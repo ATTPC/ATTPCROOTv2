@@ -1,0 +1,53 @@
+#/********************************************************************************
+# *    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    *
+# *                                                                              *
+# *              This software is distributed under the terms of the             * 
+# *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *  
+# *                  copied verbatim in the file "LICENSE"                       *
+# ********************************************************************************/
+#
+# Geant4 configuration macro for ATTPCROOT
+# (called from Root macro Config.C)
+
+
+#/mcPhysics/rangeCuts 0.01 mm
+
+/cuts/setLowEdge  100 eV
+/cuts/setHighEdge   10 GeV
+
+/mcPhysics/rangeCutForElectron    100 km
+#/mcphysics/rangeCutForPositron    1 mm
+#/run/setCut 1 um
+#/run/dumpCutValues
+#/run/particle/applyCuts
+
+/mcDet/setIsUserMaxStep 1
+/mcDet/setLimitDensity 1
+/mcDet/setIsMaxStepInLowDensityMaterials 1
+/mcDet/setMaxStepInLowDensityMaterials 1
+
+
+#/mcVerbose/all                   0
+#/mcVerbose/runAction             1
+#/mcVerbose/composedPhysicsList   1
+#/mcVerbose/trackingAction        1
+#/mcVerbose/eventAction           0
+
+#/mcphysics/rangeCutForGamma    0.01 mm   # ERROR
+#/mcRegions/setRangePrecision   0.01 mm   # ERROR
+#/mcPhysics/printGlobalCuts               # ERROR
+#/mcPhysics/printGlobalControls           # ERROR
+
+
+#/mcVerbose/all 1
+#/mcVerbose/runAction 1
+#/mcVerbose/composedPhysicsList 1
+#/mcVerbose/trackManager 2
+
+#/control/cout/ignoreThreadsExcept 0
+
+#/run/particle/applyCuts
+
+#/tracking/verbose 1
+#/control/cout/ignoreThreadsExcept 0
+

@@ -1,0 +1,129 @@
+#include "ATHoughSpaceLine.hh"
+#include "TCanvas.h"
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
+ClassImp(ATHoughSpaceLine)
+
+ATHoughSpaceLine::ATHoughSpaceLine()
+{
+    HistHoughXZ = new TH2F("HistHoughXZ","HistHoughXZ",500,0,3.15,500,0,300);
+
+    /*Char_t HoughQuadHistName[256];
+    for(Int_t i=0;i<4;i++){
+     sprintf(HoughQuadHistName,"HoughQuad_%d",i);
+     HistHoughRZ[i] = new TH2F(HoughQuadHistName,HoughQuadHistName,500,0,3.15,2500,0,1000);
+    }*/
+
+}
+
+ATHoughSpaceLine::~ATHoughSpaceLine()
+{
+      delete HistHoughXZ;
+  //for(Int_t i=0;i<4;i++) delete HistHoughRZ[i];
+}
+
+TH2F* ATHoughSpaceLine::GetHoughSpace(TString ProjPlane) {return HistHoughXZ;}
+//TH2F* ATHoughSpaceLine::GetHoughQuadrant(Int_t index) {return HistHoughRZ[index];}
+std::vector<std::pair<Double_t,Double_t>> ATHoughSpaceLine::GetHoughPar() {return HoughPar;}
+
+void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYplane, Bool_t XZplane){
+
+	Int_t nHits = event->GetNumHits();
+	
+
+		for(Int_t iHit=0; iHit<nHits; iHit++){
+			ATHit hit = event->GetHitArray()->at(iHit);
+    	                Int_t PadNumHit = hit.GetHitPadNum();
+			if(hit.GetCharge()<fThreshold) continue;
+   		        TVector3 position = hit.GetPosition();
+
+			for(Int_t itheta = 0; itheta <1023; itheta++){
+	 				Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
+               	    		 if(XZplane){
+                      	 		 Float_t d0_XZ = (TMath::Cos(angle)*position.X())  +  (TMath::Sin(angle)*position.Z());
+                      			 HistHoughXZ->Fill(angle,d0_XZ);
+
+                   		 }
+
+			}
+
+	        }
+
+}
+
+void ATHoughSpaceLine::CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4){
+
+      Int_t nQuads = protoevent->GetNumQuadrants();
+      std::vector<ATProtoQuadrant> quadrantArray;
+      ATProtoQuadrant* quadrant;
+
+	TH2F *HistHoughRZ[4]; //One per quadrant
+        Char_t HoughQuadHistName[256];
+        for(Int_t i=0;i<4;i++){
+           sprintf(HoughQuadHistName,"HoughQuad_%d",i);
+           HistHoughRZ[i] = new TH2F(HoughQuadHistName,HoughQuadHistName,500,0,3.15,2500,0,1000);
+	}	
+
+      if(nQuads<5){
+	
+        for(Int_t iQ=0; iQ<nQuads; iQ++)
+        {
+
+            quadrant = &protoevent->GetQuadrantArray()->at(iQ);
+            Int_t qNumHits = quadrant->GetNumHits();
+
+
+                    	for(Int_t iHit=0; iHit<qNumHits-1; iHit++){
+                            ATHit* hit = quadrant->GetHit(iHit);
+                            Int_t PadNumHit = hit->GetHitPadNum();
+                            TVector3 position = hit->GetPosition();
+
+			    #pragma omp parallel for ordered schedule(dynamic)
+                            for(Int_t itheta = 0; itheta <1023; itheta++){
+                                Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
+                                 Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
+                                  Float_t d0_RZ = (TMath::Cos(angle)*radius)  +  (TMath::Sin(angle)*position.Z());
+                                    HistHoughRZ[iQ]->Fill(angle,d0_RZ);
+                             }//Hough Angle loop
+
+                      }// Hit loop
+
+			
+			HoughPar.push_back(GetHoughParameters(HistHoughRZ[iQ]));
+
+
+        }
+       }
+
+	for(Int_t i=0;i<4;i++) delete HistHoughRZ[i];
+		/*TCanvas *c1=new TCanvas();
+		c1->Divide(2,2);	
+		c1->cd(1);
+		HistHoughRZ[0]->Draw("zcol");
+		c1->cd(2);
+		HistHoughRZ[1]->Draw("zcol");
+		c1->cd(3);
+		HistHoughRZ[2]->Draw("zcol");
+		c1->cd(4);
+		HistHoughRZ[3]->Draw("zcol");*/		
+
+}
+
+
+std::pair<Double_t,Double_t> ATHoughSpaceLine::GetHoughParameters(TH2F* hist){
+
+		std::pair<Double_t,Double_t> HoughParBuff;
+		Int_t locmaxx,locmaxy,locmaxz;
+                //hist->GetMaximumBin(locmaxx,locmaxy,locmaxz);
+                Double_t xpos = hist->GetXaxis()->GetBinCenter(locmaxx);
+                Double_t ypos = hist->GetYaxis()->GetBinCenter(locmaxy);
+		//std::cout<<" X Hough Position : "<<180-xpos*180/TMath::Pi()<<std::endl;
+		//std::cout<<" Y Hough Position : "<<ypos<<std::endl;
+		HoughParBuff.first= xpos;
+		HoughParBuff.second= ypos;
+		return HoughParBuff;
+
+}
+

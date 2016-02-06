@@ -1,0 +1,31 @@
+################################################################################
+# Parameters used throughout ATTPCROOT software
+# Format:
+# parameter_name:parameter_type(Int_t-integer, Double_t-double) parameter_value
+# ATDigiPar
+# Description of parameters
+################################################################################
+[ATDigiPar]
+PadPlaneX:Int_t                864   # mm
+PadPlaneZ:Int_t               1344   # mm
+PadSizeX:Int_t                   8   # mm
+PadSizeZ:Int_t                  12   # mm
+PadRows:Int_t                  108   #
+PadLayers:Int_t                112   #
+AnodeWirePlaneY:Double_t     -4.05   # mm
+GroundWirePlaneY:Double_t     -8.1   # mm
+GatingWirePlaneY:Double_t      -14   # mm
+EField:Double_t               5000   # V/m
+NumTbs:Int_t                   512
+SamplingRate:Int_t            12.5   # MHz
+DriftVelocity:Double_t        5.20   # cm/ns
+DriftLength:Double_t          1000   # mm //ATTPC : 1000 - Prototype : 500
+YDivider:Int_t                1000   # Full drift length will be divided by this number when finding cluster
+GasFile:Int_t                    2
+PadPlaneFile:Int_t               3
+PadShapeFile:Int_t               4   # might not be needed because the shape is simply rectangle
+BField:Double_t               1.75   # Tesla
+TiltAng:Double_t                 7   # Degress
+TB0:Int_t                       98   # Time Bucket reference for micromegas position
+LorentzAngle:Int_t             6.4   # Lorentz Angle
+################################################################################

@@ -1,0 +1,26 @@
+/*********************************************************************
+*   ATTPC Unpacker and Decoder Core Class	ATCore               *	
+*   Author: Y. Ayyad            				     *
+*   Log: 04-03-2015 17:16 JST					     *
+*								     *	
+*********************************************************************/
+
+#ifndef ATCORE_H
+#define ATCORE_H
+
+#include "TObject.h"
+//#include "TString.h"
+
+class ATCore : public TObject  {
+
+ public:
+    ATCore();
+    ATCore(TString filename, Int_t numTbs);
+
+    ~ATCore();
+
+
+    ClassDef(ATCore, 1);
+};
+
+#endif

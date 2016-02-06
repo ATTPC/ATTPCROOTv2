@@ -1,0 +1,13 @@
+#pragma once
+#include "ATEventDrawTask.hh"
+
+class ATEventProtoDrawTask : public ATEventDrawTask
+{
+  public :
+
+   ATEventProtoDrawTask();
+   ~ATEventProtoDrawTask();
+
+   ClassDef(ATEventProtoDrawTask,1);
+
+};

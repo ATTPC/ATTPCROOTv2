@@ -1,0 +1,36 @@
+/*********************************************************************
+*   ATTPC Unpacker and Decoder Core Class	ATCore               *	
+*   Author: Y. Ayyad            				     *
+*   Log: 04-03-2015 17:16 JST					     *
+*								     *	
+*********************************************************************/
+
+
+#include <iostream>
+#include <fstream>
+#include <cmath>
+
+#include "ATCore.h"
+#include "GETDecoder.hh"
+#include "GETFrame.hh"
+
+ClassImp(ATCore);
+
+ATCore::ATCore()
+{
+  
+}
+
+ATCore::ATCore(TString filename, Int_t numTbs)
+{
+  
+  
+}
+
+ATCore::~ATCore()
+{
+  //delete fDecoderPtr;
+  
+  //delete fPedestalPtr;
+  //delete fMapPtr;
+}
