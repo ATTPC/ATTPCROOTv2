@@ -31,9 +31,11 @@ Double_t  ATDigiPar::GetDriftVelocity()    { return fDriftVelocity; }
 Double_t  ATDigiPar::GetDriftLength()      { return fDriftLength; }
    Int_t  ATDigiPar::GetYDivider()         { return fYDivider; }
 Double_t  ATDigiPar::GetBField()           { return fBField;}
-Double_t  ATDigiPar::GetEField() 	   { return fEField;}
-Double_t  ATDigiPar::GetTiltAngle() 	   { return fTiltAng;}
+Double_t  ATDigiPar::GetEField() 	         { return fEField;}
+Double_t  ATDigiPar::GetTiltAngle() 	     { return fTiltAng;}
 Int_t     ATDigiPar::GetTB0() 	           { return fTB0;}
+Double_t  ATDigiPar::GetThetaLorentz() 	   { return fThetaLorentz;}
+Int_t     ATDigiPar::GetTBEntrance() 	     { return fTBEntrance;}
 
 ATGas *ATDigiPar::GetGas()
 {
@@ -150,6 +152,16 @@ Bool_t ATDigiPar::getParams(FairParamList *paramList) //TODO Change all these pa
     }
     if (!(paramList -> fill("TB0", &fTB0))) {
       fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find TB0 parameter!");
+      return kFALSE;
+    }
+
+    if (!(paramList -> fill("LorentzAngle", &fThetaLorentz))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find LorentzAngle parameter!");
+      return kFALSE;
+    }
+
+    if (!(paramList -> fill("TBEntrance", &fTBEntrance))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find TBEntrance parameter!");
       return kFALSE;
     }
 

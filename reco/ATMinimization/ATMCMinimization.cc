@@ -43,18 +43,21 @@ ATMCMinimization::ATMCMinimization()
   if (!fPar)
     fLogger -> Fatal(MESSAGE_ORIGIN, "ATDigiPar not found!!");
 
-  fDriftVelocity = fPar -> GetDriftVelocity();
-  fTBTime  = fPar->GetTBTime();
-  fBField  = fPar->GetBField();
+  fDriftVelocity   = fPar->GetDriftVelocity();
+  fTBTime          = fPar->GetTBTime();
+  fBField          = fPar->GetBField();
+  fThetaLorentz    = fPar->GetThetaLorentz()*TMath::Pi()/180.0;
+  fTiltAng         = fPar->GetTiltAngle()*TMath::Pi()/180.0;
+  fEntTB           = (Int_t) fPar->GetTBEntrance();
 
   fZk= 1000.0; //Position of the micromegas
 
-  fTiltAng = fPar->GetTiltAngle()*TMath::Pi()/180.0;
+
   fThetaPad = -108.0*TMath::Pi()/180.0;
-  fThetaLorentz = -6.4*TMath::Pi()/180.0;
   fThetaRot = -10.0*TMath::Pi()/180.0;
 
-  fEntTB = 280;
+  //fEntTB = 280;
+
 
   kDebug=kFALSE;
 
@@ -102,22 +105,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         std::vector<Double_t> zinter;
                         std::vector<Int_t> TBInter;
 
-                    /*    std::vector<Double_t> xsol;
-                        std::vector<Double_t> ysol;
-                        std::vector<Double_t> zsol;
 
-                        std::vector<Double_t> xdet;
-                        std::vector<Double_t> ydet;
-                        std::vector<Double_t> zdet;
-
-                        std::vector<Double_t> xpad;
-                        std::vector<Double_t> ypad;
-                        std::vector<Double_t> zpad;*/
-
-
-                        //Double_t *xcmm = new Double_t[10000];
-                      //  Double_t *ycmm =  new Double_t[10000];
-                      //  Double_t *zcmm =  new Double_t[10000];
                        Double_t xcmm[10000]={0};
                        Double_t ycmm[10000]={0};
                        Double_t zcmm[10000]={0};
@@ -137,8 +125,6 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                        Double_t xTBCorr[10000]={0};
                        Double_t yTBCorr[10000]={0};
                        Double_t zTBCorr[10000]={0};
-
-
 
 
                         //TODO: Pass these paramters with the fPar pointer
@@ -162,11 +148,6 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         Int_t integrationsteps   = 10;
                         //////////////////////////////////////////
 
-                        ////////////Rotations////////////////////
-                        //fPadtoDetRot->RotateZ(-thetaPad);
-
-
-
                         /////////// Initial parameters///////////////
                         Double_t xmin= parameter[0]/10.0; //  ! at ztb=394 in cm
                         Double_t ymin= parameter[1]/10.0;
@@ -181,24 +162,10 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         Double_t theta0=parameter[6];
                         ////////////////////////////////////////////
 
-                        /*Double_t xmin= 11.117; //  ! at ztb=394 in cm
-                        Double_t ymin= -0.212;
-                        Double_t zmin=  parameter[3]*dzstep;//394.*dzstep;
-                        Double_t phi0=266.*0.01745;
-                        Double_t bro=0.081*B0;// !Tm*/
-                        //Double_t theta0=66.*0.01745;
-
-                        //Double_t bro=0.10*B0;// !Tm
-                        //Double_t theta0=62.*0.01745;
-                        //Double_t phi0= -1.*0.01745 +175.;
-
                         Double_t phimin=phi0;
                         Double_t thetamin=theta0;
                         Double_t bromin=bro;
                         Double_t brotheta=bromin/TMath::Sin(thetamin);
-                        //Double_t xmin=-0.6; //  ! at ztb=394 in cm
-                        //Double_t ymin= -6.;
-                        //Double_t dzstep=0.221;//  !unit cm
                         Double_t tm=0.0;
                         Int_t iteration=0;
 
@@ -225,7 +192,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                   if(parameter[7]<500){
 
-                        //#pragma omp parallel for ordered schedule(dynamic)
+
                         for(Int_t i=0;i<10;i++)
                         {
 
@@ -278,17 +245,9 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                               //        define initial conditions
 
                               //         Transform initial parameters into lab
-                                        Double_t  x; // ! ztb=394
-                                        Double_t  y;
-                                        Double_t  z;
-
-                                        x= xmin + step4*(gRandom->Rndm()-0.5); // ! ztb=394
-                                        y= ymin + step5*(gRandom->Rndm()-0.5);
-                                        z= zmin + step6*(gRandom->Rndm()-0.5);
-
-                                      // Double_t  x= 0.0; // ! ztb=394
-                                      // Double_t  y= 0.0;
-                                      // Double_t  z= 0.0;
+                                        Double_t  x = xmin + step4*(gRandom->Rndm()-0.5); // ! ztb=394
+                                        Double_t  y = ymin + step5*(gRandom->Rndm()-0.5);
+                                        Double_t  z = zmin + step6*(gRandom->Rndm()-0.5);
 
                                         //std::cout<<" Xini "<<x<<" Yini "<<y<<" Zini "<<z<<std::endl;
 
@@ -341,7 +300,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                                                      //TGraph *simangle = new TGraph();
 
-                                                     //#pragma omp parallel for collapse(1) ordered schedule(dynamic)
+
                                                      for(Int_t k=0;k<iterationmax;k++)
                                                      {
                                                            iteration++;
@@ -551,6 +510,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                           // TO compare Sim and Exp uncomment this
                                                         if(kDebug){
                                                         std::cout<<" Array : "<<iChi<<" X_Sim : "<<xcmm[iChi]<<" Y_Sim : "<<ycmm[iChi]<<" Z_Sim : "<<zcmm[iChi]<<" TB Sim"<<floor(zcmm[iChi]/dzstep/10)<<std::endl;
+                                                        std::cout<<" Array Corr: "<<iChi<<" X_Sim_Corr : "<<xTBCorr[iChi]<<" Y_Sim_Corr : "<<yTBCorr[iChi]<<" Z_Sim_Corr : "<<zTBCorr[iChi]<<std::endl;
                                                         std::cout<<" Real Time bucket : "<<parameter[3]+iChi<<std::endl;
                                                         std::cout<<" Corrected TIme Bucket : "<<(zcmm[iChi]/10 - 100)/dzstep + fEntTB <<std::endl;
                                                         //std::cout<<iChi<<" X_exp : "<<position.X()<<" Y_exp : "<<position.Y()<<" Hit TS : "<<parameter[3]-HitTS<<std::endl;
@@ -686,9 +646,9 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                      FitParameters.sPhiMin=phi0;
                                                      FitParameters.sChi2Min=chi2min;
 
-                                                     //std::cout<<" New Min chi2 : "<<chi2min<<std::endl;
+                                                     //std::cout<<" New Min chi2 : "<<chi2min<<" Entrance TB : "<<fEntTB<<std::endl;
 
-                                                      //for(Int_t ii=0;ii<fPosXmin.size();ii++) std::cout<<fPosXmin.at(ii)<<std::endl;
+
 
                                                    }
 

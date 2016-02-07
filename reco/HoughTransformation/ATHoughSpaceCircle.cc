@@ -83,10 +83,13 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
   //TH1F *hdist = new TH1F("hdist","hdist",100,0,1000);
   //TH2F *distVSTb = new TH2F("DistVSTb","DistVSTb",1000,0,1000,100,0,2000);
 
-    #pragma omp parallel for ordered schedule(dynamic)
-		for(Int_t iHit=0; iHit<(nHits-nstep); iHit++){
-      //#pragma omp parallel for collapse(1) ordered schedule(dynamic)
 
+//   #pragma omp parallel
+//   {
+//    #pragma omp for ordered schedule(dynamic,1)
+		for(Int_t iHit=0; iHit<(nHits-nstep); iHit++){
+
+                //std::cout<<omp_get_num_threads()<<std::endl;
           			ATHit hit = event->GetHitArray()->at(iHit);
                 ATHit hit_forw = event->GetHitArray()->at(iHit+nstep);
                 ATHit hit_next = event->GetHitArray()->at(iHit+1);
@@ -119,6 +122,8 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
                     HistHoughXY->Fill(angle,1.0/d0_XY_inv);
                 }
       }//Hit loop
+//    }// Parallel region
+
 
                     Int_t locmaxx,locmaxy,locmaxz;
                     HistHoughXY->GetMaximumBin(locmaxx,locmaxy,locmaxz);
@@ -137,7 +142,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
                       fIniPhi=0.0;
                       fIniTheta=0.0;
 
-                      
+
                       for(Int_t iHit=0; iHit<nHits-1; iHit++){
 
                              ATHit hit = event->GetHitArray()->at(iHit);
@@ -407,6 +412,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
                    ATHoughSpaceCircle::FitParameters.sPhiMin   = min->FitParameters.sPhiMin;
                    ATHoughSpaceCircle::FitParameters.sChi2Min   = min->FitParameters.sChi2Min;
                    delete min;
+
 
                     //hdist->Draw();
                     //distVSTb->Draw("zcol");

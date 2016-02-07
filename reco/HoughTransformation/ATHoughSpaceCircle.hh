@@ -68,6 +68,7 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         };
 
         FitPar FitParameters;
+        TH2F *HistHoughXY;
 
           std::vector<ATHit>* fClusteredHits;
 
@@ -85,7 +86,7 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         std::vector<Double_t> *fPhi;
         std::vector<Double_t> *fTheta;
         std::vector<Double_t> *fDl;
-        TH2F *HistHoughXY;
+
         TH2F *HistHoughAux;
         Double_t fXCenter;
         Double_t fYCenter;
