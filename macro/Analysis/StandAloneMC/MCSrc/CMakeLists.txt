@@ -6,7 +6,6 @@ ${BASE_INCLUDE_DIRECTORIES}
 ${CMAKE_SOURCE_DIR}/MCSrc
 )
 
-
 include_directories(${INCLUDE_DIRECTORIES} ${ATTPCROOTPATH}/include)
 
 set(LINK_DIRECTORIES
@@ -28,18 +27,58 @@ CHANGE_FILE_EXTENSION(*.cc *.hh HEADERS "${SRCS}")
 Set(LINKDEF MCSrcLinkDef.h)
 Set(LIBRARY_NAME MCSrc)
 Set(DEPENDENCIES
-    Cling
     XMLParser
-# Add all library names your code depending on.
-# Basically those are the libraries in the header files' directory.
     Spectrum
-    ATTPCReco
 )
 
 ROOT_GENERATE_DICTIONARY(G__MCSrc MCSrc.hh LINKDEF MCSrcLinkDef.h)
 
 GENERATE_LIBRARY()
-target_link_libraries(MCSrc ${ROOT_LIBRARIES})
+target_link_libraries(MCSrc
+Core
+Gpad
+Graf
+Graf3d
+Gui
+Hist
+Hist
+MathCore
+Matrix
+Minuit
+Net
+Physics
+Postscript
+Rint
+RIO
+Thread
+Tree
+TreePlayer
+ATTPCReco
+FairTools
+Base
+)
 
 add_executable(MCExe MCSrc.cc)
-target_link_libraries(MCExe MCSrc)
+target_link_libraries(MCExe
+Core
+Gpad
+Graf
+Graf3d
+Gui
+Hist
+Hist
+MathCore
+Matrix
+Minuit
+Net
+Physics
+Postscript
+Rint
+RIO
+Thread
+Tree
+TreePlayer
+ATTPCReco
+FairTools
+Base
+)

@@ -10,6 +10,10 @@ IF(NOT DEFINED ENV{SIMPATH})
    MESSAGE(FATAL_ERROR "You did not define the environment variable SIMPATH which is nedded to find the external packages. Please set this variable and execute cmake again.")
 ENDIF(NOT DEFINED ENV{SIMPATH})
 
+IF(NOT DEFINED ENV{VMCWORKDIR})
+   MESSAGE(FATAL_ERROR "You did not define the environment variable VMCWORKDIR which is nedded to find the ATTPCROOT packages. Please set this variable and execute cmake again.")
+ENDIF(NOT DEFINED ENV{VMCWORKDIR})
+
 SET(SIMPATH $ENV{SIMPATH})
 SET(FAIRROOTPATH $ENV{FAIRROOTPATH})
 SET(ATTPCROOTPATH $ENV{VMCWORKDIR})

@@ -103,7 +103,7 @@ Set(LINKDEF ATTPCRecoLinkDef.h)
 Set(LIBRARY_NAME ATTPCReco)
 Set(DEPENDENCIES
     Base
-    Cling
+#   Cling
     MCStack
     XMLParser
 # Add all library names your code depending on.
