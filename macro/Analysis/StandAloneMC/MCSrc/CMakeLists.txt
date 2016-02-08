@@ -2,6 +2,7 @@ set(INCLUDE_DIRECTORIES
 ${ROOT_INCLUDE_DIR}
 ${Boost_INCLUDE_DIRS}
 ${BASE_INCLUDE_DIRECTORIES}
+${ATTPCROOTPATH}/include
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/MCSrc
 )
@@ -29,6 +30,7 @@ Set(LIBRARY_NAME MCSrc)
 Set(DEPENDENCIES
     XMLParser
     Spectrum
+    ATTPCReco
 )
 
 ROOT_GENERATE_DICTIONARY(G__MCSrc MCSrc.hh LINKDEF MCSrcLinkDef.h)
@@ -54,6 +56,7 @@ Thread
 Tree
 TreePlayer
 ATTPCReco
+AtTpcMap
 FairTools
 Base
 )
@@ -79,6 +82,7 @@ Thread
 Tree
 TreePlayer
 ATTPCReco
+AtTpcMap
 FairTools
 Base
 )

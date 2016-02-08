@@ -3,6 +3,8 @@
 #include <iostream>
 #include <istream>
 #include <limits>
+#include <map>
+#include <vector>
 
 #include "TClonesArray.h"
 #include "TString.h"
@@ -16,8 +18,11 @@
 #include "TCanvas.h"
 
 #include "ATEvent.hh"
+#include "ATPad.hh"
+#include "ATHit.hh"
 #include "ATHoughSpace.hh"
 #include "ATHoughSpaceLine.hh"
+#include "ATHoughSpaceCircle.hh"
 
 #include "FairRootManager.h"
 #include "FairLogger.h"
@@ -51,8 +56,30 @@ Int_t main()
 
           while (Reader1.Next()) {
 
+
               ATEvent* event = (ATEvent*) eventArray->At(0);
-              ATHoughSpaceLine* fHoughSpaceLine_buff  = dynamic_cast<ATHoughSpaceLine*> (houghArray->At(0));
+              Int_t nHits = event->GetNumHits();
+              //std::vector<ATHit> hitArray = event->GetHitArrayObj(); //Not working!
+
+
+              std::vector<ATHit*>* hitbuff = new std::vector<ATHit*>; // Working!
+
+              //std::vector<ATEvent*> test;
+              //test.push_back(event);
+
+                    for(Int_t iHit=0; iHit<nHits; iHit++){
+                      ATHit hit = event->GetHit(iHit);
+                      TVector3 hitPos = hit.GetPosition();
+                      hitbuff->push_back(&hit);
+
+
+                    }
+
+              //std::cout<<hitbuff->size()<<std::endl;
+
+              ATHoughSpace* fHoughSpaceCircle  = dynamic_cast<ATHoughSpaceCircle*> (houghArray->At(0));
+              //if(!fHoughSpaceCircle) std::cout<<" Warning : Failed casting "<<std::endl;
+              //fHoughSpaceCircle->GetXCenter();
 
 
           }

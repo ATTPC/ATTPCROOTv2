@@ -50,6 +50,7 @@ namespace {
 "/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/include/root",
 "/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/include",
 "/home/ayyadlim/fair_install_ROOT6/FairRootInst_v15.07a/include",
+"/home/ayyadlim/fair_install_ROOT6/ATTPCROOT/include",
 "/home/ayyadlim/fair_install_ROOT6/ATTPCROOT/macro/Analysis/StandAloneMC/MCSrc",
 "/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/include/root",
 "/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/include",
