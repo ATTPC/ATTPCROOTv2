@@ -88,7 +88,7 @@ class ATHit : public TObject {
     Int_t fHitMult; // Hit multiplicity in the pad where the hit was found
 
 
-  ClassDef(ATHit, 2);
+  ClassDef(ATHit, 3);
 };
 
 #endif

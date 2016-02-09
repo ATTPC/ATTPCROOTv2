@@ -1,10 +1,10 @@
 export Linux_Flavour_="Fedora release 21 (Twenty One)"
 export System_="x86_64"
-source /home/ayyadlim/fair_install_ROOT6/ATTPCROOT/macro/Analysis/StandAloneMC/check_system.sh                               
+source /home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/macro/Analysis/StandAloneMC/check_system.sh                               
 if [ "$same_system" == "1" ]; then 
-  export SIMPATH="/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2"
-  export ROOTSYS="/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2"
-  export FAIRROOTPATH="/home/ayyadlim/fair_install_ROOT6/FairRootInst_v15.07a"
+  export SIMPATH="/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/"
+  export ROOTSYS="/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp"
+  export FAIRROOTPATH="/home/ayyadlim/fair_install_ROOT6/FairRoot.v15.07.sp/"
   if (true); then
     export GEANT4_LIBRARY_DIR=""
     export GEANT4_INCLUDE_DIR=""
@@ -22,7 +22,7 @@ if [ "$same_system" == "1" ]; then
     export GEANT3_LIBRARY_DIR=""
     export GEANT3_LIBRARIES=""
     export USE_VGM="1"
-    export PYTHIA8DATA="/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/share/pythia8/xmldoc"
+    export PYTHIA8DATA="/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp//share/pythia8/xmldoc"
     export CLASSPATH=""
 
     export G4LEDATA=""
@@ -35,14 +35,13 @@ if [ "$same_system" == "1" ]; then
     export G4REALSURFACEDATA=""
     export G4SAIDXSDATA=""
   fi
-  export ROOT_LIBRARY_DIR="/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/lib/root"
-  export ROOT_LIBRARIES="-L/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/lib/root -lGui -lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -pthread -lm -ldl -rdynamic"
-  export ROOT_INCLUDE_DIR="/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/include/root"
-  export ROOT_INCLUDE_PATH="/home/ayyadlim/fair_install_ROOT6/FairRootInst_v15.07a/include"
-  export VMCWORKDIR="/home/ayyadlim/fair_install_ROOT6/ATTPCROOT/macro/Analysis/StandAloneMC"
-  export FAIRLIBDIR="/home/ayyadlim/fair_install_ROOT6/ATTPCROOT/macro/Analysis/StandAloneMC/lib"
-  export PYTHONPATH="/home/ayyadlim/fair_install_ROOT6/ATTPCROOT/macro/Analysis/StandAloneMC/python:/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/lib:/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/lib/root:/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/lib/Geant4:/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/lib/g4py"
+  export ROOT_LIBRARY_DIR="/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/lib/root"
+  export ROOT_LIBRARIES="-L/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/lib/root -lGui -lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -pthread -lm -ldl -rdynamic"
+  export ROOT_INCLUDE_DIR="/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include/root"
+  export VMCWORKDIR="/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/macro/Analysis/StandAloneMC"
+  export FAIRLIBDIR="/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/macro/Analysis/StandAloneMC/lib"
+  export PYTHONPATH="/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/macro/Analysis/StandAloneMC/python:/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp//lib:/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp//lib/root:/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp//lib/Geant4:/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp//lib/g4py"
   export DYLD_LIBRARY_PATH=""
-  export LD_LIBRARY_PATH="/home/ayyadlim/fair_install_ROOT6/ATTPCROOT/macro/Analysis/StandAloneMC/lib:/home/ayyadlim/fair_install_ROOT6/FairRootInst_v15.07a/lib:/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/lib/root"
-  export PATH="/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/ayyadlim/.local/bin:/home/ayyadlim/bin"
+  export LD_LIBRARY_PATH="/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/macro/Analysis/StandAloneMC/lib:/home/ayyadlim/fair_install_ROOT6/FairRoot.v15.07.sp/lib:/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/lib/root"
+  export PATH="/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/bin:/usr/libexec/icecc/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/ayyadlim/.local/bin:/home/ayyadlim/bin"
 fi

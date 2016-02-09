@@ -32,7 +32,6 @@
 Int_t main()
 {
 
-    gSystem->Load("libCling.so");
     gSystem->Load("libATTPCReco.so");
 
     FairRunAna* run = new FairRunAna(); //Forcing a dummy run
@@ -59,8 +58,8 @@ Int_t main()
 
               ATEvent* event = (ATEvent*) eventArray->At(0);
               Int_t nHits = event->GetNumHits();
-              //std::vector<ATHit> hitArray = event->GetHitArrayObj(); //Not working!
-
+              std::vector<ATHit>* hitArray = event->GetHitArray(); //Not working!
+              //hitArray->size();
 
               std::vector<ATHit*>* hitbuff = new std::vector<ATHit*>; // Working!
 
@@ -79,7 +78,7 @@ Int_t main()
 
               ATHoughSpace* fHoughSpaceCircle  = dynamic_cast<ATHoughSpaceCircle*> (houghArray->At(0));
               //if(!fHoughSpaceCircle) std::cout<<" Warning : Failed casting "<<std::endl;
-              //fHoughSpaceCircle->GetXCenter();
+              fHoughSpaceCircle->GetXCenter();
 
 
           }
