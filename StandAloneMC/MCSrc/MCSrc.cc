@@ -59,7 +59,10 @@ Int_t main()
               ATEvent* event = (ATEvent*) eventArray->At(0);
               Int_t nHits = event->GetNumHits();
               std::vector<ATHit>* hitArray = event->GetHitArray(); //Not working!
-              //hitArray->size();
+              event->GetHitArrayObj();
+              //std::cout<<event->GetHitPadMult(0)<<std::endl;
+              //std::cout<<event->GetEventID()<<std::endl;
+              hitArray->size();
 
               std::vector<ATHit*>* hitbuff = new std::vector<ATHit*>; // Working!
 
@@ -76,9 +79,9 @@ Int_t main()
 
               //std::cout<<hitbuff->size()<<std::endl;
 
-              ATHoughSpace* fHoughSpaceCircle  = dynamic_cast<ATHoughSpaceCircle*> (houghArray->At(0));
+              ATHoughSpaceCircle* fHoughSpaceCircle  = dynamic_cast<ATHoughSpaceCircle*> (houghArray->At(0));
               //if(!fHoughSpaceCircle) std::cout<<" Warning : Failed casting "<<std::endl;
-              fHoughSpaceCircle->GetXCenter();
+              std::cout<<fHoughSpaceCircle->GetYCenter()<<std::endl;
 
 
           }

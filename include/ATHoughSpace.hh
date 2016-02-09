@@ -38,7 +38,15 @@ class ATHoughSpace : public TObject
 	       virtual void CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYplane, Bool_t XZplane)=0;
 				 virtual void CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4)=0;
 
-		ClassDef(ATHoughSpace, 1);
+				 void SetThreshold(Double_t value);
+
+   protected:
+
+		
+		  Double_t fThreshold;
+
+
+		ClassDef(ATHoughSpace, 2);
 
 };
 

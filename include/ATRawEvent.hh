@@ -21,33 +21,33 @@ public:
     ATRawEvent();
     ATRawEvent(ATRawEvent *object);
     ~ATRawEvent();
-    
-    
-    
+
+    void Clear();
+
     // setters
     void SetEventID(Int_t evtid);
     void SetPad(ATPad *pad);
     void SetIsGood(Bool_t value);
     void RemovePad(Int_t padNo);
-    
-    
+
+
     // getters
     Int_t GetEventID();
     Int_t GetNumPads();
     Bool_t IsGood();
-    
+
     std::vector<ATPad> *GetPads();
-    
+
     ATPad *GetPad(Int_t padNo);
     ATPad *GetPad(Int_t PadNum,Bool_t& IsValid);
-    
-    
+
+
 private:
     Int_t fEventID;
     std::vector<ATPad> fPadArray;
-    
+
     Bool_t fIsGood;
-    
+
     ClassDef(ATRawEvent, 1);
 };
 

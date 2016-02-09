@@ -40,6 +40,7 @@ class ATHit : public TObject {
     void SetQHit(Double_t Qhit);
     void SetHitMult(Int_t HitMult);
     void SetTimeStamp(Int_t Time);
+    void SetBaseCorr(Double_t BaseCorr);
 
     //!< Track ID getter
     Int_t GetTrackID();
@@ -60,9 +61,11 @@ class ATHit : public TObject {
     Double_t GetQHit();
     Int_t GetHitMult();
     Int_t GetTimeStamp();
+    Double_t GetBaseCorr();
 
     Int_t fPadNum;
     Int_t fTimeStamp; // Time Stamp of the Hit
+    Double_t fBaseCorr;
 
   private:
     //!< Track ID having this hit
@@ -85,7 +88,7 @@ class ATHit : public TObject {
     Int_t fHitMult; // Hit multiplicity in the pad where the hit was found
 
 
-  ClassDef(ATHit, 2);
+  ClassDef(ATHit, 3);
 };
 
 #endif

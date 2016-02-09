@@ -96,7 +96,7 @@ class ATEvent : public TNamed {
 
 
 
-  ClassDef(ATEvent, 2);
+  ClassDef(ATEvent, 3);
 };
 
 //Bool_t operator<(const ATHit &s1, const ATHit &s2);

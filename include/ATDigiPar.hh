@@ -24,7 +24,7 @@ class ATDigiPar : public FairParGenericSet
     ~ATDigiPar();
 
     // Operators
-    
+
     // Getters
     Int_t GetPadPlaneX();
     Int_t GetPadPlaneZ();
@@ -48,7 +48,9 @@ class ATDigiPar : public FairParGenericSet
     Double_t GetBField();
     Double_t GetEField();
     Double_t GetTiltAngle();
-    Int_t GetTB0();
+    Int_t    GetTB0();
+    Double_t GetThetaLorentz();
+    Int_t    GetTBEntrance();
 
     // Setters
     virtual void putParams(FairParamList *paramList);
@@ -85,6 +87,8 @@ class ATDigiPar : public FairParGenericSet
     Double_t fBField;
     Double_t fTiltAng;
     Int_t fTB0;
+    Double_t fThetaLorentz;
+    Int_t fTBEntrance;
 
   ClassDef(ATDigiPar, 1);
 };
