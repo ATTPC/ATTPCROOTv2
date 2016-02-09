@@ -294,9 +294,9 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                      Int_t iterd0=0;
                                                      Int_t iterCorrNorm=0;
 
-                                                     TVector3* posang=new TVector3();
+                                                    /* TVector3* posang=new TVector3();
                                                      TVector3* posang_forw=new TVector3();
-                                                     TVector3* posang_buff=new TVector3();
+                                                     TVector3* posang_buff=new TVector3();*/
 
                                                      //TGraph *simangle = new TGraph();
 
@@ -492,6 +492,14 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                   //  std::cout<<cGREEN<<" Lenght of the simulated data : "<<iteration<<cNORMAL<<std::endl;
                                                   //  std::cout<<cGREEN<<" imaxchi2 : "<<imaxchi2<<cNORMAL<<std::endl;
 
+                                                   TVector3* posang=new TVector3();
+                                                   TVector3* posang_forw=new TVector3();
+
+                                                   TVector3* posang_sim=new TVector3();
+                                                   TVector3* posang_forw_sim=new TVector3();
+
+
+
                                                    for(Int_t iChi=0;iChi<imaxchi2;iChi++){
 
                                                       std::vector<ATHit> hitTBArray;
@@ -597,6 +605,15 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                                                           Double_t diffx= posx-xTBCorr[iChi];
                                                           Double_t diffy= posy-yTBCorr[iChi];
+
+
+                                                           posang_forw->SetXYZ(posx,posy,posz);
+                                                           Double_t ang = GetSimThetaAngle(posang,posang_forw);
+                                                          posang->SetXYZ(posx,posy,posz);
+
+                                                          /*
+                                                           // For the next iteration
+                                                           simangle->SetPoint(simangle->GetN(),iterd0,ang);*/
 
 
                                                         /*if(hitTBArray.size()>0){

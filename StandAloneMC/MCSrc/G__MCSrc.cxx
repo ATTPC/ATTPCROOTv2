@@ -50,12 +50,12 @@ namespace {
     };
     static const char* includePaths[] = {
 "/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/StandAloneMC/MCSrc/inc",
-"/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/include/root",
-"/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/include",
+"/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include/root",
+"/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include",
 "/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/include",
-"/home/ayyadlim/fair_install_ROOT6/FairRootInst_v15.07a/include",
+"/home/ayyadlim/fair_install_ROOT6/FairRoot.v15.07.sp/include",
 "/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/StandAloneMC/MCSrc/MCSrc",
-"/home/ayyadlim/fair_install_ROOT6/FairSoftInst_jul15p2/include/root",
+"/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include/root",
 "/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/StandAloneMC/MCSrc/",
 0
     };
