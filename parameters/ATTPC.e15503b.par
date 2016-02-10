@@ -25,8 +25,8 @@ GasFile:Int_t                    2
 PadPlaneFile:Int_t               3
 PadShapeFile:Int_t               4   # might not be needed because the shape is simply rectangle
 BField:Double_t               1.75   # Tesla
-TiltAng:Double_t                 7   # Degress
+TiltAng:Double_t              7.00   # Degress
 TB0:Int_t                       98   # Time Bucket reference for micromegas position
-LorentzAngle:Double_t         -7.4   # Lorentz Angle
+LorentzAngle:Double_t        -7.00   # Lorentz Angle
 TBEntrance:Int_t               280   # Beam position at detector entrance in TB
 ################################################################################

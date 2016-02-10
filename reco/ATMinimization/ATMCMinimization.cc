@@ -93,6 +93,9 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
               //TH2F *dist_vs_TB = new TH2F("dist_vs_TB","dist_vs_TB",512,0,511,1000,0,1000);
 
+                TGraph *ang_vs_step = new TGraph();
+                TGraph *ang_vs_step_sim = new TGraph();
+                TGraph *zcomp = new TGraph();
 
                         std::vector<Double_t> xc;
                         std::vector<Double_t> xiter;
@@ -309,12 +312,12 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            iterd=k;
 
 
-                                                          if(iterd0==iterd){ // Only takes the first one of hte iterd series
+                                                        //  if(iterd0==iterd){ // Only takes the first one of hte iterd series
                                                            xcmm[iterd] = x*10.0;
                                                            ycmm[iterd] = y*10.0;
                                                            zcmm[iterd] = z*10.0;
                                                            //zcmm[iterd] = -z*10. + 2*zmin*10.0;
-                                                           iterd0++;
+                                                          // iterd0++;
 
 
                                                           // if(iterd0!=iterd){
@@ -363,6 +366,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            zTBCorr[iterCorrNorm] = zpad[iterd];
 
 
+
                                                         /* posang_forw->SetXYZ(xpad[iterd],ypad[iterd],zpad[iterd]);
                                                          Double_t ang = GetSimThetaAngle(posang,posang_forw);
                                                          posang->SetXYZ(xpad[iterd],ypad[iterd],zpad[iterd]); // For the next iteration
@@ -389,7 +393,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            //std::cout<<" z : "<<zcmm[iterd]<<std::endl;
 
 
-                                                         }
+                                                        // }
 
                                                            t=t+dt;
                                                            Double_t ddxddt=esm*B*10.*dydt*factq;//  !remember esm =charge/masse
@@ -457,6 +461,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                                 //std::cout<<cRED<<" dt : "<<dt<<cNORMAL<<std::endl;
 
 
+
                                                               //  if(radp>25.0) break;//  !this limits the radial distance of the trajectories taken into ccount
                                                                 //	if(z.gt.ztot) go to 100
                                                                 if(zTBCorr[iterCorrNorm]<0.0) break;
@@ -497,6 +502,8 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                                                    TVector3* posang_sim=new TVector3();
                                                    TVector3* posang_forw_sim=new TVector3();
+
+
 
 
 
@@ -607,13 +614,19 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                           Double_t diffy= posy-yTBCorr[iChi];
 
 
+
                                                            posang_forw->SetXYZ(posx,posy,posz);
                                                            Double_t ang = GetSimThetaAngle(posang,posang_forw);
-                                                          posang->SetXYZ(posx,posy,posz);
+                                                           posang->SetXYZ(posx,posy,posz);
 
-                                                          /*
-                                                           // For the next iteration
-                                                           simangle->SetPoint(simangle->GetN(),iterd0,ang);*/
+                                                           posang_forw_sim->SetXYZ(xTBCorr[iChi],yTBCorr[iChi],zTBCorr[iterCorrNorm]);
+                                                           Double_t ang_sim = GetSimThetaAngle(posang_sim,posang_forw_sim);
+                                                           posang_sim->SetXYZ(xTBCorr[iChi],yTBCorr[iChi],zTBCorr[iterCorrNorm]);
+
+
+                                                           ang_vs_step->SetPoint(ang_vs_step->GetN(),iChi,ang);
+                                                           ang_vs_step_sim->SetPoint(ang_vs_step_sim->GetN(),iChi,ang_sim);
+
 
 
                                                         /*if(hitTBArray.size()>0){
@@ -690,7 +703,11 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                     }// paramter[7] cut
 
 
+                    ang_vs_step->Draw("AP");
+                    ang_vs_step->SetMarkerColor(kRed);
+                    ang_vs_step_sim->Draw("P");
 
+                      //zcomp->Draw("AP");
 
 
                       for(Int_t ig=0;ig<fHitArray->size();ig++){
