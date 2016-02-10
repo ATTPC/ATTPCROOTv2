@@ -93,9 +93,9 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
               //TH2F *dist_vs_TB = new TH2F("dist_vs_TB","dist_vs_TB",512,0,511,1000,0,1000);
 
-                TGraph *ang_vs_step = new TGraph();
-                TGraph *ang_vs_step_sim = new TGraph();
-                TGraph *zcomp = new TGraph();
+                //TGraph *ang_vs_step = new TGraph();
+              //  TGraph *ang_vs_step_sim = new TGraph();
+              //  TGraph *zcomp = new TGraph();
 
                         std::vector<Double_t> xc;
                         std::vector<Double_t> xiter;
@@ -619,13 +619,13 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            Double_t ang = GetSimThetaAngle(posang,posang_forw);
                                                            posang->SetXYZ(posx,posy,posz);
 
-                                                           posang_forw_sim->SetXYZ(xTBCorr[iChi],yTBCorr[iChi],zTBCorr[iterCorrNorm]);
+                                                           posang_forw_sim->SetXYZ(xTBCorr[iChi],yTBCorr[iChi],zTBCorr[iChi]);
                                                            Double_t ang_sim = GetSimThetaAngle(posang_sim,posang_forw_sim);
-                                                           posang_sim->SetXYZ(xTBCorr[iChi],yTBCorr[iChi],zTBCorr[iterCorrNorm]);
+                                                           posang_sim->SetXYZ(xTBCorr[iChi],yTBCorr[iChi],zTBCorr[iChi]);
 
 
-                                                           ang_vs_step->SetPoint(ang_vs_step->GetN(),iChi,ang);
-                                                           ang_vs_step_sim->SetPoint(ang_vs_step_sim->GetN(),iChi,ang_sim);
+                                                           //ang_vs_step->SetPoint(ang_vs_step->GetN(),iChi,ang);
+                                                          // ang_vs_step_sim->SetPoint(ang_vs_step_sim->GetN(),iChi,ang_sim);
 
 
 
@@ -703,9 +703,9 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                     }// paramter[7] cut
 
 
-                    ang_vs_step->Draw("AP");
-                    ang_vs_step->SetMarkerColor(kRed);
-                    ang_vs_step_sim->Draw("P");
+                  //  ang_vs_step->Draw("AP");
+                  //  ang_vs_step->SetMarkerColor(kRed);
+                  //  ang_vs_step_sim->Draw("P");
 
                       //zcomp->Draw("AP");
 
