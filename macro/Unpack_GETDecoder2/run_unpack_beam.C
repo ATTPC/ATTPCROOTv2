@@ -103,7 +103,7 @@ TString mappath="/data/ar46/run_0003/")
   psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC
 	//psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
 	psaTask -> SetMaxFinder();
-  psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
+  psaTask -> SetBaseCorrection(kFALSE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
   psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
   run -> AddTask(psaTask);
 
@@ -118,7 +118,7 @@ TString mappath="/data/ar46/run_0003/")
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,100);
+  run->Run(0,10);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

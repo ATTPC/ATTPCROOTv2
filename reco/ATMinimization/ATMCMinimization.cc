@@ -53,8 +53,8 @@ ATMCMinimization::ATMCMinimization()
   fZk= 1000.0; //Position of the micromegas
 
 
-  fThetaPad = -108.0*TMath::Pi()/180.0;
-  fThetaRot = -10.0*TMath::Pi()/180.0;
+  fThetaPad = -108.7*TMath::Pi()/180.0;
+  fThetaRot = -9.5*TMath::Pi()/180.0;
 
   //fEntTB = 280;
 
@@ -511,13 +511,11 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                    for(Int_t iChi=0;iChi<imaxchi2;iChi++){
 
                                                       std::vector<ATHit> hitTBArray;
+                                                      hitTBArray=GetTBHitArray(parameter[3]-iChi,fHitArray); // Seach for Hits with the same TB
                                                       //Int_t HitTS=0;
 
-
-
-                                                      if(iChi<parameter[7])   hitTBArray=GetTBHitArray(parameter[3]-iChi,fHitArray); // Seach for Hits with the same TB
-
-                                                      if(event->GetEventID()==973) std::cout<<" iChi : "<<iChi<<" parameters 3 "<<parameter[3]<<" parameters 7 "<<parameter[7]<<" Hit TB Size "<<hitTBArray.size()<<std::endl;
+                                                      //if(iChi<parameter[7])   hitTBArray=GetTBHitArray(parameter[3]-iChi,fHitArray); // Seach for Hits with the same TB
+                                                     //if(event->GetEventID()==973) std::cout<<" iChi : "<<iChi<<" parameters 3 "<<parameter[3]<<" parameters 7 "<<parameter[7]<<" Hit TB Size "<<hitTBArray.size()<<std::endl;
 
                                           //NB: Simulated data progress in forward direction in the sd::vector while the experimental one is
                                           // the opposite
