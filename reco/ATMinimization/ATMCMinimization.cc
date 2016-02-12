@@ -91,6 +91,7 @@ std::vector<Double_t> ATMCMinimization::GetPosZInt()    {return fPosZinter;}
 Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
 
+
               //TH2F *dist_vs_TB = new TH2F("dist_vs_TB","dist_vs_TB",512,0,511,1000,0,1000);
 
                 //TGraph *ang_vs_step = new TGraph();
@@ -125,9 +126,9 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                        Double_t ypad[10000]={0};
                        Double_t zpad[10000]={0};
 
-                       Double_t xTBCorr[10000]={0};
-                       Double_t yTBCorr[10000]={0};
-                       Double_t zTBCorr[10000]={0};
+                       Double_t xTBCorr[10000]={-10000};
+                       Double_t yTBCorr[10000]={-10000};
+                       Double_t zTBCorr[10000]={-10000};
 
 
                         //TODO: Pass these paramters with the fPar pointer
@@ -478,9 +479,9 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                                                     //Chi Square Calculation
 
-                                                    Int_t imaxchi2=std::max(iterd,(Int_t)parameter[7]); //NEW
+                                                    Int_t imaxchi2=std::max(iterCorrNorm,(Int_t)parameter[7]); //NEW
                                                     //Int_t imaxchi2=std::max(iteration,(Int_t)parameter[7]);
-                                                    Double_t sigma2 = 36.0;  //!error in mm2
+                                                    Double_t sigma2 = 9.0;  //!error in mm2
                                                     Double_t chi2   = 0.0;
                                                     Bool_t kIsExp   = kTRUE;
 
@@ -512,7 +513,11 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                       std::vector<ATHit> hitTBArray;
                                                       //Int_t HitTS=0;
 
+
+
                                                       if(iChi<parameter[7])   hitTBArray=GetTBHitArray(parameter[3]-iChi,fHitArray); // Seach for Hits with the same TB
+
+                                                      if(event->GetEventID()==973) std::cout<<" iChi : "<<iChi<<" parameters 3 "<<parameter[3]<<" parameters 7 "<<parameter[7]<<" Hit TB Size "<<hitTBArray.size()<<std::endl;
 
                                           //NB: Simulated data progress in forward direction in the sd::vector while the experimental one is
                                           // the opposite
