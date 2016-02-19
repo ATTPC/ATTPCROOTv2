@@ -1,4 +1,5 @@
-void run_reco_proto(TString dataFile = "output_proto.root",TString parameterFile = "pATTPC.TRIUMF2015.par"){
+void run_unpack_proto_10C(TString dataFile = "run_ND082015_0190.txt",TString parameterFile = "pATTPC.ND2015.par"){
+//void run_unpack_proto_8He_2(TString dataFile = "~/Desktop/Yassid/ATTPC/Data/TRIUMF/CoBo_AsAd0_2015-12-03T05_47_43.571_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
 
 
     // -----   Timer   --------------------------------------------------------
@@ -18,15 +19,14 @@ void run_reco_proto(TString dataFile = "output_proto.root",TString parameterFile
 	 TString paraDir = dir + "/parameters/";
 
    FairLogger *logger = FairLogger::GetLogger();
-   logger -> SetLogFileName("ATTPC_RecoLog.log");
+   logger -> SetLogFileName("ATTPCLog.log");
    logger -> SetLogToFile(kTRUE);
    logger -> SetLogToScreen(kTRUE);
    logger -> SetLogVerbosityLevel("MEDIUM");
 
 
    FairRunAna* run = new FairRunAna();
-	 run -> SetInputFile(dataFile.Data());
-   run -> SetOutputFile("output_proto_reco.root");
+   run -> SetOutputFile("output_proto.root");
    //run -> SetGeomFile("../geometry/ATTPC_Proto_v1.0.root");
 
    TString paramterFileWithPath = paraDir + parameterFile;
@@ -39,8 +39,33 @@ void run_reco_proto(TString dataFile = "output_proto.root",TString parameterFile
   // rtdb -> setFirstInput(parIo2);
    rtdb -> setSecondInput(parIo1);
 
+   ATDecoder2Task *decoderTask = new ATDecoder2Task();
+   //decoderTask ->SetDebugMode(kTRUE);
+   decoderTask ->SetMapOpt(1); // ATTPC : 0  - Prototype: 1 |||| Default value = 0
 
-	 ATPhiRecoTask *phirecoTask = new ATPhiRecoTask();
+           if (dataFile.EndsWith(".txt")){
+	          		std::ifstream listFile(dataFile.Data());
+	          		TString dataFileWithPath;
+										while (dataFileWithPath.ReadLine(listFile)) {
+										decoderTask -> AddData(dataFileWithPath);
+										}
+					}else decoderTask -> AddData(dataFile.Data());
+
+	 decoderTask ->SetGeo(geo.Data());
+   decoderTask ->SetProtoMap(protomapdir.Data());
+   decoderTask ->SetMap((Char_t const*) scriptdir.Data());
+   //decoderTask -> SetPersistence();
+   run -> AddTask(decoderTask);
+
+   ATPSATask *psaTask = new ATPSATask();
+   psaTask -> SetPersistence();
+   psaTask -> SetBackGroundPeakFinder(kFALSE); // Suppress background of each pad for noisy data (Larger computing Time)
+   psaTask -> SetThreshold(20);
+   psaTask -> SetPeakFinder(); //Note: For the moment not affecting the prototype PSA Task
+   run -> AddTask(psaTask);
+
+    //Moved to analysis macro!
+  /* ATPhiRecoTask *phirecoTask = new ATPhiRecoTask();
    phirecoTask -> SetPersistence();
    run -> AddTask(phirecoTask);
 
@@ -50,12 +75,12 @@ void run_reco_proto(TString dataFile = "output_proto.root",TString parameterFile
    HoughTask->SetLinearHough();
 	 HoughTask->SetRadiusThreshold(3.0); // Truncate Hough Space Calculation
    //HoughTask ->SetCircularHough();
-   run ->AddTask(HoughTask);
+   run ->AddTask(HoughTask);*/
 
    run->Init();
 
-   run->Run(0,10000000);
-	// run -> RunOnTBData();
+   //run->Run(0,10000000);
+	 run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------
 	timer.Stop();

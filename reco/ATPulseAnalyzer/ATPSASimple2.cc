@@ -40,7 +40,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
 
   Int_t iPad=0;
-  //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
+  #pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
   for (iPad = 0; iPad < numPads; iPad++) {
 
 
