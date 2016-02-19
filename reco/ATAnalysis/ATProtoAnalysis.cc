@@ -50,11 +50,19 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATHoughSpaceLine* houghsp
 
 
         Double_t rad_max=0.0;
+        Double_t charge_max=0.0;
+        Double_t range=0.0;
 
             for(Int_t j=0;j<qNumHit;j++){
               ATHit* qhit = quadrant->GetHit(j);
               TVector3 position = qhit->GetPosition();
+              Double_t charge = qhit->GetCharge();
               Double_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2) );
+              Double_t distance = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2) + TMath::Power(position.Z(),2));
+              if((qNumHit-j<5)&&(charge>charge_max)){
+                charge_max=charge;
+                range = distance;
+              }
               if(radius>rad_max) rad_max=radius;
               rad_graph[j] = radius;
               posz_graph[j] = position.Z();
@@ -102,7 +110,7 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATHoughSpaceLine* houghsp
             fPar0_fit.push_back(par0);
             fPar1_fit.push_back(par1);
             fAngle_fit.push_back(afit*180/TMath::Pi());
-
+            fRange.push_back(range);
 
 
       }// Quadrant loop

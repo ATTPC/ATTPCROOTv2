@@ -72,7 +72,7 @@ void ATHoughSpaceLine::CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t 
         Char_t HoughQuadHistName[256];
         for(Int_t i=0;i<4;i++){
            sprintf(HoughQuadHistName,"HoughQuad_%d",i);
-           HistHoughRZ[i] = new TH2F(HoughQuadHistName,HoughQuadHistName,500,0,3.15,1000,0,600);
+           HistHoughRZ[i] = new TH2F(HoughQuadHistName,HoughQuadHistName,200,0,3.15,1000,0,600);//Was (500,0,3.15,....
 	}
 
       if(nQuads<5){
@@ -111,7 +111,7 @@ void ATHoughSpaceLine::CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t 
 
 
       //HoughMapKey.push_back(GetHoughParameters());
-			HoughPar.push_back(GetHoughParameters(HistHoughRZ[iQ]));
+       		HoughPar.push_back(GetHoughParameters(HistHoughRZ[iQ]));
       //HoughParSTD.push_back(GetHoughParameters());
 
          }// Quadrant loop
