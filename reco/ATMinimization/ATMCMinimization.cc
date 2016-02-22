@@ -94,9 +94,11 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
               //TH2F *dist_vs_TB = new TH2F("dist_vs_TB","dist_vs_TB",512,0,511,1000,0,1000);
 
-                //TGraph *ang_vs_step = new TGraph();
-              //  TGraph *ang_vs_step_sim = new TGraph();
-              //  TGraph *zcomp = new TGraph();
+              //TH2F *htest = new TH2F("htest","htest",1000,0,2000,1000,0,2000);
+
+                TGraph *ang_vs_step = new TGraph();
+               TGraph *ang_vs_step_sim = new TGraph();
+                TGraph *zcomp = new TGraph();
 
                         std::vector<Double_t> xc;
                         std::vector<Double_t> xiter;
@@ -212,7 +214,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                             Float_t step8=0.0*factstep;//Density
 
 
-                            for(Int_t j=0;j<200;j++) //MC
+                            for(Int_t j=0;j<400;j++) //MC
                             {
                               bro=bromin*(1.+(0.5-gRandom->Rndm())*step3); //!in Tm
                               theta0=thetamin+step1*(0.5-gRandom->Rndm())*0.01745;
@@ -259,6 +261,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                         x=PosIniCmm.X();
                                         y=PosIniCmm.Y();
                                         z=PosIniCmm.Z();
+                                        Double_t zmin_trans = z;
 
                                         //For testing purposes!!!
                                         /*TVector3 InvPosIni = InvTransIniPos(x,y,z); //Arguments in cm
@@ -298,12 +301,13 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                      Int_t iterd0=0;
                                                      Int_t iterCorrNorm=0;
 
-                                                    /* TVector3* posang=new TVector3();
-                                                     TVector3* posang_forw=new TVector3();
-                                                     TVector3* posang_buff=new TVector3();*/
+                                                     /*TVector3* posang=new TVector3();
+                                                     TVector3* posang_forw=new TVector3();*/
+                                                     //TVector3* posang_buff=new TVector3();
 
-                                                     //TGraph *simangle = new TGraph();
+                                                     TGraph *simangle = new TGraph();
 
+                                                     Int_t icnb;
 
                                                      for(Int_t k=0;k<iterationmax;k++)
                                                      {
@@ -343,6 +347,9 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            zpad[iterd] = zdet[iterd];
                                                            //zpad[iterd] = -zdet[iterd] + 2*zmin*10.0;*/
 
+                                                            //if(k==0) std::cout<<" zcmm : "<<zcmm[iterd]<<"  2*zmin*10.0  : "<<2*zmin_trans*10.0<<std::endl;
+                                                            zcmm[iterd] = -zcmm[iterd]+ 2*zmin_trans*10.0;
+                                                          //  if(k==0) std::cout<<" zcmm : "<<zcmm[iterd]<<"  2*zmin*10.0  : "<<2*zmin_trans*10.0<<std::endl;
                                                             xsol[iterd]=xcmm[iterd]-zcmm[iterd]*TMath::Sin(thetaLorentz)*TMath::Sin(thetaRot);
                                                             ysol[iterd]=ycmm[iterd]+zcmm[iterd]*TMath::Sin(thetaLorentz)*TMath::Cos(thetaRot);
                                                             zsol[iterd]=zcmm[iterd];
@@ -353,8 +360,10 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                                                             xpad[iterd] = xdet[iterd]*TMath::Cos(thetaPad) + ydet[iterd]*TMath::Sin(thetaPad);
                                                             ypad[iterd] = -xdet[iterd]*TMath::Sin(thetaPad) + ydet[iterd]*TMath::Cos(thetaPad);
-                                                            //zpad[iterd] = zdet[iterd];
-                                                            zpad[iterd] = -zdet[iterd]+ 2*zmin*10.0;
+                                                            zpad[iterd] = zdet[iterd];
+                                                            //zpad[iterd] = -zdet[iterd]+ 2*zmin*10.0;
+
+
 
                                                            iterCorr = (Int_t) (zpad[iterd]/(dzstep*10) + 0.5);
                                                            if(k==0) iterCorr_0 = iterCorr; //Offset renomarlization
@@ -365,6 +374,8 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            xTBCorr[iterCorrNorm] = xpad[iterd];
                                                            yTBCorr[iterCorrNorm] = ypad[iterd];
                                                            zTBCorr[iterCorrNorm] = zpad[iterd];
+
+                                                           //htest->Fill(zTBCorr[iterCorrNorm],zcmm[iterd]);
 
 
 
@@ -384,9 +395,13 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            ziter.push_back(zpad[iterd]);*/
                                                            //////////////////////////////////////
 
+
+                                                          //if(iterCorrNorm!=icnb){
                                                            xiter.push_back(xTBCorr[iterCorrNorm]);
                                                            yiter.push_back(yTBCorr[iterCorrNorm]);
                                                            ziter.push_back(zTBCorr[iterCorrNorm]);
+                                                        // }
+                                                          icnb=iterCorrNorm;
 
                                                            //////////////////////////////////////
 
@@ -505,6 +520,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                    TVector3* posang_forw_sim=new TVector3();
 
 
+                                                  //htest->Draw("col");
 
 
 
@@ -627,8 +643,8 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            posang_sim->SetXYZ(xTBCorr[iChi],yTBCorr[iChi],zTBCorr[iChi]);
 
 
-                                                           //ang_vs_step->SetPoint(ang_vs_step->GetN(),iChi,ang);
-                                                          // ang_vs_step_sim->SetPoint(ang_vs_step_sim->GetN(),iChi,ang_sim);
+                                                           ang_vs_step->SetPoint(ang_vs_step->GetN(),iChi,ang);
+                                                           ang_vs_step_sim->SetPoint(ang_vs_step_sim->GetN(),iChi,ang_sim);
 
 
 
@@ -706,9 +722,9 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                     }// paramter[7] cut
 
 
-                  //  ang_vs_step->Draw("AP");
-                  //  ang_vs_step->SetMarkerColor(kRed);
-                  //  ang_vs_step_sim->Draw("P");
+                  /*  ang_vs_step->Draw("AP");
+                    ang_vs_step->SetMarkerColor(kRed);
+                    ang_vs_step_sim->Draw("P");*/
 
                       //zcomp->Draw("AP");
 
