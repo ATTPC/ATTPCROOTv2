@@ -390,8 +390,11 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
                     parameter[7]=fIniHitID;
 
 
+                    Double_t HoughAngleDeg = fHoughLinePar.first*180.0/TMath::Pi();
 
+                    std::cout<<" Hough Angle "<<HoughAngleDeg<<std::endl;
 
+                if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) {
 
                    min->Minimize(parameter,event);
                    fPosXmin = min->GetPosXMin();
@@ -411,6 +414,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
                    ATHoughSpaceCircle::FitParameters.sBMin     = min->FitParameters.sBMin;
                    ATHoughSpaceCircle::FitParameters.sPhiMin   = min->FitParameters.sPhiMin;
                    ATHoughSpaceCircle::FitParameters.sChi2Min   = min->FitParameters.sChi2Min;
+                 }
                    delete min;
 
 

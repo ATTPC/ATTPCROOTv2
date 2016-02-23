@@ -673,6 +673,7 @@ ATEventDrawTask::DrawHSpace()
                     }
 
 
+
                     std::cout<<cYELLOW<<"  = Initial conditions for MC : "<<std::endl;
                     std::cout<<"  Theta          : "<<fHoughSpaceCircle_buff->GetIniTheta()*180/TMath::Pi()<<std::endl;
                     std::cout<<"  Phi            : "<<fHoughSpaceCircle_buff->GetIniPhi()*180/TMath::Pi()<<std::endl;
@@ -1277,8 +1278,23 @@ ATEventDrawTask::UpdateCvsQuadrants()
 void
 ATEventDrawTask::UpdateCvsMC()
 {
+  fMC_XY_exp->GetXaxis()->SetRangeUser(-300.0,300);
+  fMC_XY_exp->GetYaxis()->SetRangeUser(-300.0,300);
+  fMC_XY->GetXaxis()->SetRangeUser(-300.0,300);
+  fMC_XY->GetYaxis()->SetRangeUser(-300.0,300);
+  fMC_XY_int->GetXaxis()->SetRangeUser(-300.0,300);
+  fMC_XY_int->GetYaxis()->SetRangeUser(-300.0,300);
   fCvsMC_XY->Modified();
   fCvsMC_XY->Update();
+
+  fMC_ZX_int->GetXaxis()->SetRangeUser(0,1000);
+  fMC_ZX_int->GetYaxis()->SetRangeUser(-300.0,300);
+  fMC_ZY_int->GetXaxis()->SetRangeUser(0,1000);
+  fMC_ZY_int->GetYaxis()->SetRangeUser(-300.0,300);
+  fMC_ZX->GetXaxis()->SetRangeUser(0,1000);
+  fMC_ZX->GetYaxis()->SetRangeUser(-300.0,300);
+  fMC_ZY->GetXaxis()->SetRangeUser(0,1000);
+  fMC_ZY->GetYaxis()->SetRangeUser(-300.0,300);
   fCvsMC_Z->Modified();
   fCvsMC_Z->Update();
 }
