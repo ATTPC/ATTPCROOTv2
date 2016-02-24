@@ -53,8 +53,8 @@ ATMCMinimization::ATMCMinimization()
   fZk= 1000.0; //Position of the micromegas
 
 
-  fThetaPad = -108.7*TMath::Pi()/180.0;
-  fThetaRot = -9.5*TMath::Pi()/180.0;
+  fThetaPad = 113.7*TMath::Pi()/180.0;
+  fThetaRot = 13.0*TMath::Pi()/180.0;
 
   //fEntTB = 280;
 
@@ -162,7 +162,9 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         Double_t TBmin = parameter[3]*dzstep; // Absolute TB to compare between exp and sim
                         //Double_t phi0= (TMath::Pi()-5.0*TMath::Pi())-parameter[4]- fThetaPad; //RADIANS
                         //Double_t phi0=parameter[4]+fThetaPad-10.0*TMath::Pi(); //RADIANS
-                        Double_t phi0=TMath::Pi()-parameter[4]-110*TMath::Pi()/180.0;
+                        Double_t phi0=TMath::Pi()-parameter[4]-115*TMath::Pi()/180.0;
+
+                        //Double_t phi0=parameter[4];
 
                         Double_t bro=parameter[5]*B0/1000.0;// !Tm*/
                         Double_t theta0=parameter[6];
@@ -324,6 +326,10 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            //zcmm[iterd] = -z*10. + 2*zmin*10.0;
                                                           // iterd0++;
 
+                                                        /*  xcmm[iterd] = 0.0;
+                                                          ycmm[iterd] = 0.0;
+                                                          zcmm[iterd] = k*1.0;*/
+
 
                                                           // if(iterd0!=iterd){
                                                            /*xiter.push_back(x*10);
@@ -347,9 +353,10 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            zpad[iterd] = zdet[iterd];
                                                            //zpad[iterd] = -zdet[iterd] + 2*zmin*10.0;*/
 
-                                                            //if(k==0) std::cout<<" zcmm : "<<zcmm[iterd]<<"  2*zmin*10.0  : "<<2*zmin_trans*10.0<<std::endl;
+                                                            //std::cout<<" k : "<<k<<std::endl;
+                                                            //std::cout<<" zcmm : "<<zcmm[iterd]<<"  2*zmin*10.0  : "<<2*zmin_trans*10.0<<std::endl;
                                                             zcmm[iterd] = -zcmm[iterd]+ 2*zmin_trans*10.0;
-                                                          //  if(k==0) std::cout<<" zcmm : "<<zcmm[iterd]<<"  2*zmin*10.0  : "<<2*zmin_trans*10.0<<std::endl;
+                                                            //std::cout<<" zcmm : "<<zcmm[iterd]<<"  2*zmin*10.0  : "<<2*zmin_trans*10.0<<std::endl;
                                                             xsol[iterd]=xcmm[iterd]-zcmm[iterd]*TMath::Sin(thetaLorentz)*TMath::Sin(thetaRot);
                                                             ysol[iterd]=ycmm[iterd]+zcmm[iterd]*TMath::Sin(thetaLorentz)*TMath::Cos(thetaRot);
                                                             zsol[iterd]=zcmm[iterd];
@@ -358,8 +365,8 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                             ydet[iterd] = -(fZk-zsol[iterd])*TMath::Sin(thetaTilt) + ysol[iterd]*TMath::Cos(thetaTilt);
                                                             zdet[iterd] = zsol[iterd]*TMath::Cos(thetaTilt) + ysol[iterd]*TMath::Sin(thetaTilt);
 
-                                                            xpad[iterd] = xdet[iterd]*TMath::Cos(thetaPad) + ydet[iterd]*TMath::Sin(thetaPad);
-                                                            ypad[iterd] = -xdet[iterd]*TMath::Sin(thetaPad) + ydet[iterd]*TMath::Cos(thetaPad);
+                                                            xpad[iterd] = xdet[iterd]*TMath::Cos(thetaPad) - ydet[iterd]*TMath::Sin(thetaPad);
+                                                            ypad[iterd] = xdet[iterd]*TMath::Sin(thetaPad) + ydet[iterd]*TMath::Cos(thetaPad);
                                                             zpad[iterd] = zdet[iterd];
                                                             //zpad[iterd] = -zdet[iterd]+ 2*zmin*10.0;
 
@@ -893,8 +900,8 @@ TVector3 ATMCMinimization::TransformIniPos(Double_t x,Double_t y, Double_t z)
 
    TVector3 PosIniCmm;
 
-   Double_t x_det = x*TMath::Cos(fThetaPad)  - y*TMath::Sin(fThetaPad);
-   Double_t y_det = x*TMath::Sin(fThetaPad) + y*TMath::Cos(fThetaPad);
+   Double_t x_det = x*TMath::Cos(fThetaPad)  + y*TMath::Sin(fThetaPad);
+   Double_t y_det = -x*TMath::Sin(fThetaPad) + y*TMath::Cos(fThetaPad);
    Double_t z_det = z;
 
    Double_t x_sol = x_det;
@@ -941,8 +948,8 @@ TVector3 ATMCMinimization::InvTransIniPos(Double_t x,Double_t y, Double_t z)
   Double_t ydet = -(fZk/10.0-zsol)*TMath::Sin(fTiltAng) + ysol*TMath::Cos(fTiltAng);
   Double_t zdet = zsol*TMath::Cos(fTiltAng) + ysol*TMath::Sin(fTiltAng);
 
-  Double_t xpad = xdet*TMath::Cos(fThetaPad) + ydet*TMath::Sin(fThetaPad);
-  Double_t ypad = -xdet*TMath::Sin(fThetaPad) + ydet*TMath::Cos(fThetaPad);
+  Double_t xpad = xdet*TMath::Cos(fThetaPad) - ydet*TMath::Sin(fThetaPad);
+  Double_t ypad = xdet*TMath::Sin(fThetaPad) + ydet*TMath::Cos(fThetaPad);
   Double_t zpad = zdet;
 
   InvPosIni.SetXYZ(xpad,ypad,zpad);
