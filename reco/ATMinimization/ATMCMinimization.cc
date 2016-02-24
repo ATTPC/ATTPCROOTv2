@@ -54,7 +54,7 @@ ATMCMinimization::ATMCMinimization()
 
 
   fThetaPad = 113.7*TMath::Pi()/180.0;
-  fThetaRot = 13.0*TMath::Pi()/180.0;
+  fThetaRot = -13.0*TMath::Pi()/180.0;
 
   //fEntTB = 280;
 
@@ -96,9 +96,9 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
               //TH2F *htest = new TH2F("htest","htest",1000,0,2000,1000,0,2000);
 
-                TGraph *ang_vs_step = new TGraph();
+               /*TGraph *ang_vs_step = new TGraph();
                TGraph *ang_vs_step_sim = new TGraph();
-                TGraph *zcomp = new TGraph();
+                TGraph *zcomp = new TGraph();*/
 
                         std::vector<Double_t> xc;
                         std::vector<Double_t> xiter;
@@ -212,7 +212,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                             Float_t step4=0.3*factstep;//!x0 in cm
                             Float_t step5=0.3*factstep;// !y0
                             Float_t step6=0.5*factstep;//!z0
-                            Float_t step7=0.0*factstep;//B
+                            Float_t step7=0.1*factstep;//B
                             Float_t step8=0.0*factstep;//Density
 
 
@@ -269,10 +269,8 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                         /*TVector3 InvPosIni = InvTransIniPos(x,y,z); //Arguments in cm
                                         x=InvPosIni.X();
                                         y=InvPosIni.Y();
-                                        z=InvPosIni.Z();*/
-                                        ////////////////////////////////
-
-                                        //std::cout<<" Xt "<<x<<" Yt "<<y<<" Zt "<<z<<std::endl;
+                                        z=InvPosIni.Z();
+                                        std::cout<<" Xt "<<x<<" Yt "<<y<<" Zt "<<z<<std::endl;*/
                                        /////////////////////////////////////////////////
 
                                         Double_t  x0=x;
@@ -290,7 +288,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                     Double_t dydt=v0*TMath::Sin(theta0)*TMath::Sin(phi0);
                                                     Double_t dzdt=v0*TMath::Cos(theta0);
                                                     Double_t iprinttr=1000;
-                                                    Double_t dens=0.06363*22*(1+step8*(gRandom->Rndm()-0.5))/20.;//  !DENSITY ISOBUTANE AT 20 TORR corrected 18 torr
+                                                    Double_t dens=0.06363*18*(1+step8*(gRandom->Rndm()-0.5))/20.;//  !DENSITY ISOBUTANE AT 20 TORR corrected 18 torr
                                                     Double_t iterationmax=10000;
                                                     ipr=0;
 
@@ -307,7 +305,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                      TVector3* posang_forw=new TVector3();*/
                                                      //TVector3* posang_buff=new TVector3();
 
-                                                     TGraph *simangle = new TGraph();
+                                                     //TGraph *simangle = new TGraph();
 
                                                      Int_t icnb;
 
@@ -363,7 +361,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                                                             xdet[iterd] = xsol[iterd];
                                                             ydet[iterd] = -(fZk-zsol[iterd])*TMath::Sin(thetaTilt) + ysol[iterd]*TMath::Cos(thetaTilt);
-                                                            zdet[iterd] = zsol[iterd]*TMath::Cos(thetaTilt) + ysol[iterd]*TMath::Sin(thetaTilt);
+                                                            zdet[iterd] = zsol[iterd]*TMath::Cos(thetaTilt) - ysol[iterd]*TMath::Sin(thetaTilt);
 
                                                             xpad[iterd] = xdet[iterd]*TMath::Cos(thetaPad) - ydet[iterd]*TMath::Sin(thetaPad);
                                                             ypad[iterd] = xdet[iterd]*TMath::Sin(thetaPad) + ydet[iterd]*TMath::Cos(thetaPad);
@@ -520,11 +518,11 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                   //  std::cout<<cGREEN<<" Lenght of the simulated data : "<<iteration<<cNORMAL<<std::endl;
                                                   //  std::cout<<cGREEN<<" imaxchi2 : "<<imaxchi2<<cNORMAL<<std::endl;
 
-                                                   TVector3* posang=new TVector3();
+                                                   /*TVector3* posang=new TVector3();
                                                    TVector3* posang_forw=new TVector3();
 
                                                    TVector3* posang_sim=new TVector3();
-                                                   TVector3* posang_forw_sim=new TVector3();
+                                                   TVector3* posang_forw_sim=new TVector3();*/
 
 
                                                   //htest->Draw("col");
@@ -641,7 +639,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
 
 
-                                                           posang_forw->SetXYZ(posx,posy,posz);
+                                                          /* posang_forw->SetXYZ(posx,posy,posz);
                                                            Double_t ang = GetSimThetaAngle(posang,posang_forw);
                                                            posang->SetXYZ(posx,posy,posz);
 
@@ -651,7 +649,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
 
                                                            ang_vs_step->SetPoint(ang_vs_step->GetN(),iChi,ang);
-                                                           ang_vs_step_sim->SetPoint(ang_vs_step_sim->GetN(),iChi,ang_sim);
+                                                           ang_vs_step_sim->SetPoint(ang_vs_step_sim->GetN(),iChi,ang_sim);*/
 
 
 
@@ -905,7 +903,7 @@ TVector3 ATMCMinimization::TransformIniPos(Double_t x,Double_t y, Double_t z)
    Double_t z_det = z;
 
    Double_t x_sol = x_det;
-   Double_t z_sol = ( z_det*TMath::Cos(fTiltAng) - y_det*TMath::Sin(fTiltAng) - fZk/10.0*TMath::Power(TMath::Sin(fTiltAng),2) ) / TMath::Cos(2*fTiltAng);
+   Double_t z_sol = ( z_det*TMath::Cos(fTiltAng) + y_det*TMath::Sin(fTiltAng) + fZk/10.0*TMath::Power(TMath::Sin(fTiltAng),2) ) ;
    Double_t y_sol = ( y_det + (fZk/10.0-z_sol)*TMath::Sin(fTiltAng) )/ TMath::Cos(fTiltAng);
 
    Double_t z_cmm = z_sol;
@@ -946,7 +944,7 @@ TVector3 ATMCMinimization::InvTransIniPos(Double_t x,Double_t y, Double_t z)
 
   Double_t xdet = xsol;
   Double_t ydet = -(fZk/10.0-zsol)*TMath::Sin(fTiltAng) + ysol*TMath::Cos(fTiltAng);
-  Double_t zdet = zsol*TMath::Cos(fTiltAng) + ysol*TMath::Sin(fTiltAng);
+  Double_t zdet = zsol*TMath::Cos(fTiltAng) - ysol*TMath::Sin(fTiltAng);
 
   Double_t xpad = xdet*TMath::Cos(fThetaPad) - ydet*TMath::Sin(fThetaPad);
   Double_t ypad = xdet*TMath::Sin(fThetaPad) + ydet*TMath::Cos(fThetaPad);
