@@ -16,6 +16,8 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
+#include <iostream>
+
 ClassImp(ATMCMinimization)
 
 ATMCMinimization::ATMCMinimization()
@@ -128,9 +130,13 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                        Double_t ypad[10000]={0};
                        Double_t zpad[10000]={0};
 
-                       Double_t xTBCorr[10000]={-10000};
-                       Double_t yTBCorr[10000]={-10000};
-                       Double_t zTBCorr[10000]={-10000};
+                       Double_t xTBCorr[10000];
+                       Double_t yTBCorr[10000];
+                       Double_t zTBCorr[10000];
+
+                       std::fill_n(xTBCorr,10000, -10000);
+                       std::fill_n(yTBCorr,10000, -10000);
+                       std::fill_n(zTBCorr,10000, -10000);
 
 
                         //TODO: Pass these paramters with the fPar pointer
@@ -201,7 +207,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                   if(parameter[7]<500){
 
 
-                        for(Int_t i=0;i<10;i++)
+                        for(Int_t i=0;i<20;i++)
                         {
 
 
@@ -209,11 +215,11 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                             Float_t step1=2*factstep;// !theta in deg
                             Float_t step2=2*factstep;//  !phi in deg
                             Float_t step3=0.2*factstep;//! broradius in realtive vaue
-                            Float_t step4=0.3*factstep;//!x0 in cm
-                            Float_t step5=0.3*factstep;// !y0
+                            Float_t step4=0.6*factstep;//!x0 in cm
+                            Float_t step5=0.6*factstep;// !y0
                             Float_t step6=0.5*factstep;//!z0
                             Float_t step7=0.1*factstep;//B
-                            Float_t step8=0.0*factstep;//Density
+                            Float_t step8=0.1*factstep;//Density
 
 
                             for(Int_t j=0;j<400;j++) //MC
@@ -288,7 +294,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                     Double_t dydt=v0*TMath::Sin(theta0)*TMath::Sin(phi0);
                                                     Double_t dzdt=v0*TMath::Cos(theta0);
                                                     Double_t iprinttr=1000;
-                                                    Double_t dens=0.06363*18*(1+step8*(gRandom->Rndm()-0.5))/20.;//  !DENSITY ISOBUTANE AT 20 TORR corrected 18 torr
+                                                    Double_t dens=0.06363*20*(1+step8*(gRandom->Rndm()-0.5))/20.;//  !DENSITY ISOBUTANE AT 20 TORR corrected 18 torr
                                                     Double_t iterationmax=10000;
                                                     ipr=0;
 
@@ -401,11 +407,11 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            //////////////////////////////////////
 
 
-                                                          //if(iterCorrNorm!=icnb){
+                                                        //  if(iterCorrNorm!=icnb){
                                                            xiter.push_back(xTBCorr[iterCorrNorm]);
                                                            yiter.push_back(yTBCorr[iterCorrNorm]);
                                                            ziter.push_back(zTBCorr[iterCorrNorm]);
-                                                        // }
+                                                      //    }
                                                           icnb=iterCorrNorm;
 
                                                            //////////////////////////////////////
@@ -442,7 +448,8 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            if(iz1==1){
                                                               c0=ekin;
                                                               if(m==2) c0=c0/2.0;
-                                                              sloss=6.98*(1./TMath::Power(c0,0.83))*(1./(20.+1.6/TMath::Power(c0,1.3)))+0.2*TMath::Exp(-30.*TMath::Power((c0-0.1),2));
+                                                              //sloss=6.98*(1./TMath::Power(c0,0.83))*(1./(20.+1.6/TMath::Power(c0,1.3)))+0.2*TMath::Exp(-30.*TMath::Power((c0-0.1),2)); //Old expression
+                                                              sloss = 0.3*TMath::Power((1./c0),0.78)*(1./(1.+0.023/TMath::Power(c0,1.37)));
                                                            }
                                                            if(iz1==6){
                                                               c0=ekin/6.;
@@ -497,13 +504,30 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                                                     //simangle->Draw("AP");
 
-                                                    //Chi Square Calculation
+                                                    Int_t numIntPoints=0;
+                                                    for(Int_t iexp=0;iexp<parameter[3];iexp++){
+                                                    std::vector<ATHit> hitTBArray;
+                                                    hitTBArray=GetTBHitArray(parameter[3]-iexp,fHitArray);
+                                                    if(hitTBArray.size()>0) numIntPoints++;
+                                                    }
 
-                                                    Int_t imaxchi2=std::max(iterCorrNorm,(Int_t)parameter[7]); //NEW
+
+                                                    //CHI SQUARE CALCULATION
+                                                    Int_t iterh = (Int_t)(iteration/integrationsteps);
+
+                                                    Int_t imaxchi2=std::max(iterh,numIntPoints); //NEW
+                                                    if(kDebug){
+                                                       std::cout<<cRED<<" Imaxchi2 : "<<imaxchi2<<std::endl;
+                                                       std::cout<<" iterCorrNorm : "<<iterCorrNorm<<std::endl;
+                                                       std::cout<<" iterh : "<<iterh<<std::endl;
+                                                       std::cout<<" parameter[7] : "<<parameter[7]<<std::endl;
+                                                       std::cout<<" Num of interpolated exp points : "<<numIntPoints<<cNORMAL<<std::endl;
+                                                     }
                                                     //Int_t imaxchi2=std::max(iteration,(Int_t)parameter[7]);
-                                                    Double_t sigma2 = 9.0;  //!error in mm2
+                                                    Double_t sigma2 = 36.0;  //!error in mm2
                                                     Double_t chi2   = 0.0;
                                                     Bool_t kIsExp   = kTRUE;
+                                                    Bool_t kIsSim   = kTRUE;
 
                                                       //NB : imaxchi2 must be limited
 
@@ -527,9 +551,19 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                                                   //htest->Draw("col");
 
+                                                  Double_t xposbuff[imaxchi2];
+                                                  Double_t yposbuff[imaxchi2];
+                                                  Double_t zposbuff[imaxchi2];
+                                                  Double_t xTBbuff[imaxchi2];
+                                                  Double_t yTBbuff[imaxchi2];
+                                                  Double_t zTBbuff[imaxchi2];
+                                                  Double_t chi2buff[imaxchi2]={0.0};
+                                                  Int_t TBShadow[imaxchi2];
 
 
                                                    for(Int_t iChi=0;iChi<imaxchi2;iChi++){
+
+
 
                                                       std::vector<ATHit> hitTBArray;
                                                       hitTBArray=GetTBHitArray(parameter[3]-iChi,fHitArray); // Seach for Hits with the same TB
@@ -547,15 +581,19 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                           //Vector index: 0,1,2,3 ....
 
                                                           // TO compare Sim and Exp uncomment this
+
                                                         if(kDebug){
+                                                        std::cout<<cRED<<"  ------------------------------------------------------------------------------------------- "<<cNORMAL<<std::endl;
                                                         std::cout<<" Array : "<<iChi<<" X_Sim : "<<xcmm[iChi]<<" Y_Sim : "<<ycmm[iChi]<<" Z_Sim : "<<zcmm[iChi]<<" TB Sim"<<floor(zcmm[iChi]/dzstep/10)<<std::endl;
-                                                        std::cout<<" Array Corr: "<<iChi<<" X_Sim_Corr : "<<xTBCorr[iChi]<<" Y_Sim_Corr : "<<yTBCorr[iChi]<<" Z_Sim_Corr : "<<zTBCorr[iChi]<<std::endl;
+                                                        std::cout<<cGREEN<<" Array Corr: "<<iChi<<" X_Sim_Corr : "<<xTBCorr[iChi]<<" Y_Sim_Corr : "<<yTBCorr[iChi]<<" Z_Sim_Corr : "<<zTBCorr[iChi]<<cNORMAL<<std::endl;
                                                         std::cout<<" Real Time bucket : "<<parameter[3]+iChi<<std::endl;
-                                                        std::cout<<" Corrected TIme Bucket : "<<(zcmm[iChi]/10 - 100)/dzstep + fEntTB <<std::endl;
+                                                        //std::cout<<" Corrected TIme Bucket : "<<(zcmm[iChi]/10 - 100)/dzstep + fEntTB <<std::endl;
                                                         //std::cout<<iChi<<" X_exp : "<<position.X()<<" Y_exp : "<<position.Y()<<" Hit TS : "<<parameter[3]-HitTS<<std::endl;
                                                         std::cout<<" Number of hits with same TB : "<<hitTBArray.size()<<std::endl;
                                                         std::cout<<" Experimental TB "<<parameter[3]-iChi<<std::endl;
                                                         }
+
+                                                        if(xTBCorr[iChi]==(Double_t)-10000) kIsSim=kFALSE;
 
 
                     //std::cout<<" Experimental Time Bucket : "<<parameter[3]-iChi<<"  Simulated Time Bucket : "<<round( (zcmm[iChi]- fZk/10)/dzstep + parameter[3] )<<std::endl;
@@ -600,7 +638,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                                   //numHitsDist++;
 
                                                                 // TO compare Sim and Exp uncomment this
-                                                                if(kDebug) std::cout<<iChi<<" X_exp : "<<positionTB.X()<<" Y_exp : "<<positionTB.Y()<<" Hit TS : "<<hitTB.GetTimeStamp()<<std::endl;
+                                                                if(kDebug) std::cout<<iChi<<" X_exp : "<<positionTB.X()<<" Y_exp : "<<positionTB.Y()<<" Z_exp : "<<posz<<" Hit TS : "<<hitTB.GetTimeStamp()<<std::endl;
 
                                                               }// Loop over hits with same TB
 
@@ -614,7 +652,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                               //posy/=numHitsDist;
                                                               kIsExp=kTRUE;
                                                                 // TO compare Sim and Exp uncomment this
-                                                              if(kDebug) std::cout<<" Average X : "<<posx<<" Average Y : "<<posy<<std::endl;
+                                                              if(kDebug) std::cout<<cGREEN<<" Average X : "<<posx<<" Average Y : "<<posy<<" Average Z : "<<posz<<cNORMAL<<std::endl;
 
                                                            }else if(hitTBArray.size()==0){
                                                                posx=0.0;
@@ -637,7 +675,13 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                           Double_t diffx= posx-xTBCorr[iChi];
                                                           Double_t diffy= posy-yTBCorr[iChi];
 
-
+                                                          xposbuff[iChi]=posx;
+                                                          yposbuff[iChi]=posy;
+                                                          zposbuff[iChi]=posz;
+                                                          xTBbuff[iChi]=xTBCorr[iChi];
+                                                          yTBbuff[iChi]=yTBCorr[iChi];
+                                                          zTBbuff[iChi]=zTBCorr[iChi];
+                                                          TBShadow[iChi]=TB;
 
                                                           /* posang_forw->SetXYZ(posx,posy,posz);
                                                            Double_t ang = GetSimThetaAngle(posang,posang_forw);
@@ -666,6 +710,9 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                             Double_t chi2_buff = ( TMath::Power(diffx,2) + TMath::Power(diffy,2) )/sigma2;
                                                             if(chi2_buff>100.0) chi2+=100.0;
                                                             else chi2+=chi2_buff;
+                                                            chi2buff[iChi]=chi2_buff;
+                                                            if(kDebug) std::cout<<" Point chi Square : "<<chi2_buff<<" for Experimental Time bucket : "<<parameter[3]-iChi<<std::endl;
+                                                            if(kDebug) std::cout<<" Total chi Square : "<<chi2<<std::endl;
                                                             fPosXinter=xinter;
                                                             fPosYinter=yinter;
                                                             fPosZinter=zinter;
@@ -673,6 +720,10 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
 
                                                           }
+
+                                                          if(kDebug && !kIsSim) std::cout<<cRED<<" Point without simulated value! "<<cNORMAL<<std::endl;
+                                                          if(kDebug && !kIsExp) std::cout<<cRED<<" Point without experimental value! "<<cNORMAL<<std::endl;
+                                                          if(kDebug) std::cout<<cRED<<"  ------------------------------------------------------------------------------------------- "<<cNORMAL<<std::endl;
 
 
 
@@ -700,8 +751,17 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                      FitParameters.sPhiMin=phi0;
                                                      FitParameters.sChi2Min=chi2min;
 
-                                                     //std::cout<<" New Min chi2 : "<<chi2min<<" Entrance TB : "<<fEntTB<<std::endl;
+                                                     std::cout<<" New Min chi2 : "<<chi2min<<" for MC iteration : "<<j<<" of the step "<<i<<std::endl;
 
+                                                          std::ofstream dumpIter;
+                                                          dumpIter.open ("eventChi.dat");
+                                                          for(Int_t idat=0;idat<imaxchi2;idat++){
+                                                          dumpIter<<" ----------- "<<std::endl;
+                                                          dumpIter<<" Time Bucket : "<<TBShadow[idat]<<std::endl;
+                                                          dumpIter<<xposbuff[idat]<<" "<<yposbuff[idat]<<" "<<zposbuff[idat]<<std::endl;
+                                                          dumpIter<<xTBbuff[idat]<<" "<<yTBbuff[idat]<<" "<<zTBbuff[idat]<<std::endl;
+                                                          dumpIter<<" Chi2 : "<<chi2buff[idat]<<std::endl;
+                                                          }
 
 
                                                    }
