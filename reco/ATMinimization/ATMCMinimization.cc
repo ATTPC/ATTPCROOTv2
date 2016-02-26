@@ -173,7 +173,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         //Double_t phi0=parameter[4];
 
                         Double_t bro=parameter[5]*B0/1000.0;// !Tm*/
-                        Double_t theta0=parameter[6];
+                         Double_t theta0=parameter[6];
                         ////////////////////////////////////////////
 
                         Double_t phimin=phi0;
@@ -186,11 +186,13 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         std::cout<<std::endl;
                         std::cout<<cGREEN<<" ============================"<<std::endl;
                         std::cout<<" Starting Monte Carlo event  "<<std::endl;
+                        std::cout<<" X : "<<xmin<<" cm  - Y : "<<ymin<<" cm - Z : "<<zmin<<" cm "<<std::endl;
                         std::cout<<" Brho : "<<bro<<" Tm "<<std::endl;
                         std::cout<<" Radius of curvature : "<<parameter[5]<<" mm "<<std::endl;
                         std::cout<<" Scattering Angle : "<<theta0*180.0/TMath::Pi()<<" deg "<<std::endl;
                         std::cout<<" Azimutal Angle : "<<phi0*180.0/TMath::Pi()<<" deg "<<std::endl;
                         std::cout<<" Lenght of the experimental data : "<<parameter[7]<<cNORMAL<<std::endl;
+
 
                         fHitArray = event->GetHitArray();
 
@@ -207,7 +209,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                   if(parameter[7]<500){
 
 
-                        for(Int_t i=0;i<20;i++)
+                        for(Int_t i=0;i<10;i++)
                         {
 
 
@@ -215,11 +217,11 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                             Float_t step1=2*factstep;// !theta in deg
                             Float_t step2=2*factstep;//  !phi in deg
                             Float_t step3=0.2*factstep;//! broradius in realtive vaue
-                            Float_t step4=0.6*factstep;//!x0 in cm
-                            Float_t step5=0.6*factstep;// !y0
+                            Float_t step4=0.3*factstep;//!x0 in cm
+                            Float_t step5=0.3*factstep;// !y0
                             Float_t step6=0.5*factstep;//!z0
                             Float_t step7=0.1*factstep;//B
-                            Float_t step8=0.1*factstep;//Density
+                            Float_t step8=0.0*factstep;//Density
 
 
                             for(Int_t j=0;j<400;j++) //MC
@@ -259,9 +261,12 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                               //        define initial conditions
 
                               //         Transform initial parameters into lab
-                                        Double_t  x = xmin + step4*(gRandom->Rndm()-0.5); // ! ztb=394
-                                        Double_t  y = ymin + step5*(gRandom->Rndm()-0.5);
-                                        Double_t  z = zmin + step6*(gRandom->Rndm()-0.5);
+                              Double_t  x = xmin + step4*(gRandom->Rndm()-0.5); // ! ztb=394
+                              Double_t  y = ymin + step5*(gRandom->Rndm()-0.5);
+                              Double_t  z = zmin + step6*(gRandom->Rndm()-0.5);
+                              Double_t x_buff =x;
+                              Double_t y_buff =y;
+                              Double_t z_buff =z;
 
                                         //std::cout<<" Xini "<<x<<" Yini "<<y<<" Zini "<<z<<std::endl;
 
@@ -294,7 +299,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                     Double_t dydt=v0*TMath::Sin(theta0)*TMath::Sin(phi0);
                                                     Double_t dzdt=v0*TMath::Cos(theta0);
                                                     Double_t iprinttr=1000;
-                                                    Double_t dens=0.06363*20*(1+step8*(gRandom->Rndm()-0.5))/20.;//  !DENSITY ISOBUTANE AT 20 TORR corrected 18 torr
+                                                    Double_t dens=0.06363*18*(1+step8*(gRandom->Rndm()-0.5))/20.;//  !DENSITY ISOBUTANE AT 20 TORR corrected 18 torr
                                                     Double_t iterationmax=10000;
                                                     ipr=0;
 
@@ -448,8 +453,8 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            if(iz1==1){
                                                               c0=ekin;
                                                               if(m==2) c0=c0/2.0;
-                                                              //sloss=6.98*(1./TMath::Power(c0,0.83))*(1./(20.+1.6/TMath::Power(c0,1.3)))+0.2*TMath::Exp(-30.*TMath::Power((c0-0.1),2)); //Old expression
-                                                              sloss = 0.3*TMath::Power((1./c0),0.78)*(1./(1.+0.023/TMath::Power(c0,1.37)));
+                                                              sloss=6.98*(1./TMath::Power(c0,0.83))*(1./(20.+1.6/TMath::Power(c0,1.3)))+0.2*TMath::Exp(-30.*TMath::Power((c0-0.1),2)); //Old expression
+                                                              //sloss = 0.3*TMath::Power((1./c0),0.78)*(1./(1.+0.023/TMath::Power(c0,1.37)));
                                                            }
                                                            if(iz1==6){
                                                               c0=ekin/6.;
@@ -494,7 +499,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                                 //	if(z.gt.ztot) go to 100
                                                                 if(zTBCorr[iterCorrNorm]<0.0) break;
                                                                 //std::cout<<" Ekin : "<<ekin<<std::endl;
-                                                                if(ekin<0.001 || isnan(ekin)) break;
+                                                                if(ekin<0.01 || isnan(ekin)) break;
                                                                 //if(ekin<0) std::cout<<" Ekin "<<std::endl;
 
 
@@ -515,7 +520,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                     //CHI SQUARE CALCULATION
                                                     Int_t iterh = (Int_t)(iteration/integrationsteps);
 
-                                                    Int_t imaxchi2=std::max(iterh,numIntPoints); //NEW
+                                                    Int_t imaxchi2=std::max(iterCorrNorm,(Int_t) parameter[7]); //NEW
                                                     if(kDebug){
                                                        std::cout<<cRED<<" Imaxchi2 : "<<imaxchi2<<std::endl;
                                                        std::cout<<" iterCorrNorm : "<<iterCorrNorm<<std::endl;
@@ -594,6 +599,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                         }
 
                                                         if(xTBCorr[iChi]==(Double_t)-10000) kIsSim=kFALSE;
+                                                        else kIsSim=kTRUE;
 
 
                     //std::cout<<" Experimental Time Bucket : "<<parameter[3]-iChi<<"  Simulated Time Bucket : "<<round( (zcmm[iChi]- fZk/10)/dzstep + parameter[3] )<<std::endl;
@@ -743,6 +749,17 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                      fBMin=B;
                                                      fPhiMin=phi0;
 
+                                                     bromin=bro;
+                                                     thetamin=theta0;
+                                                     Bmin=B;
+                                                     phimin=phi0;
+                                                     /*std::cout<<" xmin : "<<x<<std::endl;
+                                                     std::cout<<" ymin : "<<y<<std::endl;
+                                                     std::cout<<" zmin : "<<z<<std::endl;*/
+                                                     /*xmin=x_buff;
+                                                     ymin=y_buff;
+                                                     zmin=z_buff;*/
+
                                                      FitParameters.sThetaMin = theta0;
                                                      FitParameters.sEnerMin=e0sm;
                                                      FitParameters.sPosMin.SetXYZ(x,y,z);
@@ -753,7 +770,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                                                      std::cout<<" New Min chi2 : "<<chi2min<<" for MC iteration : "<<j<<" of the step "<<i<<std::endl;
 
-                                                          std::ofstream dumpIter;
+                                                      /*    std::ofstream dumpIter;
                                                           dumpIter.open ("eventChi.dat");
                                                           for(Int_t idat=0;idat<imaxchi2;idat++){
                                                           dumpIter<<" ----------- "<<std::endl;
@@ -761,7 +778,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                           dumpIter<<xposbuff[idat]<<" "<<yposbuff[idat]<<" "<<zposbuff[idat]<<std::endl;
                                                           dumpIter<<xTBbuff[idat]<<" "<<yTBbuff[idat]<<" "<<zTBbuff[idat]<<std::endl;
                                                           dumpIter<<" Chi2 : "<<chi2buff[idat]<<std::endl;
-                                                          }
+                                                        }*/
 
 
                                                    }
