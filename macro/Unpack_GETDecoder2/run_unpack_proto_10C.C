@@ -79,8 +79,8 @@ void run_unpack_proto_10C(TString dataFile = "run_ND082015_0190.txt",TString par
 
    run->Init();
 
-   //run->Run(0,10000000);
-	 run -> RunOnTBData();
+   run->Run(0,10000000);
+	 //run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------
 	timer.Stop();

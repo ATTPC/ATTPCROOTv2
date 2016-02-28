@@ -47,6 +47,9 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         std::vector<Double_t> GetPosXInt() {return fPosXinter;}
         std::vector<Double_t> GetPosYInt() {return fPosYinter;}
         std::vector<Double_t> GetPosZInt() {return fPosZinter;}
+        std::vector<Double_t> GetPosXBack() {return fPosXBack;}
+        std::vector<Double_t> GetPosYBack() {return fPosYBack;}
+        std::vector<Double_t> GetPosZBack() {return fPosZBack;}
 
 
 
@@ -109,6 +112,9 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         std::vector<Double_t> fPosXinter;
         std::vector<Double_t> fPosYinter;
         std::vector<Double_t> fPosZinter;
+        std::vector<Double_t> fPosXBack;
+        std::vector<Double_t> fPosYBack;
+        std::vector<Double_t> fPosZBack;
 
 
 

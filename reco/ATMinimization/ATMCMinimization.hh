@@ -36,6 +36,9 @@ class ATMCMinimization : public ATMinimization{
         std::vector<Double_t> GetPosXInt();
         std::vector<Double_t> GetPosYInt();
         std::vector<Double_t> GetPosZInt();
+        std::vector<Double_t> GetPosXBack();
+        std::vector<Double_t> GetPosYBack();
+        std::vector<Double_t> GetPosZBack();
 
         std::vector<ATHit> GetTBHitArray(Int_t TB,std::vector<ATHit> *harray);
 
@@ -43,6 +46,7 @@ class ATMCMinimization : public ATMinimization{
       protected:
           void GetEnergy(Double_t M,Double_t IZ,Double_t BRO,Double_t &E);
           Double_t GetSimThetaAngle(TVector3* pos, TVector3* posforw);
+          void BackwardExtrapolation();
 
           Int_t GetTBHit(Int_t TB,std::vector<ATHit> *harray);
           TVector3 TransformIniPos(Double_t x,Double_t y, Double_t z); //Transforms initial position from Pad plane to Lab frame
@@ -57,6 +61,7 @@ class ATMCMinimization : public ATMinimization{
           Double_t fBrhoMin;
           Double_t fBMin;
           Double_t fPhiMin;
+          Double_t fDensMin;
           std::vector<Double_t> fPosXmin;
           std::vector<Double_t> fPosYmin;
           std::vector<Double_t> fPosZmin;
@@ -68,6 +73,10 @@ class ATMCMinimization : public ATMinimization{
           std::vector<Double_t> fPosYinter;
           std::vector<Double_t> fPosZinter;
           std::vector<Int_t>    fPosTBinter;
+
+          std::vector<Double_t> fPosXBack;
+          std::vector<Double_t> fPosYBack;
+          std::vector<Double_t> fPosZBack;
 
           std::vector<Double_t> fPosTBexp;
 
@@ -85,7 +94,17 @@ class ATMCMinimization : public ATMinimization{
 
           Bool_t kDebug;
 
-
+          //Global variables
+          Double_t sm1;
+          Double_t m;
+          Double_t dzstep;
+          Int_t    integrationsteps;
+          Double_t restmass;
+          Double_t esm;
+          Double_t iz1;
+          Double_t z1;
+          Double_t B0;
+          Double_t B;
 
 
 

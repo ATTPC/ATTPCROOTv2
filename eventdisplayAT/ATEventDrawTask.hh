@@ -209,11 +209,14 @@ class ATEventDrawTask : public FairTask
     TGraph* fMC_XY;
     TGraph* fMC_XY_exp;
     TGraph* fMC_XY_int;
+    TGraph* fMC_XY_back;
     TCanvas* fCvsMC_Z;
     TGraph* fMC_ZX;
     TGraph* fMC_ZX_int;
+    TGraph* fMC_ZX_back;
     TGraph* fMC_ZY;
     TGraph* fMC_ZY_int;
+    TGraph* fMC_ZY_back;
 
 
 

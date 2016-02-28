@@ -394,7 +394,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
 
                     std::cout<<" Hough Angle "<<HoughAngleDeg<<std::endl;
 
-                if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) {
+                if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) { // Check RxPhi plot to adjust the angle
 
                    min->Minimize(parameter,event);
                    fPosXmin = min->GetPosXMin();
@@ -406,6 +406,9 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
                    fPosXinter = min->GetPosXInt();
                    fPosYinter = min->GetPosYInt();
                    fPosZinter = min->GetPosZInt();
+                   fPosXBack = min->GetPosXBack();
+                   fPosYBack = min->GetPosYBack();
+                   fPosZBack = min->GetPosZBack();
                    ATHoughSpaceCircle::FitParameters.sThetaMin = min->FitParameters.sThetaMin;
                    ATHoughSpaceCircle::FitParameters.sThetaMin = min->FitParameters.sThetaMin;
                    ATHoughSpaceCircle::FitParameters.sEnerMin  = min->FitParameters.sEnerMin;

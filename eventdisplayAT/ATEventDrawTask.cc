@@ -614,6 +614,9 @@ ATEventDrawTask::DrawHSpace()
    fMC_XY_int->Set(0);
    fMC_ZX_int->Set(0);
    fMC_ZY_int->Set(0);
+   fMC_XY_back->Set(0);
+   fMC_ZX_back->Set(0);
+   fMC_ZY_back->Set(0);
    if(fEventManager->GetDrawHoughSpace()){
          if(fIsCircularHough){
                   fHoughSpace = fHoughSpaceCircle_buff->GetHoughSpace("XY");
@@ -652,6 +655,10 @@ ATEventDrawTask::DrawHSpace()
                     std::vector<Double_t> fPosYInt = fHoughSpaceCircle_buff->GetPosYInt();
                     std::vector<Double_t> fPosZInt = fHoughSpaceCircle_buff->GetPosZInt();
 
+                    std::vector<Double_t> fPosXBack = fHoughSpaceCircle_buff->GetPosXBack();
+                    std::vector<Double_t> fPosYBack = fHoughSpaceCircle_buff->GetPosYBack();
+                    std::vector<Double_t> fPosZBack = fHoughSpaceCircle_buff->GetPosZBack();
+
 
                    for(Int_t i=0;i<fPosXMin.size();i++){
                        fMC_XY->SetPoint(fMC_XY->GetN(),fPosXMin.at(i),fPosYMin.at(i));
@@ -669,6 +676,13 @@ ATEventDrawTask::DrawHSpace()
                            fMC_XY_int->SetPoint(fMC_XY_int->GetN(),fPosXInt.at(i),fPosYInt.at(i));
                            fMC_ZX_int->SetPoint(fMC_ZX_int->GetN(),fPosZInt.at(i),fPosXInt.at(i));
                            fMC_ZY_int->SetPoint(fMC_ZY_int->GetN(),fPosZInt.at(i),fPosYInt.at(i));
+
+                    }
+
+                    for(Int_t i=0;i<fPosXBack.size();i++){
+                           fMC_XY_back->SetPoint(fMC_XY_back->GetN(),fPosXBack.at(i),fPosYBack.at(i));
+                           fMC_ZX_back->SetPoint(fMC_ZX_back->GetN(),fPosZBack.at(i),fPosXBack.at(i));
+                           fMC_ZY_back->SetPoint(fMC_ZY_back->GetN(),fPosZBack.at(i),fPosYBack.at(i));
 
                     }
 
@@ -1083,6 +1097,13 @@ ATEventDrawTask::DrawMC()
                fMC_XY_int->SetMarkerColor(8);
                fMC_XY_int->Draw("P");
 
+               fMC_XY_back = new TGraph();
+               fMC_XY_back->SetPoint(1,0,0);
+               fMC_XY_back->SetMarkerStyle(22);
+               fMC_XY_back->SetMarkerSize(1.0);
+               fMC_XY_back->SetMarkerColor(6);
+               fMC_XY_back->Draw("P");
+
                fCvsMC_Z->cd();
 
                fMC_ZX_int = new TGraph();
@@ -1098,6 +1119,21 @@ ATEventDrawTask::DrawMC()
                fMC_ZY_int->SetMarkerSize(1.0);
                fMC_ZY_int->SetMarkerColor(kBlack);
                fMC_ZY_int->Draw("P");
+
+               fMC_ZX_back = new TGraph();
+               fMC_ZX_back->SetPoint(1,0,0);
+               fMC_ZX_back->SetMarkerStyle(22);
+               fMC_ZX_back->SetMarkerSize(1.0);
+               fMC_ZX_back->SetMarkerColor(6);
+               fMC_ZX_back->Draw("P");
+
+               fMC_ZY_back = new TGraph();
+               fMC_ZY_back->SetPoint(1,0,0);
+               fMC_ZY_back->SetMarkerStyle(22);
+               fMC_ZY_back->SetMarkerSize(1.0);
+               fMC_ZY_back->SetMarkerColor(6);
+               fMC_ZY_back->Draw("P");
+
 
                fMC_ZX = new TGraph();
                fMC_ZX->SetPoint(1,0,0);
@@ -1284,6 +1320,8 @@ ATEventDrawTask::UpdateCvsMC()
   fMC_XY->GetYaxis()->SetRangeUser(-300.0,300);
   fMC_XY_int->GetXaxis()->SetRangeUser(-300.0,300);
   fMC_XY_int->GetYaxis()->SetRangeUser(-300.0,300);
+  fMC_XY_back->GetXaxis()->SetRangeUser(-300.0,300);
+  fMC_XY_back->GetYaxis()->SetRangeUser(-300.0,300);
   fCvsMC_XY->Modified();
   fCvsMC_XY->Update();
 
@@ -1295,6 +1333,10 @@ ATEventDrawTask::UpdateCvsMC()
   fMC_ZX->GetYaxis()->SetRangeUser(-300.0,300);
   fMC_ZY->GetXaxis()->SetRangeUser(0,1000);
   fMC_ZY->GetYaxis()->SetRangeUser(-300.0,300);
+  fMC_ZX_back->GetXaxis()->SetRangeUser(0,1000);
+  fMC_ZX_back->GetYaxis()->SetRangeUser(-300.0,300);
+  fMC_ZY_back->GetXaxis()->SetRangeUser(0,1000);
+  fMC_ZY_back->GetYaxis()->SetRangeUser(-300.0,300);
   fCvsMC_Z->Modified();
   fCvsMC_Z->Update();
 }

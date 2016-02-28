@@ -29,6 +29,7 @@ ATMCMinimization::ATMCMinimization()
   fBMin=0.0;
   fPhiMin=0.0;
   fTiltAng=0.0;
+  fDensMin=0.0;
 
   FairLogger *fLogger=FairLogger::GetLogger();
   ATDigiPar *fPar;
@@ -60,8 +61,21 @@ ATMCMinimization::ATMCMinimization()
 
   //fEntTB = 280;
 
+  //Global variables
+  m                  = 1;
+  sm1                = m;
+  dzstep             = fDriftVelocity*fTBTime/1000.0;//  !unit cm
+  integrationsteps   = 10;
+  iz1                = 1;
+  z1                 = iz1;
+  restmass           = sm1*931.49432;
+  esm                = z1*1.75879e-3*0.510998918/restmass;// ![e/m electron cm**2/(Volt*nsec**2] this is not the energy/mass but charge/mass
+  B0                 = fBField;  // !	magnetic field
+  B                  = B0*10000.; // !conversion of T en Gauss
 
   kDebug=kFALSE;
+
+
 
 
 
@@ -89,6 +103,9 @@ std::vector<Double_t> ATMCMinimization::GetPosZExp()    {return fPosZexp;}
 std::vector<Double_t> ATMCMinimization::GetPosXInt()    {return fPosXinter;}
 std::vector<Double_t> ATMCMinimization::GetPosYInt()    {return fPosYinter;}
 std::vector<Double_t> ATMCMinimization::GetPosZInt()    {return fPosZinter;}
+std::vector<Double_t> ATMCMinimization::GetPosXBack()    {return fPosXBack;}
+std::vector<Double_t> ATMCMinimization::GetPosYBack()    {return fPosYBack;}
+std::vector<Double_t> ATMCMinimization::GetPosZBack()    {return fPosZBack;}
 
 Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
@@ -143,21 +160,12 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         Double_t ymax            = 0.0;
                         Double_t e0sm            = 0.0;
                         Double_t smprot          = 931.49432;
-                        Double_t B0              = fBField;  // !	magnetic field
-                        Double_t m               = 1;
-                        Double_t sm1             = m;
-                        Double_t restmass        = sm1*931.49432;
-                        Double_t iz1             = 1;
-                        Double_t z1              = iz1;
-                        Double_t B               = B0*10000.; // !conversion of T en Gauss
                         Double_t Bmin            = B;
-                        Double_t dzstep          = fDriftVelocity*fTBTime/1000.0;//  !unit cm
                         Double_t chi2min         = 1E10;
                         Double_t thetaLorentz    = fThetaLorentz;
                         Double_t thetaRot        = fThetaRot;
                         Double_t thetaTilt       = fTiltAng;
                         Double_t thetaPad        = fThetaPad;
-                        Int_t integrationsteps   = 10;
                         //////////////////////////////////////////
 
                         /////////// Initial parameters///////////////
@@ -241,7 +249,6 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                               // 	calcul vitesse initiale
                               Double_t e0ll=e0sm*sm1;
                               Double_t e0=e0ll*1000000.;// !conversion from MeV in eV kinetic energy
-                              Double_t esm= z1*1.75879e-3*0.510998918/restmass;// ![e/m electron cm**2/(Volt*nsec**2] this is not the energy/mass but charge/mass
                               //	esm= 1.75879e-3
                               Double_t beta2=2.*e0ll/(sm1*931.49);
                               Double_t ekin=e0ll;
@@ -744,10 +751,11 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                      fPosZmin=ziter;
                                                      fThetaMin=theta0;
                                                      fEnerMin=e0sm;
-                                                     fPosMin.SetXYZ(x,y,z);
+                                                     fPosMin.SetXYZ(x_buff,y_buff,z_buff);
                                                      fBrhoMin=bro;
                                                      fBMin=B;
                                                      fPhiMin=phi0;
+                                                     fDensMin=dens;
 
                                                      bromin=bro;
                                                      thetamin=theta0;
@@ -819,6 +827,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                            fPosTBexp.push_back(hit.GetTimeStamp());
                      }
 
+                     BackwardExtrapolation();
 
 
                         std::cout<<cYELLOW<<" Minimization result : "<<std::endl;
@@ -925,6 +934,159 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                       return kTRUE;
 
+
+
+}
+
+void ATMCMinimization::BackwardExtrapolation()
+{
+
+              Double_t xcmm;
+              Double_t ycmm;
+              Double_t zcmm;
+              Double_t xsol;
+              Double_t ysol;
+              Double_t zsol;
+              Double_t xdet;
+              Double_t ydet;
+              Double_t zdet;
+              Double_t xpad;
+              Double_t ypad;
+              Double_t zpad;
+
+              Double_t xTBCorr[200];
+              Double_t yTBCorr[200];
+              Double_t zTBCorr[200];
+
+
+              Double_t e0ll=fEnerMin*sm1;
+              Double_t beta2=2.*e0ll/(sm1*931.49);
+  	          Double_t ekin=e0ll;
+  	          Double_t beta0=sqrt(beta2);//    ![cm/nsec]
+              Double_t v0=beta0*29.9792;//  !v in cm/ns
+              Double_t dt=-dzstep/(v0*TMath::Cos(fThetaMin))/(Float_t)(integrationsteps);//![unite temps ns] negatif time
+              Double_t t=0.;
+              Double_t x= fPosMin.X();
+              Double_t y= fPosMin.Y();
+              Double_t z= fPosMin.Z();
+              TVector3 PosIniCmm = TransformIniPos(x,y,z); // Transform initial position from pad plane to laboratory frame
+              x=PosIniCmm.X();
+              y=PosIniCmm.Y();
+              z=PosIniCmm.Z();
+              Double_t zmin_trans = z;
+              t=-dt;
+              Double_t dxdt=v0*TMath::Sin(fThetaMin)*TMath::Cos(fPhiMin);
+              Double_t dydt=v0*TMath::Sin(fThetaMin)*TMath::Sin(fPhiMin);
+              Double_t dzdt=v0*TMath::Cos(fThetaMin);
+              Double_t factq=1.0;
+
+              Double_t ddxddt = 0.0;
+              Double_t ddyddt = 0.0;
+              Double_t ddzddt = 0.;
+              Int_t iterCorr = 0;
+              Int_t iterCorr_0 = 0;
+              Int_t iterCorrNorm = 0;
+
+                for(Int_t i=0;i<200;i++){
+
+                  //Draw the extrapolated spiral in the micromegas pad plane
+                  xcmm = x*10.0;
+                  ycmm = y*10.0;
+                  zcmm = z*10.0;
+                  zcmm = -zcmm+ 2*zmin_trans*10.0;
+                  //std::cout<<" zcmm : "<<zcmm[iterd]<<"  2*zmin*10.0  : "<<2*zmin_trans*10.0<<std::endl;
+                  xsol = xcmm-zcmm*TMath::Sin(fThetaLorentz)*TMath::Sin(fThetaRot);
+                  ysol = ycmm+zcmm*TMath::Sin(fThetaLorentz)*TMath::Cos(fThetaRot);
+                  zsol = zcmm;
+
+                  xdet = xsol;
+                  ydet = -(fZk-zsol)*TMath::Sin(fTiltAng) + ysol*TMath::Cos(fTiltAng);
+                  zdet = zsol*TMath::Cos(fTiltAng) - ysol*TMath::Sin(fTiltAng);
+
+                  xpad = xdet*TMath::Cos(fThetaPad) - ydet*TMath::Sin(fThetaPad);
+                  ypad = xdet*TMath::Sin(fThetaPad) + ydet*TMath::Cos(fThetaPad);
+                  zpad = zdet;
+
+                  iterCorr = (Int_t) (zpad/(dzstep*10) + 0.5);
+                  if(i==0) iterCorr_0 = iterCorr; //Offset renomarlization
+                  iterCorrNorm = -iterCorr_0+iterCorr;
+
+                  //std::cout<<i<<" "<<iterCorrNorm<<std::endl;
+
+                  if(iterCorrNorm>=0){
+                  xTBCorr[iterCorrNorm] = xpad;
+                  yTBCorr[iterCorrNorm] = ypad;
+                  zTBCorr[iterCorrNorm] = zpad;
+
+                  fPosXBack.push_back(xTBCorr[iterCorrNorm]);
+                  fPosYBack.push_back(yTBCorr[iterCorrNorm]);
+                  fPosZBack.push_back(zTBCorr[iterCorrNorm]);
+                  }
+
+                  /////////////////////////////////////////////////////////
+
+                  t=t+dt;
+                  ddxddt=esm*B*10.*dydt*factq;//  !remember esm =charge/masse
+                  ddyddt=-esm*(B*10.*dxdt)*factq;
+                  ddzddt=0.;
+                  x=x + dxdt*dt + 0.5*ddxddt*TMath::Power(dt,2);
+                  y=y + dydt*dt + 0.5*ddyddt*TMath::Power(dt,2);
+                  z=z + dzdt*dt + 0.5*ddzddt*TMath::Power(dt,2);
+                  dxdt=dxdt+ddxddt*dt;
+                  dydt=dydt+ddyddt*dt;
+                  dzdt=dzdt+ddzddt*dt;
+
+                  Double_t help=TMath::Power((dxdt*dt + 0.5*ddxddt*TMath::Power(dt,2)),2 );
+                  help=help+TMath::Power((dydt*dt + 0.5*ddyddt*TMath::Power(dt,2)),2);
+                  help=help+TMath::Power((dzdt*dt + 0.5*ddzddt*TMath::Power(dt,2)),2);
+                  help=TMath::Sqrt(help);
+
+                  Double_t sloss = 0.0;
+
+                  Double_t  c0;
+
+
+                  if(iz1==1){
+                     c0=ekin;
+                     if(m==2) c0=c0/2.0;
+                     sloss=6.98*(1./TMath::Power(c0,0.83))*(1./(20.+1.6/TMath::Power(c0,1.3)))+0.2*TMath::Exp(-30.*TMath::Power((c0-0.1),2)); //Old expression
+                     //sloss = 0.3*TMath::Power((1./c0),0.78)*(1./(1.+0.023/TMath::Power(c0,1.37)));
+                  }
+                  if(iz1==6){
+                     c0=ekin/6.;
+                     sloss=36.*(1./TMath::Power(c0,0.83))*(1./(1.6+1.6/TMath::Power(c0,1.5)))+1.*TMath::Exp(TMath::Power(-(c0-0.5),2));
+                  }
+                  if(iz1==2){
+                     c0=ekin;
+                     sloss=11.95*(1./TMath::Power(c0,0.83))*(1./(2.5+1.6/TMath::Power(c0,1.5)))+ 0.05*TMath::Exp(TMath::Power(-(c0-0.5),2));
+                   }
+
+                   sloss= sloss*fDensMin*help; //!energy loss with density and step
+
+                   //if(y>ymax)ymax=y;
+                   //slowing down by energy loss
+                   Double_t vcin=sqrt(TMath::Power(dxdt,2)+TMath::Power(dydt,2)+TMath::Power(dzdt,2));// !v in cm/ns
+                   Double_t vsc=vcin/29.979; // !v/c
+                   Double_t beta=vsc;
+                   //ecinsm=931.494/2.*(vsc)**2*1./sqrt(1.-vsc**2) !relativistic
+                   Double_t ekindo=sm1*931.494*0.5*TMath::Power(vsc,2); //!nonrelativistic
+
+                       help=ekin;
+                       ekin=ekin+sloss;// !energy loss
+                       //help=ekin/help
+                       help=ekin/ekindo;
+                       help=TMath::Sqrt(help);
+                       Double_t help1=help;
+                       ekindo=ekindo-sloss;
+                       dxdt=dxdt*help; // ! this is the introduction energy loss!!!!
+                       dydt=dydt*help;
+                       dzdt=dzdt*help;
+                       //dt=dzstep/(dzdt);
+                       dt=-dzstep/(dzdt)/(Float_t) integrationsteps;
+
+
+
+                }
 
 
 }

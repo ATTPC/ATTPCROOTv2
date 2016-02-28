@@ -11,6 +11,11 @@
 
 #include <fstream>
 
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+
 ClassImp(AtTpcProtoMap)
 
 AtTpcProtoMap::AtTpcProtoMap()
@@ -44,11 +49,11 @@ Bool_t AtTpcProtoMap::SetGeoFile(TString geofile){
   f = new TFile(geodir.Data());
 
  	 if(f->IsZombie()){
-   		std::cout<<" ATTPC Proto Map : No geometry file found! Check VMCWORKDIR variable. Exiting... "<<std::endl;//TODO Not working!!!
+   		std::cout<<cRED<<" ATTPC Proto Map : No geometry file found! Check VMCWORKDIR variable. Exiting... "<<cNORMAL<<std::endl;//TODO Not working!!!
 		delete f;
                 return kFALSE;
 	 }
-               	std::cout<<" ATTPC Proto Map : Prototype geometry found in : "<<geodir.Data()<<std::endl;
+               	std::cout<<cGREEN<<" ATTPC Proto Map : Prototype geometry found in : "<<geodir.Data()<<cNORMAL<<std::endl;
 		kIsFileSet=kTRUE;
                 return kTRUE;
 

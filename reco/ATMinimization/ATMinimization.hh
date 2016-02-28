@@ -38,6 +38,9 @@ class ATMinimization : public TObject
 		virtual std::vector<Double_t> GetPosXInt()=0;
 		virtual std::vector<Double_t> GetPosYInt()=0;
 		virtual std::vector<Double_t> GetPosZInt()=0;
+		virtual std::vector<Double_t> GetPosXBack()=0;
+		virtual std::vector<Double_t> GetPosYBack()=0;
+		virtual std::vector<Double_t> GetPosZBack()=0;
 
 		struct FitPar
 		{
