@@ -409,14 +409,16 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
                    fPosXBack = min->GetPosXBack();
                    fPosYBack = min->GetPosYBack();
                    fPosZBack = min->GetPosZBack();
-                   ATHoughSpaceCircle::FitParameters.sThetaMin = min->FitParameters.sThetaMin;
-                   ATHoughSpaceCircle::FitParameters.sThetaMin = min->FitParameters.sThetaMin;
-                   ATHoughSpaceCircle::FitParameters.sEnerMin  = min->FitParameters.sEnerMin;
-                   ATHoughSpaceCircle::FitParameters.sPosMin   = min->FitParameters.sPosMin;
-                   ATHoughSpaceCircle::FitParameters.sBrhoMin  = min->FitParameters.sBrhoMin;
-                   ATHoughSpaceCircle::FitParameters.sBMin     = min->FitParameters.sBMin;
-                   ATHoughSpaceCircle::FitParameters.sPhiMin   = min->FitParameters.sPhiMin;
-                   ATHoughSpaceCircle::FitParameters.sChi2Min   = min->FitParameters.sChi2Min;
+                   ATHoughSpaceCircle::FitParameters.sThetaMin       = min->FitParameters.sThetaMin;
+                   ATHoughSpaceCircle::FitParameters.sThetaMin       = min->FitParameters.sThetaMin;
+                   ATHoughSpaceCircle::FitParameters.sEnerMin        = min->FitParameters.sEnerMin;
+                   ATHoughSpaceCircle::FitParameters.sPosMin         = min->FitParameters.sPosMin;
+                   ATHoughSpaceCircle::FitParameters.sBrhoMin        = min->FitParameters.sBrhoMin;
+                   ATHoughSpaceCircle::FitParameters.sBMin           = min->FitParameters.sBMin;
+                   ATHoughSpaceCircle::FitParameters.sPhiMin         = min->FitParameters.sPhiMin;
+                   ATHoughSpaceCircle::FitParameters.sChi2Min        = min->FitParameters.sChi2Min;
+                   ATHoughSpaceCircle::FitParameters.sVertexPos      = min->FitParameters.sVertexPos;
+                   ATHoughSpaceCircle::FitParameters.sVertexEner     = min->FitParameters.sVertexEner;
                   }
                    delete min;
 

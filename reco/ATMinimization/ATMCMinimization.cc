@@ -30,6 +30,7 @@ ATMCMinimization::ATMCMinimization()
   fPhiMin=0.0;
   fTiltAng=0.0;
   fDensMin=0.0;
+  fVertexEner=0.0;
 
   FairLogger *fLogger=FairLogger::GetLogger();
   ATDigiPar *fPar;
@@ -108,16 +109,6 @@ std::vector<Double_t> ATMCMinimization::GetPosYBack()    {return fPosYBack;}
 std::vector<Double_t> ATMCMinimization::GetPosZBack()    {return fPosZBack;}
 
 Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
-
-
-
-              //TH2F *dist_vs_TB = new TH2F("dist_vs_TB","dist_vs_TB",512,0,511,1000,0,1000);
-
-              //TH2F *htest = new TH2F("htest","htest",1000,0,2000,1000,0,2000);
-
-               /*TGraph *ang_vs_step = new TGraph();
-               TGraph *ang_vs_step_sim = new TGraph();
-                TGraph *zcomp = new TGraph();*/
 
                         std::vector<Double_t> xc;
                         std::vector<Double_t> xiter;
@@ -319,12 +310,6 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                      Int_t iterd0=0;
                                                      Int_t iterCorrNorm=0;
 
-                                                     /*TVector3* posang=new TVector3();
-                                                     TVector3* posang_forw=new TVector3();*/
-                                                     //TVector3* posang_buff=new TVector3();
-
-                                                     //TGraph *simangle = new TGraph();
-
                                                      Int_t icnb;
 
                                                      for(Int_t k=0;k<iterationmax;k++)
@@ -342,18 +327,6 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            //zcmm[iterd] = -z*10. + 2*zmin*10.0;
                                                           // iterd0++;
 
-                                                        /*  xcmm[iterd] = 0.0;
-                                                          ycmm[iterd] = 0.0;
-                                                          zcmm[iterd] = k*1.0;*/
-
-
-                                                          // if(iterd0!=iterd){
-                                                           /*xiter.push_back(x*10);
-                                                           yiter.push_back(y*10.);
-                                                           ziter.push_back(z*10.);*/
-                                                          // ziter.push_back(-z*10. + 2*zmin*10.0);
-                                                        //   iterd0=iterd;
-                                                        // }
 
                                                            //Transform to pad plane before propagation
                                                         /* xsol[iterd]=xcmm[iterd]-zcmm[iterd]*TMath::Sin(thetaLorentz)*TMath::Sin(thetaRot);
@@ -398,26 +371,6 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            yTBCorr[iterCorrNorm] = ypad[iterd];
                                                            zTBCorr[iterCorrNorm] = zpad[iterd];
 
-                                                           //htest->Fill(zTBCorr[iterCorrNorm],zcmm[iterd]);
-
-
-
-                                                        /* posang_forw->SetXYZ(xpad[iterd],ypad[iterd],zpad[iterd]);
-                                                         Double_t ang = GetSimThetaAngle(posang,posang_forw);
-                                                         posang->SetXYZ(xpad[iterd],ypad[iterd],zpad[iterd]); // For the next iteration
-                                                         simangle->SetPoint(simangle->GetN(),iterd0,ang);*/
-
-
-
-
-
-                                                           //if(k==0) std::cout<<" Xpad "<<xpad[k]<<" Ypad "<<ypad[k]<<" Zpad "<<zpad[k]<<std::endl;
-                                                           ///////////////////////////////////
-                                                           /*xiter.push_back(xpad[iterd]);
-                                                           yiter.push_back(ypad[iterd]);
-                                                           ziter.push_back(zpad[iterd]);*/
-                                                           //////////////////////////////////////
-
 
                                                         //  if(iterCorrNorm!=icnb){
                                                            xiter.push_back(xTBCorr[iterCorrNorm]);
@@ -426,13 +379,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                       //    }
                                                           icnb=iterCorrNorm;
 
-                                                           //////////////////////////////////////
 
-                                                           //std::cout<<" Iterd : "<<iterd<<std::endl;
-                                                           //std::cout<<" z : "<<zcmm[iterd]<<std::endl;
-
-
-                                                        // }
 
                                                            t=t+dt;
                                                            Double_t ddxddt=esm*B*10.*dydt*factq;//  !remember esm =charge/masse
@@ -543,26 +490,6 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                                                       //NB : imaxchi2 must be limited
 
-                                                    //std::cout<<" Hit ID : "<<parameter[7]<<std::endl;
-                                                    //Int_t hitTB = GetTBHit(parameter[3],fHitArray);
-                                                  //  std::cout<<" hitTB : "<<hitTB<<std::endl;
-                                                    //delete HitArray;
-
-
-
-                                                //  if(j==8 && i==8){
-                                                  //  std::cout<<cGREEN<<" Lenght of the simulated data : "<<iteration<<cNORMAL<<std::endl;
-                                                  //  std::cout<<cGREEN<<" imaxchi2 : "<<imaxchi2<<cNORMAL<<std::endl;
-
-                                                   /*TVector3* posang=new TVector3();
-                                                   TVector3* posang_forw=new TVector3();
-
-                                                   TVector3* posang_sim=new TVector3();
-                                                   TVector3* posang_forw_sim=new TVector3();*/
-
-
-                                                  //htest->Draw("col");
-
                                                   Double_t xposbuff[imaxchi2];
                                                   Double_t yposbuff[imaxchi2];
                                                   Double_t zposbuff[imaxchi2];
@@ -661,8 +588,6 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                               posx=cmsHits_X/totCharge;
                                                               posy=cmsHits_Y/totCharge;
 
-                                                              //posx/=numHitsDist;
-                                                              //posy/=numHitsDist;
                                                               kIsExp=kTRUE;
                                                                 // TO compare Sim and Exp uncomment this
                                                               if(kDebug) std::cout<<cGREEN<<" Average X : "<<posx<<" Average Y : "<<posy<<" Average Z : "<<posz<<cNORMAL<<std::endl;
@@ -679,12 +604,6 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                           zinter.push_back(posz);
                                                           TBInter.push_back(TB);
 
-                                                      //    Double_t diffx= posx-xcmm[iChi];
-                                                      //    Double_t diffy= posy-ycmm[iChi];
-
-                                                      //    Double_t diffx= posx-xpad[iChi];
-                                                      //    Double_t diffy= posy-ypad[iChi];
-
                                                           Double_t diffx= posx-xTBCorr[iChi];
                                                           Double_t diffy= posy-yTBCorr[iChi];
 
@@ -695,19 +614,6 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                           yTBbuff[iChi]=yTBCorr[iChi];
                                                           zTBbuff[iChi]=zTBCorr[iChi];
                                                           TBShadow[iChi]=TB;
-
-                                                          /* posang_forw->SetXYZ(posx,posy,posz);
-                                                           Double_t ang = GetSimThetaAngle(posang,posang_forw);
-                                                           posang->SetXYZ(posx,posy,posz);
-
-                                                           posang_forw_sim->SetXYZ(xTBCorr[iChi],yTBCorr[iChi],zTBCorr[iChi]);
-                                                           Double_t ang_sim = GetSimThetaAngle(posang_sim,posang_forw_sim);
-                                                           posang_sim->SetXYZ(xTBCorr[iChi],yTBCorr[iChi],zTBCorr[iChi]);
-
-
-                                                           ang_vs_step->SetPoint(ang_vs_step->GetN(),iChi,ang);
-                                                           ang_vs_step_sim->SetPoint(ang_vs_step_sim->GetN(),iChi,ang_sim);*/
-
 
 
                                                         /*if(hitTBArray.size()>0){
@@ -757,16 +663,10 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                      fPhiMin=phi0;
                                                      fDensMin=dens;
 
-                                                     bromin=bro;
+                                                     bromin=bro; //Minimization variables
                                                      thetamin=theta0;
                                                      Bmin=B;
                                                      phimin=phi0;
-                                                     /*std::cout<<" xmin : "<<x<<std::endl;
-                                                     std::cout<<" ymin : "<<y<<std::endl;
-                                                     std::cout<<" zmin : "<<z<<std::endl;*/
-                                                     /*xmin=x_buff;
-                                                     ymin=y_buff;
-                                                     zmin=z_buff;*/
 
                                                      FitParameters.sThetaMin = theta0;
                                                      FitParameters.sEnerMin=e0sm;
@@ -812,12 +712,6 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                     }// paramter[7] cut
 
 
-                  /*  ang_vs_step->Draw("AP");
-                    ang_vs_step->SetMarkerColor(kRed);
-                    ang_vs_step_sim->Draw("P");*/
-
-                      //zcomp->Draw("AP");
-
 
                       for(Int_t ig=0;ig<fHitArray->size();ig++){
                            ATHit hit = fHitArray->at(ig);
@@ -835,100 +729,10 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         std::cout<<" Azimutal angle : "<<fPhiMin*180.0/TMath::Pi()<<std::endl;
                         std::cout<<" B : "<<fBMin<<std::endl;
                         std::cout<<" Brho : "<<fBrhoMin<<std::endl;
+                        std::cout<<" Energy : "<<fEnerMin<<std::endl;
+                        std::cout<<" Vertex Position (Backward extrapolation) - X : "<<fVertexPos.X()<<" - Y : "<<fVertexPos.Y()<<" - Z : "<<fVertexPos.Z()<<std::endl;
+                        std::cout<<" Vertex Energy : "<<fVertexEner<<" MeV "<<std::endl;
                         std::cout<<" Minimum chi2 : "<<chi2min<<cNORMAL<<std::endl;
-
-                      /*  Double_t xgraph[10000]={0};
-                        Double_t ygraph[10000]={0};
-                        Double_t zgraph[10000]={0};
-
-                        Double_t xgexp[10000]={0};
-                        Double_t ygexp[10000]={0};
-
-                        Double_t xginter[10000]={0};
-                        Double_t yginter[10000]={0};
-                        Double_t zginter[10000]={0};
-
-                            //std::cout<<fPosXmin.size()<<std::endl;
-                             for(Int_t ig=0;ig<fPosXmin.size();ig++){
-                                    xgraph[ig] = fPosXmin.at(ig);
-                                    ygraph[ig] = fPosYmin.at(ig);
-                                    zgraph[ig] = fPosZmin.at(ig);
-                              }
-
-
-
-
-
-                            //if(fPosXexp.size()>0){
-                            std::cout<<" Hit array size : "<<fHitArray->size()<<std::endl;
-                              for(Int_t ig=0;ig<fHitArray->size();ig++){
-                                     ATHit hit = fHitArray->at(ig);
-                                     TVector3 position = hit.GetPosition();
-                                     xgexp[ig] = position.X();
-                                     ygexp[ig] = position.Y();
-                               }
-
-
-                        TCanvas *c1 = new TCanvas();
-                        c1->cd();
-                        TGraph *spiral_exp = new TGraph(fHitArray->size(),xgexp,ygexp);
-                        spiral_exp->Draw("AP");
-                        spiral_exp->SetMarkerStyle(20);
-                        spiral_exp->SetMarkerSize(1.0);
-                        spiral_exp->SetMarkerColor(kBlack);
-
-
-                       TGraph *spiral = new TGraph(fPosXmin.size(),xgraph,ygraph);
-                       spiral->Draw("P");
-                       spiral->SetMarkerStyle(20);
-                       spiral->SetMarkerSize(1.0);
-                       spiral->SetMarkerColor(kRed);
-
-
-
-                     if(fPosXinter.size()>0){
-                         for(Int_t ig=0;ig<fPosXinter.size();ig++){
-                                xginter[ig] = fPosXinter.at(ig);
-                                yginter[ig] = fPosYinter.at(ig);
-                                zginter[ig] = fPosZinter.at(ig);
-
-                          }
-
-                        TGraph *spiralinter = new TGraph(fPosXinter.size(),xginter,yginter);
-                        spiralinter->Draw("P");
-                        spiralinter->SetMarkerStyle(20);
-                        spiralinter->SetMarkerSize(1.0);
-                        spiralinter->SetMarkerColor(kGreen);
-                    }
-
-
-
-
-                       TCanvas *c2=new TCanvas();
-                       c2->cd();
-                      TGraph *spiralZX = new TGraph(fPosXmin.size(),zgraph,xgraph);
-                      spiralZX->Draw("AP");
-                      spiralZX->SetMarkerStyle(20);
-                      spiralZX->SetMarkerSize(1.0);
-                      spiralZX->SetMarkerColor(kBlack);
-
-                      TGraph *spiralZY = new TGraph(fPosYmin.size(),zgraph,ygraph);
-                      spiralZY->Draw("P");
-                      spiralZY->SetMarkerStyle(20);
-                      spiralZY->SetMarkerSize(1.0);
-                      spiralZY->SetMarkerColor(kRed);
-
-                      TGraph *spiralZXexp = new TGraph(fPosZmin.size(),zginter,xginter);
-                      spiralZXexp->Draw("P");
-                      spiralZXexp->SetMarkerStyle(22);
-                      spiralZXexp->SetMarkerSize(1.0);
-                      spiralZXexp->SetMarkerColor(kBlack);
-
-                      TGraph *spiralZYexp = new TGraph(fPosZmin.size(),zginter,yginter);
-                      spiralZYexp->Draw("P");
-                      spiralZYexp->SetMarkerStyle(22);
-                      spiralZYexp->SetMarkerSize(1.0);
-                      spiralZYexp->SetMarkerColor(kRed);*/
 
 
 
@@ -954,10 +758,14 @@ void ATMCMinimization::BackwardExtrapolation()
               Double_t ypad;
               Double_t zpad;
 
+              Double_t x_origin = 0.0;  //Vertex origin, by default we assume the center of the micromegas.
+              Double_t y_origin = 0.0;
+
               Double_t xTBCorr[200];
               Double_t yTBCorr[200];
               Double_t zTBCorr[200];
 
+              Double_t minDist = 1E10; //Distance of minimum approach to the vertex origin
 
               Double_t e0ll=fEnerMin*sm1;
               Double_t beta2=2.*e0ll/(sm1*931.49);
@@ -987,7 +795,23 @@ void ATMCMinimization::BackwardExtrapolation()
               Int_t iterCorr_0 = 0;
               Int_t iterCorrNorm = 0;
 
+              Double_t dist;
+
                 for(Int_t i=0;i<200;i++){
+
+                  dist = TMath::Sqrt( TMath::Power(x - x_origin,2) + TMath::Power(y - y_origin,2)  );
+
+                  std::cout<<" X back : "<<x<<" Y back "<<y<<" Z back "<<z<<std::endl;
+
+                  if(dist<minDist) minDist=dist;
+                  else{
+                    fVertexPos.SetXYZ(x,y,z);
+                    fVertexEner=ekin;
+                    FitParameters.sVertexPos=fVertexPos;
+                    FitParameters.sVertexEner=fVertexEner;
+                    break;
+                  }
+
 
                   //Draw the extrapolated spiral in the micromegas pad plane
                   xcmm = x*10.0;
@@ -1008,10 +832,9 @@ void ATMCMinimization::BackwardExtrapolation()
                   zpad = zdet;
 
                   iterCorr = (Int_t) (zpad/(dzstep*10) + 0.5);
-                  if(i==0) iterCorr_0 = iterCorr; //Offset renomarlization
+                  if(i==0) iterCorr_0 = iterCorr; //Offset renomalization
                   iterCorrNorm = -iterCorr_0+iterCorr;
 
-                  //std::cout<<i<<" "<<iterCorrNorm<<std::endl;
 
                   if(iterCorrNorm>=0){
                   xTBCorr[iterCorrNorm] = xpad;
@@ -1084,9 +907,13 @@ void ATMCMinimization::BackwardExtrapolation()
                        //dt=dzstep/(dzdt);
                        dt=-dzstep/(dzdt)/(Float_t) integrationsteps;
 
+                       if(i==199) std::cout<<cYELLOW<<" Warning: Minimum distance of approach not found ! "<<std::endl;
+
 
 
                 }
+
+
 
 
 }
