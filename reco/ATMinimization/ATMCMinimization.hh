@@ -97,6 +97,7 @@ class ATMCMinimization : public ATMinimization{
           TRotation* fPadtoDetRot;
 
           Bool_t kDebug;
+          Bool_t kVerbose; 
 
           //Global variables
           Double_t sm1;

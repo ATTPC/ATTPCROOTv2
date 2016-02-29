@@ -75,6 +75,7 @@ ATMCMinimization::ATMCMinimization()
   B                  = B0*10000.; // !conversion of T en Gauss
 
   kDebug=kFALSE;
+  kVerbose=kFALSE;
 
 
 
@@ -311,6 +312,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                      Int_t iterCorrNorm=0;
 
                                                      Int_t icnb;
+                                                     Int_t num_MC_Point = 0;
 
                                                      for(Int_t k=0;k<iterationmax;k++)
                                                      {
@@ -627,7 +629,8 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                                                           if(kIsExp){
                                                             Double_t chi2_buff = ( TMath::Power(diffx,2) + TMath::Power(diffy,2) )/sigma2;
-                                                            if(chi2_buff>100.0) chi2+=100.0;
+                                                            if(i>3 && chi2_buff>10.0) chi2+=10.0;
+                                                            else if(i<=3 && chi2_buff>100.0) chi2+=100.0;
                                                             else chi2+=chi2_buff;
                                                             chi2buff[iChi]=chi2_buff;
                                                             if(kDebug) std::cout<<" Point chi Square : "<<chi2_buff<<" for Experimental Time bucket : "<<parameter[3]-iChi<<std::endl;
@@ -636,7 +639,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                             fPosYinter=yinter;
                                                             fPosZinter=zinter;
                                                             fPosTBinter=TBInter;
-
+                                                            num_MC_Point++;
 
                                                           }
 
@@ -675,8 +678,14 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                      FitParameters.sBMin=B;
                                                      FitParameters.sPhiMin=phi0;
                                                      FitParameters.sChi2Min=chi2min;
+                                                     FitParameters.sNumMCPoint=num_MC_Point;
+                                                     FitParameters.sNormChi2=chi2min/num_MC_Point;
 
-                                                     std::cout<<" New Min chi2 : "<<chi2min<<" for MC iteration : "<<j<<" of the step "<<i<<std::endl;
+                                                    if(kVerbose){
+                                                     std::cout<<cYELLOW<<" New Min chi2 : "<<chi2min<<" for MC iteration : "<<j<<" of the step "<<i<<std::endl;
+                                                     std::cout<<" Number of MC points : "<<num_MC_Point<<std::endl;
+                                                     std::cout<<" Reduced chi2 : "<<chi2min/num_MC_Point<<cNORMAL<<std::endl;
+                                                   }
 
                                                       /*    std::ofstream dumpIter;
                                                           dumpIter.open ("eventChi.dat");
@@ -795,20 +804,25 @@ void ATMCMinimization::BackwardExtrapolation()
               Int_t iterCorr_0 = 0;
               Int_t iterCorrNorm = 0;
 
+              Double_t z_vertex=0.0;
+
               Double_t dist;
 
                 for(Int_t i=0;i<200;i++){
 
                   dist = TMath::Sqrt( TMath::Power(x - x_origin,2) + TMath::Power(y - y_origin,2)  );
 
-                  std::cout<<" X back : "<<x<<" Y back "<<y<<" Z back "<<z<<std::endl;
+                  //std::cout<<" X back : "<<x<<" Y back "<<y<<" Z back "<<z<<" zmin_trans : "<<zmin_trans<<std::endl;
+                  //std::cout<<" Z Vertex : "<<z_vertex<<std::endl;
+                  z_vertex = 2*zmin_trans - z;
 
                   if(dist<minDist) minDist=dist;
                   else{
-                    fVertexPos.SetXYZ(x,y,z);
+                    fVertexPos.SetXYZ(x,y,z_vertex);
                     fVertexEner=ekin;
                     FitParameters.sVertexPos=fVertexPos;
                     FitParameters.sVertexEner=fVertexEner;
+                    FitParameters.sMinDistAppr=dist;
                     break;
                   }
 
