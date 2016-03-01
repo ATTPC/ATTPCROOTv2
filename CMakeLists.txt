@@ -110,6 +110,7 @@ find_package(GEANT4VMC)
 find_package(CLHEP)
 find_package(CERNLIB)
 find_package(HEPMC)
+find_package(HDF5)
 find_package(OpenMP)
 find_package(CUDA)
 

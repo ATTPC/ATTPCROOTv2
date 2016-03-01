@@ -69,6 +69,9 @@ class ATHoughSpaceCircle : public ATHoughSpace{
           Double_t sChi2Min;
           TVector3 sVertexPos;
     			Double_t sVertexEner;
+          Double_t sMinDistAppr;
+          Int_t    sNumMCPoint;
+          Double_t sNormChi2;
 
         };
 

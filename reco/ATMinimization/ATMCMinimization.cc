@@ -143,9 +143,9 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                        Double_t yTBCorr[10000];
                        Double_t zTBCorr[10000];
 
-                       std::fill_n(xTBCorr,10000, -10000);
-                       std::fill_n(yTBCorr,10000, -10000);
-                       std::fill_n(zTBCorr,10000, -10000);
+                       std::fill_n(xTBCorr,-10000, -10000);
+                       std::fill_n(yTBCorr,-10000, -10000);
+                       std::fill_n(zTBCorr,-10000, -10000);
 
 
                         //TODO: Pass these paramters with the fPar pointer
@@ -209,7 +209,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                   if(parameter[7]<500){
 
 
-                        for(Int_t i=0;i<10;i++)
+                        for(Int_t i=0;i<5;i++)
                         {
 
 
@@ -629,7 +629,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                                                           if(kIsExp){
                                                             Double_t chi2_buff = ( TMath::Power(diffx,2) + TMath::Power(diffy,2) )/sigma2;
-                                                            if(i>3 && chi2_buff>10.0) chi2+=10.0;
+                                                            if(i>2 && chi2_buff>10.0) chi2+=10.0;
                                                             else if(i<=3 && chi2_buff>100.0) chi2+=100.0;
                                                             else chi2+=chi2_buff;
                                                             chi2buff[iChi]=chi2_buff;
@@ -681,7 +681,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                      FitParameters.sNumMCPoint=num_MC_Point;
                                                      FitParameters.sNormChi2=chi2min/num_MC_Point;
 
-                                                    if(kVerbose){
+                                                   if(kVerbose){
                                                      std::cout<<cYELLOW<<" New Min chi2 : "<<chi2min<<" for MC iteration : "<<j<<" of the step "<<i<<std::endl;
                                                      std::cout<<" Number of MC points : "<<num_MC_Point<<std::endl;
                                                      std::cout<<" Reduced chi2 : "<<chi2min/num_MC_Point<<cNORMAL<<std::endl;
@@ -741,6 +741,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         std::cout<<" Energy : "<<fEnerMin<<std::endl;
                         std::cout<<" Vertex Position (Backward extrapolation) - X : "<<fVertexPos.X()<<" - Y : "<<fVertexPos.Y()<<" - Z : "<<fVertexPos.Z()<<std::endl;
                         std::cout<<" Vertex Energy : "<<fVertexEner<<" MeV "<<std::endl;
+                        std::cout<<" Reduced chi2 : "<<chi2min/FitParameters.sNumMCPoint<<std::endl;
                         std::cout<<" Minimum chi2 : "<<chi2min<<cNORMAL<<std::endl;
 
 

@@ -424,7 +424,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
                    ATHoughSpaceCircle::FitParameters.sNormChi2        = min->FitParameters.sNormChi2;
                   }
                    delete min;
-
+                   delete parameter;
 
                     //hdist->Draw();
                     //distVSTb->Draw("zcol");
