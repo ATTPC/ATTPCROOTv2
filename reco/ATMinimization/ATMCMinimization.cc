@@ -220,7 +220,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                             Float_t step4=0.3*factstep;//!x0 in cm
                             Float_t step5=0.3*factstep;// !y0
                             Float_t step6=0.5*factstep;//!z0
-                            Float_t step7=0.1*factstep;//B
+                            Float_t step7=0.0*factstep;//B
                             Float_t step8=0.0*factstep;//Density
 
 
@@ -449,8 +449,6 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                                 Double_t radp=TMath::Sqrt(radp2);
                                                                 //std::cout<<cRED<<" dt : "<<dt<<cNORMAL<<std::endl;
 
-
-
                                                               //  if(radp>25.0) break;//  !this limits the radial distance of the trajectories taken into ccount
                                                                 //	if(z.gt.ztot) go to 100
                                                                 if(zTBCorr[iterCorrNorm]<0.0) break;
@@ -483,7 +481,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                        std::cout<<" iterh : "<<iterh<<std::endl;
                                                        std::cout<<" parameter[7] : "<<parameter[7]<<std::endl;
                                                        std::cout<<" Num of interpolated exp points : "<<numIntPoints<<cNORMAL<<std::endl;
-                                                     }
+                                                    }
                                                     //Int_t imaxchi2=std::max(iteration,(Int_t)parameter[7]);
                                                     Double_t sigma2 = 36.0;  //!error in mm2
                                                     Double_t chi2   = 0.0;
@@ -498,13 +496,13 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                   Double_t xTBbuff[imaxchi2];
                                                   Double_t yTBbuff[imaxchi2];
                                                   Double_t zTBbuff[imaxchi2];
-                                                  Double_t chi2buff[imaxchi2]={0.0};
+                                                  Double_t chi2buff[imaxchi2];
                                                   Int_t TBShadow[imaxchi2];
+
+                                                  std::fill_n(chi2buff,0,0);
 
 
                                                    for(Int_t iChi=0;iChi<imaxchi2;iChi++){
-
-
 
                                                       std::vector<ATHit> hitTBArray;
                                                       hitTBArray=GetTBHitArray(parameter[3]-iChi,fHitArray); // Seach for Hits with the same TB
@@ -630,7 +628,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                           if(kIsExp){
                                                             Double_t chi2_buff = ( TMath::Power(diffx,2) + TMath::Power(diffy,2) )/sigma2;
                                                             if(i>2 && chi2_buff>10.0) chi2+=10.0;
-                                                            else if(i<=3 && chi2_buff>100.0) chi2+=100.0;
+                                                            else if(i<3 && chi2_buff>100.0) chi2+=100.0;
                                                             else chi2+=chi2_buff;
                                                             chi2buff[iChi]=chi2_buff;
                                                             if(kDebug) std::cout<<" Point chi Square : "<<chi2_buff<<" for Experimental Time bucket : "<<parameter[3]-iChi<<std::endl;

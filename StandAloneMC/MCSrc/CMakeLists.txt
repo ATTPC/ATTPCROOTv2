@@ -30,7 +30,7 @@ include(${ROOT_USE_FILE})
 #---Locate other external packages
 find_package(Boost REQUIRED)
 
-include_directories( ${ROOT_INCLUDE_DIRS}
+include_directories( ${ROOT_INCLUDE_DIR}
                      ${Boost_INCLUDE_DIRS}
                      ${BASE_INCLUDE_DIRECTORIES}
                      ${ATTPCROOTPATH}/include
