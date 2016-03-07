@@ -1,4 +1,4 @@
-void run_unpack_proto_8He_2(TString dataFile = "run_ISAC2015_0251.txt",TString parameterFile = "pATTPC.TRIUMF2015.par"){
+void run_unpack_proto_8He_2(TString dataFile = "run_ISAC2015_0254.txt",TString parameterFile = "pATTPC.TRIUMF2015.par"){
 //void run_unpack_proto_8He_2(TString dataFile = "~/Desktop/Yassid/ATTPC/Data/TRIUMF/CoBo_AsAd0_2015-12-03T05_47_43.571_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
 
 
@@ -79,8 +79,8 @@ void run_unpack_proto_8He_2(TString dataFile = "run_ISAC2015_0251.txt",TString p
 
    run->Init();
 
-   run->Run(0,1000);
-	 //run -> RunOnTBData();
+   //run->Run(0,120);
+	 run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------
 	timer.Stop();
