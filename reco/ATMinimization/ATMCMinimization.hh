@@ -51,6 +51,7 @@ class ATMCMinimization : public ATMinimization{
           Int_t GetTBHit(Int_t TB,std::vector<ATHit> *harray);
           TVector3 TransformIniPos(Double_t x,Double_t y, Double_t z); //Transforms initial position from Pad plane to Lab frame
           TVector3 InvTransIniPos(Double_t x,Double_t y, Double_t z); //Transforms lab frame to pad plane
+          void ResetParameters();
 
           std::vector<ATHit> fHitTBArray;
           std::vector<ATHit> *fHitArray;
@@ -97,7 +98,7 @@ class ATMCMinimization : public ATMinimization{
           TRotation* fPadtoDetRot;
 
           Bool_t kDebug;
-          Bool_t kVerbose; 
+          Bool_t kVerbose;
 
           //Global variables
           Double_t sm1;

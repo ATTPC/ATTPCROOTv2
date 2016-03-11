@@ -1054,3 +1054,20 @@ std::vector<ATHit> ATMCMinimization::GetTBHitArray(Int_t TB,std::vector<ATHit> *
         std::copy_if(harray->begin(), harray->end(), std::back_inserter(hitTBArray),[&TB](ATHit& hit){return hit.GetTimeStamp()==TB;} );
         return hitTBArray;
 }
+
+void ATMCMinimization::ResetParameters()
+{
+  FitParameters.sThetaMin    = 0;
+  FitParameters.sEnerMin     = 0;
+  FitParameters.sPosMin.SetXYZ(0,0,0);
+  FitParameters.sBrhoMin     = 0;
+  FitParameters.sBMin        = 0;
+  FitParameters.sPhiMin      = 0;
+  FitParameters.sChi2Min     = 0;
+  FitParameters.sVertexPos.SetXYZ(0,0,0);
+  FitParameters.sVertexEner  = 0;
+  FitParameters.sMinDistAppr = 0;
+  FitParameters.sNumMCPoint  = 0;
+  FitParameters.sNormChi2    = 0;
+
+}

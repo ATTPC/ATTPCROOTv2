@@ -77,6 +77,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
 
 
   ATMinimization *min = new ATMCMinimization();
+  min->ResetParameters();
 
   //TH2F *RadVSTb = new TH2F("RadVSTb","RadVSTb",100,0,500,100,0,500);
   //TH1F *Phi = new TH1F("Phi","Phi",512,0,512);
@@ -422,6 +423,36 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
                    ATHoughSpaceCircle::FitParameters.sMinDistAppr     = min->FitParameters.sMinDistAppr;
                    ATHoughSpaceCircle::FitParameters.sNumMCPoint      = min->FitParameters.sNumMCPoint;
                    ATHoughSpaceCircle::FitParameters.sNormChi2        = min->FitParameters.sNormChi2;
+                  }
+                  else
+                  {
+                    fPosXmin.clear();
+                    fPosYmin.clear();
+                    fPosZmin.clear();
+                    fPosXexp.clear();
+                    fPosYexp.clear();
+                    fPosZexp.clear();
+                    fPosXinter.clear();
+                    fPosYinter.clear();
+                    fPosZinter.clear();
+                    fPosXBack.clear();
+                    fPosYBack.clear();
+                    fPosZBack.clear();
+                    ATHoughSpaceCircle::FitParameters.sThetaMin        = 0;
+                    ATHoughSpaceCircle::FitParameters.sThetaMin        = 0;
+                    ATHoughSpaceCircle::FitParameters.sEnerMin         = 0;
+                    ATHoughSpaceCircle::FitParameters.sPosMin.SetXYZ(0,0,0);
+                    ATHoughSpaceCircle::FitParameters.sBrhoMin         = 0;
+                    ATHoughSpaceCircle::FitParameters.sBMin            = 0;
+                    ATHoughSpaceCircle::FitParameters.sPhiMin          = 0;
+                    ATHoughSpaceCircle::FitParameters.sChi2Min         = 0;
+                    ATHoughSpaceCircle::FitParameters.sVertexPos.SetXYZ(0,0,0);
+                    ATHoughSpaceCircle::FitParameters.sVertexEner      = 0;
+                    ATHoughSpaceCircle::FitParameters.sMinDistAppr     = 0;
+                    ATHoughSpaceCircle::FitParameters.sNumMCPoint      = 0;
+                    ATHoughSpaceCircle::FitParameters.sNormChi2        = 0;
+
+
                   }
                    delete min;
                    delete parameter;
