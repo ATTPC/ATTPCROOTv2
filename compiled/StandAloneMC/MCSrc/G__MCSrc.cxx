@@ -49,14 +49,13 @@ namespace {
 0
     };
     static const char* includePaths[] = {
-"/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/StandAloneMC/MCSrc/inc",
-"/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include/root",
-"/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include",
-"/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/include",
-"/home/ayyadlim/fair_install_ROOT6/FairRoot.v15.07.sp/include",
-"/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/StandAloneMC/MCSrc/MCSrc",
-"/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include/root",
-"/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/StandAloneMC/MCSrc/",
+"/mnt/research/attpc/fair_install_ROOT6/FairSoftInst.nov15p3/include/root",
+"/mnt/research/attpc/fair_install_ROOT6/FairSoftInst.nov15p3/include",
+"/mnt/research/attpc/fair_install_ROOT6/ATTPCROOTv2/include",
+"/mnt/research/attpc/fair_install_ROOT6/FairRootInst.v15.11/include",
+"/mnt/research/attpc/fair_install_ROOT6/ATTPCROOTv2/compiled/StandAloneMC/MCSrc/MCSrc",
+"/mnt/research/attpc/fair_install_ROOT6/FairSoftInst.nov15p3/include/root",
+"/mnt/research/attpc/fair_install_ROOT6/ATTPCROOTv2/compiled/StandAloneMC/MCSrc/",
 0
     };
     static const char* fwdDeclCode = 
