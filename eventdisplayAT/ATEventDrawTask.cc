@@ -700,7 +700,8 @@ ATEventDrawTask::DrawHSpace()
                     std::cout<<"  Phi            : "<<fHoughSpaceCircle_buff->FitParameters.sPhiMin*180/TMath::Pi()<<std::endl;
                     std::cout<<"  Energy         : "<<fHoughSpaceCircle_buff->FitParameters.sEnerMin<<std::endl;
                     std::cout<<"  Brho           : "<<fHoughSpaceCircle_buff->FitParameters.sBrhoMin<<std::endl;
-                    std::cout<<"  Magnetic field : "<<fHoughSpaceCircle_buff->FitParameters.sBMin<<cNORMAL<<std::endl;
+                    std::cout<<"  Magnetic field : "<<fHoughSpaceCircle_buff->FitParameters.sBMin<<std::endl;
+                    std::cout<<"  Norm. Chi-2    : "<<fHoughSpaceCircle_buff->FitParameters.sNormChi2<<cNORMAL<<std::endl;
 
 
 
