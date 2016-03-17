@@ -1,5 +1,5 @@
 void run_unpack2
-(TString dataFile = "ar46_run_0106.txt",TString parameterFile = "ATTPC.e15503b.par",
+(TString dataFile = "runfiles/ar46_run_0112.txt",TString parameterFile = "ATTPC.e15503b.par",
 TString mappath="/data/ar46/run_0085/")
 {
 
@@ -117,8 +117,8 @@ TString mappath="/data/ar46/run_0085/")
 
   run -> Init();
 
-  run -> RunOnTBData();
-  //run->Run(0,20);
+  //run -> RunOnTBData();
+  run->Run(0,100);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
