@@ -183,6 +183,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         Double_t tm=0.0;
                         Int_t iteration=0;
 
+                        if(kVerbose){
                         std::cout<<std::endl;
                         std::cout<<cGREEN<<" ============================"<<std::endl;
                         std::cout<<" Starting Monte Carlo event  "<<std::endl;
@@ -192,12 +193,13 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         std::cout<<" Scattering Angle : "<<theta0*180.0/TMath::Pi()<<" deg "<<std::endl;
                         std::cout<<" Azimutal Angle : "<<phi0*180.0/TMath::Pi()<<" deg "<<std::endl;
                         std::cout<<" Lenght of the experimental data : "<<parameter[7]<<cNORMAL<<std::endl;
+                       }
 
 
                         fHitArray = event->GetHitArray();
 
                         GetEnergy(sm1,z1,brotheta,e0sm);
-                        std::cout<<cGREEN<<" Energy of the proton : "<<e0sm<<" MeV "<<cNORMAL<<std::endl;
+                        if(kVerbose) std::cout<<cGREEN<<" Energy of the proton : "<<e0sm<<" MeV "<<cNORMAL<<std::endl;
                         Double_t chimininit=1.e6;
 
                         if(bro==0 || isnan(e0sm) || e0sm>100.0){
@@ -368,6 +370,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                                                            //std::cout<<" iterCorr : "<<iterCorr_0-iterCorr<<" iterd : "<<iterd<<std::endl;
 
                                                            iterCorrNorm = iterCorr_0-iterCorr;
+                                                           if(iterCorrNorm<0) break;
 
                                                            xTBCorr[iterCorrNorm] = xpad[iterd];
                                                            yTBCorr[iterCorrNorm] = ypad[iterd];
@@ -730,7 +733,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                      BackwardExtrapolation();
 
-
+                     if(kVerbose){
                         std::cout<<cYELLOW<<" Minimization result : "<<std::endl;
                         std::cout<<" Scattering Angle : "<<fThetaMin*180.0/TMath::Pi()<<std::endl;
                         std::cout<<" Azimutal angle : "<<fPhiMin*180.0/TMath::Pi()<<std::endl;
@@ -741,6 +744,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         std::cout<<" Vertex Energy : "<<fVertexEner<<" MeV "<<std::endl;
                         std::cout<<" Reduced chi2 : "<<chi2min/FitParameters.sNumMCPoint<<std::endl;
                         std::cout<<" Minimum chi2 : "<<chi2min<<cNORMAL<<std::endl;
+                    }
 
 
 
@@ -920,7 +924,7 @@ void ATMCMinimization::BackwardExtrapolation()
                        //dt=dzstep/(dzdt);
                        dt=-dzstep/(dzdt)/(Float_t) integrationsteps;
 
-                       if(i==199) std::cout<<cYELLOW<<" Warning: Minimum distance of approach not found ! "<<std::endl;
+                       if(i==199) std::cout<<cYELLOW<<" Warning: Minimum distance of approach not found ! "<<cNORMAL<<std::endl;
 
 
 

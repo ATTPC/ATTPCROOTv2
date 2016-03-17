@@ -393,7 +393,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
 
                     Double_t HoughAngleDeg = fHoughLinePar.first*180.0/TMath::Pi();
 
-                    std::cout<<" Hough Angle "<<HoughAngleDeg<<std::endl;
+                    //std::cout<<" Hough Angle "<<HoughAngleDeg<<std::endl;
 
                 if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) { // Check RxPhi plot to adjust the angle
 

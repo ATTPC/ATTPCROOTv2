@@ -38,7 +38,7 @@
 namespace std {} using namespace std;
 
 // Header files passed as explicit arguments
-#include "/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/compiled/StandAloneMC/MCSrc/MCSrc.hh"
+#include "MCSrc.hh"
 
 // Header files passed via #pragma extra_include
 
@@ -49,12 +49,12 @@ namespace {
 0
     };
     static const char* includePaths[] = {
-"/usr/local/root-6.05.02/include",
-"/usr/include",
+"/home/ayyadlim/fair_install_ROOT6/FairSoftInst.nov15p3/include/root",
+"/home/ayyadlim/fair_install_ROOT6/FairSoftInst.nov15p3/include",
 "/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/include",
-"/home/ayyadlim/fair_install_ROOT6/FairRoot.v15.07.sp/include",
+"/home/ayyadlim/fair_install_ROOT6/FairRootInst.v15.11a/include",
 "/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/compiled/StandAloneMC/MCSrc/MCSrc",
-"/usr/local/root-6.05.02/include",
+"/home/ayyadlim/fair_install_ROOT6/FairSoftInst.nov15p3/include/root",
 "/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/compiled/StandAloneMC/MCSrc/",
 0
     };
@@ -69,6 +69,9 @@ extern int __Cling_Autoloading_Map;
 
 #ifndef G__VECTOR_HAS_CLASS_ITERATOR
   #define G__VECTOR_HAS_CLASS_ITERATOR 1
+#endif
+#ifndef R__HAVE_CONFIG
+  #define R__HAVE_CONFIG 1
 #endif
 
 #define _BACKWARD_BACKWARD_WARNING_H

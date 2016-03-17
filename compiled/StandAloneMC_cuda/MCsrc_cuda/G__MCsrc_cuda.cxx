@@ -49,13 +49,13 @@ namespace {
 0
     };
     static const char* includePaths[] = {
-"/mnt/research/attpc/fair_install_ROOT6/FairSoftInst.nov15p3/include/root",
-"/mnt/research/attpc/fair_install_ROOT6/FairSoftInst.nov15p3/include",
-"/mnt/research/attpc/fair_install_ROOT6/ATTPCROOTv2/include",
-"/mnt/research/attpc/fair_install_ROOT6/FairRootInst.v15.11/include",
-"/mnt/research/attpc/fair_install_ROOT6/ATTPCROOTv2/StandAloneMC_cuda/MCsrc_cuda/MCsrc_cuda",
-"/mnt/research/attpc/fair_install_ROOT6/FairSoftInst.nov15p3/include/root",
-"/mnt/research/attpc/fair_install_ROOT6/ATTPCROOTv2/StandAloneMC_cuda/MCsrc_cuda/",
+"/home/ayyadlim/fair_install_ROOT6/FairSoftInst.nov15p3/include/root",
+"/home/ayyadlim/fair_install_ROOT6/FairSoftInst.nov15p3/include",
+"/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/include",
+"/home/ayyadlim/fair_install_ROOT6/FairRootInst.v15.11a/include",
+"/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/compiled/StandAloneMC_cuda/MCsrc_cuda/MCsrc_cuda",
+"/home/ayyadlim/fair_install_ROOT6/FairSoftInst.nov15p3/include/root",
+"/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/compiled/StandAloneMC_cuda/MCsrc_cuda/",
 0
     };
     static const char* fwdDeclCode = 
