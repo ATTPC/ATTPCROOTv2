@@ -733,7 +733,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                      BackwardExtrapolation();
 
-                     //if(kVerbose){
+                     if(kVerbose){
                         std::cout<<cYELLOW<<" Minimization result : "<<std::endl;
                         std::cout<<" Scattering Angle : "<<fThetaMin*180.0/TMath::Pi()<<std::endl;
                         std::cout<<" Azimutal angle : "<<fPhiMin*180.0/TMath::Pi()<<std::endl;
@@ -744,7 +744,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         std::cout<<" Vertex Energy : "<<fVertexEner<<" MeV "<<std::endl;
                         std::cout<<" Reduced chi2 : "<<chi2min/FitParameters.sNumMCPoint<<std::endl;
                         std::cout<<" Minimum chi2 : "<<chi2min<<cNORMAL<<std::endl;
-                    //}
+                    }
 
 
 
@@ -1044,7 +1044,7 @@ Bool_t ATMCMinimization::MinimizeOpt(Double_t* parameter,ATEvent *event){
 
 
 
-                                    if(parameter[7]<500){
+                                    if(parameter[7]<700){
 
 
                                           for(Int_t i=0;i<5;i++)
