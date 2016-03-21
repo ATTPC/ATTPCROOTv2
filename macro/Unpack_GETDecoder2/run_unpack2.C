@@ -117,8 +117,8 @@ TString mappath="/data/ar46/run_0085/")
 
   run -> Init();
 
-  run -> RunOnTBData();
-  //run->Run(0,50);
+  //run -> RunOnTBData();
+  run->Run(0,2);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
@@ -131,6 +131,8 @@ TString mappath="/data/ar46/run_0085/")
   cout << "Real time " << rtime << " s, CPU time " << ctime << " s" << endl;
   cout << endl;
   // ------------------------------------------------------------------------
+
+  gApplication->Terminate();
 
 }
 
