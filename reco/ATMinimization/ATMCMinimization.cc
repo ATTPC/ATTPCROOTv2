@@ -16,7 +16,6 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
-#include <iostream>
 
 ClassImp(ATMCMinimization)
 
@@ -203,7 +202,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         Double_t chimininit=1.e6;
 
                         if(bro==0 || isnan(e0sm) || e0sm>100.0){
-                            std::cout<<cRED<<" Invalid energy !"<<cNORMAL<<std::endl;
+                            if(kVerbose) std::cout<<cRED<<" Invalid energy !"<<cNORMAL<<std::endl;
                             return kFALSE;
                           }
 
@@ -924,7 +923,8 @@ void ATMCMinimization::BackwardExtrapolation()
                        //dt=dzstep/(dzdt);
                        dt=-dzstep/(dzdt)/(Float_t) integrationsteps;
 
-                       if(i==199) std::cout<<cYELLOW<<" Warning: Minimum distance of approach not found ! "<<cNORMAL<<std::endl;
+                       if(i==199)
+                          if(kVerbose) std::cout<<cYELLOW<<" Warning: Minimum distance of approach not found ! "<<cNORMAL<<std::endl;
 
 
 
@@ -936,6 +936,9 @@ void ATMCMinimization::BackwardExtrapolation()
 }
 
 Bool_t ATMCMinimization::MinimizeOpt(Double_t* parameter,ATEvent *event){
+
+  //std::ofstream dumpMC;
+  //dumpMC.open ("MC_minimization.dat");
 
                   std::vector<Double_t> xc;
                   std::vector<Double_t> xiter;
@@ -1038,7 +1041,7 @@ Bool_t ATMCMinimization::MinimizeOpt(Double_t* parameter,ATEvent *event){
                 Double_t chimininit=1.e6;
 
                 if(bro==0 || isnan(e0sm) || e0sm>100.0){
-                    std::cout<<cRED<<" Invalid energy !"<<cNORMAL<<std::endl;
+                      if(kVerbose) std::cout<<cRED<<" Invalid energy !"<<cNORMAL<<std::endl;
                     return kFALSE;
                   }
 
@@ -1501,6 +1504,7 @@ Bool_t ATMCMinimization::MinimizeOpt(Double_t* parameter,ATEvent *event){
                                                                        std::cout<<cYELLOW<<" New Min chi2 : "<<chi2min<<" for MC iteration : "<<j<<" of the step "<<i<<std::endl;
                                                                        std::cout<<" Number of MC points : "<<num_MC_Point<<std::endl;
                                                                        std::cout<<" Reduced chi2 : "<<chi2min/num_MC_Point<<cNORMAL<<std::endl;
+                                                                       std::cout<<" Energy : "<<e0sm<<" Angle "<<theta0<<std::endl;
                                                                      }
 
                                                                         /*    std::ofstream dumpIter;
@@ -1512,6 +1516,10 @@ Bool_t ATMCMinimization::MinimizeOpt(Double_t* parameter,ATEvent *event){
                                                                             dumpIter<<xTBbuff[idat]<<" "<<yTBbuff[idat]<<" "<<zTBbuff[idat]<<std::endl;
                                                                             dumpIter<<" Chi2 : "<<chi2buff[idat]<<std::endl;
                                                                           }*/
+
+                                                                              //dumpMC<<j<<"  "<<i<<" "<<e0sm<<"  "<<theta0<<std::endl;
+
+
 
 
                                                                      }

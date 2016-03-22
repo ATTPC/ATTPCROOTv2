@@ -23,6 +23,6 @@ do
     return;
   fi
   root -b -q -l "run_unpack2.C(\"runfiles/ar46_run_0$i.txt\",\"ATTPC.e15503b.par\",\"/data/ar46/run_0085/\")"
-  mv output.root test_run_0$i.root
+  mv output.root run_0$i.root
   ((i=i+1));
 done

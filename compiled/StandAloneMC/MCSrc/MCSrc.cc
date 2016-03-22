@@ -1,4 +1,5 @@
 #include "MCSrc.hh"
+#include "MCMinimization.hh"
 #include <ios>
 #include <iostream>
 #include <istream>
@@ -36,6 +37,9 @@ Int_t main()
 
     FairRunAna* run = new FairRunAna(); //Forcing a dummy run
 
+    MCMinimization *min = new MCMinimization();
+    min->ResetParameters();
+
     TString workdir = getenv("VMCWORKDIR");
     TString FileNameHead = "output";
     TString FilePath = workdir + "/macro/Unpack_GETDecoder2/";
@@ -52,6 +56,8 @@ Int_t main()
     TTreeReader Reader1("cbmsim", file);
     TTreeReaderValue<TClonesArray> eventArray(Reader1, "ATEventH");
     TTreeReaderValue<TClonesArray> houghArray(Reader1, "ATHough");
+
+    Double_t* parameter = new Double_t[8];
 
           while (Reader1.Next()) {
 
@@ -81,8 +87,8 @@ Int_t main()
 
               ATHoughSpaceCircle* fHoughSpaceCircle  = dynamic_cast<ATHoughSpaceCircle*> (houghArray->At(0));
               //if(!fHoughSpaceCircle) std::cout<<" Warning : Failed casting "<<std::endl;
-              std::cout<<fHoughSpaceCircle->GetYCenter()<<std::endl;
-
+              //std::cout<<fHoughSpaceCircle->GetYCenter()<<std::endl;
+              min->MinimizeOpt(parameter,event);
 
           }
 
