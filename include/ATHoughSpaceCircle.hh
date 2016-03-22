@@ -33,10 +33,11 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         std::vector<Double_t>* GetTheta()  {return fTheta;}
         std::vector<Double_t>* GetDl()  {return fDl;}
 
-        Double_t GetIniPhi() {return fIniPhi;}
-        Double_t GetIniTheta()  {return fIniTheta;}
-        Double_t GetIniRadius()  {return fIniRadius;}
-        ATHit* GetIniHit()   {return fIniHit;}
+        Double_t GetIniPhi()                {return fIniPhi;}
+        Double_t GetIniTheta()              {return fIniTheta;}
+        Double_t GetIniRadius()             {return fIniRadius;}
+        ATHit*   GetIniHit()                {return fIniHit;}
+        Double_t* GetInitialParameters()    {return fParameter;}
 
         std::vector<Double_t> GetPosXMin() {return fPosXmin;}
         std::vector<Double_t> GetPosYMin() {return fPosYmin;}
@@ -126,6 +127,8 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         std::map<ULong64_t,Int_t> HoughMap; //8 byte for the key, unsigned, no negative distance in Linear Hough space is expected for each quadrant (Radius and Z are the vairbales)
         std::vector<ULong64_t> HoughMapKey;
         std::pair<Double_t,Double_t> fHoughLinePar;
+
+        Double_t fParameter[8];
 
         struct maxpersecond
         {

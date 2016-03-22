@@ -27,6 +27,7 @@ ATHoughSpaceCircle::ATHoughSpaceCircle()
     fTheta = new std::vector<Double_t>;
     fIniHit = new ATHit();
     fClusteredHits = new std::vector<ATHit>;
+    for(Int_t i;i<8;i++) fParameter[i]=0.0;
 
 
 
@@ -380,7 +381,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
 
 
                     TVector3 IniHitPos = fIniHit->GetPosition();
-                    Double_t* parameter = new Double_t[8];
+                    Double_t *parameter = new Double_t[8];
                     parameter[0]=IniHitPos.X();
                     parameter[1]=IniHitPos.Y();
                     parameter[2]=IniHitPos.Z();
@@ -390,6 +391,10 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
                     parameter[6]=fIniTheta;
                     parameter[7]=fIniHitID;
 
+                    for(Int_t i=0;i<8;i++){
+                       fParameter[i]=parameter[i];
+                       std::cout<<" Par "<<i<<" : "<<fParameter[i]<<std::endl;
+                     }
 
                     Double_t HoughAngleDeg = fHoughLinePar.first*180.0/TMath::Pi();
 

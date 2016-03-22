@@ -88,7 +88,12 @@ Int_t main()
               ATHoughSpaceCircle* fHoughSpaceCircle  = dynamic_cast<ATHoughSpaceCircle*> (houghArray->At(0));
               //if(!fHoughSpaceCircle) std::cout<<" Warning : Failed casting "<<std::endl;
               //std::cout<<fHoughSpaceCircle->GetYCenter()<<std::endl;
+              parameter = fHoughSpaceCircle->GetInitialParameters();
+              for(Int_t i=0;i<8;i++) std::cout<<" Par "<<i<<" : "<<parameter[i]<<std::endl;
+              Double_t HoughAngleDeg = parameter[6]*180.0/TMath::Pi();
+              if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) {
               min->MinimizeOpt(parameter,event);
+              }
 
           }
 

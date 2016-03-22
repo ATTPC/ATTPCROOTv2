@@ -132,7 +132,7 @@ Bool_t MCMinimization::MinimizeOpt(Double_t* parameter,ATEvent *event){
                  kVerbose = kFALSE;
                  kDebug   = kFALSE;
 
-                 if(kVerbose){
+                 //if(kVerbose){
                  std::cout<<std::endl;
                  std::cout<<cGREEN<<" ============================"<<std::endl;
                  std::cout<<" Starting Monte Carlo event  "<<std::endl;
@@ -142,7 +142,7 @@ Bool_t MCMinimization::MinimizeOpt(Double_t* parameter,ATEvent *event){
                  std::cout<<" Scattering Angle : "<<theta0*180.0/TMath::Pi()<<" deg "<<std::endl;
                  std::cout<<" Azimutal Angle : "<<phi0*180.0/TMath::Pi()<<" deg "<<std::endl;
                  std::cout<<" Lenght of the experimental data : "<<parameter[7]<<cNORMAL<<std::endl;
-                }
+              //  }
 
                 std::vector<std::vector<ATHit>> *hitTBMatrix = new std::vector<std::vector<ATHit>>;
 
@@ -645,7 +645,7 @@ Bool_t MCMinimization::MinimizeOpt(Double_t* parameter,ATEvent *event){
 
                                                            BackwardExtrapolation();
 
-                                                           if(kVerbose){
+                                                          // if(kVerbose){
                                                               std::cout<<cYELLOW<<" Minimization result : "<<std::endl;
                                                               std::cout<<" Scattering Angle : "<<fThetaMin*180.0/TMath::Pi()<<std::endl;
                                                               std::cout<<" Azimutal angle : "<<fPhiMin*180.0/TMath::Pi()<<std::endl;
@@ -656,7 +656,7 @@ Bool_t MCMinimization::MinimizeOpt(Double_t* parameter,ATEvent *event){
                                                               std::cout<<" Vertex Energy : "<<fVertexEner<<" MeV "<<std::endl;
                                                               std::cout<<" Reduced chi2 : "<<chi2min/FitParameters.sNumMCPoint<<std::endl;
                                                               std::cout<<" Minimum chi2 : "<<chi2min<<cNORMAL<<std::endl;
-                                                          }
+                                                        //  }
 
 
                                                             delete hitTBMatrix;
