@@ -32,7 +32,7 @@ void myflush ( std::istream& in );
 void mypause();
 
 void run_ana_46Ar(TString FileNameHead = "run_",
-Int_t num_ev=100000000, Int_t file_ini=86, Int_t file_end=106, Int_t runnum=250, TString file="../Kinematics/Decay_kinematics/Kine.txt")
+Int_t num_ev=100000000, Int_t file_ini=86, Int_t file_end=110, Int_t runnum=250, TString file="../Kinematics/Decay_kinematics/Kine.txt")
 {
 
 	    //gStyle->SetCanvasPreferGL(1);
@@ -54,6 +54,8 @@ Int_t num_ev=100000000, Int_t file_ini=86, Int_t file_end=106, Int_t runnum=250,
 			Double_t tThetaMin;
 			Double_t tVertexPos;
 			Double_t tVertexEner;
+
+			Double_t tEnerMinBuff=0.0;
 
 			TH2D* EAKine = new TH2D("EAKine","EAKine",500,0,180,100,0,10);
 	    EAKine->SetMarkerColor(2);
@@ -109,10 +111,12 @@ Int_t num_ev=100000000, Int_t file_ini=86, Int_t file_end=106, Int_t runnum=250,
 						tThetaMin   = 180.0*fHoughSpaceCircle->FitParameters.sThetaMin/TMath::Pi();
 						tVertexPos  = fHoughSpaceCircle->FitParameters.sVertexPos.Z();
 						tVertexEner = fHoughSpaceCircle->FitParameters.sVertexEner;
-						//std::cout<<EnerMin<<"  "<<NormChi2<<std::endl;
+						if(tEnerMin==tEnerMinBuff) continue;
+						//std::cout<<tEnerMin<<"  "<<tNormChi2<<std::endl;
 						if(nEve%1000==0) std::cout<<" Event : "<<nEve<<"/"<<nEvents<<std::endl;
 						if(tNormChi2<4) EAKine->Fill(tThetaMin,tEnerMin);
 
+						tEnerMinBuff = tEnerMin;
 
 						treeOut->Fill();
 
