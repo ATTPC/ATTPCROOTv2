@@ -89,10 +89,12 @@ Int_t main()
               //if(!fHoughSpaceCircle) std::cout<<" Warning : Failed casting "<<std::endl;
               //std::cout<<fHoughSpaceCircle->GetYCenter()<<std::endl;
               parameter = fHoughSpaceCircle->GetInitialParameters();
-              for(Int_t i=0;i<8;i++) std::cout<<" Par "<<i<<" : "<<parameter[i]<<std::endl;
-              Double_t HoughAngleDeg = parameter[6]*180.0/TMath::Pi();
+              std::pair<Double_t,Double_t>  fHoughLinePar =  fHoughSpaceCircle->GetHoughPar();
+              //for(Int_t i=0;i<8;i++) std::cout<<" Par "<<i<<" : "<<parameter[i]<<std::endl;
+              Double_t HoughAngleDeg = fHoughLinePar.first*180.0/TMath::Pi();
               if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) {
-              min->MinimizeOpt(parameter,event);
+
+                  min->MinimizeOpt(parameter,event);
               }
 
           }
