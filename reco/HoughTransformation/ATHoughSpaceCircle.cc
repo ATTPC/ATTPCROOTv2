@@ -391,10 +391,8 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
                     parameter[6]=fIniTheta;
                     parameter[7]=fIniHitID;
 
-                    for(Int_t i=0;i<8;i++){
-                       fParameter[i]=parameter[i];
-                       std::cout<<" Par "<<i<<" : "<<fParameter[i]<<std::endl;
-                     }
+                    for(Int_t i=0;i<8;i++) fParameter[i]=parameter[i];
+
 
                     Double_t HoughAngleDeg = fHoughLinePar.first*180.0/TMath::Pi();
 
