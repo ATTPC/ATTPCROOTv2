@@ -29,6 +29,14 @@ include(${ROOT_USE_FILE})
 
 #---Locate other external packages
 find_package(Boost REQUIRED)
+find_package(OpenMP)
+
+if (OPENMP_FOUND)
+    MESSAGE("-- OpenMP Support Found")
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+
+endif()
 
 include_directories( ${ROOT_INCLUDE_DIR}
                      ${Boost_INCLUDE_DIRS}

@@ -1,3 +1,7 @@
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 #include "MCSrc.hh"
 #include "MCMinimization.hh"
 #include <ios>
@@ -17,6 +21,7 @@
 #include "TSystem.h"
 #include "TH1F.h"
 #include "TCanvas.h"
+#include "TStopwatch.h"
 
 #include "ATEvent.hh"
 #include "ATPad.hh"
@@ -30,10 +35,17 @@
 #include "FairRun.h"
 #include "FairRunAna.h"
 
+int target_thread_num = 4;
+
+
 Int_t main()
 {
 
     gSystem->Load("libATTPCReco.so");
+    omp_set_num_threads(target_thread_num);
+
+    TStopwatch timer;
+    timer.Start();
 
     FairRunAna* run = new FairRunAna(); //Forcing a dummy run
 
@@ -59,21 +71,21 @@ Int_t main()
 
     Double_t* parameter = new Double_t[8];
 
-          while (Reader1.Next()) {
+      //#pragma omp parallel for ordered schedule(dynamic,1)
+      for(Int_t i=0;i<nEvents;i++){
+          //while (Reader1.Next()) {
 
+              Reader1.Next();
 
               ATEvent* event = (ATEvent*) eventArray->At(0);
               Int_t nHits = event->GetNumHits();
-              std::vector<ATHit>* hitArray = event->GetHitArray(); //Not working!
+              std::vector<ATHit>* hitArray = event->GetHitArray();
               event->GetHitArrayObj();
-              //std::cout<<event->GetHitPadMult(0)<<std::endl;
-              //std::cout<<event->GetEventID()<<std::endl;
+              std::cout<<event->GetEventID()<<std::endl;
               hitArray->size();
 
-              std::vector<ATHit*>* hitbuff = new std::vector<ATHit*>; // Working!
+              std::vector<ATHit*>* hitbuff = new std::vector<ATHit*>;
 
-              //std::vector<ATEvent*> test;
-              //test.push_back(event);
 
                     for(Int_t iHit=0; iHit<nHits; iHit++){
                       ATHit hit = event->GetHit(iHit);
@@ -82,7 +94,6 @@ Int_t main()
 
 
                     }
-
               //std::cout<<hitbuff->size()<<std::endl;
 
               ATHoughSpaceCircle* fHoughSpaceCircle  = dynamic_cast<ATHoughSpaceCircle*> (houghArray->At(0));
@@ -90,7 +101,6 @@ Int_t main()
               //std::cout<<fHoughSpaceCircle->GetYCenter()<<std::endl;
               parameter = fHoughSpaceCircle->GetInitialParameters();
               std::pair<Double_t,Double_t>  fHoughLinePar =  fHoughSpaceCircle->GetHoughPar();
-              //for(Int_t i=0;i<8;i++) std::cout<<" Par "<<i<<" : "<<parameter[i]<<std::endl;
               Double_t HoughAngleDeg = fHoughLinePar.first*180.0/TMath::Pi();
               if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) {
 
@@ -100,7 +110,14 @@ Int_t main()
           }
 
   //#pragma omp parallel for ordered schedule(dynamic,1)
-  //for(Int_t i=0;i<100;i++)std::cout<<" Hello ATTPCer! "<<std::endl;
-   return 0;
+  //for(Int_t i=0;i<100000;i++)std::cout<<" Hello ATTPCer! "<<std::endl;
+
+  timer.Stop();
+  Double_t rtime = timer.RealTime();
+  Double_t ctime = timer.CpuTime();
+  std::cout << std::endl << std::endl;
+  std::cout << "Real time " << rtime << " s, CPU time " << ctime << " s" << std::endl;
+  std::cout << std::endl;
+  return 0;
 
 }
