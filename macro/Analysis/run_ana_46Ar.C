@@ -32,7 +32,7 @@ void myflush ( std::istream& in );
 void mypause();
 
 void run_ana_46Ar(TString FileNameHead = "run_",
-Int_t num_ev=100000000, Int_t file_ini=86, Int_t file_end=110, Int_t runnum=250, TString file="../Kinematics/Decay_kinematics/Kine.txt")
+Int_t num_ev=100000000, Int_t file_ini=50, Int_t file_end=154, Int_t runnum=250, TString file="../Kinematics/Decay_kinematics/Kine.txt")
 {
 
 	    //gStyle->SetCanvasPreferGL(1);

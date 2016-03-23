@@ -1,5 +1,5 @@
-void run_unpack_proto_8He_2(TString dataFile = "run_ISAC2015_0254.txt",TString parameterFile = "pATTPC.TRIUMF2015.par"){
-//void run_unpack_proto_8He_2(TString dataFile = "/home/ayyadlim/Desktop/Yassid/ATTPC/Data/Notre_Dame_data/CoBo_AsAd0_2015-01-28T16:56:24.135_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
+//void run_unpack_proto_8He_2(TString dataFile = "run_ISAC2015_0254.txt",TString parameterFile = "pATTPC.TRIUMF2015.par"){
+void run_unpack_proto_8He_2(TString dataFile = "/home/ayyadlim/Desktop/Yassid/ATTPC/Data/TRIUMF/CoBo_AsAd0_2015-12-03T05_47_43.571_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
 
 
     // -----   Timer   --------------------------------------------------------
@@ -65,11 +65,11 @@ void run_unpack_proto_8He_2(TString dataFile = "run_ISAC2015_0254.txt",TString p
    run -> AddTask(psaTask);
 
     //Moved to analysis macro!
-   /*ATPhiRecoTask *phirecoTask = new ATPhiRecoTask();
+   ATPhiRecoTask *phirecoTask = new ATPhiRecoTask();
    phirecoTask -> SetPersistence();
    run -> AddTask(phirecoTask);
 
-   ATHoughTask *HoughTask = new ATHoughTask();
+   /*ATHoughTask *HoughTask = new ATHoughTask();
    HoughTask->SetPhiReco();
    HoughTask->SetPersistence();
    HoughTask->SetLinearHough();
@@ -79,7 +79,7 @@ void run_unpack_proto_8He_2(TString dataFile = "run_ISAC2015_0254.txt",TString p
 
    run->Init();
 
-   run->Run(0,3800);
+   run->Run(0,200);
 	 //run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------

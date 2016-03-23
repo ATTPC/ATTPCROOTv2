@@ -1,0 +1,10 @@
+/data/ar46/run_0050/CoBo0_run_0050_11-09-15_18h32m43s.graw
+/data/ar46/run_0050/CoBo1_run_0050_11-09-15_18h32m43s.graw
+/data/ar46/run_0050/CoBo2_run_0050_11-09-15_18h32m43s.graw
+/data/ar46/run_0050/CoBo3_run_0050_11-09-15_18h32m43s.graw
+/data/ar46/run_0050/CoBo4_run_0050_11-09-15_18h32m43s.graw
+/data/ar46/run_0050/CoBo5_run_0050_11-09-15_18h32m43s.graw
+/data/ar46/run_0050/CoBo6_run_0050_11-09-15_18h32m43s.graw
+/data/ar46/run_0050/CoBo7_run_0050_11-09-15_18h32m43s.graw
+/data/ar46/run_0050/CoBo8_run_0050_11-09-15_18h32m43s.graw
+/data/ar46/run_0050/CoBo9_run_0050_11-09-15_18h32m43s.graw
