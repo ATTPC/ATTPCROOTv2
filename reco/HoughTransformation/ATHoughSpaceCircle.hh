@@ -140,7 +140,7 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         };
 
 
-        ClassDef(ATHoughSpaceCircle, 2);
+        ClassDef(ATHoughSpaceCircle, 3);
 
 };
 

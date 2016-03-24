@@ -23,61 +23,54 @@ void ATPhiRecoSimple::PhiAnalyze(ATEvent *event,ATProtoEvent *protoevent){
                     ProtoQuad1->SetEventID(event->GetEventID());
                     ATProtoQuadrant *ProtoQuad2 = new ATProtoQuadrant(2); // Quadrant ID : 2
                     ProtoQuad2->SetEventID(event->GetEventID());
-		    ATProtoQuadrant *ProtoQuad3 = new ATProtoQuadrant(3); // Quadrant ID : 3
+		                ATProtoQuadrant *ProtoQuad3 = new ATProtoQuadrant(3); // Quadrant ID : 3
                     ProtoQuad3->SetEventID(event->GetEventID());
-		    ATProtoQuadrant *ProtoQuad4 = new ATProtoQuadrant(4); // Quadrant ID : 4 
+		                ATProtoQuadrant *ProtoQuad4 = new ATProtoQuadrant(4); // Quadrant ID : 4
                     ProtoQuad4->SetEventID(event->GetEventID());
 
 			 for(Int_t iHit=0; iHit<nHits; iHit++){
-				ATHit hit = event->GetHitArray()->at(iHit);
-                                ATHit *phit = &hit;
+				          ATHit hit = event->GetHitArray()->at(iHit);
+                  ATHit *phit = &hit;
     			        Int_t PadNum = hit.GetHitPadNum();
                                 //std::cout<<" Hit : "<<iHit<<" ATHit Pad Number :  "<<PadNum<<std::endl;
 
                                  //Dividing into quadrants
-                                    if(PadNum>0 && PadNum<64){
+                  if(PadNum>0 && PadNum<64){
 
                                           //std::cout<<" Quadrant 1 "<<std::endl;
                                          // std::cout<<" Hit : "<<iHit<<" ATHit Pad Number :  "<<PadNum<<std::endl;
-  					    ProtoQuad1 ->AddHit(phit);
-					    
+  					         ProtoQuad1 ->AddHit(phit);
 
+			        	  }else if(PadNum>63 && PadNum<127){
 
-
-				    }else if(PadNum>63 && PadNum<127){
-
-					  // std::cout<<" Quadrant 2 "<<std::endl;
+					                                // std::cout<<" Quadrant 2 "<<std::endl;
                                           // std::cout<<" Hit : "<<iHit<<" ATHit Pad Number :  "<<PadNum<<std::endl;
-					     ProtoQuad2 ->AddHit(phit);
+					           ProtoQuad2 ->AddHit(phit);
 
-				    }else if(PadNum>126 && PadNum<190){
+				          }else if(PadNum>126 && PadNum<190){
 
-					   //std::cout<<" Quadrant 3 "<<std::endl;
+					                                //std::cout<<" Quadrant 3 "<<std::endl;
                                           // std::cout<<" Hit : "<<iHit<<" ATHit Pad Number :  "<<PadNum<<std::endl;
-					     ProtoQuad3 ->AddHit(phit);
+                     ProtoQuad3 ->AddHit(phit);
 
-				    }else if(PadNum>189 && PadNum<253){
+				          }else if(PadNum>189 && PadNum<253){
 
-					   //std::cout<<" Quadrant 4 "<<std::endl;
-                                           //std::cout<<" Hit : "<<iHit<<" ATHit Pad Number :  "<<PadNum<<std::endl;
+					                                //std::cout<<" Quadrant 4 "<<std::endl;
+                                          //std::cout<<" Hit : "<<iHit<<" ATHit Pad Number :  "<<PadNum<<std::endl;
 				             ProtoQuad4 ->AddHit(phit);
 
-				    }else if(PadNum==0){
+				          }else if(PadNum==0){
 
-						//TODO: Central Pad
+					      	//TODO: Central Pad
 
 
                                     }
-
-				
-
-
 
 			}
 
 			PhiCalc(ProtoQuad1,event);
 			PhiCalc(ProtoQuad2,event);
-                        PhiCalc(ProtoQuad3,event);
+      PhiCalc(ProtoQuad3,event);
 			PhiCalc(ProtoQuad4,event);
 
 			/*fQuadArray.push_back(*ProtoQuad1);
@@ -91,9 +84,9 @@ void ATPhiRecoSimple::PhiAnalyze(ATEvent *event,ATProtoEvent *protoevent){
 			protoevent->AddQuadrant(ProtoQuad4);
 
 
-			
-                        delete ProtoQuad1;
-                        delete ProtoQuad2;
+
+      delete ProtoQuad1;
+      delete ProtoQuad2;
 			delete ProtoQuad3;
 			delete ProtoQuad4;
 
