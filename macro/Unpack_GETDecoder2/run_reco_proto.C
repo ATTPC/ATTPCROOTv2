@@ -54,7 +54,7 @@ void run_reco_proto(TString dataFile = "output_proto.root",TString parameterFile
 
    run->Init();
 
-   run->Run(0,10000000);
+   run->Run(0,1000);
 	 //run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------

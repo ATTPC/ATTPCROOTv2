@@ -116,7 +116,7 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
 
 
-      zPos = CalculateZ(maxAdcIdx);
+      zPos = CalculateZProto(maxAdcIdx);
       charge = adc[maxAdcIdx];
         //std::cout<<zPos<<std::endl;
 

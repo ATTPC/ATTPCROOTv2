@@ -50,7 +50,7 @@ ATPSA::ATPSA()
   fEField = fPar->GetEField();
   fTiltAng = fPar->GetTiltAngle();
 
-  fTB0 = fPar->GetTB0();
+  fEntTB   = (Int_t) fPar->GetTBEntrance();
 
   fThreshold = -1;
 
@@ -90,6 +90,13 @@ ATPSA::CalculateZ(Double_t peakIdx)
   //return -peakIdx*fTBTime*fDriftVelocity/100.;
     //std::cout<<fNumTbs<<"    "<<fTBTime<<"	"<<fDriftVelocity<<" peakID : "<<peakIdx<<std::endl;
     return (fNumTbs - peakIdx)*fTBTime*fDriftVelocity/100.;
+}
+
+Double_t
+ATPSA::CalculateZProto(Double_t peakIdx)
+{
+
+    return (fEntTB - peakIdx)*fTBTime*fDriftVelocity/100.;
 }
 
 Double_t

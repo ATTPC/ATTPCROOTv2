@@ -55,6 +55,7 @@ class ATPSA
 
     Int_t fNumTbs;            ///< the number of time buckets used in taking data
     Int_t fTBTime;            ///< time duration of a time bucket in ns
+    Int_t fEntTB;
     Double_t fDriftVelocity;  ///< drift velocity of electron in cm/us
     Double_t fMaxDriftLength; ///< maximum drift length in mm
 
@@ -70,6 +71,8 @@ class ATPSA
     Double_t CalculateZ(Double_t peakIdx);  ///< Calculate z position in mm using the peak index.
     Double_t CalculateY(Double_t layer);    ///< Calculate y position in mm. This returns the center position of given pad layer.
 
+    Double_t CalculateZProto(Double_t peakIdx);
+
     Double_t CalculateXCorr(Double_t xval, Int_t Tbx);
     Double_t CalculateYCorr(Double_t yval, Int_t Tby);
     Double_t CalculateZCorr(Double_t zval, Int_t Tbz);
@@ -78,7 +81,7 @@ class ATPSA
 
 
 
-  ClassDef(ATPSA, 2)
+  ClassDef(ATPSA, 3)
 };
 
 #endif

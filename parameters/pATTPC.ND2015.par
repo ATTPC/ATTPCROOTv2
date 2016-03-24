@@ -28,5 +28,5 @@ BField:Double_t                  2   # Tesla
 TiltAng:Double_t                 6   # Degress
 TB0:Int_t                       98   # Time Bucket reference for micromegas position
 LorentzAngle:Double_t         -7.4   # Lorentz Angle
-TBEntrance:Int_t               500   # Beam position at detector entrance in TB
+TBEntrance:Int_t               390   # Beam position at detector entrance in TB
 ################################################################################
