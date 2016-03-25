@@ -1,5 +1,5 @@
-void run_unpack_proto_8He_2(TString dataFile = "run_ISAC2015_0254.txt",TString parameterFile = "pATTPC.TRIUMF2015.par"){
-//void run_unpack_proto_8He_2(TString dataFile = "/home/ayyadlim/Desktop/Yassid/ATTPC/Data/Notre_Dame_data/10Be/CoBo_2013-02-21_12-52-57_0006.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
+//void run_unpack_proto_8He_2(TString dataFile = "run_ISAC2015_0254.txt",TString parameterFile = "pATTPC.TRIUMF2015.par"){
+void run_unpack_proto_8He_2(TString dataFile = "/home/ayyadlim/Desktop/Yassid/ATTPC/Data/TRIUMF/CoBo_AsAd0_2015-12-03T05_47_43.571_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
 
 
     // -----   Timer   --------------------------------------------------------
@@ -54,7 +54,7 @@ void run_unpack_proto_8He_2(TString dataFile = "run_ISAC2015_0254.txt",TString p
 	 decoderTask ->SetGeo(geo.Data());
    decoderTask ->SetProtoMap(protomapdir.Data());
    decoderTask ->SetMap((Char_t const*) scriptdir.Data());
-   //decoderTask -> SetPersistence();
+   decoderTask -> SetPersistence();
    run -> AddTask(decoderTask);
 
    ATPSATask *psaTask = new ATPSATask();
@@ -79,8 +79,8 @@ void run_unpack_proto_8He_2(TString dataFile = "run_ISAC2015_0254.txt",TString p
 
    run->Init();
 
-   //run->Run(0,2000);
-	 run -> RunOnTBData();
+   run->Run(0,2000);
+	 //run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------
 	timer.Stop();

@@ -27,6 +27,11 @@
 #include <limits>
 
 
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+
 std::pair<Double_t,Double_t> GetHoughParameters(TH2F* hist);
 void myflush ( std::istream& in );
 void mypause();
@@ -179,7 +184,8 @@ Bool_t debug=kTRUE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_ki
 			//Int_t nHits = event->GetNumHits();
 			//std::cout<<" ==================================================================================="<<std::endl;
 			//if(nEve%100==0) std::cout<<" Event number : "<<protoevent->GetEventID()<<" - Number of Hits : "<<nHits<<std::endl;
-			if(nEve%100==0) std::cout<<" Event Number : "<<nEve<<std::endl;
+		//	if(nEve%100==0)
+			 std::cout<<cRED<<" Event Number : "<<nEve<<cNORMAL<<std::endl;
 			if(debug) for (Int_t i=0;i<4;i++) DistHist[i]->Reset(0);
 
 
