@@ -33,7 +33,7 @@ void mypause();
 
 void run_ana_8He(TString FileNameHead = "output_proto_reco",
 Int_t num_ev=300000, Int_t file_ini=0, Int_t file_end=0, Int_t runnum=250, Float_t HoughDist=2.0,
-Bool_t debug=kFALSE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_kinematics/Kine.txt")
+Bool_t debug=kTRUE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_kinematics/Kine.txt")
 {
 
 	    //gStyle->SetCanvasPreferGL(1);
@@ -263,6 +263,8 @@ Bool_t debug=kFALSE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_k
 							for(Int_t j=0;j<qNumHit;j++){
 								ATHit* qhit = quadrant->GetHit(j);
 								TVector3 position = qhit->GetPosition();
+								//position.SetZ( (qhit->GetTimeStamp()-390)*2.8*80/10.0 );
+								//position.SetZ( (390-qhit->GetTimeStamp())*2.8*80.0/100.0 );
 								Double_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2) );
 								if(radius>rad_max) rad_max=radius;
 								fQuadHist[i]->Fill(radius,position.Z(),qhit->GetCharge());
