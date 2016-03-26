@@ -1,5 +1,5 @@
-//void run_unpack_proto_8He_2(TString dataFile = "run_ISAC2015_0254.txt",TString parameterFile = "pATTPC.TRIUMF2015.par"){
-void run_unpack_proto_8He_2(TString dataFile = "/home/ayyadlim/Desktop/Yassid/ATTPC/Data/TRIUMF/CoBo_AsAd0_2015-12-03T05_47_43.571_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
+void run_unpack_proto_8He_2(TString dataFile = "runfiles/run_ISAC2015_0259.txt",TString parameterFile = "pATTPC.TRIUMF2015.par"){
+//void run_unpack_proto_8He_2(TString dataFile = "/home/ayyadlim/Desktop/Yassid/ATTPC/Data/TRIUMF/CoBo_AsAd0_2015-12-03T05_47_43.571_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
 
 
     // -----   Timer   --------------------------------------------------------
@@ -54,7 +54,7 @@ void run_unpack_proto_8He_2(TString dataFile = "/home/ayyadlim/Desktop/Yassid/AT
 	 decoderTask ->SetGeo(geo.Data());
    decoderTask ->SetProtoMap(protomapdir.Data());
    decoderTask ->SetMap((Char_t const*) scriptdir.Data());
-   decoderTask -> SetPersistence();
+   //decoderTask -> SetPersistence();
    run -> AddTask(decoderTask);
 
    ATPSATask *psaTask = new ATPSATask();
@@ -65,9 +65,9 @@ void run_unpack_proto_8He_2(TString dataFile = "/home/ayyadlim/Desktop/Yassid/AT
    run -> AddTask(psaTask);
 
     //Moved to analysis macro!
-   ATPhiRecoTask *phirecoTask = new ATPhiRecoTask();
+   /*ATPhiRecoTask *phirecoTask = new ATPhiRecoTask();
    phirecoTask -> SetPersistence();
-   run -> AddTask(phirecoTask);
+   run -> AddTask(phirecoTask);*/
 
    /*ATHoughTask *HoughTask = new ATHoughTask();
    HoughTask->SetPhiReco();
@@ -79,8 +79,8 @@ void run_unpack_proto_8He_2(TString dataFile = "/home/ayyadlim/Desktop/Yassid/AT
 
    run->Init();
 
-   run->Run(0,2000);
-	 //run -> RunOnTBData();
+   //run->Run(0,2000);
+	 run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------
 	timer.Stop();
