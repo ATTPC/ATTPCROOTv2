@@ -27,13 +27,18 @@
 #include <limits>
 
 
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+
 std::pair<Double_t,Double_t> GetHoughParameters(TH2F* hist);
 void myflush ( std::istream& in );
 void mypause();
 
 void run_ana_8He(TString FileNameHead = "output_proto_reco",
-Int_t num_ev=300000, Int_t file_ini=0, Int_t file_end=0, Int_t runnum=250, Float_t HoughDist=2.0,
-Bool_t debug=kTRUE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_kinematics/Kine.txt")
+Int_t num_ev=3000000, Int_t file_ini=0, Int_t file_end=0, Int_t runnum=250, Float_t HoughDist=2.0,
+Bool_t debug=kFALSE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_kinematics/Kine.txt")
 {
 
 	    //gStyle->SetCanvasPreferGL(1);
@@ -113,6 +118,27 @@ Bool_t debug=kTRUE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_ki
 		}
 
 
+		Int_t    tTreeEv=0;
+		Double_t tHoughPar0[4]={0};
+		Double_t tHoughPar1[4]={0};
+		Double_t tFitPar0[4]={0};
+		Double_t tFitPar1[4]={0};
+		Double_t tAngleHough[4]={0};
+		Double_t tAngleFit[4]={0};
+
+		TFile *f = new TFile("analysis_8He.root","RECREATE");
+		TTree *treeOut = new TTree("AnalysisTree","AnalysisTree");
+		treeOut->Branch("tTreeEv",&tTreeEv,"tTreeEv/I");
+		treeOut->Branch("tHoughPar0",&tHoughPar0,"tHoughPar0[4]/D");
+		treeOut->Branch("tHoughPar1",&tHoughPar1,"tHoughPar1[4]/D");
+		treeOut->Branch("tFitPar0",&tFitPar0,"tFitPar0[4]/D");
+		treeOut->Branch("tFitPar1",&tFitPar1,"tFitPar1[4]/D");
+		treeOut->Branch("tAngleHough",&tAngleHough,"tAngleHough[4]/D");
+		treeOut->Branch("tAngleFit",&tAngleFit,"tAngleFit[4]/D");
+
+
+
+
 	    TChain *chain = new TChain("cbmsim");
 	    TFileCollection *filecol = new TFileCollection();
 	    TString FileNameHead_num;
@@ -158,7 +184,8 @@ Bool_t debug=kTRUE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_ki
 	    Int_t nEve=0;
 
 		while (Reader1.Next() && nEve<num_ev) {
-			nEve++;
+			tTreeEv=nEve;
+
 			if(debug) mypause();
 			Q02_Kine_buff->Reset(0);
 			Q13_Kine_buff->Reset(0);
@@ -179,7 +206,7 @@ Bool_t debug=kTRUE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_ki
 			//Int_t nHits = event->GetNumHits();
 			//std::cout<<" ==================================================================================="<<std::endl;
 			//if(nEve%100==0) std::cout<<" Event number : "<<protoevent->GetEventID()<<" - Number of Hits : "<<nHits<<std::endl;
-			if(nEve%100==0) std::cout<<" Event Number : "<<nEve<<std::endl;
+			if(nEve%100==0)	 std::cout<<cRED<<" Event Number : "<<nEve<<cNORMAL<<std::endl;
 			if(debug) for (Int_t i=0;i<4;i++) DistHist[i]->Reset(0);
 
 
@@ -218,6 +245,13 @@ Bool_t debug=kTRUE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_ki
 				 for(Int_t i=0;i<HoughPar.size();i++){
 
 									Angle.push_back(180-HoughPar.at(i).first*180/TMath::Pi());
+
+								  tHoughPar0[i]=HoughPar.at(i).first;
+								  tHoughPar1[i]=HoughPar.at(i).second;
+                  tAngleHough[i]=180-HoughPar.at(i).first*180/TMath::Pi();
+
+
+
 
 									if(debug){
 									std::cout<<" ------ Hough Parameters for Quadrant : "<<i<<std::endl;
@@ -321,7 +355,7 @@ Bool_t debug=kTRUE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_ki
 				   if(debug) HitPattern[i] = new TGraph(qNumHit,rad_graph,posz_graph);
 					 if(debug && stdhough) HitPatternSTD[i] = new TGraph(qNumHit,rad_graph,posz_graph);
 
-						 if(debug)std::cout<<" Fitting Quadrant : "<<i<<std::endl;
+						 if(debug)std::cout<<cYELLOW<<" Fitting Quadrant : "<<i<<cNORMAL<<std::endl;
 
 						 if(HitPatternFilter[i]->GetN()>3){
 							  //if(qNumHit>3){
@@ -375,6 +409,12 @@ Bool_t debug=kTRUE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_ki
 						 par0_fit.push_back(par0);
 						 par1_fit.push_back(par1);
 						 Angle_fit.push_back(afit*180/TMath::Pi());
+
+
+						 tFitPar0[i]=par0;
+						 tFitPar1[i]=par1;
+						 tAngleFit[i]=afit*180/TMath::Pi();
+
 
 						 if(stdhough){
 					   	 par0_fitSTD.push_back(par0STD);
@@ -527,11 +567,19 @@ Bool_t debug=kTRUE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_ki
   				//mypause();
   				//std::cin.get();
 
+					nEve++;
+					treeOut->Fill();
 
 
 		}//While
 
+			file->Close();
+
 	}//for files
+
+	      f->cd();
+	      treeOut->Write();
+      	f->Close();
 
 
         Double_t *ThetaCMS = new Double_t[20000];
