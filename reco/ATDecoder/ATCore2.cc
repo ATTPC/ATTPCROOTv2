@@ -57,7 +57,11 @@ ATCore2::ATCore2(TString filename, Int_t numTbs, Int_t windowNumTbs, Int_t windo
 
 ATCore2::~ATCore2()
 {
-  delete fDecoderPtr;
+  for(Int_t i=0;i<10;i++)
+  {
+    delete fDecoderPtr[i];
+    delete fPedestalPtr[i];
+  }
   delete fAtMapPtr;
 
 }

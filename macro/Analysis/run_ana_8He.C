@@ -38,7 +38,7 @@ void mypause();
 
 void run_ana_8He(TString FileNameHead = "output_proto_reco",
 Int_t num_ev=3000000, Int_t file_ini=0, Int_t file_end=0, Int_t runnum=250, Float_t HoughDist=2.0,
-Bool_t debug=kFALSE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_kinematics/Kine.txt")
+Bool_t debug=kTRUE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_kinematics/Kine.txt")
 {
 
 	    //gStyle->SetCanvasPreferGL(1);
@@ -206,7 +206,8 @@ Bool_t debug=kFALSE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_k
 			//Int_t nHits = event->GetNumHits();
 			//std::cout<<" ==================================================================================="<<std::endl;
 			//if(nEve%100==0) std::cout<<" Event number : "<<protoevent->GetEventID()<<" - Number of Hits : "<<nHits<<std::endl;
-			if(nEve%100==0)	 std::cout<<cRED<<" Event Number : "<<nEve<<cNORMAL<<std::endl;
+			//if(nEve%100==0)
+			std::cout<<cRED<<" Event Number : "<<nEve<<cNORMAL<<std::endl;
 			if(debug) for (Int_t i=0;i<4;i++) DistHist[i]->Reset(0);
 
 
@@ -549,6 +550,8 @@ Bool_t debug=kFALSE, Bool_t stdhough=kFALSE, TString file="../Kinematics/Decay_k
 				HoughFit[0]->Draw("SAMES");
 				ctest->Modified();
 				ctest->Update();
+
+				std::cout<<cRED<<" Here"<<cNORMAL<<std::endl;
 
 			}
 

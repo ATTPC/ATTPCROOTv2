@@ -1,10 +1,9 @@
-Int_t eventDisplay()
+void eventDisplay()
 {
   //-----User Settings:-----------------------------------------------
-
-  TString  InputFile     ="./data/attpcsim.root";
+  TString  InputFile     ="./data/attpcsim_2.root";
   TString  ParFile       ="./data/attpcpar.root";
-  TString  OutFile	 ="./data/attpctest.root";
+  TString  OutFile	     ="./data/attpctest.root";
 
 
   // -----   Reconstruction run   -------------------------------------------
@@ -28,7 +27,5 @@ Int_t eventDisplay()
 
 
   fMan->Init();
-
-  return 0;
 
 }

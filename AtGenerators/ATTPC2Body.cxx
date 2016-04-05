@@ -88,23 +88,25 @@ ATTPC2Body::ATTPC2Body(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
       for(Int_t i=0;i<fMult;i++){
 
 
-  	fPx.push_back( Double_t(a->at(i)) * px->at(i) );
-	fPy.push_back( Double_t(a->at(i)) * py->at(i) );
-	fPz.push_back( Double_t(a->at(i)) * pz->at(i) );
-	Masses.push_back(mass->at(i)*1000.0);
+       	fPx.push_back( Double_t(a->at(i)) * px->at(i) );
+	      fPy.push_back( Double_t(a->at(i)) * py->at(i) );
+	      fPz.push_back( Double_t(a->at(i)) * pz->at(i) );
+	      Masses.push_back(mass->at(i)*1000.0);
         fExEnergy.push_back(Ex->at(i));
         fWm.push_back( mass->at(i)*1000.0 + Ex->at(i));
         FairIon *IonBuff;
         FairParticle *ParticleBuff;
         sprintf(buffer, "Product_Ion%d", i);
         if( a->at(i)!=1  ){
-	  IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i),0.0,mass->at(i));
+
+          IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i),0.0,mass->at(i));
           ParticleBuff = new FairParticle("dummyPart",1,1,1.0,0,0.0,0.0);
           fPType.push_back("Ion");
           std::cout<<" Adding : "<<buffer<<std::endl;
 
         }else if( a->at(i)==1 && z->at(i)==1  ){
-	  IonBuff = new FairIon("dummyIon",50,50,0,0.0,100); // We fill the std::vector with a dummy ion
+
+          IonBuff = new FairIon("dummyIon",50,50,0,0.0,100); // We fill the std::vector with a dummy ion
           ParticleBuff = new FairParticle(2212,kProton);
           fPType.push_back("Proton");
 	}
