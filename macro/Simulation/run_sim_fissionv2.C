@@ -1,4 +1,4 @@
-void run_sim_fissionv2(Int_t nEvents = 200, TString mcEngine = "TGeant4")
+void run_sim_fissionv2(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
