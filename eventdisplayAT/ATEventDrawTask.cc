@@ -317,6 +317,9 @@ ATEventDrawTask::DrawHitPoints()
   std::ofstream dumpEvent;
   dumpEvent.open ("event.dat");
 
+  std::vector<Double_t> fPosXMin;
+  std::vector<Double_t> fPosYMin;
+  std::vector<Double_t> fPosZMin;
 
 
   fQEventHist_H->Reset(0);
@@ -370,6 +373,31 @@ ATEventDrawTask::DrawHitPoints()
   fHitSet->SetMarkerStyle(fHitStyle);
   std::cout<<cYELLOW<<" Number of hits : "<<nHits<<cNORMAL<<std::endl;
 
+  //3D visualization of the Minimized data
+
+  Int_t nHitsMin = 0; //Initialization of the variable to ensure a non-NULL pointer
+  fHitSetMin = new TEvePointSet();
+  if(fEventManager->GetDrawHoughSpace()){
+        if(fIsCircularHough){
+          fPosXMin = fHoughSpaceCircle_buff->GetPosXMin();
+          fPosYMin = fHoughSpaceCircle_buff->GetPosYMin();
+          fPosZMin = fHoughSpaceCircle_buff->GetPosZMin();
+          nHitsMin = fPosXMin.size();
+
+
+  fHitSetMin = new TEvePointSet("HitMin",nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
+  fHitSetMin->SetOwnIds(kTRUE);
+  fHitSetMin->SetMarkerColor(kGreen);
+  fHitSetMin->SetMarkerSize(fHitSize);
+  fHitSetMin->SetMarkerStyle(fHitStyle);
+
+   }
+  }
+
+
+
+  //////////////////////////////////////////////
+
   fhitBoxSet = new TEveBoxSet("hitBox");
   fhitBoxSet->Reset(TEveBoxSet::kBT_AABox, kTRUE, 64);
 
@@ -402,6 +430,7 @@ ATEventDrawTask::DrawHitPoints()
     Int_t Atbin = fPadPlane->Fill(positioncorr.X(), positioncorr.Y(), hit.GetCharge());
 
     }
+
 
     /*std::cout<<"  --------------------- "<<std::endl;
     std::cout<<" Hit : "<<iHit<<" ATHit Pad Number :  "<<PadNumHit<<" Pad Hit Mult : "<<PadMultHit<<" Pad Time Bucket : "<<hit.GetTimeStamp()<<" Hit X Position : "<<position.X()<<" Hit Y Position : "<<position.Y()<<" Hit Z Position : "<<position.Z()<<std::endl;
@@ -473,6 +502,19 @@ ATEventDrawTask::DrawHitPoints()
 
 
   }
+
+  //////////////     Minimization from Hough Space   ///////////////
+  std::cout<<cYELLOW<<" Number of simulated points "<<fPosXMin.size()<<std::endl;
+  for(Int_t iHit=0; iHit<fPosXMin.size(); iHit++)
+  {
+        if(fEventManager->GetDrawHoughSpace()){
+              if(fIsCircularHough){
+                 fHitSetMin->SetNextPoint(fPosXMin.at(iHit)/10.,fPosYMin.at(iHit)/10.,fPosZMin.at(iHit)/10.); // Convert into ccm
+         }
+        }
+  }
+
+
 
     //////////////////////// Colored Box Drawing ////////////////
 
@@ -595,7 +637,9 @@ ATEventDrawTask::DrawHitPoints()
     gEve -> AddElement(fHitSet);
     gEve -> AddElement(fhitBoxSet);
 
-
+    if(fEventManager->GetDrawHoughSpace())
+          if(fIsCircularHough)
+                  gEve -> AddElement(fHitSetMin);
 
 }
 
@@ -800,6 +844,16 @@ ATEventDrawTask::Reset()
     gEve->RemoveElement(fhitBoxSet, fEventManager);
 
   }
+
+  if(fEventManager->GetDrawHoughSpace()){
+      if(fIsCircularHough){
+              if(fHitSetMin) {
+                 fHitSetMin->Reset();
+                 gEve->RemoveElement(fHitSetMin, fEventManager);
+
+              }
+      }
+    }
 
 
  /* TEveGeoShape* hitShape;

@@ -1,5 +1,5 @@
-void run_unpack2
-(TString dataFile = "runfiles/ar46_run_0085.txt",TString parameterFile = "ATTPC.e15503b.par",
+void run_test
+(TString dataFile = "ar46_run_0113.txt",TString parameterFile = "ATTPC.e15503b.par",
 TString mappath="/data/ar46/run_0085/")
 {
 
@@ -79,7 +79,7 @@ TString mappath="/data/ar46/run_0085/")
   fDecoderTask -> SetMapOpt(0); // ATTPC : 0  - Prototype: 1 |||| Default value = 0
 
 
-  if (!fUseSeparatedData)
+  /*if (!fUseSeparatedData)
     fDecoderTask -> AddData(dataFile);
   else {
     std::ifstream listFile(dataFile.Data());
@@ -93,7 +93,21 @@ TString mappath="/data/ar46/run_0085/")
           fDecoderTask -> AddData(dataFileWithPath, iCobo);
         }
     }
-  }
+  }*/
+
+  fDecoderTask -> AddData("/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo0_run_0113_13-09-15_20h35m58s.graw",0);
+  fDecoderTask -> AddData("/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo1_run_0113_13-09-15_20h35m58s.graw",1);
+  fDecoderTask -> AddData("/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo2_run_0113_13-09-15_20h35m58s.graw",2);
+  fDecoderTask -> AddData("/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo2_run_0113_13-09-15_20h35m58s.1.graw",2);
+  fDecoderTask -> AddData("/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo3_run_0113_13-09-15_20h35m58s.graw",3);
+  fDecoderTask -> AddData("/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo4_run_0113_13-09-15_20h35m58s.graw",4);
+  fDecoderTask -> AddData("/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo5_run_0113_13-09-15_20h35m58s.graw",5);
+  fDecoderTask -> AddData("/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo6_run_0113_13-09-15_20h35m58s.graw",6);
+  fDecoderTask -> AddData("/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo7_run_0113_13-09-15_20h35m58s.graw",7);
+  fDecoderTask -> AddData("/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo7_run_0113_13-09-15_20h35m58s.1.graw",7);
+  fDecoderTask -> AddData("/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo8_run_0113_13-09-15_20h35m58s.graw",8);
+  fDecoderTask -> AddData("/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo9_run_0113_13-09-15_20h35m58s.graw",9);
+  fDecoderTask -> AddData("/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo9_run_0113_13-09-15_20h35m58s.1.graw",9);
 
   run -> AddTask(fDecoderTask);
 
@@ -112,13 +126,15 @@ TString mappath="/data/ar46/run_0085/")
 	//HoughTask ->SetLinearHough();
 	HoughTask ->SetCircularHough();
   HoughTask ->SetHoughThreshold(100.0); // Charge threshold for Hough
+  HoughTask ->SetEnableMap(); //Enables an instance of the ATTPC map
+  HoughTask ->SetMap(scriptdir.Data());
 	run -> AddTask(HoughTask);
 
 
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,10);
+  run->Run(0,500);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
@@ -131,8 +147,6 @@ TString mappath="/data/ar46/run_0085/")
   cout << "Real time " << rtime << " s, CPU time " << ctime << " s" << endl;
   cout << endl;
   // ------------------------------------------------------------------------
-
-  gApplication->Terminate();
 
 }
 

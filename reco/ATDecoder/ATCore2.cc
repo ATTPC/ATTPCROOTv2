@@ -57,12 +57,12 @@ ATCore2::ATCore2(TString filename, Int_t numTbs, Int_t windowNumTbs, Int_t windo
 
 ATCore2::~ATCore2()
 {
-  for(Int_t i=0;i<10;i++)
+  /*for(Int_t i=0;i<10;i++)
   {
     delete fDecoderPtr[i];
     delete fPedestalPtr[i];
   }
-  delete fAtMapPtr;
+  delete fAtMapPtr;*/
 
 }
 
@@ -546,7 +546,7 @@ Int_t ATCore2::GetFPNChannel(Int_t chIdx)
 }
 
 void ATCore2::SetPseudoTopologyFrame(Int_t asadMask, Bool_t check) {
-          for(Int_t i;i<10;i++) fDecoderPtr[i]->SetPseudoTopologyFrame(asadMask,check);
+          for(Int_t i=0;i<10;i++) fDecoderPtr[i]->SetPseudoTopologyFrame(asadMask,check);
 }
 
 void ATCore2::ProcessLayeredFrame(GETLayeredFrame *layeredFrame)

@@ -37,6 +37,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
   Double_t Rho2 = 0.0;
   std::map<Int_t,Int_t> PadMultiplicity;
   Float_t mesh[512] = {0};
+  fZk = 1000;
 
 
   Int_t iPad=0;
@@ -156,8 +157,8 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       if(fIsBaseCorr) charge = adc[maxAdcIdx] - basecorr/10.0; //Number of timebuckets taken into account
       else charge = adc[maxAdcIdx];
 
-      if(fIsTimeCorr) zPos = CalculateZ(maxAdcIdx+timemax);
-      else zPos = CalculateZ(maxAdcIdx);
+      if(fIsTimeCorr) zPos = CalculateZGeo(maxAdcIdx+timemax);
+      else zPos = CalculateZGeo(maxAdcIdx);
       //std::cout<<" zPos : "<<zPos<<" maxAdcIdx : "<<maxAdcIdx<<" timemax : "<<timemax<<std::endl;
 
     if(fIsMaxFinder){

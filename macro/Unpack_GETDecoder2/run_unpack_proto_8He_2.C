@@ -65,11 +65,11 @@ void run_unpack_proto_8He_2(TString dataFile = "/Users/Yassid/Desktop/ATTPC/Data
    run -> AddTask(psaTask);
 
     //Moved to analysis macro!
-   /*ATPhiRecoTask *phirecoTask = new ATPhiRecoTask();
+   ATPhiRecoTask *phirecoTask = new ATPhiRecoTask();
    phirecoTask -> SetPersistence();
-   run -> AddTask(phirecoTask);*/
+   run -> AddTask(phirecoTask);
 
-   /*ATHoughTask *HoughTask = new ATHoughTask();
+  /* ATHoughTask *HoughTask = new ATHoughTask();
    HoughTask->SetPhiReco();
    HoughTask->SetPersistence();
    HoughTask->SetLinearHough();
