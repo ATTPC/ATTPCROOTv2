@@ -112,13 +112,15 @@ TString mappath="/data/ar46/run_0085/")
 	//HoughTask ->SetLinearHough();
 	HoughTask ->SetCircularHough();
   HoughTask ->SetHoughThreshold(100.0); // Charge threshold for Hough
+  HoughTask ->SetEnableMap(); //Enables an instance of the ATTPC map
+  HoughTask ->SetMap(scriptdir.Data());
 	run -> AddTask(HoughTask);
 
 
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,10);
+  run->Run(0,100);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

@@ -30,6 +30,7 @@ class ATMCMinimization : public ATMinimization{
         Int_t GetMinimization();
     	  Bool_t Minimize(Double_t* parameter,ATEvent *event);
         Bool_t MinimizeOpt(Double_t* parameter,ATEvent *event);
+        Bool_t MinimizeOptMap(Double_t* parameter,ATEvent *event, AtTpcMap* map);
         std::vector<Double_t> GetPosXMin();
         std::vector<Double_t> GetPosYMin();
         std::vector<Double_t> GetPosZMin();

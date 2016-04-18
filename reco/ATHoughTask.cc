@@ -156,7 +156,8 @@ ATHoughTask::Exec(Option_t *opt)
     else if(fIsCircular){
             ATHoughSpaceCircle *HoughSpace = (ATHoughSpaceCircle *) new ((*fHoughArray)[0]) ATHoughSpaceCircle();
             HoughSpace ->SetThreshold(fHoughThreshold);
-            HoughSpace ->CalcHoughSpace(fEvent,kTRUE,kTRUE,kTRUE);
+            if(fIsEnableMap) HoughSpace ->CalcHoughSpace(fEvent,fAtMapPtr);
+            else HoughSpace ->CalcHoughSpace(fEvent,kTRUE,kTRUE,kTRUE);
     }
 
 

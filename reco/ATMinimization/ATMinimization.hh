@@ -14,6 +14,8 @@
 #include "TClonesArray.h"
 #include "TMath.h"
 
+#include "AtTpcMap.h"
+
 #include "TObject.h"
 #include "ATEvent.hh"
 
@@ -29,6 +31,7 @@ class ATMinimization : public TObject
     virtual Int_t GetMinimization()=0;
 	  virtual Bool_t Minimize(Double_t* parameter,ATEvent *event)=0;
 		virtual Bool_t MinimizeOpt(Double_t* parameter,ATEvent *event)=0;
+		virtual Bool_t MinimizeOptMap(Double_t* parameter,ATEvent *event,AtTpcMap* map)=0;
 		virtual std::vector<ATHit> GetTBHitArray(Int_t TB,std::vector<ATHit> *harray)=0;
 		virtual std::vector<Double_t> GetPosXMin()=0;
 		virtual std::vector<Double_t> GetPosYMin()=0;
