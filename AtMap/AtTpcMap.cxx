@@ -46,6 +46,7 @@ void AtTpcMap::Initialize()
   fPadInd = 0;
   PadKey.clear();
   fIniPads.clear();
+  hPlane = new TH2Poly();
 }
 
 void AtTpcMap::Dump(){
@@ -209,7 +210,7 @@ TH2Poly* AtTpcMap::GetATTPCPlane(){
 
 	std::cout<<" AtTpcMap::GetATTPCPlane Error : Pad plane has not been generated - Exiting... "<<std::endl;
 
-	return 0;
+	return NULL;
 
       }
 

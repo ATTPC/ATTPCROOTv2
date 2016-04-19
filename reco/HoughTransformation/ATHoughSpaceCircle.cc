@@ -69,7 +69,7 @@ std::pair<Double_t,Double_t> ATHoughSpaceCircle::GetHoughPar() {return fHoughLin
 
 TH2F* ATHoughSpaceCircle::GetHoughSpace(TString ProjPlane)   {return HistHoughXY;}
 
-void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,AtTpcMap* map)
+void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane)
 {
 
   Int_t nHits = event->GetNumHits();
@@ -331,7 +331,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,AtTpcMap* map)
 
               if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) { // Check RxPhi plot to adjust the angle
 
-                 min->MinimizeOptMap(parameter,event,map);
+                 min->MinimizeOptMap(parameter,event,hPadPlane);
                  fPosXmin = min->GetPosXMin();
                  fPosYmin = min->GetPosYMin();
                  fPosZmin = min->GetPosZMin();

@@ -24,7 +24,7 @@ class ATHoughSpaceCircle : public ATHoughSpace{
 
       	TH2F* GetHoughSpace(TString ProjPlane);
         void CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYplane, Bool_t XZplane);
-        void CalcHoughSpace(ATEvent* event,AtTpcMap* map);
+        void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane);
         void CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4);
         Double_t GetXCenter() {return fXCenter;}
         Double_t GetYCenter() {return fYCenter;}

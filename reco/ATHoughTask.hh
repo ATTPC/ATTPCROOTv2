@@ -13,6 +13,7 @@
 #include "ATHoughSpace.hh"
 
 #include "AtTpcMap.h"
+#include "TH2Poly.h"
 
 // ROOT classes
 #include "TClonesArray.h"
@@ -67,6 +68,7 @@ class ATHoughTask : public FairTask {
 
     AtTpcMap *fAtMapPtr;
     Char_t const *fMap;
+    TH2Poly *fPadPlane;
 
   ClassDef(ATHoughTask, 1);
 };

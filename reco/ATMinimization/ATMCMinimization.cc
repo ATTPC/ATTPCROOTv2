@@ -7,6 +7,7 @@
 #include "TCanvas.h"
 #include "TH2F.h"
 #include "TH1F.h"
+#include "TH2Poly.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif
@@ -1578,10 +1579,11 @@ Bool_t ATMCMinimization::MinimizeOpt(Double_t* parameter,ATEvent *event){
 
 }
 
-Bool_t ATMCMinimization::MinimizeOptMap(Double_t* parameter,ATEvent *event, AtTpcMap *map){
+Bool_t ATMCMinimization::MinimizeOptMap(Double_t* parameter,ATEvent *event, TH2Poly* hPadPlane){
 
   //std::ofstream dumpMC;
   //dumpMC.open ("MC_minimization.dat");
+
 
                   std::vector<Double_t> xc;
                   std::vector<Double_t> xiter;

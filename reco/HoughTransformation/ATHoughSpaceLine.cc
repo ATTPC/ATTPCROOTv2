@@ -36,7 +36,7 @@ std::vector<std::pair<Double_t,Double_t>> ATHoughSpaceLine::GetHoughPar(TString 
 
 }
 
-void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event,AtTpcMap* map)
+void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane)
 {
 
 

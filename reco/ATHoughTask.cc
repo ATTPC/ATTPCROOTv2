@@ -89,6 +89,7 @@ ATHoughTask::Init()
   if(fIsEnableMap){
   fAtMapPtr = new AtTpcMap();
   fAtMapPtr->GenerateATTPC();
+  fPadPlane = fAtMapPtr->GetATTPCPlane();
   Bool_t MapIn = fAtMapPtr->ParseXMLMap(fMap);
   fLogger -> Info(MESSAGE_ORIGIN, "ATTPC Map enabled");
   if(!MapIn) std::cerr<<" -E- ATHoughTask - : Map was enabled but not found ! "<<std::endl;
@@ -156,7 +157,7 @@ ATHoughTask::Exec(Option_t *opt)
     else if(fIsCircular){
             ATHoughSpaceCircle *HoughSpace = (ATHoughSpaceCircle *) new ((*fHoughArray)[0]) ATHoughSpaceCircle();
             HoughSpace ->SetThreshold(fHoughThreshold);
-            if(fIsEnableMap) HoughSpace ->CalcHoughSpace(fEvent,fAtMapPtr);
+            if(fIsEnableMap) HoughSpace ->CalcHoughSpace(fEvent,fPadPlane);
             else HoughSpace ->CalcHoughSpace(fEvent,kTRUE,kTRUE,kTRUE);
     }
 
