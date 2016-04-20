@@ -25,7 +25,8 @@
 #pragma link C++ class  ATVertexPropagator+;
 #pragma link C++ class  ATTPC2Body+;
 #pragma link C++ class  ATEulerTransformation+;
-
+#pragma link C++ class  ATTPCFissionGenerator+;
+#pragma link C++ class  ATTPCFissionGeneratorV2+;
 
 
 #endif

@@ -46,6 +46,7 @@ void AtTpcMap::Initialize()
   fPadInd = 0;
   PadKey.clear();
   fIniPads.clear();
+  hPlane = new TH2Poly();
 }
 
 void AtTpcMap::Dump(){
@@ -209,14 +210,14 @@ TH2Poly* AtTpcMap::GetATTPCPlane(){
 
 	std::cout<<" AtTpcMap::GetATTPCPlane Error : Pad plane has not been generated - Exiting... "<<std::endl;
 
-	return 0;
+	return NULL;
 
       }
 
 
 
         hPlane->SetName("ATTPC_Plane");
-    	hPlane->SetTitle("ATTPC_Plane");
+    	  hPlane->SetTitle("ATTPC_Plane");
 
 		 for(Int_t i=0;i<fPadInd;i++){
 
@@ -229,7 +230,7 @@ TH2Poly* AtTpcMap::GetATTPCPlane(){
        if(kGUIMode){
         cATTPCPlane = new TCanvas("cATTPCPlane","cATTPCPlane",1000,1000);
         gStyle->SetPalette(1);
-    	hPlane->Draw("col");
+    	  hPlane->Draw("col");
        }
 
        return hPlane;

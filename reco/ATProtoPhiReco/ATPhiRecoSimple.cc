@@ -73,15 +73,16 @@ void ATPhiRecoSimple::PhiAnalyze(ATEvent *event,ATProtoEvent *protoevent){
       PhiCalc(ProtoQuad3,event);
 			PhiCalc(ProtoQuad4,event);
 
-			/*fQuadArray.push_back(*ProtoQuad1);
-			fQuadArray.push_back(*ProtoQuad2);
-			fQuadArray.push_back(*ProtoQuad3);
-			fQuadArray.push_back(*ProtoQuad4);*/
+      // DO NOT ENABLE!
+			//fQuadArray.push_back(*ProtoQuad1);
+			//fQuadArray.push_back(*ProtoQuad2);
+			//fQuadArray.push_back(*ProtoQuad3);
+			//fQuadArray.push_back(*ProtoQuad4);
 
-			protoevent->AddQuadrant(ProtoQuad1);
-			protoevent->AddQuadrant(ProtoQuad2);
-			protoevent->AddQuadrant(ProtoQuad3);
-			protoevent->AddQuadrant(ProtoQuad4);
+			protoevent->AddQuadrant(*ProtoQuad1);
+			protoevent->AddQuadrant(*ProtoQuad2);
+			protoevent->AddQuadrant(*ProtoQuad3);
+			protoevent->AddQuadrant(*ProtoQuad4);
 
 
 

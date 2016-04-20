@@ -31,6 +31,9 @@ ATHoughTask::ATHoughTask()
 
   fInternalID = 0;
 
+  fIsEnableMap = kFALSE;
+
+
 
 }
 
@@ -39,13 +42,15 @@ ATHoughTask::~ATHoughTask()
 }
 
 
-void ATHoughTask::SetPersistence(Bool_t value)           { fIsPersistence = value; }
-void ATHoughTask::SetThreshold(Double_t threshold)       { fThreshold = threshold; }
-void ATHoughTask::SetRadiusThreshold(Float_t value)      { fRadThreshold = value; }
-void ATHoughTask::SetLinearHough()                       { fIsLinear = kTRUE;fIsCircular = kFALSE;}
-void ATHoughTask::SetCircularHough()                     { fIsCircular = kTRUE;fIsLinear = kFALSE;}
-void ATHoughTask::SetPhiReco()                           { fIsPhiReco = kTRUE;}
-void ATHoughTask::SetHoughThreshold(Double_t value)      { fHoughThreshold = value;}
+void   ATHoughTask::SetPersistence(Bool_t value)           { fIsPersistence = value; }
+void   ATHoughTask::SetThreshold(Double_t threshold)       { fThreshold = threshold; }
+void   ATHoughTask::SetRadiusThreshold(Float_t value)      { fRadThreshold = value; }
+void   ATHoughTask::SetLinearHough()                       { fIsLinear = kTRUE;fIsCircular = kFALSE;}
+void   ATHoughTask::SetCircularHough()                     { fIsCircular = kTRUE;fIsLinear = kFALSE;}
+void   ATHoughTask::SetPhiReco()                           { fIsPhiReco = kTRUE;}
+void   ATHoughTask::SetHoughThreshold(Double_t value)      { fHoughThreshold = value;}
+void   ATHoughTask::SetEnableMap()                         { fIsEnableMap = kTRUE;}
+void   ATHoughTask::SetMap(Char_t const *map)              { fMap = map; }
 
 InitStatus
 ATHoughTask::Init()
@@ -78,6 +83,16 @@ ATHoughTask::Init()
         fLogger -> Error(MESSAGE_ORIGIN, "Cannot find ATProtoEvent array! If SetPhiReco method is enabled, Phi Reconstruction is needed");
         return kERROR;
       }
+  }
+
+  // Pointer to the Pad Plane map for digitization during the MC
+  if(fIsEnableMap){
+  fAtMapPtr = new AtTpcMap();
+  fAtMapPtr->GenerateATTPC();
+  fPadPlane = fAtMapPtr->GetATTPCPlane();
+  Bool_t MapIn = fAtMapPtr->ParseXMLMap(fMap);
+  fLogger -> Info(MESSAGE_ORIGIN, "ATTPC Map enabled");
+  if(!MapIn) std::cerr<<" -E- ATHoughTask - : Map was enabled but not found ! "<<std::endl;
   }
 
 
@@ -142,7 +157,8 @@ ATHoughTask::Exec(Option_t *opt)
     else if(fIsCircular){
             ATHoughSpaceCircle *HoughSpace = (ATHoughSpaceCircle *) new ((*fHoughArray)[0]) ATHoughSpaceCircle();
             HoughSpace ->SetThreshold(fHoughThreshold);
-            HoughSpace ->CalcHoughSpace(fEvent,kTRUE,kTRUE,kTRUE);
+            if(fIsEnableMap) HoughSpace ->CalcHoughSpace(fEvent,fPadPlane);
+            else HoughSpace ->CalcHoughSpace(fEvent,kTRUE,kTRUE,kTRUE);
     }
 
 

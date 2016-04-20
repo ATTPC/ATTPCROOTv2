@@ -58,6 +58,7 @@ class ATPSA
     Int_t fEntTB;
     Double_t fDriftVelocity;  ///< drift velocity of electron in cm/us
     Double_t fMaxDriftLength; ///< maximum drift length in mm
+    Double_t fZk;             //Relative position of micromegas-cathode
 
     Int_t fThreshold;         ///< threshold of ADC value
     Double_t fBField;
@@ -71,7 +72,7 @@ class ATPSA
     Double_t CalculateZ(Double_t peakIdx);  ///< Calculate z position in mm using the peak index.
     Double_t CalculateY(Double_t layer);    ///< Calculate y position in mm. This returns the center position of given pad layer.
 
-    Double_t CalculateZProto(Double_t peakIdx);
+    Double_t CalculateZGeo(Double_t peakIdx);
 
     Double_t CalculateXCorr(Double_t xval, Int_t Tbx);
     Double_t CalculateYCorr(Double_t yval, Int_t Tby);

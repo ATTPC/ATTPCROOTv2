@@ -148,6 +148,8 @@ class ATEventDrawTask : public FairTask
     TString fMap;
 
     TEvePointSet* fHitSet;
+    TEvePointSet* fHitSetMin;
+
    // TEveGeoShape* x;
    // std::vector<TEveGeoShape*> hitSphereArray;
 

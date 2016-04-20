@@ -380,12 +380,12 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 
 	if(fELossAcc*1000>gATVP->GetRndELoss()  &&   (gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0) && fVolName=="drift_volume"){
 	 LOG(INFO)<<" Beam energy loss before reaction : "<<fELossAcc*1000<<FairLogger::endl;
-	 gMC->StopTrack();
+	       gMC->StopTrack();
          gATVP->ResetVertex();
          TLorentzVector StopPos;
          TLorentzVector StopMom;
          gMC->TrackPosition(StopPos);
-	 gMC->TrackMomentum(StopMom);
+	       gMC->TrackMomentum(StopMom);
          LOG(INFO)<<" Mass of the Tracked particle : "<<gMC->TrackMass()<<std::endl;
          LOG(INFO)<<" Mass of the Beam from global vertex pointer : "<<gATVP->GetBeamMass()<<std::endl;
 	 // LOG(INFO)<<" Total energy of the current track : "<<((gMC->Etot() - gMC->TrackMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
