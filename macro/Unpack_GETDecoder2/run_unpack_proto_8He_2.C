@@ -79,7 +79,7 @@ void run_unpack_proto_8He_2(TString dataFile = "/Users/Yassid/Desktop/ATTPC/Data
 
    run->Init();
 
-   run->Run(0,200);
+   run->Run(0,100);
 	 //run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------
