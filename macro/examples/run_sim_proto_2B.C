@@ -1,14 +1,14 @@
 void run_sim_proto_2B(Int_t nEvents = 20, TString mcEngine = "TGeant4")
 {
-    
+
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
   TString outFile ="attpcsim_proto.root";
-    
+
   // Parameter file name
   TString parFile="attpcpar_proto.root";
-  
+
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
   timer.Start();
@@ -17,7 +17,7 @@ void run_sim_proto_2B(Int_t nEvents = 20, TString mcEngine = "TGeant4")
   //gSystem->Load("libAtGen.so");
 
   ATVertexPropagator* vertex_prop = new ATVertexPropagator();
-  
+
 
   // -----   Create simulation run   ----------------------------------------
   FairRunSim* run = new FairRunSim();
@@ -25,12 +25,12 @@ void run_sim_proto_2B(Int_t nEvents = 20, TString mcEngine = "TGeant4")
   run->SetOutputFile(outFile);          // Output file
   FairRuntimeDb* rtdb = run->GetRuntimeDb();
   // ------------------------------------------------------------------------
-  
+
 
   // -----   Create media   -------------------------------------------------
   run->SetMaterials("media.geo");       // Materials
   // ------------------------------------------------------------------------
-  
+
   // -----   Create geometry   ----------------------------------------------
 
   FairModule* cave= new AtCave("CAVE");
@@ -42,7 +42,7 @@ void run_sim_proto_2B(Int_t nEvents = 20, TString mcEngine = "TGeant4")
 
   FairModule* pipe = new AtPipe("Pipe");
   run->AddModule(pipe);
-    
+
   FairDetector* ATTPC = new AtTpc("ATTPC_Proto", kTRUE);
   ATTPC->SetGeometryFileName("ATTPC_Proto_v1.0.root");
   //ATTPC->SetModifyGeometry(kTRUE);
@@ -60,14 +60,14 @@ void run_sim_proto_2B(Int_t nEvents = 20, TString mcEngine = "TGeant4")
     run->SetField(fMagField);
     // --------------------------------------------------------------------
 
-    
-    
+
+
   // -----   Create PrimaryGenerator   --------------------------------------
   FairPrimaryGenerator* primGen = new FairPrimaryGenerator();
-  
 
-   
-		 
+
+
+
                   // Beam Information
                   Int_t z = 4;  // Atomic number
 	          Int_t a = 10; // Mass number
@@ -85,38 +85,38 @@ void run_sim_proto_2B(Int_t nEvents = 20, TString mcEngine = "TGeant4")
 	          ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
 	          ionGen->SetSpotRadius(0,-20,0);
 	          // add the ion generator
-		 
+
 	          primGen->AddGenerator(ionGen);
-		  
+
   		  //primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track added to the Primary Generator
 		  // primGen->SetTarget(30,0);
- 
-                 
+
+
 
 
 		 // Variables for 2-Body kinematics reaction
-                  std::vector<Int_t> Zp; // Zp       
-		  std::vector<Int_t> Ap; // Ap 
-                  std::vector<Int_t> Qp;//Electric charge 
-                  Int_t mult;  //Number of particles        
+                  std::vector<Int_t> Zp; // Zp
+		  std::vector<Int_t> Ap; // Ap
+                  std::vector<Int_t> Qp;//Electric charge
+                  Int_t mult;  //Number of particles
  		  std::vector<Double_t> Pxp; //Px momentum X
 		  std::vector<Double_t> Pyp; //Py momentum Y
 		  std::vector<Double_t> Pzp; //Pz momentum Z
-                  std::vector<Double_t> Mass; // Masses 
-		  std::vector<Double_t> ExE; // Excitation energy 
+                  std::vector<Double_t> Mass; // Masses
+		  std::vector<Double_t> ExE; // Excitation energy
  		  Double_t ResEner; // Energy of the beam (Useless for the moment)
-	          
+
 
 		  // Note: Momentum will be calculated from the phase Space according to the residual energy of the beam
 
-                  
+
 	          mult = 4; //Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY (and the number of particles must be the same)
                   ResEner = 35.0;// Value to generate a random number between 0 and ResEner for which beam reacts...
 
                   // ---- Beam ----
-                  Zp.push_back(z); // 10Be 
-		  Ap.push_back(a); // 
-		  Qp.push_back(q); 
+                  Zp.push_back(z); // 10Be
+		  Ap.push_back(a); //
+		  Qp.push_back(q);
 		  Pxp.push_back(px);
 		  Pyp.push_back(py);
 		  Pzp.push_back(pz);
@@ -124,19 +124,19 @@ void run_sim_proto_2B(Int_t nEvents = 20, TString mcEngine = "TGeant4")
 		  ExE.push_back(BExcEner);
 
                   // ---- Target ----
-     		  Zp.push_back(2); // 4He 
-		  Ap.push_back(4); // 		  
-		  Qp.push_back(0); // 
+     		  Zp.push_back(2); // 4He
+		  Ap.push_back(4); //
+		  Qp.push_back(0); //
 		  Pxp.push_back(0.0);
 	          Pyp.push_back(0.0);
 		  Pzp.push_back(0.0);
-                  Mass.push_back(3.72840); 
+                  Mass.push_back(3.72840);
 		  ExE.push_back(0.0);//In MeV
 
                   //--- Scattered -----
-                  Zp.push_back(4); // 10Be 
-		  Ap.push_back(10); // 
-		  Qp.push_back(0); 
+                  Zp.push_back(4); // 10Be
+		  Ap.push_back(10); //
+		  Qp.push_back(0);
 		  Pxp.push_back(0.0);
 		  Pyp.push_back(0.0);
 		  Pzp.push_back(0.0);
@@ -145,34 +145,34 @@ void run_sim_proto_2B(Int_t nEvents = 20, TString mcEngine = "TGeant4")
 
 
                   // ---- Recoil -----
-		  Zp.push_back(2); // 4He 
-		  Ap.push_back(4); // 		  
-		  Qp.push_back(0); // 
+		  Zp.push_back(2); // 4He
+		  Ap.push_back(4); //
+		  Qp.push_back(0); //
 		  Pxp.push_back(0.0);
 	          Pyp.push_back(0.0);
 		  Pzp.push_back(0.0);
                   Mass.push_back(3.72840); //In MeV
 		  ExE.push_back(0.0);//In MeV
 
-              
 
-		 
-		 
-                  
-        ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner); 
+
+
+
+
+        ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner,0,180); 
         primGen->AddGenerator(TwoBody);
 
-    
+
 	run->SetGenerator(primGen);
 
 // ------------------------------------------------------------------------
- 
+
   //---Store the visualiztion info of the tracks, this make the output file very large!!
   //--- Use it only to display but not for production!
   run->SetStoreTraj(kTRUE);
 
-    
-    
+
+
   // -----   Initialize simulation run   ------------------------------------
   run->Init();
   // ------------------------------------------------------------------------
@@ -186,14 +186,14 @@ void run_sim_proto_2B(Int_t nEvents = 20, TString mcEngine = "TGeant4")
   rtdb->saveOutput();
   rtdb->print();
   // ------------------------------------------------------------------------
-   
+
   // -----   Start run   ----------------------------------------------------
    run->Run(nEvents);
-    
+
   //You can export your ROOT geometry ot a separate file
   run->CreateGeometryFile("geofile_proto_full.root");
   // ------------------------------------------------------------------------
-  
+
   // -----   Finish   -------------------------------------------------------
   timer.Stop();
   Double_t rtime = timer.RealTime();
@@ -202,9 +202,7 @@ void run_sim_proto_2B(Int_t nEvents = 20, TString mcEngine = "TGeant4")
   cout << "Macro finished succesfully." << endl;
   cout << "Output file is "    << outFile << endl;
   cout << "Parameter file is " << parFile << endl;
-  cout << "Real time " << rtime << " s, CPU time " << ctime 
+  cout << "Real time " << rtime << " s, CPU time " << ctime
        << "s" << endl << endl;
   // ------------------------------------------------------------------------
 }
-
-

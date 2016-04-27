@@ -1,0 +1,13 @@
+/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo0_run_0113_13-09-15_20h35m58s.graw
+/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo1_run_0113_13-09-15_20h35m58s.graw
+/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo2_run_0113_13-09-15_20h35m58s.graw
+/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo2_run_0113_13-09-15_20h35m58s.1.graw
+/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo3_run_0113_13-09-15_20h35m58s.graw
+/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo4_run_0113_13-09-15_20h35m58s.graw
+/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo5_run_0113_13-09-15_20h35m58s.graw
+/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo6_run_0113_13-09-15_20h35m58s.graw
+/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo7_run_0113_13-09-15_20h35m58s.graw
+/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo7_run_0113_13-09-15_20h35m58s.1.graw
+/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo8_run_0113_13-09-15_20h35m58s.graw
+/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo9_run_0113_13-09-15_20h35m58s.graw
+/Users/Yassid/Desktop/ATTPC/Data/46Ar/run_0113/CoBo9_run_0113_13-09-15_20h35m58s.1.graw

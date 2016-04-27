@@ -19,6 +19,7 @@ class ATHoughSpaceLine : public ATHoughSpace{
 
 	TH2F* GetHoughSpace(TString ProjPlane);
   void CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYplane, Bool_t XZplane);
+  void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane);
   void CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4);
         //TH2F* GetHoughQuadrant(Int_t index);
 	std::pair<Double_t,Double_t> GetHoughParameters(TH2F* hist);

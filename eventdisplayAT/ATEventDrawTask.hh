@@ -128,9 +128,6 @@ class ATEventDrawTask : public FairTask
     Bool_t fIsLinearHough;
 
     TClonesArray* fHitArray;
-    //TClonesArray* fHitClusterArray;
-    //TClonesArray* fRiemannTrackArray;
-    //TClonesArray* fKalmanArray;
     TClonesArray* fRawEventArray;
     TClonesArray* fHoughSpaceArray;
     TClonesArray* fProtoEventArray;
@@ -148,6 +145,8 @@ class ATEventDrawTask : public FairTask
     TString fMap;
 
     TEvePointSet* fHitSet;
+    TEvePointSet* fHitSetMin;
+
    // TEveGeoShape* x;
    // std::vector<TEveGeoShape*> hitSphereArray;
 

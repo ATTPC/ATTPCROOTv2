@@ -15,36 +15,36 @@ ATPhiRecoTriple::~ATPhiRecoTriple()
 
 void ATPhiRecoTriple::PhiAnalyze(ATEvent *event,ATProtoEvent *protoevent){
 
-  		    
- 
+
+
                     event->SortHitArray();
                     Int_t nHits = event->GetNumHits();
-                   
-                    
-                    ATProtoQuadrant *ProtoQuad1 = new ATProtoQuadrant(1); // Quadrant ID : 1 
+
+
+                    ATProtoQuadrant *ProtoQuad1 = new ATProtoQuadrant(1); // Quadrant ID : 1
                     ProtoQuad1->SetEventID(event->GetEventID());
-                    ATProtoQuadrant *ProtoQuad2 = new ATProtoQuadrant(2); // Quadrant ID : 2 
+                    ATProtoQuadrant *ProtoQuad2 = new ATProtoQuadrant(2); // Quadrant ID : 2
                     ProtoQuad2->SetEventID(event->GetEventID());
-		    ATProtoQuadrant *ProtoQuad3 = new ATProtoQuadrant(3); // Quadrant ID : 3 
+		    ATProtoQuadrant *ProtoQuad3 = new ATProtoQuadrant(3); // Quadrant ID : 3
                     ProtoQuad3->SetEventID(event->GetEventID());
-		    ATProtoQuadrant *ProtoQuad4 = new ATProtoQuadrant(4); // Quadrant ID : 4 
+		    ATProtoQuadrant *ProtoQuad4 = new ATProtoQuadrant(4); // Quadrant ID : 4
                     ProtoQuad4->SetEventID(event->GetEventID());
 
 			 for(Int_t iHit=0; iHit<nHits; iHit++){
 				ATHit hit = event->GetHitArray()->at(iHit);
-                                ATHit *phit = &hit;  
+                                ATHit *phit = &hit;
     			        Int_t PadNum = hit.GetHitPadNum();
                                 //std::cout<<" Hit : "<<iHit<<" ATHit Pad Number :  "<<PadNum<<std::endl;
-                                
+
                                  //Dividing into quadrants
                                     if(PadNum>0 && PadNum<64){
-					 
+
                                           //std::cout<<" Quadrant 1 "<<std::endl;
                                          // std::cout<<" Hit : "<<iHit<<" ATHit Pad Number :  "<<PadNum<<std::endl;
   					    ProtoQuad1 ->AddHit(phit);
-                                         
 
-                                            
+
+
 
 				    }else if(PadNum>63 && PadNum<127){
 
@@ -68,29 +68,29 @@ void ATPhiRecoTriple::PhiAnalyze(ATEvent *event,ATProtoEvent *protoevent){
 
 						//TODO: Central Pad
 
-				
+
                                     }
-                                  
-				    
+
+
 
 			}
-			
+
 			PhiCalc(ProtoQuad1,event);
 			PhiCalc(ProtoQuad2,event);
                         PhiCalc(ProtoQuad3,event);
 			PhiCalc(ProtoQuad4,event);
-			
+
 			/*fQuadArray.push_back(*ProtoQuad1);
 			fQuadArray.push_back(*ProtoQuad2);
 			fQuadArray.push_back(*ProtoQuad3);
 			fQuadArray.push_back(*ProtoQuad4);*/
-                        
-			protoevent->AddQuadrant(ProtoQuad1);
-			protoevent->AddQuadrant(ProtoQuad2);
-			protoevent->AddQuadrant(ProtoQuad3);
-			protoevent->AddQuadrant(ProtoQuad4);
 
-                    
+			protoevent->AddQuadrant(*ProtoQuad1);
+			protoevent->AddQuadrant(*ProtoQuad2);
+			protoevent->AddQuadrant(*ProtoQuad3);
+			protoevent->AddQuadrant(*ProtoQuad4);
+
+
                         delete ProtoQuad1;
                         delete ProtoQuad2;
 			delete ProtoQuad3;
@@ -106,17 +106,17 @@ void ATPhiRecoTriple::PhiCalc(ATProtoQuadrant *quadrant,ATEvent *event)
      Double_t a=0.5+0.125; //Small size of the strip plus half the dead area between strips
      Double_t da; //
      std::vector<ATHit> fast_HArray;
-     std::vector<ATHit> slow_HArray;  
+     std::vector<ATHit> slow_HArray;
 
      // type A: a + da - Phi/90
      // type B: a + Phi/90
-  
-     // TODO This function is tuned for prototype micromegas, 
+
+     // TODO This function is tuned for prototype micromegas,
        Int_t nHits = quadrant->GetNumHits();
 		if(nHits>2){
 		      //std::cout<<" Number of hits in quadrant  : "<<nHits<<std::endl;
 		       for(Int_t iHit=1; iHit<nHits-1; iHit++){ // Here we start from the second strip to make the average between both neighboring strips
-                          
+
 			  Double_t phi=0.0;
 			  ATHit qhit_f = quadrant->GetHitArray()->at(iHit-1); //First strip
 			  ATHit qhit_s = quadrant->GetHitArray()->at(iHit); //Second strip
@@ -134,7 +134,7 @@ void ATPhiRecoTriple::PhiCalc(ATProtoQuadrant *quadrant,ATEvent *event)
 			  Int_t T_f =  qhit_f.GetTimeStamp();
 			  Int_t T_s =  qhit_s.GetTimeStamp();
 			  Int_t T_t =  qhit_t.GetTimeStamp();
-			  
+
 
 			/* if(quadrant->GetEventID()==12154){
 			       std::cout<<" ======================================================================= "<<std::endl;
@@ -147,7 +147,7 @@ void ATPhiRecoTriple::PhiCalc(ATProtoQuadrant *quadrant,ATEvent *event)
 
 			  //if(M_f==1) Q_f = qhit_f.GetQHit();
 			  //if(M_s==1) Q_s = qhit_s.GetQHit();
-			  
+
                          	 if(PadNum_qf<11) da=1.0-a;
 			  	 else da=3.2-a;
                                  if(PadNum_qs<11) da=1.0-a;
@@ -170,9 +170,9 @@ void ATPhiRecoTriple::PhiCalc(ATProtoQuadrant *quadrant,ATEvent *event)
 				}
 				continue; //TODO: If there is an isoleted pad with multihits, we are removing it. Fix this part.
 			  }
-			  
+
 			}else if(M_f>2) continue;
-				
+
 
 			/*if(quadrant->GetEventID()==12382  && quadrant->GetQuadrantID()==1){
 			  if(PadNum_qf==PadNum_qs && M_f==M_s){std::cout<<" Multihit "<<M_f<<" in Pads Num : "<<PadNum_qf<<" - "<<PadNum_qs<<std::endl;}
@@ -180,9 +180,9 @@ void ATPhiRecoTriple::PhiCalc(ATProtoQuadrant *quadrant,ATEvent *event)
 
 			        if( (PadNum_qs==PadNum_qf+1) && (PadNum_qt==PadNum_qs+1)  ){
 
-				    Q_M = (Q_f+Q_t)/2.0;	
+				    Q_M = (Q_f+Q_t)/2.0;
 
-					if(quadrant->GetQuadrantID()%2==1){ 
+					if(quadrant->GetQuadrantID()%2==1){
 						//std::cout<<" "<<std::endl;
 						//std::cout<<" Inside an odd quadrant ID : "<<quadrant->GetQuadrantID()<<std::endl;
 						phi= (1.0 - (Q_M-Q_s)/(Q_M+Q_s)*2.0*a/da - (Q_M-Q_s)/(Q_M+Q_s) )*45 ;
@@ -204,7 +204,7 @@ void ATPhiRecoTriple::PhiCalc(ATProtoQuadrant *quadrant,ATEvent *event)
 						else{ std::cout<<" ======================================================================= "<<std::endl;
 						      std::cout<<" Warning, even-odd sttagering not found. "<<std::endl;
 						}
-						
+
 
 					}else std::cout<<" Invalid Quadrant ID : "<<quadrant->GetQuadrantID()<<std::endl;
 
@@ -219,16 +219,16 @@ void ATPhiRecoTriple::PhiCalc(ATProtoQuadrant *quadrant,ATEvent *event)
 				//if(phi>90 || phi<0) std::cout<<" Phi out of boundaries!: "<<phi<<std::endl;
 				PhiDist->Fill(phi);
                                 quadrant->AddPhiVal(phi);
-	                        
 
-		              //  if(quadrant->GetEventID()==12382  && quadrant->GetQuadrantID()==1){      
+
+		              //  if(quadrant->GetEventID()==12382  && quadrant->GetQuadrantID()==1){
 			      //  std::cout<<" ======================================================================= "<<std::endl;
 				//std::cout<<" Prototype quadrant : "<<quadrant->GetQuadrantID()<<std::endl;
                      		//std::cout<<" First Hit Pad : "<<PadNum_qf<<" First Pad Charge : "<<Q_f<<" First Pad TimeStamp : "<<T_f<<std::endl;
                               // std::cout<<" Second Hit Pad : "<<PadNum_qs<<" Second Pad Charge : "<<Q_s<<" Second Pad TimeStamp : "<<T_s<<std::endl;
 				//std::cout<<" Phi : "<<phi<<std::endl;
 				//}
- 
+
 		       }//nHits
                  }//nHits>1
                 //PhiDist->Draw();
@@ -247,7 +247,7 @@ void ATPhiRecoTriple::PhiCalcMulti(std::vector<ATHit> *multihit_Array,ATProtoQua
      		Double_t da; //
 		Double_t phi=0.0;
 
-	
+
               Int_t nHits = multihit_Array->size();
 
 	if(nHits>1){
@@ -260,7 +260,7 @@ void ATPhiRecoTriple::PhiCalcMulti(std::vector<ATHit> *multihit_Array,ATProtoQua
 			Double_t Q_s = qhit_s.GetCharge();
 			Int_t T_f =  qhit_f.GetTimeStamp();
 			Int_t T_s =  qhit_s.GetTimeStamp();
-				
+
 				 if(PadNum_qf<11) da=1.0-a;
 			  	 else da=3.2-a;
                                  if(PadNum_qs<11) da=1.0-a;
@@ -269,7 +269,7 @@ void ATPhiRecoTriple::PhiCalcMulti(std::vector<ATHit> *multihit_Array,ATProtoQua
 			 if(PadNum_qs==PadNum_qf+1){
 
 
-					if(quadrant->GetQuadrantID()%2==1){ 
+					if(quadrant->GetQuadrantID()%2==1){
 						//std::cout<<" "<<std::endl;
 						//std::cout<<" Inside an odd quadrant ID : "<<quadrant->GetQuadrantID()<<std::endl;
 						phi= (1.0 - (Q_f-Q_s)/(Q_f+Q_s)*2.0*a/da - (Q_f-Q_s)/(Q_f+Q_s) )*45 ;
@@ -291,7 +291,7 @@ void ATPhiRecoTriple::PhiCalcMulti(std::vector<ATHit> *multihit_Array,ATProtoQua
 						else{ std::cout<<" ======================================================================= "<<std::endl;
 						      std::cout<<" Warning, even-odd sttagering not found. "<<std::endl;
 						}
-						
+
 
 					}else std::cout<<" Invalid Quadrant ID : "<<quadrant->GetQuadrantID()<<std::endl;
 
@@ -307,7 +307,7 @@ void ATPhiRecoTriple::PhiCalcMulti(std::vector<ATHit> *multihit_Array,ATProtoQua
                                 quadrant->AddPhiVal(phi);
 
 
-				//  if(quadrant->GetEventID()==12382  && quadrant->GetQuadrantID()==1){      
+				//  if(quadrant->GetEventID()==12382  && quadrant->GetQuadrantID()==1){
 			       // std::cout<<" ======================================================================= "<<std::endl;
 				//std::cout<<" Prototype quadrant : "<<quadrant->GetQuadrantID()<<std::endl;
                      		//std::cout<<" First Hit Pad : "<<PadNum_qf<<" First Pad Charge : "<<Q_f<<" First Pad TimeStamp : "<<T_f<<std::endl;
@@ -323,11 +323,7 @@ void ATPhiRecoTriple::PhiCalcMulti(std::vector<ATHit> *multihit_Array,ATProtoQua
 }
 
 
-Bool_t operator== ( const ATHit &n1, const ATHit &n2) 
+Bool_t operator== ( const ATHit &n1, const ATHit &n2)
 {
         return n1.GetHitID()==n2.GetHitID();
 }
-
-
-
-

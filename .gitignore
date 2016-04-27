@@ -38,3 +38,4 @@ install_manifest.txt
 doxygen/html
 doxygen/latex
 macros/data
+.DS_Store

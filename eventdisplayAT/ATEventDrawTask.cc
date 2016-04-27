@@ -193,16 +193,6 @@ ATEventDrawTask::Init()
   fProtoEventArray =  (TClonesArray*) ioMan->GetObject("ATProtoEvent");
   if(fProtoEventArray) LOG(INFO)<<"Prototype Event Array Found."<<FairLogger::endl;
 
-
-  //fHitClusterArray = (TClonesArray*) ioMan->GetObject("STEventHC");
-  //if(fHitClusterArray) LOG(INFO)<<"Hit Cluster Found."<<FairLogger::endl;
-
-  //fRiemannTrackArray = (TClonesArray*) ioMan->GetObject("STRiemannTrack");
-  //if(fRiemannTrackArray) LOG(INFO)<<"Riemann Track Found."<<FairLogger::endl;
-
-  //fKalmanArray = (TClonesArray*) ioMan->GetObject("STKalmanTrack");
-  //if(fKalmanArray) LOG(INFO)<<"Kalman Track Found."<<FairLogger::endl;
-
  // gROOT->GetListOfSpecials()->Add(fRawEventArray);
   //fRawEventArray->SetName("ATRawEvent");
 
@@ -317,6 +307,9 @@ ATEventDrawTask::DrawHitPoints()
   std::ofstream dumpEvent;
   dumpEvent.open ("event.dat");
 
+  std::vector<Double_t> fPosXMin;
+  std::vector<Double_t> fPosYMin;
+  std::vector<Double_t> fPosZMin;
 
 
   fQEventHist_H->Reset(0);
@@ -370,6 +363,31 @@ ATEventDrawTask::DrawHitPoints()
   fHitSet->SetMarkerStyle(fHitStyle);
   std::cout<<cYELLOW<<" Number of hits : "<<nHits<<cNORMAL<<std::endl;
 
+  //3D visualization of the Minimized data
+
+  Int_t nHitsMin = 0; //Initialization of the variable to ensure a non-NULL pointer
+  fHitSetMin = new TEvePointSet();
+  if(fEventManager->GetDrawHoughSpace()){
+        if(fIsCircularHough){
+          fPosXMin = fHoughSpaceCircle_buff->GetPosXMin();
+          fPosYMin = fHoughSpaceCircle_buff->GetPosYMin();
+          fPosZMin = fHoughSpaceCircle_buff->GetPosZMin();
+          nHitsMin = fPosXMin.size();
+
+
+  fHitSetMin = new TEvePointSet("HitMin",nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
+  fHitSetMin->SetOwnIds(kTRUE);
+  fHitSetMin->SetMarkerColor(kGreen);
+  fHitSetMin->SetMarkerSize(fHitSize);
+  fHitSetMin->SetMarkerStyle(fHitStyle);
+
+   }
+  }
+
+
+
+  //////////////////////////////////////////////
+
   fhitBoxSet = new TEveBoxSet("hitBox");
   fhitBoxSet->Reset(TEveBoxSet::kBT_AABox, kTRUE, 64);
 
@@ -380,7 +398,7 @@ ATEventDrawTask::DrawHitPoints()
     Int_t PadNumHit = hit.GetHitPadNum();
     Int_t PadMultHit = event->GetHitPadMult(PadNumHit);
     Double_t BaseCorr = hit.GetBaseCorr();
-
+    Int_t Atbin = -1;
 
 
 
@@ -393,15 +411,16 @@ ATEventDrawTask::DrawHitPoints()
     fHitSet->SetMarkerColor(fHitColor);
     fHitSet->SetNextPoint(position.X()/10.,position.Y()/10.,position.Z()/10.); // Convert into cm
     fHitSet->SetPointId(new TNamed(Form("Hit %d",iHit),""));
-    Int_t Atbin = fPadPlane->Fill(position.X(), position.Y(), hit.GetCharge());
+    Atbin = fPadPlane->Fill(position.X(), position.Y(), hit.GetCharge());
 
     }else if(fEventManager->GetToggleCorrData()){
     fHitSet->SetMarkerColor(kBlue);
     fHitSet->SetNextPoint(positioncorr.X()/10.,positioncorr.Y()/10.,positioncorr.Z()/10.); // Convert into ccm
     fHitSet->SetPointId(new TNamed(Form("Corrected Hit %d",iHit),""));
-    Int_t Atbin = fPadPlane->Fill(positioncorr.X(), positioncorr.Y(), hit.GetCharge());
+    Atbin = fPadPlane->Fill(positioncorr.X(), positioncorr.Y(), hit.GetCharge());
 
     }
+
 
     /*std::cout<<"  --------------------- "<<std::endl;
     std::cout<<" Hit : "<<iHit<<" ATHit Pad Number :  "<<PadNumHit<<" Pad Hit Mult : "<<PadMultHit<<" Pad Time Bucket : "<<hit.GetTimeStamp()<<" Hit X Position : "<<position.X()<<" Hit Y Position : "<<position.Y()<<" Hit Z Position : "<<position.Z()<<std::endl;
@@ -432,7 +451,7 @@ ATEventDrawTask::DrawHitPoints()
     if(fSaveTextData)
       if(!fEventManager->GetToggleCorrData()) dumpEvent<<position.X()<<" "<<position.Y()<<" "<<position.Z()<<" "<<hit.GetTimeStamp()<<" "<<hit.GetCharge()<<std::endl;
       else if(fEventManager->GetToggleCorrData()) dumpEvent<<positioncorr.X()<<" "<<positioncorr.Y()<<" "<<positioncorr.Z()<<" "<<hit.GetTimeStamp()<<" "<<hit.GetCharge()<<std::endl;
-    //std::cout<<"  Hit number : "<<iHit<<" - Position X : "<<position.X()<<" - Position Y : "<<position.Y()<<" - Position Z : "<<position.Z()<<" - ATHit Pad Number :  "<<PadNumHit<<" - Pad bin :"<<Atbin<<" - Hit Charge : "<<hit.GetCharge()<<std::endl;
+      //std::cout<<"  Hit number : "<<iHit<<" - Position X : "<<position.X()<<" - Position Y : "<<position.Y()<<" - Position Z : "<<position.Z()<<" - ATHit Pad Number :  "<<PadNumHit<<" - Pad bin :"<<Atbin<<" - Hit Charge : "<<hit.GetCharge()<<std::endl;
 
 
 
@@ -473,6 +492,19 @@ ATEventDrawTask::DrawHitPoints()
 
 
   }
+
+  //////////////     Minimization from Hough Space   ///////////////
+  std::cout<<cYELLOW<<" Number of simulated points "<<fPosXMin.size()<<std::endl;
+  for(Int_t iHit=0; iHit<fPosXMin.size(); iHit++)
+  {
+        if(fEventManager->GetDrawHoughSpace()){
+              if(fIsCircularHough){
+                 fHitSetMin->SetNextPoint(fPosXMin.at(iHit)/10.,fPosYMin.at(iHit)/10.,fPosZMin.at(iHit)/10.); // Convert into ccm
+         }
+        }
+  }
+
+
 
     //////////////////////// Colored Box Drawing ////////////////
 
@@ -595,7 +627,9 @@ ATEventDrawTask::DrawHitPoints()
     gEve -> AddElement(fHitSet);
     gEve -> AddElement(fhitBoxSet);
 
-
+    if(fEventManager->GetDrawHoughSpace())
+          if(fIsCircularHough)
+                  gEve -> AddElement(fHitSetMin);
 
 }
 
@@ -800,6 +834,16 @@ ATEventDrawTask::Reset()
     gEve->RemoveElement(fhitBoxSet, fEventManager);
 
   }
+
+  if(fEventManager->GetDrawHoughSpace()){
+      if(fIsCircularHough){
+              if(fHitSetMin) {
+                 fHitSetMin->Reset();
+                 gEve->RemoveElement(fHitSetMin, fEventManager);
+
+              }
+      }
+    }
 
 
  /* TEveGeoShape* hitShape;

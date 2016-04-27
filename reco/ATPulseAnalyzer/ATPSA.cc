@@ -49,6 +49,7 @@ ATPSA::ATPSA()
   fBField = fPar->GetBField();
   fEField = fPar->GetEField();
   fTiltAng = fPar->GetTiltAngle();
+  fTB0  =  fPar->GetTB0();
 
   fEntTB   = (Int_t) fPar->GetTBEntrance();
 
@@ -93,10 +94,12 @@ ATPSA::CalculateZ(Double_t peakIdx)
 }
 
 Double_t
-ATPSA::CalculateZProto(Double_t peakIdx)
+ATPSA::CalculateZGeo(Double_t peakIdx)
 {
 
-    return (fEntTB - peakIdx)*fTBTime*fDriftVelocity/100.;
+    return fZk - (fEntTB - peakIdx)*fTBTime*fDriftVelocity/100.;
+    // fZk defined in each daughter class
+
 }
 
 Double_t
