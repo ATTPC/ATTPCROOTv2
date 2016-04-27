@@ -118,6 +118,58 @@ ATEventManagerProto::Init(Int_t option, Int_t level, Int_t nNodes)
  pack->GetEveFrame()->SetShowTitleBar(kFALSE);
  fCvsPadPlane = ecvs->GetCanvas();
 
+ // Raw signals
+ TEveWindowSlot* slot2 =
+ TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
+ TEveWindowPack* pack3 = slot2->MakePack();
+ pack3->SetShowTitleBar(kFALSE);
+ pack3->SetElementName("Pad plane raw signals");
+
+ slot2 = pack3->NewSlotWithWeight(1.5);
+ TRootEmbeddedCanvas* ecvs3 = new TRootEmbeddedCanvas();
+ TEveWindowFrame* frame3 = slot2->MakeFrame(ecvs3);
+ frame3->SetElementName("ATTPC Pad Plane All");
+ fPadAll = ecvs3->GetCanvas();
+
+ slot2 = pack3->NewSlotWithWeight(1.5);
+ TRootEmbeddedCanvas* ecvs31 = new TRootEmbeddedCanvas();
+ TEveWindowFrame* frame31 = slot2->MakeFrame(ecvs31);
+ frame31->SetElementName("ATTPC Mesh");
+ fCvsMesh = ecvs31->GetCanvas();
+
+ // Quadrants
+
+  TEveWindowSlot* slotH =
+  TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
+  TEveWindowPack* packH = slotH->MakePack();
+  packH->SetShowTitleBar(kFALSE);
+  packH->SetHorizontal();
+  packH->SetElementName("Radius - Z ");
+
+  slotH = packH->NewSlotWithWeight(1.5);
+  TRootEmbeddedCanvas* ecvsH1 = new TRootEmbeddedCanvas();
+  TEveWindowFrame* frameH1 = slotH->MakeFrame(ecvsH1);
+  frameH1->SetElementName("Quadrant 1");
+  fCvsQuadrant1 = ecvsH1->GetCanvas();
+
+  slotH = packH->NewSlotWithWeight(1.5);
+  TRootEmbeddedCanvas* ecvsH2 = new TRootEmbeddedCanvas();
+  TEveWindowFrame* frameH2 = slotH->MakeFrame(ecvsH2);
+  frameH2->SetElementName("Quadrant 2");
+  fCvsQuadrant2 = ecvsH2->GetCanvas();
+
+  slotH = packH->NewSlotWithWeight(1.5);
+  TRootEmbeddedCanvas* ecvsH3 = new TRootEmbeddedCanvas();
+  TEveWindowFrame* frameH3 = slotH->MakeFrame(ecvsH3);
+  frameH3->SetElementName("Quadrant 3");
+  fCvsQuadrant3 = ecvsH3->GetCanvas();
+
+  slotH = packH->NewSlotWithWeight(1.5);
+  TRootEmbeddedCanvas* ecvsH4 = new TRootEmbeddedCanvas();
+  TEveWindowFrame* frameH4 = slotH->MakeFrame(ecvsH4);
+  frameH4->SetElementName("Quadrant 4");
+  fCvsQuadrant4 = ecvsH4->GetCanvas();
+
 
    fRunAna->Init();
 

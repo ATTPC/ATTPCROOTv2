@@ -60,13 +60,18 @@ class ATEventDrawTaskProto : public FairTask
   protected:
     virtual void DrawPadWave();
     virtual void DrawPadPlane();
+    virtual void DrawPadAll();
+    virtual void DrawMesh();
+    virtual void DrawProtoSpace();
 
     void DrawHitPoints();
-    void DrawHSpace();
-    void DrawProtoSpace();
+    void DrawProtoPattern();
 
     void UpdateCvsPadWave();
     void UpdateCvsPadPlane();
+    void UpdateCvsPadAll();
+    void UpdateCvsMesh();
+    void UpdateCvsProtoQ();
 
      //Basic types
 
@@ -83,16 +88,29 @@ class ATEventDrawTaskProto : public FairTask
     // ROOT Objects
     TPaletteAxis *fPadPlanePal;
 
-    TH1F* fMesh;
+
     TH3F* f3DHist;
 
-    TH1I*  fPadAll[300];
-    TH1D* fPhiDistr[5];
-    TH1I*  fPadWave;
+    TH1I*    fPadAll[300];
+    TH1D*    fPhiDistr[5];
+    TH1I*    fPadWave;
     TH2Poly* fPadPlane;
+    TH1F*    fMesh;
+    TH2F*    fQuadrant1;
+    TH2F*    fQuadrant2;
+    TH2F*    fQuadrant3;
+    TH2F*    fQuadrant4;
+    TGraph*  fQHitPattern[4];
 
     TCanvas* fCvsPadWave;
     TCanvas* fCvsPadPlane;
+    TCanvas* fCvsPadAll;
+    TCanvas* fCvsMesh;
+    TCanvas* fCvsQuadrant1;
+    TCanvas* fCvsQuadrant2;
+    TCanvas* fCvsQuadrant3;
+    TCanvas* fCvsQuadrant4;
+
 
     TF1 *fHoughLinearFit;
     TString fMap;

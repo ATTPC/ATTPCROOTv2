@@ -124,6 +124,15 @@ ATEventDrawTaskProto::Init()
   fCvsPadPlane -> ToggleEventStatus();
   fCvsPadPlane->AddExec("ex","ATEventDrawTaskProto::SelectPad(\"fRawEvent\")");
   DrawPadPlane();
+  fCvsPadAll = fEventManager->GetCvsPadAll();
+  DrawPadAll();
+  fCvsMesh = fEventManager->GetCvsMesh();
+  DrawMesh();
+  fCvsQuadrant1 = fEventManager->GetCvsQuadrant1();
+  fCvsQuadrant2 = fEventManager->GetCvsQuadrant2();
+  fCvsQuadrant3 = fEventManager->GetCvsQuadrant3();
+  fCvsQuadrant4 = fEventManager->GetCvsQuadrant4();
+  DrawProtoSpace();
 
 }
 
@@ -135,11 +144,15 @@ ATEventDrawTaskProto::Exec(Option_t* option)
   //ResetPhiDistr();
 
     if(fHitArray) DrawHitPoints();
+    if(fProtoEventArray) DrawProtoPattern();
 
     gEve -> Redraw3D(kFALSE);
 
     UpdateCvsPadWave();
     UpdateCvsPadPlane();
+    UpdateCvsPadAll();
+    UpdateCvsMesh();
+    UpdateCvsProtoQ();
 
 }
 
@@ -165,12 +178,14 @@ ATEventDrawTaskProto::Reset()
 
 }
 
+// Filling functions
+
 void
 ATEventDrawTaskProto::DrawHitPoints()
 {
 
   Float_t *MeshArray;
-  //fMesh->Reset(0);
+  fMesh->Reset(0);
   //f3DHist->Reset(0);
   //TRandom r(0);
 
@@ -204,7 +219,7 @@ ATEventDrawTaskProto::DrawHitPoints()
 
     for(Int_t i=0;i<512;i++){
 
-		//fMesh->SetBinContent(i,MeshArray[i]);
+		fMesh->SetBinContent(i,MeshArray[i]);
 
 	}
 
@@ -273,7 +288,7 @@ ATEventDrawTaskProto::DrawHitPoints()
   }
     //////////////////////// Colored Box Drawing ////////////////
 
-    fPadPlane -> Draw("zcol");
+    //fPadPlane -> Draw("zcol");
     gPad ->Update();
     fPadPlanePal
     = (TPaletteAxis *) fPadPlane->GetListOfFunctions()->FindObject("palette");
@@ -355,7 +370,7 @@ ATEventDrawTaskProto::DrawHitPoints()
 
 
                     fPadAll[iPad]->SetBinContent(j,adc[j]);
-		    //if(fSaveTextData) dumpEvent<<adc[j]<<"     "<<j<<"     "<<fPad->GetPadNum()<<std::endl;
+
 
                 }
 
@@ -369,11 +384,55 @@ ATEventDrawTaskProto::DrawHitPoints()
   }
 
 
+
     gEve -> AddElement(fHitSet);
     gEve -> AddElement(fhitBoxSet);
 
 }
 
+void
+ATEventDrawTaskProto::DrawProtoPattern()
+{
+
+    for(Int_t i=0;i<4;i++) fQHitPattern[i]->Set(0);
+    ATProtoEvent* protoevent = (ATProtoEvent*) fProtoEventArray->At(0);
+    Int_t nQuads = protoevent->GetNumQuadrants();
+    std::vector<ATProtoQuadrant> quadrantArray;
+
+   if(nQuads<5){
+    for(Int_t iQ=0; iQ<nQuads; iQ++)
+ 	  {
+
+	   ATProtoQuadrant quadrant = protoevent->GetQuadrantArray()->at(iQ);
+	   quadrantArray.push_back(protoevent->GetQuadrantArray()->at(iQ));
+      std::vector<Double_t> *PhiArray =quadrantArray[iQ].GetPhiArray();
+
+        for(Int_t pval=0;pval<PhiArray->size();pval++){
+            fPhiDistr[iQ]->Fill(PhiArray->at(pval));
+			   }
+	          PhiArray->clear();
+
+              Int_t qNumHit = quadrant.GetNumHits();
+
+                  for(Int_t j=0;j<qNumHit;j++){
+
+                    ATHit* qhit = quadrant.GetHit(j);
+                    TVector3 position = qhit->GetPosition();
+                    Double_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2) );
+                    fQHitPattern[iQ]->SetPoint(fQHitPattern[iQ]->GetN(),radius,position.Z());
+
+                  }
+
+
+  	   }
+    }
+
+
+
+}
+
+
+// Draw functions ////
 
 void
 ATEventDrawTaskProto::DrawPadWave()
@@ -406,6 +465,59 @@ ATEventDrawTaskProto::DrawPadPlane()
 }
 
 void
+ATEventDrawTaskProto::DrawPadAll()
+{
+
+    fCvsPadAll->cd();
+
+    for(Int_t i=0;i<300;i++){
+    fPadAll[i]->GetYaxis()->SetRangeUser(0,2500);
+    fPadAll[i] -> Draw("SAME");
+    }
+
+}
+
+void
+ATEventDrawTaskProto::DrawMesh()
+{
+
+    fCvsMesh->cd();
+    fMesh = new TH1F("Mesh","Mesh",512,0,511);
+    fMesh -> Draw();
+
+}
+
+void
+ATEventDrawTaskProto::DrawProtoSpace()
+{
+
+      for(Int_t i=0;i<4;i++){
+        fQHitPattern[i] = new TGraph();
+        fQHitPattern[i]->SetMarkerStyle(22);
+				fQHitPattern[i]->SetMarkerSize(0.7);
+        fQHitPattern[i]->SetPoint(1,0,0);
+        if(i==0) {
+          fCvsQuadrant1->cd();
+          fQHitPattern[0]->Draw("A*");
+        }else if(i==1){
+          fCvsQuadrant2->cd();
+          fQHitPattern[1]->Draw("A*");
+        }else if(i==2) {
+            fCvsQuadrant3->cd();
+            fQHitPattern[2]->Draw("A*");
+        }else if(i==3){
+            fCvsQuadrant4->cd();
+            fQHitPattern[3]->Draw("A*");
+
+        }
+      }
+
+
+}
+
+/// Update functions //////
+
+void
 ATEventDrawTaskProto::UpdateCvsPadWave()
 {
     fCvsPadWave -> Modified();
@@ -419,6 +531,39 @@ ATEventDrawTaskProto::UpdateCvsPadPlane()
 {
   fCvsPadPlane -> Modified();
   fCvsPadPlane -> Update();
+
+}
+
+void
+ATEventDrawTaskProto::UpdateCvsPadAll()
+{
+    fCvsPadAll -> Modified();
+    fCvsPadAll -> Update();
+
+}
+
+void
+ATEventDrawTaskProto::UpdateCvsMesh()
+{
+
+    fCvsMesh -> Modified();
+    fCvsMesh -> Update();
+
+
+}
+
+void
+ATEventDrawTaskProto::UpdateCvsProtoQ(){
+
+  fCvsQuadrant1->Modified();
+  fCvsQuadrant1->Update();
+  fCvsQuadrant2->Modified();
+  fCvsQuadrant2->Update();
+  fCvsQuadrant3->Modified();
+  fCvsQuadrant3->Update();
+  fCvsQuadrant4->Modified();
+  fCvsQuadrant4->Update();
+
 
 }
 
