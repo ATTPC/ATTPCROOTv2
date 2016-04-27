@@ -137,7 +137,7 @@ ATEventManagerProto::Init(Int_t option, Int_t level, Int_t nNodes)
  frame31->SetElementName("ATTPC Mesh");
  fCvsMesh = ecvs31->GetCanvas();
 
- // Quadrants
+ // Quadrants Radius vs Time
 
   TEveWindowSlot* slotH =
   TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
@@ -169,6 +169,39 @@ ATEventManagerProto::Init(Int_t option, Int_t level, Int_t nNodes)
   TEveWindowFrame* frameH4 = slotH->MakeFrame(ecvsH4);
   frameH4->SetElementName("Quadrant 4");
   fCvsQuadrant4 = ecvsH4->GetCanvas();
+
+  // Quadrants Radius vs Energy Loss
+
+  TEveWindowSlot* slotHEL =
+  TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
+  TEveWindowPack* packHEL = slotHEL->MakePack();
+  packHEL->SetShowTitleBar(kFALSE);
+  packHEL->SetHorizontal();
+  packHEL->SetElementName("Radius - Energy Loss ");
+
+  slotHEL = packHEL->NewSlotWithWeight(1.5);
+  TRootEmbeddedCanvas* ecvsHEL1 = new TRootEmbeddedCanvas();
+  TEveWindowFrame* frameHEL1 = slotHEL->MakeFrame(ecvsHEL1);
+  frameHEL1->SetElementName("Quadrant Energy Loss 1");
+  fCvsELQuadrant1 = ecvsHEL1->GetCanvas();
+
+  slotHEL = packHEL->NewSlotWithWeight(1.5);
+  TRootEmbeddedCanvas* ecvsHEL2 = new TRootEmbeddedCanvas();
+  TEveWindowFrame* frameHEL2 = slotHEL->MakeFrame(ecvsHEL2);
+  frameHEL2->SetElementName("Quadrant Energy Loss 2");
+  fCvsELQuadrant2 = ecvsHEL2->GetCanvas();
+
+  slotHEL = packHEL->NewSlotWithWeight(1.5);
+  TRootEmbeddedCanvas* ecvsHEL3 = new TRootEmbeddedCanvas();
+  TEveWindowFrame* frameHEL3 = slotHEL->MakeFrame(ecvsHEL3);
+  frameHEL3->SetElementName("Quadrant Energy Loss 3");
+  fCvsELQuadrant3 = ecvsHEL3->GetCanvas();
+
+  slotHEL = packHEL->NewSlotWithWeight(1.5);
+  TRootEmbeddedCanvas* ecvsHEL4 = new TRootEmbeddedCanvas();
+  TEveWindowFrame* frameHEL4 = slotHEL->MakeFrame(ecvsHEL4);
+  frameHEL4->SetElementName("Quadrant Energy Loss 4");
+  fCvsELQuadrant4 = ecvsHEL4->GetCanvas();
 
 
    fRunAna->Init();

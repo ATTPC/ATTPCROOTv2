@@ -133,6 +133,11 @@ ATEventDrawTaskProto::Init()
   fCvsQuadrant3 = fEventManager->GetCvsQuadrant3();
   fCvsQuadrant4 = fEventManager->GetCvsQuadrant4();
   DrawProtoSpace();
+  fCvsELQuadrant1 = fEventManager->GetCvsELQuadrant1();
+  fCvsELQuadrant2 = fEventManager->GetCvsELQuadrant2();
+  fCvsELQuadrant3 = fEventManager->GetCvsELQuadrant3();
+  fCvsELQuadrant4 = fEventManager->GetCvsELQuadrant4();
+  DrawProtoEL();
 
 }
 
@@ -153,6 +158,7 @@ ATEventDrawTaskProto::Exec(Option_t* option)
     UpdateCvsPadAll();
     UpdateCvsMesh();
     UpdateCvsProtoQ();
+    UpdateCvsProtoEL();
 
 }
 
@@ -394,7 +400,10 @@ void
 ATEventDrawTaskProto::DrawProtoPattern()
 {
 
-    for(Int_t i=0;i<4;i++) fQHitPattern[i]->Set(0);
+    for(Int_t i=0;i<4;i++){
+       fQHitPattern[i]  -> Set(0);
+       fQELossPattern[i]-> Set(0);
+     }
     ATProtoEvent* protoevent = (ATProtoEvent*) fProtoEventArray->At(0);
     Int_t nQuads = protoevent->GetNumQuadrants();
     std::vector<ATProtoQuadrant> quadrantArray;
@@ -419,7 +428,8 @@ ATEventDrawTaskProto::DrawProtoPattern()
                     ATHit* qhit = quadrant.GetHit(j);
                     TVector3 position = qhit->GetPosition();
                     Double_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2) );
-                    fQHitPattern[iQ]->SetPoint(fQHitPattern[iQ]->GetN(),radius,position.Z());
+                    fQHitPattern[iQ]   ->SetPoint(fQHitPattern[iQ]->GetN(),radius,position.Z());
+                    fQELossPattern[iQ] ->SetPoint(fQELossPattern[iQ]->GetN(),radius,qhit->GetCharge());
 
                   }
 
@@ -515,6 +525,33 @@ ATEventDrawTaskProto::DrawProtoSpace()
 
 }
 
+void
+ATEventDrawTaskProto::DrawProtoEL()
+{
+
+  for(Int_t i=0;i<4;i++){
+    fQELossPattern[i] = new TGraph();
+    fQELossPattern[i]->SetMarkerStyle(22);
+    fQELossPattern[i]->SetMarkerSize(0.7);
+    fQELossPattern[i]->SetPoint(1,0,0);
+    if(i==0) {
+      fCvsELQuadrant1->cd();
+      fQELossPattern[0]->Draw("A*");
+    }else if(i==1){
+      fCvsELQuadrant2->cd();
+      fQELossPattern[1]->Draw("A*");
+    }else if(i==2) {
+        fCvsELQuadrant3->cd();
+        fQELossPattern[2]->Draw("A*");
+    }else if(i==3){
+        fCvsELQuadrant4->cd();
+        fQELossPattern[3]->Draw("A*");
+
+    }
+  }
+
+}
+
 /// Update functions //////
 
 void
@@ -563,6 +600,21 @@ ATEventDrawTaskProto::UpdateCvsProtoQ(){
   fCvsQuadrant3->Update();
   fCvsQuadrant4->Modified();
   fCvsQuadrant4->Update();
+
+
+}
+
+void
+ATEventDrawTaskProto::UpdateCvsProtoEL(){
+
+  fCvsELQuadrant1->Modified();
+  fCvsELQuadrant1->Update();
+  fCvsELQuadrant2->Modified();
+  fCvsELQuadrant2->Update();
+  fCvsELQuadrant3->Modified();
+  fCvsELQuadrant3->Update();
+  fCvsELQuadrant4->Modified();
+  fCvsELQuadrant4->Update();
 
 
 }

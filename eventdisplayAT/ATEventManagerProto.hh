@@ -41,18 +41,22 @@ class ATEventManagerProto : public TEveEventManager
 
     virtual Int_t GetCurrentEvent() {return fEntry;}
 
-    TCanvas* GetCvsPadPlane()   { return fCvsPadPlane; }
-    TCanvas* GetCvsPadWave()    { return fPadWave; }
-    TCanvas* GetCvsPadAll()     { return fPadAll; }
-    TCanvas* GetCvsQEvent()     { return fCvsQEvent; }
-    TCanvas* GetCvsHoughSpace() { return fCvsHough; }
-    TCanvas* GetCvsPhi()        { return fCvsPhi; }
-    TCanvas* GetCvsMesh()       { return fCvsMesh; }
-    TCanvas* GetCvs3DHist()     { return fCvs3DHist; }
-    TCanvas* GetCvsQuadrant1()  { return fCvsQuadrant1; }
-    TCanvas* GetCvsQuadrant2()  { return fCvsQuadrant2; }
-    TCanvas* GetCvsQuadrant3()  { return fCvsQuadrant3; }
-    TCanvas* GetCvsQuadrant4()  { return fCvsQuadrant4; }
+    TCanvas* GetCvsPadPlane()     { return fCvsPadPlane; }
+    TCanvas* GetCvsPadWave()      { return fPadWave; }
+    TCanvas* GetCvsPadAll()       { return fPadAll; }
+    TCanvas* GetCvsQEvent()       { return fCvsQEvent; }
+    TCanvas* GetCvsHoughSpace()   { return fCvsHough; }
+    TCanvas* GetCvsPhi()          { return fCvsPhi; }
+    TCanvas* GetCvsMesh()         { return fCvsMesh; }
+    TCanvas* GetCvs3DHist()       { return fCvs3DHist; }
+    TCanvas* GetCvsQuadrant1()    { return fCvsQuadrant1; }
+    TCanvas* GetCvsQuadrant2()    { return fCvsQuadrant2; }
+    TCanvas* GetCvsQuadrant3()    { return fCvsQuadrant3; }
+    TCanvas* GetCvsQuadrant4()    { return fCvsQuadrant4; }
+    TCanvas* GetCvsELQuadrant1()  { return fCvsELQuadrant1; }
+    TCanvas* GetCvsELQuadrant2()  { return fCvsELQuadrant2; }
+    TCanvas* GetCvsELQuadrant3()  { return fCvsELQuadrant3; }
+    TCanvas* GetCvsELQuadrant4()  { return fCvsELQuadrant4; }
 
     void RunEvent();
 
@@ -78,6 +82,10 @@ class ATEventManagerProto : public TEveEventManager
       TCanvas* fCvsQuadrant2;
       TCanvas* fCvsQuadrant3;
       TCanvas* fCvsQuadrant4;
+      TCanvas* fCvsELQuadrant1;
+      TCanvas* fCvsELQuadrant2;
+      TCanvas* fCvsELQuadrant3;
+      TCanvas* fCvsELQuadrant4;
 
       static ATEventManagerProto* fInstance;
 
