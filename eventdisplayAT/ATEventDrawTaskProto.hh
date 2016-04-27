@@ -64,6 +64,7 @@ class ATEventDrawTaskProto : public FairTask
     virtual void DrawMesh();
     virtual void DrawProtoSpace();
     virtual void DrawProtoEL();
+    virtual void DrawProtoHough();
 
     void DrawHitPoints();
     void DrawProtoPattern();
@@ -105,6 +106,7 @@ class ATEventDrawTaskProto : public FairTask
     TH2F*    fQuadrant4;
     TGraph*  fQHitPattern[4];
     TGraph*  fQELossPattern[4];
+    TF1*     fHoughFit[4];
 
     TCanvas* fCvsPadWave;
     TCanvas* fCvsPadPlane;
@@ -133,10 +135,11 @@ class ATEventDrawTaskProto : public FairTask
 
     /// ATTPCROOT objects
 
-    ATEventManagerProto* fEventManager;
-    ATHit *fIniHit;
-    AtTpcMap *fDetmap;
-    ATRawEvent* fRawevent;
+    ATEventManagerProto*  fEventManager;
+    ATHit*                fIniHit;
+    AtTpcMap*             fDetmap;
+    ATRawEvent*           fRawevent;
+    ATHoughSpaceLine*     fHoughSpaceLine;
 
 
 

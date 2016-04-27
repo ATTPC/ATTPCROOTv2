@@ -69,17 +69,17 @@ void run_unpack_proto_8He_2(TString dataFile = "/Users/Yassid/Desktop/ATTPC/Data
    phirecoTask -> SetPersistence();
    run -> AddTask(phirecoTask);
 
-  /* ATHoughTask *HoughTask = new ATHoughTask();
+   ATHoughTask *HoughTask = new ATHoughTask();
    HoughTask->SetPhiReco();
    HoughTask->SetPersistence();
    HoughTask->SetLinearHough();
 	 HoughTask->SetRadiusThreshold(3.0); // Truncate Hough Space Calculation
    //HoughTask ->SetCircularHough();
-   run ->AddTask(HoughTask);*/
+   run ->AddTask(HoughTask);
 
    run->Init();
 
-   run->Run(0,100);
+   run->Run(0,200);
 	 //run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------

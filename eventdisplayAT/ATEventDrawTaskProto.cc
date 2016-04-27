@@ -69,6 +69,11 @@ fhitBoxSet(0)
           fIsRawData=kFALSE;
           fHoughLinearFit =new TF1("HoughLinearFit"," (  (-TMath::Cos([0])/TMath::Sin([0]))*x ) + [1]/TMath::Sin([0])",0,500);
 
+          for (Int_t i=0;i<4;i++){
+						fHoughFit[i] =new TF1(Form("HoughFit%i",i)," (  (-TMath::Cos([0])/TMath::Sin([0]))*x ) + [1]/TMath::Sin([0])",0,120);
+						fHoughFit[i]->SetLineColor(kRed);
+          }
+
           f3DHitStyle=1;
 
 
@@ -150,6 +155,7 @@ ATEventDrawTaskProto::Exec(Option_t* option)
 
     if(fHitArray) DrawHitPoints();
     if(fProtoEventArray) DrawProtoPattern();
+    if(fHoughSpaceArray) DrawProtoHough();
 
     gEve -> Redraw3D(kFALSE);
 
@@ -408,6 +414,9 @@ ATEventDrawTaskProto::DrawProtoPattern()
     Int_t nQuads = protoevent->GetNumQuadrants();
     std::vector<ATProtoQuadrant> quadrantArray;
 
+    //fHoughSpaceLine  = dynamic_cast<ATHoughSpaceLine*> (fHoughSpaceArray->At(0));
+    //std::vector<std::pair<Double_t,Double_t>> HoughPar = fHoughSpaceLine->GetHoughPar();
+
    if(nQuads<5){
     for(Int_t iQ=0; iQ<nQuads; iQ++)
  	  {
@@ -441,6 +450,40 @@ ATEventDrawTaskProto::DrawProtoPattern()
 
 }
 
+void
+ATEventDrawTaskProto::DrawProtoHough()
+{
+
+  fHoughSpaceLine  = dynamic_cast<ATHoughSpaceLine*> (fHoughSpaceArray->At(0));
+  std::vector<std::pair<Double_t,Double_t>> HoughPar = fHoughSpaceLine->GetHoughPar();
+
+      std::vector<Double_t> par0_fit;
+      std::vector<Double_t> par1_fit;
+      std::vector<Double_t> Angle;
+      std::vector<Double_t> Angle_fit;
+
+      Double_t tHoughPar0[4]={0};
+		  Double_t tHoughPar1[4]={0};
+	   	Double_t tFitPar0[4]={0};
+	  	Double_t tFitPar1[4]={0};
+	  	Double_t tAngleHough[4]={0};
+		  Double_t tAngleFit[4]={0};
+
+      for(Int_t i=0;i<HoughPar.size();i++){
+
+           Angle.push_back(180-HoughPar.at(i).first*180/TMath::Pi());
+
+           tHoughPar0[i]=HoughPar.at(i).first;
+           tHoughPar1[i]=HoughPar.at(i).second;
+           tAngleHough[i]=180-HoughPar.at(i).first*180/TMath::Pi();
+
+           fHoughFit[i]->SetParameter(0,HoughPar.at(i).first);
+					 fHoughFit[i]->SetParameter(1,HoughPar.at(i).second);
+
+      }
+
+
+}
 
 // Draw functions ////
 
@@ -509,15 +552,19 @@ ATEventDrawTaskProto::DrawProtoSpace()
         if(i==0) {
           fCvsQuadrant1->cd();
           fQHitPattern[0]->Draw("A*");
+          if(fHoughSpaceArray) fHoughFit[0]->Draw("SAME");
         }else if(i==1){
           fCvsQuadrant2->cd();
           fQHitPattern[1]->Draw("A*");
+          if(fHoughSpaceArray) fHoughFit[1]->Draw("SAME");
         }else if(i==2) {
             fCvsQuadrant3->cd();
             fQHitPattern[2]->Draw("A*");
+            if(fHoughSpaceArray) fHoughFit[2]->Draw("SAME");
         }else if(i==3){
             fCvsQuadrant4->cd();
             fQHitPattern[3]->Draw("A*");
+            if(fHoughSpaceArray) fHoughFit[3]->Draw("SAME");
 
         }
       }
