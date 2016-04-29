@@ -70,8 +70,10 @@ fhitBoxSet(0)
           fHoughLinearFit =new TF1("HoughLinearFit"," (  (-TMath::Cos([0])/TMath::Sin([0]))*x ) + [1]/TMath::Sin([0])",0,500);
 
           for (Int_t i=0;i<4;i++){
-						fHoughFit[i] =new TF1(Form("HoughFit%i",i)," (  (-TMath::Cos([0])/TMath::Sin([0]))*x ) + [1]/TMath::Sin([0])",0,120);
-						fHoughFit[i]->SetLineColor(kRed);
+						fHoughFit[i] = new TF1(Form("HoughFit%i",i)," (  (-TMath::Cos([0])/TMath::Sin([0]))*x ) + [1]/TMath::Sin([0])",0,120);
+						fHoughFit[i] -> SetLineColor(kRed);
+            fFit[i]      = new TF1(  Form("HoughFit%i",i), "pol1",0,120    );
+            fFit[i]      -> SetLineColor(kBlue);
           }
 
           f3DHitStyle=1;
@@ -500,11 +502,19 @@ ATEventDrawTaskProto::DrawProtoPatternAna()
 
       ATProtoEventAna* protoeventAna = (ATProtoEventAna*) fProtoEventAnaArray->At(0);
 
+      std::vector<Double_t>* Par0 = protoeventAna->GetPar0();
+      std::vector<Double_t>* Par1 = protoeventAna->GetPar1();
+
+      std::vector<Double_t>* Range = protoeventAna->GetRange();
+
       //std::vector<std::pair<Double_t,Double_t>>* ELossHitPattern = protoeventAna->GetELossHitPattern();
       std::vector<std::vector<std::pair<Double_t,Double_t>>>* QELossHitPattern = protoeventAna->GetQELossHitPattern();
 
       for(Int_t i=0;i<QELossHitPattern->size();i++){
                   std::vector<std::pair<Double_t,Double_t>> ELossHitPattern = QELossHitPattern->at(i);
+                  fFit[i]->SetParameter(0,Par0->at(i));
+                  fFit[i]->SetParameter(1,Par1->at(i));
+
                 for(Int_t j=0;j<ELossHitPattern.size();j++){
                   std::pair<Double_t,Double_t> HPbuffer = ELossHitPattern.at(j);
                   Double_t radius = HPbuffer.second;
@@ -584,20 +594,31 @@ ATEventDrawTaskProto::DrawProtoSpace()
         if(i==0) {
           fCvsQuadrant1->cd();
           fQHitPattern[0]->Draw("A*");
-          if(fHoughSpaceArray) fHoughFit[0]->Draw("SAME");
+          if(fHoughSpaceArray){
+              fHoughFit[0]->Draw("SAME");
+              if(fProtoEventAnaArray) fFit[0]->Draw("SAME");
+            }
         }else if(i==1){
           fCvsQuadrant2->cd();
           fQHitPattern[1]->Draw("A*");
-          if(fHoughSpaceArray) fHoughFit[1]->Draw("SAME");
+          if(fHoughSpaceArray){
+             fHoughFit[1]->Draw("SAME");
+             if(fProtoEventAnaArray) fFit[1]->Draw("SAME");
+             }
         }else if(i==2) {
             fCvsQuadrant3->cd();
             fQHitPattern[2]->Draw("A*");
-            if(fHoughSpaceArray) fHoughFit[2]->Draw("SAME");
+            if(fHoughSpaceArray){
+               fHoughFit[2]->Draw("SAME");
+               if(fProtoEventAnaArray) fFit[2]->Draw("SAME");
+             }
         }else if(i==3){
             fCvsQuadrant4->cd();
             fQHitPattern[3]->Draw("A*");
-            if(fHoughSpaceArray) fHoughFit[3]->Draw("SAME");
-
+            if(fHoughSpaceArray){
+               fHoughFit[3]->Draw("SAME");
+               if(fProtoEventAnaArray) fFit[3]->Draw("SAME");
+             }
         }
       }
 

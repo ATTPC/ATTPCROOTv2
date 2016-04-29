@@ -24,6 +24,12 @@ void ATProtoAnalysis::SetHoughDist(Double_t value)   { fHoughDist=value; }
 void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeventAna,ATHoughSpaceLine* houghspace,TF1 *(&HoughFit)[4],TGraph *(&HitPatternFilter)[4],TF1 *(&FitResult)[4])
 {
 
+  std::vector<Double_t> fPar0_fit;
+  std::vector<Double_t> fPar1_fit;
+  std::vector<Double_t> fAngle;
+  std::vector<Double_t> fAngle_fit;
+  std::vector<Double_t> fRange;
+  std::vector<std::pair<Double_t,Double_t>> fHoughPar;
 
     std::vector<std::vector<std::pair<Double_t,Double_t>>> QELossHitPattern;
 
@@ -113,8 +119,6 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
                        //std::cout<<" Par 0 : "<<par0<<std::endl;
                        //std::cout<<" Par 1 : "<<par1<<std::endl;
                        //if(gMinuit && debug) std::cout<<gMinuit->fCstatu<<std::endl;
-
-
                  }
 
 
