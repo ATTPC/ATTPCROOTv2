@@ -103,20 +103,20 @@ ATEventDrawTaskProto::Init()
   gROOT->GetListOfSpecials()->Add(fDetmap);
 
   fHitArray = (TClonesArray*) ioMan->GetObject("ATEventH"); // TODO: Why this confusing name? It should be fEventArray
-  if(fHitArray) LOG(INFO)<<"Hit Array Found."<<FairLogger::endl;
+  if(fHitArray) LOG(INFO)<<cGREEN<<"Hit Array Found."<<cNORMAL<<FairLogger::endl;
 
   fRawEventArray = (TClonesArray*) ioMan->GetObject("ATRawEvent");
   if(fRawEventArray){
-       LOG(INFO)<<"Raw Event Array  Found."<<FairLogger::endl;
+       LOG(INFO)<<cGREEN<<"Raw Event Array  Found."<<cNORMAL<<FairLogger::endl;
        fIsRawData=kTRUE;
   }
 
   fHoughSpaceArray =  (TClonesArray*) ioMan->GetObject("ATHough");
-  if(fHoughSpaceArray) LOG(INFO)<<"Hough Array Found."<<FairLogger::endl;
+  if(fHoughSpaceArray) LOG(INFO)<<cGREEN<<"Hough Array Found."<<cNORMAL<<FairLogger::endl;
 
 
   fProtoEventArray =  (TClonesArray*) ioMan->GetObject("ATProtoEvent");
-  if(fProtoEventArray) LOG(INFO)<<"Prototype Event Array Found."<<FairLogger::endl;
+  if(fProtoEventArray) LOG(INFO)<<cGREEN<<"Prototype Event Array Found."<<cNORMAL<<FairLogger::endl;
 
   //Drawing histograms
 

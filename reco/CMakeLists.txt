@@ -59,6 +59,7 @@ ATDecoder/ATRawEvent.cc
 ATDecoder/ATHit.cc
 ATDecoder/ATEvent.cc
 ATDecoder/ATProtoEvent.cc
+ATDecoder/ATProtoEventAna.cc
 ATDecoder/ATProtoQuadrant.cc
 ATDecoder/ATPedestal.cc
 

@@ -5,6 +5,7 @@
 #endif
 #include <memory>
 
+
 ClassImp(ATProtoAnalysis)
 
 ATProtoAnalysis::ATProtoAnalysis()
@@ -20,10 +21,11 @@ ATProtoAnalysis::~ATProtoAnalysis()
 
 void ATProtoAnalysis::SetHoughDist(Double_t value)   { fHoughDist=value; }
 
-void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATHoughSpaceLine* houghspace,TF1 *(&HoughFit)[4],TGraph *(&HitPatternFilter)[4],TF1 *(&FitResult)[4])
+void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeventAna,ATHoughSpaceLine* houghspace,TF1 *(&HoughFit)[4],TGraph *(&HitPatternFilter)[4],TF1 *(&FitResult)[4])
 {
 
-
+    std::vector<std::vector<Double_t>> ELossHitPattern;
+    std::vector<Double_t> QELossHitPattern;
 
     fHoughPar = houghspace->GetHoughPar();
 
@@ -112,6 +114,13 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATHoughSpaceLine* houghsp
             fAngle_fit.push_back(afit*180/TMath::Pi());
             fRange.push_back(range);
 
+            protoeventAna->SetAngle(fAngle);
+            protoeventAna->SetAngleFit(fAngle_fit);
+            protoeventAna->SetPar0(fPar0_fit);
+            protoeventAna->SetPar1(fPar1_fit);
+            protoeventAna->SetRange(fRange);
+            protoeventAna->SetHoughPar(fHoughPar);
+            protoeventAna->SetELHitPattern(ELossHitPattern);
 
       }// Quadrant loop
 
