@@ -18,7 +18,8 @@ class ATProtoEventAna : public TNamed {
     std::vector<Double_t> fAngle_fit;
     std::vector<Double_t> fRange;
     std::vector<std::pair<Double_t,Double_t>> fHoughPar;
-    std::vector<std::vector<Double_t>> fELossHitPattern;
+    std::vector<std::pair<Double_t,Double_t>> fELossHitPattern;
+    std::vector<std::vector<std::pair<Double_t,Double_t>>> fQELossHitPattern;
 
     // Getters
     std::vector<Double_t>* GetAngleFit();
@@ -27,7 +28,8 @@ class ATProtoEventAna : public TNamed {
     std::vector<Double_t>* GetPar1();
     std::vector<Double_t>* GetRange();
     std::vector<std::pair<Double_t,Double_t>>* GetHoughPar();
-    std::vector<std::vector<Double_t>>* GetELossHitPattern();
+    std::vector<std::pair<Double_t,Double_t>>* GetELossHitPattern();
+    std::vector<std::vector<std::pair<Double_t,Double_t>>>* GetQELossHitPattern();
 
     //Setters
     void SetAngleFit(std::vector<Double_t> Angle_fit);
@@ -36,7 +38,8 @@ class ATProtoEventAna : public TNamed {
     void SetPar1(std::vector<Double_t> Par1_fit);
     void SetRange(std::vector<Double_t> Range);
     void SetHoughPar(std::vector<std::pair<Double_t,Double_t>> HoughPar );
-    void SetELHitPattern(std::vector<std::vector<Double_t>> ELHitPattern );
+    void SetELHitPattern(std::vector<std::pair<Double_t,Double_t>> ELHitPattern );
+    void SetQELHitPattern(std::vector<std::vector<std::pair<Double_t,Double_t>>> QELHitPattern );
 
 
 
