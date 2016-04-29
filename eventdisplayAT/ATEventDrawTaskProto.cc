@@ -103,20 +103,23 @@ ATEventDrawTaskProto::Init()
   gROOT->GetListOfSpecials()->Add(fDetmap);
 
   fHitArray = (TClonesArray*) ioMan->GetObject("ATEventH"); // TODO: Why this confusing name? It should be fEventArray
-  if(fHitArray) LOG(INFO)<<"Hit Array Found."<<FairLogger::endl;
+  if(fHitArray) LOG(INFO)<<cGREEN<<"Hit Array Found."<<cNORMAL<<FairLogger::endl;
 
   fRawEventArray = (TClonesArray*) ioMan->GetObject("ATRawEvent");
   if(fRawEventArray){
-       LOG(INFO)<<"Raw Event Array  Found."<<FairLogger::endl;
+       LOG(INFO)<<cGREEN<<"Raw Event Array  Found."<<cNORMAL<<FairLogger::endl;
        fIsRawData=kTRUE;
   }
 
   fHoughSpaceArray =  (TClonesArray*) ioMan->GetObject("ATHough");
-  if(fHoughSpaceArray) LOG(INFO)<<"Hough Array Found."<<FairLogger::endl;
+  if(fHoughSpaceArray) LOG(INFO)<<cGREEN<<"Hough Array Found."<<cNORMAL<<FairLogger::endl;
 
 
   fProtoEventArray =  (TClonesArray*) ioMan->GetObject("ATProtoEvent");
-  if(fProtoEventArray) LOG(INFO)<<"Prototype Event Array Found."<<FairLogger::endl;
+  if(fProtoEventArray) LOG(INFO)<<cGREEN<<"Prototype Event Array Found."<<cNORMAL<<FairLogger::endl;
+
+  fProtoEventAnaArray =  (TClonesArray*) ioMan->GetObject("ATProtoEventAna");
+  if(fProtoEventAnaArray) LOG(INFO)<<cGREEN<<"Prototype Event Analysis Array Found."<<cNORMAL<<FairLogger::endl;
 
   //Drawing histograms
 
@@ -143,6 +146,8 @@ ATEventDrawTaskProto::Init()
   fCvsELQuadrant3 = fEventManager->GetCvsELQuadrant3();
   fCvsELQuadrant4 = fEventManager->GetCvsELQuadrant4();
   DrawProtoEL();
+  //if(fProtoEventAnaArray) DrawProtoELAna();
+
 
 }
 
@@ -153,9 +158,10 @@ ATEventDrawTaskProto::Exec(Option_t* option)
   //ResetPadAll();
   //ResetPhiDistr();
 
-    if(fHitArray) DrawHitPoints();
-    if(fProtoEventArray) DrawProtoPattern();
-    if(fHoughSpaceArray) DrawProtoHough();
+    if(fHitArray)           DrawHitPoints();
+    if(fProtoEventArray)    DrawProtoPattern();
+    if(fHoughSpaceArray)    DrawProtoHough();
+    if(fProtoEventAnaArray) DrawProtoPatternAna();
 
     gEve -> Redraw3D(kFALSE);
 
@@ -485,6 +491,32 @@ ATEventDrawTaskProto::DrawProtoHough()
 
 }
 
+void
+ATEventDrawTaskProto::DrawProtoPatternAna()
+{
+
+    for(Int_t i=0;i<4;i++) fQELossPatternAna[i]-> Set(0);
+
+
+      ATProtoEventAna* protoeventAna = (ATProtoEventAna*) fProtoEventAnaArray->At(0);
+
+      //std::vector<std::pair<Double_t,Double_t>>* ELossHitPattern = protoeventAna->GetELossHitPattern();
+      std::vector<std::vector<std::pair<Double_t,Double_t>>>* QELossHitPattern = protoeventAna->GetQELossHitPattern();
+
+      for(Int_t i=0;i<QELossHitPattern->size();i++){
+                  std::vector<std::pair<Double_t,Double_t>> ELossHitPattern = QELossHitPattern->at(i);
+                for(Int_t j=0;j<ELossHitPattern.size();j++){
+                  std::pair<Double_t,Double_t> HPbuffer = ELossHitPattern.at(j);
+                  Double_t radius = HPbuffer.second;
+                  Double_t charge = HPbuffer.first;
+                  fQELossPatternAna[i] ->SetPoint(fQELossPatternAna[i]->GetN(),radius,charge);
+                }
+
+
+      }
+
+}
+
 // Draw functions ////
 
 void
@@ -581,18 +613,55 @@ ATEventDrawTaskProto::DrawProtoEL()
     fQELossPattern[i]->SetMarkerStyle(22);
     fQELossPattern[i]->SetMarkerSize(0.7);
     fQELossPattern[i]->SetPoint(1,0,0);
+    fQELossPatternAna[i] = new TGraph();
+    fQELossPatternAna[i]->SetMarkerStyle(20);
+    fQELossPatternAna[i]->SetMarkerColor(kRed);
+    fQELossPatternAna[i]->SetMarkerSize(0.7);
+    fQELossPatternAna[i]->SetPoint(1,0,0);
     if(i==0) {
       fCvsELQuadrant1->cd();
-      fQELossPattern[0]->Draw("A*");
+      fQELossPattern[0]->Draw("AP");
+      if(fProtoEventAnaArray) fQELossPatternAna[0]->Draw("P");
     }else if(i==1){
       fCvsELQuadrant2->cd();
-      fQELossPattern[1]->Draw("A*");
+      fQELossPattern[1]->Draw("AP");
+      if(fProtoEventAnaArray) fQELossPatternAna[1]->Draw("P");
+    }else if(i==2) {
+      fCvsELQuadrant3->cd();
+      fQELossPattern[2]->Draw("AP");
+      if(fProtoEventAnaArray) fQELossPatternAna[2]->Draw("P");
+    }else if(i==3){
+      fCvsELQuadrant4->cd();
+      fQELossPattern[3]->Draw("AP");
+      if(fProtoEventAnaArray) fQELossPatternAna[3]->Draw("P");
+
+    }
+  }
+
+}
+
+void
+ATEventDrawTaskProto::DrawProtoELAna()
+{
+
+  for(Int_t i=0;i<4;i++){
+    fQELossPatternAna[i] = new TGraph();
+    fQELossPatternAna[i]->SetMarkerStyle(22);
+    fQELossPatternAna[i]->SetMarkerSize(0.7);
+    fQELossPatternAna[i]->SetMarkerStyle(kRed);
+    fQELossPatternAna[i]->SetPoint(1,0,0);
+    if(i==0) {
+      fCvsELQuadrant1->cd();
+      fQELossPatternAna[0]->Draw("A*");
+    }else if(i==1){
+      fCvsELQuadrant2->cd();
+      fQELossPatternAna[1]->Draw("A*");
     }else if(i==2) {
         fCvsELQuadrant3->cd();
-        fQELossPattern[2]->Draw("A*");
+        fQELossPatternAna[2]->Draw("A*");
     }else if(i==3){
         fCvsELQuadrant4->cd();
-        fQELossPattern[3]->Draw("A*");
+        fQELossPatternAna[3]->Draw("A*");
 
     }
   }

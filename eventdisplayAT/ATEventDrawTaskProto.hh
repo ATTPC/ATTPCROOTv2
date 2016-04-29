@@ -22,11 +22,10 @@
 #include "TH2Poly.h"
 
 #include "ATEventManagerProto.hh"
-//#include "ATRiemannTrack.hh"
-//#include "ATRiemannHit.hh"
 #include "ATRawEvent.hh"
 #include "ATEvent.hh"
 #include "ATProtoEvent.hh"
+#include "ATProtoEventAna.hh"
 #include "ATHoughSpaceLine.hh"
 #include "ATHoughSpaceCircle.hh"
 #include "ATHoughSpace.hh"
@@ -65,9 +64,12 @@ class ATEventDrawTaskProto : public FairTask
     virtual void DrawProtoSpace();
     virtual void DrawProtoEL();
     virtual void DrawProtoHough();
+    virtual void DrawProtoELAna();
+
 
     void DrawHitPoints();
     void DrawProtoPattern();
+    void DrawProtoPatternAna();
 
     void UpdateCvsPadWave();
     void UpdateCvsPadPlane();
@@ -107,6 +109,7 @@ class ATEventDrawTaskProto : public FairTask
     TGraph*  fQHitPattern[4];
     TGraph*  fQELossPattern[4];
     TF1*     fHoughFit[4];
+    TGraph*  fQELossPatternAna[4];
 
     TCanvas* fCvsPadWave;
     TCanvas* fCvsPadPlane;
@@ -129,6 +132,7 @@ class ATEventDrawTaskProto : public FairTask
     TClonesArray* fRawEventArray;
     TClonesArray* fHoughSpaceArray;
     TClonesArray* fProtoEventArray;
+    TClonesArray* fProtoEventAnaArray;
 
     TEvePointSet* fHitSet;
     TEveBoxSet* fhitBoxSet;

@@ -77,9 +77,16 @@ void run_unpack_proto_8He_2(TString dataFile = "/Users/Yassid/Desktop/ATTPC/Data
    //HoughTask ->SetCircularHough();
    run ->AddTask(HoughTask);
 
+	 ATAnalysisTask *AnaTask = new ATAnalysisTask();
+   AnaTask->SetPhiReco();
+   AnaTask->SetHoughDist(2.0);
+   AnaTask->SetPersistence(kTRUE);
+
+   run->AddTask(AnaTask);
+
    run->Init();
 
-   run->Run(0,200);
+   run->Run(0,500);
 	 //run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------

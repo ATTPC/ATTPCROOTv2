@@ -3,6 +3,7 @@
 
 #include "ATEvent.hh"
 #include "ATProtoEvent.hh"
+#include "ATProtoEventAna.hh"
 #include "ATProtoQuadrant.hh"
 #include "ATHoughSpace.hh"
 #include "ATHoughSpaceLine.hh"
@@ -30,7 +31,7 @@ class ATAnalysis : public TObject
         ATAnalysis();
         virtual ~ATAnalysis();
 
-       virtual void Analyze(ATProtoEvent* protoevent,ATHoughSpaceLine* houghspace,TF1 *(&HoughFit)[4],TGraph *(&HitPatternFilter)[4],TF1 *(&FitResult)[4])=0;
+       virtual void Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeventAna,ATHoughSpaceLine* houghspace,TF1 *(&HoughFit)[4],TGraph *(&HitPatternFilter)[4],TF1 *(&FitResult)[4])=0;
 
        ClassDef(ATAnalysis, 1);
 
