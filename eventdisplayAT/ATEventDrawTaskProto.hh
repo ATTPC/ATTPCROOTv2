@@ -110,6 +110,7 @@ class ATEventDrawTaskProto : public FairTask
     TGraph*  fQELossPattern[4];
     TF1*     fHoughFit[4];
     TGraph*  fQELossPatternAna[4];
+    TF1*     fFit[4];
 
     TCanvas* fCvsPadWave;
     TCanvas* fCvsPadPlane;
