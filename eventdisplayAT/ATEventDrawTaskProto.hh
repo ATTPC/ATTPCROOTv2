@@ -65,6 +65,7 @@ class ATEventDrawTaskProto : public FairTask
     virtual void DrawProtoEL();
     virtual void DrawProtoHough();
     virtual void DrawProtoELAna();
+    virtual void DrawProtoVertex();
 
 
     void DrawHitPoints();
@@ -77,6 +78,7 @@ class ATEventDrawTaskProto : public FairTask
     void UpdateCvsMesh();
     void UpdateCvsProtoQ();
     void UpdateCvsProtoEL();
+    void UpdateCvsProtoVertex();
 
 
      //Basic types
@@ -102,15 +104,12 @@ class ATEventDrawTaskProto : public FairTask
     TH1I*    fPadWave;
     TH2Poly* fPadPlane;
     TH1F*    fMesh;
-    TH2F*    fQuadrant1;
-    TH2F*    fQuadrant2;
-    TH2F*    fQuadrant3;
-    TH2F*    fQuadrant4;
     TGraph*  fQHitPattern[4];
     TGraph*  fQELossPattern[4];
     TF1*     fHoughFit[4];
     TGraph*  fQELossPatternAna[4];
     TF1*     fFit[4];
+    TH2F*    fQVertex[4];
 
     TCanvas* fCvsPadWave;
     TCanvas* fCvsPadPlane;
@@ -124,6 +123,8 @@ class ATEventDrawTaskProto : public FairTask
     TCanvas* fCvsELQuadrant2;
     TCanvas* fCvsELQuadrant3;
     TCanvas* fCvsELQuadrant4;
+    TCanvas* fCvsVertex;
+    TCanvas* fCvsKineAA;
 
 
     TF1 *fHoughLinearFit;

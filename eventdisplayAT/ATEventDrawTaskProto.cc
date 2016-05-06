@@ -74,6 +74,7 @@ fhitBoxSet(0)
 						fHoughFit[i] -> SetLineColor(kRed);
             fFit[i]      = new TF1(  Form("HoughFit%i",i), "pol1",0,120    );
             fFit[i]      -> SetLineColor(kBlue);
+
           }
 
           f3DHitStyle=1;
@@ -149,6 +150,9 @@ ATEventDrawTaskProto::Init()
   fCvsELQuadrant4 = fEventManager->GetCvsELQuadrant4();
   DrawProtoEL();
   //if(fProtoEventAnaArray) DrawProtoELAna();
+  fCvsVertex =  fEventManager->GetCvsVertex();
+  fCvsKineAA =  fEventManager->GetCvsKineAA();
+  DrawProtoVertex();
 
 
 }
@@ -173,6 +177,7 @@ ATEventDrawTaskProto::Exec(Option_t* option)
     UpdateCvsMesh();
     UpdateCvsProtoQ();
     UpdateCvsProtoEL();
+    UpdateCvsProtoVertex();
 
 }
 
@@ -499,6 +504,8 @@ ATEventDrawTaskProto::DrawProtoPatternAna()
 
     for(Int_t i=0;i<4;i++) fQELossPatternAna[i]-> Set(0);
 
+    fQVertex[2]->Reset(0);
+    fQVertex[3]->Reset(0);
 
       ATProtoEventAna* protoeventAna = (ATProtoEventAna*) fProtoEventAnaArray->At(0);
 
@@ -524,6 +531,12 @@ ATEventDrawTaskProto::DrawProtoPatternAna()
 
 
       }
+
+      std::vector<Double_t>* vertex = protoeventAna->GetVertex();
+      fQVertex[0]->Fill(vertex->at(0),vertex->at(2));
+      fQVertex[1]->Fill(vertex->at(1),vertex->at(3));
+      fQVertex[2]->Fill(vertex->at(0),vertex->at(2));
+      fQVertex[3]->Fill(vertex->at(1),vertex->at(3));
 
 }
 
@@ -689,6 +702,32 @@ ATEventDrawTaskProto::DrawProtoELAna()
 
 }
 
+void
+ATEventDrawTaskProto::DrawProtoVertex()
+{
+
+  for(Int_t i=0;i<4;i++){
+    fQVertex[i]  = new TH2F(Form("Vertex_%i",i),Form("Vertex%i",i),1000,0,1000,1000,0,1000);
+    fQVertex[i]->SetMarkerSize(1.2);
+    fQVertex[i]->SetMarkerStyle(22);
+    if(i==0) fQVertex[i]->SetMarkerColor(kRed);
+    else if(i==1) {fQVertex[i]->SetMarkerColor(kRed);fQVertex[i]->SetMarkerStyle(20);}
+    else if(i==2) fQVertex[i]->SetMarkerColor(kBlue);
+    else if(i==3) {fQVertex[i]->SetMarkerColor(kBlue);fQVertex[i]->SetMarkerStyle(20);}
+  }
+
+    fCvsVertex->cd();
+    fQVertex[0]->Draw();
+    fQVertex[1]->Draw("SAME");
+    fQVertex[2]->Draw("SAME");
+    fQVertex[3]->Draw("SAME");
+
+
+
+
+
+}
+
 /// Update functions //////
 
 void
@@ -753,6 +792,14 @@ ATEventDrawTaskProto::UpdateCvsProtoEL(){
   fCvsELQuadrant4->Modified();
   fCvsELQuadrant4->Update();
 
+
+}
+
+void
+ATEventDrawTaskProto::UpdateCvsProtoVertex(){
+
+    fCvsVertex->Modified();
+    fCvsVertex->Update();
 
 }
 

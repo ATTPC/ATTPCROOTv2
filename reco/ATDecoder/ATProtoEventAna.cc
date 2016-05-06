@@ -5,6 +5,9 @@ ClassImp(ATProtoEventAna);
 ATProtoEventAna::ATProtoEventAna()
 :TNamed("ATProtoEventAna", "Proto Event Analysis")
 {
+  fVertex02=-500.0;
+  fVertex13=-500.0;
+
 
 }
 
@@ -22,6 +25,7 @@ std::vector<Double_t>* ATProtoEventAna::GetRange()                              
 std::vector<std::pair<Double_t,Double_t>>* ATProtoEventAna::GetHoughPar()                                      {return &fHoughPar;}
 std::vector<std::pair<Double_t,Double_t>>* ATProtoEventAna::GetELossHitPattern()                               {return &fELossHitPattern;}
 std::vector<std::vector<std::pair<Double_t,Double_t>>>* ATProtoEventAna::GetQELossHitPattern()                 {return &fQELossHitPattern;}
+std::vector<Double_t>* ATProtoEventAna::GetVertex()                                                            {return &fQVertex;}
 
 //Setters
 void ATProtoEventAna::SetAngleFit(std::vector<Double_t> Angle_fit)                                             {fAngle_fit = Angle_fit;}
@@ -32,3 +36,6 @@ void ATProtoEventAna::SetRange(std::vector<Double_t> Range)                     
 void ATProtoEventAna::SetHoughPar(std::vector<std::pair<Double_t,Double_t>> HoughPar )                         {fHoughPar = HoughPar;}
 void ATProtoEventAna::SetELHitPattern(std::vector<std::pair<Double_t,Double_t>> ELHitPattern )                 {fELossHitPattern = ELHitPattern; }
 void ATProtoEventAna::SetQELHitPattern(std::vector<std::vector<std::pair<Double_t,Double_t>>> QELHitPattern )  {fQELossHitPattern = QELHitPattern; }
+void ATProtoEventAna::SetVertex02(Double_t Vertex02)                                                           {fVertex02 = Vertex02;}
+void ATProtoEventAna::SetVertex13(Double_t Vertex13)                                                           {fVertex13 = Vertex13;}
+void ATProtoEventAna::SetVertex(std::vector<Double_t> Vertex)                                                  {fQVertex = Vertex;}

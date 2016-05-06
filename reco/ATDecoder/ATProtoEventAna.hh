@@ -20,6 +20,9 @@ class ATProtoEventAna : public TNamed {
     std::vector<std::pair<Double_t,Double_t>> fHoughPar;
     std::vector<std::pair<Double_t,Double_t>> fELossHitPattern;
     std::vector<std::vector<std::pair<Double_t,Double_t>>> fQELossHitPattern;
+    std::vector<Double_t> fQVertex;
+    Double_t fVertex02;
+    Double_t fVertex13;
 
     // Getters
     std::vector<Double_t>* GetAngleFit();
@@ -30,6 +33,7 @@ class ATProtoEventAna : public TNamed {
     std::vector<std::pair<Double_t,Double_t>>* GetHoughPar();
     std::vector<std::pair<Double_t,Double_t>>* GetELossHitPattern();
     std::vector<std::vector<std::pair<Double_t,Double_t>>>* GetQELossHitPattern();
+    std::vector<Double_t>* GetVertex();
 
     //Setters
     void SetAngleFit(std::vector<Double_t> Angle_fit);
@@ -40,6 +44,10 @@ class ATProtoEventAna : public TNamed {
     void SetHoughPar(std::vector<std::pair<Double_t,Double_t>> HoughPar );
     void SetELHitPattern(std::vector<std::pair<Double_t,Double_t>> ELHitPattern );
     void SetQELHitPattern(std::vector<std::vector<std::pair<Double_t,Double_t>>> QELHitPattern );
+    void SetVertex02(Double_t Vertex02);
+    void SetVertex13(Double_t Vertex13);
+    void SetVertex(std::vector<Double_t> Vertex);
+
 
 
 

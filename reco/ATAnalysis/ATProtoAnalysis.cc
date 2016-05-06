@@ -12,6 +12,7 @@ ATProtoAnalysis::ATProtoAnalysis()
 {
       gErrorIgnoreLevel=kFatal;
       fHoughDist=2.0;
+      fVertexDiff=50.0;
 
 }
 
@@ -135,6 +136,8 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
             QELossHitPattern.push_back(ELossHitPattern);
 
 
+
+
       }// Quadrant loop (i)
 
 
@@ -145,6 +148,11 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
           protoeventAna->SetRange(fRange);
           protoeventAna->SetHoughPar(fHoughPar);
           protoeventAna->SetQELHitPattern(QELossHitPattern);
+          protoeventAna->SetVertex(fPar0_fit);
+
+          // Vertex matching
+                if( TMath::Abs(fPar0_fit.at(0)-fPar0_fit.at(2))<fVertexDiff ) protoeventAna->SetVertex02((fPar0_fit.at(0)+fPar0_fit.at(2))/2.0);
+                if( TMath::Abs(fPar0_fit.at(1)-fPar0_fit.at(3))<fVertexDiff ) protoeventAna->SetVertex13((fPar0_fit.at(1)-fPar0_fit.at(3))/2.0);
 
 
 
