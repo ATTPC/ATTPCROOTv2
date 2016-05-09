@@ -1597,21 +1597,22 @@ Bool_t ATMCMinimization::MinimizeOptMap(Double_t* parameter,ATEvent *event, TH2P
                   std::vector<Int_t> TBInter;
 
 
-                 Double_t xcmm[10000]={0};
-                 Double_t ycmm[10000]={0};
-                 Double_t zcmm[10000]={0};
 
-                 Double_t xsol[10000]={0};
-                 Double_t ysol[10000]={0};
-                 Double_t zsol[10000]={0};
+                 Double_t xcmm=0;
+                 Double_t ycmm=0;
+                 Double_t zcmm=0;
 
-                 Double_t xdet[10000]={0};
-                 Double_t ydet[10000]={0};
-                 Double_t zdet[10000]={0};
+                 Double_t xsol=0;
+                 Double_t ysol=0;
+                 Double_t zsol=0;
 
-                 Double_t xpad[10000]={0};
-                 Double_t ypad[10000]={0};
-                 Double_t zpad[10000]={0};
+                 Double_t xdet=0;
+                 Double_t ydet=0;
+                 Double_t zdet=0;
+
+                 Double_t xpad=0;
+                 Double_t ypad=0;
+                 Double_t zpad=0;
 
                  Double_t xTBCorr[10000];
                  Double_t yTBCorr[10000];
@@ -1809,41 +1810,41 @@ Bool_t ATMCMinimization::MinimizeOptMap(Double_t* parameter,ATEvent *event, TH2P
 
 
                                                                           //  if(iterd0==iterd){ // Only takes the first one of hte iterd series
-                                                                             xcmm[iterd] = x*10.0;
-                                                                             ycmm[iterd] = y*10.0;
-                                                                             zcmm[iterd] = z*10.0;
+                                                                             xcmm = x*10.0;
+                                                                             ycmm = y*10.0;
+                                                                             zcmm = z*10.0;
                                                                              //zcmm[iterd] = -z*10. + 2*zmin*10.0;
                                                                             // iterd0++;
 
                                                                               //std::cout<<" k : "<<k<<std::endl;
                                                                               //std::cout<<" zcmm : "<<zcmm[iterd]<<"  2*zmin*10.0  : "<<2*zmin_trans*10.0<<std::endl;
-                                                                              zcmm[iterd] = -zcmm[iterd]+ 2*zmin_trans*10.0;
+                                                                              zcmm = -zcmm + 2*zmin_trans*10.0;
                                                                               //std::cout<<" zcmm : "<<zcmm[iterd]<<"  2*zmin*10.0  : "<<2*zmin_trans*10.0<<std::endl;
-                                                                              xsol[iterd]=xcmm[iterd]-zcmm[iterd]*TMath::Sin(thetaLorentz)*TMath::Sin(thetaRot);
-                                                                              ysol[iterd]=ycmm[iterd]+zcmm[iterd]*TMath::Sin(thetaLorentz)*TMath::Cos(thetaRot);
-                                                                              zsol[iterd]=zcmm[iterd];
+                                                                              xsol=xcmm-zcmm*TMath::Sin(thetaLorentz)*TMath::Sin(thetaRot);
+                                                                              ysol=ycmm+zcmm*TMath::Sin(thetaLorentz)*TMath::Cos(thetaRot);
+                                                                              zsol=zcmm;
 
-                                                                              xdet[iterd] = xsol[iterd];
-                                                                              ydet[iterd] = -(fZk-zsol[iterd])*TMath::Sin(thetaTilt) + ysol[iterd]*TMath::Cos(thetaTilt);
-                                                                              zdet[iterd] = zsol[iterd]*TMath::Cos(thetaTilt) - ysol[iterd]*TMath::Sin(thetaTilt);
+                                                                              xdet = xsol;
+                                                                              ydet = -(fZk-zsol)*TMath::Sin(thetaTilt) + ysol*TMath::Cos(thetaTilt);
+                                                                              zdet = zsol*TMath::Cos(thetaTilt) - ysol*TMath::Sin(thetaTilt);
 
-                                                                              xpad[iterd] = xdet[iterd]*TMath::Cos(thetaPad) - ydet[iterd]*TMath::Sin(thetaPad);
-                                                                              ypad[iterd] = xdet[iterd]*TMath::Sin(thetaPad) + ydet[iterd]*TMath::Cos(thetaPad);
-                                                                              zpad[iterd] = zdet[iterd];
+                                                                              xpad = xdet*TMath::Cos(thetaPad) - ydet*TMath::Sin(thetaPad);
+                                                                              ypad = xdet*TMath::Sin(thetaPad) + ydet*TMath::Cos(thetaPad);
+                                                                              zpad = zdet;
                                                                               //zpad[iterd] = -zdet[iterd]+ 2*zmin*10.0;
 
 
 
-                                                                             iterCorr = (Int_t) (zpad[iterd]/(dzstep*10) + 0.5);
+                                                                             iterCorr = (Int_t) (zpad/(dzstep*10) + 0.5);
                                                                              if(k==0) iterCorr_0 = iterCorr; //Offset renomarlization
                                                                              //std::cout<<" iterCorr : "<<iterCorr_0-iterCorr<<" iterd : "<<iterd<<std::endl;
 
                                                                              iterCorrNorm = iterCorr_0-iterCorr;
                                                                              if(iterCorrNorm<0) break;
 
-                                                                             xTBCorr[iterCorrNorm] = xpad[iterd];
-                                                                             yTBCorr[iterCorrNorm] = ypad[iterd];
-                                                                             zTBCorr[iterCorrNorm] = zpad[iterd];
+                                                                             xTBCorr[iterCorrNorm] = xpad;
+                                                                             yTBCorr[iterCorrNorm] = ypad;
+                                                                             zTBCorr[iterCorrNorm] = zpad;
 
 
                                                                           //  if(iterCorrNorm!=icnb){
@@ -1934,7 +1935,7 @@ Bool_t ATMCMinimization::MinimizeOptMap(Double_t* parameter,ATEvent *event, TH2P
                                                                       tm=tm+t;
 
                                                                       //simangle->Draw("AP");
-
+                                                                      //if(iteration>2000) std::cout<<" Number of iterations : "<<iteration<<std::endl;
 
 
                                                                       //CHI SQUARE CALCULATION
@@ -1989,7 +1990,7 @@ Bool_t ATMCMinimization::MinimizeOptMap(Double_t* parameter,ATEvent *event, TH2P
 
                                                                           if(kDebug){
                                                                           std::cout<<cRED<<"  ------------------------------------------------------------------------------------------- "<<cNORMAL<<std::endl;
-                                                                          std::cout<<" Array : "<<iChi<<" X_Sim : "<<xcmm[iChi]<<" Y_Sim : "<<ycmm[iChi]<<" Z_Sim : "<<zcmm[iChi]<<" TB Sim"<<floor(zcmm[iChi]/dzstep/10)<<std::endl;
+                                                                          std::cout<<" Array : "<<iChi<<" X_Sim : "<<xcmm<<" Y_Sim : "<<ycmm<<" Z_Sim : "<<zcmm<<" TB Sim"<<floor(zcmm/dzstep/10)<<std::endl;
                                                                           std::cout<<cGREEN<<" Array Corr: "<<iChi<<" X_Sim_Corr : "<<xTBCorr[iChi]<<" Y_Sim_Corr : "<<yTBCorr[iChi]<<" Z_Sim_Corr : "<<zTBCorr[iChi]<<cNORMAL<<std::endl;
                                                                           std::cout<<" Real Time bucket : "<<parameter[3]+iChi<<std::endl;
                                                                           //std::cout<<" Corrected TIme Bucket : "<<(zcmm[iChi]/10 - 100)/dzstep + fEntTB <<std::endl;
@@ -2170,9 +2171,12 @@ Bool_t ATMCMinimization::MinimizeOptMap(Double_t* parameter,ATEvent *event, TH2P
                                                                      }
 
                                                                     // Reset MC container for the next iteration
-                                                                    memset(xcmm, 0, sizeof(xcmm));
-                                                                    memset(ycmm, 0, sizeof(ycmm));
-                                                                    memset(zcmm, 0, sizeof(zcmm));
+                                                                    //memset(xcmm, 0, sizeof(xcmm));
+                                                                    //memset(ycmm, 0, sizeof(ycmm));
+                                                                    //memset(zcmm, 0, sizeof(zcmm));
+                                                                    xcmm = 0.0;
+                                                                    ycmm = 0.0;
+                                                                    zcmm = 0.0;
                                                                     xinter.clear();
                                                                     yinter.clear();
                                                                     zinter.clear();

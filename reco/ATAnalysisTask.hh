@@ -11,12 +11,14 @@
 // ATTPCROOT classes
 #include "ATEvent.hh"
 #include "ATProtoEvent.hh"
+#include "ATProtoEventAna.hh"
 #include "ATDigiPar.hh"
 #include "ATHoughSpaceCircle.hh"
 #include "ATHoughSpaceLine.hh"
 #include "ATHoughSpace.hh"
 #include "ATAnalysis.hh"
 #include "ATProtoAnalysis.hh"
+
 
 
 // ROOT classes
@@ -39,12 +41,14 @@ class ATAnalysisTask : public FairTask {
     FairLogger *fLogger;
     //TClonesArray *fEventHArray;
     TClonesArray *fProtoEventHArray;
+    TClonesArray *fProtoEventAnaArray;
     TClonesArray *fHoughArray;
-    TClonesArray *fAnalysisArray;
+    //TClonesArray *fAnalysisArray;
 
-    ATProtoAnalysis* fProtoAnalysis;
-    ATHoughSpaceLine *fHoughSpace;
-    ATProtoEvent *fProtoevent;
+    ATProtoAnalysis*  fProtoAnalysis;
+    ATHoughSpaceLine* fHoughSpace;
+    ATProtoEvent*     fProtoevent;
+
 
     ATDigiPar *fPar;
     Bool_t fIsPersistence;

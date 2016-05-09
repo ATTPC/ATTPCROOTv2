@@ -193,16 +193,6 @@ ATEventDrawTask::Init()
   fProtoEventArray =  (TClonesArray*) ioMan->GetObject("ATProtoEvent");
   if(fProtoEventArray) LOG(INFO)<<"Prototype Event Array Found."<<FairLogger::endl;
 
-
-  //fHitClusterArray = (TClonesArray*) ioMan->GetObject("STEventHC");
-  //if(fHitClusterArray) LOG(INFO)<<"Hit Cluster Found."<<FairLogger::endl;
-
-  //fRiemannTrackArray = (TClonesArray*) ioMan->GetObject("STRiemannTrack");
-  //if(fRiemannTrackArray) LOG(INFO)<<"Riemann Track Found."<<FairLogger::endl;
-
-  //fKalmanArray = (TClonesArray*) ioMan->GetObject("STKalmanTrack");
-  //if(fKalmanArray) LOG(INFO)<<"Kalman Track Found."<<FairLogger::endl;
-
  // gROOT->GetListOfSpecials()->Add(fRawEventArray);
   //fRawEventArray->SetName("ATRawEvent");
 

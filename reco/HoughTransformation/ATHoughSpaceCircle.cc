@@ -331,7 +331,8 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane)
 
               if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) { // Check RxPhi plot to adjust the angle
 
-                 min->MinimizeOptMap(parameter,event,hPadPlane);
+                 //min->MinimizeOptMap(parameter,event,hPadPlane);
+                 min->MinimizeOpt(parameter,event);
                  fPosXmin = min->GetPosXMin();
                  fPosYmin = min->GetPosYMin();
                  fPosZmin = min->GetPosZMin();

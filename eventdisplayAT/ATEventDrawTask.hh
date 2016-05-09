@@ -128,9 +128,6 @@ class ATEventDrawTask : public FairTask
     Bool_t fIsLinearHough;
 
     TClonesArray* fHitArray;
-    //TClonesArray* fHitClusterArray;
-    //TClonesArray* fRiemannTrackArray;
-    //TClonesArray* fKalmanArray;
     TClonesArray* fRawEventArray;
     TClonesArray* fHoughSpaceArray;
     TClonesArray* fProtoEventArray;

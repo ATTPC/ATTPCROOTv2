@@ -1,5 +1,5 @@
 //void run_unpack_proto_8He_2(TString dataFile = "runfiles/run_ISAC2015_0259.txt",TString parameterFile = "pATTPC.TRIUMF2015.par"){
-void run_unpack_proto_8He_2(TString dataFile = "/Users/Yassid/Desktop/ATTPC/Data/TRIUMF/run_0259/CoBo_AsAd0_2015-12-05T14_33_58.545_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
+void run_unpack_proto_8He_2(TString dataFile = "/data/TRIUMF/ISAC_2015/CoBo_AsAd0_2015-12-06T01:48:29.974_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
 
 
     // -----   Timer   --------------------------------------------------------
@@ -69,17 +69,24 @@ void run_unpack_proto_8He_2(TString dataFile = "/Users/Yassid/Desktop/ATTPC/Data
    phirecoTask -> SetPersistence();
    run -> AddTask(phirecoTask);
 
-  /* ATHoughTask *HoughTask = new ATHoughTask();
+   ATHoughTask *HoughTask = new ATHoughTask();
    HoughTask->SetPhiReco();
    HoughTask->SetPersistence();
    HoughTask->SetLinearHough();
 	 HoughTask->SetRadiusThreshold(3.0); // Truncate Hough Space Calculation
    //HoughTask ->SetCircularHough();
-   run ->AddTask(HoughTask);*/
+   run ->AddTask(HoughTask);
+
+	 ATAnalysisTask *AnaTask = new ATAnalysisTask();
+   AnaTask->SetPhiReco();
+   AnaTask->SetHoughDist(2.0);
+   AnaTask->SetPersistence(kTRUE);
+
+   run->AddTask(AnaTask);
 
    run->Init();
 
-   run->Run(0,200);
+   run->Run(0,500);
 	 //run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------

@@ -19,7 +19,7 @@ ATAnalysisTask::ATAnalysisTask()
   fHoughDist=2.0;
   fRunNum=0;
   fInternalID=0;
-  fAnalysisArray = new TClonesArray("ATProtoAnalysis");
+  fProtoEventAnaArray = new TClonesArray("ATProtoEventAna");
 }
 
 ATAnalysisTask::~ATAnalysisTask()
@@ -79,7 +79,7 @@ ATAnalysisTask::Init()
 
   }
 
-    ioMan -> Register("ATAnalysis", "ATTPC", fAnalysisArray, fIsPersistence);
+    ioMan -> Register("ATProtoEventAna", "ATTPC", fProtoEventAnaArray, fIsPersistence);
 
     return kSUCCESS;
 
@@ -107,7 +107,7 @@ void
 ATAnalysisTask::Exec(Option_t *opt)
 {
 
-   fAnalysisArray->Delete();
+   fProtoEventAnaArray->Delete();
 
 
    if(fIsPhiReco){
@@ -125,12 +125,14 @@ ATAnalysisTask::Exec(Option_t *opt)
     fInternalID++;
     std::cout << "  -I- ATAnalysisTask -  Event Number by Internal ID : "<<fInternalID<< std::endl;
 
+    ATProtoEventAna *protoeventAna = (ATProtoEventAna *) new ((*fProtoEventAnaArray)[0]) ATProtoEventAna();
+
     // new ((*fAnalysisArray)[0]) ATProtoAnalysis();
 
-    ATProtoAnalysis * ProtoAnalysis = (ATProtoAnalysis *) new ((*fAnalysisArray)[0]) ATProtoAnalysis();
+    //ATProtoAnalysis * ProtoAnalysis = (ATProtoAnalysis *) new ((*fAnalysisArray)[0]) ATProtoAnalysis();
     //fProtoAnalysis = (ATProtoAnalysis *) fAnalysisArray->ConstructedAt(0);
     //std::auto_ptr<ATProtoAnalysis> ProtoAnalysis(new ATProtoAnalysis());
-    ProtoAnalysis->Analyze(fProtoevent,fHoughSpace,fHoughFit,fHitPatternFilter,fFitResult);
+    fProtoAnalysis->Analyze(fProtoevent,protoeventAna,fHoughSpace,fHoughFit,fHitPatternFilter,fFitResult);
 
     for (Int_t i=0;i<4;i++){
       //fHoughFit[i]->Set(0);
