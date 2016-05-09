@@ -153,6 +153,7 @@ ATEventDrawTaskProto::Init()
   fCvsVertex =  fEventManager->GetCvsVertex();
   fCvsKineAA =  fEventManager->GetCvsKineAA();
   DrawProtoVertex();
+  DrawProtoKine();
 
 
 }
@@ -178,6 +179,7 @@ ATEventDrawTaskProto::Exec(Option_t* option)
     UpdateCvsProtoQ();
     UpdateCvsProtoEL();
     UpdateCvsProtoVertex();
+    UpdateCvsProtoKine();
 
 }
 
@@ -506,6 +508,8 @@ ATEventDrawTaskProto::DrawProtoPatternAna()
 
     fQVertex[2]->Reset(0);
     fQVertex[3]->Reset(0);
+    fQKine[2]->Reset(0);
+    fQKine[3]->Reset(0);
 
       ATProtoEventAna* protoeventAna = (ATProtoEventAna*) fProtoEventAnaArray->At(0);
 
@@ -513,6 +517,7 @@ ATEventDrawTaskProto::DrawProtoPatternAna()
       std::vector<Double_t>* Par1 = protoeventAna->GetPar1();
 
       std::vector<Double_t>* Range = protoeventAna->GetRange();
+
 
       //std::vector<std::pair<Double_t,Double_t>>* ELossHitPattern = protoeventAna->GetELossHitPattern();
       std::vector<std::vector<std::pair<Double_t,Double_t>>>* QELossHitPattern = protoeventAna->GetQELossHitPattern();
@@ -533,10 +538,17 @@ ATEventDrawTaskProto::DrawProtoPatternAna()
       }
 
       std::vector<Double_t>* vertex = protoeventAna->GetVertex();
+      std::vector<Double_t>* KineAA = protoeventAna->GetAngleFit();
       fQVertex[0]->Fill(vertex->at(0),vertex->at(2));
       fQVertex[1]->Fill(vertex->at(1),vertex->at(3));
       fQVertex[2]->Fill(vertex->at(0),vertex->at(2));
       fQVertex[3]->Fill(vertex->at(1),vertex->at(3));
+
+      fQKine[0]->Fill(KineAA->at(0),KineAA->at(2));
+      fQKine[1]->Fill(KineAA->at(1),KineAA->at(3));
+      fQKine[2]->Fill(KineAA->at(0),KineAA->at(2));
+      fQKine[3]->Fill(KineAA->at(1),KineAA->at(3));
+
 
 }
 
@@ -728,6 +740,30 @@ ATEventDrawTaskProto::DrawProtoVertex()
 
 }
 
+void
+ATEventDrawTaskProto::DrawProtoKine()
+{
+
+  for(Int_t i=0;i<4;i++){
+    fQKine[i]  = new TH2F(Form("Angle_Angle_Kinematics_%i",i),Form("Angle_Angle_Kinematics%i",i),1000,0,180,1000,0,180);
+    fQKine[i]->SetMarkerSize(1.2);
+    fQKine[i]->SetMarkerStyle(22);
+    if(i==0) fQKine[i]->SetMarkerColor(kRed);
+    else if(i==1) {fQKine[i]->SetMarkerColor(kRed);fQKine[i]->SetMarkerStyle(20);}
+    else if(i==2) fQKine[i]->SetMarkerColor(kBlue);
+    else if(i==3) {fQKine[i]->SetMarkerColor(kBlue);fQKine[i]->SetMarkerStyle(20);}
+  }
+
+    fCvsKineAA->cd();
+    fQKine[0]->Draw();
+    fQKine[1]->Draw("SAME");
+    fQKine[2]->Draw("SAME");
+    fQKine[3]->Draw("SAME");
+
+
+}
+
+
 /// Update functions //////
 
 void
@@ -802,6 +838,15 @@ ATEventDrawTaskProto::UpdateCvsProtoVertex(){
     fCvsVertex->Update();
 
 }
+
+void
+ATEventDrawTaskProto::UpdateCvsProtoKine(){
+
+    fCvsKineAA->Modified();
+    fCvsKineAA->Update();
+
+}
+
 
 void
 ATEventDrawTaskProto::SelectPad(const char *rawevt)

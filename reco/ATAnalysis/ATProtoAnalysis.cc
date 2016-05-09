@@ -39,7 +39,7 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
 
      for(Int_t i=0;i<fHoughPar.size();i++){
 
-             fAngle.push_back(180-fHoughPar.at(i).first*180/TMath::Pi());
+             fAngle.push_back(fHoughPar.at(i).first*180/TMath::Pi());
              HoughFit[i]->SetParameter(0,fHoughPar.at(i).first);
              HoughFit[i]->SetParameter(1,fHoughPar.at(i).second);
 
@@ -114,8 +114,8 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
                  par0 = FitResult[i]->GetParameter(0);
                  par1 = FitResult[i]->GetParameter(1);
 
-                 if(par1>=0) afit = TMath::ATan2(1,TMath::Abs(par1));
-                 else if(par1<0)  afit = TMath::Pi()-TMath::ATan2(1,TMath::Abs(par1));
+                 if(par1>=0) afit = TMath::Pi()-TMath::ATan2(1,TMath::Abs(par1));
+                 else if(par1<0)  afit = TMath::ATan2(1,TMath::Abs(par1));
 
                        //std::cout<<" Par 0 : "<<par0<<std::endl;
                        //std::cout<<" Par 1 : "<<par1<<std::endl;
