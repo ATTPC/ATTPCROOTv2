@@ -4,6 +4,15 @@
 #include <omp.h>
 #endif
 
+// FairRoot classes
+#include "FairRuntimeDb.h"
+#include "FairRun.h"
+
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+
 ClassImp(ATHoughSpaceLine)
 
 ATHoughSpaceLine::ATHoughSpaceLine()
@@ -16,6 +25,28 @@ ATHoughSpaceLine::ATHoughSpaceLine()
      sprintf(HoughQuadHistName,"HoughQuad_%d",i);
      HistHoughRZ[i] = new TH2F(HoughQuadHistName,HoughQuadHistName,500,0,3.15,2500,0,1000);
     }*/
+
+    FairLogger *fLogger=FairLogger::GetLogger();
+    ATDigiPar *fPar;
+
+    FairRun *run = FairRun::Instance();
+    if (!run)
+      fLogger -> Fatal(MESSAGE_ORIGIN, "No analysis run!");
+
+    FairRuntimeDb *db = run -> GetRuntimeDb();
+    if (!db)
+      fLogger -> Fatal(MESSAGE_ORIGIN, "No runtime database!");
+
+    fPar = (ATDigiPar *) db -> getContainer("ATDigiPar");
+    if (!fPar)
+      fLogger -> Fatal(MESSAGE_ORIGIN, "ATDigiPar not found!!");
+
+    fZk = 500.0; //Prototype
+    fDriftVelocity = fPar -> GetDriftVelocity();
+    fEntTB   = (Int_t) fPar->GetTBEntrance();
+    fTBTime = fPar -> GetTBTime();
+    //std::cout<<cRED<< fDriftVelocity<<"          "<<fTBTime<<cNORMAL<<std::endl;
+
 
 }
 
@@ -69,10 +100,11 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYpla
 
 void ATHoughSpaceLine::CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4){
 
+
       Int_t nQuads = protoevent->GetNumQuadrants();
       std::vector<ATProtoQuadrant> quadrantArray;
       ATProtoQuadrant* quadrant;
-      //std::cout<<"  ========================================== "<<std::endl;
+      Double_t drift_cal = fDriftVelocity*fTBTime/100.0;//mm
 
 	TH2F *HistHoughRZ[4]; //One per quadrant
         Char_t HoughQuadHistName[256];
@@ -99,13 +131,17 @@ void ATHoughSpaceLine::CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t 
                             Int_t PadNumHit = hit->GetHitPadNum();
                             TVector3 position = hit->GetPosition();
                             Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
+                            Float_t posZCal = fZk - (fEntTB - hit->GetTimeStamp())*drift_cal; // Recalibrating Z position from Time Bucket
+
+                            //std::cout<<" Pos Z Vector : "<<position.Z()<<" posZCal : "<<posZCal<<" fEntTB : "<<fEntTB<<" Time Stamp : "<<hit->GetTimeStamp()<<" Drift cal : "<<drift_cal<<std::endl;
+
 
                             if(radius>fRadThreshold){
                               Int_t itheta=0;
 			                        //#pragma omp parallel for ordered schedule(dynamic) private(itheta) //TOOD: Check performance
                               for(itheta = 0; itheta <1023; itheta++){
                                     Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
-                                    Float_t d0_RZ = (TMath::Cos(angle)*radius)  +  (TMath::Sin(angle)*position.Z());
+                                    Float_t d0_RZ = (TMath::Cos(angle)*radius)  +  (TMath::Sin(angle)*posZCal); // posZCal can be replaced anytime by position.Z()
                                     //#pragma omp ordered
                                     HistHoughRZ[iQ]->Fill(angle,d0_RZ);
                                     //#pragma omp ordered

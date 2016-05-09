@@ -34,6 +34,7 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
 
     std::vector<std::vector<std::pair<Double_t,Double_t>>> QELossHitPattern;
 
+    fZk = 500.0;
 
     fHoughPar = houghspace->GetHoughPar();
 
@@ -65,23 +66,29 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
         Double_t rad_max=0.0;
         Double_t charge_max=0.0;
         Double_t range=0.0;
+        //Double_t posZCal =0.0;
 
             for(Int_t j=0;j<qNumHit;j++){
               ATHit* qhit = quadrant->GetHit(j);
               TVector3 position = qhit->GetPosition();
               Double_t charge = qhit->GetCharge();
+              Double_t posZCal = fZk - (fEntTB - qhit->GetTimeStamp())*fTBTime*fDriftVelocity/100.;
               Double_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2) );
-              Double_t distance = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2) + TMath::Power(position.Z(),2));
+              //Double_t distance = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2) + TMath::Power(position.Z(),2));
+              Double_t distance = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2) + TMath::Power(posZCal,2));
               if((qNumHit-j<5)&&(charge>charge_max)){
                 charge_max=charge;
                 range = distance;
               }
               if(radius>rad_max) rad_max=radius;
               rad_graph[j] = radius;
-              posz_graph[j] = position.Z();
+              //posz_graph[j] = position.Z();
+              posz_graph[j] = posZCal;
 
-                Double_t geo_dist = TMath::Abs (TMath::Cos(fHoughPar.at(i).first)*radius  + TMath::Sin(fHoughPar.at(i).first)*position.Z()  - fHoughPar.at(i).second);
-                if(geo_dist<fHoughDist) HitPatternFilter[i]->SetPoint(HitPatternFilter[i]->GetN(),radius,position.Z());
+                //Double_t geo_dist = TMath::Abs (TMath::Cos(fHoughPar.at(i).first)*radius  + TMath::Sin(fHoughPar.at(i).first)*position.Z()  - fHoughPar.at(i).second);
+                Double_t geo_dist = TMath::Abs (TMath::Cos(fHoughPar.at(i).first)*radius  + TMath::Sin(fHoughPar.at(i).first)*posZCal  - fHoughPar.at(i).second);
+                //if(geo_dist<fHoughDist) HitPatternFilter[i]->SetPoint(HitPatternFilter[i]->GetN(),radius,position.Z());
+                if(geo_dist<fHoughDist) HitPatternFilter[i]->SetPoint(HitPatternFilter[i]->GetN(),radius,posZCal);
 
                     if(j<qNumHit-1){
                         ATHit* qhit_forw        = quadrant ->GetHit(j+1);

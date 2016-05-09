@@ -10,6 +10,10 @@
 #include "ATHoughSpace.hh"
 #include "TH2F.h"
 
+// FairRoot classes
+#include "FairRootManager.h"
+#include "FairLogger.h"
+
 
 class ATHoughSpaceLine : public ATHoughSpace{
 
@@ -32,6 +36,11 @@ class ATHoughSpaceLine : public ATHoughSpace{
       protected:
         Int_t fThreshold;
         Int_t fRadThreshold;
+        Double_t fDriftVelocity;
+        Int_t fTBTime;
+        Int_t fEntTB;
+        Float_t fZk;
+
         std::map<std::vector<Float_t>,Int_t> HoughMap_XZ;
         TH2F *HistHoughXZ;
         //TH2F *HistHoughRZ[4]; //One per quadrant
