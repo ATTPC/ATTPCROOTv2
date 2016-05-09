@@ -26,8 +26,6 @@ Int_t main(int argc, char** argv) {
   MPI_Init_thread(&argc, &argv,MPI_THREAD_SINGLE,&MPIThreadProvision);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  gSystem->Load("libATTPCReco.so");
-
   string workdir = getenv("VMCWORKDIR");
   string FileNameHead = "output";
   string FilePath = workdir + "/macro/Unpack_GETDecoder2/";
