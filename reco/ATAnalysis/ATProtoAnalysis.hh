@@ -21,6 +21,7 @@ class ATProtoAnalysis : public ATAnalysis{
         std::vector<std::pair<Double_t,Double_t>>* GetHoughPar() {return &fHoughPar;}*/
 
         Double_t fHoughDist;
+        Double_t fVertexDiff;
 
 
       private:

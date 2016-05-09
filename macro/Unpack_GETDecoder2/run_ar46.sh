@@ -20,7 +20,7 @@ do
   if [ ! -f  runfiles/ar46_run_0$i.txt ]; then
     echo "File ar46_run_0$i.txt not found!"
     ((i=i+1));
-    return;
+    #return;
   fi
   root -b -q -l "run_unpack2.C(\"runfiles/ar46_run_0$i.txt\",\"ATTPC.e15503b.par\",\"/data/ar46/run_0085/\")"
   mv output.root run_0$i.root

@@ -57,6 +57,8 @@ class ATEventManagerProto : public TEveEventManager
     TCanvas* GetCvsELQuadrant2()  { return fCvsELQuadrant2; }
     TCanvas* GetCvsELQuadrant3()  { return fCvsELQuadrant3; }
     TCanvas* GetCvsELQuadrant4()  { return fCvsELQuadrant4; }
+    TCanvas* GetCvsVertex()       { return fCvsVertex; }
+    TCanvas* GetCvsKineAA()       { return fCvsKineAA; }
 
     void RunEvent();
 
@@ -86,6 +88,8 @@ class ATEventManagerProto : public TEveEventManager
       TCanvas* fCvsELQuadrant2;
       TCanvas* fCvsELQuadrant3;
       TCanvas* fCvsELQuadrant4;
+      TCanvas* fCvsVertex;
+      TCanvas* fCvsKineAA;
 
       static ATEventManagerProto* fInstance;
 

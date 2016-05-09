@@ -203,6 +203,30 @@ ATEventManagerProto::Init(Int_t option, Int_t level, Int_t nNodes)
   frameHEL4->SetElementName("Quadrant Energy Loss 4");
   fCvsELQuadrant4 = ecvsHEL4->GetCanvas();
 
+  // Vertex and kinematics
+  TEveWindowSlot* slotHK =
+  TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
+  TEveWindowPack* packHK = slotHK->MakePack();
+  packHK->SetShowTitleBar(kFALSE);
+  packHK->SetHorizontal();
+  packHK->SetElementName("Vertex - Kinematics ");
+
+  slotHK = packHK->NewSlotWithWeight(1.5);
+  TRootEmbeddedCanvas* ecvsHK1 = new TRootEmbeddedCanvas();
+  TEveWindowFrame* frameHK1 = slotHK->MakeFrame(ecvsHK1);
+  frameHK1->SetElementName("Vertex Position");
+  fCvsVertex = ecvsHK1->GetCanvas();
+
+  slotHK = packHK->NewSlotWithWeight(1.5);
+  TRootEmbeddedCanvas* ecvsHK2 = new TRootEmbeddedCanvas();
+  TEveWindowFrame* frameHK2 = slotHK->MakeFrame(ecvsHK2);
+  frameHK2->SetElementName("Angle-Angle Kinematics");
+  fCvsKineAA = ecvsHK2->GetCanvas();
+
+
+
+
+
 
    fRunAna->Init();
 
