@@ -1,123 +1,86 @@
-#ifdef _OPENMP
-#include <omp.h>
-#endif
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <fstream>
+#include <string>
 
-#include "MCSrc.hh"
-#include "MCMinimization.hh"
-#include <ios>
-#include <iostream>
-#include <istream>
-#include <limits>
-#include <map>
-#include <vector>
-
-#include "TClonesArray.h"
-#include "TString.h"
-#include "TFile.h"
-#include "TTree.h"
-#include "TTreeReader.h"
-#include "TTreePlayer.h"
-#include "TTreeReaderValue.h"
-#include "TSystem.h"
-#include "TH1F.h"
-#include "TCanvas.h"
-#include "TStopwatch.h"
-
-#include "ATEvent.hh"
-#include "ATPad.hh"
-#include "ATHit.hh"
-#include "ATHoughSpace.hh"
-#include "ATHoughSpaceLine.hh"
-#include "ATHoughSpaceCircle.hh"
-
-#include "FairRootManager.h"
-#include "FairLogger.h"
-#include "FairRun.h"
-#include "FairRunAna.h"
+#include "EventLoop.hh"
 
 int target_thread_num = 4;
 
+void SignalHandler(int s);
+vector<string> GetInputFiles(const char* inputfile);
 
-Int_t main()
-{
+Int_t main(int argc, char** argv) {
 
-    gSystem->Load("libATTPCReco.so");
-    omp_set_num_threads(target_thread_num);
+  // install the interupt handler, to prevent an MPI hayday when
+  // ctrl-c killing a local mpiexec job
+  struct sigaction InteruptHandler;
+  InteruptHandler.sa_handler = SignalHandler;
+  sigemptyset(&InteruptHandler.sa_mask);
+  InteruptHandler.sa_flags = 0;
+  sigaction(SIGINT, &InteruptHandler, NULL);
 
-    TStopwatch timer;
-    timer.Start();
+  int MPIThreadProvision, rank;
+  MPI_Init_thread(&argc, &argv,MPI_THREAD_SINGLE,&MPIThreadProvision);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    FairRunAna* run = new FairRunAna(); //Forcing a dummy run
+  gSystem->Load("libATTPCReco.so");
 
-    MCMinimization *min = new MCMinimization();
-    min->ResetParameters();
+  string workdir = getenv("VMCWORKDIR");
+  string FileNameHead = "output";
+  string FilePath = workdir + "/macro/Unpack_GETDecoder2/";
+  string FileNameTail = ".root";
+  string FileName     = FilePath + FileNameHead + FileNameTail;
 
-    TString workdir = getenv("VMCWORKDIR");
-    TString FileNameHead = "output";
-    TString FilePath = workdir + "/macro/Unpack_GETDecoder2/";
-    TString FileNameTail = ".root";
-    TString FileName     = FilePath + FileNameHead + FileNameTail;
-
-    std::cout<<" Opening File : "<<FileName.Data()<<std::endl;
-    TFile* file = new TFile(FileName.Data(),"READ");
-
-    TTree* tree = (TTree*) file -> Get("cbmsim");
-    Int_t nEvents = tree -> GetEntries();
-    std::cout<<" Number of events : "<<nEvents<<std::endl;
-
-    TTreeReader Reader1("cbmsim", file);
-    TTreeReaderValue<TClonesArray> eventArray(Reader1, "ATEventH");
-    TTreeReaderValue<TClonesArray> houghArray(Reader1, "ATHough");
-
-    Double_t* parameter = new Double_t[8];
-
-      //#pragma omp parallel for ordered schedule(dynamic,1)
-      for(Int_t i=0;i<nEvents;i++){
-          //while (Reader1.Next()) {
-
-              Reader1.Next();
-
-              ATEvent* event = (ATEvent*) eventArray->At(0);
-              Int_t nHits = event->GetNumHits();
-              std::vector<ATHit>* hitArray = event->GetHitArray();
-              event->GetHitArrayObj();
-              std::cout<<event->GetEventID()<<std::endl;
-              hitArray->size();
-
-              std::vector<ATHit*>* hitbuff = new std::vector<ATHit*>;
+  //EventLoop analyzer("cbmsim",GetInputFiles("./inputfiles.dat"));
+  EventLoop analyzer("cbmsim",{FileName});
+  if (argc > 1) {   analyzer.SetOutputPath(argv[1]);    }
 
 
-                    for(Int_t iHit=0; iHit<nHits; iHit++){
-                      ATHit hit = event->GetHit(iHit);
-                      TVector3 hitPos = hit.GetPosition();
-                      hitbuff->push_back(&hit);
-
-
-                    }
-              //std::cout<<hitbuff->size()<<std::endl;
-
-              ATHoughSpaceCircle* fHoughSpaceCircle  = dynamic_cast<ATHoughSpaceCircle*> (houghArray->At(0));
-              //if(!fHoughSpaceCircle) std::cout<<" Warning : Failed casting "<<std::endl;
-              //std::cout<<fHoughSpaceCircle->GetYCenter()<<std::endl;
-              parameter = fHoughSpaceCircle->GetInitialParameters();
-              std::pair<Double_t,Double_t>  fHoughLinePar =  fHoughSpaceCircle->GetHoughPar();
-              Double_t HoughAngleDeg = fHoughLinePar.first*180.0/TMath::Pi();
-              if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) {
-
-                  min->MinimizeOpt(parameter,event);
-              }
-
-          }
-
-  //#pragma omp parallel for ordered schedule(dynamic,1)
-  //for(Int_t i=0;i<100000;i++)std::cout<<" Hello ATTPCer! "<<std::endl;
-
+  TStopwatch timer;
+  timer.Start();
+  ///////////////
+  analyzer.Run();
+  ///////////////
   timer.Stop();
   Double_t rtime = timer.RealTime();
   Double_t ctime = timer.CpuTime();
-  std::cout << std::endl << std::endl;
-  std::cout << "Real time " << rtime << " s, CPU time " << ctime << " s" << std::endl;
-  std::cout << std::endl;
+
+  // record min time accross all ranks (minimum is the most reliable measurement)
+  MPI_Allreduce(MPI_IN_PLACE, &rtime, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+  MPI_Allreduce(MPI_IN_PLACE, &ctime, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+
+  if (rank == 0) {
+    std::cout << std::endl << std::endl;
+    std::cout << "Real time " << rtime << " s, CPU time " << ctime << " s" << std::endl;
+    std::cout << std::endl;
+  }
+
+
   return 0;
 
+}
+
+
+
+void SignalHandler(int s) {
+  int size; MPI_Comm_size(MPI_COMM_WORLD, &size);
+  cout << "Caught signal: "<< s << ". Shutting down.." << endl;
+  if (size > 1) {
+    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Finalize();
+  }
+  exit(1);
+}
+
+vector<string> GetInputFiles(const char* inputfile) {
+  ifstream input(inputfile);
+  string fileline;
+  vector<string> inputfiles;
+  while(input >> fileline) {
+    if (fileline.size() > 0)inputfiles.push_back(fileline);
+  }
+  return inputfiles;
 }

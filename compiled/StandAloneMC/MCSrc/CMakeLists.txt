@@ -1,6 +1,7 @@
 # CMakeLists.txt for event package. It creates a library with dictionary and a main program
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(MCSrc)
+set(CMAKE_CXX_STANDARD 11)
 
 # Check for needed environment variables
 IF(NOT DEFINED ENV{FAIRROOTPATH})
@@ -15,6 +16,10 @@ SET(SIMPATH $ENV{SIMPATH})
 SET(FAIRROOTPATH $ENV{FAIRROOTPATH})
 SET(ATTPCROOTPATH $ENV{VMCWORKDIR})
 
+find_package(MPI REQUIRED)
+set(CMAKE_CXX_COMPILE_FLAGS ${CMAKE_CXX_COMPILE_FLAGS} ${MPI_COMPILE_FLAGS})
+set(CMAKE_CXX_LINK_FLAGS ${CMAKE_CXX_LINK_FLAGS} ${MPI_LINK_FLAGS})
+include_directories(${MPI_INCLUDE_PATH})  
 
 # You need to tell CMake where to find the ROOT installation. This can be done in a number of ways:
 #   - ROOT built with classic configure/make use the provided $ROOTSYS/etc/cmake/FindROOT.cmake
@@ -38,24 +43,30 @@ if (OPENMP_FOUND)
 
 endif()
 
+#---add mpi event looping support
+add_subdirectory (MPIEventLoop)
+
 include_directories( ${ROOT_INCLUDE_DIR}
                      ${Boost_INCLUDE_DIRS}
                      ${BASE_INCLUDE_DIRECTORIES}
                      ${ATTPCROOTPATH}/include
                      ${FAIRROOTPATH}/include
-                     ${CMAKE_SOURCE_DIR}/MCSrc)
+                     ${CMAKE_SOURCE_DIR}/MCSrc
+		     MPIEventLoop/include)
 
 link_directories( ${FAIRROOT_LIBRARY_DIR}
                   ${FAIRROOTPATH}/lib
-                  ${ATTPCROOTPATH}/build/lib)
+                  ${ATTPCROOTPATH}/build/lib
+		  MPIEventLoop)
 
 #---Generate the dictionary  (G__MCSrc.cxx G__MCSrc.pcm)
 ROOT_GENERATE_DICTIONARY(G__MCSrc MCSrc.hh MCMinimization.hh LINKDEF MCSrcLinkDef.h)
 
+
 #---Create a shared library with geneated dictionary
 add_library(MCSrc SHARED G__MCSrc.cxx)
-target_link_libraries(MCSrc ${ROOT_LIBRARIES} ATTPCReco FairTools Base)
-
+target_link_libraries(MCSrc ${ROOT_LIBRARIES} ATTPCReco FairTools Base ${MPI_LIBRARIES}) 
+#target_link_libraries(EventLoop
 #---Create  a main program using the library
 add_executable(MCExe MCSrc.cc MCMinimization.cc)
 target_link_libraries(MCExe MCSrc
@@ -81,4 +92,6 @@ TreePlayer
 ATTPCReco
 AtTpcMap
 FairTools
-Base)
+Base
+EventLoop
+${MPI_LIBRARIES}) 
