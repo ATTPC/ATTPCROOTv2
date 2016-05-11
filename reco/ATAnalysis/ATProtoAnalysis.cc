@@ -30,7 +30,9 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
   std::vector<Double_t> fAngle;
   std::vector<Double_t> fAngle_fit;
   std::vector<Double_t> fRange;
+  std::vector<Double_t> fChi2;
   std::vector<std::pair<Double_t,Double_t>> fHoughPar;
+  std::vector<Int_t> fNDF;
 
     std::vector<std::vector<std::pair<Double_t,Double_t>>> QELossHitPattern;
 
@@ -108,6 +110,8 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
             Double_t par0=0.0;
             Double_t par1=0.0;
             Double_t afit=0.0;
+            Double_t chi2=0.0;
+            Int_t ndf =0.0;
 
 
             if(HitPatternFilter[i]->GetN()>3){
@@ -118,6 +122,8 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
                if(FitResult[i]){
                  Bool_t IsValid = FitResult[i]->IsValid();
                  FitResult[i] ->SetName(Form("fitResult%i",i));
+                 chi2 = FitResult[i]->GetChisquare();
+                 ndf  = FitResult[i]->GetNDF();
                  par0 = FitResult[i]->GetParameter(0);
                  par1 = FitResult[i]->GetParameter(1);
 
@@ -138,6 +144,8 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
             fPar1_fit.push_back(par1);
             fAngle_fit.push_back(afit*180/TMath::Pi());
             fRange.push_back(range);
+            fChi2.push_back(chi2);
+            fNDF.push_back(ndf);
 
             if(i==0) protoeventAna->SetELHitPattern(ELossHitPattern);
             QELossHitPattern.push_back(ELossHitPattern);
@@ -156,6 +164,8 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
           protoeventAna->SetHoughPar(fHoughPar);
           protoeventAna->SetQELHitPattern(QELossHitPattern);
           protoeventAna->SetVertex(fPar0_fit);
+          protoeventAna->SetChi2(fChi2);
+          protoeventAna->SetNDF(fNDF);
 
           // Vertex matching
                 if( TMath::Abs(fPar0_fit.at(0)-fPar0_fit.at(2))<fVertexDiff ) protoeventAna->SetVertex02((fPar0_fit.at(0)+fPar0_fit.at(2))/2.0);

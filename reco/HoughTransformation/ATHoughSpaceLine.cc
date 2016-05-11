@@ -47,6 +47,8 @@ ATHoughSpaceLine::ATHoughSpaceLine()
     fTBTime = fPar -> GetTBTime();
     //std::cout<<cRED<< fDriftVelocity<<"          "<<fTBTime<<cNORMAL<<std::endl;
 
+    HoughPar.clear();
+    HoughParSTD.clear();
 
 }
 
@@ -178,10 +180,12 @@ void ATHoughSpaceLine::CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t 
 std::pair<Double_t,Double_t> ATHoughSpaceLine::GetHoughParameters(TH2F* hist){
 
 		std::pair<Double_t,Double_t> HoughParBuff;
+    Double_t xpos=0.0;
+    Double_t ypos=0.0;
 		Int_t locmaxx,locmaxy,locmaxz;
     hist->GetMaximumBin(locmaxx,locmaxy,locmaxz);
-    Double_t xpos = hist->GetXaxis()->GetBinCenter(locmaxx);
-    Double_t ypos = hist->GetYaxis()->GetBinCenter(locmaxy);
+    xpos = hist->GetXaxis()->GetBinCenter(locmaxx);
+    ypos = hist->GetYaxis()->GetBinCenter(locmaxy);
 		//std::cout<<" X Hough Position : "<<180-xpos*180/TMath::Pi()<<std::endl;
   //  std::cout<<" X Hough Position : "<<xpos<<std::endl;
 	//	std::cout<<" Y Hough Position : "<<ypos<<std::endl;
