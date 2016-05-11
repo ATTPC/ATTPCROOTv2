@@ -1,6 +1,4 @@
-//void run_unpack_proto_8He_2(TString dataFile = "runfiles/run_ISAC2015_0259.txt",TString parameterFile = "pATTPC.TRIUMF2015.par"){
-void run_unpack_proto_8He_2(TString dataFile = "/Users/Yassid/Desktop/ATTPC/Data/TRIUMF/run_0259/CoBo_AsAd0_2015-12-05T14_33_58.545_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
-
+void run_unpack_proto_10Be(TString dataFile = "run_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
 
     // -----   Timer   --------------------------------------------------------
 	TStopwatch timer;
@@ -10,7 +8,7 @@ void run_unpack_proto_8He_2(TString dataFile = "/Users/Yassid/Desktop/ATTPC/Data
 
    gSystem->Load("libXMLParser.so");
 
-   TString scriptfile = "LookupProto20150331.xml";
+   TString scriptfile = "LookupProto10Be.xml";
    TString protomapfile = "proto.map";
    TString dir = getenv("VMCWORKDIR");
    TString scriptdir = dir + "/scripts/"+ scriptfile;
