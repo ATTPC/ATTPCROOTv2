@@ -18,6 +18,7 @@
 #include "../../include/ATEvent.hh"
 #include "../../include/ATHit.hh"
 #include "../../include/ATProtoEvent.hh"
+#include "../../include/ATProtoEventAna.hh"
 #include "../../include/ATAnalysis.hh"
 #include "../../include/ATHoughSpaceLine.hh"
 #include "../../include/ATHoughSpaceCircle.hh"
@@ -27,7 +28,7 @@
 #include <istream>
 #include <limits>
 
-void run_plot(TString FileNameHead = "output_proto_ana",TString fileKine="../Kinematics/Decay_kinematics/Kine.txt")
+void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinematics/Decay_kinematics/Kine.txt")
 {
 
   TString workdir = getenv("VMCWORKDIR");
@@ -93,12 +94,12 @@ void run_plot(TString FileNameHead = "output_proto_ana",TString fileKine="../Kin
                 cutg->SetPoint(26,13.91253,83.41335);
 
   TTreeReader Reader1("cbmsim", file);
-  TTreeReaderValue<TClonesArray> analysisArray(Reader1, "ATAnalysis");
+  TTreeReaderValue<TClonesArray> analysisArray(Reader1, "ATProtoEventAna");
 
 
         		while (Reader1.Next()) {
 
-              ATProtoAnalysis* analysis = (ATProtoAnalysis*) analysisArray->At(0);
+              ATProtoEventAna* analysis = (ATProtoEventAna*) analysisArray->At(0);
               //Double_t ATProtoAnalysis::*HoughDist = &ATProtoAnalysis::fHoughDist;
               std::vector<Double_t> *AngleFit = analysis->GetAngleFit();
               std::vector<Double_t> *Par0     = analysis->GetPar0();

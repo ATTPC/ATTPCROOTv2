@@ -16,20 +16,20 @@ class ATProtoEvent : public TNamed {
     ~ATProtoEvent();
 
     void SetEventID(Int_t evtid);
-    void AddQuadrant(ATProtoQuadrant *quadrant);
+    void AddQuadrant(ATProtoQuadrant quadrant);
     void SetQuadrantArray(std::vector<ATProtoQuadrant> *quadrantArray);
 
     ATProtoQuadrant *GetQuadrant(Int_t quadrantNo);
     std::vector<ATProtoQuadrant> *GetQuadrantArray();
     Int_t GetNumQuadrants();
-    
-    
+
+
     Int_t fEventID;
 
     ClassDef(ATProtoEvent, 1);
    private:
      std::vector<ATProtoQuadrant> fQuadrantArray;
-    
+
 
 };
 
