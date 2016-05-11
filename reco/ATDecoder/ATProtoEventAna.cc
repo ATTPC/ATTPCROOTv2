@@ -5,6 +5,17 @@ ClassImp(ATProtoEventAna);
 ATProtoEventAna::ATProtoEventAna()
 :TNamed("ATProtoEventAna", "Proto Event Analysis")
 {
+  fPar0_fit.clear();
+  fPar1_fit.clear();
+  fAngle.clear();
+  fAngle_fit.clear();
+  fRange.clear();
+  fHoughPar.clear();
+  fELossHitPattern.clear();
+  fQELossHitPattern.clear();
+  fQVertex.clear();
+  fChi2.clear();
+  fNDF.clear();
   fVertex02=-500.0;
   fVertex13=-500.0;
 
@@ -26,6 +37,8 @@ std::vector<std::pair<Double_t,Double_t>>* ATProtoEventAna::GetHoughPar()       
 std::vector<std::pair<Double_t,Double_t>>* ATProtoEventAna::GetELossHitPattern()                               {return &fELossHitPattern;}
 std::vector<std::vector<std::pair<Double_t,Double_t>>>* ATProtoEventAna::GetQELossHitPattern()                 {return &fQELossHitPattern;}
 std::vector<Double_t>* ATProtoEventAna::GetVertex()                                                            {return &fQVertex;}
+std::vector<Double_t>* ATProtoEventAna::GetChi2()                                                              {return &fChi2;}
+std::vector<Int_t>* ATProtoEventAna::GetNDF()                                                                  {return &fNDF;}
 
 //Setters
 void ATProtoEventAna::SetAngleFit(std::vector<Double_t> Angle_fit)                                             {fAngle_fit = Angle_fit;}
@@ -39,3 +52,5 @@ void ATProtoEventAna::SetQELHitPattern(std::vector<std::vector<std::pair<Double_
 void ATProtoEventAna::SetVertex02(Double_t Vertex02)                                                           {fVertex02 = Vertex02;}
 void ATProtoEventAna::SetVertex13(Double_t Vertex13)                                                           {fVertex13 = Vertex13;}
 void ATProtoEventAna::SetVertex(std::vector<Double_t> Vertex)                                                  {fQVertex = Vertex;}
+void ATProtoEventAna::SetChi2(std::vector<Double_t> Chi2)                                                      {fChi2 = Chi2;}
+void ATProtoEventAna::SetNDF(std::vector<Int_t> NDF)                                                      {fNDF = NDF;}

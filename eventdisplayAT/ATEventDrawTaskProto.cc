@@ -539,6 +539,8 @@ ATEventDrawTaskProto::DrawProtoPatternAna()
 
       std::vector<Double_t>* vertex = protoeventAna->GetVertex();
       std::vector<Double_t>* KineAA = protoeventAna->GetAngleFit();
+      std::vector<Double_t>* Chi2   = protoeventAna->GetChi2();
+      std::vector<Int_t>* NDF       = protoeventAna->GetNDF();
       fQVertex[0]->Fill(vertex->at(0),vertex->at(2));
       fQVertex[1]->Fill(vertex->at(1),vertex->at(3));
       fQVertex[2]->Fill(vertex->at(0),vertex->at(2));
@@ -548,6 +550,19 @@ ATEventDrawTaskProto::DrawProtoPatternAna()
       fQKine[1]->Fill(KineAA->at(1),KineAA->at(3));
       fQKine[2]->Fill(KineAA->at(0),KineAA->at(2));
       fQKine[3]->Fill(KineAA->at(1),KineAA->at(3));
+
+
+
+
+      std::cout<<cYELLOW<<" ==================================================================== "<<std::endl;
+      std::cout<<"                                  ATEventDrawTask : Fit Results                     "<<std::endl;
+      std::cout<<"       -   Quadrant 0   -   Quadrant 1   -   Quadrant 2  -   Quadrant 3      "<<std::endl;
+      std::cout<<"  Angle  : "<<KineAA->at(0)<<"              "<<KineAA->at(1)<<"              "<<KineAA->at(2)<<"                "<<KineAA->at(3)<<std::endl;
+      std::cout<<"  Vertex : "<<vertex->at(0)<<"              "<<vertex->at(1)<<"              "<<vertex->at(2)<<"                "<<vertex->at(3)<<std::endl;
+      std::cout<<"  Chi2   : "<<Chi2->at(0)  <<"              "<<Chi2->at(1  )<<"              "<<Chi2->at(2)  <<"                "<<Chi2->at(3)<<std::endl;
+      std::cout<<"  NDF    : "<<NDF->at(0)   <<"              "<<NDF->at(1)   <<"              "<<NDF->at(2)   <<"                "<<NDF->at(3)<<std::endl;
+      std::cout<<" ==================================================================== "<<cNORMAL<<std::endl;
+      std::cout<<std::endl;
 
 
 }
