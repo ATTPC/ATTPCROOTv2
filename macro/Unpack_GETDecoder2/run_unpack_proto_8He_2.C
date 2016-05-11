@@ -86,7 +86,7 @@ void run_unpack_proto_8He_2(TString dataFile = "/data/TRIUMF/ISAC_2015/CoBo_AsAd
 
    run->Init();
 
-   run->Run(0,500);
+   run->Run(0,100);
 	 //run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------

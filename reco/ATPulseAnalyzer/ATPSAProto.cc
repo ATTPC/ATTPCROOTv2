@@ -49,10 +49,11 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
     //Double_t xPos = CalculateX(pad -> GetRow()); //Obsolete
     //Double_t zPos = CalculateZ(pad -> GetLayer());
-    Double_t xPos = pad -> GetPadXCoord();
-    Double_t yPos = pad -> GetPadYCoord();
-    Double_t zPos = 0;
-    Double_t charge = 0;
+    Double_t xPos     = pad -> GetPadXCoord();
+    Double_t yPos     = pad -> GetPadYCoord();
+    Double_t zPos     = 0;
+    Double_t zPosCorr = 0.0;
+    Double_t charge   = 0;
 
     if (!(pad -> IsPedestalSubtracted())) {
       fLogger -> Error(MESSAGE_ORIGIN, "Pedestal should be subtracted to use this class!");
@@ -114,12 +115,25 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
       }//if numPeaks
 
+              Double_t TBCorr=0.0;
+              Double_t TB_TotQ = 0.0;
+          // Time Correction by Center of Gravity
 
+            if(maxAdcIdx>11){
+              for(Int_t i=0;i<11;i++){
 
+                  TBCorr  += floatADC[maxAdcIdx-i+5]*(maxAdcIdx-i+5);
+                  TB_TotQ += floatADC[maxAdcIdx-i+5];
 
-      zPos = CalculateZGeo(maxAdcIdx);
+              }
+            }
+
+            TBCorr = TBCorr/TB_TotQ;
+
+      zPos     = CalculateZGeo(maxAdcIdx);
+      zPosCorr = CalculateZGeo(TBCorr);
       charge = adc[maxAdcIdx];
-        //std::cout<<zPos<<std::endl;
+      //std::cout<<zPos<<"    "<<zPosCorr<<std::endl;
 
       //#pragma omp ordered
       //std::cout<<" Pad Num : "<<PadNum<<" Peak : "<<iPeak<<"/"<<numPeaks<<" - Charge : "<<charge<<" - zPos : "<<zPos<<std::endl;
@@ -133,11 +147,14 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
      if(fValidThreshold){
       if(iPeak==0) QEventTot+=QHitTot; //Sum only if Hit is valid - We only sum once (iPeak==0) to account for the whole spectrum.
-
+        //std::cout<<" maxAdcIdx : "<<maxAdcIdx<<" TBCorr : "<<TBCorr<<std::endl;
+        //std::cout<<zPos<<"    "<<zPosCorr<<std::endl;
       ATHit *hit = new ATHit(PadNum,hitNum, xPos, yPos, zPos, charge);
       PadHitNum++;
       hit->SetQHit(QHitTot); // TODO: The charge of each hit is the total charge of the spectrum, so for double structures this is unrealistic.
       hit->SetTimeStamp(maxAdcIdx);
+      hit->SetTimeStampCorr(TBCorr);
+      hit->SetPositionCorr(xPos, yPos, zPosCorr); //Only Z is corrected here
       HitPos =  hit->GetPosition();
       Rho2+= HitPos.Mag2();
       RhoMean+=HitPos.Mag();
