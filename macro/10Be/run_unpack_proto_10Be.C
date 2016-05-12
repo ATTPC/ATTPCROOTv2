@@ -1,6 +1,4 @@
-void run_unpack_proto_8He_2(TString dataFile = "Feb2013ND.txt",TString parameterFile = "pATTPC.Feb2013.par"){
-//void run_unpack_proto_8He_2(TString dataFile = "~/Desktop/Yassid/ATTPC/Data/TRIUMF/CoBo_AsAd0_2015-12-03T05_47_43.571_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
-
+void run_unpack_proto_10Be(TString dataFile = "../10Be/Feb2013ND.txt",TString parameterFile = "pATTPC.Feb2013.par"){
 
     // -----   Timer   --------------------------------------------------------
 	TStopwatch timer;
@@ -10,7 +8,7 @@ void run_unpack_proto_8He_2(TString dataFile = "Feb2013ND.txt",TString parameter
 
    gSystem->Load("libXMLParser.so");
 
-   TString scriptfile = "LookupProto20150331.xml";
+   TString scriptfile = "LookupProto10Be.xml";
    TString protomapfile = "proto.map";
    TString dir = getenv("VMCWORKDIR");
    TString scriptdir = dir + "/scripts/"+ scriptfile;
@@ -26,7 +24,7 @@ void run_unpack_proto_8He_2(TString dataFile = "Feb2013ND.txt",TString parameter
 
 
    FairRunAna* run = new FairRunAna();
-   run -> SetOutputFile("output_proto_10Be.root");
+   run -> SetOutputFile("output_proto.root");
    //run -> SetGeomFile("../geometry/ATTPC_Proto_v1.0.root");
 
    TString paramterFileWithPath = paraDir + parameterFile;
@@ -58,14 +56,14 @@ void run_unpack_proto_8He_2(TString dataFile = "Feb2013ND.txt",TString parameter
    run -> AddTask(decoderTask);
 
    ATPSATask *psaTask = new ATPSATask();
-   psaTask -> SetPersistence(kTRUE);
+   psaTask -> SetPersistence();
    psaTask -> SetBackGroundPeakFinder(kFALSE); // Suppress background of each pad for noisy data (Larger computing Time)
    psaTask -> SetThreshold(20);
    psaTask -> SetPeakFinder(); //Note: For the moment not affecting the prototype PSA Task
    run -> AddTask(psaTask);
 
     //Moved to analysis macro!
-   /*ATPhiRecoTask *phirecoTask = new ATPhiRecoTask();
+   ATPhiRecoTask *phirecoTask = new ATPhiRecoTask();
    phirecoTask -> SetPersistence();
    run -> AddTask(phirecoTask);
 
@@ -75,19 +73,26 @@ void run_unpack_proto_8He_2(TString dataFile = "Feb2013ND.txt",TString parameter
    HoughTask->SetLinearHough();
 	 HoughTask->SetRadiusThreshold(3.0); // Truncate Hough Space Calculation
    //HoughTask ->SetCircularHough();
-   run ->AddTask(HoughTask);*/
+   run ->AddTask(HoughTask);
+
+	 ATAnalysisTask *AnaTask = new ATAnalysisTask();
+   AnaTask->SetPhiReco();
+   AnaTask->SetHoughDist(2.0);
+   AnaTask->SetPersistence(kTRUE);
+
+   run->AddTask(AnaTask);
 
    run->Init();
 
-  // run->Run(0,5000000);
-	 run -> RunOnTBData();
+   run->Run(0,50000);
+	 //run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------
 	timer.Stop();
 	Double_t rtime = timer.RealTime();
 	Double_t ctime = timer.CpuTime();
 	cout << endl << endl;
-	cout << "Macro finished successfully." << endl;
+	cout << "Macro finished succesfully." << endl;
 	cout << "Real time " << rtime << " s, CPU time " << ctime << " s" << endl;
 	cout << endl;
   // ------------------------------------------------------------------------
