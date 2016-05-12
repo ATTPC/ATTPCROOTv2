@@ -103,8 +103,10 @@ void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinemat
               //Double_t ATProtoAnalysis::*HoughDist = &ATProtoAnalysis::fHoughDist;
               std::vector<Double_t> *AngleFit = analysis->GetAngleFit();
               std::vector<Double_t> *Par0     = analysis->GetPar0();
-              Q02_Kine->Fill(AngleFit->at(0),AngleFit->at(2));
-              Q02_Kine->Fill(AngleFit->at(1),AngleFit->at(3));
+              std::vector<Double_t> *vertex   = analysis->GetVertex();
+              if( TMath::Abs(vertex->at(0) - vertex->at(2))<20 ) Q02_Kine->Fill(AngleFit->at(0),AngleFit->at(2));
+              if( TMath::Abs(vertex->at(1) - vertex->at(3))<20 ) Q02_Kine->Fill(AngleFit->at(1),AngleFit->at(3));
+
               if(cutg->IsInside(AngleFit->at(0),AngleFit->at(2)) ) {Vertex->Fill(Par0->at(0));Vertex_vs_Angle->Fill(Par0->at(0),AngleFit->at(0));}
               if(cutg->IsInside(AngleFit->at(1),AngleFit->at(3)) ) {Vertex->Fill(Par0->at(1));Vertex_vs_Angle->Fill(Par0->at(1),AngleFit->at(1));}
 
