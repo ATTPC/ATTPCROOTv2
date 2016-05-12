@@ -74,10 +74,11 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
               ATHit* qhit = quadrant->GetHit(j);
               TVector3 position = qhit->GetPosition();
               Double_t charge = qhit->GetCharge();
-              Double_t posZCal = fZk - (fEntTB - qhit->GetTimeStamp())*fTBTime*fDriftVelocity/100.;
+              Double_t posZCal     = fZk - (fEntTB - qhit->GetTimeStamp())*fTBTime*fDriftVelocity/100.;
+              Double_t posZCalCorr = fZk - (fEntTB - qhit->GetTimeStampCorr())*fTBTime*fDriftVelocity/100.;
               Double_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2) );
               //Double_t distance = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2) + TMath::Power(position.Z(),2));
-              Double_t distance = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2) + TMath::Power(posZCal,2));
+              Double_t distance = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2) + TMath::Power(posZCalCorr,2));
               if((qNumHit-j<5)&&(charge>charge_max)){
                 charge_max=charge;
                 range = distance;
@@ -85,12 +86,12 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
               if(radius>rad_max) rad_max=radius;
               rad_graph[j] = radius;
               //posz_graph[j] = position.Z();
-              posz_graph[j] = posZCal;
+              posz_graph[j] = posZCalCorr;
 
                 //Double_t geo_dist = TMath::Abs (TMath::Cos(fHoughPar.at(i).first)*radius  + TMath::Sin(fHoughPar.at(i).first)*position.Z()  - fHoughPar.at(i).second);
-                Double_t geo_dist = TMath::Abs (TMath::Cos(fHoughPar.at(i).first)*radius  + TMath::Sin(fHoughPar.at(i).first)*posZCal  - fHoughPar.at(i).second);
+                Double_t geo_dist = TMath::Abs (TMath::Cos(fHoughPar.at(i).first)*radius  + TMath::Sin(fHoughPar.at(i).first)*posZCalCorr  - fHoughPar.at(i).second);
                 //if(geo_dist<fHoughDist) HitPatternFilter[i]->SetPoint(HitPatternFilter[i]->GetN(),radius,position.Z());
-                if(geo_dist<fHoughDist) HitPatternFilter[i]->SetPoint(HitPatternFilter[i]->GetN(),radius,posZCal);
+                if(geo_dist<fHoughDist) HitPatternFilter[i]->SetPoint(HitPatternFilter[i]->GetN(),radius,posZCalCorr);
 
                     if(j<qNumHit-1){
                         ATHit* qhit_forw        = quadrant ->GetHit(j+1);

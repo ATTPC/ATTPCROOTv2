@@ -451,8 +451,10 @@ ATEventDrawTaskProto::DrawProtoPattern()
 
                     ATHit* qhit = quadrant.GetHit(j);
                     TVector3 position = qhit->GetPosition();
+                    TVector3 positionCorr = qhit->GetPositionCorr();
                     Double_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2) );
-                    fQHitPattern[iQ]   ->SetPoint(fQHitPattern[iQ]->GetN(),radius,position.Z());
+                    //fQHitPattern[iQ]   ->SetPoint(fQHitPattern[iQ]->GetN(),radius,position.Z());//
+                    fQHitPattern[iQ]   ->SetPoint(fQHitPattern[iQ]->GetN(),radius,positionCorr.Z());
                     fQELossPattern[iQ] ->SetPoint(fQELossPattern[iQ]->GetN(),radius,qhit->GetCharge());
 
                   }

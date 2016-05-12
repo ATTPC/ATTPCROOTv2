@@ -30,32 +30,32 @@ int Mainrel(){
 
 
 		Int_t a=1;
-		int A1=46.; //mass0 of the incident particle
-		int Z1=18.; //charge of the incident particle
+		int A1=8.; //mass0 of the incident particle
+		int Z1=2.; //charge of the incident particle
 		char *El1=new char[2];
 
 		//double m1=77.963180;
 
 		//cout<<El1<<endl;
 
-		int A2=1.; //mass0 of the target
-		int Z2=1.; //charge of the target
+		int A2=4.; //mass0 of the target
+		int Z2=2.; //charge of the target
 		char *El2=new char[2];
 
 		//double m2=2.0141;
 
 		//cout<<El2<<endl;
 
-		int A3=46; //mass0 of the scattered particle
-		int Z3=18; //charge of the scattered particle
+		int A3=8; //mass0 of the scattered particle
+		int Z3=2; //charge of the scattered particle
 		char *El3=new char[2];
 
 		//double m3=78.971987;
 
 		//cout<<El3<<endl;
 
-		int A4=1;//mass0 of the recoil
-		int Z4=1;//charge of the recoil
+		int A4=4;//mass0 of the recoil
+		int Z4=2;//charge of the recoil
 		char *El4=new char[2];
 
 		//double m4=1.007825;

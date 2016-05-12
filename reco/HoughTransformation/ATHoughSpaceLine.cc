@@ -133,7 +133,9 @@ void ATHoughSpaceLine::CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t 
                             Int_t PadNumHit = hit->GetHitPadNum();
                             TVector3 position = hit->GetPosition();
                             Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
-                            Float_t posZCal = fZk - (fEntTB - hit->GetTimeStamp())*drift_cal; // Recalibrating Z position from Time Bucket
+                            Double_t posZCal     = fZk - (fEntTB - hit->GetTimeStamp())*drift_cal; // Recalibrating Z position from Time Bucket
+                            Double_t posZCalCorr = fZk - (fEntTB - hit->GetTimeStampCorr())*drift_cal; // Recalibrating Z position from Time Bucket
+
 
                             //std::cout<<" Pos Z Vector : "<<position.Z()<<" posZCal : "<<posZCal<<" fEntTB : "<<fEntTB<<" Time Stamp : "<<hit->GetTimeStamp()<<" Drift cal : "<<drift_cal<<std::endl;
 
@@ -143,7 +145,7 @@ void ATHoughSpaceLine::CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t 
 			                        //#pragma omp parallel for ordered schedule(dynamic) private(itheta) //TOOD: Check performance
                               for(itheta = 0; itheta <1023; itheta++){
                                     Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
-                                    Float_t d0_RZ = (TMath::Cos(angle)*radius)  +  (TMath::Sin(angle)*posZCal); // posZCal can be replaced anytime by position.Z()
+                                    Float_t d0_RZ = (TMath::Cos(angle)*radius)  +  (TMath::Sin(angle)*posZCalCorr); // posZCal can be replaced anytime by position.Z()
                                     //#pragma omp ordered
                                     HistHoughRZ[iQ]->Fill(angle,d0_RZ);
                                     //#pragma omp ordered
