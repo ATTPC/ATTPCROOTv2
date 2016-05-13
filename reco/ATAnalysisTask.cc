@@ -123,7 +123,7 @@ ATAnalysisTask::Exec(Option_t *opt)
     fHoughSpace  = (ATHoughSpaceLine *) fHoughArray -> At(0);
     if(fIsPhiReco) fProtoevent = (ATProtoEvent *) fProtoEventHArray -> At(0);
     fInternalID++;
-    std::cout << "  -I- ATAnalysisTask -  Event Number by Internal ID : "<<fInternalID<< std::endl;
+    //std::cout << "  -I- ATAnalysisTask -  Event Number by Internal ID : "<<fInternalID<< std::endl;
 
     ATProtoEventAna *protoeventAna = (ATProtoEventAna *) new ((*fProtoEventAnaArray)[0]) ATProtoEventAna();
 
