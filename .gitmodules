@@ -1,3 +1,0 @@
-[submodule "compiled/StandAloneMC/MCSrc/MPIEventLoop"]
-	path = compiled/StandAloneMC/MCSrc/MPIEventLoop
-	url = https://github.com/csullivan/MPIEventLoop/
