@@ -28,7 +28,7 @@
 #include <istream>
 #include <limits>
 
-void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinematics/Decay_kinematics/Kine.txt")
+void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinematics/Decay_kinematics/10Be_4He_19MeV.txt")
 {
 
   TString workdir = getenv("VMCWORKDIR");

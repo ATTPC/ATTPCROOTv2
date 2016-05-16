@@ -84,8 +84,8 @@ void run_unpack_proto_10Be_2015(TString dataFile = "runfiles/ND/10Be_2015/10Be_r
 
    run->Init();
 
-   //run->Run(0,500);
-	 run -> RunOnTBData();
+   run->Run(0,10000);
+	 //run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------
 	timer.Stop();
