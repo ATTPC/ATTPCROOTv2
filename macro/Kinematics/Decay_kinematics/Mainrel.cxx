@@ -38,8 +38,8 @@ int Mainrel(){
 
 		//cout<<El1<<endl;
 
-		int A2=4.; //mass0 of the target
-		int Z2=2.; //charge of the target
+		int A2=12.; //mass0 of the target
+		int Z2=6.; //charge of the target
 		char *El2=new char[2];
 
 		//double m2=2.0141;
@@ -54,8 +54,8 @@ int Mainrel(){
 
 		//cout<<El3<<endl;
 
-		int A4=4;//mass0 of the recoil
-		int Z4=2;//charge of the recoil
+		int A4=12;//mass0 of the recoil
+		int Z4=6;//charge of the recoil
 		char *El4=new char[2];
 
 		//double m4=1.007825;

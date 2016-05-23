@@ -28,7 +28,7 @@
 #include <istream>
 #include <limits>
 
-void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinematics/Decay_kinematics/10Be_4He_19MeV.txt")
+void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinematics/Decay_kinematics/10Be_4He_19MeV.txt",TString fileKine2="../Kinematics/Decay_kinematics/10Be_12C_19MeV.txt")
 {
 
   TString workdir = getenv("VMCWORKDIR");
@@ -119,6 +119,12 @@ void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinemat
             Double_t *ThetaLabSca = new Double_t[20000];
             Double_t *EnerLabSca = new Double_t[20000];
 
+            Double_t *ThetaCMS2 = new Double_t[20000];
+            Double_t *ThetaLabRec2 = new Double_t[20000];
+            Double_t *EnerLabRec2 = new Double_t[20000];
+            Double_t *ThetaLabSca2 = new Double_t[20000];
+            Double_t *EnerLabSca2 = new Double_t[20000];
+
             std::ifstream *kineStr = new std::ifstream(fileKine.Data());
             Int_t numKin=0;
 
@@ -133,6 +139,21 @@ void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinemat
               TGraph *Kine_AngRec_AngSca_vert = new TGraph(numKin,ThetaLabSca,ThetaLabRec);
 
 
+
+              std::ifstream *kineStr2 = new std::ifstream(fileKine2.Data());
+              Int_t numKin2=0;
+
+              if(!kineStr2->fail()){
+                while(!kineStr2->eof()){
+                    *kineStr2>>ThetaCMS2[numKin2]>>ThetaLabRec2[numKin2]>>EnerLabRec2[numKin2]>>ThetaLabSca2[numKin2]>>EnerLabSca2[numKin2];
+                    numKin2++;
+                }
+              }else if(kineStr2->fail()) std::cout<<" Warning : No Kinematics file found for this reaction! Please run the macro on $SIMPATH/macro/Kinematics/Decay_kinematics/Mainrel.cxx"<<std::endl;
+
+              TGraph *Kine_AngRec_AngSca2 = new TGraph(numKin2,ThetaLabRec2,ThetaLabSca2);
+              TGraph *Kine_AngRec_AngSca_vert2 = new TGraph(numKin2,ThetaLabSca2,ThetaLabRec2);
+
+
                 c2->cd(1);
                 Vertex->Draw();
                 c2->cd(2);
@@ -142,7 +163,9 @@ void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinemat
                 Q02_Kine->Draw("");
                 Kine_AngRec_AngSca->Draw("C");
                 Kine_AngRec_AngSca_vert->Draw("C");
-                cutg->Draw("l");
+                Kine_AngRec_AngSca2->Draw("C");
+                Kine_AngRec_AngSca_vert2->Draw("C");
+                //cutg->Draw("l");
 
 
               //  c3->cd(2);
