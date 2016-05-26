@@ -1,8 +1,8 @@
 /********************************************************************************
  *    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    *
  *                                                                              *
- *              This software is distributed under the terms of the             * 
- *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *  
+ *              This software is distributed under the terms of the             *
+ *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
 #ifndef ATTPC_H
@@ -72,11 +72,11 @@ class AtTpc: public FairDetector
                              TVector3 pos, TVector3 mom,
                              Double_t time, Double_t length,
                              Double_t eLoss);
-    
+
      AtTpcPoint* AddHit(Int_t trackID,
                         Int_t detID,
                         TString VolName,
-                        Int_t detCopyID, 
+                        Int_t detCopyID,
                         TVector3 posIn,
                         TVector3 pos_out,
                         TVector3 momIn,
@@ -84,8 +84,12 @@ class AtTpc: public FairDetector
                         Double_t time,
                         Double_t length,
                         Double_t eLoss,
-			Double_t EIni,
-			Double_t AIni);    
+			                  Double_t EIni,
+			                  Double_t AIni,
+                        Int_t A,
+                        Int_t Z);
+
+      std::pair<Int_t,Int_t> DecodePdG(Int_t PdG_Code);                     
 
 
     /** The following methods can be implemented if you need to make
@@ -115,7 +119,7 @@ class AtTpc: public FairDetector
     TLorentzVector fMom;               //!  momentum at entrance
    //Double32_t     fTime;              //!  time
    //Double32_t     fLength;            //!  length
-   //Double32_t     fELoss;             //!  energy loss 
+   //Double32_t     fELoss;             //!  energy loss
 
     Int_t fTrackID;                 //!  track index
     Int_t fVolumeID;                //!  volume id

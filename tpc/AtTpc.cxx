@@ -163,8 +163,9 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 //============================================================================//
 
 
-	AtStack* stack = (AtStack*) gMC->GetStack();
+	      AtStack* stack = (AtStack*) gMC->GetStack();
         fVolName = gMC->CurrentVolName();
+        std::pair<Int_t,Int_t> AZ;
 
 
         //std::cout<<" Current Event : "<<gMC->CurrentEvent()<<std::endl;
@@ -186,8 +187,12 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
          Int_t VolumeID;
          if(gATVP->GetBeamEvtCnt()%2!=0) LOG(INFO) << " ATTPC: Beam Event " <<FairLogger::endl;
          else if(gATVP->GetDecayEvtCnt()%2==0) LOG(INFO) << " ATTPC: Reaction/Decay Event " <<FairLogger::endl;
+         AZ = DecodePdG(gMC->TrackPid());
          LOG(INFO) << " ATTPC: First hit in Volume " <<fVolName<< FairLogger::endl;
          LOG(INFO) << " Particle : "<<gMC->ParticleName(gMC->TrackPid())<<FairLogger::endl;
+         LOG(INFO) << " PID PdG : "<<gMC->TrackPid()<<FairLogger::endl;
+         LOG(INFO) << " Atomic Mass : "<<AZ.first<<FairLogger::endl;
+         LOG(INFO) << " Atomic Number : "<<AZ.second<<FairLogger::endl;
          LOG(INFO)<<" Volume ID "<<gMC->CurrentVolID(VolumeID)<<FairLogger::endl;
          LOG(INFO)<<" Track ID : "<<fTrackID<<FairLogger::endl;
          LOG(INFO)<<" Total relativistic energy " <<gMC->Etot()<< FairLogger::endl;
@@ -259,7 +264,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
             fPosOut.SetZ(newpos[2]);
 
              if(fVolName=="drift_volume" && gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0 ){
-		gATVP->ResetVertex();
+		            gATVP->ResetVertex();
                 LOG(INFO)<<" - AtTpc Warning : Beam punched through the ATTPC. Reseting Vertex! "<<std::endl;
 		}
 
@@ -287,7 +292,9 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 		       fLength,
 		       fELoss,
 		       0.0,
-		       0.0);
+		       0.0,
+           AZ.first,
+           AZ.second);
 
 	}
 	else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==1)
@@ -305,7 +312,10 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 		       fLength,
 		       fELoss,
 		       gATVP->GetScatterE(),
-		       gATVP->GetScatterA());
+		       gATVP->GetScatterA(),
+           AZ.first,
+           AZ.second);
+
 
 
 
@@ -325,7 +335,9 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 		       fLength,
 		       fELoss,
 		       gATVP->GetRecoilE(),
-		       gATVP->GetRecoilA());
+		       gATVP->GetRecoilA(),
+           AZ.first,
+           AZ.second);
 
 
 
@@ -345,7 +357,9 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
        fLength,
        fELoss,
        0.0,
-       0.0);
+       0.0,
+       AZ.first,
+       AZ.second);
 
 
 
@@ -581,8 +595,10 @@ AtTpcPoint* AtTpc::AddHit(Int_t trackID,
                             Double_t time,
                             Double_t length,
                             Double_t eLoss,
-			    Double_t EIni,
-			    Double_t AIni)
+			                      Double_t EIni,
+			                      Double_t AIni,
+                            Int_t A,
+                            Int_t Z)
 {
     TClonesArray& clref = *fAtTpcPointCollection;
     Int_t size = clref.GetEntriesFast();
@@ -604,8 +620,22 @@ AtTpcPoint* AtTpc::AddHit(Int_t trackID,
                                          time,
                                          length,
                                          eLoss,
-					 EIni,
-					 AIni);
+					                               EIni,
+					                               AIni,
+                                         A,
+                                         Z);
+}
+
+std::pair<Int_t,Int_t> AtTpc::DecodePdG(Int_t PdG_Code)
+{
+        Int_t A = PdG_Code/10%1000;
+        Int_t Z = PdG_Code/10000%1000;
+
+        std::pair<Int_t,Int_t> nucleus;
+        nucleus.first  = A;
+        nucleus.second = Z;
+        return nucleus;
+
 }
 
 ClassImp(AtTpc)

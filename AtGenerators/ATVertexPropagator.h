@@ -35,6 +35,8 @@ class ATVertexPropagator : public TObject
    void SetRndELoss(Double_t eloss);
    void SetBeamNomE(Double_t ener);
    void ResetVertex();
+   void SetMassNum(Int_t mnum);
+   void SetAtomicNum(Int_t anum);
 
    Int_t GetGlobalEvtCnt();
    Int_t GetBeamEvtCnt();
@@ -56,6 +58,8 @@ class ATVertexPropagator : public TObject
    Double_t GetRecoilA();
    Double_t GetScatterE();
    Double_t GetScatterA();
+   Int_t GetMassNum();
+   Int_t GetAtomicNum();
 
 
 
@@ -86,6 +90,8 @@ class ATVertexPropagator : public TObject
    Double_t fScatterE;
    Double_t fScatterA;
    Bool_t fIsValidKine;
+   Int_t fAiso;
+   Int_t fZiso;
 
 };
 

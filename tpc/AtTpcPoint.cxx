@@ -1,8 +1,8 @@
 /********************************************************************************
  *    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    *
  *                                                                              *
- *              This software is distributed under the terms of the             * 
- *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *  
+ *              This software is distributed under the terms of the             *
+ *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
 #include "AtTpcPoint.h"
@@ -30,20 +30,22 @@ AtTpcPoint::AtTpcPoint(Int_t trackID, Int_t detID,
 
 // -----   Standard constructor   ------------------------------------------
 AtTpcPoint::AtTpcPoint(Int_t trackID, Int_t detID, TString VolName, Int_t detCopyID,
-			 TVector3 posIn, 
+			 TVector3 posIn,
 			 TVector3 posOut, TVector3 momIn, TVector3 momOut,
-			 Double_t tof, Double_t length, Double_t eLoss, Double_t EIni, Double_t AIni) 
+			 Double_t tof, Double_t length, Double_t eLoss, Double_t EIni, Double_t AIni,Int_t A, Int_t Z)
   : FairMCPoint(trackID, detID, posIn, momIn, tof, length, eLoss) {
-  fDetCopyID = detCopyID; 
-  fX_out  = posOut.X();
-  fY_out  = posOut.Y();
-  fZ_out  = posOut.Z();
-  fPx_out = momOut.Px();
-  fPy_out = momOut.Py();
-  fPz_out = momOut.Pz();
-  fVolName = VolName;
+  fDetCopyID = detCopyID;
+  fX_out     = posOut.X();
+  fY_out     = posOut.Y();
+  fZ_out     = posOut.Z();
+  fPx_out    = momOut.Px();
+  fPy_out    = momOut.Py();
+  fPz_out    = momOut.Pz();
+  fVolName   = VolName;
   fEnergyIni = EIni;
-  fAngleIni = AIni;
+  fAngleIni  = AIni;
+  fAiso      = A;
+  fZiso      = Z;
 }
 
 
@@ -89,4 +91,3 @@ Double_t AtTpcPoint::GetY(Double_t z) const {
 // -------------------------------------------------------------------------
 
 ClassImp(AtTpcPoint)
-

@@ -1,8 +1,8 @@
 /********************************************************************************
  *    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    *
  *                                                                              *
- *              This software is distributed under the terms of the             * 
- *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *  
+ *              This software is distributed under the terms of the             *
+ *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
 #ifndef NEWDETECTORPOINT_H
@@ -39,29 +39,31 @@ class AtTpcPoint : public FairMCPoint
                      Double_t tof, Double_t length, Double_t eLoss);
 
     AtTpcPoint(Int_t trackID, Int_t detID, TString VolName, Int_t detCopyID,
-	      TVector3 posIn, 
+	      TVector3 posIn,
 	      TVector3 posOut, TVector3 momIn, TVector3 momOut,
-	      Double_t tof, Double_t length, Double_t eLoss, Double_t EIni, Double_t AIni);
+	      Double_t tof, Double_t length, Double_t eLoss, Double_t EIni, Double_t AIni, Int_t A, Int_t Z);
 
 
     /** Destructor **/
     virtual ~AtTpcPoint();
 
       /** Accessors **/
- 	 Int_t GetDetCopyID()   const { return fDetCopyID; } // added by Marc
- 	 Double_t GetXIn()   const { return fX; }
- 	 Double_t GetYIn()   const { return fY; }
- 	 Double_t GetZIn()   const { return fZ; }
- 	 Double_t GetXOut()  const { return fX_out; }
- 	 Double_t GetYOut()  const { return fY_out; }
- 	 Double_t GetZOut()  const { return fZ_out; }
- 	 Double_t GetPxOut() const { return fPx_out; }
-  	 Double_t GetPyOut() const { return fPy_out; }
-  	 Double_t GetPzOut() const { return fPz_out; }
-         TString GetVolName() const { return fVolName; }
-         Double_t GetEIni()   const { return fEnergyIni;}
-         Double_t GetAIni()   const { return fAngleIni;}
-         
+ 	 Int_t    GetDetCopyID() const { return fDetCopyID; } // added by Marc
+ 	 Double_t GetXIn()       const { return fX; }
+ 	 Double_t GetYIn()       const { return fY; }
+ 	 Double_t GetZIn()       const { return fZ; }
+ 	 Double_t GetXOut()      const { return fX_out; }
+ 	 Double_t GetYOut()      const { return fY_out; }
+ 	 Double_t GetZOut()      const { return fZ_out; }
+ 	 Double_t GetPxOut()     const { return fPx_out; }
+   Double_t GetPyOut()     const { return fPy_out; }
+   Double_t GetPzOut()     const { return fPz_out; }
+   TString  GetVolName()   const { return fVolName; }
+   Double_t GetEIni()      const { return fEnergyIni;}
+   Double_t GetAIni()      const { return fAngleIni;}
+   Int_t    GetMassNum()   const { return fAiso;}
+   Int_t    GetAtomicNum() const { return fZiso;}
+
 
      void PositionIn(TVector3& pos)  { pos.SetXYZ(fX, fY, fZ); }
   	 void PositionOut(TVector3& pos) { pos.SetXYZ(fX_out,fY_out,fZ_out); }
@@ -93,6 +95,8 @@ class AtTpcPoint : public FairMCPoint
   TString fVolName;
   Double_t fEnergyIni;
   Double_t fAngleIni;
+  Int_t fAiso;
+  Int_t fZiso;
 
 
     ClassDef(AtTpcPoint,1)
