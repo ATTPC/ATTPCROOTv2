@@ -47,8 +47,6 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       Bool_t fValidBuff = kTRUE;
       Bool_t fValidThreshold = kTRUE;
 
-    //Double_t xPos = CalculateX(pad -> GetRow()); //Obsolete
-    //Double_t zPos = CalculateZ(pad -> GetLayer());
     Double_t xPos     = pad -> GetPadXCoord();
     Double_t yPos     = pad -> GetPadYCoord();
     Double_t zPos     = 0;
@@ -158,7 +156,7 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       HitPos =  hit->GetPosition();
       Rho2+= HitPos.Mag2();
       RhoMean+=HitPos.Mag();
-      if((xPos<-9000 || yPos<-9000) && pad->GetPadNum()!=-1 ) std::cout<<" ATPSAProto::Analysis Warning! Wrong Coordinates for Pad : "<<pad->GetPadNum()<<std::endl;
+      if((xPos<-9000 || yPos<-9000) && pad->GetPadNum()!=-1) std::cout<<" ATPSAProto::Analysis Warning! Wrong Coordinates for Pad : "<<pad->GetPadNum()<<std::endl;
       //std::cout<<"  =============== Next Hit Variance Info  =============== "<<std::endl;
       //std::cout<<" Hit Num : "<<hitNum<<"  - Hit Pos Rho2 : "<<HitPos.Mag2()<<"  - Hit Pos Rho : "<<HitPos.Mag()<<std::endl;
       //std::cout<<" Hit Coordinates : "<<xPos<<"  -  "<<yPos<<" - "<<zPos<<"  -  "<<std::endl;

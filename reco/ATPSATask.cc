@@ -15,6 +15,11 @@
 #include <omp.h>
 #endif
 
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+
 ClassImp(ATPSATask);
 
 ATPSATask::ATPSATask()
@@ -30,6 +35,7 @@ ATPSATask::ATPSATask()
   fIsTimeCorr = kFALSE;
 
   fEventHArray = new TClonesArray("ATEvent");
+  //fAuxChannels.clear();
 
   fPSAMode = 2;
 }
@@ -38,14 +44,16 @@ ATPSATask::~ATPSATask()
 {
 }
 
-void ATPSATask::SetPSAMode(Int_t value)               { fPSAMode = value; }
-void ATPSATask::SetPersistence(Bool_t value)          { fIsPersistence = value; }
-void ATPSATask::SetThreshold(Double_t threshold)      { fThreshold = threshold; }
-void ATPSATask::SetBackGroundPeakFinder(Bool_t value) { fIsBGPK = value;}
-void ATPSATask::SetPeakFinder()                       { fIsPeakFinder= kTRUE;fIsMaxFinder= kFALSE;}
-void ATPSATask::SetMaxFinder()                        { fIsMaxFinder= kTRUE;fIsPeakFinder= kFALSE;}
-void ATPSATask::SetBaseCorrection(Bool_t value)       { fIsBaseCorr = value;}
-void ATPSATask::SetTimeCorrection(Bool_t value)       { fIsTimeCorr = value;}
+void ATPSATask::SetPSAMode(Int_t value)                     { fPSAMode = value; }
+void ATPSATask::SetPersistence(Bool_t value)                { fIsPersistence = value; }
+void ATPSATask::SetThreshold(Double_t threshold)            { fThreshold = threshold; }
+void ATPSATask::SetBackGroundPeakFinder(Bool_t value)       { fIsBGPK = value;}
+void ATPSATask::SetPeakFinder()                             { fIsPeakFinder= kTRUE;fIsMaxFinder= kFALSE;}
+void ATPSATask::SetMaxFinder()                              { fIsMaxFinder= kTRUE;fIsPeakFinder= kFALSE;}
+void ATPSATask::SetBaseCorrection(Bool_t value)             { fIsBaseCorr = value;}
+void ATPSATask::SetTimeCorrection(Bool_t value)             { fIsTimeCorr = value;}
+//void ATPSATask::EnableAuxChannels(std::vector<Int_t> AuxCh) { fAuxChannels = AuxCh;}
+
 
 
 InitStatus
@@ -97,6 +105,9 @@ ATPSATask::Init()
     return kERROR;
   }
 
+  //Setting Auxiliary channels for prototype
+
+  //if(ATPSA* PSA_ptr = dynamic_cast<ATPSAProto*> (fPSA) ) SetAuxChannel(fAuxChannels);
   ioMan -> Register("ATEventH", "ATTPC", fEventHArray, fIsPersistence);
 
   return kSUCCESS;
@@ -142,3 +153,20 @@ ATPSATask::Exec(Option_t *opt)
     event -> SetIsGood(kTRUE);
   }
 }
+
+/*void ATPSATask::SetAuxChannel(std::vector<Int_t> AuxCh)
+{
+
+      ATPSA* PSA_ptr;
+      if(PSA_ptr = dynamic_cast<ATPSASimple*> (fPSA)) fLogger -> Fatal(MESSAGE_ORIGIN, "SetAuxChannel only implemente for ATPSAProto! Terminating...");
+      else if(PSA_ptr = dynamic_cast<ATPSASimple2*> (fPSA) ) fLogger -> Fatal(MESSAGE_ORIGIN, "SetAuxChannel only implemente for ATPSAProto! Terminating...");
+
+      if(AuxCh.size()==0) std::cout<<cRED<<" ATPSATask : ATPSAProto Mode -  No auxiliary channels found --"<<cNORMAL<<std::endl;
+      else{
+            std::cout<<cGREEN<<" ATPSATask : Auxiliary pads found : "<<std::endl;
+            for(Int_t i=0;i<AuxCh.size();i++) std::cout<<"  "<<AuxCh.at(i)<<std::endl;
+      }
+      std::cout<<cNORMAL<<std::endl;
+      //fPSA->SetAuxChannel(AuxCh);
+
+ }*/

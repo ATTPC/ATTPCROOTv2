@@ -54,6 +54,7 @@ ATPSA::ATPSA()
   fEntTB   = (Int_t) fPar->GetTBEntrance();
 
   fThreshold = -1;
+  //fAuxChannels.clear();
 
 
   std::cout<<" ==== Parameters for Pulse Shape Analysis Task ==== "<<std::endl;
@@ -70,8 +71,9 @@ ATPSA::~ATPSA()
 {
 }
 
-void ATPSA::SetBaseCorrection(Bool_t value)   { fIsBaseCorr=value;}
-void ATPSA::SetTimeCorrection(Bool_t value)   { fIsTimeCorr=value;}
+void ATPSA::SetBaseCorrection(Bool_t value)                { fIsBaseCorr=value;}
+void ATPSA::SetTimeCorrection(Bool_t value)                { fIsTimeCorr=value;}
+//void ATPSA::SetAuxChannel(std::vector<Int_t> AuxCh)        { fAuxChannels = AuxCh;}
 
 void
 ATPSA::SetThreshold(Int_t threshold)

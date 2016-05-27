@@ -201,7 +201,7 @@ Bool_t ATTPCFissionGeneratorV2::ReadEvent(FairPrimaryGenerator* primGen) {
         ia1=Aout[j];
         iz1=Zout[j];
 
-    if(ia1>2 && iz1>1){
+    if(ia1>2 && iz1>2){
      if ( iPid < 0 ) {
   	  char ionName[20];
   	  sprintf(ionName, "Ion_%d_%d", ia1, iz1);

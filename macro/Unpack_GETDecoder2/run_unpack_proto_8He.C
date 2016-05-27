@@ -10,7 +10,7 @@ void run_unpack_proto_8He(TString dataFile = "runfiles/run_ISAC2015_test.txt",TS
 
    gSystem->Load("libXMLParser.so");
 
-   TString scriptfile = "LookupProto20150331.xml";
+   TString scriptfile = "LookupProto20150331_Aux.xml";
    TString protomapfile = "proto.map";
    TString dir = getenv("VMCWORKDIR");
    TString scriptdir = dir + "/scripts/"+ scriptfile;
@@ -57,16 +57,24 @@ void run_unpack_proto_8He(TString dataFile = "runfiles/run_ISAC2015_test.txt",TS
    decoderTask -> SetPersistence();
    run -> AddTask(decoderTask);
 
+	 // Auxiliary channels
+	 std::vector<Int_t> AuxChannels;
+	 AuxChannels.push_back(253);
+	 AuxChannels.push_back(254);
+	 AuxChannels.push_back(255);
+
+
    ATPSATask *psaTask = new ATPSATask();
    psaTask -> SetPersistence();
    psaTask -> SetBackGroundPeakFinder(kFALSE); // Suppress background of each pad for noisy data (Larger computing Time)
    psaTask -> SetThreshold(20);
    psaTask -> SetPeakFinder(); //Note: For the moment not affecting the prototype PSA Task
+	 //psaTask -> EnableAuxChannels(AuxChannels);
    run -> AddTask(psaTask);
 
    run->Init();
 
-   run->Run(0,1000);
+   run->Run(0,100);
 	 //run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------

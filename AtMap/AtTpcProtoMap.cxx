@@ -128,17 +128,16 @@ std::vector<Float_t> AtTpcProtoMap::CalcPadCenter(Int_t PadRef){
              PadCenter.reserve(2);
 
               if(!kIsProtoMapSet){
-   		std::cout<<" ATTPC Proto Map : No map file for prototype found! Please set the geometry file first via the SetProtoMap method "<<std::endl;
-		 return PadCenter;
+   		             std::cout<<" ATTPC Proto Map : No map file for prototype found! Please set the geometry file first via the SetProtoMap method "<<std::endl;
+		               return PadCenter;
 
       	      }
 
 
 	      if(f->IsZombie()){
-   		std::cout<<" ATTPC Proto Map : No geometry file found! Please set the geometry file first via the SetGeoFile method "<<std::endl;
-		return PadCenter;
-
-      	      }
+   		         std::cout<<" ATTPC Proto Map : No geometry file found! Please set the geometry file first via the SetGeoFile method "<<std::endl;
+		           return PadCenter;
+	      }
 
 
 

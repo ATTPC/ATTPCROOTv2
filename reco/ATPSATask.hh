@@ -26,6 +26,9 @@ class ATPSATask : public FairTask {
     void SetMaxFinder();
     void SetBaseCorrection(Bool_t value);
     void SetTimeCorrection(Bool_t value);
+    //void SetAuxChannel(std::vector<Int_t> AuxCh);
+    //void EnableAuxChannels(std::vector<Int_t> AuxCh);
+
 
     virtual InitStatus Init();
     virtual void SetParContainers();
@@ -49,6 +52,7 @@ class ATPSATask : public FairTask {
     Bool_t fIsTimeCorr;
 
     Double_t fThreshold;
+    //std::vector<Int_t> fAuxChannels;
 
   ClassDef(ATPSATask, 1);
 };
