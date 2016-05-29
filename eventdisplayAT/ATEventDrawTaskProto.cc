@@ -216,6 +216,7 @@ ATEventDrawTaskProto::DrawHitPoints()
 
   Float_t *MeshArray;
   fMesh->Reset(0);
+  for(Int_t i=0;i<4;i++) fAuxChannels[i]->Reset(0);
   //f3DHist->Reset(0);
   //TRandom r(0);
 
@@ -265,13 +266,11 @@ ATEventDrawTaskProto::DrawHitPoints()
           for(Int_t i=0;i<PadArray->size();i++){
             ATPad Pad = PadArray->at(i);
               if(Pad.IsAux()){
+                if(aux_cnt<4){
                 Int_t *rawadc = Pad.GetRawADC();
-                    for(Int_t j=0;j<512;j++){
-
-                        fAuxChannels[aux_cnt]->SetBinContent(j,rawadc[j]);
-
-                      }
-                  aux_cnt++;
+                    for(Int_t j=0;j<512;j++) fAuxChannels[aux_cnt]->SetBinContent(j,rawadc[j]);
+                    aux_cnt++;
+                }else std::cout<<cYELLOW<<" Warning : More auxiliary external channels than expected (max. 4)"<<cNORMAL<<std::endl;
               }
 
 
@@ -904,11 +903,23 @@ ATEventDrawTaskProto::UpdateCvsProtoKine(){
 void
 ATEventDrawTaskProto::UpdateCvsProtoAux(){
 
-   for(Int_t i = 0;i<4;i++){
-    fCvsAux->cd(i+1);
+   //for(Int_t i = 0;i<4;i++){
+    //fCvsAux->cd(1);
+    TPad* Pad_1 = (TPad*)fCvsAux->GetPad(1);
+    Pad_1->Modified();
+    Pad_1->Update();
+    TPad* Pad_2 = (TPad*)fCvsAux->GetPad(2);
+    Pad_2->Modified();
+    Pad_2->Update();
+    TPad* Pad_3 = (TPad*)fCvsAux->GetPad(3);
+    Pad_3->Modified();
+    Pad_3->Update();
+    TPad* Pad_4 = (TPad*)fCvsAux->GetPad(4);
+    Pad_4->Modified();
+    Pad_4->Update();
     fCvsAux->Modified();
     fCvsAux->Update();
-  }
+  //}
 
 }
 
