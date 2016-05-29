@@ -22,6 +22,7 @@
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
 #define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
 
 ClassImp(ATCore2);
 
@@ -99,6 +100,8 @@ void ATCore2::Initialize()
   memset(fCurrentEventID, 0, sizeof(Int_t)*10);
 
   fIsSeparatedData = kFALSE;
+  kEnableAuxChannel = kFALSE;
+  fAuxChannels.clear();
 }
 
 Bool_t ATCore2::AddData(TString filename, Int_t coboIdx)
@@ -300,10 +303,9 @@ void ATCore2::ProcessCobo(Int_t coboIdx)
         PadCenterCoord = fAtMapPtr->CalcPadCenter(PadRefNum);
         Bool_t IsInhibited = fAtMapPtr->GetIsInhibited(PadRefNum);
 
-        //if(IsInhibited) std::cout<<" Pad is inhibited : "<<PadRefNum<<std::endl;
-
             if(PadRefNum!=-1  && !fAtMapPtr->GetIsInhibited(PadRefNum)){
                 ATPad *pad = new ((*fPadArray)[PadRefNum]) ATPad(PadRefNum);
+                //if(PadRefNum)
                 pad->SetPadXCoord(PadCenterCoord[0]);
                 pad->SetPadYCoord(PadCenterCoord[1]);
                 if(PadRefNum==-1) pad->SetValidPad(kFALSE);
@@ -323,7 +325,7 @@ void ATCore2::ProcessCobo(Int_t coboIdx)
                 for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
                   pad -> SetADC(iTb, adc[iTb]);
 
-                pad -> SetPedestalSubtracted(kTRUE);
+                  pad -> SetPedestalSubtracted(kTRUE);
             }
       }
     }
@@ -620,8 +622,11 @@ void ATCore2::ProcessBasicFrame(GETBasicFrame *basicFrame)
       PadCenterCoord.reserve(2);
       PadCenterCoord = fAtMapPtr->CalcPadCenter(PadRefNum);
 
+
+
               if(PadRefNum!=-1){
               ATPad *pad = new ((*fPadArray)[PadRefNum]) ATPad(PadRefNum);
+              if(GetIsAuxChannel(PadRefNum) && kEnableAuxChannel) pad->SetIsAux(kTRUE);
               //ATPad *pad = new ATPad(PadRefNum);
               pad->SetPadXCoord(PadCenterCoord[0]);
               pad->SetPadYCoord(PadCenterCoord[1]);
@@ -652,5 +657,25 @@ void ATCore2::ProcessBasicFrame(GETBasicFrame *basicFrame)
 
 
 
+
+}
+
+void ATCore2::SetAuxChannel(std::vector<Int_t> AuxCh)
+{
+  kEnableAuxChannel = kTRUE;
+  fAuxChannels = AuxCh;
+
+  if(AuxCh.size()==0) std::cout<<cRED<<" ATPSATask : ATPSAProto Mode -  No auxiliary channels found --"<<cNORMAL<<std::endl;
+  else{
+        std::cout<<cGREEN<<" ATPSATask : Auxiliary pads found : "<<std::endl;
+        for(Int_t i=0;i<AuxCh.size();i++) std::cout<<"  "<<AuxCh.at(i)<<std::endl;
+  }
+  std::cout<<cNORMAL<<std::endl;
+
+}
+
+Bool_t  ATCore2::GetIsAuxChannel(Int_t val){
+
+  return std::find(fAuxChannels.begin(), fAuxChannels.end(), val) != fAuxChannels.end();
 
 }

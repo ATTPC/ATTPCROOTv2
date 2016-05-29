@@ -1,4 +1,4 @@
-void run_unpack_proto_8He(TString dataFile = "runfiles/run_ISAC2015_test.txt",TString parameterFile = "pATTPC.TRIUMF2015.par"){
+void run_unpack_proto_8He(TString dataFile = "runfiles/run_ISAC2015_0259.txt",TString parameterFile = "pATTPC.TRIUMF2015.par"){
 //void run_unpack_proto_8He_2(TString dataFile = "/data/TRIUMF/ISAC_2015/CoBo_AsAd0_2015-12-06T01:48:29.974_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
 //void run_unpack_proto_8He_2(TString dataFile = "/Users/Yassid/Desktop/ATTPC/Data/TRIUMF/run_0259/CoBo_AsAd0_2015-12-05T14_33_58.545_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
 
@@ -39,6 +39,12 @@ void run_unpack_proto_8He(TString dataFile = "runfiles/run_ISAC2015_test.txt",TS
   // rtdb -> setFirstInput(parIo2);
    rtdb -> setSecondInput(parIo1);
 
+	 // Auxiliary channels
+	 std::vector<Int_t> AuxChannels;
+	 AuxChannels.push_back(253);
+	 AuxChannels.push_back(254);
+	 AuxChannels.push_back(255);
+
    ATDecoder2Task *decoderTask = new ATDecoder2Task();
    //decoderTask ->SetDebugMode(kTRUE);
    decoderTask ->SetMapOpt(1); // ATTPC : 0  - Prototype: 1 |||| Default value = 0
@@ -55,21 +61,14 @@ void run_unpack_proto_8He(TString dataFile = "runfiles/run_ISAC2015_test.txt",TS
    decoderTask ->SetProtoMap(protomapdir.Data());
    decoderTask ->SetMap((Char_t const*) scriptdir.Data());
    decoderTask -> SetPersistence();
+	 decoderTask -> SetAuxChannels(AuxChannels);
    run -> AddTask(decoderTask);
-
-	 // Auxiliary channels
-	 std::vector<Int_t> AuxChannels;
-	 AuxChannels.push_back(253);
-	 AuxChannels.push_back(254);
-	 AuxChannels.push_back(255);
-
 
    ATPSATask *psaTask = new ATPSATask();
    psaTask -> SetPersistence();
    psaTask -> SetBackGroundPeakFinder(kFALSE); // Suppress background of each pad for noisy data (Larger computing Time)
    psaTask -> SetThreshold(20);
    psaTask -> SetPeakFinder(); //Note: For the moment not affecting the prototype PSA Task
-	 //psaTask -> EnableAuxChannels(AuxChannels);
    run -> AddTask(psaTask);
 
    run->Init();

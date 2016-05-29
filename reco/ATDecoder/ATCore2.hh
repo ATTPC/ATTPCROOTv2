@@ -74,6 +74,7 @@ class ATCore2 : public TObject {
 
     Int_t GetFPNChannel(Int_t chIdx);
     void SetPseudoTopologyFrame(Int_t asadMask, Bool_t check = kFALSE);
+    void SetAuxChannel(std::vector<Int_t> AuxCh);
 
     AtTpcMap *fAtMapPtr;
 
@@ -87,7 +88,8 @@ class ATCore2 : public TObject {
 
   private:
 
-    //STPlot *fPlotPtr;
+
+    Bool_t GetIsAuxChannel(Int_t val);
 
     Int_t fNumTbs;
 
@@ -115,6 +117,10 @@ class ATCore2 : public TObject {
     TString fIniMap;
     TString fLowgMap;
     TString fXtalkMap;
+
+    Bool_t kEnableAuxChannel;
+    std::vector<Int_t> fAuxChannels;
+
 
   ClassDef(ATCore2, 1);
 };

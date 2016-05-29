@@ -223,6 +223,18 @@ ATEventManagerProto::Init(Int_t option, Int_t level, Int_t nNodes)
   frameHK2->SetElementName("Angle-Angle Kinematics");
   fCvsKineAA = ecvsHK2->GetCanvas();
 
+  TEveWindowSlot* slotAux =
+  TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
+  TEveWindowPack* packAux = slotAux->MakePack();
+  packAux->SetShowTitleBar(kFALSE);
+  packAux->SetHorizontal();
+  packAux->SetElementName("Auxiliary GET Channels");
+
+  slotAux = packAux->NewSlotWithWeight(1.5);
+  TRootEmbeddedCanvas* ecvsAux1 = new TRootEmbeddedCanvas();
+  TEveWindowFrame* frameAux1 = slotAux->MakeFrame(ecvsAux1);
+  frameAux1->SetElementName("Auxiliary GET Channels");
+  fCvsAux = ecvsAux1->GetCanvas();
 
 
 

@@ -154,6 +154,8 @@ ATEventDrawTaskProto::Init()
   fCvsKineAA =  fEventManager->GetCvsKineAA();
   DrawProtoVertex();
   DrawProtoKine();
+  fCvsAux   =   fEventManager->GetCvsAux();
+  DrawProtoAux();
 
 
 }
@@ -180,6 +182,7 @@ ATEventDrawTaskProto::Exec(Option_t* option)
     UpdateCvsProtoEL();
     UpdateCvsProtoVertex();
     UpdateCvsProtoKine();
+    UpdateCvsProtoAux();
 
 }
 
@@ -255,6 +258,25 @@ ATEventDrawTaskProto::DrawHitPoints()
   fRawevent = (ATRawEvent*) fRawEventArray->At(0);
   fRawevent->SetName("fRawEvent");
   gROOT->GetListOfSpecials()->Add(fRawevent);
+
+          Int_t aux_cnt=0;
+
+          std::vector<ATPad>* PadArray = fRawevent->GetPads();
+          for(Int_t i=0;i<PadArray->size();i++){
+            ATPad Pad = PadArray->at(i);
+              if(Pad.IsAux()){
+                Int_t *rawadc = Pad.GetRawADC();
+                    for(Int_t j=0;j<512;j++){
+
+                        fAuxChannels[aux_cnt]->SetBinContent(j,rawadc[j]);
+
+                      }
+                  aux_cnt++;
+              }
+
+
+          }
+
   }
 
 
@@ -780,6 +802,21 @@ ATEventDrawTaskProto::DrawProtoKine()
 
 }
 
+void ATEventDrawTaskProto::DrawProtoAux()
+{
+
+    fCvsAux->Divide(2,2);
+    for(Int_t i=0;i<4;i++){
+      fAuxChannels[i] = new TH1F(Form("Auxiliary_Channel_%i",i),Form("AuxChannel%i",i),512,0,511);
+      fCvsAux->cd(1+i);
+      fAuxChannels[i]->Draw();
+    }
+
+
+
+
+
+}
 
 /// Update functions //////
 
@@ -863,6 +900,18 @@ ATEventDrawTaskProto::UpdateCvsProtoKine(){
     fCvsKineAA->Update();
 
 }
+
+void
+ATEventDrawTaskProto::UpdateCvsProtoAux(){
+
+   for(Int_t i = 0;i<4;i++){
+    fCvsAux->cd(i+1);
+    fCvsAux->Modified();
+    fCvsAux->Update();
+  }
+
+}
+
 
 
 void

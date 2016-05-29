@@ -10,6 +10,11 @@
 #include "FairRunAna.h"
 #include "FairRuntimeDb.h"
 
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+
 ClassImp(ATDecoder2Task);
 
 ATDecoder2Task::ATDecoder2Task()
@@ -44,6 +49,7 @@ ATDecoder2Task::ATDecoder2Task()
   fInternalID = 0;
 
   fEventID = -1;
+  fAuxChannels.clear();
 }
 
 ATDecoder2Task::~ATDecoder2Task()
@@ -67,6 +73,8 @@ void ATDecoder2Task::SetMapOpt(Int_t value)                                     
 Bool_t ATDecoder2Task::SetMap(Char_t const *map)                                               { fMap = map; }
 void ATDecoder2Task::SetPseudoTopologyFrame(Bool_t value)                                      { fIsPseudoTopology = value; }
 void ATDecoder2Task::SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap)         { fIniMap = inimap; fLowgMap = lowgmap; fXtalkMap = xtalkmap; }
+
+void ATDecoder2Task::SetAuxChannels(std::vector<Int_t> AuxCh)                                  { fAuxChannels = AuxCh;}
 
 Long64_t ATDecoder2Task::GetEventID() { return fEventIDLast; }
 
@@ -121,6 +129,7 @@ ATDecoder2Task::Init()
     if(fOpt==1){
        fDecoder -> SetProtoGeoFile(fGeoFile);
        fDecoder -> SetProtoMapFile(fProtoMapFile);
+       if(fAuxChannels.size()>0) fDecoder->SetAuxChannel(fAuxChannels);
     }
 
 

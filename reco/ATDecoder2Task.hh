@@ -82,6 +82,9 @@ class ATDecoder2Task : public FairTask {
     /// Read event for ATSource
     Int_t ReadEvent(Int_t eventID);
 
+    // Setting Auxiliary channels
+    void SetAuxChannels(std::vector<Int_t> AuxCh);
+
   private:
     FairLogger *fLogger;                ///< FairLogger singleton
 
@@ -124,6 +127,8 @@ class ATDecoder2Task : public FairTask {
     TString fXtalkMap;
 
     Int_t fInternalID;
+
+    std::vector<Int_t> fAuxChannels;   /// Auxiliary channels in GET electronics
 
   ClassDef(ATDecoder2Task, 1);
 };

@@ -3,7 +3,7 @@
 *   Author: Y. Ayyad            				                     *
 *   Log: 05-03-2015 19:24 JST					                     *
 *   Adapted from SPiRITROOT STPad by G. Jhang                        *
-*								                                     *	
+*								                                     *
 *********************************************************************/
 
 #ifndef ATPAD_H
@@ -30,10 +30,14 @@ class ATPad : public TObject  {
     //void SetGainCalibrated(Bool_t val = kTRUE); //TODO
     void SetADC(Double_t *val);
     void SetADC(Int_t idx, Double_t val);
-    
+    void SetPadXCoord(Double_t val);
+    void SetPadYCoord(Double_t val);
+    void SetIsAux(Bool_t val);
+
     ATPad &operator= (ATPad right);
 
     Bool_t IsPedestalSubtracted();
+    Bool_t IsAux();
     //Bool_t IsGainCalibrated(); //TODO
 
     Int_t GetPadNum();
@@ -41,18 +45,16 @@ class ATPad : public TObject  {
     Int_t GetRawADC(Int_t idx);
     Int_t GetMaxADCIdx();
     Bool_t GetValidPad();
-   
+
+
     Double_t *GetADC();
     Double_t GetADC(Int_t idx);
 
-    void SetPadXCoord(Double_t val);
-    void SetPadYCoord(Double_t val);   
-
     Float_t GetPadXCoord();
-    Float_t GetPadYCoord(); 
+    Float_t GetPadYCoord();
 
    private:
-    
+
     Int_t fPadNum;
     Float_t fPadXCoord;
     Float_t fPadYCoord;
@@ -63,7 +65,8 @@ class ATPad : public TObject  {
     Bool_t fIsPedestalSubtracted;
     //Bool_t fIsGainCalibrated;
     Double_t fAdc[512];
-    
+    Bool_t kIsAux;
+
     ClassDef(ATPad, 1);
 
 };
