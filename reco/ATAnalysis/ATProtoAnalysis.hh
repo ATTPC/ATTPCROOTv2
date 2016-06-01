@@ -13,6 +13,8 @@ class ATProtoAnalysis : public ATAnalysis{
 
         void Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeventAna,ATHoughSpaceLine* houghspace,TF1 *(&HoughFit)[4],TGraph *(&HitPatternFilter)[4],TF1 *(&FitResult)[4]);
         void SetHoughDist(Double_t value);
+        void SetUpperLimit(Double_t value);
+        void SetLowerLimit(Double_t value);
         /*std::vector<Double_t>* GetAngleFit()                     {return &fAngle_fit;}
         std::vector<Double_t>* GetAngle()                        {return &fAngle;}
         std::vector<Double_t>* GetPar0()                         {return &fPar0_fit;}
@@ -22,11 +24,11 @@ class ATProtoAnalysis : public ATAnalysis{
 
         Double_t fHoughDist;
         Double_t fVertexDiff;
+        Double_t fUpperLimit;
+        Double_t fLowerLimit;
 
 
       private:
-
-
 
           ClassDef(ATProtoAnalysis, 1);
 

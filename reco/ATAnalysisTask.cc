@@ -36,6 +36,8 @@ ATAnalysisTask::~ATAnalysisTask()
 void ATAnalysisTask::SetPersistence(Bool_t value)           { fIsPersistence = value; }
 void ATAnalysisTask::SetPhiReco()                           { fIsPhiReco = kTRUE;}
 void ATAnalysisTask::SetHoughDist(Double_t value)           { fHoughDist = value;}
+void ATAnalysisTask::SetUpperLimit(Double_t value)          { fUpperLimit=value;}
+void ATAnalysisTask::SetLowerLimit(Double_t value)          { fLowerLimit=value;}
 
 
 InitStatus
@@ -56,6 +58,10 @@ ATAnalysisTask::Init()
 
 
    fProtoAnalysis = new ATProtoAnalysis();
+   fProtoAnalysis->SetHoughDist(fHoughDist);
+   fProtoAnalysis->SetUpperLimit(fUpperLimit);
+   fProtoAnalysis->SetLowerLimit(fLowerLimit);
+
 
 
   if(fIsPhiReco){ //Find the Array of ProtoEvents

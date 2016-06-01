@@ -13,6 +13,8 @@ ATProtoAnalysis::ATProtoAnalysis()
       gErrorIgnoreLevel=kFatal;
       fHoughDist=2.0;
       fVertexDiff=50.0;
+      fUpperLimit=80.0;
+      fLowerLimit=10.0;
 
 }
 
@@ -20,7 +22,9 @@ ATProtoAnalysis::~ATProtoAnalysis()
 {
 }
 
-void ATProtoAnalysis::SetHoughDist(Double_t value)   { fHoughDist=value; }
+void ATProtoAnalysis::SetHoughDist(Double_t value)   { fHoughDist=value;}
+void ATProtoAnalysis::SetUpperLimit(Double_t value)  { fUpperLimit=value;}
+void ATProtoAnalysis::SetLowerLimit(Double_t value)  { fLowerLimit=value;}
 
 void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeventAna,ATHoughSpaceLine* houghspace,TF1 *(&HoughFit)[4],TGraph *(&HitPatternFilter)[4],TF1 *(&FitResult)[4])
 {
@@ -115,8 +119,8 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
             Int_t ndf =0.0;
 
 
-            if(HitPatternFilter[i]->GetN()>3){
-               HitPatternFilter[i]->Fit("pol1","FQ");
+            if(HitPatternFilter[i]->GetN()>3){ //Minimum number of points to perform the fit
+               HitPatternFilter[i]->Fit("pol1","FQ","",fLowerLimit,fUpperLimit);
                FitResult[i] = HitPatternFilter[i]->GetFunction("pol1");
 
 

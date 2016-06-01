@@ -1,4 +1,4 @@
-void run_unpack_proto_10Be(TString dataFile = "run_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
+void run_unpack_proto_10Be(TString dataFile = "runfiles/ND/10Be_2013/run_10Be_merge.txt",TString parameterFile = "pATTPC.TRIUMF2015.par"){
 
     // -----   Timer   --------------------------------------------------------
 	TStopwatch timer;
@@ -79,13 +79,17 @@ void run_unpack_proto_10Be(TString dataFile = "run_0000.graw",TString parameterF
    AnaTask->SetPhiReco();
    AnaTask->SetHoughDist(2.0);
    AnaTask->SetPersistence(kTRUE);
+	 AnaTask->SetUpperLimit(80.0);
+	 AnaTask->SetLowerLimit(10.0);
 
    run->AddTask(AnaTask);
 
    run->Init();
 
-   run->Run(0,500);
+   run->Run(0,100);
 	 //run -> RunOnTBData();
+
+
 
  // -----   Finish   -------------------------------------------------------
 	timer.Stop();
@@ -97,5 +101,6 @@ void run_unpack_proto_10Be(TString dataFile = "run_0000.graw",TString parameterF
 	cout << endl;
   // ------------------------------------------------------------------------
 
+  gApplication->Terminate();
 
 }

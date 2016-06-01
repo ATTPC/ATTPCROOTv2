@@ -33,6 +33,8 @@ class ATAnalysisTask : public FairTask {
     void SetPhiReco(); //Hough Space is calculated for the prototype after sorting the hits by quadrant. Phi Reconstruction is
     // needed prior to this mode of the task
     void SetHoughDist(Double_t value);
+    void SetUpperLimit(Double_t value);
+    void SetLowerLimit(Double_t value);
     virtual InitStatus Init();
     virtual void SetParContainers();
     virtual void Exec(Option_t *opt);
@@ -54,6 +56,8 @@ class ATAnalysisTask : public FairTask {
     Bool_t fIsPersistence;
     Bool_t fIsPhiReco;
     Double_t fHoughDist;
+    Double_t fUpperLimit;
+    Double_t fLowerLimit;
 
     Int_t fRunNum;
     Int_t fInternalID;
