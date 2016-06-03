@@ -80,13 +80,13 @@ void run_unpack_proto_10Be(TString dataFile = "runfiles/ND/10Be_2013/run_10Be_me
    AnaTask->SetHoughDist(2.0);
    AnaTask->SetPersistence(kTRUE);
 	 AnaTask->SetUpperLimit(80.0);
-	 AnaTask->SetLowerLimit(10.0);
+	 AnaTask->SetLowerLimit(0.0);
 
    run->AddTask(AnaTask);
 
    run->Init();
 
-   run->Run(0,100);
+   run->Run(0,400000);
 	 //run -> RunOnTBData();
 
 

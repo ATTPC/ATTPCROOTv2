@@ -105,6 +105,19 @@ void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinemat
                 cutg2->SetPoint(4,54.86755,29.0242);
                 cutg2->SetPoint(5,54.85507,28.95589);
 
+                TCutG *cutg3 = new TCutG("CUTG2",6);
+                cutg3->SetVarX("Q02_Kine");
+                cutg3->SetVarY("");
+                cutg3->SetTitle("Graph");
+                cutg3->SetFillColor(1);
+                cutg3->SetPoint(0,27.46418,21.43491);
+                cutg3->SetPoint(1,37.45702,16.44231);
+                cutg3->SetPoint(2,37.13467,2.463016);
+                cutg3->SetPoint(3,27.46418,4.792898);
+                cutg3->SetPoint(4,27.78653,21.43491);
+                cutg3->SetPoint(5,27.46418,21.43491);
+
+
   TTreeReader Reader1("cbmsim", file);
   TTreeReaderValue<TClonesArray> analysisArray(Reader1, "ATProtoEventAna");
   Int_t evnt = 0;
@@ -122,15 +135,15 @@ void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinemat
               std::vector<Int_t> *NDF         = analysis->GetNDF();
 
               if( TMath::Abs(vertex->at(0) - vertex->at(2))<20 && (vertex->at(0)>0 && vertex->at(2)>0))
-                if( Chi2->at(0)/NDF->at(0)<1.0  && Chi2->at(2)/NDF->at(2)<1.0  ) Q02_Kine->Fill(AngleFit->at(0),AngleFit->at(2));
+                if( Chi2->at(0)/NDF->at(0)<1000.0  && Chi2->at(2)/NDF->at(2)<1000.0  ) Q02_Kine->Fill(AngleFit->at(0),AngleFit->at(2));
 
               if( TMath::Abs(vertex->at(1) - vertex->at(3))<20 && (vertex->at(1)>0 && vertex->at(3)>0))
-                      if( Chi2->at(1)/NDF->at(1)<10.0  && Chi2->at(3)/NDF->at(3)<10.0  ) Q02_Kine->Fill(AngleFit->at(1),AngleFit->at(3));
+                      if( Chi2->at(1)/NDF->at(1)<1000.0  && Chi2->at(3)/NDF->at(3)<1000.0  ) Q02_Kine->Fill(AngleFit->at(1),AngleFit->at(3));
 
               if(cutg->IsInside(AngleFit->at(0),AngleFit->at(2)) ) {Vertex->Fill(Par0->at(0));Vertex_vs_Angle->Fill(Par0->at(0),AngleFit->at(0));}
               if(cutg->IsInside(AngleFit->at(1),AngleFit->at(3)) ) {Vertex->Fill(Par0->at(1));Vertex_vs_Angle->Fill(Par0->at(1),AngleFit->at(1));}
 
-              if(cutg2->IsInside(AngleFit->at(0),AngleFit->at(2)) ) std::cout<<evnt<<std::endl;
+              if(cutg3->IsInside(AngleFit->at(0),AngleFit->at(2)) ) std::cout<<evnt<<std::endl;
 
 
             }
@@ -187,7 +200,7 @@ void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinemat
                 Kine_AngRec_AngSca_vert->Draw("C");
                 Kine_AngRec_AngSca2->Draw("C");
                 Kine_AngRec_AngSca_vert2->Draw("C");
-                cutg2->Draw("l");
+                cutg3->Draw("l");
 
 
               //  c3->cd(2);
