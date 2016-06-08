@@ -86,7 +86,7 @@ void run_unpack_proto_10Be(TString dataFile = "runfiles/ND/10Be_2013/run_10Be_me
 
    run->Init();
 
-   run->Run(0,400000);
+   run->Run(0,100);
 	 //run -> RunOnTBData();
 
 

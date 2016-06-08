@@ -125,6 +125,7 @@ void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinemat
 
         		while (Reader1.Next()) {
 
+              if(evnt%1000==0) std::cout<<" Event : "<<evnt<<std::endl;
               evnt++;
               ATProtoEventAna* analysis = (ATProtoEventAna*) analysisArray->At(0);
               //Double_t ATProtoAnalysis::*HoughDist = &ATProtoAnalysis::fHoughDist;
@@ -135,15 +136,15 @@ void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinemat
               std::vector<Int_t> *NDF         = analysis->GetNDF();
 
               if( TMath::Abs(vertex->at(0) - vertex->at(2))<20 && (vertex->at(0)>0 && vertex->at(2)>0))
-                if( Chi2->at(0)/NDF->at(0)<1000.0  && Chi2->at(2)/NDF->at(2)<1000.0  ) Q02_Kine->Fill(AngleFit->at(0),AngleFit->at(2));
+                if( Chi2->at(0)/NDF->at(0)<10.0  && Chi2->at(2)/NDF->at(2)<10.0  ) Q02_Kine->Fill(AngleFit->at(0),AngleFit->at(2));
 
               if( TMath::Abs(vertex->at(1) - vertex->at(3))<20 && (vertex->at(1)>0 && vertex->at(3)>0))
-                      if( Chi2->at(1)/NDF->at(1)<1000.0  && Chi2->at(3)/NDF->at(3)<1000.0  ) Q02_Kine->Fill(AngleFit->at(1),AngleFit->at(3));
+                      if( Chi2->at(1)/NDF->at(1)<10.0  && Chi2->at(3)/NDF->at(3)<10.0  ) Q02_Kine->Fill(AngleFit->at(1),AngleFit->at(3));
 
               if(cutg->IsInside(AngleFit->at(0),AngleFit->at(2)) ) {Vertex->Fill(Par0->at(0));Vertex_vs_Angle->Fill(Par0->at(0),AngleFit->at(0));}
               if(cutg->IsInside(AngleFit->at(1),AngleFit->at(3)) ) {Vertex->Fill(Par0->at(1));Vertex_vs_Angle->Fill(Par0->at(1),AngleFit->at(1));}
 
-              if(cutg3->IsInside(AngleFit->at(0),AngleFit->at(2)) ) std::cout<<evnt<<std::endl;
+              //if(cutg3->IsInside(AngleFit->at(0),AngleFit->at(2)) ) std::cout<<evnt<<std::endl;
 
 
             }
