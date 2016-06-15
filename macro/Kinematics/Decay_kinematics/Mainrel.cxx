@@ -30,7 +30,7 @@ int Mainrel(){
 
 
 		Int_t a=1;
-		int A1=10.; //mass0 of the incident particle
+		int A1=12.; //mass0 of the incident particle
 		int Z1=4.; //charge of the incident particle
 		char *El1=new char[2];
 
@@ -38,8 +38,8 @@ int Mainrel(){
 
 		//cout<<El1<<endl;
 
-		int A2=12.; //mass0 of the target
-		int Z2=6.; //charge of the target
+		int A2=4.; //mass0 of the target
+		int Z2=2.; //charge of the target
 		char *El2=new char[2];
 
 		//double m2=2.0141;
@@ -54,8 +54,8 @@ int Mainrel(){
 
 		//cout<<El3<<endl;
 
-		int A4=12;//mass0 of the recoil
-		int Z4=6;//charge of the recoil
+		int A4=6;//mass0 of the recoil
+		int Z4=4;//charge of the recoil
 		char *El4=new char[2];
 
 		//double m4=1.007825;
@@ -77,7 +77,7 @@ int Mainrel(){
 		double ex3=0.0; //excitation energy of the scattered particle
 		double ex4=0.0; //excitation energy of the recoil
 
-		double tbt=1.9; // incident energy (total Lab energy in MeV)
+		double tbt=5.0; // incident energy (total Lab energy in MeV)
 
 		double Energyrdec,Anglerdec;
 
