@@ -73,7 +73,7 @@ void run_unpack_proto_8He(TString dataFile = "runfiles/run_ISAC2015_test.txt",TS
 
    run->Init();
 
-   run->Run(0,1000);
+   run->Run(0,100);
 	 //run -> RunOnTBData();
 
  // -----   Finish   -------------------------------------------------------
