@@ -62,6 +62,7 @@
 
 #pragma link C++ class ATMinimization+;
 #pragma link C++ class ATMCMinimization+;
+#pragma link C++ class ATMCQMinimization+;
 
 #pragma link C++ class ATAnalysis+;
 #pragma link C++ class ATProtoAnalysis+;

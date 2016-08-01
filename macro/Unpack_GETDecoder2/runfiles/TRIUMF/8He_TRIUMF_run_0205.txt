@@ -1,0 +1,5 @@
+/run/media/ayyadlim/ISAC_PATTPC_2015/Production/CoBo_AsAd0_2015-12-04T20:46:36.510_0000.graw
+/run/media/ayyadlim/ISAC_PATTPC_2015/Production/CoBo_AsAd0_2015-12-04T20:46:36.510_0001.graw
+/run/media/ayyadlim/ISAC_PATTPC_2015/Production/CoBo_AsAd0_2015-12-04T20:46:36.510_0002.graw
+/run/media/ayyadlim/ISAC_PATTPC_2015/Production/CoBo_AsAd0_2015-12-04T20:46:36.510_0003.graw
+/run/media/ayyadlim/ISAC_PATTPC_2015/Production/CoBo_AsAd0_2015-12-04T20:46:36.510_0004.graw

@@ -83,6 +83,7 @@ VMEDecoder/VMERawEvent.cc
 
 ATMinimization/ATMinimization.cc
 ATMinimization/ATMCMinimization.cc
+ATMinimization/ATMCQMinimization.cc
 
 ATAnalysis/ATAnalysis.cc
 ATAnalysis/ATProtoAnalysis.cc

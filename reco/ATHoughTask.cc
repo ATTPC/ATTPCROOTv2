@@ -14,7 +14,7 @@
 
 ClassImp(ATHoughTask);
 
-ATHoughTask::ATHoughTask()
+ATHoughTask::ATHoughTask():fAtPadCoord(boost::extents[10240][3][2])
 {
   fLogger = FairLogger::GetLogger();
   fPar = NULL;
@@ -95,6 +95,7 @@ ATHoughTask::Init()
   if(!MapIn) std::cerr<<" -E- ATHoughTask - : Map was enabled but not found ! "<<std::endl;
   }
 
+  fAtPadCoord = fAtMapPtr->GetPadCoordArr();
 
   ioMan -> Register("ATHough", "ATTPC", fHoughArray, fIsPersistence);
 
@@ -157,7 +158,8 @@ ATHoughTask::Exec(Option_t *opt)
     else if(fIsCircular){
             ATHoughSpaceCircle *HoughSpace = (ATHoughSpaceCircle *) new ((*fHoughArray)[0]) ATHoughSpaceCircle();
             HoughSpace ->SetThreshold(fHoughThreshold);
-            if(fIsEnableMap) HoughSpace ->CalcHoughSpace(fEvent,fPadPlane);
+            //if(fIsEnableMap) HoughSpace ->CalcHoughSpace(fEvent,fPadPlane);
+            if(fIsEnableMap) HoughSpace ->CalcHoughSpace(fEvent,fPadPlane,fAtPadCoord);
             else HoughSpace ->CalcHoughSpace(fEvent,kTRUE,kTRUE,kTRUE);
     }
 

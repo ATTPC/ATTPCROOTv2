@@ -110,6 +110,12 @@ std::vector<Double_t> ATMCMinimization::GetPosXBack()    {return fPosXBack;}
 std::vector<Double_t> ATMCMinimization::GetPosYBack()    {return fPosYBack;}
 std::vector<Double_t> ATMCMinimization::GetPosZBack()    {return fPosZBack;}
 
+Bool_t ATMCMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, TH2Poly* hPadPlane,multiarray PadCoord)
+{
+
+
+}
+
 Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
 
                         std::vector<Double_t> xc;

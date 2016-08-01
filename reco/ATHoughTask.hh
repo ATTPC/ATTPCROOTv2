@@ -15,6 +15,10 @@
 #include "AtTpcMap.h"
 #include "TH2Poly.h"
 
+#ifndef __CINT__ // Boost
+#include <boost/multi_array.hpp>
+#endif //__CINT__
+
 // ROOT classes
 #include "TClonesArray.h"
 
@@ -23,6 +27,9 @@ class ATHoughTask : public FairTask {
     ATHoughTask();
     ~ATHoughTask();
 
+    typedef boost::multi_array<double,3> multiarray;
+    typedef multiarray::index index;
+    multiarray fAtPadCoord;
 
     void SetPersistence(Bool_t value = kTRUE);
     void SetThreshold(Double_t threshold);

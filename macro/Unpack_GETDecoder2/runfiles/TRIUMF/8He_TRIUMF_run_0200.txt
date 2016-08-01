@@ -1,0 +1,6 @@
+/run/media/ayyadlim/ISAC_PATTPC_2015/Production/CoBo_AsAd0_2015-12-04T15:59:26.117_0000.graw
+/run/media/ayyadlim/ISAC_PATTPC_2015/Production/CoBo_AsAd0_2015-12-04T15:59:26.117_0001.graw
+/run/media/ayyadlim/ISAC_PATTPC_2015/Production/CoBo_AsAd0_2015-12-04T15:59:26.117_0002.graw
+/run/media/ayyadlim/ISAC_PATTPC_2015/Production/CoBo_AsAd0_2015-12-04T15:59:26.117_0003.graw
+/run/media/ayyadlim/ISAC_PATTPC_2015/Production/CoBo_AsAd0_2015-12-04T15:59:26.117_0004.graw
+/run/media/ayyadlim/ISAC_PATTPC_2015/Production/CoBo_AsAd0_2015-12-04T15:59:26.117_0005.graw
