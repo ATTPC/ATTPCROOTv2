@@ -260,8 +260,8 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
                 std::cout<<cGREEN<<" ============================"<<std::endl;
                 std::cout<<" Starting Monte Carlo event  "<<std::endl;
                 std::cout<<" X : "<<x0MC<<" cm  - Y : "<<y0MC<<" cm - Z : "<<z0MC<<" cm "<<std::endl;
-                std::cout<<" Brho : "<<(Bminv*romin)<<" Tm "<<std::endl;
-                std::cout<<" Magnetic field : "<<Bminv<<" T "<<std::endl;
+                std::cout<<" Brho : "<<(Bmin*romin)<<" Tm "<<std::endl;
+                std::cout<<" Magnetic field : "<<Bmin<<" T "<<std::endl;
                 std::cout<<" Radius of curvature : "<<parameter[5]<<" mm "<<std::endl;
                 std::cout<<" Scattering Angle : "<<aMC*180.0/TMath::Pi()<<" deg "<<std::endl;
                 std::cout<<" Azimutal Angle : "<<phiMC*180.0/TMath::Pi()<<" deg "<<std::endl;
@@ -365,7 +365,7 @@ void ATMCQMinimization::MCvar( double* parameter, int & modevar,int & iconvar,do
 
                                     Double_t bro=parameter[5]*Bmin/1000.0;// !Tm*/
                                     romin=parameter[5];
-                                     Double_t theta0=parameter[6];
+                                    Double_t theta0=parameter[6];
 
 
 

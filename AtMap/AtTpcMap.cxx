@@ -227,6 +227,8 @@ TH2Poly* AtTpcMap::GetATTPCPlane(){
 
        		 }
 
+      hPlane->ChangePartition(500,500);     
+
        if(kGUIMode){
         cATTPCPlane = new TCanvas("cATTPCPlane","cATTPCPlane",1000,1000);
         gStyle->SetPalette(1);
@@ -432,7 +434,7 @@ std::vector<Float_t> AtTpcMap::CalcPadCenter(Int_t PadRef){
 
    	   if(PadRef!=-1){ //Boost multi_array crashes with a negative index
 
-            
+
                Float_t x = (AtPadCoord[PadRef][0][0] + AtPadCoord[PadRef][1][0] + AtPadCoord[PadRef][2][0])/3.;
                PadCenter[0]=x;
                Float_t y = (AtPadCoord[PadRef][0][1] + AtPadCoord[PadRef][1][1] + AtPadCoord[PadRef][2][1])/3.;
