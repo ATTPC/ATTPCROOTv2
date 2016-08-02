@@ -50,6 +50,7 @@ ATDecoder2Task::ATDecoder2Task()
 
   fEventID = -1;
   fAuxChannels.clear();
+  fNumCobo=10;
 }
 
 ATDecoder2Task::~ATDecoder2Task()
@@ -75,6 +76,7 @@ void ATDecoder2Task::SetPseudoTopologyFrame(Bool_t value)                       
 void ATDecoder2Task::SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap)         { fIniMap = inimap; fLowgMap = lowgmap; fXtalkMap = xtalkmap; }
 
 void ATDecoder2Task::SetAuxChannels(std::vector<Int_t> AuxCh)                                  { fAuxChannels = AuxCh;}
+void ATDecoder2Task::SetNumCobo(Int_t numCobo)                                                 { fNumCobo = numCobo;}
 
 Long64_t ATDecoder2Task::GetEventID() { return fEventIDLast; }
 
@@ -93,6 +95,7 @@ ATDecoder2Task::Init()
   fDecoder = new ATCore2(fOpt);
   fDecoder -> SetUseSeparatedData(fIsSeparatedData);
   fDecoder -> SetInhibitMaps(fIniMap,fLowgMap,fXtalkMap);
+  fDecoder -> SetNumCobo(fNumCobo);
 
   for (Int_t iFile = 0; iFile < fDataList[0].size(); iFile++)
     fDecoder -> AddData(fDataList[0].at(iFile));

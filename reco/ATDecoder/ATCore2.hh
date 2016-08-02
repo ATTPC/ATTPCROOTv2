@@ -75,6 +75,7 @@ class ATCore2 : public TObject {
     Int_t GetFPNChannel(Int_t chIdx);
     void SetPseudoTopologyFrame(Int_t asadMask, Bool_t check = kFALSE);
     void SetAuxChannel(std::vector<Int_t> AuxCh);
+    void SetNumCobo(Int_t numCobo);
 
     AtTpcMap *fAtMapPtr;
 
@@ -120,6 +121,8 @@ class ATCore2 : public TObject {
 
     Bool_t kEnableAuxChannel;
     std::vector<Int_t> fAuxChannels;
+
+    Int_t fNumCobo;
 
 
   ClassDef(ATCore2, 1);

@@ -1,5 +1,5 @@
-void run_unpack2
-(TString dataFile = "runfiles/ar46_run_0085.txt",TString parameterFile = "ATTPC.e15503b.par",
+void run_unpack_alpha
+(TString dataFile = "runfiles/NSCL/alphas/alpha_run_0100.txt",TString parameterFile = "ATTPC.e15503b.par",
 TString mappath="/data/ar46/run_0085/")
 {
 
@@ -75,11 +75,12 @@ TString mappath="/data/ar46/run_0085/")
   //fDecoderTask -> SetPositivePolarity(kTRUE);
   fDecoderTask -> SetPersistence(kFALSE);
   fDecoderTask -> SetMap(scriptdir.Data());
-  fDecoderTask -> SetInhibitMaps(inimap,lowgmap,xtalkmap); // TODO: Only implemented for fUseSeparatedData!!!!!!!!!!!!!!!!!!!1
+  //fDecoderTask -> SetInhibitMaps(inimap,lowgmap,xtalkmap); // TODO: Only implemented for fUseSeparatedData!!!!!!!!!!!!!!!!!!!1
   fDecoderTask -> SetMapOpt(0); // ATTPC : 0  - Prototype: 1 |||| Default value = 0
+  fDecoderTask -> SetNumCobo(9);
 
 
-  if (!fUseSeparatedData)
+  /*if (!fUseSeparatedData)
     fDecoderTask -> AddData(dataFile);
   else {
     std::ifstream listFile(dataFile.Data());
@@ -93,7 +94,19 @@ TString mappath="/data/ar46/run_0085/")
           fDecoderTask -> AddData(dataFileWithPath, iCobo);
         }
     }
-  }
+  }*/
+
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo0_run_0100_11Dec14_22h03m15s.graw",0);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo1_run_0100_11Dec14_22h03m15s.graw",1);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo2_run_0100_11Dec14_22h03m15s.graw",2);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo2_run_0100_11Dec14_22h03m15s.1.graw",2);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo3_run_0100_11Dec14_22h03m16s.graw",3);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo4_run_0100_11Dec14_22h03m16s.graw",4);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo6_run_0100_11Dec14_22h03m16s.graw",5);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo7_run_0100_11Dec14_22h03m16s.graw",6);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo7_run_0100_11Dec14_22h03m16s.1.graw",6);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo8_run_0100_11Dec14_22h03m16s.graw",7);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo9_run_0100_11Dec14_22h03m16s.graw",8);
 
   run -> AddTask(fDecoderTask);
 
@@ -107,20 +120,18 @@ TString mappath="/data/ar46/run_0085/")
   psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
   run -> AddTask(psaTask);
 
-  ATHoughTask *HoughTask = new ATHoughTask();
+  /*ATHoughTask *HoughTask = new ATHoughTask();
 	HoughTask ->SetPersistence();
 	//HoughTask ->SetLinearHough();
 	HoughTask ->SetCircularHough();
   HoughTask ->SetHoughThreshold(100.0); // Charge threshold for Hough
-  HoughTask ->SetEnableMap(); //Enables an instance of the ATTPC map
-  HoughTask ->SetMap(scriptdir.Data());
-	run -> AddTask(HoughTask);
+	run -> AddTask(HoughTask);*/
 
 
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,10);
+  run->Run(0,36);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

@@ -102,6 +102,8 @@ void ATCore2::Initialize()
   fIsSeparatedData = kFALSE;
   kEnableAuxChannel = kFALSE;
   fAuxChannels.clear();
+
+  fNumCobo = 10;
 }
 
 Bool_t ATCore2::AddData(TString filename, Int_t coboIdx)
@@ -120,7 +122,7 @@ Bool_t ATCore2::SetData(Int_t value)
   GETDecoder2::EFrameType frameType = fDecoderPtr[0] -> GetFrameType();
 
   if (fIsSeparatedData) {
-    for (Int_t iCobo = 1; iCobo < 10; iCobo++) {
+    for (Int_t iCobo = 1; iCobo < fNumCobo; iCobo++) {
       if (fPedestalPtr[iCobo] == NULL)
         fPedestalPtr[iCobo] = new ATPedestal();
 
@@ -146,7 +148,7 @@ void ATCore2::SetDiscontinuousData(Bool_t value)
 {
   fDecoderPtr[0] -> SetDiscontinuousData(value);
   if (fIsSeparatedData)
-    for (Int_t iCobo = 1; iCobo < 10; iCobo++)
+    for (Int_t iCobo = 1; iCobo < fNumCobo; iCobo++)
       fDecoderPtr[iCobo] -> SetDiscontinuousData(value);
 }
 
@@ -166,7 +168,7 @@ void ATCore2::SetNumTbs(Int_t value)
   fDecoderPtr[0] -> SetNumTbs(value);
 
   if (fIsSeparatedData)
-    for (Int_t iCobo = 1; iCobo < 10; iCobo++)
+    for (Int_t iCobo = 1; iCobo < fNumCobo; iCobo++)
       fDecoderPtr[iCobo] -> SetNumTbs(value);
 }
 
@@ -347,7 +349,7 @@ void ATCore2::WriteData()
   }
 
   if (fIsSeparatedData)  {
-    for (Int_t iCobo = 0; iCobo < 10; iCobo++) {
+    for (Int_t iCobo = 0; iCobo < fNumCobo; iCobo++) {
       fDecoderPtr[iCobo] -> GetCoboFrame(fTargetFrameID);
       fDecoderPtr[iCobo] -> WriteFrame();
     }
@@ -372,7 +374,7 @@ ATRawEvent *ATCore2::GetRawEvent(Long64_t frameID)
     else
       fTargetFrameID = frameID;
 
-
+/*  if(fNumCobo==10){
     std::thread cobo0([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 0);
     std::thread cobo1([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 1);
     std::thread cobo2([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 2);
@@ -398,8 +400,42 @@ ATRawEvent *ATCore2::GetRawEvent(Long64_t frameID)
     cobo9.join();
     //cobo10.join();
     //cobo11.join();
+  }else if(fNumCobo==9){
 
-    for (Int_t iCobo = 0; iCobo < 10; iCobo++)
+    std::thread cobo0([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 0);
+    std::thread cobo1([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 1);
+    std::thread cobo2([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 2);
+    std::thread cobo3([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 3);
+    std::thread cobo4([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 4);
+    std::thread cobo5([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 5);
+    std::thread cobo6([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 6);
+    std::thread cobo7([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 7);
+    std::thread cobo8([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 8);
+    cobo0.join();
+    cobo1.join();
+    cobo2.join();
+    cobo3.join();
+    cobo4.join();
+    cobo5.join();
+    cobo6.join();
+    cobo7.join();
+    cobo8.join();
+
+
+  }*/
+
+  std::thread cobo[fNumCobo];
+
+  for (Int_t iCobo = 0; iCobo < fNumCobo ; iCobo++)
+            cobo[iCobo]  = std::thread([this](Int_t coboIdx) {  this -> ProcessCobo(coboIdx); }, iCobo);
+
+  for (Int_t iCobo = 0; iCobo < fNumCobo ; iCobo++)
+            cobo[iCobo].join();
+
+
+
+
+    for (Int_t iCobo = 0; iCobo < fNumCobo; iCobo++)
       if (fCurrentEventID[0] != fCurrentEventID[iCobo]) {
         std::cout << "== [ATCore] Event IDs don't match between CoBos! fCurrentEventID[0]: " << fCurrentEventID[0] << " fCurrentEventID[" << iCobo << "]: " << fCurrentEventID[iCobo] << std::endl;
 
@@ -515,7 +551,7 @@ void ATCore2::SetUseSeparatedData(Bool_t value) {
     std::cout << "            Make sure to call this method right after the instance created!" << cNORMAL << std::endl;
 
 //    fDecoderPtr[0] -> SetDebugMode(1);
-    for (Int_t iCobo = 1; iCobo < 10; iCobo++) {
+    for (Int_t iCobo = 1; iCobo < fNumCobo; iCobo++) {
       fDecoderPtr[iCobo] = new GETDecoder2();
 //      fDecoderPtr[iCobo] -> SetDebugMode(1);
     }
@@ -548,7 +584,7 @@ Int_t ATCore2::GetFPNChannel(Int_t chIdx)
 }
 
 void ATCore2::SetPseudoTopologyFrame(Int_t asadMask, Bool_t check) {
-          for(Int_t i=0;i<10;i++) fDecoderPtr[i]->SetPseudoTopologyFrame(asadMask,check);
+          for(Int_t i=0;i<fNumCobo;i++) fDecoderPtr[i]->SetPseudoTopologyFrame(asadMask,check);
 }
 
 void ATCore2::ProcessLayeredFrame(GETLayeredFrame *layeredFrame)
@@ -679,3 +715,5 @@ Bool_t  ATCore2::GetIsAuxChannel(Int_t val){
   return std::find(fAuxChannels.begin(), fAuxChannels.end(), val) != fAuxChannels.end();
 
 }
+
+void ATCore2::SetNumCobo(Int_t numCobo) {fNumCobo=numCobo;}
