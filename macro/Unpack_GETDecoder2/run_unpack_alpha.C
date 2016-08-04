@@ -1,5 +1,5 @@
 void run_unpack_alpha
-(TString dataFile = "runfiles/NSCL/alphas/alpha_run_0100.txt",TString parameterFile = "ATTPC.e15503b.par",
+(TString dataFile = "runfiles/NSCL/alphas/alpha_run_0100.txt",TString parameterFile = "ATTPC.alpha.par",
 TString mappath="/data/ar46/run_0085/")
 {
 
@@ -120,18 +120,18 @@ TString mappath="/data/ar46/run_0085/")
   psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
   run -> AddTask(psaTask);
 
-  /*ATHoughTask *HoughTask = new ATHoughTask();
+  ATHoughTask *HoughTask = new ATHoughTask();
 	HoughTask ->SetPersistence();
-	//HoughTask ->SetLinearHough();
-	HoughTask ->SetCircularHough();
+	HoughTask ->SetLinearHough();
+	//HoughTask ->SetCircularHough();
   HoughTask ->SetHoughThreshold(100.0); // Charge threshold for Hough
-	run -> AddTask(HoughTask);*/
+	run -> AddTask(HoughTask);
 
 
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,36);
+  run->Run(0,169);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
@@ -145,7 +145,7 @@ TString mappath="/data/ar46/run_0085/")
   cout << endl;
   // ------------------------------------------------------------------------
 
-  gApplication->Terminate();
+  //gApplication->Terminate();
 
 }
 

@@ -67,6 +67,7 @@ class ATPSA
     Double_t fTiltAng;
     TVector3 fLorentzVector;
     Int_t fTB0;
+    Double_t fThetaPad;
     //std::vector<Int_t> fAuxChannels; //Auxiliary external channels
 
 
@@ -81,6 +82,8 @@ class ATPSA
     Double_t CalculateZCorr(Double_t zval, Int_t Tbz);
 
     void CalcLorentzVector();
+
+    TVector3 RotateDetector(Double_t x,Double_t y,Double_t z,Int_t tb);
 
 
 

@@ -17,7 +17,12 @@ ClassImp(ATHoughSpaceLine)
 
 ATHoughSpaceLine::ATHoughSpaceLine()
 {
+
+    fXbinRZ = 500.0;
+    fYbinRZ = 500.0;
+    fHoughDist=2.0;
     HistHoughXZ = new TH2F("HistHoughXZ","HistHoughXZ",500,0,3.15,500,0,300);
+    HistHoughRZ = new TH2F("HistHoughRZ","HistHoughRZ",fXbinRZ,0,3.15,fYbinRZ,-300,300);
     fRadThreshold = 0.0;
 
     /*Char_t HoughQuadHistName[256];
@@ -50,6 +55,8 @@ ATHoughSpaceLine::ATHoughSpaceLine()
     HoughPar.clear();
     HoughParSTD.clear();
 
+
+
 }
 
 ATHoughSpaceLine::~ATHoughSpaceLine()
@@ -60,7 +67,7 @@ ATHoughSpaceLine::~ATHoughSpaceLine()
 
 void ATHoughSpaceLine::SetRadiusThreshold(Float_t value) {fRadThreshold=value;}
 
-TH2F* ATHoughSpaceLine::GetHoughSpace(TString ProjPlane) {return HistHoughXZ;}
+TH2F* ATHoughSpaceLine::GetHoughSpace(TString ProjPlane) {return HistHoughRZ;}
 //TH2F* ATHoughSpaceLine::GetHoughQuadrant(Int_t index) {return HistHoughRZ[index];}
 std::vector<std::pair<Double_t,Double_t>> ATHoughSpaceLine::GetHoughPar(TString opt)
 {
@@ -96,7 +103,7 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYpla
 
 			}
 
-	        }
+	  }// Hits loop
 
 }
 
@@ -185,6 +192,96 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multiarr
 }
 
 
+void ATHoughSpaceLine::CalcMultiHoughSpace(ATEvent* event)
+{
+
+  Int_t nHits = event->GetNumHits();
+  Double_t drift_cal = fDriftVelocity*fTBTime/100.0;//mm
+
+  std::vector<ATHit*> HitBuffer;
+
+  //HistHoughRZ = new TH2F("HistHoughRZ","HistHoughRZ",500,0,3.15,500,-300,300);
+
+  //TH2F *rad_z = new TH2F("rad_z","rad_z",1000,-500,500,1000,0,1000);
+
+  for(Int_t iHit=0; iHit<nHits; iHit++){
+        ATHit* hit = event->GetHit(iHit);
+        Int_t PadNumHit = hit->GetHitPadNum();
+        TVector3 position = hit->GetPosition();
+        Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
+        //Double_t posZCal     = fZk - (fEntTB - hit->GetTimeStamp())*drift_cal; // Recalibrating Z position from Time Bucket
+        //Double_t posZCalCorr = fZk - (fEntTB - hit->GetTimeStampCorr())*drift_cal; // Recalibrating Z position from Time Bucket
+
+
+        Int_t itheta=0;
+        //#pragma omp parallel for ordered schedule(dynamic) private(itheta) //TOOD: Check performance
+        for(itheta = 0; itheta <1023; itheta++){
+              Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
+              Float_t d0_RZ = (TMath::Cos(angle)*radius)  +  (TMath::Sin(angle)*hit->GetTimeStamp()); // posZCal can be replaced anytime by position.Z()
+              //#pragma omp ordered
+              HistHoughRZ->Fill(angle,d0_RZ);
+              //rad_z->Fill(hit->GetTimeStamp(),radius);
+
+
+         }//Hough Angle loop
+      }
+
+      //delete HistHoughRZ;
+      //HistHoughRZ->Draw("zcol");
+      //rad_z->Draw();
+
+      std::pair<Double_t,Double_t> HoughPar = GetHoughParameters(HistHoughRZ);
+
+    //rad_z->clear();
+
+      for(Int_t iHit=0; iHit<nHits; iHit++){
+          ATHit* hit = event->GetHit(iHit);
+          Int_t PadNumHit = hit->GetHitPadNum();
+          TVector3 position = hit->GetPosition();
+          Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
+          Double_t geo_dist = TMath::Abs (TMath::Cos(HoughPar.first)*radius  + TMath::Sin(HoughPar.first)*hit->GetTimeStamp()  - HoughPar.second);
+           if(geo_dist>fHoughDist){
+             HitBuffer.push_back(hit);
+             //rad_z->Fill(hit->GetTimeStamp(),radius);
+           }
+      }
+
+      // Recursive Hough Space calculation ***********************************
+
+      HistHoughRZ->Clear();
+
+
+      for(Int_t iHit=0; iHit<HitBuffer.size(); iHit++){
+            ATHit* hit = HitBuffer.at(iHit);
+            Int_t PadNumHit = hit->GetHitPadNum();
+            TVector3 position = hit->GetPosition();
+            Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
+
+            Int_t itheta=0;
+            //#pragma omp parallel for ordered schedule(dynamic) private(itheta) //TOOD: Check performance
+            for(itheta = 0; itheta <1023; itheta++){
+                  Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
+                  Float_t d0_RZ = (TMath::Cos(angle)*radius)  +  (TMath::Sin(angle)*hit->GetTimeStamp()); // posZCal can be replaced anytime by position.Z()
+                  //#pragma omp ordered
+                  HistHoughRZ->Fill(angle,d0_RZ);
+                  //rad_z->Fill(hit->GetTimeStamp(),radius);
+
+
+             }//Hough Angle loop*/
+          }
+
+         HoughPar = GetHoughParameters(HistHoughRZ);
+
+
+
+
+      //rad_z->Draw();
+
+
+}
+
+
+
 std::pair<Double_t,Double_t> ATHoughSpaceLine::GetHoughParameters(TH2F* hist){
 
 		std::pair<Double_t,Double_t> HoughParBuff;
@@ -195,11 +292,41 @@ std::pair<Double_t,Double_t> ATHoughSpaceLine::GetHoughParameters(TH2F* hist){
     xpos = hist->GetXaxis()->GetBinCenter(locmaxx);
     ypos = hist->GetYaxis()->GetBinCenter(locmaxy);
 		//std::cout<<" X Hough Position : "<<180-xpos*180/TMath::Pi()<<std::endl;
-  //  std::cout<<" X Hough Position : "<<xpos<<std::endl;
-	//	std::cout<<" Y Hough Position : "<<ypos<<std::endl;
+    //std::cout<<" X Hough Position : "<<xpos<<std::endl;
+		//std::cout<<" Y Hough Position : "<<ypos<<std::endl;
 		HoughParBuff.first= xpos;
 		HoughParBuff.second= ypos;
 		return HoughParBuff;
+
+}
+
+std::vector<std::pair<Double_t,Double_t>> ATHoughSpaceLine::GetMultiHoughParameters(TH2F* hist)
+{
+
+      std::vector<std::pair<Double_t,Double_t>> HoughPar;
+      //Int_t nBins = hist->GetSize();
+      Int_t maxBin=0;
+      Int_t maxBin2=0;
+      Int_t buff=0;
+      Double_t xpos1=0.0;
+      Double_t ypos1=0.0;
+
+        for(Int_t binx=1;binx<fXbinRZ;binx++){
+          for(Int_t biny=1;biny<fYbinRZ;biny++){
+              buff = hist->GetBinContent(binx,biny);
+                if(buff>maxBin){
+                  maxBin=buff;
+                  xpos1 = hist->GetXaxis()->GetBinCenter(binx);
+                  ypos1 = hist->GetYaxis()->GetBinCenter(biny);
+                }
+          }
+        }
+
+    //  std::cout<<maxBin<<std::endl;
+    //  std::cout<<" X Hough Position 1: "<<xpos1<<std::endl;
+  	//	std::cout<<" Y Hough Position 1: "<<ypos1<<std::endl;
+
+      return HoughPar;
 
 }
 

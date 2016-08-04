@@ -70,6 +70,12 @@ std::pair<Double_t,Double_t> ATHoughSpaceCircle::GetHoughPar() {return fHoughLin
 
 TH2F* ATHoughSpaceCircle::GetHoughSpace(TString ProjPlane)   {return HistHoughXY;}
 
+void ATHoughSpaceCircle::CalcMultiHoughSpace(ATEvent* event)
+{
+
+
+}
+
 void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane)
 {
 

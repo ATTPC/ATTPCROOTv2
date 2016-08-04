@@ -26,8 +26,10 @@ class ATHoughSpaceLine : public ATHoughSpace{
   void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane);
   void CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4);
   void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multiarray PadCoord);
+  void CalcMultiHoughSpace(ATEvent* event);
   //TH2F* GetHoughQuadrant(Int_t index);
 	std::pair<Double_t,Double_t> GetHoughParameters(TH2F* hist);
+  std::vector<std::pair<Double_t,Double_t>> GetMultiHoughParameters(TH2F* hist);
   std::pair<Double_t,Double_t> GetHoughParameters(); //Overloaded version for std::map
 	std::vector<std::pair<Double_t,Double_t>> GetHoughPar(TString opt="Hist");
   void FillHoughMap(Double_t ang, Double_t dist);
@@ -41,9 +43,13 @@ class ATHoughSpaceLine : public ATHoughSpace{
         Int_t fTBTime;
         Int_t fEntTB;
         Float_t fZk;
+        Int_t fXbinRZ;
+        Int_t fYbinRZ;
+        Double_t fHoughDist;
 
         std::map<std::vector<Float_t>,Int_t> HoughMap_XZ;
         TH2F *HistHoughXZ;
+        TH2F *HistHoughRZ;
         //TH2F *HistHoughRZ[4]; //One per quadrant
       	std::vector<std::pair<Double_t,Double_t>> HoughPar;
         std::vector<std::pair<Double_t,Double_t>> HoughParSTD;

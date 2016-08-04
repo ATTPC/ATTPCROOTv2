@@ -56,6 +56,7 @@ InitStatus
 ATHoughTask::Init()
 {
 
+
   if(fIsLinear) fHoughArray = new TClonesArray("ATHoughSpaceLine");
   else if(fIsCircular) fHoughArray = new TClonesArray("ATHoughSpaceCircle");
   else{
@@ -93,9 +94,10 @@ ATHoughTask::Init()
   Bool_t MapIn = fAtMapPtr->ParseXMLMap(fMap);
   fLogger -> Info(MESSAGE_ORIGIN, "ATTPC Map enabled");
   if(!MapIn) std::cerr<<" -E- ATHoughTask - : Map was enabled but not found ! "<<std::endl;
+  fAtPadCoord = fAtMapPtr->GetPadCoordArr();
   }
 
-  fAtPadCoord = fAtMapPtr->GetPadCoordArr();
+
 
   ioMan -> Register("ATHough", "ATTPC", fHoughArray, fIsPersistence);
 
@@ -151,7 +153,7 @@ ATHoughTask::Exec(Option_t *opt)
             ATHoughSpaceLine *HoughSpace = (ATHoughSpaceLine *) new ((*fHoughArray)[0]) ATHoughSpaceLine();
             HoughSpace->SetRadiusThreshold(fRadThreshold);
             if(fIsPhiReco) HoughSpace ->CalcHoughSpace(fProtoevent,kTRUE,kTRUE,kTRUE,kTRUE);
-            else HoughSpace ->CalcHoughSpace(fEvent,kTRUE,kTRUE,kTRUE);
+            else HoughSpace->CalcMultiHoughSpace(fEvent);
 
 
     }

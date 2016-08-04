@@ -184,19 +184,22 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
     if(fValidThreshold && fValidDerivative){
       if(iPeak==0) QEventTot+=QHitTot; //Sum only if Hit is valid - We only sum once (iPeak==0) to account for the whole spectrum.
 
-      HitPosRot = r * TVector3(xPos,yPos,zPos); // 1.- Rotate the pad plane
+      /*HitPosRot = r * TVector3(xPos,yPos,zPos); // 1.- Rotate the pad plane
       xPosCorr = CalculateXCorr(HitPosRot.X(),maxAdcIdx);// 2.- Correct for the Lorentz transformation
       yPosCorr = CalculateYCorr(HitPosRot.Y(),maxAdcIdx);
       zPosCorr = CalculateZCorr(HitPosRot.Z(),maxAdcIdx);
       TVector3 RotAux(xPosCorr,yPosCorr,zPosCorr);
        //3.- Rotate the tracks to put them in the beam direction
-      yPosCorr+=TMath::Tan(fTiltAng*TMath::Pi()/180.0)*(1000.0-zPosCorr);
+      yPosCorr+=TMath::Tan(fTiltAng*TMath::Pi()/180.0)*(1000.0-zPosCorr);*/
+
+      TVector3 posRot =  RotateDetector(xPos,yPos,zPos,maxAdcIdx);
 
      // ATHit *hit = new ATHit(PadNum,hitNum, HitPosRot.X(), HitPosRot.Y(),HitPosRot.Z(), charge);
       ATHit *hit = new ATHit(PadNum,hitNum, xPos, yPos, zPos, charge);
       //std::cout<<" AFTER zPos : "<<zPos<<" maxAdcIdx : "<<maxAdcIdx<<" timemax : "<<timemax<<std::endl;
      // ATHit *hit = new ATHit(PadNum,hitNum, xPosCorr, yPosCorr, zPosCorr, charge);
-      hit->SetPositionCorr(xPosCorr, yPosCorr, zPosCorr);
+      //hit->SetPositionCorr(xPosCorr, yPosCorr, zPosCorr);
+      hit->SetPositionCorr(posRot.X(),posRot.Y(), posRot.Z());
       hit->SetTimeStamp(maxAdcIdx);
       hit->SetBaseCorr(basecorr/10.0);
       PadHitNum++;

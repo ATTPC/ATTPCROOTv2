@@ -55,6 +55,7 @@ ATPSA::ATPSA()
 
   fThreshold = -1;
   //fAuxChannels.clear();
+  fThetaPad =-103.0*TMath::Pi()/180.0;
 
 
   std::cout<<" ==== Parameters for Pulse Shape Analysis Task ==== "<<std::endl;
@@ -169,5 +170,24 @@ ATPSA::CalcLorentzVector(){
       //  std::cout<<" Vdz : "<<z<<std::endl;
 
 
+
+}
+
+TVector3 ATPSA::RotateDetector(Double_t x,Double_t y,Double_t z,Int_t tb)
+{
+        TVector3 posRot;
+        TVector3 posDet;
+
+        posRot.SetX(x*TMath::Cos(fThetaPad) - y*TMath::Sin(fThetaPad));
+        posRot.SetY(x*TMath::Sin(fThetaPad) + y*TMath::Cos(fThetaPad));
+        posRot.SetZ(  (-271.0+tb)*fTBTime*fDriftVelocity/100. + fZk  );
+
+        Double_t TiltAng = -fTiltAng*TMath::Pi()/180.0;
+
+        posDet.SetX(posRot.X());
+        posDet.SetY( -(fZk-posRot.Z())*TMath::Sin(TiltAng)   + posRot.Y()*TMath::Cos(TiltAng)  );
+        posDet.SetZ( posRot.Z()*TMath::Cos(TiltAng) - posRot.Y()*TMath::Sin(TiltAng)  );
+
+        return posDet;
 
 }
