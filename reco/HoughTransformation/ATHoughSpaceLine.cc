@@ -20,7 +20,7 @@ ATHoughSpaceLine::ATHoughSpaceLine()
 
     fXbinRZ = 500.0;
     fYbinRZ = 500.0;
-    fHoughDist=2.0;
+    fHoughDist=10.0;
     HistHoughXZ = new TH2F("HistHoughXZ","HistHoughXZ",500,0,3.15,500,0,300);
     HistHoughRZ = new TH2F("HistHoughRZ","HistHoughRZ",fXbinRZ,0,3.15,fYbinRZ,-300,300);
     fRadThreshold = 0.0;
@@ -62,6 +62,7 @@ ATHoughSpaceLine::ATHoughSpaceLine()
 ATHoughSpaceLine::~ATHoughSpaceLine()
 {
       delete HistHoughXZ;
+      delete HistHoughRZ;
   //for(Int_t i=0;i<4;i++) delete HistHoughRZ[i];
 }
 
@@ -199,10 +200,16 @@ void ATHoughSpaceLine::CalcMultiHoughSpace(ATEvent* event)
   Double_t drift_cal = fDriftVelocity*fTBTime/100.0;//mm
 
   std::vector<ATHit*> HitBuffer;
+  std::vector<ATHit*> HitBuffer2;
 
   //HistHoughRZ = new TH2F("HistHoughRZ","HistHoughRZ",500,0,3.15,500,-300,300);
 
   //TH2F *rad_z = new TH2F("rad_z","rad_z",1000,-500,500,1000,0,1000);
+
+  //TF1* fHoughLinearFit = new TF1("HoughLinearFit"," (  (-TMath::Cos([0])/TMath::Sin([0]))*x ) + [1]/TMath::Sin([0])",0,500);
+
+  //TF1 *fHoughLinearFit;
+  //fHoughLinearFit = new TF1("HoughLinearFit"," (  (-TMath::Cos([0])/TMath::Sin([0]))*x ) + [1]/TMath::Sin([0])",0,500);
 
   for(Int_t iHit=0; iHit<nHits; iHit++){
         ATHit* hit = event->GetHit(iHit);
@@ -214,6 +221,7 @@ void ATHoughSpaceLine::CalcMultiHoughSpace(ATEvent* event)
 
 
         Int_t itheta=0;
+        //if(hit->GetTimeStamp()>130){
         //#pragma omp parallel for ordered schedule(dynamic) private(itheta) //TOOD: Check performance
         for(itheta = 0; itheta <1023; itheta++){
               Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
@@ -224,13 +232,24 @@ void ATHoughSpaceLine::CalcMultiHoughSpace(ATEvent* event)
 
 
          }//Hough Angle loop
+        //}
       }
 
       //delete HistHoughRZ;
       //HistHoughRZ->Draw("zcol");
       //rad_z->Draw();
 
-      std::pair<Double_t,Double_t> HoughPar = GetHoughParameters(HistHoughRZ);
+      std::pair<Double_t,Double_t> HoughParBuff = GetHoughParameters(HistHoughRZ);
+      HoughPar.push_back(HoughParBuff);
+
+
+      /*std::cout<<"  ++++++++++++++++++++++++++++++++++++++ "<<std::endl;
+      std::cout<<"  First Hough Space :  "<<std::endl;
+      std::cout<<"  Hough Parameter Distance : "<<HoughPar.first<<std::endl;
+  		std::cout<<"  Hough Parameter Angle : "<<HoughPar.second<<std::endl;*/
+
+      //fHoughLinearFit->SetParameter(0,TMath::Pi()/2.0-HoughPar.first);
+      //fHoughLinearFit->SetParameter(1,HoughPar.second);
 
     //rad_z->clear();
 
@@ -239,19 +258,23 @@ void ATHoughSpaceLine::CalcMultiHoughSpace(ATEvent* event)
           Int_t PadNumHit = hit->GetHitPadNum();
           TVector3 position = hit->GetPosition();
           Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
-          Double_t geo_dist = TMath::Abs (TMath::Cos(HoughPar.first)*radius  + TMath::Sin(HoughPar.first)*hit->GetTimeStamp()  - HoughPar.second);
+          Double_t geo_dist = TMath::Abs (TMath::Cos(HoughParBuff.first)*radius  + TMath::Sin(HoughParBuff.first)*hit->GetTimeStamp()  - HoughParBuff.second);
            if(geo_dist>fHoughDist){
              HitBuffer.push_back(hit);
              //rad_z->Fill(hit->GetTimeStamp(),radius);
            }
       }
 
-      // Recursive Hough Space calculation ***********************************
+      //******************************************** Recursive Hough Space calculation ***********************************
 
-      HistHoughRZ->Clear();
+    //std::cout<<HitBuffer.size()<<std::endl;
 
+    for(Int_t i=0;i<3;i++){
 
-      for(Int_t iHit=0; iHit<HitBuffer.size(); iHit++){
+      HistHoughRZ->Reset();
+      //rad_z->Reset();
+
+        for(Int_t iHit=0; iHit<HitBuffer.size(); iHit++){
             ATHit* hit = HitBuffer.at(iHit);
             Int_t PadNumHit = hit->GetHitPadNum();
             TVector3 position = hit->GetPosition();
@@ -267,15 +290,66 @@ void ATHoughSpaceLine::CalcMultiHoughSpace(ATEvent* event)
                   //rad_z->Fill(hit->GetTimeStamp(),radius);
 
 
-             }//Hough Angle loop*/
+             }//Hough Angle loop
           }
 
-         HoughPar = GetHoughParameters(HistHoughRZ);
+
+         HoughParBuff = GetHoughParameters(HistHoughRZ);
+         HoughPar.push_back(HoughParBuff);
 
 
+      /*  std::cout<<"  Iterative Hough Space  "<<i<<std::endl;
+        std::cout<<"  Hough Parameter Angle : "<<HoughPar.first<<std::endl;
+     		std::cout<<"  Hough Parameter Distance : "<<HoughPar.second<<std::endl;*/
 
+        //fHoughLinearFit->SetParameter(0,TMath::Pi()/2.0-HoughPar.first);
+        //fHoughLinearFit->SetParameter(1,HoughPar.second);
+
+         for(Int_t iHit=0; iHit<HitBuffer.size(); iHit++){
+             ATHit* hit = HitBuffer.at(iHit);
+             Int_t PadNumHit = hit->GetHitPadNum();
+             TVector3 position = hit->GetPosition();
+             Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
+             Double_t geo_dist = TMath::Abs (TMath::Cos(HoughParBuff.first)*radius  + TMath::Sin(HoughParBuff.first)*hit->GetTimeStamp()  - HoughParBuff.second);
+              if(geo_dist>fHoughDist){
+                //std::cout<<geo_dist<<" Time Bucket : "<<hit->GetTimeStamp()<<std::endl;
+                HitBuffer2.push_back(hit);
+                //rad_z->Fill(hit->GetTimeStamp(),radius);
+              }
+         }
+
+         HitBuffer.clear();
+         HitBuffer=HitBuffer2;
+         HitBuffer2.clear();
+
+       }
 
       //rad_z->Draw();
+      //fHoughLinearFit->Draw("SAME");
+
+
+      for(Int_t iHit=0; iHit<nHits; iHit++){
+            ATHit* hit = event->GetHit(iHit);
+            Int_t PadNumHit = hit->GetHitPadNum();
+            TVector3 position = hit->GetPosition();
+            Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
+
+            Int_t itheta=0;
+
+            for(itheta = 0; itheta <1023; itheta++){
+                  Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
+                  Float_t d0_RZ = (TMath::Cos(angle)*radius)  +  (TMath::Sin(angle)*hit->GetTimeStamp()); // posZCal can be replaced anytime by position.Z()
+                  //#pragma omp ordered
+                  HistHoughRZ->Fill(angle,d0_RZ);
+
+
+
+             }//Hough Angle loop
+            //}
+          }
+
+
+
 
 
 }

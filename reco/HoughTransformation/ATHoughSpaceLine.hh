@@ -9,6 +9,7 @@
 
 #include "ATHoughSpace.hh"
 #include "TH2F.h"
+#include "TF1.h"
 
 // FairRoot classes
 #include "FairRootManager.h"
