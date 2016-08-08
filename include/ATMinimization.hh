@@ -20,6 +20,10 @@
 #include "TObject.h"
 #include "ATEvent.hh"
 
+#ifndef __CINT__ // Boost
+#include <boost/multi_array.hpp>
+#endif //__CINT__
+
 
 class ATMinimization : public TObject
 {
@@ -29,10 +33,14 @@ class ATMinimization : public TObject
 		ATMinimization();
 		virtual ~ATMinimization();
 
+		typedef boost::multi_array<double,3> multiarray;
+		typedef multiarray::index index;
+
     virtual Int_t GetMinimization()=0;
 	  virtual Bool_t Minimize(Double_t* parameter,ATEvent *event)=0;
 		virtual Bool_t MinimizeOpt(Double_t* parameter,ATEvent *event)=0;
 		virtual Bool_t MinimizeOptMap(Double_t* parameter,ATEvent *event,TH2Poly* hPadPlane)=0;
+		virtual Bool_t MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, TH2Poly* hPadPlane,multiarray PadCoord)=0;
 		virtual std::vector<ATHit> GetTBHitArray(Int_t TB,std::vector<ATHit> *harray)=0;
 		virtual std::vector<Double_t> GetPosXMin()=0;
 		virtual std::vector<Double_t> GetPosYMin()=0;

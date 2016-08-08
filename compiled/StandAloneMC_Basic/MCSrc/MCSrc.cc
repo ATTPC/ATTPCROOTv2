@@ -4,6 +4,7 @@
 
 #include "MCSrc.hh"
 #include "MCMinimization.hh"
+#include "MCQMinimization.hh"
 #include <ios>
 #include <iostream>
 #include <istream>
@@ -42,7 +43,7 @@ Int_t main()
 {
 
     gSystem->Load("libATTPCReco.so");
-    omp_set_num_threads(target_thread_num);
+    //omp_set_num_threads(target_thread_num);
 
     TStopwatch timer;
     timer.Start();

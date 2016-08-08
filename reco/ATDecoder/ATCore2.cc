@@ -424,7 +424,7 @@ ATRawEvent *ATCore2::GetRawEvent(Long64_t frameID)
 
   }*/
 
-  std::thread cobo[fNumCobo];
+  std::thread* cobo = new std::thread[10];
 
   for (Int_t iCobo = 0; iCobo < fNumCobo ; iCobo++)
             cobo[iCobo]  = std::thread([this](Int_t coboIdx) {  this -> ProcessCobo(coboIdx); }, iCobo);

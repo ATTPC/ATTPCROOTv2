@@ -50,14 +50,14 @@ link_directories( ${FAIRROOT_LIBRARY_DIR}
                   ${ATTPCROOTPATH}/build/lib)
 
 #---Generate the dictionary  (G__MCSrc.cxx G__MCSrc.pcm)
-ROOT_GENERATE_DICTIONARY(G__MCSrc MCSrc.hh MCMinimization.hh LINKDEF MCSrcLinkDef.h)
+ROOT_GENERATE_DICTIONARY(G__MCSrc MCSrc.hh MCMinimization.hh MCQMinimization.hh LINKDEF MCSrcLinkDef.h)
 
 #---Create a shared library with geneated dictionary
-add_library(MCSrc SHARED G__MCSrc.cxx)
+add_library(MCSrc SHARED MCMinimization.cc MCQMinimization.cc G__MCSrc.cxx)
 target_link_libraries(MCSrc ${ROOT_LIBRARIES} ATTPCReco FairTools Base)
 
 #---Create  a main program using the library
-add_executable(MCExe MCSrc.cc MCMinimization.cc)
+add_executable(MCExe MCSrc.cc MCMinimization.cc MCQMinimization.cc)
 target_link_libraries(MCExe MCSrc
 MCSrc
 Core

@@ -1,0 +1,7 @@
+[ libMCSrc.so ]
+# List of selected classes
+class MCMinimization
+class MCMinimization::FitPar
+class MCQMinimization
+header MCMinimization.hh
+header MCQMinimization.hh

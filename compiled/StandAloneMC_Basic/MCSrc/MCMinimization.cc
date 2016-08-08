@@ -13,6 +13,8 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
+ClassImp(MCMinimization)
+
 
 MCMinimization::MCMinimization()
 {
