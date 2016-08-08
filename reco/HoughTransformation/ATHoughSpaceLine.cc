@@ -20,7 +20,7 @@ ATHoughSpaceLine::ATHoughSpaceLine()
 
     fXbinRZ = 500.0;
     fYbinRZ = 500.0;
-    fHoughDist=10.0;
+    fHoughDist=5.0;
     HistHoughXZ = new TH2F("HistHoughXZ","HistHoughXZ",500,0,3.15,500,0,300);
     HistHoughRZ = new TH2F("HistHoughRZ","HistHoughRZ",fXbinRZ,0,3.15,fYbinRZ,-300,300);
     fRadThreshold = 0.0;

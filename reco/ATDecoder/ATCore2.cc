@@ -452,6 +452,8 @@ ATRawEvent *ATCore2::GetRawEvent(Long64_t frameID)
           fRawEventPtr -> SetPad(pad);
     }
 
+    delete [] cobo;
+
     if (fRawEventPtr -> GetNumPads() == 0 && fRawEventPtr -> IsGood() == kFALSE)
       return NULL;
     else
