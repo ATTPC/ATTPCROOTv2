@@ -73,7 +73,7 @@ TString mappath="/data/ar46/run_0085/")
   fDecoderTask -> SetUseSeparatedData(fUseSeparatedData);
   if(fUseSeparatedData) fDecoderTask -> SetPseudoTopologyFrame(kTRUE);//! This calls the method 10 times so for less than 10 CoBos ATCore2 must be modified
   //fDecoderTask -> SetPositivePolarity(kTRUE);
-  fDecoderTask -> SetPersistence(kFALSE);
+  fDecoderTask -> SetPersistence(kTRUE);
   fDecoderTask -> SetMap(scriptdir.Data());
   fDecoderTask -> SetInhibitMaps(inimap,lowgmap,xtalkmap); // TODO: Only implemented for fUseSeparatedData!!!!!!!!!!!!!!!!!!!1
   fDecoderTask -> SetMapOpt(0); // ATTPC : 0  - Prototype: 1 |||| Default value = 0
@@ -104,23 +104,23 @@ TString mappath="/data/ar46/run_0085/")
 	//psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
 	psaTask -> SetMaxFinder();
   psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
-  psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
+  psaTask -> SetTimeCorrection(kTRUE); //Interpolation around the maximum of the signal peak. Only affect Z calibration at PSA stage
   run -> AddTask(psaTask);
 
-  ATHoughTask *HoughTask = new ATHoughTask();
+  /*ATHoughTask *HoughTask = new ATHoughTask();
 	HoughTask ->SetPersistence();
 	//HoughTask ->SetLinearHough();
 	HoughTask ->SetCircularHough();
   HoughTask ->SetHoughThreshold(100.0); // Charge threshold for Hough
   HoughTask ->SetEnableMap(); //Enables an instance of the ATTPC map
   HoughTask ->SetMap(scriptdir.Data());
-	run -> AddTask(HoughTask);
+	run -> AddTask(HoughTask);*/
 
 
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,40);
+  run->Run(0,100);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
