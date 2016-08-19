@@ -137,6 +137,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
       Double_t basecorr=0.0;
       Double_t slope = 0.0;
+      Int_t slope_cnt =0;
 
         if(maxAdcIdx>20) for (Int_t i = 0; i < 10; i++){
 
@@ -144,7 +145,9 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
            if(i<5){
              slope = (floatADC[maxAdcIdx-i] - floatADC[maxAdcIdx-i-1]); //Derivate for 5 Timebuckets
-             if(slope<0 && floatADC[maxAdcIdx]<3500 && fIsBaseCorr) fValidDerivative = kFALSE; //3500 condition to avoid killing saturated pads
+              //if(slope<0 && floatADC[maxAdcIdx]<3500 && fIsBaseCorr && fIsMaxFinder)
+               //fValidDerivative = kFALSE; //3500 condition to avoid killing saturated pads
+              if(slope<0 && fIsBaseCorr && fIsMaxFinder) slope_cnt++;
            }
 
 
@@ -205,6 +208,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
       if(iPeak==0) QEventTot+=QHitTot; //Sum only if Hit is valid - We only sum once (iPeak==0) to account for the whole spectrum.
 
+    
       /*HitPosRot = r * TVector3(xPos,yPos,zPos); // 1.- Rotate the pad plane
       xPosCorr = CalculateXCorr(HitPosRot.X(),maxAdcIdx);// 2.- Correct for the Lorentz transformation
       yPosCorr = CalculateYCorr(HitPosRot.Y(),maxAdcIdx);
@@ -217,7 +221,6 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
      // ATHit *hit = new ATHit(PadNum,hitNum, HitPosRot.X(), HitPosRot.Y(),HitPosRot.Z(), charge);
       ATHit *hit = new ATHit(PadNum,hitNum, xPos, yPos, zPos, charge);
-      //std::cout<<" AFTER zPos : "<<zPos<<" maxAdcIdx : "<<maxAdcIdx<<" timemax : "<<timemax<<std::endl;
      // ATHit *hit = new ATHit(PadNum,hitNum, xPosCorr, yPosCorr, zPosCorr, charge);
       //hit->SetPositionCorr(xPosCorr, yPosCorr, zPosCorr);
       hit->SetPositionCorr(posRot.X(),posRot.Y(), posRot.Z());
@@ -225,6 +228,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       hit->SetTimeStampCorr(TBCorr);
       hit->SetTimeStampCorrInter(timemax);
       hit->SetBaseCorr(basecorr/10.0);
+      hit->SetSlopeCnt(slope_cnt);
       PadHitNum++;
       hit->SetQHit(QHitTot); // TODO: The charge of each hit is the total charge of the spectrum, so for double structures this is unrealistic.
       HitPos =  hit->GetPosition();

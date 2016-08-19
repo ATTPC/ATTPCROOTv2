@@ -43,6 +43,7 @@ class ATHit : public TObject {
     void SetTimeStampCorr(Double_t TimeCorr);
     void SetTimeStampCorrInter(Double_t TimeCorrInter);
     void SetBaseCorr(Double_t BaseCorr);
+    void SetSlopeCnt(Int_t cnt);
 
     //!< Track ID getter
     Int_t GetTrackID();
@@ -66,12 +67,14 @@ class ATHit : public TObject {
     Double_t GetTimeStampCorr();
     Double_t GetTimeStampCorrInter();
     Double_t GetBaseCorr();
+    Int_t    GetSlopeCnt();
 
     Int_t    fPadNum;
     Int_t    fTimeStamp; // Time Stamp of the Hit
     Double_t fTimeStampCorr;
     Double_t fTimeStampCorrInter;
     Double_t fBaseCorr;
+    Int_t    fSlopeCnt;
 
   private:
     //!< Track ID having this hit

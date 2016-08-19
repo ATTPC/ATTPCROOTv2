@@ -73,7 +73,7 @@ TString mappath="/data/ar46/run_0085/")
   fDecoderTask -> SetUseSeparatedData(fUseSeparatedData);
   if(fUseSeparatedData) fDecoderTask -> SetPseudoTopologyFrame(kTRUE);//! This calls the method 10 times so for less than 10 CoBos ATCore2 must be modified
   //fDecoderTask -> SetPositivePolarity(kTRUE);
-  fDecoderTask -> SetPersistence(kTRUE);
+  fDecoderTask -> SetPersistence(kFALSE);
   fDecoderTask -> SetMap(scriptdir.Data());
   fDecoderTask -> SetInhibitMaps(inimap,lowgmap,xtalkmap); // TODO: Only implemented for fUseSeparatedData!!!!!!!!!!!!!!!!!!!1
   fDecoderTask -> SetMapOpt(0); // ATTPC : 0  - Prototype: 1 |||| Default value = 0
@@ -120,7 +120,7 @@ TString mappath="/data/ar46/run_0085/")
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,100);
+  run->Run(0,12);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
