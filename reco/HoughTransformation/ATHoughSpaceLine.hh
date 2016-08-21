@@ -22,6 +22,9 @@ class ATHoughSpaceLine : public ATHoughSpace{
 	 ATHoughSpaceLine();
   ~ATHoughSpaceLine();
 
+  template <class GenHough>
+  void  CalcGenHoughSpace(GenHough event);
+
 	TH2F* GetHoughSpace(TString ProjPlane);
   void CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYplane, Bool_t XZplane);
   void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane);
