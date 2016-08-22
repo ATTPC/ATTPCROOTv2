@@ -132,7 +132,7 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
 
   //std::cout<<HitBuffer.size()<<std::endl;
 
-  /*for(Int_t i=0;i<3;i++){
+  for(Int_t i=0;i<3;i++){
 
     HistHoughRZ->Reset();
     //rad_z->Reset();
@@ -209,7 +209,7 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
 
            }//Hough Angle loop
           //}
-        }*/
+        }
 
 
 
