@@ -51,11 +51,13 @@ class ATHoughSpace : public TObject
 				 virtual void CalcMultiHoughSpace(ATEvent* event)=0;
 
 				 void SetThreshold(Double_t value);
+				 void SetHoughDistance(Double_t value);
 
    protected:
 
 
 		  Double_t fThreshold;
+			Double_t fHoughDist;
 
 
 		ClassDef(ATHoughSpace, 2);

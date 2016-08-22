@@ -743,12 +743,16 @@ ATEventDrawTask::DrawHSpace()
          }else if(fIsLinearHough){
            fHoughSpace = fHoughSpaceLine_buff->GetHoughSpace("XY");
            std::vector<std::pair<Double_t,Double_t>> LinearHoughPar = fHoughSpaceLine_buff-> GetHoughPar();
+           std::vector<Double_t> LinearHpughMax = fHoughSpaceLine_buff-> GetHoughMax();
+           std::cout<<std::endl;
            std::cout<<cYELLOW<<"  = Number of lines found by Linear Hough Space : "<<LinearHoughPar.size()<<std::endl;
 
             for(Int_t i=0;i<LinearHoughPar.size();i++){
                   std::cout<<cYELLOW<<"  Hough Maximum "<<i<<"  : "<<std::endl;
                   std::cout<<cYELLOW<<"  Hough Angle : "<<LinearHoughPar.at(i).first<<std::endl;
                   std::cout<<cYELLOW<<"  Hough Distance : "<<LinearHoughPar.at(i).second<<std::endl;
+                  std::cout<<cYELLOW<<"  Maximum Bin Content : "<<LinearHpughMax.at(i)<<cNORMAL<<std::endl;
+                  std::cout<<std::endl;
 
 
             }

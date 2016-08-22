@@ -87,6 +87,7 @@ class ATDecoder2Task : public FairTask {
 
     void SetNumCobo(Int_t numCobo);
 
+
   private:
     FairLogger *fLogger;                ///< FairLogger singleton
 
@@ -128,7 +129,7 @@ class ATDecoder2Task : public FairTask {
     TString fLowgMap;
     TString fXtalkMap;
 
-    Int_t fInternalID;
+    Long64_t fInternalID;
 
     Int_t fNumCobo;
 
