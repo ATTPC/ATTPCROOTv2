@@ -31,6 +31,7 @@
 #pragma link C++ class ATProtoEventAna+;
 #pragma link C++ class ATProtoQuadrant+;
 #pragma link C++ class ATPedestal+;
+#pragma link C++ class ATTrack+;
 
 #pragma link C++ class ATDecoderTask+;
 #pragma link C++ class ATDecoder2Task+;

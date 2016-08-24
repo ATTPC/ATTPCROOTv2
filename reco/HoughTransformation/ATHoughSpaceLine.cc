@@ -1,5 +1,6 @@
 #include "ATHoughSpaceLine.hh"
 #include "TCanvas.h"
+#include "Fit/Fitter.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif
@@ -12,6 +13,7 @@
 #define cYELLOW "\033[1;33m"
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
+
 
 ClassImp(ATHoughSpaceLine)
 
@@ -467,5 +469,92 @@ void ATHoughSpaceLine::FillHoughMap(Double_t ang, Double_t dist)
 
       }
 
+
+}
+
+Int_t ATHoughSpaceLine::MinimizeTrack(ATTrack* track)
+{
+
+         Int_t nd = 10000;
+         TGraph2D * gr = new TGraph2D(); /////NB: This should be created on the heap only once so it should move outside of this function!!!!!!!!!!!!!!!
+         std::vector<ATHit> *HitArray = track->GetHitArray();
+
+         double p0[4] = {10,20,1,2}; //For the moment those are dummy parameters
+
+            for(Int_t N=0;N<HitArray->size();N++){
+              ATHit hit = HitArray->at(N);
+              TVector3 pos = hit.GetPosition();
+              gr->SetPoint(N,pos.X(),pos.Y(),pos.Z());
+
+            }
+
+            ROOT::Fit::Fitter fitter;
+            SumDistance2 sdist(gr);
+            #ifdef __CINT__
+            ROOT::Math::Functor fcn(&sdist,4,"SumDistance2");
+            #else
+            ROOT::Math::Functor fcn(sdist,4);
+            #endif
+            // set the function and the initial parameter values
+            double pStart[4] = {1,1,1,1};
+            fitter.SetFCN(fcn,pStart);
+            // set step sizes different than default ones (0.3 times parameter values)
+            for (int i = 0; i <4; ++i) fitter.Config().ParSettings(i).SetStepSize(0.01);
+
+            bool ok = fitter.FitFCN();
+            if (!ok) {
+              Error("line3Dfit","Line3D Fit failed");
+              return 1;
+            }
+
+            const ROOT::Fit::FitResult & result = fitter.Result();
+
+            std::cout << "Total final distance square " << result.MinFcnValue() << std::endl;
+            result.Print(std::cout);
+
+                //Draw the fit
+                gr->Draw("p0");
+                const double * parFit = result.GetParams();
+                int n = 1000;
+                double t0 = 0;
+                double dt = 1000;
+                TPolyLine3D *l = new TPolyLine3D(n);
+                for (int i = 0; i <n;++i) {
+                   double t = t0+ dt*i/n;
+                   double x,y,z;
+                   SetLine(t,parFit,x,y,z);
+                   l->SetPoint(i,x,y,z);
+                   std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
+                }
+                l->SetLineColor(kRed);
+                l->Draw("same");
+
+            return 0;
+
+
+
+}
+
+Double_t ATHoughSpaceLine::distance2( double x,double y,double z, const double *p)
+{
+
+    // distance line point is D= | (xp-x0) cross  ux |
+    // where ux is direction of line and x0 is a point in the line (like t = 0) and x1 is in t=1
+    XYZVector xp(x,y,z);
+    XYZVector x0(p[0], p[2], 0. );
+    XYZVector x1(p[0] + p[1], p[2] + p[3], 1. );
+    XYZVector u = (x1-x0).Unit();
+    double d2 = ((xp-x0).Cross(u)) .Mag2();
+    return d2;
+}
+
+void ATHoughSpaceLine::SetLine(double t, const double *p, double &x, double &y, double &z)
+{
+      // a parameteric line is define from 6 parameters but 4 are independent
+      // x0,y0,z0,z1,y1,z1 which are the coordinates of two points on the line
+      // can choose z0 = 0 if line not parallel to x-y plane and z1 = 1;
+      x = p[0] + p[1]*t;
+      y = p[2] + p[3]*t;
+      z = t;
 
 }

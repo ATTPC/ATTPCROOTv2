@@ -10,10 +10,20 @@
 #include "ATHoughSpace.hh"
 #include "TH2F.h"
 #include "TF1.h"
+#include "TGraph2D.h"
+#include <Math/Vector3D.h>
+#include <Math/Functor.h>
+#include <TPolyLine3D.h>
 
 // FairRoot classes
 #include "FairRootManager.h"
 #include "FairLogger.h"
+
+//ATTPCROOT
+#include "ATTrack.hh"
+
+
+using namespace ROOT::Math;
 
 
 class ATHoughSpaceLine : public ATHoughSpace{
@@ -39,6 +49,47 @@ class ATHoughSpaceLine : public ATHoughSpace{
   std::vector<Double_t> GetHoughMax();
   void FillHoughMap(Double_t ang, Double_t dist);
   void SetRadiusThreshold(Float_t value);
+  void SetLine(double t, const double *p, double &x, double &y, double &z);
+
+  Int_t MinimizeTrack(ATTrack* track);
+  static double distance2(double x,double y,double z, const double *p);
+
+  struct SumDistance2
+  {
+      TGraph2D * fGraph;
+
+          SumDistance2(TGraph2D * g) : fGraph(g) {}
+              double operator() (const double * par) {
+              assert(fGraph    != 0);
+              double * x = fGraph->GetX();
+              double * y = fGraph->GetY();
+              double * z = fGraph->GetZ();
+              int npoints = fGraph->GetN();
+              double sum = 0;
+              for (int i  = 0; i < npoints; ++i) {
+                double d = distance2(x[i],y[i],z[i],par);
+                sum += d;
+              }
+        #ifdef DEBUG
+         if (first) std::cout << "point " << i << "\t"
+            << x[i] << "\t"
+            << y[i] << "\t"
+            << z[i] << "\t"
+            << std::sqrt(d) << std::endl;
+        #endif
+
+        //if (first)
+          //std::cout << "Total Initial distance square = " << sum << std::endl;
+          //first = false;
+          return sum;
+
+
+          }
+
+
+  };
+
+
 
 
       protected:
@@ -89,6 +140,7 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
 
   std::vector<ATHit*> HitBuffer;
   std::vector<ATHit*> HitBuffer2;
+  std::vector<ATTrack*> HoughTracks;
 
   for(Int_t iHit=0; iHit<nHits; iHit++){
         ATHit* hit = event->GetHit(iHit);
@@ -109,6 +161,7 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
 
     std::pair<Double_t,Double_t> HoughParBuff = GetHoughParameters(HistHoughRZ);
     HoughPar.push_back(HoughParBuff);
+    ATTrack* track = new ATTrack();
 
 
     for(Int_t iHit=0; iHit<nHits; iHit++){
@@ -121,8 +174,12 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
          if(geo_dist>fHoughDist){
            HitBuffer.push_back(hit);
            //rad_z->Fill(hit->GetTimeStamp(),position.X());
-         }
+         }else track->AddHit(hit);
     }
+
+    HoughTracks.push_back(track);
+    MinimizeTrack(track);
+    delete track;
 
     //rad_z2->Draw();
     //rad_z->Draw("SAMES");
