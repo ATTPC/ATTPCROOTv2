@@ -10,6 +10,7 @@ ATHoughSpace::ATHoughSpace()
 {
   fThreshold = 0.0;
   fHoughDist = 5.0;
+  fHoughMaxThreshold = 10.0;
 }
 
 ATHoughSpace::~ATHoughSpace()

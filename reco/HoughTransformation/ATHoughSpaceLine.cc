@@ -14,7 +14,6 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
-
 ClassImp(ATHoughSpaceLine)
 
 ATHoughSpaceLine::ATHoughSpaceLine()
@@ -26,6 +25,7 @@ ATHoughSpaceLine::ATHoughSpaceLine()
     HistHoughXZ = new TH2F("HistHoughXZ","HistHoughXZ",500,0,3.15,500,0,300);
     HistHoughRZ = new TH2F("HistHoughRZ","HistHoughRZ",fXbinRZ,0,3.15,fYbinRZ,-300,300);
     fRadThreshold = 0.0;
+
 
     /*Char_t HoughQuadHistName[256];
     for(Int_t i=0;i<4;i++){
@@ -84,6 +84,14 @@ std::vector<std::pair<Double_t,Double_t>> ATHoughSpaceLine::GetHoughPar(TString 
 void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane)
 {
 
+
+}
+
+void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Linear Hough Space class
+{
+
+        /// Set Options here n(default is Generic hough Space calculation)
+        CalcGenHoughSpace(event);
 
 }
 
@@ -475,6 +483,7 @@ void ATHoughSpaceLine::FillHoughMap(Double_t ang, Double_t dist)
 Int_t ATHoughSpaceLine::MinimizeTrack(ATTrack* track)
 {
 
+        gErrorIgnoreLevel=kFatal;
          Int_t nd = 10000;
          TGraph2D * gr = new TGraph2D(); /////NB: This should be created on the heap only once so it should move outside of this function!!!!!!!!!!!!!!!
          std::vector<ATHit> *HitArray = track->GetHitArray();
@@ -507,10 +516,20 @@ Int_t ATHoughSpaceLine::MinimizeTrack(ATTrack* track)
               return 1;
             }
 
-            const ROOT::Fit::FitResult & result = fitter.Result();
+             const ROOT::Fit::FitResult & result = fitter.Result();
+             const ROOT::Math::Minimizer * min = fitter.GetMinimizer();
+             double sigma2 = 25.0;
+             double Chi2_min = min->MinValue();
+             int NDF = min->NFree();
+             int npoints = gr->GetN();
+ 		         //std::cout<<" Chi2 (Minuit) : "<<Chi2_min<<" NDF : "<<NDF<<std::endl;
+             //std::cout<<" Chi2 reduced  : "<<(Chi2_min/sigma2/(double) npoints);
 
-            std::cout << "Total final distance square " << result.MinFcnValue() << std::endl;
-            result.Print(std::cout);
+
+
+            //std::cout << "Total final distance square " << result.MinFcnValue() << std::endl;
+            //result.Print(std::cout);
+
 
                 //Draw the fit
                 gr->Draw("p0");
@@ -524,7 +543,7 @@ Int_t ATHoughSpaceLine::MinimizeTrack(ATTrack* track)
                    double x,y,z;
                    SetLine(t,parFit,x,y,z);
                    l->SetPoint(i,x,y,z);
-                   std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
+                   //std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
                 }
                 l->SetLineColor(kRed);
                 l->Draw("same");

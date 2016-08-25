@@ -13,6 +13,7 @@
 #include "TGraph2D.h"
 #include <Math/Vector3D.h>
 #include <Math/Functor.h>
+#include <Math/Minimizer.h>
 #include <TPolyLine3D.h>
 
 // FairRoot classes
@@ -41,6 +42,7 @@ class ATHoughSpaceLine : public ATHoughSpace{
   void CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4);
   void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multiarray PadCoord);
   void CalcMultiHoughSpace(ATEvent* event);
+  void CalcHoughSpace(ATEvent* event);
   //TH2F* GetHoughQuadrant(Int_t index);
 	std::pair<Double_t,Double_t> GetHoughParameters(TH2F* hist);
   std::vector<std::pair<Double_t,Double_t>> GetMultiHoughParameters(TH2F* hist);
@@ -101,6 +103,9 @@ class ATHoughSpaceLine : public ATHoughSpace{
         Float_t fZk;
         Int_t fXbinRZ;
         Int_t fYbinRZ;
+        std::vector<ATTrack*> fHoughTracks; //!
+        //NB: This member wont be saved in to the root file. If the //! is uncommented the program will crash because the pointers are destroyed after being used
+
 
         std::map<std::vector<Float_t>,Int_t> HoughMap_XZ;
         TH2F *HistHoughXZ;
@@ -140,7 +145,6 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
 
   std::vector<ATHit*> HitBuffer;
   std::vector<ATHit*> HitBuffer2;
-  std::vector<ATTrack*> HoughTracks;
 
   for(Int_t iHit=0; iHit<nHits; iHit++){
         ATHit* hit = event->GetHit(iHit);
@@ -160,7 +164,6 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
       }
 
     std::pair<Double_t,Double_t> HoughParBuff = GetHoughParameters(HistHoughRZ);
-    HoughPar.push_back(HoughParBuff);
     ATTrack* track = new ATTrack();
 
 
@@ -174,11 +177,17 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
          if(geo_dist>fHoughDist){
            HitBuffer.push_back(hit);
            //rad_z->Fill(hit->GetTimeStamp(),position.X());
-         }else track->AddHit(hit);
+         }else{
+           track->AddHit(hit);
+         }
     }
 
-    HoughTracks.push_back(track);
-    MinimizeTrack(track);
+    if(HoughMax.at(0)>fHoughMaxThreshold){
+       fHoughTracks.push_back(track);
+       HoughPar.push_back(HoughParBuff);
+    }
+
+    //MinimizeTrack(track);
     delete track;
 
     //rad_z2->Draw();
@@ -191,6 +200,7 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
 
   for(Int_t i=0;i<3;i++){
 
+    ATTrack* track = new ATTrack();
     HistHoughRZ->Reset();
     //rad_z->Reset();
 
@@ -215,7 +225,6 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
 
 
        HoughParBuff = GetHoughParameters(HistHoughRZ);
-       HoughPar.push_back(HoughParBuff);
 
 
       //std::cout<<"  Iterative Hough Space  "<<i<<std::endl;
@@ -235,12 +244,20 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
               //std::cout<<geo_dist<<" Time Bucket : "<<hit->GetTimeStamp()<<std::endl;
               HitBuffer2.push_back(hit);
               //rad_z->Fill(hit->GetTimeStamp(),radius);
-            }
+              }else track->AddHit(hit);
        }
+
+       if(HoughMax.at(i+1)>fHoughMaxThreshold){
+          fHoughTracks.push_back(track);
+          HoughPar.push_back(HoughParBuff);
+        }
 
        HitBuffer.clear();
        HitBuffer=HitBuffer2;
        HitBuffer2.clear();
+
+
+       delete track;
 
      }
 

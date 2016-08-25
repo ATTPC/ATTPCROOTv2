@@ -76,6 +76,12 @@ void ATHoughSpaceCircle::CalcMultiHoughSpace(ATEvent* event)
 
 }
 
+void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event)
+{
+
+
+}
+
 void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane)
 {
 

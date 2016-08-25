@@ -156,7 +156,7 @@ ATHoughTask::Exec(Option_t *opt)
             HoughSpace->SetRadiusThreshold(fRadThreshold);
             HoughSpace->SetHoughDistance(fHoughDistance);
             if(fIsPhiReco) HoughSpace ->CalcHoughSpace(fProtoevent,kTRUE,kTRUE,kTRUE,kTRUE);
-            else HoughSpace->CalcGenHoughSpace(fEvent);
+            else HoughSpace->CalcHoughSpace(fEvent);
 
 
     }
