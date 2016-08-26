@@ -92,6 +92,8 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
 
         /// Set Options here n(default is Generic hough Space calculation)
         CalcGenHoughSpace(event);
+        for(Int_t ntrack=0;ntrack<fHoughTracks.size();ntrack++)
+          MinimizeTrack(fHoughTracks.at(ntrack));
 
 }
 
@@ -532,7 +534,7 @@ Int_t ATHoughSpaceLine::MinimizeTrack(ATTrack* track)
 
 
                 //Draw the fit
-                gr->Draw("p0");
+                /*gr->Draw("p0");
                 const double * parFit = result.GetParams();
                 int n = 1000;
                 double t0 = 0;
@@ -546,7 +548,7 @@ Int_t ATHoughSpaceLine::MinimizeTrack(ATTrack* track)
                    //std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
                 }
                 l->SetLineColor(kRed);
-                l->Draw("same");
+                l->Draw("same");*/
 
             return 0;
 

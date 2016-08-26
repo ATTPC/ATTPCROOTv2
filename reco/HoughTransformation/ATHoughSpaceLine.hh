@@ -185,10 +185,11 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
     if(HoughMax.at(0)>fHoughMaxThreshold){
        fHoughTracks.push_back(track);
        HoughPar.push_back(HoughParBuff);
+       //MinimizeTrack(track);
     }
 
-    //MinimizeTrack(track);
-    delete track;
+
+    //delete track;
 
     //rad_z2->Draw();
     //rad_z->Draw("SAMES");
@@ -198,9 +199,9 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
 
   //std::cout<<HitBuffer.size()<<std::endl;
 
-  for(Int_t i=0;i<3;i++){
+  for(Int_t i=0;i<5;i++){ //NB: Only 5 lines allowed right now
 
-    ATTrack* track = new ATTrack();
+    track = new ATTrack();
     HistHoughRZ->Reset();
     //rad_z->Reset();
 
@@ -250,6 +251,7 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
        if(HoughMax.at(i+1)>fHoughMaxThreshold){
           fHoughTracks.push_back(track);
           HoughPar.push_back(HoughParBuff);
+          //MinimizeTrack(track);
         }
 
        HitBuffer.clear();
@@ -257,7 +259,7 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
        HitBuffer2.clear();
 
 
-       delete track;
+       //delete track;
 
      }
 
