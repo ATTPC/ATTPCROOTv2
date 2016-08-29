@@ -95,6 +95,65 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
         for(Int_t ntrack=0;ntrack<fHoughTracks.size();ntrack++)
           MinimizeTrack(fHoughTracks.at(ntrack));
 
+        FindVertex(fHoughTracks);
+
+
+
+}
+
+Double_t ATHoughSpaceLine::FindVertex(std::vector<ATTrack*> HoughTracks)
+{
+  Double_t Vertex;
+  Double_t mad=999999; // Minimum approach distance
+
+      //Current  parametrization
+      //x = p[0] + p[1]*t;
+      //y = p[2] + p[3]*t;
+      //z = t;
+      // (x,y,z) = (p[0],p[2],0) + (p[1],p[3],1)*t
+
+      // Test each line against the others to find a vertex candidate
+      for(Int_t i=0;i<fHoughTracks.size()-1;i++){
+
+          ATTrack* track = fHoughTracks.at(i);
+          std::vector<Double_t> p = track->GetFitPar();
+          XYZVector L_0(p[0], p[2], 0. );
+          XYZVector L_1(p[1], p[3], 1. );
+
+          //std::cout<<" L_1 p[1] : "<<p[1]<<" L_1 p[3] : "<<p[3]<<std::endl;
+
+                    for(Int_t j=i+1; j<fHoughTracks.size();j++)
+                    {
+                        ATTrack* track_f = fHoughTracks.at(j);
+                        std::vector<Double_t> p_f = track_f->GetFitPar();
+                        XYZVector L_f0(p_f[0], p_f[2], 0. );
+                        XYZVector L_f1(p_f[1], p_f[3], 1. );
+
+                        //std::cout<<" L_f1 p_f[1] : "<<p_f[1]<<" L_f1 p_f[3] : "<<p_f[3]<<std::endl;
+
+                        XYZVector L = L_1.Cross(L_f1);
+                        Double_t L_mag = L.Rho();
+
+                        std::cout<<i<<" "<<j<<" "<<L_mag<<std::endl;
+
+                        if(L_mag>0)
+                        {
+                            XYZVector n = L/(Double_t)L_mag;
+                            Double_t d = TMath::Abs(n.Dot(L_0-L_f0));
+                            if(d<mad){
+                               mad = d;
+                               std::cout<<" New distance of minimum approach : "<<mad<<std::endl;
+                            }
+                        }
+
+                     }
+
+
+       }
+
+
+  return Vertex;
+
 }
 
 void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYplane, Bool_t XZplane){
@@ -520,10 +579,17 @@ Int_t ATHoughSpaceLine::MinimizeTrack(ATTrack* track)
 
              const ROOT::Fit::FitResult & result = fitter.Result();
              const ROOT::Math::Minimizer * min = fitter.GetMinimizer();
-             double sigma2 = 25.0;
+             double sigma2 = 25.0; //Size of the pad
              double Chi2_min = min->MinValue();
              int NDF = min->NFree();
              int npoints = gr->GetN();
+             const double * parFitBuff = result.GetParams();
+             std::vector<Double_t> parFit;
+             for(Int_t i=0;i<4;i++) parFit.push_back(parFitBuff[i]); //4 parameters per fit
+             track->SetFitPar(parFit);
+             track->SetMinimum(Chi2_min);
+             track->SetNFree(NDF);
+             //std::cout<<"  L_1 p[1] : "<<parFit[1]<<" L_1 p[3] : "<<parFit[3]<<std::endl;
  		         //std::cout<<" Chi2 (Minuit) : "<<Chi2_min<<" NDF : "<<NDF<<std::endl;
              //std::cout<<" Chi2 reduced  : "<<(Chi2_min/sigma2/(double) npoints);
 
@@ -565,7 +631,7 @@ Double_t ATHoughSpaceLine::distance2( double x,double y,double z, const double *
     XYZVector x0(p[0], p[2], 0. );
     XYZVector x1(p[0] + p[1], p[2] + p[3], 1. );
     XYZVector u = (x1-x0).Unit();
-    double d2 = ((xp-x0).Cross(u)) .Mag2();
+    double d2 = ((xp-x0).Cross(u)).Mag2();
     return d2;
 }
 

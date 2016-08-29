@@ -52,6 +52,7 @@ class ATHoughSpaceLine : public ATHoughSpace{
   void FillHoughMap(Double_t ang, Double_t dist);
   void SetRadiusThreshold(Float_t value);
   void SetLine(double t, const double *p, double &x, double &y, double &z);
+  Double_t FindVertex(std::vector<ATTrack*> HoughTracks);
 
   Int_t MinimizeTrack(ATTrack* track);
   static double distance2(double x,double y,double z, const double *p);
