@@ -24,6 +24,6 @@ void ATTrack::SetMinimum(Double_t min)                              { fMinimum =
 void ATTrack::SetNFree(Int_t ndf)                                   { fNFree = ndf;}
 
 std::vector<ATHit> *ATTrack::GetHitArray()                          { return &fHitArray;}
-std::vector<Double_t> ATTrack::GetFitPar()                                  { return fParFit;}
+std::vector<Double_t> ATTrack::GetFitPar()                          { return fParFit;}
 Double_t ATTrack::GetMinimum()                                      { return fMinimum;}
 Int_t ATTrack::GetNFree()                                           { return fNFree;}

@@ -35,26 +35,31 @@ class ATHoughSpaceLine : public ATHoughSpace{
 
   template <class GenHough>
   void  CalcGenHoughSpace(GenHough event);
-
-	TH2F* GetHoughSpace(TString ProjPlane);
+  TH2F* GetHoughSpace(TString ProjPlane);
   void CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYplane, Bool_t XZplane);
   void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane);
   void CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4);
   void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multiarray PadCoord);
   void CalcMultiHoughSpace(ATEvent* event);
   void CalcHoughSpace(ATEvent* event);
+
   //TH2F* GetHoughQuadrant(Int_t index);
 	std::pair<Double_t,Double_t> GetHoughParameters(TH2F* hist);
   std::vector<std::pair<Double_t,Double_t>> GetMultiHoughParameters(TH2F* hist);
   std::pair<Double_t,Double_t> GetHoughParameters(); //Overloaded version for std::map
 	std::vector<std::pair<Double_t,Double_t>> GetHoughPar(TString opt="Hist");
   std::vector<Double_t> GetHoughMax();
+  TVector3 GetVertex1();
+  TVector3 GetVertex2();
+  Double_t GetMinimum();//Distance of minumum approach between candidate lines (for the moment only 2)
+  std::vector<ATTrack> GetTrackCand();
+
   void FillHoughMap(Double_t ang, Double_t dist);
   void SetRadiusThreshold(Float_t value);
   void SetLine(double t, const double *p, double &x, double &y, double &z);
   void FindVertex(std::vector<ATTrack*> HoughTracks);
-  TVector3 GetVertex1();
-  TVector3 GetVertex2();
+  void SetTrackCand(ATTrack *track);
+  //void SetTrackCandArray(std::vector<ATTrack> *TrackArray);
 
   Int_t MinimizeTrack(ATTrack* track);
   static double distance2(double x,double y,double z, const double *p);
@@ -110,6 +115,8 @@ class ATHoughSpaceLine : public ATHoughSpace{
         //NB: This member wont be saved in to the root file. If the //! is uncommented the program will crash because the pointers are destroyed after being used
         TVector3 fVertex_1;
         TVector3 fVertex_2;
+        Double_t fMinimum;
+        std::vector<ATTrack> fTrackCand; //Candidate tracks (debugging purposes)
 
 
         std::map<std::vector<Float_t>,Int_t> HoughMap_XZ;

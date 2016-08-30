@@ -627,9 +627,12 @@ ATEventDrawTask::DrawHitPoints()
     gEve -> AddElement(fHitSet);
     gEve -> AddElement(fhitBoxSet);
 
+
     if(fEventManager->GetDrawHoughSpace())
           if(fIsCircularHough)
                   gEve -> AddElement(fHitSetMin);
+          if(fIsLinearHough && fLineArray.size()>0)
+                  for(Int_t i=0;i<fLineArray.size();i++) gEve -> AddElement(fLineArray.at(i));
 
 }
 
@@ -743,18 +746,47 @@ ATEventDrawTask::DrawHSpace()
          }else if(fIsLinearHough){
            fHoughSpace = fHoughSpaceLine_buff->GetHoughSpace("XY");
            std::vector<std::pair<Double_t,Double_t>> LinearHoughPar = fHoughSpaceLine_buff-> GetHoughPar();
-           std::vector<Double_t> LinearHpughMax = fHoughSpaceLine_buff-> GetHoughMax();
+           std::vector<Double_t> LinearHoughMax = fHoughSpaceLine_buff-> GetHoughMax();
            TVector3 Vertex_1 = fHoughSpaceLine_buff->GetVertex1();
            TVector3 Vertex_2 = fHoughSpaceLine_buff->GetVertex2();
+           std::vector<ATTrack> TrackCand = fHoughSpaceLine_buff->GetTrackCand();
 
            std::cout<<std::endl;
            std::cout<<cYELLOW<<"  = Number of lines found by Linear Hough Space : "<<LinearHoughPar.size()<<std::endl;
+
+           int n = 1000;
+           double t0 = 0;
+           double dt = 1000;
+
+           if(TrackCand.size()>0)
+           {
+
+             for(Int_t i=0;i<TrackCand.size();i++){
+                ATTrack track = TrackCand.at(i);
+                std::vector<Double_t> parFit = track.GetFitPar();
+                TEveLine *l = new TEveLine(n);
+                    for (int i = 0; i <n;++i) {
+                      double t = t0+ dt*i/n;
+                      double x,y,z;
+                      SetLine(t,parFit,x,y,z);
+                      l->SetNextPoint(x, y, z);
+                      //l->SetPoint(i,x,y,z);
+                      //std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
+                }
+                    l->SetMainColor(kRed);
+                    //l->Draw("same");
+                    fLineArray.push_back(l);
+
+             }
+
+           }
+
 
             for(Int_t i=0;i<LinearHoughPar.size();i++){
                   std::cout<<cYELLOW<<"  Hough Maximum "<<i<<"  : "<<std::endl;
                   std::cout<<cYELLOW<<"  Hough Angle : "<<LinearHoughPar.at(i).first<<std::endl;
                   std::cout<<cYELLOW<<"  Hough Distance : "<<LinearHoughPar.at(i).second<<std::endl;
-                  std::cout<<cYELLOW<<"  Maximum Bin Content : "<<LinearHpughMax.at(i)<<cNORMAL<<std::endl;
+                  std::cout<<cYELLOW<<"  Maximum Bin Content : "<<LinearHoughMax.at(i)<<cNORMAL<<std::endl;
                   std::cout<<cYELLOW<<"  Vertex 1 -  X : "<<Vertex_1.X()<<"   Y : "<<Vertex_1.Y()<<"  Z : "<<Vertex_1.Z()<<cNORMAL<<std::endl;
                   std::cout<<cYELLOW<<"  Vertex 2 -  X : "<<Vertex_2.X()<<"   Y : "<<Vertex_2.Y()<<"  Z : "<<Vertex_2.Z()<<cNORMAL<<std::endl;
                   std::cout<<std::endl;
@@ -858,6 +890,14 @@ ATEventDrawTask::Reset()
 
               }
       }
+
+      /*else if(fIsLinearHough){
+
+                for(Int_t i=0;i<fLineArray.size();i++){
+                   fLineArray.at(i)->Reset();
+                   gEve -> RemoveElement(fLineArray.at(i),fEventManager);
+                }
+      }*/
     }
 
 
@@ -1562,3 +1602,14 @@ ATEventDrawTask::SetMultiHit(Int_t hitMax) {fMultiHit = hitMax;}
 
 void
 ATEventDrawTask::SetSaveTextData(){ fSaveTextData= kTRUE;}
+
+void ATEventDrawTask::SetLine(double t, std::vector<Double_t> p, double &x, double &y, double &z)
+{
+      // a parameteric line is define from 6 parameters but 4 are independent
+      // x0,y0,z0,z1,y1,z1 which are the coordinates of two points on the line
+      // can choose z0 = 0 if line not parallel to x-y plane and z1 = 1;
+      x = p[0] + p[1]*t;
+      y = p[2] + p[3]*t;
+      z = t;
+
+}

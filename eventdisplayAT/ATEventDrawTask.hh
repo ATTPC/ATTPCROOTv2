@@ -15,6 +15,7 @@
 #include "TEvePointSet.h"
 #include "TEveGeoShape.h"
 #include "TEveBoxSet.h"
+#include "TEveLine.h"
 #include "TClonesArray.h"
 #include "TVector3.h"
 #include "TPaletteAxis.h"
@@ -63,6 +64,7 @@ class ATEventDrawTask : public FairTask
     void Set3DHitStyleBar();
     void Set3DHitStyleBox();
     void SetSaveTextData();
+    void SetLine(double t, std::vector<Double_t> p, double &x, double &y, double &z);
     //void SetHitClusterAttributes(Color_t, Size_t, Style_t);
     //void SetRiemannAttributes(Color_t, Size_t, Style_t);
 
@@ -235,6 +237,8 @@ class ATEventDrawTask : public FairTask
 
     TF1 *fHoughLinearFit;
     ATHit *fIniHit;
+
+    std::vector<TEveLine*> fLineArray;
 
     ClassDef(ATEventDrawTask,1);
 };

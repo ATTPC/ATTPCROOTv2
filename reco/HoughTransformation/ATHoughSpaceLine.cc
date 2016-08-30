@@ -60,6 +60,7 @@ ATHoughSpaceLine::ATHoughSpaceLine()
 
     fVertex_1.SetXYZ(-10000,-10000,-10000);
     fVertex_2.SetXYZ(-10000,-10000,-10000);
+    fMinimum = -1.0;
 
 
 
@@ -72,12 +73,18 @@ ATHoughSpaceLine::~ATHoughSpaceLine()
   //for(Int_t i=0;i<4;i++) delete HistHoughRZ[i];
 }
 
-void ATHoughSpaceLine::SetRadiusThreshold(Float_t value) {fRadThreshold=value;}
-std::vector<Double_t> ATHoughSpaceLine::GetHoughMax()    {return HoughMax;}
-TVector3 ATHoughSpaceLine::GetVertex1()                  {return fVertex_1;}
-TVector3 ATHoughSpaceLine::GetVertex2()                  {return fVertex_2;}
-TH2F* ATHoughSpaceLine::GetHoughSpace(TString ProjPlane) {return HistHoughRZ;}
+std::vector<Double_t> ATHoughSpaceLine::GetHoughMax()                                {return HoughMax;}
+TVector3 ATHoughSpaceLine::GetVertex1()                                              {return fVertex_1;}
+TVector3 ATHoughSpaceLine::GetVertex2()                                              {return fVertex_2;}
+TH2F* ATHoughSpaceLine::GetHoughSpace(TString ProjPlane)                             {return HistHoughRZ;}
+Double_t ATHoughSpaceLine::GetMinimum()                                              {return fMinimum;}
+std::vector<ATTrack> ATHoughSpaceLine::GetTrackCand()                                {return fTrackCand;}
 //TH2F* ATHoughSpaceLine::GetHoughQuadrant(Int_t index) {return HistHoughRZ[index];}
+
+void ATHoughSpaceLine::SetRadiusThreshold(Float_t value)                             {fRadThreshold=value;}
+void ATHoughSpaceLine::SetTrackCand(ATTrack *track)                                  {fTrackCand.push_back(*track);}
+//void ATHoughSpaceLine::SetTrackCandArray(std::vector<ATTrack> *TrackArray)          {fTrackCand = *TrackArray; }
+
 std::vector<std::pair<Double_t,Double_t>> ATHoughSpaceLine::GetHoughPar(TString opt)
 {
   if(opt.EqualTo("Hist")) return HoughPar;
@@ -96,11 +103,13 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
 
         /// Set Options here n(default is Generic hough Space calculation)
         CalcGenHoughSpace(event);
+
+      if(fHoughTracks.size()>1){ //Defined in CalcGenHoughSpace
         for(Int_t ntrack=0;ntrack<fHoughTracks.size();ntrack++)
           MinimizeTrack(fHoughTracks.at(ntrack));
 
         FindVertex(fHoughTracks);
-
+      }
 
 
 }
@@ -111,6 +120,7 @@ void ATHoughSpaceLine::FindVertex(std::vector<ATTrack*> HoughTracks)
   Double_t mad=999999; // Minimum approach distance
   XYZVector c_1(-1000,-1000,-1000);
   XYZVector c_2(-1000,-1000,-1000);
+  //std::vector<ATTrack*> *TrackCand;
 
       //Current  parametrization
       //x = p[0] + p[1]*t;
@@ -149,22 +159,24 @@ void ATHoughSpaceLine::FindVertex(std::vector<ATTrack*> HoughTracks)
                             XYZVector n = L/(Double_t)L_mag;
                             Double_t d = TMath::Abs(n.Dot(L_0-L_f0));
                             if(d<mad){
+                               fTrackCand.clear();
                                mad = d;
                                //std::cout<<" New distance of minimum approach : "<<mad<<std::endl;
                                c_1 = L_0  + ( (L_f0 - L_0).Dot(n_2)*L_1  )/(  L_1.Dot(n_2)   );
                                c_2 = L_f0 + ( (L_0  - L_f0).Dot(n_1)*L_f1 )/(  L_f1.Dot(n_1)  );
                                fVertex_1.SetXYZ(c_1.X(),c_1.Y(),c_1.Z());
                                fVertex_2.SetXYZ(c_2.X(),c_2.Y(),c_2.Z());
+                               fMinimum = mad;
+                               fTrackCand.push_back(*track);
+                               fTrackCand.push_back(*track_f);
 
                             }
                         }
 
-                     }
-
-
-
+                     }// End of track
 
        }
+
 
 
 }

@@ -107,20 +107,20 @@ TString mappath="/data/ar46/run_0085/")
   psaTask -> SetTimeCorrection(kTRUE); //Interpolation around the maximum of the signal peak. Only affect Z calibration at PSA stage
   run -> AddTask(psaTask);
 
-  /*ATHoughTask *HoughTask = new ATHoughTask();
+  ATHoughTask *HoughTask = new ATHoughTask();
 	HoughTask ->SetPersistence();
 	//HoughTask ->SetLinearHough();
 	HoughTask ->SetCircularHough();
   HoughTask ->SetHoughThreshold(100.0); // Charge threshold for Hough
   HoughTask ->SetEnableMap(); //Enables an instance of the ATTPC map
   HoughTask ->SetMap(scriptdir.Data());
-	run -> AddTask(HoughTask);*/
+	run -> AddTask(HoughTask);
 
 
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,100);
+  run->Run(0,20);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
