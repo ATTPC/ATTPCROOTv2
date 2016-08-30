@@ -58,6 +58,9 @@ ATHoughSpaceLine::ATHoughSpaceLine()
     HoughParSTD.clear();
     HoughMax.clear();
 
+    fVertex_1.SetXYZ(-10000,-10000,-10000);
+    fVertex_2.SetXYZ(-10000,-10000,-10000);
+
 
 
 }
@@ -71,7 +74,8 @@ ATHoughSpaceLine::~ATHoughSpaceLine()
 
 void ATHoughSpaceLine::SetRadiusThreshold(Float_t value) {fRadThreshold=value;}
 std::vector<Double_t> ATHoughSpaceLine::GetHoughMax()    {return HoughMax;}
-
+TVector3 ATHoughSpaceLine::GetVertex1()                  {return fVertex_1;}
+TVector3 ATHoughSpaceLine::GetVertex2()                  {return fVertex_2;}
 TH2F* ATHoughSpaceLine::GetHoughSpace(TString ProjPlane) {return HistHoughRZ;}
 //TH2F* ATHoughSpaceLine::GetHoughQuadrant(Int_t index) {return HistHoughRZ[index];}
 std::vector<std::pair<Double_t,Double_t>> ATHoughSpaceLine::GetHoughPar(TString opt)
@@ -101,10 +105,12 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
 
 }
 
-Double_t ATHoughSpaceLine::FindVertex(std::vector<ATTrack*> HoughTracks)
+void ATHoughSpaceLine::FindVertex(std::vector<ATTrack*> HoughTracks)
 {
-  Double_t Vertex;
+
   Double_t mad=999999; // Minimum approach distance
+  XYZVector c_1(-1000,-1000,-1000);
+  XYZVector c_2(-1000,-1000,-1000);
 
       //Current  parametrization
       //x = p[0] + p[1]*t;
@@ -117,8 +123,8 @@ Double_t ATHoughSpaceLine::FindVertex(std::vector<ATTrack*> HoughTracks)
 
           ATTrack* track = fHoughTracks.at(i);
           std::vector<Double_t> p = track->GetFitPar();
-          XYZVector L_0(p[0], p[2], 0. );
-          XYZVector L_1(p[1], p[3], 1. );
+          XYZVector L_0(p[0], p[2], 0. );//p1
+          XYZVector L_1(p[1], p[3], 1. );//d1
 
           //std::cout<<" L_1 p[1] : "<<p[1]<<" L_1 p[3] : "<<p[3]<<std::endl;
 
@@ -126,15 +132,17 @@ Double_t ATHoughSpaceLine::FindVertex(std::vector<ATTrack*> HoughTracks)
                     {
                         ATTrack* track_f = fHoughTracks.at(j);
                         std::vector<Double_t> p_f = track_f->GetFitPar();
-                        XYZVector L_f0(p_f[0], p_f[2], 0. );
-                        XYZVector L_f1(p_f[1], p_f[3], 1. );
+                        XYZVector L_f0(p_f[0], p_f[2], 0. );//p2
+                        XYZVector L_f1(p_f[1], p_f[3], 1. );//d2
 
                         //std::cout<<" L_f1 p_f[1] : "<<p_f[1]<<" L_f1 p_f[3] : "<<p_f[3]<<std::endl;
 
                         XYZVector L = L_1.Cross(L_f1);
                         Double_t L_mag = L.Rho();
+                        XYZVector n_1 = L_1.Cross(L);
+                        XYZVector n_2 = L_f1.Cross(L);
 
-                        std::cout<<i<<" "<<j<<" "<<L_mag<<std::endl;
+                        //std::cout<<i<<" "<<j<<" "<<L_mag<<std::endl;
 
                         if(L_mag>0)
                         {
@@ -142,17 +150,22 @@ Double_t ATHoughSpaceLine::FindVertex(std::vector<ATTrack*> HoughTracks)
                             Double_t d = TMath::Abs(n.Dot(L_0-L_f0));
                             if(d<mad){
                                mad = d;
-                               std::cout<<" New distance of minimum approach : "<<mad<<std::endl;
+                               //std::cout<<" New distance of minimum approach : "<<mad<<std::endl;
+                               c_1 = L_0  + ( (L_f0 - L_0).Dot(n_2)*L_1  )/(  L_1.Dot(n_2)   );
+                               c_2 = L_f0 + ( (L_0  - L_f0).Dot(n_1)*L_f1 )/(  L_f1.Dot(n_1)  );
+                               fVertex_1.SetXYZ(c_1.X(),c_1.Y(),c_1.Z());
+                               fVertex_2.SetXYZ(c_2.X(),c_2.Y(),c_2.Z());
+
                             }
                         }
 
                      }
 
 
+
+
        }
 
-
-  return Vertex;
 
 }
 

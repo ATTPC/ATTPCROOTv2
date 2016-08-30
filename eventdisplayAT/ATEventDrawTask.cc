@@ -744,6 +744,9 @@ ATEventDrawTask::DrawHSpace()
            fHoughSpace = fHoughSpaceLine_buff->GetHoughSpace("XY");
            std::vector<std::pair<Double_t,Double_t>> LinearHoughPar = fHoughSpaceLine_buff-> GetHoughPar();
            std::vector<Double_t> LinearHpughMax = fHoughSpaceLine_buff-> GetHoughMax();
+           TVector3 Vertex_1 = fHoughSpaceLine_buff->GetVertex1();
+           TVector3 Vertex_2 = fHoughSpaceLine_buff->GetVertex2();
+
            std::cout<<std::endl;
            std::cout<<cYELLOW<<"  = Number of lines found by Linear Hough Space : "<<LinearHoughPar.size()<<std::endl;
 
@@ -752,6 +755,8 @@ ATEventDrawTask::DrawHSpace()
                   std::cout<<cYELLOW<<"  Hough Angle : "<<LinearHoughPar.at(i).first<<std::endl;
                   std::cout<<cYELLOW<<"  Hough Distance : "<<LinearHoughPar.at(i).second<<std::endl;
                   std::cout<<cYELLOW<<"  Maximum Bin Content : "<<LinearHpughMax.at(i)<<cNORMAL<<std::endl;
+                  std::cout<<cYELLOW<<"  Vertex 1 -  X : "<<Vertex_1.X()<<"   Y : "<<Vertex_1.Y()<<"  Z : "<<Vertex_1.Z()<<cNORMAL<<std::endl;
+                  std::cout<<cYELLOW<<"  Vertex 2 -  X : "<<Vertex_2.X()<<"   Y : "<<Vertex_2.Y()<<"  Z : "<<Vertex_2.Z()<<cNORMAL<<std::endl;
                   std::cout<<std::endl;
 
 

@@ -52,7 +52,9 @@ class ATHoughSpaceLine : public ATHoughSpace{
   void FillHoughMap(Double_t ang, Double_t dist);
   void SetRadiusThreshold(Float_t value);
   void SetLine(double t, const double *p, double &x, double &y, double &z);
-  Double_t FindVertex(std::vector<ATTrack*> HoughTracks);
+  void FindVertex(std::vector<ATTrack*> HoughTracks);
+  TVector3 GetVertex1();
+  TVector3 GetVertex2();
 
   Int_t MinimizeTrack(ATTrack* track);
   static double distance2(double x,double y,double z, const double *p);
@@ -106,6 +108,8 @@ class ATHoughSpaceLine : public ATHoughSpace{
         Int_t fYbinRZ;
         std::vector<ATTrack*> fHoughTracks; //!
         //NB: This member wont be saved in to the root file. If the //! is uncommented the program will crash because the pointers are destroyed after being used
+        TVector3 fVertex_1;
+        TVector3 fVertex_2;
 
 
         std::map<std::vector<Float_t>,Int_t> HoughMap_XZ;
