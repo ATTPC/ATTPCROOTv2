@@ -211,7 +211,7 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
 
   //std::cout<<HitBuffer.size()<<std::endl;
 
-  for(Int_t i=0;i<5;i++){ //NB: Only 5 lines allowed right now
+  for(Int_t i=0;i<5;i++){ //NB: Only 5 lines allowed right now (TEve Draw Taks must be changed if this number changes otherwise we will have a pitfall)
 
     track = new ATTrack();
     HistHoughRZ->Reset();

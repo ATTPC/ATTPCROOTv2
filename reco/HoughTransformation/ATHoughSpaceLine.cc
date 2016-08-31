@@ -614,7 +614,8 @@ Int_t ATHoughSpaceLine::MinimizeTrack(ATTrack* track)
              track->SetFitPar(parFit);
              track->SetMinimum(Chi2_min);
              track->SetNFree(NDF);
-             //std::cout<<"  L_1 p[1] : "<<parFit[1]<<" L_1 p[3] : "<<parFit[3]<<std::endl;
+
+             //std::cout<<parFit[0]<<" "<<parFit[1]<<"  "<<parFit[2]<<" "<<parFit[3]<<std::endl;
  		         //std::cout<<" Chi2 (Minuit) : "<<Chi2_min<<" NDF : "<<NDF<<std::endl;
              //std::cout<<" Chi2 reduced  : "<<(Chi2_min/sigma2/(double) npoints);
 

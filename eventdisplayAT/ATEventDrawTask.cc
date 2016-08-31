@@ -134,11 +134,12 @@ ATEventDrawTask::ATEventDrawTask()
 	 }
 
     fIsCircularHough=kFALSE;
-    fIsLinearHough=kTRUE;
+    fIsLinearHough=kFALSE;
     fIsRawData=kFALSE;
 
     fHoughLinearFit =new TF1("HoughLinearFit"," (  (-TMath::Cos([0])/TMath::Sin([0]))*x ) + [1]/TMath::Sin([0])",0,500);
     fIniHit = new ATHit();
+    fLineNum = 0;
 
 }
 
@@ -382,6 +383,48 @@ ATEventDrawTask::DrawHitPoints()
   fHitSetMin->SetMarkerStyle(fHitStyle);
 
    }
+  }
+
+
+
+  if(fEventManager->GetDrawHoughSpace()){
+
+        if(fIsLinearHough){
+          //fLineArray.clear();
+          for(Int_t i=0;i<5;i++) fLineArray[i] = new TEveLine();
+          int n = 100;
+          double t0 = 0;
+          double dt = 1000;
+          std::vector<ATTrack> TrackCand = fHoughSpaceLine_buff->GetTrackCand();
+          fLineNum = TrackCand.size();
+          if(TrackCand.size()>0)
+          {
+
+            for(Int_t j=0;j<TrackCand.size();j++){
+               fLineArray[j] = new TEveLine();
+               ATTrack track = TrackCand.at(j);
+               std::vector<Double_t> parFit = track.GetFitPar();
+               fLineArray[j]->SetMainColor(kRed);
+               for (int i = 0; i <n;++i) {
+                     double t = t0+ dt*i/n;
+                     double x,y,z;
+                     SetLine(t,parFit,x,y,z);
+                     fLineArray[j]->SetNextPoint(x, y, z);
+
+                     //fLineArray.push_back(fLine);
+                     //l->SetPoint(i,x,y,z);
+                     //std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
+               }
+
+
+            }
+
+          }
+
+
+
+        }
+
   }
 
 
@@ -631,8 +674,13 @@ ATEventDrawTask::DrawHitPoints()
     if(fEventManager->GetDrawHoughSpace())
           if(fIsCircularHough)
                   gEve -> AddElement(fHitSetMin);
-          if(fIsLinearHough && fLineArray.size()>0)
-                  for(Int_t i=0;i<fLineArray.size();i++) gEve -> AddElement(fLineArray.at(i));
+
+
+          if(fIsLinearHough )
+              if(fLineNum>0) for(Int_t i=0;i<fLineNum;i++) gEve -> AddElement(fLineArray[i]);
+
+                  // gEve -> AddElement(fLine);
+                  //if(fLineArray.size()>0) gEve -> AddElement(fLineArray.at(0));
 
 }
 
@@ -749,37 +797,39 @@ ATEventDrawTask::DrawHSpace()
            std::vector<Double_t> LinearHoughMax = fHoughSpaceLine_buff-> GetHoughMax();
            TVector3 Vertex_1 = fHoughSpaceLine_buff->GetVertex1();
            TVector3 Vertex_2 = fHoughSpaceLine_buff->GetVertex2();
-           std::vector<ATTrack> TrackCand = fHoughSpaceLine_buff->GetTrackCand();
+           //std::vector<ATTrack> TrackCand = fHoughSpaceLine_buff->GetTrackCand();
 
            std::cout<<std::endl;
            std::cout<<cYELLOW<<"  = Number of lines found by Linear Hough Space : "<<LinearHoughPar.size()<<std::endl;
 
-           int n = 1000;
-           double t0 = 0;
-           double dt = 1000;
+           //int n = 1000;
+           //double t0 = 0;
+           //double dt = 1000;
 
-           if(TrackCand.size()>0)
+
+           /*if(TrackCand.size()>0)
            {
 
              for(Int_t i=0;i<TrackCand.size();i++){
                 ATTrack track = TrackCand.at(i);
                 std::vector<Double_t> parFit = track.GetFitPar();
-                TEveLine *l = new TEveLine(n);
+                //std::cout<<cRED<<parFit[0]<<" "<<parFit[1]<<" "<<parFit[2]<<" "<<parFit[3]<<cNORMAL<<std::endl;
+                TEveLine* line = new TEveLine(n);
                     for (int i = 0; i <n;++i) {
                       double t = t0+ dt*i/n;
                       double x,y,z;
                       SetLine(t,parFit,x,y,z);
-                      l->SetNextPoint(x, y, z);
+                      line->SetNextPoint(x, y, z);
                       //l->SetPoint(i,x,y,z);
                       //std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
                 }
-                    l->SetMainColor(kRed);
+                    line->SetMainColor(kRed);
                     //l->Draw("same");
-                    fLineArray.push_back(l);
+                    fLineArray.push_back(fLine);
 
              }
 
-           }
+           }*/
 
 
             for(Int_t i=0;i<LinearHoughPar.size();i++){
@@ -891,13 +941,24 @@ ATEventDrawTask::Reset()
               }
       }
 
-      /*else if(fIsLinearHough){
+      else if(fIsLinearHough){
 
-                for(Int_t i=0;i<fLineArray.size();i++){
-                   fLineArray.at(i)->Reset();
-                   gEve -> RemoveElement(fLineArray.at(i),fEventManager);
-                }
-      }*/
+                /*if(fLine){
+                  fLine->Reset();
+                  gEve -> RemoveElement(fLine,fEventManager);
+                }*/
+
+
+              if(fLineNum>0){
+                for(Int_t i=0;i<fLineNum;i++){
+                    if(fLineArray[i]){
+                      gEve -> RemoveElement(fLineArray[i],fEventManager);
+                    }
+                  }
+
+              }
+              
+      }
     }
 
 
@@ -1608,8 +1669,8 @@ void ATEventDrawTask::SetLine(double t, std::vector<Double_t> p, double &x, doub
       // a parameteric line is define from 6 parameters but 4 are independent
       // x0,y0,z0,z1,y1,z1 which are the coordinates of two points on the line
       // can choose z0 = 0 if line not parallel to x-y plane and z1 = 1;
-      x = p[0] + p[1]*t;
-      y = p[2] + p[3]*t;
-      z = t;
+      x = (p[0] + p[1]*t)/10.0;
+      y = (p[2] + p[3]*t)/10.0;
+      z = t/10.0;
 
 }
