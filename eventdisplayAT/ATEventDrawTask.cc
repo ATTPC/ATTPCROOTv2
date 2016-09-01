@@ -394,8 +394,9 @@ ATEventDrawTask::DrawHitPoints()
           for(Int_t i=0;i<5;i++) fLineArray[i] = new TEveLine();
           int n = 100;
           double t0 = 0;
-          double dt = 1000;
+          double dt = 2000;
           std::vector<ATTrack> TrackCand = fHoughSpaceLine_buff->GetTrackCand();
+          std::cout<<cRED<<" Found "<<TrackCand.size()<<" track candidates "<<cNORMAL<<std::endl;
           fLineNum = TrackCand.size();
           if(TrackCand.size()>0)
           {
@@ -413,7 +414,7 @@ ATEventDrawTask::DrawHitPoints()
 
                      //fLineArray.push_back(fLine);
                      //l->SetPoint(i,x,y,z);
-                     //std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
+                     std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
                }
 
 
@@ -957,7 +958,7 @@ ATEventDrawTask::Reset()
                   }
 
               }
-              
+
       }
     }
 

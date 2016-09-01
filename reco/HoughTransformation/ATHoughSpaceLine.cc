@@ -61,6 +61,7 @@ ATHoughSpaceLine::ATHoughSpaceLine()
     fVertex_1.SetXYZ(-10000,-10000,-10000);
     fVertex_2.SetXYZ(-10000,-10000,-10000);
     fMinimum = -1.0;
+    fLineDistThreshold = 3.0;
 
 
 
@@ -107,8 +108,7 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
       if(fHoughTracks.size()>1){ //Defined in CalcGenHoughSpace
         for(Int_t ntrack=0;ntrack<fHoughTracks.size();ntrack++)
           MinimizeTrack(fHoughTracks.at(ntrack));
-
-        FindVertex(fHoughTracks);
+          FindVertex(fHoughTracks);
       }
 
 
@@ -132,48 +132,88 @@ void ATHoughSpaceLine::FindVertex(std::vector<ATTrack*> HoughTracks)
       for(Int_t i=0;i<fHoughTracks.size()-1;i++){
 
           ATTrack* track = fHoughTracks.at(i);
+          track->SetTrackID(i);
           std::vector<Double_t> p = track->GetFitPar();
+
+        if(p.size()>0)
+        {
           XYZVector L_0(p[0], p[2], 0. );//p1
           XYZVector L_1(p[1], p[3], 1. );//d1
 
+          //std::cout<<" L_1 p[0] : "<<p[0]<<" L_1 p[2] : "<<p[2]<<std::endl;
           //std::cout<<" L_1 p[1] : "<<p[1]<<" L_1 p[3] : "<<p[3]<<std::endl;
 
                     for(Int_t j=i+1; j<fHoughTracks.size();j++)
                     {
                         ATTrack* track_f = fHoughTracks.at(j);
+                        track_f->SetTrackID(j);
                         std::vector<Double_t> p_f = track_f->GetFitPar();
-                        XYZVector L_f0(p_f[0], p_f[2], 0. );//p2
-                        XYZVector L_f1(p_f[1], p_f[3], 1. );//d2
 
-                        //std::cout<<" L_f1 p_f[1] : "<<p_f[1]<<" L_f1 p_f[3] : "<<p_f[3]<<std::endl;
-
-                        XYZVector L = L_1.Cross(L_f1);
-                        Double_t L_mag = L.Rho();
-                        XYZVector n_1 = L_1.Cross(L);
-                        XYZVector n_2 = L_f1.Cross(L);
-
-                        //std::cout<<i<<" "<<j<<" "<<L_mag<<std::endl;
-
-                        if(L_mag>0)
+                        if(p_f.size()>0)
                         {
-                            XYZVector n = L/(Double_t)L_mag;
-                            Double_t d = TMath::Abs(n.Dot(L_0-L_f0));
-                            if(d<mad){
-                               fTrackCand.clear();
-                               mad = d;
-                               //std::cout<<" New distance of minimum approach : "<<mad<<std::endl;
-                               c_1 = L_0  + ( (L_f0 - L_0).Dot(n_2)*L_1  )/(  L_1.Dot(n_2)   );
-                               c_2 = L_f0 + ( (L_0  - L_f0).Dot(n_1)*L_f1 )/(  L_f1.Dot(n_1)  );
-                               fVertex_1.SetXYZ(c_1.X(),c_1.Y(),c_1.Z());
-                               fVertex_2.SetXYZ(c_2.X(),c_2.Y(),c_2.Z());
-                               fMinimum = mad;
-                               fTrackCand.push_back(*track);
-                               fTrackCand.push_back(*track_f);
+                                      XYZVector L_f0(p_f[0], p_f[2], 0. );//p2
+                                      XYZVector L_f1(p_f[1], p_f[3], 1. );//d2
 
-                            }
-                        }
+                                      //std::cout<<" L_f1 p_f[1] : "<<p_f[1]<<" L_f1 p_f[3] : "<<p_f[3]<<std::endl;
 
+                                      XYZVector L = L_1.Cross(L_f1);
+                                      Double_t L_mag = L.Rho();
+                                      XYZVector n_1 = L_1.Cross(L);
+                                      XYZVector n_2 = L_f1.Cross(L);
+                                      c_1 = L_0  + ( (L_f0 - L_0).Dot(n_2)*L_1  )/(  L_1.Dot(n_2)   );
+                                      c_2 = L_f0 + ( (L_0  - L_f0).Dot(n_1)*L_f1 )/(  L_f1.Dot(n_1)  );
+
+                                      //std::cout<<i<<" "<<j<<" "<<L_mag<<std::endl;
+
+                                      if(L_mag>0)
+                                      {
+                                          XYZVector n = L/(Double_t)L_mag;
+                                          Double_t d = TMath::Abs(n.Dot(L_0-L_f0));
+                                          //std::cout<<" Distance of minimum approach : "<<d<<std::endl;
+
+
+                                          if(d<mad){
+
+                                             mad = d;
+                                             //std::cout<<" New distance of minimum approach : "<<mad<<std::endl;
+                                             fVertex_1.SetXYZ(c_1.X(),c_1.Y(),c_1.Z());
+                                             fVertex_2.SetXYZ(c_2.X(),c_2.Y(),c_2.Z());
+                                             fMinimum = mad;
+                                             if ( !CheckTrackID(track->GetTrackID(),fTrackCand) ) fTrackCand.push_back(*track);
+                                             if ( !CheckTrackID(track_f->GetTrackID(),fTrackCand) )  fTrackCand.push_back(*track_f);
+
+
+
+                                          }
+
+                                         if(d<fLineDistThreshold)
+                                          {
+
+
+
+                                             if ( !CheckTrackID(track->GetTrackID(),fTrackCand) ){
+                                              //std::cout<<" Add track"<<track->GetTrackID()<<std::endl;
+                                              fTrackCand.push_back(*track);
+                                            }
+
+                                             if ( !CheckTrackID(track_f->GetTrackID(),fTrackCand) ){
+                                              //std::cout<<" Add track f"<<track_f->GetTrackID()<<std::endl;
+                                              fTrackCand.push_back(*track_f);
+                                             }
+                                          }
+
+
+
+
+                                      }
+
+                                      //for(Int_t i=0;i<fTrackCand.size();i++)
+                                          //std::cout<<fTrackCand.at(i).GetTrackID()<<std::endl;
+
+
+                        }//p_f size
                      }// End of track
+            }//p size
 
        }
 
@@ -669,5 +709,18 @@ void ATHoughSpaceLine::SetLine(double t, const double *p, double &x, double &y, 
       x = p[0] + p[1]*t;
       y = p[2] + p[3]*t;
       z = t;
+
+}
+
+Bool_t ATHoughSpaceLine::CheckTrackID(Int_t trackID, std::vector<ATTrack> trackArray)
+{
+  auto it =  find_if( trackArray.begin(),trackArray.end(),[&trackID](ATTrack& track) {return track.GetTrackID()==trackID;}   );
+  if(it != trackArray.end()){
+     auto hitInd = std::distance<std::vector<ATTrack>::const_iterator>(trackArray.begin(),it);
+     return kTRUE;
+  }
+  else return kFALSE;
+
+
 
 }

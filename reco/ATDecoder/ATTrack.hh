@@ -24,6 +24,7 @@ class ATTrack : public TObject {
     std::vector<Double_t> GetFitPar();
     Double_t GetMinimum();
     Int_t GetNFree();
+    Int_t GetTrackID();
 
 
   protected:

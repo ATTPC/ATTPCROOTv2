@@ -117,6 +117,7 @@ class ATHoughSpaceLine : public ATHoughSpace{
         TVector3 fVertex_2;
         Double_t fMinimum;
         std::vector<ATTrack> fTrackCand; //Candidate tracks (debugging purposes)
+        Int_t fLineDistThreshold;
 
 
         std::map<std::vector<Float_t>,Int_t> HoughMap_XZ;
@@ -128,6 +129,8 @@ class ATHoughSpaceLine : public ATHoughSpace{
         std::map<ULong64_t,Int_t> HoughMap; //8 byte for the key, unsigned, no negative distance in Linear Hough space is expected for each quadrant (Radius and Z are the vairbales)
         std::vector<ULong64_t> HoughMapKey;
         std::vector<Double_t> HoughMax;
+
+        Bool_t CheckTrackID(Int_t trackID, std::vector<ATTrack> trackArray); //Check if Track ID is in the list
 
         struct maxpersecond
         {

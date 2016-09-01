@@ -27,3 +27,4 @@ std::vector<ATHit> *ATTrack::GetHitArray()                          { return &fH
 std::vector<Double_t> ATTrack::GetFitPar()                          { return fParFit;}
 Double_t ATTrack::GetMinimum()                                      { return fMinimum;}
 Int_t ATTrack::GetNFree()                                           { return fNFree;}
+Int_t ATTrack::GetTrackID()                                         { return fTrackID;}
