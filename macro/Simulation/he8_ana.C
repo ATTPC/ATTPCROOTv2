@@ -7,7 +7,7 @@
 #include <fstream>
 
 
-void he8_ana(Int_t num_ev=10000)
+void he8_ana(Int_t num_ev=500)
 {
 
     TH2D *Eloss_vs_Range_Sca = new TH2D("Eloss_vs_Range_Sca","ELoss_vs_Range_Sca",100,0,1000,300,0,300);
@@ -54,7 +54,7 @@ void he8_ana(Int_t num_ev=10000)
 
 
 
-
+/*
     TCanvas *c1 = new TCanvas();
     c1->Divide(2,2);
     c1->Draw();
@@ -81,8 +81,8 @@ void he8_ana(Int_t num_ev=10000)
 
     TCanvas *c7 = new TCanvas();
     c7-> Draw();
-
-    TString mcFileNameHead = "data/attpcsim_8He_elas";
+*/
+    TString mcFileNameHead = "data/attpcsim_proto";
     TString mcFileNameTail = ".root";
     TString mcFileName     = mcFileNameHead + mcFileNameTail;
     std:cout << " Analysis of simulation file  " << mcFileName << endl;
@@ -140,11 +140,11 @@ void he8_ana(Int_t num_ev=10000)
             //std::cout<<" Volume Name : "<<VolName<<std::endl;
             Int_t trackID = point -> GetTrackID();
 
-	   // if(i==0){
-	//	zpos=point->GetZ();
-               // std::cout<<" Z pos : "<<zpos<<std::endl;
+	    //if(i==0){
+		//zpos=point->GetZ();
+                //std::cout<<" Z pos : "<<zpos<<std::endl;
 		//std::cout<<" Track ID : "<<trackID<<std::endl;
-	 //   }
+	    //}
             //std::cout<<" Track ID : "<<trackID<<std::endl;
             //std::cout<<" Point number : "<<i<<std::endl;
             if(trackID==0 && VolName.Contains("IC_")){
@@ -289,9 +289,11 @@ void he8_ana(Int_t num_ev=10000)
 
     }//number of events
 
+
+  Eloss_vs_Range_Rec->Draw();
     //c4->cd(1);
     //rad->Draw();
-
+/*
     c1->cd(1);
     Eloss_vs_Range_Sca->Draw("scat");
     c1->cd(2);
@@ -332,6 +334,6 @@ void he8_ana(Int_t num_ev=10000)
       Range_vs_Energy_Rec->Draw();
       c6->cd(3);
       Range_vs_Energy_Beam->Draw();
-
+*/
 
 }

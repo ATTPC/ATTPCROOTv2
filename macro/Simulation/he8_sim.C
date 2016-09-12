@@ -1,4 +1,4 @@
-void he8_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
+void he8_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -157,14 +157,36 @@ void he8_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
 
                   Double_t ThetaMinCMS = 0.0;
                   Double_t ThetaMaxCMS = 180.0;
+		Int_t N_cross = 6560;
+		std::vector<Double_t> Arr1(N_cross), Arr2(N_cross), Arr3(N_cross);
+		Double_t col1, col2, col3;
 
+	//lee la seccion eficaz desde una tabla
+	string filename= "all2.dat";
+	ifstream  inputfile;
+	inputfile. open(filename.c_str());
+      	if(inputfile.fail() ){
+                       cerr << "error abriendo "<< filename << endl;
+ 			exit(1);
+                      }  
+
+	for(Int_t i=0;i<N_cross;i++){
+		inputfile >> col1 >> col2 >> col3 ;
+		Arr1.at(i) = col1;
+		Arr2.at(i) = col2;
+		Arr3.at(i) = col3;
+		}
+	inputfile.close();
+ 
 
         ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
+	
         primGen->AddGenerator(TwoBody);
 
+	
 
 	run->SetGenerator(primGen);
-
+	//ATTPC_d2He* d2He = new ATTPC_d2He("d2He",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
 // ------------------------------------------------------------------------
 
   //---Store the visualiztion info of the tracks, this make the output file very large!!

@@ -270,7 +270,17 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 
          }
 
+	/*
+	//solo por curiosidad
+	 std::cout<<"======================================================================"<<std::endl;
+	 std::cout<<" Current Decay particle count : "<<gATVP->GetDecayEvtCnt()<<std::endl;
+	 std::cout<<" Current Beam particle count :  "<<gATVP->GetBeamEvtCnt()<<std::endl;
+	 std::cout<<"fTrackID : "<<fTrackID<<std::endl;
+	 std::cout<<"======================================================================"<<std::endl;
+	*/
 	}// if track
+
+	
 
 	    if( gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0) { // We assume that the beam-like particle is fTrackID==0 since it is the first one added
 														//  in the Primary Generator
@@ -334,8 +344,8 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 		       fTime,
 		       fLength,
 		       fELoss,
-		       gATVP->GetRecoilE(),
-		       gATVP->GetRecoilA(),
+		       gATVP->GetBURes1E(),
+		       gATVP->GetBURes1A(),
            AZ.first,
            AZ.second);
 
@@ -356,8 +366,8 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
        fTime,
        fLength,
        fELoss,
-       0.0,
-       0.0,
+       gATVP->GetBURes2E(),
+       gATVP->GetBURes2A(),
        AZ.first,
        AZ.second);
 

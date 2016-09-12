@@ -10,7 +10,7 @@
 # (called from Root macro Config.C)
 
 
-#/mcPhysics/rangeCuts 0.01 mm
+/mcPhysics/rangeCuts 0.01 mm
 
 /cuts/setLowEdge  100 eV
 /cuts/setHighEdge   10 GeV

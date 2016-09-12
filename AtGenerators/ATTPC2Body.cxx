@@ -475,7 +475,6 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
 
   gATVP->IncDecayEvtCnt();  //TODO: Okay someone should put a more suitable name but we are on a hurry...
 
-
   return kTRUE;
 
 }
