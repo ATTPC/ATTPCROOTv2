@@ -24,8 +24,9 @@
 #include "ATTrack.hh"
 
 
-using namespace ROOT::Math;
 
+using namespace ROOT::Math;
+class ATHit;
 
 class ATHoughSpaceLine : public ATHoughSpace{
 
@@ -147,6 +148,7 @@ class ATHoughSpaceLine : public ATHoughSpace{
 };
 
 // Template that works for any AT container with Hits inside. It works on the X-Z projection for the time being
+#include "ATHit.hh"
 template <class GenHough>
 void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
 {
@@ -168,7 +170,7 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
         Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
 
 
-        Int_t itheta=0;
+      Int_t itheta=0;
         for(itheta = 0; itheta <1023; itheta++){
               Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
               Float_t d0_RZ = (TMath::Cos(angle)*position.X())  +  (TMath::Sin(angle)*hit->GetTimeStamp()); // posZCal can be replaced anytime by position.Z()
@@ -303,7 +305,7 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
         }
 
 
-
+ 
 
 
 

@@ -280,7 +280,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 	*/
 	}// if track
 
-	
+
 
 	    if( gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0) { // We assume that the beam-like particle is fTrackID==0 since it is the first one added
 														//  in the Primary Generator
@@ -344,8 +344,8 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 		       fTime,
 		       fLength,
 		       fELoss,
-		       gATVP->GetBURes1E(),
-		       gATVP->GetBURes1A(),
+           gATVP->GetRecoilE(),
+		       gATVP->GetRecoilA(),
            AZ.first,
            AZ.second);
 

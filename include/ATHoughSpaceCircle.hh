@@ -28,6 +28,8 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multiarray PadCoord);
         void CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4);
         void CalcMultiHoughSpace(ATEvent* event);
+        void CalcHoughSpace(ATEvent* event);
+
         Double_t GetXCenter() {return fXCenter;}
         Double_t GetYCenter() {return fYCenter;}
         std::vector<Double_t>* GetRadiusDist() {return fRadius;}

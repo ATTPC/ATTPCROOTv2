@@ -103,7 +103,7 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
 {
 
         /// Set Options here n(default is Generic hough Space calculation)
-        CalcGenHoughSpace(event);
+        CalcGenHoughSpace<ATEvent*>(event);
 
       if(fHoughTracks.size()>1){ //Defined in CalcGenHoughSpace
         for(Int_t ntrack=0;ntrack<fHoughTracks.size();ntrack++)

@@ -15,13 +15,13 @@
 #include "TError.h"
 #include "TMinuit.h"
 
-#include "../../include/ATEvent.hh"
-#include "../../include/ATHit.hh"
-#include "../../include/ATProtoEvent.hh"
-#include "../../include/ATProtoEventAna.hh"
-#include "../../include/ATAnalysis.hh"
-#include "../../include/ATHoughSpaceLine.hh"
-#include "../../include/ATHoughSpaceCircle.hh"
+//#include "../../include/ATEvent.hh"
+//#include "../../include/ATHit.hh"
+//#include "../../include/ATProtoEvent.hh"
+//#include "../../include/ATProtoEventAna.hh"
+//#include "../../include/ATAnalysis.hh"
+//#include "../../include/ATHoughSpaceLine.hh"
+//#include "../../include/ATHoughSpaceCircle.hh"
 
 #include <ios>
 #include <iostream>
@@ -201,7 +201,8 @@ void run_plot(TString FileNameHead = "output_proto",TString fileKine="../Kinemat
                 Kine_AngRec_AngSca_vert->Draw("C");
                 Kine_AngRec_AngSca2->Draw("C");
                 Kine_AngRec_AngSca_vert2->Draw("C");
-                cutg3->Draw("l");
+                cutg->Draw("l");
+
 
 
               //  c3->cd(2);

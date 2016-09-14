@@ -110,28 +110,28 @@ void Mg20_ana(Int_t num_ev=10000)
         Double_t range_sca=0.0;
         Double_t energyLoss_rec=0.0;
         Double_t range_rec=0.0;
-	    Double_t range_beam=0.0;
+	      Double_t range_beam=0.0;
         Double_t BeamEnergyLoss_IC=0.0;
         Double_t EnergyRecoil = 0.0;
-	    Double_t EnergyBeam=0.0;
+	      Double_t EnergyBeam=0.0;
         Double_t EnergySca=0.0;
         Double_t AngleRecoil = 0.0;
         Double_t AngleSca = 0.0;
-	Double_t zpos = 0.0;
-	Double_t xpos = 0.0;
+	      Double_t zpos = 0.0;
+	      Double_t xpos = 0.0;
         Double_t radius=0.0;
-	Double_t radmean=0.0;
-	Double_t thetamean=0.0;
-	Double_t theta=0.0;
+	      Double_t radmean=0.0;
+	      Double_t thetamean=0.0;
+	      Double_t theta=0.0;
         Int_t n2=0;
-	Int_t nrad=0;
+	      Int_t nrad=0;
 
         TString VolName;
         tree->GetEvent(iEvent);
         // tree -> GetEntry(iEvent);
         Int_t n = pointArray -> GetEntries();
         std::cout<<" Event Number : "<<iEvent<<std::endl;
-	rad->Reset();
+	      rad->Reset();
 
         for(Int_t i=0; i<n; i++) {
 
@@ -156,24 +156,25 @@ void Mg20_ana(Int_t num_ev=10000)
 
 	      if(trackID==0 && VolName=="drift_volume"){
                 vertex=point->GetZ()*10;
-				range_beam=point -> GetLength()*10;//mm
-				EnergyBeam=point -> GetEIni();
-               // std::cout<<" Vertex : "<<vertex<<std::endl;
+				        range_beam=point -> GetLength()*10;//mm
+				        EnergyBeam=point -> GetEIni();
+                // std::cout<<" Vertex : "<<vertex<<std::endl;
 
             	}
 
 
 
             if(trackID==2 && VolName=="drift_volume"){ //RECOIL
-		        n2++;
+		            n2++;
                 range_rec = point -> GetLength()*10; //mm
                 energyLoss_rec+=( point -> GetEnergyLoss() )*1000;//MeV
                 EnergyRecoil= point->GetEIni();
+                std::cout<<EnergyRecoil<<std::endl;
                 AngleRecoil= point->GetAIni();
-		        zpos=point->GetZ()*10;
-		        xpos=point->GetXIn()*10;
+		            zpos=point->GetZ()*10;
+		            xpos=point->GetXIn()*10;
 		//if(AngleRecoil>65 && AngleRecoil<70 && vertex>200.0 && vertex<210.0 && zpos>200.0 ){
-			tracks->Fill(zpos,xpos);
+			          tracks->Fill(zpos,xpos);
 		//}
 
 

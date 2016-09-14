@@ -49,13 +49,17 @@ class ATHoughSpace : public TObject
 				 virtual void CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4)=0;
 				 virtual void CalcHoughSpace(ATEvent* event, TH2Poly* hPadPlane,multiarray PadCoord)=0;
 				 virtual void CalcMultiHoughSpace(ATEvent* event)=0;
+				 virtual void CalcHoughSpace(ATEvent* event)=0; //General Main Hough Space function
 
 				 void SetThreshold(Double_t value);
+				 void SetHoughDistance(Double_t value);
 
    protected:
 
 
 		  Double_t fThreshold;
+			Double_t fHoughDist;
+			Double_t fHoughMaxThreshold;
 
 
 		ClassDef(ATHoughSpace, 2);
