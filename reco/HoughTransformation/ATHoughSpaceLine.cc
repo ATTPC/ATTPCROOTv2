@@ -103,7 +103,10 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
 {
 
         /// Set Options here n(default is Generic hough Space calculation)
-        CalcGenHoughSpace<ATEvent*>(event);
+        std::vector<ATTrack*> YZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"YZ");
+        std::vector<ATTrack*> XZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"XZ");
+        (XZ_tracks.size()>YZ_tracks.size() ? fHoughTracks=XZ_tracks : fHoughTracks=YZ_tracks);
+
 
       if(fHoughTracks.size()>1){ //Defined in CalcGenHoughSpace
         for(Int_t ntrack=0;ntrack<fHoughTracks.size();ntrack++)
@@ -116,6 +119,10 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
 
 void ATHoughSpaceLine::FindVertex(std::vector<ATTrack*> HoughTracks)
 {
+
+  // Assumes the minimum distance between two lines, with respect a given threshold, the first vertex candidate. Then evaluates the
+  // distance of each remaining line with respect to the others (vertex) to decide the particles of the reaction.
+
 
   Double_t mad=999999; // Minimum approach distance
   XYZVector c_1(-1000,-1000,-1000);

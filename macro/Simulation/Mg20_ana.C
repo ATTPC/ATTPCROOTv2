@@ -169,7 +169,6 @@ void Mg20_ana(Int_t num_ev=10000)
                 range_rec = point -> GetLength()*10; //mm
                 energyLoss_rec+=( point -> GetEnergyLoss() )*1000;//MeV
                 EnergyRecoil= point->GetEIni();
-                std::cout<<EnergyRecoil<<std::endl;
                 AngleRecoil= point->GetAIni();
 		            zpos=point->GetZ()*10;
 		            xpos=point->GetXIn()*10;

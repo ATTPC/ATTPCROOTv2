@@ -126,7 +126,7 @@ TString mappath="/data/ar46/run_0085/")
 	HoughTask ->SetLinearHough();
 	//HoughTask ->SetCircularHough();
   HoughTask ->SetHoughThreshold(100.0); // Charge threshold for Hough
-  HoughTask ->SetHoughDistance(7.0);//This is the distance to reject points from a given linear Hough Space
+  HoughTask ->SetHoughDistance(5.0);//This is the distance to reject points from a given linear Hough Space
 	run -> AddTask(HoughTask);
 
 

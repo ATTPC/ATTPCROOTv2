@@ -113,6 +113,7 @@ find_package(HEPMC)
 find_package(HDF5)
 find_package(OpenMP)
 find_package(CUDA)
+find_package(PCL REQUIRED)
 
 
 Set(Boost_NO_SYSTEM_PATHS TRUE)
