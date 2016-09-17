@@ -113,7 +113,7 @@ find_package(HEPMC)
 find_package(HDF5)
 find_package(OpenMP)
 find_package(CUDA)
-find_package(PCL REQUIRED)
+find_package(PCL)
 
 
 Set(Boost_NO_SYSTEM_PATHS TRUE)
@@ -182,6 +182,10 @@ if (OPENMP_FOUND)
    # set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS_DEBUG} ${OpenMP_C_FLAGS}")
    # set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_DEBUG} ${OpenMP_CXX_FLAGS}")
 
+endif()
+
+if (PCL_FOUND)
+    MESSAGE("-- PCL Support Found")
 endif()
 
 Generate_Version_Info()

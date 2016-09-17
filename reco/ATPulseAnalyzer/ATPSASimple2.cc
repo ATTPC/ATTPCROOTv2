@@ -208,7 +208,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
       if(iPeak==0) QEventTot+=QHitTot; //Sum only if Hit is valid - We only sum once (iPeak==0) to account for the whole spectrum.
 
-    
+
       /*HitPosRot = r * TVector3(xPos,yPos,zPos); // 1.- Rotate the pad plane
       xPosCorr = CalculateXCorr(HitPosRot.X(),maxAdcIdx);// 2.- Correct for the Lorentz transformation
       yPosCorr = CalculateYCorr(HitPosRot.Y(),maxAdcIdx);
