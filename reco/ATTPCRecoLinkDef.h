@@ -44,6 +44,7 @@
 #pragma link C++ class ATHoughSpace+;
 #pragma link C++ class ATHoughSpaceLine+;
 #pragma link C++ class ATHoughSpaceCircle+;
+//#pragma link C++ class ATHoughSpaceLine3D+;
 
 #pragma link C++ class ATPhiReco+;
 #pragma link C++ class ATPhiRecoSimple+;

@@ -26,6 +26,7 @@ include_directories(${INCLUDE_DIRECTORIES})
 set(LINK_DIRECTORIES
 ${ROOT_LIBRARY_DIR}
 ${FAIRROOT_LIBRARY_DIR}
+${Boost_LIBRARY_DIRS}
 )
 
 link_directories(${LINK_DIRECTORIES})
@@ -100,6 +101,12 @@ ATAnalysisTask.cc
 
 )
 
+# Adding libraries that depend on PCL
+#if (PCL_FOUND)
+#set(SRCS ${SRCS} HoughTransformation/ATHoughSpaceLine3D.cc
+#)
+#endif()
+
 CHANGE_FILE_EXTENSION(*.cc *.hh HEADERS "${SRCS}")
 
 Set(LINKDEF ATTPCRecoLinkDef.h)
@@ -114,6 +121,13 @@ Set(DEPENDENCIES
     AtTpcMap
     ATPar
     Spectrum
+    ${Boost_LOG_LIBRARY}
+    ${Boost_LOG_SETUP_LIBRARY}
+    ${Boost_THREAD_LIBRARY}
+    ${Boost_THREAD_LIBRARY}
+    ${Boost_DATE_TIME_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY}
 
 )
 

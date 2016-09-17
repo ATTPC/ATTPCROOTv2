@@ -23,11 +23,6 @@
 //ATTPCROOT
 #include "ATTrack.hh"
 
-//#include <pcl/io/pcd_io.h>
-
-
-
-using namespace ROOT::Math;
 class ATHit;
 
 class ATHoughSpaceLine : public ATHoughSpace{

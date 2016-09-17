@@ -16,6 +16,8 @@
 
 ClassImp(ATHoughSpaceLine)
 
+using namespace ROOT::Math;
+
 ATHoughSpaceLine::ATHoughSpaceLine()
 {
 
