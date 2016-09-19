@@ -189,7 +189,7 @@ endif()
 
 if (PCL_FOUND)
     MESSAGE("-- PCL Support Found")
-    MESSAGE(${PCL_INCLUDE_DIRS})
+#   MESSAGE(${PCL_INCLUDE_DIRS})
 endif()
 
 if(VTK_FOUND)

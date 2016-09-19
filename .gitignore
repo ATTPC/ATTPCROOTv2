@@ -29,6 +29,12 @@ build
 *.la
 *.a
 
+# Compressed packages
+*.tar.bz2
+*.tar.gz
+*.zip
+
+
 # CMake
 CMakeCache.txt
 CMakeFiles
