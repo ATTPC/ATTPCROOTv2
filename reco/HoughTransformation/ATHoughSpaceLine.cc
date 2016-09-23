@@ -105,9 +105,15 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
 {
 
         /// Set Options here n(default is Generic hough Space calculation)
-        std::vector<ATTrack*> YZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"YZ");
-        std::vector<ATTrack*> XZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"XZ");
+        std::vector<ATTrack*> YZ_tracks;
+        std::vector<ATTrack*> XZ_tracks;
+
+          YZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"YZ");
+          XZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"XZ");
+
+
         (XZ_tracks.size()>YZ_tracks.size() ? fHoughTracks=XZ_tracks : fHoughTracks=YZ_tracks);
+
 
 
       if(fHoughTracks.size()>1){ //Defined in CalcGenHoughSpace

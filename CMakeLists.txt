@@ -194,7 +194,7 @@ endif()
 
 if(VTK_FOUND)
    MESSAGE("-- VTK Support Found")
-   MESSAGE(${VTK_INCLUDE_DIRS})
+#   MESSAGE(${VTK_INCLUDE_DIRS})
 endif()
 
 Generate_Version_Info()

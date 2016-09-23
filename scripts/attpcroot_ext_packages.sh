@@ -10,3 +10,6 @@ export FLANN_VERSION=1.8.4
 
 export EIGEN_LOCATION="http://bitbucket.org/eigen/eigen/get/3.2.9.tar.bz2"
 export EIGEN_VERSION=3.2.9
+
+export PCL_LOCATION="https://github.com/PointCloudLibrary/pcl/archive/pcl-1.8.0.tar.gz"
+export PCL_VERSION=1.8.0
