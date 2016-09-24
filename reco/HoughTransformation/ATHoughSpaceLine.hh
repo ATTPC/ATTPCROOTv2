@@ -332,8 +332,6 @@ std::vector<ATTrack*> ATHoughSpaceLine::CalcGenHoughSpace(GenHough event,ProjPla
           //}
         }
 
-
-
         return HoughTracks;
 
 

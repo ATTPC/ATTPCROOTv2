@@ -105,12 +105,30 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
 {
 
         /// Set Options here n(default is Generic hough Space calculation)
+        omp_set_num_threads(2);
+
         std::vector<ATTrack*> YZ_tracks;
         std::vector<ATTrack*> XZ_tracks;
+        int threadId;
 
-          YZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"YZ");
-          XZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"XZ");
 
+        // This is a working example of a parallelized block (class needs refactoring)
+        /*#pragma omp parallel private(threadId) shared(event)
+        {
+
+          threadId = omp_get_thread_num();
+          if(threadId==1) {YZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"YZ"); std::cout<<" Thread number : "<<threadId<<std::endl;}
+          if(threadId==0) {XZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"XZ");std::cout<<" Thread number : "<<threadId<<std::endl;}
+          std::cout<<" ============= "<<std::endl;
+
+
+        }*/
+
+        YZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"YZ");
+        HistHoughRZ->Reset();
+        HoughMax.clear();
+        HoughPar.clear();
+        XZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"XZ");
 
         (XZ_tracks.size()>YZ_tracks.size() ? fHoughTracks=XZ_tracks : fHoughTracks=YZ_tracks);
 

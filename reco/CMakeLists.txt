@@ -1,5 +1,6 @@
 # Create a library called "libATReco" which includes the source files given in the array .
 
+
 set(INCLUDE_DIRECTORIES
 ${ROOT_INCLUDE_DIR}
 ${Boost_INCLUDE_DIRS}
@@ -102,10 +103,9 @@ ATAnalysisTask.cc
 )
 
 # Adding libraries that depend on PCL
-#if (PCL_FOUND)
-#set(SRCS ${SRCS} HoughTransformation/ATHoughSpaceLine3D.cc
-#)
-#endif()
+if (PCL_FOUND)
+set(SRCS ${SRCS} HoughTransformation/ATHoughSpaceLine3D.cc)
+endif()
 
 CHANGE_FILE_EXTENSION(*.cc *.hh HEADERS "${SRCS}")
 

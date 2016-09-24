@@ -44,7 +44,10 @@
 #pragma link C++ class ATHoughSpace+;
 #pragma link C++ class ATHoughSpaceLine+;
 #pragma link C++ class ATHoughSpaceCircle+;
-//#pragma link C++ class ATHoughSpaceLine3D+;
+
+//#ifdef BUILD_PCL
+#pragma link C++ class ATHoughSpaceLine3D+;
+//#endif
 
 #pragma link C++ class ATPhiReco+;
 #pragma link C++ class ATPhiRecoSimple+;
@@ -70,5 +73,8 @@
 #pragma link C++ class ATProtoAnalysis+;
 #pragma link C++ struct ATHoughSpaceCircle::FitPar+;
 //#pragma link C++ function ATHoughSpaceLine::CalcGenHoughSpace<ATEvent*>(GenHough event);
+
+#pragma link C++ class ATHoughSpaceLine3D::Sphere+;
+#pragma link C++ struct vector3D;
 
 #endif
