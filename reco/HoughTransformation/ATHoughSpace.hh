@@ -32,6 +32,31 @@
 
 #include "TObject.h"
 
+
+#include "mmprivate.h"
+#undef BLOCKSIZE
+// Needed to avoid clash with FLANN library
+//PCL
+//#include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/io/pcd_io.h>
+#include <pcl/point_types.h>
+#include <pcl/filters/statistical_outlier_removal.h>
+#include <pcl/filters/impl/statistical_outlier_removal.hpp>
+#include <pcl/filters/voxel_grid.h>
+#include <pcl/filters/impl/voxel_grid.hpp>
+#include <pcl/features/normal_3d.h>
+#include <pcl/features/impl/normal_3d.hpp>
+#include <pcl/kdtree/kdtree_flann.h>
+#include <pcl/kdtree/impl/kdtree_flann.hpp>
+#include <pcl/search/organized.h>
+#include <pcl/search/impl/organized.hpp>
+#include <pcl/search/flann_search.h>
+#include <pcl/search/impl/flann_search.hpp>
+#include <pcl/filters/filter.h>
+#include <pcl/filters/impl/filter.hpp>
+#include <pcl/filters/filter_indices.h>
+#include <pcl/filters/impl/filter_indices.hpp>
+
 class ATHoughSpace : public TObject
 {
 

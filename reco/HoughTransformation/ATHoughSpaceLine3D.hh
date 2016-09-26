@@ -31,13 +31,13 @@
 
 //ATTPCROOT
 #include "ATTrack.hh"
-#include "mmprivate.h"
-#undef BLOCKSIZE
-// Needed to avoid clash with FLANN library
 
+//#include "mmprivate.h"
+//#undef BLOCKSIZE
+// Needed to avoid clash with FLANN library
 //PCL
 //#include <pcl/visualization/pcl_visualizer.h>
-#include <pcl/io/pcd_io.h>
+/*#include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <pcl/filters/statistical_outlier_removal.h>
 #include <pcl/filters/impl/statistical_outlier_removal.hpp>
@@ -54,7 +54,8 @@
 #include <pcl/filters/filter.h>
 #include <pcl/filters/impl/filter.hpp>
 #include <pcl/filters/filter_indices.h>
-#include <pcl/filters/impl/filter_indices.hpp>
+#include <pcl/filters/impl/filter_indices.hpp>*/
+
 
 #include <math.h>
 #include <iostream>
@@ -142,7 +143,7 @@ class ATHoughSpaceLine3D : public ATHoughSpace{
      unsigned int threshold = 1, double step_b = M_PI / 45, double step_plane = 1, unsigned int max_n = 0);
 
   static void lineTransform3D_Tesselation(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::vector<std::pair<vector3D, vector3D> > &lines,
-    unsigned int threshold = 1, unsigned char platonic_solid = HOUGH_ICOSAHEDRON, unsigned char granularity_b = 4, double step_plane = 1, unsigned int max_n = 0);
+    unsigned int threshold = 1, unsigned char platonic_solid = HOUGH_ICOSAHEDRON, unsigned char granularity_b = 3, double step_plane = 3, unsigned int max_n = 10);
 
   static void lineTransform3D_Tesselation_weighted(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::vector<double> &weights, std::vector<std::pair<vector3D, vector3D> > &lines,
     unsigned int threshold = 1, unsigned char platonic_solid = HOUGH_ICOSAHEDRON, unsigned char granularity_b = 4, double step_plane = 1, unsigned int max_n = 0);

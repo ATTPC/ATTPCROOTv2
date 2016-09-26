@@ -1,4 +1,5 @@
 #include "ATHoughSpaceLine.hh"
+#include "ATHoughSpaceLine3D.hh"
 #include "TCanvas.h"
 #include "Fit/Fitter.h"
 #ifdef _OPENMP
@@ -105,7 +106,7 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
 {
 
         /// Set Options here n(default is Generic hough Space calculation)
-        omp_set_num_threads(2);
+        /*omp_set_num_threads(2);
 
         std::vector<ATTrack*> YZ_tracks;
         std::vector<ATTrack*> XZ_tracks;
@@ -113,16 +114,16 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
 
 
         // This is a working example of a parallelized block (class needs refactoring)
-        /*#pragma omp parallel private(threadId) shared(event)
-        {
+        //#pragma omp parallel private(threadId) shared(event)
+        //{
 
-          threadId = omp_get_thread_num();
-          if(threadId==1) {YZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"YZ"); std::cout<<" Thread number : "<<threadId<<std::endl;}
-          if(threadId==0) {XZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"XZ");std::cout<<" Thread number : "<<threadId<<std::endl;}
-          std::cout<<" ============= "<<std::endl;
+          //threadId = omp_get_thread_num();
+          //if(threadId==1) {YZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"YZ"); std::cout<<" Thread number : "<<threadId<<std::endl;}
+          //if(threadId==0) {XZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"XZ");std::cout<<" Thread number : "<<threadId<<std::endl;}
+          //std::cout<<" ============= "<<std::endl;
 
 
-        }*/
+        //}
 
         YZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"YZ");
         HistHoughRZ->Reset();
@@ -138,8 +139,29 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
         for(Int_t ntrack=0;ntrack<fHoughTracks.size();ntrack++)
           MinimizeTrack(fHoughTracks.at(ntrack));
           FindVertex(fHoughTracks);
+      }*/
+
+      Int_t nHits = event->GetNumHits();
+      pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
+      cloud->reserve(nHits);
+      std::vector<std::pair<vector3D, vector3D> > lines;
+      ATHoughSpaceLine3D *hough3D = new ATHoughSpaceLine3D();
+      for(Int_t i=0;i<nHits;i++){
+        ATHit* hit = event->GetHit(i);
+        TVector3 position = hit->GetPosition();
+        pcl::PointXYZRGB p;
+        p.x = position.X();
+        p.y = position.Y();
+        p.z = position.Z();
+        p.r = 0;
+        p.g = 0;
+        p.b = 0;
+        cloud->push_back(p);
       }
 
+      hough3D->lineTransform3D_Tesselation(cloud,lines,10);
+
+      std::cout<<" Lines found : "<<lines.size()<<std::endl;
 
 }
 

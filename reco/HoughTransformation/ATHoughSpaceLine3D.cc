@@ -557,11 +557,11 @@ void ATHoughSpaceLine3D::lineTransform3D(pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
 
 
     // view directional vectors
-    pcl::PointCloud<pcl::PointXYZ>::Ptr normals(new pcl::PointCloud<pcl::PointXYZ>);
+    /*pcl::PointCloud<pcl::PointXYZ>::Ptr normals(new pcl::PointCloud<pcl::PointXYZ>);
     for(size_t i = 0; i < b_vectors.size(); i++) {
         normals->push_back(pcl::PointXYZ(b_vectors[i].x, b_vectors[i].y, b_vectors[i].z));
     }
-    /*pcl::visualization::PCLVisualizer viewer("directionalVectors");
+    pcl::visualization::PCLVisualizer viewer("directionalVectors");
     viewer.addPointCloud(normals);
     viewer.addCoordinateSystem(1.0);
     viewer.initCameraParameters();
@@ -651,6 +651,7 @@ void ATHoughSpaceLine3D::lineTransform3D(pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
         p.z = x * -b.x                              + y * -b.y;
 
         //  add line as point and orientation
+        std::cout<<"  Votes : "<<votes[i].first<<" Anchor point : "<<p.x<<" "<<p.y<<" "<<p.z<<" Orientation vector :  "<<b.x<<" "<<b.y<<" "<<b.z<<std::endl;
         lines.push_back(std::pair<vector3D, vector3D>(p, b));
     }
 }
@@ -800,6 +801,8 @@ void ATHoughSpaceLine3D::lineTransform3D_Tesselation(pcl::PointCloud<pcl::PointX
     } else {
         return;
     }
+
+    std::cout<<" We are here "<<std::endl;
 
     ATHoughSpaceLine3D::lineTransform3D(cloud, lines, threshold, sphere, step_plane, max_n);
 }
