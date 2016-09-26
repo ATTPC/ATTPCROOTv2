@@ -654,3 +654,422 @@ void ATHoughSpaceLine3D::lineTransform3D(pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
         lines.push_back(std::pair<vector3D, vector3D>(p, b));
     }
 }
+
+void ATHoughSpaceLine3D::lineTransform3D_weighted(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::vector<double> &weights, std::vector<std::pair<vector3D, vector3D> > &lines, unsigned int threshold, Sphere *sphere, double step_plane, unsigned int max_n)  {
+    std::vector<double> sin_theta, cos_theta, sin_phi, cos_phi;
+    unsigned int num_b, num_plane;
+
+    std::vector<vector3D> b_vectors;
+    b_vectors = sphere->vertices;
+    num_b = b_vectors.size();
+
+    //  plane coordinates range and indices
+    pcl::PointXYZRGB minP, maxP;
+    pcl::getMinMax3D<pcl::PointXYZRGB>(*cloud, minP, maxP);
+    double minDist = sqrt((minP.x * minP.x) + (minP.y * minP.y) + (minP.z * minP.z));
+    double maxDist = sqrt((maxP.x * maxP.x) + (maxP.y * maxP.y) + (maxP.z * maxP.z));
+    double dist = std::max(minDist, maxDist);
+    double range_plane = 2 * dist;
+    num_plane = roundToNearest(range_plane / step_plane);
+
+
+    // view directional vectors
+    pcl::PointCloud<pcl::PointXYZ>::Ptr normals(new pcl::PointCloud<pcl::PointXYZ>);
+    for(size_t i = 0; i < b_vectors.size(); i++) {
+        normals->push_back(pcl::PointXYZ(b_vectors[i].x, b_vectors[i].y, b_vectors[i].z));
+    }
+    /*pcl::visualization::PCLVisualizer viewer("directionalVectors");
+    viewer.addPointCloud(normals);
+    viewer.addCoordinateSystem(1.0);
+    viewer.initCameraParameters();
+    viewer.resetCamera();
+    viewer.spin();*/
+
+    // Create voting space
+    std::vector<double> VotingSpace;
+    try {
+        VotingSpace.resize(num_plane * num_plane * num_b);
+    } catch(const std::exception &e) {
+        std::cout << std::endl << "Voting Space too big!" << std::endl;
+        std::cout << e.what() << std::endl;
+        return;
+    }
+
+    std::cout << "Number of directional vectors: " << num_b << std::endl;
+    std::cout << "Plane coordinate range: " << num_plane << std::endl;
+    std::cout << "voting space size: " << num_plane *num_plane *num_b *sizeof(double) / 1024 / 1024 << " MB" << std::endl;
+
+    for(size_t i = 0; i < cloud->size(); i++) {
+        for(size_t j = 0; j < b_vectors.size(); j++) {
+            pcl::PointXYZRGB p;
+            p = cloud->at(i);
+
+            vector3D b;
+            b = b_vectors[j];
+
+            double beta = 1 / (1 + b.z);
+            double x_new = ((1 - (beta * b.x * b.x)) * p.x) - (beta * b.x * b.y * p.y) - (b.x * p.z);
+            double y_new = (-beta * b.x * b.y * p.x) + ((1 - (beta * b.y * b.y)) * p.y) - (b.y * p.z);
+
+            size_t x_i = roundToNearest((x_new + dist) / step_plane);
+            size_t y_i = roundToNearest((y_new + dist) / step_plane);
+
+            size_t index = (x_i * num_plane * num_b) + (y_i * num_b) + j;
+            //VotingSpace[index]++;
+            VotingSpace[index] += weights[i];
+        }
+    }
+
+    if(max_n > 1) {
+        ATHoughSpaceLine3D::nonmaximumSupression(VotingSpace, sphere->vertices, sphere->triangles, num_b, num_plane, 8, 4);
+    }
+
+
+    //  get votes above threshold in votes vector for sorting
+    std::vector<std::pair<double, size_t> > votes;
+    for(size_t i = 0; i < VotingSpace.size(); i++) {
+        if(VotingSpace[i] >= threshold) {
+            votes.push_back(std::pair<double, size_t>(VotingSpace[i], i));
+        }
+    }
+
+    std::vector<double>().swap(VotingSpace); // delete voting space (no longer needed)
+
+
+    if(max_n > 0 && votes.size() > max_n) {
+        // partition, so that nth line is on correct position
+        std::nth_element(votes.begin(), votes.begin() + votes.size() - max_n, votes.end()); // backward nth_element
+        // cut off lines with less votes than nth line
+        std::vector<std::pair<double, size_t> >(votes.begin() + votes.size() - max_n, votes.end()).swap(votes); // backwards resize()
+    }
+    // sort remaining lines in descending order
+    std::sort(votes.rbegin(), votes.rend());
+
+    lines.clear();
+    for(size_t i = 0; i < votes.size(); i++) {
+        vector3D p, b;
+        int index = votes[i].second; // retrieve voting-space index
+        if(i < 4) {
+            std::cout << "test:" << votes[i].first << std::endl;
+        }
+        float x = (int) index / num_plane / num_b; // retrieve x-coordinate index
+        index -= x * num_plane * num_b;
+        x = (x - dist) * step_plane;    //retrieve x-coordinate
+
+        float y = (int) index / num_b;  // retrieve y-coordinate index
+        index -= y * num_b;
+        y = (y - dist) * step_plane;    // retrieve y-coordinate
+
+        size_t bi = index;  // retrieve directional vector index
+        b = b_vectors[bi];  // retrieve directional vector
+
+        //  compute Point in 3D space
+        p.x = x * (1 - ((b.x * b.x) / (1 + b.z)))   + y * (-(b.x * b.y) / (1 + b.z));
+        p.y = x * (-((b.x * b.y) / (1 + b.z)))      + y * (1 - ((b.y * b.y) / (1 + b.z)));
+        p.z = x * -b.x                              + y * -b.y;
+
+        //  add line as point and orientation
+        lines.push_back(std::pair<vector3D, vector3D>(p, b));
+    }
+}
+
+void ATHoughSpaceLine3D::lineTransform3D_fibonacciSphere(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::vector<std::pair<vector3D, vector3D> > &lines, unsigned int threshold, unsigned int n_directionalVectors, double step_plane, unsigned int max_n) {
+    //  Compute directional vectors
+    Sphere *sphere = new Sphere();
+    sphere->fromFibonacciSphere(n_directionalVectors);
+
+    ATHoughSpaceLine3D::lineTransform3D(cloud, lines, threshold, sphere, step_plane, max_n);
+}
+
+void ATHoughSpaceLine3D::lineTransform3D_azimuthElevation(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::vector<std::pair<vector3D, vector3D> > &lines, unsigned int threshold, double step_b, double step_plane, unsigned int max_n) {
+    //  Compute directional vectors
+    Sphere *sphere = new Sphere();
+    sphere->fromAzimuthAndElevationUniqueHalfSphere(step_b);
+
+    ATHoughSpaceLine3D::lineTransform3D(cloud, lines, threshold, sphere, step_plane, max_n);
+}
+
+
+void ATHoughSpaceLine3D::lineTransform3D_Tesselation(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::vector<std::pair<vector3D, vector3D> > &lines, unsigned int threshold, unsigned char platonic_solid, unsigned char granularity_b, double step_plane, unsigned int max_n) {
+    //  Compute directional vectors
+    Sphere *sphere = new Sphere();
+    if(platonic_solid == HOUGH_OCTAHEDRON) {
+        sphere->fromOctahedron(granularity_b);
+    } else if(platonic_solid == HOUGH_ICOSAHEDRON) {
+        sphere->fromIcosahedron(granularity_b);
+    } else {
+        return;
+    }
+
+    ATHoughSpaceLine3D::lineTransform3D(cloud, lines, threshold, sphere, step_plane, max_n);
+}
+
+void ATHoughSpaceLine3D::lineTransform3D_Tesselation_weighted(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::vector<double> &weights, std::vector<std::pair<vector3D, vector3D> > &lines, unsigned int threshold, unsigned char platonic_solid, unsigned char granularity_b, double step_plane, unsigned int max_n) {
+    //  Compute directional vectors
+    Sphere *sphere = new Sphere();
+    if(platonic_solid == HOUGH_OCTAHEDRON) {
+        sphere->fromOctahedron(granularity_b);
+    } else if(platonic_solid == HOUGH_ICOSAHEDRON) {
+        sphere->fromIcosahedron(granularity_b);
+    } else {
+        return;
+    }
+
+    ATHoughSpaceLine3D::lineTransform3D_weighted(cloud, weights, lines, threshold, sphere, step_plane, max_n);
+}
+
+
+void ATHoughSpaceLine3D::nonmaximumSupression_AE(std::vector<unsigned int> &VotingSpace, Sphere *sphere, unsigned int num_b, unsigned int num_plane, int n, int k) {
+    std::vector<unsigned int> VotingSpaceNew = VotingSpace;
+
+    pcl::PointCloud<pcl::PointXYZ>::Ptr normals(new pcl::PointCloud<pcl::PointXYZ>);
+    for(size_t i = 0; i < sphere->vertices.size(); i++) {
+        normals->push_back(pcl::PointXYZ(sphere->vertices[i].x, sphere->vertices[i].y, sphere->vertices[i].z));
+    }
+
+    std::vector< std::vector<int> > neighbourG;
+    pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
+    kdtree.setInputCloud(normals);
+    int K = k;
+    std::vector<int> pointIdxNKNSearch(K);
+    std::vector<float> pointNKNSquaredDistance(K);
+    for(size_t i = 0; i < normals->size(); i++) {
+        kdtree.nearestKSearch(normals->at(i), K, pointIdxNKNSearch, pointNKNSquaredDistance);
+        neighbourG.push_back(pointIdxNKNSearch);
+    }
+
+    n = n / 2;
+    for(size_t k = 0; k < VotingSpace.size(); k++) {
+        unsigned int val = VotingSpace[k];
+        if(val == 0) {
+            continue;
+        }
+        size_t index = k;
+        float x_i = (int) index / num_plane / num_b; // retrieve x-coordinate index
+        index -= x_i * num_plane * num_b;
+
+        float y_i = (int) index / num_b;  // retrieve y-coordinate index
+        index -= y_i * num_b;
+
+        size_t b_i = index;  // retrieve directional vector index
+
+
+
+
+        // view directional vectors
+        /*
+        normals->clear();
+        std::vector<int>::iterator it = neighbourG[b_i].begin();
+        for(; it != neighbourG[b_i].end(); it++) {
+            normals->push_back(pcl::PointXYZ(sphere->vertices[*it].x, sphere->vertices[*it].y, sphere->vertices[*it].z));
+        }
+        pcl::visualization::PCLVisualizer viewer("directionalVectors");
+        viewer.addPointCloud(normals);
+        viewer.addCoordinateSystem(1.0);
+        viewer.initCameraParameters();
+        viewer.resetCamera();
+        viewer.spin();
+        */
+
+        for(int dx = -n; dx <= n; dx++) {
+            if(x_i + dx >= 0 && x_i + dx < num_plane) {
+                for(int dy = -n; dy <= n; dy++) {
+                    if(y_i + dy >= 0 && y_i + dy < num_plane) {
+                        //cout << "original : (" << x_i << "/" << y_i << ")   neu: (" << x_i + dx  << "/" << y_i + dy << ")" << endl;
+                        std::vector<int>::iterator it = neighbourG[b_i].begin();
+                        for(; it != neighbourG[b_i].end(); it++) {
+                            if(*it == b_i && dx == 0 && dy == 0) {
+                                continue;
+                            }
+                            size_t index_n = ((x_i + dx) * num_plane * num_b) + ((y_i + dy) * num_b) + *it; //retrieve neighbour's index
+                            if(VotingSpace[k] <= VotingSpace[index_n]) {
+                                VotingSpaceNew[k] = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    VotingSpaceNew.swap(VotingSpace);
+}
+
+void ATHoughSpaceLine3D::nonmaximumSupression(std::vector<unsigned int> &VotingSpace, std::vector<vector3D> &vertices, std::deque<unsigned int> &triangles, unsigned int num_b, unsigned int num_plane, int n, int r) {
+    std::vector<unsigned int> VotingSpaceNew = VotingSpace;
+
+    std::vector<std::set<unsigned int> > neighbourG;
+    if(triangles.size() != 0) {
+        neighbourG.resize(vertices.size());
+        for(int i = 0; i < triangles.size(); i += 3) { // find neighbours
+            unsigned int a = triangles[i];
+            unsigned int b = triangles[i + 1];
+            unsigned int c = triangles[i + 2];
+
+            neighbourG[a].insert(a);
+            neighbourG[a].insert(b);
+            neighbourG[a].insert(c);
+            neighbourG[b].insert(a);
+            neighbourG[b].insert(b);
+            neighbourG[b].insert(c);
+            neighbourG[c].insert(a);
+            neighbourG[c].insert(b);
+            neighbourG[c].insert(c);
+        }
+    }
+    n = n / 2;
+    for(size_t k = 0; k < VotingSpace.size(); k++) {
+        unsigned int val = VotingSpace[k];
+        if(val == 0) {
+            continue;
+        }
+        size_t index = k;
+        float x_i = (int) index / num_plane / num_b; // retrieve x-coordinate index
+        index -= x_i * num_plane * num_b;
+
+        float y_i = (int) index / num_b;  // retrieve y-coordinate index
+        index -= y_i * num_b;
+
+        size_t b_i = index;  // retrieve directional vector index
+
+        std::set<unsigned int> neighbours;
+        if(triangles.size() != 0) {
+            neighbours.insert(neighbourG[b_i].begin(), neighbourG[b_i].end());
+            for(int rr = 1; rr < r; rr++) { // expand neighbourhood bei neighbours of neighbours r times
+                std::set<unsigned int> newN;
+                std::set<unsigned int>::iterator it = neighbours.begin();
+                for(; it != neighbours.end(); it++) {
+                    newN.insert(neighbourG[*it].begin(), neighbourG[*it].end());
+                }
+                neighbours.insert(newN.begin(), newN.end());
+            }
+        } else {
+            neighbours.insert(b_i);
+        }
+
+        /*
+        // view directional vectors
+        pcl::PointCloud<pcl::PointXYZ>::Ptr normals(new pcl::PointCloud<pcl::PointXYZ>);
+        std::set<unsigned int>::iterator it = neighbours.begin();
+        for(; it != neighbours.end(); it++) {
+            normals->push_back(pcl::PointXYZ(vertices[*it].x, vertices[*it].y, vertices[*it].z));
+        }
+        pcl::visualization::PCLVisualizer viewer("directionalVectors");
+        viewer.addPointCloud(normals);
+        viewer.addCoordinateSystem(1.0);
+        viewer.initCameraParameters();
+        viewer.resetCamera();
+        viewer.spin();
+        */
+
+        for(int dx = -n; dx <= n; dx++) {
+            if(x_i + dx >= 0 && x_i + dx < num_plane) {
+                for(int dy = -n; dy <= n; dy++) {
+                    if(y_i + dy >= 0 && y_i + dy < num_plane) {
+                        //cout << "original : (" << x_i << "/" << y_i << ")   neu: (" << x_i + dx  << "/" << y_i + dy << ")" << endl;
+                        std::set<unsigned int>::iterator it = neighbours.begin();
+                        for(; it != neighbours.end(); it++) {
+                            if(*it == b_i && dx == 0 && dy == 0) {
+                                continue;
+                            }
+                            size_t index_n = ((x_i + dx) * num_plane * num_b) + ((y_i + dy) * num_b) + *it; //retrieve neighbour's index
+                            if(VotingSpace[k] <= VotingSpace[index_n]) {
+                                VotingSpaceNew[k] = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    VotingSpaceNew.swap(VotingSpace);
+}
+
+void ATHoughSpaceLine3D::nonmaximumSupression(std::vector<double> &VotingSpace, std::vector<vector3D> &vertices, std::deque<unsigned int> &triangles, unsigned int num_b, unsigned int num_plane, int n, int r) {
+    std::vector<double> VotingSpaceNew = VotingSpace;
+
+    std::vector<std::set<unsigned int> > neighbourG;
+    if(triangles.size() != 0) {
+        neighbourG.resize(vertices.size());
+        for(int i = 0; i < triangles.size(); i += 3) { // find neighbours
+            unsigned int a = triangles[i];
+            unsigned int b = triangles[i + 1];
+            unsigned int c = triangles[i + 2];
+
+            neighbourG[a].insert(a);
+            neighbourG[a].insert(b);
+            neighbourG[a].insert(c);
+            neighbourG[b].insert(a);
+            neighbourG[b].insert(b);
+            neighbourG[b].insert(c);
+            neighbourG[c].insert(a);
+            neighbourG[c].insert(b);
+            neighbourG[c].insert(c);
+        }
+    }
+    n = n / 2;
+    for(size_t k = 0; k < VotingSpace.size(); k++) {
+        double val = VotingSpace[k];
+        if(val == 0) {
+            continue;
+        }
+        size_t index = k;
+        float x_i = (int) index / num_plane / num_b; // retrieve x-coordinate index
+        index -= x_i * num_plane * num_b;
+
+        float y_i = (int) index / num_b;  // retrieve y-coordinate index
+        index -= y_i * num_b;
+
+        size_t b_i = index;  // retrieve directional vector index
+
+        std::set<unsigned int> neighbours;
+        if(triangles.size() != 0) {
+            neighbours.insert(neighbourG[b_i].begin(), neighbourG[b_i].end());
+            for(int rr = 1; rr < r; rr++) { // expand neighbourhood bei neighbours of neighbours r times
+                std::set<unsigned int> newN;
+                std::set<unsigned int>::iterator it = neighbours.begin();
+                for(; it != neighbours.end(); it++) {
+                    newN.insert(neighbourG[*it].begin(), neighbourG[*it].end());
+                }
+                neighbours.insert(newN.begin(), newN.end());
+            }
+        } else {
+            neighbours.insert(b_i);
+        }
+
+        /*
+        // view directional vectors
+        pcl::PointCloud<pcl::PointXYZ>::Ptr normals(new pcl::PointCloud<pcl::PointXYZ>);
+        std::set<unsigned int>::iterator it = neighbours.begin();
+        for(; it != neighbours.end(); it++) {
+            normals->push_back(pcl::PointXYZ(vertices[*it].x, vertices[*it].y, vertices[*it].z));
+        }
+        pcl::visualization::PCLVisualizer viewer("directionalVectors");
+        viewer.addPointCloud(normals);
+        viewer.addCoordinateSystem(1.0);
+        viewer.initCameraParameters();
+        viewer.resetCamera();
+        viewer.spin();
+        */
+
+        for(int dx = -n; dx <= n; dx++) {
+            if(x_i + dx >= 0 && x_i + dx < num_plane) {
+                for(int dy = -n; dy <= n; dy++) {
+                    if(y_i + dy >= 0 && y_i + dy < num_plane) {
+                        //cout << "original : (" << x_i << "/" << y_i << ")   neu: (" << x_i + dx  << "/" << y_i + dy << ")" << endl;
+                        std::set<unsigned int>::iterator it = neighbours.begin();
+                        for(; it != neighbours.end(); it++) {
+                            if(*it == b_i && dx == 0 && dy == 0) {
+                                continue;
+                            }
+                            size_t index_n = ((x_i + dx) * num_plane * num_b) + ((y_i + dy) * num_b) + *it; //retrieve neighbour's index
+                            if(VotingSpace[k] <= VotingSpace[index_n]) {
+                                VotingSpaceNew[k] = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    VotingSpaceNew.swap(VotingSpace);
+}
