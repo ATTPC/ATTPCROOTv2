@@ -1,5 +1,5 @@
 #include "ATHoughSpaceLine.hh"
-#include "ATHoughSpaceLine3D.hh"
+//#include "ATHoughSpaceLine3D.hh"
 #include "TCanvas.h"
 #include "Fit/Fitter.h"
 #ifdef _OPENMP
@@ -106,7 +106,7 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
 {
 
         /// Set Options here n(default is Generic hough Space calculation)
-        /*omp_set_num_threads(2);
+        omp_set_num_threads(2);
 
         std::vector<ATTrack*> YZ_tracks;
         std::vector<ATTrack*> XZ_tracks;
@@ -129,9 +129,10 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
         HistHoughRZ->Reset();
         HoughMax.clear();
         HoughPar.clear();
-        XZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"XZ");
+        //XZ_tracks = CalcGenHoughSpace<ATEvent*,TString>(event,"XZ");
 
         (XZ_tracks.size()>YZ_tracks.size() ? fHoughTracks=XZ_tracks : fHoughTracks=YZ_tracks);
+
 
 
 
@@ -139,9 +140,11 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
         for(Int_t ntrack=0;ntrack<fHoughTracks.size();ntrack++)
           MinimizeTrack(fHoughTracks.at(ntrack));
           FindVertex(fHoughTracks);
-      }*/
+      }
 
-      Int_t nHits = event->GetNumHits();
+
+      //  Block for Hough Space in 3D
+      /*Int_t nHits = event->GetNumHits();
       pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
       cloud->reserve(nHits);
       std::vector<std::pair<vector3D, vector3D> > lines;
@@ -152,16 +155,51 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
         pcl::PointXYZRGB p;
         p.x = position.X();
         p.y = position.Y();
-        p.z = position.Z();
+        p.z = position.Z() - 500.0;
         p.r = 0;
         p.g = 0;
         p.b = 0;
         cloud->push_back(p);
+        //std::cout<<"  p.x : "<<p.x<<" p.y : "<<p.y<<" p.z : "<<p.z<<std::endl;
       }
 
       hough3D->lineTransform3D_Tesselation(cloud,lines,10);
 
       std::cout<<" Lines found : "<<lines.size()<<std::endl;
+
+      if(lines.size()>0){
+        vector3D p, b;
+      std::pair<vector3D, vector3D> _singleline_ = lines.at(0);
+      p = _singleline_.first;
+      b = _singleline_.second;
+
+       TGraph2D * gr = new TGraph2D();
+
+      int n = 1000;
+      double t0 = 0;
+      double dt = 400000;
+      TPolyLine3D *l = new TPolyLine3D(n);
+      for (int i = 0; i <n;++i) {
+         double t = t0+ dt*i/n;
+         double x,y,z;
+         x = p.x + t*b.x;
+         y = p.y + t*b.y;
+         z = (p.z+500.0) + t*b.z;
+         //std::cout<<p.x<<std::endl;
+
+         //if( (x<1000 && x>-1000) && (y<1000 && y>-1000) &&  (z<1000 && z>-1000))
+         gr->SetPoint(i,x,y,z);
+         //std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
+      }
+      gr->SetLineColor(kRed);
+      //l->Draw("same");
+      gr->Draw("p0");
+      //gr->GetXaxis()->SetLimits(-250,250);
+      //gr->GetYaxis()->SetLimits(-250,250);
+      //gr->GetZaxis()->SetLimits(-1000,1000);
+      //gr->Draw("p0");
+    }*/
+
 
 }
 

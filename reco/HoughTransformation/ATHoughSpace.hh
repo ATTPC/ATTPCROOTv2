@@ -33,7 +33,7 @@
 #include "TObject.h"
 
 
-#include "mmprivate.h"
+/*#include "mmprivate.h"
 #undef BLOCKSIZE
 // Needed to avoid clash with FLANN library
 //PCL
@@ -55,7 +55,7 @@
 #include <pcl/filters/filter.h>
 #include <pcl/filters/impl/filter.hpp>
 #include <pcl/filters/filter_indices.h>
-#include <pcl/filters/impl/filter_indices.hpp>
+#include <pcl/filters/impl/filter_indices.hpp>*/
 
 class ATHoughSpace : public TObject
 {

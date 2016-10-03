@@ -45,8 +45,15 @@
 #pragma link C++ class ATHoughSpaceLine+;
 #pragma link C++ class ATHoughSpaceCircle+;
 
+//#pragma link C++ nestedclass;
+//#pragma link C++ nestedtypedef;
+//#pragma link C++ namespace ATRANSACN;
+//#pragma link C++ class ATRANSACN::ATRansac+;
+
 //#ifdef BUILD_PCL
-#pragma link C++ class ATHoughSpaceLine3D+;
+//#pragma link C++ class ATHoughSpaceLine3D+;
+//#pragma link C++ class ATHoughSpaceLine3D::Sphere+;
+//#pragma link C++ struct vector3D;
 //#endif
 
 #pragma link C++ class ATPhiReco+;
@@ -74,7 +81,6 @@
 #pragma link C++ struct ATHoughSpaceCircle::FitPar+;
 //#pragma link C++ function ATHoughSpaceLine::CalcGenHoughSpace<ATEvent*>(GenHough event);
 
-#pragma link C++ class ATHoughSpaceLine3D::Sphere+;
-#pragma link C++ struct vector3D;
+
 
 #endif

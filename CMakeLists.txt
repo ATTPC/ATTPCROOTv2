@@ -68,7 +68,7 @@ set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 set(INCLUDE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/include")
 Set(VMCWORKDIR ${CMAKE_SOURCE_DIR})
 Option(USE_PATH_INFO "Information from PATH and LD_LIBRARY_PATH are
-used."OFF
+used." OFF
 )
 If(USE_PATH_INFO)
   Set(PATH "$PATH")
@@ -115,7 +115,8 @@ find_package(HDF5)
 find_package(OpenMP)
 find_package(CUDA)
 find_package(PCL)
-find_package(Eigen3)
+find_package(Eigen)
+find_package(FLANN)
 find_package(VTK)
 
 
@@ -189,13 +190,15 @@ endif()
 
 if (PCL_FOUND)
     MESSAGE("-- PCL Support Found")
-#   MESSAGE(${PCL_INCLUDE_DIRS})
+    #MESSAGE(${PCL_INCLUDE_DIRS})
+    #MESSAGE(${PCL_LIBRARIES})
 endif()
 
 if(VTK_FOUND)
    MESSAGE("-- VTK Support Found")
 #   MESSAGE(${VTK_INCLUDE_DIRS})
 endif()
+
 
 Generate_Version_Info()
 

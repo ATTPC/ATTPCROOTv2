@@ -5,6 +5,8 @@ set(INCLUDE_DIRECTORIES
 ${ROOT_INCLUDE_DIR}
 ${Boost_INCLUDE_DIRS}
 ${BASE_INCLUDE_DIRECTORIES}
+#${PCL_INCLUDE_DIRS}
+#${FLANN_INCLUDE_DIRS}
 # Add all the folders having header files you used in the code.
 #${CMAKE_SOURCE_DIR}/mcstack
 ${CMAKE_SOURCE_DIR}/AtMap
@@ -19,6 +21,7 @@ ${CMAKE_SOURCE_DIR}/reco/ATProtoPhiReco
 ${CMAKE_SOURCE_DIR}/reco/VMEDecoder
 ${CMAKE_SOURCE_DIR}/reco/ATMinimization
 ${CMAKE_SOURCE_DIR}/reco/ATAnalysis
+${CMAKE_SOURCE_DIR}/reco/ATRansac
 
 )
 
@@ -28,7 +31,11 @@ set(LINK_DIRECTORIES
 ${ROOT_LIBRARY_DIR}
 ${FAIRROOT_LIBRARY_DIR}
 ${Boost_LIBRARY_DIRS}
+#${FLANN_LIBRARIES}
+#${PCL_LIBRARY_DIRS}
 )
+
+#add_definitions(${PCL_DEFINITIONS})
 
 link_directories(${LINK_DIRECTORIES})
 
@@ -91,6 +98,8 @@ ATMinimization/ATMCQMinimization.cc
 ATAnalysis/ATAnalysis.cc
 ATAnalysis/ATProtoAnalysis.cc
 
+#ATRansac/ATRansac.cc
+
 
 ATDecoderTask.cc
 ATDecoder2Task.cc
@@ -103,9 +112,9 @@ ATAnalysisTask.cc
 )
 
 # Adding libraries that depend on PCL
-if (PCL_FOUND)
-set(SRCS ${SRCS} HoughTransformation/ATHoughSpaceLine3D.cc)
-endif()
+#if (PCL_FOUND)
+#set(SRCS ${SRCS} HoughTransformation/ATHoughSpaceLine3D.cc)
+#endif()
 
 CHANGE_FILE_EXTENSION(*.cc *.hh HEADERS "${SRCS}")
 
@@ -124,10 +133,11 @@ Set(DEPENDENCIES
     ${Boost_LOG_LIBRARY}
     ${Boost_LOG_SETUP_LIBRARY}
     ${Boost_THREAD_LIBRARY}
-    ${Boost_THREAD_LIBRARY}
     ${Boost_DATE_TIME_LIBRARY}
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
+    #${FLANN_LIBRARIES}
+    #${PCL_LIBRARIES}
 
 )
 

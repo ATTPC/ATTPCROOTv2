@@ -586,6 +586,7 @@ void ATHoughSpaceLine3D::lineTransform3D(pcl::PointCloud<pcl::PointXYZRGB>::Ptr 
         for(size_t j = 0; j < b_vectors.size(); j++) {
             pcl::PointXYZRGB p;
             p = cloud->at(i);
+            //std::cout<<"  p.x : "<<p.x<<" p.y : "<<p.y<<" p.z : "<<p.z<<std::endl;
 
             vector3D b;
             b = b_vectors[j];
