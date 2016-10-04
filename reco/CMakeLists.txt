@@ -5,8 +5,7 @@ set(INCLUDE_DIRECTORIES
 ${ROOT_INCLUDE_DIR}
 ${Boost_INCLUDE_DIRS}
 ${BASE_INCLUDE_DIRECTORIES}
-#${PCL_INCLUDE_DIRS}
-#${FLANN_INCLUDE_DIRS}
+${PCL_INCLUDE_DIRS}
 # Add all the folders having header files you used in the code.
 #${CMAKE_SOURCE_DIR}/mcstack
 ${CMAKE_SOURCE_DIR}/AtMap
@@ -31,8 +30,7 @@ set(LINK_DIRECTORIES
 ${ROOT_LIBRARY_DIR}
 ${FAIRROOT_LIBRARY_DIR}
 ${Boost_LIBRARY_DIRS}
-#${FLANN_LIBRARIES}
-#${PCL_LIBRARY_DIRS}
+${PCL_LIBRARY_DIRS}
 )
 
 #add_definitions(${PCL_DEFINITIONS})
@@ -98,7 +96,7 @@ ATMinimization/ATMCQMinimization.cc
 ATAnalysis/ATAnalysis.cc
 ATAnalysis/ATProtoAnalysis.cc
 
-#ATRansac/ATRansac.cc
+ATRansac/ATRansac.cc
 
 
 ATDecoderTask.cc
@@ -136,9 +134,9 @@ Set(DEPENDENCIES
     ${Boost_DATE_TIME_LIBRARY}
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
-    #${FLANN_LIBRARIES}
-    #${PCL_LIBRARIES}
-
+    ${PCL_LIBRARIES}
 )
+
+
 
 GENERATE_LIBRARY()

@@ -52,7 +52,7 @@ std::vector<ATTrack*> ATRANSACN::ATRansac::RansacPCL(ATEvent *event)
   	pcl::PointIndices::Ptr inliers (new pcl::PointIndices ());
 
 	  // Create the segmentation object
-  /*	pcl::SACSegmentation<pcl::PointXYZRGBA> seg;
+  	pcl::SACSegmentation<pcl::PointXYZRGBA> seg;
   	seg.setOptimizeCoefficients(true);
   	seg.setModelType (pcl::SACMODEL_LINE);
   	seg.setMethodType (pcl::SAC_RANSAC);
@@ -101,7 +101,7 @@ while (cloud->points.size () > 0.01 * nr_points)
      i++;
 
 
-}*/
+}
 
     return tracks;
 

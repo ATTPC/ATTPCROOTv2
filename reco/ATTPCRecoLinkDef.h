@@ -45,10 +45,13 @@
 #pragma link C++ class ATHoughSpaceLine+;
 #pragma link C++ class ATHoughSpaceCircle+;
 
-//#pragma link C++ nestedclass;
-//#pragma link C++ nestedtypedef;
-//#pragma link C++ namespace ATRANSACN;
-//#pragma link C++ class ATRANSACN::ATRansac+;
+#pragma link C++ nestedclass;
+#pragma link C++ nestedtypedef;
+#pragma link C++ namespace ATRANSACN;
+#pragma link C++ class ATRANSACN::ATRansac+;
+
+//#pragma link C++ class ATRansac+;
+
 
 //#ifdef BUILD_PCL
 //#pragma link C++ class ATHoughSpaceLine3D+;
