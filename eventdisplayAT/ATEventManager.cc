@@ -527,8 +527,8 @@ ATEventManager::make_gui()
         eraseQevent->Connect("Clicked()", "ATEventManager", fInstance, "EraseQEvent()");
         hf->AddFrame(eraseQevent, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
 
-        drawHoughSpace = new TGTextButton(hf, "&Enable Hough Space");
-        drawHoughSpace -> SetToolTipText("Press to enable Hough Space visualization",400);
+        drawHoughSpace = new TGTextButton(hf, "&Visualize Reconstruction");
+        drawHoughSpace -> SetToolTipText("Press to enable Reconstruction visualization",400);
         drawHoughSpace ->Connect("Clicked()", "ATEventManager", fInstance, "EnableDrawHoughSpace()");
         hf->AddFrame(drawHoughSpace, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
 
@@ -652,7 +652,7 @@ ATEventManager::EnableDrawHoughSpace(){
 
      drawHoughSpace->SetState(kButtonDown);
      if (!kDrawHoughOn){
-	 drawHoughSpace->SetText("&Disable Hough Space");
+	 drawHoughSpace->SetText("&Disable Vis. Recons.");
          kDrawHoughOn = kTRUE;
     } else {
         drawHoughSpace->SetText("&Enable Hough Space");

@@ -28,6 +28,8 @@
 #include "Math/Minimizer.h"
 #include "Math/Factory.h"
 #include "Math/Functor.h"
+#include "Fit/Fitter.h"
+#include <Math/Vector3D.h>
 
 #include "ATHit.hh"
 #include "ATEvent.hh"
@@ -84,8 +86,49 @@ class ATRansac : public TObject
       ATRansac();
       ~ATRansac();
 
-
+      void CalcRANSAC(ATEvent *event);
       std::vector<ATTrack*> RansacPCL(ATEvent *event);
+
+  private:
+      Int_t MinimizeTrack(ATTrack* track);
+      static double distance2(double x,double y,double z, const double *p);
+      void SetLine(double t, const double *p, double &x, double &y, double &z);
+
+      struct SumDistance2
+      {
+          TGraph2D * fGraph;
+
+              SumDistance2(TGraph2D * g) : fGraph(g) {}
+                  double operator() (const double * par) {
+                  assert(fGraph    != 0);
+                  double * x = fGraph->GetX();
+                  double * y = fGraph->GetY();
+                  double * z = fGraph->GetZ();
+                  int npoints = fGraph->GetN();
+                  double sum = 0;
+                  for (int i  = 0; i < npoints; ++i) {
+                    double d = distance2(x[i],y[i],z[i],par);
+                    sum += d;
+                  }
+            #ifdef DEBUG
+             if (first) std::cout << "point " << i << "\t"
+                << x[i] << "\t"
+                << y[i] << "\t"
+                << z[i] << "\t"
+                << std::sqrt(d) << std::endl;
+            #endif
+
+            //if (first)
+              //std::cout << "Total Initial distance square = " << sum << std::endl;
+              //first = false;
+              return sum;
+
+
+              }
+
+
+      };
+
 
 
 

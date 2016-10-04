@@ -106,6 +106,7 @@ ATPhiRecoTask.cc
 ATHoughTask.cc
 ATVMEUnpackTask.cc
 ATAnalysisTask.cc
+ATRansacTask.cc
 
 )
 

@@ -74,6 +74,7 @@
 #pragma link C++ class ATHoughTask+;
 #pragma link C++ class ATVMEUnpackTask+;
 #pragma link C++ class ATAnalysisTask+;
+#pragma link C++ class ATRansacTask+;
 
 #pragma link C++ class ATMinimization+;
 #pragma link C++ class ATMCMinimization+;
