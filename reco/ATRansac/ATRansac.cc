@@ -15,6 +15,9 @@ ATRANSACN::ATRansac::ATRansac()
   fMinimum = -1.0;
   fLineDistThreshold = 3.0;
 
+  fRANSACModel = pcl::SACMODEL_LINE;
+  fRANSACThreshold = 5.0;
+
   pcl::console::setVerbosityLevel(pcl::console::L_ALWAYS);
 
 }
@@ -28,6 +31,10 @@ TVector3 ATRANSACN::ATRansac::GetVertex1()                                      
 TVector3 ATRANSACN::ATRansac::GetVertex2()                                              {return fVertex_2;}
 Double_t ATRANSACN::ATRansac::GetMinimum()                                              {return fMinimum;}
 std::vector<ATTrack> ATRANSACN::ATRansac::GetTrackCand()                                {return fTrackCand;}
+
+
+void ATRANSACN::ATRansac::SetModelType(int model)                                       { fRANSACModel = model;}
+void ATRANSACN::ATRansac::SetDistanceThreshold(Float_t threshold)                       { fRANSACThreshold = threshold;}
 
 void ATRANSACN::ATRansac::CalcRANSAC(ATEvent *event)
 {
@@ -89,10 +96,10 @@ std::vector<ATTrack*> ATRANSACN::ATRansac::RansacPCL(ATEvent *event)
 	  // Create the segmentation object
   	pcl::SACSegmentation<pcl::PointXYZRGBA> seg;
   	seg.setOptimizeCoefficients(true);
-  	seg.setModelType (pcl::SACMODEL_LINE);
-  	seg.setMethodType (pcl::SAC_RANSAC);
-  	seg.setMaxIterations (1000);
-  	seg.setDistanceThreshold (5.0);
+  	seg.setModelType(fRANSACModel);
+  	seg.setMethodType(pcl::SAC_RANSAC);
+  	seg.setMaxIterations(1000);
+  	seg.setDistanceThreshold(fRANSACThreshold);
 
     // Create the filtering object
  pcl::ExtractIndices<pcl::PointXYZRGBA> extract;

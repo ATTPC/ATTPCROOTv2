@@ -23,6 +23,8 @@ class ATRansacTask : public FairTask {
     ~ATRansacTask();
 
     void SetPersistence(Bool_t value = kTRUE);
+    void SetModelType(int model);
+    void SetDistanceThreshold(Float_t threshold);
 
     virtual InitStatus Init();
     virtual void SetParContainers();
@@ -37,6 +39,10 @@ class ATRansacTask : public FairTask {
     ATEvent *fEvent;
 
     Bool_t fIsPersistence;
+    int fRANSACModel;
+    Float_t fRANSACThreshold;
+
+
 
 
   ClassDef(ATRansacTask, 1);

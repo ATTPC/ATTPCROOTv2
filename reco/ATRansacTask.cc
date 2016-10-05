@@ -18,13 +18,18 @@ ATRansacTask::ATRansacTask()
 
   fIsPersistence = kFALSE;
 
+  fRANSACModel = pcl::SACMODEL_LINE;
+  fRANSACThreshold = 5.0;
+
 }
 
 ATRansacTask::~ATRansacTask()
 {
 }
 
-void   ATRansacTask::SetPersistence(Bool_t value)           { fIsPersistence = value; }
+void   ATRansacTask::SetPersistence(Bool_t value)             { fIsPersistence   = value; }
+void   ATRansacTask::SetModelType(int model)                  { fRANSACModel     = model; }
+void   ATRansacTask::SetDistanceThreshold(Float_t threshold)  { fRANSACThreshold = threshold;}
 
 InitStatus
 ATRansacTask::Init()
@@ -84,6 +89,8 @@ ATRansacTask::Exec(Option_t *opt)
 
       fEvent  = (ATEvent *) fEventHArray -> At(0);
       ATRANSACN::ATRansac *Ransac = (ATRANSACN::ATRansac *) new ((*fRansacArray)[0]) ATRANSACN::ATRansac();
+      Ransac->SetModelType(fRANSACModel);
+      Ransac->SetDistanceThreshold(fRANSACThreshold);
       Ransac->CalcRANSAC(fEvent);
 
 }

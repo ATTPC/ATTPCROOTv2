@@ -92,6 +92,8 @@ class ATRansac : public TObject
       TVector3 GetVertex2();
       Double_t GetMinimum();//Distance of minumum approach between candidate lines (for the moment only 2)
       std::vector<ATTrack> GetTrackCand();
+      void SetModelType(int model);
+      void SetDistanceThreshold(Float_t threshold);
 
   protected:
       Int_t MinimizeTrack(ATTrack* track);
@@ -100,11 +102,14 @@ class ATRansac : public TObject
       void FindVertex(std::vector<ATTrack*> tracks);
       Bool_t CheckTrackID(Int_t trackID, std::vector<ATTrack> trackArray); //Check if Track ID is in the list
 
+
       TVector3 fVertex_1;
       TVector3 fVertex_2;
       Double_t fMinimum;
       std::vector<ATTrack> fTrackCand; //Candidate tracks (debugging purposes)
       Int_t fLineDistThreshold;
+      int fRANSACModel;
+      Float_t fRANSACThreshold;
 
       struct SumDistance2
       {
