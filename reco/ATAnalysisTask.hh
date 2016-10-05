@@ -47,9 +47,10 @@ class ATAnalysisTask : public FairTask {
     TClonesArray *fHoughArray;
     //TClonesArray *fAnalysisArray;
 
-    ATProtoAnalysis*  fProtoAnalysis;
-    ATHoughSpaceLine* fHoughSpace;
-    ATProtoEvent*     fProtoevent;
+    ATProtoAnalysis   *fProtoAnalysis;
+    ATHoughSpaceLine  *fHoughSpace;
+    ATProtoEvent      *fProtoevent;
+    TClonesArray      *fRansacArray;
 
 
     ATDigiPar *fPar;

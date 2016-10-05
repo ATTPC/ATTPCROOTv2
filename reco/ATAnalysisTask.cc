@@ -56,21 +56,7 @@ ATAnalysisTask::Init()
     return kERROR;
   }*/
 
-
-   fProtoAnalysis = new ATProtoAnalysis();
-   fProtoAnalysis->SetHoughDist(fHoughDist);
-   fProtoAnalysis->SetUpperLimit(fUpperLimit);
-   fProtoAnalysis->SetLowerLimit(fLowerLimit);
-
-
-
-  if(fIsPhiReco){ //Find the Array of ProtoEvents
-      fProtoEventHArray = (TClonesArray *) ioMan -> GetObject("ATProtoEvent");
-      if (fProtoEventHArray == 0) {
-        fLogger -> Error(MESSAGE_ORIGIN, "Cannot find ATProtoEvent array! If SetPhiReco method is enabled, Phi Reconstruction is needed");
-        return kERROR;
-      }
-  }
+  // ATANALYSIS IS BASED ON PATTERN RECOGNITION ALGORITHMS
 
   fHoughArray = (TClonesArray *) ioMan -> GetObject("ATHough");
   if (fHoughArray == 0) {
@@ -78,14 +64,48 @@ ATAnalysisTask::Init()
     return kERROR;
   }
 
-  // For fitting the Prototype data
-  for (Int_t i=0;i<4;i++){
-    fHoughFit[i] =new TF1(Form("HoughFit%i",i)," (  (-TMath::Cos([0])/TMath::Sin([0]))*x ) + [1]/TMath::Sin([0])",0,120);
-    fHitPatternFilter[i] = new TGraph();
+  fRansacArray = (TClonesArray*) ioMan->GetObject("ATRansac");
+  if (fRansacArray == 0) {
+    fLogger -> Error(MESSAGE_ORIGIN, "Cannot find ATRansac array!");
+    return kERROR;
+  }
+
+
+
+  if(fIsPhiReco && fHoughArray){ //Find the Array of ProtoEvents
+
+    fProtoAnalysis = new ATProtoAnalysis();
+    fProtoAnalysis->SetHoughDist(fHoughDist);
+    fProtoAnalysis->SetUpperLimit(fUpperLimit);
+    fProtoAnalysis->SetLowerLimit(fLowerLimit);
+
+
+      fProtoEventHArray = (TClonesArray *) ioMan -> GetObject("ATProtoEvent");
+      if (fProtoEventHArray == 0) {
+        fLogger -> Error(MESSAGE_ORIGIN, "Cannot find ATProtoEvent array! If SetPhiReco method is enabled, Phi Reconstruction is needed");
+        return kERROR;
+      }
+
+      // For fitting the Prototype data
+      for (Int_t i=0;i<4;i++){
+        fHoughFit[i] =new TF1(Form("HoughFit%i",i)," (  (-TMath::Cos([0])/TMath::Sin([0]))*x ) + [1]/TMath::Sin([0])",0,120);
+        fHitPatternFilter[i] = new TGraph();
+
+      }
+
+      ioMan -> Register("ATProtoEventAna", "ATTPC", fProtoEventAnaArray, fIsPersistence);
+
+  }else if(fRansacArray){
+
 
   }
 
-    ioMan -> Register("ATProtoEventAna", "ATTPC", fProtoEventAnaArray, fIsPersistence);
+
+
+
+
+
+
 
     return kSUCCESS;
 
