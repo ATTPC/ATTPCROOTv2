@@ -10,12 +10,22 @@ ClassImp(ATRANSACN::ATRansac)
 
 ATRANSACN::ATRansac::ATRansac()
 {
+  fVertex_1.SetXYZ(-10000,-10000,-10000);
+  fVertex_2.SetXYZ(-10000,-10000,-10000);
+  fMinimum = -1.0;
+  fLineDistThreshold = 3.0;
 
 }
 
 ATRANSACN::ATRansac::~ATRansac()
 {
 }
+
+
+TVector3 ATRANSACN::ATRansac::GetVertex1()                                              {return fVertex_1;}
+TVector3 ATRANSACN::ATRansac::GetVertex2()                                              {return fVertex_2;}
+Double_t ATRANSACN::ATRansac::GetMinimum()                                              {return fMinimum;}
+std::vector<ATTrack> ATRANSACN::ATRansac::GetTrackCand()                                {return fTrackCand;}
 
 void ATRANSACN::ATRansac::CalcRANSAC(ATEvent *event)
 {
@@ -28,8 +38,11 @@ void ATRANSACN::ATRansac::CalcRANSAC(ATEvent *event)
         std::vector<ATHit>* trackHits = tracks.at(ntrack)->GetHitArray();
         Int_t nHits = trackHits->size();
         //std::cout<<" Num  Hits : "<<nHits<<std::endl;
-        if(nHits>5) MinimizeTrack(tracks.at(ntrack));
-        //FindVertex(fHoughTracks);
+          if(nHits>5)
+          {
+          MinimizeTrack(tracks.at(ntrack));
+          FindVertex(tracks);
+          }
       }
     }
 
@@ -208,6 +221,118 @@ Int_t ATRANSACN::ATRansac::MinimizeTrack(ATTrack* track)
 
 }
 
+void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
+{
+
+  // Assumes the minimum distance between two lines, with respect a given threshold, the first vertex candidate. Then evaluates the
+  // distance of each remaining line with respect to the others (vertex) to decide the particles of the reaction.
+
+
+  Double_t mad=999999; // Minimum approach distance
+  XYZVector c_1(-1000,-1000,-1000);
+  XYZVector c_2(-1000,-1000,-1000);
+  //std::vector<ATTrack*> *TrackCand;
+
+      //Current  parametrization
+      //x = p[0] + p[1]*t;
+      //y = p[2] + p[3]*t;
+      //z = t;
+      // (x,y,z) = (p[0],p[2],0) + (p[1],p[3],1)*t
+
+      // Test each line against the others to find a vertex candidate
+      for(Int_t i=0;i<tracks.size()-1;i++){
+
+          ATTrack* track = tracks.at(i);
+          track->SetTrackID(i);
+          std::vector<Double_t> p = track->GetFitPar();
+
+        if(p.size()>0)
+        {
+          XYZVector L_0(p[0], p[2], 0. );//p1
+          XYZVector L_1(p[1], p[3], 1. );//d1
+
+          //std::cout<<" L_1 p[0] : "<<p[0]<<" L_1 p[2] : "<<p[2]<<std::endl;
+          //std::cout<<" L_1 p[1] : "<<p[1]<<" L_1 p[3] : "<<p[3]<<std::endl;
+
+                    for(Int_t j=i+1; j<tracks.size();j++)
+                    {
+                        ATTrack* track_f = tracks.at(j);
+                        track_f->SetTrackID(j);
+                        std::vector<Double_t> p_f = track_f->GetFitPar();
+
+                        if(p_f.size()>0)
+                        {
+                                      XYZVector L_f0(p_f[0], p_f[2], 0. );//p2
+                                      XYZVector L_f1(p_f[1], p_f[3], 1. );//d2
+
+                                      //std::cout<<" L_f1 p_f[1] : "<<p_f[1]<<" L_f1 p_f[3] : "<<p_f[3]<<std::endl;
+
+                                      XYZVector L = L_1.Cross(L_f1);
+                                      Double_t L_mag = L.Rho();
+                                      XYZVector n_1 = L_1.Cross(L);
+                                      XYZVector n_2 = L_f1.Cross(L);
+                                      c_1 = L_0  + ( (L_f0 - L_0).Dot(n_2)*L_1  )/(  L_1.Dot(n_2)   );
+                                      c_2 = L_f0 + ( (L_0  - L_f0).Dot(n_1)*L_f1 )/(  L_f1.Dot(n_1)  );
+
+                                      //std::cout<<i<<" "<<j<<" "<<L_mag<<std::endl;
+
+                                      if(L_mag>0)
+                                      {
+                                          XYZVector n = L/(Double_t)L_mag;
+                                          Double_t d = TMath::Abs(n.Dot(L_0-L_f0));
+                                          //std::cout<<" Distance of minimum approach : "<<d<<std::endl;
+
+
+                                          if(d<mad){
+
+                                             mad = d;
+                                             //std::cout<<" New distance of minimum approach : "<<mad<<std::endl;
+                                             fVertex_1.SetXYZ(c_1.X(),c_1.Y(),c_1.Z());
+                                             fVertex_2.SetXYZ(c_2.X(),c_2.Y(),c_2.Z());
+                                             fMinimum = mad;
+                                             if ( !CheckTrackID(track->GetTrackID(),fTrackCand) ) fTrackCand.push_back(*track);
+                                             if ( !CheckTrackID(track_f->GetTrackID(),fTrackCand) )  fTrackCand.push_back(*track_f);
+
+
+
+                                          }
+
+                                         if(d<fLineDistThreshold)
+                                          {
+
+
+
+                                             if ( !CheckTrackID(track->GetTrackID(),fTrackCand) ){
+                                              //std::cout<<" Add track"<<track->GetTrackID()<<std::endl;
+                                              fTrackCand.push_back(*track);
+                                            }
+
+                                             if ( !CheckTrackID(track_f->GetTrackID(),fTrackCand) ){
+                                              //std::cout<<" Add track f"<<track_f->GetTrackID()<<std::endl;
+                                              fTrackCand.push_back(*track_f);
+                                             }
+                                          }
+
+
+
+
+                                      }
+
+                                      //for(Int_t i=0;i<fTrackCand.size();i++)
+                                          //std::cout<<fTrackCand.at(i).GetTrackID()<<std::endl;
+
+
+                        }//p_f size
+                     }// End of track
+            }//p size
+
+       }
+
+
+
+}
+
+
 Double_t ATRANSACN::ATRansac::distance2( double x,double y,double z, const double *p)
 {
 
@@ -229,5 +354,18 @@ void ATRANSACN::ATRansac::SetLine(double t, const double *p, double &x, double &
       x = p[0] + p[1]*t;
       y = p[2] + p[3]*t;
       z = t;
+
+}
+
+Bool_t ATRANSACN::ATRansac::CheckTrackID(Int_t trackID, std::vector<ATTrack> trackArray)
+{
+  auto it =  find_if( trackArray.begin(),trackArray.end(),[&trackID](ATTrack& track) {return track.GetTrackID()==trackID;}   );
+  if(it != trackArray.end()){
+     auto hitInd = std::distance<std::vector<ATTrack>::const_iterator>(trackArray.begin(),it);
+     return kTRUE;
+  }
+  else return kFALSE;
+
+
 
 }

@@ -88,11 +88,23 @@ class ATRansac : public TObject
 
       void CalcRANSAC(ATEvent *event);
       std::vector<ATTrack*> RansacPCL(ATEvent *event);
+      TVector3 GetVertex1();
+      TVector3 GetVertex2();
+      Double_t GetMinimum();//Distance of minumum approach between candidate lines (for the moment only 2)
+      std::vector<ATTrack> GetTrackCand();
 
-  private:
+  protected:
       Int_t MinimizeTrack(ATTrack* track);
       static double distance2(double x,double y,double z, const double *p);
       void SetLine(double t, const double *p, double &x, double &y, double &z);
+      void FindVertex(std::vector<ATTrack*> tracks);
+      Bool_t CheckTrackID(Int_t trackID, std::vector<ATTrack> trackArray); //Check if Track ID is in the list
+
+      TVector3 fVertex_1;
+      TVector3 fVertex_2;
+      Double_t fMinimum;
+      std::vector<ATTrack> fTrackCand; //Candidate tracks (debugging purposes)
+      Int_t fLineDistThreshold;
 
       struct SumDistance2
       {

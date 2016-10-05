@@ -28,14 +28,13 @@
 #include "TH2Poly.h"
 
 #include "ATEventManager.hh"
-//#include "ATRiemannTrack.hh"
-//#include "ATRiemannHit.hh"
 #include "ATRawEvent.hh"
 #include "ATEvent.hh"
 #include "ATProtoEvent.hh"
 #include "ATHoughSpaceLine.hh"
 #include "ATHoughSpaceCircle.hh"
 #include "ATHoughSpace.hh"
+#include "ATRansac.hh"
 #include "ATHit.hh"
 #include "AtTpcMap.h"
 #include "ATProtoQuadrant.hh"
@@ -133,9 +132,11 @@ class ATEventDrawTask : public FairTask
     TClonesArray* fRawEventArray;
     TClonesArray* fHoughSpaceArray;
     TClonesArray* fProtoEventArray;
+    TClonesArray* fRansacArray;
 
     ATHoughSpaceLine* fHoughSpaceLine_buff;
     ATHoughSpaceCircle* fHoughSpaceCircle_buff;
+    ATRANSACN::ATRansac* fRansac;
 
     ATEventManager* fEventManager;
     ATRawEvent* fRawevent;

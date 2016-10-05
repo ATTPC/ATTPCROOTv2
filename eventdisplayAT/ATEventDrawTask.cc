@@ -194,6 +194,9 @@ ATEventDrawTask::Init()
   fProtoEventArray =  (TClonesArray*) ioMan->GetObject("ATProtoEvent");
   if(fProtoEventArray) LOG(INFO)<<"Prototype Event Array Found."<<FairLogger::endl;
 
+  fRansacArray = (TClonesArray*) ioMan->GetObject("ATRansac");
+  if(fRansacArray) LOG(INFO)<<"RANSAC Array Found."<<FairLogger::endl;
+
  // gROOT->GetListOfSpecials()->Add(fRawEventArray);
   //fRawEventArray->SetName("ATRawEvent");
 
@@ -424,7 +427,43 @@ ATEventDrawTask::DrawHitPoints()
 
 
 
-        }
+        }else if(fRansacArray){
+
+          //fLineArray.clear();
+          for(Int_t i=0;i<5;i++) fLineArray[i] = new TEveLine();
+          int n = 100;
+          double t0 = 0;
+          double dt = 2000;
+          fRansac = dynamic_cast<ATRANSACN::ATRansac*> (fRansacArray->At(0));
+          std::vector<ATTrack> TrackCand = fRansac->GetTrackCand();
+          std::cout<<cRED<<" Found "<<TrackCand.size()<<" RANSAC track candidates "<<cNORMAL<<std::endl;
+          fLineNum = TrackCand.size();
+          if(TrackCand.size()>0 && TrackCand.size()<5)
+          {
+
+            for(Int_t j=0;j<TrackCand.size();j++){
+               fLineArray[j] = new TEveLine();
+               ATTrack track = TrackCand.at(j);
+               std::vector<Double_t> parFit = track.GetFitPar();
+               fLineArray[j]->SetMainColor(kRed);
+               for (int i = 0; i <n;++i) {
+                     double t = t0+ dt*i/n;
+                     double x,y,z;
+                     SetLine(t,parFit,x,y,z);
+                     fLineArray[j]->SetNextPoint(x, y, z);
+
+                     //fLineArray.push_back(fLine);
+                     //l->SetPoint(i,x,y,z);
+                     std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
+               }
+
+
+            }
+
+          }
+
+
+        }//fRANSAC
 
   }
 
@@ -677,7 +716,7 @@ ATEventDrawTask::DrawHitPoints()
                   gEve -> AddElement(fHitSetMin);
 
 
-          if(fIsLinearHough )
+          if(fIsLinearHough || fRansacArray)
               if(fLineNum>0) for(Int_t i=0;i<fLineNum;i++) gEve -> AddElement(fLineArray[i]);
 
                   // gEve -> AddElement(fLine);
@@ -942,7 +981,7 @@ ATEventDrawTask::Reset()
               }
       }
 
-      else if(fIsLinearHough){
+      else if(fIsLinearHough || fRansacArray){
 
                 /*if(fLine){
                   fLine->Reset();
@@ -1585,7 +1624,7 @@ ATEventDrawTask::SelectPad(const char *rawevt)
         Int_t *rawadc = tPad->GetRawADC();
         Double_t *adc = tPad->GetADC();
         if(tPadWave == NULL){
-            std::cout<<" = ATEventDrawTask::SelectPad NULL pointer for the TH1I! Please select an event first "<<std::endl;
+            std::cout<<" = ATEventDrawTask::SelectPad NULL pointer for the TH1I! Please enable SetPersistance for Unpacking task or select an event first "<<std::endl;
             return;
 	     }
          tPadWave->Reset();
