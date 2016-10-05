@@ -15,6 +15,8 @@ ATRANSACN::ATRansac::ATRansac()
   fMinimum = -1.0;
   fLineDistThreshold = 3.0;
 
+  pcl::console::setVerbosityLevel(pcl::console::L_ALWAYS);
+
 }
 
 ATRANSACN::ATRansac::~ATRansac()
@@ -42,6 +44,7 @@ void ATRANSACN::ATRansac::CalcRANSAC(ATEvent *event)
           {
           MinimizeTrack(tracks.at(ntrack));
           FindVertex(tracks);
+
           }
       }
     }
@@ -106,7 +109,7 @@ while (cloud->points.size () > 0.01 * nr_points)
      seg.segment(*inliers, *coefficients);
      if (inliers->indices.size () == 0)
      {
-       std::cerr << "Could not estimate a planar model for the given dataset." << std::endl;
+       //std::cerr << "Could not estimate a planar model for the given dataset." << std::endl;
        break;
      }
   // Extract the inliers
@@ -326,9 +329,9 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                      }// End of track
             }//p size
 
-       }
+       }// Loop over the tracks
 
-
+     if(fTrackCand.size()>5) fTrackCand.resize(5); //Truncate the maximum number of lines to 5
 
 }
 

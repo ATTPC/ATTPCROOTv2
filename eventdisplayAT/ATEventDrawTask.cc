@@ -178,24 +178,24 @@ ATEventDrawTask::Init()
      gROOT->GetListOfSpecials()->Add(fDetmap);
 
   fHitArray = (TClonesArray*) ioMan->GetObject("ATEventH"); // TODO: Why this confusing name? It should be fEventArray
-  if(fHitArray) LOG(INFO)<<"Hit Array Found."<<FairLogger::endl;
+  if(fHitArray) LOG(INFO)<<cGREEN<<"Hit Array Found."<<cNORMAL<<FairLogger::endl;
 
 
   fRawEventArray = (TClonesArray*) ioMan->GetObject("ATRawEvent");
   if(fRawEventArray){
-       LOG(INFO)<<"Raw Event Array  Found."<<FairLogger::endl;
+       LOG(INFO)<<cGREEN<<"Raw Event Array  Found."<<cNORMAL<<FairLogger::endl;
        fIsRawData=kTRUE;
   }
 
   fHoughSpaceArray =  (TClonesArray*) ioMan->GetObject("ATHough");
-  if(fHoughSpaceArray) LOG(INFO)<<"Hough Array Found."<<FairLogger::endl;
+  if(fHoughSpaceArray) LOG(INFO)<<cGREEN<<"Hough Array Found."<<cNORMAL<<FairLogger::endl;
 
 
   fProtoEventArray =  (TClonesArray*) ioMan->GetObject("ATProtoEvent");
-  if(fProtoEventArray) LOG(INFO)<<"Prototype Event Array Found."<<FairLogger::endl;
+  if(fProtoEventArray) LOG(INFO)<<cGREEN<<"Prototype Event Array Found."<<cNORMAL<<FairLogger::endl;
 
   fRansacArray = (TClonesArray*) ioMan->GetObject("ATRansac");
-  if(fRansacArray) LOG(INFO)<<"RANSAC Array Found."<<FairLogger::endl;
+  if(fRansacArray) LOG(INFO)<<cGREEN<<"RANSAC Array Found."<<cNORMAL<<FairLogger::endl;
 
  // gROOT->GetListOfSpecials()->Add(fRawEventArray);
   //fRawEventArray->SetName("ATRawEvent");
@@ -392,15 +392,20 @@ ATEventDrawTask::DrawHitPoints()
 
   if(fEventManager->GetDrawHoughSpace()){
 
-        if(fIsLinearHough){
+      //  if(fIsLinearHough){
           //fLineArray.clear();
           for(Int_t i=0;i<5;i++) fLineArray[i] = new TEveLine();
           int n = 100;
           double t0 = 0;
           double dt = 2000;
-          std::vector<ATTrack> TrackCand = fHoughSpaceLine_buff->GetTrackCand();
-          std::cout<<cRED<<" Found "<<TrackCand.size()<<" track candidates "<<cNORMAL<<std::endl;
+          std::vector<ATTrack> TrackCand;
+          if(fIsLinearHough) TrackCand = fHoughSpaceLine_buff->GetTrackCand();
+          else if(fRansacArray){
+             fRansac = dynamic_cast<ATRANSACN::ATRansac*> (fRansacArray->At(0));
+             TrackCand = fRansac->GetTrackCand();
+          }
           fLineNum = TrackCand.size();
+          std::cout<<cRED<<" Found "<<TrackCand.size()<<" track candidates "<<cNORMAL<<std::endl;
           if(TrackCand.size()>0)
           {
 
@@ -417,7 +422,7 @@ ATEventDrawTask::DrawHitPoints()
 
                      //fLineArray.push_back(fLine);
                      //l->SetPoint(i,x,y,z);
-                     std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
+                     //std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
                }
 
 
@@ -427,43 +432,6 @@ ATEventDrawTask::DrawHitPoints()
 
 
 
-        }else if(fRansacArray){
-
-          //fLineArray.clear();
-          for(Int_t i=0;i<5;i++) fLineArray[i] = new TEveLine();
-          int n = 100;
-          double t0 = 0;
-          double dt = 2000;
-          fRansac = dynamic_cast<ATRANSACN::ATRansac*> (fRansacArray->At(0));
-          std::vector<ATTrack> TrackCand = fRansac->GetTrackCand();
-          std::cout<<cRED<<" Found "<<TrackCand.size()<<" RANSAC track candidates "<<cNORMAL<<std::endl;
-          fLineNum = TrackCand.size();
-          if(TrackCand.size()>0 && TrackCand.size()<5)
-          {
-
-            for(Int_t j=0;j<TrackCand.size();j++){
-               fLineArray[j] = new TEveLine();
-               ATTrack track = TrackCand.at(j);
-               std::vector<Double_t> parFit = track.GetFitPar();
-               fLineArray[j]->SetMainColor(kRed);
-               for (int i = 0; i <n;++i) {
-                     double t = t0+ dt*i/n;
-                     double x,y,z;
-                     SetLine(t,parFit,x,y,z);
-                     fLineArray[j]->SetNextPoint(x, y, z);
-
-                     //fLineArray.push_back(fLine);
-                     //l->SetPoint(i,x,y,z);
-                     std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
-               }
-
-
-            }
-
-          }
-
-
-        }//fRANSAC
 
   }
 
