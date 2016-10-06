@@ -49,6 +49,7 @@
 #pragma link C++ nestedtypedef;
 #pragma link C++ namespace ATRANSACN;
 #pragma link C++ class ATRANSACN::ATRansac+;
+#pragma link C++ struct ATRANSACN::ATRansac::PairedLines+;
 
 //#pragma link C++ class ATRansac+;
 

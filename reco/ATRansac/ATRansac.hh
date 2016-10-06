@@ -95,6 +95,16 @@ class ATRansac : public TObject
       void SetModelType(int model);
       void SetDistanceThreshold(Float_t threshold);
 
+      struct PairedLines
+      {
+        std::pair<Int_t,Int_t> LinesID;
+        Double_t minDist;
+        TVector3 meanVertex;
+        Double_t angle;
+      };
+
+      std::vector<PairedLines> PLines;
+
   protected:
       Int_t MinimizeTrack(ATTrack* track);
       static double distance2(double x,double y,double z, const double *p);
@@ -145,6 +155,8 @@ class ATRansac : public TObject
 
 
       };
+
+
 
 
 

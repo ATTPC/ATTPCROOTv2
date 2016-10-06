@@ -50,11 +50,12 @@ void ATRANSACN::ATRansac::CalcRANSAC(ATEvent *event)
           if(nHits>5)
           {
           MinimizeTrack(tracks.at(ntrack));
-          FindVertex(tracks);
+
 
           }
-      }
-    }
+      }// Tracks loop
+      FindVertex(tracks);
+    }// Minimum tracks
 
 }
 
@@ -236,7 +237,7 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
 
   // Assumes the minimum distance between two lines, with respect a given threshold, the first vertex candidate. Then evaluates the
   // distance of each remaining line with respect to the others (vertex) to decide the particles of the reaction.
-
+  //std::cout<<" New find vertex call "<<std::endl;
 
   Double_t mad=999999; // Minimum approach distance
   XYZVector c_1(-1000,-1000,-1000);
@@ -291,18 +292,42 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                           XYZVector n = L/(Double_t)L_mag;
                                           Double_t d = TMath::Abs(n.Dot(L_0-L_f0));
                                           //std::cout<<" Distance of minimum approach : "<<d<<std::endl;
+                                          Double_t num = L_1.X()*L_f1.X() + L_1.Y()*L_f1.Y() + L_1.Z()*L_f1.Z() ;
+                                          Double_t den = TMath::Sqrt(L_1.X()*L_1.X() + L_1.Y()*L_1.Y() + L_1.Z()*L_1.Z())*TMath::Sqrt(L_f1.X()*L_f1.X() + L_f1.Y()*L_f1.Y() + L_f1.Z()*L_f1.Z());
+                                          Double_t ang2 = TMath::ACos(num/den);
+
+
 
 
                                           if(d<mad){
 
                                              mad = d;
                                              //std::cout<<" New distance of minimum approach : "<<mad<<std::endl;
+                                             //std::cout<<" Angle between lines i : "<<i<<" j : "<<j<<"  "<<ang2<<std::endl;
+
                                              fVertex_1.SetXYZ(c_1.X(),c_1.Y(),c_1.Z());
                                              fVertex_2.SetXYZ(c_2.X(),c_2.Y(),c_2.Z());
                                              fMinimum = mad;
-                                             if ( !CheckTrackID(track->GetTrackID(),fTrackCand) ) fTrackCand.push_back(*track);
-                                             if ( !CheckTrackID(track_f->GetTrackID(),fTrackCand) )  fTrackCand.push_back(*track_f);
-
+                                             if ( !CheckTrackID(track->GetTrackID(),fTrackCand) ){
+                                                fTrackCand.push_back(*track);
+                                                PairedLines PL;
+                                                PL.LinesID.first  = i;
+                                                PL.LinesID.second = j;
+                                                PL.minDist = mad;
+                                                PL.meanVertex = 0.5*(fVertex_1 + fVertex_2);
+                                                PL.angle = ang2;
+                                                PLines.push_back(PL);
+                                              }
+                                             if ( !CheckTrackID(track_f->GetTrackID(),fTrackCand) ){
+                                                 fTrackCand.push_back(*track_f);
+                                                 PairedLines PL;
+                                                 PL.LinesID.first  = i;
+                                                 PL.LinesID.second = j;
+                                                 PL.minDist = mad;
+                                                 PL.meanVertex = 0.5*(fVertex_1 + fVertex_2);
+                                                 PL.angle = ang2;
+                                                 PLines.push_back(PL);
+                                             }
 
 
                                           }
@@ -315,11 +340,25 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                              if ( !CheckTrackID(track->GetTrackID(),fTrackCand) ){
                                               //std::cout<<" Add track"<<track->GetTrackID()<<std::endl;
                                               fTrackCand.push_back(*track);
+                                              PairedLines PL;
+                                              PL.LinesID.first  = i;
+                                              PL.LinesID.second = j;
+                                              PL.minDist = mad;
+                                              PL.meanVertex = 0.5*(fVertex_1 + fVertex_2);
+                                              PL.angle = ang2;
+                                              PLines.push_back(PL);
                                             }
 
                                              if ( !CheckTrackID(track_f->GetTrackID(),fTrackCand) ){
                                               //std::cout<<" Add track f"<<track_f->GetTrackID()<<std::endl;
                                               fTrackCand.push_back(*track_f);
+                                              PairedLines PL;
+                                              PL.LinesID.first  = i;
+                                              PL.LinesID.second = j;
+                                              PL.minDist = mad;
+                                              PL.meanVertex = 0.5*(fVertex_1 + fVertex_2);
+                                              PL.angle = ang2;
+                                              PLines.push_back(PL);
                                              }
                                           }
 
