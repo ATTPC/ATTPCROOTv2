@@ -138,7 +138,9 @@ ATEventDrawTask::ATEventDrawTask()
     fIsRawData=kFALSE;
 
     fHoughLinearFit =new TF1("HoughLinearFit"," (  (-TMath::Cos([0])/TMath::Sin([0]))*x ) + [1]/TMath::Sin([0])",0,500);
+    fRansacLinearFit =new TF1("RansacLinearFit","x",0,500);
     fIniHit = new ATHit();
+    fIniHitRansac = new ATHit();
     fLineNum = 0;
 
 }
@@ -151,6 +153,7 @@ ATEventDrawTask::~ATEventDrawTask()
     //delete x;
     //hitSphereArray.clear();
     delete fHoughLinearFit;
+    delete fRansacLinearFit;
 
 }
 
@@ -719,6 +722,7 @@ ATEventDrawTask::DrawHSpace()
                   std::vector<Double_t>* Dl = fHoughSpaceCircle_buff->GetDl();
                   std::vector<Double_t>* Phi = fHoughSpaceCircle_buff->GetPhi();
                   fIniHit = fHoughSpaceCircle_buff->GetIniHit();
+                  fIniHitRansac = fHoughSpaceCircle_buff->GetIniHitRansac();
 
                   Int_t numRad = Radius->size();
                   Int_t numTheta = Theta->size();

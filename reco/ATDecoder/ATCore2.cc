@@ -77,7 +77,7 @@ void ATCore2::Initialize()
 
   fIsNegativePolarity = kTRUE;
   fPedestalPtr[0] = new ATPedestal();
-  for (Int_t iCobo = 1; iCobo < 10; iCobo++)
+  for (Int_t iCobo = 1; iCobo < 40; iCobo++)
     fPedestalPtr[iCobo] = NULL;
 
   //fPlotPtr = NULL;
@@ -97,13 +97,13 @@ void ATCore2::Initialize()
   fNumTbs = 512;
 
   fTargetFrameID = -1;
-  memset(fCurrentEventID, 0, sizeof(Int_t)*10);
+  memset(fCurrentEventID, 0, sizeof(Int_t)*40);
 
   fIsSeparatedData = kFALSE;
   kEnableAuxChannel = kFALSE;
   fAuxChannels.clear();
 
-  fNumCobo = 10;
+  fNumCobo = 40;
 }
 
 Bool_t ATCore2::AddData(TString filename, Int_t coboIdx)
@@ -128,18 +128,20 @@ Bool_t ATCore2::SetData(Int_t value)
 
       fIsData &= fDecoderPtr[iCobo] -> SetData(value);
       frameType = fDecoderPtr[iCobo] -> GetFrameType();
-
-      if (frameType != GETDecoder2::kCobo) {
+/*
+      if (frameType != GETDecoder2::kCobo || frameType != GETDecoder2::kBasic) {
         std::cout << cRED << "== [ATCore] When using separated data, only accepted are not merged frame data files!" << cNORMAL << std::endl;
 
         fIsData = kFALSE;
         return fIsData;
       }
+      */
+      fIsData = kTRUE;
     }
   }
 
   fTargetFrameID = -1;
-  memset(fCurrentEventID, 0, sizeof(Int_t)*12);
+  memset(fCurrentEventID, 0, sizeof(Int_t)*40);
 
   return fIsData;
 }
@@ -424,7 +426,8 @@ ATRawEvent *ATCore2::GetRawEvent(Long64_t frameID)
 
   }*/
 
-  std::thread* cobo = new std::thread[10];
+  std::thread* cobo = new std::thread[40];
+
 
   for (Int_t iCobo = 0; iCobo < fNumCobo ; iCobo++)
             cobo[iCobo]  = std::thread([this](Int_t coboIdx) {  this -> ProcessCobo(coboIdx); }, iCobo);

@@ -50,33 +50,39 @@ ATDecoder2Task::ATDecoder2Task()
 
   fEventID = -1;
   fAuxChannels.clear();
-  fNumCobo=10;
+  fNumCobo=40;
+
+  fMask = 0xF;
+
+
 }
 
 ATDecoder2Task::~ATDecoder2Task()
 {
 }
 
-void ATDecoder2Task::SetPersistence(Bool_t value)                                              { fIsPersistence = value; }
-void ATDecoder2Task::SetNumTbs(Int_t numTbs)                                                   { fNumTbs = numTbs; fExternalNumTbs = kTRUE; }
-void ATDecoder2Task::AddData(TString filename, Int_t coboIdx)                                  { fDataList[coboIdx].push_back(filename); }
-void ATDecoder2Task::SetData(Int_t value)                                                      { fDataNum = value; }
-void ATDecoder2Task::SetFPNPedestal(Double_t pedestalRMS)                                      { fFPNPedestalRMS = pedestalRMS; }
-void ATDecoder2Task::SetPositivePolarity(Bool_t value)                                          { fIsPositive = value; }
+void ATDecoder2Task::SetPersistence(Bool_t value)                                                { fIsPersistence = value; }
+void ATDecoder2Task::SetNumTbs(Int_t numTbs)                                                     { fNumTbs = numTbs; fExternalNumTbs = kTRUE; }
+void ATDecoder2Task::AddData(TString filename, Int_t coboIdx)                                    { fDataList[coboIdx].push_back(filename); }
+void ATDecoder2Task::SetData(Int_t value)                                                        { fDataNum = value; }
+void ATDecoder2Task::SetFPNPedestal(Double_t pedestalRMS)                                        { fFPNPedestalRMS = pedestalRMS; }
+void ATDecoder2Task::SetPositivePolarity(Bool_t value)                                           { fIsPositive = value; }
 //void ATDecoder2Task::SetUseGainCalibration(Bool_t value)                                       { fUseGainCalibration = value; }
 //void ATDecoder2Task::SetGainCalibrationData(TString filename)                                  { fGainCalibrationFile = filename; }
 //void ATDecoder2Task::SetGainReference(Double_t constant, Double_t linear, Double_t quadratic)  { fGainConstant = constant; fGainLinear = linear; fGainQuadratic = quadratic; }
-void ATDecoder2Task::SetUseSeparatedData(Bool_t value)                                         { fIsSeparatedData = value; }
-void ATDecoder2Task::SetEventID(Long64_t eventid)                                              { fEventID = eventid; }
-void ATDecoder2Task::SetGeo(TString geofile)				                                           { fGeoFile = geofile; }
-void ATDecoder2Task::SetProtoMap(TString mapfile)	                                             { fProtoMapFile = mapfile;}
-void ATDecoder2Task::SetMapOpt(Int_t value)                                                    { fOpt = value; }
-Bool_t ATDecoder2Task::SetMap(Char_t const *map)                                               { fMap = map; }
-void ATDecoder2Task::SetPseudoTopologyFrame(Bool_t value)                                      { fIsPseudoTopology = value; }
-void ATDecoder2Task::SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap)         { fIniMap = inimap; fLowgMap = lowgmap; fXtalkMap = xtalkmap; }
+void ATDecoder2Task::SetUseSeparatedData(Bool_t value)                                           { fIsSeparatedData = value; }
+void ATDecoder2Task::SetEventID(Long64_t eventid)                                                { fEventID = eventid; }
+void ATDecoder2Task::SetGeo(TString geofile)				                                             { fGeoFile = geofile; }
+void ATDecoder2Task::SetProtoMap(TString mapfile)	                                               { fProtoMapFile = mapfile;}
+void ATDecoder2Task::SetMapOpt(Int_t value)                                                      { fOpt = value; }
+Bool_t ATDecoder2Task::SetMap(Char_t const *map)                                                 { fMap = map; }
+void ATDecoder2Task::SetPseudoTopologyFrame(Bool_t value)                                        { fIsPseudoTopology = value; }
+void ATDecoder2Task::SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap)           { fIniMap = inimap; fLowgMap = lowgmap; fXtalkMap = xtalkmap; }
 
-void ATDecoder2Task::SetAuxChannels(std::vector<Int_t> AuxCh)                                  { fAuxChannels = AuxCh;}
-void ATDecoder2Task::SetNumCobo(Int_t numCobo)                                                 { fNumCobo = numCobo;}
+void ATDecoder2Task::SetAuxChannels(std::vector<Int_t> AuxCh)                                    { fAuxChannels = AuxCh;}
+void ATDecoder2Task::SetNumCobo(Int_t numCobo)                                                   { fNumCobo = numCobo;}
+void ATDecoder2Task::SetPTFMask(Int_t mask)                                                      { fMask = mask;}
+
 
 Long64_t ATDecoder2Task::GetEventID() { return fEventIDLast; }
 
@@ -101,11 +107,11 @@ ATDecoder2Task::Init()
     fDecoder -> AddData(fDataList[0].at(iFile));
 
   if (fIsSeparatedData)
-    for (Int_t iCobo = 1; iCobo < 10; iCobo++)
+    for (Int_t iCobo = 1; iCobo < fNumCobo; iCobo++)
       for (Int_t iFile = 0; iFile < fDataList[iCobo].size(); iFile++)
         fDecoder -> AddData(fDataList[iCobo].at(iFile), iCobo);
 
-  if(fIsPseudoTopology) fDecoder-> SetPseudoTopologyFrame(0xF,kFALSE);
+  if(fIsPseudoTopology) fDecoder-> SetPseudoTopologyFrame(fMask,kFALSE);
 
   fDecoder -> SetData(fDataNum);
 

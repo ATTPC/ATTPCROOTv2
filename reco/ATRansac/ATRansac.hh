@@ -21,10 +21,12 @@
 #include "TH1.h"
 #include "TCanvas.h"
 #include "TGraph2D.h"
+#include "TGraph.h"
 #include "TH2.h"
 #include "TMath.h"
 #include "TApplication.h"
 #include "TROOT.h"
+#include "TF1.h"
 #include "Math/Minimizer.h"
 #include "Math/Factory.h"
 #include "Math/Functor.h"
@@ -91,9 +93,13 @@ class ATRansac : public TObject
       TVector3 GetVertex1();
       TVector3 GetVertex2();
       Double_t GetMinimum();//Distance of minumum approach between candidate lines (for the moment only 2)
+      Int_t MinimizeTrack(ATTrack* track);
+      Int_t MinimizeTrackRPhi(ATTrack* track);
       std::vector<ATTrack> GetTrackCand();
       void SetModelType(int model);
       void SetDistanceThreshold(Float_t threshold);
+      void SetRPhiSpace(); // For RxPhi Ransac calculation (eventually will be moved into a template, when I have the time...)
+      void SetXYCenter(Double_t xc, Double_t yc);
 
       struct PairedLines
       {
@@ -106,7 +112,6 @@ class ATRansac : public TObject
       std::vector<PairedLines> PLines;
 
   protected:
-      Int_t MinimizeTrack(ATTrack* track);
       static double distance2(double x,double y,double z, const double *p);
       void SetLine(double t, const double *p, double &x, double &y, double &z);
       void FindVertex(std::vector<ATTrack*> tracks);
@@ -120,6 +125,9 @@ class ATRansac : public TObject
       Int_t fLineDistThreshold;
       int fRANSACModel;
       Float_t fRANSACThreshold;
+      Bool_t fRPhiSpace;
+      Double_t fXCenter;
+      Double_t fYCenter;
 
       struct SumDistance2
       {
@@ -155,9 +163,6 @@ class ATRansac : public TObject
 
 
       };
-
-
-
 
 
 

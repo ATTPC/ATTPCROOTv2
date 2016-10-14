@@ -18,6 +18,10 @@ ATRANSACN::ATRansac::ATRansac()
   fRANSACModel = pcl::SACMODEL_LINE;
   fRANSACThreshold = 5.0;
 
+  fRPhiSpace = kFALSE;
+  fXCenter = 0.0;
+  fYCenter = 0.0;
+
   pcl::console::setVerbosityLevel(pcl::console::L_ALWAYS);
 
 }
@@ -35,6 +39,9 @@ std::vector<ATTrack> ATRANSACN::ATRansac::GetTrackCand()                        
 
 void ATRANSACN::ATRansac::SetModelType(int model)                                       { fRANSACModel = model;}
 void ATRANSACN::ATRansac::SetDistanceThreshold(Float_t threshold)                       { fRANSACThreshold = threshold;}
+void ATRANSACN::ATRansac::SetRPhiSpace()                                                { fRPhiSpace = kTRUE;}
+void ATRANSACN::ATRansac::SetXYCenter(Double_t xc, Double_t yc)                                   { fXCenter = xc;fYCenter=yc;}
+
 
 void ATRANSACN::ATRansac::CalcRANSAC(ATEvent *event)
 {
@@ -84,10 +91,20 @@ std::vector<ATTrack*> ATRANSACN::ATRansac::RansacPCL(ATEvent *event)
           ATHit* hit = event->GetHit(iHit);
           Int_t PadNumHit = hit->GetHitPadNum();
           TVector3 position = hit->GetPosition();
+
+        if(fRPhiSpace){
+          cloud->points[iHit].x = hit->GetTimeStamp();
+          cloud->points[iHit].y = TMath::Sqrt(  TMath::Power((fXCenter-position.X()),2)   +  TMath::Power((fYCenter-position.Y()),2)    )*TMath::ATan2(fXCenter-position.X(),fYCenter-position.Y());
+			    cloud->points[iHit].z = 0.0;
+          cloud->points[iHit].rgb = iHit;
+
+        }
+        else{
           cloud->points[iHit].x = position.X();
  			    cloud->points[iHit].y = position.Y();
 			    cloud->points[iHit].z = position.Z();
           cloud->points[iHit].rgb = iHit; // Storing the position of the hit in the event container
+        }
 
     }
 
@@ -153,7 +170,7 @@ while (cloud->points.size () > 0.01 * nr_points)
 Int_t ATRANSACN::ATRansac::MinimizeTrack(ATTrack* track)
 {
 
-        gErrorIgnoreLevel=kFatal;
+         gErrorIgnoreLevel=kFatal;
          Int_t nd = 10000;
          TGraph2D * gr = new TGraph2D(); /////NB: This should be created on the heap only once so it should move outside of this function!!!!!!!!!!!!!!!
          std::vector<ATHit> *HitArray = track->GetHitArray();
@@ -164,7 +181,6 @@ Int_t ATRANSACN::ATRansac::MinimizeTrack(ATTrack* track)
               ATHit hit = HitArray->at(N);
               TVector3 pos = hit.GetPosition();
               gr->SetPoint(N,pos.X(),pos.Y(),pos.Z());
-
             }
 
             ROOT::Fit::Fitter fitter;
@@ -227,6 +243,44 @@ Int_t ATRANSACN::ATRansac::MinimizeTrack(ATTrack* track)
                 l->Draw("same");*/
 
             return 0;
+
+
+
+}
+
+Int_t ATRANSACN::ATRansac::MinimizeTrackRPhi(ATTrack* track)
+{
+
+  gErrorIgnoreLevel=kFatal;
+  TGraph* gr = new TGraph();
+
+   std::vector<ATHit> *HitArray = track->GetHitArray();
+
+
+      for(Int_t N=0;N<HitArray->size();N++){
+        ATHit hit = HitArray->at(N);
+        TVector3 pos = hit.GetPosition();
+        Double_t xdum = hit.GetTimeStamp();
+        Double_t ydum = TMath::Sqrt(  TMath::Power((fXCenter-pos.X()),2)   +  TMath::Power((fYCenter-pos.Y()),2)    )*TMath::ATan2(fXCenter-pos.X(),fYCenter-pos.Y());
+        gr->SetPoint(N,xdum,ydum);
+
+      }
+
+      gr->Fit("pol1","FQ");
+      //gr->Draw("A*");
+      TF1 *fit = gr->GetFunction("pol1");
+      std::vector<Double_t> parFit;
+      parFit.push_back(fit->GetParameter(0));
+      parFit.push_back(fit->GetParameter(1));
+      double Chi2_min = fit->GetChisquare();
+      Int_t NDF = fit->GetNDF();
+      track->SetFitPar(parFit);
+      track->SetMinimum(Chi2_min);
+      track->SetNFree(NDF);
+
+      //delete fit;
+      //delete gr;
+      return 0;
 
 
 

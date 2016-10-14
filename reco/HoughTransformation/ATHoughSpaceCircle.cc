@@ -27,6 +27,7 @@ ATHoughSpaceCircle::ATHoughSpaceCircle()
     fDl = new std::vector<Double_t>;
     fTheta = new std::vector<Double_t>;
     fIniHit = new ATHit();
+    fIniHitRansac = new ATHit();
     fClusteredHits = new std::vector<ATHit>;
     for(Int_t i;i<8;i++) fParameter[i]=0.0;
 
@@ -67,6 +68,8 @@ ATHoughSpaceCircle::~ATHoughSpaceCircle()
 //void ATHoughSpaceCircle::SetThreshold(Double_t value) {fThreshold = value;}
 
 std::pair<Double_t,Double_t> ATHoughSpaceCircle::GetHoughPar() {return fHoughLinePar;}
+
+std::vector<Double_t>  ATHoughSpaceCircle::GetRansacPar()      {return fRansacLinePar;}
 
 TH2F* ATHoughSpaceCircle::GetHoughSpace(TString ProjPlane)   {return HistHoughXY;}
 
@@ -858,6 +861,9 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                     fIniTheta=0.0;
 
 
+                  // ****************** Begin: RxPhi Hough Space + Clustering ********************** //
+
+
                     for(Int_t iHit=0; iHit<nHits-1; iHit++){
 
                            ATHit hit = event->GetHitArray()->at(iHit);
@@ -903,7 +909,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                     Double_t geo_dist = TMath::Abs (TMath::Cos(fHoughLinePar.first)*fPhi->at(iHit)*fRadius->at(iHit)  + TMath::Sin(fHoughLinePar.first)*hit.GetTimeStamp()  - fHoughLinePar.second);
                     Double_t hit_dist = TMath::Sqrt( TMath::Power( (fPhi->at(iHit)*fRadius->at(iHit) - IniPhiBuff*IniRadiusBuff),2) + TMath::Power(hit.GetTimeStamp()-IniTSBuff ,2) );
                     //if(hit_dist<50) std::cout<<" Hist Dist pre :"<<hit_dist<<" Geo Dist : "<<geo_dist<<std::endl;
-
+                    //std::cout<<" Hit ID : "<<hit.GetHitID()<<" Hit Time Stamp : "<< hit.GetTimeStamp()<<std::endl;
 
 
                             if(geo_dist<10.0){
@@ -935,6 +941,56 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
                    }// End of clustering algorithm
 
+
+
+                   ATRANSACN::ATRansac *Ransac = new ATRANSACN::ATRansac();
+                   Ransac->SetModelType(pcl::SACMODEL_LINE);
+                   Ransac->SetDistanceThreshold(3.0);
+                   Ransac->SetRPhiSpace();
+                   Ransac->SetXYCenter(fXCenter,fYCenter);
+                   std::vector<ATTrack*> trackSpiral = Ransac->RansacPCL(event);
+                   if(trackSpiral.size()>1){
+                     for(Int_t ntrack=0;ntrack<trackSpiral.size();ntrack++){
+                       std::vector<ATHit>* trackHits = trackSpiral.at(ntrack)->GetHitArray();
+                       Int_t nHits = trackHits->size();
+                       //std::cout<<" Num  Hits : "<<nHits<<std::endl;
+                         if(nHits>5)
+                         {
+                         if(ntrack==0) Ransac->MinimizeTrackRPhi(trackSpiral.at(ntrack));
+                         }
+                     }// Tracks loop
+
+                      fRansacLinePar = trackSpiral.at(0)->GetFitPar(); //For the moment we keep the "strongest track"
+                      std::vector<ATHit>* trackHits = trackSpiral.at(0)->GetHitArray();
+                      std::reverse(trackHits->begin(), trackHits->end());
+                      ATHit firstHit = trackHits->front();
+                      ATHit lastHit = trackHits->back();
+                      Int_t index = 0;
+                      Int_t lastHitMult =0;
+
+                      while(lastHitMult==0 && index<trackHits->size()){
+                      //std::cout<<" first Hit "<<firstHit.GetTimeStamp()<<std::endl;
+                      //std::cout<<" last Hit "<<lastHit.GetTimeStamp()<<std::endl;
+                      lastHitMult = GetTBMult(trackHits->at(index).GetTimeStamp(),trackHits,index);
+                      if(lastHitMult){
+                      ATHit hit = trackHits->at(index);
+                      TVector3 position = hit.GetPosition();
+                      fIniHitRansac->SetHit(hit.GetHitPadNum(),hit.GetHitID(),position.X(),position.Y(),position.Z(),hit.GetCharge());
+                      //std::cout<<" Ini Hit ID : "<<hit.GetHitID()<<std::endl;
+                      fIniHitRansac->SetTimeStamp(hit.GetTimeStamp());
+
+                      }
+                      //std::cout<<" last hit with TB mult>0 "<<trackHits->at(lastHitMult).GetTimeStamp()<<std::endl;
+                      //std::cout<<" Index "<<lastHitMult<<std::endl;
+                      //std::cout<<" Size : "<<trackHits->size()<<std::endl;
+                      index++;
+                      }
+
+                   }// Minimum tracks
+
+
+
+                    //delete Ransac;
 
 
                     Double_t dl_theta=0.0;
@@ -1032,6 +1088,9 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
                    }// Loop over clusterSize
 
+                   // ****************** End: RxPhi Hough Space + Clustering ********************** //
+
+
 
                   Double_t fThetaVal=0.0;
                   Int_t thetacnt=0; //Needed to remove theta values with 0
@@ -1068,7 +1127,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
               if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) { // Check RxPhi plot to adjust the angle
 
 
-                 min->MinimizeOptMapAmp(parameter,event,hPadPlane,PadCoord);
+                 //min->MinimizeOptMapAmp(parameter,event,hPadPlane,PadCoord);
                  fPosXmin = min->GetPosXMin();
                  fPosYmin = min->GetPosYMin();
                  fPosZmin = min->GetPosZMin();
@@ -1212,5 +1271,19 @@ std::pair<Double_t,Double_t> ATHoughSpaceCircle::CalHoughParameters()
 void ATHoughSpaceCircle::CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4){
 
 
+
+}
+
+Int_t ATHoughSpaceCircle::GetTBMult(Int_t TB,std::vector<ATHit> *harray,Int_t index)
+{
+
+    auto it =  find_if( harray->begin()+index,harray->end(),[&TB](ATHit& hit){return hit.GetTimeStamp()==TB;}   );
+    if(it != harray->end()){
+       auto hitInd = std::distance<std::vector<ATHit>::const_iterator>(harray->begin(),it);
+       return hitInd;
+    }
+    else{
+      return 0;
+    }
 
 }

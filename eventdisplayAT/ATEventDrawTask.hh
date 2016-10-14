@@ -237,7 +237,10 @@ class ATEventDrawTask : public FairTask
     Bool_t fIsRawData;
 
     TF1 *fHoughLinearFit;
+    TF1 *fRansacLinearFit;
     ATHit *fIniHit;
+    ATHit *fIniHitRansac;
+
 
     //std::vector<TEveLine*> fLineArray;
     TEveLine* fLineArray[5];
