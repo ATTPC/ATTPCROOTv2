@@ -22,6 +22,8 @@ ATRANSACN::ATRansac::ATRansac()
   fXCenter = 0.0;
   fYCenter = 0.0;
 
+  fRANSACPointThreshold = 0.01; //Default 10%
+
   pcl::console::setVerbosityLevel(pcl::console::L_ALWAYS);
 
 }
@@ -40,7 +42,8 @@ std::vector<ATTrack> ATRANSACN::ATRansac::GetTrackCand()                        
 void ATRANSACN::ATRansac::SetModelType(int model)                                       { fRANSACModel = model;}
 void ATRANSACN::ATRansac::SetDistanceThreshold(Float_t threshold)                       { fRANSACThreshold = threshold;}
 void ATRANSACN::ATRansac::SetRPhiSpace()                                                { fRPhiSpace = kTRUE;}
-void ATRANSACN::ATRansac::SetXYCenter(Double_t xc, Double_t yc)                                   { fXCenter = xc;fYCenter=yc;}
+void ATRANSACN::ATRansac::SetXYCenter(Double_t xc, Double_t yc)                         { fXCenter = xc;fYCenter=yc;}
+void ATRANSACN::ATRansac::SetRANSACPointThreshold(Float_t val)                          { fRANSACPointThreshold = val;}
 
 
 void ATRANSACN::ATRansac::CalcRANSAC(ATEvent *event)
@@ -124,8 +127,8 @@ std::vector<ATTrack*> ATRANSACN::ATRansac::RansacPCL(ATEvent *event)
 
 int i = 0, nr_points = (int) cloud->points.size ();
 
-// While 30% of the original cloud is still there
-while (cloud->points.size () > 0.01 * nr_points)
+
+while (cloud->points.size () > fRANSACPointThreshold * nr_points)
  {
  // Segment the largest planar component from the remaining cloud
  //std::cout<<cloud->points.size()<<std::endl;
@@ -267,16 +270,25 @@ Int_t ATRANSACN::ATRansac::MinimizeTrackRPhi(ATTrack* track)
       }
 
       gr->Fit("pol1","FQ");
+      int npoints = gr->GetN();
       //gr->Draw("A*");
       TF1 *fit = gr->GetFunction("pol1");
       std::vector<Double_t> parFit;
       parFit.push_back(fit->GetParameter(0));
       parFit.push_back(fit->GetParameter(1));
       double Chi2_min = fit->GetChisquare();
+      double sigma2 = 25.0; //Size of the pad
       Int_t NDF = fit->GetNDF();
       track->SetFitPar(parFit);
       track->SetMinimum(Chi2_min);
       track->SetNFree(NDF);
+
+
+      /*std::cout<<" Line Fit Results : "<<std::endl;
+      std::cout<<parFit[0]<<" "<<parFit[1]<<"  "<<std::endl;
+      std::cout<<" Chi2          : "<<Chi2_min<<" NDF : "<<NDF<<std::endl;
+      std::cout<<" Chi2 reduced  : "<<(Chi2_min/sigma2/(double) npoints)<<std::endl;
+      std::cout<<" Angle : "<<TMath::ATan2(parFit[1],1)*180.0/TMath::Pi()<<std::endl;*/
 
       //delete fit;
       //delete gr;
@@ -362,7 +374,7 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                              fVertex_1.SetXYZ(c_1.X(),c_1.Y(),c_1.Z());
                                              fVertex_2.SetXYZ(c_2.X(),c_2.Y(),c_2.Z());
                                              fMinimum = mad;
-                                             if ( !CheckTrackID(track->GetTrackID(),fTrackCand) ){
+                                             if ( !CheckTrackID(track->GetTrackID(),&fTrackCand) ){
                                                 fTrackCand.push_back(*track);
                                                 PairedLines PL;
                                                 PL.LinesID.first  = i;
@@ -372,7 +384,7 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                                 PL.angle = ang2;
                                                 PLines.push_back(PL);
                                               }
-                                             if ( !CheckTrackID(track_f->GetTrackID(),fTrackCand) ){
+                                             if ( !CheckTrackID(track_f->GetTrackID(),&fTrackCand) ){
                                                  fTrackCand.push_back(*track_f);
                                                  PairedLines PL;
                                                  PL.LinesID.first  = i;
@@ -391,7 +403,7 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
 
 
 
-                                             if ( !CheckTrackID(track->GetTrackID(),fTrackCand) ){
+                                             if ( !CheckTrackID(track->GetTrackID(),&fTrackCand) ){
                                               //std::cout<<" Add track"<<track->GetTrackID()<<std::endl;
                                               fTrackCand.push_back(*track);
                                               PairedLines PL;
@@ -403,7 +415,7 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                               PLines.push_back(PL);
                                             }
 
-                                             if ( !CheckTrackID(track_f->GetTrackID(),fTrackCand) ){
+                                             if ( !CheckTrackID(track_f->GetTrackID(),&fTrackCand) ){
                                               //std::cout<<" Add track f"<<track_f->GetTrackID()<<std::endl;
                                               fTrackCand.push_back(*track_f);
                                               PairedLines PL;
@@ -460,11 +472,11 @@ void ATRANSACN::ATRansac::SetLine(double t, const double *p, double &x, double &
 
 }
 
-Bool_t ATRANSACN::ATRansac::CheckTrackID(Int_t trackID, std::vector<ATTrack> trackArray)
+Bool_t ATRANSACN::ATRansac::CheckTrackID(Int_t trackID, std::vector<ATTrack> *trackArray)
 {
-  auto it =  find_if( trackArray.begin(),trackArray.end(),[&trackID](ATTrack& track) {return track.GetTrackID()==trackID;}   );
-  if(it != trackArray.end()){
-     auto hitInd = std::distance<std::vector<ATTrack>::const_iterator>(trackArray.begin(),it);
+  auto it =  find_if( trackArray->begin(),trackArray->end(),[&trackID](ATTrack& track) {return track.GetTrackID()==trackID;}   );
+  if(it != trackArray->end()){
+     auto hitInd = std::distance<std::vector<ATTrack>::const_iterator>(trackArray->begin(),it);
      return kTRUE;
   }
   else return kFALSE;

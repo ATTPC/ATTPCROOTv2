@@ -100,6 +100,7 @@ class ATRansac : public TObject
       void SetDistanceThreshold(Float_t threshold);
       void SetRPhiSpace(); // For RxPhi Ransac calculation (eventually will be moved into a template, when I have the time...)
       void SetXYCenter(Double_t xc, Double_t yc);
+      void SetRANSACPointThreshold(Float_t val);
 
       struct PairedLines
       {
@@ -115,7 +116,7 @@ class ATRansac : public TObject
       static double distance2(double x,double y,double z, const double *p);
       void SetLine(double t, const double *p, double &x, double &y, double &z);
       void FindVertex(std::vector<ATTrack*> tracks);
-      Bool_t CheckTrackID(Int_t trackID, std::vector<ATTrack> trackArray); //Check if Track ID is in the list
+      Bool_t CheckTrackID(Int_t trackID, std::vector<ATTrack> *trackArray); //Check if Track ID is in the list
 
 
       TVector3 fVertex_1;
@@ -128,6 +129,7 @@ class ATRansac : public TObject
       Bool_t fRPhiSpace;
       Double_t fXCenter;
       Double_t fYCenter;
+      Float_t fRANSACPointThreshold; //Number of points in percentage
 
       struct SumDistance2
       {

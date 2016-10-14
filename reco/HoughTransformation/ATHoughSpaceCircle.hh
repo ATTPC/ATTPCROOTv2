@@ -96,6 +96,8 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         std::pair<Double_t,Double_t> CalHoughParameters(TH2F* hist); //TODO: implement it as virtual member in the base class
         std::pair<Double_t,Double_t> CalHoughParameters(); //Overloaded version for std::map
         Int_t GetTBMult(Int_t TB,std::vector<ATHit> *harray,Int_t index);
+        ATTrack& FindCandidateTrack(const std::vector<ATTrack*>& tracks);
+        void GetDeviation(std::vector<ATHit>* hits,ATHit& _hit,Double_t& _x_dev,Double_t& _y_dev);
 
         //Double_t fThreshold;
         std::map<std::vector<Float_t>,Int_t> HoughMap_XY;

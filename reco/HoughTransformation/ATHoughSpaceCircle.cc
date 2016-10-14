@@ -941,49 +941,69 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
                    }// End of clustering algorithm
 
+                  //std::cout<<" New RANSAC Event "<<std::endl;
 
 
                    ATRANSACN::ATRansac *Ransac = new ATRANSACN::ATRansac();
                    Ransac->SetModelType(pcl::SACMODEL_LINE);
+                   Ransac->SetRANSACPointThreshold(0.1);
                    Ransac->SetDistanceThreshold(3.0);
                    Ransac->SetRPhiSpace();
                    Ransac->SetXYCenter(fXCenter,fYCenter);
                    std::vector<ATTrack*> trackSpiral = Ransac->RansacPCL(event);
+                   std::vector<ATTrack*> trackSpiral_buff;
+                   //std::cout<<" Found : "<<trackSpiral.size()<<" tracks "<<std::endl;
                    if(trackSpiral.size()>1){
                      for(Int_t ntrack=0;ntrack<trackSpiral.size();ntrack++){
                        std::vector<ATHit>* trackHits = trackSpiral.at(ntrack)->GetHitArray();
                        Int_t nHits = trackHits->size();
                        //std::cout<<" Num  Hits : "<<nHits<<std::endl;
-                         if(nHits>5)
-                         {
-                         if(ntrack==0) Ransac->MinimizeTrackRPhi(trackSpiral.at(ntrack));
+                         if(nHits>5 && ntrack==0){
+                              // Since the method returns the "stronger" lines ordered we limit the attemps to 5
+                               Ransac->MinimizeTrackRPhi(trackSpiral.at(ntrack)); //Limited to 5 lines with more than 5 hits
+                               std::vector<Double_t> LinePar = trackSpiral.at(ntrack)->GetFitPar();
+                                  if(LinePar.size()!=0 || LinePar.at(1)<0) trackSpiral_buff.push_back(trackSpiral.at(ntrack)); //Remove failed fits and lines with positive slope
                          }
+
+
                      }// Tracks loop
 
-                      fRansacLinePar = trackSpiral.at(0)->GetFitPar(); //For the moment we keep the "strongest track"
+                     //std::cout<<" Remaining : "<<trackSpiral_buff.size()<<" tracks "<<std::endl;
+
+                      ATTrack &trackCand = FindCandidateTrack(trackSpiral_buff); // Find the most probable line and then scan points in the line
+
+                      fRansacLinePar = trackCand.GetFitPar();
+
+                      //// THIS PART IS DECOUPLED
                       std::vector<ATHit>* trackHits = trackSpiral.at(0)->GetHitArray();
+                      ////////////
+
                       std::reverse(trackHits->begin(), trackHits->end());
                       ATHit firstHit = trackHits->front();
                       ATHit lastHit = trackHits->back();
                       Int_t index = 0;
                       Int_t lastHitMult =0;
+                      Double_t x_mean = 0.0;
+                      Double_t y_mean = 0.0;
 
                       while(lastHitMult==0 && index<trackHits->size()){
-                      //std::cout<<" first Hit "<<firstHit.GetTimeStamp()<<std::endl;
-                      //std::cout<<" last Hit "<<lastHit.GetTimeStamp()<<std::endl;
-                      lastHitMult = GetTBMult(trackHits->at(index).GetTimeStamp(),trackHits,index);
-                      if(lastHitMult){
-                      ATHit hit = trackHits->at(index);
-                      TVector3 position = hit.GetPosition();
-                      fIniHitRansac->SetHit(hit.GetHitPadNum(),hit.GetHitID(),position.X(),position.Y(),position.Z(),hit.GetCharge());
-                      //std::cout<<" Ini Hit ID : "<<hit.GetHitID()<<std::endl;
-                      fIniHitRansac->SetTimeStamp(hit.GetTimeStamp());
+                              //std::cout<<" first Hit "<<firstHit.GetTimeStamp()<<std::endl;
+                              //std::cout<<" last Hit "<<lastHit.GetTimeStamp()<<std::endl;
+                              lastHitMult = GetTBMult(trackHits->at(index).GetTimeStamp(),trackHits,index); // Get the last RANSAC hit with TB mult >1
+                              if(lastHitMult){
+                              ATHit hit = trackHits->at(index);
+                              TVector3 position = hit.GetPosition();
+                              GetDeviation(trackHits,hit,x_mean,y_mean);
+                              fIniHitRansac->SetHit(hit.GetHitPadNum(),hit.GetHitID(),position.X(),position.Y(),position.Z(),hit.GetCharge());
+                              //std::cout<<" Ini Hit ID : "<<hit.GetHitID()<<std::endl;
+                              fIniHitRansac->SetTimeStamp(hit.GetTimeStamp());
 
-                      }
-                      //std::cout<<" last hit with TB mult>0 "<<trackHits->at(lastHitMult).GetTimeStamp()<<std::endl;
-                      //std::cout<<" Index "<<lastHitMult<<std::endl;
-                      //std::cout<<" Size : "<<trackHits->size()<<std::endl;
-                      index++;
+                              }
+                              //std::cout<<" last hit with TB mult>0 "<<trackHits->at(lastHitMult).GetTimeStamp()<<std::endl;
+                              //std::cout<<" Index "<<lastHitMult<<std::endl;
+                              //std::cout<<" Size : "<<trackHits->size()<<std::endl;
+
+                              index++;
                       }
 
                    }// Minimum tracks
@@ -1285,5 +1305,28 @@ Int_t ATHoughSpaceCircle::GetTBMult(Int_t TB,std::vector<ATHit> *harray,Int_t in
     else{
       return 0;
     }
+
+}
+
+ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tracks)
+{
+    return *tracks.at(0);
+
+}
+
+void ATHoughSpaceCircle::GetDeviation(std::vector<ATHit>* hits,ATHit& _hit,Double_t& _x_dev,Double_t& _y_dev)
+{
+
+    Double_t mean_x;
+    Double_t mean_y;
+
+          for(auto i=0;i<hits->size();i++)
+          {
+            TVector3 position = hits->at(i).GetPosition();
+            mean_x+=position.X();
+            mean_y+=position.Y();
+          }
+
+
 
 }
