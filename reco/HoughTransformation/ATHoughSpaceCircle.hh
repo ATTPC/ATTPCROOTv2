@@ -98,6 +98,7 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         Int_t GetTBMult(Int_t TB,std::vector<ATHit> *harray,Int_t index);
         ATTrack& FindCandidateTrack(const std::vector<ATTrack*>& tracks);
         void GetDeviation(std::vector<ATHit>* hits,ATHit& _hit,Double_t& _x_dev,Double_t& _y_dev);
+        Int_t GetDensityOfHits(std::vector<ATHit>* hits,Int_t index, Int_t tb_range); //Gets number of hits around a time bucket
 
         //Double_t fThreshold;
         std::map<std::vector<Float_t>,Int_t> HoughMap_XY;
