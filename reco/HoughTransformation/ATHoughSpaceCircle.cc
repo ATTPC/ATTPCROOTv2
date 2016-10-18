@@ -1010,7 +1010,6 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                               if(lastHitMult){
                               ATHit hit = trackHits->at(index);
                               TVector3 position = hit.GetPosition();
-                              //GetDeviation(trackHits,hit,x_mean,y_mean);
                               Int_t tb_range = 10; //Range of timebuckets to calculate density of hits
                               Int_t hitdens = GetDensityOfHits(trackHits,hit.GetTimeStamp(),tb_range);
                               //std::cout<<" Hit Time Bucket : "<<hit.GetTimeStamp()<<" lastHitMult "<<lastHitMult<<" hitdens "<<hitdens<<std::endl;
@@ -1342,26 +1341,41 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
   // TODO: Slope and intercept limits should be externally implemented by visual inspection of the events
 
   Int_t index=0;
-  Float_t fSlopeLimit = -20.0;
+  Float_t fSlopeLimit = -40.0;
   Float_t fInterceptLimit = 200.0;
+  Int_t max_TB = 0;
 
   if(tracks.size()>1){
 
+    ATTrack* track_b = tracks.at(0);
+    std::vector<Double_t> LinePar_b = track_b->GetFitPar();
+    std::vector<ATHit>* trackHits_b = track_b->GetHitArray();
+    Double_t chi2_b = track_b->GetMinimum();
+    Int_t ndf_b  = track_b->GetNFree();
 
-    for(Int_t i=0;i<tracks.size()-1;i++)
+    ATHit hit_b_f = trackHits_b->front();
+    ATHit hit_b_b = trackHits_b->back();
+
+    Double_t x_mean_b = 0.0;
+    Double_t y_mean_b = 0.0;
+
+    GetDeviation(trackHits_b,x_mean_b,y_mean_b);
+
+
+
+    for(Int_t i=1;i<tracks.size();i++)
     {
-        ATTrack* track_b = tracks.at(i);
-        std::vector<Double_t> LinePar_b = track_b->GetFitPar();
-        std::vector<ATHit>* trackHits_b = track_b->GetHitArray();
 
-        ATHit hit_b_f = trackHits_b->front();
-        ATHit hit_b_b = trackHits_b->back();
-
-        for(Int_t j=i+1;j<tracks.size();j++){
-
-                ATTrack* track_f = tracks.at(j);
+                ATTrack* track_f = tracks.at(i);
                 std::vector<Double_t> LinePar_f = track_f->GetFitPar();
                 std::vector<ATHit>* trackHits_f = track_f->GetHitArray();
+                Double_t chi2_f = track_f->GetMinimum();
+                Int_t ndf_f  = track_f->GetNFree();
+
+                Double_t x_mean_f = 0.0;
+                Double_t y_mean_f = 0.0;
+
+                GetDeviation(trackHits_f,x_mean_f,y_mean_f);
 
                 ATHit hit_f_f = trackHits_f->front();
                 ATHit hit_f_b = trackHits_f->back();
@@ -1375,23 +1389,48 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
                 std::cout<<" ====================================================== "<<std::endl;
                 std::cout<<LinePar_b.at(0)<<"  "<<LinePar_b.at(1)<<std::endl;
                 std::cout<<LinePar_f.at(0)<<"  "<<LinePar_f.at(1)<<std::endl;
+
+                // Distance in the RxPhi space
+                Double_t xdum_b = hit_b_b.GetTimeStamp();
+                Double_t ydum_b = TMath::Sqrt(  TMath::Power((fXCenter-pos_b_b.X()),2)   +  TMath::Power((fYCenter-pos_b_b.Y()),2)    )*TMath::ATan2(fXCenter-pos_b_b.X(),fYCenter-pos_b_b.Y());
+                Double_t xdum_f = hit_f_b.GetTimeStamp();
+                Double_t ydum_f = TMath::Sqrt(  TMath::Power((fXCenter-pos_f_b.X()),2)   +  TMath::Power((fYCenter-pos_f_b.Y()),2)    )*TMath::ATan2(fXCenter-pos_f_b.X(),fYCenter-pos_f_b.Y());
+
+
+                Double_t dist_x = xdum_b - xdum_f;
+                Double_t dist_y = ydum_b - ydum_f;
+                Double_t dist_tot = TMath::Sqrt( TMath::Power(dist_x,2) + TMath::Power(dist_y,2) );
+
+                // Track hits are sorted in descending order, i.e. first hit is largest one in TB
                 std::cout<<" First hit of the first line : "<<hit_b_b.GetTimeStamp()<<" Number of hits : "<<trackHits_b->size()<<std::endl;
                 std::cout<<" First hit of the second line : "<<hit_f_b.GetTimeStamp()<<" Number of hits : "<<trackHits_f->size()<<std::endl;
-                std::cout<<" Index i : "<<i<<" Index j : "<<j<<std::endl;
+                std::cout<<" Last hit of the first line : "<<hit_b_f.GetTimeStamp()<<" Number of hits : "<<trackHits_b->size()<<std::endl;
+                std::cout<<" Last hit of the second line : "<<hit_f_f.GetTimeStamp()<<" Number of hits : "<<trackHits_f->size()<<std::endl;
+                std::cout<<" First line reduced Chi2 : "<<chi2_b/ndf_b<<"    Second line reduced Chi2 : "<<chi2_f/ndf_f<<std::endl;
+                std::cout<<" First line std dev x : "<<x_mean_b<<" First line std dev y : "<<y_mean_b<<std::endl;
+                std::cout<<" Second line std dev x : "<<x_mean_f<<" Second line std dev y : "<<y_mean_f<<std::endl;
+                std::cout<<" Distance between first hit of the lines : "<<dist_tot<<std::endl;
+                std::cout<<" Distance X between first hit of the lines : "<<dist_x<<std::endl;
+                std::cout<<" Distance Y between first hit of the lines : "<<dist_y<<std::endl;
+                std::cout<<" Length of the first line in TB : "<<hit_b_f.GetTimeStamp()-hit_b_b.GetTimeStamp()<<std::endl;
+                std::cout<<" Length of the second line in TB : "<<hit_f_f.GetTimeStamp()-hit_f_b.GetTimeStamp()<<std::endl;
+                std::cout<<" Ratio length/points First line : "<<(hit_b_f.GetTimeStamp()-hit_b_b.GetTimeStamp())/(float)trackHits_b->size()<<std::endl;
+                std::cout<<" Ratio length/points Second line : "<<(hit_f_f.GetTimeStamp()-hit_f_b.GetTimeStamp())/(float)trackHits_f->size()<<std::endl;
+                std::cout<<" Index i : "<<i<<" Index i+1 : "<<i+1<<std::endl;
+                std::cout<<" Max TB : "<<max_TB<<std::endl;
 
 
-                  // Get the line on the right by comparing the last time bucket of each one and the slope
-                  if((hit_b_b.GetTimeStamp()>hit_f_b.GetTimeStamp()) && (LinePar_b.at(1)>fSlopeLimit)) index = i;
-                  else if ((hit_b_b.GetTimeStamp()<hit_f_b.GetTimeStamp()) && (LinePar_f.at(1)>fSlopeLimit)) index = j;
-                  else{
-                    //std::cout<<cRED<<" ATHoughSpaceCircle::FindCandidateTrack : Warning! Inconsistent time bucket between lines"<<cNORMAL<<std::endl;
-                    index=0;
+                  // Get the line on the right by comparing the last time bucket of each one and the slope. A maximum TB is defined to keep the line with the latest
+                  // point when comparing every  track just once.
+                  if((hit_b_b.GetTimeStamp()>hit_f_b.GetTimeStamp()) && (LinePar_b.at(1)>fSlopeLimit) && (hit_b_b.GetTimeStamp()>max_TB) ){
+                     index = 0;
+                     max_TB = hit_b_b.GetTimeStamp();
+                  }else if ((hit_b_b.GetTimeStamp()<hit_f_b.GetTimeStamp()) && (LinePar_f.at(1)>fSlopeLimit)  && (hit_f_b.GetTimeStamp()>max_TB) ){
+                     index = i;
+                     max_TB = hit_f_b.GetTimeStamp();
                   }
 
                   std::cout<<" Index inside : "<<index<<std::endl;
-
-        }
-
 
 
     }
@@ -1404,12 +1443,14 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
 
 }
 
-void ATHoughSpaceCircle::GetDeviation(std::vector<ATHit>* hits,ATHit& _hit,Double_t& _x_dev,Double_t& _y_dev)
+void ATHoughSpaceCircle::GetDeviation(std::vector<ATHit>* hits,Double_t& _x_dev,Double_t& _y_dev)
 {
 
-    Double_t mean_x;
-    Double_t mean_y;
+    Double_t mean_x=0;
+    Double_t mean_y=0;
+    Double_t sigma = 5.00; //Standard deviation due to the pad size in mm
 
+      if(hits->size()>1){
           for(auto i=0;i<hits->size();i++)
           {
             TVector3 position = hits->at(i).GetPosition();
@@ -1417,6 +1458,21 @@ void ATHoughSpaceCircle::GetDeviation(std::vector<ATHit>* hits,ATHit& _hit,Doubl
             mean_y+=position.Y();
           }
 
+          mean_x/=hits->size();
+          mean_y/=hits->size();
+
+          for(auto i=0;i<hits->size();i++)
+          {
+            TVector3 position = hits->at(i).GetPosition();
+            _x_dev+= TMath::Power(mean_x - position.X(),2)/TMath::Power(sigma,2);
+            _y_dev+= TMath::Power(mean_y - position.Y(),2)/TMath::Power(sigma,2);
+          }
+
+           _x_dev/=hits->size();
+           _y_dev/=hits->size();
+
+
+      }
 
 
 }
