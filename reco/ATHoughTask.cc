@@ -148,7 +148,7 @@ ATHoughTask::Exec(Option_t *opt)
      fEvent  = (ATEvent *) fEventHArray -> At(0);
      if(fIsPhiReco) fProtoevent = (ATProtoEvent *) fProtoEventHArray -> At(0);
      fInternalID++;
-     if(fInternalID%100==0) std::cout << "  -I- ATHoughTask -  Event Number :  " << fEvent -> GetEventID()<<" Internal ID : "<<fInternalID<< std::endl;
+     std::cout << "  -I- ATHoughTask -  Event Number :  " << fEvent -> GetEventID()<<" Internal ID : "<<fInternalID<< std::endl;
 
     if(fIsLinear){ // TODO: Solve this dirty way with a dynamic cast and make global pointers
 

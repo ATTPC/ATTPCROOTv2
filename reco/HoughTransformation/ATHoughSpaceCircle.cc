@@ -12,6 +12,11 @@
 #include "FairRuntimeDb.h"
 #include "FairRun.h"
 
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+
 ClassImp(ATHoughSpaceCircle)
 
 ATHoughSpaceCircle::ATHoughSpaceCircle()
@@ -941,7 +946,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
                    }// End of clustering algorithm
 
-                  std::cout<<" New RANSAC Event "<<std::endl;
+                  std::cout<<cRED<<" New RANSAC Event "<<cNORMAL<<std::endl;
 
                    // RANSAC calculation for RxPhi:
                   // This part of the code extracts the lines found in the RxPhi space using the RANSAC algorithm of the PCL library.
@@ -983,9 +988,9 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
                       fRansacLinePar = trackCand.GetFitPar();
 
-                      //// NB:::THIS PART IS DECOUPLED
-                      std::vector<ATHit>* trackHits = trackSpiral.at(0)->GetHitArray();
-                      ////////////
+
+                      //std::vector<ATHit>* trackHits = trackSpiral.at(0)->GetHitArray();
+                      std::vector<ATHit>* trackHits = trackCand.GetHitArray();
 
                       std::reverse(trackHits->begin(), trackHits->end());
                       ATHit firstHit = trackHits->front();
@@ -1013,7 +1018,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
                                   kGoodDensity = kTRUE;
                                   fIniHitRansac->SetHit(hit.GetHitPadNum(),hit.GetHitID(),position.X(),position.Y(),position.Z(),hit.GetCharge());
-                                  //std::cout<<" Ini Hit TimeStamp : "<<hit.GetTimeStamp()<<std::endl;
+                                  std::cout<<" Ini Hit TimeStamp : "<<hit.GetTimeStamp()<<std::endl;
                                   fIniHitRansac->SetTimeStamp(hit.GetTimeStamp());
                               }else lastHitMult=0;
 
@@ -1332,22 +1337,70 @@ Int_t ATHoughSpaceCircle::GetTBMult(Int_t TB,std::vector<ATHit> *harray,Int_t in
 ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tracks)
 {
 
-    for(Int_t i=0;i<tracks.size();i++)
+  // This function compares the candidate track lines in the RxPhi space
+  // The algorithm tries to get the line with the larger time bucket within a predifined value of the slope and intercept
+  // TODO: Slope and intercept limits should be externally implemented by visual inspection of the events
+
+  Int_t index=0;
+  Float_t fSlopeLimit = -20.0;
+  Float_t fInterceptLimit = 200.0;
+
+  if(tracks.size()>1){
+
+
+    for(Int_t i=0;i<tracks.size()-1;i++)
     {
-        ATTrack* track = tracks.at(i);
-        std::vector<Double_t> LinePar = track->GetFitPar();
-        std::cout<<LinePar.at(0)<<"  "<<LinePar.at(1)<<std::endl;
-        std::vector<ATHit>* trackHits = track->GetHitArray();
-        ATHit hit = trackHits->back();
-        std::cout<<" First hit of the line : "<<hit.GetTimeStamp()<<" Number of hits : "<<trackHits->size()<<std::endl;
+        ATTrack* track_b = tracks.at(i);
+        std::vector<Double_t> LinePar_b = track_b->GetFitPar();
+        std::vector<ATHit>* trackHits_b = track_b->GetHitArray();
+
+        ATHit hit_b_f = trackHits_b->front();
+        ATHit hit_b_b = trackHits_b->back();
+
+        for(Int_t j=i+1;j<tracks.size();j++){
+
+                ATTrack* track_f = tracks.at(j);
+                std::vector<Double_t> LinePar_f = track_f->GetFitPar();
+                std::vector<ATHit>* trackHits_f = track_f->GetHitArray();
+
+                ATHit hit_f_f = trackHits_f->front();
+                ATHit hit_f_b = trackHits_f->back();
+
+                TVector3 pos_b_f = hit_b_f.GetPosition();
+                TVector3 pos_b_b = hit_b_b.GetPosition();
+                TVector3 pos_f_f = hit_f_f.GetPosition();
+                TVector3 pos_f_b = hit_f_b.GetPosition();
+
+                //Debugging
+                std::cout<<" ====================================================== "<<std::endl;
+                std::cout<<LinePar_b.at(0)<<"  "<<LinePar_b.at(1)<<std::endl;
+                std::cout<<LinePar_f.at(0)<<"  "<<LinePar_f.at(1)<<std::endl;
+                std::cout<<" First hit of the first line : "<<hit_b_b.GetTimeStamp()<<" Number of hits : "<<trackHits_b->size()<<std::endl;
+                std::cout<<" First hit of the second line : "<<hit_f_b.GetTimeStamp()<<" Number of hits : "<<trackHits_f->size()<<std::endl;
+                std::cout<<" Index i : "<<i<<" Index j : "<<j<<std::endl;
+
+
+                  // Get the line on the right by comparing the last time bucket of each one and the slope
+                  if((hit_b_b.GetTimeStamp()>hit_f_b.GetTimeStamp()) && (LinePar_b.at(1)>fSlopeLimit)) index = i;
+                  else if ((hit_b_b.GetTimeStamp()<hit_f_b.GetTimeStamp()) && (LinePar_f.at(1)>fSlopeLimit)) index = j;
+                  else{
+                    //std::cout<<cRED<<" ATHoughSpaceCircle::FindCandidateTrack : Warning! Inconsistent time bucket between lines"<<cNORMAL<<std::endl;
+                    index=0;
+                  }
+
+                  std::cout<<" Index inside : "<<index<<std::endl;
+
+        }
+
+
 
     }
 
-    //auto it =
+    std::cout<<" Index : "<<index<<std::endl;
+    return *tracks.at(index);
 
+}else return *tracks.at(0);
 
-
-    return *tracks.at(0);
 
 }
 
