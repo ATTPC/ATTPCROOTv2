@@ -1341,7 +1341,7 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
   // TODO: Slope and intercept limits should be externally implemented by visual inspection of the events
 
   Int_t index=0;
-  Float_t fSlopeLimit = -40.0;
+  Float_t fSlopeLimit = -25.0;
   Float_t fInterceptLimit = 200.0;
   Int_t max_TB = 0;
 
@@ -1359,8 +1359,8 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
     Double_t x_mean_b = 0.0;
     Double_t y_mean_b = 0.0;
 
-    GetDeviation(trackHits_b,x_mean_b,y_mean_b);
-
+    //GetDeviation(trackHits_b,x_mean_b,y_mean_b);
+     GetTBDeviation(trackHits_b);
 
 
     for(Int_t i=1;i<tracks.size();i++)
@@ -1375,7 +1375,8 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
                 Double_t x_mean_f = 0.0;
                 Double_t y_mean_f = 0.0;
 
-                GetDeviation(trackHits_f,x_mean_f,y_mean_f);
+                //GetDeviation(trackHits_f,x_mean_f,y_mean_f);
+                 GetTBDeviation(trackHits_f);
 
                 ATHit hit_f_f = trackHits_f->front();
                 ATHit hit_f_b = trackHits_f->back();
@@ -1477,10 +1478,89 @@ void ATHoughSpaceCircle::GetDeviation(std::vector<ATHit>* hits,Double_t& _x_dev,
 
 }
 
+void ATHoughSpaceCircle::GetTBDeviation(std::vector<ATHit>* hits)
+{
+
+    Double_t sigma = 5.00; //Standard deviation due to the pad size in mm
+    Double_t mean_dev_x = 0;
+    Double_t mean_dev_y = 0;
+    Int_t n_tb=0;
+
+  if(hits->size()>1){ // At least two hits
+    ATHit hit_f = hits->front();
+    ATHit hit_b = hits->back();
+    auto f_index = hit_f.GetTimeStamp();
+    auto b_index = hit_b.GetTimeStamp();
+
+    if(f_index<b_index){
+          for(auto i=f_index;i<=b_index;i++)
+          {
+              std::vector<ATHit> hitArray = GetTBHitArray(i,hits); //Find all hit with same TB
+
+              Double_t mean_x=0;
+              Double_t mean_y=0;
+              Double_t _x_dev=0;
+              Double_t _y_dev=0;
+
+                if(hitArray.size()>0){
+                        for(auto j=0;j<hitArray.size();j++)
+                        {
+                            ATHit hitTB=hitArray.at(j);
+                            TVector3 position = hitTB.GetPosition();
+                            mean_x+=position.X();
+                            mean_y+=position.Y();
+                        }//for TB array
+
+                            mean_x/=hitArray.size();
+                            mean_y/=hitArray.size();
+
+                        for(auto k=0;k<hitArray.size();k++)
+                        {
+                            TVector3 position = hitArray.at(k).GetPosition();
+                              _x_dev+= TMath::Power(mean_x - position.X(),2)/TMath::Power(sigma,2);
+                              _y_dev+= TMath::Power(mean_y - position.Y(),2)/TMath::Power(sigma,2);
+                        }
+
+                           _x_dev/=hitArray.size();
+                           _y_dev/=hitArray.size();
+
+                           n_tb++;// valid TB
+               }//hitArray>0
+
+                            mean_dev_x+=_x_dev;
+                            mean_dev_y+=_y_dev;
+
+
+
+                std::cout<<cRED<<" Hits : "<<hitArray.size()<<" TB : "<<i<<" _x_dev : "<<_x_dev<<" _y_dev : "<<_y_dev<<cNORMAL<<std::endl;
+
+
+          }//for TB
+
+            mean_dev_x/=n_tb;
+            mean_dev_y/=n_tb;
+
+            std::cout<<cYELLOW<<" Mean X dev : "<<mean_dev_x<<" Mean Y dev : "<<mean_dev_y<<cNORMAL<<std::endl;
+
+      }//if
+
+  }
+
+}
+
+
 Int_t ATHoughSpaceCircle::GetDensityOfHits(std::vector<ATHit>* hits,Int_t index, Int_t tb_range)
 {
   // This function assumes a reversed hit containers (descending TB value from beginning to end)
   int cnt = std::count_if(hits->begin(),hits->end(),[&index,&tb_range](ATHit& hit){return hit.GetTimeStamp()>index-tb_range;});
   return cnt;
 
+}
+
+std::vector<ATHit> ATHoughSpaceCircle::GetTBHitArray(Int_t TB,std::vector<ATHit> *harray)
+{
+
+        std::vector<ATHit> hitTBArray;
+        std::copy_if(harray->begin(), harray->end(), std::back_inserter(hitTBArray),[&TB](ATHit& hit){return hit.GetTimeStamp()==TB;} );
+        return hitTBArray;
 }

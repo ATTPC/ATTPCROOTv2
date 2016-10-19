@@ -64,11 +64,12 @@ ATAnalysisTask::Init()
     return kERROR;
   }
 
-  fRansacArray = (TClonesArray*) ioMan->GetObject("ATRansac");
+  // TODO:: A flag is needed to choose between HOugh and Ransac, otherwise the program will skip this step.
+  /*fRansacArray = (TClonesArray*) ioMan->GetObject("ATRansac");
   if (fRansacArray == 0) {
     fLogger -> Error(MESSAGE_ORIGIN, "Cannot find ATRansac array!");
     return kERROR;
-  }
+  }*/
 
 
 
