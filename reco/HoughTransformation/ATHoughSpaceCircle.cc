@@ -42,6 +42,7 @@ ATHoughSpaceCircle::ATHoughSpaceCircle()
     fIniRadius = 0.0;
     fIniPhi = 0.0;
     fIniHitID =0;
+    fStdDeviationLimit = 5.0;
 
 
     FairLogger *fLogger=FairLogger::GetLogger();
@@ -962,6 +963,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                    Ransac->SetDistanceThreshold(3.0);
                    Ransac->SetRPhiSpace();
                    Ransac->SetXYCenter(fXCenter,fYCenter);
+                   Int_t n_track_cnt = 0;
                    std::vector<ATTrack*> trackSpiral = Ransac->RansacPCL(event);
                    std::vector<ATTrack*> trackSpiral_buff;
                    std::cout<<" Found : "<<trackSpiral.size()<<" tracks "<<std::endl;
@@ -970,11 +972,15 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                        std::vector<ATHit>* trackHits = trackSpiral.at(ntrack)->GetHitArray();
                        Int_t nHits = trackHits->size();
                        //std::cout<<" Num  Hits : "<<nHits<<std::endl;
-                         if(nHits>5 && ntrack<4){
+                       Int_t tb_range = abs(trackHits->front().GetTimeStamp()-trackHits->back().GetTimeStamp());
+                         if(nHits>5 && n_track_cnt<5 && tb_range>2){ //Limited to 5 lines with more than 5 hits and spanning more than 2 Time Buckets
                               // Since the method returns the "stronger" lines ordered we limit the attemps to 5
-                               Ransac->MinimizeTrackRPhi(trackSpiral.at(ntrack)); //Limited to 4 lines with more than 5 hits
+                               Ransac->MinimizeTrackRPhi(trackSpiral.at(ntrack)); //Limited to 5 lines with more than 5 hits
                                std::vector<Double_t> LinePar = trackSpiral.at(ntrack)->GetFitPar();
-                                  if(LinePar.size()!=0 && LinePar.at(1)<0) trackSpiral_buff.push_back(trackSpiral.at(ntrack)); //Remove failed fits and lines with positive slope
+                                  if(LinePar.size()!=0 && LinePar.at(1)<0){
+                                     trackSpiral_buff.push_back(trackSpiral.at(ntrack));
+                                     n_track_cnt++;
+                                   } //Remove failed fits and lines with positive slope
                          }
 
 
@@ -1017,7 +1023,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
                                   kGoodDensity = kTRUE;
                                   fIniHitRansac->SetHit(hit.GetHitPadNum(),hit.GetHitID(),position.X(),position.Y(),position.Z(),hit.GetCharge());
-                                  std::cout<<" Ini Hit TimeStamp : "<<hit.GetTimeStamp()<<std::endl;
+                                  std::cout<<cGREEN<<" Ini Hit TimeStamp : "<<hit.GetTimeStamp()<<cNORMAL<<std::endl;
                                   fIniHitRansac->SetTimeStamp(hit.GetTimeStamp());
                               }else lastHitMult=0;
 
@@ -1340,9 +1346,15 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
   // The algorithm tries to get the line with the larger time bucket within a predifined value of the slope and intercept
   // TODO: Slope and intercept limits should be externally implemented by visual inspection of the events
 
-  Int_t index=0;
+
+  // ************ Adjustable parameters ***********//
   Float_t fSlopeLimit = -25.0;
   Float_t fInterceptLimit = 200.0;
+  Float_t fStdDevTB = 0.20;
+  Float_t fRatioLP = 5.0;
+  //////////////////////////////////////////////////
+
+  Int_t index=0;
   Int_t max_TB = 0;
 
   if(tracks.size()>1){
@@ -1359,13 +1371,17 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
     Double_t x_mean_b = 0.0;
     Double_t y_mean_b = 0.0;
 
+    Float_t ratio_maxdev_b=0;
+
+
     //GetDeviation(trackHits_b,x_mean_b,y_mean_b);
-     GetTBDeviation(trackHits_b);
+     GetTBDeviation(trackHits_b,ratio_maxdev_b,x_mean_b,y_mean_b);
 
 
     for(Int_t i=1;i<tracks.size();i++)
     {
 
+                Float_t ratio_maxdev_f=0;
                 ATTrack* track_f = tracks.at(i);
                 std::vector<Double_t> LinePar_f = track_f->GetFitPar();
                 std::vector<ATHit>* trackHits_f = track_f->GetHitArray();
@@ -1376,7 +1392,7 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
                 Double_t y_mean_f = 0.0;
 
                 //GetDeviation(trackHits_f,x_mean_f,y_mean_f);
-                 GetTBDeviation(trackHits_f);
+                 GetTBDeviation(trackHits_f,ratio_maxdev_f,x_mean_f,y_mean_f);
 
                 ATHit hit_f_f = trackHits_f->front();
                 ATHit hit_f_b = trackHits_f->back();
@@ -1402,6 +1418,10 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
                 Double_t dist_y = ydum_b - ydum_f;
                 Double_t dist_tot = TMath::Sqrt( TMath::Power(dist_x,2) + TMath::Power(dist_y,2) );
 
+                Double_t ratio_lp_b = abs((hit_b_f.GetTimeStamp()-hit_b_b.GetTimeStamp())/(float)trackHits_b->size() );
+                Double_t ratio_lp_f = abs((hit_f_f.GetTimeStamp()-hit_f_b.GetTimeStamp())/(float)trackHits_f->size()  );
+
+
                 // Track hits are sorted in descending order, i.e. first hit is largest one in TB
                 std::cout<<" First hit of the first line : "<<hit_b_b.GetTimeStamp()<<" Number of hits : "<<trackHits_b->size()<<std::endl;
                 std::cout<<" First hit of the second line : "<<hit_f_b.GetTimeStamp()<<" Number of hits : "<<trackHits_f->size()<<std::endl;
@@ -1415,20 +1435,36 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
                 std::cout<<" Distance Y between first hit of the lines : "<<dist_y<<std::endl;
                 std::cout<<" Length of the first line in TB : "<<hit_b_f.GetTimeStamp()-hit_b_b.GetTimeStamp()<<std::endl;
                 std::cout<<" Length of the second line in TB : "<<hit_f_f.GetTimeStamp()-hit_f_b.GetTimeStamp()<<std::endl;
-                std::cout<<" Ratio length/points First line : "<<(hit_b_f.GetTimeStamp()-hit_b_b.GetTimeStamp())/(float)trackHits_b->size()<<std::endl;
-                std::cout<<" Ratio length/points Second line : "<<(hit_f_f.GetTimeStamp()-hit_f_b.GetTimeStamp())/(float)trackHits_f->size()<<std::endl;
+                std::cout<<" Ratio length/points First line : "<<ratio_lp_b<<std::endl;
+                std::cout<<" Ratio length/points Second line : "<<ratio_lp_f<<std::endl;
                 std::cout<<" Index i : "<<i<<" Index i+1 : "<<i+1<<std::endl;
                 std::cout<<" Max TB : "<<max_TB<<std::endl;
 
 
                   // Get the line on the right by comparing the last time bucket of each one and the slope. A maximum TB is defined to keep the line with the latest
                   // point when comparing every  track just once.
+                  // Then the standard deviation of the points for each time bucket, the ratio between the number of points and length
+                  // and the number of time buckets with an unsual large std deviation are evaluated
                   if((hit_b_b.GetTimeStamp()>hit_f_b.GetTimeStamp()) && (LinePar_b.at(1)>fSlopeLimit) && (hit_b_b.GetTimeStamp()>max_TB) ){
-                     index = 0;
-                     max_TB = hit_b_b.GetTimeStamp();
+                     if(x_mean_b<fStdDeviationLimit && y_mean_b<fStdDeviationLimit)//Mean std deviation upper limit
+                     {
+                       if(ratio_maxdev_b<fStdDevTB){ //The number of TB that contribute to the std dev limit (in percentage)
+                         if(ratio_lp_b<fRatioLP){ //Ratio between the length in TB and the number of points
+                                index = 0;
+                                max_TB = hit_b_b.GetTimeStamp();
+                         }
+                       }
+                     }
                   }else if ((hit_b_b.GetTimeStamp()<hit_f_b.GetTimeStamp()) && (LinePar_f.at(1)>fSlopeLimit)  && (hit_f_b.GetTimeStamp()>max_TB) ){
-                     index = i;
-                     max_TB = hit_f_b.GetTimeStamp();
+                    if(x_mean_f<fStdDeviationLimit && y_mean_f<fStdDeviationLimit)//Mean std deviation upper limit
+                    {
+                       if(ratio_maxdev_f<fStdDevTB){ //The number of TB that contribute to the std dev limit (in percentage)
+                         if(ratio_lp_f<fRatioLP){ //Ratio between the length in TB and the number of points
+                               index = i;
+                               max_TB = hit_f_b.GetTimeStamp();
+                        }
+                       }
+                    }
                   }
 
                   std::cout<<" Index inside : "<<index<<std::endl;
@@ -1478,12 +1514,12 @@ void ATHoughSpaceCircle::GetDeviation(std::vector<ATHit>* hits,Double_t& _x_dev,
 
 }
 
-void ATHoughSpaceCircle::GetTBDeviation(std::vector<ATHit>* hits)
+void ATHoughSpaceCircle::GetTBDeviation(std::vector<ATHit>* hits,Float_t& maxdev_ratio,Double_t& mean_dev_x,Double_t& mean_dev_y)
 {
 
     Double_t sigma = 5.00; //Standard deviation due to the pad size in mm
-    Double_t mean_dev_x = 0;
-    Double_t mean_dev_y = 0;
+    mean_dev_x = 0;
+    mean_dev_y = 0;
     Int_t n_tb=0;
 
   if(hits->size()>1){ // At least two hits
@@ -1492,7 +1528,7 @@ void ATHoughSpaceCircle::GetTBDeviation(std::vector<ATHit>* hits)
     auto f_index = hit_f.GetTimeStamp();
     auto b_index = hit_b.GetTimeStamp();
 
-    if(f_index<b_index){
+    if(f_index<b_index){ //TODO: The problem comes when all the points have the same TB 
           for(auto i=f_index;i<=b_index;i++)
           {
               std::vector<ATHit> hitArray = GetTBHitArray(i,hits); //Find all hit with same TB
@@ -1502,7 +1538,7 @@ void ATHoughSpaceCircle::GetTBDeviation(std::vector<ATHit>* hits)
               Double_t _x_dev=0;
               Double_t _y_dev=0;
 
-                if(hitArray.size()>0){
+                if(hitArray.size()>1){ // The deviation is only calculated for TB with more than 1 hit
                         for(auto j=0;j<hitArray.size();j++)
                         {
                             ATHit hitTB=hitArray.at(j);
@@ -1524,6 +1560,8 @@ void ATHoughSpaceCircle::GetTBDeviation(std::vector<ATHit>* hits)
                            _x_dev/=hitArray.size();
                            _y_dev/=hitArray.size();
 
+                           if(_x_dev>fStdDeviationLimit || _y_dev>fStdDeviationLimit) maxdev_ratio++; //Number of time buckets with  std dev larger than a threshold
+
                            n_tb++;// valid TB
                }//hitArray>0
 
@@ -1532,15 +1570,17 @@ void ATHoughSpaceCircle::GetTBDeviation(std::vector<ATHit>* hits)
 
 
 
-                std::cout<<cRED<<" Hits : "<<hitArray.size()<<" TB : "<<i<<" _x_dev : "<<_x_dev<<" _y_dev : "<<_y_dev<<cNORMAL<<std::endl;
+
+              if(hitArray.size()>1)  std::cout<<cRED<<" Hits : "<<hitArray.size()<<" TB : "<<i<<" _x_dev : "<<_x_dev<<" _y_dev : "<<_y_dev<<cNORMAL<<std::endl;
 
 
           }//for TB
 
             mean_dev_x/=n_tb;
             mean_dev_y/=n_tb;
+            maxdev_ratio/=n_tb;
 
-            std::cout<<cYELLOW<<" Mean X dev : "<<mean_dev_x<<" Mean Y dev : "<<mean_dev_y<<cNORMAL<<std::endl;
+            std::cout<<cYELLOW<<" Mean X dev : "<<mean_dev_x<<" Mean Y dev : "<<mean_dev_y<<" Ratio of TB with more than 5 "<<maxdev_ratio<<cNORMAL<<std::endl;
 
       }//if
 
