@@ -40,7 +40,9 @@ ATHoughSpaceCircle::ATHoughSpaceCircle()
 
     fIniTS = 0;
     fIniRadius = 0.0;
+    fIniRadiusRansac = 0.0;
     fIniPhi = 0.0;
+    fIniPhiRansac = 0.0;
     fIniHitID =0;
     fStdDeviationLimit = 5.0;
 
@@ -867,6 +869,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                     fIniTheta=0.0;
 
 
+
                   // ****************** Begin: RxPhi Hough Space + Clustering ********************** //
 
 
@@ -947,7 +950,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
                    }// End of clustering algorithm
 
-                  std::cout<<cRED<<" New RANSAC Event "<<cNORMAL<<std::endl;
+                  //std::cout<<cRED<<" New RANSAC Event "<<cNORMAL<<std::endl;
 
                    // RANSAC calculation for RxPhi:
                   // This part of the code extracts the lines found in the RxPhi space using the RANSAC algorithm of the PCL library.
@@ -955,6 +958,10 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                   // The candidate line is found among other lines by comparing the slope, intercept and distance between them.
                   // Once the line is selected, the initial hit is chosen taking into account how many hits are found in a given TB
                   // and the density of hits along the RANSAC line.
+
+                  fIniRadiusRansac=0.0;
+                  fIniPhiRansac=0.0;
+                  fIniThetaRansac=0.0;
 
 
                    ATRANSACN::ATRansac *Ransac = new ATRANSACN::ATRansac();
@@ -966,7 +973,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                    Int_t n_track_cnt = 0;
                    std::vector<ATTrack*> trackSpiral = Ransac->RansacPCL(event);
                    std::vector<ATTrack*> trackSpiral_buff;
-                   std::cout<<" Found : "<<trackSpiral.size()<<" tracks "<<std::endl;
+                   //std::cout<<" Found : "<<trackSpiral.size()<<" tracks "<<std::endl;
                    if(trackSpiral.size()>1){
                      for(Int_t ntrack=0;ntrack<trackSpiral.size();ntrack++){
                        std::vector<ATHit>* trackHits = trackSpiral.at(ntrack)->GetHitArray();
@@ -1005,7 +1012,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
                      }// Tracks loop
 
-                     std::cout<<" Remaining : "<<trackSpiral_buff.size()<<" tracks "<<std::endl;
+                     //std::cout<<" Remaining : "<<trackSpiral_buff.size()<<" tracks "<<std::endl;
 
                   if(trackSpiral_buff.size()>0){
 
@@ -1042,8 +1049,13 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
                                   kGoodDensity = kTRUE;
                                   fIniHitRansac->SetHit(hit.GetHitPadNum(),hit.GetHitID(),position.X(),position.Y(),position.Z(),hit.GetCharge());
-                                  std::cout<<cGREEN<<" Ini Hit TimeStamp : "<<hit.GetTimeStamp()<<cNORMAL<<std::endl;
+                                  //std::cout<<cGREEN<<" Ini Hit TimeStamp : "<<hit.GetTimeStamp()<<cNORMAL<<std::endl;
                                   fIniHitRansac->SetTimeStamp(hit.GetTimeStamp());
+                                  fIniRadiusRansac = TMath::Sqrt(  TMath::Power((fXCenter-position.X()),2)   +  TMath::Power((fYCenter-position.Y()),2)    );
+                                  fIniPhiRansac = TMath::ATan2(fXCenter-position.X(),fYCenter-position.Y());
+                                  //std::cout<<" Radius Ransac : "<<fIniRadiusRansac<<std::endl;
+                                  //std::cout<<" Phi Ransac : "<<fIniPhiRansac<<std::endl;
+                                  //std::cout<<" RxPhi : "<<fIniRadiusRansac*fIniPhiRansac<<std::endl;
                               }else lastHitMult=0;
 
 
@@ -1422,9 +1434,9 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
                 TVector3 pos_f_b = hit_f_b.GetPosition();
 
                 //Debugging
-                std::cout<<" ====================================================== "<<std::endl;
-                std::cout<<LinePar_b.at(0)<<"  "<<LinePar_b.at(1)<<std::endl;
-                std::cout<<LinePar_f.at(0)<<"  "<<LinePar_f.at(1)<<std::endl;
+                //std::cout<<" ====================================================== "<<std::endl;
+                //std::cout<<LinePar_b.at(0)<<"  "<<LinePar_b.at(1)<<std::endl;
+                //std::cout<<LinePar_f.at(0)<<"  "<<LinePar_f.at(1)<<std::endl;
 
                 // Distance in the RxPhi space
                 Double_t xdum_b = hit_b_b.GetTimeStamp();
@@ -1442,7 +1454,7 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
 
 
                 // Track hits are sorted in descending order, i.e. first hit is largest one in TB
-                std::cout<<" First hit of the first line : "<<hit_b_b.GetTimeStamp()<<" Number of hits : "<<trackHits_b->size()<<std::endl;
+                /*std::cout<<" First hit of the first line : "<<hit_b_b.GetTimeStamp()<<" Number of hits : "<<trackHits_b->size()<<std::endl;
                 std::cout<<" First hit of the second line : "<<hit_f_b.GetTimeStamp()<<" Number of hits : "<<trackHits_f->size()<<std::endl;
                 std::cout<<" Last hit of the first line : "<<hit_b_f.GetTimeStamp()<<" Number of hits : "<<trackHits_b->size()<<std::endl;
                 std::cout<<" Last hit of the second line : "<<hit_f_f.GetTimeStamp()<<" Number of hits : "<<trackHits_f->size()<<std::endl;
@@ -1457,7 +1469,7 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
                 std::cout<<" Ratio length/points First line : "<<ratio_lp_b<<std::endl;
                 std::cout<<" Ratio length/points Second line : "<<ratio_lp_f<<std::endl;
                 std::cout<<" Index i : "<<i<<" Index i+1 : "<<i+1<<std::endl;
-                std::cout<<" Max TB : "<<max_TB<<std::endl;
+                std::cout<<" Max TB : "<<max_TB<<std::endl;*/
 
 
                   // Get the line on the right by comparing the last time bucket of each one and the slope. A maximum TB is defined to keep the line with the latest
@@ -1486,12 +1498,12 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
                      }
                   }
 
-                  std::cout<<" Index inside : "<<index<<std::endl;
+                  //std::cout<<" Index inside : "<<index<<std::endl;
 
 
     }
 
-    std::cout<<" Index : "<<index<<std::endl;
+    //std::cout<<" Index : "<<index<<std::endl;
     return *tracks.at(index);
 
 }else return *tracks.at(0);
@@ -1590,7 +1602,7 @@ void ATHoughSpaceCircle::GetTBDeviation(std::vector<ATHit>* hits,Float_t& maxdev
 
 
 
-              if(hitArray.size()>1) std::cout<<cRED<<" Hits : "<<hitArray.size()<<" TB : "<<i<<" _x_dev : "<<_x_dev<<" _y_dev : "<<_y_dev<<cNORMAL<<std::endl;
+              //if(hitArray.size()>1) std::cout<<cRED<<" Hits : "<<hitArray.size()<<" TB : "<<i<<" _x_dev : "<<_x_dev<<" _y_dev : "<<_y_dev<<cNORMAL<<std::endl;
 
 
           }//for TB
@@ -1605,7 +1617,7 @@ void ATHoughSpaceCircle::GetTBDeviation(std::vector<ATHit>* hits,Float_t& maxdev
 
   }
 
-  std::cout<<cYELLOW<<" Mean X dev : "<<mean_dev_x<<" Mean Y dev : "<<mean_dev_y<<" Ratio of TB with more than 5 "<<maxdev_ratio<<cNORMAL<<std::endl;
+  //std::cout<<cYELLOW<<" Mean X dev : "<<mean_dev_x<<" Mean Y dev : "<<mean_dev_y<<" Ratio of TB with more than 5 "<<maxdev_ratio<<cNORMAL<<std::endl;
 
 }
 

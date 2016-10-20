@@ -703,6 +703,7 @@ ATEventDrawTask::DrawHSpace()
    fTheta->Reset(0);
    fThetaxPhi->Reset(0);
    fThetaxPhi_Ini->Reset(0);
+   fThetaxPhi_Ini_RANSAC->Reset(0);
    fMC_XY->Set(0);
    fMC_ZX->Set(0);
    fMC_ZY->Set(0);
@@ -739,6 +740,7 @@ ATEventDrawTask::DrawHSpace()
                     }
 
                     fThetaxPhi_Ini->Fill(fIniHit->GetTimeStamp(),fHoughSpaceCircle_buff->GetIniPhi()*fHoughSpaceCircle_buff->GetIniRadius());
+                    fThetaxPhi_Ini_RANSAC->Fill(fIniHitRansac->GetTimeStamp(),fHoughSpaceCircle_buff->GetIniPhiRansac()*fHoughSpaceCircle_buff->GetIniRadiusRansac());
 
 
                     std::vector<Double_t> fPosXMin = fHoughSpaceCircle_buff->GetPosXMin();
@@ -786,11 +788,12 @@ ATEventDrawTask::DrawHSpace()
 
 
                     std::cout<<cYELLOW<<"  = Initial conditions for MC : "<<std::endl;
-                    std::cout<<"  Theta          : "<<fHoughSpaceCircle_buff->GetIniTheta()*180/TMath::Pi()<<std::endl;
-                    std::cout<<"  Phi            : "<<fHoughSpaceCircle_buff->GetIniPhi()*180/TMath::Pi()<<std::endl;
-                    std::cout<<"  Radius         : "<<fHoughSpaceCircle_buff->GetIniRadius()<<std::endl;
-                    std::cout<<"  Time Bucket    : "<<fIniHit->GetTimeStamp()<<std::endl;
-                    std::cout<<"  Radius x Ph i  : "<<fHoughSpaceCircle_buff->GetIniPhi()*fHoughSpaceCircle_buff->GetIniRadius()<<cNORMAL<<std::endl;
+                    std::cout<<"  Theta                 : "<<fHoughSpaceCircle_buff->GetIniTheta()*180/TMath::Pi()<<std::endl;
+                    std::cout<<"  Phi                   : "<<fHoughSpaceCircle_buff->GetIniPhi()*180/TMath::Pi()<<std::endl;
+                    std::cout<<"  Radius                : "<<fHoughSpaceCircle_buff->GetIniRadius()<<std::endl;
+                    std::cout<<"  Time Bucket           : "<<fIniHit->GetTimeStamp()<<std::endl;
+                    std::cout<<"  Time Bucket RANSAC    : "<<fIniHitRansac->GetTimeStamp()<<std::endl;
+                    std::cout<<"  Radius x Phi          : "<<fHoughSpaceCircle_buff->GetIniPhi()*fHoughSpaceCircle_buff->GetIniRadius()<<cNORMAL<<std::endl;
 
                     std::cout<<cGREEN<<"  = MC results : "<<std::endl;
                     std::cout<<"  Theta          : "<<fHoughSpaceCircle_buff->FitParameters.sThetaMin*180/TMath::Pi()<<std::endl;
@@ -1230,14 +1233,19 @@ ATEventDrawTask::DrawThetaxPhi()
     fThetaxPhi->SetMarkerStyle(22);
     fThetaxPhi->SetMarkerColor(kRed);
 
+    fThetaxPhi_Ini_RANSAC = new TH2F("ThetaxPhi_Ini_RANSAC","ThetaxPhi_Ini_RANSAC",512,0,511,100,-1000,1000);
+    fThetaxPhi_Ini_RANSAC->SetMarkerStyle(20);
+    fThetaxPhi_Ini_RANSAC->SetMarkerColor(kGreen);
+
     fThetaxPhi_Ini = new TH2F("ThetaxPhi_Ini","ThetaxPhi_Ini",512,0,511,100,-1000,1000);
     fThetaxPhi_Ini->SetMarkerStyle(23);
     fThetaxPhi_Ini->SetMarkerColor(kBlue);
     fThetaxPhi_Ini->SetMarkerSize(1.0);
 
+    fThetaxPhi -> Draw("");
+    fThetaxPhi_Ini -> Draw("SAMES");
+    fThetaxPhi_Ini_RANSAC -> Draw("SAMES");
 
-    fThetaxPhi_Ini -> Draw("");
-    fThetaxPhi -> Draw("SAMES");
     fHoughLinearFit->Draw("SAMES");
 
 }

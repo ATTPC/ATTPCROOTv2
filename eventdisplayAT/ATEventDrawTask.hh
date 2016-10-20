@@ -206,6 +206,7 @@ class ATEventDrawTask : public FairTask
     TH2F* fQuadrant4;
 
     TH2F* fThetaxPhi_Ini;
+    TH2F* fThetaxPhi_Ini_RANSAC;
 
     TCanvas* fCvsMC_XY;
     TGraph* fMC_XY;

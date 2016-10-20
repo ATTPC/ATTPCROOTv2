@@ -43,8 +43,13 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         Double_t  GetIniPhi()                {return fIniPhi;}
         Double_t  GetIniTheta()              {return fIniTheta;}
         Double_t  GetIniRadius()             {return fIniRadius;}
+        Double_t  GetIniPhiRansac()          {return fIniPhiRansac;}
+        Double_t  GetIniThetaRansac()        {return fIniThetaRansac;}
+        Double_t  GetIniRadiusRansac()       {return fIniRadiusRansac;}
+
         ATHit*    GetIniHit()                {return fIniHit;}
         ATHit*    GetIniHitRansac()          {return fIniHitRansac;}
+        
         Double_t* GetInitialParameters()     {return fParameter;}
 
         std::vector<Double_t> GetPosXMin() {return fPosXmin;}
@@ -118,8 +123,11 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         ATHit   *fIniHit;
         ATHit   *fIniHitRansac;
         Double_t fIniRadius;
+        Double_t fIniRadiusRansac;
         Double_t fIniPhi;
+        Double_t fIniPhiRansac;
         Double_t fIniTheta;
+        Double_t fIniThetaRansac;
         Int_t fIniTS;
         Int_t fIniHitID;
         Double_t fDriftVelocity;
