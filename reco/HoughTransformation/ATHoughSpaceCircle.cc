@@ -972,8 +972,27 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                        std::vector<ATHit>* trackHits = trackSpiral.at(ntrack)->GetHitArray();
                        Int_t nHits = trackHits->size();
                        //std::cout<<" Num  Hits : "<<nHits<<std::endl;
-                       Int_t tb_range = abs(trackHits->front().GetTimeStamp()-trackHits->back().GetTimeStamp());
-                         if(nHits>5 && n_track_cnt<5 && tb_range>2){ //Limited to 5 lines with more than 5 hits and spanning more than 2 Time Buckets
+                       //Int_t tb_range = abs(trackHits->front().GetTimeStamp()-trackHits->back().GetTimeStamp());
+
+
+                      // TODO: WARNING, this part depends strongly on the experiment
+                      /* Int_t tb_range=0;
+                      auto f_TB = trackHits->front().GetTimeStamp();
+                      auto b_TB = trackHits->back().GetTimeStamp();
+
+                      // This part filters tracks with less than three time buckets with multiplicty bigger than 1
+                      if(f_TB<b_TB){
+                            for(Int_t tb=f_TB; tb<b_TB+1;tb++) // Checking how many Tb have more than 1 hit
+                            {
+
+                                std::vector<ATHit> hitsTB = GetTBHitArray(tb,trackHits);
+                                //std::cout<<" hitsTB "<<hitsTB.size()<<" TB_hit : "<<tb<<std::endl;
+                                if(hitsTB.size()>1) tb_range++;
+                            }
+                      }*/
+
+                         //std::cout<<" tb_range : "<<tb_range<<std::endl;
+                         if(nHits>5 && n_track_cnt<5){ //Limited to 5 lines with more than 5 hits and spanning more than 2 Time Buckets
                               // Since the method returns the "stronger" lines ordered we limit the attemps to 5
                                Ransac->MinimizeTrackRPhi(trackSpiral.at(ntrack)); //Limited to 5 lines with more than 5 hits
                                std::vector<Double_t> LinePar = trackSpiral.at(ntrack)->GetFitPar();
@@ -1449,7 +1468,7 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
                      if(x_mean_b<fStdDeviationLimit && y_mean_b<fStdDeviationLimit)//Mean std deviation upper limit
                      {
                        if(ratio_maxdev_b<fStdDevTB){ //The number of TB that contribute to the std dev limit (in percentage)
-                         if(ratio_lp_b<fRatioLP){ //Ratio between the length in TB and the number of points
+                         if(ratio_lp_b<fRatioLP && ratio_lp_b>0){ //Ratio between the length in TB and the number of points
                                 index = 0;
                                 max_TB = hit_b_b.GetTimeStamp();
                          }
@@ -1459,12 +1478,12 @@ ATTrack& ATHoughSpaceCircle::FindCandidateTrack(const std::vector<ATTrack*>& tra
                     if(x_mean_f<fStdDeviationLimit && y_mean_f<fStdDeviationLimit)//Mean std deviation upper limit
                     {
                        if(ratio_maxdev_f<fStdDevTB){ //The number of TB that contribute to the std dev limit (in percentage)
-                         if(ratio_lp_f<fRatioLP){ //Ratio between the length in TB and the number of points
+                         if(ratio_lp_f<fRatioLP && ratio_lp_f>0){ //Ratio between the length in TB and the number of points
                                index = i;
                                max_TB = hit_f_b.GetTimeStamp();
                         }
                        }
-                    }
+                     }
                   }
 
                   std::cout<<" Index inside : "<<index<<std::endl;
@@ -1528,7 +1547,7 @@ void ATHoughSpaceCircle::GetTBDeviation(std::vector<ATHit>* hits,Float_t& maxdev
     auto f_index = hit_f.GetTimeStamp();
     auto b_index = hit_b.GetTimeStamp();
 
-    if(f_index<b_index){ //TODO: The problem comes when all the points have the same TB 
+    if(f_index<b_index){ //TODO: The problem comes when all the points have the same TB
           for(auto i=f_index;i<=b_index;i++)
           {
               std::vector<ATHit> hitArray = GetTBHitArray(i,hits); //Find all hit with same TB
@@ -1571,7 +1590,7 @@ void ATHoughSpaceCircle::GetTBDeviation(std::vector<ATHit>* hits,Float_t& maxdev
 
 
 
-              if(hitArray.size()>1)  std::cout<<cRED<<" Hits : "<<hitArray.size()<<" TB : "<<i<<" _x_dev : "<<_x_dev<<" _y_dev : "<<_y_dev<<cNORMAL<<std::endl;
+              if(hitArray.size()>1) std::cout<<cRED<<" Hits : "<<hitArray.size()<<" TB : "<<i<<" _x_dev : "<<_x_dev<<" _y_dev : "<<_y_dev<<cNORMAL<<std::endl;
 
 
           }//for TB
@@ -1580,11 +1599,13 @@ void ATHoughSpaceCircle::GetTBDeviation(std::vector<ATHit>* hits,Float_t& maxdev
             mean_dev_y/=n_tb;
             maxdev_ratio/=n_tb;
 
-            std::cout<<cYELLOW<<" Mean X dev : "<<mean_dev_x<<" Mean Y dev : "<<mean_dev_y<<" Ratio of TB with more than 5 "<<maxdev_ratio<<cNORMAL<<std::endl;
+
 
       }//if
 
   }
+
+  std::cout<<cYELLOW<<" Mean X dev : "<<mean_dev_x<<" Mean Y dev : "<<mean_dev_y<<" Ratio of TB with more than 5 "<<maxdev_ratio<<cNORMAL<<std::endl;
 
 }
 
