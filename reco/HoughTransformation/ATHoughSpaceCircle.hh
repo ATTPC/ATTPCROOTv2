@@ -27,7 +27,7 @@ class ATHoughSpaceCircle : public ATHoughSpace{
       	TH2F* GetHoughSpace(TString ProjPlane);
         void CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYplane, Bool_t XZplane);
         void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane);
-        void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multiarray PadCoord);
+        void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multiarray PadCoord); // Circular Hough+RANSAC+MCQ
         void CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4);
         void CalcMultiHoughSpace(ATEvent* event);
         void CalcHoughSpace(ATEvent* event);
@@ -49,7 +49,7 @@ class ATHoughSpaceCircle : public ATHoughSpace{
 
         ATHit*    GetIniHit()                {return fIniHit;}
         ATHit*    GetIniHitRansac()          {return fIniHitRansac;}
-        
+
         Double_t* GetInitialParameters()     {return fParameter;}
 
         std::vector<Double_t> GetPosXMin() {return fPosXmin;}

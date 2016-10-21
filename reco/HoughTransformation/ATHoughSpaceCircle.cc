@@ -1017,11 +1017,6 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                   if(trackSpiral_buff.size()>0){
 
                       ATTrack &trackCand = FindCandidateTrack(trackSpiral_buff); // Find the most probable line and then scan points in the line
-
-                      fRansacLinePar = trackCand.GetFitPar();
-
-
-                      //std::vector<ATHit>* trackHits = trackSpiral.at(0)->GetHitArray();
                       std::vector<ATHit>* trackHits = trackCand.GetHitArray();
 
                       std::reverse(trackHits->begin(), trackHits->end());
@@ -1042,7 +1037,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                               if(lastHitMult){
                               ATHit hit = trackHits->at(index);
                               TVector3 position = hit.GetPosition();
-                              Int_t tb_range = 10; //Range of timebuckets to calculate density of hits
+                              Int_t tb_range = 4; //Range of timebuckets to calculate density of hits
                               Int_t hitdens = GetDensityOfHits(trackHits,hit.GetTimeStamp(),tb_range);
                               //std::cout<<" Hit Time Bucket : "<<hit.GetTimeStamp()<<" lastHitMult "<<lastHitMult<<" hitdens "<<hitdens<<std::endl;
                               if(hitdens>fGoodDensity){
@@ -1053,9 +1048,14 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                                   fIniHitRansac->SetTimeStamp(hit.GetTimeStamp());
                                   fIniRadiusRansac = TMath::Sqrt(  TMath::Power((fXCenter-position.X()),2)   +  TMath::Power((fYCenter-position.Y()),2)    );
                                   fIniPhiRansac = TMath::ATan2(fXCenter-position.X(),fYCenter-position.Y());
-                                  //std::cout<<" Radius Ransac : "<<fIniRadiusRansac<<std::endl;
-                                  //std::cout<<" Phi Ransac : "<<fIniPhiRansac<<std::endl;
-                                  //std::cout<<" RxPhi : "<<fIniRadiusRansac*fIniPhiRansac<<std::endl;
+                                  fRansacLinePar = trackCand.GetFitPar();
+                                  // Moving from Hough Space to RANSAC
+                                  fClusteredHits = trackCand.GetHitArray();
+
+                                  //Shared with Hough Space
+                                  fIniTS = hit.GetTimeStamp();
+                                  fIniHitID = index;
+
                               }else lastHitMult=0;
 
 
@@ -1189,15 +1189,16 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                   }
 
 
-                  TVector3 IniHitPos = fIniHit->GetPosition();
+                  // Adapted to RANSAC
+                  TVector3 IniHitPos = fIniHitRansac->GetPosition();
                   Double_t *parameter = new Double_t[8];
                   parameter[0]=IniHitPos.X();
                   parameter[1]=IniHitPos.Y();
                   parameter[2]=IniHitPos.Z();
                   parameter[3]=fIniTS;
-                  parameter[4]=fIniPhi;
-                  parameter[5]=fIniRadius;
-                  parameter[6]=fIniTheta;
+                  parameter[4]=fIniPhiRansac;
+                  parameter[5]=fIniRadiusRansac;
+                  parameter[6]=fIniThetaRansac;
                   parameter[7]=fIniHitID;
 
                   for(Int_t i=0;i<8;i++) fParameter[i]=parameter[i];
@@ -1205,8 +1206,13 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
                   Double_t HoughAngleDeg = fHoughLinePar.first*180.0/TMath::Pi();
 
+                  Double_t RansacAngle = 0.0;
+                  if(fRansacLinePar.size()>0) RansacAngle = TMath::ATan2(fRansacLinePar.at(1),1)*180.0/TMath::Pi();
 
-              if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) { // Check RxPhi plot to adjust the angle
+                  //std::cout<<cGREEN<<" Ransac angle : "<<RansacAngle<<" Hough Angle : "<<HoughAngleDeg<<cNORMAL<<std::endl;
+
+
+              if (   RansacAngle>-90.0 && RansacAngle<-45.0 ) { // Check RxPhi plot to adjust the angle
 
 
                  //min->MinimizeOptMapAmp(parameter,event,hPadPlane,PadCoord);
