@@ -655,7 +655,7 @@ ATEventManager::EnableDrawHoughSpace(){
 	 drawHoughSpace->SetText("&Disable Vis. Recons.");
          kDrawHoughOn = kTRUE;
     } else {
-        drawHoughSpace->SetText("&Enable Hough Space");
+        drawHoughSpace->SetText("&Visualize Reconstruction");
         kDrawHoughOn = kFALSE;
     }
        drawHoughSpace->SetState(kButtonUp);

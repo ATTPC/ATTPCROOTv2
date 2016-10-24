@@ -84,6 +84,7 @@ ATMCQMinimization::ATMCQMinimization()
 ATMCQMinimization::~ATMCQMinimization()
 {
 
+
 }
 
 Int_t ATMCQMinimization::GetMinimization()
@@ -247,14 +248,13 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
             double sigmaq=0.2 ;  //defined as the fraction of sum Qsim+Qtrack
             double sigmaz= 4.0  ;  //defined as deviation of the center of gravity in mm modified from 5.4 on june 10 wm
             int imc1=0;
-            int imc1max=10;
+            int imc1max=1;//10
             iconvar=imc1;
             int imc2=0;
-            int imc2max=100;
+            int imc2max=1;//100
             int icontrol=1;
 
-            MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, dens,romin,
-                x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
+            MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
 
                 std::cout<<std::endl;
                 std::cout<<cGREEN<<" ============================"<<std::endl;
@@ -287,8 +287,8 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
                 for (imc2=0;imc2<imc2max;imc2++){
                   icontrol=2;
                   //fPadPlane->Reset(0);
-                  MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv); // for MC variation with same starting value as before
-                  QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MCv, y0MCv, z0MCv,  aMCv, phiMCv, Bminv, densv,rominv,e0sm,PadCoord);
+                   MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv); // for MC variation with same starting value as before
+                   QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MCv, y0MCv, z0MCv,  aMCv, phiMCv, Bminv, densv,rominv,e0sm,PadCoord);
                   //std::cout<<cRED<<" After QMCsim x "<<x0MCv<<" y "<< y0MCv<< " z "<< z0MCv<<" theta "<< aMCv<<" phi "<< phiMCv<<" B " <<Bminv<<" dens "<< densv<< " e0sm "<<e0sm<<" ro "<<rominv<<cNORMAL;
                   Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,CHi2fit,sigmaq,sigmaz);   //Chi2 to compare track and MC
 
@@ -298,7 +298,7 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
                         //std: cout <<"**************************************Chi2min   "<<Chimin<<"  "<<CHi2fit<<endl;
                         icontrol=3;
                         //MCvar(icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, rangeMC, x0MCv, y0MCv,z0MCv, aMCv, phiMCv, rangeMCv); // take the last value as new starting
-                          MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv);
+                        MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv);
 
                                     }
                 }//imc2 loop
@@ -306,7 +306,7 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
 
             //fPadPlane->Draw("zcol");
 
-            QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MC, y0MC, z0MC,  aMC, phiMC, Bmin, dens,romin,e0sm,PadCoord); // simulation with Chimin parameters
+           QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MC, y0MC, z0MC,  aMC, phiMC, Bmin, dens,romin,e0sm,PadCoord); // simulation with Chimin parameters
 
             FitParameters.sThetaMin = aMC;
             FitParameters.sEnerMin=e0sm;
@@ -316,7 +316,7 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
             FitParameters.sPhiMin=phiMC;
 
             //std::cout<<cRED<<" final fit x "<<x0MC <<" y "<< y0MC << " z "<< z0MC <<" theta "<< aMC <<" phi "<< phiMC <<" B " <<Bmin <<" dens "<< dens <<" e0sm "<<e0sm<<" ro "<<romin <<cNORMAL<<std::endl;
-            Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,CHi2fit,sigmaq,sigmaz);   //Chi2 to compare track and MC for Chimin parameters
+          ///  Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,CHi2fit,sigmaq,sigmaz);   //Chi2 to compare track and MC for Chimin parameters
 
             FitParameters.sChi2Min=CHi2fit;
             //FitParameters.sNumMCPoint=num_MC_Point;
@@ -349,7 +349,8 @@ void ATMCQMinimization::MCvar( double* parameter, int & modevar,int & iconvar,do
                                     y0MC =parameter[1]/10.0;
                                     z0MC =fZk/10.0 - (fEntTB-parameter[3])*dzstep;
                                     aMC = parameter[6];
-                                    phiMC = TMath::Pi()-parameter[4]-115*TMath::Pi()/180.0;
+                                    phiMC = TMath::Pi()-parameter[4]-110*TMath::Pi()/180.0;
+                                    //phiMC = TMath::Pi()-parameter[4]-115*TMath::Pi()/180.0;
                                     //double Bmin= 17000. ; //magnetic field
                                     /////////// Initial parameters///////////////
                                     //Double_t xmin= parameter[0]/10.0; //  ! at ztb=394 in cm
@@ -580,11 +581,11 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                 Double_t zmin_trans = z;
 
                                 //For testing purposes!!!
-                                /*TVector3 InvPosIni = InvTransIniPos(x,y,z); //Arguments in cm
-                                x=InvPosIni.X();
-                                y=InvPosIni.Y();
-                                z=InvPosIni.Z();
-                                std::cout<<" Xt "<<x<<" Yt "<<y<<" Zt "<<z<<std::endl;*/
+                                //TVector3 InvPosIni = InvTransIniPos(x,y,z); //Arguments in cm
+                                //x=InvPosIni.X();
+                                //y=InvPosIni.Y();
+                                //z=InvPosIni.Z();
+                                //std::cout<<" Xt "<<x<<" Yt "<<y<<" Zt "<<z<<std::endl;
                                /////////////////////////////////////////////////
 
                                 Double_t  x0=x;
@@ -637,18 +638,18 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
 
 
                                                    //Transform to pad plane before propagation
-                                                /* xsol[iterd]=xcmm[iterd]-zcmm[iterd]*TMath::Sin(thetaLorentz)*TMath::Sin(thetaRot);
-                                                   ysol[iterd]=ycmm[iterd]+zcmm[iterd]*TMath::Sin(thetaLorentz)*TMath::Cos(thetaRot);
-                                                   zsol[iterd]=zcmm[iterd];
+                                                  // xsol[iterd]=xcmm[iterd]-zcmm[iterd]*TMath::Sin(thetaLorentz)*TMath::Sin(thetaRot);
+                                                //   ysol[iterd]=ycmm[iterd]+zcmm[iterd]*TMath::Sin(thetaLorentz)*TMath::Cos(thetaRot);
+                                                //   zsol[iterd]=zcmm[iterd];
 
-                                                   xdet[iterd] = xsol[iterd];
-                                                   ydet[iterd] = (fZk-zsol[iterd])*TMath::Sin(thetaTilt) + ysol[iterd]*TMath::Cos(thetaTilt);
-                                                   zdet[iterd] = zsol[iterd]*TMath::Cos(thetaTilt) + ysol[iterd]*TMath::Sin(thetaTilt);
+                                                //   xdet[iterd] = xsol[iterd];
+                                                //   ydet[iterd] = (fZk-zsol[iterd])*TMath::Sin(thetaTilt) + ysol[iterd]*TMath::Cos(thetaTilt);
+                                                //   zdet[iterd] = zsol[iterd]*TMath::Cos(thetaTilt) + ysol[iterd]*TMath::Sin(thetaTilt);
 
-                                                   xpad[iterd] = xdet[iterd]*TMath::Cos(thetaPad) - ydet[iterd]*TMath::Sin(thetaPad);
-                                                   ypad[iterd] = xdet[iterd]*TMath::Sin(thetaPad) + ydet[iterd]*TMath::Cos(thetaPad);
-                                                   zpad[iterd] = zdet[iterd];
-                                                   //zpad[iterd] = -zdet[iterd] + 2*zmin*10.0;*/
+                                                //   xpad[iterd] = xdet[iterd]*TMath::Cos(thetaPad) - ydet[iterd]*TMath::Sin(thetaPad);
+                                                //   ypad[iterd] = xdet[iterd]*TMath::Sin(thetaPad) + ydet[iterd]*TMath::Cos(thetaPad);
+                                                //   zpad[iterd] = zdet[iterd];
+                                                   //zpad[iterd] = -zdet[iterd] + 2*zmin*10.0;
 
                                                     //std::cout<<" k : "<<k<<std::endl;
                                                     //std::cout<<" zcmm : "<<zcmm[iterd]<<"  2*zmin*10.0  : "<<2*zmin_trans*10.0<<std::endl;
@@ -776,7 +777,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
 
 
                                                       //std::cout<<" Integration : "<<integration<<std::endl;
-                              fPadPlane->Reset(0);
+                            fPadPlane->Reset(0);
 
                             for( iterd=0;iterd<integration;iterd++){
                               double costheta=cos(aMC);
@@ -792,22 +793,26 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                 //double dxpad=4.;
                                 //double dypad=4.;
                                 //double zstep=2.;
-                                /*indexx=xpad[iterd]/dxpad;
-                                if (indexx>>99) indexx=99 ;
 
-                                indexy=ypad[iterd]/dypad;
-                                    if (indexy>>99) indexy=99 ;
-                                indexz=zpad[iterd]/zstep;
-                                    if (indexz>>99) indexz=99 ;*/
+                                //indexx=xpad[iterd]/dxpad;
+                                //if (indexx>>99) indexx=99 ;
+
+                              //  indexy=ypad[iterd]/dypad;
+                              //      if (indexy>>99) indexy=99 ;
+                              //  indexz=zpad[iterd]/zstep;
+                              //      if (indexz>>99) indexz=99 ;
+
+
                                 //introduce straggling
                                 int istrag=9;
-                            /*          f=x*exp(-x**2/2.)
-                            meanr  rmax dProbability  probability
-                            0.379256755      0.758513510      0.250009149      0.379256755      0.568891168      0.250009149
-                            0.967998266       1.17748296      0.250010014      0.588741541      0.588690937      0.500019193
-                            1.42142344       1.66536391      0.250012964      0.453425169      0.416164398      0.750032187
-                            6.66956806       11.6737719      0.249981672       5.24814463       2.98571382E-29   1.00001383
-                            */
+
+                            //          f=x*exp(-x**2/2.)
+                          //  meanr  rmax dProbability  probability
+                        //    0.379256755      0.758513510      0.250009149      0.379256755      0.568891168      0.250009149
+                        //    0.967998266       1.17748296      0.250010014      0.588741541      0.588690937      0.500019193
+                        //    1.42142344       1.66536391      0.250012964      0.453425169      0.416164398      0.750032187
+                        //    6.66956806       11.6737719      0.249981672       5.24814463       2.98571382E-29   1.00001383
+
                               double sigstrtrans=0.010*sqrt(zpad[iterd]) ; //in cm
                               double sigstrlong=0.025*sqrt(zpad[iterd]) ; //in cm but zpad is in mm
                               double rstrag[4]={0.};
@@ -838,9 +843,19 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                   //  fout1<<" xstr "<<X_str<<" ystr "<<Y_str<<" z "<<z<<"  Qstr   " << Q_str<< endl;
                                    //Qsim[indexxs +100*indexys] += Qpad[iterd]/32.;  //sum charge normalized 4 radius 8 angles
                                    //zsimq[indexxs +100*indexys] += zpad[iterd]*Qpad[iterd]/32.;  //sum charge normalized 4 radius 8 angles
+
                                    //std::cout<<"integration :  "<<integration<<" X_str : "<<X_str<<" Y_str : "<<Y_str<<" Q_str : "<<Q_str<<std::endl;
-                                   Int_t pBin =  fPadPlane->Fill(X_str,Y_str,Q_str);
-                                   pBin=pBin-1;
+
+                                  Int_t pBin =  0;
+
+                                   //if(!std::isnan(X_str) && !std::isnan(Y_str) && !std::isnan(Q_str)){
+                                      //std::cout<<X_str<<"  "<<Y_str<<"   "<<Q_str<<std::endl;
+                                    if(X_str<1000 && X_str>1000 && Y_str<1000 && Y_str>1000){
+                                      pBin =  fPadPlane->Fill(X_str,Y_str,Q_str);
+                                      pBin=pBin-1;
+                                    }
+                                   //}
+
                                    //Double_t qBin = fPadPlane->GetBinContent(pBin);
                                    // calculate center of gravity for z
                                    if(pBin>0){
@@ -848,8 +863,9 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
 
                                    zsimq[pBin] += Q_str*zpad[iterd]; //not yet normalized
                                  //std::cout<<"X_str : "<<X_str<<" Y_str : "<<Y_str<<"  Pad Number : "<<pBin+1<<" Bin content : "<<qBin<<"  table "<<Qsim[pBin]<<std::endl;
-                                  } // end if
-                                                          }// phi angle
+                                   } // end if
+
+                                  }// phi angle
 
                                }  //end of straggling
                                // put in memory the cumulated charge per pad
@@ -863,7 +879,12 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                               //fout1<<" indexpad " <<" xind "<<" yind "<<" zqusim "<<"  Qsim "<<" ysim 1 2 3 4 5 6 7 8 9 10"<<endl;
                             for (Int_t i = 0; i < npadtotal; i++) {
                                 //fout1<<"  "<<zsimq[i]<<endl;
-                                  double qsimnorm=4.0;  //normalization of simulation to fit exp. amplitudes is str dependant
+
+                                 // +++++++++++++++++++++++++++
+                                 //TODO:: This factor needs to be adjusted depending on the run!!!
+                                 double qsimnorm=4.0;  //normalization of simulation to fit exp. amplitudes is str dependant
+                                 // +++++++++++++++++++++++++++++++
+
                                   Qsim[i] = Qsim[i]*qsimnorm; //noramlized: attention Zsim was maultiplied by the unnormalized
                                 if(Qsim[i] > tracksimthreshold)  //threshold after renormalization
                                 {
@@ -906,6 +927,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                               fPosZmin=ziter;
 
                               //std::cout<<" End of QMCsim : "<<Qsim[103]<<std::endl;
+
 
 
 }

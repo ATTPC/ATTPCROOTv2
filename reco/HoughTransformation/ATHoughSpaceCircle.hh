@@ -133,6 +133,8 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         Double_t fDriftVelocity;
         Int_t fTBTime;
 
+        Bool_t kDebug;
+
         std::vector<Double_t> fPosXmin;
         std::vector<Double_t> fPosYmin;
         std::vector<Double_t> fPosZmin;
