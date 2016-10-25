@@ -124,7 +124,7 @@ Bool_t  ATMCQMinimization::MinimizeOptMap(Double_t* parameter,ATEvent *event,TH2
 
 }
 
-Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, TH2Poly* hPadPlane,multiarray PadCoord)
+Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, TH2Poly* hPadPlane,const multiarray& PadCoord)
 {
 
 
@@ -248,10 +248,10 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
             double sigmaq=0.2 ;  //defined as the fraction of sum Qsim+Qtrack
             double sigmaz= 4.0  ;  //defined as deviation of the center of gravity in mm modified from 5.4 on june 10 wm
             int imc1=0;
-            int imc1max=1;//10
+            int imc1max=10;//10
             iconvar=imc1;
             int imc2=0;
-            int imc2max=1;//100
+            int imc2max=100;//100
             int icontrol=1;
 
             MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
@@ -349,7 +349,7 @@ void ATMCQMinimization::MCvar( double* parameter, int & modevar,int & iconvar,do
                                     y0MC =parameter[1]/10.0;
                                     z0MC =fZk/10.0 - (fEntTB-parameter[3])*dzstep;
                                     aMC = parameter[6];
-                                    phiMC = TMath::Pi()-parameter[4]-110*TMath::Pi()/180.0;
+                                    phiMC = TMath::Pi()-parameter[4]-fThetaPad;
                                     //phiMC = TMath::Pi()-parameter[4]-115*TMath::Pi()/180.0;
                                     //double Bmin= 17000. ; //magnetic field
                                     /////////// Initial parameters///////////////
@@ -850,7 +850,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
 
                                    //if(!std::isnan(X_str) && !std::isnan(Y_str) && !std::isnan(Q_str)){
                                       //std::cout<<X_str<<"  "<<Y_str<<"   "<<Q_str<<std::endl;
-                                    if(X_str<1000 && X_str>1000 && Y_str<1000 && Y_str>1000){
+                                    if(X_str<300 && X_str>-300 && Y_str<300 && Y_str>-300){
                                       pBin =  fPadPlane->Fill(X_str,Y_str,Q_str);
                                       pBin=pBin-1;
                                     }

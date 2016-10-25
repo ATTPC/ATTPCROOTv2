@@ -37,6 +37,7 @@ ATHoughSpaceCircle::ATHoughSpaceCircle()
     for(Int_t i;i<8;i++) fParameter[i]=0.0;
 
     kDebug = kFALSE;
+    kHough = kFALSE;
 
 
 
@@ -818,7 +819,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
 
 }
 
-void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multiarray PadCoord)
+void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const multiarray& PadCoord)
 {
 
   Int_t nHits = event->GetNumHits();
@@ -830,6 +831,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
   //ATMinimization *min = new ATMCMinimization();
   min->ResetParameters();
 
+////////////////////////////  Circular Hough Space Block /////////////////////////////
   for(Int_t iHit=0; iHit<(nHits-nstep); iHit++){
 
               //std::cout<<omp_get_num_threads()<<std::endl;
@@ -858,6 +860,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
 
 
+
                   Int_t locmaxx,locmaxy,locmaxz;
                   HistHoughXY->GetMaximumBin(locmaxx,locmaxy,locmaxz);
                   Double_t xpos = HistHoughXY->GetXaxis()->GetBinCenter(locmaxx);
@@ -866,14 +869,11 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                   fXCenter =  ypos*TMath::Cos(xpos);
                   fYCenter =  ypos*TMath::Sin(xpos);
 
-
-                    fIniRadius=0.0;
-                    fIniPhi=0.0;
-                    fIniTheta=0.0;
+////////////////////////////  End of Circular Hough Space Block /////////////////////////////
 
 
 
-                  // ****************** Begin: RxPhi Hough Space + Clustering ********************** //
+//////////////////////////// Track calculation (Including linear Hough Space calculation)  /////////////////////////////
 
 
                     for(Int_t iHit=0; iHit<nHits-1; iHit++){
@@ -893,66 +893,86 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
                               //Second Hough Space Calculation for PhixRadius
 
-                                 /*for(Int_t itheta = 0; itheta <1023; itheta++){
+                              if(kHough){
+                                 for(Int_t itheta = 0; itheta <1023; itheta++){
                                       Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
                                       Float_t d0_XY = (TMath::Cos(angle)*fPhi->at(iHit)*fRadius->at(iHit))  +  (TMath::Sin(angle)*hit.GetTimeStamp());
                                       HistHoughAux->Fill(angle,d0_XY);
                                       //FillHoughMap(angle,d0_XY);
 
-                                }*/
+                                }
+                              }//kHough
 
 
                     }
 
-                  //fHoughLinePar =  CalHoughParameters(HistHoughAux);//Histo
-                  //std::pair<Double_t,Double_t> HoughLinePar = CalHoughParameters();//std
+//////////////////////////// End of Track calculation  /////////////////////////////
 
 
-                  Double_t IniPosZ =0.0;
-                  Int_t IniTSBuff=0;
-                  Double_t IniRadiusBuff =0.0;
-                  Double_t IniPhiBuff =0.0;
+/////////////////////////// Hough Space Track Calculation   /////////////////////////////
+
+                              fIniRadius=0.0;
+                              fIniPhi=0.0;
+                              fIniTheta=0.0;
+
+                  if(kHough){
+
+                            fHoughLinePar =  CalHoughParameters(HistHoughAux);//Histo
+                           //std::pair<Double_t,Double_t> HoughLinePar = CalHoughParameters();//std
 
 
-                  /*for(Int_t iHit=0; iHit<nHits-1; iHit++)
-                  {
-                    ATHit hit = event->GetHitArray()->at(iHit);
-                    TVector3 position = hit.GetPosition();
-                    Double_t geo_dist = TMath::Abs (TMath::Cos(fHoughLinePar.first)*fPhi->at(iHit)*fRadius->at(iHit)  + TMath::Sin(fHoughLinePar.first)*hit.GetTimeStamp()  - fHoughLinePar.second);
-                    Double_t hit_dist = TMath::Sqrt( TMath::Power( (fPhi->at(iHit)*fRadius->at(iHit) - IniPhiBuff*IniRadiusBuff),2) + TMath::Power(hit.GetTimeStamp()-IniTSBuff ,2) );
-                    //if(hit_dist<50) std::cout<<" Hist Dist pre :"<<hit_dist<<" Geo Dist : "<<geo_dist<<std::endl;
-                    //std::cout<<" Hit ID : "<<hit.GetHitID()<<" Hit Time Stamp : "<< hit.GetTimeStamp()<<std::endl;
+                            Double_t IniPosZ =0.0;
+                            Int_t IniTSBuff=0;
+                            Double_t IniRadiusBuff =0.0;
+                            Double_t IniPhiBuff =0.0;
 
 
-                            if(geo_dist<10.0){
-
-                                      IniTSBuff = hit.GetTimeStamp();
-                                      IniRadiusBuff = fRadius->at(iHit);
-                                      IniPhiBuff = fPhi->at(iHit);
-
-                                        if(hit_dist<10.0){
-
-
-                                          fClusteredHits->push_back(&hit);
-                                          fIniHit->SetHit(hit.GetHitPadNum(),hit.GetHitID(),position.X(),position.Y(),position.Z(),hit.GetCharge());
-                                          IniPosZ = position.Z();
-                                          fIniHit->SetTimeStamp(hit.GetTimeStamp());
-                                          fIniTS = IniTSBuff;
-                                          fIniRadius = IniRadiusBuff;
-                                          fIniPhi = IniPhiBuff;
-                                          fIniHitID = iHit; // Easier and faster to use the position of the hit in the vector
+                            for(Int_t iHit=0; iHit<nHits-1; iHit++)
+                            {
+                              ATHit hit = event->GetHitArray()->at(iHit);
+                              TVector3 position = hit.GetPosition();
+                              Double_t geo_dist = TMath::Abs (TMath::Cos(fHoughLinePar.first)*fPhi->at(iHit)*fRadius->at(iHit)  + TMath::Sin(fHoughLinePar.first)*hit.GetTimeStamp()  - fHoughLinePar.second);
+                              Double_t hit_dist = TMath::Sqrt( TMath::Power( (fPhi->at(iHit)*fRadius->at(iHit) - IniPhiBuff*IniRadiusBuff),2) + TMath::Power(hit.GetTimeStamp()-IniTSBuff ,2) );
+                              //if(hit_dist<50) std::cout<<" Hist Dist pre :"<<hit_dist<<" Geo Dist : "<<geo_dist<<std::endl;
+                              //std::cout<<" Hit ID : "<<hit.GetHitID()<<" Hit Time Stamp : "<< hit.GetTimeStamp()<<std::endl;
 
 
-                                        }
+                                      if(geo_dist<10.0){
+
+                                                IniTSBuff = hit.GetTimeStamp();
+                                                IniRadiusBuff = fRadius->at(iHit);
+                                                IniPhiBuff = fPhi->at(iHit);
+
+                                                  if(hit_dist<10.0){
+
+
+                                                    fClusteredHits->push_back(&hit);
+                                                    fIniHit->SetHit(hit.GetHitPadNum(),hit.GetHitID(),position.X(),position.Y(),position.Z(),hit.GetCharge());
+                                                    IniPosZ = position.Z();
+                                                    fIniHit->SetTimeStamp(hit.GetTimeStamp());
+                                                    fIniTS = IniTSBuff;
+                                                    fIniRadius = IniRadiusBuff;
+                                                    fIniPhi = IniPhiBuff;
+                                                    fIniHitID = iHit; // Easier and faster to use the position of the hit in the vector
+
+
+                                                  }
 
 
 
 
-                                }
+                                          }
 
 
-                   }// End of clustering algorithm
-                   */
+                             }// End of clustering algorithm
+
+                 }// kHough
+
+/////////////////////////// End of Hough Space Track Calculation   /////////////////////////////
+
+                 else{
+
+/////////////////////////// RANSAC Track Calculation   /////////////////////////////
 
                   if(kDebug) std::cout<<cRED<<" New RANSAC Event "<<cNORMAL<<std::endl;
 
@@ -1001,7 +1021,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
 
                       // TODO: WARNING, this part depends strongly on the experiment
-                      /* Int_t tb_range=0;
+                      Int_t tb_range=0;
                       auto f_TB = trackHits->front().GetTimeStamp();
                       auto b_TB = trackHits->back().GetTimeStamp();
 
@@ -1014,7 +1034,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                                 //std::cout<<" hitsTB "<<hitsTB.size()<<" TB_hit : "<<tb<<std::endl;
                                 if(hitsTB.size()>1) tb_range++;
                             }
-                      }*/
+                      }
 
                          //std::cout<<" tb_range : "<<tb_range<<std::endl;
                          if(_Hits>5 && n_track_cnt<5){ //Limited to 5 lines with more than 5 hits and spanning more than 2 Time Buckets
@@ -1028,7 +1048,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                          }
 
 
-                     }// Tracks loop
+                     }// Tracks loop (trackSpiral)
 
                      //std::cout<<" Remaining : "<<trackSpiral_buff.size()<<" tracks "<<std::endl;
 
@@ -1071,7 +1091,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                                   fClusteredHits = trackCand.GetHitArray();
                                   //Shared with Hough Space
                                   fIniTS = hit.GetTimeStamp();
-                                  fIniHitID = index;
+                                  fIniHitID = index; // TODO:: This is reversed!!!
 
                               }else lastHitMult=0;
 
@@ -1086,7 +1106,13 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
                    }// Minimum tracks
 
-                 }
+                 }//track spiral size
+
+               }// RANSAC block if !kHough
+
+/////////////////////////// End of RANSAC Track Calculation   /////////////////////////////
+
+/////////////////////////// Theta Average Calculation   /////////////////////////////
 
 
                     Double_t dl_theta=0.0;
@@ -1199,21 +1225,35 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                            thetacnt++;
                          }
                       }
+
+                      // Ugly!! Debugging
+                      fIniTheta = fThetaVal/thetacnt;
                       fIniThetaRansac = fThetaVal/thetacnt;
                   }
 
+/////////////////////////// End of Theta Average Calculation   /////////////////////////////
 
-                  // Adapted to RANSAC
-                  TVector3 IniHitPos = fIniHitRansac->GetPosition();
                   Double_t *parameter = new Double_t[8];
-                  parameter[0]=IniHitPos.X();
-                  parameter[1]=IniHitPos.Y();
-                  parameter[2]=IniHitPos.Z();
-                  parameter[3]=fIniTS;
+                  TVector3 IniHitPos;
+
+                 if(kHough){
+                  IniHitPos = fIniHit->GetPosition();
+                  parameter[4]=fIniPhi;
+                  parameter[5]=fIniRadius;
+                  parameter[6]=fIniTheta;
+                 }else{
+                  IniHitPos = fIniHitRansac->GetPosition();
                   parameter[4]=fIniPhiRansac;
                   parameter[5]=fIniRadiusRansac;
                   parameter[6]=fIniThetaRansac;
-                  parameter[7]=fIniHitID;
+                }
+
+                parameter[0]=IniHitPos.X();
+                parameter[1]=IniHitPos.Y();
+                parameter[2]=IniHitPos.Z();
+                parameter[3]=fIniTS;
+                parameter[7]=fIniHitID;
+
 
                   for(Int_t i=0;i<8;i++) fParameter[i]=parameter[i];
 
@@ -1224,11 +1264,25 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
                   if(fRansacLinePar.size()>0) RansacAngle = TMath::ATan2(fRansacLinePar.at(1),1)*180.0/TMath::Pi();
 
                   //std::cout<<cGREEN<<" Ransac angle : "<<RansacAngle<<" Hough Angle : "<<HoughAngleDeg<<cNORMAL<<std::endl;
+                  Float_t upperlimit=0;
+                  Float_t lowerlimit=0;
+                  Float_t condAngle=180.0;
+
+                  if(kHough){
+                    upperlimit=90.0;
+                    lowerlimit=45.0;
+                    condAngle=HoughAngleDeg;
+                  }else{
+                    upperlimit=-45.0;
+                    lowerlimit=-90.0;
+                    condAngle=RansacAngle;
+                  }
 
 
-              if (   RansacAngle>-90.0 && RansacAngle<-45.0 ) { // Check RxPhi plot to adjust the angle
+              //if (   RansacAngle>-90.0 && RansacAngle<-45.0 ) { // Check RxPhi plot to adjust the angle
+              //if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) {
 
-
+              if(condAngle<upperlimit && condAngle>lowerlimit){
                  min->MinimizeOptMapAmp(parameter,event,hPadPlane,PadCoord);
                  //min->MinimizeOpt(parameter,event);
                  fPosXmin = min->GetPosXMin();
@@ -1288,7 +1342,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multia
 
                 }
 
-                 delete Ransac;
+                 //delete Ransac;
                  delete min;
                  delete parameter;
 

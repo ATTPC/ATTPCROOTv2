@@ -32,7 +32,7 @@ TH2F* ATHoughSpaceLine3D::GetHoughSpace(TString ProjPlane) {}
 void ATHoughSpaceLine3D::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYplane, Bool_t XZplane) {}
 void ATHoughSpaceLine3D::CalcHoughSpace(ATEvent* event, TH2Poly* hPadPlane) {}
 void ATHoughSpaceLine3D::CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4) {}
-void ATHoughSpaceLine3D::CalcHoughSpace(ATEvent* event, TH2Poly* hPadPlane,multiarray PadCoord) {}
+void ATHoughSpaceLine3D::CalcHoughSpace(ATEvent* event, TH2Poly* hPadPlane,const multiarray& PadCoord) {}
 void ATHoughSpaceLine3D::CalcMultiHoughSpace(ATEvent* event) {}
 void ATHoughSpaceLine3D::CalcHoughSpace(ATEvent* event) {}
 

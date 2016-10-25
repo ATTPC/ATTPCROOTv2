@@ -72,7 +72,7 @@ class ATHoughSpace : public TObject
 	       virtual void CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYplane, Bool_t XZplane)=0;
 				 virtual void CalcHoughSpace(ATEvent* event, TH2Poly* hPadPlane)=0;
 				 virtual void CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4)=0;
-				 virtual void CalcHoughSpace(ATEvent* event, TH2Poly* hPadPlane,multiarray PadCoord)=0;
+				 virtual void CalcHoughSpace(ATEvent* event, TH2Poly* hPadPlane,const multiarray& PadCoord)=0;
 				 virtual void CalcMultiHoughSpace(ATEvent* event)=0;
 				 virtual void CalcHoughSpace(ATEvent* event)=0; //General Main Hough Space function
 

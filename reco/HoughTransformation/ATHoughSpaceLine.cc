@@ -417,7 +417,7 @@ void ATHoughSpaceLine::CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t 
 
 }
 
-void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multiarray PadCoord)
+void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const multiarray& PadCoord)
 {
 
 
