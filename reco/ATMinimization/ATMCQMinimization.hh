@@ -76,7 +76,7 @@ class ATMCQMinimization : public ATMinimization{
 
           void QMCsim(double* parameter, double* Qsim,double *zsimq,double & QMCtotal,
                                     double x0MC,double y0MC, double z0MC, double phiMCv,double aMCv,
-                                    double Bminv, double densv, double rominv,double & e0sm, multiarray PadCoord);
+                                    double Bminv, double densv, double rominv,double & e0sm, multiarray PadCoord,TH2Poly *padplane);
 
           void Chi2MC(double  Qtrack[10000],double  ztrackq[10000],double & Qtracktotal,
                                     double  Qsim[10000],double  zsimq[10000],double & QMCtotal,
@@ -124,10 +124,10 @@ class ATMCQMinimization : public ATMinimization{
              Double_t fZk;
              Int_t fEntTB; //Beam entrance Time Bucket
 
-             TRotation* fPadtoDetRot;
+             //TRotation* fPadtoDetRot;
 
-             AtTpcMap *fMap;
-             TH2Poly* fPadPlane;
+             //!AtTpcMap *fAtMapPtr;
+             //!TH2Poly* fPadPlane;
 
              Bool_t kDebug;
              Bool_t kVerbose;

@@ -1091,7 +1091,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
                                   fClusteredHits = trackCand.GetHitArray();
                                   //Shared with Hough Space
                                   fIniTS = hit.GetTimeStamp();
-                                  fIniHitID = index; // TODO:: This is reversed!!!
+                                  fIniHitID = trackHits->size();
 
                               }else lastHitMult=0;
 
@@ -1343,8 +1343,8 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
                 }
 
                  //delete Ransac;
-                 delete min;
-                 delete parameter;
+                 //delete min;
+                 //delete parameter;
 
 
 

@@ -76,7 +76,7 @@ ATMCQMinimization::ATMCQMinimization()
   kDebug=kFALSE;
   kVerbose=kTRUE;  //wm
 
-  fPadPlane = new TH2Poly();
+  //!fPadPlane = new TH2Poly();
 
 
 }
@@ -128,11 +128,17 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
 {
 
 
+           TH2Poly* fPadPlane = new TH2Poly();
+           fPadPlane = hPadPlane;
+
+
+
            double Qtrack[10000]={0.}; //simulated amplitude for track to analyse
            double ztrackq[10000]={0.}; //simulated amplitude for track to analyse *ztrack fo find center of gravity
 
-            fPadPlane = hPadPlane;
             fHitArray = event->GetHitArray();
+
+
             for(Int_t i=0;i<fHitArray->size();i++){
                ATHit hit = fHitArray->at(i);
                TVector3 position = hit.GetPosition();
@@ -251,7 +257,7 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
             int imc1max=10;//10
             iconvar=imc1;
             int imc2=0;
-            int imc2max=100;//100
+            int imc2max=10;//100
             int icontrol=1;
 
             MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
@@ -286,11 +292,13 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
               iconvar = imc1; //this controls the step of MC in MCvar
                 for (imc2=0;imc2<imc2max;imc2++){
                   icontrol=2;
-                  //fPadPlane->Reset(0);
-                   MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv); // for MC variation with same starting value as before
-                   QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MCv, y0MCv, z0MCv,  aMCv, phiMCv, Bminv, densv,rominv,e0sm,PadCoord);
-                  //std::cout<<cRED<<" After QMCsim x "<<x0MCv<<" y "<< y0MCv<< " z "<< z0MCv<<" theta "<< aMCv<<" phi "<< phiMCv<<" B " <<Bminv<<" dens "<< densv<< " e0sm "<<e0sm<<" ro "<<rominv<<cNORMAL;
-                  Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,CHi2fit,sigmaq,sigmaz);   //Chi2 to compare track and MC
+                    //fPadPlane->Reset(0);
+                    MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv); // for MC variation with same starting value as before
+                    QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MCv, y0MCv, z0MCv,  aMCv, phiMCv, Bminv, densv,rominv,e0sm,PadCoord,fPadPlane);
+                   //std::cout<<cRED<<" After QMCsim x "<<x0MCv<<" y "<< y0MCv<< " z "<< z0MCv<<" theta "<< aMCv<<" phi "<< phiMCv<<" B " <<Bminv<<" dens "<< densv<< " e0sm "<<e0sm<<" ro "<<rominv<<cNORMAL;
+                   Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,CHi2fit,sigmaq,sigmaz);   //Chi2 to compare track and MC
+
+
 
                   if(CHi2fit<Chimin){
 
@@ -300,13 +308,15 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
                         //MCvar(icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, rangeMC, x0MCv, y0MCv,z0MCv, aMCv, phiMCv, rangeMCv); // take the last value as new starting
                         MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv);
 
-                                    }
+                  }
+
+
                 }//imc2 loop
             }//imc1 loop
 
             //fPadPlane->Draw("zcol");
 
-           QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MC, y0MC, z0MC,  aMC, phiMC, Bmin, dens,romin,e0sm,PadCoord); // simulation with Chimin parameters
+            QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MC, y0MC, z0MC,  aMC, phiMC, Bmin, dens,romin,e0sm,PadCoord,fPadPlane); // simulation with Chimin parameters
 
             FitParameters.sThetaMin = aMC;
             FitParameters.sEnerMin=e0sm;
@@ -335,6 +345,8 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
             //std::cout<<" Reduced chi2 : "<<chi2min/FitParameters.sNumMCPoint<<std::endl;
             std::cout<<" Minimum chi2 : "<<CHi2fit<<cNORMAL<<std::endl;
 
+            fPadPlane = NULL;
+            delete fPadPlane;
 
             return kTRUE;
 
@@ -342,6 +354,7 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
 
 void ATMCQMinimization::MCvar( double* parameter, int & modevar,int & iconvar,double & x0MC, double & y0MC, double & z0MC,  double & aMC, double & phiMC, double & Bmin, double & dens, double & romin,
                              double & x0MCv,  double & y0MCv, double & z0MCv, double & aMCv, double & phiMCv,  double & Bminv, double & densv, double & rominv){
+
 
 
                             if(modevar==1){  //initiatialisation
@@ -432,7 +445,7 @@ void ATMCQMinimization::MCvar( double* parameter, int & modevar,int & iconvar,do
 }
 
 void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,double & QMCtotal,
-       double x0MC,double y0MC, double z0MC, double aMC, double phiMC, double Bmin, double dens, double romin,double & e0sm, multiarray PadCoord) {
+       double x0MC,double y0MC, double z0MC, double aMC, double phiMC, double Bmin, double dens, double romin,double & e0sm, multiarray PadCoord,TH2Poly *padplane) {
 
 
 /*         std::cout << "indside sim  x0 " <<x0MC<< "  "<<x0MC << std::endl;
@@ -625,7 +638,8 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                    Float_t factq=1.0;
                                                    //iterd=(Int_t) k/integrationsteps;//NEW
                                                    iterd=k;
-                                                                //fout1<<" x "<<x<<" y "<<y<<" z "<<z<<"  Q" << Qpad[iterd]<< endl;
+                                                   //std::cout<<"."<<std::flush;
+                                                    //fout1<<" x "<<x<<" y "<<y<<" z "<<z<<"  Q" << Qpad[iterd]<< endl;
 
 
                                                 /////  if(iterd0==iterd) // Only takes the first one of hte iterd series
@@ -776,8 +790,10 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                       }// loop over k
 
 
+                                                      padplane->Reset(0);
                                                       //std::cout<<" Integration : "<<integration<<std::endl;
-                            fPadPlane->Reset(0);
+
+
 
                             for( iterd=0;iterd<integration;iterd++){
                               double costheta=cos(aMC);
@@ -848,32 +864,39 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
 
                                   Int_t pBin =  0;
 
-                                   //if(!std::isnan(X_str) && !std::isnan(Y_str) && !std::isnan(Q_str)){
+
                                       //std::cout<<X_str<<"  "<<Y_str<<"   "<<Q_str<<std::endl;
-                                    if(X_str<300 && X_str>-300 && Y_str<300 && Y_str>-300){
-                                      pBin =  fPadPlane->Fill(X_str,Y_str,Q_str);
-                                      pBin=pBin-1;
-                                    }
-                                   //}
+
+                                      if(padplane){
+                                        //std::cout<<X_str<<"  "<<Y_str<<"   "<<Q_str<<std::endl;
+                                        pBin =  padplane->Fill(X_str,Y_str,Q_str);
+
+                                        pBin=pBin-1;
+                                      }
+
 
                                    //Double_t qBin = fPadPlane->GetBinContent(pBin);
                                    // calculate center of gravity for z
-                                   if(pBin>0){
-                                   Qsim[pBin] += Q_str;  //charge in pad
 
-                                   zsimq[pBin] += Q_str*zpad[iterd]; //not yet normalized
-                                 //std::cout<<"X_str : "<<X_str<<" Y_str : "<<Y_str<<"  Pad Number : "<<pBin+1<<" Bin content : "<<qBin<<"  table "<<Qsim[pBin]<<std::endl;
-                                   } // end if
+                                    if(pBin>0 && pBin<npadtotal){
+                                     Qsim[pBin] += Q_str;  //charge in pad
+                                     zsimq[pBin] += Q_str*zpad[iterd]; //not yet normalized
+                                    //std::cout<<"X_str : "<<X_str<<" Y_str : "<<Y_str<<"  Pad Number : "<<pBin+1<<" Bin content : "<<qBin<<"  table "<<Qsim[pBin]<<std::endl;
+                                    } // end if
 
                                   }// phi angle
 
                                }  //end of straggling
-                               // put in memory the cumulated charge per pad
 
-                            //          std:: cout<<" xpad "<<xpad[iterd]<<"  "<<iterd<<std::endl;
-                            //          std:: cout<<" xind  "<<indexx<<" yind "<<indexy<<" Q "<<Qsim[indexx +100*indexy]<<endl;
-                            //          fout1<<" xind  "<<indexx<<" yind "<<indexy<<" Q "<<Qsim[indexx +100*indexy]<<endl;
+                               // put in memory the cumulated charge per pad
+                               //          std:: cout<<" xpad "<<xpad[iterd]<<"  "<<iterd<<std::endl;
+                              //          std:: cout<<" xind  "<<indexx<<" yind "<<indexy<<" Q "<<Qsim[indexx +100*indexy]<<endl;
+                              //          fout1<<" xind  "<<indexx<<" yind "<<indexy<<" Q "<<Qsim[indexx +100*indexy]<<endl;
+
                           }// integration loop
+
+
+
                             // calculate normalized track and define the simulated track
                               Int_t ivalidsim=0;
                               //fout1<<" indexpad " <<" xind "<<" yind "<<" zqusim "<<"  Qsim "<<" ysim 1 2 3 4 5 6 7 8 9 10"<<endl;
@@ -885,24 +908,27 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                  double qsimnorm=4.0;  //normalization of simulation to fit exp. amplitudes is str dependant
                                  // +++++++++++++++++++++++++++++++
 
-                                  Qsim[i] = Qsim[i]*qsimnorm; //noramlized: attention Zsim was maultiplied by the unnormalized
+                                   Qsim[i] = Qsim[i]*qsimnorm; //noramlized: attention Zsim was maultiplied by the unnormalized
                                 if(Qsim[i] > tracksimthreshold)  //threshold after renormalization
                                 {
                                   //int  ihelp=fPadPlane->GetBinCenter(i);
                                   //double xhelp=PadCoord[i][0][0];
                                   //double yhelp=PadCoord[i][0][1];
+
                                   Float_t xhelp = (PadCoord[i][0][0] + PadCoord[i][1][0] + PadCoord[i][2][0])/3.;// x center of gravity of the pad
                                   Float_t yhelp= (PadCoord[i][0][1] + PadCoord[i][1][1] + PadCoord[i][2][1])/3.;// y center of gravity of the pad
+
                                   //double xhelp1= PadCoord[i][1][0];
                                   //double xhelp2= PadCoord[i][2][0];
                                   //double yhelp1=PadCoord[i][0][2];
                                   //fout1<<"  test of coordinates"<<xhelp<<"  1 "<<xhelp1<<" 2  "<<xhelp2<<"   y "<<yhelp<<"  "<<"   y1 "<<yhelp1<<endl;
-                                  ivalidsim++  ;
+                                    ivalidsim++;
                                     double help;
                                     help = zsimq[i];
                                    zsimq[i]  = qsimnorm*zsimq[i]/Qsim[i];//normalized position cuidad norm
-                                //std::cout<<" Inner loop  "<< i << "  nn "<< help <<" z "<<zsimq[i]<<" Qsim "<< Qsim[i] <<std::endl;
+                                   //std::cout<<" Inner loop  "<< i << "  nn "<< help <<" z "<<zsimq[i]<<" Qsim "<< Qsim[i] <<std::endl;
                                    //fout1<<"  "<<i<<"  "<< xhelp<<"  "<<yhelp<<" " << zsimq[i]<< "  "<<Qsim[i];
+
                                    xiter.push_back(xhelp);
                                    yiter.push_back(yhelp);
                                    ziter.push_back(zsimq[i]);
@@ -925,6 +951,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                               fPosXmin=xiter;
                               fPosYmin=yiter;
                               fPosZmin=ziter;
+
 
                               //std::cout<<" End of QMCsim : "<<Qsim[103]<<std::endl;
 
