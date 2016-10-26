@@ -162,6 +162,12 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
                fPosXexp.push_back(position.X());
                fPosYexp.push_back(position.Y());
                fPosTBexp.push_back(hit.GetTimeStamp());
+               fPosXinter.push_back(position.X());
+               fPosYinter.push_back(position.Y());
+               fPosZinter.push_back(position.Z());
+               fPosTBinter.push_back(hit.GetTimeStamp());
+
+
              }
 
 
