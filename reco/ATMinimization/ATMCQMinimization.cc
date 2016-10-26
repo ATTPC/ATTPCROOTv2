@@ -307,7 +307,7 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
                     MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv); // for MC variation with same starting value as before
                     QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MCv, y0MCv, z0MCv,  aMCv, phiMCv, Bminv, densv,rominv,e0sm,PadCoord,fPadPlane);
                    //std::cout<<cRED<<" After QMCsim x "<<x0MCv<<" y "<< y0MCv<< " z "<< z0MCv<<" theta "<< aMCv<<" phi "<< phiMCv<<" B " <<Bminv<<" dens "<< densv<< " e0sm "<<e0sm<<" ro "<<rominv<<cNORMAL;
-                   Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,CHi2fit,sigmaq,sigmaz);   //Chi2 to compare track and MC
+                    Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,CHi2fit,sigmaq,sigmaz);   //Chi2 to compare track and MC
 
 
 
@@ -335,6 +335,7 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
             FitParameters.sBMin=Bmin;
             FitParameters.sPhiMin=phiMC;
 
+
             //std::cout<<cRED<<" final fit x "<<x0MC <<" y "<< y0MC << " z "<< z0MC <<" theta "<< aMC <<" phi "<< phiMC <<" B " <<Bmin <<" dens "<< dens <<" e0sm "<<e0sm<<" ro "<<romin <<cNORMAL<<std::endl;
             Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,CHi2fit,sigmaq,sigmaz);   //Chi2 to compare track and MC for Chimin parameters
 
@@ -342,16 +343,7 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
             //FitParameters.sNumMCPoint=num_MC_Point;
             //FitParameters.sNormChi2=chi2min/num_MC_Point;
 
-            /*for(Int_t ig=0;ig<fHitArray->size();ig++){
-                 ATHit hit = fHitArray->at(ig);
-                 TVector3 position = hit.GetPosition();
-                 fPosXexp.push_back(position.X());
-                 fPosYexp.push_back(position.Y());
-                 fPosTBexp.push_back(hit.GetTimeStamp());
-           }*/
-
-
-
+            BackwardExtrapolation();
 
             std::cout<<cYELLOW<<" Minimization result : "<<std::endl;
             std::cout<<" Scattering Angle : "<<aMC*180.0/TMath::Pi()<<std::endl;
@@ -359,8 +351,9 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
             std::cout<<" B : "<<Bmin<<std::endl;
             std::cout<<" Brho : "<<FitParameters.sBrhoMin<<std::endl;
             std::cout<<" Energy : "<<e0sm<<std::endl;
-            std::cout<<" Vertex Position (Backward extrapolation) - X : "<<x0MC<<" - Y : "<<y0MC<<" - Z : "<<z0MC<<std::endl;
-            //std::cout<<" Vertex Energy : "<<fVertexEner<<" MeV "<<std::endl;
+            std::cout<<" Vertex Position - X : "<<x0MC<<" - Y : "<<y0MC<<" - Z : "<<z0MC<<std::endl;
+            std::cout<<" Vertex Position (Backward extrapolation) - X : "<<fVertexPos.X()<<" - Y : "<<fVertexPos.Y()<<" - Z : "<<fVertexPos.Z()<<std::endl;
+            std::cout<<" Vertex Energy : "<<fVertexEner<<" MeV "<<std::endl;
             //std::cout<<" Reduced chi2 : "<<chi2min/FitParameters.sNumMCPoint<<std::endl;
             std::cout<<" Minimum chi2 : "<<CHi2fit<<cNORMAL<<std::endl;
 
@@ -937,6 +930,13 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                               fPosXmin=xiter;
                               fPosYmin=yiter;
                               fPosZmin=ziter;
+                              fThetaMin=theta0;
+                              fEnerMin=e0sm;
+                              fPosMin.SetXYZ(x_buff,y_buff,z_buff);
+                              //fBrhoMin=bro;
+                              fBMin=_B;
+                              fPhiMin=phi0;
+                              fDensMin=dens;
 
 
                               //std::cout<<" End of QMCsim : "<<Qsim[103]<<std::endl;
