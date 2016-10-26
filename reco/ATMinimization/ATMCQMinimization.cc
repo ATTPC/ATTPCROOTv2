@@ -157,6 +157,11 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
               // fout1<< std::endl;
                Qtrack[hitPadNum] = hitcharge;
                ztrackq[hitPadNum] = position.Z() ; // values to be used in chi2
+
+               //For visualization
+               fPosXexp.push_back(position.X());
+               fPosYexp.push_back(position.Y());
+               fPosTBexp.push_back(hit.GetTimeStamp());
              }
 
 
@@ -257,7 +262,7 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
             int imc1max=10;//10
             iconvar=imc1;
             int imc2=0;
-            int imc2max=10;//100
+            int imc2max=50;//100
             int icontrol=1;
 
             MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC,aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv,aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
@@ -330,6 +335,15 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
             FitParameters.sChi2Min=CHi2fit;
             //FitParameters.sNumMCPoint=num_MC_Point;
             //FitParameters.sNormChi2=chi2min/num_MC_Point;
+
+            /*for(Int_t ig=0;ig<fHitArray->size();ig++){
+                 ATHit hit = fHitArray->at(ig);
+                 TVector3 position = hit.GetPosition();
+                 fPosXexp.push_back(position.X());
+                 fPosYexp.push_back(position.Y());
+                 fPosTBexp.push_back(hit.GetTimeStamp());
+           }*/
+
 
 
 

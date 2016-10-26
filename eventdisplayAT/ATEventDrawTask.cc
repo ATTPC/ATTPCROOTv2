@@ -759,6 +759,7 @@ ATEventDrawTask::DrawHSpace()
                     std::vector<Double_t> fPosZBack = fHoughSpaceCircle_buff->GetPosZBack();
 
 
+
                    for(Int_t i=0;i<fPosXMin.size();i++){
                        fMC_XY->SetPoint(fMC_XY->GetN(),fPosXMin.at(i),fPosYMin.at(i));
                        fMC_ZX->SetPoint(fMC_ZX->GetN(),fPosZMin.at(i),fPosXMin.at(i));
@@ -1270,6 +1271,12 @@ ATEventDrawTask::DrawMC()
                fMC_XY->SetMarkerColor(kRed);
                fMC_XY->Draw("P");
 
+               fMC_XY_back = new TGraph();
+               fMC_XY_back->SetPoint(1,0,0);
+               fMC_XY_back->SetMarkerStyle(22);
+               fMC_XY_back->SetMarkerSize(1.0);
+               fMC_XY_back->SetMarkerColor(6);
+               fMC_XY_back->Draw("P");
 
                fMC_XY_int = new TGraph();
                fMC_XY_int->SetPoint(1,0,0);
@@ -1278,28 +1285,23 @@ ATEventDrawTask::DrawMC()
                fMC_XY_int->SetMarkerColor(8);
                fMC_XY_int->Draw("P");
 
-               fMC_XY_back = new TGraph();
-               fMC_XY_back->SetPoint(1,0,0);
-               fMC_XY_back->SetMarkerStyle(22);
-               fMC_XY_back->SetMarkerSize(1.0);
-               fMC_XY_back->SetMarkerColor(6);
-               fMC_XY_back->Draw("P");
-
                fCvsMC_Z->cd();
 
-               fMC_ZX_int = new TGraph();
-               fMC_ZX_int->SetPoint(1,0,0);
-               fMC_ZX_int->SetMarkerStyle(22);
-               fMC_ZX_int->SetMarkerSize(1.0);
-               fMC_ZX_int->SetMarkerColor(kRed);
-               fMC_ZX_int->Draw("AP");
+               fMC_ZX = new TGraph();
+               fMC_ZX->SetPoint(1,0,0);
+               fMC_ZX->SetMarkerStyle(20);
+               fMC_ZX->SetMarkerSize(1.0);
+               fMC_ZX->SetMarkerColor(kRed);
+               fMC_ZX->Draw("AP");
 
-               fMC_ZY_int = new TGraph();
-               fMC_ZY_int->SetPoint(1,0,0);
-               fMC_ZY_int->SetMarkerStyle(22);
-               fMC_ZY_int->SetMarkerSize(1.0);
-               fMC_ZY_int->SetMarkerColor(kBlack);
-               fMC_ZY_int->Draw("P");
+
+               fMC_ZY  = new TGraph();
+               fMC_ZY->SetPoint(1,0,0);
+               fMC_ZY->SetMarkerStyle(20);
+               fMC_ZY->SetMarkerSize(1.0);
+               fMC_ZY->SetMarkerColor(kBlack);
+               fMC_ZY->Draw("P");
+
 
                fMC_ZX_back = new TGraph();
                fMC_ZX_back->SetPoint(1,0,0);
@@ -1315,21 +1317,22 @@ ATEventDrawTask::DrawMC()
                fMC_ZY_back->SetMarkerColor(6);
                fMC_ZY_back->Draw("P");
 
+               fMC_ZX_int = new TGraph();
+               fMC_ZX_int->SetPoint(1,0,0);
+               fMC_ZX_int->SetMarkerStyle(22);
+               fMC_ZX_int->SetMarkerSize(1.0);
+               fMC_ZX_int->SetMarkerColor(kRed);
+               fMC_ZX_int->Draw("P");
 
-               fMC_ZX = new TGraph();
-               fMC_ZX->SetPoint(1,0,0);
-               fMC_ZX->SetMarkerStyle(20);
-               fMC_ZX->SetMarkerSize(1.0);
-               fMC_ZX->SetMarkerColor(kRed);
-               fMC_ZX->Draw("P");
+               fMC_ZY_int = new TGraph();
+               fMC_ZY_int->SetPoint(1,0,0);
+               fMC_ZY_int->SetMarkerStyle(22);
+               fMC_ZY_int->SetMarkerSize(1.0);
+               fMC_ZY_int->SetMarkerColor(kBlack);
+               fMC_ZY_int->Draw("P");
 
 
-               fMC_ZY  = new TGraph();
-               fMC_ZY->SetPoint(1,0,0);
-               fMC_ZY->SetMarkerStyle(20);
-               fMC_ZY->SetMarkerSize(1.0);
-               fMC_ZY->SetMarkerColor(kBlack);
-               fMC_ZY->Draw("P");
+
 
 
 

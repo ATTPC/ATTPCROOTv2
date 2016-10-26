@@ -175,7 +175,7 @@ Bool_t ATMCMinimization::Minimize(Double_t* parameter,ATEvent *event){
                         Double_t TBmin = parameter[3]*dzstep; // Absolute TB to compare between exp and sim
                         //Double_t phi0= (TMath::Pi()-5.0*TMath::Pi())-parameter[4]- fThetaPad; //RADIANS
                         //Double_t phi0=parameter[4]+fThetaPad-10.0*TMath::Pi(); //RADIANS
-                        Double_t phi0=TMath::Pi()-parameter[4]-115*TMath::Pi()/180.0;
+                        Double_t phi0=TMath::Pi()-parameter[4]-fThetaPad;
 
                         //Double_t phi0=parameter[4];
 
@@ -1003,7 +1003,8 @@ Bool_t ATMCMinimization::MinimizeOpt(Double_t* parameter,ATEvent *event){
                 Double_t TBmin = parameter[3]*dzstep; // Absolute TB to compare between exp and sim
                 //Double_t phi0= (TMath::Pi()-5.0*TMath::Pi())-parameter[4]- fThetaPad; //RADIANS
                 //Double_t phi0=parameter[4]+fThetaPad-10.0*TMath::Pi(); //RADIANS
-                Double_t phi0=TMath::Pi()-parameter[4]-115*TMath::Pi()/180.0;
+                //Double_t phi0=TMath::Pi()-parameter[4]-115*TMath::Pi()/180.0;
+                Double_t phi0=TMath::Pi()-parameter[4]-fThetaPad;
 
                 //Double_t phi0=parameter[4];
 
@@ -1647,7 +1648,7 @@ Bool_t ATMCMinimization::MinimizeOptMap(Double_t* parameter,ATEvent *event, TH2P
                 Double_t TBmin = parameter[3]*dzstep; // Absolute TB to compare between exp and sim
                 //Double_t phi0= (TMath::Pi()-5.0*TMath::Pi())-parameter[4]- fThetaPad; //RADIANS
                 //Double_t phi0=parameter[4]+fThetaPad-10.0*TMath::Pi(); //RADIANS
-                Double_t phi0=TMath::Pi()-parameter[4]-115*TMath::Pi()/180.0;
+                Double_t phi0=TMath::Pi()-parameter[4]-fThetaPad;
 
                 //Double_t phi0=parameter[4];
 

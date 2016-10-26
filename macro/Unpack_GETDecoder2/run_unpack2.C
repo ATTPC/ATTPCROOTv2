@@ -1,5 +1,5 @@
 void run_unpack2
-(TString dataFile = "runfiles/ar46_run_0085.txt",TString parameterFile = "ATTPC.e15503b.par",
+(TString dataFile = "runfiles/ar46_run_0101.txt",TString parameterFile = "ATTPC.e15503b.par",
 TString mappath="/data/ar46/run_0085/")
 {
 
@@ -113,7 +113,7 @@ TString mappath="/data/ar46/run_0085/")
 	//HoughTask ->SetLinearHough();
 	HoughTask ->SetCircularHough();
   HoughTask ->SetHoughThreshold(100.0); // Charge threshold for Hough
-  HoughTask ->SetEnableMap(); //Enables an instance of the ATTPC map
+  HoughTask ->SetEnableMap(); //Enables an instance of the ATTPC map:  This enables the MC with Q instead of position
   HoughTask ->SetMap(scriptdir.Data());
 	run -> AddTask(HoughTask);
 
@@ -121,7 +121,7 @@ TString mappath="/data/ar46/run_0085/")
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,100);
+  run->Run(0,10);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
