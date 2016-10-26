@@ -1343,8 +1343,8 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
                 }
 
                  //delete Ransac;
-                 //delete min;
-                 //delete parameter;
+                 delete min;
+                 delete parameter;
 
 
 
