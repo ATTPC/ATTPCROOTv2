@@ -1,7 +1,19 @@
-void run_unpack2
-(TString dataFile = "runfiles/ar46_run_0101.txt",TString parameterFile = "ATTPC.e15503b.par",
-TString mappath="/data/ar46/run_0085/")
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+
+bool check_file(const std::string& name);
+
+void run_unpack2(TString dataFile = "runfiles/ar46_run_0101.txt",TString parameterFile = "ATTPC.e15503b.par",TString mappath="/data/ar46/run_0085/")
 {
+
+  if(!check_file(dataFile.Data())){
+    std::cout<<cRED<<" Run file "<<dataFile.Data()<<" not found! Terminating..."<<cNORMAL<<std::endl;
+    exit(0);
+  }
+
+
 
   // -----   Timer   --------------------------------------------------------
  TStopwatch timer;
@@ -87,12 +99,20 @@ TString mappath="/data/ar46/run_0085/")
     TString dataFileWithPath;
     Int_t iCobo = 0;
     while (dataFileWithPath.ReadLine(listFile)) {
-        if (dataFileWithPath.Contains(Form("CoBo%i",iCobo)) )
-              fDecoderTask -> AddData(dataFileWithPath, iCobo);
-        else{
-          iCobo++;
-          fDecoderTask -> AddData(dataFileWithPath, iCobo);
-        }
+
+      if(!check_file(dataFileWithPath.Data())){
+        std::cout<<cRED<<" GRAW file "<<dataFileWithPath.Data()<<" not found! Terminating..."<<cNORMAL<<std::endl;
+        exit(0);
+      }else{
+
+              if (dataFileWithPath.Contains(Form("CoBo%i",iCobo)) )
+                    fDecoderTask -> AddData(dataFileWithPath, iCobo);
+              else{
+                iCobo++;
+                fDecoderTask -> AddData(dataFileWithPath, iCobo);
+              }
+      }
+
     }
   }
 
@@ -135,8 +155,13 @@ TString mappath="/data/ar46/run_0085/")
   cout << endl;
   // ------------------------------------------------------------------------
 
-  //gApplication->Terminate();
+  gApplication->Terminate();
 
+}
+
+bool check_file(const std::string& name) {
+  struct stat buffer;
+  return (stat (name.c_str(), &buffer) == 0);
 }
 
 /*fDecoderTask -> AddData("/home/ayyadlim/Desktop/ATTPC/run_0122/CoBo0_run_0122_14-08-15_13h27m28s.graw",0);

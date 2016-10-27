@@ -826,7 +826,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
   Double_t drift_cal = fDriftVelocity*fTBTime/100.0;//mm
 
 
-  ATMinimization *min = new ATMCQMinimization();
+  ATMCQMinimization *min = new ATMCQMinimization();
   //ATMinimization *min = new ATMCMinimization();
   min->ResetParameters();
 
@@ -1282,8 +1282,11 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
               //if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) {
 
               if(condAngle<upperlimit && condAngle>lowerlimit){
-                 min->MinimizeOptMapAmp(parameter,event,hPadPlane,PadCoord);
-                 //min->MinimizeOpt(parameter,event);
+
+                 //Custom function to pass the method to extract the Hit Array
+                 std::function<std::vector<ATHit>*()> func = std::bind(&ATEvent::GetHitArray,event);
+                 //min->MinimizeOptMapAmp(parameter,event,hPadPlane,PadCoord);
+                 min->MinimizeGen(parameter,event,func,hPadPlane,PadCoord);
                  fPosXmin = min->GetPosXMin();
                  fPosYmin = min->GetPosYMin();
                  fPosZmin = min->GetPosZMin();

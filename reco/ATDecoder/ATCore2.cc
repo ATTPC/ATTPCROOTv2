@@ -361,8 +361,10 @@ void ATCore2::WriteData()
 
 ATRawEvent *ATCore2::GetRawEvent(Long64_t frameID)
 {
+
+
   if (!fIsData) {
-    std::cout << "== [ATCore] Data file is not set!" << std::endl;
+    std::cout <<cRED<< "== [ATCore] Data file is not set!" <<cNORMAL<< std::endl;
 
     return NULL;
   }
