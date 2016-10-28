@@ -32,7 +32,7 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         void CalcMultiHoughSpace(ATEvent* event);
         void CalcHoughSpace(ATEvent* event);
 
-        void SetELossFuncArray(std::vector<std::function<Double_t(Double_t)>>& func_array);
+        void SetELossFuncArray(std::vector<std::function<Double_t(Double_t,std::vector<Double_t>&)>>& func_array);
 
         Double_t GetXCenter() {return fXCenter;}
         Double_t GetYCenter() {return fYCenter;}
@@ -71,7 +71,8 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         std::pair<Double_t,Double_t> GetHoughPar();
         std::vector<Double_t>  GetRansacPar();
         // Test function
-        static Double_t GetEloss(Double_t c0);
+        static Double_t GetEloss(Double_t c0,std::vector<Double_t>& par);
+        void SetElossParameters(const std::vector<Double_t>& par);
 
 
 
@@ -98,6 +99,7 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         TH2F *HistHoughXY;
 
         std::vector<ATHit>* fClusteredHits;
+        std::vector<Double_t> fElossPar;
 
 
       protected:
@@ -163,7 +165,7 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         Double_t fStdDeviationLimit;
 
         Double_t fParameter[8];
-        std::vector<std::function<Double_t(Double_t)>> fEloss_func_array;//!
+        std::vector<std::function<Double_t(Double_t,std::vector<Double_t>&)>> fEloss_func_array;//!
 
         struct maxpersecond
         {

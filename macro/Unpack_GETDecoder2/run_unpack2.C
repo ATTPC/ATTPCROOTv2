@@ -141,7 +141,7 @@ void run_unpack2(TString dataFile = "runfiles/ar46_run_0085.txt",TString paramet
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,100);
+  run->Run(0,20);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

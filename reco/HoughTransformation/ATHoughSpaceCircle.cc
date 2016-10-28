@@ -78,13 +78,15 @@ ATHoughSpaceCircle::~ATHoughSpaceCircle()
 
 //void ATHoughSpaceCircle::SetThreshold(Double_t value) {fThreshold = value;}
 
-void ATHoughSpaceCircle::SetELossFuncArray(std::vector<std::function<Double_t(Double_t)>>& func_array)  {fEloss_func_array = func_array;}
+void ATHoughSpaceCircle::SetELossFuncArray(std::vector<std::function<Double_t(Double_t,std::vector<Double_t>&)>>& func_array)  {fEloss_func_array = func_array;}
 
-std::pair<Double_t,Double_t> ATHoughSpaceCircle::GetHoughPar()                                          {return fHoughLinePar;}
+void ATHoughSpaceCircle::SetElossParameters(const std::vector<Double_t>& par)                                                  {fElossPar = par;}
 
-std::vector<Double_t>  ATHoughSpaceCircle::GetRansacPar()                                               {return fRansacLinePar;}
+std::pair<Double_t,Double_t> ATHoughSpaceCircle::GetHoughPar()                                                                 {return fHoughLinePar;}
 
-TH2F* ATHoughSpaceCircle::GetHoughSpace(TString ProjPlane)                                              {return HistHoughXY;}
+std::vector<Double_t>  ATHoughSpaceCircle::GetRansacPar()                                                                      {return fRansacLinePar;}
+
+TH2F* ATHoughSpaceCircle::GetHoughSpace(TString ProjPlane)                                                                     {return HistHoughXY;}
 
 void ATHoughSpaceCircle::CalcMultiHoughSpace(ATEvent* event)
 {
@@ -831,8 +833,8 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
   ATMCQMinimization *min = new ATMCQMinimization();
   //ATMinimization *min = new ATMCMinimization();
   min->ResetParameters();
-  // Setting the Eloss functions
-  std::function<Double_t(Double_t)> ELossFunc = std::bind(GetEloss,std::placeholders::_1);
+  // Setting the Eloss function, simple case
+  std::function<Double_t(Double_t,std::vector<Double_t>&)> ELossFunc = std::bind(GetEloss,std::placeholders::_1,std::placeholders::_2);
   min->AddELossFunc(ELossFunc);
 
 ////////////////////////////  Circular Hough Space Block /////////////////////////////
@@ -1728,8 +1730,13 @@ std::vector<ATHit> ATHoughSpaceCircle::GetTBHitArray(Int_t TB,std::vector<ATHit>
 }
 
 
-// Default ELoss function for protons in 20 torr Isobutane
-Double_t ATHoughSpaceCircle::GetEloss(Double_t c0)
+
+Double_t ATHoughSpaceCircle::GetEloss(Double_t c0,std::vector<Double_t>& par) //!!
 {
-   return 6.98*(1./TMath::Power(c0,0.83))*(1./(20.+1.6/TMath::Power(c0,1.3)))+0.45*TMath::Exp(-55.*TMath::Power((c0-0.025),2));
+   if(par.size()==8){
+   return par[0]*(1./TMath::Power(c0,par[1]))*(1./(par[2]+par[3]/TMath::Power(c0,par[4])))+par[5]*TMath::Exp(-par[6]*TMath::Power((c0-par[7]),2));
+ }else{
+   std::cerr<<cRED<<" ATHoughSpaceCircle::GetEloss -  Warning ! Wrong number of parameters."<<std::endl;
+   return 0;
+ }
 }

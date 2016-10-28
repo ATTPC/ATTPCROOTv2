@@ -101,8 +101,8 @@ std::vector<Double_t> ATMCQMinimization::GetPosXBack()    {return fPosXBack;}
 std::vector<Double_t> ATMCQMinimization::GetPosYBack()    {return fPosYBack;}
 std::vector<Double_t> ATMCQMinimization::GetPosZBack()    {return fPosZBack;}
 
-void ATMCQMinimization::AddELossFunc(std::function<Double_t(Double_t)>& func)                {fEloss_func_array.push_back(func);}
-std::vector<std::function<Double_t(Double_t)>> *ATMCQMinimization::GetELossFunctionArray()   {return &fEloss_func_array;}
+void ATMCQMinimization::AddELossFunc(std::function<Double_t(Double_t,std::vector<Double_t>&)>& func)                {fEloss_func_array.push_back(func);}
+std::vector<std::function<Double_t(Double_t,std::vector<Double_t>&)>> *ATMCQMinimization::GetELossFunctionArray()   {return &fEloss_func_array;}
 
 
 Bool_t  ATMCQMinimization::Minimize(Double_t* parameter,ATEvent *event)
@@ -737,13 +737,15 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                    //std::cout<<" Range : "<<range<<std::endl;
                                                    Double_t sloss = 0.0;
 
-                                                   std::function<Double_t(Double_t)> ELossFunc = fEloss_func_array.at(0);
-                                                   sloss = ELossFunc(ekin); // Energy Loss calculation dE/dX
+                                                   //TODO:: Mind BACKWARDEXTRAPOLATION member!!!!
+                                                   std::function<Double_t(Double_t,std::vector<Double_t>&)> ELossFunc = fEloss_func_array.at(0);
+                                                   std::vector<Double_t> parFunc ={6.98,0.83,20.0,1.6,1.3,0.45,55.0,0.025};
+                                                   sloss = ELossFunc(ekin,parFunc); // Energy Loss calculation dE/dX
 
                                                    Double_t c0;
 
 
-                                                  /* if(iz1==1){
+                                                   /*if(iz1==1){
                                                       c0=ekin;
                                                       if(m==2) c0=c0/2.0;
                                                       sloss=6.98*(1./TMath::Power(c0,0.83))*(1./(20.+1.6/TMath::Power(c0,1.3)))+0.45*TMath::Exp(-55.*TMath::Power((c0-0.025),2)); // expression modified June 14 2016
@@ -1079,8 +1081,11 @@ void ATMCQMinimization::BackwardExtrapolation()
 
                   Double_t  c0;
 
+                  std::function<Double_t(Double_t,std::vector<Double_t>&)> ELossFunc = fEloss_func_array.at(0);
+                  std::vector<Double_t> parFunc ={6.98,0.83,20.0,1.6,1.3,0.45,55.0,0.025};
+                  sloss = ELossFunc(ekin,parFunc); // Energy Loss calculation dE/dX
 
-                  if(iz1==1){
+                  /*if(iz1==1){
                      c0=ekin;
                      if(m==2) c0=c0/2.0;
                      sloss=6.98*(1./TMath::Power(c0,0.83))*(1./(20.+1.6/TMath::Power(c0,1.3)))+0.2*TMath::Exp(-30.*TMath::Power((c0-0.1),2)); //Old expression
@@ -1093,7 +1098,7 @@ void ATMCQMinimization::BackwardExtrapolation()
                   if(iz1==2){
                      c0=ekin;
                      sloss=11.95*(1./TMath::Power(c0,0.83))*(1./(2.5+1.6/TMath::Power(c0,1.5)))+ 0.05*TMath::Exp(TMath::Power(-(c0-0.5),2));
-                   }
+                   }*/
 
                    sloss= sloss*fDensMin*help; //!energy loss with density and step
 
@@ -1349,4 +1354,15 @@ void ATMCQMinimization::ResetParameters()
   FitParameters.sNumMCPoint  = 0;
   FitParameters.sNormChi2    = 0;
 
+}
+
+// Default ELoss function for protons in 20 torr Isobutane
+Double_t ATMCQMinimization::GetEloss(Double_t c0,std::vector<Double_t>& par) //!!
+{
+   if(par.size()==8){
+   return par[0]*(1./TMath::Power(c0,par[1]))*(1./(par[2]+par[3]/TMath::Power(c0,par[4])))+par[5]*TMath::Exp(-par[6]*TMath::Power((c0-par[7]),2));
+ }else{
+   std::cerr<<cRED<<" ATHoughSpaceCircle::GetEloss -  Warning ! Wrong number of parameters."<<std::endl;
+   return 0;
+ }
 }
