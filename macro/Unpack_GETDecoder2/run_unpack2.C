@@ -5,7 +5,7 @@
 
 bool check_file(const std::string& name);
 
-void run_unpack2(TString dataFile = "runfiles/ar46_run_0101.txt",TString parameterFile = "ATTPC.e15503b.par",TString mappath="/data/ar46/run_0085/")
+void run_unpack2(TString dataFile = "runfiles/ar46_run_0085.txt",TString parameterFile = "ATTPC.e15503b.par",TString mappath="/data/ar46/run_0085/")
 {
 
   if(!check_file(dataFile.Data())){
@@ -100,10 +100,10 @@ void run_unpack2(TString dataFile = "runfiles/ar46_run_0101.txt",TString paramet
     Int_t iCobo = 0;
     while (dataFileWithPath.ReadLine(listFile)) {
 
-      if(!check_file(dataFileWithPath.Data())){
-        std::cout<<cRED<<" GRAW file "<<dataFileWithPath.Data()<<" not found! Terminating..."<<cNORMAL<<std::endl;
-        exit(0);
-      }else{
+      //if(!check_file(dataFileWithPath.Data())){
+        //std::cout<<cRED<<" GRAW file "<<dataFileWithPath.Data()<<" not found! Terminating..."<<cNORMAL<<std::endl;
+        //exit(0);
+      //}else{
 
               if (dataFileWithPath.Contains(Form("CoBo%i",iCobo)) )
                     fDecoderTask -> AddData(dataFileWithPath, iCobo);
@@ -111,7 +111,7 @@ void run_unpack2(TString dataFile = "runfiles/ar46_run_0101.txt",TString paramet
                 iCobo++;
                 fDecoderTask -> AddData(dataFileWithPath, iCobo);
               }
-      }
+    //  }
 
     }
   }
@@ -141,7 +141,7 @@ void run_unpack2(TString dataFile = "runfiles/ar46_run_0101.txt",TString paramet
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,10);
+  run->Run(0,20);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

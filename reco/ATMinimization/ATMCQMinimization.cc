@@ -48,9 +48,9 @@ ATMCQMinimization::ATMCQMinimization()
   fTiltAng         = fPar->GetTiltAngle()*TMath::Pi()/180.0;
   fEntTB           = (Int_t) fPar->GetTBEntrance();
 
+  //TODO:: Initialize these parameters from the parameter file
   fZk= 1000.0; //Position of the micromegas
-
-
+  fDens = 0.0738 ; // 0.06363*18./20. ; //gas density
   fThetaPad = 110.9*TMath::Pi()/180.0;
   fThetaRot = -6.6*TMath::Pi()/180.0;//-11.6*TMath::Pi()/180.0; was -6.6
 

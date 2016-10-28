@@ -105,6 +105,7 @@ class ATMCQMinimization : public ATMinimization{
              Double_t fDensMin;
              Double_t fVertexEner;
              TVector3 fVertexPos;
+             Double_t fDens;
 
 
              std::vector<Double_t> fPosXmin;
@@ -227,12 +228,6 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
            double aMC   = theta0; //radians
            double phiMC = phi0;
 
-
-
-           //!TODO::::::
-           double dens = 0.0738 ; // value from Josh 0.06363*18./20. ; //gas density
-
-
            double romin;
            double Bminv;//B //after MC variation
            double densv  ; //gas density after MC variation
@@ -264,7 +259,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
            int imc2max=50;//100
            int icontrol=1;
 
-           MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC,aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv,aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
+           MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC,aMC,phiMC, Bmin, fDens,romin,x0MCv, y0MCv,z0MCv,aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
 
                std::cout<<std::endl;
                std::cout<<cGREEN<<" ============================"<<std::endl;
@@ -287,7 +282,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
                    for (imc2=0;imc2<imc2max;imc2++){
                      icontrol=2;
                        //fPadPlane->Reset(0);
-                       MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv); // for MC variation with same starting value as before
+                       MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, fDens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv); // for MC variation with same starting value as before
                        QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MCv, y0MCv, z0MCv,  aMCv, phiMCv, Bminv, densv,rominv,e0sm,PadCoord,fPadPlane);
                       //std::cout<<cRED<<" After QMCsim x "<<x0MCv<<" y "<< y0MCv<< " z "<< z0MCv<<" theta "<< aMCv<<" phi "<< phiMCv<<" B " <<Bminv<<" dens "<< densv<< " e0sm "<<e0sm<<" ro "<<rominv<<cNORMAL;
                        Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,CHi2fit,sigmaq,sigmaz);   //Chi2 to compare track and MC
@@ -299,7 +294,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
                          Chimin=CHi2fit;
 
                            icontrol=3;
-                           MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv);
+                           MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin,fDens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv);
 
                      }
 
@@ -309,7 +304,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
 
                //fPadPlane->Draw("zcol");
 
-               QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MC, y0MC, z0MC,  aMC, phiMC, Bmin, dens,romin,e0sm,PadCoord,fPadPlane); // simulation with Chimin parameters
+               QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MC, y0MC, z0MC,  aMC, phiMC, Bmin,fDens,romin,e0sm,PadCoord,fPadPlane); // simulation with Chimin parameters
 
                FitParameters.sThetaMin = aMC;
                FitParameters.sEnerMin=e0sm;
