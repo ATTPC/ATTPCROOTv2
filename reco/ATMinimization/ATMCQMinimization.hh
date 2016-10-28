@@ -40,7 +40,9 @@ class ATMCQMinimization : public ATMinimization{
 	       ATMCQMinimization();
         ~ATMCQMinimization();
 
-        Int_t GetMinimization();
+        void AddELossFunc(std::function<Double_t(Double_t)>& func);
+
+
         Bool_t Minimize(Double_t* parameter,ATEvent *event);
         Bool_t MinimizeOpt(Double_t* parameter,ATEvent *event);
         Bool_t MinimizeOptMap(Double_t* parameter,ATEvent *event, TH2Poly* hPadPlane);
@@ -61,10 +63,12 @@ class ATMCQMinimization : public ATMinimization{
         std::vector<Double_t> GetPosXBack();
         std::vector<Double_t> GetPosYBack();
         std::vector<Double_t> GetPosZBack();
-
+        Int_t GetMinimization();
         std::vector<ATHit> GetTBHitArray(Int_t TB,std::vector<ATHit> *harray);
+        std::vector<std::function<Double_t(Double_t)>> *GetELossFunctionArray();
 
         void ResetParameters();
+
 
 
       protected:
@@ -141,6 +145,8 @@ class ATMCQMinimization : public ATMinimization{
              //!AtTpcMap *fAtMapPtr;
              //!TH2Poly* fPadPlane;
 
+             std::vector<std::function<Double_t(Double_t)>> fEloss_func_array; //!
+
              Bool_t kDebug;
              Bool_t kVerbose;
 
@@ -170,8 +176,8 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
           TH2Poly* fPadPlane = new TH2Poly();
           fPadPlane = hPadPlane;
 
-          double Qtrack[10000]={0.}; //simulated amplitude for track to analyse
-          double ztrackq[10000]={0.}; //simulated amplitude for track to analyse *ztrack fo find center of gravity
+          double Qtrack[10240]={0.}; //simulated amplitude for track to analyse
+          double ztrackq[10240]={0.}; //simulated amplitude for track to analyse *ztrack fo find center of gravity
           std::vector<R>* HitArray = func();
 
 
@@ -232,12 +238,12 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
            double Bminv;//B //after MC variation
            double densv  ; //gas density after MC variation
            double rominv; //magnetic radius after MC variation
-           double xpad[10000]={0}; //these are the partial integral results in small steps
-           double ypad[10000]={0};
-           double zpad[10000]={0};
-           double Qpad[10000]={0}; //wm
-           double Qsim[10000]={0.}; //simulated amplitude
-           double zsimq[10000]={0.};
+           double xpad[10240]={0}; //these are the partial integral results in small steps
+           double ypad[10240]={0};
+           double zpad[10240]={0};
+           double Qpad[10240]={0}; //wm
+           double Qsim[10240]={0.}; //simulated amplitude
+           double zsimq[10240]={0.};
            double Qtracktotal;
            double QMCtotal;
            double CHi2fit;
@@ -253,10 +259,10 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
            double sigmaq=0.2 ;  //defined as the fraction of sum Qsim+Qtrack
            double sigmaz= 4.0  ;  //defined as deviation of the center of gravity in mm modified from 5.4 on june 10 wm
            int imc1=0;
-           int imc1max=10;//10
+           int imc1max=20;//10
            iconvar=imc1;
            int imc2=0;
-           int imc2max=50;//100
+           int imc2max=250;//100
            int icontrol=1;
 
            MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC,aMC,phiMC, Bmin, fDens,romin,x0MCv, y0MCv,z0MCv,aMCv, phiMCv, Bminv, densv, rominv); // for initialisation

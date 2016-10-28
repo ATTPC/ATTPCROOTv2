@@ -54,6 +54,7 @@ ATMCQMinimization::ATMCQMinimization()
   fThetaPad = 110.9*TMath::Pi()/180.0;
   fThetaRot = -6.6*TMath::Pi()/180.0;//-11.6*TMath::Pi()/180.0; was -6.6
 
+
   //fEntTB = 280;
 
   //Global variables
@@ -100,6 +101,9 @@ std::vector<Double_t> ATMCQMinimization::GetPosXBack()    {return fPosXBack;}
 std::vector<Double_t> ATMCQMinimization::GetPosYBack()    {return fPosYBack;}
 std::vector<Double_t> ATMCQMinimization::GetPosZBack()    {return fPosZBack;}
 
+void ATMCQMinimization::AddELossFunc(std::function<Double_t(Double_t)>& func)                {fEloss_func_array.push_back(func);}
+std::vector<std::function<Double_t(Double_t)>> *ATMCQMinimization::GetELossFunctionArray()   {return &fEloss_func_array;}
+
 
 Bool_t  ATMCQMinimization::Minimize(Double_t* parameter,ATEvent *event)
 {
@@ -128,8 +132,8 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
 
 
 
-           double Qtrack[10000]={0.}; //simulated amplitude for track to analyse
-           double ztrackq[10000]={0.}; //simulated amplitude for track to analyse *ztrack fo find center of gravity
+           double Qtrack[10240]={0.}; //simulated amplitude for track to analyse
+           double ztrackq[10240]={0.}; //simulated amplitude for track to analyse *ztrack fo find center of gravity
 
             fHitArray = event->GetHitArray();
 
@@ -239,12 +243,12 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
             double Bminv;//B //after MC variation
             double densv  ; //gas density after MC variation
             double rominv; //magnetic radius after MC variation
-            double xpad[10000]={0}; //these are the partial integral results in small steps
-            double ypad[10000]={0};
-            double zpad[10000]={0};
-            double Qpad[10000]={0}; //wm
-            double Qsim[10000]={0.}; //simulated amplitude
-            double zsimq[10000]={0.};
+            double xpad[10240]={0}; //these are the partial integral results in small steps
+            double ypad[10240]={0};
+            double zpad[10240]={0};
+            double Qpad[10240]={0}; //wm
+            double Qsim[10240]={0.}; //simulated amplitude
+            double zsimq[10240]={0.};
             double Qtracktotal;
             double QMCtotal;
             double CHi2fit;
@@ -529,19 +533,19 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                            //cerr << "error: open output file failed" << endl;
                             //  }
 
-                            double xpad[10000]={0}; //these are the partial intergal results in small steps
-                            double ypad[10000]={0};
-                            double zpad[10000]={0};
-                            double Qpad[10000]={0};
+                            double xpad[10240]={0}; //these are the partial intergal results in small steps
+                            double ypad[10240]={0};
+                            double zpad[10240]={0};
+                            double Qpad[10240]={0};
                             /*   for(Int_t idef=0;idef<10000;idef++) {
                             Qsim[idef]={0.};
                             zsimq[idef]={0.};
                           } */
-                            std::fill_n(Qsim,10000,0);
-                            std::fill_n(zsimq,10000,0);
-                            double Qpadplane[10000]={0.};   //wm
-                            double zpadplane[10000]={0.};
-                            Int_t npadtotal=10000  ;
+                            std::fill_n(Qsim,10240,0);
+                            std::fill_n(zsimq,10240,0);
+                            double Qpadplane[10240]={0.};   //wm
+                            double zpadplane[10240]={0.};
+                            Int_t npadtotal=10240;
                             double tracksimthreshold=5; // threshold for simulated track in number of primary electrons
                             double Qtotalsim=0.;  // total charge of the simulated track
 
@@ -733,9 +737,13 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                    //std::cout<<" Range : "<<range<<std::endl;
                                                    Double_t sloss = 0.0;
 
-                                                   Double_t  c0;
+                                                   std::function<Double_t(Double_t)> ELossFunc = fEloss_func_array.at(0);
+                                                   sloss = ELossFunc(ekin); // Energy Loss calculation dE/dX
 
-                                                   if(iz1==1){
+                                                   Double_t c0;
+
+
+                                                  /* if(iz1==1){
                                                       c0=ekin;
                                                       if(m==2) c0=c0/2.0;
                                                       sloss=6.98*(1./TMath::Power(c0,0.83))*(1./(20.+1.6/TMath::Power(c0,1.3)))+0.45*TMath::Exp(-55.*TMath::Power((c0-0.025),2)); // expression modified June 14 2016
@@ -751,7 +759,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                    if(iz1==2){
                                                       c0=ekin;
                                                       sloss=11.95*(1./TMath::Power(c0,0.83))*(1./(2.5+1.6/TMath::Power(c0,1.5)))+ 0.05*TMath::Exp(TMath::Power(-(c0-0.5),2));
-                                                    }
+                                                    }*/
 
                                                     sloss= sloss*dens*help; //!energy loss with density and step
 
@@ -1127,16 +1135,16 @@ void ATMCQMinimization::BackwardExtrapolation()
 void ATMCQMinimization::Chi2MC(double*  Qtrack,double*  ztrackq,double & Qtracktotal,double* Qsim ,double*  zsimq ,double & QMCtotal,double & Chi2fit, double & sigmaq, double & sigmaz) {
 
                   double trackthreshold= 50. ;
-                  int  npadtotal =10000;
-                  int indxval[10000]={0};
-                  int indyval[10000] = {0};
-                  int indzval[10000] = {0}; //index for tracks >threshold
+                  int  npadtotal =10240;
+                  //int indxval[10000]={0};
+                  //int indyval[10000] = {0};
+                  //int indzval[10000] = {0}; //index for tracks >threshold
                   double Qtrackval=0.;
                   double Qsimval=0.;
                   //int npoints=0;
-                  int indexx=0;
-                  int indexy=0;
-                  int indexz=0;
+                  //int indexx=0;
+                  //int indexy=0;
+                  //int indexz=0;
 
 
 /*// first check normalization with missing pads (Qtrack<threshold)

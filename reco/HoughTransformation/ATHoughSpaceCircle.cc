@@ -78,11 +78,13 @@ ATHoughSpaceCircle::~ATHoughSpaceCircle()
 
 //void ATHoughSpaceCircle::SetThreshold(Double_t value) {fThreshold = value;}
 
-std::pair<Double_t,Double_t> ATHoughSpaceCircle::GetHoughPar() {return fHoughLinePar;}
+void ATHoughSpaceCircle::SetELossFuncArray(std::vector<std::function<Double_t(Double_t)>>& func_array)  {fEloss_func_array = func_array;}
 
-std::vector<Double_t>  ATHoughSpaceCircle::GetRansacPar()      {return fRansacLinePar;}
+std::pair<Double_t,Double_t> ATHoughSpaceCircle::GetHoughPar()                                          {return fHoughLinePar;}
 
-TH2F* ATHoughSpaceCircle::GetHoughSpace(TString ProjPlane)   {return HistHoughXY;}
+std::vector<Double_t>  ATHoughSpaceCircle::GetRansacPar()                                               {return fRansacLinePar;}
+
+TH2F* ATHoughSpaceCircle::GetHoughSpace(TString ProjPlane)                                              {return HistHoughXY;}
 
 void ATHoughSpaceCircle::CalcMultiHoughSpace(ATEvent* event)
 {
@@ -829,6 +831,9 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
   ATMCQMinimization *min = new ATMCQMinimization();
   //ATMinimization *min = new ATMCMinimization();
   min->ResetParameters();
+  // Setting the Eloss functions
+  std::function<Double_t(Double_t)> ELossFunc = std::bind(GetEloss,std::placeholders::_1);
+  min->AddELossFunc(ELossFunc);
 
 ////////////////////////////  Circular Hough Space Block /////////////////////////////
   for(Int_t iHit=0; iHit<(nHits-nstep); iHit++){
@@ -1720,4 +1725,11 @@ std::vector<ATHit> ATHoughSpaceCircle::GetTBHitArray(Int_t TB,std::vector<ATHit>
         std::vector<ATHit> hitTBArray;
         std::copy_if(harray->begin(), harray->end(), std::back_inserter(hitTBArray),[&TB](ATHit& hit){return hit.GetTimeStamp()==TB;} );
         return hitTBArray;
+}
+
+
+// Default ELoss function for protons in 20 torr Isobutane
+Double_t ATHoughSpaceCircle::GetEloss(Double_t c0)
+{
+   return 6.98*(1./TMath::Power(c0,0.83))*(1./(20.+1.6/TMath::Power(c0,1.3)))+0.45*TMath::Exp(-55.*TMath::Power((c0-0.025),2));
 }

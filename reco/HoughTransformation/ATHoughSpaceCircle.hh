@@ -32,6 +32,8 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         void CalcMultiHoughSpace(ATEvent* event);
         void CalcHoughSpace(ATEvent* event);
 
+        void SetELossFuncArray(std::vector<std::function<Double_t(Double_t)>>& func_array);
+
         Double_t GetXCenter() {return fXCenter;}
         Double_t GetYCenter() {return fYCenter;}
         std::vector<Double_t>* GetRadiusDist() {return fRadius;}
@@ -52,24 +54,26 @@ class ATHoughSpaceCircle : public ATHoughSpace{
 
         Double_t* GetInitialParameters()     {return fParameter;}
 
-        std::vector<Double_t> GetPosXMin() {return fPosXmin;}
-        std::vector<Double_t> GetPosYMin() {return fPosYmin;}
-        std::vector<Double_t> GetPosZMin() {return fPosZmin;}
-        std::vector<Double_t> GetPosXExp() {return fPosXexp;}
-        std::vector<Double_t> GetPosYExp() {return fPosYexp;}
-        std::vector<Double_t> GetPosZExp() {return fPosZexp;}
-        std::vector<Double_t> GetPosXInt() {return fPosXinter;}
-        std::vector<Double_t> GetPosYInt() {return fPosYinter;}
-        std::vector<Double_t> GetPosZInt() {return fPosZinter;}
-        std::vector<Double_t> GetPosXBack() {return fPosXBack;}
-        std::vector<Double_t> GetPosYBack() {return fPosYBack;}
-        std::vector<Double_t> GetPosZBack() {return fPosZBack;}
-
-
+        std::vector<Double_t> GetPosXMin()   {return fPosXmin;}
+        std::vector<Double_t> GetPosYMin()   {return fPosYmin;}
+        std::vector<Double_t> GetPosZMin()   {return fPosZmin;}
+        std::vector<Double_t> GetPosXExp()   {return fPosXexp;}
+        std::vector<Double_t> GetPosYExp()   {return fPosYexp;}
+        std::vector<Double_t> GetPosZExp()   {return fPosZexp;}
+        std::vector<Double_t> GetPosXInt()   {return fPosXinter;}
+        std::vector<Double_t> GetPosYInt()   {return fPosYinter;}
+        std::vector<Double_t> GetPosZInt()   {return fPosZinter;}
+        std::vector<Double_t> GetPosXBack()  {return fPosXBack;}
+        std::vector<Double_t> GetPosYBack()  {return fPosYBack;}
+        std::vector<Double_t> GetPosZBack()  {return fPosZBack;}
 
         void FillHoughMap(Double_t ang, Double_t dist);
         std::pair<Double_t,Double_t> GetHoughPar();
         std::vector<Double_t>  GetRansacPar();
+        // Test function
+        static Double_t GetEloss(Double_t c0);
+
+
 
         //void SetThreshold(Double_t value);
 
@@ -93,7 +97,7 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         FitPar FitParameters;
         TH2F *HistHoughXY;
 
-          std::vector<ATHit>* fClusteredHits;
+        std::vector<ATHit>* fClusteredHits;
 
 
       protected:
@@ -159,6 +163,7 @@ class ATHoughSpaceCircle : public ATHoughSpace{
         Double_t fStdDeviationLimit;
 
         Double_t fParameter[8];
+        std::vector<std::function<Double_t(Double_t)>> fEloss_func_array;//!
 
         struct maxpersecond
         {
