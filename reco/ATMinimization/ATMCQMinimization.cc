@@ -72,6 +72,9 @@ ATMCQMinimization::ATMCQMinimization()
   kDebug=kFALSE;
   kVerbose=kTRUE;  //wm
 
+  //DEfault parameters for p in isobutane at 20 torr
+  fELossPar_array[0] =  {6.98,0.83,20.0,1.6,1.3,0.45,55.0,0.025};
+
   //!fPadPlane = new TH2Poly();
 
 
@@ -103,6 +106,7 @@ std::vector<Double_t> ATMCQMinimization::GetPosZBack()    {return fPosZBack;}
 
 void ATMCQMinimization::AddELossFunc(std::function<Double_t(Double_t,std::vector<Double_t>&)>& func)                {fEloss_func_array.push_back(func);}
 std::vector<std::function<Double_t(Double_t,std::vector<Double_t>&)>> *ATMCQMinimization::GetELossFunctionArray()   {return &fEloss_func_array;}
+void ATMCQMinimization::AddELossPar(std::vector<Double_t> par[10])                                                  {for(auto i=0;i<10;i++)fELossPar_array[i]=par[i];}
 
 
 Bool_t  ATMCQMinimization::Minimize(Double_t* parameter,ATEvent *event)
@@ -738,9 +742,10 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                    Double_t sloss = 0.0;
 
                                                    //TODO:: Mind BACKWARDEXTRAPOLATION member!!!!
+                                                   if(fEloss_func_array.size()>0){
                                                    std::function<Double_t(Double_t,std::vector<Double_t>&)> ELossFunc = fEloss_func_array.at(0);
-                                                   std::vector<Double_t> parFunc ={6.98,0.83,20.0,1.6,1.3,0.45,55.0,0.025};
-                                                   sloss = ELossFunc(ekin,parFunc); // Energy Loss calculation dE/dX
+                                                   sloss = ELossFunc(ekin,fELossPar_array[0]); // Energy Loss calculation dE/dX
+                                                   }else std::cout<<cYELLOW<<" ATMCQMinimization::QMCsim - Warning! No energy loss function found."<<cNORMAL<<std::endl;
 
                                                    Double_t c0;
 
@@ -1081,9 +1086,10 @@ void ATMCQMinimization::BackwardExtrapolation()
 
                   Double_t  c0;
 
+                  if(fEloss_func_array.size()>0){
                   std::function<Double_t(Double_t,std::vector<Double_t>&)> ELossFunc = fEloss_func_array.at(0);
-                  std::vector<Double_t> parFunc ={6.98,0.83,20.0,1.6,1.3,0.45,55.0,0.025};
-                  sloss = ELossFunc(ekin,parFunc); // Energy Loss calculation dE/dX
+                  sloss = ELossFunc(ekin,fELossPar_array[0]); // Energy Loss calculation dE/dX
+                  }else std::cout<<cYELLOW<<" ATMCQMinimization::QMCsim - Warning! No energy loss function found."<<cNORMAL<<std::endl;
 
                   /*if(iz1==1){
                      c0=ekin;

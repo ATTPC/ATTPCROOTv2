@@ -833,7 +833,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
   ATMCQMinimization *min = new ATMCQMinimization();
   //ATMinimization *min = new ATMCMinimization();
   min->ResetParameters();
-  // Setting the Eloss function, simple case
+  // Setting the Eloss function, simple case for protons in isobutane 20 torr
   std::function<Double_t(Double_t,std::vector<Double_t>&)> ELossFunc = std::bind(GetEloss,std::placeholders::_1,std::placeholders::_2);
   min->AddELossFunc(ELossFunc);
 

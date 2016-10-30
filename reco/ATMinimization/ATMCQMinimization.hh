@@ -41,6 +41,7 @@ class ATMCQMinimization : public ATMinimization{
         ~ATMCQMinimization();
 
         void AddELossFunc(std::function<Double_t(Double_t,std::vector<Double_t>&)>& func);
+        void AddELossPar(std::vector<Double_t> par[10]);
 
 
         Bool_t Minimize(Double_t* parameter,ATEvent *event);
@@ -69,7 +70,7 @@ class ATMCQMinimization : public ATMinimization{
 
         void ResetParameters();
         static Double_t GetEloss(Double_t c0,std::vector<Double_t>& par);
-        //void AddElossParameters(const std::vector<Double_t>& par);
+
 
 
 
@@ -148,6 +149,7 @@ class ATMCQMinimization : public ATMinimization{
              //!TH2Poly* fPadPlane;
 
              std::vector<std::function<Double_t(Double_t,std::vector<Double_t>&)>> fEloss_func_array; //!
+             std::vector<Double_t> fELossPar_array[10];
 
              Bool_t kDebug;
              Bool_t kVerbose;
