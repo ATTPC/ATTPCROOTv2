@@ -36,6 +36,10 @@ Double_t  ATDigiPar::GetTiltAngle() 	     { return fTiltAng;}
 Int_t     ATDigiPar::GetTB0() 	           { return fTB0;}
 Double_t  ATDigiPar::GetThetaLorentz() 	   { return fThetaLorentz;}
 Int_t     ATDigiPar::GetTBEntrance() 	     { return fTBEntrance;}
+Double_t  ATDigiPar::GetZPadPlane()        { return fZPadPlane;}
+Double_t  ATDigiPar::GetDensity()          { return fDensity;}
+Double_t  ATDigiPar::GetThetaPad()         { return fThetaPad;}
+Double_t  ATDigiPar::GetThetaRot()         { return fThetaRot;}
 
 ATGas *ATDigiPar::GetGas()
 {
@@ -165,6 +169,26 @@ Bool_t ATDigiPar::getParams(FairParamList *paramList) //TODO Change all these pa
       return kFALSE;
     }
 
+    if (!(paramList -> fill("ZPadPlane", &fZPadPlane))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find ZPadPlane parameter!");
+      return kFALSE;
+    }
+
+    if (!(paramList -> fill("Density", &fDensity))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find Density parameter!");
+      return kFALSE;
+    }
+
+    if (!(paramList -> fill("ThetaPad", &fThetaPad))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find ThetaPad parameter!");
+      return kFALSE;
+    }
+
+    if (!(paramList -> fill("ThetaRot", &fThetaRot))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find ThetaRot parameter!");
+      return kFALSE;
+    }
+
     fGasFileName = GetFile(fGasFile);
   }
 
@@ -199,7 +223,12 @@ void ATDigiPar::putParams(FairParamList *paramList)
   paramList -> add("BField", fBField);
   paramList -> add("TiltAng", fTiltAng);
   paramList -> add("TB0", fTB0);
-
+  paramList -> add("LorentzAngle", fThetaLorentz);
+  paramList -> add("TBEntrance",fTBEntrance);
+  paramList -> add("ZPadPlane", fZPadPlane);
+  paramList -> add("Density",fDensity);
+  paramList -> add("ThetaPad", fThetaPad);
+  paramList -> add("ThetaRot",fThetaRot);
 
 }
 

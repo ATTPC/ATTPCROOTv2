@@ -47,12 +47,10 @@ ATMCQMinimization::ATMCQMinimization()
   fThetaLorentz    = fPar->GetThetaLorentz()*TMath::Pi()/180.0;
   fTiltAng         = fPar->GetTiltAngle()*TMath::Pi()/180.0;
   fEntTB           = (Int_t) fPar->GetTBEntrance();
-
-  //TODO:: Initialize these parameters from the parameter file
-  fZk= 1000.0; //Position of the micromegas
-  fDens = 0.0738 ; // 0.06363*18./20. ; //gas density
-  fThetaPad = 110.9*TMath::Pi()/180.0;
-  fThetaRot = -6.6*TMath::Pi()/180.0;//
+  fZk              = fPar->GetZPadPlane();
+  fDens            = fPar->GetDensity();
+  fThetaPad        = fPar->GetThetaPad()*TMath::Pi()/180.0;
+  fThetaRot        = fPar->GetThetaRot()*TMath::Pi()/180.0;
 
   //DEfault parameters for p in isobutane at 20 torr
   fELossPar_array[0] =  {6.98,0.83,20.0,1.6,1.3,0.45,55.0,0.025};
