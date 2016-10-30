@@ -52,28 +52,29 @@ ATMCQMinimization::ATMCQMinimization()
   fZk= 1000.0; //Position of the micromegas
   fDens = 0.0738 ; // 0.06363*18./20. ; //gas density
   fThetaPad = 110.9*TMath::Pi()/180.0;
-  fThetaRot = -6.6*TMath::Pi()/180.0;//-11.6*TMath::Pi()/180.0; was -6.6
+  fThetaRot = -6.6*TMath::Pi()/180.0;//
 
-
-  //fEntTB = 280;
+  //DEfault parameters for p in isobutane at 20 torr
+  fELossPar_array[0] =  {6.98,0.83,20.0,1.6,1.3,0.45,55.0,0.025};
+  //fParticleAZ.push_back(std::make_pair(1,1));
 
   //Global variables
-  m                  = 1;
+  m                  = 0;
+  iz1                = 0;
   sm1                = m;
-  dzstep             = fDriftVelocity*fTBTime/1000.0;//  !unit cm
-  integrationsteps   = 10; //modified wm form  =10
-  iz1                = 1;
   z1                 = iz1;
   restmass           = sm1*931.49432;
   esm                = z1*1.75879e-3*0.510998918/restmass;// ![e/m electron cm**2/(Volt*nsec**2] this is not the energy/mass but charge/mass
+
+  dzstep             = fDriftVelocity*fTBTime/1000.0;//  !unit cm
+  integrationsteps   = 10; //modified wm form  =10
   B0                 = fBField;  // 	magnetic field
   B                  = B0*10000.; // !conversion of T en Gauss
 
   kDebug=kFALSE;
   kVerbose=kTRUE;  //wm
 
-  //DEfault parameters for p in isobutane at 20 torr
-  fELossPar_array[0] =  {6.98,0.83,20.0,1.6,1.3,0.45,55.0,0.025};
+
 
   //!fPadPlane = new TH2Poly();
 
@@ -107,6 +108,7 @@ std::vector<Double_t> ATMCQMinimization::GetPosZBack()    {return fPosZBack;}
 void ATMCQMinimization::AddELossFunc(std::function<Double_t(Double_t,std::vector<Double_t>&)>& func)                {fEloss_func_array.push_back(func);}
 std::vector<std::function<Double_t(Double_t,std::vector<Double_t>&)>> *ATMCQMinimization::GetELossFunctionArray()   {return &fEloss_func_array;}
 void ATMCQMinimization::AddELossPar(std::vector<Double_t> par[10])                                                  {for(auto i=0;i<10;i++)fELossPar_array[i]=par[i];}
+void ATMCQMinimization::AddParticle(std::vector<std::pair<Int_t,Int_t>> ptcl)                                       {fParticleAZ=ptcl;}
 
 
 Bool_t  ATMCQMinimization::Minimize(Double_t* parameter,ATEvent *event)
@@ -133,6 +135,16 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
 
            TH2Poly* fPadPlane = new TH2Poly();
            fPadPlane = hPadPlane;
+
+           if(fParticleAZ.size()>0){
+               m                  = fParticleAZ.at(0).first;
+               iz1                = fParticleAZ.at(0).second;
+               sm1                = m;
+               z1                 = iz1;
+               restmass           = sm1*931.49432;
+               esm                = z1*1.75879e-3*0.510998918/restmass;// ![e/m electron cm**2/(Volt*nsec**2] this is not the energy/mass but charge/mass
+               std::cout<<cGREEN<<" Particle  A : "<<m<<"  -  Z : "<<iz1<<cNORMAL<<std::endl;
+           }else std::cerr<<cRED<<" ATMCQMinimization::MinimizeOptMapAmp -  Warning ! Particle (A,Z) not found. Using A : "<<m<<"  -  Z : "<<iz1<<cNORMAL<<std::endl;
 
 
 
@@ -566,7 +578,6 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                       //            phi0= (-20.+ step2*(0.5-rand(0)))*0.01745 +180.
                       double phi0= phiMC;
                       double _B=Bmin;
-
 
                       GetEnergy(sm1,z1,brotheta,e0sm);
                       //std::cout << "indside sim e0sm   " << e0sm <<std::endl;

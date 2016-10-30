@@ -42,6 +42,7 @@ class ATMCQMinimization : public ATMinimization{
 
         void AddELossFunc(std::function<Double_t(Double_t,std::vector<Double_t>&)>& func);
         void AddELossPar(std::vector<Double_t> par[10]);
+        void AddParticle(std::vector<std::pair<Int_t,Int_t>> ptcl);
 
 
         Bool_t Minimize(Double_t* parameter,ATEvent *event);
@@ -150,6 +151,7 @@ class ATMCQMinimization : public ATMinimization{
 
              std::vector<std::function<Double_t(Double_t,std::vector<Double_t>&)>> fEloss_func_array; //!
              std::vector<Double_t> fELossPar_array[10];
+             std::vector<std::pair<Int_t,Int_t>> fParticleAZ;
 
              Bool_t kDebug;
              Bool_t kVerbose;
@@ -179,6 +181,17 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
 
           TH2Poly* fPadPlane = new TH2Poly();
           fPadPlane = hPadPlane;
+
+
+           if(fParticleAZ.size()>0){
+                 m                  = fParticleAZ.at(0).first;
+                 iz1                = fParticleAZ.at(0).second;
+                 sm1                = m;
+                 z1                 = iz1;
+                 restmass           = sm1*931.49432;
+                 esm                = z1*1.75879e-3*0.510998918/restmass;// ![e/m electron cm**2/(Volt*nsec**2] this is not the energy/mass but charge/mass
+                 std::cout<<cGREEN<<" Particle  A : "<<m<<"  -  Z : "<<iz1<<cNORMAL<<std::endl;
+            }else std::cerr<<cRED<<" ATMCQMinimization::MinimizeOptMapAmp -  Warning ! Particle (A,Z) not found. Using A : "<<m<<"  -  Z : "<<iz1<<cNORMAL<<std::endl;
 
           double Qtrack[10240]={0.}; //simulated amplitude for track to analyse
           double ztrackq[10240]={0.}; //simulated amplitude for track to analyse *ztrack fo find center of gravity

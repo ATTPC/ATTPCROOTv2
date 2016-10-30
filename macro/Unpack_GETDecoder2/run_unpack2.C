@@ -100,10 +100,10 @@ void run_unpack2(TString dataFile = "runfiles/ar46_run_0085.txt",TString paramet
     Int_t iCobo = 0;
     while (dataFileWithPath.ReadLine(listFile)) {
 
-      //if(!check_file(dataFileWithPath.Data())){
-        //std::cout<<cRED<<" GRAW file "<<dataFileWithPath.Data()<<" not found! Terminating..."<<cNORMAL<<std::endl;
-        //exit(0);
-      //}else{
+      if(!check_file(dataFileWithPath.Data())){
+        std::cout<<cRED<<" GRAW file "<<dataFileWithPath.Data()<<" not found! Terminating..."<<cNORMAL<<std::endl;
+        exit(0);
+      }else{
 
               if (dataFileWithPath.Contains(Form("CoBo%i",iCobo)) )
                     fDecoderTask -> AddData(dataFileWithPath, iCobo);
@@ -111,7 +111,7 @@ void run_unpack2(TString dataFile = "runfiles/ar46_run_0085.txt",TString paramet
                 iCobo++;
                 fDecoderTask -> AddData(dataFileWithPath, iCobo);
               }
-    //  }
+      }
 
     }
   }
