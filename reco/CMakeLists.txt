@@ -67,6 +67,7 @@ ATDecoder/ATHit.cc
 ATDecoder/ATEvent.cc
 ATDecoder/ATProtoEvent.cc
 ATDecoder/ATProtoEventAna.cc
+ATDecoder/ATTrackingEventAna.cc
 ATDecoder/ATProtoQuadrant.cc
 ATDecoder/ATPedestal.cc
 ATDecoder/ATTrack.cc
@@ -95,6 +96,7 @@ ATMinimization/ATMCQMinimization.cc
 
 ATAnalysis/ATAnalysis.cc
 ATAnalysis/ATProtoAnalysis.cc
+ATAnalysis/ATTrackingAnalysis.cc
 
 ATRansac/ATRansac.cc
 

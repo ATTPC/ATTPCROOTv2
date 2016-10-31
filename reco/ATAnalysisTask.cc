@@ -14,12 +14,16 @@ ClassImp(ATAnalysisTask);
 ATAnalysisTask::ATAnalysisTask()
 {
   fLogger = FairLogger::GetLogger();
-  fIsPersistence = kFALSE;
-  fIsPhiReco = kFALSE;
-  fHoughDist=2.0;
-  fRunNum=0;
-  fInternalID=0;
-  fProtoEventAnaArray = new TClonesArray("ATProtoEventAna");
+  fIsPersistence         = kFALSE;
+  fIsPhiReco             = kFALSE;
+  fIsFullScale           = kFALSE;
+  fHoughDist             = 2.0;
+  fRunNum                = 0;
+  fInternalID            = 0;
+  fProtoEventAnaArray    = new TClonesArray("ATProtoEventAna");
+  fTrackingEventAnaArray = new TClonesArray("ATTrackingEventAna");
+  fProtoAnalysis         = NULL;
+  fTrackingAnalysis      = NULL;
 }
 
 ATAnalysisTask::~ATAnalysisTask()
@@ -35,6 +39,7 @@ ATAnalysisTask::~ATAnalysisTask()
 
 void ATAnalysisTask::SetPersistence(Bool_t value)           { fIsPersistence = value; }
 void ATAnalysisTask::SetPhiReco()                           { fIsPhiReco = kTRUE;}
+void ATAnalysisTask::SetFullScale()                         { fIsFullScale = kTRUE;}
 void ATAnalysisTask::SetHoughDist(Double_t value)           { fHoughDist = value;}
 void ATAnalysisTask::SetUpperLimit(Double_t value)          { fUpperLimit=value;}
 void ATAnalysisTask::SetLowerLimit(Double_t value)          { fLowerLimit=value;}
@@ -61,15 +66,15 @@ ATAnalysisTask::Init()
   fHoughArray = (TClonesArray *) ioMan -> GetObject("ATHough");
   if (fHoughArray == 0) {
     fLogger -> Error(MESSAGE_ORIGIN, "Cannot find ATHough array!");
-    return kERROR;
-  }
+    //return kERROR;
+  }else fLogger -> Error(MESSAGE_ORIGIN, "ATHough array found!");
 
-  // TODO:: A flag is needed to choose between HOugh and Ransac, otherwise the program will skip this step.
-  /*fRansacArray = (TClonesArray*) ioMan->GetObject("ATRansac");
+
+  fRansacArray = (TClonesArray*) ioMan->GetObject("ATRansac");
   if (fRansacArray == 0) {
     fLogger -> Error(MESSAGE_ORIGIN, "Cannot find ATRansac array!");
-    return kERROR;
-  }*/
+    //return kERROR;
+  }else fLogger -> Error(MESSAGE_ORIGIN, "ATRansac array found!");
 
 
 
@@ -96,15 +101,13 @@ ATAnalysisTask::Init()
 
       ioMan -> Register("ATProtoEventAna", "ATTPC", fProtoEventAnaArray, fIsPersistence);
 
-  }else if(fRansacArray){
+  }else if(fIsFullScale && fRansacArray){
 
+      fTrackingAnalysis = new ATTrackingAnalysis();
+
+      ioMan -> Register("ATTrackingEventAna", "ATTPC", fTrackingEventAnaArray, fIsPersistence);
 
   }
-
-
-
-
-
 
 
 
@@ -135,37 +138,40 @@ ATAnalysisTask::Exec(Option_t *opt)
 {
 
    fProtoEventAnaArray->Delete();
+   fTrackingEventAnaArray->Delete();
 
 
-   if(fIsPhiReco){
-       if (fProtoEventHArray -> GetEntriesFast() == 0)
-        return;
-   }
+   if(fIsPhiReco && fHoughArray){
 
-   if (fHoughArray -> GetEntriesFast() == 0)
-    return;
+          if (fProtoEventHArray -> GetEntriesFast() == 0)
+            return;
+
+          if (fHoughArray -> GetEntriesFast() == 0)
+            return;
 
 
-    // TODO:Use dynamic casting for each detector. Do the same in the Hough Task
-    fHoughSpace  = (ATHoughSpaceLine *) fHoughArray -> At(0);
-    if(fIsPhiReco) fProtoevent = (ATProtoEvent *) fProtoEventHArray -> At(0);
-    fInternalID++;
-    //std::cout << "  -I- ATAnalysisTask -  Event Number by Internal ID : "<<fInternalID<< std::endl;
+            // TODO:Use dynamic casting for each detector. Do the same in the Hough Task
+            fHoughSpace  = (ATHoughSpaceLine *) fHoughArray -> At(0);
+            if(fIsPhiReco) fProtoevent = (ATProtoEvent *) fProtoEventHArray -> At(0);
+            fInternalID++;
+            //std::cout << "  -I- ATAnalysisTask -  Event Number by Internal ID : "<<fInternalID<< std::endl;
 
-    ATProtoEventAna *protoeventAna = (ATProtoEventAna *) new ((*fProtoEventAnaArray)[0]) ATProtoEventAna();
+            ATProtoEventAna *protoeventAna = (ATProtoEventAna *) new ((*fProtoEventAnaArray)[0]) ATProtoEventAna();
 
-    // new ((*fAnalysisArray)[0]) ATProtoAnalysis();
+            // new ((*fAnalysisArray)[0]) ATProtoAnalysis();
 
-    //ATProtoAnalysis * ProtoAnalysis = (ATProtoAnalysis *) new ((*fAnalysisArray)[0]) ATProtoAnalysis();
-    //fProtoAnalysis = (ATProtoAnalysis *) fAnalysisArray->ConstructedAt(0);
-    //std::auto_ptr<ATProtoAnalysis> ProtoAnalysis(new ATProtoAnalysis());
-    fProtoAnalysis->Analyze(fProtoevent,protoeventAna,fHoughSpace,fHoughFit,fHitPatternFilter,fFitResult);
+            //ATProtoAnalysis * ProtoAnalysis = (ATProtoAnalysis *) new ((*fAnalysisArray)[0]) ATProtoAnalysis();
+            //fProtoAnalysis = (ATProtoAnalysis *) fAnalysisArray->ConstructedAt(0);
+            //std::auto_ptr<ATProtoAnalysis> ProtoAnalysis(new ATProtoAnalysis());
+            fProtoAnalysis->Analyze(fProtoevent,protoeventAna,fHoughSpace,fHoughFit,fHitPatternFilter,fFitResult);
 
-    for (Int_t i=0;i<4;i++){
-      //fHoughFit[i]->Set(0);
-      fHitPatternFilter[i]->Set(0);
-      //fFitResult[i]->Clear(0);
-    }
+            for (Int_t i=0;i<4;i++){
+              //fHoughFit[i]->Set(0);
+              fHitPatternFilter[i]->Set(0);
+              //fFitResult[i]->Clear(0);
+            }
+
+  }
 
 
 }

@@ -12,12 +12,14 @@
 #include "ATEvent.hh"
 #include "ATProtoEvent.hh"
 #include "ATProtoEventAna.hh"
+#include "ATTrackingEventAna.hh"
 #include "ATDigiPar.hh"
 #include "ATHoughSpaceCircle.hh"
 #include "ATHoughSpaceLine.hh"
 #include "ATHoughSpace.hh"
 #include "ATAnalysis.hh"
 #include "ATProtoAnalysis.hh"
+#include "ATTrackingAnalysis.hh"
 
 
 
@@ -31,6 +33,7 @@ class ATAnalysisTask : public FairTask {
 
     void SetPersistence(Bool_t value = kTRUE);
     void SetPhiReco(); //Hough Space is calculated for the prototype after sorting the hits by quadrant. Phi Reconstruction is
+    void SetFullScale();
     // needed prior to this mode of the task
     void SetHoughDist(Double_t value);
     void SetUpperLimit(Double_t value);
@@ -44,18 +47,22 @@ class ATAnalysisTask : public FairTask {
     //TClonesArray *fEventHArray;
     TClonesArray *fProtoEventHArray;
     TClonesArray *fProtoEventAnaArray;
+    TClonesArray *fTrackingEventAnaArray;
     TClonesArray *fHoughArray;
+    TClonesArray *fRansacArray;
     //TClonesArray *fAnalysisArray;
 
-    ATProtoAnalysis   *fProtoAnalysis;
-    ATHoughSpaceLine  *fHoughSpace;
-    ATProtoEvent      *fProtoevent;
-    TClonesArray      *fRansacArray;
+    ATProtoAnalysis    *fProtoAnalysis;
+    ATTrackingAnalysis *fTrackingAnalysis;
+    ATHoughSpaceLine   *fHoughSpace;
+    ATProtoEvent       *fProtoevent;
+
 
 
     ATDigiPar *fPar;
     Bool_t fIsPersistence;
     Bool_t fIsPhiReco;
+    Bool_t fIsFullScale;
     Double_t fHoughDist;
     Double_t fUpperLimit;
     Double_t fLowerLimit;
