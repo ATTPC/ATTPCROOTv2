@@ -20,7 +20,7 @@ void ATTrackingAnalysis::SetElossParameters(std::vector<Double_t> parE[10])     
 void ATTrackingAnalysis::AddParticle(std::vector<std::pair<Int_t,Int_t>> ptcl)                          {fParticleAZ=ptcl;}
 
 
-void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna *trackingEventAna)
+void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna *trackingEventAna,TH2Poly* hPadPlane,const multiarray& PadCoord)
 {
 
   // Analysis function for a RANSAC event. An iterative loop over the tracks found by RANSAC is created.

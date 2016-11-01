@@ -202,7 +202,7 @@ ATAnalysisTask::Exec(Option_t *opt)
               fTrackingAnalysis->AddParticle(fParticleAZ);
             }
             else std::cout<<cYELLOW<<" ATAnalysisTask::Exec - Warning! No Energy Loss parameters found! "<<cNORMAL<<std::endl;
-            fTrackingAnalysis->Analyze(fRansac,trackingeventAna);
+            fTrackingAnalysis->Analyze(fRansac,trackingeventAna,fPadPlane,fAtPadCoord);
 
   }
 

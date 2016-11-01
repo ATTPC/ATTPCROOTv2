@@ -1241,6 +1241,16 @@ void ATMCQMinimization::GetEnergy(Double_t M,Double_t IZ,Double_t BRO,Double_t &
 
 }
 
+void ATMCQMinimization::GetBro(Double_t M,Double_t IZ,Double_t &BRO,Double_t E)
+{
+   Float_t  AM=931.5;
+   BRO=0.143974109*M/IZ*TMath::Sqrt(E)*TMath::Sqrt(1.+0.5*E/AM);
+   Double_t alfa=9.654260565;
+   Float_t X=M/(BRO*IZ);
+   Double_t arg=1.+alfa*TMath::Power(X,2);
+   Double_t beta=1./TMath::Sqrt(arg);
+}
+
 Double_t ATMCQMinimization::GetSimThetaAngle(TVector3* pos, TVector3* posforw)
 {
     Double_t ang;

@@ -76,6 +76,7 @@ class ATMCQMinimization : public ATMinimization{
 
       protected:
        void GetEnergy(Double_t M,Double_t IZ,Double_t BRO,Double_t &E);
+       void GetBro(Double_t M,Double_t IZ,Double_t &BRO,Double_t E);
        Double_t GetSimThetaAngle(TVector3* pos, TVector3* posforw);
        void BackwardExtrapolation();
        void SetMap(AtTpcMap* map);
