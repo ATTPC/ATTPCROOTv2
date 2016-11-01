@@ -837,7 +837,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
   std::function<Double_t(Double_t,std::vector<Double_t>&)> ELossFunc = std::bind(GetEloss,std::placeholders::_1,std::placeholders::_2);
   min->AddELossFunc(ELossFunc);
   std::vector<Double_t> par[10];
-  par[0] ={6.98,0.83,20.0,1.6,1.3,0.45,55.0,0.025};
+  par[0] ={6.98,0.83,20.0,1.6,1.3,0.45,-55.0,-0.025,0.0,0.0,0.0};
   min->AddELossPar(par);
   std::vector<std::pair<Int_t,Int_t>> particle;
   particle.push_back(std::make_pair(1,1));
@@ -1739,8 +1739,11 @@ std::vector<ATHit> ATHoughSpaceCircle::GetTBHitArray(Int_t TB,std::vector<ATHit>
 
 Double_t ATHoughSpaceCircle::GetEloss(Double_t c0,std::vector<Double_t>& par) //!!
 {
-   if(par.size()==8){
-    return par[0]*(1./TMath::Power(c0,par[1]))*(1./(par[2]+par[3]/TMath::Power(c0,par[4])))+par[5]*TMath::Exp(-par[6]*TMath::Power((c0-par[7]),2));
+   //TODO: This is not the generalized function! See ATTracking Analysis for a more general way. Here the parameters come unsigned
+   if(par.size()==11){
+    //return par[0]*(1./TMath::Power(c0,par[1]))*(1./(par[2]+par[3]/TMath::Power(c0,par[4])))+par[5]*TMath::Exp(-par[6]*TMath::Power((c0-par[7]),2));
+    return par[0]*(1./TMath::Power(c0,par[1]))*(1./(par[2]+par[3]/TMath::Power(c0,par[4]))) + par[5]*TMath::Exp(par[6]*TMath::Power((c0+par[7]),2))
+           + par[8]*TMath::Exp(par[9]*TMath::Power((c0+par[10]),2));
    }else{
     std::cerr<<cRED<<" ATHoughSpaceCircle::GetEloss -  Warning ! Wrong number of parameters."<<std::endl;
     return 0;

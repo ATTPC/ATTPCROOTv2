@@ -11,7 +11,7 @@
 
 ClassImp(ATAnalysisTask);
 
-ATAnalysisTask::ATAnalysisTask()
+ATAnalysisTask::ATAnalysisTask():fAtPadCoord(boost::extents[10240][3][2])
 {
   fLogger = FairLogger::GetLogger();
   fIsPersistence         = kFALSE;
@@ -24,6 +24,8 @@ ATAnalysisTask::ATAnalysisTask()
   fTrackingEventAnaArray = new TClonesArray("ATTrackingEventAna");
   fProtoAnalysis         = NULL;
   fTrackingAnalysis      = NULL;
+  fIsEnableMap           = kFALSE;
+
 }
 
 ATAnalysisTask::~ATAnalysisTask()
@@ -37,12 +39,16 @@ ATAnalysisTask::~ATAnalysisTask()
 
 }
 
-void ATAnalysisTask::SetPersistence(Bool_t value)           { fIsPersistence = value; }
-void ATAnalysisTask::SetPhiReco()                           { fIsPhiReco = kTRUE;}
-void ATAnalysisTask::SetFullScale()                         { fIsFullScale = kTRUE;}
-void ATAnalysisTask::SetHoughDist(Double_t value)           { fHoughDist = value;}
-void ATAnalysisTask::SetUpperLimit(Double_t value)          { fUpperLimit=value;}
-void ATAnalysisTask::SetLowerLimit(Double_t value)          { fLowerLimit=value;}
+void ATAnalysisTask::SetPersistence(Bool_t value)                               { fIsPersistence = value; }
+void ATAnalysisTask::SetPhiReco()                                               { fIsPhiReco = kTRUE;}
+void ATAnalysisTask::SetFullScale()                                             { fIsFullScale = kTRUE;}
+void ATAnalysisTask::SetHoughDist(Double_t value)                               { fHoughDist = value;}
+void ATAnalysisTask::SetUpperLimit(Double_t value)                              { fUpperLimit=value;}
+void ATAnalysisTask::SetLowerLimit(Double_t value)                              { fLowerLimit=value;}
+void ATAnalysisTask::SetELossPar(std::vector<Double_t> par[10])                 { for(Int_t i=0;i<10;i++) fELossPar[i]=par[i];}
+void ATAnalysisTask::AddParticle(std::vector<std::pair<Int_t,Int_t>> ptcl)      { fParticleAZ=ptcl;}
+void ATAnalysisTask::SetEnableMap()                                             { fIsEnableMap = kTRUE;}
+void ATAnalysisTask::SetMap(Char_t const *map)                                  { fMap = map; }
 
 
 InitStatus
@@ -67,14 +73,14 @@ ATAnalysisTask::Init()
   if (fHoughArray == 0) {
     fLogger -> Error(MESSAGE_ORIGIN, "Cannot find ATHough array!");
     //return kERROR;
-  }else fLogger -> Error(MESSAGE_ORIGIN, "ATHough array found!");
+  }else fLogger -> Info(MESSAGE_ORIGIN, "ATHough array found!");
 
 
   fRansacArray = (TClonesArray*) ioMan->GetObject("ATRansac");
   if (fRansacArray == 0) {
     fLogger -> Error(MESSAGE_ORIGIN, "Cannot find ATRansac array!");
     //return kERROR;
-  }else fLogger -> Error(MESSAGE_ORIGIN, "ATRansac array found!");
+  }else fLogger -> Info(MESSAGE_ORIGIN, "ATRansac array found!");
 
 
 
@@ -108,6 +114,18 @@ ATAnalysisTask::Init()
       ioMan -> Register("ATTrackingEventAna", "ATTPC", fTrackingEventAnaArray, fIsPersistence);
 
   }
+
+
+        if(fIsEnableMap){
+        fAtMapPtr = new AtTpcMap();
+        fAtMapPtr->GenerateATTPC();
+        fPadPlane = fAtMapPtr->GetATTPCPlane();
+        Bool_t MapIn = fAtMapPtr->ParseXMLMap(fMap);
+        fLogger -> Info(MESSAGE_ORIGIN, "ATTPC Map enabled");
+        if(!MapIn) std::cerr<<" -E- ATHoughTask - : Map was enabled but not found ! "<<std::endl;
+        fAtPadCoord = fAtMapPtr->GetPadCoordArr();
+        }
+
 
 
 
@@ -170,6 +188,21 @@ ATAnalysisTask::Exec(Option_t *opt)
               fHitPatternFilter[i]->Set(0);
               //fFitResult[i]->Clear(0);
             }
+
+  }else if(fIsFullScale && fRansacArray && fIsEnableMap){
+
+          if (fRansacArray -> GetEntriesFast() == 0)
+            return;
+
+            fRansac = (ATRANSACN::ATRansac *) fRansacArray->At(0);
+            fInternalID++;
+            ATTrackingEventAna *trackingeventAna = (ATTrackingEventAna *) new ((*fTrackingEventAnaArray)[0]) ATTrackingEventAna();
+            if(fELossPar[0].size()>0 && fParticleAZ.size()>0){
+              fTrackingAnalysis->SetElossParameters(fELossPar);
+              fTrackingAnalysis->AddParticle(fParticleAZ);
+            }
+            else std::cout<<cYELLOW<<" ATAnalysisTask::Exec - Warning! No Energy Loss parameters found! "<<cNORMAL<<std::endl;
+            fTrackingAnalysis->Analyze(fRansac,trackingeventAna);
 
   }
 

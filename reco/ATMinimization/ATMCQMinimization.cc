@@ -53,7 +53,7 @@ ATMCQMinimization::ATMCQMinimization()
   fThetaRot        = fPar->GetThetaRot()*TMath::Pi()/180.0;
 
   //DEfault parameters for p in isobutane at 20 torr
-  fELossPar_array[0] =  {6.98,0.83,20.0,1.6,1.3,0.45,55.0,0.025};
+  fELossPar_array[0] = {6.98,0.83,20.0,1.6,1.3,0.45,-55.0,-0.025,0.0,0.0,0.0};
   //fParticleAZ.push_back(std::make_pair(1,1));
 
   //Global variables
@@ -1369,15 +1369,4 @@ void ATMCQMinimization::ResetParameters()
   FitParameters.sNumMCPoint  = 0;
   FitParameters.sNormChi2    = 0;
 
-}
-
-// Default ELoss function for protons in 20 torr Isobutane
-Double_t ATMCQMinimization::GetEloss(Double_t c0,std::vector<Double_t>& par) //!!
-{
-   if(par.size()==8){
-   return par[0]*(1./TMath::Power(c0,par[1]))*(1./(par[2]+par[3]/TMath::Power(c0,par[4])))+par[5]*TMath::Exp(-par[6]*TMath::Power((c0-par[7]),2));
- }else{
-   std::cerr<<cRED<<" ATHoughSpaceCircle::GetEloss -  Warning ! Wrong number of parameters."<<std::endl;
-   return 0;
- }
 }

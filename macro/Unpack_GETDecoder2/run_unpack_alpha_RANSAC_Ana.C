@@ -1,19 +1,7 @@
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
-
-bool check_file(const std::string& name);
-
-void run_unpack2(TString dataFile = "runfiles/ar46_run_0085.txt",TString parameterFile = "ATTPC.e15503b.par",TString mappath="/data/ar46/run_0085/")
+void run_unpack_alpha_RANSAC_Ana
+(TString dataFile = "runfiles/NSCL/alphas/alpha_run_0100.txt",TString parameterFile = "ATTPC.alpha.par",
+TString mappath="/data/ar46/run_0085/")
 {
-
-  if(!check_file(dataFile.Data())){
-    std::cout<<cRED<<" Run file "<<dataFile.Data()<<" not found! Terminating..."<<cNORMAL<<std::endl;
-    exit(0);
-  }
-
-
 
   // -----   Timer   --------------------------------------------------------
  TStopwatch timer;
@@ -87,34 +75,39 @@ void run_unpack2(TString dataFile = "runfiles/ar46_run_0085.txt",TString paramet
   //fDecoderTask -> SetPositivePolarity(kTRUE);
   fDecoderTask -> SetPersistence(kFALSE);
   fDecoderTask -> SetMap(scriptdir.Data());
-  fDecoderTask -> SetNumCobo(10);
-  fDecoderTask -> SetInhibitMaps(inimap,lowgmap,xtalkmap); // TODO: Only implemented for fUseSeparatedData!!!!!!!!!!!!!!!!!!!1
+  //fDecoderTask -> SetInhibitMaps(inimap,lowgmap,xtalkmap); // TODO: Only implemented for fUseSeparatedData!!!!!!!!!!!!!!!!!!!1
   fDecoderTask -> SetMapOpt(0); // ATTPC : 0  - Prototype: 1 |||| Default value = 0
+  fDecoderTask -> SetNumCobo(9);
+  fDecoderTask -> SetEventID(0);
 
 
-  if (!fUseSeparatedData)
+  /*if (!fUseSeparatedData)
     fDecoderTask -> AddData(dataFile);
   else {
     std::ifstream listFile(dataFile.Data());
     TString dataFileWithPath;
     Int_t iCobo = 0;
     while (dataFileWithPath.ReadLine(listFile)) {
-
-      if(!check_file(dataFileWithPath.Data())){
-        std::cout<<cRED<<" GRAW file "<<dataFileWithPath.Data()<<" not found! Terminating..."<<cNORMAL<<std::endl;
-        exit(0);
-      }else{
-
-              if (dataFileWithPath.Contains(Form("CoBo%i",iCobo)) )
-                    fDecoderTask -> AddData(dataFileWithPath, iCobo);
-              else{
-                iCobo++;
-                fDecoderTask -> AddData(dataFileWithPath, iCobo);
-              }
-      }
-
+        if (dataFileWithPath.Contains(Form("CoBo%i",iCobo)) )
+              fDecoderTask -> AddData(dataFileWithPath, iCobo);
+        else{
+          iCobo++;
+          fDecoderTask -> AddData(dataFileWithPath, iCobo);
+        }
     }
-  }
+  }*/
+
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo0_run_0100_11Dec14_22h03m15s.graw",0);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo1_run_0100_11Dec14_22h03m15s.graw",1);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo2_run_0100_11Dec14_22h03m15s.graw",2);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo2_run_0100_11Dec14_22h03m15s.1.graw",2);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo3_run_0100_11Dec14_22h03m16s.graw",3);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo4_run_0100_11Dec14_22h03m16s.graw",4);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo6_run_0100_11Dec14_22h03m16s.graw",5);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo7_run_0100_11Dec14_22h03m16s.graw",6);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo7_run_0100_11Dec14_22h03m16s.1.graw",6);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo8_run_0100_11Dec14_22h03m16s.graw",7);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo9_run_0100_11Dec14_22h03m16s.graw",8);
 
   run -> AddTask(fDecoderTask);
 
@@ -125,23 +118,35 @@ void run_unpack2(TString dataFile = "runfiles/ar46_run_0085.txt",TString paramet
 	//psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
 	psaTask -> SetMaxFinder();
   psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
-  psaTask -> SetTimeCorrection(kTRUE); //Interpolation around the maximum of the signal peak. Only affect Z calibration at PSA stage
+  psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
   run -> AddTask(psaTask);
 
-  ATHoughTask *HoughTask = new ATHoughTask();
-	HoughTask ->SetPersistence();
-	//HoughTask ->SetLinearHough();
-	HoughTask ->SetCircularHough();
-  HoughTask ->SetHoughThreshold(100.0); // Charge threshold for Hough
-  HoughTask ->SetEnableMap(); //Enables an instance of the ATTPC map:  This enables the MC with Q instead of position
-  HoughTask ->SetMap(scriptdir.Data());
-	run -> AddTask(HoughTask);
+  ATRansacTask *RansacTask = new ATRansacTask();
+	RansacTask->SetPersistence(kTRUE);
+  RansacTask->SetDistanceThreshold(6.0);
+	run -> AddTask(RansacTask);
 
+  ATAnalysisTask *AnaTask = new ATAnalysisTask();
+  AnaTask->SetFullScale(); //NB: Mandatory for full scale detector
+  AnaTask->SetPersistence(kTRUE);
+
+    // Setting Monte Carlo Energy Loss parameters
+    std::vector<Double_t> par[10];
+    par[0]={8.56,0.83,2.5,1.6,1.5,0.15,55.0,0.025}; //He2+CO2
+    std::vector<std::pair<Int_t,Int_t>> particle;
+    particle.push_back(std::make_pair(4,2));
+
+  AnaTask->SetELossPar(par);
+  AnaTask->AddParticle(particle);
+  AnaTask ->SetEnableMap(); //Enables an instance of the ATTPC map:  This enables the MC with Q instead of position
+  AnaTask ->SetMap(scriptdir.Data());
+
+  run -> AddTask(AnaTask);
 
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,20);
+  run->Run(0,40);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
@@ -155,13 +160,8 @@ void run_unpack2(TString dataFile = "runfiles/ar46_run_0085.txt",TString paramet
   cout << endl;
   // ------------------------------------------------------------------------
 
-  gApplication->Terminate();
+  //gApplication->Terminate();
 
-}
-
-bool check_file(const std::string& name) {
-  struct stat buffer;
-  return (stat (name.c_str(), &buffer) == 0);
 }
 
 /*fDecoderTask -> AddData("/home/ayyadlim/Desktop/ATTPC/run_0122/CoBo0_run_0122_14-08-15_13h27m28s.graw",0);

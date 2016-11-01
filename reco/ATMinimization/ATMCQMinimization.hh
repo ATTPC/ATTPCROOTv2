@@ -70,7 +70,6 @@ class ATMCQMinimization : public ATMinimization{
         std::vector<std::function<Double_t(Double_t,std::vector<Double_t>&)>> *GetELossFunctionArray();
 
         void ResetParameters();
-        static Double_t GetEloss(Double_t c0,std::vector<Double_t>& par);
 
 
 

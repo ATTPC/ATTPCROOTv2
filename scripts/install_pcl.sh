@@ -6,9 +6,9 @@ fi
 if [ ! -d "~/pcl-$PCL_VERSION" ];
 then
 tar xzf pcl-$PCL_VERSION.tar.gz
-mv pcl-pcl-$PCL_VERSION ~/Downloads && cd ~/Downloads/pcl-pcl-$PCL_VERSION
+mv pcl-pcl-$PCL_VERSION ~/ && cd ~/pcl-pcl-$PCL_VERSION
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_visualization=ON  ..
-make 
+make -j4
 sudo make install
 fi
