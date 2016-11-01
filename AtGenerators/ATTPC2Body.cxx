@@ -170,8 +170,12 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
     fPx.resize(fMult);
 
 
+   Double_t costhetamin = TMath::Cos(fThetaCmsMin*TMath::DegToRad());
+   Double_t costhetamax = TMath::Cos(fThetaCmsMax*TMath::DegToRad());   
+   //Double_t thetacmsInput = fThetaCmsMin + ((fThetaCmsMax-fThetaCmsMin)*gRandom->Uniform());
+   ////uniform thetacm distribution between thetamin and thetamax
+   Double_t thetacmsInput = TMath::ACos( (costhetamax - costhetamin )*gRandom->Uniform() + costhetamin )*TMath::RadToDeg(); 
 
-   Double_t thetacmsInput = fThetaCmsMin + ((fThetaCmsMax-fThetaCmsMin)*gRandom->Uniform());
    std::cout<<" -I- ATTPC2Body : Random CMS Theta angle in degrees : "<<thetacmsInput<<std::endl;
    const Double_t rad2deg = 0.0174532925;
 

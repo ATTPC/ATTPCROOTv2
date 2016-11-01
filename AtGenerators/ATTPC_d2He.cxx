@@ -495,6 +495,15 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
 		std::cout << " proton2 energy:" << Ene.at(3) << " MeV" << std::endl;
   		std::cout << " proton2 angle:"  << Ang.at(3) << " deg" << std::endl;
 
+		
+
+		gATVP->SetBURes2E(Ene.at(3));
+  		gATVP->SetBURes2A(Ang.at(3));
+		gATVP->SetRecoilE(Ene.at(2));
+  		gATVP->SetRecoilA(Ang.at(2));
+  		gATVP->SetScatterE(Ene.at(0));
+  		gATVP->SetScatterA(Ang.at(0));
+
 
 
     		for(Int_t i=0; i<fMult; i++){
@@ -545,6 +554,8 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
 		       << ", " << fVz << ") cm" << std::endl;
 
 			primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
+			
+			
 
 			}
 

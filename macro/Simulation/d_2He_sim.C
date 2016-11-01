@@ -1,13 +1,13 @@
-void d_2He_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
+void d_2He_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile ="./data/attpcsim_proto.root";
+  TString outFile ="./data/attpcsim_d2He.root";
 
   // Parameter file name
-  TString parFile="./data/attpcpar_proto.root";
+  TString parFile="./data/attpcpar_d2He.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -53,11 +53,11 @@ void d_2He_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 
     // -----   Magnetic field   -------------------------------------------
     // Constant Field
-    AtConstField  *fMagField = new AtConstField();
-    fMagField->SetField(0., 0. ,0. ); // values are in kG
-    fMagField->SetFieldRegion(-50, 50,-50, 50, -10,230); // values are in cm
+    //AtConstField  *fMagField = new AtConstField();
+    //fMagField->SetField(0., 0. ,0. ); // values are in kG
+    //fMagField->SetFieldRegion(-50, 50,-50, 50, -10,230); // values are in cm
                           //  (xmin,xmax,ymin,ymax,zmin,zmax)
-    run->SetField(fMagField);
+    //run->SetField(fMagField);
     // --------------------------------------------------------------------
 
 
@@ -198,19 +198,19 @@ void d_2He_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 	inputfile.close();
  
 
-        //ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
+        
 	ATTPC_d2He* d2He = new ATTPC_d2He("d_2He",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE, &Arr1, &Arr2, &Arr3, N_cross);
         primGen->AddGenerator(d2He);
 
 	
 
 	run->SetGenerator(primGen);
-	//ATTPC_d2He* d2He = new ATTPC_d2He("d2He",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
+	
 // ------------------------------------------------------------------------
 
   //---Store the visualiztion info of the tracks, this make the output file very large!!
   //--- Use it only to display but not for production!
-  run->SetStoreTraj(kTRUE);
+  //run->SetStoreTraj(kTRUE);
 
 
 
@@ -231,8 +231,8 @@ void d_2He_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   // -----   Start run   ----------------------------------------------------
    run->Run(nEvents);
 
-  //You can export your ROOT geometry ot a separate file
-  run->CreateGeometryFile("./data/geofile_proto_full.root");
+  //You can export your ROOT geometry to a separate file
+  //run->CreateGeometryFile("./data/geofile_d2He_full.root");
   // ------------------------------------------------------------------------
 
   // -----   Finish   -------------------------------------------------------

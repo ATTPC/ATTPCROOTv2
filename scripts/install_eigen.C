@@ -8,9 +8,9 @@ fi
 //if [ ! -d "~/" ];
 //then
 
-tar -vxjf $EIGEN_VERSION.tar.bz2 -C ~/
-cd ~/eigen*/
+tar -vxjf $EIGEN_VERSION.tar.bz2 -C ~/Downloads
+cd ~/Downloads/eigen*/
 mkdir build && cd build
 cmake ../
-make -j4
+make 
 sudo make install

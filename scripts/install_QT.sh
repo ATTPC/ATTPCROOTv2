@@ -8,6 +8,6 @@ tar xzf qt-everywhere-opensource-src-$QT_VERSION.tar.gz
 mv qt-everywhere-opensource-src-$QT_VERSION ~/
 cd ~/qt-everywhere-opensource-src-$QT_VERSION
 ./configure
-make -j4
+make 
 make install
 fi

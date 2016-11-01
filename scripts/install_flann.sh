@@ -7,11 +7,11 @@ fi
 if [ ! -d "~/flann-$FLANN_VERSION-src" ];
 then
 unzip flann-$FLANN_VERSION-src.zip
-mv flann-$FLANN_VERSION-src ~/
-cd ~/flann-$FLANN_VERSION-src
+mv flann-$FLANN_VERSION-src ~/Downloads
+cd ~/Downloads/flann-$FLANN_VERSION-src
 mkdir build
 cd build
 cmake ../
-make -j4
+make 
 sudo make install
 fi
