@@ -131,12 +131,15 @@ TString mappath="/data/ar46/run_0085/")
   AnaTask->SetPersistence(kTRUE);
 
     // Setting Monte Carlo Energy Loss parameters
-    std::vector<Double_t> par[10];
-    par[0]={8.56,0.83,2.5,1.6,1.5,0.15,55.0,0.025}; //He2+CO2
+    std::vector<Double_t> par[10];  //de/dx - E
+    par[0]={8.56,0.83,2.5,1.6,1.5,0.15,55.0,0.025};
+    std::vector<Double_t> parRtoE[10]; // E - R
+    parRtoE[0] ={0.0,0.0,0.0,0.0,0.0};
     std::vector<std::pair<Int_t,Int_t>> particle;
     particle.push_back(std::make_pair(4,2));
 
   AnaTask->SetELossPar(par);
+  AnaTask->SetEtoRParameters(parRtoE);
   AnaTask->AddParticle(particle);
   AnaTask ->SetEnableMap(); //Enables an instance of the ATTPC map:  This enables the MC with Q instead of position
   AnaTask ->SetMap(scriptdir.Data());

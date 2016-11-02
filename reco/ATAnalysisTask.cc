@@ -46,6 +46,7 @@ void ATAnalysisTask::SetHoughDist(Double_t value)                               
 void ATAnalysisTask::SetUpperLimit(Double_t value)                              { fUpperLimit=value;}
 void ATAnalysisTask::SetLowerLimit(Double_t value)                              { fLowerLimit=value;}
 void ATAnalysisTask::SetELossPar(std::vector<Double_t> par[10])                 { for(Int_t i=0;i<10;i++) fELossPar[i]=par[i];}
+void ATAnalysisTask::SetEtoRParameters(std::vector<Double_t> (&parRtoE)[10])    {for(Int_t i=0;i<10;i++) fEtoRPar[i] = parRtoE[i];}
 void ATAnalysisTask::AddParticle(std::vector<std::pair<Int_t,Int_t>> ptcl)      { fParticleAZ=ptcl;}
 void ATAnalysisTask::SetEnableMap()                                             { fIsEnableMap = kTRUE;}
 void ATAnalysisTask::SetMap(Char_t const *map)                                  { fMap = map; }
@@ -199,9 +200,9 @@ ATAnalysisTask::Exec(Option_t *opt)
             ATTrackingEventAna *trackingeventAna = (ATTrackingEventAna *) new ((*fTrackingEventAnaArray)[0]) ATTrackingEventAna();
             if(fELossPar[0].size()>0 && fParticleAZ.size()>0){
               fTrackingAnalysis->SetElossParameters(fELossPar);
+              fTrackingAnalysis->SetEtoRParameters(fEtoRPar);
               fTrackingAnalysis->AddParticle(fParticleAZ);
-            }
-            else std::cout<<cYELLOW<<" ATAnalysisTask::Exec - Warning! No Energy Loss parameters found! "<<cNORMAL<<std::endl;
+            }else std::cout<<cYELLOW<<" ATAnalysisTask::Exec - Warning! No Energy Loss parameters found! "<<cNORMAL<<std::endl;
             fTrackingAnalysis->Analyze(fRansac,trackingeventAna,fPadPlane,fAtPadCoord);
 
   }

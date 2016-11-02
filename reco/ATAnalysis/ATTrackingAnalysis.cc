@@ -16,8 +16,9 @@ ATTrackingAnalysis::~ATTrackingAnalysis()
 {
 }
 
-void ATTrackingAnalysis::SetElossParameters(std::vector<Double_t> parE[10])                             {for(Int_t i=0;i<10;i++) fElossPar[i] = parE[i];}
-void ATTrackingAnalysis::AddParticle(std::vector<std::pair<Int_t,Int_t>> ptcl)                          {fParticleAZ=ptcl;}
+void ATTrackingAnalysis::SetElossParameters(std::vector<Double_t> (&parE)[10])                             {for(Int_t i=0;i<10;i++) fElossPar[i] = parE[i];}
+void ATTrackingAnalysis::SetEtoRParameters(std::vector<Double_t> (&parRtoE)[10])                           {for(Int_t i=0;i<10;i++) fEtoRPar[i] = parRtoE[i];}
+void ATTrackingAnalysis::AddParticle(std::vector<std::pair<Int_t,Int_t>>& ptcl)                            {fParticleAZ=ptcl;}
 
 
 void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna *trackingEventAna,TH2Poly* hPadPlane,const multiarray& PadCoord)
@@ -38,14 +39,17 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                 ATMCQMinimization *min = new ATMCQMinimization();
                 min->ResetParameters();
 
-                // Adding 1 function
+                // Adding Eloss functions
                 std::function<Double_t(Double_t,std::vector<Double_t>&)> ELossFunc = std::bind(GetEloss,std::placeholders::_1,std::placeholders::_2);
                 min->AddELossFunc(ELossFunc);
+                // Adding Range-Energy functions
+                std::function<Double_t(Double_t,std::vector<Double_t>&)> RtoEFunc  = std::bind(GetEnergyFromRange,std::placeholders::_1,std::placeholders::_2);
+                min->AddRtoEFunc(RtoEFunc);
+
                 // Adding n-vectors of 11 parameters
                 min->AddELossPar(fElossPar);
                 // Adding n-particles
                 min->AddParticle(fParticleAZ);
-
 
                 delete min;
 
@@ -68,4 +72,16 @@ Double_t ATTrackingAnalysis::GetEloss(Double_t c0,std::vector<Double_t>& par)
    std::cerr<<cRED<<" ATHoughSpaceCircle::GetEloss -  Warning ! Wrong number of parameters."<<std::endl;
    return 0;
  }
+}
+
+Double_t ATTrackingAnalysis::GetEnergyFromRange(Double_t range,std::vector<Double_t>& par)
+{
+    if(par.size()==5)
+    {
+      return 0;
+
+    }else
+      std::cerr<<cRED<<" ATHoughSpaceCircle::GetEnergyFromRange -  Warning ! Wrong number of parameters."<<std::endl;
+      return 0;
+
 }

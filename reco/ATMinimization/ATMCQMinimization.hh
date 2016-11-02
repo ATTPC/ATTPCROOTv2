@@ -41,8 +41,10 @@ class ATMCQMinimization : public ATMinimization{
         ~ATMCQMinimization();
 
         void AddELossFunc(std::function<Double_t(Double_t,std::vector<Double_t>&)>& func);
-        void AddELossPar(std::vector<Double_t> par[10]);
-        void AddParticle(std::vector<std::pair<Int_t,Int_t>> ptcl);
+        void AddRtoEFunc(std::function<Double_t(Double_t,std::vector<Double_t>&)>& func);
+        void AddELossPar(std::vector<Double_t> (&par)[10]);
+        void AddRtoEPar(std::vector<Double_t> (&par)[10]);
+        void AddParticle(std::vector<std::pair<Int_t,Int_t>>& ptcl);
 
 
         Bool_t Minimize(Double_t* parameter,ATEvent *event);
@@ -150,7 +152,9 @@ class ATMCQMinimization : public ATMinimization{
              //!TH2Poly* fPadPlane;
 
              std::vector<std::function<Double_t(Double_t,std::vector<Double_t>&)>> fEloss_func_array; //!
+             std::vector<std::function<Double_t(Double_t,std::vector<Double_t>&)>> fRtoE_func_array; //!
              std::vector<Double_t> fELossPar_array[10];
+             std::vector<Double_t> fRtoEPar_array[10];
              std::vector<std::pair<Int_t,Int_t>> fParticleAZ;
 
              Bool_t kDebug;
@@ -182,6 +186,9 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
           TH2Poly* fPadPlane = new TH2Poly();
           fPadPlane = hPadPlane;
 
+          std::cout<<cGREEN<<" ============================"<<std::endl;
+          std::cout<<" Starting Monte Carlo event  "<<cNORMAL<<std::endl;
+
 
            if(fParticleAZ.size()>0){
                  m                  = fParticleAZ.at(0).first;
@@ -192,6 +199,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
                  esm                = z1*1.75879e-3*0.510998918/restmass;// ![e/m electron cm**2/(Volt*nsec**2] this is not the energy/mass but charge/mass
                  std::cout<<cGREEN<<" Particle  A : "<<m<<"  -  Z : "<<iz1<<cNORMAL<<std::endl;
             }else std::cerr<<cRED<<" ATMCQMinimization::MinimizeOptMapAmp -  Warning ! Particle (A,Z) not found. Using A : "<<m<<"  -  Z : "<<iz1<<cNORMAL<<std::endl;
+
 
           double Qtrack[10240]={0.}; //simulated amplitude for track to analyse
           double ztrackq[10240]={0.}; //simulated amplitude for track to analyse *ztrack fo find center of gravity
@@ -285,9 +293,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
            MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC,aMC,phiMC, Bmin, fDens,romin,x0MCv, y0MCv,z0MCv,aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
 
                std::cout<<std::endl;
-               std::cout<<cGREEN<<" ============================"<<std::endl;
-               std::cout<<" Starting Monte Carlo event  "<<std::endl;
-               std::cout<<" X : "<<x0MC<<" cm  - Y : "<<y0MC<<" cm - Z : "<<z0MC<<" cm "<<std::endl;
+               std::cout<<cGREEN<<" X : "<<x0MC<<" cm  - Y : "<<y0MC<<" cm - Z : "<<z0MC<<" cm "<<std::endl;
                std::cout<<" Brho : "<<(Bmin*romin)<<" Tm "<<std::endl;
                std::cout<<" Magnetic field : "<<Bmin<<" T "<<std::endl;
                std::cout<<" Radius of curvature : "<<parameter[5]<<" mm "<<std::endl;

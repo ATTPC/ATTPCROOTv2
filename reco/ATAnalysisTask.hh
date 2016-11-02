@@ -46,6 +46,7 @@ class ATAnalysisTask : public FairTask {
     void SetPhiReco(); //Hough Space is calculated for the prototype after sorting the hits by quadrant. Phi Reconstruction is
     void SetFullScale();
     void SetELossPar(std::vector<Double_t> par[10]);
+    void SetEtoRParameters(std::vector<Double_t> (&parRtoE)[10]);
     void AddParticle(std::vector<std::pair<Int_t,Int_t>> ptcl);
     void SetEnableMap();
     void SetMap(Char_t const *map);
@@ -91,6 +92,7 @@ class ATAnalysisTask : public FairTask {
     TF1 *fFitResult[4];
 
     std::vector<Double_t> fELossPar[10];
+    std::vector<Double_t> fEtoRPar[10];
     std::vector<std::pair<Int_t,Int_t>> fParticleAZ;
 
     AtTpcMap *fAtMapPtr;

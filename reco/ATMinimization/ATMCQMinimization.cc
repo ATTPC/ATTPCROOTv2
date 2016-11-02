@@ -54,7 +54,9 @@ ATMCQMinimization::ATMCQMinimization()
 
   //DEfault parameters for p in isobutane at 20 torr
   fELossPar_array[0] = {6.98,0.83,20.0,1.6,1.3,0.45,-55.0,-0.025,0.0,0.0,0.0};
-  //fParticleAZ.push_back(std::make_pair(1,1));
+
+  //Default parameters
+  fRtoEPar_array[0]  = {0.0,0.0,0.0,0.0,0.0};
 
   //Global variables
   m                  = 0;
@@ -104,9 +106,11 @@ std::vector<Double_t> ATMCQMinimization::GetPosYBack()    {return fPosYBack;}
 std::vector<Double_t> ATMCQMinimization::GetPosZBack()    {return fPosZBack;}
 
 void ATMCQMinimization::AddELossFunc(std::function<Double_t(Double_t,std::vector<Double_t>&)>& func)                {fEloss_func_array.push_back(func);}
+void ATMCQMinimization::AddRtoEFunc(std::function<Double_t(Double_t,std::vector<Double_t>&)>& func)                 {fRtoE_func_array.push_back(func);}
 std::vector<std::function<Double_t(Double_t,std::vector<Double_t>&)>> *ATMCQMinimization::GetELossFunctionArray()   {return &fEloss_func_array;}
-void ATMCQMinimization::AddELossPar(std::vector<Double_t> par[10])                                                  {for(auto i=0;i<10;i++)fELossPar_array[i]=par[i];}
-void ATMCQMinimization::AddParticle(std::vector<std::pair<Int_t,Int_t>> ptcl)                                       {fParticleAZ=ptcl;}
+void ATMCQMinimization::AddELossPar(std::vector<Double_t> (&par)[10])                                               {for(auto i=0;i<10;i++)fELossPar_array[i]=par[i];}
+void ATMCQMinimization::AddRtoEPar(std::vector<Double_t> (&par)[10])                                                {for(auto i=0;i<10;i++)fRtoEPar_array[i]=par[i];}
+void ATMCQMinimization::AddParticle(std::vector<std::pair<Int_t,Int_t>>& ptcl)                                      {fParticleAZ=ptcl;}
 
 
 Bool_t  ATMCQMinimization::Minimize(Double_t* parameter,ATEvent *event)
@@ -130,6 +134,9 @@ Bool_t  ATMCQMinimization::MinimizeOptMap(Double_t* parameter,ATEvent *event,TH2
 Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, TH2Poly* hPadPlane,const multiarray& PadCoord)
 {
 
+
+            std::cout<<cGREEN<<" ============================"<<std::endl;
+            std::cout<<" Starting Monte Carlo event  "<<cNORMAL<<std::endl;
 
            TH2Poly* fPadPlane = new TH2Poly();
            fPadPlane = hPadPlane;
@@ -287,9 +294,7 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
             MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC,aMC,phiMC, Bmin, dens,romin,x0MCv, y0MCv,z0MCv,aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
 
                 std::cout<<std::endl;
-                std::cout<<cGREEN<<" ============================"<<std::endl;
-                std::cout<<" Starting Monte Carlo event  "<<std::endl;
-                std::cout<<" X : "<<x0MC<<" cm  - Y : "<<y0MC<<" cm - Z : "<<z0MC<<" cm "<<std::endl;
+                std::cout<<cGREEN<<" X : "<<x0MC<<" cm  - Y : "<<y0MC<<" cm - Z : "<<z0MC<<" cm "<<std::endl;
                 std::cout<<" Brho : "<<(Bmin*romin)<<" Tm "<<std::endl;
                 std::cout<<" Magnetic field : "<<Bmin<<" T "<<std::endl;
                 std::cout<<" Radius of curvature : "<<parameter[5]<<" mm "<<std::endl;
