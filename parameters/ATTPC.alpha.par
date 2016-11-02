@@ -24,7 +24,7 @@ YDivider:Int_t                1000   # Full drift length will be divided by this
 GasFile:Int_t                    2
 PadPlaneFile:Int_t               3
 PadShapeFile:Int_t               4   # might not be needed because the shape is simply rectangle
-BField:Double_t               1.75   # Tesla
+BField:Double_t                0.0   # Tesla
 TiltAng:Double_t               7.4   # Degrees
 TB0:Int_t                       98   # Time Bucket reference for micromegas position
 LorentzAngle:Double_t         -6.0   # Lorentz Angle
@@ -33,4 +33,5 @@ ZPadPlane:Double_t          1000.0   # Position of the micromegas pad plane
 Density:Double_t            0.0738   # Gas density (kg/m3)
 ThetaPad:Double_t            110.9   # AT-TPC pad plane rotation
 ThetaRot:Double_t             -6.6   # Second Lorentz Angle
+GasPressure:Double_t           100   # Gas pressure in torr
 ################################################################################

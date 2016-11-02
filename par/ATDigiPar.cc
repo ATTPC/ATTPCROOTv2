@@ -40,6 +40,7 @@ Double_t  ATDigiPar::GetZPadPlane()        { return fZPadPlane;}
 Double_t  ATDigiPar::GetDensity()          { return fDensity;}
 Double_t  ATDigiPar::GetThetaPad()         { return fThetaPad;}
 Double_t  ATDigiPar::GetThetaRot()         { return fThetaRot;}
+Double_t  ATDigiPar::GetGasPressure()      { return fGasPressure;}
 
 ATGas *ATDigiPar::GetGas()
 {
@@ -189,6 +190,11 @@ Bool_t ATDigiPar::getParams(FairParamList *paramList) //TODO Change all these pa
       return kFALSE;
     }
 
+    if (!(paramList -> fill("GasPressure", &fGasPressure))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find GasPressure parameter!");
+      return kFALSE;
+    }
+
     fGasFileName = GetFile(fGasFile);
   }
 
@@ -229,6 +235,7 @@ void ATDigiPar::putParams(FairParamList *paramList)
   paramList -> add("Density",fDensity);
   paramList -> add("ThetaPad", fThetaPad);
   paramList -> add("ThetaRot",fThetaRot);
+  paramList -> add("GasPressure",fGasPressure);
 
 }
 

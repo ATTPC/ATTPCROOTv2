@@ -87,7 +87,7 @@ class ATMCQMinimization : public ATMinimization{
        TVector3 TransformIniPos(Double_t x,Double_t y, Double_t z); //Transforms initial position from Pad plane to Lab frame
        TVector3 InvTransIniPos(Double_t x,Double_t y, Double_t z); //Transforms lab frame to pad plane
 
-
+       void PrintParameters(Int_t index);
 
        // New MC Amplitude functions
           void MCvar( double* parameter, int & modevar,int & iconvar,double & x0MC, double & y0MC, double & z0MC,
@@ -116,6 +116,7 @@ class ATMCQMinimization : public ATMinimization{
              Double_t fVertexEner;
              TVector3 fVertexPos;
              Double_t fDens;
+             Double_t fPressure;
 
 
              std::vector<Double_t> fPosXmin;
@@ -189,6 +190,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
           std::cout<<cGREEN<<" ============================"<<std::endl;
           std::cout<<" Starting Monte Carlo event  "<<cNORMAL<<std::endl;
 
+          //TODO:: Enable indexing to select the function and the parameters depending on the particle
 
            if(fParticleAZ.size()>0){
                  m                  = fParticleAZ.at(0).first;
@@ -199,6 +201,11 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
                  esm                = z1*1.75879e-3*0.510998918/restmass;// ![e/m electron cm**2/(Volt*nsec**2] this is not the energy/mass but charge/mass
                  std::cout<<cGREEN<<" Particle  A : "<<m<<"  -  Z : "<<iz1<<cNORMAL<<std::endl;
             }else std::cerr<<cRED<<" ATMCQMinimization::MinimizeOptMapAmp -  Warning ! Particle (A,Z) not found. Using A : "<<m<<"  -  Z : "<<iz1<<cNORMAL<<std::endl;
+
+          if(fELossPar_array[0].size()>0 && fRtoEPar_array[0].size()>0)
+            PrintParameters(0);
+
+
 
 
           double Qtrack[10240]={0.}; //simulated amplitude for track to analyse
@@ -282,7 +289,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
            double phiMCv = phiMC;
            double rangeMCv = rangeMC ;  //simulation of track values for MC variation
            double sigmaq=0.2 ;  //defined as the fraction of sum Qsim+Qtrack
-           double sigmaz= 4.0  ;  //defined as deviation of the center of gravity in mm modified from 5.4 on june 10 wm
+           double sigmaz=4.0  ;  //defined as deviation of the center of gravity in mm modified from 5.4 on june 10 wm
            int imc1=0;
            int imc1max=10;//10
            iconvar=imc1;

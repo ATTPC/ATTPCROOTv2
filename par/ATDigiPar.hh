@@ -55,6 +55,7 @@ class ATDigiPar : public FairParGenericSet
     Double_t GetDensity();
     Double_t GetThetaPad();
     Double_t GetThetaRot();
+    Double_t GetGasPressure();
 
 
     // Setters
@@ -98,6 +99,7 @@ class ATDigiPar : public FairParGenericSet
     Double_t fDensity;
     Double_t fThetaPad;
     Double_t fThetaRot;
+    Double_t fGasPressure;
 
   ClassDef(ATDigiPar, 1);
 };

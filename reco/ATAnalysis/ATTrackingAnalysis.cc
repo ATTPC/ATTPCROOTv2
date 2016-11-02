@@ -48,8 +48,11 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
                 // Adding n-vectors of 11 parameters
                 min->AddELossPar(fElossPar);
+                min->AddRtoEPar(fEtoRPar);
                 // Adding n-particles
                 min->AddParticle(fParticleAZ);
+
+                std::vector<ATTrack>  trackCand = Ransac->GetTrackCand();
 
                 delete min;
 
@@ -76,9 +79,10 @@ Double_t ATTrackingAnalysis::GetEloss(Double_t c0,std::vector<Double_t>& par)
 
 Double_t ATTrackingAnalysis::GetEnergyFromRange(Double_t range,std::vector<Double_t>& par)
 {
-    if(par.size()==5)
+    //This is a parametrization calculated at 1 atm. The Range is normalized by the pressure
+    if(par.size()==7)
     {
-      return 0;
+      return par[0]*TMath::Sqrt(range) +  par[1]*( par[2]+1.0/TMath::Sqrt(range) + par[3]) + par[4]/( TMath::Power(TMath::Sqrt(range)+par[5],2) + par[6]   )  ;
 
     }else
       std::cerr<<cRED<<" ATHoughSpaceCircle::GetEnergyFromRange -  Warning ! Wrong number of parameters."<<std::endl;

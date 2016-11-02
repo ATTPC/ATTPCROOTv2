@@ -51,6 +51,7 @@ ATMCQMinimization::ATMCQMinimization()
   fDens            = fPar->GetDensity();
   fThetaPad        = fPar->GetThetaPad()*TMath::Pi()/180.0;
   fThetaRot        = fPar->GetThetaRot()*TMath::Pi()/180.0;
+  fPressure        = fPar->GetGasPressure();
 
   //DEfault parameters for p in isobutane at 20 torr
   fELossPar_array[0] = {6.98,0.83,20.0,1.6,1.3,0.45,-55.0,-0.025,0.0,0.0,0.0};
@@ -133,7 +134,9 @@ Bool_t  ATMCQMinimization::MinimizeOptMap(Double_t* parameter,ATEvent *event,TH2
 
 Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, TH2Poly* hPadPlane,const multiarray& PadCoord)
 {
-
+            //***************************
+            // NB: DEPRECATED 11-02-2016
+            //***************************
 
             std::cout<<cGREEN<<" ============================"<<std::endl;
             std::cout<<" Starting Monte Carlo event  "<<cNORMAL<<std::endl;
@@ -150,6 +153,8 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
                esm                = z1*1.75879e-3*0.510998918/restmass;// ![e/m electron cm**2/(Volt*nsec**2] this is not the energy/mass but charge/mass
                std::cout<<cGREEN<<" Particle  A : "<<m<<"  -  Z : "<<iz1<<cNORMAL<<std::endl;
            }else std::cerr<<cRED<<" ATMCQMinimization::MinimizeOptMapAmp -  Warning ! Particle (A,Z) not found. Using A : "<<m<<"  -  Z : "<<iz1<<cNORMAL<<std::endl;
+
+
 
 
 
@@ -1384,4 +1389,14 @@ void ATMCQMinimization::ResetParameters()
   FitParameters.sNumMCPoint  = 0;
   FitParameters.sNormChi2    = 0;
 
+}
+
+void ATMCQMinimization::PrintParameters(Int_t index)
+{
+    std::cout<<cGREEN<<" Printing de/dx - E  function parameters : "<<std::endl;
+    std::ostream_iterator<Double_t> output_it (std::cout,"  ");
+    std::copy(fELossPar_array[index].begin(),fELossPar_array[index].end(),output_it);
+    std::cout<<std::endl;
+    std::cout<<" Printing Range to Energy function parameters"<<std::endl;
+    std::copy(fRtoEPar_array[index].begin(),fRtoEPar_array[index].end(),output_it);
 }
