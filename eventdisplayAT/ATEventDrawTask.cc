@@ -406,9 +406,17 @@ ATEventDrawTask::DrawHitPoints()
           else if(fRansacArray){
              fRansac = dynamic_cast<ATRANSACN::ATRansac*> (fRansacArray->At(0));
              TrackCand = fRansac->GetTrackCand();
+             TVector3 Vertex1 = fRansac->GetVertex1();
+             TVector3 Vertex2 = fRansac->GetVertex2();
+             std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z : "<<Vertex1.Z()<<std::endl;
+             std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z : "<<Vertex2.Z()<<std::endl;
+             std::cout<<" Vertex Mean - X : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z : "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
           }
+
           fLineNum = TrackCand.size();
           std::cout<<cRED<<" Found "<<TrackCand.size()<<" track candidates "<<cNORMAL<<std::endl;
+
+
           if(TrackCand.size()>0)
           {
 

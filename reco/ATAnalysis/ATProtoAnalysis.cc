@@ -40,7 +40,6 @@ void ATProtoAnalysis::Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeve
 
     std::vector<std::vector<std::pair<Double_t,Double_t>>> QELossHitPattern;
 
-    fZk = 500.0;
 
     fHoughPar = houghspace->GetHoughPar();
 

@@ -50,6 +50,7 @@ ATPSA::ATPSA()
   fEField = fPar->GetEField();
   fTiltAng = fPar->GetTiltAngle();
   fTB0  =  fPar->GetTB0();
+  fZk   = fPar->GetZPadPlane();
 
   fEntTB   = (Int_t) fPar->GetTBEntrance();
 
@@ -91,8 +92,7 @@ ATPSA::CalculateX(Double_t row)
 Double_t
 ATPSA::CalculateZ(Double_t peakIdx)
 {
-  //return -peakIdx*fTBTime*fDriftVelocity/100.;
-    //std::cout<<fNumTbs<<"    "<<fTBTime<<"	"<<fDriftVelocity<<" peakID : "<<peakIdx<<std::endl;
+    // DEPRECATED
     return (fNumTbs - peakIdx)*fTBTime*fDriftVelocity/100.;
 }
 
@@ -100,8 +100,9 @@ Double_t
 ATPSA::CalculateZGeo(Double_t peakIdx)
 {
 
+    // This function must be consistent with the re-calibrations done before.
     return fZk - (fEntTB - peakIdx)*fTBTime*fDriftVelocity/100.;
-    // fZk defined in each daughter class
+
 
 }
 

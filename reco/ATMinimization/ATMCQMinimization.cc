@@ -112,6 +112,7 @@ std::vector<std::function<Double_t(Double_t,std::vector<Double_t>&)>> *ATMCQMini
 void ATMCQMinimization::AddELossPar(std::vector<Double_t> (&par)[10])                                               {for(auto i=0;i<10;i++)fELossPar_array[i]=par[i];}
 void ATMCQMinimization::AddRtoEPar(std::vector<Double_t> (&par)[10])                                                {for(auto i=0;i<10;i++)fRtoEPar_array[i]=par[i];}
 void ATMCQMinimization::AddParticle(std::vector<std::pair<Int_t,Int_t>>& ptcl)                                      {fParticleAZ=ptcl;}
+void ATMCQMinimization::SetEntTB(Int_t value)                                                                       {fEntTB = value;}
 
 
 Bool_t  ATMCQMinimization::Minimize(Double_t* parameter,ATEvent *event)
@@ -398,23 +399,9 @@ void ATMCQMinimization::MCvar( double* parameter, int & modevar,int & iconvar,do
                                     z0MC =fZk/10.0 - (fEntTB-parameter[3])*dzstep;
                                     aMC = parameter[6];
                                     phiMC = TMath::Pi()-parameter[4]-fThetaPad;
-                                    //phiMC = TMath::Pi()-parameter[4]-115*TMath::Pi()/180.0;
-                                    //double Bmin= 17000. ; //magnetic field
-                                    /////////// Initial parameters///////////////
-                                    //Double_t xmin= parameter[0]/10.0; //  ! at ztb=394 in cm
-                                    //Double_t ymin= parameter[1]/10.0;
-                                    //Double_t zmin= fZk/10.0 - (fEntTB-parameter[3])*dzstep;  //Micromegas Origin  at 100 cm of the entrance
-                                    //Double_t zmin= parameter[3]*dzstep;
-                                    //Double_t TBmin = parameter[3]*dzstep; // Absolute TB to compare between exp and sim
-                                    //Double_t phi0= (TMath::Pi()-5.0*TMath::Pi())-parameter[4]- fThetaPad; //RADIANS
-                                    //Double_t phi0=parameter[4]+fThetaPad-10.0*TMath::Pi(); //RADIANS
-                                    //Double_t phi0=TMath::Pi()-parameter[4]-115*TMath::Pi()/180.0;
-
-                                    //Double_t phi0=parameter[4];
-
-                                    Double_t bro=parameter[5]*Bmin/1000.0;// !Tm*/
+                                    //Double_t bro=parameter[5]*Bmin/1000.0;// !Tm*/
                                     romin=parameter[5];
-                                    Double_t theta0=parameter[6];
+                                    //Double_t theta0=parameter[6];
 
 
 
@@ -538,21 +525,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                       Double_t thetaTilt       = fTiltAng;
                                       Double_t thetaPad        = fThetaPad;
 
-                                      /////////// Initial parameters///////////////
-                                      /* Double_t xmin= parameter[0]/10.0; //  ! at ztb=394 in cm
-                                      Double_t ymin= parameter[1]/10.0;
-                                      Double_t zmin= fZk/10.0 - (fEntTB-parameter[3])*dzstep;  //Micromegas Origin  at 100 cm of the entrance
-                                      //Double_t zmin= parameter[3]*dzstep;
-                                      Double_t TBmin = parameter[3]*dzstep; // Absolute TB to compare between exp and sim
-                                      //Double_t phi0= (TMath::Pi()-5.0*TMath::Pi())-parameter[4]- fThetaPad; //RADIANS
-                                      //Double_t phi0=parameter[4]+fThetaPad-10.0*TMath::Pi(); //RADIANS
-                                      Double_t phi0=TMath::Pi()-parameter[4]-115*TMath::Pi()/180.0;
 
-                                      //Double_t phi0=parameter[4];
-
-                                      Double_t bro=parameter[5]*B0/1000.0;//
-                                       Double_t theta0=parameter[6];
-                                       */
                         //if (!fout1.is_open()) {
                            //cerr << "error: open output file failed" << endl;
                             //  }
@@ -561,10 +534,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                             double ypad[10240]={0};
                             double zpad[10240]={0};
                             double Qpad[10240]={0};
-                            /*   for(Int_t idef=0;idef<10000;idef++) {
-                            Qsim[idef]={0.};
-                            zsimq[idef]={0.};
-                          } */
+
                             std::fill_n(Qsim,10240,0);
                             std::fill_n(zsimq,10240,0);
                             double Qpadplane[10240]={0.};   //wm
@@ -573,22 +543,24 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                             double tracksimthreshold=5; // threshold for simulated track in number of primary electrons
                             double Qtotalsim=0.;  // total charge of the simulated track
 
-                            //Qsim[][]={0.}
-                            //double Qsim[10000]={0.}; //simulated amplitude
-                          //double Qtrack[10000]={0.}; //simulated amplitude for track to analyse
-                         //double ztrackq[10000]={0.}; //simulated amplitude for track to analyse *ztrack fo find center of gravity
-                      //      double zsimq[10000]={0.}; //simulated amplitude for track to analyse *ztrack fo find center of gravity
-                      //bro=Bmin*romin; //!in Tm
-                      //double x0MC,double y0MC, double z0MC, double aMC, double phiMC, double Bmin, double dens, double romin
+
                       double theta0=aMC;
-                      double rometer=0.001*romin;
+                      //double rometer=0.001*romin;
                       double brotheta=Bmin*romin*1.e-7/TMath::Sin(theta0);//  !initial bro corrected for angle in Tm
-                      //            phi0= (-20.+ step2*(0.5-rand(0)))*0.01745 +180.
                       double phi0= phiMC;
                       double _B=Bmin;
 
-                      GetEnergy(sm1,z1,brotheta,e0sm);
-                      //std::cout << "indside sim e0sm   " << e0sm <<std::endl;
+                      if(B>0) GetEnergy(sm1,z1,brotheta,e0sm);
+                      else if(B==0){
+                        if(fRtoE_func_array.size()>0){
+                        std::function<Double_t(Double_t,std::vector<Double_t>&)> RtoEFunc = fRtoE_func_array.at(0);
+                        // NB: For the case of B=0 the Range of the particle will be passed through romin variable (parameter[5])
+                        e0sm = RtoEFunc(romin, fRtoEPar_array[0]);
+                      }else std::cout<<cYELLOW<<" ATMCQMinimization::QMCsim - Warning! No Range-to-Energy function found."<<cNORMAL<<std::endl;
+
+
+                      }
+
 
                       // 	calcul vitesse initiale
                       Double_t e0ll=e0sm*sm1;
@@ -701,7 +673,8 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
 
                                                     //std::cout<<" k : "<<k<<std::endl;
                                                     //std::cout<<" zcmm : "<<zcmm[iterd]<<"  2*zmin*10.0  : "<<2*zmin_trans*10.0<<std::endl;
-                                                    zcmm[iterd] = -zcmm[iterd]+ 2*zmin_trans*10.0;
+
+                                                    zcmm[iterd] = -zcmm[iterd]+ 2*zmin_trans*10.0; // To turn the direcction of propagation
                                                     xsol[iterd]=xcmm[iterd]-zcmm[iterd]*TMath::Sin(thetaLorentz)*TMath::Sin(thetaRot);
                                                     ysol[iterd]=ycmm[iterd]+zcmm[iterd]*TMath::Sin(thetaLorentz)*TMath::Cos(thetaRot);
                                                     zsol[iterd]=zcmm[iterd];
@@ -962,7 +935,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                               fThetaMin=theta0;
                               fEnerMin=e0sm;
                               fPosMin.SetXYZ(x_buff,y_buff,z_buff);
-                              //fBrhoMin=bro;
+                              fBrhoMin=romin;
                               fBMin=_B;
                               fPhiMin=phi0;
                               fDensMin=dens;

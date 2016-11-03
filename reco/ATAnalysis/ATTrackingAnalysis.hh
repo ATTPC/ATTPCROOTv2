@@ -4,8 +4,9 @@
 #include "ATAnalysis.hh"
 #include "ATRansac.hh"
 #include "ATTrackingEventAna.hh"
-
+#include "ATDigiPar.hh"
 #include "ATMCQMinimization.hh"
+
 
 class ATTrackingAnalysis : public ATAnalysis{
 
@@ -23,6 +24,7 @@ class ATTrackingAnalysis : public ATAnalysis{
 
           static Double_t GetEloss(Double_t c0,std::vector<Double_t>& par);
           static Double_t GetEnergyFromRange(Double_t range,std::vector<Double_t>& par);
+          Double_t GetVertexTime(ATRANSACN::ATRansac *Ransac);
           std::vector<Double_t> fElossPar[10];
           std::vector<Double_t> fEtoRPar[10];
           std::vector<std::pair<Int_t,Int_t>> fParticleAZ;

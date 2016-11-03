@@ -30,8 +30,9 @@ ATAnalysis::ATAnalysis()
     fEField = fPar->GetEField();
     fTiltAng = fPar->GetTiltAngle();
     fTB0  =  fPar->GetTB0();
-
+    fZk   = fPar->GetZPadPlane();
     fEntTB   = (Int_t) fPar->GetTBEntrance();
+
 
 
 }

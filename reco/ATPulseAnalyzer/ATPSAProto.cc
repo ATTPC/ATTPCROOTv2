@@ -31,7 +31,6 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
   Double_t Rho2 = 0.0;
   std::map<Int_t,Int_t> PadMultiplicity;
   Float_t mesh[512] = {0};
-  fZk = 500;
 
   Int_t iPad = 0;
 

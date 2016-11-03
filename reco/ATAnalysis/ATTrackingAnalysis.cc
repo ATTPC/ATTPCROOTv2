@@ -52,7 +52,12 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                 // Adding n-particles
                 min->AddParticle(fParticleAZ);
 
+                min->SetEntTB(GetVertexTime(Ransac));
+
                 std::vector<ATTrack>  trackCand = Ransac->GetTrackCand();
+                std::vector<ATRANSACN::ATRansac::PairedLines> trackCorr = Ransac->GetPairedLinesArray();
+
+
 
                 delete min;
 
@@ -87,5 +92,18 @@ Double_t ATTrackingAnalysis::GetEnergyFromRange(Double_t range,std::vector<Doubl
     }else
       std::cerr<<cRED<<" ATHoughSpaceCircle::GetEnergyFromRange -  Warning ! Wrong number of parameters."<<std::endl;
       return 0;
+
+}
+
+Double_t ATTrackingAnalysis::GetVertexTime(ATRANSACN::ATRansac *Ransac)
+{
+
+          // Function that infers the timebucket from the vertex.
+          // It is based on the Z calibration: fZk - (fEntTB - peakIdx)*fTBTime*fDriftVelocity/100.;
+          TVector3 Vertex1 = Ransac->GetVertex1();
+          TVector3 Vertex2 = Ransac->GetVertex2();
+          Double_t mean_Z = (Vertex1.Z()+Vertex2.Z())*0.5;
+
+          return ( 100.0*(mean_Z - fZk)/(fTBTime*fDriftVelocity) ) + fEntTB;
 
 }

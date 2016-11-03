@@ -7,6 +7,7 @@
 #ifndef ATMCQMINIMIZATION_H
 #define ATMCQMINIMIZATION_H
 
+//ATTPCROOT
 #include "ATMinimization.hh"
 #include "ATHit.hh"
 #include "ATDigiPar.hh"
@@ -16,11 +17,15 @@
 // FairRoot classes
 #include "FairRuntimeDb.h"
 #include "FairRun.h"
+
+//ROOT
 #include "TRotation.h"
 #include "TMatrixD.h"
 #include "TArrayD.h"
 #include "TVector3.h"
 #include "TH2Poly.h"
+
+//System
 #include <iostream>  //wm
 #include <fstream>   // file stream wm
 #include <cstdlib>  //wm
@@ -45,6 +50,7 @@ class ATMCQMinimization : public ATMinimization{
         void AddELossPar(std::vector<Double_t> (&par)[10]);
         void AddRtoEPar(std::vector<Double_t> (&par)[10]);
         void AddParticle(std::vector<std::pair<Int_t,Int_t>>& ptcl);
+        void SetEntTB(Int_t value);
 
 
         Bool_t Minimize(Double_t* parameter,ATEvent *event);
@@ -204,6 +210,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
 
           if(fELossPar_array[0].size()>0 && fRtoEPar_array[0].size()>0)
             PrintParameters(0);
+          else std::cerr<<cRED<<" ATMCQMinimization::MinimizeOptMapAmp - Function parameters not found ! "<<cNORMAL<<std::endl;
 
 
 

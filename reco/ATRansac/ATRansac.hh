@@ -92,6 +92,7 @@ class ATRansac : public TObject
       std::vector<ATTrack*> RansacPCL(ATEvent *event);
       TVector3 GetVertex1();
       TVector3 GetVertex2();
+      std::pair<Int_t,Int_t> GetPairTracksIndex();
       Double_t GetMinimum();//Distance of minumum approach between candidate lines (for the moment only 2)
       Int_t MinimizeTrack(ATTrack* track);
       Int_t MinimizeTrackRPhi(ATTrack* track);
@@ -111,6 +112,7 @@ class ATRansac : public TObject
       };
 
       std::vector<PairedLines> PLines;
+      std::vector<PairedLines> GetPairedLinesArray();
 
   protected:
       static double distance2(double x,double y,double z, const double *p);
@@ -130,6 +132,7 @@ class ATRansac : public TObject
       Double_t fXCenter;
       Double_t fYCenter;
       Float_t fRANSACPointThreshold; //Number of points in percentage
+      std::pair<Int_t,Int_t> fVertex_tracks;
 
       struct SumDistance2
       {

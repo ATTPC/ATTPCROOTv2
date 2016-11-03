@@ -6,6 +6,8 @@
 
 using namespace ROOT::Math;
 
+
+
 ClassImp(ATRANSACN::ATRansac)
 
 ATRANSACN::ATRansac::ATRansac()
@@ -33,10 +35,12 @@ ATRANSACN::ATRansac::~ATRansac()
 }
 
 
-TVector3 ATRANSACN::ATRansac::GetVertex1()                                              {return fVertex_1;}
-TVector3 ATRANSACN::ATRansac::GetVertex2()                                              {return fVertex_2;}
-Double_t ATRANSACN::ATRansac::GetMinimum()                                              {return fMinimum;}
-std::vector<ATTrack> ATRANSACN::ATRansac::GetTrackCand()                                {return fTrackCand;}
+TVector3 ATRANSACN::ATRansac::GetVertex1()                                                                   {return fVertex_1;}
+TVector3 ATRANSACN::ATRansac::GetVertex2()                                                                   {return fVertex_2;}
+Double_t ATRANSACN::ATRansac::GetMinimum()                                                                   {return fMinimum;}
+std::vector<ATTrack> ATRANSACN::ATRansac::GetTrackCand()                                                     {return fTrackCand;}
+std::vector<ATRANSACN::ATRansac::PairedLines> ATRANSACN::ATRansac::GetPairedLinesArray()                     {return PLines;}
+std::pair<Int_t,Int_t> ATRANSACN::ATRansac::GetPairTracksIndex()                                             {return fVertex_tracks;}
 
 
 void ATRANSACN::ATRansac::SetModelType(int model)                                       { fRANSACModel = model;}
@@ -373,6 +377,8 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
 
                                              fVertex_1.SetXYZ(c_1.X(),c_1.Y(),c_1.Z());
                                              fVertex_2.SetXYZ(c_2.X(),c_2.Y(),c_2.Z());
+                                             fVertex_tracks.first=i;
+                                             fVertex_tracks.second=j;
                                              fMinimum = mad;
                                              if ( !CheckTrackID(track->GetTrackID(),&fTrackCand) ){
                                                 fTrackCand.push_back(*track);

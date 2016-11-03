@@ -198,7 +198,7 @@ ATAnalysisTask::Exec(Option_t *opt)
             fRansac = (ATRANSACN::ATRansac *) fRansacArray->At(0);
             fInternalID++;
             ATTrackingEventAna *trackingeventAna = (ATTrackingEventAna *) new ((*fTrackingEventAnaArray)[0]) ATTrackingEventAna();
-            if(fELossPar[0].size()>0 && fParticleAZ.size()>0){
+            if(fELossPar[0].size()>0 && fParticleAZ.size()>0 && fEtoRPar[0].size()>0){
               fTrackingAnalysis->SetElossParameters(fELossPar);
               fTrackingAnalysis->SetEtoRParameters(fEtoRPar);
               fTrackingAnalysis->AddParticle(fParticleAZ);
