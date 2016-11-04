@@ -27,6 +27,7 @@ class ATTrack : public TObject {
     Int_t GetNFree();
     Int_t GetTrackID();
     Double_t GetAngleZAxis();
+    Double_t GetMeanTime();
 
 
   protected:

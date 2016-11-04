@@ -31,3 +31,15 @@ Double_t ATTrack::GetMinimum()                                      { return fMi
 Int_t ATTrack::GetNFree()                                           { return fNFree;}
 Int_t ATTrack::GetTrackID()                                         { return fTrackID;}
 Double_t ATTrack::GetAngleZAxis()                                   { return fAngleZAxis;}
+
+Double_t ATTrack::GetMeanTime()
+{
+    Double_t meanTime=0.0;
+
+    if(fHitArray.size()>0)
+    {
+      Int_t sum = std::accumulate (begin(fHitArray), end(fHitArray),0,[](int i,ATHit& hit){return hit.GetTimeStamp() + i;});
+      meanTime = sum/(Double_t)fHitArray.size();
+    }else return meanTime;
+
+}
