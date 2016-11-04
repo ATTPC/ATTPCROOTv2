@@ -30,7 +30,7 @@ class ATTrackingAnalysis : public ATAnalysis{
           std::vector<std::pair<Int_t,Int_t>> fParticleAZ;
 
 
-
+          // NB: This is just an example
           friend inline std::ostream& operator<<(std::ostream& os,const ATTrackingAnalysis& trackAna)
           {
 

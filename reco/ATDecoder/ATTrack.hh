@@ -19,12 +19,14 @@ class ATTrack : public TObject {
     void SetFitPar(std::vector<Double_t> par);
     void SetMinimum(Double_t min); // Minimizer result
     void SetNFree(Int_t ndf);
+    void SetAngleZAxis(Double_t angle);
 
     std::vector<ATHit> *GetHitArray();
     std::vector<Double_t> GetFitPar();
     Double_t GetMinimum();
     Int_t GetNFree();
     Int_t GetTrackID();
+    Double_t GetAngleZAxis();
 
 
   protected:
@@ -33,6 +35,7 @@ class ATTrack : public TObject {
     std::vector<Double_t> fParFit;
     Double_t fMinimum; //Minimizer result
     Int_t fNFree; // Free paramets
+    Double_t fAngleZAxis; // Angle of the track with respecto to the X axis.
 
     ClassDef(ATTrack, 1);
 

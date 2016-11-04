@@ -74,7 +74,10 @@
 #include <pcl/filters/extract_indices.h>
 #include <boost/shared_ptr.hpp>
 
-
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
 
 
 namespace ATRANSACN
@@ -92,6 +95,8 @@ class ATRansac : public TObject
       std::vector<ATTrack*> RansacPCL(ATEvent *event);
       TVector3 GetVertex1();
       TVector3 GetVertex2();
+      Double_t GetVertexTime();
+      Double_t GetAngleTracks(const ROOT::Math::XYZVector& vec1,const ROOT::Math::XYZVector& vec2);
       std::pair<Int_t,Int_t> GetPairTracksIndex();
       Double_t GetMinimum();//Distance of minumum approach between candidate lines (for the moment only 2)
       Int_t MinimizeTrack(ATTrack* track);
@@ -102,10 +107,12 @@ class ATRansac : public TObject
       void SetRPhiSpace(); // For RxPhi Ransac calculation (eventually will be moved into a template, when I have the time...)
       void SetXYCenter(Double_t xc, Double_t yc);
       void SetRANSACPointThreshold(Float_t val);
+      void SetVertexTime(Double_t val);
 
       struct PairedLines
       {
         std::pair<Int_t,Int_t> LinesID;
+        std::pair<Double_t,Double_t> AngleZAxis;
         Double_t minDist;
         TVector3 meanVertex;
         Double_t angle;
@@ -133,6 +140,7 @@ class ATRansac : public TObject
       Double_t fYCenter;
       Float_t fRANSACPointThreshold; //Number of points in percentage
       std::pair<Int_t,Int_t> fVertex_tracks;
+      Double_t fVertexTime;
 
       struct SumDistance2
       {
@@ -168,6 +176,19 @@ class ATRansac : public TObject
 
 
       };
+
+      //template<typename T>
+      friend inline std::ostream& operator <<(std::ostream &o, const ATRANSACN::ATRansac::PairedLines &pl)
+      {
+
+          o <<cGREEN<< " =============================================== "<<std::endl;
+          o << " Lines ID : " << pl.LinesID.first << " - " << pl.LinesID.second << std::endl;
+          o << " Minimum distance between line : "<<pl.minDist<<std::endl;
+          o << " Mean vertex between line - X : "<<pl.meanVertex.X()<<"  - Y : "<<pl.meanVertex.Y()<<"  - Z : "<<pl.meanVertex.Z()<<std::endl;
+          o << " Angle with Z axis - Line 1 : "<<pl.AngleZAxis.first<<"  - Line 2 : "<<pl.AngleZAxis.second<<std::endl;
+          o << " Angle between lines : "<<pl.angle<<cNORMAL<<std::endl;
+          return o;
+      }
 
 
 

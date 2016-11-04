@@ -103,7 +103,8 @@ Double_t ATTrackingAnalysis::GetVertexTime(ATRANSACN::ATRansac *Ransac)
           TVector3 Vertex1 = Ransac->GetVertex1();
           TVector3 Vertex2 = Ransac->GetVertex2();
           Double_t mean_Z = (Vertex1.Z()+Vertex2.Z())*0.5;
-
-          return ( 100.0*(mean_Z - fZk)/(fTBTime*fDriftVelocity) ) + fEntTB;
+          Double_t vertex_time = ( 100.0*(mean_Z - fZk)/(fTBTime*fDriftVelocity) ) + fEntTB;
+          Ransac->SetVertexTime(vertex_time);
+          return vertex_time;
 
 }

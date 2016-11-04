@@ -406,11 +406,23 @@ ATEventDrawTask::DrawHitPoints()
           else if(fRansacArray){
              fRansac = dynamic_cast<ATRANSACN::ATRansac*> (fRansacArray->At(0));
              TrackCand = fRansac->GetTrackCand();
-             TVector3 Vertex1 = fRansac->GetVertex1();
-             TVector3 Vertex2 = fRansac->GetVertex2();
+             TVector3 Vertex1    = fRansac->GetVertex1();
+             TVector3 Vertex2    = fRansac->GetVertex2();
+             Double_t VertexTime = fRansac->GetVertexTime();
              std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z : "<<Vertex1.Z()<<std::endl;
              std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z : "<<Vertex2.Z()<<std::endl;
+             std::cout<<" Vertex Time : "<<VertexTime<<std::endl;
              std::cout<<" Vertex Mean - X : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z : "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
+             std::vector<ATRANSACN::ATRansac::PairedLines> trackCorr = fRansac->GetPairedLinesArray();
+             //std::ostream_iterator<ATRANSACN::ATRansac::PairedLines> pairLine_it (std::cout,"  ");
+             if(trackCorr.size()>0){
+               for(Int_t i=0;i<trackCorr.size();i++){
+                 ATRANSACN::ATRansac::PairedLines pl = trackCorr.at(i);
+                 std::cout<<pl<<std::endl;
+               }
+              }
+
+
           }
 
           fLineNum = TrackCand.size();

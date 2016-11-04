@@ -26,6 +26,8 @@ ATRANSACN::ATRansac::ATRansac()
 
   fRANSACPointThreshold = 0.01; //Default 10%
 
+  fVertexTime = -1000.0;
+
   pcl::console::setVerbosityLevel(pcl::console::L_ALWAYS);
 
 }
@@ -41,6 +43,7 @@ Double_t ATRANSACN::ATRansac::GetMinimum()                                      
 std::vector<ATTrack> ATRANSACN::ATRansac::GetTrackCand()                                                     {return fTrackCand;}
 std::vector<ATRANSACN::ATRansac::PairedLines> ATRANSACN::ATRansac::GetPairedLinesArray()                     {return PLines;}
 std::pair<Int_t,Int_t> ATRANSACN::ATRansac::GetPairTracksIndex()                                             {return fVertex_tracks;}
+Double_t ATRANSACN::ATRansac::GetVertexTime()                                                                {return fVertexTime;}
 
 
 void ATRANSACN::ATRansac::SetModelType(int model)                                       { fRANSACModel = model;}
@@ -48,6 +51,7 @@ void ATRANSACN::ATRansac::SetDistanceThreshold(Float_t threshold)               
 void ATRANSACN::ATRansac::SetRPhiSpace()                                                { fRPhiSpace = kTRUE;}
 void ATRANSACN::ATRansac::SetXYCenter(Double_t xc, Double_t yc)                         { fXCenter = xc;fYCenter=yc;}
 void ATRANSACN::ATRansac::SetRANSACPointThreshold(Float_t val)                          { fRANSACPointThreshold = val;}
+void ATRANSACN::ATRansac::SetVertexTime(Double_t val)                                   { fVertexTime = val;}
 
 
 void ATRANSACN::ATRansac::CalcRANSAC(ATEvent *event)
@@ -281,7 +285,7 @@ Int_t ATRANSACN::ATRansac::MinimizeTrackRPhi(ATTrack* track)
       parFit.push_back(fit->GetParameter(0));
       parFit.push_back(fit->GetParameter(1));
       double Chi2_min = fit->GetChisquare();
-      double sigma2 = 25.0; //Size of the pad
+      double sigma2 = 25.0; //Size of the pad squared
       Int_t NDF = fit->GetNDF();
       track->SetFitPar(parFit);
       track->SetMinimum(Chi2_min);
@@ -309,7 +313,7 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
   // distance of each remaining line with respect to the others (vertex) to decide the particles of the reaction.
   //std::cout<<" New find vertex call "<<std::endl;
 
-  Double_t mad=999999; // Minimum approach distance
+  Double_t mad=10; // Minimum approach distance. This is the minimum distance between the lines in 3D. Must be bigger than fLineDistThreshold
   XYZVector c_1(-1000,-1000,-1000);
   XYZVector c_2(-1000,-1000,-1000);
   //std::vector<ATTrack*> *TrackCand;
@@ -319,6 +323,10 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
       //y = p[2] + p[3]*t;
       //z = t;
       // (x,y,z) = (p[0],p[2],0) + (p[1],p[3],1)*t
+
+      // Equation of the Z axis
+      XYZVector Z_0(0,0,0);
+      XYZVector Z_1(0,0,1);
 
       // Test each line against the others to find a vertex candidate
       for(Int_t i=0;i<tracks.size()-1;i++){
@@ -355,6 +363,8 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                       c_1 = L_0  + ( (L_f0 - L_0).Dot(n_2)*L_1  )/(  L_1.Dot(n_2)   );
                                       c_2 = L_f0 + ( (L_0  - L_f0).Dot(n_1)*L_f1 )/(  L_f1.Dot(n_1)  );
 
+
+
                                       //std::cout<<i<<" "<<j<<" "<<L_mag<<std::endl;
 
                                       if(L_mag>0)
@@ -365,9 +375,13 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                           Double_t num = L_1.X()*L_f1.X() + L_1.Y()*L_f1.Y() + L_1.Z()*L_f1.Z() ;
                                           Double_t den = TMath::Sqrt(L_1.X()*L_1.X() + L_1.Y()*L_1.Y() + L_1.Z()*L_1.Z())*TMath::Sqrt(L_f1.X()*L_f1.X() + L_f1.Y()*L_f1.Y() + L_f1.Z()*L_f1.Z());
                                           Double_t ang2 = TMath::ACos(num/den);
+                                          TVector3 vertex1_buff;
+                                          vertex1_buff.SetXYZ(c_1.X(),c_1.Y(),c_1.Z());
+                                          TVector3 vertex2_buff;
+                                          vertex2_buff.SetXYZ(c_2.X(),c_2.Y(),c_2.Z());
 
-
-
+                                          Double_t angZi = GetAngleTracks(L_1,Z_1);
+                                          Double_t angZj = GetAngleTracks(L_f1,Z_1);
 
                                           if(d<mad){
 
@@ -380,11 +394,16 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                              fVertex_tracks.first=i;
                                              fVertex_tracks.second=j;
                                              fMinimum = mad;
+                                             track->SetAngleZAxis(angZi);
+                                             track_f->SetAngleZAxis(angZj);
+
                                              if ( !CheckTrackID(track->GetTrackID(),&fTrackCand) ){
                                                 fTrackCand.push_back(*track);
                                                 PairedLines PL;
-                                                PL.LinesID.first  = i;
-                                                PL.LinesID.second = j;
+                                                PL.LinesID.first     = i;
+                                                PL.LinesID.second    = j;
+                                                PL.AngleZAxis.first  = angZi;
+                                                PL.AngleZAxis.second = angZj;
                                                 PL.minDist = mad;
                                                 PL.meanVertex = 0.5*(fVertex_1 + fVertex_2);
                                                 PL.angle = ang2;
@@ -395,6 +414,8 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                                  PairedLines PL;
                                                  PL.LinesID.first  = i;
                                                  PL.LinesID.second = j;
+                                                 PL.AngleZAxis.first  = angZi;
+                                                 PL.AngleZAxis.second = angZj;
                                                  PL.minDist = mad;
                                                  PL.meanVertex = 0.5*(fVertex_1 + fVertex_2);
                                                  PL.angle = ang2;
@@ -415,8 +436,10 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                               PairedLines PL;
                                               PL.LinesID.first  = i;
                                               PL.LinesID.second = j;
-                                              PL.minDist = mad;
-                                              PL.meanVertex = 0.5*(fVertex_1 + fVertex_2);
+                                              PL.AngleZAxis.first  = angZi;
+                                              PL.AngleZAxis.second = angZj;
+                                              PL.minDist = d;
+                                              PL.meanVertex = 0.5*(vertex1_buff + vertex2_buff);
                                               PL.angle = ang2;
                                               PLines.push_back(PL);
                                             }
@@ -427,8 +450,10 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                               PairedLines PL;
                                               PL.LinesID.first  = i;
                                               PL.LinesID.second = j;
-                                              PL.minDist = mad;
-                                              PL.meanVertex = 0.5*(fVertex_1 + fVertex_2);
+                                              PL.AngleZAxis.first  = angZi;
+                                              PL.AngleZAxis.second = angZj;
+                                              PL.minDist = d;
+                                              PL.meanVertex = 0.5*(vertex1_buff + vertex2_buff);
                                               PL.angle = ang2;
                                               PLines.push_back(PL);
                                              }
@@ -488,5 +513,15 @@ Bool_t ATRANSACN::ATRansac::CheckTrackID(Int_t trackID, std::vector<ATTrack> *tr
   else return kFALSE;
 
 
+
+}
+
+Double_t ATRANSACN::ATRansac::GetAngleTracks(const ROOT::Math::XYZVector& vec1,const ROOT::Math::XYZVector& vec2)
+{
+  Double_t num = vec1.X()*vec2.X() + vec1.Y()*vec2.Y() + vec1.Z()*vec2.Z() ;
+  Double_t den = TMath::Sqrt(vec1.X()*vec1.X() + vec1.Y()*vec1.Y() + vec1.Z()*vec1.Z())*TMath::Sqrt(vec2.X()*vec2.X() + vec2.Y()*vec2.Y() + vec2.Z()*vec2.Z());
+  Double_t ang = TMath::ACos(num/den);
+
+  return ang;
 
 }
