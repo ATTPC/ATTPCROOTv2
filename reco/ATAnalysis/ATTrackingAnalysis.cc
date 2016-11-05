@@ -57,6 +57,14 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                 std::vector<ATTrack>  trackCand = Ransac->GetTrackCand();
                 std::vector<ATRANSACN::ATRansac::PairedLines> trackCorr = Ransac->GetPairedLinesArray();
 
+                  if(trackCand.size()>1) // Find at least 2 tracks
+                  {
+                    for(auto i=0;i<trackCand.size();i++){
+                      ATTrack track = trackCand.at(i);
+
+
+                   }
+                  }
 
 
                 delete min;

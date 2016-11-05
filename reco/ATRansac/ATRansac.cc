@@ -44,6 +44,7 @@ std::vector<ATTrack> ATRANSACN::ATRansac::GetTrackCand()                        
 std::vector<ATRANSACN::ATRansac::PairedLines> ATRANSACN::ATRansac::GetPairedLinesArray()                     {return PLines;}
 std::pair<Int_t,Int_t> ATRANSACN::ATRansac::GetPairTracksIndex()                                             {return fVertex_tracks;}
 Double_t ATRANSACN::ATRansac::GetVertexTime()                                                                {return fVertexTime;}
+TVector3 ATRANSACN::ATRansac::GetVertexMean()                                                                {return fVertex_mean;}
 
 
 void ATRANSACN::ATRansac::SetModelType(int model)                                       { fRANSACModel = model;}
@@ -382,6 +383,11 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
 
                                           Double_t angZi = GetAngleTracks(L_1,Z_1);
                                           Double_t angZj = GetAngleTracks(L_f1,Z_1);
+                                          track->SetAngleZAxis(angZi);
+                                          track_f->SetAngleZAxis(angZj);
+                                          track->SetTrackVertex(0.5*(vertex1_buff + vertex2_buff));
+                                          track_f->SetTrackVertex(0.5*(vertex1_buff + vertex2_buff));
+
 
                                           if(d<mad){
 
@@ -389,13 +395,14 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                              //std::cout<<" New distance of minimum approach : "<<mad<<std::endl;
                                              //std::cout<<" Angle between lines i : "<<i<<" j : "<<j<<"  "<<ang2<<std::endl;
 
+                                            // Global event variables
                                              fVertex_1.SetXYZ(c_1.X(),c_1.Y(),c_1.Z());
                                              fVertex_2.SetXYZ(c_2.X(),c_2.Y(),c_2.Z());
+                                             fVertex_mean = 0.5*(fVertex_1 + fVertex_2);
                                              fVertex_tracks.first=i;
                                              fVertex_tracks.second=j;
                                              fMinimum = mad;
-                                             track->SetAngleZAxis(angZi);
-                                             track_f->SetAngleZAxis(angZj);
+
 
                                              if ( !CheckTrackID(track->GetTrackID(),&fTrackCand) ){
                                                 fTrackCand.push_back(*track);
@@ -463,10 +470,6 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
 
 
                                       }
-
-                                      //for(Int_t i=0;i<fTrackCand.size();i++)
-                                          //std::cout<<fTrackCand.at(i).GetTrackID()<<std::endl;
-
 
                         }//p_f size
                      }// End of track

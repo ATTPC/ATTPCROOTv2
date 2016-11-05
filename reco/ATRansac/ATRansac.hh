@@ -99,6 +99,7 @@ class ATRansac : public TObject
       Double_t GetAngleTracks(const ROOT::Math::XYZVector& vec1,const ROOT::Math::XYZVector& vec2);
       std::pair<Int_t,Int_t> GetPairTracksIndex();
       Double_t GetMinimum();//Distance of minumum approach between candidate lines (for the moment only 2)
+      TVector3 GetVertexMean();
       Int_t MinimizeTrack(ATTrack* track);
       Int_t MinimizeTrackRPhi(ATTrack* track);
       std::vector<ATTrack> GetTrackCand();
@@ -130,6 +131,7 @@ class ATRansac : public TObject
 
       TVector3 fVertex_1;
       TVector3 fVertex_2;
+      TVector3 fVertex_mean;
       Double_t fMinimum;
       std::vector<ATTrack> fTrackCand; //Candidate tracks (debugging purposes)
       Int_t fLineDistThreshold;
