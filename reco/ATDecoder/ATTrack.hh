@@ -6,6 +6,9 @@
 #include "TVector3.h"
 #include "TMath.h"
 
+#include <numeric>
+#include <algorithm>
+
 //ATTPCROOT
 #include "ATHit.hh"
 

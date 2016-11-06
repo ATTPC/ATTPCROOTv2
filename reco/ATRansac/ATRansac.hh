@@ -98,6 +98,7 @@ class ATRansac : public TObject
       Double_t GetVertexTime();
       Double_t GetAngleTracks(const ROOT::Math::XYZVector& vec1,const ROOT::Math::XYZVector& vec2);
       std::pair<Int_t,Int_t> GetPairTracksIndex();
+      Int_t FindIndexTrack(Int_t index);
       Double_t GetMinimum();//Distance of minumum approach between candidate lines (for the moment only 2)
       TVector3 GetVertexMean();
       Int_t MinimizeTrack(ATTrack* track);
@@ -141,7 +142,7 @@ class ATRansac : public TObject
       Double_t fXCenter;
       Double_t fYCenter;
       Float_t fRANSACPointThreshold; //Number of points in percentage
-      std::pair<Int_t,Int_t> fVertex_tracks;
+      std::pair<Int_t,Int_t> fVertex_tracks; // ID of the tracks that form the best vertex
       Double_t fVertexTime;
 
       struct SumDistance2

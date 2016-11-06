@@ -106,7 +106,7 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event) //Main function of the Lin
 {
 
         /// Set Options here n(default is Generic hough Space calculation)
-        omp_set_num_threads(2);
+        //omp_set_num_threads(2);
 
         std::vector<ATTrack*> YZ_tracks;
         std::vector<ATTrack*> XZ_tracks;

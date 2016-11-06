@@ -52,19 +52,81 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                 // Adding n-particles
                 min->AddParticle(fParticleAZ);
 
-                min->SetEntTB(GetVertexTime(Ransac));
-
                 std::vector<ATTrack>  trackCand = Ransac->GetTrackCand();
                 std::vector<ATRANSACN::ATRansac::PairedLines> trackCorr = Ransac->GetPairedLinesArray();
 
-                  if(trackCand.size()>1) // Find at least 2 tracks
-                  {
-                    for(auto i=0;i<trackCand.size();i++){
-                      ATTrack track = trackCand.at(i);
+                std::pair<Int_t,Int_t> pairTrackIndex = Ransac->GetPairTracksIndex();
+                std::vector<ATTrack*> mininizationTracks;
+                Double_t vertexTime = GetVertexTime(Ransac);
+                TVector3 Vertex_mean = Ransac->GetVertexMean();
+
+                std::cout<<cYELLOW<<" =========== New Analysis event ============"<<cNORMAL<<std::endl;
+
+                if(trackCand.size()>1){ // At least two tracks to form a vertex
+
+                      // For debuggin purposes
+                      /*for(Int_t i=0;i<trackCand.size();i++)
+                      {
+                        ATTrack track = trackCand.at(i);
+                        std::cout<<" Track ID : "<<track.GetTrackID()<<std::endl;
+                        std::cout<<" Loop Index : "<<i<<std::endl;
+                        std::cout<<" Index from ID : "<<Ransac->FindIndexTrack(track.GetTrackID())<<std::endl;
+                      }*/
+
+                      for(Int_t i=0;i<2;i++){
+                         Int_t trackID=0;
+                         if(i==0) trackID = pairTrackIndex.first;
+                         else if(i==1) trackID = pairTrackIndex.second;
+
+                         Int_t indexID = Ransac->FindIndexTrack(trackID);
+
+                        if(indexID>-1 && indexID<trackCand.size()){
+                               ATTrack* track = &trackCand.at(indexID);
+
+                               Double_t trackTime  = track->GetMeanTime();
+                               Double_t trackAngle = 180.0*track->GetAngleZAxis()/TMath::Pi();
+
+                               //std::cout<<cYELLOW<<" trackTime : "<<trackTime<<" Vertex Time : "<<vertexTime<<std::endl;
+                               //std::cout<<" Track Angle : "<<trackAngle<<"  Tilting Angle+0.5 "<<(fTiltAng+0.5)<<cNORMAL<<std::endl;
+
+                                if(trackAngle>(fTiltAng+0.5) ){
+                                    std::cout<<" Accepted Line : "<<track->GetTrackID()<<" with angle : "<<track->GetAngleZAxis()<<std::endl;
+                                    mininizationTracks.push_back(track);
+                                }
+
+                        }
+                     }
+
+                     //Try to find at least 2 candidates
+                     if(mininizationTracks.size()<2)
+                     {
+
+                          for(Int_t i=0;i<trackCand.size();i++)
+                          {
+                              if(i!=pairTrackIndex.first && i!=pairTrackIndex.second)
+                              {
+                                  ATTrack* track = &trackCand.at(i);
+                                  TVector3 trackVertex = track->GetTrackVertex();
+                                  Double_t dist = TMath::Sqrt( TMath::Power((trackVertex.X()-Vertex_mean.X()),2) + TMath::Power((trackVertex.Y()-Vertex_mean.Y()),2)
+                                   + TMath::Power((trackVertex.Z()-Vertex_mean.Z()),2));
+
+                                   std::cout<<" Evaluating Line : "<<track->GetTrackID()<<" with angle : "<<track->GetAngleZAxis()<<std::endl;
+                                   std::cout<<" Distance from vertex : "<<dist<<std::endl;
 
 
-                   }
-                  }
+                              }
+
+                          }
+
+
+                     }//if less 2 candidates
+
+                  }// if trackCand has more than 1 track
+
+
+                  // TODO: Wrong, the EntTB is extrapolated from the vertex and tilting angle.
+                  //min->SetEntTB(GetVertexTime(Ransac));
+
 
 
                 delete min;

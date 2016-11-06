@@ -375,6 +375,9 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                           //std::cout<<" Distance of minimum approach : "<<d<<std::endl;
                                           Double_t num = L_1.X()*L_f1.X() + L_1.Y()*L_f1.Y() + L_1.Z()*L_f1.Z() ;
                                           Double_t den = TMath::Sqrt(L_1.X()*L_1.X() + L_1.Y()*L_1.Y() + L_1.Z()*L_1.Z())*TMath::Sqrt(L_f1.X()*L_f1.X() + L_f1.Y()*L_f1.Y() + L_f1.Z()*L_f1.Z());
+                                          // NB:: The vector of hits is always sorted in time so the direction of porpagation of the particle is always positive.
+                                          // This means that the angle will be always between 0 and 90 degree.
+                                          // The vertex and the mean time of the track are needed to determine the direction of the track and then add 90 degrees.
                                           Double_t ang2 = TMath::ACos(num/den);
                                           TVector3 vertex1_buff;
                                           vertex1_buff.SetXYZ(c_1.X(),c_1.Y(),c_1.Z());
@@ -521,10 +524,25 @@ Bool_t ATRANSACN::ATRansac::CheckTrackID(Int_t trackID, std::vector<ATTrack> *tr
 
 Double_t ATRANSACN::ATRansac::GetAngleTracks(const ROOT::Math::XYZVector& vec1,const ROOT::Math::XYZVector& vec2)
 {
+
+  // NB:: The vector of hits is always sorted in time so the direction of porpagation of the particle is always positive.
+  // This means that the angle will be always between 0 and 90 degree.
+  // The vertex and the mean time of the track are needed to determine the direction of the track and then add 90 degrees.
   Double_t num = vec1.X()*vec2.X() + vec1.Y()*vec2.Y() + vec1.Z()*vec2.Z() ;
   Double_t den = TMath::Sqrt(vec1.X()*vec1.X() + vec1.Y()*vec1.Y() + vec1.Z()*vec1.Z())*TMath::Sqrt(vec2.X()*vec2.X() + vec2.Y()*vec2.Y() + vec2.Z()*vec2.Z());
   Double_t ang = TMath::ACos(num/den);
 
   return ang;
+
+}
+
+Int_t ATRANSACN::ATRansac::FindIndexTrack(Int_t index)
+{
+      auto it =  find_if( fTrackCand.begin(),fTrackCand.end(),[&index](ATTrack& track) {return track.GetTrackID()==index;}   );
+      if(it != fTrackCand.end()){
+         auto trackInd = std::distance<std::vector<ATTrack>::const_iterator>(fTrackCand.begin(),it);
+         return trackInd;
+      }
+      else return -1;
 
 }

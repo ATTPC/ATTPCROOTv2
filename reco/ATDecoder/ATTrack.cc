@@ -43,7 +43,7 @@ Double_t ATTrack::GetMeanTime()
     if(fHitArray.size()>0)
     {
       Int_t sum = std::accumulate (begin(fHitArray), end(fHitArray),0,[](int i,ATHit& hit){return hit.GetTimeStamp() + i;});
-      meanTime = sum/(Double_t)fHitArray.size();
+      return meanTime = sum/(Double_t)fHitArray.size();
     }else return meanTime;
 
 }
