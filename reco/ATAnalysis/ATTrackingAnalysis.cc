@@ -10,6 +10,9 @@ ClassImp(ATTrackingAnalysis)
 ATTrackingAnalysis::ATTrackingAnalysis()
 {
 
+        fVertex = -1000.0;
+        fEntTB_calc = -1000.0;
+
 }
 
 ATTrackingAnalysis::~ATTrackingAnalysis()
@@ -114,6 +117,8 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                                    std::cout<<" Distance from vertex : "<<dist<<std::endl;
 
 
+
+
                               }
 
                           }
@@ -126,15 +131,58 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
                   // Calculation of the entrance time bucket and rotation of the detector frame to find the angles in the solenoid frame.
                   Double_t Z0 = Vertex_mean.Z() + TMath::Sqrt(TMath::Power(Vertex_mean.X(),2) + TMath::Power(Vertex_mean.Y(),2) )/TMath::Tan(fTiltAng*TMath::Pi()/180.0);
+                  fEntTB_calc = GetTime(Z0);
 
-                  std::cout<<" Z0 : "<<Z0<<"  Vertex Time : "<<vertexTime<<std::endl;
-                  std::cout<<" Vertex_mean.Z() : "<<Vertex_mean.Z()<<std::endl;
+                  /*std::cout<<" Z0 : "<<Z0<<"  Vertex Time : "<<vertexTime<<std::endl;
+                  std::cout<<" TB0 : "<<fEntTB_calc<<std::endl;
+                  std::cout<<" Vertex_mean.Z() : "<<Vertex_mean.Z()<<std::endl;*/
 
-                  //min->SetEntTB(GetVertexTime(Ransac));
+                  fVertex = Z0 - Vertex_mean.Z(); //Vertex for the excitation function.
+                  min->SetEntTB(fEntTB_calc);
+
+                  if(mininizationTracks.size()>0)
+                  {
+                        for(Int_t i=0;i<mininizationTracks.size();i++){
+                          std::pair<Double_t,Double_t> angles = GetAnglesSolenoid(mininizationTracks.at(i));
+
+                        }
+
+                  }
 
 
+                  delete min;
 
-                delete min;
+                  //For debugging: Visualize the rotation of the event in the X-Z and Y-Z plane
+                  /*  TH2F* vis_XZ = new TH2F("vis_XZ","vis_XZ",1000,0,1000,1000,-250,250);
+                    TH2F* vis_YZ = new TH2F("vis_YZ","vis_YZ",1000,0,1000,1000,-250,250);
+                    vis_YZ->SetMarkerColor(kRed);
+                    vis_YZ->SetMarkerStyle(20);
+                    vis_YZ->SetMarkerSize(1.0);
+                    vis_XZ->SetMarkerStyle(20);
+                    vis_XZ->SetMarkerSize(1.0);
+
+
+                  if(trackCand.size()>0){
+                      for(Int_t i=0;i<trackCand.size();i++){
+                       std::vector<ATHit> hit_track = RotateEvent(&trackCand.at(i));
+
+                              for(Int_t j=0;j<hit_track.size();j++)
+                              {
+                                ATHit hitT =  hit_track.at(j);
+                                TVector3 posSol = hitT.GetPosition();
+                                vis_XZ->Fill(posSol.Z(),posSol.X());
+                                vis_YZ->Fill(posSol.Z(),posSol.Y());
+                              }
+
+                     }
+                  }
+
+                    vis_XZ->Draw();
+                    vis_YZ->Draw("SAME");
+
+                */
+
+
 
 
   }else{
@@ -178,9 +226,15 @@ Double_t ATTrackingAnalysis::GetVertexTime(ATRANSACN::ATRansac *Ransac)
           TVector3 Vertex1 = Ransac->GetVertex1();
           TVector3 Vertex2 = Ransac->GetVertex2();
           Double_t mean_Z = (Vertex1.Z()+Vertex2.Z())*0.5;
-          Double_t vertex_time = ( 100.0*(mean_Z - fZk)/(fTBTime*fDriftVelocity) ) + fEntTB;
+          Double_t vertex_time = GetTime(mean_Z);
           Ransac->SetVertexTime(vertex_time);
           return vertex_time;
+
+}
+
+Double_t ATTrackingAnalysis::GetTime(Double_t Z)
+{
+      return ( 100.0*(Z - fZk)/(fTBTime*fDriftVelocity) ) + fEntTB;
 
 }
 
@@ -191,25 +245,59 @@ std::pair<Double_t,Double_t> ATTrackingAnalysis::GetAnglesSolenoid(ATTrack* trac
           TVector3 posSol;
           std::pair<Double_t,Double_t> angles;
 
-          TH2F* vis = new TH2F("vis","vis",1000,0,1000,1000,-250,250);
+          Double_t TiltAng  = -fTiltAng*TMath::Pi()/180.0;
+          Double_t thetaPad = -fThetaPad;
 
           for(Int_t i=0;i<hitArray->size();i++){
 
                   ATHit hit = hitArray->at(i);
                   TVector3 position = hit.GetPosition();
-                  posRot.SetX(position.X()*TMath::Cos(fThetaPad) - position.Y()*TMath::Sin(fThetaPad));
-                  posRot.SetY(position.X()*TMath::Sin(fThetaPad) + position.Y()*TMath::Cos(fThetaPad));
-                  posRot.SetZ(  (-271.0+hit.GetTimeStamp())*fTBTime*fDriftVelocity/100. + fZk  );
-
-                  Double_t TiltAng = -fTiltAng*TMath::Pi()/180.0;
+                  posRot.SetX(position.X()*TMath::Cos(thetaPad) - position.Y()*TMath::Sin(thetaPad));
+                  posRot.SetY(position.X()*TMath::Sin(thetaPad) + position.Y()*TMath::Cos(thetaPad));
+                  posRot.SetZ(  (-fEntTB_calc+hit.GetTimeStamp())*fTBTime*fDriftVelocity/100. + fZk  );
 
                   posSol.SetX(posRot.X());
                   posSol.SetY( -(fZk-posRot.Z())*TMath::Sin(TiltAng)   + posRot.Y()*TMath::Cos(TiltAng)  );
                   posSol.SetZ( posRot.Z()*TMath::Cos(TiltAng) - posRot.Y()*TMath::Sin(TiltAng)  );
 
-                  vis->Fill(posSol.X(),posSol.Z());
           }
 
-          vis->Draw();
+          return angles;
+
+}
+
+std::vector<ATHit>  ATTrackingAnalysis::RotateEvent(ATTrack* track)
+{
+
+            std::vector<ATHit> *hitArray = track->GetHitArray();
+            TVector3 posRot;
+            TVector3 posSol;
+
+            std::vector<ATHit> hit_track;
+
+            Double_t TiltAng  = -fTiltAng*TMath::Pi()/180.0;
+            Double_t thetaPad = -fThetaPad;
+
+
+            for(Int_t i=0;i<hitArray->size();i++){
+
+                    ATHit hit = hitArray->at(i);
+                    TVector3 position = hit.GetPosition();
+                    posRot.SetX(position.X()*TMath::Cos(thetaPad) - position.Y()*TMath::Sin(thetaPad));
+                    posRot.SetY(position.X()*TMath::Sin(thetaPad) + position.Y()*TMath::Cos(thetaPad));
+                    posRot.SetZ(  (-fEntTB_calc+hit.GetTimeStamp())*fTBTime*fDriftVelocity/100. + fZk  );
+
+
+
+                    posSol.SetX(posRot.X());
+                    posSol.SetY( -(fZk-posRot.Z())*TMath::Sin(TiltAng)   + posRot.Y()*TMath::Cos(TiltAng)  );
+                    posSol.SetZ( posRot.Z()*TMath::Cos(TiltAng) - posRot.Y()*TMath::Sin(TiltAng)  );
+
+                    ATHit hitRot(i,posSol,hit.GetCharge());
+                    hit_track.push_back(hitRot);
+
+            }
+
+           return hit_track;
 
 }
