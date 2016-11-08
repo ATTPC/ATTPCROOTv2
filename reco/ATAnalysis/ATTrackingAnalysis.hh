@@ -7,6 +7,11 @@
 #include "ATDigiPar.hh"
 #include "ATMCQMinimization.hh"
 
+#include "TF1.h"
+
+#include <cstddef>
+#include <iostream>
+
 
 class ATTrackingAnalysis : public ATAnalysis{
 
@@ -34,6 +39,9 @@ class ATTrackingAnalysis : public ATAnalysis{
 
           Double_t fVertex; // Physical vertex in mm;
           Double_t fEntTB_calc;//Calculated entrance Time Bucket
+
+          TGraph *fTrackFit;//!
+          TF1 *fFitResult;//!
 
 
           // NB: This is just an example

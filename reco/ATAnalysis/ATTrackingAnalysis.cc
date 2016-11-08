@@ -12,11 +12,17 @@ ATTrackingAnalysis::ATTrackingAnalysis()
 
         fVertex = -1000.0;
         fEntTB_calc = -1000.0;
+        fTrackFit = new TGraph();
+        fFitResult = new TF1();
+
 
 }
 
 ATTrackingAnalysis::~ATTrackingAnalysis()
 {
+  delete fTrackFit;
+  delete fFitResult;
+
 }
 
 void ATTrackingAnalysis::SetElossParameters(std::vector<Double_t> (&parE)[10])                             {for(Int_t i=0;i<10;i++) fElossPar[i] = parE[i];}
@@ -133,9 +139,9 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                   Double_t Z0 = Vertex_mean.Z() + TMath::Sqrt(TMath::Power(Vertex_mean.X(),2) + TMath::Power(Vertex_mean.Y(),2) )/TMath::Tan(fTiltAng*TMath::Pi()/180.0);
                   fEntTB_calc = GetTime(Z0);
 
-                  /*std::cout<<" Z0 : "<<Z0<<"  Vertex Time : "<<vertexTime<<std::endl;
+                  std::cout<<" Z0 : "<<Z0<<"  Vertex Time : "<<vertexTime<<std::endl;
                   std::cout<<" TB0 : "<<fEntTB_calc<<std::endl;
-                  std::cout<<" Vertex_mean.Z() : "<<Vertex_mean.Z()<<std::endl;*/
+                  std::cout<<" Vertex_mean.Z() : "<<Vertex_mean.Z()<<std::endl;
 
                   fVertex = Z0 - Vertex_mean.Z(); //Vertex for the excitation function.
                   min->SetEntTB(fEntTB_calc);
@@ -153,13 +159,18 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                   delete min;
 
                   //For debugging: Visualize the rotation of the event in the X-Z and Y-Z plane
-                  /*  TH2F* vis_XZ = new TH2F("vis_XZ","vis_XZ",1000,0,1000,1000,-250,250);
+                    TH2F* vis_XZ = new TH2F("vis_XZ","vis_XZ",1000,0,1000,1000,-250,250);
                     TH2F* vis_YZ = new TH2F("vis_YZ","vis_YZ",1000,0,1000,1000,-250,250);
+                    TH2F* vis_RAD = new TH2F("vis_RAD","vis_RAD",1000,0,1000,1000,-250,250);
                     vis_YZ->SetMarkerColor(kRed);
                     vis_YZ->SetMarkerStyle(20);
                     vis_YZ->SetMarkerSize(1.0);
                     vis_XZ->SetMarkerStyle(20);
                     vis_XZ->SetMarkerSize(1.0);
+                    vis_RAD->SetMarkerColor(kGreen);
+                    vis_RAD->SetMarkerStyle(20);
+                    vis_RAD->SetMarkerSize(1.0);
+
 
 
                   if(trackCand.size()>0){
@@ -170,8 +181,11 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                               {
                                 ATHit hitT =  hit_track.at(j);
                                 TVector3 posSol = hitT.GetPosition();
+                                Double_t rad = TMath::Sqrt( TMath::Power(posSol.X(),2) + TMath::Power(posSol.Y(),2) );
                                 vis_XZ->Fill(posSol.Z(),posSol.X());
                                 vis_YZ->Fill(posSol.Z(),posSol.Y());
+                                vis_RAD->Fill(posSol.Z(),rad);
+
                               }
 
                      }
@@ -179,8 +193,8 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
                     vis_XZ->Draw();
                     vis_YZ->Draw("SAME");
+                    vis_RAD->Draw("SAME");
 
-                */
 
 
 
@@ -244,6 +258,7 @@ std::pair<Double_t,Double_t> ATTrackingAnalysis::GetAnglesSolenoid(ATTrack* trac
           TVector3 posRot;
           TVector3 posSol;
           std::pair<Double_t,Double_t> angles;
+          fTrackFit->Set(0);
 
           Double_t TiltAng  = -fTiltAng*TMath::Pi()/180.0;
           Double_t thetaPad = -fThetaPad;
@@ -260,7 +275,25 @@ std::pair<Double_t,Double_t> ATTrackingAnalysis::GetAnglesSolenoid(ATTrack* trac
                   posSol.SetY( -(fZk-posRot.Z())*TMath::Sin(TiltAng)   + posRot.Y()*TMath::Cos(TiltAng)  );
                   posSol.SetZ( posRot.Z()*TMath::Cos(TiltAng) - posRot.Y()*TMath::Sin(TiltAng)  );
 
+                  Double_t rad = TMath::Sqrt( TMath::Power(posSol.X(),2) + TMath::Power(posSol.Y(),2) );
+
+                  fTrackFit->SetPoint(fTrackFit->GetN(),posSol.Z(),rad);
+
           }
+
+          fTrackFit->Fit("pol1","FQ","",0,1000);
+          fFitResult = fTrackFit->GetFunction("pol1");
+
+          Double_t afit = 0.0;
+          Double_t par0 = fFitResult->GetParameter(0);
+          Double_t par1 = fFitResult->GetParameter(1);
+
+          if(par1>=0) afit = TMath::Pi()-TMath::ATan2(1,TMath::Abs(par1));
+          else if(par1<0)  afit = TMath::ATan2(1,TMath::Abs(par1));
+
+          std::cout<<" Scattering angle : "<<afit<<std::endl;
+
+          fTrackFit->Draw("A*");
 
           return angles;
 
