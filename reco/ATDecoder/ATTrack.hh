@@ -24,6 +24,8 @@ class ATTrack : public TObject {
     void SetMinimum(Double_t min); // Minimizer result
     void SetNFree(Int_t ndf);
     void SetAngleZAxis(Double_t angle);
+    void SetAngleZDet(Double_t angle);
+    void SetAngleYDet(Double_t angle);
     void SetTrackVertex(TVector3 vertex);
 
     std::vector<ATHit> *GetHitArray();
@@ -32,6 +34,8 @@ class ATTrack : public TObject {
     Int_t GetNFree();
     Int_t GetTrackID();
     Double_t GetAngleZAxis();
+    Double_t GetAngleZDet();
+    Double_t GetAngleYDet();
     Double_t GetMeanTime();
     Double_t GetLinearRange();
     TVector3 GetTrackVertex();
@@ -44,6 +48,8 @@ class ATTrack : public TObject {
     Double_t fMinimum; //Minimizer result
     Int_t fNFree; // Free paramets
     Double_t fAngleZAxis; // Angle of the track with respecto to the X axis.
+    Double_t fAngleZDet; // Angle with respect to Z axis (beam axis) in the detector system.
+    Double_t fAngleYDet;//  "         "           Y   "             "
     Double_t fRange; //Range of the particle
     TVector3 fTrackVertex; //Mean Vertex of the track
 

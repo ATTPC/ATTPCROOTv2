@@ -12,6 +12,8 @@ ATTrack::ATTrack()
   fMinimum     = -1;
   fNFree       = -1;
   fAngleZAxis  = -20;
+  fAngleZDet   = -20;
+  fAngleYDet  = -20;
   fRange = 0.0;
 }
 
@@ -25,6 +27,8 @@ void ATTrack::SetFitPar(std::vector<Double_t> par)                  { fParFit = 
 void ATTrack::SetMinimum(Double_t min)                              { fMinimum = min;}
 void ATTrack::SetNFree(Int_t ndf)                                   { fNFree = ndf;}
 void ATTrack::SetAngleZAxis(Double_t angle)                         { fAngleZAxis = angle;}
+void ATTrack::SetAngleZDet(Double_t angle)                          { fAngleZDet = angle;}
+void ATTrack::SetAngleYDet(Double_t angle)                          { fAngleYDet = angle;}
 void ATTrack::SetTrackVertex(TVector3 vertex)                       { fTrackVertex = vertex;}
 
 std::vector<ATHit> *ATTrack::GetHitArray()                          { return &fHitArray;}
@@ -33,6 +37,8 @@ Double_t ATTrack::GetMinimum()                                      { return fMi
 Int_t ATTrack::GetNFree()                                           { return fNFree;}
 Int_t ATTrack::GetTrackID()                                         { return fTrackID;}
 Double_t ATTrack::GetAngleZAxis()                                   { return fAngleZAxis;}
+Double_t ATTrack::GetAngleZDet()                                    { return fAngleZDet;}
+Double_t ATTrack::GetAngleYDet()                                    { return fAngleYDet;}
 TVector3 ATTrack::GetTrackVertex()                                  { return fTrackVertex;}
 
 

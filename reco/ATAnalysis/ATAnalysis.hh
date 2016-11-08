@@ -59,6 +59,9 @@ class ATAnalysis : public TObject
        Double_t fTiltAng;
        TVector3 fLorentzVector;
        Int_t fTB0;
+       Double_t fThetaPad;
+       Double_t fThetaLorentz;
+       Double_t fThetaRot;
 
        ClassDef(ATAnalysis, 1);
 

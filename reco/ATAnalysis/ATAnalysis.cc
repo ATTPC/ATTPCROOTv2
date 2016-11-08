@@ -32,6 +32,9 @@ ATAnalysis::ATAnalysis()
     fTB0  =  fPar->GetTB0();
     fZk   = fPar->GetZPadPlane();
     fEntTB   = (Int_t) fPar->GetTBEntrance();
+    fThetaPad        = fPar->GetThetaPad()*TMath::Pi()/180.0;
+    fThetaRot        = fPar->GetThetaRot()*TMath::Pi()/180.0;
+    fThetaLorentz    = fPar->GetThetaLorentz()*TMath::Pi()/180.0;
 
 
 

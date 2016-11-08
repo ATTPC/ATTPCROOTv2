@@ -124,7 +124,12 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                   }// if trackCand has more than 1 track
 
 
-                  // TODO: Wrong, the EntTB is extrapolated from the vertex and tilting angle.
+                  // Calculation of the entrance time bucket and rotation of the detector frame to find the angles in the solenoid frame.
+                  Double_t Z0 = Vertex_mean.Z() + TMath::Sqrt(TMath::Power(Vertex_mean.X(),2) + TMath::Power(Vertex_mean.Y(),2) )/TMath::Tan(fTiltAng*TMath::Pi()/180.0);
+
+                  std::cout<<" Z0 : "<<Z0<<"  Vertex Time : "<<vertexTime<<std::endl;
+                  std::cout<<" Vertex_mean.Z() : "<<Vertex_mean.Z()<<std::endl;
+
                   //min->SetEntTB(GetVertexTime(Ransac));
 
 
@@ -176,5 +181,35 @@ Double_t ATTrackingAnalysis::GetVertexTime(ATRANSACN::ATRansac *Ransac)
           Double_t vertex_time = ( 100.0*(mean_Z - fZk)/(fTBTime*fDriftVelocity) ) + fEntTB;
           Ransac->SetVertexTime(vertex_time);
           return vertex_time;
+
+}
+
+std::pair<Double_t,Double_t> ATTrackingAnalysis::GetAnglesSolenoid(ATTrack* track)
+{
+          std::vector<ATHit> *hitArray = track->GetHitArray();
+          TVector3 posRot;
+          TVector3 posSol;
+          std::pair<Double_t,Double_t> angles;
+
+          TH2F* vis = new TH2F("vis","vis",1000,0,1000,1000,-250,250);
+
+          for(Int_t i=0;i<hitArray->size();i++){
+
+                  ATHit hit = hitArray->at(i);
+                  TVector3 position = hit.GetPosition();
+                  posRot.SetX(position.X()*TMath::Cos(fThetaPad) - position.Y()*TMath::Sin(fThetaPad));
+                  posRot.SetY(position.X()*TMath::Sin(fThetaPad) + position.Y()*TMath::Cos(fThetaPad));
+                  posRot.SetZ(  (-271.0+hit.GetTimeStamp())*fTBTime*fDriftVelocity/100. + fZk  );
+
+                  Double_t TiltAng = -fTiltAng*TMath::Pi()/180.0;
+
+                  posSol.SetX(posRot.X());
+                  posSol.SetY( -(fZk-posRot.Z())*TMath::Sin(TiltAng)   + posRot.Y()*TMath::Cos(TiltAng)  );
+                  posSol.SetZ( posRot.Z()*TMath::Cos(TiltAng) - posRot.Y()*TMath::Sin(TiltAng)  );
+
+                  vis->Fill(posSol.X(),posSol.Z());
+          }
+
+          vis->Draw();
 
 }

@@ -28,6 +28,24 @@ ATRANSACN::ATRansac::ATRansac()
 
   fVertexTime = -1000.0;
 
+  /*FairLogger *fLogger=FairLogger::GetLogger();
+  ATDigiPar *fPar;
+
+  FairRun *run = FairRun::Instance();
+  if (!run)
+    fLogger -> Fatal(MESSAGE_ORIGIN, "No analysis run!");
+
+  FairRuntimeDb *db = run -> GetRuntimeDb();
+  if (!db)
+    fLogger -> Fatal(MESSAGE_ORIGIN, "No runtime database!");
+
+  fPar = (ATDigiPar *) db -> getContainer("ATDigiPar");
+  if (!fPar)
+    fLogger -> Fatal(MESSAGE_ORIGIN, "ATDigiPar not found!!");*/
+
+    fTiltAng = 6.4; //fPar->GetTiltAngle();
+
+
   pcl::console::setVerbosityLevel(pcl::console::L_ALWAYS);
 
 }
@@ -325,9 +343,25 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
       //z = t;
       // (x,y,z) = (p[0],p[2],0) + (p[1],p[3],1)*t
 
-      // Equation of the Z axis
-      XYZVector Z_0(0,0,0);
+      // Equation of the Z axis in the solenoid frame
+      XYZVector Z_0(0,0,1000.0);
       XYZVector Z_1(0,0,1);
+
+      //Equation of the Y axis in the
+      XYZVector Y_0(0,0,1000.0);
+      XYZVector Y_1(0,1,0);
+
+      // Counter clockwise rotations
+      // Direction of the Z and Y axis in the detector frame (This is the rotated detector), this is used to calculater the theta and phi angles
+      RotationX rx(-fTiltAng*TMath::Pi()/180.0);
+      XYZVector Z_1_rot(rx*Z_1);
+
+      RotationX ry(-fTiltAng*TMath::Pi()/180.0);
+      XYZVector Y_1_rot(ry*Y_1);
+
+
+      //Vector of the beam determined from the experimental data
+      XYZVector BeamDir_1(-0.106359,-0.0348344,1.0);
 
       // Test each line against the others to find a vertex candidate
       for(Int_t i=0;i<tracks.size()-1;i++){
@@ -355,6 +389,7 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                       XYZVector L_f0(p_f[0], p_f[2], 0. );//p2
                                       XYZVector L_f1(p_f[1], p_f[3], 1. );//d2
 
+                                      //std::cout<<" L_f0 p_f[0] : "<<p_f[0]<<" L_f1 p_f[2] : "<<p_f[2]<<std::endl;
                                       //std::cout<<" L_f1 p_f[1] : "<<p_f[1]<<" L_f1 p_f[3] : "<<p_f[3]<<std::endl;
 
                                       XYZVector L = L_1.Cross(L_f1);
@@ -384,10 +419,25 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                           TVector3 vertex2_buff;
                                           vertex2_buff.SetXYZ(c_2.X(),c_2.Y(),c_2.Z());
 
+                                          //Angle with respect to solenoid
                                           Double_t angZi = GetAngleTracks(L_1,Z_1);
                                           Double_t angZj = GetAngleTracks(L_f1,Z_1);
+
+                                          // Angles with respect to tilted detector
+                                          Double_t angZDeti = GetAngleTracks(L_1,BeamDir_1);
+                                          Double_t angZDetj = GetAngleTracks(L_f1,BeamDir_1);
+                                          Double_t angYDeti = 0.0;//GetAngleTracks(L_1,Y_1_rot);
+                                          Double_t angYDetj = 0.0;//GetAngleTracks(L_f1,Y_1_rot);
+
+
                                           track->SetAngleZAxis(angZi);
+                                          track->SetAngleZDet(angZDeti);
+                                          track->SetAngleYDet(angYDeti);
+
                                           track_f->SetAngleZAxis(angZj);
+                                          track_f->SetAngleZDet(angZDetj);
+                                          track_f->SetAngleYDet(angYDetj);
+
                                           track->SetTrackVertex(0.5*(vertex1_buff + vertex2_buff));
                                           track_f->SetTrackVertex(0.5*(vertex1_buff + vertex2_buff));
 
@@ -414,6 +464,10 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                                 PL.LinesID.second    = j;
                                                 PL.AngleZAxis.first  = angZi;
                                                 PL.AngleZAxis.second = angZj;
+                                                PL.AngleZDet.first  = angZDeti;
+                                                PL.AngleZDet.second = angZDetj;
+                                                PL.AngleYDet.first  = angYDeti;
+                                                PL.AngleYDet.second = angYDetj;
                                                 PL.minDist = mad;
                                                 PL.meanVertex = 0.5*(fVertex_1 + fVertex_2);
                                                 PL.angle = ang2;
@@ -426,6 +480,10 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                                  PL.LinesID.second = j;
                                                  PL.AngleZAxis.first  = angZi;
                                                  PL.AngleZAxis.second = angZj;
+                                                 PL.AngleZDet.first  = angZDeti;
+                                                 PL.AngleZDet.second = angZDetj;
+                                                 PL.AngleYDet.first  = angYDeti;
+                                                 PL.AngleYDet.second = angYDetj;
                                                  PL.minDist = mad;
                                                  PL.meanVertex = 0.5*(fVertex_1 + fVertex_2);
                                                  PL.angle = ang2;
@@ -448,6 +506,10 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                               PL.LinesID.second = j;
                                               PL.AngleZAxis.first  = angZi;
                                               PL.AngleZAxis.second = angZj;
+                                              PL.AngleZDet.first  = angZDeti;
+                                              PL.AngleZDet.second = angZDetj;
+                                              PL.AngleYDet.first  = angYDeti;
+                                              PL.AngleYDet.second = angYDetj;
                                               PL.minDist = d;
                                               PL.meanVertex = 0.5*(vertex1_buff + vertex2_buff);
                                               PL.angle = ang2;
@@ -462,6 +524,10 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
                                               PL.LinesID.second = j;
                                               PL.AngleZAxis.first  = angZi;
                                               PL.AngleZAxis.second = angZj;
+                                              PL.AngleZDet.first  = angZDeti;
+                                              PL.AngleZDet.second = angZDetj;
+                                              PL.AngleYDet.first  = angYDeti;
+                                              PL.AngleYDet.second = angYDetj;
                                               PL.minDist = d;
                                               PL.meanVertex = 0.5*(vertex1_buff + vertex2_buff);
                                               PL.angle = ang2;

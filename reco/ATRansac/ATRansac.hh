@@ -32,6 +32,19 @@
 #include "Math/Functor.h"
 #include "Fit/Fitter.h"
 #include <Math/Vector3D.h>
+#include "TRotation.h"
+#include "TMatrixD.h"
+#include "TArrayD.h"
+#include "TVectorD.h"
+
+#include "Math/GenVector/Rotation3D.h"
+#include "Math/GenVector/EulerAngles.h"
+#include "Math/GenVector/AxisAngle.h"
+#include "Math/GenVector/Quaternion.h"
+#include "Math/GenVector/RotationX.h"
+#include "Math/GenVector/RotationY.h"
+#include "Math/GenVector/RotationZ.h"
+#include "Math/GenVector/RotationZYX.h"
 
 #include "ATHit.hh"
 #include "ATEvent.hh"
@@ -115,6 +128,8 @@ class ATRansac : public TObject
       {
         std::pair<Int_t,Int_t> LinesID;
         std::pair<Double_t,Double_t> AngleZAxis;
+        std::pair<Double_t,Double_t> AngleZDet;
+        std::pair<Double_t,Double_t> AngleYDet;
         Double_t minDist;
         TVector3 meanVertex;
         Double_t angle;
@@ -122,6 +137,9 @@ class ATRansac : public TObject
 
       std::vector<PairedLines> PLines;
       std::vector<PairedLines> GetPairedLinesArray();
+
+      //ATDigiPar *fPar;
+      //FairLogger *fLogger;
 
   protected:
       static double distance2(double x,double y,double z, const double *p);
@@ -144,6 +162,7 @@ class ATRansac : public TObject
       Float_t fRANSACPointThreshold; //Number of points in percentage
       std::pair<Int_t,Int_t> fVertex_tracks; // ID of the tracks that form the best vertex
       Double_t fVertexTime;
+      Double_t fTiltAng; // From parameter file
 
       struct SumDistance2
       {
@@ -188,7 +207,9 @@ class ATRansac : public TObject
           o << " Lines ID : " << pl.LinesID.first << " - " << pl.LinesID.second << std::endl;
           o << " Minimum distance between line : "<<pl.minDist<<std::endl;
           o << " Mean vertex between line - X : "<<pl.meanVertex.X()<<"  - Y : "<<pl.meanVertex.Y()<<"  - Z : "<<pl.meanVertex.Z()<<std::endl;
-          o << " Angle with Z axis - Line 1 : "<<pl.AngleZAxis.first<<"  - Line 2 : "<<pl.AngleZAxis.second<<std::endl;
+          o << " Angle with Z solenoid axis - Line 1 : "<<pl.AngleZAxis.first<<"  - Line 2 : "<<pl.AngleZAxis.second<<std::endl;
+          o << " Angle with Z detector axis - Line 1 : "<<pl.AngleZDet.first<<"  - Line 2 : "<<pl.AngleZDet.second<<std::endl;
+          o << " Angle with Y detector axis - Line 1 : "<<pl.AngleYDet.first<<"  - Line 2 : "<<pl.AngleYDet.second<<std::endl;
           o << " Angle between lines : "<<pl.angle<<cNORMAL<<std::endl;
           return o;
       }
