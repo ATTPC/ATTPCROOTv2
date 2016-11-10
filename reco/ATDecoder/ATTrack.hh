@@ -16,6 +16,7 @@ class ATTrack : public TObject {
 
   public:
     ATTrack();
+    //ATTrack(const ATTrack &obj);
     ~ATTrack();
 
     void AddHit(ATHit* hit);
@@ -27,6 +28,9 @@ class ATTrack : public TObject {
     void SetAngleZDet(Double_t angle);
     void SetAngleYDet(Double_t angle);
     void SetTrackVertex(TVector3 vertex);
+    void SetRange(Double_t range);
+    void SetGeoTheta(Double_t angle);
+    void SetGeoPhi(Double_t angle);
 
     std::vector<ATHit> *GetHitArray();
     std::vector<Double_t> GetFitPar();
@@ -52,6 +56,9 @@ class ATTrack : public TObject {
     Double_t fAngleYDet;//  "         "           Y   "             "
     Double_t fRange; //Range of the particle
     TVector3 fTrackVertex; //Mean Vertex of the track
+    Double_t fGeoThetaAngle; // Geometrical scattering angle with respect to the detector FitParameters
+    Double_t fGeoPhiAngle; //  " azimuthal "
+
 
 
     ClassDef(ATTrack, 1);

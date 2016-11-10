@@ -42,6 +42,10 @@ class ATTrackingAnalysis : public ATAnalysis{
 
           TGraph *fTrackFit;//!
           TF1 *fFitResult;//!
+          TGraph *fTrackFitXY;//!
+          TF1 *fFitResultXY;//!
+
+
 
 
           // NB: This is just an example

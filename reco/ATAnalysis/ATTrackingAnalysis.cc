@@ -14,6 +14,8 @@ ATTrackingAnalysis::ATTrackingAnalysis()
         fEntTB_calc = -1000.0;
         fTrackFit = new TGraph();
         fFitResult = new TF1();
+        fTrackFitXY = new TGraph();
+        fFitResultXY = new TF1();
 
 
 }
@@ -22,6 +24,8 @@ ATTrackingAnalysis::~ATTrackingAnalysis()
 {
   delete fTrackFit;
   delete fFitResult;
+  delete fTrackFitXY;
+  delete fFitResultXY;
 
 }
 
@@ -156,9 +160,16 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                   }
 
 
+
+
+                  //After minimization we copy the tracks
+                  for(Int_t t=0;t<mininizationTracks.size();t++) trackingEventAna->SetTrack(mininizationTracks.at(t));
+
+
                   delete min;
 
                   //For debugging: Visualize the rotation of the event in the X-Z and Y-Z plane
+                  /*  TH2F* vis_XY = new TH2F("vis_XY","vis_XY",1000,-250,250,1000,-250,250);
                     TH2F* vis_XZ = new TH2F("vis_XZ","vis_XZ",1000,0,1000,1000,-250,250);
                     TH2F* vis_YZ = new TH2F("vis_YZ","vis_YZ",1000,0,1000,1000,-250,250);
                     TH2F* vis_RAD = new TH2F("vis_RAD","vis_RAD",1000,0,1000,1000,-250,250);
@@ -170,6 +181,8 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                     vis_RAD->SetMarkerColor(kGreen);
                     vis_RAD->SetMarkerStyle(20);
                     vis_RAD->SetMarkerSize(1.0);
+                    vis_XY->SetMarkerStyle(20);
+                    vis_XY->SetMarkerSize(1.0);
 
 
 
@@ -182,19 +195,21 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                                 ATHit hitT =  hit_track.at(j);
                                 TVector3 posSol = hitT.GetPosition();
                                 Double_t rad = TMath::Sqrt( TMath::Power(posSol.X(),2) + TMath::Power(posSol.Y(),2) );
-                                vis_XZ->Fill(posSol.Z(),posSol.X());
-                                vis_YZ->Fill(posSol.Z(),posSol.Y());
-                                vis_RAD->Fill(posSol.Z(),rad);
+                                vis_XY->Fill(posSol.X(),posSol.Y());
+                                //vis_XZ->Fill(posSol.Z(),posSol.X());
+                                //vis_YZ->Fill(posSol.Z(),posSol.Y());
+                                //vis_RAD->Fill(posSol.Z(),rad);
 
                               }
 
                      }
                   }
 
-                    vis_XZ->Draw();
-                    vis_YZ->Draw("SAME");
-                    vis_RAD->Draw("SAME");
-
+                  //  vis_XZ->Draw();
+                  //  vis_YZ->Draw("SAME");
+                  //  vis_RAD->Draw("SAME");
+                  //vis_XY->Draw();
+                  */
 
 
 
@@ -259,14 +274,28 @@ std::pair<Double_t,Double_t> ATTrackingAnalysis::GetAnglesSolenoid(ATTrack* trac
           TVector3 posSol;
           std::pair<Double_t,Double_t> angles;
           fTrackFit->Set(0);
+          fTrackFitXY->Set(0);
+
+          Double_t x_mean=0.0;
+          Double_t y_mean=0.0;
+          Double_t z_mean=0.0;
+
 
           Double_t TiltAng  = -fTiltAng*TMath::Pi()/180.0;
           Double_t thetaPad = -fThetaPad;
 
-          for(Int_t i=0;i<hitArray->size();i++){
+          std::vector<TVector3> RotVectorArray;
+
+          for(Int_t i=0;i<hitArray->size();i++)
+          {
+
 
                   ATHit hit = hitArray->at(i);
                   TVector3 position = hit.GetPosition();
+
+
+
+
                   posRot.SetX(position.X()*TMath::Cos(thetaPad) - position.Y()*TMath::Sin(thetaPad));
                   posRot.SetY(position.X()*TMath::Sin(thetaPad) + position.Y()*TMath::Cos(thetaPad));
                   posRot.SetZ(  (-fEntTB_calc+hit.GetTimeStamp())*fTBTime*fDriftVelocity/100. + fZk  );
@@ -275,25 +304,91 @@ std::pair<Double_t,Double_t> ATTrackingAnalysis::GetAnglesSolenoid(ATTrack* trac
                   posSol.SetY( -(fZk-posRot.Z())*TMath::Sin(TiltAng)   + posRot.Y()*TMath::Cos(TiltAng)  );
                   posSol.SetZ( posRot.Z()*TMath::Cos(TiltAng) - posRot.Y()*TMath::Sin(TiltAng)  );
 
+                  RotVectorArray.push_back(posSol);
+                  x_mean+=posSol.X();
+                  y_mean+=posSol.Y();
+                  z_mean+=posSol.Z();
+
                   Double_t rad = TMath::Sqrt( TMath::Power(posSol.X(),2) + TMath::Power(posSol.Y(),2) );
 
                   fTrackFit->SetPoint(fTrackFit->GetN(),posSol.Z(),rad);
+                  fTrackFitXY->SetPoint(fTrackFitXY->GetN(),posSol.X(),posSol.Y());
 
           }
 
+          x_mean/=hitArray->size();
+          y_mean/=hitArray->size();
+          z_mean/=hitArray->size();
+
+          /*std::reverse(RotVectorArray.begin(), RotVectorArray.end());
+
+          TVector3 originVec = RotVectorArray.front();
+          Double_t phiAng=0.0;
+          Double_t polarAng=0.0;
+          Int_t cnt=0;
+
+          Int_t ini_num_points = (Int_t) 0.1*RotVectorArray.size();
+
+          for(Int_t j=ini_num_points;j<RotVectorArray.size();j++)
+          {
+
+              TVector3 vec = RotVectorArray.at(j);
+              TVector3 dir_vec = (originVec - vec);
+              phiAng+= dir_vec.Phi();
+              polarAng+=dir_vec.Theta();
+              cnt++;
+              //std::cout<<" X ori : "<<originVec.X()<<" Y ori : "<<originVec.Y()<<" Z ori : "<<originVec.Z()<<std::endl;
+              //std::cout<<" X  : "<<vec.X()<<" Y  : "<<vec.Y()<<" Z  : "<<vec.Z()<<std::endl;
+              //std::cout<<" X dir  : "<<dir_vec.X()<<" Y dir : "<<dir_vec.Y()<<" Z dir : "<<dir_vec.Z()<<std::endl;
+              //std::cout<<" Phi Angle : "<<phiAng<<std::endl;
+
+
+          }
+
+          phiAng/=cnt;
+          polarAng/=cnt;
+          */
+
           fTrackFit->Fit("pol1","FQ","",0,1000);
           fFitResult = fTrackFit->GetFunction("pol1");
+
+          fTrackFitXY->Fit("pol1","FQ","",-1000,1000);
+          fFitResultXY = fTrackFitXY->GetFunction("pol1");
 
           Double_t afit = 0.0;
           Double_t par0 = fFitResult->GetParameter(0);
           Double_t par1 = fFitResult->GetParameter(1);
 
+          Double_t afitXY = 0.0;
+          Double_t par0XY = fFitResultXY->GetParameter(0);
+          Double_t par1XY = fFitResultXY->GetParameter(1);
+
           if(par1>=0) afit = TMath::Pi()-TMath::ATan2(1,TMath::Abs(par1));
           else if(par1<0)  afit = TMath::ATan2(1,TMath::Abs(par1));
 
-          std::cout<<" Scattering angle : "<<afit<<std::endl;
+          if(x_mean>0 && y_mean>0){
+            afitXY = TMath::Abs(TMath::ATan(par1XY));
+          }else if(x_mean<0 && y_mean>0){
+            afitXY = TMath::Pi()-TMath::Abs(TMath::ATan(par1XY));
+          }else if(x_mean<0 && y_mean<0){
+            afitXY = TMath::Pi()+TMath::Abs(TMath::ATan(par1XY));
+          }else if(x_mean>0 && y_mean<0){
+            afitXY = 2.0*TMath::Pi()-TMath::Abs(TMath::ATan(par1XY));
+          }else afitXY=0.0;
 
-          fTrackFit->Draw("A*");
+          //std::cout<<" X mean : "<<x_mean<<" Y mean : "<<y_mean<<std::endl;
+          //std::cout<<" Scattering angle : "<<afit*180.0/TMath::Pi()<<std::endl;
+          //std::cout<<" Azimuthal angle : "<<afitXY*180.0/TMath::Pi()<<std::endl;
+          //std::cout<<" Azimuthal  angle : "<<phiAng*180.0/TMath::Pi()<<std::endl;
+          //std::cout<<" Polar angle : "<<polarAng*180.0/TMath::Pi()<<std::endl;
+
+          angles.first = afit;
+          angles.second = afitXY;
+          track->SetGeoTheta(afit);
+          track->SetGeoPhi(afitXY);
+
+          //fTrackFit->Draw("A*");
+          //fTrackFitXY->Draw("A*");
 
           return angles;
 

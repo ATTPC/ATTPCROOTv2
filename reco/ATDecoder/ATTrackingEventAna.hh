@@ -14,7 +14,15 @@ class ATTrackingEventAna : public TNamed {
     ATTrackingEventAna();
     ~ATTrackingEventAna();
 
+    void SetTrackArray(std::vector<ATTrack> *trackArray);
+    void SetTrack(ATTrack *track);
+    void SetGeoAngles();
+
+
+
   private:
+
+   std::vector<ATTrack> fTrackArray;
 
    ClassDef(ATTrackingEventAna, 1);
 

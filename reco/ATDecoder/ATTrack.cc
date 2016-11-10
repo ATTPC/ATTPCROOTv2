@@ -17,6 +17,12 @@ ATTrack::ATTrack()
   fRange = 0.0;
 }
 
+/*ATTrack::ATTrack(const ATTrack &obj)
+{
+
+
+}*/
+
 ATTrack::~ATTrack()
 {
 }
@@ -30,6 +36,9 @@ void ATTrack::SetAngleZAxis(Double_t angle)                         { fAngleZAxi
 void ATTrack::SetAngleZDet(Double_t angle)                          { fAngleZDet = angle;}
 void ATTrack::SetAngleYDet(Double_t angle)                          { fAngleYDet = angle;}
 void ATTrack::SetTrackVertex(TVector3 vertex)                       { fTrackVertex = vertex;}
+void ATTrack::SetRange(Double_t range)                              { fRange = range;}
+void ATTrack::SetGeoTheta(Double_t angle)                           { fGeoThetaAngle = angle;}
+void ATTrack::SetGeoPhi(Double_t angle)                             { fGeoPhiAngle = angle;}
 
 std::vector<ATHit> *ATTrack::GetHitArray()                          { return &fHitArray;}
 std::vector<Double_t> ATTrack::GetFitPar()                          { return fParFit;}
