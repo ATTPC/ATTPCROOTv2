@@ -104,6 +104,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
                                 if(trackAngle>(fTiltAng+0.5) ){
                                     std::cout<<" Accepted Line : "<<track->GetTrackID()<<" with angle : "<<track->GetAngleZAxis()<<std::endl;
+                                    track->SetGeoRange(track->GetLinearRange());
                                     mininizationTracks.push_back(track);
                                 }
 
@@ -127,6 +128,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                                    std::cout<<" Distance from vertex : "<<dist<<std::endl;
 
 
+                                   track->SetGeoRange(track->GetLinearRange());
 
 
                               }

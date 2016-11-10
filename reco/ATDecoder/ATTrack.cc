@@ -39,6 +39,7 @@ void ATTrack::SetTrackVertex(TVector3 vertex)                       { fTrackVert
 void ATTrack::SetRange(Double_t range)                              { fRange = range;}
 void ATTrack::SetGeoTheta(Double_t angle)                           { fGeoThetaAngle = angle;}
 void ATTrack::SetGeoPhi(Double_t angle)                             { fGeoPhiAngle = angle;}
+void ATTrack::SetGeoRange(Double_t range)                           { fRange = range;}
 
 std::vector<ATHit> *ATTrack::GetHitArray()                          { return &fHitArray;}
 std::vector<Double_t> ATTrack::GetFitPar()                          { return fParFit;}

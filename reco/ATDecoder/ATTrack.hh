@@ -31,6 +31,7 @@ class ATTrack : public TObject {
     void SetRange(Double_t range);
     void SetGeoTheta(Double_t angle);
     void SetGeoPhi(Double_t angle);
+    void SetGeoRange(Double_t range);
 
     std::vector<ATHit> *GetHitArray();
     std::vector<Double_t> GetFitPar();
