@@ -5,6 +5,9 @@
 #pragma link off all functions;
 
 #pragma link C++ class ATAvalancheTask+;
+#pragma link C++ class ATClusterizeTask+;
+#pragma link C++ class ATPulseTask+;
+#pragma link C++ class ATSimulatedPoint+;
 
 
 #endif

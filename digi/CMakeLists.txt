@@ -14,6 +14,7 @@ ${CMAKE_SOURCE_DIR}/par
 ${CMAKE_SOURCE_DIR}/reco
 ${CMAKE_SOURCE_DIR}/digi
 ${CMAKE_SOURCE_DIR}/AtGenerators
+${CMAKE_SOURCE_DIR}/include
 )
 
 include_directories(${INCLUDE_DIRECTORIES})
@@ -22,13 +23,16 @@ set(LINK_DIRECTORIES
 ${ROOT_LIBRARY_DIR}
 ${FAIRROOT_LIBRARY_DIR}
 ${SIMPATH}/lib
-) 
+)
 
 link_directories(${LINK_DIRECTORIES})
 
 set(SRCS
 # Add all the source files below this line. Those must have cc for their extension.
 ATAvalancheTask.cc
+ATClusterizeTask.cc
+ATPulseTask.cc
+ATSimulatedPoint.cc
 
 )
 
