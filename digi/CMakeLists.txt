@@ -14,7 +14,8 @@ ${CMAKE_SOURCE_DIR}/par
 ${CMAKE_SOURCE_DIR}/reco
 ${CMAKE_SOURCE_DIR}/digi
 ${CMAKE_SOURCE_DIR}/AtGenerators
-${CMAKE_SOURCE_DIR}/include
+${CMAKE_SOURCE_DIR}/AtMap
+${CMAKE_SOURCE_DIR}/reco/ATDecoder
 )
 
 include_directories(${INCLUDE_DIRECTORIES})

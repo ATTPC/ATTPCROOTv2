@@ -16,7 +16,6 @@ class ATPSASimple2 : public ATPSA
 
   private:
     //TSpectrum *fPeakFinder;  /// TSpectrum object
-    Int_t fNumTbs = 512;
 
 
   ClassDef(ATPSASimple2, 1)
