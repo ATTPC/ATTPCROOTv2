@@ -8,9 +8,15 @@
 
 #include <numeric>
 #include <algorithm>
+#include <iostream>
 
 //ATTPCROOT
 #include "ATHit.hh"
+
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
 
 class ATTrack : public TObject {
 
@@ -32,18 +38,20 @@ class ATTrack : public TObject {
     void SetGeoTheta(Double_t angle);
     void SetGeoPhi(Double_t angle);
     void SetGeoRange(Double_t range);
+    void SetQuadrant(Int_t quad);
 
     std::vector<ATHit> *GetHitArray();
     std::vector<Double_t> GetFitPar();
     Double_t GetMinimum();
-    Int_t GetNFree();
-    Int_t GetTrackID();
+    Int_t    GetNFree();
+    Int_t    GetTrackID();
     Double_t GetAngleZAxis();
     Double_t GetAngleZDet();
     Double_t GetAngleYDet();
     Double_t GetMeanTime();
     Double_t GetLinearRange();
     TVector3 GetTrackVertex();
+    Int_t    GetQuadrant();
 
 
   protected:
@@ -59,8 +67,18 @@ class ATTrack : public TObject {
     TVector3 fTrackVertex; //Mean Vertex of the track
     Double_t fGeoThetaAngle; // Geometrical scattering angle with respect to the detector FitParameters
     Double_t fGeoPhiAngle; //  " azimuthal "
+    Int_t fQuadrant; //Pad plane quadrant
 
-
+    friend inline std::ostream& operator <<(std::ostream &o, const ATTrack &track)
+    {
+      std::cout<<cYELLOW<<" ====================================================== "<<std::endl;
+      std::cout<<"  Track "<<track.fTrackID<<" Info : "<<std::endl;
+      std::cout<<" Quadrant : "<<track.fQuadrant<<std::endl;
+      std::cout<<" Geomterical Scattering Angle : "<<track.fGeoThetaAngle*(180.0/TMath::Pi())<<" deg "
+      <<" - Geomterical Anzimuthal Angle : "<<track.fGeoPhiAngle*(180.0/TMath::Pi())<<" deg "<<std::endl;
+      std::cout<<" Geometrical Range : "<<track.fRange<<" mm "<<cNORMAL<<std::endl;
+      return o;
+    }
 
     ClassDef(ATTrack, 1);
 

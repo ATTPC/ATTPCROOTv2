@@ -45,6 +45,8 @@ class ATTrackingAnalysis : public ATAnalysis{
           TGraph *fTrackFitXY;//!
           TF1 *fFitResultXY;//!
 
+          Int_t fMultiplicity;//Number of tracks to analyze
+
 
 
 

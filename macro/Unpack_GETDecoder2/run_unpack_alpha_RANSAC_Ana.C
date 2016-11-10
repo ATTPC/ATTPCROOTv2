@@ -132,7 +132,7 @@ TString mappath="/data/ar46/run_0085/")
 
     // Setting Monte Carlo Energy Loss parameters
     std::vector<Double_t> par[10];  //de/dx - E
-    par[0]={8.56,0.83,2.5,1.6,1.5,0.15,55.0,0.025};
+    par[0]={8.56,0.83,2.5,1.6,1.5,0.15,-1.0,-0.2,-0.17,-8.0,-0.4};
     std::vector<Double_t> parRtoE[10]; // E - R
     parRtoE[0] ={0.63,-1.66,1.0,0.5,-19.0,-10.0,+40.0};
     std::vector<std::pair<Int_t,Int_t>> particle;
@@ -149,7 +149,7 @@ TString mappath="/data/ar46/run_0085/")
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,100);
+  run->Run(0,200);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

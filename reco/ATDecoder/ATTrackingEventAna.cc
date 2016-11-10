@@ -17,3 +17,5 @@ ATTrackingEventAna::~ATTrackingEventAna()
 
 void ATTrackingEventAna::SetTrackArray(std::vector<ATTrack> *trackArray)        { fTrackArray = *trackArray; }
 void ATTrackingEventAna::SetTrack(ATTrack *track)                               { fTrackArray.push_back(*track);}
+
+std::vector<ATTrack> ATTrackingEventAna::GetTrackArray()                        { return fTrackArray;}

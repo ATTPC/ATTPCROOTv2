@@ -200,6 +200,9 @@ ATEventDrawTask::Init()
   fRansacArray = (TClonesArray*) ioMan->GetObject("ATRansac");
   if(fRansacArray) LOG(INFO)<<cGREEN<<"RANSAC Array Found."<<cNORMAL<<FairLogger::endl;
 
+  fTrackingEventAnaArray = (TClonesArray*) ioMan->GetObject("ATTrackingEventAna");
+  if(fTrackingEventAnaArray) LOG(INFO)<<cGREEN<<"Tracking Event Analysis Array Found."<<cNORMAL<<FairLogger::endl;
+
  // gROOT->GetListOfSpecials()->Add(fRawEventArray);
   //fRawEventArray->SetName("ATRawEvent");
 
@@ -422,6 +425,22 @@ ATEventDrawTask::DrawHitPoints()
                }
               }
 
+
+              if(fTrackingEventAnaArray){
+
+                  fTrackingEventAna = (ATTrackingEventAna*) fTrackingEventAnaArray->At(0);
+                  std::vector<ATTrack> anaTracks = fTrackingEventAna->GetTrackArray();
+                  std::cout<<cYELLOW<<"  ====   Tracking analysis ==== "<<std::endl;
+                  std::cout<<" Number of analyzed tracks : "<<anaTracks.size()<<std::endl;
+
+                      for(Int_t i=0;i<anaTracks.size();i++)
+                      {
+                          ATTrack track = anaTracks.at(i);
+                          std::cout<<track<<std::endl; 
+
+                      }
+
+              }
 
           }
 

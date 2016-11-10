@@ -16,6 +16,7 @@ ATTrackingAnalysis::ATTrackingAnalysis()
         fFitResult = new TF1();
         fTrackFitXY = new TGraph();
         fFitResultXY = new TF1();
+        fMultiplicity = 2;
 
 
 }
@@ -73,7 +74,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                 Double_t vertexTime = GetVertexTime(Ransac);
                 TVector3 Vertex_mean = Ransac->GetVertexMean();
 
-                std::cout<<cYELLOW<<" =========== New Analysis event ============"<<cNORMAL<<std::endl;
+                //std::cout<<cYELLOW<<" =========== New Analysis event ============"<<cNORMAL<<std::endl;
 
                 if(trackCand.size()>1){ // At least two tracks to form a vertex
 
@@ -102,8 +103,8 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                                //std::cout<<cYELLOW<<" trackTime : "<<trackTime<<" Vertex Time : "<<vertexTime<<std::endl;
                                //std::cout<<" Track Angle : "<<trackAngle<<"  Tilting Angle+0.5 "<<(fTiltAng+0.5)<<cNORMAL<<std::endl;
 
-                                if(trackAngle>(fTiltAng+0.5) ){
-                                    std::cout<<" Accepted Line : "<<track->GetTrackID()<<" with angle : "<<track->GetAngleZAxis()<<std::endl;
+                                if(trackAngle>(fTiltAng+1.0) ){
+                                    //std::cout<<" Accepted Line : "<<track->GetTrackID()<<" with angle : "<<track->GetAngleZAxis()<<std::endl;
                                     track->SetGeoRange(track->GetLinearRange());
                                     mininizationTracks.push_back(track);
                                 }
@@ -120,16 +121,19 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                               if(i!=pairTrackIndex.first && i!=pairTrackIndex.second)
                               {
                                   ATTrack* track = &trackCand.at(i);
+                                  Double_t trackAngle = 180.0*track->GetAngleZAxis()/TMath::Pi();
                                   TVector3 trackVertex = track->GetTrackVertex();
                                   Double_t dist = TMath::Sqrt( TMath::Power((trackVertex.X()-Vertex_mean.X()),2) + TMath::Power((trackVertex.Y()-Vertex_mean.Y()),2)
                                    + TMath::Power((trackVertex.Z()-Vertex_mean.Z()),2));
 
-                                   std::cout<<" Evaluating Line : "<<track->GetTrackID()<<" with angle : "<<track->GetAngleZAxis()<<std::endl;
-                                   std::cout<<" Distance from vertex : "<<dist<<std::endl;
+                                   //std::cout<<" Evaluating Line : "<<track->GetTrackID()<<" with angle : "<<track->GetAngleZAxis()<<std::endl;
+                                   //std::cout<<" Distance from vertex : "<<dist<<std::endl;
 
-
-                                   track->SetGeoRange(track->GetLinearRange());
-
+                                  if(trackAngle>(fTiltAng+1.0) && dist<6.0){
+                                      //3std::cout<<" Accepted Line : "<<track->GetTrackID()<<" with angle : "<<track->GetAngleZAxis()<<std::endl;
+                                      mininizationTracks.push_back(track);
+                                      track->SetGeoRange(track->GetLinearRange());
+                                  }
 
                               }
 
@@ -145,27 +149,29 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                   Double_t Z0 = Vertex_mean.Z() + TMath::Sqrt(TMath::Power(Vertex_mean.X(),2) + TMath::Power(Vertex_mean.Y(),2) )/TMath::Tan(fTiltAng*TMath::Pi()/180.0);
                   fEntTB_calc = GetTime(Z0);
 
-                  std::cout<<" Z0 : "<<Z0<<"  Vertex Time : "<<vertexTime<<std::endl;
-                  std::cout<<" TB0 : "<<fEntTB_calc<<std::endl;
-                  std::cout<<" Vertex_mean.Z() : "<<Vertex_mean.Z()<<std::endl;
+                  //std::cout<<" Z0 : "<<Z0<<"  Vertex Time : "<<vertexTime<<std::endl;
+                  //std::cout<<" TB0 : "<<fEntTB_calc<<std::endl;
+                  //std::cout<<" Vertex_mean.Z() : "<<Vertex_mean.Z()<<std::endl;
 
                   fVertex = Z0 - Vertex_mean.Z(); //Vertex for the excitation function.
                   min->SetEntTB(fEntTB_calc);
 
-                  if(mininizationTracks.size()>0)
+                  if(mininizationTracks.size()==fMultiplicity)
                   {
                         for(Int_t i=0;i<mininizationTracks.size();i++){
                           std::pair<Double_t,Double_t> angles = GetAnglesSolenoid(mininizationTracks.at(i));
 
                         }
 
+                        //After minimization we copy the tracks
+                        for(Int_t t=0;t<mininizationTracks.size();t++) trackingEventAna->SetTrack(mininizationTracks.at(t));
+
                   }
 
 
 
 
-                  //After minimization we copy the tracks
-                  for(Int_t t=0;t<mininizationTracks.size();t++) trackingEventAna->SetTrack(mininizationTracks.at(t));
+
 
 
                   delete min;
@@ -370,12 +376,16 @@ std::pair<Double_t,Double_t> ATTrackingAnalysis::GetAnglesSolenoid(ATTrack* trac
 
           if(x_mean>0 && y_mean>0){
             afitXY = TMath::Abs(TMath::ATan(par1XY));
+            track->SetQuadrant(0);
           }else if(x_mean<0 && y_mean>0){
             afitXY = TMath::Pi()-TMath::Abs(TMath::ATan(par1XY));
+            track->SetQuadrant(1);
           }else if(x_mean<0 && y_mean<0){
             afitXY = TMath::Pi()+TMath::Abs(TMath::ATan(par1XY));
+            track->SetQuadrant(2);
           }else if(x_mean>0 && y_mean<0){
             afitXY = 2.0*TMath::Pi()-TMath::Abs(TMath::ATan(par1XY));
+            track->SetQuadrant(3);
           }else afitXY=0.0;
 
           //std::cout<<" X mean : "<<x_mean<<" Y mean : "<<y_mean<<std::endl;

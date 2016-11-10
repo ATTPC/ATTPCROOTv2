@@ -16,8 +16,8 @@ class ATTrackingEventAna : public TNamed {
 
     void SetTrackArray(std::vector<ATTrack> *trackArray);
     void SetTrack(ATTrack *track);
-    void SetGeoAngles();
 
+     std::vector<ATTrack> GetTrackArray();
 
 
   private:

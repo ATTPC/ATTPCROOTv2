@@ -13,8 +13,9 @@ ATTrack::ATTrack()
   fNFree       = -1;
   fAngleZAxis  = -20;
   fAngleZDet   = -20;
-  fAngleYDet  = -20;
-  fRange = 0.0;
+  fAngleYDet   = -20;
+  fRange       = 0.0;
+  fQuadrant    = -1;
 }
 
 /*ATTrack::ATTrack(const ATTrack &obj)
@@ -40,6 +41,7 @@ void ATTrack::SetRange(Double_t range)                              { fRange = r
 void ATTrack::SetGeoTheta(Double_t angle)                           { fGeoThetaAngle = angle;}
 void ATTrack::SetGeoPhi(Double_t angle)                             { fGeoPhiAngle = angle;}
 void ATTrack::SetGeoRange(Double_t range)                           { fRange = range;}
+void ATTrack::SetQuadrant(Int_t quad)                               { fQuadrant = quad;}
 
 std::vector<ATHit> *ATTrack::GetHitArray()                          { return &fHitArray;}
 std::vector<Double_t> ATTrack::GetFitPar()                          { return fParFit;}
@@ -50,6 +52,7 @@ Double_t ATTrack::GetAngleZAxis()                                   { return fAn
 Double_t ATTrack::GetAngleZDet()                                    { return fAngleZDet;}
 Double_t ATTrack::GetAngleYDet()                                    { return fAngleYDet;}
 TVector3 ATTrack::GetTrackVertex()                                  { return fTrackVertex;}
+Int_t ATTrack::GetQuadrant()                                        { return fQuadrant;}
 
 
 Double_t ATTrack::GetMeanTime()

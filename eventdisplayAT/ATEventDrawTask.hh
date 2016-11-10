@@ -31,6 +31,7 @@
 #include "ATRawEvent.hh"
 #include "ATEvent.hh"
 #include "ATProtoEvent.hh"
+#include "ATTrackingEventAna.hh"
 #include "ATHoughSpaceLine.hh"
 #include "ATHoughSpaceCircle.hh"
 #include "ATHoughSpace.hh"
@@ -133,10 +134,12 @@ class ATEventDrawTask : public FairTask
     TClonesArray* fHoughSpaceArray;
     TClonesArray* fProtoEventArray;
     TClonesArray* fRansacArray;
+    TClonesArray* fTrackingEventAnaArray;
 
-    ATHoughSpaceLine* fHoughSpaceLine_buff;
-    ATHoughSpaceCircle* fHoughSpaceCircle_buff;
+    ATHoughSpaceLine*    fHoughSpaceLine_buff;
+    ATHoughSpaceCircle*  fHoughSpaceCircle_buff;
     ATRANSACN::ATRansac* fRansac;
+    ATTrackingEventAna*  fTrackingEventAna;
 
     ATEventManager* fEventManager;
     ATRawEvent* fRawevent;
