@@ -66,7 +66,7 @@ VMERawEvent *VMECore::GetRawVMEEvent(Int_t eventID){
         	delete fVMERawEventPtr;
 
            fVMERawEventPtr = new VMERawEvent();
-	   fVMERawEventPtr -> SetEventID(eventID);
+	         fVMERawEventPtr -> SetEventID(eventID);
 
           std::cout<<" Event Number : "<<eventID<<std::endl;
           Int_t evttype  = fVMEDecoderPtr->GetNextEvent();

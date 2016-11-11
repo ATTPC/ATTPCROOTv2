@@ -37,6 +37,11 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
   Range_vs_AngleH->SetMarkerStyle(20);
   Range_vs_AngleH->SetMarkerSize(0.7);
 
+  TH2D* VertexH_vs_AngleH = new TH2D("VertexH_vs_AngleH","VertexH_vs_AngleH",200,0,4.0,500,0,1000);
+  VertexH_vs_AngleH->SetMarkerColor(2);
+  VertexH_vs_AngleH->SetMarkerStyle(20);
+  VertexH_vs_AngleH->SetMarkerSize(0.7);
+
   FairRunAna* run = new FairRunAna();
 
   Int_t value;
@@ -86,6 +91,8 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
                   AngleSum->Fill(track_s.GetGeoTheta()+track_r.GetGeoTheta());
                   Range_vs_AngleH->Fill(track_r.GetGeoTheta(),track_r.GetLinearRange());
                   Range_vs_AngleH->Fill(track_s.GetGeoTheta(),track_s.GetLinearRange());
+                  VertexH_vs_AngleH->Fill(track_r.GetGeoTheta(),fTrackingEvent->GetVertex());
+                  VertexH_vs_AngleH->Fill(track_s.GetGeoTheta(),fTrackingEvent->GetVertex());
                 }else if( (track_r.GetQuadrant()==1 && track_s.GetQuadrant()==3) || (track_r.GetQuadrant()==3 && track_s.GetQuadrant()==1)){
                   VertexH->Fill(fTrackingEvent->GetVertex());
                   AngleH->Fill(track_r.GetGeoTheta());
@@ -93,6 +100,8 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
                   AngleSum->Fill(track_s.GetGeoTheta()+track_r.GetGeoTheta());
                   Range_vs_AngleH->Fill(track_r.GetGeoTheta(),track_r.GetLinearRange());
                   Range_vs_AngleH->Fill(track_s.GetGeoTheta(),track_s.GetLinearRange());
+                  VertexH_vs_AngleH->Fill(track_r.GetGeoTheta(),fTrackingEvent->GetVertex());
+                  VertexH_vs_AngleH->Fill(track_s.GetGeoTheta(),fTrackingEvent->GetVertex());
                 }
 
 
@@ -121,6 +130,9 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
   Range_vs_AngleH->Draw();
   c1->cd(4);
   AngleSum->Draw();
+
+  TCanvas *c2 = new TCanvas("c2","c2",200,10,700,700);
+  VertexH_vs_AngleH->Draw();
 
 
 }

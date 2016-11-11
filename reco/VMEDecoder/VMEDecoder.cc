@@ -171,17 +171,17 @@ Int_t VMEDecoder::GetNextEvent(){
            fData.read(reinterpret_cast<Char_t *>(&dataBuff), 2);
 
            	if((dataBuff&0XFFFF)==0Xe238) {
-			if(fDebug) std::cout<<" E238 Header found! "<<std::endl;
+		                   	if(fDebug) std::cout<<" E238 Header found! "<<std::endl;
                         fData.seekg((ULong64_t)fData.tellg()-4);
-			fData.read(reinterpret_cast<Char_t *>(&eventHeader), 2);
+			                  fData.read(reinterpret_cast<Char_t *>(&eventHeader), 2);
                         if(fDebug) std::cout<<" Event Header  : "<<std::hex<<eventHeader<<std::endl;
 
   				if((eventHeader&0XFFFF)==0X2025){
 						if(fIsScaler ==kTRUE) std::cout<<" = VMEDecoder : Warning Two Scaler Events following each other! "<<std::endl;
 
 						if(fDebug) {
-						std::cout<<" - Scaler Event Found ! "<<std::endl;
-						std::cout<<"     - Stack ID                 : "<<std::dec<<((eventHeader&0xE000)>>13)<<std::endl;
+						      std::cout<<" - Scaler Event Found ! "<<std::endl;
+						      std::cout<<"     - Stack ID                 : "<<std::dec<<((eventHeader&0xE000)>>13)<<std::endl;
          					std::cout<<"     - Continuation Bit         : "<<std::dec<<((eventHeader&0x1000)>>12)<<std::endl;
          					std::cout<<"     - Event Length             : "<<std::dec<<((eventHeader&0xFFF))<<std::endl;
 						}
