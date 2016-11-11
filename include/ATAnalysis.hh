@@ -9,6 +9,8 @@
 #include "ATHoughSpaceLine.hh"
 #include "ATHoughSpaceCircle.hh"
 #include "ATHit.hh"
+#include "AtTpcMap.h"
+#include "TH2Poly.h"
 
 #include "TF1.h"
 #include "TGraph.h"
@@ -25,13 +27,21 @@
 // ROOT classes
 #include "TClonesArray.h"
 
+//Boost
+#ifndef __CINT__ // Boost
+#include <boost/multi_array.hpp>
+#endif //__CINT__
+
 class ATAnalysis : public TObject
 {
      public:
         ATAnalysis();
         virtual ~ATAnalysis();
 
-       virtual void Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeventAna,ATHoughSpaceLine* houghspace,TF1 *(&HoughFit)[4],TGraph *(&HitPatternFilter)[4],TF1 *(&FitResult)[4])=0;
+        typedef boost::multi_array<double,3> multiarray;
+        typedef multiarray::index index;
+
+       //virtual void Analyze(ATProtoEvent* protoevent,ATProtoEventAna* protoeventAna,ATHoughSpaceLine* houghspace,TF1 *(&HoughFit)[4],TGraph *(&HitPatternFilter)[4],TF1 *(&FitResult)[4])=0;
      protected:
        FairLogger *fLogger;      ///< logger pointer
        ATDigiPar *fPar;          ///< parameter container
@@ -49,6 +59,9 @@ class ATAnalysis : public TObject
        Double_t fTiltAng;
        TVector3 fLorentzVector;
        Int_t fTB0;
+       Double_t fThetaPad;
+       Double_t fThetaLorentz;
+       Double_t fThetaRot;
 
        ClassDef(ATAnalysis, 1);
 

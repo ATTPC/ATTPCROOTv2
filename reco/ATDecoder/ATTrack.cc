@@ -53,6 +53,9 @@ Double_t ATTrack::GetAngleZDet()                                    { return fAn
 Double_t ATTrack::GetAngleYDet()                                    { return fAngleYDet;}
 TVector3 ATTrack::GetTrackVertex()                                  { return fTrackVertex;}
 Int_t ATTrack::GetQuadrant()                                        { return fQuadrant;}
+Double_t ATTrack::GetGeoTheta()                                     { return fGeoThetaAngle;}
+Double_t ATTrack::GetGeoPhi()                                       { return fGeoPhiAngle;}
+
 
 
 Double_t ATTrack::GetMeanTime()

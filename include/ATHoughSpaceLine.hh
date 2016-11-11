@@ -22,10 +22,7 @@
 
 //ATTPCROOT
 #include "ATTrack.hh"
-#include "ATHit.hh"
 
-
-using namespace ROOT::Math;
 class ATHit;
 
 class ATHoughSpaceLine : public ATHoughSpace{
@@ -34,13 +31,13 @@ class ATHoughSpaceLine : public ATHoughSpace{
 	 ATHoughSpaceLine();
   ~ATHoughSpaceLine();
 
-  template <class GenHough>
-  void  CalcGenHoughSpace(GenHough event);
+  template <class GenHough, typename ProjPlane>
+  std::vector<ATTrack*>  CalcGenHoughSpace(GenHough event,ProjPlane plane);
   TH2F* GetHoughSpace(TString ProjPlane);
   void CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYplane, Bool_t XZplane);
   void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane);
   void CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4);
-  void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,multiarray PadCoord);
+  void CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const multiarray& PadCoord);
   void CalcMultiHoughSpace(ATEvent* event);
   void CalcHoughSpace(ATEvent* event);
 
@@ -148,8 +145,9 @@ class ATHoughSpaceLine : public ATHoughSpace{
 };
 
 // Template that works for any AT container with Hits inside. It works on the X-Z projection for the time being
-template <class GenHough>
-void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
+#include "ATHit.hh"
+template <class GenHough, typename ProjPlane>
+std::vector<ATTrack*> ATHoughSpaceLine::CalcGenHoughSpace(GenHough event,ProjPlane plane)
 {
 
   Int_t nHits = event->GetNumHits();
@@ -158,21 +156,32 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
   //TH2F *rad_z2 = new TH2F("rad_z2","rad_z2",1000,-500,500,1000,0,1000);
   //rad_z2->SetMarkerColor(kRed);
   //rad_z->SetMarkerSize(2.0);
+  std::vector<ATTrack*> HoughTracks;
 
   std::vector<ATHit*> HitBuffer;
   std::vector<ATHit*> HitBuffer2;
+
+  //Generic Hough Space coordinates
+  Double_t coordX;
+  Double_t coordY;
 
   for(Int_t iHit=0; iHit<nHits; iHit++){
         ATHit* hit = event->GetHit(iHit);
         Int_t PadNumHit = hit->GetHitPadNum();
         TVector3 position = hit->GetPosition();
+
+        coordY = hit->GetTimeStamp();
+        if(plane.EqualTo("XZ")) coordX = position.X();
+        else if(plane.EqualTo("YZ"))  coordX = position.Y();
+
+
         Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
 
 
-        Int_t itheta=0;
+      Int_t itheta=0;
         for(itheta = 0; itheta <1023; itheta++){
               Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
-              Float_t d0_RZ = (TMath::Cos(angle)*position.X())  +  (TMath::Sin(angle)*hit->GetTimeStamp()); // posZCal can be replaced anytime by position.Z()
+              Float_t d0_RZ = (TMath::Cos(angle)*coordX)  +  (TMath::Sin(angle)*coordY); // posZCal can be replaced anytime by position.Z()
               HistHoughRZ->Fill(angle,d0_RZ);
 
          }//Hough Angle loop
@@ -187,8 +196,13 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
         ATHit* hit = event->GetHit(iHit);
         Int_t PadNumHit = hit->GetHitPadNum();
         TVector3 position = hit->GetPosition();
+
+        coordY = hit->GetTimeStamp();
+        if(plane.EqualTo("XZ")) coordX = position.X();
+        else if(plane.EqualTo("YZ"))  coordX = position.Y();
+
         Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
-        Double_t geo_dist = TMath::Abs (TMath::Cos(HoughParBuff.first)*position.X()  + TMath::Sin(HoughParBuff.first)*hit->GetTimeStamp()  - HoughParBuff.second);
+        Double_t geo_dist = TMath::Abs (TMath::Cos(HoughParBuff.first)*coordX  + TMath::Sin(HoughParBuff.first)*coordY  - HoughParBuff.second);
         //rad_z2->Fill(hit->GetTimeStamp(),position.X());
          if(geo_dist>fHoughDist){
            HitBuffer.push_back(hit);
@@ -199,7 +213,7 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
     }
 
     if(HoughMax.at(0)>fHoughMaxThreshold){
-       fHoughTracks.push_back(track);
+       HoughTracks.push_back(track);
        HoughPar.push_back(HoughParBuff);
        //MinimizeTrack(track);
     }
@@ -225,13 +239,18 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
           ATHit* hit = HitBuffer.at(iHit);
           Int_t PadNumHit = hit->GetHitPadNum();
           TVector3 position = hit->GetPosition();
+
+          coordY = hit->GetTimeStamp();
+          if(plane.EqualTo("XZ")) coordX = position.X();
+          else if(plane.EqualTo("YZ"))  coordX = position.Y();
+
           Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
 
           Int_t itheta=0;
           //#pragma omp parallel for ordered schedule(dynamic) private(itheta) //TOOD: Check performance
           for(itheta = 0; itheta <1023; itheta++){
                 Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
-                Float_t d0_RZ = (TMath::Cos(angle)*position.X())  +  (TMath::Sin(angle)*hit->GetTimeStamp()); // posZCal can be replaced anytime by position.Z()
+                Float_t d0_RZ = (TMath::Cos(angle)*coordX)  +  (TMath::Sin(angle)*coordY); // posZCal can be replaced anytime by position.Z()
                 //#pragma omp ordered
                 HistHoughRZ->Fill(angle,d0_RZ);
                 //rad_z->Fill(hit->GetTimeStamp(),radius);
@@ -255,8 +274,13 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
            ATHit* hit = HitBuffer.at(iHit);
            Int_t PadNumHit = hit->GetHitPadNum();
            TVector3 position = hit->GetPosition();
+
+           coordY = hit->GetTimeStamp();
+           if(plane.EqualTo("XZ")) coordX = position.X();
+           else if(plane.EqualTo("YZ"))  coordX = position.Y();
+
            Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
-           Double_t geo_dist = TMath::Abs (TMath::Cos(HoughParBuff.first)*position.X()  + TMath::Sin(HoughParBuff.first)*hit->GetTimeStamp()  - HoughParBuff.second);
+           Double_t geo_dist = TMath::Abs (TMath::Cos(HoughParBuff.first)*coordX  + TMath::Sin(HoughParBuff.first)*coordY  - HoughParBuff.second);
             if(geo_dist>fHoughDist){
               //std::cout<<geo_dist<<" Time Bucket : "<<hit->GetTimeStamp()<<std::endl;
               HitBuffer2.push_back(hit);
@@ -265,7 +289,7 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
        }
 
        if(HoughMax.at(i+1)>fHoughMaxThreshold){
-          fHoughTracks.push_back(track);
+          HoughTracks.push_back(track);
           HoughPar.push_back(HoughParBuff);
           //MinimizeTrack(track);
         }
@@ -287,13 +311,18 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
           ATHit* hit = event->GetHit(iHit);
           Int_t PadNumHit = hit->GetHitPadNum();
           TVector3 position = hit->GetPosition();
+
+          coordY = hit->GetTimeStamp();
+          if(plane.EqualTo("XZ")) coordX = position.X();
+          else if(plane.EqualTo("YZ"))  coordX = position.Y();
+
           Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
 
           Int_t itheta=0;
 
           for(itheta = 0; itheta <1023; itheta++){
                 Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
-                Float_t d0_RZ = (TMath::Cos(angle)*position.X())  +  (TMath::Sin(angle)*hit->GetTimeStamp()); // posZCal can be replaced anytime by position.Z()
+                Float_t d0_RZ = (TMath::Cos(angle)*coordX)  +  (TMath::Sin(angle)*coordY); // posZCal can be replaced anytime by position.Z()
                 //#pragma omp ordered
                 HistHoughRZ->Fill(angle,d0_RZ);
 
@@ -303,9 +332,7 @@ void ATHoughSpaceLine::CalcGenHoughSpace(GenHough event)
           //}
         }
 
-
-
-
+        return HoughTracks;
 
 
 }

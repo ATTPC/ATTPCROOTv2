@@ -52,6 +52,8 @@ class ATTrack : public TObject {
     Double_t GetLinearRange();
     TVector3 GetTrackVertex();
     Int_t    GetQuadrant();
+    Double_t GetGeoTheta();
+    Double_t GetGeoPhi();
 
 
   protected:

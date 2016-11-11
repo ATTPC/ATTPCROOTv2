@@ -28,14 +28,14 @@
 #include "TH2Poly.h"
 
 #include "ATEventManager.hh"
-//#include "ATRiemannTrack.hh"
-//#include "ATRiemannHit.hh"
 #include "ATRawEvent.hh"
 #include "ATEvent.hh"
 #include "ATProtoEvent.hh"
+#include "ATTrackingEventAna.hh"
 #include "ATHoughSpaceLine.hh"
 #include "ATHoughSpaceCircle.hh"
 #include "ATHoughSpace.hh"
+#include "ATRansac.hh"
 #include "ATHit.hh"
 #include "AtTpcMap.h"
 #include "ATProtoQuadrant.hh"
@@ -133,9 +133,13 @@ class ATEventDrawTask : public FairTask
     TClonesArray* fRawEventArray;
     TClonesArray* fHoughSpaceArray;
     TClonesArray* fProtoEventArray;
+    TClonesArray* fRansacArray;
+    TClonesArray* fTrackingEventAnaArray;
 
-    ATHoughSpaceLine* fHoughSpaceLine_buff;
-    ATHoughSpaceCircle* fHoughSpaceCircle_buff;
+    ATHoughSpaceLine*    fHoughSpaceLine_buff;
+    ATHoughSpaceCircle*  fHoughSpaceCircle_buff;
+    ATRANSACN::ATRansac* fRansac;
+    ATTrackingEventAna*  fTrackingEventAna;
 
     ATEventManager* fEventManager;
     ATRawEvent* fRawevent;
@@ -205,6 +209,7 @@ class ATEventDrawTask : public FairTask
     TH2F* fQuadrant4;
 
     TH2F* fThetaxPhi_Ini;
+    TH2F* fThetaxPhi_Ini_RANSAC;
 
     TCanvas* fCvsMC_XY;
     TGraph* fMC_XY;
@@ -236,7 +241,10 @@ class ATEventDrawTask : public FairTask
     Bool_t fIsRawData;
 
     TF1 *fHoughLinearFit;
+    TF1 *fRansacLinearFit;
     ATHit *fIniHit;
+    ATHit *fIniHitRansac;
+
 
     //std::vector<TEveLine*> fLineArray;
     TEveLine* fLineArray[5];

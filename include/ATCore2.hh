@@ -94,10 +94,10 @@ class ATCore2 : public TObject {
 
     Int_t fNumTbs;
 
-    GETDecoder2 *fDecoderPtr[10];
+    GETDecoder2 *fDecoderPtr[40];
     Bool_t fIsData;
 
-    ATPedestal *fPedestalPtr[10];
+    ATPedestal *fPedestalPtr[40];
     Bool_t fIsNegativePolarity;
     Double_t fFPNSigmaThreshold;
     Bool_t fIsProtoGeoSet;
@@ -109,7 +109,7 @@ class ATCore2 : public TObject {
     ATRawEvent *fRawEventPtr;
     TClonesArray *fPadArray;
 
-    Int_t fCurrentEventID[12];
+    Int_t fCurrentEventID[40];
     Int_t fTargetFrameID;
 
     Bool_t fIsSeparatedData;

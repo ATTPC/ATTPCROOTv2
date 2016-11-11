@@ -51,6 +51,12 @@ class ATDigiPar : public FairParGenericSet
     Int_t    GetTB0();
     Double_t GetThetaLorentz();
     Int_t    GetTBEntrance();
+    Double_t GetZPadPlane();
+    Double_t GetDensity();
+    Double_t GetThetaPad();
+    Double_t GetThetaRot();
+    Double_t GetGasPressure();
+
 
     // Setters
     virtual void putParams(FairParamList *paramList);
@@ -89,6 +95,11 @@ class ATDigiPar : public FairParGenericSet
     Int_t fTB0;
     Double_t fThetaLorentz;
     Int_t fTBEntrance;
+    Double_t fZPadPlane;
+    Double_t fDensity;
+    Double_t fThetaPad;
+    Double_t fThetaRot;
+    Double_t fGasPressure;
 
   ClassDef(ATDigiPar, 1);
 };

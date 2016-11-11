@@ -165,6 +165,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
                         //After minimization we copy the tracks
                         for(Int_t t=0;t<mininizationTracks.size();t++) trackingEventAna->SetTrack(mininizationTracks.at(t));
+                        trackingEventAna->SetVertex(fVertex);
 
                   }
 

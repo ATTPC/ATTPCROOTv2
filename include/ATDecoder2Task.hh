@@ -64,6 +64,8 @@ class ATDecoder2Task : public FairTask {
 
     void SetPseudoTopologyFrame(Bool_t value);
 
+    void SetPTFMask(Int_t mask);
+
     Long64_t GetEventID();
 
     /// If set, decoded raw data is written in ROOT file with ATRawEvent class.
@@ -93,7 +95,7 @@ class ATDecoder2Task : public FairTask {
 
     ATCore2 *fDecoder;                   ///< ATConverter pointer
 
-    vector<TString> fDataList[12];      ///< Raw data file list
+    vector<TString> fDataList[40];      ///< Raw data file list
     Int_t fDataNum;                     ///< Set which number in data list to be decoded
 
     Double_t fFPNPedestalRMS;           ///< RMS cut of baseline matching part selection
@@ -132,6 +134,7 @@ class ATDecoder2Task : public FairTask {
     Long64_t fInternalID;
 
     Int_t fNumCobo;
+    Int_t fMask;
 
     std::vector<Int_t> fAuxChannels;   /// Auxiliary channels in GET electronics
 

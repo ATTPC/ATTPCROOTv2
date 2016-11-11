@@ -432,11 +432,12 @@ ATEventDrawTask::DrawHitPoints()
                   std::vector<ATTrack> anaTracks = fTrackingEventAna->GetTrackArray();
                   std::cout<<cYELLOW<<"  ====   Tracking analysis ==== "<<std::endl;
                   std::cout<<" Number of analyzed tracks : "<<anaTracks.size()<<std::endl;
+                  std::cout<<" Vertex of reaction : "<<fTrackingEventAna->GetVertex()<<std::endl;
 
                       for(Int_t i=0;i<anaTracks.size();i++)
                       {
                           ATTrack track = anaTracks.at(i);
-                          std::cout<<track<<std::endl; 
+                          std::cout<<track<<std::endl;
 
                       }
 
