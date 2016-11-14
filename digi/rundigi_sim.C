@@ -1,13 +1,27 @@
 void rundigi_sim
-(TString mcFile = "~/fair_install_ROOT6/ATTPCROOTv2_October2016/digi/data/attpcsim_2.root")
+(TString mcFile = "~/fair_install_ROOT6/ATTPCROOTv2_October2016/digi/data/attpcsim_2.root",
+ TString digiParFile = "/home/attpc/fair_install_ROOT6/ATTPCROOTv2/parameters/AT.digi.par",
+ TString gasParFile = "/home/attpc/fair_install_ROOT6/ATTPCROOTv2/parameters/Gas.digi.par")
 {
 
 
-
+  // -----   Timer   --------------------------------------------------------
+ TStopwatch timer;
+ timer.Start();
+ // ------------------------------------------------------------------------
   // __ Run ____________________________________________
   FairRunAna* fRun = new FairRunAna();
               fRun -> SetInputFile(mcFile);
               fRun -> SetOutputFile("~/fair_install_ROOT6/ATTPCROOTv2_October2016/macro/Unpack_GETDecoder2/output.root");
+
+
+  FairRuntimeDb* rtdb = fRun->GetRuntimeDb();
+              FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo();
+              parIo1 -> open(digiParFile.Data(), "in");
+              rtdb -> setSecondInput(parIo1);
+              //FairParAsciiFileIo* parIo2 = new FairParAsciiFileIo();
+              //parIo2 -> open(gasParFile.Data(), "in");
+              //rtdb -> setFirstInput(parIo2);
 
   // __ AT digi tasks___________________________________
 
@@ -26,13 +40,29 @@ void rundigi_sim
       psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
       psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
 
+      ATRansacTask *RansacTask = new ATRansacTask();
+    	RansacTask->SetPersistence(kTRUE);
+      RansacTask->SetDistanceThreshold(6.0);
+
 
   fRun -> AddTask(clusterizer);
   fRun -> AddTask(pulse);
   fRun -> AddTask(psaTask);
+  fRun -> AddTask(RansacTask);
 
   // __ Init and run ___________________________________
 
   fRun -> Init();
-  fRun -> Run(0,100);
+  fRun -> Run(1,2);
+
+  std::cout << std::endl << std::endl;
+  std::cout << "Macro finished succesfully."  << std::endl << std::endl;
+  // -----   Finish   -------------------------------------------------------
+  timer.Stop();
+  Double_t rtime = timer.RealTime();
+  Double_t ctime = timer.CpuTime();
+  cout << endl;
+  cout << "Real time " << rtime << " s, CPU time " << ctime << " s" << endl;
+  cout << endl;
+  // ------------------------------------------------------------------------
 }

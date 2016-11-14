@@ -57,6 +57,11 @@ class ATDigiPar : public FairParGenericSet
     Double_t GetThetaRot();
     Double_t GetGasPressure();
 
+    Double_t GetEIonize();
+    Double_t GetCoefDiffusionTrans();
+    Double_t GetCoefDiffusionLong();
+    Double_t GetGain();
+
 
     // Setters
     virtual void putParams(FairParamList *paramList);
@@ -100,6 +105,11 @@ class ATDigiPar : public FairParGenericSet
     Double_t fThetaPad;
     Double_t fThetaRot;
     Double_t fGasPressure;
+
+    Double_t fEIonize;                 //!< effective ionization energy [eV]
+    Double_t fCoefL;                   //!< longitudinal diffusion coefficient
+    Double_t fCoefT;                   //!< transversal diffusion coefficient
+    Double_t fGain;                    //!< gain factor from wire plane
 
   ClassDef(ATDigiPar, 1);
 };

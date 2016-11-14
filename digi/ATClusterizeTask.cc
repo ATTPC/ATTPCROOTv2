@@ -31,6 +31,15 @@ ATClusterizeTask::~ATClusterizeTask()
   fLogger->Debug(MESSAGE_ORIGIN,"Destructor of ATClusterizeTask");
 }
 
+void
+ATClusterizeTask::SetParContainers()
+{
+  fLogger->Debug(MESSAGE_ORIGIN,"SetParContainers of ATAvalancheTask");
+
+  FairRunAna* ana = FairRunAna::Instance();
+  FairRuntimeDb* rtdb = ana->GetRuntimeDb();
+  fPar = (ATDigiPar*) rtdb->getContainer("ATDigiPar");
+}
 
 InitStatus
 ATClusterizeTask::Init()
@@ -47,6 +56,12 @@ ATClusterizeTask::Init()
 
   fElectronNumberArray = new TClonesArray("ATSimulatedPoint");
   ioman -> Register("ATSimulatedPoint", "cbmsim",fElectronNumberArray, fIsPersistent);
+
+
+  fEIonize  = fPar->GetEIonize()/1000; // [MeV]
+  fVelDrift = fPar->GetDriftVelocity(); // [cm/us]
+  fCoefT    = fPar->GetCoefDiffusionTrans()*sqrt(10.); // [cm^(-1/2)] to [mm^(-1/2)]
+  fCoefL    = fPar->GetCoefDiffusionLong()*sqrt(10.);  // [cm^(-1/2)] to [mm^(-1/2)]
   return kSUCCESS;
 }
 
@@ -76,14 +91,15 @@ ATClusterizeTask::Exec(Option_t* option)
    Int_t     nElectrons   = 0;
    Int_t     eFlux        = 0;
    Int_t     genElectrons = 0;
-   Double_t  eIonize      = 15.603/1000; //Ionization energy (MeV)
+   //Double_t  eIonize      = 15.603/1000; //Ionization energy (MeV)
    TString   VolName;
    Double_t  tTime, entries;
 
    Double_t zMesh          = 1000; //mm (No tilt)
    Double_t coefDiffusion  = 0.01; //from ATMCQMinimization.cc
-   Double_t driftVelocity  = 2; //cm/us for hydrogen
-   Double_t gain           = pow(10,3);
+   //Double_t driftVelocity  = 2; //cm/us for hydrogen
+   //Double_t coefT          = 0.010;
+   //Double_t coefL          = 0.025;
    Double_t driftLength;
    Double_t driftTime;
    Double_t propX;
@@ -104,13 +120,13 @@ ATClusterizeTask::Exec(Option_t* option)
            y                 = fMCPoint->GetYIn()*10; //mm
            z                 = fMCPoint->GetZIn()*10; //mm
            energyLoss_rec    =(fMCPoint -> GetEnergyLoss() )*1000;//MeV
-           nElectrons        = energyLoss_rec/eIonize; //mean electrons generated
+           nElectrons        = energyLoss_rec/fEIonize; //mean electrons generated
            eFlux             = pow(fano*nElectrons, 0.5);//fluctuation of generated electrons
            genElectrons      = gRandom->Gaus(nElectrons, eFlux);//generated electrons
 
            driftLength       = abs(z-zMesh); //mm
-           sigstrtrans       = 0.010* sqrt(driftLength);//transverse diffusion coefficient
-           sigstrlong        = 0.025* sqrt(driftLength);//longitudal diffusion coefficient
+           sigstrtrans       = fCoefT* sqrt(driftLength);//transverse diffusion coefficient
+           sigstrlong        = fCoefL* sqrt(driftLength);//longitudal diffusion coefficient
            trans->SetParameter(0, sigstrtrans);
 
            for(Int_t charge = 0; charge<genElectrons; charge++){   //for every electron in the cluster
@@ -119,7 +135,7 @@ ATClusterizeTask::Exec(Option_t* option)
                propX           = x + r*TMath::Cos(phi);
                propY           = y + r*TMath::Sin(phi);
                driftLength     = driftLength + (gRandom -> Gaus(0,sigstrlong)); //mm
-               driftTime       = ((driftLength/10)/driftVelocity) +(tTime); //us
+               driftTime       = ((driftLength/10)/fVelDrift) +(tTime); //us
                electronNumber  +=1;
 
                //Fill container ATSimulatedPoint

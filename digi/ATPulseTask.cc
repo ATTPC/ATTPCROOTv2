@@ -39,10 +39,11 @@ ATPulseTask::~ATPulseTask()
 void
 ATPulseTask::SetParContainers()
 {
-  fLogger->Debug(MESSAGE_ORIGIN,"SetParContainers of ATPulseTask");
+  fLogger->Debug(MESSAGE_ORIGIN,"SetParContainers of ATAvalancheTask");
 
   FairRunAna* ana = FairRunAna::Instance();
   FairRuntimeDb* rtdb = ana->GetRuntimeDb();
+  fPar = (ATDigiPar*) rtdb->getContainer("ATDigiPar");
 }
 
 InitStatus
@@ -60,6 +61,9 @@ fDriftedElectronArray = (TClonesArray *) ioman -> GetObject("ATSimulatedPoint");
   fRawEventArray  = new TClonesArray("ATRawEvent", 100);        //!< Raw Event array(only one)
   ioman -> Register("ATRawEvent", "cbmsim", fRawEventArray, fIsPersistent);
 
+  fGain = fPar->GetGain();
+  std::cout<<"Gain: "<<fGain<<std::endl;
+
   return kSUCCESS;
 }
 
@@ -73,9 +77,6 @@ ATPulseTask::Exec(Option_t* option)
 {
   fLogger->Debug(MESSAGE_ORIGIN,"Exec of ATPulseTask");
 
- /* if(!fElectronArray)
-    fLogger->Fatal(MESSAGE_ORIGIN,"No DigitizedElectronArray!");
-  fElectronArray -> Delete();*/
 
   Int_t nMCPoints = fDriftedElectronArray->GetEntries();
   std::cout<<" ATPulseTask: Number of Points "<<nMCPoints<<std::endl;
@@ -106,7 +107,8 @@ ATPulseTask::Exec(Option_t* option)
    TVector3 coord;
    ATSimulatedPoint* dElectron;
    std::vector<Float_t> PadCenterCoord;
-   TF1 *gain                        =  new TF1("gain", "4*(x/100)*pow(e, -2*(x/100))", 80, 120);//Polya distribution of gain
+   TF1 *gain                        =  new TF1("gain", "4*(x/[0])*pow(2.718, -2*(x/[0]))", 80, 120);//Polya distribution of gain
+   gain->SetParameter(0, fGain);
 
 
  // ***************Create ATTPC Pad Plane***************************

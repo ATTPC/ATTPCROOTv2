@@ -8,6 +8,9 @@
 #ifndef ATPulseTask_H
 #define ATPulseTask_H
 
+#include "FairRootManager.h"
+#include "FairRunAna.h"
+#include "FairRuntimeDb.h"
 
 #include "FairTask.h"
 #include "FairMCPoint.h"
@@ -17,6 +20,7 @@
 #include "TH2Poly.h"
 #include "AtTpcMap.h"
 #include "ATRawEvent.hh"
+#include "ATGas.hh"
 
 
 
@@ -32,7 +36,10 @@ class ATPulseTask : public FairTask
     virtual void SetParContainers();  //!< Load the parameter container from the runtime database.
 
    private:
+    ATGas*     fGas;                     //!< Gas parameter container.
+    ATDigiPar* fPar; //!< Base parameter container.
     Int_t fEventID;                      //!< EventID
+    Double_t fGain;                      //!< Gain.
     Bool_t fIsPersistent;                //!< If true, save container
     TClonesArray* fDriftedElectronArray; //!< drifted electron array (input)
     TClonesArray* fRawEventArray;        //!< Raw Event array(only one)

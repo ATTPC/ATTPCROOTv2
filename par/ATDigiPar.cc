@@ -41,6 +41,10 @@ Double_t  ATDigiPar::GetDensity()          { return fDensity;}
 Double_t  ATDigiPar::GetThetaPad()         { return fThetaPad;}
 Double_t  ATDigiPar::GetThetaRot()         { return fThetaRot;}
 Double_t  ATDigiPar::GetGasPressure()      { return fGasPressure;}
+Double_t  ATDigiPar::GetEIonize()          { return fEIonize;}
+Double_t  ATDigiPar::GetCoefDiffusionLong(){ return fCoefL;}
+Double_t  ATDigiPar::GetCoefDiffusionTrans(){ return fCoefT;}
+Double_t  ATDigiPar::GetGain()             { return fGain;}
 
 ATGas *ATDigiPar::GetGas()
 {
@@ -56,7 +60,7 @@ Int_t ATDigiPar::GetTBTime() {
   switch (fSamplingRate) {
 
     case 6:
-      return 160;     
+      return 160;
     case 12:
       return 80;
     case 25:
@@ -198,6 +202,26 @@ Bool_t ATDigiPar::getParams(FairParamList *paramList) //TODO Change all these pa
       return kFALSE;
     }
 
+    if (!(paramList -> fill("EIonize", &fEIonize))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find EIonize parameter!");
+      return kFALSE;
+    }
+
+    if (!(paramList -> fill("CoefL", &fCoefL))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find CoefL parameter!");
+      return kFALSE;
+    }
+
+    if (!(paramList -> fill("CoefT", &fCoefT))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find CoefT parameter!");
+      return kFALSE;
+    }
+
+    if (!(paramList -> fill("Gain", &fGain))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find Gain parameter!");
+      return kFALSE;
+    }
+
     fGasFileName = GetFile(fGasFile);
   }
 
@@ -239,6 +263,10 @@ void ATDigiPar::putParams(FairParamList *paramList)
   paramList -> add("ThetaPad", fThetaPad);
   paramList -> add("ThetaRot",fThetaRot);
   paramList -> add("GasPressure",fGasPressure);
+  paramList -> add("EIonize",fEIonize);
+  paramList -> add("CoefL",fCoefL);
+  paramList -> add("CoefT",fCoefT);
+  paramList -> add("Gain",fGain);
 
 }
 
