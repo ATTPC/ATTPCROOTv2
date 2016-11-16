@@ -1846,7 +1846,7 @@ Bool_t ATMCMinimization::MinimizeOptMap(Double_t* parameter,ATEvent *event, TH2P
                                                                              if(k==0) iterCorr_0 = iterCorr; //Offset renomarlization
                                                                              //std::cout<<" iterCorr : "<<iterCorr_0-iterCorr<<" iterd : "<<iterd<<std::endl;
 
-                                                                             iterCorrNorm = iterCorr_0-iterCorr;
+                                                                             iterCorrNorm = iterCorr_0-iterCorr;                                                                             
                                                                              if(iterCorrNorm<0) break;
 
                                                                              xTBCorr[iterCorrNorm] = xpad;

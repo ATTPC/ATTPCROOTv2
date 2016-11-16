@@ -148,8 +148,8 @@ TString mappath="/data/ar46/run_0085/")
 
   run -> Init();
 
-  run -> RunOnTBData();
-  //run->Run(0,200);
+  //run -> RunOnTBData();
+  run->Run(0,200);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

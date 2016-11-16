@@ -5,7 +5,7 @@
 
 bool check_file(const std::string& name);
 
-void run_unpack2(TString dataFile = "runfiles/ar46_run_0085.txt",TString parameterFile = "ATTPC.e15503b.par",TString mappath="/data/ar46/run_0085/")
+void run_unpack2(TString dataFile = "runfiles/ar46_run_0113.txt",TString parameterFile = "ATTPC.e15503b.par",TString mappath="/data/ar46/run_0085/")
 {
 
   if(!check_file(dataFile.Data())){
@@ -141,7 +141,7 @@ void run_unpack2(TString dataFile = "runfiles/ar46_run_0085.txt",TString paramet
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,40);
+  run->Run(0,4);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

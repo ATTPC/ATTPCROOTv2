@@ -59,7 +59,7 @@ class ATMCQMinimization : public ATMinimization{
         Bool_t MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, TH2Poly* hPadPlane,const multiarray& PadCoord);
 
         template <typename T, typename R>
-        bool  MinimizeGen(Double_t* parameter,const T* event ,const std::function<std::vector<R>*()>& func,TH2Poly* hPadPlane,const multiarray& PadCoord);
+        bool  MinimizeGen(Double_t* parameter,T* event ,const std::function<std::vector<R>*()>& func,TH2Poly* hPadPlane,const multiarray& PadCoord);
 
         std::vector<Double_t> GetPosXMin();
         std::vector<Double_t> GetPosYMin();
@@ -88,6 +88,8 @@ class ATMCQMinimization : public ATMinimization{
        Double_t GetSimThetaAngle(TVector3* pos, TVector3* posforw);
        void BackwardExtrapolation();
        void SetMap(AtTpcMap* map);
+       Double_t GetChi2Pos(Int_t index,Int_t _iterCorrNorm,Int_t _par,
+       Double_t *_xTBCorr,Double_t *_yTBCorr,Double_t *_zTBCorr);
 
        Int_t GetTBHit(Int_t TB,std::vector<ATHit> *harray);
        TVector3 TransformIniPos(Double_t x,Double_t y, Double_t z); //Transforms initial position from Pad plane to Lab frame
@@ -109,7 +111,7 @@ class ATMCQMinimization : public ATMinimization{
                                     double  Qsim[10000],double  zsimq[10000],double & QMCtotal,
                                     double & Chi2fit, double & sigmaq, double & sigmaz);
 
-              std::vector<ATHit> fHitTBArray;
+             std::vector<ATHit> fHitTBArray;
              std::vector<ATHit> *fHitArray;
 
              Double_t fThetaMin;
@@ -166,6 +168,7 @@ class ATMCQMinimization : public ATMinimization{
 
              Bool_t kDebug;
              Bool_t kVerbose;
+             Bool_t kPosChi2; //Enable the use of Position Chi2
 
              //Global variables
              Double_t sm1;
@@ -179,7 +182,11 @@ class ATMCQMinimization : public ATMinimization{
              Double_t B0;
              Double_t B;
 
-
+             std::vector<std::vector<ATHit>> *hitTBMatrix;//!
+             Double_t *fXTBCorr;//!
+             Double_t *fYTBCorr;//!
+             Double_t *fZTBCorr;//!
+             Int_t fIterCorrNorm;//!!
 
 
            ClassDef(ATMCQMinimization, 1);
@@ -187,7 +194,7 @@ class ATMCQMinimization : public ATMinimization{
 };
 
 template <typename T, typename R>
-bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const std::function<std::vector<R>*()>& func,TH2Poly* hPadPlane,const multiarray& PadCoord)
+bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::function<std::vector<R>*()>& func,TH2Poly* hPadPlane,const multiarray& PadCoord)
 {
 
           TH2Poly* fPadPlane = new TH2Poly();
@@ -213,6 +220,20 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
           else std::cerr<<cRED<<" ATMCQMinimization::MinimizeOptMapAmp - Function parameters not found ! "<<cNORMAL<<std::endl;
 
 
+
+          if(kPosChi2)
+          {
+
+            fHitArray = event->GetHitArray();
+            Int_t numIntPoints=0;
+                for(Int_t iexp=0;iexp<parameter[3];iexp++){
+                std::vector<ATHit> hitTBArray;
+                hitTBArray=GetTBHitArray(parameter[3]-iexp,fHitArray);
+                if(hitTBArray.size()>0) numIntPoints++;
+                hitTBMatrix->push_back(hitTBArray); // TB descends
+                }
+
+          }
 
 
           double Qtrack[10240]={0.}; //simulated amplitude for track to analyse
@@ -258,6 +279,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
            Double_t smprot          = 931.49432;
            Double_t Bmin            = B;
            Double_t chi2min         = 1E10;
+           Double_t chi2minPos      = 1E10;
 
            Double_t xmin;
            Double_t ymin;
@@ -286,6 +308,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
            double Qtracktotal;
            double QMCtotal;
            double CHi2fit;
+           double Chi2fitPos =0.0;
            int modevar=1;
            double rangeMC= 200.;  //simulation of track
            int iconvar;
@@ -301,7 +324,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
            int imc1max=10;//10
            iconvar=imc1;
            int imc2=0;
-           int imc2max=50;//100
+           int imc2max=100;//100
            int icontrol=1;
 
            MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC,aMC,phiMC, Bmin, fDens,romin,x0MCv, y0MCv,z0MCv,aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
@@ -329,6 +352,15 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
                        QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MCv, y0MCv, z0MCv,  aMCv, phiMCv, Bminv, densv,rominv,e0sm,PadCoord,fPadPlane);
                       //std::cout<<cRED<<" After QMCsim x "<<x0MCv<<" y "<< y0MCv<< " z "<< z0MCv<<" theta "<< aMCv<<" phi "<< phiMCv<<" B " <<Bminv<<" dens "<< densv<< " e0sm "<<e0sm<<" ro "<<rominv<<cNORMAL;
                        Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,CHi2fit,sigmaq,sigmaz);   //Chi2 to compare track and MC
+
+                       // TODO: Warning! Check parameter[7] in the ATHOughSpaceCircle line 1109
+                       if(kPosChi2) Chi2fitPos = GetChi2Pos(imc1,fIterCorrNorm,parameter[7],fXTBCorr,fYTBCorr,fZTBCorr);
+
+                     if(Chi2fitPos<chi2minPos)
+                     {
+                        chi2minPos = Chi2fitPos;
+
+                     }
 
 
 
@@ -364,6 +396,8 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
                //FitParameters.sNumMCPoint=num_MC_Point;
                //FitParameters.sNormChi2=chi2min/num_MC_Point;
 
+              std::cout<<cRED<<" chi2minPos : "<<chi2minPos<<std::endl;
+
                BackwardExtrapolation();
 
                std::cout<<cYELLOW<<" Minimization result : "<<std::endl;
@@ -380,6 +414,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,const T* event,const st
 
                fPadPlane = NULL;
                delete fPadPlane;
+
 
                return kTRUE;
 

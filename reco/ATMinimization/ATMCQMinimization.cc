@@ -74,8 +74,13 @@ ATMCQMinimization::ATMCQMinimization()
 
   kDebug=kFALSE;
   kVerbose=kTRUE;  //wm
+  kPosChi2=kTRUE;
 
+  fXTBCorr = new Double_t[10000];
+  fYTBCorr = new Double_t[10000];
+  fZTBCorr = new Double_t[10000];
 
+  hitTBMatrix = new std::vector<std::vector<ATHit>>;
 
   //!fPadPlane = new TH2Poly();
 
@@ -84,7 +89,10 @@ ATMCQMinimization::ATMCQMinimization()
 
 ATMCQMinimization::~ATMCQMinimization()
 {
-
+  //delete hitTBMatrix;
+  delete fXTBCorr;
+  delete fYTBCorr;
+  delete fZTBCorr;
 
 }
 
@@ -696,11 +704,16 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                    //std::cout<<" iterCorr : "<<iterCorr_0-iterCorr<<" iterd : "<<iterd<<std::endl;
 
                                                    iterCorrNorm = iterCorr_0-iterCorr;
+                                                   fIterCorrNorm = iterCorrNorm;
                                                    if(iterCorrNorm<0) break;
 
                                                    xTBCorr[iterCorrNorm] = xpad[iterd];
                                                    yTBCorr[iterCorrNorm] = ypad[iterd];
                                                    zTBCorr[iterCorrNorm] = zpad[iterd];
+
+                                                   fXTBCorr[iterCorrNorm] =  xTBCorr[iterCorrNorm];
+                                                   fYTBCorr[iterCorrNorm] =  yTBCorr[iterCorrNorm];
+                                                   fZTBCorr[iterCorrNorm] =  zTBCorr[iterCorrNorm];
 
 
                                                 //  if(iterCorrNorm!=icnb){
@@ -1205,6 +1218,7 @@ void ATMCQMinimization::Chi2MC(double*  Qtrack,double*  ztrackq,double & Qtrackt
     Chi2fitq = Chi2fitq/float(npoints) ;
     Chi2fitz = Chi2fitz/float(npoints) ;
     //if(npoints>0) Chi2fit= (Chi2fitq+Chi2fitz+Chi2number)/float(2*npoints);
+
     if(npoints>0) Chi2fit= (Chi2fitq+Chi2fitz)/float(2*npoints);
     if(npoints>0) Chi2fit= Chi2fit/float(2*npoints);   /// for z and Q and npoints
     if(npoints<5) Chi2fit= 10000.;  /// to avoid chi2 by too little number of points
@@ -1372,4 +1386,136 @@ void ATMCQMinimization::PrintParameters(Int_t index)
     std::cout<<std::endl;
     std::cout<<" Printing Range to Energy function parameters"<<std::endl;
     std::copy(fRtoEPar_array[index].begin(),fRtoEPar_array[index].end(),output_it);
+}
+
+Double_t ATMCQMinimization::GetChi2Pos(Int_t index,Int_t _iterCorrNorm,Int_t _par,
+Double_t *_xTBCorr,Double_t *_yTBCorr,Double_t *_zTBCorr)
+{
+
+  //Int_t iterh = (Int_t)(_iteration/integrationsteps);
+  Int_t imaxchi2=std::max(_iterCorrNorm,(Int_t) _par); //NEW
+  Int_t num_MC_Point=0;
+
+  Double_t sigma2 = 36.0;  //!error in mm2
+  Double_t chi2   = 0.0;
+  Bool_t kIsExp   = kTRUE;
+  Bool_t kIsSim   = kTRUE;
+
+  //NB : imaxchi2 must be limited
+
+  Double_t xposbuff[imaxchi2];
+  Double_t yposbuff[imaxchi2];
+  Double_t zposbuff[imaxchi2];
+  Double_t xTBbuff[imaxchi2];
+  Double_t yTBbuff[imaxchi2];
+  Double_t zTBbuff[imaxchi2];
+  Double_t chi2buff[imaxchi2];
+  Int_t TBShadow[imaxchi2];
+
+  std::fill_n(chi2buff,0,0);
+
+
+            for(Int_t iChi=0;iChi<imaxchi2;iChi++){
+
+                std::vector<ATHit> hitTBArray;
+                if(hitTBMatrix->size()>iChi) hitTBArray=hitTBMatrix->at(iChi);
+
+                if(_xTBCorr[iChi]==(Double_t)-10000) kIsSim=kFALSE;
+                else kIsSim=kTRUE;
+
+                Double_t posx=0.0;
+                Double_t posy=0.0;
+                Double_t posz=0.0;
+                Int_t numHitsDist = 0;
+                Int_t TB = 0;
+                Double_t cmsHits_X =0.0;
+                Double_t cmsHits_Y =0.0;
+                Double_t totCharge=0.0;
+
+                if(hitTBArray.size()>0){
+
+                   for(Int_t iHitTB=0;iHitTB<hitTBArray.size();iHitTB++){// TODO: There no need to do this every chisquare loop
+                     ATHit hitTB = hitTBArray.at(iHitTB);
+                     TVector3 positionTB = hitTB.GetPosition();
+
+                     //std::cout<<cRED<<" iChi : "<<iChi<<" TB : "<<TB<<std::endl;
+
+                     cmsHits_X+= positionTB.X()*hitTB.GetCharge();
+                     cmsHits_Y+= positionTB.Y()*hitTB.GetCharge();
+                     totCharge+=hitTB.GetCharge();
+
+
+                       posx+=positionTB.X();
+                       posy+=positionTB.Y();
+                       TB=hitTB.GetTimeStamp();
+
+                       //std::cout<<cRED<<" iChi : "<<iChi<<" TB : "<<TB<<std::endl;
+
+                       //Recalibration of Z position
+                       posz = fZk - (fEntTB-TB)*dzstep*10;  // Calibration of Z in mm
+
+
+                     // TO compare Sim and Exp uncomment this
+                     //if(kDebug)
+                     //std::cout<<iChi<<" X_exp : "<<positionTB.X()<<" Y_exp : "<<positionTB.Y()<<" Z_exp : "<<posz<<" Hit TS : "<<hitTB.GetTimeStamp()<<std::endl;
+
+                   }// Loop over hits with same TB
+
+                   posx/=hitTBArray.size();
+                   posy/=hitTBArray.size();
+
+                   posx=cmsHits_X/totCharge;
+                   posy=cmsHits_Y/totCharge;
+
+                   kIsExp=kTRUE;
+                     // TO compare Sim and Exp uncomment this
+                   //if(kDebug){
+                   //std::cout<<cGREEN<<" Average X : "<<posx<<" Average Y : "<<posy<<" Average Z : "<<posz<<cNORMAL<<std::endl;
+                   //std::cout<<cRED<<" xTBCorr : "<<_xTBCorr[iChi]<<" yTBCorr : "<<_yTBCorr[iChi]<<cNORMAL<<std::endl;
+                   //}
+
+                }else if(hitTBArray.size()==0){
+                    posx=0.0;
+                    posy=0.0;
+                    kIsExp=kFALSE;
+                }// Size of container
+
+                //xinter.push_back(posx);
+                //yinter.push_back(posy);
+                //zinter.push_back(posz);
+                //TBInter.push_back(TB);
+
+                Double_t diffx= posx-_xTBCorr[iChi];
+                Double_t diffy= posy-_yTBCorr[iChi];
+
+                xposbuff[iChi]=posx;
+                yposbuff[iChi]=posy;
+                zposbuff[iChi]=posz;
+                xTBbuff[iChi]=_xTBCorr[iChi];
+                yTBbuff[iChi]=_yTBCorr[iChi];
+                zTBbuff[iChi]=_zTBCorr[iChi];
+                TBShadow[iChi]=TB;
+
+                if(kIsExp){
+                  Double_t chi2_buff = ( TMath::Power(diffx,2) + TMath::Power(diffy,2) )/sigma2;
+                  if(index>2 && chi2_buff>10.0) chi2+=10.0;
+                  else if(index<3 && chi2_buff>100.0) chi2+=100.0;
+                  else chi2+=chi2_buff;
+                  //chi2buff[iChi]=chi2_buff;
+                  //if(kDebug) std::cout<<" Point chi Square : "<<chi2_buff<<" for Experimental Time bucket : "<<iChi<<std::endl;
+                  //if(kDebug) std::cout<<" Total chi Square : "<<chi2<<std::endl;
+                  //fPosXinter=xinter;
+                  //fPosYinter=yinter;
+                  //fPosZinter=zinter;
+                  //fPosTBinter=TBInter;
+                  num_MC_Point++;
+
+                }
+
+
+            }// Chi2 loop
+
+            chi2/=num_MC_Point;
+            return chi2;
+
 }
