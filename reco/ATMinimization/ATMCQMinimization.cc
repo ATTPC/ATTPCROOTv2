@@ -487,7 +487,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
          std::cout << "indside sim dens  " << dens <<std::endl;
          std::cout << "indside sim romin   " << romin <<std::endl;  */
 
-
+                                      //PrintParameters(0);
 
                                       std::vector<Double_t> xc;
                                       std::vector<Double_t> xiter;
@@ -558,12 +558,21 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                       double phi0= phiMC;
                       double _B=Bmin;
 
-                      if(B>0) GetEnergy(sm1,z1,brotheta,e0sm);
+                      Double_t e0ll=0.0;
+
+                      if(B>0){
+                         GetEnergy(sm1,z1,brotheta,e0sm);
+                         e0ll=e0sm*sm1;
+                      }
                       else if(B==0){
                         if(fRtoE_func_array.size()>0){
                         std::function<Double_t(Double_t,std::vector<Double_t>&)> RtoEFunc = fRtoE_func_array.at(0);
                         // NB: For the case of B=0 the Range of the particle will be passed through romin variable (parameter[5])
-                        e0sm = RtoEFunc(romin, fRtoEPar_array[0]);
+                        // NB: Range to function conversion uses 760 torr of pressure for the mixture
+                        //     The energy must be scaled.
+                        e0sm = RtoEFunc(romin*(fPressure/760.0), fRtoEPar_array[0]);
+                        e0ll=e0sm;
+                        std::cout<<cRED<<" Energy : "<<e0sm<<" Experimental Range : "<<romin<<" Pressure : "<<fPressure<<std::endl;
                       }else std::cout<<cYELLOW<<" ATMCQMinimization::QMCsim - Warning! No Range-to-Energy function found."<<cNORMAL<<std::endl;
 
 
@@ -571,7 +580,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
 
 
                       // 	calcul vitesse initiale
-                      Double_t e0ll=e0sm*sm1;
+                      //Double_t e0ll=e0sm*sm1;
                       Double_t e0=e0ll*1000000.;// !conversion from MeV in eV kinetic energy
                       //	esm= 1.75879e-3
                       Double_t beta2=2.*e0ll/(sm1*931.49);
@@ -581,8 +590,8 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                        //      recalcuate velocity for energy loss
                        //  	vsc=sqrt(dxdt**2+dydt**2+dzdt**2)/29.9792  !v/c
 
-                       Double_t ecinsm=ekin/sm1;
-                       Double_t eloss=ekin;
+                       //Double_t ecinsm=ekin/sm1;
+                      // Double_t eloss=ekin;
                       //	dedx=s*dens  !de/dx in [MeV/cm] !only defined after 1st tour
                         //          dzstep=0.221  !unit cm
                       //	boucle d'integration
@@ -774,6 +783,8 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                     }*/
 
                                                     sloss= sloss*dens*help; //!energy loss with density and step
+
+                                                    //std::cout<<cYELLOW<<" sloss : "<<sloss<<" ekin : "<<ekin<<cNORMAL<<std::endl;
 
                                                     //if(y>ymax)ymax=y;
                                                     //slowing down by energy loss
@@ -1229,6 +1240,7 @@ void ATMCQMinimization::Chi2MC(double*  Qtrack,double*  ztrackq,double & Qtrackt
 
 void ATMCQMinimization::GetEnergy(Double_t M,Double_t IZ,Double_t BRO,Double_t &E){
 
+  //Energy per nucleon
   Float_t  AM=931.5;
   Float_t X=BRO/0.1439*IZ/M;
   X=pow(X,2);
@@ -1240,6 +1252,7 @@ void ATMCQMinimization::GetEnergy(Double_t M,Double_t IZ,Double_t BRO,Double_t &
 
 void ATMCQMinimization::GetBro(Double_t M,Double_t IZ,Double_t &BRO,Double_t E)
 {
+   // Energy per nucleon
    Float_t  AM=931.5;
    BRO=0.143974109*M/IZ*TMath::Sqrt(E)*TMath::Sqrt(1.+0.5*E/AM);
    Double_t alfa=9.654260565;

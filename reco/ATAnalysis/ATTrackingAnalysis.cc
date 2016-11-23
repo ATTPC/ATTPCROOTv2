@@ -53,6 +53,8 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                 ATMCQMinimization *min = new ATMCQMinimization();
                 min->ResetParameters();
 
+                Double_t *parameter = new Double_t[8];
+
                 // Adding Eloss functions
                 std::function<Double_t(Double_t,std::vector<Double_t>&)> ELossFunc = std::bind(GetEloss,std::placeholders::_1,std::placeholders::_2);
                 min->AddELossFunc(ELossFunc);
@@ -65,6 +67,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                 min->AddRtoEPar(fEtoRPar);
                 // Adding n-particles
                 min->AddParticle(fParticleAZ);
+
 
                 std::vector<ATTrack>  trackCand = Ransac->GetTrackCand();
                 std::vector<ATRANSACN::ATRansac::PairedLines> trackCorr = Ransac->GetPairedLinesArray();
@@ -158,10 +161,32 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
                   if(mininizationTracks.size()==fMultiplicity)
                   {
+
+                        //Minimization starts
                         for(Int_t i=0;i<mininizationTracks.size();i++){
+
+                          std::cout<<cRED<<" Minimizing particle : "<<i<<std::endl;
                           std::pair<Double_t,Double_t> angles = GetAnglesSolenoid(mininizationTracks.at(i));
 
+                          ATTrack* trackToMin = mininizationTracks.at(i);
+
+                          parameter[0]=Vertex_mean.X();
+                          parameter[1]=Vertex_mean.Y();
+                          parameter[2]=Vertex_mean.Z();
+                          parameter[3]=(Int_t) vertexTime;
+                          parameter[4]=angles.first;
+                          parameter[5]=trackToMin->GetLinearRange();
+                          parameter[6]=angles.second;
+                          parameter[7]=trackToMin->GetHitArray()->size();
+
+                          //Custom function to pass the method to extract the Hit Array
+                          std::function<std::vector<ATHit>*()> func = std::bind(&ATTrack::GetHitArray,trackToMin);
+
+                          min->MinimizeGen(parameter,trackToMin,func,hPadPlane,PadCoord);
+
                         }
+
+
 
                         //After minimization we copy the tracks
                         for(Int_t t=0;t<mininizationTracks.size();t++) trackingEventAna->SetTrack(mininizationTracks.at(t));
@@ -172,9 +197,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
 
 
-
-
-
+                  delete parameter;
                   delete min;
 
                   //For debugging: Visualize the rotation of the event in the X-Z and Y-Z plane
@@ -246,9 +269,10 @@ Double_t ATTrackingAnalysis::GetEloss(Double_t c0,std::vector<Double_t>& par)
 Double_t ATTrackingAnalysis::GetEnergyFromRange(Double_t range,std::vector<Double_t>& par)
 {
     //This is a parametrization calculated at 1 atm. The Range is normalized by the pressure
+
     if(par.size()==7)
     {
-      return par[0]*TMath::Sqrt(range) +  par[1]*( par[2]+1.0/TMath::Sqrt(range) + par[3]) + par[4]/( TMath::Power(TMath::Sqrt(range)+par[5],2) + par[6]   )  ;
+      return par[0]*TMath::Sqrt(range) +  par[1]*( 1.0+par[2]/(TMath::Sqrt(range) + par[3])) + par[4]/( TMath::Power(TMath::Sqrt(range)+par[5],2) + par[6]   )  ;
 
     }else
       std::cerr<<cRED<<" ATHoughSpaceCircle::GetEnergyFromRange -  Warning ! Wrong number of parameters."<<std::endl;
@@ -272,6 +296,7 @@ Double_t ATTrackingAnalysis::GetVertexTime(ATRANSACN::ATRansac *Ransac)
 
 Double_t ATTrackingAnalysis::GetTime(Double_t Z)
 {
+      //This function returns the original time according to the original Z calculation that takes fEntTb (and no fEntTB_calc)
       return ( 100.0*(Z - fZk)/(fTBTime*fDriftVelocity) ) + fEntTB;
 
 }

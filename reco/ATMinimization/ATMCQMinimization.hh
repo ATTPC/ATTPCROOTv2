@@ -321,10 +321,10 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
            double sigmaq=0.2 ;  //defined as the fraction of sum Qsim+Qtrack
            double sigmaz=4.0  ;  //defined as deviation of the center of gravity in mm modified from 5.4 on june 10 wm
            int imc1=0;
-           int imc1max=10;//10
+           int imc1max=1;//10
            iconvar=imc1;
            int imc2=0;
-           int imc2max=100;//100
+           int imc2max=1;//100
            int icontrol=1;
 
            MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC,aMC,phiMC, Bmin, fDens,romin,x0MCv, y0MCv,z0MCv,aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
@@ -411,6 +411,8 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
                std::cout<<" Vertex Energy : "<<fVertexEner<<" MeV "<<std::endl;
                //std::cout<<" Reduced chi2 : "<<chi2min/FitParameters.sNumMCPoint<<std::endl;
                std::cout<<" Minimum chi2 : "<<CHi2fit<<cNORMAL<<std::endl;
+
+
 
                fPadPlane = NULL;
                delete fPadPlane;

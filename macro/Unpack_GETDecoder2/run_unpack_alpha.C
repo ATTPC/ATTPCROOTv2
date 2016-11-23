@@ -1,5 +1,5 @@
 void run_unpack_alpha
-(TString dataFile = "runfiles/NSCL/alphas/alpha_run_0100.txt",TString parameterFile = "ATTPC.alpha.par",
+(TString dataFile = "/Users/Yassid/Desktop/ATTPC/Data/run_0225/test",TString parameterFile = "ATTPC.alpha.par",
 TString mappath="/data/ar46/run_0085/")
 {
 
@@ -81,7 +81,7 @@ TString mappath="/data/ar46/run_0085/")
   fDecoderTask -> SetEventID(0);
 
 
-  /*if (!fUseSeparatedData)
+  if (!fUseSeparatedData)
     fDecoderTask -> AddData(dataFile);
   else {
     std::ifstream listFile(dataFile.Data());
@@ -95,9 +95,9 @@ TString mappath="/data/ar46/run_0085/")
           fDecoderTask -> AddData(dataFileWithPath, iCobo);
         }
     }
-  }*/
+  }
 
-  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo0_run_0100_11Dec14_22h03m15s.graw",0);
+  /*fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo0_run_0100_11Dec14_22h03m15s.graw",0);
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo1_run_0100_11Dec14_22h03m15s.graw",1);
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo2_run_0100_11Dec14_22h03m15s.graw",2);
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo2_run_0100_11Dec14_22h03m15s.1.graw",2);
@@ -107,7 +107,7 @@ TString mappath="/data/ar46/run_0085/")
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo7_run_0100_11Dec14_22h03m16s.graw",6);
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo7_run_0100_11Dec14_22h03m16s.1.graw",6);
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo8_run_0100_11Dec14_22h03m16s.graw",7);
-  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo9_run_0100_11Dec14_22h03m16s.graw",8);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo9_run_0100_11Dec14_22h03m16s.graw",8);*/
 
   run -> AddTask(fDecoderTask);
 
