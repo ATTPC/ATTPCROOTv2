@@ -1,9 +1,9 @@
 #!/bin/bash
 
-cd  /home/jcz/FairRoor_workdir/ATTPCROOTv2/build
-cmake ../
+cd  ../../build
+#cmake ../
 make 
 source config.sh
-source incluir_datos.sh 
-cd /home/jcz/FairRoor_workdir/ATTPCROOTv2/macro/Simulation
+export G4ENSDFSTATEDATA=$ROOTSYS/share/Geant4/data/G4ENSDFSTATE1.2.1
+cd ../macro/Simulation
 

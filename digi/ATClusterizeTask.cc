@@ -130,7 +130,8 @@ ATClusterizeTask::Exec(Option_t* option)
            trans->SetParameter(0, sigstrtrans);
 
            for(Int_t charge = 0; charge<genElectrons; charge++){   //for every electron in the cluster
-               r               = trans->GetRandom();
+               //r               = trans->GetRandom(); //non-Gaussian cloud
+		r               = gRandom -> Gaus(0,sigstrtrans); //Gaussian cloud
                phi             = gRandom->Uniform(0, TMath::TwoPi());
                propX           = x + r*TMath::Cos(phi);
                propY           = y + r*TMath::Sin(phi);

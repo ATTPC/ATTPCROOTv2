@@ -174,12 +174,13 @@ std::vector<Double_t>  ATTPC_d2He::TRANSF(std::vector<Double_t> *from, std::vect
         alpha = acos((  (from->at(0)) * (to->at(0))  + (from->at(1)) * (to->at(1)) + (from->at(2)) * (to->at(2))   )/(normf*normt));
         a = sin(alpha);
         b = 1.0 - cos(alpha); 
+        
 
-	 if(abs(alpha) < 0.0001){
+	 if(fabs(alpha) < 0.000001){
 		         vout.at(0) = vin->at(0);
                          vout.at(1) = vin->at(1);
-                         vout.at(2) = vin->at(2);
-
+                         vout.at(2) = vin->at(2);       
+                         
 		}
 	else{
         	n[0] = ((from->at(1)) * (to->at(2)) - (from->at(2)) * (to->at(1)));
@@ -410,7 +411,7 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
                 p8rest[2]=-1*p7rest[2];
                 p8rest[0]=-1*p7rest[0];
                 p8rest[1]=-1*p7rest[1];
-                E7rest = sqrt( pow(Pc78,1) + pow(m7,2));
+                E7rest = sqrt( pow(Pc78,2) + pow(m7,2));
                 E8rest = sqrt( pow(Pc78,2) + pow(m8,2));
 
 		// boost to 2He frame
@@ -424,6 +425,7 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
                 p8L[2] = gamma4*(p8rest[2]+beta4*E8rest);
                 E8L = sqrt(pow(m8,2) + pow(p8L[0],2) + pow(p8L[1],2) + pow(p8L[2],2) );
 
+               
 
 		// rotate to the 2He direction
                 fvto.at(0) = p4L[0];
@@ -485,17 +487,26 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
 
 		} //if solution is valid 
 		
+                Double_t phi7 = atan2(p7L[1],p7L[0])*TMath::RadToDeg();
+                if(phi7<0) phi7 = (phi7 + 360.0);
 
+                Double_t phi8 = atan2(p8L[1],p8L[0])*TMath::RadToDeg();
+                if(phi8<0) phi8 = (phi8 + 360.0);
+
+                
 
 		std::cout << " -I- ===== ATTPC_d2He - Kinematics ====== "<<std::endl;
   		std::cout << " Scattered energy:" << Ene.at(0)  << " MeV" << std::endl;
   		std::cout << " Scattered  angle:"  << Ang.at(0) << " deg" << std::endl;
   		std::cout << " proton1 energy:" << Ene.at(2) << " MeV" << std::endl;
   		std::cout << " proton1 angle:"  << Ang.at(2) << " deg" << std::endl;
+                std::cout << " proton1 angle phi:"  << phi7 << " deg" << std::endl;
 		std::cout << " proton2 energy:" << Ene.at(3) << " MeV" << std::endl;
   		std::cout << " proton2 angle:"  << Ang.at(3) << " deg" << std::endl;
-
-		
+                std::cout << " proton2 angle phi:"  << phi8 << " deg" << std::endl;                
+                std::cout << " 2He kinetic energy:"  <<  Ene.at(1) << " MeV" << std::endl;
+		std::cout << " 2He lab angle:"  <<  Ang.at(1) << " deg" << std::endl;
+                
 
 		gATVP->SetBURes2E(Ene.at(3));
   		gATVP->SetBURes2A(Ang.at(3));
@@ -504,7 +515,7 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
   		gATVP->SetScatterE(Ene.at(0));
   		gATVP->SetScatterA(Ang.at(0));
 
-
+                Double_t random_z = 100.0*(gRandom->Uniform()); //cm
 
     		for(Int_t i=0; i<fMult; i++){
          		TParticlePDG* thisPart;
@@ -528,7 +539,8 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
 
 			 fVx = gATVP->GetVx();
 			 fVy = gATVP->GetVy();
-			 fVz = gATVP->GetVz();
+			 //fVz = gATVP->GetVz();
+                         fVz =  random_z;
 
 
 
