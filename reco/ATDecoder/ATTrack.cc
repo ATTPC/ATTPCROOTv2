@@ -56,6 +56,19 @@ Int_t ATTrack::GetQuadrant()                                        { return fQu
 Double_t ATTrack::GetGeoTheta()                                     { return fGeoThetaAngle;}
 Double_t ATTrack::GetGeoPhi()                                       { return fGeoPhiAngle;}
 
+std::vector<Double_t> ATTrack::GetPosXMin()                         {return fPosXmin;}
+std::vector<Double_t> ATTrack::GetPosYMin()                         {return fPosYmin;}
+std::vector<Double_t> ATTrack::GetPosZMin()                         {return fPosZmin;}
+std::vector<Double_t> ATTrack::GetPosXExp()                         {return fPosXexp;}
+std::vector<Double_t> ATTrack::GetPosYExp()                         {return fPosYexp;}
+std::vector<Double_t> ATTrack::GetPosZExp()                         {return fPosZexp;}
+std::vector<Double_t> ATTrack::GetPosXInt()                         {return fPosXinter;}
+std::vector<Double_t> ATTrack::GetPosYInt()                         {return fPosYinter;}
+std::vector<Double_t> ATTrack::GetPosZInt()                         {return fPosZinter;}
+std::vector<Double_t> ATTrack::GetPosXBack()                        {return fPosXBack;}
+std::vector<Double_t> ATTrack::GetPosYBack()                        {return fPosYBack;}
+std::vector<Double_t> ATTrack::GetPosZBack()                        {return fPosZBack;}
+
 
 
 Double_t ATTrack::GetMeanTime()
@@ -81,4 +94,25 @@ Double_t ATTrack::GetLinearRange()
   }else return 0;
 
 
+}
+
+void ATTrack::SetPosMin(std::vector<Double_t> xmin,std::vector<Double_t> ymin,std::vector<Double_t> zmin,std::vector<Double_t> xback,std::vector<Double_t> yback,std::vector<Double_t> zback)
+{
+  fPosXmin  = xmin;
+  fPosYmin  = ymin;
+  fPosZmin  = zmin;
+  fPosXBack = xback;
+  fPosYBack = yback;
+  fPosZBack = zback;
+
+}
+
+void ATTrack::SetPosExp(std::vector<Double_t> xexp,std::vector<Double_t> yexp,std::vector<Double_t> zexp,std::vector<Double_t> xint,std::vector<Double_t> yint,std::vector<Double_t> zint)
+{
+  fPosXexp    = xexp;
+  fPosYexp    = yexp;
+  fPosZexp    = zexp;
+  fPosXinter  = xint;
+  fPosYinter  = yint;
+  fPosZinter  = zint;
 }

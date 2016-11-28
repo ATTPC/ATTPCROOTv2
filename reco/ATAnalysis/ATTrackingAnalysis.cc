@@ -181,8 +181,9 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
                           //Custom function to pass the method to extract the Hit Array
                           std::function<std::vector<ATHit>*()> func = std::bind(&ATTrack::GetHitArray,trackToMin);
-
                           min->MinimizeGen(parameter,trackToMin,func,hPadPlane,PadCoord);
+
+                          
 
                         }
 

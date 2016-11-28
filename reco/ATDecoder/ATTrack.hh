@@ -71,6 +71,37 @@ class ATTrack : public TObject {
     Double_t fGeoPhiAngle; //  " azimuthal "
     Int_t fQuadrant; //Pad plane quadrant
 
+    // MC result and projections
+    std::vector<Double_t> fPosXmin;
+    std::vector<Double_t> fPosYmin;
+    std::vector<Double_t> fPosZmin;
+    std::vector<Double_t> fPosXexp;
+    std::vector<Double_t> fPosYexp;
+    std::vector<Double_t> fPosZexp;
+    std::vector<Double_t> fPosXinter;
+    std::vector<Double_t> fPosYinter;
+    std::vector<Double_t> fPosZinter;
+    std::vector<Double_t> fPosXBack;
+    std::vector<Double_t> fPosYBack;
+    std::vector<Double_t> fPosZBack;
+
+    void SetPosMin(std::vector<Double_t> xmin,std::vector<Double_t> ymin,std::vector<Double_t> zmin,std::vector<Double_t> xback,std::vector<Double_t> yback,std::vector<Double_t> zback);
+    void SetPosExp(std::vector<Double_t> xexp,std::vector<Double_t> yexp,std::vector<Double_t> zexp,std::vector<Double_t> xint,std::vector<Double_t> yint,std::vector<Double_t> zint);
+
+    std::vector<Double_t> GetPosXMin();
+    std::vector<Double_t> GetPosYMin();
+    std::vector<Double_t> GetPosZMin();
+    std::vector<Double_t> GetPosXExp();
+    std::vector<Double_t> GetPosYExp();
+    std::vector<Double_t> GetPosZExp();
+    std::vector<Double_t> GetPosXInt();
+    std::vector<Double_t> GetPosYInt();
+    std::vector<Double_t> GetPosZInt();
+    std::vector<Double_t> GetPosXBack();
+    std::vector<Double_t> GetPosYBack();
+    std::vector<Double_t> GetPosZBack(); 
+
+
     friend inline std::ostream& operator <<(std::ostream &o, const ATTrack &track)
     {
       std::cout<<cYELLOW<<" ====================================================== "<<std::endl;
