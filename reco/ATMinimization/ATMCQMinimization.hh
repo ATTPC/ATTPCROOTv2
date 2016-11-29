@@ -51,6 +51,7 @@ class ATMCQMinimization : public ATMinimization{
         void AddRtoEPar(std::vector<Double_t> (&par)[10]);
         void AddParticle(std::vector<std::pair<Int_t,Int_t>>& ptcl);
         void SetEntTB(Int_t value);
+        void SetZGeoVertex(Bool_t value);
 
 
         Bool_t Minimize(Double_t* parameter,ATEvent *event);
@@ -169,6 +170,7 @@ class ATMCQMinimization : public ATMinimization{
              Bool_t kDebug;
              Bool_t kVerbose;
              Bool_t kPosChi2; //Enable the use of Position Chi2
+             Bool_t kIsZGeoVertex; //Uses the relative Z vertex determined with the calibration performed with the original TB taken from parameter list
 
              //Global variables
              Double_t sm1;

@@ -158,6 +158,8 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
                   fVertex = Z0 - Vertex_mean.Z(); //Vertex for the excitation function.
                   min->SetEntTB(fEntTB_calc);
+                  min->SetZGeoVertex(kTRUE);  //If true, the MC will start where the geometrical vertex is found,
+                                              //according to the Z calibration done in the PSATask with the EntTB passed through the parameter file
 
                   if(mininizationTracks.size()==fMultiplicity)
                   {
@@ -174,9 +176,9 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                           parameter[1]=Vertex_mean.Y();
                           parameter[2]=Vertex_mean.Z();
                           parameter[3]=(Int_t) vertexTime;
-                          parameter[4]=angles.first;
+                          parameter[4]=angles.first; //Theta
                           parameter[5]=trackToMin->GetLinearRange();
-                          parameter[6]=angles.second;
+                          parameter[6]=angles.second; //Phi
                           parameter[7]=trackToMin->GetHitArray()->size();
 
                           //Custom function to pass the method to extract the Hit Array

@@ -75,6 +75,7 @@ ATMCQMinimization::ATMCQMinimization()
   kDebug=kFALSE;
   kVerbose=kTRUE;  //wm
   kPosChi2=kTRUE;
+  kIsZGeoVertex=kFALSE;
 
   fXTBCorr = new Double_t[10000];
   fYTBCorr = new Double_t[10000];
@@ -121,6 +122,7 @@ void ATMCQMinimization::AddELossPar(std::vector<Double_t> (&par)[10])           
 void ATMCQMinimization::AddRtoEPar(std::vector<Double_t> (&par)[10])                                                {for(auto i=0;i<10;i++)fRtoEPar_array[i]=par[i];}
 void ATMCQMinimization::AddParticle(std::vector<std::pair<Int_t,Int_t>>& ptcl)                                      {fParticleAZ=ptcl;}
 void ATMCQMinimization::SetEntTB(Int_t value)                                                                       {fEntTB = value;}
+void ATMCQMinimization::SetZGeoVertex(Bool_t value)                                                                 {kIsZGeoVertex = value;}
 
 
 Bool_t  ATMCQMinimization::Minimize(Double_t* parameter,ATEvent *event)
@@ -404,11 +406,14 @@ void ATMCQMinimization::MCvar( double* parameter, int & modevar,int & iconvar,do
                             if(modevar==1){  //initiatialisation
                                     x0MC =parameter[0]/10.0;
                                     y0MC =parameter[1]/10.0;
-                                    z0MC =fZk/10.0 - (fEntTB-parameter[3])*dzstep;
-                                    aMC = parameter[6];
-                                    phiMC = TMath::Pi()-parameter[4]-fThetaPad;
-                                    //Double_t bro=parameter[5]*Bmin/1000.0;// !Tm*/
+                                    if(kIsZGeoVertex) z0MC = parameter[2]/10.0;
+                                    else z0MC =fZk/10.0 - (fEntTB-parameter[3])*dzstep;
+                                    //std::cout<<" Parameter 2 "<<parameter[2]<<" zOMC : "<<z0MC<<std::endl;
+                                    aMC = parameter[4];
                                     romin=parameter[5];
+                                    phiMC = TMath::Pi()-parameter[6]-fThetaPad;
+                                    //Double_t bro=parameter[5]*Bmin/1000.0;// !Tm*/
+
                                     //Double_t theta0=parameter[6];
 
 
@@ -601,7 +606,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                       //        define initial conditions
 
                       //         Transform initial parameters into lab
-                      Double_t  x = x0MC; // ! ztb=394
+                      Double_t  x = x0MC;
                       Double_t  y = y0MC;
                       Double_t  z = z0MC;
                       Double_t x_buff =x;
@@ -1399,6 +1404,7 @@ void ATMCQMinimization::PrintParameters(Int_t index)
     std::cout<<std::endl;
     std::cout<<" Printing Range to Energy function parameters"<<std::endl;
     std::copy(fRtoEPar_array[index].begin(),fRtoEPar_array[index].end(),output_it);
+    std::cout<<cNORMAL<<std::endl;
 }
 
 Double_t ATMCQMinimization::GetChi2Pos(Int_t index,Int_t _iterCorrNorm,Int_t _par,
