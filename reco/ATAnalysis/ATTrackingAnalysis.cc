@@ -182,15 +182,18 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                           //Custom function to pass the method to extract the Hit Array
                           std::function<std::vector<ATHit>*()> func = std::bind(&ATTrack::GetHitArray,trackToMin);
                           min->MinimizeGen(parameter,trackToMin,func,hPadPlane,PadCoord);
+                          trackToMin->SetPosMin(min->GetPosXMin(),min->GetPosYMin(),min->GetPosZMin(),min->GetPosXBack(),min->GetPosYBack(),min->GetPosZBack());
+                          trackToMin->SetPosExp(min->GetPosXExp(),min->GetPosYExp(),min->GetPosZExp(),min->GetPosXInt(),min->GetPosYInt(),min->GetPosZInt());
+                          trackToMin->SetMCFit(kTRUE);
+                          trackingEventAna->SetTrack(trackToMin);
 
-                          
 
                         }
 
 
 
                         //After minimization we copy the tracks
-                        for(Int_t t=0;t<mininizationTracks.size();t++) trackingEventAna->SetTrack(mininizationTracks.at(t));
+                        //for(Int_t t=0;t<mininizationTracks.size();t++) trackingEventAna->SetTrack(mininizationTracks.at(t));
                         trackingEventAna->SetVertex(fVertex);
 
                   }

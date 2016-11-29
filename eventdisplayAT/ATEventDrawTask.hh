@@ -153,6 +153,8 @@ class ATEventDrawTask : public FairTask
     TEvePointSet* fHitSet;
     TEvePointSet* fHitSetMin;
 
+    TEvePointSet* fHitSetMC[5];
+
    // TEveGeoShape* x;
    // std::vector<TEveGeoShape*> hitSphereArray;
 
@@ -249,6 +251,7 @@ class ATEventDrawTask : public FairTask
     //std::vector<TEveLine*> fLineArray;
     TEveLine* fLineArray[5];
     Int_t fLineNum;
+    Int_t fTrackNum;
     //TEveLine* fLine;
 
     ClassDef(ATEventDrawTask,1);

@@ -16,6 +16,7 @@ ATTrack::ATTrack()
   fAngleYDet   = -20;
   fRange       = 0.0;
   fQuadrant    = -1;
+  kIsMCFit     = kFALSE;
 }
 
 /*ATTrack::ATTrack(const ATTrack &obj)
@@ -42,6 +43,7 @@ void ATTrack::SetGeoTheta(Double_t angle)                           { fGeoThetaA
 void ATTrack::SetGeoPhi(Double_t angle)                             { fGeoPhiAngle = angle;}
 void ATTrack::SetGeoRange(Double_t range)                           { fRange = range;}
 void ATTrack::SetQuadrant(Int_t quad)                               { fQuadrant = quad;}
+void ATTrack::SetMCFit(Bool_t value)                                { kIsMCFit = value;}
 
 std::vector<ATHit> *ATTrack::GetHitArray()                          { return &fHitArray;}
 std::vector<Double_t> ATTrack::GetFitPar()                          { return fParFit;}
@@ -56,18 +58,18 @@ Int_t ATTrack::GetQuadrant()                                        { return fQu
 Double_t ATTrack::GetGeoTheta()                                     { return fGeoThetaAngle;}
 Double_t ATTrack::GetGeoPhi()                                       { return fGeoPhiAngle;}
 
-std::vector<Double_t> ATTrack::GetPosXMin()                         {return fPosXmin;}
-std::vector<Double_t> ATTrack::GetPosYMin()                         {return fPosYmin;}
-std::vector<Double_t> ATTrack::GetPosZMin()                         {return fPosZmin;}
-std::vector<Double_t> ATTrack::GetPosXExp()                         {return fPosXexp;}
-std::vector<Double_t> ATTrack::GetPosYExp()                         {return fPosYexp;}
-std::vector<Double_t> ATTrack::GetPosZExp()                         {return fPosZexp;}
-std::vector<Double_t> ATTrack::GetPosXInt()                         {return fPosXinter;}
-std::vector<Double_t> ATTrack::GetPosYInt()                         {return fPosYinter;}
-std::vector<Double_t> ATTrack::GetPosZInt()                         {return fPosZinter;}
-std::vector<Double_t> ATTrack::GetPosXBack()                        {return fPosXBack;}
-std::vector<Double_t> ATTrack::GetPosYBack()                        {return fPosYBack;}
-std::vector<Double_t> ATTrack::GetPosZBack()                        {return fPosZBack;}
+std::vector<Double_t> ATTrack::GetPosXMin() const                   { return fPosXmin;}
+std::vector<Double_t> ATTrack::GetPosYMin() const                   { return fPosYmin;}
+std::vector<Double_t> ATTrack::GetPosZMin() const                   { return fPosZmin;}
+std::vector<Double_t> ATTrack::GetPosXExp() const                   { return fPosXexp;}
+std::vector<Double_t> ATTrack::GetPosYExp() const                   { return fPosYexp;}
+std::vector<Double_t> ATTrack::GetPosZExp() const                   { return fPosZexp;}
+std::vector<Double_t> ATTrack::GetPosXInt() const                   { return fPosXinter;}
+std::vector<Double_t> ATTrack::GetPosYInt() const                   { return fPosYinter;}
+std::vector<Double_t> ATTrack::GetPosZInt() const                   { return fPosZinter;}
+std::vector<Double_t> ATTrack::GetPosXBack() const                  { return fPosXBack;}
+std::vector<Double_t> ATTrack::GetPosYBack() const                  { return fPosYBack;}
+std::vector<Double_t> ATTrack::GetPosZBack() const                  { return fPosZBack;}
 
 
 
@@ -96,7 +98,8 @@ Double_t ATTrack::GetLinearRange()
 
 }
 
-void ATTrack::SetPosMin(std::vector<Double_t> xmin,std::vector<Double_t> ymin,std::vector<Double_t> zmin,std::vector<Double_t> xback,std::vector<Double_t> yback,std::vector<Double_t> zback)
+void ATTrack::SetPosMin(const std::vector<Double_t> &xmin,const std::vector<Double_t> &ymin,const std::vector<Double_t> &zmin,const std::vector<Double_t> &xback,
+  const std::vector<Double_t> &yback,const std::vector<Double_t> &zback)
 {
   fPosXmin  = xmin;
   fPosYmin  = ymin;
@@ -107,7 +110,8 @@ void ATTrack::SetPosMin(std::vector<Double_t> xmin,std::vector<Double_t> ymin,st
 
 }
 
-void ATTrack::SetPosExp(std::vector<Double_t> xexp,std::vector<Double_t> yexp,std::vector<Double_t> zexp,std::vector<Double_t> xint,std::vector<Double_t> yint,std::vector<Double_t> zint)
+void ATTrack::SetPosExp(const std::vector<Double_t> &xexp,const std::vector<Double_t> &yexp,const std::vector<Double_t> &zexp,const std::vector<Double_t> &xint,
+  const std::vector<Double_t> &yint,const std::vector<Double_t> &zint)
 {
   fPosXexp    = xexp;
   fPosYexp    = yexp;

@@ -142,6 +142,7 @@ ATEventDrawTask::ATEventDrawTask()
     fIniHit = new ATHit();
     fIniHitRansac = new ATHit();
     fLineNum = 0;
+    fTrackNum = 0;
 
 }
 
@@ -377,21 +378,25 @@ ATEventDrawTask::DrawHitPoints()
 
   Int_t nHitsMin = 0; //Initialization of the variable to ensure a non-NULL pointer
   fHitSetMin = new TEvePointSet();
+
   if(fEventManager->GetDrawHoughSpace()){
-        if(fIsCircularHough){
-          fPosXMin = fHoughSpaceCircle_buff->GetPosXMin();
-          fPosYMin = fHoughSpaceCircle_buff->GetPosYMin();
-          fPosZMin = fHoughSpaceCircle_buff->GetPosZMin();
-          nHitsMin = fPosXMin.size();
+
+                if(fIsCircularHough){
+
+                  fPosXMin = fHoughSpaceCircle_buff->GetPosXMin();
+                  fPosYMin = fHoughSpaceCircle_buff->GetPosYMin();
+                  fPosZMin = fHoughSpaceCircle_buff->GetPosZMin();
+                  nHitsMin = fPosXMin.size();
 
 
-  fHitSetMin = new TEvePointSet("HitMin",nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
-  fHitSetMin->SetOwnIds(kTRUE);
-  fHitSetMin->SetMarkerColor(kGreen);
-  fHitSetMin->SetMarkerSize(fHitSize);
-  fHitSetMin->SetMarkerStyle(fHitStyle);
+                  fHitSetMin = new TEvePointSet("HitMin",nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
+                  fHitSetMin->SetOwnIds(kTRUE);
+                  fHitSetMin->SetMarkerColor(kGreen);
+                  fHitSetMin->SetMarkerSize(fHitSize);
+                  fHitSetMin->SetMarkerStyle(fHitStyle);
 
-   }
+                }
+
   }
 
 
@@ -428,22 +433,39 @@ ATEventDrawTask::DrawHitPoints()
 
               if(fTrackingEventAnaArray){
 
+                  for(Int_t i=0;i<5;i++) fHitSetMC[i] = 0;
+
                   fTrackingEventAna = (ATTrackingEventAna*) fTrackingEventAnaArray->At(0);
                   std::vector<ATTrack> anaTracks = fTrackingEventAna->GetTrackArray();
                   std::cout<<cYELLOW<<"  ====   Tracking analysis ==== "<<std::endl;
                   std::cout<<" Number of analyzed tracks : "<<anaTracks.size()<<std::endl;
                   std::cout<<" Vertex of reaction : "<<fTrackingEventAna->GetVertex()<<std::endl;
 
+                  fTrackNum = anaTracks.size();
+
+                  if(anaTracks.size()<5){ // Limited to 5 tracks
                       for(Int_t i=0;i<anaTracks.size();i++)
                       {
                           ATTrack track = anaTracks.at(i);
                           std::cout<<track<<std::endl;
+                            fPosXMin = track.GetPosXMin();
+                            fPosYMin = track.GetPosYMin();
+                            fPosZMin = track.GetPosZMin();
+                            nHitsMin = fPosXMin.size();
+                            fHitSetMC[i] = new TEvePointSet(Form("HitMC_%d",i),nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
+                            fHitSetMC[i]->SetOwnIds(kTRUE);
+                            fHitSetMC[i]->SetMarkerColor(kGreen);
+                            fHitSetMC[i]->SetMarkerSize(fHitSize);
+                            fHitSetMC[i]->SetMarkerStyle(fHitStyle);
+
+                            for(Int_t iHit=0;iHit<fPosXMin.size();iHit++)
+                              fHitSetMC[i]->SetNextPoint(fPosXMin.at(iHit)/10.,fPosYMin.at(iHit)/10.,fPosZMin.at(iHit)/10.);
 
                       }
+                  }
+              }//If trackingEventAnaArray
 
-              }
-
-          }
+          }// If RANSAC
 
           fLineNum = TrackCand.size();
           std::cout<<cRED<<" Found "<<TrackCand.size()<<" track candidates "<<cNORMAL<<std::endl;
@@ -721,14 +743,25 @@ ATEventDrawTask::DrawHitPoints()
     gEve -> AddElement(fHitSet);
     gEve -> AddElement(fhitBoxSet);
 
+    // Analysis elements
+    if(fEventManager->GetDrawHoughSpace()){
 
-    if(fEventManager->GetDrawHoughSpace())
-          if(fIsCircularHough)
-                  gEve -> AddElement(fHitSetMin);
+        if(fIsCircularHough)
+                      gEve -> AddElement(fHitSetMin);
 
 
-          if(fIsLinearHough || fRansacArray)
+        if(fIsLinearHough || fRansacArray)
               if(fLineNum>0) for(Int_t i=0;i<fLineNum;i++) gEve -> AddElement(fLineArray[i]);
+
+
+        if(fTrackingEventAnaArray)
+             if(fTrackNum>0) for(Int_t i=0;i<fTrackNum;i++) gEve -> AddElement(fHitSetMC[i]);
+
+    }
+
+
+
+
 
                   // gEve -> AddElement(fLine);
                   //if(fLineArray.size()>0) gEve -> AddElement(fLineArray.at(0));
@@ -1015,7 +1048,22 @@ ATEventDrawTask::Reset()
               }
 
       }
-    }
+
+      if(fTrackingEventAnaArray){
+
+          for(Int_t i=0;i<fTrackNum;i++){
+            if(fHitSetMC[i])
+            {
+              fHitSetMC[i]->Reset();
+              gEve->RemoveElement(fHitSetMC[i], fEventManager);
+
+            }
+          }
+
+      }
+
+
+    }// Draw Minimization
 
 
  /* TEveGeoShape* hitShape;
