@@ -83,6 +83,8 @@ ATMCQMinimization::ATMCQMinimization()
 
   hitTBMatrix = new std::vector<std::vector<ATHit>>;
 
+  fEntZ0 = 0.0;
+
   //!fPadPlane = new TH2Poly();
 
 
@@ -123,6 +125,7 @@ void ATMCQMinimization::AddRtoEPar(std::vector<Double_t> (&par)[10])            
 void ATMCQMinimization::AddParticle(std::vector<std::pair<Int_t,Int_t>>& ptcl)                                      {fParticleAZ=ptcl;}
 void ATMCQMinimization::SetEntTB(Int_t value)                                                                       {fEntTB = value;}
 void ATMCQMinimization::SetZGeoVertex(Bool_t value)                                                                 {kIsZGeoVertex = value;}
+void ATMCQMinimization::SetEntZ0(Double_t val)                                                                      {fEntZ0 = val;}
 
 
 Bool_t  ATMCQMinimization::Minimize(Double_t* parameter,ATEvent *event)
@@ -406,12 +409,13 @@ void ATMCQMinimization::MCvar( double* parameter, int & modevar,int & iconvar,do
                             if(modevar==1){  //initiatialisation
                                     x0MC =parameter[0]/10.0;
                                     y0MC =parameter[1]/10.0;
-                                    if(kIsZGeoVertex) z0MC = parameter[2]/10.0;
+                                    if(kIsZGeoVertex) z0MC = parameter[2]/10.0 + (fZk/10.0 - fEntZ0/10.0);
                                     else z0MC =fZk/10.0 - (fEntTB-parameter[3])*dzstep;
                                     //std::cout<<" Parameter 2 "<<parameter[2]<<" zOMC : "<<z0MC<<std::endl;
                                     aMC = parameter[4];
                                     romin=parameter[5];
-                                    phiMC = TMath::Pi()-parameter[6]-fThetaPad;
+                                    if(kIsZGeoVertex) phiMC = parameter[6];
+                                    else phiMC = TMath::Pi()-parameter[6]-fThetaPad;
                                     //Double_t bro=parameter[5]*Bmin/1000.0;// !Tm*/
 
                                     //Double_t theta0=parameter[6];
@@ -708,6 +712,13 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                     xpad[iterd] = xdet[iterd]*TMath::Cos(thetaPad) - ydet[iterd]*TMath::Sin(thetaPad);
                                                     ypad[iterd] = xdet[iterd]*TMath::Sin(thetaPad) + ydet[iterd]*TMath::Cos(thetaPad);
                                                     zpad[iterd] = zdet[iterd];
+                                                    if(kIsZGeoVertex) zpad[iterd] = zpad[iterd] - (fZk - fEntZ0);
+
+                                                    // Remove!!!
+                                                    //xpad[iterd] = xcmm[iterd];
+                                                    //ypad[iterd] = ycmm[iterd];
+                                                    //zpad[iterd] = zcmm[iterd];
+
 
                                                     //zpad[iterd] = -zdet[iterd]+ 2*zmin*10.0;
 

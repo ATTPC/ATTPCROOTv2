@@ -160,6 +160,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                   min->SetEntTB(fEntTB_calc);
                   min->SetZGeoVertex(kTRUE);  //If true, the MC will start where the geometrical vertex is found,
                                               //according to the Z calibration done in the PSATask with the EntTB passed through the parameter file
+                  min->SetEntZ0(Z0); //Calculated entrance position (actually this is the cathode position)
 
                   if(mininizationTracks.size()==fMultiplicity)
                   {
@@ -406,17 +407,19 @@ std::pair<Double_t,Double_t> ATTrackingAnalysis::GetAnglesSolenoid(ATTrack* trac
           if(par1>=0) afit = TMath::Pi()-TMath::ATan2(TMath::Abs(par1),1);
           else if(par1<0)  afit = TMath::ATan2(TMath::Abs(par1),1);
 
+          afitXY = TMath::ATan2(y_mean,x_mean);
+
           if(x_mean>0 && y_mean>0){
-            afitXY = TMath::Abs(TMath::ATan(par1XY));
+            //afitXY = TMath::Abs(TMath::ATan(par1XY));
             track->SetQuadrant(0);
           }else if(x_mean<0 && y_mean>0){
-            afitXY = TMath::Pi()-TMath::Abs(TMath::ATan(par1XY));
+            //afitXY = TMath::Pi()-TMath::Abs(TMath::ATan(par1XY));
             track->SetQuadrant(1);
           }else if(x_mean<0 && y_mean<0){
-            afitXY = TMath::Pi()+TMath::Abs(TMath::ATan(par1XY));
+            //afitXY = TMath::Pi()+TMath::Abs(TMath::ATan(par1XY));
             track->SetQuadrant(2);
           }else if(x_mean>0 && y_mean<0){
-            afitXY = 2.0*TMath::Pi()-TMath::Abs(TMath::ATan(par1XY));
+            //afitXY = 2.0*TMath::Pi()-TMath::Abs(TMath::ATan(par1XY));
             track->SetQuadrant(3);
           }else afitXY=0.0;
 

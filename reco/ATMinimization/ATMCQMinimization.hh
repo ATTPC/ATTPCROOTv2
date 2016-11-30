@@ -52,6 +52,7 @@ class ATMCQMinimization : public ATMinimization{
         void AddParticle(std::vector<std::pair<Int_t,Int_t>>& ptcl);
         void SetEntTB(Int_t value);
         void SetZGeoVertex(Bool_t value);
+        void SetEntZ0(Double_t val);
 
 
         Bool_t Minimize(Double_t* parameter,ATEvent *event);
@@ -155,6 +156,8 @@ class ATMCQMinimization : public ATMinimization{
              Double_t fThetaRot;
              Double_t fZk;
              Int_t fEntTB; //Beam entrance Time Bucket
+
+             Double_t fEntZ0;
 
              //TRotation* fPadtoDetRot;
 
