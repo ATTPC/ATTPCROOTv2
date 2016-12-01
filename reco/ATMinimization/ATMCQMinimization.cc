@@ -582,7 +582,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                         //     The energy must be scaled.
                         e0sm = RtoEFunc(romin*(fPressure/760.0), fRtoEPar_array[0]);
                         e0ll=e0sm;
-                        std::cout<<cRED<<" Energy : "<<e0sm<<" Experimental Range : "<<romin<<" Pressure : "<<fPressure<<std::endl;
+                        //std::cout<<cRED<<" Energy : "<<e0sm<<" Experimental Range : "<<romin<<" Pressure : "<<fPressure<<std::endl;
                       }else std::cout<<cYELLOW<<" ATMCQMinimization::QMCsim - Warning! No Range-to-Energy function found."<<cNORMAL<<std::endl;
 
 
@@ -831,7 +831,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                         Double_t radp2=TMath::Power(x,2)+TMath::Power(y,2);
                                                         Double_t radp=TMath::Sqrt(radp2);
                                                         //std::cout<<cRED<<" dt : "<<dt<<cNORMAL<<std::endl;
-                                                        std::cout<<" Eloss : "<<sloss<<" Kinetic Energy : "<<ekin<<" zTBCorr[iterCorrNorm] "<<zTBCorr[iterCorrNorm]<<" Range : "<<range<<std::endl;
+                                                        //std::cout<<" Eloss : "<<sloss<<" Kinetic Energy : "<<ekin<<" zTBCorr[iterCorrNorm] "<<zTBCorr[iterCorrNorm]<<" Range : "<<range<<std::endl;
                                                       //  if(radp>25.0) break;//  !this limits the radial distance of the trajectories taken into ccount
                                                         //	if(z.gt.ztot) go to 100
                                                         if(zTBCorr[iterCorrNorm]<0.0) break;
