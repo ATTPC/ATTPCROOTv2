@@ -416,7 +416,7 @@ void ATMCQMinimization::MCvar( double* parameter, int & modevar,int & iconvar,do
                                     romin=parameter[5];
                                     if(kIsZGeoVertex) phiMC = parameter[4];
                                     else phiMC = TMath::Pi()-parameter[4]-fThetaPad;
-                                    
+
                                     //Double_t bro=parameter[5]*Bmin/1000.0;// !Tm*/
 
                                     //Double_t theta0=parameter[6];
@@ -831,7 +831,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                         Double_t radp2=TMath::Power(x,2)+TMath::Power(y,2);
                                                         Double_t radp=TMath::Sqrt(radp2);
                                                         //std::cout<<cRED<<" dt : "<<dt<<cNORMAL<<std::endl;
-
+                                                        std::cout<<" Eloss : "<<sloss<<" Kinetic Energy : "<<ekin<<" zTBCorr[iterCorrNorm] "<<zTBCorr[iterCorrNorm]<<" Range : "<<range<<std::endl;
                                                       //  if(radp>25.0) break;//  !this limits the radial distance of the trajectories taken into ccount
                                                         //	if(z.gt.ztot) go to 100
                                                         if(zTBCorr[iterCorrNorm]<0.0) break;
