@@ -412,10 +412,11 @@ void ATMCQMinimization::MCvar( double* parameter, int & modevar,int & iconvar,do
                                     if(kIsZGeoVertex) z0MC = parameter[2]/10.0 + (fZk/10.0 - fEntZ0/10.0);
                                     else z0MC =fZk/10.0 - (fEntTB-parameter[3])*dzstep;
                                     //std::cout<<" Parameter 2 "<<parameter[2]<<" zOMC : "<<z0MC<<std::endl;
-                                    aMC = parameter[4];
+                                    aMC = parameter[6];
                                     romin=parameter[5];
-                                    if(kIsZGeoVertex) phiMC = parameter[6];
-                                    else phiMC = TMath::Pi()-parameter[6]-fThetaPad;
+                                    if(kIsZGeoVertex) phiMC = parameter[4];
+                                    else phiMC = TMath::Pi()-parameter[4]-fThetaPad;
+                                    
                                     //Double_t bro=parameter[5]*Bmin/1000.0;// !Tm*/
 
                                     //Double_t theta0=parameter[6];
