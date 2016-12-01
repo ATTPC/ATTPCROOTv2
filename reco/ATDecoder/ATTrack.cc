@@ -17,6 +17,19 @@ ATTrack::ATTrack()
   fRange       = 0.0;
   fQuadrant    = -1;
   kIsMCFit     = kFALSE;
+  FitParameters.sThetaMin        = 0;
+  FitParameters.sThetaMin        = 0;
+  FitParameters.sEnerMin         = 0;
+  FitParameters.sPosMin.SetXYZ(0,0,0);
+  FitParameters.sBrhoMin         = 0;
+  FitParameters.sBMin            = 0;
+  FitParameters.sPhiMin          = 0;
+  FitParameters.sChi2Min         = 0;
+  FitParameters.sVertexPos.SetXYZ(0,0,0);
+  FitParameters.sVertexEner      = 0;
+  FitParameters.sMinDistAppr     = 0;
+  FitParameters.sNumMCPoint      = 0;
+  FitParameters.sNormChi2        = 0;
 }
 
 /*ATTrack::ATTrack(const ATTrack &obj)

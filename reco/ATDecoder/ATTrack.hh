@@ -88,6 +88,25 @@ class ATTrack : public TObject {
     void SetPosExp(const std::vector<Double_t> &xexp,const std::vector<Double_t> &yexp,const std::vector<Double_t> &zexp,const std::vector<Double_t> &xint,
       const std::vector<Double_t> &yint,const std::vector<Double_t> &zint);
 
+      struct FitPar
+      {
+        Double_t sThetaMin;
+        Double_t sEnerMin;
+        TVector3 sPosMin;
+        Double_t sBrhoMin;
+        Double_t sBMin;
+        Double_t sPhiMin;
+        Double_t sChi2Min;
+        TVector3 sVertexPos;
+        Double_t sVertexEner;
+        Double_t sMinDistAppr;
+        Int_t    sNumMCPoint;
+        Double_t sNormChi2;
+
+      };
+
+      FitPar FitParameters;
+
 
   protected:
     std::vector<ATHit> fHitArray;
