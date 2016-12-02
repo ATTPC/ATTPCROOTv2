@@ -11,6 +11,7 @@
 #include "ATMinimization.hh"
 #include "ATHit.hh"
 #include "ATDigiPar.hh"
+#include "ATTrack.hh"
 
 #include "AtTpcMap.h"
 
@@ -24,6 +25,7 @@
 #include "TArrayD.h"
 #include "TVector3.h"
 #include "TH2Poly.h"
+#include "TGraph.h"
 
 //System
 #include <iostream>  //wm
@@ -54,6 +56,7 @@ class ATMCQMinimization : public ATMinimization{
         void SetZGeoVertex(Bool_t value);
         void SetEntZ0(Double_t val);
         void SetBackWardPropagation(Bool_t value);
+        void SetGainCalibration(Double_t value);
 
 
         Bool_t Minimize(Double_t* parameter,ATEvent *event);
@@ -86,6 +89,8 @@ class ATMCQMinimization : public ATMinimization{
 
 
       protected:
+
+       void CalibrateGain(std::vector<ATHit>* hitArray);
        void GetEnergy(Double_t M,Double_t IZ,Double_t BRO,Double_t &E);
        void GetBro(Double_t M,Double_t IZ,Double_t &BRO,Double_t E);
        Double_t GetSimThetaAngle(TVector3* pos, TVector3* posforw);
@@ -128,6 +133,7 @@ class ATMCQMinimization : public ATMinimization{
              TVector3 fVertexPos;
              Double_t fDens;
              Double_t fPressure;
+             Double_t fGain;
 
 
              std::vector<Double_t> fPosXmin;
@@ -147,6 +153,7 @@ class ATMCQMinimization : public ATMinimization{
              std::vector<Double_t> fPosZBack;
 
              std::vector<Double_t> fPosTBexp;
+             std::vector<Double_t> fQmin;
 
              Double_t fDriftVelocity;
              Int_t fTBTime;
@@ -332,7 +339,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
            int imc1max=10;//10
            iconvar=imc1;
            int imc2=0;
-           int imc2max=10;//100
+           int imc2max=100;//100
            int icontrol=1;
 
            MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC,aMC,phiMC, Bmin, fDens,romin,x0MCv, y0MCv,z0MCv,aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
@@ -414,6 +421,8 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
               std::cout<<cRED<<" chi2minPos : "<<chi2minPos<<std::endl;
 
                //BackwardExtrapolation();
+
+               //CalibrateGain(fHitArray);
 
                std::cout<<cYELLOW<<" Minimization result : "<<std::endl;
                std::cout<<" Scattering Angle : "<<aMC*180.0/TMath::Pi()<<std::endl;

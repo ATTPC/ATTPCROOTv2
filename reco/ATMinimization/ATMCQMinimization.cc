@@ -86,6 +86,7 @@ ATMCQMinimization::ATMCQMinimization()
 
   fEntZ0 = 0.0;
   fBeam_range = 0.0;
+  fGain = 4.0;
 
   //!fPadPlane = new TH2Poly();
 
@@ -129,6 +130,7 @@ void ATMCQMinimization::SetEntTB(Int_t value)                                   
 void ATMCQMinimization::SetZGeoVertex(Bool_t value)                                                                 {kIsZGeoVertex = value;}
 void ATMCQMinimization::SetEntZ0(Double_t val)                                                                      {fEntZ0 = val;}
 void ATMCQMinimization::SetBackWardPropagation(Bool_t value)                                                        {kBackWardProp = value;}
+void ATMCQMinimization::SetGainCalibration(Double_t value)                                                          {fGain = value;}
 
 
 Bool_t  ATMCQMinimization::Minimize(Double_t* parameter,ATEvent *event)
@@ -514,6 +516,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                       std::vector<Double_t> ziter;
                                       std::vector<Double_t> zinter;
                                       std::vector<Int_t> TBInter;
+                                      std::vector<Double_t> qiter;
 
 
                                        Double_t xcmm[10000]={0};
@@ -741,14 +744,13 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                    fZTBCorr[iterCorrNorm] =  zTBCorr[iterCorrNorm];
 
 
-
-
                                                 //  if(iterCorrNorm!=icnb){
                                                    xiter.push_back(xTBCorr[iterCorrNorm]);
                                                    yiter.push_back(yTBCorr[iterCorrNorm]);
                                                    ziter.push_back(zTBCorr[iterCorrNorm]);
+
                                               //    }
-                                                  icnb=iterCorrNorm;
+                                                   icnb=iterCorrNorm;
 
 
 
@@ -888,10 +890,10 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                       double sigstrtrans=0.010*sqrt(zpad[iterd]) ; //in cm
                                       double sigstrlong=0.025*sqrt(zpad[iterd]) ; //in cm but zpad is in mm
                                       double rstrag[4]={0.};
-                                        rstrag[0] =0.37925;
+                                        rstrag[0] =  0.37925;
                                         rstrag[1] =  0.968;
-                                        rstrag[2] =  1.421 ;
-                                        rstrag[3] = 6.69 ; //normalized radius for 4 values
+                                        rstrag[2] =  1.421;
+                                        rstrag[3] =  6.69 ; //normalized radius for 4 values
 
                                      int isig;
                                      for (isig=0;isig<4;++isig)
@@ -927,7 +929,9 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
 
                                                   }// phi angle
 
-                                     }  //end of straggling
+                                     }  //end of straggling (isig)
+
+
 
                                // put in memory the cumulated charge per pad
                                //          std:: cout<<" xpad "<<xpad[iterd]<<"  "<<iterd<<std::endl;
@@ -945,7 +949,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
 
                                  // +++++++++++++++++++++++++++
                                  //TODO:: This factor needs to be adjusted depending on the run!!!
-                                 double qsimnorm=4.0;  //normalization of simulation to fit exp. amplitudes is str dependant
+                                 double qsimnorm=fGain;  //normalization of simulation to fit exp. amplitudes is str dependant
                                  // +++++++++++++++++++++++++++++++
 
                                    Qsim[i] = Qsim[i]*qsimnorm; //noramlized: attention Zsim was maultiplied by the unnormalized
@@ -961,6 +965,10 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                   xiter.push_back(xhelp);
                                   yiter.push_back(yhelp);
                                   ziter.push_back(zsimq[i]);
+
+                                  qiter.push_back(Qsim[i]/qsimnorm);
+
+
                                   Int_t iplot= 10*sqrt((Qsim[i])/2000.);
                                   int ipl;
                                   if (iplot>10)iplot=10;
@@ -971,16 +979,18 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
 
                               }//loop for tracksimthreshold
 
-                              fPosXmin=xiter;
-                              fPosYmin=yiter;
-                              fPosZmin=ziter;
-                              fThetaMin=theta0;
-                              fEnerMin=e0sm;
+                              fPosXmin  = xiter;
+                              fPosYmin  = yiter;
+                              fPosZmin  = ziter;
+                              fThetaMin = theta0;
+                              fEnerMin  = e0sm;
                               fPosMin.SetXYZ(x_buff,y_buff,z_buff);
-                              fBrhoMin=romin;
-                              fBMin=_B;
-                              fPhiMin=phi0;
-                              fDensMin=dens;
+                              fBrhoMin  = romin;
+                              fBMin     = _B;
+                              fPhiMin   = phi0;
+                              fDensMin  = dens;
+                              fPosTBmin = TBInter;
+                              fQmin     = qiter;
 
                               // Calculation of the beam energy at the vertex when backward extrapolation is not needed.
                               if(!kBackWardProp)
@@ -1560,5 +1570,39 @@ Double_t *_xTBCorr,Double_t *_yTBCorr,Double_t *_zTBCorr)
 
             chi2/=num_MC_Point;
             return chi2;
+
+}
+
+void ATMCQMinimization::CalibrateGain(std::vector<ATHit>* hitArray)
+{
+
+  TCanvas *c1 = new TCanvas();
+  c1->Divide(1,2);
+
+
+  TGraph * exp = new TGraph();
+  TGraph * sim = new TGraph();
+
+
+      for(Int_t i=0;i<hitArray->size();i++){
+        ATHit hit = hitArray->at(i);
+        TVector3 position = hit.GetPosition();
+        Int_t hitTB = hit.GetTimeStamp();
+        Int_t hitcharge = hit.GetCharge();
+        exp->SetPoint(i,position.Z(),hitcharge);
+
+      }
+
+      if(fQmin.size()>0){
+        for(Int_t i=0;i<fQmin.size();i++){
+            sim->SetPoint(i,fPosZmin.at(i),fQmin.at(i));
+        }
+      }
+
+    c1->cd(1);
+    exp->Draw("A*");
+    c1->cd(2);
+    sim->Draw("A*");
+
 
 }

@@ -163,6 +163,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                   min->SetZGeoVertex(kTRUE);  //If true, the MC will start where the geometrical vertex is found,
                                               //according to the Z calibration done in the PSATask with the EntTB passed through the parameter file
                   min->SetEntZ0(Z0); //Calculated entrance position (actually this is the cathode position)
+                  min->SetGainCalibration(0.1);//Micromegas + gas gain calibration
 
                   if(mininizationTracks.size()==fMultiplicity)
                   {
