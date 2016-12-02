@@ -53,6 +53,7 @@ class ATMCQMinimization : public ATMinimization{
         void SetEntTB(Int_t value);
         void SetZGeoVertex(Bool_t value);
         void SetEntZ0(Double_t val);
+        void SetBackWardPropagation(Bool_t value);
 
 
         Bool_t Minimize(Double_t* parameter,ATEvent *event);
@@ -157,7 +158,8 @@ class ATMCQMinimization : public ATMinimization{
              Double_t fZk;
              Int_t fEntTB; //Beam entrance Time Bucket
 
-             Double_t fEntZ0;
+             Double_t fEntZ0; // Calculated position of cathode/window
+             Double_t fBeam_range; //Calculated range of the beam particle from range;
 
              //TRotation* fPadtoDetRot;
 
@@ -174,6 +176,7 @@ class ATMCQMinimization : public ATMinimization{
              Bool_t kVerbose;
              Bool_t kPosChi2; //Enable the use of Position Chi2
              Bool_t kIsZGeoVertex; //Uses the relative Z vertex determined with the calibration performed with the original TB taken from parameter list
+             Bool_t kBackWardProp; //Enables backward extrapolation if vertex is missing (default kTRUE)
 
              //Global variables
              Double_t sm1;
@@ -329,7 +332,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
            int imc1max=10;//10
            iconvar=imc1;
            int imc2=0;
-           int imc2max=100;//100
+           int imc2max=10;//100
            int icontrol=1;
 
            MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC,aMC,phiMC, Bmin, fDens,romin,x0MCv, y0MCv,z0MCv,aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
@@ -389,9 +392,16 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
                FitParameters.sThetaMin = aMC;
                FitParameters.sEnerMin=e0sm;
                FitParameters.sPosMin.SetXYZ(x0MC,y0MC,z0MC);
-               FitParameters.sBrhoMin=Bmin*romin;
+               FitParameters.sBrhoMin=romin;
                FitParameters.sBMin=Bmin;
                FitParameters.sPhiMin=phiMC;
+               if(!kBackWardProp)
+               {
+                 FitParameters.sVertexPos.SetXYZ(x0MC,y0MC,z0MC);
+                 FitParameters.sVertexEner=fVertexEner;
+               }else if(kBackWardProp){
+                  BackwardExtrapolation();
+               }
 
 
                //std::cout<<cRED<<" final fit x "<<x0MC <<" y "<< y0MC << " z "<< z0MC <<" theta "<< aMC <<" phi "<< phiMC <<" B " <<Bmin <<" dens "<< dens <<" e0sm "<<e0sm<<" ro "<<romin <<cNORMAL<<std::endl;
@@ -403,7 +413,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
 
               std::cout<<cRED<<" chi2minPos : "<<chi2minPos<<std::endl;
 
-               BackwardExtrapolation();
+               //BackwardExtrapolation();
 
                std::cout<<cYELLOW<<" Minimization result : "<<std::endl;
                std::cout<<" Scattering Angle : "<<aMC*180.0/TMath::Pi()<<std::endl;

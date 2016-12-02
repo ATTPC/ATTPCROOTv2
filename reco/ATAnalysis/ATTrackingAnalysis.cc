@@ -52,6 +52,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
                 ATMCQMinimization *min = new ATMCQMinimization();
                 min->ResetParameters();
+                min->SetBackWardPropagation(kFALSE); //Disabled when vertex can be measured
 
                 Double_t *parameter = new Double_t[8];
 
@@ -156,7 +157,8 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                   //std::cout<<" TB0 : "<<fEntTB_calc<<std::endl;
                   //std::cout<<" Vertex_mean.Z() : "<<Vertex_mean.Z()<<std::endl;
 
-                  fVertex = Z0 - Vertex_mean.Z(); //Vertex for the excitation function.
+                  fVertex       = Z0 - Vertex_mean.Z(); //Vertex for the excitation function.
+                  fVertexEnergy = RtoEFunc(fVertex*(fPressure/760.0), fEtoRPar[0]); // Default case: 4He+4He. Every function and parameter list is the same.
                   min->SetEntTB(fEntTB_calc);
                   min->SetZGeoVertex(kTRUE);  //If true, the MC will start where the geometrical vertex is found,
                                               //according to the Z calibration done in the PSATask with the EntTB passed through the parameter file
@@ -187,6 +189,18 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                           min->MinimizeGen(parameter,trackToMin,func,hPadPlane,PadCoord);
                           trackToMin->SetPosMin(min->GetPosXMin(),min->GetPosYMin(),min->GetPosZMin(),min->GetPosXBack(),min->GetPosYBack(),min->GetPosZBack());
                           trackToMin->SetPosExp(min->GetPosXExp(),min->GetPosYExp(),min->GetPosZExp(),min->GetPosXInt(),min->GetPosYInt(),min->GetPosZInt());
+                          trackToMin->FitParameters.sThetaMin        = min->FitParameters.sThetaMin;
+                          trackToMin->FitParameters.sEnerMin         = min->FitParameters.sEnerMin;
+                          trackToMin->FitParameters.sPosMin          = min->FitParameters.sPosMin;
+                          trackToMin->FitParameters.sBrhoMin         = min->FitParameters.sBrhoMin;
+                          trackToMin->FitParameters.sBMin            = min->FitParameters.sBMin;
+                          trackToMin->FitParameters.sPhiMin          = min->FitParameters.sPhiMin;
+                          trackToMin->FitParameters.sChi2Min         = min->FitParameters.sChi2Min;
+                          trackToMin->FitParameters.sVertexPos       = min->FitParameters.sVertexPos;
+                          trackToMin->FitParameters.sVertexEner      = min->FitParameters.sVertexEner;
+                          trackToMin->FitParameters.sMinDistAppr     = min->FitParameters.sMinDistAppr;
+                          trackToMin->FitParameters.sNumMCPoint      = min->FitParameters.sNumMCPoint;
+                          trackToMin->FitParameters.sNormChi2        = min->FitParameters.sNormChi2;
                           trackToMin->SetMCFit(kTRUE);
                           trackingEventAna->SetTrack(trackToMin);
 
@@ -198,6 +212,8 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                         //After minimization we copy the tracks
                         //for(Int_t t=0;t<mininizationTracks.size();t++) trackingEventAna->SetTrack(mininizationTracks.at(t));
                         trackingEventAna->SetVertex(fVertex);
+                        trackingEventAna->SetVertexEnergy(fVertexEnergy);
+
 
                   }
 

@@ -39,6 +39,7 @@ class ATTrackingAnalysis : public ATAnalysis{
 
           Double_t fVertex; // Physical vertex in mm;
           Double_t fEntTB_calc;//Calculated entrance Time Bucket
+          Double_t fVertexEnergy; //Energy of beam from track length
 
           TGraph *fTrackFit;//!
           TF1 *fFitResult;//!

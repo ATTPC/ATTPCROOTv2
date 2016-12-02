@@ -62,6 +62,7 @@ class ATAnalysis : public TObject
        Double_t fThetaPad;
        Double_t fThetaLorentz;
        Double_t fThetaRot;
+       Double_t fPressure;
 
        ClassDef(ATAnalysis, 1);
 

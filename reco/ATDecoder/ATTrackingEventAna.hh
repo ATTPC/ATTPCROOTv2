@@ -17,9 +17,10 @@ class ATTrackingEventAna : public TNamed {
     void SetTrackArray(std::vector<ATTrack> *trackArray);
     void SetTrack(ATTrack *track);
     void SetVertex(Double_t vertex);
+    void SetVertexEnergy(Double_t vertexEner);
 
     Double_t GetVertex();
-
+    Double_t GetVertexEnergy();
     std::vector<ATTrack> GetTrackArray();
 
 
@@ -27,6 +28,7 @@ class ATTrackingEventAna : public TNamed {
 
    std::vector<ATTrack> fTrackArray;
    Double_t fVertex;
+   Double_t fVertexEnergy;
 
    ClassDef(ATTrackingEventAna, 1);
 

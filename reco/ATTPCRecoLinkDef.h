@@ -86,6 +86,7 @@
 #pragma link C++ class ATProtoAnalysis+;
 #pragma link C++ class ATTrackingAnalysis+;
 #pragma link C++ struct ATHoughSpaceCircle::FitPar+;
+#pragma link C++ struct ATTrack::FitPar+;
 //#pragma link C++ function ATHoughSpaceLine::CalcGenHoughSpace<ATEvent*>(GenHough event);
 
 

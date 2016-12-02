@@ -72,10 +72,11 @@ ATMCQMinimization::ATMCQMinimization()
   B0                 = fBField;  // 	magnetic field
   B                  = B0*10000.; // !conversion of T en Gauss
 
-  kDebug=kFALSE;
-  kVerbose=kTRUE;  //wm
-  kPosChi2=kTRUE;
-  kIsZGeoVertex=kFALSE;
+  kDebug        = kFALSE;
+  kVerbose      = kTRUE;
+  kPosChi2      = kTRUE;
+  kIsZGeoVertex = kFALSE;
+  kBackWardProp = kTRUE;
 
   fXTBCorr = new Double_t[10000];
   fYTBCorr = new Double_t[10000];
@@ -84,6 +85,7 @@ ATMCQMinimization::ATMCQMinimization()
   hitTBMatrix = new std::vector<std::vector<ATHit>>;
 
   fEntZ0 = 0.0;
+  fBeam_range = 0.0;
 
   //!fPadPlane = new TH2Poly();
 
@@ -126,6 +128,7 @@ void ATMCQMinimization::AddParticle(std::vector<std::pair<Int_t,Int_t>>& ptcl)  
 void ATMCQMinimization::SetEntTB(Int_t value)                                                                       {fEntTB = value;}
 void ATMCQMinimization::SetZGeoVertex(Bool_t value)                                                                 {kIsZGeoVertex = value;}
 void ATMCQMinimization::SetEntZ0(Double_t val)                                                                      {fEntZ0 = val;}
+void ATMCQMinimization::SetBackWardPropagation(Bool_t value)                                                        {kBackWardProp = value;}
 
 
 Bool_t  ATMCQMinimization::Minimize(Double_t* parameter,ATEvent *event)
@@ -417,6 +420,8 @@ void ATMCQMinimization::MCvar( double* parameter, int & modevar,int & iconvar,do
                                     if(kIsZGeoVertex) phiMC = parameter[4];
                                     else phiMC = TMath::Pi()-parameter[4]-fThetaPad;
 
+
+
                                     //Double_t bro=parameter[5]*Bmin/1000.0;// !Tm*/
 
                                     //Double_t theta0=parameter[6];
@@ -583,9 +588,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                         e0sm = RtoEFunc(romin*(fPressure/760.0), fRtoEPar_array[0]);
                         e0ll=e0sm;
                         //std::cout<<cRED<<" Energy : "<<e0sm<<" Experimental Range : "<<romin<<" Pressure : "<<fPressure<<std::endl;
-                      }else std::cout<<cYELLOW<<" ATMCQMinimization::QMCsim - Warning! No Range-to-Energy function found."<<cNORMAL<<std::endl;
-
-
+                        }else std::cout<<cYELLOW<<" ATMCQMinimization::QMCsim - Warning! No Range-to-Energy function found."<<cNORMAL<<std::endl;
                       }
 
 
@@ -649,7 +652,6 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                             Double_t dydt=v0*TMath::Sin(theta0)*TMath::Sin(phi0);
                                             Double_t dzdt=v0*TMath::Cos(theta0);
                                             Double_t iprinttr=1000;
-                                            //Double_t dens=0.06363*18*(1+step8*(gRandom->Rndm()-0.5))/20.;//  !DENSITY ISOBUTANE AT 20 TORR corrected 18 torr
                                             Double_t integrationmax=10000;
                                             ipr=0;
 
@@ -713,12 +715,9 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                     xpad[iterd] = xdet[iterd]*TMath::Cos(thetaPad) - ydet[iterd]*TMath::Sin(thetaPad);
                                                     ypad[iterd] = xdet[iterd]*TMath::Sin(thetaPad) + ydet[iterd]*TMath::Cos(thetaPad);
                                                     zpad[iterd] = zdet[iterd];
-                                                    if(kIsZGeoVertex) zpad[iterd] = zpad[iterd] - (fZk - fEntZ0);
 
-                                                    // Remove!!!
-                                                    //xpad[iterd] = xcmm[iterd];
-                                                    //ypad[iterd] = ycmm[iterd];
-                                                    //zpad[iterd] = zcmm[iterd];
+                                                    if(!kBackWardProp) fBeam_range = fEntZ0 - zpad[0];
+                                                    if(kIsZGeoVertex) zpad[iterd] = zpad[iterd] - (fZk - fEntZ0);
 
 
                                                     //zpad[iterd] = -zdet[iterd]+ 2*zmin*10.0;
@@ -740,6 +739,8 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                    fXTBCorr[iterCorrNorm] =  xTBCorr[iterCorrNorm];
                                                    fYTBCorr[iterCorrNorm] =  yTBCorr[iterCorrNorm];
                                                    fZTBCorr[iterCorrNorm] =  zTBCorr[iterCorrNorm];
+
+
 
 
                                                 //  if(iterCorrNorm!=icnb){
@@ -980,6 +981,17 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                               fBMin=_B;
                               fPhiMin=phi0;
                               fDensMin=dens;
+
+                              // Calculation of the beam energy at the vertex when backward extrapolation is not needed.
+                              if(!kBackWardProp)
+                              {
+                                if(fRtoE_func_array.size()>0){
+                                std::function<Double_t(Double_t,std::vector<Double_t>&)> RtoEFunc = fRtoE_func_array.at(0);
+                                fVertexEner = RtoEFunc(fBeam_range*(fPressure/760.0), fRtoEPar_array[0]);
+
+                                //std::cout<<cRED<<" Energy : "<<e0sm<<" Experimental Range : "<<romin<<" Pressure : "<<fPressure<<std::endl;
+                                }else std::cout<<cYELLOW<<" ATMCQMinimization::QMCsim - Warning! No Range-to-Energy function found."<<cNORMAL<<std::endl;
+                              }
 
 
                               //std::cout<<" End of QMCsim : "<<Qsim[103]<<std::endl;
