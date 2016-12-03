@@ -57,6 +57,7 @@ void ATTrack::SetGeoPhi(Double_t angle)                             { fGeoPhiAng
 void ATTrack::SetGeoRange(Double_t range)                           { fRange = range;}
 void ATTrack::SetQuadrant(Int_t quad)                               { fQuadrant = quad;}
 void ATTrack::SetMCFit(Bool_t value)                                { kIsMCFit = value;}
+void ATTrack::SetGeoEnergy(Double_t energy)                         { fGeoEnergy = energy;}
 
 std::vector<ATHit> *ATTrack::GetHitArray()                          { return &fHitArray;}
 std::vector<Double_t> ATTrack::GetFitPar()                          { return fParFit;}
@@ -70,6 +71,7 @@ TVector3 ATTrack::GetTrackVertex()                                  { return fTr
 Int_t ATTrack::GetQuadrant()                                        { return fQuadrant;}
 Double_t ATTrack::GetGeoTheta()                                     { return fGeoThetaAngle;}
 Double_t ATTrack::GetGeoPhi()                                       { return fGeoPhiAngle;}
+Double_t ATTrack::GetGeoEnergy()                                    { return fGeoEnergy;}
 
 std::vector<Double_t> ATTrack::GetPosXMin() const                   { return fPosXmin;}
 std::vector<Double_t> ATTrack::GetPosYMin() const                   { return fPosYmin;}

@@ -110,6 +110,8 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                                 if(trackAngle>(fTiltAng+1.0) ){
                                     //std::cout<<" Accepted Line : "<<track->GetTrackID()<<" with angle : "<<track->GetAngleZAxis()<<std::endl;
                                     track->SetGeoRange(track->GetLinearRange());
+                                    Double_t ener = RtoEFunc(track->GetLinearRange()*(fPressure/760.0), fEtoRPar[0]);
+                                    track->SetGeoEnergy(ener);
                                     mininizationTracks.push_back(track);
                                 }
 
@@ -135,8 +137,11 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
                                   if(trackAngle>(fTiltAng+1.0) && dist<6.0){
                                       //3std::cout<<" Accepted Line : "<<track->GetTrackID()<<" with angle : "<<track->GetAngleZAxis()<<std::endl;
-                                      mininizationTracks.push_back(track);
                                       track->SetGeoRange(track->GetLinearRange());
+                                      Double_t ener = RtoEFunc(track->GetLinearRange()*(fPressure/760.0), fEtoRPar[0]);
+                                      track->SetGeoEnergy(ener);
+                                      mininizationTracks.push_back(track);
+
                                   }
 
                               }
@@ -157,7 +162,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                   //std::cout<<" TB0 : "<<fEntTB_calc<<std::endl;
                   //std::cout<<" Vertex_mean.Z() : "<<Vertex_mean.Z()<<std::endl;
 
-                  fVertex       = Z0 - Vertex_mean.Z(); //Vertex for the excitation function.
+                  fVertex       = Z0 - Vertex_mean.Z(); //Vertex position for the excitation function.
                   fVertexEnergy = RtoEFunc(fVertex*(fPressure/760.0), fEtoRPar[0]); // Default case: 4He+4He. Every function and parameter list is the same.
                   min->SetEntTB(fEntTB_calc);
                   min->SetZGeoVertex(kTRUE);  //If true, the MC will start where the geometrical vertex is found,

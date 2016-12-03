@@ -40,6 +40,7 @@ class ATTrack : public TObject {
     void SetGeoRange(Double_t range);
     void SetQuadrant(Int_t quad);
     void SetMCFit(Bool_t value);
+    void SetGeoEnergy(Double_t energy);
 
     std::vector<ATHit> *GetHitArray();
     std::vector<Double_t> GetFitPar();
@@ -55,6 +56,7 @@ class ATTrack : public TObject {
     Int_t    GetQuadrant();
     Double_t GetGeoTheta();
     Double_t GetGeoPhi();
+    Double_t GetGeoEnergy();
 
     // MC result and projections
     std::vector<Double_t> fPosXmin;
@@ -121,6 +123,7 @@ class ATTrack : public TObject {
     TVector3 fTrackVertex; //Mean Vertex of the track
     Double_t fGeoThetaAngle; // Geometrical scattering angle with respect to the detector FitParameters
     Double_t fGeoPhiAngle; //  " azimuthal "
+    Double_t fGeoEnergy; //Energy from the range
     Int_t fQuadrant; //Pad plane quadrant
 
     Bool_t kIsMCFit;

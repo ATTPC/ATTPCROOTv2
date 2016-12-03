@@ -30,7 +30,15 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
   TH1F* AngleH = new TH1F("AngleH","AngleH",200,0,4.0);
   TH1F* AngleSum = new TH1F("AngleSum","AngleSum",200,0,4.0);
 
+  TH2F* RangevsEner = new TH2F("RangevsEner","RangevsEner",100,0,10,500,0,1000);
+  RangevsEner->SetMarkerColor(2);
+  RangevsEner->SetMarkerStyle(20);
+  RangevsEner->SetMarkerSize(0.7);
 
+  TH2F* VertexEvsEnersum = new TH2F("VertexEvsEnersum","VertexEvsEnersum",200,0,20,200,0,20);
+  VertexEvsEnersum->SetMarkerColor(2);
+  VertexEvsEnersum->SetMarkerStyle(20);
+  VertexEvsEnersum->SetMarkerSize(0.7);
 
   TH2D* Range_vs_AngleH = new TH2D("Range_vs_AngleH","Range_vs_AngleH",200,0,4.0,500,0,1000);
   Range_vs_AngleH->SetMarkerColor(2);
@@ -41,6 +49,8 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
   VertexH_vs_AngleH->SetMarkerColor(2);
   VertexH_vs_AngleH->SetMarkerStyle(20);
   VertexH_vs_AngleH->SetMarkerSize(0.7);
+
+
 
   FairRunAna* run = new FairRunAna();
 
@@ -85,23 +95,33 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
                 ATTrack track_s = tracks.at(1);
 
                 if( (track_r.GetQuadrant()==0 && track_s.GetQuadrant()==2) || (track_r.GetQuadrant()==2 && track_s.GetQuadrant()==0)){
+
                   VertexH->Fill(fTrackingEvent->GetVertex());
                   AngleH->Fill(track_r.GetGeoTheta());
                   AngleH->Fill(track_s.GetGeoTheta());
                   AngleSum->Fill(track_s.GetGeoTheta()+track_r.GetGeoTheta());
                   Range_vs_AngleH->Fill(track_r.GetGeoTheta(),track_r.GetLinearRange());
                   Range_vs_AngleH->Fill(track_s.GetGeoTheta(),track_s.GetLinearRange());
+                  RangevsEner->Fill(track_r.GetGeoEnergy(),track_r.GetLinearRange());
+                  RangevsEner->Fill(track_s.GetGeoEnergy(),track_s.GetLinearRange());
+                  VertexEvsEnersum->Fill(track_r.GetGeoEnergy()+track_s.GetGeoEnergy(),fTrackingEvent->GetVertexEnergy());
                   VertexH_vs_AngleH->Fill(track_r.GetGeoTheta(),fTrackingEvent->GetVertex());
                   VertexH_vs_AngleH->Fill(track_s.GetGeoTheta(),fTrackingEvent->GetVertex());
+
                 }else if( (track_r.GetQuadrant()==1 && track_s.GetQuadrant()==3) || (track_r.GetQuadrant()==3 && track_s.GetQuadrant()==1)){
+
                   VertexH->Fill(fTrackingEvent->GetVertex());
                   AngleH->Fill(track_r.GetGeoTheta());
                   AngleH->Fill(track_s.GetGeoTheta());
                   AngleSum->Fill(track_s.GetGeoTheta()+track_r.GetGeoTheta());
                   Range_vs_AngleH->Fill(track_r.GetGeoTheta(),track_r.GetLinearRange());
                   Range_vs_AngleH->Fill(track_s.GetGeoTheta(),track_s.GetLinearRange());
+                  RangevsEner->Fill(track_r.GetGeoEnergy(),track_r.GetLinearRange());
+                  RangevsEner->Fill(track_s.GetGeoEnergy(),track_s.GetLinearRange());
+                  VertexEvsEnersum->Fill(track_r.GetGeoEnergy()+track_s.GetGeoEnergy(),fTrackingEvent->GetVertexEnergy());
                   VertexH_vs_AngleH->Fill(track_r.GetGeoTheta(),fTrackingEvent->GetVertex());
                   VertexH_vs_AngleH->Fill(track_s.GetGeoTheta(),fTrackingEvent->GetVertex());
+
                 }
 
 
@@ -133,6 +153,13 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
 
   TCanvas *c2 = new TCanvas("c2","c2",200,10,700,700);
   VertexH_vs_AngleH->Draw();
+
+  TCanvas *c3 = new TCanvas("c3","c3",200,10,700,700);
+  c3->Divide(2,2);
+  c3->cd(1);
+  RangevsEner->Draw();
+  c3->cd(2);
+  VertexEvsEnersum->Draw();
 
 
 }
