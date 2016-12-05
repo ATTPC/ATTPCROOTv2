@@ -30,22 +30,45 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
   TH1F* AngleH = new TH1F("AngleH","AngleH",200,0,4.0);
   TH1F* AngleSum = new TH1F("AngleSum","AngleSum",200,0,4.0);
 
+  TH1F* AngleSumMC = new TH1F("AngleSumMC","AngleSumMC",200,0,4.0);
+  TH1F* Chi2MC = new TH1F("Chi2MC","Chi2MC",100,0,0.1);
+
   TH2F* RangevsEner = new TH2F("RangevsEner","RangevsEner",100,0,10,500,0,1000);
   RangevsEner->SetMarkerColor(2);
   RangevsEner->SetMarkerStyle(20);
   RangevsEner->SetMarkerSize(0.7);
 
-  TH2F* VertexEvsEnersum = new TH2F("VertexEvsEnersum","VertexEvsEnersum",200,0,20,200,0,20);
+  TH2F* VertexEvsEnersum = new TH2F("VertexEvsEnersum","VertexEvsEnersum",400,0,20,400,0,20);
   VertexEvsEnersum->SetMarkerColor(2);
   VertexEvsEnersum->SetMarkerStyle(20);
   VertexEvsEnersum->SetMarkerSize(0.7);
 
-  TH2D* Range_vs_AngleH = new TH2D("Range_vs_AngleH","Range_vs_AngleH",200,0,4.0,500,0,1000);
+  TH2F* VertexEvsEnersumMC = new TH2F("VertexEvsEnersumMC","VertexEvsEnersumMC",400,0,20,400,0,20);
+  VertexEvsEnersumMC->SetMarkerColor(2);
+  VertexEvsEnersumMC->SetMarkerStyle(20);
+  VertexEvsEnersumMC->SetMarkerSize(0.7);
+
+  TH2F* AnglevsEnersum = new TH2F("AngleEvsEnersum","AngleEvsEnersum",400,0,4.0,400,0,40);
+  AnglevsEnersum->SetMarkerColor(2);
+  AnglevsEnersum->SetMarkerStyle(20);
+  AnglevsEnersum->SetMarkerSize(0.7);
+
+  TH2F* AnglevsEnersumMC = new TH2F("AngleEvsEnersumMC","AngleEvsEnersumMC",400,0,4.0,400,0,40);
+  AnglevsEnersumMC->SetMarkerColor(2);
+  AnglevsEnersumMC->SetMarkerStyle(20);
+  AnglevsEnersumMC->SetMarkerSize(0.7);
+
+  TH2F* VertexXvsEnersum = new TH2F("VertexXvsEnersum","VertexXvsEnersum",500,0,1000,400,0,40);
+  VertexXvsEnersum->SetMarkerColor(2);
+  VertexXvsEnersum->SetMarkerStyle(20);
+  VertexXvsEnersum->SetMarkerSize(0.7);
+
+  TH2D* Range_vs_AngleH = new TH2D("Range_vs_AngleH","Range_vs_AngleH",400,0,4.0,500,0,1000);
   Range_vs_AngleH->SetMarkerColor(2);
   Range_vs_AngleH->SetMarkerStyle(20);
   Range_vs_AngleH->SetMarkerSize(0.7);
 
-  TH2D* VertexH_vs_AngleH = new TH2D("VertexH_vs_AngleH","VertexH_vs_AngleH",200,0,4.0,500,0,1000);
+  TH2D* VertexH_vs_AngleH = new TH2D("VertexH_vs_AngleH","VertexH_vs_AngleH",400,0,4.0,500,0,1000);
   VertexH_vs_AngleH->SetMarkerColor(2);
   VertexH_vs_AngleH->SetMarkerStyle(20);
   VertexH_vs_AngleH->SetMarkerSize(0.7);
@@ -100,13 +123,19 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
                   AngleH->Fill(track_r.GetGeoTheta());
                   AngleH->Fill(track_s.GetGeoTheta());
                   AngleSum->Fill(track_s.GetGeoTheta()+track_r.GetGeoTheta());
+                  AngleSumMC->Fill(track_s.FitParameters.sThetaMin+track_r.FitParameters.sThetaMin);
                   Range_vs_AngleH->Fill(track_r.GetGeoTheta(),track_r.GetLinearRange());
                   Range_vs_AngleH->Fill(track_s.GetGeoTheta(),track_s.GetLinearRange());
                   RangevsEner->Fill(track_r.GetGeoEnergy(),track_r.GetLinearRange());
                   RangevsEner->Fill(track_s.GetGeoEnergy(),track_s.GetLinearRange());
                   VertexEvsEnersum->Fill(track_r.GetGeoEnergy()+track_s.GetGeoEnergy(),fTrackingEvent->GetVertexEnergy());
+                  AnglevsEnersum->Fill(track_r.GetGeoTheta(),track_r.GetGeoEnergy()/track_s.GetGeoEnergy());
+                  AnglevsEnersumMC->Fill(track_r.FitParameters.sThetaMin,track_r.FitParameters.sEnerMin/track_s.FitParameters.sEnerMin);
                   VertexH_vs_AngleH->Fill(track_r.GetGeoTheta(),fTrackingEvent->GetVertex());
                   VertexH_vs_AngleH->Fill(track_s.GetGeoTheta(),fTrackingEvent->GetVertex());
+                  VertexXvsEnersum->Fill(track_r.GetGeoEnergy()+track_s.GetGeoEnergy(),fTrackingEvent->GetVertex());
+                  Chi2MC->Fill(track_s.FitParameters.sChi2Min);
+                  VertexEvsEnersumMC->Fill(track_r.FitParameters.sEnerMin+track_s.FitParameters.sEnerMin,track_r.FitParameters.sVertexEner);
 
                 }else if( (track_r.GetQuadrant()==1 && track_s.GetQuadrant()==3) || (track_r.GetQuadrant()==3 && track_s.GetQuadrant()==1)){
 
@@ -114,13 +143,19 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
                   AngleH->Fill(track_r.GetGeoTheta());
                   AngleH->Fill(track_s.GetGeoTheta());
                   AngleSum->Fill(track_s.GetGeoTheta()+track_r.GetGeoTheta());
+                  AngleSumMC->Fill(track_s.FitParameters.sThetaMin+track_r.FitParameters.sThetaMin);
                   Range_vs_AngleH->Fill(track_r.GetGeoTheta(),track_r.GetLinearRange());
                   Range_vs_AngleH->Fill(track_s.GetGeoTheta(),track_s.GetLinearRange());
                   RangevsEner->Fill(track_r.GetGeoEnergy(),track_r.GetLinearRange());
                   RangevsEner->Fill(track_s.GetGeoEnergy(),track_s.GetLinearRange());
                   VertexEvsEnersum->Fill(track_r.GetGeoEnergy()+track_s.GetGeoEnergy(),fTrackingEvent->GetVertexEnergy());
+                  AnglevsEnersum->Fill(track_r.GetGeoTheta(),track_r.GetGeoEnergy()/track_s.GetGeoEnergy());
+                  AnglevsEnersumMC->Fill(track_r.FitParameters.sThetaMin,track_r.FitParameters.sEnerMin/track_s.FitParameters.sEnerMin);
                   VertexH_vs_AngleH->Fill(track_r.GetGeoTheta(),fTrackingEvent->GetVertex());
                   VertexH_vs_AngleH->Fill(track_s.GetGeoTheta(),fTrackingEvent->GetVertex());
+                  VertexXvsEnersum->Fill(track_r.GetGeoEnergy()+track_s.GetGeoEnergy(),fTrackingEvent->GetVertex());
+                  Chi2MC->Fill(track_s.FitParameters.sChi2Min);
+                  VertexEvsEnersumMC->Fill(track_r.FitParameters.sEnerMin+track_s.FitParameters.sEnerMin,track_r.FitParameters.sVertexEner);
 
                 }
 
@@ -160,6 +195,22 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
   RangevsEner->Draw();
   c3->cd(2);
   VertexEvsEnersum->Draw();
+  c3->cd(3);
+  AnglevsEnersum->Draw();
+  c3->cd(4);
+  VertexXvsEnersum->Draw();
+
+  TCanvas *cMC = new TCanvas("cMC","cMC",200,10,700,700);
+  cMC->Divide(2,2);
+  cMC->cd(1);
+  AngleSumMC->Draw();
+  cMC->cd(2);
+  Chi2MC->Draw();
+  cMC->cd(3);
+  AnglevsEnersumMC->Draw();
+  cMC->cd(4);
+  VertexEvsEnersumMC->Draw();
+
 
 
 }
