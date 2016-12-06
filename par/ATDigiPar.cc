@@ -45,6 +45,7 @@ Double_t  ATDigiPar::GetEIonize()          { return fEIonize;}
 Double_t  ATDigiPar::GetCoefDiffusionLong(){ return fCoefL;}
 Double_t  ATDigiPar::GetCoefDiffusionTrans(){ return fCoefT;}
 Double_t  ATDigiPar::GetGain()             { return fGain;}
+Double_t  ATDigiPar::GetMaxRange()         { return fMaxRange;}
 
 ATGas *ATDigiPar::GetGas()
 {
@@ -222,6 +223,11 @@ Bool_t ATDigiPar::getParams(FairParamList *paramList) //TODO Change all these pa
       return kFALSE;
     }
 
+    if (!(paramList -> fill("MaxRange", &fMaxRange))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find Gain parameter!");
+      return kFALSE;
+    }
+
     fGasFileName = GetFile(fGasFile);
   }
 
@@ -267,6 +273,7 @@ void ATDigiPar::putParams(FairParamList *paramList)
   paramList -> add("CoefL",fCoefL);
   paramList -> add("CoefT",fCoefT);
   paramList -> add("Gain",fGain);
+  paramList -> add("MaxRange",fMaxRange);
 
 }
 

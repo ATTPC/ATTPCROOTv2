@@ -38,4 +38,5 @@ EIonize:Double_t            15.603   # Ionization energy of gas in eV
 CoefL:Double_t               0.025   # Longitudal coefficient of diffusion [cm^-0.5]
 CoefT:Double_t               0.010   # Transverse coefficient of diffusion [cm^-0.5]
 Gain:Double_t                100.0   # Average gain of micromegas
+MaxRange:Double_t          914.0   # Beam energy
 ################################################################################

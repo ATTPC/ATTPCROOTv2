@@ -109,8 +109,8 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
                                 if(trackAngle>(fTiltAng+1.0) ){
                                     //std::cout<<" Accepted Line : "<<track->GetTrackID()<<" with angle : "<<track->GetAngleZAxis()<<std::endl;
-                                    track->SetGeoRange(track->GetLinearRange());
-                                    Double_t ener = RtoEFunc(track->GetLinearRange()*(fPressure/760.0), fEtoRPar[0]);
+                                    track->SetGeoRange(track->GetLinearRange(Vertex_mean));
+                                    Double_t ener = RtoEFunc(track->GetLinearRange(Vertex_mean)*(fPressure/760.0), fEtoRPar[0]);
                                     track->SetGeoEnergy(ener);
                                     mininizationTracks.push_back(track);
                                 }
@@ -137,8 +137,8 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
                                   if(trackAngle>(fTiltAng+1.0) && dist<6.0){
                                       //3std::cout<<" Accepted Line : "<<track->GetTrackID()<<" with angle : "<<track->GetAngleZAxis()<<std::endl;
-                                      track->SetGeoRange(track->GetLinearRange());
-                                      Double_t ener = RtoEFunc(track->GetLinearRange()*(fPressure/760.0), fEtoRPar[0]);
+                                      track->SetGeoRange(track->GetLinearRange(Vertex_mean));
+                                      Double_t ener = RtoEFunc(track->GetLinearRange(Vertex_mean)*(fPressure/760.0), fEtoRPar[0]);
                                       track->SetGeoEnergy(ener);
                                       mininizationTracks.push_back(track);
 
@@ -162,7 +162,8 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                   //std::cout<<" TB0 : "<<fEntTB_calc<<std::endl;
                   //std::cout<<" Vertex_mean.Z() : "<<Vertex_mean.Z()<<std::endl;
 
-                  fVertex       = Z0 - Vertex_mean.Z(); //Vertex position for the excitation function.
+                  fVertex       = fMaxRange  - (Z0 - Vertex_mean.Z()); //Vertex position for the excitation function.
+                  std::cout<<fMaxRange<<std::endl;
                   fVertexEnergy = RtoEFunc(fVertex*(fPressure/760.0), fEtoRPar[0]); // Default case: 4He+4He. Every function and parameter list is the same.
                   min->SetEntTB(fEntTB_calc);
                   min->SetZGeoVertex(kTRUE);  //If true, the MC will start where the geometrical vertex is found,
@@ -186,13 +187,13 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                           parameter[2]=Vertex_mean.Z();
                           parameter[3]=(Int_t) vertexTime;
                           parameter[6]=angles.first; //Theta
-                          parameter[5]=trackToMin->GetLinearRange();
+                          parameter[5]=trackToMin->GetLinearRange(Vertex_mean);
                           parameter[4]=angles.second; //Phi
                           parameter[7]=trackToMin->GetHitArray()->size();
 
                           //Custom function to pass the method to extract the Hit Array
                           std::function<std::vector<ATHit>*()> func = std::bind(&ATTrack::GetHitArray,trackToMin);
-                          min->MinimizeGen(parameter,trackToMin,func,hPadPlane,PadCoord);
+                          //min->MinimizeGen(parameter,trackToMin,func,hPadPlane,PadCoord);
                           trackToMin->SetPosMin(min->GetPosXMin(),min->GetPosYMin(),min->GetPosZMin(),min->GetPosXBack(),min->GetPosYBack(),min->GetPosZBack());
                           trackToMin->SetPosExp(min->GetPosXExp(),min->GetPosYExp(),min->GetPosZExp(),min->GetPosXInt(),min->GetPosYInt(),min->GetPosZInt());
                           trackToMin->FitParameters.sThetaMin        = min->FitParameters.sThetaMin;
@@ -219,6 +220,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                         //for(Int_t t=0;t<mininizationTracks.size();t++) trackingEventAna->SetTrack(mininizationTracks.at(t));
                         trackingEventAna->SetVertex(fVertex);
                         trackingEventAna->SetVertexEnergy(fVertexEnergy);
+                        trackingEventAna->SetGeoVertex(Vertex_mean);
 
 
                   }

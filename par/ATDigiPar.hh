@@ -56,6 +56,7 @@ class ATDigiPar : public FairParGenericSet
     Double_t GetThetaPad();
     Double_t GetThetaRot();
     Double_t GetGasPressure();
+    Double_t GetMaxRange();
 
     Double_t GetEIonize();
     Double_t GetCoefDiffusionTrans();
@@ -105,6 +106,7 @@ class ATDigiPar : public FairParGenericSet
     Double_t fThetaPad;
     Double_t fThetaRot;
     Double_t fGasPressure;
+    Double_t fMaxRange;
 
     Double_t fEIonize;                 //!< effective ionization energy [eV]
     Double_t fCoefL;                   //!< longitudinal diffusion coefficient

@@ -103,15 +103,30 @@ Double_t ATTrack::GetMeanTime()
 Double_t ATTrack::GetLinearRange()
 {
   if(fHitArray.size()>0){
-    ATHit fhit = fHitArray.front();
-    ATHit lhit = fHitArray.back();
+    ATHit fhit = fHitArray.front(); // Last hit of the track (Low TB)
+    ATHit lhit = fHitArray.back(); // First hit of the track (High TB)
     TVector3 fhitPos = fhit.GetPosition();
     TVector3 lhitPos = lhit.GetPosition();
+
     return TMath::Sqrt( TMath::Power((fhitPos.X()-lhitPos.X()),2) + TMath::Power((fhitPos.Y()-lhitPos.Y()),2) + TMath::Power((fhitPos.Z()-lhitPos.Z()),2) );
   }else return 0;
 
 
 }
+
+Double_t ATTrack::GetLinearRange(TVector3 vertex)
+{
+
+  if(fHitArray.size()>0){
+    ATHit fhit = fHitArray.front();
+    TVector3 fhitPos = fhit.GetPosition();
+
+    return TMath::Sqrt( TMath::Power((fhitPos.X()-vertex.X()),2) + TMath::Power((fhitPos.Y()-vertex.Y()),2) + TMath::Power((fhitPos.Z()-vertex.Z()),2) );
+  }else return 0;
+
+
+}
+
 
 void ATTrack::SetPosMin(const std::vector<Double_t> &xmin,const std::vector<Double_t> &ymin,const std::vector<Double_t> &zmin,const std::vector<Double_t> &xback,
   const std::vector<Double_t> &yback,const std::vector<Double_t> &zback)

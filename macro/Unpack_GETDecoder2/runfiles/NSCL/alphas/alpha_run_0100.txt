@@ -1,11 +1,11 @@
 /data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo0_run_0100_11Dec14_22h03m15s.graw
 /data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo1_run_0100_11Dec14_22h03m15s.graw
-/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo2_run_0100_11Dec14_22h03m15s.1.graw
 /data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo2_run_0100_11Dec14_22h03m15s.graw
+/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo2_run_0100_11Dec14_22h03m15s.1.graw
 /data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo3_run_0100_11Dec14_22h03m16s.graw
 /data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo4_run_0100_11Dec14_22h03m16s.graw
 /data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo6_run_0100_11Dec14_22h03m16s.graw
-/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo7_run_0100_11Dec14_22h03m16s.1.graw
 /data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo7_run_0100_11Dec14_22h03m16s.graw
+/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo7_run_0100_11Dec14_22h03m16s.1.graw
 /data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo8_run_0100_11Dec14_22h03m16s.graw
 /data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo9_run_0100_11Dec14_22h03m16s.graw

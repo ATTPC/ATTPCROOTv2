@@ -1,7 +1,19 @@
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+
+bool check_file(const std::string& name);
+
 void run_unpack_alpha_RANSAC_Ana
 (TString dataFile = "runfiles/NSCL/alphas/alpha_run_0100.txt",TString parameterFile = "ATTPC.alpha.par",
 TString mappath="/data/ar46/run_0085/")
 {
+
+  if(!check_file(dataFile.Data())){
+    std::cout<<cRED<<" Run file "<<dataFile.Data()<<" not found! Terminating..."<<cNORMAL<<std::endl;
+    exit(0);
+  }
 
   // -----   Timer   --------------------------------------------------------
  TStopwatch timer;
@@ -97,6 +109,70 @@ TString mappath="/data/ar46/run_0085/")
     }
   }*/
 
+
+
+  if (!fUseSeparatedData)
+    fDecoderTask -> AddData(dataFile);
+  else {
+    std::ifstream listFile(dataFile.Data());
+
+    Int_t numLin = std::count(std::istreambuf_iterator<char>(listFile),
+               std::istreambuf_iterator<char>(), '\n');
+
+    std::cout<<cRED<<" Number of GRAW files found : "<<numLin<<cNORMAL<<std::endl;
+
+    listFile.clear();
+    listFile.seekg(0, ios::beg);
+
+    TString dataFileWithPath;
+    Int_t iCobo = 0;
+    Int_t nCobo = 0;
+
+    TString cobo_str = "CoBo0";
+
+    /*  for(Int_t fi=0;fi<numLin;fi++)
+      {
+            dataFileWithPath.ReadLine(listFile);
+
+              if(dataFileWithPath.Contains(cobo_str))
+              {
+                  fDecoderTask->AddData(dataFileWithPath, nCobo);
+              }else{
+                  nCobo++;
+                  cobo_str = Form("CoBo%i",iCobo+1);
+                  fDecoderTask->AddData(dataFileWithPath, nCobo);
+              }
+      }*/
+
+          /*
+            std::cout<<cRED<<cobo_str<<std::endl;
+            std::cout<<dataFileWithPath<<cNORMAL<<std::endl;
+
+            if (dataFileWithPath.Contains(cobo_str) ){
+              fDecoderTask->AddData(dataFileWithPath, nCobo);
+              std::cout<<cYELLOW<<dataFileWithPath<<std::endl;
+              std::cout<<nCobo<<cNORMAL<<std::endl;
+            }else{
+              iCobo++;
+              cobo_str = Form("CoBo%i",iCobo);
+              std::cout<<cGREEN<<Form("CoBo%i",iCobo)<<cNORMAL<<std::endl;
+              if(dataFileWithPath.Contains(Form("CoBo%i",iCobo)))
+              {
+               nCobo++;
+               fDecoderTask->AddData(dataFileWithPath, nCobo);
+               std::cout<<cobo_str<<std::endl;
+               std::cout<<dataFileWithPath<<std::endl;
+               std::cout<<nCobo<<cNORMAL<<std::endl;
+              }
+
+            }
+
+      }*/
+
+
+  }
+
+
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo0_run_0100_11Dec14_22h03m15s.graw",0);
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo1_run_0100_11Dec14_22h03m15s.graw",1);
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo2_run_0100_11Dec14_22h03m15s.graw",2);
@@ -148,8 +224,8 @@ TString mappath="/data/ar46/run_0085/")
 
   run -> Init();
 
-  run -> RunOnTBData();
-  //run->Run(0,1000);
+  //run -> RunOnTBData();
+  run->Run(0,1000);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
@@ -165,6 +241,11 @@ TString mappath="/data/ar46/run_0085/")
 
   gApplication->Terminate();
 
+}
+
+bool check_file(const std::string& name) {
+  struct stat buffer;
+  return (stat (name.c_str(), &buffer) == 0);
 }
 
 /*fDecoderTask -> AddData("/home/ayyadlim/Desktop/ATTPC/run_0122/CoBo0_run_0122_14-08-15_13h27m28s.graw",0);

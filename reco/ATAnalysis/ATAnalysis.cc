@@ -36,6 +36,7 @@ ATAnalysis::ATAnalysis()
     fThetaRot        = fPar->GetThetaRot()*TMath::Pi()/180.0;
     fThetaLorentz    = fPar->GetThetaLorentz()*TMath::Pi()/180.0;
     fPressure        = fPar->GetGasPressure();
+    fMaxRange        = fPar->GetMaxRange();
 
 
 

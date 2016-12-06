@@ -33,7 +33,7 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
   TH1F* AngleSumMC = new TH1F("AngleSumMC","AngleSumMC",200,0,4.0);
   TH1F* Chi2MC = new TH1F("Chi2MC","Chi2MC",100,0,0.1);
 
-  TH2F* RangevsEner = new TH2F("RangevsEner","RangevsEner",100,0,10,500,0,1000);
+  TH2F* RangevsEner = new TH2F("RangevsEner","RangevsEner",500,0,1000,100,0,15);
   RangevsEner->SetMarkerColor(2);
   RangevsEner->SetMarkerStyle(20);
   RangevsEner->SetMarkerSize(0.7);
@@ -124,16 +124,16 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
                   AngleH->Fill(track_s.GetGeoTheta());
                   AngleSum->Fill(track_s.GetGeoTheta()+track_r.GetGeoTheta());
                   AngleSumMC->Fill(track_s.FitParameters.sThetaMin+track_r.FitParameters.sThetaMin);
-                  Range_vs_AngleH->Fill(track_r.GetGeoTheta(),track_r.GetLinearRange());
-                  Range_vs_AngleH->Fill(track_s.GetGeoTheta(),track_s.GetLinearRange());
-                  RangevsEner->Fill(track_r.GetGeoEnergy(),track_r.GetLinearRange());
-                  RangevsEner->Fill(track_s.GetGeoEnergy(),track_s.GetLinearRange());
+                  Range_vs_AngleH->Fill(track_r.GetGeoTheta(),track_r.GetLinearRange(fTrackingEvent->GetGeoVertex()));
+                  Range_vs_AngleH->Fill(track_s.GetGeoTheta(),track_s.GetLinearRange(fTrackingEvent->GetGeoVertex()));
+                  RangevsEner->Fill(track_r.GetLinearRange(fTrackingEvent->GetGeoVertex()),track_r.GetGeoEnergy());
+                  RangevsEner->Fill(track_s.GetLinearRange(fTrackingEvent->GetGeoVertex()),track_s.GetGeoEnergy());
                   VertexEvsEnersum->Fill(track_r.GetGeoEnergy()+track_s.GetGeoEnergy(),fTrackingEvent->GetVertexEnergy());
                   AnglevsEnersum->Fill(track_r.GetGeoTheta(),track_r.GetGeoEnergy()/track_s.GetGeoEnergy());
                   AnglevsEnersumMC->Fill(track_r.FitParameters.sThetaMin,track_r.FitParameters.sEnerMin/track_s.FitParameters.sEnerMin);
                   VertexH_vs_AngleH->Fill(track_r.GetGeoTheta(),fTrackingEvent->GetVertex());
                   VertexH_vs_AngleH->Fill(track_s.GetGeoTheta(),fTrackingEvent->GetVertex());
-                  VertexXvsEnersum->Fill(track_r.GetGeoEnergy()+track_s.GetGeoEnergy(),fTrackingEvent->GetVertex());
+                  VertexXvsEnersum->Fill(fTrackingEvent->GetVertex(),track_r.GetGeoEnergy()+track_s.GetGeoEnergy());
                   Chi2MC->Fill(track_s.FitParameters.sChi2Min);
                   VertexEvsEnersumMC->Fill(track_r.FitParameters.sEnerMin+track_s.FitParameters.sEnerMin,track_r.FitParameters.sVertexEner);
 
@@ -144,16 +144,16 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
                   AngleH->Fill(track_s.GetGeoTheta());
                   AngleSum->Fill(track_s.GetGeoTheta()+track_r.GetGeoTheta());
                   AngleSumMC->Fill(track_s.FitParameters.sThetaMin+track_r.FitParameters.sThetaMin);
-                  Range_vs_AngleH->Fill(track_r.GetGeoTheta(),track_r.GetLinearRange());
-                  Range_vs_AngleH->Fill(track_s.GetGeoTheta(),track_s.GetLinearRange());
-                  RangevsEner->Fill(track_r.GetGeoEnergy(),track_r.GetLinearRange());
-                  RangevsEner->Fill(track_s.GetGeoEnergy(),track_s.GetLinearRange());
+                  Range_vs_AngleH->Fill(track_r.GetGeoTheta(),track_r.GetLinearRange(fTrackingEvent->GetGeoVertex()));
+                  Range_vs_AngleH->Fill(track_s.GetGeoTheta(),track_s.GetLinearRange(fTrackingEvent->GetGeoVertex()));
+                  RangevsEner->Fill(track_r.GetLinearRange(fTrackingEvent->GetGeoVertex()),track_r.GetGeoEnergy());
+                  RangevsEner->Fill(track_s.GetLinearRange(fTrackingEvent->GetGeoVertex()),track_s.GetGeoEnergy());
                   VertexEvsEnersum->Fill(track_r.GetGeoEnergy()+track_s.GetGeoEnergy(),fTrackingEvent->GetVertexEnergy());
                   AnglevsEnersum->Fill(track_r.GetGeoTheta(),track_r.GetGeoEnergy()/track_s.GetGeoEnergy());
                   AnglevsEnersumMC->Fill(track_r.FitParameters.sThetaMin,track_r.FitParameters.sEnerMin/track_s.FitParameters.sEnerMin);
                   VertexH_vs_AngleH->Fill(track_r.GetGeoTheta(),fTrackingEvent->GetVertex());
                   VertexH_vs_AngleH->Fill(track_s.GetGeoTheta(),fTrackingEvent->GetVertex());
-                  VertexXvsEnersum->Fill(track_r.GetGeoEnergy()+track_s.GetGeoEnergy(),fTrackingEvent->GetVertex());
+                  VertexXvsEnersum->Fill(fTrackingEvent->GetVertex(),track_r.GetGeoEnergy()+track_s.GetGeoEnergy());
                   Chi2MC->Fill(track_s.FitParameters.sChi2Min);
                   VertexEvsEnersumMC->Fill(track_r.FitParameters.sEnerMin+track_s.FitParameters.sEnerMin,track_r.FitParameters.sVertexEner);
 
