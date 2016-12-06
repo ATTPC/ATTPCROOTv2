@@ -54,8 +54,15 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                 min->ResetParameters();
                 min->SetBackWardPropagation(kFALSE); //Disabled when vertex can be measured
 
-                Double_t *parameter = new Double_t[8];
+                Double_t step_par[10];
+                auto init = std::initializer_list<Double_t>({8.0,8.0,0.1,0.1,0.1,0.1,0.0,0.0,0.1,0.0});
+                std::copy(init.begin(), init.end(),step_par);
+                min->SetStepParameters(step_par);
+                min->SetGainCalibration(fGain);//Micromegas + gas gain calibration
+                min->SetLongDiffCoef(fCoefL);
+                min->SetTranDiffCoef(fCoefT);
 
+                Double_t *parameter = new Double_t[8];
                 // Adding Eloss functions
                 std::function<Double_t(Double_t,std::vector<Double_t>&)> ELossFunc = std::bind(GetEloss,std::placeholders::_1,std::placeholders::_2);
                 min->AddELossFunc(ELossFunc);
@@ -168,7 +175,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                   min->SetZGeoVertex(kTRUE);  //If true, the MC will start where the geometrical vertex is found,
                                               //according to the Z calibration done in the PSATask with the EntTB passed through the parameter file
                   min->SetEntZ0(Z0); //Calculated entrance position (actually this is the cathode position)
-                  min->SetGainCalibration(0.1);//Micromegas + gas gain calibration
+
 
                   if(mininizationTracks.size()==fMultiplicity)
                   {

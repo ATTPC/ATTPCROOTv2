@@ -52,6 +52,15 @@ ATMCQMinimization::ATMCQMinimization()
   fThetaPad        = fPar->GetThetaPad()*TMath::Pi()/180.0;
   fThetaRot        = fPar->GetThetaRot()*TMath::Pi()/180.0;
   fPressure        = fPar->GetGasPressure();
+  fMaxRange        = fPar->GetMaxRange();
+  //For the moment we pass this parameters when the minimizer is called
+  //Default parameters
+  fGain            = 4.0;
+  fCoefL           = 0.025;
+  fCoefT           = 0.010;
+
+
+
 
   //DEfault parameters for p in isobutane at 20 torr
   fELossPar_array[0] = {6.98,0.83,20.0,1.6,1.3,0.45,-55.0,-0.025,0.0,0.0,0.0};
@@ -91,7 +100,7 @@ ATMCQMinimization::ATMCQMinimization()
 
   fEntZ0 = 0.0;
   fBeam_range = 0.0;
-  fGain = 4.0;
+
 
   //!fPadPlane = new TH2Poly();
 
@@ -136,7 +145,9 @@ void ATMCQMinimization::SetZGeoVertex(Bool_t value)                             
 void ATMCQMinimization::SetEntZ0(Double_t val)                                                                      {fEntZ0 = val;}
 void ATMCQMinimization::SetBackWardPropagation(Bool_t value)                                                        {kBackWardProp = value;}
 void ATMCQMinimization::SetGainCalibration(Double_t value)                                                          {fGain = value;}
-void ATMCQMinimization::SetStepParameters(Double_t par[10])                                                         {for(auto i=0;i<10;i++)fStep_par[i] = par[i];}
+void ATMCQMinimization::SetLongDiffCoef(Double_t value)                                                             {fCoefL = value;}
+void ATMCQMinimization::SetTranDiffCoef(Double_t value)                                                             {fCoefT = value;}
+void ATMCQMinimization::SetStepParameters(Double_t (&par)[10])                                                      {for(auto i=0;i<10;i++)fStep_par[i] = par[i];}
 
 
 Bool_t  ATMCQMinimization::Minimize(Double_t* parameter,ATEvent *event)
@@ -905,8 +916,8 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                     //    1.42142344       1.66536391      0.250012964      0.453425169      0.416164398      0.750032187
                                     //    6.66956806       11.6737719      0.249981672       5.24814463       2.98571382E-29   1.00001383
 
-                                      double sigstrtrans=0.010*sqrt(zpad[iterd]) ; //in cm
-                                      double sigstrlong=0.025*sqrt(zpad[iterd]) ; //in cm but zpad is in mm
+                                      double sigstrtrans=0.020*sqrt(zpad[iterd]) ; //in cm
+                                      double sigstrlong=0.020*sqrt(zpad[iterd]) ; //in cm but zpad is in mm
                                       double rstrag[4]={0.};
                                         rstrag[0] =  0.37925;
                                         rstrag[1] =  0.968;
@@ -1015,7 +1026,7 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                               {
                                 if(fRtoE_func_array.size()>0){
                                 std::function<Double_t(Double_t,std::vector<Double_t>&)> RtoEFunc = fRtoE_func_array.at(0);
-                                fVertexEner = RtoEFunc(fBeam_range*(fPressure/760.0), fRtoEPar_array[0]);
+                                fVertexEner = RtoEFunc((fMaxRange-fBeam_range)*(fPressure/760.0), fRtoEPar_array[0]);
 
                                 //std::cout<<cRED<<" Energy : "<<e0sm<<" Experimental Range : "<<romin<<" Pressure : "<<fPressure<<std::endl;
                                 }else std::cout<<cYELLOW<<" ATMCQMinimization::QMCsim - Warning! No Range-to-Energy function found."<<cNORMAL<<std::endl;
@@ -1283,15 +1294,24 @@ void ATMCQMinimization::Chi2MC(double*  Qtrack,double*  ztrackq,double & Qtrackt
 
     //Chi2number=  ((npointsim  - npoints)*(npointsim  - npoints)/float(npointsim + npoints))/10.;
     //Chi2number= Chi2number/float(npointsim + npoints);
+
+
     Chi2fitq = Chi2fitq/float(npoints) ;
     Chi2fitz = Chi2fitz/float(npoints) ;
-    //if(npoints>0) Chi2fit= (Chi2fitq+Chi2fitz+Chi2number)/float(2*npoints);
 
+
+  /****
+      if(npoints>0) Chi2fit= (Chi2fitq+Chi2fitz)/2.0;
+      if(npoints<5) Chi2fit= 100.;
+   *********/
+
+  //Normalization with n^3
     if(npoints>0) Chi2fit= (Chi2fitq+Chi2fitz)/float(2*npoints);
     if(npoints>0) Chi2fit= Chi2fit/float(2*npoints);   /// for z and Q and npoints
     if(npoints<5) Chi2fit= 10000.;  /// to avoid chi2 by too little number of points
+
      //std:: cout<< " chi2fitnorm**3  "<<Chi2fit<<"  Chi2q  " << Chi2fitq<<"  Chi2z " << Chi2fitz<<" Chi2number "<< Chi2number<<" npoints"<< npoints <<endl;
-    //std:: cout<< " chi2fitnorm**3  "<<Chi2fit<<"  Chi2q  " << Chi2fitq<<"  Chi2z " << Chi2fitz<<" npoints "<< npoints <<endl;
+    //std:: cout<< " chi2fitnorm  "<<Chi2fit<<"  Chi2q  " << Chi2fitq<<"  Chi2z " << Chi2fitz<<" npoints "<< npoints <<endl;
 
 }
 

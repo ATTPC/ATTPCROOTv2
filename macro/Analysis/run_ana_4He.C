@@ -73,6 +73,10 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
   VertexH_vs_AngleH->SetMarkerStyle(20);
   VertexH_vs_AngleH->SetMarkerSize(0.7);
 
+  TH2F* AnglePhi_vs_AngleSum = new TH2F("AnglePhi_vs_AngleSum","AnglePhi_vs_AngleSum",400,0,4.0,400,0,4.0);
+  AnglePhi_vs_AngleSum->SetMarkerColor(2);
+  AnglePhi_vs_AngleSum->SetMarkerStyle(20);
+  AnglePhi_vs_AngleSum->SetMarkerSize(0.7);
 
 
   FairRunAna* run = new FairRunAna();
@@ -137,6 +141,8 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
                   Chi2MC->Fill(track_s.FitParameters.sChi2Min);
                   VertexEvsEnersumMC->Fill(track_r.FitParameters.sEnerMin+track_s.FitParameters.sEnerMin,track_r.FitParameters.sVertexEner);
 
+                  AnglePhi_vs_AngleSum->Fill(track_s.GetGeoTheta(),track_s.GetGeoTheta()+track_r.GetGeoTheta());
+
                 }else if( (track_r.GetQuadrant()==1 && track_s.GetQuadrant()==3) || (track_r.GetQuadrant()==3 && track_s.GetQuadrant()==1)){
 
                   VertexH->Fill(fTrackingEvent->GetVertex());
@@ -156,6 +162,8 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
                   VertexXvsEnersum->Fill(fTrackingEvent->GetVertex(),track_r.GetGeoEnergy()+track_s.GetGeoEnergy());
                   Chi2MC->Fill(track_s.FitParameters.sChi2Min);
                   VertexEvsEnersumMC->Fill(track_r.FitParameters.sEnerMin+track_s.FitParameters.sEnerMin,track_r.FitParameters.sVertexEner);
+
+                  AnglePhi_vs_AngleSum->Fill(track_s.GetGeoTheta(),track_s.GetGeoTheta()+track_r.GetGeoTheta());
 
                 }
 
@@ -210,6 +218,9 @@ Int_t num_ev=100000000, Int_t file_ini=100, Int_t file_end=100, TString file="..
   AnglevsEnersumMC->Draw();
   cMC->cd(4);
   VertexEvsEnersumMC->Draw();
+
+  TCanvas *c4 = new TCanvas("c4","c4",200,10,700,700);
+  AnglePhi_vs_AngleSum->Draw();
 
 
 

@@ -37,6 +37,9 @@ ATAnalysis::ATAnalysis()
     fThetaLorentz    = fPar->GetThetaLorentz()*TMath::Pi()/180.0;
     fPressure        = fPar->GetGasPressure();
     fMaxRange        = fPar->GetMaxRange();
+    fCoefT           = fPar->GetCoefDiffusionTrans();
+    fCoefL           = fPar->GetCoefDiffusionLong();
+    fGain            = fPar->GetGain();
 
 
 

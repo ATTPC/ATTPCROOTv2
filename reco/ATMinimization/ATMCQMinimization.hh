@@ -57,7 +57,9 @@ class ATMCQMinimization : public ATMinimization{
         void SetEntZ0(Double_t val);
         void SetBackWardPropagation(Bool_t value);
         void SetGainCalibration(Double_t value);
-        void SetStepParameters(Double_t par[10]);
+        void SetLongDiffCoef(Double_t value);
+        void SetTranDiffCoef(Double_t value);
+        void SetStepParameters(Double_t (&par)[10]);
 
 
         Bool_t Minimize(Double_t* parameter,ATEvent *event);
@@ -135,6 +137,10 @@ class ATMCQMinimization : public ATMinimization{
              Double_t fDens;
              Double_t fPressure;
              Double_t fGain;
+             Double_t fMaxRange;
+             Double_t fCoefL;
+             Double_t fCoefT;
+
 
 
              std::vector<Double_t> fPosXmin;
@@ -339,10 +345,10 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
            double sigmaq=0.2 ;  //defined as the fraction of sum Qsim+Qtrack
            double sigmaz=4.0  ;  //defined as deviation of the center of gravity in mm modified from 5.4 on june 10 wm
            int imc1=0;
-           int imc1max=10;//10
+           int imc1max=20;//10
            iconvar=imc1;
            int imc2=0;
-           int imc2max=40;//100
+           int imc2max=20;//100
            int icontrol=1;
 
            MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC,aMC,phiMC, Bmin, fDens,romin,x0MCv, y0MCv,z0MCv,aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
@@ -384,6 +390,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
 
                      if(CHi2fit<Chimin){
 
+                         //std::cout<<cRED<<" Iteration : "<<imc1<<"    "<<imc2<<" Chi2Fit : "<<CHi2fit<<cNORMAL<<std::endl;
                          Chimin=CHi2fit;
 
                            icontrol=3;
