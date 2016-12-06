@@ -59,6 +59,11 @@ ATMCQMinimization::ATMCQMinimization()
   //Default parameters
   fRtoEPar_array[0]  = {0.0,0.0,0.0,0.0,0.0};
 
+  //Default steps (46Ar)
+  //fStep_par[10] = {4.0,4.0,0.1,0.5,0.5,0.5,0.0,0.0,0.1,0.0};
+   auto init = std::initializer_list<Double_t>({4.0,4.0,0.1,0.5,0.5,0.5,0.0,0.0,0.1,0.0});
+   std::copy(init.begin(), init.end(),fStep_par);
+
   //Global variables
   m                  = 0;
   iz1                = 0;
@@ -131,6 +136,7 @@ void ATMCQMinimization::SetZGeoVertex(Bool_t value)                             
 void ATMCQMinimization::SetEntZ0(Double_t val)                                                                      {fEntZ0 = val;}
 void ATMCQMinimization::SetBackWardPropagation(Bool_t value)                                                        {kBackWardProp = value;}
 void ATMCQMinimization::SetGainCalibration(Double_t value)                                                          {fGain = value;}
+void ATMCQMinimization::SetStepParameters(Double_t par[10])                                                         {for(auto i=0;i<10;i++)fStep_par[i] = par[i];}
 
 
 Bool_t  ATMCQMinimization::Minimize(Double_t* parameter,ATEvent *event)
@@ -441,15 +447,27 @@ void ATMCQMinimization::MCvar( double* parameter, int & modevar,int & iconvar,do
                     if(modevar==2){   // MC variation
                               //   start  of MC
                               double factstep= std:: pow(1.4, -iconvar);///(TMath::Power(1.4,i));
-                              double step1=4.*factstep;// angle in degres
-                              double step2=4*factstep;//  !phi in deg
+
+
+                              /*double step1=8.*factstep;// angle in degres
+                              double step2=8*factstep;//  !phi in deg
                               double step3=0.1*factstep;//! broradius in relativ
-                              double step4=0.5*factstep;//!x0 in cm
-                              double step5=0.5*factstep;// !y0
-                              double step6=0.5*factstep;//!z0
+                              double step4=0.1*factstep;//!x0 in cm
+                              double step5=0.1*factstep;// !y0
+                              double step6=0.1*factstep;//!z0
                               double step7=0.0*factstep;//B
                               double step8=0.0*factstep;//Density
-                              double step9=0.1*factstep;//to be used somewhere
+                              double step9=0.1*factstep;//to be used somewhere*/
+
+                              double step1=fStep_par[0]*factstep;// angle in degres
+                              double step2=fStep_par[1]*factstep;//  !phi in deg
+                              double step3=fStep_par[2]*factstep;//! broradius in relativ
+                              double step4=fStep_par[3]*factstep;//!x0 in cm
+                              double step5=fStep_par[4]*factstep;// !y0
+                              double step6=fStep_par[5]*factstep;//!z0
+                              double step7=fStep_par[6]*factstep;//B
+                              double step8=fStep_par[7]*factstep;//Density
+                              double step9=fStep_par[8]*factstep;//to be used somewhere*/
 
 
                               aMCv= aMC + step1*(0.5-gRandom->Rndm())*0.01745;

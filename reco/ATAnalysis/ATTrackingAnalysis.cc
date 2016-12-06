@@ -163,7 +163,6 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                   //std::cout<<" Vertex_mean.Z() : "<<Vertex_mean.Z()<<std::endl;
 
                   fVertex       = fMaxRange  - (Z0 - Vertex_mean.Z()); //Vertex position for the excitation function.
-                  std::cout<<fMaxRange<<std::endl;
                   fVertexEnergy = RtoEFunc(fVertex*(fPressure/760.0), fEtoRPar[0]); // Default case: 4He+4He. Every function and parameter list is the same.
                   min->SetEntTB(fEntTB_calc);
                   min->SetZGeoVertex(kTRUE);  //If true, the MC will start where the geometrical vertex is found,

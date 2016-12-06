@@ -57,6 +57,7 @@ class ATMCQMinimization : public ATMinimization{
         void SetEntZ0(Double_t val);
         void SetBackWardPropagation(Bool_t value);
         void SetGainCalibration(Double_t value);
+        void SetStepParameters(Double_t par[10]);
 
 
         Bool_t Minimize(Double_t* parameter,ATEvent *event);
@@ -203,6 +204,8 @@ class ATMCQMinimization : public ATMinimization{
              Double_t *fZTBCorr;//!
              Int_t fIterCorrNorm;//!!
 
+             Double_t fStep_par[10];
+
 
            ClassDef(ATMCQMinimization, 1);
 
@@ -339,7 +342,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
            int imc1max=10;//10
            iconvar=imc1;
            int imc2=0;
-           int imc2max=10;//100
+           int imc2max=40;//100
            int icontrol=1;
 
            MCvar(parameter, icontrol,iconvar,x0MC, y0MC, z0MC,aMC,phiMC, Bmin, fDens,romin,x0MCv, y0MCv,z0MCv,aMCv, phiMCv, Bminv, densv, rominv); // for initialisation
