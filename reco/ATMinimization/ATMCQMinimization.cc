@@ -748,9 +748,10 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                     ypad[iterd] = xdet[iterd]*TMath::Sin(thetaPad) + ydet[iterd]*TMath::Cos(thetaPad);
                                                     zpad[iterd] = zdet[iterd];
 
+                                                    //std::cout<<cYELLOW<<" ZPad before : "<<zpad[iterd]<<std::endl;
                                                     if(!kBackWardProp) fBeam_range = fEntZ0 - zpad[0];
                                                     if(kIsZGeoVertex) zpad[iterd] = zpad[iterd] - (fZk - fEntZ0);
-
+                                                    //std::cout<<cYELLOW<<" ZPad after : "<<zpad[iterd]<<std::endl;
 
                                                     //zpad[iterd] = -zdet[iterd]+ 2*zmin*10.0;
 
@@ -916,8 +917,8 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                     //    1.42142344       1.66536391      0.250012964      0.453425169      0.416164398      0.750032187
                                     //    6.66956806       11.6737719      0.249981672       5.24814463       2.98571382E-29   1.00001383
 
-                                      double sigstrtrans=0.020*sqrt(zpad[iterd]) ; //in cm
-                                      double sigstrlong=0.020*sqrt(zpad[iterd]) ; //in cm but zpad is in mm
+                                      double sigstrtrans=fCoefT*sqrt(zpad[iterd]) ; //in cm
+                                      double sigstrlong=fCoefL*sqrt(zpad[iterd]) ; //in cm but zpad is in mm
                                       double rstrag[4]={0.};
                                         rstrag[0] =  0.37925;
                                         rstrag[1] =  0.968;
