@@ -94,6 +94,65 @@ void ATRANSACN::ATRansac::CalcRANSAC(ATEvent *event)
       FindVertex(tracks);
     }// Minimum tracks
 
+    // Drawing tracks against the Event
+      /*TH2F* vis_RAD = new TH2F("vis_RAD","vis_RAD",1000,0,1000,1000,-250,250);
+      TH2F* exp_RAD = new TH2F("exp_RAD","exp_RAD",1000,0,1000,1000,-250,250);
+
+      TH2F* exp_amp =  new TH2F("exp_amp","exp_amp",1000,-250,250,1000,0,4000);
+      TH2F* track_amp =  new TH2F("track_amp","track_amp",1000,-250,250,1000,0,4000);
+
+      vis_RAD->SetMarkerColor(kGreen);
+      vis_RAD->SetMarkerStyle(20);
+      vis_RAD->SetMarkerSize(1.5);
+
+      exp_RAD->SetMarkerColor(kRed);
+      exp_RAD->SetMarkerStyle(20);
+      exp_RAD->SetMarkerSize(1.0);
+
+      exp_amp->SetMarkerColor(kGreen);
+      exp_amp->SetMarkerStyle(20);
+      exp_amp->SetMarkerSize(1.5);
+
+      track_amp->SetMarkerColor(kRed);
+      track_amp->SetMarkerStyle(20);
+      track_amp->SetMarkerSize(1.0);
+
+      if(tracks.size()>0){
+          for(Int_t i=0;i<1;i++){
+           std::vector<ATHit> hit_track = *tracks.at(i)->GetHitArray();
+
+                  for(Int_t j=0;j<hit_track.size();j++)
+                  {
+                    ATHit hitT =  hit_track.at(j);
+                    TVector3 posSol = hitT.GetPosition();
+                    Double_t rad = TMath::Sqrt( TMath::Power(posSol.X(),2) + TMath::Power(posSol.Y(),2) );
+                    vis_RAD->Fill(posSol.Z(),rad);
+                    track_amp->Fill(posSol.Y(),hitT.GetCharge());
+
+                  }
+
+         }
+      }
+
+      std::vector<ATHit> *hit_track = event->GetHitArray();
+
+          for(Int_t i=0;i<hit_track->size();i++){
+                ATHit hit =  hit_track->at(i);
+                TVector3 pos = hit.GetPosition();
+                Double_t rad = TMath::Sqrt( TMath::Power(pos.X(),2) + TMath::Power(pos.Y(),2) );
+                exp_RAD->Fill(pos.Z(),rad);
+                exp_amp->Fill(pos.Y(),hit.GetCharge());
+
+          }
+
+          track_amp->Draw();
+          exp_amp->Draw("SAME");
+
+        //vis_RAD->Draw();
+        //exp_RAD->Draw("SAME");
+
+        */
+
 }
 
 std::vector<ATTrack*> ATRANSACN::ATRansac::RansacPCL(ATEvent *event)

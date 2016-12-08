@@ -53,6 +53,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                 ATMCQMinimization *min = new ATMCQMinimization();
                 min->ResetParameters();
                 min->SetBackWardPropagation(kFALSE); //Disabled when vertex can be measured
+                min->SetRangeChi2(kTRUE);
 
                 Double_t step_par[10];
                 auto init = std::initializer_list<Double_t>({8.0,8.0,0.1,0.1,0.1,0.1,0.0,0.0,0.1,0.0});
@@ -264,10 +265,10 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                                 ATHit hitT =  hit_track.at(j);
                                 TVector3 posSol = hitT.GetPosition();
                                 Double_t rad = TMath::Sqrt( TMath::Power(posSol.X(),2) + TMath::Power(posSol.Y(),2) );
-                                vis_XY->Fill(posSol.X(),posSol.Y());
+                                //vis_XY->Fill(posSol.X(),posSol.Y());
                                 //vis_XZ->Fill(posSol.Z(),posSol.X());
                                 //vis_YZ->Fill(posSol.Z(),posSol.Y());
-                                //vis_RAD->Fill(posSol.Z(),rad);
+                                vis_RAD->Fill(posSol.Z(),rad);
 
                               }
 
@@ -276,7 +277,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
                   //  vis_XZ->Draw();
                   //  vis_YZ->Draw("SAME");
-                  //  vis_RAD->Draw("SAME");
+                    vis_RAD->Draw();
                   //vis_XY->Draw();
                   */
 

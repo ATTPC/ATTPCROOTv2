@@ -60,6 +60,7 @@ class ATMCQMinimization : public ATMinimization{
         void SetLongDiffCoef(Double_t value);
         void SetTranDiffCoef(Double_t value);
         void SetStepParameters(Double_t (&par)[10]);
+        void SetRangeChi2(Bool_t value);
 
 
         Bool_t Minimize(Double_t* parameter,ATEvent *event);
@@ -101,6 +102,8 @@ class ATMCQMinimization : public ATMinimization{
        void SetMap(AtTpcMap* map);
        Double_t GetChi2Pos(Int_t index,Int_t _iterCorrNorm,Int_t _par,
        Double_t *_xTBCorr,Double_t *_yTBCorr,Double_t *_zTBCorr);
+       template <typename T>
+       Double_t GetChi2Range(T* event,Double_t *_xTBCorr,Double_t *_yTBCorr,Double_t *_zTBCorr);
 
        Int_t GetTBHit(Int_t TB,std::vector<ATHit> *harray);
        TVector3 TransformIniPos(Double_t x,Double_t y, Double_t z); //Transforms initial position from Pad plane to Lab frame
@@ -191,6 +194,7 @@ class ATMCQMinimization : public ATMinimization{
              Bool_t kPosChi2; //Enable the use of Position Chi2
              Bool_t kIsZGeoVertex; //Uses the relative Z vertex determined with the calibration performed with the original TB taken from parameter list
              Bool_t kBackWardProp; //Enables backward extrapolation if vertex is missing (default kTRUE)
+             Bool_t kRangeChi2;
 
              //Global variables
              Double_t sm1;
@@ -377,7 +381,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
                       //std::cout<<cRED<<" After QMCsim x "<<x0MCv<<" y "<< y0MCv<< " z "<< z0MCv<<" theta "<< aMCv<<" phi "<< phiMCv<<" B " <<Bminv<<" dens "<< densv<< " e0sm "<<e0sm<<" ro "<<rominv<<cNORMAL;
                        Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,CHi2fit,sigmaq,sigmaz);   //Chi2 to compare track and MC
 
-                       // TODO: Warning! Check parameter[7] in the ATHOughSpaceCircle line 1109
+                       // TODO: Warning! Check parameter[7] in the ATHoughSpaceCircle line 1109
                        if(kPosChi2) Chi2fitPos = GetChi2Pos(imc1,fIterCorrNorm,parameter[7],fXTBCorr,fYTBCorr,fZTBCorr);
 
                      if(Chi2fitPos<chi2minPos)
@@ -453,6 +457,14 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
 
 
                return kTRUE;
+
+
+}
+
+
+template <typename T>
+Double_t ATMCQMinimization::GetChi2Range(T* event,Double_t *_xTBCorr,Double_t *_yTBCorr,Double_t *_zTBCorr)
+{
 
 
 }

@@ -91,6 +91,7 @@ ATMCQMinimization::ATMCQMinimization()
   kPosChi2      = kTRUE;
   kIsZGeoVertex = kFALSE;
   kBackWardProp = kTRUE;
+  kRangeChi2    = kFALSE;
 
   fXTBCorr = new Double_t[10000];
   fYTBCorr = new Double_t[10000];
@@ -148,6 +149,7 @@ void ATMCQMinimization::SetGainCalibration(Double_t value)                      
 void ATMCQMinimization::SetLongDiffCoef(Double_t value)                                                             {fCoefL = value;}
 void ATMCQMinimization::SetTranDiffCoef(Double_t value)                                                             {fCoefT = value;}
 void ATMCQMinimization::SetStepParameters(Double_t (&par)[10])                                                      {for(auto i=0;i<10;i++)fStep_par[i] = par[i];}
+void ATMCQMinimization::SetRangeChi2(Bool_t value)                                                                  {kRangeChi2 = value;}
 
 
 Bool_t  ATMCQMinimization::Minimize(Double_t* parameter,ATEvent *event)
@@ -324,7 +326,7 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
             double phiMCv = phiMC;
             double rangeMCv = rangeMC ;  //simulation of track values for MC variation
             double sigmaq=0.2 ;  //defined as the fraction of sum Qsim+Qtrack
-            double sigmaz= 4.0  ;  //defined as deviation of the center of gravity in mm modified from 5.4 on june 10 wm
+            double sigmaz=4.0  ;  //defined as deviation of the center of gravity in mm modified from 5.4 on june 10 wm
             int imc1=0;
             int imc1max=10;//10
             iconvar=imc1;
@@ -404,6 +406,8 @@ Bool_t ATMCQMinimization::MinimizeOptMapAmp(Double_t* parameter,ATEvent *event, 
 
             BackwardExtrapolation();
 
+
+
             std::cout<<cYELLOW<<" Minimization result : "<<std::endl;
             std::cout<<" Scattering Angle : "<<aMC*180.0/TMath::Pi()<<std::endl;
             std::cout<<" Azimutal angle : "<<phiMC*180.0/TMath::Pi()<<std::endl;
@@ -458,7 +462,6 @@ void ATMCQMinimization::MCvar( double* parameter, int & modevar,int & iconvar,do
                     if(modevar==2){   // MC variation
                               //   start  of MC
                               double factstep= std:: pow(1.4, -iconvar);///(TMath::Power(1.4,i));
-
 
                               /*double step1=8.*factstep;// angle in degres
                               double step2=8*factstep;//  !phi in deg
@@ -751,7 +754,8 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                                     //std::cout<<cYELLOW<<" ZPad before : "<<zpad[iterd]<<std::endl;
                                                     if(!kBackWardProp) fBeam_range = fEntZ0 - zpad[0];
                                                     if(kIsZGeoVertex) zpad[iterd] = zpad[iterd] - (fZk - fEntZ0);
-                                                    //std::cout<<cYELLOW<<" ZPad after : "<<zpad[iterd]<<std::endl;
+
+                                                    //std::cout<<cYELLOW<<" zpad[iterd] : "<<zpad[iterd]<<" zcmm[iterd] : "<<zcmm[iterd]<<std::endl;
 
                                                     //zpad[iterd] = -zdet[iterd]+ 2*zmin*10.0;
 
@@ -917,6 +921,9 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                                     //    1.42142344       1.66536391      0.250012964      0.453425169      0.416164398      0.750032187
                                     //    6.66956806       11.6737719      0.249981672       5.24814463       2.98571382E-29   1.00001383
 
+
+                                      //double sigstrtrans=10*fCoefT*sqrt(zpad[iterd]+ (fZk - fEntZ0)) ; //in cm
+                                      //double sigstrlong=10*fCoefL*sqrt(zpad[iterd]+ (fZk - fEntZ0)) ; //in cm but zpad is in mm
                                       double sigstrtrans=fCoefT*sqrt(zpad[iterd]) ; //in cm
                                       double sigstrlong=fCoefL*sqrt(zpad[iterd]) ; //in cm but zpad is in mm
                                       double rstrag[4]={0.};
@@ -1311,7 +1318,7 @@ void ATMCQMinimization::Chi2MC(double*  Qtrack,double*  ztrackq,double & Qtrackt
     if(npoints>0) Chi2fit= Chi2fit/float(2*npoints);   /// for z and Q and npoints
     if(npoints<5) Chi2fit= 10000.;  /// to avoid chi2 by too little number of points
 
-     //std:: cout<< " chi2fitnorm**3  "<<Chi2fit<<"  Chi2q  " << Chi2fitq<<"  Chi2z " << Chi2fitz<<" Chi2number "<< Chi2number<<" npoints"<< npoints <<endl;
+    // std:: cout<< " chi2fitnorm**3  "<<Chi2fit<<"  Chi2q  " << Chi2fitq<<"  Chi2z " << Chi2fitz<<" Chi2number "<< Chi2number<<" npoints"<< npoints <<endl;
     //std:: cout<< " chi2fitnorm  "<<Chi2fit<<"  Chi2q  " << Chi2fitq<<"  Chi2z " << Chi2fitz<<" npoints "<< npoints <<endl;
 
 }
