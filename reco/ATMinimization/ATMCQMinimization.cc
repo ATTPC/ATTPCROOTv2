@@ -101,7 +101,7 @@ ATMCQMinimization::ATMCQMinimization()
 
   fEntZ0 = 0.0;
   fBeam_range = 0.0;
-
+  fChi2Points = 0;
 
   //!fPadPlane = new TH2Poly();
 
@@ -1041,10 +1041,6 @@ void ATMCQMinimization::QMCsim(double* parameter, double* Qsim,double *zsimq,dou
                               }
 
 
-                              //std::cout<<" End of QMCsim : "<<Qsim[103]<<std::endl;
-
-
-
 }
 
 void ATMCQMinimization::BackwardExtrapolation()
@@ -1280,6 +1276,8 @@ void ATMCQMinimization::Chi2MC(double*  Qtrack,double*  ztrackq,double & Qtrackt
                       double qsimthreshold= 50. ;
                       double qtrackthreshold= 50. ;
 
+                      fChi2Points=0;
+
 
                       for (i=0; i<npadtotal; i++){
                             //std:: cout <<"  i "<< i << "   "<< Qsim[i]<<"  "<< Qtrack[i]<< endl;
@@ -1297,6 +1295,8 @@ void ATMCQMinimization::Chi2MC(double*  Qtrack,double*  ztrackq,double & Qtrackt
                                     }
                               }
                       }
+
+                      fChi2Points = npoints;
     // normalized
     // to optimize a similar number of points simulated and in the final fit
 

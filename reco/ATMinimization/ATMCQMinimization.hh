@@ -32,6 +32,7 @@
 #include <fstream>   // file stream wm
 #include <cstdlib>  //wm
 #include <vector>  //wm
+#include <algorithm>
 using std::vector;  //wm
 using namespace std; //wm
 
@@ -103,7 +104,7 @@ class ATMCQMinimization : public ATMinimization{
        Double_t GetChi2Pos(Int_t index,Int_t _iterCorrNorm,Int_t _par,
        Double_t *_xTBCorr,Double_t *_yTBCorr,Double_t *_zTBCorr);
        template <typename T>
-       Double_t GetChi2Range(T* event,Double_t *_xTBCorr,Double_t *_yTBCorr,Double_t *_zTBCorr);
+       Double_t GetChi2Range(T* event,std::vector<Double_t> &_xTBCorr,std::vector<Double_t> &_yTBCorr,std::vector<Double_t> &_zTBCorr,Double_t sigma, Int_t npoints);
 
        Int_t GetTBHit(Int_t TB,std::vector<ATHit> *harray);
        TVector3 TransformIniPos(Double_t x,Double_t y, Double_t z); //Transforms initial position from Pad plane to Lab frame
@@ -215,6 +216,7 @@ class ATMCQMinimization : public ATMinimization{
              Int_t fIterCorrNorm;//!!
 
              Double_t fStep_par[10];
+             Int_t fChi2Points;//!!
 
 
            ClassDef(ATMCQMinimization, 1);
@@ -302,12 +304,13 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
            }
 
 
-           Double_t ymax            = 0.0;
-           Double_t e0sm            = 0.0;
-           Double_t smprot          = 931.49432;
-           Double_t Bmin            = B;
-           Double_t chi2min         = 1E10;
-           Double_t chi2minPos      = 1E10;
+           Double_t ymax              = 0.0;
+           Double_t e0sm              = 0.0;
+           Double_t smprot            = 931.49432;
+           Double_t Bmin              = B;
+           Double_t chi2min           = 1E10;
+           Double_t chi2minPos        = 1E10;
+           Double_t chi2minRange      = 1E10;
 
            Double_t xmin;
            Double_t ymin;
@@ -337,6 +340,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
            double QMCtotal;
            double CHi2fit;
            double Chi2fitPos =0.0;
+           double Chi2Range =0.0;
            int modevar=1;
            double rangeMC= 200.;  //simulation of track
            int iconvar;
@@ -383,6 +387,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
 
                        // TODO: Warning! Check parameter[7] in the ATHoughSpaceCircle line 1109
                        if(kPosChi2) Chi2fitPos = GetChi2Pos(imc1,fIterCorrNorm,parameter[7],fXTBCorr,fYTBCorr,fZTBCorr);
+                       if(kRangeChi2) Chi2Range = GetChi2Range(event,fPosXmin,fPosYmin,fPosZmin,sigmaz,0);
 
                      if(Chi2fitPos<chi2minPos)
                      {
@@ -390,11 +395,19 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
 
                      }
 
+                     if(Chi2Range<chi2minRange)
+                     {
+                        chi2minRange = Chi2Range;
+                        //std::cout<<cYELLOW<<" Iteration : "<<imc1<<"    "<<imc2<<" Chi2Range : "<<Chi2Range<<cNORMAL<<std::endl;
+
+                     }
+
+                     if(kRangeChi2) CHi2fit = (CHi2fit + Chi2Range)/2.0;
 
 
                      if(CHi2fit<Chimin){
 
-                         //std::cout<<cRED<<" Iteration : "<<imc1<<"    "<<imc2<<" Chi2Fit : "<<CHi2fit<<cNORMAL<<std::endl;
+                         //std::cout<<cRED<<" Iteration : "<<imc1<<"    "<<imc2<<" Chi2Fit : "<<CHi2fit<<" Chi2Range : "<<Chi2Range<<cNORMAL<<std::endl;
                          Chimin=CHi2fit;
 
                            icontrol=3;
@@ -432,6 +445,8 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
                //FitParameters.sNumMCPoint=num_MC_Point;
                //FitParameters.sNormChi2=chi2min/num_MC_Point;
 
+
+
               std::cout<<cRED<<" chi2minPos : "<<chi2minPos<<std::endl;
 
                //BackwardExtrapolation();
@@ -463,9 +478,28 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
 
 
 template <typename T>
-Double_t ATMCQMinimization::GetChi2Range(T* event,Double_t *_xTBCorr,Double_t *_yTBCorr,Double_t *_zTBCorr)
+Double_t ATMCQMinimization::GetChi2Range(T* event,std::vector<Double_t> &_xTBCorr,std::vector<Double_t> &_yTBCorr,std::vector<Double_t> &_zTBCorr, Double_t sigma, Int_t npoints)
 {
 
+      Double_t chi2=0.0;
+      //NB:: Front is the last hit of the track
+      std::vector<ATHit> * hitArray = event->GetHitArray();
+      ATHit endpointHit = hitArray->front();
+      TVector3 posEp = endpointHit.GetPosition();
+
+      /*for(auto& it : _zTBCorr)
+      {
+        std::cout<<it<<std::endl;
+      }*/
+
+      chi2 = TMath::Sqrt( TMath::Power( posEp.X()-_xTBCorr.back(),2 ) + TMath::Power( posEp.Y()-_yTBCorr.back(),2 ) + TMath::Power( posEp.Z()-_zTBCorr.back(),2 )  );
+
+      //std::cout<<posEp.X()<<"    "<<posEp.Y()<<"    "<<posEp.Z()<<"    "<<std::endl;
+      //std::cout<<_xTBCorr.back()<<"    "<<_yTBCorr.back()<<"    "<<_zTBCorr.back()<<"    "<<std::endl;
+      //std::cout<<" Chi2Range : "<<chi2<<cNORMAL<<std::endl;
+      chi2/=TMath::Power(sigma,2)*TMath::Power(fChi2Points,2);
+
+      return chi2;
 
 }
 
