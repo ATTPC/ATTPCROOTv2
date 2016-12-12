@@ -311,6 +311,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
            Double_t chi2min           = 1E10;
            Double_t chi2minPos        = 1E10;
            Double_t chi2minRange      = 1E10;
+           Double_t chi2minQ          = 1E10;
 
            Double_t xmin;
            Double_t ymin;
@@ -341,6 +342,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
            double CHi2fit;
            double Chi2fitPos =0.0;
            double Chi2Range =0.0;
+           double Chi2Q =0.0;
            int modevar=1;
            double rangeMC= 200.;  //simulation of track
            int iconvar;
@@ -383,13 +385,15 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
                        MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin, fDens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv); // for MC variation with same starting value as before
                        QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MCv, y0MCv, z0MCv,  aMCv, phiMCv, Bminv, densv,rominv,e0sm,PadCoord,fPadPlane);
                       //std::cout<<cRED<<" After QMCsim x "<<x0MCv<<" y "<< y0MCv<< " z "<< z0MCv<<" theta "<< aMCv<<" phi "<< phiMCv<<" B " <<Bminv<<" dens "<< densv<< " e0sm "<<e0sm<<" ro "<<rominv<<cNORMAL;
-                       Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,CHi2fit,sigmaq,sigmaz);   //Chi2 to compare track and MC
+                       Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,Chi2Q,sigmaq,sigmaz);   //Chi2 to compare track and MC
+                       //Chi2Q = CHi2fit;
+
 
                        // TODO: Warning! Check parameter[7] in the ATHoughSpaceCircle line 1109
                        if(kPosChi2) Chi2fitPos = GetChi2Pos(imc1,fIterCorrNorm,parameter[7],fXTBCorr,fYTBCorr,fZTBCorr);
                        if(kRangeChi2) Chi2Range = GetChi2Range(event,fPosXmin,fPosYmin,fPosZmin,sigmaz,0);
 
-                     if(Chi2fitPos<chi2minPos)
+                     /*if(Chi2fitPos<chi2minPos)
                      {
                         chi2minPos = Chi2fitPos;
 
@@ -398,20 +402,22 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
                      if(Chi2Range<chi2minRange)
                      {
                         chi2minRange = Chi2Range;
-                        //std::cout<<cYELLOW<<" Iteration : "<<imc1<<"    "<<imc2<<" Chi2Range : "<<Chi2Range<<cNORMAL<<std::endl;
+                        std::cout<<cYELLOW<<" Iteration : "<<imc1<<"    "<<imc2<<" Chi2Range : "<<Chi2Range<<cNORMAL<<std::endl;
 
-                     }
+                     }*/
 
-                     if(kRangeChi2) CHi2fit = (CHi2fit + Chi2Range)/2.0;
+                     if(kRangeChi2) CHi2fit = (Chi2Q + Chi2Range)/2.0;
+                     else CHi2fit = Chi2Q;
 
 
                      if(CHi2fit<Chimin){
 
-                         //std::cout<<cRED<<" Iteration : "<<imc1<<"    "<<imc2<<" Chi2Fit : "<<CHi2fit<<" Chi2Range : "<<Chi2Range<<cNORMAL<<std::endl;
-                         Chimin=CHi2fit;
-
-                           icontrol=3;
-                           MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin,fDens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv);
+                       chi2minRange = Chi2Range;
+                       chi2minQ     = Chi2Q;
+                       Chimin       = CHi2fit;
+                        //std::cout<<cRED<<" Iteration : "<<imc1<<"    "<<imc2<<" Chi2Fit : "<<CHi2fit<<" Chi2Q : "<<chi2minQ<<" Chi2Range : "<<chi2minRange<<cNORMAL<<std::endl;
+                       icontrol=3;
+                       MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin,fDens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv);
 
                      }
 
@@ -423,12 +429,15 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
 
                QMCsim(parameter, Qsim, zsimq, QMCtotal,x0MC, y0MC, z0MC,  aMC, phiMC, Bmin,fDens,romin,e0sm,PadCoord,fPadPlane); // simulation with Chimin parameters
 
-               FitParameters.sThetaMin = aMC;
-               FitParameters.sEnerMin=e0sm;
+               FitParameters.sThetaMin  = aMC;
+               FitParameters.sEnerMin   = e0sm;
                FitParameters.sPosMin.SetXYZ(x0MC,y0MC,z0MC);
-               FitParameters.sBrhoMin=romin;
-               FitParameters.sBMin=Bmin;
-               FitParameters.sPhiMin=phiMC;
+               FitParameters.sBrhoMin   = romin;
+               FitParameters.sBMin      = Bmin;
+               FitParameters.sPhiMin    = phiMC;
+               FitParameters.sChi2Min   = Chimin;
+               FitParameters.sChi2Q     = chi2minQ;
+               FitParameters.sChi2Range = chi2minRange;
                if(!kBackWardProp)
                {
                  FitParameters.sVertexPos.SetXYZ(x0MC,y0MC,z0MC);
@@ -439,31 +448,25 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
 
 
                //std::cout<<cRED<<" final fit x "<<x0MC <<" y "<< y0MC << " z "<< z0MC <<" theta "<< aMC <<" phi "<< phiMC <<" B " <<Bmin <<" dens "<< dens <<" e0sm "<<e0sm<<" ro "<<romin <<cNORMAL<<std::endl;
-               Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,CHi2fit,sigmaq,sigmaz);   //Chi2 to compare track and MC for Chimin parameters
+               //Chi2MC(Qtrack,ztrackq,Qtracktotal,Qsim,zsimq,QMCtotal,Chi2Q,sigmaq,sigmaz);   //Chi2 to compare track and MC for Chimin parameters
+               //if(kRangeChi2) Chi2Range = GetChi2Range(event,fPosXmin,fPosYmin,fPosZmin,sigmaz,0);
 
-               FitParameters.sChi2Min=CHi2fit;
                //FitParameters.sNumMCPoint=num_MC_Point;
                //FitParameters.sNormChi2=chi2min/num_MC_Point;
-
-
-
-              std::cout<<cRED<<" chi2minPos : "<<chi2minPos<<std::endl;
-
-               //BackwardExtrapolation();
 
                //CalibrateGain(fHitArray);
 
                std::cout<<cYELLOW<<" Minimization result : "<<std::endl;
-               std::cout<<" Scattering Angle : "<<aMC*180.0/TMath::Pi()<<std::endl;
-               std::cout<<" Azimutal angle : "<<phiMC*180.0/TMath::Pi()<<std::endl;
-               std::cout<<" B : "<<Bmin<<std::endl;
-               std::cout<<" Brho : "<<FitParameters.sBrhoMin<<std::endl;
-               std::cout<<" Energy : "<<e0sm<<std::endl;
+               std::cout<<" Scattering Angle : "<<FitParameters.sThetaMin*180.0/TMath::Pi()<<std::endl;
+               std::cout<<" Azimutal angle : "<<FitParameters.sPhiMin*180.0/TMath::Pi()<<std::endl;
+               std::cout<<" B : "<<FitParameters.sBMin<<std::endl;
+               std::cout<<" Brho/Range : "<<FitParameters.sBrhoMin<<std::endl;
+               std::cout<<" Energy : "<<FitParameters.sEnerMin<<std::endl;
                std::cout<<" Vertex Position - X : "<<x0MC<<" - Y : "<<y0MC<<" - Z : "<<z0MC<<std::endl;
                std::cout<<" Vertex Position (Backward extrapolation) - X : "<<fVertexPos.X()<<" - Y : "<<fVertexPos.Y()<<" - Z : "<<fVertexPos.Z()<<std::endl;
                std::cout<<" Vertex Energy : "<<fVertexEner<<" MeV "<<std::endl;
                //std::cout<<" Reduced chi2 : "<<chi2min/FitParameters.sNumMCPoint<<std::endl;
-               std::cout<<" Minimum chi2 : "<<CHi2fit<<cNORMAL<<std::endl;
+               std::cout<<" Minimum chi2 : "<< FitParameters.sChi2Min<<cNORMAL<<std::endl;
 
 
 

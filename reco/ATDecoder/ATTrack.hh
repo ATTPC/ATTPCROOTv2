@@ -105,7 +105,8 @@ class ATTrack : public TObject {
         Double_t sMinDistAppr;
         Int_t    sNumMCPoint;
         Double_t sNormChi2;
-
+        Double_t sChi2Q;
+        Double_t sChi2Range;
       };
 
       FitPar FitParameters;
@@ -136,11 +137,17 @@ class ATTrack : public TObject {
       std::cout<<"  Track "<<track.fTrackID<<" Info : "<<std::endl;
       std::cout<<" Quadrant : "<<track.fQuadrant<<std::endl;
       std::cout<<" Geomterical Scattering Angle : "<<track.fGeoThetaAngle*(180.0/TMath::Pi())<<" deg "
-      <<" - Geomterical Anzimuthal Angle : "<<track.fGeoPhiAngle*(180.0/TMath::Pi())<<" deg "<<std::endl;
+      <<" - Geomterical Azimuthal Angle : "<<track.fGeoPhiAngle*(180.0/TMath::Pi())<<" deg "<<std::endl;
       std::cout<<" Geometrical Range : "<<track.fRange<<" mm "<<cNORMAL<<std::endl;
 
       std::cout<<cRED<<" MC Fit : "<<track.kIsMCFit<<std::endl;
       std::cout<<" Number of simulated points : "<<track.GetPosXMin().size()<<std::endl;
+      std::cout<<" Scattering Angle : "<<track.FitParameters.sThetaMin*(180.0/TMath::Pi())<<" deg "
+      <<" - Azimuthal Angle : "<<track.FitParameters.sPhiMin*(180.0/TMath::Pi())<<" deg "<<std::endl;
+      std::cout<<" Brho/Range : "<<track.FitParameters.sBrhoMin<<" T*m/mm "<<std::endl;
+      std::cout<<" Energy :  "<<track.FitParameters.sEnerMin<<" MeV "<<std::endl;
+      std::cout<<" Chi2 : "<<track.FitParameters.sChi2Min<<" - Chi2Q : "<<track.FitParameters.sChi2Q<<" - Chi2Range : "<<track.FitParameters.sChi2Range<<std::endl;
+      std::cout<<cNORMAL<<std::endl;
       return o;
     }
 

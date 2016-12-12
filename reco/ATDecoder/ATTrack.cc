@@ -30,6 +30,9 @@ ATTrack::ATTrack()
   FitParameters.sMinDistAppr     = 0;
   FitParameters.sNumMCPoint      = 0;
   FitParameters.sNormChi2        = 0;
+  FitParameters.sChi2Q           = 0;
+  FitParameters.sChi2Range       = 0;
+
 }
 
 /*ATTrack::ATTrack(const ATTrack &obj)

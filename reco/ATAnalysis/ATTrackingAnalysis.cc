@@ -215,6 +215,8 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                           trackToMin->FitParameters.sMinDistAppr     = min->FitParameters.sMinDistAppr;
                           trackToMin->FitParameters.sNumMCPoint      = min->FitParameters.sNumMCPoint;
                           trackToMin->FitParameters.sNormChi2        = min->FitParameters.sNormChi2;
+                          trackToMin->FitParameters.sChi2Q           = min->FitParameters.sChi2Q;
+                          trackToMin->FitParameters.sChi2Range       = min->FitParameters.sChi2Range;
                           trackToMin->SetMCFit(kTRUE);
                           trackingEventAna->SetTrack(trackToMin);
 

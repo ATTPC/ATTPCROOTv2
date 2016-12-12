@@ -70,6 +70,9 @@ class ATMinimization : public TObject
 			Double_t sMinDistAppr;
 			Int_t    sNumMCPoint;
 			Double_t sNormChi2;
+			Double_t sChi2Q;
+			Double_t sChi2Range;
+
 
 		};
 
