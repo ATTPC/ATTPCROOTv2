@@ -130,50 +130,36 @@ TString mappath="/data/ar46/run_0085/")
 
     TString cobo_str = "CoBo0";
 
-    /*  for(Int_t fi=0;fi<numLin;fi++)
+      for(Int_t fi=0;fi<numLin;fi++)
       {
             dataFileWithPath.ReadLine(listFile);
 
               if(dataFileWithPath.Contains(cobo_str))
               {
                   fDecoderTask->AddData(dataFileWithPath, nCobo);
+                  //std::cout<<cYELLOW<<dataFileWithPath<<cNORMAL<<std::endl;
+                  //std::cout<<cYELLOW<<cobo_str<<cNORMAL<<std::endl;
+                  //std::cout<<cRED<<nCobo<<cNORMAL<<std::endl;
               }else{
-                  nCobo++;
-                  cobo_str = Form("CoBo%i",iCobo+1);
-                  fDecoderTask->AddData(dataFileWithPath, nCobo);
+                  iCobo++;
+                  cobo_str = Form("CoBo%i",iCobo);
+                  while(!dataFileWithPath.Contains(cobo_str)){
+                    iCobo++;
+                    cobo_str = Form("CoBo%i",iCobo);
+                  }
+                      nCobo++;
+                      //std::cout<<cYELLOW<<dataFileWithPath<<cNORMAL<<std::endl;
+                      //std::cout<<cYELLOW<<cobo_str<<cNORMAL<<std::endl;
+                      //std::cout<<cRED<<nCobo<<cNORMAL<<std::endl;
+                      fDecoderTask->AddData(dataFileWithPath, nCobo);
               }
-      }*/
-
-          /*
-            std::cout<<cRED<<cobo_str<<std::endl;
-            std::cout<<dataFileWithPath<<cNORMAL<<std::endl;
-
-            if (dataFileWithPath.Contains(cobo_str) ){
-              fDecoderTask->AddData(dataFileWithPath, nCobo);
-              std::cout<<cYELLOW<<dataFileWithPath<<std::endl;
-              std::cout<<nCobo<<cNORMAL<<std::endl;
-            }else{
-              iCobo++;
-              cobo_str = Form("CoBo%i",iCobo);
-              std::cout<<cGREEN<<Form("CoBo%i",iCobo)<<cNORMAL<<std::endl;
-              if(dataFileWithPath.Contains(Form("CoBo%i",iCobo)))
-              {
-               nCobo++;
-               fDecoderTask->AddData(dataFileWithPath, nCobo);
-               std::cout<<cobo_str<<std::endl;
-               std::cout<<dataFileWithPath<<std::endl;
-               std::cout<<nCobo<<cNORMAL<<std::endl;
-              }
-
-            }
-
-      }*/
+      }
 
 
   }
 
 
-  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo0_run_0100_11Dec14_22h03m15s.graw",0);
+  /*fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo0_run_0100_11Dec14_22h03m15s.graw",0);
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo1_run_0100_11Dec14_22h03m15s.graw",1);
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo2_run_0100_11Dec14_22h03m15s.graw",2);
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo2_run_0100_11Dec14_22h03m15s.1.graw",2);
@@ -183,7 +169,7 @@ TString mappath="/data/ar46/run_0085/")
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo7_run_0100_11Dec14_22h03m16s.graw",6);
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo7_run_0100_11Dec14_22h03m16s.1.graw",6);
   fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo8_run_0100_11Dec14_22h03m16s.graw",7);
-  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo9_run_0100_11Dec14_22h03m16s.graw",8);
+  fDecoderTask -> AddData("/data/ND/2013/buffer/NSCL_Alpha/run_0100/CoBo9_run_0100_11Dec14_22h03m16s.graw",8);*/
 
   run -> AddTask(fDecoderTask);
 
@@ -224,8 +210,8 @@ TString mappath="/data/ar46/run_0085/")
 
   run -> Init();
 
-  //run -> RunOnTBData();
-  run->Run(0,100);
+  run -> RunOnTBData();
+  //run->Run(0,100);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
