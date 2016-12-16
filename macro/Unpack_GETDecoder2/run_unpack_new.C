@@ -1,6 +1,6 @@
 void run_unpack_new
-(TString dataFile = "runfiles/ar46_run_0085.txt",TString parameterFile = "ATTPC.e15503b.par",
-TString mappath="/data/ar46/run_0085/")
+(TString dataFile = "runfiles/ar46_run_0085.txt",TString parameterFile = "ATTPC.fissionC02.par",
+TString mappath="../../resources/")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -26,9 +26,11 @@ TString mappath="/data/ar46/run_0085/")
   TString digiParFile = dir + "/parameters/" + parameterFile;
   TString geoManFile  = dir + "/geometry/ATTPC_v1.2.root";
 
-  TString inimap   = mappath + "inhib.txt";
-  TString lowgmap  = mappath + "lowgain.txt";
-  TString xtalkmap = mappath + "beampads_e15503b.txt";
+  //TString inimap   = mappath + "inhib.txt";
+  //TString lowgmap  = mappath + "lowgain.txt";
+  //TString xtalkmap = mappath + "beampads_e15503b.txt";
+
+  TString inimap = mappath + "he4_in_pads.txt";
 
   // -----------------------------------------------------------------
   // Logger
@@ -76,7 +78,7 @@ TString mappath="/data/ar46/run_0085/")
   //fDecoderTask -> SetPositivePolarity(kTRUE);
   fDecoderTask -> SetPersistence(kFALSE);
   fDecoderTask -> SetMap(scriptdir.Data());
-  //fDecoderTask -> SetInhibitMaps(inimap,lowgmap,xtalkmap); // TODO: Only implemented for fUseSeparatedData!!!!!!!!!!!!!!!!!!!1
+  fDecoderTask -> SetInhibitMaps(inimap,"0","0"); // TODO: Only implemented for fUseSeparatedData!!!!!!!!!!!!!!!!!!!1
   fDecoderTask -> SetNumCobo(40);
   fDecoderTask -> SetMapOpt(0); // ATTPC : 0  - Prototype: 1 |||| Default value = 0
 
@@ -97,46 +99,57 @@ TString mappath="/data/ar46/run_0085/")
     }
   }*/
 
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm0/run_0000/CoBo_AsAd0_2016-10-07T16_44_34.319_0000.graw",0);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm0/run_0000/CoBo_AsAd1_2016-10-07T16_44_34.322_0000.graw",1);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm0/run_0000/CoBo_AsAd2_2016-10-07T16_44_34.324_0000.graw",2);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm0/run_0000/CoBo_AsAd3_2016-10-07T16_44_34.328_0000.graw",3);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm1/run_0000/CoBo_AsAd0_2016-10-07T16_47_47.204_0000.graw",4);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm1/run_0000/CoBo_AsAd1_2016-10-07T16_47_47.206_0000.graw",5);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm1/run_0000/CoBo_AsAd2_2016-10-07T16_47_47.209_0000.graw",6);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm1/run_0000/CoBo_AsAd3_2016-10-07T16_47_47.286_0000.graw",7);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm2/run_0000/CoBo_AsAd0_2016-10-07T16_49_19.013_0000.graw",8);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm2/run_0000/CoBo_AsAd1_2016-10-07T16_49_19.082_0000.graw",9);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm2/run_0000/CoBo_AsAd2_2016-10-07T16_49_19.088_0000.graw",10);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm2/run_0000/CoBo_AsAd3_2016-10-07T16_49_19.248_0000.graw",11);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm3/run_0000/CoBo_AsAd0_2016-10-07T16_48_18.379_0000.graw",12);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm3/run_0000/CoBo_AsAd1_2016-10-07T16_48_18.449_0000.graw",13);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm3/run_0000/CoBo_AsAd2_2016-10-07T16_48_18.520_0000.graw",14);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm3/run_0000/CoBo_AsAd3_2016-10-07T16_48_18.598_0000.graw",15);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm4/run_0000/CoBo_AsAd0_2016-10-07T16_49_16.650_0000.graw",16);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm4/run_0000/CoBo_AsAd1_2016-10-07T16_49_16.653_0000.graw",17);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm4/run_0000/CoBo_AsAd2_2016-10-07T16_49_16.660_0000.graw",18);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm4/run_0000/CoBo_AsAd3_2016-10-07T16_49_16.666_0000.graw",19);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm5/run_0000/CoBo_AsAd0_2016-10-07T16_44_34.178_0000.graw",20);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm5/run_0000/CoBo_AsAd1_2016-10-07T16_44_34.248_0000.graw",21);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm5/run_0000/CoBo_AsAd2_2016-10-07T16_44_34.250_0000.graw",22);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm5/run_0000/CoBo_AsAd3_2016-10-07T16_44_34.329_0000.graw",23);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm6/run_0000/CoBo_AsAd0_2016-10-07T16_44_34.269_0000.graw",24);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm6/run_0000/CoBo_AsAd1_2016-10-07T16_44_34.341_0000.graw",25);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm6/run_0000/CoBo_AsAd2_2016-10-07T16_44_34.342_0000.graw",26);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm6/run_0000/CoBo_AsAd3_2016-10-07T16_44_34.348_0000.graw",27);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm7/run_0000/CoBo_AsAd0_2016-10-07T16_44_34.286_0000.graw",28);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm7/run_0000/CoBo_AsAd1_2016-10-07T16_44_34.289_0000.graw",29);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm7/run_0000/CoBo_AsAd2_2016-10-07T16_44_34.295_0000.graw",30);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm7/run_0000/CoBo_AsAd3_2016-10-07T16_44_34.296_0000.graw",31);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm8/run_0000/CoBo_AsAd0_2016-10-07T16_49_24.139_0000.graw",32);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm8/run_0000/CoBo_AsAd1_2016-10-07T16_49_24.142_0000.graw",33);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm8/run_0000/CoBo_AsAd2_2016-10-07T16_49_24.146_0000.graw",34);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm8/run_0000/CoBo_AsAd3_2016-10-07T16_49_24.149_0000.graw",35);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm9/run_0000/CoBo_AsAd0_2016-10-07T16_44_34.135_0000.graw",36);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm9/run_0000/CoBo_AsAd1_2016-10-07T16_44_34.276_0000.graw",37);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm9/run_0000/CoBo_AsAd2_2016-10-07T16_44_34.277_0000.graw",38);
-  fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm9/run_0000/CoBo_AsAd3_2016-10-07T16_44_34.431_0000.graw",39);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm0/run_0004/CoBo_AsAd0_2016-10-10T11_44_55.841_0000.graw",0);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm0/run_0004/CoBo_AsAd1_2016-10-10T11_44_55.843_0000.graw",1);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm0/run_0004/CoBo_AsAd2_2016-10-10T11_44_55.912_0000.graw",2);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm0/run_0004/CoBo_AsAd3_2016-10-10T11_44_55.918_0000.graw",3);
+
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm1/run_0004/CoBo_AsAd0_2016-10-10T11_48_14.171_0000.graw",4);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm1/run_0004/CoBo_AsAd1_2016-10-10T11_48_14.174_0000.graw",5);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm1/run_0004/CoBo_AsAd2_2016-10-10T11_48_14.175_0000.graw",6);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm1/run_0004/CoBo_AsAd3_2016-10-10T11_48_14.184_0000.graw",7);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm1/run_0004/CoBo_AsAd3_2016-10-10T11_48_14.184_0001.graw",7);
+
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm2/run_0004/CoBo_AsAd0_2016-10-10T11_49_47.987_0000.graw",8);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm2/run_0004/CoBo_AsAd1_2016-10-10T11_49_47.990_0000.graw",9);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm2/run_0004/CoBo_AsAd2_2016-10-10T11_49_48.066_0000.graw",10);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm2/run_0004/CoBo_AsAd3_2016-10-10T11_49_48.075_0000.graw",11);
+
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm3/run_0004/CoBo_AsAd0_2016-10-10T11_48_46.111_0000.graw",12);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm3/run_0004/CoBo_AsAd1_2016-10-10T11_48_46.182_0000.graw",13);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm3/run_0004/CoBo_AsAd2_2016-10-10T11_48_46.184_0000.graw",14);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm3/run_0004/CoBo_AsAd3_2016-10-10T11_48_46.185_0000.graw",15);
+
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm4/run_0004/CoBo_AsAd0_2016-10-10T11_49_46.450_0000.graw",16);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm4/run_0004/CoBo_AsAd1_2016-10-10T11_49_46.453_0000.graw",17);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm4/run_0004/CoBo_AsAd2_2016-10-10T11_49_46.454_0000.graw",18);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm4/run_0004/CoBo_AsAd3_2016-10-10T11_49_46.454_0000.graw",19);
+
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm5/run_0004/CoBo_AsAd0_2016-10-10T11_44_55.837_0000.graw",20);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm5/run_0004/CoBo_AsAd1_2016-10-10T11_44_55.908_0000.graw",21);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm5/run_0004/CoBo_AsAd2_2016-10-10T11_44_55.909_0000.graw",22);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm5/run_0004/CoBo_AsAd3_2016-10-10T11_44_55.911_0000.graw",23);
+
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm6/run_0004/CoBo_AsAd0_2016-10-10T11_44_55.856_0000.graw",24);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm6/run_0004/CoBo_AsAd1_2016-10-10T11_44_55.927_0000.graw",25);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm6/run_0004/CoBo_AsAd2_2016-10-10T11_44_55.928_0000.graw",26);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm6/run_0004/CoBo_AsAd3_2016-10-10T11_44_55.933_0000.graw",27);
+
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm7/run_0004/CoBo_AsAd0_2016-10-10T11_44_55.855_0000.graw",28);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm7/run_0004/CoBo_AsAd1_2016-10-10T11_44_55.857_0000.graw",29);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm7/run_0004/CoBo_AsAd2_2016-10-10T11_44_55.932_0000.graw",30);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm7/run_0004/CoBo_AsAd3_2016-10-10T11_44_55.934_0000.graw",31);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm7/run_0004/CoBo_AsAd2_2016-10-10T11_44_55.934_0001.graw",31);
+
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm8/run_0004/CoBo_AsAd0_2016-10-10T11_49_53.572_0000.graw",32);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm8/run_0004/CoBo_AsAd1_2016-10-10T11_49_53.574_0000.graw",33);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm8/run_0004/CoBo_AsAd2_2016-10-10T11_49_53.575_0000.graw",34);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm8/run_0004/CoBo_AsAd3_2016-10-10T11_49_53.643_0000.graw",35);
+
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm9/run_0004/CoBo_AsAd0_2016-10-10T11_44_55.820_0000.graw",36);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm9/run_0004/CoBo_AsAd1_2016-10-10T11_44_55.892_0000.graw",37);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm9/run_0004/CoBo_AsAd2_2016-10-10T11_44_55.893_0000.graw",38);
+   fDecoderTask -> AddData("/data/NSCL/fission/co2/mm9/run_0004/CoBo_AsAd3_2016-10-10T11_44_55.902_0000.graw",39);
 
 
   run -> AddTask(fDecoderTask);
@@ -151,11 +164,16 @@ TString mappath="/data/ar46/run_0085/")
   psaTask -> SetTimeCorrection(kTRUE); //Interpolation around the maximum of the signal peak. Only affect Z calibration at PSA stage
   run -> AddTask(psaTask);
 
+  ATRansacTask *RansacTask = new ATRansacTask();
+  RansacTask->SetPersistence(kTRUE);
+  RansacTask->SetDistanceThreshold(10.0);
+  run -> AddTask(RansacTask);
+
 
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,10);
+  run->Run(0,100);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
@@ -226,3 +244,46 @@ fDecoderTask -> AddData("/home/ayyadlim/Desktop/ATTPC/run_0122/CoBo9_run_0122_14
 fDecoderTask -> AddData("/home/ayyadlim/Desktop/ATTPC/run_0122/CoBo9_run_0122_14-08-15_13h27m29s.2.graw",9);
 fDecoderTask -> AddData("/home/ayyadlim/Desktop/ATTPC/run_0122/CoBo9_run_0122_14-08-15_13h27m29s.3.graw",9);
 fDecoderTask -> AddData("/home/ayyadlim/Desktop/ATTPC/run_0122/CoBo9_run_0122_14-08-15_13h27m29s.4.graw",9);*/
+
+/// New DAQ Version
+
+/*fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm0/run_0000/CoBo_AsAd0_2016-10-07T16_44_34.319_0000.graw",0);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm0/run_0000/CoBo_AsAd1_2016-10-07T16_44_34.322_0000.graw",1);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm0/run_0000/CoBo_AsAd2_2016-10-07T16_44_34.324_0000.graw",2);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm0/run_0000/CoBo_AsAd3_2016-10-07T16_44_34.328_0000.graw",3);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm1/run_0000/CoBo_AsAd0_2016-10-07T16_47_47.204_0000.graw",4);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm1/run_0000/CoBo_AsAd1_2016-10-07T16_47_47.206_0000.graw",5);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm1/run_0000/CoBo_AsAd2_2016-10-07T16_47_47.209_0000.graw",6);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm1/run_0000/CoBo_AsAd3_2016-10-07T16_47_47.286_0000.graw",7);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm2/run_0000/CoBo_AsAd0_2016-10-07T16_49_19.013_0000.graw",8);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm2/run_0000/CoBo_AsAd1_2016-10-07T16_49_19.082_0000.graw",9);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm2/run_0000/CoBo_AsAd2_2016-10-07T16_49_19.088_0000.graw",10);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm2/run_0000/CoBo_AsAd3_2016-10-07T16_49_19.248_0000.graw",11);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm3/run_0000/CoBo_AsAd0_2016-10-07T16_48_18.379_0000.graw",12);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm3/run_0000/CoBo_AsAd1_2016-10-07T16_48_18.449_0000.graw",13);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm3/run_0000/CoBo_AsAd2_2016-10-07T16_48_18.520_0000.graw",14);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm3/run_0000/CoBo_AsAd3_2016-10-07T16_48_18.598_0000.graw",15);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm4/run_0000/CoBo_AsAd0_2016-10-07T16_49_16.650_0000.graw",16);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm4/run_0000/CoBo_AsAd1_2016-10-07T16_49_16.653_0000.graw",17);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm4/run_0000/CoBo_AsAd2_2016-10-07T16_49_16.660_0000.graw",18);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm4/run_0000/CoBo_AsAd3_2016-10-07T16_49_16.666_0000.graw",19);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm5/run_0000/CoBo_AsAd0_2016-10-07T16_44_34.178_0000.graw",20);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm5/run_0000/CoBo_AsAd1_2016-10-07T16_44_34.248_0000.graw",21);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm5/run_0000/CoBo_AsAd2_2016-10-07T16_44_34.250_0000.graw",22);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm5/run_0000/CoBo_AsAd3_2016-10-07T16_44_34.329_0000.graw",23);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm6/run_0000/CoBo_AsAd0_2016-10-07T16_44_34.269_0000.graw",24);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm6/run_0000/CoBo_AsAd1_2016-10-07T16_44_34.341_0000.graw",25);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm6/run_0000/CoBo_AsAd2_2016-10-07T16_44_34.342_0000.graw",26);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm6/run_0000/CoBo_AsAd3_2016-10-07T16_44_34.348_0000.graw",27);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm7/run_0000/CoBo_AsAd0_2016-10-07T16_44_34.286_0000.graw",28);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm7/run_0000/CoBo_AsAd1_2016-10-07T16_44_34.289_0000.graw",29);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm7/run_0000/CoBo_AsAd2_2016-10-07T16_44_34.295_0000.graw",30);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm7/run_0000/CoBo_AsAd3_2016-10-07T16_44_34.296_0000.graw",31);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm8/run_0000/CoBo_AsAd0_2016-10-07T16_49_24.139_0000.graw",32);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm8/run_0000/CoBo_AsAd1_2016-10-07T16_49_24.142_0000.graw",33);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm8/run_0000/CoBo_AsAd2_2016-10-07T16_49_24.146_0000.graw",34);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm8/run_0000/CoBo_AsAd3_2016-10-07T16_49_24.149_0000.graw",35);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm9/run_0000/CoBo_AsAd0_2016-10-07T16_44_34.135_0000.graw",36);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm9/run_0000/CoBo_AsAd1_2016-10-07T16_44_34.276_0000.graw",37);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm9/run_0000/CoBo_AsAd2_2016-10-07T16_44_34.277_0000.graw",38);
+fDecoderTask -> AddData("/data/NSCL/fission/co2/fission_CO2/mm9/run_0000/CoBo_AsAd3_2016-10-07T16_44_34.431_0000.graw",39);*/
