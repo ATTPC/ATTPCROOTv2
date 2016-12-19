@@ -167,6 +167,7 @@ TString mappath="../../resources/")
   ATRansacTask *RansacTask = new ATRansacTask();
   RansacTask->SetPersistence(kTRUE);
   RansacTask->SetDistanceThreshold(10.0);
+  RansacTask->SetFullMode(); //Without conditions on line determination
   run -> AddTask(RansacTask);
 
 

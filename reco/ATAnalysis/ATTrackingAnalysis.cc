@@ -293,6 +293,13 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
 }
 
+void ATTrackingAnalysis::AnalyzeSimple(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna *trackingEventAna,TH2Poly* hPadPlane,const multiarray& PadCoord)
+{
+
+
+
+}
+
 // Default ELoss function for protons in 20 torr Isobutane
 Double_t ATTrackingAnalysis::GetEloss(Double_t c0,std::vector<Double_t>& par)
 {

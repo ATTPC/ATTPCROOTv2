@@ -479,17 +479,18 @@ ATEventDrawTask::DrawHitPoints()
                ATTrack track = TrackCand.at(j);
                std::vector<Double_t> parFit = track.GetFitPar();
                fLineArray[j]->SetMainColor(kRed);
-               for (int i = 0; i <n;++i) {
-                     double t = t0+ dt*i/n;
-                     double x,y,z;
-                     SetLine(t,parFit,x,y,z);
-                     fLineArray[j]->SetNextPoint(x, y, z);
+               if(parFit.size()==4){
+                     for (int i = 0; i <n;++i) {
+                           double t = t0+ dt*i/n;
+                           double x,y,z;
+                           SetLine(t,parFit,x,y,z);
+                           fLineArray[j]->SetNextPoint(x, y, z);
 
-                     //fLineArray.push_back(fLine);
-                     //l->SetPoint(i,x,y,z);
-                     //std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
-               }
-
+                           //fLineArray.push_back(fLine);
+                           //l->SetPoint(i,x,y,z);
+                           //std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
+                     }
+                }else std::cout<<cRED<<" ATEventDrawTask::DrawHitPoints - Warning: wrong number of fit parameters for RANSAC lines!"<<std::endl;
 
             }
 

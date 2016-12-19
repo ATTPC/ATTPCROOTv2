@@ -16,10 +16,12 @@ ATRansacTask::ATRansacTask()
   fLogger = FairLogger::GetLogger();
   fPar = NULL;
 
-  fIsPersistence = kFALSE;
+  kIsPersistence = kFALSE;
+  kIsFullMode    = kFALSE;
 
   fRANSACModel = pcl::SACMODEL_LINE;
   fRANSACThreshold = 5.0;
+  fMinHitsLine = 5;
 
 }
 
@@ -27,9 +29,11 @@ ATRansacTask::~ATRansacTask()
 {
 }
 
-void   ATRansacTask::SetPersistence(Bool_t value)             { fIsPersistence   = value; }
+void   ATRansacTask::SetPersistence(Bool_t value)             { kIsPersistence   = value; }
 void   ATRansacTask::SetModelType(int model)                  { fRANSACModel     = model; }
 void   ATRansacTask::SetDistanceThreshold(Float_t threshold)  { fRANSACThreshold = threshold;}
+void   ATRansacTask::SetFullMode()                            { kIsFullMode      = kTRUE;}
+void   ATRansacTask::SetMinHitsLine(Int_t nhits)              { fMinHitsLine     = nhits;}
 
 InitStatus
 ATRansacTask::Init()
@@ -50,7 +54,7 @@ ATRansacTask::Init()
   }
 
 
-  ioMan -> Register("ATRansac", "ATTPC", fRansacArray, fIsPersistence);
+  ioMan -> Register("ATRansac", "ATTPC", fRansacArray, kIsPersistence);
 
 
 
@@ -91,6 +95,7 @@ ATRansacTask::Exec(Option_t *opt)
       ATRANSACN::ATRansac *Ransac = (ATRANSACN::ATRansac *) new ((*fRansacArray)[0]) ATRANSACN::ATRansac();
       Ransac->SetModelType(fRANSACModel);
       Ransac->SetDistanceThreshold(fRANSACThreshold);
-      Ransac->CalcRANSAC(fEvent);
+      if(kIsFullMode) Ransac->CalcRANSACFull(fEvent);
+      else Ransac->CalcRANSAC(fEvent);
 
 }

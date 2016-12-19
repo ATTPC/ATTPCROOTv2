@@ -19,6 +19,7 @@ ATRANSACN::ATRansac::ATRansac()
 
   fRANSACModel = pcl::SACMODEL_LINE;
   fRANSACThreshold = 5.0;
+  fMinHitsLine = 5;
 
   fRPhiSpace = kFALSE;
   fXCenter = 0.0;
@@ -67,6 +68,7 @@ TVector3 ATRANSACN::ATRansac::GetVertexMean()                                   
 
 void ATRANSACN::ATRansac::SetModelType(int model)                                       { fRANSACModel = model;}
 void ATRANSACN::ATRansac::SetDistanceThreshold(Float_t threshold)                       { fRANSACThreshold = threshold;}
+void ATRANSACN::ATRansac::SetMinHitsLine(Int_t nhits)                                   { fMinHitsLine = nhits;}
 void ATRANSACN::ATRansac::SetRPhiSpace()                                                { fRPhiSpace = kTRUE;}
 void ATRANSACN::ATRansac::SetXYCenter(Double_t xc, Double_t yc)                         { fXCenter = xc;fYCenter=yc;}
 void ATRANSACN::ATRansac::SetRANSACPointThreshold(Float_t val)                          { fRANSACPointThreshold = val;}
@@ -152,6 +154,37 @@ void ATRANSACN::ATRansac::CalcRANSAC(ATEvent *event)
         //exp_RAD->Draw("SAME");
 
         */
+
+}
+
+void ATRANSACN::ATRansac::CalcRANSACFull(ATEvent *event)
+{
+
+        std::vector<ATTrack*> tracks = RansacPCL(event);
+
+        XYZVector Z_1(0.0,0.0,1.0); // Beam direction
+
+        if(tracks.size()>1){ //Defined in CalcGenHoughSpace
+          for(Int_t ntrack=0;ntrack<tracks.size();ntrack++){
+            std::vector<ATHit>* trackHits = tracks.at(ntrack)->GetHitArray();
+            Int_t nHits = trackHits->size();
+
+              if(nHits>fMinHitsLine) //We only accept lines with more than 5 hits and a maximum number of lines of 5
+              {
+              MinimizeTrack(tracks.at(ntrack));
+              tracks.at(ntrack)->SetTrackID(ntrack);
+              std::vector<Double_t> p = tracks.at(ntrack)->GetFitPar();
+                  if(p.size()==4){
+                    XYZVector L_1(p[1], p[3], 1. );
+                    Double_t angZDeti = GetAngleTracks(L_1,Z_1);
+                    tracks.at(ntrack)->SetAngleZAxis(angZDeti);
+                    fTrackCand.push_back(*tracks.at(ntrack));
+                  }
+              }
+          }// Tracks loop
+              if(fTrackCand.size()>5) fTrackCand.resize(5);
+        }// Minimum tracks
+
 
 }
 
@@ -421,6 +454,7 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
 
       //Vector of the beam determined from the experimental data
       XYZVector BeamDir_1(-0.106359,-0.0348344,1.0);
+      //TODO:: This is for 6.5 degrees of tilting angle. Need a function to set it.
 
       // Test each line against the others to find a vertex candidate
       for(Int_t i=0;i<tracks.size()-1;i++){
