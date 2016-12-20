@@ -50,6 +50,7 @@ class ATAnalysisTask : public FairTask {
     void AddParticle(std::vector<std::pair<Int_t,Int_t>> ptcl);
     void SetEnableMap();
     void SetMap(Char_t const *map);
+    void SetSimpleMode(); // Simple tracking analysis without considering the vertex (RANSAC+Tracking Analysis)
     // needed prior to this mode of the task
     void SetHoughDist(Double_t value);
     void SetUpperLimit(Double_t value);
@@ -99,6 +100,7 @@ class ATAnalysisTask : public FairTask {
     Char_t const *fMap;
     TH2Poly *fPadPlane;
     Bool_t fIsEnableMap;
+    Bool_t fIsSimpleMode;
 
   ClassDef(ATAnalysisTask, 1);
 };

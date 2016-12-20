@@ -56,7 +56,7 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
                 min->SetRangeChi2(kTRUE);
 
                 Double_t step_par[10];
-                auto init = std::initializer_list<Double_t>({8.0,8.0,0.1,0.1,0.1,0.1,0.0,0.0,0.1,0.0});
+                auto init = std::initializer_list<Double_t>({8.0,8.0,0.1,0.1,0.1,0.1,0.0,0.0,0.1,0.0}); //MonteCarlo steps
                 std::copy(init.begin(), init.end(),step_par);
                 min->SetStepParameters(step_par);
                 min->SetGainCalibration(fGain);//Micromegas + gas gain calibration
@@ -295,6 +295,21 @@ void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna 
 
 void ATTrackingAnalysis::AnalyzeSimple(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna *trackingEventAna,TH2Poly* hPadPlane,const multiarray& PadCoord)
 {
+
+      std::function<Double_t(Double_t,std::vector<Double_t>&)> RtoEFunc  = std::bind(GetEnergyFromRange,std::placeholders::_1,std::placeholders::_2);
+      std::vector<ATTrack>  trackCand = Ransac->GetTrackCand();
+
+      if(trackCand.size()>0){
+            for(Int_t i=0;i<trackCand.size();i++)
+            {
+              ATTrack* track = &trackCand.at(i);
+              Double_t ener = RtoEFunc(track->GetLinearRange()*(fPressure/760.0), fEtoRPar[0]);
+              track->SetGeoEnergy(ener);
+              //std::cout<<" Energy : "<<ener<<" Range : "<<track->GetLinearRange()<<std::endl;
+            }
+
+      }
+
 
 
 

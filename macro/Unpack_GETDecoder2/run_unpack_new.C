@@ -171,6 +171,27 @@ TString mappath="../../resources/")
   run -> AddTask(RansacTask);
 
 
+
+  ATAnalysisTask *AnaTask = new ATAnalysisTask();
+  AnaTask->SetFullScale(); //NB: Mandatory for full scale detector
+  AnaTask->SetPersistence(kTRUE);
+  
+  std::vector<Double_t> par[10];  //de/dx - E
+  par[0]={8.56,0.83,2.5,1.6,1.5,0.15,-1.0,-0.2,-0.17,-8.0,-0.4};
+  std::vector<Double_t> parRtoE[10]; // E - R
+  parRtoE[0] ={0.63,-1.66,-1.0,0.5,-19.0,-10.0,+40.0};
+  std::vector<std::pair<Int_t,Int_t>> particle;
+  particle.push_back(std::make_pair(4,2));
+
+  AnaTask->SetELossPar(par);
+  AnaTask->SetEtoRParameters(parRtoE);
+  AnaTask->AddParticle(particle);
+  AnaTask->SetEnableMap(); //Enables an instance of the ATTPC map:  This enables the MC with Q instead of position
+  AnaTask->SetMap(scriptdir.Data());
+  AnaTask->SetSimpleMode();
+
+  run -> AddTask(AnaTask);
+
   run -> Init();
 
   //run -> RunOnTBData();

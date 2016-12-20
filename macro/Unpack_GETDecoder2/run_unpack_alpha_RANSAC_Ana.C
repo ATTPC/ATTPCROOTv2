@@ -6,7 +6,7 @@
 bool check_file(const std::string& name);
 
 void run_unpack_alpha_RANSAC_Ana
-(TString dataFile = "runfiles/NSCL/alphas/alpha_run_0111.txt",TString parameterFile = "ATTPC.alpha.par",
+(TString dataFile = "runfiles/NSCL/alphas/alpha_run_0100.txt",TString parameterFile = "ATTPC.alpha.par",
 TString mappath="/data/ar46/run_0085/")
 {
 
@@ -210,8 +210,8 @@ TString mappath="/data/ar46/run_0085/")
 
   run -> Init();
 
-  run -> RunOnTBData();
-  //run->Run(0,10);
+  //run -> RunOnTBData();
+  run->Run(0,10);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

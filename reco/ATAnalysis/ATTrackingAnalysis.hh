@@ -20,7 +20,7 @@ class ATTrackingAnalysis : public ATAnalysis{
         ~ATTrackingAnalysis();
 
         void Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna *trackingEventAna,TH2Poly* hPadPlane,const multiarray& PadCoord); // Analysis after RANSAC considering a reaction vertex
-        void AnalyzeSimple(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna *trackingEventAna,TH2Poly* hPadPlane,const multiarray& PadCoord); // Analysis  
+        void AnalyzeSimple(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna *trackingEventAna,TH2Poly* hPadPlane,const multiarray& PadCoord); // Analysis
         void SetElossParameters(std::vector<Double_t> (&parE)[10]);
         void SetEtoRParameters(std::vector<Double_t> (&parRtoE)[10]);
         void AddParticle(std::vector<std::pair<Int_t,Int_t>>& ptcl);

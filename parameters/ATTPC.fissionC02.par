@@ -30,10 +30,10 @@ TB0:Int_t                       98   # Time Bucket reference for micromegas posi
 LorentzAngle:Double_t          0.0   # Lorentz Angle
 TBEntrance:Int_t               280   # Beam position at detector entrance in TB
 ZPadPlane:Double_t          1000.0   # Position of the micromegas pad plane
-Density:Double_t             0.145   # Gas density (kg/m3 or mg/cm3)
+Density:Double_t             1.839   # Gas density (kg/m3 or mg/cm3)
 ThetaPad:Double_t            110.9   # AT-TPC pad plane rotation
 ThetaRot:Double_t              0.0   # Second Lorentz Angle
-GasPressure:Double_t           330   # Gas pressure in torr
+GasPressure:Double_t            50   # Gas pressure in torr
 EIonize:Double_t            15.603   # Ionization energy of gas in eV
 CoefL:Double_t               0.025   # Longitudal coefficient of diffusion [cm^-0.5]
 CoefT:Double_t               0.025   # Transverse coefficient of diffusion [cm^-0.5]
