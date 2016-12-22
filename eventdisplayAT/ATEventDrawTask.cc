@@ -740,7 +740,6 @@ ATEventDrawTask::DrawHitPoints()
 
   }
 
-
     gEve -> AddElement(fHitSet);
     gEve -> AddElement(fhitBoxSet);
 
@@ -755,8 +754,9 @@ ATEventDrawTask::DrawHitPoints()
               if(fLineNum>0) for(Int_t i=0;i<fLineNum;i++) gEve -> AddElement(fLineArray[i]);
 
 
+
         if(fTrackingEventAnaArray)
-             if(fTrackNum>0) for(Int_t i=0;i<fTrackNum;i++) gEve -> AddElement(fHitSetMC[i]);
+             if(fTrackNum>0 && fTrackNum<5) for(Int_t i=0;i<fTrackNum;i++) gEve -> AddElement(fHitSetMC[i]);
 
     }
 

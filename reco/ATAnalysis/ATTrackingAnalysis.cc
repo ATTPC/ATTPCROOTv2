@@ -305,7 +305,8 @@ void ATTrackingAnalysis::AnalyzeSimple(ATRANSACN::ATRansac *Ransac,ATTrackingEve
               ATTrack* track = &trackCand.at(i);
               Double_t ener = RtoEFunc(track->GetLinearRange()*(fPressure/760.0), fEtoRPar[0]);
               track->SetGeoEnergy(ener);
-              //std::cout<<" Energy : "<<ener<<" Range : "<<track->GetLinearRange()<<std::endl;
+              track->SetGeoQEnergy(track->GetGeoQEnergy());
+              trackingEventAna->SetTrack(track);
             }
 
       }
@@ -335,6 +336,10 @@ Double_t ATTrackingAnalysis::GetEnergyFromRange(Double_t range,std::vector<Doubl
     if(par.size()==7)
     {
       return par[0]*TMath::Sqrt(range) +  par[1]*( 1.0+par[2]/(TMath::Sqrt(range) + par[3])) + par[4]/( TMath::Power(TMath::Sqrt(range)+par[5],2) + par[6]   )  ;
+
+    }else if(par.size()==5){
+
+      return par[0]*TMath::Sqrt(range) + par[1] + par[2]*range + par[3]/(range+par[4]);
 
     }else
       std::cerr<<cRED<<" ATHoughSpaceCircle::GetEnergyFromRange -  Warning ! Wrong number of parameters."<<std::endl;

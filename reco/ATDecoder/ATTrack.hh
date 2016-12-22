@@ -41,6 +41,7 @@ class ATTrack : public TObject {
     void SetQuadrant(Int_t quad);
     void SetMCFit(Bool_t value);
     void SetGeoEnergy(Double_t energy);
+    void SetGeoQEnergy(Double_t qenergy);
 
     std::vector<ATHit> *GetHitArray();
     std::vector<Double_t> GetFitPar();
@@ -58,6 +59,7 @@ class ATTrack : public TObject {
     Double_t GetGeoTheta();
     Double_t GetGeoPhi();
     Double_t GetGeoEnergy();
+    Double_t GetGeoQEnergy();
 
     // MC result and projections
     std::vector<Double_t> fPosXmin;
@@ -126,6 +128,7 @@ class ATTrack : public TObject {
     Double_t fGeoThetaAngle; // Geometrical scattering angle with respect to the detector FitParameters
     Double_t fGeoPhiAngle; //  " azimuthal "
     Double_t fGeoEnergy; //Energy from the range
+    Double_t fGeoQEnergy; //Energy from the induced charge
     Int_t fQuadrant; //Pad plane quadrant
 
     Bool_t kIsMCFit;
@@ -151,7 +154,7 @@ class ATTrack : public TObject {
       return o;
     }
 
-    ClassDef(ATTrack, 1);
+    ClassDef(ATTrack, 2);
 
 
 };

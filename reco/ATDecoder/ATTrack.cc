@@ -16,6 +16,8 @@ ATTrack::ATTrack()
   fAngleYDet   = -20;
   fRange       = 0.0;
   fQuadrant    = -1;
+  fGeoEnergy   = -10.0;
+  fGeoQEnergy  = -10.0;
   kIsMCFit     = kFALSE;
   FitParameters.sThetaMin        = 0;
   FitParameters.sThetaMin        = 0;
@@ -61,6 +63,7 @@ void ATTrack::SetGeoRange(Double_t range)                           { fRange = r
 void ATTrack::SetQuadrant(Int_t quad)                               { fQuadrant = quad;}
 void ATTrack::SetMCFit(Bool_t value)                                { kIsMCFit = value;}
 void ATTrack::SetGeoEnergy(Double_t energy)                         { fGeoEnergy = energy;}
+void ATTrack::SetGeoQEnergy(Double_t qenergy)                       { fGeoQEnergy = qenergy;}
 
 std::vector<ATHit> *ATTrack::GetHitArray()                          { return &fHitArray;}
 std::vector<Double_t> ATTrack::GetFitPar()                          { return fParFit;}
@@ -127,6 +130,23 @@ Double_t ATTrack::GetLinearRange(TVector3 vertex)
     return TMath::Sqrt( TMath::Power((fhitPos.X()-vertex.X()),2) + TMath::Power((fhitPos.Y()-vertex.Y()),2) + TMath::Power((fhitPos.Z()-vertex.Z()),2) );
   }else return 0;
 
+
+}
+
+Double_t ATTrack::GetGeoQEnergy()
+{
+
+      Double_t charge = 0;
+
+      if(fHitArray.size()>0){
+          for(Int_t i=0;i<fHitArray.size();i++)
+          {
+            charge+= fHitArray.at(i).GetCharge();
+          }
+
+          return charge;
+
+      }else return -10.0;
 
 }
 
