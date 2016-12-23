@@ -304,6 +304,7 @@ void ATTrackingAnalysis::AnalyzeSimple(ATRANSACN::ATRansac *Ransac,ATTrackingEve
             {
               ATTrack* track = &trackCand.at(i);
               Double_t ener = RtoEFunc(track->GetLinearRange()*(fPressure/760.0), fEtoRPar[0]);
+              track->SetGeoRange(track->GetLinearRange());
               track->SetGeoEnergy(ener);
               track->SetGeoQEnergy(track->GetGeoQEnergy());
               trackingEventAna->SetTrack(track);

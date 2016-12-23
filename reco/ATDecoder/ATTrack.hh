@@ -141,7 +141,8 @@ class ATTrack : public TObject {
       std::cout<<" Quadrant : "<<track.fQuadrant<<std::endl;
       std::cout<<" Geomterical Scattering Angle : "<<track.fGeoThetaAngle*(180.0/TMath::Pi())<<" deg "
       <<" - Geomterical Azimuthal Angle : "<<track.fGeoPhiAngle*(180.0/TMath::Pi())<<" deg "<<std::endl;
-      std::cout<<" Geometrical Range : "<<track.fRange<<" mm "<<cNORMAL<<std::endl;
+      std::cout<<" Geometrical Range : "<<track.fRange<<" mm "<<std::endl;
+      std::cout<<" Angle with respect to Z axis : "<<track.fAngleZAxis<<cNORMAL<<std::endl;
 
       std::cout<<cRED<<" MC Fit : "<<track.kIsMCFit<<std::endl;
       std::cout<<" Number of simulated points : "<<track.GetPosXMin().size()<<std::endl;

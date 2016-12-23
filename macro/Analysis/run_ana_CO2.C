@@ -27,15 +27,17 @@ Int_t num_ev=100000000, Int_t file_ini=4, Int_t file_end=4, TString file="../Kin
 {
 
   TH1F* Energy = new TH1F("Energy","Energy",200,0,10);
-  TH1F* QEnergy = new TH1F("QEnergy","QEnergy",1000,0,100000);
+  TH1F* QEnergy = new TH1F("QEnergy","QEnergy",200,0,100000);
 
   TH2F* EvsQ = new TH2F("EvsQ","EvsQ",200,0,10,1000,0,100000);
 
 
-  TH2F* RangevsEner = new TH2F("RangevsEner","RangevsEner",500,0,1000,100,0,15);
-  RangevsEner->SetMarkerColor(2);
-  RangevsEner->SetMarkerStyle(20);
-  RangevsEner->SetMarkerSize(0.7);
+  TH2F* MultvsRange = new TH2F("MultvsRange","MultvsRange",200,0,400,200,0,600);
+  MultvsRange->SetMarkerColor(2);
+  MultvsRange->SetMarkerStyle(20);
+  MultvsRange->SetMarkerSize(0.7);
+
+  TH2F* AnglevsRange = new TH2F("AnglevsRange","AnglevsRange",400,0,4,200,0,600);
 
 
 
@@ -82,9 +84,18 @@ Int_t num_ev=100000000, Int_t file_ini=4, Int_t file_end=4, TString file="../Kin
             {
 
                     ATTrack track = tracks.at(i);
-                    Energy->Fill(track.GetGeoEnergy());
-                    QEnergy->Fill(track.GetGeoQEnergy());
-                    if(track.GetHitArray()->size()>0) EvsQ->Fill(track.GetGeoEnergy(),track.GetGeoQEnergy());
+
+                    MultvsRange->Fill(track.GetHitArray()->size(),track.GetLinearRange());
+                    AnglevsRange->Fill(track.GetAngleZAxis(),track.GetLinearRange());
+
+                    if(tracks.size()==1){
+
+                        //if(track.GetHitArray()->size()>200){
+                           Energy->Fill(track.GetGeoEnergy());
+                           EvsQ->Fill(track.GetGeoEnergy(),track.GetGeoQEnergy());
+                           QEnergy->Fill(track.GetGeoQEnergy());
+                        //}
+                  }
 
             }
 
@@ -108,8 +119,15 @@ Int_t num_ev=100000000, Int_t file_ini=4, Int_t file_end=4, TString file="../Kin
   QEnergy->Draw();
   c1->cd(3);
   EvsQ->Draw("zcol");
+  c1->cd(4);
+  MultvsRange->Draw("zcol");
 
-
+  TCanvas *c2 = new TCanvas("c2","c2",200,10,700,700);
+  c2->Divide(2,2);
+  c2->cd(1);
+  MultvsRange->Draw("zcol");
+  c2->cd(2);
+  AnglevsRange->Draw("zcol");
 
 
 }
