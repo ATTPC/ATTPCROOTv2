@@ -3,6 +3,7 @@
 #include "ATPSASimple.hh"
 #include "ATPSASimple2.hh"
 #include "ATPSAProto.hh"
+#include "ATPSAFilter.hh"
 
 
 // FAIRROOT classes
@@ -83,6 +84,10 @@ ATPSATask::Init()
   } else if (fPSAMode == 2) {
     fLogger -> Info(MESSAGE_ORIGIN, "Using ATPSAProto!");
     fPSA = new ATPSAProto();
+
+  } else if (fPSAMode == 3) {
+    fLogger -> Info(MESSAGE_ORIGIN, "Using ATPSAFilter!");
+    fPSA = new ATPSAFilter();
   }
 
   fPSA -> SetThreshold((Int_t)fThreshold);

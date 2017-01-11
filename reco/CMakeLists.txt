@@ -75,6 +75,7 @@ ATDecoder/ATTrack.cc
 ATPulseAnalyzer/ATPSA.cc
 ATPulseAnalyzer/ATPSASimple.cc
 ATPulseAnalyzer/ATPSASimple2.cc
+ATPulseAnalyzer/ATPSAFilter.cc
 ATPulseAnalyzer/ATPSAProto.cc
 
 HoughTransformation/ATHoughSpace.cc
