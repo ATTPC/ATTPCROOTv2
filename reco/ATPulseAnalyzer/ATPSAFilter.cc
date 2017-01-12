@@ -49,7 +49,7 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
   cloud->points.resize(numPads);
 
 
-  TH2F* cloud_ini = new TH2F("cloud_ini","cloud_ini",1000,-250,250,1000,-250,250);
+  /*TH2F* cloud_ini = new TH2F("cloud_ini","cloud_ini",1000,-250,250,1000,-250,250);
   cloud_ini->SetMarkerColor(kRed);
   cloud_ini->SetMarkerStyle(20);
   cloud_ini->SetMarkerSize(1.0);
@@ -57,7 +57,7 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
   TH2F* cloud_fil = new TH2F("cloud_fil","cloud_fil",1000,-250,250,1000,-250,250);
   cloud_fil->SetMarkerColor(kBlack);
   cloud_fil->SetMarkerStyle(20);
-  cloud_fil->SetMarkerSize(1.0);
+  cloud_fil->SetMarkerSize(1.0);*/
 
 
   Int_t iPad=0;
@@ -225,7 +225,7 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       cloud->points[hitNum].z   = zPos;
       cloud->points[hitNum].rgb = hitNum;
 
-      cloud_ini->Fill(xPos,yPos);
+      //cloud_ini->Fill(xPos,yPos);
 
 
       hit->SetPositionCorr(posRot.X(),posRot.Y(), posRot.Z());
@@ -267,26 +267,21 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
  }//Pad Loop
 
-      //Outliers removal
+      //Inliers
       cloud->points.resize(hitNum);
       pcl::StatisticalOutlierRemoval<pcl::PointXYZRGBA> sor;
       sor.setInputCloud(cloud);
       sor.setMeanK(10);
       sor.setStddevMulThresh(0.01);
       sor.filter(*cloud_filtered);
-      sor.setNegative(true);
-      sor.filter(*cloud_filtered);
-
-      std::cout<<" Num of Hits : "<<hitNum<<std::endl;
-      std::cout<<" Original cloud "<<cloud->points.size()<<std::endl;
-      std::cout<<" Filtered cloud "<<cloud_filtered->points.size()<<std::endl;
-
+      //Outliers
+      //sor.setNegative(true);
+      //sor.filter(*cloud_filtered);
 
 
           for(Int_t pc = 0;pc<cloud_filtered->points.size();pc++)
           {
-            //event->RemoveHit(cloud_filtered->points[pc].rgb);
-            cloud_fil->Fill(cloud_filtered->points[pc].x,cloud_filtered->points[pc].y);
+            //cloud_fil->Fill(cloud_filtered->points[pc].x,cloud_filtered->points[pc].y);
             event -> AddHit(&hitBuff.at(cloud_filtered->points[pc].rgb));
 
           }
@@ -301,7 +296,7 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
      event -> SetRhoVariance(RhoVariance);
      event -> SetEventCharge(QEventTot);
 
-     cloud_ini->Draw();
-     cloud_fil->Draw("SAME");
+     //cloud_ini->Draw();
+     //cloud_fil->Draw("SAME");
 
 }

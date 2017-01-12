@@ -29,6 +29,8 @@ class ATPSATask : public FairTask {
     //void SetAuxChannel(std::vector<Int_t> AuxCh);
     //void EnableAuxChannels(std::vector<Int_t> AuxCh);
 
+    //For PCL Outlier Removal
+
 
     virtual InitStatus Init();
     virtual void SetParContainers();
