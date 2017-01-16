@@ -35,6 +35,9 @@ class ATPSA
     void SetTimeCorrection(Bool_t value);
     //void SetAuxChannel(std::vector<Int_t> AuxCh);
 
+    void SetMeanK(Int_t value); //Number of neighbors
+    void SetStddevMulThresh(Double_t value);
+
     virtual void Analyze(ATRawEvent *rawEvent, ATEvent *event) = 0;
 
   protected:
@@ -68,6 +71,8 @@ class ATPSA
     TVector3 fLorentzVector;
     Int_t fTB0;
     Double_t fThetaPad;
+    Int_t fMeanK;
+    Double_t fStdDev;
     //std::vector<Int_t> fAuxChannels; //Auxiliary external channels
 
 

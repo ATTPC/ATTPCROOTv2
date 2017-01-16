@@ -176,6 +176,8 @@ ATPSA::CalcLorentzVector(){
 
 TVector3 ATPSA::RotateDetector(Double_t x,Double_t y,Double_t z,Int_t tb)
 {
+
+        // DEPRECATED because of timebucket calibration (-271.0)
         TVector3 posRot;
         TVector3 posDet;
 
@@ -192,3 +194,6 @@ TVector3 ATPSA::RotateDetector(Double_t x,Double_t y,Double_t z,Int_t tb)
         return posDet;
 
 }
+
+void ATPSA::SetMeanK(Int_t value)                       { fMeanK = value;}
+void ATPSA::SetStddevMulThresh(Double_t value)          { fStdDev = value;}

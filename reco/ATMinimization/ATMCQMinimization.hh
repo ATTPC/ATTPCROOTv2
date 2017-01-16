@@ -407,7 +407,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
                      }*/
 
                      if(kRangeChi2) CHi2fit = (Chi2Q + Chi2Range)/2.0;
-                     else CHi2fit = Chi2Q;
+                     else CHi2fit = (Chi2Q + Chi2fitPos)/2.0;
 
 
                      if(CHi2fit<Chimin){
@@ -415,7 +415,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
                        chi2minRange = Chi2Range;
                        chi2minQ     = Chi2Q;
                        Chimin       = CHi2fit;
-                        //std::cout<<cRED<<" Iteration : "<<imc1<<"    "<<imc2<<" Chi2Fit : "<<CHi2fit<<" Chi2Q : "<<chi2minQ<<" Chi2Range : "<<chi2minRange<<cNORMAL<<std::endl;
+                      //std::cout<<cRED<<" Iteration : "<<imc1<<"    "<<imc2<<" Chi2Fit : "<<CHi2fit<<" Chi2Q : "<<Chi2Q<<" Chi2Range : "<<Chi2Range<<cNORMAL<<std::endl;
                        icontrol=3;
                        MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin,fDens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv);
 

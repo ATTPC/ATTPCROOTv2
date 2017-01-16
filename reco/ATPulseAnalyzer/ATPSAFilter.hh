@@ -17,7 +17,6 @@ class ATPSAFilter : public ATPSA
   private:
     //TSpectrum *fPeakFinder;  /// TSpectrum object
 
-
   ClassDef(ATPSAFilter, 1)
 };
 

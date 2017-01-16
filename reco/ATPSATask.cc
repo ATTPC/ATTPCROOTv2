@@ -39,6 +39,9 @@ ATPSATask::ATPSATask()
   //fAuxChannels.clear();
 
   fPSAMode = 2;
+
+  fMeanK = 10;
+  fStdDev = 0.01;
 }
 
 ATPSATask::~ATPSATask()
@@ -54,6 +57,9 @@ void ATPSATask::SetMaxFinder()                              { fIsMaxFinder= kTRU
 void ATPSATask::SetBaseCorrection(Bool_t value)             { fIsBaseCorr = value;}
 void ATPSATask::SetTimeCorrection(Bool_t value)             { fIsTimeCorr = value;}
 //void ATPSATask::EnableAuxChannels(std::vector<Int_t> AuxCh) { fAuxChannels = AuxCh;}
+
+void ATPSATask::SetMeanK(Int_t value)                       { fMeanK = value;}
+void ATPSATask::SetStddevMulThresh(Double_t value)          { fStdDev = value;}
 
 
 
@@ -88,6 +94,8 @@ ATPSATask::Init()
   } else if (fPSAMode == 3) {
     fLogger -> Info(MESSAGE_ORIGIN, "Using ATPSAFilter!");
     fPSA = new ATPSAFilter();
+    fPSA -> SetMeanK(fMeanK);
+    fPSA -> SetStddevMulThresh(fStdDev);
   }
 
   fPSA -> SetThreshold((Int_t)fThreshold);

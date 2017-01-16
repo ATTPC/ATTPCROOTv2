@@ -121,11 +121,14 @@ void run_unpack_filter(TString dataFile = "runfiles/ar46_run_0085.txt",TString p
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
   psaTask -> SetThreshold(20);
-  psaTask -> SetPSAMode(3); //NB: 1 is ATTPC - 2 is pATTPC
+  psaTask -> SetPSAMode(3); //NB: 1 is ATTPC - 2 is pATTPC - 3: filter
 	//psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
 	psaTask -> SetMaxFinder();
   psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
-  psaTask -> SetTimeCorrection(kTRUE); //Interpolation around the maximum of the signal peak. Only affect Z calibration at PSA stage
+  psaTask -> SetTimeCorrection(kFALSE); //NB: This method should be used carefully. Other calibrations coudl be different. Interpolation around the maximum of the signal peak. Only affect Z calibration at PSA stage
+  psaTask -> SetMeanK(10);
+  psaTask -> SetStddevMulThresh(0.01);
+
   run -> AddTask(psaTask);
 
   ATHoughTask *HoughTask = new ATHoughTask();
@@ -141,7 +144,7 @@ void run_unpack_filter(TString dataFile = "runfiles/ar46_run_0085.txt",TString p
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,20);
+  run->Run(0,100);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

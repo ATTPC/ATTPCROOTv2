@@ -24,6 +24,9 @@ ClassImp(ATPSAFilter)
 ATPSAFilter::ATPSAFilter()
 {
 
+  fMeanK = 10;
+  fStdDev = 0.01;
+
 }
 
 ATPSAFilter::~ATPSAFilter()
@@ -271,8 +274,8 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       cloud->points.resize(hitNum);
       pcl::StatisticalOutlierRemoval<pcl::PointXYZRGBA> sor;
       sor.setInputCloud(cloud);
-      sor.setMeanK(10);
-      sor.setStddevMulThresh(0.01);
+      sor.setMeanK(fMeanK);
+      sor.setStddevMulThresh(fStdDev);
       sor.filter(*cloud_filtered);
       //Outliers
       //sor.setNegative(true);

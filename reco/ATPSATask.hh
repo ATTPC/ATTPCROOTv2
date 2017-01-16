@@ -30,6 +30,8 @@ class ATPSATask : public FairTask {
     //void EnableAuxChannels(std::vector<Int_t> AuxCh);
 
     //For PCL Outlier Removal
+    void SetMeanK(Int_t value); //Number of neighbors
+    void SetStddevMulThresh(Double_t value);
 
 
     virtual InitStatus Init();
@@ -55,6 +57,8 @@ class ATPSATask : public FairTask {
 
     Double_t fThreshold;
     //std::vector<Int_t> fAuxChannels;
+    Int_t fMeanK;
+    Double_t fStdDev;
 
   ClassDef(ATPSATask, 1);
 };

@@ -1291,7 +1291,7 @@ void ATMCQMinimization::Chi2MC(double*  Qtrack,double*  ztrackq,double & Qtrackt
                                        double dz= (zsimq [i] -ztrackq [i]);
                                        double sigq= dQ/(Qsum*sigmaq);
                                        double sigz=dz/sigmaz;
-                                       Chi2sum = sigq*sigq + sigz*sigz;                                     
+                                       Chi2sum = sigq*sigq + sigz*sigz;
                                        //if(Chi2sum<Chi2sumMax){
                                          npoints=npoints+1 ;
                                          Chi2fitq += sigq*sigq;
@@ -1621,7 +1621,7 @@ Double_t *_xTBCorr,Double_t *_yTBCorr,Double_t *_zTBCorr)
 
             }// Chi2 loop
 
-            chi2/=num_MC_Point;
+            chi2/=TMath::Power(num_MC_Point,3)*2.0;
             return chi2;
 
 }
