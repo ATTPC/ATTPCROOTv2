@@ -1,0 +1,12 @@
+/run/media/ayyadlim/DATA/data/Alpha/run_0080/CoBo0_run_0080_11Dec14_07h59m52s.graw
+/run/media/ayyadlim/DATA/data/Alpha/run_0080/CoBo1_run_0080_11Dec14_07h59m52s.graw
+/run/media/ayyadlim/DATA/data/Alpha/run_0080/CoBo2_run_0080_11Dec14_07h59m52s.graw
+/run/media/ayyadlim/DATA/data/Alpha/run_0080/CoBo2_run_0080_11Dec14_07h59m52s.1.graw
+/run/media/ayyadlim/DATA/data/Alpha/run_0080/CoBo3_run_0080_11Dec14_07h59m52s.graw
+/run/media/ayyadlim/DATA/data/Alpha/run_0080/CoBo4_run_0080_11Dec14_07h59m52s.graw
+/run/media/ayyadlim/DATA/data/Alpha/run_0080/CoBo6_run_0080_11Dec14_07h59m52s.graw
+/run/media/ayyadlim/DATA/data/Alpha/run_0080/CoBo7_run_0080_11Dec14_07h59m52s.graw
+/run/media/ayyadlim/DATA/data/Alpha/run_0080/CoBo7_run_0080_11Dec14_07h59m52s.1.graw
+/run/media/ayyadlim/DATA/data/Alpha/run_0080/CoBo8_run_0080_11Dec14_07h59m52s.graw
+/run/media/ayyadlim/DATA/data/Alpha/run_0080/CoBo9_run_0080_11Dec14_07h59m52s.graw
+/run/media/ayyadlim/DATA/data/Alpha/run_0080/CoBo9_run_0080_11Dec14_07h59m52s.1.graw

@@ -22,7 +22,7 @@
 //#include "../../include/ATTrackingEventAna.hh"
 
 
-void run_ana_4He(TString FileNameHead = "run_",
+void run_ana_4He_old(TString FileNameHead = "run_",
 Int_t num_ev=100000000, Int_t file_ini=80, Int_t file_end=112, TString file="../Kinematics/Decay_kinematics/Kine.txt")
 {
 

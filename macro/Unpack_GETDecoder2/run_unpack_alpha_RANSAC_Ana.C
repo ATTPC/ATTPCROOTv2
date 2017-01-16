@@ -210,8 +210,13 @@ TString mappath="/data/ar46/run_0085/")
 
   run -> Init();
 
+<<<<<<< Updated upstream
   //run -> RunOnTBData();
   run->Run(0,10);
+=======
+  run -> RunOnTBData();
+  //run->Run(0,2);
+>>>>>>> Stashed changes
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
