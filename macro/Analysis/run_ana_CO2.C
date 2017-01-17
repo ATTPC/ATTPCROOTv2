@@ -27,9 +27,14 @@ Int_t num_ev=100000000, Int_t file_ini=4, Int_t file_end=4, TString file="../Kin
 {
 
   TH1F* Energy = new TH1F("Energy","Energy",200,0,10);
+  Energy->GetXaxis()->SetTitle("Energy (MeV)");
+
   TH1F* QEnergy = new TH1F("QEnergy","QEnergy",200,0,100000);
+  QEnergy->GetXaxis()->SetTitle("Energy (a.u.)");
 
   TH2F* EvsQ = new TH2F("EvsQ","EvsQ",200,0,10,1000,0,100000);
+  EvsQ->GetXaxis()->SetTitle("Energy (MeV)");
+  EvsQ->GetYaxis()->SetTitle("Energy (a.u.)");
 
 
   TH2F* MultvsRange = new TH2F("MultvsRange","MultvsRange",200,0,400,200,0,600);
@@ -85,15 +90,16 @@ Int_t num_ev=100000000, Int_t file_ini=4, Int_t file_end=4, TString file="../Kin
 
                     ATTrack track = tracks.at(i);
 
-                    MultvsRange->Fill(track.GetHitArray()->size(),track.GetLinearRange());
-                    AnglevsRange->Fill(track.GetAngleZAxis(),track.GetLinearRange());
+                    Double_t Eoffset = 0.168; //keV
 
                     if(tracks.size()==1){
 
                         //if(track.GetHitArray()->size()>200){
-                           Energy->Fill(track.GetGeoEnergy());
-                           EvsQ->Fill(track.GetGeoEnergy(),track.GetGeoQEnergy());
+                           Energy->Fill(track.GetGeoEnergy()+Eoffset);
+                           EvsQ->Fill(track.GetGeoEnergy()+Eoffset,track.GetGeoQEnergy());
                            QEnergy->Fill(track.GetGeoQEnergy());
+			   MultvsRange->Fill(track.GetHitArray()->size(),track.GetLinearRange());
+                           AnglevsRange->Fill(track.GetAngleZAxis(),track.GetLinearRange());
                         //}
                   }
 
@@ -123,11 +129,25 @@ Int_t num_ev=100000000, Int_t file_ini=4, Int_t file_end=4, TString file="../Kin
   MultvsRange->Draw("zcol");
 
   TCanvas *c2 = new TCanvas("c2","c2",200,10,700,700);
-  c2->Divide(2,2);
+  c2->Divide(1,2);
   c2->cd(1);
   MultvsRange->Draw("zcol");
   c2->cd(2);
   AnglevsRange->Draw("zcol");
+
+  TCanvas *plot1 = new TCanvas("plot1","plot1",200,10,700,700);
+  plot1->cd();
+  Energy->Draw();
+
+  TCanvas *plot2 = new TCanvas("plot2","plot2",200,10,700,700);
+  plot2->cd();
+  QEnergy->Draw();
+
+  TCanvas *plot3 = new TCanvas("plot3","plot3",200,10,700,700);
+  plot3->cd();
+  EvsQ->Draw("zcol");
+  
+
 
 
 }
