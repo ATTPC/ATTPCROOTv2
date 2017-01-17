@@ -1291,12 +1291,16 @@ void ATMCQMinimization::Chi2MC(double*  Qtrack,double*  ztrackq,double & Qtrackt
                                        double dz= (zsimq [i] -ztrackq [i]);
                                        double sigq= dQ/(Qsum*sigmaq);
                                        double sigz=dz/sigmaz;
-                                       Chi2sum = sigq*sigq + sigz*sigz;
-                                       //if(Chi2sum<Chi2sumMax){
-                                         npoints=npoints+1 ;
-                                         Chi2fitq += sigq*sigq;
-                                         Chi2fitz += sigz*sigz;
-                                      //}
+                                       /// introduce here limit on dz
+                                       double sigz2=sigz*sigz;
+                                       if(sigz2<20.){
+                                         Chi2sum = sigq*sigq + sigz*sigz;
+                                         //if(Chi2sum<Chi2sumMax){
+                                           npoints=npoints+1 ;
+                                           Chi2fitq += sigq*sigq;
+                                           Chi2fitz += sigz*sigz;
+                                        //}
+                                       }  
                                     }
                               }
                       }
