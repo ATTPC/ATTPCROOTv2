@@ -176,7 +176,7 @@ TString mappath="/data/ar46/run_0085/")
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
   psaTask -> SetThreshold(20);
-  psaTask -> SetPSAMode(2); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC
+  psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC
 	//psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
 	psaTask -> SetMaxFinder();
   psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
@@ -210,13 +210,10 @@ TString mappath="/data/ar46/run_0085/")
 
   run -> Init();
 
-<<<<<<< Updated upstream
+
+  run->Run(0,3000);
   //run -> RunOnTBData();
-  run->Run(0,10);
-=======
-  run -> RunOnTBData();
-  //run->Run(0,2);
->>>>>>> Stashed changes
+
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

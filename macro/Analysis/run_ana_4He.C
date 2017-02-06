@@ -23,7 +23,7 @@
 
 
 void run_ana_4He(TString FileNameHead = "run_",
-Int_t num_ev=100000000, Int_t file_ini=80, Int_t file_end=112, TString file="../Kinematics/Decay_kinematics/Kine.txt")
+Int_t num_ev=100000000, Int_t file_ini=0, Int_t file_end=0, TString file="../Kinematics/Decay_kinematics/Kine.txt")
 {
 
   TH1F* VertexH = new TH1F("VertexH","VertexH",500,-100,5000);
@@ -98,7 +98,7 @@ Int_t num_ev=100000000, Int_t file_ini=80, Int_t file_end=112, TString file="../
 
   TString FileNameHead_num;
   TString FileNameHead_chain;
-  TString FilePath = "/run/media/ayyadlim/DATA/data/Alpha/Analysis/";
+  TString FilePath = "/home/ayyadlim/fair_install/data/alpha/";
 
   ofstream kine_file;
   kine_file.open("kinematics.txt");

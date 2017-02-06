@@ -355,7 +355,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
            double sigmaq=0.2 ;  //defined as the fraction of sum Qsim+Qtrack
            double sigmaz=4.0  ;  //defined as deviation of the center of gravity in mm modified from 5.4 on june 10 wm
            int imc1=0;
-           int imc1max=10;//10
+           int imc1max=5;//10
            iconvar=imc1;
            int imc2=0;
            int imc2max=100;//100
@@ -415,7 +415,7 @@ bool  ATMCQMinimization::MinimizeGen(Double_t* parameter,T* event,const std::fun
                        chi2minRange = Chi2Range;
                        chi2minQ     = Chi2Q;
                        Chimin       = CHi2fit;
-                      //std::cout<<cRED<<" Iteration : "<<imc1<<"    "<<imc2<<" Chi2Fit : "<<CHi2fit<<" Chi2Q : "<<Chi2Q<<" Chi2Range : "<<Chi2Range<<cNORMAL<<std::endl;
+                       //std::cout<<cRED<<" Iteration : "<<imc1<<"    "<<imc2<<" Chi2Fit : "<<CHi2fit<<" Chi2Q : "<<Chi2Q<<" Chi2Range : "<<Chi2Range<<cNORMAL<<std::endl;
                        icontrol=3;
                        MCvar(parameter,icontrol,iconvar,x0MC, y0MC, z0MC, aMC,phiMC, Bmin,fDens,romin,x0MCv, y0MCv,z0MCv, aMCv, phiMCv, Bminv, densv, rominv);
 
