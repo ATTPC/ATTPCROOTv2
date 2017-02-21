@@ -458,12 +458,21 @@ std::pair<Double_t,Double_t> ATTrackingAnalysis::GetAnglesSolenoid(ATTrack* trac
           fFitResultXY = fTrackFitXY->GetFunction("pol1");
 
           Double_t afit = 0.0;
-          Double_t par0 = fFitResult->GetParameter(0);
-          Double_t par1 = fFitResult->GetParameter(1);
-
           Double_t afitXY = 0.0;
-          Double_t par0XY = fFitResultXY->GetParameter(0);
-          Double_t par1XY = fFitResultXY->GetParameter(1);
+          Double_t par0 = 0.0;
+          Double_t par1 = 0.0;
+          Double_t par0XY = 0.0;
+          Double_t par1XY = 0.0;
+
+          if(fFitResult){
+           par0 = fFitResult->GetParameter(0);
+           par1 = fFitResult->GetParameter(1);
+         }
+
+         if(fFitResult){
+           par0XY = fFitResultXY->GetParameter(0);
+           par1XY = fFitResultXY->GetParameter(1);
+         }
 
           if(par1>=0) afit = TMath::Pi()-TMath::ATan2(TMath::Abs(par1),1);
           else if(par1<0)  afit = TMath::ATan2(TMath::Abs(par1),1);

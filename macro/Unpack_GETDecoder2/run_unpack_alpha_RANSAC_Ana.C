@@ -211,8 +211,8 @@ TString mappath="/data/ar46/run_0085/")
   run -> Init();
 
 
-  run->Run(0,3000);
-  //run -> RunOnTBData();
+  //run->Run(0,10);
+  run -> RunOnTBData();
 
 
   std::cout << std::endl << std::endl;
