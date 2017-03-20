@@ -63,7 +63,9 @@ private:
                 Double_t K1;
                 Double_t m1, m2 , m3, m4, m7,  m8;
                 Double_t Ex_ejectile,  Ex_2he;
-             
+                Double_t test_var;
+
+
                 Double_t beta_cm ;
                 Double_t gamma_cm ;
                 Double_t beta4, gamma4;

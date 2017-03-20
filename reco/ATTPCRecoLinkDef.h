@@ -85,6 +85,7 @@
 
 #pragma link C++ class ATAnalysis+;
 #pragma link C++ class ATProtoAnalysis+;
+#pragma link C++ class ATd2HeAnalysis+;
 #pragma link C++ class ATTrackingAnalysis+;
 #pragma link C++ struct ATHoughSpaceCircle::FitPar+;
 #pragma link C++ struct ATTrack::FitPar+;

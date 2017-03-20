@@ -1,13 +1,13 @@
-void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4")
+void d_2He_sim_12C(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile ="./data/attpcsim_d2He.root";
+  TString outFile ="/mnt/simulations/attpcroot/data/attpcsim_d2He.root";
 
   // Parameter file name
-  TString parFile="./data/attpcpar_d2He.root";
+  TString parFile="/mnt/simulations/attpcroot/data/attpcpar_d2He.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;

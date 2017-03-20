@@ -299,9 +299,16 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
 		//std::cout<<fPxBeam<<"  "<<fPyBeam<<"  "<<fPzBeam<<std::endl;
 		std::cout<<"===================================================================="<<std::endl;
 
+
+                //dirty way to include more than one excited state
+		test_var = gRandom->Uniform();
+		if(test_var>= 0 && test_var<0.25) Ex_ejectile = 0.0;
+		if(test_var>= 0.25 && test_var<0.50) Ex_ejectile = 5.0;
+		if(test_var>= 0.50 && test_var<0.75) Ex_ejectile = 10.0;
+		if(test_var>= 0.75 && test_var<1.0) Ex_ejectile = 20.0;
 	
 
-		Ex_ejectile = fExEnergy.at(2); // excitation energy of ejectile 
+		//Ex_ejectile = fExEnergy.at(2); // excitation energy of ejectile 
                 
 
 		 m1 = Masses.at(0)*amu + fExEnergy.at(0);  

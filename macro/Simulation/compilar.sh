@@ -2,7 +2,7 @@
 
 cd  ../../build
 #cmake ../
-make 
+make -j
 source config.sh
 export G4ENSDFSTATEDATA=$ROOTSYS/share/Geant4/data/G4ENSDFSTATE1.2.1
 cd ../macro/Simulation

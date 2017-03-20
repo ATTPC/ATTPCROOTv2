@@ -98,6 +98,7 @@ ATMinimization/ATMCQMinimization.cc
 ATAnalysis/ATAnalysis.cc
 ATAnalysis/ATProtoAnalysis.cc
 ATAnalysis/ATTrackingAnalysis.cc
+ATAnalysis/ATd2HeAnalysis.cc
 
 ATRansac/ATRansac.cc
 

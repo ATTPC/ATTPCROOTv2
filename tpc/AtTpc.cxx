@@ -264,7 +264,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
             fPosOut.SetZ(newpos[2]);
 
              if(fVolName=="drift_volume" && gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0 ){
-		            gATVP->ResetVertex();
+		            //gATVP->ResetVertex(); //this line is commented to force a  d_2He reaction occurs even if the beam punch through
                 LOG(INFO)<<" - AtTpc Warning : Beam punched through the ATTPC. Reseting Vertex! "<<std::endl;
 		}
 
