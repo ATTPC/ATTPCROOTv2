@@ -505,7 +505,7 @@ std::pair<Double_t,Double_t> ATTrackingAnalysis::GetAnglesSolenoid(ATTrack* trac
           track->SetGeoPhi(afitXY);
 
           //fTrackFit->Draw("A*");
-          //fTrackFitXY->Draw("A*");
+          //fTrackFitXY->Draw("A*");*/
 
           return angles;
 

@@ -1131,7 +1131,10 @@ ATEventDrawTask::DrawPadPlane()
  // fAtMapPtr->SetGUIMode();// This method does not need to be called since it generates the Canvas we do not want
     fPadPlane = fAtMapPtr->GetATTPCPlane();
     fCvsPadPlane -> cd();
-    fPadPlane -> Draw("COLZ");
+    fPadPlane -> Draw("COLZ L0");
+    fPadPlane -> SetMinimum(1.0);
+    gStyle->SetOptStat(0);
+    gStyle->SetPalette(103);
     gPad ->Update();
 
 
