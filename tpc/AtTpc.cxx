@@ -374,6 +374,42 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 
 
   }
+  else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==4)
+  {
+        AddHit(fTrackID,
+       fVolumeID,
+       fVolName,
+       fDetCopyID,
+       TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
+       TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
+       TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
+       TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
+       fTime,
+       fLength,
+       fELoss,
+       0,
+       0,
+       AZ.first,
+       AZ.second);
+  }
+else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==5)
+  {
+        AddHit(fTrackID,
+       fVolumeID,
+       fVolName,
+       fDetCopyID,
+       TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
+       TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
+       TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
+       TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
+       fTime,
+       fLength,
+       fELoss,
+       0,
+       0,
+       AZ.first,
+       AZ.second);
+  }
 
 	//std::cout<<" Energy Loss : "<<fELoss*1000<<std::endl;
 

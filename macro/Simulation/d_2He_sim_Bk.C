@@ -1,16 +1,16 @@
-void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString geovar = "_1atm" )
+void d_2He_sim_Bk(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString geovar = "_1atm" )
 {
 
   TString dir = getenv("VMCWORKDIR");
 
  const TString pathtodata = "/mnt/simulations/attpcroot/data/";
   // Output file name
-  TString outFile = pathtodata + "attpcsim_d2He_12C" + geovar + ".root";
+  TString outFile = pathtodata + "attpcsim_d2He_Bg" + geovar + ".root";
 //TString outFile = pathtodata + "attpcsim_test.root";
 
 
   // Parameter file name
- TString parFile= pathtodata + "attpcpar_d2He_12C" + geovar + ".root";
+ TString parFile= pathtodata + "attpcpar_d2He_Bg" + geovar + ".root";
   //TString parFile= pathtodata + "attpcpar_test.root";
 
   // -----   Timer   --------------------------------------------------------
@@ -138,74 +138,53 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
                  Mass.push_back(2.01410177812);
 		 ExE.push_back(0.0);//In MeV
 
-                  //--- Scattered -----
-                Zp.push_back(5); // 
-          	Ap.push_back(12); //
+                  //--- recoil 1 -----
+                Zp.push_back(1); // 
+          	Ap.push_back(1); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
           	Pyp.push_back(0.0);
           	Pzp.push_back(0.0);
-          	Mass.push_back(12.0143521);
+          	Mass.push_back(1.007825);
           	ExE.push_back(0.0);
 
 
-                  // ---- Recoil -----
-		Zp.push_back(2); // 
+                  // ---- ejectile 1 -----
+		Zp.push_back(6); // 
+          	Ap.push_back(7); //
+          	Qp.push_back(0);
+          	Pxp.push_back(0.0);
+          	Pyp.push_back(0.0);
+          	Pzp.push_back(0.0);
+          	Mass.push_back(13.00335483507);
+          	ExE.push_back(0.0);
+
+		  // ---- recoil 2 -----
+		Zp.push_back(1); // 
           	Ap.push_back(2); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
           	Pyp.push_back(0.0);
           	Pzp.push_back(0.0);
-          	Mass.push_back(2.0*1.0078250322);
+          	Mass.push_back(2.01410177812);
           	ExE.push_back(0.0);
 
-		  // ---- proton 1 -----
-		Zp.push_back(1); // 
-          	Ap.push_back(1); //
+		  // ---- ejectile 2 -----
+		Zp.push_back(6); 
+          	Ap.push_back(12); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
           	Pyp.push_back(0.0);
           	Pzp.push_back(0.0);
-          	Mass.push_back(1.0078250322);
-          	ExE.push_back(0.0);
-
-		  // ---- proton 2 -----
-		Zp.push_back(1); 
-          	Ap.push_back(1); //
-          	Qp.push_back(0);
-          	Pxp.push_back(0.0);
-          	Pyp.push_back(0.0);
-          	Pzp.push_back(0.0);
-          	Mass.push_back(1.0078250322);
+          	Mass.push_back(12.0000000);
           	ExE.push_back(0.0);
 
                   Double_t ThetaMinCMS = 0.0;
                   Double_t ThetaMaxCMS = 180.0;
-		Int_t N_cross = 6560;
-		std::vector<Double_t> Arr1(N_cross), Arr2(N_cross), Arr3(N_cross);
-		Double_t col1, col2, col3;
-
-	//lee la seccion eficaz desde una tabla
-	string filename= "all2_12C.dat";
-	ifstream  inputfile;
-	inputfile. open(filename.c_str());
-      	if(inputfile.fail() ){
-                       cerr << "error abriendo "<< filename << endl;
- 			exit(1);
-                      }  
-
-	for(Int_t i=0;i<N_cross;i++){
-		inputfile >> col1 >> col2 >> col3 ;
-		Arr1.at(i) = col1;
-		Arr2.at(i) = col2;
-		Arr3.at(i) = col3;
-		}
-	inputfile.close();
- 
-
+	
         
-	ATTPC_d2He* d2He = new ATTPC_d2He("d_2He",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE, &Arr1, &Arr2, &Arr3, N_cross);
-        primGen->AddGenerator(d2He);
+	ATTPC_Background* Backg = new ATTPC_Background("Backg",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE);
+        primGen->AddGenerator(Backg);
 
 	
 

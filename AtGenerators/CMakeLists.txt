@@ -33,6 +33,7 @@ ATTPCIonPhaseSpace.cxx
 ATVertexPropagator.cxx
 ATTPC2Body.cxx
 ATTPC_d2He.cxx
+ATTPC_Background.cxx
 ATEulerTransformation.cxx
 ATTPCFissionGenerator.cxx
 ATTPCFissionGeneratorV2.cxx

@@ -132,10 +132,10 @@ void d2He_ana()
 	inicio=clock();
 	//------------------------------------------------------------------
 
-    TString mcFileNameHead = "../data/attpcsim_d2He";
-    //TString mcFileNameHead = "../data/attpcsim_d2He_large";
+    TString pathtodata = "/mnt/simulations/attpcroot/data/";
+    TString mcFileNameHead = "attpcsim_d2He_Bg_1atm";
     TString mcFileNameTail = ".root";
-    TString mcFileName     = mcFileNameHead + mcFileNameTail;
+    TString mcFileName     = pathtodata + mcFileNameHead + mcFileNameTail;
     std:cout << " Analysis of simulation file  " << mcFileName << endl;
 
     AtTpcPoint* point = new AtTpcPoint();
@@ -189,8 +189,8 @@ void d2He_ana()
 
     
 
-    //for(Int_t iEvent=0; iEvent<1000; iEvent++)
-    for(Int_t iEvent=0; iEvent<nEvents; iEvent++)
+    for(Int_t iEvent=0; iEvent<100; iEvent++)
+    //for(Int_t iEvent=0; iEvent<nEvents; iEvent++)
     {
         Double_t energyLoss_p1=0.0;
         Double_t range_sca=0.0;
@@ -263,7 +263,7 @@ void d2He_ana()
         tree->GetEvent(iEvent);
         // tree -> GetEntry(iEvent);
         Int_t Npoints = pointArray -> GetEntries();
-        //std::cout<<" Event Number : "<<iEvent<<std::endl;
+        std::cout<<" Event Number : "<<iEvent<<std::endl;
 	
 
 	gStyle->SetOptStat(0);
@@ -293,8 +293,8 @@ void d2He_ana()
 			ypos_fold = gRandom->Gaus(ypos,0.85);
 			rpos_fold = gRandom->Gaus(rpos,0.85);
 			*/
-			//std::cout<<" Track ID : "<<trackID<<std::endl;
-                        //std::cout<<" Point number : "<<i<<std::endl;
+			std::cout<<" Track ID : "<<trackID<<std::endl;
+                        std::cout<<" Point number : "<<i<<std::endl;
 			zpos_fold = zpos;
 			xpos_fold = xpos;
 			ypos_fold = ypos;

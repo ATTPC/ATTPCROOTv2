@@ -23,13 +23,13 @@
 #include <iostream>
 
 // Name of geometry version and output file
-const TString geoVersion = "ATTPC_d2He";
+const TString geoVersion = "ATTPC_d2He_03atm";
 const TString FileName = geoVersion + ".root";
 const TString FileName1 = geoVersion + "_geomanager.root";
 
 // Names of the different used materials which are used to build the modules
 // The materials are defined in the global media.geo file 
-const TString MediumGas     = "TargetD2";
+const TString MediumGas     = "TargetD2_03";
 const TString CylinderVolumeMedium = "steel";
 const TString MediumVacuum = "vacuum4";
 const TString FieldCageCyl = "G10";
@@ -140,7 +140,7 @@ void create_materials_from_media_file()
 
   FairGeoMedium* isobutan              = geoMedia->getMedium("isobutan");
   FairGeoMedium* steel          = geoMedia->getMedium("steel");
-  FairGeoMedium* TargetD2          = geoMedia->getMedium("TargetD2");
+  FairGeoMedium* TargetD2          = geoMedia->getMedium("TargetD2_03");
   FairGeoMedium* vacuum4          = geoMedia->getMedium("vacuum4");
   FairGeoMedium* G10          = geoMedia->getMedium("G10");
   FairGeoMedium* Aluminum   = geoMedia->getMedium("Aluminum");
