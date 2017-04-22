@@ -496,7 +496,7 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
      		Ang.at(3) = acos( ( p1L[0]*p8L[0] + p1L[1]*p8L[1] + p1L[2]*p8L[2]  ) /(   sqrt(pow(p1L[0],2) + pow(p1L[1],2)
 				 + pow(p1L[2],2))* sqrt(pow(p8L[0],2) + pow(p8L[1],2) + pow(p8L[2],2)) ) ) *TMath::RadToDeg();
 
-                if(isnan(Ene.at(0)) || isnan(Ene.at(1)) || isnan(Ene.at(2)) || isnan(Ene.at(3) ) ){
+                if(std::isnan(Ene.at(0)) || std::isnan(Ene.at(1)) || std::isnan(Ene.at(2)) || std::isnan(Ene.at(3) ) ){
 
                                 fPx.at(2) = 0.; // To GeV for FairRoot
       		                fPy.at(2) = 0.;
