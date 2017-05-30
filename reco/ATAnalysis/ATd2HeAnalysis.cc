@@ -33,6 +33,26 @@ Double_t  ATd2HeAnalysis::GetVertexFit() { return vertex;}
 
 Double_t ATd2HeAnalysis::omega(Double_t x, Double_t  y, Double_t z) { return sqrt(x*x + y*y + z*z -2*x*y -2*y*z -2*x*z);}
 
+
+Double_t ATd2HeAnalysis::EnergyFluctuation(Double_t energypoint){
+
+        TRandom3* gRandome = new TRandom3();
+        Double_t fanofactor = 0.2;
+	Double_t ion_pot = 40e-6; //in MeV
+	Int_t  Nelectrons = 0;
+        Double_t eout ;
+        
+        Nelectrons = TMath::Floor(energypoint/ion_pot);
+	Nelectrons = gRandome -> Gaus(Nelectrons, sqrt(Nelectrons*fanofactor));
+	eout = Nelectrons*ion_pot;
+        delete  gRandome;
+
+        return eout;
+
+
+}
+
+
 void ATd2HeAnalysis::kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t  thetalab, Double_t  K_eject){
 
  //in this definition: m1(projectile); m2(target); m3(ejectile); and m4(recoil);

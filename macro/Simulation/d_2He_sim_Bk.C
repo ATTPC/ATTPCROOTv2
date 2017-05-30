@@ -5,12 +5,12 @@ void d_2He_sim_Bk(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString 
 
  const TString pathtodata = "/mnt/simulations/attpcroot/data/";
   // Output file name
-  TString outFile = pathtodata + "attpcsim_d2He_Bg" + geovar + ".root";
+  TString outFile = pathtodata + "attpcsim_d2He_Bg12C" + geovar + ".root";
 //TString outFile = pathtodata + "attpcsim_test.root";
 
 
   // Parameter file name
- TString parFile= pathtodata + "attpcpar_d2He_Bg" + geovar + ".root";
+ TString parFile= pathtodata + "attpcpar_d2He_Bg12C" + geovar + ".root";
   //TString parFile= pathtodata + "attpcpar_test.root";
 
   // -----   Timer   --------------------------------------------------------
@@ -151,12 +151,12 @@ void d_2He_sim_Bk(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString 
 
                   // ---- ejectile 1 -----
 		Zp.push_back(6); // 
-          	Ap.push_back(7); //
+          	Ap.push_back(13); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
           	Pyp.push_back(0.0);
           	Pzp.push_back(0.0);
-          	Mass.push_back(13.00335483507);
+          	Mass.push_back(13.005);
           	ExE.push_back(0.0);
 
 		  // ---- recoil 2 -----
@@ -176,7 +176,7 @@ void d_2He_sim_Bk(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString 
           	Pxp.push_back(0.0);
           	Pyp.push_back(0.0);
           	Pzp.push_back(0.0);
-          	Mass.push_back(12.0000000);
+          	Mass.push_back(12.00000000000);
           	ExE.push_back(0.0);
 
                   Double_t ThetaMinCMS = 0.0;

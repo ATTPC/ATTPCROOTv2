@@ -42,6 +42,10 @@ class ATTPC_Background : public FairGenerator
   virtual Double_t omega(Double_t x, Double_t y, Double_t z);
  
   virtual Double_t* TwoB(Double_t  m1b, Double_t m2b, Double_t m3b, Double_t m4b,  Double_t Kb, Double_t thetacm);
+  
+  virtual std::vector<Double_t>  TRANSF(std::vector<Double_t> *from, std::vector<Double_t> *to, std::vector<Double_t> *vin); 
+
+ virtual std::vector<Double_t>  BreakUp(std::vector<Double_t> *Pdeuteron); 
 
   /** Destructor **/
   virtual ~ATTPC_Background();
@@ -69,7 +73,7 @@ private:
 
 
 
-                Double_t ran1, ran2, ranX;
+                Double_t  ranX;
 		Int_t ran_theta;
 
                 Double_t Prec;
