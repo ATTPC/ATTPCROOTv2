@@ -10,6 +10,7 @@
 #include <Math/Minimizer.h>
 #include "Fit/Fitter.h"
 #include "TFitResult.h"
+#include "TRandom3.h"
 
 using namespace ROOT::Math;
 
@@ -26,6 +27,7 @@ class ATd2HeAnalysis {
         void kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t  thetalab, Double_t  K_eject);
 
         
+        Double_t EnergyFluctuation(Double_t energypoint);
 
         void SetThetaCM(Double_t  value);
         void SetMissingMass(Double_t  value);
@@ -93,6 +95,7 @@ class ATd2HeAnalysis {
         Double_t phi_fit;
         bool ok;
         Double_t vertex;
+        
 
       private:
     

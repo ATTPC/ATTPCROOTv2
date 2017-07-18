@@ -1,12 +1,12 @@
 // -------------------------------------------------------------------------
-// -----                   ATTPC_d2He header file              -----
+// -----                   ATTPC_Background header file              -----
 // -----                    Inherit from FairIonGenerator       ----
-// -----                 Created 29/08/16  by J. C. Zamora -----
+// -----                 Created 17/04/17  by J. C. Zamora -----
 // -------------------------------------------------------------------------
 
 
-#ifndef ATTPC_d2He_H
-#define ATTPC_d2He_H
+#ifndef ATTPC_Background_H
+#define ATTPC_Background_H
 
 
 #include "FairGenerator.h"
@@ -17,32 +17,38 @@
 #include <map>
 
 class FairPrimaryGenerator;
-class ATTPC_d2He;
+class ATTPC_Background;
 
-class ATTPC_d2He : public FairGenerator
+class ATTPC_Background : public FairGenerator
 {
 
  public:
 
   /** Default constructor **/
-  ATTPC_d2He();
+  ATTPC_Background();
 
 
-  ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t> *a,std::vector<Int_t> *q, Int_t mult, std::vector<Double_t> *px, 
-          std::vector<Double_t>* py,std::vector<Double_t> *pz, std::vector<Double_t> *mass , std::vector<Double_t> *Ex, std::vector<Double_t> *cross1, std::vector<Double_t> *cross2, std::vector<Double_t> *cross3, Int_t N_data);
+  ATTPC_Background(const char* name,std::vector<Int_t> *z,std::vector<Int_t> *a,std::vector<Int_t> *q, Int_t mult, std::vector<Double_t> *px, 
+          std::vector<Double_t>* py,std::vector<Double_t> *pz, std::vector<Double_t> *mass , std::vector<Double_t> *Ex);
 
 
-  ATTPC_d2He(const ATTPC_d2He&);
+  ATTPC_Background(const ATTPC_Background&);
 
 
-  ATTPC_d2He& operator=(const ATTPC_d2He&) { return *this; }
+  ATTPC_Background& operator=(const ATTPC_Background&) { return *this; }
 
   virtual Bool_t ReadEvent(FairPrimaryGenerator* primGen);
-  virtual std::vector<Double_t>  TRANSF(std::vector<Double_t> *from, std::vector<Double_t> *to, std::vector<Double_t> *vin); 
+  
   virtual Double_t omega(Double_t x, Double_t y, Double_t z);
+ 
+  virtual Double_t* TwoB(Double_t  m1b, Double_t m2b, Double_t m3b, Double_t m4b,  Double_t Kb, Double_t thetacm);
+  
+  virtual std::vector<Double_t>  TRANSF(std::vector<Double_t> *from, std::vector<Double_t> *to, std::vector<Double_t> *vin); 
+
+ virtual std::vector<Double_t>  BreakUp(std::vector<Double_t> *Pdeuteron); 
 
   /** Destructor **/
-  virtual ~ATTPC_d2He();
+  virtual ~ATTPC_Background();
 
 private:
 
@@ -66,38 +72,19 @@ private:
                 Double_t test_var;
 
 
-                Double_t beta_cm ;
-                Double_t gamma_cm ;
-                Double_t beta4, gamma4;
-                Double_t S, S_78;
-                Double_t Pcm, Pc78;
-                Double_t normP4L;
-                Double_t E1L;
-                Double_t E3C, E4C, E3L, E4L;
-                Double_t E7rest, E8rest;
-                Double_t E7L, E8L;
-                Double_t p1L[3],  p3L[3],  p4L[3];
-                Double_t p3C[3], p4C[3];
-                Double_t p7rest[3], p8rest[3]; 
-                Double_t p7L[3], p8L[3]; 
-                //Double_t theta78, phi78;
-                Double_t ran1, ran2, ranX;
+
+                Double_t  ranX;
 		Int_t ran_theta;
-                std::vector<Double_t> fvfrom, fvto, fvin, fvout;
-		std::vector<Double_t> inp1, inp2, inp3;
-		Double_t theta_cm, phi_cm, epsilon;
-                Double_t theta78, phi78;
 
+                Double_t Prec;
+                
 
-
-  
+                
   
   
   		std::vector<Int_t>   fQ;		    // Electric charge [e]
   
   		Double_t fBeamEnergy;			    // Residual beam energy for phase calculation
- 		// Int_t fZBeam;
- 		// Int_t fABeam;
   		Double_t fPxBeam;
   		Double_t fPyBeam;
   		Double_t fPzBeam;
@@ -107,14 +94,11 @@ private:
                 Double_t random_phi;
 
  
- 		// Double_t fBeamMass;
- 		// Double_t fTargetMass;
- 
  
  
 
 
-  ClassDef(ATTPC_d2He,2)
+  ClassDef(ATTPC_Background,2)
 
 }; 
 

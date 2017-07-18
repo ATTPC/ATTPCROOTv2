@@ -1,17 +1,14 @@
-void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString geovar = "_1atm" )
+void d_2He_sim_12N(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString geovar = "_03atm" )
 {
 
   TString dir = getenv("VMCWORKDIR");
 
  const TString pathtodata = "/mnt/simulations/attpcroot/data/";
   // Output file name
-  TString outFile = pathtodata + "attpcsim_d2He_12C" + geovar + ".root";
-//TString outFile = pathtodata + "attpcsim_test.root";
-
+  TString outFile = pathtodata + "attpcsim_d2He_12N" + geovar + ".root";
 
   // Parameter file name
- TString parFile= pathtodata + "attpcpar_d2He_12C" + geovar + ".root";
-  //TString parFile= pathtodata + "attpcpar_test.root";
+  TString parFile= pathtodata + "attpcpar_d2He_12N" + geovar + ".root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -74,21 +71,21 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
 
 
                   // Beam Information
-                  Int_t z = 6;  // Atomic number
+                  Int_t z = 7;  // Atomic number
 	          Int_t a = 12; // Mass number
 	          Int_t q = 0;   // Charge State
 	          Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
 	          Double_t px = 0.000/a;  
 	          Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
-	          Double_t pz = 5316.6744/(a*1000.0);  // Z-Momentum / per nucleon!!!!!!
+	          Double_t pz = 5320.5856/(a*1000.0);  // Z-Momentum / per nucleon!!!!!!
   	          Double_t BExcEner = 0.0;
-                  Double_t Bmass = 12.00*931.494/1000.0; //Mass in GeV
+                  Double_t Bmass = 12.01861*931.494/1000.0; //Mass in GeV
                   Double_t NomEnergy = 1; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
                 
 
 
 	          ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
-	          //ionGen->SetSpotRadius(0,-100,0);
+	          ionGen->SetSpotRadius(0,-100,0);
 	          // add the ion generator
 
 	          primGen->AddGenerator(ionGen);
@@ -119,7 +116,7 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
                   ResEner = 0.0; // Useless
 
                   // ---- Beam ----
-                  Zp.push_back(z); 
+                  Zp.push_back(z); // 40Ar TRACKID=0
 		  Ap.push_back(a); //
 		  Qp.push_back(0);
 		  Pxp.push_back((a*1000.0)*px);
@@ -129,7 +126,7 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
 		  ExE.push_back(0);
 
                   // ---- Target ----
-                 Zp.push_back(1); // 
+                 Zp.push_back(1); // p
 		 Ap.push_back(2); //
 		 Qp.push_back(0); //
 		 Pxp.push_back(0.0);
@@ -139,18 +136,18 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
 		 ExE.push_back(0.0);//In MeV
 
                   //--- Scattered -----
-                Zp.push_back(5); // 
+                Zp.push_back(6); // 40Ar TRACKID=1
           	Ap.push_back(12); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
           	Pyp.push_back(0.0);
           	Pzp.push_back(0.0);
-          	Mass.push_back(12.0143521);
+          	Mass.push_back(12.00000);
           	ExE.push_back(0.0);
 
 
                   // ---- Recoil -----
-		Zp.push_back(2); // 
+		Zp.push_back(2); // 40Ar TRACKID=1
           	Ap.push_back(2); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
@@ -160,7 +157,7 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
           	ExE.push_back(0.0);
 
 		  // ---- proton 1 -----
-		Zp.push_back(1); // 
+		Zp.push_back(1); // 40Ar TRACKID=1
           	Ap.push_back(1); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
@@ -170,7 +167,7 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
           	ExE.push_back(0.0);
 
 		  // ---- proton 2 -----
-		Zp.push_back(1); 
+		Zp.push_back(1); // 40Ar TRACKID=1
           	Ap.push_back(1); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
@@ -186,7 +183,7 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
 		Double_t col1, col2, col3;
 
 	//lee la seccion eficaz desde una tabla
-	string filename= "all2_12C.dat";
+	string filename= "all2_12N.dat";
 	ifstream  inputfile;
 	inputfile. open(filename.c_str());
       	if(inputfile.fail() ){

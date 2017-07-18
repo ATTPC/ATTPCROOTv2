@@ -244,7 +244,11 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
    		fPyBeam = gATVP->GetPy();
    		fPzBeam = gATVP->GetPz();
 
+                 //fPxBeam = fPx.at(0) ;
+   		 //fPyBeam = fPy.at(0) ;
+   		 //fPzBeam = fPz.at(0) ;
 
+                
 		  if(fBeamEnergy==0){
     			std::cout << "-I- ATTP_d2He : No solution!"<<std::endl;    			
     			gATVP->SetValidKine(kFALSE);
@@ -278,8 +282,8 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
      		Ang.at(3)=0.0;
 		}
 
-
-		else{
+                
+		//else{
 	// MC to distribute the events with the cross section
                 do{
 	                ran_theta = fN*gRandom->Uniform()  ;
@@ -299,14 +303,14 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
 		//std::cout<<fPxBeam<<"  "<<fPyBeam<<"  "<<fPzBeam<<std::endl;
 		std::cout<<"===================================================================="<<std::endl;
 
-
+                
                 //dirty way to include more than one excited state
 		test_var = gRandom->Uniform();
 		if(test_var>= 0 && test_var<0.25) Ex_ejectile = 0.0;
 		if(test_var>= 0.25 && test_var<0.50) Ex_ejectile = 5.0;
 		if(test_var>= 0.50 && test_var<0.75) Ex_ejectile = 10.0;
 		if(test_var>= 0.75 && test_var<1.0) Ex_ejectile = 20.0;
-	
+	        
 
 		//Ex_ejectile = fExEnergy.at(2); // excitation energy of ejectile 
                 
@@ -492,7 +496,26 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
      		Ang.at(3) = acos( ( p1L[0]*p8L[0] + p1L[1]*p8L[1] + p1L[2]*p8L[2]  ) /(   sqrt(pow(p1L[0],2) + pow(p1L[1],2)
 				 + pow(p1L[2],2))* sqrt(pow(p8L[0],2) + pow(p8L[1],2) + pow(p8L[2],2)) ) ) *TMath::RadToDeg();
 
-		} //if solution is valid 
+                if(std::isnan(Ene.at(0)) || std::isnan(Ene.at(1)) || std::isnan(Ene.at(2)) || std::isnan(Ene.at(3) ) ){
+
+                                fPx.at(2) = 0.; // To GeV for FairRoot
+      		                fPy.at(2) = 0.;
+	    	                fPz.at(2) = 0.;
+
+      		                fPx.at(3) = 0.;
+      		                fPy.at(3) = 0.;
+	    	                fPz.at(3) = 0.;
+
+		                fPx.at(4) = 0.;
+      		                fPy.at(4) = 0.;
+	    	                fPz.at(4) = 0.;
+
+		                fPx.at(5) = 0.;
+      		                fPy.at(5) = 0.;
+	    	                fPz.at(5) = 0.;
+                        } 
+
+		//} //if solution is valid 
 		
                 Double_t phi7 = atan2(p7L[1],p7L[0])*TMath::RadToDeg();
                 if(phi7<0) phi7 = (phi7 + 360.0);
@@ -522,7 +545,15 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
   		gATVP->SetScatterE(Ene.at(0));
   		gATVP->SetScatterA(Ang.at(0));
 
-                Double_t random_z = 100.0*(gRandom->Uniform()); //cm
+
+                do{
+	                 random_z = 100.0*(gRandom->Uniform()); //cm
+                         random_r = 1.0*(gRandom->Gaus(0,1)); //cm
+                         random_phi = 2.0*TMath::Pi()*(gRandom->Uniform()); //rad
+
+	        }while(  fabs(random_r) > 4.7 ); //cut at 2 sigma
+
+                
 
     		for(Int_t i=0; i<fMult; i++){
          		TParticlePDG* thisPart;
@@ -544,9 +575,13 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
 
 		     // Propagate the vertex of the previous event
 
-			 fVx = gATVP->GetVx();
-			 fVy = gATVP->GetVy();
+			// fVx = gATVP->GetVx();
+			 //fVy = gATVP->GetVy();
 			 //fVz = gATVP->GetVz();
+
+
+                         fVx = random_r*cos(random_phi);
+			 fVy = random_r*sin(random_phi);
                          fVz =  random_z;
 
 
