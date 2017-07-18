@@ -221,13 +221,13 @@ TH2Poly* AtTpcMap::GetATTPCPlane(){
 
 		 for(Int_t i=0;i<fPadInd;i++){
 
-      			  Double_t px[]={AtPadCoord[i][0][0],AtPadCoord[i][1][0],AtPadCoord[i][2][0]};
-      			  Double_t py[]={AtPadCoord[i][0][1],AtPadCoord[i][1][1],AtPadCoord[i][2][1]};
-       			  hPlane->AddBin(3,px,py);
+      			  Double_t px[]={AtPadCoord[i][0][0],AtPadCoord[i][1][0],AtPadCoord[i][2][0],AtPadCoord[i][0][0]};
+      			  Double_t py[]={AtPadCoord[i][0][1],AtPadCoord[i][1][1],AtPadCoord[i][2][1],AtPadCoord[i][0][1]};
+       			  hPlane->AddBin(4,px,py);
 
        		 }
 
-      hPlane->ChangePartition(500,500);     
+      hPlane->ChangePartition(500,500);
 
        if(kGUIMode){
         cATTPCPlane = new TCanvas("cATTPCPlane","cATTPCPlane",1000,1000);

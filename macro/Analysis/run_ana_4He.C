@@ -23,7 +23,7 @@
 
 
 void run_ana_4He(TString FileNameHead = "run_",
-Int_t num_ev=100000000, Int_t file_ini=0, Int_t file_end=0, TString file="../Kinematics/Decay_kinematics/Kine.txt")
+Int_t num_ev=100000000, Int_t file_ini=80, Int_t file_end=84, TString file="../Kinematics/Decay_kinematics/Kine.txt")
 {
 
   TH1F* VertexH = new TH1F("VertexH","VertexH",500,-100,5000);
@@ -73,6 +73,11 @@ Int_t num_ev=100000000, Int_t file_ini=0, Int_t file_end=0, TString file="../Kin
   Range_vs_AngleH->SetMarkerStyle(20);
   Range_vs_AngleH->SetMarkerSize(0.7);
 
+  TH2D* Energy_vs_AngleH = new TH2D("Energy_vs_AngleH","Energy_vs_AngleH",1000,0,180.0,400,0,20);
+  Energy_vs_AngleH->SetMarkerColor(2);
+  Energy_vs_AngleH->SetMarkerStyle(20);
+  Energy_vs_AngleH->SetMarkerSize(0.7);
+
   TH2D* Range1_vs_Range2 = new TH2D("Range1_vs_Range2","Range1_vs_Range2",500,0,1000,500,0,1000);
   Range1_vs_Range2->SetMarkerColor(2);
   Range1_vs_Range2->SetMarkerStyle(20);
@@ -87,6 +92,8 @@ Int_t num_ev=100000000, Int_t file_ini=0, Int_t file_end=0, TString file="../Kin
   AnglePhi_vs_AngleSum->SetMarkerColor(2);
   AnglePhi_vs_AngleSum->SetMarkerStyle(20);
   AnglePhi_vs_AngleSum->SetMarkerSize(0.7);
+
+  TH1F* ang_distr = new TH1F("ang_distr","ang_distr",60,0,180.0);
 
 
   FairRunAna* run = new FairRunAna();
@@ -148,6 +155,10 @@ Int_t num_ev=100000000, Int_t file_ini=0, Int_t file_end=0, TString file="../Kin
                   AngleSumMC->Fill(track_s.FitParameters.sThetaMin*rad2deg+track_r.FitParameters.sThetaMin*rad2deg);
                   Range_vs_AngleH->Fill(track_r.GetGeoTheta()*rad2deg,track_r.GetLinearRange(fTrackingEvent->GetGeoVertex()));
                   Range_vs_AngleH->Fill(track_s.GetGeoTheta()*rad2deg,track_s.GetLinearRange(fTrackingEvent->GetGeoVertex()));
+
+                  Energy_vs_AngleH->Fill( track_r.GetGeoTheta()*rad2deg,track_r.GetGeoEnergy() );
+                  Energy_vs_AngleH->Fill( track_s.GetGeoTheta()*rad2deg,track_s.GetGeoEnergy() );
+
                   RangevsEner->Fill(track_r.GetLinearRange(fTrackingEvent->GetGeoVertex()),track_r.GetGeoEnergy());
                   RangevsEner->Fill(track_s.GetLinearRange(fTrackingEvent->GetGeoVertex()),track_s.GetGeoEnergy());
                   VertexEvsEnersum->Fill(track_r.GetGeoEnergy()+track_s.GetGeoEnergy()+ Eoffset*2.0,fTrackingEvent->GetVertexEnergy());
@@ -164,6 +175,12 @@ Int_t num_ev=100000000, Int_t file_ini=0, Int_t file_end=0, TString file="../Kin
                   AnglePhi_vs_AngleSum->Fill(track_s.GetGeoTheta()*rad2deg,track_s.GetGeoTheta()*rad2deg+track_r.GetGeoTheta()*rad2deg);
 
                   kine_file<<track_r.GetGeoTheta()*rad2deg<<" "<<track_s.GetGeoTheta()*rad2deg<<" "<<fTrackingEvent->GetVertex()<<std::endl;
+
+                  if(fTrackingEvent->GetVertexEnergy()>10.0 && fTrackingEvent->GetVertexEnergy()<11.0){
+                    //ang_distr->Fill( track_r.GetGeoTheta()*rad2deg );
+                    ang_distr->Fill( (90.0 - track_r.GetGeoTheta()*rad2deg)*2.0  );
+                    ang_distr->Fill(  (90.0 - track_s.GetGeoTheta()*rad2deg)*2.0 );
+                  }
 
                 }else if( (track_r.GetQuadrant()==1 && track_s.GetQuadrant()==3) || (track_r.GetQuadrant()==3 && track_s.GetQuadrant()==1)){
 
@@ -174,6 +191,10 @@ Int_t num_ev=100000000, Int_t file_ini=0, Int_t file_end=0, TString file="../Kin
                   AngleSumMC->Fill(track_s.FitParameters.sThetaMin*rad2deg+track_r.FitParameters.sThetaMin*rad2deg);
                   Range_vs_AngleH->Fill(track_r.GetGeoTheta()*rad2deg,track_r.GetLinearRange(fTrackingEvent->GetGeoVertex()));
                   Range_vs_AngleH->Fill(track_s.GetGeoTheta()*rad2deg,track_s.GetLinearRange(fTrackingEvent->GetGeoVertex()));
+
+                  Energy_vs_AngleH->Fill( track_r.GetGeoTheta()*rad2deg,track_r.GetGeoEnergy() );
+                  Energy_vs_AngleH->Fill( track_s.GetGeoTheta()*rad2deg,track_s.GetGeoEnergy() );
+
                   RangevsEner->Fill(track_r.GetLinearRange(fTrackingEvent->GetGeoVertex()),track_r.GetGeoEnergy());
                   RangevsEner->Fill(track_s.GetLinearRange(fTrackingEvent->GetGeoVertex()),track_s.GetGeoEnergy());
                   VertexEvsEnersum->Fill(track_r.GetGeoEnergy()+track_s.GetGeoEnergy()+ Eoffset*2.0,fTrackingEvent->GetVertexEnergy());
@@ -190,6 +211,12 @@ Int_t num_ev=100000000, Int_t file_ini=0, Int_t file_end=0, TString file="../Kin
                   AnglePhi_vs_AngleSum->Fill(track_s.GetGeoTheta()*rad2deg,track_s.GetGeoTheta()*rad2deg+track_r.GetGeoTheta()*rad2deg);
 
                   kine_file<<track_r.GetGeoTheta()*rad2deg<<" "<<track_s.GetGeoTheta()*rad2deg<<" "<<fTrackingEvent->GetVertex()<<std::endl;
+
+                  if(fTrackingEvent->GetVertexEnergy()>10.0 && fTrackingEvent->GetVertexEnergy()<11.0){
+                    ang_distr->Fill(  (90.0 - track_r.GetGeoTheta()*rad2deg)*2.0 );
+                    ang_distr->Fill(  (90.0 - track_s.GetGeoTheta()*rad2deg)*2.0 );
+                    //ang_distr->Fill( track_r.GetGeoTheta()*rad2deg );
+                  }
 
                 }
 
@@ -207,6 +234,36 @@ Int_t num_ev=100000000, Int_t file_ini=0, Int_t file_end=0, TString file="../Kin
 
   }// for files
 
+  TGraphErrors *ang_distr_graph = new TGraphErrors();
+  ang_distr_graph->SetMarkerStyle(20);
+  ang_distr_graph->SetMarkerSize(1.5);
+
+  Double_t Nthickness = 1.8*1E20;
+  Double_t Nevents    = 8325413;
+  Double_t Nthicknorm = 10E-27; //mb
+  Double_t xsection;
+  Double_t sca_factor = 8.7449/0.445386;
+
+  for(Int_t i=1;i<ang_distr->GetSize();i++){
+
+
+      if(ang_distr->GetBinCenter(i)>60.0) xsection = ang_distr->GetBinContent(i)/(Nthickness*Nevents*Nthicknorm*sca_factor) ;
+      else xsection = ang_distr->GetBinContent(i)/5.0/(Nthickness*Nevents*Nthicknorm*sca_factor) ;
+      ang_distr_graph->SetPoint(i,ang_distr->GetBinCenter(i),xsection);
+      ang_distr_graph->SetPointError(i,2.5,xsection*0.1);
+
+  }
+
+   Double_t exp_ang[13] = {30.5962270477,35.1056211632,40.2635563711,45.211579425,50.4941499742,54.821182906,60.1321790594,65.4626358188,70.8049001368,75.6184482171,80.2196789,84.9295828543,90.1793546295};
+   Double_t exp_xs[13] = {742.0481512359/1000.0,495.5360607239/1000.0,259.1898861892/1000.0,112.3365404207/1000.0,27.7036797969/1000.0,4.6908988192/1000.0,
+     34.0926846539/1000.0,107.3499120953/1000.0,203.4859477312/1000.0,285.5202563417/1000.0,368.126863799/1000.0,444.4166944783/1000.0,448.7976365004/1000.0};
+   Double_t exp_xs_err[13] = {0.0};
+   Double_t exp_ang_err[13] = {0.0};
+
+   TGraphErrors *exp_ang_distr_graph = new TGraphErrors(13,exp_ang,exp_xs,exp_ang_err,exp_xs_err);
+   exp_ang_distr_graph->SetMarkerStyle(22);
+   exp_ang_distr_graph->SetMarkerSize(1.5);
+   exp_ang_distr_graph->SetMarkerColor(kRed);
 
   TCanvas *c1 = new TCanvas("c1","c1",200,10,700,700);
   c1->Divide(2,2);
@@ -315,5 +372,14 @@ Int_t num_ev=100000000, Int_t file_ini=0, Int_t file_end=0, TString file="../Kin
   TCanvas *c6 = new TCanvas("c6","c6",200,10,700,700);
   E1vsE2->Draw("zcol");
 
+  TCanvas *c7 = new TCanvas("c7","c7",200,10,700,700);
+  Energy_vs_AngleH->Draw("zcol");
+
+  TCanvas *c8 = new TCanvas("c8","c8",200,10,700,700);
+  ang_distr->Draw();
+
+  TCanvas *c9 = new TCanvas("c9","c9",200,10,700,700);
+  ang_distr_graph->Draw("ap");
+  exp_ang_distr_graph->Draw("p");
 
 }
