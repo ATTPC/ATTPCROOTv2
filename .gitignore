@@ -5,6 +5,8 @@ gphysi.dat
 core_dump*
 build
 !*/build
+.vscode
+*~
 
 # Executables
 *.exe
