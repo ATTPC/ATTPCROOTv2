@@ -1,4 +1,4 @@
-void run_reco_hierachical_clustering(Int_t firstEvent = 0, Int_t eventCount = 1)
+void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 1)
 {
 	// Timer
 	TStopwatch timer;
@@ -9,7 +9,7 @@ void run_reco_hierachical_clustering(Int_t firstEvent = 0, Int_t eventCount = 1)
 	TString dataDir = dir + "/data/";
 
 	TString loggerFile = dataDir + "ATTPCLog_Reco.log";
-	TString inputFile = dataDir + "attpcsim_2.root";
+	TString inputFile = dataDir + "attpcsim.root";
 	TString outputFile = dataDir + "output.root";
 
 	// Logger
@@ -20,12 +20,12 @@ void run_reco_hierachical_clustering(Int_t firstEvent = 0, Int_t eventCount = 1)
 	fLogger->SetLogVerbosityLevel("HIGH");
 
 	// read pointArray
-	TFile file(inputFile.Data());
+	TFile file(inputFile);
 	TTree *tree = nullptr;
 	file.GetObject("cbmsim", tree);
 
-	TClonesArray *pointArray = nullptr;
-	tree->SetBranchAddress("AtTpcPoint", &pointArray);
+	ATEvent *event = nullptr;
+	tree->SetBranchAddress("ATEventH", &event);
 
 	// Run task
 	ATHierarchicalClusteringTask hierarchicalClusteringTask;
@@ -39,14 +39,30 @@ void run_reco_hierachical_clustering(Int_t firstEvent = 0, Int_t eventCount = 1)
 	hierarchicalClusteringTask.SetGenTripletsNBest(2);
 	hierarchicalClusteringTask.SetSmoothRadius(0.818581f);
 
-	Int_t lastEvent = (eventCount < (tree->GetEntries() - firstEvent) ? eventCount : (tree->GetEntries() - firstEvent)) + firstEvent;
+	Int_t const lastEvent = (eventCount < (tree->GetEntries() - firstEvent) ? eventCount : (tree->GetEntries() - firstEvent)) + firstEvent;
 	for (Int_t i = firstEvent; i < lastEvent; ++i) {
 		std::cout << "# Analyzing event " << (i + 1) << " of " << tree->GetEntries() << std::endl;
 		tree->GetEvent(i);
 
+		std::vector<ATHit> *hitArray = event->GetHitArray();
+		std::cout << "HitArray Size: " << hitArray->size() << std::endl;
+
 		// analyze
-		hierarchicalClusteringTask.AnalyzePointArray(pointArray);
-		// TODO
+		ATHierarchicalClusteringCluster hierarchicalClusteringCluster = hierarchicalClusteringTask.AnalyzePointArray(*hitArray);
+		std::vector<std::vector<size_t>> clusters = hierarchicalClusteringCluster.getClusters();
+
+		// work with results
+		for (std::vector<size_t> const &cluster : clusters)
+		{
+			std::cout << "# CLUSTER" << std::endl;
+
+			for (size_t hitIndex : cluster)
+			{
+				ATHit const &hit = (*hitArray)[hitIndex];
+
+				std::cout << "Point (" << hit.GetPosition().X() << " " << hit.GetPosition().Y() << " " << hit.GetPosition().Z() << ")" << std::endl;
+			}
+		}
 	}
 
 	// Finish

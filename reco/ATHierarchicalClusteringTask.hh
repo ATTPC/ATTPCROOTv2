@@ -1,11 +1,12 @@
 #ifndef ATHIERARCHICALCLUSTERING_H
 #define ATHIERARCHICALCLUSTERING_H
 
+#include <vector>
+
 #include "FairTask.h"
 
 #include "ATHierarchicalClusteringHc.hh"
-
-class TClonesArray;
+#include "ATHit.hh"
 
 class ATHierarchicalClusteringTask : public FairTask
 {
@@ -19,7 +20,7 @@ public:
 	virtual void SetParContainers();
 	virtual void Finish();
 
-	void AnalyzePointArray(TClonesArray const *pointArray) const;
+	ATHierarchicalClusteringCluster AnalyzePointArray(std::vector<ATHit> const &hitArray) const;
 
 
 	// Getters and Setters

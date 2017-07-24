@@ -8,30 +8,29 @@
 
 void ATHierarchicalClusteringCluster::calculateRelationshipMatrixIfNecessary() const
 {
-    if (this->relationshipMatrix.size() == 0)
+    if (this->_relationshipMatrix.size() == 0)
     {
-        this->relationshipMatrix = Eigen::ArrayXXi(this->pointIndexCount, this->pointIndexCount);
-        this->relationshipMatrix.fill(0);
+        this->_relationshipMatrix = Eigen::ArrayXXi(this->_pointIndexCount, this->_pointIndexCount);
+        this->_relationshipMatrix.fill(0);
 
-        for (pcl::PointIndicesConstPtr const &cluster : this->getClusters())
+        for (std::vector<size_t> const &indices : this->getClusters())
         {
-            std::vector<int> const &indices = cluster->indices;
             size_t indicesSize = indices.size();
 
             for (size_t i = 0; i < indicesSize; ++i)
             {
                 int indexI = indices[i];
 
-                ++this->relationshipMatrix(indexI, indexI);
+                ++this->_relationshipMatrix(indexI, indexI);
 
                 for (size_t j = i + 1; j < indicesSize; ++j)
                 {
                     int indexJ = indices[j];
 
                     if(indexI < indexJ)
-                        ++this->relationshipMatrix(indexI, indexJ);
+                        ++this->_relationshipMatrix(indexI, indexJ);
                     else
-                        ++this->relationshipMatrix(indexJ, indexI);
+                        ++this->_relationshipMatrix(indexJ, indexI);
                 }
             }
         }
@@ -48,10 +47,10 @@ ATHierarchicalClusteringCluster::ATHierarchicalClusteringCluster(std::string con
     this->load(filepath);
 }
 
-ATHierarchicalClusteringCluster::ATHierarchicalClusteringCluster(std::vector<pcl::PointIndicesPtr> const &clusters, size_t pointIndexCount)
+ATHierarchicalClusteringCluster::ATHierarchicalClusteringCluster(std::vector<std::vector<size_t>> const &clusters, size_t pointIndexCount)
 {
-    this->clusters = clusters;
-    this->pointIndexCount = pointIndexCount;
+    this->_clusters = clusters;
+    this->_pointIndexCount = pointIndexCount;
 }
 
 void ATHierarchicalClusteringCluster::save(std::string filepath, std::string comment) const
@@ -60,7 +59,7 @@ void ATHierarchicalClusteringCluster::save(std::string filepath, std::string com
     std::ofstream file(filepath, std::ifstream::binary);
 
     file << "version 1" << '\n';
-    file << "pointIndexCount " << this->pointIndexCount << '\n';
+    file << "pointIndexCount " << this->_pointIndexCount << '\n';
 
     // add comments
     if (comment.size() > 0)
@@ -69,13 +68,13 @@ void ATHierarchicalClusteringCluster::save(std::string filepath, std::string com
         file << "# " << escapedComments << '\n';
     }
 
-    for (pcl::PointIndicesPtr const &cluster : this->clusters)
+    for (std::vector<size_t> const &indices : this->getClusters())
     {
-        for (auto indexIt = cluster->indices.cbegin(); indexIt != cluster->indices.cend(); ++indexIt)
+        for (auto indexIt = indices.cbegin(); indexIt != indices.cend(); ++indexIt)
         {
             file << *indexIt;
 
-            if (std::distance(indexIt, cluster->indices.cend()) != 1)
+            if (std::distance(indexIt, indices.cend()) != 1)
                 file << ",";
         }
 
@@ -85,7 +84,7 @@ void ATHierarchicalClusteringCluster::save(std::string filepath, std::string com
 
 void ATHierarchicalClusteringCluster::load(std::string filepath)
 {
-    this->clusters.resize(0);
+    this->_clusters.resize(0);
 
     std::ifstream file(filepath);
     size_t version;
@@ -107,7 +106,7 @@ void ATHierarchicalClusteringCluster::load(std::string filepath)
         if (tmp != "pointIndexCount")
             throw std::runtime_error("Illegal file-format! (expected \"pointIndexCount\")");
 
-        file >> this->pointIndexCount;
+        file >> this->_pointIndexCount;
 
         file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -121,30 +120,30 @@ void ATHierarchicalClusteringCluster::load(std::string filepath)
                 file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             else
             {
-                pcl::PointIndicesPtr pointIndicesPtr(new pcl::PointIndices());
+                std::vector<size_t> pointIndices;
 
                 while (!file.eof())
                 {
-                    char nextChar = file.peek();
+                    char nextCharInner = file.peek();
 
-                    if (nextChar == EOF || nextChar == '\n')
+                    if (nextCharInner == EOF || nextCharInner == '\n')
                     {
                         file.ignore();
                         break;
                     }
-                    else if (nextChar == '#') // ignore comment-lines
+                    else if (nextCharInner == '#') // ignore comment-lines
                         file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    else if (nextChar == ',') // ignore comma
+                    else if (nextCharInner == ',') // ignore comma
                         file.ignore();
                     else
                     {
-                        int index;
+                        size_t index;
                         file >> index;
-                        pointIndicesPtr->indices.push_back(index);
+                        pointIndices.push_back(index);
                     }
                 }
 
-                this->clusters.push_back(pointIndicesPtr);
+                this->_clusters.push_back(pointIndices);
             }
         }
     }
@@ -152,14 +151,14 @@ void ATHierarchicalClusteringCluster::load(std::string filepath)
         throw std::runtime_error("Unsupported version!");
 }
 
-std::vector<pcl::PointIndicesPtr> const &ATHierarchicalClusteringCluster::getClusters() const
+std::vector<std::vector<size_t>> const &ATHierarchicalClusteringCluster::getClusters() const
 {
-    return this->clusters;
+    return this->_clusters;
 }
 
 size_t ATHierarchicalClusteringCluster::getPointIndexCount() const
 {
-    return this->pointIndexCount;
+    return this->_pointIndexCount;
 }
 
 int ATHierarchicalClusteringCluster::operator-(ATHierarchicalClusteringCluster const &rhs) const
@@ -170,5 +169,5 @@ int ATHierarchicalClusteringCluster::operator-(ATHierarchicalClusteringCluster c
     this->calculateRelationshipMatrixIfNecessary();
     rhs.calculateRelationshipMatrixIfNecessary();
 
-    return (this->relationshipMatrix - rhs.relationshipMatrix).abs().sum();
+    return (this->_relationshipMatrix - rhs._relationshipMatrix).abs().sum();
 }
