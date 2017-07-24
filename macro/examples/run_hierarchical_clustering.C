@@ -1,4 +1,4 @@
-void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 1)
+void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 9999)
 {
 	// Timer
 	TStopwatch timer;
@@ -9,7 +9,7 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 1)
 	TString dataDir = dir + "/data/";
 
 	TString loggerFile = dataDir + "ATTPCLog_Reco.log";
-	TString inputFile = dataDir + "attpcsim.root";
+	TString inputFile = dataDir + "run0218_output.root";
 	TString outputFile = dataDir + "output.root";
 
 	// Logger
@@ -24,8 +24,9 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 1)
 	TTree *tree = nullptr;
 	file.GetObject("cbmsim", tree);
 
-	ATEvent *event = nullptr;
-	tree->SetBranchAddress("ATEventH", &event);
+	TClonesArray *events = nullptr;
+	TBranch *eventsBranch = tree->GetBranch("ATEventH");
+	eventsBranch->SetAddress(&events);
 
 	// Run task
 	ATHierarchicalClusteringTask hierarchicalClusteringTask;
@@ -42,7 +43,8 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 1)
 	Int_t const lastEvent = (eventCount < (tree->GetEntries() - firstEvent) ? eventCount : (tree->GetEntries() - firstEvent)) + firstEvent;
 	for (Int_t i = firstEvent; i < lastEvent; ++i) {
 		std::cout << "# Analyzing event " << (i + 1) << " of " << tree->GetEntries() << std::endl;
-		tree->GetEvent(i);
+		eventsBranch->GetEvent(i);
+		ATEvent *event = (ATEvent*)events->At(0);
 
 		std::vector<ATHit> *hitArray = event->GetHitArray();
 		std::cout << "HitArray Size: " << hitArray->size() << std::endl;
