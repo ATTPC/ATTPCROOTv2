@@ -195,8 +195,8 @@ namespace ATHierarchicalClusteringHc
         cleanedGroup.bestClusterDistance = clusterGroup.bestClusterDistance;
         cleanedGroup.clusters.resize(clusterGroup.clusters.size());
 
-        auto newEnd = std::copy_if(clusterGroup.clusters.cbegin(), clusterGroup.clusters.cend(), cleanedGroup.clusters.begin(), [&](cluster const &cluster) {
-            return cluster.size() >= minTriplets;
+        auto newEnd = std::copy_if(clusterGroup.clusters.cbegin(), clusterGroup.clusters.cend(), cleanedGroup.clusters.begin(), [&](cluster const &clusterEl) {
+            return clusterEl.size() >= minTriplets;
         });
         cleanedGroup.clusters.resize(std::distance(cleanedGroup.clusters.begin(), newEnd));
 
@@ -205,26 +205,26 @@ namespace ATHierarchicalClusteringHc
 
     ATHierarchicalClusteringCluster toCluster(std::vector<triplet> const &triplets, cluster_group const &clusterGroup, size_t pointIndexCount)
     {
-        std::vector<pcl::PointIndicesPtr> result;
+        std::vector<std::vector<size_t>> result;
 
         for (auto const &currentCluster : clusterGroup.clusters)
         {
-            pcl::PointIndicesPtr pointIndices(new pcl::PointIndices());
+            std::vector<size_t> pointIndices;
 
             // add point indices
             for (auto const &currentTripletIndex : currentCluster)
             {
                 triplet const &currentTriplet = triplets[currentTripletIndex];
 
-                pointIndices->indices.push_back((int)currentTriplet.pointIndexA);
-                pointIndices->indices.push_back((int)currentTriplet.pointIndexB);
-                pointIndices->indices.push_back((int)currentTriplet.pointIndexC);
+                pointIndices.push_back(currentTriplet.pointIndexA);
+                pointIndices.push_back(currentTriplet.pointIndexB);
+                pointIndices.push_back(currentTriplet.pointIndexC);
             }
 
             // sort point-indices and remove duplikates
-            std::sort(pointIndices->indices.begin(), pointIndices->indices.end());
-            auto newEnd = std::unique(pointIndices->indices.begin(), pointIndices->indices.end());
-            pointIndices->indices.resize(std::distance(pointIndices->indices.begin(), newEnd));
+            std::sort(pointIndices.begin(), pointIndices.end());
+            auto newEnd = std::unique(pointIndices.begin(), pointIndices.end());
+            pointIndices.resize(std::distance(pointIndices.begin(), newEnd));
 
             result.push_back(pointIndices);
         }

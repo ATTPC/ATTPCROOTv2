@@ -15,21 +15,19 @@
 
 #include "AtTpcPoint.h"
 #include "FairLogger.h"
-#include "TClonesArray.h"
 
 #include <iostream>
 
-static void pointArrayToPointCloud(TClonesArray const *pointArray, pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
+static void hitArrayToPointCloud(std::vector<ATHit> const &hitArray, pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
 {
-    Int_t pointCount = pointArray->GetEntries();
-    for (Int_t j = 0; j < pointCount; ++j) {
-        AtTpcPoint *point = (AtTpcPoint*)(*pointArray)[j];
+    for (auto const &point : hitArray) {
+        TVector3 const pointPos = point.GetPosition();
 
         pcl::PointXYZI pclPoint;
-        pclPoint.x = point->GetXIn();
-        pclPoint.y = point->GetYIn();
-        pclPoint.z = point->GetZIn();
-        pclPoint.intensity = point->GetAIni();
+        pclPoint.x = pointPos.X();
+        pclPoint.y = pointPos.Y();
+        pclPoint.z = pointPos.Z();
+        pclPoint.intensity = (float)point.GetCharge();
 
         cloud->push_back(pclPoint);
     }
@@ -85,13 +83,13 @@ static void colorByCluster(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, ATHie
     }
 
     size_t clusterIndex = 0;
-    for (pcl::PointIndicesPtr const &pointIndices : cluster.getClusters())
+    for (std::vector<size_t> const &pointIndices : cluster.getClusters())
     {
         double const r = (double)((clusterIndex * 23) % 19) / 18.0;
         double const g = (double)((clusterIndex * 23) % 7) / 6.0;
         double const b = (double)((clusterIndex * 23) % 3) / 2.0;
 
-        for (int index : pointIndices->indices)
+        for (size_t index : pointIndices)
         {
             auto &point = (*cloud_rgb)[index];
 
@@ -107,7 +105,7 @@ static void colorByCluster(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, ATHie
 
 ATHierarchicalClusteringCluster ATHierarchicalClusteringTask::useHc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::vector<ATHierarchicalClusteringHc::triplet> triplets, float scale) const
 {
-    ATHierarchicalClusteringHc::cluster_history result = ATHierarchicalClusteringHc::calculateHc(cloud, triplets, ATHierarchicalClusteringHc::singleLinkClusterMetric, [&] (ATHierarchicalClusteringHc::triplet const &lhs, ATHierarchicalClusteringHc::triplet const &rhs, pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud)
+    ATHierarchicalClusteringHc::cluster_history result = ATHierarchicalClusteringHc::calculateHc(cloud, triplets, ATHierarchicalClusteringHc::singleLinkClusterMetric, [&] (ATHierarchicalClusteringHc::triplet const &lhs, ATHierarchicalClusteringHc::triplet const &rhs, pcl::PointCloud<pcl::PointXYZI>::ConstPtr)
     {       
         float const perpendicularDistanceA = (rhs.center - (lhs.center + lhs.direction.dot(rhs.center - lhs.center) * lhs.direction)).squaredNorm();
         float const perpendicularDistanceB = (lhs.center - (rhs.center + rhs.direction.dot(lhs.center - rhs.center) * rhs.direction)).squaredNorm();
@@ -198,16 +196,16 @@ void ATHierarchicalClusteringTask::Finish()
 }
 
 
-void ATHierarchicalClusteringTask::AnalyzePointArray(TClonesArray const *pointArray) const
+ATHierarchicalClusteringCluster ATHierarchicalClusteringTask::AnalyzePointArray(std::vector<ATHit> const &hitArray) const
 {
     pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_xyzti(new pcl::PointCloud<pcl::PointXYZI>());
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_xyz(new pcl::PointCloud<pcl::PointXYZ>());
 
-    pointArrayToPointCloud(pointArray, cloud_xyzti);
+    hitArrayToPointCloud(hitArray, cloud_xyzti);
     copyPointCloud(*cloud_xyzti, *cloud_xyz);
 
     if (cloud_xyz->size() == 0)
-        fLogger->Error(MESSAGE_ORIGIN, "Empty cloud!");
+        throw std::runtime_error("Empty cloud!");
     else
     {
         // calculate cloud-scale
@@ -245,6 +243,8 @@ void ATHierarchicalClusteringTask::AnalyzePointArray(TClonesArray const *pointAr
             std::this_thread::sleep_for(std::chrono::milliseconds(16));
         }
 #endif
+
+        return cluster;
     }
 }
 

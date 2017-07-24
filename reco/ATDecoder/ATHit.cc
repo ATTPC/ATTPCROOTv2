@@ -107,24 +107,24 @@ void ATHit::SetTimeStamp(Int_t Time)				                           	{ fTimeStamp
 void ATHit::SetTimeStampCorr(Double_t TimeCorr)				                  { fTimeStampCorr = TimeCorr;}
 void ATHit::SetTimeStampCorrInter(Double_t TimeCorrInter)				        { fTimeStampCorrInter = TimeCorrInter;}
 void ATHit::SetBaseCorr(Double_t BaseCorr)                              { fBaseCorr = BaseCorr;}
-void ATHit::SetSlopeCnt(Int_t cnt)                                     { fSlopeCnt = cnt;}
+void ATHit::SetSlopeCnt(Int_t cnt)                                      { fSlopeCnt = cnt;}
 
 void ATHit::SetIsClustered(Bool_t value)                                { fIsClustered = value; }
 void ATHit::SetClusterID(Int_t clusterID)                               { fClusterID = clusterID; fIsClustered = kTRUE; }
 
-Int_t ATHit::GetTrackID()                                               { return fTrackID; }
+Int_t ATHit::GetTrackID() const                                         { return fTrackID; }
 Int_t ATHit::GetHitID() const                                           { return fHitID; }
-Int_t ATHit::GetHitPadNum()                                             { return fPadNum; }
-TVector3 ATHit::GetPosition()                                           { return fPosition; }
-TVector3 ATHit::GetPositionCorr()                                       { return fPositionCorr; }
-TVector3 ATHit::GetPosSigma()                                           { return fPositionSigma; }
-Double_t ATHit::GetCharge()                                             { return fCharge; }
-Double_t ATHit::GetQHit()                                               { return fQhit;}
-Int_t ATHit::GetHitMult()						                                    { return fHitMult;}
-Int_t ATHit::GetTimeStamp()						                                  { return fTimeStamp;}
-Double_t ATHit::GetTimeStampCorr()						                          { return fTimeStampCorr;}
-Double_t ATHit::GetTimeStampCorrInter()						                          { return fTimeStampCorrInter;}
-Bool_t ATHit::IsClustered()                                             { return fIsClustered; }
-Int_t ATHit::GetClusterID()                                             { return (fIsClustered ? fClusterID : -1); }
-Double_t ATHit::GetBaseCorr()                                           { return fBaseCorr; }
-Int_t ATHit::GetSlopeCnt()                                              { return fSlopeCnt; }
+Int_t ATHit::GetHitPadNum() const                                       { return fPadNum; }
+TVector3 ATHit::GetPosition() const                                     { return fPosition; }
+TVector3 ATHit::GetPositionCorr() const                                 { return fPositionCorr; }
+TVector3 ATHit::GetPosSigma() const                                     { return fPositionSigma; }
+Double_t ATHit::GetCharge() const                                       { return fCharge; }
+Double_t ATHit::GetQHit() const                                         { return fQhit;}
+Int_t ATHit::GetHitMult() const                                         { return fHitMult;}
+Int_t ATHit::GetTimeStamp() const                                       { return fTimeStamp;}
+Double_t ATHit::GetTimeStampCorr() const                                { return fTimeStampCorr;}
+Double_t ATHit::GetTimeStampCorrInter() const                           { return fTimeStampCorrInter;}
+Bool_t ATHit::IsClustered() const                                       { return fIsClustered; }
+Int_t ATHit::GetClusterID() const                                       { return (fIsClustered ? fClusterID : -1); }
+Double_t ATHit::GetBaseCorr() const                                     { return fBaseCorr; }
+Int_t ATHit::GetSlopeCnt() const                                        { return fSlopeCnt; }
