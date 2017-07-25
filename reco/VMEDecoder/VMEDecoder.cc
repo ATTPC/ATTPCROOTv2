@@ -338,16 +338,15 @@ UInt_t VMEDecoder::GetTimeStamp(){
 
 }
 
-UInt_t VMEDecoder::GetCoinReg(){
-
-                     UInt_t CoinReg;
-		     fData.read(reinterpret_cast<Char_t *>(&CoinReg), 4);
-                    // std::cout<<" SubEvent Number : "<<std::hex<<SubEveNum<<std::endl;
-		     return CoinReg;
-
+UInt_t VMEDecoder::GetCoinReg()
+{
+    UInt_t CoinRegInner;
+    fData.read(reinterpret_cast<Char_t*>(&CoinRegInner), 4);
+    // std::cout << " SubEvent Number : " << std::hex << SubEveNum << std::endl;
+    return CoinRegInner;
 }
 
 Int_t *VMEDecoder::GetRawfADC(Int_t chIdx)
 {
-  return fRawAdc + chIdx*512;
+    return fRawAdc + chIdx*512;
 }
