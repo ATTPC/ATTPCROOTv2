@@ -339,88 +339,86 @@ void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYpla
 
 }
 
-void ATHoughSpaceLine::CalcHoughSpace(ATProtoEvent* protoevent,Bool_t q1,Bool_t q2, Bool_t q3, Bool_t q4){
+void ATHoughSpaceLine::CalcHoughSpace(ATProtoEvent* protoevent, Bool_t q1, Bool_t q2, Bool_t q3, Bool_t q4)
+{
+    Int_t nQuads = protoevent->GetNumQuadrants();
+    std::vector<ATProtoQuadrant> quadrantArray;
+    ATProtoQuadrant *quadrant;
+    Double_t drift_cal = fDriftVelocity * fTBTime / 100.0; // mm
 
+    TH2F *HistHoughRZInner[4]; // One per quadrant
+    Char_t HoughQuadHistName[256];
 
-      Int_t nQuads = protoevent->GetNumQuadrants();
-      std::vector<ATProtoQuadrant> quadrantArray;
-      ATProtoQuadrant* quadrant;
-      Double_t drift_cal = fDriftVelocity*fTBTime/100.0;//mm
+    for(Int_t i = 0; i < 4; ++i)
+    {
+        sprintf(HoughQuadHistName, "HoughQuad_%d", i);
+        // HistHoughRZInner[i] = new TH2F(HoughQuadHistName, HoughQuadHistName, 200, 0, 3.15, 1000, 0, 600);// Was (500, 0, 3.15,....
+        HistHoughRZInner[i] = new TH2F(HoughQuadHistName, HoughQuadHistName, 500, 0, 3.15, 1000, 0, 600);// Was (500, 0, 3.15,....
+    }
 
-	      TH2F *HistHoughRZ[4]; //One per quadrant
-        Char_t HoughQuadHistName[256];
-        for(Int_t i=0;i<4;i++){
-           sprintf(HoughQuadHistName,"HoughQuad_%d",i);
-          // HistHoughRZ[i] = new TH2F(HoughQuadHistName,HoughQuadHistName,200,0,3.15,1000,0,600);//Was (500,0,3.15,....
-           HistHoughRZ[i] = new TH2F(HoughQuadHistName,HoughQuadHistName,500,0,3.15,1000,0,600);//Was (500,0,3.15,....
-	}
-
-      if(nQuads<5){
-
-        for(Int_t iQ=0; iQ<nQuads; iQ++)
+    if(nQuads < 5)
+    {
+        for(Int_t iQ = 0; iQ < nQuads; ++iQ)
         {
-
-
             HoughMap.clear();
-            //std::cout<<" =========  Quadrant : "<<iQ<<std::endl;
+            // std::cout << " =========  Quadrant : " << iQ << std::endl;
             quadrant = &protoevent->GetQuadrantArray()->at(iQ);
             Int_t qNumHits = quadrant->GetNumHits();
 
+            for(Int_t iHit = 0; iHit < qNumHits; ++iHit)
+            {
+                ATHit* hit = quadrant->GetHit(iHit);
+                Int_t PadNumHit = hit->GetHitPadNum();
+                TVector3 position = hit->GetPosition();
+                Float_t radius = TMath::Sqrt(TMath::Power(position.X(), 2) + TMath::Power(position.Y(), 2));
+                Double_t posZCal     = fZk - (fEntTB - hit->GetTimeStamp())     * drift_cal; // Recalibrating Z position from Time Bucket
+                Double_t posZCalCorr = fZk - (fEntTB - hit->GetTimeStampCorr()) * drift_cal; // Recalibrating Z position from Time Bucket
 
-                    	for(Int_t iHit=0; iHit<qNumHits; iHit++){
-                            ATHit* hit = quadrant->GetHit(iHit);
-                            Int_t PadNumHit = hit->GetHitPadNum();
-                            TVector3 position = hit->GetPosition();
-                            Float_t radius = TMath::Sqrt( TMath::Power(position.X(),2) + TMath::Power(position.Y(),2)  );
-                            Double_t posZCal     = fZk - (fEntTB - hit->GetTimeStamp())*drift_cal; // Recalibrating Z position from Time Bucket
-                            Double_t posZCalCorr = fZk - (fEntTB - hit->GetTimeStampCorr())*drift_cal; // Recalibrating Z position from Time Bucket
+                // std::cout << " Pos Z Vector : " << position.Z() << " posZCal : " << posZCal << " fEntTB : " << fEntTB << " Time Stamp : " << hit->GetTimeStamp() << " Drift cal : " << drift_cal << std::endl;
 
+                if(radius > fRadThreshold)
+                {
+                    // #pragma omp parallel for ordered schedule(dynamic) // TODO: Check performance
+                    for(Int_t itheta = 0; itheta < 1023; ++itheta)
+                    {
+                        Float_t angle = TMath::Pi() * (static_cast<Float_t>(itheta) / 1023);
+                        Float_t d0_RZ = (TMath::Cos(angle) * radius) + (TMath::Sin(angle) * posZCalCorr); // posZCal can be replaced anytime by position.Z()
+                        // #pragma omp ordered
+                        HistHoughRZInner[iQ]->Fill(angle,d0_RZ);
+                        // #pragma omp ordered
+                        // FillHoughMap(angle,d0_RZ);
+                    } // Hough Angle loop
+                }
+            } // Hit loop
 
-                            //std::cout<<" Pos Z Vector : "<<position.Z()<<" posZCal : "<<posZCal<<" fEntTB : "<<fEntTB<<" Time Stamp : "<<hit->GetTimeStamp()<<" Drift cal : "<<drift_cal<<std::endl;
+            // HoughMapKey.push_back(GetHoughParameters());
+            HoughPar.push_back(GetHoughParameters(HistHoughRZInner[iQ]));
+            // HoughParSTD.push_back(GetHoughParameters());
+        } // Quadrant loop
+    }
 
+    for(Int_t i = 0; i < 4; ++i)
+    {
+        delete HistHoughRZInner[i];
+    }
 
-                            if(radius>fRadThreshold){
-                              Int_t itheta=0;
-			                        //#pragma omp parallel for ordered schedule(dynamic) private(itheta) //TOOD: Check performance
-                              for(itheta = 0; itheta <1023; itheta++){
-                                    Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
-                                    Float_t d0_RZ = (TMath::Cos(angle)*radius)  +  (TMath::Sin(angle)*posZCalCorr); // posZCal can be replaced anytime by position.Z()
-                                    //#pragma omp ordered
-                                    HistHoughRZ[iQ]->Fill(angle,d0_RZ);
-                                    //#pragma omp ordered
-                                    //FillHoughMap(angle,d0_RZ);
-
-                               }//Hough Angle loop
-                            }
-
-                      }// Hit loop
-
-
-      //HoughMapKey.push_back(GetHoughParameters());
-       		HoughPar.push_back(GetHoughParameters(HistHoughRZ[iQ]));
-      //HoughParSTD.push_back(GetHoughParameters());
-
-         }// Quadrant loop
-       }
-
-	for(Int_t i=0;i<4;i++) delete HistHoughRZ[i];
-	/*	TCanvas *c1=new TCanvas();
-		c1->Divide(2,2);
-		c1->cd(1);
-		HistHoughRZ[0]->Draw("zcol");
-		c1->cd(2);
-		HistHoughRZ[1]->Draw("zcol");
-		c1->cd(3);
-		HistHoughRZ[2]->Draw("zcol");
-		c1->cd(4);
-		HistHoughRZ[3]->Draw("zcol");*/
-
+    /*
+    TCanvas *c1 = new TCanvas();
+    c1->Divide(2, 2);
+    c1->cd(1);
+    HistHoughRZInner[0]->Draw("zcol");
+    c1->cd(2);
+    HistHoughRZInner[1]->Draw("zcol");
+    c1->cd(3);
+    HistHoughRZInner[2]->Draw("zcol");
+    c1->cd(4);
+    HistHoughRZInner[3]->Draw("zcol");
+    */
 }
 
-void ATHoughSpaceLine::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const multiarray& PadCoord)
+void ATHoughSpaceLine::CalcHoughSpace(ATEvent *event, TH2Poly *hPadPlane, const multiarray &PadCoord)
 {
-
-
+    // TODO
 }
 
 
@@ -606,34 +604,36 @@ std::pair<Double_t,Double_t> ATHoughSpaceLine::GetHoughParameters(TH2F* hist){
 }
 
 
-std::vector<std::pair<Double_t,Double_t>> ATHoughSpaceLine::GetMultiHoughParameters(TH2F* hist)
+std::vector<std::pair<Double_t, Double_t>> ATHoughSpaceLine::GetMultiHoughParameters(TH2F *hist)
 {
+    std::vector<std::pair<Double_t, Double_t>> HoughParInner;
 
-      std::vector<std::pair<Double_t,Double_t>> HoughPar;
-      //Int_t nBins = hist->GetSize();
-      Int_t maxBin=0;
-      Int_t maxBin2=0;
-      Int_t buff=0;
-      Double_t xpos1=0.0;
-      Double_t ypos1=0.0;
+    Int_t maxBin = 0;
+    Double_t xpos1 = 0.0;
+    Double_t ypos1 = 0.0;
 
-        for(Int_t binx=1;binx<fXbinRZ;binx++){
-          for(Int_t biny=1;biny<fYbinRZ;biny++){
-              buff = hist->GetBinContent(binx,biny);
-                if(buff>maxBin){
-                  maxBin=buff;
-                  xpos1 = hist->GetXaxis()->GetBinCenter(binx);
-                  ypos1 = hist->GetYaxis()->GetBinCenter(biny);
-                }
-          }
+    for(Int_t binx = 1; binx < fXbinRZ; ++binx)
+    {
+        for(Int_t biny = 1; biny < fYbinRZ; ++biny)
+        {
+            Int_t buff = hist->GetBinContent(binx, biny);
+
+            if(buff > maxBin)
+            {
+                maxBin = buff;
+                xpos1 = hist->GetXaxis()->GetBinCenter(binx);
+                ypos1 = hist->GetYaxis()->GetBinCenter(biny);
+            }
         }
+    }
 
-    //  std::cout<<maxBin<<std::endl;
-    //  std::cout<<" X Hough Position 1: "<<xpos1<<std::endl;
-  	//	std::cout<<" Y Hough Position 1: "<<ypos1<<std::endl;
+    // std::cout << maxBin << std::endl;
+    // std::cout << " X Hough Position 1: " << xpos1 << std::endl;
+    // std::cout << " Y Hough Position 1: " << ypos1 << std::endl;
 
-      return HoughPar;
+    // FIXME: do anything
 
+    return HoughParInner;
 }
 
 
