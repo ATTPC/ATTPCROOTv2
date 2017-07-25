@@ -6,14 +6,14 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
-void ATHierarchicalClusteringCluster::calculateRelationshipMatrixIfNecessary() const
+void ATHierarchicalClusteringCluster::CalculateRelationshipMatrixIfNecessary() const
 {
     if (this->_relationshipMatrix.size() == 0)
     {
         this->_relationshipMatrix = Eigen::ArrayXXi(this->_pointIndexCount, this->_pointIndexCount);
         this->_relationshipMatrix.fill(0);
 
-        for (std::vector<size_t> const &indices : this->getClusters())
+        for (std::vector<size_t> const &indices : this->GetClusters())
         {
             size_t indicesSize = indices.size();
 
@@ -44,7 +44,7 @@ ATHierarchicalClusteringCluster::ATHierarchicalClusteringCluster()
 
 ATHierarchicalClusteringCluster::ATHierarchicalClusteringCluster(std::string const &filepath)
 {
-    this->load(filepath);
+    this->Load(filepath);
 }
 
 ATHierarchicalClusteringCluster::ATHierarchicalClusteringCluster(std::vector<std::vector<size_t>> const &clusters, size_t pointIndexCount)
@@ -53,7 +53,7 @@ ATHierarchicalClusteringCluster::ATHierarchicalClusteringCluster(std::vector<std
     this->_pointIndexCount = pointIndexCount;
 }
 
-void ATHierarchicalClusteringCluster::save(std::string filepath, std::string comment) const
+void ATHierarchicalClusteringCluster::Save(std::string filepath, std::string comment) const
 {
     // binary mode to disable eol conversion (windows)
     std::ofstream file(filepath, std::ifstream::binary);
@@ -68,7 +68,7 @@ void ATHierarchicalClusteringCluster::save(std::string filepath, std::string com
         file << "# " << escapedComments << '\n';
     }
 
-    for (std::vector<size_t> const &indices : this->getClusters())
+    for (std::vector<size_t> const &indices : this->GetClusters())
     {
         for (auto indexIt = indices.cbegin(); indexIt != indices.cend(); ++indexIt)
         {
@@ -82,7 +82,7 @@ void ATHierarchicalClusteringCluster::save(std::string filepath, std::string com
     }
 }
 
-void ATHierarchicalClusteringCluster::load(std::string filepath)
+void ATHierarchicalClusteringCluster::Load(std::string filepath)
 {
     this->_clusters.resize(0);
 
@@ -151,23 +151,23 @@ void ATHierarchicalClusteringCluster::load(std::string filepath)
         throw std::runtime_error("Unsupported version!");
 }
 
-std::vector<std::vector<size_t>> const &ATHierarchicalClusteringCluster::getClusters() const
+std::vector<std::vector<size_t>> const &ATHierarchicalClusteringCluster::GetClusters() const
 {
     return this->_clusters;
 }
 
-size_t ATHierarchicalClusteringCluster::getPointIndexCount() const
+size_t ATHierarchicalClusteringCluster::GetPointIndexCount() const
 {
     return this->_pointIndexCount;
 }
 
 int ATHierarchicalClusteringCluster::operator-(ATHierarchicalClusteringCluster const &rhs) const
 {
-    if (this->getPointIndexCount() != rhs.getPointIndexCount())
-        throw std::runtime_error("pointIndexCount has to be identical!");
+    if (this->GetPointIndexCount() != rhs.GetPointIndexCount())
+        throw std::runtime_error("PointIndexCount has to be identical!");
 
-    this->calculateRelationshipMatrixIfNecessary();
-    rhs.calculateRelationshipMatrixIfNecessary();
+    this->CalculateRelationshipMatrixIfNecessary();
+    rhs.CalculateRelationshipMatrixIfNecessary();
 
     return (this->_relationshipMatrix - rhs._relationshipMatrix).abs().sum();
 }

@@ -5,7 +5,7 @@
 
 namespace ATHierarchicalClusteringHc
 {
-    std::vector<triplet> generateTriplets(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, size_t nnKandidates, size_t nBest, float maxError)
+    std::vector<triplet> GenerateTriplets(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, size_t nnKandidates, size_t nBest, float maxError)
     {
         std::vector<triplet> triplets;
         pcl::KdTreeFLANN<pcl::PointXYZI> kdtree;
@@ -83,7 +83,7 @@ namespace ATHierarchicalClusteringHc
         return triplets;
     }
 
-    static Eigen::MatrixXf calculateDistanceMatrix(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, std::vector<triplet> const &triplets, TripletMetric tripletMetric)
+    static Eigen::MatrixXf CalculateDistanceMatrix(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, std::vector<triplet> const &triplets, TripletMetric tripletMetric)
     {
         size_t const tripletSize = triplets.size();
         Eigen::MatrixXf result(tripletSize, tripletSize);
@@ -102,14 +102,14 @@ namespace ATHierarchicalClusteringHc
         return result;
     }
 
-    cluster_history calculateHc(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, std::vector<triplet> const &triplets, ClusterMetric clusterMetric, TripletMetric tripletMetric)
+    cluster_history CalculateHc(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, std::vector<triplet> const &triplets, ClusterMetric clusterMetric, TripletMetric tripletMetric)
     {
         cluster_history result;
 
         result.triplets = triplets;
 
         // calculate distance-Matrix
-        Eigen::MatrixXf distanceMatrix = calculateDistanceMatrix(cloud, result.triplets, tripletMetric);
+        Eigen::MatrixXf distanceMatrix = CalculateDistanceMatrix(cloud, result.triplets, tripletMetric);
 
         cluster_group currentGeneration;
 
@@ -173,7 +173,7 @@ namespace ATHierarchicalClusteringHc
         return result;
     }
 
-    cluster_group getBestClusterGroup(cluster_history const &history, float bestClusterDistanceDelta)
+    cluster_group GetBestClusterGroup(cluster_history const &history, float bestClusterDistanceDelta)
     {
         float lastBestClusterDistance = history.history[0].bestClusterDistance;
 
@@ -189,7 +189,7 @@ namespace ATHierarchicalClusteringHc
         return history.history[history.history.size() - 1];
     }
 
-    cluster_group cleanupClusterGroup(cluster_group const &clusterGroup, size_t minTriplets)
+    cluster_group CleanupClusterGroup(cluster_group const &clusterGroup, size_t minTriplets)
     {
         cluster_group cleanedGroup;
         cleanedGroup.bestClusterDistance = clusterGroup.bestClusterDistance;
@@ -203,7 +203,7 @@ namespace ATHierarchicalClusteringHc
         return cleanedGroup;
     }
 
-    ATHierarchicalClusteringCluster toCluster(std::vector<triplet> const &triplets, cluster_group const &clusterGroup, size_t pointIndexCount)
+    ATHierarchicalClusteringCluster ToCluster(std::vector<triplet> const &triplets, cluster_group const &clusterGroup, size_t pointIndexCount)
     {
         std::vector<std::vector<size_t>> result;
 
