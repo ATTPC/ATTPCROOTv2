@@ -5,7 +5,7 @@
 
 namespace ATHierarchicalClusteringSmoothenCloud
 {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr smoothenCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int k, bool useMedian)
+    pcl::PointCloud<pcl::PointXYZ>::Ptr SmoothenCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int k, bool useMedian)
     {
         pcl::PointCloud<pcl::PointXYZ>::Ptr result_cloud(new pcl::PointCloud<pcl::PointXYZ>());
         pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
@@ -65,7 +65,7 @@ namespace ATHierarchicalClusteringSmoothenCloud
         return result_cloud;
     }
 
-    pcl::PointCloud<pcl::PointXYZI>::Ptr smoothenCloud(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, double radius, bool useMedian)
+    pcl::PointCloud<pcl::PointXYZI>::Ptr SmoothenCloud(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, double radius, bool useMedian)
     {
         pcl::PointCloud<pcl::PointXYZI>::Ptr result_cloud(new pcl::PointCloud<pcl::PointXYZI>());
         pcl::KdTreeFLANN<pcl::PointXYZI> kdtree;

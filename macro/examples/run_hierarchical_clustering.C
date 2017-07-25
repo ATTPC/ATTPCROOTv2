@@ -10,7 +10,7 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 9999)
 
 	TString loggerFile = dataDir + "ATTPCLog_Reco.log";
 	TString inputFile = dataDir + "run0218_output.root";
-	TString outputFile = dataDir + "output.root";
+	TString outputFile = dataDir + "output";
 
 	// Logger
 	FairLogger *fLogger = FairLogger::GetLogger();
@@ -51,9 +51,15 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 9999)
 
 		// analyze
 		ATHierarchicalClusteringCluster hierarchicalClusteringCluster = hierarchicalClusteringTask.AnalyzePointArray(*hitArray);
-		std::vector<std::vector<size_t>> clusters = hierarchicalClusteringCluster.getClusters();
+		std::vector<std::vector<size_t>> clusters = hierarchicalClusteringCluster.GetClusters();
 
 		// work with results
+		ostringstream oss;
+		oss << outputFile << "." << i << ".cluster";
+		hierarchicalClusteringCluster.Save(oss.str());
+		std::cout << "Generated file: " << oss.str() << std::endl;
+
+		/*
 		for (std::vector<size_t> const &cluster : clusters)
 		{
 			std::cout << "# CLUSTER" << std::endl;
@@ -65,12 +71,12 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 9999)
 				std::cout << "Point (" << hit.GetPosition().X() << " " << hit.GetPosition().Y() << " " << hit.GetPosition().Z() << ")" << std::endl;
 			}
 		}
+		*/
 	}
 
 	// Finish
 	timer.Stop();
 
 	std::cout << "Reconstruction macro finished succesfully." << std::endl
-		<< "(Real time: " << timer.RealTime() << " s, CPU time: " << timer.CpuTime() << " s)" << std::endl
-		<< "Output file: " << outputFile << std::endl;
+		<< "(Real time: " << timer.RealTime() << " s, CPU time: " << timer.CpuTime() << " s)" << std::endl;
 }

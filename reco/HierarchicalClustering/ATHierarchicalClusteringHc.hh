@@ -85,11 +85,11 @@ namespace ATHierarchicalClusteringHc
         return result;
     }
 
-    std::vector<triplet> generateTriplets(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, size_t nnKandidates = 12, size_t nBest = 2, float maxError = 0.015f);
-    cluster_history calculateHc(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, std::vector<triplet> const &triplets, ClusterMetric clusterMetric = singleLinkClusterMetric, TripletMetric tripletMetric = defaultTripletMetric);
-    cluster_group getBestClusterGroup(cluster_history const &history, float bestClusterDistanceDelta = 19.0f);
-    cluster_group cleanupClusterGroup(cluster_group const &clusterGroup, size_t minTriplets = 7);
-    ATHierarchicalClusteringCluster toCluster(std::vector<triplet> const &triplets, cluster_group const &clusterGroup, size_t pointIndexCount);
+    std::vector<triplet> GenerateTriplets(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, size_t nnKandidates = 12, size_t nBest = 2, float maxError = 0.015f);
+    cluster_history CalculateHc(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, std::vector<triplet> const &triplets, ClusterMetric clusterMetric = singleLinkClusterMetric, TripletMetric tripletMetric = defaultTripletMetric);
+    cluster_group GetBestClusterGroup(cluster_history const &history, float bestClusterDistanceDelta = 19.0f);
+    cluster_group CleanupClusterGroup(cluster_group const &clusterGroup, size_t minTriplets = 7);
+    ATHierarchicalClusteringCluster ToCluster(std::vector<triplet> const &triplets, cluster_group const &clusterGroup, size_t pointIndexCount);
 }
 
 #endif

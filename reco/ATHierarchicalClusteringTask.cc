@@ -18,7 +18,7 @@
 
 #include <iostream>
 
-static void hitArrayToPointCloud(std::vector<ATHit> const &hitArray, pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
+static void HitArrayToPointCloud(std::vector<ATHit> const &hitArray, pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
 {
     for (auto const &point : hitArray) {
         TVector3 const pointPos = point.GetPosition();
@@ -33,7 +33,7 @@ static void hitArrayToPointCloud(std::vector<ATHit> const &hitArray, pcl::PointC
     }
 }
 
-static float calculateCloudScale(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
+static float CalculateCloudScale(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
 {
     float totalDistance = 0.0f;
     pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
@@ -67,7 +67,7 @@ static float calculateCloudScale(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
 }
 
 #ifdef F17_VISUALIZE
-static void colorByCluster(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, ATHierarchicalClusteringCluster const &cluster, pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_rgb)
+static void ColorByCluster(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, ATHierarchicalClusteringCluster const &cluster, pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_rgb)
 {
     cloud_rgb->clear();
     copyPointCloud(*cloud, *cloud_rgb);
@@ -83,7 +83,7 @@ static void colorByCluster(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, ATHie
     }
 
     size_t clusterIndex = 0;
-    for (std::vector<size_t> const &pointIndices : cluster.getClusters())
+    for (std::vector<size_t> const &pointIndices : cluster.GetClusters())
     {
         double const r = (double)((clusterIndex * 23) % 19) / 18.0;
         double const g = (double)((clusterIndex * 23) % 7) / 6.0;
@@ -105,7 +105,7 @@ static void colorByCluster(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, ATHie
 
 ATHierarchicalClusteringCluster ATHierarchicalClusteringTask::useHc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::vector<ATHierarchicalClusteringHc::triplet> triplets, float scale) const
 {
-    ATHierarchicalClusteringHc::cluster_history result = ATHierarchicalClusteringHc::calculateHc(cloud, triplets, ATHierarchicalClusteringHc::singleLinkClusterMetric, [&] (ATHierarchicalClusteringHc::triplet const &lhs, ATHierarchicalClusteringHc::triplet const &rhs, pcl::PointCloud<pcl::PointXYZI>::ConstPtr)
+    ATHierarchicalClusteringHc::cluster_history result = ATHierarchicalClusteringHc::CalculateHc(cloud, triplets, ATHierarchicalClusteringHc::singleLinkClusterMetric, [&] (ATHierarchicalClusteringHc::triplet const &lhs, ATHierarchicalClusteringHc::triplet const &rhs, pcl::PointCloud<pcl::PointXYZI>::ConstPtr)
     {       
         float const perpendicularDistanceA = (rhs.center - (lhs.center + lhs.direction.dot(rhs.center - lhs.center) * lhs.direction)).squaredNorm();
         float const perpendicularDistanceB = (lhs.center - (rhs.center + rhs.direction.dot(lhs.center - rhs.center) * rhs.direction)).squaredNorm();
@@ -116,10 +116,10 @@ ATHierarchicalClusteringCluster ATHierarchicalClusteringTask::useHc(pcl::PointCl
         return std::sqrt(std::max(perpendicularDistanceA, perpendicularDistanceB)) + scale * angle;
     });
 
-    ATHierarchicalClusteringHc::cluster_group const &clusterGroup = ATHierarchicalClusteringHc::getBestClusterGroup(result, this->_bestClusterDistanceDelta);
-    ATHierarchicalClusteringHc::cluster_group const &cleanedUpClusterGroup = ATHierarchicalClusteringHc::cleanupClusterGroup(clusterGroup, this->_cleanupMinTriplets);
+    ATHierarchicalClusteringHc::cluster_group const &clusterGroup = ATHierarchicalClusteringHc::GetBestClusterGroup(result, this->_bestClusterDistanceDelta);
+    ATHierarchicalClusteringHc::cluster_group const &cleanedUpClusterGroup = ATHierarchicalClusteringHc::CleanupClusterGroup(clusterGroup, this->_cleanupMinTriplets);
 
-    return ATHierarchicalClusteringHc::toCluster(triplets, cleanedUpClusterGroup, cloud->size());
+    return ATHierarchicalClusteringHc::ToCluster(triplets, cleanedUpClusterGroup, cloud->size());
 }
 
 
@@ -201,7 +201,7 @@ ATHierarchicalClusteringCluster ATHierarchicalClusteringTask::AnalyzePointArray(
     pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_xyzti(new pcl::PointCloud<pcl::PointXYZI>());
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_xyz(new pcl::PointCloud<pcl::PointXYZ>());
 
-    hitArrayToPointCloud(hitArray, cloud_xyzti);
+    HitArrayToPointCloud(hitArray, cloud_xyzti);
     copyPointCloud(*cloud_xyzti, *cloud_xyz);
 
     if (cloud_xyz->size() == 0)
@@ -209,17 +209,17 @@ ATHierarchicalClusteringCluster ATHierarchicalClusteringTask::AnalyzePointArray(
     else
     {
         // calculate cloud-scale
-        float const cloudScale = calculateCloudScale(cloud_xyz);
+        float const cloudScale = CalculateCloudScale(cloud_xyz);
         // std::cout << "XX cloudScale: " << cloudScale << std::endl;
 
         // smoothen cloud
         pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_xyzti_smooth(new pcl::PointCloud<pcl::PointXYZI>());
 
         //cloud_smooth = smoothenCloud(cloud_filtered, 12); // k nearest neighbour
-        cloud_xyzti_smooth = ATHierarchicalClusteringSmoothenCloud::smoothenCloud(cloud_xyzti, cloudScale * this->_smoothRadius); // radius
+        cloud_xyzti_smooth = ATHierarchicalClusteringSmoothenCloud::SmoothenCloud(cloud_xyzti, cloudScale * this->_smoothRadius); // radius
 
         // calculate cluster
-        std::vector<ATHierarchicalClusteringHc::triplet> triplets = ATHierarchicalClusteringHc::generateTriplets(cloud_xyzti_smooth, this->_genTripletsNnKandidates, this->_genTripletsNBest, this->_genTripletsMaxError);
+        std::vector<ATHierarchicalClusteringHc::triplet> triplets = ATHierarchicalClusteringHc::GenerateTriplets(cloud_xyzti_smooth, this->_genTripletsNnKandidates, this->_genTripletsNBest, this->_genTripletsMaxError);
         ATHierarchicalClusteringCluster cluster = this->useHc(cloud_xyzti_smooth, triplets, cloudScale * this->_cloudScaleModifier);
 
 #ifdef F17_VISUALIZE
@@ -231,7 +231,7 @@ ATHierarchicalClusteringCluster ATHierarchicalClusteringTask::AnalyzePointArray(
 
         // color-code
         pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_xyzrgb(new pcl::PointCloud<pcl::PointXYZRGB>());
-        colorByCluster(cloud_xyz, cluster, cloud_xyzrgb);
+        ColorByCluster(cloud_xyz, cluster, cloud_xyzrgb);
 
         // visualize
         viewer.addPointCloud(cloud_xyzrgb, "cloud");
