@@ -2,7 +2,6 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TClonesArray.h"
-#include "AtHit.hh"
 
 #include <iostream>
 #include <fstream>
@@ -10,11 +9,13 @@
 
 void root_to_pcl()
 {
-	TString dataDir = "../data/";
-	TString mcFileName = dataDir + "attpcsim_2.root";
+	TString dir = getenv("VMCWORKDIR");
+	TString dataDir = dir + "/data/";
+
+	TString inputFile = dataDir + "noisy_output.root";
 	TString outputFileName = dataDir + "output";
 
-	std::cout << "Analysis of simulation file " << mcFileName << "..." << std::endl;
+	std::cout << "Converting " << inputFile << "..." << std::endl;
 
 	TFile file(inputFile);
 	TTree *tree = nullptr;
@@ -33,7 +34,7 @@ void root_to_pcl()
 		std::vector<ATHit> const *hitArray = event->GetHitArray();
 		std::cout << "HitArray Size: " << hitArray->size() << std::endl;
 
-		Int_t const hitCount = hitArray->GetEntries();
+		Int_t const hitCount = hitArray->size();
 		
 		std::ostringstream oss;
 		oss << outputFileName << "." << i << ".pcl";
@@ -51,14 +52,14 @@ void root_to_pcl()
 
 		for (Int_t j = 0; j < hitCount; ++j) {
 			std::cout << "# Reading point " << (j + 1) << " of " << hitCount << std::endl;
-			AtHit const *hit = (*hitArray)[j];
-			TVector3 position = hit->GetPosition();
+			ATHit const &hit = (*hitArray)[j];
+			TVector3 position = hit.GetPosition();
 
-			outputFile << position->X() << " "
-				<< position->Y() << " "
-				<< position->Z() << " "
-				<< hit->GetTimeStamp() << " "
-				<< hit->GetCharge() << std::endl;
+			outputFile << position.X() << " "
+				<< position.Y() << " "
+				<< position.Z() << " "
+				<< hit.GetTimeStamp() << " "
+				<< hit.GetCharge() << std::endl;
 		}
 	}
 }
