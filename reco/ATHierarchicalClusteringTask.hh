@@ -7,6 +7,7 @@
 
 #include "ATHierarchicalClusteringHc.hh"
 #include "ATHit.hh"
+#include "ATTrajectory.hh"
 
 class ATHierarchicalClusteringTask : public FairTask
 {
@@ -20,7 +21,7 @@ public:
 	virtual void SetParContainers();
 	virtual void Finish();
 
-	ATHierarchicalClusteringCluster AnalyzePointArray(std::vector<ATHit> const &hitArray) const;
+	std::vector<ATTrajectory> AnalyzePointArray(std::vector<ATHit> const &hitArray) const;
 
 
 	// Getters and Setters
@@ -63,7 +64,7 @@ private:
 	ATHierarchicalClusteringTask(const ATHierarchicalClusteringTask&);
 	ATHierarchicalClusteringTask operator=(const ATHierarchicalClusteringTask&);
 
-	ATHierarchicalClusteringCluster useHc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::vector<ATHierarchicalClusteringHc::triplet> triplets, float scale) const;
+	std::vector<ATTrajectory> useHc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::vector<ATHit> const &hitArray, std::vector<ATHierarchicalClusteringHc::triplet> triplets, float scale) const;
 
 	ClassDef(ATHierarchicalClusteringTask, 1);
 };

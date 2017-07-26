@@ -1,7 +1,9 @@
 #include "ATHierarchicalClusteringHc.hh"
 
 #include <algorithm>
+#include <pcl/common/centroid.h>
 #include <pcl/kdtree/kdtree_flann.h>
+#include <pcl/common/pca.h>
 
 namespace ATHierarchicalClusteringHc
 {
@@ -203,32 +205,127 @@ namespace ATHierarchicalClusteringHc
         return cleanedGroup;
     }
 
-    ATHierarchicalClusteringCluster ToCluster(std::vector<triplet> const &triplets, cluster_group const &clusterGroup, size_t pointIndexCount)
+
+    // TO TRAJECTORIES
+
+    static std::vector<size_t> ExtractPointIndices(std::vector<triplet> const &clusterTriplets)
     {
-        std::vector<std::vector<size_t>> result;
+        std::vector<size_t> pointIndices;
+
+        // add point indices
+        for (triplet const &currentTriplet : clusterTriplets)
+        {
+            pointIndices.push_back(currentTriplet.pointIndexA);
+            pointIndices.push_back(currentTriplet.pointIndexB);
+            pointIndices.push_back(currentTriplet.pointIndexC);
+        }
+
+        // sort point-indices and remove duplicates
+        std::sort(pointIndices.begin(), pointIndices.end());
+        auto newEnd = std::unique(pointIndices.begin(), pointIndices.end());
+        pointIndices.resize(std::distance(pointIndices.begin(), newEnd));
+
+        return pointIndices;
+    }
+
+    template <class T>
+    static T ExtactAtIndices(T const &src, std::vector<size_t> const &indices)
+    {
+        T result;
+        result.reserve(indices.size());
+
+        for (size_t index : indices)
+        {
+            result.push_back(src[index]);
+        }
+
+        return result;
+    }
+
+    // expects triplets to be in the correct order
+    static float CalculateAverageCurvature(std::vector<triplet> const &triplets)
+    {
+        float result = 0.0f;
+
+        if (triplets.size() < 2)
+            throw std::runtime_error("There need to be at least 2 triplets!");
+
+        for (size_t i = 0; i < (triplets.size() - 1); ++i)
+        {
+            float const dotProduct = triplets[i].direction.dot(triplets[i + 1].direction);
+            float absDot = std::abs(dotProduct);
+
+            // fix float-rounding errors
+            if (absDot > 1.0f)
+                absDot = 1.0f;
+
+            result += std::acos(absDot);
+        }
+
+        result /= triplets.size() - 1;
+
+        return result;
+    }
+
+    template <class T>
+    static Eigen::Vector3f CalculateCentroidPoint(pcl::PointCloud<T> const &cloud)
+    {
+        pcl::CentroidPoint<T> centroidPoint;
+
+        for (T const &point : cloud)
+        {
+            centroidPoint.add(point);
+        }
+
+        T point;
+        centroidPoint.get(point);
+
+        return Eigen::Vector3f(
+            point.x,
+            point.y,
+            point.z
+        );
+    }
+
+    static Eigen::Vector3f CalculateMainDirection(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud)
+    {
+        pcl::PCA<pcl::PointXYZI> pca;
+        pca.setInputCloud(cloud);
+        Eigen::Matrix3f eigenVectors = pca.getEigenVectors();
+
+        return eigenVectors.array().col(0);
+    }
+
+    std::vector<ATTrajectory> ToTrajectories(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, std::vector<ATHit> const &hits, std::vector<triplet> const &triplets, cluster_group const &clusterGroup)
+    {
+        std::vector<ATTrajectory> result;
 
         for (auto const &currentCluster : clusterGroup.clusters)
         {
-            std::vector<size_t> pointIndices;
+            // TODO: check - triplets and points are sorted according to their z-position - correct order?
+            std::vector<triplet> clusterTriplets = ExtactAtIndices(triplets, currentCluster);
+            std::sort(clusterTriplets.begin(), clusterTriplets.end(), [](triplet const &lhs, triplet const &rhs) {
+                return lhs.center(2) < rhs.center(2);
+            });
 
-            // add point indices
-            for (auto const &currentTripletIndex : currentCluster)
-            {
-                triplet const &currentTriplet = triplets[currentTripletIndex];
+            std::vector<size_t> pointIndices = ExtractPointIndices(clusterTriplets);
 
-                pointIndices.push_back(currentTriplet.pointIndexA);
-                pointIndices.push_back(currentTriplet.pointIndexB);
-                pointIndices.push_back(currentTriplet.pointIndexC);
-            }
+            std::vector<ATHit> clusterHits = ExtactAtIndices(hits, pointIndices);
+            std::sort(clusterHits.begin(), clusterHits.end(), [](ATHit const &lhs, ATHit const &rhs) {
+                return lhs.GetPosition().Z() < rhs.GetPosition().Z();
+            });
 
-            // sort point-indices and remove duplikates
-            std::sort(pointIndices.begin(), pointIndices.end());
-            auto newEnd = std::unique(pointIndices.begin(), pointIndices.end());
-            pointIndices.resize(std::distance(pointIndices.begin(), newEnd));
+            pcl::PointCloud<pcl::PointXYZI>::Ptr clusterCloud(new pcl::PointCloud<pcl::PointXYZI>());
+            *clusterCloud = ExtactAtIndices(*cloud, pointIndices);
 
-            result.push_back(pointIndices);
+            float approximateTrajectoryLength = 0.0f; // TODO
+            float averageCurvature = CalculateAverageCurvature(clusterTriplets);
+            Eigen::Vector3f centroidPoint = CalculateCentroidPoint(*clusterCloud);
+            Eigen::Vector3f mainDirection = CalculateMainDirection(clusterCloud);
+
+            result.push_back(ATTrajectory(clusterHits, approximateTrajectoryLength, averageCurvature, centroidPoint, mainDirection));
         }
 
-        return ATHierarchicalClusteringCluster(result, pointIndexCount);
+        return result;
     }
 }

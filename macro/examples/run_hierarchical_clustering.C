@@ -50,28 +50,29 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 9999)
 		std::cout << "HitArray Size: " << hitArray->size() << std::endl;
 
 		// analyze
-		ATHierarchicalClusteringCluster hierarchicalClusteringCluster = hierarchicalClusteringTask.AnalyzePointArray(*hitArray);
-		std::vector<std::vector<size_t>> clusters = hierarchicalClusteringCluster.GetClusters();
+		std::vector<ATTrajectory> trajectories = hierarchicalClusteringTask.AnalyzePointArray(*hitArray);
 
 		// work with results
-		ostringstream oss;
-		oss << outputFile << "." << i << ".cluster";
-		hierarchicalClusteringCluster.Save(oss.str());
-		std::cout << "Generated file: " << oss.str() << std::endl;
-
-		/*
-		for (std::vector<size_t> const &cluster : clusters)
+		for (ATTrajectory const &trajectory : trajectories)
 		{
-			std::cout << "# CLUSTER" << std::endl;
+			std::cout << "# TRAJECTORY" << std::endl;
 
-			for (size_t hitIndex : cluster)
-			{
-				ATHit const &hit = (*hitArray)[hitIndex];
+			// std::cout << "    hits:" << std::endl;
+			// for (ATHit const &hit : trajectory.GetHits())
+			// {
+			// 	std::cout << "        hit: " << hit.GetPosition().X() << " " << hit.GetPosition().Y() << " " << hit.GetPosition().Z() << std::endl;
+			// }
 
-				std::cout << "Point (" << hit.GetPosition().X() << " " << hit.GetPosition().Y() << " " << hit.GetPosition().Z() << ")" << std::endl;
-			}
+			float approximateTrajectoryLength = trajectory.GetApproximateTrajectoryLength();
+			float averageCurvature = trajectory.GetAverageCurvature();
+			Eigen::Vector3f centroidPoint = trajectory.GetCentroidPoint();
+			Eigen::Vector3f mainDirection = trajectory.GetMainDirection();
+
+			std::cout << "    approximateTrajectoryLength: " << approximateTrajectoryLength << std::endl;
+			std::cout << "    averageCurvature: " << averageCurvature << std::endl;
+			std::cout << "    centroidPoint: " << centroidPoint(0) << " " << centroidPoint(1) << " " << centroidPoint(2) << std::endl;
+			std::cout << "    mainDirection: " << mainDirection(0) << " " << mainDirection(1) << " " << mainDirection(2) << std::endl;
 		}
-		*/
 	}
 
 	// Finish

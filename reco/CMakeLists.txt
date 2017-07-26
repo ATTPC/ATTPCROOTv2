@@ -81,9 +81,9 @@ ATPulseAnalyzer/ATPSASimple2.cc
 ATPulseAnalyzer/ATPSAFilter.cc
 ATPulseAnalyzer/ATPSAProto.cc
 
-HierarchicalClustering/ATHierarchicalClusteringCluster.cc
 HierarchicalClustering/ATHierarchicalClusteringHc.cc
 HierarchicalClustering/ATHierarchicalClusteringSmoothenCloud.cc
+HierarchicalClustering/ATTrajectory.cc
 
 HoughTransformation/ATHoughSpace.cc
 HoughTransformation/ATHoughSpaceLine.cc
