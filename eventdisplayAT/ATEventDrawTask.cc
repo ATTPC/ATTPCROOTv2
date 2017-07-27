@@ -791,11 +791,11 @@ ATEventDrawTask::DrawHSpace()
    if(fEventManager->GetDrawHoughSpace()){
          if(fIsCircularHough){
                   fHoughSpace = fHoughSpaceCircle_buff->GetHoughSpace("XY");
-                  std::vector<Double_t>* Radius = fHoughSpaceCircle_buff->GetRadiusDist();
-                  std::vector<Int_t>* TimeStamp = fHoughSpaceCircle_buff->GetTimeStamp();
-                  std::vector<Double_t>* Theta = fHoughSpaceCircle_buff->GetTheta();
-                  std::vector<Double_t>* Dl = fHoughSpaceCircle_buff->GetDl();
-                  std::vector<Double_t>* Phi = fHoughSpaceCircle_buff->GetPhi();
+                  std::vector<Double_t> const *Radius = fHoughSpaceCircle_buff->GetRadiusDist();
+                  std::vector<Int_t> const *TimeStamp = fHoughSpaceCircle_buff->GetTimeStamp();
+                  std::vector<Double_t> const *Theta = fHoughSpaceCircle_buff->GetTheta();
+                  std::vector<Double_t> const *Dl = fHoughSpaceCircle_buff->GetDl();
+                  std::vector<Double_t> const *Phi = fHoughSpaceCircle_buff->GetPhi();
                   fIniHit = fHoughSpaceCircle_buff->GetIniHit();
                   fIniHitRansac = fHoughSpaceCircle_buff->GetIniHitRansac();
 
