@@ -68,6 +68,8 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 9999)
 			Eigen::Vector3f centroidPoint = trajectory.GetCentroidPoint();
 			Eigen::Vector3f mainDirection = trajectory.GetMainDirection();
 
+			std::cout << "    startHitIndex: " << trajectory.GetStartHitIndex() << std::endl;
+			std::cout << "    endHitIndex: " << trajectory.GetEndHitIndex() << std::endl;
 			std::cout << "    approximateTrajectoryLength: " << approximateTrajectoryLength << std::endl;
 			std::cout << "    averageCurvature: " << averageCurvature << std::endl;
 			std::cout << "    centroidPoint: " << centroidPoint(0) << " " << centroidPoint(1) << " " << centroidPoint(2) << std::endl;

@@ -1,5 +1,7 @@
 #include "ATHierarchicalClusteringHc.hh"
 
+#include "ATHierarchicalClusteringGraph.hpp"
+
 #include <algorithm>
 #include <pcl/common/centroid.h>
 #include <pcl/kdtree/kdtree_flann.h>
@@ -302,28 +304,46 @@ namespace ATHierarchicalClusteringHc
 
         for (auto const &currentCluster : clusterGroup.clusters)
         {
-            // TODO: check - triplets and points are sorted according to their z-position - correct order?
+            // TODO: check - triplets are sorted according to their z-position for use in CalculateAverageCurvature - correct?
             std::vector<triplet> clusterTriplets = ExtactAtIndices(triplets, currentCluster);
             std::sort(clusterTriplets.begin(), clusterTriplets.end(), [](triplet const &lhs, triplet const &rhs) {
                 return lhs.center(2) < rhs.center(2);
             });
 
-            std::vector<size_t> pointIndices = ExtractPointIndices(clusterTriplets);
-
-            std::vector<ATHit> clusterHits = ExtactAtIndices(hits, pointIndices);
-            std::sort(clusterHits.begin(), clusterHits.end(), [](ATHit const &lhs, ATHit const &rhs) {
-                return lhs.GetPosition().Z() < rhs.GetPosition().Z();
-            });
-
-            pcl::PointCloud<pcl::PointXYZI>::Ptr clusterCloud(new pcl::PointCloud<pcl::PointXYZI>());
+            std::vector<size_t> const pointIndices = ExtractPointIndices(clusterTriplets);
+            std::vector<ATHit> const clusterHits = ExtactAtIndices(hits, pointIndices);
+            pcl::PointCloud<pcl::PointXYZI>::Ptr const clusterCloud(new pcl::PointCloud<pcl::PointXYZI>());
             *clusterCloud = ExtactAtIndices(*cloud, pointIndices);
 
-            float approximateTrajectoryLength = 0.0f; // TODO
-            float averageCurvature = CalculateAverageCurvature(clusterTriplets);
-            Eigen::Vector3f centroidPoint = CalculateCentroidPoint(*clusterCloud);
-            Eigen::Vector3f mainDirection = CalculateMainDirection(clusterCloud);
+            std::vector<ATHierarchicalClusteringGraph::state> const mstHistory = ATHierarchicalClusteringGraph::CalculateMinimumSpanningTree(*clusterCloud);
+            std::vector<ATHierarchicalClusteringGraph::edge> const edges = mstHistory.back().edges;
+            Eigen::MatrixXf allPairsShortestPath = ATHierarchicalClusteringGraph::CalculateAllPairsShortestPath(edges, clusterCloud->size());
 
-            result.push_back(ATTrajectory(clusterHits, approximateTrajectoryLength, averageCurvature, centroidPoint, mainDirection));
+            size_t startHitIndex = 0;
+            size_t endHitIndex = 1;
+            float approximateTrajectoryLength = 0.0f;
+
+            // search upper half of matrix for the biggest, non-infinite value
+            for (size_t i = 0; i < (allPairsShortestPath.cols() - 1); ++i)
+            {
+                for (size_t j = (i + 1); j < allPairsShortestPath.rows(); ++j)
+                {
+                    float const &value = allPairsShortestPath(i, j);
+
+                    if (value > approximateTrajectoryLength && value != std::numeric_limits<float>::infinity())
+                    {
+                        startHitIndex = i;
+                        endHitIndex = j;
+                        approximateTrajectoryLength = value;
+                    }
+                }
+            }
+
+            float const averageCurvature = CalculateAverageCurvature(clusterTriplets);
+            Eigen::Vector3f const centroidPoint = CalculateCentroidPoint(*clusterCloud);
+            Eigen::Vector3f const mainDirection = CalculateMainDirection(clusterCloud);
+
+            result.push_back(ATTrajectory(clusterHits, startHitIndex, endHitIndex, approximateTrajectoryLength, averageCurvature, centroidPoint, mainDirection));
         }
 
         return result;

@@ -213,7 +213,7 @@ std::vector<ATTrajectory> ATHierarchicalClusteringTask::AnalyzePointArray(std::v
 
         // calculate cluster
         std::vector<ATHierarchicalClusteringHc::triplet> triplets = ATHierarchicalClusteringHc::GenerateTriplets(cloud_xyzti_smooth, this->_genTripletsNnKandidates, this->_genTripletsNBest, this->_genTripletsMaxError);
-        std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti_smooth, hitArray, triplets, cloudScale * this->_cloudScaleModifier);
+        std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti, hitArray, triplets, cloudScale * this->_cloudScaleModifier);
 
 #ifdef F17_VISUALIZE
         pcl::visualization::PCLVisualizer viewer("PCL Viewer");
@@ -236,7 +236,7 @@ std::vector<ATTrajectory> ATHierarchicalClusteringTask::AnalyzePointArray(std::v
             startA.z = trajectory.GetCentroidPoint()(2);
 
             pcl::PointXYZ endA;
-            Eigen::Vector3f endEigA = trajectory.GetCentroidPoint() + 1000.0f * trajectory.GetMainDirection();
+            Eigen::Vector3f endEigA = trajectory.GetCentroidPoint() + (trajectory.GetApproximateTrajectoryLength() / 2.0f) * trajectory.GetMainDirection();
             endA.x = endEigA(0);
             endA.y = endEigA(1);
             endA.z = endEigA(2);
@@ -251,7 +251,7 @@ std::vector<ATTrajectory> ATHierarchicalClusteringTask::AnalyzePointArray(std::v
             startB.z = trajectory.GetCentroidPoint()(2);
 
             pcl::PointXYZ endB;
-            Eigen::Vector3f endEigB = trajectory.GetCentroidPoint() - 1000.0f * trajectory.GetMainDirection();
+            Eigen::Vector3f endEigB = trajectory.GetCentroidPoint() - (trajectory.GetApproximateTrajectoryLength() / 2.0f) * trajectory.GetMainDirection();
             endB.x = endEigB(0);
             endB.y = endEigB(1);
             endB.z = endEigB(2);
