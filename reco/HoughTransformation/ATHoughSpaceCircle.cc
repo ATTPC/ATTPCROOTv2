@@ -435,7 +435,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent *event, TH2Poly *hPadPlane)
     }
 
     delete min;
-    delete parameter;
+    delete[] parameter;
 }
 
 void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYplane, Bool_t XZplane){
