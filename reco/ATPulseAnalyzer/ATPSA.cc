@@ -46,6 +46,10 @@ ATPSA::ATPSA()
   fIsBaseCorr = kFALSE;
   fIsTimeCorr = kFALSE;
 
+  fIsGainCalibrated   = kFALSE;
+  fIsJitterCalibrated = kFALSE;
+  fCalibration        = new ATCalibration();
+
   fBField = fPar->GetBField();
   fEField = fPar->GetEField();
   fTiltAng = fPar->GetTiltAngle();
@@ -195,5 +199,7 @@ TVector3 ATPSA::RotateDetector(Double_t x,Double_t y,Double_t z,Int_t tb)
 
 }
 
+void ATPSA::SetGainCalibration(TString gainFile)        { fCalibration -> SetGainFile(gainFile);}
+void ATPSA::SetJitterCalibration(TString jitterFile)    { fCalibration -> SetJitterFile(jitterFile);}
 void ATPSA::SetMeanK(Int_t value)                       { fMeanK = value;}
 void ATPSA::SetStddevMulThresh(Double_t value)          { fStdDev = value;}
