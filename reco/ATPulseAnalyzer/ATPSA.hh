@@ -6,6 +6,7 @@
 #include "ATEvent.hh"
 #include "ATHit.hh"
 #include "ATDigiPar.hh"
+#include "ATCalibration.hh"
 
 // FairRoot classes
 #include "FairRootManager.h"
@@ -37,6 +38,8 @@ class ATPSA
 
     void SetMeanK(Int_t value); //Number of neighbors
     void SetStddevMulThresh(Double_t value);
+    void SetGainCalibration(TString gainFile);
+    void SetJitterCalibration(TString jitterFile);
 
     virtual void Analyze(ATRawEvent *rawEvent, ATEvent *event) = 0;
 
@@ -50,6 +53,10 @@ class ATPSA
     Bool_t fIsBaseCorr;
     Bool_t fIsTimeCorr;
 
+    Bool_t fIsGainCalibrated;
+    Bool_t fIsJitterCalibrated;
+
+    ATCalibration *fCalibration;
 
     Int_t fPadPlaneX;         ///< pad plane size x in mm
     Int_t fPadSizeX;          ///< pad size x in mm

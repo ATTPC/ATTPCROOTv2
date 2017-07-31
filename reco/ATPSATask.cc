@@ -60,6 +60,8 @@ void ATPSATask::SetTimeCorrection(Bool_t value)             { fIsTimeCorr = valu
 
 void ATPSATask::SetMeanK(Int_t value)                       { fMeanK = value;}
 void ATPSATask::SetStddevMulThresh(Double_t value)          { fStdDev = value;}
+void ATPSATask::SetGainCalibration(TString gainFile)        { fGainFile = gainFile;}
+void ATPSATask::SetJitterCalibration(TString jitterFile)    { fJitterFile = jitterFile;}
 
 
 
@@ -101,6 +103,8 @@ ATPSATask::Init()
   fPSA -> SetThreshold((Int_t)fThreshold);
   fPSA -> SetBaseCorrection(fIsBaseCorr);
   fPSA -> SetTimeCorrection(fIsTimeCorr);
+  fPSA -> SetGainCalibration(fGainFile);
+  fPSA -> SetJitterCalibration(fJitterFile);
 
    if(fIsBGPK){
 	 fLogger -> Info(MESSAGE_ORIGIN, "Suppression of background in Peak Finder Enabled");
