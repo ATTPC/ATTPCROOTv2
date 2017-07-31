@@ -1,5 +1,6 @@
 #include "ATHierarchicalClusteringHc.hh"
 
+#include "ATCubicSplineFit.hpp"
 #include "ATHierarchicalClusteringGraph.hpp"
 
 #include <algorithm>
@@ -320,7 +321,7 @@ namespace ATHierarchicalClusteringHc
             Eigen::MatrixXf allPairsShortestPath = ATHierarchicalClusteringGraph::CalculateAllPairsShortestPath(edges, clusterCloud->size());
 
             size_t startHitIndex = 0;
-            size_t endHitIndex = 1;
+            size_t endHitIndex = 0;
             float approximateTrajectoryLength = 0.0f;
 
             // search upper half of matrix for the biggest, non-infinite value
@@ -338,6 +339,9 @@ namespace ATHierarchicalClusteringHc
                     }
                 }
             }
+
+            ATCubicSplineFit<pcl::PointXYZI> const cubicSplineFit(*clusterCloud);
+            std::cout << cubicSplineFit.GetPoint(0.0f) << std::endl;
 
             float const averageCurvature = CalculateAverageCurvature(clusterTriplets);
             Eigen::Vector3f const centroidPoint = CalculateCentroidPoint(*clusterCloud);
