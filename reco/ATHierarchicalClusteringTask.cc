@@ -11,6 +11,7 @@
 #include <pcl/visualization/cloud_viewer.h>
 #endif
 
+#include "ATCubicSplineFit.hpp"
 #include "ATHierarchicalClusteringSmoothenCloud.hh"
 
 #include "AtTpcPoint.h"
@@ -72,9 +73,34 @@ static void ColorByTrajectories(std::vector<ATTrajectory> const &trajectories, p
     size_t trajectoryIndex = 0;
     for (ATTrajectory const &trajectory : trajectories)
     {
-        float const r = (float)((trajectoryIndex * 23) % 19) / 18.0f;
-        float const g = (float)((trajectoryIndex * 23) % 7) / 6.0f;
-        float const b = (float)((trajectoryIndex * 23) % 3) / 2.0f;
+        float const r = static_cast<float>((trajectoryIndex * 23) % 19) / 18.0f;
+        float const g = static_cast<float>((trajectoryIndex * 23) % 7) / 6.0f;
+        float const b = static_cast<float>((trajectoryIndex * 23) % 3) / 2.0f;
+
+        if (trajectory.GetHits().size() > 6)
+        {
+            pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>());
+            HitArrayToPointCloud(trajectory.GetHits(), cloud);
+            ATCubicSplineFit<pcl::PointXYZI> const cubicSplineFit(*cloud);
+
+            // alternative you can pass a positionFunction which describes the position of a hit.
+            // if you were to return the Z-Coordinate as a position, your loop could be changed to this:
+            // for (float i = trajectory.GetStartHit().GetPosition().Z() - 1.0f; i <= trajectory.GetEndHit().GetPosition().Z() + 1.0f; i += 0.1f)
+            for (float i = 0.0f; i <= static_cast<float>(trajectory.GetHits().size() - 1); i += 0.1f)
+            {
+                Eigen::Vector3f position = cubicSplineFit.GetPoint(i);
+                pcl::PointXYZRGB point;
+
+                point.x = position(0);
+                point.y = position(1);
+                point.z = position(2);
+                point.r = static_cast<uint8_t>((r + 1.0f) / 2.0f * 255.0f);
+                point.g = static_cast<uint8_t>((g + 1.0f) / 2.0f * 255.0f);
+                point.b = static_cast<uint8_t>((b + 1.0f) / 2.0f * 255.0f);
+
+                cloud_rgb->push_back(point);
+            }
+        }
 
         for (ATHit const &hit : trajectory.GetHits())
         {
@@ -84,9 +110,9 @@ static void ColorByTrajectories(std::vector<ATTrajectory> const &trajectories, p
             point.x = position.X();
             point.y = position.Y();
             point.z = position.Z();
-            point.r = (uint8_t)(r * 255);
-            point.g = (uint8_t)(g * 255);
-            point.b = (uint8_t)(b * 255);
+            point.r = static_cast<uint8_t>(r * 255.0f);
+            point.g = static_cast<uint8_t>(g * 255.0f);
+            point.b = static_cast<uint8_t>(b * 255.0f);
 
             cloud_rgb->push_back(point);
         }
@@ -221,6 +247,7 @@ std::vector<ATTrajectory> ATHierarchicalClusteringTask::AnalyzePointArray(std::v
         viewer.setSize(800, 600);
         viewer.setBackgroundColor(1.0, 1.0, 1.0);
         viewer.setCameraPosition(0.0, 0.0, 2000.0, 0.0, 1.0, 0.0);
+        viewer.addCoordinateSystem(500.0f, Eigen::Affine3f());
 
         // color-code
         pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_xyzrgb(new pcl::PointCloud<pcl::PointXYZRGB>());

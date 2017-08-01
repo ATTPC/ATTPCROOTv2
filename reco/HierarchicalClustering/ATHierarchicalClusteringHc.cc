@@ -340,8 +340,8 @@ namespace ATHierarchicalClusteringHc
                 }
             }
 
-            ATCubicSplineFit<pcl::PointXYZI> const cubicSplineFit(*clusterCloud);
-            std::cout << cubicSplineFit.GetPoint(0.0f) << std::endl;
+            // ATCubicSplineFit<pcl::PointXYZI> const cubicSplineFit(*clusterCloud);
+            // std::cout << cubicSplineFit.GetPoint(-1.1f) << std::endl;
 
             float const averageCurvature = CalculateAverageCurvature(clusterTriplets);
             Eigen::Vector3f const centroidPoint = CalculateCentroidPoint(*clusterCloud);

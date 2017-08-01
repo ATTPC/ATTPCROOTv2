@@ -1,6 +1,11 @@
 #ifndef ATCUBICSPLINEFIT_H
 #define ATCUBICSPLINEFIT_H
 
+// implementation of the Catmull-Rom-Spline
+// (see: https://en.wikipedia.org/wiki/Cubic_Hermite_spline#Catmull.E2.80.93Rom_spline)
+// though I used the method described on the german page ;)
+// (see: https://de.wikipedia.org/wiki/Kubisch_Hermitescher_Spline#Catmull-Rom-Spline)
+
 #include <vector>
 #include <pcl/io/io.h>
 #include <Eigen/Core>
@@ -42,54 +47,65 @@ public:
     static inline float defaultPositionFunction(std::vector<Eigen::Vector3f> const &controlPoints, size_t index)
     {
         return static_cast<float>(index);
-        // return controlPoints[index](2);
     }
 
     static Eigen::Matrix4f const hermitricMatix;
 
-    ATCubicSplineFit(std::vector<Eigen::Vector3f> const &controlPoints, float tangentScale = 0.5f, PositionFunction positionFunction = defaultPositionFunction)
+    ATCubicSplineFit(std::vector<Eigen::Vector3f> const &controlPoints, float tangentScale = 0.5f, size_t jump = 1, PositionFunction positionFunction = defaultPositionFunction)
         : _controlPoints(controlPoints), _positionFunction(positionFunction)
     {
-        float currentPosition = 0.0f;
-
-        for (size_t k = 0; k < (controlPoints.size() - 1); ++k)
+        for (size_t k = 0; k < (controlPoints.size() - jump); k += jump)
         {
             SplineSegment splineSegment;
             splineSegment.p0Index = k;
-            splineSegment.p1Index = k + 1;
-            splineSegment.p0Pos = currentPosition;
-            float const distance = positionFunction(controlPoints, k + 1) - positionFunction(controlPoints, k);
-            splineSegment.p1Pos = currentPosition + distance;
-            splineSegment.m0 = this->CalculateTangent(k, tangentScale);
-            splineSegment.m1 = this->CalculateTangent(k + 1, tangentScale);
+            splineSegment.p1Index = k + jump;
+            splineSegment.p0Pos = positionFunction(controlPoints, splineSegment.p0Index);
+            splineSegment.p1Pos = positionFunction(controlPoints, splineSegment.p1Index);
+            splineSegment.m0 = this->CalculateTangent(splineSegment.p0Index, jump, tangentScale);
+            splineSegment.m1 = this->CalculateTangent(splineSegment.p1Index, jump, tangentScale);
 
             this->_spline.push_back(splineSegment);
-            currentPosition += distance;
         }
     }
 
-    ATCubicSplineFit(pcl::PointCloud<T> const &cloud, float tangentScale = 0.5f, PositionFunction positionFunction = defaultPositionFunction)
-        : ATCubicSplineFit(Cloud2Vectors(cloud), tangentScale, positionFunction)
+    ATCubicSplineFit(pcl::PointCloud<T> const &cloud, float tangentScale = 0.5f, size_t jump = 1, PositionFunction positionFunction = defaultPositionFunction)
+        : ATCubicSplineFit(Cloud2Vectors(cloud), tangentScale, jump, positionFunction)
     {
         // NOOP
     }
 
     Eigen::Vector3f GetPoint(float position) const
     {
+        Spline const &spline = this->GetSpline();
         std::vector<Eigen::Vector3f> const &controlPoints = this->GetControlPoints();
 
-        // TODO: select proper segment depending on position
-        size_t const k = static_cast<size_t>(position);
+        auto splineSegmentIt = std::lower_bound(spline.cbegin(), spline.cend(), position, [](SplineSegment const &lhs, float rhs)
+        {
+            return lhs.p1Pos < rhs;
+        });
 
-        SplineSegment splineSegment;
+        if (splineSegmentIt == spline.cend())
+            splineSegmentIt = spline.cend() - 1;
 
-        splineSegment.p0Index = 0;
-        splineSegment.p1Index = 1;
-        splineSegment.m0 = Eigen::Vector3f(7.0f, 8.0f, 9.0f);
-        splineSegment.m1 = Eigen::Vector3f(10.0f, 11.0f, 12.0f);
-        // /end TODO
+        SplineSegment const &splineSegment = *splineSegmentIt;
 
-        float const scaledPosition = (position - this->_positionFunction(controlPoints, k)) / (this->_positionFunction(controlPoints, k + 1) - this->_positionFunction(controlPoints, k));
+        /*
+        std::cout << "P: " << position
+            << " segment: "
+            << splineSegment.p0Pos << " "
+            << splineSegment.p1Pos << " "
+            << splineSegment.p0Index << " "
+            << "(" << controlPoints[splineSegment.p0Index](0) << " " << controlPoints[splineSegment.p0Index](1) << " " << controlPoints[splineSegment.p0Index](2) << ") "
+            << splineSegment.p1Index << " "
+            << "(" << controlPoints[splineSegment.p1Index](0) << " " << controlPoints[splineSegment.p1Index](1) << " " << controlPoints[splineSegment.p1Index](2) << ") "
+            << "(" << splineSegment.m0(0) << " " << splineSegment.m0(1) << " " << splineSegment.m0(2) << ") "
+            << "(" << splineSegment.m1(0) << " " << splineSegment.m1(1) << " " << splineSegment.m1(2) << ")"
+            << std::endl;
+        */
+
+        float const scaledPosition =
+            (position - this->_positionFunction(controlPoints, splineSegment.p0Index)) /
+            (this->_positionFunction(controlPoints, splineSegment.p1Index) - this->_positionFunction(controlPoints, splineSegment.p0Index));
 
         Eigen::RowVector4f const tVector(
             scaledPosition * scaledPosition * scaledPosition,
@@ -103,11 +119,6 @@ public:
         segmentMatrix.row(1) = controlPoints[splineSegment.p1Index];
         segmentMatrix.row(2) = splineSegment.m0;
         segmentMatrix.row(3) = splineSegment.m1;
-
-        std::cout
-            << "tVector: " << tVector << std::endl
-            << "segmentMatrix: " << segmentMatrix << std::endl
-            << "hermitricMatix: " << hermitricMatix << std::endl;
 
         return tVector * ATCubicSplineFit::hermitricMatix * segmentMatrix;
     }
@@ -135,17 +146,17 @@ public:
 
 protected:
     Spline _spline;
-    std::vector<Eigen::Vector3f> const &_controlPoints;
+    std::vector<Eigen::Vector3f> const _controlPoints;
     PositionFunction const _positionFunction;
 
-    Eigen::Vector3f CalculateTangent(size_t pos, float scale) const
+    Eigen::Vector3f CalculateTangent(size_t pos, size_t jump, float scale) const
     {
         std::vector<Eigen::Vector3f> const &controlPoints = this->GetControlPoints();
 
-        size_t const leftIndex = std::max(pos - 1, (size_t)0);
-        size_t const rightIndex = std::min(pos + 1, controlPoints.size() - 1);
+        size_t const leftIndex = pos < jump ? 0 : pos - jump;
+        size_t const rightIndex = std::min((pos + jump), (controlPoints.size() - 1));
 
-        return scale * (controlPoints[leftIndex] - controlPoints[rightIndex]);
+        return scale * (controlPoints[rightIndex] - controlPoints[leftIndex]);
     }
 };
 
