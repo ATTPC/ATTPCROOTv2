@@ -23,17 +23,19 @@ public:
     };
 
     using Spline = std::vector<SplineSegment>;
-    using PositionFunction = std::function<float(std::vector<Eigen::Vector3f> const &, size_t)>;
+    using PositionFunction = std::function<float(Eigen::Vector3f const &, size_t)>;
 
-    static inline float defaultPositionFunction(std::vector<Eigen::Vector3f> const &controlPoints, size_t index)
+    static inline float defaultPositionFunction(Eigen::Vector3f const &point, size_t index)
     {
         return static_cast<float>(index);
     }
 
-    static Eigen::Matrix4f const hermitricMatix;
+    static Eigen::Matrix4f const hermitricMatrix;
 
-    ATCubicSplineFit(std::vector<Eigen::Vector3f> const &controlPoints, float tangentScale = 0.5f, size_t jump = 1, PositionFunction positionFunction = defaultPositionFunction);
+    ATCubicSplineFit(std::vector<Eigen::Vector3f> const &controlPoints, float tangentScale = 0.5f, float minControlPointDistance = 0.01f, size_t jump = 1, PositionFunction positionFunction = defaultPositionFunction);
 
+    float GetStartPosition() const;
+    float GetEndPosition() const;
     Eigen::Vector3f GetPoint(float position) const;
     Spline const &GetSpline() const;
     std::vector<Eigen::Vector3f> const &GetControlPoints() const;

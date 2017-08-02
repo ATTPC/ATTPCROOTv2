@@ -341,11 +341,25 @@ namespace ATHierarchicalClusteringHc
                 }
             }
 
-            ATCubicSplineFit const cubicSplineFit(PointCloud2Vectors(*clusterCloud), 0.5f, 1);
+            Eigen::Vector3f const centroidPoint = CalculateCentroidPoint(*clusterCloud);
+            Eigen::Vector3f mainDirection = CalculateMainDirection(clusterCloud);
+
+            // make sure mainDirection points from startHit to endHit
+            {
+                TVector3 const &startHitPos = clusterHits[startHitIndex].GetPosition();
+                TVector3 const &endHitPos = clusterHits[endHitIndex].GetPosition();
+
+                if (ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, Eigen::Vector3f(startHitPos.X(), startHitPos.Y(), startHitPos.Z())) >
+                    ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, Eigen::Vector3f(endHitPos.X(), endHitPos.Y(), endHitPos.Z())))
+                    mainDirection *= -1.0f;
+            }
+
+            ATCubicSplineFit const cubicSplineFit(PointCloud2Vectors(*clusterCloud), 0.5f, 50.0f, 1, [&](Eigen::Vector3f const &point, size_t index)
+            {
+                return ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, point);
+            });
 
             float const averageCurvature = CalculateAverageCurvature(cubicSplineFit);
-            Eigen::Vector3f const centroidPoint = CalculateCentroidPoint(*clusterCloud);
-            Eigen::Vector3f const mainDirection = CalculateMainDirection(clusterCloud);
 
             result.push_back(ATTrajectory(clusterHits, startHitIndex, endHitIndex, approximateTrajectoryLength, averageCurvature, centroidPoint, mainDirection, cubicSplineFit));
         }

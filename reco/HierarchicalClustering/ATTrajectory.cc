@@ -35,6 +35,14 @@ ATHit const &ATTrajectory::GetStartHit() const
     return this->GetHits()[this->GetStartHitIndex()];
 }
 
+Eigen::Vector3f ATTrajectory::GetStartHitVector() const
+{
+    ATHit const &hit = this->GetStartHit();
+    TVector3 const &position = hit.GetPosition();
+
+    return Eigen::Vector3f(position.X(), position.Y(), position.Z());
+}
+
 size_t const &ATTrajectory::GetEndHitIndex() const
 {
     return this->_endHitIndex;
@@ -43,6 +51,24 @@ size_t const &ATTrajectory::GetEndHitIndex() const
 ATHit const &ATTrajectory::GetEndHit() const
 {
     return this->GetHits()[this->GetEndHitIndex()];
+}
+
+Eigen::Vector3f ATTrajectory::GetEndHitVector() const
+{
+    ATHit const &hit = this->GetEndHit();
+    TVector3 const &position = hit.GetPosition();
+
+    return Eigen::Vector3f(position.X(), position.Y(), position.Z());
+}
+
+float ATTrajectory::GetPositionOnMainDirection(Eigen::Vector3f const &centroidPoint, Eigen::Vector3f const &mainDirection, Eigen::Vector3f const &point)
+{
+    return mainDirection.dot(point - centroidPoint);
+}
+
+float ATTrajectory::GetPositionOnMainDirection(Eigen::Vector3f const &point) const
+{
+    return ATTrajectory::GetPositionOnMainDirection(this->GetCentroidPoint(), this->GetMainDirection(), point);
 }
 
 float const &ATTrajectory::GetApproximateTrajectoryLength() const

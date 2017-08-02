@@ -78,12 +78,15 @@ static void ColorByTrajectories(std::vector<ATTrajectory> const &trajectories, p
 
         ATCubicSplineFit const &cubicSplineFit = trajectory.GetCubicSplineFit();
 
-        // alternative you can pass a positionFunction which describes the position of a hit.
-        // if you were to return the Z-Coordinate as a position, your loop could be changed to this:
-        // for (float i = trajectory.GetStartHit().GetPosition().Z() - 1.0f; i <= trajectory.GetEndHit().GetPosition().Z() + 1.0f; i += 0.1f)
-        for (float i = 0.0f; i <= static_cast<float>(trajectory.GetHits().size() - 1); i += 0.1f)
+        float const startPosition = cubicSplineFit.GetStartPosition();
+        float const endPosition = cubicSplineFit.GetEndPosition();
+        float const stepSize = (endPosition - startPosition) / 250.0f;
+
+        for (float i = startPosition; i <= endPosition; i += stepSize)
+        // for (float i = 0.0f; i <= static_cast<float>(trajectory.GetHits().size() - 1); i += 0.1f)
         {
             Eigen::Vector3f position = cubicSplineFit.GetPoint(i);
+            // std::cout << "P: (" << position(0) << " " << position(1) << " " << position(2) << ")" << std::endl;
             pcl::PointXYZRGB point;
 
             point.x = position(0);
