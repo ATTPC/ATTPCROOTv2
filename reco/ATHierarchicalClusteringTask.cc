@@ -11,7 +11,6 @@
 #include <pcl/visualization/cloud_viewer.h>
 #endif
 
-#include "ATCubicSplineFit.hpp"
 #include "ATHierarchicalClusteringSmoothenCloud.hh"
 
 #include "AtTpcPoint.h"
@@ -77,29 +76,24 @@ static void ColorByTrajectories(std::vector<ATTrajectory> const &trajectories, p
         float const g = static_cast<float>((trajectoryIndex * 23) % 7) / 6.0f;
         float const b = static_cast<float>((trajectoryIndex * 23) % 3) / 2.0f;
 
-        if (trajectory.GetHits().size() > 6)
+        ATCubicSplineFit const &cubicSplineFit = trajectory.GetCubicSplineFit();
+
+        // alternative you can pass a positionFunction which describes the position of a hit.
+        // if you were to return the Z-Coordinate as a position, your loop could be changed to this:
+        // for (float i = trajectory.GetStartHit().GetPosition().Z() - 1.0f; i <= trajectory.GetEndHit().GetPosition().Z() + 1.0f; i += 0.1f)
+        for (float i = 0.0f; i <= static_cast<float>(trajectory.GetHits().size() - 1); i += 0.1f)
         {
-            pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>());
-            HitArrayToPointCloud(trajectory.GetHits(), cloud);
-            ATCubicSplineFit<pcl::PointXYZI> const cubicSplineFit(*cloud);
+            Eigen::Vector3f position = cubicSplineFit.GetPoint(i);
+            pcl::PointXYZRGB point;
 
-            // alternative you can pass a positionFunction which describes the position of a hit.
-            // if you were to return the Z-Coordinate as a position, your loop could be changed to this:
-            // for (float i = trajectory.GetStartHit().GetPosition().Z() - 1.0f; i <= trajectory.GetEndHit().GetPosition().Z() + 1.0f; i += 0.1f)
-            for (float i = 0.0f; i <= static_cast<float>(trajectory.GetHits().size() - 1); i += 0.1f)
-            {
-                Eigen::Vector3f position = cubicSplineFit.GetPoint(i);
-                pcl::PointXYZRGB point;
+            point.x = position(0);
+            point.y = position(1);
+            point.z = position(2);
+            point.r = static_cast<uint8_t>((r + 1.0f) / 2.0f * 255.0f);
+            point.g = static_cast<uint8_t>((g + 1.0f) / 2.0f * 255.0f);
+            point.b = static_cast<uint8_t>((b + 1.0f) / 2.0f * 255.0f);
 
-                point.x = position(0);
-                point.y = position(1);
-                point.z = position(2);
-                point.r = static_cast<uint8_t>((r + 1.0f) / 2.0f * 255.0f);
-                point.g = static_cast<uint8_t>((g + 1.0f) / 2.0f * 255.0f);
-                point.b = static_cast<uint8_t>((b + 1.0f) / 2.0f * 255.0f);
-
-                cloud_rgb->push_back(point);
-            }
+            cloud_rgb->push_back(point);
         }
 
         for (ATHit const &hit : trajectory.GetHits())
@@ -239,7 +233,7 @@ std::vector<ATTrajectory> ATHierarchicalClusteringTask::AnalyzePointArray(std::v
 
         // calculate cluster
         std::vector<ATHierarchicalClusteringHc::triplet> triplets = ATHierarchicalClusteringHc::GenerateTriplets(cloud_xyzti_smooth, this->_genTripletsNnKandidates, this->_genTripletsNBest, this->_genTripletsMaxError);
-        std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti, hitArray, triplets, cloudScale * this->_cloudScaleModifier);
+        std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti_smooth, hitArray, triplets, cloudScale * this->_cloudScaleModifier);
 
 #ifdef F17_VISUALIZE
         pcl::visualization::PCLVisualizer viewer("PCL Viewer");

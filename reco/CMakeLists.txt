@@ -81,6 +81,7 @@ ATPulseAnalyzer/ATPSASimple2.cc
 ATPulseAnalyzer/ATPSAFilter.cc
 ATPulseAnalyzer/ATPSAProto.cc
 
+HierarchicalClustering/ATCubicSplineFit.cc
 HierarchicalClustering/ATHierarchicalClusteringHc.cc
 HierarchicalClustering/ATHierarchicalClusteringSmoothenCloud.cc
 HierarchicalClustering/ATTrajectory.cc

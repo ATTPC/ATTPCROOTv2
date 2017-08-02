@@ -1,12 +1,28 @@
 #include "ATHierarchicalClusteringHc.hh"
 
-#include "ATCubicSplineFit.hpp"
 #include "ATHierarchicalClusteringGraph.hpp"
 
 #include <algorithm>
 #include <pcl/common/centroid.h>
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/common/pca.h>
+
+template <class T>
+static std::vector<Eigen::Vector3f> PointCloud2Vectors(pcl::PointCloud<T> const &cloud)
+{
+    std::vector<Eigen::Vector3f> result;
+
+    for (T const &pclPoint : cloud)
+    {
+        result.push_back(Eigen::Vector3f(
+            pclPoint.x,
+            pclPoint.y,
+            pclPoint.z
+        ));
+    }
+
+    return result;
+}
 
 namespace ATHierarchicalClusteringHc
 {
@@ -246,26 +262,11 @@ namespace ATHierarchicalClusteringHc
     }
 
     // expects triplets to be in the correct order
-    static float CalculateAverageCurvature(std::vector<triplet> const &triplets)
+    static float CalculateAverageCurvature(ATCubicSplineFit const &cubicSplineFit)
     {
         float result = 0.0f;
 
-        if (triplets.size() < 2)
-            throw std::runtime_error("There need to be at least 2 triplets!");
-
-        for (size_t i = 0; i < (triplets.size() - 1); ++i)
-        {
-            float const dotProduct = triplets[i].direction.dot(triplets[i + 1].direction);
-            float absDot = std::abs(dotProduct);
-
-            // fix float-rounding errors
-            if (absDot > 1.0f)
-                absDot = 1.0f;
-
-            result += std::acos(absDot);
-        }
-
-        result /= triplets.size() - 1;
+        // TODO
 
         return result;
     }
@@ -307,9 +308,9 @@ namespace ATHierarchicalClusteringHc
         {
             // TODO: check - triplets are sorted according to their z-position for use in CalculateAverageCurvature - correct?
             std::vector<triplet> clusterTriplets = ExtactAtIndices(triplets, currentCluster);
-            std::sort(clusterTriplets.begin(), clusterTriplets.end(), [](triplet const &lhs, triplet const &rhs) {
-                return lhs.center(2) < rhs.center(2);
-            });
+            // std::sort(clusterTriplets.begin(), clusterTriplets.end(), [](triplet const &lhs, triplet const &rhs) {
+            //     return lhs.center(2) < rhs.center(2);
+            // });
 
             std::vector<size_t> const pointIndices = ExtractPointIndices(clusterTriplets);
             std::vector<ATHit> const clusterHits = ExtactAtIndices(hits, pointIndices);
@@ -340,14 +341,13 @@ namespace ATHierarchicalClusteringHc
                 }
             }
 
-            // ATCubicSplineFit<pcl::PointXYZI> const cubicSplineFit(*clusterCloud);
-            // std::cout << cubicSplineFit.GetPoint(-1.1f) << std::endl;
+            ATCubicSplineFit const cubicSplineFit(PointCloud2Vectors(*clusterCloud), 0.5f, 1);
 
-            float const averageCurvature = CalculateAverageCurvature(clusterTriplets);
+            float const averageCurvature = CalculateAverageCurvature(cubicSplineFit);
             Eigen::Vector3f const centroidPoint = CalculateCentroidPoint(*clusterCloud);
             Eigen::Vector3f const mainDirection = CalculateMainDirection(clusterCloud);
 
-            result.push_back(ATTrajectory(clusterHits, startHitIndex, endHitIndex, approximateTrajectoryLength, averageCurvature, centroidPoint, mainDirection));
+            result.push_back(ATTrajectory(clusterHits, startHitIndex, endHitIndex, approximateTrajectoryLength, averageCurvature, centroidPoint, mainDirection, cubicSplineFit));
         }
 
         return result;

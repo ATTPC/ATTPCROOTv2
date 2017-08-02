@@ -4,6 +4,7 @@
 #include <vector>
 #include <Eigen/Core>
 
+#include "ATCubicSplineFit.hh"
 #include "ATHit.hh"
 
 class ATTrajectory
@@ -16,10 +17,19 @@ protected:
     float _averageCurvature = 0.0f;
     Eigen::Vector3f _centroidPoint;
     Eigen::Vector3f _mainDirection;
+    ATCubicSplineFit _cubicSplineFit;
 
 public:
-    ATTrajectory();
-    ATTrajectory(std::vector<ATHit> hits, size_t startHitIndex, size_t endHitIndex, float approximateTrajectoryLength, float averageCurvature, Eigen::Vector3f centroidPoint, Eigen::Vector3f mainDirection);
+    ATTrajectory(
+        std::vector<ATHit> const &hits,
+        size_t startHitIndex,
+        size_t endHitIndex,
+        float approximateTrajectoryLength,
+        float averageCurvature,
+        Eigen::Vector3f const &centroidPoint,
+        Eigen::Vector3f const &mainDirection,
+        ATCubicSplineFit const &cubicSplineFit
+    );
 
     std::vector<ATHit> const &GetHits() const;
     size_t const &GetStartHitIndex() const;
@@ -31,6 +41,7 @@ public:
     float const &GetAverageCurvature() const;
     Eigen::Vector3f const &GetCentroidPoint() const;
     Eigen::Vector3f const &GetMainDirection() const;
+    ATCubicSplineFit const &GetCubicSplineFit() const;
 };
 
 #endif

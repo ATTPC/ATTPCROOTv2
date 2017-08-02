@@ -1,12 +1,15 @@
 #include "ATTrajectory.hh"
 
-ATTrajectory::ATTrajectory()
-{
-    // NOOP
-}
-
-ATTrajectory::ATTrajectory(std::vector<ATHit> hits, size_t startHitIndex, size_t endHitIndex, float approximateTrajectoryLength, float averageCurvature, Eigen::Vector3f centroidPoint, Eigen::Vector3f mainDirection)
-    : ATTrajectory()
+ATTrajectory::ATTrajectory(
+    std::vector<ATHit> const &hits,
+    size_t startHitIndex,
+    size_t endHitIndex,
+    float approximateTrajectoryLength,
+    float averageCurvature,
+    Eigen::Vector3f const &centroidPoint,
+    Eigen::Vector3f const &mainDirection,
+    ATCubicSplineFit const &cubicSplineFit)
+    : _cubicSplineFit(cubicSplineFit)
 {
     this->_hits = hits;
     this->_startHitIndex = startHitIndex;
@@ -60,4 +63,9 @@ Eigen::Vector3f const &ATTrajectory::GetCentroidPoint() const
 Eigen::Vector3f const &ATTrajectory::GetMainDirection() const
 {
     return this->_mainDirection;
+}
+
+ATCubicSplineFit const &ATTrajectory::GetCubicSplineFit() const
+{
+    return this->_cubicSplineFit;
 }
