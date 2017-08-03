@@ -43,7 +43,10 @@ class ATPulseTask : public FairTask
     Bool_t fIsPersistent;                //!< If true, save container
     TClonesArray* fDriftedElectronArray; //!< drifted electron array (input)
     TClonesArray* fRawEventArray;        //!< Raw Event array(only one)
+    ATRawEvent* fRawEvent;               //!< Raw Event Object
     TH2Poly *fPadPlane;                  //!< pad plane
+    AtTpcMap *fMap;                      //!<ATTPC map
+    Int_t fInternalID;                   //!<Internal ID
 
 
      ClassDef(ATPulseTask,1);
