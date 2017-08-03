@@ -51,7 +51,7 @@ private:
   Int_t Evnt;
   Int_t event;
   Int_t Aout[100],Zout[100],Ntrack;
-  Float_t fOutPx[100],fOutPy[100],fOutPz[100];
+  Double_t fOutPx[100],fOutPy[100],fOutPz[100];
 
 
   ClassDef(ATTPCFissionGeneratorV2,1)

@@ -181,9 +181,9 @@ Bool_t ATTPCFissionGeneratorV2::ReadEvent(FairPrimaryGenerator* primGen) {
 
 	     // Propagate the vertex of the previous event
 
-			 fVx = gATVP->GetVx();
-			 fVy = gATVP->GetVy();
-			 fVz = gATVP->GetVz();
+			 //fVx = gATVP->GetVx();
+			 //fVy = gATVP->GetVy();
+			 //fVz = gATVP->GetVz();
 
     //if(i>1 && gATVP->GetDecayEvtCnt() && pdgType!=1000500500 && fPType.at(i)=="Ion" ){// TODO: Dirty way to propagate only the products (0 and 1 are beam and target respectively)
 
@@ -215,9 +215,9 @@ Bool_t ATTPCFissionGeneratorV2::ReadEvent(FairPrimaryGenerator* primGen) {
         }
         else pdgType = ia1;  // "normal" particle
 
-       px=(double)fOutPx[j];
-       py=(double)fOutPy[j];
-       pz=(double)fOutPz[j];
+       px=fOutPx[j];
+       py=fOutPy[j];
+       pz=fOutPz[j];
 
        primGen->AddTrack(pdgType, px, py, pz, fVx, fVy, fVz);
 
