@@ -146,8 +146,7 @@ void ATHoughSpaceCircle::Clustering(ATEvent *event)
 
     for (Int_t iHit = 0; iHit < (nHits - 1); ++iHit)
     {
-        // TODO: better leave event const
-        ATHit &hit = event->GetHitArray()->at(iHit);
+        ATHit const &hit = event->GetHitArray()->at(iHit);
         TVector3 const position = hit.GetPosition();
         Double_t const geo_dist = TMath::Abs(
             TMath::Cos(fHoughLinePar.first) * fPhi->at(iHit) * fRadius->at(iHit)
@@ -168,7 +167,7 @@ void ATHoughSpaceCircle::Clustering(ATEvent *event)
 
             if (hit_dist < 10.0)
             {
-                fClusteredHits->push_back(&hit); // TODO: why pointer? pointer to stack? why not copy?
+                fClusteredHits->push_back(hit);
                 fIniHit->SetHit(hit.GetHitPadNum(), hit.GetHitID(), position.X(), position.Y(), position.Z(), hit.GetCharge());
                 // IniPosZ = position.Z();
                 fIniHit->SetTimeStamp(hit.GetTimeStamp());
