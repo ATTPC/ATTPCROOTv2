@@ -83,10 +83,8 @@ static void ColorByTrajectories(std::vector<ATTrajectory> const &trajectories, p
         float const stepSize = (endPosition - startPosition) / 250.0f;
 
         for (float i = startPosition; i <= endPosition; i += stepSize)
-        // for (float i = 0.0f; i <= static_cast<float>(trajectory.GetHits().size() - 1); i += 0.1f)
         {
             Eigen::Vector3f position = cubicSplineFit.GetPoint(i);
-            // std::cout << "P: (" << position(0) << " " << position(1) << " " << position(2) << ")" << std::endl;
             pcl::PointXYZRGB point;
 
             point.x = position(0);

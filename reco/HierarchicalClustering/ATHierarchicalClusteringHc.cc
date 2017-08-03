@@ -280,44 +280,20 @@ namespace ATHierarchicalClusteringHc
         return result;
     }
 
-    static float CalculateAverageCurvature(ATCubicSplineFit const &cubicSplineFit, size_t sampleSize, float delta, size_t subDeltaCount)
+    static float CalculateAverageCurvature(ATCubicSplineFit const &cubicSplineFit, size_t const sampleSize, float const delta)
     {
         float result = 0.0f;
 
-        float const startPosition = cubicSplineFit.GetStartPosition();
-        float const endPosition = cubicSplineFit.GetEndPosition();
-        float const stepSize = (endPosition - startPosition - (2.0f * delta)) / static_cast<float>(sampleSize);
+        // respect the borders needed for derivating
+        float const startPosition = cubicSplineFit.GetStartPosition() + delta;
+        float const endPosition = cubicSplineFit.GetEndPosition() - delta;
+        float const stepSize = (endPosition - startPosition) / static_cast<float>(sampleSize);
 
-        // caluclate curvature for every sample point, except the border-points
-        for (float position = startPosition + delta; position <= endPosition - delta; position += stepSize)
+        // caluclate curvature as norm of the second derivative
+        for (float position = startPosition; position <= endPosition; position += stepSize)
         {
-            float const subDelta = delta / static_cast<float>(subDeltaCount);
-
-            // calculate the normed tangents to the left and to the right of the sample point
-            Eigen::Vector3f tangentLeft = cubicSplineFit.GetPoint(position - delta + subDelta) - cubicSplineFit.GetPoint(position - delta);
-            tangentLeft /= tangentLeft.norm();
-            Eigen::Vector3f tangentRight = cubicSplineFit.GetPoint(position + delta) - cubicSplineFit.GetPoint(position + delta - subDelta);
-            tangentRight /= tangentRight.norm();
-
-            float const arcLength = CalculateArcLength(cubicSplineFit, (position - delta), (position + delta), ((2 * subDeltaCount) + 1));
-
-            // the curvature is the inner angle between the tangents divided by the arcLength
-            float cosAngle = tangentLeft.dot(tangentRight);
-
-            // handle float rounding errors
-            if (cosAngle > 1.0f)
-                cosAngle = 1.0f;
-
-            float const curvature = std::acos(cosAngle) / arcLength;
-
-            std::cout << "arcLength: " << arcLength
-                << " cosAngle: " << cosAngle
-                << " curvature: " << curvature << std::endl;
-
-            result += curvature;
+            result += cubicSplineFit.GetSecondDerivativePoint(position, delta).norm();
         }
-
-        std::cout << "final result: " << (result / static_cast<float>(sampleSize)) << std::endl;
 
         return result / static_cast<float>(sampleSize);
     }
@@ -405,7 +381,7 @@ namespace ATHierarchicalClusteringHc
                 return ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, point);
             });
 
-            float const averageCurvature = CalculateAverageCurvature(cubicSplineFit, 1000, 0.01, 100);
+            float const averageCurvature = CalculateAverageCurvature(cubicSplineFit, 10000, 0.1f);
             approximateTrajectoryLength = CalculateArcLength(cubicSplineFit, cubicSplineFit.GetStartPosition(), cubicSplineFit.GetEndPosition(), 10000);
 
             result.push_back(ATTrajectory(clusterHits, startHitIndex, endHitIndex, approximateTrajectoryLength, averageCurvature, centroidPoint, mainDirection, cubicSplineFit));

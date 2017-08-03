@@ -37,6 +37,8 @@ public:
     float GetStartPosition() const;
     float GetEndPosition() const;
     Eigen::Vector3f GetPoint(float position) const;
+    Eigen::Vector3f GetDerivativePoint(float position, float delta = 0.1f) const;
+    Eigen::Vector3f GetSecondDerivativePoint(float position, float delta = 0.1f) const;
     Spline const &GetSpline() const;
     std::vector<Eigen::Vector3f> const &GetControlPoints() const;
 

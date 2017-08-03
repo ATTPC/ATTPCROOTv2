@@ -117,6 +117,17 @@ Eigen::Vector3f ATCubicSplineFit::GetPoint(float position) const
     return tVector * ATCubicSplineFit::hermitricMatrix * segmentMatrix;
 }
 
+
+Eigen::Vector3f ATCubicSplineFit::GetDerivativePoint(float position, float delta) const
+{
+    return (this->GetPoint(position + delta) - this->GetPoint(position - delta)) / delta;
+}
+
+Eigen::Vector3f ATCubicSplineFit::GetSecondDerivativePoint(float position, float delta) const
+{
+    return (this->GetDerivativePoint(position + delta, delta) - this->GetDerivativePoint(position - delta, delta)) / delta;
+}
+
 ATCubicSplineFit::Spline const &ATCubicSplineFit::GetSpline() const
 {
     return this->_spline;
