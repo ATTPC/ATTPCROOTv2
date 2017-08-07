@@ -261,43 +261,6 @@ namespace ATHierarchicalClusteringHc
         return result;
     }
 
-    static float CalculateArcLength(ATCubicSplineFit const &cubicSplineFit, float startPosition, float endPosition, size_t sampleSize)
-    {
-        float result = 0.0f;
-
-        float const stepSize = (endPosition - startPosition) / static_cast<float>(sampleSize);
-
-        Eigen::Vector3f lastPoint = cubicSplineFit.GetPoint(startPosition);
-        for (float position = startPosition + stepSize; position <= endPosition; position += stepSize)
-        {
-            Eigen::Vector3f point = cubicSplineFit.GetPoint(position);
-
-            result += (point - lastPoint).norm();
-
-            lastPoint = point;
-        }
-
-        return result;
-    }
-
-    static float CalculateAverageCurvature(ATCubicSplineFit const &cubicSplineFit, size_t const sampleSize, float const delta)
-    {
-        float result = 0.0f;
-
-        // respect the borders needed for derivating
-        float const startPosition = cubicSplineFit.GetStartPosition() + delta;
-        float const endPosition = cubicSplineFit.GetEndPosition() - delta;
-        float const stepSize = (endPosition - startPosition) / static_cast<float>(sampleSize);
-
-        // caluclate curvature as norm of the second derivative
-        for (float position = startPosition; position <= endPosition; position += stepSize)
-        {
-            result += cubicSplineFit.GetSecondDerivativePoint(position, delta).norm();
-        }
-
-        return result / static_cast<float>(sampleSize);
-    }
-
     template <class T>
     static Eigen::Vector3f CalculateCentroidPoint(pcl::PointCloud<T> const &cloud)
     {
@@ -327,7 +290,14 @@ namespace ATHierarchicalClusteringHc
         return eigenVectors.array().col(0);
     }
 
-    std::vector<ATTrajectory> ToTrajectories(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, std::vector<ATHit> const &hits, std::vector<triplet> const &triplets, cluster_group const &clusterGroup)
+    std::vector<ATTrajectory> ToTrajectories(
+        pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud,
+        std::vector<ATHit> const &hits,
+        std::vector<triplet> const &triplets,
+        cluster_group const &clusterGroup,
+        float const splineTangentScale,
+        float const splineMinControlPointDistance,
+        size_t const splineJump)
     {
         std::vector<ATTrajectory> result;
 
@@ -376,15 +346,12 @@ namespace ATHierarchicalClusteringHc
                     mainDirection *= -1.0f;
             }
 
-            ATCubicSplineFit const cubicSplineFit(PointCloud2Vectors(*clusterCloud), 0.5f, 20.0f, 1, [&](Eigen::Vector3f const &point, size_t index)
+            ATCubicSplineFit const cubicSplineFit(PointCloud2Vectors(*clusterCloud), splineTangentScale, splineMinControlPointDistance, splineJump, [&](Eigen::Vector3f const &point, size_t index)
             {
                 return ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, point);
             });
 
-            float const averageCurvature = CalculateAverageCurvature(cubicSplineFit, 10000, 0.1f);
-            approximateTrajectoryLength = CalculateArcLength(cubicSplineFit, cubicSplineFit.GetStartPosition(), cubicSplineFit.GetEndPosition(), 10000);
-
-            result.push_back(ATTrajectory(clusterHits, startHitIndex, endHitIndex, approximateTrajectoryLength, averageCurvature, centroidPoint, mainDirection, cubicSplineFit));
+            result.push_back(ATTrajectory(clusterHits, startHitIndex, endHitIndex, approximateTrajectoryLength, centroidPoint, mainDirection, cubicSplineFit));
         }
 
         return result;

@@ -15,7 +15,6 @@ public:
         size_t startHitIndex,
         size_t endHitIndex,
         float approximateTrajectoryLength,
-        float averageCurvature,
         Eigen::Vector3f const &centroidPoint,
         Eigen::Vector3f const &mainDirection,
         ATCubicSplineFit const &cubicSplineFit
@@ -33,7 +32,6 @@ public:
     float GetPositionOnMainDirection(Eigen::Vector3f const &point) const;
 
     float const &GetApproximateTrajectoryLength() const;
-    float const &GetAverageCurvature() const;
     Eigen::Vector3f const &GetCentroidPoint() const;
     Eigen::Vector3f const &GetMainDirection() const;
     ATCubicSplineFit const &GetCubicSplineFit() const;
@@ -43,7 +41,6 @@ protected:
     size_t _startHitIndex = 0;
     size_t _endHitIndex = 0;
     float _approximateTrajectoryLength = 0.0f;
-    float _averageCurvature = 0.0f;
     Eigen::Vector3f _centroidPoint;
     Eigen::Vector3f _mainDirection;
     ATCubicSplineFit _cubicSplineFit;

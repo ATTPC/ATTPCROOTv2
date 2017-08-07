@@ -90,7 +90,14 @@ namespace ATHierarchicalClusteringHc
     cluster_history CalculateHc(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, std::vector<triplet> const &triplets, ClusterMetric clusterMetric = singleLinkClusterMetric, TripletMetric tripletMetric = defaultTripletMetric);
     cluster_group GetBestClusterGroup(cluster_history const &history, float bestClusterDistanceDelta = 19.0f);
     cluster_group CleanupClusterGroup(cluster_group const &clusterGroup, size_t minTriplets = 7);
-    std::vector<ATTrajectory> ToTrajectories(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, std::vector<ATHit> const &hits, std::vector<triplet> const &triplets, cluster_group const &clusterGroup);
+    std::vector<ATTrajectory> ToTrajectories(
+        pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud,
+        std::vector<ATHit> const &hits,
+        std::vector<triplet> const &triplets,
+        cluster_group const &clusterGroup,
+        float const splineTangentScale = 0.5f,
+        float const splineMinControlPointDistance = 20.0f,
+        size_t const splineJump = 1);
 }
 
 #endif

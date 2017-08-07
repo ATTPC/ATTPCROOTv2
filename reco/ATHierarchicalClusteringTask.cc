@@ -84,7 +84,7 @@ static void ColorByTrajectories(std::vector<ATTrajectory> const &trajectories, p
 
         for (float i = startPosition; i <= endPosition; i += stepSize)
         {
-            Eigen::Vector3f position = cubicSplineFit.GetPoint(i);
+            Eigen::Vector3f position = cubicSplineFit.CalculatePoint(i);
             pcl::PointXYZRGB point;
 
             point.x = position(0);
@@ -133,7 +133,14 @@ std::vector<ATTrajectory> ATHierarchicalClusteringTask::useHc(pcl::PointCloud<pc
     ATHierarchicalClusteringHc::cluster_group const &clusterGroup = ATHierarchicalClusteringHc::GetBestClusterGroup(result, this->_bestClusterDistanceDelta);
     ATHierarchicalClusteringHc::cluster_group const &cleanedUpClusterGroup = ATHierarchicalClusteringHc::CleanupClusterGroup(clusterGroup, this->_cleanupMinTriplets);
 
-    return ToTrajectories(cloud, hitArray, triplets, cleanedUpClusterGroup);
+    return ToTrajectories(
+        cloud,
+        hitArray,
+        triplets,
+        cleanedUpClusterGroup,
+        this->_splineTangentScale,
+        this->_splineMinControlPointDistance,
+        this->_splineJump);
 }
 
 
@@ -234,7 +241,10 @@ std::vector<ATTrajectory> ATHierarchicalClusteringTask::AnalyzePointArray(std::v
 
         // calculate cluster
         std::vector<ATHierarchicalClusteringHc::triplet> triplets = ATHierarchicalClusteringHc::GenerateTriplets(cloud_xyzti_smooth, this->_genTripletsNnKandidates, this->_genTripletsNBest, this->_genTripletsMaxError);
+        // TODO: evaluate tradeoff
+        // using the smooth cloud yields better curvature, but the curve is too short.
         std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti, hitArray, triplets, cloudScale * this->_cloudScaleModifier);
+        // std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti_smooth, hitArray, triplets, cloudScale * this->_cloudScaleModifier);
 
 #ifdef F17_VISUALIZE
         pcl::visualization::PCLVisualizer viewer("PCL Viewer");
@@ -321,5 +331,14 @@ size_t ATHierarchicalClusteringTask::GetGenTripletsNBest() const { return this->
 
 void ATHierarchicalClusteringTask::SetSmoothRadius(float value) { this->_smoothRadius = value; }
 float ATHierarchicalClusteringTask::GetSmoothRadius() const { return this->_smoothRadius; }
+
+void ATHierarchicalClusteringTask::SetSplineTangentScale(float value) { this->_splineTangentScale = value; }
+float ATHierarchicalClusteringTask::GetSplineTangentScale() const { return this->_splineTangentScale; }
+
+void ATHierarchicalClusteringTask::SetSplineMinControlPointDistance(float value) { this->_splineMinControlPointDistance = value; }
+float ATHierarchicalClusteringTask::GetSplineMinControlPointDistance() const { return this->_splineMinControlPointDistance; }
+
+void ATHierarchicalClusteringTask::SetSplineJump(size_t value) { this->_splineJump = value; }
+size_t ATHierarchicalClusteringTask::GetSplineJump() const { return this->_splineJump; }
 
 ClassImp(ATHierarchicalClusteringTask)

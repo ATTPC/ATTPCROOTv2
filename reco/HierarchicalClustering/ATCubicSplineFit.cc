@@ -60,17 +60,27 @@ ATCubicSplineFit::ATCubicSplineFit(std::vector<Eigen::Vector3f> const &controlPo
     }
 }
 
-float ATCubicSplineFit::GetStartPosition() const
+float const &ATCubicSplineFit::GetStartPosition() const
 {
     return this->GetSpline().front().p0Pos;
 }
 
-float ATCubicSplineFit::GetEndPosition() const
+float const &ATCubicSplineFit::GetEndPosition() const
 {
     return this->GetSpline().back().p1Pos;
 }
 
-Eigen::Vector3f ATCubicSplineFit::GetPoint(float position) const
+ATCubicSplineFit::Spline const &ATCubicSplineFit::GetSpline() const
+{
+    return this->_spline;
+}
+
+std::vector<Eigen::Vector3f> const &ATCubicSplineFit::GetControlPoints() const
+{
+    return this->_controlPoints;
+}
+
+Eigen::Vector3f ATCubicSplineFit::CalculatePoint(float position) const
 {
     Spline const &spline = this->GetSpline();
     std::vector<Eigen::Vector3f> const &controlPoints = this->GetControlPoints();
@@ -118,24 +128,51 @@ Eigen::Vector3f ATCubicSplineFit::GetPoint(float position) const
 }
 
 
-Eigen::Vector3f ATCubicSplineFit::GetDerivativePoint(float position, float delta) const
+Eigen::Vector3f ATCubicSplineFit::CalculateDerivativePoint(float position, float delta) const
 {
-    return (this->GetPoint(position + delta) - this->GetPoint(position - delta)) / delta;
+    return (this->CalculatePoint(position + delta) - this->CalculatePoint(position - delta)) / delta;
 }
 
-Eigen::Vector3f ATCubicSplineFit::GetSecondDerivativePoint(float position, float delta) const
+Eigen::Vector3f ATCubicSplineFit::CalculateSecondDerivativePoint(float position, float delta) const
 {
-    return (this->GetDerivativePoint(position + delta, delta) - this->GetDerivativePoint(position - delta, delta)) / delta;
+    return (this->CalculateDerivativePoint(position + delta, delta) - this->CalculateDerivativePoint(position - delta, delta)) / delta;
 }
 
-ATCubicSplineFit::Spline const &ATCubicSplineFit::GetSpline() const
+float ATCubicSplineFit::CalculateAverageCurvature(float const startPosition, float const endPosition, size_t const sampleSize, float const delta) const
 {
-    return this->_spline;
+    float result = 0.0f;
+
+    // respect the borders needed for derivating
+    float const croppedStartPosition = startPosition + (delta + delta);
+    float const croppedEndPosition = endPosition - (delta + delta);
+    float const stepSize = (croppedEndPosition - croppedStartPosition) / static_cast<float>(sampleSize);
+
+    // caluclate curvature as norm of the second derivative
+    for (float position = croppedStartPosition; position <= croppedEndPosition; position += stepSize)
+    {
+        result += this->CalculateSecondDerivativePoint(position, delta).norm();
+    }
+
+    return result / static_cast<float>(sampleSize);
 }
 
-std::vector<Eigen::Vector3f> const &ATCubicSplineFit::GetControlPoints() const
+float ATCubicSplineFit::CalculateArcLength(float startPosition, float endPosition, size_t sampleSize) const
 {
-    return this->_controlPoints;
+    float result = 0.0f;
+
+    float const stepSize = (endPosition - startPosition) / static_cast<float>(sampleSize);
+
+    Eigen::Vector3f lastPoint = this->CalculatePoint(startPosition);
+    for (float position = startPosition + stepSize; position <= endPosition; position += stepSize)
+    {
+        Eigen::Vector3f point = this->CalculatePoint(position);
+
+        result += (point - lastPoint).norm();
+
+        lastPoint = point;
+    }
+
+    return result;
 }
 
 Eigen::Vector3f ATCubicSplineFit::CalculateTangent(size_t pos, size_t jump, float scale) const

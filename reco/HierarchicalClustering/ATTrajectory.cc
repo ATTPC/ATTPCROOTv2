@@ -5,7 +5,6 @@ ATTrajectory::ATTrajectory(
     size_t startHitIndex,
     size_t endHitIndex,
     float approximateTrajectoryLength,
-    float averageCurvature,
     Eigen::Vector3f const &centroidPoint,
     Eigen::Vector3f const &mainDirection,
     ATCubicSplineFit const &cubicSplineFit)
@@ -15,7 +14,6 @@ ATTrajectory::ATTrajectory(
     this->_startHitIndex = startHitIndex;
     this->_endHitIndex = endHitIndex;
     this->_approximateTrajectoryLength = approximateTrajectoryLength;
-    this->_averageCurvature = averageCurvature;
     this->_centroidPoint = centroidPoint;
     this->_mainDirection = mainDirection;
 }
@@ -74,11 +72,6 @@ float ATTrajectory::GetPositionOnMainDirection(Eigen::Vector3f const &point) con
 float const &ATTrajectory::GetApproximateTrajectoryLength() const
 {
     return this->_approximateTrajectoryLength;
-}
-
-float const &ATTrajectory::GetAverageCurvature() const
-{
-    return this->_averageCurvature;
 }
 
 Eigen::Vector3f const &ATTrajectory::GetCentroidPoint() const

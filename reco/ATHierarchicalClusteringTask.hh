@@ -46,6 +46,15 @@ public:
 	void SetSmoothRadius(float value);
 	float GetSmoothRadius() const;
 
+	void SetSplineTangentScale(float value);
+	float GetSplineTangentScale() const;
+
+	void SetSplineMinControlPointDistance(float value);
+	float GetSplineMinControlPointDistance() const;
+
+	void SetSplineJump(size_t value);
+	size_t GetSplineJump() const;
+
 private:
 	/** Input array from previous already existing data level **/
 	//  TClonesArray* <InputDataLevel>;
@@ -60,6 +69,9 @@ private:
 	size_t _genTripletsNnKandidates = 14;
 	size_t _genTripletsNBest = 2;
 	float _smoothRadius = 0.818581f;
+	float _splineTangentScale = 0.5f;
+	float _splineMinControlPointDistance = 20.0f;
+	size_t _splineJump = 1;
 
 	ATHierarchicalClusteringTask(const ATHierarchicalClusteringTask&);
 	ATHierarchicalClusteringTask operator=(const ATHierarchicalClusteringTask&);

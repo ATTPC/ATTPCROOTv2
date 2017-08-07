@@ -34,13 +34,16 @@ public:
 
     ATCubicSplineFit(std::vector<Eigen::Vector3f> const &controlPoints, float tangentScale = 0.5f, float minControlPointDistance = 0.01f, size_t jump = 1, PositionFunction positionFunction = defaultPositionFunction);
 
-    float GetStartPosition() const;
-    float GetEndPosition() const;
-    Eigen::Vector3f GetPoint(float position) const;
-    Eigen::Vector3f GetDerivativePoint(float position, float delta = 0.1f) const;
-    Eigen::Vector3f GetSecondDerivativePoint(float position, float delta = 0.1f) const;
+    float const &GetStartPosition() const;
+    float const &GetEndPosition() const;
     Spline const &GetSpline() const;
     std::vector<Eigen::Vector3f> const &GetControlPoints() const;
+
+    Eigen::Vector3f CalculatePoint(float position) const;
+    Eigen::Vector3f CalculateDerivativePoint(float position, float delta = 0.1f) const;
+    Eigen::Vector3f CalculateSecondDerivativePoint(float position, float delta = 0.1f) const;
+    float CalculateArcLength(float startPosition, float endPosition, size_t sampleSize) const;
+    float CalculateAverageCurvature(float const startPosition, float const endPosition, size_t const sampleSize, float const delta = 0.1f) const;
 
 protected:
     Spline _spline;
