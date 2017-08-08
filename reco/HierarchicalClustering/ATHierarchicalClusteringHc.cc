@@ -303,55 +303,62 @@ namespace ATHierarchicalClusteringHc
 
         for (auto const &currentCluster : clusterGroup.clusters)
         {
-            std::vector<triplet> clusterTriplets = ExtactAtIndices(triplets, currentCluster);
-            std::vector<size_t> const pointIndices = ExtractPointIndices(clusterTriplets);
-            std::vector<ATHit> const clusterHits = ExtactAtIndices(hits, pointIndices);
-            pcl::PointCloud<pcl::PointXYZI>::Ptr const clusterCloud(new pcl::PointCloud<pcl::PointXYZI>());
-            *clusterCloud = ExtactAtIndices(*cloud, pointIndices);
-
-            std::vector<ATHierarchicalClusteringGraph::state> const mstHistory = ATHierarchicalClusteringGraph::CalculateMinimumSpanningTree(*clusterCloud);
-            std::vector<ATHierarchicalClusteringGraph::edge> const edges = mstHistory.back().edges;
-            Eigen::MatrixXf allPairsShortestPath = ATHierarchicalClusteringGraph::CalculateAllPairsShortestPath(edges, clusterCloud->size());
-
-            size_t startHitIndex = 0;
-            size_t endHitIndex = 0;
-            float approximateTrajectoryLength = 0.0f;
-
-            // search upper half of matrix for the biggest, non-infinite value
-            for (size_t i = 0; i < (allPairsShortestPath.cols() - 1); ++i)
+            try
             {
-                for (size_t j = (i + 1); j < allPairsShortestPath.rows(); ++j)
-                {
-                    float const &value = allPairsShortestPath(i, j);
+                std::vector<triplet> clusterTriplets = ExtactAtIndices(triplets, currentCluster);
+                std::vector<size_t> const pointIndices = ExtractPointIndices(clusterTriplets);
+                std::vector<ATHit> const clusterHits = ExtactAtIndices(hits, pointIndices);
+                pcl::PointCloud<pcl::PointXYZI>::Ptr const clusterCloud(new pcl::PointCloud<pcl::PointXYZI>());
+                *clusterCloud = ExtactAtIndices(*cloud, pointIndices);
 
-                    if (value > approximateTrajectoryLength && value != std::numeric_limits<float>::infinity())
+                std::vector<ATHierarchicalClusteringGraph::state> const mstHistory = ATHierarchicalClusteringGraph::CalculateMinimumSpanningTree(*clusterCloud);
+                std::vector<ATHierarchicalClusteringGraph::edge> const edges = mstHistory.back().edges;
+                Eigen::MatrixXf allPairsShortestPath = ATHierarchicalClusteringGraph::CalculateAllPairsShortestPath(edges, clusterCloud->size());
+
+                size_t startHitIndex = 0;
+                size_t endHitIndex = 0;
+                float approximateTrajectoryLength = 0.0f;
+
+                // search upper half of matrix for the biggest, non-infinite value
+                for (size_t i = 0; i < (allPairsShortestPath.cols() - 1); ++i)
+                {
+                    for (size_t j = (i + 1); j < allPairsShortestPath.rows(); ++j)
                     {
-                        startHitIndex = i;
-                        endHitIndex = j;
-                        approximateTrajectoryLength = value;
+                        float const &value = allPairsShortestPath(i, j);
+
+                        if (value > approximateTrajectoryLength && value != std::numeric_limits<float>::infinity())
+                        {
+                            startHitIndex = i;
+                            endHitIndex = j;
+                            approximateTrajectoryLength = value;
+                        }
                     }
                 }
+
+                Eigen::Vector3f const centroidPoint = CalculateCentroidPoint(*clusterCloud);
+                Eigen::Vector3f mainDirection = CalculateMainDirection(clusterCloud);
+
+                // make sure mainDirection points from startHit to endHit
+                {
+                    TVector3 const &startHitPos = clusterHits[startHitIndex].GetPosition();
+                    TVector3 const &endHitPos = clusterHits[endHitIndex].GetPosition();
+
+                    if (ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, Eigen::Vector3f(startHitPos.X(), startHitPos.Y(), startHitPos.Z())) >
+                        ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, Eigen::Vector3f(endHitPos.X(), endHitPos.Y(), endHitPos.Z())))
+                        mainDirection *= -1.0f;
+                }
+
+                ATCubicSplineFit const cubicSplineFit(PointCloud2Vectors(*clusterCloud), splineTangentScale, splineMinControlPointDistance, splineJump, [&](Eigen::Vector3f const &point, size_t index)
+                {
+                    return ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, point);
+                });
+
+                result.push_back(ATTrajectory(clusterHits, startHitIndex, endHitIndex, approximateTrajectoryLength, centroidPoint, mainDirection, cubicSplineFit));
             }
-
-            Eigen::Vector3f const centroidPoint = CalculateCentroidPoint(*clusterCloud);
-            Eigen::Vector3f mainDirection = CalculateMainDirection(clusterCloud);
-
-            // make sure mainDirection points from startHit to endHit
+            catch (...)
             {
-                TVector3 const &startHitPos = clusterHits[startHitIndex].GetPosition();
-                TVector3 const &endHitPos = clusterHits[endHitIndex].GetPosition();
-
-                if (ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, Eigen::Vector3f(startHitPos.X(), startHitPos.Y(), startHitPos.Z())) >
-                    ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, Eigen::Vector3f(endHitPos.X(), endHitPos.Y(), endHitPos.Z())))
-                    mainDirection *= -1.0f;
+                // let all errors in creating a trajectory fail silently
             }
-
-            ATCubicSplineFit const cubicSplineFit(PointCloud2Vectors(*clusterCloud), splineTangentScale, splineMinControlPointDistance, splineJump, [&](Eigen::Vector3f const &point, size_t index)
-            {
-                return ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, point);
-            });
-
-            result.push_back(ATTrajectory(clusterHits, startHitIndex, endHitIndex, approximateTrajectoryLength, centroidPoint, mainDirection, cubicSplineFit));
         }
 
         return result;

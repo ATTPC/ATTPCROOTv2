@@ -9,6 +9,14 @@
 #include "ATHit.hh"
 #include "ATTrajectory.hh"
 
+namespace pcl
+{
+	namespace visualization
+	{
+		class PCLVisualizer;
+	}
+}
+
 class ATHierarchicalClusteringTask : public FairTask
 {
 public:
@@ -22,6 +30,8 @@ public:
 	virtual void Finish();
 
 	std::vector<ATTrajectory> AnalyzePointArray(std::vector<ATHit> const &hitArray) const;
+	void Visualize(std::vector<ATTrajectory> const &trajectories) const;
+	void Visualize(std::vector<ATTrajectory> const &trajectories, std::shared_ptr<pcl::visualization::PCLVisualizer> &viewer) const;
 
 
 	// Getters and Setters

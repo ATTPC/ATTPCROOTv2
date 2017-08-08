@@ -1,4 +1,4 @@
-void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 9999)
+void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::numeric_limits<Int_t>::max())
 {
 	// Timer
 	TStopwatch timer;
@@ -9,7 +9,7 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 9999)
 	TString dataDir = dir + "/data/";
 
 	TString loggerFile = dataDir + "ATTPCLog_Reco.log";
-	TString inputFile = dataDir + "run0218_output.root";
+	TString inputFile = dataDir + "attpcsim_alpha.root";
 	TString outputFile = dataDir + "output";
 
 	// Logger
@@ -24,8 +24,16 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 9999)
 	TTree *tree = nullptr;
 	file.GetObject("cbmsim", tree);
 
+	bool isSimulation = false;
 	TClonesArray *events = nullptr;
 	TBranch *eventsBranch = tree->GetBranch("ATEventH");
+
+	if (eventsBranch == nullptr)
+	{
+		isSimulation = true;
+		eventsBranch = tree->GetBranch("AtTpcPoint");
+	}
+
 	eventsBranch->SetAddress(&events);
 
 	// Run task
@@ -43,49 +51,90 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = 9999)
 	hierarchicalClusteringTask.SetSplineMinControlPointDistance(20.0f);
 	hierarchicalClusteringTask.SetSplineJump(1);
 
-	Int_t const lastEvent = (eventCount < (tree->GetEntries() - firstEvent) ? eventCount : (tree->GetEntries() - firstEvent)) + firstEvent;
-	for (Int_t i = firstEvent; i < lastEvent; ++i) {
-		std::cout << "# Analyzing event " << (i + 1) << " of " << tree->GetEntries() << std::endl;
-		eventsBranch->GetEvent(i);
-		ATEvent *event = (ATEvent*)events->At(0);
+	// remember visualizer, so we can reuse it
+	// `viewer` might get overwritten in the process
+	std::shared_ptr<pcl::visualization::PCLVisualizer> viewer = nullptr;
 
-		std::vector<ATHit> *hitArray = event->GetHitArray();
-		std::cout << "HitArray Size: " << hitArray->size() << std::endl;
+	Int_t const lastEvent = (eventCount < (eventsBranch->GetEntries() - firstEvent) ? eventCount : (eventsBranch->GetEntries() - firstEvent)) + firstEvent - (isSimulation ? 1 : 0);
+	for (Int_t i = firstEvent; i < lastEvent; i += (isSimulation ? 2 : 1)) {
+		std::cout << "# Analyzing event " << (i + 1) << " of " << eventsBranch->GetEntries() << std::endl;
 
-		// analyze
-		std::vector<ATTrajectory> trajectories = hierarchicalClusteringTask.AnalyzePointArray(*hitArray);
+		std::vector<ATHit> hitArray;
 
-		// work with results
-		for (ATTrajectory const &trajectory : trajectories)
+		if (isSimulation)
 		{
-			std::cout << "# TRAJECTORY" << std::endl;
+			for (size_t k = 0; k < 2; ++k)
+			{
+				eventsBranch->GetEvent(i + k);
 
-			// std::cout << "    hits:" << std::endl;
-			// for (ATHit const &hit : trajectory.GetHits())
-			// {
-			// 	std::cout << "        hit: " << hit.GetPosition().X() << " " << hit.GetPosition().Y() << " " << hit.GetPosition().Z() << std::endl;
-			// }
+				for (size_t j = 0; j < events->GetEntries(); ++j)
+				{
+					AtTpcPoint const &point = *((AtTpcPoint*)events->At(j));
+					hitArray.push_back(ATHit(
+						0,
+						point.GetXIn() * 100.0,
+						point.GetYIn() * 100.0,
+						point.GetZIn() * 100.0,
+						0.0
+					));
+				}
+			}
+		}
+		else
+		{
+			eventsBranch->GetEvent(i);
+			// TODO: make this const
+			ATEvent &event = *((ATEvent*)events->At(0));
+			hitArray = *event.GetHitArray();
+		}
 
-			ATCubicSplineFit const &cubicSplineFit = trajectory.GetCubicSplineFit();
+		std::cout << "  HitArray Size: " << hitArray.size() << std::endl;
 
-			float const splineStartPosition = cubicSplineFit.GetStartPosition();
-			float const splineEndPosition = cubicSplineFit.GetEndPosition();
-			float const trajectoryLength = cubicSplineFit.CalculateArcLength(splineStartPosition, splineEndPosition, 10000);
-			float const averageCurvature = cubicSplineFit.CalculateAverageCurvature(splineStartPosition, splineEndPosition, 10000, 0.1f);
-			Eigen::Vector3f centroidPoint = trajectory.GetCentroidPoint();
-			Eigen::Vector3f mainDirection = trajectory.GetMainDirection();
+		try
+		{
+			// analyze
+			std::vector<ATTrajectory> trajectories = hierarchicalClusteringTask.AnalyzePointArray(hitArray);
 
-			std::cout << "    startHitIndex: " << trajectory.GetStartHitIndex() << std::endl;
-			std::cout << "    startHitPosition: " << trajectory.GetPositionOnMainDirection(trajectory.GetStartHitVector()) << std::endl;
-			std::cout << "    splineStartPosition: " << splineStartPosition << std::endl;
-			std::cout << "    endHitIndex: " << trajectory.GetEndHitIndex() << std::endl;
-			std::cout << "    endHitPosition: " << trajectory.GetPositionOnMainDirection(trajectory.GetEndHitVector()) << std::endl;
-			std::cout << "    splineEndPosition: " << splineEndPosition << std::endl;
-			std::cout << "    approximateTrajectoryLength: " << trajectory.GetApproximateTrajectoryLength() << std::endl;
-			std::cout << "    trajectoryLength: " << trajectoryLength << std::endl;
-			std::cout << "    averageCurvature: " << averageCurvature << std::endl;
-			std::cout << "    centroidPoint: " << centroidPoint(0) << " " << centroidPoint(1) << " " << centroidPoint(2) << std::endl;
-			std::cout << "    mainDirection: " << mainDirection(0) << " " << mainDirection(1) << " " << mainDirection(2) << std::endl;
+			// work with results
+			for (ATTrajectory const &trajectory : trajectories)
+			{
+				std::cout << "  ## TRAJECTORY ##" << std::endl;
+
+				std::cout << "    hits: " << trajectory.GetHits().size() << std::endl;
+				// for (ATHit const &hit : trajectory.GetHits())
+				// {
+				// 	std::cout << "        hit: " << hit.GetPosition().X() << " " << hit.GetPosition().Y() << " " << hit.GetPosition().Z() << std::endl;
+				// }
+
+				ATCubicSplineFit const &cubicSplineFit = trajectory.GetCubicSplineFit();
+
+				float const splineStartPosition = cubicSplineFit.GetStartPosition();
+				float const splineEndPosition = cubicSplineFit.GetEndPosition();
+				float const trajectoryLength = cubicSplineFit.CalculateArcLength(splineStartPosition, splineEndPosition, 10000);
+				float const averageCurvature = cubicSplineFit.CalculateAverageCurvature(splineStartPosition, splineEndPosition, 10000, 0.1f);
+				Eigen::Vector3f centroidPoint = trajectory.GetCentroidPoint();
+				Eigen::Vector3f mainDirection = trajectory.GetMainDirection();
+
+				std::cout << "    startHitIndex: " << trajectory.GetStartHitIndex() << std::endl;
+				std::cout << "    startHitPosition: " << trajectory.GetPositionOnMainDirection(trajectory.GetStartHitVector()) << std::endl;
+				std::cout << "    splineStartPosition: " << splineStartPosition << std::endl;
+				std::cout << "    endHitIndex: " << trajectory.GetEndHitIndex() << std::endl;
+				std::cout << "    endHitPosition: " << trajectory.GetPositionOnMainDirection(trajectory.GetEndHitVector()) << std::endl;
+				std::cout << "    splineEndPosition: " << splineEndPosition << std::endl;
+				std::cout << "    approximateTrajectoryLength: " << trajectory.GetApproximateTrajectoryLength() << std::endl;
+				std::cout << "    trajectoryLength: " << trajectoryLength << std::endl;
+				std::cout << "    averageCurvature: " << averageCurvature << std::endl;
+				std::cout << "    centroidPoint: " << centroidPoint(0) << " " << centroidPoint(1) << " " << centroidPoint(2) << std::endl;
+				std::cout << "    mainDirection: " << mainDirection(0) << " " << mainDirection(1) << " " << mainDirection(2) << std::endl;
+			}
+
+			// remember visualizer, so we can reuse it
+			// `viewer` might get overwritten in the process
+			hierarchicalClusteringTask.Visualize(trajectories, viewer);
+		}
+		catch (std::runtime_error e)
+		{
+			std::cout << "Analyzation failed! Error: " << e.what() << std::endl;
 		}
 	}
 

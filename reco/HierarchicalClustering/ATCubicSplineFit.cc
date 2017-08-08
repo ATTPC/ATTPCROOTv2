@@ -46,6 +46,9 @@ ATCubicSplineFit::ATCubicSplineFit(std::vector<Eigen::Vector3f> const &controlPo
         this->_controlPoints.resize(writeindex);
     }
 
+    if (jump >= this->_controlPoints.size())
+        throw std::runtime_error("Too few control points!");
+
     for (size_t k = 0; k < (this->_controlPoints.size() - jump); k += jump)
     {
         SplineSegment splineSegment;
