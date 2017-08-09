@@ -29,9 +29,9 @@ public:
 	virtual void SetParContainers();
 	virtual void Finish();
 
-	std::vector<ATTrajectory> AnalyzePointArray(std::vector<ATHit> const &hitArray) const;
-	void Visualize(std::vector<ATTrajectory> const &trajectories) const;
-	void Visualize(std::vector<ATTrajectory> const &trajectories, std::shared_ptr<pcl::visualization::PCLVisualizer> &viewer) const;
+	std::vector<ATTrajectory> AnalyzePointArray(std::vector<ATHit> const &hitArray, std::vector<ATHit> *noMatch = nullptr) const;
+	void Visualize(std::vector<ATTrajectory> const &trajectories, std::vector<ATHit> const &noMatch = std::vector<ATHit>()) const;
+	void Visualize(std::vector<ATTrajectory> const &trajectories, std::vector<ATHit> const &noMatch, std::shared_ptr<pcl::visualization::PCLVisualizer> &viewer) const;
 
 
 	// Getters and Setters
@@ -86,7 +86,7 @@ private:
 	ATHierarchicalClusteringTask(const ATHierarchicalClusteringTask&);
 	ATHierarchicalClusteringTask operator=(const ATHierarchicalClusteringTask&);
 
-	std::vector<ATTrajectory> useHc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::vector<ATHit> const &hitArray, std::vector<ATHierarchicalClusteringHc::triplet> triplets, float scale) const;
+	std::vector<ATTrajectory> useHc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::vector<ATHit> const &hitArray, std::vector<ATHierarchicalClusteringHc::triplet> triplets, float scale, std::vector<ATHit> *noMatch) const;
 
 	ClassDef(ATHierarchicalClusteringTask, 1);
 };

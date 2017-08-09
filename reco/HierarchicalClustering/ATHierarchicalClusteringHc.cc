@@ -297,9 +297,11 @@ namespace ATHierarchicalClusteringHc
         cluster_group const &clusterGroup,
         float const splineTangentScale,
         float const splineMinControlPointDistance,
-        size_t const splineJump)
+        size_t const splineJump,
+        std::vector<ATHit> *noMatch)
     {
         std::vector<ATTrajectory> result;
+        std::vector<bool> indexUsed(hits.size());
 
         for (auto const &currentCluster : clusterGroup.clusters)
         {
@@ -354,10 +356,26 @@ namespace ATHierarchicalClusteringHc
                 });
 
                 result.push_back(ATTrajectory(clusterHits, startHitIndex, endHitIndex, approximateTrajectoryLength, centroidPoint, mainDirection, cubicSplineFit));
+
+                // not used indices
+                for (size_t index : pointIndices)
+                {
+                    indexUsed[index] = true;
+                }
             }
             catch (...)
             {
                 // let all errors in creating a trajectory fail silently
+            }
+        }
+
+        // fill noMatch
+        if (noMatch != nullptr)
+        {
+            for (size_t index = 0; index < indexUsed.size(); ++index)
+            {
+                if (!indexUsed[index])
+                    noMatch->push_back(hits[index]);
             }
         }
 

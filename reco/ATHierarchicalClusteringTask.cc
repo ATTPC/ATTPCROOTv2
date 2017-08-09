@@ -62,7 +62,7 @@ static float CalculateCloudScale(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
     return totalDistance / (float)cloud->size();
 }
 
-static void ColorByTrajectories(std::vector<ATTrajectory> const &trajectories, pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_rgb)
+static void ColorByTrajectories(std::vector<ATTrajectory> const &trajectories, std::vector<ATHit> const &noMatch, pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_rgb)
 {
     size_t trajectoryIndex = 0;
     for (ATTrajectory const &trajectory : trajectories)
@@ -79,7 +79,7 @@ static void ColorByTrajectories(std::vector<ATTrajectory> const &trajectories, p
 
         for (float i = startPosition; i <= endPosition; i += stepSize)
         {
-            Eigen::Vector3f position = cubicSplineFit.CalculatePoint(i);
+            Eigen::Vector3f const position = cubicSplineFit.CalculatePoint(i);
             pcl::PointXYZRGB point;
 
             point.x = position(0);
@@ -94,7 +94,7 @@ static void ColorByTrajectories(std::vector<ATTrajectory> const &trajectories, p
 
         for (ATHit const &hit : trajectory.GetHits())
         {
-            TVector3 position = hit.GetPosition();
+            TVector3 const position = hit.GetPosition();
             pcl::PointXYZRGB point;
 
             point.x = position.X();
@@ -109,9 +109,25 @@ static void ColorByTrajectories(std::vector<ATTrajectory> const &trajectories, p
 
         ++trajectoryIndex;
     }
+
+    // add no-matches
+    for (ATHit const &hit : noMatch)
+    {
+        TVector3 const position = hit.GetPosition();
+        pcl::PointXYZRGB point;
+
+        point.x = position.X();
+        point.y = position.Y();
+        point.z = position.Z();
+        point.r = 255;
+        point.g = 0;
+        point.b = 0;
+
+        cloud_rgb->push_back(point);
+    }
 }
 
-std::vector<ATTrajectory> ATHierarchicalClusteringTask::useHc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::vector<ATHit> const &hitArray, std::vector<ATHierarchicalClusteringHc::triplet> triplets, float scale) const
+std::vector<ATTrajectory> ATHierarchicalClusteringTask::useHc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::vector<ATHit> const &hitArray, std::vector<ATHierarchicalClusteringHc::triplet> triplets, float scale, std::vector<ATHit> *noMatch) const
 {
     ATHierarchicalClusteringHc::cluster_history result = ATHierarchicalClusteringHc::CalculateHc(cloud, triplets, ATHierarchicalClusteringHc::singleLinkClusterMetric, [&] (ATHierarchicalClusteringHc::triplet const &lhs, ATHierarchicalClusteringHc::triplet const &rhs, pcl::PointCloud<pcl::PointXYZI>::ConstPtr)
     {       
@@ -127,14 +143,15 @@ std::vector<ATTrajectory> ATHierarchicalClusteringTask::useHc(pcl::PointCloud<pc
     ATHierarchicalClusteringHc::cluster_group const &clusterGroup = ATHierarchicalClusteringHc::GetBestClusterGroup(result, this->_bestClusterDistanceDelta);
     ATHierarchicalClusteringHc::cluster_group const &cleanedUpClusterGroup = ATHierarchicalClusteringHc::CleanupClusterGroup(clusterGroup, this->_cleanupMinTriplets);
 
-    return ToTrajectories(
+    return ATHierarchicalClusteringHc::ToTrajectories(
         cloud,
         hitArray,
         triplets,
         cleanedUpClusterGroup,
         this->_splineTangentScale,
         this->_splineMinControlPointDistance,
-        this->_splineJump);
+        this->_splineJump,
+        noMatch);
 }
 
 
@@ -211,7 +228,7 @@ void ATHierarchicalClusteringTask::Finish()
 }
 
 
-std::vector<ATTrajectory> ATHierarchicalClusteringTask::AnalyzePointArray(std::vector<ATHit> const &hitArray) const
+std::vector<ATTrajectory> ATHierarchicalClusteringTask::AnalyzePointArray(std::vector<ATHit> const &hitArray, std::vector<ATHit> *noMatch) const
 {
     pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_xyzti(new pcl::PointCloud<pcl::PointXYZI>());
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_xyz(new pcl::PointCloud<pcl::PointXYZ>());
@@ -237,21 +254,21 @@ std::vector<ATTrajectory> ATHierarchicalClusteringTask::AnalyzePointArray(std::v
         std::vector<ATHierarchicalClusteringHc::triplet> triplets = ATHierarchicalClusteringHc::GenerateTriplets(cloud_xyzti_smooth, this->_genTripletsNnKandidates, this->_genTripletsNBest, this->_genTripletsMaxError);
         // TODO: evaluate tradeoff
         // using the smooth cloud yields better curvature, but the curve is too short.
-        std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti, hitArray, triplets, cloudScale * this->_cloudScaleModifier);
+        std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti, hitArray, triplets, cloudScale * this->_cloudScaleModifier, noMatch);
         // std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti_smooth, hitArray, triplets, cloudScale * this->_cloudScaleModifier);
 
         return trajectories;
     }
 }
 
-void ATHierarchicalClusteringTask::Visualize(std::vector<ATTrajectory> const &trajectories) const
+void ATHierarchicalClusteringTask::Visualize(std::vector<ATTrajectory> const &trajectories, std::vector<ATHit> const &noMatch) const
 {
     std::shared_ptr<pcl::visualization::PCLVisualizer> viewer = nullptr;
-    this->ATHierarchicalClusteringTask::Visualize(trajectories, viewer);
+    this->ATHierarchicalClusteringTask::Visualize(trajectories, noMatch, viewer);
     viewer->close();
 }
 
-void ATHierarchicalClusteringTask::Visualize(std::vector<ATTrajectory> const &trajectories, std::shared_ptr<pcl::visualization::PCLVisualizer> &viewer) const
+void ATHierarchicalClusteringTask::Visualize(std::vector<ATTrajectory> const &trajectories, std::vector<ATHit> const &noMatch, std::shared_ptr<pcl::visualization::PCLVisualizer> &viewer) const
 {
     if (viewer == nullptr)
     {
@@ -270,16 +287,25 @@ void ATHierarchicalClusteringTask::Visualize(std::vector<ATTrajectory> const &tr
 
     // color-code
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_xyzrgb(new pcl::PointCloud<pcl::PointXYZRGB>());
-    ColorByTrajectories(trajectories, cloud_xyzrgb);
+    ColorByTrajectories(trajectories, noMatch, cloud_xyzrgb);
 
     // visualize
     size_t lineId = 0;
+    auto addNewLine = [&](pcl::PointXYZ const &lhs, pcl::PointXYZ const &rhs, double r, double g, double b)
+    {
+        std::ostringstream oss;
+        oss << "line" << lineId;
+        viewer->addLine<pcl::PointXYZ>(lhs, rhs, oss.str());
+        viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, r, g, b, oss.str());
+        ++lineId;
+    };
+
     for (ATTrajectory const &trajectory : trajectories)
     {
-        pcl::PointXYZ startA;
-        startA.x = trajectory.GetCentroidPoint()(0);
-        startA.y = trajectory.GetCentroidPoint()(1);
-        startA.z = trajectory.GetCentroidPoint()(2);
+        pcl::PointXYZ start;
+        start.x = trajectory.GetCentroidPoint()(0);
+        start.y = trajectory.GetCentroidPoint()(1);
+        start.z = trajectory.GetCentroidPoint()(2);
 
         pcl::PointXYZ endA;
         Eigen::Vector3f endEigA = trajectory.GetCentroidPoint() + (trajectory.GetApproximateTrajectoryLength() / 2.0f) * trajectory.GetMainDirection();
@@ -287,14 +313,7 @@ void ATHierarchicalClusteringTask::Visualize(std::vector<ATTrajectory> const &tr
         endA.y = endEigA(1);
         endA.z = endEigA(2);
 
-        viewer->addLine<pcl::PointXYZ>(startA, endA, "line" + lineId);
-        viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0, 0.0, 1.0, "line" + lineId);
-        ++lineId;
-
-        pcl::PointXYZ startB;
-        startB.x = trajectory.GetCentroidPoint()(0);
-        startB.y = trajectory.GetCentroidPoint()(1);
-        startB.z = trajectory.GetCentroidPoint()(2);
+        addNewLine(start, endA, 1.0, 0.0, 1.0);
 
         pcl::PointXYZ endB;
         Eigen::Vector3f endEigB = trajectory.GetCentroidPoint() - (trajectory.GetApproximateTrajectoryLength() / 2.0f) * trajectory.GetMainDirection();
@@ -302,9 +321,44 @@ void ATHierarchicalClusteringTask::Visualize(std::vector<ATTrajectory> const &tr
         endB.y = endEigB(1);
         endB.z = endEigB(2);
 
-        viewer->addLine<pcl::PointXYZ>(startB, endB, "line" + lineId);
-        viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0, 0.0, 0.0, "line" + lineId);
-        ++lineId;
+        addNewLine(start, endB, 1.0, 0.0, 0.0);
+
+
+        /*
+        // test angle
+        ATCubicSplineFit const &cubicSplineFit = trajectory.GetCubicSplineFit();
+
+        float const startPosition = cubicSplineFit.GetStartPosition();
+        float const endPosition = cubicSplineFit.GetEndPosition();
+        float const stepSize = (endPosition - startPosition) / 250.0f;
+        float const delta = stepSize;
+
+        for (float position = startPosition; position <= endPosition; position += stepSize)
+        {
+            pcl::PointXYZ pointPcl;
+            Eigen::Vector3f const point = cubicSplineFit.CalculatePoint(position);
+            pointPcl.x = point(0);
+            pointPcl.y = point(1);
+            pointPcl.z = point(2);
+
+
+            Eigen::Vector3f const pointLeft = cubicSplineFit.CalculatePoint(position - delta);
+            Eigen::Vector3f const pointRight = cubicSplineFit.CalculatePoint(position + delta);
+
+            Eigen::Vector3f direction = (pointLeft + ((pointRight - pointLeft) / 2.0f)) - point;
+            direction /= direction.norm();
+
+
+            pcl::PointXYZ targetPointPcl;
+            Eigen::Vector3f const targetPoint = point + 20.0f * direction;
+            targetPointPcl.x = targetPoint(0);
+            targetPointPcl.y = targetPoint(1);
+            targetPointPcl.z = targetPoint(2);
+
+
+            addNewLine(pointPcl, targetPointPcl, 0.5, 0.5, 0.5);
+        }
+        */
     }
 
     viewer->addPointCloud(cloud_xyzrgb, "cloud");

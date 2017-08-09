@@ -10,6 +10,7 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 
 	TString loggerFile = dataDir + "ATTPCLog_Reco.log";
 	TString inputFile = dataDir + "attpcsim_alpha.root";
+	// TString inputFile = dataDir + "run0202.root";
 	TString outputFile = dataDir + "output";
 
 	// Logger
@@ -35,6 +36,8 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 	}
 
 	eventsBranch->SetAddress(&events);
+
+	std::cout << "This is " << (isSimulation ? "" : "not ") << "a simulation." << std::endl;
 
 	// Run task
 	ATHierarchicalClusteringTask hierarchicalClusteringTask;
@@ -63,18 +66,24 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 
 		if (isSimulation)
 		{
-			for (size_t k = 0; k < 2; ++k)
+			// first the beam is simulated,
+			// then the recoil and scatter.
+			// Here we merge them into one.
+			for (size_t j = 0; j < 2; ++j)
 			{
-				eventsBranch->GetEvent(i + k);
+				eventsBranch->GetEvent(i + j);
 
-				for (size_t j = 0; j < events->GetEntries(); ++j)
+				// here we convert the simulated points into ATHit
+				// we scale with a factor of 10 because the simulations
+				// are in cm, but the experiments are in mm
+				for (size_t k = 0; k < events->GetEntries(); ++k)
 				{
-					AtTpcPoint const &point = *((AtTpcPoint*)events->At(j));
+					AtTpcPoint const &point = *((AtTpcPoint*)events->At(k));
 					hitArray.push_back(ATHit(
 						0,
-						point.GetXIn() * 100.0,
-						point.GetYIn() * 100.0,
-						point.GetZIn() * 100.0,
+						point.GetXIn() * 10.0,
+						point.GetYIn() * 10.0,
+						point.GetZIn() * 10.0,
 						0.0
 					));
 				}
@@ -92,8 +101,12 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 
 		try
 		{
+			// a place for no-matches
+			// (points that don't belong to any trajectory)
+			std::vector<ATHit> noMatch;
+
 			// analyze
-			std::vector<ATTrajectory> trajectories = hierarchicalClusteringTask.AnalyzePointArray(hitArray);
+			std::vector<ATTrajectory> trajectories = hierarchicalClusteringTask.AnalyzePointArray(hitArray, &noMatch);
 
 			// work with results
 			for (ATTrajectory const &trajectory : trajectories)
@@ -124,13 +137,14 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 				std::cout << "    approximateTrajectoryLength: " << trajectory.GetApproximateTrajectoryLength() << std::endl;
 				std::cout << "    trajectoryLength: " << trajectoryLength << std::endl;
 				std::cout << "    averageCurvature: " << averageCurvature << std::endl;
+				std::cout << "    radius: " << (1.0f / averageCurvature) << std::endl;
 				std::cout << "    centroidPoint: " << centroidPoint(0) << " " << centroidPoint(1) << " " << centroidPoint(2) << std::endl;
 				std::cout << "    mainDirection: " << mainDirection(0) << " " << mainDirection(1) << " " << mainDirection(2) << std::endl;
 			}
 
 			// remember visualizer, so we can reuse it
 			// `viewer` might get overwritten in the process
-			hierarchicalClusteringTask.Visualize(trajectories, viewer);
+			hierarchicalClusteringTask.Visualize(trajectories, noMatch, viewer);
 		}
 		catch (std::runtime_error e)
 		{

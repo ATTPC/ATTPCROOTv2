@@ -97,7 +97,8 @@ namespace ATHierarchicalClusteringHc
         cluster_group const &clusterGroup,
         float const splineTangentScale = 0.5f,
         float const splineMinControlPointDistance = 20.0f,
-        size_t const splineJump = 1);
+        size_t const splineJump = 1,
+        std::vector<ATHit> *noMatch = nullptr);
 }
 
 #endif
