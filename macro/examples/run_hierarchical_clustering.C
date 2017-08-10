@@ -46,7 +46,7 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 	hierarchicalClusteringTask.SetBestClusterDistanceDelta(2.0f);
 	hierarchicalClusteringTask.SetCleanupMinTriplets(4);
 	hierarchicalClusteringTask.SetCloudScaleModifier(0.2f);
-	hierarchicalClusteringTask.SetGenTripletsMaxError(0.03f);
+	hierarchicalClusteringTask.SetGenTripletsMaxError(0.01f);
 	hierarchicalClusteringTask.SetGenTripletsNnKandidates(10);
 	hierarchicalClusteringTask.SetGenTripletsNBest(2);
 	hierarchicalClusteringTask.SetSmoothRadius(0.25f);
