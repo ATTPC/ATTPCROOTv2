@@ -1,5 +1,8 @@
 #include "ATTrigger.hh"
 
+#include <string>
+#include <sstream>
+
 
 
 ClassImp(ATTrigger)
@@ -13,35 +16,64 @@ ATTrigger::~ATTrigger()
 {
 }
 
-void ATTrigger::SetAtMap(TString mapPath){
+void ATTrigger::SetAtMap(TString mapPath) {
+  std::ifstream file;
+  file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
-  std::ifstream* in;
-  in = new std::ifstream(mapPath.Data());
-  if(in->fail())
-    std::cout<<" =  No AtMap file found! Please, check the path. Current :"<<mapPath.Data()<<std::endl;
+  try
+  {
+    file.open(mapPath);
 
-  Float_t CoboNum, asad, aget, channel, pad;
-  //Int_t intCoboNum, intpad;
-  Int_t nlines = 0;
-  //fPadNum = 0;
-  //for(int ii=0;ii<512;ii++) fDummy[ii] = 0.0;
-  //memset(fCoboNumArray, 0, sizeof(fCoboNumArray));
-  //fCoboNumArray[10240] = {0};
-  //fPadNumArray[10241] = {0};
+    // Int_t intCoboNum, intpad;
+    Int_t nLines = 0;
+    Int_t nPoints = 0;
+    // fPadNum = 0;
+    // for(int ii=0;ii<512;ii++) fDummy[ii] = 0.0;
+    // memset(fCoboNumArray, 0, sizeof(fCoboNumArray));
+    // fCoboNumArray[10240] = {0};
+    // fPadNumArray[10241] = {0};
 
- while (!in->eof()) {
-     *in >> CoboNum >> asad >> aget >> channel >>pad;
-     if (nlines < 5) printf("CoboNum=%8f, asad=%8f, aget=%8f, channel=%8f, pad=%8f\n",CoboNum, asad, aget, channel, pad);
+    while (!file.eof())
+    {
+      // read a single line
+      std::string line;
+      std::getline(file, line);
 
-     //intCoboNum = (int) CoboNum;
-     //intpad     = (int) pad;
-     //fCoboNumArray[nlines] = CoboNum;
-     //fPadNumArray[nlines] = pad;
-     nlines++;
-   }
-   //printf(" found %d points\n",nlines);
+      try
+      {
+        Float_t CoboNum, asad, aget, channel, pad;
 
-   in->close();
+        // read with default seperator (space) seperated elements
+        {
+          std::istringstream iss(line);
+          iss.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+          iss >> CoboNum >> asad >> aget >> channel >> pad;
+        }
+
+        printf("Successfully read point: CoboNum=%8f, asad=%8f, aget=%8f, channel=%8f, pad=%8f\n", CoboNum, asad, aget, channel, pad);
+
+        ++nPoints;
+      }
+      catch (...)
+      {
+        std::cout << "Malformed point in line " << (nLines + 1) << "!" << std::endl;
+      }
+
+      // intCoboNum = (int) CoboNum;
+      // intpad     = (int) pad;
+      // fCoboNumArray[nLines] = CoboNum;
+      // fPadNumArray[nLines] = pad;
+      ++nLines;
+    }
+
+    file.close();
+
+    std::cout << "Successfully read " << nPoints << " points in " << nLines << " lines!" << std::endl;
+  }
+  catch (...)
+  {
+    std::cout << "Something bad happened while reading the file!" << std::endl;
+  }
 }
 
 
