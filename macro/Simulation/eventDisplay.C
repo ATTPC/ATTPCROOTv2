@@ -1,7 +1,7 @@
 void eventDisplay()
 {
   //-----User Settings:-----------------------------------------------
-  TString  InputFile     ="./data/attpcsim_2.root";
+  TString  InputFile     ="./data/attpcsim.root";
   TString  ParFile       ="./data/attpcpar.root";
   TString  OutFile	     ="./data/attpctest.root";
 

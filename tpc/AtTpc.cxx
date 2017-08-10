@@ -198,7 +198,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
          LOG(INFO)<<" Total relativistic energy " <<gMC->Etot()<< FairLogger::endl;
          LOG(INFO)<<" Mass of the Tracked particle (gAVTP) : "<<gATVP->GetBeamMass()<<std::endl;
          LOG(INFO)<<" Mass of the Tracked particle (gMC) : "<<gMC->TrackMass()<<std::endl;
-         LOG(INFO)<<" Initial energy of the current particle in this volume : "<<((gMC->Etot() - gATVP->GetBeamMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
+         LOG(INFO)<<" Initial energy of the current particle in this volume : "<<((gMC->Etot() - gMC->TrackMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
          //LOG(INFO)<<" Total energy of the current track (gMC) : "<<((gMC->Etot() - gMC->TrackMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
 
         /*
@@ -448,8 +448,8 @@ else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==5)
 	       gMC->TrackMomentum(StopMom);
          LOG(INFO)<<" Mass of the Tracked particle : "<<gMC->TrackMass()<<std::endl;
          LOG(INFO)<<" Mass of the Beam from global vertex pointer : "<<gATVP->GetBeamMass()<<std::endl;
-	 // LOG(INFO)<<" Total energy of the current track : "<<((gMC->Etot() - gMC->TrackMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
-         Double_t StopEnergy = ((gMC->Etot() - gATVP->GetBeamMass()) * 1000.);
+	      // LOG(INFO)<<" Total energy of the current track : "<<((gMC->Etot() - gMC->TrackMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
+         Double_t StopEnergy = ((gMC->Etot() - gMC->TrackMass()) * 1000.);
          LOG(INFO)<<" Total energy of the Beam particle before reaction : "<<StopEnergy<<FairLogger::endl;// Relativistic Mass
          gATVP->SetVertex(StopPos.X(),StopPos.Y(),StopPos.Z(),InPos.X(),InPos.Y(),InPos.Z(),StopMom.Px(),StopMom.Py(),StopMom.Pz(),StopEnergy);
 	 // std::cout<<" Entrance Position 2 - X : "<<InPos.X()<<" - Y : "<<InPos.Y()<<" - Z : "<<InPos.Z()<<std::endl;
