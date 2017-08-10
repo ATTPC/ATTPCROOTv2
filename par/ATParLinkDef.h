@@ -8,5 +8,6 @@
 //#pragma link C++ class STGeoPar+;
 #pragma link C++ class ATDigiPar+;
 #pragma link C++ class ATGas+;
+#pragma link C++ class ATTriggerPar+;
 
 #endif

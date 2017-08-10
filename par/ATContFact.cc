@@ -1,6 +1,7 @@
 #include "ATContFact.hh"
 //#include "ATGeoPar.hh"
 #include "ATDigiPar.hh"
+#include "ATTriggerPar.hh"
 
 #include "FairRuntimeDb.h"
 
@@ -42,6 +43,12 @@ void ATContFact::setAllContainers()
                         "");
 
   containers -> Add(p);
+
+  FairContainer* pp = new FairContainer("ATTriggerPar",
+                          "ATTPC Parameter Container",
+                          "");
+
+  containers -> Add(pp);
 }
 
 FairParSet* ATContFact::createContainer(FairContainer* c)
@@ -61,6 +68,10 @@ FairParSet* ATContFact::createContainer(FairContainer* c)
 
   if (strcmp(name, "ATDigiPar") == 0) {
     p = new ATDigiPar(c -> getConcatName().Data(),
+                      c -> GetTitle(), c -> getContext());
+  }
+  if (strcmp(name, "ATTriggerPar") == 0) {
+    p = new ATTriggerPar(c -> getConcatName().Data(),
                       c -> GetTitle(), c -> getContext());
   }
   return p;
