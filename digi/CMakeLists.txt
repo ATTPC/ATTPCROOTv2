@@ -34,6 +34,8 @@ ATAvalancheTask.cc
 ATClusterizeTask.cc
 ATPulseTask.cc
 ATSimulatedPoint.cc
+ATTrigger.cc
+ATTriggerTask.cc
 
 )
 
