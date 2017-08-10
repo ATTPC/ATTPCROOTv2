@@ -43,6 +43,14 @@ ATCubicSplineFit::ATCubicSplineFit(std::vector<Eigen::Vector3f> const &controlPo
             }
         }
 
+        // add last index if it is not at the same position as the last element
+        size_t const lastIndex = this->_controlPoints.size() - 1;
+        if (lastWrittenPosition < positionFunction(this->_controlPoints[lastIndex], lastIndex))
+        {
+            this->_controlPoints[writeindex] = this->_controlPoints[lastIndex];
+            ++writeindex;
+        }
+
         this->_controlPoints.resize(writeindex);
     }
 

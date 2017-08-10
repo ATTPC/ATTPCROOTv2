@@ -254,8 +254,8 @@ std::vector<ATTrajectory> ATHierarchicalClusteringTask::AnalyzePointArray(std::v
         std::vector<ATHierarchicalClusteringHc::triplet> triplets = ATHierarchicalClusteringHc::GenerateTriplets(cloud_xyzti_smooth, this->_genTripletsNnKandidates, this->_genTripletsNBest, this->_genTripletsMaxError);
         // TODO: evaluate tradeoff
         // using the smooth cloud yields better curvature, but the curve is too short.
-        std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti, hitArray, triplets, cloudScale * this->_cloudScaleModifier, noMatch);
-        // std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti_smooth, hitArray, triplets, cloudScale * this->_cloudScaleModifier);
+        // std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti, hitArray, triplets, cloudScale * this->_cloudScaleModifier, noMatch);
+        std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti_smooth, hitArray, triplets, cloudScale * this->_cloudScaleModifier, noMatch);
 
         return trajectories;
     }
@@ -277,6 +277,8 @@ void ATHierarchicalClusteringTask::Visualize(std::vector<ATTrajectory> const &tr
         viewer->setSize(800, 600);
         viewer->setBackgroundColor(1.0, 1.0, 1.0);
         viewer->setCameraPosition(0.0, 0.0, 2000.0, 0.0, 1.0, 0.0);
+        viewer->setCameraClipDistances(std::numeric_limits<double>::min(), std::numeric_limits<double>::max());
+        viewer->setCameraFieldOfView(3.14f / 2.0f);
     }
 
     viewer->removeAllPointClouds();

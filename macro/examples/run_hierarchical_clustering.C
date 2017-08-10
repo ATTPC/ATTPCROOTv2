@@ -9,8 +9,8 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 	TString dataDir = dir + "/data/";
 
 	TString loggerFile = dataDir + "ATTPCLog_Reco.log";
-	TString inputFile = dataDir + "attpcsim_alpha.root";
-	// TString inputFile = dataDir + "run0202.root";
+	// TString inputFile = dataDir + "attpcsim_alpha.root";
+	TString inputFile = dataDir + "run0202.root";
 	TString outputFile = dataDir + "output";
 
 	// Logger
@@ -43,15 +43,15 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 	ATHierarchicalClusteringTask hierarchicalClusteringTask;
 
 	// optional: set different parameters
-	hierarchicalClusteringTask.SetBestClusterDistanceDelta(2.91713f);
-	hierarchicalClusteringTask.SetCleanupMinTriplets(20);
-	hierarchicalClusteringTask.SetCloudScaleModifier(0.281718f);
-	hierarchicalClusteringTask.SetGenTripletsMaxError(0.0103171f);
-	hierarchicalClusteringTask.SetGenTripletsNnKandidates(14);
+	hierarchicalClusteringTask.SetBestClusterDistanceDelta(2.0f);
+	hierarchicalClusteringTask.SetCleanupMinTriplets(4);
+	hierarchicalClusteringTask.SetCloudScaleModifier(0.2f);
+	hierarchicalClusteringTask.SetGenTripletsMaxError(0.03f);
+	hierarchicalClusteringTask.SetGenTripletsNnKandidates(10);
 	hierarchicalClusteringTask.SetGenTripletsNBest(2);
-	hierarchicalClusteringTask.SetSmoothRadius(0.818581f);
+	hierarchicalClusteringTask.SetSmoothRadius(0.25f);
 	hierarchicalClusteringTask.SetSplineTangentScale(0.5f);
-	hierarchicalClusteringTask.SetSplineMinControlPointDistance(20.0f);
+	hierarchicalClusteringTask.SetSplineMinControlPointDistance(30.0f);
 	hierarchicalClusteringTask.SetSplineJump(1);
 
 	// remember visualizer, so we can reuse it
@@ -80,7 +80,7 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 				{
 					AtTpcPoint const &point = *((AtTpcPoint*)events->At(k));
 					hitArray.push_back(ATHit(
-						0,
+						point.GetTrackID(),
 						point.GetXIn() * 10.0,
 						point.GetYIn() * 10.0,
 						point.GetZIn() * 10.0,
