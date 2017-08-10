@@ -79,13 +79,16 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 				for (size_t k = 0; k < events->GetEntries(); ++k)
 				{
 					AtTpcPoint const &point = *((AtTpcPoint*)events->At(k));
-					hitArray.push_back(ATHit(
-						point.GetTrackID(),
+					ATHit hit(
+						0,
 						point.GetXIn() * 10.0,
 						point.GetYIn() * 10.0,
 						point.GetZIn() * 10.0,
 						0.0
-					));
+					);
+					hit.SetTrackID(point.GetTrackID());
+
+					hitArray.push_back(hit);
 				}
 			}
 		}
@@ -114,10 +117,10 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 				std::cout << "  ## TRAJECTORY ##" << std::endl;
 
 				std::cout << "    hits: " << trajectory.GetHits().size() << std::endl;
-				// for (ATHit const &hit : trajectory.GetHits())
-				// {
-				// 	std::cout << "        hit: " << hit.GetPosition().X() << " " << hit.GetPosition().Y() << " " << hit.GetPosition().Z() << std::endl;
-				// }
+				for (ATHit const &hit : trajectory.GetHits())
+				{
+					std::cout << "      hit: " << hit.GetTrackID() << " (" << hit.GetPosition().X() << " " << hit.GetPosition().Y() << " " << hit.GetPosition().Z() << ")" << std::endl;
+				}
 
 				ATCubicSplineFit const &cubicSplineFit = trajectory.GetCubicSplineFit();
 
@@ -142,6 +145,14 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 				std::cout << "    mainDirection: " << mainDirection(0) << " " << mainDirection(1) << " " << mainDirection(2) << std::endl;
 			}
 
+			std::cout << "  ## NOMATCH ##" << std::endl;
+
+			std::cout << "    hits: " << noMatch.size() << std::endl;
+			for (ATHit const &hit : noMatch)
+			{
+				std::cout << "      hit: " << hit.GetTrackID() << " (" << hit.GetPosition().X() << " " << hit.GetPosition().Y() << " " << hit.GetPosition().Z() << ")" << std::endl;
+			}
+
 			// remember visualizer, so we can reuse it
 			// `viewer` might get overwritten in the process
 			hierarchicalClusteringTask.Visualize(trajectories, noMatch, viewer);
@@ -150,6 +161,8 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 		{
 			std::cout << "Analyzation failed! Error: " << e.what() << std::endl;
 		}
+
+		std::cout << std::endl << std::endl;
 	}
 
 	// Finish
