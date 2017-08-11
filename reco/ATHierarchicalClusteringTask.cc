@@ -73,9 +73,9 @@ static void ColorByTrajectories(std::vector<ATTrajectory> const &trajectories, s
 
         ATCubicSplineFit const &cubicSplineFit = trajectory.GetCubicSplineFit();
 
-        float const startPosition = cubicSplineFit.GetStartPosition();
-        float const endPosition = cubicSplineFit.GetEndPosition();
-        float const stepSize = (endPosition - startPosition) / 250.0f;
+        float const startPosition = cubicSplineFit.GetStartPosition() - 100.0f;
+        float const endPosition = cubicSplineFit.GetEndPosition() + 100.0f;
+        float const stepSize = (endPosition - startPosition) / 100.0f;
 
         for (float i = startPosition; i <= endPosition; i += stepSize)
         {
@@ -276,9 +276,9 @@ void ATHierarchicalClusteringTask::Visualize(std::vector<ATTrajectory> const &tr
         viewer->setPosition(100, 100);
         viewer->setSize(800, 600);
         viewer->setBackgroundColor(1.0, 1.0, 1.0);
-        viewer->setCameraPosition(0.0, 0.0, 2000.0, 0.0, 1.0, 0.0);
+        viewer->setCameraPosition(0.0, 0.0, 5000.0, 0.0, 1.0, 0.0);
         viewer->setCameraClipDistances(std::numeric_limits<double>::min(), std::numeric_limits<double>::max());
-        viewer->setCameraFieldOfView(3.14f / 2.0f);
+        viewer->setCameraFieldOfView(3.14f / 4.0f); // 45 deg
     }
 
     viewer->removeAllPointClouds();
@@ -304,13 +304,15 @@ void ATHierarchicalClusteringTask::Visualize(std::vector<ATTrajectory> const &tr
 
     for (ATTrajectory const &trajectory : trajectories)
     {
+        ATCubicSplineFit const &cubicSplineFit = trajectory.GetCubicSplineFit();
+
         pcl::PointXYZ start;
         start.x = trajectory.GetCentroidPoint()(0);
         start.y = trajectory.GetCentroidPoint()(1);
         start.z = trajectory.GetCentroidPoint()(2);
 
         pcl::PointXYZ endA;
-        Eigen::Vector3f endEigA = trajectory.GetCentroidPoint() + (trajectory.GetApproximateTrajectoryLength() / 2.0f) * trajectory.GetMainDirection();
+        Eigen::Vector3f endEigA = trajectory.GetCentroidPoint() + (cubicSplineFit.GetStartPosition() * trajectory.GetMainDirection());
         endA.x = endEigA(0);
         endA.y = endEigA(1);
         endA.z = endEigA(2);
@@ -318,7 +320,7 @@ void ATHierarchicalClusteringTask::Visualize(std::vector<ATTrajectory> const &tr
         addNewLine(start, endA, 1.0, 0.0, 1.0);
 
         pcl::PointXYZ endB;
-        Eigen::Vector3f endEigB = trajectory.GetCentroidPoint() - (trajectory.GetApproximateTrajectoryLength() / 2.0f) * trajectory.GetMainDirection();
+        Eigen::Vector3f endEigB = trajectory.GetCentroidPoint() + (cubicSplineFit.GetEndPosition() * trajectory.GetMainDirection());
         endB.x = endEigB(0);
         endB.y = endEigB(1);
         endB.z = endEigB(2);

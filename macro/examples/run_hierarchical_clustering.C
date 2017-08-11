@@ -9,7 +9,7 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 	TString dataDir = dir + "/data/";
 
 	TString loggerFile = dataDir + "ATTPCLog_Reco.log";
-	// TString inputFile = dataDir + "attpcsim_alpha.root";
+	// TString inputFile = dataDir + "attpcsim_alphaT.root";
 	TString inputFile = dataDir + "run0202.root";
 	TString outputFile = dataDir + "output";
 
@@ -90,6 +90,12 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 
 					hitArray.push_back(hit);
 				}
+
+				if (j == 0)
+				{
+					TVector3 const &vertexPosition = hitArray.back().GetPosition();
+					std::cout << "  simulated vertex-position: " << vertexPosition.X() << " " << vertexPosition.Y() << " " << vertexPosition.Z() << std::endl;
+				}
 			}
 		}
 		else
@@ -100,8 +106,6 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 			hitArray = *event.GetHitArray();
 		}
 
-		std::cout << "  HitArray Size: " << hitArray.size() << std::endl;
-
 		try
 		{
 			// a place for no-matches
@@ -110,6 +114,9 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 
 			// analyze
 			std::vector<ATTrajectory> trajectories = hierarchicalClusteringTask.AnalyzePointArray(hitArray, &noMatch);
+
+			Eigen::Vector3f const vertex = ATFindVertex(trajectories);
+			std::cout << "  expected vertex-position: " << vertex(0) << " " << vertex(1) << " " << vertex(2) << std::endl;
 
 			// work with results
 			for (ATTrajectory const &trajectory : trajectories)
@@ -128,19 +135,20 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 				float const splineEndPosition = cubicSplineFit.GetEndPosition();
 				float const trajectoryLength = cubicSplineFit.CalculateArcLength(splineStartPosition, splineEndPosition, 10000);
 				float const averageCurvature = cubicSplineFit.CalculateAverageCurvature(splineStartPosition, splineEndPosition, 10000, 0.1f);
+
+				TVector3 startHitPosition = trajectory.GetHits().front().GetPosition();
+				TVector3 endHitPosition = trajectory.GetHits().back().GetPosition();
+
 				Eigen::Vector3f centroidPoint = trajectory.GetCentroidPoint();
 				Eigen::Vector3f mainDirection = trajectory.GetMainDirection();
 
-				std::cout << "    startHitIndex: " << trajectory.GetStartHitIndex() << std::endl;
-				std::cout << "    startHitPosition: " << trajectory.GetPositionOnMainDirection(trajectory.GetStartHitVector()) << std::endl;
 				std::cout << "    splineStartPosition: " << splineStartPosition << std::endl;
-				std::cout << "    endHitIndex: " << trajectory.GetEndHitIndex() << std::endl;
-				std::cout << "    endHitPosition: " << trajectory.GetPositionOnMainDirection(trajectory.GetEndHitVector()) << std::endl;
+				std::cout << "    startHitPosition: " << startHitPosition.X() << " " << startHitPosition.Y() << " " << startHitPosition.Z() << std::endl;
 				std::cout << "    splineEndPosition: " << splineEndPosition << std::endl;
-				std::cout << "    approximateTrajectoryLength: " << trajectory.GetApproximateTrajectoryLength() << std::endl;
+				std::cout << "    endHitPosition: " << endHitPosition.X() << " " << endHitPosition.Y() << " " << endHitPosition.Z() << std::endl;
 				std::cout << "    trajectoryLength: " << trajectoryLength << std::endl;
 				std::cout << "    averageCurvature: " << averageCurvature << std::endl;
-				std::cout << "    radius: " << (1.0f / averageCurvature) << std::endl;
+				std::cout << "    averageRadius: " << (1.0f / averageCurvature) << std::endl;
 				std::cout << "    centroidPoint: " << centroidPoint(0) << " " << centroidPoint(1) << " " << centroidPoint(2) << std::endl;
 				std::cout << "    mainDirection: " << mainDirection(0) << " " << mainDirection(1) << " " << mainDirection(2) << std::endl;
 			}

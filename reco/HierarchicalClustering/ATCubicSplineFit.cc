@@ -164,12 +164,12 @@ Eigen::Vector3f ATCubicSplineFit::CalculatePoint(float position) const
 
 Eigen::Vector3f ATCubicSplineFit::CalculateDerivativePoint(float position, float delta) const
 {
-    return (this->CalculatePoint(position + delta) - this->CalculatePoint(position - delta)) / delta;
+    return (this->CalculatePoint(position + delta) - this->CalculatePoint(position - delta)) / (delta + delta);
 }
 
 Eigen::Vector3f ATCubicSplineFit::CalculateSecondDerivativePoint(float position, float delta) const
 {
-    return (this->CalculateDerivativePoint(position + delta, delta) - this->CalculateDerivativePoint(position - delta, delta)) / delta;
+    return (this->CalculateDerivativePoint(position + delta, delta) - this->CalculateDerivativePoint(position - delta, delta)) / (delta + delta);
 }
 
 float ATCubicSplineFit::CalculateAverageCurvature(float const startPosition, float const endPosition, size_t const sampleSize, float const delta) const

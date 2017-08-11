@@ -1,6 +1,6 @@
 #include "ATHierarchicalClusteringHc.hh"
 
-#include "ATHierarchicalClusteringGraph.hpp"
+// #include "ATHierarchicalClusteringGraph.hpp"
 
 #include <algorithm>
 #include <pcl/common/centroid.h>
@@ -313,37 +313,38 @@ namespace ATHierarchicalClusteringHc
                 pcl::PointCloud<pcl::PointXYZI>::Ptr const clusterCloud(new pcl::PointCloud<pcl::PointXYZI>());
                 *clusterCloud = ExtactAtIndices(*cloud, pointIndices);
 
-                std::vector<ATHierarchicalClusteringGraph::state> const mstHistory = ATHierarchicalClusteringGraph::CalculateMinimumSpanningTree(*clusterCloud);
-                std::vector<ATHierarchicalClusteringGraph::edge> const edges = mstHistory.back().edges;
-                Eigen::MatrixXf allPairsShortestPath = ATHierarchicalClusteringGraph::CalculateAllPairsShortestPath(edges, clusterCloud->size());
+                // std::vector<ATHierarchicalClusteringGraph::state> const mstHistory = ATHierarchicalClusteringGraph::CalculateMinimumSpanningTree(*clusterCloud);
+                // std::vector<ATHierarchicalClusteringGraph::edge> const edges = mstHistory.back().edges;
+                // Eigen::MatrixXf allPairsShortestPath = ATHierarchicalClusteringGraph::CalculateAllPairsShortestPath(edges, clusterCloud->size());
 
-                size_t startHitIndex = 0;
-                size_t endHitIndex = 0;
-                float approximateTrajectoryLength = 0.0f;
+                // size_t startHitIndex = 0;
+                // size_t endHitIndex = 0;
+                // float approximateTrajectoryLength = 0.0f;
 
                 // search upper half of matrix for the biggest, non-infinite value
-                for (size_t i = 0; i < (allPairsShortestPath.cols() - 1); ++i)
-                {
-                    for (size_t j = (i + 1); j < allPairsShortestPath.rows(); ++j)
-                    {
-                        float const &value = allPairsShortestPath(i, j);
+                // for (size_t i = 0; i < (allPairsShortestPath.cols() - 1); ++i)
+                // {
+                //     for (size_t j = (i + 1); j < allPairsShortestPath.rows(); ++j)
+                //     {
+                //         float const &value = allPairsShortestPath(i, j);
 
-                        if (value > approximateTrajectoryLength && value != std::numeric_limits<float>::infinity())
-                        {
-                            startHitIndex = i;
-                            endHitIndex = j;
-                            approximateTrajectoryLength = value;
-                        }
-                    }
-                }
+                //         if (value > approximateTrajectoryLength && value != std::numeric_limits<float>::infinity())
+                //         {
+                //             startHitIndex = i;
+                //             endHitIndex = j;
+                //             approximateTrajectoryLength = value;
+                //         }
+                //     }
+                // }
 
                 Eigen::Vector3f const centroidPoint = CalculateCentroidPoint(*clusterCloud);
                 Eigen::Vector3f mainDirection = CalculateMainDirection(clusterCloud);
 
                 // make sure mainDirection points from startHit to endHit
                 {
-                    TVector3 const &startHitPos = clusterHits[startHitIndex].GetPosition();
-                    TVector3 const &endHitPos = clusterHits[endHitIndex].GetPosition();
+                    // assume the first element in clusterHits to be the start
+                    TVector3 const &startHitPos = clusterHits.front().GetPosition();
+                    TVector3 const &endHitPos = clusterHits.back().GetPosition();
 
                     if (ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, Eigen::Vector3f(startHitPos.X(), startHitPos.Y(), startHitPos.Z())) >
                         ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, Eigen::Vector3f(endHitPos.X(), endHitPos.Y(), endHitPos.Z())))
@@ -355,9 +356,20 @@ namespace ATHierarchicalClusteringHc
                     return ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, point);
                 });
 
-                result.push_back(ATTrajectory(clusterHits, startHitIndex, endHitIndex, approximateTrajectoryLength, centroidPoint, mainDirection, cubicSplineFit));
+                std::vector<ATHit> sortedClusterHits = clusterHits;
+                std::stable_sort(sortedClusterHits.begin(), sortedClusterHits.end(), [&](ATHit const &lhs, ATHit const &rhs)
+                {
+                    TVector3 const &lhsPos = lhs.GetPosition();
+                    TVector3 const &rhsPos = rhs.GetPosition();
 
-                // not used indices
+                    return
+                        ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, Eigen::Vector3f(lhsPos.X(), lhsPos.Y(), lhsPos.Z())) <
+                        ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, Eigen::Vector3f(rhsPos.X(), rhsPos.Y(), rhsPos.Z()));
+                });
+
+                result.push_back(ATTrajectory(sortedClusterHits, centroidPoint, mainDirection, cubicSplineFit));
+
+                // unused indices
                 for (size_t index : pointIndices)
                 {
                     indexUsed[index] = true;
