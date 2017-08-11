@@ -19,6 +19,8 @@ Eigen::Matrix4f const ATCubicSplineFit::hermitricMatrix(hermitricMatrixValue);
 ATCubicSplineFit::ATCubicSplineFit(std::vector<Eigen::Vector3f> const &controlPoints, float tangentScale, float minControlPointDistance, size_t jump, ATCubicSplineFit::PositionFunction positionFunction)
     : _controlPoints(controlPoints), _positionFunction(positionFunction)
 {
+    this->_tangentScale = tangentScale;
+
     std::stable_sort(this->_controlPoints.begin(), this->_controlPoints.end(), [&](Eigen::Vector3f const &lhs, Eigen::Vector3f const &rhs)
     {
         return positionFunction(lhs, 0) < positionFunction(rhs, 0);
@@ -96,13 +98,34 @@ Eigen::Vector3f ATCubicSplineFit::CalculatePoint(float position) const
     Spline const &spline = this->GetSpline();
     std::vector<Eigen::Vector3f> const &controlPoints = this->GetControlPoints();
 
+    // handle out of range cases
+    // use linear interpolation
+    if (position < this->GetStartPosition())
+    {
+        SplineSegment const &firstSplineSegment = spline.front();
+
+        float const scaledPosition = (position - firstSplineSegment.p0Pos) / (firstSplineSegment.p1Pos - firstSplineSegment.p0Pos);
+
+        return controlPoints[firstSplineSegment.p0Index] + (scaledPosition / this->_tangentScale * firstSplineSegment.m0);
+    }
+    else if (position > this->GetEndPosition())
+    {
+        SplineSegment const &lastSplineSegment = spline.back();
+
+        float const scaledPosition = (position - lastSplineSegment.p1Pos) / (lastSplineSegment.p1Pos - lastSplineSegment.p0Pos);
+
+        return controlPoints[lastSplineSegment.p1Index] + (scaledPosition / this->_tangentScale * lastSplineSegment.m1);
+    }
+
+    // normal spline interpolation
     auto splineSegmentIt = std::lower_bound(spline.cbegin(), spline.cend(), position, [](SplineSegment const &lhs, float rhs)
     {
         return lhs.p1Pos < rhs;
     });
 
+    // this should never happen
     if (splineSegmentIt == spline.cend())
-        splineSegmentIt = spline.cend() - 1;
+        throw std::runtime_error("Illegal splineSegmentIt!");
 
     SplineSegment const &splineSegment = *splineSegmentIt;
 

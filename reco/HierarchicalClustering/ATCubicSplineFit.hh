@@ -49,6 +49,7 @@ protected:
     Spline _spline;
     std::vector<Eigen::Vector3f> _controlPoints;
     PositionFunction _positionFunction;
+    float _tangentScale;
 
     Eigen::Vector3f CalculateTangent(size_t pos, size_t jump, float scale) const;
 };
