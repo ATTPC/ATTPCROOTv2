@@ -1,7 +1,8 @@
 void rundigi_sim
-(TString mcFile = "~/fair_install_ROOT6/ATTPCROOTv2_October2016/digi/data/attpcsim_2.root",
+(TString mcFile = "~/fair_install_ROOT6/ATTPCROOTv2/digi/attpcsim_2.root",
  TString digiParFile = "/home/attpc/fair_install_ROOT6/ATTPCROOTv2/parameters/AT.digi.par",
- TString gasParFile = "/home/attpc/fair_install_ROOT6/ATTPCROOTv2/parameters/Gas.digi.par")
+ TString mapParFile = "/home/attpc/fair_install_ROOT6/ATTPCROOTv2/scripts/Lookup20150611.txt",
+TString trigParFile = "/home/attpc/fair_install_ROOT6/ATTPCROOTv2/parameters/AT.trigger.par")
 {
 
 
@@ -12,16 +13,16 @@ void rundigi_sim
   // __ Run ____________________________________________
   FairRunAna* fRun = new FairRunAna();
               fRun -> SetInputFile(mcFile);
-              fRun -> SetOutputFile("~/fair_install_ROOT6/ATTPCROOTv2_October2016/macro/Unpack_GETDecoder2/output.root");
+              fRun -> SetOutputFile("~/fair_install_ROOT6/ATTPCROOTv2/macro/Unpack_GETDecoder2/output.root");
 
 
   FairRuntimeDb* rtdb = fRun->GetRuntimeDb();
               FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo();
               parIo1 -> open(digiParFile.Data(), "in");
-              rtdb -> setSecondInput(parIo1);
-              //FairParAsciiFileIo* parIo2 = new FairParAsciiFileIo();
-              //parIo2 -> open(gasParFile.Data(), "in");
-              //rtdb -> setFirstInput(parIo2);
+              rtdb -> setFirstInput(parIo1);
+              FairParAsciiFileIo* parIo2 = new FairParAsciiFileIo();
+              parIo2 -> open(trigParFile.Data(), "in");
+              rtdb -> setSecondInput(parIo2);
 
   // __ AT digi tasks___________________________________
 
@@ -40,15 +41,15 @@ void rundigi_sim
       psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
       psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
 
-      ATRansacTask *RansacTask = new ATRansacTask();
-    	RansacTask->SetPersistence(kTRUE);
-      RansacTask->SetDistanceThreshold(6.0);
+      ATTriggerTask *trigTask = new ATTriggerTask();
+      trigTask  ->  SetAtMap(mapParFile);
+      trigTask  ->  SetPersistence(kTRUE);
 
 
   fRun -> AddTask(clusterizer);
   fRun -> AddTask(pulse);
   fRun -> AddTask(psaTask);
-  fRun -> AddTask(RansacTask);
+  fRun -> AddTask(trigTask);
 
   // __ Init and run ___________________________________
 

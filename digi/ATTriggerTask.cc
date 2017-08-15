@@ -79,13 +79,13 @@ ATTriggerTask::Init()
   height    = fPar->GetTrigger_height();
 
   fTrigger->SetTriggerParameters(write, read, MSB, LSB, width, fraction, threshold, window, height);
-
+  fTrigger->SetAtMap(fMapPath);
   return kSUCCESS;
 }
 
 
 void ATTriggerTask::SetAtMap(TString mapPath){
-  fTrigger->SetAtMap(mapPath);
+  fMapPath = mapPath;
 }
 
 
@@ -103,7 +103,7 @@ ATTriggerTask::Exec(Option_t* option)
 
     fEvent    = (ATEvent*) fATEventArray->At(0);
     fRawEvent = (ATRawEvent*) fATRawEventArray->At(0);
-/*
+
     //*****************Check if event will be triggered******************
     fIsTrigger = fTrigger->ImplementTrigger(fRawEvent, fEvent);
 
@@ -113,7 +113,7 @@ ATTriggerTask::Exec(Option_t* option)
       fEvent    = (ATEvent*)fATEventArray_acc->ConstructedAt(0);
       fRawEvent = (ATRawEvent*)fATRawEventArray_acc->ConstructedAt(0);
     }
-*/
+
 }
 
 ClassImp(ATTriggerTask);

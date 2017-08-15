@@ -44,6 +44,7 @@ class ATTriggerTask : public FairTask
      TClonesArray* fATEventArray_acc;
      ATEvent*      fEvent;
      ATRawEvent*   fRawEvent;
+     TString       fMapPath;
 
      Bool_t fIsTrigger;
      Bool_t fIsPersistent;

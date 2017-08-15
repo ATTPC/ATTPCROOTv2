@@ -8,9 +8,6 @@
 
 #include "TObject.h"
 #include "TString.h"
-#include "TH2.h"
-#include "TH1.h"
-#include "TH3.h"
 #include "TClonesArray.h"
 #include "TMath.h"
 #include "TClonesArray.h"
@@ -64,8 +61,6 @@ class ATTrigger : public TObject {
       Int_t fTbIdx;
       Int_t fCobo;
       Int_t fCoboNumArray[10240];
-      Int_t fPadNumArray[10240];
-      Double_t fDummy[512];
 
     	Int_t fCount =0.0;
     	Int_t fMaxRawADC = 0.0;

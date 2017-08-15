@@ -24,14 +24,8 @@ void ATTrigger::SetAtMap(TString mapPath) {
   {
     file.open(mapPath);
 
-    // Int_t intCoboNum, intpad;
     Int_t nLines = 0;
     Int_t nPoints = 0;
-    // fPadNum = 0;
-    // for(int ii=0;ii<512;ii++) fDummy[ii] = 0.0;
-    // memset(fCoboNumArray, 0, sizeof(fCoboNumArray));
-    // fCoboNumArray[10240] = {0};
-    // fPadNumArray[10241] = {0};
 
     while (!file.eof())
     {
@@ -42,15 +36,20 @@ void ATTrigger::SetAtMap(TString mapPath) {
       try
       {
         Float_t CoboNum, asad, aget, channel, pad;
+        Int_t intCoboNum, intpad;
 
         // read with default seperator (space) seperated elements
-        {
           std::istringstream iss(line);
           iss.exceptions(std::ifstream::failbit | std::ifstream::badbit);
           iss >> CoboNum >> asad >> aget >> channel >> pad;
-        }
+          if(CoboNum >11 && CoboNum <0) break;
+          intCoboNum = (int) CoboNum;
+          intpad     = (int) pad;
+          fCoboNumArray[intpad] = intCoboNum;
 
-        printf("Successfully read point: CoboNum=%8f, asad=%8f, aget=%8f, channel=%8f, pad=%8f\n", CoboNum, asad, aget, channel, pad);
+          //if(nLines<5)
+          //std::cout<<"Cobo: "<<intCoboNum<< " pad: "<<intpad<<std::endl;
+        //printf("Successfully read point: CoboNum=%8f, asad=%8f, aget=%8f, channel=%8f, pad=%8f\n", CoboNum, asad, aget, channel, pad);
 
         ++nPoints;
       }
@@ -59,10 +58,6 @@ void ATTrigger::SetAtMap(TString mapPath) {
         std::cout << "Malformed point in line " << (nLines + 1) << "!" << std::endl;
       }
 
-      // intCoboNum = (int) CoboNum;
-      // intpad     = (int) pad;
-      // fCoboNumArray[nLines] = CoboNum;
-      // fPadNumArray[nLines] = pad;
       ++nLines;
     }
 
@@ -72,7 +67,7 @@ void ATTrigger::SetAtMap(TString mapPath) {
   }
   catch (...)
   {
-    std::cout << "Something bad happened while reading the file!" << std::endl;
+    //std::cout <<cGREEN<< "Something bad happened while reading "<<mapPath<<"!" <<cNORMAL<< std::endl;
   }
 }
 
@@ -89,11 +84,11 @@ void ATTrigger::SetTriggerParameters(Double_t read, Double_t write, Double_t MSB
   fTrigger_width = width * write;
 	fPad_threshold = ((MSB*pow(2,4) + LSB)/128)*fraction*4096;
 	fTime_window = fMultiplicity_window / (read*write);
-	std::cout << "====Parameters for Trigger======"<<std::endl;
-  std::cout << " ===Time Factor:   "<<fTime_factor<<std::endl;
-  std::cout << " ===Trigger Width: "<<fTrigger_width<<" us?"<<std::endl;
-  std::cout << " ===Pad Threshold: "<<fPad_threshold<<std::endl;
-  std::cout << " ===Time Window:   "<<fTime_window<<" us?"<<std::endl;
+	std::cout << "==== Parameters for Trigger======"<<std::endl;
+  std::cout << " === Time Factor:   "<<fTime_factor<<std::endl;
+  std::cout << " === Trigger Width: "<<fTrigger_width<<" us?"<<std::endl;
+  std::cout << " === Pad Threshold: "<<fPad_threshold<<std::endl;
+  std::cout << " === Time Window:   "<<fTime_window<<" us?"<<std::endl;
 }
 
 
@@ -148,20 +143,21 @@ Bool_t ATTrigger::ImplementTrigger(ATRawEvent *rawEvent, ATEvent *event){
 
   }//While
 
+
+
     for(Int_t j = 0; j < 512; j++){
-      if (trigSignal [j] != 48) {trigSignal[j] = 0;}
+      //if (trigSignal [j] != 48) {trigSignal[j] = 0;} NOTE: For Javier, what is this?
       if (trigSignal[j] > 0 ){
         //triggerSignal(j+10) = trigSignal[j];
 
             for (Int_t l = 0; l <10240; l++){
-              if (fPadNumArray[l] == fPadNum){fCobo = fCoboNumArray[l];}
+              if (l == fPadNum){fCobo = fCoboNumArray[l];}
                 }//Loop to check with Cobo is hitting
               triggerSignal(fCobo,j) = trigSignal[j];
               }//Positive signal if
 
             }//3rd foor loop
       triggerSignal(fCobo,0) = fCobo;
-
 
 
   //*************************************************************************************************
