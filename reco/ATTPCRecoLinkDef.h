@@ -42,6 +42,7 @@
 #pragma link C++ class ATPSASimple2+;
 #pragma link C++ class ATPSAProto+;
 #pragma link C++ class ATPSAFilter+;
+#pragma link C++ class ATCalibration;
 
 #pragma link C++ class ATHoughSpace+;
 #pragma link C++ class ATHoughSpaceLine+;
@@ -74,8 +75,10 @@
 
 #pragma link C++ class ATPSATask+;
 #pragma link C++ class ATPhiRecoTask+;
+
 #pragma link C++ class ATFindVertex+; // TODO: move somewhere else?
 #pragma link C++ class ATHierarchicalClusteringTask+;
+
 #pragma link C++ class ATHoughTask+;
 #pragma link C++ class ATVMEUnpackTask+;
 #pragma link C++ class ATAnalysisTask+;

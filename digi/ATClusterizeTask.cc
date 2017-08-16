@@ -80,7 +80,7 @@ ATClusterizeTask::Exec(Option_t* option)
    * NOTE! that fMCPoint has unit of [cm] for length scale,
    * [GeV] for energy and [ns] for time.
    */
-
+   fElectronNumberArray->Delete();
 
    Double_t  energyLoss_sca=0.0;
    Double_t  energyLoss_rec=0.0;
@@ -107,7 +107,7 @@ ATClusterizeTask::Exec(Option_t* option)
    Double_t sigmaDiffusion;
    Double_t sigstrtrans, sigstrlong, phi, r;
    Int_t    electronNumber  = 0;
-   TF1 *trans      = new TF1("trans", "x*pow(2.718,(-pow(x,2))/[0])", 0, 1);
+   //TF1 *trans      = new TF1("trans", "x*pow(2.718,(-pow(x,2))/[0])", 0, 1);
 
 
    for(Int_t i=0; i<nMCPoints; i++) {
@@ -118,7 +118,7 @@ ATClusterizeTask::Exec(Option_t* option)
            tTime             = fMCPoint->GetTime()/1000; //us
            x                 = fMCPoint->GetXIn()*10; //mm
            y                 = fMCPoint->GetYIn()*10; //mm
-           z                 = fMCPoint->GetZIn()*10; //mm
+           z                 = 100-(fMCPoint->GetZIn()*10); //mm
            energyLoss_rec    =(fMCPoint -> GetEnergyLoss() )*1000;//MeV
            nElectrons        = energyLoss_rec/fEIonize; //mean electrons generated
            eFlux             = pow(fano*nElectrons, 0.5);//fluctuation of generated electrons
@@ -127,7 +127,7 @@ ATClusterizeTask::Exec(Option_t* option)
            driftLength       = abs(z-zMesh); //mm
            sigstrtrans       = fCoefT* sqrt(driftLength);//transverse diffusion coefficient
            sigstrlong        = fCoefL* sqrt(driftLength);//longitudal diffusion coefficient
-           trans->SetParameter(0, sigstrtrans);
+           //trans->SetParameter(0, sigstrtrans);
 
            for(Int_t charge = 0; charge<genElectrons; charge++){   //for every electron in the cluster
                //r               = trans->GetRandom(); //non-Gaussian cloud

@@ -2,21 +2,30 @@
 
 if [ -z "$1" ];
 then
-  echo "==  Please provide the name of the run file "
-  echo "==   i.e: ./create_runfile.sh ar46_run_0128 /data/ar46/run_0128/"
+  echo "== Please provide the output filename"
+  echo "==  i.e: ./create_runfile.sh ar46_run_0128 /data/ar46/run_0128"
 
   return;
 fi
 
-RUN=$1
+if [ -z "$2" ];
+then
+  echo "== Please provide a directory to read files from"
+  echo "==  i.e: ./create_runfile.sh ar46_run_0128 /data/ar46/run_0128"
+
+  return;
+fi
 
 OUTPUT=$1\.txt
-BUFF=buffer.txt
-> $PWD/$OUTPUT
 
-readlink -f $2/*.* >> $BUFF
-sed '/lookup/d' $BUFF >> $OUTPUT
-rm -rf $BUFF
-#sort -t "o" -k1n,1 $OUTPUT
-#sort -t"." -k2n,2  $OUTPUT
-#sort -n $OUTPUT >> $OUTPUT
+# get all files and folders ending on *.graw in the target directory (one per line)
+ls --color=never -1 $2/*.graw |
+# get the number following "CoBo" and (eventually) the number immediately before ".graw"
+# and write them like this: (\t beeing the tab-character)
+# {CoBoNumber}\t{Before.grawNumber}\t{original line}
+  perl -pe "s|(.*CoBo([0-9]+).*?(?:\.([0-9]*))?\.graw)|\2\t\3\t\1|" |
+# sort numerically by the first 2 columns
+  sort -n -k1,1 -k2,2 |
+# drop everything - except the third column
+# and write result into output file
+  cut -f3 > $OUTPUT
