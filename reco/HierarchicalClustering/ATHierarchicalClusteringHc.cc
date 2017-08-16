@@ -1,7 +1,28 @@
 #include "ATHierarchicalClusteringHc.hh"
 
+// #include "ATHierarchicalClusteringGraph.hpp"
+
 #include <algorithm>
+#include <pcl/common/centroid.h>
 #include <pcl/kdtree/kdtree_flann.h>
+#include <pcl/common/pca.h>
+
+template <class T>
+static std::vector<Eigen::Vector3f> PointCloud2Vectors(pcl::PointCloud<T> const &cloud)
+{
+    std::vector<Eigen::Vector3f> result;
+
+    for (T const &pclPoint : cloud)
+    {
+        result.push_back(Eigen::Vector3f(
+            pclPoint.x,
+            pclPoint.y,
+            pclPoint.z
+        ));
+    }
+
+    return result;
+}
 
 namespace ATHierarchicalClusteringHc
 {
@@ -203,32 +224,173 @@ namespace ATHierarchicalClusteringHc
         return cleanedGroup;
     }
 
-    ATHierarchicalClusteringCluster ToCluster(std::vector<triplet> const &triplets, cluster_group const &clusterGroup, size_t pointIndexCount)
+
+    // TO TRAJECTORIES
+
+    static std::vector<size_t> ExtractPointIndices(std::vector<triplet> const &clusterTriplets)
     {
-        std::vector<std::vector<size_t>> result;
+        std::vector<size_t> pointIndices;
+
+        // add point indices
+        for (triplet const &currentTriplet : clusterTriplets)
+        {
+            pointIndices.push_back(currentTriplet.pointIndexA);
+            pointIndices.push_back(currentTriplet.pointIndexB);
+            pointIndices.push_back(currentTriplet.pointIndexC);
+        }
+
+        // sort point-indices and remove duplicates
+        std::sort(pointIndices.begin(), pointIndices.end());
+        auto newEnd = std::unique(pointIndices.begin(), pointIndices.end());
+        pointIndices.resize(std::distance(pointIndices.begin(), newEnd));
+
+        return pointIndices;
+    }
+
+    template <class T>
+    static T ExtactAtIndices(T const &src, std::vector<size_t> const &indices)
+    {
+        T result;
+        result.reserve(indices.size());
+
+        for (size_t index : indices)
+        {
+            result.push_back(src[index]);
+        }
+
+        return result;
+    }
+
+    template <class T>
+    static Eigen::Vector3f CalculateCentroidPoint(pcl::PointCloud<T> const &cloud)
+    {
+        pcl::CentroidPoint<T> centroidPoint;
+
+        for (T const &point : cloud)
+        {
+            centroidPoint.add(point);
+        }
+
+        T point;
+        centroidPoint.get(point);
+
+        return Eigen::Vector3f(
+            point.x,
+            point.y,
+            point.z
+        );
+    }
+
+    static Eigen::Vector3f CalculateMainDirection(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud)
+    {
+        pcl::PCA<pcl::PointXYZI> pca;
+        pca.setInputCloud(cloud);
+        Eigen::Matrix3f eigenVectors = pca.getEigenVectors();
+
+        return eigenVectors.array().col(0);
+    }
+
+    std::vector<ATTrajectory> ToTrajectories(
+        pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud,
+        std::vector<ATHit> const &hits,
+        std::vector<triplet> const &triplets,
+        cluster_group const &clusterGroup,
+        float const splineTangentScale,
+        float const splineMinControlPointDistance,
+        size_t const splineJump,
+        std::vector<ATHit> *noMatch)
+    {
+        std::vector<ATTrajectory> result;
+        std::vector<bool> indexUsed(hits.size());
 
         for (auto const &currentCluster : clusterGroup.clusters)
         {
-            std::vector<size_t> pointIndices;
-
-            // add point indices
-            for (auto const &currentTripletIndex : currentCluster)
+            try
             {
-                triplet const &currentTriplet = triplets[currentTripletIndex];
+                std::vector<triplet> clusterTriplets = ExtactAtIndices(triplets, currentCluster);
+                std::vector<size_t> const pointIndices = ExtractPointIndices(clusterTriplets);
+                std::vector<ATHit> const clusterHits = ExtactAtIndices(hits, pointIndices);
+                pcl::PointCloud<pcl::PointXYZI>::Ptr const clusterCloud(new pcl::PointCloud<pcl::PointXYZI>());
+                *clusterCloud = ExtactAtIndices(*cloud, pointIndices);
 
-                pointIndices.push_back(currentTriplet.pointIndexA);
-                pointIndices.push_back(currentTriplet.pointIndexB);
-                pointIndices.push_back(currentTriplet.pointIndexC);
+                // std::vector<ATHierarchicalClusteringGraph::state> const mstHistory = ATHierarchicalClusteringGraph::CalculateMinimumSpanningTree(*clusterCloud);
+                // std::vector<ATHierarchicalClusteringGraph::edge> const edges = mstHistory.back().edges;
+                // Eigen::MatrixXf allPairsShortestPath = ATHierarchicalClusteringGraph::CalculateAllPairsShortestPath(edges, clusterCloud->size());
+
+                // size_t startHitIndex = 0;
+                // size_t endHitIndex = 0;
+                // float approximateTrajectoryLength = 0.0f;
+
+                // search upper half of matrix for the biggest, non-infinite value
+                // for (size_t i = 0; i < (allPairsShortestPath.cols() - 1); ++i)
+                // {
+                //     for (size_t j = (i + 1); j < allPairsShortestPath.rows(); ++j)
+                //     {
+                //         float const &value = allPairsShortestPath(i, j);
+
+                //         if (value > approximateTrajectoryLength && value != std::numeric_limits<float>::infinity())
+                //         {
+                //             startHitIndex = i;
+                //             endHitIndex = j;
+                //             approximateTrajectoryLength = value;
+                //         }
+                //     }
+                // }
+
+                Eigen::Vector3f const centroidPoint = CalculateCentroidPoint(*clusterCloud);
+                Eigen::Vector3f mainDirection = CalculateMainDirection(clusterCloud);
+
+                // make sure mainDirection points from startHit to endHit
+                {
+                    // assume the first element in clusterHits to be the start
+                    TVector3 const &startHitPos = clusterHits.front().GetPosition();
+                    TVector3 const &endHitPos = clusterHits.back().GetPosition();
+
+                    if (ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, Eigen::Vector3f(startHitPos.X(), startHitPos.Y(), startHitPos.Z())) >
+                        ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, Eigen::Vector3f(endHitPos.X(), endHitPos.Y(), endHitPos.Z())))
+                        mainDirection *= -1.0f;
+                }
+
+                ATCubicSplineFit const cubicSplineFit(PointCloud2Vectors(*clusterCloud), splineTangentScale, splineMinControlPointDistance, splineJump, [&](Eigen::Vector3f const &point, size_t index)
+                {
+                    return ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, point);
+                });
+
+                std::vector<ATHit> sortedClusterHits = clusterHits;
+                std::stable_sort(sortedClusterHits.begin(), sortedClusterHits.end(), [&](ATHit const &lhs, ATHit const &rhs)
+                {
+                    TVector3 const &lhsPos = lhs.GetPosition();
+                    TVector3 const &rhsPos = rhs.GetPosition();
+
+                    return
+                        ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, Eigen::Vector3f(lhsPos.X(), lhsPos.Y(), lhsPos.Z())) <
+                        ATTrajectory::GetPositionOnMainDirection(centroidPoint, mainDirection, Eigen::Vector3f(rhsPos.X(), rhsPos.Y(), rhsPos.Z()));
+                });
+
+                result.push_back(ATTrajectory(sortedClusterHits, centroidPoint, mainDirection, cubicSplineFit));
+
+                // unused indices
+                for (size_t index : pointIndices)
+                {
+                    indexUsed[index] = true;
+                }
             }
-
-            // sort point-indices and remove duplikates
-            std::sort(pointIndices.begin(), pointIndices.end());
-            auto newEnd = std::unique(pointIndices.begin(), pointIndices.end());
-            pointIndices.resize(std::distance(pointIndices.begin(), newEnd));
-
-            result.push_back(pointIndices);
+            catch (...)
+            {
+                // let all errors in creating a trajectory fail silently
+            }
         }
 
-        return ATHierarchicalClusteringCluster(result, pointIndexCount);
+        // fill noMatch
+        if (noMatch != nullptr)
+        {
+            for (size_t index = 0; index < indexUsed.size(); ++index)
+            {
+                if (!indexUsed[index])
+                    noMatch->push_back(hits[index]);
+            }
+        }
+
+        return result;
     }
 }

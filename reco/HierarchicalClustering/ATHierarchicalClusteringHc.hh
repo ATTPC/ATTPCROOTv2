@@ -5,7 +5,7 @@
 #include <pcl/io/io.h>
 #include <limits>
 
-#include "ATHierarchicalClusteringCluster.hh"
+#include "ATTrajectory.hh"
 
 namespace ATHierarchicalClusteringHc
 {
@@ -19,6 +19,7 @@ namespace ATHierarchicalClusteringHc
         float error;
     };
 
+    // indices of triplets
     typedef std::vector<size_t> cluster;
 
     struct cluster_group
@@ -85,11 +86,19 @@ namespace ATHierarchicalClusteringHc
         return result;
     }
 
-    std::vector<triplet> GenerateTriplets(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, size_t nnKandidates = 12, size_t nBest = 2, float maxError = 0.015f);
+    std::vector<triplet> GenerateTriplets(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, size_t nnKandidates, size_t nBest, float maxError);
     cluster_history CalculateHc(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, std::vector<triplet> const &triplets, ClusterMetric clusterMetric = singleLinkClusterMetric, TripletMetric tripletMetric = defaultTripletMetric);
-    cluster_group GetBestClusterGroup(cluster_history const &history, float bestClusterDistanceDelta = 19.0f);
-    cluster_group CleanupClusterGroup(cluster_group const &clusterGroup, size_t minTriplets = 7);
-    ATHierarchicalClusteringCluster ToCluster(std::vector<triplet> const &triplets, cluster_group const &clusterGroup, size_t pointIndexCount);
+    cluster_group GetBestClusterGroup(cluster_history const &history, float bestClusterDistanceDelta);
+    cluster_group CleanupClusterGroup(cluster_group const &clusterGroup, size_t minTriplets);
+    std::vector<ATTrajectory> ToTrajectories(
+        pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud,
+        std::vector<ATHit> const &hits,
+        std::vector<triplet> const &triplets,
+        cluster_group const &clusterGroup,
+        float const splineTangentScale,
+        float const splineMinControlPointDistance,
+        size_t const splineJump,
+        std::vector<ATHit> *noMatch = nullptr);
 }
 
 #endif
