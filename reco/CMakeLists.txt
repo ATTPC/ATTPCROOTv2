@@ -15,12 +15,14 @@ ${CMAKE_SOURCE_DIR}/reco/GETDecoder
 ${CMAKE_SOURCE_DIR}/reco/GETDecoder2
 ${CMAKE_SOURCE_DIR}/reco/ATDecoder
 ${CMAKE_SOURCE_DIR}/reco/ATPulseAnalyzer
+${CMAKE_SOURCE_DIR}/reco/HierarchicalClustering
 ${CMAKE_SOURCE_DIR}/reco/HoughTransformation
 ${CMAKE_SOURCE_DIR}/reco/ATProtoPhiReco
 ${CMAKE_SOURCE_DIR}/reco/VMEDecoder
 ${CMAKE_SOURCE_DIR}/reco/ATMinimization
 ${CMAKE_SOURCE_DIR}/reco/ATAnalysis
 ${CMAKE_SOURCE_DIR}/reco/ATRansac
+${CMAKE_SOURCE_DIR}/tpc
 
 )
 
