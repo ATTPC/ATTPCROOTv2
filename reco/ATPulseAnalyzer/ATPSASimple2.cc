@@ -253,13 +253,12 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
 
         for (Int_t iTb = 0; iTb < fNumTbs; iTb++){
-		mesh[iTb]+=floatADC[iTb];
-		// if(iTb==511){
-		// std::cout<<" IPad : "<<iPad<<std::endl;
-		// std::cout<<" iTb : "<<iTb<<" FloatADC : "<<floatADC[iTb]<<" mesh : "<<mesh[iTb]<<std::endl;
-		//}
-
-	}
+		        mesh[iTb]+=floatADC[iTb];
+		          // if(iTb==511){
+		          // std::cout<<" IPad : "<<iPad<<std::endl;
+		          // std::cout<<" iTb : "<<iTb<<" FloatADC : "<<floatADC[iTb]<<" mesh : "<<mesh[iTb]<<std::endl;
+		            //}
+        }
 
        }//Valid Threshold
 

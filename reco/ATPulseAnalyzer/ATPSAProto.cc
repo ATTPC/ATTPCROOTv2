@@ -166,6 +166,7 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       #pragma omp ordered
       hitNum++;
 
+                if(PadHitNum==1){ //Construct mesh signal only once
                 	for (Int_t iTb = 0; iTb < fNumTbs; iTb++){
                 		mesh[iTb]+=floatADC[iTb];
                 		/* if(iTb==511){
@@ -174,6 +175,7 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
                 		}*/
 
                 	}
+                }
 
       }//Valid Threshold
 
