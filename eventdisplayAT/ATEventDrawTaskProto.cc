@@ -625,14 +625,24 @@ ATEventDrawTaskProto::DrawPadPlane()
 void
 ATEventDrawTaskProto::DrawPadAll()
 {
-
+    
     fCvsPadAll->cd();
-
+    
     for(Int_t i=0;i<300;i++){
-    fPadAll[i]->GetYaxis()->SetRangeUser(0,2500);
-    fPadAll[i] -> Draw("SAME");
+        //fPadAll[i]->Reset(0);
+        //fPadAll[i] = new TH1I("fPadAll","fPadAll",512,0,511);
+        fPadAll[i]->GetYaxis()->SetRangeUser(0,2500);
+        // TODO: make it pad number independent / retrieve the quadrant info
+        if (i<64) fPadAll[i]->SetLineColor(6);                         // Q1, pink
+        else if(i>=64 && i<127) fPadAll[i]->SetLineColor(8);           // Q2, green
+        else if(i>=127 && i<190) fPadAll[i]->SetLineColor(7);           // Q3, blue
+        else if(i>=190 && i<253) fPadAll[i]->SetLineColor(kOrange-3);   // Q4, orange
+        else fPadAll[i]->SetLineColor(0);                              //white for non physical pads
+        fPadAll[i] -> Draw("SAME");
+        
     }
-
+    
+    
 }
 
 void
