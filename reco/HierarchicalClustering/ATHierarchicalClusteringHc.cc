@@ -165,7 +165,7 @@ namespace ATHierarchicalClusteringHc
 
             // merge cluster-pair
             cluster merged(currentGeneration.clusters[bestClusterPair.first]);
-            merged.insert(merged.cend(), currentGeneration.clusters[bestClusterPair.second].cbegin(), currentGeneration.clusters[bestClusterPair.second].cend());
+            merged.insert(merged.end(), currentGeneration.clusters[bestClusterPair.second].cbegin(), currentGeneration.clusters[bestClusterPair.second].cend());
 
             // set best cluster distance for current generation and add to results
             currentGeneration.bestClusterDistance = bestClusterDistance;

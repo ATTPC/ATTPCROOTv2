@@ -22,7 +22,7 @@ ${CMAKE_SOURCE_DIR}/reco/VMEDecoder
 ${CMAKE_SOURCE_DIR}/reco/ATMinimization
 ${CMAKE_SOURCE_DIR}/reco/ATAnalysis
 ${CMAKE_SOURCE_DIR}/reco/ATRansac
-${CMAKE_SOURCE_DIR}/tpc
+#${CMAKE_SOURCE_DIR}/tpc
 
 )
 
@@ -122,6 +122,7 @@ ATHoughTask.cc
 ATVMEUnpackTask.cc
 ATAnalysisTask.cc
 ATRansacTask.cc
+ATHierarchicalClusteringTask.cc
 
 )
 
