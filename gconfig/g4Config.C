@@ -26,26 +26,26 @@ void Config()
 ///    EM =  _EMV _EMX _EMY _EMZ _LIV _PEN
 ///    Extra = extra optical radDecay
 ///    The Extra selections are cumulative, while Hadron selections are exlusive.
-    
+
 /// The third argument activates the special processes in the TG4SpecialPhysicsList,
 /// which implement VMC features:
-/// - stepLimiter       - step limiter (default) 
+/// - stepLimiter       - step limiter (default)
 /// - specialCuts       - VMC cuts
 /// - specialControls   - VMC controls for activation/inactivation selected processes
 /// - stackPopper       - stackPopper process
 /// When more than one options are selected, they should be separated with '+'
 /// character: eg. stepLimit+specialCuts.
 
-    TG4RunConfiguration* runConfiguration 
-           = new TG4RunConfiguration("geomRoot", "QGSP_FTFP_BERT", "stepLimiter+specialCuts+specialControls+stackPopper");
+    /*TG4RunConfiguration* runConfiguration
+           = new TG4RunConfiguration("geomRoot", "QGSP_FTFP_BERT", "stepLimiter+specialCuts+specialControls+stackPopper");*/
 
- /*   TG4RunConfiguration* runConfiguration 
-     = new TG4RunConfiguration("geomRoot", "QGSP_BERT_HP_EMY", "stepLimiter+specialCuts+specialControls");*/
+    TG4RunConfiguration* runConfiguration
+     = new TG4RunConfiguration("geomRoot", "QGSP_BERT_HP_EMY", "stepLimiter+specialCuts+specialControls");
 
-/*	TG4RunConfiguration* runConfiguration 
+/*	TG4RunConfiguration* runConfiguration
            = new TG4RunConfiguration("geomRoot", "FTFP_BERT", "stepLimiter+specialCuts+specialControls+stackPopper");
 */
-/// Create the G4 VMC 
+/// Create the G4 VMC
    TGeant4* geant4 = new TGeant4("TGeant4", "The Geant4 Monte Carlo", runConfiguration);
    cout << "Geant4 has been created." << endl;
 
@@ -59,7 +59,7 @@ void Config()
       TVirtualMCDecayer* decayer = TPythia6Decayer::Instance();
       geant4->SetExternalDecayer(decayer);
    }
-  
+
 /// Customise Geant4 setting
 /// (verbose level, global range cut, ..)
 
@@ -68,7 +68,7 @@ void Config()
    cout << " -I g4Config() using g4conf  macro: " << configm1 << endl;
 
    //set geant4 specific stuff
-  geant4->SetMaxNStep(5E3);  // default is 30000
+  geant4->SetMaxNStep(5E4);  // default is 30000
   geant4->ProcessGeantMacro(configm1.Data());
 
 }
