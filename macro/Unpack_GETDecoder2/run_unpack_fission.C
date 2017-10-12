@@ -21,7 +21,7 @@ TString mappath="/mnt/projects/attpcroot/santamar/ATTPCROOTv2/resources/")
   TString outputDir = "/mnt/analysis/attpc/e17504/rootfiles/";
   gSystem -> Setenv("GEOMPATH", geomDir.Data());
 
-  TString outputFile  = /*outputDir*/ + "run_" + runNumber + "_output.root"; 
+  TString outputFile  = outputDir + "run_" + runNumber + "_output.root"; 
   //TString mcParFile   = dataDir + name + ".params.root";
   TString loggerFile  = dataDir + "ATTPCLog.log";
   TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -99,8 +99,8 @@ TString mappath="/mnt/projects/attpcroot/santamar/ATTPCROOTv2/resources/")
 	char Ctry = pch[0];
 	iAsad = (int)Ctry - '0';
 	if(abs(iAsad - iAsad_Last) > 0.1) iThread++;
-	std::cout << "File = " << dataFileWithPath << std::endl;
-	std::cout << "AsAd = " << iAsad << " ; previous AsAd = " << iAsad_Last << " ; iThread = " << iThread << std::endl;
+	//std::cout << "File = " << dataFileWithPath << std::endl;
+	//std::cout << "AsAd = " << iAsad << " ; previous AsAd = " << iAsad_Last << " ; iThread = " << iThread << std::endl;
         fDecoderTask -> AddData(dataFileWithPath, iThread);
 	iAsad_Last = iAsad;
     }
@@ -232,7 +232,6 @@ TString mappath="/mnt/projects/attpcroot/santamar/ATTPCROOTv2/resources/")
 
   run -> RunOnTBData();
   //run->Run(0,5);
-  //run->Run(0,1000000);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
