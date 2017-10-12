@@ -88,32 +88,23 @@ TString mappath="/mnt/projects/attpcroot/santamar/ATTPCROOTv2/resources/")
     std::ifstream listFile(dataFile.Data());
     TString dataFileWithPath;
     std::cout<<"FileName Check!!->"<<dataFileWithPath<<std::endl;
-    Int_t iAsad = 0;
+    int iAsad = 0;
+    int iAsad_Last = 0;
     Int_t iThread = 0;
-    Int_t counter = 0;
+    string pch;
+    string pchf;
     while (dataFileWithPath.ReadLine(listFile)) {
-	std::cout << counter << " : " << dataFileWithPath << std::endl;
-        //std::cout<<"iCobo"<</home/attpc/bigATTPC/HeCO2/Run59_February2017/mm9/iCobo<<std::endl;
-        if (dataFileWithPath.Contains(Form("AsAd%i",iAsad))){
-              fDecoderTask -> AddData(dataFileWithPath, iThread);
-	}
-        else if(iAsad == 3 || (iAsad == 2 && (dataFileWithPath.Contains(Form("mm%i",0))
-                                            || dataFileWithPath.Contains(Form("mm%i",8))
-                                            || dataFileWithPath.Contains(Form("mm%i",9))
-                                            || dataFileWithPath.Contains(Form("mm%i",10))))){
-          iAsad = 0;
-          iThread++;
-          fDecoderTask->AddData(dataFileWithPath, iThread);
-        }
-        else{
-          iAsad++;
-          iThread++;
-          fDecoderTask -> AddData(dataFileWithPath, iThread);
-        }
-	counter ++;
+	pchf = dataFileWithPath;
+        pch = pchf.substr(pchf.find("AsAd") + 4);
+	char Ctry = pch[0];
+	iAsad = (int)Ctry - '0';
+	if(abs(iAsad - iAsad_Last) > 0.1) iThread++;
+	std::cout << "File = " << dataFileWithPath << std::endl;
+	std::cout << "AsAd = " << iAsad << " ; previous AsAd = " << iAsad_Last << " ; iThread = " << iThread << std::endl;
+        fDecoderTask -> AddData(dataFileWithPath, iThread);
+	iAsad_Last = iAsad;
     }
   }
-  std::cout << "youhou" << std::endl;
 
 //#NOTE: Can only be used if only 1 .graw file per Asad!!
   /*if (!fUseSeparatedData){
@@ -129,7 +120,101 @@ TString mappath="/mnt/projects/attpcroot/santamar/ATTPCROOTv2/resources/")
       iThread++;
     }
   }*/
-  
+    
+    /*fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm0/run_0093/CoBo_AsAd0_2017-10-08T02:11:06.485_0000.graw",0);
+    
+    fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm0/run_0093/CoBo_AsAd1_2017-10-08T02:11:06.487_0000.graw",1);
+    
+    fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm0/run_0093/CoBo_AsAd2_2017-10-08T02:11:06.487_0000.graw",2);
+    
+    fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm1/run_0093/CoBo_AsAd0_2017-10-08T02:14:01.761_0005.graw",3);
+    fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm1/run_0093/CoBo_AsAd0_2017-10-08T02:14:01.761_0006.graw",3);
+    
+    fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm1/run_0093/CoBo_AsAd1_2017-10-08T02:14:01.760_0000.graw",4);
+    
+    fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm1/run_0093/CoBo_AsAd2_2017-10-08T02:14:01.761_0009.graw",5);
+    fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm1/run_0093/CoBo_AsAd2_2017-10-08T02:14:01.761_0010.graw",5);
+    
+    fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm1/run_0093/CoBo_AsAd3_2017-10-08T02:14:01.761_0004.graw",6);
+    fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm1/run_0093/CoBo_AsAd3_2017-10-08T02:14:01.761_0005.graw",6);
+    
+    fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm2/run_0093/CoBo_AsAd0_2017-10-08T02:14:36.346_0011.graw",7);
+    fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm2/run_0093/CoBo_AsAd0_2017-10-08T02:14:36.346_0012.graw",7);
+    fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm2/run_0093/CoBo_AsAd0_2017-10-08T02:14:36.346_0013.graw",7);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm2/run_0093/CoBo_AsAd1_2017-10-08T02:14:36.346_0000.graw",8);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm2/run_0093/CoBo_AsAd2_2017-10-08T02:14:36.346_0000.graw",9);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm2/run_0093/CoBo_AsAd3_2017-10-08T02:14:36.346_0007.graw",10);
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm2/run_0093/CoBo_AsAd3_2017-10-08T02:14:36.346_0008.graw",10);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm3/run_0093/CoBo_AsAd0_2017-10-08T02:13:22.056_0000.graw",11);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm3/run_0093/CoBo_AsAd1_2017-10-08T02:13:22.058_0000.graw",12);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm3/run_0093/CoBo_AsAd2_2017-10-08T02:13:22.058_0000.graw",13);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm3/run_0093/CoBo_AsAd3_2017-10-08T02:13:22.058_0000.graw",14);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm4/run_0093/CoBo_AsAd0_2017-10-08T02:18:35.596_0000.graw",15);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm4/run_0093/CoBo_AsAd1_2017-10-08T02:18:35.598_0001.graw",16);
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm4/run_0093/CoBo_AsAd1_2017-10-08T02:18:35.598_0002.graw",16);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm4/run_0093/CoBo_AsAd2_2017-10-08T02:18:35.598_0000.graw",17);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm4/run_0093/CoBo_AsAd3_2017-10-08T02:18:35.598_0000.graw",18);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm5/run_0093/CoBo_AsAd0_2017-10-08T02:10:53.729_0000.graw",19);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm5/run_0093/CoBo_AsAd1_2017-10-08T02:10:53.730_0000.graw",20);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm5/run_0093/CoBo_AsAd2_2017-10-08T02:10:53.731_0000.graw",21);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm5/run_0093/CoBo_AsAd3_2017-10-08T02:10:53.731_0000.graw",22);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm6/run_0093/CoBo_AsAd0_2017-10-08T02:15:00.148_0000.graw",23);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm6/run_0093/CoBo_AsAd1_2017-10-08T02:15:00.149_0000.graw",24);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm6/run_0093/CoBo_AsAd2_2017-10-08T02:15:00.149_0000.graw",25);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm6/run_0093/CoBo_AsAd3_2017-10-08T02:15:00.217_0005.graw",26);
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm6/run_0093/CoBo_AsAd3_2017-10-08T02:15:00.217_0006.graw",26);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm7/run_0093/CoBo_AsAd0_2017-10-08T02:14:20.689_0000.graw",27);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm7/run_0093/CoBo_AsAd1_2017-10-08T02:14:20.692_0002.graw",28);
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm7/run_0093/CoBo_AsAd1_2017-10-08T02:14:20.692_0003.graw",28);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm7/run_0093/CoBo_AsAd2_2017-10-08T02:14:20.691_0000.graw",29);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm7/run_0093/CoBo_AsAd3_2017-10-08T02:14:20.692_0002.graw",30);
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm7/run_0093/CoBo_AsAd3_2017-10-08T02:14:20.692_0003.graw",30);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm8/run_0093/CoBo_AsAd0_2017-10-08T02:14:06.994_0000.graw",31);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm8/run_0093/CoBo_AsAd1_2017-10-08T02:14:06.995_0000.graw",32);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm8/run_0093/CoBo_AsAd2_2017-10-08T02:14:07.003_0005.graw",33);
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm8/run_0093/CoBo_AsAd2_2017-10-08T02:14:07.003_0006.graw",33);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm9/run_0093/CoBo_AsAd0_2017-10-08T02:13:33.492_0000.graw",34);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm9/run_0093/CoBo_AsAd1_2017-10-08T02:13:33.494_0000.graw",35);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm9/run_0093/CoBo_AsAd2_2017-10-08T02:13:33.565_0004.graw",36);
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm9/run_0093/CoBo_AsAd2_2017-10-08T02:13:33.565_0005.graw",36);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm10/run_0093/CoBo10_AsAd0_2017-10-08T02:12:29.626_0007.graw",37);
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm10/run_0093/CoBo10_AsAd0_2017-10-08T02:12:29.626_0008.graw",37);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm10/run_0093/CoBo10_AsAd1_2017-10-08T02:12:29.626_0000.graw",38);
+    
+     fDecoderTask->AddData("/mnt/analysis/attpc/e17504/mm10/run_0093/CoBo10_AsAd2_2017-10-08T02:12:29.626_0000.graw",39);
+  */
+
   run -> AddTask(fDecoderTask);
 
   ATPSATask *psaTask = new ATPSATask();
