@@ -1,5 +1,5 @@
 void run_unpack_fission
-(TString runNumber = "0100",TString parameterFile = "ATTPC.e17504.par",
+(TString runNumber = "0108",TString parameterFile = "ATTPC.e17504.par",
 TString mappath="/mnt/projects/attpcroot/santamar/ATTPCROOTv2/resources/")
 {
 
@@ -13,17 +13,16 @@ TString mappath="/mnt/projects/attpcroot/santamar/ATTPCROOTv2/resources/")
   // Set file names 
   TString dir = getenv("VMCWORKDIR");
   //TString dataFile = "runfiles/e17504_run_" + runNumber + ".txt";
-  TString dataFile = dir + "/macro/perso/runfiles/e17504_run_" + runNumber + ".txt";
+  TString dataFile = dir + "/macro/Unpack_GETDecoder2/runfiles/NSCL/e17504/e17504_run_" + runNumber + ".txt";
   TString scriptfile = "e17504_fission.xml";
   TString scriptdir = dir + "/scripts/"+ scriptfile;
-  TString dataDir = dir + "/macro/perso/rootfiles/";
   TString geomDir = dir + "/geometry/";
   TString outputDir = "/mnt/analysis/attpc/e17504/rootfiles/";
   gSystem -> Setenv("GEOMPATH", geomDir.Data());
 
   TString outputFile  = outputDir + "run_" + runNumber + "_output.root"; 
-  //TString mcParFile   = dataDir + name + ".params.root";
-  TString loggerFile  = dataDir + "ATTPCLog.log";
+  //TString mcParFile   = outputDir + name + ".params.root";
+  TString loggerFile  = outputDir + "ATTPCLog_run" + runNumber +".log";
   TString digiParFile = dir + "/parameters/" + parameterFile;
   TString geoManFile  = dir + "/geometry/ATTPC_v1.1.root";
 
