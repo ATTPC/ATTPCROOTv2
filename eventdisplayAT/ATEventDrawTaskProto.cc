@@ -410,6 +410,7 @@ ATEventDrawTaskProto::DrawHitPoints()
             //std::cout<<"Pad num : "<<iPad<<" Is Valid? : "<<fPad->GetValidPad()<<" Pad num in pad object :"<<fPad->GetPadNum()<<std::endl;
             Int_t *rawadc = fPad->GetRawADC();
             Double_t *adc = fPad->GetADC();
+            Int_t PadNum_temp = fPad->GetPadNum();
 	   // dumpEvent<<TSpad<<fPad->GetPadNum()<<std::endl;
 
             for(Int_t j=0;j<512;j++){ // TODO: This is limited to 256 pads only. Increment the size of the array and put another option for ATTPC
@@ -417,7 +418,7 @@ ATEventDrawTaskProto::DrawHitPoints()
                 if (fPad->GetValidPad() && iPad<256){
 
 
-                    fPadAll[iPad]->SetBinContent(j,adc[j]);
+                    fPadAll[PadNum_temp]->SetBinContent(j,adc[j]);
 
 
                 }
