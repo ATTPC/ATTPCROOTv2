@@ -18,7 +18,7 @@
 
 
 ATTriggerTask::ATTriggerTask():FairTask("ATTriggerTask"),
-fIsPersistent(kFALSE)
+fIsPersistent(kTRUE)
 {
 }
 
@@ -58,8 +58,8 @@ ATTriggerTask::Init()
 }
 
     //**********SetOutputBranches********************************
-    fATRawEventArray_acc = new TClonesArray("ATRawEvent", 1);
-    fATEventArray_acc    = new TClonesArray("ATEvent", 1);
+    fATRawEventArray_acc 	= new TClonesArray("ATRawEvent", 1);
+    fATEventArray_acc    	= new TClonesArray("ATEvent", 1);
 
     ioman -> Register("Accepted_ATRawEvent", "cbmsim", fATRawEventArray_acc, fIsPersistent);
     ioman -> Register("Accepted_ATEventH", "cbmsim", fATEventArray_acc, fIsPersistent);
@@ -95,24 +95,30 @@ ATTriggerTask::Exec(Option_t* option)
   fLogger->Debug(MESSAGE_ORIGIN,"Exec of ATTriggerTask");
 
   //***************Reset everything and load next event****************
-    fATEventArray_acc     ->Delete();
-    fATRawEventArray_acc  ->Delete();
+    //fATEventArray_acc     ->Delete();
+    //fATRawEventArray_acc  ->Delete();
 
     fEvent    = NULL;
     fRawEvent = NULL;
+    
 
     fEvent    = (ATEvent*) fATEventArray->At(0);
     fRawEvent = (ATRawEvent*) fATRawEventArray->At(0);
 
+  
     //*****************Check if event will be triggered******************
     fIsTrigger = fTrigger->ImplementTrigger(fRawEvent, fEvent);
-
-
+	
     //****************Puts event into new branches***********************
     if(fIsTrigger == kTRUE){
-      fEvent    = (ATEvent*)fATEventArray_acc->ConstructedAt(0);
-      fRawEvent = (ATRawEvent*)fATRawEventArray_acc->ConstructedAt(0);
-    }
+   
+      std::cerr<<"Event triggered by DAQ"<<std::endl;
+      
+      ATEvent *event_acc = (ATEvent *) new ((*fATEventArray_acc)[0]) ATEvent(fEvent);
+      ATRawEvent *rawEvent_acc = (ATRawEvent *) new ((*fATRawEventArray_acc)[0]) ATRawEvent(fRawEvent);
+
+    
+   }
 
 }
 

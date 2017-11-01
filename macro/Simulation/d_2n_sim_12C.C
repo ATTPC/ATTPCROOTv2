@@ -1,16 +1,16 @@
-void d_2He_sim_12C(Int_t nEvents = 100, TString mcEngine = "TGeant4", TString geovar = "_03atm" )
+void d_2n_sim_12C(Int_t nEvents = 100, TString mcEngine = "TGeant4", TString geovar = "_03atm" )
 {
 
   TString dir = getenv("VMCWORKDIR");
 
  const TString pathtodata = "./data/";
   // Output file name
-  TString outFile = pathtodata + "attpcsim_d2He_12C" + geovar + ".root";
+  TString outFile = pathtodata + "attpcsim_dn_12C" + geovar + ".root";
 //TString outFile = pathtodata + "attpcsim_test.root";
 
 
   // Parameter file name
- TString parFile= pathtodata + "attpcpar_d2He_12C" + geovar + ".root";
+ TString parFile= pathtodata + "attpcpar_dn_12C" + geovar + ".root";
   //TString parFile= pathtodata + "attpcpar_test.root";
 
   // -----   Timer   --------------------------------------------------------
@@ -75,13 +75,13 @@ void d_2He_sim_12C(Int_t nEvents = 100, TString mcEngine = "TGeant4", TString ge
 
                   // Beam Information
                   Int_t z = 6;  // Atomic number
-	          Int_t a = 12; // Mass number
-	          Int_t q = 0;   // Charge State
-	          Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
-	          Double_t px = 0.000/a;
-	          Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
-	          Double_t pz = 5316.6744/(a*1000.0);  // Z-Momentum / per nucleon!!!!!!
-  	          Double_t BExcEner = 0.0;
+	                Int_t a = 12; // Mass number
+	                Int_t q = 0;   // Charge State
+	                Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
+	                Double_t px = 0.000/a;
+	                Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
+	                Double_t pz = 5316.6744/(a*1000.0);  // Z-Momentum / per nucleon!!!!!!
+  	              Double_t BExcEner = 0.0;
                   Double_t Bmass = 12.00*931.494/1000.0; //Mass in GeV
                   Double_t NomEnergy = 1; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
 
@@ -101,7 +101,7 @@ void d_2He_sim_12C(Int_t nEvents = 100, TString mcEngine = "TGeant4", TString ge
 
 		 // Variables for 2-Body kinematics reaction
                   std::vector<Int_t> Zp; // Zp
-		   std::vector<Int_t> Ap; // Ap
+		                std::vector<Int_t> Ap; // Ap
                   std::vector<Int_t> Qp;//Electric charge
                   Int_t mult;  //Number of particles
  		  std::vector<Double_t> Pxp; //Px momentum X
@@ -130,53 +130,53 @@ void d_2He_sim_12C(Int_t nEvents = 100, TString mcEngine = "TGeant4", TString ge
 
                   // ---- Target ----
                  Zp.push_back(1); //
-		 Ap.push_back(2); //
-		 Qp.push_back(0); //
-		 Pxp.push_back(0.0);
+		             Ap.push_back(2); //
+		             Qp.push_back(0); //
+		             Pxp.push_back(0.0);
                  Pyp.push_back(0.0);
-		 Pzp.push_back(0.0);
+		             Pzp.push_back(0.0);
                  Mass.push_back(2.01410177812);
-		 ExE.push_back(0.0);//In MeV
+		              ExE.push_back(0.0);//In MeV
 
                   //--- Scattered -----
-                Zp.push_back(5); //
+                Zp.push_back(7); //
           	Ap.push_back(12); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
           	Pyp.push_back(0.0);
           	Pzp.push_back(0.0);
-          	Mass.push_back(12.0143521);
+          	Mass.push_back(12.018613196);
           	ExE.push_back(0.0);
 
 
                   // ---- Recoil -----
-		Zp.push_back(2); //
+		        Zp.push_back(2); //
           	Ap.push_back(2); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
           	Pyp.push_back(0.0);
           	Pzp.push_back(0.0);
-          	Mass.push_back(2.0*1.0078250322);
+          	Mass.push_back(2.0*1.00866);
           	ExE.push_back(0.0);
 
 		  // ---- proton 1 -----
-		Zp.push_back(1); //
+		        Zp.push_back(0); //
           	Ap.push_back(1); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
           	Pyp.push_back(0.0);
           	Pzp.push_back(0.0);
-          	Mass.push_back(1.0078250322);
+          	Mass.push_back(1.00866);
           	ExE.push_back(0.0);
 
 		  // ---- proton 2 -----
-		Zp.push_back(1);
+		        Zp.push_back(0);
           	Ap.push_back(1); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
           	Pyp.push_back(0.0);
           	Pzp.push_back(0.0);
-          	Mass.push_back(1.0078250322);
+          	Mass.push_back(1.00866);
           	ExE.push_back(0.0);
 
                   Double_t ThetaMinCMS = 0.0;
