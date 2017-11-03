@@ -30,8 +30,8 @@ public:
 	virtual void Finish();
 
 	std::vector<ATTrajectory> AnalyzePointArray(std::vector<ATHit> const &hitArray, std::vector<ATHit> *noMatch = nullptr) const;
-	void Visualize(std::vector<ATTrajectory> const &trajectories, std::vector<ATHit> const &noMatch = std::vector<ATHit>()) const;
-	void Visualize(std::vector<ATTrajectory> const &trajectories, std::vector<ATHit> const &noMatch, std::shared_ptr<pcl::visualization::PCLVisualizer> &viewer) const;
+	//void Visualize(std::vector<ATTrajectory> const &trajectories, std::vector<ATHit> const &noMatch = std::vector<ATHit>()) const;
+	//void Visualize(std::vector<ATTrajectory> const &trajectories, std::vector<ATHit> const &noMatch, std::shared_ptr<pcl::visualization::PCLVisualizer> &viewer) const;
 
 
 	// Getters and Setters

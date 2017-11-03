@@ -10,7 +10,7 @@ void run_hierarchical_clustering(Int_t firstEvent = 0, Int_t eventCount = std::n
 
 	TString loggerFile = dataDir + "ATTPCLog_Reco.log";
 	// TString inputFile = dataDir + "attpcsim_alphaT.root";
-	TString inputFile = dataDir + "run_0100.root";
+	TString inputFile = dataDir + "test.root";
 	TString outputFile = dataDir + "output";
 
 	// Logger

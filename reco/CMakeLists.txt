@@ -15,14 +15,14 @@ ${CMAKE_SOURCE_DIR}/reco/GETDecoder
 ${CMAKE_SOURCE_DIR}/reco/GETDecoder2
 ${CMAKE_SOURCE_DIR}/reco/ATDecoder
 ${CMAKE_SOURCE_DIR}/reco/ATPulseAnalyzer
-#${CMAKE_SOURCE_DIR}/reco/HierarchicalClustering
+${CMAKE_SOURCE_DIR}/reco/HierarchicalClustering
 ${CMAKE_SOURCE_DIR}/reco/HoughTransformation
 ${CMAKE_SOURCE_DIR}/reco/ATProtoPhiReco
 ${CMAKE_SOURCE_DIR}/reco/VMEDecoder
 ${CMAKE_SOURCE_DIR}/reco/ATMinimization
 ${CMAKE_SOURCE_DIR}/reco/ATAnalysis
 ${CMAKE_SOURCE_DIR}/reco/ATRansac
-#${CMAKE_SOURCE_DIR}/tpc
+${CMAKE_SOURCE_DIR}/tpc
 
 )
 
@@ -80,11 +80,11 @@ ATPulseAnalyzer/ATPSASimple2.cc
 ATPulseAnalyzer/ATPSAFilter.cc
 ATPulseAnalyzer/ATPSAProto.cc
 
-#HierarchicalClustering/ATCubicSplineFit.cc
-#HierarchicalClustering/ATFindVertex.cc
-#HierarchicalClustering/ATHierarchicalClusteringHc.cc
-#HierarchicalClustering/ATHierarchicalClusteringSmoothenCloud.cc
-#HierarchicalClustering/ATTrajectory.cc
+HierarchicalClustering/ATCubicSplineFit.cc
+HierarchicalClustering/ATFindVertex.cc
+HierarchicalClustering/ATHierarchicalClusteringHc.cc
+HierarchicalClustering/ATHierarchicalClusteringSmoothenCloud.cc
+HierarchicalClustering/ATTrajectory.cc
 
 ATPulseAnalyzer/ATCalibration.cc
 
@@ -122,7 +122,7 @@ ATHoughTask.cc
 ATVMEUnpackTask.cc
 ATAnalysisTask.cc
 ATRansacTask.cc
-#ATHierarchicalClusteringTask.cc
+ATHierarchicalClusteringTask.cc
 
 )
 
