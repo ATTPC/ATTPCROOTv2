@@ -29,39 +29,6 @@ static void HitArrayToPointCloud(std::vector<ATHit> const &hitArray, pcl::PointC
     }
 }
 
-static float CalculateCloudScale(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
-{
-    float totalDistance = 0.0f;
-    pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
-    kdtree.setInputCloud(cloud);
-
-    std::vector<int> nnIndices;
-    nnIndices.reserve(2);
-    std::vector<float> nnbSquaredDistances;
-    nnbSquaredDistances.reserve(2);
-
-    for (size_t pointIndex = 0; pointIndex < cloud->size(); ++pointIndex)
-    {
-        int const nnFound = kdtree.nearestKSearch(*cloud, (int)pointIndex, 2, nnIndices, nnbSquaredDistances);
-
-        if (nnFound == 2)
-        {
-            pcl::PointXYZ const &pointA = (*cloud)[pointIndex];
-            pcl::PointXYZ const &pointB = (*cloud)[nnIndices[1]];
-
-            float const distance = std::sqrt(
-                (pointA.x - pointB.x) * (pointA.x - pointB.x) +
-                (pointA.y - pointB.y) * (pointA.y - pointB.y) +
-                (pointA.z - pointB.z) * (pointA.z - pointB.z)
-            );
-
-            totalDistance += distance;
-        }
-    }
-
-    return totalDistance / (float)cloud->size();
-}
-
 static void ColorByTrajectories(std::vector<ATTrajectory> const &trajectories, std::vector<ATHit> const &noMatch, pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_rgb)
 {
     size_t trajectoryIndex = 0;
@@ -240,22 +207,18 @@ std::vector<ATTrajectory> ATHierarchicalClusteringTask::AnalyzePointArray(std::v
         throw std::runtime_error("Empty cloud!");
     else
     {
-        // calculate cloud-scale
-        float const cloudScale = CalculateCloudScale(cloud_xyz);
-        // std::cout << "XX cloudScale: " << cloudScale << std::endl;
-
         // smoothen cloud
         pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_xyzti_smooth(new pcl::PointCloud<pcl::PointXYZI>());
 
         //cloud_smooth = smoothenCloud(cloud_filtered, 12); // k nearest neighbour
-        cloud_xyzti_smooth = ATHierarchicalClusteringSmoothenCloud::SmoothenCloud(cloud_xyzti, cloudScale * this->_smoothRadius); // radius
+        cloud_xyzti_smooth = ATHierarchicalClusteringSmoothenCloud::SmoothenCloud(cloud_xyzti, this->_smoothRadius); // radius
 
         // calculate cluster
         std::vector<ATHierarchicalClusteringHc::triplet> triplets = ATHierarchicalClusteringHc::GenerateTriplets(cloud_xyzti_smooth, this->_genTripletsNnKandidates, this->_genTripletsNBest, this->_genTripletsMaxError);
         // TODO: evaluate tradeoff
         // using the smooth cloud yields better curvature, but the curve is too short.
-        // std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti, hitArray, triplets, cloudScale * this->_cloudScaleModifier, noMatch);
-        std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti_smooth, hitArray, triplets, cloudScale * this->_cloudScaleModifier, noMatch);
+        // std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti, hitArray, triplets, this->_cloudScaleModifier, noMatch);
+        std::vector<ATTrajectory> trajectories = this->useHc(cloud_xyzti_smooth, hitArray, triplets, this->_cloudScaleModifier, noMatch);
 
         return trajectories;
     }
