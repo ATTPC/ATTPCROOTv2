@@ -772,134 +772,134 @@ ATEventDrawTask::DrawHitPoints()
 void
 ATEventDrawTask::DrawHSpace()
 {
-    
-    fRadVSTb->Reset(0);
-    fTheta->Reset(0);
-    fThetaxPhi->Reset(0);
-    fThetaxPhi_Ini->Reset(0);
-    fThetaxPhi_Ini_RANSAC->Reset(0);
-    fMC_XY->Set(0);
-    fMC_ZX->Set(0);
-    fMC_ZY->Set(0);
-    fMC_XY_exp->Set(0);
-    fMC_XY_int->Set(0);
-    fMC_ZX_int->Set(0);
-    fMC_ZY_int->Set(0);
-    fMC_XY_back->Set(0);
-    fMC_ZX_back->Set(0);
-    fMC_ZY_back->Set(0);
-    if(fEventManager->GetDrawHoughSpace()){
-        if(fIsCircularHough){
-            fHoughSpace = fHoughSpaceCircle_buff->GetHoughSpace("XY");
-            std::vector<Double_t>* Radius = fHoughSpaceCircle_buff->GetRadiusDist();
-            std::vector<Int_t>* TimeStamp = fHoughSpaceCircle_buff->GetTimeStamp();
-            std::vector<Double_t>* Theta = fHoughSpaceCircle_buff->GetTheta();
-            std::vector<Double_t>* Dl = fHoughSpaceCircle_buff->GetDl();
-            std::vector<Double_t>* Phi = fHoughSpaceCircle_buff->GetPhi();
-            fIniHit = fHoughSpaceCircle_buff->GetIniHit();
-            fIniHitRansac = fHoughSpaceCircle_buff->GetIniHitRansac();
-            
-            Int_t numRad = Radius->size();
-            Int_t numTheta = Theta->size();
-            
-            for(Int_t i=0;i<numRad;i++){
-                fRadVSTb->Fill(TimeStamp->at(i),Radius->at(i));
-                //fTheta->SetBinContent(TimeStamp->at(i),Theta->at(i));
-                fThetaxPhi->Fill(TimeStamp->at(i),Phi->at(i)*Radius->at(i));
-            }
-            
-            for(Int_t i=0;i<numTheta;i++){
-                fTheta->Fill(Dl->at(i),Theta->at(i));
-                //std::cout<<" Dl : "<<Dl->at(i)<<" Theta : "<<Theta->at(i)<<std::endl;
-            }
-            
-            fThetaxPhi_Ini->Fill(fIniHit->GetTimeStamp(),fHoughSpaceCircle_buff->GetIniPhi()*fHoughSpaceCircle_buff->GetIniRadius());
-            fThetaxPhi_Ini_RANSAC->Fill(fIniHitRansac->GetTimeStamp(),fHoughSpaceCircle_buff->GetIniPhiRansac()*fHoughSpaceCircle_buff->GetIniRadiusRansac());
-            
-            
-            std::vector<Double_t> fPosXMin = fHoughSpaceCircle_buff->GetPosXMin();
-            std::vector<Double_t> fPosYMin = fHoughSpaceCircle_buff->GetPosYMin();
-            std::vector<Double_t> fPosZMin = fHoughSpaceCircle_buff->GetPosZMin();
-            
-            std::vector<Double_t> fPosXExp = fHoughSpaceCircle_buff->GetPosXExp();
-            std::vector<Double_t> fPosYExp = fHoughSpaceCircle_buff->GetPosYExp();
-            
-            std::vector<Double_t> fPosXInt = fHoughSpaceCircle_buff->GetPosXInt();
-            std::vector<Double_t> fPosYInt = fHoughSpaceCircle_buff->GetPosYInt();
-            std::vector<Double_t> fPosZInt = fHoughSpaceCircle_buff->GetPosZInt();
-            
-            std::vector<Double_t> fPosXBack = fHoughSpaceCircle_buff->GetPosXBack();
-            std::vector<Double_t> fPosYBack = fHoughSpaceCircle_buff->GetPosYBack();
-            std::vector<Double_t> fPosZBack = fHoughSpaceCircle_buff->GetPosZBack();
-            
-            
-            
-            for(Int_t i=0;i<fPosXMin.size();i++){
-                fMC_XY->SetPoint(fMC_XY->GetN(),fPosXMin.at(i),fPosYMin.at(i));
-                fMC_ZX->SetPoint(fMC_ZX->GetN(),fPosZMin.at(i),fPosXMin.at(i));
-                fMC_ZY->SetPoint(fMC_ZY->GetN(),fPosZMin.at(i),fPosYMin.at(i));
-                
-            }
-            
-            for(Int_t i=0;i<fPosXExp.size();i++){
-                fMC_XY_exp->SetPoint(fMC_XY_exp->GetN(),fPosXExp.at(i),fPosYExp.at(i));
-                
-            }
-            
-            for(Int_t i=0;i<fPosXInt.size();i++){
-                fMC_XY_int->SetPoint(fMC_XY_int->GetN(),fPosXInt.at(i),fPosYInt.at(i));
-                fMC_ZX_int->SetPoint(fMC_ZX_int->GetN(),fPosZInt.at(i),fPosXInt.at(i));
-                fMC_ZY_int->SetPoint(fMC_ZY_int->GetN(),fPosZInt.at(i),fPosYInt.at(i));
-                
-            }
-            
-            for(Int_t i=0;i<fPosXBack.size();i++){
-                fMC_XY_back->SetPoint(fMC_XY_back->GetN(),fPosXBack.at(i),fPosYBack.at(i));
-                fMC_ZX_back->SetPoint(fMC_ZX_back->GetN(),fPosZBack.at(i),fPosXBack.at(i));
-                fMC_ZY_back->SetPoint(fMC_ZY_back->GetN(),fPosZBack.at(i),fPosYBack.at(i));
-                
-            }
-            
-            
-            
-            std::cout<<cYELLOW<<"  = Initial conditions for MC : "<<std::endl;
-            std::cout<<"  Theta                 : "<<fHoughSpaceCircle_buff->GetIniTheta()*180/TMath::Pi()<<std::endl;
-            std::cout<<"  Phi                   : "<<fHoughSpaceCircle_buff->GetIniPhi()*180/TMath::Pi()<<std::endl;
-            std::cout<<"  Radius                : "<<fHoughSpaceCircle_buff->GetIniRadius()<<std::endl;
-            std::cout<<"  Time Bucket           : "<<fIniHit->GetTimeStamp()<<std::endl;
-            std::cout<<"  Time Bucket RANSAC    : "<<fIniHitRansac->GetTimeStamp()<<std::endl;
-            std::cout<<"  Radius x Phi          : "<<fHoughSpaceCircle_buff->GetIniPhi()*fHoughSpaceCircle_buff->GetIniRadius()<<cNORMAL<<std::endl;
-            
-            std::cout<<cGREEN<<"  = MC results : "<<std::endl;
-            std::cout<<"  Theta          : "<<fHoughSpaceCircle_buff->FitParameters.sThetaMin*180/TMath::Pi()<<std::endl;
-            std::cout<<"  Phi            : "<<fHoughSpaceCircle_buff->FitParameters.sPhiMin*180/TMath::Pi()<<std::endl;
-            std::cout<<"  Energy         : "<<fHoughSpaceCircle_buff->FitParameters.sEnerMin<<std::endl;
-            std::cout<<"  Brho           : "<<fHoughSpaceCircle_buff->FitParameters.sBrhoMin<<std::endl;
-            std::cout<<"  Magnetic field : "<<fHoughSpaceCircle_buff->FitParameters.sBMin<<std::endl;
-            std::cout<<"  Norm. Chi-2    : "<<fHoughSpaceCircle_buff->FitParameters.sNormChi2<<cNORMAL<<std::endl;
-            
-            
-            
-            
-        }else if(fIsLinearHough){
-            fHoughSpace = fHoughSpaceLine_buff->GetHoughSpace("XY");
-            std::vector<std::pair<Double_t,Double_t>> LinearHoughPar = fHoughSpaceLine_buff-> GetHoughPar();
-            std::vector<Double_t> LinearHoughMax = fHoughSpaceLine_buff-> GetHoughMax();
-            TVector3 Vertex_1 = fHoughSpaceLine_buff->GetVertex1();
-            TVector3 Vertex_2 = fHoughSpaceLine_buff->GetVertex2();
-            //std::vector<ATTrack> TrackCand = fHoughSpaceLine_buff->GetTrackCand();
-            
-            std::cout<<std::endl;
-            std::cout<<cYELLOW<<"  = Number of lines found by Linear Hough Space : "<<LinearHoughPar.size()<<std::endl;
-            
-            //int n = 1000;
-            //double t0 = 0;
-            //double dt = 1000;
-            
-            
-            /*if(TrackCand.size()>0)
-             {
-             
+
+   fRadVSTb->Reset(0);
+   fTheta->Reset(0);
+   fThetaxPhi->Reset(0);
+   fThetaxPhi_Ini->Reset(0);
+   fThetaxPhi_Ini_RANSAC->Reset(0);
+   fMC_XY->Set(0);
+   fMC_ZX->Set(0);
+   fMC_ZY->Set(0);
+   fMC_XY_exp->Set(0);
+   fMC_XY_int->Set(0);
+   fMC_ZX_int->Set(0);
+   fMC_ZY_int->Set(0);
+   fMC_XY_back->Set(0);
+   fMC_ZX_back->Set(0);
+   fMC_ZY_back->Set(0);
+   if(fEventManager->GetDrawHoughSpace()){
+         if(fIsCircularHough){
+                  fHoughSpace = fHoughSpaceCircle_buff->GetHoughSpace("XY");
+                  std::vector<Double_t> const *Radius = fHoughSpaceCircle_buff->GetRadiusDist();
+                  std::vector<Int_t> const *TimeStamp = fHoughSpaceCircle_buff->GetTimeStamp();
+                  std::vector<Double_t> const *Theta = fHoughSpaceCircle_buff->GetTheta();
+                  std::vector<Double_t> const *Dl = fHoughSpaceCircle_buff->GetDl();
+                  std::vector<Double_t> const *Phi = fHoughSpaceCircle_buff->GetPhi();
+                  fIniHit = fHoughSpaceCircle_buff->GetIniHit();
+                  fIniHitRansac = fHoughSpaceCircle_buff->GetIniHitRansac();
+
+                  Int_t numRad = Radius->size();
+                  Int_t numTheta = Theta->size();
+
+                    for(Int_t i=0;i<numRad;i++){
+                      fRadVSTb->Fill(TimeStamp->at(i),Radius->at(i));
+                      //fTheta->SetBinContent(TimeStamp->at(i),Theta->at(i));
+                      fThetaxPhi->Fill(TimeStamp->at(i),Phi->at(i)*Radius->at(i));
+                    }
+
+                    for(Int_t i=0;i<numTheta;i++){
+                        fTheta->Fill(Dl->at(i),Theta->at(i));
+                        //std::cout<<" Dl : "<<Dl->at(i)<<" Theta : "<<Theta->at(i)<<std::endl;
+                    }
+
+                    fThetaxPhi_Ini->Fill(fIniHit->GetTimeStamp(),fHoughSpaceCircle_buff->GetIniPhi()*fHoughSpaceCircle_buff->GetIniRadius());
+                    fThetaxPhi_Ini_RANSAC->Fill(fIniHitRansac->GetTimeStamp(),fHoughSpaceCircle_buff->GetIniPhiRansac()*fHoughSpaceCircle_buff->GetIniRadiusRansac());
+
+
+                    std::vector<Double_t> fPosXMin = fHoughSpaceCircle_buff->GetPosXMin();
+                    std::vector<Double_t> fPosYMin = fHoughSpaceCircle_buff->GetPosYMin();
+                    std::vector<Double_t> fPosZMin = fHoughSpaceCircle_buff->GetPosZMin();
+
+                    std::vector<Double_t> fPosXExp = fHoughSpaceCircle_buff->GetPosXExp();
+                    std::vector<Double_t> fPosYExp = fHoughSpaceCircle_buff->GetPosYExp();
+
+                    std::vector<Double_t> fPosXInt = fHoughSpaceCircle_buff->GetPosXInt();
+                    std::vector<Double_t> fPosYInt = fHoughSpaceCircle_buff->GetPosYInt();
+                    std::vector<Double_t> fPosZInt = fHoughSpaceCircle_buff->GetPosZInt();
+
+                    std::vector<Double_t> fPosXBack = fHoughSpaceCircle_buff->GetPosXBack();
+                    std::vector<Double_t> fPosYBack = fHoughSpaceCircle_buff->GetPosYBack();
+                    std::vector<Double_t> fPosZBack = fHoughSpaceCircle_buff->GetPosZBack();
+
+
+
+                   for(Int_t i=0;i<fPosXMin.size();i++){
+                       fMC_XY->SetPoint(fMC_XY->GetN(),fPosXMin.at(i),fPosYMin.at(i));
+                       fMC_ZX->SetPoint(fMC_ZX->GetN(),fPosZMin.at(i),fPosXMin.at(i));
+                       fMC_ZY->SetPoint(fMC_ZY->GetN(),fPosZMin.at(i),fPosYMin.at(i));
+
+                     }
+
+                    for(Int_t i=0;i<fPosXExp.size();i++){
+                         fMC_XY_exp->SetPoint(fMC_XY_exp->GetN(),fPosXExp.at(i),fPosYExp.at(i));
+
+                    }
+
+                    for(Int_t i=0;i<fPosXInt.size();i++){
+                           fMC_XY_int->SetPoint(fMC_XY_int->GetN(),fPosXInt.at(i),fPosYInt.at(i));
+                           fMC_ZX_int->SetPoint(fMC_ZX_int->GetN(),fPosZInt.at(i),fPosXInt.at(i));
+                           fMC_ZY_int->SetPoint(fMC_ZY_int->GetN(),fPosZInt.at(i),fPosYInt.at(i));
+
+                    }
+
+                    for(Int_t i=0;i<fPosXBack.size();i++){
+                           fMC_XY_back->SetPoint(fMC_XY_back->GetN(),fPosXBack.at(i),fPosYBack.at(i));
+                           fMC_ZX_back->SetPoint(fMC_ZX_back->GetN(),fPosZBack.at(i),fPosXBack.at(i));
+                           fMC_ZY_back->SetPoint(fMC_ZY_back->GetN(),fPosZBack.at(i),fPosYBack.at(i));
+
+                    }
+
+
+
+                    std::cout<<cYELLOW<<"  = Initial conditions for MC : "<<std::endl;
+                    std::cout<<"  Theta                 : "<<fHoughSpaceCircle_buff->GetIniTheta()*180/TMath::Pi()<<std::endl;
+                    std::cout<<"  Phi                   : "<<fHoughSpaceCircle_buff->GetIniPhi()*180/TMath::Pi()<<std::endl;
+                    std::cout<<"  Radius                : "<<fHoughSpaceCircle_buff->GetIniRadius()<<std::endl;
+                    std::cout<<"  Time Bucket           : "<<fIniHit->GetTimeStamp()<<std::endl;
+                    std::cout<<"  Time Bucket RANSAC    : "<<fIniHitRansac->GetTimeStamp()<<std::endl;
+                    std::cout<<"  Radius x Phi          : "<<fHoughSpaceCircle_buff->GetIniPhi()*fHoughSpaceCircle_buff->GetIniRadius()<<cNORMAL<<std::endl;
+
+                    std::cout<<cGREEN<<"  = MC results : "<<std::endl;
+                    std::cout<<"  Theta          : "<<fHoughSpaceCircle_buff->FitParameters.sThetaMin*180/TMath::Pi()<<std::endl;
+                    std::cout<<"  Phi            : "<<fHoughSpaceCircle_buff->FitParameters.sPhiMin*180/TMath::Pi()<<std::endl;
+                    std::cout<<"  Energy         : "<<fHoughSpaceCircle_buff->FitParameters.sEnerMin<<std::endl;
+                    std::cout<<"  Brho           : "<<fHoughSpaceCircle_buff->FitParameters.sBrhoMin<<std::endl;
+                    std::cout<<"  Magnetic field : "<<fHoughSpaceCircle_buff->FitParameters.sBMin<<std::endl;
+                    std::cout<<"  Norm. Chi-2    : "<<fHoughSpaceCircle_buff->FitParameters.sNormChi2<<cNORMAL<<std::endl;
+
+
+
+
+         }else if(fIsLinearHough){
+           fHoughSpace = fHoughSpaceLine_buff->GetHoughSpace("XY");
+           std::vector<std::pair<Double_t,Double_t>> LinearHoughPar = fHoughSpaceLine_buff-> GetHoughPar();
+           std::vector<Double_t> LinearHoughMax = fHoughSpaceLine_buff-> GetHoughMax();
+           TVector3 Vertex_1 = fHoughSpaceLine_buff->GetVertex1();
+           TVector3 Vertex_2 = fHoughSpaceLine_buff->GetVertex2();
+           //std::vector<ATTrack> TrackCand = fHoughSpaceLine_buff->GetTrackCand();
+
+           std::cout<<std::endl;
+           std::cout<<cYELLOW<<"  = Number of lines found by Linear Hough Space : "<<LinearHoughPar.size()<<std::endl;
+
+           //int n = 1000;
+           //double t0 = 0;
+           //double dt = 1000;
+
+
+           /*if(TrackCand.size()>0)
+           {
+
              for(Int_t i=0;i<TrackCand.size();i++){
              ATTrack track = TrackCand.at(i);
              std::vector<Double_t> parFit = track.GetFitPar();

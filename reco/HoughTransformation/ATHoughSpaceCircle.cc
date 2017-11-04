@@ -71,8 +71,8 @@ ATHoughSpaceCircle::ATHoughSpaceCircle()
 
 ATHoughSpaceCircle::~ATHoughSpaceCircle()
 {
-	delete HistHoughXY;
-  delete HistHoughAux;
+    delete HistHoughXY;
+    delete HistHoughAux;
 }
 
 
@@ -90,338 +90,351 @@ TH2F* ATHoughSpaceCircle::GetHoughSpace(TString ProjPlane)                      
 
 void ATHoughSpaceCircle::CalcMultiHoughSpace(ATEvent* event)
 {
-
-
+    // TODO
 }
 
 void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event)
 {
-
-
+    // TODO
 }
 
-void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane)
+void ATHoughSpaceCircle::FillHistHoughXY(ATEvent *event, Int_t nstep)
 {
-
-  Int_t nHits = event->GetNumHits();
-  Int_t nstep = 10;
-  Double_t drift_cal = fDriftVelocity*fTBTime/100.0;//mm
-
-
-  ATMinimization *min = new ATMCMinimization();
-  min->ResetParameters();
-
-  for(Int_t iHit=0; iHit<(nHits-nstep); iHit++){
-
-              //std::cout<<omp_get_num_threads()<<std::endl;
-              ATHit hit = event->GetHitArray()->at(iHit);
-              ATHit hit_forw = event->GetHitArray()->at(iHit+nstep);
-              ATHit hit_next = event->GetHitArray()->at(iHit+1);
-              Int_t PadNumHit = hit.GetHitPadNum();
-              Int_t PadNumHit_forw = hit_forw.GetHitPadNum();
-
-              if(hit.GetCharge()<fThreshold) continue;
-              TVector3 position = hit.GetPosition();
-              TVector3 position_forw = hit_forw.GetPosition();
-              TVector3 position_next = hit_next.GetPosition();
-
-
-              Double_t hitdist = TMath::Sqrt( TMath::Power(position.X()-position_next.X(),2) + TMath::Power(position.Y()-position_next.Y(),2) + TMath::Power(position.Z()-position_next.Z(),2)   );
-
-
-              for(Int_t itheta = 0; itheta <1023; itheta++){
-                  Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
-                  Float_t d0_XY_inv = 2.0* ( (position.Y()-position_forw.Y())*TMath::Sin(angle) + (position.X()-position_forw.X())*TMath::Cos(angle)  )
-                  / ( (TMath::Power(position.Y(),2)-TMath::Power(position_forw.Y(),2) ) +   (TMath::Power(position.X(),2)-TMath::Power(position_forw.X(),2) )        );
-                  HistHoughXY->Fill(angle,1.0/d0_XY_inv);
-              }
-    }//Hit loop
-//    }// Parallel region
-
-
-                  Int_t locmaxx,locmaxy,locmaxz;
-                  HistHoughXY->GetMaximumBin(locmaxx,locmaxy,locmaxz);
-                  Double_t xpos = HistHoughXY->GetXaxis()->GetBinCenter(locmaxx);
-                  Double_t ypos = HistHoughXY->GetYaxis()->GetBinCenter(locmaxy);
-
-                  fXCenter =  ypos*TMath::Cos(xpos);
-                  fYCenter =  ypos*TMath::Sin(xpos);
-
-
-                    fIniRadius=0.0;
-                    fIniPhi=0.0;
-                    fIniTheta=0.0;
-
-
-                    for(Int_t iHit=0; iHit<nHits-1; iHit++){
-
-                           ATHit hit = event->GetHitArray()->at(iHit);
-                           TVector3 position = hit.GetPosition();
-                           ATHit hit_forw = event->GetHitArray()->at(iHit+1);
-                           TVector3 position_forw = hit_forw.GetPosition();
-
-                           fRadius->push_back(TMath::Sqrt(  TMath::Power((fXCenter-position.X()),2)   +  TMath::Power((fYCenter-position.Y()),2)    ));
-                           fTimeStamp->push_back(hit.GetTimeStamp());
-                           fPhi->push_back(TMath::ATan2(fXCenter-position.X(),fYCenter-position.Y()));
-                           Double_t dl = TMath::Sqrt( TMath::Power(position_forw.X()-position.X(),2) + TMath::Power(position_forw.Y()-position.Y(),2)  );
-                           Double_t dz = (hit_forw.GetTimeStamp()-hit.GetTimeStamp())*drift_cal;
-                           //fTheta->push_back(TMath::ATan2(dl,dz)); // Obsolete
-
-
-                              //Second Hough Space Calculation for PhixRadius
-
-                                 for(Int_t itheta = 0; itheta <1023; itheta++){
-                                      Float_t angle = TMath::Pi()*(static_cast<Float_t>(itheta)/1023);
-                                      Float_t d0_XY = (TMath::Cos(angle)*fPhi->at(iHit)*fRadius->at(iHit))  +  (TMath::Sin(angle)*hit.GetTimeStamp());
-                                      HistHoughAux->Fill(angle,d0_XY);
-                                      //FillHoughMap(angle,d0_XY);
-
-                                }
-
-
-                    }
-
-                  fHoughLinePar =  CalHoughParameters(HistHoughAux);//Histo
-                  //std::pair<Double_t,Double_t> HoughLinePar = CalHoughParameters();//std
-                  Double_t IniPosZ =0.0;
-
-
-                  Int_t IniTSBuff=0;
-                  Double_t IniRadiusBuff =0.0;
-                  Double_t IniPhiBuff =0.0;
-
-
-                  for(Int_t iHit=0; iHit<nHits-1; iHit++)
-                  {
-                    ATHit hit = event->GetHitArray()->at(iHit);
-                    TVector3 position = hit.GetPosition();
-                    Double_t geo_dist = TMath::Abs (TMath::Cos(fHoughLinePar.first)*fPhi->at(iHit)*fRadius->at(iHit)  + TMath::Sin(fHoughLinePar.first)*hit.GetTimeStamp()  - fHoughLinePar.second);
-                    Double_t hit_dist = TMath::Sqrt( TMath::Power( (fPhi->at(iHit)*fRadius->at(iHit) - IniPhiBuff*IniRadiusBuff),2) + TMath::Power(hit.GetTimeStamp()-IniTSBuff ,2) );
-                    //if(hit_dist<50) std::cout<<" Hist Dist pre :"<<hit_dist<<" Geo Dist : "<<geo_dist<<std::endl;
-
-
-
-                            if(geo_dist<10.0){
-
-                                      IniTSBuff = hit.GetTimeStamp();
-                                      IniRadiusBuff = fRadius->at(iHit);
-                                      IniPhiBuff = fPhi->at(iHit);
-
-                                        if(hit_dist<10.0){
-
-
-                                          fClusteredHits->push_back(&hit);
-                                          fIniHit->SetHit(hit.GetHitPadNum(),hit.GetHitID(),position.X(),position.Y(),position.Z(),hit.GetCharge());
-                                          IniPosZ = position.Z();
-                                          fIniHit->SetTimeStamp(hit.GetTimeStamp());
-                                          fIniTS = IniTSBuff;
-                                          fIniRadius = IniRadiusBuff;
-                                          fIniPhi = IniPhiBuff;
-                                          fIniHitID = iHit; // Easier and faster to use the position of the hit in the vector
-
-
-                                        }
-
-
-
-
-                                }
-
-
-                   }// End of clustering algorithm
-
-
-
-                    Double_t dl_theta=0.0;
-                    Double_t theta_avg=0.0;
-                    Int_t clusterSize=fClusteredHits->size();
-                    Int_t TB_Scan = 0;
-                    for(Int_t iHitTB=0;iHitTB<clusterSize-1;iHitTB++){
-
-                      Double_t posx=0.0;
-                      Double_t posy=0.0;
-                      Double_t posz=0.0;
-                      Double_t totCharge=0.0;
-                      Double_t cmsHits_X =0.0;
-                      Double_t cmsHits_Y =0.0;
-                      Int_t TB =0;
-                      Double_t posx_forw=0.0;
-                      Double_t posy_forw=0.0;
-                      Double_t posz_forw=0.0;
-                      Double_t totCharge_forw=0.0;
-                      Double_t cmsHits_X_forw =0.0;
-                      Double_t cmsHits_Y_forw =0.0;
-                      Int_t TB_forw = 0;
-
-
-                      // TODO: Only neighboring TB are taken into account
-                      std::vector<ATHit>  fClusteredTBHits;
-                      std::vector<ATHit>  fClusteredTBHits_forw;
-
-
-                      fClusteredTBHits=min->GetTBHitArray(fIniTS-iHitTB-TB_Scan,fClusteredHits);
-
-                    if(fClusteredTBHits.size()>0){ //Found at least 1 clustered hit in that time bucket, if not go to the next loop iteration
-                            //std::cout<<" ================================ "<<std::endl;
-                            //std::cout<<"  Starting cluster with TB : "<<fIniTS-iHitTB<<std::endl;
-                            fClusteredTBHits_forw=min->GetTBHitArray(fIniTS-iHitTB-1-TB_Scan,fClusteredHits);
-
-                     if(fClusteredTBHits_forw.size()==0){// If forward hit is empty scan until the end of the vector or until the next non-zero solution
-
-
-                          while(fClusteredTBHits_forw.size()==0  &&  fIniTS-iHitTB-1-TB_Scan>0){ //TODO: Use a lambda function for this mess
-                              TB_Scan++;
-                              fClusteredTBHits_forw=min->GetTBHitArray(fIniTS-iHitTB-1-TB_Scan,fClusteredHits);
-                              //std::cout<<TB_Scan<<std::endl;
-                              //std::cout<<fClusteredTBHits_forw.size()<<std::endl;
-                          }
-
-                      }
-
-                      if(fClusteredTBHits_forw.size()>0){
-
-
-
-
-                                    if( fClusteredTBHits.size()>0  && fClusteredTBHits_forw.size()>0 ){
-
-                                          for(Int_t iHit=0;iHit<fClusteredTBHits.size();iHit++){
-                                            ATHit hitTB = fClusteredTBHits.at(iHit);
-                                            TVector3 positionTB = hitTB.GetPosition();
-                                            TB = hitTB.GetTimeStamp();
-                                            cmsHits_X+= positionTB.X()*hitTB.GetCharge();
-                                            cmsHits_Y+= positionTB.Y()*hitTB.GetCharge();
-                                            totCharge+=hitTB.GetCharge();
-                                            //std::cout<<" Hit TB : "<<TB<<" Position X : "<<positionTB.X()<<" Position Y : "<<positionTB.Y()<<std::endl;
-                                          }
-
-                                          for(Int_t iHit=0;iHit<fClusteredTBHits_forw.size();iHit++){
-                                            ATHit hitTB_forw = fClusteredTBHits_forw.at(iHit);
-                                            TVector3 positionTB_forw = hitTB_forw.GetPosition();
-                                            TB_forw = hitTB_forw.GetTimeStamp();
-                                            cmsHits_X_forw+= positionTB_forw.X()*hitTB_forw.GetCharge();
-                                            cmsHits_Y_forw+= positionTB_forw.Y()*hitTB_forw.GetCharge();
-                                            totCharge_forw+=hitTB_forw.GetCharge();
-                                            //std::cout<<" Hit TB forw : "<<TB_forw<<" Position forw X : "<<positionTB_forw.X()<<" Position forw Y : "<<positionTB_forw.Y()<<std::endl;
-                                          }
-
-                                    }
-
-                                    posx=cmsHits_X/totCharge;
-                                    posy=cmsHits_Y/totCharge;
-                                    posx_forw=cmsHits_X_forw/totCharge_forw;
-                                    posy_forw=cmsHits_Y_forw/totCharge_forw;
-                                    //std::cout<<" Average Pos X : "<<posx<<" Average Pos Y : "<<posy<<std::endl;
-                                    //std::cout<<" Average Pos Forward X : "<<posx_forw<<" Average Pos Forward Y : "<<posy_forw<<std::endl;
-
-                          }//Hit forward if>0
-                        }//Hit if>0
-
-                        Double_t distXY = TMath::Sqrt( TMath::Power(posx-posx_forw,2) + TMath::Power(posy-posy_forw,2) );
-                        Double_t dl = (TB-TB_forw)*drift_cal;
-                        theta_avg=TMath::ATan2(distXY,dl);
-                        fTheta->push_back(theta_avg);
-                        fDl->push_back(TB);
-                        //std::cout<<TB<<std::endl;
-
-
-                   }// Loop over clusterSize
-
-
-                  Double_t fThetaVal=0.0;
-                  Int_t thetacnt=0; //Needed to remove theta values with 0
-
-                  if(!fTheta->empty()){
-
-                      for(Int_t i=0;i<fTheta->size();++i){
-                          if(fTheta->at(i)>0){
-                           fThetaVal+= fTheta->at(i);
-                           thetacnt++;
-                         }
-                      }
-                      fIniTheta = fThetaVal/thetacnt;
-                  }
-
-
-                  TVector3 IniHitPos = fIniHit->GetPosition();
-                  Double_t *parameter = new Double_t[8];
-                  parameter[0]=IniHitPos.X();
-                  parameter[1]=IniHitPos.Y();
-                  parameter[2]=IniHitPos.Z();
-                  parameter[3]=fIniTS;
-                  parameter[4]=fIniPhi;
-                  parameter[5]=fIniRadius;
-                  parameter[6]=fIniTheta;
-                  parameter[7]=fIniHitID;
-
-                  for(Int_t i=0;i<8;i++) fParameter[i]=parameter[i];
-
-
-                  Double_t HoughAngleDeg = fHoughLinePar.first*180.0/TMath::Pi();
-
-
-              if (   HoughAngleDeg<90.0 && HoughAngleDeg>45.0 ) { // Check RxPhi plot to adjust the angle
-
-                 min->MinimizeOptMap(parameter,event,hPadPlane);
-                 fPosXmin = min->GetPosXMin();
-                 fPosYmin = min->GetPosYMin();
-                 fPosZmin = min->GetPosZMin();
-                 fPosXexp = min->GetPosXExp();
-                 fPosYexp = min->GetPosYExp();
-                 fPosZexp = min->GetPosZExp();
-                 fPosXinter = min->GetPosXInt();
-                 fPosYinter = min->GetPosYInt();
-                 fPosZinter = min->GetPosZInt();
-                 fPosXBack = min->GetPosXBack();
-                 fPosYBack = min->GetPosYBack();
-                 fPosZBack = min->GetPosZBack();
-                 ATHoughSpaceCircle::FitParameters.sThetaMin        = min->FitParameters.sThetaMin;
-                 ATHoughSpaceCircle::FitParameters.sThetaMin        = min->FitParameters.sThetaMin;
-                 ATHoughSpaceCircle::FitParameters.sEnerMin         = min->FitParameters.sEnerMin;
-                 ATHoughSpaceCircle::FitParameters.sPosMin          = min->FitParameters.sPosMin;
-                 ATHoughSpaceCircle::FitParameters.sBrhoMin         = min->FitParameters.sBrhoMin;
-                 ATHoughSpaceCircle::FitParameters.sBMin            = min->FitParameters.sBMin;
-                 ATHoughSpaceCircle::FitParameters.sPhiMin          = min->FitParameters.sPhiMin;
-                 ATHoughSpaceCircle::FitParameters.sChi2Min         = min->FitParameters.sChi2Min;
-                 ATHoughSpaceCircle::FitParameters.sVertexPos       = min->FitParameters.sVertexPos;
-                 ATHoughSpaceCircle::FitParameters.sVertexEner      = min->FitParameters.sVertexEner;
-                 ATHoughSpaceCircle::FitParameters.sMinDistAppr     = min->FitParameters.sMinDistAppr;
-                 ATHoughSpaceCircle::FitParameters.sNumMCPoint      = min->FitParameters.sNumMCPoint;
-                 ATHoughSpaceCircle::FitParameters.sNormChi2        = min->FitParameters.sNormChi2;
-                }
-                else
+    Int_t const nHits = event->GetNumHits();
+
+    for (Int_t iHit = 0; iHit < (nHits - nstep); ++iHit)
+    {
+        // std::cout << omp_get_num_threads() << std::endl;
+        ATHit const hit = event->GetHitArray()->at(iHit);
+
+        if (hit.GetCharge() < fThreshold)
+            continue;
+
+        ATHit const hit_next = event->GetHitArray()->at(iHit + 1);
+        ATHit const hit_forw = event->GetHitArray()->at(iHit + nstep);
+        Int_t const PadNumHit = hit.GetHitPadNum();
+        Int_t const PadNumHit_forw = hit_forw.GetHitPadNum();
+
+        TVector3 const position = hit.GetPosition();
+        TVector3 const position_forw = hit_forw.GetPosition();
+        TVector3 const position_next = hit_next.GetPosition();
+
+        TVector3 const deltaPosNext = position - position_next;
+        Double_t const hitdist = TMath::Sqrt(deltaPosNext * deltaPosNext);
+
+        for (Int_t itheta = 0; itheta < 1023; ++itheta)
+        {
+            TVector3 const deltaPosForw = position - position_forw;
+            Float_t const angle = TMath::Pi() * (static_cast<Float_t>(itheta) / 1023.0f);
+            Float_t const d0_XY_inv = 2.0f * (deltaPosForw.Y() * TMath::Sin(angle) + deltaPosForw.X() * TMath::Cos(angle))
+                / ((TMath::Power(position.Y(), 2) - TMath::Power(position_forw.Y(), 2))
+                 + (TMath::Power(position.X(), 2) - TMath::Power(position_forw.X(), 2)));
+
+            HistHoughXY->Fill(angle, 1.0f / d0_XY_inv); // TODO: flip calculation so we do not need to do the inversion here
+        }
+    }
+}
+
+void ATHoughSpaceCircle::Clustering(ATEvent *event)
+{
+    Int_t const nHits = event->GetNumHits();
+
+    // Double_t IniPosZ = 0.0;
+    Int_t IniTSBuff = 0;
+    Double_t IniRadiusBuff = 0.0;
+    Double_t IniPhiBuff = 0.0;
+
+    for (Int_t iHit = 0; iHit < (nHits - 1); ++iHit)
+    {
+        ATHit const &hit = event->GetHitArray()->at(iHit);
+        TVector3 const position = hit.GetPosition();
+        Double_t const geo_dist = TMath::Abs(
+            TMath::Cos(fHoughLinePar.first) * fPhi->at(iHit) * fRadius->at(iHit)
+            + TMath::Sin(fHoughLinePar.first) * hit.GetTimeStamp()
+            - fHoughLinePar.second
+        );
+        Double_t const hit_dist = TMath::Sqrt(
+            TMath::Power((fPhi->at(iHit) * fRadius->at(iHit) - IniPhiBuff * IniRadiusBuff), 2)
+            + TMath::Power((hit.GetTimeStamp() - IniTSBuff), 2)
+        );
+        // if (hit_dist < 50) std::cout << " Hist Dist pre:" << hit_dist << " Geo Dist: " << geo_dist << std::endl;
+
+        if (geo_dist < 10.0)
+        {
+            IniTSBuff = hit.GetTimeStamp();
+            IniRadiusBuff = fRadius->at(iHit);
+            IniPhiBuff = fPhi->at(iHit);
+
+            if (hit_dist < 10.0)
+            {
+                fClusteredHits->push_back(hit);
+                fIniHit->SetHit(hit.GetHitPadNum(), hit.GetHitID(), position.X(), position.Y(), position.Z(), hit.GetCharge());
+                // IniPosZ = position.Z();
+                fIniHit->SetTimeStamp(hit.GetTimeStamp());
+                fIniTS = IniTSBuff;
+                fIniRadius = IniRadiusBuff;
+                fIniPhi = IniPhiBuff;
+                fIniHitID = iHit; // Easier and faster to use the position of the hit in the vector
+            }
+        }
+    } // End of clustering algorithm
+}
+
+void ATHoughSpaceCircle::CalculateParameters(ATEvent *event)
+{
+    Int_t const nHits = event->GetNumHits();
+
+    Int_t locmaxx, locmaxy, locmaxz;
+    HistHoughXY->GetMaximumBin(locmaxx, locmaxy, locmaxz);
+    Double_t xpos = HistHoughXY->GetXaxis()->GetBinCenter(locmaxx);
+    Double_t ypos = HistHoughXY->GetYaxis()->GetBinCenter(locmaxy);
+
+    fXCenter = ypos * TMath::Cos(xpos);
+    fYCenter = ypos * TMath::Sin(xpos);
+
+    fIniRadius = 0.0;
+    fIniPhi = 0.0;
+    fIniTheta = 0.0;
+
+    for (Int_t iHit = 0; iHit < (nHits - 1); ++iHit)
+    {
+        // TODO: remove unused code
+        ATHit const hit = event->GetHitArray()->at(iHit);
+        // ATHit const hit_forw = event->GetHitArray()->at(iHit + 1);
+        TVector3 const position = hit.GetPosition();
+        // TVector3 const position_forw = hit_forw.GetPosition();
+        TVector2 const deltaPosition = TVector2(fXCenter, fYCenter) - TVector2(position.X(), position.Y());
+        // TVector2 const deltaPositionForw = TVector2(position_forw.X(), position_forw.Y()) - TVector2(position.X(), position.Y());
+
+        fRadius->push_back(TMath::Sqrt(deltaPosition * deltaPosition));
+        fTimeStamp->push_back(hit.GetTimeStamp());
+        fPhi->push_back(TMath::ATan2(deltaPosition.X(), deltaPosition.Y()));
+
+        // Double_t dl = TMath::Sqrt(deltaPositionForw.X() * deltaPositionForw.Y());
+        // Double_t dz = (hit_forw.GetTimeStamp() - hit.GetTimeStamp()) * drift_cal;
+        // fTheta->push_back(TMath::ATan2(dl, dz)); // Obsolete
+
+        // Second Hough Space Calculation for PhixRadius
+        for(Int_t itheta = 0; itheta < 1023; ++itheta)
+        {
+            Float_t const angle = TMath::Pi() * (static_cast<Float_t>(itheta) / 1023.0f);
+            Float_t const d0_XY = (TMath::Cos(angle) * fPhi->at(iHit) * fRadius->at(iHit))
+                + (TMath::Sin(angle) * hit.GetTimeStamp());
+
+            HistHoughAux->Fill(angle, d0_XY);
+            // FillHoughMap(angle, d0_XY);
+        }
+    }
+
+    fHoughLinePar = CalHoughParameters(HistHoughAux); // Histo
+    // std::pair<Double_t, Double_t> HoughLinePar = CalHoughParameters(); // std
+}
+
+void ATHoughSpaceCircle::CalcHoughSpace(ATEvent *event, TH2Poly *hPadPlane)
+{
+    Double_t drift_cal = fDriftVelocity * fTBTime / 100.0; // mm
+
+    ATMinimization *min = new ATMCMinimization();
+    min->ResetParameters();
+
+    this->FillHistHoughXY(event);
+    this->CalculateParameters(event);
+    this->Clustering(event);
+
+
+    Int_t const clusterSize = fClusteredHits->size();
+    Double_t dl_theta = 0.0;
+    Double_t theta_avg = 0.0;
+    Int_t TB_Scan = 0;
+
+    for (Int_t iHitTB = 0 ; iHitTB < (clusterSize - 1); ++iHitTB)
+    {
+        Double_t posx = 0.0;
+        Double_t posy = 0.0;
+        Double_t posz = 0.0;
+        Double_t totCharge = 0.0;
+        Double_t cmsHits_X = 0.0;
+        Double_t cmsHits_Y = 0.0;
+        Int_t TB = 0;
+        Double_t posx_forw = 0.0;
+        Double_t posy_forw = 0.0;
+        Double_t posz_forw = 0.0;
+        Double_t totCharge_forw = 0.0;
+        Double_t cmsHits_X_forw = 0.0;
+        Double_t cmsHits_Y_forw = 0.0;
+        Int_t TB_forw = 0;
+
+        // TODO: Only neighboring TB are taken into account
+        std::vector<ATHit> fClusteredTBHits;
+        std::vector<ATHit> fClusteredTBHits_forw;
+
+        fClusteredTBHits = min->GetTBHitArray(fIniTS - iHitTB - TB_Scan, fClusteredHits);
+
+        if (fClusteredTBHits.size() > 0)
+        {
+            // Found at least 1 clustered hit in that time bucket, if not go to the next loop iteration
+            // std::cout << " ================================ " << std::endl;
+            // std::cout << "  Starting cluster with TB: " << (fIniTS - iHitTB) << std::endl;
+
+            // TODO: the following may be compacted with a do...while-loop
+            fClusteredTBHits_forw=min->GetTBHitArray(fIniTS - iHitTB - TB_Scan - 1, fClusteredHits);
+
+            if (fClusteredTBHits_forw.size() == 0)
+            {
+                // If forward hit is empty scan until the end of the vector or until the next non-zero solution
+                while (fClusteredTBHits_forw.size() == 0  && (fIniTS - iHitTB - TB_Scan - 1) > 0)
                 {
-                  fPosXmin.clear();
-                  fPosYmin.clear();
-                  fPosZmin.clear();
-                  fPosXexp.clear();
-                  fPosYexp.clear();
-                  fPosZexp.clear();
-                  fPosXinter.clear();
-                  fPosYinter.clear();
-                  fPosZinter.clear();
-                  fPosXBack.clear();
-                  fPosYBack.clear();
-                  fPosZBack.clear();
-                  ATHoughSpaceCircle::FitParameters.sThetaMin        = 0;
-                  ATHoughSpaceCircle::FitParameters.sThetaMin        = 0;
-                  ATHoughSpaceCircle::FitParameters.sEnerMin         = 0;
-                  ATHoughSpaceCircle::FitParameters.sPosMin.SetXYZ(0,0,0);
-                  ATHoughSpaceCircle::FitParameters.sBrhoMin         = 0;
-                  ATHoughSpaceCircle::FitParameters.sBMin            = 0;
-                  ATHoughSpaceCircle::FitParameters.sPhiMin          = 0;
-                  ATHoughSpaceCircle::FitParameters.sChi2Min         = 0;
-                  ATHoughSpaceCircle::FitParameters.sVertexPos.SetXYZ(0,0,0);
-                  ATHoughSpaceCircle::FitParameters.sVertexEner      = 0;
-                  ATHoughSpaceCircle::FitParameters.sMinDistAppr     = 0;
-                  ATHoughSpaceCircle::FitParameters.sNumMCPoint      = 0;
-                  ATHoughSpaceCircle::FitParameters.sNormChi2        = 0;
-
-
+                    // TODO: Use a lambda function for this mess
+                    ++TB_Scan; // TODO: is being incemented before being used again. correct?
+                    fClusteredTBHits_forw = min->GetTBHitArray((fIniTS - iHitTB - TB_Scan - 1), fClusteredHits);
+                    // std::cout << TB_Scan << std::endl;
+                    // std::cout << fClusteredTBHits_forw.size() << std::endl;
                 }
-                 delete min;
-                 delete parameter;
 
+            }
+
+            if (fClusteredTBHits_forw.size() > 0)
+            {
+                for (ATHit const &hitTB : fClusteredTBHits)
+                {
+                    TVector3 const positionTB = hitTB.GetPosition();
+                    TB = hitTB.GetTimeStamp();
+                    cmsHits_X += positionTB.X() * hitTB.GetCharge();
+                    cmsHits_Y += positionTB.Y() * hitTB.GetCharge();
+                    totCharge += hitTB.GetCharge();
+                    // std::cout << " Hit TB: " << TB << " Position X: " << positionTB.X() << " Position Y: " << positionTB.Y() << std::endl;
+                }
+
+                for(ATHit const &hitTB_forw : fClusteredTBHits_forw)
+                {
+                    TVector3 positionTB_forw = hitTB_forw.GetPosition();
+                    TB_forw = hitTB_forw.GetTimeStamp();
+                    cmsHits_X_forw += positionTB_forw.X() * hitTB_forw.GetCharge();
+                    cmsHits_Y_forw += positionTB_forw.Y() * hitTB_forw.GetCharge();
+                    totCharge_forw += hitTB_forw.GetCharge();
+                    // std::cout << " Hit TB forw: " << TB_forw << " Position forw X: " << positionTB_forw.X() << " Position forw Y: " << positionTB_forw.Y() << std::endl;
+                }
+
+                posx = cmsHits_X / totCharge;
+                posy = cmsHits_Y / totCharge;
+                posx_forw = cmsHits_X_forw / totCharge_forw;
+                posy_forw = cmsHits_Y_forw / totCharge_forw;
+
+                // std::cout << " Average Pos X: " << posx << " Average Pos Y: " << posy << std::endl;
+                // std::cout << " Average Pos Forward X: " << posx_forw << " Average Pos Forward Y: " << posy_forw << std::endl;
+            } // Hit forward if > 0
+        } // Hit if > 0
+
+        Double_t distXY = TMath::Sqrt(
+            ((posx - posx_forw) * (posx - posx_forw))
+            + ((posy - posy_forw) * (posy - posy_forw))
+        );
+        Double_t dl = (TB - TB_forw) * drift_cal;
+        theta_avg = TMath::ATan2(distXY, dl);
+        fTheta->push_back(theta_avg);
+        fDl->push_back(TB);
+        // std::cout << TB << std::endl;
+    } // Loop over clusterSize
+
+
+    Double_t fThetaVal = 0.0;
+    Int_t thetacnt = 0; // Needed to remove theta values with 0
+
+    if (!fTheta->empty())
+    {
+        for (Int_t i = 0; i < fTheta->size(); ++i)
+        {
+            if (fTheta->at(i) > 0)
+            {
+                fThetaVal += fTheta->at(i);
+                ++thetacnt;
+            }
+        }
+
+        fIniTheta = fThetaVal / thetacnt;
+    }
+
+
+    TVector3 IniHitPos = fIniHit->GetPosition();
+    Double_t *parameter = new Double_t[8];
+    parameter[0] = IniHitPos.X();
+    parameter[1] = IniHitPos.Y();
+    parameter[2] = IniHitPos.Z();
+    parameter[3] = fIniTS;
+    parameter[4] = fIniPhi;
+    parameter[5] = fIniRadius;
+    parameter[6] = fIniTheta;
+    parameter[7] = fIniHitID;
+
+    for (Int_t i = 0; i < 8; ++i)
+    {
+        fParameter[i] = parameter[i];
+    }
+
+
+    Double_t HoughAngleDeg = fHoughLinePar.first * 180.0 / TMath::Pi();
+
+    if (HoughAngleDeg < 90.0 && HoughAngleDeg > 45.0)
+    {
+        // Check RxPhi plot to adjust the angle
+        min->MinimizeOptMap(parameter, event, hPadPlane);
+        fPosXmin = min->GetPosXMin();
+        fPosYmin = min->GetPosYMin();
+        fPosZmin = min->GetPosZMin();
+        fPosXexp = min->GetPosXExp();
+        fPosYexp = min->GetPosYExp();
+        fPosZexp = min->GetPosZExp();
+        fPosXinter = min->GetPosXInt();
+        fPosYinter = min->GetPosYInt();
+        fPosZinter = min->GetPosZInt();
+        fPosXBack = min->GetPosXBack();
+        fPosYBack = min->GetPosYBack();
+        fPosZBack = min->GetPosZBack();
+        ATHoughSpaceCircle::FitParameters.sThetaMin = min->FitParameters.sThetaMin;
+        ATHoughSpaceCircle::FitParameters.sThetaMin = min->FitParameters.sThetaMin;
+        ATHoughSpaceCircle::FitParameters.sEnerMin = min->FitParameters.sEnerMin;
+        ATHoughSpaceCircle::FitParameters.sPosMin = min->FitParameters.sPosMin;
+        ATHoughSpaceCircle::FitParameters.sBrhoMin = min->FitParameters.sBrhoMin;
+        ATHoughSpaceCircle::FitParameters.sBMin = min->FitParameters.sBMin;
+        ATHoughSpaceCircle::FitParameters.sPhiMin = min->FitParameters.sPhiMin;
+        ATHoughSpaceCircle::FitParameters.sChi2Min = min->FitParameters.sChi2Min;
+        ATHoughSpaceCircle::FitParameters.sVertexPos = min->FitParameters.sVertexPos;
+        ATHoughSpaceCircle::FitParameters.sVertexEner = min->FitParameters.sVertexEner;
+        ATHoughSpaceCircle::FitParameters.sMinDistAppr = min->FitParameters.sMinDistAppr;
+        ATHoughSpaceCircle::FitParameters.sNumMCPoint = min->FitParameters.sNumMCPoint;
+        ATHoughSpaceCircle::FitParameters.sNormChi2 = min->FitParameters.sNormChi2;
+    }
+    else
+    {
+        fPosXmin.clear();
+        fPosYmin.clear();
+        fPosZmin.clear();
+        fPosXexp.clear();
+        fPosYexp.clear();
+        fPosZexp.clear();
+        fPosXinter.clear();
+        fPosYinter.clear();
+        fPosZinter.clear();
+        fPosXBack.clear();
+        fPosYBack.clear();
+        fPosZBack.clear();
+        ATHoughSpaceCircle::FitParameters.sThetaMin = 0;
+        ATHoughSpaceCircle::FitParameters.sThetaMin = 0;
+        ATHoughSpaceCircle::FitParameters.sEnerMin = 0;
+        ATHoughSpaceCircle::FitParameters.sPosMin.SetXYZ(0,0,0);
+        ATHoughSpaceCircle::FitParameters.sBrhoMin = 0;
+        ATHoughSpaceCircle::FitParameters.sBMin = 0;
+        ATHoughSpaceCircle::FitParameters.sPhiMin = 0;
+        ATHoughSpaceCircle::FitParameters.sChi2Min = 0;
+        ATHoughSpaceCircle::FitParameters.sVertexPos.SetXYZ(0,0,0);
+        ATHoughSpaceCircle::FitParameters.sVertexEner = 0;
+        ATHoughSpaceCircle::FitParameters.sMinDistAppr = 0;
+        ATHoughSpaceCircle::FitParameters.sNumMCPoint = 0;
+        ATHoughSpaceCircle::FitParameters.sNormChi2 = 0;
+    }
+
+    delete min;
+    delete[] parameter;
 }
 
 void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYplane, Bool_t XZplane){
@@ -1750,3 +1763,36 @@ Double_t ATHoughSpaceCircle::GetEloss(Double_t c0,std::vector<Double_t>& par) //
    }
 
 }
+
+Double_t ATHoughSpaceCircle::GetXCenter() const { return fXCenter; }
+Double_t ATHoughSpaceCircle::GetYCenter() const { return fYCenter; }
+std::vector<Double_t> const *ATHoughSpaceCircle::GetRadiusDist() const { return fRadius; }
+std::vector<Int_t> const *ATHoughSpaceCircle::GetTimeStamp() const { return fTimeStamp; }
+std::vector<Double_t> const *ATHoughSpaceCircle::GetPhi() const { return fPhi; }
+std::vector<Double_t> const *ATHoughSpaceCircle::GetTheta() const { return fTheta; }
+std::vector<Double_t> const *ATHoughSpaceCircle::GetDl() const { return fDl; }
+
+Double_t ATHoughSpaceCircle::GetIniPhi() const { return fIniPhi; }
+Double_t ATHoughSpaceCircle::GetIniTheta() const { return fIniTheta; }
+Double_t ATHoughSpaceCircle::GetIniRadius() const { return fIniRadius; }
+Double_t ATHoughSpaceCircle::GetIniPhiRansac() const { return fIniPhiRansac; }
+Double_t ATHoughSpaceCircle::GetIniThetaRansac() const { return fIniThetaRansac; }
+Double_t ATHoughSpaceCircle::GetIniRadiusRansac() const { return fIniRadiusRansac; }
+
+ATHit const *ATHoughSpaceCircle::GetIniHit() const { return fIniHit; }
+ATHit const *ATHoughSpaceCircle::GetIniHitRansac() const { return fIniHitRansac; }
+
+Double_t const *ATHoughSpaceCircle::GetInitialParameters() const { return fParameter; }
+
+std::vector<Double_t> ATHoughSpaceCircle::GetPosXMin() const { return fPosXmin; }
+std::vector<Double_t> ATHoughSpaceCircle::GetPosYMin() const { return fPosYmin; }
+std::vector<Double_t> ATHoughSpaceCircle::GetPosZMin() const { return fPosZmin; }
+std::vector<Double_t> ATHoughSpaceCircle::GetPosXExp() const { return fPosXexp; }
+std::vector<Double_t> ATHoughSpaceCircle::GetPosYExp() const { return fPosYexp; }
+std::vector<Double_t> ATHoughSpaceCircle::GetPosZExp() const { return fPosZexp; }
+std::vector<Double_t> ATHoughSpaceCircle::GetPosXInt() const { return fPosXinter; }
+std::vector<Double_t> ATHoughSpaceCircle::GetPosYInt() const { return fPosYinter; }
+std::vector<Double_t> ATHoughSpaceCircle::GetPosZInt() const { return fPosZinter; }
+std::vector<Double_t> ATHoughSpaceCircle::GetPosXBack() const { return fPosXBack; }
+std::vector<Double_t> ATHoughSpaceCircle::GetPosYBack() const { return fPosYBack; }
+std::vector<Double_t> ATHoughSpaceCircle::GetPosZBack() const { return fPosZBack; }
