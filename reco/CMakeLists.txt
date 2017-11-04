@@ -9,7 +9,6 @@ ${PCL_INCLUDE_DIRS}
 # Add all the folders having header files you used in the code.
 #${CMAKE_SOURCE_DIR}/mcstack
 ${CMAKE_SOURCE_DIR}/AtMap
-${CMAKE_SOURCE_DIR}/AtGenerators
 ${CMAKE_SOURCE_DIR}/par
 ${CMAKE_SOURCE_DIR}/reco
 ${CMAKE_SOURCE_DIR}/reco/GETDecoder
@@ -81,9 +80,14 @@ ATPulseAnalyzer/ATPSASimple2.cc
 ATPulseAnalyzer/ATPSAFilter.cc
 ATPulseAnalyzer/ATPSAProto.cc
 
-HierarchicalClustering/ATHierarchicalClusteringCluster.cc
+HierarchicalClustering/ATCubicSplineFit.cc
+HierarchicalClustering/ATFindVertex.cc
 HierarchicalClustering/ATHierarchicalClusteringHc.cc
 HierarchicalClustering/ATHierarchicalClusteringSmoothenCloud.cc
+HierarchicalClustering/ATTrajectory.cc
+
+ATPulseAnalyzer/ATCalibration.cc
+
 
 HoughTransformation/ATHoughSpace.cc
 HoughTransformation/ATHoughSpaceLine.cc
@@ -114,11 +118,11 @@ ATDecoderTask.cc
 ATDecoder2Task.cc
 ATPSATask.cc
 ATPhiRecoTask.cc
-ATHierarchicalClusteringTask.cc
 ATHoughTask.cc
 ATVMEUnpackTask.cc
 ATAnalysisTask.cc
 ATRansacTask.cc
+ATHierarchicalClusteringTask.cc
 
 )
 

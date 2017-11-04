@@ -1,0 +1,15 @@
+################################################################################
+#ATTriggerPar
+################################################################################
+[ATTriggerPar]
+Write_clock:Double_t                        12500000.0		#The CoBo write clock in Hz
+Read_clock:Double_t                         25000000.0		#The CoBo read clock in Hz
+Master_clock:Double_t                      100000000.0		#The CoBo Global Master Clock in Hz
+Pad_thresh_MSB:Double_t                            1.0		#Global Threshold Value
+Pad_thresh_LSB:Double_t                            2.0		#LSB Threshold Value
+Trigger_signal_width:Double_t              0.000000235 		#Width of the trigger signal pulse
+Trigger_discriminator_fraction:Double_t          0.175	  #as a decimal, not a percent
+Multiplicity_threshold:Double_t                20000.0		#Certain threshold for the multiplicity
+Multiplicity_window:Double_t                     300.0		#The width of the time window
+Trigger_height:Double_t                           48.0		#The width of the time window
+################################################################################

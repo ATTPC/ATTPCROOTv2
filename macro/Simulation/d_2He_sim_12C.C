@@ -1,9 +1,9 @@
-void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString geovar = "_1atm" )
+void d_2He_sim_12C(Int_t nEvents = 100, TString mcEngine = "TGeant4", TString geovar = "_03atm" )
 {
 
   TString dir = getenv("VMCWORKDIR");
 
- const TString pathtodata = "/mnt/simulations/attpcroot/data/";
+ const TString pathtodata = "./data/";
   // Output file name
   TString outFile = pathtodata + "attpcsim_d2He_12C" + geovar + ".root";
 //TString outFile = pathtodata + "attpcsim_test.root";
@@ -78,13 +78,13 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
 	          Int_t a = 12; // Mass number
 	          Int_t q = 0;   // Charge State
 	          Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
-	          Double_t px = 0.000/a;  
+	          Double_t px = 0.000/a;
 	          Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
 	          Double_t pz = 5316.6744/(a*1000.0);  // Z-Momentum / per nucleon!!!!!!
   	          Double_t BExcEner = 0.0;
                   Double_t Bmass = 12.00*931.494/1000.0; //Mass in GeV
                   Double_t NomEnergy = 1; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
-                
+
 
 
 	          ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
@@ -119,7 +119,7 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
                   ResEner = 0.0; // Useless
 
                   // ---- Beam ----
-                  Zp.push_back(z); 
+                  Zp.push_back(z);
 		  Ap.push_back(a); //
 		  Qp.push_back(0);
 		  Pxp.push_back((a*1000.0)*px);
@@ -129,7 +129,7 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
 		  ExE.push_back(0);
 
                   // ---- Target ----
-                 Zp.push_back(1); // 
+                 Zp.push_back(1); //
 		 Ap.push_back(2); //
 		 Qp.push_back(0); //
 		 Pxp.push_back(0.0);
@@ -139,7 +139,7 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
 		 ExE.push_back(0.0);//In MeV
 
                   //--- Scattered -----
-                Zp.push_back(5); // 
+                Zp.push_back(5); //
           	Ap.push_back(12); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
@@ -150,7 +150,7 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
 
 
                   // ---- Recoil -----
-		Zp.push_back(2); // 
+		Zp.push_back(2); //
           	Ap.push_back(2); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
@@ -160,7 +160,7 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
           	ExE.push_back(0.0);
 
 		  // ---- proton 1 -----
-		Zp.push_back(1); // 
+		Zp.push_back(1); //
           	Ap.push_back(1); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
@@ -170,7 +170,7 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
           	ExE.push_back(0.0);
 
 		  // ---- proton 2 -----
-		Zp.push_back(1); 
+		Zp.push_back(1);
           	Ap.push_back(1); //
           	Qp.push_back(0);
           	Pxp.push_back(0.0);
@@ -192,7 +192,7 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
       	if(inputfile.fail() ){
                        cerr << "error abriendo "<< filename << endl;
  			exit(1);
-                      }  
+                      }
 
 	for(Int_t i=0;i<N_cross;i++){
 		inputfile >> col1 >> col2 >> col3 ;
@@ -201,16 +201,16 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
 		Arr3.at(i) = col3;
 		}
 	inputfile.close();
- 
 
-        
+
+
 	ATTPC_d2He* d2He = new ATTPC_d2He("d_2He",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE, &Arr1, &Arr2, &Arr3, N_cross);
         primGen->AddGenerator(d2He);
 
-	
+
 
 	run->SetGenerator(primGen);
-	
+
 // ------------------------------------------------------------------------
 
   //---Store the visualiztion info of the tracks, this make the output file very large!!
@@ -252,4 +252,3 @@ void d_2He_sim_12C(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString
        << "s" << endl << endl;
   // ------------------------------------------------------------------------
 }
-

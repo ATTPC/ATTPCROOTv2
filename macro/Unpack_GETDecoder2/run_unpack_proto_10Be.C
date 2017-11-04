@@ -1,4 +1,4 @@
-void run_unpack_proto_10Be(TString dataFile = "runfiles/ND/10Be_2013/run_10Be_merge.txt",TString parameterFile = "pATTPC.TRIUMF2015.par"){
+void run_unpack_proto_10Be(TString dataFile = "/home/ayyadlim/Desktop/ATTPC/CoBo_2013-02-22_19-35-53_0000.graw",TString parameterFile = "pATTPC.TRIUMF2015.par"){
 
     // -----   Timer   --------------------------------------------------------
 	TStopwatch timer;
@@ -52,7 +52,7 @@ void run_unpack_proto_10Be(TString dataFile = "runfiles/ND/10Be_2013/run_10Be_me
 	 decoderTask ->SetGeo(geo.Data());
    decoderTask ->SetProtoMap(protomapdir.Data());
    decoderTask ->SetMap((Char_t const*) scriptdir.Data());
-   //decoderTask -> SetPersistence();
+   decoderTask -> SetPersistence();
    run -> AddTask(decoderTask);
 
    ATPSATask *psaTask = new ATPSATask();

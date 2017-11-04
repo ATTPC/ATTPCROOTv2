@@ -5,7 +5,7 @@
 
 bool check_file(const std::string& name);
 
-void run_unpack2(TString dataFile = "runfiles/ar46_run_0085.txt",TString parameterFile = "ATTPC.e15503b.par",TString mappath="/data/ar46/run_0085/")
+void run_unpack2(TString dataFile = "runfiles/NSCL/Ar46/ar46_run_0171.txt",TString parameterFile = "ATTPC.e15503b.par",TString mappath="/data/ar46/run_0085/")
 {
 
   if(!check_file(dataFile.Data())){

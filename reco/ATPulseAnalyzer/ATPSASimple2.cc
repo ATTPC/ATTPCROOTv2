@@ -88,11 +88,17 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       Double_t floatADC[512] = {0};
       Double_t dummy[512] = {0};
 
+          if(fCalibration -> IsGainFile()){
+            adc = fCalibration -> CalibrateGain(adc, PadNum);
+          }
+          if(fCalibration -> IsJitterFile()){
+            adc = fCalibration -> CalibrateJitter(adc, PadNum);
+          }
+
 
       for (Int_t iTb = 0; iTb < fNumTbs; iTb++){
           floatADC[iTb] = adc[iTb];
           QHitTot+=adc[iTb];
-
       }
 
   TSpectrum *PeakFinder = new TSpectrum;
@@ -161,19 +167,16 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       Double_t TBCorr=0.0;
       Double_t TB_TotQ = 0.0;
 
-
       if(maxAdcIdx>11){
         for(Int_t i=0;i<11;i++){
 
-          TBCorr  += (floatADC[maxAdcIdx-i+5] - basecorr/10.0)*(maxAdcIdx-i+5); //Substract the baseline correction
-          TB_TotQ += floatADC[maxAdcIdx-i+5] - basecorr/10.0;
-
+          if(floatADC[maxAdcIdx-i+10] > 0 && floatADC[maxAdcIdx-i+10] < 4000){
+            TBCorr  += (floatADC[maxAdcIdx-i+5] - basecorr/10.0)*(maxAdcIdx-i+5); //Substract the baseline correction
+            TB_TotQ += floatADC[maxAdcIdx-i+5] - basecorr/10.0;
+          }
        }
      }
-
-    TBCorr = TBCorr/TB_TotQ;
-
-
+     TBCorr = TBCorr/TB_TotQ;
 
       if(fIsBaseCorr) charge = adc[maxAdcIdx] - basecorr/10.0; //Number of timebuckets taken into account
       else charge = adc[maxAdcIdx];
@@ -250,13 +253,12 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
 
         for (Int_t iTb = 0; iTb < fNumTbs; iTb++){
-		mesh[iTb]+=floatADC[iTb];
-		// if(iTb==511){
-		// std::cout<<" IPad : "<<iPad<<std::endl;
-		// std::cout<<" iTb : "<<iTb<<" FloatADC : "<<floatADC[iTb]<<" mesh : "<<mesh[iTb]<<std::endl;
-		//}
-
-	}
+		        mesh[iTb]+=floatADC[iTb];
+		          // if(iTb==511){
+		          // std::cout<<" IPad : "<<iPad<<std::endl;
+		          // std::cout<<" iTb : "<<iTb<<" FloatADC : "<<floatADC[iTb]<<" mesh : "<<mesh[iTb]<<std::endl;
+		            //}
+        }
 
        }//Valid Threshold
 

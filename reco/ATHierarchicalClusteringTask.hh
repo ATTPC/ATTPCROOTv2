@@ -7,6 +7,15 @@
 
 #include "ATHierarchicalClusteringHc.hh"
 #include "ATHit.hh"
+#include "ATTrajectory.hh"
+
+namespace pcl
+{
+	namespace visualization
+	{
+		class PCLVisualizer;
+	}
+}
 
 class ATHierarchicalClusteringTask : public FairTask
 {
@@ -20,7 +29,9 @@ public:
 	virtual void SetParContainers();
 	virtual void Finish();
 
-	ATHierarchicalClusteringCluster AnalyzePointArray(std::vector<ATHit> const &hitArray) const;
+	std::vector<ATTrajectory> AnalyzePointArray(std::vector<ATHit> const &hitArray, std::vector<ATHit> *noMatch = nullptr) const;
+	//void Visualize(std::vector<ATTrajectory> const &trajectories, std::vector<ATHit> const &noMatch = std::vector<ATHit>()) const;
+	//void Visualize(std::vector<ATTrajectory> const &trajectories, std::vector<ATHit> const &noMatch, std::shared_ptr<pcl::visualization::PCLVisualizer> &viewer) const;
 
 
 	// Getters and Setters
@@ -45,6 +56,15 @@ public:
 	void SetSmoothRadius(float value);
 	float GetSmoothRadius() const;
 
+	void SetSplineTangentScale(float value);
+	float GetSplineTangentScale() const;
+
+	void SetSplineMinControlPointDistance(float value);
+	float GetSplineMinControlPointDistance() const;
+
+	void SetSplineJump(size_t value);
+	size_t GetSplineJump() const;
+
 private:
 	/** Input array from previous already existing data level **/
 	//  TClonesArray* <InputDataLevel>;
@@ -52,18 +72,21 @@ private:
 	/** Output array to new data level**/
 	//  TClonesArray* <OutputDataLevel>;
 
-	float _bestClusterDistanceDelta = 2.91713f;
-	size_t _cleanupMinTriplets = 20;
-	float _cloudScaleModifier = 0.281718f;
-	float _genTripletsMaxError = 0.0103171f;
-	size_t _genTripletsNnKandidates = 14;
+	float _bestClusterDistanceDelta = 2.0f;
+	size_t _cleanupMinTriplets = 4;
+	float _cloudScaleModifier = 4.0f;
+	float _genTripletsMaxError = 0.01f;
+	size_t _genTripletsNnKandidates = 10;
 	size_t _genTripletsNBest = 2;
-	float _smoothRadius = 0.818581f;
+	float _smoothRadius = 5.0f;
+	float _splineTangentScale = 0.5f;
+	float _splineMinControlPointDistance = 20.0f;
+	size_t _splineJump = 1;
 
 	ATHierarchicalClusteringTask(const ATHierarchicalClusteringTask&);
 	ATHierarchicalClusteringTask operator=(const ATHierarchicalClusteringTask&);
 
-	ATHierarchicalClusteringCluster useHc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::vector<ATHierarchicalClusteringHc::triplet> triplets, float scale) const;
+	std::vector<ATTrajectory> useHc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::vector<ATHit> const &hitArray, std::vector<ATHierarchicalClusteringHc::triplet> triplets, float scale, std::vector<ATHit> *noMatch) const;
 
 	ClassDef(ATHierarchicalClusteringTask, 1);
 };
