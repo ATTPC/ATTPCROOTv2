@@ -1,8 +1,6 @@
 #ifndef ATRANSACTASK_H
 #define ATRANSACTASK_H
 
-
-
 // FAIRROOT classes
 #include "FairTask.h"
 #include "FairLogger.h"

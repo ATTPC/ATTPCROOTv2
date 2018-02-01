@@ -3,11 +3,20 @@
 
 #include <vector>
 
-#include "FairTask.h"
-
+// ATTPCROOT classes
+#include "ATEvent.hh"
+#include "ATProtoEvent.hh"
+#include "ATDigiPar.hh"
 #include "ATHierarchicalClusteringHc.hh"
 #include "ATHit.hh"
 #include "ATTrajectory.hh"
+
+// FAIRROOT classes
+#include "FairTask.h"
+#include "FairLogger.h"
+
+
+
 
 namespace pcl
 {
@@ -28,6 +37,8 @@ public:
 	virtual void Exec(Option_t* option);
 	virtual void SetParContainers();
 	virtual void Finish();
+
+  void SetPersistence(Bool_t value = kTRUE);
 
 	std::vector<ATTrajectory> AnalyzePointArray(std::vector<ATHit> const &hitArray, std::vector<ATHit> *noMatch = nullptr) const;
 	//void Visualize(std::vector<ATTrajectory> const &trajectories, std::vector<ATHit> const &noMatch = std::vector<ATHit>()) const;
@@ -66,11 +77,16 @@ public:
 	size_t GetSplineJump() const;
 
 private:
-	/** Input array from previous already existing data level **/
-	//  TClonesArray* <InputDataLevel>;
 
-	/** Output array to new data level**/
-	//  TClonesArray* <OutputDataLevel>;
+	TClonesArray *fEventHArray;
+	TClonesArray *fHierarchicalClusteringArray;
+
+	FairLogger *fLogger;
+	ATDigiPar *fPar;
+
+	//ATEvent *fEvent;
+
+	Bool_t kIsPersistence;
 
 	float _bestClusterDistanceDelta = 2.0f;
 	size_t _cleanupMinTriplets = 4;

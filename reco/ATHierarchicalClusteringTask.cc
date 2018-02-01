@@ -3,16 +3,25 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
+#include <iostream>
 #include <pcl/io/pcd_io.h>
 //#include <pcl/visualization/cloud_viewer.h>
 #include <pcl/kdtree/kdtree_flann.h>
 
 #include "ATHierarchicalClusteringSmoothenCloud.hh"
+#include "ATHierarchicalClusteringHc.hh"
+#include "ATFindVertex.hh"
 
-//#include "AtTpcPoint.h"
+// ROOT classes
+#include "TClonesArray.h"
+
+// FAIRROOT classes
+#include "FairRootManager.h"
+#include "FairRun.h"
+#include "FairRuntimeDb.h"
 #include "FairLogger.h"
 
-#include <iostream>
+
 
 static void HitArrayToPointCloud(std::vector<ATHit> const &hitArray, pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
 {
@@ -126,7 +135,10 @@ std::vector<ATTrajectory> ATHierarchicalClusteringTask::useHc(pcl::PointCloud<pc
 ATHierarchicalClusteringTask::ATHierarchicalClusteringTask()
     : FairTask("ATHierarchicalClusteringTask")
 {
+    fLogger = FairLogger::GetLogger();
     fLogger->Debug(MESSAGE_ORIGIN, "Defaul Constructor of ATHierarchicalClusteringTask");
+    fPar = NULL;
+    kIsPersistence = kFALSE;
 }
 
 ATHierarchicalClusteringTask::~ATHierarchicalClusteringTask()
@@ -134,45 +146,45 @@ ATHierarchicalClusteringTask::~ATHierarchicalClusteringTask()
     fLogger->Debug(MESSAGE_ORIGIN, "Destructor of ATHierarchicalClusteringTask");
 }
 
+void ATHierarchicalClusteringTask::SetPersistence(Bool_t value)             { kIsPersistence   = value; }
+
 void ATHierarchicalClusteringTask::SetParContainers()
 {
     fLogger->Debug(MESSAGE_ORIGIN, "SetParContainers of ATHierarchicalClusteringTask");
 
-    // Load all necessary parameter containers from the runtime data base
-    /*
-    FairRunAna* ana = FairRunAna::Instance();
-    FairRuntimeDb* rtdb=ana->GetRuntimeDb();
-    <ATHierarchicalClusteringTaskDataMember> = (<ClassPointer>*)
-        (rtdb->getContainer("<ContainerName>"));
-    */
+    FairRun *run = FairRun::Instance();
+    if (!run)
+      fLogger -> Fatal(MESSAGE_ORIGIN, "No analysis run!");
+
+    FairRuntimeDb *db = run -> GetRuntimeDb();
+    if (!db)
+      fLogger -> Fatal(MESSAGE_ORIGIN, "No runtime database!");
+
+    fPar = (ATDigiPar *) db -> getContainer("ATDigiPar");
+    if (!fPar)
+      fLogger -> Fatal(MESSAGE_ORIGIN, "ATDigiPar not found!!");
 }
 
 InitStatus ATHierarchicalClusteringTask::Init()
 {
     fLogger->Debug(MESSAGE_ORIGIN, "Initilization of ATHierarchicalClusteringTask");
 
+    fHierarchicalClusteringArray = new TClonesArray("ATHierarchicalClusteringHc");
+
     // Get a handle from the IO manager
-    FairRootManager* ioman = FairRootManager::Instance();
+    FairRootManager* ioMan = FairRootManager::Instance();
+    if (ioMan == 0) {
+      fLogger -> Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      return kERROR;
+    }
 
-    // Get a pointer to the previous already existing data level
-    /*
-        <InputDataLevel> = (TClonesArray*) ioman->GetObject("InputDataLevelName");
-        if ( ! <InputLevel> ) {
-        fLogger->Error(MESSAGE_ORIGIN,"No InputDataLevelName array!\n ATHierarchicalClusteringTask will be inactive");
-        return kERROR;
-        }
-    */
+    fEventHArray = (TClonesArray *) ioMan -> GetObject("ATEventH");
+    if (fEventHArray == 0) {
+      fLogger -> Error(MESSAGE_ORIGIN, "Cannot find ATEvent array!");
+      return kERROR;
+    }
 
-    // Create the TClonesArray for the output data and register
-    // it in the IO manager
-    /*
-        <OutputDataLevel> = new TClonesArray("OutputDataLevelName", 100);
-        ioman->Register("OutputDataLevelName","OutputDataLevelName",<OutputDataLevel>,kTRUE);
-    */
-
-    // Do whatever else is needed at the initilization stage
-    // Create histograms to be filled
-    // initialize variables
+     ioMan -> Register("ATHierarchicalClusteringHc", "ATTPC", fHierarchicalClusteringArray, kIsPersistence);
 
     return kSUCCESS;
 }
@@ -187,6 +199,33 @@ InitStatus ATHierarchicalClusteringTask::ReInit()
 void ATHierarchicalClusteringTask::Exec(Option_t* option)
 {
     fLogger->Debug(MESSAGE_ORIGIN, "Exec of ATHierarchicalClusteringTask");
+
+      fHierarchicalClusteringArray -> Delete();
+
+      if (fEventHArray -> GetEntriesFast() == 0)
+       return;
+
+      std::vector<ATHit> hitArray;
+      ATEvent &event = *((ATEvent*) fEventHArray->At(0));
+ 			hitArray = *event.GetHitArray();
+
+      std::cout << "  -I- ATHierarchicalClusteringTask -  Event Number :  " << event.GetEventID()<<"\n";
+
+      try
+      {
+       // a place for no-matches
+ 			// (points that don't belong to any trajectory)
+ 			 std::vector<ATHit> noMatch;
+
+       std::vector<ATTrajectory> trajectories = AnalyzePointArray(hitArray, &noMatch);
+
+      }
+       catch (std::runtime_error e)
+   		{
+   			std::cout << "Analyzation failed! Error: " << e.what() << std::endl;
+   		}
+
+      //fEvent  = (ATEvent *) fEventHArray -> At(0);
 }
 
 void ATHierarchicalClusteringTask::Finish()
@@ -325,7 +364,7 @@ std::vector<ATTrajectory> ATHierarchicalClusteringTask::AnalyzePointArray(std::v
 
         //    addNewLine(pointPcl, targetPointPcl, 0.5, 0.5, 0.5);
         //}
-        
+
     }
 
     viewer->addPointCloud(cloud_xyzrgb, "cloud");
