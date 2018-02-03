@@ -114,11 +114,13 @@ ATClusterizeTask::Exec(Option_t* option)
          fMCPoint = (AtTpcPoint*) fMCPointArray-> At(i);
          VolName=fMCPoint->GetVolName();
          Int_t trackID  = fMCPoint->GetTrackID();
+         std::cout<<" Debug -  TrackID "<<trackID<<"\n";
          if(VolName == "drift_volume"){
            tTime             = fMCPoint->GetTime()/1000; //us
            x                 = fMCPoint->GetXIn()*10; //mm
            y                 = fMCPoint->GetYIn()*10; //mm
-           z                 = 100-(fMCPoint->GetZIn()*10); //mm
+           z                 = 1000-(fMCPoint->GetZIn()*10); //mm
+           std::cout<<" tTime : "<<tTime<<" - x : "<<x<<" - y : "<<y<<" - z : "<<z<<"\n";
            energyLoss_rec    =(fMCPoint -> GetEnergyLoss() )*1000;//MeV
            nElectrons        = energyLoss_rec/fEIonize; //mean electrons generated
            eFlux             = pow(fano*nElectrons, 0.5);//fluctuation of generated electrons
@@ -131,7 +133,7 @@ ATClusterizeTask::Exec(Option_t* option)
 
            for(Int_t charge = 0; charge<genElectrons; charge++){   //for every electron in the cluster
                //r               = trans->GetRandom(); //non-Gaussian cloud
-		r               = gRandom -> Gaus(0,sigstrtrans); //Gaussian cloud
+		           r               = gRandom -> Gaus(0,sigstrtrans); //Gaussian cloud
                phi             = gRandom->Uniform(0, TMath::TwoPi());
                propX           = x + r*TMath::Cos(phi);
                propY           = y + r*TMath::Sin(phi);

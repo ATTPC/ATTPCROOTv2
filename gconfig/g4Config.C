@@ -36,11 +36,11 @@ void Config()
 /// When more than one options are selected, they should be separated with '+'
 /// character: eg. stepLimit+specialCuts.
 
-    /*TG4RunConfiguration* runConfiguration
-           = new TG4RunConfiguration("geomRoot", "QGSP_FTFP_BERT", "stepLimiter+specialCuts+specialControls+stackPopper");*/
-
     TG4RunConfiguration* runConfiguration
-     = new TG4RunConfiguration("geomRoot", "QGSP_BERT_HP_EMY", "stepLimiter+specialCuts+specialControls");
+           = new TG4RunConfiguration("geomRoot", "QGSP_FTFP_BERT", "stepLimiter+specialCuts+specialControls+stackPopper");
+
+    /*TG4RunConfiguration* runConfiguration
+     = new TG4RunConfiguration("geomRoot", "QGSP_BERT_HP_EMY", "stepLimiter+specialCuts+specialControls");*/
 
 /*	TG4RunConfiguration* runConfiguration
            = new TG4RunConfiguration("geomRoot", "FTFP_BERT", "stepLimiter+specialCuts+specialControls+stackPopper");
@@ -64,7 +64,7 @@ void Config()
 /// (verbose level, global range cut, ..)
 
    TString configm(gSystem->Getenv("VMCWORKDIR"));
-   configm1 = configm + "/gconfig/g4config.in";
+   TString configm1 = configm + "/gconfig/g4config.in";
    cout << " -I g4Config() using g4conf  macro: " << configm1 << endl;
 
    //set geant4 specific stuff

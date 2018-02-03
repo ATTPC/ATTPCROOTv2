@@ -52,6 +52,7 @@ Set(DEPENDENCIES
   AtGen
   ATPar
   ATTPCReco
+  AtTpcMap
 )
 
 GENERATE_LIBRARY()
