@@ -97,6 +97,7 @@ ATTPC2Body::ATTPC2Body(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
         FairIon *IonBuff;
         FairParticle *ParticleBuff;
         sprintf(buffer, "Product_Ion%d", i);
+
         if( a->at(i)!=1  ){
 
           IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i),0.0,mass->at(i));
@@ -111,10 +112,10 @@ ATTPC2Body::ATTPC2Body(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
           fPType.push_back("Proton");
 	}
 
-	std::cout<<" Z "<<z->at(i)<<" A "<<a->at(i)<<std::endl;
-	//std::cout<<buffer<<std::endl;
-        fIon.push_back(IonBuff);
-        fParticle.push_back(ParticleBuff);
+	       std::cout<<" Z "<<z->at(i)<<" A "<<a->at(i)<<std::endl;
+	       //std::cout<<buffer<<std::endl;
+         fIon.push_back(IonBuff);
+         fParticle.push_back(ParticleBuff);
 
        }
 
@@ -128,13 +129,13 @@ ATTPC2Body::ATTPC2Body(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
 
   	if(fPType.at(i)=="Ion"){
                  std::cout<<" In position "<<i<<" adding an : "<<fPType.at(i)<<std::endl;
-		 run->AddNewIon(fIon.at(i));
-		 std::cout<<" fIon name :"<<fIon.at(i)->GetName()<<std::endl;
+		             run->AddNewIon(fIon.at(i));
+		             std::cout<<" fIon name :"<<fIon.at(i)->GetName()<<std::endl;
                  std::cout<<" fParticle name :"<<fParticle.at(i)->GetName()<<std::endl;
 
         }else if(fPType.at(i)=="Proton"){
-		 std::cout<<" In position "<<i<<" adding an : "<<fPType.at(i)<<std::endl;
-		 run->AddNewParticle(fParticle.at(i));
+		             std::cout<<" In position "<<i<<" adding an : "<<fPType.at(i)<<std::endl;
+		             run->AddNewParticle(fParticle.at(i));
                  std::cout<<" fIon name :"<<fIon.at(i)->GetName()<<std::endl;
                  std::cout<<" fParticle name :"<<fParticle.at(i)->GetName()<<std::endl;
                  std::cout<<fParticle.at(i)->GetName()<<std::endl;
@@ -171,10 +172,10 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
 
 
    Double_t costhetamin = TMath::Cos(fThetaCmsMin*TMath::DegToRad());
-   Double_t costhetamax = TMath::Cos(fThetaCmsMax*TMath::DegToRad());   
+   Double_t costhetamax = TMath::Cos(fThetaCmsMax*TMath::DegToRad());
    //Double_t thetacmsInput = fThetaCmsMin + ((fThetaCmsMax-fThetaCmsMin)*gRandom->Uniform());
    ////uniform thetacm distribution between thetamin and thetamax
-   Double_t thetacmsInput = TMath::ACos( (costhetamax - costhetamin )*gRandom->Uniform() + costhetamin )*TMath::RadToDeg(); 
+   Double_t thetacmsInput = TMath::ACos( (costhetamax - costhetamin )*gRandom->Uniform() + costhetamin )*TMath::RadToDeg();
 
    std::cout<<" -I- ATTPC2Body : Random CMS Theta angle in degrees : "<<thetacmsInput<<std::endl;
    const Double_t rad2deg = 0.0174532925;

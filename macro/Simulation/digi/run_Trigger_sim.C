@@ -73,7 +73,7 @@ void run_Trigger_sim(TString tag = "test")
 
  // __ Init and run ___________________________________
   fRun -> Init();
-  fRun -> Run(5,30);
+  fRun -> Run(0,2);
 
   timer.Stop();
   cout << endl << endl;

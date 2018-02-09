@@ -114,19 +114,19 @@ ATClusterizeTask::Exec(Option_t* option)
          fMCPoint = (AtTpcPoint*) fMCPointArray-> At(i);
          VolName=fMCPoint->GetVolName();
          Int_t trackID  = fMCPoint->GetTrackID();
-         std::cout<<" Debug -  TrackID "<<trackID<<"\n";
          if(VolName == "drift_volume"){
            tTime             = fMCPoint->GetTime()/1000; //us
            x                 = fMCPoint->GetXIn()*10; //mm
            y                 = fMCPoint->GetYIn()*10; //mm
            z                 = 1000-(fMCPoint->GetZIn()*10); //mm
-           std::cout<<" tTime : "<<tTime<<" - x : "<<x<<" - y : "<<y<<" - z : "<<z<<"\n";
+           //std::cout<<" tTime : "<<tTime<<" - x : "<<x<<" - y : "<<y<<" - z : "<<z<<" Time "<<tTime<<"\n";
            energyLoss_rec    =(fMCPoint -> GetEnergyLoss() )*1000;//MeV
+           std::cout<<" Energy Loss "<<energyLoss_rec<<" fEIonize"<<fEIonize<<"\n";
            nElectrons        = energyLoss_rec/fEIonize; //mean electrons generated
            eFlux             = pow(fano*nElectrons, 0.5);//fluctuation of generated electrons
            genElectrons      = gRandom->Gaus(nElectrons, eFlux);//generated electrons
 
-           driftLength       = abs(z-zMesh); //mm
+           driftLength       = abs(z); //mm
            sigstrtrans       = fCoefT* sqrt(driftLength);//transverse diffusion coefficient
            sigstrlong        = fCoefL* sqrt(driftLength);//longitudal diffusion coefficient
            //trans->SetParameter(0, sigstrtrans);
@@ -139,6 +139,8 @@ ATClusterizeTask::Exec(Option_t* option)
                propY           = y + r*TMath::Sin(phi);
                driftLength     = driftLength + (gRandom -> Gaus(0,sigstrlong)); //mm
                driftTime       = ((driftLength/10)/fVelDrift) +(tTime); //us
+               //NB: tTime in the simulation is 0 for the first simulation point
+               //std::cout<<i<<"  "<<charge<<"  "<<" Drift velocity "<<fVelDrift<<" driftTime : "<<driftTime<<" tTime "<<tTime<<"\n";
                electronNumber  +=1;
 
                //Fill container ATSimulatedPoint

@@ -1,4 +1,4 @@
-void run_Ar46_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
+void run_Ar46_sim(Int_t nEvents = 2, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -93,14 +93,14 @@ void run_Ar46_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 
 
 		 // Variables for 2-Body kinematics reaction
-                  std::vector<Int_t> Zp; // Zp
+      std::vector<Int_t> Zp; // Zp
 		  std::vector<Int_t> Ap; // Ap
-                  std::vector<Int_t> Qp;//Electric charge
-                  Int_t mult;  //Number of particles
+      std::vector<Int_t> Qp;//Electric charge
+      Int_t mult;  //Number of particles
  		  std::vector<Double_t> Pxp; //Px momentum X
 		  std::vector<Double_t> Pyp; //Py momentum Y
 		  std::vector<Double_t> Pzp; //Pz momentum Z
-                  std::vector<Double_t> Mass; // Masses
+      std::vector<Double_t> Mass; // Masses
 		  std::vector<Double_t> ExE; // Excitation energy
  		  Double_t ResEner; // Energy of the beam (Useless for the moment)
 
@@ -109,52 +109,52 @@ void run_Ar46_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 
 
 	          mult = 4; //Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY (and the number of particles must be the same)
-                  ResEner = 0.0; // Useless
+            ResEner = 0.0; // Useless
 
                   // ---- Beam ----
                   Zp.push_back(z); //
-		  Ap.push_back(a); //
-		  Qp.push_back(q);
-		  Pxp.push_back(px);
-		  Pyp.push_back(py);
-		  Pzp.push_back(pz);
-		  Mass.push_back(Bmass);
-		  ExE.push_back(BExcEner);
+            		  Ap.push_back(a); //
+            		  Qp.push_back(q);
+            		  Pxp.push_back(px);
+            		  Pyp.push_back(py);
+            		  Pzp.push_back(pz);
+            		  Mass.push_back(Bmass);
+            		  ExE.push_back(BExcEner);
 
                   // ---- Target ----
                  Zp.push_back(1); //
-		 Ap.push_back(1); //
-		 Qp.push_back(0); //
-		 Pxp.push_back(0.0);
+            		 Ap.push_back(1); //
+            		 Qp.push_back(0); //
+            		 Pxp.push_back(0.0);
                  Pyp.push_back(0.0);
-		 Pzp.push_back(0.0);
+		             Pzp.push_back(0.0);
                  Mass.push_back(0.9314);
-		 ExE.push_back(0.0);//In MeV
+		             ExE.push_back(0.0);//In MeV
 
                   //--- Scattered -----
                 Zp.push_back(z); //
-          	Ap.push_back(a); //
-          	Qp.push_back(q);
-          	Pxp.push_back(0.0);
-          	Pyp.push_back(0.0);
-          	Pzp.push_back(0.0);
-          	Mass.push_back(42.844);
-          	ExE.push_back(0.0);
+          	    Ap.push_back(a); //
+              	Qp.push_back(q);
+          	    Pxp.push_back(0.0);
+          	    Pyp.push_back(0.0);
+              	Pzp.push_back(0.0);
+              	Mass.push_back(42.844);
+              	ExE.push_back(0.0);
 
 
                   // ---- Recoil -----
-		 Zp.push_back(1); //
-		 Ap.push_back(1); //
-		 Qp.push_back(0); //
-		 Pxp.push_back(0.0);
+            		 Zp.push_back(1); //
+            		 Ap.push_back(1); //
+            		 Qp.push_back(0); //
+            		 Pxp.push_back(0.0);
                  Pyp.push_back(0.0);
-		 Pzp.push_back(0.0);
+            		 Pzp.push_back(0.0);
                  Mass.push_back(0.9313);
-		 ExE.push_back(0.0);//In MeV
+              	 ExE.push_back(0.0);//In MeV
 
 
                   Double_t ThetaMinCMS = 0.0;
-                  Double_t ThetaMaxCMS = 180.0;
+                  Double_t ThetaMaxCMS = 60.0;
 
 
         ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
