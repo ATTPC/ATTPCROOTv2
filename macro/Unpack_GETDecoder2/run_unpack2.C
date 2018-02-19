@@ -5,7 +5,7 @@
 
 bool check_file(const std::string& name);
 
-void run_unpack2(TString dataFile = "runfiles/NSCL/Ar46/ar46_run_0171.txt",TString parameterFile = "ATTPC.e15503b.par",TString mappath="/data/ar46/run_0085/")
+void run_unpack2(TString dataFile = "runfiles/NSCL/Ar46/ar46_run_0100.txt",TString parameterFile = "ATTPC.e15503b.par",TString mappath="/data/ar46/run_0085/")
 {
 
   if(!check_file(dataFile.Data())){
@@ -32,7 +32,7 @@ void run_unpack2(TString dataFile = "runfiles/NSCL/Ar46/ar46_run_0171.txt",TStri
 
   //TString inputFile   = dataDir + name + ".digi.root";
   //TString outputFile  = dataDir + "output.root";
-  TString outputFile  = "output.root";
+  TString outputFile  = "run_100.root";
   //TString mcParFile   = dataDir + name + ".params.root";
   TString loggerFile  = dataDir + "ATTPCLog.log";
   TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -128,20 +128,20 @@ void run_unpack2(TString dataFile = "runfiles/NSCL/Ar46/ar46_run_0171.txt",TStri
   psaTask -> SetTimeCorrection(kTRUE); //Interpolation around the maximum of the signal peak. Only affect Z calibration at PSA stage
   run -> AddTask(psaTask);
 
-  ATHoughTask *HoughTask = new ATHoughTask();
+  /*ATHoughTask *HoughTask = new ATHoughTask();
 	HoughTask ->SetPersistence();
 	//HoughTask ->SetLinearHough();
 	HoughTask ->SetCircularHough();
   HoughTask ->SetHoughThreshold(100.0); // Charge threshold for Hough
   HoughTask ->SetEnableMap(); //Enables an instance of the ATTPC map:  This enables the MC with Q instead of position
   HoughTask ->SetMap(scriptdir.Data());
-	run -> AddTask(HoughTask);
+	run -> AddTask(HoughTask);*/
 
 
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,50);
+  run->Run(0,1000);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
