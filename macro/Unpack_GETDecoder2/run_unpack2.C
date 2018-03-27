@@ -5,7 +5,7 @@
 
 bool check_file(const std::string& name);
 
-void run_unpack2(TString dataFile = "runfiles/NSCL/Ar46/ar46_run_0171.txt",TString parameterFile = "ATTPC.e15503b.par",TString mappath="/data/ar46/run_0085/")
+void run_unpack2(TString dataFile = "runfiles/NSCL/Ar46/ar46_run_0167.txt",TString parameterFile = "ATTPC.e15503b.par",TString mappath="../../")
 {
 
   if(!check_file(dataFile.Data())){
@@ -121,27 +121,27 @@ void run_unpack2(TString dataFile = "runfiles/NSCL/Ar46/ar46_run_0171.txt",TStri
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
   psaTask -> SetThreshold(20);
-  psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC
+  psaTask -> SetPSAMode(3); //NB: 1 is ATTPC - 2 is pATTPC
 	//psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
 	psaTask -> SetMaxFinder();
   psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
   psaTask -> SetTimeCorrection(kTRUE); //Interpolation around the maximum of the signal peak. Only affect Z calibration at PSA stage
   run -> AddTask(psaTask);
 
-  ATHoughTask *HoughTask = new ATHoughTask();
+  /*ATHoughTask *HoughTask = new ATHoughTask();
 	HoughTask ->SetPersistence();
 	//HoughTask ->SetLinearHough();
 	HoughTask ->SetCircularHough();
   HoughTask ->SetHoughThreshold(100.0); // Charge threshold for Hough
   HoughTask ->SetEnableMap(); //Enables an instance of the ATTPC map:  This enables the MC with Q instead of position
   HoughTask ->SetMap(scriptdir.Data());
-	run -> AddTask(HoughTask);
+	run -> AddTask(HoughTask);*/
 
 
   run -> Init();
 
   //run -> RunOnTBData();
-  run->Run(0,50);
+  run->Run(0,1000);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
