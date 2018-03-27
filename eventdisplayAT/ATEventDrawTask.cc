@@ -761,7 +761,7 @@ ATEventDrawTask::DrawHitPoints()
     }
 
 
-
+    dumpEvent.close();
 
 
     // gEve -> AddElement(fLine);

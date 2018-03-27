@@ -32,7 +32,7 @@ void run_unpack2(TString dataFile = "runfiles/NSCL/Ar46/ar46_run_0167.txt",TStri
 
   //TString inputFile   = dataDir + name + ".digi.root";
   //TString outputFile  = dataDir + "output.root";
-  TString outputFile  = "output.root";
+  TString outputFile  = "run_100.root";
   //TString mcParFile   = dataDir + name + ".params.root";
   TString loggerFile  = dataDir + "ATTPCLog.log";
   TString digiParFile = dir + "/parameters/" + parameterFile;

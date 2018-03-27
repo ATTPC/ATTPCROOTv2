@@ -686,13 +686,11 @@ void ATEventManager::Select3DThres()
 void ATEventManager::SaveASCIIEvent()
 {
 
-   char s[64], *e;
    Int_t event=fEntry;
    TFile* file =FairRootManager::Instance()->GetInChain()->GetFile();
-   char *filename = (char*)file->GetName();
-   sprintf(s, "mv event.dat %s_event_%i.dat",filename, event);
-   //gSystem->Exec("mv event.dat test.dat");
-   gSystem->Exec(s);
+   std::string file_name = file->GetName();
+   std::string cmd = "mv event.dat event_" + std::to_string(event) + ".dat";
+   gSystem->Exec(cmd.c_str());
 
 }
 
