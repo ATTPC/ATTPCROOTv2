@@ -123,6 +123,7 @@ ATVMEUnpackTask.cc
 ATAnalysisTask.cc
 ATRansacTask.cc
 ATHierarchicalClusteringTask.cc
+ATTrackFinderHCTask.cc
 
 )
 
