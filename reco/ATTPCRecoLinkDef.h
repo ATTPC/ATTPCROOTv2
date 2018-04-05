@@ -79,6 +79,7 @@
 #pragma link C++ class ATFindVertex+; // TODO: move somewhere else?
 #pragma link C++ class ATHierarchicalClusteringTask+;
 #pragma link C++ class ATTrackFinderHCTask+;
+#pragma link C++ class ATTrackFinderHC+;
 
 #pragma link C++ class ATHoughTask+;
 #pragma link C++ class ATVMEUnpackTask+;

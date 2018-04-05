@@ -20,6 +20,10 @@ foreach(p
   endif()
 endforeach()
 
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 # Set name of our project to “ATTPC". Has to be done
 # after check of cmake version since this is a new feature
 project(ATTPC)
@@ -232,8 +236,6 @@ add_subdirectory (reco)
 add_subdirectory (par)
 add_subdirectory (eventdisplayAT)
 add_subdirectory (digi)
-
-
 
 WRITE_CONFIG_FILE(config.sh)
 
