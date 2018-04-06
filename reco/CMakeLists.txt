@@ -17,7 +17,6 @@ ${CMAKE_SOURCE_DIR}/reco/ATDecoder
 ${CMAKE_SOURCE_DIR}/reco/ATPulseAnalyzer
 ${CMAKE_SOURCE_DIR}/reco/HierarchicalClustering
 ${CMAKE_SOURCE_DIR}/reco/ATTrackFinderHC
-${CMAKE_SOURCE_DIR}/reco/ATTrackFinderHC/src
 ${CMAKE_SOURCE_DIR}/reco/HoughTransformation
 ${CMAKE_SOURCE_DIR}/reco/ATProtoPhiReco
 ${CMAKE_SOURCE_DIR}/reco/VMEDecoder
@@ -89,6 +88,12 @@ HierarchicalClustering/ATHierarchicalClusteringSmoothenCloud.cc
 HierarchicalClustering/ATTrajectory.cc
 
 ATTrackFinderHC/ATTrackFinderHC.cc
+ATTrackFinderHC/smoothenCloud.cc
+ATTrackFinderHC/msd.cc
+ATTrackFinderHC/cluster.cc
+ATTrackFinderHC/hc.cc
+ATTrackFinderHC/fastcluster.cc
+
 
 ATPulseAnalyzer/ATCalibration.cc
 
@@ -115,7 +120,6 @@ ATAnalysis/ATTrackingAnalysis.cc
 ATAnalysis/ATd2HeAnalysis.cc
 
 ATRansac/ATRansac.cc
-
 
 ATDecoderTask.cc
 ATDecoder2Task.cc

@@ -11,13 +11,13 @@
 #include <vector>
 #include <algorithm>
 
-#include "fastcluster.h"
+#include "fastcluster.hh"
 
 // Code by Daniel Müllner
 // workaround to make it usable as a standalone version (without R)
 bool fc_isnan(double x) { return false; }
-#include "fastcluster_dm.cpp"
-#include "fastcluster_R_dm.cpp"
+#include "fastcluster_dm.cc"
+#include "fastcluster_R_dm.cc"
 
 //
 // Assigns cluster labels (0, ..., nclust-1) to the n points such
@@ -130,7 +130,7 @@ void cutree_cdist(int n, const int* merge, double* height, double cdist, int* la
 //   1 = invalid method
 //
 int hclust_fast(int n, double* distmat, int method, int* merge, double* height) {
-  
+
   // call appropriate culstering function
   cluster_result Z2(n-1);
   if (method == HCLUST_METHOD_SINGLE) {
@@ -155,7 +155,7 @@ int hclust_fast(int n, double* distmat, int method, int* merge, double* height) 
   else {
     return 1;
   }
-  
+
   int* order = new int[n];
   if (method == HCLUST_METHOD_MEDIAN) {
     generate_R_dendrogram<true>(merge, height, order, Z2, n);
@@ -164,6 +164,6 @@ int hclust_fast(int n, double* distmat, int method, int* merge, double* height) 
   }
 
   delete[] order; // only needed for visualization
-  
+
   return 0;
 }

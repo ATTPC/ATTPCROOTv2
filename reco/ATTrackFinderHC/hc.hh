@@ -1,10 +1,11 @@
-#pragma once
+#ifndef HC_H
+#define HC_H
 
 #include <vector>
 #include <pcl/io/io.h>
 #include <limits>
 
-#include "cluster.h"
+#include "cluster.hh"
 
 namespace hc
 {
@@ -97,3 +98,5 @@ namespace hc
   Cluster toCluster(std::vector<hc::triplet> const &triplets, hc::cluster_group const &clusterGroup, size_t pointIndexCount);
   cluster_group compute_hc(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud,std::vector<triplet> const &triplets,ScaleTripletMetric triplet_metric, float cdist,int opt_verbose);
 }
+
+#endif

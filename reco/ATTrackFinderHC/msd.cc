@@ -3,7 +3,7 @@
 #include <numeric>
 #include <vector>
 
-#include "msd.h"
+#include "msd.hh"
 namespace msd {
 /*
 @brief Compute mean squared distance.

@@ -49,7 +49,7 @@ bool ATTrackFinderHC::FindTracks(ATEvent &event)
       new pcl::PointCloud<pcl::PointXYZI>());
 
   ///TODO: Convert hit patern
-
+  eventToClusters(event,cloud_xyzti);
 
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_xyz(
       new pcl::PointCloud<pcl::PointXYZ>());
@@ -72,7 +72,7 @@ bool ATTrackFinderHC::FindTracks(ATEvent &event)
 
       // cloud_smooth = smoothenCloud(cloud_filtered, 12); // k nearest neighbour
       cloud_xyzti_smooth =
-          smoothenCloud(cloud_xyzti, opt_params.smoothRadius);  // radius
+          smoothenCloud::smoothenCloud(cloud_xyzti, opt_params.smoothRadius,false);  // radius
 
 
       // calculate cluster
@@ -103,7 +103,7 @@ Cluster ATTrackFinderHC::use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
   return hc::toCluster(triplets, cleaned_up_cluster_group, cloud->size());
 }
 
-void ATTrackFinderHC::eventToPCL(ATEvent& event,pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
+void ATTrackFinderHC::eventToClusters(ATEvent& event,pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
 {
   Int_t nHits = event.GetNumHits();
   cloud->points.resize(nHits);
@@ -117,8 +117,15 @@ void ATTrackFinderHC::eventToPCL(ATEvent& event,pcl::PointCloud<pcl::PointXYZI>:
         cloud->points[iHit].y = position.Y();
         cloud->points[iHit].z = position.Z();
         cloud->points[iHit].intensity = iHit; // Storing the position of the hit in the event container
-        delete hit;
+        //std::cout<<position.Y()<<"\n";
+
 
   }
+
+}
+
+void ATTrackFinderHC::clustersToTrack(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,Cluster const cluster)
+{
+
 
 }

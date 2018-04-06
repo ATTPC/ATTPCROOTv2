@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CLUSTER_H
+#define CLUSTER_H
 
 #include <vector>
 #include <pcl/io/io.h>
@@ -25,3 +26,5 @@ public:
 
     int operator-(Cluster const &rhs) const;
 };
+
+#endif

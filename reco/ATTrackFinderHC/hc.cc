@@ -1,5 +1,5 @@
-#include "hclust/fastcluster.h"
-#include "hc.h"
+#include "fastcluster.hh"
+#include "hc.hh"
 
 #pragma warning(push, 0)
 #include <pcl/kdtree/kdtree_flann.h>
@@ -348,6 +348,7 @@ Cluster toCluster(std::vector<hc::triplet> const &triplets,
                   hc::cluster_group const &clusterGroup,
                   size_t pointIndexCount) {
   std::vector<pcl::PointIndicesPtr> result;
+
 
   // for (auto const &currentCluster : clusterGroup.clusters)
   for (std::vector<cluster>::const_iterator currentCluster =

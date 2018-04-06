@@ -1,7 +1,10 @@
-#include "smoothenCloud.h"
+#include "smoothenCloud.hh"
 
 #include <pcl/common/centroid.h>
 #include <pcl/kdtree/kdtree_flann.h>
+
+namespace smoothenCloud
+{
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr smoothenCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int k, bool useMedian)
 {
@@ -119,4 +122,6 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr smoothenCloud(pcl::PointCloud<pcl::PointXYZ
     }
 
     return result_cloud;
+
+}
 }

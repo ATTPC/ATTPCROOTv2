@@ -1,4 +1,4 @@
-#include "cluster.h"
+#include "cluster.hh"
 
 #include <fstream>
 #include <limits>

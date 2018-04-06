@@ -44,10 +44,9 @@
 #include <pcl/io/pcd_io.h>
 
 //trackfinder
-#include "hc.h"
-#include "msd.h"
-//#include "src/mst.h"
-#include "smoothenCloud.h"
+#include "hc.hh"
+#include "msd.hh"
+#include "smoothenCloud.hh"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
@@ -80,7 +79,9 @@ class ATTrackFinderHC : public TObject
                    std::vector<hc::triplet> triplets, float scale, float cdist,
                    size_t cleanup_min_triplets, int opt_verbose);
 
-      void eventToPCL(ATEvent& event,pcl::PointCloud<pcl::PointXYZI>::Ptr cloud);
+      void clustersToTrack(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,Cluster const cluster);
+
+      void eventToClusters(ATEvent& event,pcl::PointCloud<pcl::PointXYZI>::Ptr cloud);
 
 
       ClassDef(ATTrackFinderHC, 1);
