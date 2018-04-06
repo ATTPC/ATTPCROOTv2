@@ -34,6 +34,7 @@
 #define cYELLOW "\033[1;33m"
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
+#define cBLUE "\033[1;34m"
 
 
 using namespace std;
@@ -200,6 +201,9 @@ ATEventDrawTask::Init()
 
     fRansacArray = (TClonesArray*) ioMan->GetObject("ATRansac");
     if(fRansacArray) LOG(INFO)<<cGREEN<<"RANSAC Array Found."<<cNORMAL<<FairLogger::endl;
+
+    fTrackFinderHCArray = (TClonesArray*) ioMan->GetObject("ATTrackFinderHC");
+    if(fTrackFinderHCArray)  LOG(INFO)<<cGREEN<<"Track Finder Hierarchical Clustering Array Found."<<cNORMAL<<FairLogger::endl;
 
     fTrackingEventAnaArray = (TClonesArray*) ioMan->GetObject("ATTrackingEventAna");
     if(fTrackingEventAnaArray) LOG(INFO)<<cGREEN<<"Tracking Event Analysis Array Found."<<cNORMAL<<FairLogger::endl;
@@ -372,7 +376,7 @@ ATEventDrawTask::DrawHitPoints()
     fHitSet->SetMarkerColor(fHitColor);
     fHitSet->SetMarkerSize(fHitSize);
     fHitSet->SetMarkerStyle(fHitStyle);
-    std::cout<<cYELLOW<<" Number of hits : "<<nHits<<cNORMAL<<std::endl;
+    std::cout<<cBLUE<<" Number of hits : "<<nHits<<cNORMAL<<std::endl;
 
     //3D visualization of the Minimized data
 
@@ -410,6 +414,8 @@ ATEventDrawTask::DrawHitPoints()
         double t0 = 0;
         double dt = 2000;
         std::vector<ATTrack> TrackCand;
+
+
         if(fIsLinearHough) TrackCand = fHoughSpaceLine_buff->GetTrackCand();
         else if(fRansacArray){
             fRansac = dynamic_cast<ATRANSACN::ATRansac*> (fRansacArray->At(0));
@@ -430,6 +436,34 @@ ATEventDrawTask::DrawHitPoints()
                 }
             }
 
+        }else if(fTrackFinderHCArray){
+            fTrackFinderHC = dynamic_cast<ATTrackFinderHC*> (fTrackFinderHCArray->At(0));
+            TrackCand = fTrackFinderHC->GetTrackCand();
+            for(Int_t i=0;i<10;i++) fHitSetTFHC[i] = 0;
+
+            if(TrackCand.size()<10){
+              for(Int_t i=0;i<TrackCand.size();i++)
+              {
+
+                  fHitSetTFHC[i] = new TEvePointSet(Form("HitMC_%d",i),nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
+                  fHitSetTFHC[i]->SetMarkerColor(GetTrackColor(i)+1);
+                  fHitSetTFHC[i]->SetMarkerSize(fHitSize);
+                  fHitSetTFHC[i]->SetMarkerStyle(fHitStyle);
+                  ATTrack track = TrackCand.at(i);
+                  std::vector<ATHit>* trackHits =  track.GetHitArray();
+
+                    for(int j =0;j<trackHits->size();++j){
+                      TVector3 position = trackHits->at(j).GetPosition();
+                      fHitSetTFHC[i]->SetNextPoint(position.X()/10.,position.Y()/10.,position.Z()/10.);
+
+                    }
+
+
+
+              }
+            }
+
+        }
 
             if(fTrackingEventAnaArray){
 
@@ -465,13 +499,13 @@ ATEventDrawTask::DrawHitPoints()
                 }
             }//If trackingEventAnaArray
 
-        }// If RANSAC
+
 
         fLineNum = TrackCand.size();
         std::cout<<cRED<<" Found "<<TrackCand.size()<<" track candidates "<<cNORMAL<<std::endl;
 
 
-        if(TrackCand.size()>0)
+        if(TrackCand.size()>0 && fRansacArray)
         {
 
             for(Int_t j=0;j<TrackCand.size();j++){
@@ -611,7 +645,7 @@ ATEventDrawTask::DrawHitPoints()
     }
 
     //////////////     Minimization from Hough Space   ///////////////
-    std::cout<<cYELLOW<<" Number of simulated points "<<fPosXMin.size()<<std::endl;
+    std::cout<<cGREEN<<" Number of simulated points "<<fPosXMin.size()<<cNORMAL<<std::endl;
     for(Int_t iHit=0; iHit<fPosXMin.size(); iHit++)
     {
         if(fEventManager->GetDrawHoughSpace()){
@@ -740,8 +774,12 @@ ATEventDrawTask::DrawHitPoints()
 
     }
 
-    gEve -> AddElement(fHitSet);
-    gEve -> AddElement(fhitBoxSet);
+   if(!fEventManager->GetDrawHoughSpace()){
+      gEve -> AddElement(fHitSet);
+      gEve -> AddElement(fhitBoxSet);
+    }
+
+
 
     // Analysis elements
     if(fEventManager->GetDrawHoughSpace()){
@@ -753,6 +791,8 @@ ATEventDrawTask::DrawHitPoints()
         if(fIsLinearHough || fRansacArray)
             if(fLineNum>0) for(Int_t i=0;i<fLineNum;i++) gEve -> AddElement(fLineArray[i]);
 
+        if(fTrackFinderHCArray)
+            if(fLineNum>0) for(Int_t i=0;i<fLineNum;i++) gEve -> AddElement(fHitSetTFHC[i]);
 
 
         if(fTrackingEventAnaArray)
@@ -862,7 +902,7 @@ ATEventDrawTask::DrawHSpace()
 
 
 
-                    std::cout<<cYELLOW<<"  = Initial conditions for MC : "<<std::endl;
+                    std::cout<<cGREEN<<"  = Initial conditions for MC : "<<std::endl;
                     std::cout<<"  Theta                 : "<<fHoughSpaceCircle_buff->GetIniTheta()*180/TMath::Pi()<<std::endl;
                     std::cout<<"  Phi                   : "<<fHoughSpaceCircle_buff->GetIniPhi()*180/TMath::Pi()<<std::endl;
                     std::cout<<"  Radius                : "<<fHoughSpaceCircle_buff->GetIniRadius()<<std::endl;
@@ -890,7 +930,7 @@ ATEventDrawTask::DrawHSpace()
            //std::vector<ATTrack> TrackCand = fHoughSpaceLine_buff->GetTrackCand();
 
            std::cout<<std::endl;
-           std::cout<<cYELLOW<<"  = Number of lines found by Linear Hough Space : "<<LinearHoughPar.size()<<std::endl;
+           std::cout<<cGREEN<<"  = Number of lines found by Linear Hough Space : "<<LinearHoughPar.size()<<std::endl;
 
            //int n = 1000;
            //double t0 = 0;
@@ -1047,6 +1087,18 @@ ATEventDrawTask::Reset()
                 }
 
             }
+
+        }
+
+        if(fTrackFinderHCArray){
+
+                if(fLineNum>0){
+                    for(Int_t i=0;i<fLineNum;i++){
+                        if(fHitSetMC[i]){
+                            gEve -> RemoveElement(fHitSetTFHC[i],fEventManager);
+                        }
+                    }
+                }
 
         }
 
@@ -1797,5 +1849,14 @@ void ATEventDrawTask::SetLine(double t, std::vector<Double_t> p, double &x, doub
     x = (p[0] + p[1]*t)/10.0;
     y = (p[2] + p[3]*t)/10.0;
     z = t/10.0;
+
+}
+
+EColor ATEventDrawTask::GetTrackColor(int i)
+{
+   std::vector<EColor> colors = {kAzure,kOrange,kViolet,kTeal,kMagenta,kBlue,kViolet,kYellow,kCyan,kAzure};
+   if(i<10){
+     return colors.at(i);
+   }else return kAzure;
 
 }

@@ -265,6 +265,7 @@ while (cloud->points.size () > fRANSACPointThreshold * nr_points)
      extract.setNegative (false);
      extract.filter (*cloud_p);
      //std::cerr << "PointCloud representing the planar component: " << cloud_p->width * cloud_p->height << " data points." << std::endl;
+     //TODO: Possible memory leak, change to vector of objects!
      ATTrack *track = new ATTrack();
 
           for(Int_t iHit=0;iHit<(cloud_p->width*cloud_p->height);iHit++)

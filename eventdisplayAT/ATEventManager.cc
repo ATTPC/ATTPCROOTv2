@@ -37,7 +37,12 @@
 #include "TPolyLine.h"
 
 
-
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+#define cBLUE "\033[1;34m"
+#define cWHITERED "\033[37;41m"
 
 
 #include <iostream>
@@ -409,7 +414,7 @@ ATEventManager::GotoEvent(Int_t event)
 {
 
   fEntry=event;
-  std::cout<<" Event number : "<<fEntry<<std::endl;
+  std::cout<<cWHITERED<<" Event number : "<<fEntry<<cNORMAL<<std::endl;
   fRunAna->Run((Long64_t)event);
 
 }

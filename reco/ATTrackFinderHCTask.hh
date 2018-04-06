@@ -35,7 +35,7 @@ public:
 private:
 
 	TClonesArray *fEventHArray;
-	//TClonesArray *fHierarchicalClusteringArray;
+	TClonesArray *fTrackFinderHCArray;
 
 	FairLogger *fLogger;
 	ATDigiPar *fPar;

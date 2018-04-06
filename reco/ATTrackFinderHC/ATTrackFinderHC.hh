@@ -72,6 +72,7 @@ class ATTrackFinderHC : public TObject
       ~ATTrackFinderHC();
 
       bool FindTracks(ATEvent &event);
+      std::vector<ATTrack>& GetTrackCand();
 
   private:
 
@@ -79,9 +80,12 @@ class ATTrackFinderHC : public TObject
                    std::vector<hc::triplet> triplets, float scale, float cdist,
                    size_t cleanup_min_triplets, int opt_verbose);
 
-      void clustersToTrack(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,Cluster const cluster);
+      std::vector<ATTrack> clustersToTrack(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
+                          Cluster const cluster, ATEvent& event);
 
       void eventToClusters(ATEvent& event,pcl::PointCloud<pcl::PointXYZI>::Ptr cloud);
+
+      std::vector<ATTrack> fTrackCand; //Candidate tracks
 
 
       ClassDef(ATTrackFinderHC, 1);

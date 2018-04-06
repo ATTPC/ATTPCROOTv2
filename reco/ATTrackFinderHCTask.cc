@@ -26,6 +26,8 @@ ATTrackFinderHCTask::~ATTrackFinderHCTask()
     fLogger->Debug(MESSAGE_ORIGIN, "Destructor of ATTrackFinderHCTask");
 }
 
+void ATTrackFinderHCTask::SetPersistence(Bool_t value)             { kIsPersistence   = value; }
+
 void ATTrackFinderHCTask::SetParContainers()
 {
     fLogger->Debug(MESSAGE_ORIGIN, "SetParContainers of ATHierarchicalClusteringTask");
@@ -47,7 +49,7 @@ InitStatus ATTrackFinderHCTask::Init()
 {
     fLogger->Debug(MESSAGE_ORIGIN, "Initilization of ATTrackFinderHCTaskTask");
 
-    //fHierarchicalClusteringArray = new TClonesArray("ATHierarchicalClusteringHc");
+    fTrackFinderHCArray = new TClonesArray("ATTrackFinderHC");
 
     // Get a handle from the IO manager
     FairRootManager* ioMan = FairRootManager::Instance();
@@ -62,7 +64,7 @@ InitStatus ATTrackFinderHCTask::Init()
       return kERROR;
     }
 
-     //ioMan -> Register("ATHierarchicalClusteringHc", "ATTPC", fHierarchicalClusteringArray, kIsPersistence);
+     ioMan -> Register("ATTrackFinderHC", "ATTPC",fTrackFinderHCArray, kIsPersistence);
 
     return kSUCCESS;
 }
@@ -71,7 +73,7 @@ void ATTrackFinderHCTask::Exec(Option_t* option)
 {
     fLogger->Debug(MESSAGE_ORIGIN, "Exec of ATTrackFinderHCTask");
 
-      //fHierarchicalClusteringArray -> Delete();
+      fTrackFinderHCArray -> Delete();
 
       if (fEventHArray -> GetEntriesFast() == 0)
        return;
@@ -80,15 +82,15 @@ void ATTrackFinderHCTask::Exec(Option_t* option)
       ATEvent &event = *((ATEvent*) fEventHArray->At(0));
  			hitArray = *event.GetHitArray();
 
+      //ATRANSACN::ATRansac *Ransac = (ATRANSACN::ATRansac *) new ((*fRansacArray)[0]) ATRANSACN::ATRansac();
+
       std::cout << "  -I- ATTrackFinderHCTask -  Event Number :  " << event.GetEventID()<<"\n";
 
       try
       {
-
-        //std::unique_ptr<ATTrackFinderHCTask> trackfinder( new ATTrackFinderHCTask());
-        std::unique_ptr<ATTrackFinderHC> trackfinder = std::make_unique<ATTrackFinderHC>();
+        ATTrackFinderHC* trackfinder = (ATTrackFinderHC *) new ((*fTrackFinderHCArray)[0]) ATTrackFinderHC();
+        //std::unique_ptr<ATTrackFinderHC> trackfinder = std::make_unique<ATTrackFinderHC>();
         trackfinder->FindTracks(event);
-
 
       }
        catch (std::runtime_error e)

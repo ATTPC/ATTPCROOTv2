@@ -16,6 +16,7 @@ ATTrackFinderHC::~ATTrackFinderHC()
 
 }
 
+std::vector<ATTrack>& ATTrackFinderHC::GetTrackCand() {return fTrackCand;}
 
 bool ATTrackFinderHC::FindTracks(ATEvent &event)
 {
@@ -87,6 +88,8 @@ bool ATTrackFinderHC::FindTracks(ATEvent &event)
                        opt_params.bestClusterDistanceDelta,
                        opt_params.cleanupMinTriplets, opt_verbose);
 
+      //Adapt clusters to ATTrack
+      fTrackCand = clustersToTrack(cloud_xyzti,cluster,event);
 
 
 }
@@ -94,11 +97,12 @@ bool ATTrackFinderHC::FindTracks(ATEvent &event)
 Cluster ATTrackFinderHC::use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
                std::vector<hc::triplet> triplets, float scale, float cdist,
                size_t cleanup_min_triplets, int opt_verbose = 0) {
+
   hc::ScaleTripletMetric scale_triplet_metric(scale);
   hc::cluster_group result =
-      hc::compute_hc(cloud, triplets, scale_triplet_metric, cdist, opt_verbose);
+  hc::compute_hc(cloud, triplets, scale_triplet_metric, cdist, opt_verbose);
   hc::cluster_group const &cleaned_up_cluster_group =
-      hc::cleanupClusterGroup(result, cleanup_min_triplets);
+  hc::cleanupClusterGroup(result, cleanup_min_triplets);
 
   return hc::toCluster(triplets, cleaned_up_cluster_group, cloud->size());
 }
@@ -122,10 +126,65 @@ void ATTrackFinderHC::eventToClusters(ATEvent& event,pcl::PointCloud<pcl::PointX
 
   }
 
+
 }
 
-void ATTrackFinderHC::clustersToTrack(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,Cluster const cluster)
+std::vector<ATTrack> ATTrackFinderHC::clustersToTrack(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,Cluster const cluster,ATEvent& event)
 {
+    std::vector<ATTrack> tracks;
 
+    std::vector<pcl::PointXYZI, Eigen::aligned_allocator<pcl::PointXYZI> > points =
+        cloud->points;
+
+        std::vector<pcl::PointIndicesPtr> clusters = cluster.getClusters();
+
+        for (size_t clusterIndex = 0; clusterIndex < clusters.size();
+             ++clusterIndex) {
+
+          ATTrack track; // One track per cluster
+
+          pcl::PointIndicesPtr const &pointIndices = clusters[clusterIndex];
+          // get color colour
+
+          for (size_t i = 0; i < pointIndices->indices.size(); ++i) {
+            int index = pointIndices->indices[i];
+            pcl::PointXYZI point = cloud->points[index];
+
+
+            if(event.GetHit(point.intensity)) track.AddHit(event.GetHit(point.intensity));
+
+
+                      // remove clustered points from point-vector
+                      for (std::vector<pcl::PointXYZI,
+                                       Eigen::aligned_allocator<pcl::PointXYZI> >::iterator it =
+                               points.end();
+                           it != points.begin(); --it) {
+                        if (it->x == point.x && it->y == point.y && it->z == point.z) {
+                          points.erase(it);
+                          break;
+                        }
+                      }
+
+
+          }//Indices loop
+
+          tracks.push_back(track);
+
+        }// Clusters loop
+
+        std::cout<<cRED<<" Tracks found "<<tracks.size()<<cNORMAL<<"\n";
+
+        //Dump noise into a track
+        ATTrack track;
+        for (std::vector<pcl::PointXYZI,
+                         Eigen::aligned_allocator<pcl::PointXYZI> >::iterator it =
+                 points.begin();
+             it != points.end(); ++it){
+              if(event.GetHit(it->intensity)) track.AddHit(event.GetHit(it->intensity));
+        }
+
+        tracks.push_back(track);
+
+        return tracks;
 
 }

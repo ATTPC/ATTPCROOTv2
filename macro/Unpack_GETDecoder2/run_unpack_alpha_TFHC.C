@@ -173,12 +173,13 @@ TString mappath="/data/ar46/run_0085/")
   run -> AddTask(psaTask);
 
   ATTrackFinderHCTask *trackfinderHCTask = new ATTrackFinderHCTask();
+  trackfinderHCTask -> SetPersistence(kTRUE);
   run -> AddTask(trackfinderHCTask);
 
   run -> Init();
 
 
-  run->Run(0,10);
+  run->Run(0,30);
   //run -> RunOnTBData();
 
 
