@@ -445,12 +445,15 @@ ATEventDrawTask::DrawHitPoints()
               for(Int_t i=0;i<TrackCand.size();i++)
               {
 
-                  fHitSetTFHC[i] = new TEvePointSet(Form("HitMC_%d",i),nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
-                  fHitSetTFHC[i]->SetMarkerColor(GetTrackColor(i)+1);
-                  fHitSetTFHC[i]->SetMarkerSize(fHitSize);
-                  fHitSetTFHC[i]->SetMarkerStyle(fHitStyle);
                   ATTrack track = TrackCand.at(i);
                   std::vector<ATHit>* trackHits =  track.GetHitArray();
+
+                  fHitSetTFHC[i] = new TEvePointSet(Form("HitMC_%d",i),nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
+                  if(track.GetIsNoise()) fHitSetTFHC[i]->SetMarkerColor(kRed);
+                  else fHitSetTFHC[i]->SetMarkerColor(GetTrackColor(i)+1);
+                  fHitSetTFHC[i]->SetMarkerSize(fHitSize);
+                  fHitSetTFHC[i]->SetMarkerStyle(fHitStyle);
+
 
                     for(int j =0;j<trackHits->size();++j){
                       TVector3 position = trackHits->at(j).GetPosition();

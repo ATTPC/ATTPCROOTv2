@@ -19,6 +19,7 @@ ATTrack::ATTrack()
   fGeoEnergy   = -10.0;
   fGeoQEnergy  = -10.0;
   kIsMCFit     = kFALSE;
+  kIsNoise     = kFALSE;
   FitParameters.sThetaMin        = 0;
   FitParameters.sThetaMin        = 0;
   FitParameters.sEnerMin         = 0;
@@ -64,6 +65,7 @@ void ATTrack::SetQuadrant(Int_t quad)                               { fQuadrant 
 void ATTrack::SetMCFit(Bool_t value)                                { kIsMCFit = value;}
 void ATTrack::SetGeoEnergy(Double_t energy)                         { fGeoEnergy = energy;}
 void ATTrack::SetGeoQEnergy(Double_t qenergy)                       { fGeoQEnergy = qenergy;}
+void ATTrack::SetIsNoise(Bool_t value)                              { kIsNoise = value;}
 
 std::vector<ATHit> *ATTrack::GetHitArray()                          { return &fHitArray;}
 std::vector<Double_t> ATTrack::GetFitPar()                          { return fParFit;}
@@ -78,6 +80,7 @@ Int_t ATTrack::GetQuadrant()                                        { return fQu
 Double_t ATTrack::GetGeoTheta()                                     { return fGeoThetaAngle;}
 Double_t ATTrack::GetGeoPhi()                                       { return fGeoPhiAngle;}
 Double_t ATTrack::GetGeoEnergy()                                    { return fGeoEnergy;}
+Bool_t  ATTrack::GetIsNoise()                                       { return kIsNoise;}
 
 std::vector<Double_t> ATTrack::GetPosXMin() const                   { return fPosXmin;}
 std::vector<Double_t> ATTrack::GetPosYMin() const                   { return fPosYmin;}

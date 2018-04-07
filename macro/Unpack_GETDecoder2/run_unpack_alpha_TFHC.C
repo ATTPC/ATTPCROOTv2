@@ -179,7 +179,7 @@ TString mappath="/data/ar46/run_0085/")
   run -> Init();
 
 
-  run->Run(0,30);
+  run->Run(0,200);
   //run -> RunOnTBData();
 
 

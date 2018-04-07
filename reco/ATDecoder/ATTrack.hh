@@ -42,6 +42,7 @@ class ATTrack : public TObject {
     void SetMCFit(Bool_t value);
     void SetGeoEnergy(Double_t energy);
     void SetGeoQEnergy(Double_t qenergy);
+    void SetIsNoise(Bool_t value);
 
     std::vector<ATHit> *GetHitArray();
     std::vector<Double_t> GetFitPar();
@@ -60,6 +61,7 @@ class ATTrack : public TObject {
     Double_t GetGeoPhi();
     Double_t GetGeoEnergy();
     Double_t GetGeoQEnergy();
+    Bool_t   GetIsNoise();
 
     // MC result and projections
     std::vector<Double_t> fPosXmin;
@@ -132,6 +134,7 @@ class ATTrack : public TObject {
     Int_t fQuadrant; //Pad plane quadrant
 
     Bool_t kIsMCFit;
+    Bool_t kIsNoise;
 
 
     friend inline std::ostream& operator <<(std::ostream &o, const ATTrack &track)

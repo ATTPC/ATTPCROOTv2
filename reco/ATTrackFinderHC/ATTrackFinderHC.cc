@@ -182,7 +182,7 @@ std::vector<ATTrack> ATTrackFinderHC::clustersToTrack(pcl::PointCloud<pcl::Point
              it != points.end(); ++it){
               if(event.GetHit(it->intensity)) track.AddHit(event.GetHit(it->intensity));
         }
-
+        track.SetIsNoise(kTRUE);
         tracks.push_back(track);
 
         return tracks;
