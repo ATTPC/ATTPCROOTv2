@@ -25,10 +25,10 @@
 #include <vector>
 
 //ATTPCROOT
+#include "ATPRA.hh"
 #include "ATHit.hh"
 #include "ATEvent.hh"
-#include "ATProtoEvent.hh"
-#include "ATProtoQuadrant.hh"
+#include "ATPatternEvent.hh"
 #include "ATDigiPar.hh"
 #include "AtTpcMap.h"
 #include "ATTrack.hh"
@@ -64,15 +64,18 @@ struct hc_params {
   float _padding;
 };
 
-class ATTrackFinderHC : public TObject
+namespace ATPATTERN{
+
+
+class ATTrackFinderHC : public ATPRA
 {
 
   public:
       ATTrackFinderHC();
       ~ATTrackFinderHC();
 
-      bool FindTracks(ATEvent &event);
-      std::vector<ATTrack>& GetTrackCand();
+      bool FindTracks(ATEvent &event, ATPatternEvent *patternEvent);
+      std::vector<ATTrack> GetTrackCand();
 
   private:
 
@@ -91,5 +94,7 @@ class ATTrackFinderHC : public TObject
       ClassDef(ATTrackFinderHC, 1);
 
 };
+
+}//namespace
 
 #endif

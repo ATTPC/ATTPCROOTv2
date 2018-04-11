@@ -172,14 +172,14 @@ TString mappath="/data/ar46/run_0085/")
   psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
   run -> AddTask(psaTask);
 
-  ATTrackFinderHCTask *trackfinderHCTask = new ATTrackFinderHCTask();
-  trackfinderHCTask -> SetPersistence(kTRUE);
-  run -> AddTask(trackfinderHCTask);
+  ATPRATask *praTask = new ATPRATask();
+  praTask -> SetPersistence(kTRUE);
+  run -> AddTask(praTask);
 
   run -> Init();
 
 
-  run->Run(0,200);
+  run->Run(0,2);
   //run -> RunOnTBData();
 
 

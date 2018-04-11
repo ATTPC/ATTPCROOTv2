@@ -437,7 +437,7 @@ ATEventDrawTask::DrawHitPoints()
             }
 
         }else if(fTrackFinderHCArray){
-            fTrackFinderHC = dynamic_cast<ATTrackFinderHC*> (fTrackFinderHCArray->At(0));
+            fTrackFinderHC = dynamic_cast<ATPATTERN::ATTrackFinderHC*> (fTrackFinderHCArray->At(0));
             TrackCand = fTrackFinderHC->GetTrackCand();
             for(Int_t i=0;i<10;i++) fHitSetTFHC[i] = 0;
 

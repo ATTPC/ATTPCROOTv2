@@ -138,11 +138,11 @@ class ATEventDrawTask : public FairTask
     TClonesArray* fTrackFinderHCArray;
     TClonesArray* fTrackingEventAnaArray;
 
-    ATHoughSpaceLine*    fHoughSpaceLine_buff;
-    ATHoughSpaceCircle*  fHoughSpaceCircle_buff;
-    ATRANSACN::ATRansac* fRansac;
-    ATTrackingEventAna*  fTrackingEventAna;
-    ATTrackFinderHC*     fTrackFinderHC;
+    ATHoughSpaceLine*               fHoughSpaceLine_buff;
+    ATHoughSpaceCircle*             fHoughSpaceCircle_buff;
+    ATRANSACN::ATRansac*            fRansac;
+    ATTrackingEventAna*             fTrackingEventAna;
+    ATPATTERN::ATTrackFinderHC*     fTrackFinderHC;
 
     ATEventManager* fEventManager;
     ATRawEvent* fRawevent;

@@ -1,4 +1,4 @@
-#include "ATTrackFinderHCTask.hh"
+#include "ATPRATask.hh"
 
 #include <chrono>
 #include <iostream>
@@ -12,25 +12,27 @@
 #include "FairRuntimeDb.h"
 #include "FairLogger.h"
 
-ATTrackFinderHCTask::ATTrackFinderHCTask()
-    : FairTask("ATTrackFinderHCTask")
+ATPRATask::ATPRATask()
+    : FairTask("ATPRATask")
 {
     fLogger = FairLogger::GetLogger();
-    fLogger->Debug(MESSAGE_ORIGIN, "Defaul Constructor of ATTrackFinderHCTask");
+    fLogger->Debug(MESSAGE_ORIGIN, "Defaul Constructor of ATPRATask");
     fPar = NULL;
+    fPRAlgorithm = 0;
     kIsPersistence = kFALSE;
 }
 
-ATTrackFinderHCTask::~ATTrackFinderHCTask()
+ATPRATask::~ATPRATask()
 {
-    fLogger->Debug(MESSAGE_ORIGIN, "Destructor of ATTrackFinderHCTask");
+    fLogger->Debug(MESSAGE_ORIGIN, "Destructor of ATPRATask");
 }
 
-void ATTrackFinderHCTask::SetPersistence(Bool_t value)             { kIsPersistence   = value; }
+void ATPRATask::SetPersistence(Bool_t value)             { kIsPersistence   = value; }
+void ATPRATask::SetPRAlgorithm(Int_t value)              { fPRAlgorithm     = value; }
 
-void ATTrackFinderHCTask::SetParContainers()
+void ATPRATask::SetParContainers()
 {
-    fLogger->Debug(MESSAGE_ORIGIN, "SetParContainers of ATHierarchicalClusteringTask");
+    fLogger->Debug(MESSAGE_ORIGIN, "SetParContainers of ATPRATask");
 
     FairRun *run = FairRun::Instance();
     if (!run)
@@ -45,11 +47,27 @@ void ATTrackFinderHCTask::SetParContainers()
       fLogger -> Fatal(MESSAGE_ORIGIN, "ATDigiPar not found!!");
 }
 
-InitStatus ATTrackFinderHCTask::Init()
+InitStatus ATPRATask::Init()
 {
-    fLogger->Debug(MESSAGE_ORIGIN, "Initilization of ATTrackFinderHCTaskTask");
+    fLogger->Debug(MESSAGE_ORIGIN, "Initilization of ATPRATask");
 
-    fTrackFinderHCArray = new TClonesArray("ATTrackFinderHC");
+    fPatternEventArray = new TClonesArray("ATPatternEvent");
+
+    if (fPRAlgorithm == 0) {
+      fLogger -> Info(MESSAGE_ORIGIN, "Using Track Finder Hierarchical Clustering algorithm");
+
+      fPRA = new ATPATTERN::ATTrackFinderHC();
+
+    } else if (fPRAlgorithm == 1) {
+      fLogger -> Info(MESSAGE_ORIGIN, "Using RANSAC algorithm");
+
+      //fPSA = new ATPSASimple2();
+
+    } else if (fPRAlgorithm == 2) {
+      fLogger -> Info(MESSAGE_ORIGIN, "Using Hough transform algorithm");
+      //fPSA = new ATPSAProto();
+
+    }
 
     // Get a handle from the IO manager
     FairRootManager* ioMan = FairRootManager::Instance();
@@ -64,16 +82,16 @@ InitStatus ATTrackFinderHCTask::Init()
       return kERROR;
     }
 
-     ioMan -> Register("ATTrackFinderHC", "ATTPC",fTrackFinderHCArray, kIsPersistence);
+     ioMan -> Register("ATPatternEvent", "ATTPC",fPatternEventArray, kIsPersistence);
 
     return kSUCCESS;
 }
 
-void ATTrackFinderHCTask::Exec(Option_t* option)
+void ATPRATask::Exec(Option_t* option)
 {
-    fLogger->Debug(MESSAGE_ORIGIN, "Exec of ATTrackFinderHCTask");
+    fLogger->Debug(MESSAGE_ORIGIN, "Exec of ATPRATask");
 
-      fTrackFinderHCArray -> Delete();
+      fPatternEventArray -> Delete();
 
       if (fEventHArray -> GetEntriesFast() == 0)
        return;
@@ -86,9 +104,10 @@ void ATTrackFinderHCTask::Exec(Option_t* option)
 
       try
       {
-        //ATTrackFinderHC* trackfinder = (ATTrackFinderHC *) new ((*fTrackFinderHCArray)[0]) ATTrackFinderHC();
-        //std::unique_ptr<ATTrackFinderHC> trackfinder = std::make_unique<ATTrackFinderHC>();
-        //trackfinder->FindTracks(event);
+
+        ATPatternEvent *patternEvent = (ATPatternEvent *) new ((*fPatternEventArray)[0]) ATPatternEvent();
+
+        fPRA->FindTracks(event,patternEvent);
 
       }
        catch (std::runtime_error e)
@@ -99,7 +118,7 @@ void ATTrackFinderHCTask::Exec(Option_t* option)
       //fEvent  = (ATEvent *) fEventHArray -> At(0);
 }
 
-void ATTrackFinderHCTask::Finish()
+void ATPRATask::Finish()
 {
-    fLogger->Debug(MESSAGE_ORIGIN, "Finish of ATTrackFinderHCTask");
+    fLogger->Debug(MESSAGE_ORIGIN, "Finish of ATPRATask");
 }

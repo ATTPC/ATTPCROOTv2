@@ -4,21 +4,22 @@
 #include "FairRuntimeDb.h"
 #include "FairRun.h"
 
-ClassImp(ATTrackFinderHC)
+ClassImp(ATPATTERN::ATTrackFinderHC)
 
-ATTrackFinderHC::ATTrackFinderHC()
+
+ATPATTERN::ATTrackFinderHC::ATTrackFinderHC()
 {
 
 }
 
-ATTrackFinderHC::~ATTrackFinderHC()
+ATPATTERN::ATTrackFinderHC::~ATTrackFinderHC()
 {
 
 }
 
-std::vector<ATTrack>& ATTrackFinderHC::GetTrackCand() {return fTrackCand;}
+std::vector<ATTrack> ATPATTERN::ATTrackFinderHC::GetTrackCand() {return fTrackCand;}
 
-bool ATTrackFinderHC::FindTracks(ATEvent &event)
+bool ATPATTERN::ATTrackFinderHC::FindTracks(ATEvent &event, ATPatternEvent *patternEvent)
 {
 
   int opt_verbose = 0;
@@ -89,12 +90,13 @@ bool ATTrackFinderHC::FindTracks(ATEvent &event)
                        opt_params.cleanupMinTriplets, opt_verbose);
 
       //Adapt clusters to ATTrack
-      fTrackCand = clustersToTrack(cloud_xyzti,cluster,event);
+      //fTrackCand = clustersToTrack(cloud_xyzti,cluster,event);
 
+      patternEvent->SetTrackCand(clustersToTrack(cloud_xyzti,cluster,event));
 
 }
 
-Cluster ATTrackFinderHC::use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
+Cluster ATPATTERN::ATTrackFinderHC::use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
                std::vector<hc::triplet> triplets, float scale, float cdist,
                size_t cleanup_min_triplets, int opt_verbose = 0) {
 
@@ -107,7 +109,7 @@ Cluster ATTrackFinderHC::use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
   return hc::toCluster(triplets, cleaned_up_cluster_group, cloud->size());
 }
 
-void ATTrackFinderHC::eventToClusters(ATEvent& event,pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
+void ATPATTERN::ATTrackFinderHC::eventToClusters(ATEvent& event,pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
 {
   Int_t nHits = event.GetNumHits();
   cloud->points.resize(nHits);
@@ -129,7 +131,7 @@ void ATTrackFinderHC::eventToClusters(ATEvent& event,pcl::PointCloud<pcl::PointX
 
 }
 
-std::vector<ATTrack> ATTrackFinderHC::clustersToTrack(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,Cluster const cluster,ATEvent& event)
+std::vector<ATTrack> ATPATTERN::ATTrackFinderHC::clustersToTrack(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,Cluster const cluster,ATEvent& event)
 {
     std::vector<ATTrack> tracks;
 

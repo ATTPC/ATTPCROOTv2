@@ -29,6 +29,7 @@
 #pragma link C++ class ATEvent+;
 #pragma link C++ class ATProtoEvent+;
 #pragma link C++ class ATProtoEventAna+;
+#pragma link C++ class ATPatternEvent+;
 #pragma link C++ class ATTrackingEventAna+;
 #pragma link C++ class ATProtoQuadrant+;
 #pragma link C++ class ATPedestal+;
@@ -54,6 +55,9 @@
 #pragma link C++ class ATRANSACN::ATRansac+;
 #pragma link C++ struct ATRANSACN::ATRansac::PairedLines+;
 
+#pragma link C++ class ATPATTERN::ATTrackFinderHC+;
+#pragma link C++ class ATPATTERN::ATPRA+;
+#pragma link C++ namespace ATPATTERN;
 //#pragma link C++ class ATRansac+;
 
 
@@ -78,8 +82,11 @@
 
 #pragma link C++ class ATFindVertex+; // TODO: move somewhere else?
 #pragma link C++ class ATHierarchicalClusteringTask+;
-#pragma link C++ class ATTrackFinderHCTask+;
-#pragma link C++ class ATTrackFinderHC+;
+//#pragma link C++ class ATTrackFinderHCTask+;
+#pragma link C++ class ATPRATask+;
+//#pragma link C++ class ATTrackFinderHC+;
+
+
 
 #pragma link C++ class ATHoughTask+;
 #pragma link C++ class ATVMEUnpackTask+;
