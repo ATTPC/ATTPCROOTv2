@@ -28,7 +28,7 @@ void ATPATTERN::ATPRA::SetTrackCurvature(ATTrack& track)
           ATHit hitB = hitArray->at((int)(iHit+(nstep/2.0)));
           ATHit hitC = hitArray->at((int)(iHit+nstep));
 
-          std::cout<<nstep<<" "<<iHit<<"  "<<(int)(iHit+(nstep/2.0))<<"  "<<(int)(iHit+nstep)<<"\n";
+          //std::cout<<nstep<<" "<<iHit<<"  "<<(int)(iHit+(nstep/2.0))<<"  "<<(int)(iHit+nstep)<<"\n";
 
           TVector3 posA = hitA.GetPosition();
           TVector3 posB = hitB.GetPosition();
@@ -40,7 +40,7 @@ void ATPATTERN::ATPRA::SetTrackCurvature(ATTrack& track)
           double centerX = ( slopeAB*slopeBC*( posA.Y()-posC.Y() ) + slopeBC*( posB.X()+posA.X() )
              - slopeAB*(posB.X()+posC.X()) )/ ( 2.0*(slopeBC - slopeAB) );
 
-          double centerY = (-1/slopeAB)/( centerX - ( posB.X()+posA.X() )/2.0 )  + ( posB.Y()+posA.Y() )/2.0;
+          double centerY = (-1/slopeAB)*( centerX - ( posB.X()+posA.X() )/2.0 )  + ( posB.Y()+posA.Y() )/2.0;
 
           std::cout<<" Center "<<centerX<<" - "<<centerY<<"\n";
 
