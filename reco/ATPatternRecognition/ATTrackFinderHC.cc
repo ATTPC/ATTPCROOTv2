@@ -170,6 +170,7 @@ std::vector<ATTrack> ATPATTERN::ATTrackFinderHC::clustersToTrack(pcl::PointCloud
 
           }//Indices loop
 
+          SetTrackCurvature(track);
           tracks.push_back(track);
 
         }// Clusters loop

@@ -34,6 +34,90 @@ void ATTrackingAnalysis::SetElossParameters(std::vector<Double_t> (&parE)[10])  
 void ATTrackingAnalysis::SetEtoRParameters(std::vector<Double_t> (&parRtoE)[10])                           {for(Int_t i=0;i<10;i++) fEtoRPar[i] = parRtoE[i];}
 void ATTrackingAnalysis::AddParticle(std::vector<std::pair<Int_t,Int_t>>& ptcl)                            {fParticleAZ=ptcl;}
 
+void ATTrackingAnalysis::Analyze(ATPatternEvent *patternEvent,ATTrackingEventAna *trackingEventAna,TH2Poly* hPadPlane,const multiarray& PadCoord)
+{
+      if(fElossPar[0].size()>0 && fParticleAZ.size()>0){
+
+                ATMCQMinimization *min = new ATMCQMinimization();
+                min->ResetParameters();
+                min->SetBackWardPropagation(kFALSE); //Disabled when vertex can be measured
+                min->SetRangeChi2(kTRUE);
+
+                Double_t step_par[10];
+                auto init = std::initializer_list<Double_t>({8.0,8.0,0.1,0.1,0.1,0.1,0.0,0.0,0.1,0.0}); //MonteCarlo steps
+                std::copy(init.begin(), init.end(),step_par);
+                min->SetStepParameters(step_par);
+                min->SetGainCalibration(fGain);//Micromegas + gas gain calibration
+                min->SetLongDiffCoef(fCoefL);
+                min->SetTranDiffCoef(fCoefT);
+
+                Double_t *parameter = new Double_t[8];
+                // Adding Eloss functions
+                std::function<Double_t(Double_t,std::vector<Double_t>&)> ELossFunc = std::bind(GetEloss,std::placeholders::_1,std::placeholders::_2);
+                min->AddELossFunc(ELossFunc);
+                // Adding Range-Energy functions
+                std::function<Double_t(Double_t,std::vector<Double_t>&)> RtoEFunc  = std::bind(GetEnergyFromRange,std::placeholders::_1,std::placeholders::_2);
+                min->AddRtoEFunc(RtoEFunc);
+
+                // Adding n-vectors of 11 parameters
+                min->AddELossPar(fElossPar);
+                min->AddRtoEPar(fEtoRPar);
+                // Adding n-particles
+                min->AddParticle(fParticleAZ);
+
+                TVector3 Vertex_mean(0,0,0); // NB::Vertex from the Pattern Recognition analysis needed
+
+                std::vector<ATTrack>  trackCand = patternEvent->GetTrackCand();
+
+                for(Int_t i=0;i<trackCand.size();++i){
+
+                  ATTrack* trackToMin = &trackCand.at(i);
+
+                  parameter[0]=Vertex_mean.X();
+                  parameter[1]=Vertex_mean.Y();
+                  parameter[2]=Vertex_mean.Z();
+                  parameter[3]= 0.0; //Initial Time Bucket 
+                  parameter[6]= 0.0; //Theta
+                  parameter[5]= 0.0; //Curvature
+                  parameter[4]= 0.0; //Phi
+                  parameter[7]=trackToMin->GetHitArray()->size();
+
+                  //Custom function to pass the method to extract the Hit Array
+                  std::function<std::vector<ATHit>*()> func = std::bind(&ATTrack::GetHitArray,trackToMin);
+                  min->MinimizeGen(parameter,trackToMin,func,hPadPlane,PadCoord);
+                  trackToMin->SetPosMin(min->GetPosXMin(),min->GetPosYMin(),min->GetPosZMin(),min->GetPosXBack(),min->GetPosYBack(),min->GetPosZBack());
+                  trackToMin->SetPosExp(min->GetPosXExp(),min->GetPosYExp(),min->GetPosZExp(),min->GetPosXInt(),min->GetPosYInt(),min->GetPosZInt());
+                  trackToMin->FitParameters.sThetaMin        = min->FitParameters.sThetaMin;
+                  trackToMin->FitParameters.sEnerMin         = min->FitParameters.sEnerMin;
+                  trackToMin->FitParameters.sPosMin          = min->FitParameters.sPosMin;
+                  trackToMin->FitParameters.sBrhoMin         = min->FitParameters.sBrhoMin;
+                  trackToMin->FitParameters.sBMin            = min->FitParameters.sBMin;
+                  trackToMin->FitParameters.sPhiMin          = min->FitParameters.sPhiMin;
+                  trackToMin->FitParameters.sChi2Min         = min->FitParameters.sChi2Min;
+                  trackToMin->FitParameters.sVertexPos       = min->FitParameters.sVertexPos;
+                  trackToMin->FitParameters.sVertexEner      = min->FitParameters.sVertexEner;
+                  trackToMin->FitParameters.sMinDistAppr     = min->FitParameters.sMinDistAppr;
+                  trackToMin->FitParameters.sNumMCPoint      = min->FitParameters.sNumMCPoint;
+                  trackToMin->FitParameters.sNormChi2        = min->FitParameters.sNormChi2;
+                  trackToMin->FitParameters.sChi2Q           = min->FitParameters.sChi2Q;
+                  trackToMin->FitParameters.sChi2Range       = min->FitParameters.sChi2Range;
+                  trackToMin->SetMCFit(kTRUE);
+                  trackingEventAna->SetTrack(trackToMin);
+
+
+                }
+
+
+
+      }else{
+        std::cout<<cYELLOW<<" ATTrackingAnalysis::Analyze - Warning! No Energy Loss or Particle parameters found! "<<cNORMAL<<std::endl;
+      }
+
+
+
+
+}
+
 
 void ATTrackingAnalysis::Analyze(ATRANSACN::ATRansac *Ransac,ATTrackingEventAna *trackingEventAna,TH2Poly* hPadPlane,const multiarray& PadCoord)
 {

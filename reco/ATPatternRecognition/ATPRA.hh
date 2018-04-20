@@ -26,6 +26,8 @@ namespace ATPATTERN{
             FairLogger *fLogger;      ///< logger pointer
             ATDigiPar *fPar;          ///< parameter container
 
+            void SetTrackCurvature(ATTrack& track);
+
 
 
 

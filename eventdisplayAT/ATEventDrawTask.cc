@@ -202,8 +202,11 @@ ATEventDrawTask::Init()
     fRansacArray = (TClonesArray*) ioMan->GetObject("ATRansac");
     if(fRansacArray) LOG(INFO)<<cGREEN<<"RANSAC Array Found."<<cNORMAL<<FairLogger::endl;
 
-    fTrackFinderHCArray = (TClonesArray*) ioMan->GetObject("ATTrackFinderHC");
-    if(fTrackFinderHCArray)  LOG(INFO)<<cGREEN<<"Track Finder Hierarchical Clustering Array Found."<<cNORMAL<<FairLogger::endl;
+    //fTrackFinderHCArray = (TClonesArray*) ioMan->GetObject("ATTrackFinderHC");
+    //if(fTrackFinderHCArray)  LOG(INFO)<<cGREEN<<"Track Finder Hierarchical Clustering Array Found."<<cNORMAL<<FairLogger::endl;
+
+    fPatternEventArray = (TClonesArray*) ioMan->GetObject("ATPatternEvent");
+    if(fPatternEventArray) LOG(INFO)<<cGREEN<<"Pattern Event Array Found."<<cNORMAL<<FairLogger::endl;
 
     fTrackingEventAnaArray = (TClonesArray*) ioMan->GetObject("ATTrackingEventAna");
     if(fTrackingEventAnaArray) LOG(INFO)<<cGREEN<<"Tracking Event Analysis Array Found."<<cNORMAL<<FairLogger::endl;
@@ -436,9 +439,9 @@ ATEventDrawTask::DrawHitPoints()
                 }
             }
 
-        }else if(fTrackFinderHCArray){
-            fTrackFinderHC = dynamic_cast<ATPATTERN::ATTrackFinderHC*> (fTrackFinderHCArray->At(0));
-            TrackCand = fTrackFinderHC->GetTrackCand();
+        }else if(fPatternEventArray){
+            ATPatternEvent* patternEvent = dynamic_cast<ATPatternEvent*> (fPatternEventArray->At(0));
+            TrackCand = patternEvent->GetTrackCand();
             for(Int_t i=0;i<10;i++) fHitSetTFHC[i] = 0;
 
             if(TrackCand.size()<10){
