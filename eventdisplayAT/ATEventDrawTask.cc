@@ -780,24 +780,27 @@ ATEventDrawTask::DrawHitPoints()
 
     }
 
+   //Adding raw data points
    if(!fEventManager->GetDrawHoughSpace()){
+
       gEve -> AddElement(fHitSet);
       gEve -> AddElement(fhitBoxSet);
-    }
 
-
-
-    // Analysis elements
-    if(fEventManager->GetDrawHoughSpace()){
+    //Adding pattern rec. and tracking algorithm results
+    }else if(fEventManager->GetDrawHoughSpace()){
 
         if(fIsCircularHough)
             gEve -> AddElement(fHitSetMin);
 
 
-        if(fIsLinearHough || fRansacArray)
+        if(fIsLinearHough || fRansacArray){
             if(fLineNum>0) for(Int_t i=0;i<fLineNum;i++) gEve -> AddElement(fLineArray[i]);
+            //Lines plto together with data points
+            gEve -> AddElement(fHitSet);
+            gEve -> AddElement(fhitBoxSet);
+        }
 
-        if(fTrackFinderHCArray)
+        if(fPatternEventArray)
             if(fLineNum>0) for(Int_t i=0;i<fLineNum;i++) gEve -> AddElement(fHitSetTFHC[i]);
 
 
@@ -805,6 +808,7 @@ ATEventDrawTask::DrawHitPoints()
             if(fTrackNum>0 && fTrackNum<5) for(Int_t i=0;i<fTrackNum;i++) gEve -> AddElement(fHitSetMC[i]);
 
     }
+
 
 
     dumpEvent.close();
@@ -834,6 +838,7 @@ ATEventDrawTask::DrawHSpace()
    fMC_XY_back->Set(0);
    fMC_ZX_back->Set(0);
    fMC_ZY_back->Set(0);
+
    if(fEventManager->GetDrawHoughSpace()){
          if(fIsCircularHough){
                   fHoughSpace = fHoughSpaceCircle_buff->GetHoughSpace("XY");
@@ -1069,6 +1074,7 @@ ATEventDrawTask::Reset()
     }
 
     if(fEventManager->GetDrawHoughSpace()){
+
         if(fIsCircularHough){
             if(fHitSetMin) {
                 fHitSetMin->Reset();
@@ -1096,7 +1102,7 @@ ATEventDrawTask::Reset()
 
         }
 
-        if(fTrackFinderHCArray){
+        if(fPatternEventArray){
 
                 if(fLineNum>0){
                     for(Int_t i=0;i<fLineNum;i++){
