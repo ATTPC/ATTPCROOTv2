@@ -1,4 +1,4 @@
-void Be12He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
+void Be12He4_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -37,14 +37,14 @@ void Be12He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   cave->SetGeometryFileName("cave.geo");
   run->AddModule(cave);
 
-  FairModule* magnet = new AtMagnet("Magnet");
-  run->AddModule(magnet);
+  //FairModule* magnet = new AtMagnet("Magnet");
+  //run->AddModule(magnet);
 
   /*FairModule* pipe = new AtPipe("Pipe");
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_Proto_v1.0.root");
+  ATTPC->SetGeometryFileName("ATTPC_v1.1.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
@@ -149,9 +149,9 @@ void Be12He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 		             Ap.push_back(4); //
 		             Qp.push_back(0); //
 		             Pxp.push_back(0.0);
-                     Pyp.push_back(0.0);
+                 Pyp.push_back(0.0);
 		             Pzp.push_back(0.0);
-                     Mass.push_back(3.728401);
+                 Mass.push_back(3.728401);
 		             ExE.push_back(0.0);//In MeV
 
 

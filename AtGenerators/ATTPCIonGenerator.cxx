@@ -210,9 +210,9 @@ Bool_t ATTPCIonGenerator::ReadEvent(FairPrimaryGenerator* primGen) {
   gATVP->IncBeamEvtCnt(); 
 
 
-       if(gATVP->GetBeamEvtCnt()%2!=0){
-	  Double_t Er = gRandom->Uniform(0.,fNomEner);
-  	  gATVP->SetRndELoss(Er);
+  if(gATVP->GetBeamEvtCnt()%2!=0){
+	         Double_t Er = gRandom->Uniform(0.,fNomEner);
+  	       gATVP->SetRndELoss(Er);
            std::cout<<" Random Energy ATTPCIonGenerator : "<<Er<<std::endl;
 	}
 

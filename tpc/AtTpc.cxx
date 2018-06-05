@@ -231,7 +231,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 //            return kFALSE;
 
       if (gMC->IsTrackExiting())
-        {
+      {
 
             const Double_t* oldpos;
             const Double_t* olddirection;
@@ -263,10 +263,10 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
             fPosOut.SetY(newpos[1]);
             fPosOut.SetZ(newpos[2]);
 
-             if(fVolName=="drift_volume" && gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0 ){
-		            //gATVP->ResetVertex(); //this line is commented to force a  d_2He reaction occurs even if the beam punch through
+            if(fVolName=="drift_volume" && gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0 ){
+		            gATVP->ResetVertex(); 
                 LOG(INFO)<<" - AtTpc Warning : Beam punched through the ATTPC. Reseting Vertex! "<<std::endl;
-		}
+		        }
 
          }
 
@@ -282,134 +282,134 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 
 
 
-	    if( gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0) { // We assume that the beam-like particle is fTrackID==0 since it is the first one added
-														//  in the Primary Generator
+              	    if( gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0) { // We assume that the beam-like particle is fTrackID==0 since it is the first one added
+              														//  in the Primary Generator
 
-               // std::cout<<" Current Decay particle count : "<<gATVP->GetDecayEvtCnt()<<std::endl;
-		//std::cout<<" Current Beam particle count :  "<<gATVP->GetBeamEvtCnt()<<std::endl;
-               // std::cout<<" fTrackID : "<<fTrackID<<std::endl;
-		//std::cout<<" Recoil Energy : "<<gATVP->GetRecoilE()<<std::endl;
+                             // std::cout<<" Current Decay particle count : "<<gATVP->GetDecayEvtCnt()<<std::endl;
+              		//std::cout<<" Current Beam particle count :  "<<gATVP->GetBeamEvtCnt()<<std::endl;
+                             // std::cout<<" fTrackID : "<<fTrackID<<std::endl;
+              		//std::cout<<" Recoil Energy : "<<gATVP->GetRecoilE()<<std::endl;
 
-		AddHit(fTrackID,
-		       fVolumeID,
-                       fVolName,
-		       fDetCopyID,
-		       TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
-		       TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
-		       TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
-		       TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
-		       fTime,
-		       fLength,
-		       fELoss,
-		       0.0,
-		       0.0,
-           AZ.first,
-           AZ.second);
+              		AddHit(fTrackID,
+              		       fVolumeID,
+                                     fVolName,
+              		       fDetCopyID,
+              		       TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
+              		       TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
+              		       TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
+              		       TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
+              		       fTime,
+              		       fLength,
+              		       fELoss,
+              		       0.0,
+              		       0.0,
+                         AZ.first,
+                         AZ.second);
 
-	}
-	else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==1)
-	{
+              	}
+              	else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==1)
+              	{
 
- 		AddHit(fTrackID,
-		       fVolumeID,
-           fVolName,
-		       fDetCopyID,
-		       TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
-		       TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
-		       TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
-		       TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
-		       fTime,
-		       fLength,
-		       fELoss,
-		       gATVP->GetScatterE(),
-		       gATVP->GetScatterA(),
-           AZ.first,
-           AZ.second);
-
-
-
-
-	}
-        else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==2)
-	{
-
- 		AddHit(fTrackID,
-		       fVolumeID,
-           fVolName,
-		       fDetCopyID,
-		       TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
-		       TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
-		       TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
-		       TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
-		       fTime,
-		       fLength,
-		       fELoss,
-           gATVP->GetRecoilE(),
-		       gATVP->GetRecoilA(),
-           AZ.first,
-           AZ.second);
+               		AddHit(fTrackID,
+              		       fVolumeID,
+                         fVolName,
+              		       fDetCopyID,
+              		       TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
+              		       TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
+              		       TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
+              		       TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
+              		       fTime,
+              		       fLength,
+              		       fELoss,
+              		       gATVP->GetScatterE(),
+              		       gATVP->GetScatterA(),
+                         AZ.first,
+                         AZ.second);
 
 
 
-	}
-  else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==3)
-  {
 
-        AddHit(fTrackID,
-       fVolumeID,
-       fVolName,
-       fDetCopyID,
-       TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
-       TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
-       TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
-       TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
-       fTime,
-       fLength,
-       fELoss,
-       gATVP->GetBURes2E(),
-       gATVP->GetBURes2A(),
-       AZ.first,
-       AZ.second);
+              	}
+                      else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==2)
+              	{
+
+               		AddHit(fTrackID,
+              		       fVolumeID,
+                         fVolName,
+              		       fDetCopyID,
+              		       TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
+              		       TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
+              		       TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
+              		       TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
+              		       fTime,
+              		       fLength,
+              		       fELoss,
+                         gATVP->GetRecoilE(),
+              		       gATVP->GetRecoilA(),
+                         AZ.first,
+                         AZ.second);
 
 
 
-  }
-  else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==4)
-  {
-        AddHit(fTrackID,
-       fVolumeID,
-       fVolName,
-       fDetCopyID,
-       TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
-       TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
-       TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
-       TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
-       fTime,
-       fLength,
-       fELoss,
-       0,
-       0,
-       AZ.first,
-       AZ.second);
-  }
-else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==5)
-  {
-        AddHit(fTrackID,
-       fVolumeID,
-       fVolName,
-       fDetCopyID,
-       TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
-       TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
-       TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
-       TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
-       fTime,
-       fLength,
-       fELoss,
-       0,
-       0,
-       AZ.first,
-       AZ.second);
-  }
+              	}
+                else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==3)
+                {
+
+                      AddHit(fTrackID,
+                     fVolumeID,
+                     fVolName,
+                     fDetCopyID,
+                     TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
+                     TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
+                     TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
+                     TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
+                     fTime,
+                     fLength,
+                     fELoss,
+                     gATVP->GetBURes2E(),
+                     gATVP->GetBURes2A(),
+                     AZ.first,
+                     AZ.second);
+
+
+
+                }
+                else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==4)
+                {
+                      AddHit(fTrackID,
+                     fVolumeID,
+                     fVolName,
+                     fDetCopyID,
+                     TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
+                     TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
+                     TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
+                     TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
+                     fTime,
+                     fLength,
+                     fELoss,
+                     0,
+                     0,
+                     AZ.first,
+                     AZ.second);
+                }
+              else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==5)
+                {
+                      AddHit(fTrackID,
+                     fVolumeID,
+                     fVolName,
+                     fDetCopyID,
+                     TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
+                     TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
+                     TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
+                     TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
+                     fTime,
+                     fLength,
+                     fELoss,
+                     0,
+                     0,
+                     AZ.first,
+                     AZ.second);
+                }
 
 	//std::cout<<" Energy Loss : "<<fELoss*1000<<std::endl;
 
@@ -438,25 +438,25 @@ else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==5)
 
 
 
-	if(fELossAcc*1000>gATVP->GetRndELoss()  &&   (gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0) && fVolName=="drift_volume"){
-	 LOG(INFO)<<" Beam energy loss before reaction : "<<fELossAcc*1000<<FairLogger::endl;
-	       gMC->StopTrack();
-         gATVP->ResetVertex();
-         TLorentzVector StopPos;
-         TLorentzVector StopMom;
-         gMC->TrackPosition(StopPos);
-	       gMC->TrackMomentum(StopMom);
-         LOG(INFO)<<" Mass of the Tracked particle : "<<gMC->TrackMass()<<std::endl;
-         LOG(INFO)<<" Mass of the Beam from global vertex pointer : "<<gATVP->GetBeamMass()<<std::endl;
-	      // LOG(INFO)<<" Total energy of the current track : "<<((gMC->Etot() - gMC->TrackMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
-         Double_t StopEnergy = ((gMC->Etot() - gMC->TrackMass()) * 1000.);
-         LOG(INFO)<<" Total energy of the Beam particle before reaction : "<<StopEnergy<<FairLogger::endl;// Relativistic Mass
-         gATVP->SetVertex(StopPos.X(),StopPos.Y(),StopPos.Z(),InPos.X(),InPos.Y(),InPos.Z(),StopMom.Px(),StopMom.Py(),StopMom.Pz(),StopEnergy);
-	 // std::cout<<" Entrance Position 2 - X : "<<InPos.X()<<" - Y : "<<InPos.Y()<<" - Z : "<<InPos.Z()<<std::endl;
-         //  std::cout<<" Stop Position - X : "<<StopPos.X()<<" - Y : "<<StopPos.Y()<<" - Z : "<<StopPos.Z()<<std::endl;
+        	if(fELossAcc*1000>gATVP->GetRndELoss()  &&   (gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0) && fVolName=="drift_volume"){
+        	 LOG(INFO)<<" Beam energy loss before reaction : "<<fELossAcc*1000<<FairLogger::endl;
+        	       gMC->StopTrack();
+                 gATVP->ResetVertex();
+                 TLorentzVector StopPos;
+                 TLorentzVector StopMom;
+                 gMC->TrackPosition(StopPos);
+        	       gMC->TrackMomentum(StopMom);
+                 LOG(INFO)<<" Mass of the Tracked particle : "<<gMC->TrackMass()<<std::endl;
+                 LOG(INFO)<<" Mass of the Beam from global vertex pointer : "<<gATVP->GetBeamMass()<<std::endl;
+        	      // LOG(INFO)<<" Total energy of the current track : "<<((gMC->Etot() - gMC->TrackMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
+                 Double_t StopEnergy = ((gMC->Etot() - gMC->TrackMass()) * 1000.);
+                 LOG(INFO)<<" Total energy of the Beam particle before reaction : "<<StopEnergy<<FairLogger::endl;// Relativistic Mass
+                 gATVP->SetVertex(StopPos.X(),StopPos.Y(),StopPos.Z(),InPos.X(),InPos.Y(),InPos.Z(),StopMom.Px(),StopMom.Py(),StopMom.Pz(),StopEnergy);
+        	 // std::cout<<" Entrance Position 2 - X : "<<InPos.X()<<" - Y : "<<InPos.Y()<<" - Z : "<<InPos.Z()<<std::endl;
+                 //  std::cout<<" Stop Position - X : "<<StopPos.X()<<" - Y : "<<StopPos.Y()<<" - Z : "<<StopPos.Z()<<std::endl;
 
-	}
-		// Increment number of AtTpc det points in TParticle
+        	}
+        		// Increment number of AtTpc det points in TParticle
 
 
 

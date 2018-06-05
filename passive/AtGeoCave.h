@@ -17,7 +17,6 @@
 #define MYGEOCAVE_H
 
 #include "FairGeoSet.h"                 // for FairGeoSet
-#include "Riosfwd.h"                    // for fstream
 #include "Rtypes.h"                     // for AtGeoCave::Class, Bool_t, etc
 #include "TString.h"                    // for TString
 
