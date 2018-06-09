@@ -1,4 +1,4 @@
-void Mg20_p_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
+void N12_dn_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -68,90 +68,88 @@ void Mg20_p_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 
 
 
-                  // Beam Information
-                Int_t z = 12;  // Atomic number
-	              Int_t a = 20; // Mass number
+                // Beam Information
+                Int_t z = 7;  // Atomic number
+	              Int_t a = 12; // Mass number
 	              Int_t q = 0;   // Charge State
 	              Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
 	              Double_t px = 0.000/a;  // X-Momentum / per nucleon!!!!!!
 	              Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
 	              Double_t pz = 2.029/a;  // Z-Momentum / per nucleon!!!!!!
   	            Double_t BExcEner = 0.0;
-                Double_t Bmass = 18.64745; //Mass in GeV
-                Double_t NomEnergy = 110.0; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
-                Double_t TargetMass = 0.93827203;//Mass in GeV
+                Double_t Bmass = 11.19527; //Mass in GeV
+                Double_t NomEnergy = 120.88; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
+                Double_t TargetMass = 1.8756129;//Mass in GeV
 
 
 	          ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
 	          ionGen->SetSpotRadius(0,-100,0);
-	          // add the ion generator
-
 	          primGen->AddGenerator(ionGen);
 
-  		  //primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track added to the Primary Generator
-		  // primGen->SetTarget(30,0);
+  		      //primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track added to the Primary Generator
+		        // primGen->SetTarget(30,0);
 
 
 
 
 		 // Variables for 2-Body kinematics reaction
                   std::vector<Int_t> Zp; // Zp
-		   std::vector<Int_t> Ap; // Ap
+		              std::vector<Int_t> Ap; // Ap
                   std::vector<Int_t> Qp;//Electric charge
                   Int_t mult;  //Number of particles
- 		  std::vector<Double_t> Pxp; //Px momentum X
-		  std::vector<Double_t> Pyp; //Py momentum Y
-		  std::vector<Double_t> Pzp; //Pz momentum Z
+ 		              std::vector<Double_t> Pxp; //Px momentum X
+		              std::vector<Double_t> Pyp; //Py momentum Y
+		              std::vector<Double_t> Pzp; //Pz momentum Z
                   std::vector<Double_t> Mass; // Masses
-		  std::vector<Double_t> ExE; // Excitation energy
- 		  Double_t ResEner; // Energy of the beam (Useless for the moment)
+		              std::vector<Double_t> ExE; // Excitation energy
+ 		              Double_t ResEner; // Energy of the beam (Useless for the moment)
 
 
 		  // Note: Momentum will be calculated from the phase Space according to the residual energy of the beam
 
 
-	          mult = 4; //Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY (and the number of particles must be the same)
+	                mult = 4; //Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY (and the number of particles must be the same)
                   ResEner = 0.0; // Useless
 
                   // ---- Beam ----
                   Zp.push_back(z); // 40Ar TRACKID=0
-		  Ap.push_back(a); //
-		  Qp.push_back(q);
-		  Pxp.push_back(px);
-		  Pyp.push_back(py);
-		  Pzp.push_back(pz);
-		  Mass.push_back(Bmass);
-		  ExE.push_back(BExcEner);
+            		  Ap.push_back(a); //
+            		  Qp.push_back(q);
+            		  Pxp.push_back(px);
+            		  Pyp.push_back(py);
+            		  Pzp.push_back(pz);
+            		  Mass.push_back(Bmass);
+            		  ExE.push_back(BExcEner);
 
                   // ---- Target ----
-                 Zp.push_back(1); // p
-		             Ap.push_back(1); //
+                 Zp.push_back(1); // d
+		             Ap.push_back(2); //
 		             Qp.push_back(0); //
 		             Pxp.push_back(0.0);
                  Pyp.push_back(0.0);
 		             Pzp.push_back(0.0);
-                 Mass.push_back(0.93827203);
+                 Mass.push_back(1.8756129);
 		             ExE.push_back(0.0);//In MeV
 
                   //--- Scattered -----
-                Zp.push_back(12); // 40Ar TRACKID=1
-          	 	  Ap.push_back(20); //
-          		  Qp.push_back(0);
-          		  Pxp.push_back(0.0);
-          		  Pyp.push_back(0.0);
-          		  Pzp.push_back(0.0);
-          		  Mass.push_back(18.64745);
-          		  ExE.push_back(0.0);
+                 Zp.push_back(8); // 13O TRACKID=1
+          	 	   Ap.push_back(13); //
+          		   Qp.push_back(0);
+          		   Pxp.push_back(0.0);
+          		   Pyp.push_back(0.0);
+          		   Pzp.push_back(0.0);
+          		   Mass.push_back(12.13254);
+          		   ExE.push_back(0.0);
 
 
                   // ---- Recoil -----
-		             Zp.push_back(1); // p  TRACKID=2
+		             Zp.push_back(0); // n  TRACKID=2
 		             Ap.push_back(1); //
 		             Qp.push_back(0); //
 		             Pxp.push_back(0.0);
                  Pyp.push_back(0.0);
 		             Pzp.push_back(0.0);
-                 Mass.push_back(0.93827203);
+                 Mass.push_back(0.9395654);
 		             ExE.push_back(0.0);//In MeV
 
 

@@ -174,7 +174,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 	TParticle* beam_part0 = stack->GetParticle(stack->GetCurrentTrackNumber());
         std::cout<<" Current particle mass  "<<beam_part0->GetMass()<<std::endl;*/
 
-   if (gMC->IsTrackEntering())
+    if (gMC->IsTrackEntering())
     {
          fELoss = 0.;
          fELossAcc = 0.;
@@ -201,22 +201,22 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
          LOG(INFO)<<" Initial energy of the current particle in this volume : "<<((gMC->Etot() - gMC->TrackMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
          //LOG(INFO)<<" Total energy of the current track (gMC) : "<<((gMC->Etot() - gMC->TrackMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
 
-        /*
-         std::cout<<" Recoil Energy : "<<gATVP->GetRecoilE()<<std::endl;
-	 std::cout<<" Scattered Energy : "<<gATVP->GetScatterE()<<std::endl;
-         std::cout<<" Recoil Angle : "<<gATVP->GetRecoilA()<<std::endl;
-	 std::cout<<" Scattered Angle : "<<gATVP->GetScatterA()<<std::endl;*/
+              /*
+               std::cout<<" Recoil Energy : "<<gATVP->GetRecoilE()<<std::endl;
+      	 std::cout<<" Scattered Energy : "<<gATVP->GetScatterE()<<std::endl;
+               std::cout<<" Recoil Angle : "<<gATVP->GetRecoilA()<<std::endl;
+      	 std::cout<<" Scattered Angle : "<<gATVP->GetScatterA()<<std::endl;*/
     }
 
-    //
-    fELoss = gMC->Edep();
-    fELossAcc+= fELoss;
-    fTime = gMC->TrackTime() * 1.0e09;
-    fLength = gMC->TrackLength();
-    gMC->TrackPosition(fPosIn);
-    gMC->TrackMomentum(fMomIn);
-    fTrackID  = gMC->GetStack()->GetCurrentTrackNumber();
-    fVolumeID = vol->getMCid();
+      //
+      fELoss = gMC->Edep();
+      fELossAcc+= fELoss;
+      fTime = gMC->TrackTime() * 1.0e09;
+      fLength = gMC->TrackLength();
+      gMC->TrackPosition(fPosIn);
+      gMC->TrackMomentum(fMomIn);
+      fTrackID  = gMC->GetStack()->GetCurrentTrackNumber();
+      fVolumeID = vol->getMCid();
 
     // Set additional parameters at exit of active volume. Create R3BTraPoint.
     if (gMC->IsTrackExiting() || gMC->IsTrackStop() || gMC->IsTrackDisappeared())
@@ -282,7 +282,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 
 
 
-              	    if( gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0) { // We assume that the beam-like particle is fTrackID==0 since it is the first one added
+              	 if( gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0) { // We assume that the beam-like particle is fTrackID==0 since it is the first one added
               														//  in the Primary Generator
 
                              // std::cout<<" Current Decay particle count : "<<gATVP->GetDecayEvtCnt()<<std::endl;
@@ -329,8 +329,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 
 
 
-              	}
-                      else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==2)
+              	}else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==2)
               	{
 
                		AddHit(fTrackID,
@@ -439,7 +438,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 
 
         	if(fELossAcc*1000>gATVP->GetRndELoss()  &&   (gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0) && fVolName=="drift_volume"){
-        	 LOG(INFO)<<" Beam energy loss before reaction : "<<fELossAcc*1000<<FairLogger::endl;
+        	       LOG(INFO)<<" Beam energy loss before reaction : "<<fELossAcc*1000<<FairLogger::endl;
         	       gMC->StopTrack();
                  gATVP->ResetVertex();
                  TLorentzVector StopPos;
