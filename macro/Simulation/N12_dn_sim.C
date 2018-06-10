@@ -4,10 +4,10 @@ void N12_dn_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile ="./data/attpcsim_proto.root";
+  TString outFile ="./data/attpcsim.root";
 
   // Parameter file name
-  TString parFile="./data/attpcpar_proto.root";
+  TString parFile="./data/attpcpar.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -37,14 +37,14 @@ void N12_dn_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
   cave->SetGeometryFileName("cave.geo");
   run->AddModule(cave);
 
-  FairModule* magnet = new AtMagnet("Magnet");
-  run->AddModule(magnet);
+  /*FairModule* magnet = new AtMagnet("Magnet");
+  run->AddModule(magnet);*/
 
   /*FairModule* pipe = new AtPipe("Pipe");
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_Proto_C4H10_50torr.root");
+  ATTPC->SetGeometryFileName("ATTPC_CD4_760torr.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
@@ -75,10 +75,10 @@ void N12_dn_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 	              Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
 	              Double_t px = 0.000/a;  // X-Momentum / per nucleon!!!!!!
 	              Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
-	              Double_t pz = 2.029/a;  // Z-Momentum / per nucleon!!!!!!
+	              Double_t pz = 1.648/a;  // Z-Momentum / per nucleon!!!!!!
   	            Double_t BExcEner = 0.0;
                 Double_t Bmass = 11.19527; //Mass in GeV
-                Double_t NomEnergy = 120.88; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
+                Double_t NomEnergy = 120.72; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
                 Double_t TargetMass = 1.8756129;//Mass in GeV
 
 

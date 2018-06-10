@@ -241,6 +241,9 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
 
               }
 
+
+              if(gATVP->GetValidKine()){
+
                        Double_t t_cm2=t_cm*t_cm;
                        Double_t t3_cm=(t_cm2+2.*fWm.at(3)*t_cm)/(t_cm+fWm.at(2)+fWm.at(3))/2.0;
                        Double_t t4_cm=(t_cm2+2.*fWm.at(2)*t_cm)/(t_cm+fWm.at(2)+fWm.at(3))/2.0;
@@ -305,6 +308,9 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
                           std::cout << " Recoil energy:" << Ene.at(1) << " MeV" << std::endl;
                           std::cout << " Recoiled angle:"  << Ang.at(1)*180.0/TMath::Pi() << " deg" << std::endl;
                       }
+
+
+
 
                       gATVP->SetRecoilE(Ene.at(1));
                       gATVP->SetRecoilA(Ang.at(1)*180.0/TMath::Pi());
@@ -402,9 +408,31 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
                             LOG(DEBUG)<<" Direction 2 Theta : "<<direction2.Theta()*180.0/TMath::Pi()<<FairLogger::endl;
                             LOG(DEBUG)<<" Direction 2 Phi : "<<direction2.Phi()*180.0/TMath::Pi()<<FairLogger::endl;
 
+                            fPx.at(2) = p3_lab*direction1.X()/1000.0; // To GeV for FairRoot
+                            fPy.at(2) = p3_lab*direction1.Y()/1000.0;
+                            fPz.at(2) = p3_lab*direction1.Z()/1000.0;
+
+                            fPx.at(3) = p4_lab*direction2.X()/1000.0;
+                            fPy.at(3) = p4_lab*direction2.Y()/1000.0;
+                            fPz.at(3) = p4_lab*direction2.Z()/1000.0;
+
+              }else{
+
+                   fPx.at(2) = 0.0; // To GeV for FairRoot
+                   fPy.at(2) = 0.0;
+                   fPz.at(2) = 0.0;
+
+                   fPx.at(3) = 0.0;
+                   fPy.at(3) = 0.0;
+                   fPz.at(3) = 0.0;
 
 
-                          if(!gATVP->GetValidKine()){
+
+              }
+
+
+
+                         /* if(!gATVP->GetValidKine()){
 
                             fPx.at(2) = 0.0; // To GeV for FairRoot
                             fPy.at(2) = 0.0;
@@ -424,7 +452,9 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
                             fPy.at(3) = p4_lab*direction2.Y()/1000.0;
                     	      fPz.at(3) = p4_lab*direction2.Z()/1000.0;
 
-                          }
+                          }*/
+
+
 
                              // Debugging purposes
 
