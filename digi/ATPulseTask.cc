@@ -85,10 +85,18 @@ struct vPad{
   Int_t padnumb;
 };
 
+Double_t PadResponse(Double_t *x, Double_t *par)
+{
+    return par[0] * TMath::Exp(-3.0*(x[0]-par[1])/par[2] )  * TMath::Sin((x[0]-par[1])/par[2]) * TMath::Power((x[0]-par[1])/par[2],3);
+    
+} 
+
 void
 ATPulseTask::Exec(Option_t* option)
 {
   fLogger->Debug(MESSAGE_ORIGIN,"Exec of ATPulseTask");
+
+  Double_t tau  = 1; //shaping time (us)
 
 
   Int_t nMCPoints = fDriftedElectronArray->GetEntries();
@@ -102,7 +110,45 @@ ATPulseTask::Exec(Option_t* option)
   fRawEvent = NULL;
   fRawEvent = (ATRawEvent*)fRawEventArray->ConstructedAt(0);
 
+  fPadPlane->Reset(0);
+
   Int_t size = fRawEventArray -> GetEntriesFast();
+
+  std::map<int,std::vector<TF1> > pulseMap;
+
+  TFile output("test_output.root","recreate");
+
+
+    //Distributing electron pulses among the pads
+    for(Int_t iEvents = 0; iEvents<nMCPoints; iEvents++){//for every electron
+
+          auto dElectron   = (ATSimulatedPoint*) fDriftedElectronArray -> At(iEvents); 
+          auto coord       = dElectron->GetPosition();
+          auto xElectron   = coord (0); //mm
+          auto yElectron   = coord (1); //mm
+          auto eTime       = coord (2); //us
+          auto padNumber   = (int)fPadPlane->Fill(xElectron,yElectron) - 1;
+
+          //std::cout<<pBin<<"  "<<coord(0)<<"  "<<coord(1)<<"  "<<coord(2)<<"\n";
+
+          TF1 ePulse(Form("ePulse_%i",iEvents),PadResponse,0,100,3);
+          ePulse.SetParameter(0,fGain);
+          ePulse.SetParameter(1,eTime);
+          ePulse.SetParameter(2,tau);
+
+          output.cd();
+          ePulse.Write();
+
+          pulseMap[padNumber].push_back(ePulse);
+
+    } 
+
+
+    output.Close();
+
+
+
+  /*
    Double_t e                       = 2.718;
    Double_t tau                     = 1; //shaping time (us)
    Double_t samplingtime            = 60;
@@ -134,8 +180,9 @@ ATPulseTask::Exec(Option_t* option)
          //std::cout<<"Total number of entries: "<<cGREEN<<nEvents<<cNORMAL<<std::endl;
          //#pragma omp parallel for ordered schedule(dynamic,1)
        for(Int_t iEvents = 1; iEvents<nMCPoints; iEvents++){//for every electron
+
          dElectron                     = (ATSimulatedPoint*) fDriftedElectronArray -> At(iEvents);
-         coord                         = dElectron->GetPosition();
+         
          xElectron                     = coord (0); //mm
          yElectron                     = coord (1); //mm
          eTime                         = coord (2); //us
@@ -145,7 +192,7 @@ ATPulseTask::Exec(Option_t* option)
          Double_t pointmem[1000][3]    = {0};
          Double_t digital[512]         = {0};
 
-         //*******Create new element in padarray if there's a new pad******//
+         //Create new element in padarray if there's a new pad
          TString check = kTRUE;
          vsize  = padarray.size();
          for(Int_t r = 0; r<vsize; r++){
@@ -159,14 +206,14 @@ ATPulseTask::Exec(Option_t* option)
 
          //if(iEvents % 1000 == 0)   std::cout<<"Number of Electrons Processed: "<<cRED<<iEvents<<cNORMAL<<std::endl;
 
-         // *********Pulse Generation for each electron************
+         //Pulse Generation for each electron
          for(Double_t j = eTime; j<eTime+10; j+=samplingrate/5){
            output                = pow(2.718,-3*((j-eTime)/tau))*sin((j-eTime)/tau)*pow((j-eTime)/tau,3);
            pointmem[counter][0]  = j;
            pointmem[counter][1]  = output;
            counter++;
 
-           // **************Once a point is assigned a height in time, it assigns time to a time bucket********************
+           // Once a point is assigned a height in time, it assigns time to a time bucket
            for(Int_t k = 0; k<512; k++){//go through all time buckets
              if(j>=timeBucket[k] && j<timeBucket[k+1]){//if point on pulse is in this time bucket, assign it that time bucket
                pointmem[counter][2]  = k;
@@ -175,7 +222,7 @@ ATPulseTask::Exec(Option_t* option)
            }//end assigning pulse to time buckets
          }//end plotting pulse function
 
-         //*********Once pulse is generated, it adds points to the running average********
+         //Once pulse is generated, it adds points to the running average
          Int_t pTimebucket  = pointmem[0][2];
          Int_t A            = 0;
          Int_t nOPoints     = 0;
@@ -193,7 +240,7 @@ ATPulseTask::Exec(Option_t* option)
            }
          }
 
-         // ********Adds pulse to output array**************
+         // Adds pulse to output array
          vsize  = padarray.size();
          for(Int_t y = 0; y<vsize; y++){
            if(padarray[y].padnumb == padNumber){
@@ -205,7 +252,7 @@ ATPulseTask::Exec(Option_t* option)
          }
        }// end through all electrons
 
-// ***************Set Pad and add to event**************
+// Set Pad and add to event
        vsize = padarray.size();
        Int_t thepad;
        for(Int_t q = 0; q<vsize; q++){
@@ -228,7 +275,8 @@ ATPulseTask::Exec(Option_t* option)
        }
            fEventID++;
            padarray.clear();
-  //return;
+  //return;*/
 }
+
 
 ClassImp(ATPulseTask);

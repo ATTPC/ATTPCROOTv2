@@ -177,7 +177,7 @@ ATClusterizeTask::Exec(Option_t* option)
           	   //std::cout << "Final point: " << x_post << " "<< y_post << " " << z_post << std::endl;
           	   //if ENERGY IS DISTRIBUTED FROM present Point position to previous Point position
           	  // std::cout << "Init point: " << x_pre << " " << y_pre << " " << z_pre << std::endl;
-          	   std::cout << "Final point: " << x << " "<< y << " " << z << " " << fMCPoint->GetTrackID() <<std::endl;
+          	   //std::cout << "Final point: " << x << " "<< y << " " << z << " " << fMCPoint->GetTrackID() <<std::endl;
           	 
                   
                      //std::cout<<" tTime : "<<tTime<<" - x : "<<x<<" - y : "<<y<<" - z : "<<z<<" Time "<<tTime<<"\n";
@@ -186,6 +186,7 @@ ATClusterizeTask::Exec(Option_t* option)
                      nElectrons        = energyLoss_rec/fEIonize; //mean electrons generated
                      eFlux             = pow(fano*nElectrons, 0.5);//fluctuation of generated electrons
                      genElectrons      = gRandom->Gaus(nElectrons, eFlux);//generated electrons
+                     //std::cout<<" nElectrons "<<nElectrons<<" Gen Electrons "<<genElectrons<<"\n";
           	   
           	   //step in each direction for an homogeneous electron creation position along the track
           	   //stepX = (x_post-x) / genElectrons;
@@ -210,10 +211,10 @@ ATClusterizeTask::Exec(Option_t* option)
                    propX           = x_pre+stepX*charge + r*TMath::Cos(phi);
                    propY           = y_pre+stepY*charge + r*TMath::Sin(phi);
                    driftLength     = driftLength + (gRandom -> Gaus(0,sigstrlong)); //mm
-                   driftTime       = ((driftLength/10)/fVelDrift) +(tTime); //us
+                   driftTime       = ((driftLength/10)/fVelDrift); //us
                    //NB: tTime in the simulation is 0 for the first simulation point
                    //std::cout<<i<<"  "<<charge<<"  "<<" Drift velocity "<<fVelDrift<<" driftTime : "<<driftTime<<" tTime "<<tTime<<"\n";
-                   std::cout<<" Position of electron "<<charge<<" : "<<propX<<" : "<<propY<<"\n";
+                   //std::cout<<" Position of electron "<<charge<<" : "<<propX<<" : "<<propY<<"\n";
                    electronNumber  +=1;
 
                    //Fill container ATSimulatedPoint
@@ -224,7 +225,13 @@ ATClusterizeTask::Exec(Option_t* option)
                                                                           propY,  //Y
                                                                           driftTime);  //Z
           }//end producing e- and filling ATSimpoint
+
+
+          x_pre = x; y_pre = y; z_pre = z;
+
      }//end if drift volume
+
+
  }//end through all interaction points
 
 

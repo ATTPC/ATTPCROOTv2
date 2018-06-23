@@ -47,7 +47,7 @@ TString trigParFile = "/Users/yassid/fair_install/ATTPCROOTv2/parameters/AT.trig
 
 
   fRun -> AddTask(clusterizer);
-  //fRun -> AddTask(pulse);
+  fRun -> AddTask(pulse);
   //fRun -> AddTask(psaTask);
   //`fRun -> AddTask(trigTask);
 

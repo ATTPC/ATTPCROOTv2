@@ -30,6 +30,8 @@ class ATPulseTask : public FairTask
      ATPulseTask();
      ~ATPulseTask();
 
+
+
     void SetPersistence(Bool_t val) { fIsPersistent = val; }
     virtual InitStatus Init();        //!< Initiliazation of task at the beginning of a run.
     virtual void Exec(Option_t* opt); //!< Executed for each event.
@@ -37,7 +39,7 @@ class ATPulseTask : public FairTask
 
    private:
     ATGas*     fGas;                     //!< Gas parameter container.
-    ATDigiPar* fPar; //!< Base parameter container.
+    ATDigiPar* fPar;                     //!< Base parameter container.
     Int_t fEventID;                      //!< EventID
     Double_t fGain;                      //!< Gain.
     Bool_t fIsPersistent;                //!< If true, save container
@@ -49,7 +51,7 @@ class ATPulseTask : public FairTask
     Int_t fInternalID;                   //!<Internal ID
 
 
-     ClassDef(ATPulseTask,1);
+    ClassDef(ATPulseTask,1);
 
 };
 
