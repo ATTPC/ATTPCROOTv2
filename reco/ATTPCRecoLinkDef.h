@@ -23,6 +23,7 @@
 
 #pragma link C++ class ATCore+;
 #pragma link C++ class ATCore2+;
+//#pragma link C++ class ATHDFParser+;
 #pragma link C++ class ATPad+;
 #pragma link C++ class ATRawEvent+;
 #pragma link C++ class ATHit+;

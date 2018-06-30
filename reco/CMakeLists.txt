@@ -74,6 +74,7 @@ ATDecoder/ATPatternEvent.cc
 ATDecoder/ATProtoQuadrant.cc
 ATDecoder/ATPedestal.cc
 ATDecoder/ATTrack.cc
+ATDecoder/ATHDFParser.cc
 
 ATPulseAnalyzer/ATPSA.cc
 ATPulseAnalyzer/ATPSASimple.cc
