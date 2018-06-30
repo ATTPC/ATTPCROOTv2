@@ -125,6 +125,7 @@ ATPatternRecognition/fastcluster.cc
 
 ATDecoderTask.cc
 ATDecoder2Task.cc
+ATHDFParserTask.cc
 ATPSATask.cc
 ATPhiRecoTask.cc
 ATHoughTask.cc
