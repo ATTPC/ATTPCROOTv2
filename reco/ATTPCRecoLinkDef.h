@@ -38,7 +38,6 @@
 
 #pragma link C++ class ATDecoderTask+;
 #pragma link C++ class ATDecoder2Task+;
-//#pragma link C++ class ATHDFParserTask+;
 
 #pragma link C++ class ATPSA+;
 #pragma link C++ class ATPSASimple+;
@@ -104,6 +103,7 @@
 #pragma link C++ class ATTrackingAnalysis+;
 #pragma link C++ struct ATHoughSpaceCircle::FitPar+;
 #pragma link C++ struct ATTrack::FitPar+;
+#pragma link C++ class ATHDFParserTask+;
 //#pragma link C++ function ATHoughSpaceLine::CalcGenHoughSpace<ATEvent*>(GenHough event);
 
 

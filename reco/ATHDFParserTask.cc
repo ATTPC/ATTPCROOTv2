@@ -20,35 +20,30 @@ ATHDFParserTask::ATHDFParserTask()
   fRawEventArray = new TClonesArray("ATRawEvent");
   fEventID = -1;
   fRawEvent = new ATRawEvent();
-
+  
 }
 
 ATHDFParserTask::~ATHDFParserTask()
 {
-	delete fRawEvent;
+  delete fRawEvent;
 }
 
-void ATHDFParserTask::SetPersistence(Bool_t value)                                                { fIsPersistence = value; }
+void ATHDFParserTask::SetPersistence(Bool_t value)
+{ fIsPersistence = value; }
 
 
 InitStatus ATHDFParserTask::Init()
 {
   FairRootManager *ioMan = FairRootManager::Instance();
   if (ioMan == 0) {
-    fLogger -> Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
-
+    fLogger -> Error(MESSAGE_ORIGIN, "Cannot find RootManager!");  
     return kERROR;
   }
-
-
+  
   //Need try-catch
   HDFParser = std::make_unique<ATHDFParser>();
   HDFParser->open(fFileName.c_str());
-
-  ioMan -> Register("ATRawEvent", "ATTPC", fRawEventArray, fIsPersistence);
-
- 
-    
+  ioMan -> Register("ATRawEvent", "ATTPC", fRawEventArray, fIsPersistence);  
   return kSUCCESS;
 }
 
@@ -57,11 +52,11 @@ void ATHDFParserTask::SetParContainers()
   FairRun *run = FairRun::Instance();
   if (!run)
     fLogger -> Fatal(MESSAGE_ORIGIN, "No analysis run!");
-
+  
   FairRuntimeDb *db = run -> GetRuntimeDb();
   if (!db)
     fLogger -> Fatal(MESSAGE_ORIGIN, "No runtime database!");
-
+  
   fPar = (ATDigiPar *) db -> getContainer("ATDigiPar");
   if (!fPar)
     fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find ATDigiPar!");
@@ -69,36 +64,29 @@ void ATHDFParserTask::SetParContainers()
 
 void ATHDFParserTask::Exec(Option_t *opt)
 {
-
   fRawEventArray -> Delete();
   fRawEvent->Clear();
-  	 
-  std::size_t npads = HDFParser->n_pads(fEventID++);
-
   
-
-    //fInternalID++;
-    //if(fInternalID%100==0) std::cout<<" Event Number "<<fEventID<<" Internal ID : "<<fInternalID<<" Number of Pads : "<<fRawEvent->GetNumPads()<<std::endl;
-
+  std::size_t npads = HDFParser->n_pads(fEventID++);
+  
+  //fInternalID++;
+  //if(fInternalID%100==0) std::cout<<" Event Number "<<fEventID<<" Internal ID : "<<fInternalID<<" Number of Pads : "<<fRawEvent->GetNumPads()<<std::endl;
+  
   //new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
-
-
 }
 
 Int_t ATHDFParserTask::ReadEvent(Int_t eventID)
 {
   //fRawEventArray -> Delete();
-
+  
   //fRawEvent = fDecoder -> GetRawEvent(eventID);
   //fEventIDLast = fDecoder -> GetEventID();
-
+  
   //if (fRawEvent == NULL)
-    //return 1;
-
+  //return 1;
+  
   //new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
-
-
-
+  
   return 0;
 }
 
@@ -106,12 +94,10 @@ Int_t ATHDFParserTask::ReadEvent(Int_t eventID)
 void ATHDFParserTask::FinishEvent()
 {
   /*fRawEvent = fDecoder -> GetRawEvent();
-
-  if (fRawEvent == NULL)
-  {
+    
+    if (fRawEvent == NULL)
+    {
     fLogger -> Info(MESSAGE_ORIGIN, "End of file. Terminating FairRun.");
     FairRootManager::Instance() -> SetFinishRun();
-  }*/
+    }*/
 }
-
-
