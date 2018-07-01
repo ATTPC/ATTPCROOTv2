@@ -19,11 +19,13 @@ ATHDFParserTask::ATHDFParserTask()
   fIsPersistence = kFALSE;
   fRawEventArray = new TClonesArray("ATRawEvent");
   fEventID = -1;
+  fRawEvent = new ATRawEvent();
 
 }
 
 ATHDFParserTask::~ATHDFParserTask()
 {
+	delete fRawEvent;
 }
 
 void ATHDFParserTask::SetPersistence(Bool_t value)                                                { fIsPersistence = value; }
@@ -38,10 +40,14 @@ InitStatus ATHDFParserTask::Init()
     return kERROR;
   }
 
+
+  //Need try-catch
+  HDFParser = std::make_unique<ATHDFParser>();
+  HDFParser->open(fFileName.c_str());
+
   ioMan -> Register("ATRawEvent", "ATTPC", fRawEventArray, fIsPersistence);
 
-  HDFParser = std::make_unique<ATHDFParser>();
-
+ 
     
   return kSUCCESS;
 }
@@ -65,30 +71,31 @@ void ATHDFParserTask::Exec(Option_t *opt)
 {
 
   fRawEventArray -> Delete();
+  fRawEvent->Clear();
+  	 
+  std::size_t npads = HDFParser->n_pads(fEventID++);
 
-  if (fRawEvent == NULL)
-	//fRawEvent = fDecoder -> GetRawEvent(fEventID++);
+  
 
     //fInternalID++;
     //if(fInternalID%100==0) std::cout<<" Event Number "<<fEventID<<" Internal ID : "<<fInternalID<<" Number of Pads : "<<fRawEvent->GetNumPads()<<std::endl;
 
-  new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
+  //new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
 
-  fRawEvent = NULL;
 
 }
 
 Int_t ATHDFParserTask::ReadEvent(Int_t eventID)
 {
-  fRawEventArray -> Delete();
+  //fRawEventArray -> Delete();
 
   //fRawEvent = fDecoder -> GetRawEvent(eventID);
   //fEventIDLast = fDecoder -> GetEventID();
 
-  if (fRawEvent == NULL)
-    return 1;
+  //if (fRawEvent == NULL)
+    //return 1;
 
-  new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
+  //new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
 
 
 

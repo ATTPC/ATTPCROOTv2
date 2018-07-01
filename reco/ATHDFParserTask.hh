@@ -30,6 +30,7 @@ class ATHDFParserTask : public FairTask {
 
 	  void SetPersistence(Bool_t value = kTRUE); 
 	  Int_t ReadEvent(Int_t eventID);
+	  void SetFileName(std::string filename) {fFileName = filename;}
 
 	  virtual InitStatus Init();
 	  virtual void SetParContainers();
@@ -39,10 +40,11 @@ class ATHDFParserTask : public FairTask {
   private:
 
   		FairLogger *fLogger;
+  		std::string fFileName;
   		std::unique_ptr<ATHDFParser> HDFParser;
   		ATDigiPar *fPar;
   		TClonesArray *fRawEventArray;       
-        ATRawEvent *fRawEvent;
+        ATRawEvent* fRawEvent;
 
         Long64_t fEventIDLast;              ///< Last event ID
         Long64_t fEventID;                  ///< Event ID for STSource            

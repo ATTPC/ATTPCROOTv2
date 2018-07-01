@@ -1,13 +1,12 @@
+/*********************************************************************
+* 
+*********************************************************************/
+
 #ifndef _ATHDFPARSER_H_
 #define _ATHDFPARSER_H_
 
 #include "TObject.h"
-#include "TString.h"
-#include "TClonesArray.h"
-
-#include "ATRawEvent.hh"
-#include "AtTpcMap.h"
-#include "AtTpcProtoMap.h"
+#include "TROOT.h"
 
 #include <hdf5.h>
 
@@ -17,17 +16,14 @@
 
 #include <iostream>
 
-
-
 class ATHDFParser : public TObject {
 
-	class ATHDFParser_impl;
-    std::unique_ptr<ATHDFParser_impl, void(*)(ATHDFParser_impl*)> _pimpl;
-
   public:
-    ATHDFParser();
 
-  enum class IO_MODE {
+     ATHDFParser();
+    ~ATHDFParser();
+
+    enum class IO_MODE {
       READ,
       WRITE
     };
@@ -56,9 +52,15 @@ class ATHDFParser : public TObject {
     void end_raw_event();
     void close();
 
+  private:
 
+	 hid_t _file;
+	 hid_t _group;
+	 hid_t _dataset;
+	 
+   
 
- ClassDef(ATHDFParser, 1);
+  ClassDef(ATHDFParser, 1);
 };
 
-#endif   
+#endif

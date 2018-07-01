@@ -23,7 +23,7 @@
 
 #pragma link C++ class ATCore+;
 #pragma link C++ class ATCore2+;
-//#pragma link C++ class ATHDFParser+;
+#pragma link C++ class ATHDFParser+;
 #pragma link C++ class ATPad+;
 #pragma link C++ class ATRawEvent+;
 #pragma link C++ class ATHit+;
@@ -38,6 +38,7 @@
 
 #pragma link C++ class ATDecoderTask+;
 #pragma link C++ class ATDecoder2Task+;
+//#pragma link C++ class ATHDFParserTask+;
 
 #pragma link C++ class ATPSA+;
 #pragma link C++ class ATPSASimple+;
@@ -81,7 +82,6 @@
 #pragma link C++ class ATPSATask+;
 #pragma link C++ class ATPhiRecoTask+;
 
-#pragma link C++ class ATFindVertex+; // TODO: move somewhere else?
 #pragma link C++ class ATHierarchicalClusteringTask+;
 //#pragma link C++ class ATTrackFinderHCTask+;
 #pragma link C++ class ATPRATask+;
