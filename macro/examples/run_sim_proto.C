@@ -1,4 +1,4 @@
-void run_sim_proto(Int_t nEvents = 100, TString mcEngine = "TGeant4")
+void run_sim_proto(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 {
     
   TString dir = getenv("VMCWORKDIR");

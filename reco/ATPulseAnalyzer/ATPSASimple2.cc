@@ -40,7 +40,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
 
   Int_t iPad=0;
-  #pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
+  //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
   for (iPad = 0; iPad < numPads; iPad++) {
 
 
@@ -60,9 +60,6 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       ry.RotateY(180.0*TMath::Pi()/180.0);
       rx.RotateX(6.0*TMath::Pi()/180.0);
 
-
-      //Double_t xPos = CalculateX(pad -> GetRow()); //Obsolete
-    //Double_t zPos = CalculateZ(pad -> GetLayer());
     Double_t xPos = pad -> GetPadXCoord();
     Double_t yPos = pad -> GetPadYCoord();
     Double_t zPos = 0;

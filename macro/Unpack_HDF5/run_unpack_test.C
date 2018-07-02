@@ -28,7 +28,7 @@ void run_unpack_test(std::string dataFile = "/home/ayyadlim/Desktop/test.h5",TSt
   //TString mcParFile   = dataDir + name + ".params.root";
   TString loggerFile  = dataDir + "ATTPCLog.log";
   TString digiParFile = dir + "/parameters/" + parameterFile;
-  TString geoManFile  = dir + "/geometry/ATTPC_v1.2.root";
+  TString geoManFile  = dir + "/geometry/ATTPC_v1.1.root";
 
   TString inimap   = mappath + "inhib.txt";
   TString lowgmap  = mappath + "lowgain.txt";
@@ -56,14 +56,26 @@ void run_unpack_test(std::string dataFile = "/home/ayyadlim/Desktop/test.h5",TSt
   rtdb -> setSecondInput(parIo1);
 
   ATHDFParserTask* HDFParserTask = new ATHDFParserTask();
-  HDFParserTask->SetPersistence(kTRUE);
+  HDFParserTask->SetPersistence(kFALSE);
+  HDFParserTask->SetATTPCMap(scriptdir.Data());
   HDFParserTask->SetFileName(dataFile);
+
+  ATPSATask *psaTask = new ATPSATask();
+  psaTask -> SetPersistence(kTRUE);
+  psaTask -> SetThreshold(10);
+  psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC
+  //psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
+  psaTask -> SetMaxFinder();
+  //psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
+  //psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
+  
   
   run -> AddTask(HDFParserTask);
+  run -> AddTask(psaTask);
 
   run -> Init();
 
-  run->Run(0,10);
+  run->Run(0,100);
   //run -> RunOnTBData();
 
 

@@ -19,6 +19,11 @@
 #include <vector>
 #include <memory>
 
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+
 class ATHDFParserTask : public FairTask {
   
 public:
@@ -27,8 +32,8 @@ public:
   ~ATHDFParserTask();
   
   void SetPersistence(Bool_t value = kTRUE); 
-  Int_t ReadEvent(Int_t eventID);
   void SetFileName(std::string filename) {fFileName = filename;}
+  bool SetATTPCMap(Char_t const *lookup);
   
   virtual InitStatus Init();
   virtual void SetParContainers();
@@ -47,7 +52,15 @@ private:
   std::size_t fNumEvents;            
   
   Bool_t fIsPersistence;  
-  std::string fFileName;            
+  std::string fFileName;
+
+  char const *fMap;
+  AtTpcMap *fAtMapPtr;
+
+  typedef boost::multi_array<double,3> multiarray;
+  typedef multiarray::index index;
+  multiarray AtPadCoordArr;
+             
   
   ClassDef(ATHDFParserTask, 1);
 };

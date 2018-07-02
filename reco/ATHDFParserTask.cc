@@ -13,24 +13,44 @@
 
 ClassImp(ATHDFParserTask);
 
-ATHDFParserTask::ATHDFParserTask()
+ATHDFParserTask::ATHDFParserTask():AtPadCoordArr(boost::extents[10240][3][2])
 {
   fLogger = FairLogger::GetLogger();
   fIsPersistence = kFALSE;
   fRawEventArray = new TClonesArray("ATRawEvent");
   fEventID = 0;
   fRawEvent = new ATRawEvent();
+  fAtMapPtr = new AtTpcMap();
 
   
 }
 
 ATHDFParserTask::~ATHDFParserTask()
 {
+	delete fRawEventArray;
+	delete fRawEvent;
+	delete fAtMapPtr;
   
 }
 
 void ATHDFParserTask::SetPersistence(Bool_t value)
 { fIsPersistence = value; }
+
+bool ATHDFParserTask::SetATTPCMap(Char_t const *lookup){
+
+  fAtMapPtr->GenerateATTPC();
+  Bool_t MapIn = fAtMapPtr->ParseXMLMap(lookup);
+  if(!MapIn) return false;
+
+  std::cout<<cGREEN<<" Open lookup table "<<lookup<<cNORMAL<<"\n";
+
+  //AtPadCoordArr = fAtMapPtr->GetPadCoordArr();//TODO Use a pointer to a simpler container
+  //**** For debugging purposes only! ******//
+  //fAtMapPtr->SetGUIMode();
+  //fAtMapPtr->GetATTPCPlane();
+  return true;
+
+}
 
 
 InitStatus ATHDFParserTask::Init()
@@ -69,32 +89,63 @@ void ATHDFParserTask::Exec(Option_t *opt)
   fRawEventArray -> Delete();
   fRawEvent->Clear();
   
-  std::cout<<fEventID<<"\n";
+  std::cout<<" Event : "<<fEventID<<"\n";
 
   std::size_t npads = HDFParser->n_pads(fEventID++);
 
-  std::cout<<npads<<"\n";
+  //std::cout<<npads<<"\n";
+
+  	for(auto ipad=0;ipad<npads;++ipad)
+  	{
+  		
+
+  		std::vector<int16_t> rawadc = HDFParser->pad_raw_data(ipad);
+
+  		int iCobo = rawadc[0];
+  		int iAsad = rawadc[1];
+  		int iAget = rawadc[2];
+  		int iCh   = rawadc[3];
+  		int iPad  = rawadc[4];
+
+  		std::vector<int> PadRef={iCobo,iAsad,iAget,iCh};
+  		int PadRefNum = fAtMapPtr->GetPadNum(PadRef);
+  		std::vector<Float_t> PadCenterCoord;
+        PadCenterCoord.reserve(2);
+        PadCenterCoord = fAtMapPtr->CalcPadCenter(PadRefNum);
+
+  		ATPad *pad = new ATPad(PadRefNum);
+  		pad->SetPadXCoord(PadCenterCoord[0]);
+        pad->SetPadYCoord(PadCenterCoord[1]);
+
+        //Baseline subtraction
+        double adc[512] = {0};
+        double baseline =0;
+
+        for (Int_t iTb = 500; iTb < 517; iTb++)
+        	baseline+=rawadc[iTb];
+
+        baseline/=17.0;
+
+  		for (Int_t iTb = 0; iTb < 512; iTb++){
+  				  
+                  pad -> SetRawADC(iTb, rawadc.at(iTb+5));
+                  adc[iTb] = (double)rawadc[iTb+5] - baseline;
+                  //std::cout<<" iTb "<<iTb<<" rawadc "<<rawadc[iTb]<<"	"<<adc[iTb]<<"\n";
+                  pad -> SetADC(iTb, adc[iTb]);
+        }          
+
+        pad -> SetPedestalSubtracted(kTRUE);
+        
+        fRawEvent -> SetIsGood(kTRUE);
+        fRawEvent -> SetPad(pad); 
+
+
+  	}
   
-  //fInternalID++;
-  //if(fInternalID%100==0) std::cout<<" Event Number "<<fEventID<<" Internal ID : "<<fInternalID<<" Number of Pads : "<<fRawEvent->GetNumPads()<<std::endl;
-  
-  //new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
+    
+  new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
 }
 
-Int_t ATHDFParserTask::ReadEvent(Int_t eventID)
-{
-  //fRawEventArray -> Delete();
-  
-  //fRawEvent = fDecoder -> GetRawEvent(eventID);
-  //fEventIDLast = fDecoder -> GetEventID();
-  
-  //if (fRawEvent == NULL)
-  //return 1;
-  
-  //new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
-  
-  return 0;
-}
 
 
 void ATHDFParserTask::FinishEvent()
