@@ -38,16 +38,16 @@ public:
 private:
   
   FairLogger *fLogger;
-  std::string fFileName;
-  std::unique_ptr<ATHDFParser> HDFParser;
+  ATHDFParser* HDFParser;
   ATDigiPar *fPar;
   TClonesArray *fRawEventArray;       
   ATRawEvent* fRawEvent;
   
-  Long64_t fEventIDLast;              ///< Last event ID
-  Long64_t fEventID;                  ///< Event ID for STSource            
+  Long64_t    fEventID;                  
+  std::size_t fNumEvents;            
   
-  Bool_t fIsPersistence;              
+  Bool_t fIsPersistence;  
+  std::string fFileName;            
   
   ClassDef(ATHDFParserTask, 1);
 };

@@ -3,9 +3,8 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
-bool check_file(const std::string& name);
 
-void run_unpack_test(TString dataFile = "/home/ayyadlim/Desktop/test.h5",TString parameterFile = "ATTPC.alpha.par",TString mappath="/data/ar46/run_0085/")
+void run_unpack_test(std::string dataFile = "/home/ayyadlim/Desktop/test.h5",TString parameterFile = "ATTPC.alpha.par",TString mappath="/data/ar46/run_0085/")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -56,15 +55,15 @@ void run_unpack_test(TString dataFile = "/home/ayyadlim/Desktop/test.h5",TString
  // rtdb -> setFirstInput(parIo2);
   rtdb -> setSecondInput(parIo1);
 
-  std::unique_ptr<ATHDFParserTask> HDFParserTask = std::make_unique<ATHDFParserTask>();
+  ATHDFParserTask* HDFParserTask = new ATHDFParserTask();
   HDFParserTask->SetPersistence(kTRUE);
+  HDFParserTask->SetFileName(dataFile);
+  
+  run -> AddTask(HDFParserTask);
 
+  run -> Init();
 
-  //run -> AddTask(HDFParserTask);
-
-
-
-  //run->Run(0,1);
+  run->Run(0,10);
   //run -> RunOnTBData();
 
 

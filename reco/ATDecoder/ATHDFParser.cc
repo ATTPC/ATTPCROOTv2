@@ -25,7 +25,7 @@ hid_t ATHDFParser::open_file(char const* file, IO_MODE mode)
 
     if (fileId >= 0)
     {
-      //std::cout << "> hdf5_wrapper::open_file:MESSAGE, opening file: " << file << ", mode: " << mode << ", ID: " << fileId << '\n';
+      std::cout << "> hdf5_wrapper::open_file:MESSAGE, opening file: " << file << ", ID: " << fileId << '\n';
       return fileId;
     }
     else
