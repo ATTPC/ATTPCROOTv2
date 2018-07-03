@@ -4,7 +4,7 @@
 #define cGREEN "\033[1;32m"
 
 
-void run_unpack_test(std::string dataFile = "/home/ayyadlim/Desktop/test.h5",TString parameterFile = "ATTPC.alpha.par",TString mappath="/data/ar46/run_0085/")
+void run_unpack_test(std::string dataFile = "/home/ayyadlim/Desktop/test.h5",TString parameterFile = "ATTPC.e15250.par",TString mappath="")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -56,7 +56,7 @@ void run_unpack_test(std::string dataFile = "/home/ayyadlim/Desktop/test.h5",TSt
   rtdb -> setSecondInput(parIo1);
 
   ATHDFParserTask* HDFParserTask = new ATHDFParserTask();
-  HDFParserTask->SetPersistence(kFALSE);
+  HDFParserTask->SetPersistence(kTRUE);
   HDFParserTask->SetATTPCMap(scriptdir.Data());
   HDFParserTask->SetFileName(dataFile);
 
@@ -75,7 +75,7 @@ void run_unpack_test(std::string dataFile = "/home/ayyadlim/Desktop/test.h5",TSt
 
   run -> Init();
 
-  run->Run(0,100);
+  run->Run(0,10);
   //run -> RunOnTBData();
 
 

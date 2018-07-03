@@ -157,7 +157,7 @@ Set(DEPENDENCIES
     AtTpcMap
     ATPar
     Spectrum
-    hdf5
+    ${HDF5_LIBRARIES}
     ${Boost_LOG_LIBRARY}
     ${Boost_LOG_SETUP_LIBRARY}
     ${Boost_THREAD_LIBRARY}

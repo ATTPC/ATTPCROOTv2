@@ -43,6 +43,21 @@ std::tuple<hid_t, hsize_t> ATHDFParser::open_group(hid_t fileId, char const* gro
       //std::cout << "> hdf5_wrapper::open_group:MESSAGE, opening group: " << group << ", ID: " << groupId << '\n';
       hsize_t size;
       H5Gget_num_objs(groupId, &size);
+
+      //Determining the first event
+      std::vector<int16_t> events;
+      int cnt = 0;
+      for(auto isize=0;isize<size;++isize)
+      {
+	      char name[100];
+	      H5Lget_name_by_idx(groupId,".",H5_INDEX_NAME, H5_ITER_INC,isize,name,100, H5P_DEFAULT);
+	      events.push_back(std::atoi(name));
+	      ++cnt;
+	  }
+
+	 std::vector<int16_t>::iterator result = std::min_element(std::begin(events), std::end(events));
+     _inievent = events.at(std::distance(std::begin(events), result));
+
       return std::make_tuple(groupId, size);
     }
     else
@@ -125,6 +140,32 @@ std::vector<int16_t> ATHDFParser::pad_raw_data(std::size_t i_pad)
     std::vector<int16_t> datav(data,data+517);
     return datav;
 }
+
+int16_t ATHDFParser::inievent()
+{
+	return _inievent;
+}
+
+std::size_t ATHDFParser::datasets()
+{
+	herr_t idx = H5Literate(_group, H5_INDEX_NAME, H5_ITER_INC, NULL, file_info, NULL);
+}
+
+herr_t ATHDFParser::file_info(hid_t loc_id, const char *name, const H5L_info_t *linfo, void *opdata)
+{
+    hid_t group;
+    /*
+     * Open the group using its name.
+     */
+    group = H5Gopen2(loc_id, name, H5P_DEFAULT);
+    /*
+     * Display group name.
+     */
+    std::cout << "Name : " << name << "\n";
+    H5Gclose(group);
+    return 0;
+}
+
 
 void ATHDFParser::end_raw_event()
 {

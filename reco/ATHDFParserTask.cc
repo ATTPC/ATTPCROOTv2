@@ -65,6 +65,7 @@ InitStatus ATHDFParserTask::Init()
   HDFParser = new ATHDFParser();
   fNumEvents = HDFParser->open(fFileName.c_str());
   std::cout<<" Number of events : "<<fNumEvents<<"\n";
+  fEventID = HDFParser->inievent();
   ioMan -> Register("ATRawEvent", "ATTPC", fRawEventArray, fIsPersistence);
   return kSUCCESS;
 }
