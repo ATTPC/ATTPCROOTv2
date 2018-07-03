@@ -58,7 +58,7 @@ ATClusterizeTask::Init()
   ioman -> Register("ATSimulatedPoint", "cbmsim",fElectronNumberArray, fIsPersistent);
 
 
-  fEIonize  = fPar->GetEIonize()/1000; // [MeV]
+  fEIonize  = fPar->GetEIonize()/1000000; // [MeV]
   fVelDrift = fPar->GetDriftVelocity(); // [cm/us]
   fCoefT    = fPar->GetCoefDiffusionTrans()*sqrt(10.); // [cm^(-1/2)] to [mm^(-1/2)]
   fCoefL    = fPar->GetCoefDiffusionLong()*sqrt(10.);  // [cm^(-1/2)] to [mm^(-1/2)]

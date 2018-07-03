@@ -16,6 +16,7 @@
 #include "FairMCPoint.h"
 
 #include "TClonesArray.h"
+#include "TH1D.h"
 #include "ATDigiPar.hh"
 #include "TH2Poly.h"
 #include "AtTpcMap.h"
@@ -50,6 +51,8 @@ class ATPulseTask : public FairTask
     AtTpcMap *fMap;                      //!<ATTPC map
     Int_t fInternalID;                   //!<Internal ID
 
+  std::map<Int_t, TH1F*> electronsMap;    //!< 
+  TH1F* eleAccumulated;                  //!< 
 
     ClassDef(ATPulseTask,1);
 
