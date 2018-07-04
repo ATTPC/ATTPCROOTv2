@@ -4,6 +4,7 @@
 #include "ATPSASimple2.hh"
 #include "ATPSAProto.hh"
 #include "ATPSAFilter.hh"
+#include "ATPSAFull.hh"
 
 
 // FAIRROOT classes
@@ -98,6 +99,12 @@ ATPSATask::Init()
     fPSA = new ATPSAFilter();
     fPSA -> SetMeanK(fMeanK);
     fPSA -> SetStddevMulThresh(fStdDev);
+  
+  } else if (fPSAMode == 4) {
+    fLogger -> Info(MESSAGE_ORIGIN, "Using ATPSAFull!");
+
+    fPSA = new ATPSAFull();
+
   }
 
   fPSA -> SetThreshold((Int_t)fThreshold);

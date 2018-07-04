@@ -242,7 +242,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       //std::cout<<" Hit Coordinates : "<<xPos<<"  -  "<<yPos<<" - "<<zPos<<"  -  "<<std::endl;
       //std::cout<<" Is Pad"<<pad->GetPadNum()<<" Valid? "<<pad->GetValidPad()<<std::endl;
       //std::cout<<" TimeStamp : "<<maxAdcIdx<<" Time Max Interpolated : "<<timemax<<std::endl;
-      #pragma omp ordered
+      //#pragma omp ordered
       event -> AddHit(hit);
       delete hit;
 
@@ -263,7 +263,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
     //    #pragma omp ordered
       // if(fValidThreshold && fValidBuff){ PadMultiplicity.insert(std::pair<Int_t,Int_t>(PadNum,PadHitNum));std::cout<<" PadNum : "<<PadNum<<" PadHitNum : "<<PadHitNum<<std::endl;}
-      #pragma omp ordered
+      //#pragma omp ordered
       PadMultiplicity.insert(std::pair<Int_t,Int_t>(PadNum,PadHitNum));
 
     }//if Valid Num Peaks
