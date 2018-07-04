@@ -37,6 +37,7 @@ ATTPC_Background.cxx
 ATEulerTransformation.cxx
 ATTPCFissionGenerator.cxx
 ATTPCFissionGeneratorV2.cxx
+ATTPCXSReader.cxx
 )
 
 set(LINKDEF  GenLinkDef.h)

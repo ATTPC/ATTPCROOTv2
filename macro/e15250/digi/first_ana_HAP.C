@@ -7,12 +7,11 @@
 #include "TClonesArray.h"
 #include "TCanvas.h"
 #include "TMath.h"
-//#include </home/ayyadlim/fair_install_ROOT6/ATTPCROOT/tpc/AtTpcPoint.h>
 
 #include <iostream>
 #include <fstream>
 
-void first_ana(Int_t num_ev=10000){
+void first_ana_HAP(Int_t num_ev=10000){
   TH2D *Eloss_vs_Range_Sca = new TH2D("Eloss_vs_Range_Sca","ELoss_vs_Range_Sca",100,0,1000,300,0,300);
   Eloss_vs_Range_Sca->SetMarkerStyle(20);
   Eloss_vs_Range_Sca->SetMarkerSize(0.5);
@@ -84,10 +83,10 @@ void first_ana(Int_t num_ev=10000){
   TCanvas *c7 = new TCanvas();
   c7-> Draw();
   
-  TString mcFileNameHead = "../data/attpcsim_e15250_2";
+  TString mcFileNameHead = "../data/attpcsim_e15250_2M";
   TString mcFileNameTail = ".root";
   TString mcFileName     = mcFileNameHead + mcFileNameTail;
-  TString outFileNameHead = "../data/e15250ana_2";
+  TString outFileNameHead = "../data/e15250ana_2M";
   TString outFileNameTail = ".root";
   TString outFileName     = outFileNameHead + outFileNameTail;
   
@@ -237,7 +236,7 @@ void first_ana(Int_t num_ev=10000){
 	  thetamean+=theta;
 	  //std::cout<<" Point : "<<i<<" radius : "<<radius<<std::endl;
 	}
-	
+	RecELoss = energyLoss_rec;
 	//}
 	
 	
