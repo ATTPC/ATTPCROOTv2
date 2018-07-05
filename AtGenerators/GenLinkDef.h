@@ -29,6 +29,6 @@
 #pragma link C++ class  ATEulerTransformation+;
 #pragma link C++ class  ATTPCFissionGenerator+;
 #pragma link C++ class  ATTPCFissionGeneratorV2+;
-
+#pragma link C++ class  ATTPCXSReader+;
 
 #endif
