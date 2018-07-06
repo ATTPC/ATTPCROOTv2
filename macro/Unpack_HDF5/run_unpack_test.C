@@ -4,7 +4,7 @@
 #define cGREEN "\033[1;32m"
 
 
-void run_unpack_test(std::string dataFile = "/home/ayyadlim/Desktop/run_0097.h5",TString parameterFile = "ATTPC.e15250.par",TString mappath="")
+void run_unpack_test(std::string dataFile = "/home/ayyadlim/Desktop/run_0138.h5",TString parameterFile = "ATTPC.e15250.par",TString mappath="")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -62,7 +62,7 @@ void run_unpack_test(std::string dataFile = "/home/ayyadlim/Desktop/run_0097.h5"
 
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(10);
+  psaTask -> SetThreshold(1);
   psaTask -> SetPSAMode(3); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
   //psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
   psaTask -> SetMaxFinder();
@@ -75,7 +75,7 @@ void run_unpack_test(std::string dataFile = "/home/ayyadlim/Desktop/run_0097.h5"
 
   run -> Init();
 
-  run->Run(0,1000);
+  run->Run(0,1);
   //run -> RunOnTBData();
 
 

@@ -50,17 +50,17 @@ class ATHDFParser : public TObject {
     std::size_t n_pads(std::size_t i_raw_event);
     std::vector<int16_t> pad_raw_data(std::size_t i_pad);
     std::size_t datasets();
-    int16_t inievent();
+    unsigned long int inievent();
     static herr_t file_info(hid_t loc_id, const char *name, const H5L_info_t *linfo, void *opdata);
     void end_raw_event();
     void close();
 
   private:
 
-	 hid_t       _file;
-	 hid_t       _group;
-	 hid_t       _dataset;
-	 int16_t _inievent;
+	 hid_t       			   _file;
+	 hid_t       			   _group;
+	 hid_t       			   _dataset;
+	 unsigned long int         _inievent;
 	 
    
 

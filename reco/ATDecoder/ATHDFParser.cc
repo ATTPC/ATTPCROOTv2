@@ -45,8 +45,9 @@ std::tuple<hid_t, hsize_t> ATHDFParser::open_group(hid_t fileId, char const* gro
       H5Gget_num_objs(groupId, &size);
 
       //Determining the first event
-      std::vector<int16_t> events;
+      std::vector<unsigned long int> events;
       int cnt = 0;
+      
       for(auto isize=0;isize<size;++isize)
       {
 	      char name[100];
@@ -55,8 +56,10 @@ std::tuple<hid_t, hsize_t> ATHDFParser::open_group(hid_t fileId, char const* gro
 	      ++cnt;
 	  }
 
-	 std::vector<int16_t>::iterator result = std::min_element(std::begin(events), std::end(events));
+	 std::vector<unsigned long int>::iterator result = std::min_element(std::begin(events), std::end(events));
      _inievent = events.at(std::distance(std::begin(events), result));
+
+     //std::cout<<" Minimum "<<_inievent<<" Position "<<std::distance(std::begin(events), result)<<" Size "<<events.size()<<"\n";
 
       return std::make_tuple(groupId, size);
     }
@@ -141,7 +144,7 @@ std::vector<int16_t> ATHDFParser::pad_raw_data(std::size_t i_pad)
     return datav;
 }
 
-int16_t ATHDFParser::inievent()
+unsigned long int ATHDFParser::inievent()
 {
 	return _inievent;
 }
