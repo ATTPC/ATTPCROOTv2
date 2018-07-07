@@ -1,4 +1,4 @@
-void Mg22_alpha_e15250_sim_2(Int_t nEvents = 1000, TString mcEngine = "TGeant4") {
+void Mg22_alpha_e15250_sim_2(Int_t nEvents = 10000, TString mcEngine = "TGeant4") {
   
   TString dir = getenv("VMCWORKDIR");
   
