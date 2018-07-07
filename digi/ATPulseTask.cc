@@ -64,7 +64,13 @@ fDriftedElectronArray = (TClonesArray *) ioman -> GetObject("ATSimulatedPoint");
 
   fGain = fPar->GetGain();
   std::cout<<"Gain: "<<fGain<<std::endl;
+  
+  gain = new TF1("gain", "4*(x/[0])*pow(2.718, -2*(x/[0]))", 80, 120);//Polya distribution of gain
+  gain->SetParameter(0, fGain);
 
+  fTBTime = fPar->GetTBTime(); //Assuming 80 ns bucket
+  fNumTbs = fPar->GetNumTbs();
+    
   // ***************Create ATTPC Pad Plane***************************
   TString scriptfile = "Lookup20150611.xml";
   TString dir = getenv("VMCWORKDIR");
@@ -83,22 +89,27 @@ fDriftedElectronArray = (TClonesArray *) ioman -> GetObject("ATSimulatedPoint");
   ePulse.SetParameter(1,eTime);
   ePulse.SetParameter(2,tau);*/
   
+  char buff[100];
+  eleAccumulated = new TH1F*[10241];
+  for(Int_t padS=0;padS<10240;padS++){
+    sprintf(buff,"%d",padS); 
+    eleAccumulated[padS] = new TH1F(buff,buff,fNumTbs,0,fTBTime*fNumTbs/1000); //max time in microseconds from Time bucket size
+  }
+  
   return kSUCCESS;
 }
 
-struct vPad{
-  Double_t RawADC[512];
-  Int_t padnumb;
-};
-
 Double_t PadResponse(Double_t *x, Double_t *par){
-    return par[0] * TMath::Exp(-3.0*(x[0]-par[1])/par[2] )  * TMath::Sin((x[0]-par[1])/par[2]) * TMath::Power((x[0]-par[1])/par[2],3);  
+  return par[0] * TMath::Exp(-3.0*(x[0]-par[1])/par[2] )  * TMath::Sin((x[0]-par[1])/par[2]) * TMath::Power((x[0]-par[1])/par[2],3);  
 }
 
 void ATPulseTask::Exec(Option_t* option) {
   fLogger->Debug(MESSAGE_ORIGIN,"Exec of ATPulseTask");
   
   Double_t tau  = 1; //shaping time (us)
+
+  for(Int_t padS=0;padS<10240;padS++)
+    eleAccumulated[padS]->Reset();
   
   Int_t nMCPoints = fDriftedElectronArray->GetEntries();
   std::cout<<" ATPulseTask: Number of Points "<<nMCPoints<<std::endl;
@@ -130,42 +141,37 @@ void ATPulseTask::Exec(Option_t* option) {
     
     std::map<Int_t,TH1F*>::iterator ite = electronsMap.find(padNumber);
     if(ite == electronsMap.end()){
-      char buff[100];
-      sprintf(buff,"%d",padNumber);
-      eleAccumulated = new TH1F(buff,buff,512,0,60); //CHECK PARAMETERS FOR MAXIMUM DRIFT TIME 
-      eleAccumulated->Fill(eTime);
-      electronsMap[padNumber]=eleAccumulated;
+      eleAccumulated[padNumber]->Fill(eTime);
+      electronsMap[padNumber]=eleAccumulated[padNumber];
     }
     else{
-      eleAccumulated = (ite->second);
-      eleAccumulated->Fill(eTime);
-      electronsMap[padNumber]=eleAccumulated;
+      eleAccumulated[padNumber] = (ite->second);
+      eleAccumulated[padNumber]->Fill(eTime);
+      electronsMap[padNumber]=eleAccumulated[padNumber];
     } 
   }
   std::cout << "...End of collection of electrons in this event."<< std::endl;
-  
+  TAxis* axis = eleAccumulated[0]->GetXaxis();
+  Double_t binWidth = axis->GetBinWidth(10);
+
   //output.cd();
   
   std::vector<Float_t> PadCenterCoord;
   std::map<Int_t,TH1F*>::iterator ite2 = electronsMap.begin();
-  Int_t signal[512];
-  TF1 *gain = new TF1("gain", "4*(x/[0])*pow(2.718, -2*(x/[0]))", 80, 120);//Polya distribution of gain
-  gain->SetParameter(0, fGain);
+  Int_t signal[fNumTbs];
   
-  Double_t *thePar = new Double_t[3];
+  //Double_t *thePar = new Double_t[3];
   while(ite2!=electronsMap.end()){
-    for(Int_t kk=0;kk<512;kk++) signal[kk]=0;
+    for(Int_t kk=0;kk<fNumTbs;kk++) signal[kk]=0;
     Int_t thePadNumber = (ite2->first);
-    eleAccumulated = (ite2->second);
-    TAxis* axis = eleAccumulated->GetXaxis();
-    Double_t binWidth = axis->GetBinWidth(10);
+    eleAccumulated[thePadNumber] = (ite2->second);
     // Set Pad and add to event
     ATPad *pad = new ATPad();
-    for(Int_t kk=0;kk<512;kk++){
-      if(eleAccumulated->GetBinContent(kk)>0){
-	for(Int_t nn=kk;nn<512;nn++){
+    for(Int_t kk=0;kk<fNumTbs;kk++){
+      if(eleAccumulated[thePadNumber]->GetBinContent(kk)>0){
+	for(Int_t nn=kk;nn<fNumTbs;nn++){
 	  Double_t binCenter = axis->GetBinCenter(kk);
-	  signal[nn] += 1000*eleAccumulated->GetBinContent(kk)*pow(2.718,-3*((((((Double_t)nn)+0.5)*binWidth)-binCenter)/tau))*sin((((((Double_t)nn)+0.5)*binWidth)-binCenter)/tau)*pow((((((Double_t)nn)+0.5)*binWidth)-binCenter)/tau,3);
+	  signal[nn] += eleAccumulated[thePadNumber]->GetBinContent(kk)*pow(2.718,-3*((((((Double_t)nn)+0.5)*binWidth)-binCenter)/tau))*sin((((((Double_t)nn)+0.5)*binWidth)-binCenter)/tau)*pow((((((Double_t)nn)+0.5)*binWidth)-binCenter)/tau,3);
 	  
 	  //std::cout << "1: " << eleAccumulated->GetBinContent(kk) << "  2: "<< pow(2.718,-3*((((((Double_t)nn)+0.5)*binWidth)-binCenter)/tau))*sin(((((Double_t)nn)+0.5)*binWidth)-binCenter)/tau)*pow(((((Double_t)nn)+0.5)*binWidth)-binCenter)/tau,3)<< std::endl;
 	}
@@ -181,11 +187,12 @@ void ATPulseTask::Exec(Option_t* option) {
     pad->SetPadYCoord(PadCenterCoord[1]);
     pad->SetPedestalSubtracted(kTRUE);
     Double_t g = gain->GetRandom();
-    for(Int_t bin = 0; bin<512; bin++){
+    for(Int_t bin = 0; bin<fNumTbs; bin++){
       pad->SetADC(bin,signal[bin]*g);
     }
     fRawEvent->SetPad(pad);
     fRawEvent->SetEventID(fEventID);
+    delete pad;
     //std::cout <<" Event "<<aux<<" "<<electronsMap.size()<< "*"<< std::flush;
     ite2++;
   }
