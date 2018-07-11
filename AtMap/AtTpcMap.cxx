@@ -47,16 +47,31 @@ void AtTpcMap::Initialize()
   PadKey.clear();
   fIniPads.clear();
   hPlane = new TH2Poly();
+
+  
 }
 
 void AtTpcMap::Dump(){
 
-    int values = 0;
-  	 for(index i = 0; i != 10240; ++i)
-   	   for(index j = 0; j != 3; ++j)
-     	     for(index k = 0; k != 2; ++k)
-             	std::cout<<" ATTPC Triangular pad coordinates - Pad Index : "<<i<<"   X("<<j<<")  -  Y("<<k<<") :"<<AtPadCoord[i][j][k]<<std::endl;
+  std::ofstream coordmap;
+  coordmap.open("coordmap.txt");
 
+    int values = 0;
+  	 for(index i = 0; i != 10240; ++i){
+        coordmap<<i<<"  ";
+   	   for(index j = 0; j != 3; ++j){
+     	     for(index k = 0; k != 2; ++k){
+             	std::cout<<" ATTPC Triangular pad coordinates - Pad Index : "<<i<<"   X("<<j<<")  -  Y("<<k<<") :"<<AtPadCoord[i][j][k]<<std::endl;
+              coordmap<<AtPadCoord[i][j][k]<<"  ";
+           }//k
+        }//j
+
+        coordmap<<std::endl;
+
+      }//i
+
+  coordmap.close();
+      
 }
 
 void AtTpcMap::GenerateATTPC(){

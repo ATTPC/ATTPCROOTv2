@@ -10,6 +10,7 @@ void test_map()
   AtTpcMap* fAtMapPtr = new AtTpcMap();
   fAtMapPtr->GenerateATTPC();
   TH2Poly *fPadPlane = fAtMapPtr->GetATTPCPlane();
+  fAtMapPtr->Dump();
 
   Float_t x=0;
   Float_t y=0;
@@ -26,7 +27,7 @@ void test_map()
     TString FileNameTail = ".root";
     TString FileName     = FilePath + FileNameHead + FileNameTail;
 
-    std::cout<<" Opening File : "<<FileName.Data()<<std::endl;
+   /* std::cout<<" Opening File : "<<FileName.Data()<<std::endl;
     TFile* file = new TFile(FileName.Data(),"READ");
 
     TTree* tree = (TTree*) file -> Get("cbmsim");
@@ -56,7 +57,7 @@ void test_map()
               Int_t bin=  fPadPlane->Fill(hitPos.X(),hitPos.Y(),hit.GetCharge());
              } 
 
-    }
+    }*/
 
             /*for(Int_t i=0;i<100000;i++)
             {
