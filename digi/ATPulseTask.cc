@@ -137,7 +137,7 @@ void ATPulseTask::Exec(Option_t* option) {
     auto padNumber   = (int)fPadPlane->Fill(xElectron,yElectron) - 1;
     
     if(padNumber<0 || padNumber>10240) continue;
-    //std::cout<<pBin<<"  "<<coord(0)<<"  "<<coord(1)<<"  "<<coord(2)<<"\n";
+      //std::cout<<padNumber<<"  "<<coord(0)<<"  "<<coord(1)<<"  "<<coord(2)<<"\n";
     
     std::map<Int_t,TH1F*>::iterator ite = electronsMap.find(padNumber);
     if(ite == electronsMap.end()){

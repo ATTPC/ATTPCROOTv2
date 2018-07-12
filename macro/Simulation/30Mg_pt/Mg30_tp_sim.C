@@ -75,10 +75,10 @@ void Mg30_tp_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 	              Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
 	              Double_t px = 0.000/a;  // X-Momentum / per nucleon!!!!!!
 	              Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
-	              Double_t pz = 1.586/a;  // Z-Momentum / per nucleon!!!!!!
+	              Double_t pz = 2.898/a;  // Z-Momentum / per nucleon!!!!!!
   	            Double_t BExcEner = 0.0;
                 Double_t Bmass = 27.93591; //Mass in GeV
-                Double_t NomEnergy = 2.2; //Used to force the beam to stop within a certain energy range.
+                Double_t NomEnergy = 1.2; //Used to force the beam to stop within a certain energy range.
                 Double_t TargetMass = 0.93827203;//Mass in GeV
 
 

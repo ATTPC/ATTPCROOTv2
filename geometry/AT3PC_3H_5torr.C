@@ -145,6 +145,8 @@ TGeoVolume* create_detector()
   TGeoMedium* mylar           = gGeoMan->GetMedium(CellMaterial);
   TGeoMedium* tritiumgas      = gGeoMan->GetMedium(CellMedium);
 
+  TGeoVolume *chamber_volume = gGeoManager->MakeTube("chamber_volume", OuterCylinder,tpc_diameter/2,(tpc_diameter+10.0)/2, 120.0/2);
+  gGeoMan->GetVolume(geoVersion)->AddNode(chamber_volume,1, new TGeoTranslation(0,0,120.0/2));
 
   TGeoVolume *drift_volume = gGeoManager->MakeTube("drift_volume", gas,(5.0+cell_thickness)/2, tpc_diameter/2, drift_length/2);
   gGeoMan->GetVolume(geoVersion)->AddNode(drift_volume,1, new TGeoTranslation(0,0,drift_length/2));
