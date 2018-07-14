@@ -11,7 +11,7 @@
 #include <iostream>
 #include <fstream>
 
-void ana(Int_t num_ev=2){
+void ana(Int_t num_ev=100){
 
 
   //HISTOS
@@ -27,7 +27,7 @@ void ana(Int_t num_ev=2){
   Eloss_vs_Angle_Rec->SetMarkerSize(0.5);
   Eloss_vs_Angle_Rec->SetMarkerColor(2);
 
-  TH2D *KineRec = new TH2D("KineRec","KineRec",1000,0,180,1000,0,10);
+  TH2D *KineRec = new TH2D("KineRec","KineRec",1000,0,180,1000,0,40);
   KineRec->SetMarkerStyle(20);
   KineRec->SetMarkerSize(0.5);
   KineRec->SetMarkerColor(2);
@@ -125,7 +125,6 @@ void ana(Int_t num_ev=2){
 				RecAng = AngleRecoil;
 				zpos=point->GetZ()*10;
 				xpos=point->GetXIn()*10;
-				//if(AngleRecoil>65 && AngleRecoil<70 && vertex>200.0 && vertex<210.0 && zpos>200.0 ){
 				tracks->Fill(zpos,xpos);
 				}
 
@@ -134,6 +133,7 @@ void ana(Int_t num_ev=2){
 		if(iEvent%2!=0){
      		 Eloss_vs_Range_Rec->Fill(range_rec,energyLoss_rec);
      		 KineRec->Fill(RecAng,RecEner);
+     		 std::cout<<RecAng<<"	"<<RecEner<<"\n";
      		 Eloss_vs_Angle_Rec->Fill(RecAng,energyLoss_rec);
 			 RecELoss =  energyLoss_rec;  
 

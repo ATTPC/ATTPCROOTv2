@@ -77,9 +77,9 @@ void Mg30_tp_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 	              Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
 	              Double_t pz = 2.898/a;  // Z-Momentum / per nucleon!!!!!!
   	            Double_t BExcEner = 0.0;
-                Double_t Bmass = 27.93591; //Mass in GeV
+                Double_t Bmass = 29.9904; //Mass in GeV
                 Double_t NomEnergy = 1.2; //Used to force the beam to stop within a certain energy range.
-                Double_t TargetMass = 0.93827203;//Mass in GeV
+                Double_t TargetMass = 3.01605;//Mass in GeV
 
 
 	          ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
@@ -130,7 +130,7 @@ void Mg30_tp_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 		             Pxp.push_back(0.0);
                  Pyp.push_back(0.0);
 		             Pzp.push_back(0.0);
-                 Mass.push_back(2.809432);
+                 Mass.push_back(3.01605);
 		             ExE.push_back(0.0);//In MeV
 
                   //--- Scattered -----
@@ -140,7 +140,7 @@ void Mg30_tp_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
           		  Pxp.push_back(0.0);
           		  Pyp.push_back(0.0);
           		  Pzp.push_back(0.0);
-          		  Mass.push_back(29.80686);
+          		  Mass.push_back(31.999);
           		  ExE.push_back(0.0);
 
 
@@ -151,12 +151,12 @@ void Mg30_tp_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 		             Pxp.push_back(0.0);
                  Pyp.push_back(0.0);
 		             Pzp.push_back(0.0);
-                 Mass.push_back(0.93827203);
+                 Mass.push_back(1.00783);
 		             ExE.push_back(0.0);//In MeV
 
 
-                  Double_t ThetaMinCMS = 0.0;
-                  Double_t ThetaMaxCMS = 45.0;
+                 Double_t ThetaMinCMS = 60.0;
+                 Double_t ThetaMaxCMS = 61.0;
 
 
         ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);

@@ -30,32 +30,32 @@ int Mainrel(){
 
 
 		Int_t a=1;
-		int A1=12.; //mass0 of the incident particle
-		int Z1=4.; //charge of the incident particle
+		int A1=30.; //mass0 of the incident particle
+		int Z1=12.; //charge of the incident particle
 		char *El1=new char[2];
 
 		//double m1=77.963180;
 
 		//cout<<El1<<endl;
 
-		int A2=4.; //mass0 of the target
-		int Z2=2.; //charge of the target
+		int A2=3.; //mass0 of the target
+		int Z2=1.; //charge of the target
 		char *El2=new char[2];
 
 		//double m2=2.0141;
 
 		//cout<<El2<<endl;
 
-		int A3=12; //mass0 of the scattered particle
-		int Z3=4; //charge of the scattered particle
+		int A3=32; //mass0 of the scattered particle
+		int Z3=12; //charge of the scattered particle
 		char *El3=new char[2];
 
 		//double m3=78.971987;
 
 		//cout<<El3<<endl;
 
-		int A4=4;//mass0 of the recoil
-		int Z4=2;//charge of the recoil
+		int A4=1;//mass0 of the recoil
+		int Z4=1;//charge of the recoil
 		char *El4=new char[2];
 
 		//double m4=1.007825;
@@ -74,10 +74,10 @@ int Mainrel(){
 
 		double ex1=0; //excitation energy of the incident particle
 		double ex2=0; //excitation energy of the target
-		double ex3=2.1; //excitation energy of the scattered particle
+		double ex3=0.0; //excitation energy of the scattered particle
 		double ex4=0.0; //excitation energy of the recoil
 
-		double tbt=3.0; // incident energy (total Lab energy in MeV)
+		double tbt=5.0; // incident energy (total Lab energy in MeV)
 
 		double Energyrdec,Anglerdec;
 
@@ -87,25 +87,29 @@ int Mainrel(){
 	   // cout<<" Charge of the incident particle Z1"<<endl;
 	   // cin>>Z1;
 		double m1=read_ame03(Z1,A1,El1);
+		std::cout<<" m1 "<<m1<<"\n";
 		//cout<<" Mass of the target A2"<<endl;
 		//cin>>A2;
 		//cout<<" Charge of the target Z2"<<endl;
 		//cin>>Z2;
 		double m2=read_ame03(Z2,A2,El2);
+		std::cout<<" m2 "<<m2<<"\n";
 		//cout<<" Mass of the scattered particle A3"<<endl;
 		//cin>>A3;
 		//cout<<" Charge of the scattered particle Z3"<<endl;
 		//cin>>Z3;
 		double m3=read_ame03(Z3,A3,El3);
+		std::cout<<" m3 "<<m3<<"\n";
 		//cout<<" Mass of the recoil particle A4"<<endl;
 		//cin>>A4;
 		//cout<<" Charge of the recoil particle Z4"<<endl;
 		//cin>>Z4;
 		double m4=read_ame03(Z4,A4,El4);
+		std::cout<<" m4 "<<m4<<"\n";
 		//cout<<" Excitation energy of the recoil "<<endl;
 		//cin>>ex4;
-		double md1=read_ame03(ZD1,AD1,ElD1);
-		double md2=read_ame03(ZD2,AD2,ElD2);
+		//double md1=read_ame03(ZD1,AD1,ElD1);
+		//double md2=read_ame03(ZD2,AD2,ElD2);
 
 
 
@@ -150,22 +154,22 @@ int Mainrel(){
 
 
 		cout<<"ThetaCM(deg) ThetaR(deg)   EnergyR(Mev)"<<endl;
-		for(Float_t k=0;k<=180;k=k+0.1){
-  //for(Float_t k=0;k<=180;k=k+2){
-    kine->SetThetaCMAngle(k);
-    kine->Kinematics();
-    //kine->PrintResults();
-    Angler[j]=kine->GetANGAr(0)*180/TMath::Pi();
-    Energyr[j]=kine->GetANGAr(1);
-    //    if((k-TMath::Floor(k)==0))
-    //  cout<<k<<" "<<Angler[j]<<" "<<Energyr[j]<<endl;
-    Angles[j]=kine->GetANGAs(0)*180/TMath::Pi();
-    Energys[j]=kine->GetANGAs(1);
-    ThetaCM[j]=k;
-			kineStr<<ThetaCM[j]<<" "<<Angler[j]<<" "<<Energyr[j]<<" "<<Angles[j]<<" "<<Energys[j]<<std::endl;
-    j++;
+				for(Float_t k=0;k<=180;k=k+0.1){
+		  //for(Float_t k=0;k<=180;k=k+2){
+		    kine->SetThetaCMAngle(k);
+		    kine->Kinematics();
+		    //kine->PrintResults();
+		    Angler[j]=kine->GetANGAr(0)*180/TMath::Pi();
+		    Energyr[j]=kine->GetANGAr(1);
+		    //    if((k-TMath::Floor(k)==0))
+		    //  cout<<k<<" "<<Angler[j]<<" "<<Energyr[j]<<endl;
+		    Angles[j]=kine->GetANGAs(0)*180/TMath::Pi();
+		    Energys[j]=kine->GetANGAs(1);
+		    ThetaCM[j]=k;
+					kineStr<<ThetaCM[j]<<" "<<Angler[j]<<" "<<Energyr[j]<<" "<<Angles[j]<<" "<<Energys[j]<<std::endl;
+		    j++;
 
-  }
+	  }
 
 
 
