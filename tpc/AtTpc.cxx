@@ -440,7 +440,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
                  LOG(INFO)<<" Mass of the Tracked particle : "<<gMC->TrackMass()<<std::endl;
                  LOG(INFO)<<" Mass of the Beam from global vertex pointer : "<<gATVP->GetBeamMass()<<std::endl;
         	      // LOG(INFO)<<" Total energy of the current track : "<<((gMC->Etot() - gMC->TrackMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
-                 Double_t StopEnergy = ((gMC->Etot() - gMC->TrackMass()) * 1000.);
+                 Double_t StopEnergy = ((gMC->Etot() - gATVP->GetBeamMass()*0.93149401) * 1000.);
                  LOG(INFO)<<" Total energy of the Beam particle before reaction : "<<StopEnergy<<FairLogger::endl;// Relativistic Mass
                  gATVP->SetVertex(StopPos.X(),StopPos.Y(),StopPos.Z(),InPos.X(),InPos.Y(),InPos.Z(),StopMom.Px(),StopMom.Py(),StopMom.Pz(),StopEnergy);
         	 // std::cout<<" Entrance Position 2 - X : "<<InPos.X()<<" - Y : "<<InPos.Y()<<" - Z : "<<InPos.Z()<<std::endl;

@@ -36,7 +36,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
   Double_t RhoMean = 0.0;
   Double_t Rho2 = 0.0;
   std::map<Int_t,Int_t> PadMultiplicity;
-  Float_t mesh[fNumTbs] = {0};
+  Float_t mesh[512] = {0};
 
 
   Int_t iPad=0;
@@ -82,8 +82,8 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       }
 
       Double_t *adc = pad -> GetADC();
-      Double_t floatADC[fNumTbs] = {0};
-      Double_t dummy[fNumTbs] = {0};
+      Double_t floatADC[512] = {0};
+      Double_t dummy[512] = {0};
 
           if(fCalibration -> IsGainFile()){
             adc = fCalibration -> CalibrateGain(adc, PadNum);

@@ -1,4 +1,4 @@
-void Mg30_tp_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
+void Mg30_tp_sim(Int_t nEvents = 2, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");

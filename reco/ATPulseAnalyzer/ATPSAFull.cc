@@ -26,7 +26,7 @@ ATPSAFull::Analyze(ATRawEvent *rawEvent, ATEvent *event) {
   Int_t numPads = rawEvent -> GetNumPads();
   Int_t hitNum = 0;
   std::map<Int_t,Int_t> PadMultiplicity;
-  Float_t mesh[fNumTbs] = {0};
+  Float_t mesh[512] = {0};
   
   for (auto iPad = 0; iPad < numPads; iPad++) {
     ATPad *pad = rawEvent -> GetPad(iPad);
@@ -62,8 +62,8 @@ ATPSAFull::Analyze(ATRawEvent *rawEvent, ATEvent *event) {
     }
     
     Double_t *adc = pad -> GetADC();
-    Double_t floatADC[fNumTbs] = {0};
-    Double_t dummy[fNumTbs] = {0};
+    Double_t floatADC[512] = {0};
+    Double_t dummy[512] = {0};
     
     Int_t divider = 50;
     Int_t initial=0;

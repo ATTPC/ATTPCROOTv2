@@ -96,7 +96,7 @@ ATTPC2Body::ATTPC2Body(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
 	      fPz.push_back( Double_t(a->at(i)) * pz->at(i) );
 	      Masses.push_back(mass->at(i)*1000.0);
         fExEnergy.push_back(Ex->at(i));
-        fWm.push_back( mass->at(i)*1000.0 + Ex->at(i));
+        fWm.push_back( mass->at(i)*1000.0*0.93149401 + Ex->at(i));
         FairIon *IonBuff;
         FairParticle *ParticleBuff;
         sprintf(buffer, "Product_Ion%d", i);

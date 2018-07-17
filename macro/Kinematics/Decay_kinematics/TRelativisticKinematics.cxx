@@ -60,7 +60,7 @@ TRelativisticKinematics::TRelativisticKinematics() {
 		double wm4=m4*U+ex4;
 		
 		double eb=tb+wm1; // Total energy of beam LAB system
-		//cout<<eb<<endl;
+		//cout<<tb<<"	"<<m1<<"	"<<wm1<<"	"<<eb<<endl;
 		double pb2=tb*tb+2.0*tb*wm1; // Momentum of the beam as a function of kinetic energy of the beam Tb = sqrt(p^2c^2+m^2c^4) - mc^2
 		double pb=sqrt(pb2);
 		double beta=pb/(eb+wm2); // Beta
