@@ -195,6 +195,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
          LOG(INFO) << " Atomic Number : "<<AZ.second<<FairLogger::endl;
          LOG(INFO)<<" Volume ID "<<gMC->CurrentVolID(VolumeID)<<FairLogger::endl;
          LOG(INFO)<<" Track ID : "<<fTrackID<<FairLogger::endl;
+         LOG(INFO)<<" Position : "<<fPosIn.X()<<" "<<fPosIn.Y()<<"  "<<fPosIn.Z()<<std::endl;
          LOG(INFO)<<" Total relativistic energy " <<gMC->Etot()<< FairLogger::endl;
          LOG(INFO)<<" Mass of the Tracked particle (gAVTP) : "<<gATVP->GetBeamMass()<<std::endl;
          LOG(INFO)<<" Mass of the Tracked particle (gMC) : "<<gMC->TrackMass()<<std::endl;
@@ -207,6 +208,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
                std::cout<<" Recoil Angle : "<<gATVP->GetRecoilA()<<std::endl;
       	 std::cout<<" Scattered Angle : "<<gATVP->GetScatterA()<<std::endl;*/
     }
+
 
       //
       fELoss = gMC->Edep();
