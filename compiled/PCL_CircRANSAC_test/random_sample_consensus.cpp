@@ -28,7 +28,7 @@ main(int argc, char** argv)
   pcl::PointCloud<pcl::PointXYZ>::Ptr final (new pcl::PointCloud<pcl::PointXYZ>);
 
   std::ifstream file;
-  file.open("event_6.dat");
+  file.open("../event_6.dat");
 
   std::string line_buffer;
 
