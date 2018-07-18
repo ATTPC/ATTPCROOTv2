@@ -16,12 +16,14 @@
 //ROOT
 #include "TGraph.h"
 #include "TCanvas.h"
+#include "TApplication.h"
 
 
 int
 main(int argc, char** argv)
 {
 
+  TApplication app("app",&argc,argv);
 
   // initialize PointClouds
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
@@ -41,6 +43,8 @@ main(int argc, char** argv)
   cloud->is_dense = false;
   cloud->points.resize (cloud->width * cloud->height);
 
+  TGraph *hitPatternOrigin = new TGraph();
+
   while(std::getline(file,line_buffer))
   {
           std::istringstream ss_line(line_buffer);
@@ -48,6 +52,7 @@ main(int argc, char** argv)
           cloud->points[i].x = x;
           cloud->points[i].y = y;
           cloud->points[i].z = z;
+          hitPatternOrigin->SetPoint(hitPatternOrigin->GetN(),cloud->points[i].x,cloud->points[i].y );
           ++i;
 
   }
@@ -61,7 +66,7 @@ main(int argc, char** argv)
   // Mandatory
   seg.setModelType (pcl::SACMODEL_CIRCLE2D);
   seg.setMethodType (pcl::SAC_RANSAC);
-  seg.setDistanceThreshold (1.5);
+  seg.setDistanceThreshold (6.0);
 
   seg.setInputCloud (cloud);
   seg.segment(*inliers, *coefficients);
@@ -77,30 +82,29 @@ main(int argc, char** argv)
                                       << coefficients->values[2] << " " 
                                       << coefficients->values[3] << std::endl;
 
+  TGraph *hitPattern = new TGraph();
+
   std::cerr << "Model inliers: " << inliers->indices.size () << std::endl;
-  for (size_t i = 0; i < inliers->indices.size (); ++i)
+  for (size_t i = 0; i < inliers->indices.size (); ++i){
     std::cerr << inliers->indices[i] << "    " << cloud->points[inliers->indices[i]].x << " "
                                                << cloud->points[inliers->indices[i]].y << " "
                                                << cloud->points[inliers->indices[i]].z << std::endl;
+     hitPattern->SetPoint(hitPattern->GetN(),cloud->points[inliers->indices[i]].x,cloud->points[inliers->indices[i]].y );                                          
+  }
 
-
- /* std::vector<int> inliers;
-  Eigen::VectorXf  model_coefficients;
-
-  // created RandomSampleConsensus object and compute the appropriated model
-  pcl::SampleConsensusModelCircle2D<pcl::PointXYZ>::Ptr
-    model_s(new pcl::SampleConsensusModelCircle2D<pcl::PointXYZ> (cloud));
+  hitPatternOrigin->SetMarkerStyle(20);
+  hitPatternOrigin->SetMarkerColor(kBlue);
+  hitPatternOrigin->SetMarkerSize(1.2);
+  hitPatternOrigin->Draw("ap");
   
-    pcl::RandomSampleConsensus<pcl::PointXYZ> ransac (model_s);
-    ransac.setDistanceThreshold (.01);
-    ransac.computeModel();
-    ransac.getInliers(inliers);
+  hitPattern->SetMarkerStyle(20);
+  hitPattern->SetMarkerColor(kRed);
+  hitPattern->SetMarkerSize(1.2);
+  hitPattern->Draw("p");
 
-    //model_s->computeModelCoefficients(inliers,model_coefficients);     
-  
 
-  // copies all inliers of the model computed to another PointCloud
-  pcl::copyPointCloud<pcl::PointXYZ>(*cloud, inliers, *final);*/
+
+  app.Run();
 
  
   return 0;
