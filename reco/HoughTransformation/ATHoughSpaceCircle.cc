@@ -1110,9 +1110,10 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
                                   fIniHitRansac->SetHit(hit.GetHitPadNum(),hit.GetHitID(),position.X(),position.Y(),position.Z(),hit.GetCharge());
                                   if(kDebug) std::cout<<cGREEN<<" Ini Hit TimeStamp : "<<hit.GetTimeStamp()<<cNORMAL<<std::endl;
                                   fIniHitRansac->SetTimeStamp(hit.GetTimeStamp());
-                                  smoothRadius(trackCand);
-                                  //fIniRadiusRansac = TMath::Sqrt(  TMath::Power((fXCenter-position.X()),2)   +  TMath::Power((fYCenter-position.Y()),2)    );
-                                  fIniRadiusRansac = trackCand.GetRANSACCoeff()[2];
+                                  std::vector<ATTrack*> circleTracks = smoothRadius(trackCand);
+                              
+                                  if(circleTracks.size()>0)fIniRadiusRansac = circleTracks[0]->GetRANSACCoeff()[2];
+                                  else fIniRadiusRansac = TMath::Sqrt(  TMath::Power((fXCenter-position.X()),2)   +  TMath::Power((fYCenter-position.Y()),2)    );
                                   std::cout<<cRED<<" Radius Ransac "<<fIniRadiusRansac<<"\n";
                                   std::cout<<" fXCenter "<<fXCenter<<"  fYCenter "<<fYCenter<<" "<<position.X()<<"  "<<position.Y()<<"\n";
 
@@ -1386,14 +1387,14 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
 
 }
 
-std::pair<Double_t, Double_t> ATHoughSpaceCircle::smoothRadius(ATTrack &trackCand)
+std::vector<ATTrack*> ATHoughSpaceCircle::smoothRadius(ATTrack &trackCand)
 {
 
         
         RansacSmoothRadius.SetModelType(pcl::SACMODEL_CIRCLE2D);
         RansacSmoothRadius.SetRANSACPointThreshold(0.1);
         RansacSmoothRadius.SetDistanceThreshold(6.0);
-        std::vector<ATTrack*> circleTracks = RansacSmoothRadius.Ransac(trackCand.GetHitArray());
+        return RansacSmoothRadius.Ransac(trackCand.GetHitArray());
 
 
 }

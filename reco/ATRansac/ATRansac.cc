@@ -285,7 +285,7 @@ while (cloud->points.size () > fRANSACPointThreshold * nr_points)
           }
 
      track->SetRANSACCoeff(coeff);
-     std::cout<<coeff[2]<<"\n";
+     
 
      tracks.push_back(track);
      //std::stringstream ss;
