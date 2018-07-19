@@ -1110,9 +1110,12 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
                                   fIniHitRansac->SetHit(hit.GetHitPadNum(),hit.GetHitID(),position.X(),position.Y(),position.Z(),hit.GetCharge());
                                   if(kDebug) std::cout<<cGREEN<<" Ini Hit TimeStamp : "<<hit.GetTimeStamp()<<cNORMAL<<std::endl;
                                   fIniHitRansac->SetTimeStamp(hit.GetTimeStamp());
-                                  fIniRadiusRansac = TMath::Sqrt(  TMath::Power((fXCenter-position.X()),2)   +  TMath::Power((fYCenter-position.Y()),2)    );
+                                  smoothRadius(trackCand);
+                                  //fIniRadiusRansac = TMath::Sqrt(  TMath::Power((fXCenter-position.X()),2)   +  TMath::Power((fYCenter-position.Y()),2)    );
+                                  fIniRadiusRansac = trackCand.GetRANSACCoeff()[2];
                                   std::cout<<cRED<<" Radius Ransac "<<fIniRadiusRansac<<"\n";
                                   std::cout<<" fXCenter "<<fXCenter<<"  fYCenter "<<fYCenter<<" "<<position.X()<<"  "<<position.Y()<<"\n";
+
                                   fIniPhiRansac = TMath::ATan2(fXCenter-position.X(),fYCenter-position.Y());
                                   fRansacLinePar = trackCand.GetFitPar();
                                   // Moving from Hough Space to RANSAC
@@ -1135,6 +1138,8 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
                    }// Minimum tracks
 
                  }//track spiral size
+
+                 delete Ransac;
 
                }// RANSAC block if !kHough
 
@@ -1373,7 +1378,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
 
                 }
 
-                 //delete Ransac;
+                 
                  delete min;
                  delete parameter;
 
@@ -1381,11 +1386,23 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
 
 }
 
+std::pair<Double_t, Double_t> ATHoughSpaceCircle::smoothRadius(ATTrack &trackCand)
+{
+
+        
+        RansacSmoothRadius.SetModelType(pcl::SACMODEL_CIRCLE2D);
+        RansacSmoothRadius.SetRANSACPointThreshold(0.1);
+        RansacSmoothRadius.SetDistanceThreshold(6.0);
+        std::vector<ATTrack*> circleTracks = RansacSmoothRadius.Ransac(trackCand.GetHitArray());
+
+
+}
+
 
 std::pair<Double_t,Double_t> ATHoughSpaceCircle::CalHoughParameters(TH2F* hist){
 
-		std::pair<Double_t,Double_t> HoughParBuff;
-		Int_t locmaxx,locmaxy,locmaxz;
+	std::pair<Double_t,Double_t> HoughParBuff;
+	Int_t locmaxx,locmaxy,locmaxz;
     hist->GetMaximumBin(locmaxx,locmaxy,locmaxz);
     Double_t xpos = hist->GetXaxis()->GetBinCenter(locmaxx);
     Double_t ypos = hist->GetYaxis()->GetBinCenter(locmaxy);

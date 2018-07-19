@@ -113,6 +113,7 @@ protected:
     void GetTBDeviation(std::vector<ATHit> *hits, Float_t &maxdev_ratio, Double_t &mean_dev_x, Double_t &mean_dev_y);
     Int_t GetDensityOfHits(std::vector<ATHit> *hits, Int_t index, Int_t tb_range); //Gets number of hits around a time bucket
     std::vector<ATHit> GetTBHitArray(Int_t TB,std::vector<ATHit> *harray);
+    std::pair<Double_t, Double_t> smoothRadius(ATTrack &trackCand);
 
     // TODO: Double_t fThreshold;
     std::map<std::vector<Float_t>, Int_t> HoughMap_XY;
@@ -165,6 +166,8 @@ protected:
 
     Double_t fParameter[8];
     std::vector<std::function<Double_t(Double_t, std::vector<Double_t>&)>> fEloss_func_array; // !
+
+    ATRANSACN::ATRansac RansacSmoothRadius;
 
     struct maxpersecond
     {

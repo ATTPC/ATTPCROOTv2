@@ -107,6 +107,7 @@ class ATRansac : public TObject
       void CalcRANSAC(ATEvent *event);
       void CalcRANSACFull(ATEvent *event);
       std::vector<ATTrack*> RansacPCL(ATEvent *event);
+      std::vector<ATTrack*> Ransac(std::vector<ATHit>* hits);
       TVector3 GetVertex1();
       TVector3 GetVertex2();
       Double_t GetVertexTime();

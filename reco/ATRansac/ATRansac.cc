@@ -188,58 +188,56 @@ void ATRANSACN::ATRansac::CalcRANSACFull(ATEvent *event)
 
 }
 
-std::vector<ATTrack*> ATRANSACN::ATRansac::RansacPCL(ATEvent *event)
+std::vector<ATTrack*> ATRANSACN::ATRansac::Ransac(std::vector<ATHit>* hits)
 {
-
     std::vector<ATTrack*> tracks;
 
-
     //Data writer
-	  pcl::PCDWriter writer;
+    //pcl::PCDWriter writer;
 
-	  // initialize PointClouds
-  	pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGBA>);
-  	pcl::PointCloud<pcl::PointXYZRGBA>::Ptr final (new pcl::PointCloud<pcl::PointXYZRGBA>);
+    // initialize PointClouds
+    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGBA>);
+    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr final (new pcl::PointCloud<pcl::PointXYZRGBA>);
 
-	  //pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZRGBA>);
-	  pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_p(new pcl::PointCloud<pcl::PointXYZRGBA>);
-	  pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_f (new pcl::PointCloud<pcl::PointXYZRGBA>);
+    //pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZRGBA>);
+    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_p(new pcl::PointCloud<pcl::PointXYZRGBA>);
+    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_f (new pcl::PointCloud<pcl::PointXYZRGBA>);
 
-    Int_t nHits = event->GetNumHits();
+    Int_t nHits = hits->size();
     cloud->points.resize(nHits);
 
     for(Int_t iHit=0; iHit<nHits; iHit++){
 
-          ATHit* hit = event->GetHit(iHit);
+          ATHit* hit = &hits->at(iHit);
           Int_t PadNumHit = hit->GetHitPadNum();
           TVector3 position = hit->GetPosition();
 
         if(fRPhiSpace){
           cloud->points[iHit].x = hit->GetTimeStamp();
           cloud->points[iHit].y = TMath::Sqrt(  TMath::Power((fXCenter-position.X()),2)   +  TMath::Power((fYCenter-position.Y()),2)    )*TMath::ATan2(fXCenter-position.X(),fYCenter-position.Y());
-			    cloud->points[iHit].z = 0.0;
+          cloud->points[iHit].z = 0.0;
           cloud->points[iHit].rgb = iHit;
 
         }
         else{
           cloud->points[iHit].x = position.X();
- 			    cloud->points[iHit].y = position.Y();
-			    cloud->points[iHit].z = position.Z();
+          cloud->points[iHit].y = position.Y();
+          cloud->points[iHit].z = position.Z();
           cloud->points[iHit].rgb = iHit; // Storing the position of the hit in the event container
         }
 
     }
 
     pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients ());
-  	pcl::PointIndices::Ptr inliers (new pcl::PointIndices ());
+    pcl::PointIndices::Ptr inliers (new pcl::PointIndices ());
 
-	  // Create the segmentation object
-  	pcl::SACSegmentation<pcl::PointXYZRGBA> seg;
-  	seg.setOptimizeCoefficients(true);
-  	seg.setModelType(fRANSACModel);
-  	seg.setMethodType(pcl::SAC_RANSAC);
-  	seg.setMaxIterations(1000);
-  	seg.setDistanceThreshold(fRANSACThreshold);
+    // Create the segmentation object
+    pcl::SACSegmentation<pcl::PointXYZRGBA> seg;
+    seg.setOptimizeCoefficients(true);
+    seg.setModelType(fRANSACModel);
+    seg.setMethodType(pcl::SAC_RANSAC);
+    seg.setMaxIterations(1000);
+    seg.setDistanceThreshold(fRANSACThreshold);
 
     // Create the filtering object
  pcl::ExtractIndices<pcl::PointXYZRGBA> extract;
@@ -254,6 +252,19 @@ while (cloud->points.size () > fRANSACPointThreshold * nr_points)
 
      seg.setInputCloud (cloud);
      seg.segment(*inliers, *coefficients);
+
+     std::vector<Double_t> coeff;
+
+     std::cerr << "Model coefficients: " << coefficients->values[0] << " " 
+                                         << coefficients->values[1] << " "
+                                         << coefficients->values[2] << " " 
+                                         << coefficients->values[3] << std::endl;
+
+     for(auto icoeff=0;icoeff<4;++icoeff)
+          coeff.push_back(coefficients->values[icoeff]);                                    
+
+
+
      if (inliers->indices.size () == 0)
      {
        //std::cerr << "Could not estimate a planar model for the given dataset." << std::endl;
@@ -270,9 +281,13 @@ while (cloud->points.size () > fRANSACPointThreshold * nr_points)
 
           for(Int_t iHit=0;iHit<(cloud_p->width*cloud_p->height);iHit++)
           {
-            if(event->GetHit(cloud_p->points[iHit].rgb)) track->AddHit(event->GetHit(cloud_p->points[iHit].rgb));
+            if(&hits->at(cloud_p->points[iHit].rgb)) track->AddHit(&hits->at(cloud_p->points[iHit].rgb));
           }
-      tracks.push_back(track);
+
+     track->SetRANSACCoeff(coeff);
+     std::cout<<coeff[2]<<"\n";
+
+     tracks.push_back(track);
      //std::stringstream ss;
      //ss << "../track_" << i << ".pcd";
      //writer.write<pcl::PointXYZ> (ss.str (), *cloud_p, false);
@@ -287,6 +302,15 @@ while (cloud->points.size () > fRANSACPointThreshold * nr_points)
 }
 
     return tracks;
+
+
+}
+
+
+std::vector<ATTrack*> ATRANSACN::ATRansac::RansacPCL(ATEvent *event)
+{
+
+    return ATRANSACN::ATRansac::Ransac(event->GetHitArray());
 
 }
 

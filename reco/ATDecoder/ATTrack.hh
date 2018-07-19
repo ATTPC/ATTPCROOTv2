@@ -43,25 +43,27 @@ class ATTrack : public TObject {
     void SetGeoEnergy(Double_t energy);
     void SetGeoQEnergy(Double_t qenergy);
     void SetIsNoise(Bool_t value);
+    void SetRANSACCoeff(std::vector<Double_t> par);
 
-    std::vector<ATHit> *GetHitArray();
-    std::vector<Double_t> GetFitPar();
-    Double_t GetMinimum();
-    Int_t    GetNFree();
-    Int_t    GetTrackID();
-    Double_t GetAngleZAxis();
-    Double_t GetAngleZDet();
-    Double_t GetAngleYDet();
-    Double_t GetMeanTime();
-    Double_t GetLinearRange();
-    Double_t GetLinearRange(TVector3 vertex);
-    TVector3 GetTrackVertex();
-    Int_t    GetQuadrant();
-    Double_t GetGeoTheta();
-    Double_t GetGeoPhi();
-    Double_t GetGeoEnergy();
-    Double_t GetGeoQEnergy();
-    Bool_t   GetIsNoise();
+    std::vector<ATHit>*     GetHitArray();
+    std::vector<Double_t>   GetFitPar();
+    Double_t                GetMinimum();
+    Int_t                   GetNFree();
+    Int_t                   GetTrackID();
+    Double_t                GetAngleZAxis();
+    Double_t                GetAngleZDet();
+    Double_t                GetAngleYDet();
+    Double_t                GetMeanTime();
+    Double_t                GetLinearRange();
+    Double_t                GetLinearRange(TVector3 vertex);
+    TVector3                GetTrackVertex();
+    Int_t                   GetQuadrant();
+    Double_t                GetGeoTheta();
+    Double_t                GetGeoPhi();
+    Double_t                GetGeoEnergy();
+    Double_t                GetGeoQEnergy();
+    Bool_t                  GetIsNoise();
+    std::vector<Double_t>&  GetRANSACCoeff();
 
     // MC result and projections
     std::vector<Double_t> fPosXmin;
@@ -117,21 +119,22 @@ class ATTrack : public TObject {
 
 
   protected:
-    std::vector<ATHit> fHitArray;
-    Int_t fTrackID;
+    std::vector<ATHit>    fHitArray;
+    Int_t                 fTrackID;
     std::vector<Double_t> fParFit;
-    Double_t fMinimum; //Minimizer result
-    Int_t fNFree; // Free paramets
-    Double_t fAngleZAxis; // Angle of the track with respecto to the X axis.
-    Double_t fAngleZDet; // Angle with respect to Z axis (beam axis) in the detector system.
-    Double_t fAngleYDet;//  "         "           Y   "             "
-    Double_t fRange; //Range of the particle
-    TVector3 fTrackVertex; //Mean Vertex of the track
-    Double_t fGeoThetaAngle; // Geometrical scattering angle with respect to the detector FitParameters
-    Double_t fGeoPhiAngle; //  " azimuthal "
-    Double_t fGeoEnergy; //Energy from the range
-    Double_t fGeoQEnergy; //Energy from the induced charge
-    Int_t fQuadrant; //Pad plane quadrant
+    Double_t              fMinimum; //Minimizer result
+    Int_t                 fNFree; // Free paramets
+    Double_t              fAngleZAxis; // Angle of the track with respecto to the X axis.
+    Double_t              fAngleZDet; // Angle with respect to Z axis (beam axis) in the detector system.
+    Double_t              fAngleYDet;//  "         "           Y   "             "
+    Double_t              fRange; //Range of the particle
+    TVector3              fTrackVertex; //Mean Vertex of the track
+    Double_t              fGeoThetaAngle; // Geometrical scattering angle with respect to the detector FitParameters
+    Double_t              fGeoPhiAngle; //  " azimuthal "
+    Double_t              fGeoEnergy; //Energy from the range
+    Double_t              fGeoQEnergy; //Energy from the induced charge
+    Int_t                 fQuadrant; //Pad plane quadrant
+    std::vector<Double_t> fRANSACCoeff; //Coefficients for radius smoothing using RANSAC: x, y and radius of curvature
 
     Bool_t kIsMCFit;
     Bool_t kIsNoise;

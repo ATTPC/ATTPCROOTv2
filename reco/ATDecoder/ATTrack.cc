@@ -66,6 +66,7 @@ void ATTrack::SetMCFit(Bool_t value)                                { kIsMCFit =
 void ATTrack::SetGeoEnergy(Double_t energy)                         { fGeoEnergy = energy;}
 void ATTrack::SetGeoQEnergy(Double_t qenergy)                       { fGeoQEnergy = qenergy;}
 void ATTrack::SetIsNoise(Bool_t value)                              { kIsNoise = value;}
+void ATTrack::SetRANSACCoeff(std::vector<Double_t> par)             { fRANSACCoeff = par;}
 
 std::vector<ATHit> *ATTrack::GetHitArray()                          { return &fHitArray;}
 std::vector<Double_t> ATTrack::GetFitPar()                          { return fParFit;}
@@ -81,6 +82,8 @@ Double_t ATTrack::GetGeoTheta()                                     { return fGe
 Double_t ATTrack::GetGeoPhi()                                       { return fGeoPhiAngle;}
 Double_t ATTrack::GetGeoEnergy()                                    { return fGeoEnergy;}
 Bool_t  ATTrack::GetIsNoise()                                       { return kIsNoise;}
+std::vector<Double_t>& ATTrack::GetRANSACCoeff()                    { return fRANSACCoeff;}
+
 
 std::vector<Double_t> ATTrack::GetPosXMin() const                   { return fPosXmin;}
 std::vector<Double_t> ATTrack::GetPosYMin() const                   { return fPosYmin;}
