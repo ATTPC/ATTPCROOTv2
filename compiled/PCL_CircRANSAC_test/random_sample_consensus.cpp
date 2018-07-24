@@ -17,6 +17,20 @@
 #include "TGraph.h"
 #include "TCanvas.h"
 #include "TApplication.h"
+#include "TMath.h"
+
+
+void GetEnergy(Double_t M,Double_t IZ,Double_t BRO,Double_t &E){
+
+  //Energy per nucleon
+  Float_t  AM=931.5;
+  Float_t X=BRO/0.1439*IZ/M;
+  X=pow(X,2);
+  X=2.*AM*X;
+  X=X+pow(AM,2);
+  E=TMath::Sqrt(X)-AM;
+
+}
 
 
 int
@@ -30,15 +44,21 @@ main(int argc, char** argv)
   pcl::PointCloud<pcl::PointXYZ>::Ptr final (new pcl::PointCloud<pcl::PointXYZ>);
 
   std::ifstream file;
-  file.open("../event_2.dat");
+  file.open("../event_6_2.dat");
+
+  //events 1 and 19 - 3.3 MeV 137 deg
+  // events 2 and 6 - 9.9 MeV 60 deg
+
+  double angle = 12.36;
 
   std::string line_buffer;
 
   float x,y,z,A;
   int TB;
   int i = 0;
+  int nPoints =0;
 
-  cloud->width    = 74;
+  cloud->width    = 1000;
   cloud->height   = 1;
   cloud->is_dense = false;
   cloud->points.resize (cloud->width * cloud->height);
@@ -56,6 +76,10 @@ main(int argc, char** argv)
           ++i;
 
   }
+
+  i/=1;
+
+  cloud->points.resize (i * cloud->height);
 
   pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
   pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
@@ -81,6 +105,13 @@ main(int argc, char** argv)
                                       << coefficients->values[1] << " "
                                       << coefficients->values[2] << " " 
                                       << coefficients->values[3] << std::endl;
+
+  double bro = 2.0*coefficients->values[2]/TMath::Sin(angle*TMath::Pi()/180.0)/1000.0;                                    
+  double ener = 0;
+
+  GetEnergy(1.0,1.0,bro,ener);
+
+  std::cout<<" Energy "<<ener<<"\n";                                      
 
   TGraph *hitPattern = new TGraph();
 

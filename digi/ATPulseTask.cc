@@ -106,7 +106,7 @@ Double_t PadResponse(Double_t *x, Double_t *par){
 void ATPulseTask::Exec(Option_t* option) {
   fLogger->Debug(MESSAGE_ORIGIN,"Exec of ATPulseTask");
   
-  Double_t tau  = 1; //shaping time (us)
+  Double_t tau  = 1.0; //shaping time (us)
 
   for(Int_t padS=0;padS<10240;padS++)
     eleAccumulated[padS]->Reset();

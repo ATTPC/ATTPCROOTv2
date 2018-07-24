@@ -155,8 +155,8 @@ void Mg30_tp_sim(Int_t nEvents = 50, TString mcEngine = "TGeant4")
 		             ExE.push_back(0.0);//In MeV
 
 
-                 Double_t ThetaMinCMS = 60.0;
-                 Double_t ThetaMaxCMS = 61.0;
+                 Double_t ThetaMinCMS = 20.0;
+                 Double_t ThetaMaxCMS = 160.0;
 
 
         ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);

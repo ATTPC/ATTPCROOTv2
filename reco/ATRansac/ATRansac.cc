@@ -218,6 +218,7 @@ std::vector<ATTrack*> ATRANSACN::ATRansac::Ransac(std::vector<ATHit>* hits)
           cloud->points[iHit].z = 0.0;
           cloud->points[iHit].rgb = iHit;
 
+
         }
         else{
           cloud->points[iHit].x = position.X();
@@ -277,17 +278,22 @@ while (cloud->points.size () > fRANSACPointThreshold * nr_points)
      extract.filter (*cloud_p);
      //std::cerr << "PointCloud representing the planar component: " << cloud_p->width * cloud_p->height << " data points." << std::endl;
      //TODO: Possible memory leak, change to vector of objects!
-     ATTrack *track = new ATTrack();
 
-          for(Int_t iHit=0;iHit<(cloud_p->width*cloud_p->height);iHit++)
-          {
-            if(&hits->at(cloud_p->points[iHit].rgb)) track->AddHit(&hits->at(cloud_p->points[iHit].rgb));
-          }
+     //std::cout<<" Cloud p size "<<cloud_p->points.size()<<" "<<cloud_p->width<<"  "<<cloud_p->height<<"\n";
 
-     track->SetRANSACCoeff(coeff);
-     
+     if(cloud_p->points.size()>0){
+         ATTrack *track = new ATTrack();
 
-     tracks.push_back(track);
+              for(Int_t iHit=0;iHit<cloud_p->points.size();iHit++)
+              {
+                if(&hits->at(cloud_p->points[iHit].rgb)) track->AddHit(&hits->at(cloud_p->points[iHit].rgb));
+              }
+
+         track->SetRANSACCoeff(coeff);
+         
+
+         tracks.push_back(track);
+      }   
      //std::stringstream ss;
      //ss << "../track_" << i << ".pcd";
      //writer.write<pcl::PointXYZ> (ss.str (), *cloud_p, false);

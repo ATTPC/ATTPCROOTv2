@@ -1115,7 +1115,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
                                   if(circleTracks.size()>0)fIniRadiusRansac = circleTracks[0]->GetRANSACCoeff()[2];
                                   else fIniRadiusRansac = TMath::Sqrt(  TMath::Power((fXCenter-position.X()),2)   +  TMath::Power((fYCenter-position.Y()),2)    );
                                   std::cout<<cRED<<" Radius Ransac "<<fIniRadiusRansac<<"\n";
-                                  std::cout<<" fXCenter "<<fXCenter<<"  fYCenter "<<fYCenter<<" "<<position.X()<<"  "<<position.Y()<<"\n";
+                                  std::cout<<" fXCenter "<<fXCenter<<"  fYCenter "<<fYCenter<<" "<<position.X()<<"  "<<position.Y()<<cNORMAL<<"\n";
 
                                   fIniPhiRansac = TMath::ATan2(fXCenter-position.X(),fYCenter-position.Y());
                                   fRansacLinePar = trackCand.GetFitPar();
