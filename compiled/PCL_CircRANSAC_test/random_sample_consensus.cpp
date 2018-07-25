@@ -44,12 +44,12 @@ main(int argc, char** argv)
   pcl::PointCloud<pcl::PointXYZ>::Ptr final (new pcl::PointCloud<pcl::PointXYZ>);
 
   std::ifstream file;
-  file.open("../event_6_2.dat");
+  file.open("../event_7.dat");
 
   //events 1 and 19 - 3.3 MeV 137 deg
   // events 2 and 6 - 9.9 MeV 60 deg
 
-  double angle = 12.36;
+  double angle = 25.57;
 
   std::string line_buffer;
 
@@ -115,13 +115,25 @@ main(int argc, char** argv)
 
   TGraph *hitPattern = new TGraph();
 
+  std::vector<double> wpca;
+  std::vector<double> whit;
+
+
   std::cerr << "Model inliers: " << inliers->indices.size () << std::endl;
   for (size_t i = 0; i < inliers->indices.size (); ++i){
     std::cerr << inliers->indices[i] << "    " << cloud->points[inliers->indices[i]].x << " "
                                                << cloud->points[inliers->indices[i]].y << " "
                                                << cloud->points[inliers->indices[i]].z << std::endl;
-     hitPattern->SetPoint(hitPattern->GetN(),cloud->points[inliers->indices[i]].x,cloud->points[inliers->indices[i]].y );                                          
+
+     //wpca.push_back( (cloud->points[inliers->indices[i]].y -  coefficients->values[1])/ )                                          
+
+
+     hitPattern->SetPoint(hitPattern->GetN(),cloud->points[inliers->indices[i]].x,cloud->points[inliers->indices[i]].y );  
+
+
   }
+
+
 
   hitPatternOrigin->SetMarkerStyle(20);
   hitPatternOrigin->SetMarkerColor(kBlue);
