@@ -1,4 +1,4 @@
-void Mg30_tp_sim(Int_t nEvents = 50, TString mcEngine = "TGeant4")
+void Mg30_tp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -155,7 +155,7 @@ void Mg30_tp_sim(Int_t nEvents = 50, TString mcEngine = "TGeant4")
 		             ExE.push_back(0.0);//In MeV
 
 
-                 Double_t ThetaMinCMS = 20.0;
+                 Double_t ThetaMinCMS = 10.0;
                  Double_t ThetaMaxCMS = 160.0;
 
 
