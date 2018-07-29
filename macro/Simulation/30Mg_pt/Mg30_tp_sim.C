@@ -1,4 +1,4 @@
-void Mg30_tp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
+void Mg30_tp_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -155,8 +155,8 @@ void Mg30_tp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 		             ExE.push_back(0.0);//In MeV
 
 
-                 Double_t ThetaMinCMS = 10.0;
-                 Double_t ThetaMaxCMS = 160.0;
+                 Double_t ThetaMinCMS = 100.0;
+                 Double_t ThetaMaxCMS = 100.0;
 
 
         ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);

@@ -11,7 +11,7 @@
 #include <iostream>
 #include <fstream>
 
-void ana(Int_t num_ev=6){
+void ana(Int_t num_ev=10){
 
 
   //HISTOS

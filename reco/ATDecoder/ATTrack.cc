@@ -67,6 +67,8 @@ void ATTrack::SetGeoEnergy(Double_t energy)                         { fGeoEnergy
 void ATTrack::SetGeoQEnergy(Double_t qenergy)                       { fGeoQEnergy = qenergy;}
 void ATTrack::SetIsNoise(Bool_t value)                              { kIsNoise = value;}
 void ATTrack::SetRANSACCoeff(std::vector<Double_t> par)             { fRANSACCoeff = par;}
+void ATTrack::SetGeoCenter(std::pair<Double_t,Double_t> center)     { fGeoCenter = center; }
+void ATTrack::SetGeoRadius(Double_t radius)                         { fGeoRadius = radius;}  
 
 std::vector<ATHit> *ATTrack::GetHitArray()                          { return &fHitArray;}
 std::vector<Double_t> ATTrack::GetFitPar()                          { return fParFit;}
@@ -83,6 +85,8 @@ Double_t ATTrack::GetGeoPhi()                                       { return fGe
 Double_t ATTrack::GetGeoEnergy()                                    { return fGeoEnergy;}
 Bool_t  ATTrack::GetIsNoise()                                       { return kIsNoise;}
 std::vector<Double_t>& ATTrack::GetRANSACCoeff()                    { return fRANSACCoeff;}
+std::pair<Double_t,Double_t> ATTrack::GetGeoCenter()                { return fGeoCenter;}
+Double_t                     ATTrack::GetGeoRadius()                { return fGeoRadius;}
 
 
 std::vector<Double_t> ATTrack::GetPosXMin() const                   { return fPosXmin;}

@@ -828,7 +828,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,Bool_t YZplane,Bool_t XYp
 
                   }
                    delete min;
-                   delete parameter;
+                   delete[] parameter;
 
                     //hdist->Draw();
                     //distVSTb->Draw("zcol");
@@ -1111,9 +1111,15 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
                                   if(kDebug) std::cout<<cGREEN<<" Ini Hit TimeStamp : "<<hit.GetTimeStamp()<<cNORMAL<<std::endl;
                                   fIniHitRansac->SetTimeStamp(hit.GetTimeStamp());
                                   std::vector<ATTrack*> circleTracks = smoothRadius(trackCand);
+                                  
                               
-                                  if(circleTracks.size()>0)fIniRadiusRansac = circleTracks[0]->GetRANSACCoeff()[2];
-                                  else fIniRadiusRansac = TMath::Sqrt(  TMath::Power((fXCenter-position.X()),2)   +  TMath::Power((fYCenter-position.Y()),2)    );
+                                  if(circleTracks.size()>0){
+                                    fIniRadiusRansac = circleTracks[0]->GetRANSACCoeff()[2];
+                                    fIniTheta = calcAngleFromArcLength(circleTracks[0]);
+                                    fIniThetaRansac = fIniTheta;
+                                    std::cout<<" Smooth Angle:  "<< fIniTheta*180.0/TMath::Pi() << "\n";
+
+                                  }else fIniRadiusRansac = TMath::Sqrt(  TMath::Power((fXCenter-position.X()),2)   +  TMath::Power((fYCenter-position.Y()),2)    );
                                   std::cout<<cRED<<" Radius Ransac "<<fIniRadiusRansac<<"\n";
                                   std::cout<<" fXCenter "<<fXCenter<<"  fYCenter "<<fYCenter<<" "<<position.X()<<"  "<<position.Y()<<cNORMAL<<"\n";
 
@@ -1261,8 +1267,9 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
                       }
 
                       // Ugly!! Debugging
-                      fIniTheta = fThetaVal/thetacnt;
-                      fIniThetaRansac = fThetaVal/thetacnt;
+                      //fIniTheta = fThetaVal/thetacnt;
+                      //fIniThetaRansac = fThetaVal/thetacnt;
+                      //std::cout<<" Init Angle "<<fIniTheta*180.0/TMath::Pi()<<"\n";
                   }
 
 /////////////////////////// End of Theta Average Calculation   /////////////////////////////
@@ -1289,7 +1296,10 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
                 parameter[7]=fIniHitID;
 
 
-                  for(Int_t i=0;i<8;i++) fParameter[i]=parameter[i];
+                  for(Int_t i=0;i<8;i++){
+                   fParameter[i]=parameter[i];
+                   fParAux.push_back(parameter[i]);
+                  }
 
 
                   Double_t HoughAngleDeg = fHoughLinePar.first*180.0/TMath::Pi();
@@ -1321,7 +1331,7 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
                  //Custom function to pass the method to extract the Hit Array
                  std::function<std::vector<ATHit>*()> func = std::bind(&ATEvent::GetHitArray,event);
                  //min->MinimizeOptMapAmp(parameter,event,hPadPlane,PadCoord);
-                 min->MinimizeGen(parameter,event,func,hPadPlane,PadCoord);
+                 //min->MinimizeGen(parameter,event,func,hPadPlane,PadCoord);
                  fPosXmin = min->GetPosXMin();
                  fPosYmin = min->GetPosYMin();
                  fPosZmin = min->GetPosZMin();
@@ -1381,7 +1391,63 @@ void ATHoughSpaceCircle::CalcHoughSpace(ATEvent* event,TH2Poly* hPadPlane,const 
 
                  
                  delete min;
-                 delete parameter;
+                 delete[] parameter;
+
+
+
+}
+
+double ATHoughSpaceCircle::calcAngleFromArcLength(ATTrack* track)
+{
+
+    std::vector<ATHit>* hits = track->GetHitArray();
+
+    std::vector<Double_t> coeff = track->GetRANSACCoeff();
+
+    std::vector<double> wpca;
+    std::vector<double> whit;
+    std::vector<double> arclength;
+
+    TGraph *arclengthGraph = new TGraph();
+
+    TVector3 posPCA = hits->at(0).GetPosition();
+
+    for (size_t i = 0; i < hits->size (); ++i){
+
+            TVector3 pos = hits->at(i).GetPosition();
+
+
+            /*std::cerr << inliers->indices[i] << "    " << cloud->points[inliers->indices[i]].x << " "
+                                                       << cloud->points[inliers->indices[i]].y << " "
+                                                       << cloud->points[inliers->indices[i]].z << std::endl;*/
+
+             wpca.push_back( TMath::ATan2 ( posPCA.Y() -  coeff.at(1) , posPCA.X() -  coeff.at(0) ) );    
+
+             whit.push_back( TMath::ATan2 ( pos.Y() -  coeff.at(1) , pos.X() -  coeff.at(0) ) );
+
+             arclength.push_back(  fabs(coeff.at(2))*( wpca.at(i) - whit.at(i))  );                                   
+
+             arclengthGraph->SetPoint(arclengthGraph->GetN(),arclength.at(i),pos.Z());
+
+
+     }
+
+     TF1 *f1 = new TF1("f1","pol1",-500,500);
+     arclengthGraph->Fit(f1,"R");  
+     Double_t slope = f1->GetParameter(1);
+     double angle = (TMath::ATan2(slope,1)*180.0/TMath::Pi());
+
+
+     if(angle<0) angle=90.0+angle;
+     else if(angle>0) angle=90+angle;
+
+
+     delete f1;
+     delete arclengthGraph;
+     
+
+
+     return angle*TMath::Pi()/180.0;
 
 
 
@@ -1804,6 +1870,7 @@ ATHit const *ATHoughSpaceCircle::GetIniHit() const { return fIniHit; }
 ATHit const *ATHoughSpaceCircle::GetIniHitRansac() const { return fIniHitRansac; }
 
 Double_t const *ATHoughSpaceCircle::GetInitialParameters() const { return fParameter; }
+std::vector<double> const ATHoughSpaceCircle::GetInitialParametersVector() const { return fParAux;}
 
 std::vector<Double_t> ATHoughSpaceCircle::GetPosXMin() const { return fPosXmin; }
 std::vector<Double_t> ATHoughSpaceCircle::GetPosYMin() const { return fPosYmin; }

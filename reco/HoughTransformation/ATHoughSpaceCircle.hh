@@ -54,6 +54,7 @@ public:
     ATHit const *GetIniHitRansac() const;
 
     Double_t const *GetInitialParameters() const;
+    std::vector<double> const GetInitialParametersVector() const;
 
     std::vector<Double_t> GetPosXMin() const;
     std::vector<Double_t> GetPosYMin() const;
@@ -114,6 +115,7 @@ protected:
     Int_t GetDensityOfHits(std::vector<ATHit> *hits, Int_t index, Int_t tb_range); //Gets number of hits around a time bucket
     std::vector<ATHit> GetTBHitArray(Int_t TB,std::vector<ATHit> *harray);
     std::vector<ATTrack*> smoothRadius(ATTrack &trackCand);
+    double calcAngleFromArcLength(ATTrack* track);
 
     // TODO: Double_t fThreshold;
     std::map<std::vector<Float_t>, Int_t> HoughMap_XY;
@@ -166,6 +168,8 @@ protected:
 
     Double_t fParameter[8];
     std::vector<std::function<Double_t(Double_t, std::vector<Double_t>&)>> fEloss_func_array; // !
+
+    std::vector<double> fParAux;
 
     ATRANSACN::ATRansac RansacSmoothRadius;
 
