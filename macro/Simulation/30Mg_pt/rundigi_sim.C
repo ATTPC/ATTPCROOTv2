@@ -71,7 +71,7 @@ void rundigi_sim
   // __ Init and run ___________________________________
 
   fRun -> Init();
-  fRun -> Run(0,20);
+  fRun -> Run(0,2000);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
