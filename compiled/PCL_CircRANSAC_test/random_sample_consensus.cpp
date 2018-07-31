@@ -46,7 +46,7 @@ main(int argc, char** argv)
   pcl::PointCloud<pcl::PointXYZ>::Ptr final (new pcl::PointCloud<pcl::PointXYZ>);
 
   std::ifstream file;
-  file.open("../event_4b.dat");
+  file.open("../event_21.dat");
 
   std::string line_buffer;
 
@@ -74,7 +74,7 @@ main(int argc, char** argv)
 
   }
 
-  i/=1;
+  i/=3;
 
   cloud->points.resize (i * cloud->height);
 

@@ -26,7 +26,7 @@ void ana_digi()
     double _B = 2.0; //Magnetic field
 
 
-    for(Int_t i=0;i<nEvents;i++){
+    for(Int_t i=0;i<22;i++){
          
 
               Reader1.Next();
