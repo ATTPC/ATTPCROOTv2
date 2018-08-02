@@ -26,7 +26,7 @@ void ana_digi()
     double _B = 2.0; //Magnetic field
 
 
-    for(Int_t i=0;i<22;i++){
+    for(Int_t i=0;i<nEvents;i++){
          
 
               Reader1.Next();
@@ -75,14 +75,35 @@ void ana_digi()
 
      }// Event loop
 
-     TCanvas *c1 = new TCanvas("c1","c1",400,400);
-	 scatteringAngle->Draw();  
+    Double_t *ThetaCMS = new Double_t[20000];
+    Double_t *ThetaLabRec = new Double_t[20000];
+    Double_t *EnerLabRec = new Double_t[20000];
+    Double_t *ThetaLabSca = new Double_t[20000];
+    Double_t *EnerLabSca = new Double_t[20000];
 
-	 TCanvas *c2 = new TCanvas("c2","c2",400,400);
-	 energy->Draw();
+    TString kinfile="30Mg_tp_5AMeV.txt";
+    std::ifstream *kineStr = new std::ifstream(kinfile.Data());
+    Int_t numKin=0;
 
-	 TCanvas *c3 = new TCanvas("c3","c3",400,400);   
-	 ang_vs_energy->Draw("col");      
+    if(!kineStr->fail()){
+      while(!kineStr->eof()){
+          *kineStr>>ThetaCMS[numKin]>>ThetaLabRec[numKin]>>EnerLabRec[numKin]>>ThetaLabSca[numKin]>>EnerLabSca[numKin];
+          numKin++;
+      }
+    }else if(kineStr->fail()) std::cout<<" Warning : No Kinematics file found for this reaction! Please run the macro on $SIMPATH/macro/Kinematics/Decay_kinematics/Mainrel.cxx"<<std::endl;
+
+    TGraph *Kine = new TGraph(numKin,ThetaLabRec,EnerLabRec);
+    Kine->SetLineColor(kRed);
+
+    TCanvas *c1 = new TCanvas("c1","c1",400,400);
+	  scatteringAngle->Draw();  
+
+	  TCanvas *c2 = new TCanvas("c2","c2",400,400);
+	  energy->Draw();
+
+	  TCanvas *c3 = new TCanvas("c3","c3",400,400);   
+	  ang_vs_energy->Draw("col");
+    Kine->Draw("C");
 
 
 

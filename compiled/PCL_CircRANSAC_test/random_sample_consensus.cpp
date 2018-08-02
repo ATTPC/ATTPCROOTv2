@@ -135,7 +135,7 @@ main(int argc, char** argv)
 
   }
 
-  TF1 *f1 = new TF1("f1","pol1",-500,500);
+  TF1 *f1 = new TF1("f1","pol1",0,500);
   arclengthGraph->Fit(f1,"R");  
   //TF1 *fitfunc = arclengthGraph->GetFunction("pol1");
 
@@ -157,24 +157,32 @@ main(int argc, char** argv)
 
   std::cout<<" Energy "<<ener<<"\n"; 
 
-  TCanvas *c1 = new TCanvas();
-  c1->Divide(2,2);
+  TCanvas *c1 = new TCanvas("c1","c1",700,500);
+  c1->Divide(2,1);
   c1->cd(1);
 
   hitPatternOrigin->SetMarkerStyle(20);
   hitPatternOrigin->SetMarkerColor(kBlue);
   hitPatternOrigin->SetMarkerSize(1.2);
+  hitPatternOrigin->GetXaxis()->SetTitle("X (mm)");
+  hitPatternOrigin->GetYaxis()->SetTitle("Y (mm)");
   hitPatternOrigin->Draw("ap");
   
   hitPattern->SetMarkerStyle(20);
   hitPattern->SetMarkerColor(kRed);
   hitPattern->SetMarkerSize(1.2);
+  hitPattern->GetXaxis()->SetTitle("X (mm)");
+  hitPattern->GetYaxis()->SetTitle("Y (mm)");
   hitPattern->Draw("p");
+
+
 
   c1->cd(2);
   arclengthGraph->SetMarkerStyle(20);
   arclengthGraph->SetMarkerColor(kRed);
   arclengthGraph->SetMarkerSize(1.2);
+  arclengthGraph->GetXaxis()->SetTitle("Arclength (mm)");
+  arclengthGraph->GetYaxis()->SetTitle("Z (mm)");
   arclengthGraph->Draw("ap");
 
 

@@ -4,7 +4,7 @@
 #define cGREEN "\033[1;32m"
 
 
-void run_unpack_test2(std::string dataFile = "/home/ayyadlim/Desktop/run_0183.h5",TString parameterFile = "ATTPC.e15250.par",TString mappath="")
+void run_unpack_test2(std::string dataFile = "/home/ayyadlim/Desktop/run_0210.h5",TString parameterFile = "ATTPC.e15250.par",TString mappath="")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -75,7 +75,7 @@ void run_unpack_test2(std::string dataFile = "/home/ayyadlim/Desktop/run_0183.h5
 
   run -> Init();
 
-  run->Run(0,200);
+  run->Run(0,10);
   //run -> RunOnTBData();
 
 

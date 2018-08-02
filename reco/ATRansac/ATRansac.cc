@@ -203,6 +203,8 @@ std::vector<ATTrack*> ATRANSACN::ATRansac::Ransac(std::vector<ATHit>* hits)
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_p(new pcl::PointCloud<pcl::PointXYZRGBA>);
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_f (new pcl::PointCloud<pcl::PointXYZRGBA>);
 
+    if(hits->size()<5) return tracks;
+
     Int_t nHits = hits->size();
     cloud->points.resize(nHits);
 
@@ -306,6 +308,7 @@ while (cloud->points.size () > fRANSACPointThreshold * nr_points)
 
 
 }
+
 
     return tracks;
 
