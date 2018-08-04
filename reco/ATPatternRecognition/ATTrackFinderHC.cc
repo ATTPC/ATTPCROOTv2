@@ -141,8 +141,7 @@ std::vector<ATTrack> ATPATTERN::ATTrackFinderHC::clustersToTrack(pcl::PointCloud
 
         std::vector<pcl::PointIndicesPtr> clusters = cluster.getClusters();
 
-        for (size_t clusterIndex = 0; clusterIndex < clusters.size();
-             ++clusterIndex) {
+        for (size_t clusterIndex = 0; clusterIndex < clusters.size(); ++clusterIndex) {
 
           ATTrack track; // One track per cluster
 
@@ -157,16 +156,16 @@ std::vector<ATTrack> ATPATTERN::ATTrackFinderHC::clustersToTrack(pcl::PointCloud
             if(event.GetHit(point.intensity)) track.AddHit(event.GetHit(point.intensity));
 
 
-                      // remove clustered points from point-vector
-                      for (std::vector<pcl::PointXYZI,
-                                       Eigen::aligned_allocator<pcl::PointXYZI> >::iterator it =
-                               points.end();
-                           it != points.begin(); --it) {
+              // remove clustered points from point-vector
+               for (std::vector<pcl::PointXYZI, Eigen::aligned_allocator<pcl::PointXYZI> >::iterator it =points.end();it != points.begin(); --it) {
                         if (it->x == point.x && it->y == point.y && it->z == point.z) {
-                          points.erase(it);
-                          break;
-                        }
-                      }
+
+                            if(it!=points.end()){
+                                points.erase(it);                          
+                                break;
+                             }   
+                         }
+               }
 
 
           }//Indices loop

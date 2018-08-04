@@ -42,7 +42,7 @@ void ATPATTERN::ATPRA::SetTrackCurvature(ATTrack& track)
 
           double centerY = (-1/slopeAB)*( centerX - ( posB.X()+posA.X() )/2.0 )  + ( posB.Y()+posA.Y() )/2.0;
 
-          std::cout<<" Center "<<centerX<<" - "<<centerY<<"\n";
+          //std::cout<<" Center "<<centerX<<" - "<<centerY<<"\n";
 
           double radiusA = TMath::Sqrt( TMath::Power(posA.X() - centerX,2) + TMath::Power(posA.Y() - centerY,2)   );
           radius_vec.push_back(radiusA);
