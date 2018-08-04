@@ -28,22 +28,14 @@ bool ATPATTERN::ATTrackFinderHC::FindTracks(ATEvent &event, ATPatternEvent *patt
 
   hc_params bestParams;
   // ATTPC
-  // Skalierungsfaktor für das clustering
-  bestParams.cloudScaleModifier = 1.0;
-  // Radius zum glätten der Punkte
-  bestParams.smoothRadius = 7.0f;
-  // Anzal nächste Nachbarn um Triplets zu erzeugen
-  bestParams.genTripletsNnKandidates = 19;
-  // Anzahl bester Triplets, die aus der Kandidatenmenge übernommen werden
-  bestParams.genTripletsNBest = 3;
-  // Vermutung: Maximaler Winkel zwichen den Geraden AB und BC im Triplet.
-  bestParams.genTripletsMaxError = 0.015;
-  // Schwellwert für den besten Cluster Abstand.
-  // Darüber werden die Cluster nicht mehr vereinigt
-  bestParams.bestClusterDistanceDelta = 5.0;  // Aymans: 2.0
-  // Schwellwert zum Entfernen aller Cluster,
-  // welche weniger Tripletten besitzen als angegeben.
-  bestParams.cleanupMinTriplets = 5;
+  // Defaultvalues
+  bestParams.s = -1.0;
+  bestParams.r = -1.0;
+  bestParams.k = 19;
+  bestParams.n = 3;
+  bestParams.a = 0.03;
+  bestParams.t = 3.5;
+  bestParams.m = 8;
   opt_params = bestParams;
 
   //Parse ATTPCROOT date into PCL format
@@ -61,20 +53,29 @@ bool ATPATTERN::ATTrackFinderHC::FindTracks(ATEvent &event, ATPatternEvent *patt
     return 0;
   }
 
-  if (opt_params.smoothRadius < 0.0) {
-    float fq = msd::first_quartile(cloud_xyz);
-    opt_params.smoothRadius = fq;
-    //if (opt_verbose > 0) {
-      //std::cout << "Computed smoothen radius: " << fq << std::endl;
-    //}
+  // compute default r if it is not given
+  if (opt_params.r < 0.0) {
+    float dnn = 2.0f * std::sqrt(msd::first_quartile(cloud_xyz));
+    opt_params.r = dnn;
+    if (opt_verbose > 0) {
+      std::cout << "Computed smoothed radius: " << dnn << std::endl;
+    }
+  }
+
+  // compute default s if it is not given
+  if (opt_params.s < 0.0) {
+    float dnn = std::sqrt(msd::first_quartile(cloud_xyz)) / 3.0f;
+    opt_params.s = dnn;
+    if (opt_verbose > 0) {
+      std::cout << "Computed distance scale: " << dnn << std::endl;
+    }
   }
 
     pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_xyzti_smooth(
         new pcl::PointCloud<pcl::PointXYZI>());
 
-      // cloud_smooth = smoothenCloud(cloud_filtered, 12); // k nearest neighbour
-      cloud_xyzti_smooth =
-          smoothenCloud::smoothenCloud(cloud_xyzti, opt_params.smoothRadius,false);  // radius
+
+    cloud_xyzti_smooth = smoothenCloud(cloud_xyzti, opt_params.r,false);
 
 
       // calculate cluster
@@ -82,12 +83,12 @@ bool ATPATTERN::ATTrackFinderHC::FindTracks(ATEvent &event, ATPatternEvent *patt
       std::vector<hc::triplet> triplets;
 
       triplets = hc::generateTriplets(
-          cloud_xyzti_smooth, opt_params.genTripletsNnKandidates,
-          opt_params.genTripletsNBest, opt_params.genTripletsMaxError);
+      cloud_xyzti_smooth, opt_params.k,
+      opt_params.n, opt_params.a);
 
-      cluster = use_hc(cloud_xyzti_smooth, triplets, opt_params.cloudScaleModifier,
-                       opt_params.bestClusterDistanceDelta,
-                       opt_params.cleanupMinTriplets, opt_verbose);
+      cluster = use_hc(cloud_xyzti_smooth, triplets, opt_params.s,
+                   opt_params.t,
+                   opt_params.m, opt_verbose);
 
       //Adapt clusters to ATTrack
       //fTrackCand = clustersToTrack(cloud_xyzti,cluster,event);

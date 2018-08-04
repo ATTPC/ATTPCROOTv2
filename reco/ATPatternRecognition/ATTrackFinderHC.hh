@@ -54,14 +54,31 @@
 #define cGREEN "\033[1;32m"
 
 struct hc_params {
-  float cloudScaleModifier;
-  size_t genTripletsNnKandidates;
-  size_t genTripletsNBest;
-  size_t cleanupMinTriplets;
-  float smoothRadius;
-  float genTripletsMaxError;
-  float bestClusterDistanceDelta;
+  float s;
+  size_t k;
+  size_t n;
+  size_t m;
+  float r;
+  float a;
+  float t;
   float _padding;
+};
+
+struct Point {
+  float x;
+  float y;
+  float z;
+  std::vector<int> clIds;
+
+  Point(pcl::PointXYZ point) {
+    x = point.x;
+    y = point.y;
+    z = point.z;
+  }
+
+  bool operator==(const Point &p) const {
+    return (x == p.x && y == p.y && z == p.z);
+  }
 };
 
 namespace ATPATTERN{

@@ -15,7 +15,7 @@ neighbours. This is done for all points in the given point cloud.
 @param  cloud   the point cloud
 @return vector of mean squared distances of every point in the cloud
 */
-std::vector<float> compute_mean_sqare_distacne(
+std::vector<float> compute_mean_square_distance(
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int k) {
   // compute mean square distances for every point to its k nearest neighbours
   pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
@@ -59,7 +59,7 @@ oint cloud.
 @return first quartile
 */
 float first_quartile(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud) {
-  std::vector<float> msd = compute_mean_sqare_distacne(cloud, 1), lower_half;
+  std::vector<float> msd = compute_mean_square_distance(cloud, 1), lower_half;
   float const q1 = msd.size() /4;
   std::nth_element(msd.begin(), msd.begin() + q1, msd.end());
   return msd[q1];
