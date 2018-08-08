@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <sstream>
 #include <vector>
+#include <future>
 
 //ATTPCROOT
 #include "ATPRA.hh"

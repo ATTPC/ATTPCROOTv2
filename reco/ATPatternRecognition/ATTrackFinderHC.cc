@@ -170,7 +170,6 @@ std::vector<ATTrack> ATPATTERN::ATTrackFinderHC::clustersToTrack(pcl::PointCloud
 
           }//Indices loop
 
-          SetTrackCurvature(track);
           tracks.push_back(track);
 
         }// Clusters loop
@@ -187,6 +186,22 @@ std::vector<ATTrack> ATPATTERN::ATTrackFinderHC::clustersToTrack(pcl::PointCloud
         }
         track.SetIsNoise(kTRUE);
         tracks.push_back(track);
+
+        //Estimaton of track parameters
+        std::vector<std::future<void>> futures;
+        futures.reserve(10);
+
+        for(auto& track : tracks)
+        {
+
+           //futures.push_back( std::async(std::launch::async,&ATPRA::SetTrackInitialParameters,this,std::ref(track)) );
+           std::cout<<" Processing track "<<"\n";
+           SetTrackInitialParameters(track);
+
+        }
+
+        //for(auto& future : futures) future.wait();
+
 
         return tracks;
 

@@ -214,7 +214,7 @@ std::vector<ATTrack*> ATRANSACN::ATRansac::Ransac(std::vector<ATHit>* hits)
           Int_t PadNumHit = hit->GetHitPadNum();
           TVector3 position = hit->GetPosition();
 
-        if(fRPhiSpace){
+        if(fRPhiSpace){ //TODO: Pass a vector of hits with the proper RxPhi conversion
           cloud->points[iHit].x = hit->GetTimeStamp();
           cloud->points[iHit].y = TMath::Sqrt(  TMath::Power((fXCenter-position.X()),2)   +  TMath::Power((fYCenter-position.Y()),2)    )*TMath::ATan2(fXCenter-position.X(),fYCenter-position.Y());
           cloud->points[iHit].z = 0.0;
