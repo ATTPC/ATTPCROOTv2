@@ -187,6 +187,8 @@ std::vector<ATTrack> ATPATTERN::ATTrackFinderHC::clustersToTrack(pcl::PointCloud
         track.SetIsNoise(kTRUE);
         tracks.push_back(track);
 
+        ROOT::EnableThreadSafety();
+
         //Estimaton of track parameters
         std::vector<std::future<void>> futures;
         futures.reserve(10);
@@ -194,14 +196,23 @@ std::vector<ATTrack> ATPATTERN::ATTrackFinderHC::clustersToTrack(pcl::PointCloud
         for(auto& track : tracks)
         {
 
-           //futures.push_back( std::async(std::launch::async,&ATPRA::SetTrackInitialParameters,this,std::ref(track)) );
-           std::cout<<" Processing track "<<"\n";
-           SetTrackInitialParameters(track);
+           futures.push_back( std::async(std::launch::async,&ATPRA::SetTrackInitialParameters,this,std::ref(track)) );
+           //std::cout<<" Processing track "<<"\n";
+           //SetTrackInitialParameters(track);
 
         }
 
-        //for(auto& future : futures) future.wait();
+        for(auto& future : futures) future.wait();
 
+        for(auto& track : tracks)
+        { 
+          std::vector<Double_t>& coeffs = track.GetRANSACCoeff();
+
+            for(auto& coeff : coeffs){
+              std::cout<<coeff<<"\n";
+            }
+
+        }
 
         return tracks;
 

@@ -102,6 +102,9 @@ void ATPATTERN::ATPRA::SetTrackInitialParameters(ATTrack& track)
 
                arclengthGraph->SetPoint(arclengthGraph->GetN(),arclength.at(i),pos.Z());
 
+               //std::cout<<pos.X()<<"  "<<pos.Y()<<" "<<pos.Z()<<" "<<hits->at(i).GetTimeStamp()<<"  "<<hits->at(i).GetCharge()<<"\n";
+
+
                //Add a hit in the Arc legnth - Z plane
                double xPos = arclength.at(i);
                double yPos = pos.Z();
@@ -112,21 +115,24 @@ void ATPATTERN::ATPRA::SetTrackInitialParameters(ATTrack& track)
 
        }
 
-    // TF1 *f1 = new TF1("f1","pol1",-500,500);
+       TF1 *f1 = new TF1("f1","pol1",-500,500);
     // TF1 * f1 = new TF1("f1",[](double *x, double *p) { return (p[0]+p[1]*x[0]); },-500,500,2); 
     // TF1 * f1 = new TF1("f1","[0]+[1]*x",-500,500);
     // TF1 * f1 = new TF1("f1",fitf,-500,500,2);
     // arclengthGraph->Fit(f1,"R");  
     // Double_t slope = f1->GetParameter(1);
+    // std::cout<<" Slope "<<slope<<"\n";
 
      double slope = 0;
 
-     std::cout<<" RANSAC Theta "<<"\n";
+     //std::cout<<" RANSAC Theta "<<"\n";
      ATRANSACN::ATRansac RansacTheta;
      RansacTheta.SetModelType(pcl::SACMODEL_LINE);
      RansacTheta.SetRANSACPointThreshold(0.1);
-     RansacTheta.SetDistanceThreshold(3.0);
-     std::vector<ATTrack*> thetaTrack = RansacTheta.Ransac(thetaHits);
+     RansacTheta.SetDistanceThreshold(6.0);
+     std::vector<ATTrack*> thetaTracks = RansacTheta.Ransac(thetaHits);
+
+     //RansacTheta.MinimizeTrack(thetaTracks[0]);
 
      double angle = (TMath::ATan2(slope,1)*180.0/TMath::Pi());
 
