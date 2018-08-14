@@ -71,81 +71,91 @@ void ATPATTERN::ATPRA::SetTrackInitialParameters(ATTrack& track)
                                                                                //This function also sets the coefficients
                                                                                //i.e. radius of curvature and center
 
-      std::vector<ATHit>* hits = circularTracks[0]->GetHitArray();
+     // if(circularTracks[0]->GetHitArray() != nullptr) 
 
-      std::vector<Double_t> coeff = circularTracks[0]->GetRANSACCoeff();
+  
 
-      std::vector<double> wpca;
-      std::vector<double> whit;
-      std::vector<double> arclength;
-
-      TGraph *arclengthGraph = new TGraph();
-
-      TVector3 posPCA = hits->at(0).GetPosition();
-
-      std::vector<ATHit>* thetaHits = new std::vector<ATHit>();
-
-      for (size_t i = 0; i < hits->size (); ++i){
-
-              TVector3 pos = hits->at(i).GetPosition();
+      if(!circularTracks.empty())
+      {  
 
 
-              //std::cerr << inliers->indices[i] << "    " << cloud->points[inliers->indices[i]].x << " "
-                                                         //<< cloud->points[inliers->indices[i]].y << " "
-                                                         //<< cloud->points[inliers->indices[i]].z << std::endl;
+          std::vector<ATHit>* hits = circularTracks[0]->GetHitArray();
 
-               wpca.push_back( TMath::ATan2 ( posPCA.Y() -  coeff.at(1) , posPCA.X() -  coeff.at(0) ) );    
+          std::vector<Double_t> coeff = circularTracks[0]->GetRANSACCoeff();
 
-               whit.push_back( TMath::ATan2 ( pos.Y() -  coeff.at(1) , pos.X() -  coeff.at(0) ) );
+          std::vector<double> wpca;
+          std::vector<double> whit;
+          std::vector<double> arclength;
 
-               arclength.push_back(  fabs(coeff.at(2))*( wpca.at(i) - whit.at(i))  );                                   
+          TGraph *arclengthGraph = new TGraph();
 
-               arclengthGraph->SetPoint(arclengthGraph->GetN(),arclength.at(i),pos.Z());
+          TVector3 posPCA = hits->at(0).GetPosition();
 
-               //std::cout<<pos.X()<<"  "<<pos.Y()<<" "<<pos.Z()<<" "<<hits->at(i).GetTimeStamp()<<"  "<<hits->at(i).GetCharge()<<"\n";
+          std::vector<ATHit>* thetaHits = new std::vector<ATHit>();
 
+          for (size_t i = 0; i < hits->size (); ++i){
 
-               //Add a hit in the Arc legnth - Z plane
-               double xPos = arclength.at(i);
-               double yPos = pos.Z();
-               double zPos = 0.0;
-
-               thetaHits->push_back(ATHit(hits->at(i).GetHitPadNum(),i, xPos, yPos,zPos,hits->at(i).GetCharge()) );
+                  TVector3 pos = hits->at(i).GetPosition();
 
 
-       }
+                  //std::cerr << inliers->indices[i] << "    " << cloud->points[inliers->indices[i]].x << " "
+                                                             //<< cloud->points[inliers->indices[i]].y << " "
+                                                             //<< cloud->points[inliers->indices[i]].z << std::endl;
 
-       TF1 *f1 = new TF1("f1","pol1",-500,500);
-    // TF1 * f1 = new TF1("f1",[](double *x, double *p) { return (p[0]+p[1]*x[0]); },-500,500,2); 
-    // TF1 * f1 = new TF1("f1","[0]+[1]*x",-500,500);
-    // TF1 * f1 = new TF1("f1",fitf,-500,500,2);
-    // arclengthGraph->Fit(f1,"R");  
-    // Double_t slope = f1->GetParameter(1);
-    // std::cout<<" Slope "<<slope<<"\n";
+                   wpca.push_back( TMath::ATan2 ( posPCA.Y() -  coeff.at(1) , posPCA.X() -  coeff.at(0) ) );    
 
-     double slope = 0;
+                   whit.push_back( TMath::ATan2 ( pos.Y() -  coeff.at(1) , pos.X() -  coeff.at(0) ) );
 
-     //std::cout<<" RANSAC Theta "<<"\n";
-     ATRANSACN::ATRansac RansacTheta;
-     RansacTheta.SetModelType(pcl::SACMODEL_LINE);
-     RansacTheta.SetRANSACPointThreshold(0.1);
-     RansacTheta.SetDistanceThreshold(6.0);
-     std::vector<ATTrack*> thetaTracks = RansacTheta.Ransac(thetaHits);
+                   arclength.push_back(  fabs(coeff.at(2))*( wpca.at(i) - whit.at(i))  );                                   
 
-     //RansacTheta.MinimizeTrack(thetaTracks[0]);
+                   arclengthGraph->SetPoint(arclengthGraph->GetN(),arclength.at(i),pos.Z());
 
-     double angle = (TMath::ATan2(slope,1)*180.0/TMath::Pi());
+                   //std::cout<<pos.X()<<"  "<<pos.Y()<<" "<<pos.Z()<<" "<<hits->at(i).GetTimeStamp()<<"  "<<hits->at(i).GetCharge()<<"\n";
 
 
-     if(angle<0) angle=90.0+angle;
-     else if(angle>0) angle=90+angle;
+                   //Add a hit in the Arc legnth - Z plane
+                   double xPos = arclength.at(i);
+                   double yPos = pos.Z();
+                   double zPos = 0.0;
 
-     track.SetGeoCenter(std::make_pair(coeff.at(0),coeff.at(1)));
-     track.SetGeoTheta(angle*TMath::Pi()/180.0);
+                   thetaHits->push_back(ATHit(hits->at(i).GetHitPadNum(),i, xPos, yPos,zPos,hits->at(i).GetCharge()) );
 
-     //delete f1;
-     delete arclengthGraph;
-     delete thetaHits;
+
+           }
+
+           TF1 *f1 = new TF1("f1","pol1",-500,500);
+        // TF1 * f1 = new TF1("f1",[](double *x, double *p) { return (p[0]+p[1]*x[0]); },-500,500,2); 
+        // TF1 * f1 = new TF1("f1","[0]+[1]*x",-500,500);
+        // TF1 * f1 = new TF1("f1",fitf,-500,500,2);
+        // arclengthGraph->Fit(f1,"R");  
+        // Double_t slope = f1->GetParameter(1);
+        // std::cout<<" Slope "<<slope<<"\n";
+
+         double slope = 0;
+
+         //std::cout<<" RANSAC Theta "<<"\n";
+         ATRANSACN::ATRansac RansacTheta;
+         RansacTheta.SetModelType(pcl::SACMODEL_LINE);
+         RansacTheta.SetRANSACPointThreshold(0.1);
+         RansacTheta.SetDistanceThreshold(6.0);
+         std::vector<ATTrack*> thetaTracks = RansacTheta.Ransac(thetaHits);
+
+         //RansacTheta.MinimizeTrack(thetaTracks[0]);
+
+         double angle = (TMath::ATan2(slope,1)*180.0/TMath::Pi());
+
+
+         if(angle<0) angle=90.0+angle;
+         else if(angle>0) angle=90+angle;
+
+         track.SetGeoCenter(std::make_pair(coeff.at(0),coeff.at(1)));
+         track.SetGeoTheta(angle*TMath::Pi()/180.0);
+
+         //delete f1;
+         delete arclengthGraph;
+         delete thetaHits;
+
+      } 
      
 
 }
