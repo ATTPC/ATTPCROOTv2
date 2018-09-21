@@ -52,6 +52,7 @@ Set(DEPENDENCIES
 # Basically those are the libraries in the header files' directory.
     ATTPCReco
     AtTpcMap
+    FairLogger::FairLogger
 )
 
 GENERATE_LIBRARY()

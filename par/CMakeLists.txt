@@ -36,6 +36,7 @@ Set(LIBRARY_NAME ATPar)
 Set(DEPENDENCIES
     Base
     MCStack
+    FairLogger::FairLogger
 # Add all library names your code depending on.
 # Basically those are the libraries in the header files' directory.
 )

@@ -26,7 +26,7 @@ AtMCTrack.cxx
 Set(HEADERS )
 Set(LINKDEF MCStackLinkDef.h)
 Set(LIBRARY_NAME AtData)
-Set(DEPENDENCIES Base EG Physics Cling Core )
+Set(DEPENDENCIES Base EG Physics Cling Core FairLogger::FairLogger)
 
 GENERATE_LIBRARY()
 

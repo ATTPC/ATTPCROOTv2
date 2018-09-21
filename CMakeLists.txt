@@ -13,6 +13,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION  2.8.2 FATAL_ERROR)
 
 foreach(p
   CMP0025 # CMake 3.0
+  CMP0028 # double colon for imported and alias targets
   CMP0042 # CMake 3.0
   )
   if(POLICY ${p})
@@ -105,6 +106,11 @@ CHECK_EXTERNAL_PACKAGE_INSTALL_DIR()
 # For example the framework can run without GEANT4, but ROOT is
 # mandatory
 
+if(SIMPATH)
+  set(CMAKE_PREFIX_PATH ${SIMPATH} ${CMAKE_PREFIX_PATH})
+endif()
+
+find_package(FairLogger 1.1.0 REQUIRED)
 find_package(ROOT 5.32.00 REQUIRED)
 find_package(Pythia8)
 find_package(GENERATORS REQUIRED)

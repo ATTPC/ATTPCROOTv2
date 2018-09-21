@@ -28,6 +28,7 @@ set(LINKDEF FieldLinkDef.h)
 Set(LIBRARY_NAME Field)
 Set(DEPENDENCIES
     Base 
+    FairLogger::FairLogger
 )
 
 GENERATE_LIBRARY()

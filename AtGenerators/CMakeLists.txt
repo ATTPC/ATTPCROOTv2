@@ -44,6 +44,6 @@ set(LINKDEF  GenLinkDef.h)
 set(LIBRARY_NAME AtGen)
 
 #set(DEPENDENCIES  Base AtData pythia8 Pythia6)
-set(DEPENDENCIES  Base AtData)
+set(DEPENDENCIES  Base AtData FairLogger::FairLogger)
 
 GENERATE_LIBRARY()

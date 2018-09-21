@@ -43,7 +43,7 @@ AtTpcPoint.cxx
 Set(LINKDEF AtTpcLinkDef.h)
 Set(LIBRARY_NAME AtTpc)
 Set(DEPENDENCIES
-    Base Core Cling AtGen 
+    Base Core Cling AtGen FairLogger::FairLogger
 )
 
 GENERATE_LIBRARY()

@@ -151,6 +151,7 @@ Set(LINKDEF ATTPCRecoLinkDef.h)
 Set(LIBRARY_NAME ATTPCReco)
 Set(DEPENDENCIES
     Base
+    FairLogger::FairLogger
 #   Cling
     MCStack
     XMLParser

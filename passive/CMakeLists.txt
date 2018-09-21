@@ -30,6 +30,6 @@ AtPassiveContFact.cxx
 Set(HEADERS )
 Set(LINKDEF PassiveLinkDef.h)
 Set(LIBRARY_NAME Passive)
-Set(DEPENDENCIES Base GeoBase ParBase Geom Cling Core)
+Set(DEPENDENCIES Base GeoBase ParBase Geom Cling Core FairLogger::FairLogger)
 
 GENERATE_LIBRARY()
