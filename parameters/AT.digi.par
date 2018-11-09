@@ -19,7 +19,7 @@ GatingWirePlaneY:Double_t      -14   # mm
 EField:Double_t               5000   # V/m
 NumTbs:Int_t                   512
 SamplingRate:Int_t            12.5   # MHz
-DriftVelocity:Double_t         2.0   # cm/ns
+DriftVelocity:Double_t         2.0   # cm/micros
 DriftLength:Double_t          1000   # mm //ATTPC : 1000 - Prototype : 500
 YDivider:Int_t                1000   # Full drift length will be divided by this number when finding cluster
 GasFile:Int_t                    2

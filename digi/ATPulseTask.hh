@@ -23,10 +23,8 @@
 #include "ATRawEvent.hh"
 #include "ATGas.hh"
 
-
-
 class ATPulseTask : public FairTask {
-
+  
 public:
   ATPulseTask();
   ~ATPulseTask();
@@ -41,8 +39,9 @@ private:
   ATDigiPar* fPar;                     //!< Base parameter container.
   Int_t fEventID;                      //!< EventID
   Double_t fGain;                      //!< Gain.
-  Int_t fTBTime;                    //!< Time bucket size
-  Int_t fNumTbs;                       //!< 
+  Double_t fGETGain;                   //!< GET Gain.
+  Int_t fTBTime;                       //!< Time bucket size
+  Int_t fNumTbs;                       //!<
   Bool_t fIsPersistent;                //!< If true, save container
   TClonesArray* fDriftedElectronArray; //!< drifted electron array (input)
   TClonesArray* fRawEventArray;        //!< Raw Event array(only one)
@@ -51,13 +50,12 @@ private:
   AtTpcMap *fMap;                      //!<ATTPC map
   Int_t fInternalID;                   //!<Internal ID
   
-  std::map<Int_t, TH1F*> electronsMap;    //!< 
+  std::map<Int_t, TH1F*> electronsMap;    //!<
   TH1F** eleAccumulated;                  //!<
   
   TF1 *gain;                         //!<
   
   ClassDef(ATPulseTask,1);
-  
 };
 
 #endif
