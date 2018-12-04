@@ -47,7 +47,7 @@ using namespace std;
 void protov20181201()
 {
     TGraph *g[2016];
-    TH2Poly* h2pol = new TH2Poly("p2","pAT-TPC Pad Plane",-130,130,-130,130);
+    TH2Poly* h2pol = new TH2Poly();
     h2pol->SetName("ATTPC_Proto");
     h2pol->SetTitle("ATTPC_Proto");
 
@@ -210,7 +210,6 @@ void protov20181201()
 
     //TH2Poly file
     TFile *file = new TFile ("proto20181201_geo_hires.root","RECREATE");
-    h2pol->Clear();
     h2pol->Reset(0);
     h2pol->Write();
     file->Close();
