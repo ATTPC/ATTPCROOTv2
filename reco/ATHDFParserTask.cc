@@ -120,6 +120,7 @@ InitStatus ATHDFParserTask::Init()
   fNumEvents = HDFParser->open(fFileName.c_str());
   std::cout<<" Number of events : "<<fNumEvents<<"\n";
   fEventID = HDFParser->inievent();
+  fEventsByName = HDFParser->get_events_by_name();
   ioMan -> Register("ATRawEvent", "ATTPC", fRawEventArray, fIsPersistence);
   return kSUCCESS;
 }
@@ -143,68 +144,76 @@ void ATHDFParserTask::Exec(Option_t *opt)
 {
   fRawEventArray -> Delete();
   fRawEvent->Clear();
-  
-  std::cout<<" Event : "<<fEventID<<"\n";
 
-  std::size_t npads = HDFParser->n_pads(fEventID++);
-
-  //std::cout<<npads<<"\n";
-
-  	for(auto ipad=0;ipad<npads;++ipad)
-  	{
-  		
-
-  		std::vector<int16_t> rawadc = HDFParser->pad_raw_data(ipad);
-
-  		int iCobo = rawadc[0];
-  		int iAsad = rawadc[1];
-  		int iAget = rawadc[2];
-  		int iCh   = rawadc[3];
-  		int iPad  = rawadc[4];
-
-  		std::vector<int> PadRef={iCobo,iAsad,iAget,iCh};
-  		int PadRefNum = fAtMapPtr->GetPadNum(PadRef);
-
-      std::cout<<iCobo<<" "<<iAsad<<" "<<iAget<<" "<<iCh<<" "<<iPad<<"  "<<PadRefNum<<"\n";
-
-  		std::vector<Float_t> PadCenterCoord;
-      PadCenterCoord.reserve(2);
-      PadCenterCoord = fAtMapPtr->CalcPadCenter(PadRefNum);
-
-  		ATPad *pad = new ATPad(PadRefNum);
-  		pad->SetPadXCoord(PadCenterCoord[0]);
-        pad->SetPadYCoord(PadCenterCoord[1]);
-
-
-        //Baseline subtraction
-        double adc[512] = {0};
-        double baseline =0;
-
-        for (Int_t iTb = 500; iTb < 517; iTb++)
-        	baseline+=rawadc[iTb];
-
-        baseline/=17.0;
-
-  		for (Int_t iTb = 0; iTb < 512; iTb++){
-  				  
-                  pad -> SetRawADC(iTb, rawadc.at(iTb+5));
-                  adc[iTb] = (double)rawadc[iTb+5] - baseline;
-                  //std::cout<<" iTb "<<iTb<<" rawadc "<<rawadc[iTb]<<"	"<<adc[iTb]<<"\n";
-                  pad -> SetADC(iTb, adc[iTb]);
-        }          
-
-        pad -> SetPedestalSubtracted(kTRUE);
-        
-        fRawEvent -> SetIsGood(kTRUE);
-        fRawEvent -> SetPad(pad); 
-
-
-  	}
-  
+  if(fEventsByName.back().find("data") != std::string::npos) {
     
-  new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
-}
 
+      std::size_t npads = HDFParser->n_pads(fEventsByName.back());
+
+      std::cout<<" Event : "<<fEventID<<" Event name "<<fEventsByName.back()<<"\n";
+
+      ++fEventID;
+
+      //std::cout<<npads<<"\n";
+
+      	for(auto ipad=0;ipad<npads;++ipad)
+      	{
+      		
+
+      		std::vector<int16_t> rawadc = HDFParser->pad_raw_data(ipad);
+
+      		int iCobo = rawadc[0];
+      		int iAsad = rawadc[1];
+      		int iAget = rawadc[2];
+      		int iCh   = rawadc[3];
+      		int iPad  = rawadc[4];
+
+      		std::vector<int> PadRef={iCobo,iAsad,iAget,iCh};
+      		int PadRefNum = fAtMapPtr->GetPadNum(PadRef);
+
+          //std::cout<<iCobo<<" "<<iAsad<<" "<<iAget<<" "<<iCh<<" "<<iPad<<"  "<<PadRefNum<<"\n";
+
+      		std::vector<Float_t> PadCenterCoord;
+          PadCenterCoord.reserve(2);
+          PadCenterCoord = fAtMapPtr->CalcPadCenter(PadRefNum);
+
+      		ATPad *pad = new ATPad(PadRefNum);
+      		pad->SetPadXCoord(PadCenterCoord[0]);
+            pad->SetPadYCoord(PadCenterCoord[1]);
+
+
+            //Baseline subtraction
+            double adc[512] = {0};
+            double baseline =0;
+
+            for (Int_t iTb = 500; iTb < 517; iTb++)
+            	baseline+=rawadc[iTb];
+
+            baseline/=17.0;
+
+      		for (Int_t iTb = 0; iTb < 512; iTb++){
+      				  
+                      pad -> SetRawADC(iTb, rawadc.at(iTb+5));
+                      adc[iTb] = (double)rawadc[iTb+5] - baseline;
+                      //std::cout<<" iTb "<<iTb<<" rawadc "<<rawadc[iTb]<<"	"<<adc[iTb]<<"\n";
+                      pad -> SetADC(iTb, adc[iTb]);
+            }          
+
+            pad -> SetPedestalSubtracted(kTRUE);
+            
+            fRawEvent -> SetIsGood(kTRUE);
+            fRawEvent -> SetPad(pad); 
+
+
+      	}
+      
+        
+      new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
+    }
+
+    fEventsByName.pop_back();
+
+}
 
 
 void ATHDFParserTask::FinishEvent()

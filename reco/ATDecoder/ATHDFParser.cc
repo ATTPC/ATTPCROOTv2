@@ -53,6 +53,8 @@ std::tuple<hid_t, hsize_t> ATHDFParser::open_group(hid_t fileId, char const* gro
 	      char name[100];
 	      H5Lget_name_by_idx(groupId,".",H5_INDEX_NAME, H5_ITER_INC,isize,name,100, H5P_DEFAULT);
 	      events.push_back(std::atoi(name));
+        std::string name_string(name);
+        _eventsbyname.push_back(name_string);
 	      ++cnt;
 	  }
 
@@ -124,9 +126,9 @@ std::size_t ATHDFParser::open(char const* file)
     return std::get<1>(group_n_entries);
 }
 
-std::size_t ATHDFParser::n_pads(std::size_t i_raw_event)
+std::size_t ATHDFParser::n_pads(std::string i_raw_event)
 {
-    std::string dataset_name = std::to_string(i_raw_event);
+    std::string dataset_name = i_raw_event;
     auto dataset_dims = open_dataset(_group, dataset_name.c_str());
     if (std::get<0>(dataset_dims)==0) return 0;
     _dataset = std::get<0>(dataset_dims);

@@ -47,7 +47,7 @@ class ATHDFParser : public TObject {
 
     // Following methods satisfy the data_handler interface
     std::size_t open(char const* file);
-    std::size_t n_pads(std::size_t i_raw_event);
+    std::size_t n_pads(std::string i_raw_event);
     std::vector<int16_t> pad_raw_data(std::size_t i_pad);
     std::size_t datasets();
     unsigned long int inievent();
@@ -55,12 +55,15 @@ class ATHDFParser : public TObject {
     void end_raw_event();
     void close();
 
+    std::vector<std::string> get_events_by_name() {return _eventsbyname;}
+
   private:
 
-	 hid_t       			   _file;
-	 hid_t       			   _group;
-	 hid_t       			   _dataset;
+	 hid_t       			         _file;
+	 hid_t       			         _group;
+	 hid_t       			         _dataset;
 	 unsigned long int         _inievent;
+   std::vector<std::string>  _eventsbyname;
 	 
    
 

@@ -68,6 +68,8 @@ private:
   Int_t kOpt;
   Bool_t fIsProtoGeoSet;
   Bool_t fIsProtoMapSet;
+
+  std::vector<std::string> fEventsByName;
              
   
   ClassDef(ATHDFParserTask, 1);

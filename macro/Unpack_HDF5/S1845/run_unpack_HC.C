@@ -15,7 +15,7 @@ void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0074.h5",TS
   gSystem->Load("libXMLParser.so");
   // -----------------------------------------------------------------
   // Set file names
-  TString scriptfile = "LookupProto20181201.xml";
+  TString scriptfile = "LookupProto20181201v2.xml";
   TString protomapfile = "proto20181201.map";
   TString dir = getenv("VMCWORKDIR");
   TString scriptdir = dir + "/scripts/"+ scriptfile;
@@ -82,7 +82,7 @@ void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0074.h5",TS
 
   run -> Init();
 
-  run->Run(0,1);
+  run->Run(0,100);
   //run -> RunOnTBData();
 
 
