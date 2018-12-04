@@ -20,8 +20,31 @@ ATHDFParserTask::ATHDFParserTask():AtPadCoordArr(boost::extents[10240][3][2])
   fRawEventArray = new TClonesArray("ATRawEvent");
   fEventID = 0;
   fRawEvent = new ATRawEvent();
-  fAtMapPtr = new AtTpcMap();
+  
+  kOpt = 0;
 
+
+  fIsProtoGeoSet = kFALSE;
+  fIsProtoMapSet = kFALSE;
+  if(kOpt==0) fAtMapPtr = new AtTpcMap();
+  else if(kOpt==1) fAtMapPtr = new AtTpcProtoMap();
+  else std::cout << "== ATCore Initialization Error : Option not found. Current available options: ATTPC Map 0 / Prototype Map 1" << std::endl;
+  
+}
+
+ATHDFParserTask::ATHDFParserTask(Int_t opt):AtPadCoordArr(boost::extents[10240][3][2]),kOpt(0)
+{
+  fLogger = FairLogger::GetLogger();
+  fIsPersistence = kFALSE;
+  fRawEventArray = new TClonesArray("ATRawEvent");
+  fEventID = 0;
+  fRawEvent = new ATRawEvent();
+  kOpt = opt;
+  fIsProtoGeoSet = kFALSE;
+  fIsProtoMapSet = kFALSE;
+  if(kOpt==0) fAtMapPtr = new AtTpcMap();
+  else if(kOpt==1) fAtMapPtr = new AtTpcProtoMap();
+  else std::cout << "== ATCore Initialization Error : Option not found. Current available options: ATTPC Map 0 / Prototype Map 1" << std::endl;
   
 }
 
@@ -38,7 +61,7 @@ void ATHDFParserTask::SetPersistence(Bool_t value)
 
 bool ATHDFParserTask::SetATTPCMap(Char_t const *lookup){
 
-  fAtMapPtr->GenerateATTPC();
+  if(kOpt==0) fAtMapPtr->GenerateATTPC();
   Bool_t MapIn = fAtMapPtr->ParseXMLMap(lookup);
   if(!MapIn) return false;
 
@@ -49,6 +72,37 @@ bool ATHDFParserTask::SetATTPCMap(Char_t const *lookup){
   //fAtMapPtr->SetGUIMode();
   //fAtMapPtr->GetATTPCPlane();
   return true;
+
+}
+
+Bool_t ATHDFParserTask::SetProtoGeoFile(TString geofile){
+
+   if(kOpt==1){
+
+  fIsProtoGeoSet = fAtMapPtr->SetGeoFile(geofile);
+        return fIsProtoGeoSet;
+
+   }else{
+   std::cout << "== ATHDFParserTask::SetProtoGeoMap. This method must be used only with Prototype mapping (kOpt=1)!" << std::endl;
+         return kFALSE;
+   }
+
+
+}
+
+
+Bool_t ATHDFParserTask::SetProtoMapFile(TString mapfile){
+
+  if(kOpt==1){
+
+  fIsProtoMapSet = fAtMapPtr->SetProtoMap(mapfile);
+        return fIsProtoMapSet;
+
+   }else{
+   std::cout << "== ATHDFParserTask::SetProtoMapFile. This method must be used only with Prototype mapping (kOpt=1)!" << std::endl;
+         return kFALSE;
+   }
+
 
 }
 
@@ -110,13 +164,17 @@ void ATHDFParserTask::Exec(Option_t *opt)
 
   		std::vector<int> PadRef={iCobo,iAsad,iAget,iCh};
   		int PadRefNum = fAtMapPtr->GetPadNum(PadRef);
+
+      std::cout<<iCobo<<" "<<iAsad<<" "<<iAget<<" "<<iCh<<" "<<iPad<<"  "<<PadRefNum<<"\n";
+
   		std::vector<Float_t> PadCenterCoord;
-        PadCenterCoord.reserve(2);
-        PadCenterCoord = fAtMapPtr->CalcPadCenter(PadRefNum);
+      PadCenterCoord.reserve(2);
+      PadCenterCoord = fAtMapPtr->CalcPadCenter(PadRefNum);
 
   		ATPad *pad = new ATPad(PadRefNum);
   		pad->SetPadXCoord(PadCenterCoord[0]);
         pad->SetPadYCoord(PadCenterCoord[1]);
+
 
         //Baseline subtraction
         double adc[512] = {0};

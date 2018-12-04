@@ -6,6 +6,7 @@
 
 #include "ATHDFParser.hh"
 #include "AtTpcMap.h"
+#include "AtTpcProtoMap.h"
 #include "ATPedestal.hh"
 #include "ATRawEvent.hh"
 
@@ -29,11 +30,14 @@ class ATHDFParserTask : public FairTask {
 public:
   
   ATHDFParserTask();
+  ATHDFParserTask(Int_t opt);
   ~ATHDFParserTask();
   
   void SetPersistence(Bool_t value = kTRUE); 
   void SetFileName(std::string filename) {fFileName = filename;}
   bool SetATTPCMap(Char_t const *lookup);
+  Bool_t SetProtoGeoFile(TString geofile); // Only for Prototype Map
+  Bool_t SetProtoMapFile(TString mapfile);  // Only for Prototype Map
   
   virtual InitStatus Init();
   virtual void SetParContainers();
@@ -60,6 +64,10 @@ private:
   typedef boost::multi_array<double,3> multiarray;
   typedef multiarray::index index;
   multiarray AtPadCoordArr;
+
+  Int_t kOpt;
+  Bool_t fIsProtoGeoSet;
+  Bool_t fIsProtoMapSet;
              
   
   ClassDef(ATHDFParserTask, 1);
