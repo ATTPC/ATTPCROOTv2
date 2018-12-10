@@ -19,6 +19,7 @@ ATHDFParserTask::ATHDFParserTask():AtPadCoordArr(boost::extents[10240][3][2])
   fIsPersistence = kFALSE;
   fRawEventArray = new TClonesArray("ATRawEvent");
   fEventID = 0;
+  fIniEventID = 0;
   fRawEvent = new ATRawEvent();
   
   kOpt = 0;
@@ -38,6 +39,7 @@ ATHDFParserTask::ATHDFParserTask(Int_t opt):AtPadCoordArr(boost::extents[10240][
   fIsPersistence = kFALSE;
   fRawEventArray = new TClonesArray("ATRawEvent");
   fEventID = 0;
+  fIniEventID = 0;
   fRawEvent = new ATRawEvent();
   kOpt = opt;
   fIsProtoGeoSet = kFALSE;
@@ -106,6 +108,11 @@ Bool_t ATHDFParserTask::SetProtoMapFile(TString mapfile){
 
 }
 
+Bool_t ATHDFParserTask::SetInitialEvent(std::size_t inievent)
+{
+  fIniEventID = inievent; 
+}
+
 
 InitStatus ATHDFParserTask::Init()
 {
@@ -120,6 +127,13 @@ InitStatus ATHDFParserTask::Init()
   fNumEvents = HDFParser->open(fFileName.c_str());
   std::cout<<" Number of events : "<<fNumEvents<<"\n";
   //fEventsByName = HDFParser->get_events_by_name();
+
+
+  if(fIniEventID>fNumEvents){
+    fLogger -> Fatal(MESSAGE_ORIGIN, "Exceeded the maximum event number");
+     return kERROR;
+  }
+
   ioMan -> Register("ATRawEvent", "ATTPC", fRawEventArray, fIsPersistence);
   return kSUCCESS;
 }
@@ -153,7 +167,7 @@ void ATHDFParserTask::Exec(Option_t *opt)
 
       std::cout<<" Event : "<<fEventID<<" Event name "<<event_name<<"\n";
 
-      ++fEventID;
+      
 
       //std::cout<<npads<<"\n";
 
@@ -211,6 +225,8 @@ void ATHDFParserTask::Exec(Option_t *opt)
         
       new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
     }
+
+    ++fEventID;
 
 }
 

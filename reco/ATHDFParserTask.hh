@@ -38,6 +38,7 @@ public:
   bool SetATTPCMap(Char_t const *lookup);
   Bool_t SetProtoGeoFile(TString geofile); // Only for Prototype Map
   Bool_t SetProtoMapFile(TString mapfile);  // Only for Prototype Map
+  Bool_t SetInitialEvent(std::size_t inievent);
   
   virtual InitStatus Init();
   virtual void SetParContainers();
@@ -52,8 +53,10 @@ private:
   TClonesArray *fRawEventArray;       
   ATRawEvent* fRawEvent;
   
-  Long64_t    fEventID;                  
-  std::size_t fNumEvents;          
+  
+  std::size_t    fIniEventID;                  
+  std::size_t    fNumEvents; 
+  std::size_t    fEventID;         
   
   Bool_t fIsPersistence;  
   std::string fFileName;

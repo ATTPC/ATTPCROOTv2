@@ -82,7 +82,7 @@ void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0136.h5",TS
 
   run -> Init();
 
-  run->Run(0,10);
+  run->Run(0,1000);
   //run -> RunOnTBData();
 
 

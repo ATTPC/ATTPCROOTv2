@@ -161,7 +161,7 @@ std::vector<int16_t> ATHDFParser::pad_raw_data(std::size_t i_pad)
     return datav;
 }
 
-unsigned long int ATHDFParser::inievent()
+std::size_t ATHDFParser::inievent()
 {
 	return _inievent;
 }
