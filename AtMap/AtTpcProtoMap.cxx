@@ -214,7 +214,7 @@ Int_t AtTpcProtoMap::BinToPad(Int_t binval){
              if(kIs){
                     if(kDebug) std::cerr<<" = AtTpcProtoMap::BinToPad - Bin not found : "<<binval<<std::endl;
                     return -1;
-             }else if(binval>257 || binval<0){
+             }else if(binval>2014 || binval<0){
 
               std::cout<<" = AtTpcProtoMap::BinToPad - Warning: Bin value out of expected boundaries for prototype bin mapping : "<<binval<<std::endl;
 

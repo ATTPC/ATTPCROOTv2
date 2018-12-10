@@ -28,7 +28,7 @@ ATHDFParserTask::ATHDFParserTask():AtPadCoordArr(boost::extents[10240][3][2])
   fIsProtoMapSet = kFALSE;
   if(kOpt==0) fAtMapPtr = new AtTpcMap();
   else if(kOpt==1) fAtMapPtr = new AtTpcProtoMap();
-  else std::cout << "== ATCore Initialization Error : Option not found. Current available options: ATTPC Map 0 / Prototype Map 1" << std::endl;
+  else std::cout << "== ATHDFParserTask Initialization Error : Option not found. Current available options: ATTPC Map 0 / Prototype Map 1" << std::endl;
   
 }
 
@@ -44,7 +44,7 @@ ATHDFParserTask::ATHDFParserTask(Int_t opt):AtPadCoordArr(boost::extents[10240][
   fIsProtoMapSet = kFALSE;
   if(kOpt==0) fAtMapPtr = new AtTpcMap();
   else if(kOpt==1) fAtMapPtr = new AtTpcProtoMap();
-  else std::cout << "== ATCore Initialization Error : Option not found. Current available options: ATTPC Map 0 / Prototype Map 1" << std::endl;
+  else std::cout << "== ATHDFParserTask Initialization Error : Option not found. Current available options: ATTPC Map 0 / Prototype Map 1" << std::endl;
   
 }
 
@@ -119,8 +119,7 @@ InitStatus ATHDFParserTask::Init()
   HDFParser = new ATHDFParser();
   fNumEvents = HDFParser->open(fFileName.c_str());
   std::cout<<" Number of events : "<<fNumEvents<<"\n";
-  fEventID = HDFParser->inievent();
-  fEventsByName = HDFParser->get_events_by_name();
+  //fEventsByName = HDFParser->get_events_by_name();
   ioMan -> Register("ATRawEvent", "ATTPC", fRawEventArray, fIsPersistence);
   return kSUCCESS;
 }
@@ -145,12 +144,14 @@ void ATHDFParserTask::Exec(Option_t *opt)
   fRawEventArray -> Delete();
   fRawEvent->Clear();
 
-  if(fEventsByName.back().find("data") != std::string::npos) {
+   std::string event_name = HDFParser->get_event_name(fEventID);
+
+  if(event_name.find("data") != std::string::npos) {
     
 
-      std::size_t npads = HDFParser->n_pads(fEventsByName.back());
+      std::size_t npads = HDFParser->n_pads(event_name);
 
-      std::cout<<" Event : "<<fEventID<<" Event name "<<fEventsByName.back()<<"\n";
+      std::cout<<" Event : "<<fEventID<<" Event name "<<event_name<<"\n";
 
       ++fEventID;
 
@@ -211,18 +212,14 @@ void ATHDFParserTask::Exec(Option_t *opt)
       new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
     }
 
-    fEventsByName.pop_back();
-
 }
 
 
 void ATHDFParserTask::FinishEvent()
 {
-  /*fRawEvent = fDecoder -> GetRawEvent();
+  
+  
+    //fLogger -> Info(MESSAGE_ORIGIN, "End of file. Terminating FairRun.");
+    //FairRootManager::Instance() -> SetFinishRun();
     
-    if (fRawEvent == NULL)
-    {
-    fLogger -> Info(MESSAGE_ORIGIN, "End of file. Terminating FairRun.");
-    FairRootManager::Instance() -> SetFinishRun();
-    }*/
 }

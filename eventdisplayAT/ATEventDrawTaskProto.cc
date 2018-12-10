@@ -45,7 +45,7 @@ fhitBoxSet(0)
   Char_t padhistname[256];
   fMultiHit=10;
 
-  for(Int_t i=0;i<300;i++){ // TODO: Full-scale must be accomodated
+  for(Int_t i=0;i<2015;i++){ 
       sprintf(padhistname,"pad_%d",i);
         fPadAll[i] = new TH1I(padhistname,padhistname,512,0,511);
   }
@@ -135,8 +135,8 @@ ATEventDrawTaskProto::Init()
   fCvsPadPlane -> ToggleEventStatus();
   fCvsPadPlane->AddExec("ex","ATEventDrawTaskProto::SelectPad(\"fRawEvent\")");
   DrawPadPlane();
-  /*fCvsPadAll = fEventManager->GetCvsPadAll();
-  DrawPadAll();*/
+  fCvsPadAll = fEventManager->GetCvsPadAll();
+  DrawPadAll();
   fCvsMesh = fEventManager->GetCvsMesh();
   DrawMesh();
   /*fCvsQuadrant1 = fEventManager->GetCvsQuadrant1();
@@ -165,9 +165,7 @@ void
 ATEventDrawTaskProto::Exec(Option_t* option)
 {
     Reset();
-  //ResetPadAll();
-  //ResetPhiDistr();
-
+  
     if(fHitArray)           DrawHitPoints();
     //if(fProtoEventArray)    DrawProtoPattern();
     //if(fHoughSpaceArray)    DrawProtoHough();
@@ -177,7 +175,7 @@ ATEventDrawTaskProto::Exec(Option_t* option)
 
     UpdateCvsPadWave();
     UpdateCvsPadPlane();
-    //UpdateCvsPadAll();
+    UpdateCvsPadAll();
     UpdateCvsMesh();
     //UpdateCvsProtoQ();
     //UpdateCvsProtoEL();
@@ -220,6 +218,9 @@ ATEventDrawTaskProto::DrawHitPoints()
   for(Int_t i=0;i<4;i++) fAuxChannels[i]->Reset(0);
   //f3DHist->Reset(0);
   //TRandom r(0);
+
+    for(Int_t i=0;i<2015;i++)
+        fPadAll[i]->Reset(0);
 
 
   std::ofstream dumpEvent;
@@ -371,28 +372,32 @@ ATEventDrawTaskProto::DrawHitPoints()
 
          
 
- /*if(fIsRawData){
-  fRawevent = (ATRawEvent*) fRawEventArray->At(0);
-  fRawevent->SetName("fRawEvent");
-  gROOT->GetListOfSpecials()->Add(fRawevent);
+  if(fIsRawData){
 
-          Int_t aux_cnt=0;
+      fRawevent = (ATRawEvent*) fRawEventArray->At(0);
 
-          std::vector<ATPad>* PadArray = fRawevent->GetPads();
-          for(Int_t i=0;i<PadArray->size();i++){
-            ATPad Pad = PadArray->at(i);
-              if(Pad.IsAux()){
-                if(aux_cnt<4){
-                Int_t *rawadc = Pad.GetRawADC();
-                    for(Int_t j=0;j<512;j++) fAuxChannels[aux_cnt]->SetBinContent(j,rawadc[j]);
-                    aux_cnt++;
-                }else std::cout<<cYELLOW<<" Warning : More auxiliary external channels than expected (max. 4)"<<cNORMAL<<std::endl;
-              }
+      if(fRawevent){
+          fRawevent->SetName("fRawEvent");
+          gROOT->GetListOfSpecials()->Add(fRawevent);
+
+                  Int_t aux_cnt=0;
+
+                  std::vector<ATPad>* PadArray = fRawevent->GetPads();
+                  for(Int_t i=0;i<PadArray->size();i++){
+                    ATPad Pad = PadArray->at(i);
+                      if(Pad.IsAux()){
+                        if(aux_cnt<4){
+                        Int_t *rawadc = Pad.GetRawADC();
+                            for(Int_t j=0;j<512;j++) fAuxChannels[aux_cnt]->SetBinContent(j,rawadc[j]);
+                            aux_cnt++;
+                        }else std::cout<<cYELLOW<<" Warning : More auxiliary external channels than expected (max. 4)"<<cNORMAL<<std::endl;
+                      }
 
 
-          }
+                  }
 
-  }*/
+       }//if raw event           
+  }
 
     /*if(fIsRawData){
     ATPad *RawPad = fRawevent->GetPad(PadNumHit,fValidPad);
@@ -407,38 +412,37 @@ ATEventDrawTaskProto::DrawHitPoints()
     }*/
 
 
- /*if(fIsRawData){
-    Int_t nPads = fRawevent->GetNumPads();
-    std::cout<<"Num of pads : "<<nPads<<std::endl;
+  if(fIsRawData){
 
-        for(Int_t iPad = 0;iPad<nPads;iPad++){
+    if(fRawevent!=NULL){
 
+        Int_t nPads = fRawevent->GetNumPads();
+        std::cout<<"Num of pads : "<<nPads<<std::endl;
 
-            ATPad *fPad = fRawevent->GetPad(iPad);
-            //std::cout<<"Pad num : "<<iPad<<" Is Valid? : "<<fPad->GetValidPad()<<" Pad num in pad object :"<<fPad->GetPadNum()<<std::endl;
-            Int_t *rawadc = fPad->GetRawADC();
-            Double_t *adc = fPad->GetADC();
-            Int_t PadNum_temp = fPad->GetPadNum();
-	   // dumpEvent<<TSpad<<fPad->GetPadNum()<<std::endl;
+            for(Int_t iPad = 0;iPad<nPads;iPad++){
 
-            for(Int_t j=0;j<512;j++){ // TODO: This is limited to 256 pads only. Increment the size of the array and put another option for ATTPC
+                ATPad *fPad = fRawevent->GetPad(iPad);
+                //std::cout<<"Pad num : "<<iPad<<" Is Valid? : "<<fPad->GetValidPad()<<" Pad num in pad object :"<<fPad->GetPadNum()<<std::endl;
 
-                if (fPad->GetValidPad() && iPad<256){
+                 if(fPad!=NULL){
+                      Int_t *rawadc = fPad->GetRawADC();
+                      Double_t *adc = fPad->GetADC();
+                      Int_t PadNum_temp = fPad->GetPadNum();
+          	          // dumpEvent<<TSpad<<fPad->GetPadNum()<<std::endl;
+                      if (fPad->GetValidPad() && PadNum_temp<2015 && PadNum_temp>-1){
 
+                         for(Int_t j=0;j<512;j++){                          
+                              fPadAll[PadNum_temp]->SetBinContent(j,adc[j]);
+                          }
 
-                    fPadAll[PadNum_temp]->SetBinContent(j,adc[j]);
+                      }
+                  }    
 
+            }//Pads
 
-                }
+      }//NULL      
 
-
-
-            }
-
-
-        }
-
-  }*/
+  }//Rawdata
 
 
 
@@ -643,16 +647,18 @@ ATEventDrawTaskProto::DrawPadAll()
     
     fCvsPadAll->cd();
     
-    for(Int_t i=0;i<300;i++){
+    for(Int_t i=0;i<2015;i++){
         //fPadAll[i]->Reset(0);
         //fPadAll[i] = new TH1I("fPadAll","fPadAll",512,0,511);
         fPadAll[i]->GetYaxis()->SetRangeUser(0,2500);
-        // TODO: make it pad number independent / retrieve the quadrant info
-        if (i<64) fPadAll[i]->SetLineColor(6);                         // Q1, pink
+        fPadAll[i]->SetLineColor(8);
+
+        /*if (i<64) fPadAll[i]->SetLineColor(6);                         // Q1, pink
         else if(i>=64 && i<127) fPadAll[i]->SetLineColor(8);           // Q2, green
         else if(i>=127 && i<190) fPadAll[i]->SetLineColor(7);           // Q3, blue
         else if(i>=190 && i<253) fPadAll[i]->SetLineColor(kOrange-3);   // Q4, orange
-        else fPadAll[i]->SetLineColor(0);                              //white for non physical pads
+        else fPadAll[i]->SetLineColor(0);                              //white for non physical pads*/
+
         fPadAll[i] -> Draw("SAME");
         
     }

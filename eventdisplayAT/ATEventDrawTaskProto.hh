@@ -103,7 +103,7 @@ class ATEventDrawTaskProto : public FairTask
 
     TH3F* f3DHist;
 
-    TH1I*    fPadAll[300];
+    TH1I*    fPadAll[2015];
     TH1D*    fPhiDistr[5];
     TH1I*    fPadWave;
     TH2Poly* fPadPlane;

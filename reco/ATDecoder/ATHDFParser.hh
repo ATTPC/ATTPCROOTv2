@@ -56,6 +56,7 @@ class ATHDFParser : public TObject {
     void close();
 
     std::vector<std::string> get_events_by_name() {return _eventsbyname;}
+    std::string get_event_name(std::size_t idx);
 
   private:
 

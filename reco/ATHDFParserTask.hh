@@ -53,7 +53,7 @@ private:
   ATRawEvent* fRawEvent;
   
   Long64_t    fEventID;                  
-  std::size_t fNumEvents;            
+  std::size_t fNumEvents;          
   
   Bool_t fIsPersistence;  
   std::string fFileName;
