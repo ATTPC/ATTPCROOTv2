@@ -59,7 +59,7 @@ void test_map()
 
     }*/
 
-            /*for(Int_t i=0;i<100000;i++)
+            for(Int_t i=0;i<100000;i++)
             {
 
                   x = x + 0.001;
@@ -68,7 +68,7 @@ void test_map()
                   Int_t bin=  fPadPlane->Fill(x,y,z);
 
 
-            }*/
+            }
 
             fPadPlane->Draw("COL L0");
             fPadPlane -> SetMinimum(1.0);

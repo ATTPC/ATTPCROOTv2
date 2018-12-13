@@ -146,7 +146,7 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
 
         }else if(fPType.at(i)=="Proton"){
 		             std::cout<<" In position "<<i<<" adding an : "<<fPType.at(i)<<std::endl;
-		             run->AddNewParticle(fParticle.at(i));
+		             //run->AddNewParticle(fParticle.at(i));
                  std::cout<<" fIon name :"<<fIon.at(i)->GetName()<<std::endl;
                  std::cout<<" fParticle name :"<<fParticle.at(i)->GetName()<<std::endl;
                  std::cout<<fParticle.at(i)->GetName()<<std::endl;
@@ -154,7 +154,7 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
 	      }else if(fPType.at(i)=="Neutron"){
 
                  std::cout<<" In position "<<i<<" adding an : "<<fPType.at(i)<<std::endl;
-                 run->AddNewParticle(fParticle.at(i));
+                 //run->AddNewParticle(fParticle.at(i));
                  std::cout<<" fIon name :"<<fIon.at(i)->GetName()<<std::endl;
                  std::cout<<" fParticle name :"<<fParticle.at(i)->GetName()<<std::endl;
                  std::cout<<fParticle.at(i)->GetName()<<std::endl;
@@ -303,7 +303,7 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
 		}
 
 
-		//else{
+		else{
 	// MC to distribute the events with the cross section
                 do{
 	                ran_theta = fN*gRandom->Uniform()  ;
@@ -331,7 +331,8 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
 		if(test_var>= 0.50 && test_var<0.75) Ex_ejectile = 10.0;
 		if(test_var>= 0.75 && test_var<1.0) Ex_ejectile = 20.0;
 
-
+		
+		
 		//Ex_ejectile = fExEnergy.at(2); // excitation energy of ejectile
 
 
@@ -343,6 +344,8 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
                  m8 = Masses.at(5)*amu;
 		 //K1 = sqrt(pow(fPx.at(0),2) + pow( fPy.at(0),2) + pow( fPz.at(0),2) + pow(m1,2)) - m1;
 		 K1 = sqrt(pow(fPxBeam*1000.0,2) + pow(fPyBeam*1000.0,2) + pow( fPzBeam*1000.0,2) + pow(m1,2)) - m1;
+
+		
 
 		 p1L[0] = fPxBeam*1000.0;
                  p1L[1] = fPyBeam*1000.0;
@@ -359,6 +362,7 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
                 S = 2.*E1L*m2 + pow(m1,2) + pow(m2,2);
 		Pcm = 0.5*(ATTPC_d2He::omega(S, pow(m3,2), pow(m4,2)))/sqrt(S);
 
+		
 		//std::cout<<beta_cm<<"  "<<gamma_cm<<"  "<<p1L[2]<<"  "<<K1<<"  "<<m1<<" "<<(ATTPC_d2He::omega(S, pow(m3,2), pow(m4,2)))<<" "<<sqrt(S)<<std::endl;
 
 
@@ -535,7 +539,7 @@ Bool_t ATTPC_d2He::ReadEvent(FairPrimaryGenerator* primGen) {
 	    	                fPz.at(5) = 0.;
                         }
 
-		//} //if solution is valid
+		} //if solution is valid
 
                 Double_t phi7 = atan2(p7L[1],p7L[0])*TMath::RadToDeg();
                 if(phi7<0) phi7 = (phi7 + 360.0);

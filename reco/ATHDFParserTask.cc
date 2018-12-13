@@ -160,7 +160,7 @@ void ATHDFParserTask::Exec(Option_t *opt)
 
    std::string event_name = HDFParser->get_event_name(fEventID);
 
-  if(event_name.find("data") != std::string::npos) {
+  //if(event_name.find("data") != std::string::npos) {
     
 
       std::size_t npads = HDFParser->n_pads(event_name);
@@ -224,7 +224,7 @@ void ATHDFParserTask::Exec(Option_t *opt)
       
         
       new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
-    }
+    //}
 
     ++fEventID;
 
