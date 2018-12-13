@@ -37,6 +37,7 @@ ATHDFParserTask::ATHDFParserTask(Int_t opt):AtPadCoordArr(boost::extents[10240][
 {
   fLogger = FairLogger::GetLogger();
   fIsPersistence = kFALSE;
+  fIsOldFormat  = kFALSE;
   fRawEventArray = new TClonesArray("ATRawEvent");
   fEventID = 0;
   fIniEventID = 0;
@@ -60,6 +61,10 @@ ATHDFParserTask::~ATHDFParserTask()
 
 void ATHDFParserTask::SetPersistence(Bool_t value)
 { fIsPersistence = value; }
+
+Bool_t  ATHDFParserTask::SetOldFormat(Bool_t oldF)
+{ fIsOldFormat = oldF; }
+
 
 bool ATHDFParserTask::SetATTPCMap(Char_t const *lookup){
 
@@ -160,7 +165,7 @@ void ATHDFParserTask::Exec(Option_t *opt)
 
    std::string event_name = HDFParser->get_event_name(fEventID);
 
-  //if(event_name.find("data") != std::string::npos) {
+  if(event_name.find("data") != std::string::npos || fIsOldFormat ==kTRUE) {
     
 
       std::size_t npads = HDFParser->n_pads(event_name);
@@ -224,7 +229,7 @@ void ATHDFParserTask::Exec(Option_t *opt)
       
         
       new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
-    //}
+    }
 
     ++fEventID;
 

@@ -39,7 +39,8 @@ public:
   Bool_t SetProtoGeoFile(TString geofile); // Only for Prototype Map
   Bool_t SetProtoMapFile(TString mapfile);  // Only for Prototype Map
   Bool_t SetInitialEvent(std::size_t inievent);
-  
+  Bool_t SetOldFormat(Bool_t oldF = kFALSE);
+
   virtual InitStatus Init();
   virtual void SetParContainers();
   virtual void Exec(Option_t *opt);
@@ -60,6 +61,7 @@ private:
   
   Bool_t fIsPersistence;  
   std::string fFileName;
+  Bool_t fIsOldFormat; 
 
   char const *fMap;
   AtTpcMap *fAtMapPtr;

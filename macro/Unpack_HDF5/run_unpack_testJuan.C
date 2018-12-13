@@ -61,6 +61,7 @@ void run_unpack_testJuan(std::string dataFile = "/home/juan/backups/nscl/exp_att
 
   ATHDFParserTask* HDFParserTask = new ATHDFParserTask();
   HDFParserTask->SetPersistence(kTRUE);
+  HDFParserTask->SetOldFormat(kTRUE);
   HDFParserTask->SetATTPCMap(scriptdir.Data());
   HDFParserTask->SetFileName(dataFile);
 
