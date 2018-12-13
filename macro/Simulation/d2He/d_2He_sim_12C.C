@@ -1,9 +1,9 @@
-void d_2He_sim_12C(Int_t nEvents = 100, TString mcEngine = "TGeant4", TString geovar = "_03atm" )
+void d_2He_sim_12C(Int_t nEvents = 10, TString mcEngine = "TGeant4", TString geovar = "_03atm" )
 {
 
   TString dir = getenv("VMCWORKDIR");
 
- const TString pathtodata = "./data/";
+ const TString pathtodata = "~/FairRoot/ATTPCROOTv2/geometry";
   // Output file name
   TString outFile = pathtodata + "attpcsim_d2He_12C" + geovar + ".root";
 //TString outFile = pathtodata + "attpcsim_test.root";
