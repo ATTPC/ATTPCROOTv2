@@ -137,7 +137,7 @@ InitStatus ATHDFParserTask::Init()
   if(fIniEventID>fNumEvents){
     fLogger -> Fatal(MESSAGE_ORIGIN, "Exceeded the maximum event number");
      return kERROR;
-  }
+  }else fEventID=fIniEventID;
 
   ioMan -> Register("ATRawEvent", "ATTPC", fRawEventArray, fIsPersistence);
   return kSUCCESS;

@@ -53,6 +53,8 @@ ATEventManagerProto::ATEventManagerProto()
   fRunAna(FairRunAna::Instance()),
   fEntry(0),
   fEvent(0),
+  kDrawPROn(0),
+  drawPatternRecognition(0),
   fCurrentEvent(0)
 
 {
@@ -374,37 +376,37 @@ ATEventManagerProto::make_gui()
     frmMain->SetWindowName("XX GUI");
     frmMain->SetCleanup(kDeepCleanup);
 
-    /*TGVerticalFrame* hf = new TGVerticalFrame(frmMain);
+    TGVerticalFrame* hf = new TGVerticalFrame(frmMain);
     {
 
 
-        drawallpad = new TGTextButton(hf, "&Enable Draw All Pads");
-        drawallpad -> SetToolTipText("Press to Enable/Disble drawing of all pads signal\n (Display on ATTPC Pad Plane Raw Signals tab) ",400);
-        drawallpad->Connect("Clicked()", "ATEventManager", fInstance, "ChangeDrawAllPads()");
-        hf->AddFrame(drawallpad, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
+        //drawallpad = new TGTextButton(hf, "&Enable Draw All Pads");
+        //drawallpad -> SetToolTipText("Press to Enable/Disble drawing of all pads signal\n (Display on ATTPC Pad Plane Raw Signals tab) ",400);
+        //drawallpad->Connect("Clicked()", "ATEventManager", fInstance, "ChangeDrawAllPads()");
+        //hf->AddFrame(drawallpad, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
 
-        eraseQevent = new TGTextButton(hf, "&Erase Q Event Pad");
-        eraseQevent -> SetToolTipText("Press to erase Event Q histogram upon calling the next event",400);
-        eraseQevent->Connect("Clicked()", "ATEventManager", fInstance, "EraseQEvent()");
-        hf->AddFrame(eraseQevent, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
+        //eraseQevent = new TGTextButton(hf, "&Erase Q Event Pad");
+        //eraseQevent -> SetToolTipText("Press to erase Event Q histogram upon calling the next event",400);
+        //eraseQevent->Connect("Clicked()", "ATEventManager", fInstance, "EraseQEvent()");
+        //hf->AddFrame(eraseQevent, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
 
-        drawHoughSpace = new TGTextButton(hf, "&Enable Hough Space");
-        drawHoughSpace -> SetToolTipText("Press to enable Hough Space visualization",400);
-        drawHoughSpace ->Connect("Clicked()", "ATEventManager", fInstance, "EnableDrawHoughSpace()");
-        hf->AddFrame(drawHoughSpace, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
+        drawPatternRecognition = new TGTextButton(hf, "&Enable Pattern Recognition visualization");
+        drawPatternRecognition -> SetToolTipText("Press to enable Pattern Recognition visualization",400);
+        drawPatternRecognition ->Connect("Clicked()", "ATEventManagerProto", fInstance, "EnableDrawPatternRecognition()");
+        hf->AddFrame(drawPatternRecognition, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
 
-        saveASCIIevent = new TGTextButton(hf, "&Save event as text file");
-        saveASCIIevent -> SetToolTipText("Dump the waveform of each hit into a text file",400);
-        saveASCIIevent->Connect("Clicked()", "ATEventManager", fInstance, "SaveASCIIEvent()");
-        hf->AddFrame(saveASCIIevent, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
+        //saveASCIIevent = new TGTextButton(hf, "&Save event as text file");
+        //saveASCIIevent -> SetToolTipText("Dump the waveform of each hit into a text file",400);
+        //saveASCIIevent->Connect("Clicked()", "ATEventManager", fInstance, "SaveASCIIEvent()");
+        //hf->AddFrame(saveASCIIevent, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
 
-        toggleCorr = new TGTextButton(hf, "&Toggle Corrected Data");
-        toggleCorr -> SetToolTipText("Press to toggle between data corrected by Lorentz Angle ",400);
-        toggleCorr->Connect("Clicked()", "ATEventManager", fInstance, "ToggleCorrData()");
-        hf->AddFrame(toggleCorr, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
+        //toggleCorr = new TGTextButton(hf, "&Toggle Corrected Data");
+        //toggleCorr -> SetToolTipText("Press to toggle between data corrected by Lorentz Angle ",400);
+        //toggleCorr->Connect("Clicked()", "ATEventManager", fInstance, "ToggleCorrData()");
+        //hf->AddFrame(toggleCorr, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
 
 
-    }*/
+    }
 
   /*  TGHorizontalFrame* hf_2 = new TGHorizontalFrame(frmMain);
     {
@@ -420,13 +422,12 @@ ATEventManagerProto::make_gui()
         hf_2->AddFrame(b);
         b->Connect("Clicked()", "ATEventManager", fInstance, "NextEvent()");
 
-    }
+    }*/
 
 
 
     frmMain->AddFrame(hf);
-    frmMain->AddFrame(hf_2);*/
-
+    //frmMain->AddFrame(hf_2);
 
 
 
@@ -481,5 +482,20 @@ ATEventManagerProto::make_gui()
     browser->StopEmbedding();
     browser->SetTabTitle("ATTPC Event Control", 0);
 
+
+}
+
+void
+ATEventManagerProto::EnableDrawPatternRecognition(){
+
+     drawPatternRecognition->SetState(kButtonDown);
+     if (!kDrawPROn){
+        drawPatternRecognition->SetText("&Disable Vis. Recons.");
+         kDrawPROn = kTRUE;
+    } else {
+        drawPatternRecognition->SetText("&Visualize Reconstruction");
+        kDrawPROn = kFALSE;
+    }
+       drawPatternRecognition->SetState(kButtonUp);
 
 }

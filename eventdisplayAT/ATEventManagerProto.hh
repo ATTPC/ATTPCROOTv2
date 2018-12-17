@@ -34,6 +34,7 @@ class ATEventManagerProto : public TEveEventManager
     virtual void SelectEvent();
 
     static void DrawWave();
+    void EnableDrawPatternRecognition();
 
     void AddTask(FairTask* task) { fRunAna->AddTask(task); }
     //virtual void InitRiemann(Int_t option=1, Int_t level=3, Int_t nNodes=10000);
@@ -61,6 +62,8 @@ class ATEventManagerProto : public TEveEventManager
     TCanvas* GetCvsKineAA()       { return fCvsKineAA; }
     TCanvas* GetCvsAux()          { return fCvsAux; }
 
+    Bool_t GetDrawPatternRecognition() { return kDrawPROn; }
+
     void RunEvent();
 
     private :
@@ -68,10 +71,12 @@ class ATEventManagerProto : public TEveEventManager
       FairRunAna* fRunAna;
 
       Bool_t kEraseQ;
+      Bool_t kDrawPROn;
 
       Int_t fEntry;
       TGListTreeItem* fEvent;
       TGNumberEntry*  fCurrentEvent;
+      TGTextButton    *drawPatternRecognition;
 
       TCanvas* fCvsPadPlane;
       TCanvas* fPadWave;

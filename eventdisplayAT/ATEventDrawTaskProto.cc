@@ -67,6 +67,7 @@ fhitBoxSet(0)
           fIsCircularHough=kFALSE;
           fIsLinearHough=kTRUE;
           fIsRawData=kFALSE;
+          kIsPRDrawn=kFALSE;
           fHoughLinearFit =new TF1("HoughLinearFit"," (  (-TMath::Cos([0])/TMath::Sin([0]))*x ) + [1]/TMath::Sin([0])",0,500);
 
           for (Int_t i=0;i<4;i++){
@@ -114,15 +115,20 @@ ATEventDrawTaskProto::Init()
        fIsRawData=kTRUE;
   }
 
-  fHoughSpaceArray =  (TClonesArray*) ioMan->GetObject("ATHough");
-  if(fHoughSpaceArray) LOG(INFO)<<cGREEN<<"Hough Array Found."<<cNORMAL<<FairLogger::endl;
+  fPatternEventArray = (TClonesArray*) ioMan->GetObject("ATPatternEvent");
+    if(fPatternEventArray) LOG(INFO)<<cGREEN<<"Pattern Event Array Found."<<cNORMAL<<FairLogger::endl;
+
+  //fHoughSpaceArray =  (TClonesArray*) ioMan->GetObject("ATHough");
+  //if(fHoughSpaceArray) LOG(INFO)<<cGREEN<<"Hough Array Found."<<cNORMAL<<FairLogger::endl;
 
 
-  fProtoEventArray =  (TClonesArray*) ioMan->GetObject("ATProtoEvent");
-  if(fProtoEventArray) LOG(INFO)<<cGREEN<<"Prototype Event Array Found."<<cNORMAL<<FairLogger::endl;
+  //fProtoEventArray =  (TClonesArray*) ioMan->GetObject("ATProtoEvent");
+  //if(fProtoEventArray) LOG(INFO)<<cGREEN<<"Prototype Event Array Found."<<cNORMAL<<FairLogger::endl;
 
   fProtoEventAnaArray =  (TClonesArray*) ioMan->GetObject("ATProtoEventAna");
-  if(fProtoEventAnaArray) LOG(INFO)<<cGREEN<<"Prototype Event Analysis Array Found."<<cNORMAL<<FairLogger::endl;
+   if(fProtoEventAnaArray) LOG(INFO)<<cGREEN<<"Prototype Event Analysis Array Found."<<cNORMAL<<FairLogger::endl;
+
+  
 
   //Drawing histograms
 
@@ -200,6 +206,26 @@ ATEventDrawTaskProto::Reset()
     gEve->RemoveElement(fhitBoxSet, fEventManager);
 
   }
+
+  if(fEventManager->GetDrawPatternRecognition()){
+
+
+        if(fPatternEventArray!=NULL & kIsPRDrawn==kTRUE){
+
+                if(fLineNum>0){
+                    for(Int_t i=0;i<fLineNum;i++){
+                        if(fHitSetPR[i]!=NULL){
+                            gEve -> RemoveElement(fHitSetPR[i],fEventManager);
+                        }
+                    }
+                }
+
+        }
+
+        kIsPRDrawn = kFALSE;
+
+
+  }  
 
   if(fPadPlane!=NULL)
     fPadPlane->Reset(0);
@@ -370,8 +396,6 @@ ATEventDrawTaskProto::DrawHitPoints()
            //for(Int_t i=0;i<hitSphereArray.size();i++) gEve->AddElement(hitSphereArray[i]);
 
 
-         
-
   if(fIsRawData){
 
       fRawevent = (ATRawEvent*) fRawEventArray->At(0);
@@ -445,9 +469,74 @@ ATEventDrawTaskProto::DrawHitPoints()
   }//Rawdata
 
 
+    if(fEventManager->GetDrawPatternRecognition())
+    {
 
-    gEve -> AddElement(fHitSet);
-    gEve -> AddElement(fhitBoxSet);
+        for(Int_t i=0;i<10;i++) fLineArray[i] = new TEveLine();
+        int n = 100;
+        double t0 = 0;
+        double dt = 2000;
+        std::vector<ATTrack> TrackCand;
+
+
+
+        if(fPatternEventArray){
+
+            ATPatternEvent* patternEvent = dynamic_cast<ATPatternEvent*> (fPatternEventArray->At(0));
+
+           if(patternEvent!=NULL)
+           {
+            TrackCand = patternEvent->GetTrackCand();
+            for(Int_t i=0;i<10;i++) fHitSetPR[i] = 0;
+
+            fLineNum = TrackCand.size();
+            std::cout<<cRED<<" Found "<<TrackCand.size()<<" track candidates "<<cNORMAL<<std::endl;
+
+              if(TrackCand.size()<10){
+                    for(Int_t i=0;i<TrackCand.size();i++)
+                    {
+
+                        ATTrack track = TrackCand.at(i);
+                        std::vector<ATHit>* trackHits =  track.GetHitArray();
+                        int nHitsMin = trackHits->size();
+
+                        fHitSetPR[i] = new TEvePointSet(Form("HitPR_%d",i),nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
+                        if(track.GetIsNoise()) fHitSetPR[i]->SetMarkerColor(kRed);
+                        else fHitSetPR[i]->SetMarkerColor(GetTrackColor(i)+1);
+                        fHitSetPR[i]->SetMarkerSize(fHitSize);
+                        fHitSetPR[i]->SetMarkerStyle(fHitStyle);
+
+
+                          for(int j =0;j<trackHits->size();++j){
+                            TVector3 position = trackHits->at(j).GetPosition();
+                            fHitSetPR[i]->SetNextPoint(position.X()/10.,position.Y()/10.,position.Z()/10.);
+
+                          }
+
+                      if(fEventManager->GetDrawPatternRecognition()) gEve -> AddElement(fHitSetPR[i]);
+                      kIsPRDrawn=kTRUE;
+
+                    }
+               }
+            }
+      }    
+
+
+    } 
+
+
+    if(!fEventManager->GetDrawPatternRecognition()){
+
+      gEve -> AddElement(fHitSet);
+      gEve -> AddElement(fhitBoxSet);
+
+     }else if(fEventManager->GetDrawPatternRecognition()){
+     
+
+       //if(fPatternEventArray)
+            // if(fLineNum>0) for(Int_t i=0;i<fLineNum;i++) gEve -> AddElement(fHitSetPR[i]);
+
+     }         
 
 }
 
@@ -1057,3 +1146,12 @@ ATEventDrawTaskProto::Set3DHitStyleBar() {f3DHitStyle=0;}
 
 void
 ATEventDrawTaskProto::Set3DHitStyleBox() {f3DHitStyle=1;}
+
+EColor ATEventDrawTaskProto::GetTrackColor(int i)
+{
+   std::vector<EColor> colors = {kAzure,kOrange,kViolet,kTeal,kMagenta,kBlue,kViolet,kYellow,kCyan,kAzure};
+   if(i<10){
+     return colors.at(i);
+   }else return kAzure;
+
+}
