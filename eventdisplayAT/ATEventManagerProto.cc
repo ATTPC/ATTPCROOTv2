@@ -55,6 +55,7 @@ ATEventManagerProto::ATEventManagerProto()
   fEvent(0),
   kDrawPROn(0),
   drawPatternRecognition(0),
+  saveASCIIevent(0),
   fCurrentEvent(0)
 
 {
@@ -395,10 +396,10 @@ ATEventManagerProto::make_gui()
         drawPatternRecognition ->Connect("Clicked()", "ATEventManagerProto", fInstance, "EnableDrawPatternRecognition()");
         hf->AddFrame(drawPatternRecognition, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
 
-        //saveASCIIevent = new TGTextButton(hf, "&Save event as text file");
-        //saveASCIIevent -> SetToolTipText("Dump the waveform of each hit into a text file",400);
-        //saveASCIIevent->Connect("Clicked()", "ATEventManager", fInstance, "SaveASCIIEvent()");
-        //hf->AddFrame(saveASCIIevent, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
+        saveASCIIevent = new TGTextButton(hf, "&Save event as text file");
+        saveASCIIevent -> SetToolTipText("Dump the waveform of each hit into a text file",400);
+        saveASCIIevent->Connect("Clicked()", "ATEventManagerProto", fInstance, "SaveASCIIEvent()");
+        hf->AddFrame(saveASCIIevent, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
 
         //toggleCorr = new TGTextButton(hf, "&Toggle Corrected Data");
         //toggleCorr -> SetToolTipText("Press to toggle between data corrected by Lorentz Angle ",400);
@@ -497,5 +498,16 @@ ATEventManagerProto::EnableDrawPatternRecognition(){
         kDrawPROn = kFALSE;
     }
        drawPatternRecognition->SetState(kButtonUp);
+
+}
+
+void ATEventManagerProto::SaveASCIIEvent()
+{
+
+   Int_t event=fEntry;
+   TFile* file =FairRootManager::Instance()->GetInChain()->GetFile();
+   std::string file_name = file->GetName();
+   std::string cmd = "mv event.dat event_" + std::to_string(event) + ".dat";
+   gSystem->Exec(cmd.c_str());
 
 }

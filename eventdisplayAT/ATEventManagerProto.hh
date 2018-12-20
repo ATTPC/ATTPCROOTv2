@@ -65,6 +65,7 @@ class ATEventManagerProto : public TEveEventManager
     Bool_t GetDrawPatternRecognition() { return kDrawPROn; }
 
     void RunEvent();
+    void SaveASCIIEvent();
 
     private :
       FairRootManager* fRootManager;
@@ -77,6 +78,7 @@ class ATEventManagerProto : public TEveEventManager
       TGListTreeItem* fEvent;
       TGNumberEntry*  fCurrentEvent;
       TGTextButton    *drawPatternRecognition;
+      TGTextButton    *saveASCIIevent;
 
       TCanvas* fCvsPadPlane;
       TCanvas* fPadWave;

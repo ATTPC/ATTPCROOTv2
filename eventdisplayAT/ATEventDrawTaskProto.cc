@@ -40,6 +40,7 @@ fHitColor(kPink),
 fHitSize(1),
 fHitStyle(kFullDotMedium),
 fHitSet(0),
+fSaveTextData(0),
 fhitBoxSet(0)
 {
   Char_t padhistname[256];
@@ -385,6 +386,8 @@ ATEventDrawTaskProto::DrawHitPoints()
 
                  fhitBoxSet->DigitColor(xrgb*255,yrgb*255,zrgb*255, 0);
 
+                 dumpEvent<<position.X()<<" "<<position.Y()<<" "<<position.Z()<<" "<<hit.GetTimeStamp()<<" "<<hit.GetCharge()<<std::endl;
+
             }
 
              /////////////////////// End of colored box drawing ////////////////////////////
@@ -536,7 +539,9 @@ ATEventDrawTaskProto::DrawHitPoints()
        //if(fPatternEventArray)
             // if(fLineNum>0) for(Int_t i=0;i<fLineNum;i++) gEve -> AddElement(fHitSetPR[i]);
 
-     }         
+     }   
+
+     dumpEvent.close();      
 
 }
 

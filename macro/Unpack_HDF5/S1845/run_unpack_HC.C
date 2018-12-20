@@ -4,7 +4,7 @@
 #define cGREEN "\033[1;32m"
 
 
-void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0136.h5",TString parameterFile = "ATTPC.e15250.par",TString mappath="")
+void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0136.h5",TString parameterFile = "pATTPC.S1845.par",TString mappath="")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -82,7 +82,7 @@ void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0136.h5",TS
 
   run -> Init();
 
-  run->Run(0,100);
+  run->Run(0,30);
   //run -> RunOnTBData();
 
 

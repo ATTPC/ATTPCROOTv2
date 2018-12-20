@@ -34,7 +34,7 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
   Int_t iPad = 0;
 
-  #pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
+  //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
   for (iPad = 0; iPad < numPads; iPad++) {
 
 
@@ -134,6 +134,7 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
       //#pragma omp ordered
       //std::cout<<" Pad Num : "<<PadNum<<" Peak : "<<iPeak<<"/"<<numPeaks<<" - Charge : "<<charge<<" - zPos : "<<zPos<<std::endl;
+      //std::cout<<" xPos : "<<xPos<<" yPos : "<<yPos<<"\n";
 
         if (fThreshold > 0 && charge < fThreshold)// TODO: Does this work when the polarity is negative??
             fValidThreshold = kFALSE;
@@ -160,10 +161,10 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       //std::cout<<" Hit Num : "<<hitNum<<"  - Hit Pos Rho2 : "<<HitPos.Mag2()<<"  - Hit Pos Rho : "<<HitPos.Mag()<<std::endl;
       //std::cout<<" Hit Coordinates : "<<xPos<<"  -  "<<yPos<<" - "<<zPos<<"  -  "<<std::endl;
       //std::cout<<" Is Pad"<<pad->GetPadNum()<<" Valid? "<<pad->GetValidPad()<<std::endl;
-      #pragma omp ordered
+      //#pragma omp ordered
       event -> AddHit(hit);
       delete hit;
-      #pragma omp ordered
+      //#pragma omp ordered
       hitNum++;
 
                 if(PadHitNum==1){ //Construct mesh signal only once
@@ -182,7 +183,7 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
     }// Peak loop
 
 
-     #pragma omp ordered
+     //#pragma omp ordered
      PadMultiplicity.insert(std::pair<Int_t,Int_t>(PadNum,PadHitNum));
 
 

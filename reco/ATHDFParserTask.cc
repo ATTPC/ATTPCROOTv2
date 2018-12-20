@@ -199,7 +199,9 @@ void ATHDFParserTask::Exec(Option_t *opt)
 
       		ATPad *pad = new ATPad(PadRefNum);
       		pad->SetPadXCoord(PadCenterCoord[0]);
-            pad->SetPadYCoord(PadCenterCoord[1]);
+          pad->SetPadYCoord(PadCenterCoord[1]);
+
+          //std::cout<<PadCenterCoord[0]<<" "<<PadCenterCoord[1]<<"\n";
 
 
             //Baseline subtraction

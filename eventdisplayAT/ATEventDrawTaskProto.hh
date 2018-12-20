@@ -165,6 +165,7 @@ class ATEventDrawTaskProto : public FairTask
     Int_t fTrackNum;
 
     Bool_t kIsPRDrawn;
+    Bool_t fSaveTextData;
 
 
 
