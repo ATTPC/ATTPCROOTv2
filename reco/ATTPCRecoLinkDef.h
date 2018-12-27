@@ -43,6 +43,7 @@
 #pragma link C++ class ATPSASimple+;
 #pragma link C++ class ATPSASimple2+;
 #pragma link C++ class ATPSAProto+;
+#pragma link C++ class ATPSAProtoFull+;
 #pragma link C++ class ATPSAFilter+;
 #pragma link C++ class ATPSAFull+;
 #pragma link C++ class ATCalibration+;

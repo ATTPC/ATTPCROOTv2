@@ -46,11 +46,11 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       Bool_t fValidBuff = kTRUE;
       Bool_t fValidThreshold = kTRUE;
 
-    Double_t xPos     = pad -> GetPadXCoord();
-    Double_t yPos     = pad -> GetPadYCoord();
-    Double_t zPos     = 0;
-    Double_t zPosCorr = 0.0;
-    Double_t charge   = 0;
+      Double_t xPos     = pad -> GetPadXCoord();
+      Double_t yPos     = pad -> GetPadYCoord();
+      Double_t zPos     = 0;
+      Double_t zPosCorr = 0.0;
+      Double_t charge   = 0;
 
     if (!(pad -> IsPedestalSubtracted())) {
       fLogger -> Error(MESSAGE_ORIGIN, "Pedestal should be subtracted to use this class!");

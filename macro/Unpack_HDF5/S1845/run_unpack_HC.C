@@ -4,7 +4,7 @@
 #define cGREEN "\033[1;32m"
 
 
-void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0136.h5",TString parameterFile = "pATTPC.S1845.par",TString mappath="")
+void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0168.h5",TString parameterFile = "pATTPC.S1845.par",TString mappath="")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -64,10 +64,10 @@ void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0136.h5",TS
 
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(10);
-  psaTask -> SetPSAMode(2); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
-  psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
-  //psaTask -> SetMaxFinder();
+  psaTask -> SetThreshold(40);
+  psaTask -> SetPSAMode(5); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets - 5: Proto Full
+  //psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
+  psaTask -> SetMaxFinder();
   //psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
   //psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
 
@@ -78,11 +78,11 @@ void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0136.h5",TS
   
   run -> AddTask(HDFParserTask);
   run -> AddTask(psaTask);
-  run -> AddTask(praTask);
+  //run -> AddTask(praTask);
 
   run -> Init();
 
-  run->Run(0,30);
+  run->Run(0,3000);
   //run -> RunOnTBData();
 
 

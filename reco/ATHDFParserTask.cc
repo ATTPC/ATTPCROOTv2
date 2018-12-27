@@ -208,10 +208,10 @@ void ATHDFParserTask::Exec(Option_t *opt)
             double adc[512] = {0};
             double baseline =0;
 
-            for (Int_t iTb = 500; iTb < 517; iTb++)
+            for (Int_t iTb = 5; iTb < 25; iTb++)
             	baseline+=rawadc[iTb];
 
-            baseline/=17.0;
+            baseline/=20.0;
 
       		for (Int_t iTb = 0; iTb < 512; iTb++){
       				  

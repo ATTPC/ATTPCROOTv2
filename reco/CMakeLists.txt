@@ -83,6 +83,7 @@ ATPulseAnalyzer/ATPSASimple.cc
 ATPulseAnalyzer/ATPSASimple2.cc
 ATPulseAnalyzer/ATPSAFilter.cc
 ATPulseAnalyzer/ATPSAProto.cc
+ATPulseAnalyzer/ATPSAProtoFull.cc
 ATPulseAnalyzer/ATPSAFull.cc
 
 HierarchicalClustering/ATCubicSplineFit.cc

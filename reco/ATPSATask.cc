@@ -5,6 +5,7 @@
 #include "ATPSAProto.hh"
 #include "ATPSAFilter.hh"
 #include "ATPSAFull.hh"
+#include "ATPSAProtoFull.hh"
 
 
 // FAIRROOT classes
@@ -105,7 +106,12 @@ ATPSATask::Init()
 
     fPSA = new ATPSAFull();
 
-  }
+  } else if (fPSAMode == 5) {
+    fLogger -> Info(MESSAGE_ORIGIN, "Using ATPSAProtoFull!");
+
+    fPSA = new ATPSAProtoFull();
+
+  }  
 
   fPSA -> SetThreshold((Int_t)fThreshold);
   fPSA -> SetBaseCorrection(fIsBaseCorr);

@@ -18,7 +18,7 @@ GatingWirePlaneY:Double_t      -14   # mm
 EField:Double_t               8000   # V/m
 NumTbs:Int_t                   512
 SamplingRate:Int_t            25.0   # Real value is 6.25 MHz
-DriftVelocity:Double_t        2.00   # cm/us
+DriftVelocity:Double_t        3.20   # cm/us
 DriftLength:Double_t           500   # mm //ATTPC : 1000 - Prototype : 500
 YDivider:Int_t                1000   # Full drift length will be divided by this number when finding cluster
 GasFile:Int_t                    2
@@ -30,7 +30,7 @@ TB0:Int_t                       98   # Time Bucket reference for micromegas posi
 LorentzAngle:Double_t          0.0   # Lorentz Angle
 TBEntrance:Int_t               500   # Beam position at detector entrance in TB
 ZPadPlane:Double_t           500.0   # Position of the micromegas pad plane
-Density:Double_t             0.145   # Gas density (kg/m3 or mg/cm3)
+Density:Double_t           0.02626   # Gas density (kg/m3 or mg/cm3)
 ThetaPad:Double_t              0.0   # AT-TPC pad plane rotation
 ThetaRot:Double_t              0.0   # Second Lorentz Angle
 GasPressure:Double_t            60   # Gas pressure in torr
@@ -38,5 +38,5 @@ EIonize:Double_t            15.603   # Ionization energy of gas in eV
 CoefL:Double_t               0.025   # Longitudal coefficient of diffusion [cm^-0.5]
 CoefT:Double_t               0.025   # Transverse coefficient of diffusion [cm^-0.5]
 Gain:Double_t                 0.28   # Average gain of micromegas
-MaxRange:Double_t            500.0   # Maximum range from Beam energy in mm
+MaxRange:Double_t            102.0   # Maximum range from Beam energy in mm
 ################################################################################

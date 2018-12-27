@@ -73,13 +73,15 @@ ATPSAFull::Analyze(ATRawEvent *rawEvent, ATEvent *event) {
     Int_t maxTime = 0;
     
     std::map<Int_t, Int_t> interval;
+
     for (Int_t iTb = 0; iTb < fNumTbs; iTb++) floatADC[iTb] = adc[iTb];
-    for (Int_t ij = 20; ij < 500; ij++) { //Excluding first and last 12 Time Buckets
-      if (floatADC[ij] > max) {
-	max = floatADC[ij];
-	maxTime = ij;
+
+      for (Int_t ij = 20; ij < 500; ij++) { //Excluding first and last 12 Time Buckets
+        if (floatADC[ij] > max) {
+  	     max = floatADC[ij];
+  	     maxTime = ij;
+        }
       }
-    }
     Int_t size=0;
     maxAdcIdx = maxTime;
     for (Int_t iTb = 0; iTb < fNumTbs; iTb++){
