@@ -66,7 +66,7 @@ ATPSAProtoFull::Analyze(ATRawEvent *rawEvent, ATEvent *event)
                   if(floatADC[iTb] > fThreshold){
 
                     mesh[iTb]+=floatADC[iTb];
-                    QEventTot+=floatADC[iTb];
+                    if(iTb>fIniTB && iTb<fEndTB) QEventTot+=floatADC[iTb]; //This allows to constrain the calculation of the charge avoiding noisy timebuckets
                     zPos     = CalculateZGeo(iTb);
                     charge   = adc[iTb];
                     ATHit *hit = new ATHit(PadNum,hitNum, xPos, yPos, zPos, charge);

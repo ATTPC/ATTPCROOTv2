@@ -44,6 +44,11 @@ ATPSATask::ATPSATask()
 
   fMeanK = 10;
   fStdDev = 0.01;
+
+  fTBRange.first  = 0;
+  fTBRange.second = 512;
+
+
 }
 
 ATPSATask::~ATPSATask()
@@ -94,6 +99,7 @@ ATPSATask::Init()
   } else if (fPSAMode == 2) {
     fLogger -> Info(MESSAGE_ORIGIN, "Using ATPSAProto!");
     fPSA = new ATPSAProto();
+    fPSA -> SetTBLimits(fTBRange);
 
   } else if (fPSAMode == 3) {
     fLogger -> Info(MESSAGE_ORIGIN, "Using ATPSAFilter!");
@@ -110,6 +116,7 @@ ATPSATask::Init()
     fLogger -> Info(MESSAGE_ORIGIN, "Using ATPSAProtoFull!");
 
     fPSA = new ATPSAProtoFull();
+    fPSA -> SetTBLimits(fTBRange);
 
   }  
 
@@ -200,3 +207,19 @@ ATPSATask::Exec(Option_t *opt)
       //fPSA->SetAuxChannel(AuxCh);
 
  }*/
+
+void ATPSATask::SetTBLimits(std::pair<Int_t,Int_t> limits)
+{
+    if(limits.first>=limits.second)
+    {
+      std::cout<<" Warning ATPSATask::SetTBLimits -  Wrong Time Bucket limits. Setting default limits (0,512) ... "<<"\n";
+      
+
+    }else{
+      fTBRange.first  = limits.first;
+      fTBRange.second = limits.second;
+    }
+
+
+
+}

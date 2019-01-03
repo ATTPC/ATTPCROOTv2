@@ -62,6 +62,9 @@ ATPSA::ATPSA()
   //fAuxChannels.clear();
   fThetaPad =-103.0*TMath::Pi()/180.0;
 
+  fIniTB = 0;             
+  fEndTB = 512;
+
 
   std::cout<<" ==== Parameters for Pulse Shape Analysis Task ==== "<<std::endl;
   std::cout<<" ==== Magnetic Field : "<<fBField<<" T "<<std::endl;
@@ -203,3 +206,23 @@ void ATPSA::SetGainCalibration(TString gainFile)        { fCalibration -> SetGai
 void ATPSA::SetJitterCalibration(TString jitterFile)    { fCalibration -> SetJitterFile(jitterFile);}
 void ATPSA::SetMeanK(Int_t value)                       { fMeanK = value;}
 void ATPSA::SetStddevMulThresh(Double_t value)          { fStdDev = value;}
+
+
+void ATPSA::SetTBLimits(std::pair<Int_t,Int_t> limits)
+{
+    if(limits.first>=limits.second)
+    {
+      std::cout<<" Warning ATPSA::SetTBLimits -  Wrong Time Bucket limits. Setting default limits (0,512) ... "<<"\n";
+      fIniTB = 0;
+      fEndTB = 512;
+
+    }else{
+      fIniTB = limits.first;
+      fEndTB = limits.second;
+
+    }
+
+
+}
+
+

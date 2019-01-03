@@ -67,7 +67,6 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       for (Int_t iTb = 0; iTb < fNumTbs; iTb++){
           floatADC[iTb] = adc[iTb];
           QHitTot+=adc[iTb];
-
       }
 
       TSpectrum *PeakFinder = new TSpectrum;
@@ -96,36 +95,34 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       if(numPeaks>0) maxAdcIdx = (Int_t)(ceil((PeakFinder -> GetPositionX())[iPeak]));
       else if(numPeaks==0){
 
-        for (Int_t ij = 20; ij < 500; ij++) //Excluding first and last 10 Time Buckets
-        {
-         //if(PadNum==9788) std::cout<<" Time Bucket "<<i<<" floatADC "<<floatADC[i]<<std::endl;
-
-          if (floatADC[ij] > max)
-           {
-             max = floatADC[ij];
-             maxTime = ij;
-
-          }
-        }
-
-        maxAdcIdx = maxTime;
-
-      }//if numPeaks
-
-              Double_t TBCorr=0.0;
-              Double_t TB_TotQ = 0.0;
-          // Time Correction by Center of Gravity
-
-            if(maxAdcIdx>11){
-              for(Int_t i=0;i<11;i++){
-
-                  TBCorr  += floatADC[maxAdcIdx-i+5]*(maxAdcIdx-i+5);
-                  TB_TotQ += floatADC[maxAdcIdx-i+5];
-
+            //if no peaks are found, find the maximum value
+            for (Int_t ij = 20; ij < 500; ij++) //Excluding first and last 10 Time Buckets
+            {
+              if (floatADC[ij] > max)
+               {
+                 max = floatADC[ij];
+                 maxTime = ij;
               }
             }
 
-            TBCorr = TBCorr/TB_TotQ;
+            maxAdcIdx = maxTime;
+
+      }//if numPeaks
+
+              // Time Correction by Center of Gravity
+              Double_t TBCorr=0.0;
+              Double_t TB_TotQ = 0.0;
+        
+              if(maxAdcIdx>11){
+                for(Int_t i=0;i<11;i++){
+
+                    TBCorr  += floatADC[maxAdcIdx-i+5]*(maxAdcIdx-i+5);
+                    TB_TotQ += floatADC[maxAdcIdx-i+5];
+
+                }
+              }
+
+              TBCorr = TBCorr/TB_TotQ;
 
       zPos     = CalculateZGeo(maxAdcIdx);
       zPosCorr = CalculateZGeo(TBCorr);
@@ -144,7 +141,10 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
        // continue;
 
      if(fValidThreshold){
-      if(iPeak==0) QEventTot+=QHitTot; //Sum only if Hit is valid - We only sum once (iPeak==0) to account for the whole spectrum.
+      
+          if(iPeak==0) 
+              for (Int_t iTb = fIniTB; iTb < fEndTB; iTb++) 
+                    if(adc[iTb]>fThreshold) QEventTot+=adc[iTb]; //Sum only if Hit is valid - We only sum once (iPeak==0) to account for the whole spectrum.
         //std::cout<<" maxAdcIdx : "<<maxAdcIdx<<" TBCorr : "<<TBCorr<<std::endl;
         //std::cout<<zPos<<"    "<<zPosCorr<<std::endl;
       ATHit *hit = new ATHit(PadNum,hitNum, xPos, yPos, zPos, charge);
@@ -167,14 +167,9 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       //#pragma omp ordered
       hitNum++;
 
-                if(PadHitNum==1){ //Construct mesh signal only once
+                if(PadHitNum==1){ //Construct mesh signal only once per PAD
                 	for (Int_t iTb = 0; iTb < fNumTbs; iTb++){
-                		mesh[iTb]+=floatADC[iTb];
-                		/* if(iTb==511){
-                		 std::cout<<" IPad : "<<iPad<<std::endl;
-                		 std::cout<<" iTb : "<<iTb<<" FloatADC : "<<floatADC[iTb]<<" mesh : "<<mesh[iTb]<<std::endl;
-                		}*/
-
+                		if(adc[iTb]>fThreshold) mesh[iTb]+=floatADC[iTb];
                 	}
                 }
 
