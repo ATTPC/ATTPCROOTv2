@@ -68,6 +68,7 @@ class ATTrack : public TObject {
     std::vector<Double_t>&       GetRANSACCoeff();
     std::pair<Double_t,Double_t> GetGeoCenter();
     Double_t                     GetGeoRadius();
+    Bool_t                       SortHitArrayTime();
 
     // MC result and projections
     std::vector<Double_t> fPosXmin;
@@ -145,6 +146,7 @@ class ATTrack : public TObject {
     Bool_t kIsMCFit;
     Bool_t kIsNoise;
 
+    static Bool_t SortHitTime(const ATHit &lhs, const ATHit &rhs)  { return lhs.fTimeStamp < rhs.fTimeStamp; }
 
     friend inline std::ostream& operator <<(std::ostream &o, const ATTrack &track)
     {

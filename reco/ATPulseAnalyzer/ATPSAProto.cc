@@ -52,6 +52,8 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       Double_t zPosCorr = 0.0;
       Double_t charge   = 0;
 
+      if((xPos<-9000 || yPos<-9000)) continue; //Skip invalid pads
+
     if (!(pad -> IsPedestalSubtracted())) {
       fLogger -> Error(MESSAGE_ORIGIN, "Pedestal should be subtracted to use this class!");
 
@@ -133,7 +135,7 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       //std::cout<<" Pad Num : "<<PadNum<<" Peak : "<<iPeak<<"/"<<numPeaks<<" - Charge : "<<charge<<" - zPos : "<<zPos<<std::endl;
       //std::cout<<" xPos : "<<xPos<<" yPos : "<<yPos<<"\n";
 
-        if (fThreshold > 0 && charge < fThreshold)// TODO: Does this work when the polarity is negative??
+        if (fThreshold > 0 && charge < fThreshold )// TODO: Does this work when the polarity is negative??
             fValidThreshold = kFALSE;
 
       //if (zPos > 0 || zPos < -fMaxDriftLength)

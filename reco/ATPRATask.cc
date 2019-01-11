@@ -20,6 +20,7 @@ ATPRATask::ATPRATask()
     fPar = NULL;
     fPRAlgorithm = 0;
     kIsPersistence = kFALSE;
+    fMinNumHits = 10;
 }
 
 ATPRATask::~ATPRATask()
@@ -107,7 +108,7 @@ void ATPRATask::Exec(Option_t* option)
 
         ATPatternEvent *patternEvent = (ATPatternEvent *) new ((*fPatternEventArray)[0]) ATPatternEvent();
 
-        fPRA->FindTracks(event,patternEvent);
+        if(hitArray.size()>fMinNumHits) fPRA->FindTracks(event,patternEvent);
 
       }
        catch (std::runtime_error e)

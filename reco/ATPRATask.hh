@@ -42,7 +42,8 @@ private:
 
 	ATPATTERN::ATPRA *fPRA;
 
-  Int_t fPRAlgorithm;
+    Int_t fPRAlgorithm;
+    Int_t fMinNumHits;
 
 	Bool_t kIsPersistence;
 

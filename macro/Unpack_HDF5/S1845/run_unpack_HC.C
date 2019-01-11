@@ -66,7 +66,10 @@ void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0168.h5",TS
   psaTask -> SetPersistence(kTRUE);
   psaTask -> SetThreshold(40);
   psaTask -> SetPSAMode(5); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets - 5: Proto Full
-  psaTask -> SetTBLimits(std::make_pair<Int_t,Int_t>(160,270)); // Set the limits of integration for the total charge Q (only implemented in PSA modes 2 and 5)
+
+  psaTask -> SetTBLimits(std::make_pair<Int_t,Int_t>(160,270)); 
+  // Set the limits of integration for the total charge Q (only implemented in PSA modes 2 and 5)
+  // For example (160,270) is used for the proton run
   //psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
   psaTask -> SetMaxFinder();
   //psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
@@ -83,7 +86,7 @@ void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0168.h5",TS
 
   run -> Init();
 
-  run->Run(0,3000);
+  run->Run(0,1000);
   //run -> RunOnTBData();
 
 

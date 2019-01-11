@@ -183,3 +183,10 @@ void ATTrack::SetPosExp(const std::vector<Double_t> &xexp,const std::vector<Doub
   fPosYinter  = yint;
   fPosZinter  = zint;
 }
+
+Bool_t ATTrack::SortHitArrayTime()
+{
+
+  std::sort(fHitArray.begin(),fHitArray.end(), SortHitTime);
+
+}
