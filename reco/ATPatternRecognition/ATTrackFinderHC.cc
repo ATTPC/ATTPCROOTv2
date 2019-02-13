@@ -102,12 +102,17 @@ Cluster ATPATTERN::ATTrackFinderHC::use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr 
                size_t cleanup_min_triplets, int opt_verbose = 0) {
 
   hc::ScaleTripletMetric scale_triplet_metric(scale);
-  hc::cluster_group result =
-  hc::compute_hc(cloud, triplets, scale_triplet_metric, cdist, opt_verbose);
-  hc::cluster_group const &cleaned_up_cluster_group =
-  hc::cleanupClusterGroup(result, cleanup_min_triplets);
 
-  return hc::toCluster(triplets, cleaned_up_cluster_group, cloud->size());
+  Cluster empty_cluster;
+
+  if(triplets.size()>5)
+  {
+    hc::cluster_group result =
+    hc::compute_hc(cloud, triplets, scale_triplet_metric, cdist, opt_verbose);
+    hc::cluster_group const &cleaned_up_cluster_group =
+    hc::cleanupClusterGroup(result, cleanup_min_triplets);
+    return hc::toCluster(triplets, cleaned_up_cluster_group, cloud->size());
+  }else return empty_cluster; 
 }
 
 void ATPATTERN::ATTrackFinderHC::eventToClusters(ATEvent& event,pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
