@@ -5,7 +5,13 @@ Double_t* GetPadWaveForm(Int_t padnum,std::vector<ATPad> *padarray)
 	 if(it != padarray->end()){
              auto padInd = std::distance<std::vector<ATPad>::const_iterator>(padarray->begin(),it);
              //std::cout<<" Pad found !"<<"\n";
-             return padarray->at(padInd).GetADC();
+
+             if(padarray->at(padInd).GetPadNum()>-1){
+             	return padarray->at(padInd).GetADC();
+         	 }else{
+         	 	std::cout<<" Invalid pad number : "<<padarray->at(padInd).GetPadNum()<<"\n";
+         	 	return 0;
+         	 }
      }else{
       std::cerr<<" Warning! : Padnum not found in Pad Array!"<<"\n";	
       return 0;
@@ -144,7 +150,7 @@ void analysis()
 	FairRunAna* run = new FairRunAna(); //Forcing a dummy run
 
 	TString workdir = getenv("VMCWORKDIR");
-    TString FileNameHead = "output_proto";
+    TString FileNameHead = "run_0141";
     TString FilePath = workdir + "/macro/Unpack_HDF5/S1845/";
     TString FileNameTail = ".root";
     TString FileName     = FilePath + FileNameHead + FileNameTail;
