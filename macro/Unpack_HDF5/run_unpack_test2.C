@@ -76,7 +76,7 @@ void run_unpack_test2(std::string dataFile = "/Users/yassid/Desktop/run_0210.h5"
 
   run -> Init();
 
-  run->Run(0,1000);
+  run->Run(0,20);
   //run -> RunOnTBData();
 
 

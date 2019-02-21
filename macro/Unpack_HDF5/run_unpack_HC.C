@@ -4,7 +4,7 @@
 #define cGREEN "\033[1;32m"
 
 
-void run_unpack_HC(std::string dataFile = "/home/ayyadlim/Desktop/run_0127.h5",TString parameterFile = "ATTPC.e15250.par",TString mappath="")
+void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0210.h5",TString parameterFile = "ATTPC.e15250.par",TString mappath="")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -36,11 +36,11 @@ void run_unpack_HC(std::string dataFile = "/home/ayyadlim/Desktop/run_0127.h5",T
 
   // -----------------------------------------------------------------
   // Logger
-  FairLogger *fLogger = FairLogger::GetLogger();
+  /*FairLogger *fLogger = FairLogger::GetLogger();
   fLogger -> SetLogFileName(loggerFile);
   fLogger -> SetLogToScreen(kTRUE);
   fLogger -> SetLogToFile(kTRUE);
-  fLogger -> SetLogVerbosityLevel("LOW");
+  fLogger -> SetLogVerbosityLevel("LOW");*/
 
   FairRunAna* run = new FairRunAna();
   run -> SetOutputFile(outputFile);
@@ -80,7 +80,7 @@ void run_unpack_HC(std::string dataFile = "/home/ayyadlim/Desktop/run_0127.h5",T
 
   run -> Init();
 
-  run->Run(0,200);
+  run->Run(0,100);
   //run -> RunOnTBData();
 
 
