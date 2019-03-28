@@ -1,3 +1,80 @@
+Double_t fitref(int x)
+{
+	double c4=x;
+		
+	double c6=1580.*TMath::Exp(TMath::Power(-((c4-197.)/16.),2)) + 1550.*TMath::Exp(TMath::Power(-((c4-224.)/11.),2)) 
+		   + 650.*TMath::Exp(TMath::Power(-((c4-211.)/10.),2)) - 150.*TMath::Exp(TMath::Power(-((c4-221.)/6.),2)) 
+		   + 70.*TMath::Exp(TMath::Power(-((c4-214.)/5.),2));
+	
+	double fitref=c6*2.0;
+
+	return fitref;
+
+
+}
+
+Double_t chi2fit(TH1F* mesh, double Qrefproton, double Qrefexp, double angle,int iTb, double &chimin,double &shiftmin, double &stretchmin)
+{
+
+	int    dzero=50; //initial step when minimizing
+	double dstretch=0.5; 
+	double stretch0=0.;  //shifts the calc to exp for ibegin
+	int    shift0=200.-iTb;
+	int    istretchmax=20;
+	int    izeromax=20;
+	double chimin=1.e6;
+	int    itb0=200;  //bricolage, to be replaced by center of gravity but probably not important
+
+	double chi2[100][100];
+
+		for(int iter=0;iter<2;++iter)
+		{
+
+			for(int istretch=0;istretch<istretchmax;++istretch)
+			{
+
+				for(int izero=0;izero<izeromax;++izero)
+				{
+					chi2[istretch][izero]=0.;
+
+						for(int itb=100;itb<400;++itb)
+						{
+
+							int shift      = dzero*(float(izero-izeromax/2.0)/float(izeromax));
+							shift          = shift+shift0; //  !could be better limited this is the tb of the evnt
+							double stretch = dstretch*(float(istretch-istretchmax/2.0)/float(istretchmax)) + stretch0;
+							int tbref      = itb+shift+stretch*(itb-itb0); //!this is the coordinate of the analytical function before angle correction
+							tbref          = 200.+ (tbref-200.)/cos(angle*0.01745); // !zero degree=beam=tbucket direction
+							double fitfit  = fitref(tbref)/cos(angle*0.01745);// !function fitted at point bref corrected for projection on exp axis
+
+							double sigma          = (mesh->GetBinContent(itb)+fitfit)*0.1+100.;//  !error to be tested
+				 			sigma                 = 100.;//  !error to be tested
+				 			chi2[istretch][izero] = chi2[istretch][izero]+ TMath::Power(((mesh->GetBinContent(itb)*Qrefproton/Qrefexp-fitfit)/sigma),2) ;// !now with renormalized
+
+						}//TB
+
+						if( chi2[istretch][izero]<chimin)
+						{
+							chimin= chi2[istretch][izero];
+							stretchmin=stretch;
+							shiftmin=shift;
+						}	
+
+				}//izero
+
+			}//istretch
+
+			shift0=shiftmin;
+			stretch0=stretchmin;
+			dzero=dzero/10.;
+			dstretch=dstretch/10.;
+
+
+		}//iter
+
+	return 0;
+}
+
 Double_t* GetPadWaveForm(Int_t padnum,std::vector<ATPad> *padarray)
 {
 	 auto it =  find_if( padarray->begin(),padarray->end(),[&padnum](ATPad& pad) {return pad.GetPadNum()==padnum;}   );
@@ -192,14 +269,24 @@ void analysis()
 
     TH2F* range_vs_angle = new TH2F("range_vs_angle","range_vs_angle",100,0,200,100,0,360);
 
+    std::ofstream outputFile("experiment_bragg_events.txt");
 
-     for(Int_t i=0;i<50000;i++){
+    TH1F* mesh = new TH1F("mesh","mesh",512,0,511);
+
+    double Qprot_ref = 169276.80; //Average total charge of 180 keV protons
+
+
+     for(Int_t i=0;i<10;i++){
           //while (Reader1.Next()) {
 
               Reader1.Next();
 
               ATEvent* event = (ATEvent*) eventArray->At(0);
               ATRawEvent *rawEvent = (ATRawEvent*) raweventArray->At(0);
+
+              
+
+              mesh->Reset();
 
               if(event!=NULL)
               {
@@ -241,6 +328,15 @@ void analysis()
 	              		double Qint_nearFirst = 0;
 	              		double Qint_nearLast = 0;
 
+	              		double Qtot = 0;
+
+	              		int firstTBOT = 1000;
+	              		int lastTBOT  = -10;
+
+	              		double chi2min = 0;
+	              		double stretchmin = 0;
+	              		double shiftmin = 0;
+
 
 	              		for(auto hit : *hits)
 	              		{
@@ -258,6 +354,15 @@ void analysis()
 
 	              				Double_t* adc = GetPadWaveForm(hit.GetHitPadNum(),padArray);
 
+	              				for(int indTB=0;indTB<512;++indTB)
+	              	   			 {
+	              	    				if(adc[indTB]>40.0){	              	    		
+	              	    					mesh->Fill(indTB,adc[indTB]);
+	              	    					Qtot+=adc[indTB];
+	              	    					if(indTB<firstTBOT) firstTBOT = indTB;
+	              	    					if(indTB>lastTBOT)  lastTBOT  = indTB;
+	              	    				}	
+	              				}
 
 	              				double distFromFirst = TMath::Sqrt( TMath::Power(pos.X()-first_pos.X(),2) + TMath::Power(pos.Y()-first_pos.Y(),2) + TMath::Power(pos.Z()-first_pos.Z(),2) ); 
 	              	    		double distFromLast = TMath::Sqrt( TMath::Power(pos.X()-last_pos.X(),2) + TMath::Power(pos.Y()-last_pos.Y(),2) + TMath::Power(pos.Z()-last_pos.Z(),2) );
@@ -295,10 +400,21 @@ void analysis()
 	              	    	Double_t angDeg = ang*180.0/TMath::Pi();
 	              	    	range_vs_angle->Fill(track.GetLinearRange(),angDeg);
 
-	              	    	if(angDeg<50.0 && angDeg>40.0 &&  track.GetLinearRange()>80.0){
+	              	    	if(angDeg<55.0 && angDeg>35.0 &&  track.GetLinearRange()>80.0){
+
 	              	    	range_vs_Q->Fill(track.GetLinearRange(),event->GetEventCharge()); //For the moment only events where the clustering works 1 track + noise
 	              	    	Q1_vs_Q2->Fill(Q_nearFirst,Q_nearLast);
 	              	    	Q1_vs_Q2_int->Fill(Qint_nearFirst,Qint_nearLast);
+
+	              	    	double dummy_result = chi2fit(mesh,Qprot_ref,Qtot,angDeg,firstTBOT,chi2min,stretchmin,shiftmin);
+
+	              	    		 for(int indTB=0;indTB<512;++indTB)
+			 					 {
+									outputFile<<indTB<<"	"<<mesh->GetBinContent(indTB)<<"	"<<mesh->GetBinError(indTB)<<"	"<<i<<"		"<<angDeg<<"\n";	
+
+
+							     }
+
 	              	    	
 	              	    	}	
 

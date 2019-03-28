@@ -9,6 +9,8 @@ void analysis_proton()
     TString FileNameTail = ".root";
     TString FileName     = FilePath + FileNameHead + FileNameTail;
 
+    std::ofstream outputFileEvent("proton_bragg_events.txt");
+
     std::cout<<" Opening File : "<<FileName.Data()<<std::endl;
     TFile* file = new TFile(FileName.Data(),"READ");
 
@@ -21,13 +23,22 @@ void analysis_proton()
 
     TH2F* Q1_vs_Q2_int = new TH2F("Q1_vs_Q2_int","Q1_vs_Q2_int",500,0,500000,500,0,500000);
 
-    for(Int_t i=0;i<10000;i++){
+    TH1F* mesh = new TH1F("mesh","mesh",512,0,511);
+
+    int numevt = 100;
+
+    for(Int_t i=0;i<numevt;i++){
           //while (Reader1.Next()) {
 
               Reader1.Next();
 
+              mesh->Reset();
+
               
               ATRawEvent *rawEvent = (ATRawEvent*) raweventArray->At(0);
+
+              outputFileEvent<<"		"<<"\n";
+              outputFileEvent<<" Event "<<i<<" "<<"\n";
 
               if(rawEvent!=NULL)
               {
@@ -43,22 +54,28 @@ void analysis_proton()
 	              int lastTBOT  = -10;
 	              double Qint_nearFirst = 0;
 	              double Qint_nearLast = 0;
+	              double Qtotal = 0;
 
 	              for(auto padInd=0;padInd<padArray->size();++padInd)
 	              {
 	              		Double_t *adc =  padArray->at(padInd).GetADC();
 
-	              		std::cout<<" Pad Index "<<padInd<<"	Pad Number "<<padArray->at(padInd).GetPadNum()<<"\n";
+	              		//std::cout<<" Pad Index "<<padInd<<"	Pad Number "<<padArray->at(padInd).GetPadNum()<<"\n";
 
 	              	if(padArray->at(padInd).GetPadNum()>-1){	
 
 	              		for(int indTB=0;indTB<512;++indTB)
 	              	    {
+
 	              	    				if(adc[indTB]>40.0){
 
 	              	    					//std::cout<<" TB "<<indTB<<" ADC "<<adc[indTB]<<"\n";
 	              	    					if(indTB<firstTBOT) firstTBOT = indTB;
 	              	    					if(indTB>lastTBOT)  lastTBOT = indTB;
+
+	              	    					mesh->Fill(indTB,adc[indTB]);
+
+	              	    					Qtotal+=adc[indTB];
 
 	              	    				}
 
@@ -73,6 +90,8 @@ void analysis_proton()
 	             int midTBOT = (lastTBOT - firstTBOT)/2.0 + firstTBOT; 
 
 	             std::cout<<" First TBOT "<<firstTBOT<<" Last TBOT "<<lastTBOT<<" Middle TBOT "<<midTBOT<<"\n";
+
+	             std::cout<<" Total Q "<<Qtotal<<"\n";
 
 	             for(auto padInd=0;padInd<padArray->size();++padInd)
 	             {
@@ -91,11 +110,32 @@ void analysis_proton()
 
 
               }//Rawevent	
+
+              for(int indTB=0;indTB<512;++indTB)
+			  {
+				outputFileEvent<<indTB<<"	"<<mesh->GetBinContent(indTB)<<"	"<<mesh->GetBinError(indTB)<<"\n";	
+			  }
     }
+
+    mesh->Scale(1.0/numevt);
+
+    std::ofstream outputFile("proton_bragg.txt");
+
+    for(int indTB=0;indTB<512;++indTB)
+	{
+		outputFile<<indTB<<"	"<<mesh->GetBinContent(indTB)<<"	"<<mesh->GetBinError(indTB)<<"\n";
+	
+	}
+
+	outputFile.close();	
+
+
 
     TCanvas *c1 = new TCanvas();
      c1->Divide(2,2);
      c1->cd(1);
      Q1_vs_Q2_int->Draw("zcol");
+     c1->cd(2);
+     mesh->Draw("hist");
 
 }
