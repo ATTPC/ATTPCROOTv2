@@ -2,9 +2,9 @@ Double_t fitref(int x)
 {
 	double c4=x;
 		
-	double c6=1580.*TMath::Exp(TMath::Power(-((c4-197.)/16.),2)) + 1550.*TMath::Exp(TMath::Power(-((c4-224.)/11.),2)) 
-		   + 650.*TMath::Exp(TMath::Power(-((c4-211.)/10.),2)) - 150.*TMath::Exp(TMath::Power(-((c4-221.)/6.),2)) 
-		   + 70.*TMath::Exp(TMath::Power(-((c4-214.)/5.),2));
+	double c6=1580.*exp(-TMath::Power(((c4-197.)/16.),2)) + 1550.*exp(-TMath::Power(((c4-224.)/11.),2)) 
+		   + 650.*exp(-TMath::Power(((c4-211.)/10.),2)) - 150.*exp(-TMath::Power(((c4-221.)/6.),2)) 
+		   + 70.*exp(-TMath::Power(((c4-214.)/5.),2));
 	
 	double fitref=c6*2.0;
 
@@ -22,8 +22,12 @@ Double_t chi2fit(TH1F* mesh, double Qrefproton, double Qrefexp, double angle,int
 	int    shift0=200.-iTb;
 	int    istretchmax=20;
 	int    izeromax=20;
-	double chimin=1.e6;
 	int    itb0=200;  //bricolage, to be replaced by center of gravity but probably not important
+
+	double stretch = 0;
+	int    shift = 0;
+
+	chimin=1.e6;
 
 	double chi2[100][100];
 
@@ -40,9 +44,9 @@ Double_t chi2fit(TH1F* mesh, double Qrefproton, double Qrefexp, double angle,int
 						for(int itb=100;itb<400;++itb)
 						{
 
-							int shift      = dzero*(float(izero-izeromax/2.0)/float(izeromax));
+							shift          = dzero*(float(izero-izeromax/2.0)/float(izeromax));
 							shift          = shift+shift0; //  !could be better limited this is the tb of the evnt
-							double stretch = dstretch*(float(istretch-istretchmax/2.0)/float(istretchmax)) + stretch0;
+							stretch = dstretch*(float(istretch-istretchmax/2.0)/float(istretchmax)) + stretch0;
 							int tbref      = itb+shift+stretch*(itb-itb0); //!this is the coordinate of the analytical function before angle correction
 							tbref          = 200.+ (tbref-200.)/cos(angle*0.01745); // !zero degree=beam=tbucket direction
 							double fitfit  = fitref(tbref)/cos(angle*0.01745);// !function fitted at point bref corrected for projection on exp axis
@@ -50,6 +54,8 @@ Double_t chi2fit(TH1F* mesh, double Qrefproton, double Qrefexp, double angle,int
 							double sigma          = (mesh->GetBinContent(itb)+fitfit)*0.1+100.;//  !error to be tested
 				 			sigma                 = 100.;//  !error to be tested
 				 			chi2[istretch][izero] = chi2[istretch][izero]+ TMath::Power(((mesh->GetBinContent(itb)*Qrefproton/Qrefexp-fitfit)/sigma),2) ;// !now with renormalized
+				 			
+				 			//std::cout<<" chi2inner "<<chi2[istretch][izero]<<"\n";
 
 						}//TB
 
@@ -273,10 +279,12 @@ void analysis()
 
     TH1F* mesh = new TH1F("mesh","mesh",512,0,511);
 
+    TH1F* chi2minH = new TH1F("chi2minH","chi2minH",1000,0,8000);
+
     double Qprot_ref = 169276.80; //Average total charge of 180 keV protons
 
 
-     for(Int_t i=0;i<10;i++){
+     for(Int_t i=0;i<10000;i++){
           //while (Reader1.Next()) {
 
               Reader1.Next();
@@ -298,11 +306,11 @@ void analysis()
 	              //std::cout<<hitArray->size()<<"\n";
 	              ATPatternEvent* patternEvent = (ATPatternEvent*) patterneventArray->At(0);
 	              std::vector<ATTrack>& tracks = patternEvent->GetTrackCand();
-	              std::cout<<" Found tracks "<<tracks.size()<<"\n";
+	              //std::cout<<" Found tracks "<<tracks.size()<<"\n";
 
 	              std::vector<ATPad> *padArray = rawEvent->GetPads();
 
-	              std::cout<<" Number of pads : "<<padArray->size()<<"\n";
+	              //std::cout<<" Number of pads : "<<padArray->size()<<"\n";
 
 	              bool isValid = true;
 
@@ -396,7 +404,7 @@ void analysis()
 	              	    {
 	              	    	Double_t ang = GetAngle(&track);
 	              	    	angleH->Fill(ang*180.0/TMath::Pi());
-	              	    	std::cout<<" Angle "<<ang*180.0/TMath::Pi()<<"\n";
+	              	    	//std::cout<<" Angle "<<ang*180.0/TMath::Pi()<<"\n";
 	              	    	Double_t angDeg = ang*180.0/TMath::Pi();
 	              	    	range_vs_angle->Fill(track.GetLinearRange(),angDeg);
 
@@ -408,12 +416,16 @@ void analysis()
 
 	              	    	double dummy_result = chi2fit(mesh,Qprot_ref,Qtot,angDeg,firstTBOT,chi2min,stretchmin,shiftmin);
 
-	              	    		 for(int indTB=0;indTB<512;++indTB)
+	              	    	//std::cout<<" Chi2Min "<<chi2min<<"\n";
+
+	              	    	chi2minH->Fill(chi2min);
+
+	              	    		 /*for(int indTB=0;indTB<512;++indTB)
 			 					 {
 									outputFile<<indTB<<"	"<<mesh->GetBinContent(indTB)<<"	"<<mesh->GetBinError(indTB)<<"	"<<i<<"		"<<angDeg<<"\n";	
 
 
-							     }
+							     }*/
 
 	              	    	
 	              	    	}	
@@ -453,6 +465,9 @@ void analysis()
      angleH->Draw();
 	 c2->cd(2);
 	 range_vs_angle->Draw("zcol");
+	 c2->cd(3);
+	 chi2minH->Draw();
+
 
      gStyle->SetOptStat(0);
      gStyle->SetPalette(103);
