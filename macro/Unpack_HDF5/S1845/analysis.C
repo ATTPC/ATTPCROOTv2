@@ -284,7 +284,7 @@ void analysis()
     double Qprot_ref = 169276.80; //Average total charge of 180 keV protons
 
 
-     for(Int_t i=0;i<10000;i++){
+     for(Int_t i=0;i<100000;i++){
           //while (Reader1.Next()) {
 
               Reader1.Next();

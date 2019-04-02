@@ -63,7 +63,20 @@ void ATHDFParserTask::SetPersistence(Bool_t value)
 { fIsPersistence = value; }
 
 Bool_t  ATHDFParserTask::SetOldFormat(Bool_t oldF)
-{ fIsOldFormat = oldF; }
+{ 
+  fIsOldFormat = oldF;
+  return kTRUE; 
+}
+
+bool   ATHDFParserTask::SetAuxChannel(uint32_t hash,std::string channel_name)
+{
+  auto value = fAuxTable.emplace(hash,channel_name);
+
+  std::cout<<cGREEN<<" Auxiliary channel added "<<channel_name<<" - Hash "<<hash<<cNORMAL<<"\n";
+
+  return value.second;
+
+}
 
 
 bool ATHDFParserTask::SetATTPCMap(Char_t const *lookup){

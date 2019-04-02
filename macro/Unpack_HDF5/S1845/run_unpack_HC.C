@@ -3,8 +3,17 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
+struct auxchannel
+{
+  std::string name;
+  uint8_t cobo;
+  uint8_t asad;
+  uint8_t aget;
+  uint8_t channel;
+};
 
-void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0168.h5",TString parameterFile = "pATTPC.S1845.par",TString mappath="")
+
+void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0141.h5",TString parameterFile = "pATTPC.S1845.par",TString mappath="")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -55,12 +64,41 @@ void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0168.h5",TS
  // rtdb -> setFirstInput(parIo2);
   rtdb -> setSecondInput(parIo1);
 
+  //Auxiliary channels
+  //Hash table: cobo, asad, aget, channel
+  std::vector<auxchannel> aux_channels;
+
+  auxchannel ch_1{"mutant",5,0,0,65};
+  aux_channels.push_back(ch_1);
+  auxchannel ch_2{"mesh",5,0,0,66};
+  aux_channels.push_back(ch_2);
+  auxchannel ch_3{"protons",5,0,0,67};
+  aux_channels.push_back(ch_3);
+  auxchannel ch_4{"begin_DAQ",5,0,0,61};
+  aux_channels.push_back(ch_4);
+  auxchannel ch_5{"unknown",5,0,0,64};
+  aux_channels.push_back(ch_5);
+  auxchannel ch_6{"downscaled",5,0,0,59};
+  aux_channels.push_back(ch_6);
+
+   //End of auxiliary channel setup 
+
+
+
   ATHDFParserTask* HDFParserTask = new ATHDFParserTask(1);
   HDFParserTask->SetPersistence(kTRUE);
   HDFParserTask->SetATTPCMap(scriptdir.Data());
   HDFParserTask->SetProtoGeoFile(geo.Data());
   HDFParserTask->SetProtoMapFile(protomapdir.Data());
   HDFParserTask->SetFileName(dataFile);
+
+   for(auto iaux : aux_channels)
+   {
+    auto hash  =  HDFParserTask->CalculateHash(iaux.cobo,iaux.asad,iaux.aget,iaux.channel);  
+    auto isaux = HDFParserTask->SetAuxChannel(hash,iaux.name);  
+
+   }
+
 
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
@@ -82,11 +120,12 @@ void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0168.h5",TS
   
   run -> AddTask(HDFParserTask);
   run -> AddTask(psaTask);
-  run -> AddTask(praTask);
+  //run -> AddTask(praTask);
 
-  run -> Init();
+  //run -> Init();
 
-  run->Run(0,10000);
+  //run->Run(0,2);
+  //run->Run(0,309412);
   //run -> RunOnTBData();
 
 
