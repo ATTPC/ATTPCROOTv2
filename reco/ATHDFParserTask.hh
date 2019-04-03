@@ -42,6 +42,7 @@ public:
   Bool_t SetInitialEvent(std::size_t inievent);
   Bool_t SetOldFormat(Bool_t oldF = kFALSE);
   bool   SetAuxChannel(uint32_t hash,std::string channel_name);
+  bool   FindAuxChannel(uint32_t hash);
 
   virtual InitStatus Init();
   virtual void SetParContainers();
@@ -89,7 +90,8 @@ private:
   Bool_t fIsProtoMapSet;
 
   std::vector<std::string> fEventsByName;
-  std::unordered_map<uint32_t,std::string> fAuxTable;
+  std::unordered_map<uint32_t,std::string>            fAuxTable;
+  std::unordered_map<uint32_t,std::string>::iterator  fAuxTableIt;
              
   
   ClassDef(ATHDFParserTask, 1);

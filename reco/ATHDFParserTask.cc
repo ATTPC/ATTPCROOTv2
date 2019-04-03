@@ -78,6 +78,27 @@ bool   ATHDFParserTask::SetAuxChannel(uint32_t hash,std::string channel_name)
 
 }
 
+bool  ATHDFParserTask::FindAuxChannel(uint32_t hash)
+{
+  fAuxTableIt = fAuxTable.find(hash);
+ 
+  
+  if (fAuxTableIt != fAuxTable.end())
+  {
+    //std::cout << "Element Found - ";
+    //std::cout << fAuxTableIt->first << "::" << fAuxTableIt->second << std::endl;
+    return true;
+  }
+  else
+  {
+    //std::cout << "Element Not Found" << std::endl;
+    return false;
+  }
+ 
+  
+
+}
+
 
 bool ATHDFParserTask::SetATTPCMap(Char_t const *lookup){
 
@@ -201,6 +222,8 @@ void ATHDFParserTask::Exec(Option_t *opt)
       		int iCh   = rawadc[3];
       		int iPad  = rawadc[4];
 
+         
+
       		std::vector<int> PadRef={iCobo,iAsad,iAget,iCh};
       		int PadRefNum = fAtMapPtr->GetPadNum(PadRef);
 
@@ -213,6 +236,16 @@ void ATHDFParserTask::Exec(Option_t *opt)
       		ATPad *pad = new ATPad(PadRefNum);
       		pad->SetPadXCoord(PadCenterCoord[0]);
           pad->SetPadYCoord(PadCenterCoord[1]);
+
+          if(iPad == -1)
+          {
+            auto hash  = CalculateHash(uint32_t(iCobo),uint32_t(iAsad),uint32_t(iAget),uint32_t(iCh)); 
+            bool isAux = FindAuxChannel(hash);
+
+              if(isAux)
+                pad->SetIsAux(true);
+
+          }
 
           //std::cout<<PadCenterCoord[0]<<" "<<PadCenterCoord[1]<<"\n";
 

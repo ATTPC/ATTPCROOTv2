@@ -52,7 +52,16 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       Double_t zPosCorr = 0.0;
       Double_t charge   = 0;
 
-      if((xPos<-9000 || yPos<-9000)) continue; //Skip invalid pads
+      if((xPos<-9000 || yPos<-9000) && !pad->IsAux() )
+      {
+          std::cout<<" Is Auxiliary? "<<pad->IsAux()<<" Pad Num "<<PadNum<<"\n";
+          continue; //Skip invalid pads that are not
+      }else if(pad->IsAux()){
+
+        std::cout<<" Is Auxiliary 2? "<<pad->IsAux()<<" Pad Num "<<PadNum<<"\n";
+        event->AddAuxPad(pad);
+        continue;
+      }   
 
     if (!(pad -> IsPedestalSubtracted())) {
       fLogger -> Error(MESSAGE_ORIGIN, "Pedestal should be subtracted to use this class!");
@@ -191,7 +200,7 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
   }// Pad loop
     // std::cout<<"  --------------------------------- "<<std::endl;
-     //std::cout<<" Rho2 : "<<Rho2<<" - RhoMean : "<<RhoMean<<" Num of Hits : "<<event->GetNumHits()<<std::endl;
+     std::cout<<" Rho2 : "<<Rho2<<" - RhoMean : "<<RhoMean<<" Num of Hits : "<<event->GetNumHits()<<std::endl;
      RhoVariance = Rho2 - ( pow(RhoMean,2)/(event->GetNumHits()) );
      RhoVariance = Rho2 - ( event->GetNumHits()*pow((RhoMean/event->GetNumHits()),2) ) ;
      //std::cout<<" Rho Variance : "<<RhoVariance<<std::endl;

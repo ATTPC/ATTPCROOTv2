@@ -62,23 +62,23 @@ Bool_t ATEvent::IsChanged()                  { return fIsChanged; }
 
 Bool_t ATEvent::IsGood()                     { return fIsGood; }
 
-//Int_t ATEvent::GetNumClusters()              { return fClusterArray.size(); }
 
 // setters
 void ATEvent::SetEventID(Int_t evtid)                                 { fEventID = evtid; }
 void ATEvent::AddHit(ATHit *hit)                                      { fHitArray.push_back(*hit); }
+void ATEvent::AddAuxPad(ATPad *pad)                                   { fAuxPadArray.push_back(*pad); }
 void ATEvent::SetHitArray(vector<ATHit> *hitArray)                    { fHitArray = *hitArray; }
-//void ATEvent::AddCluster(ATHitCluster *cluster)                   { fClusterArray.push_back(*cluster); }
-//void ATEvent::SetClusterArray(vector<ATHitCluster> *clusterArray) { fClusterArray = *clusterArray; }
-void ATEvent::SetEventCharge(Double_t Qevent)  			      {fQevent = Qevent;}
+void ATEvent::SetAuxPadArray(std::vector<ATPad> *padArray)            { fAuxPadArray = *padArray; }
+void ATEvent::SetEventCharge(Double_t Qevent)  			                  { fQevent = Qevent;}
 void ATEvent::SetRhoVariance(Double_t RhoVariance)                    { fRhoVariance = RhoVariance;}
 void ATEvent::SetMultiplicityMap(std::map<Int_t,Int_t> MultiMap)      { fMultiMap = MultiMap;}
-void ATEvent::SetMeshSignal(Float_t *mesharray)			      { memcpy(fMeshSig, mesharray, sizeof(fMeshSig));}
+void ATEvent::SetMeshSignal(Float_t *mesharray)			                  { memcpy(fMeshSig, mesharray, sizeof(fMeshSig));}
 void ATEvent::SetMeshSignal(Int_t idx, Float_t val)                   { fMeshSig[idx] = val; }
 
+
 // getters
-Int_t ATEvent::GetEventID() { return fEventID; }
-Int_t ATEvent::GetNumHits() { return fHitArray.size(); }
+Int_t ATEvent::GetEventID()  { return fEventID; }
+Int_t ATEvent::GetNumHits()  { return fHitArray.size(); }
 Float_t *ATEvent::GetMesh()  { return fMeshSig; }
 
 ATHit *ATEvent::GetHit(Int_t hitNo)
@@ -104,26 +104,11 @@ vector<ATHit> ATEvent::GetHitArrayObj()
   return fHitArray;
 }
 
-/*ATHitCluster *ATEvent::GetCluster(Int_t clusterNo)
+std::vector<ATPad> *ATEvent::GetAuxPadArray()
 {
-  if (!(clusterNo < GetNumClusters()) || !IsClustered())
-    return NULL;
+  return &fAuxPadArray;
+}
 
-  return &fClusterArray[clusterNo];
-}*/
-
-/*void ATEvent::RemoveCluster(Int_t clusterNo)
-{
-  if (!(clusterNo < GetNumClusters()) || !IsClustered())
-    return;
-
-  fClusterArray.erase(fClusterArray.begin() + clusterNo);
-}*/
-
-/*vector<ATHitCluster> *ATEvent::GetClusterArray()
-{
-  return &fClusterArray;
-}*/
 
 
 Double_t ATEvent::GetEventCharge()  {return fQevent;}

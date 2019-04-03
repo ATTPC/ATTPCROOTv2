@@ -17,6 +17,7 @@ ATHit::ATHit()
     fTimeStampCorrInter = 0.0;
     fBaseCorr = 0.0;
     fSlopeCnt=0;
+    kIsAux = kFALSE;
 }
 
 ATHit::ATHit(Int_t hitID, TVector3 vec, Double_t charge)
@@ -34,6 +35,7 @@ ATHit::ATHit(Int_t hitID, TVector3 vec, Double_t charge)
     fTimeStampCorrInter = 0.0;
     fBaseCorr = 0.0;
     fSlopeCnt=0;
+    kIsAux = kFALSE;
 }
 
 ATHit::ATHit(Int_t hitID, Double_t x, Double_t y, Double_t z, Double_t charge)
@@ -51,6 +53,7 @@ ATHit::ATHit(Int_t hitID, Double_t x, Double_t y, Double_t z, Double_t charge)
     fTimeStampCorrInter = 0.0;
     fBaseCorr = 0.0;
     fSlopeCnt=0;
+    kIsAux = kFALSE;
 }
 
 ATHit::ATHit(Int_t PadNum,Int_t hitID, Double_t x, Double_t y, Double_t z, Double_t charge)
@@ -67,6 +70,7 @@ ATHit::ATHit(Int_t PadNum,Int_t hitID, Double_t x, Double_t y, Double_t z, Doubl
     fTimeStampCorrInter = 0.0;
     fBaseCorr = 0.0;
     fSlopeCnt=0;
+    kIsAux = kFALSE;
 
 }
 
@@ -112,6 +116,8 @@ void ATHit::SetSlopeCnt(Int_t cnt)                                      { fSlope
 void ATHit::SetIsClustered(Bool_t value)                                { fIsClustered = value; }
 void ATHit::SetClusterID(Int_t clusterID)                               { fClusterID = clusterID; fIsClustered = kTRUE; }
 
+void ATHit::SetIsAux(bool value)                                        { kIsAux = value;}
+
 Int_t ATHit::GetTrackID() const                                         { return fTrackID; }
 Int_t ATHit::GetHitID() const                                           { return fHitID; }
 Int_t ATHit::GetHitPadNum() const                                       { return fPadNum; }
@@ -128,3 +134,5 @@ Bool_t ATHit::IsClustered() const                                       { return
 Int_t ATHit::GetClusterID() const                                       { return (fIsClustered ? fClusterID : -1); }
 Double_t ATHit::GetBaseCorr() const                                     { return fBaseCorr; }
 Int_t ATHit::GetSlopeCnt() const                                        { return fSlopeCnt; }
+
+bool ATHit::IsAux() const                                               { return kIsAux;}

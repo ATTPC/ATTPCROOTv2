@@ -36,6 +36,8 @@ class ATHit : public TObject {
     void SetIsClustered(Bool_t value = kTRUE);
     //!< Cluster stter
     void SetClusterID(Int_t clusterID);
+    //!< Aux setter
+    void SetIsAux(bool value);
 
     void SetQHit(Double_t Qhit);
     void SetHitMult(Int_t HitMult);
@@ -69,6 +71,8 @@ class ATHit : public TObject {
     Double_t GetBaseCorr() const;
     Int_t    GetSlopeCnt() const;
 
+    bool IsAux() const;
+
     Int_t    fPadNum;
     Int_t    fTimeStamp; // Time Stamp of the Hit
     Double_t fTimeStampCorr;
@@ -95,6 +99,8 @@ class ATHit : public TObject {
     Int_t fClusterID;
 
     Int_t fHitMult; // Hit multiplicity in the pad where the hit was found
+
+    bool kIsAux;
 
 
   ClassDef(ATHit, 3);
