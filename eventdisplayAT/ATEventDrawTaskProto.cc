@@ -242,7 +242,7 @@ ATEventDrawTaskProto::DrawHitPoints()
 
   Float_t *MeshArray;
   fMesh->Reset(0);
-  for(Int_t i=0;i<4;i++) fAuxChannels[i]->Reset(0);
+  for(Int_t i=0;i<9;i++) fAuxChannels[i]->Reset(0);
   //f3DHist->Reset(0);
   //TRandom r(0);
 
@@ -413,11 +413,12 @@ ATEventDrawTaskProto::DrawHitPoints()
                   for(Int_t i=0;i<PadArray->size();i++){
                     ATPad Pad = PadArray->at(i);
                       if(Pad.IsAux()){
-                        if(aux_cnt<4){
-                        Int_t *rawadc = Pad.GetRawADC();
+                        if(aux_cnt<9){
+                            std::cout<<cYELLOW<<" Auxiliary Channel "<<aux_cnt<<" - Name "<<Pad.GetAuxName()<<cNORMAL<<"\n";
+                            Int_t *rawadc = Pad.GetRawADC();
                             for(Int_t j=0;j<512;j++) fAuxChannels[aux_cnt]->SetBinContent(j,rawadc[j]);
                             aux_cnt++;
-                        }else std::cout<<cYELLOW<<" Warning : More auxiliary external channels than expected (max. 4)"<<cNORMAL<<std::endl;
+                        }else std::cout<<cYELLOW<<" Warning : More auxiliary external channels than expected (max. 9)"<<cNORMAL<<std::endl;
                       }
 
 
@@ -929,8 +930,8 @@ ATEventDrawTaskProto::DrawProtoKine()
 void ATEventDrawTaskProto::DrawProtoAux()
 {
 
-    fCvsAux->Divide(2,2);
-    for(Int_t i=0;i<4;i++){
+    fCvsAux->Divide(3,3);
+    for(Int_t i=0;i<9;i++){
       fAuxChannels[i] = new TH1F(Form("Auxiliary_Channel_%i",i),Form("AuxChannel%i",i),512,0,511);
       fCvsAux->cd(1+i);
       fAuxChannels[i]->Draw();
@@ -1042,6 +1043,21 @@ ATEventDrawTaskProto::UpdateCvsProtoAux(){
     TPad* Pad_4 = (TPad*)fCvsAux->GetPad(4);
     Pad_4->Modified();
     Pad_4->Update();
+    TPad* Pad_5 = (TPad*)fCvsAux->GetPad(5);
+    Pad_5->Modified();
+    Pad_5->Update();
+    TPad* Pad_6 = (TPad*)fCvsAux->GetPad(6);
+    Pad_6->Modified();
+    Pad_6->Update();
+    TPad* Pad_7 = (TPad*)fCvsAux->GetPad(7);
+    Pad_7->Modified();
+    Pad_7->Update();
+    TPad* Pad_8 = (TPad*)fCvsAux->GetPad(8);
+    Pad_8->Modified();
+    Pad_8->Update();
+    TPad* Pad_9 = (TPad*)fCvsAux->GetPad(9);
+    Pad_9->Modified();
+    Pad_9->Update();
     fCvsAux->Modified();
     fCvsAux->Update();
   //}

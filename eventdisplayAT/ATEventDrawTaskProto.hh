@@ -119,7 +119,7 @@ class ATEventDrawTaskProto : public FairTask
     TF1*     fFit[4];
     TH2F*    fQVertex[4];
     TH2F*    fQKine[4];
-    TH1F*    fAuxChannels[4];
+    TH1F*    fAuxChannels[9];
 
     TCanvas* fCvsPadWave;
     TCanvas* fCvsPadPlane;

@@ -78,7 +78,7 @@ bool   ATHDFParserTask::SetAuxChannel(uint32_t hash,std::string channel_name)
 
 }
 
-bool  ATHDFParserTask::FindAuxChannel(uint32_t hash)
+std::pair<bool,std::string>  ATHDFParserTask::FindAuxChannel(uint32_t hash)
 {
   fAuxTableIt = fAuxTable.find(hash);
  
@@ -87,12 +87,12 @@ bool  ATHDFParserTask::FindAuxChannel(uint32_t hash)
   {
     //std::cout << "Element Found - ";
     //std::cout << fAuxTableIt->first << "::" << fAuxTableIt->second << std::endl;
-    return true;
+    return std::make_pair(true,fAuxTableIt->second);
   }
   else
   {
     //std::cout << "Element Not Found" << std::endl;
-    return false;
+    return std::make_pair(false,"not_found");
   }
  
   
@@ -240,10 +240,12 @@ void ATHDFParserTask::Exec(Option_t *opt)
           if(iPad == -1)
           {
             auto hash  = CalculateHash(uint32_t(iCobo),uint32_t(iAsad),uint32_t(iAget),uint32_t(iCh)); 
-            bool isAux = FindAuxChannel(hash);
+            std::pair<bool,std::string> isAux = FindAuxChannel(hash);
 
-              if(isAux)
+              if(isAux.first){
                 pad->SetIsAux(true);
+                pad->SetAuxName(isAux.second);
+              }
 
           }
 

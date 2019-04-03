@@ -33,18 +33,20 @@ class ATPad : public TObject  {
     void SetPadXCoord(Double_t val);
     void SetPadYCoord(Double_t val);
     void SetIsAux(Bool_t val);
+    void SetAuxName(std::string val);
 
     ATPad &operator= (ATPad right);
 
     Bool_t IsPedestalSubtracted();
     Bool_t IsAux();
-    //Bool_t IsGainCalibrated(); //TODO
+    
 
     Int_t GetPadNum();
     Int_t *GetRawADC();
     Int_t GetRawADC(Int_t idx);
     Int_t GetMaxADCIdx();
     Bool_t GetValidPad();
+    std::string GetAuxName();
 
 
     Double_t *GetADC();
@@ -66,6 +68,7 @@ class ATPad : public TObject  {
     //Bool_t fIsGainCalibrated;
     Double_t fAdc[512];
     Bool_t kIsAux;
+    std::string fAuxName;
 
     ClassDef(ATPad, 1);
 

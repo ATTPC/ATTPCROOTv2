@@ -68,17 +68,17 @@ void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0141.h5",TS
   //Hash table: cobo, asad, aget, channel
   std::vector<auxchannel> aux_channels;
 
-  auxchannel ch_1{"mutant",5,0,0,59};
+  auxchannel ch_1{"mutant",5,0,0,65};
   aux_channels.push_back(ch_1);
-  auxchannel ch_2{"mesh",5,0,0,61};
+  auxchannel ch_2{"mesh",5,0,0,66};
   aux_channels.push_back(ch_2);
-  auxchannel ch_3{"protons",5,0,0,64};
+  auxchannel ch_3{"protons",5,0,0,67};
   aux_channels.push_back(ch_3);
-  auxchannel ch_4{"begin_DAQ",5,0,0,65};
+  auxchannel ch_4{"begin_DAQ",5,0,0,61};
   aux_channels.push_back(ch_4);
-  auxchannel ch_5{"unknown",5,0,0,66};
+  auxchannel ch_5{"unknown",5,0,0,64};
   aux_channels.push_back(ch_5);
-  auxchannel ch_6{"downscaled",5,0,0,67};
+  auxchannel ch_6{"downscaled_alpha",5,0,0,59};
   aux_channels.push_back(ch_6);
 
    //End of auxiliary channel setup 

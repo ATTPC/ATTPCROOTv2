@@ -42,7 +42,7 @@ public:
   Bool_t SetInitialEvent(std::size_t inievent);
   Bool_t SetOldFormat(Bool_t oldF = kFALSE);
   bool   SetAuxChannel(uint32_t hash,std::string channel_name);
-  bool   FindAuxChannel(uint32_t hash);
+  std::pair<bool,std::string> FindAuxChannel(uint32_t hash);
 
   virtual InitStatus Init();
   virtual void SetParContainers();
