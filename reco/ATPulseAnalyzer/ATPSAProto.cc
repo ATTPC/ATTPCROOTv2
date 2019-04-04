@@ -199,8 +199,10 @@ ATPSAProto::Analyze(ATRawEvent *rawEvent, ATEvent *event)
    delete PeakFinder;
 
   }// Pad loop
+
+    //std::vector<ATPad> *auxPadArray = event->GetAuxPadArray();
     // std::cout<<"  --------------------------------- "<<std::endl;
-     std::cout<<" Rho2 : "<<Rho2<<" - RhoMean : "<<RhoMean<<" Num of Hits : "<<event->GetNumHits()<<std::endl;
+     //std::cout<<" Rho2 : "<<Rho2<<" - RhoMean : "<<RhoMean<<" Num of Hits : "<<event->GetNumHits()<<" - Number of auxiliary pads : "<<auxPadArray->size()<<std::endl;
      RhoVariance = Rho2 - ( pow(RhoMean,2)/(event->GetNumHits()) );
      RhoVariance = Rho2 - ( event->GetNumHits()*pow((RhoMean/event->GetNumHits()),2) ) ;
      //std::cout<<" Rho Variance : "<<RhoVariance<<std::endl;

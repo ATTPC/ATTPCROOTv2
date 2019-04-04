@@ -226,6 +226,21 @@ Double_t GetAngle(ATTrack* track)
 
 }
 
+double GetMaximum(double *adc)
+{
+
+	double max = 0;
+
+	for(int indTB=0;indTB<512;++indTB)
+	{
+	    //std::cout<<" TB "<<indTB<<" adc "<<adc[indTB]<<"\n";
+	    if(adc[indTB]>max) max = adc[indTB];
+	}             	   			 
+
+	return max;
+
+}
+
 
 void analysis()
 {
@@ -233,10 +248,12 @@ void analysis()
 	FairRunAna* run = new FairRunAna(); //Forcing a dummy run
 
 	TString workdir = getenv("VMCWORKDIR");
-    TString FileNameHead = "run_0141";
+    TString FileNameHead = "output_proto";
     TString FilePath = workdir + "/macro/Unpack_HDF5/S1845/";
     TString FileNameTail = ".root";
+    TString FileNameOut  = "_analysis";
     TString FileName     = FilePath + FileNameHead + FileNameTail;
+    TString OutputFileName = FilePath + FileNameHead + FileNameOut + FileNameTail;
 
     std::cout<<" Opening File : "<<FileName.Data()<<std::endl;
     TFile* file = new TFile(FileName.Data(),"READ");
@@ -283,14 +300,54 @@ void analysis()
 
     double Qprot_ref = 169276.80; //Average total charge of 180 keV protons
 
+    double chi2_tree = 0;
+    double Qref_tree = 0;
+    double Qexp_tree = 0;
+    double stretch_tree = 0;
+    double angle_tree = 0;
+    double range_tree = 0;
+    double shift_tree = 0;
+    double protonTrigger_tree = 0;
+    double alphaTrigger_tree = 0;
+    int    eventNum_tree = 0;
 
-     for(Int_t i=0;i<100000;i++){
+    TFile *analysisFile = new TFile(OutputFileName,"RECREATE");
+    TTree *analysisTree = new TTree("analysisTree","analysis");
+    analysisTree->Branch("chi2_tree",&chi2_tree,"chi2_tree/D");
+    analysisTree->Branch("Qref_tree",&Qref_tree,"Qref_tree/D");
+    analysisTree->Branch("Qexp_tree",&Qexp_tree,"Qexp_tree/D");
+    analysisTree->Branch("angle_tree",&angle_tree,"angle_tree/D");
+    analysisTree->Branch("stretch_tree",&stretch_tree,"stretch_tree/D");
+    analysisTree->Branch("range_tree",&range_tree,"range_tree/D");
+    analysisTree->Branch("shift_tree",&shift_tree,"shift_tree/D");
+    analysisTree->Branch("protonTrigger_tree",&protonTrigger_tree,"protonTrigger_tree/D");
+    analysisTree->Branch("alphaTrigger_tree",&alphaTrigger_tree,"alphaTrigger_tree/D");
+    analysisTree->Branch("eventNum_tree",&eventNum_tree,"eventNum_tree/D");
+
+
+
+
+
+
+
+     for(Int_t i=0;i<100;i++){
           //while (Reader1.Next()) {
 
               Reader1.Next();
 
               ATEvent* event = (ATEvent*) eventArray->At(0);
               ATRawEvent *rawEvent = (ATRawEvent*) raweventArray->At(0);
+
+              chi2_tree = 0;
+    		  Qref_tree = 0;
+    		  Qexp_tree = 0;
+    		  stretch_tree = 0;
+    		  angle_tree = 0;
+    		  range_tree = 0;
+    		  shift_tree = 0;
+    		  protonTrigger_tree = 0;
+    		  alphaTrigger_tree = 0;
+    
 
               
 
@@ -303,14 +360,41 @@ void analysis()
 	              std::vector<ATHit>* hitArray = event->GetHitArray();
 	              event->GetHitArrayObj();
 	              std::cout<<" 	**** Event Number : "<<i<<" Event Q : "<<event->GetEventCharge()<<std::endl;
+	              eventNum_tree = i;
 	              //std::cout<<hitArray->size()<<"\n";
 	              ATPatternEvent* patternEvent = (ATPatternEvent*) patterneventArray->At(0);
 	              std::vector<ATTrack>& tracks = patternEvent->GetTrackCand();
 	              //std::cout<<" Found tracks "<<tracks.size()<<"\n";
 
 	              std::vector<ATPad> *padArray = rawEvent->GetPads();
+	              std::vector<ATPad> *auxPadArray = event->GetAuxPadArray();
 
-	              //std::cout<<" Number of pads : "<<padArray->size()<<"\n";
+
+	              std::cout<<" Number of pads : "<<padArray->size()<<" - Number of auxiliary pads : "<<auxPadArray->size()<<"\n";
+
+	              for(auto auxpad : *auxPadArray)
+	              {
+	              	if(auxpad.GetAuxName().compare(std::string("downscaled_alpha"))==0)
+	              	{
+	              		//std::cout<<" Auxiliary pad name "<<auxpad.GetAuxName()<<"\n";
+	              		Double_t *adc = auxpad.GetADC();
+	              		float max = GetMaximum(adc);
+    					alphaTrigger_tree = max;
+
+
+	              	}else if(auxpad.GetAuxName().compare(std::string("protons"))==0){
+	              	
+	              		//std::cout<<" Auxiliary pad name "<<auxpad.GetAuxName()<<"\n";
+	              		Double_t *adc = auxpad.GetADC();
+	              		float max = GetMaximum(adc);
+    					protonTrigger_tree = max;
+
+
+	              	}
+
+
+	              }
+
 
 	              bool isValid = true;
 
@@ -420,6 +504,17 @@ void analysis()
 
 	              	    	chi2minH->Fill(chi2min);
 
+	              	    	chi2_tree = chi2min;
+	              	    	Qref_tree = Qprot_ref;
+    						Qexp_tree = Qtot;
+    						stretch_tree = stretchmin;
+    						angle_tree = angDeg;
+    						range_tree = track.GetLinearRange();
+    						shift_tree = shiftmin;
+
+    						analysisTree->Fill();
+
+
 	              	    		 /*for(int indTB=0;indTB<512;++indTB)
 			 					 {
 									outputFile<<indTB<<"	"<<mesh->GetBinContent(indTB)<<"	"<<mesh->GetBinError(indTB)<<"	"<<i<<"		"<<angDeg<<"\n";	
@@ -443,9 +538,14 @@ void analysis()
 
 
 
-	          }   
+	          }
 
-     }//for loop
+	    
+
+     }//for event loop
+
+     analysisTree->Write();
+     analysisFile->Close();
 
      TCanvas *c1 = new TCanvas();
      c1->Divide(2,2);
