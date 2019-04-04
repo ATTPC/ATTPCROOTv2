@@ -46,7 +46,7 @@ Double_t chi2fit(TH1F* mesh, double Qrefproton, double Qrefexp, double angle,int
 
 							shift          = dzero*(float(izero-izeromax/2.0)/float(izeromax));
 							shift          = shift+shift0; //  !could be better limited this is the tb of the evnt
-							stretch = dstretch*(float(istretch-istretchmax/2.0)/float(istretchmax)) + stretch0;
+							stretch        = dstretch*(float(istretch-istretchmax/2.0)/float(istretchmax)) + stretch0;
 							int tbref      = itb+shift+stretch*(itb-itb0); //!this is the coordinate of the analytical function before angle correction
 							tbref          = 200.+ (tbref-200.)/cos(angle*0.01745); // !zero degree=beam=tbucket direction
 							double fitfit  = fitref(tbref)/cos(angle*0.01745);// !function fitted at point bref corrected for projection on exp axis
@@ -248,7 +248,7 @@ void analysis()
 	FairRunAna* run = new FairRunAna(); //Forcing a dummy run
 
 	TString workdir = getenv("VMCWORKDIR");
-    TString FileNameHead = "output_proto";
+    TString FileNameHead = "run_0141";
     TString FilePath = workdir + "/macro/Unpack_HDF5/S1845/";
     TString FileNameTail = ".root";
     TString FileNameOut  = "_analysis";
@@ -330,7 +330,7 @@ void analysis()
 
 
 
-     for(Int_t i=0;i<100;i++){
+     for(Int_t i=0;i<100000;i++){
           //while (Reader1.Next()) {
 
               Reader1.Next();
@@ -498,7 +498,7 @@ void analysis()
 	              	    	Q1_vs_Q2->Fill(Q_nearFirst,Q_nearLast);
 	              	    	Q1_vs_Q2_int->Fill(Qint_nearFirst,Qint_nearLast);
 
-	              	    	double dummy_result = chi2fit(mesh,Qprot_ref,Qtot,angDeg,firstTBOT,chi2min,stretchmin,shiftmin);
+	              	    	double dummy_result = chi2fit(mesh,Qprot_ref,Qtot,angDeg,firstTBOT,chi2min,shiftmin,stretchmin);
 
 	              	    	//std::cout<<" Chi2Min "<<chi2min<<"\n";
 
