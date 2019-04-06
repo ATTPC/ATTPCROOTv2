@@ -341,10 +341,10 @@ void analysis()
               chi2_tree = 0;
     		  Qref_tree = 0;
     		  Qexp_tree = 0;
-    		  stretch_tree = 0;
+    		  stretch_tree = -10;
     		  angle_tree = 0;
     		  range_tree = 0;
-    		  shift_tree = 0;
+    		  shift_tree = -400;
     		  protonTrigger_tree = 0;
     		  alphaTrigger_tree = 0;
     
@@ -484,6 +484,7 @@ void analysis()
 
 	              		//std::cout<<" 		**** Range : "<<track.GetLinearRange()<<"\n";
 
+
 	              	    if(isValid)
 	              	    {
 	              	    	Double_t ang = GetAngle(&track);
@@ -493,6 +494,7 @@ void analysis()
 	              	    	range_vs_angle->Fill(track.GetLinearRange(),angDeg);
 
 	              	    	if(angDeg<55.0 && angDeg>35.0 &&  track.GetLinearRange()>80.0){
+
 
 	              	    	range_vs_Q->Fill(track.GetLinearRange(),event->GetEventCharge()); //For the moment only events where the clustering works 1 track + noise
 	              	    	Q1_vs_Q2->Fill(Q_nearFirst,Q_nearLast);
@@ -512,7 +514,7 @@ void analysis()
     						range_tree = track.GetLinearRange();
     						shift_tree = shiftmin;
 
-    						analysisTree->Fill();
+    						//analysisTree->Fill();
 
 
 	              	    		 /*for(int indTB=0;indTB<512;++indTB)
@@ -540,7 +542,7 @@ void analysis()
 
 	          }
 
-	    
+	    analysisTree->Fill();
 
      }//for event loop
 
