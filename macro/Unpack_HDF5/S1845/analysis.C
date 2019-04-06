@@ -248,7 +248,7 @@ void analysis()
 	FairRunAna* run = new FairRunAna(); //Forcing a dummy run
 
 	TString workdir = getenv("VMCWORKDIR");
-    TString FileNameHead = "run_0141";
+    TString FileNameHead = "run_0144";
     TString FilePath = workdir + "/macro/Unpack_HDF5/S1845/";
     TString FileNameTail = ".root";
     TString FileNameOut  = "_analysis";
@@ -402,7 +402,7 @@ void analysis()
 	              {
 	              	//std::cout<<" - Number of hits : "<<track.GetHitArray()->size()<<"	- Is noise? : "<<track.GetIsNoise()<<"\n";
 
-	              	if( track.GetHitArray()->size()>10 && track.GetIsNoise()==0 && tracks.size()==2)
+	              	if( track.GetHitArray()->size()>10 && track.GetIsNoise()==0 && tracks.size()<=2)
 	              	{
 	              		track.SortHitArrayTime();
 	              		//std::cout<<" - Number of hits : "<<track.GetHitArray()->size()<<"	- Is noise? : "<<track.GetIsNoise()<<"\n";
