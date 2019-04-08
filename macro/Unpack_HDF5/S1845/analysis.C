@@ -248,7 +248,7 @@ void analysis()
 	FairRunAna* run = new FairRunAna(); //Forcing a dummy run
 
 	TString workdir = getenv("VMCWORKDIR");
-    TString FileNameHead = "run_0144";
+    TString FileNameHead = "run_0141";
     TString FilePath = workdir + "/macro/Unpack_HDF5/S1845/";
     TString FileNameTail = ".root";
     TString FileNameOut  = "_analysis";
@@ -310,6 +310,7 @@ void analysis()
     double protonTrigger_tree = 0;
     double alphaTrigger_tree = 0;
     int    eventNum_tree = 0;
+    double Qtot_tree = 0;
 
     TFile *analysisFile = new TFile(OutputFileName,"RECREATE");
     TTree *analysisTree = new TTree("analysisTree","analysis");
@@ -322,7 +323,8 @@ void analysis()
     analysisTree->Branch("shift_tree",&shift_tree,"shift_tree/D");
     analysisTree->Branch("protonTrigger_tree",&protonTrigger_tree,"protonTrigger_tree/D");
     analysisTree->Branch("alphaTrigger_tree",&alphaTrigger_tree,"alphaTrigger_tree/D");
-    analysisTree->Branch("eventNum_tree",&eventNum_tree,"eventNum_tree/D");
+    analysisTree->Branch("eventNum_tree",&eventNum_tree,"eventNum_tree/I");
+    analysisTree->Branch("Qtot_tree",&Qtot_tree,"Qtot_tree/D");
 
 
 
@@ -347,6 +349,7 @@ void analysis()
     		  shift_tree = -400;
     		  protonTrigger_tree = 0;
     		  alphaTrigger_tree = 0;
+    		  Qtot_tree = 0;
     
 
               
@@ -394,6 +397,8 @@ void analysis()
 
 
 	              }
+
+	              Qtot_tree = event->GetEventCharge();
 
 
 	              bool isValid = true;
@@ -493,7 +498,7 @@ void analysis()
 	              	    	Double_t angDeg = ang*180.0/TMath::Pi();
 	              	    	range_vs_angle->Fill(track.GetLinearRange(),angDeg);
 
-	              	    	if(angDeg<55.0 && angDeg>35.0 &&  track.GetLinearRange()>80.0){
+	              	    	if(angDeg<80.0 && angDeg>10.0){
 
 
 	              	    	range_vs_Q->Fill(track.GetLinearRange(),event->GetEventCharge()); //For the moment only events where the clustering works 1 track + noise
