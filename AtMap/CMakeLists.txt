@@ -40,6 +40,7 @@ Set(LINKDEF AtTpcMapLinkDef.h)
 Set(LIBRARY_NAME AtTpcMap)
 Set(DEPENDENCIES
     Base
+    XMLParser
 )
 
 GENERATE_LIBRARY()
