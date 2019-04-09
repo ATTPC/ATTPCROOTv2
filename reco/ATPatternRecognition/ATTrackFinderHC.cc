@@ -192,7 +192,7 @@ std::vector<ATTrack> ATPATTERN::ATTrackFinderHC::clustersToTrack(pcl::PointCloud
         track.SetIsNoise(kTRUE);
         tracks.push_back(track);
 
-        ROOT::EnableThreadSafety();
+        /*ROOT::EnableThreadSafety();
 
         //Estimaton of track parameters
         std::vector<std::future<void>> futures;
@@ -217,7 +217,7 @@ std::vector<ATTrack> ATPATTERN::ATTrackFinderHC::clustersToTrack(pcl::PointCloud
               std::cout<<coeff<<"\n";
             }
 
-        }
+        }*/
 
         return tracks;
 
