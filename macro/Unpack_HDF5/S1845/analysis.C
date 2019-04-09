@@ -20,7 +20,7 @@ Double_t chi2fit(TH1F* mesh, double Qrefproton, double Qrefexp, double angle,int
 	double dstretch=0.5; 
 	double stretch0=0.;  //shifts the calc to exp for ibegin
 	int    shift0=200.-iTb;
-	int    istretchmax=20;
+	int    istretchmax=40;
 	int    izeromax=20;
 	int    itb0=200;  //bricolage, to be replaced by center of gravity but probably not important
 
@@ -363,7 +363,7 @@ void analysis()
 	              std::vector<ATHit>* hitArray = event->GetHitArray();
 	              event->GetHitArrayObj();
 	              std::cout<<" 	**** Event Number : "<<i<<" Event Q : "<<event->GetEventCharge()<<std::endl;
-	              eventNum_tree = i;
+	              eventNum_tree = int(i);
 	              //std::cout<<hitArray->size()<<"\n";
 	              ATPatternEvent* patternEvent = (ATPatternEvent*) patterneventArray->At(0);
 	              std::vector<ATTrack>& tracks = patternEvent->GetTrackCand();
