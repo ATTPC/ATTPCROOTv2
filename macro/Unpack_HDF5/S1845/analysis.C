@@ -13,7 +13,7 @@ Double_t fitref(int x)
 
 }
 
-Double_t chi2fit(TH1F* mesh, double Qrefproton, double Qrefexp, double angle,int iTb, double &chimin,double &shiftmin, double &stretchmin)
+Double_t chi2fit(TH1F* mesh, double Qrefproton, double Qrefexp, double angle,int iTb, double &chimin,double &shiftmin, double &stretchmin, std::vector<double>& ref_curve, std::vector<double>& exp_curve)
 {
 
 	int    dzero=50; //initial step when minimizing
@@ -41,6 +41,10 @@ Double_t chi2fit(TH1F* mesh, double Qrefproton, double Qrefexp, double angle,int
 				{
 					chi2[istretch][izero]=0.;
 
+					std::vector<double> ref_curve_buffer;
+					std::vector<double> exp_curve_buffer;
+
+
 						for(int itb=100;itb<400;++itb)
 						{
 
@@ -55,6 +59,8 @@ Double_t chi2fit(TH1F* mesh, double Qrefproton, double Qrefexp, double angle,int
 				 			sigma                 = 100.;//  !error to be tested
 				 			chi2[istretch][izero] = chi2[istretch][izero]+ TMath::Power(((mesh->GetBinContent(itb)*Qrefproton/Qrefexp-fitfit)/sigma),2) ;// !now with renormalized
 				 			
+				 			ref_curve_buffer.push_back(fitfit);
+				 			exp_curve_buffer.push_back(mesh->GetBinContent(itb)*Qrefproton/Qrefexp);
 				 			//std::cout<<" chi2inner "<<chi2[istretch][izero]<<"\n";
 
 						}//TB
@@ -64,6 +70,8 @@ Double_t chi2fit(TH1F* mesh, double Qrefproton, double Qrefexp, double angle,int
 							chimin= chi2[istretch][izero];
 							stretchmin=stretch;
 							shiftmin=shift;
+							exp_curve = exp_curve_buffer;
+							ref_curve = ref_curve_buffer;
 						}	
 
 				}//izero
@@ -252,7 +260,7 @@ void analysis()
 	FairRunAna* run = new FairRunAna(); //Forcing a dummy run
 
 	TString workdir = getenv("VMCWORKDIR");
-    TString FileNameHead = "run_0142";
+    TString FileNameHead = "run_0080";
     TString FilePath = workdir + "/macro/Unpack_HDF5/S1845/";
     TString FileNameTail = ".root";
     TString FileNameOut  = "_analysis";
@@ -302,6 +310,8 @@ void analysis()
 
     TH1F* chi2minH = new TH1F("chi2minH","chi2minH",1000,0,8000);
 
+    TH1F* Qtot = new TH1F("Qtot","Qtot",1000,0,1000000);
+
     double Qprot_ref = 169276.80; //Average total charge of 180 keV protons
 
     double chi2_tree = 0;
@@ -315,6 +325,8 @@ void analysis()
     double alphaTrigger_tree = 0;
     int    eventNum_tree = 0;
     double Qtot_tree = 0;
+    std::vector<double> exp_curve_tree;
+    std::vector<double> ref_curve_tree;
 
     TFile *analysisFile = new TFile(OutputFileName,"RECREATE");
     TTree *analysisTree = new TTree("analysisTree","analysis");
@@ -329,9 +341,10 @@ void analysis()
     analysisTree->Branch("alphaTrigger_tree",&alphaTrigger_tree,"alphaTrigger_tree/D");
     analysisTree->Branch("eventNum_tree",&eventNum_tree,"eventNum_tree/I");
     analysisTree->Branch("Qtot_tree",&Qtot_tree,"Qtot_tree/D");
+    analysisTree->Branch("exp_curve_tree",&exp_curve_tree);
+    analysisTree->Branch("ref_curve_tree",&ref_curve_tree);
 
-
-
+    std::ofstream outputFileBragg("bragg_collection.txt");
 
 
 
@@ -354,8 +367,9 @@ void analysis()
     		  protonTrigger_tree = 0;
     		  alphaTrigger_tree = 0;
     		  Qtot_tree = 0;
-    
 
+			  exp_curve_tree.clear();
+    		  ref_curve_tree.clear();
               
 
               mesh->Reset();
@@ -403,6 +417,8 @@ void analysis()
 	              }
 
 	              Qtot_tree = event->GetEventCharge();
+
+	              Qtot->Fill(Qtot_tree);
 
 
 	              bool isValid = true;
@@ -462,6 +478,11 @@ void analysis()
 	              	    					Qtot+=adc[indTB];
 	              	    					if(indTB<firstTBOT) firstTBOT = indTB;
 	              	    					if(indTB>lastTBOT)  lastTBOT  = indTB;
+
+	              	    					 if(Qtot_tree>180000){	           
+	              								outputFileBragg<<"	"<<indTB<<"		"<<adc[indTB]<<"	"<<Qtot_tree<<"		"<<i<<"\n";
+	              							 }
+	            
 	              	    				}	
 	              				}
 
@@ -509,7 +530,7 @@ void analysis()
 	              	    	Q1_vs_Q2->Fill(Q_nearFirst,Q_nearLast);
 	              	    	Q1_vs_Q2_int->Fill(Qint_nearFirst,Qint_nearLast);
 
-	              	    	double dummy_result = chi2fit(mesh,Qprot_ref,Qtot,angDeg,firstTBOT,chi2min,shiftmin,stretchmin);
+	              	    	double dummy_result = chi2fit(mesh,Qprot_ref,Qtot,angDeg,firstTBOT,chi2min,shiftmin,stretchmin,ref_curve_tree, exp_curve_tree);
 
 	              	    	//std::cout<<" Chi2Min "<<chi2min<<"\n";
 
@@ -558,6 +579,8 @@ void analysis()
      analysisTree->Write();
      analysisFile->Close();
 
+     outputFileBragg.close();
+
      TCanvas *c1 = new TCanvas();
      c1->Divide(2,2);
      c1->cd(1);
@@ -578,6 +601,9 @@ void analysis()
 	 range_vs_angle->Draw("zcol");
 	 c2->cd(3);
 	 chi2minH->Draw();
+
+	 TCanvas *c3 = new TCanvas();
+	 Qtot->Draw();
 
 
      gStyle->SetOptStat(0);
