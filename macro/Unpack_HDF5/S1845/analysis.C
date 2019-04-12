@@ -13,7 +13,7 @@ Double_t fitref(int x)
 
 }
 
-Double_t chi2fit(TH1F* mesh, double Qrefproton, double Qrefexp, double angle,int iTb, double &chimin,double &shiftmin, double &stretchmin, std::vector<double>& ref_curve, std::vector<double>& exp_curve)
+Double_t chi2fit(TH1F* mesh, double Qrefproton,double Qreflith, double Qrefexp, double angle,int iTb, double &chimin,double &shiftmin, double &stretchmin, std::vector<double>& ref_curve, std::vector<double>& exp_curve)
 {
 
 	int    dzero=50; //initial step when minimizing
@@ -53,6 +53,8 @@ Double_t chi2fit(TH1F* mesh, double Qrefproton, double Qrefexp, double angle,int
 							stretch        = dstretch*(float(istretch-istretchmax/2.0)/float(istretchmax)) + stretch0;
 							int tbref      = itb+shift+stretch*(itb-itb0); //!this is the coordinate of the analytical function before angle correction
 							tbref          = 200.+ (tbref-200.)/cos(angle*0.01745); // !zero degree=beam=tbucket direction
+
+							//NB:: For the 7Li fit, we need to multiply by cos(45) tbref and fitfit
 							double fitfit  = fitref(tbref)/cos(angle*0.01745);// !function fitted at point bref corrected for projection on exp axis
 
 							double sigma          = (mesh->GetBinContent(itb)+fitfit)*0.1+100.;//  !error to be tested
@@ -313,6 +315,7 @@ void analysis()
     TH1F* Qtot = new TH1F("Qtot","Qtot",1000,0,1000000);
 
     double Qprot_ref = 169276.80; //Average total charge of 180 keV protons
+    double Qlith_ref = 233000.00;
 
     double chi2_tree = 0;
     double Qref_tree = 0;
@@ -454,6 +457,9 @@ void analysis()
 	              		double stretchmin = 0;
 	              		double shiftmin = 0;
 
+	              		Double_t angOut = GetAngle(&track);
+	              	    Double_t angDegOut = angOut*180.0/TMath::Pi();
+
 
 	              		for(auto hit : *hits)
 	              		{
@@ -471,6 +477,7 @@ void analysis()
 
 	              				Double_t* adc = GetPadWaveForm(hit.GetHitPadNum(),padArray);
 
+
 	              				for(int indTB=0;indTB<512;++indTB)
 	              	   			 {
 	              	    				if(adc[indTB]>40.0){	              	    		
@@ -480,7 +487,7 @@ void analysis()
 	              	    					if(indTB>lastTBOT)  lastTBOT  = indTB;
 
 	              	    					 if(Qtot_tree>180000){	           
-	              								outputFileBragg<<"	"<<indTB<<"		"<<adc[indTB]<<"	"<<Qtot_tree<<"		"<<i<<"\n";
+	              								outputFileBragg<<"	"<<indTB<<"		"<<adc[indTB]<<"	"<<Qtot_tree<<"		"<<i<<"		"<<angDegOut<<"\n";
 	              							 }
 	            
 	              	    				}	
@@ -530,7 +537,7 @@ void analysis()
 	              	    	Q1_vs_Q2->Fill(Q_nearFirst,Q_nearLast);
 	              	    	Q1_vs_Q2_int->Fill(Qint_nearFirst,Qint_nearLast);
 
-	              	    	double dummy_result = chi2fit(mesh,Qprot_ref,Qtot,angDeg,firstTBOT,chi2min,shiftmin,stretchmin,ref_curve_tree, exp_curve_tree);
+	              	    	double dummy_result = chi2fit(mesh,Qprot_ref,Qlith_ref,Qtot,angDeg,firstTBOT,chi2min,shiftmin,stretchmin,ref_curve_tree, exp_curve_tree);
 
 	              	    	//std::cout<<" Chi2Min "<<chi2min<<"\n";
 

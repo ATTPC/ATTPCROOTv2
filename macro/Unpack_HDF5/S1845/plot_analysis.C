@@ -1,9 +1,9 @@
 void plot_analysis()
 {
 
-		std::vector<TString> files{"run_0080_analysis.root"};
-		//"run_0082_analysis.root",
-		//"run_0083_analysis.root"};
+		std::vector<TString> files{"run_0081_analysis.root",
+		"run_0082_analysis.root",
+		"run_0083_analysis.root"};
 		/*,"run_0141_analysis.root"
 		,"run_0142_analysis.root"
 		,"run_0144_analysis.root"
@@ -18,8 +18,8 @@ void plot_analysis()
 		,"run_0158_analysis.root"
 		,"run_0159_analysis.root"};*/
 
-		//TString path = "analysis/";
-		TString path = "";
+		TString path = "analysis/";
+		//TString path = "";
 
 
 		//Histograms 
@@ -92,8 +92,8 @@ void plot_analysis()
     		analysisTree->SetBranchAddress("protonTrigger_tree",&protonTrigger_tree);
     		analysisTree->SetBranchAddress("alphaTrigger_tree",&alphaTrigger_tree);
     		analysisTree->SetBranchAddress("eventNum_tree",&eventNum_tree);
-    		analysisTree->SetBranchAddress("exp_curve_tree",&exp_curve_tree);
-    		analysisTree->SetBranchAddress("ref_curve_tree",&ref_curve_tree);
+    		//analysisTree->SetBranchAddress("exp_curve_tree",&exp_curve_tree);
+    		//analysisTree->SetBranchAddress("ref_curve_tree",&ref_curve_tree);
     		analysisTree->SetBranchAddress("Qtot_tree",&Qtot_tree);
 
 
@@ -143,7 +143,7 @@ void plot_analysis()
             		
             	}
 
-            	if(chi2_tree<300&&chi2_tree>50)
+            	/*if(chi2_tree<300&&chi2_tree>50)
             	{
 
 
@@ -157,7 +157,7 @@ void plot_analysis()
 	            	{
 	            		ref_curve->SetBinContent(ivec,ref_curve_tree->at(ivec));	
 	            	}
-	            }	
+	            }*/	
 
             }
 
