@@ -1,4 +1,4 @@
-void N12_dn_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
+void N12_dn_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -44,7 +44,7 @@ void N12_dn_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_CD4_760torr.root");
+  ATTPC->SetGeometryFileName("ATTPC_Proto_C4D10_200torr.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
@@ -75,11 +75,11 @@ void N12_dn_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 	              Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
 	              Double_t px = 0.000/a;  // X-Momentum / per nucleon!!!!!!
 	              Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
-	              Double_t pz = 1.648/a;  // Z-Momentum / per nucleon!!!!!!
+	              Double_t pz = 1.644/a;  // Z-Momentum / per nucleon!!!!!!
   	            Double_t BExcEner = 0.0;
-                Double_t Bmass = 11.19527; //Mass in GeV
-                Double_t NomEnergy = 120.72; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
-                Double_t TargetMass = 1.8756129;//Mass in GeV
+                Double_t Bmass = 12.018613197; 
+                Double_t NomEnergy = 120.0; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
+                Double_t TargetMass = 1.8756129;
 
 
 	          ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
@@ -128,7 +128,7 @@ void N12_dn_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 		             Pxp.push_back(0.0);
                  Pyp.push_back(0.0);
 		             Pzp.push_back(0.0);
-                 Mass.push_back(1.8756129);
+                 Mass.push_back(2.014101777);
 		             ExE.push_back(0.0);//In MeV
 
                   //--- Scattered -----
@@ -138,7 +138,7 @@ void N12_dn_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
           		   Pxp.push_back(0.0);
           		   Pyp.push_back(0.0);
           		   Pzp.push_back(0.0);
-          		   Mass.push_back(12.13254);
+          		   Mass.push_back(13.024812213);
           		   ExE.push_back(0.0);
 
 
@@ -149,7 +149,7 @@ void N12_dn_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 		             Pxp.push_back(0.0);
                  Pyp.push_back(0.0);
 		             Pzp.push_back(0.0);
-                 Mass.push_back(0.9395654);
+                 Mass.push_back(1.008665);
 		             ExE.push_back(0.0);//In MeV
 
 

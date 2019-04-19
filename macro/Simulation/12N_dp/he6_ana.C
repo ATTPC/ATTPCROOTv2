@@ -46,11 +46,12 @@ void he6_ana(Int_t num_ev=10000)
     TH2D *RadAng[10];
     TH2D *Range_vs_Energy_Sca = new TH2D("Range_vs_Energy_Sca","Range_vs_Energy_Sca",200,0,1000,500,0,50);
     TH2D *Range_vs_Energy_Rec = new TH2D("Range_vs_Energy_Rec","Range_vs_Energy_Rec",200,0,1000,500,0,50);
-    TH2D *Range_vs_Energy_Beam = new TH2D("Range_vs_Energy_Beam","Range_vs_Energy_Beam",200,0,1000,500,0,50);
+    TH2D *Range_vs_Energy_Beam = new TH2D("Range_vs_Energy_Beam","Range_vs_Energy_Beam",200,0,1000,500,0,500);
 
     TH3D *Vertex_vs_Angle_Rec = new TH3D("Vertex_vs_Angle_Rec","Vertex_vs_Angle_Rec",100,0,500,100,0,500,100,0,180);
 
     TH2D *Angle_sca_vs_Angle_rec = new TH2D("Angle_sca_vs_Angle_rec","Angle_sca_vs_Angle_rec",200,0,180,200,0,180);
+    TH2D *Angle_sca_vs_Energy_sca = new TH2D("Angle_sca_vs_Energy_rec","Angle_sca_vs_Energy_rec",200,0,180,200,0,1000);
     Char_t hra_name[10][256];
 
            for(Int_t i=0;i<10;i++){
@@ -142,6 +143,7 @@ void he6_ana(Int_t num_ev=10000)
         Double_t range_rec=0.0;
 	      Double_t range_beam=0.0;
         Double_t BeamEnergyLoss_IC=0.0;
+        Double_t BeamEnergyLoss=0.0;
         Double_t EnergyRecoil = 0.0;
 	      Double_t EnergyBeam=0.0;
         Double_t EnergySca=0.0;
@@ -190,7 +192,9 @@ void he6_ana(Int_t num_ev=10000)
                 vertex=point->GetZ()*10;
 			    range_beam=point -> GetLength()*10;//mm
 			    EnergyBeam=point -> GetEIni();
-               // std::cout<<" Vertex : "<<vertex<<std::endl;
+                std::cout<<" Vertex : "<<vertex<<std::endl;
+                BeamEnergyLoss+=( point -> GetEnergyLoss())*1000;
+                std::cout<<BeamEnergyLoss<<"    "<<range_beam<<"\n";
 
             }
 
@@ -216,16 +220,17 @@ void he6_ana(Int_t num_ev=10000)
 
             //SCATTERED INFORMATION
             if(trackID==1 && VolName=="drift_volume"){
-                range_sca = point -> GetLength()*10; //mm
+                range_sca = point -> GetLength()*10.0; //mm
                 ScaRange = range_sca;
                 EnergySca = point ->GetEIni();
+                cout << EnergySca << endl;
                 ScaEner = EnergySca;
                 energyLoss_sca+=( point -> GetEnergyLoss() )*1000;//MeV
                 AngleSca= point->GetAIni();
                 ScaAng = AngleSca;
                 // std::cout<<" Track ID : "<<trackID<<std::endl;
-                // std::cout<<" Range_sca : "<<range_sca<<std::endl;
-                // std::cout<<" energyLoss_sca : "<<energyLoss_sca<<std::endl;
+                 std::cout<<" Range_sca : "<<range_sca<<std::endl;
+                 std::cout<<" energyLoss_sca : "<<energyLoss_sca<<std::endl;
             }//TrackID == 1
 
 
@@ -250,6 +255,7 @@ void he6_ana(Int_t num_ev=10000)
             HKineRecoil->Fill(AngleRecoil,EnergyRecoil);
             Angle_sca_vs_Angle_rec->Fill(AngleRecoil,AngleSca);
             Vertex_vs_Angle_Rec->Fill(vertex,range_rec,AngleRecoil);
+            Angle_sca_vs_Energy_sca->Fill(AngleSca,EnergySca);
 
 
     		for(Int_t i=0;i<10;i++){
@@ -268,6 +274,7 @@ void he6_ana(Int_t num_ev=10000)
 	Range_vs_Energy_Sca->Fill(range_sca,EnergySca);
     Range_vs_Energy_Rec->Fill(range_rec,EnergyRecoil);
 	Range_vs_Energy_Beam->Fill(range_beam,EnergyBeam);
+
 
      treeOut->Fill();
 
@@ -303,6 +310,8 @@ void he6_ana(Int_t num_ev=10000)
       c5->cd(1);
       //rad->Draw();
     Angle_sca_vs_Angle_rec->Draw("zcol");
+    c5->cd(2);
+    Angle_sca_vs_Energy_sca->Draw("zcol");
 
     c7->cd();
     Vertex_vs_Angle_Rec-> GetXaxis() -> SetTitle("Vertex Position [mm]");
