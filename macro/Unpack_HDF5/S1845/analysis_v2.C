@@ -429,28 +429,39 @@ void analysis_v2()
     double Qlith_ref = 233000.00;
 
     double chi2_tree = 0;
-    double Qref_tree = 0;
-    double Qexp_tree = 0;
-    double stretch_tree = 0;
-    double angle_tree = 0;
-    double range_tree = 0;
+      
+    double stretch_tree = 0;  
     double shift_tree = 0;
+
+    double chi2Li_tree = 0;
+    double stretchLi_tree = 0;
+    double shiftLi_tree = 0;
+
+
     double protonTrigger_tree = 0;
     double alphaTrigger_tree = 0;
+    double angle_tree = 0;
+    double range_tree = 0;
+    double Qexp_tree = 0;
+    double Qref_tree = 0;
     int    eventNum_tree = 0;
     double Qtot_tree = 0;
+
     std::vector<double> exp_curve_tree;
     std::vector<double> ref_curve_tree;
 
     TFile *analysisFile = new TFile(OutputFileName,"RECREATE");
     TTree *analysisTree = new TTree("analysisTree","analysis");
     analysisTree->Branch("chi2_tree",&chi2_tree,"chi2_tree/D");
+    analysisTree->Branch("chi2Li_tree",&chi2Li_tree,"chi2Li_tree/D");
     analysisTree->Branch("Qref_tree",&Qref_tree,"Qref_tree/D");
     analysisTree->Branch("Qexp_tree",&Qexp_tree,"Qexp_tree/D");
     analysisTree->Branch("angle_tree",&angle_tree,"angle_tree/D");
     analysisTree->Branch("stretch_tree",&stretch_tree,"stretch_tree/D");
+    analysisTree->Branch("stretchLi_tree",&stretch_tree,"stretch_tree/D");
     analysisTree->Branch("range_tree",&range_tree,"range_tree/D");
     analysisTree->Branch("shift_tree",&shift_tree,"shift_tree/D");
+    analysisTree->Branch("shiftLi_tree",&shift_tree,"shift_tree/D");
     analysisTree->Branch("protonTrigger_tree",&protonTrigger_tree,"protonTrigger_tree/D");
     analysisTree->Branch("alphaTrigger_tree",&alphaTrigger_tree,"alphaTrigger_tree/D");
     analysisTree->Branch("eventNum_tree",&eventNum_tree,"eventNum_tree/I");
@@ -471,18 +482,21 @@ void analysis_v2()
               ATEvent* event = (ATEvent*) eventArray->At(0);
               ATRawEvent *rawEvent = (ATRawEvent*) raweventArray->At(0);
 
-              chi2_tree = 0;
+          chi2_tree = 0;
+          chi2Li_tree = 0;
     		  Qref_tree = 0;
     		  Qexp_tree = 0;
     		  stretch_tree = -10;
+          stretchLi_tree = -10;
     		  angle_tree = 0;
     		  range_tree = 0;
     		  shift_tree = -400;
+          shiftLi_tree = -400;
     		  protonTrigger_tree = 0;
     		  alphaTrigger_tree = 0;
     		  Qtot_tree = 0;
 
-			  exp_curve_tree.clear();
+			    exp_curve_tree.clear();
     		  ref_curve_tree.clear();
               
 
@@ -522,7 +536,7 @@ void analysis_v2()
 	              		//std::cout<<" Auxiliary pad name "<<auxpad.GetAuxName()<<"\n";
 	              		Double_t *adc = auxpad.GetADC();
 	              		float max = GetMaximum(adc);
-    					protonTrigger_tree = max;
+    					      protonTrigger_tree = max;
 
 
 	              	}
@@ -647,21 +661,39 @@ void analysis_v2()
 	              	    	Q1_vs_Q2->Fill(Q_nearFirst,Q_nearLast);
 	              	    	Q1_vs_Q2_int->Fill(Qint_nearFirst,Qint_nearLast);
 
-	              	    	double dummy_result = chi2fit(mesh,Qprot_ref,Qlith_ref,Qtot,angDeg,firstTBOT,chi2min,shiftmin,stretchmin,ref_curve_tree, exp_curve_tree);
+                        int ioptionpart = 1;
+                        double sumref = 169276.80;
+                        double sumexp = Qtot;
 
-	              	    	//std::cout<<" Chi2Min "<<chi2min<<"\n";
+	              	    	double dummy_result = chi2fitImp(ioptionpart,mesh,sumref,sumexp,angDeg,firstTBOT,chi2min,shiftmin,stretchmin,ref_curve_tree, exp_curve_tree);
+                        
+
+	              	    	std::cout<<" Chi2Min proton "<<chi2min<<"\n";
 
 	              	    	chi2minH->Fill(chi2min);
 
-	              	    	chi2_tree = chi2min;
-	              	    	Qref_tree = Qprot_ref;
-    						        Qexp_tree = Qtot;
-    						        stretch_tree = stretchmin;
-    						        angle_tree = angDeg;
-    						        range_tree = track.GetLinearRange();
+	              	    	chi2_tree = chi2min;   						        
+    						        stretch_tree = stretchmin; 						        
     						        shift_tree = shiftmin;
 
-    						//analysisTree->Fill();
+                        ioptionpart = 2;
+                        sumref = 233000.00;
+                        dummy_result = chi2fitImp(ioptionpart,mesh,sumref,sumexp,angDeg,firstTBOT,chi2min,shiftmin,stretchmin,ref_curve_tree, exp_curve_tree);
+
+
+                        std::cout<<" Chi2Min 7Li "<<chi2min<<"\n";
+
+                        chi2Li_tree = chi2min;                      
+                        stretchLi_tree = stretchmin;                    
+                        shiftLi_tree = shiftmin;
+
+
+                        Qref_tree = Qprot_ref;
+                        Qexp_tree = Qtot;
+                        angle_tree = angDeg;
+                        range_tree = track.GetLinearRange();
+
+    					         	//analysisTree->Fill();
 
 
 	              	    		 /*for(int indTB=0;indTB<512;++indTB)
