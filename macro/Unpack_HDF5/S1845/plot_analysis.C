@@ -1,9 +1,10 @@
 void plot_analysis()
 {
 
-		std::vector<TString> files{"run_0081_analysis.root",
-		"run_0082_analysis.root",
-		"run_0083_analysis.root"};
+		std::vector<TString> files{"run_0080_analysis.root"};
+			//"run_0081_analysis.root",
+		//"run_0082_analysis.root",
+		//"run_0083_analysis.root"};
 		/*,"run_0141_analysis.root"
 		,"run_0142_analysis.root"
 		,"run_0144_analysis.root"
@@ -24,7 +25,10 @@ void plot_analysis()
 
 		//Histograms 
 		TH1F* chi2 = new TH1F("chi2","chi2",1000,0,10000);
-		TH2F* chi2_stretch = new TH2F("chi2_stretch","chi2_stretch",1000,0,10000,100,-1.0,1.0);
+		TH2F* chi2_chi2Li = new TH2F("chi2_chi2Li","chi2_chi2Li",1000,0,10000,1000,0,10000);
+		TH2F* chi2_chi2Li_cond = new TH2F("chi2_chi2Li_cond","chi2_chi2Li_cond",1000,0,10000,1000,0,10000);
+		TH2F* chi2_stretch = new TH2F("chi2_stretch","chi2_stretch",1000,0,10000,100,-2.0,2.0);
+		TH2F* chi2Li_stretchLi = new TH2F("chi2Li_stretchLi","chi2Li_stretchLi",1000,0,10000,100,-2.0,2.0);
 		TH2F* chi2_range = new TH2F("chi2_range","chi2_range",1000,0,10000,1000,0.0,200.0);
 		TH2F* chi2_Qratio = new TH2F("chi2_Qratio","chi2_Qratio",1000,0,10000,100,0,10.0);
 		TH2F* chi2_shift = new TH2F("chi2_shift","chi2_shift",1000,0,10000,100,-300,300.0);
@@ -64,9 +68,11 @@ void plot_analysis()
 			TFile* file = new TFile(path+ifile,"READ");
 
 			double chi2_tree = 0;
+			double chi2Li_tree = 0;
    		    double Qref_tree = 0;
     		double Qexp_tree = 0;
     		double stretch_tree = 0;
+    		double stretchLi_tree = 0;
     		double angle_tree = 0;
     		double range_tree = 0;
     		double shift_tree = 0;
@@ -83,10 +89,12 @@ void plot_analysis()
             std::cout<<" Number of events : "<<nEvents<<std::endl;
 
             analysisTree->SetBranchAddress("chi2_tree",&chi2_tree);
+            analysisTree->SetBranchAddress("chi2Li_tree",&chi2Li_tree);
     		analysisTree->SetBranchAddress("Qref_tree",&Qref_tree);
     		analysisTree->SetBranchAddress("Qexp_tree",&Qexp_tree);
     		analysisTree->SetBranchAddress("angle_tree",&angle_tree);
     		analysisTree->SetBranchAddress("stretch_tree",&stretch_tree);
+    		analysisTree->SetBranchAddress("stretchLi_tree",&stretchLi_tree);
     		analysisTree->SetBranchAddress("range_tree",&range_tree);
     		analysisTree->SetBranchAddress("shift_tree",&shift_tree);
     		analysisTree->SetBranchAddress("protonTrigger_tree",&protonTrigger_tree);
@@ -119,27 +127,44 @@ void plot_analysis()
 
             		Qexp_range->Fill(Qexp_tree,range_tree);
 
+            		double Qratio = Qexp_tree/Qref_tree;
+
 
             	if(chi2_tree>0 && alphaTrigger_tree<200){
             		chi2->Fill(chi2_tree);
             		chi2_stretch->Fill(chi2_tree,stretch_tree);
+            		chi2Li_stretchLi->Fill(chi2Li_tree,stretchLi_tree);
             		chi2_Qratio->Fill(chi2_tree,Qexp_tree/Qref_tree);
             		chi2_range->Fill(chi2_tree,range_tree);
             		chi2_shift->Fill(chi2_tree,shift_tree);
-            		if(chi2_tree<600) stretch_Qratio->Fill(stretch_tree,Qexp_tree/Qref_tree);
+            		chi2_chi2Li->Fill(chi2_tree,chi2Li_tree);
 
-            		if(chi2_tree<600&&chi2_tree>100&&stretch_tree<0.04&&stretch_tree>0.01){
+
+
+            		if(stretch_tree>-0.02 && stretch_tree<0.5 && stretchLi_tree>-0.2 && stretchLi_tree<0.5 && angle_tree>10 && angle_tree<60 && Qratio>0.6)
+            		{
+
+            			chi2_chi2Li_cond->Fill(chi2_tree,chi2Li_tree);
+            			if(chi2_tree<1000 && chi2Li_tree>1000) Qexp->Fill(Qexp_tree);
+
+            		}
+
+
+
+            		   //if(chi2_tree<600) stretch_Qratio->Fill(stretch_tree,Qexp_tree/Qref_tree);
+
+            		/*if(chi2_tree<600&&chi2_tree>100&&stretch_tree<0.04&&stretch_tree>0.01){
             			 
             			 Qexp->Fill(Qexp_tree);
             			 stretch->Fill(stretch_tree);
-            		}
+            		}*/
 
-            		double Qratio = Qexp_tree/Qref_tree;
+            		/*double Qratio = Qexp_tree/Qref_tree;
 
             		if(Qratio<1.1&&Qratio>0.8&&stretch_tree<0.04&&stretch_tree>0.01){
             			chi2_cond->Fill(chi2_tree);
             			chi2_cond_range->Fill(chi2_tree,range_tree);
-            		}
+            		}*/
             		
             	}
 
@@ -172,28 +197,30 @@ void plot_analysis()
 	   c1->cd(2);
 	   chi2_stretch->Draw("zcol");
 	   c1->cd(3);
-	   chi2_Qratio->Draw("zcol");
+	   chi2Li_stretchLi->Draw("zcol");
 	   c1->cd(4);
+	   chi2_range->Draw("zcol");
 
 	   TCanvas *c3 = new TCanvas();
 	   c3->Divide(2,2);
 	   c3->cd(1);
-	   stretch_Qratio->Draw("zcol");
+	   chi2_chi2Li->Draw("zcol");
 	   c3->cd(2);
-	   alphaTrigger->Draw();
-	   c3->cd(3);
+	   chi2_Qratio->Draw("zcol");
+	   /*c3->cd(3);
 	   alphaTrigger_angle->Draw();
 	   c3->cd(4);
-	   alphaTrigger_event->Draw();
+	   alphaTrigger_event->Draw();*/
 	   
 	   
 
 	   TCanvas *c2 = new TCanvas();
 	   c2->Divide(2,2);
 	   c2->cd(1);
-	   Qexp->Draw();
+	   chi2_chi2Li_cond->Draw();
 	   c2->cd(2);
-	   chi2_range->Draw("zcol");
+	   Qexp->Draw();
+	   /*chi2_range->Draw("zcol");
 	   c2->cd(3);
 	   chi2_shift->Draw("zcol");
 	   c2->cd(4);
@@ -216,6 +243,6 @@ void plot_analysis()
 
 	    TCanvas *c6 = new TCanvas();
 	    exp_curve->Draw();
-	    ref_curve->Draw("SAME");
+	    ref_curve->Draw("SAME");*/
 
 }

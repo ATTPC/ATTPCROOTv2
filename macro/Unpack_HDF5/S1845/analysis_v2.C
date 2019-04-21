@@ -1,6 +1,6 @@
 Double_t fitref(int x)
 {
-	double c4=x;
+	double c4=x-100.;
 		
 	double c6=1580.*exp(-TMath::Power(((c4-197.)/16.),2)) + 1550.*exp(-TMath::Power(((c4-224.)/11.),2)) 
 		   + 650.*exp(-TMath::Power(((c4-211.)/10.),2)) - 150.*exp(-TMath::Power(((c4-221.)/6.),2)) 
@@ -30,7 +30,7 @@ double fitLi(int x)
              }
 }           
 
-Double_t chi2fitImp(int ioptionpart, TH1F* mesh, double sumref, double sumexp, double angle,int iTb, double &chimin,double &shiftmin, double &stretchmin, std::vector<double>& ref_curve, std::vector<double>& exp_curve)
+Double_t chi2fitImp(int ioptionpart, TH1F* mesh, double &sumref, double sumexp, double angle,int iTb, double &chimin,double &shiftmin, double &stretchmin, std::vector<double>& ref_curve, std::vector<double>& exp_curve)
 {
 
            int    dzero=110;
@@ -54,7 +54,7 @@ Double_t chi2fitImp(int ioptionpart, TH1F* mesh, double sumref, double sumexp, d
 
            double sumrefold = sumref;
 
-           for(int iter=0;iter<2;++iter)
+           for(int iter=0;iter<1;++iter)
            {
               for(int istretch=0;istretch<istretchmax;++istretch)
               {
@@ -449,6 +449,7 @@ void analysis_v2()
 
     std::vector<double> exp_curve_tree;
     std::vector<double> ref_curve_tree;
+    std::vector<double> refLi_curve_tree;
 
     TFile *analysisFile = new TFile(OutputFileName,"RECREATE");
     TTree *analysisTree = new TTree("analysisTree","analysis");
@@ -458,23 +459,24 @@ void analysis_v2()
     analysisTree->Branch("Qexp_tree",&Qexp_tree,"Qexp_tree/D");
     analysisTree->Branch("angle_tree",&angle_tree,"angle_tree/D");
     analysisTree->Branch("stretch_tree",&stretch_tree,"stretch_tree/D");
-    analysisTree->Branch("stretchLi_tree",&stretch_tree,"stretch_tree/D");
+    analysisTree->Branch("stretchLi_tree",&stretchLi_tree,"stretchLi_tree/D");
     analysisTree->Branch("range_tree",&range_tree,"range_tree/D");
     analysisTree->Branch("shift_tree",&shift_tree,"shift_tree/D");
-    analysisTree->Branch("shiftLi_tree",&shift_tree,"shift_tree/D");
+    analysisTree->Branch("shiftLi_tree",&shiftLi_tree,"shiftLi_tree/D");
     analysisTree->Branch("protonTrigger_tree",&protonTrigger_tree,"protonTrigger_tree/D");
     analysisTree->Branch("alphaTrigger_tree",&alphaTrigger_tree,"alphaTrigger_tree/D");
     analysisTree->Branch("eventNum_tree",&eventNum_tree,"eventNum_tree/I");
     analysisTree->Branch("Qtot_tree",&Qtot_tree,"Qtot_tree/D");
-    analysisTree->Branch("exp_curve_tree",&exp_curve_tree);
-    analysisTree->Branch("ref_curve_tree",&ref_curve_tree);
+    //analysisTree->Branch("exp_curve_tree",&exp_curve_tree);
+    //analysisTree->Branch("ref_curve_tree",&ref_curve_tree);
+    //analysisTree->Branch("refLi_curve_tree",&ref_curve_tree);
 
     std::ofstream outputFileBragg("bragg_collection.txt");
 
 
 
 
-     for(Int_t i=0;i<10;i++){
+     for(Int_t i=0;i<100000;i++){
           //while (Reader1.Next()) {
 
               Reader1.Next();
@@ -498,6 +500,7 @@ void analysis_v2()
 
 			    exp_curve_tree.clear();
     		  ref_curve_tree.clear();
+          refLi_curve_tree.clear();
               
 
               mesh->Reset();
@@ -662,13 +665,13 @@ void analysis_v2()
 	              	    	Q1_vs_Q2_int->Fill(Qint_nearFirst,Qint_nearLast);
 
                         int ioptionpart = 1;
-                        double sumref = 169276.80;
+                        double sumrefp = 169276.80;
                         double sumexp = Qtot;
 
-	              	    	double dummy_result = chi2fitImp(ioptionpart,mesh,sumref,sumexp,angDeg,firstTBOT,chi2min,shiftmin,stretchmin,ref_curve_tree, exp_curve_tree);
+	              	    	double dummy_result = chi2fitImp(ioptionpart,mesh,sumrefp,sumexp,angDeg,firstTBOT,chi2min,shiftmin,stretchmin,ref_curve_tree, exp_curve_tree);
                         
 
-	              	    	std::cout<<" Chi2Min proton "<<chi2min<<"\n";
+	              	    	std::cout<<" Chi2Min proton "<<chi2min<<" - sumref "<<sumrefp<<"\n";
 
 	              	    	chi2minH->Fill(chi2min);
 
@@ -676,12 +679,16 @@ void analysis_v2()
     						        stretch_tree = stretchmin; 						        
     						        shift_tree = shiftmin;
 
+                        chi2min = 0;
+                        stretchmin = 0;
+                        shiftmin = 0;
+
                         ioptionpart = 2;
-                        sumref = 233000.00;
-                        dummy_result = chi2fitImp(ioptionpart,mesh,sumref,sumexp,angDeg,firstTBOT,chi2min,shiftmin,stretchmin,ref_curve_tree, exp_curve_tree);
+                        double sumrefLi = 233000.00;
+                        dummy_result = chi2fitImp(ioptionpart,mesh,sumrefLi,sumexp,angDeg,firstTBOT,chi2min,shiftmin,stretchmin,refLi_curve_tree, exp_curve_tree);
 
 
-                        std::cout<<" Chi2Min 7Li "<<chi2min<<"\n";
+                        std::cout<<" Chi2Min 7Li "<<chi2min<<" - sumref "<<sumrefLi<<"\n";
 
                         chi2Li_tree = chi2min;                      
                         stretchLi_tree = stretchmin;                    
