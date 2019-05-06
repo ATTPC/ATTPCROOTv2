@@ -1,8 +1,8 @@
 void plot_analysis()
 {
 
-		std::vector<TString> files{"run_0080_analysis.root"};
-			//"run_0081_analysis.root",
+		std::vector<TString> files{"run_0080_analysis.root"};//,
+		//"run_0081_analysis.root",
 		//"run_0082_analysis.root",
 		//"run_0083_analysis.root"};
 		/*,"run_0141_analysis.root"
@@ -19,8 +19,9 @@ void plot_analysis()
 		,"run_0158_analysis.root"
 		,"run_0159_analysis.root"};*/
 
-		TString path = "analysis/";
-		//TString path = "";
+		//TString path = "analysis/";
+		TString path = "";
+
 
 
 		//Histograms 
@@ -63,7 +64,12 @@ void plot_analysis()
 		for(auto ifile : files)
 		{
 
+
 			std::cout<<" Processing file "<<ifile<<"\n";
+
+			TString QtotoutputFileName = path + "Qtot_" + ifile + ".txt";
+
+			//std::ofstream QtotoutputFile(QtotoutputFileName.Data());
 
 			TFile* file = new TFile(path+ifile,"READ");
 
@@ -109,6 +115,7 @@ void plot_analysis()
             {
             	analysisTree->GetEntry(iEvent);
 
+            	//QtotoutputFile<<Qtot_tree<<"\n";
 
 			  	//exp_curve_tree->clear();
     		  	//ref_curve_tree->clear();
@@ -131,6 +138,9 @@ void plot_analysis()
 
 
             	if(chi2_tree>0 && alphaTrigger_tree<200){
+
+            		std::cout<<" Event "<<eventNum_tree<<" chi2 proton "<<chi2_tree<<" - chi2 7Li "<<chi2Li_tree<<" - stretch proton "<<stretch_tree<<" - stretch 7Li "<<stretchLi_tree<<"\n";
+
             		chi2->Fill(chi2_tree);
             		chi2_stretch->Fill(chi2_tree,stretch_tree);
             		chi2Li_stretchLi->Fill(chi2Li_tree,stretchLi_tree);
@@ -141,13 +151,20 @@ void plot_analysis()
 
 
 
-            		if(stretch_tree>-0.02 && stretch_tree<0.5 && stretchLi_tree>-0.2 && stretchLi_tree<0.5 && angle_tree>10 && angle_tree<60 && Qratio>0.6)
+            		if(stretch_tree>-0.2 && stretch_tree<0.5 && 
+            			stretchLi_tree>-0.2 && stretchLi_tree<0.5 
+            			&& angle_tree>10 && angle_tree<60 
+            			)
             		{
 
             			chi2_chi2Li_cond->Fill(chi2_tree,chi2Li_tree);
-            			if(chi2_tree<1000 && chi2Li_tree>1000) Qexp->Fill(Qexp_tree);
+            			if(chi2_tree<1000 && chi2Li_tree>2000) 
+            				Qexp->Fill(Qexp_tree);
 
             		}
+
+
+
 
 
 
@@ -186,6 +203,7 @@ void plot_analysis()
 
             }
 
+            //QtotoutputFile.close();
             file->Close();
 
 	   }	

@@ -262,7 +262,7 @@ void analysis()
 	FairRunAna* run = new FairRunAna(); //Forcing a dummy run
 
 	TString workdir = getenv("VMCWORKDIR");
-    TString FileNameHead = "run_0081";
+    TString FileNameHead = "run_0080";
     TString FilePath = workdir + "/macro/Unpack_HDF5/S1845/";
     TString FileNameTail = ".root";
     TString FileNameOut  = "_analysis";
@@ -352,7 +352,7 @@ void analysis()
 
 
 
-     for(Int_t i=0;i<100000;i++){
+     for(Int_t i=0;i<100;i++){
           //while (Reader1.Next()) {
 
               Reader1.Next();
@@ -486,7 +486,7 @@ void analysis()
 	              	    					if(indTB<firstTBOT) firstTBOT = indTB;
 	              	    					if(indTB>lastTBOT)  lastTBOT  = indTB;
 
-	              	    					 if(Qtot_tree>180000){	           
+	              	    				 if(Qtot_tree>180000){	           
 	              								outputFileBragg<<"	"<<indTB<<"		"<<adc[indTB]<<"	"<<Qtot_tree<<"		"<<i<<"		"<<angDegOut<<"\n";
 	              							 }
 	            

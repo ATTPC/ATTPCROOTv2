@@ -444,6 +444,7 @@ void analysis_v2()
     double range_tree = 0;
     double Qexp_tree = 0;
     double Qref_tree = 0;
+    double QrefLi_tree = 0;
     int    eventNum_tree = 0;
     double Qtot_tree = 0;
 
@@ -456,6 +457,7 @@ void analysis_v2()
     analysisTree->Branch("chi2_tree",&chi2_tree,"chi2_tree/D");
     analysisTree->Branch("chi2Li_tree",&chi2Li_tree,"chi2Li_tree/D");
     analysisTree->Branch("Qref_tree",&Qref_tree,"Qref_tree/D");
+    analysisTree->Branch("QrefLi_tree",&QrefLi_tree,"QrefLi_tree/D");
     analysisTree->Branch("Qexp_tree",&Qexp_tree,"Qexp_tree/D");
     analysisTree->Branch("angle_tree",&angle_tree,"angle_tree/D");
     analysisTree->Branch("stretch_tree",&stretch_tree,"stretch_tree/D");
@@ -476,7 +478,7 @@ void analysis_v2()
 
 
 
-     for(Int_t i=0;i<100000;i++){
+     for(Int_t i=0;i<1000;i++){
           //while (Reader1.Next()) {
 
               Reader1.Next();
@@ -651,6 +653,7 @@ void analysis_v2()
 
 	              	    if(isValid)
 	              	    {
+
 	              	    	Double_t ang = GetAngle(&track);
 	              	    	angleH->Fill(ang*180.0/TMath::Pi());
 	              	    	//std::cout<<" Angle "<<ang*180.0/TMath::Pi()<<"\n";
@@ -660,65 +663,65 @@ void analysis_v2()
 	              	    	if(angDeg<80.0 && angDeg>10.0){
 
 
-	              	    	range_vs_Q->Fill(track.GetLinearRange(),event->GetEventCharge()); //For the moment only events where the clustering works 1 track + noise
-	              	    	Q1_vs_Q2->Fill(Q_nearFirst,Q_nearLast);
-	              	    	Q1_vs_Q2_int->Fill(Qint_nearFirst,Qint_nearLast);
+        	              	    	range_vs_Q->Fill(track.GetLinearRange(),event->GetEventCharge()); //For the moment only events where the clustering works 1 track + noise
+        	              	    	Q1_vs_Q2->Fill(Q_nearFirst,Q_nearLast);
+        	              	    	Q1_vs_Q2_int->Fill(Qint_nearFirst,Qint_nearLast);
 
-                        int ioptionpart = 1;
-                        double sumrefp = 169276.80;
-                        double sumexp = Qtot;
+                                int ioptionpart = 1;
+                                double sumrefp = 169276.80;
+                                double sumexp = Qtot;
 
-	              	    	double dummy_result = chi2fitImp(ioptionpart,mesh,sumrefp,sumexp,angDeg,firstTBOT,chi2min,shiftmin,stretchmin,ref_curve_tree, exp_curve_tree);
-                        
+        	              	    	double dummy_result = chi2fitImp(ioptionpart,mesh,sumrefp,sumexp,angDeg,firstTBOT,chi2min,shiftmin,stretchmin,ref_curve_tree, exp_curve_tree);
+                                
 
-	              	    	std::cout<<" Chi2Min proton "<<chi2min<<" - sumref "<<sumrefp<<"\n";
+        	              	    	std::cout<<" Chi2Min proton "<<chi2min<<" - sumref "<<sumrefp<<"\n";
 
-	              	    	chi2minH->Fill(chi2min);
+        	              	    	chi2minH->Fill(chi2min);
 
-	              	    	chi2_tree = chi2min;   						        
-    						        stretch_tree = stretchmin; 						        
-    						        shift_tree = shiftmin;
+        	              	    	chi2_tree = chi2min;   						        
+            						        stretch_tree = stretchmin; 						        
+            						        shift_tree = shiftmin;
 
-                        chi2min = 0;
-                        stretchmin = 0;
-                        shiftmin = 0;
+                                chi2min = 0;
+                                stretchmin = 0;
+                                shiftmin = 0;
 
-                        ioptionpart = 2;
-                        double sumrefLi = 233000.00;
-                        dummy_result = chi2fitImp(ioptionpart,mesh,sumrefLi,sumexp,angDeg,firstTBOT,chi2min,shiftmin,stretchmin,refLi_curve_tree, exp_curve_tree);
-
-
-                        std::cout<<" Chi2Min 7Li "<<chi2min<<" - sumref "<<sumrefLi<<"\n";
-
-                        chi2Li_tree = chi2min;                      
-                        stretchLi_tree = stretchmin;                    
-                        shiftLi_tree = shiftmin;
+                                ioptionpart = 2;
+                                double sumrefLi = 233000.00;
+                                dummy_result = chi2fitImp(ioptionpart,mesh,sumrefLi,sumexp,angDeg,firstTBOT,chi2min,shiftmin,stretchmin,refLi_curve_tree, exp_curve_tree);
 
 
-                        Qref_tree = Qprot_ref;
-                        Qexp_tree = Qtot;
-                        angle_tree = angDeg;
-                        range_tree = track.GetLinearRange();
+                                std::cout<<" Chi2Min 7Li "<<chi2min<<" - sumref "<<sumrefLi<<"\n";
 
-    					         	//analysisTree->Fill();
-
-
-	              	    		 /*for(int indTB=0;indTB<512;++indTB)
-			 					 {
-									outputFile<<indTB<<"	"<<mesh->GetBinContent(indTB)<<"	"<<mesh->GetBinError(indTB)<<"	"<<i<<"		"<<angDeg<<"\n";	
+                                chi2Li_tree = chi2min;                      
+                                stretchLi_tree = stretchmin;                    
+                                shiftLi_tree = shiftmin;
 
 
-							     }*/
+                                Qref_tree = sumrefp;
+                                QrefLi_tree = sumrefLi;
+                                Qexp_tree = Qtot;
+                                angle_tree = angDeg;
+                                range_tree = track.GetLinearRange();
 
-	              	    	
-	              	    	}	
+            					         	//analysisTree->Fill(); //Fill tree with each track. 
+
+
+        	              	    		 for(int indTB=0;indTB<512;++indTB)
+        			 				          	 {
+        									           outputFile<<indTB<<"	"<<mesh->GetBinContent(indTB)<<"	"<<mesh->GetBinError(indTB)<<"  "<<Qtot_tree<<"	"<<i<<"		"<<angDeg<<"\n";	
+
+        		        					     }
 
 	              	    	
-	              	    }	
+	              	    	}//angle valid
+
+	              	    	
+	              	    }//Is valid	
 
 	              	    
 
-	              	}
+	              	}// track size/ number of hits/ number of tracks
 
 
 
@@ -753,13 +756,13 @@ void analysis_v2()
      c2->Divide(2,2);
      c2->cd(1);
      angleH->Draw();
-	 c2->cd(2);
-	 range_vs_angle->Draw("zcol");
-	 c2->cd(3);
-	 chi2minH->Draw();
+	   c2->cd(2);
+	   range_vs_angle->Draw("zcol");
+	   c2->cd(3);
+	   chi2minH->Draw();
 
-	 TCanvas *c3 = new TCanvas();
-	 Qtot->Draw();
+	   TCanvas *c3 = new TCanvas();
+	   Qtot->Draw();
 
 
      gStyle->SetOptStat(0);
