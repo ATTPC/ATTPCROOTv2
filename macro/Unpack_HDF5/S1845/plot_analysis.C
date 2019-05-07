@@ -1,7 +1,7 @@
 void plot_analysis()
 {
 
-		std::vector<TString> files{"run_0080_analysis.root"};//,
+		std::vector<TString> files{"run_0142_analysis.root"};
 		//"run_0081_analysis.root",
 		//"run_0082_analysis.root",
 		//"run_0083_analysis.root"};
@@ -19,8 +19,8 @@ void plot_analysis()
 		,"run_0158_analysis.root"
 		,"run_0159_analysis.root"};*/
 
-		//TString path = "analysis/";
-		TString path = "";
+		TString path = "analysis_May2019/";
+		//TString path = "";
 
 
 
@@ -55,6 +55,8 @@ void plot_analysis()
 
 		TH1F* exp_curve = new TH1F("exp_curve","exp_curve",512,0,511);
 		TH1F* ref_curve = new TH1F("ref_curve","ref_curve",512,0,511);
+
+		TH2F* Qexp_angle = new TH2F("Qexp_angle","Qexp_angle",1000,0,2000000,1000,0,90);
 
 
 
@@ -147,19 +149,29 @@ void plot_analysis()
             		chi2_Qratio->Fill(chi2_tree,Qexp_tree/Qref_tree);
             		chi2_range->Fill(chi2_tree,range_tree);
             		chi2_shift->Fill(chi2_tree,shift_tree);
-            		chi2_chi2Li->Fill(chi2_tree,chi2Li_tree);
+
+            		//Qexp->Fill(Qexp_tree);
+            		if(chi2_tree<750 && chi2Li_tree>1000)
+            		Qexp_angle->Fill(Qexp_tree,angle_tree);
+
+
+            		
 
 
 
             		if(stretch_tree>-0.2 && stretch_tree<0.5 && 
             			stretchLi_tree>-0.2 && stretchLi_tree<0.5 
             			&& angle_tree>10 && angle_tree<60 
+            			
             			)
             		{
 
             			chi2_chi2Li_cond->Fill(chi2_tree,chi2Li_tree);
-            			if(chi2_tree<1000 && chi2Li_tree>2000) 
+            			if(chi2_tree<750 && chi2Li_tree>1000) 
             				Qexp->Fill(Qexp_tree);
+
+            			if(Qexp_tree<180000 && Qexp_tree>165000)
+            				chi2_chi2Li->Fill(chi2_tree,chi2Li_tree);
 
             		}
 
@@ -238,10 +250,10 @@ void plot_analysis()
 	   chi2_chi2Li_cond->Draw();
 	   c2->cd(2);
 	   Qexp->Draw();
-	   /*chi2_range->Draw("zcol");
+	   //chi2_range->Draw("zcol");
 	   c2->cd(3);
-	   chi2_shift->Draw("zcol");
-	   c2->cd(4);
+	   Qexp_angle->Draw();
+	   /*c2->cd(4);
 	   alpha_proton->Draw();
 
 

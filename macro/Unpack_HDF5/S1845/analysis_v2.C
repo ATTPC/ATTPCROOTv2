@@ -475,10 +475,12 @@ void analysis_v2()
 
     std::ofstream outputFileBragg("bragg_collection.txt");
 
+    std::ofstream outputFileQtotProton("Qtot_proton.txt");
+    std::ofstream outputFileQtotAlpha("Qtot_alpha.txt");
 
 
 
-     for(Int_t i=0;i<1000;i++){
+     for(Int_t i=0;i<nEvents;i++){
           //while (Reader1.Next()) {
 
               Reader1.Next();
@@ -550,6 +552,11 @@ void analysis_v2()
 	              }
 
 	              Qtot_tree = event->GetEventCharge();
+
+                if(alphaTrigger_tree>300)
+                  outputFileQtotAlpha << i <<"  "<<Qtot_tree<<"\n";
+                else if(protonTrigger_tree>300)
+                  outputFileQtotProton << i <<"  "<<Qtot_tree<<"\n";
 
 	              Qtot->Fill(Qtot_tree);
 
@@ -739,6 +746,8 @@ void analysis_v2()
      analysisFile->Close();
 
      outputFileBragg.close();
+     outputFileQtotAlpha.close();
+     outputFileQtotProton.close();
 
      TCanvas *c1 = new TCanvas();
      c1->Divide(2,2);
