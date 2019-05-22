@@ -1,23 +1,80 @@
 void plot_analysis()
 {
 
-		std::vector<TString> files{"run_0142_analysis.root"};
-		//"run_0081_analysis.root",
-		//"run_0082_analysis.root",
-		//"run_0083_analysis.root"};
-		/*,"run_0141_analysis.root"
-		,"run_0142_analysis.root"
-		,"run_0144_analysis.root"
-		,"run_0145_analysis.root"
-		,"run_0149_analysis.root"
-		,"run_0150_analysis.root"
-		,"run_0152_analysis.root"
-		,"run_0153_analysis.root"
-		,"run_0154_analysis.root"
-		,"run_0156_analysis.root"
-		,"run_0157_analysis.root"
-		,"run_0158_analysis.root"
-		,"run_0159_analysis.root"};*/
+		std::vector<TString> files//{"run_0158_analysis.root"};
+		{"run_0080_analysis.root",
+		"run_0081_analysis.root",
+		"run_0082_analysis.root",
+		"run_0083_analysis.root",
+		"run_0085_analysis.root",
+		"run_0086_analysis.root",
+		"run_0087_analysis.root",
+		"run_0091_analysis.root",
+		"run_0092_analysis.root",
+	    "run_0093_analysis.root",
+		"run_0100_analysis.root",
+		"run_0101_analysis.root",
+		"run_0102_analysis.root",
+		"run_0103_analysis.root",
+		"run_0104_analysis.root",
+		"run_0105_analysis.root",
+		"run_0106_analysis.root",
+		"run_0107_analysis.root",
+		"run_0108_analysis.root",
+		"run_0109_analysis.root",
+		"run_0110_analysis.root",
+		"run_0111_analysis.root",
+		"run_0112_analysis.root",
+	    "run_0113_analysis.root",
+	    "run_0142_analysis.root", 
+		"run_0144_analysis.root",
+		"run_0145_analysis.root",
+		"run_0149_analysis.root",
+		"run_0150_analysis.root",
+		"run_0152_analysis.root",
+		"run_0153_analysis.root",
+		"run_0154_analysis.root",
+		"run_0156_analysis.root",
+		"run_0157_analysis.root",
+		"run_0158_analysis.root"};
+
+		std::vector<float> Qcorr_fact
+		{
+		  1.208,
+		  1.208,
+		  1.208,
+		  1.208,
+		  1.208,
+		  1.208,
+		  1.208,
+		  1.208,
+		  1.208,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000,
+		  1.000
+		};
 
 		TString path = "analysis_May2019/";
 		//TString path = "";
@@ -37,13 +94,20 @@ void plot_analysis()
 		TH1F* alphaTrigger = new TH1F("alphaTrigger","alphaTrigger",10000,0,4000);
 		TH2F* alphaTrigger_angle = new TH2F("alphaTrigger_angle","alphaTrigger_angle",1000,0,4000,100,0,180);
 
+		TH2F* chi2ratio_charge = new TH2F("chi2ratio_charge","chi2ratio_charge",100,0,10,250,0,2000000);
+
 		TH2F* alphaTrigger_event = new TH2F("alphaTrigger_event","alphaTrigger_event",1000,0,4000,100,0,10000000);
 
 		TH2F* alphaTrigger_Qevent = new TH2F("alphaTrigger_Qevent","alphaTrigger_Qevent",1000,0,4000,100,0,10000000);
 
 		TH2F* alpha_proton = new TH2F("alpha_proton","alpha_proton",1000,0,4000,1000,0,4000);
 
-		TH1F* Qexp = new TH1F("Qexp","Qexp",1000,0,2000000);
+		TH1F* Qexp = new TH1F("Qexp","Qexp",250,0,2000000);
+		TH1F* Qexp_low = new TH1F("Qexp_low","Qexp_low",250,0,2000000);
+		TH1F* Qexp_cond = new TH1F("Qexp_cond","Qexp_cond",250,0,2000000);
+		Qexp_low->SetLineColor(kRed);
+
+		TH1F* Qexp_nocond = new TH1F("Qexp_nocond","Qexp_nocond",1000,0,1000000);
 		TH1F* stretch = new TH1F("stretch","stretch",1000,-1.0,1.0);
 		TH1F* Qtot = new TH1F("Qtot","Qtot",1000,0,2000000);
 
@@ -58,13 +122,18 @@ void plot_analysis()
 
 		TH2F* Qexp_angle = new TH2F("Qexp_angle","Qexp_angle",1000,0,2000000,1000,0,90);
 
+		TH1F* hEnergy = new TH1F("hEnergy","hEnergy",100,0,1000);
+
 
 
 		std::size_t global_events = 0;
 
+		int qfacInd = 0;
+
 
 		for(auto ifile : files)
 		{
+
 
 
 			std::cout<<" Processing file "<<ifile<<"\n";
@@ -128,20 +197,34 @@ void plot_analysis()
             	//if( protonTrigger_tree>300 ) 
             		//Qexp->Fill(Qexp_tree);
 
-            	++global_events;
+            	    ++global_events;
 
             
             		alphaTrigger->Fill(alphaTrigger_tree);
             		alphaTrigger_angle->Fill(alphaTrigger_tree,angle_tree);
 
+
+            		//Gain correction and calibration
+            		//std::cout<<"=============="<<"\n";
+            		//std::cout<<Qexp_tree<<"\n";
+            		Qexp_tree*=Qcorr_fact[qfacInd];
+            		//std::cout<<Qexp_tree<<"\n";
+            		double Energy = 198.0 +  (Qexp_tree-170000)/(1.87*1000); //kev
+            		//std::cout<<Energy<<"\n";
+            		//std::cout<<"=============="<<"\n";
+
+
+
             		Qexp_range->Fill(Qexp_tree,range_tree);
 
             		double Qratio = Qexp_tree/Qref_tree;
 
+            		Qexp_nocond->Fill(Qexp_tree);
+
 
             	if(chi2_tree>0 && alphaTrigger_tree<200){
 
-            		std::cout<<" Event "<<eventNum_tree<<" chi2 proton "<<chi2_tree<<" - chi2 7Li "<<chi2Li_tree<<" - stretch proton "<<stretch_tree<<" - stretch 7Li "<<stretchLi_tree<<"\n";
+            		//std::cout<<" Event "<<eventNum_tree<<" chi2 proton "<<chi2_tree<<" - chi2 7Li "<<chi2Li_tree<<" - stretch proton "<<stretch_tree<<" - stretch 7Li "<<stretchLi_tree<<"\n";
 
             		chi2->Fill(chi2_tree);
             		chi2_stretch->Fill(chi2_tree,stretch_tree);
@@ -151,8 +234,8 @@ void plot_analysis()
             		chi2_shift->Fill(chi2_tree,shift_tree);
 
             		//Qexp->Fill(Qexp_tree);
-            		if(chi2_tree<750 && chi2Li_tree>1000)
-            		Qexp_angle->Fill(Qexp_tree,angle_tree);
+            		if(chi2_tree<2000 && chi2Li_tree>1000)
+            			Qexp_angle->Fill(Qexp_tree,angle_tree);
 
 
             		
@@ -161,17 +244,30 @@ void plot_analysis()
 
             		if(stretch_tree>-0.2 && stretch_tree<0.5 && 
             			stretchLi_tree>-0.2 && stretchLi_tree<0.5 
-            			&& angle_tree>10 && angle_tree<60 
+            			&& angle_tree>30 && angle_tree<70 && shift_tree<-25
             			
             			)
             		{
 
             			chi2_chi2Li_cond->Fill(chi2_tree,chi2Li_tree);
-            			if(chi2_tree<750 && chi2Li_tree>1000) 
+            			if(chi2_tree<2000 && chi2Li_tree>1000) 
             				Qexp->Fill(Qexp_tree);
+
+            			if(chi2_tree<350 && chi2Li_tree>1000) 
+            				Qexp_low->Fill(Qexp_tree);
 
             			if(Qexp_tree<180000 && Qexp_tree>165000)
             				chi2_chi2Li->Fill(chi2_tree,chi2Li_tree);
+
+            			chi2ratio_charge->Fill((chi2_tree/chi2Li_tree),Qexp_tree);
+
+            			if((chi2_tree/chi2Li_tree)>3.5)
+            			{
+            				Qexp_cond->Fill(Qexp_tree);
+            				hEnergy->Fill(Energy);
+            			}
+
+            			
 
             		}
 
@@ -217,6 +313,7 @@ void plot_analysis()
 
             //QtotoutputFile.close();
             file->Close();
+            ++qfacInd;
 
 	   }	
 
@@ -234,31 +331,35 @@ void plot_analysis()
 	   TCanvas *c3 = new TCanvas();
 	   c3->Divide(2,2);
 	   c3->cd(1);
-	   chi2_chi2Li->Draw("zcol");
+	   chi2_chi2Li->Draw();
 	   c3->cd(2);
 	   chi2_Qratio->Draw("zcol");
-	   /*c3->cd(3);
-	   alphaTrigger_angle->Draw();
+	   c3->cd(3);
+	   chi2ratio_charge->Draw("zcol");
 	   c3->cd(4);
-	   alphaTrigger_event->Draw();*/
+	   Qexp_cond->Draw();
 	   
-	   
+	    Qexp->Scale(1.0/Qexp->GetEntries());
+	    Qexp_low->Scale(1.0/Qexp_low->GetEntries());
+
 
 	   TCanvas *c2 = new TCanvas();
 	   c2->Divide(2,2);
 	   c2->cd(1);
 	   chi2_chi2Li_cond->Draw();
 	   c2->cd(2);
-	   Qexp->Draw();
+	   Qexp_low->Draw("hist");
+	   Qexp->Draw("hist sames");
 	   //chi2_range->Draw("zcol");
 	   c2->cd(3);
 	   Qexp_angle->Draw();
-	   /*c2->cd(4);
-	   alpha_proton->Draw();
+	   c2->cd(4);
+	   Qexp_nocond->Draw();
 
 
 	   TCanvas *c4 = new TCanvas();
-	   c4->Divide(2,2);
+	   hEnergy->Draw();
+	   /*c4->Divide(2,2);
 	   c4->cd(1);
 	   stretch->Draw("zcol");
 	   c4->cd(2);
