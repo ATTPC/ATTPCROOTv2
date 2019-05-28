@@ -1,7 +1,67 @@
 void plot_analysis()
 {
 
-		std::vector<TString> files//{"run_0158_analysis.root"};
+		std::vector<TString> files{
+
+			"run_0102_analysis.root",
+			"run_0105_analysis.root",
+			"run_0106_analysis.root",
+			"run_0107_analysis.root",
+			"run_0108_analysis.root",
+			"run_0110_analysis.root",
+			"run_0111_analysis.root",
+			"run_0112_analysis.root",
+			"run_0113_analysis.root",
+			"run_0114_analysis.root",
+			"run_0115_analysis.root",
+			"run_0116_analysis.root",
+			"run_0118_analysis.root",
+			"run_0119_analysis.root",
+			"run_0142_analysis.root",
+			"run_0144_analysis.root",
+			"run_0145_analysis.root",
+			"run_0149_analysis.root",
+			"run_0150_analysis.root",
+			"run_0153_analysis.root",
+			"run_0154_analysis.root",
+			"run_0156_analysis.root",
+			"run_0157_analysis.root",
+			"run_0158_analysis.root"
+		};
+
+
+
+		//Charge
+		std::vector<float> Qmean
+		{
+			//4.91730e+05,//92
+			6.00135e+05,//102
+			5.86952e+05,//105 (104,103 looks weird)
+			5.96395e+05,//106
+			5.94771e+05,//107
+			5.91242e+05,//108
+			6.04639e+05,//110 (too low?) and 109 weird
+			5.91745e+05,//111
+			5.88678e+05,//112
+			6.01875e+05,//113 High counts (~30)
+			5.93903e+05,//114 Fishy
+			5.88968e+05,//115
+			6.08054e+05,//116
+			6.09483e+05,//118
+			6.02555e+05,//119
+			6.57401e+05,//142
+			5.70000e+05,//144
+			6.04211e+05,//145
+			5.60000e+05,//149
+			5.91102e+05, //150
+			5.92518e+05, //153 High counts (27)
+			5.67468e+05,//154
+			5.90579e+05,//156
+			5.67845e+05,//157
+			5.77317e+05 //158
+		}; 
+
+		/*std::vector<TString> files//{"run_0158_analysis.root"};
 		{"run_0080_analysis.root",
 		"run_0081_analysis.root",
 		"run_0082_analysis.root",
@@ -74,7 +134,7 @@ void plot_analysis()
 		  1.000,
 		  1.000,
 		  1.000
-		};
+		};*/
 
 		TString path = "analysis_May2019/";
 		//TString path = "";
@@ -90,6 +150,7 @@ void plot_analysis()
 		TH2F* chi2_range = new TH2F("chi2_range","chi2_range",1000,0,10000,1000,0.0,200.0);
 		TH2F* chi2_Qratio = new TH2F("chi2_Qratio","chi2_Qratio",1000,0,10000,100,0,10.0);
 		TH2F* chi2_shift = new TH2F("chi2_shift","chi2_shift",1000,0,10000,100,-300,300.0);
+		TH2F* chi2_shiftLi = new TH2F("chi2_shiftLi","chi2_shiftLi",1000,0,10000,100,-300,300.0);
 		TH2F* stretch_Qratio = new TH2F("stretch_Qratio","stretch_Qratio",1000,-1.0,1.0,1000,0,10.0);
 		TH1F* alphaTrigger = new TH1F("alphaTrigger","alphaTrigger",10000,0,4000);
 		TH2F* alphaTrigger_angle = new TH2F("alphaTrigger_angle","alphaTrigger_angle",1000,0,4000,100,0,180);
@@ -107,7 +168,7 @@ void plot_analysis()
 		TH1F* Qexp_cond = new TH1F("Qexp_cond","Qexp_cond",250,0,2000000);
 		Qexp_low->SetLineColor(kRed);
 
-		TH1F* Qexp_nocond = new TH1F("Qexp_nocond","Qexp_nocond",1000,0,1000000);
+		TH1F* Qexp_nocond = new TH1F("Qexp_nocond","Qexp_nocond",1000,0,3000000);
 		TH1F* stretch = new TH1F("stretch","stretch",1000,-1.0,1.0);
 		TH1F* Qtot = new TH1F("Qtot","Qtot",1000,0,2000000);
 
@@ -153,6 +214,7 @@ void plot_analysis()
     		double angle_tree = 0;
     		double range_tree = 0;
     		double shift_tree = 0;
+    		double shiftLi_tree = 0;
     		double protonTrigger_tree = 0;
     		double alphaTrigger_tree = 0;
     		double Qtot_tree = 0;
@@ -174,6 +236,7 @@ void plot_analysis()
     		analysisTree->SetBranchAddress("stretchLi_tree",&stretchLi_tree);
     		analysisTree->SetBranchAddress("range_tree",&range_tree);
     		analysisTree->SetBranchAddress("shift_tree",&shift_tree);
+    		analysisTree->SetBranchAddress("shiftLi_tree",&shiftLi_tree);
     		analysisTree->SetBranchAddress("protonTrigger_tree",&protonTrigger_tree);
     		analysisTree->SetBranchAddress("alphaTrigger_tree",&alphaTrigger_tree);
     		analysisTree->SetBranchAddress("eventNum_tree",&eventNum_tree);
@@ -207,7 +270,7 @@ void plot_analysis()
             		//Gain correction and calibration
             		//std::cout<<"=============="<<"\n";
             		//std::cout<<Qexp_tree<<"\n";
-            		Qexp_tree*=Qcorr_fact[qfacInd];
+            		Qexp_tree*=Qmean[qfacInd]/5.77317e+05;
             		//std::cout<<Qexp_tree<<"\n";
             		double Energy = 198.0 +  (Qexp_tree-170000)/(1.87*1000); //kev
             		//std::cout<<Energy<<"\n";
@@ -231,7 +294,12 @@ void plot_analysis()
             		chi2Li_stretchLi->Fill(chi2Li_tree,stretchLi_tree);
             		chi2_Qratio->Fill(chi2_tree,Qexp_tree/Qref_tree);
             		chi2_range->Fill(chi2_tree,range_tree);
-            		chi2_shift->Fill(chi2_tree,shift_tree);
+
+            		if(Qexp_tree>50000 && Qexp_tree<300000)
+            		{
+            			chi2_shift->Fill(chi2_tree,shift_tree);          		
+            			chi2_shiftLi->Fill(chi2Li_tree,shiftLi_tree);
+            		}	
 
             		//Qexp->Fill(Qexp_tree);
             		if(chi2_tree<2000 && chi2Li_tree>1000)
@@ -242,32 +310,40 @@ void plot_analysis()
 
 
 
-            		if(stretch_tree>-0.2 && stretch_tree<0.5 && 
-            			stretchLi_tree>-0.2 && stretchLi_tree<0.5 
-            			&& angle_tree>30 && angle_tree<70 && shift_tree<-25
+            		if(    stretch_tree>-0.25 && stretch_tree<1.5
+            			&& stretchLi_tree>0.0 && stretchLi_tree<1.5 
+            			&& angle_tree>30 && angle_tree<70 && shift_tree<-10 && shift_tree>-45 && shiftLi_tree<0 && shiftLi_tree>-20
+            			&& Qexp_tree>50000 && Qexp_tree<300000
+            			&& chi2_tree<200 && chi2Li_tree>1000
+            			//&& (chi2Li_tree/chi2_tree)>4.0
             			
             			)
             		{
 
             			chi2_chi2Li_cond->Fill(chi2_tree,chi2Li_tree);
+
             			if(chi2_tree<2000 && chi2Li_tree>1000) 
             				Qexp->Fill(Qexp_tree);
 
-            			if(chi2_tree<350 && chi2Li_tree>1000) 
+            			if(chi2_tree<200 && chi2Li_tree>1000) 
             				Qexp_low->Fill(Qexp_tree);
 
-            			if(Qexp_tree<180000 && Qexp_tree>165000)
-            				chi2_chi2Li->Fill(chi2_tree,chi2Li_tree);
+            			//To put conditions
+            			//if(Qexp_tree<180000 && Qexp_tree>165000)
+            				//chi2_chi2Li->Fill(chi2_tree,chi2Li_tree);
 
-            			chi2ratio_charge->Fill((chi2_tree/chi2Li_tree),Qexp_tree);
+            			double chi2_ratio = (chi2Li_tree/chi2_tree);
 
-            			if((chi2_tree/chi2Li_tree)>3.5)
-            			{
+            			chi2ratio_charge->Fill(chi2_ratio,Qexp_tree);
+
+            			//if((chi2_tree/chi2Li_tree)>4.0)
+            		//	{
             				Qexp_cond->Fill(Qexp_tree);
             				hEnergy->Fill(Energy);
-            			}
+            				chi2_chi2Li->Fill(chi2_tree,chi2Li_tree);
+            		//	}
 
-            			
+
 
             		}
 
@@ -358,8 +434,7 @@ void plot_analysis()
 
 
 	   TCanvas *c4 = new TCanvas();
-	   hEnergy->Draw();
-	   /*c4->Divide(2,2);
+	   c4->Divide(2,2);
 	   c4->cd(1);
 	   stretch->Draw("zcol");
 	   c4->cd(2);
@@ -373,7 +448,16 @@ void plot_analysis()
 	    chi2_cond_range->Draw();
 
 	    TCanvas *c6 = new TCanvas();
-	    exp_curve->Draw();
+	    c6->Divide(2,2);
+	    c6->cd(1);
+	    chi2_shift->Draw("zcol");
+	    c6->cd(2);
+	    chi2_shiftLi->Draw("zcol");
+
+	   /* exp_curve->Draw();
 	    ref_curve->Draw("SAME");*/
+
+	    TCanvas *c7 = new TCanvas();
+	    hEnergy->Draw();
 
 }
