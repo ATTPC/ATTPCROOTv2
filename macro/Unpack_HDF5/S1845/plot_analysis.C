@@ -1,3 +1,30 @@
+Double_t ConvolutedDecay(Double_t *x, Double_t *par)
+{
+
+	///This function is derived from the convolution of a gaussian with an exponential decay, to fit TAC spectra of long half-lives (above 100 ps)
+	///Requires the following parameters:
+	///   - par[0]:  Normalization factor
+	///   - par[1]:  Centroid of gaussian
+	///   - par[2]:  Sigma of gaussian 
+	///   - par[3]:  Lambda of the level
+	
+	  Double_t val;
+	  val = TMath::Sqrt(TMath::Pi())*par[0]*par[3]/2*TMath::Exp(par[3]/2*(2*par[1]+par[3]*pow(par[2],2)-2*x[0]))*TMath::Erfc((par[1]+par[3]*pow(par[2],2)-x[0])/(TMath::Sqrt(2)*par[2]))+par[4];
+	  return val;
+}
+
+Double_t BreitWigner(Double_t *x, Double_t *par)
+{
+
+	return par[0]*TMath::Power(par[1],2) / ( TMath::Power( (x[0] - par[2]),2) + par[3]*TMath::Power(par[4],2) );
+}
+
+Double_t SumBW(Double_t *x, Double_t *par)
+{
+
+	return BreitWigner(x,par) + BreitWigner(x,&par[5]);
+}
+
 void plot_analysis()
 {
 
@@ -183,7 +210,7 @@ void plot_analysis()
 
 		TH2F* Qexp_angle = new TH2F("Qexp_angle","Qexp_angle",1000,0,2000000,1000,0,90);
 
-		TH1F* hEnergy = new TH1F("hEnergy","hEnergy",100,0,1000);
+		TH1F* hEnergy = new TH1F("hEnergy","hEnergy",200,0,1000);
 
 
 
@@ -314,7 +341,7 @@ void plot_analysis()
             			&& stretchLi_tree>0.0 && stretchLi_tree<1.5 
             			&& angle_tree>30 && angle_tree<70 && shift_tree<-10 && shift_tree>-45 && shiftLi_tree<0 && shiftLi_tree>-20
             			&& Qexp_tree>50000 && Qexp_tree<300000
-            			&& chi2_tree<200 && chi2Li_tree>1000
+            			&& chi2_tree>0 && chi2_tree<200 && chi2Li_tree>1000
             			//&& (chi2Li_tree/chi2_tree)>4.0
             			
             			)
@@ -391,7 +418,61 @@ void plot_analysis()
             file->Close();
             ++qfacInd;
 
+            
+
 	   }	
+
+	   std::ofstream hOutput("henergy.txt");
+
+            for(auto ibin = 1;ibin<hEnergy->GetSize();++ibin)
+            	hOutput << ibin << "	" << hEnergy->GetBinCenter(ibin) << "	" << hEnergy->GetBinContent(ibin) << "\n";
+
+
+            //Fitting chi2<200
+            /*Double_t par[9];
+            TF1 *g1    = new TF1("g1","gaus",120,240);
+  			TF1 *e2 = new TF1("e2","gaus",220,260);
+  			TF1 *total = new TF1("total","gaus(0)+gaus(3)",120,260);
+  			total->SetLineColor(1);
+   			hEnergy->Fit(g1,"R");
+  			hEnergy->Fit(e2,"R+");
+  			g1->GetParameters(&par[0]);
+  			e2->GetParameters(&par[3]);
+  			total->SetParameters(par);
+ 			hEnergy->Fit(total,"R+");*/
+
+            Double_t par[10];
+            TF1 *fitSumBreitWigner = new TF1("SumBW",SumBW,50,400,10);
+            par[0] = 1.7;
+            par[1] = 93;
+            par[2] = 175.0;
+            par[3] = 0.25;
+            par[4] = 25.0;
+            par[5] = 0.17;
+            par[6] = 93;
+            par[7] = 195.0;
+            par[8] = 0.25;
+            par[9] = 25.0;
+            fitSumBreitWigner->SetParameters(par);
+            fitSumBreitWigner->SetNpx(1000);
+            fitSumBreitWigner->SetLineWidth(3);
+ 			hEnergy->Fit(fitSumBreitWigner,"R");
+ 			fitSumBreitWigner->GetParameters(&par[0]);
+
+ 			TF1 *MainBreitWigner = new TF1("MainBreitWigner",BreitWigner,50,400,5);
+ 			MainBreitWigner->SetParameters(&par[0]);
+ 			MainBreitWigner->SetLineColor(kBlack);
+ 			MainBreitWigner->SetLineStyle(9);
+ 			MainBreitWigner->SetLineWidth(3);
+ 			MainBreitWigner->SetNpx(1000);
+
+ 			TF1 *BGBreitWigner = new TF1("BGBreitWigner",BreitWigner,50,400,5);
+ 			BGBreitWigner->SetParameters(&par[5]);
+ 			BGBreitWigner->SetLineColor(kBlack);
+ 			BGBreitWigner->SetLineStyle(2);
+ 			BGBreitWigner->SetLineWidth(3);
+ 			BGBreitWigner->SetNpx(1000);
+
 
 	   TCanvas *c1 = new TCanvas();
 	   c1->Divide(2,2);
@@ -457,7 +538,12 @@ void plot_analysis()
 	   /* exp_curve->Draw();
 	    ref_curve->Draw("SAME");*/
 
+	    hEnergy->SetLineWidth(3);
 	    TCanvas *c7 = new TCanvas();
 	    hEnergy->Draw();
+	    MainBreitWigner->Draw("SAME");
+	    BGBreitWigner->Draw("SAME");
+
+	    std::cout<<" Number of protons from fit : "<<MainBreitWigner->Integral(50,400)<<"\n";
 
 }
