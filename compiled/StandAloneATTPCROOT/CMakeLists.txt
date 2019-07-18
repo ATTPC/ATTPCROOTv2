@@ -43,11 +43,14 @@ link_directories( ${FAIRROOT_LIBRARY_DIR}
                   ${ATTPCROOTPATH}/build/lib
                   )
 
+message(STATUS ${ATTPCROOTPATH})		
+
 add_library(SAMain SHARED SAMain.cc)
 target_link_libraries(SAMain ${ROOT_LIBRARIES} ATTPCReco FairTools Base ${PCL_LIBRARIES})
 
 add_executable(SAMainExe SAMain.cc)
-target_link_libraries (SAMainExe SAMain ${PCL_LIBRARIES} ${ROOT_LIBRARIES}
+target_link_libraries (SAMainExe SAMain
+  ${PCL_LIBRARIES} ${ROOT_LIBRARIES}
 Core
 Gpad
 Graf
