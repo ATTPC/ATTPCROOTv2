@@ -10,5 +10,6 @@ else printf "${GREEN}VMCWORKDIR is set to '$VMCWORKDIR'${NC}\n";
 fi
 rm -rf $VMCWORKDIR/include/
 mkdir $VMCWORKDIR/include/
-find $VMCWORKDIR -type f | grep -i hh$ | xargs -i cp {} $VMCWORKDIR/include/
+find $VMCWORKDIR -type f | grep -w h$ | xargs -i cp {} $VMCWORKDIR/include/
+find $VMCWORKDIR -type f | grep -w hh$ | xargs -i cp {} $VMCWORKDIR/include/
 printf "${GREEN}Success! Project headers copied into '$VMCWORKDIR/include/'${NC}\n"
