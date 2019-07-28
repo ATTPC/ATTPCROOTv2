@@ -1,22 +1,23 @@
 #include "SAMain.hh"
 
-int main()
+int main(int argc, char* argv[])
 {
 
+   gSystem->Load("libATTPCReco.so");
+    
+   TStopwatch timer;
+   timer.Start();
 
- std::cout<<" Let the games begin ..."<<"\n";
+   FairRunAna* run = new FairRunAna(); //Forcing a dummy run
+   TString FileName = "attpcsim.root";
+   std::cout<<" Opening File : "<<FileName.Data()<<std::endl;
+   TFile* file = new TFile(FileName.Data(),"READ");
 
- // Load relevant libraries
-
- // Open the simulation file
-
- // Read events
- 	// Perform RANSAC
-
-
- //Plot results
-
-
- return 0;
+   TTree* tree = (TTree*) file -> Get("cbmsim");
+   Int_t nEvents = tree -> GetEntries();
+   std::cout<<" Number of events : "<<nEvents<<std::endl;
+   
+  
+   return 0;
 
 }
