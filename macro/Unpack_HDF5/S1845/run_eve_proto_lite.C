@@ -1,4 +1,4 @@
-void run_eve_proto_lite(TString  InputDataFile = "run_0080.root",TString  OutputDataFile = "output_proto.reco_display.root", TString unpackDir="/Unpack_HDF5/S1845/")
+void run_eve_proto_lite(TString  InputDataFile = "output_proto.root",TString  OutputDataFile = "output_proto.reco_display.root", TString unpackDir="/Unpack_HDF5/S1845/")
 {
 
    TString dir = getenv("VMCWORKDIR");

@@ -23,9 +23,11 @@ void analysis_proton()
 
     TH2F* Q1_vs_Q2_int = new TH2F("Q1_vs_Q2_int","Q1_vs_Q2_int",500,0,500000,500,0,500000);
 
+    TH1F* hQ = new TH1F("hQ","hQ",500,0,500000);
+
     TH1F* mesh = new TH1F("mesh","mesh",512,0,511);
 
-    int numevt = 100;
+    int numevt = 10000;
 
     for(Int_t i=0;i<numevt;i++){
           //while (Reader1.Next()) {
@@ -93,6 +95,17 @@ void analysis_proton()
 
 	             std::cout<<" Total Q "<<Qtotal<<"\n";
 
+	             float Qtotalcal = Qtotal;
+
+	             //if(Qtotal>1.68017e+05) Qtotalcal = gRandom->Gaus(Qtotal-10000,500);
+	             //if(Qtotal<1.68017e+05) 
+
+	             Qtotalcal = gRandom->Gaus(Qtotal/2.0,500)+1.68017e+05/2.0;
+;
+
+
+	             hQ->Fill(Qtotalcal);
+
 	             for(auto padInd=0;padInd<padArray->size();++padInd)
 	             {
 
@@ -137,5 +150,9 @@ void analysis_proton()
      Q1_vs_Q2_int->Draw("zcol");
      c1->cd(2);
      mesh->Draw("hist");
+
+     TCanvas *c2 = new TCanvas();
+     hQ->Draw();
+
 
 }

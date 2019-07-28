@@ -13,7 +13,7 @@ struct auxchannel
 };
 
 
-void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0168.h5",TString parameterFile = "pATTPC.S1845.par",TString mappath="")
+void run_unpack_HC(std::string dataFile = "/home/ayyadlim/Desktop/get/files/run_0168.h5",TString parameterFile = "pATTPC.S1845.par",TString mappath="")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -101,10 +101,10 @@ void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0168.h5",TS
 
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(40);
+  psaTask -> SetThreshold(20);
   psaTask -> SetPSAMode(2); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets - 5: Proto Full
 
-  //psaTask -> SetTBLimits(std::make_pair<Int_t,Int_t>(160,270)); 
+  psaTask -> SetTBLimits(std::make_pair<Int_t,Int_t>(160,270)); 
   // Set the limits of integration for the total charge Q (only implemented in PSA modes 2 and 5)
   // For example (160,270) is used for the proton run
   //psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
@@ -123,7 +123,7 @@ void run_unpack_HC(std::string dataFile = "/Users/yassid/Desktop/run_0168.h5",TS
 
   run -> Init();
 
-  run->Run(0,1000);
+  run->Run(0,20000);
   //run->Run(0,309412);
   //run -> RunOnTBData();
 
