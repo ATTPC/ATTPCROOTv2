@@ -3,8 +3,17 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
+struct auxchannel
+{
+  std::string name;
+  uint8_t cobo;
+  uint8_t asad;
+  uint8_t aget;
+  uint8_t channel;
+};
 
-void run_unpack(std::string dataFile = "/home/ayyadlim/Desktop/run_0121.h5",TString parameterFile = "ATTPC.e15250.par",TString mappath="")
+
+void run_unpack_HC(std::string dataFile = "/home/ayyadlim/Desktop/run_0171.h5",TString parameterFile = "pATTPC.S1845.par",TString mappath="")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -16,10 +25,13 @@ void run_unpack(std::string dataFile = "/home/ayyadlim/Desktop/run_0121.h5",TStr
   // -----------------------------------------------------------------
   // Set file names
   TString scriptfile = "LookupProtoND.xml";
+  TString protomapfile = "proto20181201.map";
   TString dir = getenv("VMCWORKDIR");
   TString scriptdir = dir + "/scripts/"+ scriptfile;
   TString dataDir = dir + "/macro/data/";
   TString geomDir = dir + "/geometry/";
+  TString protomapdir = dir + "/scripts/"+ protomapfile;
+  TString geo = "proto20181201_geo_hires.root";
   gSystem -> Setenv("GEOMPATH", geomDir.Data());
 
   //TString inputFile   = dataDir + name + ".digi.root";
@@ -28,16 +40,13 @@ void run_unpack(std::string dataFile = "/home/ayyadlim/Desktop/run_0121.h5",TStr
   //TString mcParFile   = dataDir + name + ".params.root";
   TString loggerFile  = dataDir + "ATTPCLog.log";
   TString digiParFile = dir + "/parameters/" + parameterFile;
-  TString geoManFile  = dir + "/geometry/ATTPC_v1.1.root";
+  TString geoManFile  = dir + "/geometry/ATTPC_Proto_v1.0.root";
 
-  TString inimap   = mappath + "inhib.txt";
-  TString lowgmap  = mappath + "lowgain.txt";
-  TString xtalkmap = mappath + "beampads_e15503b.txt";
 
   // -----------------------------------------------------------------
   // Logger
-  /*FairLogger *fLogger = FairLogger::GetLogger();
-  fLogger -> SetLogFileName(loggerFile);
+  FairLogger *fLogger = FairLogger::GetLogger();
+  /*fLogger -> SetLogFileName(loggerFile);
   fLogger -> SetLogToScreen(kTRUE);
   fLogger -> SetLogToFile(kTRUE);
   fLogger -> SetLogVerbosityLevel("LOW");*/
@@ -55,22 +64,56 @@ void run_unpack(std::string dataFile = "/home/ayyadlim/Desktop/run_0121.h5",TStr
  // rtdb -> setFirstInput(parIo2);
   rtdb -> setSecondInput(parIo1);
 
-  ATHDFParserTask* HDFParserTask = new ATHDFParserTask();
+  //Auxiliary channels
+  //Hash table: cobo, asad, aget, channel
+  std::vector<auxchannel> aux_channels;
+
+  auxchannel ch_1{"mutant",5,0,0,65};
+  aux_channels.push_back(ch_1);
+  auxchannel ch_2{"mesh",5,0,0,66};
+  aux_channels.push_back(ch_2);
+  auxchannel ch_3{"protons",5,0,0,67};
+  aux_channels.push_back(ch_3);
+  auxchannel ch_4{"begin_DAQ",5,0,0,61};
+  aux_channels.push_back(ch_4);
+  auxchannel ch_5{"unknown",5,0,0,64};
+  aux_channels.push_back(ch_5);
+  auxchannel ch_6{"downscaled_alpha",5,0,0,59};
+  aux_channels.push_back(ch_6);
+
+   //End of auxiliary channel setup 
+
+
+
+  ATHDFParserTask* HDFParserTask = new ATHDFParserTask(1);
   HDFParserTask->SetPersistence(kTRUE);
   HDFParserTask->SetATTPCMap(scriptdir.Data());
+  HDFParserTask->SetProtoGeoFile(geo.Data());
+  HDFParserTask->SetProtoMapFile(protomapdir.Data());
   HDFParserTask->SetFileName(dataFile);
+
+   for(auto iaux : aux_channels)
+   {
+    auto hash  = HDFParserTask->CalculateHash(iaux.cobo,iaux.asad,iaux.aget,iaux.channel);  
+    auto isaux = HDFParserTask->SetAuxChannel(hash,iaux.name);  
+   }
+
 
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(1);
-  psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
+  psaTask -> SetThreshold(20);
+  psaTask -> SetPSAMode(2); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets - 5: Proto Full
+
+  //psaTask -> SetTBLimits(std::make_pair<Int_t,Int_t>(160,270)); 
+  // Set the limits of integration for the total charge Q (only implemented in PSA modes 2 and 5)
+  // For example (160,270) is used for the proton run
   //psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
   psaTask -> SetMaxFinder();
   //psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
   //psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
 
-  //ATPRATask *praTask = new ATPRATask();
-  //praTask -> SetPersistence(kTRUE);
+  ATPRATask *praTask = new ATPRATask();
+  praTask -> SetPersistence(kTRUE);
   
   
   
@@ -81,6 +124,7 @@ void run_unpack(std::string dataFile = "/home/ayyadlim/Desktop/run_0121.h5",TStr
   run -> Init();
 
   run->Run(0,100);
+  //run->Run(0,309412);
   //run -> RunOnTBData();
 
 
