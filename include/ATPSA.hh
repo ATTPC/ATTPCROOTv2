@@ -6,6 +6,7 @@
 #include "ATEvent.hh"
 #include "ATHit.hh"
 #include "ATDigiPar.hh"
+#include "ATCalibration.hh"
 
 // FairRoot classes
 #include "FairRootManager.h"
@@ -35,6 +36,12 @@ class ATPSA
     void SetTimeCorrection(Bool_t value);
     //void SetAuxChannel(std::vector<Int_t> AuxCh);
 
+    void SetMeanK(Int_t value); //Number of neighbors
+    void SetStddevMulThresh(Double_t value);
+    void SetGainCalibration(TString gainFile);
+    void SetJitterCalibration(TString jitterFile);
+    void SetTBLimits(std::pair<Int_t,Int_t> limits);
+
     virtual void Analyze(ATRawEvent *rawEvent, ATEvent *event) = 0;
 
   protected:
@@ -47,6 +54,10 @@ class ATPSA
     Bool_t fIsBaseCorr;
     Bool_t fIsTimeCorr;
 
+    Bool_t fIsGainCalibrated;
+    Bool_t fIsJitterCalibrated;
+
+    ATCalibration *fCalibration;
 
     Int_t fPadPlaneX;         ///< pad plane size x in mm
     Int_t fPadSizeX;          ///< pad size x in mm
@@ -57,6 +68,8 @@ class ATPSA
     Int_t fNumTbs;            ///< the number of time buckets used in taking data
     Int_t fTBTime;            ///< time duration of a time bucket in ns
     Int_t fEntTB;
+    Int_t fIniTB;             /// First TB for charge integration
+    Int_t fEndTB;             /// Last TB for charge integration
     Double_t fDriftVelocity;  ///< drift velocity of electron in cm/us
     Double_t fMaxDriftLength; ///< maximum drift length in mm
     Double_t fZk;             //Relative position of micromegas-cathode
@@ -68,6 +81,8 @@ class ATPSA
     TVector3 fLorentzVector;
     Int_t fTB0;
     Double_t fThetaPad;
+    Int_t fMeanK;
+    Double_t fStdDev;
     //std::vector<Int_t> fAuxChannels; //Auxiliary external channels
 
 

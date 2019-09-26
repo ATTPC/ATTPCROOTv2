@@ -44,7 +44,7 @@ Set(LINKDEF ATEventDisplayLinkDef.h) # Change the linkdef name and delete this c
 Set(LIBRARY_NAME ATEventDisplay) # Change the library name and delete this comment
 Set(DEPENDENCIES
     Base
-    MCStack
+    #MCStack
     EventDisplay
 # ROOT Eve package
     Eve

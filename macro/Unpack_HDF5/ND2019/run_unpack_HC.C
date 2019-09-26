@@ -13,7 +13,7 @@ struct auxchannel
 };
 
 
-void run_unpack_HC(std::string dataFile = "/home/ayyadlim/Desktop/run_0171.h5",TString parameterFile = "pATTPC.S1845.par",TString mappath="")
+void run_unpack_HC(std::string dataFile = "/mnt/data/fair_install/data/run_0171.h5",TString parameterFile = "pATTPC.S1845.par",TString mappath="")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -81,7 +81,7 @@ void run_unpack_HC(std::string dataFile = "/home/ayyadlim/Desktop/run_0171.h5",T
   auxchannel ch_6{"downscaled_alpha",5,0,0,59};
   aux_channels.push_back(ch_6);
 
-   //End of auxiliary channel setup 
+   //End of auxiliary channel setup
 
 
 
@@ -94,8 +94,8 @@ void run_unpack_HC(std::string dataFile = "/home/ayyadlim/Desktop/run_0171.h5",T
 
    for(auto iaux : aux_channels)
    {
-    auto hash  = HDFParserTask->CalculateHash(iaux.cobo,iaux.asad,iaux.aget,iaux.channel);  
-    auto isaux = HDFParserTask->SetAuxChannel(hash,iaux.name);  
+    auto hash  = HDFParserTask->CalculateHash(iaux.cobo,iaux.asad,iaux.aget,iaux.channel);
+    auto isaux = HDFParserTask->SetAuxChannel(hash,iaux.name);
    }
 
 
@@ -104,7 +104,7 @@ void run_unpack_HC(std::string dataFile = "/home/ayyadlim/Desktop/run_0171.h5",T
   psaTask -> SetThreshold(20);
   psaTask -> SetPSAMode(2); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets - 5: Proto Full
 
-  //psaTask -> SetTBLimits(std::make_pair<Int_t,Int_t>(160,270)); 
+  //psaTask -> SetTBLimits(std::make_pair<Int_t,Int_t>(160,270));
   // Set the limits of integration for the total charge Q (only implemented in PSA modes 2 and 5)
   // For example (160,270) is used for the proton run
   //psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
@@ -112,14 +112,14 @@ void run_unpack_HC(std::string dataFile = "/home/ayyadlim/Desktop/run_0171.h5",T
   //psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
   //psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
 
-  ATPRATask *praTask = new ATPRATask();
-  praTask -> SetPersistence(kTRUE);
-  
-  
-  
+
+  ATRansacTask *RansacTask = new ATRansacTask();
+  RansacTask->SetPersistence(kTRUE);
+  RansacTask->SetDistanceThreshold(5.0);
+
   run -> AddTask(HDFParserTask);
   run -> AddTask(psaTask);
-  //run -> AddTask(praTask);
+  run -> AddTask(RansacTask);
 
   run -> Init();
 
@@ -143,4 +143,3 @@ void run_unpack_HC(std::string dataFile = "/home/ayyadlim/Desktop/run_0171.h5",T
   gApplication->Terminate();
 
 }
-

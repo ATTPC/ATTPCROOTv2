@@ -2,6 +2,9 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(StandAloneATTPCROOT)
 
+SET(BOOST_ROOT "/mnt/data/fair_install/boost_1_67_0/")
+SET(PCL_DIR "/mnt/data/fair_install/pcl_1.8.1/share/pcl-1.8/")
+
 # Check for needed environment variables
 IF(NOT DEFINED ENV{FAIRROOTPATH})
   MESSAGE(FATAL_ERROR "You did not define the environment variable FAIRROOTPATH which is needed to find FairRoot. Please set this variable and execute cmake again.")
@@ -27,8 +30,8 @@ find_package(ROOT REQUIRED COMPONENTS RIO)
 include(${ROOT_USE_FILE})
 
 #---Locate other external packages
-find_package(Boost REQUIRED)
-find_package(PCL 1.2 REQUIRED)
+find_package(Boost 1.67 REQUIRED)
+find_package(PCL 1.8 REQUIRED)
 
 include_directories( ${ROOT_INCLUDE_DIR}
                      ${Boost_INCLUDE_DIRS}
@@ -41,9 +44,12 @@ include_directories( ${ROOT_INCLUDE_DIR}
 link_directories( ${FAIRROOT_LIBRARY_DIR}
                   ${FAIRROOTPATH}/lib
                   ${ATTPCROOTPATH}/build/lib
+                  ${PCL_LIBRARY_DIRS}
                   )
 
-message(STATUS ${ATTPCROOTPATH})		
+add_definitions(${PCL_DEFINITIONS})
+
+message(STATUS ${ATTPCROOTPATH})
 
 add_library(SAMain SHARED SAMain.cc)
 target_link_libraries(SAMain ${ROOT_LIBRARIES} ATTPCReco FairTools Base ${PCL_LIBRARIES})
@@ -56,7 +62,6 @@ Gpad
 Graf
 Graf3d
 Gui
-Hist
 Hist
 MathCore
 Matrix
@@ -72,5 +77,4 @@ TreePlayer
 ATTPCReco
 AtTpcMap
 FairTools
-Base)                 
-
+Base)

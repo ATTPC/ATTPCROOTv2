@@ -21,13 +21,13 @@ foreach(p
   endif()
 endforeach()
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 # Set name of our project to “ATTPC". Has to be done
 # after check of cmake version since this is a new feature
 project(ATTPC)
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 #In case you need Fortran
 #ENABLE_LANGUAGE(Fortran)
@@ -110,6 +110,8 @@ if(SIMPATH)
   set(CMAKE_PREFIX_PATH ${SIMPATH} ${CMAKE_PREFIX_PATH})
 endif()
 
+set(PCL_DIR "/mnt/data/fair_install/pcl_1.8.1/share/pcl-1.8/")
+
 find_package(FairLogger 1.1.0 REQUIRED)
 find_package(ROOT 5.32.00 REQUIRED)
 find_package(Pythia8)
@@ -121,10 +123,10 @@ find_package(GEANT4VMC)
 find_package(CLHEP)
 find_package(CERNLIB)
 find_package(HEPMC)
-find_package(HDF5)
+find_package(HDF5 REQUIRED)
 find_package(OpenMP)
 find_package(CUDA)
-find_package(PCL)
+find_package(PCL 1.3 REQUIRED)
 find_package(Eigen)
 #find_package(FLANN)
 #find_package(VTK)

@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 project(random_sample_consensus)
 
-find_package(PCL 1.2 REQUIRED)
+set(PCL_DIR "/mnt/data/fair_install/pcl_1.8.1/share/pcl-1.8/")
+
+find_package(PCL 1.8 REQUIRED)
 find_package(ROOT REQUIRED)
 
 include(${ROOT_USE_FILE})

@@ -16,7 +16,7 @@
 #include "FairGeoInterface.h"           // for FairGeoInterface
 #include "FairGeoLoader.h"              // for FairGeoLoader
 #include "FairGeoNode.h"                // for FairGeoNode
-#include "FairGeoPassivePar.h"          // for FairGeoPassivePar
+//#include "FairGeoPassivePar.h"          // for FairGeoPassivePar
 #include "FairGeoVolume.h"              // for FairGeoVolume
 #include "FairRun.h"                    // for FairRun
 #include "FairRuntimeDb.h"              // for FairRuntimeDb

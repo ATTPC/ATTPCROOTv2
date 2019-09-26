@@ -1,6 +1,5 @@
 # Create a library called "libATReco" which includes the source files given in the array .
 
-
 set(INCLUDE_DIRECTORIES
 ${HDF5_INCLUDE_DIR}
 ${ROOT_INCLUDE_DIR}
@@ -34,9 +33,10 @@ ${ROOT_LIBRARY_DIR}
 ${FAIRROOT_LIBRARY_DIR}
 ${Boost_LIBRARY_DIRS}
 ${PCL_LIBRARY_DIRS}
+${PCL_LIBRARIES}
 )
 
-#add_definitions(${PCL_DEFINITIONS})
+add_definitions(${PCL_DEFINITIONS})
 
 link_directories(${LINK_DIRECTORIES})
 
@@ -154,7 +154,7 @@ Set(DEPENDENCIES
     Base
     FairLogger::FairLogger
 #   Cling
-    MCStack
+#    MCStack
     XMLParser
 # Add all library names your code depending on.
 # Basically those are the libraries in the header files' directory.

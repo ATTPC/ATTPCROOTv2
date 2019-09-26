@@ -105,7 +105,9 @@ class ATRansac : public TObject
       ~ATRansac();
 
       void CalcRANSAC(ATEvent *event);
+      void CalcRANSACFull(ATEvent *event);
       std::vector<ATTrack*> RansacPCL(ATEvent *event);
+      std::vector<ATTrack*> Ransac(std::vector<ATHit>* hits);
       TVector3 GetVertex1();
       TVector3 GetVertex2();
       Double_t GetVertexTime();
@@ -117,8 +119,9 @@ class ATRansac : public TObject
       Int_t MinimizeTrack(ATTrack* track);
       Int_t MinimizeTrackRPhi(ATTrack* track);
       std::vector<ATTrack> GetTrackCand();
-      void SetModelType(int model);
-      void SetDistanceThreshold(Float_t threshold);
+      void SetModelType(int model); //RANSAC Model: Line, plane...
+      void SetDistanceThreshold(Float_t threshold); //Distance to RANSAC line
+      void SetMinHitsLine(Int_t nhits);
       void SetRPhiSpace(); // For RxPhi Ransac calculation (eventually will be moved into a template, when I have the time...)
       void SetXYCenter(Double_t xc, Double_t yc);
       void SetRANSACPointThreshold(Float_t val);
@@ -152,7 +155,7 @@ class ATRansac : public TObject
       TVector3 fVertex_2;
       TVector3 fVertex_mean;
       Double_t fMinimum;
-      std::vector<ATTrack> fTrackCand; //Candidate tracks (debugging purposes)
+      std::vector<ATTrack> fTrackCand; //Candidate tracks
       Int_t fLineDistThreshold;
       int fRANSACModel;
       Float_t fRANSACThreshold;
@@ -163,6 +166,7 @@ class ATRansac : public TObject
       std::pair<Int_t,Int_t> fVertex_tracks; // ID of the tracks that form the best vertex
       Double_t fVertexTime;
       Double_t fTiltAng; // From parameter file
+      Int_t fMinHitsLine; //Minimum number of hits per line
 
       struct SumDistance2
       {

@@ -26,8 +26,15 @@ class ATPSATask : public FairTask {
     void SetMaxFinder();
     void SetBaseCorrection(Bool_t value);
     void SetTimeCorrection(Bool_t value);
+    void SetGainCalibration(TString gainFile);
+    void SetJitterCalibration(TString jitterFile);
     //void SetAuxChannel(std::vector<Int_t> AuxCh);
     //void EnableAuxChannels(std::vector<Int_t> AuxCh);
+
+    //For PCL Outlier Removal
+    void SetMeanK(Int_t value); //Number of neighbors
+    void SetStddevMulThresh(Double_t value);
+    void SetTBLimits(std::pair<Int_t,Int_t> limits);
 
 
     virtual InitStatus Init();
@@ -51,8 +58,14 @@ class ATPSATask : public FairTask {
     Bool_t fIsBaseCorr;
     Bool_t fIsTimeCorr;
 
+    TString fGainFile;
+    TString fJitterFile;
+
     Double_t fThreshold;
     //std::vector<Int_t> fAuxChannels;
+    Int_t fMeanK;
+    Double_t fStdDev;
+    std::pair<Int_t,Int_t> fTBRange;
 
   ClassDef(ATPSATask, 1);
 };

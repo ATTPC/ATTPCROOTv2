@@ -62,6 +62,11 @@ class ATAnalysis : public TObject
        Double_t fThetaPad;
        Double_t fThetaLorentz;
        Double_t fThetaRot;
+       Double_t fPressure;
+       Double_t fMaxRange;
+       Double_t fGain;
+       Double_t fCoefL;
+       Double_t fCoefT;
 
        ClassDef(ATAnalysis, 1);
 
