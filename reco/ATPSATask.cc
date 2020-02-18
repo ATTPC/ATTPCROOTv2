@@ -180,8 +180,9 @@ ATPSATask::Exec(Option_t *opt)
   //std::cout << "  Event Number :  " << rawEvent -> GetEventID() << " Valid pads : " << rawEvent -> GetNumPads() << std::endl;
 
   ATEvent *event = (ATEvent *) new ((*fEventHArray)[0]) ATEvent();
-  //event -> SetEventID(event -> GetEventID());
-    event -> SetEventID(rawEvent -> GetEventID());
+
+  event->SetEventID(rawEvent->GetEventID());
+  event->SetTimestamp(rawEvent->GetTimestamp());
 
   if (!(rawEvent -> IsGood()))
     event -> SetIsGood(kFALSE);

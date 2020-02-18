@@ -18,24 +18,24 @@
 
 class ATHDFParser : public TObject {
 
-  public:
+public:
 
-     ATHDFParser();
-    ~ATHDFParser();
+  ATHDFParser();
+  ~ATHDFParser();
 
-    enum class IO_MODE {
-      READ,
+  enum class IO_MODE {
+    READ,
       WRITE
-    };
-    hid_t open_file(char const* file, IO_MODE mode);
-    std::tuple<hid_t, hsize_t> open_group(hid_t fileId, char const* group);
-    std::tuple<hid_t, std::vector<hsize_t> > open_dataset(hid_t locId, char const* dataset);
-    void close_file(hid_t file);
-    void close_group(hid_t group);
-    void close_dataset(hid_t dataset);
+      };
+  hid_t open_file(char const* file, IO_MODE mode);
+  std::tuple<hid_t, hsize_t> open_group(hid_t fileId, char const* group);
+  std::tuple<hid_t, std::vector<hsize_t> > open_dataset(hid_t locId, char const* dataset);
+  void close_file(hid_t file);
+  void close_group(hid_t group);
+  void close_dataset(hid_t dataset);
 
-    template<typename T>
-    void read_slab(hid_t dataset, hsize_t* counts, hsize_t* offsets, hsize_t* dims_out, T* data)
+  template<typename T>
+  void read_slab(hid_t dataset, hsize_t* counts, hsize_t* offsets, hsize_t* dims_out, T* data)
     {
       hid_t dataspace = H5Dget_space(dataset);
       H5Sselect_hyperslab(dataspace, H5S_SELECT_SET, offsets, nullptr, counts, nullptr);
@@ -45,27 +45,28 @@ class ATHDFParser : public TObject {
       H5Sclose(dataspace);
     }
 
-    // Following methods satisfy the data_handler interface
-    std::size_t open(char const* file);
-    std::size_t n_pads(std::string i_raw_event);
-    std::vector<int16_t> pad_raw_data(std::size_t i_pad);
-    std::size_t datasets();
-    std::size_t inievent();
-    static herr_t file_info(hid_t loc_id, const char *name, const H5L_info_t *linfo, void *opdata);
-    void end_raw_event();
-    void close();
+  // Following methods satisfy the data_handler interface
+  std::size_t open(char const* file);
+  std::size_t n_pads(std::string i_raw_event);
+  std::vector<int16_t> pad_raw_data(std::size_t i_pad);
+  std::vector<int64_t> get_header(std::string headerName);
+  std::size_t datasets();
+  std::size_t inievent();
+  static herr_t file_info(hid_t loc_id, const char *name, const H5L_info_t *linfo, void *opdata);
+  void end_raw_event();
+  void close();
 
-    std::vector<std::string> get_events_by_name() {return _eventsbyname;}
-    void set_inievent(std::size_t inievent)       {_inievent = inievent;}
-    std::string get_event_name(std::size_t idx);
+  std::vector<std::string> get_events_by_name() {return _eventsbyname;}
+  void set_inievent(std::size_t inievent)       {_inievent = inievent;}
+  std::string get_event_name(std::size_t idx);
 
-  private:
+private:
 
-	 hid_t       			         _file;
-	 hid_t       			         _group;
-	 hid_t       			         _dataset;
-	 std::size_t         _inievent;
-   std::vector<std::string>  _eventsbyname;
+  hid_t               _file;
+  hid_t       	      _group;
+  hid_t       	      _dataset;
+  std::size_t         _inievent;
+  std::vector<std::string>  _eventsbyname;
 	 
    
 
