@@ -1,9 +1,9 @@
 /*********************************************************************
  *   ATTPC ATRawEvent Stores a RawEvent composed by the ATTC pads    *
- *   Author: Y. Ayyad            				                     *
- *   Log: 07-03-2015 17:16 JST					                     *
+ *   Author: Y. Ayyad            				     *
+ *   Log: 07-03-2015 17:16 JST					     *
  *   Adapted from STRawEvent from SPiRITROOT by G. Jhang             *
- *								                                     *
+ *   Edited by Adam Anthony 2/17/2020                                *
  *********************************************************************/
 
 #include <iostream>
@@ -15,21 +15,21 @@
 ClassImp(ATRawEvent);
 
 ATRawEvent::ATRawEvent()
-:TNamed("ATRawEvent", "Raw event container")
+  :TNamed("ATRawEvent", "Raw event container")
 {
-    fEventID = -1;
-    fPadArray.reserve(10240);// TODO Prototype size is smaller we do not need such size
+  fEventID = -1;
+  fPadArray.reserve(10240);// TODO Prototype size is smaller we do not need such size
 
-    fIsGood = kTRUE;
+  fIsGood = kTRUE;
 }
 
 ATRawEvent::ATRawEvent(ATRawEvent *object)
-:TNamed("ATRawEvent", "Raw event container")
+  :TNamed("ATRawEvent", "Raw event container")
 {
-    fEventID = object -> GetEventID();
-    fPadArray = *(object -> GetPads());
+  fEventID = object -> GetEventID();
+  fPadArray = *(object -> GetPads());
 
-    fIsGood = object -> IsGood();
+  fIsGood = object -> IsGood();
 }
 
 ATRawEvent::~ATRawEvent()
@@ -46,41 +46,40 @@ void ATRawEvent::Clear()
 
 
 // setters
-void ATRawEvent::SetEventID(Int_t evtid) { fEventID = evtid; }
+void ATRawEvent::SetEventID(ULong_t evtid) { fEventID = evtid; }
 void ATRawEvent::SetPad(ATPad *pad)      { fPadArray.push_back(*pad); }
 void ATRawEvent::SetIsGood(Bool_t value) { fIsGood = value; }
+void ATRawEvent::SetTimestamp(ULong_t timestamp) { fTimestamp = timestamp; }
+
 void ATRawEvent::RemovePad(Int_t padNo)
 {
-    if (!(padNo < GetNumPads()))
-        return;
+  if (!(padNo < GetNumPads()))
+    return;
 
-    fPadArray.erase(fPadArray.begin() + padNo);
+  fPadArray.erase(fPadArray.begin() + padNo);
 }
 
-
-
-
 // getters
-Int_t  ATRawEvent::GetEventID()         { return fEventID; }
-Int_t  ATRawEvent::GetNumPads()         { return fPadArray.size(); }
+ULong_t   ATRawEvent::GetEventID()         { return fEventID; }
+Int_t   ATRawEvent::GetNumPads()         { return fPadArray.size(); }
 Bool_t  ATRawEvent::IsGood()             { return fIsGood; }
-std::vector<ATPad> *ATRawEvent::GetPads()            { return &fPadArray; }
-ATPad *ATRawEvent::GetPad(Int_t padNo)  { return (padNo < GetNumPads() ? &fPadArray[padNo] : NULL); }
+ULong_t ATRawEvent::GetTimestamp()       { return fTimestamp; }
+ATPad  *ATRawEvent::GetPad(Int_t padNo)  { return (padNo < GetNumPads() ? &fPadArray[padNo] : NULL); }
+std::vector<ATPad> *ATRawEvent::GetPads()     { return &fPadArray; }
 
 ATPad *ATRawEvent::GetPad(Int_t PadNum, Bool_t& IsValid)
 {
-    for(std::vector<ATPad>::iterator it = fPadArray.begin(); it != fPadArray.end(); ++it) {
+  for(std::vector<ATPad>::iterator it = fPadArray.begin(); it != fPadArray.end(); ++it)
+  {
+    //std::cout<<" ATRawEvent::GetPad : "<<(*it).GetPadNum()<<std::endl;
 
-        //std::cout<<" ATRawEvent::GetPad : "<<(*it).GetPadNum()<<std::endl;
-
-        if((*it).GetPadNum()==PadNum){
-
-            IsValid = kTRUE;
-            return &(*it);
-
-        }
-
+    if( (*it).GetPadNum() == PadNum )
+    {
+      IsValid = kTRUE;
+      return &(*it);
     }
-    return NULL;
+  }// End loop over all valid pads
 
+  IsValid = kFALSE;
+  return NULL;
 }

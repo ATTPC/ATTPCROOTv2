@@ -24,7 +24,7 @@ ATEvent::ATEvent(Bool_t isClustered, Bool_t isTracked, Bool_t isChanged)
 }
 
 ATEvent::ATEvent(ATEvent *object)
-:TNamed("ATEvent", "Event container")
+  :TNamed("ATEvent", "Event container")
 {
   fEventID = object -> GetEventID();
   fQevent = -100.0;
@@ -39,7 +39,7 @@ ATEvent::ATEvent(ATEvent *object)
   if (IsClustered())
     //fClusterArray = *(object -> GetClusterArray());
 
-  fIsGood = object -> IsGood();
+    fIsGood = object -> IsGood();
 
 
 
@@ -65,21 +65,23 @@ Bool_t ATEvent::IsGood()                     { return fIsGood; }
 
 // setters
 void ATEvent::SetEventID(Int_t evtid)                                 { fEventID = evtid; }
+void ATEvent::SetTimestamp(ULong_t timestamp)                         { fTimestamp = timestamp; }
 void ATEvent::AddHit(ATHit *hit)                                      { fHitArray.push_back(*hit); }
 void ATEvent::AddAuxPad(ATPad *pad)                                   { fAuxPadArray.push_back(*pad); }
 void ATEvent::SetHitArray(vector<ATHit> *hitArray)                    { fHitArray = *hitArray; }
 void ATEvent::SetAuxPadArray(std::vector<ATPad> *padArray)            { fAuxPadArray = *padArray; }
-void ATEvent::SetEventCharge(Double_t Qevent)  			                  { fQevent = Qevent;}
+void ATEvent::SetEventCharge(Double_t Qevent)  			      { fQevent = Qevent;}
 void ATEvent::SetRhoVariance(Double_t RhoVariance)                    { fRhoVariance = RhoVariance;}
 void ATEvent::SetMultiplicityMap(std::map<Int_t,Int_t> MultiMap)      { fMultiMap = MultiMap;}
-void ATEvent::SetMeshSignal(Float_t *mesharray)			                  { memcpy(fMeshSig, mesharray, sizeof(fMeshSig));}
+void ATEvent::SetMeshSignal(Float_t *mesharray)			      { memcpy(fMeshSig, mesharray, sizeof(fMeshSig));}
 void ATEvent::SetMeshSignal(Int_t idx, Float_t val)                   { fMeshSig[idx] = val; }
 
 
 // getters
-Int_t ATEvent::GetEventID()  { return fEventID; }
-Int_t ATEvent::GetNumHits()  { return fHitArray.size(); }
-Float_t *ATEvent::GetMesh()  { return fMeshSig; }
+Int_t ATEvent::GetEventID()    { return fEventID; }
+Long_t ATEvent::GetTimestamp() { return fTimestamp; }
+Int_t ATEvent::GetNumHits()    { return fHitArray.size(); }
+Float_t *ATEvent::GetMesh()    { return fMeshSig; }
 
 ATHit *ATEvent::GetHit(Int_t hitNo)
 {

@@ -13,7 +13,8 @@
 
 ClassImp(ATHDFParserTask);
 
-ATHDFParserTask::ATHDFParserTask():AtPadCoordArr(boost::extents[10240][3][2])
+ATHDFParserTask::ATHDFParserTask():
+  AtPadCoordArr(boost::extents[10240][3][2])
 {
   fLogger = FairLogger::GetLogger();
   fIsPersistence = kFALSE;
@@ -33,7 +34,8 @@ ATHDFParserTask::ATHDFParserTask():AtPadCoordArr(boost::extents[10240][3][2])
   
 }
 
-ATHDFParserTask::ATHDFParserTask(Int_t opt):AtPadCoordArr(boost::extents[10240][3][2]),kOpt(0)
+ATHDFParserTask::ATHDFParserTask(Int_t opt):
+  AtPadCoordArr(boost::extents[10240][3][2]),kOpt(0)
 {
   fLogger = FairLogger::GetLogger();
   fIsPersistence = kFALSE;
@@ -56,11 +58,9 @@ ATHDFParserTask::~ATHDFParserTask()
 	delete fRawEventArray;
 	delete fRawEvent;
 	delete fAtMapPtr;
-  
 }
 
-void ATHDFParserTask::SetPersistence(Bool_t value)
-{ fIsPersistence = value; }
+void ATHDFParserTask::SetPersistence(Bool_t value){ fIsPersistence = value; }
 
 Bool_t  ATHDFParserTask::SetOldFormat(Bool_t oldF)
 { 
@@ -68,7 +68,7 @@ Bool_t  ATHDFParserTask::SetOldFormat(Bool_t oldF)
   return kTRUE; 
 }
 
-bool   ATHDFParserTask::SetAuxChannel(uint32_t hash,std::string channel_name)
+bool   ATHDFParserTask::SetAuxChannel(uint32_t hash, std::string channel_name)
 {
   auto value = fAuxTable.emplace(hash,channel_name);
 
@@ -98,7 +98,6 @@ std::pair<bool,std::string>  ATHDFParserTask::FindAuxChannel(uint32_t hash)
   
 
 }
-
 
 bool ATHDFParserTask::SetATTPCMap(Char_t const *lookup){
 
@@ -134,17 +133,17 @@ Bool_t ATHDFParserTask::SetProtoGeoFile(TString geofile){
 
 Bool_t ATHDFParserTask::SetProtoMapFile(TString mapfile){
 
-  if(kOpt==1){
-
-  fIsProtoMapSet = fAtMapPtr->SetProtoMap(mapfile);
-        return fIsProtoMapSet;
-
-   }else{
-   std::cout << "== ATHDFParserTask::SetProtoMapFile. This method must be used only with Prototype mapping (kOpt=1)!" << std::endl;
-         return kFALSE;
-   }
-
-
+  if(kOpt==1)
+  {
+    
+    fIsProtoMapSet = fAtMapPtr->SetProtoMap(mapfile);
+    return fIsProtoMapSet;
+    
+  } else
+  {
+    std::cout << "== ATHDFParserTask::SetProtoMapFile. This method must be used only with Prototype mapping (kOpt=1)!" << std::endl;
+    return kFALSE;
+  }
 }
 
 Bool_t ATHDFParserTask::SetInitialEvent(std::size_t inievent)
@@ -164,14 +163,16 @@ InitStatus ATHDFParserTask::Init()
   //Need try-catch
   HDFParser = new ATHDFParser();
   fNumEvents = HDFParser->open(fFileName.c_str());
-  std::cout<<" Number of events : "<<fNumEvents<<"\n";
+  std::cout<<" Number of events : " << fNumEvents << std::endl;
   //fEventsByName = HDFParser->get_events_by_name();
 
 
-  if(fIniEventID>fNumEvents){
+  if(fIniEventID > fNumEvents)
+  {
     fLogger -> Fatal(MESSAGE_ORIGIN, "Exceeded the maximum event number");
      return kERROR;
-  }else fEventID=fIniEventID;
+  } else
+    fEventID=fIniEventID;
 
   ioMan -> Register("ATRawEvent", "ATTPC", fRawEventArray, fIsPersistence);
   return kSUCCESS;
@@ -181,15 +182,15 @@ void ATHDFParserTask::SetParContainers()
 {
   FairRun *run = FairRun::Instance();
   if (!run)
-    fLogger -> Fatal(MESSAGE_ORIGIN, "No analysis run!");
+    fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
   
-  FairRuntimeDb *db = run -> GetRuntimeDb();
+  FairRuntimeDb *db = run->GetRuntimeDb();
   if (!db)
-    fLogger -> Fatal(MESSAGE_ORIGIN, "No runtime database!");
+    fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
   
-  fPar = (ATDigiPar *) db -> getContainer("ATDigiPar");
+  fPar = (ATDigiPar *) db->getContainer("ATDigiPar");
   if (!fPar)
-    fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find ATDigiPar!");
+    fLogger->Fatal(MESSAGE_ORIGIN, "Cannot find ATDigiPar!");
 }
 
 void ATHDFParserTask::Exec(Option_t *opt)
@@ -197,91 +198,95 @@ void ATHDFParserTask::Exec(Option_t *opt)
   fRawEventArray -> Delete();
   fRawEvent->Clear();
 
-   std::string event_name = HDFParser->get_event_name(fEventID);
+  std::string event_name = HDFParser->get_event_name(fEventID);
+  
+  if(event_name.find("data") != std::string::npos || fIsOldFormat == kTRUE)
+  {
+    //Construct the name of the header event
+    std::string header_name;
+    std::getline(std::stringstream(event_name), header_name, '_');
+    header_name += "_header";
 
-  if(event_name.find("data") != std::string::npos || fIsOldFormat ==kTRUE) {
+    auto header = HDFParser->get_header(header_name);
     
+    fRawEvent->SetEventID(header.at(0));
+    fRawEvent->SetTimestamp(header.at(1));
 
-      std::size_t npads = HDFParser->n_pads(event_name);
+    std::cout <<  fRawEvent->GetTimestamp() << std::endl;
+    std::size_t npads = HDFParser->n_pads(event_name);
 
-      std::cout<<" Event : "<<fEventID<<" Event name "<<event_name<<"\n";
-
+//    std::cout << " Event : " << fEventID << " Event name " << event_name << " with header "
+//	      << header_name << " and " << npads << " ch with " << n.at(0) << " " << n.at(1) << std::endl;
+    
+    for(auto ipad = 0; ipad < npads; ++ipad)
+    {
       
+      std::vector<int16_t> rawadc = HDFParser->pad_raw_data(ipad);
+      
+      int iCobo = rawadc[0];
+      int iAsad = rawadc[1];
+      int iAget = rawadc[2];
+      int iCh   = rawadc[3];
+      int iPad  = rawadc[4];
 
-      //std::cout<<npads<<"\n";
+      std::vector<int> PadRef = {iCobo,iAsad,iAget,iCh};
+      int PadRefNum = fAtMapPtr->GetPadNum(PadRef);
 
-      	for(auto ipad=0;ipad<npads;++ipad)
-      	{
-      		
+      //std::cout<<iCobo<<" "<<iAsad<<" "<<iAget<<" "<<iCh<<" "<<iPad<<"  "<<PadRefNum<<"\n";
 
-      		std::vector<int16_t> rawadc = HDFParser->pad_raw_data(ipad);
+      std::vector<Float_t> PadCenterCoord;
+      PadCenterCoord.reserve(2);
+      PadCenterCoord = fAtMapPtr->CalcPadCenter(PadRefNum);
 
-      		int iCobo = rawadc[0];
-      		int iAsad = rawadc[1];
-      		int iAget = rawadc[2];
-      		int iCh   = rawadc[3];
-      		int iPad  = rawadc[4];
+      ATPad *pad = new ATPad(PadRefNum);
+      pad->SetPadXCoord(PadCenterCoord[0]);
+      pad->SetPadYCoord(PadCenterCoord[1]);
 
-         
+      if(iPad == -1)
+      {
+	auto hash  = CalculateHash(uint32_t(iCobo),uint32_t(iAsad),uint32_t(iAget),uint32_t(iCh)); 
+	std::pair<bool,std::string> isAux = FindAuxChannel(hash);
 
-      		std::vector<int> PadRef={iCobo,iAsad,iAget,iCh};
-      		int PadRefNum = fAtMapPtr->GetPadNum(PadRef);
+	if(isAux.first){
+	  pad->SetIsAux(true);
+	  pad->SetAuxName(isAux.second);
+	}
 
-          //std::cout<<iCobo<<" "<<iAsad<<" "<<iAget<<" "<<iCh<<" "<<iPad<<"  "<<PadRefNum<<"\n";
+      }
 
-      		std::vector<Float_t> PadCenterCoord;
-          PadCenterCoord.reserve(2);
-          PadCenterCoord = fAtMapPtr->CalcPadCenter(PadRefNum);
-
-      		ATPad *pad = new ATPad(PadRefNum);
-      		pad->SetPadXCoord(PadCenterCoord[0]);
-          pad->SetPadYCoord(PadCenterCoord[1]);
-
-          if(iPad == -1)
-          {
-            auto hash  = CalculateHash(uint32_t(iCobo),uint32_t(iAsad),uint32_t(iAget),uint32_t(iCh)); 
-            std::pair<bool,std::string> isAux = FindAuxChannel(hash);
-
-              if(isAux.first){
-                pad->SetIsAux(true);
-                pad->SetAuxName(isAux.second);
-              }
-
-          }
-
-          //std::cout<<PadCenterCoord[0]<<" "<<PadCenterCoord[1]<<"\n";
+      //std::cout<<PadCenterCoord[0]<<" "<<PadCenterCoord[1]<<"\n";
 
 
-            //Baseline subtraction
-            double adc[512] = {0};
-            double baseline =0;
+      //Baseline subtraction
+      double adc[512] = {0};
+      double baseline =0;
 
-            for (Int_t iTb = 5; iTb < 25; iTb++)
-            	baseline+=rawadc[iTb];
+      for (Int_t iTb = 5; iTb < 25; iTb++)
+	baseline+=rawadc[iTb];
 
-            baseline/=20.0;
+      baseline/=20.0;
 
-      		for (Int_t iTb = 0; iTb < 512; iTb++){
+      for (Int_t iTb = 0; iTb < 512; iTb++){
       				  
-                      pad -> SetRawADC(iTb, rawadc.at(iTb+5));
-                      adc[iTb] = (double)rawadc[iTb+5] - baseline;
-                      //std::cout<<" iTb "<<iTb<<" rawadc "<<rawadc[iTb]<<"	"<<adc[iTb]<<"\n";
-                      pad -> SetADC(iTb, adc[iTb]);
-            }          
+	pad -> SetRawADC(iTb, rawadc.at(iTb+5));
+	adc[iTb] = (double)rawadc[iTb+5] - baseline;
+	//std::cout<<" iTb "<<iTb<<" rawadc "<<rawadc[iTb]<<"	"<<adc[iTb]<<"\n";
+	pad -> SetADC(iTb, adc[iTb]);
+      }          
 
-            pad -> SetPedestalSubtracted(kTRUE);
+      pad -> SetPedestalSubtracted(kTRUE);
             
-            fRawEvent -> SetIsGood(kTRUE);
-            fRawEvent -> SetPad(pad); 
-
-
-      	}
+      fRawEvent -> SetIsGood(kTRUE);
+      fRawEvent -> SetPad(pad); 
       
-        
-      new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
-    }
+      
+    }// End loop over pads
+      
+    new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
+    
+  } //End if statment for if it is data or header
 
-    ++fEventID;
+  ++fEventID;
 
 }
 

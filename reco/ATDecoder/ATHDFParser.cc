@@ -141,6 +141,25 @@ std::size_t ATHDFParser::open(char const* file)
     }
  }
 
+std::vector<int64_t> ATHDFParser::get_header(std::string headerName)
+{
+  std::vector<int64_t> retVec;
+  
+  auto dataset_dims = open_dataset(_group, headerName.c_str());
+  if( std::get<0>(dataset_dims) == 0)
+    return retVec;
+
+  _dataset = std::get<0>(dataset_dims);
+
+  int64_t  data[2];
+  auto status = H5Dread(_dataset, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+
+  //Add read data to the vector and return it
+  retVec.push_back(data[0]);   retVec.push_back(data[1]);
+  return retVec;
+  
+}
+
 std::size_t ATHDFParser::n_pads(std::string i_raw_event)
 {
     std::string dataset_name = i_raw_event;
