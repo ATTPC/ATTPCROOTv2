@@ -22,7 +22,8 @@ ATHDFParserTask::ATHDFParserTask():
   fEventID = 0;
   fIniEventID = 0;
   fRawEvent = new ATRawEvent();
-  
+  fIsOldFormat  = kFALSE;
+  fIsBaseLineSubtraction = kFALSE;  
   kOpt = 0;
 
 
@@ -40,6 +41,7 @@ ATHDFParserTask::ATHDFParserTask(Int_t opt):
   fLogger = FairLogger::GetLogger();
   fIsPersistence = kFALSE;
   fIsOldFormat  = kFALSE;
+  fIsBaseLineSubtraction = kFALSE;
   fRawEventArray = new TClonesArray("ATRawEvent");
   fEventID = 0;
   fIniEventID = 0;
@@ -66,6 +68,12 @@ Bool_t  ATHDFParserTask::SetOldFormat(Bool_t oldF)
 { 
   fIsOldFormat = oldF;
   return kTRUE; 
+}
+
+Bool_t ATHDFParserTask::SetBaseLineSubtraction(Bool_t value)
+{
+  fIsBaseLineSubtraction = value;
+  return kTRUE;
 }
 
 bool   ATHDFParserTask::SetAuxChannel(uint32_t hash, std::string channel_name)
@@ -212,11 +220,11 @@ void ATHDFParserTask::Exec(Option_t *opt)
     fRawEvent->SetEventID(header.at(0));
     fRawEvent->SetTimestamp(header.at(1));
 
-    std::cout <<  fRawEvent->GetTimestamp() << std::endl;
+    //std::cout <<  fRawEvent->GetTimestamp() << std::endl;
     std::size_t npads = HDFParser->n_pads(event_name);
 
-//    std::cout << " Event : " << fEventID << " Event name " << event_name << " with header "
-//	      << header_name << " and " << npads << " ch with " << n.at(0) << " " << n.at(1) << std::endl;
+    std::cout << " Event : " << fEventID << " Event name " << event_name << " with header "
+	      << header_name << " and " << npads <<  std::endl;
     
     for(auto ipad = 0; ipad < npads; ++ipad)
     {
@@ -242,29 +250,27 @@ void ATHDFParserTask::Exec(Option_t *opt)
       pad->SetPadXCoord(PadCenterCoord[0]);
       pad->SetPadYCoord(PadCenterCoord[1]);
 
-      if(iPad == -1)
-      {
-	auto hash  = CalculateHash(uint32_t(iCobo),uint32_t(iAsad),uint32_t(iAget),uint32_t(iCh)); 
-	std::pair<bool,std::string> isAux = FindAuxChannel(hash);
+      auto hash  = CalculateHash(uint32_t(iCobo),uint32_t(iAsad),uint32_t(iAget),uint32_t(iCh)); 
+      std::pair<bool,std::string> isAux = FindAuxChannel(hash);
 
-	if(isAux.first){
+      if(isAux.first){
 	  pad->SetIsAux(true);
 	  pad->SetAuxName(isAux.second);
-	}
-
       }
+   
 
       //std::cout<<PadCenterCoord[0]<<" "<<PadCenterCoord[1]<<"\n";
-
 
       //Baseline subtraction
       double adc[512] = {0};
       double baseline =0;
 
-      for (Int_t iTb = 5; iTb < 25; iTb++)
-	baseline+=rawadc[iTb];
+      if(fIsBaseLineSubtraction){
+	      for (Int_t iTb = 5; iTb < 25; iTb++)
+		baseline+=rawadc[iTb];
 
-      baseline/=20.0;
+	      baseline/=20.0;
+      }
 
       for (Int_t iTb = 0; iTb < 512; iTb++){
       				  

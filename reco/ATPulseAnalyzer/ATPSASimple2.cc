@@ -73,6 +73,17 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
     Int_t maxAdcIdx=0;
     Int_t numPeaks=0;
 
+    if((xPos<-9000 || yPos<-9000) && !pad->IsAux() )
+      {
+          //std::cout<<" Is Auxiliary? "<<pad->IsAux()<<" Pad Num "<<PadNum<<"\n";
+          continue; //Skip invalid pads that are not
+      }else if(pad->IsAux()){
+
+        //std::cout<<" Is Auxiliary 2? "<<pad->IsAux()<<" Pad Num "<<PadNum<<"\n";
+        event->AddAuxPad(pad);
+        continue;
+      }   
+
     CalcLorentzVector();
 
       if (!(pad -> IsPedestalSubtracted())) {

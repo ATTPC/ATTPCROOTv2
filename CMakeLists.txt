@@ -6,7 +6,7 @@
 # and the experiment part.
 
 # Check if cmake has the required version
-CMAKE_MINIMUM_REQUIRED(VERSION  2.8.2 FATAL_ERROR)
+CMAKE_MINIMUM_REQUIRED(VERSION  3.5 FATAL_ERROR)
 
 ### CMP0025   Compiler id for Apple Clang is now AppleClang.
 ### CMP0042   MACOSX_RPATH is enabled by default.
@@ -25,9 +25,6 @@ endforeach()
 # after check of cmake version since this is a new feature
 project(ATTPC)
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
 #In case you need Fortran
 #ENABLE_LANGUAGE(Fortran)
@@ -60,12 +57,24 @@ include(CTest)
 include(CheckCompiler)
 #include(CheckFortran)
 
+set(CMAKE_CXX_FLAGS -std=c++14)
+
 #Check the compiler and set the compile and link flags
 If(NOT CMAKE_BUILD_TYPE)
   Message("Set BuildType DEBUG")
   set(CMAKE_BUILD_TYPE Debug)
 EndIf(NOT CMAKE_BUILD_TYPE)
 Check_Compiler()
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_FLAGS -std=c++14)
+
+#String(FIND "${CMAKE_CXX_FLAGS}" "-std=c++14" POS_C++11)
+#If(${POS_C++11} EQUAL -1)
+#      Message(FATAL_ERROR "FairSoft wasn't compiled with c++11, c++14 or c++17 support. Please recompile FairSoft with a compiler which supports at least c++11.")
+# EndIf()
 
 
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
@@ -111,6 +120,10 @@ if(SIMPATH)
 endif()
 
 set(PCL_DIR "/mnt/data/fair_install/pcl_1.8.1/share/pcl-1.8/")
+#set(PCL_DIR "/mnt/simulations/attpcroot/fair_install_2020/pcl_1.9.0_inst/share/pcl-1.10/")
+#set(PCL_DIR "/mnt/misc/sw/x86_64/Debian/8/fairroot/18.00/pcl/share/pcl-1.8/")
+#set(PCL_DIR "/mnt/simulations/attpcroot/fair_install_2020/pcl_1.9.0_inst/share/pcl-1.9/")
+
 
 find_package(FairLogger 1.1.0 REQUIRED)
 find_package(ROOT 5.32.00 REQUIRED)
@@ -126,10 +139,12 @@ find_package(HEPMC)
 find_package(HDF5 REQUIRED)
 find_package(OpenMP)
 find_package(CUDA)
-find_package(PCL 1.3 REQUIRED)
+find_package(PCL 1.8 REQUIRED)
 find_package(Eigen)
 #find_package(FLANN)
 #find_package(VTK)
+
+add_definitions(${PCL_DEFINITIONS})
 
 
 Set(Boost_NO_SYSTEM_PATHS TRUE)
@@ -247,6 +262,32 @@ add_subdirectory (digi)
 
 WRITE_CONFIG_FILE(config.sh)
 
+
 configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake
                ${CMAKE_BINARY_DIR}/CTestCustom.cmake
               )
+
+if(CMAKE_CXX_FLAGS)
+  message(STATUS "  ")
+  message(STATUS "  ${Cyan}GLOBAL CXX FLAGS${CR}  ${BGreen}${CMAKE_CXX_FLAGS}${CR}")
+endif()
+
+if(CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "  ")
+  message(STATUS "  ${Cyan}BUILD TYPE         CXX FLAGS${CR}")
+  string(TOUPPER "${CMAKE_BUILD_TYPE}" selected_type)
+  foreach(type IN LISTS CMAKE_CONFIGURATION_TYPES)
+   string(TOUPPER "${type}" type_upper)
+   if(type_upper STREQUAL selected_type)
+     pad("${type}" 18 " " type_padded)
+     message(STATUS "${BGreen}* ${type_padded}${CMAKE_CXX_FLAGS_${type_upper}}${CR}")
+   else()
+     pad("${type}" 18 " " type_padded)
+     message(STATUS "  ${BWhite}${type_padded}${CR}${CMAKE_CXX_FLAGS_${type_upper}}")
+   endif()
+   unset(type_padded)
+   unset(type_upper)
+ endforeach()
+message(STATUS "  ")
+message(STATUS "  (Change the build type with ${BMagenta}-DCMAKE_BUILD_TYPE=...${CR})")
+endif()
