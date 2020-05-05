@@ -82,7 +82,7 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_021
 
 
   ATHDFParserTask* HDFParserTask = new ATHDFParserTask();
-  HDFParserTask->SetPersistence(kTRUE);
+  HDFParserTask->SetPersistence(kFALSE);
   HDFParserTask->SetATTPCMap(scriptdir.Data());
   HDFParserTask->SetOldFormat(kFALSE);
   HDFParserTask->SetFileName(dataFile);

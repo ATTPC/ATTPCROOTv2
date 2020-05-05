@@ -87,7 +87,7 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e18505_attpc/ND2019/run
 
 
   ATHDFParserTask* HDFParserTask = new ATHDFParserTask(1);
-  HDFParserTask->SetPersistence(kTRUE);
+  HDFParserTask->SetPersistence(kFALSE);
   HDFParserTask->SetATTPCMap(scriptdir.Data());
   HDFParserTask->SetProtoGeoFile(geo.Data());
   HDFParserTask->SetProtoMapFile(protomapdir.Data());

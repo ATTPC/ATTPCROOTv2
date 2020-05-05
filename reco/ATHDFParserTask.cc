@@ -283,10 +283,11 @@ void ATHDFParserTask::Exec(Option_t *opt)
       pad -> SetPedestalSubtracted(kTRUE);
             
       fRawEvent -> SetIsGood(kTRUE);
-      fRawEvent -> SetPad(pad); 
+      fRawEvent -> SetPad(pad);
+      delete pad;
       
       
-    }// End loop over pads
+    }// End loop over pads 
       
     new ((*fRawEventArray)[0]) ATRawEvent(fRawEvent);
     
