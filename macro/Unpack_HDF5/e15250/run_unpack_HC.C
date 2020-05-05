@@ -32,7 +32,7 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_021
 
   //TString inputFile   = dataDir + name + ".digi.root";
   //TString outputFile  = dataDir + "output.root";
-  TString outputFile  = "/mnt/analysis/attpcroot/output.root";
+  TString outputFile  = "/mnt/simulations/attpcroot/fair_install_2020/ATTPCROOTv2/macro/Unpack_HDF5/e15250/output.root";
   //TString mcParFile   = dataDir + name + ".params.root";
   TString loggerFile  = dataDir + "ATTPCLog.log";
   TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -82,9 +82,10 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_021
 
 
   ATHDFParserTask* HDFParserTask = new ATHDFParserTask();
-  HDFParserTask->SetPersistence(kFALSE);
+  HDFParserTask->SetPersistence(kTRUE);
   HDFParserTask->SetATTPCMap(scriptdir.Data());
   HDFParserTask->SetOldFormat(kFALSE);
+  HDFParserTask->SetBaseLineSubtraction(kTRUE);
   HDFParserTask->SetFileName(dataFile);
 
   for(auto iaux : aux_channels)
@@ -95,7 +96,7 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_021
 
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(1);
+  psaTask -> SetThreshold(100);
   psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
   //psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
   psaTask -> SetMaxFinder();
@@ -113,7 +114,7 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_021
 
   run -> Init();
 
-  run->Run(0,4000);
+  run->Run(0,100);
   //run -> RunOnTBData();
 
 
