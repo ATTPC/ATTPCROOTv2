@@ -13,11 +13,11 @@
 #include "TDatabasePDG.h"
 #include "TParticlePDG.h"
 #include "TObjArray.h"
-                    
+
 #include "TRandom.h"
 #include "TMath.h"
 #include "TLorentzVector.h"
-  
+
 #include "FairRunSim.h"
 #include "FairIon.h"
 #include <iostream>
@@ -33,7 +33,7 @@ Int_t ATTPCIonGenerator::fgNIon = 0;
 
 // -----   Default constructor   ------------------------------------------
 ATTPCIonGenerator::ATTPCIonGenerator()
-  : fMult(0),          
+  : fMult(0),
     fPx(0.), fPy(0.), fPz(0.),
     fR(0.), fz(0.), fOffset(0.),
     fVx(0.), fVy(0.), fVz(0.),
@@ -48,7 +48,7 @@ ATTPCIonGenerator::ATTPCIonGenerator()
 
 ATTPCIonGenerator::ATTPCIonGenerator(const Char_t* ionName, Int_t mult,
 				 Double_t px, Double_t py, Double_t pz)
-  : fMult(0),          
+  : fMult(0),
     fPx(0.), fPy(0.), fPz(0.),
     fR(0.), fz(0.), fOffset(0.),
     fVx(0.), fVy(0.), fVz(0.),
@@ -66,8 +66,8 @@ ATTPCIonGenerator::ATTPCIonGenerator(const Char_t* ionName, Int_t mult,
      fPx   = Double_t(fIon->GetA()) * px;
      fPy   = Double_t(fIon->GetA()) * py;
      fPz   = Double_t(fIon->GetA()) * pz;
-     //fVx   = vx; 
-     //fVy   = vy; 
+     //fVx   = vx;
+     //fVy   = vy;
      //fVz   = vz;
        //}
 
@@ -87,9 +87,9 @@ ATTPCIonGenerator::ATTPCIonGenerator(const Char_t* ionName, Int_t mult,
   }
   if(fIon==0 && part==0 ){
      cout << "-E- ATTPCIonGenerator: Ion or Particle is not defined !" << endl;
-     Fatal("ATTPCIonGenerator", "No FairRun instantised!");      
+     Fatal("ATTPCIonGenerator", "No FairRun instantised!");
   }
-    
+
 }
 // ------------------------------------------------------------------------
 
@@ -98,7 +98,7 @@ ATTPCIonGenerator::ATTPCIonGenerator(const Char_t* ionName, Int_t mult,
 // -----   Default constructor   ------------------------------------------
 ATTPCIonGenerator::ATTPCIonGenerator(const char* name,Int_t z, Int_t a, Int_t q, Int_t mult,
 				 Double_t px, Double_t py, Double_t pz, Double_t Ex, Double_t m, Double_t ener)
-  : fMult(0),          
+  : fMult(0),
     fPx(0.), fPy(0.), fPz(0.),
     fR(0.), fz(0.), fOffset(0.),
     fVx(0.), fVy(0.), fVz(0.),
@@ -110,12 +110,12 @@ ATTPCIonGenerator::ATTPCIonGenerator(const char* name,Int_t z, Int_t a, Int_t q,
   fPy   = Double_t(a) * py;
   fPz   = Double_t(a) * pz;
   fNomEner = ener;
-  //fVx   = vx; 
-  //fVy   = vy; 
-  //fVz   = vz; 
+  //fVx   = vx;
+  //fVy   = vy;
+  //fVz   = vz;
   char buffer[20];
   sprintf(buffer, "FairIon%d", fgNIon);
-  fIon= new FairIon(buffer, z, a, q,Ex,m); 
+  fIon= new FairIon(buffer, z, a, q,Ex,m);
   cout <<" Beam Ion mass : "<<fIon->GetMass()<<endl;
   gATVP->SetBeamMass(fIon->GetMass());
   gATVP->SetBeamNomE(ener);
@@ -131,7 +131,7 @@ ATTPCIonGenerator::ATTPCIonGenerator(const char* name,Int_t z, Int_t a, Int_t q,
 
 
 ATTPCIonGenerator::ATTPCIonGenerator(const ATTPCIonGenerator& right)
-  : fMult(right.fMult),          
+  : fMult(right.fMult),
     fPx(right.fPx), fPy(right.fPy), fPz(right.fPz),
     fR(right.fR), fz(right.fz), fOffset(right.fOffset),
     fVx(right.fVx), fVy(right.fVy), fVz(right.fVz),
@@ -175,7 +175,7 @@ Bool_t ATTPCIonGenerator::ReadEvent(FairPrimaryGenerator* primGen) {
  //   return kFALSE;
  // }
 
-  TParticlePDG* thisPart = 
+  TParticlePDG* thisPart =
     TDatabasePDG::Instance()->GetParticle(fIon->GetName());
   if ( ! thisPart ) {
     cout << "-W- FairIonGenerator: Ion " << fIon->GetName()
@@ -200,27 +200,27 @@ Bool_t ATTPCIonGenerator::ReadEvent(FairPrimaryGenerator* primGen) {
       fVy=0.0;
       fVz=0.0;
     }
-
+/*
   cout << "-I- FairIonGenerator: Generating " << fMult <<" with mass "<<thisPart->Mass() << " ions of type "
        << fIon->GetName() << " (PDG code " << pdgType << ")" << endl;
-  cout << "    Momentum (" << fPx << ", " << fPy << ", " << fPz 
+  cout << "    Momentum (" << fPx << ", " << fPy << ", " << fPz
        << ") Gev from vertex (" << fVx << ", " << fVy
        << ", " << fVz << ") cm" << endl;
-
-  gATVP->IncBeamEvtCnt(); 
+*/
+  gATVP->IncBeamEvtCnt();
 
 
   if(gATVP->GetBeamEvtCnt()%2!=0){
 	         Double_t Er = gRandom->Uniform(0.,fNomEner);
   	       gATVP->SetRndELoss(Er);
-           std::cout<<" Random Energy ATTPCIonGenerator : "<<Er<<std::endl;
+  //         std::cout<<" Random Energy ATTPCIonGenerator : "<<Er<<std::endl;
 	}
 
   for(Int_t i=0; i<fMult; i++)
     primGen->AddTrack(pdgType, fPx, fPy, fPz, fVx, fVy, fVz);
 
-   
-  
+
+
   return kTRUE;
 
 }
