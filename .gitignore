@@ -9,6 +9,8 @@ data
 .vscode
 *~
 
+*#*
+
 # Executables
 *.exe
 *.out

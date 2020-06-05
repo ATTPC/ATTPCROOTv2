@@ -1,0 +1,29 @@
+#! /bin/bash
+
+EXE=/mnt/simulations/attpcroot/adam/ATTPCROOTv2/compiled/E12014Unpacker/build/SAMainExe
+
+INPUT=/user/e12014/attpc
+
+OUTPUT=/mnt/analysis/e12014/TPC/unpacked
+
+runNum=$1
+
+echo "Unpacking TPC run $runNum"
+
+if ! [[ $runNum =~ ^[0-9]+$ ]]; then
+    echo "Error: Invalid run number" >&2; exit 1
+fi
+
+# Format input and output file names
+printf -v inName "run_%04d.h5" $runNum
+printf -v outName "run_%04d.root" $runNum
+
+if  [ ! -f $INPUT/$inName ]; then
+    echo "Error: File $INPUT/$inName doesn't exist" >&2; exit 1
+fi
+
+$EXE $INPUT/$inName
+
+mv $outName $OUTPUT/$outName
+
+
