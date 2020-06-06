@@ -28,6 +28,7 @@ link_directories( ${LINK_DIRECTORIES})
 set(SRCS
 #Pythia6Generator.cxx
 #Pythia8Generator.cxx
+ATTPCIonDecay.cxx
 ATTPCIonGenerator.cxx
 ATTPCIonPhaseSpace.cxx
 ATVertexPropagator.cxx

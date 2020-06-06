@@ -1,4 +1,6 @@
 #include "ATVertexPropagator.h"
+#include "TVector3.h"
+
 
 ATVertexPropagator *gATVP = (ATVertexPropagator *)0;
 //ATVertexPropagator *gATVP = new ATVertexPropagator();
@@ -6,7 +8,8 @@ ATVertexPropagator *gATVP = (ATVertexPropagator *)0;
 // -----   Default constructor   -------------------------------------------
 ATVertexPropagator::ATVertexPropagator():fGlobalEvtCnt(0),fBeamEvtCnt(0),fDecayEvtCnt(0),
 fVx(0.),fVy(0.),fVz(0.),fPx(0.),fPy(0.),fPz(0.),fE(0.),fBeamMass(0),fRndELoss(0),fBeamNomE(0),fInVx(0),fInVy(0),fInVz(0),
-fRecoilE(0),fRecoilA(0),fScatterE(0),fScatterA(0),fBURes1E(0),fBURes1A(0), fBURes2E(0),fBURes2A(0),fIsValidKine(0),fAiso(0),fZiso(0)
+fRecoilE(0),fRecoilA(0),fScatterE(0),fScatterA(0),fBURes1E(0),fBURes1A(0), fBURes2E(0),fBURes2A(0),fIsValidKine(0),fAiso(0),fZiso(0),
+fExEjectile(0.)
 {
 
    if(gATVP)
@@ -88,7 +91,9 @@ void ATVertexPropagator::SetBURes2E(Double_t val)		  { fBURes2E = val;}
 void ATVertexPropagator::SetBURes2A(Double_t val)		  { fBURes2A = val;}
 void ATVertexPropagator::SetMassNum(Int_t mnum)		  { fAiso = mnum;}
 void ATVertexPropagator::SetAtomicNum(Int_t anum)		{ fZiso = anum;}
-
+void ATVertexPropagator::SetScatterP(TVector3 avec)		{ fScatP = avec;}
+void ATVertexPropagator::SetScatterEx(Double_t val)			{fExEjectile=val;}
+void ATVertexPropagator::Setd2HeVtx(TVector3 avec)			{fd2HeVtx=avec;}
 
 
 Int_t ATVertexPropagator::GetGlobalEvtCnt()    			{ return fGlobalEvtCnt;}
@@ -118,6 +123,9 @@ Double_t ATVertexPropagator::GetBURes2A()			                  { return fBURes2A 
 Bool_t ATVertexPropagator::GetValidKine()                         {  return fIsValidKine; }
 Int_t ATVertexPropagator::GetMassNum()    			 { return fAiso;}
 Int_t ATVertexPropagator::GetAtomicNum()    			{ return fZiso;}
+TVector3 ATVertexPropagator::GetScatterP()			                  { return fScatP;}
+Double_t ATVertexPropagator::GetScatterEx()			                  { return fExEjectile;}
+TVector3 ATVertexPropagator::Getd2HeVtx()			                  {return fd2HeVtx;}
 
 
 void ATVertexPropagator::IncGlobalEvtCnt()                      {  fGlobalEvtCnt++;    }
