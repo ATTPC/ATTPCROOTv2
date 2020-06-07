@@ -29,6 +29,9 @@ public:
       };
   hid_t open_file(char const* file, IO_MODE mode);
   std::tuple<hid_t, hsize_t> open_group(hid_t fileId, char const* group);
+
+
+  //Returns the id of the dataspace and the dimesnions in the vector
   std::tuple<hid_t, std::vector<hsize_t> > open_dataset(hid_t locId, char const* dataset);
   void close_file(hid_t file);
   void close_group(hid_t group);
@@ -60,6 +63,10 @@ public:
   void set_inievent(std::size_t inievent)       {_inievent = inievent;}
   std::string get_event_name(std::size_t idx);
 
+
+  std::size_t getFirstEvent() { return _firstEvent; };
+  std::size_t getLastEvent() { return _lastEvent; };
+
 private:
 
   hid_t               _file;
@@ -67,7 +74,10 @@ private:
   hid_t       	      _dataset;
   std::size_t         _inievent;
   std::vector<std::string>  _eventsbyname;
-	 
+
+
+  std::size_t _firstEvent;
+  std::size_t _lastEvent;
    
 
   ClassDef(ATHDFParser, 1);
