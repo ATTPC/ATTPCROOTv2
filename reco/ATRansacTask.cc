@@ -94,7 +94,7 @@ ATRansacTask::Exec(Option_t *opt)
 
       fEvent  = (ATEvent *) fEventHArray -> At(0);
       ATRANSACN::ATRansac *Ransac = (ATRANSACN::ATRansac *) new ((*fRansacArray)[0]) ATRANSACN::ATRansac();
-      //Ransac -> SetTiltAngle(fTiltAngle);
+      Ransac -> SetTiltAngle(fTiltAngle);
       Ransac->SetModelType(fRANSACModel);
       Ransac->SetDistanceThreshold(fRANSACThreshold);
       if(kIsFullMode) Ransac->CalcRANSACFull(fEvent);
