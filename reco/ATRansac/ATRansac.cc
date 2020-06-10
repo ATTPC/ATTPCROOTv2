@@ -66,6 +66,7 @@ Double_t ATRANSACN::ATRansac::GetVertexTime()                                   
 TVector3 ATRANSACN::ATRansac::GetVertexMean()                                                                {return fVertex_mean;}
 
 
+void ATRANSACN::ATRansac::SetTiltAngle(Double_t val)                                    { fTiltAng = val; }
 void ATRANSACN::ATRansac::SetModelType(int model)                                       { fRANSACModel = model;}
 void ATRANSACN::ATRansac::SetDistanceThreshold(Float_t threshold)                       { fRANSACThreshold = threshold;}
 void ATRANSACN::ATRansac::SetMinHitsLine(Int_t nhits)                                   { fMinHitsLine = nhits;}
@@ -184,6 +185,8 @@ void ATRANSACN::ATRansac::CalcRANSACFull(ATEvent *event)
           }// Tracks loop
               if(fTrackCand.size()>5) fTrackCand.resize(5);
         }// Minimum tracks
+
+    FindVertex(tracks);
 
 
 }

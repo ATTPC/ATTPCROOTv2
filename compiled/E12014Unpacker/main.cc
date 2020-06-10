@@ -7,7 +7,7 @@
 using namespace std;
 
 void run_unpack_adam(std::string dataFile = "/mnt/user/e12014/attpc/run_0260.h5",
-		     TString parameterFile = "ATTPC.e15250.par", TString mappath="")
+		     TString parameterFile = "ATTPC.e12014.par", TString mappath="")
 {
 
   //dataFile="/mnt/analysis/e18505_attpc/ND2019/run_0171.h5";
@@ -72,21 +72,29 @@ void run_unpack_adam(std::string dataFile = "/mnt/user/e12014/attpc/run_0260.h5"
   psaTask -> SetPersistence(kTRUE);
   psaTask -> SetThreshold(10);
   psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
+  psaTask -> SetMaxFinder();
     
+  ATRansacTask *RansacTask = new ATRansacTask();
+  RansacTask -> SetPersistence(kTRUE);
+  RansacTask -> SetDistanceThreshold(10.0);
+  RansacTask -> SetTiltAngle(0);
+  RansacTask -> SetFullMode();
+
   
   run -> AddTask(HDFParserTask);
-  //run -> AddTask(psaTask);
+  run -> AddTask(psaTask);
+  run -> AddTask(RansacTask);
 
   run -> Init();
   auto numEvents = HDFParserTask->GetNumEvents();
   
-  std::cout << "There are " << numEvents << "Events." << std::endl;
+  std::cout << "There are " << numEvents << " Events." << std::endl;
   
   //Only look at first 10 events
   //run->Run(0,10);
 
   // Unpack all events
-  run->Run(0,numEvents/2);
+  run->Run(0,numEvents);
 
 
 
