@@ -1,10 +1,10 @@
 #include "ATTPCFissionGeneratorV3.h"
 
 // Default constructor
- ATTPCFissionGeneratorV3::ATTPCFissionGeneratorV3():
-nTracks(0)
+ATTPCFissionGeneratorV3::ATTPCFissionGeneratorV3():
+  nTracks(0)
 {
-
+  
 }
 
 // Generator that takes in a file that specifies the expected distribution of
@@ -141,4 +141,4 @@ Bool_t ATTPCFissionGeneratorV3::ReadEvent(FairPrimaryGenerator * primeGen)
 
 }
 
-ClassImp(ATTPCFissionGeneratorV3);
+//ClassImp(ATTPCFissionGeneratorV3);

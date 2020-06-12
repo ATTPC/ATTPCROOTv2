@@ -50,9 +50,12 @@ class ATTPCIonGenerator : public FairGenerator
    **@param mult      Number of ions per event
    **@param px,py,pz  Momentum components [GeV] per nucleon!
    **@param vx,vy,vz  Vertex coordinates [cm]
+   **@param ener      Energy of the ion.
+   **@param eLoss     Maximum energy loss before reaction happens. Defaults to ener.
    **/
   ATTPCIonGenerator(const char* name,Int_t z, Int_t a, Int_t q, Int_t mult, Double_t px, 
-		  Double_t py, Double_t pz, Double_t Ex, Double_t m, Double_t ener);
+		    Double_t py, Double_t pz, Double_t Ex, Double_t m, Double_t ener,
+		    Double_t eLoss = -1);
 
 
   ATTPCIonGenerator(const ATTPCIonGenerator&);
@@ -90,7 +93,8 @@ private:
   Double_t fVx, fVy, fVz;   // Vertex coordinates [cm]
   FairIon   *fIon;          // Pointer to the FairIon to be generated
   Int_t    fQ;		    // Electric charge [e]
-  Int_t fNomEner;           
+  Int_t fNomEner;
+  Double_t fMaxEnLoss;      // Max energy loss before reation happens
 
   Bool_t fBeamSpotIsSet;    // True if point beamspot is set
     
