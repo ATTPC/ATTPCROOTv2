@@ -34,6 +34,7 @@ void   ATRansacTask::SetModelType(int model)                  { fRANSACModel    
 void   ATRansacTask::SetDistanceThreshold(Float_t threshold)  { fRANSACThreshold = threshold;}
 void   ATRansacTask::SetFullMode()                            { kIsFullMode      = kTRUE;}
 void   ATRansacTask::SetMinHitsLine(Int_t nhits)              { fMinHitsLine     = nhits;}
+void   ATRansacTask::SetTiltAngle(Double_t val)               { fTiltAngle       = val;}
 
 InitStatus
 ATRansacTask::Init()
@@ -93,6 +94,7 @@ ATRansacTask::Exec(Option_t *opt)
 
       fEvent  = (ATEvent *) fEventHArray -> At(0);
       ATRANSACN::ATRansac *Ransac = (ATRANSACN::ATRansac *) new ((*fRansacArray)[0]) ATRANSACN::ATRansac();
+      Ransac -> SetTiltAngle(fTiltAngle);
       Ransac->SetModelType(fRANSACModel);
       Ransac->SetDistanceThreshold(fRANSACThreshold);
       if(kIsFullMode) Ransac->CalcRANSACFull(fEvent);

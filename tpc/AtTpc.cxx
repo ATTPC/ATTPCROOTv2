@@ -266,7 +266,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
             fPosOut.SetZ(newpos[2]);
 
             if( (fVolName=="drift_volume" || fVolName=="cell") && gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0 ){
-		            gATVP->ResetVertex(); 
+		            gATVP->ResetVertex();
                 LOG(INFO)<<" - AtTpc Warning : Beam punched through the ATTPC. Reseting Vertex! "<<std::endl;
 		        }
 
@@ -403,6 +403,24 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
                      AZ.first,
                      AZ.second);
                 }
+                else if(gATVP->GetDecayEvtCnt()%2==0 && fTrackID==6)
+                  {
+                        AddHit(fTrackID,
+                       fVolumeID,
+                       fVolName,
+                       fDetCopyID,
+                       TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
+                       TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
+                       TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
+                       TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
+                       fTime,
+                       fLength,
+                       fELoss,
+                       0,
+                       0,
+                       AZ.first,
+                       AZ.second);
+                  }
 
 	//std::cout<<" Energy Loss : "<<fELoss*1000<<std::endl;
 
