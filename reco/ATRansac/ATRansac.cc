@@ -496,7 +496,7 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
       //TODO:: This is for 6.5 degrees of tilting angle. Need a function to set it.
 
       // Test each line against the others to find a vertex candidate
-      for(Int_t i=0;i<tracks.size()-1;i++){
+      for(Int_t i=0;i<int(tracks.size())-1;i++){
 
           ATTrack* track = tracks.at(i);
           track->SetTrackID(i);
