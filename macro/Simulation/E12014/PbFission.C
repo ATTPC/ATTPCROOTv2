@@ -1,6 +1,6 @@
 //Code to simulate fission event
 
-void PbFission(Int_t nEvents = 10, TString mcEngine = "TGeant4")
+void PbFission(Int_t nEvents= 10, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -91,8 +91,7 @@ void PbFission(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   Double_t eLoss = 100;
 
   //Create the ion generator
-  ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion", z, a, q, m,
-						    px, py, pz, BExcEner, Bmass, NomEnergy, eLoss);
+  ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy, eLoss);
   ionGen->SetSpotRadius(0,-100,0);
 
   // add the ion generator
@@ -116,7 +115,7 @@ void PbFission(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 
   //---Store the visualiztion info of the tracks, this make the output file very large!!
   //--- Use it only to display but not for production!
-  run->SetStoreTraj(kTRUE);
+  //run->SetStoreTraj(kTRUE);
 
 
 
