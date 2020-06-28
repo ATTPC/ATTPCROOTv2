@@ -533,6 +533,12 @@ ATEventDrawTask::DrawHitPoints()
                 }else std::cout<<cRED<<" ATEventDrawTask::DrawHitPoints - Warning: wrong number of fit parameters for RANSAC lines!"<<std::endl;
 
             }
+	    fVertex = new TEvePointSet("Vertex",1, TEvePointSelectorConsumer::kTVT_XYZ);
+	    fVertex -> SetOwnIds(kTRUE);
+	    fVertex -> SetMarkerStyle(34);
+	    fVertex -> SetMarkerSize(2.0);
+            fVertex -> SetMarkerColor(kViolet);
+	    fVertex -> SetNextPoint(fRansac -> GetVertexMean().x()*0.1, fRansac -> GetVertexMean().y()*0.1, fRansac -> GetVertexMean().z()*0.1);
 
         }
 
@@ -798,6 +804,7 @@ ATEventDrawTask::DrawHitPoints()
             //Lines plto together with data points
             gEve -> AddElement(fHitSet);
             gEve -> AddElement(fhitBoxSet);
+	    if(fVertex) gEve -> AddElement(fVertex);
         }
 
         if(fPatternEventArray)
@@ -1073,6 +1080,7 @@ ATEventDrawTask::Reset()
 
     }
 
+
     if(fEventManager->GetDrawHoughSpace()){
 
         if(fIsCircularHough){
@@ -1089,6 +1097,13 @@ ATEventDrawTask::Reset()
              fLine->Reset();
              gEve -> RemoveElement(fLine,fEventManager);
              }*/
+            if(fVertex) 
+            {
+              //fVertex->Reset();
+              gEve -> RemoveElement(fVertex, fEventManager);
+	      fVertex = nullptr;
+            }
+
 
 
             if(fLineNum>0){

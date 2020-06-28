@@ -256,6 +256,7 @@ class ATEventDrawTask : public FairTask
 
     //std::vector<TEveLine*> fLineArray;
     TEveLine* fLineArray[5];
+    TEvePointSet *fVertex = nullptr;
     Int_t fLineNum;
     Int_t fTrackNum;
     //TEveLine* fLine;
