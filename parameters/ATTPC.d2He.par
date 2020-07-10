@@ -17,8 +17,8 @@ GroundWirePlaneY:Double_t     -8.1   # mm
 GatingWirePlaneY:Double_t      -14   # mm
 EField:Double_t               5000   # V/m
 NumTbs:Int_t                   512
-SamplingRate:Int_t             6.0   # Real value is 6.25 MHz
-DriftVelocity:Double_t        1.25   # cm/us
+SamplingRate:Int_t             6.25   # Real value is 6.25 MHz
+DriftVelocity:Double_t        1.25   # cm/us #1.25
 DriftLength:Double_t          1000   # mm //ATTPC : 1000 - Prototype : 500
 YDivider:Int_t                1000   # Full drift length will be divided by this number when finding cluster
 GasFile:Int_t                    2
@@ -30,13 +30,13 @@ TB0:Int_t                       98   # Time Bucket reference for micromegas posi
 LorentzAngle:Double_t          0.0   # Lorentz Angle
 TBEntrance:Int_t               512   # Beam position at detector entrance in TB
 ZPadPlane:Double_t          1000.0   # Position of the micromegas pad plane
-Density:Double_t         1.6454e-3   # Gas density (kg/m3 or mg/cm3)
-ThetaPad:Double_t            110.9   # AT-TPC pad plane rotation
+Density:Double_t            0.1143   # Gas density (kg/m3 or mg/cm3)
+ThetaPad:Double_t            0.0   # AT-TPC pad plane rotation
 ThetaRot:Double_t              0.0   # Second Lorentz Angle
 GasPressure:Double_t           532   # Gas pressure in torr
-EIonize:Double_t            15.603   # Ionization energy of gas in eV
-CoefL:Double_t               0.025   # Longitudal coefficient of diffusion [cm^-0.5]
-CoefT:Double_t               0.025   # Transverse coefficient of diffusion [cm^-0.5]
-Gain:Double_t                   10   # Average gain of micromegas
+EIonize:Double_t            13.6   # Ionization energy of gas in eV
+CoefL:Double_t               0.025   # Longitudal coefficient of diffusion [cm^-0.5] #0.025
+CoefT:Double_t               0.025   # Transverse coefficient of diffusion [cm^-0.5] #0.025
+Gain:Double_t                100   # Average gain of micromegas
 MaxRange:Double_t           1000.0   # Maximum range from Beam energy in mm
 ################################################################################

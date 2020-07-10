@@ -1,9 +1,9 @@
-void d_2He_sim_56Ni07(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TString geovar = "_07atm" )
+void d_2He_sim_56Ni07(Int_t nEvents = 100, TString mcEngine = "TGeant4", TString geovar = "_03atm" )
 {
 
   TString dir = getenv("VMCWORKDIR");
 
- const TString pathtodata = "/mnt/simulations/attpcroot/data/";
+ const TString pathtodata = "/user/giraud/ATTPC/simu/ATTPCROOTv2/macro/Simulation/d2He/";
   // Output file name
   TString outFile = pathtodata + "attpcsim_d2He_56Nigs" + geovar + ".root";
 
@@ -76,9 +76,14 @@ void d_2He_sim_56Ni07(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TStr
 	          Int_t a = 56; // Mass number
 	          Int_t q = 0;   // Charge State
 	          Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
-	          Double_t px = 0.000/a;  
-	          Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
+//	          Double_t px = 0.000/a;  
+//	          Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
+//	          Double_t pz = 24798.97727/(a*1000.0);  // Z-Momentum / per nucleon!!!!!!
+
+	          Double_t px = 100.97727/(a*1000.0);  
+	          Double_t py = 80.97727/(a*1000.0);  // Y-Momentum / per nucleon!!!!!!
 	          Double_t pz = 24798.97727/(a*1000.0);  // Z-Momentum / per nucleon!!!!!!
+
   	          Double_t BExcEner = 0.0;
                   Double_t Bmass = 55.942128549*931.494/1000.0; //Mass in GeV
                   Double_t NomEnergy = 100; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
@@ -86,7 +91,7 @@ void d_2He_sim_56Ni07(Int_t nEvents = 100000, TString mcEngine = "TGeant4", TStr
 
 
 	          ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
-	          ionGen->SetSpotRadius(0,-100,0);
+	          ionGen->SetSpotRadius(1,-100,1);//(0,-100,0);
 	          // add the ion generator
 
 	          primGen->AddGenerator(ionGen);

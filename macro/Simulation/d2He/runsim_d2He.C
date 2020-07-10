@@ -1,13 +1,15 @@
-void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
+void runsim_d2He(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
+  //TString str_nEvents = std::to_string(nEvents);
 
   // Output file name
-  TString outFile ="attpcsim_d2He_test.root";
-
+  //TString outFile ="../../../outputFiles/attpcsim_d2He_"+str_nEvents+".root";
+  TString outFile ="outputFiles/attpcsim_d2He.root";
   // Parameter file name
-  TString parFile="attpcpar_d2He_test.root";
+  //TString parFile="../../../outputFiles/attpcpar_d2He_"+str_nEvents+".root";
+  TString parFile="outputFiles/attpcpar_d2He.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -17,7 +19,6 @@ void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
   //gSystem->Load("libAtGen.so");
 
   ATVertexPropagator* vertex_prop = new ATVertexPropagator();
-
 
   // -----   Create simulation run   ----------------------------------------
   FairRunSim* run = new FairRunSim();
@@ -44,7 +45,7 @@ void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_d2He_07atm_test.root");
+  ATTPC->SetGeometryFileName("ATTPC_d2He_07atm.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
@@ -60,20 +61,15 @@ void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
   //run->SetField(fMagField);
   // --------------------------------------------------------------------
 
-
-
   // -----   Create PrimaryGenerator   --------------------------------------
   FairPrimaryGenerator* primGen = new FairPrimaryGenerator();
-
-
-
 
   // Beam Information
   Int_t z = 8;  // Atomic number
   Int_t a = 14; // Mass number
   Int_t q = 0;   // Charge State
   Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
-  Double_t kBeam = 100.;
+  Double_t kBeam = 115.;
   Double_t BExcEner = 0.0;
   Double_t Bmass = 14.008596359*931.494/1000.0; //Mass in GeV
   Double_t NomEnergy = 0.0858025; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
@@ -86,7 +82,7 @@ void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
 
 
 
-  ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
+  ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,kBeam);
   //ionGen->SetSpotRadius(0,-100,0);
   // add the ion generator
 
@@ -110,9 +106,7 @@ void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
   std::vector<Double_t> ExE; // Excitation energy
   Double_t ResEner; // Energy of the beam (Useless for the moment)
 
-
   // Note: Momentum will be calculated from the phase Space according to the residual energy of the beam
-
 
   mult = 6; //Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY (and the number of particles must be the same)
   ResEner = 0.0; // Useless
@@ -128,7 +122,7 @@ void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
   ExE.push_back(0);
 
   // ---- Target ----
-  Zp.push_back(1); // p
+  Zp.push_back(1); //
   Ap.push_back(2); //
   Qp.push_back(0); //
   Pxp.push_back(0.0);
@@ -202,10 +196,8 @@ void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
   inputfile.close();
 
 
-
   ATTPC_d2He* d2He = new ATTPC_d2He("d_2He",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE, &Arr1, &Arr2, &Arr3, N_cross);
   primGen->AddGenerator(d2He);
-
 
   //-------------------------------------------------------------------------
   //Set the parameters of the decay generator
@@ -215,26 +207,25 @@ void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
   std::vector<std::vector<Int_t>> qDecay;
   std::vector<std::vector<Double_t>> massDecay;
 
-  Int_t zB;
-  Int_t aB;
-  Double_t massDecayB;
-  std::vector<Double_t> SepEne;
+  Int_t ZB;
+  Int_t AB;
+  Double_t BMassDecay;
+  std::vector<Double_t> SepEne;//=7.55056;//Sp 14N in MeV, not used for now in IonDecay
 
-  Int_t TotDecayCases=4;//the number of decay channel (case) to be considered
+  Int_t TotDecayCases=4;
 
   zDecay.resize(TotDecayCases);
   aDecay.resize(TotDecayCases);
   qDecay.resize(TotDecayCases);
   massDecay.resize(TotDecayCases);
 
+
   //--- decaying nucleus -----
-  //should be a reaction product (its momentum is set in the reaction generator)
-  zB=7; // 14N
-  aB=14;
-  massDecayB=14.00307400443;
+  ZB=7; // 14N
+  AB=14;
+  BMassDecay=14.00307400443;
 
   // ---- Products ----
-  //as many first indexes (zDecay.at(0)...) as the value TotDecayCases
   //Case 1
   SepEne.push_back(7.55056);
   zDecay.at(0).push_back(6); // 13C
@@ -288,25 +279,23 @@ void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
   qDecay.at(3).push_back(0);
   massDecay.at(3).push_back(1.0086649158);
 
+
   ATTPCIonDecay* decay_14N = new ATTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay,
-    zB, aB, massDecayB, &SepEne);
+    ZB, AB, BMassDecay, &SepEne);
 
-    primGen->AddGenerator(decay_14N);
-
+   //primGen->AddGenerator(decay_14N);
     // ------------------------------------------------------------------------
 
     run->SetGenerator(primGen);
-
-    // ------------------------------------------------------------------------
 
     //---Store the visualiztion info of the tracks, this make the output file very large!!
     //--- Use it only to display but not for production!
     //run->SetStoreTraj(kTRUE);
 
 
-
     // -----   Initialize simulation run   ------------------------------------
     run->Init();
+
     // ------------------------------------------------------------------------
 
     // -----   Runtime database   ---------------------------------------------

@@ -9,7 +9,7 @@ ATVertexPropagator *gATVP = (ATVertexPropagator *)0;
 ATVertexPropagator::ATVertexPropagator():fGlobalEvtCnt(0),fBeamEvtCnt(0),fDecayEvtCnt(0),
 fVx(0.),fVy(0.),fVz(0.),fPx(0.),fPy(0.),fPz(0.),fE(0.),fBeamMass(0),fRndELoss(0),fBeamNomE(0),fInVx(0),fInVy(0),fInVz(0),
 fRecoilE(0),fRecoilA(0),fScatterE(0),fScatterA(0),fBURes1E(0),fBURes1A(0), fBURes2E(0),fBURes2A(0),fIsValidKine(0),fAiso(0),fZiso(0),
-fExEjectile(0.)
+ffocz(0),fExEjectile(0),fTanOffset(0),fIsSingleProton(0)
 {
 
    if(gATVP)
@@ -96,6 +96,7 @@ void ATVertexPropagator::SetScatterEx(Double_t val)			{fExEjectile=val;}
 void ATVertexPropagator::Setd2HeVtx(TVector3 avec)			{fd2HeVtx=avec;}
 
 
+
 Int_t ATVertexPropagator::GetGlobalEvtCnt()    			{ return fGlobalEvtCnt;}
 Int_t ATVertexPropagator::GetBeamEvtCnt()    			{ return fBeamEvtCnt;}
 Int_t ATVertexPropagator::GetDecayEvtCnt()    			{ return fDecayEvtCnt;}
@@ -132,6 +133,16 @@ void ATVertexPropagator::IncGlobalEvtCnt()                      {  fGlobalEvtCnt
 void ATVertexPropagator::IncBeamEvtCnt()                        {  fBeamEvtCnt++;    }
 void ATVertexPropagator::IncDecayEvtCnt()                       {  fDecayEvtCnt++;    }
 void ATVertexPropagator::SetValidKine(Bool_t val)               {  fIsValidKine=val; }
+
+void ATVertexPropagator::Setfocz(Double_t val)               {  ffocz=val; }
+Double_t ATVertexPropagator::Getfocz()			                  { return ffocz;}
+
+void ATVertexPropagator::SetTanOffset(Double_t val)               {  fTanOffset=val; }
+Double_t ATVertexPropagator::GetTanOffset()			                  { return fTanOffset;}
+
+void ATVertexPropagator::SetIsSingleProton(Bool_t val)               {  fIsSingleProton=val; }
+Bool_t ATVertexPropagator::GetIsSingleProton()                         {  return fIsSingleProton; }
+
 
 
 

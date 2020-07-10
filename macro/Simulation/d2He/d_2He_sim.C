@@ -78,7 +78,7 @@ void d_2He_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
 	          Double_t pz = 24798.97727/(a*1000.0);  // Z-Momentum / per nucleon!!!!!!
   	          Double_t BExcEner = 0.0;
                   Double_t Bmass = 55.942128549*931.494/1000.0; //Mass in GeV
-                  Double_t NomEnergy = 100; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
+                  Double_t NomEnergy = 0.0858025; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
                 
 
 

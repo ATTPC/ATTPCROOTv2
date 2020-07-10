@@ -1,0 +1,7 @@
+#!/bin/bash
+
+root -b -l -q runsim_d2He.C && root -b -l -q rundigi_d2He.C && cd Analyis_d2He && root -b -l -q runana_digi_d2He.C
+#simFile="runsim_d2He.C"
+#nEvents=$1
+
+#cd macro/Simulation/d2He  && sed -i "/void runsim_d2He(Int_t nEvents/c\void runsim_d2He(Int_t nEvents = $nEvents, TString mcEngine = \"TGeant4\")" $simFile && root -b -l -q runsim_d2He.C && root -b -l -q rundigi_d2He.C && cd ../../../

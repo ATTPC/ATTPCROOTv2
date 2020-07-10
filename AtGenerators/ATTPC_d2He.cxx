@@ -52,6 +52,11 @@ fIon(0)
   //      << " Please do not use the default constructor! " << endl;
 }
 
+inline Double_t sign(Double_t num) {
+    if (num > 0) return 1;
+    return (num == 0) ? 1 : -1;
+}
+
 // -----   Default constructor   ------------------------------------------
 ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t> *a,std::vector<Int_t> *q, Int_t mult, std::vector<Double_t> *px,
   std::vector<Double_t>* py,std::vector<Double_t> *pz, std::vector<Double_t> *mass, std::vector<Double_t> *Ex, std::vector<Double_t> *cross1, std::vector<Double_t> *cross2, std::vector<Double_t> *cross3, Int_t N_data)
@@ -60,7 +65,6 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
   fVx(0.), fVy(0.), fVz(0.),
   fIon(0)
   {
-
 
     fgNIon++;
     fMult = mult;
@@ -107,7 +111,7 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
         IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i),0.0,mass->at(i)*amu/1000.0);
         ParticleBuff = new FairParticle("dummyPart",1,1,1.0,0,0.0,0.0);
         fPType.push_back("Ion");
-        //std::cout<<" Adding : "<<buffer<<std::endl;
+        //          std::cout<<" Adding : "<<buffer<<std::endl;
 
       }else if( a->at(i)==1 && z->at(i)==1  ){
 
@@ -123,7 +127,7 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
 
       }
 
-      std::cout<<" Z "<<z->at(i)<<" A "<<a->at(i)<<std::endl;
+      //	       std::cout<<" Z "<<z->at(i)<<" A "<<a->at(i)<<std::endl;
       //std::cout<<buffer<<std::endl;
       fIon.push_back(IonBuff);
       fParticle.push_back(ParticleBuff);
@@ -139,25 +143,25 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
     for(Int_t i=0;i<fMult;i++){
 
       if(fPType.at(i)=="Ion"){
-        //std::cout<<" In position "<<i<<" adding an : "<<fPType.at(i)<<std::endl;
+        //                 std::cout<<" In position "<<i<<" adding an : "<<fPType.at(i)<<std::endl;
         run->AddNewIon(fIon.at(i));
-        //std::cout<<" fIon name :"<<fIon.at(i)->GetName()<<std::endl;
-        //std::cout<<" fParticle name :"<<fParticle.at(i)->GetName()<<std::endl;
+        //		             std::cout<<" fIon name :"<<fIon.at(i)->GetName()<<std::endl;
+        //                 std::cout<<" fParticle name :"<<fParticle.at(i)->GetName()<<std::endl;
 
       }else if(fPType.at(i)=="Proton"){
-        //std::cout<<" In position "<<i<<" adding an : "<<fPType.at(i)<<std::endl;
+        //		             std::cout<<" In position "<<i<<" adding an : "<<fPType.at(i)<<std::endl;
         //run->AddNewParticle(fParticle.at(i));
-        //std::cout<<" fIon name :"<<fIon.at(i)->GetName()<<std::endl;
-        //std::cout<<" fParticle name :"<<fParticle.at(i)->GetName()<<std::endl;
-        //std::cout<<fParticle.at(i)->GetName()<<std::endl;
+        //                 std::cout<<" fIon name :"<<fIon.at(i)->GetName()<<std::endl;
+        //                 std::cout<<" fParticle name :"<<fParticle.at(i)->GetName()<<std::endl;
+        //                 std::cout<<fParticle.at(i)->GetName()<<std::endl;
 
       }else if(fPType.at(i)=="Neutron"){
 
-        //std::cout<<" In position "<<i<<" adding an : "<<fPType.at(i)<<std::endl;
+        //                 std::cout<<" In position "<<i<<" adding an : "<<fPType.at(i)<<std::endl;
         //run->AddNewParticle(fParticle.at(i));
-        //std::cout<<" fIon name :"<<fIon.at(i)->GetName()<<std::endl;
-        //std::cout<<" fParticle name :"<<fParticle.at(i)->GetName()<<std::endl;
-        //std::cout<<fParticle.at(i)->GetName()<<std::endl;
+        //                 std::cout<<" fIon name :"<<fIon.at(i)->GetName()<<std::endl;
+        //                 std::cout<<" fParticle name :"<<fParticle.at(i)->GetName()<<std::endl;
+        //                 std::cout<<fParticle.at(i)->GetName()<<std::endl;
 
       }
 
@@ -174,9 +178,6 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
   }
 
 
-
-
-
   // Rotation of a 3D vector around an arbitrary axis
   // Rodriges Formula
   std::vector<Double_t>  ATTPC_d2He::TRANSF(std::vector<Double_t> *from, std::vector<Double_t> *to, std::vector<Double_t> *vin){
@@ -185,8 +186,6 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
     double n[3];
     double normn, normf, normt;
     double alpha, a, b;
-
-
 
     normf = sqrt( pow(from->at(0),2) + pow(from->at(1),2) + pow(from->at(2),2) );
     normt = sqrt( pow(to->at(0),2) + pow(to->at(1),2) + pow(to->at(2),2) );
@@ -255,10 +254,8 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
     fIsDecay = kFALSE;
 
 
-
-
     fBeamEnergy = gATVP->GetEnergy();
-    //std::cout<<" -I- ATTPC_d2He Residual energy  : "<<gATVP->GetEnergy()<<std::endl;
+    std::cout<<" -I- ATTPC_d2He Residual energy  : "<<gATVP->GetEnergy()<<std::endl;
 
     fPxBeam = gATVP->GetPx();
     fPyBeam = gATVP->GetPy();
@@ -318,10 +315,10 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
 
 
 
-      //std::cout<<"===================================================================="<<std::endl;
-      //std::cout<<theta_cm*TMath::RadToDeg()<<"  "<<phi_cm<<"  "<<epsilon<<std::endl;
-      ////std::cout<<fPxBeam<<"  "<<fPyBeam<<"  "<<fPzBeam<<std::endl;
-      //std::cout<<"===================================================================="<<std::endl;
+      /* std::cout<<"===================================================================="<<std::endl;
+      std::cout<<theta_cm*TMath::RadToDeg()<<"  "<<phi_cm<<"  "<<epsilon<<std::endl;
+      //std::cout<<fPxBeam<<"  "<<fPyBeam<<"  "<<fPzBeam<<std::endl;
+      std::cout<<"===================================================================="<<std::endl; */
 
 
       //dirty way to include more than one excited state
@@ -548,8 +545,8 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
     if(phi8<0) phi8 = (phi8 + 360.0);
 
 
-/*
-    std::cout << " -I- ===== ATTPC_d2He - Kinematics ====== "<<std::endl;
+
+    /*std::cout << " -I- ===== ATTPC_d2He - Kinematics ====== "<<Ex_ejectile<<std::endl;
     std::cout << " Scattered energy:" << Ene.at(0)  << " MeV" << std::endl;
     std::cout << " Scattered  angle:"  << Ang.at(0) << " deg" << std::endl;
     std::cout << " proton1 energy:" << Ene.at(2) << " MeV" << std::endl;
@@ -576,12 +573,55 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
 
     do{
       random_z = 100.0*(gRandom->Uniform()); //cm
+
       random_r = 1.0*(gRandom->Gaus(0,1)); //cm
       random_phi = 2.0*TMath::Pi()*(gRandom->Uniform()); //rad
 
     }while(  fabs(random_r) > 4.7 ); //cut at 2 sigma
 
+/*
+    Double_t ffocz = gATVP->Getfocz();
+    random_z = 100.0*(gRandom->Uniform()); //cm //should be some how related to the energy loss and the xs?
 
+    Double_t PtotBeam=sqrt(pow(fPxBeam,2)+pow(fPyBeam,2)+pow(fPzBeam,2));
+    Double_t signz = 1;
+    if(random_z<ffocz) signz = -1;
+
+    if(fPxBeam !=0 && fPyBeam!=0){
+      fVx   = sign(fPxBeam)*(signz)*(random_z/tan(acos(abs(fPxBeam)/PtotBeam)));
+      fVy   = sign(fPyBeam)*(signz)*(sqrt(pow(random_z,2)+pow(gATVP->GetInVx(),2))/tan(acos(abs(fPyBeam)/PtotBeam)));
+      fVz   = random_z;
+    }
+*/
+/*
+	      Double_t ffocz = gATVP->Getfocz();
+		  Double_t fTanOffset = gATVP->GetTanOffset();
+	      random_z = 100.0*(gRandom->Uniform()); //cm //should be some how related to the energy loss and the xs?
+	
+		//std::cout<<random_z<<" "<<ffocz<<std::endl;
+
+
+	      Double_t PtotBeam=sqrt(pow(fPxBeam,2)+pow(fPyBeam,2)+pow(fPzBeam,2));
+	      Double_t signz = 1;
+	      if(random_z<ffocz) signz = -1;
+	
+	      if(fPxBeam !=0 && fPyBeam!=0){
+	        fVx   = sign(fPxBeam)*(signz)*(abs(random_z-ffocz)/tan(acos(abs(fPxBeam)/PtotBeam))) + fTanOffset;
+	        fVy   = sign(fPyBeam)*(signz)*(sqrt(pow(abs(random_z-ffocz),2)+pow(gATVP->GetInVx(),2))/tan(acos(abs(fPyBeam)/PtotBeam)));
+	        fVz   = random_z;
+	      }
+
+	      else{
+	        fVx = 0.;
+	        fVy = 0.;
+	        fVz =  random_z;
+	      }
+
+	      //std::cout<<fVx<<" "<<fVy<<" "<<fVz<<std::endl;
+
+    TVector3 d2HeVtx(fVx,fVy,fVz);
+    gATVP->Setd2HeVtx(d2HeVtx);
+*/
 
     for(Int_t i=0; i<fMult; i++){
       TParticlePDG* thisPart;
@@ -614,47 +654,53 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
       //fVz = gATVP->GetVz();
 
 
-      fVx = random_r*cos(random_phi);
-      fVy = random_r*sin(random_phi);
-      fVz =  random_z;
+       fVx = random_r*cos(random_phi);
+       fVy = random_r*sin(random_phi);
+       fVz =  random_z;
 
-      TVector3 d2HeVtx(fVx,fVy,fVz);
-      gATVP->Setd2HeVtx(d2HeVtx);
+      // cout<<gATVP->GetVx(); <<" "<<gATVP->GetVy();<<" "<<gATVP->GetVz();<<" "<<endl;
 
+
+
+       TVector3 d2HeVtx(fVx,fVy,fVz);
+       gATVP->Setd2HeVtx(d2HeVtx);
+
+       Bool_t IsSingleProton=kFALSE;
+       IsSingleProton = gATVP->GetIsSingleProton();
 
       if(i>1 && i!=3 && gATVP->GetDecayEvtCnt() && pdgType!=1000500500 && fPType.at(i)=="Ion" ){
         // TODO: Dirty way to propagate only the products (0 and 1 are beam and target respectively)
         // i=3 is excluded because  corresponds to 2He
-/*
-        std::cout << "-I- FairIonGenerator: Generating ions of type "
+        /*			            std::cout << "-I- FairIonGenerator: Generating ions of type "
         << fIon.at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl;
         std::cout << "    Momentum (" << fPx.at(i) << ", " << fPy.at(i) << ", " << fPz.at(i)
         << ") Gev from vertex (" << fVx << ", " << fVy
-        << ", " << fVz << ") cm" << std::endl;
-*/
+        << ", " << fVz << ") cm" << std::endl;*/
+
 
         primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
 
       }else if(i>1 && i!=3 && gATVP->GetDecayEvtCnt() && pdgType==2212 && fPType.at(i)=="Proton" ){
-/*
-        std::cout << "-I- FairIonGenerator: Generating ions of type "
+
+      /*  			      std::cout << "-I- FairIonGenerator: Generating ions of type "
         << fParticle.at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl;
         std::cout << "    Momentum (" << fPx.at(i) << ", " << fPy.at(i) << ", " << fPz.at(i)
         << ") Gev from vertex (" << fVx << ", " << fVy
-        << ", " << fVz << ") cm" << std::endl;
-*/
+        << ", " << fVz << ") cm" << std::endl;*/
 
-        primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
-
+       // primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
+       if(IsSingleProton){ if(i==4) primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);}
+       else if (!IsSingleProton) primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
+	//primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
 
       }else if(i>1 && i!=3 && gATVP->GetDecayEvtCnt() && pdgType==2112 && fPType.at(i)=="Neutron" ){
-/*
-        std::cout << "-I- FairIonGenerator: Generating ions of type "
+
+        /*         std::cout << "-I- FairIonGenerator: Generating ions of type "
         << fParticle.at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl;
         std::cout << "    Momentum (" << fPx.at(i) << ", " << fPy.at(i) << ", " << fPz.at(i)
         << ") Gev from vertex (" << fVx << ", " << fVy
         << ", " << fVz << ") cm" << std::endl;
-*/
+        */
         primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
 
 

@@ -58,7 +58,7 @@ double GetEloss(double Eres, double lres, double trackmiss, std::vector<Double_t
 
 
 
-void d2He_ana_56Ni_1atm0(TString geofile = "_1atm", Double_t elhueco=5)
+void d2He_ana_56Ni_1atm0(TString geofile = "_03atm", Double_t elhueco=5)
 {
 
 
@@ -67,8 +67,8 @@ void d2He_ana_56Ni_1atm0(TString geofile = "_1atm", Double_t elhueco=5)
 	inicio=clock();
 	//------------------------------------------------------------------
 
-    TString pathtodata = "/mnt/simulations/attpcroot/data/";
-    TString mcFileNameHead = "attpcsim_d2He_56Ni" + geofile;
+    TString pathtodata = "/user/giraud/ATTPC/simu/ATTPCROOTv2/macro/Simulation/d2He/";
+    TString mcFileNameHead = "attpcsim_d2He_56Nigs" + geofile;
     TString mcFileNameTail = ".root";
     TString mcFileName     = pathtodata + mcFileNameHead + mcFileNameTail;
     std:cout << " Analysis of simulation file  " << mcFileName << endl;
@@ -204,7 +204,7 @@ void d2He_ana_56Ni_1atm0(TString geofile = "_1atm", Double_t elhueco=5)
 	Double_t zpos_old = 0.0;
 	Double_t xpos_old = 0.0;
 	Double_t ypos_old = 0.0;
-	
+	Double_t tTime = 0.0;	
 	Double_t eLoss_p1_hi=0.0;        
         Double_t eLoss_p2_hi=0.0;        
 	Double_t eLoss_p1_reco=0.0;        

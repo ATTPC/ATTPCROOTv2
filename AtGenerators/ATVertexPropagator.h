@@ -78,6 +78,8 @@ class ATVertexPropagator : public TObject
    TVector3 Getd2HeVtx();
 
 
+
+
    void IncGlobalEvtCnt();
    void IncBeamEvtCnt();
    void IncDecayEvtCnt();
@@ -85,7 +87,13 @@ class ATVertexPropagator : public TObject
    void SetValidKine(Bool_t val);
    Bool_t GetValidKine();
 
+   void Setfocz(Double_t val);
+   Double_t Getfocz();
+   void SetTanOffset(Double_t val);
+   Double_t GetTanOffset();
 
+   void SetIsSingleProton(Bool_t val);
+   Bool_t GetIsSingleProton();
 
    Double_t fVx;
    Double_t fVy;
@@ -111,10 +119,12 @@ class ATVertexPropagator : public TObject
    Bool_t fIsValidKine;
    Int_t fAiso;
    Int_t fZiso;
+   Double_t ffocz;
    TVector3 fScatP;
    TVector3 fd2HeVtx;
    Double_t fExEjectile;
-
+   Double_t fTanOffset;
+   Bool_t fIsSingleProton;
 };
 
 extern ATVertexPropagator *gATVP; // global
