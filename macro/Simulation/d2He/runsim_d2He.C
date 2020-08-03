@@ -1,4 +1,4 @@
-void runsim_d2He(Int_t nEvents = 10, TString mcEngine = "TGeant4")
+void runsim_d2He(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -179,7 +179,8 @@ void runsim_d2He(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   Double_t col1, col2, col3;
 
   //lee la seccion eficaz desde una tabla
-  string filename= "0to5_14O.dat"; //all2.dat//all2_14O.dat
+  //string filename= "0to5_14O.dat"; //all2.dat//all2_14O.dat
+  string filename= "14O_all.dat"; //
   ifstream  inputfile;
   inputfile. open(filename.c_str());
   if(inputfile.fail() ){

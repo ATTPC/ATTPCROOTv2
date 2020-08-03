@@ -139,7 +139,7 @@ void ATPulseTask::Exec(Option_t* option) {
 
 ////////////////////////   test
 std::ifstream inhi_map;
-inhi_map.open("/mnt/simulations/ceclub/giraud/ATTPCROOTv2/macro/Simulation/d2He/coordmap_inhi.txt");
+inhi_map.open("/home/juan/FairRoot/ATTPCROOTv2_simon/ATTPCROOTv2/macro/Simulation/d2He/coordmap_inhi.txt");
 std::vector<Int_t> PadNum_inhi;
 while(!inhi_map.eof()){
 	Int_t ipad;

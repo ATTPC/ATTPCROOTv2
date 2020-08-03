@@ -56,7 +56,7 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
   psaTask -> SetThreshold(1);//10
-   // psaTask -> SetThreshold(0.1);
+   //psaTask -> SetThreshold(0.1);
 
 
   //psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC
@@ -69,8 +69,12 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
 
   ATRansacTask *RandTask = new ATRansacTask();
   RandTask ->SetPersistence(kTRUE);
-  RandTask ->SetModelType(1);
+  //RandTask ->SetModelType(1);
   //RandTask ->SetFullMode();
+  RandTask->SetDistanceThreshold(7.5);
+  RandTask->SetMinHitsLine(8);
+
+
 
 /*
   ATHoughTask *HoughTask = new ATHoughTask();
@@ -95,6 +99,7 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
 
   fRun -> Init();
   fRun -> Run(0,nEvents);
+  //fRun -> Run(0,20);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

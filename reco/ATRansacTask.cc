@@ -97,6 +97,7 @@ ATRansacTask::Exec(Option_t *opt)
       //Ransac -> SetTiltAngle(fTiltAngle);
       Ransac->SetModelType(fRANSACModel);
       Ransac->SetDistanceThreshold(fRANSACThreshold);
+      Ransac->SetMinHitsLine(fMinHitsLine);
       if(kIsFullMode) Ransac->CalcRANSACFull(fEvent);
       else Ransac->CalcRANSAC(fEvent);
 

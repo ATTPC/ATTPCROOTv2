@@ -83,14 +83,20 @@ void ATRANSACN::ATRansac::CalcRANSAC(ATEvent *event)
 
     std::vector<ATTrack*> tracks = RansacPCL(event);
 
+    //std::cout << "/* Resultado de Ransac */" << '\n';
+    //std::cout << "/**************************** */" << '\n';
+    //std::cout << "Event  "<< event->GetEventID()<<"  number of tracks   "<<tracks.size()<< '\n';
+    //std::cout << "/**************************** */" << '\n';
+
     if(tracks.size()>1){ //Defined in CalcGenHoughSpace
       for(Int_t ntrack=0;ntrack<tracks.size();ntrack++){
         std::vector<ATHit>* trackHits = tracks.at(ntrack)->GetHitArray();
         Int_t nHits = trackHits->size();
-        //std::cout<<" Num  Hits : "<<nHits<<std::endl;
+        //std::cout<<" Num  Hits : "<<nHits<<"   "<<fMinHitsLine<<"  "<< fRANSACThreshold<<std::endl;
           if(nHits>fMinHitsLine)
           {
-          MinimizeTrack(tracks.at(ntrack));
+          //MinimizeTrack(tracks.at(ntrack));
+          double mychi2 = Fit3D(tracks.at(ntrack));
           }
       }// Tracks loop
       FindVertex(tracks);
@@ -328,6 +334,7 @@ std::vector<ATTrack*> ATRANSACN::ATRansac::RansacPCL(ATEvent *event)
 Int_t ATRANSACN::ATRansac::MinimizeTrack(ATTrack* track)
 {
 
+
          gErrorIgnoreLevel=kFatal;
          Int_t nd = 10000;
          TGraph2D * gr = new TGraph2D(); /////NB: This should be created on the heap only once so it should move outside of this function!!!!!!!!!!!!!!!
@@ -340,6 +347,7 @@ Int_t ATRANSACN::ATRansac::MinimizeTrack(ATTrack* track)
               TVector3 pos = hit.GetPosition();
               gr->SetPoint(N,pos.X(),pos.Y(),pos.Z());
             }
+
 
             ROOT::Fit::Fitter fitter;
             SumDistance2 sdist(gr);
@@ -354,11 +362,14 @@ Int_t ATRANSACN::ATRansac::MinimizeTrack(ATTrack* track)
             // set step sizes different than default ones (0.3 times parameter values)
             for (int i = 0; i <4; ++i) fitter.Config().ParSettings(i).SetStepSize(0.01);
 
+
+
             bool ok = fitter.FitFCN();
             if (!ok) {
               Error("line3Dfit","Line3D Fit failed");
               return 1;
             }
+
 
              const ROOT::Fit::FitResult & result = fitter.Result();
              const ROOT::Math::Minimizer * min = fitter.GetMinimizer();
@@ -373,9 +384,9 @@ Int_t ATRANSACN::ATRansac::MinimizeTrack(ATTrack* track)
              track->SetMinimum(Chi2_min);
              track->SetNFree(NDF);
 
-             // std::cout<<parFit[0]<<" "<<parFit[1]<<"  "<<parFit[2]<<" "<<parFit[3]<<std::endl;
- 		         // std::cout<<" Chi2 (Minuit) : "<<Chi2_min<<" NDF : "<<NDF<<std::endl;
-             // std::cout<<" Chi2 reduced  : "<<(Chi2_min/sigma2/(double) npoints)<<std::endl;
+              //std::cout<<parFit[0]<<" "<<parFit[1]<<"  "<<parFit[2]<<" "<<parFit[3]<<std::endl;
+ 		          //std::cout<<" Chi2 (Minuit) : "<<Chi2_min<<" NDF : "<<NDF<<std::endl;
+              //std::cout<<" Chi2 reduced  : "<<(Chi2_min/sigma2/(double) npoints)<<std::endl;
 
 
 
@@ -494,6 +505,7 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
       //TODO:: This is for 6.5 degrees of tilting angle. Need a function to set it.
 
       // Test each line against the others to find a vertex candidate
+      //std::cout << "Numero de tracks detectados  "<< tracks.size()<< '\n';
       for(Int_t i=0;i<tracks.size()-1;i++){
 
           ATTrack* track = tracks.at(i);
@@ -502,11 +514,13 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
 
         if(p.size()>0)
         {
-          XYZVector L_0(p[0], p[2], 0. );//p1
-          XYZVector L_1(p[1], p[3], 1. );//d1
+          //XYZVector L_0(p[0], p[2], 0. );//p1
+          //XYZVector L_1(p[1], p[3], 1. );//d1
+          XYZVector L_0(p[0], p[2], p[4] );//p1
+          XYZVector L_1(p[1], p[3], p[5] );//d1
 
-          // std::cout<<" L_1 p[0] : "<<p[0]<<" L_1 p[2] : "<<p[2]<<std::endl;
-          // std::cout<<" L_1 p[1] : "<<p[1]<<" L_1 p[3] : "<<p[3]<<std::endl;
+           //std::cout<<" L_1 p[0] : "<<p[0]<<" L_1 p[2] : "<<p[2]<<std::endl;
+           //std::cout<<" L_1 p[1] : "<<p[1]<<" L_1 p[3] : "<<p[3]<<std::endl;
 
                     for(Int_t j=i+1; j<tracks.size();j++)
                     {
@@ -516,8 +530,10 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
 
                         if(p_f.size()>0)
                         {
-                                      XYZVector L_f0(p_f[0], p_f[2], 0. );//p2
-                                      XYZVector L_f1(p_f[1], p_f[3], 1. );//d2
+                                      //XYZVector L_f0(p_f[0], p_f[2], 0. );//p2
+                                      //XYZVector L_f1(p_f[1], p_f[3], 1. );//d2
+                                      XYZVector L_f0(p_f[0], p_f[2], p_f[4] );//p2
+                                      XYZVector L_f1(p_f[1], p_f[3], p_f[5] );//d2
 
                                       // std::cout<<" L_f0 p_f[0] : "<<p_f[0]<<" L_f1 p_f[2] : "<<p_f[2]<<std::endl;
                                       // std::cout<<" L_f1 p_f[1] : "<<p_f[1]<<" L_f1 p_f[3] : "<<p_f[3]<<std::endl;
@@ -810,4 +826,121 @@ Int_t ATRANSACN::ATRansac::FindIndexTrack(Int_t index)
       }
       else return -1;
 
+}
+
+Double_t ATRANSACN::ATRansac::Fit3D(ATTrack* track)
+{
+
+    int R, C;
+    double Q;
+    double Xm,Ym,Zm;
+    double Xh,Yh,Zh;
+    double a,b;
+    double Sxx,Sxy,Syy,Sxz,Szz,Syz;
+    double theta;
+    double K11,K22,K12,K10,K01,K00;
+    double c0,c1,c2;
+    double p,q,r,dm2;
+    double rho,phi;
+
+    Q=Xm=Ym=Zm=0.;
+    Sxx=Syy=Szz=Sxy=Sxz=Syz=0.;
+
+
+    std::vector<ATHit> *HitArray = track->GetHitArray();
+    std::vector<double> X;
+    std::vector<double> Y;
+    std::vector<double> Z;
+    std::vector<double> Charge;
+
+
+    for(Int_t i=0;i<HitArray->size();i++){
+         ATHit hit = HitArray->at(i);
+         TVector3 pos = hit.GetPosition();
+         Double_t tq = hit.GetCharge();
+         X.push_back(pos.X());
+         Y.push_back(pos.Y());
+         Z.push_back(pos.Z());
+         Charge.push_back(q);
+       }
+
+
+    for (Int_t i=0;i<HitArray->size();i++)
+    {
+        Q+=Charge[i]/10.;
+        Xm+=X[i]*Charge[i]/10.;
+        Ym+=Y[i]*Charge[i]/10.;
+        Zm+=Z[i]*Charge[i]/10.;
+        Sxx+=X[i]*X[i]*Charge[i]/10.;
+        Syy+=Y[i]*Y[i]*Charge[i]/10.;
+        Szz+=Z[i]*Z[i]*Charge[i]/10.;
+        Sxy+=X[i]*Y[i]*Charge[i]/10.;
+        Sxz+=X[i]*Z[i]*Charge[i]/10.;
+        Syz+=Y[i]*Z[i]*Charge[i]/10.;
+    }
+
+    Xm/=Q;
+    Ym/=Q;
+    Zm/=Q;
+    Sxx/=Q;
+    Syy/=Q;
+    Szz/=Q;
+    Sxy/=Q;
+    Sxz/=Q;
+    Syz/=Q;
+    Sxx-=(Xm*Xm);
+    Syy-=(Ym*Ym);
+    Szz-=(Zm*Zm);
+    Sxy-=(Xm*Ym);
+    Sxz-=(Xm*Zm);
+    Syz-=(Ym*Zm);
+
+    theta=0.5*atan((2.*Sxy)/(Sxx-Syy));
+
+    K11=(Syy+Szz)*pow(cos(theta),2)+(Sxx+Szz)*pow(sin(theta),2)-2.*Sxy*cos(theta)*sin(theta);
+    K22=(Syy+Szz)*pow(sin(theta),2)+(Sxx+Szz)*pow(cos(theta),2)+2.*Sxy*cos(theta)*sin(theta);
+    K12=-Sxy*(pow(cos(theta),2)-pow(sin(theta),2))+(Sxx-Syy)*cos(theta)*sin(theta);
+    K10=Sxz*cos(theta)+Syz*sin(theta);
+    K01=-Sxz*sin(theta)+Syz*cos(theta);
+    K00=Sxx+Syy;
+
+    c2=-K00-K11-K22;
+    c1=K00*K11+K00*K22+K11*K22-K01*K01-K10*K10;
+    c0=K01*K01*K11+K10*K10*K22-K00*K11*K22;
+
+
+    p=c1-pow(c2,2)/3.;
+    q=2.*pow(c2,3)/27.-c1*c2/3.+c0;
+    r=pow(q/2.,2)+pow(p,3)/27.;
+
+
+    if(r>0) dm2=-c2/3.+pow(-q/2.+sqrt(r),1./3.)+pow(-q/2.-sqrt(r),1./3.);
+    if(r<0)
+    {
+        rho=sqrt(-pow(p,3)/27.);
+        phi=acos(-q/(2.*rho));
+        dm2=std::min(-c2/3.+2.*pow(rho,1./3.)*cos(phi/3.),std::min(-c2/3.+2.*pow(rho,1./3.)*cos((phi+2.*TMath::Pi())/3.),-c2/3.+2.*pow(rho,1./3.)*cos((phi+4.*TMath::Pi())/3.)));
+    }
+
+    a=-K10*cos(theta)/(K11-dm2)+K01*sin(theta)/(K22-dm2);
+    b=-K10*sin(theta)/(K11-dm2)-K01*cos(theta)/(K22-dm2);
+
+    Xh=((1.+b*b)*Xm-a*b*Ym+a*Zm)/(1.+a*a+b*b);
+    Yh=((1.+a*a)*Ym-a*b*Xm+b*Zm)/(1.+a*a+b*b);
+    Zh=((a*a+b*b)*Zm+a*Xm+b*Ym)/(1.+a*a+b*b);
+
+    std::vector<Double_t> par;
+    par.push_back(Xm); //0
+    par.push_back(Xh-Xm); //1
+    par.push_back(Ym); //2
+    par.push_back(Yh-Ym); //3
+    par.push_back(Zm); //4
+    par.push_back(Zh-Zm); //5
+
+    track->SetFitPar(par);
+    track->SetMinimum(fabs(dm2/Q));
+    track->SetNFree(X.size()-6);
+    X.clear(); Y.clear(); Z.clear(); Charge.clear();
+
+    return(fabs(dm2/Q));
 }

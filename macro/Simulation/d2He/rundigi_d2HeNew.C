@@ -1,8 +1,8 @@
 void rundigi_d2HeNew
-(TString mcFile = "attpcsim_d2He_test100.root",//attpcsim_d2He_14O_07atm_100000.root
+(TString mcFile = "outputFiles/attpcsim_d2He.root",//attpcsim_d2He_14O_07atm_100000.root
 TString digiParFile = "../../../parameters/ATTPC.d2He.par",
 TString mapParFile = "../../../scripts/Lookup20150611.xml",
-TString parFile = "attpcpar_d2He_test100.root")    //"attpcpar_d2He_test_10k.root")//attpcpar_d2He_14O_07atm_100000.root
+TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k.root")//attpcpar_d2He_14O_07atm_100000.root
 //TString trigParFile = "../../../parameters/AT.trigger.par")
 {
 
@@ -50,8 +50,8 @@ TString parFile = "attpcpar_d2He_test100.root")    //"attpcpar_d2He_test_10k.roo
 
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(1);//10
-   // psaTask -> SetThreshold(0.1);
+  //psaTask -> SetThreshold(1);//10
+   psaTask -> SetThreshold(0.1);
 
 
   //psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC

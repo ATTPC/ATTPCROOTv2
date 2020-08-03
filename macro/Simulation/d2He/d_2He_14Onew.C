@@ -44,7 +44,8 @@ void d_2He_14Onew(Int_t nEvents = 50, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_d2He_07atm_test.root");
+  //ATTPC->SetGeometryFileName("ATTPC_d2He_07atm_test.root");
+  ATTPC->SetGeometryFileName("ATTPC_d2He_07atm.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
@@ -180,7 +181,7 @@ void d_2He_14Onew(Int_t nEvents = 50, TString mcEngine = "TGeant4")
 
   Double_t ThetaMinCMS = 0.0;
   Double_t ThetaMaxCMS = 180.0;
-  Int_t N_cross = 6560;
+  Int_t N_cross = 1760;
   std::vector<Double_t> Arr1(N_cross), Arr2(N_cross), Arr3(N_cross);
   Double_t col1, col2, col3;
 

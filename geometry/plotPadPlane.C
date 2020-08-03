@@ -44,7 +44,7 @@
 
 using namespace std;
 
-void ()
+void plotPadPlane()
 {
     TGraph *g[2016];
     TH2Poly* h2pol = new TH2Poly("p2","pAT-TPC Pad Plane",-130,130,-130,130);

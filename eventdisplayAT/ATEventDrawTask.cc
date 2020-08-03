@@ -530,7 +530,19 @@ ATEventDrawTask::DrawHitPoints()
                         //l->SetPoint(i,x,y,z);
                         //std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
                     }
-                }else std::cout<<cRED<<" ATEventDrawTask::DrawHitPoints - Warning: wrong number of fit parameters for RANSAC lines!"<<std::endl;
+                }else if(parFit.size()==6){
+                    for (int i = -n; i <n;++i) {
+                        double t = t0+ dt*i/n;
+                        double x,y,z;
+                        SetLine6(t,parFit,x,y,z);
+                        fLineArray[j]->SetNextPoint(x, y, z);
+
+                        //fLineArray.push_back(fLine);
+                        //l->SetPoint(i,x,y,z);
+                        //std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
+                    }
+                  }
+                else std::cout<<cRED<<" ATEventDrawTask::DrawHitPoints - Warning: wrong number of fit parameters for RANSAC lines!"<<std::endl;
 
             }
 	    fVertex = new TEvePointSet("Vertex",1, TEvePointSelectorConsumer::kTVT_XYZ);
@@ -1097,7 +1109,7 @@ ATEventDrawTask::Reset()
              fLine->Reset();
              gEve -> RemoveElement(fLine,fEventManager);
              }*/
-            if(fVertex) 
+            if(fVertex)
             {
               //fVertex->Reset();
               gEve -> RemoveElement(fVertex, fEventManager);
@@ -1876,6 +1888,17 @@ void ATEventDrawTask::SetLine(double t, std::vector<Double_t> p, double &x, doub
     x = (p[0] + p[1]*t)/10.0;
     y = (p[2] + p[3]*t)/10.0;
     z = t/10.0;
+
+}
+
+void ATEventDrawTask::SetLine6(double t, std::vector<Double_t> p, double &x, double &y, double &z)
+{
+    // a parameteric line is define from 6 parameters but 4 are independent
+    // x0,y0,z0,z1,y1,z1 which are the coordinates of two points on the line
+    // can choose z0 = 0 if line not parallel to x-y plane and z1 = 1;
+    x = (p[0] + p[1]*t)/10.0;
+    y = (p[2] + p[3]*t)/10.0;
+    z = (p[4] + p[5]*t)/10.0;
 
 }
 

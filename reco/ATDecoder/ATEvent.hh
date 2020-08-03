@@ -10,6 +10,8 @@
 #include "ATHit.hh"
 #include "ATPad.hh"
 
+//#include "AtTpcPoint.h"
+//#include "ATVertexPropagator.h"
 
 
 using std::vector;
@@ -47,7 +49,7 @@ public:
   void SetMeshSignal(Int_t idx, Float_t val);
 
   void SetIsGood(Bool_t value);
-    
+
 
   // getters
   Int_t GetEventID();
@@ -64,12 +66,13 @@ public:
   // ATHitCluster *GetCluster(Int_t clusterNo);
   // void RemoveCluster(Int_t clusterNo);
   // vector<ATHitCluster> *GetClusterArray();
-  // 
+  //
   // Int_t GetNumTracks();
   // STTrack *GetTrack(Int_t trackNo);
   // STTrack *RemoveTrack(Int_t trackNo);
   // vector<STTrack> *GetTrackArray();
 
+  //void SimulatedHits(AtTpcPoint* pointSim);
 
   Double_t GetEventCharge();
   Double_t GetRhoVariance();
@@ -97,7 +100,7 @@ private:
 
   Int_t fEventID;
   ULong_t fTimestamp;
-  
+
   vector<ATHit> fHitArray;
   vector<ATPad> fAuxPadArray;
 
