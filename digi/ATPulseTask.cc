@@ -136,7 +136,7 @@ void ATPulseTask::Exec(Option_t* option) {
 
 	//TFile output("test_output.root","recreate");
 
-
+/*
 ////////////////////////   test
 std::ifstream inhi_map;
 inhi_map.open("/home/juan/FairRoot/ATTPCROOTv2_simon/ATTPCROOTv2/macro/Simulation/d2He/coordmap_inhi.txt");
@@ -149,7 +149,7 @@ while(!inhi_map.eof()){
 inhi_map.close();
 //for(Int_t ipad = 0; ipad<PadNum_inhi.size(); ipad++)std::cout<<ipad<<" "<<PadNum_inhi.at(ipad)<<std::endl;
 /////////////////////////
-
+*/
 
 
 
@@ -165,7 +165,7 @@ inhi_map.close();
 
 		Bool_t isInhi = kFALSE;
 		if(padNumber<0 || padNumber>10240) continue;
-		for(Int_t ipad = 0; ipad<PadNum_inhi.size(); ipad++) if(padNumber==PadNum_inhi.at(ipad)){ /*std::cout<<padNumber<<"  "<<coord(0)<<"  "<<coord(1)<<"  "<<coord(2)<<"\n";*/isInhi=kTRUE; continue;}
+		//for(Int_t ipad = 0; ipad<PadNum_inhi.size(); ipad++) if(padNumber==PadNum_inhi.at(ipad)){ /*std::cout<<padNumber<<"  "<<coord(0)<<"  "<<coord(1)<<"  "<<coord(2)<<"\n";*/isInhi=kTRUE; continue;}
 
 		//std::cout<<padNumber<<"  "<<coord(0)<<"  "<<coord(1)<<"  "<<coord(2)<<"\n";
 		//std::cout << eTime << " " <<std::endl;
