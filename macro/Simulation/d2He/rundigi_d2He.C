@@ -1,8 +1,10 @@
 void rundigi_d2He
-(TString mcFile = "outputFiles/attpcsim_d2He.root",//attpcsim_d2He_14O_07atm_100000.root
+//(TString mcFile = "outputFiles/attpcsim_d2He.root",//attpcsim_d2He_14O_07atm_100000.root
+(TString mcFile = "outputFiles/attpcsim_d2He_simon3.root",//attpcsim_d2He_14O_07atm_100000.root
 TString digiParFile = "../../../parameters/ATTPC.d2He.par",
 TString mapParFile = "../../../scripts/Lookup20150611.xml",
-TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k.root")//attpcpar_d2He_14O_07atm_100000.root
+//TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k.root")//attpcpar_d2He_14O_07atm_100000.root
+TString parFile = "outputFiles/attpcpar_d2He_simon3.root")    //"attpcpar_d2He_test_10k.root")//attpcpar_d2He_14O_07atm_100000.root
 //TString trigParFile = "../../../parameters/AT.trigger.par")
 {
 
@@ -17,6 +19,8 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
   TString dataDir = dir + "/macro/data/";
   TString geomDir = dir + "/geometry/";
   gSystem -> Setenv("GEOMPATH", geomDir.Data());
+  TString inimap = dir + "/resources/coordmap_inhi.txt";
+
   TFile* fileSim = new TFile(mcFile,"READ");
   TTree* treeSim = (TTree*) fileSim -> Get("cbmsim");
   Int_t nEvents = treeSim->GetEntries();
@@ -39,14 +43,17 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
   rtdb -> setSecondInput(parIo2);
 
 
+
   // __ AT digi tasks___________________________________
 
   ATClusterizeTask* clusterizer = new ATClusterizeTask();
   clusterizer -> SetPersistence(kFALSE);
 
+
   ATPulseTask* pulse = new ATPulseTask();
   pulse -> SetPersistence(kTRUE);
-
+  pulse -> IsInhibitMap(kTRUE);
+  pulse -> SetInhibitMaps(inimap,"0","0");
 
   //      ATTriggerTask *trigTask = new ATTriggerTask();
   //      trigTask  ->  SetAtMap(mapParFile);
@@ -88,6 +95,7 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
   //  ATHoughTask *HoughTask = new ATHoughTask();
   //  HoughTask ->SetPersistence(kTRUE);
 
+  //fRun -> AddTask(fDecoderTask);
   fRun -> AddTask(clusterizer);
   fRun -> AddTask(pulse);
   fRun -> AddTask(psaTask);

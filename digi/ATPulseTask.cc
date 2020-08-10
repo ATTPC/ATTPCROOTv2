@@ -37,6 +37,9 @@ ATPulseTask::~ATPulseTask()
 	LOG(INFO) << "Destructor of ATPulseTask" << FairLogger::endl;
 }
 
+void ATPulseTask::SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap)
+           { fIniMap = inimap; fLowgMap = lowgmap; fXtalkMap = xtalkmap; }
+
 void
 ATPulseTask::SetParContainers()
 {
@@ -89,6 +92,7 @@ ATPulseTask::Init()
 	fMap->GenerateATTPC();
 	Bool_t MapIn = fMap->ParseXMLMap(scriptdir);
 	fPadPlane = fMap->GetATTPCPlane();
+  if(fIsInhibitMap) fMap->ParseInhibitMap(fIniMap,fLowgMap,fXtalkMap);
 
 	fEventID = 0;
 	fRawEvent = NULL;
@@ -134,22 +138,6 @@ void ATPulseTask::Exec(Option_t* option) {
 	fPadPlane->Reset(0);
 	Int_t size = fRawEventArray -> GetEntriesFast(); //will be always 1
 
-	//TFile output("test_output.root","recreate");
-
-/*
-////////////////////////   test
-std::ifstream inhi_map;
-inhi_map.open("/home/juan/FairRoot/ATTPCROOTv2_simon/ATTPCROOTv2/macro/Simulation/d2He/coordmap_inhi.txt");
-std::vector<Int_t> PadNum_inhi;
-while(!inhi_map.eof()){
-	Int_t ipad;
-	inhi_map >> ipad;
-	PadNum_inhi.push_back(ipad);
-}
-inhi_map.close();
-//for(Int_t ipad = 0; ipad<PadNum_inhi.size(); ipad++)std::cout<<ipad<<" "<<PadNum_inhi.at(ipad)<<std::endl;
-/////////////////////////
-*/
 
 
 
@@ -163,13 +151,12 @@ inhi_map.close();
 		auto eTime       = coord (2); //us
 		auto padNumber   = (int)fPadPlane->Fill(xElectron,yElectron) - 1;
 
-		Bool_t isInhi = kFALSE;
 		if(padNumber<0 || padNumber>10240) continue;
-		//for(Int_t ipad = 0; ipad<PadNum_inhi.size(); ipad++) if(padNumber==PadNum_inhi.at(ipad)){ /*std::cout<<padNumber<<"  "<<coord(0)<<"  "<<coord(1)<<"  "<<coord(2)<<"\n";*/isInhi=kTRUE; continue;}
 
 		//std::cout<<padNumber<<"  "<<coord(0)<<"  "<<coord(1)<<"  "<<coord(2)<<"\n";
 		//std::cout << eTime << " " <<std::endl;
-		if(!isInhi){
+		Bool_t IsInhibited = fMap->GetIsInhibited(padNumber);
+		if(!IsInhibited){
 			std::map<Int_t,TH1F*>::iterator ite = electronsMap.find(padNumber);
 			if(ite == electronsMap.end()){
 				eleAccumulated[padNumber]->Fill(eTime);

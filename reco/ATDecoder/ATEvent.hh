@@ -10,9 +10,6 @@
 #include "ATHit.hh"
 #include "ATPad.hh"
 
-//#include "AtTpcPoint.h"
-//#include "ATVertexPropagator.h"
-
 
 using std::vector;
 using std::map;

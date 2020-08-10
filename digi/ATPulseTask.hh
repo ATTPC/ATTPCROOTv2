@@ -24,16 +24,18 @@
 #include "ATGas.hh"
 
 class ATPulseTask : public FairTask {
-  
+
 public:
   ATPulseTask();
   ~ATPulseTask();
-  
+
   void SetPersistence(Bool_t val) { fIsPersistent = val; }
   virtual InitStatus Init();        //!< Initiliazation of task at the beginning of a run.
   virtual void Exec(Option_t* opt); //!< Executed for each event.
   virtual void SetParContainers();  //!< Load the parameter container from the runtime database.
-  
+  void SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap);
+  inline void IsInhibitMap(Bool_t val) { fIsInhibitMap = val; }
+
 private:
   ATGas*     fGas;                     //!< Gas parameter container.
   ATDigiPar* fPar;                     //!< Base parameter container.
@@ -49,12 +51,17 @@ private:
   TH2Poly *fPadPlane;                  //!< pad plane
   AtTpcMap *fMap;                      //!<ATTPC map
   Int_t fInternalID;                   //!<Internal ID
-  
+
   std::map<Int_t, TH1F*> electronsMap;    //!<
   TH1F** eleAccumulated;                  //!<
-  
+
   TF1 *gain;                         //!<
-  
+
+  TString fIniMap;
+  TString fLowgMap;
+  TString fXtalkMap;
+  Bool_t fIsInhibitMap;                //!< If true, save container
+
   ClassDef(ATPulseTask,1);
 };
 

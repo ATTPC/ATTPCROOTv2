@@ -831,6 +831,9 @@ Int_t ATRANSACN::ATRansac::FindIndexTrack(Int_t index)
 Double_t ATRANSACN::ATRansac::Fit3D(ATTrack* track)
 {
 
+  //--------Adapted from https://www.scribd.com/doc/31477970/Regressions-et-trajectoires-3D
+  //--------3D linear regression
+
     int R, C;
     double Q;
     double Xm,Ym,Zm;
