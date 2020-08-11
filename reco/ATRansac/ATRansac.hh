@@ -127,6 +127,7 @@ class ATRansac : public TObject
       void SetXYCenter(Double_t xc, Double_t yc);
       void SetRANSACPointThreshold(Float_t val);
       void SetVertexTime(Double_t val);
+      Double_t Fit3D(ATTrack* track);
 
       struct PairedLines
       {
