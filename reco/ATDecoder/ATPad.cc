@@ -17,7 +17,7 @@ ATPad::ATPad()
     fPadXCoord = -9999;
     fPadYCoord = -9999;
     kIsAux = kFALSE;
-    fAuxName = "noname";
+    fAuxName = "noname";   
 }
 
 ATPad::ATPad(Int_t PadNum)
@@ -58,7 +58,7 @@ void ATPad::SetADC(Int_t idx, Double_t val)       { fAdc[idx] = val; }
 void ATPad::SetPadXCoord(Double_t val)            { fPadXCoord = val;}
 void ATPad::SetPadYCoord(Double_t val)            { fPadYCoord = val;}
 void ATPad::SetIsAux(Bool_t val)                  { kIsAux = val;}
-void ATPad::SetAuxName(std::string val)        { fAuxName = val;}
+void ATPad::SetAuxName(std::string val)           { fAuxName = val;}
 
 Float_t ATPad::GetPadXCoord()                     { return fPadXCoord;}
 Float_t ATPad::GetPadYCoord()                     { return fPadYCoord;}

@@ -179,12 +179,16 @@ void ATPulseTask::Exec(Option_t* option) {
     eleAccumulated[thePadNumber] = (ite2->second);
     // Set Pad and add to event
     ATPad *pad = new ATPad();
+    //std::cout<<" Pad number "<<thePadNumber<<"\n";
+	
     for(Int_t kk=0;kk<fNumTbs;kk++) {
       if(eleAccumulated[thePadNumber]->GetBinContent(kk)>0) {
 	for(Int_t nn=kk;nn<fNumTbs;nn++) {
 	  Double_t binCenter = axis->GetBinCenter(kk);
 	  Double_t factor =(((((Double_t)nn)+0.5)*binWidth)-binCenter)/tau;
- 	  signal[nn] += eleAccumulated[thePadNumber]->GetBinContent(kk)*pow(2.718,-3*factor)*sin(factor)*pow(factor,3);
+          Double_t factor_2 = pow(2.718,-3*factor)*sin(factor)*pow(factor,3);
+ 	  signal[nn]+= eleAccumulated[thePadNumber]->GetBinContent(kk)*pow(2.718,-3*factor)*sin(factor)*pow(factor,3);
+	  //if(signal[nn]>0)std::cout<<" Bin "<<kk<<" eleAcc "<<eleAccumulated[thePadNumber]->GetBinContent(kk)<<" Signal "<<signal[nn]<<" factor "<<factor<<" factor 2 "<<factor_2<<"\n";
 	}
       }
     }
@@ -194,10 +198,12 @@ void ATPulseTask::Exec(Option_t* option) {
     pad->SetValidPad(kTRUE);
     pad->SetPadXCoord(PadCenterCoord[0]);
     pad->SetPadYCoord(PadCenterCoord[1]);
+    //std::cout<<" X "<<PadCenterCoord[0]<<" Y "<<PadCenterCoord[1]<<"\n";
     pad->SetPedestalSubtracted(kTRUE);
     Double_t g = gain->GetRandom();
     for(Int_t bin = 0; bin<fNumTbs; bin++){
       pad->SetADC(bin,signal[bin]*g*fGETGain);
+      //std::cout<<" bin "<<bin<<" signal "<<signal[bin]<<" g "<<g<<" GET gain"<<fGETGain<<"\n";
     }
     fRawEvent->SetPad(pad);
     fRawEvent->SetEventID(fEventID);

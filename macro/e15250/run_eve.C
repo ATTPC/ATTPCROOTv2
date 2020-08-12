@@ -1,4 +1,4 @@
-void run_eve(TString  InputDataFile = "output_digi_4.root",TString  OutputDataFile = "output.reco_display.root", TString unpackDir="e15250/digi/")
+void run_eve(TString  InputDataFile = "output_digi.root",TString  OutputDataFile = "output.reco_display.root", TString unpackDir="e15250/digi/")
 {
   FairLogger *fLogger = FairLogger::GetLogger();
   fLogger -> SetLogToScreen(kTRUE);

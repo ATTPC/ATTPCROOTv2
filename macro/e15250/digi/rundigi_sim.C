@@ -1,5 +1,5 @@
 void rundigi_sim
-(TString mcFile = "../data/attpcsim_e15250_2M.root",
+(TString mcFile = "../data/attpcsim_e15250.root",
  TString digiParFile = "../../../parameters/ATTPC.e15250_sim.par",
  TString mapParFile = "../../../scripts/Lookup20150611.txt",
  TString trigParFile = "../../../parameters/AT.trigger.par")
@@ -30,9 +30,9 @@ void rundigi_sim
   
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(10);
+  psaTask -> SetThreshold(1);
   //psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC
-  psaTask -> SetPSAMode(4); //FULL mode
+  psaTask -> SetPSAMode(1); //FULL mode
   //psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
   psaTask -> SetMaxFinder();
   psaTask -> SetBaseCorrection(kFALSE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
@@ -41,15 +41,20 @@ void rundigi_sim
   ATTriggerTask *trigTask = new ATTriggerTask();
   trigTask  ->  SetAtMap(mapParFile);
   trigTask  ->  SetPersistence(kTRUE);
+
+  ATPRATask *praTask = new ATPRATask();
+  praTask -> SetPersistence(kTRUE);
   
   fRun -> AddTask(clusterizer);
   fRun -> AddTask(pulse);
-  //fRun -> AddTask(psaTask);
+  fRun -> AddTask(psaTask);
   //fRun -> AddTask(trigTask);
+  fRun -> AddTask(praTask);
+  
   
   // __ Init and run ___________________________________
   fRun -> Init();
-  fRun -> Run(0,10);
+  fRun -> Run(0,2000);
   
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

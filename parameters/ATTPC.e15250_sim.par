@@ -37,6 +37,6 @@ GasPressure:Double_t           600   # Gas pressure in torr
 EIonize:Double_t            15.603   # Ionization energy of gas in eV
 CoefL:Double_t               0.025   # Longitudal coefficient of diffusion [cm^-0.5]
 CoefT:Double_t               0.025   # Transverse coefficient of diffusion [cm^-0.5]
-Gain:Double_t                   10   # Average gain of micromegas
+Gain:Double_t                 1000   # Average gain of micromegas
 MaxRange:Double_t            500.0   # Maximum range from Beam energy in mm
 ################################################################################

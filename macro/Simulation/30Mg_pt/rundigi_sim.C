@@ -66,12 +66,12 @@ void rundigi_sim
   fRun -> AddTask(pulse);
   fRun -> AddTask(psaTask);
   //fRun -> AddTask(trigTask);
-  fRun -> AddTask(HoughTask);
+  //fRun -> AddTask(HoughTask);
 
   // __ Init and run ___________________________________
 
   fRun -> Init();
-  fRun -> Run(0,2000);
+  fRun -> Run(0,10);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

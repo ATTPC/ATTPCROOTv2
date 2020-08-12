@@ -184,7 +184,7 @@ ATClusterizeTask::Exec(Option_t* option)
       
       //std::cout<<" tTime : "<<tTime<<" - x : "<<x<<" - y : "<<y<<" - z : "<<z<<" Time "<<tTime<<"\n";
       energyLoss_rec    = (fMCPoint -> GetEnergyLoss() )*1000;//MeV
-      //std::cout<<" Energy Loss "<<energyLoss_rec<<" fEIonize"<<fEIonize<<"\n";
+      //std::cout<<" Energy Loss "<<energyLoss_rec<<" fEIonize"<<fEIonize<<" Track ID "<<presentTrackID<<"\n";
       nElectrons        = energyLoss_rec/fEIonize; //mean electrons generated
       eFlux             = pow(fano*nElectrons, 0.5);//fluctuation of generated electrons
       genElectrons      = gRandom->Gaus(nElectrons, eFlux);//generated electrons
