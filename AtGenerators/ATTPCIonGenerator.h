@@ -52,7 +52,8 @@ class ATTPCIonGenerator : public FairGenerator
    **@param vx,vy,vz  Vertex coordinates [cm]
    **/
   ATTPCIonGenerator(const char* name,Int_t z, Int_t a, Int_t q, Int_t mult, Double_t px,
-		  Double_t py, Double_t pz, Double_t Ex, Double_t m, Double_t ener, Double_t ebeam);
+		  Double_t py, Double_t pz, Double_t Ex, Double_t m, Double_t ener, Double_t ebeam, 
+		  Double_t beam1, Double_t beam2, Double_t beam3);
 
 
   ATTPCIonGenerator(const ATTPCIonGenerator&);
@@ -88,13 +89,15 @@ private:
   Double_t fPx, fPy, fPz;   // Momentum components [GeV] per nucleon
   Double32_t fR, fOcal, fOcalUncert;  // beam Spot radius [cm], z source, z source uncertainty
   Double_t fz;
-  Double_t fOffset;
   Double_t fVx, fVy, fVz;   // Vertex coordinates [cm]
   Double_t fEbeam; // Beam energy [MeV] per nucleon
   FairIon   *fIon;          // Pointer to the FairIon to be generated
   Int_t    fQ;		    // Electric charge [e]
   Int_t fNomEner;
   Int_t fA;
+  Double_t fwhmFocus;
+  Double_t angularDiv;
+  Double_t zFocus;
 
 
   Bool_t fBeamSpotIsSet;    // True if point beamspot is set

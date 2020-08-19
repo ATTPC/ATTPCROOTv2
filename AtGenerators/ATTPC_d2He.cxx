@@ -570,7 +570,7 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
     gATVP->SetScatterP(ScatP);
     gATVP->SetScatterEx(Ex_ejectile);
 
-
+/*
     do{
       random_z = 100.0*(gRandom->Uniform()); //cm
 
@@ -578,50 +578,12 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
       random_phi = 2.0*TMath::Pi()*(gRandom->Uniform()); //rad
 
     }while(  fabs(random_r) > 4.7 ); //cut at 2 sigma
-
-/*
-    Double_t ffocz = gATVP->Getfocz();
-    random_z = 100.0*(gRandom->Uniform()); //cm //should be some how related to the energy loss and the xs?
-
-    Double_t PtotBeam=sqrt(pow(fPxBeam,2)+pow(fPyBeam,2)+pow(fPzBeam,2));
-    Double_t signz = 1;
-    if(random_z<ffocz) signz = -1;
-
-    if(fPxBeam !=0 && fPyBeam!=0){
-      fVx   = sign(fPxBeam)*(signz)*(random_z/tan(acos(abs(fPxBeam)/PtotBeam)));
-      fVy   = sign(fPyBeam)*(signz)*(sqrt(pow(random_z,2)+pow(gATVP->GetInVx(),2))/tan(acos(abs(fPyBeam)/PtotBeam)));
-      fVz   = random_z;
-    }
 */
-/*
-	      Double_t ffocz = gATVP->Getfocz();
-		  Double_t fTanOffset = gATVP->GetTanOffset();
-	      random_z = 100.0*(gRandom->Uniform()); //cm //should be some how related to the energy loss and the xs?
-	
-		//std::cout<<random_z<<" "<<ffocz<<std::endl;
-
-
-	      Double_t PtotBeam=sqrt(pow(fPxBeam,2)+pow(fPyBeam,2)+pow(fPzBeam,2));
-	      Double_t signz = 1;
-	      if(random_z<ffocz) signz = -1;
-	
-	      if(fPxBeam !=0 && fPyBeam!=0){
-	        fVx   = sign(fPxBeam)*(signz)*(abs(random_z-ffocz)/tan(acos(abs(fPxBeam)/PtotBeam))) + fTanOffset;
-	        fVy   = sign(fPyBeam)*(signz)*(sqrt(pow(abs(random_z-ffocz),2)+pow(gATVP->GetInVx(),2))/tan(acos(abs(fPyBeam)/PtotBeam)));
-	        fVz   = random_z;
-	      }
-
-	      else{
-	        fVx = 0.;
-	        fVy = 0.;
-	        fVz =  random_z;
-	      }
-
-	      //std::cout<<fVx<<" "<<fVy<<" "<<fVz<<std::endl;
-
-    TVector3 d2HeVtx(fVx,fVy,fVz);
-    gATVP->Setd2HeVtx(d2HeVtx);
-*/
+    TVector3 d2HeVtx= gATVP->Getd2HeVtx();
+    fVx = d2HeVtx.X();
+    fVy = d2HeVtx.Y();
+    fVz = d2HeVtx.Z();
+    //std::cout<<fVx<<" "<<fVy<<" "<<std::endl;
 
     for(Int_t i=0; i<fMult; i++){
       TParticlePDG* thisPart;
@@ -653,20 +615,15 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
       //fVy = gATVP->GetVy();
       //fVz = gATVP->GetVz();
 
-
+/*
        fVx = random_r*cos(random_phi);
        fVy = random_r*sin(random_phi);
        fVz =  random_z;
-
+*/
       // cout<<gATVP->GetVx(); <<" "<<gATVP->GetVy();<<" "<<gATVP->GetVz();<<" "<<endl;
 
-
-
-       TVector3 d2HeVtx(fVx,fVy,fVz);
+      // TVector3 d2HeVtx(fVx,fVy,fVz);
        gATVP->Setd2HeVtx(d2HeVtx);
-
-       Bool_t IsSingleProton=kFALSE;
-       IsSingleProton = gATVP->GetIsSingleProton();
 
       if(i>1 && i!=3 && gATVP->GetDecayEvtCnt() && pdgType!=1000500500 && fPType.at(i)=="Ion" ){
         // TODO: Dirty way to propagate only the products (0 and 1 are beam and target respectively)
@@ -689,9 +646,7 @@ ATTPC_d2He::ATTPC_d2He(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
         << ", " << fVz << ") cm" << std::endl;*/
 
        // primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
-       if(IsSingleProton){ if(i==4) primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);}
-       else if (!IsSingleProton) primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
-	//primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
+	primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
 
       }else if(i>1 && i!=3 && gATVP->GetDecayEvtCnt() && pdgType==2112 && fPType.at(i)=="Neutron" ){
 

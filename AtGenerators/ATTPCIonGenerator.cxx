@@ -38,7 +38,7 @@ fPx(0.), fPy(0.), fPz(0.),
 fR(0.), fOcal(0.), fOcalUncert(0.),
 fVx(0.), fVy(0.), fVz(0.),
 fIon(NULL),  fQ(0), fBeamSpotIsSet(kFALSE),
-fA(0), fEbeam(0)
+fA(0), fEbeam(0), fwhmFocus(0), angularDiv(0), zFocus(0)
 {
   //  cout << "-W- ATTPCIonGenerator: "
   //      << " Please do not use the default constructor! \n";
@@ -100,13 +100,14 @@ ATTPCIonGenerator::ATTPCIonGenerator(const Char_t* ionName, Int_t mult,
 
   // -----   Default constructor   ------------------------------------------
   ATTPCIonGenerator::ATTPCIonGenerator(const char* name,Int_t z, Int_t a, Int_t q, Int_t mult,
-    Double_t px, Double_t py, Double_t pz, Double_t Ex, Double_t m, Double_t ener, Double_t ebeam)
+    Double_t px, Double_t py, Double_t pz, Double_t Ex, Double_t m, Double_t ener, Double_t ebeam, Double_t beam1, Double_t beam2
+    , Double_t beam3)
     : fMult(0),
     fPx(0.), fPy(0.), fPz(0.),
     fR(0.), fOcal(0.), fOcalUncert(0.),
     fVx(0.), fVy(0.), fVz(0.),
     fIon(NULL),  fQ(0), fBeamSpotIsSet(kFALSE), fNomEner(0.),
-    fA(0), fEbeam(0)
+    fA(0), fEbeam(0), fwhmFocus(0), angularDiv(0), zFocus(0)
     {
       fgNIon++;
       fMult = mult;
@@ -116,6 +117,9 @@ ATTPCIonGenerator::ATTPCIonGenerator(const Char_t* ionName, Int_t mult,
       fA  = a;
       fNomEner = ener;
       fEbeam = ebeam;
+      fwhmFocus = beam1;
+      angularDiv = beam2;
+      zFocus = beam3;
       //fVx   = vx;
       //fVy   = vy;
       //fVz   = vz;
@@ -125,6 +129,7 @@ ATTPCIonGenerator::ATTPCIonGenerator(const Char_t* ionName, Int_t mult,
       //  cout <<" Beam Ion mass : "<<fIon->GetMass()<<endl;
       gATVP->SetBeamMass(fIon->GetMass());
       gATVP->SetBeamNomE(ener);
+      if(fwhmFocus>0 && angularDiv>0 && zFocus>0) {fBeamSpotIsSet = kTRUE;  }
       FairRunSim* run = FairRunSim::Instance();
       if ( ! run ) {
         cout << "-E- FairIonGenerator: No FairRun instantised!\n";
@@ -142,7 +147,8 @@ ATTPCIonGenerator::ATTPCIonGenerator(const Char_t* ionName, Int_t mult,
     fR(right.fR), fOcal(right.fOcal), fOcalUncert(right.fOcalUncert),
     fVx(right.fVx), fVy(right.fVy), fVz(right.fVz),
     fIon(right.fIon), fQ(right.fQ), fBeamSpotIsSet(right.fBeamSpotIsSet),
-    fA(right.fA), fEbeam(right.fEbeam)
+    fA(right.fA), fEbeam(right.fEbeam),
+    fwhmFocus(right.fwhmFocus), angularDiv(right.angularDiv), zFocus(right.zFocus)
     {
     }
 
@@ -180,92 +186,61 @@ ATTPCIonGenerator::ATTPCIonGenerator(const Char_t* ionName, Int_t mult,
     // -----   Public method ReadEvent   --------------------------------------
     Bool_t ATTPCIonGenerator::ReadEvent(FairPrimaryGenerator* primGen) {
 
-      Double_t xFocus, yFocus, focz, angularFWHM, x0, y0, tanXPrime, tanYPrime, tanOffset;
+      	Double_t xFocus, yFocus, x0, y0, theta, phi;
+      	Double_t rHole=2.5;
 
+      	TParticlePDG* thisPart =
+      	TDatabasePDG::Instance()->GetParticle(fIon->GetName());
+      	if ( ! thisPart ) {
+        	cout << "-W- FairIonGenerator: Ion " << fIon->GetName()
+        	<< " not found in database!\n";
+        	return kFALSE;
+     	}
 
-      // if ( ! fIon ) {
-      //   cout << "-W- FairIonGenerator: No ion defined! \n";
-      //   return kFALSE;
-      // }
-
-      TParticlePDG* thisPart =
-      TDatabasePDG::Instance()->GetParticle(fIon->GetName());
-      if ( ! thisPart ) {
-        cout << "-W- FairIonGenerator: Ion " << fIon->GetName()
-        << " not found in database!\n";
-        return kFALSE;
-      }
-
-      int pdgType = thisPart->PdgCode();
+      	int pdgType = thisPart->PdgCode();
+      
+ 	Double_t fPtot=sqrt(pow(fEbeam * fA / 1000.0 + thisPart->Mass(),2) - pow(thisPart->Mass(),2));
 	
-//startRand:
-
-	fR = 1.0; //cm, FWHM of Gaussian
-	angularFWHM = 20.*1E-3; //radians, use E-3 to convert from milirad
-	fOcal = 50; //cm, distance from entrance
-	
-	//generate a particle at x0, y0, pick a spot at focus point (xFocus, yFocus) extrapolate between points for vector.
-	//x0/y0 is coordinates of beam particle at ATTPC entrance, xFocus is coordinates at focus.
-	xFocus = gRandom->Gaus(0,fR / 2.355);
-	yFocus = gRandom->Gaus(0,fR / 2.355);
-	
-	x0 = fabs(gRandom->Gaus(xFocus, (fOcal) * tan(angularFWHM / 2.355)))*sign(xFocus);
-	y0 = fabs(gRandom->Gaus(yFocus, (fOcal) * tan(angularFWHM / 2.355)))*sign(yFocus);
-
-//	if(sqrt(x0*x0+y0*y0)>2.) goto startRand;
-
-	//Optional: Offsets in x, x':
-	xFocus+= 1.; //cm
-	x0+=     1.; //cm
-	x0-= tan(0*1E-3) * fOcal;
-	 
-      //fOcalUncert = 1.;
-      //fOcal = 50.;
-	fBeamSpotIsSet = kFALSE;  
-	  if(fBeamSpotIsSet){  
-        fVx   =x0 ;//xFocus; 
-        fVy   =y0 ;//yFocus; 
-        fVz   =0. ;//fOcal;
-		
-		//focz is the position where y = 0, x = tangentialOffset. (This can be negative, since it's only used in ATTPC_d2He to extrapolate a position 0<z<100)
-		
-		//Spatial angles
-		tanYPrime = ((yFocus - y0)/fOcal);
-		tanXPrime = ((xFocus - x0)/fOcal);
-		
-		focz = (-y0 / tanYPrime);
-		tanOffset = focz * tanXPrime + x0; 
-
-        //fPx   = sign(fVx)*(-sqrt( pow(fEbeam * fA / 1000.0 + thisPart->Mass(),2) - pow(thisPart->Mass(),2) )*cos(atan(focz/fVx)));
-        //fPy   = sign(fVy)*(-sqrt( pow(fEbeam * fA / 1000.0 + thisPart->Mass(),2) - pow(thisPart->Mass(),2) )*cos(atan(sqrt(pow(focz,2)+pow(fVx,2))/fVy)));
-		
-        fPx   = sign(tanXPrime)*fabs((sqrt( pow(fEbeam * fA / 1000.0 + thisPart->Mass(),2) - pow(thisPart->Mass(),2) )*cos(atan(fOcal/(xFocus - x0))))); 
-        fPy   = sign(tanYPrime)*fabs((sqrt( pow(fEbeam * fA / 1000.0 + thisPart->Mass(),2) - pow(thisPart->Mass(),2) )*cos(atan(sqrt(pow(focz,2)+pow(x0 - tanOffset,2))/y0))));
-		fPz   = sqrt(pow(fEbeam * fA / 1000.0 + thisPart->Mass(),2) - pow(thisPart->Mass(),2) - fPx*fPx - fPy*fPy);
-		
-/*		cout << "Debug: zFocus:" << focz<< " test focz "<<sqrt(x0*x0+y0*y0)*fOcal/(sqrt(x0*x0+y0*y0)-sqrt(xFocus*xFocus+yFocus*yFocus)) << " xPrime: " << atan(tanXPrime) << " Momentum x angle: " << fabs(cos(atan(focz/(tanOffset - x0))))*sign(fPx) << " yPrime:" << atan(tanYPrime) << " Momentum y angle: " << fabs(cos(atan(sqrt(pow(focz,2)+pow(x0 - tanOffset,2))/y0)))*sign(fPy) << endl;
-		cout << "x0: " << x0 <<", y0: " << y0 << ", xFocus: " << xFocus << ", yFocus: " << yFocus << ", x-Offset:" << tanOffset << std::endl;
+/*
+	fwhmFocus = 1.; //cm, FWHM of Gaussian
+	angularDiv = 10.*1E-3; //radians, use E-3 to convert from milirad
+	zFocus = 50; //cm, distance from entrance
 */	
-      }
-      else if(!fBeamSpotIsSet){
-        fVx=0.0;
-        fVy=0.0;
-        fVz=0.0;
-	//	std::cout<<"THE BEAM SPOT WAS DETERMINED NOT TO BE SET \n"<<std::endl;
-        fPx   = 0.;
-        fPy   = 0.;
-        fPz   = sqrt(pow(fEbeam * fA / 1000.0 + thisPart->Mass(),2) - pow(thisPart->Mass(),2) - fPx*fPx - fPy*fPy);
-      }
-	gATVP->SetTanOffset(tanOffset);
-	gATVP->Setfocz(focz/10.);//mm to cm
+	//x0/y0 is coordinates of beam particle at ATTPC entrance, xFocus is coordinates at focus.
+	xFocus = gRandom->Gaus(0,fwhmFocus / 2.355);
+	yFocus = gRandom->Gaus(0,fwhmFocus / 2.355);
+	do{
+	theta = gRandom->Uniform(-angularDiv,angularDiv);
+	phi = gRandom->Uniform(-angularDiv,angularDiv);
+	x0 = xFocus-zFocus*tan(phi);
+	y0 = yFocus-sqrt(pow(zFocus,2)+pow(xFocus-x0,2))*tan(theta);
+	}
+	while(sqrt(pow(x0,2)+pow(y0,2))>rHole && sqrt(pow(tan(theta),2)+pow(tan(phi),2))>tan(angularDiv));
+	
+	if(fBeamSpotIsSet){  
+        	fVx   =x0 ;
+        	fVy   =y0 ; 
+        	fVz   =0. ;
 
-     /* if (fBeamSpotIsSet){
-		  cout << "-I- FairIonGenerator: Generating " << fMult <<" with mass "<<thisPart->Mass() << " ions of type "
-		  << fIon->GetName() << " (PDG code " << pdgType << ")\n";
-		  cout << "    Momentum (" << fPx << ", " << fPy << ", " << fPz
-		  << ") Gev from vertex (" << fVx << ", " << fVy << ", " << fVz << ") cm. TanOffset: " << tanOffset << " "<< fR << " test mom " <<sqrt( pow(fEbeam * fA / 1000.0 + thisPart->Mass(),2) - pow(thisPart->Mass(),2) )/fA<<endl; 
-	    }
+		fPx=fPtot*cos(theta)*sin(phi);
+		fPy=fPtot*sin(theta);
+		fPz=sqrt(fPtot*fPtot - fPx*fPx - fPy*fPy);
+/*
+		cout << "x0: " << x0 <<", y0: " << y0 << ", xFocus: " << xFocus << ", yFocus: " << yFocus << ", zFocust:" << zFocus << std::endl;
+		cout<< "Px: "<< fPx<<" Py: "<<fPy<<"fPz :"<<fPz<<endl;
+		cout<<"theta: "<<theta<<"phi: "<<phi<<endl;
 */
+	
+      	}
+      	else if(!fBeamSpotIsSet){
+        	fVx=0.0;
+        	fVy=0.0;
+        	fVz=0.0;
+	//	std::cout<<"THE BEAM SPOT WAS DETERMINED NOT TO BE SET \n"<<std::endl;
+        	fPx   = 0.;
+        	fPy   = 0.;
+        	fPz   = sqrt(pow(fEbeam * fA / 1000.0 + thisPart->Mass(),2) - pow(thisPart->Mass(),2) - fPx*fPx - fPy*fPy);
+      }
       // cout << "-I- FairIonGenerator: Generating " << fMult <<" with mass "<<thisPart->Mass() << " ions of type "
       // << fIon->GetName() << " (PDG code " << pdgType << ")\n";
       // cout << "    Momentum (" << fPx << ", " << fPy << ", " << fPz
@@ -274,6 +249,7 @@ ATTPCIonGenerator::ATTPCIonGenerator(const Char_t* ionName, Int_t mult,
 
 
       gATVP->IncBeamEvtCnt();
+      gATVP->Setd2HeVtx(fVx,fVy,theta,phi);
 
 
       if(gATVP->GetBeamEvtCnt()%2!=0){
