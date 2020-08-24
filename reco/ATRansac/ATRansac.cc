@@ -80,10 +80,10 @@ void ATRANSACN::ATRansac::CalcRANSAC(ATEvent *event)
 {
 
     std::vector<ATTrack*> tracks = RansacPCL(event);
-    //std::cout<<" Number of tracks : "<<tracks.size()<<std::endl;
-
-    if(tracks.size()>1){ //Defined in CalcGenHoughSpace
-      for(Int_t ntrack=0;ntrack<tracks.size();ntrack++){
+    Int_t tracksSize = tracks.size();
+    std::cout<<"RansacPCL tracks size : "<<tracksSize<<std::endl;
+    if(tracksSize>1){
+      for(Int_t ntrack=0;ntrack<tracksSize;ntrack++){
         std::vector<ATHit>* trackHits = tracks.at(ntrack)->GetHitArray();
         Int_t nHits = trackHits->size();
         //std::cout<<" Num  Hits : "<<nHits<<std::endl;
@@ -164,7 +164,7 @@ void ATRANSACN::ATRansac::CalcRANSACFull(ATEvent *event)
         std::vector<ATTrack*> tracks = RansacPCL(event);
 
         XYZVector Z_1(0.0,0.0,1.0); // Beam direction
-
+    
         if(tracks.size()>1){ //Defined in CalcGenHoughSpace
           for(Int_t ntrack=0;ntrack<tracks.size();ntrack++){
             std::vector<ATHit>* trackHits = tracks.at(ntrack)->GetHitArray();
@@ -492,7 +492,8 @@ void ATRANSACN::ATRansac::FindVertex(std::vector<ATTrack*> tracks)
 
 
       //Vector of the beam determined from the experimental data
-      XYZVector BeamDir_1(-0.106359,-0.0348344,1.0);
+     // XYZVector BeamDir_1(-0.106359,-0.0348344,1.0);
+      XYZVector BeamDir_1(0.,0.,1.0);
       //TODO:: This is for 6.5 degrees of tilting angle. Need a function to set it.
 
       // Test each line against the others to find a vertex candidate

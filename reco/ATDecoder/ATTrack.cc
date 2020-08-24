@@ -103,6 +103,52 @@ std::vector<Double_t> ATTrack::GetPosYBack() const                  { return fPo
 std::vector<Double_t> ATTrack::GetPosZBack() const                  { return fPosZBack;}
 
 
+TVector3 ATTrack::GetLastPoint()
+{ 
+	Double_t maxR = 0.; 
+        TVector3 maxPos,temp; 
+        for(Int_t nHit = 0;nHit < fHitArray.size();nHit++){
+        	temp = fHitArray.at(nHit).GetPosition();
+               	if(sqrt(pow(temp.X(),2) + pow(temp.Y(),2))>maxR){
+                	maxR = sqrt(pow(temp.X(),2) + pow(temp.Y(),2));
+                        maxPos = temp;
+                }
+        }
+	return maxPos;
+}
+//alternative, but noticed that the last point in time is not alway the further away
+/*
+TVector3 ATTrack::GetLastPoint()
+{
+	TVector3 maxPos;
+	if(fHitArray.size()>0){
+		ATHit fhit = fHitArray.front(); // Last hit of the track (Low TB)
+    		ATHit lhit = fHitArray.back(); // First hit of the track (High TB)
+    		TVector3 fhitPos = fhit.GetPosition();
+    		TVector3 lhitPos = lhit.GetPosition();
+    		if( pow(fhitPos.X(),2) + pow(fhitPos.Y(),2) > pow(lhitPos.X(),2) + pow(lhitPos.Y(),2) ) maxPos = fhitPos;
+		else maxPos = lhitPos;
+	}
+	return maxPos
+}
+*/
+
+
+std::pair<Double_t,Double_t> ATTrack::GetThetaPhi(const TVector3 &vertex, const TVector3 &maxPos)
+{
+	std::pair<Double_t,Double_t> thetaPhi;
+        if(fParFit.size()>0){
+
+                TVector3 vp(TMath::Sign(1,maxPos.X())*fabs(fParFit[1]),TMath::Sign(1,maxPos.Y())*fabs(fParFit[3]),-TMath::Sign(1,(maxPos.Z()-vertex.Z()))*fabs(fParFit[5]));
+//		std::cout<<" fParFit "<<fParFit[1]<<" "<<fParFit[3]<<" "<<fParFit[5]<<std::endl;
+//		std::cout<<" maxPos "<<maxPos.X()<<" "<<maxPos.Y()<<" "<<maxPos.Z()<<std::endl;
+
+		thetaPhi.first = vp.Theta();
+		thetaPhi.second = vp.Phi();
+	}
+	return thetaPhi;
+}
+
 
 Double_t ATTrack::GetMeanTime()
 {
@@ -142,6 +188,15 @@ Double_t ATTrack::GetLinearRange(TVector3 vertex)
 
 
 }
+
+
+Double_t ATTrack::GetLinearRange(const TVector3 &vertex, const TVector3 &maxPos)
+{
+  if(fHitArray.size()>0){
+    return TMath::Sqrt( TMath::Power((maxPos.X()-vertex.X()),2) + TMath::Power((maxPos.Y()-vertex.Y()),2) + TMath::Power((maxPos.Z()-vertex.Z()),2) );
+  }else return 0;
+}
+
 
 Double_t ATTrack::GetGeoQEnergy()
 {
