@@ -1,13 +1,13 @@
-void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
+void runsim_d2He(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile ="attpcsim_d2He_test.root";
+  TString outFile ="outputFiles/attpcsim_d2He.root";
 
   // Parameter file name
-  TString parFile="attpcpar_d2He_test.root";
+  TString parFile="outputFiles/attpcpar_d2He.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -44,7 +44,7 @@ void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_d2He_07atm_test.root");
+  ATTPC->SetGeometryFileName("ATTPC_d2He_07atm.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
@@ -73,7 +73,7 @@ void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
   Int_t a = 14; // Mass number
   Int_t q = 0;   // Charge State
   Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
-  Double_t kBeam = 100.;
+  Double_t kBeam = 115.;
   Double_t BExcEner = 0.0;
   Double_t Bmass = 14.008596359*931.494/1000.0; //Mass in GeV
   Double_t NomEnergy = 0.0858025; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
@@ -84,9 +84,13 @@ void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
   //Double_t pz = 24798.97727/(a*1000.0);  // Z-Momentum / per nucleon!!!!!!
   Double_t pz = sqrt( pow(kBeam * a / 1000.0 + Bmass,2) - pow(Bmass,2) )/a;  // Z-Momentum / per nucleon!!!!!!
 
+//set the following three variables to zero if do not want beam spot
+  Double_t fwhmFocus = 1.;//cm, FWHM of the gaussian distribution at beam spot
+  Double_t angularDiv= 10.E-3;//rad, angular divergence of the beam 
+  Double_t zFocus=50.;//cm, z position (beam direction) of the beam spot
 
-
-  ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
+  ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,kBeam,
+        fwhmFocus,angularDiv,zFocus);
   //ionGen->SetSpotRadius(0,-100,0);
   // add the ion generator
 
@@ -180,12 +184,12 @@ void runsim_d2He(Int_t nEvents = 50, TString mcEngine = "TGeant4")
 
   Double_t ThetaMinCMS = 0.0;
   Double_t ThetaMaxCMS = 180.0;
-  Int_t N_cross = 6560;
+  Int_t N_cross = 6560;//1760
   std::vector<Double_t> Arr1(N_cross), Arr2(N_cross), Arr3(N_cross);
   Double_t col1, col2, col3;
 
   //lee la seccion eficaz desde una tabla
-  string filename= "0to5_14O.dat"; //all2.dat//all2_14O.dat
+  string filename= "all2_14O.dat"; //all2_14O.dat//0to5_14O.dat
   ifstream  inputfile;
   inputfile. open(filename.c_str());
   if(inputfile.fail() ){

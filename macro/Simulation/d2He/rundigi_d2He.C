@@ -78,6 +78,7 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
   RandTask ->SetPersistence(kTRUE);
   //RandTask ->SetModelType(1);
   //RandTask ->SetFullMode();
+  RandTask->SetTiltAngle(0.0);
   RandTask->SetDistanceThreshold(7.5);
   RandTask->SetMinHitsLine(8);
 
