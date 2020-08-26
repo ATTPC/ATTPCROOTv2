@@ -86,7 +86,7 @@ void runsim_d2He(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
 
 //set the following three variables to zero if do not want beam spot
   Double_t fwhmFocus = 1.;//cm, FWHM of the gaussian distribution at beam spot
-  Double_t angularDiv= 10.E-3;//rad, angular divergence of the beam 
+  Double_t angularDiv= 10.E-3;//rad, angular divergence of the beam
   Double_t zFocus=50.;//cm, z position (beam direction) of the beam spot
 
   ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,kBeam,
@@ -295,7 +295,7 @@ void runsim_d2He(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
   ATTPCIonDecay* decay_14N = new ATTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay,
     zB, aB, massDecayB, &SepEne);
 
-    primGen->AddGenerator(decay_14N);
+    //primGen->AddGenerator(decay_14N);
 
     // ------------------------------------------------------------------------
 

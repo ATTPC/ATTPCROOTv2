@@ -86,6 +86,8 @@ void
 ATRansacTask::Exec(Option_t *opt)
 {
 
+
+
       fRansacArray -> Delete();
 
       if (fEventHArray -> GetEntriesFast() == 0)
@@ -100,5 +102,7 @@ ATRansacTask::Exec(Option_t *opt)
       Ransac->SetMinHitsLine(fMinHitsLine);
       if(kIsFullMode) Ransac->CalcRANSACFull(fEvent);
       else Ransac->CalcRANSAC(fEvent);
+
+
 
 }

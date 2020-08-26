@@ -79,7 +79,10 @@ void ATRANSACN::ATRansac::SetVertexTime(Double_t val)                           
 void ATRANSACN::ATRansac::CalcRANSAC(ATEvent *event)
 {
 
+
+
     std::vector<ATTrack*> tracks = RansacPCL(event);
+
     Int_t tracksSize = tracks.size();
     std::cout<<"RansacPCL tracks size : "<<tracksSize<<std::endl;
     if(tracksSize>1){
@@ -95,6 +98,7 @@ void ATRANSACN::ATRansac::CalcRANSAC(ATEvent *event)
           }
       }// Tracks loop
       FindVertex(tracks);
+
     }// Minimum tracks
 
     // Drawing tracks against the Event
@@ -164,7 +168,7 @@ void ATRANSACN::ATRansac::CalcRANSACFull(ATEvent *event)
         std::vector<ATTrack*> tracks = RansacPCL(event);
 
         XYZVector Z_1(0.0,0.0,1.0); // Beam direction
-    
+
         if(tracks.size()>1){ //Defined in CalcGenHoughSpace
           for(Int_t ntrack=0;ntrack<tracks.size();ntrack++){
             std::vector<ATHit>* trackHits = tracks.at(ntrack)->GetHitArray();
@@ -195,6 +199,7 @@ std::vector<ATTrack*> ATRANSACN::ATRansac::Ransac(std::vector<ATHit>* hits)
 {
     std::vector<ATTrack*> tracks;
 
+
     //Data writer
     //pcl::PCDWriter writer;
 
@@ -205,6 +210,7 @@ std::vector<ATTrack*> ATRANSACN::ATRansac::Ransac(std::vector<ATHit>* hits)
     //pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZRGBA>);
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_p(new pcl::PointCloud<pcl::PointXYZRGBA>);
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_f (new pcl::PointCloud<pcl::PointXYZRGBA>);
+
 
     if(hits->size()<5) return tracks;
 
@@ -230,12 +236,16 @@ std::vector<ATTrack*> ATRANSACN::ATRansac::Ransac(std::vector<ATHit>* hits)
           cloud->points[iHit].y = position.Y();
           cloud->points[iHit].z = position.Z();
           cloud->points[iHit].rgb = iHit; // Storing the position of the hit in the event container
+          //std::cout << position.X()<<"  "<<position.Y()<<"  "<<position.Z() << '\n';
         }
 
     }
 
+
+
     pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients ());
     pcl::PointIndices::Ptr inliers (new pcl::PointIndices ());
+
 
     // Create the segmentation object
     pcl::SACSegmentation<pcl::PointXYZRGBA> seg;
@@ -246,9 +256,10 @@ std::vector<ATTrack*> ATRANSACN::ATRansac::Ransac(std::vector<ATHit>* hits)
     seg.setDistanceThreshold(fRANSACThreshold);
 
     // Create the filtering object
- pcl::ExtractIndices<pcl::PointXYZRGBA> extract;
+    pcl::ExtractIndices<pcl::PointXYZRGBA> extract;
 
 int i = 0, nr_points = (int) cloud->points.size ();
+
 
 
 while (cloud->points.size () > fRANSACPointThreshold * nr_points)
@@ -261,6 +272,7 @@ while (cloud->points.size () > fRANSACPointThreshold * nr_points)
 
      std::vector<Double_t> coeff;
 
+
      /*std::cerr << "Model coefficients: " << coefficients->values[0] << " "
                                          << coefficients->values[1] << " "
                                          << coefficients->values[2] << " "
@@ -268,7 +280,10 @@ while (cloud->points.size () > fRANSACPointThreshold * nr_points)
                                          << coefficients->values[4] << "  "
                                          << coefficients->values[5] << std::endl;*/
 
-     for(auto icoeff=0;icoeff<6;++icoeff)
+      //size of vector coefficients->values is not always 6!
+     int Coefsize = coefficients->values.size();
+
+     for(auto icoeff=0;icoeff<Coefsize;++icoeff)
           coeff.push_back(coefficients->values[icoeff]);
 
 
@@ -313,6 +328,7 @@ while (cloud->points.size () > fRANSACPointThreshold * nr_points)
 
 
 }
+
 
 
     return tracks;
