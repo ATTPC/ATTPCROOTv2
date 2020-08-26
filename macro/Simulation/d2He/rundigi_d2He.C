@@ -80,7 +80,7 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
   //RandTask ->SetFullMode();
   RandTask->SetTiltAngle(0.0);
   RandTask->SetDistanceThreshold(7.5);
-  RandTask->SetMinHitsLine(8);
+  RandTask->SetMinHitsLine(10);
 
 
 
@@ -107,8 +107,8 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
   // __ Init and run ___________________________________
 
   fRun -> Init();
-  fRun -> Run(0,nEvents);
-  //fRun -> Run(0,20);
+  //fRun -> Run(0,nEvents);
+  fRun -> Run(0,100);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

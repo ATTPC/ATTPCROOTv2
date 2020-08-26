@@ -138,6 +138,7 @@ void ATPulseTask::Exec(Option_t* option) {
   fPadPlane->Reset(0);
   Int_t size = fRawEventArray -> GetEntriesFast(); //will be always 1
 
+
   //TFile output("test_output.root","recreate");
 
   //Distributing electron pulses among the pads
@@ -186,7 +187,7 @@ void ATPulseTask::Exec(Option_t* option) {
     // Set Pad and add to event
     ATPad *pad = new ATPad();
     //std::cout<<" Pad number "<<thePadNumber<<"\n";
-	
+
     for(Int_t kk=0;kk<fNumTbs;kk++) {
       if(eleAccumulated[thePadNumber]->GetBinContent(kk)>0) {
 	for(Int_t nn=kk;nn<fNumTbs;nn++) {
@@ -217,8 +218,11 @@ void ATPulseTask::Exec(Option_t* option) {
     //std::cout <<" Event "<<aux<<" "<<electronsMap.size()<< "*"<< std::flush;
     ite2++;
   }
+	
   fEventID++;
   return;
+
+
 }
 
 ClassImp(ATPulseTask);
