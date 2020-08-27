@@ -15,6 +15,7 @@ ${CMAKE_SOURCE_DIR}/eventdisplayAT
 ${CMAKE_SOURCE_DIR}/reco/ATDecoder
 ${CMAKE_SOURCE_DIR}/reco/HoughTransformation
 ${CMAKE_SOURCE_DIR}/reco/ATRansac
+${CMAKE_SOURCE_DIR}/reco/ATRansacMod
 ${CMAKE_SOURCE_DIR}/reco/ATPatternRecognition
 ${CMAKE_SOURCE_DIR}/par
 

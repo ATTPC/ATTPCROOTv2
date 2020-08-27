@@ -180,9 +180,9 @@ vector <int> EvtMatch(const vector<Long64_t> &TsEvtS800, const vector<Long64_t> 
 
 
   int S800_ATTPC_merger() {
-    TString fileS800_1="/projects/ceclub/giraud/s800root_jorge/s800root/files/rootFiles/test-runs800-48Ca-RAW.root";
-    TString fileS800_2="/projects/ceclub/giraud/s800root_jorge/s800root/files/rootFiles/test-runs800-48Ca-CAL.root";
-    TString fileATTPC="../outputFiles/attpcdigi_d2He_1000.root";//projects/ceclub/giraud/ATTPCROOTv2/macro/Unpack_HDF5/
+    TString fileS800_1="/home/juan/FairRoot/ATTPCROOTv2_simon/test-runs800-48Ca-RAW.root";
+    TString fileS800_2="/home/juan/FairRoot/ATTPCROOTv2_simon/test-runs800-48Ca-CAL.root";
+    TString fileATTPC="/home/juan/FairRoot/ATTPCROOTv2_simon/attpcdigi_d2He_1000.root";//projects/ceclub/giraud/ATTPCROOTv2/macro/Unpack_HDF5/
     Int_t S800class, ATTPCclass;
     S800class=1;//0 : rawtree; 1 : caltree
     ATTPCclass=3;//2 : raw hit pattern; 3: ransac fitted hit pattern

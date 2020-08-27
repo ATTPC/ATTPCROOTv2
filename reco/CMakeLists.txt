@@ -23,6 +23,7 @@ ${CMAKE_SOURCE_DIR}/reco/ATAnalysis
 ${CMAKE_SOURCE_DIR}/reco/ATRansac
 ${CMAKE_SOURCE_DIR}/reco/ATPatternRecognition
 ${CMAKE_SOURCE_DIR}/tpc
+${CMAKE_SOURCE_DIR}/reco/ATRansacMod
 
 )
 
@@ -117,6 +118,7 @@ ATAnalysis/ATTrackingAnalysis.cc
 ATAnalysis/ATd2HeAnalysis.cc
 
 ATRansac/ATRansac.cc
+ATRansacMod/ATRansacMod.cc
 
 ATPatternRecognition/ATPRA.cc
 ATPatternRecognition/ATTrackFinderHC.cc
