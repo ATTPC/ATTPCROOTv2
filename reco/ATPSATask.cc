@@ -106,7 +106,7 @@ ATPSATask::Init()
     fPSA = new ATPSAFilter();
     fPSA -> SetMeanK(fMeanK);
     fPSA -> SetStddevMulThresh(fStdDev);
-  
+
   } else if (fPSAMode == 4) {
     fLogger -> Info(MESSAGE_ORIGIN, "Using ATPSAFull!");
 
@@ -118,7 +118,7 @@ ATPSATask::Init()
     fPSA = new ATPSAProtoFull();
     fPSA -> SetTBLimits(fTBRange);
 
-  }  
+  }
 
   fPSA -> SetThreshold((Int_t)fThreshold);
   fPSA -> SetBaseCorrection(fIsBaseCorr);
@@ -177,7 +177,7 @@ ATPSATask::Exec(Option_t *opt)
     return;
 
   ATRawEvent *rawEvent = (ATRawEvent *) fRawEventArray -> At(0);
-  //std::cout << "  Event Number :  " << rawEvent -> GetEventID() << " Valid pads : " << rawEvent -> GetNumPads() << std::endl;
+  std::cout << "  Event Number :  " << rawEvent -> GetEventID() << " Valid pads : " << rawEvent -> GetNumPads() << std::endl;
 
   ATEvent *event = (ATEvent *) new ((*fEventHArray)[0]) ATEvent();
 
@@ -214,7 +214,7 @@ void ATPSATask::SetTBLimits(std::pair<Int_t,Int_t> limits)
     if(limits.first>=limits.second)
     {
       std::cout<<" Warning ATPSATask::SetTBLimits -  Wrong Time Bucket limits. Setting default limits (0,512) ... "<<"\n";
-      
+
 
     }else{
       fTBRange.first  = limits.first;

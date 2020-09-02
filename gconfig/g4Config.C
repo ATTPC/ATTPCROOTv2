@@ -68,7 +68,7 @@ void Config()
    cout << " -I g4Config() using g4conf  macro: " << configm1 << endl;
 
    //set geant4 specific stuff
-  geant4->SetMaxNStep(5E4);  // default is 30000
+  geant4->SetMaxNStep(5E3);  // default is 30000
   geant4->ProcessGeantMacro(configm1.Data());
 
 }

@@ -48,7 +48,7 @@ void AtTpcMap::Initialize()
   fIniPads.clear();
   hPlane = new TH2Poly();
 
-  
+
 }
 
 void AtTpcMap::Dump(){
@@ -71,7 +71,7 @@ void AtTpcMap::Dump(){
       }//i
 
   coordmap.close();
-      
+
 }
 
 void AtTpcMap::GenerateATTPC(){
@@ -284,12 +284,13 @@ void AtTpcMap::ParseMapList(TXMLNode *node){
 
 	for(; node;node=node->GetNextNode()){
 	 if(node->GetNodeType()==TXMLNode::kXMLElementNode){ //Element node
-	    if(strcmp(node->GetNodeName(),"e17504_fission") == 0 
+	    if(strcmp(node->GetNodeName(),"e17504_fission") == 0
       || strcmp(node->GetNodeName(),"Lookup20150611") == 0
-      || strcmp(node->GetNodeName(),"e18505") == 0 
-      || strcmp(node->GetNodeName(),"LookupProto20150331") == 0 
+      || strcmp(node->GetNodeName(),"e18505") == 0
+      || strcmp(node->GetNodeName(),"LookupProto20150331") == 0
       || strcmp(node->GetNodeName(),"LookupProto10Be") == 0
       || strcmp(node->GetNodeName(),"LookupProto20181201v2") == 0
+      || strcmp(node->GetNodeName(),"e12014_pad_mapping") == 0
       || strcmp(node->GetNodeName(),"LookupProtoND") == 0){ //TODO Implement this as function parameter ( I Know this is very dirty
 				//cout<<node->GetNodeName()<<endl;
                                 //if(strcmp(node->GetNodeName(),"Lookup20141208") == 0){
@@ -514,6 +515,10 @@ Bool_t AtTpcMap::ParseInhibitMap(TString inimap, TString lowgmap, TString xtalkm
             }
 
          std::cout<< cYELLOW <<__func__ <<"     "<<fIniPads.size()<<" pads added to inhibition list"<<cNORMAL<<std::endl;
+
+         delete fIni;
+         delete fLowg;
+         delete fXtalk;
 
      return kTRUE;
 

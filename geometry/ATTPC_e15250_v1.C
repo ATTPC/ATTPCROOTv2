@@ -52,7 +52,7 @@ TGeoVolume* create_detector();
 void position_detector();
 void add_alignable_volumes();
 
-void ATTPC_v1_1() {
+void ATTPC_e15250_v1() {
   // Load the necessary FairRoot libraries
  // gROOT->LoadMacro("$VMCWORKDIR/gconfig/basiclibs.C");
  // basiclibs();
@@ -72,7 +72,7 @@ void ATTPC_v1_1() {
   TGeoVolume* top = new TGeoVolumeAssembly("TOP");
   gGeoMan->SetTopVolume(top);
 
-  TGeoMedium* gas   = gGeoMan->GetMedium(MediumVacuum);
+  TGeoMedium* gas   = gGeoMan->GetMedium(MediumGas);
   TGeoVolume* tpcvac = new TGeoVolumeAssembly(geoVersion);
   tpcvac -> SetMedium(gas);
   top->AddNode(tpcvac, 1);

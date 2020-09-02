@@ -1,4 +1,4 @@
-void Mg22_alpha_e15250_sim_2(Int_t nEvents = 10000, TString mcEngine = "TGeant4") {
+void Mg22_alpha_e15250_sim_2(Int_t nEvents = 10, TString mcEngine = "TGeant4") {
   
   TString dir = getenv("VMCWORKDIR");
   
@@ -175,7 +175,7 @@ void Mg22_alpha_e15250_sim_2(Int_t nEvents = 10000, TString mcEngine = "TGeant4"
   run->Run(nEvents);
   
   //You can export your ROOT geometry ot a separate file
-  run->CreateGeometryFile("../data/geofile_e15250_full.root");
+  run->CreateGeometryFile("./data/geofile_e15250_full.root");
   // ------------------------------------------------------------------------
   
   // -----   Finish   -------------------------------------------------------

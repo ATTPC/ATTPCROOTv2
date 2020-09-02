@@ -1,4 +1,4 @@
-void Mg22_alpha_e15250_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
+void Mg22_alpha_e15250_sim(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -53,11 +53,11 @@ void Mg22_alpha_e15250_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 
   // -----   Magnetic field   -------------------------------------------
   // Constant Field
-  /*  AtConstField  *fMagField = new AtConstField();
-    fMagField->SetField(0., 0. ,0. ); // values are in kG
+    AtConstField  *fMagField = new AtConstField();
+    fMagField->SetField(0., 0. ,20. ); // values are in kG
     fMagField->SetFieldRegion(-50, 50,-50, 50, -10,230); // values are in cm
                           //  (xmin,xmax,ymin,ymax,zmin,zmax)
-    run->SetField(fMagField);*/
+    run->SetField(fMagField);
   // --------------------------------------------------------------------
 
   // -----   Create PrimaryGenerator   --------------------------------------
@@ -72,9 +72,9 @@ void Mg22_alpha_e15250_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 	Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
 	Double_t pz = 2.126/a;  // Z-Momentum / per nucleon!!!!!!
   Double_t BExcEner = 0.0; 
-  Double_t Bmass = 20.49247; //Mass in GeV
-  Double_t NomEnergy = 210.0; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
-  Double_t TargetMass = 3.728401;//Mass in GeV
+  Double_t Bmass = 21.999573843; //Mass in GeV
+  Double_t NomEnergy = 120.0; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
+  Double_t TargetMass = 4.00150618;
 
 
 	ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
@@ -109,17 +109,17 @@ void Mg22_alpha_e15250_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   Pxp.push_back(px);
   Pyp.push_back(py);
   Pzp.push_back(pz);
-  Mass.push_back(Bmass);
+  Mass.push_back(21.999573843);
   ExE.push_back(BExcEner);
 
   // ---- Target ----
-  Zp.push_back(2); // p
+        Zp.push_back(2); // p
 	Ap.push_back(4); //
 	Qp.push_back(0); //
 	Pxp.push_back(0.0);
-  Pyp.push_back(0.0);
+        Pyp.push_back(0.0);
 	Pzp.push_back(0.0);
-  Mass.push_back(3.728401);
+        Mass.push_back(4.00150618);
 	ExE.push_back(0.0);//In MeV
 
   //--- Scattered -----
@@ -129,7 +129,7 @@ void Mg22_alpha_e15250_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   Pxp.push_back(0.0);
   Pyp.push_back(0.0);
   Pzp.push_back(0.0);
-  Mass.push_back(23.27844);
+  Mass.push_back(24.990428095);
   ExE.push_back(0.0);
 
  // ---- Recoil -----
@@ -139,11 +139,11 @@ void Mg22_alpha_e15250_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   Pxp.push_back(0.0);
   Pyp.push_back(0.0);
   Pzp.push_back(0.0);
-  Mass.push_back(0.93827203);
+  Mass.push_back(1.00783);
 	ExE.push_back(0.0);//In MeV
 
-  Double_t ThetaMinCMS = 0.0;
-  Double_t ThetaMaxCMS = 180.0;
+  Double_t ThetaMinCMS = 10.0;
+  Double_t ThetaMaxCMS = 120.0;
 
   ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
   primGen->AddGenerator(TwoBody);

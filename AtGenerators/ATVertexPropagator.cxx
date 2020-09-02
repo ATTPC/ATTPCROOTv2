@@ -1,5 +1,6 @@
 #include "ATVertexPropagator.h"
 #include "TVector3.h"
+#include "TRandom.h"
 
 
 ATVertexPropagator *gATVP = (ATVertexPropagator *)0;
@@ -8,8 +9,7 @@ ATVertexPropagator *gATVP = (ATVertexPropagator *)0;
 // -----   Default constructor   -------------------------------------------
 ATVertexPropagator::ATVertexPropagator():fGlobalEvtCnt(0),fBeamEvtCnt(0),fDecayEvtCnt(0),
 fVx(0.),fVy(0.),fVz(0.),fPx(0.),fPy(0.),fPz(0.),fE(0.),fBeamMass(0),fRndELoss(0),fBeamNomE(0),fInVx(0),fInVy(0),fInVz(0),
-fRecoilE(0),fRecoilA(0),fScatterE(0),fScatterA(0),fBURes1E(0),fBURes1A(0), fBURes2E(0),fBURes2A(0),fIsValidKine(0),fAiso(0),fZiso(0),
-fExEjectile(0.)
+fRecoilE(0),fRecoilA(0),fScatterE(0),fScatterA(0),fBURes1E(0),fBURes1A(0), fBURes2E(0),fBURes2A(0),fIsValidKine(0),fAiso(0),fZiso(0),fExEjectile(0)
 {
 
    if(gATVP)
@@ -94,6 +94,15 @@ void ATVertexPropagator::SetAtomicNum(Int_t anum)		{ fZiso = anum;}
 void ATVertexPropagator::SetScatterP(TVector3 avec)		{ fScatP = avec;}
 void ATVertexPropagator::SetScatterEx(Double_t val)			{fExEjectile=val;}
 void ATVertexPropagator::Setd2HeVtx(TVector3 avec)			{fd2HeVtx=avec;}
+void ATVertexPropagator::Setd2HeVtx(Double_t x0, Double_t y0, Double_t theta, Double_t phi)			{
+      Double_t vx,vy,vz;
+      vz = 100.0*(gRandom->Uniform()); //cm
+      //vz=50.;
+      vx = x0+vz*tan(phi);
+      vy = y0+sqrt(pow(vz,2)+pow(vx-x0,2))*tan(theta);
+      fd2HeVtx.SetXYZ(vx,vy,vz);
+}
+
 
 
 Int_t ATVertexPropagator::GetGlobalEvtCnt()    			{ return fGlobalEvtCnt;}
@@ -127,12 +136,10 @@ TVector3 ATVertexPropagator::GetScatterP()			                  { return fScatP;}
 Double_t ATVertexPropagator::GetScatterEx()			                  { return fExEjectile;}
 TVector3 ATVertexPropagator::Getd2HeVtx()			                  {return fd2HeVtx;}
 
-
 void ATVertexPropagator::IncGlobalEvtCnt()                      {  fGlobalEvtCnt++;    }
 void ATVertexPropagator::IncBeamEvtCnt()                        {  fBeamEvtCnt++;    }
 void ATVertexPropagator::IncDecayEvtCnt()                       {  fDecayEvtCnt++;    }
 void ATVertexPropagator::SetValidKine(Bool_t val)               {  fIsValidKine=val; }
-
 
 
 ClassImp(ATVertexPropagator)

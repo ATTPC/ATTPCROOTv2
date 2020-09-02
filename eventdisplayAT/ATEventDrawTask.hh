@@ -67,6 +67,7 @@ class ATEventDrawTask : public FairTask
     void Set3DHitStyleBox();
     void SetSaveTextData();
     void SetLine(double t, std::vector<Double_t> p, double &x, double &y, double &z);
+    void SetLine6(double t, std::vector<Double_t> p, double &x, double &y, double &z);
     //void SetHitClusterAttributes(Color_t, Size_t, Style_t);
     //void SetRiemannAttributes(Color_t, Size_t, Style_t);
 
@@ -256,6 +257,7 @@ class ATEventDrawTask : public FairTask
 
     //std::vector<TEveLine*> fLineArray;
     TEveLine* fLineArray[5];
+    TEvePointSet *fVertex = nullptr;
     Int_t fLineNum;
     Int_t fTrackNum;
     //TEveLine* fLine;
