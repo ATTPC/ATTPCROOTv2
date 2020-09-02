@@ -58,20 +58,22 @@ ATGas *ATDigiPar::GetGas()
 }
 
 Int_t ATDigiPar::GetTBTime() {
-  switch (fSamplingRate) {
-
-    case 6:
-      return 160;
-    case 12:
-      return 80;
-    case 25:
-      return 40;
-    case 50:
-      return 20;
-    case 100:
-      return 10;
-    default:
-      return -1;
+  switch (fSamplingRate)
+  {
+  case 3:
+    return 320;
+  case 6:
+    return 160;
+  case 12:
+    return 80;
+  case 25:
+    return 40;
+  case 50:
+    return 20;
+  case 100:
+    return 10;
+  default:
+    return -1;
   }
 }
 
