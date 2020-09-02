@@ -37,7 +37,8 @@ ATTPCIonGenerator::ATTPCIonGenerator()
     fPx(0.), fPy(0.), fPz(0.),
     fR(0.), fz(0.), fOffset(0.),
     fVx(0.), fVy(0.), fVz(0.),
-    fIon(NULL),  fQ(0), fBeamSpotIsSet(kFALSE)
+    fIon(NULL),  fQ(0), fBeamOpt(0),
+    fWhmFocus(0.), fDiv(0.), fZFocus(0.), fRHole(0.)
 {
 //  cout << "-W- ATTPCIonGenerator: "
 //      << " Please do not use the default constructor! " << endl;
@@ -52,7 +53,8 @@ ATTPCIonGenerator::ATTPCIonGenerator(const Char_t* ionName, Int_t mult,
     fPx(0.), fPy(0.), fPz(0.),
     fR(0.), fz(0.), fOffset(0.),
     fVx(0.), fVy(0.), fVz(0.),
-    fIon(NULL),  fQ(0), fBeamSpotIsSet(kFALSE)
+    fIon(NULL),  fQ(0), fBeamOpt(0),
+    fWhmFocus(0.), fDiv(0.), fZFocus(0.), fRHole(0.)
 {
 
   FairRunSim *fRun=FairRunSim::Instance();
@@ -103,7 +105,8 @@ ATTPCIonGenerator::ATTPCIonGenerator(const char* name,Int_t z, Int_t a, Int_t q,
     fPx(0.), fPy(0.), fPz(0.),
     fR(0.), fz(0.), fOffset(0.),
     fVx(0.), fVy(0.), fVz(0.),
-    fIon(NULL),  fQ(0), fBeamSpotIsSet(kFALSE), fNomEner(0.)
+    fIon(NULL),  fQ(0), fNomEner(0.), fBeamOpt(0),
+    fWhmFocus(0.), fDiv(0.), fZFocus(0.), fRHole(0.)
  {
   fgNIon++;
   fMult = mult;
@@ -139,7 +142,9 @@ ATTPCIonGenerator::ATTPCIonGenerator(const ATTPCIonGenerator& right)
     fPx(right.fPx), fPy(right.fPy), fPz(right.fPz),
     fR(right.fR), fz(right.fz), fOffset(right.fOffset),
     fVx(right.fVx), fVy(right.fVy), fVz(right.fVz),
-    fIon(right.fIon), fQ(right.fQ), fBeamSpotIsSet(right.fBeamSpotIsSet)
+    fIon(right.fIon), fQ(right.fQ), fBeamOpt(right.fBeamOpt),
+    fWhmFocus(right.fWhmFocus), fDiv(right.fDiv), fZFocus(right.fZFocus), 
+    fRHole(right.fRHole)
 {
 }
 
@@ -165,14 +170,50 @@ void ATTPCIonGenerator::SetExcitationEnergy(Double_t eExc) {
 void ATTPCIonGenerator::SetMass(Double_t mass) {
   fIon->SetMass(mass);
 }
+
+
+
+// -----   Private method SetEmittance   ----------------------------------
+void ATTPCIonGenerator::SetEmittance() {
+ 
+  Double_t x=0., y=0., xFocus=0., yFocus=0., theta=0., phi=0.;
+  Double_t ptot=sqrt(pow(fPx,2) + pow(fPy,2) + pow(fPz,2));
+
+/*
+Ex.
+        fWhmFocus = 1.; //cm, FWHM of Gaussian
+        fDiv = 10.*1E-3; //radians
+        fZFocus = 50; //cm, focus distance from entrance
+*/
+  //x is coordinates of beam particle at ATTPC entrance, xFocus is coordinates at focus.
+  xFocus = gRandom->Gaus(0,fWhmFocus / 2.355);
+  yFocus = gRandom->Gaus(0,fWhmFocus / 2.355);
+
+  do{
+  	theta = gRandom->Uniform(-fDiv,fDiv);
+        phi = gRandom->Uniform(-fDiv,fDiv);
+        x = xFocus-fZFocus*tan(phi);
+        y = yFocus-sqrt(pow(fZFocus,2)+pow(xFocus-x,2))*tan(theta);
+  }
+  while(sqrt(pow(x,2)+pow(y,2))>fRHole && sqrt(pow(tan(theta),2)+pow(tan(phi),2))>tan(fDiv));
+  
+  fVx   =x ;
+  fVy   =y ;
+  fVz   =0. ;
+
+  fPx=ptot*cos(theta)*sin(phi);
+  fPy=ptot*sin(theta);
+  fPz=sqrt(ptot*ptot - fPx*fPx - fPy*fPy);
+
+  gATVP->Setd2HeVtx(fVx,fVy,theta,phi);
+
+}
 //_________________________________________________________________________
 
 
 
 // -----   Public method ReadEvent   --------------------------------------
 Bool_t ATTPCIonGenerator::ReadEvent(FairPrimaryGenerator* primGen) {
-
-  Double_t Phi, SpotR;
 
  // if ( ! fIon ) {
  //   cout << "-W- FairIonGenerator: No ion defined! " << endl;
@@ -189,21 +230,25 @@ Bool_t ATTPCIonGenerator::ReadEvent(FairPrimaryGenerator* primGen) {
 
   int pdgType = thisPart->PdgCode();
 
-  //cout << "fR=" << fR << " fz=" << fz <<endl;
+  switch (fBeamOpt) {
+  	case 1:
+  		Double_t Phi, SpotR;
+                Phi= gRandom->Uniform(0,360)*TMath::DegToRad();
+                SpotR=gRandom->Uniform(0,fR);
 
-  Phi= gRandom->Uniform(0,360)*TMath::DegToRad();
-  SpotR=gRandom->Uniform(0,fR);
-
-  if(fBeamSpotIsSet) {
-    fVx   = SpotR*cos(Phi); //gRandom->Uniform(-fx,fx);
-    fVy   = fOffset + SpotR*sin(Phi); //gRandom->Uniform(-fy,fy);
-    fVz   = fz;
-  }else
-    {
-      fVx=0.0;
-      fVy=0.0;
-      fVz=0.0;
-    }
+                fVx   = SpotR*cos(Phi); //gRandom->Uniform(-fx,fx);
+                fVy   = fOffset + SpotR*sin(Phi); //gRandom->Uniform(-fy,fy);
+                fVz   = fz;
+		break;
+	case 2:
+		SetEmittance();//parameters: fWhmFocus, fDiv, fZFocus, fRHole, fPx, fPy, fPz  
+		//changes: fVx, fVy, fVz, fPx, fPy, fPz, d2HeVtx
+		break;
+	default:
+      		fVx=0.0;
+      		fVy=0.0;
+      		fVz=0.0;
+  }
 /*
   cout << "-I- FairIonGenerator: Generating " << fMult <<" with mass "<<thisPart->Mass() << " ions of type "
        << fIon->GetName() << " (PDG code " << pdgType << ")" << endl;

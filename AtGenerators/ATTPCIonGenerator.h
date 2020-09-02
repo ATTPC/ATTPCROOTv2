@@ -74,10 +74,12 @@ class ATTPCIonGenerator : public FairGenerator
   void SetMass(Double_t mass);
 
   void SetSpotRadius   (Double32_t r=0, Double32_t z=0, Double32_t off=0) {
-    fR=r; fz=z; fOffset=off; fBeamSpotIsSet=kTRUE;}
+    fR=r; fz=z; fOffset=off; fBeamOpt=1;}
 
-
-  /** Method ReadEvent 
+  void SetBeamEmittance   (Double32_t val1=0, Double32_t val2=0, Double32_t val3=0, Double32_t val4=0) {
+    fWhmFocus=val1; fDiv=val2; fZFocus=val3; fRHole=val4; fBeamOpt=2;}
+  
+   /** Method ReadEvent 
    ** Generates <mult> of the specified ions and hands hem to the
    ** FairPrimaryGenerator. 
    **/
@@ -85,6 +87,8 @@ class ATTPCIonGenerator : public FairGenerator
 
 
 private:
+
+  void SetEmittance();
 
   static Int_t fgNIon;      //! Number of the instance of this class
   Int_t    fMult;           // Multiplicity per event
@@ -95,8 +99,9 @@ private:
   Int_t    fQ;		    // Electric charge [e]
   Int_t fNomEner;
   Double_t fMaxEnLoss;      // Max energy loss before reation happens
+  Double32_t fWhmFocus, fDiv, fZFocus, fRHole;// Beam whm at focus, beam divergence, z focus, radius of the pad plan hole
 
-  Bool_t fBeamSpotIsSet;    // True if point beamspot is set
+  Int_t fBeamOpt;
     
   ClassDef(ATTPCIonGenerator,1)
 
