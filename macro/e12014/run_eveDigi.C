@@ -1,7 +1,5 @@
-void run_eve(int runNum, TString  OutputDataFile = "output.reco_display.root")
+void run_eve(TString  InputDataFile = "./output_digi.root", TString  OutputDataFile = "output.reco_display.root")
 {
-  TString  InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpacked/run_%04d.root", runNum);
-  
   FairLogger *fLogger = FairLogger::GetLogger();
   fLogger -> SetLogToScreen(kTRUE);
   fLogger->SetLogVerbosityLevel("MEDIUM");
@@ -34,6 +32,4 @@ void run_eve(int runNum, TString  OutputDataFile = "output.reco_display.root")
 
   eveMan->AddTask(eve);
   eveMan->Init();
-
-  eveMan->RunEvent(27);
 }
