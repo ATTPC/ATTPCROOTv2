@@ -22,6 +22,7 @@ ATRansacTask::ATRansacTask()
   fRANSACModel = pcl::SACMODEL_LINE;
   fRANSACThreshold = 5.0;
   fMinHitsLine = 5;
+  fNumItera = 500;
 
 }
 
@@ -35,6 +36,7 @@ void   ATRansacTask::SetDistanceThreshold(Float_t threshold)  { fRANSACThreshold
 void   ATRansacTask::SetFullMode()                            { kIsFullMode      = kTRUE;}
 void   ATRansacTask::SetMinHitsLine(Int_t nhits)              { fMinHitsLine     = nhits;}
 void   ATRansacTask::SetTiltAngle(Double_t val)               { fTiltAngle       = val;}
+void   ATRansacTask::SetNumItera(Int_t niterations)  { fNumItera = niterations;}
 
 InitStatus
 ATRansacTask::Init()
@@ -102,7 +104,13 @@ ATRansacTask::Exec(Option_t *opt)
       Ransac->SetMinHitsLine(fMinHitsLine);
       if(kIsFullMode) Ransac->CalcRANSACFull(fEvent);
       else Ransac->CalcRANSAC(fEvent);
+      
 
-
-
+      /*
+      ATRansacMod * Rantest = new ATRansacMod();
+      Rantest->SetDistanceThreshold(fRANSACThreshold);
+      Rantest->SetMinHitsLine(fMinHitsLine);
+      Rantest->SetNumItera(fNumItera);
+      Rantest->CalcRANSACMod(fEvent);
+      */
 }
