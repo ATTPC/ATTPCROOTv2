@@ -65,7 +65,7 @@ public:
   Double_t GetCoefDiffusionLong();
   Double_t GetGain();
   Double_t GetGETGain();
-
+  Int_t    GetPeakingTime();
   
   // Setters
   virtual void putParams(FairParamList *paramList);
@@ -117,7 +117,8 @@ private:
   Double_t fCoefT;                   //!< transversal diffusion coefficient
   Double_t fGain;                    //!< gain factor from wire plane
   Double_t fGETGain;                 //!< Gain from get electronics in fC
-
+  Int_t fPeakingTime;                //!< Peaking time of the electronics in ns
+  
   ClassDef(ATDigiPar, 1);
 };
 

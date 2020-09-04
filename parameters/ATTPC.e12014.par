@@ -40,5 +40,6 @@ CoefL:Double_t               0.055   # Longitudal coefficient of diffusion [cm^-
 CoefT:Double_t               0.038   # Transverse coefficient of diffusion [cm^-0.5]
 Gain:Double_t                 0.28   # Average gain of micromegas
 GETGain:Double_t              1000   # Gain of the GET electronics in fC
+PeakingTime:Int_t              720   # Electronic peaking time in ns
 MaxRange:Double_t            1000.0  # Maximum range from Beam energy in mm
 ################################################################################

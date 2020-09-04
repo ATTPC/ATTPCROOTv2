@@ -67,8 +67,11 @@ ATPulseTask::Init()
   fGain = fPar->GetGain();
   fGETGain = fPar->GetGETGain(); //Get the electronics gain in fC
   fGETGain = 1.602e-19*4096/(fGETGain*1e-15); //Scale to gain and correct for ADC
-  std::cout<<"  Gain in ATTPC gas: "<<fGain<<std::endl;
-  std::cout<<"  GET Gain: " << fGETGain << std::endl;
+  fPeakingTime = fPar->GetPeakingTime();
+  
+  std::cout <<"  Gain in ATTPC gas: "<<fGain<<std::endl;
+  std::cout <<"  GET Gain: " << fGETGain << std::endl;
+  std::cout <<"  Electronic peaking time: " << fPeakingTime << " ns" << std::endl;
   
   gain = new TF1("gain", "4*(x/[0])*pow(2.718, -2*(x/[0]))", 0, fGain*5);//Polya distribution of gain
   gain->SetParameter(0, fGain);
@@ -120,7 +123,8 @@ Double_t PadResponse(Double_t *x, Double_t *par){
 
 void ATPulseTask::Exec(Option_t* option) {
   LOG(INFO) << "Exec of ATPulseTask" << FairLogger::endl;
-  Double_t tau  = 1.0; //shaping time (us)
+
+  Double_t tau  = fPeakingTime/1000.; //shaping time (us)
 
   for(Int_t padS=0;padS<10240;padS++)
     eleAccumulated[padS]->Reset();

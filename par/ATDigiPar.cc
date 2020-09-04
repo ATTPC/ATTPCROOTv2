@@ -47,6 +47,7 @@ Double_t  ATDigiPar::GetCoefDiffusionLong(){ return fCoefL;}
 Double_t  ATDigiPar::GetCoefDiffusionTrans(){ return fCoefT;}
 Double_t  ATDigiPar::GetGain()             { return fGain;}
 Double_t  ATDigiPar::GetGETGain()             { return fGETGain;}
+Int_t     ATDigiPar::GetPeakingTime()      { return fPeakingTime;}
 Double_t  ATDigiPar::GetMaxRange()         { return fMaxRange;}
 
 ATGas *ATDigiPar::GetGas()
@@ -238,6 +239,11 @@ Bool_t ATDigiPar::getParams(FairParamList *paramList) //TODO Change all these pa
       return kFALSE;
     }
 
+    if (!(paramList -> fill("PeakingTime", &fPeakingTime))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find PeakingTime parameter!");
+      return kFALSE;
+    }
+
     if (!(paramList -> fill("MaxRange", &fMaxRange))) {
       fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find Gain parameter!");
       return kFALSE;
@@ -290,6 +296,7 @@ void ATDigiPar::putParams(FairParamList *paramList)
   paramList -> add("CoefT",fCoefT);
   paramList -> add("Gain",fGain);
   paramList -> add("GETGain",fGETGain);
+  paramList -> add("PeakingTime", fPeakingTime);
   paramList -> add("MaxRange",fMaxRange);
 
 }
