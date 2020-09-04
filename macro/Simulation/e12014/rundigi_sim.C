@@ -45,7 +45,7 @@ void rundigi_sim()
   
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(1);
+  psaTask -> SetThreshold(0);
   psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC
   psaTask -> SetMaxFinder();
   

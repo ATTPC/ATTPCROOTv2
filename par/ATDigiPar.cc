@@ -5,7 +5,7 @@ ClassImp(ATDigiPar)
 
 ATDigiPar::ATDigiPar(const Char_t *name, const Char_t *title, const Char_t *context)
 :FairParGenericSet("ATDigiPar", "ATTPC Parameter Container", ""),
- fGas(NULL)
+  fGas(NULL)
 {
   fInitialized = kFALSE;
 
@@ -17,19 +17,19 @@ ATDigiPar::~ATDigiPar()
 }
 
 // Getters
-   Int_t  ATDigiPar::GetPadPlaneX()        { return fPadPlaneX; }
-   Int_t  ATDigiPar::GetPadPlaneZ()        { return fPadPlaneZ; }
-   Int_t  ATDigiPar::GetPadSizeX()         { return fPadSizeX; }
-   Int_t  ATDigiPar::GetPadSizeZ()         { return fPadSizeZ; }
-   Int_t  ATDigiPar::GetPadRows()          { return fPadRows; }
-   Int_t  ATDigiPar::GetPadLayers()        { return fPadLayers; }
+Int_t  ATDigiPar::GetPadPlaneX()        { return fPadPlaneX; }
+Int_t  ATDigiPar::GetPadPlaneZ()        { return fPadPlaneZ; }
+Int_t  ATDigiPar::GetPadSizeX()         { return fPadSizeX; }
+Int_t  ATDigiPar::GetPadSizeZ()         { return fPadSizeZ; }
+Int_t  ATDigiPar::GetPadRows()          { return fPadRows; }
+Int_t  ATDigiPar::GetPadLayers()        { return fPadLayers; }
 Double_t  ATDigiPar::GetAnodeWirePlaneY()  { return fAnodeWirePlaneY; }
 Double_t  ATDigiPar::GetGroundWirePlaneY() { return fGroundWirePlaneY; }
 Double_t  ATDigiPar::GetGatingWirePlaneY() { return fGatingWirePlaneY; }
-   Int_t  ATDigiPar::GetNumTbs()           { return fNumTbs; }
+Int_t  ATDigiPar::GetNumTbs()           { return fNumTbs; }
 Double_t  ATDigiPar::GetDriftVelocity()    { return fDriftVelocity; }
 Double_t  ATDigiPar::GetDriftLength()      { return fDriftLength; }
-   Int_t  ATDigiPar::GetYDivider()         { return fYDivider; }
+Int_t  ATDigiPar::GetYDivider()         { return fYDivider; }
 Double_t  ATDigiPar::GetBField()           { return fBField;}
 Double_t  ATDigiPar::GetEField() 	         { return fEField;}
 Double_t  ATDigiPar::GetTiltAngle() 	     { return fTiltAng;}
@@ -42,9 +42,11 @@ Double_t  ATDigiPar::GetThetaPad()         { return fThetaPad;}
 Double_t  ATDigiPar::GetThetaRot()         { return fThetaRot;}
 Double_t  ATDigiPar::GetGasPressure()      { return fGasPressure;}
 Double_t  ATDigiPar::GetEIonize()          { return fEIonize;}
+Double_t  ATDigiPar::GetFano()             { return fFano;}
 Double_t  ATDigiPar::GetCoefDiffusionLong(){ return fCoefL;}
 Double_t  ATDigiPar::GetCoefDiffusionTrans(){ return fCoefT;}
 Double_t  ATDigiPar::GetGain()             { return fGain;}
+Double_t  ATDigiPar::GetGETGain()             { return fGETGain;}
 Double_t  ATDigiPar::GetMaxRange()         { return fMaxRange;}
 
 ATGas *ATDigiPar::GetGas()
@@ -158,7 +160,7 @@ Bool_t ATDigiPar::getParams(FairParamList *paramList) //TODO Change all these pa
       fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find PadShapeFile parameter!");
       return kFALSE;
     }
-     if (!(paramList -> fill("BField", &fBField))) {
+    if (!(paramList -> fill("BField", &fBField))) {
       fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find BField parameter!");
       return kFALSE;
     }
@@ -211,6 +213,11 @@ Bool_t ATDigiPar::getParams(FairParamList *paramList) //TODO Change all these pa
       return kFALSE;
     }
 
+    if (!(paramList -> fill("Fano", &fFano))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find Fano parameter!");
+      return kFALSE;
+    }
+
     if (!(paramList -> fill("CoefL", &fCoefL))) {
       fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find CoefL parameter!");
       return kFALSE;
@@ -223,6 +230,11 @@ Bool_t ATDigiPar::getParams(FairParamList *paramList) //TODO Change all these pa
 
     if (!(paramList -> fill("Gain", &fGain))) {
       fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find Gain parameter!");
+      return kFALSE;
+    }
+    
+    if (!(paramList -> fill("GETGain", &fGETGain))) {
+      fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find GETGain parameter!");
       return kFALSE;
     }
 
@@ -273,9 +285,11 @@ void ATDigiPar::putParams(FairParamList *paramList)
   paramList -> add("ThetaRot",fThetaRot);
   paramList -> add("GasPressure",fGasPressure);
   paramList -> add("EIonize",fEIonize);
+  paramList -> add("Fano",fFano);
   paramList -> add("CoefL",fCoefL);
   paramList -> add("CoefT",fCoefT);
   paramList -> add("Gain",fGain);
+  paramList -> add("GETGain",fGETGain);
   paramList -> add("MaxRange",fMaxRange);
 
 }

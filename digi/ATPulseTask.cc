@@ -65,11 +65,13 @@ ATPulseTask::Init()
   ioman -> Register("ATRawEvent", "cbmsim", fRawEventArray, fIsPersistent);
 
   fGain = fPar->GetGain();
+  fGETGain = fPar->GetGETGain(); //Get the electronics gain in fC
+  fGETGain = 1.602e-19*4096/(fGETGain*1e-15); //Scale to gain and correct for ADC
   std::cout<<"  Gain in ATTPC gas: "<<fGain<<std::endl;
-
+  std::cout<<"  GET Gain: " << fGETGain << std::endl;
+  
   gain = new TF1("gain", "4*(x/[0])*pow(2.718, -2*(x/[0]))", 0, fGain*5);//Polya distribution of gain
   gain->SetParameter(0, fGain);
-  //gain->SetParameter(1, getGain);
 
   //TODO: THIS SHOULD BE TAKEN FROM A NEW PARAMETER AS THE GAS GAIN
   //GET gain: 120fC, 240fC, 1pC or 10pC in 4096 channels
@@ -77,8 +79,8 @@ ATPulseTask::Init()
   // 1.6e-19*4096/240e-15 = 2.731e-03
   // 1.6e-19*4096/1e-12 = 6.5536e-04
   // 1.6e-19*4096/10e-12 = 6.5536e-05
-  fGETGain = 5.4613e-03; //electrones(carga)*4096/120 fC
-  std::cout<<"  GET Gain: " << fGETGain << std::endl;
+  // fGETGain = 5.4613e-03; //electrones(carga)*4096/120 fC
+  //std::cout<<"  GET Gain: " << fGETGain << std::endl;
 
   fTBTime = fPar->GetTBTime(); //Assuming 80 ns bucket
   fNumTbs = fPar->GetNumTbs();
