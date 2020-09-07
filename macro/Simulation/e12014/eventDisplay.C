@@ -3,7 +3,7 @@
  * Adam Anthony 8/21/19
  */
 
-void eventDisplay(TString fileName="PbFission_sim")
+void eventDisplay(TString fileName="PbFission_simDisplay")
 {
 
   //Form file names

@@ -43,6 +43,7 @@ private:
   Int_t fEventID;                      //!< EventID
   Double_t fGain;                      //!< Gain.
   Double_t fGETGain;                   //!< GET Gain.
+  Int_t fPeakingTime;                  //!< Electronic peaking time
   Int_t fTBTime;                       //!< Time bucket size
   Int_t fNumTbs;                       //!<
   Bool_t fIsPersistent;                //!< If true, save container

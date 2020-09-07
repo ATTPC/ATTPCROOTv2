@@ -1,23 +1,27 @@
 //Code to take MC tracks and digitize
 
-
 void rundigi_sim()
 {
 
-  TString scriptfile = "Lookup20150611.xml";
+  TString scriptfile = "e12014_pad_mapping.xml";
   TString paramFile  = "ATTPC.e12014.par";
   
   TString dir = getenv("VMCWORKDIR");
-  
+
+
   TString mcFile      = "./data/PbFission_sim.root";
+
+  //Create the full parameter file paths
   TString digiParFile = dir + "/parameters/" + paramFile;
   TString mapParFile  = dir + "/scripts/" + scriptfile;
 
   
-// -----   Timer   --------------------------------------------------------
+  // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
   timer.Start();
   // ------------------------------------------------------------------------
+
+
   // __ Run ____________________________________________
   FairRunAna* fRun = new FairRunAna();
   fRun -> SetInputFile(mcFile);
@@ -41,8 +45,9 @@ void rundigi_sim()
   
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(10);
+  psaTask -> SetThreshold(0);
   psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC
+  psaTask -> SetMaxFinder();
   
   fRun -> AddTask(clusterizer);
   fRun -> AddTask(pulse);
