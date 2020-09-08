@@ -28,6 +28,7 @@ class ATRansacTask : public FairTask {
     void SetFullMode(); //Mode that calculates the RANSAC method for every potential line
     void SetMinHitsLine(Int_t nhits); //Set Mininum number of hits per line
     void SetTiltAngle(Double_t val);
+    void SetAlgorithm(Int_t val);
 
     virtual InitStatus Init();
     virtual void SetParContainers();
@@ -48,6 +49,7 @@ class ATRansacTask : public FairTask {
     Int_t fMinHitsLine; // Minimum number of hits
     Double_t fTiltAngle;
     Int_t fNumItera;
+    Int_t fRANSACAlg;
 
 
 

@@ -23,6 +23,7 @@ ATRansacTask::ATRansacTask()
   fRANSACThreshold = 5.0;
   fMinHitsLine = 5;
   fNumItera = 500;
+  fRANSACAlg = 0;
 
 }
 
@@ -37,12 +38,18 @@ void   ATRansacTask::SetFullMode()                            { kIsFullMode     
 void   ATRansacTask::SetMinHitsLine(Int_t nhits)              { fMinHitsLine     = nhits;}
 void   ATRansacTask::SetTiltAngle(Double_t val)               { fTiltAngle       = val;}
 void   ATRansacTask::SetNumItera(Int_t niterations)  { fNumItera = niterations;}
+void   ATRansacTask::SetAlgorithm(Int_t val)  { fRANSACAlg = val;}
 
 InitStatus
 ATRansacTask::Init()
 {
 
-  fRansacArray = new TClonesArray("ATRANSACN::ATRansac");
+  if(fRANSACAlg==0)fRansacArray = new TClonesArray("ATRANSACN::ATRansac");
+  else if(fRANSACAlg==1) fRansacArray = new TClonesArray("ATRansacMod");
+  else{
+    fLogger -> Error(MESSAGE_ORIGIN, "Cannot find Ransac algorithm!");
+    return kERROR;
+  }
 
   FairRootManager *ioMan = FairRootManager::Instance();
   if (ioMan == 0) {
@@ -58,6 +65,7 @@ ATRansacTask::Init()
 
 
   ioMan -> Register("ATRansac", "ATTPC", fRansacArray, kIsPersistence);
+
 
 
 
@@ -95,22 +103,25 @@ ATRansacTask::Exec(Option_t *opt)
       if (fEventHArray -> GetEntriesFast() == 0)
        return;
 
-
       fEvent  = (ATEvent *) fEventHArray -> At(0);
-      ATRANSACN::ATRansac *Ransac = (ATRANSACN::ATRansac *) new ((*fRansacArray)[0]) ATRANSACN::ATRansac();
-      Ransac -> SetTiltAngle(fTiltAngle);
-      Ransac->SetModelType(fRANSACModel);
-      Ransac->SetDistanceThreshold(fRANSACThreshold);
-      Ransac->SetMinHitsLine(fMinHitsLine);
-      if(kIsFullMode) Ransac->CalcRANSACFull(fEvent);
-      else Ransac->CalcRANSAC(fEvent);
-      
 
-      /*
-      ATRansacMod * Rantest = new ATRansacMod();
-      Rantest->SetDistanceThreshold(fRANSACThreshold);
-      Rantest->SetMinHitsLine(fMinHitsLine);
-      Rantest->SetNumItera(fNumItera);
-      Rantest->CalcRANSACMod(fEvent);
-      */
+      if(fRANSACAlg==0){
+        ATRANSACN::ATRansac *Ransac = (ATRANSACN::ATRansac *) new ((*fRansacArray)[0]) ATRANSACN::ATRansac();
+        Ransac -> SetTiltAngle(fTiltAngle);
+        Ransac->SetModelType(fRANSACModel);
+        Ransac->SetDistanceThreshold(fRANSACThreshold);
+        Ransac->SetMinHitsLine(fMinHitsLine);
+        if(kIsFullMode) Ransac->CalcRANSACFull(fEvent);
+        else Ransac->CalcRANSAC(fEvent);
+      }
+
+      //std::cout << "/* Number of hits in the task    */"<<fEvent->GetNumHits() << '\n';
+      if(fRANSACAlg==1){
+        ATRansacMod * Rantest = (ATRansacMod *) new ((*fRansacArray)[0]) ATRansacMod();
+        Rantest->SetDistanceThreshold(fRANSACThreshold);
+        Rantest->SetMinHitsLine(fMinHitsLine);
+        Rantest->SetNumItera(fNumItera);
+        Rantest->CalcRANSACMod(fEvent);
+      }
+
 }

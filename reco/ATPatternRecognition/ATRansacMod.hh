@@ -29,26 +29,6 @@
 #include "TApplication.h"
 #include "TROOT.h"
 
-#include "Math/Minimizer.h"
-#include "Math/Factory.h"
-#include "Math/Functor.h"
-#include "Fit/Fitter.h"
-#include <Math/Vector3D.h>
-#include "TRotation.h"
-#include "TMatrixD.h"
-#include "TArrayD.h"
-#include "TVectorD.h"
-
-#include "Math/GenVector/Rotation3D.h"
-#include "Math/GenVector/EulerAngles.h"
-#include "Math/GenVector/AxisAngle.h"
-#include "Math/GenVector/Quaternion.h"
-#include "Math/GenVector/RotationX.h"
-#include "Math/GenVector/RotationY.h"
-#include "Math/GenVector/RotationZ.h"
-#include "Math/GenVector/RotationZYX.h"
-
-
 #ifdef _OPENMP
 #include <omp.h>
 #endif
@@ -95,12 +75,12 @@ class ATRansacMod : public TObject
       void SetDistanceThreshold(Float_t threshold) { fRANSACThreshold = threshold;};
       void SetMinHitsLine(Int_t nhits) { fRANSACMinPoints = nhits;};
       void SetNumItera(Int_t niterations) { fRANSACMaxIteration = niterations;};
-      Double_t GetAngleTracks(const ROOT::Math::XYZVector& vec1,const ROOT::Math::XYZVector& vec2);
       TVector3 GetVertex1(){return fVertex_1;};
       TVector3 GetVertex2(){return fVertex_2;};
       Double_t GetVertexTime(){return fVertexTime;};
       TVector3 GetVertexMean(){return fVertex_mean;};
       std::vector<ATTrack> GetTrackCand(){return fTrackCand;};
+
 
       struct Cluster // return type of structure
         {
@@ -121,25 +101,12 @@ class ATRansacMod : public TObject
       AllClusters cluster_vector;
 
 
-      struct PairedLines
-      {
-        std::pair<Int_t,Int_t> LinesID;
-        std::pair<Double_t,Double_t> AngleZAxis;
-        std::pair<Double_t,Double_t> AngleZDet;
-        std::pair<Double_t,Double_t> AngleYDet;
-        Double_t minDist;
-        TVector3 meanVertex;
-        Double_t angle;
-      };
-
-      std::vector<PairedLines> PLines;
-      std::vector<PairedLines> GetPairedLinesArray();
 
 
   protected:
 
       void FindVertex(std::vector<ATTrack*> tracks);
-      Bool_t CheckTrackID(Int_t trackID, std::vector<ATTrack> *trackArray); //Check if Track ID is in the list
+
 
       TVector3 fVertex_1;
       TVector3 fVertex_2;
@@ -162,6 +129,8 @@ class ATRansacMod : public TObject
 	    double fTotalCharge;
 	    int fVerbose;
       double Avcharge;
+
+
 
 
   public:

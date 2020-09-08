@@ -181,6 +181,7 @@ ATPSATask::Exec(Option_t *opt)
 
   ATEvent *event = (ATEvent *) new ((*fEventHArray)[0]) ATEvent();
 
+
   event->SetEventID(rawEvent->GetEventID());
   event->SetTimestamp(rawEvent->GetTimestamp());
 
@@ -190,7 +191,10 @@ ATPSATask::Exec(Option_t *opt)
     fPSA -> Analyze(rawEvent, event);
     event -> SetIsGood(kTRUE);
   }
+
+  //std::cout << "PSA events  "<<event->GetNumHits()  << '\n';
 }
+
 
 /*void ATPSATask::SetAuxChannel(std::vector<Int_t> AuxCh)
 {

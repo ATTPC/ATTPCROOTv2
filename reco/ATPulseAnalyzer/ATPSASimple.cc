@@ -25,7 +25,7 @@ ATPSASimple::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
   for (Int_t iPad = 0; iPad < numPads; iPad++) {
     ATPad *pad = rawEvent -> GetPad(iPad);
-    
+
     //Double_t xPos = CalculateX(0);//Obsolete we do nedd to call these members, coordinates are taken from the Pad object
     //Double_t zPos = CalculateZ(0);
     Double_t xPos = pad -> GetPadXCoord();
