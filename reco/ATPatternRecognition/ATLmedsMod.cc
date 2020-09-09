@@ -18,7 +18,7 @@ ATLmedsMod::ATLmedsMod()
   fLmedsMaxIteration = 500;
 	fLmedsMinPoints = 30;
 	fLmedsThreshold = 15;
-  fLineDistThreshold = 3.0;
+  fLineDistThreshold = 6.0;
   fRandSamplMode = 0;
 
   fVertex_1.SetXYZ(-10000,-10000,-10000);
@@ -516,7 +516,7 @@ void ATLmedsMod::FindVertex(std::vector<ATTrack*> tracks)
                                       TVector3 vertexbuffdif = vertexbuff1 - vertexbuff2;
 
 
-                                      if(vertexbuffdif.Mag()>4*fLineDistThreshold) continue;
+                                      if(vertexbuffdif.Mag()>2*fLineDistThreshold) continue;
 
 
 
