@@ -31,6 +31,7 @@ class ATRansacTask : public FairTask {
     void SetMinHitsLine(Int_t nhits); //Set Mininum number of hits per line
     void SetTiltAngle(Double_t val);
     void SetAlgorithm(Int_t val);
+    void SetRanSamMode(Int_t mode);
 
     virtual InitStatus Init();
     virtual void SetParContainers();
@@ -52,6 +53,7 @@ class ATRansacTask : public FairTask {
     Double_t fTiltAngle;
     Int_t fNumItera;
     Int_t fRANSACAlg;
+    Int_t fRandSamplMode;
 
 
 

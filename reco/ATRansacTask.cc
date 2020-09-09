@@ -24,6 +24,7 @@ ATRansacTask::ATRansacTask()
   fMinHitsLine = 5;
   fNumItera = 500;
   fRANSACAlg = 0;
+  fRandSamplMode = 0;
 
 }
 
@@ -39,6 +40,7 @@ void   ATRansacTask::SetMinHitsLine(Int_t nhits)              { fMinHitsLine    
 void   ATRansacTask::SetTiltAngle(Double_t val)               { fTiltAngle       = val;}
 void   ATRansacTask::SetNumItera(Int_t niterations)  { fNumItera = niterations;}
 void   ATRansacTask::SetAlgorithm(Int_t val)  { fRANSACAlg = val;}
+void   ATRansacTask::SetRanSamMode(Int_t mode){fRandSamplMode = mode;};
 
 InitStatus
 ATRansacTask::Init()
@@ -123,6 +125,7 @@ ATRansacTask::Exec(Option_t *opt)
         Rantest->SetDistanceThreshold(fRANSACThreshold);
         Rantest->SetMinHitsLine(fMinHitsLine);
         Rantest->SetNumItera(fNumItera);
+        Rantest->SetRanSamMode(fRandSamplMode);
         Rantest->CalcRANSACMod(fEvent);
       }
 
@@ -131,6 +134,7 @@ ATRansacTask::Exec(Option_t *opt)
         Rantest->SetDistanceThreshold(fRANSACThreshold);
         Rantest->SetMinHitsLine(fMinHitsLine);
         Rantest->SetNumItera(fNumItera);
+        Rantest->SetRanSamMode(fRandSamplMode);
         Rantest->CalcMlesacMod(fEvent);
       }
 
@@ -139,6 +143,7 @@ ATRansacTask::Exec(Option_t *opt)
         Rantest->SetDistanceThreshold(fRANSACThreshold);
         Rantest->SetMinHitsLine(fMinHitsLine);
         Rantest->SetNumItera(fNumItera);
+        Rantest->SetRanSamMode(fRandSamplMode);
         Rantest->CalcLmedsMod(fEvent);
       }
 

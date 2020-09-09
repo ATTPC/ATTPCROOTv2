@@ -19,6 +19,7 @@ ATRansacMod::ATRansacMod()
 	fRANSACMinPoints = 30;
 	fRANSACThreshold = 15;
   fLineDistThreshold = 3.0;
+  fRandSamplMode = 0;
 
   fVertex_1.SetXYZ(-10000,-10000,-10000);
   fVertex_2.SetXYZ(-10000,-10000,-10000);
@@ -88,33 +89,37 @@ vector<double> ATRansacMod::GetPDF(const std::vector<int>  samplesIdx){
   return w;
 }
 
-vector<int> ATRansacMod::RandSam(vector<int> indX)
+vector<int> ATRansacMod::RandSam(vector<int> indX, Int_t mode)
 {
   size_t pclouds = indX.size();
   std::vector<double> Proba = GetPDF(indX);
   int p1,p2;
   double w1,w2;
-  /*
-  //-------Uniform sampling
-  p1=(int)(gRandom->Uniform(0,pclouds));
+  vector<int> ranpair;
+  ranpair.resize(2);
 
-	 do{
-      p2=(int)(gRandom->Uniform(0,pclouds));
-    } while(p2==p1);
+  if(mode==0){
+    //-------Uniform sampling
+    p1=(int)(gRandom->Uniform(0,pclouds));
 
-  vector<int> ranpair{indX[p1],indX[p2]};
-  */
+	   do{
+       p2=(int)(gRandom->Uniform(0,pclouds));
+     } while(p2==p1);
 
-  /*
+     ranpair[0] = indX[p1];
+     ranpair[1] = indX[p2];
+  }
+
+  if(mode==1){
   //--------Gaussian sampling
-  double dist = 0;
-  double sigma = 30.0;
-  double y = 0;
-  double gauss = 0;
-  int counter = 0;
-  p1=(int)(gRandom->Uniform(0,pclouds));
-  TVector3 P1 ={vX[indX[p1]],vY[indX[p1]],vZ[indX[p1]]};
-	 do{
+    double dist = 0;
+    double sigma = 30.0;
+    double y = 0;
+    double gauss = 0;
+    int counter = 0;
+    p1=(int)(gRandom->Uniform(0,pclouds));
+    TVector3 P1 ={vX[indX[p1]],vY[indX[p1]],vZ[indX[p1]]};
+	  do{
       p2=(int)(gRandom->Uniform(0,pclouds));
       TVector3 P2 ={vX[indX[p2]],vY[indX[p2]],vZ[indX[p2]]};
       TVector3 dif = P2-P1;
@@ -123,16 +128,17 @@ vector<int> ATRansacMod::RandSam(vector<int> indX)
       y = (gRandom->Uniform(0,1));
       counter++;
       if(counter>20 && p2!=p1) break;
-    } while(p2==p1 || y>gauss);
+      } while(p2==p1 || y>gauss);
 
-  vector<int> ranpair{indX[p1],indX[p2]};
-  */
+      ranpair[0] = indX[p1];
+      ranpair[1] = indX[p2];
+  }
 
-  /*
-  //-------Weighted sampling
-  bool cond = false;
-  p1=(int)(gRandom->Uniform(0,pclouds));
-   do{
+  if(mode==2){
+    //-------Weighted sampling
+    bool cond = false;
+    p1=(int)(gRandom->Uniform(0,pclouds));
+    do{
       p2=(int)(gRandom->Uniform(0,pclouds));
       cond = false;
       double TwiceAvCharge = 2*GetAvCharge();
@@ -145,20 +151,21 @@ vector<int> ATRansacMod::RandSam(vector<int> indX)
       }
     } while(p2==p1 || cond==false);
 
-  vector<int> ranpair{indX[p1],indX[p2]};
-  */
+    ranpair[0] = indX[p1];
+    ranpair[1] = indX[p2];
+  }
 
-
-  //-------Weighted sampling + Gauss dist.
-  bool cond = false;
-  double dist = 0;
-  double sigma = 30.0;
-  double y = 0;
-  double gauss = 0;
-  int counter = 0;
-  p1=(int)(gRandom->Uniform(0,pclouds));
-  TVector3 P1 ={vX[indX[p1]],vY[indX[p1]],vZ[indX[p1]]};
-  do{
+  if(mode==3){
+    //-------Weighted sampling + Gauss dist.
+    bool cond = false;
+    double dist = 0;
+    double sigma = 30.0;
+    double y = 0;
+    double gauss = 0;
+    int counter = 0;
+    p1=(int)(gRandom->Uniform(0,pclouds));
+    TVector3 P1 ={vX[indX[p1]],vY[indX[p1]],vZ[indX[p1]]};
+    do{
       p2=(int)(gRandom->Uniform(0,pclouds));
       TVector3 P2 ={vX[indX[p2]],vY[indX[p2]],vZ[indX[p2]]};
       TVector3 dif = P2-P1;
@@ -173,19 +180,18 @@ vector<int> ATRansacMod::RandSam(vector<int> indX)
       if(Proba.size()==pclouds){
         w2 = gRandom->Uniform(0,TwiceAvCharge);
         if(Proba[p2]>=w2) cond = true;
-      }else{
+        }else{
         w2 = 1;
         cond = true;
       }
 
     } while(p2==p1 || cond==false || y>gauss);
 
-  vector<int> ranpair{indX[p1],indX[p2]};
-
-
+    ranpair[0] = indX[p1];
+    ranpair[1] = indX[p2];
+  }
 
   return ranpair;
-
 }
 
 
@@ -235,11 +241,11 @@ void ATRansacMod::Solve()
 
         if(remainIndex.size()<fRANSACMinPoints) break;
 
-        std::vector< int> Rsamples = RandSam(remainIndex);  //random sampling
+        std::vector< int> Rsamples = RandSam(remainIndex,fRandSamplMode);  //random sampling
         EstimModel(Rsamples); //estimate the linear model
 
 
-        std::vector<int> inlIdxR;
+        //std::vector<int> inlIdxR;
         int nbInliers = 0;
         double weight = 0;
 
@@ -248,7 +254,7 @@ void ATRansacMod::Solve()
   	      double error = EstimError(*j); //error of each point relative to the model
           error = error*error;
   	      if(error<(fRANSACThreshold*fRANSACThreshold)){
-  	        	inlIdxR.push_back(*j);
+  	        	//inlIdxR.push_back(*j);
               nbInliers++;
               weight +=error;
   	        	}
@@ -279,6 +285,7 @@ void ATRansacMod::Solve()
         std::vector<int> ModInx = {IdxMod1[i].second, IdxMod2[i].second};
         EstimModel(ModInx);
         std::vector<int> inlIdxR;
+        //inlIdxR.clear();
         ModInx.clear();
 
         if(remainIndex.size()<fRANSACMinPoints) break;
@@ -434,7 +441,9 @@ void ATRansacMod::FindVertex(std::vector<ATTrack*> tracks)
 
 
       //Vector of the beam determined from the experimental data
-      TVector3 BeamDir_1(0.,0.,1.0);
+      TVector3 BeamDir(0.,0.,1.0);
+      TVector3 BeamPoint(0.,0.,500.0);
+
       std::vector<Bool_t> IsFilled;
       for(Int_t i=0;i<int(tracks.size());i++) IsFilled.push_back(kFALSE);
 
@@ -469,49 +478,69 @@ void ATRansacMod::FindVertex(std::vector<ATTrack*> tracks)
 
                               TVector3 n = e1.Cross(e2);
                               double sdist = fabs( n.Dot(p1-p2)/n.Mag() );
-
-                              TVector3 n1 = e1.Cross(e2.Cross(e1));
-                              TVector3 n2 = e2.Cross(e1.Cross(e2));
-                              double t1 = (p2-p1).Dot(n2)/(e1.Dot(n2));
-                              double t2 = (p1-p2).Dot(n1)/(e2.Dot(n1));
-                              c_1 = p1 + t1*e1;
-                              c_2 = p2 + t2*e2;
-
+                              TVector3 vertexbuff = ClosestPoint2Lines(e1, p1, e2, p2);
 
                               if(sdist < fLineDistThreshold){
-                                if(angle>5 && angle<175){
-                                  TVector3 meanVer = 0.5*(c_1+c_2);
-                                  double radius = sqrt(meanVer.X()*meanVer.X() + meanVer.Y()*meanVer.Y());
-                                  if(meanVer.Z()>0 && meanVer.Z()<1000 && radius<50.0){
-                                    //std::cout<<i<<" "<<j<<" "<<sdist<<"  "<<c_1.Z()<<"   "<<c_2.Z()<<"   "<<angle<<std::endl;
-                                    track->SetTrackVertex(0.5*(c_1 + c_2));
-                                    track_f->SetTrackVertex(0.5*(c_1 + c_2));
-                                    fVertex_1.SetXYZ(c_1.X(),c_1.Y(),c_1.Z());
-                                    fVertex_2.SetXYZ(c_2.X(),c_2.Y(),c_2.Z());
-                                    fVertex_mean = 0.5*(fVertex_1 + fVertex_2);
+                                TVector3 meanVer = vertexbuff;
+                                double radius = sqrt(vertexbuff.X()*vertexbuff.X() + vertexbuff.Y()*vertexbuff.Y());
 
+                                if(vertexbuff.Z()>0 && vertexbuff.Z()<1000 && radius<50.0){
 
+                                  track->SetTrackVertex(vertexbuff);
+                                  track_f->SetTrackVertex(vertexbuff);
+                                  fVertex_1.SetXYZ(vertexbuff.X(),vertexbuff.Y(),vertexbuff.Z());
+                                  fVertex_2.SetXYZ(vertexbuff.X(),vertexbuff.Y(),vertexbuff.Z());
+                                  fVertex_mean = vertexbuff;
 
-                                    if ( !IsFilled[track->GetTrackID()] ){
-                                      //std::cout<<" Add track  "<<track->GetTrackID()<<std::endl;
-                                      IsFilled[track->GetTrackID()] = kTRUE;
-                                      fTrackCand.push_back(*track);
+                                  if ( !IsFilled[track->GetTrackID()] ){
+                                    //std::cout<<" Add track  "<<track->GetTrackID()<<std::endl;
+                                    IsFilled[track->GetTrackID()] = kTRUE;
+                                    fTrackCand.push_back(*track);
                                     }
 
-                                    if ( !IsFilled[track_f->GetTrackID()] ){
-                                      //std::cout<<" Add trackf  "<<track_f->GetTrackID()<<std::endl;
-                                      IsFilled[track_f->GetTrackID()] = kTRUE;
-                                      fTrackCand.push_back(*track_f);
+                                  if ( !IsFilled[track_f->GetTrackID()] ){
+                                    //std::cout<<" Add trackf  "<<track_f->GetTrackID()<<std::endl;
+                                    IsFilled[track_f->GetTrackID()] = kTRUE;
+                                    fTrackCand.push_back(*track_f);
                                     }
+
+                                    //condition for almost parallel tracks and vertex out of the chamber
+                                  } else if(angle<10 && angle>170){
+
+                                      TVector3 vertexbuff1 = ClosestPoint2Lines(e1, p1, BeamDir, BeamPoint);
+                                      TVector3 vertexbuff2 = ClosestPoint2Lines(e2, p2, BeamDir, BeamPoint);
+                                      TVector3 vertexbuffav = 0.5*(vertexbuff1+vertexbuff2);
+                                      TVector3 vertexbuffdif = vertexbuff1 - vertexbuff2;
+
+
+                                      if(vertexbuffdif.Mag()>4*fLineDistThreshold) continue;
+
+
+
+                                      track->SetTrackVertex(vertexbuffav);
+                                      track_f->SetTrackVertex(vertexbuffav);
+                                      fVertex_1.SetXYZ(vertexbuffav.X(),vertexbuffav.Y(),vertexbuffav.Z());
+                                      fVertex_2.SetXYZ(vertexbuffav.X(),vertexbuffav.Y(),vertexbuffav.Z());
+                                      fVertex_mean = vertexbuffav;
+
+                                      if ( !IsFilled[track->GetTrackID()] ){
+                                        //std::cout<<" Add track  "<<track->GetTrackID()<<std::endl;
+                                        IsFilled[track->GetTrackID()] = kTRUE;
+                                        fTrackCand.push_back(*track);
+                                        }
+
+                                      if ( !IsFilled[track_f->GetTrackID()] ){
+                                        //std::cout<<" Add trackf  "<<track_f->GetTrackID()<<std::endl;
+                                        IsFilled[track_f->GetTrackID()] = kTRUE;
+                                        fTrackCand.push_back(*track_f);
+                                        }
+
                                   }
-                                }
-
-                                //need to include a condition for almost parallel tracks
-                              }
 
 
+                              } // if fLineDistThreshold
 
-                     }// End of track
+                     }// End of track_f
 
        }// Loop over the tracks
 
@@ -519,7 +548,19 @@ void ATRansacMod::FindVertex(std::vector<ATTrack*> tracks)
 
 }
 
+TVector3 ATRansacMod::ClosestPoint2Lines(TVector3 d1, TVector3 pt1, TVector3 d2, TVector3 pt2)
+{
+  TVector3 n1 = d1.Cross(d2.Cross(d1));
+  TVector3 n2 = d2.Cross(d1.Cross(d2));
+  double t1 = (pt2-pt1).Dot(n2)/(d1.Dot(n2));
+  double t2 = (pt1-pt2).Dot(n1)/(d2.Dot(n1));
+  TVector3 c1 = pt1 + t1*d1;
+  TVector3 c2 = pt2 + t2*d2;
+  TVector3 meanpoint = 0.5*(c1+c2);
 
+  return meanpoint;
+
+}
 
 Double_t ATRansacMod::Fit3D(vector<int> inliners, TVector3& V1, TVector3& V2)
 {
