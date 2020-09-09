@@ -456,6 +456,31 @@ ATEventDrawTask::DrawHitPoints()
               std::cout<<" Vertex Mean - X : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z : "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
             }
 
+            if(fRANSACAlg==2){
+              fMlesacMod = dynamic_cast<ATMlesacMod*> (fRansacArray->At(0));
+              TrackCand = fMlesacMod->GetTrackCand();
+              TVector3 Vertex1    = fMlesacMod->GetVertex1();
+              TVector3 Vertex2    = fMlesacMod->GetVertex2();
+              Double_t VertexTime = fMlesacMod->GetVertexTime();
+              std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z : "<<Vertex1.Z()<<std::endl;
+              std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z : "<<Vertex2.Z()<<std::endl;
+              std::cout<<" Vertex Time : "<<VertexTime<<std::endl;
+              std::cout<<" Vertex Mean - X : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z : "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
+            }
+
+            if(fRANSACAlg==3){
+              fLmedsMod = dynamic_cast<ATLmedsMod*> (fRansacArray->At(0));
+              TrackCand = fLmedsMod->GetTrackCand();
+              TVector3 Vertex1    = fLmedsMod->GetVertex1();
+              TVector3 Vertex2    = fLmedsMod->GetVertex2();
+              Double_t VertexTime = fLmedsMod->GetVertexTime();
+              std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z : "<<Vertex1.Z()<<std::endl;
+              std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z : "<<Vertex2.Z()<<std::endl;
+              std::cout<<" Vertex Time : "<<VertexTime<<std::endl;
+              std::cout<<" Vertex Mean - X : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z : "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
+            }
+
+
         }else if(fPatternEventArray){
             ATPatternEvent* patternEvent = dynamic_cast<ATPatternEvent*> (fPatternEventArray->At(0));
             TrackCand = patternEvent->GetTrackCand();
@@ -568,6 +593,8 @@ ATEventDrawTask::DrawHitPoints()
             fVertex -> SetMarkerColor(kViolet);
 	    if(fRANSACAlg==0) fVertex -> SetNextPoint(fRansac -> GetVertexMean().x()*0.1, fRansac -> GetVertexMean().y()*0.1, fRansac -> GetVertexMean().z()*0.1);
       if(fRANSACAlg==1) fVertex -> SetNextPoint(fRansacMod -> GetVertexMean().x()*0.1, fRansacMod -> GetVertexMean().y()*0.1, fRansacMod -> GetVertexMean().z()*0.1);
+      if(fRANSACAlg==2) fVertex -> SetNextPoint(fMlesacMod -> GetVertexMean().x()*0.1, fMlesacMod -> GetVertexMean().y()*0.1, fMlesacMod -> GetVertexMean().z()*0.1);
+      if(fRANSACAlg==3) fVertex -> SetNextPoint(fLmedsMod -> GetVertexMean().x()*0.1, fLmedsMod -> GetVertexMean().y()*0.1, fLmedsMod -> GetVertexMean().z()*0.1);
 
         }
 

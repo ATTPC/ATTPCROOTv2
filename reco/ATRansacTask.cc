@@ -46,6 +46,8 @@ ATRansacTask::Init()
 
   if(fRANSACAlg==0)fRansacArray = new TClonesArray("ATRANSACN::ATRansac");
   else if(fRANSACAlg==1) fRansacArray = new TClonesArray("ATRansacMod");
+  else if(fRANSACAlg==2) fRansacArray = new TClonesArray("ATMlesacMod");
+  else if(fRANSACAlg==3) fRansacArray = new TClonesArray("ATLmedsMod");
   else{
     fLogger -> Error(MESSAGE_ORIGIN, "Cannot find Ransac algorithm!");
     return kERROR;
@@ -123,5 +125,22 @@ ATRansacTask::Exec(Option_t *opt)
         Rantest->SetNumItera(fNumItera);
         Rantest->CalcRANSACMod(fEvent);
       }
+
+      if(fRANSACAlg==2){
+        ATMlesacMod * Rantest = (ATMlesacMod *) new ((*fRansacArray)[0]) ATMlesacMod();
+        Rantest->SetDistanceThreshold(fRANSACThreshold);
+        Rantest->SetMinHitsLine(fMinHitsLine);
+        Rantest->SetNumItera(fNumItera);
+        Rantest->CalcMlesacMod(fEvent);
+      }
+
+      if(fRANSACAlg==3){
+        ATLmedsMod * Rantest = (ATLmedsMod *) new ((*fRansacArray)[0]) ATLmedsMod();
+        Rantest->SetDistanceThreshold(fRANSACThreshold);
+        Rantest->SetMinHitsLine(fMinHitsLine);
+        Rantest->SetNumItera(fNumItera);
+        Rantest->CalcLmedsMod(fEvent);
+      }
+
 
 }

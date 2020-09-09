@@ -11,6 +11,8 @@
 #include "ATDigiPar.hh"
 #include "ATRansac.hh"
 #include "ATRansacMod.hh"
+#include "ATMlesacMod.hh"
+#include "ATLmedsMod.hh"
 
 // ROOT classes
 #include "TClonesArray.h"

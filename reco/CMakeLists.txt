@@ -118,6 +118,8 @@ ATAnalysis/ATd2HeAnalysis.cc
 
 ATRansac/ATRansac.cc
 ATPatternRecognition/ATRansacMod.cc
+ATPatternRecognition/ATMlesacMod.cc
+ATPatternRecognition/ATLmedsMod.cc
 
 ATPatternRecognition/ATPRA.cc
 ATPatternRecognition/ATTrackFinderHC.cc

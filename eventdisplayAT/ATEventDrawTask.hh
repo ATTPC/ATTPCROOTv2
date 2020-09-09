@@ -38,6 +38,8 @@
 #include "ATHoughSpace.hh"
 #include "ATRansac.hh"
 #include "ATRansacMod.hh"
+#include "ATMlesacMod.hh"
+#include "ATLmedsMod.hh"
 #include "ATTrackFinderHC.hh"
 #include "ATHit.hh"
 #include "AtTpcMap.h"
@@ -147,6 +149,8 @@ class ATEventDrawTask : public FairTask
     ATHoughSpaceCircle*             fHoughSpaceCircle_buff;
     ATRANSACN::ATRansac*            fRansac;
     ATRansacMod*                    fRansacMod;
+    ATMlesacMod*                    fMlesacMod;
+    ATLmedsMod*                    fLmedsMod;
     ATTrackingEventAna*             fTrackingEventAna;
     ATPATTERN::ATTrackFinderHC*     fTrackFinderHC;
 
