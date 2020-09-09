@@ -58,6 +58,8 @@
 #pragma link C++ class ATRANSACN::ATRansac+;
 #pragma link C++ struct ATRANSACN::ATRansac::PairedLines+;
 #pragma link C++ class ATRansacMod+;
+#pragma link C++ class ATMlesacMod+;
+#pragma link C++ class ATLmedsMod+;
 
 #pragma link C++ class ATPATTERN::ATTrackFinderHC+;
 #pragma link C++ class ATPATTERN::ATPRA+;

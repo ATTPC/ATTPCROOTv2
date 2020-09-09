@@ -82,7 +82,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
         //std::cout<<" Is Auxiliary 2? "<<pad->IsAux()<<" Pad Num "<<PadNum<<"\n";
         event->AddAuxPad(pad);
         continue;
-      }   
+      }
 
     CalcLorentzVector();
 
@@ -272,6 +272,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
       }//Peak Loop
 
+
     //    #pragma omp ordered
       // if(fValidThreshold && fValidBuff){ PadMultiplicity.insert(std::pair<Int_t,Int_t>(PadNum,PadHitNum));std::cout<<" PadNum : "<<PadNum<<" PadHitNum : "<<PadHitNum<<std::endl;}
       //#pragma omp ordered
@@ -283,7 +284,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
  }//Pad Loop
 
-
+    //std::cout << "number of hits from  PSA!!  "<<hitNum << '\n';
 
 
     // std::cout<<"  --------------------------------- "<<std::endl;

@@ -38,6 +38,8 @@
 #include "ATHoughSpace.hh"
 #include "ATRansac.hh"
 #include "ATRansacMod.hh"
+#include "ATMlesacMod.hh"
+#include "ATLmedsMod.hh"
 #include "ATTrackFinderHC.hh"
 #include "ATHit.hh"
 #include "AtTpcMap.h"
@@ -80,6 +82,7 @@ class ATEventDrawTask : public FairTask
     void SetProtoMap(TString map) {fMap = map;}
 
     void SetMultiHit(Int_t hitMax);
+    void SetAlgorithm(Int_t val) {fRANSACAlg = val;};
 
   protected :
     virtual void DrawPadPlane();
@@ -146,6 +149,8 @@ class ATEventDrawTask : public FairTask
     ATHoughSpaceCircle*             fHoughSpaceCircle_buff;
     ATRANSACN::ATRansac*            fRansac;
     ATRansacMod*                    fRansacMod;
+    ATMlesacMod*                    fMlesacMod;
+    ATLmedsMod*                    fLmedsMod;
     ATTrackingEventAna*             fTrackingEventAna;
     ATPATTERN::ATTrackFinderHC*     fTrackFinderHC;
 
@@ -250,6 +255,7 @@ class ATEventDrawTask : public FairTask
     Bool_t fSaveTextData;
     Float_t f3DThreshold;
     Bool_t fIsRawData;
+    Int_t fRANSACAlg;
 
     TF1 *fHoughLinearFit;
     TF1 *fRansacLinearFit;

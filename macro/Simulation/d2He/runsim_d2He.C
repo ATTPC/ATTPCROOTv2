@@ -1,4 +1,4 @@
-void runsim_d2He(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
+void runsim_d2He(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");

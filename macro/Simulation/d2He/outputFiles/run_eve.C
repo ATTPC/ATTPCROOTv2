@@ -30,6 +30,7 @@ void run_eve(TString  InputDataFile = "attpcdigi_d2He_1000.root",TString  Output
   eve->SetMultiHit(100); //Set the maximum number of multihits in the visualization
   eve->SetSaveTextData();
   eve->UnpackHoughSpace();
+  eve->SetAlgorithm(3); // 0=PCL ransac; 1=Homemade Ransac; 2=Homemade Mlesac; 3=Homemade Lmeds; 
 
   //----------------------Traks and points -------------------------------------
   //FairMCTracks    *Track     = new FairMCTracks("Monte-Carlo Tracks");
