@@ -55,20 +55,21 @@ public:
   // Internal variables for tracking the physics 
 private:
   //Tree
-  TTree *fissionEvents;
+  TTree     *fissionEvents; //!
+
   //Variables read from the file for each event
-  Int_t nTracks;
-  Int_t Aout[100];
-  Int_t Zout[100];
-  Double_t pX[100];
-  Double_t pY[100];
-  Double_t pZ[100];
-  Double_t pT[100];
+  Int_t    nTracks;        //!
+  Int_t    Aout[100];      //!
+  Int_t    Zout[100];      //!
+  Double_t pX[100];        //!
+  Double_t pY[100];        //!
+  Double_t pZ[100];        //!
+  Double_t pT[100];        //!
   
-  Int_t nEvents; // Number of unique fission simualtion events
-  Int_t event;   // Track what event we are at. Reset to 0 if we flow over the number of events in the tree
+  Int_t nEvents; //! Number of unique fission simualtion events
+  Int_t event;   //! Track what event we are at. Reset to 0 if we flow over the number of events in the tree
   
-  ClassDef(ATTPCFissionGeneratorV3, 3)
+  ClassDef(ATTPCFissionGeneratorV3, 4)
     
 };
 

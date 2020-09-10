@@ -37,11 +37,14 @@ public:
 private:
   Int_t fEventID;     //!< EventID
   Double_t fEIonize;  //!< Effective ionization energy of gas. [eV]
+  Double_t fFano;      //!< Fano factor of the gas
   Double_t fVelDrift; //!< Drift velocity of electron in gas. [mm/ns]
   Double_t fCoefT;    //!< Transversal diffusion coefficient. [mm^(-1/2)]
   Double_t fCoefL;    //!< Longitudinal diffusion coefficient. [mm^(-1/2)]
+
   ATGas*     fGas;    //!< Gas parameter container.
   ATDigiPar* fPar; //!< Base parameter container.
+
   TClonesArray* fMCPointArray;
   AtTpcPoint* fMCPoint;
   TClonesArray* fElectronNumberArray; //!< Primary cluster array

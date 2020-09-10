@@ -58,10 +58,13 @@ ATClusterizeTask::Init()
   ioman -> Register("ATSimulatedPoint", "cbmsim",fElectronNumberArray, fIsPersistent);
   
   fEIonize  = fPar->GetEIonize()/1000000; // [MeV]
+  fFano     = fPar->GetFano();
   fVelDrift = fPar->GetDriftVelocity(); // [cm/us]
   fCoefT    = fPar->GetCoefDiffusionTrans()*sqrt(10.); // [cm^(-1/2)] to [mm^(-1/2)]
   fCoefL    = fPar->GetCoefDiffusionLong()*sqrt(10.);  // [cm^(-1/2)] to [mm^(-1/2)]
+  
   std::cout<<"  Ionization energy of gas: " << fEIonize << " MeV"<< std::endl;
+  std::cout<<"  Fano factor of gas: " << fFano << std::endl;
   std::cout<<"  Drift velocity: " << fVelDrift << std::endl;
   std::cout<<"  Longitudal coefficient of diffusion: " << fCoefT << std::endl;
   std::cout<<"  Transverse coefficient of diffusion: " << fCoefL << std::endl;
@@ -91,7 +94,6 @@ ATClusterizeTask::Exec(Option_t* option)
   Double_t  x = 0;
   Double_t  y = 0;
   Double_t  z = 0;
-  Double_t  fano = 2;
   Int_t     nElectrons   = 0;
   Int_t     eFlux        = 0;
   Int_t     genElectrons = 0;
@@ -186,7 +188,7 @@ ATClusterizeTask::Exec(Option_t* option)
       energyLoss_rec    = (fMCPoint -> GetEnergyLoss() )*1000;//MeV
       //std::cout<<" Energy Loss "<<energyLoss_rec<<" fEIonize"<<fEIonize<<" Track ID "<<presentTrackID<<"\n";
       nElectrons        = energyLoss_rec/fEIonize; //mean electrons generated
-      eFlux             = pow(fano*nElectrons, 0.5);//fluctuation of generated electrons
+      eFlux             = pow(fFano*nElectrons, 0.5);//fluctuation of generated electrons
       genElectrons      = gRandom->Gaus(nElectrons, eFlux);//generated electrons
       //std::cout<<" nElectrons "<<nElectrons<<" Gen Electrons "<<genElectrons<<"\n";
       

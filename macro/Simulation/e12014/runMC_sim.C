@@ -1,11 +1,11 @@
-//Code to simulate fission event
+//Code to simulate fission event from a file
 
-void PbFission(Int_t nEvents= 10, TString mcEngine = "TGeant4")
+void runMC_sim(Int_t nEvents= 100, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
 
-//  TString ionList = dir + TString("macro/Simulation/E12014/data/PbIonList.txt");
+  //TString ionList = dir + TString("macro/Simulation/E12014/data/PbIonList.txt");
   TString ionList = "./data/PbIonList.txt";
   TString fissionDistro = "./data/PbFissionEvents.root";
   
@@ -50,7 +50,8 @@ void PbFission(Int_t nEvents= 10, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_H1bar.root");
+  ATTPC->SetGeometryFileName("ATTPC_He1bar.root");
+
   //ATTPC->SetVerboseLevel(2);
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
@@ -62,7 +63,7 @@ void PbFission(Int_t nEvents= 10, TString mcEngine = "TGeant4")
   FairPrimaryGenerator* primGen = new FairPrimaryGenerator();
   
   
-  /***** Beam Information *****/
+  /***** Primary Beam Information *****/
   Int_t z = 81; // Atomic number
   Int_t a = 195; // Mass number
   Int_t q = 78;  // Charge State
@@ -81,33 +82,30 @@ void PbFission(Int_t nEvents= 10, TString mcEngine = "TGeant4")
   Double_t BExcEner = 0.0;
 
   //TODO: Fix to right mass
-  Double_t Bmass = 195; //Mass in amu
+  Double_t Bmass = 194.9259; //Mass in amu
 
   // Nominal Energy of the beam: Only used for cross section calculation
   // (Tracking energy is determined with momentum).
-  Double_t NomEnergy = 70.0*a;
+  Double_t NomEnergy = 70.0*a; //Depricated
 
-  //E loss until reaction occurs
-  Double_t eLoss = 100;
+  //E loss until reaction occurs in MeV
+  Double_t eLoss = 801.3;
 
   //Create the ion generator
-  ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy, eLoss);
+  ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion", z, a, q, m,
+						    px, py, pz, BExcEner,
+						    Bmass, NomEnergy, eLoss);
+  //Set the beam at enterance of TPC
   ionGen->SetSpotRadius(0,-100,0);
 
-  // add the ion generator
-  primGen->AddGenerator(ionGen);
-
-  //primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track added to the Primary Generator
-  // primGen->SetTarget(30,0);
-
-
+  
   // Create the fission generator
   ATTPCFissionGeneratorV3 *fissionGen =
     new ATTPCFissionGeneratorV3("FissionGenerator", ionList, fissionDistro);
 
+  //Add all of the generators
+  primGen->AddGenerator(ionGen);
   primGen->AddGenerator(fissionGen);
-
-  //ATTPCFissionGeneratorV3 *fissionGen = new ATTPCFissionGeneratorV3("FissionGen", "/macro/simulation/Pb196.txt");
 
   run->SetGenerator(primGen);
 
@@ -115,7 +113,7 @@ void PbFission(Int_t nEvents= 10, TString mcEngine = "TGeant4")
 
   //---Store the visualiztion info of the tracks, this make the output file very large!!
   //--- Use it only to display but not for production!
-  //run->SetStoreTraj(kTRUE);
+  run->SetStoreTraj(kTRUE);
 
 
 

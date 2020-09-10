@@ -98,7 +98,7 @@ Bool_t ATTPCFissionGeneratorV3::ReadEvent(FairPrimaryGenerator * primeGen)
   else
     std::cout << "ATTPCFissionGeneratorV3: Runing reaction-like event" << std::endl;
 
-  gATVP->IncDecayEvtCnt();
+
 
   auto fPDG = TDatabasePDG::Instance();
   auto stack = (AtStack *) gMC->GetStack();
@@ -108,9 +108,23 @@ Bool_t ATTPCFissionGeneratorV3::ReadEvent(FairPrimaryGenerator * primeGen)
   Double_t fVy = gATVP->GetVy();
   Double_t fVz = gATVP->GetVz();
 
+  //Get the energy and momentum of the beam in MeV and MeV/c
+  Double_t fVEn = gATVP->GetEnergy() + gATVP->GetBeamMass() * 931.494;
+  Double_t fVPx = gATVP->GetPx()*1000;
+  Double_t fVPy = gATVP->GetPy()*1000;
+  Double_t fVPz = gATVP->GetPz()*1000;
+
+  TLorentzVector beam;
+  beam.SetPxPyPzE(fVPx, fVPy, fVPz, fVEn);
+
+  //Get the vector to boost back to the lab frame
+  auto boostVec = beam.BoostVector();
+  
+
   fissionEvents->GetEntry(event);
 
-  for (int i = 0; i < nTracks; ++i) {
+  for (int i = 0; i < nTracks; ++i)
+  {
     // Create the particle
     Int_t pdgType = 0;
     TString partName = TString::Format("Ion_%d_%d", Zout[i], Aout[i]);
@@ -122,23 +136,34 @@ Bool_t ATTPCFissionGeneratorV3::ReadEvent(FairPrimaryGenerator * primeGen)
     else
       pdgType = part->PdgCode();
 
-    auto px = pX[i] / 1000;	//Change to MeV
+    auto px = pX[i] / 1000;	//Change to GeV/c
     auto py = pY[i] / 1000;
     auto pz = pZ[i] / 1000;
+    auto pt = pT[i] / 1000;
+    TLorentzVector frag(px,py,pz,pt);
+    frag.Boost(boostVec);
+    
+    std::cout << std::endl;
+    std::cout << "ATTPCFissionGeneratorV3: Generating ion of type " << partName
+	      << " with CoM momentum (" << px << ", " << py << ", " << pz
+	      << ") GeV/c at vertex (" << fVx << ", " << fVy << ", " << fVz << ") cm."
+	      << std::endl;
+    std::cout << "ATTPCFissionGeneratorV3: Generating ion of type " << partName
+	      << " with lab momentum (" << frag.Px() << ", " << frag.Py() << ", " << frag.Pz()
+	      << ") GeV/c at vertex (" << fVx << ", " << fVy << ", " << fVz << ") cm."
+	      << std::endl << std::endl;
 
-    std::
-	cout << "ATTPCFissionGeneratorV3: Generating ion of type " << partName
-	<< " with momentum (" << px << ", " << py << ", " << pz <<
-	") GeV/c at vertex (" << fVx << ", " << fVy << ", " << fVz << ") cm." <<
-	std::endl;
+    //Requires GeV
+    primeGen->AddTrack(pdgType, frag.Px(), frag.Py(), frag.Pz(), fVx, fVy, fVz);
 
-    primeGen->AddTrack(pdgType, px, py, pz, fVx, fVy, fVz);
+  } //End loop over tracks
 
-  }				//End loop over tracks
-
-  std::cout << "Wrote tracks for fission event: " << event << std::endl;
+  std::cout << "Wrote tracks for fission root event: " << event << std::endl;
+  std::cout << "Wrote tracks for MC event: " <<  gATVP->GetDecayEvtCnt() << std::endl;
   event++;
 
+  gATVP->IncDecayEvtCnt();
+  return true;
 }
 
-//ClassImp(ATTPCFissionGeneratorV3);
+ClassImp(ATTPCFissionGeneratorV3);
