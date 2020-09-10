@@ -32,7 +32,9 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
   // __ Run ____________________________________________
   FairRunAna* fRun = new FairRunAna();
   fRun -> SetInputFile(mcFile);
-  fRun -> SetOutputFile("outputFiles/attpcdigi_d2He_"+str_nEvents+".root");
+  //fRun -> SetOutputFile("outputFiles/attpcdigi_d2He_"+str_nEvents+".root");
+  fRun -> SetOutputFile("outputFiles/attpcdigi_d2He_"+str_nEvents+"_ran.root");
+  //fRun -> SetOutputFile("outputFiles/attpcdigi_d2He_1e6pps_lmed.root");
 
   FairRuntimeDb* rtdb = fRun->GetRuntimeDb();
   FairParRootFileIo* parIo1 = new FairParRootFileIo();
@@ -81,7 +83,7 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
   RandTask->SetTiltAngle(0.0);
   RandTask->SetDistanceThreshold(15.0);
   RandTask->SetMinHitsLine(7);
-  RandTask->SetAlgorithm(3); // 0=PCL ransac; 1=Homemade Ransac; 2=Homemade Mlesac; 3=Homemade Lmeds;
+  RandTask->SetAlgorithm(1); // 0=PCL ransac; 1=Homemade Ransac; 2=Homemade Mlesac; 3=Homemade Lmeds;
   RandTask->SetRanSamMode(3);// 0=Uniform; 1=Gaussian; 2=Weighted; 3=Gaussian+Weighted
 
 
@@ -108,8 +110,8 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
   // __ Init and run ___________________________________
 
   fRun -> Init();
-  fRun -> Run(0,nEvents);
-  //fRun -> Run(0,100);
+  //fRun -> Run(0,nEvents);
+  fRun -> Run(0,200);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
