@@ -9,9 +9,9 @@
 #include "S800.hh"
 #include "S800defs.h"
 
-#include "lmcurve.h"
-#include "lmmin.h"
-#include "lmfit.h"
+#include "lmcurve.hh"
+#include "lmmin.hh"
+#include "lmfit.hh"
 using namespace std;
 
 

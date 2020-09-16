@@ -9,12 +9,12 @@
  * Usage:    see application sample demo/curve1.c
  *
  * Author:   Joachim Wuttke 2010
- * 
+ *
  * Homepage: joachimwuttke.de/lmfit
  */
- 
 
-#include "lmmin.h"
+
+#include "lmmin.hh"
 
 
 typedef struct {
@@ -37,7 +37,7 @@ void lmcurve_evaluate( const double *par, int m_dat, const void *data,
 }
 
 
-void lmcurve_fit( int n_par, double *par, int m_dat, 
+void lmcurve_fit( int n_par, double *par, int m_dat,
                   const double *t, const double *y,
                   double (*f)( double t, const double *par ),
                   const lm_control_struct *control, lm_status_struct *status )
