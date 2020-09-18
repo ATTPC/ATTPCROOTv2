@@ -14,6 +14,7 @@ ${ROOT_INCLUDE_DIR}
 ${BASE_INCLUDE_DIRECTORIES}
 #put here all directories where header files are located
 ${CMAKE_SOURCE_DIR}/s800
+${CMAKE_SOURCE_DIR}/reco/ATDecoder
 
 
 )
@@ -39,6 +40,8 @@ TInverseMap.cc
 #lmcurve.cc
 #lmfit.cc
 #S800Settings.cc
+ATMergeTask.cc
+#${CMAKE_SOURCE_DIR}/reco/ATDecoder/ATRawEvent.cc
 
 )
 
@@ -48,6 +51,7 @@ Set(LINKDEF S800LinkDef.h)
 Set(LIBRARY_NAME S800)
 Set(DEPENDENCIES
     Base
+    FairLogger::FairLogger
 # Add all library names your code depending on.
 # Basically those are the libraries in the header files' directory.
 )
