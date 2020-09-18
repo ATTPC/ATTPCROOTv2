@@ -29,7 +29,7 @@ class ATMergeTask : public FairTask {
     void SetOptiEvtDelta(Int_t EvtDelta);
     void SetPIDcut(TString file);
 
-    Bool_t isInGlom(Double_t ts1, Double_t ts2);
+    Bool_t isInGlom(Long64_t ts1, Long64_t ts2);
     Bool_t isInPID(S800Calc *s800calc);
 
 
@@ -57,7 +57,7 @@ class ATMergeTask : public FairTask {
     Int_t fTsEvtS800Size,fEvtDelta;
     Double_t fGlom;
     TString fS800File;
-    vector <Double_t> fS800Ts;
+    vector <Long64_t> fS800Ts;
     vector <Double_t> fS800Evt;
 
     TF1 *fOptiFit;

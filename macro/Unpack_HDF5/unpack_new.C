@@ -68,6 +68,7 @@ void unpack_new(int runNumber)
   //MergeEvt->SetS800FileType(1);
   MergeEvt->SetS800File(S800File);
   MergeEvt->SetPersistence(kTRUE);
+  MergeEvt->SetOptiEvtDelta(100);
   MergeEvt->SetPIDcut("/mnt/simulations/ceclub/giraud/attpc/ATTPCROOTv2/macro/Unpack_HDF5/rootFiles/cutest");
 
 
