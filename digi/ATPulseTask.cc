@@ -68,11 +68,11 @@ ATPulseTask::Init()
   fGETGain = fPar->GetGETGain(); //Get the electronics gain in fC
   fGETGain = 1.602e-19*4096/(fGETGain*1e-15); //Scale to gain and correct for ADC
   fPeakingTime = fPar->GetPeakingTime();
-  
+
   std::cout <<"  Gain in ATTPC gas: "<<fGain<<std::endl;
   std::cout <<"  GET Gain: " << fGETGain << std::endl;
   std::cout <<"  Electronic peaking time: " << fPeakingTime << " ns" << std::endl;
-  
+
   gain = new TF1("gain", "4*(x/[0])*pow(2.718, -2*(x/[0]))", 0, fGain*5);//Polya distribution of gain
   gain->SetParameter(0, fGain);
 
@@ -122,6 +122,7 @@ Double_t PadResponse(Double_t *x, Double_t *par){
 }
 
 void ATPulseTask::Exec(Option_t* option) {
+
   LOG(INFO) << "Exec of ATPulseTask" << FairLogger::endl;
 
   Double_t tau  = fPeakingTime/1000.; //shaping time (us)
@@ -185,6 +186,7 @@ void ATPulseTask::Exec(Option_t* option) {
   std::map<Int_t,TH1F*>::iterator ite2 = electronsMap.begin();
   Int_t signal[fNumTbs];
 
+
   //Double_t *thePar = new Double_t[3];
   while(ite2!=electronsMap.end()) {
     for(Int_t kk=0;kk<fNumTbs;kk++) signal[kk]=0;
@@ -219,12 +221,13 @@ void ATPulseTask::Exec(Option_t* option) {
       //std::cout<<" bin "<<bin<<" signal "<<signal[bin]<<" g "<<g<<" GET gain"<<fGETGain<<"\n";
     }
     fRawEvent->SetPad(pad);
-    fRawEvent->SetEventID(fEventID);
     delete pad;
     //std::cout <<" Event "<<aux<<" "<<electronsMap.size()<< "*"<< std::flush;
     ite2++;
   }
-	
+	//if electronsMap.size==0, fEventID still needs to be set
+	fRawEvent->SetEventID(fEventID);
+
   fEventID++;
   return;
 

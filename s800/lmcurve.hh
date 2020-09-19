@@ -6,11 +6,11 @@
  * Contents: Simplified interface for one-dimensional curve fitting
  *
  * Author:   Joachim Wuttke 2010
- * 
+ *
  * Homepage: joachimwuttke.de/lmfit
  */
- 
-#include "lmmin.h"
+
+#include "lmmin.hh"
 
 #ifndef LMCURVE_H
 #define LMCURVE_H
