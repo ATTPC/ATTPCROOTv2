@@ -7,10 +7,10 @@
  *                       height: p(0), centroid: p(1), FWHM: 2*sqrt(2*log(2))*p(3)
  * Author:   Shumpei Noji
  */
- 
-#include "lmmin.h"
-#include "lmcurve.h"
-#include "lmfit.h"
+
+#include "lmmin.hh"
+#include "lmcurve.hh"
+#include "lmfit.hh"
 #include <stdio.h>
 #include <math.h>
 

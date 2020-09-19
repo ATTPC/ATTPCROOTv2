@@ -22,13 +22,13 @@
  * free to do whatever you want with this stuff. If we meet some day,
  * and you think this work is worth it, you can buy me a beer in return.
  */
- 
+
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <float.h>
-#include "lmmin.h"
+#include "lmmin.hh"
 
 
 /*****************************************************************************/
@@ -44,9 +44,9 @@
 
 /* If the above values do not work, the following seem good for an x86:
  LM_MACHEP     .555e-16
- LM_DWARF      9.9e-324 
- LM_SQRT_DWARF 1.e-160   
- LM_SQRT_GIANT 1.e150 
+ LM_DWARF      9.9e-324
+ LM_SQRT_DWARF 1.e-160
+ LM_SQRT_GIANT 1.e150
  LM_USER_TOL   1.e-14
    The following values should work on any machine:
  LM_MACHEP     1.2e-16
@@ -152,7 +152,7 @@ void lm_printout_std( int n_par, const double *par, int m_dat,
 /*  lm_minimize (intermediate-level interface)                               */
 /*****************************************************************************/
 
-void lmmin( int n_par, double *par, int m_dat, const void *data, 
+void lmmin( int n_par, double *par, int m_dat, const void *data,
             void (*evaluate) (const double *par, int m_dat, const void *data,
                               double *fvec, int *info),
             const lm_control_struct *control, lm_status_struct *status,
@@ -385,7 +385,7 @@ void lm_lmdif( int m, int n, double *x, double *fvec, double ftol,
  *        {
  *           // for ( i=0; i<m_dat; ++i )
  *           //     calculate fvec[i] for given parameters par;
- *           // to stop the minimization, 
+ *           // to stop the minimization,
  *           //     set *info to a negative integer.
  *        }
  *
@@ -486,7 +486,7 @@ void lm_lmdif( int m, int n, double *x, double *fvec, double ftol,
         lm_qrfac(m, n, fjac, 1, ipvt, wa1, wa2, wa3);
         /* return values are ipvt, wa1=rdiag, wa2=acnorm */
 
-        if (!iter) { 
+        if (!iter) {
             /* first iteration only */
             if (mode != 2) {
                 /* diag := norms of the columns of the initial Jacobian */
@@ -593,7 +593,7 @@ void lm_lmdif( int m, int n, double *x, double *fvec, double ftol,
             else
                 actred = -1;
 
-/*** inner: compute the scaled predicted reduction and 
+/*** inner: compute the scaled predicted reduction and
      the scaled directional derivative. ***/
 
             for (j = 0; j < n; j++) {
@@ -890,7 +890,7 @@ void lm_lmpar(int n, double *r, int ldr, int *ipvt, double *diag,
         dxnorm = lm_enorm(n, xdi);
         fp_old = fp;
         fp = dxnorm - delta;
-        
+
         /** if the function is small enough, accept the current value
             of par. Also test for the exceptional cases where parl
             is zero or the number of iterations has reached 10. **/
@@ -899,7 +899,7 @@ void lm_lmpar(int n, double *r, int ldr, int *ipvt, double *diag,
             || (parl == 0. && fp <= fp_old && fp_old < 0.)
             || iter == 10)
             break; /* the only exit from the iteration. */
-        
+
         /** compute the Newton correction. **/
 
         for (j = 0; j < n; j++)
@@ -920,11 +920,11 @@ void lm_lmpar(int n, double *r, int ldr, int *ipvt, double *diag,
         else if (fp < 0)
             paru = MIN(paru, *par);
         /* the case fp==0 is precluded by the break condition  */
-        
+
         /** compute an improved estimate for par. **/
-        
+
         *par = MAX(parl, *par + parc);
-        
+
     }
 
 } /*** lm_lmpar. ***/
@@ -1176,7 +1176,7 @@ void lm_qrsolv(int n, double *r, int ldr, int *ipvt, double *diag,
             sdiag[k] = 0.;
         sdiag[j] = diag[ipvt[j]];
 
-/*** qrsolv: the transformations to eliminate the row of d modify only 
+/*** qrsolv: the transformations to eliminate the row of d modify only
      a single element of qT*b beyond the first n, which is initially 0. ***/
 
         qtbpj = 0.;
