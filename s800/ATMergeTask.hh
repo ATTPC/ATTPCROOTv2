@@ -6,7 +6,6 @@
 #include "FairLogger.h"
 
 // ATTPCROOT classes
-#include "ATEvent.hh"
 
 // ROOT classes
 #include "TClonesArray.h"
@@ -18,54 +17,42 @@
 
 class ATMergeTask : public FairTask {
 
-  public:
-    ATMergeTask();
-    ~ATMergeTask();
+public:
+  ATMergeTask();
+  ~ATMergeTask();
 
-    void SetPersistence(Bool_t value = kTRUE);
-    //void SetS800FileType(int model);
-    void SetS800File(TString file);
-    void SetGlom(Double_t glom);
-    void SetOptiEvtDelta(Int_t EvtDelta);
-    void SetPIDcut(TString file);
+  void SetPersistence(Bool_t value = kTRUE);
+  void SetS800File(TString file);
+  void SetGlom(Double_t glom);
+  void SetOptiEvtDelta(Int_t EvtDelta);
+  void SetPIDcut(TString file);
 
-    Bool_t isInGlom(Long64_t ts1, Long64_t ts2);
-    Bool_t isInPID(S800Calc *s800calc);
+  Bool_t isInGlom(Long64_t ts1, Long64_t ts2);
+  Bool_t isInPID(S800Calc *s800calc);
 
 
-    virtual InitStatus Init();
-//    virtual void SetParContainers();
-    virtual void Exec(Option_t *opt);
+  virtual InitStatus Init();
+  //    virtual void SetParContainers();
+  virtual void Exec(Option_t *opt);
 
-  private:
-    FairLogger *fLogger;
-//    ATDigiPar *fPar;
-//    TClonesArray *fEventHArray;
-    TClonesArray *fRawEventArray;
-//    TClonesArray *fRansacArray;
-//    S800Event *fS800Event;
-//    S800Calc *fS800CalcBr;
-//    S800 *fS800Br;
-    TClonesArray *fS800CalcBr;
-    //TClonesArray *fS800Br;
-    TFile *fS800file;
-    TString fS800strReader[2];
-    TString fS800strTs[2];
-    TString fcutPIDFile;
+private:
+  FairLogger *fLogger;
+  
+  TClonesArray *fRawEventArray;
+  S800Calc *fS800CalcBr;
+  TFile *fS800file;
 
-    //Int_t fS800FileType;
-    Int_t fTsEvtS800Size,fEvtDelta;
-    Double_t fGlom;
-    TString fS800File;
-    vector <Long64_t> fS800Ts;
-    vector <Double_t> fS800Evt;
+  Int_t fTsEvtS800Size,fEvtDelta;
+  TString fS800File;
+  vector <Long64_t> fS800Ts;
+  vector <Double_t> fS800Evt;
 
-    TF1 *fOptiFit;
-    TCutG *fcutPID;
+  TF1 *fOptiFit;
+  Double_t fGlom;
+  TCutG *fcutPID;
+  TString fcutPIDFile;
 
-    ATEvent *fEvent;
-
-    Bool_t fIsPersistence;
+  Bool_t fIsPersistence;
 
 
 

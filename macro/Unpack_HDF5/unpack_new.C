@@ -14,7 +14,6 @@ void unpack_new(int runNumber)
 
   //Set the output file
   TString outputFile = TString::Format("rootFiles/run_unpacked_%04d_new.root", runNumber);
-  //TString outputFile = TString::Format("../Simulation/d2He/Analyis_d2He/rootS800/raw/test-runs800-48Ca-RAW-%04d.root", runNumber);
 
   std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
   std::cout << "Saving in: " << outputFile << std::endl;
@@ -48,7 +47,7 @@ void unpack_new(int runNumber)
 
   //Create the unpacker task
   ATHDFParserTask* HDFParserTask = new ATHDFParserTask();
-  HDFParserTask->SetPersistence(kTRUE);
+  HDFParserTask->SetPersistence(kFALSE);//kTRUE
   HDFParserTask->SetATTPCMap(scriptdir.Data());
   HDFParserTask->SetFileName(inputFile.Data());
   HDFParserTask->SetOldFormat(false);
@@ -61,41 +60,47 @@ void unpack_new(int runNumber)
  // HDFParserTask->SetAuxChannel(hash, "IonCb_34");
 
 
-//---------------------------------------------------
   //TString S800File = TString::Format("../Simulation/d2He/Analyis_d2He/rootS800/raw/test-runs800-48Ca-RAW-%04d.root", runNumber);
-  TString S800File = "/mnt/simulations/ceclub/giraud/attpc/ATTPCROOTv2/macro/Simulation/d2He/Analyis_d2He/rootS800/cal/test-runs800-48Ca-CAL-0001.root";//mnt/simulations/ceclub/giraud/attpc/ATTPCROOTv2/macro/Simulation/d2He/Analyis_d2He/test-runs800-48Ca-CAL-0001-newTs.root
+  TString S800File = "/mnt/simulations/ceclub/giraud/attpc/ATTPCROOTv2/macro/Simulation/d2He/Analyis_d2He/rootS800/cal/test-runs800-48Ca-CAL-0001.root";
   ATMergeTask *MergeEvt = new ATMergeTask();
-  //MergeEvt->SetS800FileType(1);
   MergeEvt->SetS800File(S800File);
   MergeEvt->SetPersistence(kTRUE);
   MergeEvt->SetOptiEvtDelta(100);
   MergeEvt->SetPIDcut("/mnt/simulations/ceclub/giraud/attpc/ATTPCROOTv2/macro/Unpack_HDF5/rootFiles/cutest");
 
-
-//---------------------------------------------------
-
-
-
   //Create PSA task
   ATPSATask *psaTask = new ATPSATask();
-  psaTask -> SetPersistence(kFALSE);//kFALSE
+  psaTask -> SetPersistence(kTRUE);//kFALSE
   psaTask -> SetThreshold(50);
   psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
   psaTask -> SetMaxFinder();
 
-  ATRansacTask *RansacTask = new ATRansacTask();
-  RansacTask -> SetPersistence(kTRUE);
-  RansacTask -> SetVerbose(kFALSE);
-  RansacTask -> SetDistanceThreshold(10.0);
-  RansacTask -> SetTiltAngle(0);
-  RansacTask -> SetMinHitsLine(30);
-  //RansacTask -> SetFullMode();
+/*
+  ATRansacTask *RandTask = new ATRansacTask();
+  RandTask -> SetPersistence(kTRUE);
+  RandTask -> SetVerbose(kFALSE);
+  RandTask -> SetDistanceThreshold(10.0);
+  RandTask -> SetTiltAngle(0);
+  RandTask -> SetMinHitsLine(30);
+  //RandTask -> SetFullMode();
+*/
+  ATRansacTask *RandTask = new ATRansacTask();
+  RandTask ->SetPersistence(kTRUE);
+  //RandTask ->SetModelType(1);
+  //RandTask ->SetFullMode();
+  RandTask->SetTiltAngle(0.0);
+  RandTask->SetDistanceThreshold(15.0);
+  RandTask->SetMinHitsLine(7);
+  RandTask->SetAlgorithm(3); // 0=PCL ransac; 1=Homemade Ransac; 2=Homemade Mlesac; 3=Homemade Lmeds;
+  RandTask->SetRanSamMode(3);// 0=Uniform; 1=Gaussian; 2=Weighted; 3=Gaussian+Weighted
+
+
 
   //Add unpacker to the run
   run -> AddTask(HDFParserTask);
   run -> AddTask(MergeEvt);
   run -> AddTask(psaTask);
-  run -> AddTask(RansacTask);
+  run -> AddTask(RandTask);
 
   run -> Init();
 
