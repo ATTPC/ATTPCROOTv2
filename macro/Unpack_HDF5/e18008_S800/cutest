@@ -1,0 +1,15 @@
+{
+//========= Macro generated from object: CUTG/Graph
+//========= by ROOT version6.12/06
+
+   TCutG *cutg = new TCutG("CUTG",4);
+   cutg->SetVarX("ATEventH.fHitArray.fPosition.y()");
+   cutg->SetVarY("ATEventH.fHitArray.fPosition.x()");
+   cutg->SetTitle("Graph");
+   cutg->SetFillStyle(1000);
+   cutg->SetPoint(0,0,0);
+   cutg->SetPoint(1,0,500);
+   cutg->SetPoint(2,2000,500);
+   cutg->SetPoint(3,2000,0);
+   cutg->Draw("");
+}

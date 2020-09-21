@@ -203,6 +203,10 @@ if(S800EvtMatch>0) {
 
   fS800CalcBr->SetIsInCut(isInPID(fS800CalcBr));
 
+  rawEvent->SetIsExtGate(isInPID(fS800CalcBr));
+
+
+
 }
 
 
