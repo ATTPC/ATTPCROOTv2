@@ -36,9 +36,10 @@
 #pragma link C++ class vector< vector <Double_t> >+;
 #pragma link C++ class vector< vector <UShort_t> >+;
 #pragma link C++ class S800TSettings+;
+#pragma link C++ class vector<S800TSettings*>+;
+#pragma link C++ class ATMergeTask+;
 #pragma link C++ class S800Settings+;
 //#pragma link C++ class vector<S800TSettings*>+;
 #pragma link C++ class ATS800Task+;
-
 
 #endif

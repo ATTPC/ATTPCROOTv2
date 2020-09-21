@@ -14,6 +14,7 @@ ${ROOT_INCLUDE_DIR}
 ${BASE_INCLUDE_DIRECTORIES}
 #put here all directories where header files are located
 ${CMAKE_SOURCE_DIR}/s800
+${CMAKE_SOURCE_DIR}/reco/ATDecoder
 )
 
 include_directories(${INCLUDE_DIRECTORIES} )
@@ -39,6 +40,7 @@ lmcurve.cc
 lmfit.cc
 S800Settings.cc
 S800TSettings.cc
+ATMergeTask.cc
 
 )
 
