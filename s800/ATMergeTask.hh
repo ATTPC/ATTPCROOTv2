@@ -37,7 +37,7 @@ public:
 
 private:
   FairLogger *fLogger;
-  
+
   TClonesArray *fRawEventArray;
   S800Calc *fS800CalcBr;
   TFile *fS800file;
@@ -49,8 +49,9 @@ private:
 
   TF1 *fOptiFit;
   Double_t fGlom;
-  TCutG *fcutPID;
-  TString fcutPIDFile;
+
+  vector<TCutG *> fcutPID;
+  vector<TString> fcutPIDFile;
 
   Bool_t fIsPersistence;
 

@@ -71,7 +71,8 @@ void unpack_new(int runNumber=2)
   MergeEvt->SetS800File(S800File);
   MergeEvt->SetPersistence(kTRUE);
   MergeEvt->SetOptiEvtDelta(100);
-  MergeEvt->SetPIDcut("cutest");
+  MergeEvt->SetPIDcut("CUT1BLA.root");
+  MergeEvt->SetPIDcut("CUT2BLA.root");
 
   //Create PSA task
   ATPSATask *psaTask = new ATPSATask();
