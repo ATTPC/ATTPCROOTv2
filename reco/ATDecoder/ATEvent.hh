@@ -47,7 +47,8 @@ public:
   void SetMeshSignal(Int_t idx, Float_t val);
 
   void SetIsGood(Bool_t value);
-    
+  void SetIsExtGate(Bool_t value);
+
 
   // getters
   Int_t GetEventID();
@@ -60,11 +61,13 @@ public:
 
   std::vector<ATPad>* GetAuxPadArray();
 
+  Bool_t IsExtGate();
+
   Int_t GetNumClusters();
   // ATHitCluster *GetCluster(Int_t clusterNo);
   // void RemoveCluster(Int_t clusterNo);
   // vector<ATHitCluster> *GetClusterArray();
-  // 
+  //
   // Int_t GetNumTracks();
   // STTrack *GetTrack(Int_t trackNo);
   // STTrack *RemoveTrack(Int_t trackNo);
@@ -82,6 +85,7 @@ public:
 
   Bool_t IsGood();
 
+
   static Bool_t SortHit(const ATHit &lhs, const ATHit &rhs)  { return lhs.fPadNum < rhs.fPadNum; }
   static Bool_t SortHitTime(const ATHit &lhs, const ATHit &rhs)  { return lhs.fTimeStamp < rhs.fTimeStamp; }
   Bool_t SortHitArray();
@@ -94,10 +98,11 @@ private:
   Bool_t fIsChanged;
 
   Bool_t fIsGood;
+  Bool_t fIsinGate;
 
   Int_t fEventID;
   ULong_t fTimestamp;
-  
+
   vector<ATHit> fHitArray;
   vector<ATPad> fAuxPadArray;
 

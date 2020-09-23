@@ -190,7 +190,9 @@ ATPSATask::Exec(Option_t *opt)
   else {
     fPSA -> Analyze(rawEvent, event);
     event -> SetIsGood(kTRUE);
+    event->SetIsExtGate(rawEvent->GetIsExtGate());
   }
+
 
   //std::cout << "PSA events  "<<event->GetNumHits()  << '\n';
 }

@@ -21,6 +21,7 @@ ATRawEvent::ATRawEvent()
   fPadArray.reserve(10240);// TODO Prototype size is smaller we do not need such size
 
   fIsGood = kTRUE;
+  fIsinGate = kFALSE;
 }
 
 ATRawEvent::ATRawEvent(ATRawEvent *object)
@@ -50,6 +51,7 @@ void ATRawEvent::SetEventID(ULong_t evtid) { fEventID = evtid; }
 void ATRawEvent::SetPad(ATPad *pad)      { fPadArray.push_back(*pad); }
 void ATRawEvent::SetIsGood(Bool_t value) { fIsGood = value; }
 void ATRawEvent::SetTimestamp(ULong_t timestamp) { fTimestamp = timestamp; }
+void ATRawEvent::SetIsExtGate(Bool_t value){ fIsinGate = value; }
 
 void ATRawEvent::RemovePad(Int_t padNo)
 {
@@ -66,6 +68,7 @@ Bool_t  ATRawEvent::IsGood()             { return fIsGood; }
 ULong_t ATRawEvent::GetTimestamp()       { return fTimestamp; }
 ATPad  *ATRawEvent::GetPad(Int_t padNo)  { return (padNo < GetNumPads() ? &fPadArray[padNo] : NULL); }
 std::vector<ATPad> *ATRawEvent::GetPads()     { return &fPadArray; }
+Bool_t ATRawEvent::GetIsExtGate(){ return fIsinGate;}
 
 ATPad *ATRawEvent::GetPad(Int_t PadNum, Bool_t& IsValid)
 {

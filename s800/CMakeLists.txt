@@ -53,6 +53,7 @@ Set(DEPENDENCIES
     FairLogger::FairLogger
 # Add all library names your code depending on.
 # Basically those are the libraries in the header files' directory.
+  TreePlayer
 )
 
 
