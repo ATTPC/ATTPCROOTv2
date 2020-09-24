@@ -9,6 +9,7 @@
 #pragma link C++ class ATEventDrawTask+;
 #pragma link C++ class ATEventDrawTaskProto+;
 #pragma link C++ class ATEventProtoDrawTask+;
-
+#pragma link C++ class ATEventManagerS800+;
+#pragma link C++ class ATEventDrawTaskS800+;
 
 #endif

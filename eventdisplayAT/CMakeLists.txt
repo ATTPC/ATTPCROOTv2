@@ -18,6 +18,7 @@ ${CMAKE_SOURCE_DIR}/reco/ATRansac
 ${CMAKE_SOURCE_DIR}/reco/ATRansacMod
 ${CMAKE_SOURCE_DIR}/reco/ATPatternRecognition
 ${CMAKE_SOURCE_DIR}/par
+${CMAKE_SOURCE_DIR}/s800
 
 )
 
@@ -37,6 +38,9 @@ ATEventManagerProto.cc
 ATEventDrawTask.cc
 ATEventDrawTaskProto.cc
 ATEventProtoDrawTask.cc
+ATEventManagerS800.cc
+ATEventDrawTaskS800.cc
+
 )
 
 CHANGE_FILE_EXTENSION(*.cc *.hh HEADERS "${SRCS}")
@@ -53,6 +57,7 @@ Set(DEPENDENCIES
 # Basically those are the libraries in the header files' directory.
     ATTPCReco
     AtTpcMap
+    S800
     FairLogger::FairLogger
 )
 
