@@ -1,4 +1,4 @@
-void run_eve(int runNum, TString  OutputDataFile = "output.reco_display.root")
+void run_eve(int runNum = 206, TString  OutputDataFile = "output.reco_display.root")
 {
   TString  InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpacked/run_%04d.root", runNum);
   
@@ -35,5 +35,5 @@ void run_eve(int runNum, TString  OutputDataFile = "output.reco_display.root")
   eveMan->AddTask(eve);
   eveMan->Init();
 
-  eveMan->RunEvent(27);
+  //eveMan->RunEvent(27);
 }
