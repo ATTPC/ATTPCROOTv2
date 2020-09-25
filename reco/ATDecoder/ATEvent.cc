@@ -18,7 +18,7 @@ ATEvent::ATEvent(Bool_t isClustered, Bool_t isTracked, Bool_t isChanged)
   fIsGood = kFALSE;
   fQevent = -100.0;
   fRhoVariance = 0.0;
-
+  fIsinGate = kFALSE;
 
 
 }
@@ -55,12 +55,14 @@ void ATEvent::SetIsTracked(Bool_t value)     { fIsTracked = value; }
 void ATEvent::SetIsChanged(Bool_t value)     { fIsChanged = value; }
 
 void ATEvent::SetIsGood(Bool_t value)        { fIsGood = value; }
+void ATEvent::SetIsExtGate(Bool_t value){ fIsinGate = value; }
 
 Bool_t ATEvent::IsClustered()                { return fIsClustered; }
 Bool_t ATEvent::IsTracked()                  { return fIsTracked; }
 Bool_t ATEvent::IsChanged()                  { return fIsChanged; }
 
 Bool_t ATEvent::IsGood()                     { return fIsGood; }
+Bool_t ATEvent::IsExtGate()             { return fIsinGate;}
 
 
 // setters

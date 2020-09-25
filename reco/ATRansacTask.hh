@@ -10,6 +10,9 @@
 #include "ATProtoEvent.hh"
 #include "ATDigiPar.hh"
 #include "ATRansac.hh"
+#include "ATRansacMod.hh"
+#include "ATMlesacMod.hh"
+#include "ATLmedsMod.hh"
 
 // ROOT classes
 #include "TClonesArray.h"
@@ -23,9 +26,12 @@ class ATRansacTask : public FairTask {
     void SetPersistence(Bool_t value = kTRUE);
     void SetModelType(int model);
     void SetDistanceThreshold(Float_t threshold);
+    void SetNumItera(Int_t niterations);
     void SetFullMode(); //Mode that calculates the RANSAC method for every potential line
     void SetMinHitsLine(Int_t nhits); //Set Mininum number of hits per line
     void SetTiltAngle(Double_t val);
+    void SetAlgorithm(Int_t val);
+    void SetRanSamMode(Int_t mode);
 
     virtual InitStatus Init();
     virtual void SetParContainers();
@@ -45,7 +51,9 @@ class ATRansacTask : public FairTask {
     Float_t fRANSACThreshold;
     Int_t fMinHitsLine; // Minimum number of hits
     Double_t fTiltAngle;
-
+    Int_t fNumItera;
+    Int_t fRANSACAlg;
+    Int_t fRandSamplMode;
 
 
 

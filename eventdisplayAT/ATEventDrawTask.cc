@@ -100,7 +100,8 @@ fMaxX(-432),
 f3DHitStyle(0),
 fMultiHit(0),
 fSaveTextData(0),
-f3DThreshold(0)
+f3DThreshold(0),
+fRANSACAlg(0)
 {
 
     //fAtMapPtr = new AtTpcMap();
@@ -201,6 +202,7 @@ ATEventDrawTask::Init()
 
     fRansacArray = (TClonesArray*) ioMan->GetObject("ATRansac");
     if(fRansacArray) LOG(INFO)<<cGREEN<<"RANSAC Array Found."<<cNORMAL<<FairLogger::endl;
+
 
     //fTrackFinderHCArray = (TClonesArray*) ioMan->GetObject("ATTrackFinderHC");
     //if(fTrackFinderHCArray)  LOG(INFO)<<cGREEN<<"Track Finder Hierarchical Clustering Array Found."<<cNORMAL<<FairLogger::endl;
@@ -421,23 +423,63 @@ ATEventDrawTask::DrawHitPoints()
 
         if(fIsLinearHough) TrackCand = fHoughSpaceLine_buff->GetTrackCand();
         else if(fRansacArray){
-            fRansac = dynamic_cast<ATRANSACN::ATRansac*> (fRansacArray->At(0));
-            TrackCand = fRansac->GetTrackCand();
-            TVector3 Vertex1    = fRansac->GetVertex1();
-            TVector3 Vertex2    = fRansac->GetVertex2();
-            Double_t VertexTime = fRansac->GetVertexTime();
-            std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z : "<<Vertex1.Z()<<std::endl;
-            std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z : "<<Vertex2.Z()<<std::endl;
-            std::cout<<" Vertex Time : "<<VertexTime<<std::endl;
-            std::cout<<" Vertex Mean - X : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z : "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
-            std::vector<ATRANSACN::ATRansac::PairedLines> trackCorr = fRansac->GetPairedLinesArray();
-            //std::ostream_iterator<ATRANSACN::ATRansac::PairedLines> pairLine_it (std::cout,"  ");
-            if(trackCorr.size()>0){
-                for(Int_t i=0;i<trackCorr.size();i++){
-                    ATRANSACN::ATRansac::PairedLines pl = trackCorr.at(i);
-                    std::cout<<pl<<std::endl;
-                }
+            if(fRANSACAlg==0){
+              fRansac = dynamic_cast<ATRANSACN::ATRansac*> (fRansacArray->At(0));
+              TrackCand = fRansac->GetTrackCand();
+              TVector3 Vertex1    = fRansac->GetVertex1();
+              TVector3 Vertex2    = fRansac->GetVertex2();
+              Double_t VertexTime = fRansac->GetVertexTime();
+              std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z : "<<Vertex1.Z()<<std::endl;
+              std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z : "<<Vertex2.Z()<<std::endl;
+              std::cout<<" Vertex Time : "<<VertexTime<<std::endl;
+              std::cout<<" Vertex Mean - X : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z : "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
+
+              std::vector<ATRANSACN::ATRansac::PairedLines> trackCorr = fRansac->GetPairedLinesArray();
+              //std::ostream_iterator<ATRANSACN::ATRansac::PairedLines> pairLine_it (std::cout,"  ");
+              if(trackCorr.size()>0){
+                  for(Int_t i=0;i<trackCorr.size();i++){
+                      ATRANSACN::ATRansac::PairedLines pl = trackCorr.at(i);
+                      std::cout<<pl<<std::endl;
+                    }
+                  }
             }
+
+            if(fRANSACAlg==1){
+              fRansacMod = dynamic_cast<ATRansacMod*> (fRansacArray->At(0));
+              TrackCand = fRansacMod->GetTrackCand();
+              TVector3 Vertex1    = fRansacMod->GetVertex1();
+              TVector3 Vertex2    = fRansacMod->GetVertex2();
+              Double_t VertexTime = fRansacMod->GetVertexTime();
+              std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z : "<<Vertex1.Z()<<std::endl;
+              std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z : "<<Vertex2.Z()<<std::endl;
+              std::cout<<" Vertex Time : "<<VertexTime<<std::endl;
+              std::cout<<" Vertex Mean - X : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z : "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
+            }
+
+            if(fRANSACAlg==2){
+              fMlesacMod = dynamic_cast<ATMlesacMod*> (fRansacArray->At(0));
+              TrackCand = fMlesacMod->GetTrackCand();
+              TVector3 Vertex1    = fMlesacMod->GetVertex1();
+              TVector3 Vertex2    = fMlesacMod->GetVertex2();
+              Double_t VertexTime = fMlesacMod->GetVertexTime();
+              std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z : "<<Vertex1.Z()<<std::endl;
+              std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z : "<<Vertex2.Z()<<std::endl;
+              std::cout<<" Vertex Time : "<<VertexTime<<std::endl;
+              std::cout<<" Vertex Mean - X : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z : "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
+            }
+
+            if(fRANSACAlg==3){
+              fLmedsMod = dynamic_cast<ATLmedsMod*> (fRansacArray->At(0));
+              TrackCand = fLmedsMod->GetTrackCand();
+              TVector3 Vertex1    = fLmedsMod->GetVertex1();
+              TVector3 Vertex2    = fLmedsMod->GetVertex2();
+              Double_t VertexTime = fLmedsMod->GetVertexTime();
+              std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z : "<<Vertex1.Z()<<std::endl;
+              std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z : "<<Vertex2.Z()<<std::endl;
+              std::cout<<" Vertex Time : "<<VertexTime<<std::endl;
+              std::cout<<" Vertex Mean - X : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z : "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
+            }
+
 
         }else if(fPatternEventArray){
             ATPatternEvent* patternEvent = dynamic_cast<ATPatternEvent*> (fPatternEventArray->At(0));
@@ -549,7 +591,10 @@ ATEventDrawTask::DrawHitPoints()
 	    fVertex -> SetMarkerStyle(34);
 	    fVertex -> SetMarkerSize(2.0);
             fVertex -> SetMarkerColor(kViolet);
-	    fVertex -> SetNextPoint(fRansac -> GetVertexMean().x()*0.1, fRansac -> GetVertexMean().y()*0.1, fRansac -> GetVertexMean().z()*0.1);
+	    if(fRANSACAlg==0) fVertex -> SetNextPoint(fRansac -> GetVertexMean().x()*0.1, fRansac -> GetVertexMean().y()*0.1, fRansac -> GetVertexMean().z()*0.1);
+      if(fRANSACAlg==1) fVertex -> SetNextPoint(fRansacMod -> GetVertexMean().x()*0.1, fRansacMod -> GetVertexMean().y()*0.1, fRansacMod -> GetVertexMean().z()*0.1);
+      if(fRANSACAlg==2) fVertex -> SetNextPoint(fMlesacMod -> GetVertexMean().x()*0.1, fMlesacMod -> GetVertexMean().y()*0.1, fMlesacMod -> GetVertexMean().z()*0.1);
+      if(fRANSACAlg==3) fVertex -> SetNextPoint(fLmedsMod -> GetVertexMean().x()*0.1, fLmedsMod -> GetVertexMean().y()*0.1, fLmedsMod -> GetVertexMean().z()*0.1);
 
         }
 

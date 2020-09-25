@@ -14,7 +14,7 @@
 
 #pragma link C++ class S800+;
 #pragma link C++ class S800Event+;
-//#pragma link C++ class S800Calibration+;
+#pragma link C++ class S800Calibration+;
 #pragma link C++ class S800Calc;
 #pragma link C++ class CRDC+;
 #pragma link C++ class SCINT+;
@@ -37,6 +37,9 @@
 #pragma link C++ class vector< vector <UShort_t> >+;
 #pragma link C++ class S800TSettings+;
 #pragma link C++ class vector<S800TSettings*>+;
-
+#pragma link C++ class ATMergeTask+;
+#pragma link C++ class S800Settings+;
+//#pragma link C++ class vector<S800TSettings*>+;
+#pragma link C++ class ATS800Task+;
 
 #endif

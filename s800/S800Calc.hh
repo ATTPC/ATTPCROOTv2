@@ -11,7 +11,7 @@ class S800Calibration;
 
 class CRDC : public TObject {
 public:
-   CRDC(){    
+   CRDC(){
       fid = -1;
       fx = sqrt(-1.0);
       fy = sqrt(-1.0);
@@ -69,7 +69,7 @@ public:
 	 fypad.push_back((Float_t)ypad[i]);
       }
    }
-   
+
    void SetPedSubtractedPads(vector<Float_t> v){fPedSubtractedPads=v;}
    void SetID(int id){fid = id;}
    void SetX(Float_t x){fx = x;}
@@ -88,7 +88,7 @@ public:
 
    Int_t GetNumClusters(){return fNumClusters;}
    Float_t GetMaxClusterWidth(){return fMaxClusterWidth;}
-   
+
    Int_t GetID(){return fid;}
    Float_t GetX(){return fx;}
    Float_t GetY(){return fy;}
@@ -105,11 +105,11 @@ public:
    Float_t GetFnorm(){return ffnorm;}
    std::vector<Int_t> GetXpad(){return fxpad;}
    std::vector<Float_t> GetYpad(){return fypad;}
-  
+
    std::vector<Float_t> & GetPedSubtractedPads(){return fPedSubtractedPads;}
 
 protected:
-   Int_t fid; 
+   Int_t fid;
    Float_t fx;
    Float_t fy;
    Float_t fx_cog;
@@ -117,17 +117,17 @@ protected:
    Float_t ftac;
    Float_t fanode;
    Float_t fcathode;
-   std::vector<Float_t> fcal;                  
-   std::vector<Float_t> fPedSubtractedPads; 
+   std::vector<Float_t> fcal;
+   std::vector<Float_t> fPedSubtractedPads;
    std::vector<Int_t> fchan;          	    //!
    std::vector<Float_t> fypad;     	    //!
-   std::vector<Int_t> fxpad;                //!  
-   Short_t fmaxpad;              
-   Float_t fmaxchg;              
-   std::vector<Float_t> ffitprm;   
-   Float_t ffnorm;                 
-   Int_t fNumClusters;		   
-   Float_t fMaxClusterWidth;       
+   std::vector<Int_t> fxpad;                //!
+   Short_t fmaxpad;
+   Float_t fmaxchg;
+   std::vector<Float_t> ffitprm;
+   Float_t ffnorm;
+   Int_t fNumClusters;
+   Float_t fMaxClusterWidth;
    ClassDef(CRDC, 1);
 };
 
@@ -158,11 +158,11 @@ public:
       frf  = rf;
       fobj = obj;
       fxfp = xfp;
-   }  
+   }
    void SetTAC(Float_t obj, Float_t xfp){
       ftac_obj = obj;
       ftac_xfp = xfp;
-   }  
+   }
    Float_t GetRF(){return frf;}
    Float_t GetOBJ(){return fobj;}
    Float_t GetXFP(){return fxfp;}
@@ -206,7 +206,7 @@ public:
       return sqrt(-1.0);
     }
   }
-  
+
   Float_t GetFirstE1DownHit(){
     if (fE1Down.size() !=0 ){
       return fE1Down[0];
@@ -237,7 +237,7 @@ public:
       return sqrt(-1.0);
     }
   }
-  
+
   Float_t GetFirstHodoscopeHit(){
     if ( fHodoscope.size()!=0){
       return fHodoscope[0];
@@ -254,7 +254,7 @@ public:
   vector <Float_t> fGalotte;
   vector <Float_t> fRf;
   vector <Float_t> fHodoscope;
-  
+
 
   ClassDef(MultiHitTOF,1);
 };
@@ -352,14 +352,14 @@ public:
   }
    void SetCal(std::vector<Float_t> cal){
     fcal.clear();
-    fchan.clear();    
+    fchan.clear();
     for(UShort_t i=0;i<cal.size();i++){
       if(!isnan(cal[i])&&cal[i]>0.0){
 	fcal.push_back(cal[i]);
 	fchan.push_back(i);
       }
     }
-  }  
+  }
   void SetSum(Float_t sum){fsum = sum;}
   void SetDE(Float_t de){fde = de;}
   Float_t GetSum(){return fsum;}
@@ -419,14 +419,14 @@ protected:
   Short_t fexternal1;
   Short_t fexternal2;
   Short_t fsecondary;
-  
+
   ClassDef(Trigger, 1);
 };
 
 
 
 
-/**Calibrated S800 Data Structure. Contains instances of the calibrated data 
+/**Calibrated S800 Data Structure. Contains instances of the calibrated data
 structure for each of the S800s detectors.  They are called 'CRDC', 'IC',
 'TOF', 'SCINT', 'HODOSCOPE' and 'MultiHitTOF'
  */
@@ -436,6 +436,8 @@ public:
 
    void Clear(Option_t * /*option*/ ="") { // modified to suppress warnings
       ftimes800 =0;
+      fts =0;
+      fits =0;
       fCRDC[0].Clear();
       fCRDC[1].Clear();
       fTOF.Clear();
@@ -443,29 +445,32 @@ public:
       fSCINT[1].Clear();
       fSCINT[2].Clear();
       fIC.Clear();
+      fIsInCut =kFALSE;
    }
 
    void ApplyCalibration(S800* s800, S800Calibration* cal);
 
+   void SetIsInCut(Bool_t val){fIsInCut = val;}
    void SetTimeS800(Float_t time){ftimes800 = time;}
    void SetCRDC(CRDC crdc, int id){fCRDC[id] = crdc;}
    void SetTOF(TOF tof){fTOF = tof;}
    void SetIC(IC ic){fIC = ic;}
    void SetSCINT(SCINT scint, int id){fSCINT[id] = scint;}
    void SetHODOSCOPE(HODOSCOPE hodoscope, int id) {fHODOSCOPE[id] = hodoscope;}
-  
+
    void SetMultiHitTOF(MultiHitTOF f){fMultiHitTOF=f;}
    void SetTrigger (Trigger in){fTrigger=in;}
 
+   Bool_t GetIsInCut(){return fIsInCut;}
    Float_t GetTimeS800(){return ftimes800;};
    CRDC* GetCRDC(int id){return &fCRDC[id];}
    TOF* GetTOF(){return &fTOF;}
    SCINT* GetSCINT(int id){return &fSCINT[id];}
    HODOSCOPE* GetHODOSCOPE(Int_t id) {return &fHODOSCOPE[id];}
    IC* GetIC(){return &fIC;}
-  
+
    MultiHitTOF * GetMultiHitTOF(){return &fMultiHitTOF;}
-    
+
    Trigger * GetTrigger(){return &fTrigger;}
 
    // timestamp
@@ -474,7 +479,7 @@ public:
    long long int GetTS(){return fts;}
    long long int GetInternalTS(){return fits;}
 
-protected:  
+protected:
    CRDC      fCRDC[2];
    IC fIC;
    TOF       fTOF;
@@ -485,7 +490,9 @@ protected:
    Float_t       ftimes800;
    long long int fts;  //timestamp global
    long long int fits; //timestamp internal
-  
+
+   Bool_t fIsInCut;
+
   MultiHitTOF fMultiHitTOF;
 
    ClassDef(S800Calc, 1);

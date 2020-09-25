@@ -32,12 +32,14 @@ public:
   void SetIsGood(Bool_t value);
   void RemovePad(Int_t padNo);
   void SetTimestamp(ULong_t timestamp);
+  void SetIsExtGate(Bool_t value);
 
   // getters
   ULong_t GetEventID();
   Int_t GetNumPads();
   ULong_t GetTimestamp();
   Bool_t IsGood();
+  Bool_t GetIsExtGate();
 
   std::vector<ATPad> *GetPads();
 
@@ -49,9 +51,10 @@ private:
   ULong_t fEventID;
   std::vector<ATPad> fPadArray;
   ULong_t fTimestamp;
-  
+
   Bool_t fIsGood;
-  
+  Bool_t fIsinGate;
+
   ClassDef(ATRawEvent, 1);
 };
 
