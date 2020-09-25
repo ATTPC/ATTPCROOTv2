@@ -29,7 +29,7 @@ const TString FileName1 = geoVersion + "_geomanager.root";
 
 // Names of the different used materials which are used to build the modules
 // The materials are defined in the global media.geo file
-const TString MediumGas     = "heco2";
+const TString MediumGas     = "TargetD2_07";
 const TString CylinderVolumeMedium         = "steel";
 const TString MediumVacuum = "vacuum4";
 
@@ -120,14 +120,14 @@ void create_materials_from_media_file()
 
   FairGeoMedium* isobutan              = geoMedia->getMedium("isobutan");
   FairGeoMedium* steel          = geoMedia->getMedium("steel");
-  FairGeoMedium* heco2          = geoMedia->getMedium("heco2");
+  FairGeoMedium* deuterium          = geoMedia->getMedium("TargetD2_07");
   FairGeoMedium* vacuum4          = geoMedia->getMedium("vacuum4");
 
   // include check if all media are found
 
   geoBuild->createMedium(isobutan);
   geoBuild->createMedium(steel);
-   geoBuild->createMedium(heco2);
+   geoBuild->createMedium(deuterium);
    geoBuild->createMedium(vacuum4);
 }
 
