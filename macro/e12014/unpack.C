@@ -11,7 +11,7 @@ void unpack(int runNumber)
   
    
   //Set the input file
-  TString inputFile = TString::Format("/mnt/rawdata/e12014_attpc/run_%04d.h5", runNumber);
+  TString inputFile = TString::Format("/mnt/rawdata/e12014_attpc/h5/run_%04d.h5", runNumber);
 
   //Set the output file
   TString outputFile = TString::Format("/mnt/analysis/e12014/TPC/unpacked/run_%04d.root", runNumber);
@@ -61,22 +61,22 @@ void unpack(int runNumber)
   //Create PSA task
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(50);
+  psaTask -> SetThreshold(0);
   psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
   psaTask -> SetMaxFinder();
 
-  ATRansacTask *RansacTask = new ATRansacTask();
-  RansacTask -> SetPersistence(kTRUE);
-  RansacTask -> SetVerbose(kFALSE);
-  RansacTask -> SetDistanceThreshold(20.0);
-  RansacTask -> SetTiltAngle(0);
-  RansacTask -> SetMinHitsLine(1000);
+  //ATRansacTask *RansacTask = new ATRansacTask();
+  //RansacTask -> SetPersistence(kTRUE);
+  //RansacTask -> SetVerbose(kFALSE);
+  //RansacTask -> SetDistanceThreshold(20.0);
+  //RansacTask -> SetTiltAngle(0);
+  //RansacTask -> SetMinHitsLine(1000);
   //RansacTask -> SetFullMode();
   
   //Add unpacker to the run
   run -> AddTask(HDFParserTask);
   run -> AddTask(psaTask);
-  run -> AddTask(RansacTask);
+  //run -> AddTask(RansacTask);
 
   run -> Init();
 

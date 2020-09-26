@@ -1,6 +1,6 @@
 //Code to simulate fission event from a file
 
-void runMC_sim(Int_t nEvents= 100, TString mcEngine = "TGeant4")
+void runMC_sim(Int_t nEvents= 20, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -76,7 +76,7 @@ void runMC_sim(Int_t nEvents= 100, TString mcEngine = "TGeant4")
   Double_t py = 0.000/a;    // Y-Momentum / per nucleon!!!!!!
 
   // 70 MeV / nucleon
-  Double_t pz = 71702.6/a;  // Z-Momentum (MeV)/ per nucleon!!!!!!
+  Double_t pz = 42348.9/a;  // Z-Momentum (MeV)/ per nucleon!!!!!!
   pz /= 1000; // change to GeV/c for FairSoft
   
   Double_t BExcEner = 0.0;
@@ -86,10 +86,10 @@ void runMC_sim(Int_t nEvents= 100, TString mcEngine = "TGeant4")
 
   // Nominal Energy of the beam: Only used for cross section calculation
   // (Tracking energy is determined with momentum).
-  Double_t NomEnergy = 70.0*a; //Depricated
+  Double_t NomEnergy = 25.0*a; //Depricated
 
   //E loss until reaction occurs in MeV
-  Double_t eLoss = 801.3;
+  Double_t eLoss = 1000;
 
   //Create the ion generator
   ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion", z, a, q, m,
