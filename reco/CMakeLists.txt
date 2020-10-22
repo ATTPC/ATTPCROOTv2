@@ -14,7 +14,7 @@ ${CMAKE_SOURCE_DIR}/reco/GETDecoder
 ${CMAKE_SOURCE_DIR}/reco/GETDecoder2
 ${CMAKE_SOURCE_DIR}/reco/ATDecoder
 ${CMAKE_SOURCE_DIR}/reco/ATPulseAnalyzer
-${CMAKE_SOURCE_DIR}/reco/HierarchicalClustering
+#${CMAKE_SOURCE_DIR}/reco/HierarchicalClustering
 ${CMAKE_SOURCE_DIR}/reco/HoughTransformation
 ${CMAKE_SOURCE_DIR}/reco/ATProtoPhiReco
 ${CMAKE_SOURCE_DIR}/reco/VMEDecoder
@@ -36,7 +36,10 @@ ${PCL_LIBRARY_DIRS}
 ${PCL_LIBRARIES}
 )
 
+if(PCL_FOUND)
 add_definitions(${PCL_DEFINITIONS})
+endif()
+
 
 link_directories(${LINK_DIRECTORIES})
 
@@ -65,7 +68,6 @@ GETDecoder2/GETFileChecker.cc
 ATDecoder/ATCore.cc
 ATDecoder/ATCore2.cc
 ATDecoder/ATPad.cc
-#ATDecoder/ATPad2.cc
 ATDecoder/ATRawEvent.cc
 ATDecoder/ATHit.cc
 ATDecoder/ATEvent.cc
@@ -81,73 +83,82 @@ ATDecoder/ATHDFParser.cc
 ATPulseAnalyzer/ATPSA.cc
 ATPulseAnalyzer/ATPSASimple.cc
 ATPulseAnalyzer/ATPSASimple2.cc
-ATPulseAnalyzer/ATPSAFilter.cc
 ATPulseAnalyzer/ATPSAProto.cc
 ATPulseAnalyzer/ATPSAProtoFull.cc
 ATPulseAnalyzer/ATPSAFull.cc
-
-HierarchicalClustering/ATCubicSplineFit.cc
-HierarchicalClustering/ATFindVertex.cc
-HierarchicalClustering/ATHierarchicalClusteringHc.cc
-HierarchicalClustering/ATHierarchicalClusteringSmoothenCloud.cc
-HierarchicalClustering/ATTrajectory.cc
-
 ATPulseAnalyzer/ATCalibration.cc
 
-HoughTransformation/ATHoughSpace.cc
-HoughTransformation/ATHoughSpaceLine.cc
-HoughTransformation/ATHoughSpaceCircle.cc
+#HierarchicalClustering/ATCubicSplineFit.cc
+#HierarchicalClustering/ATFindVertex.cc
+#HierarchicalClustering/ATHierarchicalClusteringHc.cc
+#HierarchicalClustering/ATHierarchicalClusteringSmoothenCloud.cc
+#HierarchicalClustering/ATTrajectory.cc
 
-ATProtoPhiReco/ATPhiReco.cc
-ATProtoPhiReco/ATPhiRecoSimple.cc
-ATProtoPhiReco/ATPhiRecoTriple.cc
+
+#HoughTransformation/ATHoughSpace.cc
+#HoughTransformation/ATHoughSpaceLine.cc
+#HoughTransformation/ATHoughSpaceCircle.cc
+
+#ATProtoPhiReco/ATPhiReco.cc
+#ATProtoPhiReco/ATPhiRecoSimple.cc
+#ATProtoPhiReco/ATPhiRecoTriple.cc
 
 VMEDecoder/VMEDecoder.cc
 VMEDecoder/VMECore.cc
 VMEDecoder/ATRawIC.cc
 VMEDecoder/VMERawEvent.cc
 
-ATMinimization/ATMinimization.cc
-ATMinimization/ATMCMinimization.cc
-ATMinimization/ATMCQMinimization.cc
+#ATMinimization/ATMinimization.cc
+#ATMinimization/ATMCMinimization.cc
+#ATMinimization/ATMCQMinimization.cc
 
-ATAnalysis/ATAnalysis.cc
-ATAnalysis/ATProtoAnalysis.cc
-ATAnalysis/ATTrackingAnalysis.cc
-ATAnalysis/ATd2HeAnalysis.cc
+#ATAnalysis/ATAnalysis.cc
+#ATAnalysis/ATProtoAnalysis.cc
+#ATAnalysis/ATTrackingAnalysis.cc
+#ATAnalysis/ATd2HeAnalysis.cc
 
-ATRansac/ATRansac.cc
-ATPatternRecognition/ATRansacMod.cc
-ATPatternRecognition/ATMlesacMod.cc
-ATPatternRecognition/ATLmedsMod.cc
+#ATRansac/ATRansac.cc
 
-ATPatternRecognition/ATPRA.cc
-ATPatternRecognition/ATTrackFinderHC.cc
-ATPatternRecognition/smoothenCloud.cc
-ATPatternRecognition/msd.cc
-ATPatternRecognition/cluster.cc
-ATPatternRecognition/hc.cc
-ATPatternRecognition/fastcluster.cc
+#ATPatternRecognition/ATRansacMod.cc
+#ATPatternRecognition/ATMlesacMod.cc
+#ATPatternRecognition/ATLmedsMod.cc
+#ATPatternRecognition/ATPRA.cc
+#ATPatternRecognition/ATTrackFinderHC.cc
+#ATPatternRecognition/smoothenCloud.cc
+#ATPatternRecognition/msd.cc
+#ATPatternRecognition/cluster.cc
+#ATPatternRecognition/hc.cc
+#ATPatternRecognition/fastcluster.cc
 
 
 ATDecoderTask.cc
 ATDecoder2Task.cc
 ATHDFParserTask.cc
 ATPSATask.cc
-ATPhiRecoTask.cc
-ATHoughTask.cc
-ATVMEUnpackTask.cc
-ATAnalysisTask.cc
-ATRansacTask.cc
-ATHierarchicalClusteringTask.cc
-ATPRATask.cc
+#ATPhiRecoTask.cc
+#ATHoughTask.cc
+#ATVMEUnpackTask.cc
+#ATAnalysisTask.cc
+#ATRansacTask.cc
+#ATHierarchicalClusteringTask.cc
+#ATPRATask.cc
 
 )
 
 # Adding libraries that depend on PCL
-#if (PCL_FOUND)
-#set(SRCS ${SRCS} HoughTransformation/ATHoughSpaceLine3D.cc)
-#endif()
+if(PCL_FOUND)
+MESSAGE("${Green} libATTPCReco - Building PCL classes: RANSAC, TrackFinder, PSAFilter ${ColourReset} ")
+set(SRCS ${SRCS} 
+ATRansac/ATRansac.cc
+ATPulseAnalyzer/ATPSAFilter.cc
+ATPatternRecognition/ATTrackFinderHC.cc
+ATPatternRecognition/smoothenCloud.cc
+ATPatternRecognition/msd.cc
+ATPatternRecognition/cluster.cc
+ATPatternRecognition/hc.cc
+ATPatternRecognition/fastcluster.cc
+)
+endif()
 
 CHANGE_FILE_EXTENSION(*.cc *.hh HEADERS "${SRCS}")
 
