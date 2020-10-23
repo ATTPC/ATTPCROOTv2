@@ -52,6 +52,28 @@ std::vector <double> get_invmap_vars(TInverseMap *inv_map, double x0, double y0,
 		return outPuts;
 	}
 
+std::vector <double> get_invmap_vars(TInverseMap *inv_map, double x0, double y0, double afp, double bfp, double z)
+	{
+		int order;
+		double sinb_sina;
+		vector <double> outPuts;
+
+		order = 5;
+
+		outPuts.push_back(inv_map->Ata(order, x0, afp, y0, bfp, z));//ata
+		outPuts.push_back(inv_map->Bta(order, x0, afp, y0, bfp, z) * bta_corr);//bta
+		outPuts.push_back(inv_map->Yta(order, x0, afp, y0, bfp, z) * 1000.);//yta
+		outPuts.push_back(inv_map->Dta(order, x0, afp, y0, bfp, z));//dta
+		outPuts.push_back(atan(sqrt(pow(tan(outPuts.at(0)), 2) + pow(tan(outPuts.at(1)), 2))));//theta_lab
+		outPuts.push_back(atan(tan(outPuts.at(1))/tan(outPuts.at(0))));//phi
+		if (outPuts.at(0) < 0)
+		outPuts.at(5) = 3.141592653 + outPuts.at(5);
+		else if (outPuts.at(1) < 0)
+		outPuts.at(5) = 2*3.141592653 + outPuts.at(5);
+
+		return outPuts;
+	}
+
 
 Double_t FindAngleBetweenTracks(const TVector3 &vec1,const TVector3 &vec2)
     {
@@ -283,9 +305,37 @@ void analysis(int runNumberS800, int runNumberATTPC)
 
 
 		//----------------------- S800 -------------------------------------------------
+		std::vector< std::string > mapList;
+                mapList.push_back("invMap/invmap_14N/invmap_-05.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_-04.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_-03.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_-02.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_-01.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_00.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_01.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_02.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_03.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_04.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_05.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_06.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_07.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_08.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_09.inv");
+                mapList.push_back("invMap/invmap_14N/invmap_10.inv");
+		
+		std::vector<Double_t> mapDist;
+		for(int i=0;i<mapList.size();i++){
+			mapDist.push_back(-0.5+0.1*(i));
+		}
 
-		std::string mapFile="inv_map.inv";
-		TInverseMap *inv_map = new TInverseMap(mapFile.c_str());
+		//inv_map->SetDistPivotTarget(mapDist);
+		//std::string mapFile="inv_map.inv";
+		//TInverseMap *inv_map = new TInverseMap(mapFile.c_str());
+		//TInverseMap *inv_map = new TInverseMap(mapList);
+		TInverseMap *inv_map = new TInverseMap();
+		inv_map->SetDistPivotTarget(mapDist);
+		inv_map->ReadMultiMapFile(mapList);
+		std::cout<<" mapDist "<<mapDist.size()<<" "<<mapDist.at(2)<<std::endl;
 
 
 		/// --------------------- Event loop -------------------------------------------
@@ -386,13 +436,13 @@ void analysis(int runNumberS800, int runNumberATTPC)
 				S800_dE = sqrt( (corrGainE1up*S800_E1up) * (corrGainE1down* S800_E1down ) );
 				S800_dECorr = S800_dE + afp_corr_dE*S800_afp + x0_corr_dE*fabs(S800_x0);
 				for (Int_t j=0; j<32; j++) if (s800cal->GetHODOSCOPE(j)->GetEnergy()>=10 && s800cal->GetHODOSCOPE(j)->GetEnergy()<=4000) S800_hodoSum += s800cal->GetHODOSCOPE(j)->GetEnergy()*3000./coeff_hodo[j];
-				std::vector <double> S800_invMapOut = get_invmap_vars(inv_map,S800_x0,S800_y0,S800_afp,S800_bfp);
+				/*std::vector <double> S800_invMapOut = get_invmap_vars(inv_map,S800_x0,S800_y0,S800_afp,S800_bfp);
 				S800_ata = S800_invMapOut.at(0);
 				S800_bta = S800_invMapOut.at(1);
 				S800_yta = S800_invMapOut.at(2);
 				S800_dta = S800_invMapOut.at(3);
 				S800_thetaLab= S800_invMapOut.at(4);
-				S800_phi= S800_invMapOut.at(5);
+				S800_phi= S800_invMapOut.at(5);*/
 
 
     //std::cout<<"draw func in cut "<<S800_timeObjSelect<<" "<<XfObj_tof<<" "<<S800_ICSum<<std::endl;
@@ -402,7 +452,7 @@ void analysis(int runNumberS800, int runNumberATTPC)
 				ICSum_Obj->Fill(S800_ObjCorr,S800_ICSum);
 		    		XfpObj_tof->Fill(S800_XfObj_tof,S800_ObjCorr);
 
-				dta_ata->Fill(S800_dta,S800_ata*180./TMath::Pi());//ata in deg
+				//dta_ata->Fill(S800_dta,S800_ata*180./TMath::Pi());//ata in deg
 				x_y_crdc1->Fill(S800_x0,S800_y0);
 				x_y_crdc2->Fill(S800_x1,S800_y1);
 
@@ -442,6 +492,15 @@ void analysis(int runNumberS800, int runNumberATTPC)
       		MaxZ1=lastPoint1.Z();
       		MaxZ2=lastPoint2.Z();
 
+				std::vector <double> S800_invMapOut = get_invmap_vars(inv_map,S800_x0/1000.,S800_y0/1000.,S800_afp,S800_bfp,0.8-vertexMean.Z()/1.0e3);
+				S800_ata = S800_invMapOut.at(0);
+				S800_bta = S800_invMapOut.at(1);
+				S800_yta = S800_invMapOut.at(2);
+				S800_dta = S800_invMapOut.at(3);
+				S800_thetaLab= S800_invMapOut.at(4);
+				S800_phi= S800_invMapOut.at(5);
+
+				dta_ata->Fill(S800_dta,S800_ata*180./TMath::Pi());//ata in deg
 
 //----------- New Bragg ----------------------------------
 		/*			

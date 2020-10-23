@@ -72,7 +72,7 @@ bool ReadMapFile(const char *filename) {
     }
     unsigned int index;
     InvMapRow invrow;
-    std::map<int,std::vector<InvMapRow> > Map;
+    //std::map<int,std::vector<InvMapRow> > Map;
     
     std::stringstream ss(line);
     ss >> index;

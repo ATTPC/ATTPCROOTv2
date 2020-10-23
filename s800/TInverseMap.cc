@@ -2,13 +2,13 @@
 #include <TInverseMap.hh>
 
 #include <fstream>
+#include <iostream>
 #include <cstdio>
 #include <unistd.h>
 #include <sstream>
 
+#include <TSpline.h>
 
-//#include <TS800.h>
-//#include <TGRUTOptions.h>
 
 TInverseMap *TInverseMap::fInverseMap=0;
 
@@ -16,8 +16,10 @@ TInverseMap::TInverseMap(const char* filename) : TNamed("InverseMap",filename) {
   ReadMapFile(filename);
 }
 
-TInverseMap::~TInverseMap() { }
+TInverseMap::TInverseMap() : TNamed("InverseMap","multiInvMap") {
+}
 
+TInverseMap::~TInverseMap() { }
 
 TInverseMap *TInverseMap::Get(const char *filename) {
   if(fInverseMap)
@@ -48,6 +50,7 @@ bool TInverseMap::ReadMapFile(const char *filename) {
   sscanf(info.c_str(),"S800 inverse map - Brho=%g - M=%d - Q=%d", &fBrho, &fMass, &fCharge);
   
   int par =0;
+  fsize=0;
   while(getline(infile,line)) {
     if(line.find("----------")!=std::string::npos)
       continue;
@@ -59,13 +62,14 @@ bool TInverseMap::ReadMapFile(const char *filename) {
     InvMapRow invrow;
     std::stringstream ss(line);
     ss >> index;
-    if((index-1) != fMap[par-1].size()) { 
+    /*if((index-1) != fMap[par-1].size()) { 
       //problems. 
-    }
+    }*/
     {
       std::string temp;
       ss >> temp;
       invrow.coefficient = std::atof(temp.c_str());
+      fsize++;
     }
 //    ss >> invrow.coefficient;
     ss >> invrow.order;
@@ -83,6 +87,62 @@ bool TInverseMap::ReadMapFile(const char *filename) {
   }
   return true;
 }
+
+
+bool TInverseMap::ReadMultiMapFile(std::vector< std::string > &mapfile_v) {
+
+  std::cout<<"mapfile size : "<<mapfile_v.size()<<std::endl;
+  fMap_v.clear();
+  for(int i=0; i<mapfile_v.size(); i++){
+  	bool isRead=false;
+        fMap.clear();
+        isRead = ReadMapFile(mapfile_v.at(i).c_str());
+        fMap_v.push_back(fMap);
+        //fMapDist_v.push_back(0.1*(1+i));//change that, find a way to know the distance pivot-target for each map.
+        std::cout<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<mapfile_v.at(i)<<std::endl;
+        if(!isRead) std::cout<<"! Inv map file not read : "<<mapfile_v.at(i)<<std::endl;
+  }
+
+  std::vector<InvMapRow> invrow_v;
+  std::vector< std::vector<double> > coeff_v;
+  Int_t icoeff=0;
+  TSpline3 *spline[fsize];
+  //TGraph *graph[fsize];
+
+  if(fMap_v.size()>0)
+  	for(int j=0; j<fMap_v.at(0).size(); j++){//loop on par//assuming the first map has the same format as the following maps 
+        	for(int k=0; k<fMap_v.at(0).at(j).size(); k++){//loop on coeff in par
+                	std::vector<double> buff_v;
+			std::vector<InvMapRowS> blabla;
+                        InvMapRowS invrow_s;
+                        for(int i=0; i<fMap_v.size(); i++){//loop on maps
+                        	//std::cout<<"mapcoeff : "<<i<<" "<<j<<" "<<k<<" "<<fMap_v.at(i).at(j).at(k).coefficient<<std::endl;
+                                buff_v.push_back((Double_t)fMap_v.at(i).at(j).at(k).coefficient);
+                         //std::cout<<"invrow : "<<j<<" "<<invrow_v.at(j).coefficient<<std::endl;
+                        }
+			coeff_v.push_back(buff_v);
+                        char fname[20];
+                        sprintf(fname,"f_%d",icoeff);
+                        spline[icoeff] = new TSpline3(fname, &fMapDist_v[0], &buff_v[0],fMap_v.size());
+                        //graph[icoeff] = new TGraph(fMap_v.size(),&mapdist_v[0], &buff_v[0]);
+                        //std::cout<<"debug  : "<<j<<" "<<k<<" "<<fMap_v.size()<<" "<<fMapDist_v.back()<<" "<<spline[icoeff]->Eval(0.35)<<std::endl;
+                        invrow_s.coefficient = spline[icoeff];
+                        invrow_s.order = fMap_v.at(0).at(j).at(k).order;
+                        invrow_s.exp[0] = fMap_v.at(0).at(j).at(k).exp[0];
+                        invrow_s.exp[1] = fMap_v.at(0).at(j).at(k).exp[1];
+                        invrow_s.exp[2] = fMap_v.at(0).at(j).at(k).exp[2];
+                        invrow_s.exp[3] = fMap_v.at(0).at(j).at(k).exp[3];
+                        invrow_s.exp[4] = fMap_v.at(0).at(j).at(k).exp[4];
+                        invrow_s.exp[5] = fMap_v.at(0).at(j).at(k).exp[5];
+                        fMap_s[j].push_back(invrow_s);
+                        icoeff++;
+	        }
+                        //fMap_s[j].push_back(invrow_s);
+  	}
+        std::cout<<"eval func "<<fMap_s[0].at(0).coefficient->Eval(0.5)<<" "<<spline[0]->Eval(0.5)<<std::endl;
+
+}
+
 
 void TInverseMap::Print(Option_t *opt) const {
   printf("%s\n",info.c_str());
@@ -176,6 +236,53 @@ float TInverseMap::Dta(int order, double xfp, double afp, double yfp, double bfp
   input[5]  =   0.0;
   return MapCalc(order, 3, input);
 }
+
+
+float TInverseMap::Ata(int order, double xfp, double afp, double yfp, double bfp, double z){
+  float input[6];
+  input[0]  = - xfp / 1000.0;
+  input[1]  = - afp;
+  input[2]  =   yfp / 1000.0;
+  input[3]  =   bfp;
+  input[4]  =   0.0;
+  input[5]  =   0.0;
+  return MapCalc_s(order, 0, input, z);
+}
+
+float TInverseMap::Bta(int order, double xfp, double afp, double yfp, double bfp, double z){
+  float input[6];
+  input[0]  = - xfp / 1000.0;
+  input[1]  = - afp;
+  input[2]  =   yfp / 1000.0;
+  input[3]  =   bfp;
+  input[4]  =   0.0;
+  input[5]  =   0.0;
+  return MapCalc_s(order, 2, input, z);
+}
+
+float TInverseMap::Yta(int order, double xfp, double afp, double yfp, double bfp, double z){
+  float input[6];
+  input[0]  = - xfp / 1000.0;
+  input[1]  = - afp;
+  input[2]  =   yfp / 1000.0;
+  input[3]  =   bfp;
+  input[4]  =   0.0;
+  input[5]  =   0.0;
+  return MapCalc_s(order, 1, input, z);
+}
+
+float TInverseMap::Dta(int order, double xfp, double afp, double yfp, double bfp, double z){
+  float input[6];
+  input[0]  = - xfp / 1000.0;
+  input[1]  = - afp;
+  input[2]  =   yfp / 1000.0;
+  input[3]  =   bfp;
+  input[4]  =   0.0;
+  input[5]  =   0.0;
+  return MapCalc_s(order, 3, input, z);
+}
+
+
 /*
 float TInverseMap::Ata(int order, const TS800 *s800) { 
   float input[6];
@@ -243,9 +350,22 @@ float TInverseMap::MapCalc(int order,int par,float *input) const {
 }
 
 
+float TInverseMap::MapCalc_s(int order,int par,float *input,double z){
+  float cumul         = 0.0;
+  float multiplicator = 0.0;
+  std::vector<InvMapRowS> vec = fMap_s.at(par);
+  for(unsigned int x=0; x<vec.size();x++) {
+    if(order<vec.at(x).order) break;
+    multiplicator = 1.0;
+    for(int y=0;y<6;y++) {
+      if(vec.at(x).exp[y]!=0)
+        multiplicator *= pow(input[y],vec.at(x).exp[y]);
+    }
+    cumul += multiplicator*vec.at(x).coefficient->Eval(z);
+  }
 
-
-
+  return cumul;
+}
 
 
 
