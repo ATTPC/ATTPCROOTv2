@@ -82,6 +82,9 @@ class ATMlesacMod : public TObject
       std::vector<ATTrack> GetTrackCand(){return fTrackCand;};
       TVector3 ClosestPoint2Lines(TVector3 d1, TVector3 pt1, TVector3 d2, TVector3 pt2);
       void SetRanSamMode(Int_t mode){fRandSamplMode = mode;};
+      void SetChargeThres(double value){fChargeThres = value;};
+      void SetVertexMod(Int_t mode){fVertexMod = mode;};
+
 
       struct Cluster // return type of structure
         {
@@ -107,6 +110,7 @@ class ATMlesacMod : public TObject
   protected:
 
       void FindVertex(std::vector<ATTrack*> tracks);
+      void FindVertexOneTrack(std::vector<ATTrack*> tracks);
 
 
       TVector3 fVertex_1;
@@ -118,6 +122,7 @@ class ATMlesacMod : public TObject
       std::pair<Int_t,Int_t> fVertex_tracks; // ID of the tracks that form the best vertex
       Int_t fLineDistThreshold;
       Int_t fRandSamplMode;
+      Int_t fVertexMod;
 
       vector<double> vX, vY, vZ, vQ;
 	    vector<double> vTrackCharge;
@@ -131,7 +136,7 @@ class ATMlesacMod : public TObject
 	    double fTotalCharge;
 	    int fVerbose;
       double Avcharge;
-
+      double fChargeThres;
 
 
 

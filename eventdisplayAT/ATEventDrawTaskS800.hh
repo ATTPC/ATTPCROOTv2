@@ -107,6 +107,8 @@ class ATEventDrawTaskS800 : public FairTask
     virtual void DrawMC();
     virtual void DrawLvsTheta();
     virtual void DrawPID();
+    virtual void DrawPID2();
+    virtual void DrawTEST();
 
 
 
@@ -127,6 +129,7 @@ class ATEventDrawTaskS800 : public FairTask
     void UpdateCvsMC();
     void UpdateCvsLvsTheta();
     void UpdateCvsPID();
+    void UpdateCvsPID2();
 
 
 
@@ -157,7 +160,7 @@ class ATEventDrawTaskS800 : public FairTask
     TClonesArray* fTrackFinderHCArray;
     TClonesArray* fTrackingEventAnaArray;
     TClonesArray* fPatternEventArray;
-    TClonesArray* fS800CalcArray;
+   // TClonesArray* fS800CalcArray;
 
     ATHoughSpaceLine*               fHoughSpaceLine_buff;
     ATHoughSpaceCircle*             fHoughSpaceCircle_buff;
@@ -243,7 +246,9 @@ class ATEventDrawTaskS800 : public FairTask
     TH2F* fLvsTheta;
     TCanvas* fCvsPID;
     TH2F* fPID;
-
+    TH2F* fTEST;
+    TCanvas* fCvsPID2;
+    TH2F* fPID2;
 
     TH2F* fThetaxPhi_Ini;
     TH2F* fThetaxPhi_Ini_RANSAC;
@@ -287,6 +292,7 @@ class ATEventDrawTaskS800 : public FairTask
     //std::vector<TEveLine*> fLineArray;
     TEveLine* fLineArray[5];
     TEvePointSet *fVertex = nullptr;
+    std::vector<TEvePointSet *> fVVertex;
     Int_t fLineNum;
     Int_t fTrackNum;
     //TEveLine* fLine;

@@ -1,4 +1,4 @@
-void runsim_d2He(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
+void runsim_d2He(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -85,12 +85,13 @@ void runsim_d2He(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
   Double_t pz = sqrt( pow(kBeam * a / 1000.0 + Bmass,2) - pow(Bmass,2) )/a;  // Z-Momentum / per nucleon!!!!!!
 
 //set the following three variables to zero if do not want beam spot
-  Double_t fwhmFocus = 1.;//cm, FWHM of the gaussian distribution at beam spot
+  Double_t fwhmFocus = 0.5;//cm, FWHM of the gaussian distribution at beam spot
   Double_t angularDiv= 10.E-3;//rad, angular divergence of the beam
   Double_t zFocus=50.;//cm, z position (beam direction) of the beam spot
+  Double_t rHole=2.;//cm, hole radius in the pad plane
 
-  ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,kBeam,
-        fwhmFocus,angularDiv,zFocus);
+  ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,kBeam);
+  ionGen->SetBeamEmittance(fwhmFocus,angularDiv,zFocus,rHole);
   //ionGen->SetSpotRadius(0,-100,0);
   // add the ion generator
 

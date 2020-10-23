@@ -18,13 +18,15 @@ ATLmedsMod::ATLmedsMod()
   fLmedsMaxIteration = 500;
 	fLmedsMinPoints = 30;
 	fLmedsThreshold = 15;
-  fLineDistThreshold = 6.0;
+  fLineDistThreshold = 10.0;//40 e18027 // 10 e18008
   fRandSamplMode = 0;
 
   fVertex_1.SetXYZ(-10000,-10000,-10000);
   fVertex_2.SetXYZ(-10000,-10000,-10000);
   fVertexTime = -1000.0;
   fMinimum = -1.0;
+  fChargeThres = 0;
+  //fVertexMod = 0;
 }
 
 ATLmedsMod::~ATLmedsMod()
@@ -45,6 +47,7 @@ void ATLmedsMod::Init(ATEvent *event)
       ATHit hit = hitArray->at(iHit);
       TVector3 position = hit.GetPosition();
       Double_t tq = hit.GetCharge();
+      if(tq<fChargeThres) continue;
       vX.push_back(position.X()); //in cm
       vY.push_back(position.Y()); //in cm
       vZ.push_back(position.Z()); //in cm
@@ -138,8 +141,11 @@ vector<int> ATLmedsMod::RandSam(vector<int> indX, Int_t mode)
   if(mode==2){
     //-------Weighted sampling
     bool cond = false;
+    int counter = 0;
     p1=(int)(gRandom->Uniform(0,pclouds));
     do{
+      counter++;
+      if(counter>30 && p2!=p1) break;
       p2=(int)(gRandom->Uniform(0,pclouds));
       cond = false;
       double TwiceAvCharge = 2*GetAvCharge();
@@ -355,8 +361,13 @@ void ATLmedsMod::CalcLmedsMod(ATEvent *event)
             //fTrackCand.push_back(*tracks.at(ntrack));
           //}
       }
-
-      if(tracksSize>1) FindVertex(tracks);
+      switch(fVertexMod) {
+  	case 1:
+      		if(tracksSize>1) FindVertex(tracks);
+    		break;
+ 	default:
+      		if(tracksSize>0) FindVertexOneTrack(tracks); //find a vertex for each track
+      }
     }
 }
 
@@ -441,8 +452,6 @@ void ATLmedsMod::FindVertex(std::vector<ATTrack*> tracks)
       //z = p[4] + p[5]*t;
       // (x,y,z) = (p[0],p[2],p[4]) + (p[1],p[3],p[5])*t
 
-
-
       //Vector of the beam determined from the experimental data
       TVector3 BeamDir(0.,0.,1.0);
       TVector3 BeamPoint(0.,0.,500.0);
@@ -462,15 +471,13 @@ void ATLmedsMod::FindVertex(std::vector<ATTrack*> tracks)
 
           TVector3 p1(p[0], p[2], p[4] );//p1
           TVector3 e1(p[1], p[3], p[5] );//d1
-
-
-
+	
                     for(Int_t j=i+1; j<tracks.size();j++)
                     {
                         ATTrack* track_f = tracks.at(j);
                         std::vector<Double_t> p_f = track_f->GetFitPar();
                         if(track->GetTrackID() == track_f->GetTrackID()) continue;
-
+			
                         if(p_f.size()==0) continue;
 
 
@@ -482,19 +489,19 @@ void ATLmedsMod::FindVertex(std::vector<ATTrack*> tracks)
                               TVector3 n = e1.Cross(e2);
                               double sdist = fabs( n.Dot(p1-p2)/n.Mag() );
                               TVector3 vertexbuff = ClosestPoint2Lines(e1, p1, e2, p2);
-
+                              
                               if(sdist < fLineDistThreshold){
                                 TVector3 meanVer = vertexbuff;
                                 double radius = sqrt(vertexbuff.X()*vertexbuff.X() + vertexbuff.Y()*vertexbuff.Y());
 
-                                if(vertexbuff.Z()>0 && vertexbuff.Z()<1000 && radius<50.0){
+                                if(vertexbuff.Z()>0 && vertexbuff.Z()<1000 && radius<25.0){
 
                                   track->SetTrackVertex(vertexbuff);
                                   track_f->SetTrackVertex(vertexbuff);
                                   fVertex_1.SetXYZ(vertexbuff.X(),vertexbuff.Y(),vertexbuff.Z());
                                   fVertex_2.SetXYZ(vertexbuff.X(),vertexbuff.Y(),vertexbuff.Z());
                                   fVertex_mean = vertexbuff;
-
+				
                                   if ( !IsFilled[track->GetTrackID()] ){
                                     //std::cout<<" Add track  "<<track->GetTrackID()<<std::endl;
                                     IsFilled[track->GetTrackID()] = kTRUE;
@@ -525,7 +532,7 @@ void ATLmedsMod::FindVertex(std::vector<ATTrack*> tracks)
                                       fVertex_1.SetXYZ(vertexbuffav.X(),vertexbuffav.Y(),vertexbuffav.Z());
                                       fVertex_2.SetXYZ(vertexbuffav.X(),vertexbuffav.Y(),vertexbuffav.Z());
                                       fVertex_mean = vertexbuffav;
-
+                                   
                                       if ( !IsFilled[track->GetTrackID()] ){
                                         //std::cout<<" Add track  "<<track->GetTrackID()<<std::endl;
                                         IsFilled[track->GetTrackID()] = kTRUE;
@@ -544,6 +551,84 @@ void ATLmedsMod::FindVertex(std::vector<ATTrack*> tracks)
                               } // if fLineDistThreshold
 
                      }// End of track_f
+
+       }// Loop over the tracks
+
+     if(fTrackCand.size()>5) fTrackCand.resize(5); //Truncate the maximum number of lines to 5
+
+}
+
+void ATLmedsMod::FindVertexOneTrack(std::vector<ATTrack*> tracks)
+{
+
+  // Assumes the minimum distance between two lines, with respect a given threshold, the first vertex candidate. Then evaluates the
+  // distance of each remaining line with respect to the others (vertex) to decide the particles of the reaction.
+  //std::cout<<" New find vertex call "<<std::endl;
+
+  Double_t mad=10; // Minimum approach distance. This is the minimum distance between the lines in 3D. Must be bigger than fLineDistThreshold
+  //ROOT::Math::XYZVector c_1(-1000,-1000,-1000);
+  //ROOT::Math::XYZVector c_2(-1000,-1000,-1000);
+  TVector3 c_1(-1000,-1000,-1000);
+  TVector3 c_2(-1000,-1000,-1000);
+  //std::vector<ATTrack*> *TrackCand;
+
+      //Current  parametrization
+      //x = p[0] + p[1]*t;
+      //y = p[2] + p[3]*t;
+      //z = p[4] + p[5]*t;
+      // (x,y,z) = (p[0],p[2],p[4]) + (p[1],p[3],p[5])*t
+
+
+
+      //Vector of the beam determined from the experimental data
+      TVector3 BeamDir(0.,0.,1.0);
+      TVector3 BeamPoint(0.,0.,500.0);
+
+      std::vector<Bool_t> IsFilled;
+      for(Int_t i=0;i<int(tracks.size());i++) IsFilled.push_back(kFALSE);
+
+      // Test each line against the others to find a vertex candidate
+      for(Int_t i=0;i<int(tracks.size());i++){
+
+          ATTrack* track = tracks.at(i);
+          std::vector<Double_t> p = track->GetFitPar();
+
+          if(p.size()==0) continue;
+
+
+
+          TVector3 p1(p[0], p[2], p[4] );//p1
+          TVector3 e1(p[1], p[3], p[5] );//d1
+
+          double angle = e1.Angle(BeamDir)*180./3.1415;
+
+          TVector3 n = e1.Cross(BeamDir);
+          double sdist = fabs( n.Dot(p1-BeamPoint)/n.Mag() );
+          TVector3 vertexbuff = ClosestPoint2Lines(e1, p1, BeamDir, BeamPoint);
+
+
+
+          if(sdist < fLineDistThreshold){
+              TVector3 meanVer = vertexbuff;
+              double radius = sqrt(vertexbuff.X()*vertexbuff.X() + vertexbuff.Y()*vertexbuff.Y());
+
+              if(radius<25.0){
+
+                  track->SetTrackVertex(vertexbuff);
+                  fVertex_1.SetXYZ(vertexbuff.X(),vertexbuff.Y(),vertexbuff.Z());
+                  fVertex_mean = vertexbuff;
+
+                  if ( !IsFilled[track->GetTrackID()] ){
+                      //std::cout<<" Add track  "<<track->GetTrackID()<<std::endl;
+                        IsFilled[track->GetTrackID()] = kTRUE;
+                        fTrackCand.push_back(*track);
+                      }
+
+                                    //condition for almost parallel tracks and vertex out of the chamber
+                }
+
+
+          } // if fLineDistThreshold
 
        }// Loop over the tracks
 

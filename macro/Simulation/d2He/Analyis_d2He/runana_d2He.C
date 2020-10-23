@@ -67,7 +67,7 @@ TGraph *graphtable;
 		FairRunAna* run = new FairRunAna(); //Forcing a dummy run
 		ATd2HeAnalysis *d2heana = new ATd2HeAnalysis ();
 
-		std::string digiFileName = "../outputFiles/attpcdigi_d2He_30000.root";
+		std::string digiFileName = "../outputFiles/attpcdigi_d2He_1000_ran.root";
 		//std::string digiFileName = "../output_debug.root";
 
 		TFile* file = new TFile(digiFileName.c_str(),"READ");
@@ -79,7 +79,7 @@ TGraph *graphtable;
 		TTreeReaderValue<TClonesArray> ransacArray(reader, "ATRansac");
 
 		TFile* outfile;
-		TString  outFileNameHead = "attpcana_30000.root";//attpcsim_d2He_test20k
+		TString  outFileNameHead = "attpcana_1000.root";//attpcsim_d2He_test20k
 		outfile   = TFile::Open(outFileNameHead.Data(),"recreate");
 
 		TH1F* scatteringAngle = new TH1F("scatteringAngle","scatteringAngle",1000,0,200);
@@ -198,10 +198,10 @@ TGraph *graphtable;
 			vertexY = vertexMean.Y();
 			vertexZ = vertexMean.Z();
 
-			theta1 = trackCand.at(0).GetThetaPhi(vertexMean, lastPoint1).first;
-			theta2 = trackCand.at(1).GetThetaPhi(vertexMean, lastPoint2).first;
-			phi1 = trackCand.at(0).GetThetaPhi(vertexMean, lastPoint1).second;
-			phi2 = trackCand.at(1).GetThetaPhi(vertexMean, lastPoint2).second;
+			theta1 = trackCand.at(0).GetThetaPhi(vertexMean, lastPoint1,-1).first;//GetThetaPhi(..,..,-1) for simu;
+			theta2 = trackCand.at(1).GetThetaPhi(vertexMean, lastPoint2,-1).first;
+			phi1 = trackCand.at(0).GetThetaPhi(vertexMean, lastPoint1,-1).second;
+			phi2 = trackCand.at(1).GetThetaPhi(vertexMean, lastPoint2,-1).second;
 
 			std::vector<Double_t> fitPar1 = trackCand.at(0).GetFitPar();
 			std::vector<Double_t> fitPar2 = trackCand.at(1).GetFitPar();

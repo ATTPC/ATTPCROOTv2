@@ -134,12 +134,13 @@ TVector3 ATTrack::GetLastPoint()
 */
 
 
-std::pair<Double_t,Double_t> ATTrack::GetThetaPhi(const TVector3 &vertex, const TVector3 &maxPos)
+std::pair<Double_t,Double_t> ATTrack::GetThetaPhi(const TVector3 &vertex, const TVector3 &maxPos, int zdir)//zdir -1 for simu // +1 for data
 {
 	std::pair<Double_t,Double_t> thetaPhi;
         if(fParFit.size()>0){
 
-                TVector3 vp(TMath::Sign(1,maxPos.X())*fabs(fParFit[1]),TMath::Sign(1,maxPos.Y())*fabs(fParFit[3]),-TMath::Sign(1,(maxPos.Z()-vertex.Z()))*fabs(fParFit[5]));
+                TVector3 vp(TMath::Sign(1,maxPos.X())*fabs(fParFit[1]),TMath::Sign(1,maxPos.Y())*fabs(fParFit[3]),zdir*TMath::Sign(1,(maxPos.Z()-vertex.Z()))*fabs(fParFit[5]));//works with simu
+		//TVector3 vp(TMath::Sign(1,maxPos.X())*fabs(fParFit[1]),TMath::Sign(1,maxPos.Y())*fabs(fParFit[3]),TMath::Sign(1,(maxPos.Z()-vertex.Z()))*fabs(fParFit[5]));//works with data
 //		std::cout<<" fParFit "<<fParFit[1]<<" "<<fParFit[3]<<" "<<fParFit[5]<<std::endl;
 //		std::cout<<" maxPos "<<maxPos.X()<<" "<<maxPos.Y()<<" "<<maxPos.Z()<<std::endl;
 

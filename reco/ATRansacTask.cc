@@ -25,6 +25,8 @@ ATRansacTask::ATRansacTask()
   fNumItera = 500;
   fRANSACAlg = 0;
   fRandSamplMode = 0;
+  fCharThres = 0;
+  fVertexMode = 0;
 
 }
 
@@ -41,6 +43,9 @@ void   ATRansacTask::SetTiltAngle(Double_t val)               { fTiltAngle      
 void   ATRansacTask::SetNumItera(Int_t niterations)  { fNumItera = niterations;}
 void   ATRansacTask::SetAlgorithm(Int_t val)  { fRANSACAlg = val;}
 void   ATRansacTask::SetRanSamMode(Int_t mode){fRandSamplMode = mode;};
+void   ATRansacTask::SetIsReprocess(Bool_t value)             { kIsReprocess   = value; }
+void   ATRansacTask::SetChargeThreshold(Double_t value)             { fCharThres   = value; }
+void   ATRansacTask::SetVertexMode(Int_t value)             { fVertexMode   = value; }
 
 InitStatus
 ATRansacTask::Init()
@@ -70,7 +75,17 @@ ATRansacTask::Init()
 
   ioMan -> Register("ATRansac", "ATTPC", fRansacArray, kIsPersistence);
 
-
+  if(kIsReprocess){
+     ioMan -> Register("ATEventH", "ATTPC", fEventHArray, kIsPersistence);
+     /*
+     fS800CalcBr = (TClonesArray *) ioMan -> GetObject("s800cal");
+     if (fS800CalcBr == 0) {
+       fLogger -> Error(MESSAGE_ORIGIN, "Cannot find ATEvent array!");
+       return kERROR;
+     }
+     ioMan -> Register("s800cal", "S800", fS800CalcBr, fIsPersistence);
+     */
+   }
 
 
 
@@ -127,6 +142,8 @@ ATRansacTask::Exec(Option_t *opt)
         Rantest->SetNumItera(fNumItera);
         Rantest->SetRanSamMode(fRandSamplMode);
         Rantest->CalcRANSACMod(fEvent);
+        Rantest->SetChargeThres(fCharThres);
+        Rantest->SetVertexMod(fVertexMode);
       }
 
       if(fRANSACAlg==2){
@@ -136,6 +153,8 @@ ATRansacTask::Exec(Option_t *opt)
         Rantest->SetNumItera(fNumItera);
         Rantest->SetRanSamMode(fRandSamplMode);
         Rantest->CalcMlesacMod(fEvent);
+        Rantest->SetChargeThres(fCharThres);
+        Rantest->SetVertexMod(fVertexMode);
       }
 
       if(fRANSACAlg==3){
@@ -145,6 +164,8 @@ ATRansacTask::Exec(Option_t *opt)
         Rantest->SetNumItera(fNumItera);
         Rantest->SetRanSamMode(fRandSamplMode);
         Rantest->CalcLmedsMod(fEvent);
+        Rantest->SetChargeThres(fCharThres);
+        Rantest->SetVertexMod(fVertexMode);
       }
 
 

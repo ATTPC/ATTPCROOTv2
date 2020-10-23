@@ -21,6 +21,7 @@
 #include "TGLabel.h"
 #include "TGWidget.h"
 #include "TGCanvas.h"
+#include <TCutG.h>
 
 
 
@@ -90,7 +91,9 @@ ATEventManagerS800::ATEventManagerS800()
   fCvsLvsTheta(0),
   fCvsPID(0),
   fCvsMesh(0),
-  fCvsPIDFull(0)
+  fCvsPIDFull(0),
+  fCvsPID2(0),
+  fCvsPID2Full(0)
 
 {
   fInstance=this;
@@ -112,8 +115,6 @@ ATEventManagerS800::InitRiemann(Int_t option, Int_t level, Int_t nNodes)
 void
 ATEventManagerS800::Init(Int_t option, Int_t level, Int_t nNodes)
 {
-
-
 
   gStyle->SetOptTitle(0);
   //gStyle->SetCanvasPreferGL(kTRUE);
@@ -225,22 +226,44 @@ ATEventManagerS800::Init(Int_t option, Int_t level, Int_t nNodes)
     TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
     TEveWindowPack* pack3 = slot2->MakePack();
     pack3->SetShowTitleBar(kFALSE);
-    pack3->SetElementName("S800 PID");
+    pack3->SetElementName("S800 PID1");
 
     slot2 = pack3->NewSlotWithWeight(1.5);
     TRootEmbeddedCanvas* ecvs3 = new TRootEmbeddedCanvas();
     TEveWindowFrame* frame3 = slot2->MakeFrame(ecvs3);
-    frame3->SetElementName("dE-ToF (gated)");
+    frame3->SetElementName("T[Xf_Obj]-TObj (gated)");
     fCvsPID = ecvs3->GetCanvas();
-
-
 
     slot2 = pack3->NewSlotWithWeight(1.5);
     TRootEmbeddedCanvas* ecvs31 = new TRootEmbeddedCanvas();
     TEveWindowFrame* frame31 = slot2->MakeFrame(ecvs31);
-    frame31->SetElementName("dE-ToF (full)");
+    frame31->SetElementName("T[Xf_Obj]-TObj (full)");
     fCvsPIDFull = ecvs31->GetCanvas();
     DrawPIDFull();
+
+
+
+    TEveWindowSlot* slot2b =
+    TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
+    TEveWindowPack* pack3b = slot2b->MakePack();
+    pack3b->SetShowTitleBar(kFALSE);
+    pack3b->SetElementName("S800 PID2");
+
+
+    slot2b = pack3b->NewSlotWithWeight(1.5);
+    TRootEmbeddedCanvas* ecvs3b = new TRootEmbeddedCanvas();
+    TEveWindowFrame* frame3b = slot2b->MakeFrame(ecvs3b);
+    frame3b->SetElementName("ICSumE-ToF (gated)");
+    fCvsPID2 = ecvs3b->GetCanvas();
+
+    slot2b = pack3b->NewSlotWithWeight(1.5);
+    TRootEmbeddedCanvas* ecvs31b = new TRootEmbeddedCanvas();
+    TEveWindowFrame* frame31b = slot2b->MakeFrame(ecvs31b);
+    frame31b->SetElementName("ICSumE-ToF (full)");
+    fCvsPID2Full = ecvs31b->GetCanvas();
+    DrawPID2Full();
+
+
 
    /* TEveWindowSlot* slot2 =
     TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
@@ -374,6 +397,8 @@ ATEventManagerS800::Init(Int_t option, Int_t level, Int_t nNodes)
 
   fRunAna->Init();
 
+  FillPIDFull(); // plot the Full PID at the beginning of the visualiztion
+
   if(gGeoManager) {
     TGeoNode* geoNode = gGeoManager->GetTopNode();
     TEveGeoTopNode* topNode
@@ -489,41 +514,115 @@ ATEventManagerS800::DrawPIDFull()
 {
 
 
-    fPIDFull = new TH2F("PIDFull","PIDFull",180,0,180,500,0,1030);
+    fPIDFull = new TH2F("PIDFull","PIDFull",500,-150,50,300,230,260);
     //fLvsTheta->SetMarkerStyle(22);
     //fLvsTheta->SetMarkerColor(kRed);
+
+    fPIDFull -> Draw("colz");
+
+}
+
+void
+ATEventManagerS800::DrawPID2Full()
+{
+
+
+    fPID2Full = new TH2F("PID2Full","PID2Full",500,-150,50,1000,1400,2200);
+    //fLvsTheta->SetMarkerStyle(22);
+    //fLvsTheta->SetMarkerColor(kRed);
+
+    fPID2Full -> Draw("colz");
+
+}
+
+void
+ATEventManagerS800::FillPIDFull()
+{
+//	TFile *fi=new TFile("/mnt/analysis/e18027/codes/ATTPCROOTv2/macro/Unpack_HDF5/e18027_S800/cuts/afp.root");		   // open file
+ // 	TCutG *CUT1=(TCutG *)fi->Get("afp");	   // read CUTEC  
+//	TFile *fi2=new TFile("/mnt/analysis/e18027/codes/ATTPCROOTv2/macro/Unpack_HDF5/e18027_S800/cuts/tof.root");		   // open file
+ // 	TCutG *CUT2=(TCutG *)fi2->Get("tof");	   // read CUTEC
+
     TChain* chain =FairRootManager::Instance()->GetInChain();
     Entries = chain->GetEntriesFast();
+    //std::cout << "el plot full antes....  "<< Entries<< '\n';
     for(int neve=1;neve<Entries;neve++){
       fRootManager->ReadEvent(neve);
-      cS800Array = (TClonesArray*) fRootManager->GetObject("s800cal");
-      if(cS800Array == nullptr) break;
-      cS800Calc = (S800Calc*) cS800Array->At(0);
+  //    cS800Array = (TClonesArray*) fRootManager->GetObject("s800cal");
+  //    if(cS800Array == nullptr) break;
+  //    cS800Calc = (S800Calc*) cS800Array->At(0);
 
-      Double_t x0_corr_tof = 0.101259;
-      Double_t afp_corr_tof = 1177.02;
-      Double_t afp_corr_dE = 61.7607;
-      Double_t x0_corr_dE = -0.0403;
-      Double_t rf_offset = 0.0;
-      Double_t S800_rf = cS800Calc->GetMultiHitTOF()->GetFirstRfHit();
-      Double_t S800_x0 = cS800Calc->GetCRDC(0)->GetXfit();
-      Double_t S800_x1 = cS800Calc->GetCRDC(1)->GetXfit();
-      Double_t S800_y0 = cS800Calc->GetCRDC(0)->GetY();
-      Double_t S800_y1 = cS800Calc->GetCRDC(1)->GetY();
-      Double_t S800_E1up = cS800Calc->GetSCINT(0)->GetDEup(); //check this par
-      Double_t S800_E1down = cS800Calc->GetSCINT(0)->GetDEdown(); //check this par
-      Double_t S800_tof = S800_rf;//might change
-      Double_t S800_afp = atan( (S800_x1-S800_x0)/1073. );
-      Double_t S800_bfp = atan( (S800_y1-S800_y0)/1073. );
-      Double_t S800_tofCorr = S800_tof + x0_corr_tof*S800_x0 + afp_corr_tof*S800_afp - rf_offset;
-      Double_t S800_dE = cS800Calc->GetSCINT(0)->GetDE();//check if is this scint (0)
-      //Double_t S800_dE = sqrt( (0.6754*S800_E1up) * ( 1.0 * S800_E1down ) );
-      Double_t S800_dECorr = S800_dE + afp_corr_dE*S800_afp + x0_corr_dE*fabs(S800_x0);
-      fPIDFull->Fill(S800_tofCorr,S800_dECorr);
+      cS800Calc = (S800Calc*) fRootManager->GetObject("s800cal");
+      if(cS800Calc == nullptr) break;
+      // cS800Calc = (S800Calc*) cS800Array->At(0);
 
+
+      Double_t x0_corr_tof = 0.;
+      Double_t afp_corr_tof = 0.;
+      Double_t afp_corr_dE = 0.;
+      Double_t x0_corr_dE = 0.;
+      Double_t rf_offset = 0.;
+      Double_t corrGainE1up = 1;
+      Double_t corrGainE1down = 1;
+
+     // Double_t S800_timeRf = cS800Calc->GetMultiHitTOF()->GetFirstRfHit();
+     // Double_t S800_timeE1up = cS800Calc->GetMultiHitTOF()->GetFirstE1UpHit();
+     // Double_t S800_timeE1down = cS800Calc->GetMultiHitTOF()->GetFirstE1DownHit();
+     // Double_t S800_timeE1 = sqrt( (corrGainE1up*S800_timeE1up) * (corrGainE1down*S800_timeE1down) );
+     // Double_t S800_timeXf = cS800Calc->GetMultiHitTOF()->GetFirstXfHit();
+     // Double_t S800_timeObj = cS800Calc->GetMultiHitTOF()->GetFirstObjHit();
+
+
+    Int_t CondMTDCXfObj = 0;
+    Double_t ObjCorr1C1 = 100.; //70
+    Double_t ObjCorr1C2 = 0.009; //0.0085
+    vector<Float_t> S800_timeMTDCObj = cS800Calc->GetMultiHitTOF()->GetMTDCObj();
+    vector<Float_t> S800_timeMTDCXf = cS800Calc->GetMultiHitTOF()->GetMTDCXf();
+    Float_t S800_timeObjSelect=-999;
+    Float_t S800_timeXfSelect=-999;
+    Float_t ObjCorr=-999; 
+
+
+    for(int k=0; k<S800_timeMTDCXf.size(); k++){
+    	if(S800_timeMTDCXf.at(k)>140 && S800_timeMTDCXf.at(k)<230) S800_timeXfSelect=S800_timeMTDCXf.at(k);
     }
-    
-    fPIDFull -> Draw("colz");
+    for(int k=0; k<S800_timeMTDCObj.size(); k++){
+    	if(S800_timeMTDCObj.at(k)>-115 && S800_timeMTDCObj.at(k)<-20) S800_timeObjSelect=S800_timeMTDCObj.at(k);
+    }
+
+    Double_t XfObj_tof = S800_timeXfSelect - S800_timeObjSelect;
+    if(S800_timeXfSelect!=-999 && S800_timeObjSelect!=-999) {
+    	XfObj_tof=S800_timeXfSelect-S800_timeObjSelect;
+	    CondMTDCXfObj=1;
+    }
+    Double_t S800_ICSum = cS800Calc->GetIC()->GetSum();
+
+
+      Double_t S800_x0 = cS800Calc->GetCRDC(0)->GetX();
+      Double_t S800_x1 = cS800Calc->GetCRDC(1)->GetX();
+      //Double_t S800_y0 = cS800Calc->GetCRDC(0)->GetY();
+      //Double_t S800_y1 = cS800Calc->GetCRDC(1)->GetY();
+
+      //Double_t S800_E1up = cS800Calc->GetSCINT(0)->GetDEup();
+      //Double_t S800_E1down = cS800Calc->GetSCINT(0)->GetDEdown();
+
+      //Double_t S800_tof = S800_timeObj - S800_timeE1;
+
+      Double_t S800_afp = atan( (S800_x1-S800_x0)/1073. );
+      //Double_t S800_bfp = atan( (S800_y1-S800_y0)/1073. );
+      //Double_t S800_tofCorr = S800_tof + x0_corr_tof*S800_x0 + afp_corr_tof*S800_afp;// - rf_offset;
+      //Double_t S800_dE = cS800Calc->GetSCINT(0)->GetDE();//check if is this scint (0)
+      //Double_t S800_dE = sqrt( (corrGainE1up*S800_E1up) * (corrGainE1down* S800_E1down ) );
+      //Double_t S800_dECorr = S800_dE + afp_corr_dE*S800_afp + x0_corr_dE*fabs(S800_x0);
+
+if(CondMTDCXfObj && std::isnan(S800_ICSum)==0 && std::isnan(S800_afp)==0 && std::isnan(S800_x0)==0) ObjCorr = S800_timeObjSelect + ObjCorr1C1*S800_afp + ObjCorr1C2*S800_x0;
+
+    //std::cout<<"draw func in cut "<<S800_timeObjSelect<<" "<<XfObj_tof<<" "<<S800_ICSum<<std::endl;
+
+        if(ObjCorr != -999 )fPIDFull->Fill(ObjCorr,XfObj_tof);
+        if(ObjCorr != -999 )fPID2Full->Fill(ObjCorr,S800_ICSum);
+    }
+
 
 }
 
@@ -594,6 +693,8 @@ ATEventManagerS800::make_gui()
 
        TChain* chain =FairRootManager::Instance()->GetInChain();
        Entries = chain->GetEntriesFast();
+
+       //std::cout << "Numero entradas en el gui   "<<Entries << '\n';
 
     TEveBrowser* browser = gEve->GetBrowser();
     browser->StartEmbedding(TRootBrowser::kLeft);

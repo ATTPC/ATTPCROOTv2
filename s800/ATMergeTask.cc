@@ -30,19 +30,35 @@ ATMergeTask::ATMergeTask()
   fLogger = FairLogger::GetLogger();
 
   fIsPersistence=kFALSE;
-  fEvtDelta=100;
+  fEvtDelta=5;
   fGlom=2;
+  fTsDelta=1272;
+  fSetCut1=kFALSE;
+  fSetCut2=kFALSE;
+  fSetCut3=kFALSE;
 
   fS800CalcBr = new S800Calc;
 
-  fcutPID.clear();
-  fcutPIDFile.clear();
+  fcutPID1.clear();
+  fcutPID1File.clear();
+  fcutPID2.clear();
+  fcutPID2File.clear();
+  fcutPID3.clear();
+  fcutPID3File.clear();
+
+  fParameters.clear();
+  fTofObjCorr.clear();
+  fMTDCObjRange.clear();
+  fMTDCXfRange.clear();
 
 }
 
 ATMergeTask::~ATMergeTask()
 {
+  fS800TsGraph->Delete();
+  fS800TsFunc->Delete();
   fS800CalcBr->Delete();
+  fRawEventArray->Delete();
   delete fS800file;
 }
 
@@ -50,7 +66,21 @@ void   ATMergeTask::SetPersistence(Bool_t value)                  { fIsPersisten
 void   ATMergeTask::SetS800File(TString file)                  { fS800File     = file; }
 void   ATMergeTask::SetGlom(Double_t glom)                  { fGlom     = glom; }
 void   ATMergeTask::SetOptiEvtDelta(Int_t EvtDelta)                  { fEvtDelta     = EvtDelta; }
-void   ATMergeTask::SetPIDcut(TString file)                  { fcutPIDFile.push_back(file); }
+void   ATMergeTask::SetPID1cut(TString file)                  { fcutPID1File.push_back(file); fSetCut1=kTRUE;}
+void   ATMergeTask::SetPID2cut(TString file)                  { fcutPID2File.push_back(file); fSetCut2=kTRUE;}
+void   ATMergeTask::SetPID3cut(TString file)                  { fcutPID3File.push_back(file); fSetCut3=kTRUE;}
+void   ATMergeTask::SetTsDelta(Int_t TsDelta)                  { fTsDelta     = TsDelta; }
+void   ATMergeTask::SetParameters(std::vector<Double_t> vec)   { fParameters     = vec; }
+void   ATMergeTask::SetTofObjCorr(std::vector<Double_t> vec)   { fTofObjCorr    = vec; }
+void   ATMergeTask::SetMTDCObjRange(std::vector<Double_t> vec)   { fMTDCObjRange    = vec; }
+void   ATMergeTask::SetMTDCXfRange(std::vector<Double_t> vec)   { fMTDCXfRange    = vec; }
+
+Int_t   ATMergeTask::GetS800TsSize()                  { return fTsEvtS800Size; }
+Int_t   ATMergeTask::GetMergedTsSize()                { return fEvtMerged; }
+vector<Double_t>   ATMergeTask::GetTofObjCorr()       { return fTofObjCorr; }
+vector<Double_t>   ATMergeTask::GetMTDCObjRange()     { return fMTDCObjRange; }
+vector<Double_t>   ATMergeTask::GetMTDCXfRange()      { return fMTDCXfRange; }
+vector<Double_t> ATMergeTask::GetParameters()         { return fParameters; }
 
 Bool_t ATMergeTask::isInGlom(Long64_t ts1, Long64_t ts2)
 {
@@ -62,40 +92,90 @@ Bool_t ATMergeTask::isInGlom(Long64_t ts1, Long64_t ts2)
 
 Bool_t ATMergeTask::isInPID(S800Calc *s800calc)
 {
-  Double_t x0_corr_tof = 0.101259;
-  Double_t afp_corr_tof = 1177.02;
-  Double_t afp_corr_dE = 61.7607;
-  Double_t x0_corr_dE = -0.0403;
-  Double_t rf_offset = 0.0;
-  Double_t S800_rf = s800calc->GetMultiHitTOF()->GetFirstRfHit();
-  Double_t S800_x0 = s800calc->GetCRDC(0)->GetXfit();
-  Double_t S800_x1 = s800calc->GetCRDC(1)->GetXfit();
-  Double_t S800_y0 = s800calc->GetCRDC(0)->GetY();
-  Double_t S800_y1 = s800calc->GetCRDC(1)->GetY();
-  Double_t S800_E1up = s800calc->GetSCINT(0)->GetDEup(); //check this par
-  Double_t S800_E1down = s800calc->GetSCINT(0)->GetDEdown(); //check this par
-  Double_t S800_tof = S800_rf;//might change
+  Double_t x0_corr_tof = fParameters.at(0);
+  Double_t afp_corr_tof = fParameters.at(1);
+  Double_t afp_corr_dE = fParameters.at(2);
+  Double_t x0_corr_dE = fParameters.at(3);
+  Double_t rf_offset = fParameters.at(4);
+  Double_t corrGainE1up = fParameters.at(5);
+  Double_t corrGainE1down = fParameters.at(6);
+
+  //Double_t S800_timeRf = s800calc->GetMultiHitTOF()->GetFirstRfHit();
+  //Double_t S800_timeE1up = s800calc->GetMultiHitTOF()->GetFirstE1UpHit();
+  //Double_t S800_timeE1down = s800calc->GetMultiHitTOF()->GetFirstE1DownHit();
+  //Double_t S800_timeE1 = sqrt( (corrGainE1up*S800_timeE1up) * (corrGainE1down*S800_timeE1down) );
+  //Double_t S800_timeXf = s800calc->GetMultiHitTOF()->GetFirstXfHit();
+  //Double_t S800_timeObj = s800calc->GetMultiHitTOF()->GetFirstObjHit();
+  vector<Float_t> S800_timeMTDCObj = s800calc->GetMultiHitTOF()->GetMTDCObj();
+  vector<Float_t> S800_timeMTDCXf = s800calc->GetMultiHitTOF()->GetMTDCXf();
+  Float_t S800_timeObjSelect=-999;
+  Float_t S800_timeXfSelect=-999;
+  Float_t ObjCorr = -999;
+
+  Double_t S800_x0 = s800calc->GetCRDC(0)->GetX();
+  Double_t S800_x1 = s800calc->GetCRDC(1)->GetX();
+  //Double_t S800_y0 = s800calc->GetCRDC(0)->GetY();
+  //Double_t S800_y1 = s800calc->GetCRDC(1)->GetY();
+
+  //Double_t S800_E1up = s800calc->GetSCINT(0)->GetDEup();
+  //Double_t S800_E1down = s800calc->GetSCINT(0)->GetDEdown();
+
+  Double_t S800_ICSum = s800calc->GetIC()->GetSum();
+
   Double_t S800_afp = atan( (S800_x1-S800_x0)/1073. );
-  Double_t S800_bfp = atan( (S800_y1-S800_y0)/1073. );
-  Double_t S800_tofCorr = S800_tof + x0_corr_tof*S800_x0 + afp_corr_tof*S800_afp - rf_offset;
+  //Double_t S800_bfp = atan( (S800_y1-S800_y0)/1073. );
+  //Double_t S800_tofCorr = S800_tof + x0_corr_tof*S800_x0 + afp_corr_tof*S800_afp;// - rf_offset;
   //Double_t S800_dE = s800calc->GetSCINT(0)->GetDE();//check if is this scint (0)
-  Double_t S800_dE = sqrt( (0.6754*S800_E1up) * ( 1.0 * S800_E1down ) );
-  Double_t S800_dECorr = S800_dE + afp_corr_dE*S800_afp + x0_corr_dE*fabs(S800_x0);
+  //Double_t S800_dE = sqrt( (corrGainE1up*S800_E1up) * (corrGainE1down* S800_E1down ) );
+  //Double_t S800_dECorr = S800_dE + afp_corr_dE*S800_afp + x0_corr_dE*fabs(S800_x0);
 
   Bool_t is=kFALSE;
-  Int_t InCondition = 0;
+  Int_t InCondition1 = 0;
+  Int_t InCondition2 = 0;
+  Int_t InCondition3 = 0;
+  Int_t CondMTDCXfObj = 0;
 
-  for(Int_t w=0; w<fcutPID.size();w++) InCondition += fcutPID[w]->IsInside(S800_tofCorr,S800_dECorr); //or of IsInside
 
-  //std::cout <<" Number of TCutG files  "<<fcutPID.size()<<"   "<<InCondition<< '\n';
+//----------- New 10/01 -------------------------------------
+  for(int k=0; k<S800_timeMTDCXf.size(); k++){
+   if(S800_timeMTDCXf.at(k)>fMTDCXfRange.at(0) && S800_timeMTDCXf.at(k)<fMTDCXfRange.at(1)) S800_timeXfSelect=S800_timeMTDCXf.at(k);//140 to 230
+  }
+  for(int k=0; k<S800_timeMTDCObj.size(); k++){
+   if(S800_timeMTDCObj.at(k)>fMTDCObjRange.at(0) && S800_timeMTDCObj.at(k)<fMTDCObjRange.at(1)) S800_timeObjSelect=S800_timeMTDCObj.at(k);//-75 to 0
+  }//-115 to -20
 
-  if(std::isnan(S800_tofCorr)==0)
-    if(InCondition){
-      is=kTRUE;
-    }
+  Double_t XfObj_tof = S800_timeXfSelect - S800_timeObjSelect;
+  if(S800_timeXfSelect!=-999 && S800_timeObjSelect!=-999) {
+   XfObj_tof=S800_timeXfSelect-S800_timeObjSelect;
+   CondMTDCXfObj=1;
+  }
+
+  if(CondMTDCXfObj && std::isnan(S800_x0)==0 && std::isnan(S800_afp)==0 && std::isnan(S800_ICSum)==0){
+   ObjCorr = S800_timeObjSelect + fTofObjCorr.at(0)*S800_afp + fTofObjCorr.at(1)*S800_x0;//100, 0.009
+  }
+
+  for(Int_t w=0; w<fcutPID1.size();w++) if(ObjCorr != -999 && fcutPID1[w]->IsInside(ObjCorr,XfObj_tof)) InCondition1 += 1; //or of PID1
+  for(Int_t w=0; w<fcutPID2.size();w++) if(ObjCorr != -999 && fcutPID2[w]->IsInside(S800_x0,S800_afp)) InCondition2 += 1; //or of PID2
+  for(Int_t w=0; w<fcutPID3.size();w++) if(ObjCorr != -999 && fcutPID3[w]->IsInside(ObjCorr,S800_ICSum)) InCondition3 += 1; //or of PID3
+
+  if(!fSetCut1) InCondition1=1;
+  if(!fSetCut2) InCondition2=1;
+  if(!fSetCut3) InCondition3=1;
+
+  std::cout <<" Number of TCutG files  "<<fcutPID1.size()<<" "<<fcutPID2.size()<<" "<<fcutPID3.size()<<" "<<InCondition1<<" "<<InCondition2<<" "<<InCondition3<< '\n';
+
+  Int_t AndofCon = InCondition1*InCondition2*InCondition3;
+
+  //if(InCondition1){
+    //std::cout<<"InCondition1 TRUE !"<<std::endl;
+  //}
+  if(AndofCon){
+    is=kTRUE;
+    std::cout<<"AndOfCond                                          TRUE   TRUE   TRUE !!!"<<std::endl;
+  }
+//----------- New 10/01 -------------------------------------
   return is;
 }
-
 
 
 InitStatus
@@ -116,6 +196,7 @@ ATMergeTask::Init()
 
 
   fTsEvtS800Size=0;
+  fEvtMerged=0;
 
   fS800file = new TFile(fS800File);
   TTreeReader reader1("caltree", fS800file);
@@ -123,33 +204,24 @@ ATMergeTask::Init()
 
   while (reader1.Next()) {
     fS800Ts.push_back((Long64_t) *ts);
+    //fS800Ts.push_back((Long64_t) *ts - fTsDelta);//special for run180 e18027
     fS800Evt.push_back((Double_t) fTsEvtS800Size);
-    //if(fTsEvtS800Size<100) std::cout<<"Ts S800 "<<fS800Ts.at(fTsEvtS800Size)<<std::endl;
+    if(fTsEvtS800Size<20) std::cout<<"Ts S800 "<<fS800Ts.at(fTsEvtS800Size)<<std::endl;
     fTsEvtS800Size++;
   }
-  ioMan -> RegisterAny("s800cal", fS800CalcBr, fIsPersistence);
+  //ioMan -> RegisterAny("s800cal", fS800CalcBr, fIsPersistence);
+  ioMan -> Register("s800cal", "S800", fS800CalcBr, fIsPersistence);
 
-  //std::cout << "  File :  " << fS800File<< " Events : " << fTsEvtS800Size <<"  " <<std::endl;
 
-
-  /* fit of the TS vs entry number, this should be monotonic increasing,
-  the function is used then to reduce the size of the S800 event loop
-  */
-  //I think TS has to be converted into double for TGraph, but would prefer to not have this extra step
   vector <Double_t> S800_ts(fS800Ts.begin(),fS800Ts.end());
   //auto c1 = new TCanvas("c1", "c1", 800, 800);
-  Double_t par_fit[2];
-  gROOT->SetBatch(kTRUE);//kTRUE not display the plots
-  fOptiFit = new TF1("fOptiFit","[1]*x + [0]",0,7E+9);//poly 1 seems relatively ok, fit do not need to be very precise,
-  //the fit limit might be an important parmeter
-  //TF1 *f1 = new TF1("f1","[2]*x*x + [1]*x + [0]",0,1000);//ploy 2
-  TGraph *gS800 = new TGraph(80, &S800_ts[0], &fS800Evt[0]);//fTsEvtS800Size instead of 80 (just for the test file)
-  gS800->Fit("fOptiFit");//might be biased by the TS default value
-  fOptiFit->GetParameters(&par_fit[0]);
-  fOptiFit->SetParameters(par_fit[0],par_fit[1]);
+  //gROOT->SetBatch(kTRUE);//kTRUE not display the plots
+  fS800TsGraph = new TGraph(fTsEvtS800Size, &S800_ts[0], &fS800Evt[0]);//fTsEvtS800Size instead of 80 (just for the test file)
+  //make a function of S800Evt vs S800TS, used then to search the S800 matching TS only among few S800 events, faster than looping on all the events.
+  fS800TsFunc = new TF1("fS800TsFunc",[&](double*x, double *){ return fS800TsGraph->Eval(x[0]); },0,S800_ts.back(),0);
   //c1->cd();
-  //gS800->Draw("AL");
-  //f1->Draw("same");
+  //fS800TsGraph->Draw("AL");
+  //fS800TsFunc->Draw("same");
 
   //auto c2 = new TCanvas("c2", "c2", 800, 800);
   //c2->cd();
@@ -157,19 +229,40 @@ ATMergeTask::Init()
   //fcutPID = (TCutG*)gROOT->GetListOfSpecials()->FindObject("CUTG");
   //fcutPID->SetName("fcutPID");
 
-  for(Int_t w=0; w<fcutPIDFile.size();w++){
-    TFile f(fcutPIDFile[w]);
+
+  for(Int_t w=0; w<fcutPID1File.size();w++){
+    TFile f(fcutPID1File[w]);
     TIter next(f.GetListOfKeys());
     TKey *key;
 
     while ((key=(TKey*)next())) {
-      cout<<"Loading Cut file:  "<<key->GetName()<<endl;
-      fcutPID.push_back( (TCutG*)f.Get(key->GetName()) );
+      cout<<"PID1 Loading Cut file:  "<<key->GetName()<<endl;
+      fcutPID1.push_back( (TCutG*)f.Get(key->GetName()) );
     }
-
   }
 
+  for(Int_t w=0; w<fcutPID2File.size();w++){
+    TFile f(fcutPID2File[w]);
+    TIter next(f.GetListOfKeys());
+    TKey *key;
 
+    while ((key=(TKey*)next())) {
+      cout<<"PID2 Loading Cut file:  "<<key->GetName()<<endl;
+      fcutPID2.push_back( (TCutG*)f.Get(key->GetName()) );
+    }
+  }
+
+  for(Int_t w=0; w<fcutPID3File.size();w++){
+    TFile f(fcutPID3File[w]);
+    TIter next(f.GetListOfKeys());
+    TKey *key;
+
+    while ((key=(TKey*)next())) {
+      cout<<"PID3 Loading Cut file:  "<<key->GetName()<<endl;
+      fcutPID3.push_back( (TCutG*)f.Get(key->GetName()) );
+    }
+  }
+//----------- New 10/01 -------------------------------------
 
   return kSUCCESS;
 }
@@ -193,6 +286,7 @@ if (!fPar)
 fLogger -> Fatal(MESSAGE_ORIGIN, "ATDigiPar not found!!");
 }
 */
+
 void
 ATMergeTask::Exec(Option_t *opt)
 {
@@ -200,37 +294,45 @@ ATMergeTask::Exec(Option_t *opt)
 
   fS800CalcBr -> Clear();
 
+
   if (fRawEventArray -> GetEntriesFast() == 0) return;
 
   ATRawEvent *rawEvent = (ATRawEvent *) fRawEventArray -> At(0);
   Long64_t ATTPCTs = rawEvent -> GetTimestamp();
   int minj, maxj;
   Double_t S800EvtMatch=-1;
-  minj=(int)fOptiFit->Eval(ATTPCTs)-fEvtDelta;//define the ATTPC entries range where the matching timestamp should be, to not loop over all the ATTPC entries.
-  maxj=(int)fOptiFit->Eval(ATTPCTs)+fEvtDelta;
+  minj=(int)fS800TsFunc->Eval(ATTPCTs)-fEvtDelta;//define the ATTPC entries range where the matching timestamp should be, to not loop over all the ATTPC entries.
+  maxj=(int)fS800TsFunc->Eval(ATTPCTs)+fEvtDelta;
+
+std::cout<<" TS ATTPC "<<ATTPCTs<<std::endl;
 
   for(int i=minj;i<maxj;i++)
   {
-    if(i>0 && i<fTsEvtS800Size){
-      if(isInGlom(fS800Ts.at(i-1),fS800Ts.at(i)) )std::cout<<" -- Warning -- Timestamp of consecutive entries from S800 root file within the ticks window"<<std::endl;
+    if(i>=0 && i<fTsEvtS800Size){
+      if(i>0 && isInGlom(fS800Ts.at(i-1),fS800Ts.at(i)) )std::cout<<" -- Warning -- Timestamp of consecutive entries from S800 root file within the glom"<<std::endl;
       else{
         //Is there a way to check that with the AT-TPC "event by event" processing?
         /*if(isInGlom(TsEvtATTPC.at(i-1),TsEvtATTPC.at(i)) )
         {
         cout<<" -- Warning -- Timestamp of consecutive entries from ATTPC root file within the glom"<<endl;
       }
-      else*/ if(isInGlom(fS800Ts.at(i),ATTPCTs) ){
+      else*/ if(isInGlom(fS800Ts.at(i)+fTsDelta,ATTPCTs) ){//fTsDelta constant offset likely from the length of the sync signal between S800 and AT-TPC
+      //if(isInGlom(fS800Ts.at(i),ATTPCTs) ){//special run180 
       S800EvtMatch = (int)fS800Evt.at(i);
-      //std::cout<<" in glom "<<minj<<" "<<maxj<<" "<<i<<" "<<fS800Ts.at(i)<<" "<<ATTPCTs<<" "<<S800EvtMatch<<std::endl;
+      std::cout<<" in glom "<<minj<<" "<<maxj<<" "<<i<<" "<<fS800Ts.at(i)<<" "<<ATTPCTs<<" "<<S800EvtMatch<<" "<<fS800TsFunc->Eval(ATTPCTs)<<" "<<ATTPCTs-fS800Ts.at(i)<<std::endl;
+      fEvtMerged++;
       break;
     }
     else
     S800EvtMatch = -1;
-    //std::cout<<" NOT in glom "<<minj<<" "<<maxj<<" "<<i<<" "<<fS800Ts.at(i)<<" "<<ATTPCTs<<" "<<S800EvtMatch<<std::endl;
+    //std::cout<<" NOT in glom "<<minj<<" "<<maxj<<" "<<i<<" "<<fS800Ts.at(i)<<" "<<ATTPCTs<<" "<<fS800Ts.at(i)-ATTPCTs<<" "<<S800EvtMatch<<std::endl;
   }
+
 }
 }
 
+
+if(S800EvtMatch<0) std::cout<<"NO TS MATCHING          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<std::endl;
 
 if(S800EvtMatch>0) {
   TTreeReader reader2("caltree", fS800file);
@@ -241,9 +343,10 @@ if(S800EvtMatch>0) {
 
   *fS800CalcBr = (S800Calc) *readerValueS800Calc->Get();
 
-  fS800CalcBr->SetIsInCut(isInPID(fS800CalcBr));
-
-  rawEvent->SetIsExtGate(isInPID(fS800CalcBr));
+  Bool_t isIn=kFALSE;
+  isIn=isInPID(fS800CalcBr);
+  fS800CalcBr->SetIsInCut(isIn);
+  rawEvent->SetIsExtGate(isIn);
 
 
 

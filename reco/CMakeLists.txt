@@ -14,7 +14,7 @@ ${CMAKE_SOURCE_DIR}/reco/GETDecoder
 ${CMAKE_SOURCE_DIR}/reco/GETDecoder2
 ${CMAKE_SOURCE_DIR}/reco/ATDecoder
 ${CMAKE_SOURCE_DIR}/reco/ATPulseAnalyzer
-#${CMAKE_SOURCE_DIR}/reco/HierarchicalClustering
+${CMAKE_SOURCE_DIR}/reco/HierarchicalClustering
 ${CMAKE_SOURCE_DIR}/reco/HoughTransformation
 ${CMAKE_SOURCE_DIR}/reco/ATProtoPhiReco
 ${CMAKE_SOURCE_DIR}/reco/VMEDecoder
@@ -88,60 +88,60 @@ ATPulseAnalyzer/ATPSAProtoFull.cc
 ATPulseAnalyzer/ATPSAFull.cc
 ATPulseAnalyzer/ATCalibration.cc
 
-#HierarchicalClustering/ATCubicSplineFit.cc
-#HierarchicalClustering/ATFindVertex.cc
-#HierarchicalClustering/ATHierarchicalClusteringHc.cc
-#HierarchicalClustering/ATHierarchicalClusteringSmoothenCloud.cc
-#HierarchicalClustering/ATTrajectory.cc
+HierarchicalClustering/ATCubicSplineFit.cc
+HierarchicalClustering/ATFindVertex.cc
+HierarchicalClustering/ATHierarchicalClusteringHc.cc
+HierarchicalClustering/ATHierarchicalClusteringSmoothenCloud.cc
+HierarchicalClustering/ATTrajectory.cc
 
 
-#HoughTransformation/ATHoughSpace.cc
-#HoughTransformation/ATHoughSpaceLine.cc
-#HoughTransformation/ATHoughSpaceCircle.cc
+HoughTransformation/ATHoughSpace.cc
+HoughTransformation/ATHoughSpaceLine.cc
+HoughTransformation/ATHoughSpaceCircle.cc
 
-#ATProtoPhiReco/ATPhiReco.cc
-#ATProtoPhiReco/ATPhiRecoSimple.cc
-#ATProtoPhiReco/ATPhiRecoTriple.cc
+ATProtoPhiReco/ATPhiReco.cc
+ATProtoPhiReco/ATPhiRecoSimple.cc
+ATProtoPhiReco/ATPhiRecoTriple.cc
 
 VMEDecoder/VMEDecoder.cc
 VMEDecoder/VMECore.cc
 VMEDecoder/ATRawIC.cc
 VMEDecoder/VMERawEvent.cc
 
-#ATMinimization/ATMinimization.cc
-#ATMinimization/ATMCMinimization.cc
-#ATMinimization/ATMCQMinimization.cc
+ATMinimization/ATMinimization.cc
+ATMinimization/ATMCMinimization.cc
+ATMinimization/ATMCQMinimization.cc
 
-#ATAnalysis/ATAnalysis.cc
-#ATAnalysis/ATProtoAnalysis.cc
-#ATAnalysis/ATTrackingAnalysis.cc
-#ATAnalysis/ATd2HeAnalysis.cc
+ATAnalysis/ATAnalysis.cc
+ATAnalysis/ATProtoAnalysis.cc
+ATAnalysis/ATTrackingAnalysis.cc
+ATAnalysis/ATd2HeAnalysis.cc
 
-#ATRansac/ATRansac.cc
+ATRansac/ATRansac.cc
 
-#ATPatternRecognition/ATRansacMod.cc
-#ATPatternRecognition/ATMlesacMod.cc
-#ATPatternRecognition/ATLmedsMod.cc
-#ATPatternRecognition/ATPRA.cc
-#ATPatternRecognition/ATTrackFinderHC.cc
-#ATPatternRecognition/smoothenCloud.cc
-#ATPatternRecognition/msd.cc
-#ATPatternRecognition/cluster.cc
-#ATPatternRecognition/hc.cc
-#ATPatternRecognition/fastcluster.cc
+ATPatternRecognition/ATRansacMod.cc
+ATPatternRecognition/ATMlesacMod.cc
+ATPatternRecognition/ATLmedsMod.cc
+ATPatternRecognition/ATPRA.cc
+ATPatternRecognition/ATTrackFinderHC.cc
+ATPatternRecognition/smoothenCloud.cc
+ATPatternRecognition/msd.cc
+ATPatternRecognition/cluster.cc
+ATPatternRecognition/hc.cc
+ATPatternRecognition/fastcluster.cc
 
 
 ATDecoderTask.cc
 ATDecoder2Task.cc
 ATHDFParserTask.cc
 ATPSATask.cc
-#ATPhiRecoTask.cc
-#ATHoughTask.cc
-#ATVMEUnpackTask.cc
-#ATAnalysisTask.cc
-#ATRansacTask.cc
-#ATHierarchicalClusteringTask.cc
-#ATPRATask.cc
+ATPhiRecoTask.cc
+ATHoughTask.cc
+ATVMEUnpackTask.cc
+ATAnalysisTask.cc
+ATRansacTask.cc
+ATHierarchicalClusteringTask.cc
+ATPRATask.cc
 
 )
 
