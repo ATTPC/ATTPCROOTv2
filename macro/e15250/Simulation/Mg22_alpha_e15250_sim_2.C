@@ -3,10 +3,10 @@ void Mg22_alpha_e15250_sim_2(Int_t nEvents = 10, TString mcEngine = "TGeant4") {
   TString dir = getenv("VMCWORKDIR");
   
   // Output file name
-  TString outFile ="../data/attpcsim_e15250_2M.root";
+  TString outFile ="./data/attpcsim_e15250_2M.root";
   
   // Parameter file name
-  TString parFile="../data/attpcpar_e15250_2M.root";
+  TString parFile="./data/attpcpar_e15250_2M.root";
   
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
