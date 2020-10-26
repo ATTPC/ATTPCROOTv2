@@ -1,4 +1,4 @@
-void Mg22_alpha_e15250_sim_elastic(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
+void Mg22_alpha_e15250_sim_elastic(Int_t nEvents = 200, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -44,7 +44,7 @@ void Mg22_alpha_e15250_sim_elastic(Int_t nEvents = 2000, TString mcEngine = "TGe
   run->AddModule(pipe);
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_e15250_v1.root");
+  ATTPC->SetGeometryFileName("ATTPC_Mg22elastic.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
@@ -54,7 +54,7 @@ void Mg22_alpha_e15250_sim_elastic(Int_t nEvents = 2000, TString mcEngine = "TGe
   // -----   Magnetic field   -------------------------------------------
   // Constant Field
     AtConstField  *fMagField = new AtConstField();
-    fMagField->SetField(0., 0. ,20. ); // values are in kG
+    fMagField->SetField(0., 0. ,14. ); // values are in kG
     fMagField->SetFieldRegion(-50, 50,-50, 50, -10,230); // values are in cm
                           //  (xmin,xmax,ymin,ymax,zmin,zmax)
     run->SetField(fMagField);
@@ -136,7 +136,7 @@ void Mg22_alpha_e15250_sim_elastic(Int_t nEvents = 2000, TString mcEngine = "TGe
   ExE.push_back(0.0);
 
   // ---- Recoil ----- 
-  Zp.push_back(2); // p
+  Zp.push_back(2); // alpha
 	Ap.push_back(4); //
 	Qp.push_back(0); //
   Pxp.push_back(0.0);

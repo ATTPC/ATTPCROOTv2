@@ -26,7 +26,6 @@ hid_t ATHDFParser::open_file(char const* file, IO_MODE mode)
     if (fileId >= 0)
     {
       std::cout << "> hdf5_wrapper::open_file:MESSAGE, opening file: " << file << ", ID: " << fileId << '\n';
-
       return fileId;
     }
     else
@@ -120,33 +119,11 @@ void ATHDFParser::close_dataset(hid_t datasetId)
 std::size_t ATHDFParser::open(char const* file)
 {
     auto f = open_file(file, ATHDFParser::IO_MODE::READ);
-    if (f == 0)
-      return 0;
+    if (f==0) return 0;
     _file = f;
-    
-    //Look for the meta group and from it pull the minimum and maximum event numbers
-    auto meta_size = open_group(_file, "meta");
-    auto metaID = std::get<0>(meta_size);
-    if(metaID > 0)
-    {
-      char *datasetName = "meta";
-      auto dataset_dims = open_dataset(metaID, datasetName);
-      auto datasetId = std::get<0>(dataset_dims);
-      auto len = std::get<1>(dataset_dims).at(0);
-
-      int64_t  *data = new int64_t[len];      
-      auto status = H5Dread(datasetId, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
-      std::cout << "Events: " << data[0] << " to " << data[2] << std::endl;
-
-      _firstEvent = data[0];
-      _lastEvent = data[1];
-    }
-
     auto group_n_entries = open_group(f, "get");
-    if (std::get<0>(group_n_entries)==-1)
-      return 0;
+    if (std::get<0>(group_n_entries)==-1) return 0;
     _group = std::get<0>(group_n_entries);
-
     return std::get<1>(group_n_entries);
 }
 
@@ -163,31 +140,6 @@ std::size_t ATHDFParser::open(char const* file)
       return "invalid";
     }
  }
-
-std::vector<int64_t> ATHDFParser::get_header(std::string headerName)
-{
-  std::vector<int64_t> retVec;
-  
-  auto dataset_dims = open_dataset(_group, headerName.c_str());
-  if( std::get<0>(dataset_dims) == 0)
-    return retVec;
-
-  _dataset = std::get<0>(dataset_dims);
-
-
-  //Get the length of the header
-  auto len = std::get<1>(dataset_dims).at(0);
-    
-  int64_t  *data = new int64_t[len];
-  auto status = H5Dread(_dataset, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
-
-  //Add read data to the vector and return it
-  for ( int i = 0; i < len; ++i)
-    retVec.push_back(data[i]);
-  
-  return retVec;
-  
-}
 
 std::size_t ATHDFParser::n_pads(std::string i_raw_event)
 {

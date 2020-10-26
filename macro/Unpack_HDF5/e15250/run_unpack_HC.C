@@ -12,7 +12,7 @@ struct auxchannel
   uint8_t channel;
 };
 
-void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_0214.h5",TString parameterFile = "ATTPC.e15250.par",TString mappath="")
+void run_unpack_HC(std::string dataFile = "./run_0290.h5",TString parameterFile = "ATTPC.e15250.par",TString mappath="")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -32,7 +32,7 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_021
 
   //TString inputFile   = dataDir + name + ".digi.root";
   //TString outputFile  = dataDir + "output.root";
-  TString outputFile  = "/mnt/simulations/attpcroot/fair_install_2020/ATTPCROOTv2/macro/Unpack_HDF5/e15250/output.root";
+  TString outputFile  = "./output.root";
   //TString mcParFile   = dataDir + name + ".params.root";
   TString loggerFile  = dataDir + "ATTPCLog.log";
   TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -44,11 +44,11 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_021
 
   // -----------------------------------------------------------------
   // Logger
-  /*FairLogger *fLogger = FairLogger::GetLogger();
-  fLogger -> SetLogFileName(loggerFile);
-  fLogger -> SetLogToScreen(kTRUE);
-  fLogger -> SetLogToFile(kTRUE);
-  fLogger -> SetLogVerbosityLevel("LOW");*/
+  FairLogger *fLogger = FairLogger::GetLogger();
+  //fLogger -> SetLogFileName(loggerFile);
+  //fLogger -> SetLogToScreen(kTRUE);
+  //fLogger -> SetLogToFile(kTRUE);
+  //fLogger -> SetLogVerbosityLevel("LOW");
 
   FairRunAna* run = new FairRunAna();
   run -> SetOutputFile(outputFile);
@@ -97,10 +97,10 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_021
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
   psaTask -> SetThreshold(100);
-  psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
+  psaTask -> SetPSAMode(6); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
   //psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
   psaTask -> SetMaxFinder();
-  //psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
+  psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
   //psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
 
   ATPRATask *praTask = new ATPRATask();
@@ -110,11 +110,11 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_021
   
   run -> AddTask(HDFParserTask);
   run -> AddTask(psaTask);
-  //run -> AddTask(praTask);
+  run -> AddTask(praTask);
 
   run -> Init();
 
-  run->Run(0,100);
+  run->Run(0,1000);
   //run -> RunOnTBData();
 
 

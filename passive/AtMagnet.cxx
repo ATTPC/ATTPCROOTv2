@@ -70,7 +70,7 @@ void AtMagnet::ConstructGeometry()
      TGeoVolume *SolenoidVol = new TGeoVolume("SolenoidVol", SolenoidGeo, Fe);
      SolenoidVol->SetLineColor(kWhite);
      SolenoidVol->SetTransparency(50);
-     top->AddNode(SolenoidVol,1,new TGeoTranslation(0, 6.079, 110));
+     top->AddNode(SolenoidVol,1,new TGeoTranslation(0, 0, 110));
 
   /*  TGeoTubeSeg *magnet1a = new TGeoTubeSeg("magnet1a", 250, 300, 35, 45, 135);
     TGeoTubeSeg *magnet1b = new TGeoTubeSeg("magnet1b", 250, 300, 35, 45, 135);

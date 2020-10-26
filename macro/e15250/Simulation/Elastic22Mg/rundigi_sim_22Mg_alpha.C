@@ -1,8 +1,8 @@
 void rundigi_sim_22Mg_alpha
 (TString mcFile = "./data/attpcsim_e15250.root",
- TString digiParFile = "../../../parameters/ATTPC.e15250.par",
- TString mapParFile = "../../../scripts/Lookup20150611.xml",
- TString trigParFile = "../../../parameters/AT.trigger.par")
+ TString digiParFile = "../../../../parameters/ATTPC.e15250.par",
+ TString mapParFile = "../../../../scripts/Lookup20150611.xml",
+ TString trigParFile = "../../../../parameters/AT.trigger.par")
 {
   // -----   Timer   --------------------------------------------------------
  TStopwatch timer;
@@ -49,12 +49,23 @@ void rundigi_sim_22Mg_alpha
       psaTask -> SetBaseCorrection(kFALSE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
       psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
 
-      /*ATTriggerTask *trigTask = new ATTriggerTask();
+      ATTriggerTask *trigTask = new ATTriggerTask();
       trigTask  ->  SetAtMap(mapParFile);
-      trigTask  ->  SetPersistence(kTRUE);*/
+      trigTask  ->  SetPersistence(kTRUE);
      
       ATPRATask *praTask = new ATPRATask();
       praTask -> SetPersistence(kTRUE);
+
+	ATRansacTask *RandTask = new ATRansacTask();
+  	RandTask ->SetPersistence(kTRUE);
+  	//RandTask ->SetModelType(1);
+  	//RandTask ->SetFullMode();
+ 	 RandTask->SetTiltAngle(0.0);
+  	RandTask->SetDistanceThreshold(15.0);
+ 	 RandTask->SetMinHitsLine(7);
+  	RandTask->SetAlgorithm(3); // 0=PCL ransac; 1=Homemade Ransac; 2=Homemade Mlesac; 3=Homemade Lmeds;
+ 	 RandTask->SetRanSamMode(3);// 0=Uniform; 1=Gaussian; 2=Weighted; 3=Gaussian+Weighted
+	
 /*
       ATHoughTask *HoughTask = new ATHoughTask();
       HoughTask ->SetPersistence();
@@ -66,7 +77,8 @@ void rundigi_sim_22Mg_alpha
   fRun -> AddTask(clusterizer);
   fRun -> AddTask(pulse);
   fRun -> AddTask(psaTask);
-  fRun -> AddTask(praTask);
+  fRun -> AddTask(RandTask);
+  //fRun -> AddTask(praTask);
   //fRun -> AddTask(trigTask);
   //fRun -> AddTask(HoughTask);
   //fRun -> AddTask(hierarchicalClusteringTask);

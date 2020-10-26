@@ -244,7 +244,7 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       RhoMean+=HitPos.Mag();
       if((xPos<-9000 || yPos<-9000) && pad->GetPadNum()!=-1 ) std::cout<<" ATPSASimple2::Analysis Warning! Wrong Coordinates for Pad : "<<pad->GetPadNum()<<std::endl;
 
-
+      if((xPos<-9000 || yPos<-9000) && pad->GetPadNum()!=-1 ) std::cout<<" ATPSASimple2withFFT::Analysis Warning! Wrong Coordinates for Pad : "<<pad->GetPadNum()<<std::endl;
       //#pragma omp ordered
       //event -> AddHit(hit);
       hitBuff.push_back(*hit);

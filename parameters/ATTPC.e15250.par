@@ -18,13 +18,13 @@ GatingWirePlaneY:Double_t      -14   # mm
 EField:Double_t               5000   # V/m
 NumTbs:Int_t                   512
 SamplingRate:Int_t             6.0   # Real value is 6.25 MHz
-DriftVelocity:Double_t        0.44   # cm/us
+DriftVelocity:Double_t        2.07   # cm/us
 DriftLength:Double_t          1000   # mm //ATTPC : 1000 - Prototype : 500
 YDivider:Int_t                1000   # Full drift length will be divided by this number when finding cluster
 GasFile:Int_t                    2
 PadPlaneFile:Int_t               3
 PadShapeFile:Int_t               4   # might not be needed because the shape is simply rectangle
-BField:Double_t                0.0   # Tesla
+BField:Double_t             1.2468   # Tesla
 TiltAng:Double_t               0.0   # Degrees
 TB0:Int_t                       98   # Time Bucket reference for micromegas position (DEPRECATED)
 LorentzAngle:Double_t          0.0   # Lorentz Angle
@@ -35,8 +35,11 @@ ThetaPad:Double_t            110.9   # AT-TPC pad plane rotation
 ThetaRot:Double_t              0.0   # Second Lorentz Angle
 GasPressure:Double_t           600   # Gas pressure in torr
 EIonize:Double_t            15.603   # Ionization energy of gas in eV
+Fano:Double_t                 0.24   # Fano factor of the gas
 CoefL:Double_t               0.025   # Longitudal coefficient of diffusion [cm^-0.5]
 CoefT:Double_t               0.025   # Transverse coefficient of diffusion [cm^-0.5]
 Gain:Double_t                 0.28   # Average gain of micromegas
+GETGain:Double_t              1000   # Gain of the GET electronics in fC
+PeakingTime:Int_t              720   # Electronic peaking time in ns
 MaxRange:Double_t            500.0   # Maximum range from Beam energy in mm
 ################################################################################

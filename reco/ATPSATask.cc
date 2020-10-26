@@ -2,11 +2,12 @@
 #include "ATPSA.hh"
 #include "ATPSASimple.hh"
 #include "ATPSASimple2.hh"
+#include "ATPSASimple2withFFT.hh"
 #include "ATPSAProto.hh"
 #include "ATPSAFilter.hh"
 #include "ATPSAFull.hh"
 #include "ATPSAProtoFull.hh"
-
+#include "TVirtualFFT.h"
 
 // FAIRROOT classes
 #include "FairRootManager.h"
@@ -40,7 +41,7 @@ ATPSATask::ATPSATask()
   fEventHArray = new TClonesArray("ATEvent");
   //fAuxChannels.clear();
 
-  fPSAMode = 2;
+  fPSAMode = 1;
 
   fMeanK = 10;
   fStdDev = 0.01;
@@ -117,6 +118,11 @@ ATPSATask::Init()
 
     fPSA = new ATPSAProtoFull();
     fPSA -> SetTBLimits(fTBRange);
+
+  } else if (fPSAMode == 6) {
+    fLogger -> Info(MESSAGE_ORIGIN, "Using ATPSASimple2withFFT!");
+
+    fPSA = new ATPSASimple2withFFT();
 
   }
 
