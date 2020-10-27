@@ -94,41 +94,15 @@ ATPulseAnalyzer/ATCalibration.cc
 #HierarchicalClustering/ATHierarchicalClusteringSmoothenCloud.cc
 #HierarchicalClustering/ATTrajectory.cc
 
-
-#HoughTransformation/ATHoughSpace.cc
-#HoughTransformation/ATHoughSpaceLine.cc
-#HoughTransformation/ATHoughSpaceCircle.cc
-
 #ATProtoPhiReco/ATPhiReco.cc
 #ATProtoPhiReco/ATPhiRecoSimple.cc
 #ATProtoPhiReco/ATPhiRecoTriple.cc
 
-VMEDecoder/VMEDecoder.cc
-VMEDecoder/VMECore.cc
-VMEDecoder/ATRawIC.cc
-VMEDecoder/VMERawEvent.cc
+#VMEDecoder/VMEDecoder.cc
+#VMEDecoder/VMECore.cc
+#VMEDecoder/ATRawIC.cc
+#VMEDecoder/VMERawEvent.cc
 
-#ATMinimization/ATMinimization.cc
-#ATMinimization/ATMCMinimization.cc
-#ATMinimization/ATMCQMinimization.cc
-
-#ATAnalysis/ATAnalysis.cc
-#ATAnalysis/ATProtoAnalysis.cc
-#ATAnalysis/ATTrackingAnalysis.cc
-#ATAnalysis/ATd2HeAnalysis.cc
-
-#ATRansac/ATRansac.cc
-
-#ATPatternRecognition/ATRansacMod.cc
-#ATPatternRecognition/ATMlesacMod.cc
-#ATPatternRecognition/ATLmedsMod.cc
-#ATPatternRecognition/ATPRA.cc
-#ATPatternRecognition/ATTrackFinderHC.cc
-#ATPatternRecognition/smoothenCloud.cc
-#ATPatternRecognition/msd.cc
-#ATPatternRecognition/cluster.cc
-#ATPatternRecognition/hc.cc
-#ATPatternRecognition/fastcluster.cc
 
 
 ATDecoderTask.cc
@@ -136,18 +110,14 @@ ATDecoder2Task.cc
 ATHDFParserTask.cc
 ATPSATask.cc
 #ATPhiRecoTask.cc
-#ATHoughTask.cc
 #ATVMEUnpackTask.cc
-#ATAnalysisTask.cc
-#ATRansacTask.cc
-#ATHierarchicalClusteringTask.cc
-#ATPRATask.cc
+
 
 )
 
 # Adding libraries that depend on PCL
 if(PCL_FOUND)
-MESSAGE("${Green} libATTPCReco - Building PCL classes: RANSAC, TrackFinder, PSAFilter ${ColourReset} ")
+MESSAGE("${Green} libATTPCReco - Building PCL classes: RANSAC, Pattern Recognition, Hough Transformation, Minimization, Analysis, PSA/PSAFilter ${ColourReset} ")
 set(SRCS ${SRCS} 
 ATRansac/ATRansac.cc
 ATPulseAnalyzer/ATPSAFilter.cc
@@ -157,6 +127,26 @@ ATPatternRecognition/msd.cc
 ATPatternRecognition/cluster.cc
 ATPatternRecognition/hc.cc
 ATPatternRecognition/fastcluster.cc
+ATPatternRecognition/ATPRA.cc
+ATPatternRecognition/ATRansacMod.cc
+ATPatternRecognition/ATMlesacMod.cc
+ATPatternRecognition/ATLmedsMod.cc
+ATMinimization/ATMinimization.cc
+ATMinimization/ATMCMinimization.cc
+ATMinimization/ATMCQMinimization.cc
+ATAnalysis/ATAnalysis.cc
+ATAnalysis/ATProtoAnalysis.cc
+ATAnalysis/ATTrackingAnalysis.cc
+ATAnalysis/ATd2HeAnalysis.cc
+HoughTransformation/ATHoughSpace.cc
+HoughTransformation/ATHoughSpaceLine.cc
+HoughTransformation/ATHoughSpaceCircle.cc
+ATRansac/ATRansac.cc
+ATPRATask.cc
+ATHoughTask.cc
+ATAnalysisTask.cc
+ATRansacTask.cc
+#ATHierarchicalClusteringTask.cc
 )
 endif()
 
