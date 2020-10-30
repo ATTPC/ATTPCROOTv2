@@ -99,6 +99,7 @@ class ATEventDrawTask : public FairTask
     virtual void DrawTheta();
     virtual void DrawThetaxPhi();
     virtual void DrawMC();
+    virtual void DrawAux();
 
     AtTpcMap *fAtMapPtr;
     void UpdateCvsPadPlane();
@@ -115,7 +116,7 @@ class ATEventDrawTask : public FairTask
     void UpdateCvsThetaxPhi();
     void UpdateCvsQuadrants();
     void UpdateCvsMC();
-
+    void UpdateCvsAux();
 
 
     void ResetPadAll();
@@ -223,6 +224,8 @@ class ATEventDrawTask : public FairTask
     TH2F* fQuadrant3;
     TCanvas* fCvsQuadrant4;
     TH2F* fQuadrant4;
+    TH1F*    fAuxChannels[9];
+    TCanvas* fCvsAux;
 
     TH2F* fThetaxPhi_Ini;
     TH2F* fThetaxPhi_Ini_RANSAC;
