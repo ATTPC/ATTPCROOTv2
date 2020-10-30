@@ -49,24 +49,25 @@ class ATEventManager : public TEveEventManager
 
     virtual Int_t GetCurrentEvent() {return fEntry;}
 
-    TCanvas* GetCvsPadPlane()   { return fCvsPadPlane; }
-    TCanvas* GetCvsPadWave()    { return fPadWave; }
-    TCanvas* GetCvsPadAll()     { return fPadAll; }
-    TCanvas* GetCvsQEvent()     { return fCvsQEvent; }
-    TCanvas* GetCvsHoughSpace() { return fCvsHough; }
-    TCanvas* GetCvsPhi()        { return fCvsPhi; }
-    TCanvas* GetCvsMesh()       { return fCvsMesh; }
-    TCanvas* GetCvs3DHist()     { return fCvs3DHist; }
-    TCanvas* GetCvsRad()        { return fCvsRad; }
-    TCanvas* GetCvsTheta()      { return fCvsTheta; }
-    TCanvas* GetCvsThetaxPhi()  { return fCvsThetaxPhi; }
-    TCanvas* GetCvsQuadrant1()  { return fCvsQuadrant1; }
-    TCanvas* GetCvsQuadrant2()  { return fCvsQuadrant2; }
-    TCanvas* GetCvsQuadrant3()  { return fCvsQuadrant3; }
-    TCanvas* GetCvsQuadrant4()  { return fCvsQuadrant4; }
-    TCanvas* GetCvsMC_XY()      { return fCvsMC_XY; }
-    TCanvas* GetCvsMC_Z()       { return fCvsMC_Z; }
-
+  TCanvas* GetCvsPadPlane()   { return fCvsPadPlane; }
+  TCanvas* GetCvsPadWave()    { return fPadWave; }
+  TCanvas* GetCvsPadAll()     { return fPadAll; }
+  TCanvas* GetCvsQEvent()     { return fCvsQEvent; }
+  TCanvas* GetCvsHoughSpace() { return fCvsHough; }
+  TCanvas* GetCvsPhi()        { return fCvsPhi; }
+  TCanvas* GetCvsMesh()       { return fCvsMesh; }
+  TCanvas* GetCvs3DHist()     { return fCvs3DHist; }
+  TCanvas* GetCvsRad()        { return fCvsRad; }
+  TCanvas* GetCvsTheta()      { return fCvsTheta; }
+  TCanvas* GetCvsThetaxPhi()  { return fCvsThetaxPhi; }
+  TCanvas* GetCvsQuadrant1()  { return fCvsQuadrant1; }
+  TCanvas* GetCvsQuadrant2()  { return fCvsQuadrant2; }
+  TCanvas* GetCvsQuadrant3()  { return fCvsQuadrant3; }
+  TCanvas* GetCvsQuadrant4()  { return fCvsQuadrant4; }
+  TCanvas* GetCvsMC_XY()      { return fCvsMC_XY; }
+  TCanvas* GetCvsMC_Z()       { return fCvsMC_Z; }
+  TCanvas* GetCvsAux()        { return fCvsAux; } 
+  
     Bool_t GetDrawAllPad() { return kDrawAllOn; }
     Bool_t GetDrawHoughSpace() { return kDrawHoughOn; }
     Bool_t GetEraseQEvent() {Bool_t EraseBuff = kEraseQ; kEraseQ=kFALSE; return EraseBuff; }
@@ -105,6 +106,7 @@ class ATEventManager : public TEveEventManager
     TCanvas* fCvsQuadrant4;
     TCanvas* fCvsMC_XY;
     TCanvas* fCvsMC_Z;
+    TCanvas* fCvsAux;
 
 
     TGTextButton *drawallpad;

@@ -253,8 +253,9 @@ ATEventDrawTask::Init()
      fCvsQuadrant3 = fEventManager->GetCvsQuadrant3();
      fCvsQuadrant4 = fEventManager->GetCvsQuadrant4();
      DrawHoughSpaceProto();*/
-
-
+    fCvsAux = fEventManager->GetCvsAux();
+    DrawAux();
+    
     //******* NO CALLS TO TCANVAS BELOW THIS ONE
     fCvsHoughSpace = fEventManager->GetCvsHoughSpace();
     DrawHoughSpace();
@@ -320,6 +321,10 @@ ATEventDrawTask::DrawHitPoints()
 
     Float_t *MeshArray;
     fMesh->Reset(0);
+
+    for(int i=0; i < 9; ++i)
+      fAuxChannels[i]->Reset(0);
+
     f3DHist->Reset(0);
     TRandom r(0);
 
@@ -362,10 +367,31 @@ ATEventDrawTask::DrawHitPoints()
     }
 
 
-    if(fIsRawData){
+    if(fIsRawData)
+    {
         fRawevent = (ATRawEvent*) fRawEventArray->At(0);
         fRawevent->SetName("fRawEvent");
         gROOT->GetListOfSpecials()->Add(fRawevent);
+
+	//Draw aux channels
+	int numAux = 0;
+	auto padArray = fRawevent->GetPads();
+
+	//Loop through each pad
+	for(auto&& pad : *padArray)
+	  if(pad.IsAux() && numAux < 9)
+	  {
+	    std::cout << cYELLOW << " Auxiliary Channel " << numAux << " - Name "
+		      << pad.GetAuxName() << cNORMAL << std::endl;
+	    auto rawAdc = pad.GetRawADC();
+	    for( int i = 0; i < 512; ++i)
+	      fAuxChannels[numAux]->SetBinContent(i, rawAdc[i]);
+	    numAux++;
+	  }
+
+	if(numAux+1 == 9)
+	  std::cout << cYELLOW << "Warning: More auxiliary channels than expected (max 9)"
+		    << cNORMAL << std::endl;
     }
 
 
@@ -1568,14 +1594,53 @@ ATEventDrawTask::DrawMC()
     fMC_ZY_int->SetMarkerColor(kBlack);
     fMC_ZY_int->Draw("P");
 
-
-
-
-
-
+}
+void
+ATEventDrawTask::DrawAux()
+{
+  fCvsAux->Divide(3,3);
+  for(int i = 0; i < 9; ++i)
+  {
+    fAuxChannels[i] = new TH1F(Form("AuxCh%i",i), Form("AuxChannel%i",i),512,0,511);
+    fCvsAux->cd(i+1);
+    fAuxChannels[i]->Draw();
+  }
 }
 
+void
+ATEventDrawTask::UpdateCvsAux()
+{
 
+  TPad* Pad_1 = (TPad*)fCvsAux->GetPad(1);
+    Pad_1->Modified();
+    Pad_1->Update();
+    TPad* Pad_2 = (TPad*)fCvsAux->GetPad(2);
+    Pad_2->Modified();
+    Pad_2->Update();
+    TPad* Pad_3 = (TPad*)fCvsAux->GetPad(3);
+    Pad_3->Modified();
+    Pad_3->Update();
+    TPad* Pad_4 = (TPad*)fCvsAux->GetPad(4);
+    Pad_4->Modified();
+    Pad_4->Update();
+    TPad* Pad_5 = (TPad*)fCvsAux->GetPad(5);
+    Pad_5->Modified();
+    Pad_5->Update();
+    TPad* Pad_6 = (TPad*)fCvsAux->GetPad(6);
+    Pad_6->Modified();
+    Pad_6->Update();
+    TPad* Pad_7 = (TPad*)fCvsAux->GetPad(7);
+    Pad_7->Modified();
+    Pad_7->Update();
+    TPad* Pad_8 = (TPad*)fCvsAux->GetPad(8);
+    Pad_8->Modified();
+    Pad_8->Update();
+    TPad* Pad_9 = (TPad*)fCvsAux->GetPad(9);
+    Pad_9->Modified();
+    Pad_9->Update();
+    fCvsAux->Modified();
+    fCvsAux->Update();
+}
 void
 ATEventDrawTask::UpdateCvsPadPlane()
 {
