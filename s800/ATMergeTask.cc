@@ -1,5 +1,5 @@
 #include "ATMergeTask.hh"
-
+#include "TFile.h"
 // FAIRROOT classes
 #include "FairRootManager.h"
 #include "FairRun.h"
