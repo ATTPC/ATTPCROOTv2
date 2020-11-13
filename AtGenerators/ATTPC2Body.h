@@ -1,8 +1,9 @@
-// -------------------------------------------------------------------------
-// -----                   ATTPC2Body header file              -----
-// -----                    Inherit from FairIonGenerator              -----
-// -----                 Created 29/07/15  by Y. Ayyad                 -----
-// -------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------//
+// -----                   ATTPC2Body header file                                   ----//
+// -----                    Inherit from FairIonGenerator                           ----//
+// -----                 Created 29/07/15  by Y. Ayyad                              ----//
+// -----                 11/13/2020 Added Fixed target option for HELIOS (Y. Ayyad) ----//
+// -------------------------------------------------------------------------------------//
 
 
 #ifndef ATTPC2Body_H
@@ -37,6 +38,8 @@ class ATTPC2Body : public FairGenerator
 
   ATTPC2Body& operator=(const ATTPC2Body&) { return *this; }
 
+  void SetFixedTargetPosition(double vx, double vy, double vz);
+
   virtual Bool_t ReadEvent(FairPrimaryGenerator* primGen);
 
 
@@ -58,7 +61,7 @@ private:
   //std::vector<Int_t> fA;
   //std::vector<Int_t> fZ;
   Double_t fBeamEnergy;			    // Residual beam energy for phase calculation
- // Double_t fBeamEnergy_buff;			    // Residual beam energy for phase calculation
+  Double_t fBeamEnergy_buff;		    // Residual beam energy for phase calculation
  // Int_t fZBeam;
  // Int_t fABeam;
   Double_t fPxBeam;
@@ -72,7 +75,8 @@ private:
   Bool_t fNoSolution;
   std::vector<Double_t> fWm;                                 // Total mass
  
- 
+  Bool_t fIsFixedTargetPos; //
+  
 
 
   ClassDef(ATTPC2Body,1)

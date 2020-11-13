@@ -3,7 +3,7 @@ void eventDisplay_proto()
   //-----User Settings:-----------------------------------------------
   TString  InputFile     ="attpcsim_proto.root";
   TString  ParFile       ="attpcpar_proto.root";
-  TString  OutFile	     ="attpctest_proto.root";
+  TString  OutFile	 ="attpctest_proto.root";
 
 
   // -----   Reconstruction run   -------------------------------------------

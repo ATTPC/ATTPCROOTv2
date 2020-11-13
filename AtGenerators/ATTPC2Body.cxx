@@ -78,8 +78,10 @@ ATTPC2Body::ATTPC2Body(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
   TParticle* kNeutron = new TParticle();
   kNeutron->SetPdgCode(2112);
 
- /* fBeamEnergy_buff = ResEner;
-  fBeamMass = BMass;
+  fIsFixedTargetPos = kFALSE;
+
+  fBeamEnergy_buff = ResEner;
+ /* fBeamMass = BMass;
   fTargetMass = TMass;
   fZBeam = ZB;
   fABeam = AB;
@@ -94,7 +96,7 @@ ATTPC2Body::ATTPC2Body(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
        	fPx.push_back( Double_t(a->at(i)) * px->at(i) );
 	      fPy.push_back( Double_t(a->at(i)) * py->at(i) );
 	      fPz.push_back( Double_t(a->at(i)) * pz->at(i) );
-	      Masses.push_back(mass->at(i)*1000.0);
+	Masses.push_back(mass->at(i)*1000.0);
         fExEnergy.push_back(Ex->at(i));
         fWm.push_back( mass->at(i)*1000.0*0.93149401 + Ex->at(i));
         FairIon *IonBuff;
@@ -139,8 +141,8 @@ ATTPC2Body::ATTPC2Body(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
         	if(fPType.at(i)=="Ion"){
 
                        std::cout<<" In position "<<i<<" adding an : "<<fPType.at(i)<<std::endl;
-      		             run->AddNewIon(fIon.at(i));
-      		             std::cout<<" fIon name :"<<fIon.at(i)->GetName()<<std::endl;
+      		       run->AddNewIon(fIon.at(i));
+      		       std::cout<<" fIon name :"<<fIon.at(i)->GetName()<<std::endl;
                        std::cout<<" fParticle name :"<<fParticle.at(i)->GetName()<<std::endl;
 
           }else if(fPType.at(i)=="Proton"){
@@ -171,6 +173,13 @@ ATTPC2Body::ATTPC2Body(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
 ATTPC2Body::~ATTPC2Body()
 {
  // if (fIon) delete fIon;
+}
+
+void ATTPC2Body::SetFixedTargetPosition(double vx, double vy, double vz)
+{
+   fVx = vx;
+   fVy = vy;
+   fVz = vz;
 }
 
 // -----   Public method ReadEvent   --------------------------------------
@@ -204,14 +213,18 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
 
    fIsDecay = kFALSE;
 
+    if(fIsFixedTargetPos){
+          fBeamEnergy = fBeamEnergy_buff;
 
-   fBeamEnergy = gATVP->GetEnergy();
-   std::cout<<" -I- ATTPC2Body Residual energy  : "<<gATVP->GetEnergy()<<std::endl;
+    }else{
+	   fBeamEnergy = gATVP->GetEnergy();
+	   std::cout<<" -I- ATTPC2Body Residual energy  : "<<gATVP->GetEnergy()<<std::endl;
+    }
 
 
    if(gATVP->GetEnergy()>0 && gATVP->GetDecayEvtCnt()%2!=0){ //Requires a non zero vertex energy and pre-generated Beam event (not punch thorugh)
 
-           fPxBeam = gATVP->GetPx();
+           fPxBeam = gATVP->GetPx(); //TODO: Not used for the final reaction products momentum (Yassid 11/13/2020)
            fPyBeam = gATVP->GetPy();
            fPzBeam = gATVP->GetPz();
 
@@ -318,13 +331,13 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
                       gATVP->SetScatterA(Ang.at(0)*180.0/TMath::Pi());
 
 
-                    	    fPx.at(0) = 0.0;
+                    	  fPx.at(0) = 0.0;
                           fPy.at(0) = 0.0;
-                    	    fPz.at(0) = 0.0;
+                    	  fPz.at(0) = 0.0;
 
                           fPx.at(1) = 0.0;
                           fPy.at(1) = 0.0;
-                    	    fPz.at(1) = 0.0;
+                    	   fPz.at(1) = 0.0;
 
 
 
@@ -495,11 +508,17 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
                                  int pdgType = thisPart->PdgCode();
 
                               	 // Propagate the vertex of the previous event
-
+				if(fIsFixedTargetPos){
+				 
+				 //fVx = 0.0;
+                              	 //fVy = 0.0;
+                              	 //fVz = 0.0;
+						
+				}else{
                               	 fVx = gATVP->GetVx();
                               	 fVy = gATVP->GetVy();
                               	 fVz = gATVP->GetVz();
-
+				}
 
 
                       		      if(i>1 && gATVP->GetDecayEvtCnt() && pdgType!=1000500500 && fPType.at(i)=="Ion" ){// TODO: Dirty way to propagate only the products (0 and 1 are beam and target respectively)
@@ -540,7 +559,7 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
         }//if residual energy > 0
 
                       
-                       gATVP->IncDecayEvtCnt();  //TODO: Okay someone should put a more suitable name but we are on a hurry...
+                       gATVP->IncDecayEvtCnt();  
 
                        return kTRUE;
 

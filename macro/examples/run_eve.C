@@ -1,10 +1,10 @@
-void run_eve(TString  InputDataFile = "output_digi.root",TString  OutputDataFile = "output.reco_display.root", TString unpackDir="examples/")
+void run_eve(TString  InputDataFile = "output.root",TString  OutputDataFile = "output.reco_display.root", TString unpackDir="/Unpack_GETDecoder2/")
 {
   FairLogger *fLogger = FairLogger::GetLogger();
   fLogger -> SetLogToScreen(kTRUE);
   fLogger->SetLogVerbosityLevel("MEDIUM");
   TString dir = getenv("VMCWORKDIR");
-  TString geoFile = "ATTPC_e15250_v1_geomanager.root";
+  TString geoFile = "ATTPC_v1.1_geomanager.root";
 
 
   TString InputDataPath = dir + "/macro/"+ unpackDir + InputDataFile;

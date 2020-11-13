@@ -20,12 +20,11 @@ ${FAIRROOT_LIBRARY_DIR}
 link_directories( ${LINK_DIRECTORIES})
 
 set(SRCS
-#Put here your sourcefiles
 AtSiArrayPoint.cxx
-#AtTpcContFact.cxx
-#AtTpcGeo.cxx
-#AtTpcGeoPar.cxx
-#AtTpc.cxx
+AtSiArrayContFact.cxx
+AtSiArrayGeo.cxx
+AtSiArrayGeoPar.cxx
+AtSiArray.cxx
 )
 
 Set(LINKDEF AtSiArrayLinkDef.h)
