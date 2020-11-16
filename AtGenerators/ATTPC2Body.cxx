@@ -177,6 +177,8 @@ ATTPC2Body::~ATTPC2Body()
 
 void ATTPC2Body::SetFixedTargetPosition(double vx, double vy, double vz)
 {
+   std::cout<<" -I- ATTPC2Body : Fixed target position at "<<vx<<"	"<<vy<<"	"<<vz<<std::endl;
+   fIsFixedTargetPos = kTRUE;
    fVx = vx;
    fVy = vy;
    fVz = vz;
@@ -215,15 +217,19 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
 
     if(fIsFixedTargetPos){
           fBeamEnergy = fBeamEnergy_buff;
+          gATVP->SetValidKine(kTRUE);
+          std::cout<<" -I- ATTPC2Body Beam energy (Fixed Target mode) : "<<fBeamEnergy<<std::endl;
 
     }else{
 	   fBeamEnergy = gATVP->GetEnergy();
-	   std::cout<<" -I- ATTPC2Body Residual energy  : "<<gATVP->GetEnergy()<<std::endl;
+	   std::cout<<" -I- ATTPC2Body Residual energy (Active Target mode) : "<<gATVP->GetEnergy()<<std::endl;
     }
 
 
-   if(gATVP->GetEnergy()>0 && gATVP->GetDecayEvtCnt()%2!=0){ //Requires a non zero vertex energy and pre-generated Beam event (not punch thorugh)
+   if(fBeamEnergy>0 && (gATVP->GetDecayEvtCnt()%2!=0 || fIsFixedTargetPos)){ //Requires a non zero vertex energy and pre-generated Beam event (not punch thorugh)
 
+           
+	   
            fPxBeam = gATVP->GetPx(); //TODO: Not used for the final reaction products momentum (Yassid 11/13/2020)
            fPyBeam = gATVP->GetPy();
            fPzBeam = gATVP->GetPz();
@@ -484,7 +490,7 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
 
 
                           // Particle transport begins here
-
+		
 
                           for(Int_t i=0; i<fMult; i++){
 
@@ -521,7 +527,7 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
 				}
 
 
-                      		      if(i>1 && gATVP->GetDecayEvtCnt() && pdgType!=1000500500 && fPType.at(i)=="Ion" ){// TODO: Dirty way to propagate only the products (0 and 1 are beam and target respectively)
+                      		      if(i>1 && (gATVP->GetDecayEvtCnt() || fIsFixedTargetPos)  && pdgType!=1000500500 && fPType.at(i)=="Ion" ){// TODO: Dirty way to propagate only the products (0 and 1 are beam and target respectively)
 
 
                                   			 std::cout << "-I- FairIonGenerator: Generating ions of type "
@@ -555,6 +561,8 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
 
 
                           }
+
+				
 
         }//if residual energy > 0
 

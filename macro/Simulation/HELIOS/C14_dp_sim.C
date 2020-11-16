@@ -1,4 +1,4 @@
-void Mg30_tp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
+void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -7,7 +7,7 @@ void Mg30_tp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   TString outFile ="heliossim.root";
 
   // Parameter file name
-  TString parFile=".heliospar.root";
+  TString parFile="heliospar.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -35,16 +35,10 @@ void Mg30_tp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   cave->SetGeometryFileName("cave.geo");
   run->AddModule(cave);
 
-  //FairModule* magnet = new AtMagnet("Magnet");
-  //run->AddModule(magnet);
-
-  /*FairModule* pipe = new AtPipe("Pipe");
-  run->AddModule(pipe);*/
-
   FairDetector* HELIOS = new AtSiArray("HELIOS", kTRUE);
   HELIOS->SetGeometryFileName("HELIOS_SiArray_v1.0.root");
   //HELIOS->SetModifyGeometry(kTRUE);
-  run->AddModule(ATTPC);
+  run->AddModule(HELIOS);
 
  // ------------------------------------------------------------------------
 
@@ -84,7 +78,7 @@ void Mg30_tp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 	          //ionGen->SetSpotRadius(0,-100,0);
 	          // add the ion generator
 
-	          primGen->AddGenerator(ionGen);
+	          //primGen->AddGenerator(ionGen);
 
   		  //primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track added to the Primary Generator
 		  // primGen->SetTarget(30,0);
@@ -109,7 +103,7 @@ void Mg30_tp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 
 
 	          mult = 4; //Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY (and the number of particles must be the same)
-                  ResEner = 10.0; // For fixed target mode (Si Array) in MeV
+                  ResEner = 100.0; // For fixed target mode (Si Array) in MeV
 
                   // ---- Beam ----
                   Zp.push_back(z); // 40Ar TRACKID=0
@@ -158,6 +152,7 @@ void Mg30_tp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 
 
         ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
+        TwoBody->SetFixedTargetPosition(0.0,0.0,0.0);
         primGen->AddGenerator(TwoBody);
 
 
@@ -189,7 +184,7 @@ void Mg30_tp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
    run->Run(nEvents);
 
   //You can export your ROOT geometry ot a separate file
-  run->CreateGeometryFile("geofile_proto_full.root");
+  run->CreateGeometryFile("geofile_helios_full.root");
   // ------------------------------------------------------------------------
 
   // -----   Finish   -------------------------------------------------------
