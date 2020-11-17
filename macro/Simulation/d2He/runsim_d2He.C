@@ -1,4 +1,4 @@
-void runsim_d2He(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
+void runsim_d2He(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -90,7 +90,9 @@ void runsim_d2He(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
   Double_t zFocus=50.;//cm, z position (beam direction) of the beam spot
   Double_t rHole=2.;//cm, hole radius in the pad plane
 
-  ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,kBeam);
+  //ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,kBeam);
+  //kBeam was set to -1 because the random energy loss is not working for fast beams. In our case this eloss is negligible
+  ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,-1);
   ionGen->SetBeamEmittance(fwhmFocus,angularDiv,zFocus,rHole);
   //ionGen->SetSpotRadius(0,-100,0);
   // add the ion generator

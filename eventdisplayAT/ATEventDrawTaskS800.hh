@@ -108,7 +108,7 @@ class ATEventDrawTaskS800 : public FairTask
     virtual void DrawLvsTheta();
     virtual void DrawPID();
     virtual void DrawPID2();
-    virtual void DrawTEST();
+    //virtual void DrawTEST();
 
 
 
@@ -246,7 +246,7 @@ class ATEventDrawTaskS800 : public FairTask
     TH2F* fLvsTheta;
     TCanvas* fCvsPID;
     TH2F* fPID;
-    TH2F* fTEST;
+    //TH2F* fTEST;
     TCanvas* fCvsPID2;
     TH2F* fPID2;
 

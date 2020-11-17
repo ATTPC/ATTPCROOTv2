@@ -101,7 +101,7 @@ ATTPCIonGenerator::ATTPCIonGenerator(const Char_t* ionName, Int_t mult,
 ATTPCIonGenerator::ATTPCIonGenerator(const char* name,Int_t z, Int_t a, Int_t q, Int_t mult,
 				     Double_t px, Double_t py, Double_t pz, Double_t Ex, Double_t m,
 				     Double_t ener, Double_t eLoss)
-  : fMult(0),          
+  : fMult(0),
     fPx(0.), fPy(0.), fPz(0.),
     fR(0.), fz(0.), fOffset(0.),
     fVx(0.), fVy(0.), fVz(0.),
@@ -116,10 +116,10 @@ ATTPCIonGenerator::ATTPCIonGenerator(const char* name,Int_t z, Int_t a, Int_t q,
   fNomEner = ener;
 
   fMaxEnLoss = eLoss < 0 ? ener : eLoss;
-  
-  //fVx   = vx; 
-  //fVy   = vy; 
-  //fVz   = vz; 
+
+  //fVx   = vx;
+  //fVy   = vy;
+  //fVz   = vz;
   char buffer[20];
   sprintf(buffer, "FairIon%d", fgNIon);
   fIon= new FairIon(buffer, z, a, q,Ex,m);
@@ -143,7 +143,7 @@ ATTPCIonGenerator::ATTPCIonGenerator(const ATTPCIonGenerator& right)
     fR(right.fR), fz(right.fz), fOffset(right.fOffset),
     fVx(right.fVx), fVy(right.fVy), fVz(right.fVz),
     fIon(right.fIon), fQ(right.fQ), fBeamOpt(right.fBeamOpt),
-    fWhmFocus(right.fWhmFocus), fDiv(right.fDiv), fZFocus(right.fZFocus), 
+    fWhmFocus(right.fWhmFocus), fDiv(right.fDiv), fZFocus(right.fZFocus),
     fRHole(right.fRHole)
 {
 }
@@ -175,7 +175,7 @@ void ATTPCIonGenerator::SetMass(Double_t mass) {
 
 // -----   Private method SetEmittance   ----------------------------------
 void ATTPCIonGenerator::SetEmittance() {
- 
+
   Double_t x=0., y=0., xFocus=0., yFocus=0., theta=0., phi=0.;
   Double_t ptot=sqrt(pow(fPx,2) + pow(fPy,2) + pow(fPz,2));
 
@@ -196,7 +196,7 @@ Ex.
         y = yFocus-sqrt(pow(fZFocus,2)+pow(xFocus-x,2))*tan(theta);
   }
   while(sqrt(pow(x,2)+pow(y,2))>fRHole && sqrt(pow(tan(theta),2)+pow(tan(phi),2))>tan(fDiv));
-  
+
   fVx   =x ;
   fVy   =y ;
   fVz   =0. ;
@@ -241,7 +241,7 @@ Bool_t ATTPCIonGenerator::ReadEvent(FairPrimaryGenerator* primGen) {
                 fVz   = fz;
 		break;
 	case 2:
-		SetEmittance();//parameters: fWhmFocus, fDiv, fZFocus, fRHole, fPx, fPy, fPz  
+		SetEmittance();//parameters: fWhmFocus, fDiv, fZFocus, fRHole, fPx, fPy, fPz
 		//changes: fVx, fVy, fVz, fPx, fPy, fPz, d2HeVtx
 		break;
 	default:
@@ -266,7 +266,7 @@ Bool_t ATTPCIonGenerator::ReadEvent(FairPrimaryGenerator* primGen) {
     gATVP->SetRndELoss(Er);
     std::cout<<" Random Energy ATTPCIonGenerator : "<<Er<<std::endl;
   }
-  
+
   for(Int_t i=0; i<fMult; i++)
     primGen->AddTrack(pdgType, fPx, fPy, fPz, fVx, fVy, fVz);
 

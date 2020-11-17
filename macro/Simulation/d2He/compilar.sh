@@ -6,4 +6,3 @@ cd  ../../../build
 make -j3
 source config.sh
 cd $here
-

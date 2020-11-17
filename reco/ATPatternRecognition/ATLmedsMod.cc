@@ -362,12 +362,12 @@ void ATLmedsMod::CalcLmedsMod(ATEvent *event)
           //}
       }
       switch(fVertexMod) {
-  	case 1:
-      		if(tracksSize>1) FindVertex(tracks);
-    		break;
- 	default:
-      		if(tracksSize>0) FindVertexOneTrack(tracks); //find a vertex for each track
-      }
+  	     case 1:
+      		 if(tracksSize>1) FindVertex(tracks);
+    		   break;
+ 	       default:
+      		 if(tracksSize>0) FindVertexOneTrack(tracks); //find a vertex for each track
+         }
     }
 }
 
@@ -471,13 +471,13 @@ void ATLmedsMod::FindVertex(std::vector<ATTrack*> tracks)
 
           TVector3 p1(p[0], p[2], p[4] );//p1
           TVector3 e1(p[1], p[3], p[5] );//d1
-	
+
                     for(Int_t j=i+1; j<tracks.size();j++)
                     {
                         ATTrack* track_f = tracks.at(j);
                         std::vector<Double_t> p_f = track_f->GetFitPar();
                         if(track->GetTrackID() == track_f->GetTrackID()) continue;
-			
+
                         if(p_f.size()==0) continue;
 
 
@@ -489,7 +489,7 @@ void ATLmedsMod::FindVertex(std::vector<ATTrack*> tracks)
                               TVector3 n = e1.Cross(e2);
                               double sdist = fabs( n.Dot(p1-p2)/n.Mag() );
                               TVector3 vertexbuff = ClosestPoint2Lines(e1, p1, e2, p2);
-                              
+
                               if(sdist < fLineDistThreshold){
                                 TVector3 meanVer = vertexbuff;
                                 double radius = sqrt(vertexbuff.X()*vertexbuff.X() + vertexbuff.Y()*vertexbuff.Y());
@@ -501,7 +501,7 @@ void ATLmedsMod::FindVertex(std::vector<ATTrack*> tracks)
                                   fVertex_1.SetXYZ(vertexbuff.X(),vertexbuff.Y(),vertexbuff.Z());
                                   fVertex_2.SetXYZ(vertexbuff.X(),vertexbuff.Y(),vertexbuff.Z());
                                   fVertex_mean = vertexbuff;
-				
+
                                   if ( !IsFilled[track->GetTrackID()] ){
                                     //std::cout<<" Add track  "<<track->GetTrackID()<<std::endl;
                                     IsFilled[track->GetTrackID()] = kTRUE;
@@ -532,7 +532,7 @@ void ATLmedsMod::FindVertex(std::vector<ATTrack*> tracks)
                                       fVertex_1.SetXYZ(vertexbuffav.X(),vertexbuffav.Y(),vertexbuffav.Z());
                                       fVertex_2.SetXYZ(vertexbuffav.X(),vertexbuffav.Y(),vertexbuffav.Z());
                                       fVertex_mean = vertexbuffav;
-                                   
+
                                       if ( !IsFilled[track->GetTrackID()] ){
                                         //std::cout<<" Add track  "<<track->GetTrackID()<<std::endl;
                                         IsFilled[track->GetTrackID()] = kTRUE;

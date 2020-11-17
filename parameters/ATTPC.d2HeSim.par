@@ -39,7 +39,7 @@ Fano:Double_t                 0.24   # Fano factor of the gas
 CoefL:Double_t               0.025   # Longitudal coefficient of diffusion [cm^-0.5]
 CoefT:Double_t               0.025   # Transverse coefficient of diffusion [cm^-0.5]
 Gain:Double_t                 1000   # Average gain of micromegas
-GETGain:Double_t              1000   # Gain of the GET electronics in fC
+GETGain:Double_t              100000   # Gain of the GET electronics in fC
 PeakingTime:Int_t              720   # Electronic peaking time in ns
 MaxRange:Double_t           1000.0   # Maximum range from Beam energy in mm
 ################################################################################

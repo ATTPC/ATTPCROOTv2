@@ -18,6 +18,7 @@ ATRansacTask::ATRansacTask()
 
   kIsPersistence = kFALSE;
   kIsFullMode    = kFALSE;
+  kIsReprocess   = kFALSE;
 
   fRANSACModel = pcl::SACMODEL_LINE;
   fRANSACThreshold = 5.0;

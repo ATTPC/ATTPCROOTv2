@@ -33,7 +33,7 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
   FairRunAna* fRun = new FairRunAna();
   fRun -> SetInputFile(mcFile);
   //fRun -> SetOutputFile("outputFiles/attpcdigi_d2He_"+str_nEvents+".root");
-  fRun -> SetOutputFile("outputFiles/attpcdigi_d2He_"+str_nEvents+"_ran.root");
+  fRun -> SetOutputFile("outputFiles/attpcdigi_d2He_test.root");
   //fRun -> SetOutputFile("outputFiles/attpcdigi_d2He_1e6pps_lmed.root");
 
   FairRuntimeDb* rtdb = fRun->GetRuntimeDb();
@@ -64,7 +64,7 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
 
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(1);//10
+  //psaTask -> SetThreshold(1);//10
    //psaTask -> SetThreshold(0.1);
 
 
@@ -83,9 +83,9 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
   RandTask->SetTiltAngle(0.0);
   RandTask->SetDistanceThreshold(15.0);
   RandTask->SetMinHitsLine(7);
-  RandTask->SetAlgorithm(0); // 0=PCL ransac; 1=Homemade Ransac; 2=Homemade Mlesac; 3=Homemade Lmeds;
+  RandTask->SetAlgorithm(3); // 0=PCL ransac; 1=Homemade Ransac; 2=Homemade Mlesac; 3=Homemade Lmeds;
   RandTask->SetRanSamMode(3);// 0=Uniform; 1=Gaussian; 2=Weighted; 3=Gaussian+Weighted
-  //RandTask->SetVertexMode(1);
+  RandTask->SetVertexMode(1); //set to 1 for two tracks same vertex
 
 
 /*
