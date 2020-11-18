@@ -105,7 +105,10 @@ fRANSACAlg(0),
 fCvsLvsTheta(0),
 fLvsTheta(0),
 fCvsPID(0),
-fPID(0)
+fPID(0),
+fCvsPID2(0),
+fPID2(0)
+
 {
 
     //fAtMapPtr = new AtTpcMap();
@@ -217,8 +220,10 @@ ATEventDrawTaskS800::Init()
     fTrackingEventAnaArray = (TClonesArray*) ioMan->GetObject("ATTrackingEventAna");
     if(fTrackingEventAnaArray) LOG(INFO)<<cGREEN<<"Tracking Event Analysis Array Found."<<cNORMAL<<FairLogger::endl;
 
-    fS800CalcArray = (TClonesArray*) ioMan->GetObject("s800cal");
-    if(fS800CalcArray) LOG(INFO)<<cGREEN<<"S800Calc Array Found."<<cNORMAL<<FairLogger::endl;
+    fS800Calc = (S800Calc*) ioMan->GetObject("s800cal");
+    if(fS800Calc) LOG(INFO)<<cGREEN<<"S800Calc Found."<<cNORMAL<<FairLogger::endl;
+    //fS800CalcArray = (TClonesArray*) ioMan->GetObject("s800cal");
+    //if(fS800CalcArray) LOG(INFO)<<cGREEN<<"S800Calc Array Found."<<cNORMAL<<FairLogger::endl;
 
     // gROOT->GetListOfSpecials()->Add(fRawEventArray);
     //fRawEventArray->SetName("ATRawEvent");
@@ -256,6 +261,11 @@ ATEventDrawTaskS800::Init()
     DrawLvsTheta();
     fCvsPID = fEventManager->GetCvsPID();
     DrawPID();
+    //DrawTEST();
+    fCvsPID2 = fEventManager->GetCvsPID2();
+    DrawPID2();
+
+
     //fCvsThetaxPhi = fEventManager->GetCvsThetaxPhi();
     //DrawThetaxPhi();
     //fCvsMC_XY = fEventManager->GetCvsMC_XY();
@@ -305,7 +315,8 @@ ATEventDrawTaskS800::Exec(Option_t* option)
     if(fHitArray){ DrawHitPoints(); DrawMeshSpace();}
     if(fProtoEventArray) DrawProtoSpace();
     if(fHoughSpaceArray && fUnpackHough ) DrawHSpace();
-    if(fS800CalcArray){ DrawS800(); }
+    if(fS800Calc){ DrawS800(); }
+
 
     gEve -> Redraw3D(kFALSE);
 
@@ -332,28 +343,74 @@ void
 ATEventDrawTaskS800::DrawS800()
 {
 
-  fS800Calc = dynamic_cast<S800Calc*> (fS800CalcArray->At(0));
+  //std::cout<<"draw func "<<fS800Calc->GetIC()->GetSum()<<std::endl;
+
+  //fS800Calc = dynamic_cast<S800Calc*> (fS800CalcArray->At(0));
   if(fS800Calc->GetIsInCut()){
-    Double_t x0_corr_tof = 0.101259;
-    Double_t afp_corr_tof = 1177.02;
-    Double_t afp_corr_dE = 61.7607;
-    Double_t x0_corr_dE = -0.0403;
+    Double_t x0_corr_tof = 0.;
+    Double_t afp_corr_tof = 0.;
+    Double_t afp_corr_dE = 0.;
+    Double_t x0_corr_dE = 0.;
     Double_t rf_offset = 0.0;
-    Double_t S800_rf = fS800Calc->GetMultiHitTOF()->GetFirstRfHit();
-    Double_t S800_x0 = fS800Calc->GetCRDC(0)->GetXfit();
-    Double_t S800_x1 = fS800Calc->GetCRDC(1)->GetXfit();
-    Double_t S800_y0 = fS800Calc->GetCRDC(0)->GetY();
-    Double_t S800_y1 = fS800Calc->GetCRDC(1)->GetY();
-    Double_t S800_E1up = fS800Calc->GetSCINT(0)->GetDEup(); //check this par
-    Double_t S800_E1down = fS800Calc->GetSCINT(0)->GetDEdown(); //check this par
-    Double_t S800_tof = S800_rf;//might change
+    Double_t corrGainE1up = 1;
+    Double_t corrGainE1down = 1;
+    Double_t ObjCorr1C1 = 100.; //70
+    Double_t ObjCorr1C2 = 0.021; //0.0085
+
+   // Double_t S800_timeRf = fS800Calc->GetMultiHitTOF()->GetFirstRfHit();
+   // Double_t S800_timeE1up = fS800Calc->GetMultiHitTOF()->GetFirstE1UpHit();
+   // Double_t S800_timeE1down = fS800Calc->GetMultiHitTOF()->GetFirstE1DownHit();
+   // Double_t S800_timeE1 = sqrt( (corrGainE1up*S800_timeE1up) * (corrGainE1down*S800_timeE1down) );
+   // Double_t S800_timeXf = fS800Calc->GetMultiHitTOF()->GetFirstXfHit();
+   // Double_t S800_timeObj = fS800Calc->GetMultiHitTOF()->GetFirstObjHit();
+
+//----------- New 10/01 -------------------------------------
+    Int_t CondMTDCXfObj = 0;
+    vector<Float_t> S800_timeMTDCObj = fS800Calc->GetMultiHitTOF()->GetMTDCObj();
+    vector<Float_t> S800_timeMTDCXf = fS800Calc->GetMultiHitTOF()->GetMTDCXf();
+    Float_t S800_timeObjSelect=-999;
+    Float_t S800_timeXfSelect=-999;
+    Float_t ObjCorr=-999;
+
+    for(int k=0; k<S800_timeMTDCXf.size(); k++){
+    	if(S800_timeMTDCXf.at(k)>140 && S800_timeMTDCXf.at(k)<230) S800_timeXfSelect=S800_timeMTDCXf.at(k);
+    }
+    for(int k=0; k<S800_timeMTDCObj.size(); k++){
+    	if(S800_timeMTDCObj.at(k)>-115 && S800_timeMTDCObj.at(k)<-20) S800_timeObjSelect=S800_timeMTDCObj.at(k);
+    }
+
+    Double_t XfObj_tof = S800_timeXfSelect - S800_timeObjSelect;
+    if(S800_timeXfSelect!=-999 && S800_timeObjSelect!=-999) {
+    	 XfObj_tof=S800_timeXfSelect-S800_timeObjSelect;
+	 CondMTDCXfObj=1;
+    }
+    Double_t S800_ICSum = fS800Calc->GetIC()->GetSum();
+//----------- New 10/01 -------------------------------------
+
+    Double_t S800_x0 = fS800Calc->GetCRDC(0)->GetX();
+    Double_t S800_x1 = fS800Calc->GetCRDC(1)->GetX();
+    //Double_t S800_y0 = fS800Calc->GetCRDC(0)->GetY();
+    //Double_t S800_y1 = fS800Calc->GetCRDC(1)->GetY();
+
+    //Double_t S800_E1up = fS800Calc->GetSCINT(0)->GetDEup();
+    //Double_t S800_E1down = fS800Calc->GetSCINT(0)->GetDEdown();
+
+    //Double_t S800_tof = S800_timeObj - S800_timeE1;
+
     Double_t S800_afp = atan( (S800_x1-S800_x0)/1073. );
-    Double_t S800_bfp = atan( (S800_y1-S800_y0)/1073. );
-    Double_t S800_tofCorr = S800_tof + x0_corr_tof*S800_x0 + afp_corr_tof*S800_afp - rf_offset;
-    Double_t S800_dE = fS800Calc->GetSCINT(0)->GetDE();//check if is this scint (0)
-    //Double_t S800_dE = sqrt( (0.6754*S800_E1up) * ( 1.0 * S800_E1down ) );
-    Double_t S800_dECorr = S800_dE + afp_corr_dE*S800_afp + x0_corr_dE*fabs(S800_x0);
-    fPID->Fill(S800_tofCorr,S800_dECorr);
+    //Double_t S800_bfp = atan( (S800_y1-S800_y0)/1073. );
+    //Double_t S800_tofCorr = S800_tof + x0_corr_tof*S800_x0 + afp_corr_tof*S800_afp;// - rf_offset;
+    //Double_t S800_dE = fS800Calc->GetSCINT(0)->GetDE();//check if is this scint (0)
+    //Double_t S800_dE = sqrt( (corrGainE1up*S800_E1up) * (corrGainE1down* S800_E1down ) );
+    //Double_t S800_dECorr = S800_dE + afp_corr_dE*S800_afp + x0_corr_dE*fabs(S800_x0);
+
+    if(CondMTDCXfObj && std::isnan(S800_ICSum)==0 && std::isnan(S800_afp)==0 && std::isnan(S800_x0)==0) ObjCorr = S800_timeObjSelect + ObjCorr1C1*S800_afp + ObjCorr1C2*S800_x0;
+
+    //std::cout<<"draw func in cut "<<S800_timeObjSelect<<" "<<XfObj_tof<<" "<<S800_ICSum<<std::endl;
+
+	if(ObjCorr != -999 )fPID->Fill(ObjCorr,XfObj_tof);
+	if(ObjCorr != -999 )fPID2->Fill(ObjCorr,S800_ICSum);
+
   }
 
 }
@@ -361,6 +418,8 @@ ATEventDrawTaskS800::DrawS800()
 void
 ATEventDrawTaskS800::DrawHitPoints()
 {
+
+  //std::cout<<"draw hit Points "<<fHitArray->At(0)<<std::endl;
 
     Float_t *MeshArray;
     fMesh->Reset(0);
@@ -492,36 +551,42 @@ ATEventDrawTaskS800::DrawHitPoints()
               fRansacMod = dynamic_cast<ATRansacMod*> (fRansacArray->At(0));
               TrackCand = fRansacMod->GetTrackCand();
               TVector3 Vertex1    = fRansacMod->GetVertex1();
+              /*TVector3 Vertex1    = fRansacMod->GetVertex1();
               TVector3 Vertex2    = fRansacMod->GetVertex2();
               Double_t VertexTime = fRansacMod->GetVertexTime();
               std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z : "<<Vertex1.Z()<<std::endl;
               std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z : "<<Vertex2.Z()<<std::endl;
               std::cout<<" Vertex Time : "<<VertexTime<<std::endl;
               std::cout<<" Vertex Mean - X : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z : "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
+              */
             }
 
             if(fRANSACAlg==2){
               fMlesacMod = dynamic_cast<ATMlesacMod*> (fRansacArray->At(0));
               TrackCand = fMlesacMod->GetTrackCand();
-              TVector3 Vertex1    = fMlesacMod->GetVertex1();
+              //TVector3 Vertex1    = fRansacMod->GetVertex1();
+              /*TVector3 Vertex1    = fMlesacMod->GetVertex1();
               TVector3 Vertex2    = fMlesacMod->GetVertex2();
               Double_t VertexTime = fMlesacMod->GetVertexTime();
               std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z : "<<Vertex1.Z()<<std::endl;
               std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z : "<<Vertex2.Z()<<std::endl;
               std::cout<<" Vertex Time : "<<VertexTime<<std::endl;
               std::cout<<" Vertex Mean - X : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z : "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
+              */
             }
 
             if(fRANSACAlg==3){
               fLmedsMod = dynamic_cast<ATLmedsMod*> (fRansacArray->At(0));
               TrackCand = fLmedsMod->GetTrackCand();
-              TVector3 Vertex1    = fLmedsMod->GetVertex1();
+              //TVector3 Vertex1    = fRansacMod->GetVertex1();
+              /*TVector3 Vertex1    = fLmedsMod->GetVertex1();
               TVector3 Vertex2    = fLmedsMod->GetVertex2();
               Double_t VertexTime = fLmedsMod->GetVertexTime();
               std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z : "<<Vertex1.Z()<<std::endl;
               std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z : "<<Vertex2.Z()<<std::endl;
               std::cout<<" Vertex Time : "<<VertexTime<<std::endl;
               std::cout<<" Vertex Mean - X : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z : "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
+              */
             }
 
 
@@ -633,13 +698,24 @@ ATEventDrawTaskS800::DrawHitPoints()
                 //---------------get info from tracks
                 TVector3	LastPoint = track.GetLastPoint();
                 TVector3	tvertex = track.GetTrackVertex();
-                std::pair<Double_t,Double_t> pThePhi  = track.GetThetaPhi(tvertex, LastPoint);
+                std::pair<Double_t,Double_t> pThePhi  = track.GetThetaPhi(tvertex, LastPoint,1);
                 Double_t tTheta =   pThePhi.first * 180./3.1415;
                 TVector3 tLeng = LastPoint - tvertex;
                 Double_t tLength = tLeng.Mag();
                 fLvsTheta->Fill(tTheta,tLength);
+                //multiple vertex per event
+                fVertex = new TEvePointSet(TString::Format("Vertex%d", j),1, TEvePointSelectorConsumer::kTVT_XYZ);
+                fVertex -> SetOwnIds(kTRUE);
+                fVertex -> SetMarkerStyle(34);
+                fVertex -> SetMarkerSize(2.0);
+                fVertex -> SetMarkerColor(kViolet);
+                fVertex -> SetNextPoint(tvertex.X()*0.1, tvertex.Y()*0.1, tvertex.Z()*0.1);
+                fVVertex.push_back(fVertex);
+                std::cout<<cGREEN<<" Vertex"<< j<<" - X : "<<tvertex.X()<<" - Y : "<<tvertex.Y()<<"  - Z : "<<tvertex.Z()<<cNORMAL<<std::endl;
 
             }
+            //one vertex per event
+            /*
 	    fVertex = new TEvePointSet("Vertex",1, TEvePointSelectorConsumer::kTVT_XYZ);
 	    fVertex -> SetOwnIds(kTRUE);
 	    fVertex -> SetMarkerStyle(34);
@@ -649,7 +725,7 @@ ATEventDrawTaskS800::DrawHitPoints()
       if(fRANSACAlg==1) fVertex -> SetNextPoint(fRansacMod -> GetVertexMean().x()*0.1, fRansacMod -> GetVertexMean().y()*0.1, fRansacMod -> GetVertexMean().z()*0.1);
       if(fRANSACAlg==2) fVertex -> SetNextPoint(fMlesacMod -> GetVertexMean().x()*0.1, fMlesacMod -> GetVertexMean().y()*0.1, fMlesacMod -> GetVertexMean().z()*0.1);
       if(fRANSACAlg==3) fVertex -> SetNextPoint(fLmedsMod -> GetVertexMean().x()*0.1, fLmedsMod -> GetVertexMean().y()*0.1, fLmedsMod -> GetVertexMean().z()*0.1);
-
+      */
         }
 
 
@@ -911,10 +987,11 @@ ATEventDrawTaskS800::DrawHitPoints()
 
         if(fIsLinearHough || fRansacArray){
             if(fLineNum>0) for(Int_t i=0;i<fLineNum;i++) gEve -> AddElement(fLineArray[i]);
-            //Lines plto together with data points
+            //Lines plot together with data points
             gEve -> AddElement(fHitSet);
             gEve -> AddElement(fhitBoxSet);
-	    if(fVertex) gEve -> AddElement(fVertex);
+            for(int w=0;w<fVVertex.size();w++) gEve -> AddElement(fVVertex.at(w));
+	          //if(fVertex) gEve -> AddElement(fVertex);
         }
 
         if(fPatternEventArray)
@@ -1207,13 +1284,21 @@ ATEventDrawTaskS800::Reset()
              fLine->Reset();
              gEve -> RemoveElement(fLine,fEventManager);
              }*/
-            if(fVertex)
+             //one vertex
+            /*if(fVertex)
             {
               //fVertex->Reset();
               gEve -> RemoveElement(fVertex, fEventManager);
 	      fVertex = nullptr;
-            }
-
+      }*/
+      //multiple vertex
+      if(fVVertex.size()>0)
+      {
+        //fVertex->Reset();
+        for(int w=0;w<fVVertex.size();w++) gEve -> RemoveElement(fVVertex.at(w), fEventManager);
+        fVertex = nullptr;
+        fVVertex.clear();
+      }
 
 
             if(fLineNum>0){
@@ -1535,13 +1620,26 @@ ATEventDrawTaskS800::DrawPID()
 {
 
     fCvsPID->cd();
-    fPID = new TH2F("PID","PID",180,0,180,500,0,1030);
+    //fPID = new TH2F("PID","PID",3000,-250,500,2000,0,500);
+fPID = new TH2F("PID","PID",500,-150,50,300,230,260);
     //fLvsTheta->SetMarkerStyle(22);
     //fLvsTheta->SetMarkerColor(kRed);
     fPID -> Draw("colz");
 
 }
 
+void
+ATEventDrawTaskS800::DrawPID2()
+{
+
+    fCvsPID2->cd();
+    //fPID2 = new TH2F("PID2","PID2",3000,-250,500,2000,0,500);
+fPID2 = new TH2F("PID2","PID2",500,-150,50,1000,1400,2200);
+    //fLvsTheta->SetMarkerStyle(22);
+    //fLvsTheta->SetMarkerColor(kRed);
+    fPID2 -> Draw("colz");
+
+}
 
 void
 ATEventDrawTaskS800::DrawThetaxPhi()
@@ -1810,6 +1908,16 @@ ATEventDrawTaskS800::UpdateCvsPID()
 
 }
 
+void
+ATEventDrawTaskS800::UpdateCvsPID2()
+{
+
+
+    fCvsPID2 -> Modified();
+    fCvsPID2 -> Update();
+
+
+}
 
 void
 ATEventDrawTaskS800::UpdateCvsThetaxPhi()

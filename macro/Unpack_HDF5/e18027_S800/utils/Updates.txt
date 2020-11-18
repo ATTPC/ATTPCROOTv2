@@ -1,0 +1,49 @@
+--------------------------------------------------------------------------------
+Server where we can run the unpacker in parallel:
+@n103.compute.nscl.msu.edu
+(to run the code also @flagtail should work, but it is slower than the node.
+The ATTPCROOTv2 do not work on fishtank : walleye, steelhead, pike..)
+
+command to excecute in bckg :
+root -b -q "unpack_new.C(2060,60)" >& unpack_run60.log &
+
+script to unpack several runs: bash_unpack.sh , update the run list in the script.
+then the files are merged with hadd mergedFile.root fileToMerge1.root fileToMerge2.root ...
+--------------------------------------------------------------------------------
+
+General comments:
+
+Once the s800 .evt files are copied to fishtank they will be automatically unpacked
+
+Before running the unpack_new macro, be sure that the h5 file as been transferred
+from the AT-TPC server to fishtank (/mnt/daqtesting/e18027_attpc_transfer/h5/)
+and the S800 root file is in (/mnt/analysis/e18027/rootS800/cal/).
+
+For the first run of the experiment we have to find the MergeEvt->SetTsDelta(...)
+parameter in order to match the timestamps. It is a constant offset between the
+timestamps of the two daq. The Glom window can stay at 2, this parameter is the
+variable offset between the timestamps this should not be higher than 2.
+
+With the first run we can create the gates on the PID.
+For that you can use the macro PIDS800Corr.C (e.g. root -q "PIDS800Corr.C(2060)"),
+it creates a root file in rootPID/ .
+You can use the tree leaf to draw the different PID and gate as you want.
+Type .x ../save_cut.C("CUTNAME")to save your cut in the "cuts" directory.
+Then in set the path of the gates in unpack_new, ex:
+MergeEvt->SetPID1cut("cuts/GATENAME1.root"); //gate for the beam PID
+MergeEvt->SetPID2cut("cuts/GATENAME2.root"); //gate for the ejectile PID
+
+-> Some adjustments in the code may have to be done, depending which PID your are
+interested
+
+To run the visualizer e.g. root "run_eve.C(2060,60)"
+Make sure the fitting algorithm is the same as the one used in unpack_new
+
+
+There is an analysis skeleton macro: analysis.C (e.g. root -q "analysis.C(2060,60)")
+The analyzed runs are stored in /mnt/analysis/e18008/rootAna/.
+
+The S800 variables obtain with inverse map (e.g. angle and position in dispersive
+direction at the target) in the analysis macro are not usable for now.
+But that is something that will probably help, looking for correlations between
+the position-angle reconstructed with the inverse map, and the track vertex position.

@@ -72,6 +72,7 @@ class ATEventManagerS800 : public TEveEventManager
     TCanvas* GetCvsMC_Z()       { return fCvsMC_Z; }
     TCanvas* GetCvsLvsTheta()      { return fCvsLvsTheta; }
     TCanvas* GetCvsPID()      { return fCvsPID; }
+    TCanvas* GetCvsPID2()      { return fCvsPID2; }
 
     Bool_t GetDrawAllPad() { return kDrawAllOn; }
     Bool_t GetDrawHoughSpace() { return kDrawHoughOn; }
@@ -88,6 +89,10 @@ class ATEventManagerS800 : public TEveEventManager
     TCanvas* fCvsPIDFull;
     TH2F* fPIDFull;
     virtual void DrawPIDFull();
+    virtual void FillPIDFull();
+    TCanvas* fCvsPID2Full;
+    TH2F* fPID2Full;
+    virtual void DrawPID2Full();
 
   private :
     FairRootManager* fRootManager;
@@ -121,6 +126,7 @@ class ATEventManagerS800 : public TEveEventManager
     TCanvas* fCvsMC_Z;
     TCanvas* fCvsLvsTheta;
     TCanvas* fCvsPID;
+    TCanvas* fCvsPID2;
 
 
     TGTextButton *drawallpad;

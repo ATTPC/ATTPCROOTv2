@@ -316,10 +316,10 @@ static double coeff_hodo[32] = {100000000, 1164, 887, 100000000, 824, 1728, 826,
                         vertexY = vertexMean.Y();
                         vertexZ = vertexMean.Z();
 
-                        theta1 = trackCand.at(0).GetThetaPhi(vertexMean, lastPoint1).first;
-                        theta2 = trackCand.at(1).GetThetaPhi(vertexMean, lastPoint2).first;
-                        phi1 = trackCand.at(0).GetThetaPhi(vertexMean, lastPoint1).second;
-                        phi2 = trackCand.at(1).GetThetaPhi(vertexMean, lastPoint2).second;
+                        theta1 = trackCand.at(0).GetThetaPhi(vertexMean, lastPoint1,-1).first;
+                        theta2 = trackCand.at(1).GetThetaPhi(vertexMean, lastPoint2,-1).first;
+                        phi1 = trackCand.at(0).GetThetaPhi(vertexMean, lastPoint1,-1).second;
+                        phi2 = trackCand.at(1).GetThetaPhi(vertexMean, lastPoint2,-1).second;
 
                         std::vector<Double_t> fitPar1 = trackCand.at(0).GetFitPar();
                         std::vector<Double_t> fitPar2 = trackCand.at(1).GetFitPar();

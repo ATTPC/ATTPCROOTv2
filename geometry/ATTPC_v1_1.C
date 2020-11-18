@@ -39,7 +39,7 @@ const Float_t Z_Distance = 10;
 
 // Silicon box for both module types
 const Float_t tpc_diameter = 50.;
-const Float_t drift_length = 120.;
+const Float_t drift_length = 100.;
 
 
 // some global variables

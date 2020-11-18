@@ -2,8 +2,7 @@
 
 here=$PWD
 cd  ../../../build
-#cmake ../
+cmake ../
 make -j3
 source config.sh
 cd $here
-

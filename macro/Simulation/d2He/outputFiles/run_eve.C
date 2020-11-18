@@ -1,5 +1,5 @@
 //void run_eve(TString  InputDataFile = "attpcdigi_d2He_1000.root",TString  OutputDataFile = "output.reco_display.root", TString unpackDir="/Unpack_GETDecoder2/")
-void run_eve(TString  InputDataFile = "attpcdigi_d2He_1e6pps_ran.root",TString  OutputDataFile = "output.reco_display.root")
+void run_eve(TString  InputDataFile = "attpcdigi_d2He_test.root",TString  OutputDataFile = "output.reco_display.root")
 {
   FairLogger *fLogger = FairLogger::GetLogger();
   fLogger -> SetLogToScreen(kTRUE);
@@ -20,7 +20,6 @@ void run_eve(TString  InputDataFile = "attpcdigi_d2He_1e6pps_ran.root",TString  
 
   FairRuntimeDb* rtdb = fRun->GetRuntimeDb();
   FairParRootFileIo* parIo1 = new FairParRootFileIo();
-  //parIo1->open("param.dummy.root");
   rtdb->setFirstInput(parIo1);
 
   FairRootManager* ioman = FairRootManager::Instance();
@@ -31,17 +30,9 @@ void run_eve(TString  InputDataFile = "attpcdigi_d2He_1e6pps_ran.root",TString  
   eve->SetMultiHit(100); //Set the maximum number of multihits in the visualization
   eve->SetSaveTextData();
   //eve->UnpackHoughSpace();
-  eve->SetAlgorithm(1); // 0=PCL ransac; 1=Homemade Ransac; 2=Homemade Mlesac; 3=Homemade Lmeds;
-
-  //----------------------Traks and points -------------------------------------
-  //FairMCTracks    *Track     = new FairMCTracks("Monte-Carlo Tracks");
-  //FairMCPointDraw *AtTpcPoints = new FairMCPointDraw("AtTpcPoint", kBlue, kFullSquare);
-
-
-
+  // eve->SetAlgorithm(3); // 0=PCL ransac; 1=Homemade Ransac; 2=Homemade Mlesac; 3=Homemade Lmeds;
+  eve->SetAlgorithm(3); // 0=PCL ransac; 1=Homemade Ransac; 2=Homemade Mlesac; 3=Homemade Lmeds;
 
   eveMan->AddTask(eve);
-  //eveMan->AddTask(Track);
-  //eveMan->AddTask(AtTpcPoints);
   eveMan->Init();
 }

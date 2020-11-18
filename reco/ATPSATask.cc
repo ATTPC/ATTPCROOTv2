@@ -194,7 +194,7 @@ ATPSATask::Exec(Option_t *opt)
   }
 
 
-  //std::cout << "PSA events  "<<event->GetNumHits()  << '\n';
+  // std::cout << "PSA events  "<<event->GetNumHits()  << '\n';
 }
 
 
