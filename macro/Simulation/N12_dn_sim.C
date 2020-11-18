@@ -1,4 +1,4 @@
-void N12_dn_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
+void N12_dn_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");

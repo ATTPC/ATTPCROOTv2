@@ -3,6 +3,7 @@
 #include "AtSiArrayPoint.h"
 #include "AtSiArrayGeo.h"
 #include "AtSiArrayGeoPar.h"
+#include "ATVertexPropagator.h"
 
 #include "FairVolume.h"
 #include "FairGeoVolume.h"
@@ -44,6 +45,7 @@ AtSiArray::AtSiArray()
     fAtSiArrayPointCollection(new TClonesArray("AtSiArrayPoint")),
     fELossAcc(-1)
 {
+//LOG(INFO)<<" AtSiArray detector initialized ";
 }
 
 AtSiArray::AtSiArray(const char* name, Bool_t active)
@@ -59,6 +61,7 @@ AtSiArray::AtSiArray(const char* name, Bool_t active)
     fAtSiArrayPointCollection(new TClonesArray("AtSiArrayPoint")),
     fELossAcc(-1)
 {
+//LOG(INFO)<<" AtSiArray detector initialized ";
 }
 
 AtSiArray::~AtSiArray()
@@ -81,39 +84,155 @@ Bool_t  AtSiArray::ProcessHits(FairVolume* vol)
 {
   /** This method is called from the MC stepping */
 
+  AtStack* stack = static_cast<AtStack*>(TVirtualMC::GetMC()->GetStack());
+  std::pair<Int_t,Int_t> AZ;
+  AZ = DecodePdG(gMC->TrackPid());
+  fVolName = gMC->CurrentVolName();
+  Int_t VolumeID;
+
     LOG(debug) << "In AtSiArray::ProcessHits";
     // Set parameters at entrance of volume. Reset ELoss.
     if (TVirtualMC::GetMC()->IsTrackEntering()) {
+
         fELoss = 0.;
         fTime = TVirtualMC::GetMC()->TrackTime() * 1.0e09;
         fLength = TVirtualMC::GetMC()->TrackLength();
-        TVirtualMC::GetMC()->TrackPosition(fPos);
-        TVirtualMC::GetMC()->TrackMomentum(fMom);
+        TVirtualMC::GetMC()->TrackPosition(fPosIn);
+        TVirtualMC::GetMC()->TrackMomentum(fMomIn);
+
+         
+         std::cout<<" AtSiArray: Track is entering "<<"\n";
+         LOG(INFO)<<" HELIOS: First hit in Volume " <<fVolName<< FairLogger::endl;
+         LOG(INFO)<<" Particle : "<<gMC->ParticleName(gMC->TrackPid())<<FairLogger::endl;
+         LOG(INFO)<<" PID PdG : "<<gMC->TrackPid()<<FairLogger::endl;
+         LOG(INFO)<<" Atomic Mass : "<<AZ.first<<FairLogger::endl;
+         LOG(INFO)<<" Atomic Number : "<<AZ.second<<FairLogger::endl;
+         LOG(INFO)<<" Volume ID "<<gMC->CurrentVolID(VolumeID)<<FairLogger::endl;
+         LOG(INFO)<<" Track ID : "<<fTrackID<<FairLogger::endl;
+         LOG(INFO)<<" Position In : "<<fPosIn.X()<<" "<<fPosIn.Y()<<"  "<<fPosIn.Z()<<std::endl;
+         LOG(INFO)<<" Position Out : "<<fPosOut.X()<<" "<<fPosOut.Y()<<"  "<<fPosOut.Z()<<std::endl;
+         LOG(INFO)<<" Momentum In: "<<fMomIn.X()<<" "<<fMomIn.Y()<<"  "<<fMomIn.Z()<<std::endl;
+         //LOG(INFO)<<" Total relativistic energy " <<gMC->Etot()<< FairLogger::endl;
+         //LOG(INFO)<<" Mass of the Tracked particle (gAVTP) : "<<gATVP->GetBeamMass()<<std::endl;
+         //LOG(INFO)<<" Mass of the Tracked particle (gMC) : "<<gMC->TrackMass()<<std::endl;
+         //LOG(INFO)<<" Initial energy of the current particle in this volume : "<<((gMC->Etot() - gMC->TrackMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
+
     }
 
     // Sum energy loss for all steps in the active volume
     fELoss += TVirtualMC::GetMC()->Edep();
+    gMC->TrackPosition(fPosIn);
+    gMC->TrackMomentum(fMomIn);
+    fTrackID  = gMC->GetStack()->GetCurrentTrackNumber();
+    fVolumeID = vol->getMCid();
+    fTime = gMC->TrackTime() * 1.0e09;
+    fLength = gMC->TrackLength();
 
     // Create AtSiArrayPoint at exit of active volume
     if (TVirtualMC::GetMC()->IsTrackExiting() || TVirtualMC::GetMC()->IsTrackStop()
         || TVirtualMC::GetMC()->IsTrackDisappeared()) {
         fTrackID = TVirtualMC::GetMC()->GetStack()->GetCurrentTrackNumber();
         fVolumeID = vol->getMCid();
-        if (fELoss == 0.) {
+        TVirtualMC::GetMC()->TrackPosition(fPosOut);
+        TVirtualMC::GetMC()->TrackMomentum(fMomOut);
+        
+        /*if (fELoss == 0.) {
             return kFALSE;
+        }*/
+
+	
+
+        if (gMC->IsTrackExiting())
+        {
+
+
+            const Double_t* oldpos;
+            const Double_t* olddirection;
+            Double_t newpos[3];
+            Double_t newdirection[3];
+            Double_t safety;
+
+            gGeoManager->FindNode(fPosOut.X(), fPosOut.Y(), fPosOut.Z());
+            oldpos = gGeoManager->GetCurrentPoint();
+            olddirection = gGeoManager->GetCurrentDirection();
+
+            for (Int_t i = 0; i < 3; i++)
+            {
+                newdirection[i] = -1 * olddirection[i];
+            }
+
+            gGeoManager->SetCurrentDirection(newdirection);
+            // TGeoNode *bla = gGeoManager->FindNextBoundary(2);
+            safety = gGeoManager->GetSafeDistance();
+
+            gGeoManager->SetCurrentDirection(-newdirection[0], -newdirection[1], -newdirection[2]);
+
+            for (Int_t i = 0; i < 3; i++)
+            {
+                newpos[i] = oldpos[i] - (3 * safety * olddirection[i]);
+            }
+
+            fPosOut.SetX(newpos[0]);
+            fPosOut.SetY(newpos[1]);
+            fPosOut.SetZ(newpos[2]);
+
+            std::cout<<" AtSiArray: Track is exiting "<<"\n";
+            LOG(INFO)<<" HELIOS: First hit in Volume " <<fVolName<< FairLogger::endl;
+            LOG(INFO)<<" Particle : "<<gMC->ParticleName(gMC->TrackPid())<<FairLogger::endl;
+            LOG(INFO)<<" PID PdG : "<<gMC->TrackPid()<<FairLogger::endl;
+            LOG(INFO)<<" Atomic Mass : "<<AZ.first<<FairLogger::endl;
+            LOG(INFO)<<" Atomic Number : "<<AZ.second<<FairLogger::endl;
+            LOG(INFO)<<" Volume ID "<<gMC->CurrentVolID(VolumeID)<<FairLogger::endl;
+            LOG(INFO)<<" Track ID : "<<fTrackID<<FairLogger::endl;
+            LOG(INFO)<<" Position In : "<<fPosIn.X()<<" "<<fPosIn.Y()<<"  "<<fPosIn.Z()<<std::endl;
+            LOG(INFO)<<" Position Out : "<<fPosOut.X()<<" "<<fPosOut.Y()<<"  "<<fPosOut.Z()<<std::endl;
+            LOG(INFO)<<" Momentum In: "<<fMomIn.X()<<" "<<fMomIn.Y()<<"  "<<fMomIn.Z()<<std::endl;
+            LOG(INFO)<<" Momentum Out: "<<fMomOut.X()<<" "<<fMomOut.Y()<<"  "<<fMomOut.Z()<<std::endl;
+
         }
-        AddHit(fTrackID,
+
+       /* AddHit(fTrackID,
                fVolumeID,
-               TVector3(fPos.X(), fPos.Y(), fPos.Z()),
-               TVector3(fMom.Px(), fMom.Py(), fMom.Pz()),
+               fVolName,
+               fDetCopyID,
+               TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
+               TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
+               TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
+               TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
                fTime,
                fLength,
-               fELoss);
+               fELoss,
+               0.0,
+               0.0,
+               AZ.first,
+               AZ.second);
+
+
 
         
         AtStack* stack = static_cast<AtStack*>(TVirtualMC::GetMC()->GetStack());
-        stack->AddPoint(kAtSiArray);
+        stack->AddPoint(kAtSiArray);*/
     }
+
+   
+    AddHit(fTrackID,
+               fVolumeID,
+               fVolName,
+               fDetCopyID,
+               TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
+               TVector3(fPosOut.X(), fPosOut.Y(), fPosOut.Z()),
+               TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()),
+               TVector3(fMomOut.Px(), fMomOut.Py(), fMomOut.Pz()),
+               fTime,
+               fLength,
+               fELoss,
+               0.0,
+               0.0,
+               AZ.first,
+               AZ.second);
+    
+
+    stack->AddPoint(kAtSiArray);
 
     return kTRUE;
  

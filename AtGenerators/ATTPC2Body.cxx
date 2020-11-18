@@ -79,23 +79,22 @@ ATTPC2Body::ATTPC2Body(const char* name,std::vector<Int_t> *z,std::vector<Int_t>
   kNeutron->SetPdgCode(2112);
 
   fIsFixedTargetPos = kFALSE;
+  fIsFixedMomentum  = kFALSE;
+  fPxBeam_buff      = 0.0;
+  fPyBeam_buff      = 0.0;
+  fPzBeam_buff      = 0.0;
 
   fBeamEnergy_buff = ResEner;
- /* fBeamMass = BMass;
-  fTargetMass = TMass;
-  fZBeam = ZB;
-  fABeam = AB;
-  fPxBeam = PxB;
-  fPyBeam = PyB;
-  fPzBeam = PzB;*/
+  
+ 
 
 
       for(Int_t i=0;i<fMult;i++){
 
 
        	fPx.push_back( Double_t(a->at(i)) * px->at(i) );
-	      fPy.push_back( Double_t(a->at(i)) * py->at(i) );
-	      fPz.push_back( Double_t(a->at(i)) * pz->at(i) );
+	fPy.push_back( Double_t(a->at(i)) * py->at(i) );
+	fPz.push_back( Double_t(a->at(i)) * pz->at(i) );
 	Masses.push_back(mass->at(i)*1000.0);
         fExEnergy.push_back(Ex->at(i));
         fWm.push_back( mass->at(i)*1000.0*0.93149401 + Ex->at(i));
@@ -184,6 +183,16 @@ void ATTPC2Body::SetFixedTargetPosition(double vx, double vy, double vz)
    fVz = vz;
 }
 
+void ATTPC2Body::SetFixedBeamMomentum(double px, double py, double pz)
+{
+  std::cout<<" -I- ATTPC2Body : Fixed beam momentum "<<px<<"	"<<py<<"	"<<pz<<std::endl;
+  fIsFixedMomentum = kTRUE;
+  fPxBeam_buff = px;
+  fPyBeam_buff = py;
+  fPzBeam_buff = pz;
+
+}
+
 // -----   Public method ReadEvent   --------------------------------------
 Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
 
@@ -222,17 +231,26 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
 
     }else{
 	   fBeamEnergy = gATVP->GetEnergy();
+           
 	   std::cout<<" -I- ATTPC2Body Residual energy (Active Target mode) : "<<gATVP->GetEnergy()<<std::endl;
     }
 
 
    if(fBeamEnergy>0 && (gATVP->GetDecayEvtCnt()%2!=0 || fIsFixedTargetPos)){ //Requires a non zero vertex energy and pre-generated Beam event (not punch thorugh)
 
-           
-	   
-           fPxBeam = gATVP->GetPx(); //TODO: Not used for the final reaction products momentum (Yassid 11/13/2020)
+
+     if(fIsFixedTargetPos){
+           fPxBeam = fPxBeam_buff; 
+           fPyBeam = fPyBeam_buff;
+           fPzBeam = fPzBeam_buff;
+     
+     }else{
+  
+          
+           fPxBeam = gATVP->GetPx(); 
            fPyBeam = gATVP->GetPy();
            fPzBeam = gATVP->GetPz();
+     }	         
 
            Double_t eb=fBeamEnergy+fWm.at(0);
            Double_t pb2=fBeamEnergy*fBeamEnergy+2.0*fBeamEnergy*fWm.at(0);
@@ -343,17 +361,17 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
 
                           fPx.at(1) = 0.0;
                           fPy.at(1) = 0.0;
-                    	   fPz.at(1) = 0.0;
+                    	  fPz.at(1) = 0.0;
 
 
 
-                    	    fPx.at(2) = p3_labx/1000.0; // To GeV for FairRoot
+                    	  fPx.at(2) = p3_labx/1000.0; // To GeV for FairRoot
                           fPy.at(2) = 0.0;
-                    	    fPz.at(2) = p3_labz/1000.0;
+                    	  fPz.at(2) = p3_labz/1000.0;
 
                           fPx.at(3) = p4_labx/1000.0;
                           fPy.at(3) = 0.0;
-                    	    fPz.at(3) = p4_labz/1000.0;
+                    	  fPz.at(3) = p4_labz/1000.0;
 
 
                            Double_t phiBeam1=0., phiBeam2=0.;
@@ -368,7 +386,7 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
                            std::cout << " Beam Theta (Pos) : "<<BeamPos.Theta()*180.0/TMath::Pi()<<std::endl;
                            std::cout << " Beam Phi  (Pos) : "<<BeamPos.Phi()*180.0/TMath::Pi()<<std::endl;*/
 
-                           TVector3 BeamPos(gATVP->GetPx()*1000,gATVP->GetPy()*1000,gATVP->GetPz()*1000); //To MeV for Euler Transformation
+                           TVector3 BeamPos(fPxBeam*1000,fPyBeam*1000,fPzBeam*1000); //To MeV for Euler Transformation
                            //TVector3 BeamPos(1.0,1.0,0.0);
                            LOG(DEBUG) << " Beam Theta (Mom) : "<<BeamPos.Theta()*180.0/TMath::Pi()<<FairLogger::endl;
                            LOG(DEBUG) << " Beam Phi (Mom) : "<<BeamPos.Phi()*180.0/TMath::Pi()<<FairLogger::endl;
@@ -537,7 +555,7 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
                                   		   << ", " << fVz << ") cm" << std::endl;
                                   			 primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
 
-                      			    }else if(i>1 && gATVP->GetDecayEvtCnt() && pdgType==2212 && fPType.at(i)=="Proton" ){
+                      		       }else if(i>1 && (gATVP->GetDecayEvtCnt() || fIsFixedTargetPos) && pdgType==2212 && fPType.at(i)=="Proton" ){
 
                                   			std::cout << "-I- FairIonGenerator: Generating ions of type "
                                   		  << fParticle.at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl;
@@ -546,7 +564,7 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
                                   		  << ", " << fVz << ") cm" << std::endl;
                                   			primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
 
-                      			     }else if(i>1 && gATVP->GetDecayEvtCnt() && pdgType==2112 && fPType.at(i)=="Neutron" ){
+                      		      }else if(i>1 && (gATVP->GetDecayEvtCnt() || fIsFixedTargetPos) && pdgType==2112 && fPType.at(i)=="Neutron" ){
 
                                         std::cout << "-I- FairIonGenerator: Generating ions of type "
                                         << fParticle.at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl;
@@ -555,7 +573,7 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
                                         << ", " << fVz << ") cm" << std::endl;
                                         primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
 
-                                 }
+                                      }
 
                             		    
 

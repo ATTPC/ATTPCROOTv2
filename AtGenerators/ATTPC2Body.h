@@ -39,6 +39,7 @@ class ATTPC2Body : public FairGenerator
   ATTPC2Body& operator=(const ATTPC2Body&) { return *this; }
 
   void SetFixedTargetPosition(double vx, double vy, double vz);
+  void SetFixedBeamMomentum(double px, double py, double pz);
 
   virtual Bool_t ReadEvent(FairPrimaryGenerator* primGen);
 
@@ -67,6 +68,9 @@ private:
   Double_t fPxBeam;
   Double_t fPyBeam;
   Double_t fPzBeam;
+  Double_t fPxBeam_buff;
+  Double_t fPyBeam_buff;
+  Double_t fPzBeam_buff;
   Double_t fThetaCmsMax;
   Double_t fThetaCmsMin;
   Bool_t fIsDecay;
@@ -76,10 +80,10 @@ private:
   std::vector<Double_t> fWm;                                 // Total mass
  
   Bool_t fIsFixedTargetPos; //
-  
+  Bool_t fIsFixedMomentum;//
 
 
-  ClassDef(ATTPC2Body,1)
+  ClassDef(ATTPC2Body,2)
 
 }; 
 
