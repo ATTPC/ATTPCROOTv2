@@ -55,7 +55,7 @@ private:
   Bool_t fIsGood;
   Bool_t fIsinGate;
 
-  ClassDef(ATRawEvent, 1);
+  ClassDef(ATRawEvent, 2);
 };
 
 #endif
