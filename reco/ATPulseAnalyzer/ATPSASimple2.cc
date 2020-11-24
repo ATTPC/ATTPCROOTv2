@@ -50,6 +50,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       Double_t gthreshold = -1;
       if(pSizeID==0) gthreshold = fThresholdlow; //threshold for central pads
       else if(pSizeID==1) gthreshold = fThreshold; //threshold for big pads
+      else gthreshold = fThreshold; //default threshold for all pads
 
       Double_t QHitTot = 0.0;
       Int_t PadHitNum = 0;
