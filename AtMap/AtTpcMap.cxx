@@ -287,6 +287,7 @@ void AtTpcMap::ParseMapList(TXMLNode *node){
 	 || strcmp(node->GetNodeName(),"LookupProto10Be") == 0
 	 || strcmp(node->GetNodeName(),"LookupProto20181201v2") == 0
 	 || strcmp(node->GetNodeName(),"e12014_pad_mapping") == 0
+   || strcmp(node->GetNodeName(),"e12014_pad_map_size") == 0
 	 || strcmp(node->GetNodeName(),"LookupProtoND") == 0){ //TODO Implement this as function parameter ( I Know this is very dirty
 	//cout<<node->GetNodeName()<<endl;
 	//if(strcmp(node->GetNodeName(),"Lookup20141208") == 0){
@@ -310,6 +311,7 @@ void AtTpcMap::ParseATTPCMap(TXMLNode *node){
   Int_t fAgetID=-1000;
   Int_t fChannelID=-1000;
   Int_t fPadID=-1000;
+  Int_t fSizeID=-1000;
 
 
 
@@ -325,6 +327,8 @@ void AtTpcMap::ParseATTPCMap(TXMLNode *node){
 	fChannelID = atoi(node->GetText());
       if (strcmp(node->GetNodeName(), "PadID") == 0)
 	fPadID = atoi(node->GetText());
+  if (strcmp(node->GetNodeName(), "SizeID") == 0)
+ fSizeID = atoi(node->GetText());
 
 
     }
@@ -340,6 +344,7 @@ void AtTpcMap::ParseATTPCMap(TXMLNode *node){
 
   ATTPCPadMap.insert(std::pair<std::vector<int>,int>(PadKey,fPadID));
   ATTPCPadMapInverse.insert(std::pair<int,std::vector<int>>(fPadID,PadKey));
+  ATTPCPadSize.insert(std::pair<int,int>(fPadID,fSizeID));
 
   PadKey.clear();
   if(kDebug) cout<<"PadID : "<<fPadID<<" - CoboID : "<<fCoboID<<"  - AsadID : "<<fAsadID<<"  - AgetID : "<<fAgetID<<"  - ChannelID : "<<fChannelID<<endl;
@@ -439,8 +444,17 @@ std::vector<int> AtTpcMap::GetPadRef(int padNum)
   if(ATTPCPadMapInverse.find(padNum) == ATTPCPadMapInverse.end())
     return std::vector<int>(4,-1);
   return ATTPCPadMapInverse[padNum];
-  
+
 }
+
+int AtTpcMap::GetPadSize(int padNum)
+{
+  if(ATTPCPadSize.find(padNum) == ATTPCPadSize.end())
+    return -1000;
+  return ATTPCPadSize[padNum];
+
+}
+
 
 std::vector<Float_t> AtTpcMap::CalcPadCenter(Int_t PadRef){
 

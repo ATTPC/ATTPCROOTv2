@@ -72,6 +72,7 @@ void unpack_new(int runNumber)
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);//kFALSE
   psaTask -> SetThreshold(50);
+  psaTask -> SetThresholdLow(50);
   psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
   psaTask -> SetMaxFinder();
 
