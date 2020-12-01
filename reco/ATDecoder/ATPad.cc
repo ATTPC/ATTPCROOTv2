@@ -14,16 +14,18 @@ ClassImp(ATPad);
 ATPad::ATPad()
 {
     fPadNum = -1;
+    fSizeID = -1000;
     fPadXCoord = -9999;
     fPadYCoord = -9999;
     kIsAux = kFALSE;
-    fAuxName = "noname";   
+    fAuxName = "noname";
 }
 
 ATPad::ATPad(Int_t PadNum)
 {
     Initialize();
     fPadNum = PadNum;
+    fSizeID = -1000;
     fPadXCoord = -9999;
     fPadYCoord = -9999;
     kIsAux = kFALSE;
@@ -51,6 +53,7 @@ void ATPad::SetPad(Int_t val)                     { fPadNum = val; }
 void ATPad::SetRawADC(Int_t *val)                 { memcpy(fRawAdc,val, sizeof(fRawAdc)); }
 void ATPad::SetRawADC(Int_t idx, Int_t val)       { fRawAdc[idx] = val;}
 void ATPad::SetPedestalSubtracted(Bool_t val)     { fIsPedestalSubtracted = val; }
+void ATPad::SetSizeID(Int_t val)                     { fSizeID = val; }
 //void ATPad::SetGainCalibrated(Bool_t val)       { fIsGainCalibrated = val; }//TODO
 void ATPad::SetMaxADCIdx(Int_t val)               { fMaxAdcIdx = val; }
 void ATPad::SetADC(Double_t *val)                 { memcpy(fAdc, val, sizeof(fAdc)); }
@@ -74,6 +77,8 @@ ATPad &ATPad::operator= (ATPad right)
 
   fPadNum = right.GetPadNum();
 
+  fSizeID = right.GetSizeID();
+
 
   memcpy(fRawAdc, right.GetRawADC(), sizeof(fRawAdc));
   memcpy(fAdc, right.GetADC(), sizeof(fAdc));
@@ -88,6 +93,7 @@ ATPad &ATPad::operator= (ATPad right)
 }
 
  Int_t  ATPad::GetPadNum()             { return fPadNum; }
+ Int_t  ATPad::GetSizeID()             { return fSizeID; }
  Int_t *ATPad::GetRawADC()             { return fRawAdc; }
  Int_t  ATPad::GetRawADC(Int_t idx)    { return fRawAdc[idx]; }
  Int_t  ATPad::GetMaxADCIdx()          { return fMaxAdcIdx; }

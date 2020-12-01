@@ -66,6 +66,7 @@ public:
   Bool_t ParseInhibitMap(TString inimap, TString lowgmap, TString xtalkmap);
   Bool_t DumpATTPCMap();
   Int_t  GetPadNum(std::vector<int> PadRef);
+  Int_t  GetPadSize(int padNum);
   Bool_t GetIsInhibited(Int_t PadNum);
   std::vector<int> GetPadRef(int padNum);
 
@@ -87,6 +88,7 @@ public:
 
 
   std::map<std::vector<int>,int> ATTPCPadMap;
+  std::map<int,int> ATTPCPadSize;
   std::map<int,std::vector<int>> ATTPCPadMapInverse;
   std::vector<int> PadKey;
   std::set<Int_t> fIniPads;
@@ -97,14 +99,14 @@ public:
   TH2Poly *hPlane; //TODO Only allowed by C+11, change the initialization to the cxx
 
   /*  friend ostream & operator << (ostream& out, const AtTpcMap& p){
-      
+
       std::vector<int>::iterator it;
-      
+
       for(auto it=p.PadKey.begin();it!=p.PadKey.end();it++){
-      
+
       out<<"  This "<<p.PadKey[0]<<std::endl;
       }
-			     
+
       out<<" EN Node ID :"<<p.id<<" , ";
       out<<" EN detector segment name :"<<p.detname<<" , ";
       out<<" EN module ID :"<<p.modid<<" , ";

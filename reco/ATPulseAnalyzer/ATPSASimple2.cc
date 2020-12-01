@@ -46,6 +46,12 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
       ATPad *pad = rawEvent -> GetPad(iPad);
       Int_t PadNum = pad->GetPadNum();
+      Int_t pSizeID = pad->GetSizeID();
+      Double_t gthreshold = -1;
+      if(pSizeID==0) gthreshold = fThresholdlow; //threshold for central pads
+      else if(pSizeID==1) gthreshold = fThreshold; //threshold for big pads
+      else gthreshold = fThreshold; //default threshold for all pads
+
       Double_t QHitTot = 0.0;
       Int_t PadHitNum = 0;
       TVector3 HitPos;
@@ -195,11 +201,13 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       //std::cout<<" zPos : "<<zPos<<" maxAdcIdx : "<<maxAdcIdx<<" timemax : "<<timemax<<std::endl;
 
     if(fIsMaxFinder){
-      if ((fThreshold > 0 && charge < fThreshold ) || maxTime<20 || maxTime>500)// TODO: Does this work when the polarity is negative??
+      //if ((fThreshold > 0 && charge < fThreshold ) || maxTime<20 || maxTime>500)// TODO: Does this work when the polarity is negative??
+      if ((gthreshold > 0 && charge < gthreshold ) || maxTime<20 || maxTime>500)// TODO: Does this work when the polarity is negative??
              fValidThreshold = kFALSE;
     }
     if(fIsPeakFinder) {
-        if (fThreshold > 0 && charge < fThreshold)
+        //if (fThreshold > 0 && charge < fThreshold)
+        if (gthreshold > 0 && charge < gthreshold)
          fValidThreshold = kFALSE;
        }
         // continue;

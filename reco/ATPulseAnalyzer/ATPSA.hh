@@ -29,6 +29,7 @@ class ATPSA
 
     //! Setting threshold
     void SetThreshold(Int_t threshold);
+    void SetThresholdLow(Int_t thresholdlow);
     void SetBackGroundSuppression();
     void SetPeakFinder();
     void SetMaxFinder();
@@ -75,6 +76,7 @@ class ATPSA
     Double_t fZk;             //Relative position of micromegas-cathode
 
     Int_t fThreshold;         ///< threshold of ADC value
+    Int_t fThresholdlow;         ///< threshold for Central pads
     Double_t fBField;
     Double_t fEField;
     Double_t fTiltAng;

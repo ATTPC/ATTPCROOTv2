@@ -58,6 +58,7 @@ ATPSATask::~ATPSATask()
 void ATPSATask::SetPSAMode(Int_t value)                     { fPSAMode = value; }
 void ATPSATask::SetPersistence(Bool_t value)                { fIsPersistence = value; }
 void ATPSATask::SetThreshold(Double_t threshold)            { fThreshold = threshold; }
+void ATPSATask::SetThresholdLow(Double_t thresholdlow)            { fThresholdlow = thresholdlow; }
 void ATPSATask::SetBackGroundPeakFinder(Bool_t value)       { fIsBGPK = value;}
 void ATPSATask::SetPeakFinder()                             { fIsPeakFinder= kTRUE;fIsMaxFinder= kFALSE;}
 void ATPSATask::SetMaxFinder()                              { fIsMaxFinder= kTRUE;fIsPeakFinder= kFALSE;}
@@ -121,6 +122,7 @@ ATPSATask::Init()
   }
 
   fPSA -> SetThreshold((Int_t)fThreshold);
+  fPSA -> SetThresholdLow((Int_t)fThresholdlow);
   fPSA -> SetBaseCorrection(fIsBaseCorr);
   fPSA -> SetTimeCorrection(fIsTimeCorr);
   fPSA -> SetGainCalibration(fGainFile);
