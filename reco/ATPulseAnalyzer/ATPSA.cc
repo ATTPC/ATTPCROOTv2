@@ -59,10 +59,11 @@ ATPSA::ATPSA()
   fEntTB   = (Int_t) fPar->GetTBEntrance();
 
   fThreshold = -1;
+  fThresholdlow = -1;
   //fAuxChannels.clear();
   fThetaPad =-103.0*TMath::Pi()/180.0;
 
-  fIniTB = 0;             
+  fIniTB = 0;
   fEndTB = 512;
 
 
@@ -88,6 +89,12 @@ void
 ATPSA::SetThreshold(Int_t threshold)
 {
   fThreshold = threshold;
+}
+
+void
+ATPSA::SetThresholdLow(Int_t thresholdlow)
+{
+  fThresholdlow = thresholdlow;
 }
 
 Double_t
@@ -224,5 +231,3 @@ void ATPSA::SetTBLimits(std::pair<Int_t,Int_t> limits)
 
 
 }
-
-

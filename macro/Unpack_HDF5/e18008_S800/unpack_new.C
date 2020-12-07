@@ -20,7 +20,7 @@ struct auxchannel
 };
 
 // Requires the TPC run number
-void unpack_new(int runNumberS800, int runNumberATTPC)
+void unpack_new(int runNumberS800=2063, int runNumberATTPC=63)
 {
   //Load the library for unpacking and reconstruction
   gSystem->Load("libATTPCReco.so");
@@ -32,13 +32,13 @@ void unpack_new(int runNumberS800, int runNumberATTPC)
 
   //Set the input file
   //TString inputFile = TString::Format("hdf5Files/run_%04d.h5", runNumber);
-  TString inputFile = TString::Format("/mnt/daqtesting/e18008_attpc_transfer/h5/run_%04d.h5", runNumberATTPC);
-  // TString inputFile = TString::Format("/mnt/simulations/ceclub/giraud/attpc/ATTPCROOTv2/macro/Unpack_HDF5/hdf5Files/run_0002.h5", runNumberATTPC);
+  //TString inputFile = TString::Format("/mnt/daqtesting/e18008_attpc_transfer/h5/run_%04d.h5", runNumberATTPC);
+  TString inputFile = TString::Format("/mnt/rawdata/e18008_attpc/h5/run_%04d.h5", runNumberATTPC);
+   //TString inputFile = TString::Format("/mnt/rawdata/ceclub/giraud/attpc/ATTPCROOTv2/macro/Unpack_HDF5/hdf5Files/run_0002.h5", runNumberATTPC);
 
   //Set the output file
   // TString outputFile = TString::Format("/mnt/analysis/e18008/rootMerg/run_2%03d_%04d.root", runNumberS800, runNumberATTPC);
-  //TString outputFile = TString::Format("/mnt/analysis/e18008/rootMerg/run_%04d_%04d.root", runNumberS800, runNumberATTPC);
-  TString outputFile = TString::Format("run_%04d_%04d.root", runNumberS800, runNumberATTPC);
+  TString outputFile = TString::Format("/mnt/analysis/e18008/rootMerg/jcz_test/run_%04d_%04d.root", runNumberS800, runNumberATTPC);
   // TString outputFile = TString::Format("/projects/ceclub/giraud/attpc/ATTPCROOTv2/macro/Simulation/d2He/Analyis_d2He/merged_run0002_48Ca.root", runNumberS800, runNumberATTPC);
 
   std::cout << "Unpacking AT-TPC run " << runNumberATTPC << " from: " << inputFile << std::endl;
@@ -46,6 +46,7 @@ void unpack_new(int runNumberS800, int runNumberATTPC)
 
   //Set the mapping for the TPC
   TString scriptfile = "e12014_pad_mapping.xml";//"Lookup20150611.xml";
+ //TString scriptfile = "e12014_pad_map_size.xml";
  // TString scriptfile = "Lookup20150611.xml";//"Lookup20150611.xml";
   //TString parameterFile = "ATTPC.testnew.par";
   TString parameterFile = "ATTPC.d2He.par";
@@ -56,9 +57,9 @@ void unpack_new(int runNumberS800, int runNumberATTPC)
   TString geomDir   = dir + "/geometry/";
   gSystem -> Setenv("GEOMPATH", geomDir.Data());
   TString digiParFile = dir + "/parameters/" + parameterFile;
-  TString geoManFile  = dir + "/geometry/ATTPC_v1.1.root";
+  //TString geoManFile  = dir + "/geometry/ATTPC_v1.1.root";
   //TString geoManFile  = dir + "/geometry/ATTPC_He1bar.root";
-  //TString geoManFile  = dir + "/geometry/ATTPC_d2He_07atm.root";
+  TString geoManFile  = dir + "/geometry/ATTPC_d2He_07atm.root";
 
 
   //Create a run
@@ -98,7 +99,8 @@ void unpack_new(int runNumberS800, int runNumberATTPC)
 
   //Create the unpacker task
   ATHDFParserTask* HDFParserTask = new ATHDFParserTask();
-  HDFParserTask->SetPersistence(kFALSE);//kTRUE // do no write Rawevents
+ // HDFParserTask->SetPersistence(kFALSE); // do no write Rawevents
+  HDFParserTask->SetPersistence(kTRUE);
   HDFParserTask->SetATTPCMap(scriptdir.Data());
   HDFParserTask->SetFileName(inputFile.Data());
   HDFParserTask->SetOldFormat(false);
@@ -152,32 +154,30 @@ void unpack_new(int runNumberS800, int runNumberATTPC)
   MergeEvt->SetOptiEvtDelta(5);
   MergeEvt->SetGlom(2);
   MergeEvt->SetTsDelta(1192);//run60//61... //181
-  //MergeEvt->SetTsDelta(844107828);//run180.. high pressure, uncomment the lines with "special for run180" in ATMergeTask
-  //MergeEvt->SetTsDelta(0);//run180.. high pressure
-
   //MergeEvt->SetTsDelta(792);run59/has to be adjusted, function of the drift velocity
   //MergeEvt->SetTsDelta(1272);//has to be adjusted, function of the drift velocity
-  MergeEvt->SetPID1cut("rootPID/XfObjObj_run60to70.root");//14N
-  //MergeEvt->SetPID2cut("rootPID/ICSumObj_run60to70.root");//14N
-  MergeEvt->SetPID3cut("rootPID/ICSumObj_run60to70.root");//14N
-  //MergeEvt->SetPID1cut("rootPID/XfObjObj_run115.root");//13N
-  //MergeEvt->SetPID2cut("rootPID/ICSumObj_run115.root");//13N
-  //MergeEvt->SetPID1cut("rootPID/XfObjObj_run139.root");//13C
-  //MergeEvt->SetPID2cut("rootPID/ICSumObj_run139.root");//13C
+  MergeEvt->SetPID1cut("rootPID/XfObjObj_run60to70.root");//can have multiple gates for PID1
+  MergeEvt->SetPID2cut("rootPID/ICSumObj_run60to70.root");//can have multiple gates for PID2
+  //MergeEvt->SetPID1cut("rootPID/XfObjObj_run115.root");//can have multiple gates for PID1
+  //MergeEvt->SetPID2cut("rootPID/ICSumObj_run115.root");//can have multiple gates for PID2
   MergeEvt->SetParameters(S800par);
   MergeEvt->SetTofObjCorr(S800MTDCObjCorr);
   MergeEvt->SetMTDCObjRange(S800MTDCObjRange);
   MergeEvt->SetMTDCXfRange(S800MTDCXfRange);
 
+
+
   //Create PSA task
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);//kFALSE
-  psaTask -> SetThreshold(100);//50
-  //psaTask -> SetThreshold(0);//50
+  psaTask -> SetThreshold(160);//50
+  psaTask -> SetThresholdLow(100);
   psaTask -> SetPSAMode(3); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
   psaTask -> SetMeanK(3);
   psaTask -> SetStddevMulThresh(0.00001);
   psaTask -> SetMaxFinder();
+  //psaTask -> SetPeakFinder(); //TSpectrum
+
 
 /*
   ATRansacTask *RandTask = new ATRansacTask();
@@ -195,10 +195,9 @@ void unpack_new(int runNumberS800, int runNumberATTPC)
   //RandTask ->SetFullMode();
   RandTask->SetTiltAngle(0.0);
   RandTask->SetDistanceThreshold(12.0);//15.
-  RandTask->SetMinHitsLine(15);//7
+  RandTask->SetMinHitsLine(12);//7
   RandTask->SetAlgorithm(3); // 0=PCL ransac; 1=Homemade Ransac; 2=Homemade Mlesac; 3=Homemade Lmeds;
-  RandTask->SetRanSamMode(1);// 0=Uniform; 1=Gaussian; 2=Weighted; 3=Gaussian+Weighted
-  RandTask->SetVertexMode(1);
+  RandTask->SetRanSamMode(3);// 0=Uniform; 1=Gaussian; 2=Weighted; 3=Gaussian+Weighted
 
 
 
@@ -217,8 +216,8 @@ void unpack_new(int runNumberS800, int runNumberATTPC)
   std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
   //return;
-  //run->Run(0,numEvents);
-  run->Run(0,5000);
+ // run->Run(0,numEvents);
+  run->Run(0,200);
 
 
   std::cout << std::endl << std::endl;
