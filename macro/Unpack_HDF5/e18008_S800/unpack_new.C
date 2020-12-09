@@ -45,8 +45,8 @@ void unpack_new(int runNumberS800=2063, int runNumberATTPC=63)
   std::cout << "Saving in: " << outputFile << std::endl;
 
   //Set the mapping for the TPC
-  TString scriptfile = "e12014_pad_mapping.xml";//"Lookup20150611.xml";
- //TString scriptfile = "e12014_pad_map_size.xml";
+ // TString scriptfile = "e12014_pad_mapping.xml";//"Lookup20150611.xml";
+ TString scriptfile = "e12014_pad_map_size.xml";
  // TString scriptfile = "Lookup20150611.xml";//"Lookup20150611.xml";
   //TString parameterFile = "ATTPC.testnew.par";
   TString parameterFile = "ATTPC.d2He.par";
@@ -175,8 +175,8 @@ void unpack_new(int runNumberS800=2063, int runNumberATTPC=63)
   psaTask -> SetPSAMode(3); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
   psaTask -> SetMeanK(3);
   psaTask -> SetStddevMulThresh(0.00001);
-  psaTask -> SetMaxFinder();
-  //psaTask -> SetPeakFinder(); //TSpectrum
+  //psaTask -> SetMaxFinder();
+  psaTask -> SetPeakFinder(); //TSpectrum
 
 
 /*
