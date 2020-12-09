@@ -32,6 +32,7 @@ ATPSATask::ATPSATask()
 
   fIsPersistence = kFALSE;
   fIsBGPK = kFALSE;
+  fIsBGInter = kFALSE;
   fIsPeakFinder = kFALSE;
   fIsMaxFinder = kFALSE;
   fIsBaseCorr = kFALSE;
@@ -60,6 +61,7 @@ void ATPSATask::SetPersistence(Bool_t value)                { fIsPersistence = v
 void ATPSATask::SetThreshold(Double_t threshold)            { fThreshold = threshold; }
 void ATPSATask::SetThresholdLow(Double_t thresholdlow)            { fThresholdlow = thresholdlow; }
 void ATPSATask::SetBackGroundPeakFinder(Bool_t value)       { fIsBGPK = value;}
+void ATPSATask::SetBackGroundInterpolation(Bool_t value)       { fIsBGInter = value;}
 void ATPSATask::SetPeakFinder()                             { fIsPeakFinder= kTRUE;fIsMaxFinder= kFALSE;}
 void ATPSATask::SetMaxFinder()                              { fIsMaxFinder= kTRUE;fIsPeakFinder= kFALSE;}
 void ATPSATask::SetBaseCorrection(Bool_t value)             { fIsBaseCorr = value;}
@@ -131,6 +133,11 @@ ATPSATask::Init()
    if(fIsBGPK){
 	 fLogger -> Info(MESSAGE_ORIGIN, "Suppression of background in Peak Finder Enabled");
          fPSA -> SetBackGroundSuppression();
+   }
+
+   if(fIsBGInter){
+	 fLogger -> Info(MESSAGE_ORIGIN, "Suppression of Interpolated background  Enabled");
+         fPSA -> SetBackGroundInterpolation();
    }
 
    if(fIsPeakFinder){

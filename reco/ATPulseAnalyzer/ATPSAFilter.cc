@@ -114,13 +114,22 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       Double_t *adc = pad -> GetADC();
       Double_t floatADC[512] = {0};
       Double_t dummy[512] = {0};
+      Double_t bg[512] = {0};
 
-
-      for (Int_t iTb = 0; iTb < fNumTbs; iTb++){
+      for (Int_t iTb = 1; iTb < fNumTbs; iTb++){
           floatADC[iTb] = adc[iTb];
           QHitTot+=adc[iTb];
-
+          bg[512] = adc[iTb];
       }
+
+  TSpectrum *BGInter = new TSpectrum;
+  if(fBackGroundInterp){
+    BGInter->Background(bg,fNumTbs,6,TSpectrum::kBackDecreasingWindow,TSpectrum::kBackOrder2,kTRUE,TSpectrum::kBackSmoothing7,kTRUE);
+    for(Int_t iTb = 1; iTb < fNumTbs; iTb++){
+      floatADC[iTb] = floatADC[iTb] - bg[iTb];
+      if(floatADC[iTb]<0) floatADC[iTb] = 0;
+    }
+  }
 
   TSpectrum *PeakFinder = new TSpectrum;
   if(fIsPeakFinder) numPeaks = PeakFinder -> SearchHighRes(floatADC, dummy, fNumTbs, 4.7, 5, fBackGroundSuppression, 3, kTRUE, 3);
@@ -275,6 +284,7 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
     }//if Valid Num Peaks
 
     delete PeakFinder;
+    delete BGInter;
 
  }//Pad Loop
 

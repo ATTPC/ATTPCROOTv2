@@ -23,6 +23,7 @@ class ATPSATask : public FairTask {
     void SetThreshold(Double_t threshold);
     void SetThresholdLow(Double_t thresholdlow);
     void SetBackGroundPeakFinder(Bool_t value);
+    void SetBackGroundInterpolation(Bool_t value);
     void SetPeakFinder();
     void SetMaxFinder();
     void SetBaseCorrection(Bool_t value);
@@ -54,6 +55,7 @@ class ATPSATask : public FairTask {
 
     Bool_t fIsPersistence;
     Bool_t fIsBGPK;
+    Bool_t fIsBGInter;
     Bool_t fIsPeakFinder;
     Bool_t fIsMaxFinder;
     Bool_t fIsBaseCorr;

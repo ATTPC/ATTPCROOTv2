@@ -31,6 +31,7 @@ class ATPSA
     void SetThreshold(Int_t threshold);
     void SetThresholdLow(Int_t thresholdlow);
     void SetBackGroundSuppression();
+    void SetBackGroundInterpolation();
     void SetPeakFinder();
     void SetMaxFinder();
     void SetBaseCorrection(Bool_t value);
@@ -50,6 +51,7 @@ class ATPSA
     ATDigiPar *fPar;          ///< parameter container
 
     Bool_t fBackGroundSuppression;
+    Bool_t fBackGroundInterp;
     Bool_t fIsPeakFinder;
     Bool_t fIsMaxFinder;
     Bool_t fIsBaseCorr;
