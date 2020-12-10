@@ -210,8 +210,11 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
 
 
-      if(fIsBaseCorr) charge = adc[maxAdcIdx] - basecorr/10.0; //Number of timebuckets taken into account
-      else charge = adc[maxAdcIdx];
+      //if(fIsBaseCorr) charge = adc[maxAdcIdx] - basecorr/10.0; //Number of timebuckets taken into account
+      //else charge = adc[maxAdcIdx];
+
+      if(fIsBaseCorr) charge = floatADC[maxAdcIdx] - basecorr/10.0; //Number of timebuckets taken into account
+      else charge = floatADC[maxAdcIdx];
 
 
       if(fIsTimeCorr) zPos = CalculateZGeo(TBCorr);

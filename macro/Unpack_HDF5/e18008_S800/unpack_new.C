@@ -177,6 +177,7 @@ void unpack_new(int runNumberS800=2063, int runNumberATTPC=63)
   psaTask -> SetStddevMulThresh(0.00001);
   //psaTask -> SetMaxFinder();
   psaTask -> SetPeakFinder(); //TSpectrum
+  psaTask -> SetBackGroundInterpolation(kTRUE); //TSpectrum
 
 
 /*
