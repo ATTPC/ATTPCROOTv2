@@ -119,7 +119,7 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       for (Int_t iTb = 1; iTb < fNumTbs; iTb++){
           floatADC[iTb] = adc[iTb];
           QHitTot+=adc[iTb];
-          bg[512] = adc[iTb];
+          bg[iTb] = adc[iTb];
       }
 
   TSpectrum *BGInter = new TSpectrum;
