@@ -122,6 +122,11 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
           bg[iTb] = adc[iTb];
       }
 
+
+  TSpectrum *PeakFinder = new TSpectrum;
+  if(fIsPeakFinder) numPeaks = PeakFinder -> SearchHighRes(floatADC, dummy, fNumTbs, 4.7, 5, fBackGroundSuppression, 3, kTRUE, 3);
+  if(fIsMaxFinder) numPeaks = 1;
+
   TSpectrum *BGInter = new TSpectrum;
   if(fBackGroundInterp){
     BGInter->Background(bg,fNumTbs,6,TSpectrum::kBackDecreasingWindow,TSpectrum::kBackOrder2,kTRUE,TSpectrum::kBackSmoothing7,kTRUE);
@@ -131,9 +136,6 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
     }
   }
 
-  TSpectrum *PeakFinder = new TSpectrum;
-  if(fIsPeakFinder) numPeaks = PeakFinder -> SearchHighRes(floatADC, dummy, fNumTbs, 4.7, 5, fBackGroundSuppression, 3, kTRUE, 3);
-  if(fIsMaxFinder) numPeaks = 1;
 
   if (numPeaks == 0) fValidBuff = kFALSE;
        //continue;
@@ -147,6 +149,8 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       Int_t maxTime = 0;
 
       if(fIsPeakFinder) maxAdcIdx = (Int_t)(ceil((PeakFinder -> GetPositionX())[iPeak]));
+
+      if(maxAdcIdx<3 || maxAdcIdx>509) continue; // excluding the first and last 3 tb
 
     //  Int_t maxAdcIdx = *std::max_element(floatADC,floatADC+512);
 
