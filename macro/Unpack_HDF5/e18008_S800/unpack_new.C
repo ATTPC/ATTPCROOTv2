@@ -171,7 +171,7 @@ void unpack_new(int runNumberS800=2063, int runNumberATTPC=63)
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);//kFALSE
   psaTask -> SetThreshold(160);//50
-  psaTask -> SetThresholdLow(100);
+  psaTask -> SetThresholdLow(80);
   psaTask -> SetPSAMode(3); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
   psaTask -> SetMeanK(3);
   psaTask -> SetStddevMulThresh(0.00001);
