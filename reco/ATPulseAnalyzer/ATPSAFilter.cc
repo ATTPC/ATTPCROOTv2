@@ -114,17 +114,28 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       Double_t *adc = pad -> GetADC();
       Double_t floatADC[512] = {0};
       Double_t dummy[512] = {0};
+      Double_t bg[512] = {0};
 
-
-      for (Int_t iTb = 0; iTb < fNumTbs; iTb++){
+      for (Int_t iTb = 1; iTb < fNumTbs; iTb++){
           floatADC[iTb] = adc[iTb];
           QHitTot+=adc[iTb];
-
+          bg[iTb] = adc[iTb];
       }
+
 
   TSpectrum *PeakFinder = new TSpectrum;
   if(fIsPeakFinder) numPeaks = PeakFinder -> SearchHighRes(floatADC, dummy, fNumTbs, 4.7, 5, fBackGroundSuppression, 3, kTRUE, 3);
   if(fIsMaxFinder) numPeaks = 1;
+
+  TSpectrum *BGInter = new TSpectrum;
+  if(fBackGroundInterp){
+    BGInter->Background(bg,fNumTbs,6,TSpectrum::kBackDecreasingWindow,TSpectrum::kBackOrder2,kTRUE,TSpectrum::kBackSmoothing7,kTRUE);
+    for(Int_t iTb = 1; iTb < fNumTbs; iTb++){
+      floatADC[iTb] = floatADC[iTb] - bg[iTb];
+      if(floatADC[iTb]<0) floatADC[iTb] = 0;
+    }
+  }
+
 
   if (numPeaks == 0) fValidBuff = kFALSE;
        //continue;
@@ -138,6 +149,8 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       Int_t maxTime = 0;
 
       if(fIsPeakFinder) maxAdcIdx = (Int_t)(ceil((PeakFinder -> GetPositionX())[iPeak]));
+
+      if(maxAdcIdx<3 || maxAdcIdx>509) continue; // excluding the first and last 3 tb
 
     //  Int_t maxAdcIdx = *std::max_element(floatADC,floatADC+512);
 
@@ -201,8 +214,11 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
 
 
-      if(fIsBaseCorr) charge = adc[maxAdcIdx] - basecorr/10.0; //Number of timebuckets taken into account
-      else charge = adc[maxAdcIdx];
+      //if(fIsBaseCorr) charge = adc[maxAdcIdx] - basecorr/10.0; //Number of timebuckets taken into account
+      //else charge = adc[maxAdcIdx];
+
+      if(fIsBaseCorr) charge = floatADC[maxAdcIdx] - basecorr/10.0; //Number of timebuckets taken into account
+      else charge = floatADC[maxAdcIdx];
 
 
       if(fIsTimeCorr) zPos = CalculateZGeo(TBCorr);
@@ -275,6 +291,7 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
     }//if Valid Num Peaks
 
     delete PeakFinder;
+    delete BGInter;
 
  }//Pad Loop
 

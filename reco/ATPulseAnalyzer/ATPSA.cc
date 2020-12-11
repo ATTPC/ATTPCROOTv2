@@ -41,6 +41,7 @@ ATPSA::ATPSA()
   fMaxDriftLength = fPar -> GetDriftLength();
 
   fBackGroundSuppression = kFALSE;
+  fBackGroundInterp = kFALSE;
   fIsPeakFinder = kFALSE;
   fIsMaxFinder = kFALSE;
   fIsBaseCorr = kFALSE;
@@ -129,6 +130,11 @@ ATPSA::CalculateY(Double_t layer)
 void
 ATPSA::SetBackGroundSuppression(){
   fBackGroundSuppression = kTRUE;
+}
+
+void
+ATPSA::SetBackGroundInterpolation(){
+  fBackGroundInterp = kTRUE;
 }
 
 void
