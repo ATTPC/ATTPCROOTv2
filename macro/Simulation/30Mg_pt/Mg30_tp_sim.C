@@ -44,9 +44,14 @@ void Mg30_tp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("AT3PC_3H_5torr.root");
+  ATTPC->SetGeometryFileName("ATTPC_He1bar.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
+
+  FairDetector* APOLLO = new AtApollo("APOLLO", kTRUE);
+  APOLLO->SetGeometryFileName("APOLLO_v0.root");
+  //ATTPC->SetModifyGeometry(kTRUE);
+  run->AddModule(APOLLO);
 
  // ------------------------------------------------------------------------
 

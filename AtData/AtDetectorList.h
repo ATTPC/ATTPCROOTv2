@@ -18,6 +18,6 @@
 #ifndef AtDetectorList_H
 #define AtDetectorList_H 1
 // kSTOPHERE is needed for iteration over the enum. All detectors have to be put before.
-enum DetectorId {kAtTpc,kAtSiArray,kSTOPHERE};
+enum DetectorId {kAtTpc,kAtSiArray,kAtApollo, kSTOPHERE};
 
 #endif
