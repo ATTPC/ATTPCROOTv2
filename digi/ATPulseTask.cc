@@ -73,8 +73,9 @@ ATPulseTask::Init()
   std::cout <<"  GET Gain: " << fGETGain << std::endl;
   std::cout <<"  Electronic peaking time: " << fPeakingTime << " ns" << std::endl;
 
-  gain = new TF1("gain", "4*(x/[0])*pow(2.718, -2*(x/[0]))", 0, fGain*5);//Polya distribution of gain
+  gain = new TF1("gain", "pow([1]+1,[1]+1)/ROOT::Math::tgamma([1]+1)*pow((x/[0]),[1])*exp(-([1]+1)*(x/[0]))", 0, fGain*5);//Polya distribution of gain
   gain->SetParameter(0, fGain);
+  gain->SetParameter(1, 1);
 
   //TODO: THIS SHOULD BE TAKEN FROM A NEW PARAMETER AS THE GAS GAIN
   //GET gain: 120fC, 240fC, 1pC or 10pC in 4096 channels
@@ -215,11 +216,17 @@ void ATPulseTask::Exec(Option_t* option) {
     pad->SetPadYCoord(PadCenterCoord[1]);
     //std::cout<<" X "<<PadCenterCoord[0]<<" Y "<<PadCenterCoord[1]<<"\n";
     pad->SetPedestalSubtracted(kTRUE);
-    Double_t g = gain->GetRandom();
+    Double_t gAvg = 0;
+    gRandom->SetSeed(0);
+    Int_t nEleAcc = eleAccumulated[thePadNumber]->GetEntries();
+    for(Int_t i=0; i<nEleAcc; i++ ) gAvg += gain->GetRandom();
+    if(nEleAcc>0) gAvg = gAvg/nEleAcc;
+
     for(Int_t bin = 0; bin<fNumTbs; bin++){
-      pad->SetADC(bin,signal[bin]*g*fGETGain);
-      //std::cout<<" bin "<<bin<<" signal "<<signal[bin]<<" g "<<g<<" GET gain"<<fGETGain<<"\n";
+      pad->SetADC(bin,signal[bin]*gAvg*fGETGain);
+      //if(signal[bin]!=0)std::cout<<" bin "<<bin<<" signal "<<signal[bin]<<" gAvg "<<gAvg<<" GET gain "<<fGETGain<<" nEleAcc "<<nEleAcc<<"\n";
     }
+
     fRawEvent->SetPad(pad);
     delete pad;
     //std::cout <<" Event "<<aux<<" "<<electronsMap.size()<< "*"<< std::flush;
