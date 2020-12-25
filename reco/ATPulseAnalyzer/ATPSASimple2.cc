@@ -38,6 +38,14 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
   std::map<Int_t,Int_t> PadMultiplicity;
   Float_t mesh[512] = {0};
 
+  std::multimap<Int_t,std::size_t> mcPointsMap = rawEvent->GetSimMCPointMap();
+  std::cout<<" MC Simulated points Map size "<<mcPointsMap.size()<<"\n";
+
+  /* for (const auto& entry : mcPointsMap)
+   {
+        std::cout<<entry.first<<"	"<<entry.second<<"\n";
+   }*/
+   
 
   Int_t iPad=0;
   //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
@@ -251,6 +259,10 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
        //3.- Rotate the tracks to put them in the beam direction
       yPosCorr+=TMath::Tan(fTiltAng*TMath::Pi()/180.0)*(1000.0-zPosCorr);*/
 
+
+     
+
+
       TVector3 posRot =  RotateDetector(xPos,yPos,zPos,maxAdcIdx);
 
      // ATHit *hit = new ATHit(PadNum,hitNum, HitPosRot.X(), HitPosRot.Y(),HitPosRot.Z(), charge);
@@ -277,6 +289,11 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       //std::cout<<" Hit Coordinates : "<<xPos<<"  -  "<<yPos<<" - "<<zPos<<"  -  "<<std::endl;
       //std::cout<<" Is Pad"<<pad->GetPadNum()<<" Valid? "<<pad->GetValidPad()<<std::endl;
       //std::cout<<" TimeStamp : "<<maxAdcIdx<<" Time Max Interpolated : "<<timemax<<std::endl;
+
+
+      //Tracking MC points
+      if(mcPointsMap.size()>0)TrackMCPoints(mcPointsMap,hit);
+
       //#pragma omp ordered
       event -> AddHit(hit);
       delete hit;

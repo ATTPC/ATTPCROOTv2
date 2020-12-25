@@ -21,6 +21,7 @@ class ATPSATask : public FairTask {
     void SetPSAMode(Int_t value = 0);
     void SetPersistence(Bool_t value = kTRUE);
     void SetThreshold(Double_t threshold);
+    void SetThresholdLow(Double_t thresholdlow);
     void SetBackGroundPeakFinder(Bool_t value);
     void SetPeakFinder();
     void SetMaxFinder();
@@ -47,6 +48,7 @@ class ATPSATask : public FairTask {
     ATDigiPar *fPar;
     TClonesArray *fRawEventArray;
     TClonesArray *fEventHArray;
+    TClonesArray *fMCPointArray;
 
     ATPSA *fPSA;
     Int_t fPSAMode;
@@ -62,6 +64,7 @@ class ATPSATask : public FairTask {
     TString fJitterFile;
 
     Double_t fThreshold;
+    Double_t fThresholdlow;
     //std::vector<Int_t> fAuxChannels;
     Int_t fMeanK;
     Double_t fStdDev;

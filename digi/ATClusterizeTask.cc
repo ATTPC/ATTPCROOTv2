@@ -78,10 +78,10 @@ ATClusterizeTask::Exec(Option_t* option)
   fLogger->Debug(MESSAGE_ORIGIN,"Exec of ATClusterizeTask");
   Int_t nMCPoints = fMCPointArray->GetEntries();
   //std::cout<<"ATClusterizeTask: Number of MC Points "<<nMCPoints<<std::endl;
-  if(nMCPoints<10){
+  /*if(nMCPoints<10){
     fLogger->Warning(MESSAGE_ORIGIN, "Not enough hits for digitization! (<10)");
     return;
-  }
+  }*///Commented to process all events
   
   /**
    * NOTE! that fMCPoint has unit of [cm] for length scale,
@@ -225,10 +225,11 @@ ATClusterizeTask::Exec(Option_t* option)
 	//Fill container ATSimulatedPoint
 	Int_t size = fElectronNumberArray -> GetEntriesFast();
 	ATSimulatedPoint* simpoint
-	  = new((*fElectronNumberArray)[size]) ATSimulatedPoint(electronNumber,  //electron #
+	  = new((*fElectronNumberArray)[size]) ATSimulatedPoint(i,electronNumber,  //electron #
 								propX,  //X
 								propY,  //Y
 								driftTime);  //Z
+        simpoint->SetMCEventID(fMCPoint->GetEventID());
       }//end producing e- and filling ATSimpoint
       
       x_pre = x; y_pre = y; z_pre = z;

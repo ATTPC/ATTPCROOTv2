@@ -75,6 +75,8 @@ TRelativisticKinematics::TRelativisticKinematics() {
 		double e_cm  = sqrt(e_cm2);
 		double t_cm  = e_cm-wm3-wm4; // Kinetic energy of CM subtract the masses
 		//cout<<e<<endl;
+
+                std::cout<<" Beam energy in lab (e) : "<<eb<<" Kinetic energy (tb) : "<<tb<<" Mass (wm1) : "<<wm1<<" momemtum (pb) : "<<pb<<"\n";
 		
 		if(t_cm<0.0){
 			cout << "No solution!";

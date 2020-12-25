@@ -15,6 +15,20 @@ class ATHit : public TObject {
     ATHit(Int_t PadNum,Int_t hitID, Double_t x, Double_t y, Double_t z, Double_t charge);
     ~ATHit();
 
+    struct MCSimPoint
+    {
+        int pointID;
+        int trackID;
+	double energy;
+	double eloss;
+	double angle;	
+	int A;
+	int Z;
+	MCSimPoint(){}
+        MCSimPoint(int pointID_,int trackID_,double energy_,double eloss_,double angle_,int A_, int Z_) : pointID(pointID_),trackID(trackID_),energy(energy_),eloss(eloss_),angle(angle_),A(A_),Z(Z_) {}
+    };
+ 
+
     //!< Track ID setter
     void SetTrackID(Int_t trackID);
     //!< Hit ID setter
@@ -46,6 +60,8 @@ class ATHit : public TObject {
     void SetTimeStampCorrInter(Double_t TimeCorrInter);
     void SetBaseCorr(Double_t BaseCorr);
     void SetSlopeCnt(Int_t cnt);
+ 
+    void SetMCSimPoint(ATHit::MCSimPoint point);
 
     //!< Track ID getter
     Int_t GetTrackID() const;
@@ -70,6 +86,7 @@ class ATHit : public TObject {
     Double_t GetTimeStampCorrInter() const;
     Double_t GetBaseCorr() const;
     Int_t    GetSlopeCnt() const;
+    std::vector<ATHit::MCSimPoint>& GetMCSimPointArray();
 
     bool IsAux() const;
 
@@ -80,7 +97,10 @@ class ATHit : public TObject {
     Double_t fBaseCorr;
     Int_t    fSlopeCnt;
 
+ 
+
   private:
+   
     //!< Track ID having this hit
     Int_t fTrackID;
     //!< Hit ID
@@ -100,7 +120,11 @@ class ATHit : public TObject {
 
     Int_t fHitMult; // Hit multiplicity in the pad where the hit was found
 
+    std::vector<ATHit::MCSimPoint> fMCSimPointArray;
+
     bool kIsAux;
+
+   
 
 
   ClassDef(ATHit, 3);

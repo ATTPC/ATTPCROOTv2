@@ -46,7 +46,7 @@ void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
     // -----   Magnetic field   -------------------------------------------
     // Constant Field
     AtConstField  *fMagField = new AtConstField();
-    fMagField->SetField(0., 0. ,20. ); // values are in kG
+    fMagField->SetField(0., 0. ,-20. ); // values are in kG
     fMagField->SetFieldRegion(-100, 100,-100, 100, -250,250); // values are in cm
     fMagField->Print();
                           //  (xmin,xmax,ymin,ymax,zmin,zmax)
@@ -70,7 +70,7 @@ void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 	        Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
 	        Double_t pz = 1.916/a;  // Z-Momentum / per nucleon!!!!!!
   	        Double_t BExcEner = 0.0;
-                Double_t Bmass = 13.04404; //Mass in GeV
+                Double_t Bmass = 14.003241; //Mass in GeV
                 Double_t NomEnergy = 1.2; //Used to force the beam to stop within a certain energy range.
                 Double_t TargetMass = 1.87614;//Mass in GeV
 
@@ -148,8 +148,8 @@ void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 		 ExE.push_back(0.0);//In MeV
 
 
-                 Double_t ThetaMinCMS = 5.0;
-                 Double_t ThetaMaxCMS = 5.0;
+                 Double_t ThetaMinCMS = 10.0;
+                 Double_t ThetaMaxCMS = 10.0;
 
 
         ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);

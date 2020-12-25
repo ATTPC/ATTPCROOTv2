@@ -26,6 +26,7 @@
 #include "FairRunAna.h"
 
 #include "ATEvent.hh"
+#include "ATHit.hh"
 
 //ROOT
 #include "TGraph.h"
@@ -67,7 +68,14 @@ typedef struct ATHit_t {
     double    z;
     int       t;
     double    A;
-    int       trackID; 
+    int       trackID;
+    int       pointIDMC;
+    int       trackIDMC;
+    double    energyMC;
+    double    elossMC;
+    double    angleMC;	
+    int       AMC;
+    int       ZMC; 
 
 } ATHit_t;
 
@@ -77,6 +85,12 @@ const H5std_string MEMBER3( "z" );
 const H5std_string MEMBER4( "t" );
 const H5std_string MEMBER5( "A" );
 const H5std_string MEMBER6( "trackID" );
+const H5std_string MEMBER7( "pointIDMC" );
+const H5std_string MEMBER8( "energyMC" );
+const H5std_string MEMBER9( "elossMC" );
+const H5std_string MEMBER10( "angleMC" );
+const H5std_string MEMBER11( "AMC" );
+const H5std_string MEMBER12( "ZMC" );
 
 
 using namespace H5;

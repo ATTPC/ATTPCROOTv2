@@ -37,6 +37,12 @@
 
 #include "TVector3.h"
 
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+#define cBLUE "\033[1;34m"
+
 Int_t ATTPC2Body::fgNIon = 0;
 
 
@@ -217,7 +223,7 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
    ////uniform thetacm distribution between thetamin and thetamax
    Double_t thetacmsInput = TMath::ACos( (costhetamax - costhetamin )*gRandom->Uniform() + costhetamin )*TMath::RadToDeg();
 
-   std::cout<<" -I- ATTPC2Body : Random CMS Theta angle in degrees : "<<thetacmsInput<<std::endl;
+   std::cout<<cBLUE<<" -I- ATTPC2Body : Random CMS Theta angle in degrees : "<<thetacmsInput<<cNORMAL<<std::endl;
    const Double_t rad2deg = 0.0174532925;
 
    AtStack* stack = (AtStack*) gMC->GetStack();
@@ -227,12 +233,12 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
     if(fIsFixedTargetPos){
           fBeamEnergy = fBeamEnergy_buff;
           gATVP->SetValidKine(kTRUE);
-          std::cout<<" -I- ATTPC2Body Beam energy (Fixed Target mode) : "<<fBeamEnergy<<std::endl;
+          std::cout<<cBLUE<<" -I- ATTPC2Body Beam energy (Fixed Target mode) : "<<fBeamEnergy<<cNORMAL<<std::endl;
 
     }else{
 	   fBeamEnergy = gATVP->GetEnergy();
            
-	   std::cout<<" -I- ATTPC2Body Residual energy (Active Target mode) : "<<gATVP->GetEnergy()<<std::endl;
+	   std::cout<<cBLUE<<" -I- ATTPC2Body Residual energy (Active Target mode) : "<<gATVP->GetEnergy()<<cNORMAL<<std::endl;
     }
 
 
@@ -339,11 +345,12 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
 
                         }else{
 
-                          std::cout << " -I- ===== ATTPC2Body - Kinematics ====== "<<std::endl;
+                          
+			  std::cout <<cBLUE<< " -I- ===== ATTPC2Body - Kinematics ====== "<<std::endl;
                           std::cout << " Scattered energy:" << Ene.at(0)  << " MeV" << std::endl;
                           std::cout << " Scattered  angle:"  << Ang.at(0)*180/TMath::Pi() << " deg" << std::endl;
                           std::cout << " Recoil energy:" << Ene.at(1) << " MeV" << std::endl;
-                          std::cout << " Recoiled angle:"  << Ang.at(1)*180.0/TMath::Pi() << " deg" << std::endl;
+                          std::cout << " Recoiled angle:"  << Ang.at(1)*180.0/TMath::Pi() << " deg" <<cNORMAL<< std::endl;
                       }
 
 
@@ -548,7 +555,7 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
                       		      if(i>1 && (gATVP->GetDecayEvtCnt() || fIsFixedTargetPos)  && pdgType!=1000500500 && fPType.at(i)=="Ion" ){// TODO: Dirty way to propagate only the products (0 and 1 are beam and target respectively)
 
 
-                                  			 std::cout << "-I- FairIonGenerator: Generating ions of type "
+                                  			 std::cout <<cBLUE<< "-I- FairIonGenerator: Generating ions of type "
                                   		   << fIon.at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl;
                                   			 std::cout << "    Momentum (" << fPx.at(i) << ", " << fPy.at(i) << ", " << fPz.at(i)
                                   		   << ") Gev from vertex (" << fVx << ", " << fVy
@@ -570,7 +577,7 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
                                         << fParticle.at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl;
                                         std::cout << "    Momentum (" << fPx.at(i) << ", " << fPy.at(i) << ", " << fPz.at(i)
                                         << ") Gev from vertex (" << fVx << ", " << fVy
-                                        << ", " << fVz << ") cm" << std::endl;
+                                        << ", " << fVz << ") cm" <<cNORMAL<< std::endl;
                                         primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
 
                                       }

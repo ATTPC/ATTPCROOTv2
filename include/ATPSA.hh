@@ -21,6 +21,10 @@
 #include "TVector3.h"
 #include "TMath.h"
 
+#include "AtTpcPoint.h"
+
+typedef std::multimap<Int_t, std::size_t>::iterator MCMapIterator;
+
 class ATPSA
 {
   public:
@@ -29,6 +33,7 @@ class ATPSA
 
     //! Setting threshold
     void SetThreshold(Int_t threshold);
+    void SetThresholdLow(Int_t thresholdlow);
     void SetBackGroundSuppression();
     void SetPeakFinder();
     void SetMaxFinder();
@@ -41,6 +46,8 @@ class ATPSA
     void SetGainCalibration(TString gainFile);
     void SetJitterCalibration(TString jitterFile);
     void SetTBLimits(std::pair<Int_t,Int_t> limits);
+   
+    void SetSimulatedEvent(TClonesArray* MCSimPointArray);
 
     virtual void Analyze(ATRawEvent *rawEvent, ATEvent *event) = 0;
 
@@ -75,6 +82,7 @@ class ATPSA
     Double_t fZk;             //Relative position of micromegas-cathode
 
     Int_t fThreshold;         ///< threshold of ADC value
+    Int_t fThresholdlow;         ///< threshold for Central pads
     Double_t fBField;
     Double_t fEField;
     Double_t fTiltAng;
@@ -99,6 +107,10 @@ class ATPSA
     void CalcLorentzVector();
 
     TVector3 RotateDetector(Double_t x,Double_t y,Double_t z,Int_t tb);
+
+    void TrackMCPoints(std::multimap<Int_t,std::size_t>& map, ATHit* hit);//< Assign MC Points kinematics to each hit.
+
+    TClonesArray* fMCSimPointArray;
 
 
 

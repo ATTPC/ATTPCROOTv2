@@ -37,6 +37,9 @@
 #include "ATHoughSpaceCircle.hh"
 #include "ATHoughSpace.hh"
 #include "ATRansac.hh"
+#include "ATRansacMod.hh"
+#include "ATMlesacMod.hh"
+#include "ATLmedsMod.hh"
 #include "ATTrackFinderHC.hh"
 #include "ATHit.hh"
 #include "AtTpcMap.h"
@@ -67,6 +70,7 @@ class ATEventDrawTask : public FairTask
     void Set3DHitStyleBox();
     void SetSaveTextData();
     void SetLine(double t, std::vector<Double_t> p, double &x, double &y, double &z);
+    void SetLine6(double t, std::vector<Double_t> p, double &x, double &y, double &z);
     //void SetHitClusterAttributes(Color_t, Size_t, Style_t);
     //void SetRiemannAttributes(Color_t, Size_t, Style_t);
 
@@ -78,6 +82,7 @@ class ATEventDrawTask : public FairTask
     void SetProtoMap(TString map) {fMap = map;}
 
     void SetMultiHit(Int_t hitMax);
+    void SetAlgorithm(Int_t val) {fRANSACAlg = val;};
 
   protected :
     virtual void DrawPadPlane();
@@ -94,6 +99,7 @@ class ATEventDrawTask : public FairTask
     virtual void DrawTheta();
     virtual void DrawThetaxPhi();
     virtual void DrawMC();
+    virtual void DrawAux();
 
     AtTpcMap *fAtMapPtr;
     void UpdateCvsPadPlane();
@@ -110,7 +116,7 @@ class ATEventDrawTask : public FairTask
     void UpdateCvsThetaxPhi();
     void UpdateCvsQuadrants();
     void UpdateCvsMC();
-
+    void UpdateCvsAux();
 
 
     void ResetPadAll();
@@ -143,6 +149,9 @@ class ATEventDrawTask : public FairTask
     ATHoughSpaceLine*               fHoughSpaceLine_buff;
     ATHoughSpaceCircle*             fHoughSpaceCircle_buff;
     ATRANSACN::ATRansac*            fRansac;
+    ATRansacMod*                    fRansacMod;
+    ATMlesacMod*                    fMlesacMod;
+    ATLmedsMod*                    fLmedsMod;
     ATTrackingEventAna*             fTrackingEventAna;
     ATPATTERN::ATTrackFinderHC*     fTrackFinderHC;
 
@@ -215,6 +224,8 @@ class ATEventDrawTask : public FairTask
     TH2F* fQuadrant3;
     TCanvas* fCvsQuadrant4;
     TH2F* fQuadrant4;
+    TH1F*    fAuxChannels[9];
+    TCanvas* fCvsAux;
 
     TH2F* fThetaxPhi_Ini;
     TH2F* fThetaxPhi_Ini_RANSAC;
@@ -247,6 +258,7 @@ class ATEventDrawTask : public FairTask
     Bool_t fSaveTextData;
     Float_t f3DThreshold;
     Bool_t fIsRawData;
+    Int_t fRANSACAlg;
 
     TF1 *fHoughLinearFit;
     TF1 *fRansacLinearFit;
@@ -256,6 +268,7 @@ class ATEventDrawTask : public FairTask
 
     //std::vector<TEveLine*> fLineArray;
     TEveLine* fLineArray[5];
+    TEvePointSet *fVertex = nullptr;
     Int_t fLineNum;
     Int_t fTrackNum;
     //TEveLine* fLine;

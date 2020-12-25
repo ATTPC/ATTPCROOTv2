@@ -22,6 +22,13 @@
 #include "FairIon.h"
 #include <iostream>
 #include "TParticle.h"
+
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+#define cBLUE "\033[1;34m"
+
 using std::cout;
 using std::endl;
 
@@ -121,6 +128,7 @@ ATTPCIonGenerator::ATTPCIonGenerator(const char* name,Int_t z, Int_t a, Int_t q,
   //fVy   = vy;
   //fVz   = vz;
   char buffer[20];
+  double IonMass =  m*0.93149410242;
   sprintf(buffer, "FairIon%d", fgNIon);
   fIon= new FairIon(buffer, z, a, q,Ex,m);
   cout <<" Beam Ion mass : "<<fIon->GetMass()<<endl;
@@ -264,7 +272,7 @@ Bool_t ATTPCIonGenerator::ReadEvent(FairPrimaryGenerator* primGen) {
   {
     Double_t Er = gRandom->Uniform(0., fMaxEnLoss);
     gATVP->SetRndELoss(Er);
-    std::cout<<" Random Energy ATTPCIonGenerator : "<<Er<<std::endl;
+    std::cout<<cGREEN<<" Random Energy ATTPCIonGenerator : "<<Er<<cNORMAL<<std::endl;
   }
 
   for(Int_t i=0; i<fMult; i++)

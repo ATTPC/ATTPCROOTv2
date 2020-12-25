@@ -20,6 +20,7 @@
 
 //#pragma link C++ class  Pythia6Generator+;
 //#pragma link C++ class  Pythia8Generator+;
+#pragma link C++ class  ATTPCIonDecay+;
 #pragma link C++ class  ATTPCIonGenerator+;
 #pragma link C++ class  ATTPCIonPhaseSpace+;
 #pragma link C++ class  ATVertexPropagator+;
@@ -29,6 +30,7 @@
 #pragma link C++ class  ATEulerTransformation+;
 #pragma link C++ class  ATTPCFissionGenerator+;
 #pragma link C++ class  ATTPCFissionGeneratorV2+;
+#pragma link C++ class  ATTPCFissionGeneratorV3+;
 #pragma link C++ class  ATTPCXSReader+;
 
 #endif

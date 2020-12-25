@@ -27,6 +27,7 @@
 #pragma link C++ class ATPad+;
 #pragma link C++ class ATRawEvent+;
 #pragma link C++ class ATHit+;
+#pragma link C++ struct ATHit::MCSimPoint+;
 #pragma link C++ class ATEvent+;
 #pragma link C++ class ATProtoEvent+;
 #pragma link C++ class ATProtoEventAna+;
@@ -57,6 +58,9 @@
 #pragma link C++ namespace ATRANSACN;
 #pragma link C++ class ATRANSACN::ATRansac+;
 #pragma link C++ struct ATRANSACN::ATRansac::PairedLines+;
+#pragma link C++ class ATRansacMod+;
+#pragma link C++ class ATMlesacMod+;
+#pragma link C++ class ATLmedsMod+;
 
 #pragma link C++ class ATPATTERN::ATTrackFinderHC+;
 #pragma link C++ class ATPATTERN::ATPRA+;

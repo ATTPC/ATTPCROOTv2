@@ -90,6 +90,15 @@ ATPSATask::Init()
     return kERROR;
   }
 
+  //Retrieving simulated points, if available
+  fMCPointArray = (TClonesArray*) ioMan->GetObject("AtTpcPoint");
+  if (fMCPointArray != 0) {
+    fLogger -> Info(MESSAGE_ORIGIN, " Simulated points found (simulation analysis) ");
+  }else if (fMCPointArray != 0){
+    fLogger -> Info(MESSAGE_ORIGIN, " Simulated points not found (experimental data analysis) ");
+  }
+
+
   if (fPSAMode == 0) {
     fLogger -> Info(MESSAGE_ORIGIN, "Using ATPSASimple!");
 
@@ -190,16 +199,20 @@ ATPSATask::Exec(Option_t *opt)
 
   ATEvent *event = (ATEvent *) new ((*fEventHArray)[0]) ATEvent();
 
-
   event->SetEventID(rawEvent->GetEventID());
   event->SetTimestamp(rawEvent->GetTimestamp());
 
   if (!(rawEvent -> IsGood()))
     event -> SetIsGood(kFALSE);
   else {
-    fPSA -> Analyze(rawEvent, event);
+
+    if(fMCPointArray != 0){
+          std::cout<<" point array size "<<fMCPointArray->GetEntries()<<"\n";
+	  fPSA->SetSimulatedEvent(fMCPointArray);
+    }
+    fPSA  -> Analyze(rawEvent, event);
     event -> SetIsGood(kTRUE);
-    event->SetIsExtGate(rawEvent->GetIsExtGate());
+    event ->SetIsExtGate(rawEvent->GetIsExtGate());
   }
 
 
@@ -239,3 +252,4 @@ void ATPSATask::SetTBLimits(std::pair<Int_t,Int_t> limits)
 
 
 }
+

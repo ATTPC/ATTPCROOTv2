@@ -97,6 +97,10 @@ class ATTrack : public TObject {
     std::vector<Double_t> GetPosYBack() const;
     std::vector<Double_t> GetPosZBack() const;
 
+    TVector3	GetLastPoint();
+    Double_t	GetLinearRange(const TVector3 &vertex, const TVector3 &maxPos);
+    std::pair<Double_t,Double_t> GetThetaPhi(const TVector3 &vertex, const TVector3 &maxPos, int zdir);
+
     void SetPosMin(const std::vector<Double_t> &xmin,const std::vector<Double_t> &ymin,const std::vector<Double_t> &zmin,const std::vector<Double_t> &xback,
       const std::vector<Double_t> &yback,const std::vector<Double_t> &zback);
     void SetPosExp(const std::vector<Double_t> &xexp,const std::vector<Double_t> &yexp,const std::vector<Double_t> &zexp,const std::vector<Double_t> &xint,

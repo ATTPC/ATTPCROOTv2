@@ -23,6 +23,7 @@ ${CMAKE_SOURCE_DIR}/reco/ATAnalysis
 ${CMAKE_SOURCE_DIR}/reco/ATRansac
 ${CMAKE_SOURCE_DIR}/reco/ATPatternRecognition
 ${CMAKE_SOURCE_DIR}/tpc
+${CMAKE_SOURCE_DIR}/AtGenerators
 
 )
 

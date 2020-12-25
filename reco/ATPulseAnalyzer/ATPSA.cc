@@ -82,9 +82,14 @@ ATPSA::~ATPSA()
 {
 }
 
-void ATPSA::SetBaseCorrection(Bool_t value)                { fIsBaseCorr=value;}
-void ATPSA::SetTimeCorrection(Bool_t value)                { fIsTimeCorr=value;}
+void ATPSA::SetBaseCorrection(Bool_t value)                  { fIsBaseCorr=value;}
+void ATPSA::SetTimeCorrection(Bool_t value)                  { fIsTimeCorr=value;}
 //void ATPSA::SetAuxChannel(std::vector<Int_t> AuxCh)        { fAuxChannels = AuxCh;}
+
+void ATPSA::SetSimulatedEvent(TClonesArray* MCSimPointArray) 
+{
+  fMCSimPointArray = MCSimPointArray;
+}
 
 void
 ATPSA::SetThreshold(Int_t threshold)
@@ -235,5 +240,32 @@ void ATPSA::SetTBLimits(std::pair<Int_t,Int_t> limits)
 
     }
 
+
+}
+
+void ATPSA::TrackMCPoints(std::multimap<Int_t,std::size_t>& map, ATHit* hit)
+{
+
+      //Find every simulated point ID for each valid pad
+      std::pair<MCMapIterator, MCMapIterator> result = map.equal_range(hit->GetHitPadNum());
+      for (MCMapIterator it = result.first; it != result.second; it++)
+      {
+        //std::cout<<fMCSimPointArray->GetEntries()<<"\n";
+
+	int count = std::distance(result.first, result.second);
+    
+		//if(count>1){
+               // std::cout<<" Count "<<count<<"\n";
+		
+		        if(fMCSimPointArray!=0){
+				AtTpcPoint* MCPoint = (AtTpcPoint*) fMCSimPointArray->At(it->second);
+                                ATHit::MCSimPoint mcpoint(it->second,MCPoint->GetTrackID(),MCPoint->GetEIni(),MCPoint->GetEnergyLoss(),MCPoint->GetAIni(),MCPoint->GetMassNum(),MCPoint->GetAtomicNum());
+				hit->SetMCSimPoint(mcpoint);
+				//std::cout << " Pad Num : "<<hit->GetHitPadNum()<<" MC Point ID : "<<it->second << std::endl;
+				//std::cout << " Track ID : "<<MCPoint->GetTrackID()<<" Energy (MeV) : "<<MCPoint->GetEIni()<<" Angle (deg) : "<<MCPoint->GetAIni()<<"\n";
+				//std::cout << " Mass Number : "<<MCPoint->GetMassNum()<<" Atomic Number "<<MCPoint->GetAtomicNum()<<"\n";
+			}
+              //  }
+      }
 
 }

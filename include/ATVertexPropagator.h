@@ -2,6 +2,8 @@
 #define ATVertexPropagator_H
 
 #include "TObject.h"
+#include "TVector3.h"
+
 
 #include <iostream>
 #include <map>
@@ -41,6 +43,10 @@ class ATVertexPropagator : public TObject
    void ResetVertex();
    void SetMassNum(Int_t mnum);
    void SetAtomicNum(Int_t anum);
+   void SetScatterP(TVector3 val);
+   void SetScatterEx(Double_t val);
+   void Setd2HeVtx(TVector3 val);
+   void Setd2HeVtx(Double_t x0, Double_t y0, Double_t theta, Double_t phi);
 
    Int_t GetGlobalEvtCnt();
    Int_t GetBeamEvtCnt();
@@ -68,7 +74,9 @@ class ATVertexPropagator : public TObject
    Double_t GetBURes2A();
    Int_t GetMassNum();
    Int_t GetAtomicNum();
-
+   TVector3 GetScatterP();
+   Double_t GetScatterEx();
+   TVector3 Getd2HeVtx();
 
 
    void IncGlobalEvtCnt();
@@ -77,8 +85,6 @@ class ATVertexPropagator : public TObject
 
    void SetValidKine(Bool_t val);
    Bool_t GetValidKine();
-
-
 
    Double_t fVx;
    Double_t fVy;
@@ -104,7 +110,9 @@ class ATVertexPropagator : public TObject
    Bool_t fIsValidKine;
    Int_t fAiso;
    Int_t fZiso;
-
+   TVector3 fScatP;
+   TVector3 fd2HeVtx; 
+   Double_t fExEjectile;
 };
 
 extern ATVertexPropagator *gATVP; // global

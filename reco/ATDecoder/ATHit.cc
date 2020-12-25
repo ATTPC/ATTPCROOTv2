@@ -7,8 +7,8 @@ ATHit::ATHit()
   fTrackID = -1;
   SetHit(-1, 0, 0, -1000, -1);
 
-  fIsClustered = kFALSE;
-  fClusterID = -1;
+    fIsClustered = kFALSE;
+    fClusterID = -1;
     fPadNum = -1;
     fQhit = -100.0;
     fHitMult = 0;
@@ -18,6 +18,7 @@ ATHit::ATHit()
     fBaseCorr = 0.0;
     fSlopeCnt=0;
     kIsAux = kFALSE;
+    fMCSimPointArray.clear();
 }
 
 ATHit::ATHit(Int_t hitID, TVector3 vec, Double_t charge)
@@ -36,6 +37,7 @@ ATHit::ATHit(Int_t hitID, TVector3 vec, Double_t charge)
     fBaseCorr = 0.0;
     fSlopeCnt=0;
     kIsAux = kFALSE;
+    fMCSimPointArray.clear();
 }
 
 ATHit::ATHit(Int_t hitID, Double_t x, Double_t y, Double_t z, Double_t charge)
@@ -54,6 +56,7 @@ ATHit::ATHit(Int_t hitID, Double_t x, Double_t y, Double_t z, Double_t charge)
     fBaseCorr = 0.0;
     fSlopeCnt=0;
     kIsAux = kFALSE;
+    fMCSimPointArray.clear();
 }
 
 ATHit::ATHit(Int_t PadNum,Int_t hitID, Double_t x, Double_t y, Double_t z, Double_t charge)
@@ -71,6 +74,7 @@ ATHit::ATHit(Int_t PadNum,Int_t hitID, Double_t x, Double_t y, Double_t z, Doubl
     fBaseCorr = 0.0;
     fSlopeCnt=0;
     kIsAux = kFALSE;
+    fMCSimPointArray.clear();
 
 }
 
@@ -134,5 +138,14 @@ Bool_t ATHit::IsClustered() const                                       { return
 Int_t ATHit::GetClusterID() const                                       { return (fIsClustered ? fClusterID : -1); }
 Double_t ATHit::GetBaseCorr() const                                     { return fBaseCorr; }
 Int_t ATHit::GetSlopeCnt() const                                        { return fSlopeCnt; }
+std::vector<ATHit::MCSimPoint>& ATHit::GetMCSimPointArray()		{ return fMCSimPointArray; }
 
 bool ATHit::IsAux() const                                               { return kIsAux;}
+
+void ATHit::SetMCSimPoint(ATHit::MCSimPoint point)
+{
+  fMCSimPointArray.push_back(point);
+}
+
+
+

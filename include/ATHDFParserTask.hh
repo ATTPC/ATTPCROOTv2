@@ -45,6 +45,7 @@ public:
   Bool_t SetOldFormat(Bool_t oldF = kFALSE);
   bool   SetAuxChannel(uint32_t hash,std::string channel_name);
   std::pair<bool,std::string> FindAuxChannel(uint32_t hash);
+  Bool_t SetBaseLineSubtraction(Bool_t value = kFALSE);
 
   void SetTimestampIndex(int index) { fTimestampIndex = index; };
   int  GetTimestampIndex()    { return fTimestampIndex; };
@@ -95,6 +96,7 @@ private:
   Int_t  fTimestampIndex;
   Bool_t fIsProtoGeoSet;
   Bool_t fIsProtoMapSet;
+  Bool_t fIsBaseLineSubtraction;
 
   std::vector<std::string> fEventsByName;
   std::unordered_map<uint32_t,std::string>            fAuxTable;

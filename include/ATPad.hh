@@ -25,6 +25,7 @@ class ATPad : public TObject  {
     void SetRawADC(Int_t *val);
     void SetRawADC(Int_t idx, Int_t val);
     void SetMaxADCIdx(Int_t val);
+    void SetSizeID(Int_t val);
 
     void SetPedestalSubtracted(Bool_t val = kTRUE);
     //void SetGainCalibrated(Bool_t val = kTRUE); //TODO
@@ -39,7 +40,7 @@ class ATPad : public TObject  {
 
     Bool_t IsPedestalSubtracted();
     Bool_t IsAux();
-    
+
 
     Int_t GetPadNum();
     Int_t *GetRawADC();
@@ -47,7 +48,7 @@ class ATPad : public TObject  {
     Int_t GetMaxADCIdx();
     Bool_t GetValidPad();
     std::string GetAuxName();
-
+    Int_t GetSizeID();
 
     Double_t *GetADC();
     Double_t GetADC(Int_t idx);
@@ -58,6 +59,7 @@ class ATPad : public TObject  {
    private:
 
     Int_t fPadNum;
+    Int_t fSizeID;
     Float_t fPadXCoord;
     Float_t fPadYCoord;
     Bool_t kIsValid;

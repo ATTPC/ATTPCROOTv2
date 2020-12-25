@@ -122,10 +122,12 @@ class ATRansac : public TObject
       void SetModelType(int model); //RANSAC Model: Line, plane...
       void SetDistanceThreshold(Float_t threshold); //Distance to RANSAC line
       void SetMinHitsLine(Int_t nhits);
+      void SetTiltAngle(Double_t val);
       void SetRPhiSpace(); // For RxPhi Ransac calculation (eventually will be moved into a template, when I have the time...)
       void SetXYCenter(Double_t xc, Double_t yc);
       void SetRANSACPointThreshold(Float_t val);
       void SetVertexTime(Double_t val);
+      Double_t Fit3D(ATTrack* track);
 
       struct PairedLines
       {

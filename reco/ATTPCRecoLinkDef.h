@@ -27,6 +27,7 @@
 #pragma link C++ class ATPad+;
 #pragma link C++ class ATRawEvent+;
 #pragma link C++ class ATHit+;
+#pragma link C++ struct ATHit::MCSimPoint+;
 #pragma link C++ class ATEvent+;
 #pragma link C++ class ATProtoEvent+;
 #pragma link C++ class ATProtoEventAna+;

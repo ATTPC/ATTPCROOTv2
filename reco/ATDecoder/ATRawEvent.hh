@@ -16,6 +16,9 @@
 #include "ATPad.hh"
 
 #include <vector>
+#include <iostream>
+#include <map>
+#include <iterator>
 
 class ATRawEvent : public TNamed
 {
@@ -33,6 +36,7 @@ public:
   void RemovePad(Int_t padNo);
   void SetTimestamp(ULong_t timestamp);
   void SetIsExtGate(Bool_t value);
+  void SetSimMCPointMap(std::multimap<Int_t,std::size_t> map);
 
   // getters
   ULong_t GetEventID();
@@ -46,6 +50,8 @@ public:
   ATPad *GetPad(Int_t padNo);
   ATPad *GetPad(Int_t PadNum,Bool_t& IsValid);
 
+  std::multimap<Int_t,std::size_t>& GetSimMCPointMap();
+
 
 private:
   ULong_t fEventID;
@@ -54,6 +60,8 @@ private:
 
   Bool_t fIsGood;
   Bool_t fIsinGate;
+
+  std::multimap<Int_t,std::size_t> fSimMCPointMap; //<! Monte Carlo Point - Hit map for kinematics
 
   ClassDef(ATRawEvent, 2);
 };

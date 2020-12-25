@@ -1,5 +1,6 @@
 #include "ATPulseTask.hh"
 #include "ATHit.hh"
+#include "AtTpcPoint.h"
 
 // Fair class header
 #include "FairRootManager.h"
@@ -30,11 +31,16 @@ ATPulseTask::ATPulseTask():FairTask("ATPulseTask"),
 			   fEventID(0)
 {
   LOG(INFO) << "Constructor of ATPulseTask" << FairLogger::endl;
+  fIsSaveMCInfo = kFALSE;
 }
 
 ATPulseTask::~ATPulseTask()
 {
   LOG(INFO) << "Destructor of ATPulseTask" << FairLogger::endl;
+  for(Int_t padS=0;padS<10240;padS++){
+   delete eleAccumulated[padS];
+  }
+  delete [] eleAccumulated;
 }
 
 void ATPulseTask::SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap)
@@ -63,6 +69,13 @@ ATPulseTask::Init()
 
   fRawEventArray  = new TClonesArray("ATRawEvent", 1); //!< Raw Event array (only one)
   ioman -> Register("ATRawEvent", "cbmsim", fRawEventArray, fIsPersistent);
+
+  //Retrieve kinematics for each simulated point
+  fMCPointArray = (TClonesArray*) ioman->GetObject("AtTpcPoint");
+  if (fMCPointArray == 0) {
+    fLogger -> Error(MESSAGE_ORIGIN, "Cannot find fMCPointArray array!");
+    return kERROR;
+  }
 
   fGain = fPar->GetGain();
   fGETGain = fPar->GetGETGain(); //Get the electronics gain in fC
@@ -131,14 +144,19 @@ void ATPulseTask::Exec(Option_t* option) {
   for(Int_t padS=0;padS<10240;padS++)
     eleAccumulated[padS]->Reset();
 
+  electronsMap.clear();
+  MCPointsMap.clear();
+
   Int_t nMCPoints = fDriftedElectronArray->GetEntries();
   std::cout<<" ATPulseTask: Number of Points "<<nMCPoints<<std::endl;
   if(nMCPoints<10){
     LOG(INFO) << "Not enough hits for digitization! (<10)" << FairLogger::endl;
+    fRawEvent->SetEventID(fEventID);
+    ++fEventID;
     return;
   }
 
-  electronsMap.clear();
+  
 
   fRawEventArray->Delete();
   fRawEvent = NULL;
@@ -147,7 +165,6 @@ void ATPulseTask::Exec(Option_t* option) {
   Int_t size = fRawEventArray -> GetEntriesFast(); //will be always 1
 
 
-  //TFile output("test_output.root","recreate");
 
   //Distributing electron pulses among the pads
   for(Int_t iEvents = 0; iEvents<nMCPoints; iEvents++){//for every electron
@@ -158,13 +175,56 @@ void ATPulseTask::Exec(Option_t* option) {
     auto yElectron   = coord (1); //mm
     auto eTime       = coord (2); //us
     auto padNumber   = (int)fPadPlane->Fill(xElectron,yElectron) - 1;
+    auto mcPoint     = (AtTpcPoint*) fMCPointArray->At(dElectron->GetPointID());
+    auto trackID     = mcPoint->GetTrackID();
+
+    //std::cout<<" Electron Number "<<iEvents<<" mcPointID : "<<dElectron->GetPointID()<<" Pad number "<<padNumber <<"\n";
 
     if(padNumber<0 || padNumber>10240) continue;
 
+        if(fIsSaveMCInfo){
+
+		    // Count occurrences of electrons coming from the same point
+		    int val = dElectron->GetPointID(), count = 0;
+   
+		   // Only one (or more depending on count) MC point with the same ID is saved globally, pads can contain several MC points. If a pad contains the same MC point ID, it is discarded. 
+		   /*for (const auto& entry : MCPointsMap){
+			if (entry.second == val)
+			{
+			    ++count;
+			    break;
+			}
+		    }*/
+
+
+		    // The same MC point ID is saved per pad only once, but duplicates are allowed in other pads
+		    std::multimap<Int_t,std::size_t>::iterator it;
+		    for (it=MCPointsMap.equal_range(padNumber).first; it!=MCPointsMap.equal_range(padNumber).second; ++it)
+		    {
+                        auto mcPointMap = (AtTpcPoint*) fMCPointArray->At(val);
+                        auto trackIDMap = mcPointMap->GetTrackID();
+			if(it->second == val || (trackID==trackIDMap))
+			{ 
+			  // std::cout<<" padNumber "<<padNumber<<" it->second "<<it->second<<" "<<" val "<<val<<" count "<<count<<"\n";
+			   ++count;
+			   break;
+			}
+		    }
+
+		    if(count==0)
+		     {	
+			    auto const insertionResult = MCPointsMap.insert(std::make_pair(padNumber, dElectron->GetPointID()));
+			    //std::cout<<" MC points  "<<MCPointsMap.count(padNumber)<<"	in pad "<<padNumber<<" with Point ID  "<<dElectron->GetPointID()<<" with track ID "<<mcPoint->GetTrackID()<<" with A/Z "<<mcPoint->GetMassNum()<<"/"<<mcPoint->GetAtomicNum()<<"\n";
+		     }
+
+                    
+
+       }
+
     //std::cout<<padNumber<<"  "<<coord(0)<<"  "<<coord(1)<<"  "<<coord(2)<<"\n";
     //std::cout << eTime << " " <<std::endl;
-		Bool_t IsInhibited = fMap->GetIsInhibited(padNumber);
-		if(!IsInhibited){
+    Bool_t IsInhibited = fMap->GetIsInhibited(padNumber);
+    if(!IsInhibited){
     	std::map<Int_t,TH1F*>::iterator ite = electronsMap.find(padNumber);
     	if(ite == electronsMap.end()){
       	eleAccumulated[padNumber]->Fill(eTime);
@@ -175,8 +235,8 @@ void ATPulseTask::Exec(Option_t* option) {
       	eleAccumulated[padNumber]->Fill(eTime);
       	electronsMap[padNumber]=eleAccumulated[padNumber];
     	}
-  	}
-	}
+     }
+    }
   //std::cout << "...End of collection of electrons in this event."<< std::endl;
   TAxis* axis = eleAccumulated[0]->GetXaxis();
   Double_t binWidth = axis->GetBinWidth(10);
@@ -234,8 +294,10 @@ void ATPulseTask::Exec(Option_t* option) {
   }
 	//if electronsMap.size==0, fEventID still needs to be set
 	fRawEvent->SetEventID(fEventID);
+        fRawEvent->SetSimMCPointMap(MCPointsMap);
 
-  fEventID++;
+  std::cout<<"ATPulseTask Event ID : "<<fEventID<<"\n";
+  ++fEventID;                    
   return;
 
 

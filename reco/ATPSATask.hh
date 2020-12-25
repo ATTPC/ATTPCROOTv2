@@ -49,6 +49,7 @@ class ATPSATask : public FairTask {
     ATDigiPar *fPar;
     TClonesArray *fRawEventArray;
     TClonesArray *fEventHArray;
+    TClonesArray *fMCPointArray;
 
     ATPSA *fPSA;
     Int_t fPSAMode;
