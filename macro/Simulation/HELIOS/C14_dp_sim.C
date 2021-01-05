@@ -1,4 +1,4 @@
-void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
+void C14_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -149,7 +149,7 @@ void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 
 
                  Double_t ThetaMinCMS = 10.0;
-                 Double_t ThetaMaxCMS = 10.0;
+                 Double_t ThetaMaxCMS = 40.0;
 
 
         ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);

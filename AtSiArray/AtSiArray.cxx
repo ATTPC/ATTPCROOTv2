@@ -120,7 +120,8 @@ Bool_t  AtSiArray::ProcessHits(FairVolume* vol)
     }
 
     // Sum energy loss for all steps in the active volume
-    fELoss += TVirtualMC::GetMC()->Edep();
+    fELoss = TVirtualMC::GetMC()->Edep();
+    //std::cout<<" Energy loss : "<<fELoss*1000<<"\n";
     gMC->TrackPosition(fPosIn);
     gMC->TrackMomentum(fMomIn);
     fTrackID  = gMC->GetStack()->GetCurrentTrackNumber();
