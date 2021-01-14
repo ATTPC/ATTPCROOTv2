@@ -41,6 +41,14 @@
 
 Int_t ATTPCIonDecay::fgNIon = 0;
 
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+#define cBLUE "\033[1;34m"
+#define cORANGEWARNING "\033[29;5;202m"
+#define cBLINKINGRED "\033[32;5m"
+
 
 
 ATTPCIonDecay::ATTPCIonDecay()
@@ -85,6 +93,8 @@ ATTPCIonDecay::ATTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
     fBeamMass = BMass*amu/1000.0;
     fSepEne=SepEne[0];
     fMasses=mass[0];
+    fIsSequentialDecay = kFALSE;
+    
 
     FairRunSim* run = FairRunSim::Instance();
     if ( ! run ) {
@@ -134,9 +144,23 @@ ATTPCIonDecay::ATTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
     Bool_t IsGoodCase=kFALSE;
     fIsDecay = kFALSE;
 
+    LOG(INFO)<<cBLUE<<" ATTPCIonDecay - Decay energy -  From reaction :  "<<ExEject<<" . From beam : "<<gATVP->GetEnergy()/1000.0<<" GeV "<<cNORMAL<<"\n";
+    LOG(INFO)<<cORANGEWARNING<<" ATTPCIonDecay - Warning: Temporary warning message to control the flow of generators.Please, check that if the decay comes from beam fusion, the energy from reaction is 0"<<cNORMAL<<"\n";
+
+    if(ExEject>0 && !fIsSequentialDecay)
+    {
+	LOG(INFO)<<cBLINKINGRED<<" ATTPCIonDecay - Warning, Incosistent variables: Recoil energy greater than 0 but sequential decay not enabled! Continue at your own risk!"<<cNORMAL<<"\n";
+
+    }
+
+    
+
     std::vector<Int_t> GoodCases;
+
+    //Test for decay from reaction
     for(Int_t i=0;i<fNbCases;i++) {
-      if(ExEject*1000.0>fSepEne.at(i)) {
+      //if(ExEject*1000.0>fSepEne.at(i)) {
+     if(ExEject>-1) {//Forcign all good cases
         GoodCases.push_back(i);
         IsGoodCase=kTRUE;
       }
@@ -146,7 +170,7 @@ ATTPCIonDecay::ATTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
       auto it = GoodCases.begin();
       std::advance(it, RandVar);
       Int_t Case = *it;
-      //std::cout<<"iterator "<<" "<<Case<<" "<<RandVar<<" "<<GoodCases.size()<<" "<<std::endl;
+      //LOG(INFO)<<"iterator "<<" "<<Case<<" "<<RandVar<<" "<<GoodCases.size()<<" "<<std::endl;
 
       Double_t beta;
       Double_t s=0.0;
@@ -164,29 +188,36 @@ ATTPCIonDecay::ATTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
       fPy.clear();
       fPz.clear();
 
+
+
       fPx.resize(fMult.at(Case));
       fPy.resize(fMult.at(Case));
       fPz.resize(fMult.at(Case));
 
+      //LOG(INFO)<<" Case : "<<Case<<" with multiplicity : "<<fMult.at(Case)<<"\n";
+
       fIsDecay = kFALSE;
 
 
-// === Get ejectile info from previous reaction generator (d2He)
-
-      //fBeamEnergy = gATVP->GetEnergy()/1000.0;
-      fBeamEnergy = gATVP->GetScatterE()/1000.0;
-      //fPxBeam = gATVP->GetPx();
-      //fPyBeam = gATVP->GetPy();
-      //fPzBeam = gATVP->GetPz();
+      if(fIsSequentialDecay)
+      {
+	 fBeamEnergy = gATVP->GetScatterE()/1000.0;
+         TVector3 ScatP = gATVP->GetScatterP();
+         fPxBeam = ScatP.X();
+         fPyBeam = ScatP.Y();
+         fPzBeam = ScatP.Z();
+      }else{ //simultaneous       
+         fBeamEnergy = gATVP->GetEnergy()/1000.0;
+         fPxBeam = gATVP->GetPx();
+         fPyBeam = gATVP->GetPy();
+         fPzBeam = gATVP->GetPz();
+      }
 
       TParticlePDG* thisPart0;
-      thisPart0 = TDatabasePDG::Instance()->GetParticle("Product_Ion2");//14N from d2He generator
+      thisPart0 = TDatabasePDG::Instance()->GetParticle(fIon.at(Case).at(0)->GetName()); //NB: The first particle of the list must be the decaying ion
       int pdgType0 = thisPart0->PdgCode();
-      TVector3 ScatP = gATVP->GetScatterP();
-      fPxBeam = ScatP.X();
-      fPyBeam = ScatP.Y();
-      fPzBeam = ScatP.Z();
-      std::cout<<" Ejectile info : "<<pdgType0<<" "<<fPxBeam<<" "<<fPyBeam<<" "<<fPzBeam<<" "<<fBeamEnergy<<" "<<ExEject<<std::endl;
+      
+      LOG(INFO)<<cBLUE<<" Ejectile info : "<<pdgType0<<" "<<fBeamMass<<" "<<fPxBeam<<" "<<fPyBeam<<" "<<fPzBeam<<" "<<fBeamEnergy<<" "<<ExEject<<cNORMAL<<"\n";
 
 
 // === Phase Space Calculation
@@ -216,7 +247,7 @@ ATTPCIonDecay::ATTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
         std::vector<Double_t> KineticEnergy;
         std::vector<Double_t> ThetaLab;
 
-        std::cout<<"  ==== Phase Space Information ==== "<<std::endl;
+        LOG(INFO)<<cBLUE<<" ATTPCIonDecay -  Phase Space Information "<<"\n";
         for(Int_t i=0;i<fMult.at(Case);i++){
           p_vector.push_back(event1.GetDecay(i));
           fPx.at(i) = p_vector.at(i)->Px();
@@ -224,10 +255,14 @@ ATTPCIonDecay::ATTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
           fPz.at(i) = p_vector.at(i)->Pz();
           KineticEnergy.push_back((p_vector.at(i)->E() - mass_1[i])*1000.0);
           ThetaLab.push_back(p_vector.at(i)->Theta()*180./TMath::Pi());
-          std::cout<<" Particle "<<i<<" - TKE (MeV) : "<<KineticEnergy.at(i)<<" - Lab Angle (deg) : "<<ThetaLab.at(i)<<std::endl;
+          LOG(INFO)<<" Particle "<<i<<" - TKE (MeV) : "<<KineticEnergy.at(i)<<" - Lab Angle (deg) : "<<ThetaLab.at(i)<<cNORMAL<<"\n";
         }
 
-      }// if kinematics condition
+      }else{// if kinematics condition
+
+		LOG(INFO)<<cYELLOW<<"ATTPCIonDecay - Warning, kinematical conditions for decay not fulfilled "<<cNORMAL<<"\n";
+
+      }
 
 // === Propagate the decay products from the vertex of the reaction
 
@@ -253,13 +288,18 @@ ATTPCIonDecay::ATTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
 
         int pdgType = thisPart->PdgCode();
 
-        TVector3 d2HeVtx = gATVP->Getd2HeVtx();
-        //fVx = gATVP->GetVx();
-        //fVy = gATVP->GetVy();
-        //fVz = gATVP->GetVz();
-        fVx = d2HeVtx.X();
-        fVy = d2HeVtx.Y();
-        fVz = d2HeVtx.Z();
+        //To do: Add a member function to enable vertex from d2He generator 
+        //TVector3 d2HeVtx = gATVP->Getd2HeVtx();
+        //fVx = d2HeVtx.X();
+        //fVy = d2HeVtx.Y();
+        //fVz = d2HeVtx.Z();
+
+        fVx = gATVP->GetVx();
+        fVy = gATVP->GetVy();
+        fVz = gATVP->GetVz();
+ 
+        
+        
 
         //std::cout << "-I- FairIonGenerator: Generating " <<" with mass "<<thisPart->Mass()<<" ions of type "<< fIon.at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl;
         //std::cout << "    Momentum (" << fPx.at(i) << ", " << fPy.at(i) << ", " << fPz.at(i)
@@ -273,7 +313,7 @@ ATTPCIonDecay::ATTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
       }//for fMult.at(Case)
     }//if IsGoodCase
 
-    gATVP->IncDecayEvtCnt();
+    if(!fIsSequentialDecay) gATVP->IncDecayEvtCnt(); //Increase count only if no other generator is meant to do it.
 
     return kTRUE;
 

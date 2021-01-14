@@ -549,7 +549,13 @@ Bool_t ATTPC2Body::ReadEvent(FairPrimaryGenerator* primGen) {
                               	 fVx = gATVP->GetVx();
                               	 fVy = gATVP->GetVy();
                               	 fVz = gATVP->GetVz();
+				 
 				}
+
+				//For decay generators
+				TVector3 ScatP(fPx.at(2),fPy.at(2),fPz.at(2));
+				gATVP->SetScatterP(ScatP);
+    				gATVP->SetScatterEx(fExEnergy.at(2));
 
 
                       		      if(i>1 && (gATVP->GetDecayEvtCnt() || fIsFixedTargetPos)  && pdgType!=1000500500 && fPType.at(i)=="Ion" ){// TODO: Dirty way to propagate only the products (0 and 1 are beam and target respectively)

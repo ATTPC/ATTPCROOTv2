@@ -48,6 +48,7 @@ public:
     ATTPCIonDecay& operator=(const ATTPCIonDecay&) { return *this; }
 
     virtual Bool_t ReadEvent(FairPrimaryGenerator* primGen);
+    void SetSequentialDecay(Bool_t var) {fIsSequentialDecay = var;}
 
 
     /** Destructor **/
@@ -77,10 +78,11 @@ public:
     Bool_t fIsDecay;
     Double_t fBeamMass;
     std::vector<Double_t> fSepEne;
+    Bool_t fIsSequentialDecay; //<! True if the decay generator is to be used after a reaction generator.
 
 
 
-    ClassDef(ATTPCIonDecay,2)
+    ClassDef(ATTPCIonDecay,3)
 
   };
 

@@ -96,78 +96,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
 {
   /** This method is called from the MC stepping */
 
-/*
-  //Set parameters at entrance of volume. Reset ELoss.
-   if ( gMC->IsTrackEntering() ) {
-    fELoss  = 0.;
-    fTime   = gMC->TrackTime() * 1.0e09;
-    fLength = gMC->TrackLength();
-    gMC->TrackPosition(fPos);
-    gMC->TrackMomentum(fMom);
-   }
 
-  // Sum energy loss for all steps in the active volume
-  fELoss += gMC->Edep();
-
-  // Create AtTpcPoint at exit of active volume
-  if ( gMC->IsTrackExiting()    ||
-       gMC->IsTrackStop()       ||
-       gMC->IsTrackDisappeared()   ) {
-    fTrackID  = gMC->GetStack()->GetCurrentTrackNumber();
-    fVolumeID = vol->getMCid();
-    if (fELoss == 0. ) { return kFALSE; }
-    AddHit(fTrackID, fVolumeID, TVector3(fPos.X(),  fPos.Y(),  fPos.Z()),
-           TVector3(fMom.Px(), fMom.Py(), fMom.Pz()), fTime, fLength,
-           fELoss);
-
-    // Increment number of AtTpc det points in TParticle
-    AtStack* stack = (AtStack*) gMC->GetStack();
-    stack->AddPoint(kAtTpc);
-  }*/
-
-
-     //Set parameters at entrance of volume. Reset ELoss.
-//  if ( gMC->IsTrackEntering() ) {
-
-
-//=========================================================================//
- /*  if (!(gMC -> IsTrackInside()))
-      return kFALSE;
-
-    fELoss = gMC -> Edep();
-
-    if (fELoss == 0)
-      return kFALSE;
-
-//    fELoss  = 0;
-    fTime   = gMC->TrackTime() * 1.0e09;
-    fLength = gMC->TrackLength();
-    gMC->TrackPosition(fPos);
-    gMC->TrackMomentum(fMom);
-//  }
-
-  // Sum energy loss for all steps in the active volume
-//  fELoss += gMC->Edep();
-
-  // Create STMCPoint at exit of active volume
-//  if ( gMC->IsTrackExiting()    ||
-//       gMC->IsTrackStop()       ||
-//       gMC->IsTrackDisappeared()   ) {
-    fTrackID  = gMC->GetStack()->GetCurrentTrackNumber();
-    fVolumeID = vol->getMCid();
-//    if (fELoss == 0. ) { return kFALSE; }
-    AddHit(fTrackID, fVolumeID, TVector3(fPos.X(),  fPos.Y(),  fPos.Z()),
-           TVector3(fMom.Px(), fMom.Py(), fMom.Pz()), fTime, fLength,
-           fELoss);
-
-     // Increment number of AtTpc det points in TParticle
-    AtStack* stack = (AtStack*) gMC->GetStack();
-    stack->AddPoint(kAtTpc);
-    Print();
-
-
-  return kTRUE;*/
-//============================================================================//
 
 
 	AtStack* stack = (AtStack*) gMC->GetStack();
@@ -282,7 +211,7 @@ Bool_t  AtTpc::ProcessHits(FairVolume* vol)
             if( (fVolName=="drift_volume" || fVolName=="cell") && gATVP->GetBeamEvtCnt()%2!=0 && fTrackID==0 ){
 		            gATVP->ResetVertex();
                 LOG(INFO)<<cRED<<" - AtTpc Warning : Beam punched through the ATTPC. Reseting Vertex! "<<cNORMAL<<std::endl;
-		        }
+	     }
 
          }
 
@@ -558,66 +487,7 @@ void AtTpc::Print(Option_t* option) const
     LOG(INFO) << "ATTPC: " << nHits << " points registered in this event" << FairLogger::endl;
 }
 
-/*void AtTpc::ConstructGeometry()
-{
 
-    TGeoVolume *top=gGeoManager->GetTopVolume();
-    TGeoMedium *Si =gGeoManager->GetMedium("Si");
-    TGeoMedium *Carbon = gGeoManager->GetMedium("Carbon");
-
-    if(Si==0){
-        TGeoMaterial *matSi     = new TGeoMaterial("Si", 28.0855, 14, 2.33);
-        Si     = new TGeoMedium("Si", 2, matSi);
-    }
-    if(Carbon==0){
-        TGeoMaterial *matCarbon    = new TGeoMaterial("C", 12.011, 6.0, 2.265);
-        Carbon     = new TGeoMedium("C", 3, matCarbon);
-    }
-
-
-    TGeoVolume *det1= gGeoManager->MakeTubs("Det1",Si,5,80,0.1,0,360);
-    AddSensitiveVolume(det1);
-    TGeoRotation r1;
-    r1.SetAngles(0,0,0);
-    TGeoTranslation t1(0, 0, 0);
-    TGeoCombiTrans c1(t1, r1);
-    TGeoHMatrix *h1 = new TGeoHMatrix(c1);
-    top->AddNode(det1,1,h1);
-    det1->SetLineColor(kGreen);
-
-    TGeoVolume *passive1= gGeoManager->MakeTubs("Pass1",Si,5,120,10,0,360);
-    TGeoRotation rp1;
-    rp1.SetAngles(0,0,0);
-    TGeoTranslation tp1(0, 0, 20);
-    TGeoCombiTrans cp1(tp1, rp1);
-    TGeoHMatrix *hp1 = new TGeoHMatrix(cp1);
-    top->AddNode(passive1,1,hp1);
-    passive1->SetLineColor(kBlue);
-
-
-
-    TGeoVolume *det2= gGeoManager->MakeTubs("Det2",Si,5,150,0.1,0,360);
-    AddSensitiveVolume(det2);
-    TGeoRotation r2;
-    r2.SetAngles(0,0,0);
-    TGeoTranslation t2(0, 0, 70);
-    TGeoCombiTrans c2(t2, r2);
-    TGeoHMatrix *h2 = new TGeoHMatrix(c2);
-    top->AddNode(det2,1,h2);
-    det2->SetLineColor(kGreen);
-
-    TGeoVolume *det3= gGeoManager->MakeTubs("Det3",Si,5,150,0.1,0,360);
-    AddSensitiveVolume(det3);
-    TGeoRotation r3;
-    r3.SetAngles(0,0,0);
-    TGeoTranslation t3(0, 0, 150);
-    TGeoCombiTrans c3(t3, r3);
-    TGeoHMatrix *h3 = new TGeoHMatrix(c3);
-    top->AddNode(det3,1,h3);
-    det3->SetLineColor(kGreen);
-
-
-}*/
 
 void AtTpc::ConstructGeometry()
 {
