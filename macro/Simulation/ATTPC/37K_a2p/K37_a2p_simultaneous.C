@@ -1,4 +1,4 @@
-void K37_a2p_simultaneous(Int_t nEvents = 10, TString mcEngine = "TGeant4")
+void K37_a2p_simultaneous(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -87,25 +87,6 @@ void K37_a2p_simultaneous(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   std::vector<Double_t> Mass; // Masses
   std::vector<Double_t> ExE; // Excitation energy
   Double_t ResEner; // Energy of the beam (Useless for the moment)
-
-  // ---- Beam ----
-  /*Zp.push_back(z); // 14O
-  Ap.push_back(a); //
-  Qp.push_back(0);
-  Pxp.push_back(px);
-  Pyp.push_back(py);
-  Pzp.push_back(pz);
-  Mass.push_back(Bmass);
-  ExE.push_back(0);
-
-  Zp.push_back(z); 
-  Ap.push_back(a); 
-  Qp.push_back(q);
-  Pxp.push_back(px);
-  Pyp.push_back(py);
-  Pzp.push_back(pz);
-  Mass.push_back(10.013533818);//uma
-  ExE.push_back(BExcEner);*/
   
   //-------------------------------------------------------------------------
   //Set the parameters of the decay generator
@@ -118,6 +99,8 @@ void K37_a2p_simultaneous(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   Int_t zB;
   Int_t aB;
   Double_t massDecayB;
+  Double_t massTarget;
+  Double_t exEnergy;
   std::vector<Double_t> SepEne;
 
   Int_t TotDecayCases=1;//the number of decay channel (case) to be considered
@@ -127,14 +110,31 @@ void K37_a2p_simultaneous(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   qDecay.resize(TotDecayCases);
   massDecay.resize(TotDecayCases);
 
-   //--- decaying nucleus -----
+  //NB: There are two ways of running the simulation
+  // 1) Beam generator + decay
+  //	1.a) Decay starting from the beam (decaying nucleus) + target four momentum + excitation energy -> decay products
+  //    1.b) Decay from compound nucleus formed in fusion (decaying nucleus) + excitation energy -> decay products
+  // 2) Beam generator + reaction generator (i.e. two-body) + decay. This case is analogous to 1.b) but the compound nucleus is the scattered particle in the       reaction that carries Ex energy. This mode has to be enabled with decay->SetSequentialDecay(kTRUE)
+
+   // Example of 1.b)
+   //--- decaying nucleus (sequential decay case) -----
   //should be a reaction product (its momentum is set in the reaction generator)
-  zB=21; // 41Sc
+  /*zB=21; // 41Sc
   aB=41;
   massDecayB=40.96925110;
+  massTarget= 0.0;
+  exEnergy = 0;*/
+
+  // Example of 1.a)
+  //--- decaying nucleus (Beam + decay case or simulatenous) -----
+  zB=19; // 
+  aB=37;
+  massDecayB=36.973376107; //37K
+  massTarget=4.00260325415 ; //4He //Only applicable for one-step decay (i.e.: simultaneous Beam+Decay)
+  exEnergy = 0;
 
   //Case 1
-  SepEne.push_back(1.085); //proton separation energy of mother nucleus (41Sc)
+  SepEne.push_back(1.085); //proton separation energy of mother nucleus 
   zDecay.at(0).push_back(19); 
   aDecay.at(0).push_back(39);
   qDecay.at(0).push_back(0);
@@ -151,7 +151,7 @@ void K37_a2p_simultaneous(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   massDecay.at(0).push_back(1.00783);
 
   ATTPCIonDecay* decay = new ATTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay,
-    zB, aB, massDecayB, &SepEne);
+    zB, aB, massDecayB,massTarget,exEnergy,&SepEne);
 
   primGen->AddGenerator(decay);
 

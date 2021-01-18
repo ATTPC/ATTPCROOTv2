@@ -39,7 +39,7 @@ public:
   //  std::vector<Double_t>* py,std::vector<Double_t> *pz, std::vector<Double_t> *mass , Double_t ResEner, Int_t ZB, Int_t AB, Double_t PxB, Double_t PyB, Double_t PzB, Double_t BMass, Double_t TMass);
 
   ATTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std::vector<Int_t>> *a, std::vector<std::vector<Int_t>> *q,
-    std::vector<std::vector<Double_t>> *mass, Int_t ZB, Int_t AB, Double_t BMass, std::vector<Double_t> *SepEne);
+    std::vector<std::vector<Double_t>> *mass, Int_t ZB, Int_t AB, Double_t BMass,Double_t TMass,Double_t ExEnergy, std::vector<Double_t> *SepEne);
 
 
     ATTPCIonDecay(const ATTPCIonDecay&);
@@ -77,8 +77,11 @@ public:
     Double_t fPzBeam;
     Bool_t fIsDecay;
     Double_t fBeamMass;
+    Double_t fTargetMass;
+    Double_t fExEnergy;
     std::vector<Double_t> fSepEne;
     Bool_t fIsSequentialDecay; //<! True if the decay generator is to be used after a reaction generator.
+    
 
 
 
