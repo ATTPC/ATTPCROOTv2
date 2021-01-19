@@ -32,5 +32,6 @@
 #pragma link C++ class  ATTPCFissionGeneratorV2+;
 #pragma link C++ class  ATTPCFissionGeneratorV3+;
 #pragma link C++ class  ATTPCXSReader+;
+#pragma link C++ class  ATTPCGammaDummyGenerator+;
 
 #endif

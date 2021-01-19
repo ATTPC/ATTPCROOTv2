@@ -23,7 +23,7 @@ ${FAIRROOT_LIBRARY_DIR}
 ${SIMPATH}/lib
 )
 
-link_directories( ${LINK_DIRECTORIES})
+link_directories(${LINK_DIRECTORIES})
 
 set(SRCS
 #Pythia6Generator.cxx
@@ -40,6 +40,7 @@ ATTPCFissionGenerator.cxx
 ATTPCFissionGeneratorV2.cxx
 ATTPCFissionGeneratorV3.cxx
 ATTPCXSReader.cxx
+ATTPCGammaDummyGenerator.cxx
 )
 
 set(LINKDEF  GenLinkDef.h)
