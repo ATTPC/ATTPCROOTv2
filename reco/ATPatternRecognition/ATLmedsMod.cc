@@ -18,7 +18,7 @@ ATLmedsMod::ATLmedsMod()
   fLmedsMaxIteration = 500;
 	fLmedsMinPoints = 30;
 	fLmedsThreshold = 15;
-  fLineDistThreshold = 10.0;//40 e18027 // 10 e18008
+  fLineDistThreshold = 15.0;//40 e18027 // 10 e18008
   fRandSamplMode = 0;
 
   fVertex_1.SetXYZ(-10000,-10000,-10000);

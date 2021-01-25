@@ -1,4 +1,4 @@
-void runsim_d2He(Int_t nEvents = 100, TString mcEngine = "TGeant4")
+void runsim_d2He(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -187,12 +187,12 @@ void runsim_d2He(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 
   Double_t ThetaMinCMS = 0.0;
   Double_t ThetaMaxCMS = 180.0;
-  Int_t N_cross = 6560;//1760
+  Int_t N_cross = 1760;//1760 6560
   std::vector<Double_t> Arr1(N_cross), Arr2(N_cross), Arr3(N_cross);
   Double_t col1, col2, col3;
 
   //lee la seccion eficaz desde una tabla
-  string filename= "all2_14O.dat"; //all2_14O.dat//0to5_14O.dat
+  string filename= "0to5_14O.dat"; //all2_14O.dat//0to5_14O.dat
   ifstream  inputfile;
   inputfile. open(filename.c_str());
   if(inputfile.fail() ){

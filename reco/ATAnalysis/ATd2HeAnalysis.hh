@@ -11,6 +11,7 @@
 #include "Fit/Fitter.h"
 #include "TFitResult.h"
 #include "TRandom3.h"
+#include "TMatrixD.h"
 
 using namespace ROOT::Math;
 
@@ -21,19 +22,23 @@ class ATd2HeAnalysis {
 	       ATd2HeAnalysis();
         ~ATd2HeAnalysis();
 
-        
 
-        Double_t omega(Double_t x, Double_t  y, Double_t z); 
+
+        Double_t omega(Double_t x, Double_t  y, Double_t z);
         void kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t  thetalab, Double_t  K_eject);
-
-        
         Double_t EnergyFluctuation(Double_t energypoint);
+
+
+        TMatrixD CalcV();
+        TMatrixD Calcd(TMatrixD alpha0);
+        TMatrixD CalcD(TMatrixD alpha0);
+        void KFit(std::vector<double> pin, std::vector<double>& pout);
 
         void SetThetaCM(Double_t  value);
         void SetMissingMass(Double_t  value);
         double signo(double value ){
 	        if(value<0) return -1.0;
-                else return 1.0;	
+                else return 1.0;
                 }
 
         Double_t GetThetaCM();
@@ -52,7 +57,7 @@ class ATd2HeAnalysis {
                 z = t;
         }
 
-        
+
 
         struct SumDistance2 {
            // the TGraph is a data member of the object
@@ -88,17 +93,17 @@ class ATd2HeAnalysis {
 
         void FitTrack(TGraph2D *f2dtrack, TGraph *fpadtrack, std::vector<Double_t> *iniguess );
 
-        
+
         Double_t THcm;
         Double_t MissingMass;
         Double_t theta_fit;
         Double_t phi_fit;
         bool ok;
         Double_t vertex;
-        
+
 
       private:
-    
+
 
           ClassDef(ATd2HeAnalysis, 1);
 
@@ -106,4 +111,3 @@ class ATd2HeAnalysis {
 };
 
 #endif
-
