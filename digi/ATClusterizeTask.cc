@@ -56,7 +56,6 @@ ATClusterizeTask::Init()
 
   fElectronNumberArray = new TClonesArray("ATSimulatedPoint");
   ioman -> Register("ATSimulatedPoint", "cbmsim",fElectronNumberArray, fIsPersistent);
-	//ioman -> Register("AtTpcPoint", "cbmsim",fMCPointArray, kTRUE); //dirty way to get sim data points
 
   fEIonize  = fPar->GetEIonize()/1000000; // [MeV]
   fFano     = fPar->GetFano();
