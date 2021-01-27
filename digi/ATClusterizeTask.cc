@@ -58,6 +58,7 @@ ATClusterizeTask::Init()
   ioman -> Register("ATSimulatedPoint", "cbmsim",fElectronNumberArray, fIsPersistent);
 
 
+
   fEIonize  = fPar->GetEIonize()/1000000; // [MeV]
   fFano     = fPar->GetFano();
   fVelDrift = fPar->GetDriftVelocity(); // [cm/us]
