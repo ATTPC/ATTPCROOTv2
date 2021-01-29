@@ -148,9 +148,10 @@ ATPSAFilter::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       Float_t min=0.0;
       Int_t maxTime = 0;
 
-      if(fIsPeakFinder) maxAdcIdx = (Int_t)(ceil((PeakFinder -> GetPositionX())[iPeak]));
-
-      if(maxAdcIdx<3 || maxAdcIdx>509) continue; // excluding the first and last 3 tb
+      if(fIsPeakFinder){
+         maxAdcIdx = (Int_t)(ceil((PeakFinder -> GetPositionX())[iPeak]));
+         if(maxAdcIdx<3 || maxAdcIdx>509) continue; // excluding the first and last 3 tb
+       }
 
     //  Int_t maxAdcIdx = *std::max_element(floatADC,floatADC+512);
 

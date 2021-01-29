@@ -65,7 +65,7 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
   //psaTask -> SetThreshold(1);//10
-   //psaTask -> SetThreshold(0.1);
+   psaTask -> SetThreshold(0.0);
 
 
   //psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC
@@ -81,10 +81,10 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
   //RandTask ->SetModelType(1);
   //RandTask ->SetFullMode();
   RandTask->SetTiltAngle(0.0);
-  RandTask->SetDistanceThreshold(15.0);
-  RandTask->SetMinHitsLine(7);
+  RandTask->SetDistanceThreshold(10.0);
+  RandTask->SetMinHitsLine(10);
   RandTask->SetAlgorithm(3); // 0=PCL ransac; 1=Homemade Ransac; 2=Homemade Mlesac; 3=Homemade Lmeds;
-  RandTask->SetRanSamMode(3);// 0=Uniform; 1=Gaussian; 2=Weighted; 3=Gaussian+Weighted
+  RandTask->SetRanSamMode(1);// 0=Uniform; 1=Gaussian; 2=Weighted; 3=Gaussian+Weighted
   RandTask->SetVertexMode(1); //set to 1 for two tracks same vertex
 
 
@@ -112,7 +112,7 @@ TString parFile = "outputFiles/attpcpar_d2He.root")    //"attpcpar_d2He_test_10k
 
   fRun -> Init();
   fRun -> Run(0,nEvents);
-  //fRun -> Run(0,20);
+  //fRun -> Run(0,100);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
