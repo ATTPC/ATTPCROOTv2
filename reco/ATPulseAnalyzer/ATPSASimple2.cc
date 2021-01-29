@@ -47,6 +47,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
    }*/
    
 
+
   Int_t iPad=0;
   //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
   for (iPad = 0; iPad < numPads; iPad++) {
@@ -59,6 +60,8 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       if(pSizeID==0) gthreshold = fThresholdlow; //threshold for central pads
       else if(pSizeID==1) gthreshold = fThreshold; //threshold for big pads
       else gthreshold = fThreshold; //default threshold for all pads
+
+
 
       Double_t QHitTot = 0.0;
       Int_t PadHitNum = 0;
@@ -123,6 +126,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
           floatADC[iTb] = adc[iTb];
           QHitTot+=adc[iTb];
           bg[iTb] = adc[iTb];
+          //if(floatADC[iTb]!=0)std::cout << "Pad  "<<iPad<<"  tb  "<<iTb<<"  ADC  "<<floatADC[iTb] << '\n';
       }
 
   TSpectrum *PeakFinder = new TSpectrum;
@@ -144,17 +148,22 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
    if(fValidBuff){
 
+
+
     for (Int_t iPeak = 0; iPeak < numPeaks; iPeak++) {
+
+
 
       Float_t max=0.0;
       Float_t min=0.0;
       Int_t maxTime = 0;
 
-      if(fIsPeakFinder) maxAdcIdx = (Int_t)(ceil((PeakFinder -> GetPositionX())[iPeak]));
-
-      if(maxAdcIdx<3 || maxAdcIdx>509) continue; // excluding the first and last 3 tb
-
+      if(fIsPeakFinder){
+          maxAdcIdx = (Int_t)(ceil((PeakFinder -> GetPositionX())[iPeak]));
+          if(maxAdcIdx<3 || maxAdcIdx>509) continue; // excluding the first and last 3 tb
+        }
     //  Int_t maxAdcIdx = *std::max_element(floatADC,floatADC+fNumTbs);
+
 
     if(fIsMaxFinder){
       for (Int_t ij = 20; ij < 500; ij++) //Excluding first and last 12 Time Buckets
@@ -172,6 +181,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
       maxAdcIdx = maxTime;
 
     }
+
 
 
       //Charge Correction due to mesh induction (base line)
@@ -302,6 +312,7 @@ ATPSASimple2::Analyze(ATRawEvent *rawEvent, ATEvent *event)
 
 
         for (Int_t iTb = 0; iTb < fNumTbs; iTb++){
+           //if(floatADC[iTb]!=0)std::cout << "Pad  "<<iPad<<"  tb  "<<iTb<<"  ADC  "<<floatADC[iTb] << '\n';
 		        mesh[iTb]+=floatADC[iTb];
 		          // if(iTb==511){
 		          // std::cout<<" IPad : "<<iPad<<std::endl;
