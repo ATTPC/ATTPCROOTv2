@@ -9,6 +9,7 @@
 #define APOLLO_H
 
 #include "FairDetector.h"
+#include "TVector3.h"
 
 class FairVolume;
 class TClonesArray;
@@ -103,6 +104,8 @@ class AtApollo: public FairDetector
     */
      AtApolloPoint* AddPoint(Int_t trackID,
                         Int_t detID,
+                        TVector3 pos,
+                        TVector3 mom,
                         Int_t crystalID,
                         Double_t time,
                         Double_t length,
