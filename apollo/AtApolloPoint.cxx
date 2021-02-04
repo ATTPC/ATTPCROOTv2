@@ -10,8 +10,6 @@
 #include <iostream>
 using std::cout;
 using std::endl;
-TVector3 p(0,0,0);      //Unused Tvector for FairMCPoint initialization
-
 
 // -----   Default constructor   -------------------------------------------
 AtApolloPoint::AtApolloPoint()
@@ -21,10 +19,11 @@ AtApolloPoint::AtApolloPoint()
 // -------------------------------------------------------------------------
 
 // -----   Standard constructor   ------------------------------------------
-AtApolloPoint::AtApolloPoint(Int_t trackID, Int_t detID, Int_t crystalID,
+AtApolloPoint::AtApolloPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom,
+                                   Int_t crystalID,
                                    Double_t tof, Double_t length,
                                    Double_t eLoss)
-  : FairMCPoint(trackID, detID,  p, p, tof, length, eLoss)
+  : FairMCPoint(trackID, detID,  pos, mom, tof, length, eLoss)
 {
 }
 

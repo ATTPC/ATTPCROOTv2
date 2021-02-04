@@ -17,6 +17,7 @@
 #include "TVirtualMC.h"
 #include "TClonesArray.h"
 #include "TGeoManager.h"
+#include "TLorentzVector.h"
 
 #include <iostream>
 using std::cout;
@@ -72,11 +73,15 @@ Bool_t  AtApollo::ProcessHits(FairVolume* vol)
   AtStack* stack = (AtStack*) gMC->GetStack();
   fVolName = gMC->CurrentVolName();
 
+  TLorentzVector fPosIn;
+  TLorentzVector fMomIn;
+
     if (gMC->IsTrackEntering())
     {
          fELoss = 0.;
          fELossAcc = 0.;
          fTime = gMC->TrackTime() * 1.0e09;
+
     }
 
       //
@@ -90,12 +95,16 @@ Bool_t  AtApollo::ProcessHits(FairVolume* vol)
         fVolumeID = vol->getMCid();
         fDetCopyID = vol->getCopyNo();
         fLength = gMC->TrackLength();
+        gMC->TrackPosition(fPosIn);
+        gMC->TrackMomentum(fMomIn);
 
         if (fELossAcc == 0.)
             return kFALSE;
 
         AddPoint(fTrackID,
                  fVolumeID,
+                 TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
+                 TVector3(fMomIn.X(), fMomIn.Y(), fMomIn.Z()),
                  fDetCopyID,
                  fTime,
                  fLength,
@@ -173,6 +182,8 @@ Bool_t AtApollo::CheckIfSensitive(std::string name)
 // -----   Private method AddPoint   --------------------------------------------
 AtApolloPoint* AtApollo::AddPoint(Int_t trackID,
                             Int_t detID,
+                            TVector3 pos,
+                            TVector3 mom,
                             Int_t crystalID,
                             Double_t time,
                             Double_t length,
@@ -186,6 +197,8 @@ AtApolloPoint* AtApollo::AddPoint(Int_t trackID,
 
     return new (clref[size]) AtApolloPoint(trackID,
                                          detID,
+                                         pos,
+                                         mom,
                                          crystalID,
                                          time,
                                          length,

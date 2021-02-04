@@ -10,9 +10,9 @@
 
 
 #include "FairMCPoint.h"
+#include "TVector3.h"
 
 #include "TObject.h"
-#include "TVector3.h"
 
 
 class AtApolloPoint : public FairMCPoint
@@ -27,12 +27,14 @@ class AtApolloPoint : public FairMCPoint
     /** Constructor with arguments
      *@param trackID   Index of MCTrack
      *@param detID     Detector ID
+     *@param pos      Ccoordinates at entrance to active volume [cm]
+     *@param mom      Momentum of track at entrance [GeV]
      *@param crystalID Crystal ID
      *@param tof       Time since event start [ns]
      *@param length    Track length since creation [cm]
      *@param eLoss     Energy deposit [GeV]
      **/
-    AtApolloPoint(Int_t trackID, Int_t detID, Int_t crystalID, Double_t tof, Double_t length, Double_t eLoss);
+    AtApolloPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Int_t crystalID, Double_t tof, Double_t length, Double_t eLoss);
 
     /** Destructor **/
     virtual ~AtApolloPoint();
