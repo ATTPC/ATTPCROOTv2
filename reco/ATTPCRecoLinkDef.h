@@ -68,6 +68,10 @@
 //#pragma link C++ class ATRansac+;
 
 
+#pragma link C++ class ATFITTER::ATFitter+;
+#pragma link C++ class ATFITTER::ATGenfit+;
+#pragma link C++ namespace ATFITTER;
+
 //#ifdef BUILD_PCL
 //#pragma link C++ class ATHoughSpaceLine3D+;
 //#pragma link C++ class ATHoughSpaceLine3D::Sphere+;

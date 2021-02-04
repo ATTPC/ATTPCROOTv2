@@ -6,6 +6,7 @@ ${ROOT_INCLUDE_DIR}
 ${Boost_INCLUDE_DIRS}
 ${BASE_INCLUDE_DIRECTORIES}
 ${PCL_INCLUDE_DIRS}
+${GENFIT2_INCLUDE_DIR}
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtMap
 ${CMAKE_SOURCE_DIR}/par
@@ -22,6 +23,7 @@ ${CMAKE_SOURCE_DIR}/reco/ATMinimization
 ${CMAKE_SOURCE_DIR}/reco/ATAnalysis
 ${CMAKE_SOURCE_DIR}/reco/ATRansac
 ${CMAKE_SOURCE_DIR}/reco/ATPatternRecognition
+${CMAKE_SOURCE_DIR}/reco/ATFitter
 ${CMAKE_SOURCE_DIR}/tpc
 ${CMAKE_SOURCE_DIR}/AtGenerators
 
@@ -35,6 +37,7 @@ ${FAIRROOT_LIBRARY_DIR}
 ${Boost_LIBRARY_DIRS}
 ${PCL_LIBRARY_DIRS}
 ${PCL_LIBRARIES}
+${GENFIT2_LIBRARY_DIR}
 )
 
 if(PCL_FOUND)
@@ -88,6 +91,8 @@ ATPulseAnalyzer/ATPSAProto.cc
 ATPulseAnalyzer/ATPSAProtoFull.cc
 ATPulseAnalyzer/ATPSAFull.cc
 ATPulseAnalyzer/ATCalibration.cc
+
+ATFitter/ATFitter.cc
 
 #HierarchicalClustering/ATCubicSplineFit.cc
 #HierarchicalClustering/ATFindVertex.cc
@@ -151,6 +156,13 @@ ATRansacTask.cc
 )
 endif()
 
+if(GENFIT2_FOUND)
+MESSAGE("${Green} libATTPCReco - Building GENFIT classes: ATFitter/Genfit ${ColourReset} ")
+set(SRCS ${SRCS}
+ATFitter/ATGenfit.cc
+)
+endif()
+
 CHANGE_FILE_EXTENSION(*.cc *.hh HEADERS "${SRCS}")
 
 Set(LINKDEF ATTPCRecoLinkDef.h)
@@ -174,6 +186,7 @@ Set(DEPENDENCIES
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
     ${PCL_LIBRARIES}
+    ${GENFIT2_LIBRARY_DIR}
 )
 
 

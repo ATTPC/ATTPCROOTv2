@@ -160,6 +160,7 @@ find_package(HDF5 REQUIRED)
 find_package(OpenMP)
 find_package(CUDA)
 find_package(PCL 1.8)
+find_package(GENFIT2)
 #find_package(Eigen)
 #find_package(FLANN)
 #find_package(VTK)
@@ -167,6 +168,7 @@ find_package(PCL 1.8)
 if(PCL_FOUND)
 add_definitions(${PCL_DEFINITIONS})
 endif()
+
 
 
 Set(Boost_NO_SYSTEM_PATHS TRUE)
@@ -243,6 +245,12 @@ if (PCL_FOUND)
     MESSAGE(${PCL_DEFINITIONS})
 Else()
     MESSAGE("${BoldRed} PCL Support NOT Found: Classes and modules depending on PCL will not be built. ${ColourReset}")
+endif()
+
+if(GENFIT2_FOUND)
+MESSAGE("${Green} GENFIT FOUND ${ColourReset}")
+MESSAGE("${Green} ${GENFIT2_INCLUDE_DIR} ${ColourReset}")
+MESSAGE("${Green} ${GENFIT2_LIBRARY_DIR} ${ColourReset}")
 endif()
 
 if(VTK_FOUND)
