@@ -44,7 +44,7 @@ void P35He4_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_He1bar.root");
+  ATTPC->SetGeometryFileName("ATTPC_He380torr.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
@@ -78,7 +78,7 @@ void P35He4_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 	          Double_t pz = 5.670/a;  // Z-Momentum / per nucleon!!!!!!
   	          Double_t BExcEner = 0.0;
                   Double_t Bmass =34.973314117; 
-                  Double_t NomEnergy = 120.0;//MeV 
+                  Double_t NomEnergy = 60.0;//MeV 
                       
 
 

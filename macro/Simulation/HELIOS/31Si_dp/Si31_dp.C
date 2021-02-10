@@ -1,4 +1,4 @@
-void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
+void Si31_dp(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -36,9 +36,14 @@ void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   run->AddModule(cave);
 
   FairDetector* HELIOS = new AtSiArray("HELIOS", kTRUE);
-  HELIOS->SetGeometryFileName("HELIOS_SiArray_v1.0.root");
+  HELIOS->SetGeometryFileName("SOLARIS_SiArray_v1.0.root");
   //HELIOS->SetModifyGeometry(kTRUE);
   run->AddModule(HELIOS);
+
+  FairDetector* APOLLO = new AtApollo("APOLLO", kTRUE);
+  APOLLO->SetGeometryFileName("APOLLO_v0.root");
+  //ATTPC->SetModifyGeometry(kTRUE);
+  run->AddModule(APOLLO);
 
  // ------------------------------------------------------------------------
 
@@ -62,17 +67,17 @@ void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 
 
                   // Beam Information
-                Int_t z = 6;  // Atomic number
-	        Int_t a = 14; // Mass number
+                Int_t z = 14;  // Atomic number
+	        Int_t a = 31; // Mass number
 	        Int_t q = 0;   // Charge State
 	        Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
 	        Double_t px = 0.000/a;  // X-Momentum / per nucleon!!!!!!
 	        Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
-	        Double_t pz = 1.916/a;  // Z-Momentum / per nucleon!!!!!!
+	        Double_t pz = 4.021/a;  // Z-Momentum / per nucleon!!!!!!
   	        Double_t BExcEner = 0.0;
-                Double_t Bmass = 14.003241; //Mass in GeV
+                Double_t Bmass = 30.975363226999998; //
                 Double_t NomEnergy = 1.2; //Used to force the beam to stop within a certain energy range.
-                Double_t TargetMass = 1.87614;//Mass in GeV
+               
 
 
 	          //ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
@@ -104,20 +109,20 @@ void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 
 
 	          mult = 4; //Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY (and the number of particles must be the same)
-                  ResEner = 140.0; // For fixed target mode (Si Array) in MeV
+                  ResEner = 278.4; // For fixed target mode (Si Array) in MeV
 
                   // ---- Beam ----
-                  Zp.push_back(z); // 40Ar TRACKID=0
+                  Zp.push_back(z); // 
             	  Ap.push_back(a); //
             	  Qp.push_back(q);
                   Pxp.push_back(px);
             	  Pyp.push_back(py);
             	  Pzp.push_back(pz);
-            	  Mass.push_back(14.003241);
+            	  Mass.push_back(30.975363226999998);
             	  ExE.push_back(BExcEner);
 
                   // ---- Target ----
-                 Zp.push_back(1); // t
+                 Zp.push_back(1); // 
 		 Ap.push_back(2); //
 		 Qp.push_back(0); //
 		 Pxp.push_back(0.0);
@@ -127,18 +132,18 @@ void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 		 ExE.push_back(0.0);//In MeV
 
                   //--- Scattered -----
-                Zp.push_back(6); // 32Mg TRACKID=1
-                Ap.push_back(15); //
+                Zp.push_back(14); // 
+                Ap.push_back(32); //
                 Qp.push_back(0);
           	Pxp.push_back(0.0);
           	Pyp.push_back(0.0);
           	Pzp.push_back(0.0);
-          	Mass.push_back(15.0106);
+          	Mass.push_back(31.974148082);
           	ExE.push_back(0.0);
 
 
                  // ---- Recoil -----
-		 Zp.push_back(1); // p  TRACKID=2
+		 Zp.push_back(1); // p  
 		 Ap.push_back(1); //
 		 Qp.push_back(0); //
 		 Pxp.push_back(0.0);
@@ -149,7 +154,7 @@ void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 
 
                  Double_t ThetaMinCMS = 10.0;
-                 Double_t ThetaMaxCMS = 40.0;
+                 Double_t ThetaMaxCMS = 35.0;
 
 
         ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);

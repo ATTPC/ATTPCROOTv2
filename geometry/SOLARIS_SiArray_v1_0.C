@@ -14,7 +14,7 @@
 #include <iostream>
 
 // Name of geometry version and output file
-const TString geoVersion = "HELIOS_SiArray_v1.0";
+const TString geoVersion = "SOLARIS_SiArray_v1.0";
 const TString FileName = geoVersion + ".root";
 const TString FileName1 = geoVersion + "_geomanager.root";
 
@@ -28,10 +28,10 @@ const TString CellMedium   = "3H_5torr"; //For testing
 const TString TargetMedium = "CD2_polyethylene";
 
 
-const Float_t Z_dist_from_target            = -12.5;//cm
+const Float_t Z_dist_from_target            = -60.0;//cm
 const Float_t x_off                         = 2.3;// Distance between Si in the same YZ plane 
 const Float_t y_off                         = 2.3;// Distance between Si in the same XZ plane 
-const Float_t Recoil_Z_dist_from_target     = 90.0;// Distance of the recoil detector with respect to the target
+const Float_t Recoil_Z_dist_from_target     = 140.0;// Distance of the recoil detector with respect to the target
 const Float_t Si_width                      = 1.0;// Width of Si detectors
 
 
@@ -46,7 +46,7 @@ TGeoVolume* create_detector();
 void position_detector();
 void add_alignable_volumes();
 
-void HELIOS_SiArray_v1_0() {
+void SOLARIS_SiArray_v1_0() {
 
 
   // Load needed material definition from media.geo file
