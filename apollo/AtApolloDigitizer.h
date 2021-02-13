@@ -57,9 +57,9 @@ class AtApolloDigitizer : public FairTask
 
     /** Public method SetExpEnergyRes
      **
-     ** Sets the experimental energy resolution of the CsI crystals
+     ** Sets the experimental energy resolution of the CsI and LaBr crystals
      **/
-    void SetExpEnergyRes(Double_t crystalRes);
+    void SetExpEnergyRes(Double_t crystalResCsI, Double_t crystalResLaBr);
 
 
     /** Public method SetDetectionThreshold
@@ -94,7 +94,8 @@ class AtApolloDigitizer : public FairTask
     TClonesArray* fApolloCryCalDataCA; /**< Array with CALIFA Cal- output data. >*/
 
     Double_t fNonUniformity; // Experimental non-uniformity parameter
-    Double_t fResolution;    // Experimental resolution @ 1 MeV
+    Double_t fResolutionCsI; // Experimental resolution @ 1 MeV for CsI
+    Double_t fResolutionLaBr;// Experimental resolution @ 1 MeV for LaBr
     Double_t fThreshold;     // Minimum energy requested to create a Cal
 
     /** Private method NUSmearing
@@ -105,15 +106,21 @@ class AtApolloDigitizer : public FairTask
      **/
     Double_t NUSmearing(Double_t inputEnergy);
 
-    /** Private method ExpResSmearing
+    /** Private method ExpResSmearingCsI
      **
      ** Smears the energy according to some Experimental Resolution distribution
      ** Very simple scheme where the Experimental Resolution
      ** is introduced as a gaus random distribution with a width given by the
-     ** parameter fCrystalResolution(in % @ MeV). Scales according to 1/sqrt(E)
+     ** parameter fResolutionCsI (LaBr) (in % @ MeV). Scales according to 1/sqrt(E)
      **/
-    Double_t ExpResSmearing(Double_t inputEnergy);
+    Double_t ExpResSmearingCsI(Double_t inputEnergy);
 
+    /** Private method ExpResSmearingLaBr
+    **/
+    Double_t ExpResSmearingLaBr(Double_t inputEnergy);
+
+    Bool_t isCsI(Int_t id);
+    Bool_t isLaBr(Int_t id);
 
     ClassDef(AtApolloDigitizer, 1);
 };
