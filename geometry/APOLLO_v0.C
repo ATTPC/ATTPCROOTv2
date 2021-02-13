@@ -16,6 +16,9 @@
 
 #include <iostream>
 
+//SETUP Option
+Bool_t crystalAlongBeamLine = kFALSE;
+
 // Name of geometry version and output file
 const TString geoVersion = "APOLLO_v0";
 const TString FileName = geoVersion + ".root";
@@ -25,7 +28,7 @@ const TString FileName1 = geoVersion + "_geomanager.root";
 // The materials are defined in the global media.geo file
 const TString MediumHalfSphere = "Aluminum";
 const TString MediumVacuum     = "vacuum4";
-//const TString MediumSciLaBr    = "LantanumBromide";
+const TString MediumSciLaBr    = "LaBr";
 const TString MediumSciCsI     = "CsI";
 
 ////// Parameters for the half sphere holding the scintillators
@@ -119,11 +122,13 @@ void create_materials_from_media_file()
 
   FairGeoMedium* vacuum4           = geoMedia->getMedium("vacuum4");
   FairGeoMedium* CsI               = geoMedia->getMedium("CsI");
+  FairGeoMedium* LaBr              = geoMedia->getMedium("LaBr");
   FairGeoMedium* Aluminum         = geoMedia->getMedium("Aluminum");
 
   // include check if all media are found
   geoBuild->createMedium(vacuum4);
   geoBuild->createMedium(CsI);
+  geoBuild->createMedium(LaBr);
   geoBuild->createMedium(Aluminum);
 }
 
@@ -133,6 +138,7 @@ TGeoVolume* create_detector()
   TGeoMedium* medium   = gGeoMan->GetMedium(MediumVacuum);
   TGeoMedium* Aluminum   = gGeoMan->GetMedium(MediumHalfSphere);
   TGeoMedium* CsI   = gGeoMan->GetMedium(MediumSciCsI);
+  TGeoMedium* LaBr   = gGeoMan->GetMedium(MediumSciLaBr);
 
   // APOLLO HALF SPHERE (WITH HOLES)
   TGeoShape* pSphereBulk = new TGeoSphere("SphereBulk",
@@ -210,7 +216,7 @@ TGeoVolume* create_detector()
   gGeoMan->GetVolume(geoVersion)->AddNode(halfSphere,0,new TGeoCombiTrans(0.,0.,0.,new TGeoRotation("halfSphere",0,0,0)));
   //halfSphere->SetTransparency(80);
 
-  //26 CsI CRYSTALS WITH "WRAPPING" CENTERED IN THE HALFSPHERE HOLES
+  //26 CsI or LaBr CRYSTALS WITH "WRAPPING" CENTERED IN THE HALFSPHERE HOLES
   TGeoVolume** Cry_vol_wrap;
   Cry_vol_wrap = new TGeoVolume*[26];
   TGeoVolume** Cry_vol;
@@ -221,7 +227,7 @@ TGeoVolume* create_detector()
   TString name_cry[26] = { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12",
                         "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25" , "26" };
 
-  Cry_vol[0] = gGeoManager->MakeTube(CrystalName + name_cry[0], CsI, 0, Sci_radius, Sci_halfLength);
+  Cry_vol[0] = gGeoManager->MakeTube(CrystalName + name_cry[0], LaBr, 0, Sci_radius, Sci_halfLength);
   Cry_vol[0]->SetVisLeaves(kTRUE);
   Cry_vol[0]->SetVisibility(kTRUE);
   Cry_vol[0]->SetVisContainers(kTRUE);
@@ -232,10 +238,11 @@ TGeoVolume* create_detector()
   Cry_vol_wrap[0]->SetVisContainers(kTRUE);
   Cry_vol_wrap[0]->SetLineColor(kBlue);
   Cry_vol_wrap[0]->AddNode(Cry_vol[0],1,new TGeoCombiTrans(0., 0., 0., fRefRot));
-  gGeoMan->GetVolume(geoVersion)->AddNode(Cry_vol_wrap[0],1,new TGeoCombiTrans(0., 0., (HalfSphere_innerRadius+HalfSphere_outerRadius)/2 + Sci_halfLength - Sci_eccentricity, fRefRot));
+  if(crystalAlongBeamLine)
+    gGeoMan->GetVolume(geoVersion)->AddNode(Cry_vol_wrap[0],1,new TGeoCombiTrans(0., 0., (HalfSphere_innerRadius+HalfSphere_outerRadius)/2 + Sci_halfLength - Sci_eccentricity, fRefRot));
 
   for(Int_t i=0;i<5;i++){
-    Cry_vol[i+1] = gGeoManager->MakeTube(CrystalName + name_cry[i+1], CsI, 0, Sci_radius, Sci_halfLength);
+    Cry_vol[i+1] = gGeoManager->MakeTube(CrystalName + name_cry[i+1], LaBr, 0, Sci_radius, Sci_halfLength);
     Cry_vol[i+1]->SetVisLeaves(kTRUE);
     Cry_vol[i+1]->SetVisibility(kTRUE);
     Cry_vol[i+1]->SetVisContainers(kTRUE);
@@ -249,7 +256,7 @@ TGeoVolume* create_detector()
     rot_1[i].SetXEulerAngles(0,TMath::Pi()/6,i*2*TMath::Pi()/5);
     geoRot_1 = new TGeoRotation("geoRot_1",i*72,30,0);
     tran_1[i] = rot_1[i] * tran_1[i];
-    Cry_vol_wrap[i+1]->AddNode(Cry_vol[i+1],1,new TGeoCombiTrans(0., 0., 0., fRefRot));
+    Cry_vol_wrap[i+1]->AddNode(Cry_vol[i+1],i+2,new TGeoCombiTrans(0., 0., 0., fRefRot));
     gGeoMan->GetVolume(geoVersion)->AddNode(Cry_vol_wrap[i+1],i+2,new TGeoCombiTrans(tran_1[i].X(),tran_1[i].Y(),tran_1[i].Z(), geoRot_1));
   }
 
@@ -268,7 +275,7 @@ TGeoVolume* create_detector()
     rot_2[i].SetXEulerAngles(0,TMath::Pi()/3,TMath::Pi()/10+i*TMath::Pi()/5);
     geoRot_2 = new TGeoRotation("geoRot_2",18+i*36,60,0);
     tran_2[i] = rot_2[i] * tran_2[i];
-    Cry_vol_wrap[i+6]->AddNode(Cry_vol[i+6],1,new TGeoCombiTrans(0., 0., 0., fRefRot));
+    Cry_vol_wrap[i+6]->AddNode(Cry_vol[i+6],i+7,new TGeoCombiTrans(0., 0., 0., fRefRot));
     gGeoMan->GetVolume(geoVersion)->AddNode(Cry_vol_wrap[i+6],i+7,new TGeoCombiTrans(tran_2[i].X(),tran_2[i].Y(),tran_2[i].Z(), geoRot_2));
   }
 
@@ -287,7 +294,7 @@ TGeoVolume* create_detector()
     rot_3[i].SetXEulerAngles(0,TMath::Pi()/2,i*TMath::Pi()/5);
     geoRot_3 = new TGeoRotation("geoRot_3",i*36,90,0);
     tran_3[i] = rot_3[i] * tran_3[i];
-    Cry_vol_wrap[i+16]->AddNode(Cry_vol[i+16],1,new TGeoCombiTrans(0., 0., 0., fRefRot));
+    Cry_vol_wrap[i+16]->AddNode(Cry_vol[i+16],i+17,new TGeoCombiTrans(0., 0., 0., fRefRot));
     gGeoMan->GetVolume(geoVersion)->AddNode(Cry_vol_wrap[i+16],i+17,new TGeoCombiTrans(tran_3[i].X(),tran_3[i].Y(),tran_3[i].Z(), geoRot_3));
   }
 

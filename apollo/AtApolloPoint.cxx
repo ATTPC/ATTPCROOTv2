@@ -25,6 +25,7 @@ AtApolloPoint::AtApolloPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 
                                    Double_t eLoss)
   : FairMCPoint(trackID, detID,  pos, mom, tof, length, eLoss)
 {
+  fCrystalID = crystalID;
 }
 
 // -------------------------------------------------------------------------

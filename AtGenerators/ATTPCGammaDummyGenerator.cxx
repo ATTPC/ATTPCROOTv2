@@ -222,6 +222,7 @@ Bool_t ATTPCGammaDummyGenerator::ReadEvent(FairPrimaryGenerator* primGen)
                     pz = pz * fGammaEnergies[i] / gammaMomentum;
                     break;
                 }
+                else br = br - fGammaBranchingRatios[i];
             }
             // if Sum(branchingRatios)<1, the leftover probability (up to 1) is defined as environmental noise
             doNotBoost = 1;

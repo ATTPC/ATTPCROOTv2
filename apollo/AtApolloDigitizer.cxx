@@ -30,7 +30,8 @@ AtApolloDigitizer::AtApolloDigitizer()
     , fNonUniformity(0)
 {
     fNonUniformity = 0.; // perfect crystals
-    fResolution = 0.;    // perfect crystals
+    fResolutionCsI = 0.;    // perfect crystals
+    fResolutionLaBr = 0.;    // perfect crystals
     fThreshold = 0.;     // no threshold
 }
 
@@ -75,10 +76,10 @@ InitStatus AtApolloDigitizer::Init()
     if (!rootManager)
         LOG(fatal) << "Init: No FairRootManager";
 
-    fApolloPointDataCA = (TClonesArray*)rootManager->GetObject("CrystalPoint");
+    fApolloPointDataCA = (TClonesArray*)rootManager->GetObject("AtApolloPoint");
     if (!fApolloPointDataCA)
     {
-        LOG(fatal) << "Init: No CrystalPoint CA";
+        LOG(fatal) << "Init: No AtApolloPoint CA";
         return kFATAL;
     }
 
@@ -168,8 +169,10 @@ void AtApolloDigitizer::Exec(Option_t* option)
             continue;
         }
 
-        if (fResolution > 0)
-            ((AtApolloCrystalCalData*)(fApolloCryCalDataCA->At(i)))->SetEnergy(ExpResSmearing(temp));
+        if (isCsI(tempCryID) && fResolutionCsI > 0)
+            ((AtApolloCrystalCalData*)(fApolloCryCalDataCA->At(i)))->SetEnergy(ExpResSmearingCsI(temp));
+        if (isLaBr(tempCryID) && fResolutionLaBr > 0)
+            ((AtApolloCrystalCalData*)(fApolloCryCalDataCA->At(i)))->SetEnergy(ExpResSmearingLaBr(temp));
     }
 }
 
@@ -217,10 +220,12 @@ AtApolloCrystalCalData* AtApolloDigitizer::AddCrystalCal(Int_t ident,
     return new (clref[size]) AtApolloCrystalCalData(ident, energy, time);
 }
 
-void AtApolloDigitizer::SetExpEnergyRes(Double_t crystalRes)
+void AtApolloDigitizer::SetExpEnergyRes(Double_t crystalResCsI, Double_t crystalResLaBr)
 {
-    fResolution = crystalRes;
-    LOG(INFO) << "AtApolloDigitizer::SetExpEnergyRes to " << fResolution << "% @ 1 MeV.";
+    fResolutionCsI = crystalResCsI;
+    fResolutionLaBr = crystalResLaBr;
+    LOG(INFO) << "AtApolloDigitizer::SetExpEnergyRes to " << fResolutionCsI << "% @ 1 MeV for CsI and "
+              << fResolutionLaBr << "% @ 1 MeV for LaBr.";
 }
 
 Double_t AtApolloDigitizer::NUSmearing(Double_t inputEnergy)
@@ -238,7 +243,7 @@ void AtApolloDigitizer::SetNonUniformity(Double_t nonU)
     LOG(INFO) << "AtApolloDigitizer::SetNonUniformity to " << fNonUniformity << " %";
 }
 
-Double_t AtApolloDigitizer::ExpResSmearing(Double_t inputEnergy)
+Double_t AtApolloDigitizer::ExpResSmearingCsI(Double_t inputEnergy)
 {
     // Smears the energy according to some Experimental Resolution distribution
     // Very simple  scheme where the Experimental Resolution
@@ -250,12 +255,35 @@ Double_t AtApolloDigitizer::ExpResSmearing(Double_t inputEnergy)
     //  ( % * energy ) / sqrt( energy )
     // and then the % is given at 1 MeV!!
     //
-    if (fResolution == 0)
+    if (fResolutionCsI == 0)
         return inputEnergy;
     else
     {
         // Energy in MeV, that is the reason for the factor 1000...
-        Double_t randomIs = gRandom->Gaus(0, inputEnergy * fResolution * 1000 / (235 * sqrt(inputEnergy * 1000)));
+        Double_t randomIs = gRandom->Gaus(0, inputEnergy * fResolutionCsI * 1000 / (235 * sqrt(inputEnergy * 1000)));
         return inputEnergy + randomIs / 1000;
     }
+}
+Double_t AtApolloDigitizer::ExpResSmearingLaBr(Double_t inputEnergy)
+{
+    if (fResolutionLaBr == 0)
+        return inputEnergy;
+    else
+    {
+        // Energy in MeV, that is the reason for the factor 1000...
+        Double_t randomIs = gRandom->Gaus(0, inputEnergy * fResolutionLaBr * 1000 / (235 * sqrt(inputEnergy * 1000)));
+        return inputEnergy + randomIs / 1000;
+    }
+}
+
+Bool_t AtApolloDigitizer::isCsI(Int_t id)
+{
+    if(id>6 &&id<27) return kTRUE;
+    else return kFALSE;
+}
+
+Bool_t AtApolloDigitizer::isLaBr(Int_t id)
+{
+    if(id>0 && id<7) return kTRUE;
+    else return kFALSE;
 }

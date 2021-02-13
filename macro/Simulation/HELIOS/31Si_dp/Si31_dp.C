@@ -16,6 +16,7 @@ void Si31_dp(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
 
   ATVertexPropagator* vertex_prop = new ATVertexPropagator();
 
+  Bool_t fApolloDigitizer = true; // Apply hit digitizer task for Apollo
 
   // -----   Create simulation run   ----------------------------------------
   FairRunSim* run = new FairRunSim();
@@ -77,7 +78,7 @@ void Si31_dp(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
   	        Double_t BExcEner = 0.0;
                 Double_t Bmass = 30.975363226999998; //
                 Double_t NomEnergy = 1.2; //Used to force the beam to stop within a certain energy range.
-               
+
 
 
 	          //ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
@@ -112,7 +113,7 @@ void Si31_dp(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
                   ResEner = 278.4; // For fixed target mode (Si Array) in MeV
 
                   // ---- Beam ----
-                  Zp.push_back(z); // 
+                  Zp.push_back(z); //
             	  Ap.push_back(a); //
             	  Qp.push_back(q);
                   Pxp.push_back(px);
@@ -122,7 +123,7 @@ void Si31_dp(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
             	  ExE.push_back(BExcEner);
 
                   // ---- Target ----
-                 Zp.push_back(1); // 
+                 Zp.push_back(1); //
 		 Ap.push_back(2); //
 		 Qp.push_back(0); //
 		 Pxp.push_back(0.0);
@@ -132,7 +133,7 @@ void Si31_dp(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
 		 ExE.push_back(0.0);//In MeV
 
                   //--- Scattered -----
-                Zp.push_back(14); // 
+                Zp.push_back(14); //
                 Ap.push_back(32); //
                 Qp.push_back(0);
           	Pxp.push_back(0.0);
@@ -143,7 +144,7 @@ void Si31_dp(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
 
 
                  // ---- Recoil -----
-		 Zp.push_back(1); // p  
+		 Zp.push_back(1); // p
 		 Ap.push_back(1); //
 		 Qp.push_back(0); //
 		 Pxp.push_back(0.0);
@@ -163,6 +164,37 @@ void Si31_dp(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
         primGen->AddGenerator(TwoBody);
 
 
+        // -----   Create GammaDummyGenerator
+             Double_t pdgId = 22;       // 22 for gamma emission, 2212 for proton emission
+             Double_t theta1 = 0.;      // polar angle distribution: lower edge (50)
+             Double_t theta2 = 90.;    // polar angle distribution: upper edge (51)
+             Double_t momentum = 0.001; // GeV/c
+             Int_t multiplicity = 1;
+             ATTPCGammaDummyGenerator* gammasGen = new ATTPCGammaDummyGenerator(pdgId, multiplicity);
+             gammasGen->SetThetaRange(theta1, theta2);
+             gammasGen->SetCosTheta();
+             gammasGen->SetPRange(momentum, momentum);
+             gammasGen->SetDecayChainPoint(0.001,0.1);
+             gammasGen->SetDecayChainPoint(0.009701,0.1);
+             gammasGen->SetDecayChainPoint(0.009934,0.4);
+             gammasGen->SetDecayChainPoint(0.010279,0.2);
+             gammasGen->SetDecayChainPoint(0.010846,0.2);
+             gammasGen->SetPhiRange(0., 360.); //(2.5,4)
+             gammasGen->SetBoxXYZ(-0.1, 0.1, -0.1, 0.1, -0.1, 0.1);
+             gammasGen->SetLorentzBoost(0.0); // for instance beta=0.8197505718204776 for 700 A MeV
+             // add the gamma generator
+             primGen->AddGenerator(gammasGen);
+
+             /*
+             31Si beam 9 MeV/u
+             target CD2 = ~100 ug/cm2
+             silicon array roughly from -10cm to -40cm (upstream of the target (edited)
+             to look at excitation energies of 32Si ranging from 9.2 MeV to ~ 10 - 11 MeV
+             @Héctor por favor anade tambien las gammas desde un estado 9.5 MeV por
+             encima de la neutron separation energy de 32Si, cualquier cosa inventada vale por ahora
+              9701, 9934, 10279, 10846
+              */
+
 	run->SetGenerator(primGen);
 
 // ------------------------------------------------------------------------
@@ -170,15 +202,24 @@ void Si31_dp(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
   //---Store the visualiztion info of the tracks, this make the output file very large!!
   //--- Use it only to display but not for production!
   run->SetStoreTraj(kTRUE);
-  
 
+  // ----- Initialize ApolloDigitizer task (from Point Level to Cal Level)
+  if (fApolloDigitizer)
+    {
+      AtApolloDigitizer* apolloDig = new AtApolloDigitizer();
+      apolloDig->SetNonUniformity(1.0);           // Non-uniformity: 1 means +-1% max deviation);
+      apolloDig->SetExpEnergyRes(6.,3.);          // 5. means 5% at 1 MeV (first CsI, second LaBr)
+      apolloDig->SetDetectionThreshold(0.000010); // in GeV!! 0.000010 means 10 keV
+      run->AddTask(apolloDig);
+    }
 
   // -----   Initialize simulation run   ------------------------------------
   run->Init();
   // ------------------------------------------------------------------------
 
   //Trajectory filters
-  
+
+
 
 
   // -----   Runtime database   ---------------------------------------------
