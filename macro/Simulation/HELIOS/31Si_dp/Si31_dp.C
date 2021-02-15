@@ -174,11 +174,16 @@ void Si31_dp(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
              gammasGen->SetThetaRange(theta1, theta2);
              gammasGen->SetCosTheta();
              gammasGen->SetPRange(momentum, momentum);
-             gammasGen->SetDecayChainPoint(0.001,0.1);
-             gammasGen->SetDecayChainPoint(0.009701,0.1);
-             gammasGen->SetDecayChainPoint(0.009934,0.4);
-             gammasGen->SetDecayChainPoint(0.010279,0.2);
-             gammasGen->SetDecayChainPoint(0.010846,0.2);
+             gammasGen->SetNuclearDecayChain();
+             gammasGen->SetDecayChainPoint(0.001,0.2);
+             gammasGen->SetDecayChainPoint(0.002,0.2);
+             gammasGen->SetDecayChainPoint(0.003,0.2);
+             gammasGen->SetDecayChainPoint(0.004,0.2);
+             gammasGen->SetDecayChainPoint(0.005,0.2);
+             //gammasGen->SetDecayChainPoint(0.009701,0.1);
+             //gammasGen->SetDecayChainPoint(0.009934,0.4);
+             //gammasGen->SetDecayChainPoint(0.010279,0.2);
+             //gammasGen->SetDecayChainPoint(0.010846,0.2);
              gammasGen->SetPhiRange(0., 360.); //(2.5,4)
              gammasGen->SetBoxXYZ(-0.1, 0.1, -0.1, 0.1, -0.1, 0.1);
              gammasGen->SetLorentzBoost(0.0); // for instance beta=0.8197505718204776 for 700 A MeV

@@ -106,6 +106,8 @@ class ATTPCGammaDummyGenerator : public FairGenerator
 
   void SetDebug(Bool_t debug = 0) { fDebug = debug; }
 
+  void SetNuclearDecayChain(Bool_t nuc = 1) { fNuclearDecayChainIsSet = nuc; }
+
   void SetLorentzBoost(Double32_t beta = 0)
   {
       SetFragmentVelocity(beta);
