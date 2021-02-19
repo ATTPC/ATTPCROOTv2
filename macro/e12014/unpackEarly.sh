@@ -1,9 +1,9 @@
 #!/bin/bash
 
-MINRUN=163
-MAXRUN=285
+MINRUN=0
+MAXRUN=130
 
-LOGFILE=unpackEnd.log
+LOGFILE=unpackEarly.log
 
 rm -f $LOGFILE
 for RUN in $(seq $MINRUN $MAXRUN)

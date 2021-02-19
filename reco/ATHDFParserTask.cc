@@ -21,7 +21,7 @@ ATHDFParserTask::ATHDFParserTask():
   fRawEventArray = new TClonesArray("ATRawEvent");
   fEventID = 0;
   fIniEventID = 0;
-  fTimestampIndex = 1;
+  fNumberTimestamps = 1;
   fRawEvent = new ATRawEvent();
   fIsOldFormat  = kFALSE;
   fIsBaseLineSubtraction = kFALSE;
@@ -45,7 +45,7 @@ ATHDFParserTask::ATHDFParserTask(Int_t opt):
   fRawEventArray = new TClonesArray("ATRawEvent");
   fEventID = 0;
   fIniEventID = 0;
-  fTimestampIndex = 1;
+  fNumberTimestamps = 1;
   fRawEvent = new ATRawEvent();
 
   kOpt = opt;
@@ -226,7 +226,11 @@ void ATHDFParserTask::Exec(Option_t *opt)
   auto header = HDFParser->get_header(header_name.Data());
 
   fRawEvent->SetEventID(header.at(0));
-  fRawEvent->SetTimestamp(header.at(fTimestampIndex));
+
+  //Get the timestamps
+  fRawEvent->SetNumberOfTimestamps(fNumberTimestamps);
+  for(int i = 0; i < fNumberTimestamps; ++i)
+    fRawEvent->SetTimestamp(header.at(i+1), i);
 
   std::size_t npads = HDFParser->n_pads(event_name.Data());
 

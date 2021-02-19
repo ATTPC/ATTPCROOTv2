@@ -34,14 +34,16 @@ public:
   void SetPad(ATPad *pad);
   void SetIsGood(Bool_t value);
   void RemovePad(Int_t padNo);
-  void SetTimestamp(ULong_t timestamp);
+  void SetTimestamp(ULong64_t timestamp, int index = 0);
+  void SetNumberOfTimestamps(int numTS);
   void SetIsExtGate(Bool_t value);
   void SetSimMCPointMap(std::multimap<Int_t,std::size_t> map);
 
   // getters
   ULong_t GetEventID();
   Int_t GetNumPads();
-  ULong_t GetTimestamp();
+  ULong64_t GetTimestamp(int index = 0);
+  std::vector<ULong64_t> *GetTimestamps();
   Bool_t IsGood();
   Bool_t GetIsExtGate();
 
@@ -56,14 +58,14 @@ public:
 private:
   ULong_t fEventID;
   std::vector<ATPad> fPadArray;
-  ULong_t fTimestamp;
+  std::vector<ULong64_t> fTimestamp;
 
   Bool_t fIsGood;
   Bool_t fIsinGate;
 
   std::multimap<Int_t,std::size_t> fSimMCPointMap; //<! Monte Carlo Point - Hit map for kinematics
 
-  ClassDef(ATRawEvent, 2);
+  ClassDef(ATRawEvent, 3);
 };
 
 #endif

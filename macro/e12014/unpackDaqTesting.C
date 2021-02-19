@@ -1,7 +1,7 @@
-//Unpacks tpc files from /mnt/rawdata/ to /mnt/analysis/e12014/TPC/unpacked
+//Unpacks tpc files from /mnt/daqtesting/ to /mnt/analysis/e12014/TPC/unpacked
 
 // Requires the TPC run number
-void unpack(int runNumber)
+void unpackDaqTesting(int runNumber)
 {
   //Load the library for unpacking and reconstruction
   gSystem->Load("libATTPCReco.so");
@@ -11,7 +11,7 @@ void unpack(int runNumber)
   
    
   //Set the input file
-  TString inputFile = TString::Format("/mnt/rawdata/e12014_attpc/h5/run_%04d.h5", runNumber);
+  TString inputFile = TString::Format("/mnt/daqtesting/e12014_attpc_transfer/h5/run_%04d.h5", runNumber);
 
   //Set the output file
   TString outputFile = TString::Format("/mnt/analysis/e12014/TPC/unpacked/run_%04d.root", runNumber);
@@ -53,20 +53,6 @@ void unpack(int runNumber)
   HDFParserTask->SetNumberTimestamps(2);
   HDFParserTask->SetBaseLineSubtraction(kTRUE);
 
-/*
-  //cobo asad aget channel
-  auto hash = HDFParserTask->CalculateHash(10,0,2,32);
-
-  //Add all eight aux channels to the file
-  for(int i = 0; i < 4; ++i)
-  {
-    hash = HDFParserTask->CalculateHash(10, 0, i, 0);
-    HDFParserTask->SetAuxChannel(hash, Form("aget%d_ch%d", i, 0));
-    hash = HDFParserTask->CalculateHash(10, 0, i, 34);
-    HDFParserTask->SetAuxChannel(hash, Form("aget%d_ch%d", i, 34));
-    }
-*/
-
   //Add the aux channels from the experiment
   auto hash = HDFParserTask->CalculateHash(10,0,0,0);
   HDFParserTask->SetAuxChannel(hash, "MCP_US");
@@ -76,8 +62,9 @@ void unpack(int runNumber)
   HDFParserTask->SetAuxChannel(hash, "MCP_DS");
   hash = HDFParserTask->CalculateHash(10,0,2,34);
   HDFParserTask->SetAuxChannel(hash, "IC");
+  
 
-
+  
   //Create PSA task
   ATPSATask *psaTask = new ATPSATask();
   psaTask -> SetPersistence(kTRUE);
@@ -104,8 +91,7 @@ void unpack(int runNumber)
   auto numEvents = HDFParserTask->GetNumEvents()/2;
 
   //numEvents = 1700;//217;
-  //numEvents = 10;
-  
+  numEvents = 10;
   std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
   //return;

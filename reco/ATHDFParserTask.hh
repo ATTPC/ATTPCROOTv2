@@ -47,8 +47,8 @@ public:
   std::pair<bool,std::string> FindAuxChannel(uint32_t hash);
   Bool_t SetBaseLineSubtraction(Bool_t value = kFALSE);
 
-  void SetTimestampIndex(int index) { fTimestampIndex = index; };
-  int  GetTimestampIndex()    { return fTimestampIndex; };
+  void SetNumberTimestamps(int numTimestamps) { fNumberTimestamps = numTimestamps; };
+  int  GetNumberTimestamps()    { return fNumberTimestamps; };
   std::size_t GetNumEvents() { return fNumEvents; };
   
   virtual InitStatus Init();
@@ -93,7 +93,7 @@ private:
   multiarray AtPadCoordArr;
 
   Int_t  kOpt;
-  Int_t  fTimestampIndex;
+  Int_t  fNumberTimestamps;
   Bool_t fIsProtoGeoSet;
   Bool_t fIsProtoMapSet;
   Bool_t fIsBaseLineSubtraction;
