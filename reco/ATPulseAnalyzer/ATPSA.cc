@@ -11,7 +11,7 @@ using std::max_element;
 using std::min_element;
 using std::distance;
 
-ClassImp(ATPSA) ATPSA::ATPSA()
+ ATPSA::ATPSA()
 {
     //TODO:Move to class that needs them
     fIniTB = 0;
@@ -25,19 +25,17 @@ ClassImp(ATPSA) ATPSA::ATPSA()
     fIsJitterCalibrated = kFALSE;
     fCalibration = new ATCalibration();
 
-    fLogger = FairLogger::GetLogger();
-
     FairRun *run = FairRun::Instance();
     if (!run)
-	fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+	LOG(FATAL) << "No analysis run!";
 
     FairRuntimeDb *db = run->GetRuntimeDb();
     if (!db)
-	fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+	LOG(FATAL) << "No runtime database!";
 
     fPar = (ATDigiPar *) db->getContainer("ATDigiPar");
     if (!fPar)
-	fLogger->Fatal(MESSAGE_ORIGIN, "ATDigiPar not found!!");
+	LOG(FATAL) << "ATDigiPar not found!!";
 
     fPadPlaneX = fPar->GetPadPlaneX();
     fPadSizeX = fPar->GetPadSizeX();
@@ -241,3 +239,5 @@ void ATPSA::TrackMCPoints(std::multimap < Int_t, std::size_t >&map, ATHit * hit)
     }
 
 }
+
+ClassImp(ATPSA)

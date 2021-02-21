@@ -27,11 +27,8 @@ ClassImp(ATPSATask);
 
 ATPSATask::ATPSATask(ATPSA * psa)
 {
-    fLogger = FairLogger::GetLogger();
     fPSA = psa;
-
     fIsPersistence = kFALSE;
-
     fEventHArray = new TClonesArray("ATEvent");
 }
 
@@ -49,23 +46,21 @@ InitStatus ATPSATask::Init()
 {
     FairRootManager *ioMan = FairRootManager::Instance();
     if (ioMan == 0) {
-	fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+	LOG(ERROR) << "Cannot find RootManager!";
 	return kERROR;
     }
 
     fRawEventArray = (TClonesArray *) ioMan->GetObject("ATRawEvent");
     if (fRawEventArray == 0) {
-	fLogger->Error(MESSAGE_ORIGIN, "Cannot find ATRawEvent array!");
+	LOG(ERROR) << "Cannot find ATRawEvent array!";
 	return kERROR;
     }
     //Retrieving simulated points, if available
     fMCPointArray = (TClonesArray *) ioMan->GetObject("AtTpcPoint");
     if (fMCPointArray != 0) {
-	fLogger->Info(MESSAGE_ORIGIN,
-		      " Simulated points found (simulation analysis) ");
+	LOG(INFO) << " Simulated points found (simulation analysis) ";
     } else if (fMCPointArray != 0) {
-	fLogger->Info(MESSAGE_ORIGIN,
-		      " Simulated points not found (experimental data analysis) ");
+	LOG(INFO) << " Simulated points not found (experimental data analysis) ";
     }
 
     ioMan->Register("ATEventH", "ATTPC", fEventHArray, fIsPersistence);

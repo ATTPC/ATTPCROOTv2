@@ -21,7 +21,6 @@ class ATPSATask:public FairTask {
     virtual void Exec(Option_t * opt);
 
  private:
-     FairLogger * fLogger;
 
     TClonesArray *fRawEventArray;
     TClonesArray *fEventHArray;

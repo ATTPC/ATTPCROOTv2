@@ -104,10 +104,7 @@ void
 	CalcLorentzVector();
 
 	if (!(pad->IsPedestalSubtracted())) {
-	    fLogger->Error(MESSAGE_ORIGIN,
-			   "Pedestal should be subtracted to use this class!");
-
-	    //return;
+	    LOG(ERROR) << "Pedestal should be subtracted to use this class!";
 	}
 
 	Double_t *adc = pad->GetADC();

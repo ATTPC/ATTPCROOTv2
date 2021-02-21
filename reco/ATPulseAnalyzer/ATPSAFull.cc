@@ -43,15 +43,6 @@ void
 	ry.RotateY(180.0 * TMath::Pi() / 180.0);
 	rx.RotateX(6.0 * TMath::Pi() / 180.0);
 
-	Double_t xPos = pad->GetPadXCoord();
-	Double_t yPos = pad->GetPadYCoord();
-	Double_t zPos = 0;
-	Double_t xPosRot = 0;
-	Double_t yPosRot = 0;
-	Double_t zPosRot = 0;
-	Double_t xPosCorr = 0;
-	Double_t yPosCorr = 0;
-	Double_t zPosCorr = 0;
 	Double_t charge = 0;
 	Int_t maxAdcIdx = 0;
 	Int_t numPeaks = 0;
@@ -59,8 +50,7 @@ void
 	CalcLorentzVector();
 
 	if (!(pad->IsPedestalSubtracted())) {
-	    fLogger->Error(MESSAGE_ORIGIN,
-			   "Pedestal should be subtracted to use this class!");
+	    LOG(ERROR) << "Pedestal should be subtracted to use this class!";
 	    //return;
 	}
 

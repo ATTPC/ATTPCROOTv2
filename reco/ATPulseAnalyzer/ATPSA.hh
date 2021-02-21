@@ -29,7 +29,7 @@ typedef
 class ATPSA {
  public:
     ATPSA();
-    virtual ~ ATPSA();
+    virtual ~ATPSA();
 
     //! Setting threshold
     void SetThreshold(Int_t threshold);
@@ -45,7 +45,6 @@ class ATPSA {
     virtual void Analyze(ATRawEvent * rawEvent, ATEvent * event) = 0;
 
  protected:
-    FairLogger * fLogger;	///< logger pointer
     ATDigiPar *fPar;		///< parameter container
 
     Bool_t fIsGainCalibrated;
@@ -99,6 +98,6 @@ class ATPSA {
 
     TVector3 RotateDetector(Double_t x, Double_t y, Double_t z, Int_t tb);
 
-ClassDef(ATPSA, 4)};
+    ClassDef(ATPSA, 4)};
 
 #endif

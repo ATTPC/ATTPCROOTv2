@@ -65,8 +65,7 @@ void
 	}
 
 	if (!(pad->IsPedestalSubtracted())) {
-	    fLogger->Error(MESSAGE_ORIGIN,
-			   "Pedestal should be subtracted to use this class!");
+	    LOG(ERROR) << "Pedestal should be subtracted to use this class!";
 
 	    //return;
 	}
