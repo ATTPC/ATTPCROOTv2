@@ -45,6 +45,7 @@ endforeach()
 # after check of cmake version since this is a new feature
 project(ATTPC)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 #In case you need Fortran
 #ENABLE_LANGUAGE(Fortran)

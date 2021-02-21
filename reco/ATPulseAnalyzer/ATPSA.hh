@@ -1,9 +1,9 @@
 #ifndef ATPSA_H
 #define ATPSA_H
 
+#include "ATEvent.hh"
 #include "ATRawEvent.hh"
 #include "ATPad.hh"
-#include "ATEvent.hh"
 #include "ATHit.hh"
 #include "ATDigiPar.hh"
 #include "ATCalibration.hh"
@@ -23,82 +23,71 @@
 
 #include "AtTpcPoint.h"
 
-typedef std::multimap<Int_t, std::size_t>::iterator MCMapIterator;
+typedef
+ std::multimap < Int_t, std::size_t >::iterator MCMapIterator;
 
-class ATPSA
-{
-  public:
+class ATPSA {
+ public:
     ATPSA();
-    virtual ~ATPSA();
+    virtual ~ ATPSA();
 
     //! Setting threshold
     void SetThreshold(Int_t threshold);
     void SetThresholdLow(Int_t thresholdlow);
-    void SetBackGroundSuppression();
-    void SetBackGroundInterpolation();
-    void SetPeakFinder();
-    void SetMaxFinder();
-    void SetBaseCorrection(Bool_t value);
-    void SetTimeCorrection(Bool_t value);
-    //void SetAuxChannel(std::vector<Int_t> AuxCh);
 
-    void SetMeanK(Int_t value); //Number of neighbors
-    void SetStddevMulThresh(Double_t value);
     void SetGainCalibration(TString gainFile);
     void SetJitterCalibration(TString jitterFile);
-    void SetTBLimits(std::pair<Int_t,Int_t> limits);
-   
-    void SetSimulatedEvent(TClonesArray* MCSimPointArray);
 
-    virtual void Analyze(ATRawEvent *rawEvent, ATEvent *event) = 0;
+    void SetTBLimits(std::pair < Int_t, Int_t > limits);
 
-  protected:
-    FairLogger *fLogger;      ///< logger pointer
-    ATDigiPar *fPar;          ///< parameter container
+    void SetSimulatedEvent(TClonesArray * MCSimPointArray);
 
-    Bool_t fBackGroundSuppression;
-    Bool_t fBackGroundInterp;
-    Bool_t fIsPeakFinder;
-    Bool_t fIsMaxFinder;
-    Bool_t fIsBaseCorr;
-    Bool_t fIsTimeCorr;
+    virtual void Analyze(ATRawEvent * rawEvent, ATEvent * event) = 0;
+
+ protected:
+    FairLogger * fLogger;	///< logger pointer
+    ATDigiPar *fPar;		///< parameter container
 
     Bool_t fIsGainCalibrated;
     Bool_t fIsJitterCalibrated;
 
     ATCalibration *fCalibration;
+    TClonesArray *fMCSimPointArray;
 
-    Int_t fPadPlaneX;         ///< pad plane size x in mm
-    Int_t fPadSizeX;          ///< pad size x in mm
-    Int_t fPadSizeZ;          ///< pad size y in mm
-    Int_t fPadRows;           ///< number of total pad rows
-    Int_t fPadLayers;         ///< number of total pad layers
+    Int_t fThreshold;		///< threshold of ADC value
+    Int_t fThresholdlow;	///< threshold for Central pads
+    Bool_t fUsingLowThreshold;
 
-    Int_t fNumTbs;            ///< the number of time buckets used in taking data
-    Int_t fTBTime;            ///< time duration of a time bucket in ns
-    Int_t fEntTB;
-    Int_t fIniTB;             /// First TB for charge integration
-    Int_t fEndTB;             /// Last TB for charge integration
-    Double_t fDriftVelocity;  ///< drift velocity of electron in cm/us
-    Double_t fMaxDriftLength; ///< maximum drift length in mm
-    Double_t fZk;             //Relative position of micromegas-cathode
+    Int_t fIniTB;		/// First TB for charge integration
+    Int_t fEndTB;		/// Last TB for charge integration
 
-    Int_t fThreshold;         ///< threshold of ADC value
-    Int_t fThresholdlow;         ///< threshold for Central pads
+    //Variables from parameter file
     Double_t fBField;
     Double_t fEField;
     Double_t fTiltAng;
     TVector3 fLorentzVector;
     Int_t fTB0;
     Double_t fThetaPad;
-    Int_t fMeanK;
-    Double_t fStdDev;
-    //std::vector<Int_t> fAuxChannels; //Auxiliary external channels
 
+    Int_t fPadPlaneX;		///< pad plane size x in mm
+    Int_t fPadSizeX;		///< pad size x in mm
+    Int_t fPadSizeZ;		///< pad size y in mm
+    Int_t fPadRows;		///< number of total pad rows
+    Int_t fPadLayers;		///< number of total pad layers
 
-    Double_t CalculateX(Double_t row);      ///< Calculate x position in mm. This returns the center position of given pad row.
-    Double_t CalculateZ(Double_t peakIdx);  ///< Calculate z position in mm using the peak index.
-    Double_t CalculateY(Double_t layer);    ///< Calculate y position in mm. This returns the center position of given pad layer.
+    Int_t fNumTbs;		///< the number of time buckets used in taking data
+    Int_t fTBTime;		///< time duration of a time bucket in ns
+    Int_t fEntTB;
+    Double_t fDriftVelocity;	///< drift velocity of electron in cm/us
+    Double_t fMaxDriftLength;	///< maximum drift length in mm
+    Double_t fZk;		//Relative position of micromegas-cathode
+
+    //Protected functions
+    void TrackMCPoints(std::multimap < Int_t, std::size_t >&map, ATHit * hit);	//< Assign MC Points kinematics to each hit.
+
+    Double_t CalculateX(Double_t row);	///< Calculate x position in mm. This returns the center position of given pad row.
+    Double_t CalculateZ(Double_t peakIdx);	///< Calculate z position in mm using the peak index.
+    Double_t CalculateY(Double_t layer);	///< Calculate y position in mm. This returns the center position of given pad layer.
 
     Double_t CalculateZGeo(Double_t peakIdx);
 
@@ -108,15 +97,8 @@ class ATPSA
 
     void CalcLorentzVector();
 
-    TVector3 RotateDetector(Double_t x,Double_t y,Double_t z,Int_t tb);
+    TVector3 RotateDetector(Double_t x, Double_t y, Double_t z, Int_t tb);
 
-    void TrackMCPoints(std::multimap<Int_t,std::size_t>& map, ATHit* hit);//< Assign MC Points kinematics to each hit.
-
-    TClonesArray* fMCSimPointArray;
-
-
-
-  ClassDef(ATPSA, 3)
-};
+ClassDef(ATPSA, 4)};
 
 #endif

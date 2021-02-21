@@ -3,76 +3,35 @@
 
 // FAIRROOT classes
 #include "FairTask.h"
-#include "FairLogger.h"
+class FairLogger;
 
 // ATTPCROOT classes
-#include "ATRawEvent.hh"
-#include "ATDigiPar.hh"
-#include "ATPSA.hh"
+class ATPSA;
 
 // ROOT classes
-#include "TClonesArray.h"
+class TClonesArray;
 
-class ATPSATask : public FairTask {
-  public:
-    ATPSATask();
+class ATPSATask:public FairTask {
+ public:
+    ATPSATask(ATPSA * psaMethod);
     ~ATPSATask();
 
-    void SetPSAMode(Int_t value = 0);
-    void SetPersistence(Bool_t value = kTRUE);
-    void SetThreshold(Double_t threshold);
-    void SetThresholdLow(Double_t thresholdlow);
-    void SetBackGroundPeakFinder(Bool_t value);
-    void SetBackGroundInterpolation(Bool_t value);
-    void SetPeakFinder();
-    void SetMaxFinder();
-    void SetBaseCorrection(Bool_t value);
-    void SetTimeCorrection(Bool_t value);
-    void SetGainCalibration(TString gainFile);
-    void SetJitterCalibration(TString jitterFile);
-    //void SetAuxChannel(std::vector<Int_t> AuxCh);
-    //void EnableAuxChannels(std::vector<Int_t> AuxCh);
-
-    //For PCL Outlier Removal
-    void SetMeanK(Int_t value); //Number of neighbors
-    void SetStddevMulThresh(Double_t value);
-    void SetTBLimits(std::pair<Int_t,Int_t> limits);
-
-
+    void SetPersistence(Bool_t value);
     virtual InitStatus Init();
-    virtual void SetParContainers();
-    virtual void Exec(Option_t *opt);
+    virtual void Exec(Option_t * opt);
 
-  private:
-    FairLogger *fLogger;
+ private:
+     FairLogger * fLogger;
 
-    ATDigiPar *fPar;
     TClonesArray *fRawEventArray;
     TClonesArray *fEventHArray;
     TClonesArray *fMCPointArray;
 
     ATPSA *fPSA;
-    Int_t fPSAMode;
 
     Bool_t fIsPersistence;
-    Bool_t fIsBGPK;
-    Bool_t fIsBGInter;
-    Bool_t fIsPeakFinder;
-    Bool_t fIsMaxFinder;
-    Bool_t fIsBaseCorr;
-    Bool_t fIsTimeCorr;
 
-    TString fGainFile;
-    TString fJitterFile;
-
-    Double_t fThreshold;
-    Double_t fThresholdlow;
-    //std::vector<Int_t> fAuxChannels;
-    Int_t fMeanK;
-    Double_t fStdDev;
-    std::pair<Int_t,Int_t> fTBRange;
-
-  ClassDef(ATPSATask, 1);
+     ClassDef(ATPSATask, 2);
 };
 
 #endif

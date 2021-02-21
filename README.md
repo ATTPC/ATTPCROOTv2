@@ -4,7 +4,7 @@ The framework allows the end user to unpack and analyze the data, as well as per
 
 There was also some documentation written as part of Alexander Carl's 2019 thesis which can be found [here](https://publications.nscl.msu.edu/thesis/%20Carls_2019_6009.pdf)
 
-# Installation on NSCL cluster
+# Installation on NSCL/FRIB cluster
 
 ROOT and FairROOT are already installed on the system. The modules and their prerequisites just need to be loaded with the commands:
 ```
@@ -23,6 +23,28 @@ make -j 4
 ```
 
 After the source builds, you should be good to go.
+
+# For developers
+
+### Formatting code for pull requests
+Pull requests submitted should have the code formated in the linux stlye with tabs as 4 spaces instead of 8. The GNU program `indent` can be used to easily reformat code before commiting changes. If called from the root directory as `indent [files]`, it will read the local profile `.indent.pro`. If called elsewhere, the proper command line arguments need to be passed `indent -linux -i4 -pmt [files]`. If there is a region of code you want to make sure is not reformatted by `indent` you can use control comments. Formatting of code is turned off with the comment `// *INDENT-OFF*` and re-enabled with the comment `// *INDENT-ON*`.
+
+To the extent possible, keep `#include` statements in source files. In a header file, a forward decleration is always preferable to a `#include`, if possible.
+
+If any changes are made to the memory layout of a class, the version number in the ROOT macro `ClassDef` needs to be incremented. For members of a class, prefer ROOT types (ie Double_t) over native types.
+
+### Adding a class
+
+Classes, for example a new generator, can be added by created the header and source files. In that directory the `CMakeLists.txt` file must be edited to add any include directories needed as well as add the source file so the make file knows to compile it. In addition the class should be added the the local `GenLinkDef.h` file, if needed. In addition, a symbolic link should be created to the new header in the `include` directory.
+
+In general, any class added or modified should try to respect backwards compatibilty. In addition, it should avoid modifying important base classes unless there is a good reason. That is, if you're adding a feature only used in a certain experiment to a certain class you should extend that class rather then modify it.
+
+### Expanding on tasks
+
+Each task class (something that inherits from FairTask) should be primarily responsible for setting up the input and output. The logic of the task should be handled by another class, and instance of which is a member of the task class. When adding new features or options to a task the base logic class should be extended instead of modified.
+
+For example, the task responsible for pulse shape analysis is `ATPSATask`. It contains a member `fPSA` of type `ATPSA`.Each PSA method extends `ATPSA` and when ATPSATask is created, it should be passed a pointer to an instance of a class derived from `ATPSA`. This sets the behavior of the task and holds all of the necessary parameters and flags.
+
 
 # Creating geometry files
 
@@ -70,12 +92,10 @@ During a run, the generator will boost the fragments before generating the parti
 
 There is a macro for generating these input files in [macro/Simulation/E12014](macro/Simulation/E12014).
 
+# Running Analysis
+TODO
 
-# Adding a class
-
-Classes, for example a new generator, can be added by created the header and source files. In that directory the `CMakeLists.txt` file must be edited to add any include directories needed as well as add the source file so the make file knows to compile it. In addition the class should be added the the local `GenLinkDef.h` file, if needed.
-
-# Thoughts on design
+# Notes on design
 ATTPCROOT is task based and there are two main input streams of data. One is from simulations, the other experimental data. The two streams come together at the level of waveforms on the pads, either simulated or real. From then on the analysis is identiacal.
 
 ## Simulation Tasks

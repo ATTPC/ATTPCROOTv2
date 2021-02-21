@@ -7,15 +7,13 @@
 // ROOT classes
 #include "TSpectrum.h"
 
-class ATPSAProtoFull : public ATPSA
-{
-  public:
+class ATPSAProtoFull:public ATPSA {
+ public:
     ATPSAProtoFull();
     ~ATPSAProtoFull();
 
-    void Analyze(ATRawEvent *rawEvent, ATEvent *event);
+    void Analyze(ATRawEvent * rawEvent, ATEvent * event);
 
-  ClassDef(ATPSAProtoFull, 1)
-};
+ ClassDef(ATPSAProtoFull, 1)};
 
 #endif

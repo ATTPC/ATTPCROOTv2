@@ -3,17 +3,14 @@
 
 #include "ATPSA.hh"
 
-class ATPSA;
-
-class ATPSASimple : public ATPSA
-{
-  public:
+class ATPSASimple:public ATPSA {
+ public:
     ATPSASimple();
     ~ATPSASimple();
 
-    void Analyze(ATRawEvent *rawEvent, ATEvent *event);
+    void Analyze(ATRawEvent * rawEvent, ATEvent * event) override;
 
-  ClassDef(ATPSASimple, 1);
+     ClassDef(ATPSASimple, 2);
 };
 
 #endif

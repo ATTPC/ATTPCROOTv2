@@ -2,25 +2,19 @@
 #define ATPSAPROTO_H
 
 #include "ATPSA.hh"
-#include "TH1F.h"
 
-// ROOT classes
-#include "TSpectrum.h"
-
-class ATPSAProto : public ATPSA
-{
-  public:
+class ATPSAProto:public ATPSA {
+ public:
     ATPSAProto();
     ~ATPSAProto();
 
-    void Analyze(ATRawEvent *rawEvent, ATEvent *event);
+    void SetBackGroundSuppression();
 
-  private:
-    //TSpectrum *fPeakFinder;  /// TSpectrum object
+    void Analyze(ATRawEvent * rawEvent, ATEvent * event) override;
 
+ private:
+     Bool_t fBackGroundSuppression;
 
-
-  ClassDef(ATPSAProto, 1)
-};
+ ClassDef(ATPSAProto, 2)};
 
 #endif

@@ -3,22 +3,28 @@
 
 #include "ATPSA.hh"
 
-// ROOT classes
-#include "TSpectrum.h"
-
-class ATPSASimple2 : public ATPSA
-{
-  public:
+class ATPSASimple2:public ATPSA {
+ public:
     ATPSASimple2();
     ~ATPSASimple2();
 
-    void Analyze(ATRawEvent *rawEvent, ATEvent *event);
+    void Analyze(ATRawEvent * rawEvent, ATEvent * event) override;
 
-  private:
-    //TSpectrum *fPeakFinder;  /// TSpectrum object
+    void SetBackGroundSuppression();
+    void SetBackGroundInterpolation();
+    void SetPeakFinder();
+    void SetMaxFinder();
+    void SetBaseCorrection(Bool_t value);
+    void SetTimeCorrection(Bool_t value);
 
+ private:
+     Bool_t fBackGroundSuppression;
+    Bool_t fBackGroundInterp;
+    Bool_t fIsPeakFinder;
+    Bool_t fIsMaxFinder;
+    Bool_t fIsBaseCorr;
+    Bool_t fIsTimeCorr;
 
-  ClassDef(ATPSASimple2, 1)
-};
+ ClassDef(ATPSASimple2, 2)};
 
 #endif
