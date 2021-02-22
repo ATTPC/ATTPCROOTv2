@@ -1,4 +1,18 @@
 #include "ATPSAFull.hh"
+
+// FairRoot classes
+#include "FairRuntimeDb.h"
+#include "FairRun.h"
+
+//ATTPCROOT classes
+#include "ATRawEvent.hh"
+#include "ATEvent.hh"
+#include "ATDigiPar.hh"
+#include "ATCalibration.hh"
+#include "ATHit.hh"
+#include "AtTpcPoint.h"
+
+//ROOT classes
 #include "TH1F.h"
 #include "TRotation.h"
 #include "TMatrixD.h"
@@ -6,14 +20,15 @@
 #include "TSpectrum.h"
 
 // STL
+#include <algorithm>
 #include <cmath>
 #include <map>
+
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-#include <algorithm>
 
-ClassImp(ATPSAFull) ATPSAFull::ATPSAFull()
+ATPSAFull::ATPSAFull()
 {
     //fPeakFinder = new TSpectrum();
 }
@@ -168,3 +183,5 @@ void
     event->SetMultiplicityMap(PadMultiplicity);
 
 }
+
+ClassImp(ATPSAFull)

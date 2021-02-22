@@ -1,16 +1,29 @@
 #include "ATPSASimple2.hh"
+
+#include "FairLogger.h"
+
+//ATTPCROOT classes
+#include "ATCalibration.hh"
+#include "ATRawEvent.hh"
+#include "ATEvent.hh"
+#include "ATHit.hh"
+#include "AtTpcPoint.h"
+
+//ROOT classes
 #include "TH1F.h"
 #include "TRotation.h"
 #include "TMatrixD.h"
 #include "TArrayD.h"
+#include "TSpectrum.h"
 
 // STL
+#include <algorithm>
 #include <cmath>
 #include <map>
+
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-#include <algorithm>
 
 ClassImp(ATPSASimple2) ATPSASimple2::ATPSASimple2()
 {

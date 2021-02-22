@@ -1,14 +1,24 @@
 #include "ATPSAProtoFull.hh"
+
+#include "FairLogger.h"
+
 #include "TH1.h"
+
+//ATTPCROOT classes
+#include "ATRawEvent.hh"
+#include "ATEvent.hh"
+#include "ATCalibration.hh"
+#include "ATHit.hh"
 
 // STL
 #include <cmath>
 #include <map>
+
 #ifdef _OPENMP
 #include <omp.h>
 #endif
 
-ClassImp(ATPSAProtoFull) ATPSAProtoFull::ATPSAProtoFull()
+ATPSAProtoFull::ATPSAProtoFull()
 {
     //fPeakFinder = new TSpectrum();
     //HPeak = new TH1F("HPeak","HPeak",512,0,511);
@@ -18,8 +28,7 @@ ATPSAProtoFull::~ATPSAProtoFull()
 {
 }
 
-void
- ATPSAProtoFull::Analyze(ATRawEvent * rawEvent, ATEvent * event)
+void ATPSAProtoFull::Analyze(ATRawEvent * rawEvent, ATEvent * event)
 {
     Int_t numPads = rawEvent->GetNumPads();
     Int_t hitNum = 0;
@@ -96,3 +105,5 @@ void
     event->SetEventCharge(QEventTot);
 
 }
+
+ClassImp(ATPSAProtoFull)

@@ -25,6 +25,6 @@ class ATPSASimple2:public ATPSA {
     Bool_t fIsBaseCorr;
     Bool_t fIsTimeCorr;
 
- ClassDef(ATPSASimple2, 2)};
+ ClassDefOverride(ATPSASimple2, 2)};
 
 #endif

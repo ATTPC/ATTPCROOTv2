@@ -1,5 +1,19 @@
-
 #include "ATPSASimple.hh"
+
+//ATTPCROOT classes
+#include "ATRawEvent.hh"
+#include "ATEvent.hh"
+#include "ATDigiPar.hh"
+#include "ATCalibration.hh"
+#include "ATHit.hh"
+#include "AtTpcPoint.h"
+
+//ROOT classes
+#include "TH1F.h"
+#include "TRotation.h"
+#include "TMatrixD.h"
+#include "TArrayD.h"
+#include "TSpectrum.h"
 
 // STL
 #include <algorithm>

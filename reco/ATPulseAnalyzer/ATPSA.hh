@@ -1,35 +1,26 @@
 #ifndef ATPSA_H
 #define ATPSA_H
 
-#include "ATEvent.hh"
-#include "ATRawEvent.hh"
-#include "ATPad.hh"
-#include "ATHit.hh"
-#include "ATDigiPar.hh"
-#include "ATCalibration.hh"
-
-// FairRoot classes
-#include "FairRootManager.h"
-#include "FairLogger.h"
-
 // STL
-#include <vector>
+#include <map>
 
 // ROOT classes
-#include "TClonesArray.h"
-#include "TSpectrum.h"
+#include "TObject.h"
 #include "TVector3.h"
-#include "TMath.h"
+class TClonesArray;
 
-#include "AtTpcPoint.h"
-
-typedef
- std::multimap < Int_t, std::size_t >::iterator MCMapIterator;
+//ATTPCROOT classes
+class ATRawEvent;
+class ATEvent;
+class ATDigiPar;
+class ATCalibration;
+class ATHit;
+class AtTpcPoint;
 
 class ATPSA {
  public:
     ATPSA();
-    virtual ~ATPSA();
+    virtual ~ ATPSA();
 
     //! Setting threshold
     void SetThreshold(Int_t threshold);
@@ -45,7 +36,7 @@ class ATPSA {
     virtual void Analyze(ATRawEvent * rawEvent, ATEvent * event) = 0;
 
  protected:
-    ATDigiPar *fPar;		///< parameter container
+     ATDigiPar * fPar;		///< parameter container
 
     Bool_t fIsGainCalibrated;
     Bool_t fIsJitterCalibrated;
@@ -98,6 +89,6 @@ class ATPSA {
 
     TVector3 RotateDetector(Double_t x, Double_t y, Double_t z, Int_t tb);
 
-    ClassDef(ATPSA, 4)};
+ ClassDef(ATPSA, 4)};
 
 #endif

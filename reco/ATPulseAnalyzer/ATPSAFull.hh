@@ -10,8 +10,8 @@ class ATPSAFull:public ATPSA {
     ATPSAFull();
     ~ATPSAFull();
 
-    void Analyze(ATRawEvent * rawEvent, ATEvent * event);
+    void Analyze(ATRawEvent * rawEvent, ATEvent * event) override;
 
- ClassDef(ATPSAFull, 1)};
+ ClassDefOverride(ATPSAFull, 1)};
 
 #endif

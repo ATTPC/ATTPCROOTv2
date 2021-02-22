@@ -6,14 +6,17 @@
 #include "ATRawEvent.hh"
 #include "ATEvent.hh"
 
+#include "FairLogger.h"
+
 // STL
 #include <cmath>
 #include <map>
+
 #ifdef _OPENMP
 #include <omp.h>
 #endif
 
-ClassImp(ATPSAProto) ATPSAProto::ATPSAProto()
+ATPSAProto::ATPSAProto()
 {
     //fPeakFinder = new TSpectrum();
     //HPeak = new TH1F("HPeak","HPeak",512,0,511);
@@ -23,8 +26,7 @@ ATPSAProto::~ATPSAProto()
 {
 }
 
-void
- ATPSAProto::Analyze(ATRawEvent * rawEvent, ATEvent * event)
+void ATPSAProto::Analyze(ATRawEvent * rawEvent, ATEvent * event)
 {
     Int_t numPads = rawEvent->GetNumPads();
     Int_t hitNum = 0;
@@ -222,3 +224,5 @@ void
     event->SetEventCharge(QEventTot);
 
 }
+
+ClassImp(ATPSAProto)

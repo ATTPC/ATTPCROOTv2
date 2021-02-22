@@ -44,5 +44,6 @@ class ATCalibration:public TObject {
     Int_t fPadNum;
 
      ClassDef(ATCalibration, 1);
+
 };
 #endif

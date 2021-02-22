@@ -4,14 +4,28 @@
 #include "FairRuntimeDb.h"
 #include "FairRun.h"
 
+//ROOT classes
+#include "TClonesArray.h"
+#include "TSpectrum.h"
+#include "TVector3.h"
+#include "TMath.h"
+
 // STL
 #include <algorithm>
+
+//ATTPCROOT classes
+#include "ATRawEvent.hh"
+#include "ATEvent.hh"
+#include "ATDigiPar.hh"
+#include "ATCalibration.hh"
+#include "ATHit.hh"
+#include "AtTpcPoint.h"
 
 using std::max_element;
 using std::min_element;
 using std::distance;
 
- ATPSA::ATPSA()
+ATPSA::ATPSA()
 {
     //TODO:Move to class that needs them
     fIniTB = 0;
@@ -71,8 +85,7 @@ ATPSA::~ATPSA()
 {
 }
 
-void
- ATPSA::SetSimulatedEvent(TClonesArray * MCSimPointArray)
+void ATPSA::SetSimulatedEvent(TClonesArray * MCSimPointArray)
 {
     fMCSimPointArray = MCSimPointArray;
 }
@@ -208,6 +221,7 @@ void ATPSA::SetTBLimits(std::pair < Int_t, Int_t > limits)
 
 void ATPSA::TrackMCPoints(std::multimap < Int_t, std::size_t >&map, ATHit * hit)
 {
+    typedef std::multimap < Int_t, std::size_t >::iterator MCMapIterator;
 
     //Find every simulated point ID for each valid pad
     std::pair < MCMapIterator, MCMapIterator > result =

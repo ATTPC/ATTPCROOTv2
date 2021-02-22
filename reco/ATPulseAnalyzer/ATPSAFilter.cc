@@ -1,24 +1,39 @@
 #include "ATPSAFilter.hh"
+
+#include "FairLogger.h"
+
+//ROOT files
 #include "TH1F.h"
 #include "TRotation.h"
-#include "TMatrixD.h"
-#include "TArrayD.h"
-#include "TH2F.h"
+#include "TSpectrum.h"
 
-#include <iostream>
+//ATTPCROOT classes
+#include "ATRawEvent.hh"
+#include "ATEvent.hh"
+#include "ATCalibration.hh"
+#include "ATHit.hh"
+#include "AtTpcPoint.h"
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshadow"
+
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <pcl/filters/statistical_outlier_removal.h>
 
+#pragma GCC diagnostic pop
+
 // STL
+#include <algorithm>
 #include <cmath>
 #include <map>
+#include <iostream>
+
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-#include <algorithm>
 
-ClassImp(ATPSAFilter) ATPSAFilter::ATPSAFilter()
+ATPSAFilter::ATPSAFilter()
 {
 
     fBackGroundSuppression = kFALSE;
@@ -37,8 +52,7 @@ ATPSAFilter::~ATPSAFilter()
 {
 }
 
-void
- ATPSAFilter::Analyze(ATRawEvent * rawEvent, ATEvent * event)
+void ATPSAFilter::Analyze(ATRawEvent * rawEvent, ATEvent * event)
 {
 
     Int_t numPads = rawEvent->GetNumPads();
@@ -389,3 +403,5 @@ void ATPSAFilter::SetStddevMulThresh(Double_t value)
 {
     fStdDev = value;
 }
+
+ClassImp(ATPSAFilter)

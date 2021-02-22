@@ -4,7 +4,6 @@
 #include "ATPSA.hh"
 
 // ROOT classes
-#include "TSpectrum.h"
 
 class ATPSAFilter:public ATPSA {
  public:
@@ -34,6 +33,6 @@ class ATPSAFilter:public ATPSA {
     Int_t fMeanK;
     Double_t fStdDev;
 
- ClassDef(ATPSAFilter, 1)};
+ ClassDefOverride(ATPSAFilter, 1)};
 
 #endif

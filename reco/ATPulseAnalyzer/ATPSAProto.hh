@@ -15,6 +15,6 @@ class ATPSAProto:public ATPSA {
  private:
      Bool_t fBackGroundSuppression;
 
- ClassDef(ATPSAProto, 2)};
+ ClassDefOverride(ATPSAProto, 2)};
 
 #endif

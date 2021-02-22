@@ -31,7 +31,7 @@ Pull requests submitted should have the code formated in the linux stlye with ta
 
 To the extent possible, keep `#include` statements in source files. In a header file, a forward decleration is always preferable to a `#include`, if possible.
 
-If any changes are made to the memory layout of a class, the version number in the ROOT macro `ClassDef` needs to be incremented. For members of a class, prefer ROOT types (ie Double_t) over native types.
+If any changes are made to the memory layout of a class, the version number in the ROOT macro `ClassDef` needs to be incremented. If the class overrides any virtual function, the macro `ClassDefOverride` should be used instead. Classes should follow ROOT standards. For members of a class, prefer ROOT types (ie Double_t) over native types. All members of a class should start with the letter "f", and all functions should begin with a capital letter, and be camel case.
 
 ### Adding a class
 
@@ -39,11 +39,9 @@ Classes, for example a new generator, can be added by created the header and sou
 
 In general, any class added or modified should try to respect backwards compatibilty. In addition, it should avoid modifying important base classes unless there is a good reason. That is, if you're adding a feature only used in a certain experiment to a certain class you should extend that class rather then modify it.
 
-### Expanding on tasks
+### Adding a task
 
-Each task class (something that inherits from FairTask) should be primarily responsible for setting up the input and output. The logic of the task should be handled by another class, and instance of which is a member of the task class. When adding new features or options to a task the base logic class should be extended instead of modified.
-
-For example, the task responsible for pulse shape analysis is `ATPSATask`. It contains a member `fPSA` of type `ATPSA`.Each PSA method extends `ATPSA` and when ATPSATask is created, it should be passed a pointer to an instance of a class derived from `ATPSA`. This sets the behavior of the task and holds all of the necessary parameters and flags.
+Each task class (something that inherits from FairTask) should be primarily responsible for setting up the input and output. The logic of the task should be handled by another class, an instance of which is a member of the task class. When adding new features or options to a task the base logic class should be extended rather then modified.
 
 
 # Creating geometry files
@@ -93,6 +91,31 @@ During a run, the generator will boost the fragments before generating the parti
 There is a macro for generating these input files in [macro/Simulation/E12014](macro/Simulation/E12014).
 
 # Running Analysis
+
+When running analysis in a macro, an instance of FairRunAna is created and tasks added to it. Each task will take in an event, process it, and then pass the event to the next task. Each task can save the intermediary step if desired by setting the boolean flag kIsPersistant.
+
+### Unpacking Tasks
+These tasks are responsible for taking raw data in and saving it in an ATRawEvent class.
+
+#### HFD5ParserTask
+TODO
+
+### Pulse Shape Analysis
+These tasks are responsible for taking an ATRawEvent and saving it as an ATEvent. That is, it takes the waveforms from the pads and process it into an array of ATHits which are the location of charge deposition in the TPC in space.
+
+All the different PSA methods are handled by the same task, ATPSAtask. This task can also handle gain and jitter calibration through the class ATCalibration. When constructing the task, a pointer must be passed to a class that derives from the virtual class ATPSA. This derived class handles the logic of the task and the managment of whatever parameters are necessary. Below contains documentation on the various implemented PSA methods, including discriptions of their parameters.
+
+#### ATPSASimple
+TODO
+#### ATPSASimple2
+TODO
+#### ATPSAFull
+TODO
+#### ATPSASFilter
+TODO
+#### ATPSAProtoFull
+TODO
+#### ATPSAProto
 TODO
 
 # Notes on design

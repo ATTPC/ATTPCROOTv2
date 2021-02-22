@@ -10,7 +10,8 @@ class ATPSASimple:public ATPSA {
 
     void Analyze(ATRawEvent * rawEvent, ATEvent * event) override;
 
-     ClassDef(ATPSASimple, 2);
+     ClassDefOverride(ATPSASimple, 2);
+
 };
 
 #endif
