@@ -35,13 +35,18 @@ If any changes are made to the memory layout of a class, the version number in t
 
 ### Adding a class
 
-Classes, for example a new generator, can be added by created the header and source files. In that directory the `CMakeLists.txt` file must be edited to add any include directories needed as well as add the source file so the make file knows to compile it. In addition the class should be added the the local `GenLinkDef.h` file, if needed. In addition, a symbolic link should be created to the new header in the `include` directory.
+Classes, for example a new generator, can be added by created the header and source files. In that directory the `CMakeLists.txt` file must be edited to add any include directories needed as well as add the source file so the make file knows to compile it. In addition the class should be added the the local `GenLinkDef.h` file, if needed. In addition, a symbolic link should be created to the new header in the `include` directory. Classes should respect the naming convention of `AtName.cxx` for source, and `AtName.h` for headers. The FairRoot macro used to generate the ROOT dictionaries for each library, assumes these file extensions.
 
 In general, any class added or modified should try to respect backwards compatibilty. In addition, it should avoid modifying important base classes unless there is a good reason. That is, if you're adding a feature only used in a certain experiment to a certain class you should extend that class rather then modify it.
 
 ### Adding a task
 
 Each task class (something that inherits from FairTask) should be primarily responsible for setting up the input and output. The logic of the task should be handled by another class, an instance of which is a member of the task class. When adding new features or options to a task the base logic class should be extended rather then modified.
+
+### Adding a library
+
+Each folder in the root directory names `AtName` will build into a shared object with the name `libAtName` as defined by a `CMakelists.txt` file in each folder. Other folders, (eg macro, icon, parameters, etc), are not built and do not contain a CMakeLists.txt folder. In order for the new library to be built, it must be added as a subdirectory to the global CMakeList.txt in the root directory.
+
 
 
 # Creating geometry files

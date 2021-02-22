@@ -298,7 +298,7 @@ add_subdirectory (reco)
 add_subdirectory (par)
 add_subdirectory (digi)
 add_subdirectory (s800)
-add_subdirectory (apollo)
+add_subdirectory (AtApollo)
 
 if (PCL_FOUND)
 add_subdirectory (eventdisplayAT)
