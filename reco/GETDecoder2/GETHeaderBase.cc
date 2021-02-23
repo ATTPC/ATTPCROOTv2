@@ -1,4 +1,4 @@
-#include "GETHeaderBase.hh"
+#include "GETHeaderBase.h"
 
 ClassImp(GETHeaderBase)
 

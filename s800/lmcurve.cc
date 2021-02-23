@@ -14,7 +14,7 @@
  */
 
 
-#include "lmmin.hh"
+#include "lmmin.h"
 
 
 typedef struct {

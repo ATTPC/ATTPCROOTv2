@@ -3,7 +3,7 @@
 #include "AtSiArrayPoint.h"
 #include "AtSiArrayGeo.h"
 #include "AtSiArrayGeoPar.h"
-#include "ATVertexPropagator.h"
+#include "AtVertexPropagator.h"
 
 #include "FairVolume.h"
 #include "FairGeoVolume.h"
@@ -113,7 +113,7 @@ Bool_t  AtSiArray::ProcessHits(FairVolume* vol)
          LOG(INFO)<<" Position Out : "<<fPosOut.X()<<" "<<fPosOut.Y()<<"  "<<fPosOut.Z()<<std::endl;
          LOG(INFO)<<" Momentum In: "<<fMomIn.X()<<" "<<fMomIn.Y()<<"  "<<fMomIn.Z()<<std::endl;
          //LOG(INFO)<<" Total relativistic energy " <<gMC->Etot()<< FairLogger::endl;
-         //LOG(INFO)<<" Mass of the Tracked particle (gAVTP) : "<<gATVP->GetBeamMass()<<std::endl;
+         //LOG(INFO)<<" Mass of the Tracked particle (gAVTP) : "<<gAtVP->GetBeamMass()<<std::endl;
          //LOG(INFO)<<" Mass of the Tracked particle (gMC) : "<<gMC->TrackMass()<<std::endl;
          //LOG(INFO)<<" Initial energy of the current particle in this volume : "<<((gMC->Etot() - gMC->TrackMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
 
@@ -333,7 +333,7 @@ AtSiArrayPoint* AtSiArray::AddHit(Int_t trackID,
 {
     TClonesArray& clref = *fAtSiArrayPointCollection;
     Int_t size = clref.GetEntriesFast();
-   // std::cout<< "ATTPC: Adding Point at (" << posIn.X() << ", " << posIn.Y() << ", " << posIn.Z() << ") cm,  detector " << detID << ", track " << trackID
+   // std::cout<< "AtTPC: Adding Point at (" << posIn.X() << ", " << posIn.Y() << ", " << posIn.Z() << ") cm,  detector " << detID << ", track " << trackID
     //<< ", energy loss " << eLoss << " MeV" <<" with accumulated Energy Loss : "<<fELossAcc<<" MeV "<< std::endl;
     if (fVerboseLevel > 1)
        LOG(INFO) << "Si Array: Adding Point at (" << posIn.X() << ", " << posIn.Y() << ", " << posIn.Z() << ") cm,  detector " << detID << ", track " << trackID

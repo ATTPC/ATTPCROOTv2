@@ -1,4 +1,4 @@
-#include "S800Event.hh"
+#include "S800Event.h"
 
 // ClassImp(S800Event)
 // 

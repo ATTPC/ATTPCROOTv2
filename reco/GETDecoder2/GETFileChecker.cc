@@ -9,7 +9,7 @@
 // =================================================
 
 // GETDecoder
-#include "GETFileChecker.hh"
+#include "GETFileChecker.h"
 
 // ROOT
 #include "TString.h"

@@ -33,4 +33,4 @@ Set(DEPENDENCIES
     Base Core Cling AtGen FairLogger::FairLogger
 )
 
-GENERATE_LIBRARY()
+GENERAtE_LIBRARY()

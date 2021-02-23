@@ -24,9 +24,9 @@
 #include "TPad.h"
 #include "TText.h"
 
-#include "GETPlot.hh"
-#include "GETDecoder.hh"
-#include "GETFrame.hh"
+#include "GETPlot.h"
+#include "GETDecoder.h"
+#include "GETFrame.h"
 
 ClassImp(GETPlot);
 

@@ -18,9 +18,9 @@
 
 #include "TString.h"
 
-#include "GETDecoder2.hh"
+#include "GETDecoder2.h"
 
-#include "GETFileChecker.hh"
+#include "GETFileChecker.h"
 
 //#define DEBUG
 

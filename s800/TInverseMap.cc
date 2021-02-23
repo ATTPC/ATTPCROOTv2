@@ -1,5 +1,5 @@
 
-#include <TInverseMap.hh>
+#include <TInverseMap.h>
 
 #include <fstream>
 #include <iostream>
@@ -166,7 +166,7 @@ void TInverseMap::Print(Option_t *opt) const {
 }
 
 //Parameter def.               |    
-// 0 == ATA                    |    
+// 0 == AtA                    |    
 // 1 == YTA                    |    
 // 2 == BTA                    |    
 // 3 == DTA                    |    
@@ -292,7 +292,7 @@ float TInverseMap::Ata(int order, const TS800 *s800) {
   input[3]  =   s800->GetBFP();
   input[4]  =   0.0;
   input[5]  =   0.0;
-  int par = 0; // ATA
+  int par = 0; // AtA
   return MapCalc(order,par,input);
 }
 

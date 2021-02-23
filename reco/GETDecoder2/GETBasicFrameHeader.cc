@@ -1,4 +1,4 @@
-#include "GETBasicFrameHeader.hh"
+#include "GETBasicFrameHeader.h"
 
 ClassImp(GETBasicFrameHeader)
 

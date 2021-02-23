@@ -1,4 +1,4 @@
-#include "GETLayerHeader.hh"
+#include "GETLayerHeader.h"
 
 ClassImp(GETLayerHeader)
 

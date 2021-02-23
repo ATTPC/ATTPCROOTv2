@@ -1,4 +1,4 @@
-# Create a library called "libATReco" which includes the source files given in the array .
+# Create a library called "libAtReco" which includes the source files given in the array .
 
 set(INCLUDE_DIRECTORIES
 ${HDF5_INCLUDE_DIR}
@@ -9,22 +9,22 @@ ${PCL_INCLUDE_DIRS}
 ${GENFIT2_INCLUDE_DIR}
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtMap
-${CMAKE_SOURCE_DIR}/par
+${CMAKE_SOURCE_DIR}/AtParameter
 ${CMAKE_SOURCE_DIR}/reco
 ${CMAKE_SOURCE_DIR}/reco/GETDecoder
 ${CMAKE_SOURCE_DIR}/reco/GETDecoder2
-${CMAKE_SOURCE_DIR}/reco/ATDecoder
-${CMAKE_SOURCE_DIR}/reco/ATPulseAnalyzer
+${CMAKE_SOURCE_DIR}/reco/AtDecoder
+${CMAKE_SOURCE_DIR}/reco/AtPulseAnalyzer
 #${CMAKE_SOURCE_DIR}/reco/HierarchicalClustering
 ${CMAKE_SOURCE_DIR}/reco/HoughTransformation
-${CMAKE_SOURCE_DIR}/reco/ATProtoPhiReco
+${CMAKE_SOURCE_DIR}/reco/AtProtoPhiReco
 ${CMAKE_SOURCE_DIR}/reco/VMEDecoder
-${CMAKE_SOURCE_DIR}/reco/ATMinimization
-${CMAKE_SOURCE_DIR}/reco/ATAnalysis
-${CMAKE_SOURCE_DIR}/reco/ATRansac
-${CMAKE_SOURCE_DIR}/reco/ATPatternRecognition
-${CMAKE_SOURCE_DIR}/reco/ATFitter
-${CMAKE_SOURCE_DIR}/tpc
+${CMAKE_SOURCE_DIR}/reco/AtMinimization
+${CMAKE_SOURCE_DIR}/reco/AtAnalysis
+${CMAKE_SOURCE_DIR}/reco/AtRansac
+${CMAKE_SOURCE_DIR}/reco/AtPatternRecognition
+${CMAKE_SOURCE_DIR}/reco/AtFitter
+${CMAKE_SOURCE_DIR}/AtTpc
 ${CMAKE_SOURCE_DIR}/AtGenerators
 
 )
@@ -69,104 +69,104 @@ GETDecoder2/GETLayeredFrame.cc
 GETDecoder2/GETMath2.cc
 GETDecoder2/GETFileChecker.cc
 
-ATDecoder/ATCore.cc
-ATDecoder/ATCore2.cc
-ATDecoder/ATPad.cc
-ATDecoder/ATRawEvent.cc
-ATDecoder/ATHit.cc
-ATDecoder/ATEvent.cc
-ATDecoder/ATProtoEvent.cc
-ATDecoder/ATProtoEventAna.cc
-ATDecoder/ATTrackingEventAna.cc
-ATDecoder/ATPatternEvent.cc
-ATDecoder/ATProtoQuadrant.cc
-ATDecoder/ATPedestal.cc
-ATDecoder/ATTrack.cc
-ATDecoder/ATHDFParser.cc
+AtDecoder/AtCore.cc
+AtDecoder/AtCore2.cc
+AtDecoder/AtPad.cc
+AtDecoder/AtRawEvent.cc
+AtDecoder/AtHit.cc
+AtDecoder/AtEvent.cc
+AtDecoder/AtProtoEvent.cc
+AtDecoder/AtProtoEventAna.cc
+AtDecoder/AtTrackingEventAna.cc
+AtDecoder/AtPatternEvent.cc
+AtDecoder/AtProtoQuadrant.cc
+AtDecoder/AtPedestal.cc
+AtDecoder/AtTrack.cc
+AtDecoder/AtHDFParser.cc
 
-ATPulseAnalyzer/ATPSA.cc
-ATPulseAnalyzer/ATPSASimple.cc
-ATPulseAnalyzer/ATPSASimple2.cc
-ATPulseAnalyzer/ATPSAProto.cc
-ATPulseAnalyzer/ATPSAProtoFull.cc
-ATPulseAnalyzer/ATPSAFull.cc
-ATPulseAnalyzer/ATCalibration.cc
+AtPulseAnalyzer/AtPSA.cc
+AtPulseAnalyzer/AtPSASimple.cc
+AtPulseAnalyzer/AtPSASimple2.cc
+AtPulseAnalyzer/AtPSAProto.cc
+AtPulseAnalyzer/AtPSAProtoFull.cc
+AtPulseAnalyzer/AtPSAFull.cc
+AtPulseAnalyzer/AtCalibration.cc
 
-ATFitter/ATFitter.cc
+AtFitter/AtFitter.cc
 
-#HierarchicalClustering/ATCubicSplineFit.cc
-#HierarchicalClustering/ATFindVertex.cc
-#HierarchicalClustering/ATHierarchicalClusteringHc.cc
-#HierarchicalClustering/ATHierarchicalClusteringSmoothenCloud.cc
-#HierarchicalClustering/ATTrajectory.cc
+#HierarchicalClustering/AtCubicSplineFit.cc
+#HierarchicalClustering/AtFindVertex.cc
+#HierarchicalClustering/AtHierarchicalClusteringHc.cc
+#HierarchicalClustering/AtHierarchicalClusteringSmoothenCloud.cc
+#HierarchicalClustering/AtTrajectory.cc
 
-#ATProtoPhiReco/ATPhiReco.cc
-#ATProtoPhiReco/ATPhiRecoSimple.cc
-#ATProtoPhiReco/ATPhiRecoTriple.cc
+#AtProtoPhiReco/AtPhiReco.cc
+#AtProtoPhiReco/AtPhiRecoSimple.cc
+#AtProtoPhiReco/AtPhiRecoTriple.cc
 
 #VMEDecoder/VMEDecoder.cc
 #VMEDecoder/VMECore.cc
-#VMEDecoder/ATRawIC.cc
+#VMEDecoder/AtRawIC.cc
 #VMEDecoder/VMERawEvent.cc
 
 
 
-ATDecoderTask.cc
-ATDecoder2Task.cc
-ATHDFParserTask.cc
-ATPSATask.cc
-#ATPhiRecoTask.cc
-#ATVMEUnpackTask.cc
+AtDecoderTask.cc
+AtDecoder2Task.cc
+AtHDFParserTask.cc
+AtPSAtask.cc
+#AtPhiRecoTask.cc
+#AtVMEUnpackTask.cc
 
 
 )
 
 # Adding libraries that depend on PCL
 if(PCL_FOUND)
-MESSAGE("${Green} libATTPCReco - Building PCL classes: RANSAC, Pattern Recognition, Hough Transformation, Minimization, Analysis, PSA/PSAFilter ${ColourReset} ")
+MESSAGE("${Green} libAtTPCReco - Building PCL classes: RANSAC, Pattern Recognition, Hough Transformation, Minimization, Analysis, PSA/PSAFilter ${ColourReset} ")
 set(SRCS ${SRCS} 
-ATRansac/ATRansac.cc
-ATPulseAnalyzer/ATPSAFilter.cc
-ATPatternRecognition/ATTrackFinderHC.cc
-ATPatternRecognition/smoothenCloud.cc
-ATPatternRecognition/msd.cc
-ATPatternRecognition/cluster.cc
-ATPatternRecognition/hc.cc
-ATPatternRecognition/fastcluster.cc
-ATPatternRecognition/ATPRA.cc
-ATPatternRecognition/ATRansacMod.cc
-ATPatternRecognition/ATMlesacMod.cc
-ATPatternRecognition/ATLmedsMod.cc
-ATMinimization/ATMinimization.cc
-ATMinimization/ATMCMinimization.cc
-ATMinimization/ATMCQMinimization.cc
-ATAnalysis/ATAnalysis.cc
-ATAnalysis/ATProtoAnalysis.cc
-ATAnalysis/ATTrackingAnalysis.cc
-ATAnalysis/ATd2HeAnalysis.cc
-HoughTransformation/ATHoughSpace.cc
-HoughTransformation/ATHoughSpaceLine.cc
-HoughTransformation/ATHoughSpaceCircle.cc
-ATRansac/ATRansac.cc
-ATPRATask.cc
-ATHoughTask.cc
-ATAnalysisTask.cc
-ATRansacTask.cc
-#ATHierarchicalClusteringTask.cc
+AtRansac/AtRansac.cc
+AtPulseAnalyzer/AtPSAFilter.cc
+AtPatternRecognition/AtTrackFinderHC.cc
+AtPatternRecognition/smoothenCloud.cc
+AtPatternRecognition/msd.cc
+AtPatternRecognition/cluster.cc
+AtPatternRecognition/hc.cc
+AtPatternRecognition/fastcluster.cc
+AtPatternRecognition/AtPRA.cc
+AtPatternRecognition/AtRansacMod.cc
+AtPatternRecognition/AtMlesacMod.cc
+AtPatternRecognition/AtLmedsMod.cc
+AtMinimization/AtMinimization.cc
+AtMinimization/AtMCMinimization.cc
+AtMinimization/AtMCQMinimization.cc
+AtAnalysis/AtAnalysis.cc
+AtAnalysis/AtProtoAnalysis.cc
+AtAnalysis/AtTrackingAnalysis.cc
+AtAnalysis/Atd2HeAnalysis.cc
+HoughTransformation/AtHoughSpace.cc
+HoughTransformation/AtHoughSpaceLine.cc
+HoughTransformation/AtHoughSpaceCircle.cc
+AtRansac/AtRansac.cc
+AtPRAtask.cc
+AtHoughTask.cc
+AtAnalysisTask.cc
+AtRansacTask.cc
+#AtHierarchicalClusteringTask.cc
 )
 endif()
 
 if(GENFIT2_FOUND)
-MESSAGE("${Green} libATTPCReco - Building GENFIT classes: ATFitter/Genfit ${ColourReset} ")
+MESSAGE("${Green} libAtTPCReco - Building GENFIT classes: AtFitter/Genfit ${ColourReset} ")
 set(SRCS ${SRCS}
-ATFitter/ATGenfit.cc
+AtFitter/AtGenfit.cc
 )
 endif()
 
-CHANGE_FILE_EXTENSION(*.cc *.hh HEADERS "${SRCS}")
+CHANGE_FILE_EXTENSION(*.cc *.h HEADERS "${SRCS}")
 
-Set(LINKDEF ATTPCRecoLinkDef.h)
-Set(LIBRARY_NAME ATTPCReco)
+Set(LINKDEF AtTPCRecoLinkDef.h)
+Set(LIBRARY_NAME AtTPCReco)
 Set(DEPENDENCIES
     Base
     FairLogger::FairLogger
@@ -176,13 +176,13 @@ Set(DEPENDENCIES
 # Add all library names your code depending on.
 # Basically those are the libraries in the header files' directory.
     AtTpcMap
-    ATPar
+    AtParameter
     Spectrum
     ${HDF5_LIBRARIES}
     ${Boost_LOG_LIBRARY}
     ${Boost_LOG_SETUP_LIBRARY}
     ${Boost_THREAD_LIBRARY}
-    ${Boost_DATE_TIME_LIBRARY}
+    ${Boost_DAtE_TIME_LIBRARY}
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
     ${PCL_LIBRARIES}
@@ -191,4 +191,4 @@ Set(DEPENDENCIES
 
 
 
-GENERATE_LIBRARY()
+GENERAtE_LIBRARY()

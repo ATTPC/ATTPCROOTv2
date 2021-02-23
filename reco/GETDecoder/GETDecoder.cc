@@ -23,10 +23,10 @@
 #include "TObjString.h"
 #include "TString.h"
 
-#include "GETDecoder.hh"
-#include "GETFrame.hh"
-#include "GETPlot.hh"
-#include "GETMath.hh"
+#include "GETDecoder.h"
+#include "GETFrame.h"
+#include "GETPlot.h"
+#include "GETMath.h"
 
 ClassImp(GETDecoder);
 

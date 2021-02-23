@@ -1,5 +1,5 @@
-#ifndef ATSIARRAYCONTFACT_H
-#define ATSIARRAYCONTFACT_H
+#ifndef AtSIARRAYCONTFACT_H
+#define AtSIARRAYCONTFACT_H
 
 #include "FairContFact.h"
 

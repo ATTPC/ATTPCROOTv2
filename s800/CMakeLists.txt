@@ -14,7 +14,7 @@ ${ROOT_INCLUDE_DIR}
 ${BASE_INCLUDE_DIRECTORIES}
 #put here all directories where header files are located
 ${CMAKE_SOURCE_DIR}/s800
-${CMAKE_SOURCE_DIR}/reco/ATDecoder
+${CMAKE_SOURCE_DIR}/reco/AtDecoder
 )
 
 include_directories(${INCLUDE_DIRECTORIES} )
@@ -33,18 +33,18 @@ S800Calc.cc
 S800Event.cc
 S800.cc
 TInverseMap.cc
-ATS800Task.cc
+AtS800Task.cc
 S800Calibration.cc
 lmmin.cc
 lmcurve.cc
 lmfit.cc
 S800Settings.cc
 S800TSettings.cc
-ATMergeTask.cc
+AtMergeTask.cc
 
 )
 
-CHANGE_FILE_EXTENSION(*.cc *.hh HEADERS "${SRCS}")
+CHANGE_FILE_EXTENSION(*.cc *.h HEADERS "${SRCS}")
 
 Set(LINKDEF S800LinkDef.h)
 Set(LIBRARY_NAME S800)

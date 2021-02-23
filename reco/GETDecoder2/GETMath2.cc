@@ -13,7 +13,7 @@
 
 #include <cmath>
 
-#include "GETMath2.hh"
+#include "GETMath2.h"
 
 ClassImp(GETMath2)
 

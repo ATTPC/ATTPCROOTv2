@@ -16,22 +16,22 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ global gATVP;
+#pragma link C++ global gAtVP;
 
 //#pragma link C++ class  Pythia6Generator+;
 //#pragma link C++ class  Pythia8Generator+;
-#pragma link C++ class  ATTPCIonDecay+;
-#pragma link C++ class  ATTPCIonGenerator+;
-#pragma link C++ class  ATTPCIonPhaseSpace+;
-#pragma link C++ class  ATVertexPropagator+;
-#pragma link C++ class  ATTPC2Body+;
-#pragma link C++ class  ATTPC_d2He+;
-#pragma link C++ class  ATTPC_Background+;
-#pragma link C++ class  ATEulerTransformation+;
-#pragma link C++ class  ATTPCFissionGenerator+;
-#pragma link C++ class  ATTPCFissionGeneratorV2+;
-#pragma link C++ class  ATTPCFissionGeneratorV3+;
-#pragma link C++ class  ATTPCXSReader+;
-#pragma link C++ class  ATTPCGammaDummyGenerator+;
+#pragma link C++ class  AtTPCIonDecay+;
+#pragma link C++ class  AtTPCIonGenerator+;
+#pragma link C++ class  AtTPCIonPhaseSpace+;
+#pragma link C++ class  AtVertexPropagator+;
+#pragma link C++ class  AtTPC2Body+;
+#pragma link C++ class  AtTPC_d2He+;
+#pragma link C++ class  AtTPC_Background+;
+#pragma link C++ class  AtEulerTransformation+;
+#pragma link C++ class  AtTPCFissionGenerator+;
+#pragma link C++ class  AtTPCFissionGeneratorV2+;
+#pragma link C++ class  AtTPCFissionGeneratorV3+;
+#pragma link C++ class  AtTPCXSReader+;
+#pragma link C++ class  AtTPCGammaDummyGenerator+;
 
 #endif

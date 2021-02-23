@@ -1,4 +1,4 @@
-#include "GETFrameInfo.hh"
+#include "GETFrameInfo.h"
 
 #include <cstdio>
 #include <iostream>

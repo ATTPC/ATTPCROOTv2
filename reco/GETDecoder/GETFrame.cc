@@ -12,7 +12,7 @@
 #include <iostream>
 #include <cmath>
 
-#include "GETFrame.hh"
+#include "GETFrame.h"
 
 ClassImp(GETFrame);
 

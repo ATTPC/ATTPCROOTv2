@@ -13,7 +13,7 @@
 #include "TString.h"
 #include "TH1.h"
 
-#include "VMEDecoder.hh"
+#include "VMEDecoder.h"
 
 ClassImp(VMEDecoder);
 

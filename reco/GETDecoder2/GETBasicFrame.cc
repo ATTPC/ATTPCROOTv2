@@ -1,4 +1,4 @@
-#include "GETBasicFrame.hh"
+#include "GETBasicFrame.h"
 
 GETBasicFrame::GETBasicFrame() {
   Clear();

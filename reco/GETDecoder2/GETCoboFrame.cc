@@ -1,4 +1,4 @@
-#include "GETCoboFrame.hh"
+#include "GETCoboFrame.h"
 
 GETCoboFrame::GETCoboFrame() {
   Clear();

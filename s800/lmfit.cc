@@ -8,9 +8,9 @@
  * Author:   Shumpei Noji
  */
 
-#include "lmmin.hh"
-#include "lmcurve.hh"
-#include "lmfit.hh"
+#include "lmmin.h"
+#include "lmcurve.h"
+#include "lmfit.h"
 #include <stdio.h>
 #include <math.h>
 

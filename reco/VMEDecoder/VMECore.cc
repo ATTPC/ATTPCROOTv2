@@ -7,9 +7,9 @@
 
 #include "TH1.h"
 
-#include "VMECore.hh"
-#include "VMEDecoder.hh"
-#include "ATRawIC.hh"
+#include "VMECore.h"
+#include "VMEDecoder.h"
+#include "AtRawIC.h"
 
 ClassImp(VMECore);
 
@@ -72,8 +72,8 @@ VMERawEvent *VMECore::GetRawVMEEvent(Int_t eventID){
           Int_t evttype  = fVMEDecoderPtr->GetNextEvent();
           if(evttype==0) return NULL;
           Int_t *rawICadc = fVMEDecoderPtr -> GetRawfADC(fICChannel);
-	  ATRawIC *ic = new ATRawIC();
-          //ATRawIC ic;
+	  AtRawIC *ic = new AtRawIC();
+          //AtRawIC ic;
 
 		     for (Int_t iTb = 0; iTb <512; iTb++){
 

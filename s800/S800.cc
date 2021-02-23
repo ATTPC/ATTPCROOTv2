@@ -1,4 +1,4 @@
-#include "S800.hh"
+#include "S800.h"
 
 int S800::DecodeS800(unsigned short *pevent, unsigned short twords) {
   long long int n;

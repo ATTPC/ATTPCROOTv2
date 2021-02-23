@@ -1,4 +1,4 @@
-#include "GETLayeredFrame.hh"
+#include "GETLayeredFrame.h"
 
 GETLayeredFrame::GETLayeredFrame() {
   fFrames = NULL;

@@ -5,13 +5,13 @@
 #include <cstdlib>
 #include <iomanip>
 
-#include "S800Calibration.hh"
-#include "S800.hh"
+#include "S800Calibration.h"
+#include "S800.h"
 #include "S800defs.h"
 
-#include "lmcurve.hh"
-#include "lmmin.hh"
-#include "lmfit.hh"
+#include "lmcurve.h"
+#include "lmmin.h"
+#include "lmfit.h"
 using namespace std;
 
 
@@ -700,7 +700,7 @@ void S800Calibration::S800Calculate(S800* in, S800Calc* out){
 			k);
    }
 
-   //SCINTILLATOR
+   //SCINTILLAtOR
    for(UShort_t s=0; s<3; s++){
       scint[s].Clear();
       scint[s].SetTime(TimeOffset(in->GetScintillator(s)->GetTime_up()),

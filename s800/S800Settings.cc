@@ -1,4 +1,4 @@
-#include "S800Settings.hh"
+#include "S800Settings.h"
 
 S800Settings::S800Settings(){
 }

@@ -1,4 +1,4 @@
-#include "GETTopologyFrame.hh"
+#include "GETTopologyFrame.h"
 
 ClassImp(GETTopologyFrame)
 

@@ -11,11 +11,11 @@
 
 #include <cmath>
 
-#include "GETMath.hh"
+#include "GETMath.h"
 #include "Riostream.h"
 
-#include "GETDecoder.hh"
-#include "GETFrame.hh"
+#include "GETDecoder.h"
+#include "GETFrame.h"
 
 ClassImp(GETMath);
 

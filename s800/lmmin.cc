@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <float.h>
-#include "lmmin.hh"
+#include "lmmin.h"
 
 
 /*****************************************************************************/
@@ -472,7 +472,7 @@ void lm_lmdif( int m, int n, double *x, double *fvec, double ftol,
                 fjac[j*m+i] = (wa4[i] - fvec[i]) / step;
             x[j] = temp; /* restore */
         }
-#ifdef LMFIT_DEBUG_MATRIX
+#ifdef LMFIT_DEBUG_MAtRIX
         /* print the entire matrix */
         for (i = 0; i < m; i++) {
             for (j = 0; j < n; j++)
@@ -648,7 +648,7 @@ void lm_lmdif( int m, int n, double *x, double *fvec, double ftol,
             }
 #ifdef LMFIT_DEBUG_MESSAGES
             else {
-                printf("ATTN: iteration considered unsuccessful\n");
+                printf("AtTN: iteration considered unsuccessful\n");
             }
 #endif
 
