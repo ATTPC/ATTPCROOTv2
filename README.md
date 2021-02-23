@@ -9,7 +9,7 @@ There was also some documentation written as part of Alexander Carl's 2019 thesi
 ROOT and FairROOT are already installed on the system. The modules and their prerequisites just need to be loaded with the commands:
 ```
 module load gnu/gcc/6.4
-module load fairroot
+module load fairroot/18.00
 ```
 
 To install ATTPCROOT checkout the repository from github and then create a folder in the repository to build the code and cd into it. From this directory you can call CMake to configure the build. Then you can build the source
@@ -22,14 +22,14 @@ cmake ../
 make -j 4
 ```
 
-After the source builds, you should be good to go.
+After the source builds, you should be good to go. The CMake script will output a configuration file in the build directory called `config.sh`. This script should be sourced before building or running any macros. For those working on the NSCL fishtank computers, the script `env.sh` can be sourced instead. This will also add to your `$PATH` the executables needed to format the code using `clang-format` described below.
 
 # For developers
 
 ### Formatting code for pull requests
 Pull requests submitted should have the code formated in the [ROOT style](https://root.cern/contribute/coding_conventions/). Never include a header file when a forward decleration is sufficient. Only include header files for base classes or classes that are used by value in the class definition.
 
-Before submitting a pull request, reformat the code using `clang-format`. If run from within the repository it will pick up the `.clang-format` file detail the style. This file is also reproduced on the page detailing ROOT the ROOT coding style. If for some reason you need a section of code to not be formatted, you can turn off formatting using comment flags. Formatting of code is turned off with the comment `// clang-format off` and re-enabled with the comment `// clang-format on`.
+Before submitting a pull request, reformat the code using `clang-format`. If run from within the repository it will pick up the `.clang-format` file detail the style. This file is also reproduced on the page detailing ROOT the ROOT coding style. If for some reason you need a section of code to not be formatted, you can turn off formatting using comment flags. Formatting of code is turned off with the comment `// clang-format off` and re-enabled with the comment `// clang-format on`. This process can be simplified using the command `git-clang-format` which when given no options will tun `clang-format` on all lines of code that differ between the working directory and HEAD. Detailed documentation is [here](https://github.com/llvm-mirror/clang/blob/master/tools/clang-format/git-clang-format).
 
 All data members of a class should be private or protected and begin with the letter `f`, followed by a capital letter. All member functions should begin with a capital letter. Private data members should be declared first, followed by the private static members, the private methods and the private static methods. Then the protected members and methods and finally the public methods. 
 

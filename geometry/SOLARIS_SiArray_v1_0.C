@@ -28,7 +28,7 @@ const TString CellMedium   = "3H_5torr"; //For testing
 const TString TargetMedium = "CD2_polyethylene";
 
 
-const Float_t Z_dist_from_target            = -60.0;//cm
+const Float_t Z_dist_from_target            = -10.0;//cm
 const Float_t x_off                         = 2.3;// Distance between Si in the same YZ plane 
 const Float_t y_off                         = 2.3;// Distance between Si in the same XZ plane 
 const Float_t Recoil_Z_dist_from_target     = 140.0;// Distance of the recoil detector with respect to the target

@@ -1,4 +1,4 @@
-void Si31_dp(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
+void S43_dp(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -52,7 +52,7 @@ void Si31_dp(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
     // -----   Magnetic field   -------------------------------------------
     // Constant Field
     AtConstField  *fMagField = new AtConstField();
-    fMagField->SetField(0., 0. ,-20. ); // values are in kG
+    fMagField->SetField(0., 0. ,-30. ); // values are in kG
     fMagField->SetFieldRegion(-100, 100,-100, 100, -250,250); // values are in cm
     fMagField->Print();
                           //  (xmin,xmax,ymin,ymax,zmin,zmax)
@@ -68,15 +68,15 @@ void Si31_dp(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 
 
                   // Beam Information
-                Int_t z = 14;  // Atomic number
-	        Int_t a = 31; // Mass number
+                Int_t z = 16;  // Atomic number
+	        Int_t a = 43; // Mass number
 	        Int_t q = 0;   // Charge State
 	        Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
 	        Double_t px = 0.000/a;  // X-Momentum / per nucleon!!!!!!
 	        Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
-	        Double_t pz = 4.021/a;  // Z-Momentum / per nucleon!!!!!!
+	        Double_t pz = 4.232/a;  // Z-Momentum / per nucleon!!!!!!
   	        Double_t BExcEner = 0.0;
-                Double_t Bmass = 30.975363226999998; //
+                Double_t Bmass = 42.986908; //
                 Double_t NomEnergy = 1.2; //Used to force the beam to stop within a certain energy range.
 
 
@@ -110,7 +110,7 @@ void Si31_dp(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 
 
 	          mult = 4; //Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY (and the number of particles must be the same)
-                  ResEner = 278.4; // For fixed target mode (Si Array) in MeV
+                  ResEner = 294.4; // For fixed target mode (Si Array) in MeV
 
                   // ---- Beam ----
                   Zp.push_back(z); //
@@ -119,7 +119,7 @@ void Si31_dp(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
                   Pxp.push_back(px);
             	  Pyp.push_back(py);
             	  Pzp.push_back(pz);
-            	  Mass.push_back(30.975363226999998);
+            	  Mass.push_back(Bmass);
             	  ExE.push_back(BExcEner);
 
                   // ---- Target ----
@@ -133,14 +133,14 @@ void Si31_dp(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 		 ExE.push_back(0.0);//In MeV
 
                   //--- Scattered -----
-                Zp.push_back(14); //
-                Ap.push_back(32); //
+                Zp.push_back(16); //
+                Ap.push_back(44); //
                 Qp.push_back(0);
           	Pxp.push_back(0.0);
           	Pyp.push_back(0.0);
           	Pzp.push_back(0.0);
-          	Mass.push_back(31.974148082);
-          	ExE.push_back(6.705);
+          	Mass.push_back(43.990119);
+          	ExE.push_back(1.365);
 
 
                  // ---- Recoil -----
@@ -155,7 +155,7 @@ void Si31_dp(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 
 
                  Double_t ThetaMinCMS = 10.0;
-                 Double_t ThetaMaxCMS = 35.0;
+                 Double_t ThetaMaxCMS = 45.0;
 
 
         ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
@@ -175,31 +175,15 @@ void Si31_dp(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
              gammasGen->SetCosTheta();
              gammasGen->SetPRange(momentum, momentum);
              gammasGen->SetNuclearDecayChain();
-             gammasGen->SetDecayChainPoint(0.006705,0.69); //100/131 = 76.3%
-             gammasGen->SetDecayChainPoint(0.004763,0.09); //9/131 = 6.9%
-             gammasGen->SetDecayChainPoint(0.002474,0.22); //22/131 = 16.8%
-             //gammasGen->SetDecayChainPoint(0.004,0.2);
-             //gammasGen->SetDecayChainPoint(0.005,0.2);
-             //gammasGen->SetDecayChainPoint(0.009701,0.1);
-             //gammasGen->SetDecayChainPoint(0.009934,0.4);
-             //gammasGen->SetDecayChainPoint(0.010279,0.2);
-             //gammasGen->SetDecayChainPoint(0.010846,0.2);
+             gammasGen->SetDecayChainPoint(0.001329,0.90);
+             gammasGen->SetDecayChainPoint(0.000036,0.10);
              gammasGen->SetPhiRange(0., 360.); //(2.5,4)
              gammasGen->SetBoxXYZ(-0.1, 0.1, -0.1, 0.1, -0.1, 0.1);
              gammasGen->SetLorentzBoost(0.0); // for instance beta=0.8197505718204776 for 700 A MeV
              // add the gamma generator
              primGen->AddGenerator(gammasGen);
 
-             /*
-             31Si beam 9 MeV/u
-             target CD2 = ~100 ug/cm2
-             silicon array roughly from -10cm to -40cm (upstream of the target (edited)
-             to look at excitation energies of 32Si ranging from 9.2 MeV to ~ 10 - 11 MeV
-		
-	     LeveLs for 32Si
-	             
-		Ex = 6.705 MeV. Gammas: 6.704 MeV (100), 4.763 (9), 2.474 (22)
-              */
+             
 
 	run->SetGenerator(primGen);
 
