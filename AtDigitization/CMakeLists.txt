@@ -8,9 +8,9 @@ Set(DEPENDENCIES
 # Add all library names your code depending on.
 # Basically those are the libraries in the header files' directory.
   AtTpc
-  AtGen
+  AtGenerators
   AtParameter
-  AtTPCReco
+  AtReco
   AtTpcMap
 )
 

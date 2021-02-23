@@ -9,7 +9,6 @@ ${Boost_INCLUDE_DIRS}
 ${SIMPAtH}/include
 ${BASE_INCLUDE_DIRECTORIES}
 ${CMAKE_SOURCE_DIR}/AtGenerators
-${CMAKE_SOURCE_DIR}/generators
 ${CMAKE_SOURCE_DIR}/AtData
 ${CMAKE_SOURCE_DIR}/AtTpc
 
@@ -44,7 +43,7 @@ AtTPCGammaDummyGenerator.cxx
 )
 
 set(LINKDEF  GenLinkDef.h)
-set(LIBRARY_NAME AtGen)
+set(LIBRARY_NAME AtGenerators)
 
 #set(DEPENDENCIES  Base AtData pythia8 Pythia6)
 set(DEPENDENCIES  Base AtData FairLogger::FairLogger)

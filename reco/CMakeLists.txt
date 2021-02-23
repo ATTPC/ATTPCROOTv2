@@ -31,6 +31,30 @@ ${CMAKE_SOURCE_DIR}/AtGenerators
 
 include_directories(${INCLUDE_DIRECTORIES})
 
+Set(LINKDEF AtTPCRecoLinkDef.h)
+Set(LIBRARY_NAME AtReco)
+Set(DEPENDENCIES
+    Base
+    FairLogger::FairLogger
+#   Cling
+#    MCStack
+    XMLParser
+# Add all library names your code depending on.
+# Basically those are the libraries in the header files' directory.
+    AtTpcMap
+    AtParameter
+    Spectrum
+    ${HDF5_LIBRARIES}
+    ${Boost_LOG_LIBRARY}
+    ${Boost_LOG_SETUP_LIBRARY}
+    ${Boost_THREAD_LIBRARY}
+    ${Boost_DAtE_TIME_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY}
+    ${PCL_LIBRARIES}
+    ${GENFIT2_LIBRARY_DIR}
+)
+
 set(LINK_DIRECTORIES
 ${ROOT_LIBRARY_DIR}
 ${FAIRROOT_LIBRARY_DIR}
@@ -164,31 +188,5 @@ AtFitter/AtGenfit.cc
 endif()
 
 CHANGE_FILE_EXTENSION(*.cc *.h HEADERS "${SRCS}")
-
-Set(LINKDEF AtTPCRecoLinkDef.h)
-Set(LIBRARY_NAME AtTPCReco)
-Set(DEPENDENCIES
-    Base
-    FairLogger::FairLogger
-#   Cling
-#    MCStack
-    XMLParser
-# Add all library names your code depending on.
-# Basically those are the libraries in the header files' directory.
-    AtTpcMap
-    AtParameter
-    Spectrum
-    ${HDF5_LIBRARIES}
-    ${Boost_LOG_LIBRARY}
-    ${Boost_LOG_SETUP_LIBRARY}
-    ${Boost_THREAD_LIBRARY}
-    ${Boost_DAtE_TIME_LIBRARY}
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
-    ${PCL_LIBRARIES}
-    ${GENFIT2_LIBRARY_DIR}
-)
-
-
 
 GENERAtE_LIBRARY()

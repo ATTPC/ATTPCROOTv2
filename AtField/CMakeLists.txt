@@ -25,7 +25,7 @@ AtFieldPar.cxx
 )
 
 set(LINKDEF FieldLinkDef.h)
-Set(LIBRARY_NAME Field)
+Set(LIBRARY_NAME AtField)
 Set(DEPENDENCIES
     Base 
     FairLogger::FairLogger

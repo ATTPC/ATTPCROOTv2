@@ -30,7 +30,7 @@ AtSiArray.cxx
 Set(LINKDEF AtSiArrayLinkDef.h)
 Set(LIBRARY_NAME AtSiArray)
 Set(DEPENDENCIES
-    Base Core Cling AtGen FairLogger::FairLogger
+    Base Core Cling AtGenerators FairLogger::FairLogger
 )
 
 GENERAtE_LIBRARY()

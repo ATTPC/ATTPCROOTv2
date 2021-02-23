@@ -54,7 +54,7 @@ Set(DEPENDENCIES
     Eve
 # Add all library names your code depending on.
 # Basically those are the libraries in the header files' directory.
-    AtTPCReco
+    AtReco
     AtTpcMap
     S800
     FairLogger::FairLogger

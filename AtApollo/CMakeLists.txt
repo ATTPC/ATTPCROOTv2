@@ -12,7 +12,7 @@
 Set(LINKDEF AtApolloLinkDef.h)
 Set(LIBRARY_NAME AtApollo)
 Set(DEPENDENCIES
-    Base Core Cling AtGen FairLogger::FairLogger
+    Base Core Cling AtGenerators FairLogger::FairLogger
 )
 
 set(SRCS
