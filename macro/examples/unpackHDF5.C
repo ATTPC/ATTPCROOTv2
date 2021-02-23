@@ -1,22 +1,16 @@
 //Unpacks tpc files from /mnt/rawdata/ to /mnt/analysis/e12014/TPC/unpacked
 
 // Requires the TPC run number
-void unpack(int runNumber)
+void unpackHDF5(TString inputFile = TString("/mnt/rawdata/e12014_attpc/h5/run_0200.h5"),
+		TString outputFile = TString("/mnt/analysis/e12014/TPC/unpacked/run_0200.root"))
 {
   //Load the library for unpacking and reconstruction
   gSystem->Load("libAtReconstruction.so");
   
   TStopwatch timer;
   timer.Start();
-  
-   
-  //Set the input file
-  TString inputFile = TString::Format("/mnt/rawdata/e12014_attpc/h5/run_%04d.h5", runNumber);
-
-  //Set the output file
-  TString outputFile = TString::Format("/mnt/analysis/e12014/TPC/unpacked/run_%04d.root", runNumber);
-  
-  std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
+    
+  std::cout << "Unpacking: " << inputFile << std::endl;
   std::cout << "Saving in: " << outputFile << std::endl;
 
    
