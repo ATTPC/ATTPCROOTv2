@@ -5,17 +5,16 @@
 #include <pcl/io/io.h>
 
 class Cluster {
- protected:
-  size_t pointIndexCount;
-  std::vector<pcl::PointIndicesPtr> clusters;
+protected:
+   size_t pointIndexCount;
+   std::vector<pcl::PointIndicesPtr> clusters;
 
- public:
-  Cluster(){};
-  Cluster(std::vector<pcl::PointIndicesPtr> const &clusters,
-          size_t pointIndexCount);
+public:
+   Cluster(){};
+   Cluster(std::vector<pcl::PointIndicesPtr> const &clusters, size_t pointIndexCount);
 
-  std::vector<pcl::PointIndicesPtr> const &getClusters() const;
-  size_t getPointIndexCount() const;
+   std::vector<pcl::PointIndicesPtr> const &getClusters() const;
+   size_t getPointIndexCount() const;
 };
 
 #endif

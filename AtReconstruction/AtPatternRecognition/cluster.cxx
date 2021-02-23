@@ -6,15 +6,18 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
-Cluster::Cluster(std::vector<pcl::PointIndicesPtr> const &clusters,
-                 size_t pointIndexCount) {
-  this->clusters = clusters;
-  this->pointIndexCount = pointIndexCount;
+Cluster::Cluster(std::vector<pcl::PointIndicesPtr> const &clusters, size_t pointIndexCount)
+{
+   this->clusters = clusters;
+   this->pointIndexCount = pointIndexCount;
 }
 
-std::vector<pcl::PointIndicesPtr> const &Cluster::getClusters() const {
-  return this->clusters;
+std::vector<pcl::PointIndicesPtr> const &Cluster::getClusters() const
+{
+   return this->clusters;
 }
 
-size_t Cluster::getPointIndexCount() const { return this->pointIndexCount; }
-
+size_t Cluster::getPointIndexCount() const
+{
+   return this->pointIndexCount;
+}

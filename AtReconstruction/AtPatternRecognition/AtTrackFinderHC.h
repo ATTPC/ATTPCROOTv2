@@ -1,8 +1,8 @@
 /*******************************************************************
-* Base class for AtTrackFinderHC                                   *
-* Log: Class started 04-05-2018                                    *
-* Author: Y. Ayyad (ayyad@lbl.gov)                                 *
-********************************************************************/
+ * Base class for AtTrackFinderHC                                   *
+ * Log: Class started 04-05-2018                                    *
+ * Author: Y. Ayyad (ayyad@lbl.gov)                                 *
+ ********************************************************************/
 
 #ifndef AtTRACKFINDERHC_H
 #define AtTRACKFINDERHC_H
@@ -15,7 +15,7 @@
 #include <omp.h>
 #endif
 
-//System
+// System
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -25,7 +25,7 @@
 #include <vector>
 #include <future>
 
-//AtTPCROOT
+// AtTPCROOT
 #include "AtPRA.h"
 #include "AtHit.h"
 #include "AtEvent.h"
@@ -39,12 +39,12 @@
 #include "FairRootManager.h"
 #include "FairLogger.h"
 
-//PCL
+// PCL
 #include <pcl/common/common.h>
 #include <pcl/filters/extract_indices.h>
 #include <pcl/io/pcd_io.h>
 
-//trackfinder
+// trackfinder
 #include "hc.h"
 #include "msd.h"
 #include "smoothenCloud.h"
@@ -55,64 +55,57 @@
 #define cGREEN "\033[1;32m"
 
 struct hc_params {
-  float s;
-  size_t k;
-  size_t n;
-  size_t m;
-  float r;
-  float a;
-  float t;
-  float _padding;
+   float s;
+   size_t k;
+   size_t n;
+   size_t m;
+   float r;
+   float a;
+   float t;
+   float _padding;
 };
 
 struct Point {
-  float x;
-  float y;
-  float z;
-  std::vector<int> clIds;
+   float x;
+   float y;
+   float z;
+   std::vector<int> clIds;
 
-  Point(pcl::PointXYZ point) {
-    x = point.x;
-    y = point.y;
-    z = point.z;
-  }
+   Point(pcl::PointXYZ point)
+   {
+      x = point.x;
+      y = point.y;
+      z = point.z;
+   }
 
-  bool operator==(const Point &p) const {
-    return (x == p.x && y == p.y && z == p.z);
-  }
+   bool operator==(const Point &p) const { return (x == p.x && y == p.y && z == p.z); }
 };
 
-namespace AtPAtTERN{
+namespace AtPAtTERN {
 
+class AtTrackFinderHC : public AtPRA {
 
-class AtTrackFinderHC : public AtPRA
-{
+public:
+   AtTrackFinderHC();
+   ~AtTrackFinderHC();
 
-  public:
-      AtTrackFinderHC();
-      ~AtTrackFinderHC();
+   bool FindTracks(AtEvent &event, AtPatternEvent *patternEvent);
+   std::vector<AtTrack> GetTrackCand();
 
-      bool FindTracks(AtEvent &event, AtPatternEvent *patternEvent);
-      std::vector<AtTrack> GetTrackCand();
+private:
+   Cluster use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::vector<hc::triplet> triplets, float scale,
+                  float cdist, size_t cleanup_min_triplets, int opt_verbose);
 
-  private:
+   std::vector<AtTrack>
+   clustersToTrack(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, Cluster const cluster, AtEvent &event);
 
-      Cluster use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
-                   std::vector<hc::triplet> triplets, float scale, float cdist,
-                   size_t cleanup_min_triplets, int opt_verbose);
+   void eventToClusters(AtEvent &event, pcl::PointCloud<pcl::PointXYZI>::Ptr cloud);
 
-      std::vector<AtTrack> clustersToTrack(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
-                          Cluster const cluster, AtEvent& event);
+   std::vector<AtTrack> fTrackCand; // Candidate tracks
 
-      void eventToClusters(AtEvent& event,pcl::PointCloud<pcl::PointXYZI>::Ptr cloud);
-
-      std::vector<AtTrack> fTrackCand; //Candidate tracks
-
-
-      ClassDef(AtTrackFinderHC, 1);
-
+   ClassDef(AtTrackFinderHC, 1);
 };
 
-}//namespace
+} // namespace AtPAtTERN
 
 #endif

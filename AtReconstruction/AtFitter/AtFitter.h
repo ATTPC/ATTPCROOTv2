@@ -10,29 +10,23 @@
 #include "FairRootManager.h"
 #include "FairLogger.h"
 
-namespace AtFITTER{
+namespace AtFITTER {
 
-      class AtFitter : public TObject
-      {
+class AtFitter : public TObject {
 
-          public:
+public:
+   AtFitter();
+   virtual ~AtFitter();
+   // virtual std::vector<AtTrack> GetFittedTrack() = 0;
+   virtual bool FitTracks(AtPatternEvent &patternEvent) = 0;
 
-	    AtFitter();
-            virtual ~AtFitter();
-            //virtual std::vector<AtTrack> GetFittedTrack() = 0;
-            virtual bool FitTracks(AtPatternEvent &patternEvent) = 0;
+protected:
+   FairLogger *fLogger; ///< logger pointer
+   AtDigiPar *fPar;     ///< parameter container
 
-	  protected:
-            FairLogger *fLogger;      ///< logger pointer
-            AtDigiPar *fPar;          ///< parameter container
-            
+   ClassDef(AtFitter, 1)
+};
 
-            ClassDef(AtFitter, 1)
-      };
-
-}//namespace
-
+} // namespace AtFITTER
 
 #endif
-
-

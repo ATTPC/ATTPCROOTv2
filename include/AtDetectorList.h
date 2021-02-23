@@ -11,13 +11,12 @@
 // -----                  M. Al-Turany   June 2014                     -----
 // -------------------------------------------------------------------------
 
-
 /** Defines unique identifier for all At detectors system **/
 /** THis is needed for stack filtring **/
 
 #ifndef AtDetectorList_H
 #define AtDetectorList_H 1
 // kSTOPHERE is needed for iteration over the enum. All detectors have to be put before.
-enum DetectorId {kAtTpc,kAtSiArray,kSTOPHERE};
+enum DetectorId { kAtTpc, kAtSiArray, kSTOPHERE };
 
 #endif

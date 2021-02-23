@@ -3,7 +3,7 @@
 
 #include <vector>
 
-//ROOT
+// ROOT
 #include "TClonesArray.h"
 
 // AtTPCROOT classes
@@ -18,38 +18,34 @@
 #include "FairTask.h"
 #include "FairLogger.h"
 
-class AtPRAtask : public FairTask
-{
+class AtPRAtask : public FairTask {
 public:
-	AtPRAtask();
-	~AtPRAtask();
+   AtPRAtask();
+   ~AtPRAtask();
 
-	virtual InitStatus Init();
-	virtual void Exec(Option_t* option);
-	virtual void SetParContainers();
-	virtual void Finish();
+   virtual InitStatus Init();
+   virtual void Exec(Option_t *option);
+   virtual void SetParContainers();
+   virtual void Finish();
 
-  void SetPersistence(Bool_t value = kTRUE);
-  void SetPRAlgorithm(Int_t value = 0);
+   void SetPersistence(Bool_t value = kTRUE);
+   void SetPRAlgorithm(Int_t value = 0);
 
 private:
+   TClonesArray *fEventHArray;
+   TClonesArray *fPatternEventArray;
 
-	TClonesArray *fEventHArray;
-	TClonesArray *fPatternEventArray;
+   FairLogger *fLogger;
+   AtDigiPar *fPar;
 
-	FairLogger *fLogger;
-	AtDigiPar *fPar;
+   AtPAtTERN::AtPRA *fPRA;
 
-	AtPAtTERN::AtPRA *fPRA;
+   Int_t fPRAlgorithm;
+   Int_t fMinNumHits;
 
-    Int_t fPRAlgorithm;
-    Int_t fMinNumHits;
+   Bool_t kIsPersistence;
 
-	Bool_t kIsPersistence;
-
-
-  ClassDef(AtPRAtask, 1);
-
+   ClassDef(AtPRAtask, 1);
 };
 
-  #endif
+#endif

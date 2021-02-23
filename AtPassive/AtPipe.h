@@ -17,16 +17,14 @@
 #include "FairModule.h"
 
 class AtPipe : public FairModule {
-  public:
-    AtPipe(const char * name, const char *Title="At Pipe");
-    AtPipe();
+public:
+   AtPipe(const char *name, const char *Title = "At Pipe");
+   AtPipe();
 
-    virtual ~AtPipe();
-    virtual void ConstructGeometry();
-   
-  ClassDef(AtPipe,1) //AtPIPE
+   virtual ~AtPipe();
+   virtual void ConstructGeometry();
 
+   ClassDef(AtPipe, 1) // AtPIPE
 };
 
-#endif //PIPE_H
-
+#endif // PIPE_H

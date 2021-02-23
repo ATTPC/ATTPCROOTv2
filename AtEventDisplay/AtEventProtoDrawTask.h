@@ -3,17 +3,14 @@
 
 #include "AtEventDrawTask.h"
 
-class AtEventProtoDrawTask : public AtEventDrawTask
-{
-  public :
-
+class AtEventProtoDrawTask : public AtEventDrawTask {
+public:
    AtEventProtoDrawTask();
    ~AtEventProtoDrawTask();
 
    void DrawPadPlane();
 
-   ClassDef(AtEventProtoDrawTask,1);
-
+   ClassDef(AtEventProtoDrawTask, 1);
 };
 
 #endif

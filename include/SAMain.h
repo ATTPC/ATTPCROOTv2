@@ -1,7 +1,7 @@
 #ifndef SAMAIN_H
 #define SAMAIN_H
 
-//STD
+// STD
 #include <ios>
 #include <iostream>
 #include <istream>
@@ -9,7 +9,7 @@
 #include <map>
 #include <vector>
 
-//FairROOT
+// FairROOT
 #include "FairRootManager.h"
 #include "FairLogger.h"
 #include "FairRun.h"
@@ -17,7 +17,7 @@
 #include "FairParAsciiFileIo.h"
 #include "FairRuntimeDb.h"
 
-//ATTPCROOT
+// ATTPCROOT
 #include "ATHDFParserTask.hh"
 #include "ATEvent.hh"
 #include "ATPad.hh"
@@ -29,7 +29,7 @@
 #include "AtTpcPoint.h"
 #include "ATPSATask.hh"
 
-//PCL
+// PCL
 #include <pcl/console/parse.h>
 #include <pcl/filters/extract_indices.h>
 #include <pcl/io/pcd_io.h>
@@ -42,7 +42,7 @@
 #include <pcl/ModelCoefficients.h>
 #include <pcl/segmentation/sac_segmentation.h>
 
-//ROOT
+// ROOT
 #include "TGraph.h"
 #include "TCanvas.h"
 #include "TApplication.h"
@@ -80,43 +80,37 @@
 #include "Math/GenVector/RotationZ.h"
 #include "Math/GenVector/RotationZYX.h"
 
-int MinimizeTrack(ATTrack* track);
-static double distance2(double x,double y,double z, const double *p);
+int MinimizeTrack(ATTrack *track);
+static double distance2(double x, double y, double z, const double *p);
 void SetLine(double t, const double *p, double &x, double &y, double &z);
 
-struct SumDistance2
-{
-    TGraph2D * fGraph;
+struct SumDistance2 {
+   TGraph2D *fGraph;
 
-        SumDistance2(TGraph2D * g) : fGraph(g) {}
-            double operator() (const double * par) {
-            assert(fGraph    != 0);
-            double * x = fGraph->GetX();
-            double * y = fGraph->GetY();
-            double * z = fGraph->GetZ();
-            int npoints = fGraph->GetN();
-            double sum = 0;
-            for (int i  = 0; i < npoints; ++i) {
-              double d = distance2(x[i],y[i],z[i],par);
-              sum += d;
-            }
-      #ifdef DEBUG
-       if (first) std::cout << "point " << i << "\t"
-          << x[i] << "\t"
-          << y[i] << "\t"
-          << z[i] << "\t"
-          << std::sqrt(d) << std::endl;
-      #endif
+   SumDistance2(TGraph2D *g) : fGraph(g) {}
+   double operator()(const double *par)
+   {
+      assert(fGraph != 0);
+      double *x = fGraph->GetX();
+      double *y = fGraph->GetY();
+      double *z = fGraph->GetZ();
+      int npoints = fGraph->GetN();
+      double sum = 0;
+      for (int i = 0; i < npoints; ++i) {
+         double d = distance2(x[i], y[i], z[i], par);
+         sum += d;
+      }
+#ifdef DEBUG
+      if (first)
+         std::cout << "point " << i << "\t" << x[i] << "\t" << y[i] << "\t" << z[i] << "\t" << std::sqrt(d)
+                   << std::endl;
+#endif
 
-      //if (first)
-        //std::cout << "Total Initial distance square = " << sum << std::endl;
-        //first = false;
-        return sum;
-
-
-        }
-
-
+      // if (first)
+      // std::cout << "Total Initial distance square = " << sum << std::endl;
+      // first = false;
+      return sum;
+   }
 };
 
 #endif

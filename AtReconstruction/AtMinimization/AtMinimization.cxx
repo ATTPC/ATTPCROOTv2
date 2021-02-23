@@ -6,10 +6,8 @@
 
 ClassImp(AtMinimization)
 
-AtMinimization::AtMinimization()
+   AtMinimization::AtMinimization()
 {
 }
 
-AtMinimization::~AtMinimization()
-{
-}
+AtMinimization::~AtMinimization() {}

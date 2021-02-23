@@ -15,40 +15,38 @@
 #include "AtPhiRecoSimple.h"
 #include "AtPhiRecoTriple.h"
 
-
 // ROOT classes
-#include "TClonesArray.h" 
+#include "TClonesArray.h"
 
 class AtPhiRecoTask : public FairTask {
-  public:
-    AtPhiRecoTask();
-    ~AtPhiRecoTask();
+public:
+   AtPhiRecoTask();
+   ~AtPhiRecoTask();
 
-   
-    void SetPersistence(Bool_t value = kTRUE);
-    void SetThreshold(Double_t threshold);
-    void SetPhiRecoMode(Int_t value = 0);
+   void SetPersistence(Bool_t value = kTRUE);
+   void SetThreshold(Double_t threshold);
+   void SetPhiRecoMode(Int_t value = 0);
 
-    virtual InitStatus Init();
-    virtual void SetParContainers();
-    virtual void Exec(Option_t *opt);
+   virtual InitStatus Init();
+   virtual void SetParContainers();
+   virtual void Exec(Option_t *opt);
 
-  private:
-    FairLogger *fLogger;
-    
-    AtDigiPar *fPar;
-    
-    TClonesArray *fEventHArray;
-    TClonesArray *fPEventArray; 
+private:
+   FairLogger *fLogger;
 
-    AtPhiReco *fPhiReco;
-    Int_t fPhiRecoMode;
+   AtDigiPar *fPar;
 
-    Bool_t fIsPersistence;
-    
-    Double_t fThreshold;
+   TClonesArray *fEventHArray;
+   TClonesArray *fPEventArray;
 
-  ClassDef(AtPhiRecoTask, 1);
+   AtPhiReco *fPhiReco;
+   Int_t fPhiRecoMode;
+
+   Bool_t fIsPersistence;
+
+   Double_t fThreshold;
+
+   ClassDef(AtPhiRecoTask, 1);
 };
 
 #endif

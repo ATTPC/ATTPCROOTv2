@@ -10,18 +10,16 @@
 // -----                Created 26/03/14  by M. Al-Turany              -----
 // -------------------------------------------------------------------------
 
-
 #ifdef __CINT__
 
 #pragma link off all globals;
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class  AtMagnet+;
-#pragma link C++ class  AtCave+;
+#pragma link C++ class AtMagnet + ;
+#pragma link C++ class AtCave + ;
 #pragma link C++ class AtGeoCave;
 #pragma link C++ class AtPassiveContFact;
-#pragma link C++ class  AtPipe+;
+#pragma link C++ class AtPipe + ;
 
 #endif
-

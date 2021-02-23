@@ -1,9 +1,9 @@
 // =================================================
 //  GETFileChecker Class
-// 
+//
 //  Description:
 //    Check if the file exists or not
-// 
+//
 //  Genie Jhang ( geniejhang@majimak.com )
 //  2015. 09. 01
 // =================================================
@@ -14,10 +14,10 @@
 #include "TString.h"
 
 class GETFileChecker {
-  public:
-    static TString CheckFile(TString filename);
+public:
+   static TString CheckFile(TString filename);
 
-  ClassDef(GETFileChecker, 1)
+   ClassDef(GETFileChecker, 1)
 };
 
 #endif

@@ -29,80 +29,78 @@
 #include <boost/multi_array.hpp>
 #endif //__CINT__
 
-
 // ROOT classes
 #include "TClonesArray.h"
 
 class AtAnalysisTask : public FairTask {
-  public:
-    AtAnalysisTask();
-    ~AtAnalysisTask();
+public:
+   AtAnalysisTask();
+   ~AtAnalysisTask();
 
-    typedef boost::multi_array<double,3> multiarray;
-    typedef multiarray::index index;
-    multiarray fAtPadCoord;
+   typedef boost::multi_array<double, 3> multiarray;
+   typedef multiarray::index index;
+   multiarray fAtPadCoord;
 
-    void SetPersistence(Bool_t value = kTRUE);
-    void SetPhiReco(); //Hough Space is calculated for the prototype after sorting the hits by quadrant. Phi Reconstruction is
-    void SetFullScale();
-    void SetELossPar(std::vector<Double_t> par[10]);
-    void SetEtoRParameters(std::vector<Double_t> (&parRtoE)[10]);
-    void AddParticle(std::vector<std::pair<Int_t,Int_t>> ptcl);
-    void SetEnableMap();
-    void SetMap(Char_t const *map);
-    void SetSimpleMode(); // Simple tracking analysis without considering the vertex (RANSAC+Tracking Analysis)
-    // needed prior to this mode of the task
-    void SetHoughDist(Double_t value);
-    void SetUpperLimit(Double_t value);
-    void SetLowerLimit(Double_t value);
-    virtual InitStatus Init();
-    virtual void SetParContainers();
-    virtual void Exec(Option_t *opt);
+   void SetPersistence(Bool_t value = kTRUE);
+   void SetPhiReco(); // Hough Space is calculated for the prototype after sorting the hits by quadrant. Phi
+                      // Reconstruction is
+   void SetFullScale();
+   void SetELossPar(std::vector<Double_t> par[10]);
+   void SetEtoRParameters(std::vector<Double_t> (&parRtoE)[10]);
+   void AddParticle(std::vector<std::pair<Int_t, Int_t>> ptcl);
+   void SetEnableMap();
+   void SetMap(Char_t const *map);
+   void SetSimpleMode(); // Simple tracking analysis without considering the vertex (RANSAC+Tracking Analysis)
+   // needed prior to this mode of the task
+   void SetHoughDist(Double_t value);
+   void SetUpperLimit(Double_t value);
+   void SetLowerLimit(Double_t value);
+   virtual InitStatus Init();
+   virtual void SetParContainers();
+   virtual void Exec(Option_t *opt);
 
-  private:
-    FairLogger *fLogger;
-    //TClonesArray *fEventHArray;
-    TClonesArray *fProtoEventHArray;
-    TClonesArray *fProtoEventAnaArray;
-    TClonesArray *fTrackingEventAnaArray;
-    TClonesArray *fHoughArray;
-    TClonesArray *fRansacArray;
-    //TClonesArray *fAnalysisArray;
+private:
+   FairLogger *fLogger;
+   // TClonesArray *fEventHArray;
+   TClonesArray *fProtoEventHArray;
+   TClonesArray *fProtoEventAnaArray;
+   TClonesArray *fTrackingEventAnaArray;
+   TClonesArray *fHoughArray;
+   TClonesArray *fRansacArray;
+   // TClonesArray *fAnalysisArray;
 
-    AtProtoAnalysis     *fProtoAnalysis;
-    AtTrackingAnalysis  *fTrackingAnalysis;
-    AtHoughSpaceLine    *fHoughSpace;
-    AtProtoEvent        *fProtoevent;
-    AtRANSACN::AtRansac *fRansac;
+   AtProtoAnalysis *fProtoAnalysis;
+   AtTrackingAnalysis *fTrackingAnalysis;
+   AtHoughSpaceLine *fHoughSpace;
+   AtProtoEvent *fProtoevent;
+   AtRANSACN::AtRansac *fRansac;
 
+   AtDigiPar *fPar;
+   Bool_t fIsPersistence;
+   Bool_t fIsPhiReco;
+   Bool_t fIsFullScale;
+   Double_t fHoughDist;
+   Double_t fUpperLimit;
+   Double_t fLowerLimit;
 
+   Int_t fRunNum;
+   Int_t fInternalID;
 
-    AtDigiPar *fPar;
-    Bool_t fIsPersistence;
-    Bool_t fIsPhiReco;
-    Bool_t fIsFullScale;
-    Double_t fHoughDist;
-    Double_t fUpperLimit;
-    Double_t fLowerLimit;
+   TF1 *fHoughFit[4];
+   TGraph *fHitPatternFilter[4];
+   TF1 *fFitResult[4];
 
-    Int_t fRunNum;
-    Int_t fInternalID;
+   std::vector<Double_t> fELossPar[10];
+   std::vector<Double_t> fEtoRPar[10];
+   std::vector<std::pair<Int_t, Int_t>> fParticleAZ;
 
-    TF1 *fHoughFit[4];
-    TGraph *fHitPatternFilter[4];
-    TF1 *fFitResult[4];
+   AtTpcMap *fAtMapPtr;
+   Char_t const *fMap;
+   TH2Poly *fPadPlane;
+   Bool_t fIsEnableMap;
+   Bool_t fIsSimpleMode;
 
-    std::vector<Double_t> fELossPar[10];
-    std::vector<Double_t> fEtoRPar[10];
-    std::vector<std::pair<Int_t,Int_t>> fParticleAZ;
-
-    AtTpcMap *fAtMapPtr;
-    Char_t const *fMap;
-    TH2Poly *fPadPlane;
-    Bool_t fIsEnableMap;
-    Bool_t fIsSimpleMode;
-
-  ClassDef(AtAnalysisTask, 1);
+   ClassDef(AtAnalysisTask, 1);
 };
 
 #endif

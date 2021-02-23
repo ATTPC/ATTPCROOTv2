@@ -11,27 +11,23 @@
 // -----                Created 26/03/14  by M. Al-Turany              -----
 // -------------------------------------------------------------------------
 
-
 #ifndef Cave_H
 #define Cave_H
 
-#include "FairModule.h"                 // for FairModule
+#include "FairModule.h" // for FairModule
 
-#include "Rtypes.h"                     // for AtCave::Class, ClassDef, etc
+#include "Rtypes.h" // for AtCave::Class, ClassDef, etc
 
-class AtCave : public FairModule
-{
-  public:
-    AtCave(const char* name, const char* Title="Exp Cave");
-    AtCave();
-    virtual ~AtCave();
-    virtual void ConstructGeometry();
+class AtCave : public FairModule {
+public:
+   AtCave(const char *name, const char *Title = "Exp Cave");
+   AtCave();
+   virtual ~AtCave();
+   virtual void ConstructGeometry();
 
-
-  private:
-    Double_t world[3];
-    ClassDef(AtCave,1) //PNDCaveSD
+private:
+   Double_t world[3];
+   ClassDef(AtCave, 1) // PNDCaveSD
 };
 
-#endif //Cave_H
-
+#endif // Cave_H

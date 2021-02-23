@@ -11,8 +11,6 @@
 // -----                Created 26/03/14  by M. Al-Turany              -----
 // -------------------------------------------------------------------------
 
-
-
 #ifndef AtFieldPar_H
 #define AtFieldPar_H 1
 
@@ -21,101 +19,83 @@
 class FairField;
 class FairParamList;
 
-const int kMaxFieldMapType = 5;        
+const int kMaxFieldMapType = 5;
 
-class AtFieldPar : public FairParGenericSet
-{
+class AtFieldPar : public FairParGenericSet {
 
- public:
+public:
+   /** Standard constructor  **/
+   AtFieldPar(const char *name, const char *title, const char *context);
 
-  
-  /** Standard constructor  **/
-  AtFieldPar(const char* name, const char* title, const char* context);
+   /** default constructor  **/
+   AtFieldPar();
 
-/** default constructor  **/
-  AtFieldPar();
-  
-  /** Destructor **/
-  ~AtFieldPar();
+   /** Destructor **/
+   ~AtFieldPar();
 
+   /** Put parameters **/
+   virtual void putParams(FairParamList *list);
 
-  /** Put parameters **/
-  virtual void putParams(FairParamList* list);
+   /** Get parameters **/
+   virtual Bool_t getParams(FairParamList *list);
 
+   /** Set parameters from CbmField  **/
+   void SetParameters(FairField *field);
 
-  /** Get parameters **/
-  virtual Bool_t getParams(FairParamList* list);
+   /** Accessors **/
+   Int_t GetType() const { return fType; }
+   Double_t GetXmin() const { return fXmin; }
+   Double_t GetXmax() const { return fXmax; }
+   Double_t GetYmin() const { return fYmin; }
+   Double_t GetYmax() const { return fYmax; }
+   Double_t GetZmin() const { return fZmin; }
+   Double_t GetZmax() const { return fZmax; }
+   Double_t GetBx() const { return fBx; }
+   Double_t GetBy() const { return fBy; }
+   Double_t GetBz() const { return fBz; }
+   void MapName(TString &name) { name = fMapName; }
+   Double_t GetPositionX() const { return fPosX; }
+   Double_t GetPositionY() const { return fPosY; }
+   Double_t GetPositionZ() const { return fPosZ; }
+   Double_t GetScale() const { return fScale; }
+   Double_t GetPeak() const { return fPeak; }
+   Double_t GetMiddle() const { return fMiddle; }
 
+private:
+   /** Field type
+    ** 0 = constant field
+    ** 1 = field map
+    ** 2 = field map sym2 (symmetries in x and y)
+    ** 3 = field map sym3 (symmetries in x, y and z)
+    ** kTypeDistorted = distorted field map (its parent field can be field map or constant field)
+    **/
+   Int_t fType;
 
-  /** Set parameters from CbmField  **/
-  void SetParameters(FairField* field);
+   /** Field limits in case of constant field **/
+   Double_t fXmin, fXmax;
+   Double_t fYmin, fYmax;
+   Double_t fZmin, fZmax;
 
+   /** Field values in case of constant field [kG] **/
+   Double_t fBx, fBy, fBz;
 
-  /** Accessors **/
-  Int_t    GetType()      const { return fType; }
-  Double_t GetXmin()      const { return fXmin; }
-  Double_t GetXmax()      const { return fXmax; }
-  Double_t GetYmin()      const { return fYmin; }
-  Double_t GetYmax()      const { return fYmax; }
-  Double_t GetZmin()      const { return fZmin; }
-  Double_t GetZmax()      const { return fZmax; }
-  Double_t GetBx()        const { return fBx; }
-  Double_t GetBy()        const { return fBy; }
-  Double_t GetBz()        const { return fBz; }
-  void MapName(TString& name) { name = fMapName; }
-  Double_t GetPositionX() const { return fPosX; }
-  Double_t GetPositionY() const { return fPosY; }
-  Double_t GetPositionZ() const { return fPosZ; }
-  Double_t GetScale()     const { return fScale; }
-  Double_t GetPeak()      const { return fPeak; }
-  Double_t GetMiddle()    const { return fMiddle; }
-    
+   /** Field map name in case of field map **/
+   TString fMapName;
 
+   /** Field centre position for field map **/
+   Double_t fPosX, fPosY, fPosZ;
 
- private:
+   /** Scaling factor for field map **/
+   Double_t fScale;
 
-  /** Field type
-   ** 0 = constant field
-   ** 1 = field map
-   ** 2 = field map sym2 (symmetries in x and y)
-   ** 3 = field map sym3 (symmetries in x, y and z)
-   ** kTypeDistorted = distorted field map (its parent field can be field map or constant field)
-   **/
-  Int_t fType;
+   /** field parameters**/
+   Double_t fPeak;
+   Double_t fMiddle;
 
+   AtFieldPar(const AtFieldPar &);
+   AtFieldPar &operator=(const AtFieldPar &);
 
-  /** Field limits in case of constant field **/
-  Double_t fXmin, fXmax;
-  Double_t fYmin, fYmax;
-  Double_t fZmin, fZmax;
-
-
-  /** Field values in case of constant field [kG] **/
-  Double_t fBx, fBy, fBz;
-
-
-  /** Field map name in case of field map **/
-  TString fMapName;
-
-
-  /** Field centre position for field map **/
-  Double_t fPosX, fPosY, fPosZ;
-
-
-  /** Scaling factor for field map **/
-  Double_t fScale;
- 
-  /** field parameters**/
-  Double_t fPeak;
-  Double_t fMiddle;
-
- 
-  AtFieldPar(const AtFieldPar&);
-  AtFieldPar& operator=(const AtFieldPar&);
-
-  ClassDef(AtFieldPar,1);
-
+   ClassDef(AtFieldPar, 1);
 };
-
 
 #endif

@@ -12,15 +12,15 @@
 
 class FairContainer;
 
-class AtApolloContFact : public FairContFact
-{
-  private:
-    void setAllContainers();
-  public:
-    AtApolloContFact();
-    ~AtApolloContFact() {}
-    FairParSet* createContainer(FairContainer*);
-    ClassDef(AtApolloContFact,0) // Factory for all AtApollo parameter containers
+class AtApolloContFact : public FairContFact {
+private:
+   void setAllContainers();
+
+public:
+   AtApolloContFact();
+   ~AtApolloContFact() {}
+   FairParSet *createContainer(FairContainer *);
+   ClassDef(AtApolloContFact, 0) // Factory for all AtApollo parameter containers
 };
 
 #endif

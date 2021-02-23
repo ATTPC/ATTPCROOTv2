@@ -14,7 +14,7 @@
 #pragma link C++ class AtApolloContFact;
 #pragma link C++ class AtApollo;
 #pragma link C++ class AtApolloDigitizer;
-#pragma link C++ class AtApolloPoint+;
-#pragma link C++ class AtApolloCrystalCalData+;
+#pragma link C++ class AtApolloPoint + ;
+#pragma link C++ class AtApolloCrystalCalData + ;
 
 #endif

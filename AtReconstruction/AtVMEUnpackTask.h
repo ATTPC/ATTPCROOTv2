@@ -16,43 +16,38 @@
 #include <vector>
 
 class AtVMEUnpackTask : public FairTask {
-  public:
-    
-    AtVMEUnpackTask();
-    ~AtVMEUnpackTask();
+public:
+   AtVMEUnpackTask();
+   ~AtVMEUnpackTask();
 
-    void AddData(TString filename);
-    void SetData(Int_t value);
-    void SetPersistence(Bool_t value = kTRUE);
-    void SetICChannel(Int_t value);
-    void SetMeshChannel(Int_t value);
-    void SetTriggerChannel(Int_t value);
+   void AddData(TString filename);
+   void SetData(Int_t value);
+   void SetPersistence(Bool_t value = kTRUE);
+   void SetICChannel(Int_t value);
+   void SetMeshChannel(Int_t value);
+   void SetTriggerChannel(Int_t value);
 
-    virtual InitStatus Init();
-    virtual void SetParContainers();
-    virtual void Exec(Option_t *opt);
+   virtual InitStatus Init();
+   virtual void SetParContainers();
+   virtual void Exec(Option_t *opt);
 
-   
+private:
+   VMECore *fVMEDecoder;
+   std::vector<TString> fDataList;
+   Int_t fDataNum;
+   Bool_t fIsPersistence;
 
-   private:
-  
-    VMECore *fVMEDecoder;
-    std::vector<TString> fDataList;    
-    Int_t fDataNum;
-    Bool_t fIsPersistence;
+   Int_t fICChannel;
+   Int_t fMeshChannel;
+   Int_t fTriggerChannel;
 
-    Int_t fICChannel;
-    Int_t fMeshChannel;
-    Int_t fTriggerChannel;
-  
-    FairLogger *fLogger; 
-    AtDigiPar *fPar;   
+   FairLogger *fLogger;
+   AtDigiPar *fPar;
 
-    Int_t fEventID;
-  
-    TClonesArray *fVMERawEventArray;
+   Int_t fEventID;
 
-       
+   TClonesArray *fVMERawEventArray;
+
    ClassDef(AtVMEUnpackTask, 1);
 };
 

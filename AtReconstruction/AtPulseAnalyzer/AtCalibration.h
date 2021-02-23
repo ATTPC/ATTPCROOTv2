@@ -12,38 +12,37 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
-class AtCalibration:public TObject {
- public:
-    AtCalibration();
-    ~AtCalibration();
+class AtCalibration : public TObject {
+public:
+   AtCalibration();
+   ~AtCalibration();
 
-    void SetGainFile(TString gainFile);
-    void SetJitterFile(TString jitterFile);
+   void SetGainFile(TString gainFile);
+   void SetJitterFile(TString jitterFile);
 
-    Double_t *CalibrateGain(Double_t adc[512], Int_t padNum);
-    Double_t *CalibrateJitter(Double_t adc[512], Int_t padNum);
+   Double_t *CalibrateGain(Double_t adc[512], Int_t padNum);
+   Double_t *CalibrateJitter(Double_t adc[512], Int_t padNum);
 
-    Bool_t IsGainFile();
-    Bool_t IsJitterFile();
+   Bool_t IsGainFile();
+   Bool_t IsJitterFile();
 
- protected:
-     TString fGainFile;
-    TString fJitterFile;
+protected:
+   TString fGainFile;
+   TString fJitterFile;
 
-    Double_t fGadc[512];
-    Double_t fGnewadc[512];
-    Double_t fJadc[512];
-    Double_t fJnewadc[512];
+   Double_t fGadc[512];
+   Double_t fGnewadc[512];
+   Double_t fJadc[512];
+   Double_t fJnewadc[512];
 
-    Bool_t fIsGainCalibrated;
-    Bool_t fIsJitterCalibrated;
+   Bool_t fIsGainCalibrated;
+   Bool_t fIsJitterCalibrated;
 
-    Double_t fGainCalib[10240];
-    Double_t fJitterCalib[10240];
+   Double_t fGainCalib[10240];
+   Double_t fJitterCalib[10240];
 
-    Int_t fPadNum;
+   Int_t fPadNum;
 
-     ClassDef(AtCalibration, 1);
-
+   ClassDef(AtCalibration, 1);
 };
 #endif

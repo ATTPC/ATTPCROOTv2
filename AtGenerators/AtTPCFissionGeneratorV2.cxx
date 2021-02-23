@@ -14,7 +14,6 @@
 #include "TParticlePDG.h"
 #include "TObjArray.h"
 
-
 #include "TRandom.h"
 #include "TMath.h"
 #include "TLorentzVector.h"
@@ -23,7 +22,6 @@
 #include "TVirtualMC.h"
 #include "TParticle.h"
 #include "TClonesArray.h"
-
 
 #include "FairRunSim.h"
 #include "FairIon.h"
@@ -44,195 +42,179 @@
 
 Int_t AtTPCFissionGeneratorV2::fgNIon = 0;
 
-
 AtTPCFissionGeneratorV2::AtTPCFissionGeneratorV2()
-  :  fP1x(0.), fP1y(0.), fP1z(0.),
-    fP2x(0.), fP2y(0.), fP2z(0.),
-    fVx(0.), fVy(0.), fVz(0.)
+   : fP1x(0.), fP1y(0.), fP1z(0.), fP2x(0.), fP2y(0.), fP2z(0.), fVx(0.), fVy(0.), fVz(0.)
 {
-//  cout << "-W- AtTPCIonGenerator: "
-//      << " Please do not use the default constructor! " << endl;
+   //  cout << "-W- AtTPCIonGenerator: "
+   //      << " Please do not use the default constructor! " << endl;
 }
 
 // -----   Default constructor   ------------------------------------------
-AtTPCFissionGeneratorV2::AtTPCFissionGeneratorV2(const char* name,TString simfile):
-  fP1x(0.), fP1y(0.), fP1z(0.),
-  fP2x(0.), fP2y(0.), fP2z(0.),
-  fVx(0.), fVy(0.), fVz(0.)
+AtTPCFissionGeneratorV2::AtTPCFissionGeneratorV2(const char *name, TString simfile)
+   : fP1x(0.), fP1y(0.), fP1z(0.), fP2x(0.), fP2y(0.), fP2z(0.), fVx(0.), fVy(0.), fVz(0.)
 {
 
-  TString dir = getenv("VMCWORKDIR");
-  std::ifstream*  fInputFilebase;
-  TString fFileNamebase;
-  std::map<TString, FairIon*> fIonMap;       //!
+   TString dir = getenv("VMCWORKDIR");
+   std::ifstream *fInputFilebase;
+   TString fFileNamebase;
+   std::map<TString, FairIon *> fIonMap; //!
 
-  fFileNamebase = dir+"/macro/Simulation/database/ionlist.txt";
-    std::cout << " AtTPCFissionGenerator: Opening input file " << fFileNamebase << std::endl;
-     // Open first the file to register all new ions.
-    fInputFilebase = new std::ifstream(fFileNamebase);
-    if ( ! fInputFilebase->is_open() )
-         Fatal("AtTPCFissionGenerator","Cannot open input file.");
+   fFileNamebase = dir + "/macro/Simulation/database/ionlist.txt";
+   std::cout << " AtTPCFissionGenerator: Opening input file " << fFileNamebase << std::endl;
+   // Open first the file to register all new ions.
+   fInputFilebase = new std::ifstream(fFileNamebase);
+   if (!fInputFilebase->is_open())
+      Fatal("AtTPCFissionGenerator", "Cannot open input file.");
 
-    std::cout << "AtTPCFissionGenerator: Looking for ions..." << std::endl;
+   std::cout << "AtTPCFissionGenerator: Looking for ions..." << std::endl;
 
+   Int_t nIons = 0;
+   Int_t eventId = 1;
+   Double_t pBeam, b;
 
-  Int_t nIons = 0;
-  Int_t eventId=1;
-  Double_t pBeam,b;
+   // Define track variables to be read from file
+   Int_t iPid = -1;
+   Int_t A, Z, qq;
 
-  // Define track variables to be read from file
-  Int_t    iPid   = -1;
-  Int_t    A,Z,qq;
+   fIonMap.clear();
 
+   *fInputFilebase >> Z >> A;
 
-  fIonMap.clear();
+   while (!fInputFilebase->eof()) {
 
-  *fInputFilebase>> Z >> A;
+      if (fInputFilebase->eof())
+         continue;
 
-  while ( ! fInputFilebase->eof()) {
+      char buffer[20];
+      sprintf(buffer, "Ion_%d_%d", A, Z);
+      TString ionName(buffer);
 
+      FairIon *ion = new FairIon(ionName, Z, A, qq);
+      fIonMap[ionName] = ion;
+      nIons++;
 
-  if ( fInputFilebase->eof() ) continue;
+      *fInputFilebase >> Z >> A;
 
-	char buffer[20];
-	sprintf(buffer, "Ion_%d_%d", A, Z);
-	TString ionName(buffer);
+   } //!
 
-	  FairIon* ion = new FairIon(ionName,Z,A,qq);
-	  fIonMap[ionName] = ion;
-	  nIons++;
+   FairRunSim *run = FairRunSim::Instance();
+   std::map<TString, FairIon *>::iterator mapIt;
+   for (mapIt = fIonMap.begin(); mapIt != fIonMap.end(); mapIt++) {
+      FairIon *ion = (*mapIt).second;
+      run->AddNewIon(ion);
+   }
 
-     *fInputFilebase>> Z >> A;
+   std::cout << cYELLOW << "AtTPCFissionGenerator: " << nIons << " ions registered." << cNORMAL << std::endl;
 
-  }//!
+   TString simfilepath = dir + "/macro/Simulation/data/" + simfile;
+   TFile *f = new TFile(simfilepath.Data());
+   if (f->IsZombie()) {
+      std::cout << cRED << " AtTPCFissionGenerator: No simulation file found! Check VMCWORKDIR variable. Exiting... "
+                << cNORMAL << std::endl;
+      delete f;
+   } else
+      std::cout << cGREEN << " AtTPCFissionGenerator : Prototype geometry found in : " << simfilepath.Data() << cNORMAL
+                << std::endl;
 
-  FairRunSim* run = FairRunSim::Instance();
-  std::map<TString, FairIon*>::iterator mapIt;
-  for (mapIt=fIonMap.begin(); mapIt!=fIonMap.end(); mapIt++) {
-    FairIon* ion = (*mapIt).second;
-    run->AddNewIon(ion);
+   TTree *fTree = (TTree *)f->Get("tree101");
+   Int_t nEvents = fTree->GetEntriesFast();
+   std::cout << " Number of events : " << nEvents << std::endl;
+   fTree->SetBranchAddress("Evnt", &Evnt);
+   fTree->SetBranchAddress("Ntrack", &Ntrack);
+   fTree->SetBranchAddress("Aout", Aout);
+   fTree->SetBranchAddress("Zout", Zout);
+   fTree->SetBranchAddress("fOutPx", fOutPx);
+   fTree->SetBranchAddress("fOutPy", fOutPy);
+   fTree->SetBranchAddress("fOutPz", fOutPz);
+   pTree.push_back(fTree);
 
-  }
-
-    std::cout <<cYELLOW<< "AtTPCFissionGenerator: " << nIons << " ions registered."<<cNORMAL<< std::endl;
-
-
-    TString simfilepath = dir + "/macro/Simulation/data/"+ simfile;
-    TFile *f = new TFile(simfilepath.Data());
-    if(f->IsZombie()){
-    std::cout<<cRED<<" AtTPCFissionGenerator: No simulation file found! Check VMCWORKDIR variable. Exiting... "<<cNORMAL<<std::endl;
-    delete f;
-    }else std::cout<<cGREEN<<" AtTPCFissionGenerator : Prototype geometry found in : "<<simfilepath.Data()<<cNORMAL<<std::endl;
-
-
-    TTree* fTree = (TTree*) f-> Get("tree101");
-    Int_t nEvents = fTree -> GetEntriesFast();
-    std::cout<<" Number of events : "<<nEvents<<std::endl;
-    fTree->SetBranchAddress("Evnt",&Evnt);
-    fTree->SetBranchAddress("Ntrack",&Ntrack);
-    fTree->SetBranchAddress("Aout",Aout);
-    fTree->SetBranchAddress("Zout",Zout);
-    fTree->SetBranchAddress("fOutPx",fOutPx);
-    fTree->SetBranchAddress("fOutPy",fOutPy);
-    fTree->SetBranchAddress("fOutPz",fOutPz);
-    pTree.push_back(fTree);
-
-    event=0;
-
-
-
+   event = 0;
 }
 
 // -----   Destructor   ---------------------------------------------------
 AtTPCFissionGeneratorV2::~AtTPCFissionGeneratorV2()
 {
- // if (fIon) delete fIon;
+   // if (fIon) delete fIon;
 }
 
 // -----   Public method ReadEvent   --------------------------------------
-Bool_t AtTPCFissionGeneratorV2::ReadEvent(FairPrimaryGenerator* primGen) {
+Bool_t AtTPCFissionGeneratorV2::ReadEvent(FairPrimaryGenerator *primGen)
+{
 
-  fVx=0.,fVy=0.,fVz=0.;
-  Double_t uma=931.494028,mp=938.272013, c=29.972458;
-  Double_t px,py,pz;
+   fVx = 0., fVy = 0., fVz = 0.;
+   Double_t uma = 931.494028, mp = 938.272013, c = 29.972458;
+   Double_t px, py, pz;
 
-  TDatabasePDG* fPDG = TDatabasePDG::Instance();
+   TDatabasePDG *fPDG = TDatabasePDG::Instance();
 
-  pTree.at(0)->GetEntry(event);
+   pTree.at(0)->GetEntry(event);
 
+   AtStack *stack = (AtStack *)gMC->GetStack();
 
-   AtStack* stack = (AtStack*) gMC->GetStack();
+   // fIsDecay = kFALSE;
 
-   //fIsDecay = kFALSE;
+   // fBeamEnergy = gAtVP->GetEnergy();
+   // std::cout<<" -I- AtTPC2Body Residual energy  : "<<gAtVP->GetEnergy()<<std::endl;
 
+   // fPxBeam = gAtVP->GetPx();
+   // fPyBeam = gAtVP->GetPy();
+   // fPzBeam = gAtVP->GetPz();
 
-   //fBeamEnergy = gAtVP->GetEnergy();
-   //std::cout<<" -I- AtTPC2Body Residual energy  : "<<gAtVP->GetEnergy()<<std::endl;
+   // gAtVP->SetRecoilE(Ene.at(1));
+   // gAtVP->SetRecoilA(Ang.at(1)*180.0/TMath::Pi());
+   // gAtVP->SetScatterE(Ene.at(0));
+   // gAtVP->SetScatterA(Ang.at(0)*180.0/TMath::Pi());
 
-   //fPxBeam = gAtVP->GetPx();
-   //fPyBeam = gAtVP->GetPy();
-   //fPzBeam = gAtVP->GetPz();
+   // Propagate the vertex of the previous event
 
+   // fVx = gAtVP->GetVx();
+   // fVy = gAtVP->GetVy();
+   // fVz = gAtVP->GetVz();
 
-  //gAtVP->SetRecoilE(Ene.at(1));
-  //gAtVP->SetRecoilA(Ang.at(1)*180.0/TMath::Pi());
-  //gAtVP->SetScatterE(Ene.at(0));
-  //gAtVP->SetScatterA(Ang.at(0)*180.0/TMath::Pi());
+   // if(i>1 && gAtVP->GetDecayEvtCnt() && pdgType!=1000500500 && fPType.at(i)=="Ion" ){// TODO: Dirty way to propagate
+   // only the products (0 and 1 are beam and target respectively)
 
-	     // Propagate the vertex of the previous event
+   // Define event
+   Int_t I = 0;
 
-			 //fVx = gAtVP->GetVx();
-			 //fVy = gAtVP->GetVy();
-			 //fVz = gAtVP->GetVz();
+   // Define track variables
+   Int_t iPid = -1;
+   Int_t ia1 = 12;
+   Int_t iz1 = 6;
+   Int_t pdgType = 0;
 
-    //if(i>1 && gAtVP->GetDecayEvtCnt() && pdgType!=1000500500 && fPType.at(i)=="Ion" ){// TODO: Dirty way to propagate only the products (0 and 1 are beam and target respectively)
+   for (Int_t j = 0; j < Ntrack; j++) {
 
-    // Define event
-    Int_t     I = 0;
+      ia1 = Aout[j];
+      iz1 = Zout[j];
 
-    // Define track variables
-    Int_t    iPid   = -1;
-    Int_t    ia1      = 12;
-    Int_t    iz1      = 6;
-    Int_t pdgType=0;
+      if (ia1 > 2 && iz1 > 2) {
+         if (iPid < 0) {
+            char ionName[20];
+            sprintf(ionName, "Ion_%d_%d", ia1, iz1);
+            TParticlePDG *part = fPDG->GetParticle(ionName);
+            if (!part) {
+               std::cout << "AtTPCFissionGenerator::ReadEvent: Cannot find " << ionName << " in database!" << std::endl;
+               // continue;
+            }
+            if (part)
+               pdgType = part->PdgCode();
+         } else
+            pdgType = ia1; // "normal" particle
 
-    for(Int_t j=0;j<Ntrack;j++){
+         px = fOutPx[j];
+         py = fOutPy[j];
+         pz = fOutPz[j];
 
-        ia1=Aout[j];
-        iz1=Zout[j];
-
-    if(ia1>2 && iz1>2){
-     if ( iPid < 0 ) {
-  	  char ionName[20];
-  	  sprintf(ionName, "Ion_%d_%d", ia1, iz1);
-  	  TParticlePDG* part = fPDG->GetParticle(ionName);
-  	  if ( ! part ) {
-  	      std::cout << "AtTPCFissionGenerator::ReadEvent: Cannot find "
-  		  << ionName << " in database!" << std::endl;
-  	      //continue;
-  	  }
-  	  if(part) pdgType = part->PdgCode();
-        }
-        else pdgType = ia1;  // "normal" particle
-
-       px=fOutPx[j];
-       py=fOutPy[j];
-       pz=fOutPz[j];
-
-       primGen->AddTrack(pdgType, px, py, pz, fVx, fVy, fVz);
-
-     }
-
+         primGen->AddTrack(pdgType, px, py, pz, fVx, fVy, fVz);
+      }
    }
 
+   gAtVP->IncDecayEvtCnt(); // TODO: Okay someone should put a more suitable name but we are on a hurry...
+   std::cout << cRED << " Fission event : " << event << cNORMAL << std::endl;
+   event++;
 
-  gAtVP->IncDecayEvtCnt();  //TODO: Okay someone should put a more suitable name but we are on a hurry...
-  std::cout<<cRED<<" Fission event : "<<event<<cNORMAL<<std::endl;
-  event++;
-
-  return kTRUE;
-
+   return kTRUE;
 }
-
 
 ClassImp(AtTPCFissionGeneratorV2)

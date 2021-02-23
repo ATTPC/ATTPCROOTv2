@@ -5,18 +5,17 @@
 
 class FairContainer;
 
-class AtContFact : public FairContFact
-{
-  public:
-    AtContFact();
-    ~AtContFact();
+class AtContFact : public FairContFact {
+public:
+   AtContFact();
+   ~AtContFact();
 
-    FairParSet* createContainer(FairContainer*);
+   FairParSet *createContainer(FairContainer *);
 
-  private:
-    void setAllContainers();
+private:
+   void setAllContainers();
 
-  ClassDef(AtContFact, 1) // Factory for all SPiRIT parameter containers
+   ClassDef(AtContFact, 1) // Factory for all SPiRIT parameter containers
 };
 
 #endif

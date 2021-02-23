@@ -1,8 +1,8 @@
 /********************************************************************************
  *    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    *
  *                                                                              *
- *              This software is distributed under the terms of the             * 
- *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *  
+ *              This software is distributed under the terms of the             *
+ *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
 #ifdef __CINT__
@@ -15,6 +15,6 @@
 #pragma link C++ class AtTpcGeo;
 #pragma link C++ class AtTpcGeoPar;
 #pragma link C++ class AtTpc;
-#pragma link C++ class AtTpcPoint+;
+#pragma link C++ class AtTpcPoint + ;
 
 #endif

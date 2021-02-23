@@ -2,7 +2,6 @@
 #include "AtHoughSpaceLine.h"
 #include "AtHoughSpaceCircle.h"
 
-
 // FAIRROOT classes
 #include "FairRootManager.h"
 #include "FairRun.h"
@@ -14,164 +13,183 @@
 
 ClassImp(AtHoughTask);
 
-AtHoughTask::AtHoughTask():fAtPadCoord(boost::extents[10240][3][2])
+AtHoughTask::AtHoughTask() : fAtPadCoord(boost::extents[10240][3][2])
 {
-  fLogger = FairLogger::GetLogger();
-  fPar = NULL;
+   fLogger = FairLogger::GetLogger();
+   fPar = NULL;
 
-  fIsPersistence = kFALSE;
-  fIsLinear = kFALSE;
-  fIsCircular = kFALSE;
-  fIsPhiReco = kFALSE;
-  fRadThreshold=0.0;
-  fHoughThreshold = 0.0;
-  fHoughDistance = 5.0;
+   fIsPersistence = kFALSE;
+   fIsLinear = kFALSE;
+   fIsCircular = kFALSE;
+   fIsPhiReco = kFALSE;
+   fRadThreshold = 0.0;
+   fHoughThreshold = 0.0;
+   fHoughDistance = 5.0;
 
-  fEvent = NULL;
-  fProtoevent = NULL;
+   fEvent = NULL;
+   fProtoevent = NULL;
 
-  fInternalID = 0;
+   fInternalID = 0;
 
-  fIsEnableMap = kFALSE;
-
-
-
+   fIsEnableMap = kFALSE;
 }
 
-AtHoughTask::~AtHoughTask()
+AtHoughTask::~AtHoughTask() {}
+
+void AtHoughTask::SetPersistence(Bool_t value)
 {
+   fIsPersistence = value;
+}
+void AtHoughTask::SetThreshold(Double_t threshold)
+{
+   fThreshold = threshold;
+}
+void AtHoughTask::SetRadiusThreshold(Float_t value)
+{
+   fRadThreshold = value;
+}
+void AtHoughTask::SetLinearHough()
+{
+   fIsLinear = kTRUE;
+   fIsCircular = kFALSE;
+}
+void AtHoughTask::SetCircularHough()
+{
+   fIsCircular = kTRUE;
+   fIsLinear = kFALSE;
+}
+void AtHoughTask::SetPhiReco()
+{
+   fIsPhiReco = kTRUE;
+}
+void AtHoughTask::SetHoughThreshold(Double_t value)
+{
+   fHoughThreshold = value;
+}
+void AtHoughTask::SetHoughDistance(Double_t value)
+{
+   fHoughDistance = value;
+}
+void AtHoughTask::SetEnableMap()
+{
+   fIsEnableMap = kTRUE;
+}
+void AtHoughTask::SetMap(Char_t const *map)
+{
+   fMap = map;
 }
 
-
-void   AtHoughTask::SetPersistence(Bool_t value)           { fIsPersistence = value; }
-void   AtHoughTask::SetThreshold(Double_t threshold)       { fThreshold = threshold; }
-void   AtHoughTask::SetRadiusThreshold(Float_t value)      { fRadThreshold = value; }
-void   AtHoughTask::SetLinearHough()                       { fIsLinear = kTRUE;fIsCircular = kFALSE;}
-void   AtHoughTask::SetCircularHough()                     { fIsCircular = kTRUE;fIsLinear = kFALSE;}
-void   AtHoughTask::SetPhiReco()                           { fIsPhiReco = kTRUE;}
-void   AtHoughTask::SetHoughThreshold(Double_t value)      { fHoughThreshold = value;}
-void   AtHoughTask::SetHoughDistance(Double_t value)       { fHoughDistance = value;}
-void   AtHoughTask::SetEnableMap()                         { fIsEnableMap = kTRUE;}
-void   AtHoughTask::SetMap(Char_t const *map)              { fMap = map; }
-
-InitStatus
-AtHoughTask::Init()
+InitStatus AtHoughTask::Init()
 {
 
+   if (fIsLinear)
+      fHoughArray = new TClonesArray("AtHoughSpaceLine");
+   else if (fIsCircular)
+      fHoughArray = new TClonesArray("AtHoughSpaceCircle");
+   else {
 
-  if(fIsLinear) fHoughArray = new TClonesArray("AtHoughSpaceLine");
-  else if(fIsCircular) fHoughArray = new TClonesArray("AtHoughSpaceCircle");
-  else{
+      fLogger->Error(MESSAGE_ORIGIN,
+                     "-I- AtHoughTask : Hough Space Calculation NOT Set. Please choose a Hough Space Topology");
+      return kERROR;
+   }
 
-    fLogger -> Error(MESSAGE_ORIGIN, "-I- AtHoughTask : Hough Space Calculation NOT Set. Please choose a Hough Space Topology");
-    return kERROR;
+   FairRootManager *ioMan = FairRootManager::Instance();
+   if (ioMan == 0) {
+      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      return kERROR;
+   }
 
-  }
+   fEventHArray = (TClonesArray *)ioMan->GetObject("AtEventH");
+   if (fEventHArray == 0) {
+      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtEvent array!");
+      return kERROR;
+   }
 
-  FairRootManager *ioMan = FairRootManager::Instance();
-  if (ioMan == 0) {
-    fLogger -> Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
-    return kERROR;
-  }
-
-  fEventHArray = (TClonesArray *) ioMan -> GetObject("AtEventH");
-  if (fEventHArray == 0) {
-    fLogger -> Error(MESSAGE_ORIGIN, "Cannot find AtEvent array!");
-    return kERROR;
-  }
-
-  if(fIsPhiReco){ //Find the Array of ProtoEvents
-      fProtoEventHArray = (TClonesArray *) ioMan -> GetObject("AtProtoEvent");
+   if (fIsPhiReco) { // Find the Array of ProtoEvents
+      fProtoEventHArray = (TClonesArray *)ioMan->GetObject("AtProtoEvent");
       if (fProtoEventHArray == 0) {
-        fLogger -> Error(MESSAGE_ORIGIN, "Cannot find AtProtoEvent array! If SetPhiReco method is enabled, Phi Reconstruction is needed");
-        return kERROR;
+         fLogger->Error(
+            MESSAGE_ORIGIN,
+            "Cannot find AtProtoEvent array! If SetPhiReco method is enabled, Phi Reconstruction is needed");
+         return kERROR;
       }
-  }
+   }
 
-  // Pointer to the Pad Plane map for digitization during the MC
-  if(fIsEnableMap){
-  fAtMapPtr = new AtTpcMap();
-  fAtMapPtr->GenerateATTPC();
-  fPadPlane = fAtMapPtr->GetATTPCPlane();
-  Bool_t MapIn = fAtMapPtr->ParseXMLMap(fMap);
-  fLogger -> Info(MESSAGE_ORIGIN, "AtTPC Map enabled");
-  if(!MapIn) std::cerr<<" -E- AtHoughTask - : Map was enabled but not found ! "<<std::endl;
-  fAtPadCoord = fAtMapPtr->GetPadCoordArr();
-  }
+   // Pointer to the Pad Plane map for digitization during the MC
+   if (fIsEnableMap) {
+      fAtMapPtr = new AtTpcMap();
+      fAtMapPtr->GenerateATTPC();
+      fPadPlane = fAtMapPtr->GetATTPCPlane();
+      Bool_t MapIn = fAtMapPtr->ParseXMLMap(fMap);
+      fLogger->Info(MESSAGE_ORIGIN, "AtTPC Map enabled");
+      if (!MapIn)
+         std::cerr << " -E- AtHoughTask - : Map was enabled but not found ! " << std::endl;
+      fAtPadCoord = fAtMapPtr->GetPadCoordArr();
+   }
 
+   ioMan->Register("AtHough", "AtTPC", fHoughArray, fIsPersistence);
 
-
-  ioMan -> Register("AtHough", "AtTPC", fHoughArray, fIsPersistence);
-
-
-
-
-  return kSUCCESS;
+   return kSUCCESS;
 }
 
-void
-AtHoughTask::SetParContainers()
+void AtHoughTask::SetParContainers()
 {
 
+   FairRun *run = FairRun::Instance();
+   if (!run)
+      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
 
+   FairRuntimeDb *db = run->GetRuntimeDb();
+   if (!db)
+      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
 
-  FairRun *run = FairRun::Instance();
-  if (!run)
-    fLogger -> Fatal(MESSAGE_ORIGIN, "No analysis run!");
-
-  FairRuntimeDb *db = run -> GetRuntimeDb();
-  if (!db)
-    fLogger -> Fatal(MESSAGE_ORIGIN, "No runtime database!");
-
-  fPar = (AtDigiPar *) db -> getContainer("AtDigiPar");
-  if (!fPar)
-    fLogger -> Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");
+   fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
+   if (!fPar)
+      fLogger->Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");
 }
 
-void
-AtHoughTask::Exec(Option_t *opt)
+void AtHoughTask::Exec(Option_t *opt)
 {
-   fHoughArray -> Delete();
+   fHoughArray->Delete();
 
+   if (fEventHArray->GetEntriesFast() == 0)
+      return;
 
+   if (fIsPhiReco) {
+      if (fProtoEventHArray->GetEntriesFast() == 0)
+         return;
+   }
 
-    if (fEventHArray -> GetEntriesFast() == 0)
-     return;
+   // AtEvent *Event = (AtEvent *) fEventHArray -> At(0);
+   fEvent = (AtEvent *)fEventHArray->At(0);
+   if (fIsPhiReco)
+      fProtoevent = (AtProtoEvent *)fProtoEventHArray->At(0);
+   fInternalID++;
+   std::cout << "  -I- AtHoughTask -  Event Number :  " << fEvent->GetEventID() << " Internal ID : " << fInternalID
+             << std::endl;
 
-     if(fIsPhiReco){
-         if (fProtoEventHArray -> GetEntriesFast() == 0)
-          return;
-        }
+   if (fIsLinear) { // TODO: Solve this dirty way with a dynamic cast and make global pointers
 
+      AtHoughSpaceLine *HoughSpace = (AtHoughSpaceLine *)new ((*fHoughArray)[0]) AtHoughSpaceLine();
+      HoughSpace->SetRadiusThreshold(fRadThreshold);
+      HoughSpace->SetHoughDistance(fHoughDistance);
+      if (fIsPhiReco)
+         HoughSpace->CalcHoughSpace(fProtoevent, kTRUE, kTRUE, kTRUE, kTRUE);
+      else
+         HoughSpace->CalcHoughSpace(fEvent);
 
-     //AtEvent *Event = (AtEvent *) fEventHArray -> At(0);
-     fEvent  = (AtEvent *) fEventHArray -> At(0);
-     if(fIsPhiReco) fProtoevent = (AtProtoEvent *) fProtoEventHArray -> At(0);
-     fInternalID++;
-     std::cout << "  -I- AtHoughTask -  Event Number :  " << fEvent -> GetEventID()<<" Internal ID : "<<fInternalID<< std::endl;
+   } else if (fIsCircular) {
+      AtHoughSpaceCircle *HoughSpace = (AtHoughSpaceCircle *)new ((*fHoughArray)[0]) AtHoughSpaceCircle();
+      HoughSpace->SetThreshold(fHoughThreshold);
+      // if(fIsEnableMap) HoughSpace ->CalcHoughSpace(fEvent,fPadPlane);
+      if (fIsEnableMap)
+         HoughSpace->CalcHoughSpace(fEvent, fPadPlane, fAtPadCoord);
+      else
+         HoughSpace->CalcHoughSpace(fEvent, kTRUE, kTRUE, kTRUE);
+   }
 
-    if(fIsLinear){ // TODO: Solve this dirty way with a dynamic cast and make global pointers
-
-            AtHoughSpaceLine *HoughSpace = (AtHoughSpaceLine *) new ((*fHoughArray)[0]) AtHoughSpaceLine();
-            HoughSpace->SetRadiusThreshold(fRadThreshold);
-            HoughSpace->SetHoughDistance(fHoughDistance);
-            if(fIsPhiReco) HoughSpace ->CalcHoughSpace(fProtoevent,kTRUE,kTRUE,kTRUE,kTRUE);
-            else HoughSpace->CalcHoughSpace(fEvent);
-
-
-    }
-    else if(fIsCircular){
-            AtHoughSpaceCircle *HoughSpace = (AtHoughSpaceCircle *) new ((*fHoughArray)[0]) AtHoughSpaceCircle();
-            HoughSpace ->SetThreshold(fHoughThreshold);
-            //if(fIsEnableMap) HoughSpace ->CalcHoughSpace(fEvent,fPadPlane);
-            if(fIsEnableMap) HoughSpace ->CalcHoughSpace(fEvent,fPadPlane,fAtPadCoord);
-            else HoughSpace ->CalcHoughSpace(fEvent,kTRUE,kTRUE,kTRUE);
-    }
-
-
-
-  //(AtHoughSpaceLine *) new ((*fHoughArray)[0]) AtHoughSpaceLine();
-  //event -> SetEventID(event -> GetEventID());
+   //(AtHoughSpaceLine *) new ((*fHoughArray)[0]) AtHoughSpaceLine();
+   // event -> SetEventID(event -> GetEventID());
    /* event -> SetEventID(rawEvent -> GetEventID());
 
   if (!(rawEvent -> IsGood()))

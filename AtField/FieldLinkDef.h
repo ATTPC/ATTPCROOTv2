@@ -9,15 +9,14 @@
 // -----                  M. Al-Turany   June 2014                     -----
 // -------------------------------------------------------------------------
 
-
 #ifdef __CINT__
 
 #pragma link off all globals;
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class AtConstField+;
-#pragma link C++ class AtFieldCreator+;
-#pragma link C++ class AtFieldPar+;
+#pragma link C++ class AtConstField + ;
+#pragma link C++ class AtFieldCreator + ;
+#pragma link C++ class AtFieldPar + ;
 
 #endif

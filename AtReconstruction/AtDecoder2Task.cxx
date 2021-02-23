@@ -19,227 +19,274 @@ ClassImp(AtDecoder2Task);
 
 AtDecoder2Task::AtDecoder2Task()
 {
-  fLogger = FairLogger::GetLogger();
+   fLogger = FairLogger::GetLogger();
 
-  fDecoder = NULL;
-  fDataNum = 0;
-  fOpt = 0;
+   fDecoder = NULL;
+   fDataNum = 0;
+   fOpt = 0;
 
-  fFPNPedestalRMS = -1;
+   fFPNPedestalRMS = -1;
 
-  fExternalNumTbs = kFALSE;
-  fNumTbs = 512;
+   fExternalNumTbs = kFALSE;
+   fNumTbs = 512;
 
-  //fUseGainCalibration = kFALSE;
-  //fGainCalibrationFile = "";
-  //fGainConstant = -9999;
-  //fGainLinear = -9999;
-  //fGainQuadratic = 0;
+   // fUseGainCalibration = kFALSE;
+   // fGainCalibrationFile = "";
+   // fGainConstant = -9999;
+   // fGainLinear = -9999;
+   // fGainQuadratic = 0;
 
-  fIsPersistence = kFALSE;
-  fIsPositive = kFALSE;
+   fIsPersistence = kFALSE;
+   fIsPositive = kFALSE;
 
-  fPar = NULL;
-  fRawEventArray = new TClonesArray("AtRawEvent");
-  fRawEvent = NULL;
+   fPar = NULL;
+   fRawEventArray = new TClonesArray("AtRawEvent");
+   fRawEvent = NULL;
 
-  fIsSeparatedData = kFALSE;
-  fIsPseudoTopology = kFALSE;
+   fIsSeparatedData = kFALSE;
+   fIsPseudoTopology = kFALSE;
 
-  fInternalID = 0;
+   fInternalID = 0;
 
-  fEventID = -1;
-  fAuxChannels.clear();
-  fNumCobo=40;
+   fEventID = -1;
+   fAuxChannels.clear();
+   fNumCobo = 40;
 
-  fMask = 0xF;
-
-
+   fMask = 0xF;
 }
 
-AtDecoder2Task::~AtDecoder2Task()
+AtDecoder2Task::~AtDecoder2Task() {}
+
+void AtDecoder2Task::SetPersistence(Bool_t value)
 {
+   fIsPersistence = value;
+}
+void AtDecoder2Task::SetNumTbs(Int_t numTbs)
+{
+   fNumTbs = numTbs;
+   fExternalNumTbs = kTRUE;
+}
+void AtDecoder2Task::AddData(TString filename, Int_t coboIdx)
+{
+   fDataList[coboIdx].push_back(filename);
+}
+void AtDecoder2Task::SetData(Int_t value)
+{
+   fDataNum = value;
+}
+void AtDecoder2Task::SetFPNPedestal(Double_t pedestalRMS)
+{
+   fFPNPedestalRMS = pedestalRMS;
+}
+void AtDecoder2Task::SetPositivePolarity(Bool_t value)
+{
+   fIsPositive = value;
+}
+// void AtDecoder2Task::SetUseGainCalibration(Bool_t value)                                       { fUseGainCalibration
+// = value; } void AtDecoder2Task::SetGainCalibrationData(TString filename)                                  {
+// fGainCalibrationFile = filename; } void AtDecoder2Task::SetGainReference(Double_t constant, Double_t linear, Double_t
+// quadratic)  { fGainConstant = constant; fGainLinear = linear; fGainQuadratic = quadratic; }
+void AtDecoder2Task::SetUseSeparatedData(Bool_t value)
+{
+   fIsSeparatedData = value;
+}
+void AtDecoder2Task::SetEventID(Long64_t eventid)
+{
+   fEventID = eventid;
+}
+void AtDecoder2Task::SetGeo(TString geofile)
+{
+   fGeoFile = geofile;
+}
+void AtDecoder2Task::SetProtoMap(TString mapfile)
+{
+   fProtoMapFile = mapfile;
+}
+void AtDecoder2Task::SetMapOpt(Int_t value)
+{
+   fOpt = value;
+}
+Bool_t AtDecoder2Task::SetMap(Char_t const *map)
+{
+   fMap = map;
+}
+void AtDecoder2Task::SetPseudoTopologyFrame(Bool_t value)
+{
+   fIsPseudoTopology = value;
+}
+void AtDecoder2Task::SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap)
+{
+   fIniMap = inimap;
+   fLowgMap = lowgmap;
+   fXtalkMap = xtalkmap;
 }
 
-void AtDecoder2Task::SetPersistence(Bool_t value)                                                { fIsPersistence = value; }
-void AtDecoder2Task::SetNumTbs(Int_t numTbs)                                                     { fNumTbs = numTbs; fExternalNumTbs = kTRUE; }
-void AtDecoder2Task::AddData(TString filename, Int_t coboIdx)                                    { fDataList[coboIdx].push_back(filename); }
-void AtDecoder2Task::SetData(Int_t value)                                                        { fDataNum = value; }
-void AtDecoder2Task::SetFPNPedestal(Double_t pedestalRMS)                                        { fFPNPedestalRMS = pedestalRMS; }
-void AtDecoder2Task::SetPositivePolarity(Bool_t value)                                           { fIsPositive = value; }
-//void AtDecoder2Task::SetUseGainCalibration(Bool_t value)                                       { fUseGainCalibration = value; }
-//void AtDecoder2Task::SetGainCalibrationData(TString filename)                                  { fGainCalibrationFile = filename; }
-//void AtDecoder2Task::SetGainReference(Double_t constant, Double_t linear, Double_t quadratic)  { fGainConstant = constant; fGainLinear = linear; fGainQuadratic = quadratic; }
-void AtDecoder2Task::SetUseSeparatedData(Bool_t value)                                           { fIsSeparatedData = value; }
-void AtDecoder2Task::SetEventID(Long64_t eventid)                                                { fEventID = eventid; }
-void AtDecoder2Task::SetGeo(TString geofile)				                                             { fGeoFile = geofile; }
-void AtDecoder2Task::SetProtoMap(TString mapfile)	                                               { fProtoMapFile = mapfile;}
-void AtDecoder2Task::SetMapOpt(Int_t value)                                                      { fOpt = value; }
-Bool_t AtDecoder2Task::SetMap(Char_t const *map)                                                 { fMap = map; }
-void AtDecoder2Task::SetPseudoTopologyFrame(Bool_t value)                                        { fIsPseudoTopology = value; }
-void AtDecoder2Task::SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap)           { fIniMap = inimap; fLowgMap = lowgmap; fXtalkMap = xtalkmap; }
-
-void AtDecoder2Task::SetAuxChannels(std::vector<Int_t> AuxCh)                                    { fAuxChannels = AuxCh;}
-void AtDecoder2Task::SetNumCobo(Int_t numCobo)                                                   { fNumCobo = numCobo;}
-void AtDecoder2Task::SetPTFMask(Int_t mask)                                                      { fMask = mask;}
-
-
-Long64_t AtDecoder2Task::GetEventID() { return fEventIDLast; }
-
-InitStatus
-AtDecoder2Task::Init()
+void AtDecoder2Task::SetAuxChannels(std::vector<Int_t> AuxCh)
 {
-  FairRootManager *ioMan = FairRootManager::Instance();
-  if (ioMan == 0) {
-    fLogger -> Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+   fAuxChannels = AuxCh;
+}
+void AtDecoder2Task::SetNumCobo(Int_t numCobo)
+{
+   fNumCobo = numCobo;
+}
+void AtDecoder2Task::SetPTFMask(Int_t mask)
+{
+   fMask = mask;
+}
 
-    return kERROR;
-  }
+Long64_t AtDecoder2Task::GetEventID()
+{
+   return fEventIDLast;
+}
 
-  ioMan -> Register("AtRawEvent", "AtTPC", fRawEventArray, fIsPersistence);
+InitStatus AtDecoder2Task::Init()
+{
+   FairRootManager *ioMan = FairRootManager::Instance();
+   if (ioMan == 0) {
+      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
 
-  fDecoder = new AtCore2(fOpt);
-  fDecoder -> SetUseSeparatedData(fIsSeparatedData);
-  fDecoder -> SetInhibitMaps(fIniMap,fLowgMap,fXtalkMap);
-  fDecoder -> SetNumCobo(fNumCobo);
+      return kERROR;
+   }
 
-  for (Int_t iFile = 0; iFile < fDataList[0].size(); iFile++)
-    fDecoder -> AddData(fDataList[0].at(iFile));
+   ioMan->Register("AtRawEvent", "AtTPC", fRawEventArray, fIsPersistence);
 
-  if (fIsSeparatedData)
-    for (Int_t iCobo = 1; iCobo < fNumCobo; iCobo++)
-      for (Int_t iFile = 0; iFile < fDataList[iCobo].size(); iFile++)
-        fDecoder -> AddData(fDataList[iCobo].at(iFile), iCobo);
+   fDecoder = new AtCore2(fOpt);
+   fDecoder->SetUseSeparatedData(fIsSeparatedData);
+   fDecoder->SetInhibitMaps(fIniMap, fLowgMap, fXtalkMap);
+   fDecoder->SetNumCobo(fNumCobo);
 
-  if(fIsPseudoTopology) fDecoder-> SetPseudoTopologyFrame(fMask,kFALSE);
+   for (Int_t iFile = 0; iFile < fDataList[0].size(); iFile++)
+      fDecoder->AddData(fDataList[0].at(iFile));
 
-  fDecoder -> SetData(fDataNum);
+   if (fIsSeparatedData)
+      for (Int_t iCobo = 1; iCobo < fNumCobo; iCobo++)
+         for (Int_t iFile = 0; iFile < fDataList[iCobo].size(); iFile++)
+            fDecoder->AddData(fDataList[iCobo].at(iFile), iCobo);
 
-  if (fExternalNumTbs)
-    fDecoder -> SetNumTbs(fNumTbs);
-  else
-    fDecoder -> SetNumTbs(fPar -> GetNumTbs());
+   if (fIsPseudoTopology)
+      fDecoder->SetPseudoTopologyFrame(fMask, kFALSE);
 
+   fDecoder->SetData(fDataNum);
 
-  if (fFPNPedestalRMS == -1)
-    //fFPNPedestalRMS = fPar -> GetFPNPedestalRMS();
-    fFPNPedestalRMS =5;
+   if (fExternalNumTbs)
+      fDecoder->SetNumTbs(fNumTbs);
+   else
+      fDecoder->SetNumTbs(fPar->GetNumTbs());
 
-  fDecoder -> SetFPNPedestal(fFPNPedestalRMS);
+   if (fFPNPedestalRMS == -1)
+      // fFPNPedestalRMS = fPar -> GetFPNPedestalRMS();
+      fFPNPedestalRMS = 5;
 
-  Bool_t kMapIn = fDecoder -> SetAtTPCMap(fMap);
-  //std::cout<<kMapIn<<std::endl;
+   fDecoder->SetFPNPedestal(fFPNPedestalRMS);
+
+   Bool_t kMapIn = fDecoder->SetAtTPCMap(fMap);
+   // std::cout<<kMapIn<<std::endl;
    if (!kMapIn) {
-      fLogger -> Error(MESSAGE_ORIGIN, "Cannot find AtTPC Map!");
+      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtTPC Map!");
 
       return kERROR;
-    }
+   }
 
-    if(fOpt==1){
-       fDecoder -> SetProtoGeoFile(fGeoFile);
-       fDecoder -> SetProtoMapFile(fProtoMapFile);
-       if(fAuxChannels.size()>0) fDecoder->SetAuxChannel(fAuxChannels);
-    }
+   if (fOpt == 1) {
+      fDecoder->SetProtoGeoFile(fGeoFile);
+      fDecoder->SetProtoMapFile(fProtoMapFile);
+      if (fAuxChannels.size() > 0)
+         fDecoder->SetAuxChannel(fAuxChannels);
+   }
 
+   /*  if (fGainCalibrationFile.EqualTo("") && fUseGainCalibration == kFALSE)
+       fLogger -> Info(MESSAGE_ORIGIN, "Gain not calibrated!");
+     else if (fGainCalibrationFile.EqualTo("") && fUseGainCalibration == kTRUE) {
+       Bool_t isSetGainCalibrationData = fDecoder -> SetGainCalibrationData(fPar -> GetGainCalibrationDataFileName());
+       if (!isSetGainCalibrationData) {
+         fLogger -> Error(MESSAGE_ORIGIN, "Cannot find gain calibration data file!");
 
-/*  if (fGainCalibrationFile.EqualTo("") && fUseGainCalibration == kFALSE)
-    fLogger -> Info(MESSAGE_ORIGIN, "Gain not calibrated!");
-  else if (fGainCalibrationFile.EqualTo("") && fUseGainCalibration == kTRUE) {
-    Bool_t isSetGainCalibrationData = fDecoder -> SetGainCalibrationData(fPar -> GetGainCalibrationDataFileName());
-    if (!isSetGainCalibrationData) {
-      fLogger -> Error(MESSAGE_ORIGIN, "Cannot find gain calibration data file!");
+         return kERROR;
+       }*/
+   //  LOG(INFO) << fPar -> GetGainCalibrationDataFileName() << " " << fPar -> GetGCConstant() << " " << fPar ->
+   //  GetGCLinear() << " " << fPar -> GetGCQuadratic() << FairLogger::endl;
 
-      return kERROR;
-    }*/
-  //  LOG(INFO) << fPar -> GetGainCalibrationDataFileName() << " " << fPar -> GetGCConstant() << " " << fPar -> GetGCLinear() << " " << fPar -> GetGCQuadratic() << FairLogger::endl;
+   /*  fDecoder -> SetGainReference(fPar -> GetGCConstant(), fPar -> GetGCLinear(), fPar -> GetGCQuadratic());
+     fLogger -> Info(MESSAGE_ORIGIN, "Gain calibration data is set from parameter list!");
+   } else {
+     Bool_t isSetGainCalibrationData = fDecoder -> SetGainCalibrationData(fGainCalibrationFile);
+     if (!isSetGainCalibrationData) {
+       fLogger -> Error(MESSAGE_ORIGIN, "Cannot find gain calibration data file!");
 
-  /*  fDecoder -> SetGainReference(fPar -> GetGCConstant(), fPar -> GetGCLinear(), fPar -> GetGCQuadratic());
-    fLogger -> Info(MESSAGE_ORIGIN, "Gain calibration data is set from parameter list!");
-  } else {
-    Bool_t isSetGainCalibrationData = fDecoder -> SetGainCalibrationData(fGainCalibrationFile);
-    if (!isSetGainCalibrationData) {
-      fLogger -> Error(MESSAGE_ORIGIN, "Cannot find gain calibration data file!");
+       return kERROR;
+     }
 
-      return kERROR;
-    }
+     if (fGainConstant == -9999 || fGainLinear == -9999) {
+       fLogger -> Error(MESSAGE_ORIGIN, "Cannot find gain calibration data file!");
 
-    if (fGainConstant == -9999 || fGainLinear == -9999) {
-      fLogger -> Error(MESSAGE_ORIGIN, "Cannot find gain calibration data file!");
+       return kERROR;
+     }
 
-      return kERROR;
-    }
+     fDecoder -> SetGainReference(fGainConstant, fGainLinear, fGainQuadratic);
+     fLogger -> Info(MESSAGE_ORIGIN, "Gain calibration data is set!");
+   }*/
 
-    fDecoder -> SetGainReference(fGainConstant, fGainLinear, fGainQuadratic);
-    fLogger -> Info(MESSAGE_ORIGIN, "Gain calibration data is set!");
-  }*/
-
-  return kSUCCESS;
+   return kSUCCESS;
 }
 
-void
-AtDecoder2Task::SetParContainers()
+void AtDecoder2Task::SetParContainers()
 {
-  FairRun *run = FairRun::Instance();
-  if (!run)
-    fLogger -> Fatal(MESSAGE_ORIGIN, "No analysis run!");
+   FairRun *run = FairRun::Instance();
+   if (!run)
+      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
 
-  FairRuntimeDb *db = run -> GetRuntimeDb();
-  if (!db)
-    fLogger -> Fatal(MESSAGE_ORIGIN, "No runtime database!");
+   FairRuntimeDb *db = run->GetRuntimeDb();
+   if (!db)
+      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
 
-  fPar = (AtDigiPar *) db -> getContainer("AtDigiPar");
-  if (!fPar)
-    fLogger -> Fatal(MESSAGE_ORIGIN, "Cannot find AtDigiPar!");
+   fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
+   if (!fPar)
+      fLogger->Fatal(MESSAGE_ORIGIN, "Cannot find AtDigiPar!");
 }
 
-void
-AtDecoder2Task::Exec(Option_t *opt)
+void AtDecoder2Task::Exec(Option_t *opt)
 {
-//#ifdef TASKTIMER
-//  STDebugLogger::Instance() -> TimerStart("DecoderTask");
-//#endif
-  fRawEventArray -> Delete();
+   //#ifdef TASKTIMER
+   //  STDebugLogger::Instance() -> TimerStart("DecoderTask");
+   //#endif
+   fRawEventArray->Delete();
 
-  if (fRawEvent == NULL)
-    fRawEvent = fDecoder -> GetRawEvent(fEventID++);
-    fInternalID++;
-    if(fInternalID%100==0) std::cout<<" Event Number "<<fEventID<<" Internal ID : "<<fInternalID<<" Number of Pads : "<<fRawEvent->GetNumPads()<<std::endl;
+   if (fRawEvent == NULL)
+      fRawEvent = fDecoder->GetRawEvent(fEventID++);
+   fInternalID++;
+   if (fInternalID % 100 == 0)
+      std::cout << " Event Number " << fEventID << " Internal ID : " << fInternalID
+                << " Number of Pads : " << fRawEvent->GetNumPads() << std::endl;
 
-  new ((*fRawEventArray)[0]) AtRawEvent(fRawEvent);
+   new ((*fRawEventArray)[0]) AtRawEvent(fRawEvent);
 
-  fRawEvent = NULL;
-//#ifdef TASKTIMER
-//  STDebugLogger::Instance() -> TimerStop("DecoderTask");
-//#endif
+   fRawEvent = NULL;
+   //#ifdef TASKTIMER
+   //  STDebugLogger::Instance() -> TimerStop("DecoderTask");
+   //#endif
 }
 
-Int_t
-AtDecoder2Task::ReadEvent(Int_t eventID)
+Int_t AtDecoder2Task::ReadEvent(Int_t eventID)
 {
-  fRawEventArray -> Delete();
+   fRawEventArray->Delete();
 
-  fRawEvent = fDecoder -> GetRawEvent(eventID);
-  fEventIDLast = fDecoder -> GetEventID();
+   fRawEvent = fDecoder->GetRawEvent(eventID);
+   fEventIDLast = fDecoder->GetEventID();
 
-  if (fRawEvent == NULL)
-    return 1;
+   if (fRawEvent == NULL)
+      return 1;
 
-  new ((*fRawEventArray)[0]) AtRawEvent(fRawEvent);
+   new ((*fRawEventArray)[0]) AtRawEvent(fRawEvent);
 
-
-
-  return 0;
+   return 0;
 }
 
-
-void
-AtDecoder2Task::FinishEvent()
+void AtDecoder2Task::FinishEvent()
 {
-  fRawEvent = fDecoder -> GetRawEvent();
+   fRawEvent = fDecoder->GetRawEvent();
 
-  if (fRawEvent == NULL)
-  {
-    fLogger -> Info(MESSAGE_ORIGIN, "End of file. Terminating FairRun.");
-    FairRootManager::Instance() -> SetFinishRun();
-  }
+   if (fRawEvent == NULL) {
+      fLogger->Info(MESSAGE_ORIGIN, "End of file. Terminating FairRun.");
+      FairRootManager::Instance()->SetFinishRun();
+   }
 }

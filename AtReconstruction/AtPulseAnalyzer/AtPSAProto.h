@@ -3,18 +3,19 @@
 
 #include "AtPSA.h"
 
-class AtPSAProto:public AtPSA {
- public:
-    AtPSAProto();
-    ~AtPSAProto();
+class AtPSAProto : public AtPSA {
+public:
+   AtPSAProto();
+   ~AtPSAProto();
 
-    void SetBackGroundSuppression();
+   void SetBackGroundSuppression();
 
-    void Analyze(AtRawEvent * rawEvent, AtEvent * event) override;
+   void Analyze(AtRawEvent *rawEvent, AtEvent *event) override;
 
- private:
-     Bool_t fBackGroundSuppression;
+private:
+   Bool_t fBackGroundSuppression;
 
- ClassDefOverride(AtPSAProto, 2)};
+   ClassDefOverride(AtPSAProto, 2)
+};
 
 #endif

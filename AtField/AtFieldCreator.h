@@ -11,7 +11,6 @@
 // -----                Created 26/03/14  by M. Al-Turany              -----
 // -------------------------------------------------------------------------
 
-
 #ifndef AtFieldCreator_H
 #define AtFieldCreator_H
 
@@ -21,22 +20,20 @@ class AtFieldPar;
 
 class FairField;
 
-class AtFieldCreator : public FairFieldFactory 
-{
+class AtFieldCreator : public FairFieldFactory {
 
- public:
-  AtFieldCreator();
-  virtual ~AtFieldCreator();
-  virtual FairField* createFairField();
-  virtual void SetParm();
-  ClassDef(AtFieldCreator,1);
-  
- protected:
-  AtFieldPar* fFieldPar;
-  
- private:
-  AtFieldCreator(const AtFieldCreator&);
-  AtFieldCreator& operator=(const AtFieldCreator&);
+public:
+   AtFieldCreator();
+   virtual ~AtFieldCreator();
+   virtual FairField *createFairField();
+   virtual void SetParm();
+   ClassDef(AtFieldCreator, 1);
 
+protected:
+   AtFieldPar *fFieldPar;
+
+private:
+   AtFieldCreator(const AtFieldCreator &);
+   AtFieldCreator &operator=(const AtFieldCreator &);
 };
-#endif //AtFieldCreator_H
+#endif // AtFieldCreator_H

@@ -5,50 +5,46 @@
 // -------------------------------------------------------------------------
 
 #ifndef ATEULERTRANSFORMATION_H
-#define ATEULERTRANSFORMATION_H 
+#define ATEULERTRANSFORMATION_H
 
 #include "TNamed.h"
 #include "TObject.h"
 
-
-class ATEulerTransformation : public TNamed 
-{
+class ATEulerTransformation : public TNamed {
 private:
+   // inputs: teta0,phi0, beamdirection=>(alpha,beta,gamma)
+   // outputs: theta_1,phi_1
 
-// inputs: teta0,phi0, beamdirection=>(alpha,beta,gamma)
-// outputs: theta_1,phi_1
+   Double_t ThetaInBeamSystem;
+   Double_t PhiInBeamSystem;
+   Double_t BeamDirectionAtVertexTheta;
+   Double_t BeamDirectionAtVertexPhi;
 
-  Double_t ThetaInBeamSystem;
-  Double_t PhiInBeamSystem;
-  Double_t BeamDirectionAtVertexTheta;
-  Double_t BeamDirectionAtVertexPhi;
-
-  Double_t ThetaInLabSystem;
-  Double_t PhiInLabSystem;
+   Double_t ThetaInLabSystem;
+   Double_t PhiInLabSystem;
 
 public:
-  ATEulerTransformation();
-  ~ATEulerTransformation();
+   ATEulerTransformation();
+   ~ATEulerTransformation();
 
-  void SetThetaInBeamSystem(Double_t value){ThetaInBeamSystem = value;}
-  void SetPhiInBeamSystem(Double_t value){PhiInBeamSystem = value;}
-  void SetBeamDirectionAtVertexTheta(Double_t value){BeamDirectionAtVertexTheta = value;}
-  void SetBeamDirectionAtVertexPhi(Double_t value){BeamDirectionAtVertexPhi = value;}
+   void SetThetaInBeamSystem(Double_t value) { ThetaInBeamSystem = value; }
+   void SetPhiInBeamSystem(Double_t value) { PhiInBeamSystem = value; }
+   void SetBeamDirectionAtVertexTheta(Double_t value) { BeamDirectionAtVertexTheta = value; }
+   void SetBeamDirectionAtVertexPhi(Double_t value) { BeamDirectionAtVertexPhi = value; }
 
-  Double_t GetThetaInBeamSystem(void){return ThetaInBeamSystem;}
-  Double_t GetPhiInBeamSystem(void){return PhiInBeamSystem;}
-  Double_t GetThetaInLabSystem(void){return ThetaInLabSystem;}
-  Double_t GetPhiInLabSystem(void){return PhiInLabSystem;}
-  Double_t GetBeamDirectionAtVertexTheta(void){return BeamDirectionAtVertexTheta;}
-  Double_t GetBeamDirectionAtVertexPhi(void){return BeamDirectionAtVertexPhi;}
+   Double_t GetThetaInBeamSystem(void) { return ThetaInBeamSystem; }
+   Double_t GetPhiInBeamSystem(void) { return PhiInBeamSystem; }
+   Double_t GetThetaInLabSystem(void) { return ThetaInLabSystem; }
+   Double_t GetPhiInLabSystem(void) { return PhiInLabSystem; }
+   Double_t GetBeamDirectionAtVertexTheta(void) { return BeamDirectionAtVertexTheta; }
+   Double_t GetBeamDirectionAtVertexPhi(void) { return BeamDirectionAtVertexPhi; }
 
-  void DoTheEulerTransformationBeam2Lab();
+   void DoTheEulerTransformationBeam2Lab();
 
-  void Dump();
+   void Dump();
 
-  void PrintResults();
+   void PrintResults();
 
-  ClassDef(ATEulerTransformation,1)
-
+   ClassDef(ATEulerTransformation, 1)
 };
 #endif

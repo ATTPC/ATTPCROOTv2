@@ -3,8 +3,7 @@
 
 #include <pcl/io/io.h>
 
-pcl::PointCloud<pcl::PointXYZI>::Ptr smoothenCloud(
-    pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, double radius,
-    bool useMedian = false);
+pcl::PointCloud<pcl::PointXYZI>::Ptr
+smoothenCloud(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, double radius, bool useMedian = false);
 
 #endif

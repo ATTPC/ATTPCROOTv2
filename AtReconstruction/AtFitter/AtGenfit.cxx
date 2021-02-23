@@ -6,18 +6,10 @@
 
 ClassImp(AtFITTER::AtGenfit)
 
-AtFITTER::AtGenfit::AtGenfit()
+   AtFITTER::AtGenfit::AtGenfit()
 {
-
 }
 
-AtFITTER::AtGenfit::~AtGenfit()
-{
+AtFITTER::AtGenfit::~AtGenfit() {}
 
-}
-
-
-bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
-{
-
-}
+bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent) {}

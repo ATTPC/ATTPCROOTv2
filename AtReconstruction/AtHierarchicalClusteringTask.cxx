@@ -21,24 +21,23 @@
 #include "FairRuntimeDb.h"
 #include "FairLogger.h"
 
-
-
 static void HitArrayToPointCloud(std::vector<AtHit> const &hitArray, pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
 {
-    for (auto const &point : hitArray) {
-        TVector3 const pointPos = point.GetPosition();
+   for (auto const &point : hitArray) {
+      TVector3 const pointPos = point.GetPosition();
 
-        pcl::PointXYZI pclPoint;
-        pclPoint.x = pointPos.X();
-        pclPoint.y = pointPos.Y();
-        pclPoint.z = pointPos.Z();
-        pclPoint.intensity = static_cast<float>(point.GetCharge());
+      pcl::PointXYZI pclPoint;
+      pclPoint.x = pointPos.X();
+      pclPoint.y = pointPos.Y();
+      pclPoint.z = pointPos.Z();
+      pclPoint.intensity = static_cast<float>(point.GetCharge());
 
-        cloud->push_back(pclPoint);
-    }
+      cloud->push_back(pclPoint);
+   }
 }
 
-/*static void ColorByTrajectories(std::vector<AtTrajectory> const &trajectories, std::vector<AtHit> const &noMatch, pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_rgb)
+/*static void ColorByTrajectories(std::vector<AtTrajectory> const &trajectories, std::vector<AtHit> const &noMatch,
+pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_rgb)
 {
     size_t trajectoryIndex = 0;
     for (AtTrajectory const &trajectory : trajectories)
@@ -103,181 +102,184 @@ static void HitArrayToPointCloud(std::vector<AtHit> const &hitArray, pcl::PointC
     }
 }*/
 
-std::vector<AtTrajectory> AtHierarchicalClusteringTask::useHc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::vector<AtHit> const &hitArray, std::vector<AtHierarchicalClusteringHc::triplet> triplets, float scale, std::vector<AtHit> *noMatch) const
+std::vector<AtTrajectory> AtHierarchicalClusteringTask::useHc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
+                                                              std::vector<AtHit> const &hitArray,
+                                                              std::vector<AtHierarchicalClusteringHc::triplet> triplets,
+                                                              float scale, std::vector<AtHit> *noMatch) const
 {
-    AtHierarchicalClusteringHc::cluster_history result = AtHierarchicalClusteringHc::CalculateHc(cloud, triplets, AtHierarchicalClusteringHc::singleLinkClusterMetric, [&] (AtHierarchicalClusteringHc::triplet const &lhs, AtHierarchicalClusteringHc::triplet const &rhs, pcl::PointCloud<pcl::PointXYZI>::ConstPtr)
-    {
-        float const perpendicularDistanceA = (rhs.center - (lhs.center + lhs.direction.dot(rhs.center - lhs.center) * lhs.direction)).squaredNorm();
-        float const perpendicularDistanceB = (lhs.center - (rhs.center + rhs.direction.dot(lhs.center - rhs.center) * rhs.direction)).squaredNorm();
+   AtHierarchicalClusteringHc::cluster_history result = AtHierarchicalClusteringHc::CalculateHc(
+      cloud, triplets, AtHierarchicalClusteringHc::singleLinkClusterMetric,
+      [&](AtHierarchicalClusteringHc::triplet const &lhs, AtHierarchicalClusteringHc::triplet const &rhs,
+          pcl::PointCloud<pcl::PointXYZI>::ConstPtr) {
+         float const perpendicularDistanceA =
+            (rhs.center - (lhs.center + lhs.direction.dot(rhs.center - lhs.center) * lhs.direction)).squaredNorm();
+         float const perpendicularDistanceB =
+            (lhs.center - (rhs.center + rhs.direction.dot(lhs.center - rhs.center) * rhs.direction)).squaredNorm();
 
-        float const angle = std::abs(std::tan(2.0f * std::acos(lhs.direction.dot(rhs.direction))));
+         float const angle = std::abs(std::tan(2.0f * std::acos(lhs.direction.dot(rhs.direction))));
 
-        // squared distances!
-        return std::sqrt(std::max(perpendicularDistanceA, perpendicularDistanceB)) + scale * angle;
-    });
+         // squared distances!
+         return std::sqrt(std::max(perpendicularDistanceA, perpendicularDistanceB)) + scale * angle;
+      });
 
-    AtHierarchicalClusteringHc::cluster_group const &clusterGroup = AtHierarchicalClusteringHc::GetBestClusterGroup(result, this->_bestClusterDistanceDelta);
-    AtHierarchicalClusteringHc::cluster_group const &cleanedUpClusterGroup = AtHierarchicalClusteringHc::CleanupClusterGroup(clusterGroup, this->_cleanupMinTriplets);
+   AtHierarchicalClusteringHc::cluster_group const &clusterGroup =
+      AtHierarchicalClusteringHc::GetBestClusterGroup(result, this->_bestClusterDistanceDelta);
+   AtHierarchicalClusteringHc::cluster_group const &cleanedUpClusterGroup =
+      AtHierarchicalClusteringHc::CleanupClusterGroup(clusterGroup, this->_cleanupMinTriplets);
 
-    return AtHierarchicalClusteringHc::ToTrajectories(
-        cloud,
-        hitArray,
-        triplets,
-        cleanedUpClusterGroup,
-        this->_splineTangentScale,
-        this->_splineMinControlPointDistance,
-        this->_splineJump,
-        noMatch);
+   return AtHierarchicalClusteringHc::ToTrajectories(cloud, hitArray, triplets, cleanedUpClusterGroup,
+                                                     this->_splineTangentScale, this->_splineMinControlPointDistance,
+                                                     this->_splineJump, noMatch);
 }
 
-
-
-AtHierarchicalClusteringTask::AtHierarchicalClusteringTask()
-    : FairTask("AtHierarchicalClusteringTask")
+AtHierarchicalClusteringTask::AtHierarchicalClusteringTask() : FairTask("AtHierarchicalClusteringTask")
 {
-    fLogger = FairLogger::GetLogger();
-    fLogger->Debug(MESSAGE_ORIGIN, "Defaul Constructor of AtHierarchicalClusteringTask");
-    fPar = NULL;
-    kIsPersistence = kFALSE;
+   fLogger = FairLogger::GetLogger();
+   fLogger->Debug(MESSAGE_ORIGIN, "Defaul Constructor of AtHierarchicalClusteringTask");
+   fPar = NULL;
+   kIsPersistence = kFALSE;
 }
 
 AtHierarchicalClusteringTask::~AtHierarchicalClusteringTask()
 {
-    fLogger->Debug(MESSAGE_ORIGIN, "Destructor of AtHierarchicalClusteringTask");
+   fLogger->Debug(MESSAGE_ORIGIN, "Destructor of AtHierarchicalClusteringTask");
 }
 
-void AtHierarchicalClusteringTask::SetPersistence(Bool_t value)             { kIsPersistence   = value; }
+void AtHierarchicalClusteringTask::SetPersistence(Bool_t value)
+{
+   kIsPersistence = value;
+}
 
 void AtHierarchicalClusteringTask::SetParContainers()
 {
-    fLogger->Debug(MESSAGE_ORIGIN, "SetParContainers of AtHierarchicalClusteringTask");
+   fLogger->Debug(MESSAGE_ORIGIN, "SetParContainers of AtHierarchicalClusteringTask");
 
-    FairRun *run = FairRun::Instance();
-    if (!run)
-      fLogger -> Fatal(MESSAGE_ORIGIN, "No analysis run!");
+   FairRun *run = FairRun::Instance();
+   if (!run)
+      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
 
-    FairRuntimeDb *db = run -> GetRuntimeDb();
-    if (!db)
-      fLogger -> Fatal(MESSAGE_ORIGIN, "No runtime database!");
+   FairRuntimeDb *db = run->GetRuntimeDb();
+   if (!db)
+      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
 
-    fPar = (AtDigiPar *) db -> getContainer("AtDigiPar");
-    if (!fPar)
-      fLogger -> Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");
+   fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
+   if (!fPar)
+      fLogger->Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");
 }
 
 InitStatus AtHierarchicalClusteringTask::Init()
 {
-    fLogger->Debug(MESSAGE_ORIGIN, "Initilization of AtHierarchicalClusteringTask");
+   fLogger->Debug(MESSAGE_ORIGIN, "Initilization of AtHierarchicalClusteringTask");
 
-    fHierarchicalClusteringArray = new TClonesArray("AtHierarchicalClusteringHc");
+   fHierarchicalClusteringArray = new TClonesArray("AtHierarchicalClusteringHc");
 
-    // Get a handle from the IO manager
-    FairRootManager* ioMan = FairRootManager::Instance();
-    if (ioMan == 0) {
-      fLogger -> Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+   // Get a handle from the IO manager
+   FairRootManager *ioMan = FairRootManager::Instance();
+   if (ioMan == 0) {
+      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
       return kERROR;
-    }
+   }
 
-    fEventHArray = (TClonesArray *) ioMan -> GetObject("AtEventH");
-    if (fEventHArray == 0) {
-      fLogger -> Error(MESSAGE_ORIGIN, "Cannot find AtEvent array!");
+   fEventHArray = (TClonesArray *)ioMan->GetObject("AtEventH");
+   if (fEventHArray == 0) {
+      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtEvent array!");
       return kERROR;
-    }
+   }
 
-     ioMan -> Register("AtHierarchicalClusteringHc", "AtTPC", fHierarchicalClusteringArray, kIsPersistence);
+   ioMan->Register("AtHierarchicalClusteringHc", "AtTPC", fHierarchicalClusteringArray, kIsPersistence);
 
-    return kSUCCESS;
+   return kSUCCESS;
 }
 
 InitStatus AtHierarchicalClusteringTask::ReInit()
 {
-    fLogger->Debug(MESSAGE_ORIGIN, "Initilization of AtHierarchicalClusteringTask");
+   fLogger->Debug(MESSAGE_ORIGIN, "Initilization of AtHierarchicalClusteringTask");
 
-    return kSUCCESS;
+   return kSUCCESS;
 }
 
-void AtHierarchicalClusteringTask::Exec(Option_t* option)
+void AtHierarchicalClusteringTask::Exec(Option_t *option)
 {
-    fLogger->Debug(MESSAGE_ORIGIN, "Exec of AtHierarchicalClusteringTask");
+   fLogger->Debug(MESSAGE_ORIGIN, "Exec of AtHierarchicalClusteringTask");
 
-      fHierarchicalClusteringArray -> Delete();
+   fHierarchicalClusteringArray->Delete();
 
-      if (fEventHArray -> GetEntriesFast() == 0)
-       return;
+   if (fEventHArray->GetEntriesFast() == 0)
+      return;
 
-      std::vector<AtHit> hitArray;
-      AtEvent &event = *((AtEvent*) fEventHArray->At(0));
- 			hitArray = *event.GetHitArray();
+   std::vector<AtHit> hitArray;
+   AtEvent &event = *((AtEvent *)fEventHArray->At(0));
+   hitArray = *event.GetHitArray();
 
-      std::cout << "  -I- AtHierarchicalClusteringTask -  Event Number :  " << event.GetEventID()<<"\n";
+   std::cout << "  -I- AtHierarchicalClusteringTask -  Event Number :  " << event.GetEventID() << "\n";
 
-      try
-      {
-       // a place for no-matches
- 			// (points that don't belong to any trajectory)
- 			 std::vector<AtHit> noMatch;
+   try {
+      // a place for no-matches
+      // (points that don't belong to any trajectory)
+      std::vector<AtHit> noMatch;
 
-       std::vector<AtTrajectory> trajectories = AnalyzePointArray(hitArray, &noMatch);
+      std::vector<AtTrajectory> trajectories = AnalyzePointArray(hitArray, &noMatch);
 
-      }
-       catch (std::runtime_error e)
-   		{
-   			std::cout << "Analyzation failed! Error: " << e.what() << std::endl;
-   		}
+   } catch (std::runtime_error e) {
+      std::cout << "Analyzation failed! Error: " << e.what() << std::endl;
+   }
 
-      //fEvent  = (AtEvent *) fEventHArray -> At(0);
+   // fEvent  = (AtEvent *) fEventHArray -> At(0);
 }
 
 void AtHierarchicalClusteringTask::Finish()
 {
-    fLogger->Debug(MESSAGE_ORIGIN, "Finish of AtHierarchicalClusteringTask");
+   fLogger->Debug(MESSAGE_ORIGIN, "Finish of AtHierarchicalClusteringTask");
 }
 
-
-std::vector<AtTrajectory> AtHierarchicalClusteringTask::AnalyzePointArray(std::vector<AtHit> const &hitArray, std::vector<AtHit> *noMatch) const
+std::vector<AtTrajectory>
+AtHierarchicalClusteringTask::AnalyzePointArray(std::vector<AtHit> const &hitArray, std::vector<AtHit> *noMatch) const
 {
-    pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_xyzti(new pcl::PointCloud<pcl::PointXYZI>());
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_xyz(new pcl::PointCloud<pcl::PointXYZ>());
+   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_xyzti(new pcl::PointCloud<pcl::PointXYZI>());
+   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_xyz(new pcl::PointCloud<pcl::PointXYZ>());
 
-    HitArrayToPointCloud(hitArray, cloud_xyzti);
-    copyPointCloud(*cloud_xyzti, *cloud_xyz);
+   HitArrayToPointCloud(hitArray, cloud_xyzti);
+   copyPointCloud(*cloud_xyzti, *cloud_xyz);
 
-    if (cloud_xyz->size() == 0)
-        throw std::runtime_error("Empty cloud!");
-    else
-    {
-        // smoothen cloud
-        pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_xyzti_smooth(new pcl::PointCloud<pcl::PointXYZI>());
+   if (cloud_xyz->size() == 0)
+      throw std::runtime_error("Empty cloud!");
+   else {
+      // smoothen cloud
+      pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_xyzti_smooth(new pcl::PointCloud<pcl::PointXYZI>());
 
-        //cloud_smooth = smoothenCloud(cloud_filtered, 12); // k nearest neighbour
-        cloud_xyzti_smooth = AtHierarchicalClusteringSmoothenCloud::SmoothenCloud(cloud_xyzti, this->_smoothRadius); // radius
+      // cloud_smooth = smoothenCloud(cloud_filtered, 12); // k nearest neighbour
+      cloud_xyzti_smooth =
+         AtHierarchicalClusteringSmoothenCloud::SmoothenCloud(cloud_xyzti, this->_smoothRadius); // radius
 
-        // calculate cluster
-        std::vector<AtHierarchicalClusteringHc::triplet> triplets = AtHierarchicalClusteringHc::GenerateTriplets(cloud_xyzti_smooth, this->_genTripletsNnKandidates, this->_genTripletsNBest, this->_genTripletsMaxError);
-        // TODO: evaluate tradeoff
-        // using the smooth cloud yields better curvature, but the curve is too short.
-        // std::vector<AtTrajectory> trajectories = this->useHc(cloud_xyzti, hitArray, triplets, this->_cloudScaleModifier, noMatch);
-        std::vector<AtTrajectory> trajectories = this->useHc(cloud_xyzti_smooth, hitArray, triplets, this->_cloudScaleModifier, noMatch);
+      // calculate cluster
+      std::vector<AtHierarchicalClusteringHc::triplet> triplets = AtHierarchicalClusteringHc::GenerateTriplets(
+         cloud_xyzti_smooth, this->_genTripletsNnKandidates, this->_genTripletsNBest, this->_genTripletsMaxError);
+      // TODO: evaluate tradeoff
+      // using the smooth cloud yields better curvature, but the curve is too short.
+      // std::vector<AtTrajectory> trajectories = this->useHc(cloud_xyzti, hitArray, triplets,
+      // this->_cloudScaleModifier, noMatch);
+      std::vector<AtTrajectory> trajectories =
+         this->useHc(cloud_xyzti_smooth, hitArray, triplets, this->_cloudScaleModifier, noMatch);
 
-        return trajectories;
-    }
+      return trajectories;
+   }
 }
 
-/*void AtHierarchicalClusteringTask::Visualize(std::vector<AtTrajectory> const &trajectories, std::vector<AtHit> const &noMatch) const
+/*void AtHierarchicalClusteringTask::Visualize(std::vector<AtTrajectory> const &trajectories, std::vector<AtHit> const
+&noMatch) const
 {
     std::shared_ptr<pcl::visualization::PCLVisualizer> viewer = nullptr;
     this->AtHierarchicalClusteringTask::Visualize(trajectories, noMatch, viewer);
     viewer->close();
 }*/
 
-/*void AtHierarchicalClusteringTask::Visualize(std::vector<AtTrajectory> const &trajectories, std::vector<AtHit> const &noMatch, std::shared_ptr<pcl::visualization::PCLVisualizer> &viewer) const
+/*void AtHierarchicalClusteringTask::Visualize(std::vector<AtTrajectory> const &trajectories, std::vector<AtHit> const
+&noMatch, std::shared_ptr<pcl::visualization::PCLVisualizer> &viewer) const
 {
     if (viewer == nullptr)
     {
-        viewer = std::shared_ptr<pcl::visualization::PCLVisualizer>(new pcl::visualization::PCLVisualizer("PCL Viewer"));
-        viewer->setPosition(100, 100);
-        viewer->setSize(800, 600);
-        viewer->setBackgroundColor(1.0, 1.0, 1.0);
+        viewer = std::shared_ptr<pcl::visualization::PCLVisualizer>(new pcl::visualization::PCLVisualizer("PCL
+Viewer")); viewer->setPosition(100, 100); viewer->setSize(800, 600); viewer->setBackgroundColor(1.0, 1.0, 1.0);
         viewer->setCameraPosition(0.0, 0.0, 5000.0, 0.0, 1.0, 0.0);
         viewer->setCameraClipDistances(std::numeric_limits<double>::min(), std::numeric_limits<double>::max());
         viewer->setCameraFieldOfView(3.14f / 4.0f); // 45 deg
@@ -314,18 +316,14 @@ std::vector<AtTrajectory> AtHierarchicalClusteringTask::AnalyzePointArray(std::v
         start.z = trajectory.GetCentroidPoint()(2);
 
         pcl::PointXYZ endA;
-        Eigen::Vector3f endEigA = trajectory.GetCentroidPoint() + (cubicSplineFit.GetStartPosition() * trajectory.GetMainDirection());
-        endA.x = endEigA(0);
-        endA.y = endEigA(1);
-        endA.z = endEigA(2);
+        Eigen::Vector3f endEigA = trajectory.GetCentroidPoint() + (cubicSplineFit.GetStartPosition() *
+trajectory.GetMainDirection()); endA.x = endEigA(0); endA.y = endEigA(1); endA.z = endEigA(2);
 
         addNewLine(start, endA, 1.0, 0.0, 1.0);
 
         pcl::PointXYZ endB;
-        Eigen::Vector3f endEigB = trajectory.GetCentroidPoint() + (cubicSplineFit.GetEndPosition() * trajectory.GetMainDirection());
-        endB.x = endEigB(0);
-        endB.y = endEigB(1);
-        endB.z = endEigB(2);
+        Eigen::Vector3f endEigB = trajectory.GetCentroidPoint() + (cubicSplineFit.GetEndPosition() *
+trajectory.GetMainDirection()); endB.x = endEigB(0); endB.y = endEigB(1); endB.z = endEigB(2);
 
         addNewLine(start, endB, 1.0, 0.0, 0.0);
 
@@ -373,34 +371,94 @@ std::vector<AtTrajectory> AtHierarchicalClusteringTask::AnalyzePointArray(std::v
     viewer->spin();
 }*/
 
-void AtHierarchicalClusteringTask::SetBestClusterDistanceDelta(float value) { this->_bestClusterDistanceDelta = value; }
-float AtHierarchicalClusteringTask::GetBestClusterDistanceDelta() const { return this->_bestClusterDistanceDelta; }
+void AtHierarchicalClusteringTask::SetBestClusterDistanceDelta(float value)
+{
+   this->_bestClusterDistanceDelta = value;
+}
+float AtHierarchicalClusteringTask::GetBestClusterDistanceDelta() const
+{
+   return this->_bestClusterDistanceDelta;
+}
 
-void AtHierarchicalClusteringTask::SetCleanupMinTriplets(size_t value) { this->_cleanupMinTriplets = value; }
-size_t AtHierarchicalClusteringTask::GetCleanupMinTriplets() const { return this->_cleanupMinTriplets; }
+void AtHierarchicalClusteringTask::SetCleanupMinTriplets(size_t value)
+{
+   this->_cleanupMinTriplets = value;
+}
+size_t AtHierarchicalClusteringTask::GetCleanupMinTriplets() const
+{
+   return this->_cleanupMinTriplets;
+}
 
-void AtHierarchicalClusteringTask::SetCloudScaleModifier(float value) { this->_cloudScaleModifier = value; }
-float AtHierarchicalClusteringTask::GetCloudScaleModifier() const { return this->_cloudScaleModifier; }
+void AtHierarchicalClusteringTask::SetCloudScaleModifier(float value)
+{
+   this->_cloudScaleModifier = value;
+}
+float AtHierarchicalClusteringTask::GetCloudScaleModifier() const
+{
+   return this->_cloudScaleModifier;
+}
 
-void AtHierarchicalClusteringTask::SetGenTripletsMaxError(float value) { this->_genTripletsMaxError = value; }
-float AtHierarchicalClusteringTask::GetGenTripletsMaxError() const { return this->_genTripletsMaxError; }
+void AtHierarchicalClusteringTask::SetGenTripletsMaxError(float value)
+{
+   this->_genTripletsMaxError = value;
+}
+float AtHierarchicalClusteringTask::GetGenTripletsMaxError() const
+{
+   return this->_genTripletsMaxError;
+}
 
-void AtHierarchicalClusteringTask::SetGenTripletsNnKandidates(size_t value) { this->_genTripletsNnKandidates = value; }
-size_t AtHierarchicalClusteringTask::GetGenTripletsNnKandidates() const { return this->_genTripletsNnKandidates; }
+void AtHierarchicalClusteringTask::SetGenTripletsNnKandidates(size_t value)
+{
+   this->_genTripletsNnKandidates = value;
+}
+size_t AtHierarchicalClusteringTask::GetGenTripletsNnKandidates() const
+{
+   return this->_genTripletsNnKandidates;
+}
 
-void AtHierarchicalClusteringTask::SetGenTripletsNBest(size_t value) { this->_genTripletsNBest = value; }
-size_t AtHierarchicalClusteringTask::GetGenTripletsNBest() const { return this->_genTripletsNBest; }
+void AtHierarchicalClusteringTask::SetGenTripletsNBest(size_t value)
+{
+   this->_genTripletsNBest = value;
+}
+size_t AtHierarchicalClusteringTask::GetGenTripletsNBest() const
+{
+   return this->_genTripletsNBest;
+}
 
-void AtHierarchicalClusteringTask::SetSmoothRadius(float value) { this->_smoothRadius = value; }
-float AtHierarchicalClusteringTask::GetSmoothRadius() const { return this->_smoothRadius; }
+void AtHierarchicalClusteringTask::SetSmoothRadius(float value)
+{
+   this->_smoothRadius = value;
+}
+float AtHierarchicalClusteringTask::GetSmoothRadius() const
+{
+   return this->_smoothRadius;
+}
 
-void AtHierarchicalClusteringTask::SetSplineTangentScale(float value) { this->_splineTangentScale = value; }
-float AtHierarchicalClusteringTask::GetSplineTangentScale() const { return this->_splineTangentScale; }
+void AtHierarchicalClusteringTask::SetSplineTangentScale(float value)
+{
+   this->_splineTangentScale = value;
+}
+float AtHierarchicalClusteringTask::GetSplineTangentScale() const
+{
+   return this->_splineTangentScale;
+}
 
-void AtHierarchicalClusteringTask::SetSplineMinControlPointDistance(float value) { this->_splineMinControlPointDistance = value; }
-float AtHierarchicalClusteringTask::GetSplineMinControlPointDistance() const { return this->_splineMinControlPointDistance; }
+void AtHierarchicalClusteringTask::SetSplineMinControlPointDistance(float value)
+{
+   this->_splineMinControlPointDistance = value;
+}
+float AtHierarchicalClusteringTask::GetSplineMinControlPointDistance() const
+{
+   return this->_splineMinControlPointDistance;
+}
 
-void AtHierarchicalClusteringTask::SetSplineJump(size_t value) { this->_splineJump = value; }
-size_t AtHierarchicalClusteringTask::GetSplineJump() const { return this->_splineJump; }
+void AtHierarchicalClusteringTask::SetSplineJump(size_t value)
+{
+   this->_splineJump = value;
+}
+size_t AtHierarchicalClusteringTask::GetSplineJump() const
+{
+   return this->_splineJump;
+}
 
 ClassImp(AtHierarchicalClusteringTask)

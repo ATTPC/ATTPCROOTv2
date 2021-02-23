@@ -19,40 +19,33 @@
 #include "AtTriggerPar.h"
 #include "AtTrigger.h"
 
+class AtTriggerTask : public FairTask {
+public:
+   AtTriggerTask();
+   ~AtTriggerTask();
 
+   void SetPersistence(Bool_t val) { fIsPersistent = val; }
+   void SetAtMap(TString mapPath);
 
-class AtTriggerTask : public FairTask
-{
-  public:
-     AtTriggerTask();
-     ~AtTriggerTask();
+   virtual InitStatus Init();        //!< Initiliazation of task at the beginning of a run.
+   virtual void Exec(Option_t *opt); //!< Executed for each event.
+   virtual void SetParContainers();  //!< Load the parameter container from the runtime database.
 
-     void SetPersistence(Bool_t val) { fIsPersistent = val; }
-     void SetAtMap(TString mapPath);
+private:
+   AtTriggerPar *fPar;
+   AtTrigger *fTrigger;
+   TClonesArray *fAtRawEventArray;
+   TClonesArray *fAtEventArray;
+   TClonesArray *fAtRawEventArray_acc;
+   TClonesArray *fAtEventArray_acc;
+   AtEvent *fEvent;
+   AtRawEvent *fRawEvent;
+   TString fMapPath;
 
-    virtual InitStatus Init();        //!< Initiliazation of task at the beginning of a run.
-    virtual void Exec(Option_t* opt); //!< Executed for each event.
-    virtual void SetParContainers();  //!< Load the parameter container from the runtime database.
+   Bool_t fIsTrigger;
+   Bool_t fIsPersistent;
 
-   private:
-
-     AtTriggerPar* fPar;
-     AtTrigger* fTrigger;
-     TClonesArray* fAtRawEventArray;
-     TClonesArray* fAtEventArray;
-     TClonesArray* fAtRawEventArray_acc;
-     TClonesArray* fAtEventArray_acc;
-     AtEvent*      fEvent;
-     AtRawEvent*   fRawEvent;
-     TString       fMapPath;
-     
-
-     Bool_t fIsTrigger;
-     Bool_t fIsPersistent;
-
-
-     ClassDef(AtTriggerTask,1);
-
+   ClassDef(AtTriggerTask, 1);
 };
 
 #endif

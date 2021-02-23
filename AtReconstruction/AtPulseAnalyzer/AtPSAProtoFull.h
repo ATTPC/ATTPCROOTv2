@@ -3,13 +3,14 @@
 
 #include "AtPSA.h"
 
-class AtPSAProtoFull:public AtPSA {
- public:
-    AtPSAProtoFull();
-    ~AtPSAProtoFull();
+class AtPSAProtoFull : public AtPSA {
+public:
+   AtPSAProtoFull();
+   ~AtPSAProtoFull();
 
-    void Analyze(AtRawEvent * rawEvent, AtEvent * event) override;
+   void Analyze(AtRawEvent *rawEvent, AtEvent *event) override;
 
- ClassDefOverride(AtPSAProtoFull, 1)};
+   ClassDefOverride(AtPSAProtoFull, 1)
+};
 
 #endif

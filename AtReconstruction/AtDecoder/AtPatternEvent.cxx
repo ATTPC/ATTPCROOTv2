@@ -2,18 +2,15 @@
 
 ClassImp(AtPatternEvent);
 
-AtPatternEvent::AtPatternEvent()
-:TNamed("AtPatternEvent", "Pattern Recognition Event")
+AtPatternEvent::AtPatternEvent() : TNamed("AtPatternEvent", "Pattern Recognition Event") {}
+
+AtPatternEvent::~AtPatternEvent() {}
+
+void AtPatternEvent::SetTrackCand(std::vector<AtTrack> tracks)
 {
-
-
+   fTrackCand = tracks;
 }
-
-
-AtPatternEvent::~AtPatternEvent()
+std::vector<AtTrack> &AtPatternEvent::GetTrackCand()
 {
-
+   return fTrackCand;
 }
-
-void AtPatternEvent::SetTrackCand(std::vector<AtTrack> tracks) {fTrackCand = tracks;}
-std::vector<AtTrack>& AtPatternEvent::GetTrackCand() {return fTrackCand;}

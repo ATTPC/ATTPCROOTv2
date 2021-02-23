@@ -11,24 +11,20 @@
 // -----                Created 26/03/14  by M. Al-Turany              -----
 // -------------------------------------------------------------------------
 
-
 #ifndef MAGNET_H
 #define MAGNET_H
 
-#include "FairModule.h"                 // for FairModule
-#include "Rtypes.h"                     // for AtMagnet::Class, Bool_t, etc
-#include <string>                       // for string
+#include "FairModule.h" // for FairModule
+#include "Rtypes.h"     // for AtMagnet::Class, Bool_t, etc
+#include <string>       // for string
 
-class AtMagnet : public FairModule
-{
-  public:
-    AtMagnet(const char* name, const char* Title="MY Magnet");
-    AtMagnet();
-    virtual ~AtMagnet();
-    void ConstructGeometry();
-    ClassDef(AtMagnet,1)
-
+class AtMagnet : public FairModule {
+public:
+   AtMagnet(const char *name, const char *Title = "MY Magnet");
+   AtMagnet();
+   virtual ~AtMagnet();
+   void ConstructGeometry();
+   ClassDef(AtMagnet, 1)
 };
 
-#endif //MAGNET_H
-
+#endif // MAGNET_H

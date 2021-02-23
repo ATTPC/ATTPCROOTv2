@@ -4,9 +4,9 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class MCMinimization+;
-#pragma link C++ struct MCMinimization::FitPar+;
-#pragma link C++ class MCQMinimization+;
-#pragma link C++ struct MCQMinimization::FitPar+;
+#pragma link C++ class MCMinimization + ;
+#pragma link C++ struct MCMinimization::FitPar + ;
+#pragma link C++ class MCQMinimization + ;
+#pragma link C++ struct MCQMinimization::FitPar + ;
 
 #endif

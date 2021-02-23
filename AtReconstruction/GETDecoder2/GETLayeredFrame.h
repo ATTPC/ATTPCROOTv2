@@ -7,20 +7,20 @@
 #include "TClonesArray.h"
 
 class GETLayeredFrame : public GETLayerHeader {
-  public:
-    GETLayeredFrame();
+public:
+   GETLayeredFrame();
 
-            Int_t  GetNumFrames();
-     TClonesArray *GetFrames();
-    GETBasicFrame *GetFrame(Int_t index);
+   Int_t GetNumFrames();
+   TClonesArray *GetFrames();
+   GETBasicFrame *GetFrame(Int_t index);
 
-             void  Clear(Option_t * = "");
-             void  Read(ifstream &stream);
+   void Clear(Option_t * = "");
+   void Read(ifstream &stream);
 
-  private:
-     TClonesArray *fFrames;
+private:
+   TClonesArray *fFrames;
 
-  ClassDef(GETLayeredFrame, 1);
+   ClassDef(GETLayeredFrame, 1);
 };
 
 #endif

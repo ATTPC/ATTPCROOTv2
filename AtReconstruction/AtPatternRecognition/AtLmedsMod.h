@@ -43,113 +43,96 @@
 
 using namespace std;
 
-
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
+class AtLmedsMod : public TObject {
 
+public:
+   AtLmedsMod();
+   ~AtLmedsMod();
 
-class AtLmedsMod : public TObject
-{
+   void Reset();
+   void Init(AtEvent *event);
+   void Solve();
+   vector<int> RandSam(vector<int> indX, Int_t mode);
+   void EstimModel(const std::vector<int> samplesIdx);
+   double EstimError(int i);
+   void CalcLmedsMod(AtEvent *event);
+   vector<double> GetChargeOfTracks();
+   vector<double> GetTrackLength();
+   vector<double> GetPDF(const std::vector<int> samplesIdx);
+   void SetAvCharge(double charge) { Avcharge = charge; };
+   double GetAvCharge() { return Avcharge; };
+   double Fit3D(vector<int> inliners, TVector3 &V1, TVector3 &V2);
+   void SetDistanceThreshold(Float_t threshold) { fLmedsThreshold = threshold; };
+   void SetMinHitsLine(Int_t nhits) { fLmedsMinPoints = nhits; };
+   void SetNumItera(Int_t niterations) { fLmedsMaxIteration = niterations; };
+   TVector3 GetVertex1() { return fVertex_1; };
+   TVector3 GetVertex2() { return fVertex_2; };
+   Double_t GetVertexTime() { return fVertexTime; };
+   TVector3 GetVertexMean() { return fVertex_mean; };
+   std::vector<AtTrack> GetTrackCand() { return fTrackCand; };
+   double GetMedian(vector<double> errvec);
+   TVector3 ClosestPoint2Lines(TVector3 d1, TVector3 pt1, TVector3 d2, TVector3 pt2);
+   void SetRanSamMode(Int_t mode) { fRandSamplMode = mode; };
+   void SetChargeThres(double value) { fChargeThres = value; };
+   void SetVertexMod(Int_t mode) { fVertexMod = mode; };
 
-  public:
-      AtLmedsMod();
-      ~AtLmedsMod();
+   struct Cluster // return type of structure
+   {
+      double ClusterStrength;        // strength
+      size_t ClusterSize;            // size
+      double ClusterChi2;            // Chi2
+      std::vector<int> ClusterIndex; // Indices
+      TVector3 ClusterFitP1;         // point 1 from the fitted line
+      TVector3 ClusterFitP2;         // point 2 from the fitted line
+   };
 
+   typedef std::vector<Cluster> AllClusters;
+   std::vector<AtTrack *> Clusters2Tracks(AllClusters NClusters, AtEvent *event);
 
-      void Reset();
-	    void Init(AtEvent *event);
-	    void Solve();
-      vector<int> RandSam(vector<int> indX, Int_t mode);
-      void EstimModel(const std::vector<int>  samplesIdx);
-      double EstimError(int i);
-      void CalcLmedsMod(AtEvent *event);
-	    vector<double> GetChargeOfTracks();
-	    vector<double> GetTrackLength();
-      vector<double> GetPDF(const std::vector<int>  samplesIdx);
-      void SetAvCharge(double charge){Avcharge = charge;};
-      double GetAvCharge(){return Avcharge;};
-	    double Fit3D(vector<int> inliners, TVector3& V1, TVector3& V2);
-      void SetDistanceThreshold(Float_t threshold) { fLmedsThreshold = threshold;};
-      void SetMinHitsLine(Int_t nhits) { fLmedsMinPoints = nhits;};
-      void SetNumItera(Int_t niterations) { fLmedsMaxIteration = niterations;};
-      TVector3 GetVertex1(){return fVertex_1;};
-      TVector3 GetVertex2(){return fVertex_2;};
-      Double_t GetVertexTime(){return fVertexTime;};
-      TVector3 GetVertexMean(){return fVertex_mean;};
-      std::vector<AtTrack> GetTrackCand(){return fTrackCand;};
-      double GetMedian(vector<double> errvec);
-      TVector3 ClosestPoint2Lines(TVector3 d1, TVector3 pt1, TVector3 d2, TVector3 pt2);
-      void SetRanSamMode(Int_t mode){fRandSamplMode = mode;};
-      void SetChargeThres(double value){fChargeThres = value;};
-      void SetVertexMod(Int_t mode){fVertexMod = mode;};
+   void SetCluster(const std::vector<int> samplesIdx, const double cost, const double Chi2, TVector3 CP1, TVector3 CP2);
+   inline AllClusters GetClusters() { return cluster_vector; }
+   AllClusters cluster_vector;
 
-      struct Cluster // return type of structure
-        {
-          double ClusterStrength;		// strength
-          size_t ClusterSize;			// size
-          double ClusterChi2;			// Chi2
-          std::vector<int> ClusterIndex;			// Indices
-          TVector3 ClusterFitP1;			// point 1 from the fitted line
-          TVector3 ClusterFitP2;			// point 2 from the fitted line
-        };
+protected:
+   void FindVertex(std::vector<AtTrack *> tracks);
+   void FindVertexOneTrack(std::vector<AtTrack *> tracks);
 
+   vector<double> errorsVec;
+   TVector3 fVertex_1;
+   TVector3 fVertex_2;
+   TVector3 fVertex_mean;
+   Double_t fVertexTime;
+   Double_t fMinimum;
+   std::vector<AtTrack> fTrackCand;        // Candidate tracks
+   std::pair<Int_t, Int_t> fVertex_tracks; // ID of the tracks that form the best vertex
+   Int_t fLineDistThreshold;
+   Int_t fRandSamplMode;
+   Int_t fVertexMod;
 
-      typedef std::vector<Cluster> AllClusters;
-      std::vector<AtTrack*> Clusters2Tracks( AllClusters NClusters, AtEvent *event);
+   vector<double> vX, vY, vZ, vQ;
+   vector<double> vTrackCharge;
+   float fLmedsMinPoints;
+   float fLmedsPointThreshold;
+   float fLmedsChargeThreshold;
+   float fLmedsThreshold;
+   float fLmedsMaxIteration;
+   int fNumberOfTracksMax;
+   int fOriginalCloudSize;
+   double fTotalCharge;
+   int fVerbose;
+   double Avcharge;
+   double fChargeThres;
 
-      void SetCluster(const std::vector<int> samplesIdx, const double cost, const double Chi2, TVector3 CP1, TVector3 CP2);
-      inline AllClusters GetClusters(){return cluster_vector;}
-      AllClusters cluster_vector;
+public:
+   TVector3 Vs;
+   TVector3 Ps;
 
-
-
-
-  protected:
-
-      void FindVertex(std::vector<AtTrack*> tracks);
-      void FindVertexOneTrack(std::vector<AtTrack*> tracks);
-
-      vector<double> errorsVec;
-      TVector3 fVertex_1;
-      TVector3 fVertex_2;
-      TVector3 fVertex_mean;
-      Double_t fVertexTime;
-      Double_t fMinimum;
-      std::vector<AtTrack> fTrackCand; //Candidate tracks
-      std::pair<Int_t,Int_t> fVertex_tracks; // ID of the tracks that form the best vertex
-      Int_t fLineDistThreshold;
-      Int_t fRandSamplMode;
-      Int_t fVertexMod;
-
-      vector<double> vX, vY, vZ, vQ;
-	    vector<double> vTrackCharge;
-      float fLmedsMinPoints;
-	    float fLmedsPointThreshold;
-	    float fLmedsChargeThreshold;
-	    float fLmedsThreshold;
-	    float fLmedsMaxIteration;
-	    int fNumberOfTracksMax;
-	    int fOriginalCloudSize;
-	    double fTotalCharge;
-	    int fVerbose;
-      double Avcharge;
-      double fChargeThres;
-
-
-
-
-  public:
-
-    TVector3 Vs;
-    TVector3 Ps;
-
-
-  ClassDef(AtLmedsMod, 1);
-
-
+   ClassDef(AtLmedsMod, 1);
 };
 
 #endif

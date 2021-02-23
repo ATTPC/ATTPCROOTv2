@@ -5,13 +5,14 @@
 
 // ROOT classes
 
-class AtPSAFull:public AtPSA {
- public:
-    AtPSAFull();
-    ~AtPSAFull();
+class AtPSAFull : public AtPSA {
+public:
+   AtPSAFull();
+   ~AtPSAFull();
 
-    void Analyze(AtRawEvent * rawEvent, AtEvent * event) override;
+   void Analyze(AtRawEvent *rawEvent, AtEvent *event) override;
 
- ClassDefOverride(AtPSAFull, 1)};
+   ClassDefOverride(AtPSAFull, 1)
+};
 
 #endif

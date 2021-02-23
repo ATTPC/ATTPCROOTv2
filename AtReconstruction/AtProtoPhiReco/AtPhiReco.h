@@ -20,24 +20,21 @@
 // ROOT classes
 #include "TClonesArray.h"
 
+class AtPhiReco {
 
-class AtPhiReco
-{
-  
-   public:
-    AtPhiReco();
-    virtual ~AtPhiReco();
-    virtual void PhiAnalyze(AtEvent *event,AtProtoEvent *protoevent) = 0;
-    //virtual void PhiAnalyze(AtEvent *event, AtHoughSpace *HSpace) = 0; //TODO: Overload pure virtual functions???? 
+public:
+   AtPhiReco();
+   virtual ~AtPhiReco();
+   virtual void PhiAnalyze(AtEvent *event, AtProtoEvent *protoevent) = 0;
+   // virtual void PhiAnalyze(AtEvent *event, AtHoughSpace *HSpace) = 0; //TODO: Overload pure virtual functions????
 
-    //TODO Ideas : Maximum separation in time buckets between two pulses - Sort the Hit Array vector 
-   
-   protected:
-     std::vector<AtProtoQuadrant> fQuadArray; //Limited to 4 
-     //Double_t PhiCalc(AtProtoQuadrant *quadrant); // Calculates Phi Angle of two neighboring strips
- 
+   // TODO Ideas : Maximum separation in time buckets between two pulses - Sort the Hit Array vector
 
-  ClassDef(AtPhiReco,1)
+protected:
+   std::vector<AtProtoQuadrant> fQuadArray; // Limited to 4
+   // Double_t PhiCalc(AtProtoQuadrant *quadrant); // Calculates Phi Angle of two neighboring strips
+
+   ClassDef(AtPhiReco, 1)
 };
 
 #endif

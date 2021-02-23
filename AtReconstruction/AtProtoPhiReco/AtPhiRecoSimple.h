@@ -5,21 +5,20 @@
 #include "AtProtoEvent.h"
 #include "AtProtoQuadrant.h"
 
-class AtPhiRecoSimple : public AtPhiReco
-{
-  public:
-    AtPhiRecoSimple();
-    ~AtPhiRecoSimple();
-   
-    void PhiAnalyze(AtEvent *event,AtProtoEvent *protoevent);
-    //void PhiAnalyze(AtEvent *event, AtHoughSpace *HSpace);
+class AtPhiRecoSimple : public AtPhiReco {
+public:
+   AtPhiRecoSimple();
+   ~AtPhiRecoSimple();
 
-   private:
-   void PhiCalc(AtProtoQuadrant *quadrant,AtEvent *event);
-   void PhiCalcMulti(std::vector<AtHit> *multihit_Array,AtProtoQuadrant *quadrant);
-   TH1D* PhiDist; 
+   void PhiAnalyze(AtEvent *event, AtProtoEvent *protoevent);
+   // void PhiAnalyze(AtEvent *event, AtHoughSpace *HSpace);
 
-  ClassDef(AtPhiRecoSimple, 1)
+private:
+   void PhiCalc(AtProtoQuadrant *quadrant, AtEvent *event);
+   void PhiCalcMulti(std::vector<AtHit> *multihit_Array, AtProtoQuadrant *quadrant);
+   TH1D *PhiDist;
+
+   ClassDef(AtPhiRecoSimple, 1)
 };
 
 #endif

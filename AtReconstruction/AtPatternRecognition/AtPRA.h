@@ -11,35 +11,31 @@
 #include "FairRootManager.h"
 #include "FairLogger.h"
 
-//ROOT
+// ROOT
 #include "TVirtualFitter.h"
 
+namespace AtPAtTERN {
 
-namespace AtPAtTERN{
+class AtPRA : public TObject {
 
-      class AtPRA : public TObject
-      {
+public:
+   virtual ~AtPRA();
+   virtual std::vector<AtTrack> GetTrackCand() = 0;
+   virtual bool FindTracks(AtEvent &event, AtPatternEvent *patternEvent) = 0;
 
-          public:
+   void SetTrackInitialParameters(AtTrack &track);
 
-            virtual ~AtPRA();
-            virtual std::vector<AtTrack> GetTrackCand() = 0;
-            virtual bool FindTracks(AtEvent &event, AtPatternEvent *patternEvent) = 0;
+protected:
+   FairLogger *fLogger; ///< logger pointer
+   AtDigiPar *fPar;     ///< parameter container
 
-            void SetTrackInitialParameters(AtTrack& track);
+   void SetTrackCurvature(AtTrack &track);
 
-          protected:
-            FairLogger *fLogger;      ///< logger pointer
-            AtDigiPar *fPar;          ///< parameter container
+   ClassDef(AtPRA, 1)
+};
 
-            void SetTrackCurvature(AtTrack& track);
-            
+} // namespace AtPAtTERN
 
-            ClassDef(AtPRA, 1)
-      };
-
-}//namespace
-
-Double_t fitf(Double_t *x,Double_t *par);
+Double_t fitf(Double_t *x, Double_t *par);
 
 #endif

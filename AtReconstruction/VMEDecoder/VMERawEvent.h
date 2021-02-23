@@ -10,23 +10,21 @@
 
 class VMERawEvent : public TNamed {
 public:
-    VMERawEvent();
-    VMERawEvent(VMERawEvent *object);
-    ~VMERawEvent();
+   VMERawEvent();
+   VMERawEvent(VMERawEvent *object);
+   ~VMERawEvent();
 
-    void SetEventID(Int_t evtid);
-    void SetRawIC(AtRawIC *rawic);
+   void SetEventID(Int_t evtid);
+   void SetRawIC(AtRawIC *rawic);
 
-    Int_t GetEventID();
-    AtRawIC* GetRawIC();
-    
+   Int_t GetEventID();
+   AtRawIC *GetRawIC();
 
 private:
-    Int_t fEventID;
-    AtRawIC fIC;
+   Int_t fEventID;
+   AtRawIC fIC;
 
-
-  ClassDef(VMERawEvent, 1);
+   ClassDef(VMERawEvent, 1);
 };
 
 #endif

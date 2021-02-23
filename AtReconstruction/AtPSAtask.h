@@ -11,26 +11,25 @@ class AtPSA;
 // ROOT classes
 class TClonesArray;
 
-class AtPSAtask:public FairTask {
- public:
-    AtPSAtask(AtPSA * psaMethod);
-    ~AtPSAtask();
+class AtPSAtask : public FairTask {
+public:
+   AtPSAtask(AtPSA *psaMethod);
+   ~AtPSAtask();
 
-    void SetPersistence(Bool_t value);
-    virtual InitStatus Init();
-    virtual void Exec(Option_t * opt);
+   void SetPersistence(Bool_t value);
+   virtual InitStatus Init();
+   virtual void Exec(Option_t *opt);
 
- private:
+private:
+   TClonesArray *fRawEventArray;
+   TClonesArray *fEventHArray;
+   TClonesArray *fMCPointArray;
 
-    TClonesArray *fRawEventArray;
-    TClonesArray *fEventHArray;
-    TClonesArray *fMCPointArray;
+   AtPSA *fPSA;
 
-    AtPSA *fPSA;
+   Bool_t fIsPersistence;
 
-    Bool_t fIsPersistence;
-
-     ClassDef(AtPSAtask, 2);
+   ClassDef(AtPSAtask, 2);
 };
 
 #endif

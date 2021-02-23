@@ -26,52 +26,48 @@
 #define cGREEN "\033[1;32m"
 
 class AtTrigger : public TObject {
-  public:
-      AtTrigger();
-      ~AtTrigger();
+public:
+   AtTrigger();
+   ~AtTrigger();
 
+   void SetAtMap(TString mapPath);
+   void SetTriggerParameters(Double_t read, Double_t write, Double_t MSB, Double_t LSB, Double_t width,
+                             Double_t fraction, Double_t threshold, Double_t window, Double_t height);
 
-      void SetAtMap(TString mapPath);
-      void SetTriggerParameters(Double_t read, Double_t write, Double_t MSB,
-      Double_t LSB, Double_t width, Double_t fraction, Double_t threshold, Double_t window, Double_t height);
+   Bool_t ImplementTrigger(AtRawEvent *rawEvent, AtEvent *event);
 
-      Bool_t ImplementTrigger(AtRawEvent *rawEvent, AtEvent *event);
+protected:
+   Bool_t fValidPad;
 
+   Double_t *fRawAdc;
+   Int_t fPadNum;
 
+   Double_t fMultiplicity_threshold;
+   Double_t fMultiplicity_window;
+   Double_t fTrigger_height;
+   Double_t fTime_factor;
+   Double_t fTrigger_width;
+   Double_t fPad_threshold;
+   Double_t fTime_window;
 
-    protected:
-      Bool_t fValidPad;
+   AtRawEvent *fRawEvent;
+   AtEvent *fEvent;
+   AtHit fHit;
+   AtPad *fPad;
 
-      Double_t* fRawAdc;
-      Int_t fPadNum;
+   Int_t fTbIdx;
+   Int_t fCobo;
+   Int_t fCoboNumArray[10240];
 
-      Double_t fMultiplicity_threshold;
-      Double_t fMultiplicity_window;
-      Double_t fTrigger_height;
-      Double_t fTime_factor;
-      Double_t fTrigger_width;
-      Double_t fPad_threshold;
-      Double_t fTime_window;
+   Int_t fCount = 0.0;
+   Int_t fMaxRawADC = 0.0;
+   // vector<TH2I *> fHRawPulse;
 
-      AtRawEvent* fRawEvent;
-      AtEvent* fEvent;
-      AtHit fHit;
-      AtPad* fPad;
+   Int_t fMinIdx;
+   Int_t fMaxIdx;
+   Int_t fAccum;
+   Bool_t fTrigger;
 
-      Int_t fTbIdx;
-      Int_t fCobo;
-      Int_t fCoboNumArray[10240];
-
-    	Int_t fCount =0.0;
-    	Int_t fMaxRawADC = 0.0;
-    	//vector<TH2I *> fHRawPulse;
-
-    	Int_t fMinIdx;
-      Int_t fMaxIdx;
-      Int_t fAccum;
-    	Bool_t fTrigger;
-
-
-    ClassDef(AtTrigger, 1);
+   ClassDef(AtTrigger, 1);
 };
 #endif

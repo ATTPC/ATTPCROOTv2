@@ -8,58 +8,51 @@
 #ifndef APOLLOPOINT_H
 #define APOLLOPOINT_H 1
 
-
 #include "FairMCPoint.h"
 #include "TVector3.h"
 
 #include "TObject.h"
 
+class AtApolloPoint : public FairMCPoint {
 
-class AtApolloPoint : public FairMCPoint
-{
+public:
+   /** Default constructor **/
+   AtApolloPoint();
 
-  public:
+   /** Constructor with arguments
+    *@param trackID   Index of MCTrack
+    *@param detID     Detector ID
+    *@param pos      Ccoordinates at entrance to active volume [cm]
+    *@param mom      Momentum of track at entrance [GeV]
+    *@param crystalID Crystal ID
+    *@param tof       Time since event start [ns]
+    *@param length    Track length since creation [cm]
+    *@param eLoss     Energy deposit [GeV]
+    **/
+   AtApolloPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Int_t crystalID, Double_t tof, Double_t length,
+                 Double_t eLoss);
 
-    /** Default constructor **/
-    AtApolloPoint();
+   /** Destructor **/
+   virtual ~AtApolloPoint();
 
+   /** Accessors **/
+   Int_t GetCrystalID() const { return fCrystalID; }
 
-    /** Constructor with arguments
-     *@param trackID   Index of MCTrack
-     *@param detID     Detector ID
-     *@param pos      Ccoordinates at entrance to active volume [cm]
-     *@param mom      Momentum of track at entrance [GeV]
-     *@param crystalID Crystal ID
-     *@param tof       Time since event start [ns]
-     *@param length    Track length since creation [cm]
-     *@param eLoss     Energy deposit [GeV]
-     **/
-    AtApolloPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Int_t crystalID, Double_t tof, Double_t length, Double_t eLoss);
+   /** Modifiers **/
+   void SetCrystalID(Int_t id) { fCrystalID = id; }; // added by Marc
 
-    /** Destructor **/
-    virtual ~AtApolloPoint();
+   /** Output to screen **/
+   virtual void Print(const Option_t *opt) const;
 
-      /** Accessors **/
- 	 Int_t    GetCrystalID() const { return fCrystalID; }
+private:
+   /** Copy constructor **/
+   AtApolloPoint(const AtApolloPoint &point);
+   AtApolloPoint operator=(const AtApolloPoint &point);
 
-         /** Modifiers **/
- 	 void SetCrystalID(Int_t id)       { fCrystalID = id; }; // added by Marc
+protected:
+   Int_t fCrystalID;
 
-    /** Output to screen **/
-    virtual void Print(const Option_t* opt) const;
-
-  private:
-    /** Copy constructor **/
-    AtApolloPoint(const AtApolloPoint& point);
-    AtApolloPoint operator=(const AtApolloPoint& point);
-
- protected:
-
-  Int_t fCrystalID;
-
-  ClassDef(AtApolloPoint,1)
-
+   ClassDef(AtApolloPoint, 1)
 };
-
 
 #endif

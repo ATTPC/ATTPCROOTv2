@@ -22,26 +22,20 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
-namespace AtFITTER{
+namespace AtFITTER {
 
+class AtGenfit : public AtFitter {
 
-class AtGenfit : public AtFitter
-{
+public:
+   AtGenfit();
+   ~AtGenfit();
 
-  public:
-      AtGenfit();
-      ~AtGenfit();
+   bool FitTracks(AtPatternEvent &patternEvent);
 
-      bool FitTracks(AtPatternEvent &patternEvent);
-
-  private:
-
-
-  ClassDef(AtGenfit, 1);
-
+private:
+   ClassDef(AtGenfit, 1);
 };
 
-}//namespace
+} // namespace AtFITTER
 
 #endif
-

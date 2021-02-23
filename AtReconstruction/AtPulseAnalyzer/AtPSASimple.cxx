@@ -1,6 +1,6 @@
 #include "AtPSASimple.h"
 
-//AtTPCROOT classes
+// AtTPCROOT classes
 #include "AtRawEvent.h"
 #include "AtEvent.h"
 #include "AtDigiPar.h"
@@ -8,7 +8,7 @@
 #include "AtHit.h"
 #include "AtTpcPoint.h"
 
-//ROOT classes
+// ROOT classes
 #include "TH1F.h"
 #include "TRotation.h"
 #include "TMatrixD.h"
@@ -18,58 +18,51 @@
 // STL
 #include <algorithm>
 
+using std::distance;
 using std::max_element;
 using std::min_element;
-using std::distance;
 
-ClassImp(AtPSASimple) AtPSASimple::AtPSASimple()
+ClassImp(AtPSASimple) AtPSASimple::AtPSASimple() {}
+
+AtPSASimple::~AtPSASimple() {}
+
+void AtPSASimple::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 {
-}
+   Int_t numPads = rawEvent->GetNumPads();
+   Int_t hitNum = 0;
 
-AtPSASimple::~AtPSASimple()
-{
-}
+   for (Int_t iPad = 0; iPad < numPads; iPad++) {
+      AtPad *pad = rawEvent->GetPad(iPad);
 
-void
- AtPSASimple::Analyze(AtRawEvent * rawEvent, AtEvent * event)
-{
-    Int_t numPads = rawEvent->GetNumPads();
-    Int_t hitNum = 0;
+      Double_t xPos = pad->GetPadXCoord();
+      Double_t yPos = pad->GetPadYCoord();
+      Double_t zPos = 0;
+      Double_t charge = 0;
 
-    for (Int_t iPad = 0; iPad < numPads; iPad++) {
-	AtPad *pad = rawEvent->GetPad(iPad);
+      if (pad->IsPedestalSubtracted()) { // TODO after pedestal subtraction
+         Double_t *adc = pad->GetADC();
+         Int_t maxAdcIdx = distance(adc, max_element(adc + 4, adc + fNumTbs - 5));
 
-	Double_t xPos = pad->GetPadXCoord();
-	Double_t yPos = pad->GetPadYCoord();
-	Double_t zPos = 0;
-	Double_t charge = 0;
+         zPos = CalculateY(maxAdcIdx);
+         charge = adc[maxAdcIdx];
 
-	if (pad->IsPedestalSubtracted()) {	//TODO after pedestal subtraction
-	    Double_t *adc = pad->GetADC();
-	    Int_t maxAdcIdx =
-		distance(adc, max_element(adc + 4, adc + fNumTbs - 5));
+         if (fThreshold > 0 && charge < fThreshold)
+            continue;
+      } else {
+         Int_t *rawAdc = pad->GetRawADC();
+         Int_t minAdcIdx = distance(rawAdc, min_element(rawAdc + 4, rawAdc + fNumTbs - 5));
 
-	    zPos = CalculateY(maxAdcIdx);
-	    charge = adc[maxAdcIdx];
+         zPos = CalculateZ(minAdcIdx);
+         charge = rawAdc[minAdcIdx];
 
-	    if (fThreshold > 0 && charge < fThreshold)
-		continue;
-	} else {
-	    Int_t *rawAdc = pad->GetRawADC();
-	    Int_t minAdcIdx =
-		distance(rawAdc, min_element(rawAdc + 4, rawAdc + fNumTbs - 5));
+         if (fThreshold > 0 && charge > fThreshold)
+            continue;
+      }
 
-	    zPos = CalculateZ(minAdcIdx);
-	    charge = rawAdc[minAdcIdx];
+      AtHit *hit = new AtHit(hitNum, xPos, yPos, zPos, charge);
+      event->AddHit(hit);
+      delete hit;
 
-	    if (fThreshold > 0 && charge > fThreshold)
-		continue;
-	}
-
-	AtHit *hit = new AtHit(hitNum, xPos, yPos, zPos, charge);
-	event->AddHit(hit);
-	delete hit;
-
-	hitNum++;
-    }
+      hitNum++;
+   }
 }

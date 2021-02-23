@@ -11,22 +11,18 @@
 
 class AtPatternEvent : public TNamed {
 
-  public:
-    AtPatternEvent();
-    ~AtPatternEvent();
+public:
+   AtPatternEvent();
+   ~AtPatternEvent();
 
-    void SetTrackCand(std::vector<AtTrack> tracks);
+   void SetTrackCand(std::vector<AtTrack> tracks);
 
-    std::vector<AtTrack>& GetTrackCand();
+   std::vector<AtTrack> &GetTrackCand();
 
-
-
-  private:
-
-   std::vector<AtTrack> fTrackCand; //Candidate tracks
+private:
+   std::vector<AtTrack> fTrackCand; // Candidate tracks
 
    ClassDef(AtPatternEvent, 1);
-
 };
 
- #endif
+#endif
