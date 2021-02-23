@@ -1,4 +1,4 @@
-void Si31_dp(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
+void Si31_dp_v2(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -174,32 +174,35 @@ void Si31_dp(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
              gammasGen->SetThetaRange(theta1, theta2);
              gammasGen->SetCosTheta();
              gammasGen->SetPRange(momentum, momentum);
-             gammasGen->SetNuclearDecayChain();
-             gammasGen->SetDecayChainPoint(0.006705,0.69); //100/131 = 76.3%
-             gammasGen->SetDecayChainPoint(0.004763,0.09); //9/131 = 6.9%
-             gammasGen->SetDecayChainPoint(0.002474,0.22); //22/131 = 16.8%
-             //gammasGen->SetDecayChainPoint(0.004,0.2);
-             //gammasGen->SetDecayChainPoint(0.005,0.2);
-             //gammasGen->SetDecayChainPoint(0.009701,0.1);
-             //gammasGen->SetDecayChainPoint(0.009934,0.4);
-             //gammasGen->SetDecayChainPoint(0.010279,0.2);
-             //gammasGen->SetDecayChainPoint(0.010846,0.2);
+             /*gammasGen->SetDecayChainPoint(0.001,0.1);
+             gammasGen->SetDecayChainPoint(0.009701,0.1);
+             gammasGen->SetDecayChainPoint(0.009934,0.4);
+             gammasGen->SetDecayChainPoint(0.010279,0.2);
+             gammasGen->SetDecayChainPoint(0.010846,0.2);*/
+             gammasGen->SetDecayChainPoint(0.002474,0.22);
+             gammasGen->SetDecayChainPoint(0.004763,0.06);
+             gammasGen->SetDecayChainPoint(0.006704,0.72);
+             
              gammasGen->SetPhiRange(0., 360.); //(2.5,4)
              gammasGen->SetBoxXYZ(-0.1, 0.1, -0.1, 0.1, -0.1, 0.1);
              gammasGen->SetLorentzBoost(0.0); // for instance beta=0.8197505718204776 for 700 A MeV
              // add the gamma generator
              primGen->AddGenerator(gammasGen);
 
+	     // List of gammas
+	     // Ex: 6.705 MeV - 6.704 (72), 4.763 (6), 2.474 (22)
+
              /*
              31Si beam 9 MeV/u
              target CD2 = ~100 ug/cm2
              silicon array roughly from -10cm to -40cm (upstream of the target (edited)
              to look at excitation energies of 32Si ranging from 9.2 MeV to ~ 10 - 11 MeV
-		
-	     LeveLs for 32Si
-	             
-		Ex = 6.705 MeV. Gammas: 6.704 MeV (100), 4.763 (9), 2.474 (22)
+             @Héctor por favor anade tambien las gammas desde un estado 9.5 MeV por
+             encima de la neutron separation energy de 32Si, cualquier cosa inventada vale por ahora
+              9701, 9934, 10279, 10846
               */
+
+		
 
 	run->SetGenerator(primGen);
 
