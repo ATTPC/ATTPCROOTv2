@@ -10,7 +10,7 @@ Set(DEPENDENCIES
   AtTpc
   AtGenerators
   AtParameter
-  AtReco
+  AtReconstruction
   AtTpcMap
 )
 
@@ -26,11 +26,11 @@ ${CMAKE_SOURCE_DIR}/base
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtTpc
 ${CMAKE_SOURCE_DIR}/AtParameter
-${CMAKE_SOURCE_DIR}/reco
+${CMAKE_SOURCE_DIR}/AtReconstruction
 ${CMAKE_SOURCE_DIR}/AtDigitization
 ${CMAKE_SOURCE_DIR}/AtGenerators
 ${CMAKE_SOURCE_DIR}/AtMap
-${CMAKE_SOURCE_DIR}/reco/AtDecoder
+${CMAKE_SOURCE_DIR}/AtReconstruction/AtDecoder
 )
 
 include_directories(${INCLUDE_DIRECTORIES})

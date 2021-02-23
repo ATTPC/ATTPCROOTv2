@@ -13,8 +13,8 @@ set(INCLUDE_DIRECTORIES
 ${ROOT_INCLUDE_DIR}
 ${BASE_INCLUDE_DIRECTORIES}
 #put here all directories where header files are located
-${CMAKE_SOURCE_DIR}/s800
-${CMAKE_SOURCE_DIR}/reco/AtDecoder
+${CMAKE_SOURCE_DIR}/AtS800
+${CMAKE_SOURCE_DIR}/AtReconstruction/AtDecoder
 )
 
 include_directories(${INCLUDE_DIRECTORIES} )
@@ -29,25 +29,23 @@ link_directories( ${LINK_DIRECTORIES})
 
 set(SRCS
 #Put here your sourcefiles
-S800Calc.cc
-S800Event.cc
-S800.cc
-TInverseMap.cc
-AtS800Task.cc
-S800Calibration.cc
-lmmin.cc
-lmcurve.cc
-lmfit.cc
-S800Settings.cc
-S800TSettings.cc
-AtMergeTask.cc
+S800Calc.cxx
+S800Event.cxx
+S800.cxx
+TInverseMap.cxx
+AtS800Task.cxx
+S800Calibration.cxx
+lmmin.cxx
+lmcurve.cxx
+lmfit.cxx
+S800Settings.cxx
+S800TSettings.cxx
+AtMergeTask.cxx
 
 )
 
-CHANGE_FILE_EXTENSION(*.cc *.h HEADERS "${SRCS}")
-
 Set(LINKDEF S800LinkDef.h)
-Set(LIBRARY_NAME S800)
+Set(LIBRARY_NAME AtS800)
 Set(DEPENDENCIES
     Base
     FairLogger::FairLogger

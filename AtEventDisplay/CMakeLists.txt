@@ -12,13 +12,13 @@ ${PCL_INCLUDE_DIRS}
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtMap
 ${CMAKE_SOURCE_DIR}/AtEventDisplay
-${CMAKE_SOURCE_DIR}/reco/AtDecoder
-${CMAKE_SOURCE_DIR}/reco
-${CMAKE_SOURCE_DIR}/reco/HoughTransformation
-${CMAKE_SOURCE_DIR}/reco/AtRansac
-${CMAKE_SOURCE_DIR}/reco/AtPatternRecognition
+${CMAKE_SOURCE_DIR}/AtReconstruction/AtDecoder
+${CMAKE_SOURCE_DIR}/AtReconstruction
+${CMAKE_SOURCE_DIR}/AtReconstruction/HoughTransformation
+${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
+${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
 ${CMAKE_SOURCE_DIR}/AtParameter
-${CMAKE_SOURCE_DIR}/s800
+${CMAKE_SOURCE_DIR}/AtS800
 
 )
 
@@ -54,9 +54,9 @@ Set(DEPENDENCIES
     Eve
 # Add all library names your code depending on.
 # Basically those are the libraries in the header files' directory.
-    AtReco
+    AtReconstruction
     AtTpcMap
-    S800
+    AtS800
     FairLogger::FairLogger
 )
 
