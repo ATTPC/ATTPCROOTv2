@@ -27,11 +27,13 @@ After the source builds, you should be good to go.
 # For developers
 
 ### Formatting code for pull requests
-Pull requests submitted should have the code formated in the linux stlye with tabs as 4 spaces instead of 8. The GNU program `indent` can be used to easily reformat code before commiting changes. If called from the root directory as `indent [files]`, it will read the local profile `.indent.pro`. If called elsewhere, the proper command line arguments need to be passed `indent -linux -i4 -pmt [files]`. If there is a region of code you want to make sure is not reformatted by `indent` you can use control comments. Formatting of code is turned off with the comment `// *INDENT-OFF*` and re-enabled with the comment `// *INDENT-ON*`.
+Pull requests submitted should have the code formated in the [ROOT style](https://root.cern/contribute/coding_conventions/). Never include a header file when a forward decleration is sufficient. Only include header files for base classes or classes that are used by value in the class definition.
 
-To the extent possible, keep `#include` statements in source files. In a header file, a forward decleration is always preferable to a `#include`, if possible.
+Before submitting a pull request, reformat the code using `clang-format`. If run from within the repository it will pick up the `.clang-format` file detail the style. This file is also reproduced on the page detailing ROOT the ROOT coding style. If for some reason you need a section of code to not be formatted, you can turn off formatting using comment flags. Formatting of code is turned off with the comment `// clang-format off` and re-enabled with the comment `// clang-format on`.
 
-If any changes are made to the memory layout of a class, the version number in the ROOT macro `ClassDef` needs to be incremented. If the class overrides any virtual function, the macro `ClassDefOverride` should be used instead. Classes should follow ROOT standards. For members of a class, prefer ROOT types (ie Double_t) over native types. All members of a class should start with the letter "f", and all functions should begin with a capital letter, and be camel case.
+All data members of a class should be private or protected and begin with the letter `f`, followed by a capital letter. All member functions should begin with a capital letter. Private data members should be declared first, followed by the private static members, the private methods and the private static methods. Then the protected members and methods and finally the public methods. 
+
+Avoid raw c types for anything that might be written to disk (any memeber variable), instead use ROOT defined types like `Int_t` defined in `Rtypes.h`. If any changes are made to the memory layout of a class, the version number in the ROOT macro `ClassDef` needs to be incremented. If the class overrides any virtual function, the macro `ClassDefOverride` should be used instead.
 
 ### Adding a class
 
