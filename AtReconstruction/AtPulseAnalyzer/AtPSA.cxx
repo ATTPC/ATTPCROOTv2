@@ -27,6 +27,8 @@ using std::min_element;
 
 AtPSA::AtPSA()
 {
+   std::cout << "Calling AtPSA Constructor" << std::endl;
+
    // TODO:Move to class that needs them
    fIniTB = 0;
    fEndTB = 512;
@@ -37,6 +39,12 @@ AtPSA::AtPSA()
 
    fIsGainCalibrated = kFALSE;
    fIsJitterCalibrated = kFALSE;
+}
+
+AtPSA::~AtPSA() {}
+
+void AtPSA::Init()
+{
    fCalibration = new AtCalibration();
 
    FairRun *run = FairRun::Instance();
@@ -76,9 +84,8 @@ AtPSA::AtPSA()
    std::cout << " ==== Tilting Angle : " << fTiltAng << " deg " << std::endl;
    std::cout << " ==== Drift Velocity : " << fDriftVelocity << " cm/us " << std::endl;
    std::cout << " ==== TB0 : " << fTB0 << std::endl;
+   std::cout << " ==== NumTbs : " << fNumTbs << std::endl;
 }
-
-AtPSA::~AtPSA() {}
 
 void AtPSA::SetSimulatedEvent(TClonesArray *MCSimPointArray)
 {

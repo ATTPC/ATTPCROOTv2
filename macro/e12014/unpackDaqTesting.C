@@ -4,7 +4,7 @@
 void unpackDaqTesting(int runNumber)
 {
   //Load the library for unpacking and reconstruction
-  gSystem->Load("libATTPCReco.so");
+  gSystem->Load("libAtReconstruction.so");
   
   TStopwatch timer;
   timer.Start();
@@ -29,9 +29,11 @@ void unpackDaqTesting(int runNumber)
   TString scriptdir = dir + "/scripts/"+ scriptfile;
   TString geomDir   = dir + "/geometry/";
   gSystem -> Setenv("GEOMPATH", geomDir.Data());
+
+
   TString digiParFile = dir + "/parameters/" + parameterFile;
   TString geoManFile  = dir + "/geometry/ATTPC_v1.1.root";
-
+  std::cout << "Setting par file: " << digiParFile << std::endl;
 
   //Create a run
   FairRunAna* run = new FairRunAna();
@@ -45,9 +47,9 @@ void unpackDaqTesting(int runNumber)
   rtdb -> setSecondInput(parIo1);
 
   //Create the unpacker task
-  ATHDFParserTask* HDFParserTask = new ATHDFParserTask();
+  AtHDFParserTask* HDFParserTask = new AtHDFParserTask();
   HDFParserTask->SetPersistence(kTRUE);
-  HDFParserTask->SetATTPCMap(scriptdir.Data());
+  HDFParserTask->SetAtTPCMap(scriptdir.Data());
   HDFParserTask->SetFileName(inputFile.Data());
   HDFParserTask->SetOldFormat(false);
   HDFParserTask->SetNumberTimestamps(2);
@@ -66,11 +68,13 @@ void unpackDaqTesting(int runNumber)
 
   
   //Create PSA task
-  ATPSATask *psaTask = new ATPSATask();
+  AtPSASimple2 *psa = new AtPSASimple2();
+  psa -> SetThreshold(0);
+  psa -> SetThresholdLow(0);
+  psa -> SetMaxFinder();
+  
+  AtPSAtask *psaTask = new AtPSAtask(psa);
   psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(0);
-  psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
-  psaTask -> SetMaxFinder();
 
   //ATRansacTask *RansacTask = new ATRansacTask();
   //RansacTask -> SetPersistence(kTRUE);

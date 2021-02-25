@@ -62,6 +62,8 @@ InitStatus AtPSAtask::Init()
 
    ioMan->Register("AtEventH", "AtTPC", fEventHArray, fIsPersistence);
 
+   fPSA->Init();
+
    return kSUCCESS;
 }
 

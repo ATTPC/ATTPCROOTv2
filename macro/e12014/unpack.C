@@ -41,6 +41,8 @@ void unpack(int runNumber)
   //Set the parameter file
   FairRuntimeDb* rtdb = run->GetRuntimeDb();
   FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo();
+
+  std::cout << "Setting par file: " << digiParFile << std::endl;
   parIo1 -> open(digiParFile.Data(), "in");
   rtdb -> setSecondInput(parIo1);
 

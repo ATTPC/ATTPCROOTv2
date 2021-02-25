@@ -128,7 +128,7 @@ TString AtTriggerPar::GetFile(Int_t fileNum)
 {
    std::ifstream fileList;
    TString sysFile = gSystem->Getenv("VMCWORKDIR");
-   TString parFile = sysFile + "/parameters/At.files.par";
+   TString parFile = sysFile + "/parameters/AT.files.par";
    fileList.open(parFile.Data());
 
    if (!fileList) {

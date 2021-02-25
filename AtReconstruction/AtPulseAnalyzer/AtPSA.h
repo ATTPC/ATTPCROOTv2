@@ -22,6 +22,7 @@ public:
    AtPSA();
    virtual ~AtPSA();
 
+   void Init();
    //! Setting threshold
    void SetThreshold(Int_t threshold);
    void SetThresholdLow(Int_t thresholdlow);

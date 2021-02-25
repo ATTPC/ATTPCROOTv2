@@ -25,8 +25,8 @@ void run_eve(int runNum = 206, TString  OutputDataFile = "output.reco_display.ro
 
   FairRootManager* ioman = FairRootManager::Instance();
 
-  ATEventManager *eveMan = new ATEventManager();
-  ATEventDrawTask* eve = new ATEventDrawTask();
+  AtEventManager *eveMan = new AtEventManager();
+  AtEventDrawTask* eve = new AtEventDrawTask();
   eve->Set3DHitStyleBox();
   eve->SetMultiHit(100); //Set the maximum number of multihits in the visualization
   eve->SetSaveTextData();
