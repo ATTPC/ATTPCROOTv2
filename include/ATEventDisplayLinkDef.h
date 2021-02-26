@@ -4,12 +4,12 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class ATEventManager+;
-#pragma link C++ class ATEventManagerProto+;
-#pragma link C++ class ATEventDrawTask+;
-#pragma link C++ class ATEventDrawTaskProto+;
-#pragma link C++ class ATEventProtoDrawTask+;
-#pragma link C++ class ATEventManagerS800+;
-#pragma link C++ class ATEventDrawTaskS800+;
+#pragma link C++ class ATEventManager + ;
+#pragma link C++ class ATEventManagerProto + ;
+#pragma link C++ class ATEventDrawTask + ;
+#pragma link C++ class ATEventDrawTaskProto + ;
+#pragma link C++ class ATEventProtoDrawTask + ;
+#pragma link C++ class ATEventManagerS800 + ;
+#pragma link C++ class ATEventDrawTaskS800 + ;
 
 #endif

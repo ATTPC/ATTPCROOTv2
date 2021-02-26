@@ -4,39 +4,35 @@
 #include "TObject.h"
 #include "TVector3.h"
 
-
 #include <iostream>
 #include <map>
 
 class ATVertexPropagator;
 
+class ATVertexPropagator : public TObject {
 
-class ATVertexPropagator : public TObject
-{
+public:
+   ATVertexPropagator();
+   virtual ~ATVertexPropagator();
 
-  public:
+   Bool_t Test();
 
+   ClassDef(ATVertexPropagator, 1)
 
-    ATVertexPropagator();
-    virtual ~ATVertexPropagator();
-
-    Bool_t Test();
-
-    ClassDef(ATVertexPropagator,1)
-
-   Int_t fGlobalEvtCnt;
+      Int_t fGlobalEvtCnt;
    Int_t fBeamEvtCnt;
    Int_t fDecayEvtCnt;
 
-   void SetVertex(Double_t vx,Double_t vy,Double_t vz,Double_t invx,Double_t invy,Double_t invz,Double_t px,Double_t py, Double_t pz, Double_t E);
+   void SetVertex(Double_t vx, Double_t vy, Double_t vz, Double_t invx, Double_t invy, Double_t invz, Double_t px,
+                  Double_t py, Double_t pz, Double_t E);
    void SetBeamMass(Double_t m);
    void SetRecoilE(Double_t val);
    void SetRecoilA(Double_t val);
    void SetScatterE(Double_t val);
    void SetScatterA(Double_t val);
-   void SetBURes1E(Double_t val); //Recoil(Scatt) breaks up. Residual 1
+   void SetBURes1E(Double_t val); // Recoil(Scatt) breaks up. Residual 1
    void SetBURes1A(Double_t val);
-   void SetBURes2E(Double_t val); //Recoil(Scatt) breaks up. Residual 2
+   void SetBURes2E(Double_t val); // Recoil(Scatt) breaks up. Residual 2
    void SetBURes2A(Double_t val);
    void SetRndELoss(Double_t eloss);
    void SetBeamNomE(Double_t ener);
@@ -68,16 +64,15 @@ class ATVertexPropagator : public TObject
    Double_t GetRecoilA();
    Double_t GetScatterE();
    Double_t GetScatterA();
-   Double_t GetBURes1E(); //Recoil(Scatt) breaks up. Residual 1
+   Double_t GetBURes1E(); // Recoil(Scatt) breaks up. Residual 1
    Double_t GetBURes1A();
-   Double_t GetBURes2E(); //Recoil(Scatt) breaks up. Residual 2
+   Double_t GetBURes2E(); // Recoil(Scatt) breaks up. Residual 2
    Double_t GetBURes2A();
    Int_t GetMassNum();
    Int_t GetAtomicNum();
    TVector3 GetScatterP();
    Double_t GetScatterEx();
    TVector3 Getd2HeVtx();
-
 
    void IncGlobalEvtCnt();
    void IncBeamEvtCnt();
@@ -111,11 +106,10 @@ class ATVertexPropagator : public TObject
    Int_t fAiso;
    Int_t fZiso;
    TVector3 fScatP;
-   TVector3 fd2HeVtx; 
+   TVector3 fd2HeVtx;
    Double_t fExEjectile;
 };
 
 extern ATVertexPropagator *gATVP; // global
-
 
 #endif

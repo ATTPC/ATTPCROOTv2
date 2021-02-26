@@ -4,7 +4,7 @@
 void unpack(int runNumber)
 {
   //Load the library for unpacking and reconstruction
-  gSystem->Load("libATTPCReco.so");
+  gSystem->Load("libAtReconstruction.so");
   
   TStopwatch timer;
   timer.Start();
@@ -41,29 +41,53 @@ void unpack(int runNumber)
   //Set the parameter file
   FairRuntimeDb* rtdb = run->GetRuntimeDb();
   FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo();
+
+  std::cout << "Setting par file: " << digiParFile << std::endl;
   parIo1 -> open(digiParFile.Data(), "in");
   rtdb -> setSecondInput(parIo1);
 
   //Create the unpacker task
-  ATHDFParserTask* HDFParserTask = new ATHDFParserTask();
+  AtHDFParserTask* HDFParserTask = new AtHDFParserTask();
   HDFParserTask->SetPersistence(kTRUE);
-  HDFParserTask->SetATTPCMap(scriptdir.Data());
+  HDFParserTask->SetAtTPCMap(scriptdir.Data());
   HDFParserTask->SetFileName(inputFile.Data());
   HDFParserTask->SetOldFormat(false);
-  HDFParserTask->SetTimestampIndex(2);
+  HDFParserTask->SetNumberTimestamps(2);
   HDFParserTask->SetBaseLineSubtraction(kTRUE);
 
+/*
+  //cobo asad aget channel
   auto hash = HDFParserTask->CalculateHash(10,0,2,32);
-  HDFParserTask->SetAuxChannel(hash, "IonCb_32");
-  hash = HDFParserTask->CalculateHash(10,0,2,34);
-  HDFParserTask->SetAuxChannel(hash, "IonCb_34");
 
-  //Create PSA task
-  ATPSATask *psaTask = new ATPSATask();
+  //Add all eight aux channels to the file
+  for(int i = 0; i < 4; ++i)
+  {
+    hash = HDFParserTask->CalculateHash(10, 0, i, 0);
+    HDFParserTask->SetAuxChannel(hash, Form("aget%d_ch%d", i, 0));
+    hash = HDFParserTask->CalculateHash(10, 0, i, 34);
+    HDFParserTask->SetAuxChannel(hash, Form("aget%d_ch%d", i, 34));
+    }
+*/
+
+  //Add the aux channels from the experiment
+  auto hash = HDFParserTask->CalculateHash(10,0,0,0);
+  HDFParserTask->SetAuxChannel(hash, "MCP_US");
+  hash = HDFParserTask->CalculateHash(10,0,0,34);
+  HDFParserTask->SetAuxChannel(hash, "TPC_Mesh");
+  hash = HDFParserTask->CalculateHash(10,0,1,0);
+  HDFParserTask->SetAuxChannel(hash, "MCP_DS");
+  hash = HDFParserTask->CalculateHash(10,0,2,34);
+  HDFParserTask->SetAuxChannel(hash, "IC");
+
+
+  AtPSASimple2 *psa = new AtPSASimple2();
+  psa -> SetThreshold(0);
+  psa -> SetMaxFinder();
+
+
+//Create PSA task
+  AtPSAtask *psaTask = new AtPSAtask(psa);
   psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(0);
-  psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
-  psaTask -> SetMaxFinder();
 
   //ATRansacTask *RansacTask = new ATRansacTask();
   //RansacTask -> SetPersistence(kTRUE);
@@ -84,6 +108,8 @@ void unpack(int runNumber)
   auto numEvents = HDFParserTask->GetNumEvents()/2;
 
   //numEvents = 1700;//217;
+  numEvents = 10;
+  
   std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
   //return;

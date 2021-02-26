@@ -2,4 +2,3 @@
 #define FAIRROOT_VERSION 0.0.9
 #define FAIRROOT_GIT_DATE "Sun Jan 1 00:00:00 0"
 #endif
-

@@ -45,6 +45,7 @@ endforeach()
 # after check of cmake version since this is a new feature
 project(ATTPC)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 #In case you need Fortran
 #ENABLE_LANGUAGE(Fortran)
@@ -173,6 +174,7 @@ endif()
 
 Set(Boost_NO_SYSTEM_PATHS TRUE)
 Set(Boost_NO_BOOST_CMAKE TRUE)
+
 If(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
   set(BOOST_ROOT ${SIMPATH})
   set(GSL_DIR ${SIMPATH})
@@ -180,6 +182,8 @@ Else(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
   set(BOOST_ROOT ${SIMPATH}/basics/boost)
   set(GSL_DIR ${SIMPATH}/basics/gsl)
 EndIf(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
+
+
 Message("-- Looking for Boost ...")
 # If an older version of boost is found both of the variables below are
 # cached and in a second cmake run, a good boost version is found even
@@ -188,7 +192,9 @@ Message("-- Looking for Boost ...")
 # for boost.
 Unset(Boost_INCLUDE_DIR CACHE)
 Unset(Boost_LIBRARY_DIRS CACHE)
+
 find_package(Boost 1.41)
+
 If (Boost_FOUND)
   Set(Boost_Avail 1)
 Else (Boost_FOUND)
@@ -283,19 +289,19 @@ ENDIF(HAS_CXX11_SHAREDPOINTER)
 
 add_subdirectory (AtData)
 add_subdirectory (AtGenerators)
-add_subdirectory (tpc)
+add_subdirectory (AtTpc)
 add_subdirectory (AtSiArray)
-add_subdirectory (passive)
-add_subdirectory (field)
+add_subdirectory (AtPassive)
+add_subdirectory (AtField)
 add_subdirectory (AtMap)
-add_subdirectory (reco)
-add_subdirectory (par)
-add_subdirectory (digi)
-add_subdirectory (s800)
-add_subdirectory (apollo)
+add_subdirectory (AtReconstruction)
+add_subdirectory (AtParameter)
+add_subdirectory (AtDigitization)
+add_subdirectory (AtS800)
+add_subdirectory (AtApollo)
 
 if (PCL_FOUND)
-add_subdirectory (eventdisplayAT)
+add_subdirectory (AtEventDisplay)
 endif()
 
 WRITE_CONFIG_FILE(config.sh)

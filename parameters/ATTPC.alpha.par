@@ -2,10 +2,10 @@
 # Parameters used throughout ATTPCROOT software
 # Format:
 # parameter_name:parameter_type(Int_t-integer, Double_t-double) parameter_value
-# ATDigiPar
+# AtDigiPar
 # Description of parameters
 ################################################################################
-[ATDigiPar]
+[AtDigiPar]
 PadPlaneX:Int_t                864   # mm
 PadPlaneZ:Int_t               1344   # mm
 PadSizeX:Int_t                   8   # mm

@@ -1,6 +1,7 @@
 // Do NOT change. Changes will be lost next time file is generated
 
-#define R__DICTIONARY_FILENAME dIhomedIayyadlimdIfair_install_ROOT6dIATTPCROOTv2dImacrodIAnalysisdIStandAloneMCdIMCSrcdIG__MCSrcDict
+#define R__DICTIONARY_FILENAME \
+   dIhomedIayyadlimdIfair_install_ROOT6dIATTPCROOTv2dImacrodIAnalysisdIStandAloneMCdIMCSrcdIG__MCSrcDict
 
 /*******************************************************************/
 #include <stddef.h>
@@ -35,7 +36,9 @@
 #include "TDataMember.h"
 
 // Since CINT ignores the std namespace, we need to do so in this file.
-namespace std {} using namespace std;
+namespace std {
+}
+using namespace std;
 
 // Header files passed as explicit arguments
 #include "MCSrc.hh"
@@ -43,29 +46,28 @@ namespace std {} using namespace std;
 // Header files passed via #pragma extra_include
 
 namespace {
-  void TriggerDictionaryInitialization_G__MCSrcDict_Impl() {
-    static const char* headers[] = {
-0    };
-    static const char* includePaths[] = {
-"/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include/root",
-"/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include",
-"/home/ayyadlim/fair_install_ROOT6/FairRoot.v15.07.sp/include",
-"/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/include",
-"/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/macro/Analysis/StandAloneMC/MCSrc",
-"/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include/root",
-"/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include",
-"/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include/root",
-"/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/macro/Analysis/StandAloneMC/MCSrc/",
-0
-    };
-    static const char* fwdDeclCode = 
-R"DICTFWDDCLS(
+void TriggerDictionaryInitialization_G__MCSrcDict_Impl()
+{
+   static const char *headers[] = {0};
+   static const char *includePaths[] = {
+      "/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include/root",
+      "/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include",
+      "/home/ayyadlim/fair_install_ROOT6/FairRoot.v15.07.sp/include",
+      "/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/include",
+      "/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/macro/Analysis/StandAloneMC/MCSrc",
+      "/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include/root",
+      "/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include",
+      "/home/ayyadlim/fair_install_ROOT6/FairSoft.jul15.sp/include/root",
+      "/home/ayyadlim/fair_install_ROOT6/ATTPCROOTv2/macro/Analysis/StandAloneMC/MCSrc/",
+      0};
+   static const char *fwdDeclCode =
+      R"DICTFWDDCLS(
 #pragma clang diagnostic ignored "-Wkeyword-compat"
 #pragma clang diagnostic ignored "-Wignored-attributes"
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 extern int __Cling_Autoloading_Map;
 )DICTFWDDCLS";
-    static const char* payloadCode = R"DICTPAYLOAD(
+   static const char *payloadCode = R"DICTPAYLOAD(
 
 #ifndef G__VECTOR_HAS_CLASS_ITERATOR
   #define G__VECTOR_HAS_CLASS_ITERATOR 1
@@ -78,23 +80,20 @@ extern int __Cling_Autoloading_Map;
 
 #undef  _BACKWARD_BACKWARD_WARNING_H
 )DICTPAYLOAD";
-    static const char* classesHeaders[]={
-nullptr};
+   static const char *classesHeaders[] = {nullptr};
 
-    static bool isInitialized = false;
-    if (!isInitialized) {
-      TROOT::RegisterModule("G__MCSrcDict",
-        headers, includePaths, payloadCode, fwdDeclCode,
-        TriggerDictionaryInitialization_G__MCSrcDict_Impl, {}, classesHeaders);
+   static bool isInitialized = false;
+   if (!isInitialized) {
+      TROOT::RegisterModule("G__MCSrcDict", headers, includePaths, payloadCode, fwdDeclCode,
+                            TriggerDictionaryInitialization_G__MCSrcDict_Impl, {}, classesHeaders);
       isInitialized = true;
-    }
-  }
-  static struct DictInit {
-    DictInit() {
-      TriggerDictionaryInitialization_G__MCSrcDict_Impl();
-    }
-  } __TheDictionaryInitializer;
+   }
 }
-void TriggerDictionaryInitialization_G__MCSrcDict() {
-  TriggerDictionaryInitialization_G__MCSrcDict_Impl();
+static struct DictInit {
+   DictInit() { TriggerDictionaryInitialization_G__MCSrcDict_Impl(); }
+} __TheDictionaryInitializer;
+} // namespace
+void TriggerDictionaryInitialization_G__MCSrcDict()
+{
+   TriggerDictionaryInitialization_G__MCSrcDict_Impl();
 }
