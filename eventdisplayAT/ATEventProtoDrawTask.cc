@@ -27,8 +27,8 @@ ATEventProtoDrawTask::DrawPadPlane()
     return;
   }
 
-    fAtMapPtr->SetGeoFile("proto_geo_hires.root");
-    fPadPlane = fAtMapPtr->GetATTPCPlane("ATTPC_Proto");
+    dynamic_cast<AtTpcProtoMap*>(fAtMapPtr)->SetGeoFile("proto_geo_hires.root");
+    fPadPlane = dynamic_cast<AtTpcProtoMap*>(fAtMapPtr)->GetATTPCPlane("ATTPC_Proto");
     fCvsPadPlane -> cd();
     fPadPlane -> Draw("zcol");
     

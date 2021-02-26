@@ -114,9 +114,13 @@ std::pair<bool,std::string>  ATHDFParserTask::FindAuxChannel(uint32_t hash)
 
 bool ATHDFParserTask::SetATTPCMap(Char_t const *lookup){
 
-  if(kOpt==0) fAtMapPtr->GenerateATTPC();
+  if(kOpt==0)
+  { 
+   dynamic_cast<AtTpcMap*>(fAtMapPtr)->GenerateATTPC();
+  }
+
   Bool_t MapIn = fAtMapPtr->ParseXMLMap(lookup);
-  if(!MapIn) return false;
+   if(!MapIn) return false;
 
   std::cout<<cGREEN<<" Open lookup table "<<lookup<<cNORMAL<<"\n";
 
@@ -132,7 +136,7 @@ Bool_t ATHDFParserTask::SetProtoGeoFile(TString geofile){
 
    if(kOpt==1){
 
-  fIsProtoGeoSet = fAtMapPtr->SetGeoFile(geofile);
+  fIsProtoGeoSet = dynamic_cast<AtTpcProtoMap*>(fAtMapPtr)->SetGeoFile(geofile);
         return fIsProtoGeoSet;
 
    }else{
@@ -149,7 +153,7 @@ Bool_t ATHDFParserTask::SetProtoMapFile(TString mapfile){
   if(kOpt==1)
   {
 
-    fIsProtoMapSet = fAtMapPtr->SetProtoMap(mapfile);
+    fIsProtoMapSet = dynamic_cast<AtTpcProtoMap*>(fAtMapPtr)->SetProtoMap(mapfile);
     return fIsProtoMapSet;
 
   } else

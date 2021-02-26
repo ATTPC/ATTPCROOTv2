@@ -2,7 +2,7 @@ void run_eve_proto_lite(TString  InputDataFile = "output_proto.root",TString  Ou
 {
 
    TString dir = getenv("VMCWORKDIR");
-   TString protomapfile = "proto.map";
+   TString protomapfile = "proto20181201.map";
    TString protomapdir = dir + "/scripts/"+ protomapfile;
    TString geoFile = "ATTPC_Proto_v1.0_geomanager.root";
 

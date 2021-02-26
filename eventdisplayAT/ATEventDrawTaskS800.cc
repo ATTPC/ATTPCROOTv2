@@ -181,8 +181,8 @@ ATEventDrawTaskS800::Init()
     if(option=="Prototype"){
 
         fDetmap  =  new AtTpcProtoMap();
-        //TString fMap = "/Users/yassidayyad/fair_install/ATTPCROOT_v2_06042015/scripts/proto.map"; //TODO Put it as input of the run macro
-        fDetmap->SetProtoMap(fMap.Data());
+        dynamic_cast<AtTpcProtoMap*>(fDetmap)->SetProtoMap(fMap.Data());
+
     }else{
         fDetmap  =  new AtTpcMap();
     }
@@ -1401,9 +1401,8 @@ ATEventDrawTaskS800::DrawPadPlane()
         return;
     }
 
-    fAtMapPtr->GenerateATTPC();
-    // fAtMapPtr->SetGUIMode();// This method does not need to be called since it generates the Canvas we do not want
-    fPadPlane = fAtMapPtr->GetATTPCPlane();
+    dynamic_cast<AtTpcMap*>(fAtMapPtr)->GenerateATTPC();
+    fPadPlane = dynamic_cast<AtTpcMap*>(fAtMapPtr)->GetATTPCPlane();
     fCvsPadPlane -> cd();
     //fPadPlane -> Draw("COLZ L0"); //0  == bin lines adre not drawn
     fPadPlane -> Draw("COL L0");
@@ -2037,12 +2036,12 @@ ATEventDrawTaskS800::SelectPad(const char *rawevt)
         std::cout<<" Bin number selected : "<<bin<<" Bin name :"<<bin_name<<std::endl;
         Bool_t IsValid = kFALSE;
 
-        AtTpcMap *tmap = NULL;
+        AtMap *tmap = NULL;
         tmap = (AtTpcMap*)gROOT->GetListOfSpecials()->FindObject("fMap");
         //new AtTpcProtoMap();
         //TString map = "/Users/yassidayyad/fair_install/ATTPCROOT_v2_06042015/scripts/proto.map";
         //tmap->SetProtoMap(map.Data());
-        Int_t tPadNum =tmap->BinToPad(bin);
+        Int_t tPadNum =dynamic_cast<AtTpcMap*>(tmap)->BinToPad(bin);
         std::cout<<" Bin : "<<bin<<" to Pad : "<<tPadNum<<std::endl;
         ATPad *tPad = tRawEvent->GetPad(tPadNum,IsValid);
         std::cout<<" Event ID (Select Pad) : "<<tRawEvent->GetEventID()<<std::endl;

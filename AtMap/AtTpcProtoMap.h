@@ -16,18 +16,20 @@
 #include <map>
 
 
-class AtTpcProtoMap : public AtTpcMap 
+class AtTpcProtoMap : public AtMap 
 {
    public:
 	AtTpcProtoMap();
 	~AtTpcProtoMap();
 
-	void Initialize();
         void GenerateATTPC();
+        void Dump();
+        std::vector<Float_t> CalcPadCenter(Int_t PadRef);
+
         TH2Poly* GetATTPCPlane();
         TH2Poly* GetATTPCPlane(TString TH2Poly_name);
-        Bool_t SetGeoFile(TString geofile);
-        std::vector<Float_t> CalcPadCenter(Int_t PadRef);
+
+        Bool_t SetGeoFile(TString geofile);       
         Bool_t SetProtoMap(TString file);
         Int_t BinToPad(Int_t binval);
 
@@ -41,7 +43,7 @@ class AtTpcProtoMap : public AtTpcMap
 
 
         std::ifstream *InProtoMap;
-	    std::map<Int_t,std::vector<Float_t>> ProtoGeoMap;
+	std::map<Int_t,std::vector<Float_t>> ProtoGeoMap;
         std::map<Int_t,Int_t> ProtoBinMap;        
 
 

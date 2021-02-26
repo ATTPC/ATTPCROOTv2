@@ -5,6 +5,7 @@
 #include "FairLogger.h"
 
 #include "ATHDFParser.hh"
+#include "AtMap.h"
 #include "AtTpcMap.h"
 #include "AtTpcProtoMap.h"
 #include "ATPedestal.hh"
@@ -86,7 +87,7 @@ private:
   Bool_t fIsOldFormat; 
 
   char const *fMap;
-  AtTpcMap *fAtMapPtr;
+  AtMap *fAtMapPtr;
 
   typedef boost::multi_array<double,3> multiarray;
   typedef multiarray::index index;

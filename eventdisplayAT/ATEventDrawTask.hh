@@ -42,7 +42,9 @@
 #include "ATLmedsMod.hh"
 #include "ATTrackFinderHC.hh"
 #include "ATHit.hh"
+#include "AtTpcProtoMap.h"
 #include "AtTpcMap.h"
+#include "AtMap.h"
 #include "ATProtoQuadrant.hh"
 #include <fstream>
 
@@ -101,7 +103,7 @@ class ATEventDrawTask : public FairTask
     virtual void DrawMC();
     virtual void DrawAux();
 
-    AtTpcMap *fAtMapPtr;
+    AtMap *fAtMapPtr;
     void UpdateCvsPadPlane();
     void UpdateCvsPadWave();
     void UpdateCvsPadAll();
@@ -158,7 +160,7 @@ class ATEventDrawTask : public FairTask
     ATEventManager* fEventManager;
     ATRawEvent* fRawevent;
 
-    AtTpcMap *fDetmap;
+    AtMap *fDetmap;
 
     Int_t fThreshold;
     Option_t* fGeoOption; //Chose Geometry of the detector: ATTPC (Default)-  Prototype

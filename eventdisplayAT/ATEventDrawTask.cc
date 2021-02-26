@@ -19,8 +19,6 @@
 #include "TRandom.h"
 #include "TColor.h"
 
-#include "AtTpcMap.h"
-#include "AtTpcProtoMap.h"
 #include "TH2Poly.h"
 #include "TF1.h"
 
@@ -174,8 +172,8 @@ ATEventDrawTask::Init()
     if(option=="Prototype"){
 
         fDetmap  =  new AtTpcProtoMap();
-        //TString fMap = "/Users/yassidayyad/fair_install/ATTPCROOT_v2_06042015/scripts/proto.map"; //TODO Put it as input of the run macro
-        fDetmap->SetProtoMap(fMap.Data());
+        dynamic_cast<AtTpcProtoMap*>(fDetmap)->SetProtoMap(fMap.Data());
+
     }else{
         fDetmap  =  new AtTpcMap();
     }
@@ -183,7 +181,7 @@ ATEventDrawTask::Init()
     fDetmap->SetName("fMap");
     gROOT->GetListOfSpecials()->Add(fDetmap);
 
-    fHitArray = (TClonesArray*) ioMan->GetObject("ATEventH"); // TODO: Why this confusing name? It should be fEventArray
+    fHitArray = (TClonesArray*) ioMan->GetObject("ATEventH"); //
     if(fHitArray) LOG(INFO)<<cGREEN<<"Hit Array Found."<<cNORMAL<<FairLogger::endl;
 
 
@@ -1890,12 +1888,12 @@ ATEventDrawTask::SelectPad(const char *rawevt)
         std::cout<<" Bin number selected : "<<bin<<" Bin name :"<<bin_name<<std::endl;
         Bool_t IsValid = kFALSE;
 
-        AtTpcMap *tmap = NULL;
-        tmap = (AtTpcMap*)gROOT->GetListOfSpecials()->FindObject("fMap");
+        AtMap *tmap = NULL;
+        tmap = (AtMap*)gROOT->GetListOfSpecials()->FindObject("fMap");
         //new AtTpcProtoMap();
         //TString map = "/Users/yassidayyad/fair_install/ATTPCROOT_v2_06042015/scripts/proto.map";
         //tmap->SetProtoMap(map.Data());
-        Int_t tPadNum =tmap->BinToPad(bin);
+        Int_t tPadNum =dynamic_cast<AtTpcMap*>(tmap)->BinToPad(bin);
         std::cout<<" Bin : "<<bin<<" to Pad : "<<tPadNum<<std::endl;
         ATPad *tPad = tRawEvent->GetPad(tPadNum,IsValid);
         std::cout<<" Event ID (Select Pad) : "<<tRawEvent->GetEventID()<<std::endl;

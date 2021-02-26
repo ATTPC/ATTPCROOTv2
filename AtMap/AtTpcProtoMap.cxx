@@ -21,7 +21,12 @@ ClassImp(AtTpcProtoMap)
 AtTpcProtoMap::AtTpcProtoMap()
 {
 
-Initialize();
+  kIsFileSet= kFALSE;
+  kIsGenerated = kFALSE;
+  kIsProtoMapSet = kFALSE;
+  hProto = new TH2Poly();
+  hProto->SetName("ATTPC_Proto");
+  hProto->SetTitle("ATTPC_Proto");
 
 }
 
@@ -30,17 +35,7 @@ AtTpcProtoMap::~AtTpcProtoMap()
 
 }
 
-void AtTpcProtoMap::Initialize()
-{
-  kIsFileSet= kFALSE;
-  kIsGenerated = kFALSE;
-  kIsProtoMapSet = kFALSE;
-  hProto = new TH2Poly();
-  hProto->SetName("ATTPC_Proto");
-  hProto->SetTitle("ATTPC_Proto");
 
-
-}
 
 Bool_t AtTpcProtoMap::SetGeoFile(TString geofile){
 
@@ -221,4 +216,10 @@ Int_t AtTpcProtoMap::BinToPad(Int_t binval){
              }else return padval;
 
 
+}
+
+void AtTpcProtoMap::Dump()
+{
+
+  
 }

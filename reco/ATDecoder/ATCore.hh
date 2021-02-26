@@ -17,6 +17,7 @@
 #include "TString.h"
 #include "GETDecoder.hh"
 #include "GETFrame.hh"
+#include "AtMap.h"
 #include "AtTpcMap.h"
 #include "AtTpcProtoMap.h"
 #include "ATPad.hh"
@@ -48,7 +49,7 @@ class ATCore : public TObject  {
      
     
 
-     AtTpcMap *fAtMapPtr;
+     AtMap *fAtMapPtr;
 
      #ifndef __CINT__
      typedef boost::multi_array<double,3> multiarray;

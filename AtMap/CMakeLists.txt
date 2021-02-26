@@ -31,9 +31,10 @@ link_directories( ${LINK_DIRECTORIES})
 
 set(SRCS
 #Put here your sourcefiles
+AtMap.cxx
 AtTpcMap.cxx
 AtTpcProtoMap.cxx
-
+AtGadgetIIMap.cxx
 )
 
 Set(LINKDEF AtTpcMapLinkDef.h)

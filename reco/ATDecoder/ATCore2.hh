@@ -12,11 +12,10 @@
 #include "TClonesArray.h"
 
 #include "ATRawEvent.hh"
+#include "AtMap.h"
 #include "AtTpcMap.h"
 #include "AtTpcProtoMap.h"
 #include "ATPedestal.hh"
-//#include "STGainCalibration.hh"
-//#include "STPlot.hh"
 
 #include "GETDecoder2.hh"
 
@@ -77,7 +76,7 @@ class ATCore2 : public TObject {
     void SetAuxChannel(std::vector<Int_t> AuxCh);
     void SetNumCobo(Int_t numCobo);
 
-    AtTpcMap *fAtMapPtr;
+    AtMap *fAtMapPtr;
 
     #ifndef __CINT__
     typedef boost::multi_array<double,3> multiarray;

@@ -31,6 +31,7 @@
 #include "ATHoughSpaceCircle.hh"
 #include "ATHoughSpace.hh"
 #include "ATHit.hh"
+#include "AtMap.h"
 #include "AtTpcMap.h"
 #include "ATProtoQuadrant.hh"
 #include "ATPatternEvent.hh"
@@ -156,7 +157,7 @@ class ATEventDrawTaskProto : public FairTask
 
     ATEventManagerProto*  fEventManager;
     ATHit*                fIniHit;
-    AtTpcMap*             fDetmap;
+    AtMap*                fDetmap;
     ATRawEvent*           fRawevent;
     ATHoughSpaceLine*     fHoughSpaceLine;
 
