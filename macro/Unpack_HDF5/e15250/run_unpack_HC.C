@@ -114,7 +114,7 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_021
 
   run -> Init();
 
-  run->Run(0,100);
+  run->Run(0,1000);
   //run -> RunOnTBData();
 
 

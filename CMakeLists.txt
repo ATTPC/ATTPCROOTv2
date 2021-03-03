@@ -294,9 +294,9 @@ add_subdirectory (digi)
 add_subdirectory (s800)
 add_subdirectory (apollo)
 
-#if (PCL_FOUND)
+if (PCL_FOUND)
 add_subdirectory (eventdisplayAT)
-#endif()
+endif()
 
 WRITE_CONFIG_FILE(config.sh)
 

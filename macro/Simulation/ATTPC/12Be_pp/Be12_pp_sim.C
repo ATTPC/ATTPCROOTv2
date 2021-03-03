@@ -76,7 +76,7 @@ void Be12_pp_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 	          Double_t px = 0.000/a;  // X-Momentum / per nucleon!!!!!!
 	          Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
 	          Double_t pz = 2.016/a;  // Z-Momentum / per nucleon!!!!!!
-  	          Double_t BExcEner = 0.0;
+  	          Double_t BExcEner = 2.251;// 
                   Double_t Bmass = 12.026922; //Mass in amu
                   Double_t NomEnergy = 9.0; 
                   
@@ -141,7 +141,7 @@ void Be12_pp_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
           	  Pyp.push_back(0.0);
           	  Pzp.push_back(0.0);
           	  Mass.push_back(12.026922);
-          	  ExE.push_back(0.0);
+          	  ExE.push_back(2.251);
 
 
                   // ---- Recoil -----
