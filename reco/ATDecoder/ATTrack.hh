@@ -12,6 +12,7 @@
 
 //ATTPCROOT
 #include "ATHit.hh"
+#include "ATHitCluster.hh"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
@@ -26,6 +27,7 @@ class ATTrack : public TObject {
     ~ATTrack();
 
     void AddHit(ATHit* hit);
+    void AddClusterHit(std::shared_ptr<ATHitCluster> hitCluster);
     void SetTrackID(Int_t val);
     void SetFitPar(std::vector<Double_t> par);
     void SetMinimum(Double_t min); // Minimizer result
@@ -48,6 +50,7 @@ class ATTrack : public TObject {
     void SetGeoRadius(Double_t radius);
 
     std::vector<ATHit>*          GetHitArray();
+    std::vector<ATHitCluster>*   GetHitClusterArray();
     std::vector<Double_t>        GetFitPar();
     Double_t                     GetMinimum();
     Int_t                        GetNFree();
@@ -129,6 +132,7 @@ class ATTrack : public TObject {
 
   protected:
     std::vector<ATHit>           fHitArray;
+    std::vector<ATHitCluster>    fHitClusterArray;          ///< Clusterized hits container
     Int_t                        fTrackID;
     std::vector<Double_t>        fParFit;
     Double_t                     fMinimum; //Minimizer result

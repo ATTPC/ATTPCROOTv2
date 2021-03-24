@@ -149,12 +149,12 @@ void ATPulseTask::Exec(Option_t* option) {
 
   Int_t nMCPoints = fDriftedElectronArray->GetEntries();
   std::cout<<" ATPulseTask: Number of Points "<<nMCPoints<<std::endl;
-  if(nMCPoints<10){
+  /*if(nMCPoints<10){
     LOG(INFO) << "Not enough hits for digitization! (<10)" << FairLogger::endl;
     fRawEvent->SetEventID(fEventID);
     ++fEventID;
     return;
-  }
+  }*/
 
   
 

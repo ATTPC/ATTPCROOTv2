@@ -27,6 +27,7 @@
 #pragma link C++ class ATPad+;
 #pragma link C++ class ATRawEvent+;
 #pragma link C++ class ATHit+;
+#pragma link C++ class ATHitCluster+;
 #pragma link C++ struct ATHit::MCSimPoint+;
 #pragma link C++ class ATEvent+;
 #pragma link C++ class ATProtoEvent+;
@@ -62,12 +63,13 @@
 #pragma link C++ class ATMlesacMod+;
 #pragma link C++ class ATLmedsMod+;
 
+
 #pragma link C++ class ATPATTERN::ATTrackFinderHC+;
 #pragma link C++ class ATPATTERN::ATPRA+;
 #pragma link C++ namespace ATPATTERN;
 //#pragma link C++ class ATRansac+;
 
-
+#pragma link C++ class genfit::ATSpacepointMeasurement+;
 #pragma link C++ class ATFITTER::ATFitter+;
 #pragma link C++ class ATFITTER::ATGenfit+;
 #pragma link C++ namespace ATFITTER;
@@ -114,6 +116,7 @@
 #pragma link C++ struct ATHoughSpaceCircle::FitPar+;
 #pragma link C++ struct ATTrack::FitPar+;
 #pragma link C++ class ATHDFParserTask+;
+#pragma link C++ class ATFitterTask+;
 //#pragma link C++ function ATHoughSpaceLine::CalcGenHoughSpace<ATEvent*>(GenHough event);
 
 

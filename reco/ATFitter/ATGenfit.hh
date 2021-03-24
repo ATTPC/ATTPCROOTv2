@@ -3,8 +3,12 @@
 
 #include "ATFitter.hh"
 
+#include "ATHit.hh"
+#include "ATHitCluster.hh"
+#include "ATSpacePointMeasurement.hh"
+
 // GENFIT2 classes
-/*#include "AbsKalmanFitter.h"
+#include "AbsKalmanFitter.h"
 #include "KalmanFitterRefTrack.h"
 #include "DAF.h"
 #include "ConstField.h"
@@ -13,7 +17,7 @@
 #include "TGeoMaterialInterface.h"
 #include "MeasurementFactory.h"
 #include "MeasurementProducer.h"
-#include "EventDisplay.h"*/
+#include "EventDisplay.h"
 
 //#include "GFRaveVertexFactory.h"
 
@@ -33,9 +37,22 @@ class ATGenfit : public ATFitter
       ~ATGenfit();
 
       bool FitTracks(ATPatternEvent &patternEvent);
+      void Init();
+      void SetMinIterations(Int_t value);
+      void SetMaxIterations(Int_t value);
 
   private:
 
+      genfit::AbsKalmanFitter *fKalmanFitter;
+      TClonesArray *fGenfitTrackArray;
+      TClonesArray *fHitClusterArray;
+      Int_t fTPCDetID;
+      Int_t fCurrentDirection;
+
+      genfit::MeasurementProducer<ATHitCluster, genfit::ATSpacepointMeasurement> *fMeasurementProducer;
+      genfit::MeasurementFactory<genfit::AbsMeasurement> *fMeasurementFactory;
+
+      std::vector<Int_t> *fPDGCandidateArray;
 
   ClassDef(ATGenfit, 1);
 

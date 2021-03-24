@@ -3,6 +3,7 @@
 
 #include "ATDigiPar.hh"
 #include "ATTrack.hh"
+#include "ATHitCluster.hh"
 #include "ATEvent.hh"
 #include "ATPatternEvent.hh"
 #include "ATRansac.hh"
@@ -27,12 +28,15 @@ namespace ATPATTERN{
             virtual bool FindTracks(ATEvent &event, ATPatternEvent *patternEvent) = 0;
 
             void SetTrackInitialParameters(ATTrack& track);
+           
 
           protected:
-            FairLogger *fLogger;      ///< logger pointer
-            ATDigiPar *fPar;          ///< parameter container
+            FairLogger 			*fLogger;             ///< logger pointer
+            ATDigiPar 			*fPar;                ///< parameter container
+            
 
             void SetTrackCurvature(ATTrack& track);
+            void Clusterize(ATTrack& track);
             
 
             ClassDef(ATPRA, 1)

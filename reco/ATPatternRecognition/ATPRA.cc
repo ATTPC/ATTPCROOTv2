@@ -20,7 +20,7 @@ void ATPATTERN::ATPRA::SetTrackCurvature(ATTrack& track)
         std::vector<double> radius_vec;
         std::vector<ATHit>* hitArray = track.GetHitArray();
         int nstep = 0.60*hitArray->size(); //20% of the hits to calculate the radius of curvature with less fluctuations
-        ATHit iHit;
+        
 
         for(Int_t iHit=0; iHit<(hitArray->size()-nstep); iHit++){
 
@@ -160,9 +160,75 @@ void ATPATTERN::ATPRA::SetTrackInitialParameters(ATTrack& track)
 
 }
 
+void ATPATTERN::ATPRA::Clusterize(ATTrack& track)
+{
+        std::cout<<" ================================================================= "<<"\n";
+        std::cout<<" Clusterizing track : "<<track.GetTrackID()<<"\n"; 
+        std::vector<ATHit>* hitArray = track.GetHitArray();
+        std::vector<ATHit> hitTBArray;
+        int clusterID = 0;
+
+        for(auto iHits=0;iHits<hitArray->size();++iHits)
+	  {
+	    TVector3 pos    = hitArray->at(iHits).GetPosition();
+            double Q = hitArray->at(iHits).GetCharge();
+            int TB          = hitArray->at(iHits).GetTimeStamp();
+	    std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<Q<<"\n";	
+
+	  }        
+               
+
+	  for(auto iTB=0;iTB<512;++iTB){
+
+		Double_t clusterQ = 0.0;
+                hitTBArray.clear();
+
+        	std::copy_if(hitArray->begin(), hitArray->end(), std::back_inserter(hitTBArray),[&iTB](ATHit& hit){return hit.GetTimeStamp()==iTB;} );
+
+		if(hitTBArray.size()>0)
+		{
+                  double x=0,y =0;
+		  std::shared_ptr<ATHitCluster> hitCluster = std::make_shared<ATHitCluster>();
+                  hitCluster->SetIsClustered();
+                  hitCluster->SetClusterID(clusterID);
+                  Double_t hitQ = 0.0;//std::accumulate(hitTBArray.begin(), hitTBArray.end(), 0.0,[&](double sum,ATHit& hit){ return sum+hit.GetCharge();});
+                  std::for_each(hitTBArray.begin(),hitTBArray.end(), [&x,&y,&hitQ](ATHit& hit){ TVector3 pos = hit.GetPosition();x+=pos.X()*hit.GetCharge();y+=pos.Y()*hit.GetCharge();hitQ+=hit.GetCharge();});
+                  x/=hitQ;
+                  y/=hitQ;
+                  hitCluster->SetCharge(hitQ);
+                  hitCluster->SetPosition(x,y,hitTBArray.at(0).GetPosition().Z());
+                  hitCluster->SetTimeStamp(hitTBArray.at(0).GetTimeStamp());
+                  ++clusterID;
+                  track.AddClusterHit(hitCluster);
+		  
+                  
+		}
+   
+          }
+
+          //Sanity check
+          std::vector<ATHitCluster>* hitClusterArray = track.GetHitClusterArray();
+          std::cout<<" Clusterized hits : "<<hitClusterArray->size()<<"\n";
+          for(auto iClusterHits=0;iClusterHits<hitClusterArray->size();++iClusterHits)
+	  {
+	    TVector3 pos    = hitClusterArray->at(iClusterHits).GetPosition();
+            double clusterQ = hitClusterArray->at(iClusterHits).GetCharge();
+            int TB          = hitClusterArray->at(iClusterHits).GetTimeStamp();
+	    std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<clusterQ<<"\n";	
+
+	  }
+        
+
+}
+
 Double_t fitf(Double_t *x,Double_t *par)
 {
 
   return par[0]+par[1]*x[0];
 
 }
+
+
+
+
+

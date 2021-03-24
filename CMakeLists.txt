@@ -251,6 +251,7 @@ if(GENFIT2_FOUND)
 MESSAGE("${Green} GENFIT FOUND ${ColourReset}")
 MESSAGE("${Green} ${GENFIT2_INCLUDE_DIR} ${ColourReset}")
 MESSAGE("${Green} ${GENFIT2_LIBRARY_DIR} ${ColourReset}")
+MESSAGE("${Green} ${GENFIT2_LDFLAGS} ${ColourReset}")
 endif()
 
 if(VTK_FOUND)

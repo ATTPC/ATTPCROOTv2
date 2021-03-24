@@ -74,6 +74,7 @@ ATDecoder/ATCore2.cc
 ATDecoder/ATPad.cc
 ATDecoder/ATRawEvent.cc
 ATDecoder/ATHit.cc
+ATDecoder/ATHitCluster.cc
 ATDecoder/ATEvent.cc
 ATDecoder/ATProtoEvent.cc
 ATDecoder/ATProtoEventAna.cc
@@ -115,6 +116,7 @@ ATDecoderTask.cc
 ATDecoder2Task.cc
 ATHDFParserTask.cc
 ATPSATask.cc
+ATFitterTask.cc
 #ATPhiRecoTask.cc
 #ATVMEUnpackTask.cc
 
@@ -160,6 +162,7 @@ if(GENFIT2_FOUND)
 MESSAGE("${Green} libATTPCReco - Building GENFIT classes: ATFitter/Genfit ${ColourReset} ")
 set(SRCS ${SRCS}
 ATFitter/ATGenfit.cc
+ATFitter/ATSpacePointMeasurement.cc
 )
 endif()
 
@@ -186,7 +189,7 @@ Set(DEPENDENCIES
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
     ${PCL_LIBRARIES}
-    ${GENFIT2_LIBRARY_DIR}
+    ${GENFIT2_LIBRARY_DIR}/libgenfit2.so
 )
 
 

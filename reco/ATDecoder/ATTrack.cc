@@ -71,6 +71,7 @@ void ATTrack::SetGeoCenter(std::pair<Double_t,Double_t> center)     { fGeoCenter
 void ATTrack::SetGeoRadius(Double_t radius)                         { fGeoRadius = radius;}  
 
 std::vector<ATHit> *ATTrack::GetHitArray()                          { return &fHitArray;}
+std::vector<ATHitCluster> *ATTrack::GetHitClusterArray()            { return &fHitClusterArray;}
 std::vector<Double_t> ATTrack::GetFitPar()                          { return fParFit;}
 Double_t ATTrack::GetMinimum()                                      { return fMinimum;}
 Int_t ATTrack::GetNFree()                                           { return fNFree;}
@@ -102,6 +103,12 @@ std::vector<Double_t> ATTrack::GetPosXBack() const                  { return fPo
 std::vector<Double_t> ATTrack::GetPosYBack() const                  { return fPosYBack;}
 std::vector<Double_t> ATTrack::GetPosZBack() const                  { return fPosZBack;}
 
+
+
+void ATTrack::AddClusterHit(std::shared_ptr<ATHitCluster> hitCluster)
+{
+   fHitClusterArray.push_back(std::move(*hitCluster));
+}
 
 TVector3 ATTrack::GetLastPoint()
 { 

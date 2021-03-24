@@ -99,7 +99,7 @@ class ATHit : public TObject {
 
  
 
-  private:
+  protected:
    
     //!< Track ID having this hit
     Int_t fTrackID;
