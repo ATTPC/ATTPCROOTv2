@@ -12,7 +12,8 @@ struct auxchannel
   uint8_t channel;
 };
 
-void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_0214.h5",TString parameterFile = "ATTPC.e15250.par",TString mappath="")
+void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_0214.h5",
+                   TString parameterFile = "ATTPC.e15250_sim.par", TString mappath = "")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -32,7 +33,7 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_021
 
   //TString inputFile   = dataDir + name + ".digi.root";
   //TString outputFile  = dataDir + "output.root";
-  TString outputFile  = "/mnt/simulations/attpcroot/fair_install_2020/ATTPCROOTv2/macro/Unpack_HDF5/e15250/output.root";
+  TString outputFile = "output.root";
   //TString mcParFile   = dataDir + name + ".params.root";
   TString loggerFile  = dataDir + "ATTPCLog.log";
   TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -114,7 +115,7 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_021
 
   run -> Init();
 
-  run->Run(0,100);
+  run->Run(0, 1000);
   //run -> RunOnTBData();
 
 

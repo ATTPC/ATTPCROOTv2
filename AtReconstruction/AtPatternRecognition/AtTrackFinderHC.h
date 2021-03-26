@@ -81,7 +81,7 @@ struct Point {
    bool operator==(const Point &p) const { return (x == p.x && y == p.y && z == p.z); }
 };
 
-namespace AtPAtTERN {
+namespace AtPATTERN {
 
 class AtTrackFinderHC : public AtPRA {
 
@@ -106,6 +106,6 @@ private:
    ClassDef(AtTrackFinderHC, 1);
 };
 
-} // namespace AtPAtTERN
+} // namespace AtPATTERN
 
 #endif

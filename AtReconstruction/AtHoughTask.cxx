@@ -118,8 +118,8 @@ InitStatus AtHoughTask::Init()
    // Pointer to the Pad Plane map for digitization during the MC
    if (fIsEnableMap) {
       fAtMapPtr = new AtTpcMap();
-      fAtMapPtr->GenerateATTPC();
-      fPadPlane = fAtMapPtr->GetATTPCPlane();
+      fAtMapPtr->GenerateAtTpc();
+      fPadPlane = fAtMapPtr->GetAtTpcPlane();
       Bool_t MapIn = fAtMapPtr->ParseXMLMap(fMap);
       fLogger->Info(MESSAGE_ORIGIN, "AtTPC Map enabled");
       if (!MapIn)

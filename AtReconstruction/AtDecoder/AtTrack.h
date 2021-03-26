@@ -1,5 +1,5 @@
-#ifndef AtTRACK_H
-#define AtTRACK_H
+#ifndef ATTRACK_H
+#define ATTRACK_H
 
 #include "TROOT.h"
 #include "TObject.h"
@@ -12,6 +12,7 @@
 
 // AtTPCROOT
 #include "AtHit.h"
+#include "AtHitCluster.h"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
@@ -26,6 +27,7 @@ public:
    ~AtTrack();
 
    void AddHit(AtHit *hit);
+   void AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster);
    void SetTrackID(Int_t val);
    void SetFitPar(std::vector<Double_t> par);
    void SetMinimum(Double_t min); // Minimizer result
@@ -48,6 +50,7 @@ public:
    void SetGeoRadius(Double_t radius);
 
    std::vector<AtHit> *GetHitArray();
+   std::vector<AtHitCluster> *GetHitClusterArray();
    std::vector<Double_t> GetFitPar();
    Double_t GetMinimum();
    Int_t GetNFree();
@@ -129,6 +132,7 @@ public:
 
 protected:
    std::vector<AtHit> fHitArray;
+   std::vector<AtHitCluster> fHitClusterArray; ///< Clusterized hits container
    Int_t fTrackID;
    std::vector<Double_t> fParFit;
    Double_t fMinimum;                  // Minimizer result

@@ -1,8 +1,10 @@
-void rundigi_sim
-(TString mcFile = "./data/attpcsim.root",
- TString digiParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/ATTPC.e15250_sim.par",
- TString mapParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
- TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
+void rundigi_sim(
+   TString mcFile = "attpcsim.root",
+   TString digiParFile =
+      "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/ATTPC.e15250_sim.par",
+   TString mapParFile =
+      "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
+   TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
 {
   // -----   Timer   --------------------------------------------------------
  TStopwatch timer;
@@ -20,10 +22,9 @@ void rundigi_sim
   // __ Run ____________________________________________
   FairRunAna* fRun = new FairRunAna();
               fRun -> SetInputFile(mcFile);
-              fRun -> SetOutputFile("output_digi_10Be.root");
+              fRun->SetOutputFile("output_digi_10Be_aaHe6_test.root");
 
-
-  FairRuntimeDb* rtdb = fRun->GetRuntimeDb();
+              FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
               FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo();
               parIo1 -> open(digiParFile.Data(), "in");
               rtdb -> setFirstInput(parIo1);
@@ -50,6 +51,9 @@ void rundigi_sim
       psaTask -> SetBaseCorrection(kFALSE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
       psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
 
+      ATPRATask *praTask = new ATPRATask();
+      praTask->SetPersistence(kTRUE);
+
       /*ATTriggerTask *trigTask = new ATTriggerTask();
       trigTask  ->  SetAtMap(mapParFile);
       trigTask  ->  SetPersistence(kTRUE);*/   
@@ -57,14 +61,14 @@ void rundigi_sim
 
   fRun -> AddTask(clusterizer);
   fRun -> AddTask(pulse);
-  fRun -> AddTask(psaTask);
-  //fRun -> AddTask(trigTask);
-  //fRun -> AddTask(HoughTask);
+  // fRun -> AddTask(psaTask);
+  // fRun -> AddTask(praTask);
+  // fRun -> AddTask(trigTask);
 
   // __ Init and run ___________________________________
 
   fRun -> Init();
-  fRun -> Run(0,10000);
+  fRun->Run(0, 20);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

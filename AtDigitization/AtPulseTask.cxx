@@ -109,9 +109,9 @@ InitStatus AtPulseTask::Init()
    TString scriptdir = dir + "/scripts/" + scriptfile;
 
    fMap = new AtTpcMap();
-   fMap->GenerateATTPC();
+   fMap->GenerateAtTpc();
    Bool_t MapIn = fMap->ParseXMLMap(scriptdir);
-   fPadPlane = fMap->GetATTPCPlane();
+   fPadPlane = fMap->GetAtTpcPlane();
    if (fIsInhibitMap)
       fMap->ParseInhibitMap(fIniMap, fLowgMap, fXtalkMap);
 
@@ -155,12 +155,13 @@ void AtPulseTask::Exec(Option_t *option)
 
    Int_t nMCPoints = fDriftedElectronArray->GetEntries();
    std::cout << " AtPulseTask: Number of Points " << nMCPoints << std::endl;
-   if (nMCPoints < 10) {
+
+   /*if (nMCPoints < 10) {
       LOG(INFO) << "Not enough hits for digitization! (<10)" << FairLogger::endl;
       fRawEvent->SetEventID(fEventID);
       ++fEventID;
       return;
-   }
+      }*/
 
    fRawEventArray->Delete();
    fRawEvent = NULL;

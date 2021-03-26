@@ -140,7 +140,7 @@ InitStatus AtDecoderTask::Init()
    else
       fLogger->Info(MESSAGE_ORIGIN, "Positive polarity set");
 
-   Bool_t kMapIn = fDecoder->SetAtTPCMap(fMap);
+   Bool_t kMapIn = fDecoder->SetAtTpcMap(fMap);
    // std::cout<<kMapIn<<std::endl;
    if (!kMapIn) {
       fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtTPC Map!");

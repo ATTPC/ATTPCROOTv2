@@ -134,6 +134,10 @@ std::vector<AtHit> *AtTrack::GetHitArray()
 {
    return &fHitArray;
 }
+std::vector<AtHitCluster> *AtTrack::GetHitClusterArray()
+{
+   return &fHitClusterArray;
+}
 std::vector<Double_t> AtTrack::GetFitPar()
 {
    return fParFit;
@@ -246,6 +250,11 @@ std::vector<Double_t> AtTrack::GetPosYBack() const
 std::vector<Double_t> AtTrack::GetPosZBack() const
 {
    return fPosZBack;
+}
+
+void AtTrack::AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster)
+{
+   fHitClusterArray.push_back(std::move(*hitCluster));
 }
 
 TVector3 AtTrack::GetLastPoint()

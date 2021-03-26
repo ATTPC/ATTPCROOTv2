@@ -4,20 +4,20 @@
 #include "FairRuntimeDb.h"
 #include "FairRun.h"
 
-ClassImp(AtPAtTERN::AtTrackFinderHC)
+ClassImp(AtPATTERN::AtTrackFinderHC)
 
-   AtPAtTERN::AtTrackFinderHC::AtTrackFinderHC()
+   AtPATTERN::AtTrackFinderHC::AtTrackFinderHC()
 {
 }
 
-AtPAtTERN::AtTrackFinderHC::~AtTrackFinderHC() {}
+AtPATTERN::AtTrackFinderHC::~AtTrackFinderHC() {}
 
-std::vector<AtTrack> AtPAtTERN::AtTrackFinderHC::GetTrackCand()
+std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::GetTrackCand()
 {
    return fTrackCand;
 }
 
-bool AtPAtTERN::AtTrackFinderHC::FindTracks(AtEvent &event, AtPatternEvent *patternEvent)
+bool AtPATTERN::AtTrackFinderHC::FindTracks(AtEvent &event, AtPatternEvent *patternEvent)
 {
 
    int opt_verbose = 0;
@@ -86,7 +86,7 @@ bool AtPAtTERN::AtTrackFinderHC::FindTracks(AtEvent &event, AtPatternEvent *patt
    patternEvent->SetTrackCand(clustersToTrack(cloud_xyzti, cluster, event));
 }
 
-Cluster AtPAtTERN::AtTrackFinderHC::use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
+Cluster AtPATTERN::AtTrackFinderHC::use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
                                            std::vector<hc::triplet> triplets, float scale, float cdist,
                                            size_t cleanup_min_triplets, int opt_verbose = 0)
 {
@@ -103,7 +103,7 @@ Cluster AtPAtTERN::AtTrackFinderHC::use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr 
       return empty_cluster;
 }
 
-void AtPAtTERN::AtTrackFinderHC::eventToClusters(AtEvent &event, pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
+void AtPATTERN::AtTrackFinderHC::eventToClusters(AtEvent &event, pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
 {
    Int_t nHits = event.GetNumHits();
    cloud->points.resize(nHits);
@@ -121,7 +121,7 @@ void AtPAtTERN::AtTrackFinderHC::eventToClusters(AtEvent &event, pcl::PointCloud
    }
 }
 
-std::vector<AtTrack> AtPAtTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
+std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
                                                                  Cluster const cluster, AtEvent &event)
 {
    std::vector<AtTrack> tracks;
@@ -158,6 +158,7 @@ std::vector<AtTrack> AtPAtTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
 
       } // Indices loop
 
+      Clusterize(track);
       tracks.push_back(track);
 
    } // Clusters loop

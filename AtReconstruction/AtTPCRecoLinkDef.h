@@ -27,6 +27,7 @@
 #pragma link C++ class AtPad + ;
 #pragma link C++ class AtRawEvent + ;
 #pragma link C++ class AtHit + ;
+#pragma link C++ class AtHitCluster + ;
 #pragma link C++ struct AtHit::MCSimPoint + ;
 #pragma link C++ class AtEvent + ;
 #pragma link C++ class AtProtoEvent + ;
@@ -62,14 +63,17 @@
 #pragma link C++ class AtMlesacMod + ;
 #pragma link C++ class AtLmedsMod + ;
 
-#pragma link C++ class AtPAtTERN::AtTrackFinderHC + ;
-#pragma link C++ class AtPAtTERN::AtPRA + ;
-#pragma link C++ namespace AtPAtTERN;
+#pragma link C++ class AtPATTERN::AtTrackFinderHC + ;
+#pragma link C++ class AtPATTERN::AtPRA + ;
+#pragma link C++ namespace AtPATTERN;
 //#pragma link C++ class AtRansac+;
 
-#pragma link C++ class AtFITTER::AtFitter + ;
-#pragma link C++ class AtFITTER::AtGenfit + ;
-#pragma link C++ namespace AtFITTER;
+/* Classes that depend on Genfit2 */
+//#pragma link C++ class genfit::AtSpacepointMeasurement+ ;
+//#pragma link C++ class AtFITTER::AtFitter+ ;
+//#pragma link C++ class AtFITTER::AtGenfit+ ;
+//#pragma link C++ namespace AtFITTER;
+//#pragma link C++ class AtFitterTask+ ;
 
 //#ifdef BUILD_PCL
 //#pragma link C++ class AtHoughSpaceLine3D+;
@@ -110,6 +114,7 @@
 #pragma link C++ struct AtHoughSpaceCircle::FitPar + ;
 #pragma link C++ struct AtTrack::FitPar + ;
 #pragma link C++ class AtHDFParserTask + ;
+
 //#pragma link C++ function AtHoughSpaceLine::CalcGenHoughSpace<AtEvent*>(GenHough event);
 
 #endif
