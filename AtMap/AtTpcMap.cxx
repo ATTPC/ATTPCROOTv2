@@ -223,34 +223,31 @@ TH2Poly *AtTpcMap::GetAtTpcPlane()
    return hPlane;
 }
 
-std::vector<Float_t> AtTpcMap::CalcPadCenter(Int_t PadRef){
+std::vector<Float_t> AtTpcMap::CalcPadCenter(Int_t PadRef)
+{
 
-    std::vector<Float_t> PadCenter={-9999,-9999};
-    PadCenter.reserve(2);
+   std::vector<Float_t> PadCenter = {-9999, -9999};
+   PadCenter.reserve(2);
 
+   if (!fPadInd || !kIsParsed) {
 
-    if(!fPadInd || !kIsParsed){
+      std::cout << " AtTpcMap::CalcPadCenter Error : Pad plane has not been generated or parsed " << std::endl;
+      return PadCenter;
+   }
 
-	std::cout<<" AtTpcMap::CalcPadCenter Error : Pad plane has not been generated or parsed "<<std::endl;
-	return PadCenter;
+   if (PadRef != -1) { // Boost multi_array crashes with a negative index
 
-    }
+      Float_t x = (AtPadCoord[PadRef][0][0] + AtPadCoord[PadRef][1][0] + AtPadCoord[PadRef][2][0]) / 3.;
+      PadCenter[0] = x;
+      Float_t y = (AtPadCoord[PadRef][0][1] + AtPadCoord[PadRef][1][1] + AtPadCoord[PadRef][2][1]) / 3.;
+      PadCenter[1] = y;
+      return PadCenter;
 
-    if(PadRef!=-1){ //Boost multi_array crashes with a negative index
+   } else {
 
-
-	Float_t x = (AtPadCoord[PadRef][0][0] + AtPadCoord[PadRef][1][0] + AtPadCoord[PadRef][2][0])/3.;
-	PadCenter[0]=x;
-	Float_t y = (AtPadCoord[PadRef][0][1] + AtPadCoord[PadRef][1][1] + AtPadCoord[PadRef][2][1])/3.;
-	PadCenter[1]=y;
-	return PadCenter;
-
-    }else{
-
-	if(kDebug) std::cout<<" AtTpcMap::CalcPadCenter Error : Pad not found"<<std::endl;
-	return PadCenter;
-
-    }
-
+      if (kDebug)
+         std::cout << " AtTpcMap::CalcPadCenter Error : Pad not found" << std::endl;
+      return PadCenter;
+   }
 }
 ClassImp(AtTpcMap)

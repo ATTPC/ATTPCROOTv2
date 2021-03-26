@@ -41,9 +41,8 @@ public:
    virtual void Dump() override;
    virtual void GenerateAtTpc() override;
    virtual std::vector<Float_t> CalcPadCenter(Int_t PadRef) override;
-    virtual TH2Poly *GetAtTpcPlane() override;
-    virtual Int_t BinToPad(Int_t binval) override { return binval - 1; };
-
+   virtual TH2Poly *GetAtTpcPlane() override;
+   virtual Int_t BinToPad(Int_t binval) override { return binval - 1; };
 
    Int_t fill_coord(int pindex, float padxoff, float padyoff, float triside, float fort);
 
