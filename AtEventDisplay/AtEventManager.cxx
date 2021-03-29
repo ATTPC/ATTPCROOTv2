@@ -58,8 +58,8 @@ AtEventManager::AtEventManager()
    : TEveEventManager("AtEventManager", ""), fRootManager(FairRootManager::Instance()), fRunAna(FairRunAna::Instance()),
      fEntry(0), fEvent(0), fCurrentEvent(0), f3DThresDisplay(0), fCvsPadPlane(0), fPadWave(0), fPadAll(0),
      fCvsQEvent(0), fCvsHough(0), fCvsRad(0), drawallpad(0), eraseQevent(0), drawHoughSpace(0), saveASCIIevent(0),
-     toggleCorr(0), kDrawAllOn(0), kDrawAllOff(0), kEraseQ(0), kDrawHoughOn(0), kDraw3DGeo(0), kDraw3DHist(0),
-     kToggleData(0), k3DThreshold(0)
+     toggleCorr(0), kDrawAllOn(0), kEraseQ(0), kDrawHoughOn(0), kDraw3DGeo(0), kDraw3DHist(0), kToggleData(0),
+     k3DThreshold(0)
 
 {
    fInstance = this;

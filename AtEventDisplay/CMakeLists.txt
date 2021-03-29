@@ -37,7 +37,6 @@ AtEventManager.cxx
 AtEventManagerProto.cxx
 AtEventDrawTask.cxx
 AtEventDrawTaskProto.cxx
-AtEventProtoDrawTask.cxx
 AtEventManagerS800.cxx
 AtEventDrawTaskS800.cxx
 
