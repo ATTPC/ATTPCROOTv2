@@ -29,7 +29,7 @@ public:
 
    Bool_t SetGeoFile(TString geofile);
    Bool_t SetProtoMap(TString file);
-   Int_t BinToPad(Int_t binval);
+   virtual Int_t BinToPad(Int_t binval) override;
 
    TFile *f;
    TH2Poly *hProto;
@@ -43,7 +43,7 @@ public:
    std::map<Int_t, std::vector<Float_t>> ProtoGeoMap;
    std::map<Int_t, Int_t> ProtoBinMap;
 
-   ClassDef(AtTpcProtoMap, 1);
+   ClassDefOverride(AtTpcProtoMap, 1);
 };
 
 #endif

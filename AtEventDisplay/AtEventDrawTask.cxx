@@ -1696,12 +1696,15 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
       Int_t tPadNum = dynamic_cast<AtTpcMap *>(tmap)->BinToPad(bin);
       std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
       AtPad *tPad = tRawEvent->GetPad(tPadNum, IsValid);
+
+      //Check to make sure pad is valid
+      if (!tPad)
+	  return;
+      
       std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
       std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << " Is Valid? : " << IsValid << std::endl;
       std::cout << std::endl;
-      // TH1D* tPadWaveSub = NULL;
-      // tPadWaveSub = new TH1D("tPadWaveSub","tPadWaveSub",512.0,0.0,511.0);
-      // tPadWaveSub->SetLineColor(kRed);
+
       TH1I *tPadWave = NULL;
       tPadWave = (TH1I *)gROOT->GetListOfSpecials()->FindObject("fPadWave");
       Int_t *rawadc = tPad->GetRawADC();

@@ -18,14 +18,14 @@ public:
    AtGadgetIIMap();
    ~AtGadgetIIMap();
 
-   void Dump();                                         // pure virtual member
-   void GenerateAtTPC();                                // pure virtual member
-   std::vector<Float_t> CalcPadCenter(Int_t PadRef);    // pure virtual member
-   Int_t BinToPad(Int_t binval) { return binval - 1; }; // pure virtual member
+   void Dump() override;                                         // pure virtual member
+   void GenerateAtTpc() override;                                // pure virtual member
+   std::vector<Float_t> CalcPadCenter(Int_t PadRef) override;    // pure virtual member
+   Int_t BinToPad(Int_t binval) override { return binval - 1; }; // pure virtual member
 
-   TH2Poly *GetAtTPCPlane(); // virtual member
+   TH2Poly *GetAtTpcPlane() override; // virtual member
 
-   ClassDef(AtGadgetIIMap, 1);
+   ClassDefOverride(AtGadgetIIMap, 1);
 };
 
 #endif

@@ -63,7 +63,7 @@ public:
        out<<" EN Module status :"<<p.stat<<endl;
        }*/
 
-   ClassDef(AtTpcMap, 1);
+   ClassDefOverride(AtTpcMap, 1);
 };
 
 #endif

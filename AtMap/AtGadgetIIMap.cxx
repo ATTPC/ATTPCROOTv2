@@ -26,7 +26,7 @@ AtGadgetIIMap::~AtGadgetIIMap() {}
 
 void AtGadgetIIMap::Dump() {}
 
-void AtGadgetIIMap::GenerateAtTPC()
+void AtGadgetIIMap::GenerateAtTpc()
 {
    Float_t pad_size = 2.0;      // mm
    Float_t pad_spacing = 0.001; // mm
@@ -67,7 +67,7 @@ void AtGadgetIIMap::GenerateAtTPC()
 
 std::vector<Float_t> AtGadgetIIMap::CalcPadCenter(Int_t PadRef) {}
 
-TH2Poly *AtGadgetIIMap::GetAtTPCPlane()
+TH2Poly *AtGadgetIIMap::GetAtTpcPlane()
 {
 
    if (fPadInd == 0) {

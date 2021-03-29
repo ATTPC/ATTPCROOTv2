@@ -74,7 +74,7 @@ public:
    std::vector<int> PadKey;
 
 private:
-   ClassDef(AtMap, 1);
+   ClassDefOverride(AtMap, 1);
 };
 
 #endif
