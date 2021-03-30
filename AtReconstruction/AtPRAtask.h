@@ -1,5 +1,5 @@
-#ifndef AtPRAtASK_H
-#define AtPRAtASK_H
+#ifndef AtPRATASK_H
+#define AtPRATASK_H
 
 #include <vector>
 
@@ -38,7 +38,7 @@ private:
    FairLogger *fLogger;
    AtDigiPar *fPar;
 
-   AtPAtTERN::AtPRA *fPRA;
+   AtPATTERN::AtPRA *fPRA;
 
    Int_t fPRAlgorithm;
    Int_t fMinNumHits;

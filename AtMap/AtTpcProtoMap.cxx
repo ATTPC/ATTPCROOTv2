@@ -21,13 +21,6 @@ ClassImp(AtTpcProtoMap)
    AtTpcProtoMap::AtTpcProtoMap()
 {
 
-   Initialize();
-}
-
-AtTpcProtoMap::~AtTpcProtoMap() {}
-
-void AtTpcProtoMap::Initialize()
-{
    kIsFileSet = kFALSE;
    kIsGenerated = kFALSE;
    kIsProtoMapSet = kFALSE;
@@ -35,6 +28,8 @@ void AtTpcProtoMap::Initialize()
    hProto->SetName("ATTPC_Proto");
    hProto->SetTitle("ATTPC_Proto");
 }
+
+AtTpcProtoMap::~AtTpcProtoMap() {}
 
 Bool_t AtTpcProtoMap::SetGeoFile(TString geofile)
 {
@@ -44,27 +39,27 @@ Bool_t AtTpcProtoMap::SetGeoFile(TString geofile)
    f = new TFile(geodir.Data());
 
    if (f->IsZombie()) {
-      std::cout << cRED << " ATTPC Proto Map : No geometry file found! Check VMCWORKDIR variable. Exiting... "
+      std::cout << cRED << " AtTPC Proto Map : No geometry file found! Check VMCWORKDIR variable. Exiting... "
                 << cNORMAL << std::endl; // TODO Not working!!!
       delete f;
       return kFALSE;
    }
-   std::cout << cGREEN << " ATTPC Proto Map : Prototype geometry found in : " << geodir.Data() << cNORMAL << std::endl;
+   std::cout << cGREEN << " AtTPC Proto Map : Prototype geometry found in : " << geodir.Data() << cNORMAL << std::endl;
    kIsFileSet = kTRUE;
    return kTRUE;
 }
 
-void AtTpcProtoMap::GenerateATTPC()
+void AtTpcProtoMap::GenerateAtTpc()
 {
 
    if (f->IsZombie()) {
       std::cout
-         << " ATTPC Proto Map : No geometry file found! Please set the geometry file first via SetGeoFile method "
+         << " AtTPC Proto Map : No geometry file found! Please set the geometry file first via SetGeoFile method "
          << std::endl;
       return;
    }
 
-   std::cout << " ATTPC Proto Map : Generating the map geometry of the ATTPC Prototype " << std::endl;
+   std::cout << " AtTPC Proto Map : Generating the map geometry of the AtTPC Prototype " << std::endl;
    TMultiGraph *mg;
    TKey *key;
    TIter nextkey(gDirectory->GetListOfKeys());
@@ -80,26 +75,26 @@ void AtTpcProtoMap::GenerateATTPC()
    kIsGenerated = kTRUE;
 }
 
-TH2Poly *AtTpcProtoMap::GetATTPCPlane()
+TH2Poly *AtTpcProtoMap::GetAtTpcPlane()
 {
-   // This method must be called after GenerateATTPC()
+   // This method must be called after GenerateAtTPC()
 
    if (!kIsFileSet) {
       std::cout
-         << " ATTPC Proto Map : No geometry file found! Please set the geometry file first via the SetGeoFile method "
+         << " AtTPC Proto Map : No geometry file found! Please set the geometry file first via the SetGeoFile method "
          << std::endl;
       return NULL;
    }
 
    if (!kIsGenerated) {
       std::cout
-         << "  ATTPC Proto Map : Pad plane has not been generated. Please generate it via the GenerateATTPC method "
+         << "  AtTPC Proto Map : Pad plane has not been generated. Please generate it via the GenerateAtTPC method "
          << std::endl;
       return NULL;
    }
 
    if (kGUIMode) {
-      cATTPCPlane = new TCanvas("cATTPCPlane", "cATTPCPlane", 1000, 1000);
+      cAtTPCPlane = new TCanvas("cAtTPCPlane", "cAtTPCPlane", 1000, 1000);
       gStyle->SetPalette(1);
       hProto->Draw("Lcol");
    }
@@ -107,17 +102,17 @@ TH2Poly *AtTpcProtoMap::GetATTPCPlane()
    return hProto;
 }
 
-TH2Poly *AtTpcProtoMap::GetATTPCPlane(TString TH2Poly_name)
+TH2Poly *AtTpcProtoMap::GetAtTpcPlane(TString TH2Poly_name)
 {
    // This is a stand alone method
    if (f->IsZombie()) {
       std::cout
-         << " ATTPC Proto Map : No geometry file found! Please set the geometry file first via SetGeoFile method "
+         << " AtTPC Proto Map : No geometry file found! Please set the geometry file first via SetGeoFile method "
          << std::endl;
       return NULL;
    }
    hProto = (TH2Poly *)f->Get(TH2Poly_name.Data());
-   // cATTPCPlane = new TCanvas("cATTPCPlane","cATTPCPlane",1000,1000);
+   // cAtTPCPlane = new TCanvas("cAtTPCPlane","cAtTPCPlane",1000,1000);
    // gStyle->SetPalette(1);
    // hProto->Draw("Lcol");
    return hProto;
@@ -130,7 +125,7 @@ std::vector<Float_t> AtTpcProtoMap::CalcPadCenter(Int_t PadRef)
    PadCenter.reserve(2);
 
    if (!kIsProtoMapSet) {
-      std::cout << " ATTPC Proto Map : No map file for prototype found! Please set the geometry file first via the "
+      std::cout << " AtTPC Proto Map : No map file for prototype found! Please set the geometry file first via the "
                    "SetProtoMap method "
                 << std::endl;
       return PadCenter;
@@ -138,7 +133,7 @@ std::vector<Float_t> AtTpcProtoMap::CalcPadCenter(Int_t PadRef)
 
    if (f->IsZombie()) {
       std::cout
-         << " ATTPC Proto Map : No geometry file found! Please set the geometry file first via the SetGeoFile method "
+         << " AtTPC Proto Map : No geometry file found! Please set the geometry file first via the SetGeoFile method "
          << std::endl;
       return PadCenter;
    }
@@ -227,3 +222,5 @@ Int_t AtTpcProtoMap::BinToPad(Int_t binval)
    } else
       return padval;
 }
+
+void AtTpcProtoMap::Dump() {}

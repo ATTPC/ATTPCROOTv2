@@ -117,7 +117,7 @@ InitStatus AtDecoderTask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      LOG(ERROR) << "Cannot find RootManager!";
 
       return kERROR;
    }
@@ -136,14 +136,14 @@ InitStatus AtDecoderTask::Init()
       fDecoder->SetDebugMode(fDebug);
 
    if (!fIsPositive)
-      fLogger->Info(MESSAGE_ORIGIN, "Negative polarity set");
+      LOG(INFO) << "Negative polarity set";
    else
-      fLogger->Info(MESSAGE_ORIGIN, "Positive polarity set");
+      LOG(INFO) << "Positive polarity set";
 
-   Bool_t kMapIn = fDecoder->SetAtTPCMap(fMap);
+   Bool_t kMapIn = fDecoder->SetAtTpcMap(fMap);
    // std::cout<<kMapIn<<std::endl;
    if (!kMapIn) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtTPC Map!");
+      LOG(ERROR) << "Cannot find AT-TPC Map!";
 
       return kERROR;
    }
@@ -205,11 +205,11 @@ InitStatus AtDecoderTask::Init()
    }
 
    if (fGetRawEventMode == 0)
-      fLogger->Info(MESSAGE_ORIGIN, "Using Normal GetRawEventMode");
+      LOG(INFO) << "Using Normal GetRawEventMode";
    else if (fGetRawEventMode == 1)
-      fLogger->Info(MESSAGE_ORIGIN, "Using Fast GetRawEventMode");
+      LOG(INFO) << "Using Fast GetRawEventMode";
    else {
-      fLogger->Error(MESSAGE_ORIGIN, "GetRawEvent Mode NOT Set!");
+      LOG(ERROR) << "GetRawEvent Mode NOT Set!";
       return kERROR;
    }
 
@@ -220,15 +220,15 @@ void AtDecoderTask::SetParContainers()
 {
    FairRun *run = FairRun::Instance();
    if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+      LOG(FATAL) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+      LOG(FATAL) << "No runtime database!";
 
    fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
    if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "Cannot find AtDigiPar!");
+      LOG(FATAL) << "Cannot find AtDigiPar!";
 }
 
 void AtDecoderTask::Exec(Option_t *opt)
@@ -245,7 +245,7 @@ void AtDecoderTask::Exec(Option_t *opt)
       if (rawEvent != NULL)
          new ((*fRawEventArray)[0]) AtRawEvent(rawEvent);
       else {
-         fLogger->Info(MESSAGE_ORIGIN, "End of file. Terminating FairRun.");
+         LOG(INFO) << "End of file. Terminating FairRun.";
          FairRootManager::Instance()->SetFinishRun();
       }
 
@@ -256,7 +256,7 @@ void AtDecoderTask::Exec(Option_t *opt)
       if (rawEvent != NULL)
          new ((*fRawEventArray)[0]) AtRawEvent(rawEvent);
       else {
-         fLogger->Info(MESSAGE_ORIGIN, "End of file. Terminating FairRun.");
+         LOG(INFO) << "End of file. Terminating FairRun.";
          FairRootManager::Instance()->SetFinishRun();
       }
    }

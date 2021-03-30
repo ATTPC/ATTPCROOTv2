@@ -26,12 +26,16 @@ Find_Library(GENFIT2_LIBRARY NAMES genfit2
              NO_DEFAULT_PATH
             )
 
+Message(STATUS "Genfit2 ${GENFIT2_LIBRARY}")
+
 If(GENFIT2_LIBRARY)
 
   MESSAGE(STATUS "Looking for GENFIT2... - found ${GENFIT}/lib")
 
   Set(GENFIT2_LIBRARY_DIR ${GENFIT}/lib)
   Set(GENFIT2_LDFLAGS "-L${GENFIT}/lib -lgenfit2")
+
+  #MESSAGE(STATUS ${GENFIT2_LDFLAGS})
 
   Set(GENFIT2_INCLUDE_DIR ${GENFIT}/include)
 

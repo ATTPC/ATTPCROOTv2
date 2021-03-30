@@ -42,6 +42,7 @@
 #include "AtTrackFinderHC.h"
 #include "AtHit.h"
 #include "AtTpcMap.h"
+#include "AtMap.h"
 #include "AtProtoQuadrant.h"
 #include <fstream>
 
@@ -107,7 +108,7 @@ protected:
    virtual void DrawPID2();
    // virtual void DrawTEST();
 
-   AtTpcMap *fAtMapPtr;
+   AtMap *fAtMapPtr;
    void UpdateCvsPadPlane();
    void UpdateCvsPadWave();
    void UpdateCvsPadAll();
@@ -161,14 +162,14 @@ protected:
    AtMlesacMod *fMlesacMod;
    AtLmedsMod *fLmedsMod;
    AtTrackingEventAna *fTrackingEventAna;
-   AtPAtTERN::AtTrackFinderHC *fTrackFinderHC;
+   AtPATTERN::AtTrackFinderHC *fTrackFinderHC;
 
    S800Calc *fS800Calc;
 
    AtEventManagerS800 *fEventManager;
    AtRawEvent *fRawevent;
 
-   AtTpcMap *fDetmap;
+   AtMap *fDetmap;
 
    Int_t fThreshold;
    Option_t *fGeoOption; // Chose Geometry of the detector: AtTPC (Default)-  Prototype

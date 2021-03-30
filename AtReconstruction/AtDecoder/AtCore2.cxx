@@ -11,11 +11,6 @@
 
 #include "AtCore2.h"
 
-#include "AtTpcMap.h"
-#include "AtTpcProtoMap.h"
-#include "AtPedestal.h"
-#include "AtRawEvent.h"
-
 #include "GETCoboFrame.h"
 #include "GETLayeredFrame.h"
 
@@ -185,16 +180,18 @@ void AtCore2::SetFPNPedestal(Double_t sigmaThreshold)
    std::cout << "== [AtCore] Using FPN pedestal is set!" << std::endl;
 }
 
-Bool_t AtCore2::SetAtTPCMap(Char_t const *lookup)
+Bool_t AtCore2::SetAtTpcMap(Char_t const *lookup)
 {
 
-   if (kOpt == 0)
-      fAtMapPtr->GenerateATTPC(); // NOTE: In the case of the AtTPC Map we need to generate the coordinates to calculate
-                                  // the Pad Center
+   if (kOpt == 0) {
+      dynamic_cast<AtTpcMap *>(fAtMapPtr)->GenerateAtTpc();
+      // NOTE: In the case of the AtTPC Map we need to generate
+      // the coordinates to calculate the Pad Center
+   }
+
    Bool_t MapIn = fAtMapPtr->ParseXMLMap(lookup);
    if (!MapIn)
       return false;
-
    Bool_t kIsIniParsed = fAtMapPtr->ParseInhibitMap(fIniMap, fLowgMap, fXtalkMap);
 
    // AtPadCoordArr = fAtMapPtr->GetPadCoordArr();//TODO Use a pointer to a simpler container
@@ -209,7 +206,7 @@ Bool_t AtCore2::SetProtoGeoFile(TString geofile)
 
    if (kOpt == 1) {
 
-      fIsProtoGeoSet = fAtMapPtr->SetGeoFile(geofile);
+      fIsProtoGeoSet = dynamic_cast<AtTpcProtoMap *>(fAtMapPtr)->SetGeoFile(geofile);
       return fIsProtoGeoSet;
 
    } else {
@@ -224,7 +221,7 @@ Bool_t AtCore2::SetProtoMapFile(TString mapfile)
 
    if (kOpt == 1) {
 
-      fIsProtoMapSet = fAtMapPtr->SetProtoMap(mapfile);
+      fIsProtoMapSet = dynamic_cast<AtTpcProtoMap *>(fAtMapPtr)->SetProtoMap(mapfile);
       return fIsProtoMapSet;
 
    } else {

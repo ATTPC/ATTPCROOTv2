@@ -62,7 +62,7 @@ InitStatus AtPRAtask::Init()
    if (fPRAlgorithm == 0) {
       fLogger->Info(MESSAGE_ORIGIN, "Using Track Finder Hierarchical Clustering algorithm");
 
-      fPRA = new AtPAtTERN::AtTrackFinderHC();
+      fPRA = new AtPATTERN::AtTrackFinderHC();
 
    } else if (fPRAlgorithm == 1) {
       fLogger->Info(MESSAGE_ORIGIN, "Using RANSAC algorithm");

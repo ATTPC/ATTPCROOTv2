@@ -6,8 +6,8 @@
  *								                                     *
  *********************************************************************/
 
-#ifndef AtCORE_H
-#define AtCORE_H
+#ifndef ATCORE_H
+#define ATCORE_H
 
 #ifndef __CINT__ // Boost
 #include <boost/multi_array.hpp>
@@ -17,6 +17,7 @@
 #include "TString.h"
 #include "GETDecoder.h"
 #include "GETFrame.h"
+#include "AtMap.h"
 #include "AtTpcMap.h"
 #include "AtTpcProtoMap.h"
 #include "AtPad.h"
@@ -34,7 +35,7 @@ public:
    void Initialize();
    Bool_t AddData(TString filename);
    Bool_t SetData(Int_t value);
-   Bool_t SetAtTPCMap(Char_t const *lookup);
+   Bool_t SetAtTpcMap(Char_t const *lookup);
    Bool_t SetProtoGeoFile(TString geofile); // Only for Prototype Map
    Bool_t SetProtoMapFile(TString mapfile); // Only for Prototype Map
    void SetPositivePolarity(Bool_t value = kTRUE);
@@ -45,7 +46,7 @@ public:
    void SetInternalPedestal(Int_t startTb = 10, Int_t averageTbs = 20);
    void SetFPNPedestal(Double_t sigmaThreshold = 5);
 
-   AtTpcMap *fAtMapPtr;
+   AtMap *fAtMapPtr;
 
 #ifndef __CINT__
    typedef boost::multi_array<double, 3> multiarray;

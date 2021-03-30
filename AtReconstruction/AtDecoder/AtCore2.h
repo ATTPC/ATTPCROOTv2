@@ -4,19 +4,18 @@
 //  Adapted for AtTPCROOT by Y. Ayyad (ayyadlim@nscl.msu.edu)
 // =================================================
 
-#ifndef _AtCORE2_H_
-#define _AtCORE2_H_
+#ifndef _ATCORE2_H_
+#define _ATCORE2_H_
 
 #include "TObject.h"
 #include "TString.h"
 #include "TClonesArray.h"
 
 #include "AtRawEvent.h"
+#include "AtMap.h"
 #include "AtTpcMap.h"
 #include "AtTpcProtoMap.h"
 #include "AtPedestal.h"
-//#include "STGainCalibration.h"
-//#include "STPlot.h"
 
 #include "GETDecoder2.h"
 
@@ -43,7 +42,7 @@ public:
    TString GetDataName(Int_t index, Int_t coboIdx = 0);
    void SetNumTbs(Int_t value);
    void SetFPNPedestal(Double_t sigmaThreshold = 5);
-   Bool_t SetAtTPCMap(Char_t const *lookup);
+   Bool_t SetAtTpcMap(Char_t const *lookup);
    Bool_t SetProtoGeoFile(TString geofile); // Only for Prototype Map
    Bool_t SetProtoMapFile(TString mapfile); // Only for Prototype Map
    Bool_t SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap);
@@ -77,7 +76,7 @@ public:
    void SetAuxChannel(std::vector<Int_t> AuxCh);
    void SetNumCobo(Int_t numCobo);
 
-   AtTpcMap *fAtMapPtr;
+   AtMap *fAtMapPtr;
 
 #ifndef __CINT__
    typedef boost::multi_array<double, 3> multiarray;

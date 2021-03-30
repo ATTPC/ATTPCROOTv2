@@ -52,7 +52,7 @@ Set(DEPENDENCIES
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
     ${PCL_LIBRARIES}
-    ${GENFIT2_LIBRARY_DIR}
+
 )
 
 set(LINK_DIRECTORIES
@@ -98,6 +98,7 @@ AtDecoder/AtCore2.cxx
 AtDecoder/AtPad.cxx
 AtDecoder/AtRawEvent.cxx
 AtDecoder/AtHit.cxx
+AtDecoder/AtHitCluster.cxx
 AtDecoder/AtEvent.cxx
 AtDecoder/AtProtoEvent.cxx
 AtDecoder/AtProtoEventAna.cxx
@@ -116,7 +117,7 @@ AtPulseAnalyzer/AtPSAProtoFull.cxx
 AtPulseAnalyzer/AtPSAFull.cxx
 AtPulseAnalyzer/AtCalibration.cxx
 
-AtFitter/AtFitter.cxx
+
 
 #HierarchicalClustering/AtCubicSplineFit.cxx
 #HierarchicalClustering/AtFindVertex.cxx
@@ -139,6 +140,7 @@ AtDecoderTask.cxx
 AtDecoder2Task.cxx
 AtHDFParserTask.cxx
 AtPSAtask.cxx
+
 #AtPhiRecoTask.cxx
 #AtVMEUnpackTask.cxx
 
@@ -183,8 +185,14 @@ endif()
 if(GENFIT2_FOUND)
 MESSAGE("${Green} libAtTPCReco - Building GENFIT classes: AtFitter/Genfit ${ColourReset} ")
 set(SRCS ${SRCS}
-AtFitter/AtGenfit.cxx
-)
+  AtFitter/AtFitter.cxx
+  AtFitter/AtGenfit.cxx
+  AtFitter/AtSpacePointMeasurement.cxx
+  AtFitterTask.cxx
+  )
+set(DEPENDENCIES ${DEPENDENCIES}
+  ${GENFIT2_LIBRARY_DIR}/libgenfit2.so
+  )
 endif()
 
 GENERATE_LIBRARY()

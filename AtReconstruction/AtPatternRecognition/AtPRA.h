@@ -3,6 +3,7 @@
 
 #include "AtDigiPar.h"
 #include "AtTrack.h"
+#include "AtHitCluster.h"
 #include "AtEvent.h"
 #include "AtPatternEvent.h"
 #include "AtRansac.h"
@@ -14,7 +15,7 @@
 // ROOT
 #include "TVirtualFitter.h"
 
-namespace AtPAtTERN {
+namespace AtPATTERN {
 
 class AtPRA : public TObject {
 
@@ -30,11 +31,12 @@ protected:
    AtDigiPar *fPar;     ///< parameter container
 
    void SetTrackCurvature(AtTrack &track);
+   void Clusterize(AtTrack &track);
 
    ClassDef(AtPRA, 1)
 };
 
-} // namespace AtPAtTERN
+} // namespace AtPATTERN
 
 Double_t fitf(Double_t *x, Double_t *par);
 

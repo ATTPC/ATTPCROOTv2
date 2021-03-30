@@ -30,7 +30,7 @@
 #include "AtHoughSpaceCircle.h"
 #include "AtHoughSpace.h"
 #include "AtHit.h"
-#include "AtTpcMap.h"
+#include "AtTpcProtoMap.h"
 #include "AtProtoQuadrant.h"
 #include "AtPatternEvent.h"
 #include <fstream>
@@ -150,7 +150,7 @@ protected:
 
    AtEventManagerProto *fEventManager;
    AtHit *fIniHit;
-   AtTpcMap *fDetmap;
+   AtTpcProtoMap *fDetmap;
    AtRawEvent *fRawevent;
    AtHoughSpaceLine *fHoughSpaceLine;
 

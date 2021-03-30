@@ -4,24 +4,45 @@
  *         Adapted for AtTPCROOT by Yassid Ayyad (NSCL)
  */
 
-#include "FairRootManager.h"
-
 #include "AtEventDrawTask.h"
 
-#include "TEveManager.h"
-#include "TEveGeoShape.h"
-#include "TEveTrans.h"
-#include "TGeoSphere.h"
-#include "TEveTrans.h"
-#include "TPaletteAxis.h"
-#include "TStyle.h"
-#include "TRandom.h"
-#include "TColor.h"
-
+#include "AtEvent.h"
+#include "AtEventManager.h"
+#include "AtHit.h"
+#include "AtHoughSpace.h"
+#include "AtHoughSpaceCircle.h"
+#include "AtHoughSpaceLine.h"
+#include "AtLmedsMod.h"
+#include "AtMlesacMod.h"
+#include "AtPatternEvent.h"
+#include "AtRansac.h"
+#include "AtRansacMod.h"
+#include "AtRawEvent.h"
 #include "AtTpcMap.h"
-#include "AtTpcProtoMap.h"
-#include "TH2Poly.h"
+#include "AtTrackFinderHC.h"
+#include "AtTrackingEventAna.h"
+
+#include "FairLogger.h"
+#include "FairRootManager.h"
+
+#include "TClonesArray.h"
+#include "TColor.h"
+#include "TEveBoxSet.h"
+#include "TEveGeoShape.h"
+#include "TEveLine.h"
+#include "TEveManager.h"
+#include "TEvePointSet.h"
+#include "TEveTrans.h"
 #include "TF1.h"
+#include "TGeoSphere.h"
+#include "TH1.h"
+#include "TH2.h"
+#include "TH2Poly.h"
+#include "TH3.h"
+#include "TPaletteAxis.h"
+#include "TRandom.h"
+#include "TStyle.h"
+#include "TVector3.h"
 
 #ifndef __CINT__ // Boost
 #include <boost/multi_array.hpp>
@@ -44,7 +65,7 @@ AtEventDrawTask::AtEventDrawTask()
      // fHitClusterArray(0),
      // fRiemannTrackArray(0),
      // fKalmanArray(0),
-     fEventManager(0), fRawevent(0), fHoughSpaceArray(0), fProtoEventArray(0), fDetmap(0), fThreshold(0), fHitSet(0),
+     fEventManager(0), fRawevent(0), fHoughSpaceArray(0), fDetmap(0), fThreshold(0), fHitSet(0),
      // x(0),
      // hitSphereArray(0),
      fhitBoxSet(0), fPadPlanePal(0), fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium),
@@ -64,18 +85,12 @@ AtEventDrawTask::AtEventDrawTask()
      fRANSACAlg(0)
 {
 
-   // fAtMapPtr = new AtTpcMap();
-
-   fGeoOption = "AtTPC";
-
    Char_t padhistname[256];
    fMultiHit = 10;
 
-   for (Int_t i = 0; i < 300; i++) { // TODO: Full-scale must be accomodated
+   for (Int_t i = 0; i < fNumPads; i++) { // TODO: Full-scale must be accomodated
       sprintf(padhistname, "pad_%d", i);
       fPadAll[i] = new TH1I(padhistname, padhistname, 512, 0, 511);
-
-      // fPadAll[i] = NULL;
    }
 
    Char_t phihistname[256];
@@ -124,65 +139,54 @@ AtEventDrawTask::~AtEventDrawTask()
 InitStatus AtEventDrawTask::Init()
 {
 
-   TString option = fGeoOption;
    std::cout << " =====  AtEventDrawTask::Init =====" << std::endl;
-   std::cout << " =====  Current detector : " << option.Data() << std::endl;
+   std::cout << " =====  Current detector : AT-TPC ====" << std::endl;
    gROOT->Reset();
    FairRootManager *ioMan = FairRootManager::Instance();
    fEventManager = AtEventManager::Instance();
 
-   if (option == "Prototype") {
-
-      fDetmap = new AtTpcProtoMap();
-      // TString fMap = "/Users/yassidayyad/fair_install/AtTPCROOT_v2_06042015/scripts/proto.map"; //TODO Put it as
-      // input of the run macro
-      fDetmap->SetProtoMap(fMap.Data());
-   } else {
-      fDetmap = new AtTpcMap();
-   }
-
+   fDetmap = new AtTpcMap();
    fDetmap->SetName("fMap");
    gROOT->GetListOfSpecials()->Add(fDetmap);
 
    fHitArray = (TClonesArray *)ioMan->GetObject("AtEventH"); // TODO: Why this confusing name? It should be fEventArray
    if (fHitArray)
-      LOG(INFO) << cGREEN << "Hit Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Hit Array Found." << cNORMAL << std::endl;
 
    fRawEventArray = (TClonesArray *)ioMan->GetObject("AtRawEvent");
    if (fRawEventArray) {
-      LOG(INFO) << cGREEN << "Raw Event Array  Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Raw Event Array  Found." << cNORMAL << std::endl;
       fIsRawData = kTRUE;
    }
 
    fHoughSpaceArray = (TClonesArray *)ioMan->GetObject("AtHough");
    if (fHoughSpaceArray)
-      LOG(INFO) << cGREEN << "Hough Array Found." << cNORMAL << FairLogger::endl;
-
-   fProtoEventArray = (TClonesArray *)ioMan->GetObject("AtProtoEvent");
-   if (fProtoEventArray)
-      LOG(INFO) << cGREEN << "Prototype Event Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Hough Array Found." << cNORMAL << std::endl;
 
    fRansacArray = (TClonesArray *)ioMan->GetObject("AtRansac");
    if (fRansacArray)
-      LOG(INFO) << cGREEN << "RANSAC Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "RANSAC Array Found." << cNORMAL << std::endl;
 
    // fTrackFinderHCArray = (TClonesArray*) ioMan->GetObject("AtTrackFinderHC");
    // if(fTrackFinderHCArray)  LOG(INFO)<<cGREEN<<"Track Finder Hierarchical Clustering Array
-   // Found."<<cNORMAL<<FairLogger::endl;
+   // Found."<<cNORMAL<<std::endl;
 
    fPatternEventArray = (TClonesArray *)ioMan->GetObject("AtPatternEvent");
    if (fPatternEventArray)
-      LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL << std::endl;
 
    fTrackingEventAnaArray = (TClonesArray *)ioMan->GetObject("AtTrackingEventAna");
    if (fTrackingEventAnaArray)
-      LOG(INFO) << cGREEN << "Tracking Event Analysis Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Tracking Event Analysis Array Found." << cNORMAL << std::endl;
 
    // gROOT->GetListOfSpecials()->Add(fRawEventArray);
    // fRawEventArray->SetName("AtRawEvent");
 
    gStyle->SetPalette(55);
    // fPhiDistr=NULL;
+
+   // Get all of the pads from the display manager
+
    fCvsPadWave = fEventManager->GetCvsPadWave();
    fCvsPadWave->SetName("fCvsPadWave");
    gROOT->GetListOfSpecials()->Add(fCvsPadWave);
@@ -255,12 +259,13 @@ void AtEventDrawTask::Exec(Option_t *option)
       }
    }
 
+   // if (fRawEventArray)
+   //  DrawPadAll();
+
    if (fHitArray) {
       DrawHitPoints();
       DrawMeshSpace();
    }
-   if (fProtoEventArray)
-      DrawProtoSpace();
    if (fHoughSpaceArray && fUnpackHough)
       DrawHSpace();
 
@@ -777,27 +782,23 @@ void AtEventDrawTask::DrawHitPoints()
 
       if (fEventManager->GetDrawAllPad()) {
 
+         std::cout << "Setting pads for Draw All Pads." << std::endl;
+
          for (Int_t iPad = 0; iPad < nPads; iPad++) {
 
             AtPad *fPad = fRawevent->GetPad(iPad);
-            // std::cout<<"Pad num : "<<iPad<<" Is Valid? : "<<fPad->GetValidPad()<<" Pad num in pad object
-            // :"<<fPad->GetPadNum()<<std::endl;
+            // std::cout<<"Pad num : "<<iPad<<" Is Valid? : "<<fPad->GetValidPad()
+            //	     << std::endl;
+
+            if (!fPad->GetValidPad())
+               continue;
+
             Int_t *rawadc = fPad->GetRawADC();
             Double_t *adc = fPad->GetADC();
             // dumpEvent<<TSpad<<fPad->GetPadNum()<<std::endl;
 
-            for (Int_t j = 0; j < 512; j++) { // TODO: This is limited to 256 pads only. Increment the size of the array
-                                              // and put another option for AtTPC
-
-               if (fPad->GetValidPad() && iPad < 256) {
-
-                  fPadAll[iPad]->SetBinContent(j, adc[j]);
-                  // if(fSaveTextData) dumpEvent<<adc[j]<<"     "<<j<<"     "<<fPad->GetPadNum()<<std::endl;
-               }
-            }
-
-            // delete fPad;
-            // fPad= NULL;
+            for (Int_t j = 0; j < 512; j++)
+               fPadAll[iPad]->SetBinContent(j, adc[j]);
          }
       }
    }
@@ -1027,26 +1028,6 @@ void AtEventDrawTask::DrawHSpace()
    }
 }
 
-void AtEventDrawTask::DrawProtoSpace()
-{
-   AtProtoEvent *protoevent = (AtProtoEvent *)fProtoEventArray->At(0);
-   Int_t nQuads = protoevent->GetNumQuadrants();
-   std::vector<AtProtoQuadrant> quadrant;
-
-   if (nQuads < 5) {
-      for (Int_t iQ = 0; iQ < nQuads; iQ++) {
-
-         // AtProtoQuadrant quadrant = protoevent->GetQuadrantArray()->at(iQ);
-         quadrant.push_back(protoevent->GetQuadrantArray()->at(iQ));
-         std::vector<Double_t> *PhiArray = quadrant[iQ].GetPhiArray();
-         for (Int_t pval = 0; pval < PhiArray->size(); pval++) {
-            fPhiDistr[iQ]->Fill(PhiArray->at(pval));
-         }
-         PhiArray->clear();
-      }
-   }
-}
-
 void AtEventDrawTask::DrawMeshSpace() {}
 
 void AtEventDrawTask::Reset()
@@ -1168,9 +1149,9 @@ void AtEventDrawTask::DrawPadPlane()
       return;
    }
 
-   fAtMapPtr->GenerateATTPC();
+   fAtMapPtr->GenerateAtTpc();
    // fAtMapPtr->SetGUIMode();// This method does not need to be called since it generates the Canvas we do not want
-   fPadPlane = fAtMapPtr->GetATTPCPlane();
+   fPadPlane = fAtMapPtr->GetAtTpcPlane();
    fCvsPadPlane->cd();
    // fPadPlane -> Draw("COLZ L0"); //0  == bin lines adre not drawn
    fPadPlane->Draw("COL L0");
@@ -1216,27 +1197,14 @@ void AtEventDrawTask::DrawPadAll()
 {
 
    fCvsPadAll->cd();
-   TString option = fGeoOption;
 
-   for (Int_t i = 0; i < 300; i++) {
-      // fPadAll[i]->Reset(0);
-      // fPadAll[i] = new TH1I("fPadAll","fPadAll",512,0,511);
+   std::cout << "Starting to draw pads" << std::endl;
+   for (Int_t i = 0; i < fNumPads; i++) {
       fPadAll[i]->GetYaxis()->SetRangeUser(0, 2500);
       // TODO: make it pad number independent / retrieve the quadrant info
-      if (option == "Prototype") {
-         if (i < 64)
-            fPadAll[i]->SetLineColor(kPink - 3); // Q1, pink
-         else if (i >= 64 && i < 127)
-            fPadAll[i]->SetLineColor(kGreen + 2); // Q2, green
-         else if (i >= 127 && i < 190)
-            fPadAll[i]->SetLineColor(kBlue + 1); // Q3, blue
-         else if (i >= 190 && i < 253)
-            fPadAll[i]->SetLineColor(kOrange - 3); // Q4, orange
-         else
-            fPadAll[i]->SetLineColor(0); // white for non physical pads
-      }
       fPadAll[i]->Draw("SAME");
    }
+   std::cout << "Finished drawing." << std::endl;
 }
 
 void AtEventDrawTask::DrawQEvent()
@@ -1265,24 +1233,6 @@ void AtEventDrawTask::DrawHoughSpace()
    fCvsHoughSpace->cd();
    fHoughSpace = new TH2F("HistHoughXY", "HistHoughXY", 100, 0, 3.15, 500, -1000, 1000);
    fHoughSpace->Draw("colz");
-}
-
-void AtEventDrawTask::DrawHoughSpaceProto()
-{
-   // if(fIsLinearHough){ //
-   fCvsQuadrant1->cd();
-   fQuadrant1 = new TH2F("fQuadrant1", "fQuadrant1", 100, 0, 3.15, 500, -1000, 1000);
-   fQuadrant1->Draw("zcol");
-   fCvsQuadrant2->cd();
-   fQuadrant2 = new TH2F("fQuadrant2", "fQuadrant2", 100, 0, 3.15, 500, -1000, 1000);
-   fQuadrant2->Draw("zcol");
-   fCvsQuadrant3->cd();
-   fQuadrant3 = new TH2F("fQuadrant3", "fQuadrant3", 100, 0, 3.15, 500, -1000, 1000);
-   fQuadrant3->Draw("zcol");
-   fCvsQuadrant4->cd();
-   fQuadrant4 = new TH2F("fQuadrant4", "fQuadrant4", 100, 0, 3.15, 500, -1000, 1000);
-   fQuadrant4->Draw("zcol");
-   //}
 }
 
 void AtEventDrawTask::DrawPhiReco()
@@ -1688,20 +1638,20 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
       std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
       Bool_t IsValid = kFALSE;
 
-      AtTpcMap *tmap = NULL;
-      tmap = (AtTpcMap *)gROOT->GetListOfSpecials()->FindObject("fMap");
-      // new AtTpcProtoMap();
-      // TString map = "/Users/yassidayyad/fair_install/AtTPCROOT_v2_06042015/scripts/proto.map";
-      // tmap->SetProtoMap(map.Data());
-      Int_t tPadNum = tmap->BinToPad(bin);
+      AtMap *tmap = NULL;
+      tmap = (AtMap *)gROOT->GetListOfSpecials()->FindObject("fMap");
+      Int_t tPadNum = dynamic_cast<AtTpcMap *>(tmap)->BinToPad(bin);
       std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
       AtPad *tPad = tRawEvent->GetPad(tPadNum, IsValid);
+
+      // Check to make sure pad is valid
+      if (!tPad)
+         return;
+
       std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
       std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << " Is Valid? : " << IsValid << std::endl;
       std::cout << std::endl;
-      // TH1D* tPadWaveSub = NULL;
-      // tPadWaveSub = new TH1D("tPadWaveSub","tPadWaveSub",512.0,0.0,511.0);
-      // tPadWaveSub->SetLineColor(kRed);
+
       TH1I *tPadWave = NULL;
       tPadWave = (TH1I *)gROOT->GetListOfSpecials()->FindObject("fPadWave");
       Int_t *rawadc = tPad->GetRawADC();
@@ -1746,8 +1696,7 @@ void AtEventDrawTask::DrawWave(Int_t PadNum)
 
 void AtEventDrawTask::ResetPadAll()
 {
-
-   for (Int_t i = 0; i < 300; i++) {
+   for (Int_t i = 0; i < fNumPads; i++) {
       fPadAll[i]->Reset(0);
    }
 }

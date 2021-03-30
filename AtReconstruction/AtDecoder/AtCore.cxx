@@ -98,12 +98,13 @@ Bool_t AtCore::SetData(Int_t value)
    return fIsData;
 }
 
-Bool_t AtCore::SetAtTPCMap(Char_t const *lookup)
+Bool_t AtCore::SetAtTpcMap(Char_t const *lookup)
 {
 
-   if (kOpt == 0)
-      fAtMapPtr->GenerateATTPC(); // NOTE: In the case of the AtTPC Map we need to generate the coordinates to calculate
-                                  // the Pad Center
+   if (kOpt == 0) {
+      dynamic_cast<AtTpcMap *>(fAtMapPtr)->GenerateAtTpc();
+   }
+
    Bool_t MapIn = fAtMapPtr->ParseXMLMap(lookup);
    if (!MapIn)
       return false;
@@ -120,7 +121,7 @@ Bool_t AtCore::SetProtoGeoFile(TString geofile)
 
    if (kOpt == 1) {
 
-      fIsProtoGeoSet = fAtMapPtr->SetGeoFile(geofile);
+      fIsProtoGeoSet = dynamic_cast<AtTpcProtoMap *>(fAtMapPtr)->SetGeoFile(geofile);
       return fIsProtoGeoSet;
 
    } else {
@@ -135,7 +136,7 @@ Bool_t AtCore::SetProtoMapFile(TString mapfile)
 
    if (kOpt == 1) {
 
-      fIsProtoMapSet = fAtMapPtr->SetProtoMap(mapfile);
+      fIsProtoMapSet = dynamic_cast<AtTpcProtoMap *>(fAtMapPtr)->SetProtoMap(mapfile);
       return fIsProtoMapSet;
 
    } else {

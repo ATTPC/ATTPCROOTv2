@@ -1,48 +1,55 @@
 /**
  * @brief Event display task
+ * Used to draw AT-TPC events
  * @author JungWoo Lee (Korea Univ.)
  *         Adapted for AtTPCROOT by Yassid Ayyad (NSCL)
  */
-#ifndef AtEVENTDRAWTASK_H
-#define AtEVENTDRAWTASK_H
+#ifndef ATEVENTDRAWTASK_H
+#define ATEVENTDRAWTASK_H
+
+// ATTPCROOT classes
+namespace AtPATTERN {
+class AtTrackFinderHC;
+}
+namespace AtRANSACN {
+class AtRansac;
+}
+class AtEvent;
+class AtEventManager;
+class AtHit;
+class AtHoughSpace;
+class AtHoughSpaceCircle;
+class AtHoughSpaceLine;
+class AtLmedsMod;
+class AtMlesacMod;
+class AtRansacMod;
+class AtRawEvent;
+class AtTrackingEventAna;
+class AtTpcMap;
+class AtPatternEvent;
 
 // FairRoot classes
 #include "FairTask.h"
-#include "FairLogger.h"
 
 // ROOT classes
-#include "TEvePointSet.h"
-#include "TEveGeoShape.h"
-#include "TEveBoxSet.h"
-#include "TEveLine.h"
-#include "TClonesArray.h"
-#include "TVector3.h"
-#include "TPaletteAxis.h"
+class TCanvas;
+class TClonesArray;
+class TEvePointSet;
+class TEveGeoShape;
+class TEveBoxSet;
+class TEveLine;
+class TGraph;
+class TH1I;
+class TH1D;
+class TH1F;
+class TH2D;
+class TH2F;
+class TH2Poly;
+class TH3F;
+class TPaletteAxis;
+class TVector3;
 
-#include "TCanvas.h"
-#include "TH2.h"
-#include "TH1.h"
-#include "TH3.h"
-#include "TGraph.h"
-#include "TH2Poly.h"
-
-#include "AtEventManager.h"
-#include "AtRawEvent.h"
-#include "AtEvent.h"
-#include "AtProtoEvent.h"
-#include "AtPatternEvent.h"
-#include "AtTrackingEventAna.h"
-#include "AtHoughSpaceLine.h"
-#include "AtHoughSpaceCircle.h"
-#include "AtHoughSpace.h"
-#include "AtRansac.h"
-#include "AtRansacMod.h"
-#include "AtMlesacMod.h"
-#include "AtLmedsMod.h"
-#include "AtTrackFinderHC.h"
-#include "AtHit.h"
-#include "AtTpcMap.h"
-#include "AtProtoQuadrant.h"
+#include <Rtypes.h>
 #include <fstream>
 
 #ifndef __CINT__ // Boost
@@ -54,10 +61,10 @@ public:
    AtEventDrawTask();
    AtEventDrawTask(TString modes);
 
-   virtual ~AtEventDrawTask();
+   ~AtEventDrawTask();
 
-   virtual InitStatus Init();
-   virtual void Exec(Option_t *option);
+   InitStatus Init();
+   void Exec(Option_t *option);
    void Reset();
 
    // void Set2DPlotRange(Int_t uaIdx);
@@ -69,35 +76,27 @@ public:
    void SetSaveTextData();
    void SetLine(double t, std::vector<Double_t> p, double &x, double &y, double &z);
    void SetLine6(double t, std::vector<Double_t> p, double &x, double &y, double &z);
-   // void SetHitClusterAttributes(Color_t, Size_t, Style_t);
-   // void SetRiemannAttributes(Color_t, Size_t, Style_t);
 
    static void SelectPad(const char *rawevt);
    void DrawWave(Int_t PadNum);
-
-   void SetGeoOption(Option_t *option) { fGeoOption = option; }
-
-   void SetProtoMap(TString map) { fMap = map; }
-
    void SetMultiHit(Int_t hitMax);
    void SetAlgorithm(Int_t val) { fRANSACAlg = val; };
 
-protected:
-   virtual void DrawPadPlane();
-   virtual void DrawPadWave();
-   virtual void DrawPadAll();
-   virtual void DrawQEvent();
-   virtual void DrawRhoVariance();
-   virtual void DrawHoughSpace();
-   virtual void DrawHoughSpaceProto();
-   virtual void DrawPhiReco();
-   virtual void DrawMesh();
-   virtual void Draw3DHist();
-   virtual void DrawRad();
-   virtual void DrawTheta();
-   virtual void DrawThetaxPhi();
-   virtual void DrawMC();
-   virtual void DrawAux();
+private:
+   void DrawPadPlane();
+   void DrawPadWave();
+   void DrawPadAll();
+   void DrawQEvent();
+   void DrawRhoVariance();
+   void DrawHoughSpace();
+   void DrawPhiReco();
+   void DrawMesh();
+   void Draw3DHist();
+   void DrawRad();
+   void DrawTheta();
+   void DrawThetaxPhi();
+   void DrawMC();
+   void DrawAux();
 
    AtTpcMap *fAtMapPtr;
    void UpdateCvsPadPlane();
@@ -121,7 +120,6 @@ protected:
 
    void DrawHitPoints();
    void DrawHSpace();
-   void DrawProtoSpace();
    void DrawMeshSpace();
    // void DrawHitClusterPoints();
    // void DrawRiemannHits();
@@ -132,11 +130,11 @@ protected:
    Bool_t fUnpackHough;
    Bool_t fIsCircularHough;
    Bool_t fIsLinearHough;
+   static const Int_t fNumPads = 1000; // Maximum number of pads to draw for DrawAllPads option
 
    TClonesArray *fHitArray;
    TClonesArray *fRawEventArray;
    TClonesArray *fHoughSpaceArray;
-   TClonesArray *fProtoEventArray;
    TClonesArray *fRansacArray;
    TClonesArray *fTrackFinderHCArray;
    TClonesArray *fTrackingEventAnaArray;
@@ -149,7 +147,7 @@ protected:
    AtMlesacMod *fMlesacMod;
    AtLmedsMod *fLmedsMod;
    AtTrackingEventAna *fTrackingEventAna;
-   AtPAtTERN::AtTrackFinderHC *fTrackFinderHC;
+   AtPATTERN::AtTrackFinderHC *fTrackFinderHC;
 
    AtEventManager *fEventManager;
    AtRawEvent *fRawevent;
@@ -157,7 +155,6 @@ protected:
    AtTpcMap *fDetmap;
 
    Int_t fThreshold;
-   Option_t *fGeoOption; // Chose Geometry of the detector: AtTPC (Default)-  Prototype
    TString fMap;
 
    TEvePointSet *fHitSet;
@@ -177,22 +174,12 @@ protected:
    Size_t fHitSize;
    Style_t fHitStyle;
 
-   /*TEvePointSet* fHitClusterSet;
-   Color_t fHitClusterColor;
-   Size_t  fHitClusterSize;
-   Style_t fHitClusterStyle;*/
-
-   /*vector<TEvePointSet*> fRiemannSetArray;
-   Color_t fRiemannColor;
-   Size_t  fRiemannSize;
-   Style_t fRiemannStyle;*/
-
    TCanvas *fCvsPadPlane;
    TH2Poly *fPadPlane;
    TCanvas *fCvsPadWave;
    TH1I *fPadWave;
    TCanvas *fCvsPadAll;
-   TH1I *fPadAll[300];
+   TH1I *fPadAll[fNumPads];
    TCanvas *fCvsQEvent;
    TH1D *fQEventHist;
    TH1D *fQEventHist_H;

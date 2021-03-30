@@ -113,7 +113,6 @@ private:
    TGTextButton *toggleCorr;
    // TGCanvas *InfoCvs;
    Bool_t kDrawAllOn;
-   Bool_t kDrawAllOff;
    Bool_t kEraseQ;
    Bool_t kDrawHoughOn;
    Bool_t kDraw3DGeo;

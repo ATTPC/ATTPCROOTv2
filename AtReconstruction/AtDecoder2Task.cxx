@@ -179,7 +179,7 @@ InitStatus AtDecoder2Task::Init()
 
    fDecoder->SetFPNPedestal(fFPNPedestalRMS);
 
-   Bool_t kMapIn = fDecoder->SetAtTPCMap(fMap);
+   Bool_t kMapIn = fDecoder->SetAtTpcMap(fMap);
    // std::cout<<kMapIn<<std::endl;
    if (!kMapIn) {
       fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtTPC Map!");

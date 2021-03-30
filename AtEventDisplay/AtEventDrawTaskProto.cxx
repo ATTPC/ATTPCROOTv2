@@ -650,7 +650,7 @@ void AtEventDrawTaskProto::DrawPadPlane()
      return;
    }*/
 
-   fPadPlane = fDetmap->GetATTPCPlane("AtTPC_Proto");
+   fPadPlane = fDetmap->GetAtTpcPlane("AtTPC_Proto");
    fCvsPadPlane->cd();
    // fPadPlane -> Draw("zcol");
    // fPadPlane -> Draw("COL L0");

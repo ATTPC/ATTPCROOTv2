@@ -1,5 +1,5 @@
-#ifndef AtHIT_H
-#define AtHIT_H
+#ifndef ATHIT_H
+#define ATHIT_H
 
 #include "TROOT.h"
 #include "TObject.h"
@@ -97,7 +97,7 @@ public:
    Double_t fBaseCorr;
    Int_t fSlopeCnt;
 
-private:
+protected:
    //!< Track ID having this hit
    Int_t fTrackID;
    //!< Hit ID

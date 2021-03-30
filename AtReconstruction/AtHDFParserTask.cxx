@@ -116,8 +116,10 @@ bool AtHDFParserTask::SetAtTPCMap(Char_t const *lookup)
 {
 
    if (kOpt == 0)
-      fAtMapPtr->GenerateATTPC();
+      dynamic_cast<AtTpcMap *>(fAtMapPtr)->GenerateAtTpc();
+
    Bool_t MapIn = fAtMapPtr->ParseXMLMap(lookup);
+
    if (!MapIn)
       return false;
 
@@ -135,7 +137,7 @@ Bool_t AtHDFParserTask::SetProtoGeoFile(TString geofile)
 
    if (kOpt == 1) {
 
-      fIsProtoGeoSet = fAtMapPtr->SetGeoFile(geofile);
+      fIsProtoGeoSet = dynamic_cast<AtTpcProtoMap *>(fAtMapPtr)->SetGeoFile(geofile);
       return fIsProtoGeoSet;
 
    } else {
@@ -150,7 +152,7 @@ Bool_t AtHDFParserTask::SetProtoMapFile(TString mapfile)
 
    if (kOpt == 1) {
 
-      fIsProtoMapSet = fAtMapPtr->SetProtoMap(mapfile);
+      fIsProtoMapSet = dynamic_cast<AtTpcProtoMap *>(fAtMapPtr)->SetProtoMap(mapfile);
       return fIsProtoMapSet;
 
    } else {
