@@ -40,6 +40,7 @@ AtTPCFissionGeneratorV2.cxx
 AtTPCFissionGeneratorV3.cxx
 AtTPCXSReader.cxx
 AtTPCGammaDummyGenerator.cxx
+AtTPC20MgDecay.cxx
 )
 
 set(LINKDEF  GenLinkDef.h)
