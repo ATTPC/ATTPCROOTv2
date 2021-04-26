@@ -9,7 +9,7 @@ void getConstPads(int tpcRun = 200)
   tpc_tree.Add(TString::Format("/mnt/analysis/e12014/TPC/unpacked/run_%04d.root", tpcRun));
   
   TTreeReader reader(&tpc_tree);
-  TTreeReaderValue<TClonesArray> event(reader, "ATEventH");
+  TTreeReaderValue<TClonesArray> event(reader, "AtEventH");
 
   //Open file and skip header
   std::ofstream padFile("data/constPads_" + std::to_string(tpcRun) + ".dat");
@@ -24,8 +24,8 @@ void getConstPads(int tpcRun = 200)
 
   auto fAtMapPtr = new AtTpcMap();
   fAtMapPtr->ParseXMLMap(mapDir.Data());
-  fAtMapPtr->GenerateATTPC();
-  auto fPadPlane = fAtMapPtr->GetATTPCPlane();
+  fAtMapPtr->GenerateAtTpc();
+  auto fPadPlane = fAtMapPtr->GetAtTpcPlane();
   double fThreshold = 0;
 
   //Make a map to hold how often each pad was recorded
@@ -35,13 +35,13 @@ void getConstPads(int tpcRun = 200)
   //Loop through every event
   while(reader.Next())
   {
-    auto eventPtr = (ATEvent*) (event->At(0));
+    auto eventPtr = (AtEvent*) (event->At(0));
     auto numHits = eventPtr->GetNumHits();
 
     for( int i = 0; i < numHits; ++i)
     {
       //Get the padNum for the hit
-      ATHit hit = eventPtr->GetHitArray()->at(i);
+      AtHit hit = eventPtr->GetHitArray()->at(i);
       auto padNum = hit.GetHitPadNum();
 
       //If the pad hasn't been hit yet insert an element into the map
