@@ -13,6 +13,20 @@
 #include "TROOT.h"
 
 class AtPad : public TObject {
+private:
+   Int_t fPadNum;
+   Int_t fSizeID;
+   Float_t fPadXCoord;
+   Float_t fPadYCoord;
+   Bool_t kIsValid;
+   Int_t fRawAdc[512];
+   Int_t fMaxAdcIdx;
+
+   Bool_t fIsPedestalSubtracted;
+   // Bool_t fIsGainCalibrated;
+   Double_t fAdc[512];
+   Bool_t kIsAux;
+   std::string fAuxName;
 
 public:
    AtPad();
@@ -55,20 +69,6 @@ public:
    Float_t GetPadXCoord();
    Float_t GetPadYCoord();
 
-private:
-   Int_t fPadNum;
-   Int_t fSizeID;
-   Float_t fPadXCoord;
-   Float_t fPadYCoord;
-   Bool_t kIsValid;
-   Int_t fRawAdc[512];
-   Int_t fMaxAdcIdx;
-
-   Bool_t fIsPedestalSubtracted;
-   // Bool_t fIsGainCalibrated;
-   Double_t fAdc[512];
-   Bool_t kIsAux;
-   std::string fAuxName;
 
    ClassDef(AtPad, 1);
 };

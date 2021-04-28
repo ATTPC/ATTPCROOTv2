@@ -29,7 +29,7 @@ void getConstPads(int tpcRun = 200)
   double fThreshold = 0;
 
   //Make a map to hold how often each pad was recorded
-  std::map<Int_t, Int_t> pads;
+  std::map<Int_t, Int_t> pads; // pads[padNum] = numHits
 
   std::cout << "Starting loop over events" << std::endl;
   //Loop through every event
