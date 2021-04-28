@@ -64,7 +64,7 @@ private:
    Int_t nEvents; //! Number of unique fission simualtion events
    Int_t event;   //! Track what event we are at. Reset to 0 if we flow over the number of events in the tree
 
-   ClassDef(AtTPCFissionGeneratorV3, 4)
+   ClassDefOverride(AtTPCFissionGeneratorV3, 4)
 };
 
 #endif //#ifndef AtTPCFISSIONGENERAtORV3_H

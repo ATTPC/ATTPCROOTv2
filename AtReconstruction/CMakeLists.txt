@@ -24,6 +24,7 @@ ${CMAKE_SOURCE_DIR}/AtReconstruction/AtAnalysis
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
+${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
 ${CMAKE_SOURCE_DIR}/AtTpc
 ${CMAKE_SOURCE_DIR}/AtGenerators
 
@@ -117,7 +118,8 @@ AtPulseAnalyzer/AtPSAProtoFull.cxx
 AtPulseAnalyzer/AtPSAFull.cxx
 AtPulseAnalyzer/AtCalibration.cxx
 
-
+AtFilter/AtFilter.cxx
+AtFilter/AtFilterDivide.cxx
 
 #HierarchicalClustering/AtCubicSplineFit.cxx
 #HierarchicalClustering/AtFindVertex.cxx
@@ -140,6 +142,7 @@ AtDecoderTask.cxx
 AtDecoder2Task.cxx
 AtHDFParserTask.cxx
 AtPSAtask.cxx
+AtFilterTask.cxx
 
 #AtPhiRecoTask.cxx
 #AtVMEUnpackTask.cxx
