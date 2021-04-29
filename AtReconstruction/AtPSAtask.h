@@ -9,25 +9,32 @@ class FairLogger;
 class AtPSA;
 
 // ROOT classes
+#include "TString.h"
 class TClonesArray;
 
 class AtPSAtask : public FairTask {
-public:
-   AtPSAtask(AtPSA *psaMethod);
-   ~AtPSAtask();
-
-   void SetPersistence(Bool_t value);
-   virtual InitStatus Init();
-   virtual void Exec(Option_t *opt);
-
 private:
    TClonesArray *fRawEventArray;
    TClonesArray *fEventHArray;
    TClonesArray *fMCPointArray;
 
+   TString fInputBranchName;
+   TString fOutputBranchName;
+
    AtPSA *fPSA;
 
    Bool_t fIsPersistence;
+
+public:
+   AtPSAtask(AtPSA *psaMethod);
+   ~AtPSAtask();
+
+   void SetPersistence(Bool_t value);
+   void SetInputBranch(TString branchName);
+   void SetOutputBranch(TString branchName);
+   virtual InitStatus Init();
+   virtual void Exec(Option_t *opt);
+
 
    ClassDef(AtPSAtask, 2);
 };

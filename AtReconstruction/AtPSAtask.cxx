@@ -26,9 +26,8 @@
 ClassImp(AtPSAtask);
 
 AtPSAtask::AtPSAtask(AtPSA *psa)
+   : fInputBranchName("AtRawEvent"), fOutputBranchName("AtEventH"), fPSA(psa), fIsPersistence(false)
 {
-   fPSA = psa;
-   fIsPersistence = kFALSE;
    fEventHArray = new TClonesArray("AtEvent");
 }
 
@@ -39,6 +38,16 @@ void AtPSAtask::SetPersistence(Bool_t value)
    fIsPersistence = value;
 }
 
+void AtPSAtask::SetInputBranch(TString branchName)
+{
+   fInputBranchName = branchName;
+}
+
+void AtPSAtask::SetOutputBranch(TString branchName)
+{
+   fOutputBranchName = branchName;
+}
+
 InitStatus AtPSAtask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
@@ -47,9 +56,9 @@ InitStatus AtPSAtask::Init()
       return kERROR;
    }
 
-   fRawEventArray = (TClonesArray *)ioMan->GetObject("AtRawEvent");
+   fRawEventArray = (TClonesArray *)ioMan->GetObject(fInputBranchName);
    if (fRawEventArray == 0) {
-      LOG(ERROR) << "Cannot find AtRawEvent array!";
+      LOG(ERROR) << "Cannot find AtRawEvent array in branch " << fInputBranchName << "!";
       return kERROR;
    }
    // Retrieving simulated points, if available
@@ -60,7 +69,7 @@ InitStatus AtPSAtask::Init()
       LOG(INFO) << " Simulated points not found (experimental data analysis) ";
    }
 
-   ioMan->Register("AtEventH", "AtTPC", fEventHArray, fIsPersistence);
+   ioMan->Register(fOutputBranchName, "AtTPC", fEventHArray, fIsPersistence);
 
    fPSA->Init();
 

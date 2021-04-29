@@ -76,6 +76,8 @@ public:
    void SetSaveTextData();
    void SetLine(double t, std::vector<Double_t> p, double &x, double &y, double &z);
    void SetLine6(double t, std::vector<Double_t> p, double &x, double &y, double &z);
+   void SetRawEventBranch(TString branchName);
+   void SetEventBranch(TString branchName);
 
    static void SelectPad(const char *rawevt);
    void DrawWave(Int_t PadNum);
@@ -131,6 +133,9 @@ private:
    Bool_t fIsCircularHough;
    Bool_t fIsLinearHough;
    static const Int_t fNumPads = 1000; // Maximum number of pads to draw for DrawAllPads option
+
+   TString fRawEventBranchName;
+   TString fEventBranchName;
 
    TClonesArray *fHitArray;
    TClonesArray *fRawEventArray;
