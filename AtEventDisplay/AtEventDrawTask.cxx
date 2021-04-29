@@ -82,7 +82,7 @@ AtEventDrawTask::AtEventDrawTask()
      fQEventHist_H(0), fCvsHoughSpace(0), fHoughSpace(0), fCvsRhoVariance(0), fRhoVariance(0), fCvsPhi(0), fCvsMesh(0),
      fMesh(0), fCvs3DHist(0), f3DHist(0), fCvsRad(0), fRadVSTb(0), fCvsTheta(0), fTheta(0), fAtMapPtr(0), fMinZ(0),
      fMaxZ(1344), fMinX(432), fMaxX(-432), f3DHitStyle(0), fMultiHit(0), fSaveTextData(0), f3DThreshold(0),
-     fRANSACAlg(0)
+     fRANSACAlg(0), fRawEventBranchName("AtRawEvent"), fEventBranchName("AtEventH")
 {
 
    Char_t padhistname[256];
@@ -149,13 +149,13 @@ InitStatus AtEventDrawTask::Init()
    fDetmap->SetName("fMap");
    gROOT->GetListOfSpecials()->Add(fDetmap);
 
-   fHitArray = (TClonesArray *)ioMan->GetObject("AtEventH"); // TODO: Why this confusing name? It should be fEventArray
+   fHitArray = (TClonesArray *)ioMan->GetObject(fEventBranchName);
    if (fHitArray)
-      LOG(INFO) << cGREEN << "Hit Array Found." << cNORMAL << std::endl;
+      LOG(INFO) << cGREEN << "Hit Array Found in branch " << fEventBranchName << "." << cNORMAL << std::endl;
 
-   fRawEventArray = (TClonesArray *)ioMan->GetObject("AtRawEvent");
+   fRawEventArray = (TClonesArray *)ioMan->GetObject(fRawEventBranchName);
    if (fRawEventArray) {
-      LOG(INFO) << cGREEN << "Raw Event Array  Found." << cNORMAL << std::endl;
+      LOG(INFO) << cGREEN << "Raw Event Array Found in branch " << fRawEventBranchName << "." << cNORMAL << std::endl;
       fIsRawData = kTRUE;
    }
 
@@ -1756,4 +1756,14 @@ EColor AtEventDrawTask::GetTrackColor(int i)
       return colors.at(i);
    } else
       return kAzure;
+}
+
+void AtEventDrawTask::SetRawEventBranch(TString branchName)
+{
+   fRawEventBranchName = branchName;
+}
+
+void AtEventDrawTask::SetEventBranch(TString branchName)
+{
+   fEventBranchName = branchName;
 }

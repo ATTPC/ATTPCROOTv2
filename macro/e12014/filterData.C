@@ -73,8 +73,11 @@ void filterData(int runNumber)
    AtPSASimple2 *psa = new AtPSASimple2();
    psa->SetThreshold(0);
    psa->SetMaxFinder();
+
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);
+   psaTask->SetInputBranch("AtRawEventFiltered");
+   psaTask->SetOutputBranch("AtEventFiltered");
 
    // ATRansacTask *RansacTask = new ATRansacTask();
    // RansacTask -> SetPersistence(kTRUE);

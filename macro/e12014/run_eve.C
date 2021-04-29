@@ -1,39 +1,56 @@
-void run_eve(int runNum = 206, TString  OutputDataFile = "output.reco_display.root")
+/*#include "TString.h"
+#include "AtEventDrawTask.h"
+#include "AtEventManager.h"
+
+#include "FairLogger.h"
+#include "FairParRootFileIo.h"
+#include "FairRunAna.h"
+*/
+
+void run_eve(int runNum = 206, bool displayFilteredData = false, TString OutputDataFile = "output.reco_display.root")
 {
-  TString  InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpacked/run_%04d.root", runNum);
-  
-  FairLogger *fLogger = FairLogger::GetLogger();
-  fLogger -> SetLogToScreen(kTRUE);
-  fLogger->SetLogVerbosityLevel("MEDIUM");
-  TString dir = getenv("VMCWORKDIR");
-  TString geoFile = "ATTPC_v1.1_geomanager.root";
+   TString InputDataFile;
+   if (!displayFilteredData)
+      InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpacked/run_%04d.root", runNum);
+   else
+      InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/filterTesting/run_%04d.root", runNum);
+   std::cout << "Opening: " << InputDataFile << std::endl;
 
-  
-  TString InputDataPath = InputDataFile;
-  TString OutputDataPath = OutputDataFile;
-  TString GeoDataPath = dir + "/geometry/" + geoFile;
+   FairLogger *fLogger = FairLogger::GetLogger();
+   fLogger->SetLogToScreen(kTRUE);
+   fLogger->SetLogVerbosityLevel("MEDIUM");
+   TString dir = getenv("VMCWORKDIR");
+   TString geoFile = "ATTPC_v1.1_geomanager.root";
 
-  FairRunAna *fRun= new FairRunAna();
-  fRun -> SetInputFile(InputDataPath);
-  fRun -> SetOutputFile(OutputDataPath);
-  fRun -> SetGeomFile(GeoDataPath);
+   TString InputDataPath = InputDataFile;
+   TString OutputDataPath = OutputDataFile;
+   TString GeoDataPath = dir + "/geometry/" + geoFile;
 
-  FairRuntimeDb* rtdb = fRun->GetRuntimeDb();
-  FairParRootFileIo* parIo1 = new FairParRootFileIo();
-  //parIo1->open("param.dummy.root");
-  rtdb->setFirstInput(parIo1);
+   FairRunAna *fRun = new FairRunAna();
+   fRun->SetInputFile(InputDataPath);
+   fRun->SetOutputFile(OutputDataPath);
+   fRun->SetGeomFile(GeoDataPath);
 
-  FairRootManager* ioman = FairRootManager::Instance();
+   FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
+   FairParRootFileIo *parIo1 = new FairParRootFileIo();
+   // parIo1->open("param.dummy.root");
+   rtdb->setFirstInput(parIo1);
 
-  AtEventManager *eveMan = new AtEventManager();
-  AtEventDrawTask* eve = new AtEventDrawTask();
-  eve->Set3DHitStyleBox();
-  eve->SetMultiHit(100); //Set the maximum number of multihits in the visualization
-  eve->SetSaveTextData();
-  //eve->UnpackHoughSpace();
+   FairRootManager *ioman = FairRootManager::Instance();
 
-  eveMan->AddTask(eve);
-  eveMan->Init();
+   AtEventManager *eveMan = new AtEventManager();
+   AtEventDrawTask *eve = new AtEventDrawTask();
+   eve->Set3DHitStyleBox();
+   eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
+   eve->SetSaveTextData();
+   if (displayFilteredData) {
+      eve->SetRawEventBranch("AtRawEventFiltered");
+      eve->SetEventBranch("AtEventFiltered");
+   }
+   // eve->UnpackHoughSpace();
 
-  //eveMan->RunEvent(27);
+   eveMan->AddTask(eve);
+   eveMan->Init();
+
+   // eveMan->RunEvent(27);
 }
