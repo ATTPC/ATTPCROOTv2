@@ -4,10 +4,10 @@ void Mg20_test_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile ="./data/attpcsim.root";
+  TString outFile ="./data/gadgetsim.root";
 
   // Parameter file name
-  TString parFile="./data/attpcpar.root";
+  TString parFile="./data/gadgetpar.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -43,7 +43,7 @@ void Mg20_test_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_He1bar.root");
+  ATTPC->SetGeometryFileName("GADGET_II.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
@@ -52,18 +52,7 @@ void Mg20_test_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   //ATTPC->SetModifyGeometry(kTRUE);
   //run->AddModule(APOLLO);
 
- // ------------------------------------------------------------------------
-
-
-    // -----   Magnetic field   -------------------------------------------
-    // Constant Field
-    AtConstField  *fMagField = new AtConstField();
-    fMagField->SetField(0., 0. ,0. ); // values are in kG
-    fMagField->SetFieldRegion(-50, 50,-50, 50, -10,230); // values are in cm
-                          //  (xmin,xmax,ymin,ymax,zmin,zmax)
-    run->SetField(fMagField);
-    // --------------------------------------------------------------------
-
+  // ------------------------------------------------------------------------
 
 
   // -----   Create PrimaryGenerator   --------------------------------------
@@ -75,7 +64,7 @@ void Mg20_test_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 
   run->SetGenerator(primGen);
 
-// ------------------------------------------------------------------------
+  // ------------------------------------------------------------------------
 
   //---Store the visualiztion info of the tracks, this make the output file very large!!
   //--- Use it only to display but not for production!
