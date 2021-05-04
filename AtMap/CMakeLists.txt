@@ -35,6 +35,7 @@ AtMap.cxx
 AtTpcMap.cxx
 AtTpcProtoMap.cxx
 AtGadgetIIMap.cxx
+AtSpecMATMap.cxx
 )
 
 Set(LINKDEF AtTpcMapLinkDef.h)
