@@ -19,9 +19,14 @@
 #include "TH1D.h"
 #include "AtDigiPar.h"
 #include "TH2Poly.h"
+#include "AtMap.h"
+//#include "AtSpecMATMap.h"
+#include "AtGadgetIIMap.h"
 #include "AtTpcMap.h"
 #include "AtRawEvent.h"
 #include "AtGas.h"
+
+enum DetectorId { kAtTpc, kGADGETII, kSpecMAT };
 
 class AtPulseTask : public FairTask {
 
@@ -36,6 +41,7 @@ public:
    virtual void SetParContainers();  //!< Load the parameter container from the runtime database.
    void SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap);
    inline void IsInhibitMap(Bool_t val) { fIsInhibitMap = val; }
+   inline void SelectDetectorId(DetectorId val) {fDetectorId = val;};
 
 private:
    AtGas *fGas;                         //!< Gas parameter container.
@@ -45,19 +51,23 @@ private:
    Double_t fGETGain;                   //!< GET Gain.
    Int_t fPeakingTime;                  //!< Electronic peaking time
    Int_t fTBTime;                       //!< Time bucket size
-   Int_t fNumTbs;                       //!<
+   Int_t fNumTbs;                       //!< Number of time buckers
    Bool_t fIsPersistent;                //!< If true, save container
    TClonesArray *fDriftedElectronArray; //!< drifted electron array (input)
    TClonesArray *fRawEventArray;        //!< Raw Event array(only one)
    TClonesArray *fMCPointArray;         //!< MC Point Array
    AtRawEvent *fRawEvent;               //!< Raw Event Object
    TH2Poly *fPadPlane;                  //!< pad plane
-   AtTpcMap *fMap;                      //!< AtTPC map
+   AtMap *fMap;                         //!< AtTPC map
    Int_t fInternalID;                   //!< Internal ID
+   Int_t fNumPads;			//!< Number of pads
 
    std::map<Int_t, TH1F *> electronsMap;          //!<
    TH1F **eleAccumulated;                         //!<
    std::multimap<Int_t, std::size_t> MCPointsMap; //!< Correspondance between MC Points and pads
+
+   
+   DetectorId fDetectorId;
 
    TF1 *gain; //!<
 

@@ -55,14 +55,34 @@ void AtGadgetIIMap::GenerateAtTpc()
 
    fPadInd = pad_num;
 
-   for (auto ipad = 0; ipad < fPadInd; ++ipad) { // todo: Check total number of pads
+	for(auto isec = 0; isec < 2; ++isec){
+		   for (auto ipad = 0; ipad < fPadInd; ++ipad) { // todo: Check total number of pads
 
-      Double_t px[] = {AtPadCoord[ipad][0][0], AtPadCoord[ipad][1][0], AtPadCoord[ipad][2][0], AtPadCoord[ipad][3][0],
-                       AtPadCoord[ipad][0][0]};
-      Double_t py[] = {AtPadCoord[ipad][0][1], AtPadCoord[ipad][1][1], AtPadCoord[ipad][2][1], AtPadCoord[ipad][3][1],
-                       AtPadCoord[ipad][0][1]};
-      hPlane->AddBin(5, px, py);
-   }
+		      Double_t px[] = {AtPadCoord[ipad][0][0]*TMath::Power(-1,isec), AtPadCoord[ipad][1][0]*TMath::Power(-1,isec), AtPadCoord[ipad][2][0]*TMath::Power(-1,isec), AtPadCoord[ipad][3][0]*TMath::Power(-1,isec),
+				       AtPadCoord[ipad][0][0]*TMath::Power(-1,isec)};
+		      Double_t py[] = {AtPadCoord[ipad][0][1]*TMath::Power(-1,isec), AtPadCoord[ipad][1][1]*TMath::Power(-1,isec), AtPadCoord[ipad][2][1]*TMath::Power(-1,isec), AtPadCoord[ipad][3][1]*TMath::Power(-1,isec),
+				       AtPadCoord[ipad][0][1]*TMath::Power(-1,isec)};
+		      hPlane->AddBin(5, px, py);
+		   } 
+	}
+
+
+			for(auto isec = 1; isec < 3; ++isec){
+				   for (auto ipad = 0; ipad < fPadInd; ++ipad) { // todo: Check total number of pads
+
+				      Double_t px[] = {AtPadCoord[ipad][0][0]*TMath::Power(-1,isec), AtPadCoord[ipad][1][0]*TMath::Power(-1,isec), AtPadCoord[ipad][2][0]*TMath::Power(-1,isec), AtPadCoord[ipad][3][0]*TMath::Power(-1,isec),
+						       AtPadCoord[ipad][0][0]*TMath::Power(-1,isec)};
+				      Double_t py[] = {AtPadCoord[ipad][0][1]*TMath::Power(-1,isec+1), AtPadCoord[ipad][1][1]*TMath::Power(-1,isec+1), AtPadCoord[ipad][2][1]*TMath::Power(-1,isec+1), AtPadCoord[ipad][3][1]*TMath::Power(-1,isec+1),
+						       AtPadCoord[ipad][0][1]*TMath::Power(-1,isec+1)};
+				      hPlane->AddBin(5, px, py);
+				   } 
+			}
+
+
+
+
+
+
 }
 
 std::vector<Float_t> AtGadgetIIMap::CalcPadCenter(Int_t PadRef) {}

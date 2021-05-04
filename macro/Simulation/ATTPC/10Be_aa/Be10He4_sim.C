@@ -1,4 +1,4 @@
-void Be10He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
+void Be10He4_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -16,7 +16,7 @@ void Be10He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 
   //gSystem->Load("libAtGen.so");
 
-  ATVertexPropagator* vertex_prop = new ATVertexPropagator();
+  AtVertexPropagator* vertex_prop = new AtVertexPropagator();
 
 
   // -----   Create simulation run   ----------------------------------------
@@ -82,7 +82,7 @@ void Be10He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
                       
 
 
-	          ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
+	          AtTPCIonGenerator* ionGen = new AtTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
 	          ionGen->SetSpotRadius(0,-100,0);
 	          // add the ion generator
 
@@ -159,7 +159,7 @@ void Be10He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
                   Double_t ThetaMaxCMS = 90.0;
 
 
-        ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner,ThetaMinCMS,ThetaMaxCMS);
+        AtTPC2Body* TwoBody = new AtTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner,ThetaMinCMS,ThetaMaxCMS);
         primGen->AddGenerator(TwoBody);
 
 

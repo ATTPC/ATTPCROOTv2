@@ -1,7 +1,5 @@
 void rundigi_sim(
-   TString mcFile = "attpcsim.root",
-   TString digiParFile =
-      "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/ATTPC.e15250_sim.par",
+   TString mcFile = "./data/attpcsim.root",
    TString mapParFile =
       "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
    TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
@@ -22,36 +20,39 @@ void rundigi_sim(
   // __ Run ____________________________________________
   FairRunAna* fRun = new FairRunAna();
               fRun -> SetInputFile(mcFile);
-              fRun->SetOutputFile("output_digi_10Be_aaHe6_test.root");
-
+              fRun->SetOutputFile("output_digi.root");	      
+	      
+	      TString parameterFile = "ATTPC.e15250_sim.par";
+	      TString digiParFile = dir + "/parameters/" + parameterFile;
+	      
               FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
               FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo();
               parIo1 -> open(digiParFile.Data(), "in");
               rtdb -> setFirstInput(parIo1);
-              FairParAsciiFileIo* parIo2 = new FairParAsciiFileIo();
-              parIo2 -> open(trigParFile.Data(), "in");
-              rtdb -> setSecondInput(parIo2);
+              
+              
 
   // __ AT digi tasks___________________________________
 
-      ATClusterizeTask* clusterizer = new ATClusterizeTask();
+      AtClusterizeTask* clusterizer = new AtClusterizeTask();
       clusterizer -> SetPersistence(kFALSE);
 
-      ATPulseTask* pulse = new ATPulseTask();
+      AtPulseTask* pulse = new AtPulseTask();
       pulse -> SetPersistence(kTRUE);
       pulse -> SetSaveMCInfo();
 
-      ATPSATask *psaTask = new ATPSATask();
-      psaTask -> SetPersistence(kTRUE);
-      psaTask -> SetThreshold(10);
-      //psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC
-      psaTask -> SetPSAMode(1); //FULL mode
-      //psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
-      psaTask -> SetMaxFinder();
-      psaTask -> SetBaseCorrection(kFALSE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
-      psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
 
-      ATPRATask *praTask = new ATPRATask();
+      AtPSASimple2 *psa = new AtPSASimple2();
+       //psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
+      //psa -> SetBaseCorrection(kFALSE); 
+      //psa -> SetTimeCorrection(kFALSE); 
+      
+      AtPSAtask *psaTask = new AtPSAtask(psa);
+      psaTask -> SetPersistence(kTRUE);
+      psa->SetThreshold(10);      
+      psa -> SetMaxFinder();
+      
+      AtPRAtask *praTask = new AtPRAtask();
       praTask->SetPersistence(kTRUE);
 
       /*ATTriggerTask *trigTask = new ATTriggerTask();
@@ -68,7 +69,7 @@ void rundigi_sim(
   // __ Init and run ___________________________________
 
   fRun -> Init();
-  fRun->Run(0, 20);
+  fRun->Run(0, 10);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
