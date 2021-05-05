@@ -35,6 +35,7 @@ AtMap.cxx
 AtTpcMap.cxx
 AtTpcProtoMap.cxx
 AtGadgetIIMap.cxx
+AtSpecMATMap.cxx
 )
 
 Set(LINKDEF AtTpcMapLinkDef.h)
@@ -43,5 +44,6 @@ Set(DEPENDENCIES
     Base
     XMLParser
 )
+
 
 GENERATE_LIBRARY()
