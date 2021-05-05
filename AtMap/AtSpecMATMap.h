@@ -8,9 +8,9 @@
 #ifndef ATSPECMATMAP_H
 #define ATSPECMATMAP_H
 
-#include <boost/multi_array.hpp>
-
 #include "AtMap.h"
+
+#include <boost/multi_array.hpp>
 
 class AtSpecMATMap : public AtMap {
 
@@ -26,7 +26,6 @@ public:
    TH2Poly *GetAtTpcPlane() override; // virtual member
 
    void SpecMATPadPlane();
-
 
    ClassDefOverride(AtSpecMATMap, 1);
 };
