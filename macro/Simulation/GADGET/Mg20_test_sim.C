@@ -1,4 +1,4 @@
-void Mg20_test_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
+void Mg20_test_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -47,10 +47,7 @@ void Mg20_test_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
-  //FairDetector* APOLLO = new AtApollo("APOLLO", kTRUE);
-  //APOLLO->SetGeometryFileName("APOLLO_v0.root");
-  //ATTPC->SetModifyGeometry(kTRUE);
-  //run->AddModule(APOLLO);
+  
 
   // ------------------------------------------------------------------------
 
@@ -58,8 +55,8 @@ void Mg20_test_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   // -----   Create PrimaryGenerator   --------------------------------------
   FairPrimaryGenerator* primGen = new FairPrimaryGenerator();
 
-
   AtTPC20MgDecay* decay = new AtTPC20MgDecay();
+  decay->SetBoxXYZ(0.0,0.0,10.0,0.0,0.0,20.0);
   primGen->AddGenerator(decay);
 
   run->SetGenerator(primGen);
