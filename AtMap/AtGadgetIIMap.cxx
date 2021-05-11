@@ -38,121 +38,116 @@ void AtGadgetIIMap::GenerateAtTpc()
    for (auto irow = 0; irow < pads_per_row.size(); ++irow) {
 
       for (auto ipad = 0; ipad < pads_per_row[irow]; ++ipad) {
-	AtPadCoord[ipad + pad_num][0][0] = ipad * 2;
-	AtPadCoord[ipad + pad_num][0][1] = -irow * 2;
-	AtPadCoord[ipad + pad_num][1][0] = ipad * 2 + 2;
-	AtPadCoord[ipad + pad_num][1][1] = -irow * 2;
-	AtPadCoord[ipad + pad_num][2][0] = ipad * 2 + 2;
-	AtPadCoord[ipad + pad_num][2][1] = -2 - irow * 2;
-	AtPadCoord[ipad + pad_num][3][0] = ipad * 2;
-	AtPadCoord[ipad + pad_num][3][1] = -2 - irow * 2;
-
+         AtPadCoord[ipad + pad_num][0][0] = ipad * 2;
+         AtPadCoord[ipad + pad_num][0][1] = -irow * 2;
+         AtPadCoord[ipad + pad_num][1][0] = ipad * 2 + 2;
+         AtPadCoord[ipad + pad_num][1][1] = -irow * 2;
+         AtPadCoord[ipad + pad_num][2][0] = ipad * 2 + 2;
+         AtPadCoord[ipad + pad_num][2][1] = -2 - irow * 2;
+         AtPadCoord[ipad + pad_num][3][0] = ipad * 2;
+         AtPadCoord[ipad + pad_num][3][1] = -2 - irow * 2;
       }
 
       std::cout << " Row " << irow << " Number of pads " << pad_num << "\n";
       pad_num += pads_per_row[irow];
    }
-   
-   for (auto irow = 0; irow < pads_per_row.size(); ++irow) {            
+
+   for (auto irow = 0; irow < pads_per_row.size(); ++irow) {
 
       for (auto ipad = 0; ipad < pads_per_row[irow]; ++ipad) {
-	AtPadCoord[ipad + pad_num][0][0] = -ipad * 2;
-	AtPadCoord[ipad + pad_num][0][1] = irow * 2;
-	AtPadCoord[ipad + pad_num][1][0] = -ipad * 2 - 2;
-	AtPadCoord[ipad + pad_num][1][1] = irow * 2;
-	AtPadCoord[ipad + pad_num][2][0] = -ipad * 2 - 2;
-	AtPadCoord[ipad + pad_num][2][1] = 2 + irow * 2;
-	AtPadCoord[ipad + pad_num][3][0] = -ipad * 2;
-	AtPadCoord[ipad + pad_num][3][1] = 2 + irow * 2;
-
+         AtPadCoord[ipad + pad_num][0][0] = -ipad * 2;
+         AtPadCoord[ipad + pad_num][0][1] = irow * 2;
+         AtPadCoord[ipad + pad_num][1][0] = -ipad * 2 - 2;
+         AtPadCoord[ipad + pad_num][1][1] = irow * 2;
+         AtPadCoord[ipad + pad_num][2][0] = -ipad * 2 - 2;
+         AtPadCoord[ipad + pad_num][2][1] = 2 + irow * 2;
+         AtPadCoord[ipad + pad_num][3][0] = -ipad * 2;
+         AtPadCoord[ipad + pad_num][3][1] = 2 + irow * 2;
       }
 
       std::cout << " Row " << irow << " Number of pads " << pad_num << "\n";
       pad_num += pads_per_row[irow];
    }
 
-    for (auto irow = 0; irow < pads_per_row.size(); ++irow) {
+   for (auto irow = 0; irow < pads_per_row.size(); ++irow) {
 
       for (auto ipad = 0; ipad < pads_per_row[irow]; ++ipad) {
-	AtPadCoord[ipad + pad_num][0][0] = ipad * 2;
-	AtPadCoord[ipad + pad_num][0][1] = irow * 2;
-	AtPadCoord[ipad + pad_num][1][0] = ipad * 2 + 2;
-	AtPadCoord[ipad + pad_num][1][1] = irow * 2;
-	AtPadCoord[ipad + pad_num][2][0] = ipad * 2 + 2;
-	AtPadCoord[ipad + pad_num][2][1] = 2 + irow * 2;
-	AtPadCoord[ipad + pad_num][3][0] = ipad * 2;
-	AtPadCoord[ipad + pad_num][3][1] = 2 + irow * 2;
-
+         AtPadCoord[ipad + pad_num][0][0] = ipad * 2;
+         AtPadCoord[ipad + pad_num][0][1] = irow * 2;
+         AtPadCoord[ipad + pad_num][1][0] = ipad * 2 + 2;
+         AtPadCoord[ipad + pad_num][1][1] = irow * 2;
+         AtPadCoord[ipad + pad_num][2][0] = ipad * 2 + 2;
+         AtPadCoord[ipad + pad_num][2][1] = 2 + irow * 2;
+         AtPadCoord[ipad + pad_num][3][0] = ipad * 2;
+         AtPadCoord[ipad + pad_num][3][1] = 2 + irow * 2;
       }
 
       std::cout << " Row " << irow << " Number of pads " << pad_num << "\n";
       pad_num += pads_per_row[irow];
    }
 
-    for (auto irow = 0; irow < pads_per_row.size(); ++irow) {
+   for (auto irow = 0; irow < pads_per_row.size(); ++irow) {
 
       for (auto ipad = 0; ipad < pads_per_row[irow]; ++ipad) {
-	AtPadCoord[ipad + pad_num][0][0] = -ipad * 2;
-	AtPadCoord[ipad + pad_num][0][1] = -irow * 2;
-	AtPadCoord[ipad + pad_num][1][0] = -ipad * 2 - 2;
-	AtPadCoord[ipad + pad_num][1][1] = -irow * 2;
-	AtPadCoord[ipad + pad_num][2][0] = -ipad * 2 - 2;
-	AtPadCoord[ipad + pad_num][2][1] = -2 - irow * 2;
-	AtPadCoord[ipad + pad_num][3][0] = -ipad * 2;
-	AtPadCoord[ipad + pad_num][3][1] = -2 - irow * 2;
-
+         AtPadCoord[ipad + pad_num][0][0] = -ipad * 2;
+         AtPadCoord[ipad + pad_num][0][1] = -irow * 2;
+         AtPadCoord[ipad + pad_num][1][0] = -ipad * 2 - 2;
+         AtPadCoord[ipad + pad_num][1][1] = -irow * 2;
+         AtPadCoord[ipad + pad_num][2][0] = -ipad * 2 - 2;
+         AtPadCoord[ipad + pad_num][2][1] = -2 - irow * 2;
+         AtPadCoord[ipad + pad_num][3][0] = -ipad * 2;
+         AtPadCoord[ipad + pad_num][3][1] = -2 - irow * 2;
       }
 
       std::cout << " Row " << irow << " Number of pads " << pad_num << "\n";
       pad_num += pads_per_row[irow];
    }
 
-    std::cout<<" Total pads "<<pad_num<<"\n"; 
+   std::cout << " Total pads " << pad_num << "\n";
 
-  
    fPadInd = pad_num;
 
-   for(auto ipad = 0;ipad<fPadInd;++ipad)
-     {
-       Double_t px[] = {AtPadCoord[ipad][0][0], AtPadCoord[ipad][1][0], AtPadCoord[ipad][2][0], AtPadCoord[ipad][3][0],AtPadCoord[ipad][0][0]};
-       Double_t py[] = {AtPadCoord[ipad][0][1], AtPadCoord[ipad][1][1], AtPadCoord[ipad][2][1], AtPadCoord[ipad][3][1],AtPadCoord[ipad][0][1]};
-       hPlane->AddBin(5, px, py);     
-     }  
+   for (auto ipad = 0; ipad < fPadInd; ++ipad) {
+      Double_t px[] = {AtPadCoord[ipad][0][0], AtPadCoord[ipad][1][0], AtPadCoord[ipad][2][0], AtPadCoord[ipad][3][0],
+                       AtPadCoord[ipad][0][0]};
+      Double_t py[] = {AtPadCoord[ipad][0][1], AtPadCoord[ipad][1][1], AtPadCoord[ipad][2][1], AtPadCoord[ipad][3][1],
+                       AtPadCoord[ipad][0][1]};
+      hPlane->AddBin(5, px, py);
+   }
 
-//for(auto isec = 0; isec < 2; ++isec){
-//	   for (auto ipad = 0; ipad < fPadInd; ++ipad) { // todo: Check total number of pads
-//
-//	      Double_t px[] = {AtPadCoord[ipad][0][0]*TMath::Power(-1,isec), AtPadCoord[ipad][1][0]*TMath::Power(-1,isec), AtPadCoord[ipad][2][0]*TMath::Power(-1,isec), AtPadCoord[ipad][3][0]*TMath::Power(-1,isec),
-//			       AtPadCoord[ipad][0][0]*TMath::Power(-1,isec)};
-//	      Double_t py[] = {AtPadCoord[ipad][0][1]*TMath::Power(-1,isec), AtPadCoord[ipad][1][1]*TMath::Power(-1,isec), AtPadCoord[ipad][2][1]*TMath::Power(-1,isec), AtPadCoord[ipad][3][1]*TMath::Power(-1,isec),
-//			       AtPadCoord[ipad][0][1]*TMath::Power(-1,isec)};
-//	      hPlane->AddBin(5, px, py);
-//	   } 
-//}
-//
-//
-//		for(auto isec = 1; isec < 3; ++isec){
-//			   for (auto ipad = 0; ipad < fPadInd; ++ipad) { // todo: Check total number of pads
-//
-//			      Double_t px[] = {AtPadCoord[ipad][0][0]*TMath::Power(-1,isec), AtPadCoord[ipad][1][0]*TMath::Power(-1,isec), AtPadCoord[ipad][2][0]*TMath::Power(-1,isec), AtPadCoord[ipad][3][0]*TMath::Power(-1,isec),
-//					       AtPadCoord[ipad][0][0]*TMath::Power(-1,isec)};
-//			      Double_t py[] = {AtPadCoord[ipad][0][1]*TMath::Power(-1,isec+1), AtPadCoord[ipad][1][1]*TMath::Power(-1,isec+1), AtPadCoord[ipad][2][1]*TMath::Power(-1,isec+1), AtPadCoord[ipad][3][1]*TMath::Power(-1,isec+1),
-//					       AtPadCoord[ipad][0][1]*TMath::Power(-1,isec+1)};
-//			      hPlane->AddBin(5, px, py);
-//			   } 
-//		}
-//
-
-
-
-
-
+   // for(auto isec = 0; isec < 2; ++isec){
+   //	   for (auto ipad = 0; ipad < fPadInd; ++ipad) { // todo: Check total number of pads
+   //
+   //	      Double_t px[] = {AtPadCoord[ipad][0][0]*TMath::Power(-1,isec), AtPadCoord[ipad][1][0]*TMath::Power(-1,isec),
+   // AtPadCoord[ipad][2][0]*TMath::Power(-1,isec), AtPadCoord[ipad][3][0]*TMath::Power(-1,isec),
+   //			       AtPadCoord[ipad][0][0]*TMath::Power(-1,isec)};
+   //	      Double_t py[] = {AtPadCoord[ipad][0][1]*TMath::Power(-1,isec), AtPadCoord[ipad][1][1]*TMath::Power(-1,isec),
+   // AtPadCoord[ipad][2][1]*TMath::Power(-1,isec), AtPadCoord[ipad][3][1]*TMath::Power(-1,isec),
+   //			       AtPadCoord[ipad][0][1]*TMath::Power(-1,isec)};
+   //	      hPlane->AddBin(5, px, py);
+   //	   }
+   // }
+   //
+   //
+   //		for(auto isec = 1; isec < 3; ++isec){
+   //			   for (auto ipad = 0; ipad < fPadInd; ++ipad) { // todo: Check total number of pads
+   //
+   //			      Double_t px[] = {AtPadCoord[ipad][0][0]*TMath::Power(-1,isec),
+   // AtPadCoord[ipad][1][0]*TMath::Power(-1,isec), AtPadCoord[ipad][2][0]*TMath::Power(-1,isec),
+   // AtPadCoord[ipad][3][0]*TMath::Power(-1,isec), 					       AtPadCoord[ipad][0][0]*TMath::Power(-1,isec)};
+   // Double_t py[] = {AtPadCoord[ipad][0][1]*TMath::Power(-1,isec+1), AtPadCoord[ipad][1][1]*TMath::Power(-1,isec+1),
+   // AtPadCoord[ipad][2][1]*TMath::Power(-1,isec+1), AtPadCoord[ipad][3][1]*TMath::Power(-1,isec+1),
+   //					       AtPadCoord[ipad][0][1]*TMath::Power(-1,isec+1)};
+   //			      hPlane->AddBin(5, px, py);
+   //			   }
+   //		}
+   //
 }
 
 std::vector<Float_t> AtGadgetIIMap::CalcPadCenter(Int_t PadRef)
 {
 
-  std::vector<Float_t> PadCenter = {-9999, -9999};
+   std::vector<Float_t> PadCenter = {-9999, -9999};
    PadCenter.reserve(2);
 
    if (!fPadInd || !kIsParsed) {
@@ -163,9 +158,9 @@ std::vector<Float_t> AtGadgetIIMap::CalcPadCenter(Int_t PadRef)
 
    if (PadRef != -1) { // Boost multi_array crashes with a negative index
 
-     Float_t x = (AtPadCoord[PadRef][0][0] + AtPadCoord[PadRef][1][0])/2.0 ;
+      Float_t x = (AtPadCoord[PadRef][0][0] + AtPadCoord[PadRef][1][0]) / 2.0;
       PadCenter[0] = x;
-      Float_t y = (AtPadCoord[PadRef][1][1] + AtPadCoord[PadRef][2][1])/2.0;
+      Float_t y = (AtPadCoord[PadRef][1][1] + AtPadCoord[PadRef][2][1]) / 2.0;
       PadCenter[1] = y;
       return PadCenter;
 
@@ -175,10 +170,6 @@ std::vector<Float_t> AtGadgetIIMap::CalcPadCenter(Int_t PadRef)
          std::cout << " AtTpcMap::CalcPadCenter Error : Pad not found" << std::endl;
       return PadCenter;
    }
-
-
-
-
 }
 
 TH2Poly *AtGadgetIIMap::GetAtTpcPlane()

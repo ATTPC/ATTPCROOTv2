@@ -69,7 +69,6 @@ public:
    Float_t GetPadXCoord();
    Float_t GetPadYCoord();
 
-
    ClassDef(AtPad, 1);
 };
 
