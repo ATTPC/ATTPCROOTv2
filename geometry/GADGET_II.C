@@ -229,6 +229,5 @@ TGeoVolume* create_detector()
   gGeoMan->GetVolume(geoVersion)->AddNode(cathode_mount,1,new TGeoCombiTrans(0.0,0,cathode_mount_length/2,new TGeoRotation("cathode_mount",0,tpc_rot,0)));
   downstream_cap->SetTransparency(80);
 
-
   return drift_volume;
 }
