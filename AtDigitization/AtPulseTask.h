@@ -20,7 +20,7 @@
 #include "AtDigiPar.h"
 #include "TH2Poly.h"
 #include "AtMap.h"
-//#include "AtSpecMATMap.h"
+#include "AtSpecMATMap.h"
 #include "AtGadgetIIMap.h"
 #include "AtTpcMap.h"
 #include "AtRawEvent.h"

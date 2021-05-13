@@ -100,8 +100,8 @@ InitStatus AtPulseTask::Init()
 
    case kSpecMAT:
       std::cout << cGREEN << " SpecMAT\n" << cNORMAL;
-      // fMap = new AtSpecMATMap();
-      fNumPads = 1058;
+      fNumPads = 3162;
+      fMap = new AtSpecMATMap(fNumPads);
       break;
 
    default:

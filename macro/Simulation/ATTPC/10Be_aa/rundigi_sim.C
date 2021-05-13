@@ -62,7 +62,7 @@ void rundigi_sim(
 
   fRun -> AddTask(clusterizer);
   fRun -> AddTask(pulse);
-  // fRun -> AddTask(psaTask);
+  fRun->AddTask(psaTask);
   // fRun -> AddTask(praTask);
   // fRun -> AddTask(trigTask);
 
