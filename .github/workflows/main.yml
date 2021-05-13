@@ -16,4 +16,4 @@ jobs:
         source: '.'
         exclude: './macro ./scripts ./compiled'
         extensions: 'h,cxx,C'
-        clangFormatVersion: 12
+        clangFormatVersion: 11
