@@ -7,9 +7,9 @@
 #define cYELLOW "\033[1;33m"
 #define cNORMAL "\033[0m"
 
-AtSpecMATMap::AtSpecMATMap()
+AtSpecMATMap::AtSpecMATMap(Int_t fNumPads)
 {
-   AtPadCoord.resize(boost::extents[1024][4][2]);
+   AtPadCoord.resize(boost::extents[fNumPads][4][2]);
    kIsParsed = 0;
    kGUIMode = 0;
    kDebug = 0;

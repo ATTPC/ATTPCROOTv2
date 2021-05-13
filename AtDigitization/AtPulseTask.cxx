@@ -101,10 +101,10 @@ InitStatus AtPulseTask::Init()
 	      break;
 	      
 	    case kSpecMAT :
-	      std::cout <<cGREEN<<" SpecMAT\n"<<cNORMAL;
-	      //fMap = new AtSpecMATMap();
-	      fNumPads = 1058;
-	      break;
+          std::cout << cGREEN << " SpecMAT\n" << cNORMAL;
+          fNumPads = 3162;
+          fMap = new AtSpecMATMap(fNumPads);
+          break;
 	      
             default       :
 	      std::cout <<cRED<<" Pad plane not selected! Exiting...\n"<<cNORMAL;

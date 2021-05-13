@@ -15,7 +15,7 @@
 class AtSpecMATMap : public AtMap {
 
 public:
-   AtSpecMATMap();
+   AtSpecMATMap(Int_t fNumPads);
    ~AtSpecMATMap();
 
    void Dump() override;                                         // pure virtual member
@@ -26,6 +26,9 @@ public:
    TH2Poly *GetAtTpcPlane() override; // virtual member
 
    void SpecMATPadPlane();
+
+private:
+   Int_t fNumPads;
 
    ClassDefOverride(AtSpecMATMap, 1);
 };

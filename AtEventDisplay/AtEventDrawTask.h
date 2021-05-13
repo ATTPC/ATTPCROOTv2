@@ -25,6 +25,7 @@ class AtMlesacMod;
 class AtRansacMod;
 class AtRawEvent;
 class AtTrackingEventAna;
+class AtMap;
 class AtTpcMap;
 class AtPatternEvent;
 
@@ -56,6 +57,8 @@ class TVector3;
 #include <boost/multi_array.hpp>
 #endif //__CINT__
 
+enum DetectorId { kAtTpc, kGADGETII, kSpecMAT };
+
 class AtEventDrawTask : public FairTask {
 public:
    AtEventDrawTask();
@@ -83,6 +86,7 @@ public:
    void DrawWave(Int_t PadNum);
    void SetMultiHit(Int_t hitMax);
    void SetAlgorithm(Int_t val) { fRANSACAlg = val; };
+   inline void SelectDetectorId(DetectorId val) { fDetectorId = val; }
 
 private:
    void DrawPadPlane();
@@ -100,7 +104,7 @@ private:
    void DrawMC();
    void DrawAux();
 
-   AtTpcMap *fAtMapPtr;
+   AtMap *fAtMapPtr;
    void UpdateCvsPadPlane();
    void UpdateCvsPadWave();
    void UpdateCvsPadAll();
@@ -157,7 +161,7 @@ private:
    AtEventManager *fEventManager;
    AtRawEvent *fRawevent;
 
-   AtTpcMap *fDetmap;
+   AtMap *fDetmap;
 
    Int_t fThreshold;
    TString fMap;
@@ -244,7 +248,8 @@ private:
    Float_t f3DThreshold;
    Bool_t fIsRawData;
    Int_t fRANSACAlg;
-
+   DetectorId fDetectorId;
+   Int_t fDetNumPads;
    TF1 *fHoughLinearFit;
    TF1 *fRansacLinearFit;
    AtHit const *fIniHit;
