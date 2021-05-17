@@ -52,15 +52,17 @@ InitStatus AtClusterizeTask::Init()
    fEIonize = fPar->GetEIonize() / 1000000; // [MeV]
    fFano = fPar->GetFano();
    fVelDrift = fPar->GetDriftVelocity();               // [cm/us]
-   fCoefT = fPar->GetCoefDiffusionTrans() * sqrt(10.); // [cm^(-1/2)] to [mm^(-1/2)]
-   fCoefL = fPar->GetCoefDiffusionLong() * sqrt(10.);  // [cm^(-1/2)] to [mm^(-1/2)]
+   fCoefT = fPar->GetCoefDiffusionTrans(); // [cm^2/us]
+   fCoefL = fPar->GetCoefDiffusionLong();  // [cm^2/us]
+   fDetPadPlane = fPar->GetZPadPlane(); //[mm]
 
    std::cout << "  Ionization energy of gas: " << fEIonize << " MeV" << std::endl;
    std::cout << "  Fano factor of gas: " << fFano << std::endl;
    std::cout << "  Drift velocity: " << fVelDrift << std::endl;
    std::cout << "  Longitudal coefficient of diffusion: " << fCoefT << std::endl;
    std::cout << "  Transverse coefficient of diffusion: " << fCoefL << std::endl;
-
+   std::cout << "  Position of the pad plane (Z): " <<fDetPadPlane << std::endl;
+   
    return kSUCCESS;
 }
 
@@ -154,14 +156,14 @@ void AtClusterizeTask::Exec(Option_t *option)
          if (fMCPoint->GetEnergyLoss() == 0) {        // a new track is entering the volume or created
             x_pre = fMCPoint->GetXIn() * 10;          // mm
             y_pre = fMCPoint->GetYIn() * 10;          // mm
-            z_pre = 1000 - (fMCPoint->GetZIn() * 10); // mm
+            z_pre = fDetPadPlane - (fMCPoint->GetZIn() * 10); // mm
             presentTrackID = fMCPoint->GetTrackID();
             continue; // no energy deposited in this point, just taking in entrance coordinates
          }
          if (presentTrackID != fMCPoint->GetTrackID()) { // new track  (but energy not zero!)
             x_pre = fMCPoint->GetXIn() * 10;             // mm
             y_pre = fMCPoint->GetYIn() * 10;             // mm
-            z_pre = 1000 - (fMCPoint->GetZIn() * 10);    // mm
+            z_pre = fDetPadPlane - (fMCPoint->GetZIn() * 10);    // mm
             presentTrackID = fMCPoint->GetTrackID();
             std::cout << "Note in NEW DIGI: Energy not zero in first point for a track!" << std::endl;
             continue; // first point of a new track, just taking in entrance coordinates
@@ -170,7 +172,7 @@ void AtClusterizeTask::Exec(Option_t *option)
          tTime = fMCPoint->GetTime() / 1000;   // us
          x = fMCPoint->GetXIn() * 10;          // mm
          y = fMCPoint->GetYIn() * 10;          // mm
-         z = 1000 - (fMCPoint->GetZIn() * 10); // mm
+         z = fDetPadPlane - (fMCPoint->GetZIn() * 10); // mm
 
          // if ENERGY IS DISTRIBUTED FROM present Point position to next Point position
          // std::cout << "Init point: " << x << " " << y << " " << z << std::endl;
@@ -179,13 +181,13 @@ void AtClusterizeTask::Exec(Option_t *option)
          // std::cout << "Init point: " << x_pre << " " << y_pre << " " << z_pre << std::endl;
          // std::cout << "Final point: " << x << " "<< y << " " << z << " " << fMCPoint->GetTrackID() <<std::endl;
 
-         // std::cout<<" tTime : "<<tTime<<" - x : "<<x<<" - y : "<<y<<" - z : "<<z<<" Time "<<tTime<<"\n";
+	 //std::cout<<" tTime : "<<tTime<<" - x : "<<x<<" - y : "<<y<<" - z : "<<z<<" Time "<<tTime<<"\n";
          energyLoss_rec = (fMCPoint->GetEnergyLoss()) * 1000; // MeV
          // std::cout<<" Energy Loss "<<energyLoss_rec<<" fEIonize"<<fEIonize<<" Track ID "<<presentTrackID<<"\n";
          nElectrons = energyLoss_rec / fEIonize;          // mean electrons generated
          eFlux = pow(fFano * nElectrons, 0.5);            // fluctuation of generated electrons
          genElectrons = gRandom->Gaus(nElectrons, eFlux); // generated electrons
-         // std::cout<<" nElectrons "<<nElectrons<<" Gen Electrons "<<genElectrons<<"\n";
+	 //std::cout<<" nElectrons "<<nElectrons<<" Gen Electrons "<<genElectrons<<"\n";
 
          // step in each direction for an homogeneous electron creation position along the track
          // stepX = (x_post-x) / genElectrons;
@@ -198,8 +200,8 @@ void AtClusterizeTask::Exec(Option_t *option)
          }
 
          driftLength = abs(z);                     // mm  //coarse value of the driftLength
-         sigstrtrans = fCoefT * sqrt(driftLength); // transverse diffusion coefficient
-         sigstrlong = fCoefL * sqrt(driftLength);  // longitudal diffusion coefficient
+         sigstrtrans = sqrt(10.0*fCoefT*2*driftLength/fVelDrift); // transverse diffusion coefficient in mm 
+         sigstrlong = sqrt(10.0*fCoefL*2*driftLength/fVelDrift);  // longitudal diffusion coefficient in mm
          // trans->SetParameter(0, sigstrtrans);
 
          for (Int_t charge = 0; charge < genElectrons; charge++) { // for every electron in the cluster
@@ -213,7 +215,7 @@ void AtClusterizeTask::Exec(Option_t *option)
             driftTime = ((driftLength / 10) / fVelDrift);               // us
             // NB: tTime in the simulation is 0 for the first simulation point
             // std::cout<<i<<"  "<<charge<<"  "<<" Drift velocity "<<fVelDrift
-            //<<" driftTime : "<<driftTime<<" tTime "<<tTime<<"\n";
+	    // <<" driftTime : "<<driftTime<<" tTime "<<tTime<<"\n";
             // std::cout<<" Position of electron "<<charge<<" : "<<propX<<" : "<<propY<<"\n";
             electronNumber += 1;
 

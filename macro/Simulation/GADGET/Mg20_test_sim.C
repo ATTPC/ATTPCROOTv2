@@ -43,7 +43,7 @@ void Mg20_test_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("GADGET_II.root");
+  ATTPC->SetGeometryFileName("GADGET_II_lp.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
