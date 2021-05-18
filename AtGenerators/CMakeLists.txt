@@ -39,6 +39,7 @@ AtTPCFissionGenerator.cxx
 AtTPCFissionGeneratorV2.cxx
 AtTPCFissionGeneratorV3.cxx
 AtTPCXSReader.cxx
+AtTPCXSManager.cxx
 AtTPCGammaDummyGenerator.cxx
 AtTPC20MgDecay.cxx
 )

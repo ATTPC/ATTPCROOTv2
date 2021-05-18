@@ -1,104 +1,96 @@
 void Mg20_test_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
 {
 
-  TString dir = getenv("VMCWORKDIR");
+   TString dir = getenv("VMCWORKDIR");
 
-  // Output file name
-  TString outFile ="./data/attpcsim.root";
+   // Output file name
+   TString outFile = "./data/attpcsim.root";
 
-  // Parameter file name
-  TString parFile="./data/attpcpar.root";
+   // Parameter file name
+   TString parFile = "./data/attpcpar.root";
 
-  // -----   Timer   --------------------------------------------------------
-  TStopwatch timer;
-  timer.Start();
-  // ------------------------------------------------------------------------
+   // -----   Timer   --------------------------------------------------------
+   TStopwatch timer;
+   timer.Start();
+   // ------------------------------------------------------------------------
 
-  //gSystem->Load("libAtGen.so");
-  AtVertexPropagator* vertex_prop = new AtVertexPropagator();
+   // gSystem->Load("libAtGen.so");
+   AtVertexPropagator *vertex_prop = new AtVertexPropagator();
 
+   // -----   Create simulation run   ----------------------------------------
+   FairRunSim *run = new FairRunSim();
+   run->SetName(mcEngine);      // Transport engine
+   run->SetOutputFile(outFile); // Output file
+   FairRuntimeDb *rtdb = run->GetRuntimeDb();
+   // ------------------------------------------------------------------------
 
-  // -----   Create simulation run   ----------------------------------------
-  FairRunSim* run = new FairRunSim();
-  run->SetName(mcEngine);              // Transport engine
-  run->SetOutputFile(outFile);          // Output file
-  FairRuntimeDb* rtdb = run->GetRuntimeDb();
-  // ------------------------------------------------------------------------
+   // -----   Create media   -------------------------------------------------
+   run->SetMaterials("media.geo"); // Materials
+   // ------------------------------------------------------------------------
 
+   // -----   Create geometry   ----------------------------------------------
 
-  // -----   Create media   -------------------------------------------------
-  run->SetMaterials("media.geo");       // Materials
-  // ------------------------------------------------------------------------
+   FairModule *cave = new AtCave("CAVE");
+   cave->SetGeometryFileName("cave.geo");
+   run->AddModule(cave);
 
-  // -----   Create geometry   ----------------------------------------------
+   // FairModule* magnet = new AtMagnet("Magnet");
+   // run->AddModule(magnet);
 
-  FairModule* cave= new AtCave("CAVE");
-  cave->SetGeometryFileName("cave.geo");
-  run->AddModule(cave);
+   /*FairModule* pipe = new AtPipe("Pipe");
+   run->AddModule(pipe);*/
 
-  //FairModule* magnet = new AtMagnet("Magnet");
-  //run->AddModule(magnet);
+   FairDetector *ATTPC = new AtTpc("ATTPC", kTRUE);
+   ATTPC->SetGeometryFileName("ATTPC_H1bar.root");
+   // ATTPC->SetModifyGeometry(kTRUE);
+   run->AddModule(ATTPC);
 
-  /*FairModule* pipe = new AtPipe("Pipe");
-  run->AddModule(pipe);*/
+   // ------------------------------------------------------------------------
 
-  FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_H1bar.root");
-  //ATTPC->SetModifyGeometry(kTRUE);
-  run->AddModule(ATTPC);
+   // -----   Create PrimaryGenerator   --------------------------------------
+   FairPrimaryGenerator *primGen = new FairPrimaryGenerator();
 
-  
+   AtTPC20MgDecay *decay = new AtTPC20MgDecay();
+   decay->SetBoxXYZ(0.0, 0.0, 10.0, 0.0, 0.0, 20.0);
+   primGen->AddGenerator(decay);
 
-  // ------------------------------------------------------------------------
+   run->SetGenerator(primGen);
 
+   // ------------------------------------------------------------------------
 
-  // -----   Create PrimaryGenerator   --------------------------------------
-  FairPrimaryGenerator* primGen = new FairPrimaryGenerator();
+   //---Store the visualiztion info of the tracks, this make the output file very large!!
+   //--- Use it only to display but not for production!
+   run->SetStoreTraj(kTRUE);
 
-  AtTPC20MgDecay* decay = new AtTPC20MgDecay();
-  decay->SetBoxXYZ(0.0,0.0,10.0,0.0,0.0,20.0);
-  primGen->AddGenerator(decay);
+   // -----   Initialize simulation run   ------------------------------------
+   run->Init();
+   // ------------------------------------------------------------------------
 
-  run->SetGenerator(primGen);
+   // -----   Runtime database   ---------------------------------------------
 
-  // ------------------------------------------------------------------------
+   Bool_t kParameterMerged = kTRUE;
+   FairParRootFileIo *parOut = new FairParRootFileIo(kParameterMerged);
+   parOut->open(parFile.Data());
+   rtdb->setOutput(parOut);
+   rtdb->saveOutput();
+   rtdb->print();
+   // ------------------------------------------------------------------------
 
-  //---Store the visualiztion info of the tracks, this make the output file very large!!
-  //--- Use it only to display but not for production!
-  run->SetStoreTraj(kTRUE);
-
-
-
-  // -----   Initialize simulation run   ------------------------------------
-  run->Init();
-  // ------------------------------------------------------------------------
-
-  // -----   Runtime database   ---------------------------------------------
-
-  Bool_t kParameterMerged = kTRUE;
-  FairParRootFileIo* parOut = new FairParRootFileIo(kParameterMerged);
-  parOut->open(parFile.Data());
-  rtdb->setOutput(parOut);
-  rtdb->saveOutput();
-  rtdb->print();
-  // ------------------------------------------------------------------------
-
-  // -----   Start run   ----------------------------------------------------
+   // -----   Start run   ----------------------------------------------------
    run->Run(nEvents);
 
-  //You can export your ROOT geometry ot a separate file
-  run->CreateGeometryFile("./data/geofile_full.root");
-  // ------------------------------------------------------------------------
+   // You can export your ROOT geometry ot a separate file
+   run->CreateGeometryFile("./data/geofile_full.root");
+   // ------------------------------------------------------------------------
 
-  // -----   Finish   -------------------------------------------------------
-  timer.Stop();
-  Double_t rtime = timer.RealTime();
-  Double_t ctime = timer.CpuTime();
-  cout << endl << endl;
-  cout << "Macro finished succesfully." << endl;
-  cout << "Output file is "    << outFile << endl;
-  cout << "Parameter file is " << parFile << endl;
-  cout << "Real time " << rtime << " s, CPU time " << ctime
-       << "s" << endl << endl;
-  // ------------------------------------------------------------------------
+   // -----   Finish   -------------------------------------------------------
+   timer.Stop();
+   Double_t rtime = timer.RealTime();
+   Double_t ctime = timer.CpuTime();
+   cout << endl << endl;
+   cout << "Macro finished succesfully." << endl;
+   cout << "Output file is " << outFile << endl;
+   cout << "Parameter file is " << parFile << endl;
+   cout << "Real time " << rtime << " s, CPU time " << ctime << "s" << endl << endl;
+   // ------------------------------------------------------------------------
 }
