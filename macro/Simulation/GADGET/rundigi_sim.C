@@ -50,7 +50,7 @@ void rundigi_sim(
       
       AtPSAtask *psaTask = new AtPSAtask(psa);
       psaTask -> SetPersistence(kTRUE);
-      psa->SetThreshold(5);      
+      psa->SetThreshold(5);
       psa -> SetMaxFinder();
       
       AtPRAtask *praTask = new AtPRAtask();

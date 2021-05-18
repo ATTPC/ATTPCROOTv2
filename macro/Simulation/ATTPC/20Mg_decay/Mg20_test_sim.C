@@ -4,10 +4,10 @@ void Mg20_test_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile ="./data/gadgetsim.root";
+  TString outFile ="./data/attpcsim.root";
 
   // Parameter file name
-  TString parFile="./data/gadgetpar.root";
+  TString parFile="./data/attpcpar.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -43,7 +43,7 @@ void Mg20_test_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("GADGET_II.root");
+  ATTPC->SetGeometryFileName("ATTPC_H1bar.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
@@ -87,7 +87,7 @@ void Mg20_test_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
    run->Run(nEvents);
 
   //You can export your ROOT geometry ot a separate file
-  run->CreateGeometryFile("./data/geofile_proto_full.root");
+  run->CreateGeometryFile("./data/geofile_full.root");
   // ------------------------------------------------------------------------
 
   // -----   Finish   -------------------------------------------------------
