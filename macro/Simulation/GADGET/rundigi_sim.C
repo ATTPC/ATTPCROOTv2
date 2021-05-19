@@ -24,7 +24,7 @@ void rundigi_sim(
 
               TString parameterFile = "GADGET.sim.par";
               TString digiParFile = dir + "/parameters/" + parameterFile;
-	      
+
               FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
               FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo();
               parIo1 -> open(digiParFile.Data(), "in");

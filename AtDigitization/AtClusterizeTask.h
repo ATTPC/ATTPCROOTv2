@@ -33,12 +33,12 @@ public:
    virtual void SetParContainers();  //!< Load the parameter container from the runtime database.
 
 private:
-   Int_t fEventID;     //!< EventID
-   Double_t fEIonize;  //!< Effective ionization energy of gas. [eV]
-   Double_t fFano;     //!< Fano factor of the gas
-   Double_t fVelDrift; //!< Drift velocity of electron in gas. [mm/ns]
-   Double_t fCoefT;    //!< Transversal diffusion coefficient. [mm^(-1/2)]
-   Double_t fCoefL;    //!< Longitudinal diffusion coefficient. [mm^(-1/2)]
+   Int_t fEventID;        //!< EventID
+   Double_t fEIonize;     //!< Effective ionization energy of gas. [eV]
+   Double_t fFano;        //!< Fano factor of the gas
+   Double_t fVelDrift;    //!< Drift velocity of electron in gas. [mm/ns]
+   Double_t fCoefT;       //!< Transversal diffusion coefficient. [mm^(-1/2)]
+   Double_t fCoefL;       //!< Longitudinal diffusion coefficient. [mm^(-1/2)]
    Double_t fDetPadPlane; //!< Position of the pad plane with respect to the entrance [mm]
 
    AtGas *fGas;     //!< Gas parameter container.

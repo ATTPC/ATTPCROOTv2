@@ -50,8 +50,9 @@ Bool_t AtTPCXSManager::SetExcitationFunction(std::string filename)
 
       std::cout << " Number of energy - angle bins : " << nEbins << " - " << nAbins << "\n";
 
-      fExFunction = std::make_shared<TH2F>("fExFunction", "fExFunction", nEbins+1, ERangeDown-Ebinsize/2.0, ERangeUp+Ebinsize/2.0, nAbins+1,
-                                           ARangeDown-Abinsize/2.0, ARangeUp+Abinsize/2.0);
+      fExFunction = std::make_shared<TH2F>("fExFunction", "fExFunction", nEbins + 1, ERangeDown - Ebinsize / 2.0,
+                                           ERangeUp + Ebinsize / 2.0, nAbins + 1, ARangeDown - Abinsize / 2.0,
+                                           ARangeUp + Abinsize / 2.0);
 
       while (!file.eof()) {
 
@@ -67,9 +68,9 @@ Bool_t AtTPCXSManager::SetExcitationFunction(std::string filename)
          std::cout << " Energy cm (MeV) : " << ecm << " - Cross section (mb/sr or mb) : " << xs
                    << " - Angle cm (deg) : " << acm << " - Place holder : " << ph << "\n";
 
-         Int_t bin = fExFunction->Fill(ecm,acm,xs);
-	 std::cout<<" Bin fill "<<bin<<"\n";
-	 
+         Int_t bin = fExFunction->Fill(ecm, acm, xs);
+         std::cout << " Bin fill " << bin << "\n";
+
          ++nPoints;
       }
 

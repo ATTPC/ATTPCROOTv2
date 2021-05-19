@@ -41,7 +41,7 @@ public:
    virtual void SetParContainers();  //!< Load the parameter container from the runtime database.
    void SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap);
    inline void IsInhibitMap(Bool_t val) { fIsInhibitMap = val; }
-   inline void SelectDetectorId(DetectorId val) {fDetectorId = val;};
+   inline void SelectDetectorId(DetectorId val) { fDetectorId = val; };
 
 private:
    AtGas *fGas;                         //!< Gas parameter container.
@@ -60,13 +60,12 @@ private:
    TH2Poly *fPadPlane;                  //!< pad plane
    AtMap *fMap;                         //!< AtTPC map
    Int_t fInternalID;                   //!< Internal ID
-   Int_t fNumPads;			//!< Number of pads
+   Int_t fNumPads;                      //!< Number of pads
 
    std::map<Int_t, TH1F *> electronsMap;          //!<
    TH1F **eleAccumulated;                         //!<
    std::multimap<Int_t, std::size_t> MCPointsMap; //!< Correspondance between MC Points and pads
 
-   
    DetectorId fDetectorId;
 
    TF1 *gain; //!<

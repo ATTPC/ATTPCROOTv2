@@ -33,16 +33,16 @@ AtPulseTask::AtPulseTask() : FairTask("AtPulseTask"), fEventID(0)
    fDetectorId = kAtTpc;
    fNumPads = 10240;
    fGain = 0;
-   fGETGain = 0;                     
+   fGETGain = 0;
    fPeakingTime = 0;
 }
 
 AtPulseTask::~AtPulseTask()
 {
    LOG(INFO) << "Destructor of AtPulseTask" << FairLogger::endl;
-   for (Int_t padS = 0; padS < fNumPads;padS++) {
-     delete eleAccumulated[padS];
-      }
+   for (Int_t padS = 0; padS < fNumPads; padS++) {
+      delete eleAccumulated[padS];
+   }
    delete[] eleAccumulated;
 }
 
@@ -82,38 +82,34 @@ InitStatus AtPulseTask::Init()
       return kERROR;
    }
 
-
-   //Selection of pad plane
-   std::cout<<cGREEN<<" Selected detector/pad plane :"<<cNORMAL;
+   // Selection of pad plane
+   std::cout << cGREEN << " Selected detector/pad plane :" << cNORMAL;
    DetectorId det = fDetectorId;
-	switch(det)
-	{
-	    case kAtTpc  :
-	      std::cout <<cGREEN<< " ATTPC\n"<<cNORMAL;
-	      fNumPads = 10240;
-	      fMap = new AtTpcMap();
-	      break;
+   switch (det) {
+   case kAtTpc:
+      std::cout << cGREEN << " ATTPC\n" << cNORMAL;
+      fNumPads = 10240;
+      fMap = new AtTpcMap();
+      break;
 
-	    case kGADGETII:
-	      std::cout <<cGREEN<<" GADGETII\n"<<cNORMAL;
-	      fNumPads = 1012;
-	      fMap = new AtGadgetIIMap();
-	      break;
-	      
-	    case kSpecMAT :
-          std::cout << cGREEN << " SpecMAT\n" << cNORMAL;
-          fNumPads = 3162;
-          fMap = new AtSpecMATMap(fNumPads);
-          break;
-	      
-            default       :
-	      std::cout <<cRED<<" Pad plane not selected! Exiting...\n"<<cNORMAL;
-	      exit(0);
-	      break;
-	}
-   
+   case kGADGETII:
+      std::cout << cGREEN << " GADGETII\n" << cNORMAL;
+      fNumPads = 1012;
+      fMap = new AtGadgetIIMap();
+      break;
 
-   
+   case kSpecMAT:
+      std::cout << cGREEN << " SpecMAT\n" << cNORMAL;
+      fNumPads = 3162;
+      fMap = new AtSpecMATMap(fNumPads);
+      break;
+
+   default:
+      std::cout << cRED << " Pad plane not selected! Exiting...\n" << cNORMAL;
+      exit(0);
+      break;
+   }
+
    fGain = fPar->GetGain();
    fGETGain = fPar->GetGETGain();                    // Get the electronics gain in fC
    fGETGain = 1.602e-19 * 4096 / (fGETGain * 1e-15); // Scale to gain and correct for ADC
@@ -128,14 +124,13 @@ InitStatus AtPulseTask::Init()
    std::cout << "  Gain in AtTPC gas: " << fGain << std::endl;
    std::cout << "  GET Gain: " << fGETGain << std::endl;
    std::cout << "  Electronic peaking time: " << fPeakingTime << " ns" << std::endl;
-   std::cout << "  Number of pads: " << fNumPads << std::endl; 
+   std::cout << "  Number of pads: " << fNumPads << std::endl;
 
    gain = new TF1("gain", "pow([1]+1,[1]+1)/ROOT::Math::tgamma([1]+1)*pow((x/[0]),[1])*exp(-([1]+1)*(x/[0]))", 0,
                   fGain * 5); // Polya distribution of gain
    gain->SetParameter(0, fGain);
    gain->SetParameter(1, 1);
 
-   
    fTBTime = fPar->GetTBTime(); // Assuming 80 ns bucket
    fNumTbs = fPar->GetNumTbs();
 
@@ -144,7 +139,6 @@ InitStatus AtPulseTask::Init()
    TString dir = getenv("VMCWORKDIR");
    TString scriptdir = dir + "/scripts/" + scriptfile;
 
-   
    fMap->GenerateAtTpc();
    Bool_t MapIn = fMap->ParseXMLMap(scriptdir);
    fPadPlane = fMap->GetAtTpcPlane();
@@ -160,14 +154,15 @@ InitStatus AtPulseTask::Init()
      ePulse.SetParameter(2,tau);*/
 
    char buff[100];
-   eleAccumulated = new TH1F *[fNumPads+1];
+   eleAccumulated = new TH1F *[fNumPads + 1];
    for (Int_t padS = 0; padS < fNumPads; padS++) {
       sprintf(buff, "%d", padS);
       eleAccumulated[padS] =
          new TH1F(buff, buff, fNumTbs, 0, fTBTime * fNumTbs / 1000); // max time in microseconds from Time bucket size
    }
 
-   std::cout<<" AtDigitalization : Initialization of parameters complete!  "<<"\n"; 
+   std::cout << " AtDigitalization : Initialization of parameters complete!  "
+             << "\n";
 
    return kSUCCESS;
 }
@@ -219,7 +214,8 @@ void AtPulseTask::Exec(Option_t *option)
       auto mcPoint = (AtTpcPoint *)fMCPointArray->At(dElectron->GetPointID());
       auto trackID = mcPoint->GetTrackID();
 
-      // std::cout<<" Electron Number "<<iEvents<<" mcPointID : "<<dElectron->GetPointID()<<" Pad number "<<padNumber<<" Coord X "<<xElectron<<" Coord Y "<<yElectron
+      // std::cout<<" Electron Number "<<iEvents<<" mcPointID : "<<dElectron->GetPointID()<<" Pad number "<<padNumber<<"
+      // Coord X "<<xElectron<<" Coord Y "<<yElectron
       //<<"\n";
 
       if (padNumber < 0 || padNumber > fNumPads)
@@ -276,7 +272,7 @@ void AtPulseTask::Exec(Option_t *option)
          }
       }
    }
-   std::cout << "...End of collection of electrons in this event."<< std::endl;
+   std::cout << "...End of collection of electrons in this event." << std::endl;
    TAxis *axis = eleAccumulated[0]->GetXaxis();
    Double_t binWidth = axis->GetBinWidth(10);
 
@@ -294,7 +290,7 @@ void AtPulseTask::Exec(Option_t *option)
       eleAccumulated[thePadNumber] = (ite2->second);
       // Set Pad and add to event
       AtPad *pad = new AtPad();
-      //std::cout<<" Pad number "<<thePadNumber<<"\n";
+      // std::cout<<" Pad number "<<thePadNumber<<"\n";
 
       for (Int_t kk = 0; kk < fNumTbs; kk++) {
          if (eleAccumulated[thePadNumber]->GetBinContent(kk) > 0) {
@@ -315,7 +311,7 @@ void AtPulseTask::Exec(Option_t *option)
       pad->SetValidPad(kTRUE);
       pad->SetPadXCoord(PadCenterCoord[0]);
       pad->SetPadYCoord(PadCenterCoord[1]);
-      //std::cout<<" X "<<PadCenterCoord[0]<<" Y "<<PadCenterCoord[1]<<"\n";
+      // std::cout<<" X "<<PadCenterCoord[0]<<" Y "<<PadCenterCoord[1]<<"\n";
       pad->SetPedestalSubtracted(kTRUE);
       Double_t gAvg = 0;
       gRandom->SetSeed(0);
