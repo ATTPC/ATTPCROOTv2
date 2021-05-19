@@ -32,14 +32,13 @@ public:
 
    bool SetExcitationFunction(std::string filename);
 
-  
-  inline std::shared_ptr<TH2F> GetExcitationFunction() {return fExFunction;}
-  
+   inline std::shared_ptr<TH2F> GetExcitationFunction() { return fExFunction; }
+
 private:
    std::string fExFunctionFile;
    std::shared_ptr<TH2F> fExFunction;
-  Bool_t kIsExFunction;
-  
+   Bool_t kIsExFunction;
+
    ClassDef(AtTPCXSManager, 1)
 };
 
