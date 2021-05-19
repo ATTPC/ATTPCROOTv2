@@ -50,7 +50,7 @@ void rundigi_sim(
       
       AtPSAtask *psaTask = new AtPSAtask(psa);
       psaTask -> SetPersistence(kTRUE);
-      psa->SetThreshold(10);      
+      psa->SetThreshold(5);
       psa -> SetMaxFinder();
       
       AtPRAtask *praTask = new AtPRAtask();
@@ -70,7 +70,7 @@ void rundigi_sim(
   // __ Init and run ___________________________________
 
   fRun -> Init();
-  fRun->Run(0, 20);
+  fRun->Run(0, 10);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

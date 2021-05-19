@@ -16,6 +16,7 @@
 #pragma link off all functions;
 
 #pragma link C++ global gAtVP;
+#pragma link C++ global gAtXS;
 
 //#pragma link C++ class  Pythia6Generator+;
 //#pragma link C++ class  Pythia8Generator+;
@@ -31,6 +32,7 @@
 #pragma link C++ class AtTPCFissionGeneratorV2 + ;
 #pragma link C++ class AtTPCFissionGeneratorV3 + ;
 #pragma link C++ class AtTPCXSReader + ;
+#pragma link C++ class AtTPCXSManager + ;
 #pragma link C++ class AtTPCGammaDummyGenerator + ;
 #pragma link C++ class AtTPC20MgDecay + ;
 
