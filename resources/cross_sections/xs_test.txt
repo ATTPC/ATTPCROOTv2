@@ -1,4 +1,4 @@
-E_binsize(MeV)	A_binsize(Deg)  E_range_up(MeV) E_range_down(Mev) A_range_up(Deg) A_range_down(Deg)	XS_tot(mb/sr)
+\0;95;0cE_binsize(MeV)	A_binsize(Deg)  E_range_up(MeV) E_range_down(Mev) A_range_up(Deg) A_range_down(Deg)	XS_tot(mb/sr)
 0.1     	10.0		2.1 	          0.1            60.0	 	   40.0                33.2     
 0.100	0.0	40.0	0.0
 0.200	0.0	40.0	0.0
