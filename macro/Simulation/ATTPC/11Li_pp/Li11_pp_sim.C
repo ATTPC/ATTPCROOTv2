@@ -76,34 +76,33 @@ void Li11_pp_sim(Int_t nEvents = 200, TString mcEngine = "TGeant4")
 	          Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
 	          Double_t pz = 4.20976/a;  // Z-Momentum / per nucleon!!!!!!
   	          Double_t BExcEner = 0.0;
-                  Double_t Bmass =11.043723;
-                  Double_t NomEnergy = 0.64; // MeV
+             Double_t Bmass = 11.043723;
+             Double_t NomEnergy = 0.64; // MeV
 
-                  AtTPCIonGenerator *ionGen =
-                     new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
-                  ionGen->SetSpotRadius(0, -100, 0);
-                  // add the ion generator
+             AtTPCIonGenerator *ionGen =
+                new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
+             ionGen->SetSpotRadius(0, -100, 0);
+             // add the ion generator
 
-                  primGen->AddGenerator(ionGen);
+             primGen->AddGenerator(ionGen);
 
-                  // primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track
-                  // added to the Primary Generator
-                  // primGen->SetTarget(30,0);
+             // primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track
+             // added to the Primary Generator
+             // primGen->SetTarget(30,0);
 
-                  // Variables for 2-Body kinematics reaction
-                  std::vector<Int_t> Zp; // Zp
-                  std::vector<Int_t> Ap; // Ap
-                  std::vector<Int_t> Qp;//Electric charge
-                  Int_t mult;  //Number of particles
-                  std::vector<Double_t> Pxp; //Px momentum X
-		          std::vector<Double_t> Pyp; //Py momentum Y
-                  std::vector<Double_t> Pzp; //Pz momentum Z
-                  std::vector<Double_t> Mass; // Masses
-		          std::vector<Double_t> ExE; // Excitation energy
-                  Double_t ResEner; // Energy of the beam (Useless for the moment)
+             // Variables for 2-Body kinematics reaction
+             std::vector<Int_t> Zp;      // Zp
+             std::vector<Int_t> Ap;      // Ap
+             std::vector<Int_t> Qp;      // Electric charge
+             Int_t mult;                 // Number of particles
+             std::vector<Double_t> Pxp;  // Px momentum X
+             std::vector<Double_t> Pyp;  // Py momentum Y
+             std::vector<Double_t> Pzp;  // Pz momentum Z
+             std::vector<Double_t> Mass; // Masses
+             std::vector<Double_t> ExE;  // Excitation energy
+             Double_t ResEner;           // Energy of the beam (Useless for the moment)
 
-
-		  // Note: Momentum will be calculated from the phase Space according to the residual energy of the beam
+             // Note: Momentum will be calculated from the phase Space according to the residual energy of the beam
 
 
 	          mult = 4; //Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY (and the number of particles must be the same)

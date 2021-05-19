@@ -51,10 +51,10 @@ InitStatus AtClusterizeTask::Init()
 
    fEIonize = fPar->GetEIonize() / 1000000; // [MeV]
    fFano = fPar->GetFano();
-   fVelDrift = fPar->GetDriftVelocity();               // [cm/us]
-   fCoefT = fPar->GetCoefDiffusionTrans();             // [cm^2/us]
-   fCoefL = fPar->GetCoefDiffusionLong();              // [cm^2/us]
-   fDetPadPlane = fPar->GetZPadPlane();                //[mm]
+   fVelDrift = fPar->GetDriftVelocity();   // [cm/us]
+   fCoefT = fPar->GetCoefDiffusionTrans(); // [cm^2/us]
+   fCoefL = fPar->GetCoefDiffusionLong();  // [cm^2/us]
+   fDetPadPlane = fPar->GetZPadPlane();    //[mm]
 
    std::cout << "  Ionization energy of gas: " << fEIonize << " MeV" << std::endl;
    std::cout << "  Fano factor of gas: " << fFano << std::endl;
@@ -153,25 +153,25 @@ void AtClusterizeTask::Exec(Option_t *option)
 
          // THAt WOULD BE THE CODE IF THE ENERGY IS DISTRIBUTED FROM present Point position to previous Point position
          // THAt IS MOST PROBABLY  CORRECT
-         if (fMCPoint->GetEnergyLoss() == 0) {        // a new track is entering the volume or created
-            x_pre = fMCPoint->GetXIn() * 10;          // mm
-            y_pre = fMCPoint->GetYIn() * 10;          // mm
+         if (fMCPoint->GetEnergyLoss() == 0) {                // a new track is entering the volume or created
+            x_pre = fMCPoint->GetXIn() * 10;                  // mm
+            y_pre = fMCPoint->GetYIn() * 10;                  // mm
             z_pre = fDetPadPlane - (fMCPoint->GetZIn() * 10); // mm
             presentTrackID = fMCPoint->GetTrackID();
             continue; // no energy deposited in this point, just taking in entrance coordinates
          }
-         if (presentTrackID != fMCPoint->GetTrackID()) { // new track  (but energy not zero!)
-            x_pre = fMCPoint->GetXIn() * 10;             // mm
-            y_pre = fMCPoint->GetYIn() * 10;             // mm
+         if (presentTrackID != fMCPoint->GetTrackID()) {      // new track  (but energy not zero!)
+            x_pre = fMCPoint->GetXIn() * 10;                  // mm
+            y_pre = fMCPoint->GetYIn() * 10;                  // mm
             z_pre = fDetPadPlane - (fMCPoint->GetZIn() * 10); // mm
             presentTrackID = fMCPoint->GetTrackID();
             std::cout << "Note in NEW DIGI: Energy not zero in first point for a track!" << std::endl;
             continue; // first point of a new track, just taking in entrance coordinates
          }
 
-         tTime = fMCPoint->GetTime() / 1000;   // us
-         x = fMCPoint->GetXIn() * 10;          // mm
-         y = fMCPoint->GetYIn() * 10;          // mm
+         tTime = fMCPoint->GetTime() / 1000;           // us
+         x = fMCPoint->GetXIn() * 10;                  // mm
+         y = fMCPoint->GetYIn() * 10;                  // mm
          z = fDetPadPlane - (fMCPoint->GetZIn() * 10); // mm
 
          // if ENERGY IS DISTRIBUTED FROM present Point position to next Point position
@@ -199,7 +199,7 @@ void AtClusterizeTask::Exec(Option_t *option)
             stepZ = (z - z_pre) / genElectrons;
          }
 
-         driftLength = abs(z);                     // mm  //coarse value of the driftLength
+         driftLength = abs(z);                                            // mm  //coarse value of the driftLength
          sigstrtrans = sqrt(10.0 * fCoefT * 2 * driftLength / fVelDrift); // transverse diffusion coefficient in mm
          sigstrlong = sqrt(10.0 * fCoefL * 2 * driftLength / fVelDrift);  // longitudal diffusion coefficient in mm
          // trans->SetParameter(0, sigstrtrans);
