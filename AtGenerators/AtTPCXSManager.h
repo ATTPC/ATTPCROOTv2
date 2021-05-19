@@ -24,30 +24,25 @@
 
 class AtTPCXSManager;
 
-class AtTPCXSManager : public TObject
-{
+class AtTPCXSManager : public TObject {
 
- public:
-   
-  AtTPCXSManager();
-  ~AtTPCXSManager();
+public:
+   AtTPCXSManager();
+   ~AtTPCXSManager();
 
-  bool SetExcitationFunction(std::string filename);
+   bool SetExcitationFunction(std::string filename);
+
   
-
-  private:
-
-  std::string fExFunctionFile;
-  std::shared_ptr<TH2F>  fExFunction;
+  inline std::shared_ptr<TH2F> GetExcitationFunction() {return fExFunction;}
   
-
- ClassDef(AtTPCXSManager, 1)
+private:
+   std::string fExFunctionFile;
+   std::shared_ptr<TH2F> fExFunction;
+  Bool_t kIsExFunction;
+  
+   ClassDef(AtTPCXSManager, 1)
 };
 
 extern AtTPCXSManager *gAtXS; // global
 
-#endif  
-
-
-
-  
+#endif

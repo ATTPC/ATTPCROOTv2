@@ -76,8 +76,8 @@ void Li11_pp_sim(Int_t nEvents = 200, TString mcEngine = "TGeant4")
 	          Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
 	          Double_t pz = 4.20976/a;  // Z-Momentum / per nucleon!!!!!!
   	          Double_t BExcEner = 0.0;
-                  Double_t Bmass =11.043723; 
-                  Double_t NomEnergy = 0.64;//MeV
+                  Double_t Bmass =11.043723;
+                  Double_t NomEnergy = 0.64; // MeV
 
                   AtTPCIonGenerator *ionGen =
                      new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
