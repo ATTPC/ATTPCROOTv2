@@ -39,6 +39,7 @@ private:
    Double_t fVelDrift; //!< Drift velocity of electron in gas. [mm/ns]
    Double_t fCoefT;    //!< Transversal diffusion coefficient. [mm^(-1/2)]
    Double_t fCoefL;    //!< Longitudinal diffusion coefficient. [mm^(-1/2)]
+   Double_t fDetPadPlane; //!< Position of the pad plane with respect to the entrance [mm]
 
    AtGas *fGas;     //!< Gas parameter container.
    AtDigiPar *fPar; //!< Base parameter container.

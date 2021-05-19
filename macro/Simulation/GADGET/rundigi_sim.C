@@ -20,10 +20,10 @@ void rundigi_sim(
   // __ Run ____________________________________________
   FairRunAna* fRun = new FairRunAna();
               fRun -> SetInputFile(mcFile);
-              fRun->SetOutputFile("output_digi.root");	      
-	      
-	      TString parameterFile = "ATTPC.e15250_sim.par";
-	      TString digiParFile = dir + "/parameters/" + parameterFile;
+              fRun->SetOutputFile("output_digi.root");
+
+              TString parameterFile = "GADGET.sim.par";
+              TString digiParFile = dir + "/parameters/" + parameterFile;
 	      
               FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
               FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo();
@@ -50,7 +50,7 @@ void rundigi_sim(
       
       AtPSAtask *psaTask = new AtPSAtask(psa);
       psaTask -> SetPersistence(kTRUE);
-      psa->SetThreshold(10);      
+      psa->SetThreshold(5);
       psa -> SetMaxFinder();
       
       AtPRAtask *praTask = new AtPRAtask();
@@ -63,14 +63,14 @@ void rundigi_sim(
 
   fRun -> AddTask(clusterizer);
   fRun -> AddTask(pulse);
-  // fRun -> AddTask(psaTask);
+  fRun->AddTask(psaTask);
   // fRun -> AddTask(praTask);
   // fRun -> AddTask(trigTask);
 
   // __ Init and run ___________________________________
 
   fRun -> Init();
-  fRun->Run(0, 20);
+  fRun->Run(0, 10);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

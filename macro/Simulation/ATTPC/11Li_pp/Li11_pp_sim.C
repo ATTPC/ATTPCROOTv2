@@ -1,4 +1,4 @@
-void Li11_pp_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
+void Li11_pp_sim(Int_t nEvents = 200, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -16,8 +16,7 @@ void Li11_pp_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 
   //gSystem->Load("libAtGen.so");
 
-  ATVertexPropagator* vertex_prop = new ATVertexPropagator();
-
+  AtVertexPropagator *vertex_prop = new AtVertexPropagator();
 
   // -----   Create simulation run   ----------------------------------------
   FairRunSim* run = new FairRunSim();
@@ -77,24 +76,21 @@ void Li11_pp_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 	          Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
 	          Double_t pz = 4.20976/a;  // Z-Momentum / per nucleon!!!!!!
   	          Double_t BExcEner = 0.0;
-                  Double_t Bmass =11.043723; 
-                  Double_t NomEnergy = 0.64;//MeV 
-                      
+                  Double_t Bmass =11.043723;
+                  Double_t NomEnergy = 0.64; // MeV
 
+                  AtTPCIonGenerator *ionGen =
+                     new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
+                  ionGen->SetSpotRadius(0, -100, 0);
+                  // add the ion generator
 
-	          ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
-	          ionGen->SetSpotRadius(0,-100,0);
-	          // add the ion generator
+                  primGen->AddGenerator(ionGen);
 
-	          primGen->AddGenerator(ionGen);
+                  // primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track
+                  // added to the Primary Generator
+                  // primGen->SetTarget(30,0);
 
-  		  //primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track added to the Primary Generator
-		  // primGen->SetTarget(30,0);
-
-
-
-
-		 // Variables for 2-Body kinematics reaction
+                  // Variables for 2-Body kinematics reaction
                   std::vector<Int_t> Zp; // Zp
                   std::vector<Int_t> Ap; // Ap
                   std::vector<Int_t> Qp;//Electric charge
@@ -158,51 +154,47 @@ void Li11_pp_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
                   Double_t ThetaMinCMS = 5.0;
                   Double_t ThetaMaxCMS = 20.0;
 
+                  AtTPC2Body *TwoBody = new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE,
+                                                       ResEner, ThetaMinCMS, ThetaMaxCMS);
+                  primGen->AddGenerator(TwoBody);
 
-        ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner,ThetaMinCMS,ThetaMaxCMS);
-        primGen->AddGenerator(TwoBody);
+                  run->SetGenerator(primGen);
 
+                  // ------------------------------------------------------------------------
 
-	run->SetGenerator(primGen);
+                  //---Store the visualiztion info of the tracks, this make the output file very large!!
+                  //--- Use it only to display but not for production!
+                  run->SetStoreTraj(kTRUE);
 
-// ------------------------------------------------------------------------
+                  // -----   Initialize simulation run   ------------------------------------
+                  run->Init();
+                  // ------------------------------------------------------------------------
 
-  //---Store the visualiztion info of the tracks, this make the output file very large!!
-  //--- Use it only to display but not for production!
-  run->SetStoreTraj(kTRUE);
+                  // -----   Runtime database   ---------------------------------------------
 
+                  Bool_t kParameterMerged = kTRUE;
+                  FairParRootFileIo *parOut = new FairParRootFileIo(kParameterMerged);
+                  parOut->open(parFile.Data());
+                  rtdb->setOutput(parOut);
+                  rtdb->saveOutput();
+                  rtdb->print();
+                  // ------------------------------------------------------------------------
 
+                  // -----   Start run   ----------------------------------------------------
+                  run->Run(nEvents);
 
-  // -----   Initialize simulation run   ------------------------------------
-  run->Init();
-  // ------------------------------------------------------------------------
+                  // You can export your ROOT geometry ot a separate file
+                  run->CreateGeometryFile("./data/geofile_full.root");
+                  // ------------------------------------------------------------------------
 
-  // -----   Runtime database   ---------------------------------------------
-
-  Bool_t kParameterMerged = kTRUE;
-  FairParRootFileIo* parOut = new FairParRootFileIo(kParameterMerged);
-  parOut->open(parFile.Data());
-  rtdb->setOutput(parOut);
-  rtdb->saveOutput();
-  rtdb->print();
-  // ------------------------------------------------------------------------
-
-  // -----   Start run   ----------------------------------------------------
-   run->Run(nEvents);
-
-  //You can export your ROOT geometry ot a separate file
-  run->CreateGeometryFile("./data/geofile_full.root");
-  // ------------------------------------------------------------------------
-
-  // -----   Finish   -------------------------------------------------------
-  timer.Stop();
-  Double_t rtime = timer.RealTime();
-  Double_t ctime = timer.CpuTime();
-  cout << endl << endl;
-  cout << "Macro finished succesfully." << endl;
-  cout << "Output file is "    << outFile << endl;
-  cout << "Parameter file is " << parFile << endl;
-  cout << "Real time " << rtime << " s, CPU time " << ctime
-       << "s" << endl << endl;
-  // ------------------------------------------------------------------------
+                  // -----   Finish   -------------------------------------------------------
+                  timer.Stop();
+                  Double_t rtime = timer.RealTime();
+                  Double_t ctime = timer.CpuTime();
+                  cout << endl << endl;
+                  cout << "Macro finished succesfully." << endl;
+                  cout << "Output file is " << outFile << endl;
+                  cout << "Parameter file is " << parFile << endl;
+                  cout << "Real time " << rtime << " s, CPU time " << ctime << "s" << endl << endl;
+                  // ------------------------------------------------------------------------
 }

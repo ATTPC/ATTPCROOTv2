@@ -91,13 +91,11 @@ Bool_t AtTPC20MgDecay::ReadEvent(FairPrimaryGenerator *primGen)
     pxAlpha = ptAlpha * TMath::Cos(phiAlpha);
     pyAlpha = ptAlpha * TMath::Sin(phiAlpha);
 
+    primGen->AddTrack(22, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0); // dummy photon for track ID 0
+    primGen->AddTrack(protonPDGID, pxProton, pyProton, pzProton, fX, fY, fZ);
+    primGen->AddTrack(alphaPDGID, pxAlpha, pyAlpha, pzAlpha, fX, fY, fZ);
 
-
-  primGen->AddTrack(protonPDGID, pxProton, pyProton, pzProton, fX, fY, fZ);
-  primGen->AddTrack(alphaPDGID, pxAlpha, pyAlpha, pzAlpha, fX, fY, fZ);
-
-
-   return kTRUE;
+    return kTRUE;
 }
 
 ClassImp(AtTPC20MgDecay)
