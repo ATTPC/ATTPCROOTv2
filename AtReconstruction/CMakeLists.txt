@@ -1,5 +1,8 @@
 # Create a library called "libAtReco" which includes the source files given in the array .
 
+Set(LIBRARY_NAME AtReconstruction)
+Set(LINKDEF AtTPCRecoLinkDef.h)
+
 set(INCLUDE_DIRECTORIES
 ${HDF5_INCLUDE_DIR}
 ${ROOT_INCLUDE_DIR}
@@ -7,6 +10,8 @@ ${Boost_INCLUDE_DIRS}
 ${BASE_INCLUDE_DIRECTORIES}
 ${PCL_INCLUDE_DIRS}
 ${GENFIT2_INCLUDE_DIR}
+${HiRAEVT_INCLUDE_DIR}
+
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtMap
 ${CMAKE_SOURCE_DIR}/AtParameter
@@ -30,14 +35,9 @@ ${CMAKE_SOURCE_DIR}/AtGenerators
 
 )
 
-include_directories(${INCLUDE_DIRECTORIES})
-
-Set(LINKDEF AtTPCRecoLinkDef.h)
-Set(LIBRARY_NAME AtReconstruction)
 Set(DEPENDENCIES
     Base
     FairLogger::FairLogger
-#   Cling
 #    MCStack
     XMLParser
 # Add all library names your code depending on.
@@ -53,7 +53,6 @@ Set(DEPENDENCIES
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
     ${PCL_LIBRARIES}
-
 )
 
 set(LINK_DIRECTORIES
@@ -66,11 +65,8 @@ ${GENFIT2_LIBRARY_DIR}
 )
 
 if(PCL_FOUND)
-add_definitions(${PCL_DEFINITIONS})
+  add_definitions(${PCL_DEFINITIONS})
 endif()
-
-
-link_directories(${LINK_DIRECTORIES})
 
 set(SRCS
 # Add all the source files below this line. Those must have cxx for their extension.
@@ -136,8 +132,6 @@ AtFilter/AtFilterDivide.cxx
 #VMEDecoder/AtRawIC.cxx
 #VMEDecoder/VMERawEvent.cxx
 
-
-
 AtDecoderTask.cxx
 AtDecoder2Task.cxx
 AtHDFParserTask.cxx
@@ -146,43 +140,42 @@ AtFilterTask.cxx
 
 #AtPhiRecoTask.cxx
 #AtVMEUnpackTask.cxx
-
-
 )
 
 # Adding libraries that depend on PCL
 if(PCL_FOUND)
-MESSAGE("${Green} libAtTPCReco - Building PCL classes: RANSAC, Pattern Recognition, Hough Transformation, Minimization, Analysis, PSA/PSAFilter ${ColourReset} ")
-set(SRCS ${SRCS} 
-AtRansac/AtRansac.cxx
-AtPulseAnalyzer/AtPSAFilter.cxx
-AtPatternRecognition/AtTrackFinderHC.cxx
-AtPatternRecognition/smoothenCloud.cxx
-AtPatternRecognition/msd.cxx
-AtPatternRecognition/cluster.cxx
-AtPatternRecognition/hc.cxx
-AtPatternRecognition/fastcluster.cxx
-AtPatternRecognition/AtPRA.cxx
-AtPatternRecognition/AtRansacMod.cxx
-AtPatternRecognition/AtMlesacMod.cxx
-AtPatternRecognition/AtLmedsMod.cxx
-AtMinimization/AtMinimization.cxx
-AtMinimization/AtMCMinimization.cxx
-AtMinimization/AtMCQMinimization.cxx
-AtAnalysis/AtAnalysis.cxx
-AtAnalysis/AtProtoAnalysis.cxx
-AtAnalysis/AtTrackingAnalysis.cxx
-AtAnalysis/Atd2HeAnalysis.cxx
-HoughTransformation/AtHoughSpace.cxx
-HoughTransformation/AtHoughSpaceLine.cxx
-HoughTransformation/AtHoughSpaceCircle.cxx
-AtRansac/AtRansac.cxx
-AtPRAtask.cxx
-AtHoughTask.cxx
-AtAnalysisTask.cxx
-AtRansacTask.cxx
-#AtHierarchicalClusteringTask.cxx
-)
+  MESSAGE("${Green} libAtTPCReco - Building PCL classes: RANSAC, Pattern Recognition, Hough Transformation, Minimization, Analysis, PSA/PSAFilter ${ColourReset} ")
+
+  set(SRCS ${SRCS} 
+    AtRansac/AtRansac.cxx
+    AtPulseAnalyzer/AtPSAFilter.cxx
+    AtPatternRecognition/AtTrackFinderHC.cxx
+    AtPatternRecognition/smoothenCloud.cxx
+    AtPatternRecognition/msd.cxx
+    AtPatternRecognition/cluster.cxx
+    AtPatternRecognition/hc.cxx
+    AtPatternRecognition/fastcluster.cxx
+    AtPatternRecognition/AtPRA.cxx
+    AtPatternRecognition/AtRansacMod.cxx
+    AtPatternRecognition/AtMlesacMod.cxx
+    AtPatternRecognition/AtLmedsMod.cxx
+    AtMinimization/AtMinimization.cxx
+    AtMinimization/AtMCMinimization.cxx
+    AtMinimization/AtMCQMinimization.cxx
+    AtAnalysis/AtAnalysis.cxx
+    AtAnalysis/AtProtoAnalysis.cxx
+    AtAnalysis/AtTrackingAnalysis.cxx
+    AtAnalysis/Atd2HeAnalysis.cxx
+    HoughTransformation/AtHoughSpace.cxx
+    HoughTransformation/AtHoughSpaceLine.cxx
+    HoughTransformation/AtHoughSpaceCircle.cxx
+    AtRansac/AtRansac.cxx
+    AtPRAtask.cxx
+    AtHoughTask.cxx
+    AtAnalysisTask.cxx
+    AtRansacTask.cxx
+    #AtHierarchicalClusteringTask.cxx
+    )
 endif()
 
 if(GENFIT2_FOUND)
@@ -198,4 +191,26 @@ set(DEPENDENCIES ${DEPENDENCIES}
   )
 endif()
 
+if(HiRAEVT_FOUND)
+  MESSAGE("${Green} libAtTPCReco - Building HiRAEVT classes ${ColourReset} ")
+  list(APPEND SRCS
+    AtLinkDAQTask.cxx
+    )
+
+  set(HiRA_DEPS 
+    HTDetectors
+    )
+  list(APPEND DEPENDENCIES ${HiRA_DEPS})
+
+  foreach(dep ${HiRA_DEPS})
+    message("Getting includes for: ${dep}")
+    get_target_property(inclDir ${dep} INTERFACE_INCLUDE_DIRECTORIES)
+    message("includes: ${inclDir}")
+    list(APPEND INCLUDE_DIRECTORIES ${inclDir})
+  endforeach()
+  
+endif()
+
+link_directories(${LINK_DIRECTORIES})
+include_directories(${INCLUDE_DIRECTORIES})
 GENERATE_LIBRARY()

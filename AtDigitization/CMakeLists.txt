@@ -39,6 +39,8 @@ set(LINK_DIRECTORIES
 ${ROOT_LIBRARY_DIR}
 ${FAIRROOT_LIBRARY_DIR}
 ${SIMPAtH}/lib
+
+${HIRAEVT_SOURCE_DIR}/build/lib
 )
 
 link_directories(${LINK_DIRECTORIES})

@@ -137,7 +137,7 @@ CHECK_EXTERNAL_PACKAGE_INSTALL_DIR()
 # mandatory
 
 if(SIMPATH)
-  set(CMAKE_PREFIX_PATH ${SIMPATH} ${CMAKE_PREFIX_PATH})
+  list(APPEND CMAKE_PREFIX_PATH ${SIMPATH})
 endif()
 
 #set(PCL_DIR "/mnt/data/fair_install/pcl_1.8.1/share/pcl-1.8/")
@@ -145,6 +145,7 @@ endif()
 #set(PCL_DIR "/mnt/misc/sw/x86_64/Debian/8/fairroot/18.00/pcl/share/pcl-1.8/")
 #set(PCL_DIR "/mnt/simulations/attpcroot/fair_install_2020/pcl_1.9.0_inst/share/pcl-1.9/")
 
+message("Looking for configs in: ${CMAKE_PREFIX_PATH}")
 
 find_package(FairLogger 1.1.0 REQUIRED)
 find_package(ROOT 5.32.00 REQUIRED)
@@ -158,18 +159,25 @@ find_package(CLHEP)
 find_package(CERNLIB)
 find_package(HEPMC)
 find_package(HDF5 REQUIRED)
+message("Using HDF5Version: ${HDF5_VERSION}")
 find_package(OpenMP)
 find_package(CUDA)
 find_package(PCL 1.8)
 find_package(GENFIT2)
-#find_package(Eigen)
-#find_package(FLANN)
+find_package(HiRAEVT)
+
+find_package(Eigen)
+find_package(FLANN)
+message("FLANN: ${FLANN_VERSION}")
 #find_package(VTK)
 
 if(PCL_FOUND)
 add_definitions(${PCL_DEFINITIONS})
 endif()
 
+if(HiRAEVT_FOUND)
+  message("Found HiRAEVT version ${HiRAEVT_VERSION} at ${HiRAEVT_CONFIG}")
+endif()
 
 
 Set(Boost_NO_SYSTEM_PATHS TRUE)
@@ -246,11 +254,11 @@ if (OPENMP_FOUND)
 endif()
 
 if (PCL_FOUND)
-    MESSAGE("${Green} PCL Support Found ${ColourReset}")
-    MESSAGE(${PCL_INCLUDE_DIRS})
-    MESSAGE(${PCL_DEFINITIONS})
+  MESSAGE("${Green} PCL Support Found: PCL ${PCL_VERSION} at ${PCL_CONFIG}${ColourReset}")
+  #MESSAGE(${PCL_INCLUDE_DIRS})
+  #MESSAGE(${PCL_DEFINITIONS})
 Else()
-    MESSAGE("${BoldRed} PCL Support NOT Found: Classes and modules depending on PCL will not be built. ${ColourReset}")
+  MESSAGE("${BoldRed} PCL Support NOT Found: Classes and modules depending on PCL will not be built. ${ColourReset}")
 endif()
 
 if(GENFIT2_FOUND)
@@ -259,6 +267,7 @@ MESSAGE("${Green} ${GENFIT2_INCLUDE_DIR} ${ColourReset}")
 MESSAGE("${Green} ${GENFIT2_LIBRARY_DIR} ${ColourReset}")
 MESSAGE("${Green} ${GENFIT2_LDFLAGS} ${ColourReset}")
 endif()
+
 
 if(VTK_FOUND)
    MESSAGE("${Green} VTK Support Found ${ColourReset}")

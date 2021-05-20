@@ -58,7 +58,6 @@ void unpack(int runNumber)
 /*
   //cobo asad aget channel
   auto hash = HDFParserTask->CalculateHash(10,0,2,32);
-
   //Add all eight aux channels to the file
   for(int i = 0; i < 4; ++i)
   {
@@ -106,9 +105,10 @@ void unpack(int runNumber)
 
   //Get the number of events and unpack the whole run
   auto numEvents = HDFParserTask->GetNumEvents()/2;
-
+  std::cout << "Found " << HDFParserTask->GetNumEvents()/2 << " events in HDF5 file" << std::endl;
+  
   //numEvents = 1700;//217;
-  numEvents = 10;
+  //numEvents = 10;
   
   std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 

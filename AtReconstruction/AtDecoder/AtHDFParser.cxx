@@ -121,8 +121,8 @@ std::size_t AtHDFParser::open(char const *file)
    auto meta_size = open_group(_file, "meta");
    auto metaID = std::get<0>(meta_size);
    if (metaID > 0) {
-      char *datasetName = "meta";
-      auto dataset_dims = open_dataset(metaID, datasetName);
+      std::string datasetName = "meta";
+      auto dataset_dims = open_dataset(metaID, datasetName.data());
       auto datasetId = std::get<0>(dataset_dims);
       auto len = std::get<1>(dataset_dims).at(0);
 

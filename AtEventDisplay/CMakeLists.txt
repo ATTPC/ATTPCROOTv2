@@ -27,6 +27,8 @@ include_directories(${INCLUDE_DIRECTORIES})
 set(LINK_DIRECTORIES
 ${ROOT_LIBRARY_DIR}
 ${FAIRROOT_LIBRARY_DIR}
+
+${HIRAEVT_SOURCE_DIR}/build/lib
 )
 
 link_directories(${LINK_DIRECTORIES})
