@@ -1,4 +1,4 @@
-void O16He4_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
+void O16He4_sim(Int_t nEvents = 40, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -134,18 +134,18 @@ void O16He4_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 		 ExE.push_back(0.0);//In MeV
 
                   //--- Scattered -----
-                  Zp.push_back(8); // 12Be TRACKID=1
+                  Zp.push_back(8); // 
           	  Ap.push_back(16); //
                   Qp.push_back(0);
           	  Pxp.push_back(0.0);
           	  Pyp.push_back(0.0);
           	  Pzp.push_back(0.0);
           	  Mass.push_back(15.99491461956);//uma
-          	  ExE.push_back(0.0);
+          	  ExE.push_back(15.0);
 
 
                   // ---- Recoil -----
-		  Zp.push_back(2); // p  TRACKID=2
+		  Zp.push_back(2); //
 		  Ap.push_back(4); //
 		  Qp.push_back(0); //
 		  Pxp.push_back(0.0);
@@ -157,12 +157,51 @@ void O16He4_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 
                   Double_t ThetaMinCMS = 20.0;
                   Double_t ThetaMaxCMS = 90.0;
-
-
+		  
         AtTPC2Body* TwoBody = new AtTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner,ThetaMinCMS,ThetaMaxCMS);
-        primGen->AddGenerator(TwoBody);
+        TwoBody->SetSequentialDecay(kTRUE);
+	primGen->AddGenerator(TwoBody);
 
+        //Setting decay
+	 // Set the parameters of the decay generator
 
+   std::vector<std::vector<Int_t>> zDecay;
+   std::vector<std::vector<Int_t>> aDecay;
+   std::vector<std::vector<Int_t>> qDecay;
+   std::vector<std::vector<Double_t>> massDecay;
+
+   Int_t zB;
+   Int_t aB;
+   Double_t massDecayB;
+   Double_t massTarget;
+   Double_t exEnergy;
+   std::vector<Double_t> SepEne;
+
+   Int_t TotDecayCases = 1; // the number of decay channel (case) to be considered
+
+   zDecay.resize(TotDecayCases);
+   aDecay.resize(TotDecayCases);
+   qDecay.resize(TotDecayCases);
+   massDecay.resize(TotDecayCases);
+
+   zB=8; // 16O
+   aB=16;
+   massDecayB=15.99491461956;
+   massTarget= 0.0;
+   exEnergy = 0.0; //NB: Set to zero for sequential decay
+
+   for(auto i=0;i<4;++i){ // 4 alpha particles
+   zDecay.at(0).push_back(2);
+   aDecay.at(0).push_back(4);
+   qDecay.at(0).push_back(0);
+   massDecay.at(0).push_back(4.00260325415);
+   }
+     
+        AtTPCIonDecay *decay = new AtTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay, zB, aB, massDecayB, massTarget, exEnergy, &SepEne);
+        decay->SetSequentialDecay(kTRUE);
+	primGen->AddGenerator(decay);
+	
+	
 	run->SetGenerator(primGen);
 
 // ------------------------------------------------------------------------

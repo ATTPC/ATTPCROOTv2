@@ -35,7 +35,10 @@ public:
 
    void SetFixedTargetPosition(double vx, double vy, double vz);
    void SetFixedBeamMomentum(double px, double py, double pz);
+   inline void SetSequentialDecay(Bool_t val) {kIsDecay = val;}
 
+   inline Bool_t GetIsDecay(){return kIsDecay;}
+  
    virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
 
    /** Destructor **/
@@ -66,7 +69,7 @@ private:
    Double_t fPzBeam_buff;
    Double_t fThetaCmsMax;
    Double_t fThetaCmsMin;
-   Bool_t fIsDecay;
+   Bool_t kIsDecay;
    // Double_t fBeamMass;
    // Double_t fTargetMass;
    Bool_t fNoSolution;
@@ -75,7 +78,7 @@ private:
    Bool_t fIsFixedTargetPos; //
    Bool_t fIsFixedMomentum;  //
 
-   ClassDef(AtTPC2Body, 2)
+   ClassDef(AtTPC2Body, 3)
 };
 
 #endif
