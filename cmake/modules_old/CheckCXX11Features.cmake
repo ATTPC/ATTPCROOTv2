@@ -2,7 +2,7 @@
  #    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    #
  #                                                                              #
  #              This software is distributed under the terms of the             # 
- #              GNU Lesser General Public Licence (LGPL) version 3,             #  
+ #         GNU Lesser General Public Licence version 3 (LGPL) version 3,        #  
  #                  copied verbatim in the file "LICENSE"                       #
  ################################################################################
 # - Check which parts of the C++11 standard the compiler supports
@@ -150,5 +150,4 @@ cxx11_check_feature("sizeof_member" HAS_CXX11_SIZEOF_MEMBER)
 cxx11_check_feature("static_assert" HAS_CXX11_STATIC_ASSERT)
 cxx11_check_feature("variadic_templates" HAS_CXX11_VARIADIC_TEMPLATES)
 cxx11_check_feature("sharedpointer" HAS_CXX11_SHAREDPOINTER)
-cxx11_check_feature("funcptr-to-lambda-conversion" HAS_CXX11_PATTERN1)
 

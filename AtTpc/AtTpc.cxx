@@ -11,7 +11,7 @@
 #include "AtTpcGeo.h"
 #include "AtTpcGeoPar.h"
 #include "AtVertexPropagator.h"
-#include "AtTPCXSManager.h"
+//#include "AtTPCXSManager.h"
 
 #include "FairVolume.h"
 #include "FairGeoVolume.h"

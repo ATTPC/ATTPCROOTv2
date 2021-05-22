@@ -1,16 +1,15 @@
 # Create a library called "libAtReco" which includes the source files given in the array .
 
+Set(LINKDEF AtTPCRecoLinkDef.h)
+Set(LIBRARY_NAME AtReconstruction)
+
 set(INCLUDE_DIRECTORIES
-${HDF5_INCLUDE_DIR}
-${ROOT_INCLUDE_DIR}
-${Boost_INCLUDE_DIRS}
+#${HDF5_INCLUDE_DIR}
 ${BASE_INCLUDE_DIRECTORIES}
-${PCL_INCLUDE_DIRS}
+#${PCL_INCLUDE_DIRS}
 ${GENFIT2_INCLUDE_DIR}
+
 # Add all the folders having header files you used in the code.
-${CMAKE_SOURCE_DIR}/AtMap
-${CMAKE_SOURCE_DIR}/AtParameter
-${CMAKE_SOURCE_DIR}/AtReconstruction
 ${CMAKE_SOURCE_DIR}/AtReconstruction/GETDecoder
 ${CMAKE_SOURCE_DIR}/AtReconstruction/GETDecoder2
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtDecoder
@@ -25,52 +24,41 @@ ${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
-${CMAKE_SOURCE_DIR}/AtTpc
-${CMAKE_SOURCE_DIR}/AtGenerators
-
 )
 
-include_directories(${INCLUDE_DIRECTORIES})
-
-Set(LINKDEF AtTPCRecoLinkDef.h)
-Set(LIBRARY_NAME AtReconstruction)
+message("HD5: ${HDF5_LIBRARIES}")
 Set(DEPENDENCIES
-    Base
-    FairLogger::FairLogger
-#   Cling
-#    MCStack
-    XMLParser
-# Add all library names your code depending on.
-# Basically those are the libraries in the header files' directory.
-    AtTpcMap
-    AtParameter
-    Spectrum
-    ${HDF5_LIBRARIES}
-    ${Boost_LOG_LIBRARY}
-    ${Boost_LOG_SETUP_LIBRARY}
-    ${Boost_THREAD_LIBRARY}
-    ${Boost_DAtE_TIME_LIBRARY}
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
-    ${PCL_LIBRARIES}
+  Base
+  FairTools
+  XMLParser
+  AtTpcMap
+  AtParameter
+  AtTpc
+  AtGenerators
+  ROOT::Spectrum
+  ROOT::Core
+  
+  hdf5::hdf5-shared
+  ${Boost_LOG_LIBRARY}
+  ${Boost_LOG_SETUP_LIBRARY}
+  ${Boost_THREAD_LIBRARY}
+  ${Boost_DAtE_TIME_LIBRARY}
+  ${Boost_FILESYSTEM_LIBRARY}
+  ${Boost_SYSTEM_LIBRARY}
+  ${PCL_LIBRARIES}
 
-)
+  )
 
 set(LINK_DIRECTORIES
-${ROOT_LIBRARY_DIR}
 ${FAIRROOT_LIBRARY_DIR}
-${Boost_LIBRARY_DIRS}
-${PCL_LIBRARY_DIRS}
-${PCL_LIBRARIES}
+#${PCL_LIBRARY_DIRS}
+#${PCL_LIBRARIES}
 ${GENFIT2_LIBRARY_DIR}
 )
 
 if(PCL_FOUND)
-add_definitions(${PCL_DEFINITIONS})
+#add_definitions(${PCL_DEFINITIONS})
 endif()
-
-
-link_directories(${LINK_DIRECTORIES})
 
 set(SRCS
 # Add all the source files below this line. Those must have cxx for their extension.
@@ -136,8 +124,6 @@ AtFilter/AtFilterDivide.cxx
 #VMEDecoder/AtRawIC.cxx
 #VMEDecoder/VMERawEvent.cxx
 
-
-
 AtDecoderTask.cxx
 AtDecoder2Task.cxx
 AtHDFParserTask.cxx
@@ -146,56 +132,60 @@ AtFilterTask.cxx
 
 #AtPhiRecoTask.cxx
 #AtVMEUnpackTask.cxx
-
-
 )
 
 # Adding libraries that depend on PCL
 if(PCL_FOUND)
-MESSAGE("${Green} libAtTPCReco - Building PCL classes: RANSAC, Pattern Recognition, Hough Transformation, Minimization, Analysis, PSA/PSAFilter ${ColourReset} ")
-set(SRCS ${SRCS} 
-AtRansac/AtRansac.cxx
-AtPulseAnalyzer/AtPSAFilter.cxx
-AtPatternRecognition/AtTrackFinderHC.cxx
-AtPatternRecognition/smoothenCloud.cxx
-AtPatternRecognition/msd.cxx
-AtPatternRecognition/cluster.cxx
-AtPatternRecognition/hc.cxx
-AtPatternRecognition/fastcluster.cxx
-AtPatternRecognition/AtPRA.cxx
-AtPatternRecognition/AtRansacMod.cxx
-AtPatternRecognition/AtMlesacMod.cxx
-AtPatternRecognition/AtLmedsMod.cxx
-AtMinimization/AtMinimization.cxx
-AtMinimization/AtMCMinimization.cxx
-AtMinimization/AtMCQMinimization.cxx
-AtAnalysis/AtAnalysis.cxx
-AtAnalysis/AtProtoAnalysis.cxx
-AtAnalysis/AtTrackingAnalysis.cxx
-AtAnalysis/Atd2HeAnalysis.cxx
-HoughTransformation/AtHoughSpace.cxx
-HoughTransformation/AtHoughSpaceLine.cxx
-HoughTransformation/AtHoughSpaceCircle.cxx
-AtRansac/AtRansac.cxx
-AtPRAtask.cxx
-AtHoughTask.cxx
-AtAnalysisTask.cxx
-AtRansacTask.cxx
-#AtHierarchicalClusteringTask.cxx
-)
+  MESSAGE("${Green} libAtTPCReco - Building PCL classes: RANSAC, Pattern Recognition, Hough Transformation, Minimization, Analysis, PSA/PSAFilter ${ColourReset} ")
+  set(SRCS ${SRCS} 
+    AtRansac/AtRansac.cxx
+    AtPulseAnalyzer/AtPSAFilter.cxx
+    AtPatternRecognition/AtTrackFinderHC.cxx
+    AtPatternRecognition/smoothenCloud.cxx
+    AtPatternRecognition/msd.cxx
+    AtPatternRecognition/cluster.cxx
+    AtPatternRecognition/hc.cxx
+    AtPatternRecognition/fastcluster.cxx
+    AtPatternRecognition/AtPRA.cxx
+    AtPatternRecognition/AtRansacMod.cxx
+    AtPatternRecognition/AtMlesacMod.cxx
+    AtPatternRecognition/AtLmedsMod.cxx
+    AtMinimization/AtMinimization.cxx
+    AtMinimization/AtMCMinimization.cxx
+    AtMinimization/AtMCQMinimization.cxx
+    AtAnalysis/AtAnalysis.cxx
+    AtAnalysis/AtProtoAnalysis.cxx
+    AtAnalysis/AtTrackingAnalysis.cxx
+    AtAnalysis/Atd2HeAnalysis.cxx
+    HoughTransformation/AtHoughSpace.cxx
+    HoughTransformation/AtHoughSpaceLine.cxx
+    HoughTransformation/AtHoughSpaceCircle.cxx
+    AtRansac/AtRansac.cxx
+    AtPRAtask.cxx
+    AtHoughTask.cxx
+    AtAnalysisTask.cxx
+    AtRansacTask.cxx
+    #AtHierarchicalClusteringTask.cxx
+    )
 endif()
 
 if(GENFIT2_FOUND)
-MESSAGE("${Green} libAtTPCReco - Building GENFIT classes: AtFitter/Genfit ${ColourReset} ")
-set(SRCS ${SRCS}
-  AtFitter/AtFitter.cxx
-  AtFitter/AtGenfit.cxx
-  AtFitter/AtSpacePointMeasurement.cxx
-  AtFitterTask.cxx
-  )
-set(DEPENDENCIES ${DEPENDENCIES}
-  ${GENFIT2_LIBRARY_DIR}/libgenfit2.so
-  )
+  MESSAGE("${Green} libAtTPCReco - Building GENFIT classes: AtFitter/Genfit ${ColourReset} ")
+  set(SRCS ${SRCS}
+    AtFitter/AtFitter.cxx
+    AtFitter/AtGenfit.cxx
+    AtFitter/AtSpacePointMeasurement.cxx
+    AtFitterTask.cxx
+    )
+  set(DEPENDENCIES ${DEPENDENCIES}
+    ${GENFIT2_LIBRARY_DIR}/libgenfit2.so
+    )
 endif()
 
-GENERATE_LIBRARY()
+generate_target_root_library(${LIBRARY_NAME}
+  LINKDEF ${LINKDEF}
+  SRCS ${SRCS}
+  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
+  LIBRARY_DIR ${LINK_DIRECTORIES}
+  DEPS_PUBLIC ${DEPENDENCIES}
+  )

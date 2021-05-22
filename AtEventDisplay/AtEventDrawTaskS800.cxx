@@ -17,6 +17,7 @@
 #include "TStyle.h"
 #include "TRandom.h"
 #include "TColor.h"
+#include "TVirtualX.h"
 
 #include "AtTpcMap.h"
 #include "AtTpcProtoMap.h"
@@ -1787,8 +1788,8 @@ void AtEventDrawTaskS800::SelectPad(const char *rawevt)
       int pxmin = gPad->XtoAbsPixel(uxmin);
       int pxmax = gPad->XtoAbsPixel(uxmax);
       if (pyold)
-         gVirtualX->DrawLine(pxmin, pyold, pxmax, pyold);
-      gVirtualX->DrawLine(pxmin, py, pxmax, py);
+         TVirtualX::Instance()->DrawLine(pxmin, pyold, pxmax, pyold);
+      TVirtualX::Instance()->DrawLine(pxmin, py, pxmax, py);
       gPad->SetUniqueID(py);
       Float_t upx = gPad->AbsPixeltoX(px);
       Float_t upy = gPad->AbsPixeltoY(py);

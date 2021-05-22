@@ -26,8 +26,7 @@ if(NOT WIN32)
 endif()
 
 # Check if cmake has the required version
-CMAKE_MINIMUM_REQUIRED(VERSION  3.11.0 FATAL_ERROR)
-cmake_policy(VERSION 3.11...3.14)
+CMAKE_MINIMUM_REQUIRED(VERSION  3.11 FATAL_ERROR)
 
 ### CMP0025   Compiler id for Apple Clang is now AppleClang.
 ### CMP0042   MACOSX_RPATH is enabled by default.
@@ -65,31 +64,21 @@ SET(FAIRROOTPATH $ENV{FAIRROOTPATH})
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/
 # is checked
-#Remove defaults becuse we want to fource config loading over FindModules
-#set(CMAKE_MODULE_PATH "${FAIRROOTPATH}/share/fairbase/cmake/modules"  ${CMAKE_MODULE_PATH})
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+set(CMAKE_MODULE_PATH "${FAIRROOTPATH}/share/fairbase/cmake/modules"  ${CMAKE_MODULE_PATH})
 
 Set(CheckSrcDir "${FAIRROOTPATH}/share/fairbase/cmake/checks")
 
-if(SIMPATH)
-  set(CMAKE_PREFIX_PATH ${SIMPATH} ${CMAKE_PREFIX_PATH})
-  set(LD_LIBRARY_PATH ${LD_LIBRARY_PATH} ${SIMPATH}/lib)
-endif()
-
-find_package(FairRoot REQUIRED)
+find_package(FairRoot)
 
 # Load some basic macros which are needed later on
 include(FairMacros)
 include(WriteConfigFile)
 include(CTest)
 include(CheckCompiler)
-include(AtROOTMacros)
-include(FairRootTargetRootDictionary)
-include(GNUInstallDirs)
-  
 #include(CheckFortran)
 
-#set(CMAKE_CXX_FLAGS -std=c++14)
+set(CMAKE_CXX_FLAGS -std=c++14)
 
 #Check the compiler and set the compile and link flags
 If(NOT CMAKE_BUILD_TYPE)
@@ -147,69 +136,69 @@ CHECK_EXTERNAL_PACKAGE_INSTALL_DIR()
 # For example the framework can run without GEANT4, but ROOT is
 # mandatory
 
+if(SIMPATH)
+  set(CMAKE_PREFIX_PATH ${SIMPATH} ${CMAKE_PREFIX_PATH})
+endif()
 
 message("Looking for config files in : ${CMAKE_PREFIX_PATH}")
-find_package2(PUBLIC ROOT 6.16 CONFIG REQUIRED)
-include(ROOTMacros)
-if(ROOT_vmc_FOUND)
-  set(VMCLIB ROOT::VMC)
-else()
-  find_package2(PUBLIC VMC REQUIRED)
-  set(VMCLIB VMCLibrary)
-endif()
 
-#Look for target
-#get_target_property(dirs ROOT::Core INTERFACE_LINK_DIRECTORIES)
-#message("base: ${dirs}")
+find_package(FairLogger 1.1.0 REQUIRED)
+message("FairLogger: ${FairLogger_CONFIG}")
 
-
-find_package2(PUBLIC FairLogger  VERSION 1.2.0 REQUIRED)
-foreach(dep IN LISTS FairLogger_PACKAGE_DEPENDENCIES)
-  if(NOT dep STREQUAL "Boost")
-    find_package2(PUBLIC ${dep} REQUIRED VERSION ${FairLogger_${dep}_VERSION})
-    set(PROJECT_${dep}_VERSION ${FairLogger_${dep}_VERSION})
-  endif()
-endforeach()
-
-find_package2(PUBLIC Pythia6)
-find_package2(PUBLIC Pythia8)
-find_package2(PUBLIC Geant3)
-find_package2(PUBLIC Geant4)
-Find_Package2(PUBLIC VGM)
-find_package2(PUBLIC Geant4VMC)
+find_package(ROOT 5.32.00 REQUIRED)
+find_package(Pythia8)
+find_package(GENERATORS REQUIRED)
+find_package(GEANT3 REQUIRED)
+find_package(GEANT4)
+find_package(GEANT4DATA)
+find_package(GEANT4VMC)
+find_package(CLHEP)
+find_package(CERNLIB)
 find_package(HEPMC)
+find_package(Boost CONFIG REQUIRED)
+message("Found boost: ${Boost_VERSION} in ${Boost_CONFIG}")
+find_package(HDF5 CONFIG REQUIRED)
+message("Found HDF5: ${HDF5_VERSION} in ${HDF5_CONFIG}")
+find_package(OpenMP)
+find_package(CUDA)
 
-Set(Boost_NO_SYSTEM_PATHS TRUE)
-Set(Boost_NO_BOOST_CMAKE TRUE)
-If(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
-  set(BOOST_ROOT ${SIMPATH})
-  set(GSL_DIR ${SIMPATH})
-Else(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
-  set(BOOST_ROOT ${SIMPATH}/basics/boost)
-  set(GSL_DIR ${SIMPATH}/basics/gsl)
-EndIf(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
+message("Looking for PCL")
+find_package(PCL 1.8 CONFIG)
+message("Found PCL: ${PCL_VERSION} in ${PCL_CONFIG}")
+find_package(GENFIT2)
 
+#find_package(Eigen)
+#find_package(FLANN)
+#find_package(VTK)
 
-if(NOT DEFINED Boost_NO_SYSTEM_PATHS)
-  Set(Boost_NO_SYSTEM_PATHS TRUE)
-endif()
-if(NOT DEFINED Boost_NO_BOOST_CMAKE AND CMAKE_VERSION VERSION_LESS 3.15)
-  Set(Boost_NO_BOOST_CMAKE TRUE)
-endif()
-if(Boost_NO_BOOST_CMAKE)
-  # If an older version of boost is found both of the variables below are
-  # cached and in a second cmake run, a good boost version is found even
-  # if the version is to old.
-  # To overcome this problem both variables are cleared before checking
-  # for boost.
-  Unset(Boost_INCLUDE_DIR CACHE)
-  Unset(Boost_LIBRARY_DIRS CACHE)
+if(PCL_FOUND)
+add_definitions(${PCL_DEFINITIONS})
 endif()
 
-find_package2(PUBLIC Boost
-  VERSION 1.67
-  ADD_REQUIREMENTS_OF FairRoot FairMQ FairLogger
-)
+
+
+#Set(Boost_NO_SYSTEM_PATHS TRUE)
+#Set(Boost_NO_BOOST_CMAKE TRUE)
+
+#If(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
+#  set(BOOST_ROOT ${SIMPATH})
+#  set(GSL_DIR ${SIMPATH})
+#Else(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
+#  set(BOOST_ROOT ${SIMPATH}/basics/boost)
+#  set(GSL_DIR ${SIMPATH}/basics/gsl)
+#EndIf(${ROOT_LIBRARY_DIR} MATCHES /lib/root)
+
+
+#Message("-- Looking for Boost ...")
+# If an older version of boost is found both of the variables below are
+# cached and in a second cmake run, a good boost version is found even
+# if the version is to old.
+# To overcome this problem both variables are cleared before checking
+# for boost.
+#Unset(Boost_INCLUDE_DIR CACHE)
+#Unset(Boost_LIBRARY_DIRS CACHE)
+
+#find_package(Boost 1.41 CONFIG)
 
 If (Boost_FOUND)
   Set(Boost_Avail 1)
@@ -217,39 +206,65 @@ Else (Boost_FOUND)
   Set(Boost_Avail 0)
 EndIf (Boost_FOUND)
 
-## Add additional packages beyond the initial
-find_package2(PUBLIC HDF5 REQUIRED CONFIG)
-find_package2(PUBLIC PCL 1.8 CONFIG)
-find_package2(PUBLIC GEANT4DATA)
-#find_package(GENFIT2)
-
-# Possibly unused packages? #
-#find_package(GENERATORS REQUIRED)
-#find_package(CLHEP)
-#find_package(CERNLIB)
-#find_package(OpenMP)
-#find_package(CUDA)
-#find_package(Eigen)
-#find_package(FLANN)
-#find_package(VTK)
-
 # set a variable which should be used in all CMakeLists.txt
 # Defines all basic include directories from fairbase
 SetBasicVariables()
 
 # Set the library version in the main CMakeLists.txt
-SET(ATTPCROOT_MAJOR_VERSION 0)
-SET(ATTPCROOT_MINOR_VERSION 0)
-SET(ATTPCROOT_PATCH_VERSION 0)
-SET(ATTPCROOT_VERSION "${ATTPCROOT_MAJOR_VERSION}.${ATTPCROOT_MINOR_VERSION}.${ATTPCROOT_PATCH_VERSION}")
+SET(FAIRROOT_MAJOR_VERSION 0)
+SET(FAIRROOT_MINOR_VERSION 0)
+SET(FAIRROOT_PATCH_VERSION 0)
+SET(FAIRROOT_VERSION "${FAIRROOT_MAJOR_VERSION}.${FAIRROOT_MINOR_VERSION}.${FAIRROOT_PATCH_VERSION}")
 
-set(ATTPCROOT_LIBRARY_PROPERTIES ${ATTPCROOT_LIBRARY_PROPERTIES}
-  VERSION "${ATTPCROOT_VERSION}"
-  SOVERSION "${ATTPCROOT_MAJOR_VERSION}.${ATTPCROOT_MINOR_VERSION}"
+If(NOT DEFINED ROOT_FOUND_VERSION)
+SET(ROOT_FOUND_VERSION "${found_vers}")
+EndIf()
+
+MESSAGE("${Green} ROOT_FOUND_VERSION = ${ROOT_FOUND_VERSION}${ColourReset}")
+
+If(ROOT_FOUND_VERSION LESS 59999)
+SET(FAIRROOT_LIBRARY_PROPERTIES ${FAIRROOT_LIBRARY_PROPERTIES}
+VERSION "${FAIRROOT_VERSION}"
+SOVERSION "${FAIRROOT_MAJOR_VERSION}"
+SUFFIX ".so"
 )
-set(PROJECT_LIBRARY_PROPERTIES ${ATTPCROOT_LIBRARY_PROPERTIES})
+Else()
+SET(FAIRROOT_LIBRARY_PROPERTIES ${FAIRROOT_LIBRARY_PROPERTIES}
+VERSION "${FAIRROOT_VERSION}"
+SOVERSION "${FAIRROOT_MAJOR_VERSION}"
+)
+EndIf()
 
-configure_file(${CMAKE_SOURCE_DIR}/cmake/scripts/FairRootConfigVersion.cmake.in "${CMAKE_BINARY_DIR}/FairRootConfigVersion.cmake" @ONLY)
+
+if (OPENMP_FOUND)
+    MESSAGE("${Green} OpenMP Support Found${ColourReset}")
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+   # set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS_DEBUG} ${OpenMP_C_FLAGS}")
+   # set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_DEBUG} ${OpenMP_CXX_FLAGS}")
+
+ endif()
+
+if (PCL_FOUND)
+    MESSAGE("${Green} PCL Support Found ${ColourReset}")
+    MESSAGE(${PCL_INCLUDE_DIRS})
+    MESSAGE(${PCL_DEFINITIONS})
+  Else()
+    MESSAGE("${BoldRed} PCL Support NOT Found: Classes and modules depending on PCL will not be built. ${ColourReset}")
+endif()
+
+if(GENFIT2_FOUND)
+MESSAGE("${Green} GENFIT FOUND ${ColourReset}")
+MESSAGE("${Green} ${GENFIT2_INCLUDE_DIR} ${ColourReset}")
+MESSAGE("${Green} ${GENFIT2_LIBRARY_DIR} ${ColourReset}")
+MESSAGE("${Green} ${GENFIT2_LDFLAGS} ${ColourReset}")
+endif()
+
+if(VTK_FOUND)
+   MESSAGE("${Green} VTK Support Found ${ColourReset}")
+   #MESSAGE(${VTK_INCLUDE_DIRS})
+endif()
+
 
 Generate_Version_Info()
 
@@ -270,64 +285,29 @@ ENDIF(HAS_CXX11_SHAREDPOINTER)
 # cause another cmake executable to run.  The same process will walk through
 # the project's entire directory structure.
 
-add_subdirectory (AtData)
-add_subdirectory (AtGenerators)
-add_subdirectory (AtTpc)
-add_subdirectory (AtSiArray)
-add_subdirectory (AtPassive)
-add_subdirectory (AtField)
-add_subdirectory (AtMap)
-add_subdirectory (AtReconstruction)
-add_subdirectory (AtParameter)
-add_subdirectory (AtDigitization)
-add_subdirectory (AtS800)
-add_subdirectory (AtApollo)
+#add_subdirectory (AtData)
+#add_subdirectory (AtGenerators)
+#add_subdirectory (AtTpc)
+#add_subdirectory (AtSiArray)
+#add_subdirectory (AtPassive)
+#add_subdirectory (AtField)
+#add_subdirectory (AtMap)
+#add_subdirectory (AtReconstruction)
+#add_subdirectory (AtParameter)
+#add_subdirectory (AtDigitization)
+#add_subdirectory (AtS800)
+#add_subdirectory (AtApollo)
 
-if (PCL_FOUND)
-  add_subdirectory (AtEventDisplay)
-endif()
+#if (PCL_FOUND)
+ # add_subdirectory (AtEventDisplay)
+#endif()
 
 WRITE_CONFIG_FILE(config.sh)
 
-# Summary of what was found
-If(NOT DEFINED ROOT_FOUND_VERSION)
-SET(ROOT_FOUND_VERSION "${found_vers}")
-EndIf()
 
-MESSAGE("${Green} ROOT_FOUND_VERSION = ${ROOT_FOUND_VERSION}${ColourReset}")
-
-if (OPENMP_FOUND)
-  MESSAGE("${Green} OpenMP Support Found${ColourReset}")
-  set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-  # set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS_DEBUG} ${OpenMP_C_FLAGS}")
-  # set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_DEBUG} ${OpenMP_CXX_FLAGS}")
-  
-endif()
- 
-if (PCL_FOUND)
-  MESSAGE("${Green} PCL Support Found ${ColourReset}")
-  MESSAGE(${PCL_INCLUDE_DIRS})
-  MESSAGE(${PCL_DEFINITIONS})
-Else()
-  MESSAGE("${BoldRed} PCL Support NOT Found: Classes and modules depending on PCL will not be built. ${ColourReset}")
-endif()
-
-if(GENFIT2_FOUND)
-  MESSAGE("${Green} GENFIT FOUND ${ColourReset}")
-  MESSAGE("${Green} ${GENFIT2_INCLUDE_DIR} ${ColourReset}")
-  MESSAGE("${Green} ${GENFIT2_LIBRARY_DIR} ${ColourReset}")
-  MESSAGE("${Green} ${GENFIT2_LDFLAGS} ${ColourReset}")
-endif()
-
-if(VTK_FOUND)
-  MESSAGE("${Green} VTK Support Found ${ColourReset}")
-  #MESSAGE(${VTK_INCLUDE_DIRS})
-endif()
-
-configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake
-  ${CMAKE_BINARY_DIR}/CTestCustom.cmake
-  )
+#configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake
+#  ${CMAKE_BINARY_DIR}/CTestCustom.cmake
+#  )
 
 if(CMAKE_CXX_FLAGS)
   message(STATUS "  ")

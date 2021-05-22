@@ -46,6 +46,7 @@
 #include "TRandom.h"
 #include "TStyle.h"
 #include "TVector3.h"
+#include "TVirtualX.h"
 
 #ifndef __CINT__ // Boost
 #include <boost/multi_array.hpp>
@@ -1660,8 +1661,8 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
          int pxmin = gPad->XtoAbsPixel(uxmin);
          int pxmax = gPad->XtoAbsPixel(uxmax);
          if (pyold)
-            gVirtualX->DrawLine(pxmin, pyold, pxmax, pyold);
-         gVirtualX->DrawLine(pxmin, py, pxmax, py);
+            TVirtualX::Instance()->DrawLine(pxmin, pyold, pxmax, pyold);
+         TVirtualX::Instance()->DrawLine(pxmin, py, pxmax, py);
          gPad->SetUniqueID(py);
          Float_t upx = gPad->AbsPixeltoX(px);
          Float_t upy = gPad->AbsPixeltoY(py);
