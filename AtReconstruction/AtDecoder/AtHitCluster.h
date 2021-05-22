@@ -12,13 +12,18 @@
 class AtHitCluster : public AtHit {
 public:
    AtHitCluster();
+   AtHitCluster(AtHitCluster *cluster);
    virtual ~AtHitCluster() {}
 
    void Clear(Option_t * = "");
 
    void SetCovMatrix(TMatrixD matrix); ///< Set covariance matrix
    TMatrixD GetCovMatrix() const;      ///< Get covariance matrix
-
+    void SetPOCA(TVector3 p);
+    TVector3 GetPOCA();
+    void SetLength(Double_t length);
+    Double_t GetLength();
+  
 protected:
    TMatrixD fCovMatrix; ///< Cluster covariance matrix
 

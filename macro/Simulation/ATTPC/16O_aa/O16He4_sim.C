@@ -134,114 +134,110 @@ void O16He4_sim(Int_t nEvents = 40, TString mcEngine = "TGeant4")
 		 ExE.push_back(0.0);//In MeV
 
                   //--- Scattered -----
-                  Zp.push_back(8); // 
-          	  Ap.push_back(16); //
-                  Qp.push_back(0);
-          	  Pxp.push_back(0.0);
-          	  Pyp.push_back(0.0);
-          	  Pzp.push_back(0.0);
-          	  Mass.push_back(15.99491461956);//uma
-          	  ExE.push_back(15.0);
+       Zp.push_back(8);  //
+       Ap.push_back(16); //
+       Qp.push_back(0);
+       Pxp.push_back(0.0);
+       Pyp.push_back(0.0);
+       Pzp.push_back(0.0);
+       Mass.push_back(15.99491461956); // uma
+       ExE.push_back(15.0);
 
+       // ---- Recoil -----
+       Zp.push_back(2); //
+       Ap.push_back(4); //
+       Qp.push_back(0); //
+       Pxp.push_back(0.0);
+       Pyp.push_back(0.0);
+       Pzp.push_back(0.0);
+       Mass.push_back(4.00260325415); // uma
+       ExE.push_back(0.0);            // In MeV
 
-                  // ---- Recoil -----
-		  Zp.push_back(2); //
-		  Ap.push_back(4); //
-		  Qp.push_back(0); //
-		  Pxp.push_back(0.0);
-                  Pyp.push_back(0.0);
-		  Pzp.push_back(0.0);
-                  Mass.push_back(4.00260325415);//uma
-		  ExE.push_back(0.0);//In MeV
+       Double_t ThetaMinCMS = 20.0;
+       Double_t ThetaMaxCMS = 90.0;
 
+       AtTPC2Body *TwoBody = new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner,
+                                            ThetaMinCMS, ThetaMaxCMS);
+       TwoBody->SetSequentialDecay(kTRUE);
+       primGen->AddGenerator(TwoBody);
 
-                  Double_t ThetaMinCMS = 20.0;
-                  Double_t ThetaMaxCMS = 90.0;
-		  
-        AtTPC2Body* TwoBody = new AtTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner,ThetaMinCMS,ThetaMaxCMS);
-        TwoBody->SetSequentialDecay(kTRUE);
-	primGen->AddGenerator(TwoBody);
+       // Setting decay
+       // Set the parameters of the decay generator
 
-        //Setting decay
-	 // Set the parameters of the decay generator
+       std::vector<std::vector<Int_t>> zDecay;
+       std::vector<std::vector<Int_t>> aDecay;
+       std::vector<std::vector<Int_t>> qDecay;
+       std::vector<std::vector<Double_t>> massDecay;
 
-   std::vector<std::vector<Int_t>> zDecay;
-   std::vector<std::vector<Int_t>> aDecay;
-   std::vector<std::vector<Int_t>> qDecay;
-   std::vector<std::vector<Double_t>> massDecay;
+       Int_t zB;
+       Int_t aB;
+       Double_t massDecayB;
+       Double_t massTarget;
+       Double_t exEnergy;
+       std::vector<Double_t> SepEne;
 
-   Int_t zB;
-   Int_t aB;
-   Double_t massDecayB;
-   Double_t massTarget;
-   Double_t exEnergy;
-   std::vector<Double_t> SepEne;
+       Int_t TotDecayCases = 1; // the number of decay channel (case) to be considered
 
-   Int_t TotDecayCases = 1; // the number of decay channel (case) to be considered
+       zDecay.resize(TotDecayCases);
+       aDecay.resize(TotDecayCases);
+       qDecay.resize(TotDecayCases);
+       massDecay.resize(TotDecayCases);
 
-   zDecay.resize(TotDecayCases);
-   aDecay.resize(TotDecayCases);
-   qDecay.resize(TotDecayCases);
-   massDecay.resize(TotDecayCases);
+       zB = 8; // 16O
+       aB = 16;
+       massDecayB = 15.99491461956;
+       massTarget = 0.0;
+       exEnergy = 0.0; // NB: Set to zero for sequential decay
 
-   zB=8; // 16O
-   aB=16;
-   massDecayB=15.99491461956;
-   massTarget= 0.0;
-   exEnergy = 0.0; //NB: Set to zero for sequential decay
+       for (auto i = 0; i < 4; ++i) { // 4 alpha particles
+          zDecay.at(0).push_back(2);
+          aDecay.at(0).push_back(4);
+          qDecay.at(0).push_back(0);
+          massDecay.at(0).push_back(4.00260325415);
+       }
 
-   for(auto i=0;i<4;++i){ // 4 alpha particles
-   zDecay.at(0).push_back(2);
-   aDecay.at(0).push_back(4);
-   qDecay.at(0).push_back(0);
-   massDecay.at(0).push_back(4.00260325415);
-   }
-     
-        AtTPCIonDecay *decay = new AtTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay, zB, aB, massDecayB, massTarget, exEnergy, &SepEne);
-        decay->SetSequentialDecay(kTRUE);
-	primGen->AddGenerator(decay);
-	
-	
-	run->SetGenerator(primGen);
+       AtTPCIonDecay *decay =
+          new AtTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay, zB, aB, massDecayB, massTarget, exEnergy, &SepEne);
+       decay->SetSequentialDecay(kTRUE);
+       primGen->AddGenerator(decay);
 
-// ------------------------------------------------------------------------
+       run->SetGenerator(primGen);
 
-  //---Store the visualiztion info of the tracks, this make the output file very large!!
-  //--- Use it only to display but not for production!
-  run->SetStoreTraj(kTRUE);
+       // ------------------------------------------------------------------------
 
+       //---Store the visualiztion info of the tracks, this make the output file very large!!
+       //--- Use it only to display but not for production!
+       run->SetStoreTraj(kTRUE);
 
+       // -----   Initialize simulation run   ------------------------------------
+       run->Init();
+       // ------------------------------------------------------------------------
 
-  // -----   Initialize simulation run   ------------------------------------
-  run->Init();
-  // ------------------------------------------------------------------------
+       // -----   Runtime database   ---------------------------------------------
 
-  // -----   Runtime database   ---------------------------------------------
+       Bool_t kParameterMerged = kTRUE;
+       FairParRootFileIo *parOut = new FairParRootFileIo(kParameterMerged);
+       parOut->open(parFile.Data());
+       rtdb->setOutput(parOut);
+       rtdb->saveOutput();
+       rtdb->print();
+       // ------------------------------------------------------------------------
 
-  Bool_t kParameterMerged = kTRUE;
-  FairParRootFileIo* parOut = new FairParRootFileIo(kParameterMerged);
-  parOut->open(parFile.Data());
-  rtdb->setOutput(parOut);
-  rtdb->saveOutput();
-  rtdb->print();
-  // ------------------------------------------------------------------------
+       // -----   Start run   ----------------------------------------------------
+       run->Run(nEvents);
 
-  // -----   Start run   ----------------------------------------------------
-   run->Run(nEvents);
+       // You can export your ROOT geometry ot a separate file
+       run->CreateGeometryFile("./data/geofile_full.root");
+       // ------------------------------------------------------------------------
 
-  //You can export your ROOT geometry ot a separate file
-  run->CreateGeometryFile("./data/geofile_full.root");
-  // ------------------------------------------------------------------------
-
-  // -----   Finish   -------------------------------------------------------
-  timer.Stop();
-  Double_t rtime = timer.RealTime();
-  Double_t ctime = timer.CpuTime();
-  cout << endl << endl;
-  cout << "Macro finished succesfully." << endl;
-  cout << "Output file is "    << outFile << endl;
-  cout << "Parameter file is " << parFile << endl;
-  cout << "Real time " << rtime << " s, CPU time " << ctime
-       << "s" << endl << endl;
-  // ------------------------------------------------------------------------
+       // -----   Finish   -------------------------------------------------------
+       timer.Stop();
+       Double_t rtime = timer.RealTime();
+       Double_t ctime = timer.CpuTime();
+       cout << endl << endl;
+       cout << "Macro finished succesfully." << endl;
+       cout << "Output file is " << outFile << endl;
+       cout << "Parameter file is " << parFile << endl;
+       cout << "Real time " << rtime << " s, CPU time " << ctime << "s" << endl << endl;
+       // ------------------------------------------------------------------------
 }

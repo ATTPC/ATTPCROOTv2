@@ -32,17 +32,15 @@ class AtGenfit : public AtFitter {
 
 public:
    AtGenfit();
-   ~AtGenfit();
-
-public:
-   AtGenfit();
-   ~AtGenfit();
+  ~AtGenfit();
 
    bool FitTracks(AtPatternEvent &patternEvent);
    void Init();
    void SetMinIterations(Int_t value);
    void SetMaxIterations(Int_t value);
-
+   TClonesArray* GetGenfitTrackArray();
+  
+  
 private:
    genfit::AbsKalmanFitter *fKalmanFitter;
    TClonesArray *fGenfitTrackArray;

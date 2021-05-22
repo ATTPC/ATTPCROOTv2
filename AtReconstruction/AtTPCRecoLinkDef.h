@@ -69,10 +69,10 @@
 //#pragma link C++ class AtRansac+;
 
 /* Classes that depend on Genfit2 */
-//#pragma link C++ class genfit::AtSpacepointMeasurement+ ;
-//#pragma link C++ class AtFITTER::AtFitter+ ;
-//#pragma link C++ class AtFITTER::AtGenfit+ ;
-//#pragma link C++ namespace AtFITTER;
+#pragma link C++ class genfit::AtSpacepointMeasurement+ ;
+#pragma link C++ class AtFITTER::AtFitter+ ;
+#pragma link C++ class AtFITTER::AtGenfit+ ;
+#pragma link C++ namespace AtFITTER;
 //#pragma link C++ class AtFitterTask+ ;
 
 //#ifdef BUILD_PCL

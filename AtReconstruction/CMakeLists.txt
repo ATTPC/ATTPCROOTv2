@@ -191,7 +191,7 @@ set(SRCS ${SRCS}
   AtFitter/AtFitter.cxx
   AtFitter/AtGenfit.cxx
   AtFitter/AtSpacePointMeasurement.cxx
-  AtFitterTask.cxx
+  #AtFitterTask.cxx
   )
 set(DEPENDENCIES ${DEPENDENCIES}
   ${GENFIT2_LIBRARY_DIR}/libgenfit2.so
