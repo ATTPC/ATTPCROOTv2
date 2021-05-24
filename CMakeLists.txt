@@ -270,6 +270,10 @@ ENDIF(HAS_CXX11_SHAREDPOINTER)
 # cause another cmake executable to run.  The same process will walk through
 # the project's entire directory structure.
 
+# Make sure that we always return something when we say we are
+# I have seen this cause all sorts of errors in the code from segfaults to
+# infinite loops. 
+
 add_subdirectory (AtData)
 add_subdirectory (AtGenerators)
 add_subdirectory (AtTpc)

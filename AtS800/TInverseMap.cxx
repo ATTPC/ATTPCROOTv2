@@ -142,6 +142,7 @@ bool TInverseMap::ReadMultiMapFile(std::vector<std::string> &mapfile_v)
          // fMap_s[j].push_back(invrow_s);
       }
    std::cout << "eval func " << fMap_s[0].at(0).coefficient->Eval(0.5) << " " << spline[0]->Eval(0.5) << std::endl;
+   return true;
 }
 
 void TInverseMap::Print(Option_t *opt) const

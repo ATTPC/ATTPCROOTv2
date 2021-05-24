@@ -109,6 +109,7 @@ void AtDecoder2Task::SetMapOpt(Int_t value)
 Bool_t AtDecoder2Task::SetMap(Char_t const *map)
 {
    fMap = map;
+   return kTRUE;
 }
 void AtDecoder2Task::SetPseudoTopologyFrame(Bool_t value)
 {
@@ -143,7 +144,7 @@ InitStatus AtDecoder2Task::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      LOG(error) << "Cannot find RootManager!";
 
       return kERROR;
    }
@@ -182,7 +183,7 @@ InitStatus AtDecoder2Task::Init()
    Bool_t kMapIn = fDecoder->SetAtTpcMap(fMap);
    // std::cout<<kMapIn<<std::endl;
    if (!kMapIn) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtTPC Map!");
+      LOG(error) << "Cannot find AtTPC Map!";
 
       return kERROR;
    }
@@ -204,7 +205,7 @@ InitStatus AtDecoder2Task::Init()
          return kERROR;
        }*/
    //  LOG(INFO) << fPar -> GetGainCalibrationDataFileName() << " " << fPar -> GetGCConstant() << " " << fPar ->
-   //  GetGCLinear() << " " << fPar -> GetGCQuadratic() << FairLogger::endl;
+   //  GetGCLinear() << " " << fPar -> GetGCQuadratic();
 
    /*  fDecoder -> SetGainReference(fPar -> GetGCConstant(), fPar -> GetGCLinear(), fPar -> GetGCQuadratic());
      fLogger -> Info(MESSAGE_ORIGIN, "Gain calibration data is set from parameter list!");
@@ -233,15 +234,15 @@ void AtDecoder2Task::SetParContainers()
 {
    FairRun *run = FairRun::Instance();
    if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+      LOG(fatal) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+      LOG(fatal) << "No runtime database!";
 
    fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
    if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "Cannot find AtDigiPar!");
+      LOG(fatal) << "Cannot find AtDigiPar!";
 }
 
 void AtDecoder2Task::Exec(Option_t *opt)
@@ -286,7 +287,7 @@ void AtDecoder2Task::FinishEvent()
    fRawEvent = fDecoder->GetRawEvent();
 
    if (fRawEvent == NULL) {
-      fLogger->Info(MESSAGE_ORIGIN, "End of file. Terminating FairRun.");
+      LOG(info) << "End of file. Terminating FairRun.";
       FairRootManager::Instance()->SetFinishRun();
    }
 }

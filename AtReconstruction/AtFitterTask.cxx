@@ -47,28 +47,28 @@ InitStatus AtFitterTask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 
    fEventHArray = (TClonesArray *)ioMan->GetObject("AtEventH");
    if (fEventHArray == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtEvent array!");
+      LOG(error) << "Cannot find AtEvent array!";
       return kERROR;
    }
 
    // Algorithm selection
 
    if (fFitterAlgorithm == 0) {
-      fLogger->Info(MESSAGE_ORIGIN, "Using GENFIT2");
+      LOG(info) << "Using GENFIT2";
 
       fFitter = new AtFITTER::AtGenfit();
 
    } else if (fFitterAlgorithm == 1) {
-      fLogger->Error(MESSAGE_ORIGIN, "Fitter algorithm not defined!");
+      LOG(error) << "Fitter algorithm not defined!";
       return kERROR;
    } else if (fFitterAlgorithm == 2) {
-      fLogger->Error(MESSAGE_ORIGIN, "Fitter algorithm not defined!");
+      LOG(error) << "Fitter algorithm not defined!";
       return kERROR;
    }
 
@@ -77,19 +77,19 @@ InitStatus AtFitterTask::Init()
 
 void AtFitterTask::SetParContainers()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "SetParContainers of AtFitterTask");
+   LOG(debug) << "SetParContainers of AtFitterTask";
 
    FairRun *run = FairRun::Instance();
    if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+      LOG(fatal) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+      LOG(fatal) << "No runtime database!";
 
    fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
    if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");
+      LOG(fatal) << "AtDigiPar not found!!";
 }
 
 void AtFitterTask::Exec(Option_t *option) {}

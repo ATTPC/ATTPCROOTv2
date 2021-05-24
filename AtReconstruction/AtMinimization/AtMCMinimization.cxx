@@ -17,8 +17,6 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
-ClassImp(AtMCMinimization)
-
    AtMCMinimization::AtMCMinimization()
 {
 
@@ -36,15 +34,15 @@ ClassImp(AtMCMinimization)
 
    FairRun *run = FairRun::Instance();
    if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+      LOG(fatal) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+      LOG(fatal) << "No runtime database!";
 
    fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
    if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");
+      LOG(fatal) << "AtDigiPar not found!!";
 
    fDriftVelocity = fPar->GetDriftVelocity();
    fTBTime = fPar->GetTBTime();
@@ -76,10 +74,6 @@ ClassImp(AtMCMinimization)
    kDebug = kFALSE;
    kVerbose = kFALSE;
 }
-
-AtMCMinimization::~AtMCMinimization() {}
-
-Int_t AtMCMinimization::GetMinimization() {}
 
 std::vector<Double_t> AtMCMinimization::GetPosXMin()
 {
@@ -133,6 +127,7 @@ std::vector<Double_t> AtMCMinimization::GetPosZBack()
 Bool_t
 AtMCMinimization::MinimizeOptMapAmp(Double_t *parameter, AtEvent *event, TH2Poly *hPadPlane, const multiarray &PadCoord)
 {
+   return kTRUE;
 }
 
 Bool_t AtMCMinimization::Minimize(Double_t *parameter, AtEvent *event)
@@ -2384,3 +2379,5 @@ void AtMCMinimization::ResetParameters()
    FitParameters.sNumMCPoint = 0;
    FitParameters.sNormChi2 = 0;
 }
+
+ClassImp(AtMCMinimization)

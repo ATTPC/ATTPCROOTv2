@@ -15,6 +15,7 @@ void run_eve(int runNum = 206, bool displayFilteredData = false, TString OutputD
    else
       InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/filterTesting/run_%04d.root", runNum);
 
+   InputDataFile = "./run_0309.root";
    std::cout << "Opening: " << InputDataFile << std::endl;
 
    FairLogger *fLogger = FairLogger::GetLogger();
@@ -28,8 +29,10 @@ void run_eve(int runNum = 206, bool displayFilteredData = false, TString OutputD
    TString GeoDataPath = dir + "/geometry/" + geoFile;
 
    FairRunAna *fRun = new FairRunAna();
-   fRun->SetInputFile(InputDataPath);
-   fRun->SetOutputFile(OutputDataPath);
+   FairRootFileSink *sink = new FairRootFileSink(OutputDataFile);
+   FairFileSource *source = new FairFileSource(InputDataFile);
+   fRun->SetSource(source);
+   fRun->SetSink(sink);
    fRun->SetGeomFile(GeoDataPath);
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
@@ -53,5 +56,6 @@ void run_eve(int runNum = 206, bool displayFilteredData = false, TString OutputD
    eveMan->AddTask(eve);
    eveMan->Init();
 
+   std::cout << "Finished init" << std::endl;
    // eveMan->RunEvent(27);
 }

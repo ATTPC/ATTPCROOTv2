@@ -358,6 +358,7 @@ void AtEventManager::Init(Int_t option, Int_t level, Int_t nNodes)
    dfViewer->DoDraw();
 
    // RunEvent();
+   std::cout << "End of AtEventManager" << std::endl;
 }
 
 void AtEventManager::SelectEvent()

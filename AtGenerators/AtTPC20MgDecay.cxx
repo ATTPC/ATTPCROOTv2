@@ -26,6 +26,7 @@ AtTPC20MgDecay::~AtTPC20MgDecay() {}
 Bool_t AtTPC20MgDecay::Init()
 {
    // Initialize generator
+   return kTRUE;
 }
 
 // -----   Public method ReadEvent   --------------------------------------

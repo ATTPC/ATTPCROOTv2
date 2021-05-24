@@ -91,8 +91,12 @@ function(generate_target_root_library target)
   target_sources(${target} PRIVATE ${HT_SRCS})
   set_target_properties(${target} PROPERTIES ${PROJECT_LIBRARY_PROPERTIES})
 
-  # Add root includes publicly. They are not in the same location for
+  # Make sure that we always return something when we say we are
+  # I have seen this cause all sorts of errors in the code from segfaults to
+  # infinite loops.
+  target_compile_options(${target} PRIVATE -Werror=return-type)
 
+    
   # Add our includes either in the include directory for install or normal build paths
   # Build interface need to be commented because ${HT_INCLUDE_DIR} includes a ';'
   # which CMake does not like outside a string. It just appends the <BUILD_INTERFACE:...

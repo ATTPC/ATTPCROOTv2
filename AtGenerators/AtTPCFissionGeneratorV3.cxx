@@ -17,7 +17,7 @@ AtTPCFissionGeneratorV3::AtTPCFissionGeneratorV3(const char *name, TString ionLi
    std::ifstream fileIn(ionList.Data());
 
    if (!fileIn.is_open())
-      Fatal("AtTPCFissionGeneratorV3", Form("Cannot open input file: %s", ionList.Data()));
+      LOG(fatal) << "Failed to open file: " << ionList;
 
    // Read the file until all of the ions have been generated
    std::set<std::vector<int>> ionSet;

@@ -348,6 +348,7 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    RhoVariance = Rho2 - (event->GetNumHits() * pow((RhoMean / event->GetNumHits()), 2));
    // std::cout<<" Rho Variance : "<<RhoVariance<<std::endl;
    // std::cout<<" Q Event Tot : "<<QEventTot<<std::endl;
+
    for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
       event->SetMeshSignal(iTb, mesh[iTb]);
    event->SortHitArrayTime();

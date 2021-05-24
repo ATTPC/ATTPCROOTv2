@@ -263,6 +263,7 @@ InitStatus AtEventDrawTask::Init()
 
    std::cout << " AtEventDrawTask::Init : Initialization complete! "
              << "\n";
+   return kSUCCESS;
 }
 
 void AtEventDrawTask::Exec(Option_t *option)

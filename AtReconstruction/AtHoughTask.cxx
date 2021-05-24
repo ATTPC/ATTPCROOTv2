@@ -88,29 +88,26 @@ InitStatus AtHoughTask::Init()
       fHoughArray = new TClonesArray("AtHoughSpaceCircle");
    else {
 
-      fLogger->Error(MESSAGE_ORIGIN,
-                     "-I- AtHoughTask : Hough Space Calculation NOT Set. Please choose a Hough Space Topology");
+      LOG(error) << "-I- AtHoughTask : Hough Space Calculation NOT Set. Please choose a Hough Space Topology";
       return kERROR;
    }
 
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 
    fEventHArray = (TClonesArray *)ioMan->GetObject("AtEventH");
    if (fEventHArray == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtEvent array!");
+      LOG(error) << "Cannot find AtEvent array!";
       return kERROR;
    }
 
    if (fIsPhiReco) { // Find the Array of ProtoEvents
       fProtoEventHArray = (TClonesArray *)ioMan->GetObject("AtProtoEvent");
       if (fProtoEventHArray == 0) {
-         fLogger->Error(
-            MESSAGE_ORIGIN,
-            "Cannot find AtProtoEvent array! If SetPhiReco method is enabled, Phi Reconstruction is needed");
+         LOG(error) << "Cannot find AtProtoEvent array! If SetPhiReco method is enabled, Phi Reconstruction is needed";
          return kERROR;
       }
    }
@@ -121,7 +118,7 @@ InitStatus AtHoughTask::Init()
       fAtMapPtr->GenerateAtTpc();
       fPadPlane = fAtMapPtr->GetAtTpcPlane();
       Bool_t MapIn = fAtMapPtr->ParseXMLMap(fMap);
-      fLogger->Info(MESSAGE_ORIGIN, "AtTPC Map enabled");
+      LOG(info) << "AtTPC Map enabled";
       if (!MapIn)
          std::cerr << " -E- AtHoughTask - : Map was enabled but not found ! " << std::endl;
       fAtPadCoord = fAtMapPtr->GetPadCoordArr();
@@ -137,15 +134,15 @@ void AtHoughTask::SetParContainers()
 
    FairRun *run = FairRun::Instance();
    if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+      LOG(fatal) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+      LOG(fatal) << "No runtime database!";
 
    fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
    if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");
+      LOG(fatal) << "AtDigiPar not found!!";
 }
 
 void AtHoughTask::Exec(Option_t *opt)

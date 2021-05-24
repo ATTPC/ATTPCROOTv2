@@ -103,17 +103,17 @@ InitStatus AtEventDrawTaskProto::Init()
 
    fHitArray = (TClonesArray *)ioMan->GetObject("AtEventH"); // TODO: Why this confusing name? It should be fEventArray
    if (fHitArray)
-      LOG(INFO) << cGREEN << "Hit Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Hit Array Found." << cNORMAL;
 
    fRawEventArray = (TClonesArray *)ioMan->GetObject("AtRawEvent");
    if (fRawEventArray) {
-      LOG(INFO) << cGREEN << "Raw Event Array  Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Raw Event Array  Found." << cNORMAL;
       fIsRawData = kTRUE;
    }
 
    fPatternEventArray = (TClonesArray *)ioMan->GetObject("AtPatternEvent");
    if (fPatternEventArray)
-      LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL;
 
    // fHoughSpaceArray =  (TClonesArray*) ioMan->GetObject("AtHough");
    // if(fHoughSpaceArray) LOG(INFO)<<cGREEN<<"Hough Array Found."<<cNORMAL<<FairLogger::endl;
@@ -123,7 +123,7 @@ InitStatus AtEventDrawTaskProto::Init()
 
    fProtoEventAnaArray = (TClonesArray *)ioMan->GetObject("AtProtoEventAna");
    if (fProtoEventAnaArray)
-      LOG(INFO) << cGREEN << "Prototype Event Analysis Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Prototype Event Analysis Array Found." << cNORMAL;
 
    // Drawing histograms
 
@@ -157,6 +157,8 @@ InitStatus AtEventDrawTaskProto::Init()
    DrawProtoKine();*/
    fCvsAux = fEventManager->GetCvsAux();
    DrawProtoAux();
+
+   return kSUCCESS;
 }
 
 void AtEventDrawTaskProto::Exec(Option_t *option)

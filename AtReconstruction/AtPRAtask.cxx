@@ -15,7 +15,7 @@
 AtPRAtask::AtPRAtask() : FairTask("AtPRAtask")
 {
    fLogger = FairLogger::GetLogger();
-   fLogger->Debug(MESSAGE_ORIGIN, "Defaul Constructor of AtPRAtask");
+   LOG(debug) << "Defaul Constructor of AtPRAtask";
    fPar = NULL;
    fPRAlgorithm = 0;
    kIsPersistence = kFALSE;
@@ -24,7 +24,7 @@ AtPRAtask::AtPRAtask() : FairTask("AtPRAtask")
 
 AtPRAtask::~AtPRAtask()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Destructor of AtPRAtask");
+   LOG(debug) << "Destructor of AtPRAtask";
 }
 
 void AtPRAtask::SetPersistence(Bool_t value)
@@ -38,52 +38,52 @@ void AtPRAtask::SetPRAlgorithm(Int_t value)
 
 void AtPRAtask::SetParContainers()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "SetParContainers of AtPRAtask");
+   LOG(debug) << "SetParContainers of AtPRAtask";
 
    FairRun *run = FairRun::Instance();
    if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+      LOG(fatal) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+      LOG(fatal) << "No runtime database!";
 
    fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
    if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");
+      LOG(fatal) << "AtDigiPar not found!!";
 }
 
 InitStatus AtPRAtask::Init()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Initilization of AtPRAtask");
+   LOG(debug) << "Initilization of AtPRAtask";
 
    fPatternEventArray = new TClonesArray("AtPatternEvent");
 
    if (fPRAlgorithm == 0) {
-      fLogger->Info(MESSAGE_ORIGIN, "Using Track Finder Hierarchical Clustering algorithm");
+      LOG(info) << "Using Track Finder Hierarchical Clustering algorithm";
 
       fPRA = new AtPATTERN::AtTrackFinderHC();
 
    } else if (fPRAlgorithm == 1) {
-      fLogger->Info(MESSAGE_ORIGIN, "Using RANSAC algorithm");
+      LOG(info) << "Using RANSAC algorithm";
 
       // fPSA = new AtPSASimple2();
 
    } else if (fPRAlgorithm == 2) {
-      fLogger->Info(MESSAGE_ORIGIN, "Using Hough transform algorithm");
+      LOG(info) << "Using Hough transform algorithm";
       // fPSA = new AtPSAProto();
    }
 
    // Get a handle from the IO manager
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 
    fEventHArray = (TClonesArray *)ioMan->GetObject("AtEventH");
    if (fEventHArray == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtEvent array!");
+      LOG(error) << "Cannot find AtEvent array!";
       return kERROR;
    }
 
@@ -94,7 +94,7 @@ InitStatus AtPRAtask::Init()
 
 void AtPRAtask::Exec(Option_t *option)
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Exec of AtPRAtask");
+   LOG(debug) << "Exec of AtPRAtask";
 
    fPatternEventArray->Delete();
 
@@ -123,5 +123,5 @@ void AtPRAtask::Exec(Option_t *option)
 
 void AtPRAtask::Finish()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Finish of AtPRAtask");
+   LOG(debug) << "Finish of AtPRAtask";
 }

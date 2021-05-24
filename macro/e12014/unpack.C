@@ -11,11 +11,11 @@ void unpack(int runNumber)
   
    
   //Set the input file
-  TString inputFile = TString::Format("/mnt/rawdata/e12014_attpc/h5/run_%04d.h5", runNumber);
+  TString inputFile = TString::Format("./run_%04d.h5", runNumber);
 
   //Set the output file
-  TString outputFile = TString::Format("/mnt/analysis/e12014/TPC/unpacked/run_%04d.root", runNumber);
-  
+  TString outputFile = TString::Format("./run_%04d.root", runNumber);
+
   std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
   std::cout << "Saving in: " << outputFile << std::endl;
 
@@ -89,18 +89,18 @@ void unpack(int runNumber)
   AtPSAtask *psaTask = new AtPSAtask(psa);
   psaTask -> SetPersistence(kTRUE);
 
-  //ATRansacTask *RansacTask = new ATRansacTask();
-  //RansacTask -> SetPersistence(kTRUE);
-  //RansacTask -> SetVerbose(kFALSE);
-  //RansacTask -> SetDistanceThreshold(20.0);
-  //RansacTask -> SetTiltAngle(0);
-  //RansacTask -> SetMinHitsLine(1000);
-  //RansacTask -> SetFullMode();
-  
+  AtRansacTask *RansacTask = new AtRansacTask();
+  RansacTask->SetPersistence(kTRUE);
+  RansacTask->SetVerbose(kFALSE);
+  RansacTask->SetDistanceThreshold(20.0);
+  RansacTask->SetTiltAngle(0);
+  RansacTask->SetMinHitsLine(1000);
+  RansacTask->SetFullMode();
+
   //Add unpacker to the run
   run -> AddTask(HDFParserTask);
   run -> AddTask(psaTask);
-  //run -> AddTask(RansacTask);
+  run->AddTask(RansacTask);
 
   run -> Init();
 

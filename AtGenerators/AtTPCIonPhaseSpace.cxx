@@ -53,8 +53,6 @@ AtTPCIonPhaseSpace::AtTPCIonPhaseSpace(const char *name, std::vector<Int_t> *z, 
    fMult = mult;
    fIon.reserve(fMult);
 
-   char buffer[20];
-
    fBeamEnergy_buff = ResEner;
    fBeamMass = BMass;
    fTargetMass = TMass;
@@ -71,8 +69,8 @@ AtTPCIonPhaseSpace::AtTPCIonPhaseSpace(const char *name, std::vector<Int_t> *z, 
       fPz.push_back(Double_t(a->at(i)) * pz->at(i));
       Masses.push_back(mass->at(i));
 
-      sprintf(buffer, "Product_Ion%d", i);
-      FairIon *IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i));
+      FairIon *IonBuff =
+         new FairIon(TString::Format("Product_Ion%d", i).Data(), z->at(i), a->at(i), q->at(i), 0.0, mass->at(i));
       // FairIon *IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i));
       // std::cout<<" Z "<<z->at(i)<<" A "<<a->at(i)<<std::endl;
       // std::cout<<buffer<<std::endl;

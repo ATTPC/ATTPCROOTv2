@@ -85,7 +85,7 @@ AtTPCFissionGeneratorV2::AtTPCFissionGeneratorV2(const char *name, TString simfi
       if (fInputFilebase->eof())
          continue;
 
-      char buffer[20];
+      char buffer[40];
       sprintf(buffer, "Ion_%d_%d", A, Z);
       TString ionName(buffer);
 
@@ -190,7 +190,7 @@ Bool_t AtTPCFissionGeneratorV2::ReadEvent(FairPrimaryGenerator *primGen)
 
       if (ia1 > 2 && iz1 > 2) {
          if (iPid < 0) {
-            char ionName[20];
+            char ionName[40];
             sprintf(ionName, "Ion_%d_%d", ia1, iz1);
             TParticlePDG *part = fPDG->GetParticle(ionName);
             if (!part) {
