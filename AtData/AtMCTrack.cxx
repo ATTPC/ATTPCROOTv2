@@ -97,5 +97,4 @@ Double_t AtMCTrack::GetRapidity() const
 }
 // -------------------------------------------------------------------------
 
-
 ClassImp(AtMCTrack)

@@ -23,17 +23,15 @@ AtTPCXSReader.cxx
 AtTPCXSManager.cxx
 AtTPCGammaDummyGenerator.cxx
 AtTPC20MgDecay.cxx
+
+AtCSVReader.h
 )
 
 set(INCLUDE_DIRECTORIES
 ${PYTHIA8_INCLUDE_DIR}
-${Boost_INCLUDE_DIRS}
 ${BASE_INCLUDE_DIRECTORIES}
-#${CMAKE_SOURCE_DIR}/AtGenerators
-#${CMAKE_SOURCE_DIR}/AtData
-#${CMAKE_SOURCE_DIR}/AtTpc
-
 )
+
 set(DEPENDENCIES
   Base
   FairTools

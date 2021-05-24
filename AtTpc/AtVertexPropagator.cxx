@@ -2,7 +2,7 @@
 #include "TVector3.h"
 #include "TRandom.h"
 
-AtVertexPropagator *gAtVP = (AtVertexPropagator *)0;
+AtVertexPropagator *gAtVP = nullptr;
 // AtVertexPropagator *gAtVP = new AtVertexPropagator();
 
 // -----   Default constructor   -------------------------------------------
@@ -286,4 +286,4 @@ void AtVertexPropagator::SetValidKine(Bool_t val)
    fIsValidKine = val;
 }
 
-ClassImp(AtVertexPropagator)
+ClassImp(AtVertexPropagator);

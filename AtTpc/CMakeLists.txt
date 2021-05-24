@@ -34,6 +34,7 @@ AtTpcGeo.cxx
 AtTpcGeoPar.cxx
 AtTpcPoint.cxx
 AtVertexPropagator.cxx
+
 )
 
 Set(DEPENDENCIES
@@ -41,7 +42,6 @@ Set(DEPENDENCIES
   FairTools
   ROOT::Core
   Cling
-#  AtGenerators
   AtData
   )
   

@@ -7,8 +7,6 @@
 #include <iostream>
 #include <map>
 
-class AtVertexPropagator;
-
 class AtVertexPropagator : public TObject {
 
 public:
@@ -17,9 +15,7 @@ public:
 
    Bool_t Test();
 
-   ClassDef(AtVertexPropagator, 1)
-
-      Int_t fGlobalEvtCnt;
+   Int_t fGlobalEvtCnt;
    Int_t fBeamEvtCnt;
    Int_t fDecayEvtCnt;
 
@@ -108,6 +104,8 @@ public:
    TVector3 fScatP;
    TVector3 fd2HeVtx;
    Double_t fExEjectile;
+
+   ClassDef(AtVertexPropagator, 1)
 };
 
 extern AtVertexPropagator *gAtVP; // global

@@ -10,12 +10,7 @@
 void run_eve(int runNum = 206, bool displayFilteredData = false, TString OutputDataFile = "output.reco_display.root")
 {
    TString InputDataFile;
-   if (!displayFilteredData)
-      InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpacked/run_%04d.root", runNum);
-   else
-      InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/filterTesting/run_%04d.root", runNum);
-
-   InputDataFile = "./run_0200.root";
+   InputDataFile = "./output_digi.root";
    std::cout << "Opening: " << InputDataFile << std::endl;
 
    FairLogger *fLogger = FairLogger::GetLogger();
