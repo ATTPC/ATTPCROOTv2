@@ -26,7 +26,6 @@ ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
 )
 
-message("HD5: ${HDF5_LIBRARIES}")
 Set(DEPENDENCIES
   Base
   FairTools
