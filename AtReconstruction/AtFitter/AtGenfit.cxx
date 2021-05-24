@@ -4,9 +4,7 @@
 #include "FairRuntimeDb.h"
 #include "FairRun.h"
 
-ClassImp(AtFITTER::AtGenfit)
-
-   AtFITTER::AtGenfit::AtGenfit()
+AtFITTER::AtGenfit::AtGenfit()
 {
 
    fTPCDetID = 0;
@@ -60,4 +58,7 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
    for (auto iTrack = 0; iTrack < patternTrackCand.size(); ++iTrack) {
 
    } // iTrack
+   return true;
 }
+
+ClassImp(AtFITTER::AtGenfit);

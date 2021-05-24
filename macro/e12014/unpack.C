@@ -55,20 +55,6 @@ void unpack(int runNumber)
   HDFParserTask->SetNumberTimestamps(2);
   HDFParserTask->SetBaseLineSubtraction(kTRUE);
 
-/*
-  //cobo asad aget channel
-  auto hash = HDFParserTask->CalculateHash(10,0,2,32);
-
-  //Add all eight aux channels to the file
-  for(int i = 0; i < 4; ++i)
-  {
-    hash = HDFParserTask->CalculateHash(10, 0, i, 0);
-    HDFParserTask->SetAuxChannel(hash, Form("aget%d_ch%d", i, 0));
-    hash = HDFParserTask->CalculateHash(10, 0, i, 34);
-    HDFParserTask->SetAuxChannel(hash, Form("aget%d_ch%d", i, 34));
-    }
-*/
-
   //Add the aux channels from the experiment
   auto hash = HDFParserTask->CalculateHash(10,0,0,0);
   HDFParserTask->SetAuxChannel(hash, "MCP_US");
@@ -114,7 +100,6 @@ void unpack(int runNumber)
 
   //return;
   run->Run(0,numEvents);
-
 
   std::cout << std::endl << std::endl;
   std::cout << "Done unpacking events"  << std::endl << std::endl;

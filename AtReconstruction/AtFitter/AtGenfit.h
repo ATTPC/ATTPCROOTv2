@@ -1,5 +1,5 @@
-#ifndef AtGENFIT_H
-#define AtGENFIT_H
+#ifndef ATGENFIT_H
+#define ATGENFIT_H
 
 #include "AtFitter.h"
 
@@ -34,11 +34,7 @@ public:
    AtGenfit();
    ~AtGenfit();
 
-public:
-   AtGenfit();
-   ~AtGenfit();
-
-   bool FitTracks(AtPatternEvent &patternEvent);
+   bool FitTracks(AtPatternEvent &patternEvent) override;
    void Init();
    void SetMinIterations(Int_t value);
    void SetMaxIterations(Int_t value);
@@ -55,7 +51,7 @@ private:
 
    std::vector<Int_t> *fPDGCandidateArray;
 
-   ClassDef(AtGenfit, 1);
+   ClassDefOverride(AtGenfit, 1);
 };
 
 } // namespace AtFITTER

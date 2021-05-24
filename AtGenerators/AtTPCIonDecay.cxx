@@ -259,7 +259,9 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
       for (Int_t i = 0; i < fMult.at(Case); i++) {
          M_tot += fMasses.at(Case).at(i) * amu / 1000.0;
          mass_1[i] = fMasses.at(Case).at(i) * amu / 1000.0;
-	 std::cout<<fMasses.at(Case).at(i)*amu/1000.0<<" "<<M_tot<<" "<<fBeamMass<<" "<<fBeamMass-M_tot<<" "<<ExEject<<" "<<sqrt(s)<<" "<<(sqrt(s)-M_tot)*1000.0<<std::endl;
+         std::cout << fMasses.at(Case).at(i) * amu / 1000.0 << " " << M_tot << " " << fBeamMass << " "
+                   << fBeamMass - M_tot << " " << ExEject << " " << sqrt(s) << " " << (sqrt(s) - M_tot) * 1000.0
+                   << std::endl;
       }
 
       // std::cout<<" S : "<<s<<" Pow(M) "<<pow(M_tot,2)<<" "<<gAtVP->GetScatterEx()<<" "<<fSepEne.at(Case)<<std::endl;
@@ -288,8 +290,9 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
 
       } else { // if kinematics condition
 
-         LOG(INFO) << cYELLOW << "AtTPCIonDecay - Warning, kinematical conditions for decay not fulfilled " << cNORMAL << "\n";
-	 LOG(INFO) << cYELLOW << " s = "<<s<<" - pow(M_tot,2) = "<<pow(M_tot,2)<< cNORMAL <<"\n";
+         LOG(INFO) << cYELLOW << "AtTPCIonDecay - Warning, kinematical conditions for decay not fulfilled " << cNORMAL
+                   << "\n";
+         LOG(INFO) << cYELLOW << " s = " << s << " - pow(M_tot,2) = " << pow(M_tot, 2) << cNORMAL << "\n";
       }
 
       // === Propagate the decay products from the vertex of the reaction
@@ -342,8 +345,8 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
       } // for fMult.at(Case)
    }    // if IsGoodCase
 
-   //if (!fIsSequentialDecay)
-      gAtVP->IncDecayEvtCnt(); // Increase count only if no other generator is meant to do it.
+   // if (!fIsSequentialDecay)
+   gAtVP->IncDecayEvtCnt(); // Increase count only if no other generator is meant to do it.
 
    return kTRUE;
 }

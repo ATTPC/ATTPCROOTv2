@@ -24,7 +24,7 @@ protected:
    FairLogger *fLogger; ///< logger pointer
    AtDigiPar *fPar;     ///< parameter container
 
-   ClassDef(AtFitter, 1)
+   ClassDef(AtFitter, 1);
 };
 
 } // namespace AtFITTER

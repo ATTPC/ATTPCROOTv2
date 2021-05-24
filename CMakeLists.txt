@@ -94,8 +94,8 @@ include(GNUInstallDirs)
 
 #Check the compiler and set the compile and link flags
 If(NOT CMAKE_BUILD_TYPE)
-  Message("Set BuildType DEBUG")
-  set(CMAKE_BUILD_TYPE Debug)
+  Message("Set BuildType to RELWITHDEBINFO")
+  set(CMAKE_BUILD_TYPE RELWITHDEBINFO)
 EndIf(NOT CMAKE_BUILD_TYPE)
 
 Check_Compiler()

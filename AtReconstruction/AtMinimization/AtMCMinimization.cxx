@@ -17,7 +17,7 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
-   AtMCMinimization::AtMCMinimization()
+AtMCMinimization::AtMCMinimization()
 {
 
    fThetaMin = 0.0;
@@ -74,6 +74,7 @@
    kDebug = kFALSE;
    kVerbose = kFALSE;
 }
+AtMCMinimization::~AtMCMinimization() {}
 
 std::vector<Double_t> AtMCMinimization::GetPosXMin()
 {

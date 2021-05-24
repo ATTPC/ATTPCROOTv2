@@ -43,7 +43,8 @@
 
 Int_t AtTPC2Body::fgNIon = 0;
 
-AtTPC2Body::AtTPC2Body() : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0), fQ(0), kIsDecay(kFALSE)
+AtTPC2Body::AtTPC2Body()
+   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0), fQ(0), kIsDecay(kFALSE)
 {
    //  cout << "-W- AtTPCIonGenerator: "
    //      << " Please do not use the default constructor! " << endl;
@@ -54,7 +55,7 @@ AtTPC2Body::AtTPC2Body(const char *name, std::vector<Int_t> *z, std::vector<Int_
                        Int_t mult, std::vector<Double_t> *px, std::vector<Double_t> *py, std::vector<Double_t> *pz,
                        std::vector<Double_t> *mass, std::vector<Double_t> *Ex, Double_t ResEner, Double_t MinCMSAng,
                        Double_t MaxCMSAng)
-  : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0), fPType(0.), fQ(0),kIsDecay(kFALSE)
+   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0), fPType(0.), fQ(0), kIsDecay(kFALSE)
 {
 
    fgNIon++;
@@ -207,8 +208,6 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
 
    AtStack *stack = (AtStack *)gMC->GetStack();
 
-   
-
    if (fIsFixedTargetPos) {
       fBeamEnergy = fBeamEnergy_buff;
       gAtVP->SetValidKine(kTRUE);
@@ -324,7 +323,7 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
          } else {
 
             std::cout << cBLUE << " -I- ===== AtTPC2Body - Kinematics ====== " << std::endl;
-	    std::cout << " Decay of scattered particle enabled : "<<kIsDecay<<"\n";
+            std::cout << " Decay of scattered particle enabled : " << kIsDecay << "\n";
             std::cout << " Scattered energy:" << Ene.at(0) << " MeV" << std::endl;
             std::cout << " Scattered  angle:" << Ang.at(0) * 180 / TMath::Pi() << " deg" << std::endl;
             std::cout << " Recoil energy:" << Ene.at(1) << " MeV" << std::endl;
@@ -520,16 +519,15 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
          gAtVP->SetScatterP(ScatP);
          gAtVP->SetScatterEx(fExEnergy.at(2));
 
-	 Int_t trackIdCut = 0;
+         Int_t trackIdCut = 0;
 
-	 if(kIsDecay)
-	   trackIdCut = 2; //Remove beam and decaying particle
-	 else
-	   trackIdCut = 1; //Remove beam
+         if (kIsDecay)
+            trackIdCut = 2; // Remove beam and decaying particle
+         else
+            trackIdCut = 1; // Remove beam
 
-	 if (i > trackIdCut && (gAtVP->GetDecayEvtCnt() || fIsFixedTargetPos) && pdgType != 1000500500 &&
-             fPType.at(i) ==
-                "Ion") { 
+         if (i > trackIdCut && (gAtVP->GetDecayEvtCnt() || fIsFixedTargetPos) && pdgType != 1000500500 &&
+             fPType.at(i) == "Ion") {
 
             std::cout << cBLUE << "-I- FairIonGenerator: Generating ions of type " << fIon.at(i)->GetName()
                       << " (PDG code " << pdgType << ")" << std::endl;
@@ -559,8 +557,8 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
 
    } // if residual energy > 0
 
-   if(kIsDecay==kFALSE) //Only increases the reaction counter if decay is not expected 
-     gAtVP->IncDecayEvtCnt();
+   if (kIsDecay == kFALSE) // Only increases the reaction counter if decay is not expected
+      gAtVP->IncDecayEvtCnt();
 
    return kTRUE;
 }

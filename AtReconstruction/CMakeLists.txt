@@ -4,9 +4,7 @@ Set(LINKDEF AtTPCRecoLinkDef.h)
 Set(LIBRARY_NAME AtReconstruction)
 
 set(INCLUDE_DIRECTORIES
-#${HDF5_INCLUDE_DIR}
 ${BASE_INCLUDE_DIRECTORIES}
-#${PCL_INCLUDE_DIRS}
 ${GENFIT2_INCLUDE_DIR}
 
 # Add all the folders having header files you used in the code.
@@ -50,14 +48,8 @@ Set(DEPENDENCIES
 
 set(LINK_DIRECTORIES
 ${FAIRROOT_LIBRARY_DIR}
-#${PCL_LIBRARY_DIRS}
-#${PCL_LIBRARIES}
 ${GENFIT2_LIBRARY_DIR}
 )
-
-if(PCL_FOUND)
-#add_definitions(${PCL_DEFINITIONS})
-endif()
 
 set(SRCS
 # Add all the source files below this line. Those must have cxx for their extension.

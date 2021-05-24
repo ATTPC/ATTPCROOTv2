@@ -997,7 +997,7 @@ void AtEventDrawTaskProto::SelectPad(const char *rawevt)
       int pxmin = gPad->XtoAbsPixel(uxmin);
       int pxmax = gPad->XtoAbsPixel(uxmax);
       if (pyold)
-	TVirtualX::Instance()->DrawLine(pxmin, pyold, pxmax, pyold);
+         TVirtualX::Instance()->DrawLine(pxmin, pyold, pxmax, pyold);
       TVirtualX::Instance()->DrawLine(pxmin, py, pxmax, py);
       gPad->SetUniqueID(py);
       Float_t upx = gPad->AbsPixeltoX(px);
