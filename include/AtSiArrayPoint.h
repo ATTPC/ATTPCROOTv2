@@ -1,5 +1,5 @@
-#ifndef ATSIARRAYPOINT_H
-#define ATSIARRAYPOINT_H 1
+#ifndef AtSIARRAYPOINT_H
+#define AtSIARRAYPOINT_H 1
 
 #include "FairMCPoint.h"
 

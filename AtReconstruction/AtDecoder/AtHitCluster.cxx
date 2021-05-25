@@ -13,22 +13,20 @@ AtHitCluster::AtHitCluster()
 
 AtHitCluster::AtHitCluster(AtHitCluster *cluster)
 {
-  fIsClustered = cluster -> IsClustered();
-  fClusterID = cluster -> GetClusterID();
-  fTrackID = cluster -> GetTrackID();
+   fIsClustered = cluster->IsClustered();
+   fClusterID = cluster->GetClusterID();
+   fTrackID = cluster->GetTrackID();
 
-  fCovMatrix.ResizeTo(3, 3);
-  fCovMatrix = cluster -> GetCovMatrix();
-  fCharge  = cluster -> GetCharge();
-  fLength = cluster->GetLength();
+   fCovMatrix.ResizeTo(3, 3);
+   fCovMatrix = cluster->GetCovMatrix();
+   fCharge = cluster->GetCharge();
+   fLength = cluster->GetLength();
 
-  SetPOCA(cluster -> GetPOCA());
-  SetPosition(cluster -> GetPosition());
-  SetTimeStamp(cluster -> GetTimeStamp());
-  SetPosSigma(cluster->GetPosSigma());
-
+   SetPOCA(cluster->GetPOCA());
+   SetPosition(cluster->GetPosition());
+   SetTimeStamp(cluster->GetTimeStamp());
+   SetPosSigma(cluster->GetPosSigma());
 }
-
 
 void AtHitCluster::Clear(Option_t *)
 {
@@ -61,13 +59,22 @@ TMatrixD AtHitCluster::GetCovMatrix() const
    return fCovMatrix;
 }
 
-void     AtHitCluster::SetLength(Double_t length)    { fLength = length;}
-void     AtHitCluster::SetPOCA(TVector3 p)
+void AtHitCluster::SetLength(Double_t length)
 {
-  fPOCAX = p.X();
-  fPOCAY = p.Y();
-  fPOCAZ = p.Z();
+   fLength = length;
+}
+void AtHitCluster::SetPOCA(TVector3 p)
+{
+   fPOCAX = p.X();
+   fPOCAY = p.Y();
+   fPOCAZ = p.Z();
 }
 
-TVector3 AtHitCluster::GetPOCA()                     { return TVector3(fPOCAX, fPOCAY, fPOCAZ); }
-Double_t AtHitCluster::GetLength()                   { return fLength; }
+TVector3 AtHitCluster::GetPOCA()
+{
+   return TVector3(fPOCAX, fPOCAY, fPOCAZ);
+}
+Double_t AtHitCluster::GetLength()
+{
+   return fLength;
+}

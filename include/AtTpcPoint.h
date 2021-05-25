@@ -9,12 +9,12 @@
 #define NEWDETECTORPOINT_H 1
 
 #include "FairMCPoint.h"
-#include "ATVertexPropagator.h"
+#include "AtVertexPropagator.h"
 
 #include "TObject.h"
 #include "TVector3.h"
 
-class ATVertexPropagator;
+class AtVertexPropagator;
 
 class AtTpcPoint : public FairMCPoint {
 

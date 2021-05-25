@@ -1,5 +1,5 @@
-#ifndef ATSIARRAY_H
-#define ATSIARRAY_H
+#ifndef AtSIARRAY_H
+#define AtSIARRAY_H
 
 #include "FairDetector.h"
 
@@ -122,4 +122,4 @@ private:
    ClassDef(AtSiArray, 1)
 };
 
-#endif // ATSIARRAY_H
+#endif // AtSIARRAY_H

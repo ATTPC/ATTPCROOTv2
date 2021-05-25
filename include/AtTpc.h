@@ -5,20 +5,20 @@
  *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
-#ifndef ATTPC_H
-#define ATTPC_H
+#ifndef AtTPC_H
+#define AtTPC_H
 
 #include "FairDetector.h"
 
 #include "TVector3.h"
 #include "TLorentzVector.h"
 
-#include "ATVertexPropagator.h"
+#include "AtVertexPropagator.h"
 
 class AtTpcPoint;
 class FairVolume;
 class TClonesArray;
-class ATVertexPropagator;
+class AtVertexPropagator;
 
 class AtTpc : public FairDetector {
 

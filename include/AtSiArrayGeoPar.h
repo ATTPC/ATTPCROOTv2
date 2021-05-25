@@ -1,5 +1,5 @@
-#ifndef ATSIARRAYGEOPAR_H
-#define ATSIARRAYGEOPAR_H
+#ifndef AtSIARRAYGEOPAR_H
+#define AtSIARRAYGEOPAR_H
 
 #include "FairParGenericSet.h"
 

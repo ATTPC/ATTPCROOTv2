@@ -1,4 +1,4 @@
-void O16He4_sim(Int_t nEvents = 40, TString mcEngine = "TGeant4")
+void O16He4_sim(Int_t nEvents = 50, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -44,7 +44,7 @@ void O16He4_sim(Int_t nEvents = 40, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_He1bar.root");
+  ATTPC->SetGeometryFileName("ATTPC_He1bar_v2.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
@@ -78,7 +78,7 @@ void O16He4_sim(Int_t nEvents = 40, TString mcEngine = "TGeant4")
 	          Double_t pz = 2.189/a;  // Z-Momentum / per nucleon!!!!!!
   	          Double_t BExcEner = 0.0;
                   Double_t Bmass = 15.99491461956; 
-                  Double_t NomEnergy = 50.0; 
+                  Double_t NomEnergy = 5.0; 
                       
 
 
@@ -153,8 +153,8 @@ void O16He4_sim(Int_t nEvents = 40, TString mcEngine = "TGeant4")
        Mass.push_back(4.00260325415); // uma
        ExE.push_back(0.0);            // In MeV
 
-       Double_t ThetaMinCMS = 20.0;
-       Double_t ThetaMaxCMS = 90.0;
+       Double_t ThetaMinCMS = 60.0;
+       Double_t ThetaMaxCMS = 60.0;
 
        AtTPC2Body *TwoBody = new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner,
                                             ThetaMinCMS, ThetaMaxCMS);

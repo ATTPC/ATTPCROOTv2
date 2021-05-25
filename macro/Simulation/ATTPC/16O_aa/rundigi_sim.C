@@ -19,6 +19,7 @@ void rundigi_sim(
    // __ Run ____________________________________________
    FairRunAna *fRun = new FairRunAna();
    fRun->SetInputFile(mcFile);
+   fRun -> SetGeomFile("/mnt/simulations/attpcroot/fair_install_2020/ATTPCROOTv2_develop/geometry/ATTPC_He1bar_v2_geomanager.root");
    fRun->SetOutputFile("output_digi.root");
 
    TString parameterFile = "ATTPC.e20020_sim.par";
@@ -51,6 +52,9 @@ void rundigi_sim(
    AtPRAtask *praTask = new AtPRAtask();
    praTask->SetPersistence(kTRUE);
 
+   AtFitterTask *fitterTask = new AtFitterTask();
+   fitterTask->SetPersistence(kTRUE);
+
    /*ATTriggerTask *trigTask = new ATTriggerTask();
    trigTask  ->  SetAtMap(mapParFile);
    trigTask  ->  SetPersistence(kTRUE);*/
@@ -59,12 +63,13 @@ void rundigi_sim(
    fRun->AddTask(pulse);
    fRun->AddTask(psaTask);
    fRun->AddTask(praTask);
-   // fRun -> AddTask(trigTask);
+   fRun->AddTask(fitterTask);
+   //fRun -> AddTask(trigTask);
 
    // __ Init and run ___________________________________
 
    fRun->Init();
-   fRun->Run(0, 20);
+   fRun->Run(0, 50);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;

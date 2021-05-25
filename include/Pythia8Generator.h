@@ -9,8 +9,8 @@
 // -----                  M. Al-Turany   June 2014                     -----
 // -------------------------------------------------------------------------
 
-#ifndef PNDP8GENERATOR_H
-#define PNDP8GENERATOR_H 1
+#ifndef PNDP8GENERAtOR_H
+#define PNDP8GENERAtOR_H 1
 
 #include "TROOT.h"
 #include "FairGenerator.h"
@@ -87,4 +87,4 @@ protected:
    ClassDef(Pythia8Generator, 1);
 };
 
-#endif /* !PNDP8GENERATOR_H */
+#endif /* !PNDP8GENERAtOR_H */

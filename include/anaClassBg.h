@@ -81,7 +81,7 @@ anaClassBg::anaClassBg(TTree *tree) : fChain(0)
       }
       f->GetObject("bgtracks", tree);
 
-#else // SINGLE_TREE
+#else  // SINGLE_TREE
 
       // The following code should be used if you want this class to access a chain
       // of trees.
