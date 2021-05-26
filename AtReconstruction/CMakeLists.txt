@@ -1,72 +1,82 @@
 # Create a library called "libAtReco" which includes the source files given in the array .
 
 Set(LIBRARY_NAME AtReconstruction)
-Set(LINKDEF AtTPCRecoLinkDef.h)
+Set(LINKDEF "${LIBRARY_NAME}LinkDef.h")
+
+Set(DEPS_PUBLIC
+  
+  # External dependencies
+  ${HDF5_LIBRARIES}
+  ${Boost_LOG_LIBRARY}
+  ${Boost_LOG_SETUP_LIBRARY}
+  ${Boost_THREAD_LIBRARY}
+  ${Boost_DAtE_TIME_LIBRARY}
+  ${Boost_FILESYSTEM_LIBRARY}
+  ${Boost_SYSTEM_LIBRARY}
+  ${PCL_LIBRARIES}
+    
+  Base
+  Spectrum
+  #MCStack
+  FairLogger::FairLogger
+  XMLParser
+
+  #Internal dependencies
+  AtTpcMap
+  AtParameter
+  
+)
+#foreach(l ${PCL_LIBRARIES})
+#  message(${l})
+#endforeach()
+set(LINK_DIRECTORIES
+
+  # Link directories for external libraries that do not support
+  # exporting their targets thorugh a Config.cmake file
+  ${ROOT_LIBRARY_DIR}
+  ${FAIRROOT_LIBRARY_DIR}
+  ${Boost_LIBRARY_DIRS}
+  ${PCL_LIBRARY_DIRS}
+  ${GENFIT2_LIBRARY_DIR}
+  )
 
 set(INCLUDE_DIRECTORIES
-${HDF5_INCLUDE_DIR}
-${ROOT_INCLUDE_DIR}
-${Boost_INCLUDE_DIRS}
-${BASE_INCLUDE_DIRECTORIES}
-${PCL_INCLUDE_DIRS}
-${GENFIT2_INCLUDE_DIR}
-${HiRAEVT_INCLUDE_DIR}
 
-# Add all the folders having header files you used in the code.
-${CMAKE_SOURCE_DIR}/AtMap
-${CMAKE_SOURCE_DIR}/AtParameter
-${CMAKE_SOURCE_DIR}/AtReconstruction
-${CMAKE_SOURCE_DIR}/AtReconstruction/GETDecoder
-${CMAKE_SOURCE_DIR}/AtReconstruction/GETDecoder2
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtDecoder
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtPulseAnalyzer
-#${CMAKE_SOURCE_DIR}/AtReconstruction/HierarchicalClustering
-${CMAKE_SOURCE_DIR}/AtReconstruction/HoughTransformation
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtProtoPhiReco
-${CMAKE_SOURCE_DIR}/AtReconstruction/VMEDecoder
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtMinimization
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtAnalysis
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
-${CMAKE_SOURCE_DIR}/AtTpc
-${CMAKE_SOURCE_DIR}/AtGenerators
+  # Include directories for external libraries that do not support
+  # exporting their targets through a Config.cmake file
+  ${HDF5_INCLUDE_DIR}
+  ${ROOT_INCLUDE_DIR}
+  ${Boost_INCLUDE_DIRS}
+  ${BASE_INCLUDE_DIRECTORIES}
+  ${PCL_INCLUDE_DIRS}
+  ${GENFIT2_INCLUDE_DIR}
 
-)
+  # Add all the folders having header files you used in the code.
+  ${CMAKE_SOURCE_DIR}/AtMap
+  ${CMAKE_SOURCE_DIR}/AtParameter
+  ${CMAKE_SOURCE_DIR}/AtTpc
+  ${CMAKE_SOURCE_DIR}/AtGenerators
 
-Set(DEPENDENCIES
-    Base
-    FairLogger::FairLogger
-#    MCStack
-    XMLParser
-# Add all library names your code depending on.
-# Basically those are the libraries in the header files' directory.
-    AtTpcMap
-    AtParameter
-    Spectrum
-    ${HDF5_LIBRARIES}
-    ${Boost_LOG_LIBRARY}
-    ${Boost_LOG_SETUP_LIBRARY}
-    ${Boost_THREAD_LIBRARY}
-    ${Boost_DAtE_TIME_LIBRARY}
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
-    ${PCL_LIBRARIES}
-)
+  # Add all the sub directories containing header files in this folder
+    ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/GETDecoder
+  ${CMAKE_CURRENT_SOURCE_DIR}/GETDecoder2
+  ${CMAKE_CURRENT_SOURCE_DIR}/AtDecoder
+  ${CMAKE_CURRENT_SOURCE_DIR}/AtPulseAnalyzer
+  #${CMAKE_CURRENT_SOURCE_DIR}/HierarchicalClustering
+  ${CMAKE_CURRENT_SOURCE_DIR}/HoughTransformation
+  ${CMAKE_CURRENT_SOURCE_DIR}/AtProtoPhiReco
+  ${CMAKE_CURRENT_SOURCE_DIR}/VMEDecoder
+  ${CMAKE_CURRENT_SOURCE_DIR}/AtMinimization
+  ${CMAKE_CURRENT_SOURCE_DIR}/AtAnalysis
+  ${CMAKE_CURRENT_SOURCE_DIR}/AtRansac
+  ${CMAKE_CURRENT_SOURCE_DIR}/AtPatternRecognition
+  ${CMAKE_CURRENT_SOURCE_DIR}/AtFitter
+  ${CMAKE_CURRENT_SOURCE_DIR}/AtFilter
 
-set(LINK_DIRECTORIES
-${ROOT_LIBRARY_DIR}
-${FAIRROOT_LIBRARY_DIR}
-${Boost_LIBRARY_DIRS}
-${PCL_LIBRARY_DIRS}
-${PCL_LIBRARIES}
-${GENFIT2_LIBRARY_DIR}
-)
+  )
 
-if(PCL_FOUND)
-  add_definitions(${PCL_DEFINITIONS})
-endif()
+
 
 set(SRCS
 # Add all the source files below this line. Those must have cxx for their extension.
@@ -142,11 +152,15 @@ AtFilterTask.cxx
 #AtVMEUnpackTask.cxx
 )
 
+### Add additional sources and libraries if we found certain modules ###
+
 # Adding libraries that depend on PCL
 if(PCL_FOUND)
   MESSAGE("${Green} libAtTPCReco - Building PCL classes: RANSAC, Pattern Recognition, Hough Transformation, Minimization, Analysis, PSA/PSAFilter ${ColourReset} ")
 
-  set(SRCS ${SRCS} 
+  add_definitions(${PCL_DEFINITIONS})
+  
+  list(APPEND SRCS 
     AtRansac/AtRansac.cxx
     AtPulseAnalyzer/AtPSAFilter.cxx
     AtPatternRecognition/AtTrackFinderHC.cxx
@@ -179,37 +193,37 @@ if(PCL_FOUND)
 endif()
 
 if(GENFIT2_FOUND)
-MESSAGE("${Green} libAtTPCReco - Building GENFIT classes: AtFitter/Genfit ${ColourReset} ")
-set(SRCS ${SRCS}
-  AtFitter/AtFitter.cxx
-  AtFitter/AtGenfit.cxx
-  AtFitter/AtSpacePointMeasurement.cxx
-  AtFitterTask.cxx
-  )
-set(DEPENDENCIES ${DEPENDENCIES}
-  ${GENFIT2_LIBRARY_DIR}/libgenfit2.so
-  )
+  MESSAGE("${Green} libAtTPCReco - Building GENFIT classes: AtFitter/Genfit ${ColourReset} ")
+
+  list(APPEND SRCS
+    AtFitter/AtFitter.cxx
+    AtFitter/AtGenfit.cxx
+    AtFitter/AtSpacePointMeasurement.cxx
+    AtFitterTask.cxx
+    )
+  list(APPEND DEPS_PUBLIC 
+    ${GENFIT2_LIBRARY_DIR}/libgenfit2.so
+    )
 endif()
 
 if(HiRAEVT_FOUND)
   MESSAGE("${Green} libAtTPCReco - Building HiRAEVT classes ${ColourReset} ")
+
   list(APPEND SRCS
     AtLinkDAQTask.cxx
     )
-
-  set(HiRA_DEPS 
-    HTDetectors
-    )
-  list(APPEND DEPENDENCIES ${HiRA_DEPS})
-
-  foreach(dep ${HiRA_DEPS})
-    message("Getting includes for: ${dep}")
-    get_target_property(inclDir ${dep} INTERFACE_INCLUDE_DIRECTORIES)
-    message("includes: ${inclDir}")
-    list(APPEND INCLUDE_DIRECTORIES ${inclDir})
-  endforeach()
-  
+  list(APPEND DEPENDENCIES
+    HTDetectors)
 endif()
+
+# Generate a target for the library and export it 
+#generate_target_root_library( ${LIBRARY_NAME}
+#  SRCS ${SRCS}
+#  LINKDEF ${LINKDEF}
+#  DEPS_PUBLIC ${DEPENDENCIES}
+#  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
+#  LIBRARY_DIR ${LINK_DIRECTORIES}
+#  )
 
 link_directories(${LINK_DIRECTORIES})
 include_directories(${INCLUDE_DIRECTORIES})

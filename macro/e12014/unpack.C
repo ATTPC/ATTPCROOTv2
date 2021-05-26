@@ -108,7 +108,7 @@ void unpack(int runNumber)
   std::cout << "Found " << HDFParserTask->GetNumEvents()/2 << " events in HDF5 file" << std::endl;
   
   //numEvents = 1700;//217;
-  //numEvents = 10;
+  numEvents = 10;
   
   std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 

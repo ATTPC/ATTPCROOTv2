@@ -26,7 +26,7 @@ if(NOT WIN32)
 endif()
 
 # Check if cmake has the required version
-CMAKE_MINIMUM_REQUIRED(VERSION  3.5 FATAL_ERROR)
+CMAKE_MINIMUM_REQUIRED(VERSION  3.11 FATAL_ERROR)
 
 ### CMP0025   Compiler id for Apple Clang is now AppleClang.
 ### CMP0042   MACOSX_RPATH is enabled by default.
@@ -43,7 +43,16 @@ endforeach()
 
 # Set name of our project to “ATTPC". Has to be done
 # after check of cmake version since this is a new feature
-project(ATTPC)
+# Also add version numbers to libraries
+set(ATTPC_MAJOR_VERSION 0)
+set(ATTPC_MINOR_VERSION 1)
+set(ATTPC_PATCH_VERSION 0)
+set(ATTPC_VERSION "${ATTPC_MAJOR_VERSION}.${ATTPC_MINOR_VERSION}.${ATTPC_PATCH_VERSION}")
+project(ATTPC VERSION ${ATTPC_VERSION})  
+set(PROJECT_LIBRARY_PROPERTIES ${ATTPC_LIBRARY_PROPERTIES}
+  VERSION "${ATTPC_VERSION}"
+  SOVERSION "${ATTPC_MAJOR_VERSION}"
+  )
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -63,9 +72,12 @@ SET(SIMPATH $ENV{SIMPATH})
 SET(FAIRROOTPATH $ENV{FAIRROOTPATH})
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/
-# is checked
+# is checked. 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
-set(CMAKE_MODULE_PATH "${FAIRROOTPATH}/share/fairbase/cmake/modules"  ${CMAKE_MODULE_PATH})
+list(INSERT CMAKE_MODULE_PATH 0 "${FAIRROOTPATH}/share/fairbase/cmake/modules")
+
+#Set the prefix of where to look for ModuleConfig.cmake files
+#list(APPEND CMAKE_PREFIX_PATH 
 
 Set(CheckSrcDir "${FAIRROOTPATH}/share/fairbase/cmake/checks")
 
@@ -76,6 +88,8 @@ include(FairMacros)
 include(WriteConfigFile)
 include(CTest)
 include(CheckCompiler)
+include(ROOTTargetMacros)
+include(GNUInstallDirs)
 #include(CheckFortran)
 
 set(CMAKE_CXX_FLAGS -std=c++14)
@@ -102,9 +116,9 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 set(INCLUDE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/include")
 Set(VMCWORKDIR ${CMAKE_SOURCE_DIR})
-Option(USE_PATH_INFO "Information from PATH and LD_LIBRARY_PATH are
-used." OFF
-)
+Option(USE_PATH_INFO "Information from PATH and LD_LIBRARY_PATH are used." OFF
+  )
+
 If(USE_PATH_INFO)
   Set(PATH "$PATH")
   If (APPLE)
@@ -158,18 +172,18 @@ find_package(GEANT4VMC)
 find_package(CLHEP)
 find_package(CERNLIB)
 find_package(HEPMC)
+#find_package(HDF5 REQUIRED CONFIG)
 find_package(HDF5 REQUIRED)
-message("Using HDF5Version: ${HDF5_VERSION}")
 find_package(OpenMP)
 find_package(CUDA)
-find_package(PCL 1.8)
+find_package(PCL 1.8) 
+
 find_package(GENFIT2)
 find_package(HiRAEVT)
 
 find_package(Eigen)
 find_package(FLANN)
-message("FLANN: ${FLANN_VERSION}")
-#find_package(VTK)
+
 
 if(PCL_FOUND)
 add_definitions(${PCL_DEFINITIONS})
@@ -214,10 +228,6 @@ EndIf (Boost_FOUND)
 SetBasicVariables()
 
 # Set the library version in the main CMakeLists.txt
-SET(FAIRROOT_MAJOR_VERSION 0)
-SET(FAIRROOT_MINOR_VERSION 0)
-SET(FAIRROOT_PATCH_VERSION 0)
-SET(FAIRROOT_VERSION "${FAIRROOT_MAJOR_VERSION}.${FAIRROOT_MINOR_VERSION}.${FAIRROOT_PATCH_VERSION}")
 
 If(NOT DEFINED ROOT_FOUND_VERSION)
 SET(ROOT_FOUND_VERSION "${found_vers}")

@@ -15,6 +15,7 @@ void run_eve(int runNum = 206, bool displayFilteredData = false, TString OutputD
    else
       InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/filterTesting/run_%04d.root", runNum);
 
+   InputDataFile = "./run_0200.root";
    std::cout << "Opening: " << InputDataFile << std::endl;
 
    FairLogger *fLogger = FairLogger::GetLogger();
