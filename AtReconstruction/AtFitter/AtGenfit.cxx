@@ -33,8 +33,8 @@ ClassImp(AtFITTER::AtGenfit)
    genfit::MaterialEffects *materialEffects = genfit::MaterialEffects::getInstance();
    materialEffects->init(new genfit::TGeoMaterialInterface());
 
-   //fPDGCandidateArray = new std::vector<Int_t>; // TODO
-   //fPDGCandidateArray->push_back(2212);
+   // fPDGCandidateArray = new std::vector<Int_t>; // TODO
+   // fPDGCandidateArray->push_back(2212);
 
    std::cout << " AtFITTER::AtGenfit::AtGenfit(): Checking materials that GENFIT will use "
              << "\n";
@@ -71,18 +71,20 @@ ClassImp(AtFITTER::AtGenfit)
       }
    }
 
-   //PDG definitions
+   // PDG definitions
    const Double_t kAu2Gev = 0.9314943228;
-  const Double_t khSlash = 1.0545726663e-27;
-  const Double_t kErg2Gev = 1/1.6021773349e-3;
-  const Double_t khShGev = khSlash*kErg2Gev;
-  const Double_t kYear2Sec = 3600*24*365.25;
+   const Double_t khSlash = 1.0545726663e-27;
+   const Double_t kErg2Gev = 1 / 1.6021773349e-3;
+   const Double_t khShGev = khSlash * kErg2Gev;
+   const Double_t kYear2Sec = 3600 * 24 * 365.25;
 
-  TDatabasePDG *db = TDatabasePDG::Instance();
-  db -> AddParticle("Deuteron","Deuteron",2*kAu2Gev+8.071e-3,kTRUE, 0,3,"Ion",1000010020);
-  db -> AddParticle("Triton","Triton",3*kAu2Gev+14.931e-3,kFALSE, khShGev/(12.33*kYear2Sec),3,"Ion",1000010030);
-  db -> AddParticle("Alpha","Alpha",4*kAu2Gev+2.424e-3,kTRUE, khShGev/(12.33*kYear2Sec),6,"Ion",1000020040);
-  db -> AddParticle("HE3","HE3",3*kAu2Gev+14.931e-3,kFALSE, 0,6,"Ion",1000020030);
+   TDatabasePDG *db = TDatabasePDG::Instance();
+   db->AddParticle("Deuteron", "Deuteron", 2 * kAu2Gev + 8.071e-3, kTRUE, 0, 3, "Ion", 1000010020);
+   db->AddParticle("Triton", "Triton", 3 * kAu2Gev + 14.931e-3, kFALSE, khShGev / (12.33 * kYear2Sec), 3, "Ion",
+                   1000010030);
+   db->AddParticle("Alpha", "Alpha", 4 * kAu2Gev + 2.424e-3, kTRUE, khShGev / (12.33 * kYear2Sec), 6, "Ion",
+                   1000020040);
+   db->AddParticle("HE3", "HE3", 3 * kAu2Gev + 14.931e-3, kFALSE, 0, 6, "Ion", 1000020030);
 }
 
 AtFITTER::AtGenfit::~AtGenfit()
@@ -97,8 +99,8 @@ AtFITTER::AtGenfit::~AtGenfit()
 
 void AtFITTER::AtGenfit::Init()
 {
-   std::cout << " AtFITTER::AtGenfit::Init() "
-             << "\n";
+  std::cout <<cGREEN<< " AtFITTER::AtGenfit::Init() "
+	    <<cNORMAL<< "\n";
 
    fHitClusterArray->Delete();
    fGenfitTrackArray->Delete();
@@ -125,7 +127,7 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
 
    std::vector<AtTrack> &patternTrackCand = patternEvent.GetTrackCand();
 
-   std::cout << " AtFITTER::AtGenfit::FitTracks - Number of candidate tracks : " << patternTrackCand.size() << "\n";
+   std::cout <<cGREEN<< " AtFITTER::AtGenfit::FitTracks - Number of candidate tracks : " << patternTrackCand.size() <<cNORMAL<< "\n";
 
    for (auto track : patternTrackCand) {
       auto hitClusterArray = track.GetHitClusterArray();
@@ -134,15 +136,16 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
       TVector3 mom_res;
       TMatrixDSym cov_res;
 
-      std::cout<<" Track "<<track.GetTrackID()<<" with "<<hitClusterArray->size()<<" clusters "<<"\n";
+      std::cout <<cYELLOW<< " Track " << track.GetTrackID() << " with " << hitClusterArray->size() << " clusters "
+                <<cNORMAL<< "\n";
 
       if (hitClusterArray->size() > 3 && !track.GetIsNoise()) { // TODO Check minimum number of clusters
 
          fHitClusterArray->Delete();
          genfit::TrackCand trackCand;
 
-	 //std::reverse(hitClusterArray->begin(), hitClusterArray->end()); // TODO: Reverted to adapt it to simulation
-	 
+	 std::reverse(hitClusterArray->begin(), hitClusterArray->end()); // TODO: Reverted to adapt it to simulation
+
          // Adding clusterized  hits
          for (auto cluster : *hitClusterArray) {
             TVector3 pos = cluster.GetPosition();
@@ -154,8 +157,10 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
          }
 
          TVector3 iniPos = hitClusterArray->front().GetPosition(); // TODO Check first cluster is the first in time
-         TVector3 posSeed(iniPos.X(), iniPos.Y(),iniPos.Z());
-         posSeed.SetMag(posSeed.Mag() / 10.);
+	 //std::cout<<" Initial position : "<<iniPos.X()<<" - "<<iniPos.Y()<<" - "<<iniPos.Z()<<"\n";
+	 
+	 TVector3 posSeed(iniPos.X()/10.0, iniPos.Y()/10.0,(1000.0-iniPos.Z())/10.0);
+         posSeed.SetMag(posSeed.Mag());
 
          TMatrixDSym covSeed(6); // TODO Check where COV matrix is defined, likely in AtPattern clusterize (hard coded
                                  // in AtSpacePoint measurement)
@@ -167,18 +172,21 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
             covSeed(iComp, iComp) = covSeed(iComp - 3, iComp - 3);
 
          // Initial parameters from pattern recognition. For the moment, I just hardcode the paramters for a specific
-         // case. Momentum will be determined from BRho. Test case 12Be+p elastic 15A MeV, 60.5 deg, 12 MeV, 2 T, 0.50215
-         // Tm, mometum 0.150541
+         // case. Momentum will be determined from BRho. Test case 12Be+p elastic 15A MeV, 60.5 deg, 12 MeV, 2 T,
+         // 0.50215 Tm, mometum 0.150541
          //                                    71.619 deg, 5.00336 MeV, 0.32364 Tm, 0.0970261 MeV/c
          //                                   75.8167 deg, 3.01889 MeV, 0.25126 Tm, 0.753272 MeV/c
-         Double_t theta = 44.20 * TMath::DegToRad(); // track->GetGeoTheta();
-         Double_t radius = 0.0;                        // track->GetGeoRadius();
-         Double_t phi = 0.0 * TMath::DegToRad();       // track->GetGeoPhi();
+	 // Second test case 16O+alpha->16O* (15 MeV) 10A MeV,  0.645 Tm (~20 MeV), 44 deg.   
+	 //                  16O+alpha elastic 70 deg, 10 MeV, 0.45568.
+	 
+	 Double_t theta = 60.0 * TMath::DegToRad(); // track->GetGeoTheta();
+         Double_t radius = 0.0;                      // track->GetGeoRadius();
+         Double_t phi = 0.0 * TMath::DegToRad();     // track->GetGeoPhi();
 
-         Double_t brho = 0.645;      // 12 MeV proton
-         Double_t p_mass = 4.00150618;//1.00727647; // amu
+         Double_t brho = 0.72121;        // Tm
+         Double_t p_mass = 4.00150618; // 1.00727647; // amu
          Int_t p_Z = 2;
-	 Int_t PDGCode = 1000020040;
+         Int_t PDGCode = 1000020040;
 
          std::tuple<Double_t, Double_t> mom_ener =
             GetMomFromBrho(p_mass, p_Z, brho); // TODO Change to structured bindings when C++17
@@ -189,7 +197,7 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
          trackCand.setCovSeed(covSeed);
          trackCand.setPosMomSeed(posSeed, momSeed, p_Z);
          trackCand.setPdgCode(1000020040);
-         //trackCand.Print();
+         // trackCand.Print();
 
          genfit::Track *gfTrack = new ((*fGenfitTrackArray)[fGenfitTrackArray->GetEntriesFast()])
             genfit::Track(trackCand, *fMeasurementFactory);
@@ -205,10 +213,10 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
          genfit::FitStatus *fitStatus;
          try {
             fitStatus = gfTrack->getFitStatus(trackRep);
-            std::cout << " Is fitted? " << fitStatus->isFitted() << "\n";
+            std::cout <<cYELLOW<< " Is fitted? " << fitStatus->isFitted() << "\n";
             std::cout << " Is Converged ? " << fitStatus->isFitConverged() << "\n";
             std::cout << " Is Converged Partially? " << fitStatus->isFitConvergedPartially() << "\n";
-            std::cout << " Is pruned ? " << fitStatus->isTrackPruned() << "\n";
+            std::cout << " Is pruned ? " << fitStatus->isTrackPruned() <<cNORMAL<< "\n";
             fitStatus->Print();
          } catch (genfit::Exception &e) {
             // return 0;
@@ -220,8 +228,8 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
             fitState.Print();
             // Fit result
             fitState.getPosMomCov(pos_res, mom_res, cov_res);
-            std::cout << " Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  " << pos_res.Y()
-                      << "  " << pos_res.Z() << "\n";
+            std::cout <<cYELLOW<< " Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  " << pos_res.Y()
+                      << "  " << pos_res.Z() <<cNORMAL<< "\n";
          } catch (genfit::Exception &e) {
          }
 

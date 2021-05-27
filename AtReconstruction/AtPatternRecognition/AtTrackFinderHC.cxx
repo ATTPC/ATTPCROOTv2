@@ -176,6 +176,10 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
    track.SetIsNoise(kTRUE);
    tracks.push_back(track);
 
+   for(auto& track : tracks)
+    SetTrackInitialParameters(track);
+   
+
    /*ROOT::EnableThreadSafety();
 
    //Estimaton of track parameters

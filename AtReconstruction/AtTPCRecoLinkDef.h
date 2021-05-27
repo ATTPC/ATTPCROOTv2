@@ -73,7 +73,7 @@
 #pragma link C++ class AtFITTER::AtFitter + ;
 #pragma link C++ class AtFITTER::AtGenfit + ;
 #pragma link C++ namespace AtFITTER;
-#pragma link C++ class AtFitterTask+ ;
+#pragma link C++ class AtFitterTask + ;
 
 //#ifdef BUILD_PCL
 //#pragma link C++ class AtHoughSpaceLine3D+;

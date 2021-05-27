@@ -38,7 +38,7 @@ ClassImp(genfit::AtSpacepointMeasurement)
 
       rawHitCoords_(0) = pos.X() / 10.;
       rawHitCoords_(1) = pos.Y() / 10.;
-      rawHitCoords_(2) = pos.Z() / 10.;
+      rawHitCoords_(2) = 100.0-pos.Z() / 10.;
 
       TMatrixDSym cov(3);
 
@@ -62,8 +62,8 @@ ClassImp(genfit::AtSpacepointMeasurement)
       fCharge = detHit->GetCharge();
 
       //std::cout<<" AtSpacepointMeasurement::AtSpacepointMeasurement "<<"\n";
-      //std::cout<<rawHitCoords_(0)<<"	"<<rawHitCoords_(1)<<"	  "<<rawHitCoords_(2)<<"	"<<fCharge<<"	"<<detId_<<"	"<<hitId_<<"\n"; 
-      
+      // std::cout<<rawHitCoords_(0)<<"	"<<rawHitCoords_(1)<<"	  "<<rawHitCoords_(2)<<"	"<<fCharge<<" "<<detId_<<" "<<hitId_<<"\n";
+
       this->initG();
    }
 

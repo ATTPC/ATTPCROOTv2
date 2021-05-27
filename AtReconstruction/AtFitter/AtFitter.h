@@ -10,6 +10,11 @@
 #include "FairRootManager.h"
 #include "FairLogger.h"
 
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+
 namespace AtFITTER {
 
 class AtFitter : public TObject {

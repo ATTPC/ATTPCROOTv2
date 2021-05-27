@@ -171,7 +171,7 @@ TGeoVolume *create_detector()
 
    gGeoMan->GetVolume(geoVersion)
       ->AddNode(drift_volume, 1,
-                new TGeoCombiTrans(0.0,0.0, drift_length / 2.0, new TGeoRotation("drift_volume", 0, tpc_rot, 0)));
+                new TGeoCombiTrans(0.0, 0.0, drift_length / 2.0, new TGeoRotation("drift_volume", 0, tpc_rot, 0)));
    drift_volume->SetTransparency(80);
 
    // ATTPC Window
@@ -181,6 +181,15 @@ TGeoVolume *create_detector()
       ->AddNode(tpc_window, 1, new TGeoCombiTrans(0.0, 0.0, 0.0, new TGeoRotation("tpc_window", 0, tpc_rot, 0)));
    tpc_window->SetTransparency(50);
 
+   // ATTPC Vessel
+   TGeoVolume *vessel_volume = gGeoManager->MakeTube("vessel_volume", OuterCylinder, tpc_diameter / 2., (tpc_diameter+2.0) / 2., drift_length / 2.);
+  
+   gGeoMan->GetVolume(geoVersion)
+      ->AddNode(vessel_volume, 1,
+                new TGeoCombiTrans(0.0, 0.0, drift_length / 2.0, new TGeoRotation("vessel_volume", 0, tpc_rot, 0)));
+   vessel_volume->SetTransparency(90);
+
+   
    /*** Unused IC Construction ***
    // IC Drift Volumes
 
