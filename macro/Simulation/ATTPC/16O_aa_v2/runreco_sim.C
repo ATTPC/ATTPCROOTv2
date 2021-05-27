@@ -60,17 +60,17 @@ void runreco_sim(
    trigTask  ->  SetAtMap(mapParFile);
    trigTask  ->  SetPersistence(kTRUE);*/
 
-   //fRun->AddTask(clusterizer);
-   //fRun->AddTask(pulse);
-   //fRun->AddTask(psaTask);
-   //fRun->AddTask(praTask);
-     fRun->AddTask(fitterTask);
+   // fRun->AddTask(clusterizer);
+   // fRun->AddTask(pulse);
+   // fRun->AddTask(psaTask);
+   // fRun->AddTask(praTask);
+   fRun->AddTask(fitterTask);
    // fRun -> AddTask(trigTask);
 
    // __ Init and run ___________________________________
 
    fRun->Init();
-   fRun->Run(0,300);
+   fRun->Run(0, 300);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;

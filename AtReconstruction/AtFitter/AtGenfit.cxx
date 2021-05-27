@@ -99,8 +99,7 @@ AtFITTER::AtGenfit::~AtGenfit()
 
 void AtFITTER::AtGenfit::Init()
 {
-  std::cout <<cGREEN<< " AtFITTER::AtGenfit::Init() "
-	    <<cNORMAL<< "\n";
+   std::cout << cGREEN << " AtFITTER::AtGenfit::Init() " << cNORMAL << "\n";
 
    fHitClusterArray->Delete();
    fGenfitTrackArray->Delete();
@@ -127,7 +126,8 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
 
    std::vector<AtTrack> &patternTrackCand = patternEvent.GetTrackCand();
 
-   std::cout <<cGREEN<< " AtFITTER::AtGenfit::FitTracks - Number of candidate tracks : " << patternTrackCand.size() <<cNORMAL<< "\n";
+   std::cout << cGREEN << " AtFITTER::AtGenfit::FitTracks - Number of candidate tracks : " << patternTrackCand.size()
+             << cNORMAL << "\n";
 
    for (auto track : patternTrackCand) {
       auto hitClusterArray = track.GetHitClusterArray();
@@ -136,15 +136,15 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
       TVector3 mom_res;
       TMatrixDSym cov_res;
 
-      std::cout <<cYELLOW<< " Track " << track.GetTrackID() << " with " << hitClusterArray->size() << " clusters "
-                <<cNORMAL<< "\n";
+      std::cout << cYELLOW << " Track " << track.GetTrackID() << " with " << hitClusterArray->size() << " clusters "
+                << cNORMAL << "\n";
 
       if (hitClusterArray->size() > 3 && !track.GetIsNoise()) { // TODO Check minimum number of clusters
 
          fHitClusterArray->Delete();
          genfit::TrackCand trackCand;
 
-	 std::reverse(hitClusterArray->begin(), hitClusterArray->end()); // TODO: Reverted to adapt it to simulation
+         std::reverse(hitClusterArray->begin(), hitClusterArray->end()); // TODO: Reverted to adapt it to simulation
 
          // Adding clusterized  hits
          for (auto cluster : *hitClusterArray) {
@@ -157,9 +157,9 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
          }
 
          TVector3 iniPos = hitClusterArray->front().GetPosition(); // TODO Check first cluster is the first in time
-	 //std::cout<<" Initial position : "<<iniPos.X()<<" - "<<iniPos.Y()<<" - "<<iniPos.Z()<<"\n";
-	 
-	 TVector3 posSeed(iniPos.X()/10.0, iniPos.Y()/10.0,(1000.0-iniPos.Z())/10.0);
+         // std::cout<<" Initial position : "<<iniPos.X()<<" - "<<iniPos.Y()<<" - "<<iniPos.Z()<<"\n";
+
+         TVector3 posSeed(iniPos.X() / 10.0, iniPos.Y() / 10.0, (1000.0 - iniPos.Z()) / 10.0);
          posSeed.SetMag(posSeed.Mag());
 
          TMatrixDSym covSeed(6); // TODO Check where COV matrix is defined, likely in AtPattern clusterize (hard coded
@@ -176,14 +176,14 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
          // 0.50215 Tm, mometum 0.150541
          //                                    71.619 deg, 5.00336 MeV, 0.32364 Tm, 0.0970261 MeV/c
          //                                   75.8167 deg, 3.01889 MeV, 0.25126 Tm, 0.753272 MeV/c
-	 // Second test case 16O+alpha->16O* (15 MeV) 10A MeV,  0.645 Tm (~20 MeV), 44 deg.   
-	 //                  16O+alpha elastic 70 deg, 10 MeV, 0.45568.
-	 
-	 Double_t theta = 60.0 * TMath::DegToRad(); // track->GetGeoTheta();
-         Double_t radius = 0.0;                      // track->GetGeoRadius();
-         Double_t phi = 0.0 * TMath::DegToRad();     // track->GetGeoPhi();
+         // Second test case 16O+alpha->16O* (15 MeV) 10A MeV,  0.645 Tm (~20 MeV), 44 deg.
+         //                  16O+alpha elastic 70 deg, 10 MeV, 0.45568.
 
-         Double_t brho = 0.72121;        // Tm
+         Double_t theta = 60.0 * TMath::DegToRad(); // track->GetGeoTheta();
+         Double_t radius = 0.0;                     // track->GetGeoRadius();
+         Double_t phi = 0.0 * TMath::DegToRad();    // track->GetGeoPhi();
+
+         Double_t brho = 0.72121;      // Tm
          Double_t p_mass = 4.00150618; // 1.00727647; // amu
          Int_t p_Z = 2;
          Int_t PDGCode = 1000020040;
@@ -213,10 +213,10 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
          genfit::FitStatus *fitStatus;
          try {
             fitStatus = gfTrack->getFitStatus(trackRep);
-            std::cout <<cYELLOW<< " Is fitted? " << fitStatus->isFitted() << "\n";
+            std::cout << cYELLOW << " Is fitted? " << fitStatus->isFitted() << "\n";
             std::cout << " Is Converged ? " << fitStatus->isFitConverged() << "\n";
             std::cout << " Is Converged Partially? " << fitStatus->isFitConvergedPartially() << "\n";
-            std::cout << " Is pruned ? " << fitStatus->isTrackPruned() <<cNORMAL<< "\n";
+            std::cout << " Is pruned ? " << fitStatus->isTrackPruned() << cNORMAL << "\n";
             fitStatus->Print();
          } catch (genfit::Exception &e) {
             // return 0;
@@ -228,8 +228,8 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
             fitState.Print();
             // Fit result
             fitState.getPosMomCov(pos_res, mom_res, cov_res);
-            std::cout <<cYELLOW<< " Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  " << pos_res.Y()
-                      << "  " << pos_res.Z() <<cNORMAL<< "\n";
+            std::cout << cYELLOW << " Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
+                      << pos_res.Y() << "  " << pos_res.Z() << cNORMAL << "\n";
          } catch (genfit::Exception &e) {
          }
 

@@ -70,9 +70,16 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
    if (!circularTracks.empty()) {
 
+      
+
       std::vector<AtHit> *hits = circularTracks[0]->GetHitArray();
 
       std::vector<Double_t> coeff = circularTracks[0]->GetRANSACCoeff();
+
+      track.SetGeoCenter(std::make_pair(coeff.at(0), coeff.at(1)));
+      track.SetGeoRadius(coeff.at(2));
+      std::cout<<" RANSAC circle fit -  Center : "<<coeff.at(0)<<" - "<<coeff.at(1)<<" - Radius : "<<coeff.at(2)<<"\n";
+      
 
       std::vector<double> wpca;
       std::vector<double> whit;
@@ -134,20 +141,32 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
       //double angle = (TMath::ATan2(slope, 1) * 180.0 / TMath::Pi());
 
-      double angle = (TMath::ATan2(coeffTheta.at(1), 1) * 180.0 / TMath::Pi());
+      /*std::cout<<" Coeff theta 0 : "<<coeffTheta.at(0)<<"\n";
+      std::cout<<" Coeff theta 1 : "<<coeffTheta.at(1)<<"\n";
+      std::cout<<" Coeff theta 2 : "<<coeffTheta.at(2)<<"\n";
+      std::cout<<" Coeff theta 3 : "<<coeffTheta.at(3)<<"\n";
+      std::cout<<" Coeff theta 4 : "<<coeffTheta.at(4)<<"\n";
+      std::cout<<" Coeff theta 5 : "<<coeffTheta.at(5)<<"\n";*/
+      
 
+      double angle = 0.0;
+
+	if(coeffTheta.at(3)!=0)
+	  angle = (TMath::ATan2(coeffTheta.at(4),coeffTheta.at(3)) * 180.0 / TMath::Pi());
+
+      std::cout<<" pre  Angle "<<angle<<"\n"; 
+      
       if (angle < 0)
-         angle = 90.0 - angle;
+         angle = 90.0 + angle;
 
       //Tangent line at the first point of the spiral
       double phi0 = TMath::ATan2(posPCA.Y() - coeff.at(1),posPCA.X()-coeff.at(0));
 
       std::cout<<" AtPRA::SetTrackInitialParameters : "<<"\n";
-      std::cout<<" Theta angle : "<<angle * TMath::Pi()/180.0<<"\n";
-      std::cout<<" Phi angle : "<<phi0<<"\n";
+      std::cout<<" Theta angle : "<<angle<<"\n";
+      std::cout<<" Phi angle : "<<phi0*TMath::RadToDeg()<<"\n";
 
-      track.SetGeoTheta(angle * TMath::Pi()/180.0);
-      track.SetGeoCenter(std::make_pair(coeff.at(0), coeff.at(1)));
+      track.SetGeoTheta(angle * TMath::Pi()/180.0);     
       track.SetGeoPhi(phi0);
 
       // delete f1;

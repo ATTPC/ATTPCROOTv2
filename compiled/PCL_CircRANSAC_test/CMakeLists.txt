@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(random_sample_consensus)
 
 #set(PCL_DIR "/mnt/data/fair_install/pcl_1.8.1/share/pcl-1.8/")
-set(PCL_DIR "/mnt/simulations/attpcroot/fair_install_2020/pcl_1.9.1_inst/share/pcl-1.10/")
+#set(PCL_DIR "/mnt/simulations/attpcroot/fair_install_2020/pcl_1.9.1_inst/share/pcl-1.10/")
 
-find_package(PCL 1.9 REQUIRED)
+find_package(PCL REQUIRED)
 find_package(ROOT REQUIRED)
 
 include(${ROOT_USE_FILE})

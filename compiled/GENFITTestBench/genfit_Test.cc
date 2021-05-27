@@ -1,6 +1,5 @@
 #include "genfit_Test.hh"
 #include "TDatabasePDG.h"
- 
 
 int main()
 {
@@ -19,8 +18,7 @@ int main()
                    1000020040);
    db->AddParticle("HE3", "HE3", 3 * kAu2Gev + 14.931e-3, kFALSE, 0, 6, "Ion", 1000020030);
 
-
-   const Double_t M_Ener = 4.00150618 * 931.49401/1000.0;//alpha
+   const Double_t M_Ener = 4.00150618 * 931.49401 / 1000.0; // alpha
 
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
    TString FileName =
@@ -33,7 +31,7 @@ int main()
    std::cout << " Number of events : " << nEvents << std::endl;
 
    TTreeReader Reader1("cbmsim", file);
-   //TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtPatternEvent");
+   // TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtPatternEvent");
    TTreeReaderValue<std::vector<genfit::Track>> fitterVector(Reader1, "ATTPC");
 
    // GENFIT geometry
@@ -51,7 +49,7 @@ int main()
    TH2F *length_vs_momentum = new TH2F("length_vs_momentum", "length_vs_momentum", 200, 0, 200, 1000, 0, 2.0);
    TH2F *hits_vs_momentum = new TH2F("hits_vs_momentum", "hits_vs_momentum", 200, 0, 200, 1000, 0, 2.0);
    TH2F *angle_vs_energy = new TH2F("angle_vs_energy", "angle_vs_energy", 720, 0, 179, 1000, 0, 100.0);
-   
+
    // event display
    genfit::EventDisplay *display = genfit::EventDisplay::getInstance();
 
@@ -60,8 +58,8 @@ int main()
       std::cout << " Event Number : " << i << "\n";
 
       Reader1.Next();
-      //eventArray->Clear();
-      //AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
+      // eventArray->Clear();
+      // AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
 
       auto numGenfitTracks = fitterVector->size();
       std::cout << " Number of tracks : " << numGenfitTracks << std::endl;
@@ -94,10 +92,9 @@ int main()
                   length_vs_momentum->Fill(len, mom_res.Mag());
                   auto numHits = genfitTrack.getNumPoints();
                   hits_vs_momentum->Fill(numHits, mom_res.Mag());
-		  Double_t E = TMath::Sqrt(TMath::Power(mom_res.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener;
-		  angle_vs_energy->Fill(mom_res.Theta() * TMath::RadToDeg(),E*1000.0);
+                  Double_t E = TMath::Sqrt(TMath::Power(mom_res.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener;
+                  angle_vs_energy->Fill(mom_res.Theta() * TMath::RadToDeg(), E * 1000.0);
                }
-	       
             }
 
          } catch (std::exception &e) {
@@ -117,36 +114,36 @@ int main()
                std::cout << " Pos : " << pos.X() << "	" << pos.Y() << "	" << pos.Z() << " " << TB << "\n";
             }
          }
-	 }*/
+    }*/
    }
 
+   Double_t *ThetaCMS = new Double_t[20000];
+   Double_t *ThetaLabRec = new Double_t[20000];
+   Double_t *EnerLabRec = new Double_t[20000];
+   Double_t *ThetaLabSca = new Double_t[20000];
+   Double_t *EnerLabSca = new Double_t[20000];
+   Double_t *MomLabRec = new Double_t[20000];
 
-     Double_t *ThetaCMS = new Double_t[20000];
-            Double_t *ThetaLabRec = new Double_t[20000];
-            Double_t *EnerLabRec = new Double_t[20000];
-            Double_t *ThetaLabSca = new Double_t[20000];
-            Double_t *EnerLabSca = new Double_t[20000];
-	    Double_t *MomLabRec = new Double_t[20000];
-	    
-	    TString fileKine="../O16_aa_el_kine.txt";
-	    std::ifstream *kineStr = new std::ifstream(fileKine.Data());
-	    Int_t numKin=0;
-	    
+   TString fileKine = "../O16_aa_el_kine.txt";
+   std::ifstream *kineStr = new std::ifstream(fileKine.Data());
+   Int_t numKin = 0;
 
-	     if(!kineStr->fail()){
-			while(!kineStr->eof()){
-					*kineStr>>ThetaCMS[numKin]>>ThetaLabRec[numKin]>>EnerLabRec[numKin]>>ThetaLabSca[numKin]>>EnerLabSca[numKin];
-					//numKin++;
-					
-					//MomLabRec[numKin] =( pow(EnerLabRec[numKin] + M_Ener,2) - TMath::Power(M_Ener, 2))/1000.0;
-					//std::cout<<" Momentum : " <<MomLabRec[numKin]<<"\n";
-					//Double_t E = TMath::Sqrt(TMath::Power(p, 2) + TMath::Power(M_Ener, 2)) - M_Ener;
-					numKin++;
-			}
-	     }else if(kineStr->fail()) std::cout<<" Warning : No Kinematics file found for this reaction!"<<std::endl;
+   if (!kineStr->fail()) {
+      while (!kineStr->eof()) {
+         *kineStr >> ThetaCMS[numKin] >> ThetaLabRec[numKin] >> EnerLabRec[numKin] >> ThetaLabSca[numKin] >>
+            EnerLabSca[numKin];
+         // numKin++;
 
-	    TGraph *Kine_AngRec_EnerRec = new TGraph(numKin,ThetaLabRec,EnerLabRec);
-   
+         // MomLabRec[numKin] =( pow(EnerLabRec[numKin] + M_Ener,2) - TMath::Power(M_Ener, 2))/1000.0;
+         // std::cout<<" Momentum : " <<MomLabRec[numKin]<<"\n";
+         // Double_t E = TMath::Sqrt(TMath::Power(p, 2) + TMath::Power(M_Ener, 2)) - M_Ener;
+         numKin++;
+      }
+   } else if (kineStr->fail())
+      std::cout << " Warning : No Kinematics file found for this reaction!" << std::endl;
+
+   TGraph *Kine_AngRec_EnerRec = new TGraph(numKin, ThetaLabRec, EnerLabRec);
+
    TCanvas *c1 = new TCanvas();
    c1->Divide(2, 2);
    c1->Draw();
@@ -155,7 +152,7 @@ int main()
    c1->cd(2);
    momentum->Draw();
    c1->cd(3);
-   angle_vs_momentum->Draw();  
+   angle_vs_momentum->Draw();
    c1->cd(4);
    pos_vs_momentum->Draw();
 

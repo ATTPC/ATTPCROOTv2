@@ -68,7 +68,7 @@ void Be12_pp_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
    Double_t px = 0.000 / a;    // X-Momentum / per nucleon!!!!!!
    Double_t py = 0.000 / a;    // Y-Momentum / per nucleon!!!!!!
    Double_t pz = 2.016 / a;    // Z-Momentum / per nucleon!!!!!!
-   Double_t BExcEner = 0.0;  //
+   Double_t BExcEner = 0.0;    //
    Double_t Bmass = 12.026922; // Mass in amu
    Double_t NomEnergy = 9.0;
 

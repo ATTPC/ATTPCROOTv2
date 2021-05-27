@@ -1,5 +1,5 @@
 void run_eve(TString InputDataFile = "output_digi.root", TString OutputDataFile = "output.reco_display.root",
-             TString unpackDir = "/Simulation/ATTPC/16O_aa/")
+             TString unpackDir = "/Simulation/ATTPC/16O_aa_v2/")
 {
    FairLogger *fLogger = FairLogger::GetLogger();
    fLogger->SetLogToScreen(kTRUE);
