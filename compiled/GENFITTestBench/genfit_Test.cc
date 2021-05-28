@@ -58,7 +58,7 @@ int main()
       std::cout << " Event Number : " << i << "\n";
 
       Reader1.Next();
-      // eventArray->Clear();
+      // eventArray->Clear(); //LOOKS LIKE WRONG!!!
       // AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
 
       auto numGenfitTracks = fitterVector->size();
