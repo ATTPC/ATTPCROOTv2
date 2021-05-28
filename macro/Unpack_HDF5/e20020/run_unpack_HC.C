@@ -4,7 +4,7 @@
 #define cGREEN "\033[1;32m"
 
 
-void run_unpack_HC(std::string dataFile = "/mnt/daqtesting/e20020_attpc_transfer/h5/run_0058.h5",TString parameterFile = "ATTPC.e20020_sim.par",TString mappath="")
+void run_unpack_HC(std::string dataFile = "/mnt/daqtesting/e20020_attpc_transfer/h5/run_0068.h5",TString parameterFile = "ATTPC.e20020.par",TString mappath="")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -44,7 +44,6 @@ void run_unpack_HC(std::string dataFile = "/mnt/daqtesting/e20020_attpc_transfer
 
   FairRunAna* run = new FairRunAna();
   run -> SetOutputFile(outputFile);
-  //run -> SetGeomFile("../geometry/ATTPC_Proto_v1.0.root");
   run -> SetGeomFile(geoManFile);
 
   FairRuntimeDb* rtdb = run->GetRuntimeDb();
@@ -80,8 +79,8 @@ void run_unpack_HC(std::string dataFile = "/mnt/daqtesting/e20020_attpc_transfer
   
   run -> Init();
 
-  run->Run(0,100);
-  //run -> RunOnTBData();
+  //run->Run(0,300);
+  run -> RunOnTBData();
 
 
   std::cout << std::endl << std::endl;

@@ -56,6 +56,7 @@ void AtPATTERN::AtPRA::SetTrackCurvature(AtTrack &track)
 void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 {
 
+  //std::cout<<" Processing track with "<<track.GetHitArray()->size()<<" points."<<"\n";
    // Get the radius of curvature from RANSAC
    AtRANSACN::AtRansac RansacSmoothRadius;
    RansacSmoothRadius.SetModelType(pcl::SACMODEL_CIRCLE2D);
@@ -80,7 +81,7 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
       track.SetGeoCenter(std::make_pair(coeff.at(0), coeff.at(1)));
       track.SetGeoRadius(coeff.at(2));
-      std::cout<<" RANSAC circle fit -  Center : "<<coeff.at(0)<<" - "<<coeff.at(1)<<" - Radius : "<<coeff.at(2)<<"\n";
+      //std::cout<<" RANSAC circle fit -  Center : "<<coeff.at(0)<<" - "<<coeff.at(1)<<" - Radius : "<<coeff.at(2)<<"\n";
       
 
       std::vector<double> wpca;
@@ -132,7 +133,7 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
       Double_t angle = 0.0;
       Double_t phi0    = 0.0;
 
-      std::cout<<" Debugging : "<<"\n";
+      
 
       try{
 	
@@ -159,16 +160,24 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
       std::cout<<" Coeff theta 4 : "<<coeffTheta.at(4)<<"\n";
       std::cout<<" Coeff theta 5 : "<<coeffTheta.at(5)<<"\n";*/
       
-
+      int sign = 0;
+      
+      if(coeffTheta.at(3)*coeffTheta.at(4)<0) sign = -1;
+      else sign = 1;
       
 
 	if(coeffTheta.at(3)!=0)
-	  angle = (TMath::ATan2(coeffTheta.at(4),coeffTheta.at(3)) * 180.0 / TMath::Pi());
-
-      std::cout<<" pre  Angle "<<angle<<"\n"; 
+          angle = acos( sign*fabs(coeffTheta.at(4)) )*TMath::RadToDeg();
+	  //angle = (TMath::ATan2(coeffTheta.at(3),coeffTheta.at(4)) * 180.0 / TMath::Pi());
+	  /*{
+	    double w_c = TMath::Sqrt( TMath::Power(coeffTheta.at(4),2) + TMath::Power(coeffTheta.at(3),2)   );
+	    angle      = asin(coeffTheta.at(3)/w_c)*TMath::RadToDeg();
+	    }*/
+	  
+	//std::cout<<" pre  Angle "<<angle<<"\n"; 
       
-      if (angle < 0)
-         angle = 90.0 + angle;
+	//if (angle < 0)
+	//angle = 90.0 + angle;
 
       //Tangent line at the first point of the spiral
       phi0 = TMath::ATan2(posPCA.Y() - coeff.at(1),posPCA.X()-coeff.at(0));
@@ -178,9 +187,9 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
       
       
 
-      std::cout<<" AtPRA::SetTrackInitialParameters : "<<"\n";
+      /*std::cout<<" AtPRA::SetTrackInitialParameters : "<<"\n";
       std::cout<<" Theta angle : "<<angle<<"\n";
-      std::cout<<" Phi angle : "<<phi0*TMath::RadToDeg()<<"\n";
+      std::cout<<" Phi angle : "<<phi0*TMath::RadToDeg()<<"\n";*/
 	
 
       track.SetGeoTheta(angle * TMath::Pi()/180.0);     
@@ -253,11 +262,11 @@ void AtPATTERN::AtPRA::Clusterize3D(AtTrack &track)
                hitCluster->SetIsClustered();
                hitCluster->SetClusterID(clusterID);
                Double_t hitQ = 0.0;
-               std::for_each(hitTBArray.begin(), hitTBArray.end(), [&x, &y, &hitQ](AtHit &hit) {
-                  TVector3 pos = hit.GetPosition();
-                  x += pos.X() * hit.GetCharge();
-                  y += pos.Y() * hit.GetCharge();
-                  hitQ += hit.GetCharge();
+               std::for_each(hitTBArray.begin(), hitTBArray.end(), [&x, &y, &hitQ](AtHit &hitInQ) {
+                  TVector3 pos = hitInQ.GetPosition();
+                  x += pos.X() * hitInQ.GetCharge();
+                  y += pos.Y() * hitInQ.GetCharge();
+                  hitQ += hitInQ.GetCharge();
                });
                x /= hitQ;
                y /= hitQ;
