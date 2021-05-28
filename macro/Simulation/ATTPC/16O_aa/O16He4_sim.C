@@ -105,8 +105,7 @@ void O16He4_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
 
              // Note: Momentum will be calculated from the phase Space according to the residual energy of the beam
 
-
-	          mult = 4; //Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY (and the number of particles must be the same)
+             mult = 4; //Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY (and the number of particles must be the same)
                   ResEner = 40.0; //MeV 
 
                   // ---- Beam ----
