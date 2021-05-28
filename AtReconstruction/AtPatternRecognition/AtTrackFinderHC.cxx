@@ -177,7 +177,7 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
    tracks.push_back(track);
 
    for (auto &track : tracks)
-      SetTrackInitialParameters(track);
+    SetTrackInitialParameters(track);
 
    /*ROOT::EnableThreadSafety();
 
