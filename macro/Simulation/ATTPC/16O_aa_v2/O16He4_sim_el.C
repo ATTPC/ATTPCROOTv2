@@ -1,4 +1,4 @@
-void O16He4_sim_el(Int_t nEvents = 300, TString mcEngine = "TGeant4")
+void O16He4_sim_el(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
@@ -141,8 +141,8 @@ void O16He4_sim_el(Int_t nEvents = 300, TString mcEngine = "TGeant4")
    Mass.push_back(4.00260325415); // uma
    ExE.push_back(0.0);            // In MeV
 
-   Double_t ThetaMinCMS = 20.0;
-   Double_t ThetaMaxCMS = 60.0;
+   Double_t ThetaMinCMS = 40.0;
+   Double_t ThetaMaxCMS = 40.0;
 
    AtTPC2Body *TwoBody =
       new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);

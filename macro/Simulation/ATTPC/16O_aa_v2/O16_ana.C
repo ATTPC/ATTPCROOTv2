@@ -35,7 +35,7 @@ void O16_ana()
 
 	   Double_t theta = track.GetGeoTheta();
 	   Double_t rad   = track.GetGeoRadius();
-
+           Double_t phi   = track.GetGeoPhi();
 	   
 
            Double_t B_f = 3.0;
@@ -48,7 +48,7 @@ void O16_ana()
 
 	   angle_vs_energy->Fill(theta*TMath::RadToDeg(),ener*Am);
 
-	   std::cout<<" Brho : "<<bro<<" - Angle : "<<theta*TMath::RadToDeg()<<" - Radius : "<<rad<<" - Energy :"<<ener*Am<<"\n";
+	   std::cout<<" Brho : "<<bro<<" - Theta : "<<theta*TMath::RadToDeg()<<" - Phi : "<<phi*TMath::RadToDeg()<<" - Radius : "<<rad<<" - Energy :"<<ener*Am<<"\n";
 	   
 	   /*std::vector<AtHit> *hitArray = track.GetHitArray();
             for (auto hit : *hitArray) {
