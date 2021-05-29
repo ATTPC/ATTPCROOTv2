@@ -179,16 +179,15 @@ bool AtFITTER::AtGenfit::FitTracks(AtPatternEvent &patternEvent)
          // Second test case 16O+alpha->16O* (15 MeV) 10A MeV,  0.645 Tm (~20 MeV), 44 deg.
          //                  16O+alpha elastic 70 deg, 10 MeV, 0.45568.
 
-         Double_t theta = 180.0*TMath::DegToRad()-track.GetGeoTheta();//60.0 * TMath::DegToRad(); // track->GetGeoTheta();
-         Double_t radius = track.GetGeoRadius()/1000.0;// mm to m
-         Double_t phi =  track.GetGeoPhi();
+         Double_t theta =
+            180.0 * TMath::DegToRad() - track.GetGeoTheta(); // 60.0 * TMath::DegToRad(); // track->GetGeoTheta();
+         Double_t radius = track.GetGeoRadius() / 1000.0;    // mm to m
+         Double_t phi = track.GetGeoPhi();
 
-         Double_t brho = 3.0*radius/TMath::Sin(theta);      // Tm
+         Double_t brho = 3.0 * radius / TMath::Sin(theta); // Tm
          Double_t p_mass = 4.00150618; // 1.00727647; // amu
          Int_t p_Z = 2;
          Int_t PDGCode = 1000020040;
-
-    
 
          std::tuple<Double_t, Double_t> mom_ener =
             GetMomFromBrho(p_mass, p_Z, brho); // TODO Change to structured bindings when C++17
