@@ -3,8 +3,7 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
-void run_unpack_HC(std::string dataFile = "/mnt/daqtesting/e20020_attpc_transfer/h5/run_0090.h5",
-                   TString parameterFile = "ATTPC.e20020.par", TString mappath = "")
+void unpack_e20020(TString fileName)
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -15,6 +14,12 @@ void run_unpack_HC(std::string dataFile = "/mnt/daqtesting/e20020_attpc_transfer
   gSystem->Load("libXMLParser.so");
   // -----------------------------------------------------------------
   // Set file names
+  
+  TString parameterFile = "ATTPC.e20020.par";
+  TString mappath = "";
+  TString filepath = "/mnt/daqtesting/e20020_attpc_transfer/h5/";
+  TString fileExt = ".h5";
+  TString dataFile = filepath + fileName + fileExt;
   TString scriptfile = "e12014_pad_mapping.xml";
   TString dir = getenv("VMCWORKDIR");
   TString scriptdir = dir + "/scripts/"+ scriptfile;
@@ -24,7 +29,7 @@ void run_unpack_HC(std::string dataFile = "/mnt/daqtesting/e20020_attpc_transfer
 
   //TString inputFile   = dataDir + name + ".digi.root";
   //TString outputFile  = dataDir + "output.root";
-  TString outputFile  = "output.root";
+  TString outputFile  = fileName+".root";
   //TString mcParFile   = dataDir + name + ".params.root";
   TString loggerFile  = dataDir + "ATTPCLog.log";
   TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -57,7 +62,7 @@ void run_unpack_HC(std::string dataFile = "/mnt/daqtesting/e20020_attpc_transfer
   AtHDFParserTask* HDFParserTask = new AtHDFParserTask();
   HDFParserTask->SetPersistence(kFALSE);
   HDFParserTask->SetAtTPCMap(scriptdir.Data());
-  HDFParserTask->SetFileName(dataFile);
+  HDFParserTask->SetFileName(dataFile.Data());
   HDFParserTask->SetBaseLineSubtraction(kTRUE);
   
   AtPSASimple2 *psa = new AtPSASimple2();
