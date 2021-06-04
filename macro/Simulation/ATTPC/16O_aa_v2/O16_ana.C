@@ -38,8 +38,8 @@ void O16_ana()
       Double_t phi = track.GetGeoPhi();
 
       Double_t B_f = 3.0;
-	   
-	   double bro = B_f*rad/TMath::Sin(theta)/1000.0;
+
+      double bro = B_f*rad/TMath::Sin(theta)/1000.0;
            double ener = 0;
 	   Double_t  Am = 4.0;
 
@@ -56,8 +56,8 @@ void O16_ana()
                TVector3 pos = hit.GetPosition();
                int TB = hit.GetTimeStamp();
                std::cout << " Pos : " << pos.X() << "   " << pos.Y() << "       " << pos.Z() << " " << TB << "\n";
-	       }*/
-	}
+          }*/
+   }
     }
 
 

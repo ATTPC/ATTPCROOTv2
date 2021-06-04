@@ -56,6 +56,8 @@ private:
    TClonesArray *fGenfitTrackArray;
    std::vector<genfit::Track> *fGenfitTrackVector;
 
+  std::size_t fEventCnt;
+  
    ClassDef(AtFitterTask, 1);
 };
 

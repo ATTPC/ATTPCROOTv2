@@ -22,7 +22,7 @@ int main()
 
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
    TString FileName =
-      "/mnt/simulations/attpcroot/fair_install_2020/ATTPCROOTv2_develop/macro/Simulation/ATTPC/16O_aa/output_reco.root";
+      "/user/e20020/ATTPCROOTv2_e20020_dev/macro/Simulation/ATTPC/16O_aa_v2/output_reco.root";
    std::cout << " Opening File : " << FileName.Data() << std::endl;
    TFile *file = new TFile(FileName.Data(), "READ");
 

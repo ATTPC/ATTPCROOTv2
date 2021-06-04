@@ -70,7 +70,8 @@ void runreco_sim(
    // __ Init and run ___________________________________
 
    fRun->Init();
-   fRun->Run(0, 10);
+   fRun->Run(0,1000);
+   //fRun->Run(845,852);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;

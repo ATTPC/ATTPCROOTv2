@@ -36,7 +36,7 @@ AtFitterTask::AtFitterTask()
    fPatternEventArray = new TClonesArray("ATPatternEvent");
    fGenfitTrackArray = new TClonesArray("genfit::Track");
    fFitterAlgorithm = 0;
-
+   fEventCnt = 0;
    fGenfitTrackVector = new std::vector<genfit::Track>();
 }
 
@@ -66,7 +66,12 @@ InitStatus AtFitterTask::Init()
    if (fFitterAlgorithm == 0) {
       fLogger->Info(MESSAGE_ORIGIN, "Using GENFIT2");
 
-      fFitter = new AtFITTER::AtGenfit();
+      fFitter = new AtFITTER::AtGenfit(3.0,0.1,1.5);
+      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetPDGCode(1000020040);
+      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetMass(4.00150618);
+      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetAtomicNumber(2);
+      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetNumFitPoints(0.90);
+      
 
    } else if (fFitterAlgorithm == 1) {
       fLogger->Error(MESSAGE_ORIGIN, "Fitter algorithm not defined!");
@@ -104,40 +109,70 @@ void AtFitterTask::Exec(Option_t *option)
    if (fPatternEventArray->GetEntriesFast() == 0)
       return;
 
-   fGenfitTrackArray->Delete();
+   fGenfitTrackArray->Clear("C");
    fGenfitTrackVector->clear();
-
+   
    fFitter->Init();
 
+   std::cout<<" Event Counter "<<fEventCnt<<"\n"; 
+   
    AtPatternEvent &patternEvent = *((AtPatternEvent *)fPatternEventArray->At(0));
+   std::vector<AtTrack> &patternTrackCand = patternEvent.GetTrackCand();
+   std::cout<<" AtFitterTask:Exec -  Number of candidate tracks : " << patternTrackCand.size()<<"\n";
 
-   fFitter->FitTracks(patternEvent);
+   if(patternTrackCand.size()<10){
+   
+     for(auto track : patternTrackCand){       
+
+       if(track.GetIsNoise())
+	  continue;
+
+       genfit::Track *fitTrack=fFitter->FitTracks(&track);
+       if(fitTrack!=nullptr)fGenfitTrackVector->push_back(*static_cast<genfit::Track *>(fitTrack));
+     }
+   }    
+
+   /*if(patternTrackCand.size()>1){
+     genfit::Track *fitTrack=fFitter->FitTracks(&patternTrackCand.at(1));
+   if(fitTrack!=nullptr)fGenfitTrackVector->push_back(*static_cast<genfit::Track *>(fitTrack));
+   }*/
+
+   //if(fitTrack==nullptr)
+   //std::cout<<" Nullptr "<<"\n";
+     
+     //}
+
+   // }
+     
+   
 
    // TODO: Genfit block, add a dynamic cast and a try-catch
 
-   try {
+   /*try {
       auto genfitTrackArray = dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->GetGenfitTrackArray();
       auto genfitTracks = genfitTrackArray->GetEntriesFast();
 
-      for (auto iTrack = 0; iTrack < genfitTracks; ++iTrack) {
+       for (auto iTrack = 0; iTrack < genfitTracks; ++iTrack) {
          new ((*fGenfitTrackArray)[iTrack]) genfit::Track(*static_cast<genfit::Track *>(genfitTrackArray->At(iTrack)));
          // auto trackTest = *static_cast<genfit::Track*>(genfitTrackArray->At(iTrack));
          // trackTest.Print();
          // genfit::MeasuredStateOnPlane fitState = trackTest.getFittedState();
          // fitState.Print();
          fGenfitTrackVector->push_back(*static_cast<genfit::Track *>(genfitTrackArray->At(iTrack)));
-      }
+	 }
 
-      /*auto genfitTracks_ = fGenfitTrackArray->GetEntriesFast();
-      for(auto iTrack=0;iTrack<genfitTracks_;++iTrack){
+      //auto genfitTracks_ = fGenfitTrackArray->GetEntriesFast();
+      //for(auto iTrack=0;iTrack<genfitTracks_;++iTrack){
 
-              auto trackTest = *static_cast<genfit::Track*>(fGenfitTrackArray->At(iTrack));
-              trackTest.Print();
-              genfit::MeasuredStateOnPlane fitState = trackTest.getFittedState();
-              fitState.Print();
-      } */
+        //      auto trackTest = *static_cast<genfit::Track*>(fGenfitTrackArray->At(iTrack));
+         //     trackTest.Print();
+         //     genfit::MeasuredStateOnPlane fitState = trackTest.getFittedState();
+          //    fitState.Print();
+      //} 
 
    } catch (std::exception &e) {
       std::cout << " " << e.what() << "\n";
-   }
+      }*/
+
+       ++fEventCnt;  
 }

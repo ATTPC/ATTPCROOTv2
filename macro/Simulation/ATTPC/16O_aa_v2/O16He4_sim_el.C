@@ -1,4 +1,4 @@
-void O16He4_sim_el(Int_t nEvents = 10, TString mcEngine = "TGeant4")
+void O16He4_sim_el(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
@@ -71,7 +71,7 @@ void O16He4_sim_el(Int_t nEvents = 10, TString mcEngine = "TGeant4")
    Double_t pz = 2.189 / a; // Z-Momentum / per nucleon!!!!!!
    Double_t BExcEner = 0.0;
    Double_t Bmass = 15.99491461956;
-   Double_t NomEnergy = 5.0;
+   Double_t NomEnergy = 40.0;
 
    AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
    ionGen->SetSpotRadius(0, -100, 0);
@@ -141,8 +141,8 @@ void O16He4_sim_el(Int_t nEvents = 10, TString mcEngine = "TGeant4")
    Mass.push_back(4.00260325415); // uma
    ExE.push_back(0.0);            // In MeV
 
-   Double_t ThetaMinCMS = 40.0;
-   Double_t ThetaMaxCMS = 40.0;
+   Double_t ThetaMinCMS = 30.0;
+   Double_t ThetaMaxCMS = 60.0;
 
    AtTPC2Body *TwoBody =
       new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);
