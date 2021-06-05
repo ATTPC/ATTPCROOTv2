@@ -26,6 +26,11 @@
 #include "TGeoManager.h"
 #include "Math/DistFunc.h"
 
+#define cRED "\033[1;31m"
+#define cYELLOW "\033[1;33m"
+#define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+
 ClassImp(AtFitterTask);
 
 AtFitterTask::AtFitterTask()
@@ -38,6 +43,18 @@ AtFitterTask::AtFitterTask()
    fFitterAlgorithm = 0;
    fEventCnt = 0;
    fGenfitTrackVector = new std::vector<genfit::Track>();
+
+    
+   fMagneticField = 2.0;
+   fMinIterations = 5.0;
+   fMaxIterations = 20.0;
+   fPDGCode = 2212;
+   fMass = 1.00727646;
+   fAtomicNumber = 1;
+   fNumFitPoints = 0.90;
+   fMaxBrho = 3.0;//Tm
+   fMinBrho = 0.01;//Tm
+
 }
 
 AtFitterTask::~AtFitterTask() {}
@@ -65,12 +82,23 @@ InitStatus AtFitterTask::Init()
 
    if (fFitterAlgorithm == 0) {
       fLogger->Info(MESSAGE_ORIGIN, "Using GENFIT2");
-
-      fFitter = new AtFITTER::AtGenfit(3.0,0.1,1.5);
-      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetPDGCode(1000020040);
-      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetMass(4.00150618);
-      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetAtomicNumber(2);
-      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetNumFitPoints(0.90);
+      std::cout<<cGREEN<<" AtFitterTask::Init - Fit parameters. "<<"\n";
+      std::cout<<" Magnetic Field       : "<<fMagneticField<<" T\n";
+      std::cout<<" PDG Code             : "<<fPDGCode<<"\n";
+      std::cout<<" Mass                 : "<<fMass<<" amu\n";
+      std::cout<<" Atomic Number        : "<<fAtomicNumber<<"\n";
+      std::cout<<" Number of fit points : "<<fNumFitPoints<<"\n";
+      std::cout<<" Maximum iterations   : "<<fMaxIterations<<"\n";
+      std::cout<<" Minimum iterations   : "<<fMinIterations<<"\n";
+      std::cout<<" Maximum brho         : "<<fMaxBrho<<"\n";
+      std::cout<<" Minimum brho         : "<<fMinBrho<<"\n";
+      std::cout<<" --------------------------------------------- "<<cNORMAL<<"\n";
+      
+      fFitter = new AtFITTER::AtGenfit(fMagneticField,fMinBrho,fMaxBrho,fMinIterations,fMaxIterations);
+      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetPDGCode(fPDGCode);
+      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetMass(fMass);
+      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetAtomicNumber(fAtomicNumber);
+      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetNumFitPoints(fNumFitPoints);
       
 
    } else if (fFitterAlgorithm == 1) {

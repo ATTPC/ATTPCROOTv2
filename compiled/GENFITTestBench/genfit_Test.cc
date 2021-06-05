@@ -21,8 +21,7 @@ int main()
    const Double_t M_Ener = 4.00150618 * 931.49401 / 1000.0; // alpha
 
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
-   TString FileName =
-      "/user/e20020/ATTPCROOTv2_e20020_dev/macro/Simulation/ATTPC/16O_aa_v2/output_reco.root";
+   TString FileName = "/user/e20020/ATTPCROOTv2_e20020_dev/macro/Simulation/ATTPC/16O_aa_v2/output_reco.root";
    std::cout << " Opening File : " << FileName.Data() << std::endl;
    TFile *file = new TFile(FileName.Data(), "READ");
 

@@ -10,12 +10,11 @@
 #include "FairRootManager.h"
 #include "FairLogger.h"
 
-//GENFIT
+// GENFIT
 #include "Track.h"
 #include "TrackCand.h"
 #include "RKTrackRep.h"
 #include "Exception.h"
-
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
@@ -30,7 +29,7 @@ public:
    AtFitter();
    virtual ~AtFitter();
    // virtual std::vector<AtTrack> GetFittedTrack() = 0;
-  virtual genfit::Track* FitTracks(AtTrack* track) = 0;
+   virtual genfit::Track *FitTracks(AtTrack *track) = 0;
    virtual void Init() = 0;
 
 protected:

@@ -33,22 +33,21 @@ namespace AtFITTER {
 class AtGenfit : public AtFitter {
 
 public:
-   
-   AtGenfit(Float_t magfield,Float_t minbrho,Float_t maxbrho,Int_t minit=5,Int_t maxit=20);
+   AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, Int_t minit = 5, Int_t maxit = 20);
    ~AtGenfit();
 
-   genfit::Track* FitTracks(AtTrack *track);
+   genfit::Track *FitTracks(AtTrack *track);
    void Init();
 
-   inline void SetMinIterations(Int_t minit){fMinIterations = minit;}
-   inline void SetMaxIterations(Int_t maxit){fMaxIterations = maxit;}
-   inline void SetMinBrho(Float_t minbrho){fMinBrho = minbrho;}
-   inline void SetMaxBrho(Float_t maxbrho){fMaxBrho = maxbrho;}
-   inline void SetMagneticField(Float_t magfield){fMagneticField = 10.0*magfield;} 
-   inline void SetPDGCode(Int_t pdgcode){fPDGCode = pdgcode;}
-   inline void SetMass(Float_t mass){fMass = mass;}
-   inline void SetAtomicNumber(Int_t znumber){fAtomicNumber = znumber;}
-   inline void SetNumFitPoints(Float_t points){fNumFitPoints = points;}
+   inline void SetMinIterations(Int_t minit) { fMinIterations = minit; }
+   inline void SetMaxIterations(Int_t maxit) { fMaxIterations = maxit; }
+   inline void SetMinBrho(Float_t minbrho) { fMinBrho = minbrho; }
+   inline void SetMaxBrho(Float_t maxbrho) { fMaxBrho = maxbrho; }
+   inline void SetMagneticField(Float_t magfield) { fMagneticField = 10.0 * magfield; }
+   inline void SetPDGCode(Int_t pdgcode) { fPDGCode = pdgcode; }
+   inline void SetMass(Float_t mass) { fMass = mass; }
+   inline void SetAtomicNumber(Int_t znumber) { fAtomicNumber = znumber; }
+   inline void SetNumFitPoints(Float_t points) { fNumFitPoints = points; }
 
    TClonesArray *GetGenfitTrackArray();
 
@@ -56,18 +55,18 @@ private:
    std::shared_ptr<genfit::AbsKalmanFitter> fKalmanFitter;
    TClonesArray *fGenfitTrackArray;
    TClonesArray *fHitClusterArray;
-   Int_t fPDGCode;//<! Particle PGD code
+   Int_t fPDGCode; //<! Particle PGD code
    Int_t fTPCDetID;
    Int_t fCurrentDirection;
-   Float_t fMaxBrho;//<! Max Brho allowed in Tm
-   Float_t fMinBrho;//<! Min Brho allowed in Tm
-   Int_t fMaxIterations;//<! Max iterations for fitter
-   Int_t fMinIterations;//<! Min iterations for fitter
-   Float_t fMagneticField;//<! Constant magnetic field along Z in T
-   Float_t fMass;//<! Particle mass in atomic mass unit
-   Int_t fAtomicNumber;//<! Particle Atomic number Z
-   Float_t fNumFitPoints;//<! % of processed track points for fit
-  
+   Float_t fMaxBrho;       //<! Max Brho allowed in Tm
+   Float_t fMinBrho;       //<! Min Brho allowed in Tm
+   Int_t fMaxIterations;   //<! Max iterations for fitter
+   Int_t fMinIterations;   //<! Min iterations for fitter
+   Float_t fMagneticField; //<! Constant magnetic field along Z in T
+   Float_t fMass;          //<! Particle mass in atomic mass unit
+   Int_t fAtomicNumber;    //<! Particle Atomic number Z
+   Float_t fNumFitPoints;  //<! % of processed track points for fit
+
    genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement> *fMeasurementProducer;
    genfit::MeasurementFactory<genfit::AbsMeasurement> *fMeasurementFactory;
 

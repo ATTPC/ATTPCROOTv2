@@ -11,7 +11,7 @@
 
 ClassImp(AtFITTER::AtGenfit)
 
-AtFITTER::AtGenfit::AtGenfit(Float_t magfield,Float_t minbrho,Float_t maxbrho,Int_t minit,Int_t maxit)
+   AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, Int_t minit, Int_t maxit)
 {
 
    fTPCDetID = 0;
@@ -20,17 +20,17 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield,Float_t minbrho,Float_t maxbrho,In
    fMaxIterations = maxit;
    fMinBrho = minbrho;
    fMaxBrho = maxbrho;
-   fMagneticField = 10.0*magfield; //T to kGauss
-   fNumFitPoints = 0.90; //Percentage of processed points 
-   fMass = 1.00727647; //<! Particle mass in amu
+   fMagneticField = 10.0 * magfield; // T to kGauss
+   fNumFitPoints = 0.90;             // Percentage of processed points
+   fMass = 1.00727647;               //<! Particle mass in amu
    fAtomicNumber = 1;
    fPDGCode = 2212;
-   
+
    fKalmanFitter = std::make_shared<genfit::KalmanFitterRefTrack>();
    fKalmanFitter->setMinIterations(fMinIterations);
    fKalmanFitter->setMaxIterations(fMaxIterations);
-   //fKalmanFitter->setDebugLvl();
-   
+   // fKalmanFitter->setDebugLvl();
+
    fGenfitTrackArray = new TClonesArray("genfit::Track");
    fHitClusterArray = new TClonesArray("AtHitCluster");
 
@@ -39,7 +39,7 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield,Float_t minbrho,Float_t maxbrho,In
    fMeasurementFactory = new genfit::MeasurementFactory<genfit::AbsMeasurement>();
    fMeasurementFactory->addProducer(fTPCDetID, fMeasurementProducer);
 
-   genfit::FieldManager::getInstance()->init(new genfit::ConstField(0., 0.,fMagneticField)); // TODO kGauss
+   genfit::FieldManager::getInstance()->init(new genfit::ConstField(0., 0., fMagneticField)); // TODO kGauss
    genfit::MaterialEffects *materialEffects = genfit::MaterialEffects::getInstance();
    materialEffects->init(new genfit::TGeoMaterialInterface());
 
@@ -99,12 +99,12 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield,Float_t minbrho,Float_t maxbrho,In
 
 AtFITTER::AtGenfit::~AtGenfit()
 {
-  //delete fKalmanFitter;
-  delete fGenfitTrackArray;
-  delete fHitClusterArray;
-  delete fMeasurementProducer;
-  delete fMeasurementFactory;
-  delete fPDGCandidateArray;
+   // delete fKalmanFitter;
+   delete fGenfitTrackArray;
+   delete fHitClusterArray;
+   delete fMeasurementProducer;
+   delete fMeasurementFactory;
+   delete fPDGCandidateArray;
 }
 
 void AtFITTER::AtGenfit::Init()
@@ -121,51 +121,51 @@ TClonesArray *AtFITTER::AtGenfit::GetGenfitTrackArray()
    return fGenfitTrackArray;
 }
 
-genfit::Track* AtFITTER::AtGenfit::FitTracks(AtTrack *track)
+genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
 {
 
-  //std::vector<genfit::Track> genfitTrackArray;
+   // std::vector<genfit::Track> genfitTrackArray;
 
-  //std::vector<AtTrack> &patternTrackCand = patternEvent.GetTrackCand();
+   // std::vector<AtTrack> &patternTrackCand = patternEvent.GetTrackCand();
 
-  //std::cout << cGREEN << " AtFITTER::AtGenfit::FitTracks - Number of candidate tracks : " << patternTrackCand.size()
-  //<< cNORMAL << "\n";
+   // std::cout << cGREEN << " AtFITTER::AtGenfit::FitTracks - Number of candidate tracks : " << patternTrackCand.size()
+   //<< cNORMAL << "\n";
 
-  //for (auto track : patternTrackCand) {
-     fHitClusterArray->Delete();
-     genfit::TrackCand trackCand;
+   // for (auto track : patternTrackCand) {
+   fHitClusterArray->Delete();
+   genfit::TrackCand trackCand;
 
-      auto hitClusterArray = track->GetHitClusterArray();
+   auto hitClusterArray = track->GetHitClusterArray();
 
-      TVector3 pos_res;
-      TVector3 mom_res;
-      TMatrixDSym cov_res;
+   TVector3 pos_res;
+   TVector3 mom_res;
+   TMatrixDSym cov_res;
 
-      std::cout << cYELLOW << " Track " << track->GetTrackID() << " with " << hitClusterArray->size() << " clusters "
-                << cNORMAL << "\n";
+   std::cout << cYELLOW << " Track " << track->GetTrackID() << " with " << hitClusterArray->size() << " clusters "
+             << cNORMAL << "\n";
 
-      if (hitClusterArray->size() < 15 || track->GetIsNoise() )  //&& patternTrackCand.size()<5) { // TODO Check minimum number of clusters
-        return nullptr; 
-      	
-         
-         std::reverse(hitClusterArray->begin(), hitClusterArray->end()); // TODO: Reverted to adapt it to simulation
+   if (hitClusterArray->size() < 15 ||
+       track->GetIsNoise()) //&& patternTrackCand.size()<5) { // TODO Check minimum number of clusters
+      return nullptr;
 
-         // Adding clusterized  hits
-         //for (auto cluster : *hitClusterArray) {
-	 for(auto iCluster=0;iCluster<hitClusterArray->size()*fNumFitPoints;++iCluster){
-	   auto cluster = hitClusterArray->at(iCluster);
-	    TVector3 pos = cluster.GetPosition();
-            Int_t idx = fHitClusterArray->GetEntriesFast();
-            new ((*fHitClusterArray)[idx]) AtHitCluster(cluster);
-            trackCand.addHit(fTPCDetID, idx);
-            //std::cout<<" Adding  cluster "<<idx<<"\n";
-            //std::cout<<pos.X()<<"     "<<pos.Y()<<"   "<<1000.0-pos.Z()<<"\n";
-         }
+   std::reverse(hitClusterArray->begin(), hitClusterArray->end()); // TODO: Reverted to adapt it to simulation
+
+   // Adding clusterized  hits
+   // for (auto cluster : *hitClusterArray) {
+   for (auto iCluster = 0; iCluster < hitClusterArray->size() * fNumFitPoints; ++iCluster) {
+      auto cluster = hitClusterArray->at(iCluster);
+      TVector3 pos = cluster.GetPosition();
+      Int_t idx = fHitClusterArray->GetEntriesFast();
+      new ((*fHitClusterArray)[idx]) AtHitCluster(cluster);
+      trackCand.addHit(fTPCDetID, idx);
+      // std::cout<<" Adding  cluster "<<idx<<"\n";
+      // std::cout<<pos.X()<<"     "<<pos.Y()<<"   "<<1000.0-pos.Z()<<"\n";
+   }
 
          TVector3 iniPos = hitClusterArray->front().GetPosition(); // TODO Check first cluster is the first in time
-         std::cout<<" Initial position : "<<iniPos.X()<<" - "<<iniPos.Y()<<" - "<<iniPos.Z()<<"\n";
+         std::cout << " Initial position : " << iniPos.X() << " - " << iniPos.Y() << " - " << iniPos.Z() << "\n";
 
-         TVector3 posSeed(iniPos.X() / 10.0, iniPos.Y() / 10.0, (1000.0-iniPos.Z()) / 10.0);
+         TVector3 posSeed(iniPos.X() / 10.0, iniPos.Y() / 10.0, (1000.0 - iniPos.Z()) / 10.0);
          posSeed.SetMag(posSeed.Mag());
 
          TMatrixDSym covSeed(6); // TODO Check where COV matrix is defined, likely in AtPattern clusterize (hard coded
@@ -177,20 +177,23 @@ genfit::Track* AtFITTER::AtGenfit::FitTracks(AtTrack *track)
          for (Int_t iComp = 3; iComp < 6; iComp++)
             covSeed(iComp, iComp) = covSeed(iComp - 3, iComp - 3);
 
-         
-         Double_t theta = 180.0*TMath::DegToRad()-track->GetGeoTheta();//180.0*TMath::DegToRad()-track.GetGeoTheta();
-         Double_t radius = track->GetGeoRadius()/1000.0;// mm to m
-         Double_t phi =  track->GetGeoPhi();
-         Double_t brho = (fMagneticField/10.0)*radius/TMath::Sin(theta);      // Tm
+         Double_t theta =
+            180.0 * TMath::DegToRad() - track->GetGeoTheta(); // 180.0*TMath::DegToRad()-track.GetGeoTheta();
+         Double_t radius = track->GetGeoRadius() / 1000.0;    // mm to m
+         Double_t phi = track->GetGeoPhi();
+         Double_t brho = (fMagneticField / 10.0) * radius / TMath::Sin(theta); // Tm
 
-	 Double_t p_mass = fMass;
+         Double_t p_mass = fMass;
          Int_t p_Z = fAtomicNumber;
          Int_t PDGCode = fPDGCode;
 
-	 std::cout<<" Initial parameters "<<"\n";
-	 std::cout<<" PDG : "<<PDGCode<<" - Mass : "<<p_mass<<" - Atomic number : "<<p_Z<<"\n";
-	 std::cout<<" B field : "<<fMagneticField/10.0<<" - Min. Bhro : "<<fMinBrho<<" - Max. Brho : "<<fMaxBrho<<"\n";
-	 std::cout<<" Theta : "<<theta*TMath::RadToDeg()<<" - Phi : "<<phi*TMath::RadToDeg()<<" - Brho : "<<brho<<"\n";
+         std::cout << " Initial parameters "
+                   << "\n";
+         std::cout << " PDG : " << PDGCode << " - Mass : " << p_mass << " - Atomic number : " << p_Z << "\n";
+         std::cout << " B field : " << fMagneticField / 10.0 << " - Min. Bhro : " << fMinBrho
+                   << " - Max. Brho : " << fMaxBrho << "\n";
+         std::cout << " Theta : " << theta * TMath::RadToDeg() << " - Phi : " << phi * TMath::RadToDeg()
+                   << " - Brho : " << brho << "\n";
 
          std::tuple<Double_t, Double_t> mom_ener =
             GetMomFromBrho(p_mass, p_Z, brho); // TODO Change to structured bindings when C++17
@@ -203,31 +206,29 @@ genfit::Track* AtFITTER::AtGenfit::FitTracks(AtTrack *track)
          trackCand.setPdgCode(1000020040);
          // trackCand.Print();
 
-	 if(brho>fMaxBrho && brho<fMinBrho)
-	   return nullptr;
-	 
+         if (brho > fMaxBrho && brho < fMinBrho)
+            return nullptr;
+
          genfit::Track *gfTrack = new ((*fGenfitTrackArray)[fGenfitTrackArray->GetEntriesFast()])
             genfit::Track(trackCand, *fMeasurementFactory);
          gfTrack->addTrackRep(new genfit::RKTrackRep(1000020040)); // TODO: Forcing proton track representation
 
          genfit::RKTrackRep *trackRep = (genfit::RKTrackRep *)gfTrack->getTrackRep(0);
-	 //trackRep->setPropDir(1);
+         // trackRep->setPropDir(1);
 
          try {
-	   fKalmanFitter->processTrackWithRep(gfTrack, trackRep, false);
-	   //fKalmanFitter->processTrackPartially(gfTrack, trackRep,0,hitClusterArray->size()*0.30);
+            fKalmanFitter->processTrackWithRep(gfTrack, trackRep, false);
+            // fKalmanFitter->processTrackPartially(gfTrack, trackRep,0,hitClusterArray->size()*0.30);
          } catch (genfit::Exception &e) {
 
-	   std::cout<<" AtGenfit -  Exception caught from Kalman Fitter : "<<e.what()<<"\n";
+            std::cout << " AtGenfit -  Exception caught from Kalman Fitter : " << e.what() << "\n";
          }
 
-	 //gfTrack->prune("FCW");
+         // gfTrack->prune("FCW");
 
-          
-	 
          genfit::FitStatus *fitStatus;
          try {
-	    fitStatus = gfTrack->getFitStatus(trackRep);
+            fitStatus = gfTrack->getFitStatus(trackRep);
             std::cout << cYELLOW << " Is fitted? " << fitStatus->isFitted() << "\n";
             std::cout << " Is Converged ? " << fitStatus->isFitConverged() << "\n";
             std::cout << " Is Converged Partially? " << fitStatus->isFitConvergedPartially() << "\n";
@@ -235,43 +236,36 @@ genfit::Track* AtFITTER::AtGenfit::FitTracks(AtTrack *track)
             fitStatus->Print();
          } catch (genfit::Exception &e) {
             return nullptr;
-	    }
+         }
 
-	 
-
-	 
-       
-	 
          /*genfit::MeasuredStateOnPlane fitState;
-	 genfit::TrackPoint* firstPoint;
-	 genfit::TrackPoint* lastPoint;
-	 genfit::KalmanFitterInfo* pointKFitterInfo;*/
+    genfit::TrackPoint* firstPoint;
+    genfit::TrackPoint* lastPoint;
+    genfit::KalmanFitterInfo* pointKFitterInfo;*/
          /*try {
-	   fitState = gfTrack->getFittedState();
-	   fitState.Print();
-	   // Fit result
+      fitState = gfTrack->getFittedState();
+      fitState.Print();
+      // Fit result
             fitState.getPosMomCov(pos_res, mom_res, cov_res);
             std::cout << cYELLOW << " Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
-	            << pos_res.Y() << "  " << pos_res.Z() << cNORMAL << "\n";
-	    firstPoint = gfTrack->getPointWithMeasurement(0);
-	    lastPoint  = gfTrack->getPointWithMeasurement(gfTrack->getNumPoints()-1);
-	    //firstPoint->Print();
-	    //lastPoint->Print();
-	    //pointKFitterInfo = firstPoint->getKalmanFitterInfo();
-	    
+               << pos_res.Y() << "  " << pos_res.Z() << cNORMAL << "\n";
+       firstPoint = gfTrack->getPointWithMeasurement(0);
+       lastPoint  = gfTrack->getPointWithMeasurement(gfTrack->getNumPoints()-1);
+       //firstPoint->Print();
+       //lastPoint->Print();
+       //pointKFitterInfo = firstPoint->getKalmanFitterInfo();
+
          } catch (genfit::Exception &e) {
          }*/
 
-	 // gfTrack ->Print();
+         // gfTrack ->Print();
 
+         //} // iTrack
 
-      
-      //} // iTrack
+         std::cout << " End of GENFIT "
+                   << "\n";
+         std::cout << "               "
+                   << "\n";
 
-   std::cout << " End of GENFIT "
-             << "\n";
-   std::cout << "               "
-             << "\n";
-
-   return gfTrack;
+         return gfTrack;
 }

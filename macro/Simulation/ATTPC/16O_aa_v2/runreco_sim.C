@@ -55,7 +55,17 @@ void runreco_sim(
 
    AtFitterTask *fitterTask = new AtFitterTask();
    fitterTask->SetPersistence(kTRUE);
-
+   fitterTask->SetMagneticField(3.0);//T
+   fitterTask->SetMinIterations(5);
+   fitterTask->SetMaxIterations(20);
+   fitterTask->SetPDGCode(100002004);
+   fitterTask->SetMass(4.00150618);
+   fitterTask->SetAtomicNumber(2);
+   fitterTask->SetNumFitPoints(0.9);
+   fitterTask->SetMaxBrho(1.5);
+   fitterTask->SetMinBhro(0.1);
+   
+   
    /*ATTriggerTask *trigTask = new ATTriggerTask();
    trigTask  ->  SetAtMap(mapParFile);
    trigTask  ->  SetPersistence(kTRUE);*/
@@ -70,8 +80,8 @@ void runreco_sim(
    // __ Init and run ___________________________________
 
    fRun->Init();
-   fRun->Run(0,1000);
-   //fRun->Run(845,852);
+   fRun->Run(0, 1000);
+   // fRun->Run(845,852);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;
