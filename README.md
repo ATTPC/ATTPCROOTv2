@@ -8,17 +8,17 @@ There was also some documentation written as part of Alexander Carl's 2019 thesi
 
 ROOT and FairROOT are already installed on the system. The modules and their prerequisites just need to be loaded with the commands:
 ```
-module load gnu/gcc/6.4
-module load fairroot/18.00
+module purge
+module load fairroot/18.6.3
 ```
 
-To install ATTPCROOT checkout the repository from github and then create a folder in the repository to build the code and cd into it. From this directory you can call CMake to configure the build. Then you can build the source
+To install ATTPCROOT checkout the repository from github and then create a folder in the repository to build the code and cd into it. From this directory you can call CMake to configure the build. Then you can build the source. You will need to tell CMake where you installed things besides FairRoot and FairSoft by setting the DCMAKE_PREFIX_PATH:
 ```
 git clone https://github.com/ATTPC/ATTPCROOTv2.git
 cd ATTPCROOTv2
 mkdir build
 cd build
-cmake ../
+cmake -DCMAKE_PREFIX_PATH=/mnt/misc/sw/x86_64/Debian/10/fairroot/18.6.3/ ../
 make -j 4
 ```
 
