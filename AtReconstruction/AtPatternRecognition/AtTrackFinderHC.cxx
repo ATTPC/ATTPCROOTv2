@@ -156,6 +156,7 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
 
       } // Indices loop
 
+      track.SetTrackID(clusterIndex);
       Clusterize(track);
       tracks.push_back(track);
 
@@ -172,6 +173,10 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
    }
    track.SetIsNoise(kTRUE);
    tracks.push_back(track);
+
+   for (auto &track : tracks)
+      if (track.GetHitArray()->size() > 0)
+         SetTrackInitialParameters(track);
 
    /*ROOT::EnableThreadSafety();
 
@@ -194,11 +199,14 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
    {
      std::vector<Double_t>& coeffs = track.GetRANSACCoeff();
 
+     std::cout<<" RANSAC coeff for Track "<<track.GetTrackID()<<"\n";
+
        for(auto& coeff : coeffs){
-         std::cout<<coeff<<"\n";
+
+    std::cout<<coeff<<"\n";
        }
 
-   }*/
+       }*/
 
    return tracks;
 }

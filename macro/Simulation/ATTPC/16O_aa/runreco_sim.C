@@ -1,5 +1,5 @@
-void rundigi_sim(
-   TString mcFile = "./data/attpcsim.root",
+void runreco_sim(
+   TString mcFile = "output_digi.root",
    TString mapParFile =
       "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
    TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
@@ -21,7 +21,7 @@ void rundigi_sim(
    fRun->SetInputFile(mcFile);
    fRun->SetGeomFile(
       "/mnt/simulations/attpcroot/fair_install_2020/ATTPCROOTv2_develop/geometry/ATTPC_He1bar_v2_geomanager.root");
-   fRun->SetOutputFile("output_digi.root");
+   fRun->SetOutputFile("output_reco.root");
 
    TString parameterFile = "ATTPC.e20020_sim.par";
    TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -33,7 +33,7 @@ void rundigi_sim(
 
    // __ AT digi tasks___________________________________
 
-   AtClusterizeTask *clusterizer = new AtClusterizeTask();
+   /*AtClusterizeTask *clusterizer = new AtClusterizeTask();
    clusterizer->SetPersistence(kFALSE);
 
    AtPulseTask *pulse = new AtPulseTask();
@@ -51,7 +51,7 @@ void rundigi_sim(
    psa->SetMaxFinder();
 
    AtPRAtask *praTask = new AtPRAtask();
-   praTask->SetPersistence(kTRUE);
+   praTask->SetPersistence(kTRUE);*/
 
    AtFitterTask *fitterTask = new AtFitterTask();
    fitterTask->SetPersistence(kTRUE);
@@ -60,11 +60,11 @@ void rundigi_sim(
    trigTask  ->  SetAtMap(mapParFile);
    trigTask  ->  SetPersistence(kTRUE);*/
 
-   fRun->AddTask(clusterizer);
-   fRun->AddTask(pulse);
-   fRun->AddTask(psaTask);
-   fRun->AddTask(praTask);
-   // fRun->AddTask(fitterTask);
+   // fRun->AddTask(clusterizer);
+   // fRun->AddTask(pulse);
+   // fRun->AddTask(psaTask);
+   // fRun->AddTask(praTask);
+   fRun->AddTask(fitterTask);
    // fRun -> AddTask(trigTask);
 
    // __ Init and run ___________________________________

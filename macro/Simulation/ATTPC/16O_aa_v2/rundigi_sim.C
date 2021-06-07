@@ -53,8 +53,8 @@ void rundigi_sim(
    AtPRAtask *praTask = new AtPRAtask();
    praTask->SetPersistence(kTRUE);
 
-   AtFitterTask *fitterTask = new AtFitterTask();
-   fitterTask->SetPersistence(kTRUE);
+   // AtFitterTask *fitterTask = new AtFitterTask();
+   // fitterTask->SetPersistence(kTRUE);
 
    /*ATTriggerTask *trigTask = new ATTriggerTask();
    trigTask  ->  SetAtMap(mapParFile);
@@ -70,7 +70,7 @@ void rundigi_sim(
    // __ Init and run ___________________________________
 
    fRun->Init();
-   fRun->Run(0, 300);
+   fRun->Run(0, 10000);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;
