@@ -10,6 +10,7 @@ ROOT and FairROOT are already installed on the system. The modules and their pre
 ```
 module purge
 module load fairroot/18.6.3
+module load xerces/3.2.3
 ```
 
 To install ATTPCROOT checkout the repository from github and then create a folder in the repository to build the code and cd into it. From this directory you can call CMake to configure the build. Then you can build the source. You will need to tell CMake where you installed things besides FairRoot and FairSoft by setting the DCMAKE_PREFIX_PATH:
