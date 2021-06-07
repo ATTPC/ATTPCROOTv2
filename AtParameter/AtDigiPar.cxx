@@ -1,8 +1,8 @@
 #include "AtDigiPar.h"
 
-ClassImp(AtDigiPar)
+ClassImp(AtDigiPar);
 
-   AtDigiPar::AtDigiPar(const Char_t *name, const Char_t *title, const Char_t *context)
+AtDigiPar::AtDigiPar(const Char_t *name, const Char_t *title, const Char_t *context)
    : FairParGenericSet("AtDigiPar", "AtTPC Parameter Container", ""), fGas(NULL)
 {
    fInitialized = kFALSE;

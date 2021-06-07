@@ -239,7 +239,7 @@ find_package2(PUBLIC GEANT4DATA)
 find_package2(PUBLIC GENFIT2)
 find_package2(PUBLIC OpenMP)
 find_package2(PUBLIC CUDA)
-find_package2(PUBLIC Eigen CONFIG)
+find_package2(PUBLIC Eigen3 CONFIG)
 find_package2(PUBLIC FLANN)
 find_package2(PUBLIC VTK)
 
