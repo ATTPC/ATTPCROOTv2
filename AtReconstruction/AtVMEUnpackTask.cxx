@@ -50,7 +50,7 @@ InitStatus AtVMEUnpackTask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      LOG(error) << "Cannot find RootManager!";
 
       return kERROR;
    }
@@ -76,15 +76,15 @@ void AtVMEUnpackTask::SetParContainers()
 {
    FairRun *run = FairRun::Instance();
    if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+      LOG(fatal) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+      LOG(fatal) << "No runtime database!";
 
    fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
    if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "Cannot find AtDigiPar!");
+      LOG(fatal) << "Cannot find AtDigiPar!";
 }
 
 void AtVMEUnpackTask::Exec(Option_t *opt)

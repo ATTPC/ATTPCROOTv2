@@ -397,6 +397,6 @@ void AtTrack::SetPosExp(const std::vector<Double_t> &xexp, const std::vector<Dou
 
 Bool_t AtTrack::SortHitArrayTime()
 {
-
    std::sort(fHitArray.begin(), fHitArray.end(), SortHitTime);
+   return kTRUE;
 }

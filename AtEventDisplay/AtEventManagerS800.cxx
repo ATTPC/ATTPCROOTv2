@@ -9,7 +9,8 @@
 #include "TEveViewer.h"
 #include "TEveWindow.h"
 #include "TEveBrowser.h"
-
+#include "TFile.h"
+#include "TVirtualX.h"
 #include "TRootEmbeddedCanvas.h"
 
 #include "TGTab.h"
@@ -90,7 +91,7 @@ void AtEventManagerS800::Init(Int_t option, Int_t level, Int_t nNodes)
    UInt_t width, height;
    UInt_t widthMax = 1400, heightMax = 650;
    Double_t ratio = (Double_t)widthMax / heightMax;
-   gVirtualX->GetWindowSize(gClient->GetRoot()->GetId(), dummy, dummy, width, height);
+   TVirtualX::Instance()->GetWindowSize(gClient->GetRoot()->GetId(), dummy, dummy, width, height);
    // Assume that width of screen is always larger than the height of screen
    if (width > widthMax) {
       width = widthMax;
@@ -579,8 +580,8 @@ void AtEventManagerS800::DrawWave()
       int pxmin = gPad->XtoAbsPixel(uxmin);
       int pxmax = gPad->XtoAbsPixel(uxmax);
       if (pyold)
-         gVirtualX->DrawLine(pxmin, pyold, pxmax, pyold);
-      gVirtualX->DrawLine(pxmin, py, pxmax, py);
+         TVirtualX::Instance()->DrawLine(pxmin, pyold, pxmax, pyold);
+      TVirtualX::Instance()->DrawLine(pxmin, py, pxmax, py);
       gPad->SetUniqueID(py);
       Float_t upx = gPad->AbsPixeltoX(px);
       Float_t upy = gPad->AbsPixeltoY(py);

@@ -122,7 +122,7 @@ std::size_t AtHDFParser::open(char const *file)
    auto metaID = std::get<0>(meta_size);
    if (metaID > 0) {
       std::string datasetName = "meta";
-      auto dataset_dims = open_dataset(metaID, datasetName.data());
+      auto dataset_dims = open_dataset(metaID, datasetName.c_str());
       auto datasetId = std::get<0>(dataset_dims);
       auto len = std::get<1>(dataset_dims).at(0);
 
@@ -207,6 +207,7 @@ std::size_t AtHDFParser::inievent()
 std::size_t AtHDFParser::datasets()
 {
    herr_t idx = H5Literate(_group, H5_INDEX_NAME, H5_ITER_INC, NULL, file_info, NULL);
+   return 0;
 }
 
 herr_t AtHDFParser::file_info(hid_t loc_id, const char *name, const H5L_info_t *linfo, void *opdata)

@@ -1,10 +1,3 @@
- ################################################################################
- #    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    #
- #                                                                              #
- #              This software is distributed under the terms of the             # 
- #         GNU Lesser General Public Licence version 3 (LGPL) version 3,        #  
- #                  copied verbatim in the file "LICENSE"                       #
- ################################################################################
 # - Try to find GEANT3
 # Once done this will define
 #
@@ -43,7 +36,7 @@ SET(CMAKE_REQUIRED_LIBRARIES
     Physics 
     Gui 
     EG 
-    ${Pythia6_LIBRARY_DIR}/libPythia6.so 
+    ${GENERATORS_LIBRARY_DIR}/libPythia6.so 
     EGPythia6 
     VMC 
     Geom 

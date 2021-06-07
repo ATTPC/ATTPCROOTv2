@@ -2,14 +2,15 @@
 
 #include <cassert>
 #include <iostream>
+#include "FairLogger.h"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
 #define cNORMAL "\033[0m"
 
-AtSpecMATMap::AtSpecMATMap(Int_t fNumPads)
+AtSpecMATMap::AtSpecMATMap(Int_t numPads)
 {
-   AtPadCoord.resize(boost::extents[fNumPads][4][2]);
+   AtPadCoord.resize(boost::extents[numPads][4][2]);
    kIsParsed = 0;
    kGUIMode = 0;
    kDebug = 0;
@@ -221,6 +222,10 @@ void AtSpecMATMap::SpecMATPadPlane()
 
 void AtSpecMATMap::GenerateAtTpc() {}
 
-std::vector<Float_t> AtSpecMATMap::CalcPadCenter(Int_t PadRef) {}
+std::vector<Float_t> AtSpecMATMap::CalcPadCenter(Int_t PadRef)
+{
+   LOG(error) << "CalcPadCenter function for SpecMAT is not implemented!";
+   return std::vector<Float_t>();
+}
 
 ClassImp(AtSpecMATMap)

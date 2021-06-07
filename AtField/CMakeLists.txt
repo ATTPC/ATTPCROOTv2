@@ -2,21 +2,8 @@
 # the array .
 # The extension is already found.  Any number of sources could be listed here.
 
-set(INCLUDE_DIRECTORIES
-${BASE_INCLUDE_DIRECTORIES} 
-${ROOT_INCLUDE_DIR}
-${CMAKE_SOURCE_DIR}/AtField 
-)
-
-include_directories( ${INCLUDE_DIRECTORIES})
-
-set(LINK_DIRECTORIES
-${ROOT_LIBRARY_DIR}
-${FAIRROOT_LIBRARY_DIR}
-
-)
- 
-link_directories( ${LINK_DIRECTORIES})
+set(target AtField)
+set(LINKDEF FieldLinkDef.h)
 
 set(SRCS
 AtConstField.cxx   
@@ -24,12 +11,26 @@ AtFieldCreator.cxx
 AtFieldPar.cxx
 )
 
-set(LINKDEF FieldLinkDef.h)
-Set(LIBRARY_NAME AtField)
-Set(DEPENDENCIES
-    Base 
-    FairLogger::FairLogger
+set(INCLUDE_DIRECTORIES
+${BASE_INCLUDE_DIRECTORIES} 
 )
 
-GENERATE_LIBRARY()
+set(LINK_DIRECTORIES
+${FAIRROOT_LIBRARY_DIR}
+)
+
+Set(DEPENDENCIES
+    Base 
+    FairTools
+    ROOT::Core
+)
+
+
+generate_target_root_library(${target}
+  LINKDEF ${LINKDEF}
+  SRCS ${SRCS}
+  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
+  LIBRARY_DIR ${LINK_DIRECTORIES}
+  DEPS_PUBLIC ${DEPENDENCIES}
+  )
 

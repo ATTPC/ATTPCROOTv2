@@ -33,7 +33,6 @@ public:
    typedef boost::multi_array<double, 3> multiarray;
    typedef multiarray::index index;
 
-   virtual Int_t GetMinimization() = 0;
    virtual Bool_t Minimize(Double_t *parameter, AtEvent *event) = 0;
    virtual Bool_t MinimizeOpt(Double_t *parameter, AtEvent *event) = 0;
    virtual Bool_t MinimizeOptMap(Double_t *parameter, AtEvent *event, TH2Poly *hPadPlane) = 0;

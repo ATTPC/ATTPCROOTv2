@@ -9,6 +9,7 @@
 #include "TCanvas.h"
 #include "TGraph.h"
 #include "TF1.h"
+#include "TKey.h"
 #include "TMath.h"
 #include "TCutG.h"
 #include "TTreeReader.h"
@@ -250,13 +251,13 @@ InitStatus AtMergeTask::Init()
 
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 
    fRawEventArray = (TClonesArray *)ioMan->GetObject("AtRawEvent");
    if (fRawEventArray == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtRawEvent array!");
+      LOG(error) << "Cannot find AtRawEvent array!";
       return kERROR;
    }
 

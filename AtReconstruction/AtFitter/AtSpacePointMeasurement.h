@@ -22,7 +22,7 @@
 #include "SpacepointMeasurement.h"
 #include "TrackCandHit.h"
 
-#include "ATHitCluster.h"
+#include "AtHitCluster.h"
 
 namespace genfit {
 

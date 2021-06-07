@@ -1,3 +1,5 @@
 #ignore .dat files
 
 *.dat
+*.root
+*.h5

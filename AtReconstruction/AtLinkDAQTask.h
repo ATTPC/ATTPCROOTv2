@@ -13,7 +13,7 @@
  * As an input it takes some mean and radius to search around, and a histogram of the reduced interval
  * is saved.
  * 
- * Adam Anthony 5/19/21
+ * Adam Anthony 5/27/21
  * 
  */
 
@@ -42,14 +42,16 @@ private:
    Double_t fSearchRadius;
    ULong64_t fOldTpcTimestamp;
    ULong64_t fOldEvtTimestamp;
-
+   Int_t fTpcTimestampIndex;
+   
 public:
    AtLinkDAQTask();
    ~AtLinkDAQTask();
    
    void SetInputTree(TString fileName, TString treeName);
    void SetEvtTimestamp(TString name);
-
+   void SetTpcTimestampIndex(Int_t index) { fTpcTimestampIndex = index; }
+   
    virtual InitStatus Init() override;
    virtual void Exec(Option_t *opt) override;
    virtual void Finish() override; //called at end of run

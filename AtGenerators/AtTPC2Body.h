@@ -35,10 +35,10 @@ public:
 
    void SetFixedTargetPosition(double vx, double vy, double vz);
    void SetFixedBeamMomentum(double px, double py, double pz);
-   inline void SetSequentialDecay(Bool_t val) {kIsDecay = val;}
+   inline void SetSequentialDecay(Bool_t val) { kIsDecay = val; }
 
-   inline Bool_t GetIsDecay(){return kIsDecay;}
-  
+   inline Bool_t GetIsDecay() { return kIsDecay; }
+
    virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
 
    /** Destructor **/

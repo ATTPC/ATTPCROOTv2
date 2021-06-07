@@ -17,6 +17,7 @@
 #include "TStyle.h"
 #include "TRandom.h"
 #include "TColor.h"
+#include "TVirtualX.h"
 
 #include "AtTpcMap.h"
 #include "AtTpcProtoMap.h"
@@ -149,7 +150,7 @@ InitStatus AtEventDrawTaskS800::Init()
 
    fHitArray = (TClonesArray *)ioMan->GetObject("AtEventH"); // TODO: Why this confusing name? It should be fEventArray
    if (fHitArray)
-      LOG(INFO) << cGREEN << "Hit Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Hit Array Found." << cNORMAL;
 
    /*
    fRawEventArray = (TClonesArray*) ioMan->GetObject("AtRawEvent");
@@ -160,15 +161,15 @@ InitStatus AtEventDrawTaskS800::Init()
    */
    fHoughSpaceArray = (TClonesArray *)ioMan->GetObject("AtHough");
    if (fHoughSpaceArray)
-      LOG(INFO) << cGREEN << "Hough Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Hough Array Found." << cNORMAL;
 
    fProtoEventArray = (TClonesArray *)ioMan->GetObject("AtProtoEvent");
    if (fProtoEventArray)
-      LOG(INFO) << cGREEN << "Prototype Event Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Prototype Event Array Found." << cNORMAL;
 
    fRansacArray = (TClonesArray *)ioMan->GetObject("AtRansac");
    if (fRansacArray)
-      LOG(INFO) << cGREEN << "RANSAC Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "RANSAC Array Found." << cNORMAL;
 
    // fTrackFinderHCArray = (TClonesArray*) ioMan->GetObject("AtTrackFinderHC");
    // if(fTrackFinderHCArray)  LOG(INFO)<<cGREEN<<"Track Finder Hierarchical Clustering Array
@@ -176,15 +177,15 @@ InitStatus AtEventDrawTaskS800::Init()
 
    fPatternEventArray = (TClonesArray *)ioMan->GetObject("AtPatternEvent");
    if (fPatternEventArray)
-      LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL;
 
    fTrackingEventAnaArray = (TClonesArray *)ioMan->GetObject("AtTrackingEventAna");
    if (fTrackingEventAnaArray)
-      LOG(INFO) << cGREEN << "Tracking Event Analysis Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Tracking Event Analysis Array Found." << cNORMAL;
 
    fS800Calc = (S800Calc *)ioMan->GetObject("s800cal");
    if (fS800Calc)
-      LOG(INFO) << cGREEN << "S800Calc Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "S800Calc Found." << cNORMAL;
    // fS800CalcArray = (TClonesArray*) ioMan->GetObject("s800cal");
    // if(fS800CalcArray) LOG(INFO)<<cGREEN<<"S800Calc Array Found."<<cNORMAL<<FairLogger::endl;
 
@@ -240,6 +241,8 @@ InitStatus AtEventDrawTaskS800::Init()
    //******* NO CALLS TO TCANVAS BELOW THIS ONE
    fCvsHoughSpace = fEventManager->GetCvsHoughSpace();
    DrawHoughSpace();
+
+   return kSUCCESS;
 }
 
 void AtEventDrawTaskS800::Exec(Option_t *option)
@@ -1787,8 +1790,8 @@ void AtEventDrawTaskS800::SelectPad(const char *rawevt)
       int pxmin = gPad->XtoAbsPixel(uxmin);
       int pxmax = gPad->XtoAbsPixel(uxmax);
       if (pyold)
-         gVirtualX->DrawLine(pxmin, pyold, pxmax, pyold);
-      gVirtualX->DrawLine(pxmin, py, pxmax, py);
+         TVirtualX::Instance()->DrawLine(pxmin, pyold, pxmax, pyold);
+      TVirtualX::Instance()->DrawLine(pxmin, py, pxmax, py);
       gPad->SetUniqueID(py);
       Float_t upx = gPad->AbsPixeltoX(px);
       Float_t upy = gPad->AbsPixeltoY(py);

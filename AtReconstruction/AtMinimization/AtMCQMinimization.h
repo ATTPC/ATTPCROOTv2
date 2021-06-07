@@ -83,7 +83,6 @@ public:
    std::vector<Double_t> GetPosXBack();
    std::vector<Double_t> GetPosYBack();
    std::vector<Double_t> GetPosZBack();
-   Int_t GetMinimization();
    std::vector<AtHit> GetTBHitArray(Int_t TB, std::vector<AtHit> *harray);
    std::vector<std::function<Double_t(Double_t, std::vector<Double_t> &)>> *GetELossFunctionArray();
 

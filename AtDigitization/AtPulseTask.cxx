@@ -28,7 +28,7 @@
 
 AtPulseTask::AtPulseTask() : FairTask("AtPulseTask"), fEventID(0)
 {
-   LOG(INFO) << "Constructor of AtPulseTask" << FairLogger::endl;
+   LOG(INFO) << "Constructor of AtPulseTask";
    fIsSaveMCInfo = kFALSE;
    fDetectorId = kAtTpc;
    fNumPads = 10240;
@@ -39,7 +39,7 @@ AtPulseTask::AtPulseTask() : FairTask("AtPulseTask"), fEventID(0)
 
 AtPulseTask::~AtPulseTask()
 {
-   LOG(INFO) << "Destructor of AtPulseTask" << FairLogger::endl;
+   LOG(INFO) << "Destructor of AtPulseTask";
    for (Int_t padS = 0; padS < fNumPads; padS++) {
       delete eleAccumulated[padS];
    }
@@ -55,7 +55,7 @@ void AtPulseTask::SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkm
 
 void AtPulseTask::SetParContainers()
 {
-   LOG(INFO) << "SetParContainers of AtPulseTask" << FairLogger::endl;
+   LOG(INFO) << "SetParContainers of AtPulseTask";
    FairRunAna *ana = FairRunAna::Instance();
    FairRuntimeDb *rtdb = ana->GetRuntimeDb();
    fPar = (AtDigiPar *)rtdb->getContainer("AtDigiPar");
@@ -63,12 +63,12 @@ void AtPulseTask::SetParContainers()
 
 InitStatus AtPulseTask::Init()
 {
-   LOG(INFO) << "Initilization of AtPulseTask" << FairLogger::endl;
+   LOG(INFO) << "Initilization of AtPulseTask";
    FairRootManager *ioman = FairRootManager::Instance();
 
    fDriftedElectronArray = (TClonesArray *)ioman->GetObject("AtSimulatedPoint");
    if (fDriftedElectronArray == 0) {
-      LOG(INFO) << "ERROR: Cannot find fDriftedElectronArray array!" << FairLogger::endl;
+      LOG(INFO) << "ERROR: Cannot find fDriftedElectronArray array!";
       return kERROR;
    }
 
@@ -78,7 +78,7 @@ InitStatus AtPulseTask::Init()
    // Retrieve kinematics for each simulated point
    fMCPointArray = (TClonesArray *)ioman->GetObject("AtTpcPoint");
    if (fMCPointArray == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find fMCPointArray array!");
+      LOG(error) << "Cannot find fMCPointArray array!";
       return kERROR;
    }
 
@@ -176,7 +176,7 @@ Double_t PadResponse(Double_t *x, Double_t *par)
 void AtPulseTask::Exec(Option_t *option)
 {
 
-   LOG(INFO) << "Exec of AtPulseTask" << FairLogger::endl;
+   LOG(INFO) << "Exec of AtPulseTask";
 
    Double_t tau = fPeakingTime / 1000.; // shaping time (us)
 
@@ -190,7 +190,7 @@ void AtPulseTask::Exec(Option_t *option)
    std::cout << " AtPulseTask: Number of Points " << nMCPoints << std::endl;
 
    /*if (nMCPoints < 10) {
-      LOG(INFO) << "Not enough hits for digitization! (<10)" << FairLogger::endl;
+      LOG(INFO) << "Not enough hits for digitization! (<10)";
       fRawEvent->SetEventID(fEventID);
       ++fEventID;
       return;

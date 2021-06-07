@@ -27,7 +27,6 @@ public:
    AtMCMinimization();
    ~AtMCMinimization();
 
-   Int_t GetMinimization();
    Bool_t Minimize(Double_t *parameter, AtEvent *event);
    Bool_t MinimizeOpt(Double_t *parameter, AtEvent *event);
    Bool_t MinimizeOptMap(Double_t *parameter, AtEvent *event, TH2Poly *hPadPlane);
