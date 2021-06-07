@@ -1,4 +1,4 @@
-void Be12_pp_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
+void Be12_pp_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
@@ -16,7 +16,7 @@ void Be12_pp_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 
    // gSystem->Load("libAtGen.so");
 
-   ATVertexPropagator *vertex_prop = new ATVertexPropagator();
+   AtVertexPropagator *vertex_prop = new AtVertexPropagator();
 
    // -----   Create simulation run   ----------------------------------------
    FairRunSim *run = new FairRunSim();
@@ -68,11 +68,11 @@ void Be12_pp_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
    Double_t px = 0.000 / a;    // X-Momentum / per nucleon!!!!!!
    Double_t py = 0.000 / a;    // Y-Momentum / per nucleon!!!!!!
    Double_t pz = 2.016 / a;    // Z-Momentum / per nucleon!!!!!!
-   Double_t BExcEner = 2.251;  //
+   Double_t BExcEner = 0.0;    //
    Double_t Bmass = 12.026922; // Mass in amu
    Double_t NomEnergy = 9.0;
 
-   ATTPCIonGenerator *ionGen = new ATTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
+   AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
    ionGen->SetSpotRadius(0, -100, 0);
    // add the ion generator
 
@@ -143,8 +143,8 @@ void Be12_pp_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
    Double_t ThetaMinCMS = 5.0;
    Double_t ThetaMaxCMS = 50.0;
 
-   ATTPC2Body *TwoBody =
-      new ATTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);
+   AtTPC2Body *TwoBody =
+      new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);
    primGen->AddGenerator(TwoBody);
 
    run->SetGenerator(primGen);

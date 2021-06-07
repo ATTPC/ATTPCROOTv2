@@ -20,7 +20,7 @@
 #include "TMath.h"
 #include "TF1.h"
 #include "TAxis.h"
-
+//#include "AtHit.h"
 
 void GetEnergy(Double_t M,Double_t IZ,Double_t BRO,Double_t &E){
 
@@ -46,7 +46,7 @@ main(int argc, char** argv)
   pcl::PointCloud<pcl::PointXYZ>::Ptr final (new pcl::PointCloud<pcl::PointXYZ>);
 
   std::ifstream file;
-  file.open("../event_test.dat");
+  file.open("../event_exp_1.dat");
 
   std::string line_buffer;
 
@@ -110,7 +110,8 @@ main(int argc, char** argv)
   std::vector<double> wpca;
   std::vector<double> whit;
   std::vector<double> arclength;
- 
+
+  // std::vector<AtHit> *thetaHits = new std::vector<AtHit>();
 
   std::cerr << "Model inliers: " << inliers->indices.size () << std::endl;
   for (size_t i = 0; i < inliers->indices.size (); ++i){
@@ -133,29 +134,51 @@ main(int argc, char** argv)
 
      std::cout<<arclength.at(i)<<"  "<<cloud->points[inliers->indices[i]].z<<"  "<<wpca.at(i)<<"  "<<whit.at(i)<<"\n";
 
+     double xPos = arclength.at(i);
+     double yPos = cloud->points[inliers->indices[i]].z;
+     double zPos = 0.0;
+
+     // thetaHits->push_back(AtHit(hits->at(i).GetHitPadNum(), i, xPos, yPos, zPos, hits->at(i).GetCharge()));
   }
 
-  TF1 *f1 = new TF1("f1","pol1",0,500);
-  arclengthGraph->Fit(f1,"R");  
-  //TF1 *fitfunc = arclengthGraph->GetFunction("pol1");
+  // TF1 *f1 = new TF1("f1","pol1",0,500);
+  // arclengthGraph->Fit(f1,"R");
+  // TF1 *fitfunc = arclengthGraph->GetFunction("pol1");
 
-  Double_t slope = f1->GetParameter(1);
-  double angle = (TMath::ATan2(slope,1)*180.0/TMath::Pi());
+  // Double_t slope = f1->GetParameter(1);
+  // double angle = (TMath::ATan2(slope,1)*180.0/TMath::Pi());
 
-  std::cout<<" Angle before "<<angle<<"\n";
+  double slope = 0;
 
-  if(angle<0) angle=90.0+angle;
-  else if(angle>0) angle=90+angle;
+  // std::cout<<" RANSAC Theta "<<"\n";
+  // AtRANSACN::AtRansac RansacTheta;
+  // RansacTheta.SetModelType(pcl::SACMODEL_LINE);
+  // RansacTheta.SetRANSACPointThreshold(0.1);
+  // RansacTheta.SetDistanceThreshold(6.0);
+  // std::vector<AtTrack *> thetaTracks = RansacTheta.Ransac(thetaHits);
 
-  double bro = 2.0*coefficients->values[2]/TMath::Sin(angle*TMath::Pi()/180.0)/1000.0;                                    
-  double ener = 0;
+  // RansacTheta.MinimizeTrack(thetaTracks[0]);
 
-  GetEnergy(1.0,1.0,bro,ener);
+  // std::vector<Double_t> coeffTheta = thetaTracks[0]->GetRANSACCoeff();
 
-  std::cout<<" Angle "<<angle<<"\n";
-  std::cout<<" Bro "<<bro<<"\n";
+  // double angle = (TMath::ATan2(slope, 1) * 180.0 / TMath::Pi());
 
-  std::cout<<" Energy "<<ener<<"\n"; 
+  // double angle = (TMath::ATan2(coeffTheta.at(1), 1) * 180.0 / TMath::Pi());
+
+  // std::cout<<" Angle before "<<angle<<"\n";
+
+  // if (angle < 0)
+  // angle = 90.0 - angle;
+
+  /*double bro = 2.0*coefficients->values[2]/TMath::Sin(angle*TMath::Pi()/180.0)/1000.0;
+ double ener = 0;
+
+ GetEnergy(1.0,1.0,bro,ener);
+
+ std::cout<<" Angle "<<angle<<"\n";
+ std::cout<<" Bro "<<bro<<"\n";
+
+ std::cout<<" Energy "<<ener<<"\n";*/
 
   TCanvas *c1 = new TCanvas("c1","c1",700,500);
   c1->Divide(2,1);
@@ -191,4 +214,4 @@ main(int argc, char** argv)
 
  
   return 0;
- }
+}

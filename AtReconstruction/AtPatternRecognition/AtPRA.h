@@ -32,6 +32,7 @@ protected:
 
    void SetTrackCurvature(AtTrack &track);
    void Clusterize(AtTrack &track);
+   void Clusterize3D(AtTrack &track);
 
    ClassDef(AtPRA, 1)
 };

@@ -8,6 +8,8 @@ ${BASE_INCLUDE_DIRECTORIES}
 )
 set(LINK_DIRECTORIES
 ${FAIRROOT_LIBRARY_DIR}
+
+${HIRAEVT_SOURCE_DIR}/build/lib
 )
 set(SRCS
 # Add all the source files below this line. Those must have cc for their extension.

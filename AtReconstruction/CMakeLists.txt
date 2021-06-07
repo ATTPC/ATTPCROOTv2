@@ -1,7 +1,8 @@
 # Create a library called "libAtReco" which includes the source files given in the array .
 
-Set(LINKDEF AtTPCRecoLinkDef.h)
 Set(LIBRARY_NAME AtReconstruction)
+Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
+
 
 set(INCLUDE_DIRECTORIES
 ${BASE_INCLUDE_DIRECTORIES}
@@ -22,6 +23,13 @@ ${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
+)
+#foreach(l ${PCL_LIBRARIES})
+#  message(${l})
+#endforeach()
+set(LINK_DIRECTORIES
+${FAIRROOT_LIBRARY_DIR}
+${GENFIT2_LIBRARY_DIR}
 )
 
 Set(DEPENDENCIES
@@ -47,83 +55,85 @@ Set(DEPENDENCIES
   )
 
 set(LINK_DIRECTORIES
-${FAIRROOT_LIBRARY_DIR}
-${GENFIT2_LIBRARY_DIR}
-)
+  ${FAIRROOT_LIBRARY_DIR}
+  ${GENFIT2_LIBRARY_DIR}
+  )
 
 set(SRCS
-# Add all the source files below this line. Those must have cxx for their extension.
-GETDecoder/GETDecoder.cxx
-GETDecoder/GETFrame.cxx
-GETDecoder/GETMath.cxx
-GETDecoder/GETPlot.cxx
+  # Add all the source files below this line. Those must have cxx for their extension.
+  GETDecoder/GETDecoder.cxx
+  GETDecoder/GETFrame.cxx
+  GETDecoder/GETMath.cxx
+  GETDecoder/GETPlot.cxx
 
-GETDecoder2/GETDecoder2.cxx
-GETDecoder2/GETFrameInfo.cxx
+  GETDecoder2/GETDecoder2.cxx
+  GETDecoder2/GETFrameInfo.cxx
 
-GETDecoder2/GETHeaderBase.cxx
-GETDecoder2/GETBasicFrameHeader.cxx
-GETDecoder2/GETLayerHeader.cxx
+  GETDecoder2/GETHeaderBase.cxx
+  GETDecoder2/GETBasicFrameHeader.cxx
+  GETDecoder2/GETLayerHeader.cxx
 
-GETDecoder2/GETTopologyFrame.cxx
-GETDecoder2/GETBasicFrame.cxx
-GETDecoder2/GETCoboFrame.cxx
-GETDecoder2/GETLayeredFrame.cxx
+  GETDecoder2/GETTopologyFrame.cxx
+  GETDecoder2/GETBasicFrame.cxx
+  GETDecoder2/GETCoboFrame.cxx
+  GETDecoder2/GETLayeredFrame.cxx
 
-GETDecoder2/GETMath2.cxx
-GETDecoder2/GETFileChecker.cxx
+  GETDecoder2/GETMath2.cxx
+  GETDecoder2/GETFileChecker.cxx
 
-AtDecoder/AtCore.cxx
-AtDecoder/AtCore2.cxx
-AtDecoder/AtPad.cxx
-AtDecoder/AtRawEvent.cxx
-AtDecoder/AtHit.cxx
-AtDecoder/AtHitCluster.cxx
-AtDecoder/AtEvent.cxx
-AtDecoder/AtProtoEvent.cxx
-AtDecoder/AtProtoEventAna.cxx
-AtDecoder/AtTrackingEventAna.cxx
-AtDecoder/AtPatternEvent.cxx
-AtDecoder/AtProtoQuadrant.cxx
-AtDecoder/AtPedestal.cxx
-AtDecoder/AtTrack.cxx
-AtDecoder/AtHDFParser.cxx
+  AtDecoder/AtCore.cxx
+  AtDecoder/AtCore2.cxx
+  AtDecoder/AtPad.cxx
+  AtDecoder/AtRawEvent.cxx
+  AtDecoder/AtHit.cxx
+  AtDecoder/AtHitCluster.cxx
+  AtDecoder/AtEvent.cxx
+  AtDecoder/AtProtoEvent.cxx
+  AtDecoder/AtProtoEventAna.cxx
+  AtDecoder/AtTrackingEventAna.cxx
+  AtDecoder/AtPatternEvent.cxx
+  AtDecoder/AtProtoQuadrant.cxx
+  AtDecoder/AtPedestal.cxx
+  AtDecoder/AtTrack.cxx
+  AtDecoder/AtHDFParser.cxx
 
-AtPulseAnalyzer/AtPSA.cxx
-AtPulseAnalyzer/AtPSASimple.cxx
-AtPulseAnalyzer/AtPSASimple2.cxx
-AtPulseAnalyzer/AtPSAProto.cxx
-AtPulseAnalyzer/AtPSAProtoFull.cxx
-AtPulseAnalyzer/AtPSAFull.cxx
-AtPulseAnalyzer/AtCalibration.cxx
+  AtPulseAnalyzer/AtPSA.cxx
+  AtPulseAnalyzer/AtPSASimple.cxx
+  AtPulseAnalyzer/AtPSASimple2.cxx
+  AtPulseAnalyzer/AtPSAProto.cxx
+  AtPulseAnalyzer/AtPSAProtoFull.cxx
+  AtPulseAnalyzer/AtPSAFull.cxx
+  AtPulseAnalyzer/AtCalibration.cxx
 
-AtFilter/AtFilter.cxx
-AtFilter/AtFilterDivide.cxx
+  AtFilter/AtFilter.cxx
+  AtFilter/AtFilterDivide.cxx
 
-#HierarchicalClustering/AtCubicSplineFit.cxx
-#HierarchicalClustering/AtFindVertex.cxx
-#HierarchicalClustering/AtHierarchicalClusteringHc.cxx
-#HierarchicalClustering/AtHierarchicalClusteringSmoothenCloud.cxx
-#HierarchicalClustering/AtTrajectory.cxx
+  #HierarchicalClustering/AtCubicSplineFit.cxx
+  #HierarchicalClustering/AtFindVertex.cxx
+  #HierarchicalClustering/AtHierarchicalClusteringHc.cxx
+  #HierarchicalClustering/AtHierarchicalClusteringSmoothenCloud.cxx
+  #HierarchicalClustering/AtTrajectory.cxx
 
-#AtProtoPhiReco/AtPhiReco.cxx
-#AtProtoPhiReco/AtPhiRecoSimple.cxx
-#AtProtoPhiReco/AtPhiRecoTriple.cxx
+  #AtProtoPhiReco/AtPhiReco.cxx
+  #AtProtoPhiReco/AtPhiRecoSimple.cxx
+  #AtProtoPhiReco/AtPhiRecoTriple.cxx
 
-#VMEDecoder/VMEDecoder.cxx
-#VMEDecoder/VMECore.cxx
-#VMEDecoder/AtRawIC.cxx
-#VMEDecoder/VMERawEvent.cxx
+  #VMEDecoder/VMEDecoder.cxx
+  #VMEDecoder/VMECore.cxx
+  #VMEDecoder/AtRawIC.cxx
+  #VMEDecoder/VMERawEvent.cxx
 
-AtDecoderTask.cxx
-AtDecoder2Task.cxx
-AtHDFParserTask.cxx
-AtPSAtask.cxx
-AtFilterTask.cxx
+  AtDecoderTask.cxx
+  AtDecoder2Task.cxx
+  AtHDFParserTask.cxx
+  AtPSAtask.cxx
+  AtFilterTask.cxx
 
-#AtPhiRecoTask.cxx
-#AtVMEUnpackTask.cxx
-)
+  #AtPhiRecoTask.cxx
+  #AtVMEUnpackTask.cxx
+  )
+
+### Add additional sources and libraries if we found certain modules ###
 
 # Adding libraries that depend on PCL
 if(PCL_FOUND)
