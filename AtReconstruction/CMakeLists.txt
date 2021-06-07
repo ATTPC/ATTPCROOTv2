@@ -24,9 +24,7 @@ ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
 )
-#foreach(l ${PCL_LIBRARIES})
-#  message(${l})
-#endforeach()
+
 set(LINK_DIRECTORIES
 ${FAIRROOT_LIBRARY_DIR}
 ${GENFIT2_LIBRARY_DIR}
@@ -50,8 +48,6 @@ Set(DEPENDENCIES
   ${Boost_DAtE_TIME_LIBRARY}
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
-  ${PCL_LIBRARIES}
-
   )
 
 set(LINK_DIRECTORIES
@@ -168,6 +164,20 @@ if(PCL_FOUND)
     AtRansacTask.cxx
     #AtHierarchicalClusteringTask.cxx
     )
+  set(DEPENDENCIES ${DEPENDENCIES}
+    ${PCL_LIBRARIES}
+    )
+  # Add include directory and link directory if no targets
+  if(NOT TARGET pcl_common)
+    message("No set targets for PCL!")
+    set(LINK_DIRECTORIES ${LINK_DIRECTORIES}
+      ${PCL_LIBRARY_DIR}
+      )
+    set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES}
+      ${PCL_INCLUDE_DIRS}
+      )
+    
+  endif()
 endif()
 
 if(GENFIT2_FOUND)
