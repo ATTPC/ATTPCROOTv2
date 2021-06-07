@@ -9,11 +9,13 @@ void unpack(int runNumber)
    TStopwatch timer;
    timer.Start();
 
-   // Set the input file
-   TString inputFile = TString::Format("./run_%04d.h5", runNumber);
-
-   // Set the output file
-   TString outputFile = TString::Format("./run_%04d.root", runNumber);
+   // Set the input/output directories
+   TString inputDir = "/mnt/rawdata/e12014_attpc/h5";
+   TString outDir = "./";
+   
+   // Set the in/out files
+   TString inputFile = inputDir + TString::Format("/run_%04d.h5", runNumber);
+   TString outputFile = outDir + TString::Format("/run_%04d.root", runNumber);
 
    std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
    std::cout << "Saving in: " << outputFile << std::endl;
