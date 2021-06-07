@@ -44,7 +44,6 @@ AtFitterTask::AtFitterTask()
    fEventCnt = 0;
    fGenfitTrackVector = new std::vector<genfit::Track>();
 
-    
    fMagneticField = 2.0;
    fMinIterations = 5.0;
    fMaxIterations = 20.0;
@@ -52,9 +51,8 @@ AtFitterTask::AtFitterTask()
    fMass = 1.00727646;
    fAtomicNumber = 1;
    fNumFitPoints = 0.90;
-   fMaxBrho = 3.0;//Tm
-   fMinBrho = 0.01;//Tm
-
+   fMaxBrho = 3.0;  // Tm
+   fMinBrho = 0.01; // Tm
 }
 
 AtFitterTask::~AtFitterTask() {}
@@ -68,7 +66,7 @@ InitStatus AtFitterTask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 
@@ -81,31 +79,31 @@ InitStatus AtFitterTask::Init()
    // Algorithm selection
 
    if (fFitterAlgorithm == 0) {
-      fLogger->Info(MESSAGE_ORIGIN, "Using GENFIT2");
-      std::cout<<cGREEN<<" AtFitterTask::Init - Fit parameters. "<<"\n";
-      std::cout<<" Magnetic Field       : "<<fMagneticField<<" T\n";
-      std::cout<<" PDG Code             : "<<fPDGCode<<"\n";
-      std::cout<<" Mass                 : "<<fMass<<" amu\n";
-      std::cout<<" Atomic Number        : "<<fAtomicNumber<<"\n";
-      std::cout<<" Number of fit points : "<<fNumFitPoints<<"\n";
-      std::cout<<" Maximum iterations   : "<<fMaxIterations<<"\n";
-      std::cout<<" Minimum iterations   : "<<fMinIterations<<"\n";
-      std::cout<<" Maximum brho         : "<<fMaxBrho<<"\n";
-      std::cout<<" Minimum brho         : "<<fMinBrho<<"\n";
-      std::cout<<" --------------------------------------------- "<<cNORMAL<<"\n";
-      
-      fFitter = new AtFITTER::AtGenfit(fMagneticField,fMinBrho,fMaxBrho,fMinIterations,fMaxIterations);
-      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetPDGCode(fPDGCode);
-      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetMass(fMass);
-      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetAtomicNumber(fAtomicNumber);
-      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetNumFitPoints(fNumFitPoints);
-      
+      LOG(info) << "Using GENFIT2";
+      std::cout << cGREEN << " AtFitterTask::Init - Fit parameters. "
+                << "\n";
+      std::cout << " Magnetic Field       : " << fMagneticField << " T\n";
+      std::cout << " PDG Code             : " << fPDGCode << "\n";
+      std::cout << " Mass                 : " << fMass << " amu\n";
+      std::cout << " Atomic Number        : " << fAtomicNumber << "\n";
+      std::cout << " Number of fit points : " << fNumFitPoints << "\n";
+      std::cout << " Maximum iterations   : " << fMaxIterations << "\n";
+      std::cout << " Minimum iterations   : " << fMinIterations << "\n";
+      std::cout << " Maximum brho         : " << fMaxBrho << "\n";
+      std::cout << " Minimum brho         : " << fMinBrho << "\n";
+      std::cout << " --------------------------------------------- " << cNORMAL << "\n";
+
+      fFitter = new AtFITTER::AtGenfit(fMagneticField, fMinBrho, fMaxBrho, fMinIterations, fMaxIterations);
+      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetPDGCode(fPDGCode);
+      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetMass(fMass);
+      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetAtomicNumber(fAtomicNumber);
+      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetNumFitPoints(fNumFitPoints);
 
    } else if (fFitterAlgorithm == 1) {
-      fLogger->Error(MESSAGE_ORIGIN, "Fitter algorithm not defined!");
+      LOG(error) << "Fitter algorithm not defined!";
       return kERROR;
    } else if (fFitterAlgorithm == 2) {
-      fLogger->Error(MESSAGE_ORIGIN, "Fitter algorithm not defined!");
+      LOG(error) << "Fitter algorithm not defined!";
       return kERROR;
    }
 
@@ -117,19 +115,19 @@ InitStatus AtFitterTask::Init()
 
 void AtFitterTask::SetParContainers()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "SetParContainers of AtFitterTask");
+   LOG(debug) << "SetParContainers of AtFitterTask";
 
    FairRun *run = FairRun::Instance();
    if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+      LOG(fatal) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+      LOG(fatal) << "No runtime database!";
 
    fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
    if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");
+      LOG(fatal) << "AtDigiPar not found!!";
 }
 
 void AtFitterTask::Exec(Option_t *option)
@@ -139,40 +137,39 @@ void AtFitterTask::Exec(Option_t *option)
 
    fGenfitTrackArray->Clear("C");
    fGenfitTrackVector->clear();
-   
+
    fFitter->Init();
 
-   std::cout<<" Event Counter "<<fEventCnt<<"\n"; 
-   
+   std::cout << " Event Counter " << fEventCnt << "\n";
+
    AtPatternEvent &patternEvent = *((AtPatternEvent *)fPatternEventArray->At(0));
    std::vector<AtTrack> &patternTrackCand = patternEvent.GetTrackCand();
-   std::cout<<" AtFitterTask:Exec -  Number of candidate tracks : " << patternTrackCand.size()<<"\n";
+   std::cout << " AtFitterTask:Exec -  Number of candidate tracks : " << patternTrackCand.size() << "\n";
 
-   if(patternTrackCand.size()<10){
-   
-     for(auto track : patternTrackCand){       
+   if (patternTrackCand.size() < 10) {
 
-       if(track.GetIsNoise())
-	  continue;
+      for (auto track : patternTrackCand) {
 
-       genfit::Track *fitTrack=fFitter->FitTracks(&track);
-       if(fitTrack!=nullptr)fGenfitTrackVector->push_back(*static_cast<genfit::Track *>(fitTrack));
-     }
-   }    
+         if (track.GetIsNoise())
+            continue;
+
+         genfit::Track *fitTrack = fFitter->FitTracks(&track);
+         if (fitTrack != nullptr)
+            fGenfitTrackVector->push_back(*static_cast<genfit::Track *>(fitTrack));
+      }
+   }
 
    /*if(patternTrackCand.size()>1){
      genfit::Track *fitTrack=fFitter->FitTracks(&patternTrackCand.at(1));
    if(fitTrack!=nullptr)fGenfitTrackVector->push_back(*static_cast<genfit::Track *>(fitTrack));
    }*/
 
-   //if(fitTrack==nullptr)
-   //std::cout<<" Nullptr "<<"\n";
-     
-     //}
+   // if(fitTrack==nullptr)
+   // std::cout<<" Nullptr "<<"\n";
+
+   //}
 
    // }
-     
-   
 
    // TODO: Genfit block, add a dynamic cast and a try-catch
 
@@ -187,7 +184,7 @@ void AtFitterTask::Exec(Option_t *option)
          // genfit::MeasuredStateOnPlane fitState = trackTest.getFittedState();
          // fitState.Print();
          fGenfitTrackVector->push_back(*static_cast<genfit::Track *>(genfitTrackArray->At(iTrack)));
-	 }
+    }
 
       //auto genfitTracks_ = fGenfitTrackArray->GetEntriesFast();
       //for(auto iTrack=0;iTrack<genfitTracks_;++iTrack){
@@ -196,11 +193,11 @@ void AtFitterTask::Exec(Option_t *option)
          //     trackTest.Print();
          //     genfit::MeasuredStateOnPlane fitState = trackTest.getFittedState();
           //    fitState.Print();
-      //} 
+      //}
 
    } catch (std::exception &e) {
       std::cout << " " << e.what() << "\n";
       }*/
 
-       ++fEventCnt;  
+   ++fEventCnt;
 }

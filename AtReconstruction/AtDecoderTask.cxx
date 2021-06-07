@@ -69,6 +69,7 @@ void AtDecoderTask::SetData(Int_t value)
 Bool_t AtDecoderTask::SetMap(Char_t const *map)
 {
    fMap = map;
+   return kTRUE;
 }
 void AtDecoderTask::SetInternalPedestal(Int_t startTb, Int_t averageTbs)
 {

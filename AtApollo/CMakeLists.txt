@@ -12,7 +12,12 @@
 Set(LINKDEF AtApolloLinkDef.h)
 Set(LIBRARY_NAME AtApollo)
 Set(DEPENDENCIES
-    Base Core Cling AtGenerators FairLogger::FairLogger
+  Base
+  FairTools
+  ROOT::Core
+  Cling
+  AtGenerators
+  AtData
 )
 
 set(SRCS
@@ -23,26 +28,17 @@ AtApolloPoint.cxx
 AtApolloCrystalCalData.cxx
 AtApolloDigitizer.cxx
 )
-
 set(INCLUDE_DIRECTORIES
-${ROOT_INCLUDE_DIR}
-${Boost_INCLUDE_DIRS}
 ${BASE_INCLUDE_DIRECTORIES}
-#put here all directories where header files are located
-${CMAKE_SOURCE_DIR}/AtData
-${CMAKE_SOURCE_DIR}/AtApollo
-${CMAKE_SOURCE_DIR}/AtGenerators
 )
-
-include_directories( ${INCLUDE_DIRECTORIES})
-
 set(LINK_DIRECTORIES
-${ROOT_LIBRARY_DIR}
 ${FAIRROOT_LIBRARY_DIR}
 )
 
-link_directories( ${LINK_DIRECTORIES})
-
-
-
-GENERATE_LIBRARY()
+generate_target_root_library(${LIBRARY_NAME}
+  LINKDEF ${LINKDEF}
+  SRCS ${SRCS}
+  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
+  LIBRARY_DIR ${LINK_DIRECTORIES}
+  DEPS_PUBLIC ${DEPENDENCIES}
+  )

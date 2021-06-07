@@ -97,6 +97,7 @@ void AtPSAtask::Exec(Option_t *opt)
          std::cout << " point array size " << fMCPointArray->GetEntries() << "\n";
          fPSA->SetSimulatedEvent(fMCPointArray);
       }
+
       // Analyze the event
       fPSA->Analyze(rawEvent, event);
 

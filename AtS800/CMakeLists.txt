@@ -9,23 +9,15 @@
 # the array .
 # The extension is already found.  Any number of sources could be listed here.
 
+Set(LINKDEF S800LinkDef.h)
+Set(LIBRARY_NAME AtS800)
+
 set(INCLUDE_DIRECTORIES
-${ROOT_INCLUDE_DIR}
 ${BASE_INCLUDE_DIRECTORIES}
-#put here all directories where header files are located
-${CMAKE_SOURCE_DIR}/AtS800
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtDecoder
 )
-
-include_directories(${INCLUDE_DIRECTORIES} )
-
 set(LINK_DIRECTORIES
-${ROOT_LIBRARY_DIR}
 ${FAIRROOT_LIBRARY_DIR}
-
 )
-
-link_directories( ${LINK_DIRECTORIES})
 
 set(SRCS
 #Put here your sourcefiles
@@ -44,15 +36,19 @@ AtMergeTask.cxx
 
 )
 
-Set(LINKDEF S800LinkDef.h)
-Set(LIBRARY_NAME AtS800)
 Set(DEPENDENCIES
     Base
-    FairLogger::FairLogger
-# Add all library names your code depending on.
-# Basically those are the libraries in the header files' directory.
-  TreePlayer
+    FairTools
+    ROOT::Core
+    ROOT::TreePlayer
+
+    AtReconstruction
 )
 
-
-GENERATE_LIBRARY()
+generate_target_root_library(${LIBRARY_NAME}
+  LINKDEF ${LINKDEF}
+  SRCS ${SRCS}
+  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
+  LIBRARY_DIR ${LINK_DIRECTORIES}
+  DEPS_PUBLIC ${DEPENDENCIES}
+  )

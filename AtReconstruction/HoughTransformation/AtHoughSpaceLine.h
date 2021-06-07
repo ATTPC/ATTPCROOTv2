@@ -78,11 +78,11 @@ public:
             double d = distance2(x[i], y[i], z[i], par);
             sum += d;
          }
-#ifdef DEBUG
-         if (first)
-            std::cout << "point " << i << "\t" << x[i] << "\t" << y[i] << "\t" << z[i] << "\t" << std::sqrt(d)
-                      << std::endl;
-#endif
+         /*#ifdef DEBUG
+                  if (first)
+                     std::cout << "point " << i << "\t" << x[i] << "\t" << y[i] << "\t" << z[i] << "\t" << std::sqrt(d)
+                               << std::endl;
+                     #end*/
 
          // if (first)
          // std::cout << "Total Initial distance square = " << sum << std::endl;

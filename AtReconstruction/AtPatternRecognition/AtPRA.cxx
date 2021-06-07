@@ -69,11 +69,7 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
    // if(circularTracks[0]->GetHitArray() != nullptr)
 
-   
-   
    if (!circularTracks.empty()) {
-
-    
 
       std::vector<AtHit> *hits = circularTracks[0]->GetHitArray();
 
@@ -121,7 +117,7 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
          thetaHits->push_back(AtHit(hits->at(i).GetHitPadNum(), i, xPos, yPos, zPos, hits->at(i).GetCharge()));
       }
 
-      //TF1 *f1 = new TF1("f1", "pol1", -500, 500);
+      // TF1 *f1 = new TF1("f1", "pol1", -500, 500);
       // TF1 * f1 = new TF1("f1",[](double *x, double *p) { return (p[0]+p[1]*x[0]); },-500,500,2);
       // TF1 * f1 = new TF1("f1","[0]+[1]*x",-500,500);
       // TF1 * f1 = new TF1("f1",fitf,-500,500,2);
@@ -131,73 +127,72 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
       Double_t slope = 0;
       Double_t angle = 0.0;
-      Double_t phi0    = 0.0;
+      Double_t phi0 = 0.0;
 
-      try{
-	
-	if(thetaHits->size()>0){
-      // std::cout<<" RANSAC Theta "<<"\n";
-      AtRANSACN::AtRansac RansacTheta;
-      RansacTheta.SetModelType(pcl::SACMODEL_LINE);
-      RansacTheta.SetRANSACPointThreshold(0.1);
-      RansacTheta.SetDistanceThreshold(6.0);
-      std::vector<AtTrack *> thetaTracks = RansacTheta.Ransac(thetaHits);
+      try {
 
-      // RansacTheta.MinimizeTrack(thetaTracks[0]);
-      if(thetaTracks.size()>0){
+         if (thetaHits->size() > 0) {
+            // std::cout<<" RANSAC Theta "<<"\n";
+            AtRANSACN::AtRansac RansacTheta;
+            RansacTheta.SetModelType(pcl::SACMODEL_LINE);
+            RansacTheta.SetRANSACPointThreshold(0.1);
+            RansacTheta.SetDistanceThreshold(6.0);
+            std::vector<AtTrack *> thetaTracks = RansacTheta.Ransac(thetaHits);
 
-	//NB: Only the most intense line is taken, if any	
-      std::vector<Double_t> coeffTheta = thetaTracks[0]->GetRANSACCoeff();
+            // RansacTheta.MinimizeTrack(thetaTracks[0]);
+            if (thetaTracks.size() > 0) {
 
-      //double angle = (TMath::ATan2(slope, 1) * 180.0 / TMath::Pi());
+               // NB: Only the most intense line is taken, if any
+               std::vector<Double_t> coeffTheta = thetaTracks[0]->GetRANSACCoeff();
 
-      /*std::cout<<" Coeff theta 0 : "<<coeffTheta.at(0)<<"\n";
-      std::cout<<" Coeff theta 1 : "<<coeffTheta.at(1)<<"\n";
-      std::cout<<" Coeff theta 2 : "<<coeffTheta.at(2)<<"\n";
-      std::cout<<" Coeff theta 3 : "<<coeffTheta.at(3)<<"\n";
-      std::cout<<" Coeff theta 4 : "<<coeffTheta.at(4)<<"\n";
-      std::cout<<" Coeff theta 5 : "<<coeffTheta.at(5)<<"\n";*/
+               // double angle = (TMath::ATan2(slope, 1) * 180.0 / TMath::Pi());
 
-      int sign = 0;
+               /*std::cout<<" Coeff theta 0 : "<<coeffTheta.at(0)<<"\n";
+               std::cout<<" Coeff theta 1 : "<<coeffTheta.at(1)<<"\n";
+               std::cout<<" Coeff theta 2 : "<<coeffTheta.at(2)<<"\n";
+               std::cout<<" Coeff theta 3 : "<<coeffTheta.at(3)<<"\n";
+               std::cout<<" Coeff theta 4 : "<<coeffTheta.at(4)<<"\n";
+               std::cout<<" Coeff theta 5 : "<<coeffTheta.at(5)<<"\n";*/
 
-      if (coeffTheta.at(3) * coeffTheta.at(4) < 0)
-         sign = -1;
-      else
-         sign = 1;
+               int sign = 0;
 
-      if (coeffTheta.at(3) != 0)
-         angle = acos(sign * fabs(coeffTheta.at(4))) * TMath::RadToDeg();
-      // angle = (TMath::ATan2(coeffTheta.at(3),coeffTheta.at(4)) * 180.0 / TMath::Pi());
-      /*{
-        double w_c = TMath::Sqrt( TMath::Power(coeffTheta.at(4),2) + TMath::Power(coeffTheta.at(3),2)   );
-        angle      = asin(coeffTheta.at(3)/w_c)*TMath::RadToDeg();
-        }*/
+               if (coeffTheta.at(3) * coeffTheta.at(4) < 0)
+                  sign = -1;
+               else
+                  sign = 1;
 
-      // std::cout<<" pre  Angle "<<angle<<"\n";
+               if (coeffTheta.at(3) != 0)
+                  angle = acos(sign * fabs(coeffTheta.at(4))) * TMath::RadToDeg();
+               // angle = (TMath::ATan2(coeffTheta.at(3),coeffTheta.at(4)) * 180.0 / TMath::Pi());
+               /*{
+                 double w_c = TMath::Sqrt( TMath::Power(coeffTheta.at(4),2) + TMath::Power(coeffTheta.at(3),2)   );
+                 angle      = asin(coeffTheta.at(3)/w_c)*TMath::RadToDeg();
+                 }*/
 
-      // if (angle < 0)
-      // angle = 90.0 + angle;
+               // std::cout<<" pre  Angle "<<angle<<"\n";
 
-      //Tangent line at the first point of the spiral
-      phi0 = TMath::ATan2(posPCA.Y() - coeff.at(1),posPCA.X()-coeff.at(0));
+               // if (angle < 0)
+               // angle = 90.0 + angle;
 
-      }//thetaTracks
+               // Tangent line at the first point of the spiral
+               phi0 = TMath::ATan2(posPCA.Y() - coeff.at(1), posPCA.X() - coeff.at(0));
 
-      /*std::cout<<" AtPRA::SetTrackInitialParameters : "<<"\n";
-      std::cout<<" Theta angle : "<<angle<<"\n";
-      std::cout<<" Phi angle : "<<phi0*TMath::RadToDeg()<<"\n";*/
+            } // thetaTracks
 
-      track.SetGeoTheta(angle * TMath::Pi()/180.0);     
-      track.SetGeoPhi(phi0);
+            /*std::cout<<" AtPRA::SetTrackInitialParameters : "<<"\n";
+            std::cout<<" Theta angle : "<<angle<<"\n";
+            std::cout<<" Phi angle : "<<phi0*TMath::RadToDeg()<<"\n";*/
 
-      }//if 
+            track.SetGeoTheta(angle * TMath::Pi() / 180.0);
+            track.SetGeoPhi(phi0);
 
-	
-      }catch(std::exception &e){
+         } // if
 
-	std::cout<<" AtPRA::SetTrackInitialParameters - Exception caught : "<<e.what()<<"\n";
+      } catch (std::exception &e) {
+
+         std::cout << " AtPRA::SetTrackInitialParameters - Exception caught : " << e.what() << "\n";
       }
-	
+
       // delete f1;
       delete arclengthGraph;
       delete thetaHits;
@@ -304,9 +299,9 @@ void AtPATTERN::AtPRA::Clusterize3D(AtTrack &track)
 
 void AtPATTERN::AtPRA::Clusterize(AtTrack &track)
 {
-  //std::cout << " ================================================================= "
-  //         << "\n";
-  // std::cout << " Clusterizing track : " << track.GetTrackID() << "\n";
+   // std::cout << " ================================================================= "
+   //         << "\n";
+   // std::cout << " Clusterizing track : " << track.GetTrackID() << "\n";
    std::vector<AtHit> *hitArray = track.GetHitArray();
    std::vector<AtHit> hitTBArray;
    int clusterID = 0;

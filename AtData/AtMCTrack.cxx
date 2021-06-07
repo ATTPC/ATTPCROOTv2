@@ -64,11 +64,11 @@ AtMCTrack::~AtMCTrack() {}
 void AtMCTrack::Print(Int_t trackId) const
 {
    LOG(DEBUG) << "Track " << trackId << ", mother : " << fMotherId << ", Type " << fPdgCode << ", momentum (" << fPx
-              << ", " << fPy << ", " << fPz << ") GeV" << FairLogger::endl;
+              << ", " << fPy << ", " << fPz << ") GeV";
    /* LOG(DEBUG2) << "       Ref " << GetNPoints(kREF)
                 << ", TutDet " << GetNPoints(kTutDet)
                 << ", Rutherford " << GetNPoints(kFairRutherford)
-                << FairLogger::endl;
+               ;
   */
 }
 // -------------------------------------------------------------------------
@@ -94,50 +94,6 @@ Double_t AtMCTrack::GetRapidity() const
    Double_t e = GetEnergy();
    Double_t y = 0.5 * TMath::Log((e + fPz) / (e - fPz));
    return y;
-}
-// -------------------------------------------------------------------------
-
-// -----   Public method GetNPoints   --------------------------------------
-Int_t AtMCTrack::GetNPoints(DetectorId detId) const
-{
-   /*  // TODO: Where does this come from
-     if      ( detId == kREF  ) { return (  fNPoints &   1); }
-     else if ( detId == kTutDet  ) { return ( (fNPoints & ( 7 <<  1) ) >>  1); }
-     else if ( detId == kFairRutherford ) { return ( (fNPoints & (31 <<  4) ) >>  4); }
-     else {
-       LOG(ERROR) << "Unknown detector ID "
-                  << detId << FairLogger::endl;
-       return 0;
-     }
-   */
-}
-// -------------------------------------------------------------------------
-
-// -----   Public method SetNPoints   --------------------------------------
-void AtMCTrack::SetNPoints(Int_t iDet, Int_t nPoints)
-{
-   /*
-     if ( iDet == kREF ) {
-       if      ( nPoints < 0 ) { nPoints = 0; }
-       else if ( nPoints > 1 ) { nPoints = 1; }
-       fNPoints = ( fNPoints & ( ~ 1 ) )  |  nPoints;
-     }
-
-     else if ( iDet == kTutDet ) {
-       if      ( nPoints < 0 ) { nPoints = 0; }
-       else if ( nPoints > 7 ) { nPoints = 7; }
-       fNPoints = ( fNPoints & ( ~ (  7 <<  1 ) ) )  |  ( nPoints <<  1 );
-     }
-
-     else if ( iDet == kFairRutherford ) {
-       if      ( nPoints <  0 ) { nPoints =  0; }
-       else if ( nPoints > 31 ) { nPoints = 31; }
-       fNPoints = ( fNPoints & ( ~ ( 31 <<  4 ) ) )  |  ( nPoints <<  4 );
-     }
-
-     else LOG(ERROR) << "Unknown detector ID "
-                       << iDet << FairLogger::endl;
-   */
 }
 // -------------------------------------------------------------------------
 

@@ -11,7 +11,7 @@
 #include "AtTpcGeo.h"
 #include "AtTpcGeoPar.h"
 #include "AtVertexPropagator.h"
-#include "AtTPCXSManager.h"
+//#include "AtTPCXSManager.h"
 
 #include "FairVolume.h"
 #include "FairGeoVolume.h"
@@ -102,30 +102,29 @@ TParticle* beam_part0 = stack->GetParticle(stack->GetCurrentTrackNumber());
          InPos = fPosIn; // Position of the first hit of the beam in the TPC volume ( For tracking purposes in the TPC)
       Int_t VolumeID;
 
-      // LOG(INFO)<<cGREEN<< " ==================================================== " << FairLogger::endl;
+      // LOG(INFO)<<cGREEN<< " ==================================================== ";
       if (gAtVP->GetBeamEvtCnt() % 2 != 0)
-         LOG(INFO) << cGREEN << " AtTPC: Beam Event " << FairLogger::endl;
+         LOG(INFO) << cGREEN << " AtTPC: Beam Event ";
       else if (gAtVP->GetDecayEvtCnt() % 2 == 0)
-         LOG(INFO) << cBLUE << " AtTPC: Reaction/Decay Event " << FairLogger::endl;
+         LOG(INFO) << cBLUE << " AtTPC: Reaction/Decay Event ";
       AZ = DecodePdG(gMC->TrackPid());
-      LOG(INFO) << " AtTPC: First hit in Volume " << fVolName << FairLogger::endl;
-      LOG(INFO) << " Particle : " << gMC->ParticleName(gMC->TrackPid()) << FairLogger::endl;
-      LOG(INFO) << " PID PdG : " << gMC->TrackPid() << FairLogger::endl;
-      LOG(INFO) << " Atomic Mass : " << AZ.first << FairLogger::endl;
-      LOG(INFO) << " Atomic Number : " << AZ.second << FairLogger::endl;
-      LOG(INFO) << " Volume ID " << gMC->CurrentVolID(VolumeID) << FairLogger::endl;
-      LOG(INFO) << " Track ID : " << fTrackID << FairLogger::endl;
-      LOG(INFO) << " Position : " << fPosIn.X() << " " << fPosIn.Y() << "  " << fPosIn.Z() << FairLogger::endl;
-      LOG(INFO) << " Momentum : " << fMomIn.X() << " " << fMomIn.Y() << "  " << fMomIn.Z() << FairLogger::endl;
-      LOG(INFO) << " Total relativistic energy " << gMC->Etot() << FairLogger::endl;
-      LOG(INFO) << " Mass of the Beam particle (gAVTP) : " << gAtVP->GetBeamMass() << FairLogger::endl;
-      LOG(INFO) << " Mass of the Tracked particle (gMC) : " << gMC->TrackMass()
-                << FairLogger::endl; // NB: with electrons
+      LOG(INFO) << " AtTPC: First hit in Volume " << fVolName;
+      LOG(INFO) << " Particle : " << gMC->ParticleName(gMC->TrackPid());
+      LOG(INFO) << " PID PdG : " << gMC->TrackPid();
+      LOG(INFO) << " Atomic Mass : " << AZ.first;
+      LOG(INFO) << " Atomic Number : " << AZ.second;
+      LOG(INFO) << " Volume ID " << gMC->CurrentVolID(VolumeID);
+      LOG(INFO) << " Track ID : " << fTrackID;
+      LOG(INFO) << " Position : " << fPosIn.X() << " " << fPosIn.Y() << "  " << fPosIn.Z();
+      LOG(INFO) << " Momentum : " << fMomIn.X() << " " << fMomIn.Y() << "  " << fMomIn.Z();
+      LOG(INFO) << " Total relativistic energy " << gMC->Etot();
+      LOG(INFO) << " Mass of the Beam particle (gAVTP) : " << gAtVP->GetBeamMass();
+      LOG(INFO) << " Mass of the Tracked particle (gMC) : " << gMC->TrackMass(); // NB: with electrons
       LOG(INFO) << " Initial energy of the beam particle in this volume : "
-                << ((gMC->Etot() - gAtVP->GetBeamMass() * 0.93149401) * 1000.) << FairLogger::endl; // Relativistic Mass
-      LOG(INFO) << " Total energy of the current track (gMC) : " << ((gMC->Etot() - gMC->TrackMass()) * 1000.)
-                << FairLogger::endl; // Relativistic Mass
-      LOG(INFO) << " ==================================================== " << cNORMAL << FairLogger::endl;
+                << ((gMC->Etot() - gAtVP->GetBeamMass() * 0.93149401) * 1000.); // Relativistic Mass
+      LOG(INFO) << " Total energy of the current track (gMC) : "
+                << ((gMC->Etot() - gMC->TrackMass()) * 1000.); // Relativistic Mass
+      LOG(INFO) << " ==================================================== " << cNORMAL;
       /*
        std::cout<<" Recoil Energy : "<<gAtVP->GetRecoilE()<<std::endl;
   std::cout<<" Scattered Energy : "<<gAtVP->GetScatterE()<<std::endl;
@@ -267,20 +266,20 @@ Double_t Er = r.Rndm();
    if (fELossAcc * 1000 > gAtVP->GetRndELoss() && (gAtVP->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0) &&
        (fVolName == "drift_volume" || fVolName == "cell")) {
 
-      LOG(INFO) << cYELLOW << " Beam energy loss before reaction : " << fELossAcc * 1000 << FairLogger::endl;
+      LOG(INFO) << cYELLOW << " Beam energy loss before reaction : " << fELossAcc * 1000;
       gMC->StopTrack();
       gAtVP->ResetVertex();
       TLorentzVector StopPos;
       TLorentzVector StopMom;
       gMC->TrackPosition(StopPos);
       gMC->TrackMomentum(StopMom);
-      LOG(INFO) << " Mass of the Tracked particle : " << gMC->TrackMass() << FairLogger::endl;
-      LOG(INFO) << " Mass of the Beam particle (gAVTP)  : " << gAtVP->GetBeamMass() << FairLogger::endl;
+      LOG(INFO) << " Mass of the Tracked particle : " << gMC->TrackMass();
+      LOG(INFO) << " Mass of the Beam particle (gAVTP)  : " << gAtVP->GetBeamMass();
       // LOG(INFO)<<" Total energy of the current track : "<<((gMC->Etot() - gMC->TrackMass()) *
       // 1000.)<<FairLogger::endl;// Relativistic Mass
       Double_t StopEnergy = ((gMC->Etot() - gAtVP->GetBeamMass() * 0.93149401) * 1000.);
-      LOG(INFO) << " Total energy of the Beam particle before reaction : " << StopEnergy << cNORMAL
-                << FairLogger::endl; // Relativistic Mass
+      LOG(INFO) << " Total energy of the Beam particle before reaction : " << StopEnergy
+                << cNORMAL; // Relativistic Mass
       gAtVP->SetVertex(StopPos.X(), StopPos.Y(), StopPos.Z(), InPos.X(), InPos.Y(), InPos.Z(), StopMom.Px(),
                        StopMom.Py(), StopMom.Pz(), StopEnergy);
       // std::cout<<" Entrance Position 2 - X : "<<InPos.X()<<" - Y : "<<InPos.Y()<<" - Z : "<<InPos.Z()<<std::endl;
@@ -344,17 +343,17 @@ void AtTpc::Reset()
 void AtTpc::Print(Option_t *option) const
 {
    Int_t nHits = fAtTpcPointCollection->GetEntriesFast();
-   LOG(INFO) << "AtTPC: " << nHits << " points registered in this event" << FairLogger::endl;
+   LOG(INFO) << "AtTPC: " << nHits << " points registered in this event";
 }
 
 void AtTpc::ConstructGeometry()
 {
    TString fileName = GetGeometryFileName();
    if (fileName.EndsWith(".geo")) {
-      LOG(INFO) << "Constructing AtTPC geometry from ASCII file " << fileName << FairLogger::endl;
+      LOG(INFO) << "Constructing AtTPC geometry from ASCII file " << fileName;
       // ConstructASCIIGeometry();
    } else if (fileName.EndsWith(".root")) {
-      LOG(INFO) << "Constructing AtTPC geometry from ROOT file " << fileName << FairLogger::endl;
+      LOG(INFO) << "Constructing AtTPC geometry from ROOT file " << fileName;
       ConstructRootGeometry();
    } else {
       std::cout << "Geometry format not supported." << std::endl;
@@ -366,7 +365,7 @@ Bool_t AtTpc::CheckIfSensitive(std::string name)
 
    TString tsname = name;
    if (tsname.Contains("drift_volume") || tsname.Contains("window") || tsname.Contains("cell")) {
-      LOG(INFO) << " AtTPC geometry: Sensitive volume found: " << tsname << FairLogger::endl;
+      LOG(INFO) << " AtTPC geometry: Sensitive volume found: " << tsname;
       return kTRUE;
    }
    return kFALSE;
@@ -392,8 +391,7 @@ AtTpcPoint *AtTpc::AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t det
    //<< ", energy loss " << eLoss << " MeV" <<" with accumulated Energy Loss : "<<fELossAcc<<" MeV "<< std::endl;
    if (fVerboseLevel > 1)
       LOG(INFO) << "AtTPC: Adding Point at (" << posIn.X() << ", " << posIn.Y() << ", " << posIn.Z()
-                << ") cm,  detector " << detID << ", track " << trackID << ", energy loss " << eLoss * 1e06 << " keV"
-                << FairLogger::endl;
+                << ") cm,  detector " << detID << ", track " << trackID << ", energy loss " << eLoss * 1e06 << " keV";
 
    return new (clref[size]) AtTpcPoint(trackID, detID, VolName, detCopyID, posIn, posOut, momIn, momOut, time, length,
                                        eLoss, EIni, AIni, A, Z);

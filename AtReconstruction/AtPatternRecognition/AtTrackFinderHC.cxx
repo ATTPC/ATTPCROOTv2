@@ -4,11 +4,7 @@
 #include "FairRuntimeDb.h"
 #include "FairRun.h"
 
-ClassImp(AtPATTERN::AtTrackFinderHC)
-
-   AtPATTERN::AtTrackFinderHC::AtTrackFinderHC()
-{
-}
+AtPATTERN::AtTrackFinderHC::AtTrackFinderHC() {}
 
 AtPATTERN::AtTrackFinderHC::~AtTrackFinderHC() {}
 
@@ -84,6 +80,8 @@ bool AtPATTERN::AtTrackFinderHC::FindTracks(AtEvent &event, AtPatternEvent *patt
    // fTrackCand = clustersToTrack(cloud_xyzti,cluster,event);
 
    patternEvent->SetTrackCand(clustersToTrack(cloud_xyzti, cluster, event));
+
+   return true;
 }
 
 Cluster AtPATTERN::AtTrackFinderHC::use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
@@ -177,8 +175,8 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
    tracks.push_back(track);
 
    for (auto &track : tracks)
-     if(track.GetHitArray()->size()>0)SetTrackInitialParameters(track);
-   
+      if (track.GetHitArray()->size() > 0)
+         SetTrackInitialParameters(track);
 
    /*ROOT::EnableThreadSafety();
 
@@ -212,3 +210,5 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
 
    return tracks;
 }
+
+ClassImp(AtPATTERN::AtTrackFinderHC)

@@ -1,10 +1,3 @@
- ################################################################################
- #    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    #
- #                                                                              #
- #              This software is distributed under the terms of the             # 
- #         GNU Lesser General Public Licence version 3 (LGPL) version 3,        #  
- #                  copied verbatim in the file "LICENSE"                       #
- ################################################################################
 # - Try to find GEANT4 data files
 #
 
@@ -99,17 +92,30 @@ Else (G4RADIOACTIVEDATA)
 EndIf (G4RADIOACTIVEDATA)
 
 
-FIND_PATH(G4REALSURFACEDATA NAMES EtchedTiO.dat PATHS
-  ${GEANT4_DATA}/RealSurface/
-  ${GEANT4_DATA}/RealSurface1.0
-  NO_DEFAULT_PATH
+FIND_PATH(G4REALSURFACEDATA NAMES Polished_LUT.dat PATHS
+   ${GEANT4_DATA}/RealSurface/
+   ${GEANT4_DATA}/RealSurface2.1
+   NO_DEFAULT_PATH
 )
+
 If (G4REALSURFACEDATA)
   Message(STATUS "Found RealSurface data")
   SET(G4REALSURFACEDATA  ${G4REALSURFACEDATA})
 Else (G4REALSURFACEDATA)
   Message(STATUS "NOT Found RealSurface data")
 EndIf (G4REALSURFACEDATA)
+
+
+FIND_PATH(G4ENSDFSTATEDATA NAMES README PATHS
+  ${GEANT4_DATA}/G4ENSDFSTATE/
+  NO_DEFAULT_PATH
+)
+If (G4ENSDFSTATEDATA)
+  Message(STATUS "Found G4ENSDFSTATEDATA data")
+  SET(G4ENSDFSTATEDATA  ${G4ENSDFSTATEDATA})
+Else (G4ENSDFSTATEDATA)
+  Message(STATUS "NOT Found G4ENSDFSTATEDATA data")
+EndIf (G4ENSDFSTATEDATA)
 
 FIND_PATH(G4SAIDXSDATA NAMES README_Eta PATHS
   ${GEANT4_DATA}/G4SAIDDATA

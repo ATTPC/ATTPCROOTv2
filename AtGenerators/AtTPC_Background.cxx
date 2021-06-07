@@ -57,7 +57,7 @@ AtTPC_Background::AtTPC_Background(const char *name, std::vector<Int_t> *z, std:
    fMult = mult;
    fIon.reserve(fMult);
 
-   char buffer[20];
+   char buffer[30];
    TDatabasePDG *pdgDB = TDatabasePDG::Instance();
    TParticlePDG *kProtonPDG = pdgDB->GetParticle(2212);
    TParticle *kProton = new TParticle();

@@ -218,9 +218,9 @@ Int_t AtTpcProtoMap::BinToPad(Int_t binval)
       std::cout
          << " = AtTpcProtoMap::BinToPad - Warning: Bin value out of expected boundaries for prototype bin mapping : "
          << binval << std::endl;
+   }
 
-   } else
-      return padval;
+   return padval;
 }
 
 void AtTpcProtoMap::Dump() {}

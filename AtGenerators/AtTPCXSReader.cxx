@@ -103,7 +103,7 @@ AtTPCXSReader::AtTPCXSReader(const char *name, std::vector<Int_t> *z, std::vecto
    TParticle *kNeutron = new TParticle();
    kNeutron->SetPdgCode(2112);
 
-   char buffer[20];
+   char buffer[30];
    for (Int_t i = 0; i < fMult; i++) {
       fPx.push_back(Double_t(a->at(i)) * px->at(i));
       fPy.push_back(Double_t(a->at(i)) * py->at(i));

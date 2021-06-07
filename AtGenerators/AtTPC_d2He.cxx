@@ -64,7 +64,7 @@ AtTPC_d2He::AtTPC_d2He(const char *name, std::vector<Int_t> *z, std::vector<Int_
    fMult = mult;
    fIon.reserve(fMult);
 
-   char buffer[20];
+   char buffer[30];
    TDatabasePDG *pdgDB = TDatabasePDG::Instance();
    TParticlePDG *kProtonPDG = pdgDB->GetParticle(2212);
    TParticle *kProton = new TParticle();

@@ -19,12 +19,12 @@ AtTriggerTask::AtTriggerTask() : FairTask("AtTriggerTask"), fIsPersistent(kTRUE)
 
 AtTriggerTask::~AtTriggerTask()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Destructor of AtTriggerTask");
+   LOG(debug) << "Destructor of AtTriggerTask";
 }
 
 void AtTriggerTask::SetParContainers()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "SetParContainers of AtTriggerTask");
+   LOG(debug) << "SetParContainers of AtTriggerTask";
 
    FairRunAna *ana = FairRunAna::Instance();
    FairRuntimeDb *rtdb = ana->GetRuntimeDb();
@@ -33,20 +33,20 @@ void AtTriggerTask::SetParContainers()
 
 InitStatus AtTriggerTask::Init()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Initilization of AtTriggerTask");
+   LOG(debug) << "Initilization of AtTriggerTask";
 
    FairRootManager *ioman = FairRootManager::Instance();
 
    //********Get AtEventH and AtRawEvent*************
    fAtEventArray = (TClonesArray *)ioman->GetObject("AtEventH");
    if (fAtEventArray == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find fAtEventArray array!");
+      LOG(error) << "Cannot find fAtEventArray array!";
       return kERROR;
    }
 
    fAtRawEventArray = (TClonesArray *)ioman->GetObject("AtRawEvent");
    if (fAtRawEventArray == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find fAtRawEventArray array!");
+      LOG(error) << "Cannot find fAtRawEventArray array!";
       return kERROR;
    }
 
@@ -83,7 +83,7 @@ void AtTriggerTask::SetAtMap(TString mapPath)
 
 void AtTriggerTask::Exec(Option_t *option)
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Exec of AtTriggerTask");
+   LOG(debug) << "Exec of AtTriggerTask";
 
    //***************Reset everything and load next event****************
    // fAtEventArray_acc     ->Delete();

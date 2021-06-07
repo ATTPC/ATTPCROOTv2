@@ -43,6 +43,7 @@ class TGraph;
 class TH1I;
 class TH1D;
 class TH1F;
+class TF1;
 class TH2D;
 class TH2F;
 class TH2Poly;

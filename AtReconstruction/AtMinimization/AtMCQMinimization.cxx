@@ -31,15 +31,15 @@ ClassImp(AtMCQMinimization)
 
    FairRun *run = FairRun::Instance();
    if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+      LOG(fatal) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+      LOG(fatal) << "No runtime database!";
 
    fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
    if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");
+      LOG(fatal) << "AtDigiPar not found!!";
 
    fDriftVelocity = fPar->GetDriftVelocity();
    fTBTime = fPar->GetTBTime();
@@ -111,8 +111,6 @@ AtMCQMinimization::~AtMCQMinimization()
    delete fYTBCorr;
    delete fZTBCorr;
 }
-
-Int_t AtMCQMinimization::GetMinimization() {}
 
 std::vector<Double_t> AtMCQMinimization::GetPosXMin()
 {
@@ -227,11 +225,20 @@ void AtMCQMinimization::SetRangeChi2(Bool_t value)
    kRangeChi2 = value;
 }
 
-Bool_t AtMCQMinimization::Minimize(Double_t *parameter, AtEvent *event) {}
+Bool_t AtMCQMinimization::Minimize(Double_t *parameter, AtEvent *event)
+{
+   return kTRUE;
+}
 
-Bool_t AtMCQMinimization::MinimizeOpt(Double_t *parameter, AtEvent *event) {}
+Bool_t AtMCQMinimization::MinimizeOpt(Double_t *parameter, AtEvent *event)
+{
+   return kTRUE;
+}
 
-Bool_t AtMCQMinimization::MinimizeOptMap(Double_t *parameter, AtEvent *event, TH2Poly *hPadPlane) {}
+Bool_t AtMCQMinimization::MinimizeOptMap(Double_t *parameter, AtEvent *event, TH2Poly *hPadPlane)
+{
+   return kTRUE;
+}
 
 Bool_t AtMCQMinimization::MinimizeOptMapAmp(Double_t *parameter, AtEvent *event, TH2Poly *hPadPlane,
                                             const multiarray &PadCoord)

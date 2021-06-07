@@ -67,7 +67,6 @@ public:
    }
 
 private:
-   FairLogger *fLogger;
    AtHDFParser *HDFParser;
    AtDigiPar *fPar;
    TClonesArray *fRawEventArray;

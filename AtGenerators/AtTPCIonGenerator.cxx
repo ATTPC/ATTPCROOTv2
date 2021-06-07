@@ -106,10 +106,9 @@ AtTPCIonGenerator::AtTPCIonGenerator(const char *name, Int_t z, Int_t a, Int_t q
    // fVx   = vx;
    // fVy   = vy;
    // fVz   = vz;
-   char buffer[20];
+
    double IonMass = m * 0.93149410242;
-   sprintf(buffer, "FairIon%d", fgNIon);
-   fIon = new FairIon(buffer, z, a, q, Ex, m);
+   fIon = new FairIon(TString::Format("FairIon%d", fgNIon).Data(), z, a, q, Ex, m);
    cout << " Beam Ion mass : " << fIon->GetMass() << endl;
    gAtVP->SetBeamMass(fIon->GetMass());
    gAtVP->SetBeamNomE(ener);

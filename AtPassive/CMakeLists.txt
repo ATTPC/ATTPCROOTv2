@@ -1,24 +1,15 @@
 # Create a library called "libPassive" which includes the source files given in
 # the array .
 # The extension is already found.  Any number of sources could be listed here.
+Set(LINKDEF PassiveLinkDef.h)
+Set(LIBRARY_NAME AtPassive)
 
 set(INCLUDE_DIRECTORIES
 ${BASE_INCLUDE_DIRECTORIES}
-${CMAKE_SOURCE_DIR}/AtPassive
-${ROOT_INCLUDE_DIR} 
-
 )
-
-include_directories( ${INCLUDE_DIRECTORIES})
-
 set(LINK_DIRECTORIES
-${ROOT_LIBRARY_DIR}
 ${FAIRROOT_LIBRARY_DIR}
-
 )
- 
-link_directories( ${LINK_DIRECTORIES})
-
 set(SRCS
 AtCave.cxx           
 AtPipe.cxx 
@@ -27,9 +18,20 @@ AtMagnet.cxx
 AtPassiveContFact.cxx
 )
 
-Set(HEADERS )
-Set(LINKDEF PassiveLinkDef.h)
-Set(LIBRARY_NAME AtPassive)
-Set(DEPENDENCIES Base GeoBase ParBase Geom Cling Core FairLogger::FairLogger)
+Set(DEPENDENCIES
+  Base
+  FairTools
+  GeoBase
+  ParBase
+  Geom
+  ROOT::Core
+  )
 
-GENERATE_LIBRARY()
+
+generate_target_root_library(${LIBRARY_NAME}
+  LINKDEF ${LINKDEF}
+  SRCS ${SRCS}
+  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
+  LIBRARY_DIR ${LINK_DIRECTORIES}
+  DEPS_PUBLIC ${DEPENDENCIES}
+  )

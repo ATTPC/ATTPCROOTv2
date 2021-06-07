@@ -18,6 +18,7 @@
 
 #include "TDatabasePDG.h"
 #include "TVirtualMC.h" //For gMC
+#include "Math/GenVector/LorentzVector.h"
 
 #include "AtStack.h"
 #include "AtVertexPropagator.h"
@@ -27,6 +28,20 @@
 #include <iostream>
 
 class AtTPCFissionGeneratorV3 : public FairGenerator {
+
+private:
+   using VecXYZE = ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<>>;
+   // Tree
+   TFile *fEventFile; //!
+   TTree *fEventTree; //!
+
+   // Variables read from the file for each event
+   std::vector<VecXYZE> *fDecayFrags;
+   std::vector<Int_t> *fA;
+   std::vector<Int_t> *fZ;
+
+   Int_t fNumEvents; //! Number of unique fission simualtion events
+   Int_t fCurrEvent; //! Track what event we are at. Reset to 0 if we flow over the number of events in the tree
 
 public:
    // Default constructor
@@ -48,21 +63,6 @@ public:
    virtual ~AtTPCFissionGeneratorV3();
 
    // Internal variables for tracking the physics
-private:
-   // Tree
-   TTree *fissionEvents; //!
-
-   // Variables read from the file for each event
-   Int_t nTracks;    //!
-   Int_t Aout[100];  //!
-   Int_t Zout[100];  //!
-   Double_t pX[100]; //!
-   Double_t pY[100]; //!
-   Double_t pZ[100]; //!
-   Double_t pT[100]; //!
-
-   Int_t nEvents; //! Number of unique fission simualtion events
-   Int_t event;   //! Track what event we are at. Reset to 0 if we flow over the number of events in the tree
 
    ClassDefOverride(AtTPCFissionGeneratorV3, 4)
 };

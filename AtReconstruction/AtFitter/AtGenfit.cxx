@@ -9,9 +9,7 @@
 
 #include "TDatabasePDG.h"
 
-ClassImp(AtFITTER::AtGenfit)
-
-   AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, Int_t minit, Int_t maxit)
+AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, Int_t minit, Int_t maxit)
 {
 
    fTPCDetID = 0;
@@ -115,7 +113,6 @@ void AtFITTER::AtGenfit::Init()
    fGenfitTrackArray->Delete();
 }
 
-
 TClonesArray *AtFITTER::AtGenfit::GetGenfitTrackArray()
 {
    return fGenfitTrackArray;
@@ -162,110 +159,111 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       // std::cout<<pos.X()<<"     "<<pos.Y()<<"   "<<1000.0-pos.Z()<<"\n";
    }
 
-         TVector3 iniPos = hitClusterArray->front().GetPosition(); // TODO Check first cluster is the first in time
-         std::cout << " Initial position : " << iniPos.X() << " - " << iniPos.Y() << " - " << iniPos.Z() << "\n";
+   TVector3 iniPos = hitClusterArray->front().GetPosition(); // TODO Check first cluster is the first in time
+   std::cout << " Initial position : " << iniPos.X() << " - " << iniPos.Y() << " - " << iniPos.Z() << "\n";
 
-         TVector3 posSeed(iniPos.X() / 10.0, iniPos.Y() / 10.0, (1000.0 - iniPos.Z()) / 10.0);
-         posSeed.SetMag(posSeed.Mag());
+   TVector3 posSeed(iniPos.X() / 10.0, iniPos.Y() / 10.0, (1000.0 - iniPos.Z()) / 10.0);
+   posSeed.SetMag(posSeed.Mag());
 
-         TMatrixDSym covSeed(6); // TODO Check where COV matrix is defined, likely in AtPattern clusterize (hard coded
-                                 // in AtSpacePoint measurement)
-         TMatrixD covMatrix = hitClusterArray->front().GetCovMatrix();
-         for (Int_t iComp = 0; iComp < 3; iComp++)
-            covSeed(iComp, iComp) = covMatrix(iComp, iComp) / 100.; // unit conversion mm2 -> cm2
+   TMatrixDSym covSeed(6); // TODO Check where COV matrix is defined, likely in AtPattern clusterize (hard coded
+                           // in AtSpacePoint measurement)
+   TMatrixD covMatrix = hitClusterArray->front().GetCovMatrix();
+   for (Int_t iComp = 0; iComp < 3; iComp++)
+      covSeed(iComp, iComp) = covMatrix(iComp, iComp) / 100.; // unit conversion mm2 -> cm2
 
-         for (Int_t iComp = 3; iComp < 6; iComp++)
-            covSeed(iComp, iComp) = covSeed(iComp - 3, iComp - 3);
+   for (Int_t iComp = 3; iComp < 6; iComp++)
+      covSeed(iComp, iComp) = covSeed(iComp - 3, iComp - 3);
 
-         Double_t theta =
-            180.0 * TMath::DegToRad() - track->GetGeoTheta(); // 180.0*TMath::DegToRad()-track.GetGeoTheta();
-         Double_t radius = track->GetGeoRadius() / 1000.0;    // mm to m
-         Double_t phi = track->GetGeoPhi();
-         Double_t brho = (fMagneticField / 10.0) * radius / TMath::Sin(theta); // Tm
+   Double_t theta = 180.0 * TMath::DegToRad() - track->GetGeoTheta(); // 180.0*TMath::DegToRad()-track.GetGeoTheta();
+   Double_t radius = track->GetGeoRadius() / 1000.0;                  // mm to m
+   Double_t phi = track->GetGeoPhi();
+   Double_t brho = (fMagneticField / 10.0) * radius / TMath::Sin(theta); // Tm
 
-         Double_t p_mass = fMass;
-         Int_t p_Z = fAtomicNumber;
-         Int_t PDGCode = fPDGCode;
+   Double_t p_mass = fMass;
+   Int_t p_Z = fAtomicNumber;
+   Int_t PDGCode = fPDGCode;
 
-         std::cout << " Initial parameters "
-                   << "\n";
-         std::cout << " PDG : " << PDGCode << " - Mass : " << p_mass << " - Atomic number : " << p_Z << "\n";
-         std::cout << " B field : " << fMagneticField / 10.0 << " - Min. Bhro : " << fMinBrho
-                   << " - Max. Brho : " << fMaxBrho << "\n";
-         std::cout << " Theta : " << theta * TMath::RadToDeg() << " - Phi : " << phi * TMath::RadToDeg()
-                   << " - Brho : " << brho << "\n";
+   std::cout << " Initial parameters "
+             << "\n";
+   std::cout << " PDG : " << PDGCode << " - Mass : " << p_mass << " - Atomic number : " << p_Z << "\n";
+   std::cout << " B field : " << fMagneticField / 10.0 << " - Min. Bhro : " << fMinBrho << " - Max. Brho : " << fMaxBrho
+             << "\n";
+   std::cout << " Theta : " << theta * TMath::RadToDeg() << " - Phi : " << phi * TMath::RadToDeg()
+             << " - Brho : " << brho << "\n";
 
-         std::tuple<Double_t, Double_t> mom_ener =
-            GetMomFromBrho(p_mass, p_Z, brho); // TODO Change to structured bindings when C++17
-         Double_t momSeedMag = std::get<0>(mom_ener);
-         TVector3 momSeed(0., 0., momSeedMag); //
-         momSeed.SetTheta(theta);              // TODO: Check angle conventions
-         momSeed.SetPhi(phi);                  // TODO
-         trackCand.setCovSeed(covSeed);
-         trackCand.setPosMomSeed(posSeed, momSeed, p_Z);
-         trackCand.setPdgCode(1000020040);
-         // trackCand.Print();
+   std::tuple<Double_t, Double_t> mom_ener =
+      GetMomFromBrho(p_mass, p_Z, brho); // TODO Change to structured bindings when C++17
+   Double_t momSeedMag = std::get<0>(mom_ener);
+   TVector3 momSeed(0., 0., momSeedMag); //
+   momSeed.SetTheta(theta);              // TODO: Check angle conventions
+   momSeed.SetPhi(phi);                  // TODO
+   trackCand.setCovSeed(covSeed);
+   trackCand.setPosMomSeed(posSeed, momSeed, p_Z);
+   trackCand.setPdgCode(1000020040);
+   // trackCand.Print();
 
-         if (brho > fMaxBrho && brho < fMinBrho)
-            return nullptr;
+   if (brho > fMaxBrho && brho < fMinBrho)
+      return nullptr;
 
-         genfit::Track *gfTrack = new ((*fGenfitTrackArray)[fGenfitTrackArray->GetEntriesFast()])
-            genfit::Track(trackCand, *fMeasurementFactory);
-         gfTrack->addTrackRep(new genfit::RKTrackRep(1000020040)); // TODO: Forcing proton track representation
+   genfit::Track *gfTrack =
+      new ((*fGenfitTrackArray)[fGenfitTrackArray->GetEntriesFast()]) genfit::Track(trackCand, *fMeasurementFactory);
+   gfTrack->addTrackRep(new genfit::RKTrackRep(1000020040)); // TODO: Forcing proton track representation
 
-         genfit::RKTrackRep *trackRep = (genfit::RKTrackRep *)gfTrack->getTrackRep(0);
-         // trackRep->setPropDir(1);
+   genfit::RKTrackRep *trackRep = (genfit::RKTrackRep *)gfTrack->getTrackRep(0);
+   // trackRep->setPropDir(1);
 
-         try {
-            fKalmanFitter->processTrackWithRep(gfTrack, trackRep, false);
-            // fKalmanFitter->processTrackPartially(gfTrack, trackRep,0,hitClusterArray->size()*0.30);
-         } catch (genfit::Exception &e) {
+   try {
+      fKalmanFitter->processTrackWithRep(gfTrack, trackRep, false);
+      // fKalmanFitter->processTrackPartially(gfTrack, trackRep,0,hitClusterArray->size()*0.30);
+   } catch (genfit::Exception &e) {
 
-            std::cout << " AtGenfit -  Exception caught from Kalman Fitter : " << e.what() << "\n";
-         }
+      std::cout << " AtGenfit -  Exception caught from Kalman Fitter : " << e.what() << "\n";
+   }
 
-         // gfTrack->prune("FCW");
+   // gfTrack->prune("FCW");
 
-         genfit::FitStatus *fitStatus;
-         try {
-            fitStatus = gfTrack->getFitStatus(trackRep);
-            std::cout << cYELLOW << " Is fitted? " << fitStatus->isFitted() << "\n";
-            std::cout << " Is Converged ? " << fitStatus->isFitConverged() << "\n";
-            std::cout << " Is Converged Partially? " << fitStatus->isFitConvergedPartially() << "\n";
-            std::cout << " Is pruned ? " << fitStatus->isTrackPruned() << cNORMAL << "\n";
-            fitStatus->Print();
-         } catch (genfit::Exception &e) {
-            return nullptr;
-         }
+   genfit::FitStatus *fitStatus;
+   try {
+      fitStatus = gfTrack->getFitStatus(trackRep);
+      std::cout << cYELLOW << " Is fitted? " << fitStatus->isFitted() << "\n";
+      std::cout << " Is Converged ? " << fitStatus->isFitConverged() << "\n";
+      std::cout << " Is Converged Partially? " << fitStatus->isFitConvergedPartially() << "\n";
+      std::cout << " Is pruned ? " << fitStatus->isTrackPruned() << cNORMAL << "\n";
+      fitStatus->Print();
+   } catch (genfit::Exception &e) {
+      return nullptr;
+   }
 
-         /*genfit::MeasuredStateOnPlane fitState;
-    genfit::TrackPoint* firstPoint;
-    genfit::TrackPoint* lastPoint;
-    genfit::KalmanFitterInfo* pointKFitterInfo;*/
-         /*try {
-      fitState = gfTrack->getFittedState();
-      fitState.Print();
-      // Fit result
-            fitState.getPosMomCov(pos_res, mom_res, cov_res);
-            std::cout << cYELLOW << " Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
-               << pos_res.Y() << "  " << pos_res.Z() << cNORMAL << "\n";
-       firstPoint = gfTrack->getPointWithMeasurement(0);
-       lastPoint  = gfTrack->getPointWithMeasurement(gfTrack->getNumPoints()-1);
-       //firstPoint->Print();
-       //lastPoint->Print();
-       //pointKFitterInfo = firstPoint->getKalmanFitterInfo();
+   /*genfit::MeasuredStateOnPlane fitState;
+genfit::TrackPoint* firstPoint;
+genfit::TrackPoint* lastPoint;
+genfit::KalmanFitterInfo* pointKFitterInfo;*/
+   /*try {
+fitState = gfTrack->getFittedState();
+fitState.Print();
+// Fit result
+      fitState.getPosMomCov(pos_res, mom_res, cov_res);
+      std::cout << cYELLOW << " Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
+         << pos_res.Y() << "  " << pos_res.Z() << cNORMAL << "\n";
+ firstPoint = gfTrack->getPointWithMeasurement(0);
+ lastPoint  = gfTrack->getPointWithMeasurement(gfTrack->getNumPoints()-1);
+ //firstPoint->Print();
+ //lastPoint->Print();
+ //pointKFitterInfo = firstPoint->getKalmanFitterInfo();
 
-         } catch (genfit::Exception &e) {
-         }*/
+   } catch (genfit::Exception &e) {
+   }*/
 
-         // gfTrack ->Print();
+   // gfTrack ->Print();
 
-         //} // iTrack
+   //} // iTrack
 
-         std::cout << " End of GENFIT "
-                   << "\n";
-         std::cout << "               "
-                   << "\n";
+   std::cout << " End of GENFIT "
+             << "\n";
+   std::cout << "               "
+             << "\n";
 
-         return gfTrack;
+   return gfTrack;
 }
+
+ClassImp(AtFITTER::AtGenfit);

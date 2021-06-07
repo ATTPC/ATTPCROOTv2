@@ -11,6 +11,7 @@
 #include "TStyle.h"
 #include "TRandom.h"
 #include "TColor.h"
+#include "TVirtualX.h"
 
 #include "AtTpcMap.h"
 #include "AtTpcProtoMap.h"
@@ -102,17 +103,17 @@ InitStatus AtEventDrawTaskProto::Init()
 
    fHitArray = (TClonesArray *)ioMan->GetObject("AtEventH"); // TODO: Why this confusing name? It should be fEventArray
    if (fHitArray)
-      LOG(INFO) << cGREEN << "Hit Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Hit Array Found." << cNORMAL;
 
    fRawEventArray = (TClonesArray *)ioMan->GetObject("AtRawEvent");
    if (fRawEventArray) {
-      LOG(INFO) << cGREEN << "Raw Event Array  Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Raw Event Array  Found." << cNORMAL;
       fIsRawData = kTRUE;
    }
 
    fPatternEventArray = (TClonesArray *)ioMan->GetObject("AtPatternEvent");
    if (fPatternEventArray)
-      LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL;
 
    // fHoughSpaceArray =  (TClonesArray*) ioMan->GetObject("AtHough");
    // if(fHoughSpaceArray) LOG(INFO)<<cGREEN<<"Hough Array Found."<<cNORMAL<<FairLogger::endl;
@@ -122,7 +123,7 @@ InitStatus AtEventDrawTaskProto::Init()
 
    fProtoEventAnaArray = (TClonesArray *)ioMan->GetObject("AtProtoEventAna");
    if (fProtoEventAnaArray)
-      LOG(INFO) << cGREEN << "Prototype Event Analysis Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Prototype Event Analysis Array Found." << cNORMAL;
 
    // Drawing histograms
 
@@ -156,6 +157,8 @@ InitStatus AtEventDrawTaskProto::Init()
    DrawProtoKine();*/
    fCvsAux = fEventManager->GetCvsAux();
    DrawProtoAux();
+
+   return kSUCCESS;
 }
 
 void AtEventDrawTaskProto::Exec(Option_t *option)
@@ -994,8 +997,8 @@ void AtEventDrawTaskProto::SelectPad(const char *rawevt)
       int pxmin = gPad->XtoAbsPixel(uxmin);
       int pxmax = gPad->XtoAbsPixel(uxmax);
       if (pyold)
-         gVirtualX->DrawLine(pxmin, pyold, pxmax, pyold);
-      gVirtualX->DrawLine(pxmin, py, pxmax, py);
+         TVirtualX::Instance()->DrawLine(pxmin, pyold, pxmax, pyold);
+      TVirtualX::Instance()->DrawLine(pxmin, py, pxmax, py);
       gPad->SetUniqueID(py);
       Float_t upx = gPad->AbsPixeltoX(px);
       Float_t upy = gPad->AbsPixeltoY(py);

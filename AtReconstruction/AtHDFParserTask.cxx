@@ -5,6 +5,7 @@
 #include "FairRun.h"
 #include "FairRunAna.h"
 #include "FairRuntimeDb.h"
+#include "FairLogger.h"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
@@ -15,7 +16,6 @@ ClassImp(AtHDFParserTask);
 
 AtHDFParserTask::AtHDFParserTask() : AtPadCoordArr(boost::extents[10240][3][2])
 {
-   fLogger = FairLogger::GetLogger();
    fIsPersistence = kFALSE;
    fRawEventArray = new TClonesArray("AtRawEvent");
    fEventID = 0;
@@ -40,7 +40,6 @@ AtHDFParserTask::AtHDFParserTask() : AtPadCoordArr(boost::extents[10240][3][2])
 
 AtHDFParserTask::AtHDFParserTask(Int_t opt) : AtPadCoordArr(boost::extents[10240][3][2]), kOpt(0)
 {
-   fLogger = FairLogger::GetLogger();
    fIsPersistence = kFALSE;
    fIsOldFormat = kFALSE;
    fIsBaseLineSubtraction = kFALSE;
@@ -165,13 +164,14 @@ Bool_t AtHDFParserTask::SetProtoMapFile(TString mapfile)
 Bool_t AtHDFParserTask::SetInitialEvent(std::size_t inievent)
 {
    fIniEventID = inievent;
+   return true;
 }
 
 InitStatus AtHDFParserTask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 
@@ -183,7 +183,7 @@ InitStatus AtHDFParserTask::Init()
    auto numUniqueEvents = HDFParser->getFirstEvent() - HDFParser->getLastEvent();
 
    if (fIniEventID > numUniqueEvents) {
-      fLogger->Fatal(MESSAGE_ORIGIN, "Exceeded the valid range of event numbers");
+      LOG(fatal) << "Exceeded the valid range of event numbers";
       return kERROR;
    } else
       fEventID = fIniEventID + HDFParser->getFirstEvent();
@@ -196,15 +196,15 @@ void AtHDFParserTask::SetParContainers()
 {
    FairRun *run = FairRun::Instance();
    if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+      LOG(fatal) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+      LOG(fatal) << "No runtime database!";
 
    fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
    if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "Cannot find AtDigiPar!");
+      LOG(fatal) << "Cannot find AtDigiPar!";
 }
 
 void AtHDFParserTask::Exec(Option_t *opt)
@@ -213,13 +213,13 @@ void AtHDFParserTask::Exec(Option_t *opt)
    fRawEvent->Clear();
 
    if (fEventID > HDFParser->getLastEvent()) {
-      fLogger->Fatal(MESSAGE_ORIGIN, "Tried to unpack an event that was too large!");
+      LOG(fatal) << "Tried to unpack an event that was too large!";
       return;
    }
 
    // Get the names of the header and data
-   TString event_name = TString::Format("evt%d_data", fEventID);
-   TString header_name = TString::Format("evt%d_header", fEventID);
+   TString event_name = TString::Format("evt%lu_data", fEventID);
+   TString header_name = TString::Format("evt%lu_header", fEventID);
 
    auto header = HDFParser->get_header(header_name.Data());
 
@@ -295,7 +295,7 @@ void AtHDFParserTask::Exec(Option_t *opt)
       delete pad;
 
    } // End loop over pads
-
+   // std::cout << "Unpacked event: " << fEventID << std::endl;
    new ((*fRawEventArray)[0]) AtRawEvent(fRawEvent);
 
    ++fEventID;

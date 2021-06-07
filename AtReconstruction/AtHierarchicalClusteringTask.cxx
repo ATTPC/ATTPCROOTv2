@@ -135,14 +135,14 @@ std::vector<AtTrajectory> AtHierarchicalClusteringTask::useHc(pcl::PointCloud<pc
 AtHierarchicalClusteringTask::AtHierarchicalClusteringTask() : FairTask("AtHierarchicalClusteringTask")
 {
    fLogger = FairLogger::GetLogger();
-   fLogger->Debug(MESSAGE_ORIGIN, "Defaul Constructor of AtHierarchicalClusteringTask");
+   LOG(debug) << "Defaul Constructor of AtHierarchicalClusteringTask";
    fPar = NULL;
    kIsPersistence = kFALSE;
 }
 
 AtHierarchicalClusteringTask::~AtHierarchicalClusteringTask()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Destructor of AtHierarchicalClusteringTask");
+   LOG(debug) << "Destructor of AtHierarchicalClusteringTask";
 }
 
 void AtHierarchicalClusteringTask::SetPersistence(Bool_t value)
@@ -152,37 +152,37 @@ void AtHierarchicalClusteringTask::SetPersistence(Bool_t value)
 
 void AtHierarchicalClusteringTask::SetParContainers()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "SetParContainers of AtHierarchicalClusteringTask");
+   LOG(debug) << "SetParContainers of AtHierarchicalClusteringTask";
 
    FairRun *run = FairRun::Instance();
    if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+      LOG(fatal) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+      LOG(fatal) << "No runtime database!";
 
    fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
    if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");
+      LOG(fatal) << "AtDigiPar not found!!";
 }
 
 InitStatus AtHierarchicalClusteringTask::Init()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Initilization of AtHierarchicalClusteringTask");
+   LOG(debug) << "Initilization of AtHierarchicalClusteringTask";
 
    fHierarchicalClusteringArray = new TClonesArray("AtHierarchicalClusteringHc");
 
    // Get a handle from the IO manager
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 
    fEventHArray = (TClonesArray *)ioMan->GetObject("AtEventH");
    if (fEventHArray == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtEvent array!");
+      LOG(error) << "Cannot find AtEvent array!";
       return kERROR;
    }
 
@@ -193,14 +193,14 @@ InitStatus AtHierarchicalClusteringTask::Init()
 
 InitStatus AtHierarchicalClusteringTask::ReInit()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Initilization of AtHierarchicalClusteringTask");
+   LOG(debug) << "Initilization of AtHierarchicalClusteringTask";
 
    return kSUCCESS;
 }
 
 void AtHierarchicalClusteringTask::Exec(Option_t *option)
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Exec of AtHierarchicalClusteringTask");
+   LOG(debug) << "Exec of AtHierarchicalClusteringTask";
 
    fHierarchicalClusteringArray->Delete();
 
@@ -229,7 +229,7 @@ void AtHierarchicalClusteringTask::Exec(Option_t *option)
 
 void AtHierarchicalClusteringTask::Finish()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Finish of AtHierarchicalClusteringTask");
+   LOG(debug) << "Finish of AtHierarchicalClusteringTask";
 }
 
 std::vector<AtTrajectory>

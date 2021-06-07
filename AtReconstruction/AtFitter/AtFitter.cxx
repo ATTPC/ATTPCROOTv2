@@ -7,11 +7,9 @@
 // STL
 #include <algorithm>
 
-ClassImp(AtFITTER::AtFitter)
+ClassImp(AtFITTER::AtFitter);
 
-   AtFITTER::AtFitter::AtFitter()
-{
-}
+AtFITTER::AtFitter::AtFitter() {}
 
 AtFITTER::AtFitter::~AtFitter() {}
 

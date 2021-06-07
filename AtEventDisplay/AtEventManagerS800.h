@@ -15,6 +15,7 @@
 
 #include "AtEvent.h"
 #include "S800Calc.h"
+class TH2F;
 
 #ifndef __CINT__ // Boost
 #include <boost/multi_array.hpp>

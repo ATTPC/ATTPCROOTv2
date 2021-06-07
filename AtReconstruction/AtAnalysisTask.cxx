@@ -94,7 +94,7 @@ InitStatus AtAnalysisTask::Init()
 
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 
@@ -108,17 +108,17 @@ InitStatus AtAnalysisTask::Init()
 
    fHoughArray = (TClonesArray *)ioMan->GetObject("AtHough");
    if (fHoughArray == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtHough array!");
+      LOG(error) << "Cannot find AtHough array!";
       // return kERROR;
    } else
-      fLogger->Info(MESSAGE_ORIGIN, "AtHough array found!");
+      LOG(info) << "AtHough array found!";
 
    fRansacArray = (TClonesArray *)ioMan->GetObject("AtRansac");
    if (fRansacArray == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtRansac array!");
+      LOG(error) << "Cannot find AtRansac array!";
       // return kERROR;
    } else
-      fLogger->Info(MESSAGE_ORIGIN, "AtRansac array found!");
+      LOG(info) << "AtRansac array found!";
 
    if (fIsPhiReco && fHoughArray) { // Find the Array of ProtoEvents
 
@@ -129,9 +129,7 @@ InitStatus AtAnalysisTask::Init()
 
       fProtoEventHArray = (TClonesArray *)ioMan->GetObject("AtProtoEvent");
       if (fProtoEventHArray == 0) {
-         fLogger->Error(
-            MESSAGE_ORIGIN,
-            "Cannot find AtProtoEvent array! If SetPhiReco method is enabled, Phi Reconstruction is needed");
+         LOG(error) << "Cannot find AtProtoEvent array! If SetPhiReco method is enabled, Phi Reconstruction is needed";
          return kERROR;
       }
 
@@ -156,7 +154,7 @@ InitStatus AtAnalysisTask::Init()
       fAtMapPtr->GenerateAtTpc();
       fPadPlane = fAtMapPtr->GetAtTpcPlane();
       Bool_t MapIn = fAtMapPtr->ParseXMLMap(fMap);
-      fLogger->Info(MESSAGE_ORIGIN, "AtTPC Map enabled");
+      LOG(info) << "AtTPC Map enabled";
       if (!MapIn)
          std::cerr << " -E- AtHoughTask - : Map was enabled but not found ! " << std::endl;
       fAtPadCoord = fAtMapPtr->GetPadCoordArr();
@@ -170,15 +168,15 @@ void AtAnalysisTask::SetParContainers()
 
    FairRun *run = FairRun::Instance();
    if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+      LOG(fatal) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+      LOG(fatal) << "No runtime database!";
 
    fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
    if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");
+      LOG(fatal) << "AtDigiPar not found!!";
 }
 
 void AtAnalysisTask::Exec(Option_t *opt)
