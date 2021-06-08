@@ -44,7 +44,6 @@ AtFitterTask::AtFitterTask()
    fEventCnt = 0;
    fGenfitTrackVector = new std::vector<genfit::Track>();
 
-    
    fMagneticField = 2.0;
    fMinIterations = 5.0;
    fMaxIterations = 20.0;
@@ -52,9 +51,8 @@ AtFitterTask::AtFitterTask()
    fMass = 1.00727646;
    fAtomicNumber = 1;
    fNumFitPoints = 0.90;
-   fMaxBrho = 3.0;//Tm
-   fMinBrho = 0.01;//Tm
-
+   fMaxBrho = 3.0;  // Tm
+   fMinBrho = 0.01; // Tm
 }
 
 AtFitterTask::~AtFitterTask() {}
@@ -82,24 +80,24 @@ InitStatus AtFitterTask::Init()
 
    if (fFitterAlgorithm == 0) {
       fLogger->Info(MESSAGE_ORIGIN, "Using GENFIT2");
-      std::cout<<cGREEN<<" AtFitterTask::Init - Fit parameters. "<<"\n";
-      std::cout<<" Magnetic Field       : "<<fMagneticField<<" T\n";
-      std::cout<<" PDG Code             : "<<fPDGCode<<"\n";
-      std::cout<<" Mass                 : "<<fMass<<" amu\n";
-      std::cout<<" Atomic Number        : "<<fAtomicNumber<<"\n";
-      std::cout<<" Number of fit points : "<<fNumFitPoints<<"\n";
-      std::cout<<" Maximum iterations   : "<<fMaxIterations<<"\n";
-      std::cout<<" Minimum iterations   : "<<fMinIterations<<"\n";
-      std::cout<<" Maximum brho         : "<<fMaxBrho<<"\n";
-      std::cout<<" Minimum brho         : "<<fMinBrho<<"\n";
-      std::cout<<" --------------------------------------------- "<<cNORMAL<<"\n";
-      
-      fFitter = new AtFITTER::AtGenfit(fMagneticField,fMinBrho,fMaxBrho,fMinIterations,fMaxIterations);
-      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetPDGCode(fPDGCode);
-      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetMass(fMass);
-      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetAtomicNumber(fAtomicNumber);
-      dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetNumFitPoints(fNumFitPoints);
-      
+      std::cout << cGREEN << " AtFitterTask::Init - Fit parameters. "
+                << "\n";
+      std::cout << " Magnetic Field       : " << fMagneticField << " T\n";
+      std::cout << " PDG Code             : " << fPDGCode << "\n";
+      std::cout << " Mass                 : " << fMass << " amu\n";
+      std::cout << " Atomic Number        : " << fAtomicNumber << "\n";
+      std::cout << " Number of fit points : " << fNumFitPoints << "\n";
+      std::cout << " Maximum iterations   : " << fMaxIterations << "\n";
+      std::cout << " Minimum iterations   : " << fMinIterations << "\n";
+      std::cout << " Maximum brho         : " << fMaxBrho << "\n";
+      std::cout << " Minimum brho         : " << fMinBrho << "\n";
+      std::cout << " --------------------------------------------- " << cNORMAL << "\n";
+
+      fFitter = new AtFITTER::AtGenfit(fMagneticField, fMinBrho, fMaxBrho, fMinIterations, fMaxIterations);
+      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetPDGCode(fPDGCode);
+      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetMass(fMass);
+      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetAtomicNumber(fAtomicNumber);
+      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetNumFitPoints(fNumFitPoints);
 
    } else if (fFitterAlgorithm == 1) {
       fLogger->Error(MESSAGE_ORIGIN, "Fitter algorithm not defined!");

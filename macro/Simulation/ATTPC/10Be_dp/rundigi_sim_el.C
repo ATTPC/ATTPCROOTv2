@@ -1,5 +1,5 @@
-void runreco_sim(
-   TString mcFile = "output_digi.root",
+void rundigi_sim_el(
+   TString mcFile = "./data/attpcsim_el.root",
    TString mapParFile =
       "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
    TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
@@ -20,10 +20,10 @@ void runreco_sim(
    FairRunAna *fRun = new FairRunAna();
    fRun->SetInputFile(mcFile);
    fRun->SetGeomFile(
-      "/mnt/simulations/attpcroot/fair_install_2020/ATTPCROOTv2_develop/geometry/ATTPC_He1bar_v2_geomanager.root");
-   fRun->SetOutputFile("output_reco.root");
+      "/user/e20020/ATTPCROOTv2_e20020_dev/geometry/ATTPC_D1bar_v2_geomanager.root");
+   fRun->SetOutputFile("output_digi_el.root");
 
-   TString parameterFile = "ATTPC.e20020_sim.par";
+   TString parameterFile = "ATTPC.e20009_sim.par";
    TString digiParFile = dir + "/parameters/" + parameterFile;
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
@@ -33,7 +33,7 @@ void runreco_sim(
 
    // __ AT digi tasks___________________________________
 
-   /*AtClusterizeTask *clusterizer = new AtClusterizeTask();
+   AtClusterizeTask *clusterizer = new AtClusterizeTask();
    clusterizer->SetPersistence(kFALSE);
 
    AtPulseTask *pulse = new AtPulseTask();
@@ -51,36 +51,26 @@ void runreco_sim(
    psa->SetMaxFinder();
 
    AtPRAtask *praTask = new AtPRAtask();
-   praTask->SetPersistence(kTRUE);*/
+   praTask->SetPersistence(kTRUE);
 
-   AtFitterTask *fitterTask = new AtFitterTask();
-   fitterTask->SetPersistence(kTRUE);
-   fitterTask->SetMagneticField(3.0); // T
-   fitterTask->SetMinIterations(5);
-   fitterTask->SetMaxIterations(20);
-   fitterTask->SetPDGCode(1000020040);
-   fitterTask->SetMass(4.00150618);
-   fitterTask->SetAtomicNumber(2);
-   fitterTask->SetNumFitPoints(0.9);
-   fitterTask->SetMaxBrho(1.5);
-   fitterTask->SetMinBhro(0.1);
+   // AtFitterTask *fitterTask = new AtFitterTask();
+   // fitterTask->SetPersistence(kTRUE);
 
    /*ATTriggerTask *trigTask = new ATTriggerTask();
    trigTask  ->  SetAtMap(mapParFile);
    trigTask  ->  SetPersistence(kTRUE);*/
 
-   // fRun->AddTask(clusterizer);
-   // fRun->AddTask(pulse);
-   // fRun->AddTask(psaTask);
-   // fRun->AddTask(praTask);
-   fRun->AddTask(fitterTask);
+   fRun->AddTask(clusterizer);
+   fRun->AddTask(pulse);
+   fRun->AddTask(psaTask);
+   fRun->AddTask(praTask);
+   // fRun->AddTask(fitterTask);
    // fRun -> AddTask(trigTask);
 
    // __ Init and run ___________________________________
 
    fRun->Init();
-   fRun->Run(0, 1000);
-   // fRun->Run(845,852);
+   fRun->Run(0, 2);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;

@@ -29,7 +29,7 @@ ClassImp(AtFITTER::AtGenfit)
    fKalmanFitter = std::make_shared<genfit::KalmanFitterRefTrack>();
    fKalmanFitter->setMinIterations(fMinIterations);
    fKalmanFitter->setMaxIterations(fMaxIterations);
-   // fKalmanFitter->setDebugLvl();
+   //fKalmanFitter->setDebugLvl();
 
    fGenfitTrackArray = new TClonesArray("genfit::Track");
    fHitClusterArray = new TClonesArray("AtHitCluster");
@@ -148,22 +148,26 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
        track->GetIsNoise()) //&& patternTrackCand.size()<5) { // TODO Check minimum number of clusters
       return nullptr;
 
-   std::reverse(hitClusterArray->begin(), hitClusterArray->end()); // TODO: Reverted to adapt it to simulation
+   std::reverse(hitClusterArray->begin(), hitClusterArray->end()); 
 
+   //TVector3 iniPos;
+   
    // Adding clusterized  hits
    // for (auto cluster : *hitClusterArray) {
-   for (auto iCluster = 0; iCluster < hitClusterArray->size() * fNumFitPoints; ++iCluster) {
+   for (auto iCluster = 0; iCluster < hitClusterArray->size(); ++iCluster) {
       auto cluster = hitClusterArray->at(iCluster);
       TVector3 pos = cluster.GetPosition();
       Int_t idx = fHitClusterArray->GetEntriesFast();
       new ((*fHitClusterArray)[idx]) AtHitCluster(cluster);
       trackCand.addHit(fTPCDetID, idx);
-      // std::cout<<" Adding  cluster "<<idx<<"\n";
-      // std::cout<<pos.X()<<"     "<<pos.Y()<<"   "<<1000.0-pos.Z()<<"\n";
+      //std::cout<<" Adding  cluster "<<idx<<"\n";
+      //std::cout<<pos.X()<<"     "<<pos.Y()<<"   "<<1000.0-pos.Z()<<"\n";
+      //if(iCluster==0)
+      //iniPos	= pos;
    }
 
-         TVector3 iniPos = hitClusterArray->front().GetPosition(); // TODO Check first cluster is the first in time
-         std::cout << " Initial position : " << iniPos.X() << " - " << iniPos.Y() << " - " << iniPos.Z() << "\n";
+        TVector3 iniPos = hitClusterArray->front().GetPosition(); // TODO Check first cluster is the first in time
+        std::cout << " Initial position : " << iniPos.X() << " - " << iniPos.Y() << " - " << iniPos.Z() << "\n";
 
          TVector3 posSeed(iniPos.X() / 10.0, iniPos.Y() / 10.0, (1000.0 - iniPos.Z()) / 10.0);
          posSeed.SetMag(posSeed.Mag());
@@ -203,18 +207,22 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
          momSeed.SetPhi(phi);                  // TODO
          trackCand.setCovSeed(covSeed);
          trackCand.setPosMomSeed(posSeed, momSeed, p_Z);
-         trackCand.setPdgCode(1000020040);
+         trackCand.setPdgCode(fPDGCode);
          // trackCand.Print();
 
          if (brho > fMaxBrho && brho < fMinBrho)
             return nullptr;
 
+	 
+	 
          genfit::Track *gfTrack = new ((*fGenfitTrackArray)[fGenfitTrackArray->GetEntriesFast()])
             genfit::Track(trackCand, *fMeasurementFactory);
-         gfTrack->addTrackRep(new genfit::RKTrackRep(1000020040)); // TODO: Forcing proton track representation
+         gfTrack->addTrackRep(new genfit::RKTrackRep(fPDGCode));
 
+	 
+	 
          genfit::RKTrackRep *trackRep = (genfit::RKTrackRep *)gfTrack->getTrackRep(0);
-         // trackRep->setPropDir(1);
+         //trackRep->setPropDir(-1);
 
          try {
             fKalmanFitter->processTrackWithRep(gfTrack, trackRep, false);

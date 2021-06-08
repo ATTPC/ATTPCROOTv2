@@ -1,9 +1,9 @@
 void GetEnergy(Double_t M,Double_t IZ,Double_t BRO,Double_t &E);
 
-void O16_ana()
+void Be10_dp_ana()
 {
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
-   TString FileName = "output_digi.root";
+   TString FileName = "output_digi_el.root";
    std::cout << " Opening File : " << FileName.Data() << std::endl;
    TFile *file = new TFile(FileName.Data(), "READ");
 
@@ -41,9 +41,9 @@ void O16_ana()
 
       double bro = B_f * rad / TMath::Sin(theta) / 1000.0;
       double ener = 0;
-      Double_t  Am = 4.0;
+      Double_t  Am = 1.0;
 
-           GetEnergy(Am,2.0,bro,ener);
+           GetEnergy(Am,1.0,bro,ener);
 
 	   angle_vs_energy->Fill(theta*TMath::RadToDeg(),ener*Am);
 
@@ -71,33 +71,33 @@ void O16_ana()
    Double_t *EnerLabSca = new Double_t[20000];
    Double_t *MomLabRec = new Double_t[20000];
 
-   TString fileKine = "O16_aa_el_kine.txt";
-   std::ifstream *kineStr = new std::ifstream(fileKine.Data());
-   Int_t numKin = 0;
-
-   if (!kineStr->fail()) {
-      while (!kineStr->eof()) {
-         *kineStr >> ThetaCMS[numKin] >> ThetaLabRec[numKin] >> EnerLabRec[numKin] >> ThetaLabSca[numKin] >>
-            EnerLabSca[numKin];
-         // numKin++;
-
-         // MomLabRec[numKin] =( pow(EnerLabRec[numKin] + M_Ener,2) - TMath::Power(M_Ener, 2))/1000.0;
-         // std::cout<<" Momentum : " <<MomLabRec[numKin]<<"\n";
-         // Double_t E = TMath::Sqrt(TMath::Power(p, 2) + TMath::Power(M_Ener, 2)) - M_Ener;
-         numKin++;
-      }
-   } else if (kineStr->fail())
-      std::cout << " Warning : No Kinematics file found for this reaction!" << std::endl;
-
-    TGraph *Kine_AngRec_EnerRec = new TGraph(numKin, ThetaLabRec, EnerLabRec);
-   
-   TCanvas *c1 = new TCanvas();
-   c1->Draw();
-   angle_vs_energy->Draw();
-   Kine_AngRec_EnerRec->SetLineColor(kRed);
-   Kine_AngRec_EnerRec->Draw("SAME");
-
-   
+   //TString fileKine = "O16_aa_el_kine.txt";
+   //std::ifstream *kineStr = new std::ifstream(fileKine.Data());
+   //Int_t numKin = 0;
+   //
+   //if (!kineStr->fail()) {
+   //   while (!kineStr->eof()) {
+   //      *kineStr >> ThetaCMS[numKin] >> ThetaLabRec[numKin] >> EnerLabRec[numKin] >> ThetaLabSca[numKin] >>
+   //         EnerLabSca[numKin];
+   //      // numKin++;
+   //
+   //      // MomLabRec[numKin] =( pow(EnerLabRec[numKin] + M_Ener,2) - TMath::Power(M_Ener, 2))/1000.0;
+   //      // std::cout<<" Momentum : " <<MomLabRec[numKin]<<"\n";
+   //      // Double_t E = TMath::Sqrt(TMath::Power(p, 2) + TMath::Power(M_Ener, 2)) - M_Ener;
+   //      numKin++;
+   //   }
+   //} else if (kineStr->fail())
+   //   std::cout << " Warning : No Kinematics file found for this reaction!" << std::endl;
+   //
+   // TGraph *Kine_AngRec_EnerRec = new TGraph(numKin, ThetaLabRec, EnerLabRec);
+   //
+   //TCanvas *c1 = new TCanvas();
+   //c1->Draw();
+   //angle_vs_energy->Draw();
+   //Kine_AngRec_EnerRec->SetLineColor(kRed);
+   //Kine_AngRec_EnerRec->Draw("SAME");
+   //
+   //
    
 }
 
