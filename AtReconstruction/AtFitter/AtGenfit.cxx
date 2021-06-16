@@ -89,7 +89,7 @@ ClassImp(AtFITTER::AtGenfit)
    const Double_t kYear2Sec = 3600 * 24 * 365.25;
 
    TDatabasePDG *db = TDatabasePDG::Instance();
-   db->AddParticle("Deuteron", "Deuteron", 2 * kAu2Gev + 8.071e-3, kTRUE, 0, 3, "Ion", 1000010020);
+   db->AddParticle("Deuteron", "Deuteron",1.875612928, kTRUE, 0, 3, "Ion", 1000010020); //1.875612928 2 * kAu2Gev + 8.071e-3
    db->AddParticle("Triton", "Triton", 3 * kAu2Gev + 14.931e-3, kFALSE, khShGev / (12.33 * kYear2Sec), 3, "Ion",
                    1000010030);
    db->AddParticle("Alpha", "Alpha", 4 * kAu2Gev + 2.424e-3, kTRUE, khShGev / (12.33 * kYear2Sec), 6, "Ion",
@@ -149,7 +149,11 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       return nullptr;
 
    std::reverse(hitClusterArray->begin(), hitClusterArray->end()); 
+   //hitClusterArray->resize(hitClusterArray->size() * 0.50);
 
+   
+   
+   
    //TVector3 iniPos;
    
    // Adding clusterized  hits

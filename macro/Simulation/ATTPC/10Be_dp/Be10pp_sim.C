@@ -1,13 +1,13 @@
-void Be10pp_sim(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
+void Be10pp_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile ="./data/attpcsim_el.root";
+  TString outFile ="./data/attpcsim_el_20deg.root";
 
   // Parameter file name
-  TString parFile="./data/attpcpar_el.root";
+  TString parFile="./data/attpcpar_el_20deg.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -155,8 +155,8 @@ void Be10pp_sim(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
 		  ExE.push_back(0.0);//In MeV
 
 
-                  Double_t ThetaMinCMS = 30.0;
-                  Double_t ThetaMaxCMS = 30.0;
+                  Double_t ThetaMinCMS = 20.0;
+                  Double_t ThetaMaxCMS = 20.0;
 
 
         AtTPC2Body* TwoBody = new AtTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner,ThetaMinCMS,ThetaMaxCMS);
