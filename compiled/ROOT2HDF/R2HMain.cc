@@ -7,8 +7,7 @@ int main(int argc, char* argv[])
    gSystem->Load("libATTPCReco.so");
 
    FairRunAna* run = new FairRunAna(); //Forcing a dummy run
-   TString FileName = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/macro/Simulation/ATTPC/10Be_aa/"
-                      "output_digi_10Be_aaHe6.root";
+   TString FileName = "/mnt/simulations/attpcroot/fair_install_2020/ATTPCROOTv2/macro/Simulation/ATTPC/22Mg_aa/Mg22_Ne20pp_8MeV.root";
    std::cout<<" Opening File : "<<FileName.Data()<<std::endl;
    TFile* file = new TFile(FileName.Data(),"READ");
 
@@ -17,10 +16,10 @@ int main(int argc, char* argv[])
    std::cout<<" Number of events : "<<nEvents<<std::endl;
 
    TTreeReader Reader1("cbmsim", file);
-   TTreeReaderValue<TClonesArray> eventArray(Reader1, "ATEventH");
+   TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtEventH");
 
    const int   RANK = 1;
-   const H5std_string FILE_NAME( "output_digi_HDF_2Body.h5" );
+   const H5std_string FILE_NAME( "output_digi_HDF_Mg22_Ne20pp_8MeV.h5" );
 
 
       H5File* HDFfile = new H5File( FILE_NAME, H5F_ACC_TRUNC );
@@ -29,7 +28,7 @@ int main(int argc, char* argv[])
 			  //while (Reader1.Next()) {
 			  			 			     
 			      Reader1.Next();
-			      ATEvent* event = (ATEvent*) eventArray->At(0);
+			      AtEvent* event = (AtEvent*) eventArray->At(0);
 			      Int_t nHits = event->GetNumHits();
 			      std::cout<<" Event number "<<i<<" Number of hits "<<nHits<<"\n";
 
@@ -42,9 +41,9 @@ int main(int argc, char* argv[])
 			  
 
 				for(Int_t iHit=0; iHit<nHits; iHit++){
-				    ATHit* hit = event->GetHit(iHit);
+				    AtHit* hit = event->GetHit(iHit);
 			  	    TVector3 hitPos = hit->GetPosition();
-				    std::vector<ATHit::MCSimPoint> MCPoints = hit-> GetMCSimPointArray();
+				    std::vector<AtHit::MCSimPoint> MCPoints = hit-> GetMCSimPointArray();
 				    
 				    hits[iHit].x       = hitPos.X();
 				    hits[iHit].y       = hitPos.Y();

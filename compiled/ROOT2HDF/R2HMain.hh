@@ -25,8 +25,8 @@
 #include "FairRun.h"
 #include "FairRunAna.h"
 
-#include "ATEvent.hh"
-#include "ATHit.hh"
+#include "AtEvent.h"
+#include "AtHit.h"
 
 //ROOT
 #include "TGraph.h"

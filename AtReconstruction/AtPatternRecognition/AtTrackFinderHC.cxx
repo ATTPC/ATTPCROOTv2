@@ -159,7 +159,7 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
       } // Indices loop
 
       track.SetTrackID(clusterIndex);
-      Clusterize(track);
+      Clusterize3D(track);
       tracks.push_back(track);
 
    } // Clusters loop
@@ -167,14 +167,14 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
    std::cout << cRED << " Tracks found " << tracks.size() << cNORMAL << "\n";
 
    // Dump noise into a track
-   AtTrack track;
+   AtTrack ntrack;
    for (std::vector<pcl::PointXYZI, Eigen::aligned_allocator<pcl::PointXYZI>>::iterator it = points.begin();
         it != points.end(); ++it) {
       if (event.GetHit(it->intensity))
-         track.AddHit(event.GetHit(it->intensity));
+         ntrack.AddHit(event.GetHit(it->intensity));
    }
-   track.SetIsNoise(kTRUE);
-   tracks.push_back(track);
+   ntrack.SetIsNoise(kTRUE);
+   tracks.push_back(ntrack);
 
    for (auto &track : tracks)
      if(track.GetHitArray()->size()>0)SetTrackInitialParameters(track);

@@ -1,5 +1,5 @@
-void rundigi_sim_el(
-   TString mcFile = "./data/attpcsim_el_20deg.root",
+void rundigi_sim(
+   TString mcFile = "./data/attpcsim.root",
    TString mapParFile =
       "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
    TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
@@ -20,10 +20,10 @@ void rundigi_sim_el(
    FairRunAna *fRun = new FairRunAna();
    fRun->SetInputFile(mcFile);
    fRun->SetGeomFile(
-      "/user/e20020/ATTPCROOTv2_e20020_dev/geometry/ATTPC_D1bar_v2_geomanager.root");
-   fRun->SetOutputFile("output_digi_el_20deg.root");
+      "/mnt/simulations/attpcroot/fair_install_2020/ATTPCROOTv2/geometry/ATTPC_He1bar_v2_geomanager.root");
+   fRun->SetOutputFile("output_digi.root");
 
-   TString parameterFile = "ATTPC.e20009_sim.par";
+   TString parameterFile = "ATTPC.e20020_sim.par";
    TString digiParFile = dir + "/parameters/" + parameterFile;
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
@@ -53,8 +53,8 @@ void rundigi_sim_el(
    AtPRAtask *praTask = new AtPRAtask();
    praTask->SetPersistence(kTRUE);
 
-   // AtFitterTask *fitterTask = new AtFitterTask();
-   // fitterTask->SetPersistence(kTRUE);
+   AtFitterTask *fitterTask = new AtFitterTask();
+   fitterTask->SetPersistence(kTRUE);
 
    /*ATTriggerTask *trigTask = new ATTriggerTask();
    trigTask  ->  SetAtMap(mapParFile);
@@ -70,7 +70,7 @@ void rundigi_sim_el(
    // __ Init and run ___________________________________
 
    fRun->Init();
-   fRun->Run(0, 2);
+   fRun->Run(0,10000);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;

@@ -1,12 +1,11 @@
-void run_eve_el_20(TString InputDataFile = "output_digi_el_20deg.root",
-                   TString OutputDataFile = "output_el.reco_display.root",
-                   TString unpackDir = "/Simulation/ATTPC/10Be_dp/")
+void run_eve(TString InputDataFile = "output_digi.root", TString OutputDataFile = "output.reco_display.root",
+             TString unpackDir = "/Simulation/ATTPC/22Mg_aa/")
 {
    FairLogger *fLogger = FairLogger::GetLogger();
    fLogger->SetLogToScreen(kTRUE);
    fLogger->SetLogVerbosityLevel("MEDIUM");
    TString dir = getenv("VMCWORKDIR");
-   TString geoFile = "ATTPC_D1bar_v2_geomanager.root";
+   TString geoFile = "ATTPC_He1bar_v2_geomanager.root";
 
    TString InputDataPath = dir + "/macro/" + unpackDir + InputDataFile;
    TString OutputDataPath = dir + "/macro/" + unpackDir + OutputDataFile;

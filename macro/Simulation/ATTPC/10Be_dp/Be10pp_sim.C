@@ -4,10 +4,10 @@ void Be10pp_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile ="./data/attpcsim_el_20deg.root";
+  TString outFile = "./data/attpcsim_el_20deg.root";
 
   // Parameter file name
-  TString parFile="./data/attpcpar_el_20deg.root";
+  TString parFile = "./data/attpcpar_el_20deg.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -154,10 +154,8 @@ void Be10pp_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
                   Mass.push_back(2.01410177785);//uma
 		  ExE.push_back(0.0);//In MeV
 
-
-                  Double_t ThetaMinCMS = 20.0;
-                  Double_t ThetaMaxCMS = 20.0;
-
+        Double_t ThetaMinCMS = 20.0;
+        Double_t ThetaMaxCMS = 20.0;
 
         AtTPC2Body* TwoBody = new AtTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner,ThetaMinCMS,ThetaMaxCMS);
         primGen->AddGenerator(TwoBody);

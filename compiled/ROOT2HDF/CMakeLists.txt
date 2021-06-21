@@ -41,7 +41,7 @@ link_directories( ${FAIRROOT_LIBRARY_DIR}
                   )
 
 add_library(R2H SHARED R2HMain.cc)
-target_link_libraries(R2H ${ROOT_LIBRARIES} ${HDF5_CXX_LIBRARIES} ${HDF5_CXX_HL_LIBRARIES} ${HDF5_HL_LIBRARIES} ATTPCReco FairTools Base)
+target_link_libraries(R2H ${ROOT_LIBRARIES} ${HDF5_CXX_LIBRARIES} ${HDF5_CXX_HL_LIBRARIES} ${HDF5_HL_LIBRARIES} AtReconstruction FairTools Base)
 
 add_executable(R2HExe R2HMain.cc)
 target_link_libraries (R2HExe R2H
@@ -63,7 +63,7 @@ RIO
 Thread
 Tree
 TreePlayer
-ATTPCReco
+AtReconstruction
 AtTpcMap
 FairTools
 Base)
