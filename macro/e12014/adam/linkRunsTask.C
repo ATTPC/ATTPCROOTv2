@@ -1,9 +1,8 @@
-// Unpacks tpc files from /mnt/rawdata/ to /mnt/analysis/e12014/TPC/unpacked
 
-// Requires the TPC run number
-void unpack(int runNumber)
+void linkRunsTask(int tpcRunNum = 118, int nsclRunNum = 310)
 {
-   // Load the library for unpacking and reconstruction
+
+
    gSystem->Load("libAtReconstruction.so");
 
    TStopwatch timer;
@@ -11,13 +10,15 @@ void unpack(int runNumber)
 
    // Set the input/output directories
    TString inputDir = "/mnt/rawdata/e12014_attpc/h5";
-   TString outDir = "/mnt/analysis/e12014/TPC/unpacked";
+   TString outDir = "./";
    
    // Set the in/out files
-   TString inputFile = inputDir + TString::Format("/run_%04d.h5", runNumber);
-   TString outputFile = outDir + TString::Format("/run_%04d.root", runNumber);
+   TString inputFile = inputDir + TString::Format("/run_%04d.h5", tpcRunNum);
+   TString outputFile = outDir + TString::Format("/run_%04d.root", tpcRunNum);
+   TString evtOutputFile = outDir + TString::Format("/evtRun_%04d.root", tpcRunNum);
+   TString nsclTreeFile = TString::Format("/mnt/analysis/e12014/HiRAEVT/mapped/mappedRun-%d.root", nsclRunNum);
 
-   std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
+   std::cout << "Unpacking run " << tpcRunNum << " from: " << inputFile << std::endl;
    std::cout << "Saving in: " << outputFile << std::endl;
 
    // Set the mapping for the TPC
@@ -47,7 +48,7 @@ void unpack(int runNumber)
 
    // Create the unpacker task
    AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
-   HDFParserTask->SetPersistence(kTRUE);
+   HDFParserTask->SetPersistence(kFALSE);
    HDFParserTask->SetAtTPCMap(scriptdir.Data());
    HDFParserTask->SetFileName(inputFile.Data());
    HDFParserTask->SetOldFormat(false);
@@ -64,26 +65,19 @@ void unpack(int runNumber)
    hash = HDFParserTask->CalculateHash(10, 0, 2, 34);
    HDFParserTask->SetAuxChannel(hash, "IC");
 
-   AtPSASimple2 *psa = new AtPSASimple2();
-   psa->SetThreshold(35);
-   psa->SetMaxFinder();
+   AtLinkDAQTask *linker = new AtLinkDAQTask();
+   linker->SetPersistance(true);
+   auto success = linker->SetInputTree(nsclTreeFile, "E12014");
+   linker->SetEvtOutputFile(evtOutputFile);
+   linker->SetEvtTimestamp("tstamp");
+   linker->SetTpcTimestampIndex(1);
+   linker->SetSearchMean(1);
+   linker->SetSearchRadius(2);
 
-   // Create PSA task
-   AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetPersistence(kTRUE);
-
-   AtRansacTask *RansacTask = new AtRansacTask();
-   RansacTask->SetPersistence(kTRUE);
-   RansacTask->SetVerbose(kFALSE);
-   RansacTask->SetDistanceThreshold(20.0);
-   RansacTask->SetTiltAngle(0);
-   RansacTask->SetMinHitsLine(10);
-   RansacTask->SetFullMode();
-
+   
    // Add unpacker to the run
    run->AddTask(HDFParserTask);
-   run->AddTask(psaTask);
-   //run->AddTask(RansacTask);
+   run->AddTask(linker);
 
    run->Init();
 
@@ -91,8 +85,8 @@ void unpack(int runNumber)
    auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
    // numEvents = 1700;//217;
-   //numEvents = 100;
-
+   //numEvents = 10;
+   
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
    // return;
@@ -112,3 +106,5 @@ void unpack(int runNumber)
 
    return 0;
 }
+
+

@@ -242,6 +242,8 @@ find_package2(PUBLIC CUDA)
 find_package2(PUBLIC Eigen3 CONFIG)
 find_package2(PUBLIC FLANN)
 find_package2(PUBLIC VTK)
+find_package2(PUBLIC HiRAEVT REQUIRED)
+message("Found HiRAEVT: ${HiRAEVT_FOUND}")
 
 # Possibly unused packages? #
 #find_package(GENERATORS REQUIRED) this was just looking for pythia6...
