@@ -2,7 +2,7 @@
 module purge
 module load fairroot/18.6.3
 #module load xerces/3.2.3
-source build/config.sh
+source build/config.sh -p
 
 
 

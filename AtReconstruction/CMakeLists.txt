@@ -34,6 +34,7 @@ Set(DEPENDENCIES
   Base
   FairTools
   XMLParser
+  AtAnalysis
   AtTpcMap
   AtParameter
   AtTpc
@@ -190,6 +191,16 @@ if(GENFIT2_FOUND)
     )
   set(DEPENDENCIES ${DEPENDENCIES}
     ${GENFIT2_LIBRARY_DIR}/libgenfit2.so
+    )
+endif()
+
+if(HiRAEVT_FOUND)
+  MESSAGE("${Green} libAtTPCReco - Building HiRAEVT classes ${ColourReset} ")
+  set(SRCS ${SRCS}
+    AtLinkDAQTask.cxx
+    )
+  set(DEPENDENCIES ${DEPENDENCIES}
+    HTDetectors
     )
 endif()
 

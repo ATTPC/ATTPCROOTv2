@@ -303,6 +303,7 @@ add_subdirectory (AtParameter)
 add_subdirectory (AtDigitization)
 add_subdirectory (AtS800)
 add_subdirectory (AtApollo)
+add_subdirectory (AtAnalysis)
 
 if (PCL_FOUND)
   add_subdirectory (AtEventDisplay)

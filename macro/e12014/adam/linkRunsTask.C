@@ -34,7 +34,7 @@ void linkRunsTask(int tpcRunNum = 118, int nsclRunNum = 310)
    TString geoManFile = dir + "/geometry/ATTPC_v1.1.root";
 
    // Create a run
-   FairRunAna *run = new FairRunAna();
+   AtRunAna *run = new AtRunAna();
    run->SetOutputFile(outputFile);
    run->SetGeomFile(geoManFile);
 
@@ -73,8 +73,8 @@ void linkRunsTask(int tpcRunNum = 118, int nsclRunNum = 310)
    linker->SetTpcTimestampIndex(1);
    linker->SetSearchMean(1);
    linker->SetSearchRadius(2);
+   linker->SetCorruptedSearchRadius(1000);
 
-   
    // Add unpacker to the run
    run->AddTask(HDFParserTask);
    run->AddTask(linker);
@@ -84,9 +84,9 @@ void linkRunsTask(int tpcRunNum = 118, int nsclRunNum = 310)
    // Get the number of events and unpack the whole run
    auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
-   // numEvents = 1700;//217;
-   //numEvents = 10;
-   
+   // numEvents = 5000;//217;
+   // numEvents = 10;
+
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
    // return;
