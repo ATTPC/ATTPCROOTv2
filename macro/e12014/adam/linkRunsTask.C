@@ -1,8 +1,8 @@
 
+bool checkEvent(AtRawEvent *evt);
+
 void linkRunsTask(int tpcRunNum = 118, int nsclRunNum = 310)
 {
-
-
    gSystem->Load("libAtReconstruction.so");
 
    TStopwatch timer;
@@ -48,7 +48,7 @@ void linkRunsTask(int tpcRunNum = 118, int nsclRunNum = 310)
 
    // Create the unpacker task
    AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
-   HDFParserTask->SetPersistence(kFALSE);
+   HDFParserTask->SetPersistence(kTRUE);
    HDFParserTask->SetAtTPCMap(scriptdir.Data());
    HDFParserTask->SetFileName(inputFile.Data());
    HDFParserTask->SetOldFormat(false);
@@ -65,8 +65,10 @@ void linkRunsTask(int tpcRunNum = 118, int nsclRunNum = 310)
    hash = HDFParserTask->CalculateHash(10, 0, 2, 34);
    HDFParserTask->SetAuxChannel(hash, "IC");
 
+   AtDataReductionTask *reducer = new AtDataReductionTask();
+   reducer->SetReductionFunction(&checkEvent);
+
    AtLinkDAQTask *linker = new AtLinkDAQTask();
-   linker->SetPersistance(true);
    auto success = linker->SetInputTree(nsclTreeFile, "E12014");
    linker->SetEvtOutputFile(evtOutputFile);
    linker->SetEvtTimestamp("tstamp");
@@ -77,6 +79,7 @@ void linkRunsTask(int tpcRunNum = 118, int nsclRunNum = 310)
 
    // Add unpacker to the run
    run->AddTask(HDFParserTask);
+   run->AddTask(reducer);
    run->AddTask(linker);
 
    run->Init();
@@ -107,4 +110,7 @@ void linkRunsTask(int tpcRunNum = 118, int nsclRunNum = 310)
    return 0;
 }
 
-
+bool checkEvent(AtRawEvent *evt)
+{
+   return (evt->GetNumPads() > 300);
+}

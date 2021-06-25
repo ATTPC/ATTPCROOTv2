@@ -43,10 +43,7 @@ class AtLinkDAQTask : public FairTask {
 private:
    // Info for AT-TPC Tree
    TClonesArray *fInputEventArray; // AtRawEvent
-   TClonesArray *fOutputEventArray; // AtRawEvent
-   TClonesArray *fMCPointArray;    // AtRawEvent
    TString fInputBranchName;       // Name if AtRawEvent branch
-   TString fOutputBranchName;      // Name of output AtRawEventBranch
    AtRawEvent *fRawEvent;
 
    // Info for HiRAEVT Tree input

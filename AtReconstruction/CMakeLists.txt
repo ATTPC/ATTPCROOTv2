@@ -125,7 +125,8 @@ set(SRCS
   AtHDFParserTask.cxx
   AtPSAtask.cxx
   AtFilterTask.cxx
-
+  AtDataReductionTask.cxx
+  
   #AtPhiRecoTask.cxx
   #AtVMEUnpackTask.cxx
   )

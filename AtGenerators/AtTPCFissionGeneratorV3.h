@@ -37,8 +37,8 @@ private:
 
    // Variables read from the file for each event
    std::vector<VecXYZE> *fDecayFrags; //!
-   std::vector<Int_t> *fA; //!
-   std::vector<Int_t> *fZ; //!
+   std::vector<Int_t> *fA;            //!
+   std::vector<Int_t> *fZ;            //!
 
    Int_t fNumEvents; //! Number of unique fission simualtion events
    Int_t fCurrEvent; //! Track what event we are at. Reset to 0 if we flow over the number of events in the tree

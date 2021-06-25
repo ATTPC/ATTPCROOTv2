@@ -13,13 +13,12 @@
 #include "AtRawEvent.h"
 
 AtLinkDAQTask::AtLinkDAQTask()
-   : fInputBranchName("AtRawEvent"), fOutputBranchName("AtRawEventAligned"), fSearchMean(0), fSearchRadius(0),
-     fOldTpcTimestamp(0), fOldEvtTimestamp(0), kPersistent(kFALSE), fEvtOutputFileName(""), fEvtTreeIndex(0),
-     kFirstEvent(kTRUE), evtTree(nullptr), fDifferenceOffset(0)
+   : fInputBranchName("AtRawEvent"), fSearchMean(0), fSearchRadius(0), fOldTpcTimestamp(0), fOldEvtTimestamp(0),
+     kPersistent(kFALSE), fEvtOutputFileName(""), fEvtTreeIndex(0), kFirstEvent(kTRUE), evtTree(nullptr),
+     fDifferenceOffset(0)
 {
    // Initialize pointers for reading and writing trees
    fEvtTS = new HTTimestamp();
-   fOutputEventArray = new TClonesArray("AtRawEvent");
 }
 
 AtLinkDAQTask::~AtLinkDAQTask() {}
@@ -67,15 +66,6 @@ InitStatus AtLinkDAQTask::Init()
       LOG(ERROR) << "Cannot find AtRawEvent array in branch " << fInputBranchName << "!";
       return kERROR;
    }
-   // Retrieving simulated points, if available
-   fMCPointArray = (TClonesArray *)ioMan->GetObject("AtTpcPoint");
-   if (fMCPointArray != 0) {
-      LOG(INFO) << " Simulated points found (simulation analysis) ";
-   } else if (fMCPointArray != 0) {
-      LOG(INFO) << " Simulated points not found (experimental data analysis) ";
-   }
-
-   ioMan->Register(fOutputBranchName, "AtTPC", fOutputEventArray, kPersistent);
 
    // Set the branch addresses for the HiRAEVT detectors
    if (evtTree == nullptr) {
@@ -183,7 +173,6 @@ void AtLinkDAQTask::Exec(Option_t *opt)
    ResetFlags();
    // Should already have loaded the event from iomanager. If this is the
    // first event then set the old timestamp and continue without filling
-   fOutputEventArray->Delete();
    if (fInputEventArray->GetEntriesFast() == 0)
       return;
    fRawEvent = dynamic_cast<AtRawEvent *>(fInputEventArray->At(0));
