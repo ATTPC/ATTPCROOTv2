@@ -3,7 +3,7 @@
 Set(LIBRARY_NAME AtReconstruction)
 Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
-
+message("GENFIT2 INCLUDES: ${GENFIT2_INCLUDE_DIR}")
 set(INCLUDE_DIRECTORIES
 ${BASE_INCLUDE_DIRECTORIES}
 ${GENFIT2_INCLUDE_DIR}
@@ -34,6 +34,7 @@ Set(DEPENDENCIES
   Base
   FairTools
   XMLParser
+  AtAnalysis
   AtTpcMap
   AtParameter
   AtTpc
@@ -124,7 +125,8 @@ set(SRCS
   AtHDFParserTask.cxx
   AtPSAtask.cxx
   AtFilterTask.cxx
-
+  AtDataReductionTask.cxx
+  
   #AtPhiRecoTask.cxx
   #AtVMEUnpackTask.cxx
   )
@@ -190,6 +192,16 @@ if(GENFIT2_FOUND)
     )
   set(DEPENDENCIES ${DEPENDENCIES}
     ${GENFIT2_LIBRARY_DIR}/libgenfit2.so
+    )
+endif()
+
+if(HiRAEVT_FOUND)
+  MESSAGE("${Green} libAtTPCReco - Building HiRAEVT classes ${ColourReset} ")
+  set(SRCS ${SRCS}
+    AtLinkDAQTask.cxx
+    )
+  set(DEPENDENCIES ${DEPENDENCIES}
+    HTDetectors
     )
 endif()
 

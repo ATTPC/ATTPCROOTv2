@@ -41,7 +41,7 @@ public:
    Double_t GetDriftLength();   ///< returns the drift length in mm
    Int_t GetYDivider();         ///< returns the slice divider
 
-   virtual Bool_t getParams(FairParamList *paramList);
+   virtual Bool_t getParams(FairParamList *paramList) override;
 
    TString GetFile(Int_t fileNum);
 
@@ -67,7 +67,7 @@ public:
    Int_t GetPeakingTime();
 
    // Setters
-   virtual void putParams(FairParamList *paramList);
+   virtual void putParams(FairParamList *paramList) override;
 
    // Main methods
 
@@ -118,7 +118,7 @@ private:
    Double_t fGETGain;  //!< Gain from get electronics in fC
    Int_t fPeakingTime; //!< Peaking time of the electronics in ns
 
-   ClassDef(AtDigiPar, 1);
+   ClassDefOverride(AtDigiPar, 2);
 };
 
 #endif

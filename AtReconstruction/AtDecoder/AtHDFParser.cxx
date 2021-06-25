@@ -155,9 +155,9 @@ std::string AtHDFParser::get_event_name(std::size_t idx)
    }
 }
 
-std::vector<int64_t> AtHDFParser::get_header(std::string headerName)
+std::vector<uint64_t> AtHDFParser::get_header(std::string headerName)
 {
-   std::vector<int64_t> retVec;
+   std::vector<uint64_t> retVec;
 
    auto dataset_dims = open_dataset(_group, headerName.c_str());
    if (std::get<0>(dataset_dims) == 0)
@@ -168,7 +168,7 @@ std::vector<int64_t> AtHDFParser::get_header(std::string headerName)
    // Get the length of the header
    auto len = std::get<1>(dataset_dims).at(0);
 
-   int64_t *data = new int64_t[len];
+   uint64_t *data = new uint64_t[len];
    auto status = H5Dread(_dataset, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
 
    // Add read data to the vector and return it

@@ -239,9 +239,11 @@ find_package2(PUBLIC GEANT4DATA)
 find_package2(PUBLIC GENFIT2)
 find_package2(PUBLIC OpenMP)
 find_package2(PUBLIC CUDA)
-find_package2(PUBLIC Eigen CONFIG)
+find_package2(PUBLIC Eigen3 CONFIG)
 find_package2(PUBLIC FLANN)
 find_package2(PUBLIC VTK)
+find_package2(PUBLIC HiRAEVT REQUIRED)
+message("Found HiRAEVT: ${HiRAEVT_FOUND}")
 
 # Possibly unused packages? #
 #find_package(GENERATORS REQUIRED) this was just looking for pythia6...
@@ -301,6 +303,7 @@ add_subdirectory (AtParameter)
 add_subdirectory (AtDigitization)
 add_subdirectory (AtS800)
 add_subdirectory (AtApollo)
+add_subdirectory (AtAnalysis)
 
 if (PCL_FOUND)
   add_subdirectory (AtEventDisplay)
