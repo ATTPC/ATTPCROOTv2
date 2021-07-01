@@ -1,4 +1,4 @@
-void Be10pp_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
+void Be10pp_sim(Int_t nEvents = 200, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");

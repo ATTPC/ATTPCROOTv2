@@ -1,5 +1,5 @@
 void rundigi_sim(
-   TString mcFile = "./data/attpcsim.root",
+   TString mcFile = "./data/attpcsim_ctest_in.root",
    TString mapParFile =
       "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
    TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
@@ -21,7 +21,7 @@ void rundigi_sim(
    fRun->SetInputFile(mcFile);
    fRun->SetGeomFile(
       "/user/e20020/ATTPCROOTv2_e20020_dev/geometry/ATTPC_D1bar_v2_geomanager.root");
-   fRun->SetOutputFile("output_digi.root");
+   fRun->SetOutputFile("output_digi_ctest_in.root");
 
    TString parameterFile = "ATTPC.e20009_sim.par";
    TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -70,7 +70,7 @@ void rundigi_sim(
    // __ Init and run ___________________________________
 
    fRun->Init();
-   fRun->Run(0, 5000);
+   fRun->Run(0,1000);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;

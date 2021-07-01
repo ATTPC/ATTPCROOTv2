@@ -33,7 +33,8 @@ protected:
    void SetTrackCurvature(AtTrack &track);
    void Clusterize(AtTrack &track);
    void Clusterize3D(AtTrack &track);
-
+  void Clusterize3D(AtTrack &track,Float_t distance, Float_t radius);
+  
    ClassDef(AtPRA, 1)
 };
 

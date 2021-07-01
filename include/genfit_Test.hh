@@ -10,8 +10,6 @@
 #include "EventDisplay.h"
 #include "KalmanFitStatus.h"
 #include "FitStatus.h"
-#include "AbsFitterInfo.h"
-#include "KalmanFitterInfo.h"
 
 #include <ios>
 #include <iostream>
@@ -72,7 +70,3 @@
 #include "Math/GenVector/RotationY.h"
 #include "Math/GenVector/RotationZ.h"
 #include "Math/GenVector/RotationZYX.h"
-
-std::tuple<Double_t, Double_t>
-GetMomFromBrho(Double_t A, Double_t Z, Double_t brho); ///< Returns momentum (in GeV) from Brho assuming M (amu) and Z;
-

@@ -1,17 +1,7 @@
-#include "AbsKalmanFitter.h"
-#include "KalmanFitterRefTrack.h"
-#include "DAF.h"
-#include "ConstField.h"
-#include "FieldManager.h"
-#include "MaterialEffects.h"
-#include "TGeoMaterialInterface.h"
-#include "MeasurementFactory.h"
-#include "MeasurementProducer.h"
-#include "EventDisplay.h"
-#include "KalmanFitStatus.h"
-#include "FitStatus.h"
-#include "AbsFitterInfo.h"
-#include "KalmanFitterInfo.h"
+#include <hdf5.h>
+#include "H5Cpp.h"
+#include <H5Exception.h>
+#include "H5File.h"
 
 #include <ios>
 #include <iostream>
@@ -29,23 +19,14 @@
 #include "TTreeReaderValue.h"
 #include "TSystem.h"
 #include "TH1F.h"
-#include "TH2F.h"
 #include "TCanvas.h"
 #include "TStopwatch.h"
-#include "TGeoManager.h"
 
-#include "FairRootManager.h"
-#include "FairLogger.h"
 #include "FairRun.h"
 #include "FairRunAna.h"
 
-#include "AtTpcPoint.h"
 #include "AtEvent.h"
-#include "AtPad.h"
 #include "AtHit.h"
-#include "AtTrack.h"
-#include "AtPatternEvent.h"
-
 
 //ROOT
 #include "TGraph.h"
@@ -73,6 +54,45 @@
 #include "Math/GenVector/RotationZ.h"
 #include "Math/GenVector/RotationZYX.h"
 
-std::tuple<Double_t, Double_t>
-GetMomFromBrho(Double_t A, Double_t Z, Double_t brho); ///< Returns momentum (in GeV) from Brho assuming M (amu) and Z;
+hid_t       	      _group;
+hid_t       	      _dataset;
+
+enum class IO_MODE {
+    READ,
+    WRITE
+};
+
+typedef struct ATHit_t {
+    double    x;
+    double    y;
+    double    z;
+    int       t;
+    double    A;
+    int       trackID;
+    int       pointIDMC;
+    int       trackIDMC;
+    double    energyMC;
+    double    elossMC;
+    double    angleMC;	
+    int       AMC;
+    int       ZMC; 
+
+} ATHit_t;
+
+const H5std_string MEMBER1( "x" );
+const H5std_string MEMBER2( "y" );
+const H5std_string MEMBER3( "z" );
+const H5std_string MEMBER4( "t" );
+const H5std_string MEMBER5( "A" );
+const H5std_string MEMBER6( "trackID" );
+const H5std_string MEMBER7( "pointIDMC" );
+const H5std_string MEMBER8( "energyMC" );
+const H5std_string MEMBER9( "elossMC" );
+const H5std_string MEMBER10( "angleMC" );
+const H5std_string MEMBER11( "AMC" );
+const H5std_string MEMBER12( "ZMC" );
+
+
+using namespace H5;
+
 

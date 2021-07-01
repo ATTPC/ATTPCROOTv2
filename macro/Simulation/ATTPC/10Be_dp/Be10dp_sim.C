@@ -1,13 +1,13 @@
-void Be10dp_sim(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
+void Be10dp_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile ="./data/attpcsim.root";
+  TString outFile ="./data/attpcsim_ctest_in.root";
 
   // Parameter file name
-  TString parFile="./data/attpcpar.root";
+  TString parFile="./data/attpcpar_ctest_in.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -141,7 +141,7 @@ void Be10dp_sim(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
           	  Pyp.push_back(0.0);
           	  Pzp.push_back(0.0);
           	  Mass.push_back(11.021657749);//uma
-          	  ExE.push_back(0.0);
+          	  ExE.push_back(0.320);
 
 
                   // ---- Recoil -----
@@ -154,8 +154,8 @@ void Be10dp_sim(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
                   Mass.push_back(1.00727646);//uma
 		  ExE.push_back(0.0);//In MeV
 
-        Double_t ThetaMinCMS = 10.0;
-        Double_t ThetaMaxCMS = 20.0;
+        Double_t ThetaMinCMS = 20.0;
+        Double_t ThetaMaxCMS = 40.0;
 
         AtTPC2Body* TwoBody = new AtTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner,ThetaMinCMS,ThetaMaxCMS);
         primGen->AddGenerator(TwoBody);
