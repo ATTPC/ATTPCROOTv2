@@ -83,9 +83,7 @@ int main(int argc, char* argv[])
       dataset->write(hits, mtype1);
 
       delete dataset;
-
-		   }
-
+   }
 
    delete HDFfile;
 

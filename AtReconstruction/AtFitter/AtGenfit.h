@@ -48,8 +48,8 @@ public:
    inline void SetMass(Float_t mass) { fMass = mass; }
    inline void SetAtomicNumber(Int_t znumber) { fAtomicNumber = znumber; }
    inline void SetNumFitPoints(Float_t points) { fNumFitPoints = points; }
-  inline void SetVerbosityLevel(Int_t verbosity) {fVerbosity = verbosity; }
-  
+   inline void SetVerbosityLevel(Int_t verbosity) { fVerbosity = verbosity; }
+
    TClonesArray *GetGenfitTrackArray();
 
 private:
@@ -67,8 +67,8 @@ private:
    Float_t fMass;          //<! Particle mass in atomic mass unit
    Int_t fAtomicNumber;    //<! Particle Atomic number Z
    Float_t fNumFitPoints;  //<! % of processed track points for fit
-  Int_t fVerbosity;        //<! Fit verbosity
-  
+   Int_t fVerbosity;       //<! Fit verbosity
+
    genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement> *fMeasurementProducer;
    genfit::MeasurementFactory<genfit::AbsMeasurement> *fMeasurementFactory;
 
