@@ -1,9 +1,7 @@
-void rundigi_sim_el(
-   TString mcFile = "./data/attpcsim_gs.root",
-   TString mapParFile =
-      "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
-   TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
+void runreco_sim(TString mcFile = "output_digi_dp_gs.root")
 {
+   TString mapParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml";
+   TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par";
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
    timer.Start();
@@ -21,7 +19,7 @@ void rundigi_sim_el(
    fRun->SetInputFile(mcFile);
    fRun->SetGeomFile(
       "/user/e20020/ATTPCROOTv2_e20020_dev/geometry/ATTPC_D1bar_v2_geomanager.root");
-   fRun->SetOutputFile("output_digi_gs.root");
+   fRun->SetOutputFile("output_reco_dp_gs.root");
 
    TString parameterFile = "ATTPC.e20009_sim.par";
    TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -31,41 +29,15 @@ void rundigi_sim_el(
    parIo1->open(digiParFile.Data(), "in");
    rtdb->setFirstInput(parIo1);
 
-   // __ AT digi tasks___________________________________
-
-   AtClusterizeTask *clusterizer = new AtClusterizeTask();
-   clusterizer->SetPersistence(kFALSE);
-
-   AtPulseTask *pulse = new AtPulseTask();
-   pulse->SetPersistence(kTRUE);
-   pulse->SetSaveMCInfo();
-
-   AtPSASimple2 *psa = new AtPSASimple2();
-   // psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
-   // psa -> SetBaseCorrection(kFALSE);
-   // psa -> SetTimeCorrection(kFALSE);
-
-   AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetPersistence(kTRUE);
-   psa->SetThreshold(3);
-   psa->SetMaxFinder();
-
    AtPRAtask *praTask = new AtPRAtask();
    praTask->SetPersistence(kTRUE);
 
    // AtFitterTask *fitterTask = new AtFitterTask();
    // fitterTask->SetPersistence(kTRUE);
 
-   /*ATTriggerTask *trigTask = new ATTriggerTask();
-   trigTask  ->  SetAtMap(mapParFile);
-   trigTask  ->  SetPersistence(kTRUE);*/
-
-   fRun->AddTask(clusterizer);
-   fRun->AddTask(pulse);
-   fRun->AddTask(psaTask);
-   fRun->AddTask(praTask);
+    fRun->AddTask(praTask);
    // fRun->AddTask(fitterTask);
-   // fRun -> AddTask(trigTask);
+  
 
    // __ Init and run ___________________________________
 

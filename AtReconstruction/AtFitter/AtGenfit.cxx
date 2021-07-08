@@ -291,10 +291,10 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
 
    try {
       fKalmanFitter->processTrackWithRep(gfTrack, trackRep, false);
-         } catch (genfit::Exception &e) {
-            std::cout << " AtGenfit -  Exception caught from Kalman Fitter : " << e.what() << "\n";
-            return nullptr;
-         }
+   } catch (genfit::Exception &e) {
+      std::cout << " AtGenfit -  Exception caught from Kalman Fitter : " << e.what() << "\n";
+      return nullptr;
+   }
 
          // gfTrack->prune("FCW");
 

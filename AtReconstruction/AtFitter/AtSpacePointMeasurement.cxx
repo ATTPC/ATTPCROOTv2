@@ -38,7 +38,7 @@ ClassImp(genfit::AtSpacepointMeasurement)
 
       rawHitCoords_(0) = pos.X() / 10.;
       rawHitCoords_(1) = pos.Y() / 10.;
-      rawHitCoords_(2) = (pos.Z() / 10.);
+      rawHitCoords_(2) = pos.Z() / 10.;
 
       TMatrixDSym cov(3);
 
@@ -46,14 +46,14 @@ ClassImp(genfit::AtSpacepointMeasurement)
       cov(1,1) = detHit -> GetDy();
       cov(2,2) = detHit -> GetDz();*/  //TODO: Compute position variance
 
-      cov(0, 1) = 0;
-      cov(1, 2) = 0;
-      cov(2, 0) = 0;
+      cov(0, 1) = 0.0;
+      cov(1, 2) = 0.0;
+      cov(2, 0) = 0.0;
 
       // Forced covariance matrix to be constant. Need to study later.
-      cov(0, 0) = 0.04;
-      cov(1, 1) = 0.01;
-      cov(2, 2) = 0.04;
+      cov(0, 0) = 0.2/10.0;
+      cov(1, 1) = 0.2/10.0;
+      cov(2, 2) = 1.28/10.0;
 
       rawHitCov_ = cov;
       detId_ = hit->getDetId();

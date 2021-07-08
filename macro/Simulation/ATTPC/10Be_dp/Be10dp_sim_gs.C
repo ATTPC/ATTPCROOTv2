@@ -1,13 +1,13 @@
-void Be10dp_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
+void Be10dp_sim_gs(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile = "./data/attpcsim_ctest_520.root";
+  TString outFile = "./data/attpcsim_dp_in.root";
 
   // Parameter file name
-  TString parFile = "./data/attpcpar_ctest_520.root";
+  TString parFile = "./data/attpcpar_dp_in.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -141,7 +141,7 @@ void Be10dp_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
           	  Pyp.push_back(0.0);
           	  Pzp.push_back(0.0);
           	  Mass.push_back(11.021657749);//uma
-              ExE.push_back(0.0);
+              ExE.push_back(0.320);
 
               // ---- Recoil -----
               Zp.push_back(1); // p  TRACKID=2

@@ -1,5 +1,5 @@
-void rundigi_sim_el(
-   TString mcFile = "./data/attpcsim_gs.root",
+void rundigi_sim_dp_gs(
+   TString mcFile = "./data/attpcsim_dp_in.root",
    TString mapParFile =
       "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
    TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
@@ -21,7 +21,7 @@ void rundigi_sim_el(
    fRun->SetInputFile(mcFile);
    fRun->SetGeomFile(
       "/user/e20020/ATTPCROOTv2_e20020_dev/geometry/ATTPC_D1bar_v2_geomanager.root");
-   fRun->SetOutputFile("output_digi_gs.root");
+   fRun->SetOutputFile("output_digi_dp_in.root");
 
    TString parameterFile = "ATTPC.e20009_sim.par";
    TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -63,14 +63,14 @@ void rundigi_sim_el(
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
    fRun->AddTask(psaTask);
-   fRun->AddTask(praTask);
+   //fRun->AddTask(praTask);
    // fRun->AddTask(fitterTask);
    // fRun -> AddTask(trigTask);
 
    // __ Init and run ___________________________________
 
    fRun->Init();
-   fRun->Run(0,10000);
+   fRun->Run(0, 10000);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;

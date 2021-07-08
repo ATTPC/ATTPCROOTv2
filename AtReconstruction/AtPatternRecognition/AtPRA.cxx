@@ -228,6 +228,14 @@ void AtPATTERN::AtPRA::Clusterize3D(AtTrack &track, Float_t distance, Float_t ra
 
        }*/
 
+   //Diffusion coefficients (TODO: Get them from the parameter file)
+   Double_t driftVel      = 1.0; //cm/us
+   Double_t samplingRate  = 0.320;//us
+   Double_t d_t           = 0.0009; //cm^2/us
+   Double_t d_l           = 0.0009; //cm^2/us
+   Double_t D_T           = TMath::Sqrt((2.0*d_t)/driftVel); 
+   Double_t D_L           = TMath::Sqrt((2.0*d_l)/driftVel);
+     
    if (hitArray->size() > 0) {
 
       TVector3 refPos = hitArray->at(0).GetPosition(); // First hit
@@ -261,23 +269,36 @@ void AtPATTERN::AtPRA::Clusterize3D(AtTrack &track, Float_t distance, Float_t ra
 
             if (hitTBArray.size() > 0) {
                double x = 0, y = 0, z = 0;
-               int timeStamp;
+	       double sigma_x = 0, sigma_y = 0, sigma_z = 0;
+	       
+	       int timeStamp;
                std::shared_ptr<AtHitCluster> hitCluster = std::make_shared<AtHitCluster>();
                hitCluster->SetIsClustered();
                hitCluster->SetClusterID(clusterID);
                Double_t hitQ = 0.0;
-               std::for_each(hitTBArray.begin(), hitTBArray.end(), [&x, &y, &z, &hitQ, &timeStamp](AtHit &hitInQ) {
-                  TVector3 pos = hitInQ.GetPosition();
+               std::for_each(hitTBArray.begin(), hitTBArray.end(), [&x, &y, &z, &hitQ, &timeStamp,&sigma_x,&sigma_y,&sigma_z,&D_T,&D_L,&driftVel,&samplingRate](AtHit &hitInQ) {
+		  TVector3 pos = hitInQ.GetPosition();
                   x += pos.X() * hitInQ.GetCharge();
                   y += pos.Y() * hitInQ.GetCharge();
                   z += pos.Z();
                   hitQ += hitInQ.GetCharge();
                   timeStamp += hitInQ.GetTimeStamp();
+		  
+								     //Calculation of variance (DOI: 10.1051/,00010 (2017)715001EPJ Web of Conferences50epjconf/2010010)
+		  sigma_x += hitInQ.GetCharge()*TMath::Sqrt( TMath::Power(0.2,2)  +  pos.Z()*TMath::Power(D_T,2));//0.2 mm of position resolution
+		  sigma_y += sigma_x;
+		  sigma_z += TMath::Sqrt( (1.0/6.0)*TMath::Power(driftVel*samplingRate,2)  +  pos.Z()*TMath::Power(D_L,2));
+
+
                });
                x /= hitQ;
                y /= hitQ;
                z /= hitTBArray.size();
                timeStamp /= std::round(timeStamp);
+
+	       sigma_x/= hitQ;
+	       sigma_y/= hitQ;
+	       sigma_z/= hitTBArray.size();
 
                TVector3 clustPos(x, y, z);
                Bool_t checkDistance = kTRUE;
@@ -300,9 +321,9 @@ void AtPATTERN::AtPRA::Clusterize3D(AtTrack &track, Float_t distance, Float_t ra
                   cov(0, 1) = 0;
                   cov(1, 2) = 0;
                   cov(2, 0) = 0;
-                  cov(0, 0) = 0.04;
-                  cov(1, 1) = 0.04;
-                  cov(2, 2) = 0.01;
+                  cov(0, 0) = TMath::Power(sigma_x,2);//0.04;
+		  cov(1, 1) = TMath::Power(sigma_y,2);//0.04;
+		  cov(2, 2) = TMath::Power(sigma_z,2);//0.01;
                   hitCluster->SetCovMatrix(cov);
                   ++clusterID;
                   track.AddClusterHit(hitCluster);
