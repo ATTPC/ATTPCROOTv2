@@ -1,17 +1,16 @@
 void plotFit(std::string fileFolder = "dd_520/")
 {
 
-  
    // Data histograms
    TH2F *Ang_Ener = new TH2F("Ang_Ener", "Ang_Ener", 720, 0, 179, 1000, 0, 100.0);
    TH1F *HQval = new TH1F("HQval", "HQval", 1000, -10, 10);
-   
-   TH1F *hxpos_fit = new TH1F("hxpos_fit","hxpos_fit",100,-10,10);
-   TH1F *hypos_fit = new TH1F("hypos_fit","hypos_fit",100,-10,10);
-   TH1F *hzpos_fit = new TH1F("hzpos_fit","hzpos_fit",200,-100,100);
-   
+
+   TH1F *hxpos_fit = new TH1F("hxpos_fit", "hxpos_fit", 100, -10, 10);
+   TH1F *hypos_fit = new TH1F("hypos_fit", "hypos_fit", 100, -10, 10);
+   TH1F *hzpos_fit = new TH1F("hzpos_fit", "hzpos_fit", 200, -100, 100);
+
    // Find every valid file
-   //std::system("find ./dd_520 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
+   // std::system("find ./dd_520 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::ifstream file;
    file.open("test.txt");
@@ -24,8 +23,8 @@ void plotFit(std::string fileFolder = "dd_520/")
       std::istringstream iss(line);
       if (line.find(fileType) != std::string::npos) {
          std::cout << " Found fit file : " << line << "\n";
-         //files.push_back(fileFolder+line);
-	 files.push_back(line);
+         // files.push_back(fileFolder+line);
+         files.push_back(line);
       }
    }
 
@@ -36,26 +35,25 @@ void plotFit(std::string fileFolder = "dd_520/")
       if (!rootfile.IsZombie()) {
          std::cout << " Opening file : " << dataFile << "\n";
          TTree *outputTree = (TTree *)rootfile.Get("outputTree");
-         Float_t EFit, AFit, EPRA, APRA,Ex,xiniPRA,yiniPRA,ziniPRA,xiniFit,yiniFit,ziniFit;
+         Float_t EFit, AFit, EPRA, APRA, Ex, xiniPRA, yiniPRA, ziniPRA, xiniFit, yiniFit, ziniFit;
          outputTree->SetBranchAddress("EFit", &EFit);
          outputTree->SetBranchAddress("AFit", &AFit);
          outputTree->SetBranchAddress("EPRA", &EPRA);
          outputTree->SetBranchAddress("APRA", &APRA);
-	 outputTree->SetBranchAddress("Ex", &Ex);
-	 outputTree->SetBranchAddress("xiniFit", &xiniFit);
-	 outputTree->SetBranchAddress("yiniFit", &yiniFit);
-	 outputTree->SetBranchAddress("ziniFit", &ziniFit);
+         outputTree->SetBranchAddress("Ex", &Ex);
+         outputTree->SetBranchAddress("xiniFit", &xiniFit);
+         outputTree->SetBranchAddress("yiniFit", &yiniFit);
+         outputTree->SetBranchAddress("ziniFit", &ziniFit);
 
-	 
          Int_t nentries = (Int_t)outputTree->GetEntries();
          for (Int_t i = 0; i < nentries; i++) {
             outputTree->GetEntry(i);
             Ang_Ener->Fill(AFit, EFit);
-	    if(ziniFit>20 && ziniFit<30 && EFit>2.5) HQval->Fill(Ex);
-	    hxpos_fit->Fill(xiniFit);
-	    hypos_fit->Fill(yiniFit);
-	    hzpos_fit->Fill(ziniFit);
-	    
+            if (ziniFit > 20 && ziniFit < 30 && EFit > 2.5)
+               HQval->Fill(Ex);
+            hxpos_fit->Fill(xiniFit);
+            hypos_fit->Fill(yiniFit);
+            hzpos_fit->Fill(ziniFit);
          }
       }
    }
@@ -129,7 +127,7 @@ void plotFit(std::string fileFolder = "dd_520/")
    TGraph *Kine_AngRec_EnerRec_dp_first = new TGraph(numKin, ThetaLabRec, EnerLabRec);
 
    TCanvas *c1 = new TCanvas();
-   c1->Divide(1,2);
+   c1->Divide(1, 2);
    c1->Draw();
    c1->cd(1);
    Ang_Ener->SetMarkerStyle(20);
@@ -151,12 +149,11 @@ void plotFit(std::string fileFolder = "dd_520/")
    HQval->Draw();
 
    TCanvas *c2 = new TCanvas();
-   c2->Divide(1,2);
+   c2->Divide(1, 2);
    c2->Draw();
    c2->cd(1);
    hxpos_fit->Draw();
    hypos_fit->Draw("SAMES");
    c2->cd(2);
    hzpos_fit->Draw();
-	    
 }

@@ -19,8 +19,7 @@ void rundigi_sim_dp_gs(
    // __ Run ____________________________________________
    FairRunAna *fRun = new FairRunAna();
    fRun->SetInputFile(mcFile);
-   fRun->SetGeomFile(
-      "/user/e20020/ATTPCROOTv2_e20020_dev/geometry/ATTPC_D1bar_v2_geomanager.root");
+   fRun->SetGeomFile("/user/e20020/ATTPCROOTv2_e20020_dev/geometry/ATTPC_D1bar_v2_geomanager.root");
    fRun->SetOutputFile("output_digi_dp_in.root");
 
    TString parameterFile = "ATTPC.e20009_sim.par";
@@ -63,7 +62,7 @@ void rundigi_sim_dp_gs(
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
    fRun->AddTask(psaTask);
-   //fRun->AddTask(praTask);
+   // fRun->AddTask(praTask);
    // fRun->AddTask(fitterTask);
    // fRun -> AddTask(trigTask);
 

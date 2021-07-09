@@ -11,7 +11,7 @@
 
 ClassImp(AtFITTER::AtGenfit)
 
-   AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, Int_t minit, Int_t maxit)
+AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,std::string eLossFile, Int_t minit, Int_t maxit)
 {
 
    fTPCDetID = 0;
@@ -26,7 +26,8 @@ ClassImp(AtFITTER::AtGenfit)
    fAtomicNumber = 1;
    fPDGCode = 2212;
    fVerbosity = 0;
-
+   fEnergyLossFile = eLossFile;
+   
    fKalmanFitter = std::make_shared<genfit::KalmanFitterRefTrack>();
    fKalmanFitter->setMinIterations(fMinIterations);
    fKalmanFitter->setMaxIterations(fMaxIterations);
@@ -42,8 +43,9 @@ ClassImp(AtFITTER::AtGenfit)
 
    genfit::FieldManager::getInstance()->init(new genfit::ConstField(0., 0., fMagneticField)); // TODO kGauss
    genfit::MaterialEffects *materialEffects = genfit::MaterialEffects::getInstance();
+   materialEffects->setEnergyLossFile(fEnergyLossFile);
    materialEffects->init(new genfit::TGeoMaterialInterface());
-
+   
    // fPDGCandidateArray = new std::vector<Int_t>; // TODO
    // fPDGCandidateArray->push_back(2212);
 

@@ -70,7 +70,7 @@ void rundigi_sim_el(
    // __ Init and run ___________________________________
 
    fRun->Init();
-   fRun->Run(0,10000);
+   fRun->Run(0, 10000);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;

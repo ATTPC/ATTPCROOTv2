@@ -19,8 +19,7 @@ void rundigi_sim_dp_el(
    // __ Run ____________________________________________
    FairRunAna *fRun = new FairRunAna();
    fRun->SetInputFile(mcFile);
-   fRun->SetGeomFile(
-      "/user/e20020/ATTPCROOTv2_e20020_dev/geometry/ATTPC_D1bar_v2_geomanager.root");
+   fRun->SetGeomFile("/user/e20020/ATTPCROOTv2_e20020_dev/geometry/ATTPC_D1bar_v2_geomanager.root");
    fRun->SetOutputFile("output_digi_ctest_520.root");
 
    TString parameterFile = "ATTPC.e20009_sim.par";

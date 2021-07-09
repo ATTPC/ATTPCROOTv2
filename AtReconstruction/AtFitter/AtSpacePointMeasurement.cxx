@@ -51,9 +51,9 @@ ClassImp(genfit::AtSpacepointMeasurement)
       cov(2, 0) = 0.0;
 
       // Forced covariance matrix to be constant. Need to study later.
-      cov(0, 0) = 0.2/10.0;
-      cov(1, 1) = 0.2/10.0;
-      cov(2, 2) = 1.28/10.0;
+      cov(0, 0) = 0.2 / 10.0;
+      cov(1, 1) = 0.2 / 10.0;
+      cov(2, 2) = 1.28 / 10.0;
 
       rawHitCov_ = cov;
       detId_ = hit->getDetId();

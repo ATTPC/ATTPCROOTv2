@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
    Int_t Be11PDGCode = 1000040110;
    Int_t BeAtomicNumber = 4;
 
-   Int_t particlePDG = 2212;//1000010020;//2212;
+   Int_t particlePDG = 1000010020; // 1000010020;//2212;
    Float_t particleMass = 0;
    Int_t recoilPDG = 0;
    Float_t recoilMass = 0;
@@ -74,18 +74,23 @@ int main(int argc, char *argv[])
    Double_t m_b;
    Double_t m_B;
 
+
+   
+   TString elossFileName = "deuteron_D2_1bar.txt";
+   
    switch (particlePDG) {
    case 2212:
       std::cout << cGREEN << " Analyzing 10Be(d,p)11Be (PDG: 2212) " << cNORMAL << "\n";
       particleMass = pMass;
       recoilMass = Be11Mass;
       recoilPDG = 1000040110;
-      //files.push_back("output_digi_ctest.root");
-      //files.push_back("output_digi_ctest_in.root");
+      // files.push_back("output_digi_ctest.root");
+      // files.push_back("output_digi_ctest_in.root");
       files.push_back("output_reco_dp_gs.root");
       files.push_back("output_reco_dp_in.root");
       m_b = m_p;
       m_B = m_Be11;
+      elossFileName = "proton_D2_1bar.txt";
       break;
    case 1000010020:
       std::cout << cGREEN << " Analyzing 10Be(d,d)10Be (PDG: 1000010020) " << cNORMAL << "\n";
@@ -96,9 +101,11 @@ int main(int argc, char *argv[])
       files.push_back("output_reco_in.root");
       m_b = m_d;
       m_B = m_Be10;
+      elossFileName = "deuteron_D2_1bar.txt";
       break;
    }
 
+   
    const Double_t M_Ener = particleMass * 931.49401 / 1000.0;
 
    // Histograms
@@ -120,8 +127,8 @@ int main(int argc, char *argv[])
 
    TH1F *eRes = new TH1F("eRes", "eRes", 100, -2.0, 2.0);
 
-   TH1F *zpos_fit = new TH1F("zpos_fit","zpos_fit",200,-100,100);
-   
+   TH1F *zpos_fit = new TH1F("zpos_fit", "zpos_fit", 200, -100, 100);
+
    // Paths
    TString dir = getenv("VMCWORKDIR");
    TString geoManFile = dir + "/geometry/ATTPC_D1bar_v2_geomanager.root";
@@ -134,6 +141,11 @@ int main(int argc, char *argv[])
 
    TString fileNameWithPath = dir + filePath + fileName;
 
+   TString eLossFilePath = dir + "/resources/energy_loss/";
+   TString eLossFileNameWithPath = eLossFilePath + elossFileName;
+
+   std::cout<<" ELoss file "<<eLossFileNameWithPath.Data()<<"\n";
+   
    FairRunAna *run = new FairRunAna();
    run->SetGeomFile(geoManFile.Data());
    TFile *file = new TFile(fileNameWithPath.Data(), "READ");
@@ -149,11 +161,13 @@ int main(int argc, char *argv[])
    if (fInteractiveMode)
       display = genfit::EventDisplay::getInstance();
 
-   AtFITTER::AtFitter *fFitter = new AtFITTER::AtGenfit(magneticField, 0.00001, 1000.0);
+   AtFITTER::AtFitter *fFitter = new AtFITTER::AtGenfit(magneticField, 0.00001, 1000.0,eLossFileNameWithPath.Data());
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetPDGCode(particlePDG);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetMass(particleMass);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetAtomicNumber(atomicNumber);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetNumFitPoints(1.0);
+   //dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetEnergyLossFile(eLossFileNameWithPath.Data());
+   
    // dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetVerbosityLevel(1);
 
    // Output file
@@ -178,7 +192,7 @@ int main(int argc, char *argv[])
    outputTree->Branch("xiniFit", &xiniFit, "xiniFit/F");
    outputTree->Branch("yiniFit", &yiniFit, "yiniFit/F");
    outputTree->Branch("ziniFit", &ziniFit, "ziniFit/F");
-   
+
    for (auto iFile = 0; iFile < files.size(); ++iFile) {
 
       fileNameWithPath = dir + filePath + files.at(iFile).Data();
@@ -199,9 +213,9 @@ int main(int argc, char *argv[])
 
       for (Int_t i = firstEvt; i < lastEvt; i++) {
 
-	//std::chrono::seconds tickingBomb(10);
-        // std::chrono::time_point<std::chrono::system_clock> end;
-        // end = std::chrono::system_clock::now() + tickingBomb;
+         // std::chrono::seconds tickingBomb(10);
+         // std::chrono::time_point<std::chrono::system_clock> end;
+         // end = std::chrono::system_clock::now() + tickingBomb;
 
          // if(i%2==0)
          // continue;
@@ -210,11 +224,11 @@ int main(int argc, char *argv[])
          AFit = 0;
          EPRA = 0;
          APRA = 0;
-	 Ex   = -100;
-	 xiniFit = -100;
-	 yiniFit = -100;
-	 ziniFit = -1000;
-	 
+         Ex = -100;
+         xiniFit = -100;
+         yiniFit = -100;
+         ziniFit = -1000;
+
          std::cout << cGREEN << " Event Number : " << i << cNORMAL << "\n";
 
          Reader1.Next();
@@ -297,23 +311,24 @@ int main(int argc, char *argv[])
                         EFit = E * 1000.0;
                         AFit = 180.0 - thetaA * TMath::RadToDeg();
 
-			xiniFit = pos_res.X();
-			yiniFit = pos_res.Y();
-			ziniFit = pos_res.Z();
-			
+                        xiniFit = pos_res.X();
+                        yiniFit = pos_res.Y();
+                        ziniFit = pos_res.Z();
+
                         /*Double_t Qval =
                            E * 1000.0 * (1 + m_d / m_Be10) - Ebeam_buff * (1 - m_beam / m_Be10) -
                            (2.0 / m_Be10) * TMath::Sqrt(Ebeam_buff * E * 1000 * m_d) * TMath::Cos(mom_res.Theta());*/
-                        
+
                         // Excitation energy
-			Double_t ex_energy_exp = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, TMath::DegToRad()*180.0-thetaA, E * 1000);
+                        Double_t ex_energy_exp =
+                           kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, TMath::DegToRad() * 180.0 - thetaA, E * 1000);
                         // Double_t ex_energy_exp =
-			// kine_2b(m_Be10, m_d, m_d, m_Be10, Ebeam_buff, mom_res.Theta(), E * 1000);
-			//std::cout<<" Pos res Z "<<pos_res.Z()<<"\n";
-			//if (pos_res.Z() < 500){
-			   HQval->Fill(ex_energy_exp);
-			   //} 
-			Ex = ex_energy_exp;
+                        // kine_2b(m_Be10, m_d, m_d, m_Be10, Ebeam_buff, mom_res.Theta(), E * 1000);
+                        // std::cout<<" Pos res Z "<<pos_res.Z()<<"\n";
+                        // if (pos_res.Z() < 500){
+                        HQval->Fill(ex_energy_exp);
+                        //}
+                        Ex = ex_energy_exp;
 
                         // Getting information from points
                         /*for(auto iPoint = 0;iPoint<fitTrack->getNumPoints();++iPoint)
