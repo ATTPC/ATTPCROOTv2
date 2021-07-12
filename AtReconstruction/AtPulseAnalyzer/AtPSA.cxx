@@ -120,7 +120,7 @@ Double_t AtPSA::CalculateZGeo(Double_t peakIdx)
 {
 
    // This function must be consistent with the re-calibrations done before.
-   return fZk - (fEntTB - peakIdx) * fTBTime * fDriftVelocity / 100.;
+   return -fZk + (fEntTB - peakIdx) * fTBTime * fDriftVelocity / 100.+400;
 }
 
 Double_t AtPSA::CalculateY(Double_t layer)
