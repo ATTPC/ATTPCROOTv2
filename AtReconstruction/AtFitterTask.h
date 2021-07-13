@@ -53,8 +53,8 @@ public:
    inline void SetNumFitPoints(Float_t numpoints) { fNumFitPoints = numpoints; }
    inline void SetMaxBrho(Float_t maxbrho) { fMaxBrho = maxbrho; }
    inline void SetMinBhro(Float_t minbrho) { fMinBrho = minbrho; }
-   inline void SetELossFile(std::string file) {fELossFile = file;}
-  
+   inline void SetELossFile(std::string file) { fELossFile = file; }
+
 private:
    Bool_t fIsPersistence; //!< Persistence check variable
    FairLogger *fLogger;

@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
    Int_t Be11PDGCode = 1000040110;
    Int_t BeAtomicNumber = 4;
 
-   Int_t particlePDG = 1000010020; // 1000010020;//2212;
+   Int_t particlePDG = 2212; // 1000010020;//2212;
    Float_t particleMass = 0;
    Int_t recoilPDG = 0;
    Float_t recoilMass = 0;
@@ -74,10 +74,8 @@ int main(int argc, char *argv[])
    Double_t m_b;
    Double_t m_B;
 
-
-   
    TString elossFileName = "deuteron_D2_1bar.txt";
-   
+
    switch (particlePDG) {
    case 2212:
       std::cout << cGREEN << " Analyzing 10Be(d,p)11Be (PDG: 2212) " << cNORMAL << "\n";
@@ -105,7 +103,6 @@ int main(int argc, char *argv[])
       break;
    }
 
-   
    const Double_t M_Ener = particleMass * 931.49401 / 1000.0;
 
    // Histograms
@@ -135,20 +132,17 @@ int main(int argc, char *argv[])
    std::cout << " Geometry file : " << geoManFile.Data() << "\n";
    TString filePath = "/macro/Simulation/ATTPC/10Be_dp/";
    TString fileName = "output_digi.root";
-   // std::vector<TString> files{"output_digi_el_20deg.root"};
-   // std::vector<TString> files{"output_digi_el.root","output_digi_inel.root","output_digi.root"};
-   // std::vector<TString> files{"output_digi_ctest.root"};
-
+   
    TString fileNameWithPath = dir + filePath + fileName;
 
    TString eLossFilePath = dir + "/resources/energy_loss/";
    TString eLossFileNameWithPath = eLossFilePath + elossFileName;
 
-   std::cout<<" ELoss file "<<eLossFileNameWithPath.Data()<<"\n";
-   
+   std::cout << " ELoss file " << eLossFileNameWithPath.Data() << "\n";
+
    FairRunAna *run = new FairRunAna();
    run->SetGeomFile(geoManFile.Data());
-   TFile *file = new TFile(fileNameWithPath.Data(), "READ");
+   TFile *file;// = new TFile(fileNameWithPath.Data(), "READ");
 
    // GENFIT geometry
    new TGeoManager("Geometry", "ATTPC geometry");
@@ -161,37 +155,47 @@ int main(int argc, char *argv[])
    if (fInteractiveMode)
       display = genfit::EventDisplay::getInstance();
 
-   AtFITTER::AtFitter *fFitter = new AtFITTER::AtGenfit(magneticField, 0.00001, 1000.0,eLossFileNameWithPath.Data());
+   AtFITTER::AtFitter *fFitter = new AtFITTER::AtGenfit(magneticField, 0.00001, 1000.0, eLossFileNameWithPath.Data());
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetPDGCode(particlePDG);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetMass(particleMass);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetAtomicNumber(atomicNumber);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetNumFitPoints(1.0);
-   //dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetEnergyLossFile(eLossFileNameWithPath.Data());
-   
-   // dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetVerbosityLevel(1);
+   //dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetVerbosityLevel(1);
 
    // Output file
    Float_t EFit;
    Float_t AFit;
+   Float_t PhiFit;
    Float_t EPRA;
    Float_t APRA;
+   Float_t PhiPRA;
    Float_t Ex;
    Float_t xiniFit;
    Float_t yiniFit;
    Float_t ziniFit;
-
+   Float_t xiniPRA;
+   Float_t yiniPRA;
+   Float_t ziniPRA;
+   Float_t pVal;
+   
    TString outputFileName = "fit_analysis_" + std::to_string(firstEvt) + "_" + std::to_string(lastEvt) + ".root";
 
    TFile *outputFile = new TFile(outputFileName.Data(), "RECREATE");
    TTree *outputTree = new TTree("outputTree", "OutputTree");
    outputTree->Branch("EFit", &EFit, "EFit/F");
    outputTree->Branch("AFit", &AFit, "AFit/F");
+   outputTree->Branch("PhiFit", &PhiFit, "PhiFit/F");   
    outputTree->Branch("EPRA", &EPRA, "EPRA/F");
    outputTree->Branch("APRA", &APRA, "APRA/F");
+   outputTree->Branch("PhiPRA", &PhiPRA, "PhiPRA/F");
    outputTree->Branch("Ex", &Ex, "Ex/F");
    outputTree->Branch("xiniFit", &xiniFit, "xiniFit/F");
    outputTree->Branch("yiniFit", &yiniFit, "yiniFit/F");
    outputTree->Branch("ziniFit", &ziniFit, "ziniFit/F");
+   outputTree->Branch("xiniPRA", &xiniPRA, "xiniPRA/F");
+   outputTree->Branch("yiniPRA", &yiniPRA, "yiniPRA/F");
+   outputTree->Branch("ziniPRA", &ziniPRA, "ziniPRA/F");
+   outputTree->Branch("pVal", &pVal, "pVal/F");
 
    for (auto iFile = 0; iFile < files.size(); ++iFile) {
 
@@ -222,12 +226,18 @@ int main(int argc, char *argv[])
 
          EFit = 0;
          AFit = 0;
+	 PhiFit = 0;
          EPRA = 0;
          APRA = 0;
+	 PhiPRA = 0;
          Ex = -100;
          xiniFit = -100;
          yiniFit = -100;
          ziniFit = -1000;
+	 xiniPRA = -100;
+         yiniPRA = -100;
+         ziniPRA = -1000;
+	 pVal = 0;
 
          std::cout << cGREEN << " Event Number : " << i << cNORMAL << "\n";
 
@@ -267,7 +277,7 @@ int main(int argc, char *argv[])
                TVector3 pos_res;
                TVector3 mom_res;
                TMatrixDSym cov_res;
-               Double_t pVal = 0;
+               //Double_t pVal = 0;
                Double_t bChi2 = 0, fChi2 = 0, bNdf = 0, fNdf = 0;
 
                try {
@@ -308,9 +318,10 @@ int main(int argc, char *argv[])
                         angle_vs_energy->Fill(180.0 - thetaA * TMath::RadToDeg(), E * 1000.0);
                         phi->Fill(mom_res.Phi() * TMath::RadToDeg());
 
-                        EFit = E * 1000.0;
-                        AFit = 180.0 - thetaA * TMath::RadToDeg();
-
+                        EFit   = E * 1000.0;
+                        AFit   = 180.0 - thetaA * TMath::RadToDeg();
+			PhiFit = mom_res.Phi();
+			
                         xiniFit = pos_res.X();
                         yiniFit = pos_res.Y();
                         ziniFit = pos_res.Z();
@@ -365,8 +376,29 @@ int main(int argc, char *argv[])
                angle_vs_energy_pattern->Fill(theta * TMath::RadToDeg(), std::get<1>(mom_ener) * 1000.0);
                phi_pattern->Fill(phi * TMath::RadToDeg());
                phi_phi_pattern->Fill(phi * TMath::RadToDeg(), mom_res.Phi() * TMath::RadToDeg());
-               EPRA = std::get<1>(mom_ener) * 1000.0;
-               APRA = theta * TMath::RadToDeg();
+               EPRA   = std::get<1>(mom_ener) * 1000.0;
+               APRA   = theta * TMath::RadToDeg();
+	       PhiPRA = phi * TMath::RadToDeg();
+
+
+	       auto hitClusterArray = track.GetHitClusterArray();
+	       AtHitCluster iniCluster;
+               Double_t zIniCal = 0;
+	       TVector3 iniPos;
+
+   if (track.GetGeoTheta() > 90.0 * TMath::DegToRad()) {
+      iniCluster = hitClusterArray->front();
+      iniPos = iniCluster.GetPosition();
+      zIniCal = 1000.0 - iniPos.Z();
+   } else if (track.GetGeoTheta() < 90.0 * TMath::DegToRad()) {
+      iniCluster = hitClusterArray->front();
+      iniPos = iniCluster.GetPosition();
+      zIniCal = iniPos.Z();
+   }
+	       
+	       xiniPRA = iniPos.X();
+               yiniPRA = iniPos.Y();
+               ziniPRA = zIniCal;
 
             } // track loop
 

@@ -33,7 +33,8 @@ namespace AtFITTER {
 class AtGenfit : public AtFitter {
 
 public:
-  AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,std::string eLossFile, Int_t minit = 5, Int_t maxit = 20);
+   AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile, Int_t minit = 5,
+            Int_t maxit = 20);
    ~AtGenfit();
 
    genfit::Track *FitTracks(AtTrack *track);
@@ -49,7 +50,7 @@ public:
    inline void SetAtomicNumber(Int_t znumber) { fAtomicNumber = znumber; }
    inline void SetNumFitPoints(Float_t points) { fNumFitPoints = points; }
    inline void SetVerbosityLevel(Int_t verbosity) { fVerbosity = verbosity; }
-   inline void SetEnergyLossFile(std::string file) { fEnergyLossFile = file;}
+   inline void SetEnergyLossFile(std::string file) { fEnergyLossFile = file; }
 
    TClonesArray *GetGenfitTrackArray();
 

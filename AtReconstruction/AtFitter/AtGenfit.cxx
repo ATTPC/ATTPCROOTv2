@@ -11,7 +11,8 @@
 
 ClassImp(AtFITTER::AtGenfit)
 
-AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,std::string eLossFile, Int_t minit, Int_t maxit)
+   AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile, Int_t minit,
+                                Int_t maxit)
 {
 
    fTPCDetID = 0;
@@ -27,7 +28,7 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,
    fPDGCode = 2212;
    fVerbosity = 0;
    fEnergyLossFile = eLossFile;
-   
+
    fKalmanFitter = std::make_shared<genfit::KalmanFitterRefTrack>();
    fKalmanFitter->setMinIterations(fMinIterations);
    fKalmanFitter->setMaxIterations(fMaxIterations);
@@ -45,7 +46,7 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,
    genfit::MaterialEffects *materialEffects = genfit::MaterialEffects::getInstance();
    materialEffects->setEnergyLossFile(fEnergyLossFile);
    materialEffects->init(new genfit::TGeoMaterialInterface());
-   
+
    // fPDGCandidateArray = new std::vector<Int_t>; // TODO
    // fPDGCandidateArray->push_back(2212);
 
@@ -171,6 +172,10 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    } else if (track->GetGeoTheta() < 90.0 * TMath::DegToRad()) {
       theta = track->GetGeoTheta();
       phi = -track->GetGeoPhi();
+      /*if(track->GetGeoPhi()<0.0)
+	phi = (2*TMath::Pi()+track->GetGeoPhi());
+      else
+      phi = track->GetGeoPhi();*/
    } else {
       std::cout << cRED << " AtGenfit::FitTracks - Warning! Undefined theta angle. Skipping event..." << cNORMAL
                 << "\n";

@@ -96,7 +96,7 @@ InitStatus AtFitterTask::Init()
       std::cout << " Energy loss file     : " << fELossFile << "\n";
       std::cout << " --------------------------------------------- " << cNORMAL << "\n";
 
-      fFitter = new AtFITTER::AtGenfit(fMagneticField, fMinBrho, fMaxBrho,fELossFile, fMinIterations, fMaxIterations);
+      fFitter = new AtFITTER::AtGenfit(fMagneticField, fMinBrho, fMaxBrho, fELossFile, fMinIterations, fMaxIterations);
       dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetPDGCode(fPDGCode);
       dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetMass(fMass);
       dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetAtomicNumber(fAtomicNumber);
