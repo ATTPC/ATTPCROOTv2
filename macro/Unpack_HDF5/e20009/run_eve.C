@@ -1,42 +1,40 @@
-void run_eve(TString InputDataFileName="output")
+void run_eve(TString InputDataFileName = "output")
 {
 
-  
-  TString  InputDataFile = InputDataFileName+".root";
-  
-  TString  OutputDataFile = InputDataFileName+".reco_display.root";
-  TString unpackDir="/Unpack_HDF5/";
-  
-  FairLogger *fLogger = FairLogger::GetLogger();
-  fLogger -> SetLogToScreen(kTRUE);
-  fLogger->SetLogVerbosityLevel("MEDIUM");
-  TString dir = getenv("VMCWORKDIR");
-  TString geoFile = "ATTPC_He1bar_v2_geomanager.root";
+   TString InputDataFile = InputDataFileName + ".root";
 
+   TString OutputDataFile = InputDataFileName + ".reco_display.root";
+   TString unpackDir = "/Unpack_HDF5/";
 
-  TString InputDataPath = InputDataFile;
-  TString OutputDataPath = OutputDataFile;
-  TString GeoDataPath = dir + "/geometry/" + geoFile;
+   FairLogger *fLogger = FairLogger::GetLogger();
+   fLogger->SetLogToScreen(kTRUE);
+   fLogger->SetLogVerbosityLevel("MEDIUM");
+   TString dir = getenv("VMCWORKDIR");
+   TString geoFile = "ATTPC_He1bar_v2_geomanager.root";
 
-  FairRunAna *fRun= new FairRunAna();
-  fRun -> SetInputFile(InputDataPath);
-  fRun -> SetOutputFile(OutputDataPath);
-  fRun -> SetGeomFile(GeoDataPath);
+   TString InputDataPath = InputDataFile;
+   TString OutputDataPath = OutputDataFile;
+   TString GeoDataPath = dir + "/geometry/" + geoFile;
 
-  FairRuntimeDb* rtdb = fRun->GetRuntimeDb();
-  FairParRootFileIo* parIo1 = new FairParRootFileIo();
-  //parIo1->open("param.dummy.root");
-  rtdb->setFirstInput(parIo1);
+   FairRunAna *fRun = new FairRunAna();
+   fRun->SetInputFile(InputDataPath);
+   fRun->SetOutputFile(OutputDataPath);
+   fRun->SetGeomFile(GeoDataPath);
 
-  FairRootManager* ioman = FairRootManager::Instance();
+   FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
+   FairParRootFileIo *parIo1 = new FairParRootFileIo();
+   // parIo1->open("param.dummy.root");
+   rtdb->setFirstInput(parIo1);
 
-  AtEventManager *eveMan = new AtEventManager();
-  AtEventDrawTask* eve = new AtEventDrawTask();
-  eve->Set3DHitStyleBox();
-  eve->SetMultiHit(100); //Set the maximum number of multihits in the visualization
-  eve->SetSaveTextData();
-  eve->UnpackHoughSpace();
+   FairRootManager *ioman = FairRootManager::Instance();
 
-  eveMan->AddTask(eve);
-  eveMan->Init();
+   AtEventManager *eveMan = new AtEventManager();
+   AtEventDrawTask *eve = new AtEventDrawTask();
+   eve->Set3DHitStyleBox();
+   eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
+   eve->SetSaveTextData();
+   eve->UnpackHoughSpace();
+
+   eveMan->AddTask(eve);
+   eveMan->Init();
 }

@@ -1,4 +1,5 @@
-#include "genfitSA.h"
+#include "e20009Ana.h"
+
 #include "AtFitter.h"
 #include "AtGenfit.h"
 
@@ -14,7 +15,7 @@
 int main(int argc, char *argv[])
 {
 
-   std::size_t firstEvt = 0;
+  std::size_t firstEvt = 0;
    std::size_t lastEvt = 0;
    bool fInteractiveMode = 1;
 
@@ -41,8 +42,10 @@ int main(int argc, char *argv[])
    TStopwatch timer;
    timer.Start();
 
+   
    std::vector<TString> files;
-
+   files.push_back("run_0108.root");
+   
    // Analysis parameters
    Float_t magneticField = 3.0; // T
    Float_t dMass = 2.0135532;
@@ -56,7 +59,7 @@ int main(int argc, char *argv[])
    Int_t Be11PDGCode = 1000040110;
    Int_t BeAtomicNumber = 4;
 
-   Int_t particlePDG = 1000010020; // 1000010020;//2212;
+   Int_t particlePDG = 2212; // 1000010020;//2212;
    Float_t particleMass = 0;
    Int_t recoilPDG = 0;
    Float_t recoilMass = 0;
@@ -76,7 +79,7 @@ int main(int argc, char *argv[])
 
    TString elossFileName = "deuteron_D2_1bar.txt";
 
-   switch (particlePDG) {
+    switch (particlePDG) {
    case 2212:
       std::cout << cGREEN << " Analyzing 10Be(d,p)11Be (PDG: 2212) " << cNORMAL << "\n";
       particleMass = pMass;
@@ -84,8 +87,8 @@ int main(int argc, char *argv[])
       recoilPDG = 1000040110;
       // files.push_back("output_digi_ctest.root");
       // files.push_back("output_digi_ctest_in.root");
-      files.push_back("output_reco_dp_gs.root");
-      files.push_back("output_reco_dp_in.root");
+      //files.push_back("output_reco_dp_gs.root");
+      //files.push_back("output_reco_dp_in.root");
       m_b = m_p;
       m_B = m_Be11;
       elossFileName = "proton_D2_1bar.txt";
@@ -95,17 +98,15 @@ int main(int argc, char *argv[])
       particleMass = dMass;
       recoilMass = Be10Mass;
       recoilPDG = 1000040100;
-      files.push_back("output_reco_gs.root");
-      files.push_back("output_reco_in.root");
+      //files.push_back("output_reco_gs.root");
+      //files.push_back("output_reco_in.root");
       m_b = m_d;
       m_B = m_Be10;
       elossFileName = "deuteron_D2_1bar.txt";
       break;
    }
 
-   const Double_t M_Ener = particleMass * 931.49401 / 1000.0;
-
-   // Histograms
+    // Histograms
    TH1F *angle = new TH1F("angle", "angle", 720, 0, 179);
    TH1F *phi = new TH1F("phi", "phi", 1440, -359, 359);
    TH1F *phi_pattern = new TH1F("phi_pattern", "phi_pattern", 1440, -359, 359);
@@ -128,11 +129,12 @@ int main(int argc, char *argv[])
 
    // Paths
    TString dir = getenv("VMCWORKDIR");
+
    TString geoManFile = dir + "/geometry/ATTPC_D1bar_v2_geomanager.root";
    std::cout << " Geometry file : " << geoManFile.Data() << "\n";
-   TString filePath = "/macro/Simulation/ATTPC/10Be_dp/";
-   TString fileName = "output_digi.root";
-   
+   TString filePath = "/macro/Unpack_HDF5/e20009/";
+   TString fileName = "run_0108.root";
+
    TString fileNameWithPath = dir + filePath + fileName;
 
    TString eLossFilePath = dir + "/resources/energy_loss/";
@@ -197,7 +199,7 @@ int main(int argc, char *argv[])
    outputTree->Branch("ziniPRA", &ziniPRA, "ziniPRA/F");
    outputTree->Branch("pVal", &pVal, "pVal/F");
 
-   for (auto iFile = 0; iFile < files.size(); ++iFile) {
+    for (auto iFile = 0; iFile < files.size(); ++iFile) {
 
       fileNameWithPath = dir + filePath + files.at(iFile).Data();
       std::cout << " Opening File : " << fileNameWithPath.Data() << std::endl;
@@ -245,7 +247,7 @@ int main(int argc, char *argv[])
 
          AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
 
-         if (patternEvent) {
+	 if (patternEvent) {
 
             std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
             std::cout << " Number of pattern tracks " << patternTrackCand.size() << "\n";
@@ -261,121 +263,14 @@ int main(int argc, char *argv[])
                if (track.GetIsNoise() || track.GetHitClusterArray()->size() < 5)
                   continue;
 
-               fFitter->Init();
-               genfit::Track *fitTrack;
-
-               try {
-                  fitTrack = fFitter->FitTracks(&track);
-               } catch (std::exception &e) {
-                  std::cout << " Exception fitting track !" << e.what() << "\n";
-                  continue;
-               }
-
-               if (fitTrack == nullptr)
-                  continue;
-
-               TVector3 pos_res;
-               TVector3 mom_res;
-               TMatrixDSym cov_res;
-               //Double_t pVal = 0;
-               Double_t bChi2 = 0, fChi2 = 0, bNdf = 0, fNdf = 0;
-
-               try {
-
-                  if (fitTrack && fitTrack->hasKalmanFitStatus()) {
-
-                     auto KalmanFitStatus = fitTrack->getKalmanFitStatus();
-
-                     if (KalmanFitStatus->isFitConverged(false)) {
-                        // KalmanFitStatus->Print();
-                        genfit::MeasuredStateOnPlane fitState = fitTrack->getFittedState();
-                        // fitState.Print();
-                        fitState.getPosMomCov(pos_res, mom_res, cov_res);
-                        pVal = KalmanFitStatus->getPVal();
-                        // fKalmanFitter -> getChiSquNdf(gfTrack, trackRep, bChi2, fChi2, bNdf, fNdf);
-
-                        // Building histograms
-                        if (fInteractiveMode)
-                           display->addEvent(fitTrack);
-
-                        Double_t thetaA = 0.0;
-                        if (track.GetGeoTheta() > 90.0 * TMath::DegToRad()) {
-                           thetaA = 180.0 * TMath::DegToRad() - mom_res.Theta();
-                        } else
-                           thetaA = mom_res.Theta();
-
-                        angle->Fill(thetaA * TMath::RadToDeg());
-                        // std::cout<<" Angle "<<mom_res.Theta()<<"\n";
-                        auto pos_radial = TMath::Sqrt(TMath::Power(pos_res.X(), 2) + TMath::Power(pos_res.Y(), 2));
-                        momentum->Fill(mom_res.Mag());
-                        angle_vs_momentum->Fill(thetaA * TMath::RadToDeg(), mom_res.Mag());
-                        pos_vs_momentum->Fill(pos_res.Mag(), mom_res.Mag());
-                        auto len = fitTrack->getTrackLen();
-                        length_vs_momentum->Fill(len, mom_res.Mag());
-                        auto numHits = fitTrack->getNumPoints();
-                        hits_vs_momentum->Fill(numHits, mom_res.Mag());
-                        Double_t E = TMath::Sqrt(TMath::Power(mom_res.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener;
-                        angle_vs_energy->Fill(180.0 - thetaA * TMath::RadToDeg(), E * 1000.0);
-                        phi->Fill(mom_res.Phi() * TMath::RadToDeg());
-
-                        EFit   = E * 1000.0;
-                        AFit   = 180.0 - thetaA * TMath::RadToDeg();
-			PhiFit = mom_res.Phi();
-			
-                        xiniFit = pos_res.X();
-                        yiniFit = pos_res.Y();
-                        ziniFit = pos_res.Z();
-
-                        /*Double_t Qval =
-                           E * 1000.0 * (1 + m_d / m_Be10) - Ebeam_buff * (1 - m_beam / m_Be10) -
-                           (2.0 / m_Be10) * TMath::Sqrt(Ebeam_buff * E * 1000 * m_d) * TMath::Cos(mom_res.Theta());*/
-
-                        // Excitation energy
-                        Double_t ex_energy_exp =
-                           kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, TMath::DegToRad() * 180.0 - thetaA, E * 1000);
-                        // Double_t ex_energy_exp =
-                        // kine_2b(m_Be10, m_d, m_d, m_Be10, Ebeam_buff, mom_res.Theta(), E * 1000);
-                        // std::cout<<" Pos res Z "<<pos_res.Z()<<"\n";
-                        // if (pos_res.Z() < 500){
-                        HQval->Fill(ex_energy_exp);
-                        //}
-                        Ex = ex_energy_exp;
-
-                        // Getting information from points
-                        /*for(auto iPoint = 0;iPoint<fitTrack->getNumPoints();++iPoint)
-                          {
-                            genfit::TrackPoint* trackPointMnF = fitTrack->getPointWithMeasurementAndFitterInfo(iPoint);
-                            if(trackPointMnF->getKalmanFitterInfo())
-                              {
-                           genfit::KalmanFitterInfo* fitterInfo = trackPointMnF->getKalmanFitterInfo();
-                           //genfit::MeasuredStateOnPlane pointFitState = fitterInfo->getFittedState();
-                           //genfit::MeasurementOnPlane* pointMeasurement = fitterInfo->getMeasurementOnPlane();
-                           genfit::MeasuredStateOnPlane* pointPrediction = fitterInfo->getPrediction(1);
-                           TVector3 pos_res_p;
-                           TVector3 mom_res_p;
-                           TMatrixDSym cov_res_p;
-                           //if(fitterInfo->hasMeasurements()){
-                           pointPrediction->getPosMomCov(pos_res_p, mom_res_p, cov_res_p);
-                           //std::cout<<" Point "<<iPoint<<" - Momemtum : "<<mom_res_p.Mag()<<" - Theta :
-                          "<<mom_res_p.Theta()*TMath::RadToDeg()<<" - Phi : "<<mom_res_p.Phi()*TMath::RadToDeg()<<"\n";
-                           //}
-                              }
-                              }*/
-                     }
-                  }
-               } catch (std::exception &e) {
-                  std::cout << " " << e.what() << "\n";
-                  continue;
-               }
-
-               Double_t theta = 180.0 * TMath::DegToRad() - track.GetGeoTheta();
+	       Double_t theta = track.GetGeoTheta();//180.0 * TMath::DegToRad() - track.GetGeoTheta();
                Double_t radius = track.GetGeoRadius() / 1000.0; // mm to m
                Double_t phi = track.GetGeoPhi();
                Double_t brho = magneticField * radius / TMath::Sin(theta); // Tm
                std::tuple<Double_t, Double_t> mom_ener = GetMomFromBrho(particleMass, atomicNumber, brho);
                angle_vs_energy_pattern->Fill(theta * TMath::RadToDeg(), std::get<1>(mom_ener) * 1000.0);
                phi_pattern->Fill(phi * TMath::RadToDeg());
-               phi_phi_pattern->Fill(phi * TMath::RadToDeg(), mom_res.Phi() * TMath::RadToDeg());
+               //phi_phi_pattern->Fill(phi * TMath::RadToDeg(), mom_res.Phi() * TMath::RadToDeg());
                EPRA   = std::get<1>(mom_ener) * 1000.0;
                APRA   = theta * TMath::RadToDeg();
 	       PhiPRA = phi * TMath::RadToDeg();
@@ -399,14 +294,15 @@ int main(int argc, char *argv[])
 	       xiniPRA = iniPos.X();
                yiniPRA = iniPos.Y();
                ziniPRA = zIniCal;
+	       
 
-            } // track loop
+	        } // track loop
 
             outputTree->Fill();
 
          } // if pattern event
-
-      } // Event
+	       
+	    } // Event
 
    } // File
 
@@ -415,7 +311,7 @@ int main(int argc, char *argv[])
    outputTree->Write();
    outputFile->Close();
 
-   // Adding kinematic lines
+    // Adding kinematic lines
    Double_t *ThetaCMS = new Double_t[20000];
    Double_t *ThetaLabRec = new Double_t[20000];
    Double_t *EnerLabRec = new Double_t[20000];
@@ -551,10 +447,11 @@ int main(int argc, char *argv[])
       display->open();
 
    } // Interactive mode
-
+   
   return 0;
+  
 }
-
+  
 std::tuple<Double_t, Double_t> GetMomFromBrho(Double_t M, Double_t Z, Double_t brho)
 {
 
