@@ -165,11 +165,14 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    Double_t theta = 0.0;
    Double_t phi = 0.0;
 
-   if (track->GetGeoTheta() > 90.0 * TMath::DegToRad()) {
-      theta = 180.0 * TMath::DegToRad() - track->GetGeoTheta();
-      phi = track->GetGeoPhi();
+   if (track->GetGeoTheta() < 90.0 * TMath::DegToRad()) {
+   //if (track->GetGeoTheta() > 90.0 * TMath::DegToRad()) {
+     //theta = 180.0 * TMath::DegToRad() - track->GetGeoTheta();
+      theta = track->GetGeoTheta();
+      phi = 180.0 * TMath::DegToRad()-track->GetGeoPhi();
       std::reverse(hitClusterArray->begin(), hitClusterArray->end());
-   } else if (track->GetGeoTheta() < 90.0 * TMath::DegToRad()) {
+     }else if (track->GetGeoTheta() > 90.0 * TMath::DegToRad()) {
+     //}else if (track->GetGeoTheta() < 90.0 * TMath::DegToRad()) {
       theta = track->GetGeoTheta();
       phi = -track->GetGeoPhi();
       /*if(track->GetGeoPhi()<0.0)
@@ -210,15 +213,16 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       auto clusterClone(cluster);
       // Reversing position for real forward tracks
       // Using original PRA angle to determine the rotation
-      if (thetaPRA > 90.0 * TMath::DegToRad()) {
-         clusterClone.SetPosition(pos.X(), pos.Y(), 1000.0 - pos.Z());
+      //if (thetaPRA > 90.0 * TMath::DegToRad()) {
+      if (thetaPRA < 90.0 * TMath::DegToRad()) {
+         clusterClone.SetPosition(-pos.X(), pos.Y(), 1000.0 - pos.Z());
       }
 
       Int_t idx = fHitClusterArray->GetEntriesFast();
       new ((*fHitClusterArray)[idx]) AtHitCluster(clusterClone);
       trackCand.addHit(fTPCDetID, idx);
-      // std::cout<<" Adding  cluster "<<idx<<"\n";
-      // std::cout<<pos.X()<<"     "<<pos.Y()<<"   "<<pos.Z()<<"\n";
+      //std::cout<<" Adding  cluster "<<idx<<"\n";
+      //std::cout<<pos.X()<<"     "<<pos.Y()<<"   "<<pos.Z()<<"\n";
       // if(iCluster==0)
       // iniPos	= pos;
    }
@@ -227,16 +231,23 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    // Last(first) one for tracks with angle >(<) 90
    AtHitCluster iniCluster;
    Double_t zIniCal = 0;
+   Double_t xIniCal = 0;
    TVector3 iniPos;
 
-   if (track->GetGeoTheta() > 90.0 * TMath::DegToRad()) {
+   //if (track->GetGeoTheta() > 90.0 * TMath::DegToRad()) {
+   if (track->GetGeoTheta() < 90.0 * TMath::DegToRad()) {
       iniCluster = hitClusterArray->front();
+     //iniCluster = hitClusterArray->back();
       iniPos = iniCluster.GetPosition();
       zIniCal = 1000.0 - iniPos.Z();
-   } else if (track->GetGeoTheta() < 90.0 * TMath::DegToRad()) {
+      xIniCal = - iniPos.X();
+   //} else if (track->GetGeoTheta() < 90.0 * TMath::DegToRad()) {
+     } else if (track->GetGeoTheta() > 90.0 * TMath::DegToRad()) {
       iniCluster = hitClusterArray->front();
+      // iniCluster = hitClusterArray->back();
       iniPos = iniCluster.GetPosition();
       zIniCal = iniPos.Z();
+      xIniCal = iniPos.X();
    } else {
       std::cout << cRED << " AtGenfit::FitTracks - Warning! Undefined theta angle. Skipping event..." << cNORMAL
                 << "\n";
@@ -245,13 +256,13 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
 
    Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
 
-   if (dist > 20.0)
-      return nullptr;
+   //if (dist > 20.0)
+     //return nullptr;
 
    // if(fVerbosity>1)
-   std::cout << " Initial position : " << iniPos.X() << " - " << iniPos.Y() << " - " << iniPos.Z() << "\n";
+   std::cout << " Initial position : " << xIniCal << " - " << iniPos.Y() << " - " << zIniCal << "\n";
 
-   TVector3 posSeed(iniPos.X() / 10.0, iniPos.Y() / 10.0, zIniCal / 10.0);
+   TVector3 posSeed(xIniCal / 10.0, iniPos.Y() / 10.0, zIniCal / 10.0);
    posSeed.SetMag(posSeed.Mag());
 
    TMatrixDSym covSeed(6); // TODO Check where COV matrix is defined, likely in AtPattern clusterize (hard coded

@@ -37,7 +37,7 @@ void unpack_e20009(TString fileName)
 
    // TString inputFile   = dataDir + name + ".digi.root";
    // TString outputFile  = dataDir + "output.root";
-   TString outputFile = fileName + ".root";
+   TString outputFile = "/mnt/analysis/e20009/" + fileName + ".root";
    // TString mcParFile   = dataDir + name + ".params.root";
    TString loggerFile = dataDir + "ATTPCLog.log";
    TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -68,7 +68,7 @@ void unpack_e20009(TString fileName)
    rtdb->setSecondInput(parIo1);
 
    AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
-   HDFParserTask->SetPersistence(kTRUE);
+   HDFParserTask->SetPersistence(kFALSE);
    HDFParserTask->SetAtTPCMap(scriptdir.Data());
    HDFParserTask->SetFileName(dataFile.Data());
    HDFParserTask->SetBaseLineSubtraction(kTRUE);
@@ -119,7 +119,7 @@ void unpack_e20009(TString fileName)
 
    run->Init();
 
-   run->Run(0, 2000);
+   run->Run(0, 10000);
    // run->RunOnTBData();
 
    std::cout << std::endl << std::endl;

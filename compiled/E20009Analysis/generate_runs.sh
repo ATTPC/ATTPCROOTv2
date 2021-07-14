@@ -1,0 +1,32 @@
+if [ -z "$1" ];
+then
+  echo "== Input the first and last events and the step followed by boolean for interactive mode. Followed by run number and fit direction"
+  echo "==   ex) 0 10000 100 0 run_0118 0"
+
+  exit 1
+fi
+
+FIRSTEVE=$1
+LASTEVE=$2
+STEP=$3
+BOOLINT=$4
+RUN=$5
+DIREC=$6
+TOTEV=$(($LASTEVE-$FIRSTEVE))
+printf "Number of events  $TOTEV \n"
+OUTPUT=runFit_${STEP}step_${TOTEV}ev.txt
+NUMCOM=$(( ($TOTEV/$STEP)-2  )) 
+> $OUTPUT
+
+FIRSTBUFF=$(($FIRSTEV+$STEP))
+
+printf "./build/e20009AnaExe $FIRSTEVE $FIRSTBUFF 0 $RUN $DIREC\n" >> $OUTPUT
+
+
+for (( i = 0; i <= $NUMCOM; i++ )) 
+do    
+    SECONDBUFF=$(($FIRSTBUFF+$STEP))
+    printf "./build/e20009AnaExe $FIRSTBUFF $SECONDBUFF 0 $RUN $DIREC\n" >> $OUTPUT
+    FIRSTBUFF=$(($FIRSTBUFF+$STEP))
+    
+	     done

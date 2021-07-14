@@ -71,7 +71,8 @@ private:
    Float_t fNumFitPoints;       //<! % of processed track points for fit
    Int_t fVerbosity;            //<! Fit verbosity
    std::string fEnergyLossFile; //<! Energy loss file
-
+   Bool_t fSimulationConv;       //<! Switch to simulation convention
+  
    genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement> *fMeasurementProducer;
    genfit::MeasurementFactory<genfit::AbsMeasurement> *fMeasurementFactory;
 
