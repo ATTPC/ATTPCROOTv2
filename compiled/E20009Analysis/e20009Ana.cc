@@ -3,6 +3,7 @@
 #include "AtFitter.h"
 #include "AtGenfit.h"
 
+
 #include <chrono>
 #include <thread>
 #include <iostream>
@@ -19,7 +20,7 @@ int main(int argc, char *argv[])
    std::size_t lastEvt = 0;
    bool fInteractiveMode = 1;
    TString inputFileName = "";
-   bool fitDirection = 0; //0: Forward (d,d) - 1: Backwards (d,p)
+   bool fitDirection = 0; // 0: Forward (d,d) - 1: Backwards (d,p)
 
    //  Arguments
    if (argc == 6) {
@@ -28,12 +29,13 @@ int main(int argc, char *argv[])
       fInteractiveMode = std::atoi(argv[3]);
       inputFileName = argv[4];
       fitDirection = std::atoi(argv[5]);
-      std::cout <<cGREEN<<" Processing file "<<inputFileName<<"\n";
+      std::cout << cGREEN << " Processing file " << inputFileName << "\n";
       std::cout << " Processing events from : " << firstEvt << " to " << lastEvt << "\n";
-      std::cout << " Fit direction : "<<fitDirection<<" 0: Forward (d,d) - 1: Backwards (d,p)\n "; 
-      std::cout << " Interactive mode? : " << fInteractiveMode << cNORMAL<<"\n";
+      std::cout << " Fit direction : " << fitDirection << " 0: Forward (d,d) - 1: Backwards (d,p)\n ";
+      std::cout << " Interactive mode? : " << fInteractiveMode << cNORMAL << "\n";
    } else {
-      std::cout << " Wrong number of arguments. Expecting 6: first_event last_event interactive_mode_bool fileNameWithoutExtension fitDirection_bool."
+      std::cout << " Wrong number of arguments. Expecting 6: first_event last_event interactive_mode_bool "
+                   "fileNameWithoutExtension fitDirection_bool."
                 << "\n";
       return 0;
    }
@@ -48,11 +50,10 @@ int main(int argc, char *argv[])
    TStopwatch timer;
    timer.Start();
 
-   TString rootFileName = inputFileName+".root";
-   
+   TString rootFileName = inputFileName + ".root";
+
    std::vector<TString> files;
    files.push_back(rootFileName);
-   
 
    // Analysis parameters
    Float_t magneticField = 3.0; // T
@@ -136,7 +137,8 @@ int main(int argc, char *argv[])
 
    TString geoManFile = dir + "/geometry/ATTPC_D1bar_v2_geomanager.root";
    std::cout << " Geometry file : " << geoManFile.Data() << "\n";
-   TString filePath = "/macro/Unpack_HDF5/e20009/";
+   //TString filePath = "/macro/Unpack_HDF5/e20009/";
+   TString filePath = "/mnt/analysis/e20009/";
    TString fileName = "run_0108.root";
 
    TString fileNameWithPath = dir + filePath + fileName;
@@ -183,8 +185,10 @@ int main(int argc, char *argv[])
    Float_t yiniPRA;
    Float_t ziniPRA;
    Float_t pVal;
+   Float_t IC;
 
-   TString outputFileName = "fit_analysis_" + std::to_string(firstEvt) + "_" + std::to_string(lastEvt) + ".root";
+   TString outputFileName = "fit_analysis_" + inputFileName;
+   outputFileName+="_" + std::to_string(firstEvt) + "_" + std::to_string(lastEvt) + ".root";
 
    TFile *outputFile = new TFile(outputFileName.Data(), "RECREATE");
    TTree *outputTree = new TTree("outputTree", "OutputTree");
@@ -202,10 +206,12 @@ int main(int argc, char *argv[])
    outputTree->Branch("yiniPRA", &yiniPRA, "yiniPRA/F");
    outputTree->Branch("ziniPRA", &ziniPRA, "ziniPRA/F");
    outputTree->Branch("pVal", &pVal, "pVal/F");
+   outputTree->Branch("IC", &IC, "IC/F");
 
    for (auto iFile = 0; iFile < files.size(); ++iFile) {
 
-      fileNameWithPath = dir + filePath + files.at(iFile).Data();
+     //fileNameWithPath = dir + filePath + files.at(iFile).Data();
+     fileNameWithPath = filePath + files.at(iFile).Data();
       std::cout << " Opening File : " << fileNameWithPath.Data() << std::endl;
 
       file = new TFile(fileNameWithPath.Data(), "READ");
@@ -218,7 +224,7 @@ int main(int argc, char *argv[])
 
       TTreeReader Reader1("cbmsim", file);
       TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtPatternEvent");
-      // TTreeReaderValue<std::vector<genfit::Track>> fitterVector(Reader1, "ATTPC");
+      TTreeReaderValue<TClonesArray> evArray(Reader1, "AtEventH");
       Reader1.SetEntriesRange(firstEvt, lastEvt);
 
       for (Int_t i = firstEvt; i < lastEvt; i++) {
@@ -244,18 +250,35 @@ int main(int argc, char *argv[])
          yiniPRA = -100;
          ziniPRA = -1000;
          pVal = 0;
-
+	 IC = 0;
+	 
          std::cout << cGREEN << " Event Number : " << i << cNORMAL << "\n";
 
          Reader1.Next();
 
          AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
-
+	 AtEvent* event = (AtEvent*) evArray->At(0);
+	 
          if (patternEvent) {
+
+	    std::vector<AtPad> *auxPadArray = event->GetAuxPadArray();
+	    std::cout<<" Number of auxiliary pads : "<<auxPadArray->size()<<"\n";
 
             std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
             std::cout << " Number of pattern tracks " << patternTrackCand.size() << "\n";
 
+	     for(auto auxpad : *auxPadArray)
+	              {
+	              	if(auxpad.GetAuxName().compare(std::string("IC"))==0)
+	              	{
+	              		std::cout<<" Auxiliary pad name "<<auxpad.GetAuxName()<<"\n";
+	              		Double_t *adc = auxpad.GetADC();
+	              		IC = GetMaximum(adc);
+    				    
+			}
+		      }		
+
+	    
             evtNum_vs_trkNum->Fill(i, patternTrackCand.size());
 
             for (auto track : patternTrackCand) {
@@ -264,12 +287,10 @@ int main(int argc, char *argv[])
                          << " clusters "
                          << "\n";
 
-               if (track.GetIsNoise() || track.GetHitClusterArray()->size() < 5)
-		 {
-		   std::cout<<cRED<<" Track is noise or has less than 5 clusters! "<<cNORMAL<<"\n"; 
+               if (track.GetIsNoise() || track.GetHitClusterArray()->size() < 5) {
+                  std::cout << cRED << " Track is noise or has less than 5 clusters! " << cNORMAL << "\n";
                   continue;
-		 }
-	       
+               }
 
                Double_t theta = track.GetGeoTheta();            // 180.0 * TMath::DegToRad() - track.GetGeoTheta();
                Double_t radius = track.GetGeoRadius() / 1000.0; // mm to m
@@ -302,14 +323,13 @@ int main(int argc, char *argv[])
                yiniPRA = iniPos.Y();
                ziniPRA = zIniCal;
 
-	       //Fit
-	       /*if(fitDirection == 0 && theta* TMath::RadToDeg()>90) //O is between 0 and 90 (d,d)
+               // Fit
+               if(fitDirection == 0 && theta* TMath::RadToDeg()>90) //O is between 0 and 90 (d,d)
 		 continue;
-	       else if(fitDirection == 1 && theta* TMath::RadToDeg()<90) //1 is between 90 and 180 (d,p)
-	       continue;*/
+               else if(fitDirection == 1 && theta* TMath::RadToDeg()<90) //1 is between 90 and 180 (d,p)
+               continue;
 
-	       
-	       fFitter->Init();
+               fFitter->Init();
                genfit::Track *fitTrack;
 
                try {
@@ -322,11 +342,10 @@ int main(int argc, char *argv[])
                if (fitTrack == nullptr)
                   continue;
 
-
-	        TVector3 pos_res;
+               TVector3 pos_res;
                TVector3 mom_res;
                TMatrixDSym cov_res;
-               //Double_t pVal = 0;
+               // Double_t pVal = 0;
                Double_t bChi2 = 0, fChi2 = 0, bNdf = 0, fNdf = 0;
 
                try {
@@ -350,9 +369,12 @@ int main(int argc, char *argv[])
                         Double_t thetaA = 0.0;
                         if (track.GetGeoTheta() > 90.0 * TMath::DegToRad()) {
                            thetaA = 180.0 * TMath::DegToRad() - mom_res.Theta();
-                        } else
+			   //std::cout<<" Milana bonita "<<mom_res.Theta()<<"\n";
+                        } else{
                            thetaA = mom_res.Theta();
-
+			   //std::cout<<" Kia "<<mom_res.Theta()<<"\n";
+			}
+			   
                         angle->Fill(thetaA * TMath::RadToDeg());
                         // std::cout<<" Angle "<<mom_res.Theta()<<"\n";
                         auto pos_radial = TMath::Sqrt(TMath::Power(pos_res.X(), 2) + TMath::Power(pos_res.Y(), 2));
@@ -364,27 +386,24 @@ int main(int argc, char *argv[])
                         auto numHits = fitTrack->getNumPoints();
                         hits_vs_momentum->Fill(numHits, mom_res.Mag());
                         Double_t E = TMath::Sqrt(TMath::Power(mom_res.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener;
-                        angle_vs_energy->Fill(180.0 - thetaA * TMath::RadToDeg(), E * 1000.0);
+                        angle_vs_energy->Fill(thetaA * TMath::RadToDeg(), E * 1000.0);
                         hphi->Fill(mom_res.Phi() * TMath::RadToDeg());
 
-                        EFit   = E * 1000.0;
-                        AFit   = thetaA * TMath::RadToDeg();
-			PhiFit = mom_res.Phi();
-			
+                        EFit = E * 1000.0;
+                        AFit = thetaA * TMath::RadToDeg();
+                        PhiFit = mom_res.Phi();
+
                         xiniFit = pos_res.X();
                         yiniFit = pos_res.Y();
                         ziniFit = pos_res.Z();
 
-                        
                         // Excitation energy
                         Double_t ex_energy_exp =
-                           kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, TMath::DegToRad() * 180.0 - thetaA, E * 1000);
-                        
-                        HQval->Fill(ex_energy_exp);
-                        
-                        Ex = ex_energy_exp;
+                           kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, thetaA, E * 1000);
 
-                        
+                        HQval->Fill(ex_energy_exp);
+
+                        Ex = ex_energy_exp;
                      }
                   }
                } catch (std::exception &e) {
@@ -392,8 +411,6 @@ int main(int argc, char *argv[])
                   continue;
                }
 
-	       
-	       
             } // track loop
 
             outputTree->Fill();
@@ -405,7 +422,7 @@ int main(int argc, char *argv[])
    } // File
 
    outputFile->cd();
-   //outputTree->Print();
+   // outputTree->Print();
    outputTree->Write();
    outputFile->Close();
 
@@ -589,3 +606,19 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    // THcm = theta_cm*TMath::RadToDeg();
    return Ex;
 }
+
+double GetMaximum(double *adc)
+{
+
+	double max = 0;
+
+	for(int indTB=0;indTB<512;++indTB)
+	{
+	    //std::cout<<" TB "<<indTB<<" adc "<<adc[indTB]<<"\n";
+	    if(adc[indTB]>max) max = adc[indTB];
+	}             	   			 
+
+	return max;
+
+}
+

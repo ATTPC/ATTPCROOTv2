@@ -14,7 +14,7 @@ RUN=$5
 DIREC=$6
 TOTEV=$(($LASTEVE-$FIRSTEVE))
 printf "Number of events  $TOTEV \n"
-OUTPUT=runFit_${STEP}step_${TOTEV}ev.txt
+OUTPUT=runFit_${STEP}step_${TOTEV}ev_${RUN}.txt
 NUMCOM=$(( ($TOTEV/$STEP)-2  )) 
 > $OUTPUT
 
