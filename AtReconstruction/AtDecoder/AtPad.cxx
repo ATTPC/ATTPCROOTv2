@@ -98,25 +98,25 @@ void AtPad::SetAuxName(std::string val)
    fAuxName = val;
 }
 
-Float_t AtPad::GetPadXCoord()
+Float_t AtPad::GetPadXCoord() const
 {
    return fPadXCoord;
 }
-Float_t AtPad::GetPadYCoord()
+Float_t AtPad::GetPadYCoord() const
 {
    return fPadYCoord;
 }
 
-Bool_t AtPad::GetValidPad()
+Bool_t AtPad::GetValidPad() const
 {
    return kIsValid;
 }
-Bool_t AtPad::IsAux()
+Bool_t AtPad::IsAux() const
 {
    return kIsAux;
 }
 
-std::string AtPad::GetAuxName()
+std::string AtPad::GetAuxName() const
 {
    return fAuxName;
 }
@@ -141,11 +141,11 @@ AtPad &AtPad::operator=(AtPad right)
    return *this;
 }
 
-Int_t AtPad::GetPadNum()
+Int_t AtPad::GetPadNum() const
 {
    return fPadNum;
 }
-Int_t AtPad::GetSizeID()
+Int_t AtPad::GetSizeID() const
 {
    return fSizeID;
 }
@@ -153,15 +153,15 @@ Int_t *AtPad::GetRawADC()
 {
    return fRawAdc;
 }
-Int_t AtPad::GetRawADC(Int_t idx)
+Int_t AtPad::GetRawADC(Int_t idx) const
 {
    return fRawAdc[idx];
 }
-Int_t AtPad::GetMaxADCIdx()
+Int_t AtPad::GetMaxADCIdx() const
 {
    return fMaxAdcIdx;
 }
-Bool_t AtPad::IsPedestalSubtracted()
+Bool_t AtPad::IsPedestalSubtracted() const
 {
    return fIsPedestalSubtracted;
 }
@@ -178,7 +178,7 @@ Double_t *AtPad::GetADC()
    return fAdc;
 }
 
-Double_t AtPad::GetADC(Int_t idx)
+Double_t AtPad::GetADC(Int_t idx) const
 {
    if (!fIsPedestalSubtracted) {
       std::cout << "== Pedestal subtraction is not done!" << std::endl;

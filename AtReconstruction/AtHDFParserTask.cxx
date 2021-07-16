@@ -282,6 +282,7 @@ void AtHDFParserTask::Exec(Option_t *opt)
       }
 
       for (Int_t iTb = 0; iTb < 512; iTb++) {
+         // First 5 entries in array are electronic ID
          pad->SetRawADC(iTb, rawadc.at(iTb + 5));
          adc[iTb] = (double)rawadc[iTb + 5] - baseline;
          // std::cout<<" iTb "<<iTb<<" rawadc "<<rawadc[iTb]<<"	"<<adc[iTb]<<"\n";

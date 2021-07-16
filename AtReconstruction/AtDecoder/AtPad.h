@@ -14,7 +14,7 @@
 
 class AtPad : public TObject {
 private:
-   Int_t fPadNum;
+   Int_t fPadNum; // Pad reference number in AtTpcMap
    Int_t fSizeID;
    Float_t fPadXCoord;
    Float_t fPadYCoord;
@@ -52,22 +52,22 @@ public:
 
    AtPad &operator=(AtPad right);
 
-   Bool_t IsPedestalSubtracted();
-   Bool_t IsAux();
+   Bool_t IsPedestalSubtracted() const;
+   Bool_t IsAux() const;
 
-   Int_t GetPadNum();
+   Int_t GetPadNum() const;
    Int_t *GetRawADC();
-   Int_t GetRawADC(Int_t idx);
-   Int_t GetMaxADCIdx();
-   Bool_t GetValidPad();
-   std::string GetAuxName();
-   Int_t GetSizeID();
+   Int_t GetRawADC(Int_t idx) const;
+   Int_t GetMaxADCIdx() const;
+   Bool_t GetValidPad() const;
+   std::string GetAuxName() const;
+   Int_t GetSizeID() const;
 
    Double_t *GetADC();
-   Double_t GetADC(Int_t idx);
+   Double_t GetADC(Int_t idx) const;
 
-   Float_t GetPadXCoord();
-   Float_t GetPadYCoord();
+   Float_t GetPadXCoord() const;
+   Float_t GetPadYCoord() const;
 
    ClassDef(AtPad, 1);
 };
