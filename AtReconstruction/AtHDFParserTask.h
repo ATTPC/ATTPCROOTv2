@@ -49,6 +49,8 @@ public:
    int GetNumberTimestamps() { return fNumberTimestamps; };
    std::size_t GetNumEvents() { return fNumEvents; };
 
+   AtMap *GetMap() { return fAtMapPtr; }
+
    virtual InitStatus Init();
    virtual void SetParContainers();
    virtual void Exec(Option_t *opt);

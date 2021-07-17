@@ -1,5 +1,5 @@
 /*********************************************************************
- *   AtTPC Pad Class	AtPad                                            *
+ *   AtTPC Pad Class	AtPad                                         *
  *   Author: Y. Ayyad                                                 *
  *   Log: 05-03-2015 19:24 JST                                        *
  *                                                                    *

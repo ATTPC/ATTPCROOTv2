@@ -10,7 +10,7 @@
 void run_eve(int runNum = 210, bool displayFilteredData = false, TString OutputDataFile = "output.reco_display.root")
 {
    TString InputDataFile;
-   InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpackedReduced/run_%04d.root", runNum);
+   InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpackedReducedFiltered/run_%04d.root", runNum);
 
    // InputDataFile = "./run_0200.root";
    std::cout << "Opening: " << InputDataFile << std::endl;
