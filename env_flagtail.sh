@@ -7,4 +7,4 @@ source build/config.sh -p
 
 
 #export PATH=/mnt/analysis/e12014/clangInstall/install/bin/:$PATH
-#export LD_LIBRARY_PATH=/mnt/analysis/e12014/clangInstall/install/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/mnt/analysis/e12014/clangInstall/install/lib:$LD_LIBRARY_PATH

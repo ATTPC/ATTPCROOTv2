@@ -66,17 +66,13 @@ void AtFilterTask::Exec(Option_t *opt)
 
    if (filteredEvent->IsGood())
 
-      // Loop through every pad
-      for (auto &pad : *(filteredEvent->GetPads())) {
-         // If it is an aux pad, do not filter
-         if (pad.IsAux())
-            continue;
+      fFilter->InitEvent(filteredEvent);
 
-         // Filter the raw ADC
-         fFilter->Filter(pad.GetRawADC());
-
-         // Check if the pad is baseline subtracted
-         if (pad.IsPedestalSubtracted())
-            fFilter->Filter(pad.GetADC());
-      } // end loop over pads
+   // Loop through every pad
+   for (auto &pad : *(filteredEvent->GetPads())) {
+      // If it is an aux pad, do not filter
+      if (pad.IsAux())
+         continue;
+      fFilter->Filter(&pad);
+   } // end loop over pads
 }

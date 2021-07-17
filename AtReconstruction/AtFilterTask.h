@@ -15,7 +15,6 @@ class AtFilterTask : public FairTask {
 private:
    TClonesArray *fInputEventArray;  // AtRawEvent
    TClonesArray *fOutputEventArray; // AtRawEvent
-   TClonesArray *fMCPointArray;     // AtRawEvent
 
    AtFilter *fFilter;
    Bool_t fIsPersistent;

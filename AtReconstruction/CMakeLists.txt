@@ -103,7 +103,7 @@ set(SRCS
   AtPulseAnalyzer/AtCalibration.cxx
 
   AtFilter/AtFilter.cxx
-  AtFilter/AtFilterDivide.cxx
+  AtFilter/AtFilterSubtraction.cxx
 
   #HierarchicalClustering/AtCubicSplineFit.cxx
   #HierarchicalClustering/AtFindVertex.cxx

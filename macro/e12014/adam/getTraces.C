@@ -13,7 +13,6 @@ void getTraces(int tpcRun = 200)
    std::ofstream traceFile("data/traces_" + std::to_string(tpcRun) + ".dat");
    if (!traceFile.good())
       std::cout << "Failed to open file" << std::endl;
-   ;
 
    // Create pad plane and load map
    TString mapFile = "e12014_pad_mapping.xml"; //"Lookup20150611.xml";
@@ -28,7 +27,7 @@ void getTraces(int tpcRun = 200)
    double fThreshold = 0;
 
    const int numEvents = 5;
-
+   const int padID = 0;
    std::vector<std::vector<Short_t>> traces; // traces[event][time]
 
    // Loop through every event
