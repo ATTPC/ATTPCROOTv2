@@ -82,4 +82,17 @@ Double_t omega(Double_t x, Double_t y, Double_t z)
 }
 double GetMaximum(double *adc);
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+

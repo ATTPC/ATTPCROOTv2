@@ -3,7 +3,6 @@
 #include "AtFitter.h"
 #include "AtGenfit.h"
 
-
 #include <chrono>
 #include <thread>
 #include <iostream>
@@ -81,7 +80,7 @@ int main(int argc, char *argv[])
    Double_t m_Be11 = 11.021657749 * 931.49401;
    Double_t m_beam = m_Be10;
 
-   Double_t Ebeam_buff = 100.0; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
+   Double_t Ebeam_buff = 96.0; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
 
    Double_t m_b;
    Double_t m_B;
@@ -96,7 +95,7 @@ int main(int argc, char *argv[])
       recoilPDG = 1000040110;
       m_b = m_p;
       m_B = m_Be11;
-      elossFileName = "proton_D2_1bar.txt";
+      elossFileName = "proton_D2_600torr.txt";
       break;
    case 0:
       std::cout << cGREEN << " Analyzing 10Be(d,d)10Be (PDG: 1000010020) " << cNORMAL << "\n";
@@ -105,7 +104,7 @@ int main(int argc, char *argv[])
       recoilPDG = 1000040100;
       m_b = m_d;
       m_B = m_Be10;
-      elossFileName = "deuteron_D2_1bar.txt";
+      elossFileName = "deuteron_D2_600torr.txt";
       break;
    }
 
@@ -135,7 +134,7 @@ int main(int argc, char *argv[])
    // Paths
    TString dir = getenv("VMCWORKDIR");
 
-   TString geoManFile = dir + "/geometry/ATTPC_D1bar_v2_geomanager.root";
+   TString geoManFile = dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
    std::cout << " Geometry file : " << geoManFile.Data() << "\n";
    //TString filePath = "/macro/Unpack_HDF5/e20009/";
    TString filePath = "/mnt/analysis/e20009/";
@@ -177,7 +176,7 @@ int main(int argc, char *argv[])
    Float_t EPRA;
    Float_t APRA;
    Float_t PhiPRA;
-   Float_t Ex;
+   Float_t Ex;   
    Float_t xiniFit;
    Float_t yiniFit;
    Float_t ziniFit;
@@ -186,9 +185,43 @@ int main(int argc, char *argv[])
    Float_t ziniPRA;
    Float_t pVal;
    Float_t IC;
+   Float_t EFitXtr;
+   Float_t ExXtr;
+   Float_t xiniFitXtr;
+   Float_t yiniFitXtr;
+   Float_t ziniFitXtr;
+   Float_t distXtr;
+   Float_t trackLength;
+   Float_t POCAXtr;
+   Int_t   trackID;
+   
+   std::vector<Float_t> EFitVec;
+   std::vector<Float_t> AFitVec;
+   std::vector<Float_t> PhiFitVec;
+   std::vector<Float_t> EPRAVec;
+   std::vector<Float_t> APRAVec;
+   std::vector<Float_t> PhiPRAVec;
+   std::vector<Float_t> ExVec;   
+   std::vector<Float_t> xiniFitVec;
+   std::vector<Float_t> yiniFitVec;
+   std::vector<Float_t> ziniFitVec;
+   std::vector<Float_t> xiniPRAVec;
+   std::vector<Float_t> yiniPRAVec;
+   std::vector<Float_t> ziniPRAVec;
+   std::vector<Float_t> pValVec;
+   std::vector<Float_t> ICVec;
+   std::vector<Float_t> EFitXtrVec;
+   std::vector<Float_t> ExXtrVec;
+   std::vector<Float_t> xiniFitXtrVec;
+   std::vector<Float_t> yiniFitXtrVec;
+   std::vector<Float_t> ziniFitXtrVec;
+   std::vector<Float_t> distXtrVec;
+   std::vector<Float_t> trackLengthVec;
+   std::vector<Float_t> POCAXtrVec;
+   std::vector<Int_t> trackIDVec;
 
    TString outputFileName = "fit_analysis_" + inputFileName;
-   outputFileName+="_" + std::to_string(firstEvt) + "_" + std::to_string(lastEvt) + ".root";
+   outputFileName += "_" + std::to_string(firstEvt) + "_" + std::to_string(lastEvt) + ".root";
 
    TFile *outputFile = new TFile(outputFileName.Data(), "RECREATE");
    TTree *outputTree = new TTree("outputTree", "OutputTree");
@@ -199,19 +232,53 @@ int main(int argc, char *argv[])
    outputTree->Branch("APRA", &APRA, "APRA/F");
    outputTree->Branch("PhiPRA", &PhiPRA, "PhiPRA/F");
    outputTree->Branch("Ex", &Ex, "Ex/F");
+   outputTree->Branch("ExXtr", &ExXtr, "ExXtr/F");
    outputTree->Branch("xiniFit", &xiniFit, "xiniFit/F");
    outputTree->Branch("yiniFit", &yiniFit, "yiniFit/F");
    outputTree->Branch("ziniFit", &ziniFit, "ziniFit/F");
    outputTree->Branch("xiniPRA", &xiniPRA, "xiniPRA/F");
    outputTree->Branch("yiniPRA", &yiniPRA, "yiniPRA/F");
    outputTree->Branch("ziniPRA", &ziniPRA, "ziniPRA/F");
+   outputTree->Branch("EFitXtr", &EFitXtr, "EFitXtr/F");
+   outputTree->Branch("xiniFitXtr", &xiniFitXtr, "xiniFitXtr/F");
+   outputTree->Branch("yiniFitXtr", &yiniFitXtr, "yiniFitXtr/F");
+   outputTree->Branch("ziniFitXtr", &ziniFitXtr, "ziniFitXtr/F");
+   outputTree->Branch("distXtr", &distXtr, "distXtr/F");
    outputTree->Branch("pVal", &pVal, "pVal/F");
    outputTree->Branch("IC", &IC, "IC/F");
+   outputTree->Branch("trackLength", &trackLength, "trackLength/F");
+   outputTree->Branch("POCAXtr", &POCAXtr, "POCAXtr/F");
+   outputTree->Branch("trackID", &trackID, "trackID/F");
+
+   outputTree->Branch("EFitVec", &EFitVec);
+   outputTree->Branch("AFitVec", &AFitVec);
+   outputTree->Branch("PhiFitVec", &PhiFitVec);
+   outputTree->Branch("EPRAVec", &EPRAVec);
+   outputTree->Branch("APRAVec", &APRAVec);
+   outputTree->Branch("PhiPRAVec", &PhiPRAVec);
+   outputTree->Branch("ExVec", &ExVec);
+   outputTree->Branch("ExXtrVec", &ExXtrVec);
+   outputTree->Branch("xiniFitVec", &xiniFitVec);
+   outputTree->Branch("yiniFitVec", &yiniFitVec);
+   outputTree->Branch("ziniFitVec", &ziniFitVec);
+   outputTree->Branch("xiniPRAVec", &xiniPRAVec);
+   outputTree->Branch("yiniPRAVec", &yiniPRAVec);
+   outputTree->Branch("ziniPRAVec", &ziniPRAVec);
+   outputTree->Branch("EFitXtrVec", &EFitXtrVec);
+   outputTree->Branch("xiniFitXtrVec", &xiniFitXtrVec);
+   outputTree->Branch("yiniFitXtrVec", &yiniFitXtrVec);
+   outputTree->Branch("ziniFitXtrVec", &ziniFitXtrVec);
+   outputTree->Branch("distXtrVec", &distXtrVec);
+   outputTree->Branch("pValVec", &pValVec);
+   outputTree->Branch("ICVec", &ICVec);
+   outputTree->Branch("trackLengthVec", &trackLengthVec);
+   outputTree->Branch("POCAXtrVec", &POCAXtrVec);
+   outputTree->Branch("trackIDVec", &trackIDVec);
 
    for (auto iFile = 0; iFile < files.size(); ++iFile) {
 
      //fileNameWithPath = dir + filePath + files.at(iFile).Data();
-     fileNameWithPath = filePath + files.at(iFile).Data();
+      fileNameWithPath = filePath + files.at(iFile).Data();
       std::cout << " Opening File : " << fileNameWithPath.Data() << std::endl;
 
       file = new TFile(fileNameWithPath.Data(), "READ");
@@ -237,48 +304,79 @@ int main(int argc, char *argv[])
          // continue;
 
          EFit = 0;
+	 EFitXtr = 0;
          AFit = 0;
          PhiFit = 0;
          EPRA = 0;
          APRA = 0;
          PhiPRA = 0;
          Ex = -100;
+	 ExXtr = -100;
          xiniFit = -100;
          yiniFit = -100;
          ziniFit = -1000;
-         xiniPRA = -100;
+	 xiniFitXtr = -100;
+         yiniFitXtr = -100;
+         ziniFitXtr = -1000;  
+	 xiniPRA = -100;
          yiniPRA = -100;
          ziniPRA = -1000;
          pVal = 0;
-	 IC = 0;
+         IC = 0;
+	 trackLength = -1000.0;
+	 POCAXtr = -1000.0;
+
+	 EFitVec.clear();
+    AFitVec.clear();
+    PhiFitVec.clear();
+   EPRAVec.clear();
+    APRAVec.clear();
+    PhiPRAVec.clear();
+    ExVec.clear();   
+    xiniFitVec.clear();
+    yiniFitVec.clear();
+    ziniFitVec.clear();
+    xiniPRAVec.clear();
+    yiniPRAVec.clear();
+    ziniPRAVec.clear();
+    pValVec.clear();
+    ICVec.clear();
+    EFitXtrVec.clear();
+    ExXtrVec.clear();
+    xiniFitXtrVec.clear();
+    yiniFitXtrVec.clear();
+    ziniFitXtrVec.clear();
+    distXtrVec.clear();
+    trackLengthVec.clear();
+    POCAXtrVec.clear();
+    trackIDVec.clear();
+	 
 	 
          std::cout << cGREEN << " Event Number : " << i << cNORMAL << "\n";
 
          Reader1.Next();
 
          AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
-	 AtEvent* event = (AtEvent*) evArray->At(0);
-	 
+         AtEvent *event = (AtEvent *)evArray->At(0);
+
          if (patternEvent) {
 
-	    std::vector<AtPad> *auxPadArray = event->GetAuxPadArray();
-	    std::cout<<" Number of auxiliary pads : "<<auxPadArray->size()<<"\n";
+            std::vector<AtPad> *auxPadArray = event->GetAuxPadArray();
+            std::cout << " Number of auxiliary pads : " << auxPadArray->size() << "\n";
 
             std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
             std::cout << " Number of pattern tracks " << patternTrackCand.size() << "\n";
 
-	     for(auto auxpad : *auxPadArray)
-	              {
-	              	if(auxpad.GetAuxName().compare(std::string("IC"))==0)
-	              	{
-	              		std::cout<<" Auxiliary pad name "<<auxpad.GetAuxName()<<"\n";
-	              		Double_t *adc = auxpad.GetADC();
-	              		IC = GetMaximum(adc);
-    				    
-			}
-		      }		
+            for (auto auxpad : *auxPadArray) {
+               if (auxpad.GetAuxName().compare(std::string("IC")) == 0) {
+                  std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
+                  Double_t *adc = auxpad.GetADC();
+                  IC = GetMaximum(adc);
+               }
+            }
 
-	    
+	    ICVec.push_back(IC);
+
             evtNum_vs_trkNum->Fill(i, patternTrackCand.size());
 
             for (auto track : patternTrackCand) {
@@ -286,6 +384,9 @@ int main(int argc, char *argv[])
                std::cout << " Track " << track.GetTrackID() << " with " << track.GetHitClusterArray()->size()
                          << " clusters "
                          << "\n";
+
+	       trackID = track.GetTrackID();
+	       trackIDVec.push_back(trackID);
 
                if (track.GetIsNoise() || track.GetHitClusterArray()->size() < 5) {
                   std::cout << cRED << " Track is noise or has less than 5 clusters! " << cNORMAL << "\n";
@@ -303,14 +404,23 @@ int main(int argc, char *argv[])
                EPRA = std::get<1>(mom_ener) * 1000.0;
                APRA = theta * TMath::RadToDeg();
                PhiPRA = phi * TMath::RadToDeg();
-
+	       
+	       
                auto hitClusterArray = track.GetHitClusterArray();
                AtHitCluster iniCluster;
                Double_t zIniCal = 0;
                TVector3 iniPos;
 
+	       /*for (auto cluster : *hitClusterArray) {
+
+		 
+		 TVector3 pos = cluster.GetPosition();
+		  std::cout<<pos.X()<<"     "<<pos.Y()<<"   "<<pos.Z()<<"\n";
+		 
+	       }*/
+
                if (track.GetGeoTheta() < 90.0 * TMath::DegToRad()) {
-                  iniCluster = hitClusterArray->front();
+		 iniCluster = hitClusterArray->back();//NB: We do not reverse the cluster vector like in AtGenfit!
                   iniPos = iniCluster.GetPosition();
                   zIniCal = 1000.0 - iniPos.Z();
                } else if (track.GetGeoTheta() > 90.0 * TMath::DegToRad()) {
@@ -323,12 +433,25 @@ int main(int argc, char *argv[])
                yiniPRA = iniPos.Y();
                ziniPRA = zIniCal;
 
+	       
                // Fit
-               if(fitDirection == 0 && theta* TMath::RadToDeg()>90) //O is between 0 and 90 (d,d)
-		 continue;
-               else if(fitDirection == 1 && theta* TMath::RadToDeg()<90) //1 is between 90 and 180 (d,p)
-               continue;
+               if (fitDirection == 0 && theta * TMath::RadToDeg() > 90) // O is between 0 and 90 (d,d)
+                  continue;
+               else if (fitDirection == 1 && theta * TMath::RadToDeg() < 90) // 1 is between 90 and 180 (d,p)
+                  continue;
 
+	       //Skip border angles
+	       if(theta * TMath::RadToDeg() < 10 || theta * TMath::RadToDeg() > 170)
+		 continue;
+
+	       //Skip tracks that are far from Z (to be checked against number of iterations for extrapolation)
+	       Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
+
+	       //std::cout<<cRED<<" Distance to Z "<<dist<<cNORMAL<<"\n";
+	       if (dist > 50.0)
+	         continue;
+
+		 
                fFitter->Init();
                genfit::Track *fitTrack;
 
@@ -347,21 +470,81 @@ int main(int argc, char *argv[])
                TMatrixDSym cov_res;
                // Double_t pVal = 0;
                Double_t bChi2 = 0, fChi2 = 0, bNdf = 0, fNdf = 0;
+	       Double_t distance=-100;
+	       Double_t POCA = 1E6;
+	       TVector3 mom_ext;
+	       TVector3 pos_ext;
+	       TVector3 mom_ext_buff;
+	       TVector3 pos_ext_buff;
 
+	       
                try {
 
                   if (fitTrack && fitTrack->hasKalmanFitStatus()) {
 
                      auto KalmanFitStatus = fitTrack->getKalmanFitStatus();
-
+		     auto trackRep        = fitTrack->getTrackRep(0); //Only one representation is sved for the moment.
+		     
+		     
                      if (KalmanFitStatus->isFitConverged(false)) {
                         // KalmanFitStatus->Print();
                         genfit::MeasuredStateOnPlane fitState = fitTrack->getFittedState();
                         // fitState.Print();
                         fitState.getPosMomCov(pos_res, mom_res, cov_res);
+			trackLength = KalmanFitStatus->getTrackLen();
                         pVal = KalmanFitStatus->getPVal();
-                        // fKalmanFitter -> getChiSquNdf(gfTrack, trackRep, bChi2, fChi2, bNdf, fNdf);
+			
+			// fKalmanFitter -> getChiSquNdf(gfTrack, trackRep, bChi2, fChi2, bNdf, fNdf);
+			Float_t stepXtr   = -0.1;
+			Int_t   minCnt    = 0;
+			Int_t   minCntExt = 0;
+			
+			 try {
+			   for(auto iStep=0;iStep<40;++iStep){
+			     
+			     trackRep -> extrapolateBy(fitState, stepXtr*iStep);
+			     mom_ext_buff = fitState.getMom();
+			     pos_ext_buff = fitState.getPos();
+			     double distance = TMath::Sqrt(pos_ext_buff.X()*pos_ext_buff.X() + pos_ext_buff.Y()*pos_ext_buff.Y());
+			     //if (fVerbosityLevel > 2){
+			     std::cout << cYELLOW << " Extrapolation: Total Momentum : " << mom_ext_buff.Mag() << " - Position : " << pos_ext_buff.X() << "  "<< pos_ext_buff.Y() << "  " << pos_ext_buff.Z() <<" - distance : "<<distance<< cNORMAL << "\n";
+			     //}
+			     
+			     if(distance<POCA)
+			       {
+				 POCA    = distance;
+				 POCAXtr = distance;
+				 mom_ext = mom_ext_buff;
+				 pos_ext = pos_ext_buff;
+				 distXtr = iStep*stepXtr;
+				 ++minCnt;
+				 minCntExt = 0;
+			       }
+			     //Loop control
+			     // if(minCntExt>20) //Break the loop if a new minimum is not found after several iterations
+			     //break;
 
+			       ++minCntExt;  
+			     
+			   }
+
+			 } catch (genfit::Exception &e) {
+			   mom_ext.SetXYZ(0, 0, 0);
+			   pos_ext.SetXYZ(0, 0, 0);
+			 }
+
+			 //mom_res = mom_ext;
+			 //pos_res = pos_ext;
+			 xiniFitXtr = pos_ext.X();
+                         yiniFitXtr = pos_ext.Y();
+                         ziniFitXtr = pos_ext.Z();
+			 
+			 
+			 std::cout << cYELLOW << " Extrapolation: Total Momentum : " << mom_ext.Mag() << " - Position : " << pos_ext.X() << "  "
+			     << pos_ext.Y() << "  " << pos_ext.Z() <<" - POCA : "<<POCA<< cNORMAL << "\n";
+
+
+			
                         // Building histograms
                         if (fInteractiveMode)
                            display->addEvent(fitTrack);
@@ -369,12 +552,12 @@ int main(int argc, char *argv[])
                         Double_t thetaA = 0.0;
                         if (track.GetGeoTheta() > 90.0 * TMath::DegToRad()) {
                            thetaA = 180.0 * TMath::DegToRad() - mom_res.Theta();
-			   //std::cout<<" Milana bonita "<<mom_res.Theta()<<"\n";
-                        } else{
+                           
+                        } else {
                            thetaA = mom_res.Theta();
-			   //std::cout<<" Kia "<<mom_res.Theta()<<"\n";
-			}
-			   
+                           
+                        }
+
                         angle->Fill(thetaA * TMath::RadToDeg());
                         // std::cout<<" Angle "<<mom_res.Theta()<<"\n";
                         auto pos_radial = TMath::Sqrt(TMath::Power(pos_res.X(), 2) + TMath::Power(pos_res.Y(), 2));
@@ -397,19 +580,56 @@ int main(int argc, char *argv[])
                         yiniFit = pos_res.Y();
                         ziniFit = pos_res.Z();
 
+			
                         // Excitation energy
-                        Double_t ex_energy_exp =
-                           kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, thetaA, E * 1000);
-
+                        Double_t ex_energy_exp = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, thetaA, E * 1000);
+			EFitXtr                = 1000.0*(TMath::Sqrt(TMath::Power(mom_ext.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener);
+			ExXtr                  = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, thetaA, EFitXtr);
+			
+			
                         HQval->Fill(ex_energy_exp);
 
                         Ex = ex_energy_exp;
+
+			
                      }
                   }
                } catch (std::exception &e) {
                   std::cout << " " << e.what() << "\n";
                   continue;
                }
+
+
+	       EPRAVec.push_back(EPRA);
+	       APRAVec.push_back(APRA);
+	       PhiPRAVec.push_back(PhiPRA);
+
+	       xiniPRAVec.push_back(xiniPRA);
+	       yiniPRAVec.push_back(yiniPRA);
+	       ziniPRAVec.push_back(ziniPRA);
+
+
+	       trackLengthVec.push_back(trackLength);
+			pValVec.push_back(pVal);
+	       
+	                xiniFitXtrVec.push_back(xiniFitXtr);
+                         yiniFitXtrVec.push_back(yiniFitXtr);
+                         ziniFitXtrVec.push_back(ziniFitXtr);
+			 POCAXtrVec.push_back(POCAXtr);
+			 distXtrVec.push_back(distXtr);
+			 
+	       
+	                xiniFitVec.push_back(xiniFit);
+                        yiniFitVec.push_back(yiniFit);
+                        ziniFitVec.push_back(ziniFit);
+
+			EFitVec.push_back(EFit);
+			AFitVec.push_back(AFit);
+			PhiFitVec.push_back(PhiFit);
+
+			EFitXtrVec.push_back(EFitXtr);
+			ExVec.push_back(Ex);
+			ExXtrVec.push_back(ExXtr);
 
             } // track loop
 
@@ -610,15 +830,13 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
 double GetMaximum(double *adc)
 {
 
-	double max = 0;
+   double max = 0;
 
-	for(int indTB=0;indTB<512;++indTB)
-	{
-	    //std::cout<<" TB "<<indTB<<" adc "<<adc[indTB]<<"\n";
-	    if(adc[indTB]>max) max = adc[indTB];
-	}             	   			 
+   for (int indTB = 0; indTB < 512; ++indTB) {
+      // std::cout<<" TB "<<indTB<<" adc "<<adc[indTB]<<"\n";
+      if (adc[indTB] > max)
+         max = adc[indTB];
+   }
 
-	return max;
-
+   return max;
 }
-

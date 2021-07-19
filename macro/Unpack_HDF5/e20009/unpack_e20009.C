@@ -119,7 +119,10 @@ void unpack_e20009(TString fileName)
 
    run->Init();
 
-   run->Run(0, 10000);
+   auto numEvents = HDFParserTask->GetNumEvents()/2;
+
+   //run->Run(0, 10000);
+   run->Run(0,numEvents);
    // run->RunOnTBData();
 
    std::cout << std::endl << std::endl;
