@@ -518,10 +518,10 @@ void AtEventDrawTask::DrawHitPoints()
       } else if (fPatternEventArray) {
          AtPatternEvent *patternEvent = dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0));
          TrackCand = patternEvent->GetTrackCand();
-         for (Int_t i = 0; i < 10; i++)
+         for (Int_t i = 0; i < 20; i++)
             fHitSetTFHC[i] = 0;
 
-         if (TrackCand.size() < 10) {
+         if (TrackCand.size() < 20) {
             for (Int_t i = 0; i < TrackCand.size(); i++) {
 
                AtTrack track = TrackCand.at(i);
@@ -1110,7 +1110,7 @@ void AtEventDrawTask::Reset()
 
          if (fLineNum > 0) {
             for (Int_t i = 0; i < fLineNum; i++) {
-               if (fHitSetMC[i]) {
+               if (fHitSetTFHC[i]) {
                   gEve->RemoveElement(fHitSetTFHC[i], fEventManager);
                }
             }
