@@ -10,6 +10,8 @@
 #include "FairRootManager.h"
 #include "FairTask.h"
 
+#include "TH2.h"
+#include "TFile.h"
 #include "TCanvas.h"
 #include "TClonesArray.h"
 
