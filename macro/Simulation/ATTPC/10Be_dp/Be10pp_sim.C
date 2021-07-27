@@ -4,10 +4,10 @@ void Be10pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile = "../data/attpcsim_gs.root";
+  TString outFile = "./data/attpcsim_gs.root";
 
   // Parameter file name
-  TString parFile = "../data/attpcpar_gs.root";
+  TString parFile = "./data/attpcpar_gs.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -44,7 +44,7 @@ void Be10pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_D1bar_v2.root");
+  ATTPC->SetGeometryFileName("ATTPC_D600torr_v2.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 

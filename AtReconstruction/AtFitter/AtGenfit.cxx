@@ -166,35 +166,34 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    Double_t theta = 0.0;
    Double_t phi = 0.0;
 
-   //Variable for convention (simulation comes reversed)
+   // Variable for convention (simulation comes reversed)
    Double_t thetaConv;
-   if(fSimulationConv)
-     {
-       thetaConv = 180.0 * TMath::DegToRad() - track->GetGeoTheta();
-     }else{
-       thetaConv = track->GetGeoTheta();
-     }
-       
+   if (fSimulationConv) {
+      thetaConv = 180.0 * TMath::DegToRad() - track->GetGeoTheta();
+   } else {
+      thetaConv = track->GetGeoTheta();
+   }
+
    if (thetaConv < 90.0 * TMath::DegToRad()) { // Forward (Backward) for experiment (simulation)
-      
-     if(fSimulationConv){
-       theta = 180.0 * TMath::DegToRad() - track->GetGeoTheta();
-       phi   = track->GetGeoPhi();
-     }else{
-	 theta = track->GetGeoTheta();
+
+      if (fSimulationConv) {
+         theta = 180.0 * TMath::DegToRad() - track->GetGeoTheta();
+         phi = track->GetGeoPhi();
+      } else {
+         theta = track->GetGeoTheta();
          phi = 180.0 * TMath::DegToRad() - track->GetGeoPhi();
-       } 
+      }
       std::reverse(hitClusterArray->begin(), hitClusterArray->end());
 
    } else if (thetaConv > 90.0 * TMath::DegToRad()) { // Backward (Forward) for experiment (simulation)
 
-     if(fSimulationConv){
-      theta = track->GetGeoTheta();
-      phi = 180.0 * TMath::DegToRad() -track->GetGeoPhi();
-     }else{
-       theta = 180.0 * TMath::DegToRad() - track->GetGeoTheta();
-       phi   = track->GetGeoPhi();
-     }
+      if (fSimulationConv) {
+         theta = track->GetGeoTheta();
+         phi = 180.0 * TMath::DegToRad() - track->GetGeoPhi();
+      } else {
+         theta = 180.0 * TMath::DegToRad() - track->GetGeoTheta();
+         phi = track->GetGeoPhi();
+      }
    } else {
       std::cout << cRED << " AtGenfit::FitTracks - Warning! Undefined theta angle. Skipping event..." << cNORMAL
                 << "\n";
@@ -217,6 +216,7 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
                 << " - Max. Brho : " << fMaxBrho << "\n";
       std::cout << " Theta : " << theta * TMath::RadToDeg() << " - Phi : " << phi * TMath::RadToDeg()
                 << " - Brho : " << brho << "\n";
+      
    }
 
    // hitClusterArray->resize(hitClusterArray->size() * 0.50);
@@ -227,11 +227,22 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       auto cluster = hitClusterArray->at(iCluster);
       TVector3 pos = cluster.GetPosition();
       auto clusterClone(cluster);
-      // Reversing position for real forward tracks
-      // Using original PRA angle to determine the rotation
+
+      if(iCluster==0)
+      {
+	std::cout<<" First cluster : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<"\n"; 
+
+      }else if(iCluster==(hitClusterArray->size()-1)){
+
+	std::cout<<" Last cluster : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<"\n";
+      }
+
       
-      if (thetaConv < 90.0 * TMath::DegToRad()) {
-         clusterClone.SetPosition(-pos.X(), pos.Y(), 1000.0 - pos.Z());
+      if (thetaConv < 90.0 * TMath::DegToRad()) {//Experiment forward
+	if(fSimulationConv)
+	  clusterClone.SetPosition(pos.X(), pos.Y(), 1000.0 - pos.Z());
+	else  
+	   clusterClone.SetPosition(-pos.X(), pos.Y(), 1000.0 - pos.Z());
       }
 
       Int_t idx = fHitClusterArray->GetEntriesFast();
@@ -250,14 +261,17 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    Double_t xIniCal = 0;
    TVector3 iniPos;
 
-   
    if (thetaConv < 90.0 * TMath::DegToRad()) {
       iniCluster = hitClusterArray->front();
       // iniCluster = hitClusterArray->back();
       iniPos = iniCluster.GetPosition();
       zIniCal = 1000.0 - iniPos.Z();
-      xIniCal = -iniPos.X();
       
+      if(fSimulationConv)
+	xIniCal = iniPos.X();
+      else
+       xIniCal = -iniPos.X();
+
    } else if (thetaConv > 90.0 * TMath::DegToRad()) {
       iniCluster = hitClusterArray->front();
       // iniCluster = hitClusterArray->back();
@@ -370,27 +384,25 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
             return nullptr;
          }
 
-	 //TODO: Extrapolate back to Z axis (done in e20009 analysis for the moment)
-	 /*TVector3 posVertex(0,0,pos_res.Z());
-         TVector3 normalVertex(0, 0, 1);
-       
-	 
-	 try { 
-	   for(auto iStep=0;iStep<20;++iStep){ 
-	   trackRep -> extrapolateBy(fitState, -0.1*iStep);
-	   //trackRep -> extrapolateToPlane(fitState,genfit::SharedPlanePtr(new genfit::DetPlane(posVertex,normalVertex))); 
-	   mom_res = fitState.getMom();
-	   pos_res = fitState.getPos();
-	   double distance = TMath::Sqrt(pos_res.X()*pos_res.X() + pos_res.Y()*pos_res.Y());
-	   if (fVerbosity > 0)
-               std::cout << cYELLOW << " Extrapolation: Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
-                         << pos_res.Y() << "  " << pos_res.Z() <<" - POCA : "<<POCA<< cNORMAL << "\n";
-	   }
-           
-         } catch (genfit::Exception &e) {
-	   mom_res.SetXYZ(0, 0, 0);
-	   pos_res.SetXYZ(0, 0, 0);
-	   }*/
+         // TODO: Extrapolate back to Z axis (done in e20009 analysis for the moment)
+         /*TVector3 posVertex(0,0,pos_res.Z());
+              TVector3 normalVertex(0, 0, 1);
+
+
+         try {
+           for(auto iStep=0;iStep<20;++iStep){
+           trackRep -> extrapolateBy(fitState, -0.1*iStep);
+           //trackRep -> extrapolateToPlane(fitState,genfit::SharedPlanePtr(new
+         genfit::DetPlane(posVertex,normalVertex))); mom_res = fitState.getMom(); pos_res = fitState.getPos(); double
+         distance = TMath::Sqrt(pos_res.X()*pos_res.X() + pos_res.Y()*pos_res.Y()); if (fVerbosity > 0) std::cout <<
+         cYELLOW << " Extrapolation: Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
+                              << pos_res.Y() << "  " << pos_res.Z() <<" - POCA : "<<POCA<< cNORMAL << "\n";
+           }
+
+              } catch (genfit::Exception &e) {
+           mom_res.SetXYZ(0, 0, 0);
+           pos_res.SetXYZ(0, 0, 0);
+           }*/
 
          // gfTrack ->Print();
 

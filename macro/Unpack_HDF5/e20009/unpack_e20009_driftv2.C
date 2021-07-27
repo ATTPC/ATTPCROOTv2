@@ -11,7 +11,7 @@ struct auxchannel {
    uint8_t channel;
 };
 
-void unpack_e20009(TString fileName)
+void unpack_e20009_driftv2(TString fileName)
 {
 
    // -----   Timer   --------------------------------------------------------
@@ -23,7 +23,7 @@ void unpack_e20009(TString fileName)
    // -----------------------------------------------------------------
    // Set file names
 
-   TString parameterFile = "ATTPC.e20009.par";
+   TString parameterFile = "ATTPC.e20009_v2.par";
    TString mappath = "";
    TString filepath = "/mnt/daqtesting/e20009_attpc_transfer/h5/";
    TString fileExt = ".h5";
@@ -41,7 +41,7 @@ void unpack_e20009(TString fileName)
    // TString mcParFile   = dataDir + name + ".params.root";
    TString loggerFile = dataDir + "ATTPCLog.log";
    TString digiParFile = dir + "/parameters/" + parameterFile;
-   TString geoManFile = dir + "/geometry/ATTPC_He1bar_v2.root";
+   TString geoManFile = dir + "/geometry/ATTPC_D600torr_v2.root";
 
    TString inimap = mappath + "inhib.txt";
    TString lowgmap = mappath + "lowgain.txt";
@@ -121,9 +121,9 @@ void unpack_e20009(TString fileName)
 
    auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
-   // run->Run(0, 10000);
-   run->Run(0, numEvents);
-   // run->RunOnTBData();
+   run->Run(0, 20000);
+   //run->Run(0, numEvents);
+   
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;

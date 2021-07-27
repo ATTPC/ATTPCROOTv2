@@ -6,7 +6,7 @@ Double_t omega(Double_t x, Double_t y, Double_t z)
 double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t thetalab, Double_t K_eject)
 {
 
- // in this definition: m1(projectile); m2(target); m3(ejectile); and m4(recoil);
+   // in this definition: m1(projectile); m2(target); m3(ejectile); and m4(recoil);
    double Et1 = K_proj + m1;
    double Et2 = m2;
    double Et3 = K_eject + m3;
@@ -32,12 +32,9 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
 
    // THcm = theta_cm*TMath::RadToDeg();
    return Ex;
-
-  
 }
 
-
-void plotFit(std::string fileFolder = "data_nobeamfit/")
+void plotFit(std::string fileFolder = "data/")
 {
 
    // Data histograms
@@ -47,16 +44,23 @@ void plotFit(std::string fileFolder = "data_nobeamfit/")
 
    TH2F *Ang_Ener_Xtr = new TH2F("Ang_Ener_Xtr", "Ang_Ener_Xtr", 720, 0, 179, 1000, 0, 100.0);
    TH1F *HQval_Xtr = new TH1F("HQval_Xtr", "HQval_Xtr", 1000, -10, 10);
-   
+
    TH2F *QvsAng = new TH2F("QvsAng", "QvsAng", 1000, -10, 10, 720, 0, 179);
    TH2F *QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 10, 200, -100, 100);
    TH2F *ZposvsAng = new TH2F("ZposvsAng", "ZposvsAng", 200, -100, 100, 720, 0, 179);
    TH2F *QvsXpos = new TH2F("QvsXpos", "QvsXpos", 1000, -10, 10, 100, -10, 10);
 
+   TH2F *QvsAng_Xtr = new TH2F("QvsAng_Xtr", "QvsAng_Xtr", 1000, -10, 10, 720, 0, 179);
+
    TH1F *hxpos_fit = new TH1F("hxpos_fit", "hxpos_fit", 100, -10, 10);
    TH1F *hypos_fit = new TH1F("hypos_fit", "hypos_fit", 100, -10, 10);
    TH1F *hzpos_fit = new TH1F("hzpos_fit", "hzpos_fit", 200, -100, 100);
 
+   TH1F *hxpos_fit_Xtr = new TH1F("hxpos_fit_Xtr", "hxpos_fit_Xtr", 100, -10, 10);
+   TH1F *hypos_fit_Xtr = new TH1F("hypos_fit_Xtr", "hypos_fit_Xtr", 100, -10, 10);
+   TH1F *hzpos_fit_Xtr = new TH1F("hzpos_fit_Xtr", "hzpos_fit_Xtr", 200, -100, 100);
+
+   
    // PRA
    TH2F *Ang_Ener_PRA = new TH2F("Ang_Ener_PRA", "Ang_Ener_PRA", 720, 0, 179, 1000, 0, 100.0);
 
@@ -70,9 +74,8 @@ void plotFit(std::string fileFolder = "data_nobeamfit/")
    TH2F *x_Phi = new TH2F("x_Phi", "x_Phi", 1000, -10, 10, 720, -179, 179);
    TH2F *y_Phi = new TH2F("y_Phi", "y_Phi", 1000, -10, 10, 720, -179, 179);
 
+   TH2F *x_y_Xtr = new TH2F("x_y_Xtr", "x_y_Xtr", 1000, -10, 10, 1000, -10, 10);
 
-   TH2F *x_y = new TH2F("x_y", "x_y", 1000, -10, 10, 1000, -10, 10);
-   
    // Q-value calculation
    Double_t m_p = 1.007825 * 931.49401;
    Double_t m_d = 2.0135532 * 931.49401;
@@ -84,10 +87,8 @@ void plotFit(std::string fileFolder = "data_nobeamfit/")
    Double_t m_b;
    Double_t m_B;
 
-      m_b = m_d;
-      m_B = m_Be10;
-
-
+   m_b = m_d;
+   m_B = m_Be10;
 
    // Find every valid file
    // std::system("find ./dd_520 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
@@ -104,7 +105,7 @@ void plotFit(std::string fileFolder = "data_nobeamfit/")
       if (line.find(fileType) != std::string::npos) {
          std::cout << " Found fit file : " << line << "\n";
          //files.push_back(fileFolder + line);
-          files.push_back(line);
+         files.push_back(line);
       }
    }
 
@@ -131,109 +132,106 @@ void plotFit(std::string fileFolder = "data_nobeamfit/")
          outputTree->SetBranchAddress("ziniPRA", &ziniPRA);
          outputTree->SetBranchAddress("IC", &IC);
 
-	 std::vector<Float_t> *EFitVec = 0;
-	 std::vector<Float_t> *AFitVec = 0;
-	 std::vector<Float_t> *PhiFitVec = 0;
-	 std::vector<Float_t> *EPRAVec = 0;
-	 std::vector<Float_t> *APRAVec = 0;
-	 std::vector<Float_t> *PhiPRAVec = 0;
-	 std::vector<Float_t> *ExVec = 0;
-	 std::vector<Float_t> *ExXtrVec = 0;
-	 std::vector<Float_t> *xiniFitVec = 0;
-	 std::vector<Float_t> *yiniFitVec = 0;
-	 std::vector<Float_t> *ziniFitVec = 0;
-	 std::vector<Float_t> *xiniPRAVec = 0;
-	 std::vector<Float_t> *yiniPRAVec = 0;
-	 std::vector<Float_t> *ziniPRAVec = 0;
-	 std::vector<Float_t> *ICVec = 0;
-	 std::vector<Float_t> *EFitXtrVec = 0;
-	 std::vector<Float_t> *xiniFitXtrVec = 0;
-	 std::vector<Float_t> *yiniFitXtrVec = 0;
-	 std::vector<Float_t> *ziniFitXtrVec = 0;
-	 std::vector<Float_t> *distXtrVec = 0;
-	 std::vector<Float_t> *pValVec = 0;
-	 std::vector<Float_t> *trackLengthVec = 0;
-	 std::vector<Float_t> *POCAXtrVec = 0;
-	 std::vector<Float_t> *trackIDVec = 0;
+         std::vector<Float_t> *EFitVec = 0;
+         std::vector<Float_t> *AFitVec = 0;
+         std::vector<Float_t> *PhiFitVec = 0;
+         std::vector<Float_t> *EPRAVec = 0;
+         std::vector<Float_t> *APRAVec = 0;
+         std::vector<Float_t> *PhiPRAVec = 0;
+         std::vector<Float_t> *ExVec = 0;
+         std::vector<Float_t> *ExXtrVec = 0;
+         std::vector<Float_t> *xiniFitVec = 0;
+         std::vector<Float_t> *yiniFitVec = 0;
+         std::vector<Float_t> *ziniFitVec = 0;
+         std::vector<Float_t> *xiniPRAVec = 0;
+         std::vector<Float_t> *yiniPRAVec = 0;
+         std::vector<Float_t> *ziniPRAVec = 0;
+         std::vector<Float_t> *ICVec = 0;
+         std::vector<Float_t> *EFitXtrVec = 0;
+         std::vector<Float_t> *xiniFitXtrVec = 0;
+         std::vector<Float_t> *yiniFitXtrVec = 0;
+         std::vector<Float_t> *ziniFitXtrVec = 0;
+         std::vector<Float_t> *distXtrVec = 0;
+         std::vector<Float_t> *pValVec = 0;
+         std::vector<Float_t> *trackLengthVec = 0;
+         std::vector<Float_t> *POCAXtrVec = 0;
+         std::vector<Float_t> *trackIDVec = 0;
 
-	 
-
-	 outputTree->SetBranchAddress("EFitVec", &EFitVec);
-	 outputTree->SetBranchAddress("AFitVec", &AFitVec);
-	 outputTree->SetBranchAddress("PhiFitVec", &PhiFitVec);
-	 outputTree->SetBranchAddress("EPRAVec", &EPRAVec);
-	 outputTree->SetBranchAddress("APRAVec", &APRAVec);
-	 outputTree->SetBranchAddress("PhiPRAVec", &PhiPRAVec);
-	 outputTree->SetBranchAddress("ExVec", &ExVec);
-	 outputTree->SetBranchAddress("ExXtrVec", &ExXtrVec);
-	 outputTree->SetBranchAddress("xiniFitVec", &xiniFitVec);
-	 outputTree->SetBranchAddress("yiniFitVec", &yiniFitVec);
-	 outputTree->SetBranchAddress("ziniFitVec", &ziniFitVec);
-	 outputTree->SetBranchAddress("xiniPRAVec", &xiniPRAVec);
-	 outputTree->SetBranchAddress("yiniPRAVec", &yiniPRAVec);
-	 outputTree->SetBranchAddress("ziniPRAVec", &ziniPRAVec);
-	 outputTree->SetBranchAddress("ICVec", &ICVec);
-	 outputTree->SetBranchAddress("EFitXtrVec", &EFitXtrVec);
-	 outputTree->SetBranchAddress("xiniFitXtrVec", &xiniFitXtrVec);
-	 outputTree->SetBranchAddress("yiniFitXtrVec", &yiniFitXtrVec);
-	 outputTree->SetBranchAddress("ziniFitXtrVec", &ziniFitXtrVec);
-	 outputTree->SetBranchAddress("distXtrVec", &distXtrVec);
-	 outputTree->SetBranchAddress("pValVec", &pValVec);
-	 outputTree->SetBranchAddress("trackLengthVec", &trackLengthVec);
-	 outputTree->SetBranchAddress("POCAXtrVec", &POCAXtrVec);
-	 outputTree->SetBranchAddress("trackIDVec", &trackIDVec);
-	 
-	 
-	 
+         outputTree->SetBranchAddress("EFitVec", &EFitVec);
+         outputTree->SetBranchAddress("AFitVec", &AFitVec);
+         outputTree->SetBranchAddress("PhiFitVec", &PhiFitVec);
+         outputTree->SetBranchAddress("EPRAVec", &EPRAVec);
+         outputTree->SetBranchAddress("APRAVec", &APRAVec);
+         outputTree->SetBranchAddress("PhiPRAVec", &PhiPRAVec);
+         outputTree->SetBranchAddress("ExVec", &ExVec);
+         outputTree->SetBranchAddress("ExXtrVec", &ExXtrVec);
+         outputTree->SetBranchAddress("xiniFitVec", &xiniFitVec);
+         outputTree->SetBranchAddress("yiniFitVec", &yiniFitVec);
+         outputTree->SetBranchAddress("ziniFitVec", &ziniFitVec);
+         outputTree->SetBranchAddress("xiniPRAVec", &xiniPRAVec);
+         outputTree->SetBranchAddress("yiniPRAVec", &yiniPRAVec);
+         outputTree->SetBranchAddress("ziniPRAVec", &ziniPRAVec);
+         outputTree->SetBranchAddress("ICVec", &ICVec);
+         outputTree->SetBranchAddress("EFitXtrVec", &EFitXtrVec);
+         outputTree->SetBranchAddress("xiniFitXtrVec", &xiniFitXtrVec);
+         outputTree->SetBranchAddress("yiniFitXtrVec", &yiniFitXtrVec);
+         outputTree->SetBranchAddress("ziniFitXtrVec", &ziniFitXtrVec);
+         outputTree->SetBranchAddress("distXtrVec", &distXtrVec);
+         outputTree->SetBranchAddress("pValVec", &pValVec);
+         outputTree->SetBranchAddress("trackLengthVec", &trackLengthVec);
+         outputTree->SetBranchAddress("POCAXtrVec", &POCAXtrVec);
+         outputTree->SetBranchAddress("trackIDVec", &trackIDVec);
 
          Int_t nentries = (Int_t)outputTree->GetEntries();
          for (Int_t i = 0; i < nentries; i++) {
             outputTree->GetEntry(i);
 
+	    if ((IC > 900 && IC < 1500)) {
+               // From std::vector
+               assert(EFitVec->size() == AFitVec->size());
 
-	  if((IC>900  && IC<1300))
-	  { 
-	    //From std::vector
-	    assert(EFitVec->size() == AFitVec->size() );
+               for (auto index = 0; index < EFitVec->size(); ++index) {
+		 //if((*AFitVec)[index]>20.0 && (*EFitVec)[index]>4.0){
+		if( ((*xiniFitXtrVec)[index]<0.3 && (*xiniFitXtrVec)[index]>-0.3) && ((*yiniFitXtrVec)[index]<0.3 && (*yiniFitXtrVec)[index]>-0.3) ){
+		 Ang_Ener->Fill((*AFitVec)[index], (*EFitVec)[index]);
+                  HQval->Fill((*ExVec)[index]);
+                  Ang_Ener_Xtr->Fill((*AFitVec)[index], (*EFitXtrVec)[index]);
+                  HQval_Xtr->Fill((*ExXtrVec)[index]);
+		  hxpos_fit_Xtr->Fill((*xiniFitXtrVec)[index]);
+		  hypos_fit_Xtr->Fill((*yiniFitXtrVec)[index]);
+		  hzpos_fit_Xtr->Fill((*ziniFitXtrVec)[index]);
+		  x_y_Xtr->Fill((*xiniFitXtrVec)[index], (*yiniFitXtrVec)[index]);
+		  QvsAng_Xtr->Fill((*ExXtrVec)[index], AFit);
+		 }// x-y
+		 //}//Energy and angle 
+		  
+	       	  	}//IC
 
-	    for(auto index = 0;index<EFitVec->size();++index)
-	      {
-		Ang_Ener->Fill((*AFitVec)[index], (*EFitVec)[index]);
-		HQval->Fill((*ExVec)[index]);
-		Ang_Ener_Xtr->Fill((*AFitVec)[index], (*EFitXtrVec)[index]);
-		HQval_Xtr->Fill((*ExXtrVec)[index]);
-	      }	
+               HIC->Fill(IC);
+               
+               Ang_Ener_PRA->Fill(APRA, EPRA);
 
-	    
-            HIC->Fill(IC);
-	    //if((IC>1800 && IC<2100)){
-	    //if((IC>1000  && IC<1020) && AFit>50.0){
-            // if((xiniFit<2.0 && xiniFit>-2.0) && (yiniFit<2.0 && yiniFit>-2.0))
-            // {
-            //Ang_Ener->Fill(AFit, EFit);
-            Ang_Ener_PRA->Fill(APRA,EPRA);
-	    
-	    	    
-            //HQval->Fill(Ex);
-            hxpos_fit->Fill(xiniFit);
-            hypos_fit->Fill(yiniFit);
-            hzpos_fit->Fill(ziniFit);
-            QvsAng->Fill(Ex, AFit);
-            QvsZpos->Fill(Ex, ziniFit);
-            ZposvsAng->Fill(ziniFit, AFit);
-            Ang_AngPRA->Fill(AFit, APRA);
-            zfit_zPRA->Fill(ziniFit, ziniPRA / 10.0);
-            Phi_PhiPRA->Fill(PhiFit * TMath::RadToDeg(), PhiPRA);
-            Ang_Phi->Fill(AFit, PhiFit * TMath::RadToDeg());
-            x_Phi->Fill(xiniFit, PhiFit * TMath::RadToDeg());
-            y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
-	    x_y->Fill(xiniFit,yiniFit);
-	    QvsXpos->Fill(Ex,xiniFit);
+               // HQval->Fill(Ex);
+               //hxpos_fit->Fill(xiniFit);
+               //hypos_fit->Fill(yiniFit);
+               //hzpos_fit->Fill(ziniFit);
 
-	    // Excitation energy
-            //Double_t ex_energy_exp = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, AFit*TMath::DegToRad(),EFit);
-	    //HQval->Fill(Ex);
-	    }
+	       QvsAng->Fill(Ex, AFit);
+               QvsZpos->Fill(Ex, ziniFit);
+               ZposvsAng->Fill(ziniFit, AFit);
+               Ang_AngPRA->Fill(AFit, APRA);
+               zfit_zPRA->Fill(ziniFit, ziniPRA / 10.0);
+               Phi_PhiPRA->Fill(PhiFit * TMath::RadToDeg(), PhiPRA);
+               Ang_Phi->Fill(AFit, PhiFit * TMath::RadToDeg());
+               x_Phi->Fill(xiniFit, PhiFit * TMath::RadToDeg());
+               y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
+               
+               QvsXpos->Fill(Ex, xiniFit);
+
+               // Excitation energy
+               // Double_t ex_energy_exp = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, AFit*TMath::DegToRad(),EFit);
+                //HQval->Fill(Ex);
+	       }
          }
       }
    }
@@ -260,6 +258,22 @@ void plotFit(std::string fileFolder = "data_nobeamfit/")
       std::cout << " Warning : No Kinematics file found for this reaction!" << std::endl;
 
    TGraph *Kine_AngRec_EnerRec = new TGraph(numKin, ThetaLabRec, EnerLabRec);
+
+   fileKine = "Be10pp_el_9AMeV.txt";
+   std::ifstream *kineStr5 = new std::ifstream(fileKine.Data());
+   numKin = 0;
+
+   if (!kineStr5->fail()) {
+      while (!kineStr5->eof()) {
+         *kineStr5 >> ThetaCMS[numKin] >> ThetaLabRec[numKin] >> EnerLabRec[numKin] >> ThetaLabSca[numKin] >>
+            EnerLabSca[numKin];
+         numKin++;
+      }
+   } else if (kineStr->fail())
+      std::cout << " Warning : No Kinematics file found for this reaction!" << std::endl;
+
+   TGraph *Kine_AngRec_EnerRec_9AMeV = new TGraph(numKin, ThetaLabRec, EnerLabRec);
+
 
    fileKine = "Be10pp_in_2+1.txt";
    std::ifstream *kineStr2 = new std::ifstream(fileKine.Data());
@@ -318,6 +332,10 @@ void plotFit(std::string fileFolder = "data_nobeamfit/")
    Kine_AngRec_EnerRec->Draw("SAME");
    Kine_AngRec_EnerRec_in->SetLineWidth(1);
    Kine_AngRec_EnerRec_in->SetLineColor(kBlue);
+    Kine_AngRec_EnerRec_9AMeV->SetLineWidth(1);
+      Kine_AngRec_EnerRec_9AMeV->SetLineColor(kGreen+10);
+      Kine_AngRec_EnerRec_9AMeV->Draw("SAME");
+
    Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp->SetLineWidth(1);
    Kine_AngRec_EnerRec_dp->SetLineColor(kGreen);
@@ -335,19 +353,20 @@ void plotFit(std::string fileFolder = "data_nobeamfit/")
    Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
+   Kine_AngRec_EnerRec_9AMeV->Draw("SAME");
    c1->cd(4);
    HQval_Xtr->Draw();
-   
+
    TCanvas *c2 = new TCanvas();
    c2->Divide(2, 3);
    c2->Draw();
    c2->cd(1);
-   hxpos_fit->Draw();
-   hypos_fit->Draw("SAMES");
+   hxpos_fit_Xtr->Draw();
+   hypos_fit_Xtr->Draw("SAMES");
    c2->cd(2);
-   hzpos_fit->Draw();
+   hzpos_fit_Xtr->Draw();
    c2->cd(3);
-   QvsAng->Draw();
+   QvsAng_Xtr->Draw();
    c2->cd(4);
    QvsZpos->Draw();
    c2->cd(5);
@@ -389,5 +408,5 @@ void plotFit(std::string fileFolder = "data_nobeamfit/")
    c5->cd(3);
    HIC->Draw();
    c5->cd(4);
-   x_y->Draw("zcol");
+   x_y_Xtr->Draw("zcol");
 }

@@ -51,8 +51,8 @@ public:
    inline void SetNumFitPoints(Float_t points) { fNumFitPoints = points; }
    inline void SetVerbosityLevel(Int_t verbosity) { fVerbosity = verbosity; }
    inline void SetEnergyLossFile(std::string file) { fEnergyLossFile = file; }
-   inline void SetSimulationConvention(Bool_t simconv) {fSimulationConv = simconv;}
-  
+   inline void SetSimulationConvention(Bool_t simconv) { fSimulationConv = simconv; }
+
    TClonesArray *GetGenfitTrackArray();
 
 private:
