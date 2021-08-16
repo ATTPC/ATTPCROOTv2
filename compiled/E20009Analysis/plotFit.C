@@ -186,26 +186,36 @@ void plotFit(std::string fileFolder = "data/")
          for (Int_t i = 0; i < nentries; i++) {
             outputTree->GetEntry(i);
 
-	    if ((IC > 900 && IC < 1500)) {
+	    // if ((IC > 900 && IC < 1500)) {
                // From std::vector
                assert(EFitVec->size() == AFitVec->size());
 
                for (auto index = 0; index < EFitVec->size(); ++index) {
+
+		 Double_t angle = (*AFitVec)[index];
+		 
+		 if(dataFile.find("sim") != std::string::npos)
+		   {
+		     angle= (*AFitVec)[index];
+		   }  
+		   
+		 
+
 		 //if((*AFitVec)[index]>20.0 && (*EFitVec)[index]>4.0){
-		if( ((*xiniFitXtrVec)[index]<0.3 && (*xiniFitXtrVec)[index]>-0.3) && ((*yiniFitXtrVec)[index]<0.3 && (*yiniFitXtrVec)[index]>-0.3) ){
-		 Ang_Ener->Fill((*AFitVec)[index], (*EFitVec)[index]);
+		 //	if( ((*xiniFitXtrVec)[index]<0.3 && (*xiniFitXtrVec)[index]>-0.3) && ((*yiniFitXtrVec)[index]<0.3 && (*yiniFitXtrVec)[index]>-0.3) ){
+        	  Ang_Ener->Fill(angle, (*EFitVec)[index]);
                   HQval->Fill((*ExVec)[index]);
-                  Ang_Ener_Xtr->Fill((*AFitVec)[index], (*EFitXtrVec)[index]);
+                  Ang_Ener_Xtr->Fill((angle), (*EFitXtrVec)[index]);
                   HQval_Xtr->Fill((*ExXtrVec)[index]);
 		  hxpos_fit_Xtr->Fill((*xiniFitXtrVec)[index]);
 		  hypos_fit_Xtr->Fill((*yiniFitXtrVec)[index]);
 		  hzpos_fit_Xtr->Fill((*ziniFitXtrVec)[index]);
 		  x_y_Xtr->Fill((*xiniFitXtrVec)[index], (*yiniFitXtrVec)[index]);
 		  QvsAng_Xtr->Fill((*ExXtrVec)[index], AFit);
-		 }// x-y
+		  // }// x-y
 		 //}//Energy and angle 
 		  
-	       	  	}//IC
+		// 	  	}//IC
 
                HIC->Fill(IC);
                

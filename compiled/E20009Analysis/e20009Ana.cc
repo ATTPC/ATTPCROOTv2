@@ -579,8 +579,9 @@ int main(int argc, char *argv[])
                        if (fInteractiveMode)
                           display->addEvent(fitTrack);
 
+		       
                        Double_t thetaA = 0.0;
-                       if (track.GetGeoTheta() > 90.0 * TMath::DegToRad()) {
+                       if (thetaConv > 90.0) {
                           thetaA = 180.0 * TMath::DegToRad() - mom_res.Theta();
 
                        } else {

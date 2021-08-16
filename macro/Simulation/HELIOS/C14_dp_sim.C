@@ -14,7 +14,7 @@ void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   timer.Start();
   // ------------------------------------------------------------------------
 
-  ATVertexPropagator* vertex_prop = new ATVertexPropagator();
+  AtVertexPropagator* vertex_prop = new AtVertexPropagator();
 
 
   // -----   Create simulation run   ----------------------------------------
@@ -152,7 +152,7 @@ void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
                  Double_t ThetaMaxCMS = 40.0;
 
 
-        ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
+        AtTPC2Body* TwoBody = new AtTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
         TwoBody->SetFixedTargetPosition(0.0,0.0,0.0);
         TwoBody->SetFixedBeamMomentum(0.0,0.0,pz*a);
         primGen->AddGenerator(TwoBody);
