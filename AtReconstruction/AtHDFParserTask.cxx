@@ -245,7 +245,7 @@ void AtHDFParserTask::Exec(Option_t *opt)
       int iCh = rawadc[3];
       int iPad = rawadc[4];
 
-      std::vector<int> PadRef = {iCobo, iAsad, iAget, iCh};
+      AtMap::PadReference PadRef = {iCobo, iAsad, iAget, iCh};
       int PadRefNum = fAtMapPtr->GetPadNum(PadRef);
 
       // std::cout<<iCobo<<" "<<iAsad<<" "<<iAget<<" "<<iCh<<" "<<iPad<<"  "<<PadRefNum<<"\n";

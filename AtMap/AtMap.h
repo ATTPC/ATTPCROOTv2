@@ -36,6 +36,12 @@ public:
 
    typedef boost::multi_array<double, 3> multiarray;
    typedef multiarray::index index;
+   struct PadReference {
+      Int_t cobo;
+      Int_t asad;
+      Int_t aget;
+      Int_t ch;
+   };
 
    virtual void Dump() = 0;
    virtual void GenerateAtTpc() = 0;
@@ -43,7 +49,7 @@ public:
    virtual TH2Poly *GetAtTpcPlane() = 0;
    virtual Int_t BinToPad(Int_t binval) = 0;
 
-   Int_t GetPadNum(std::vector<int> PadRef);
+   Int_t GetPadNum(const AtMap::PadReference &PadRef) const;
    multiarray GetPadCoordArr() { return AtPadCoord; }
    multiarray *GetPadCoord() { return fAtPadCoordPtr = &AtPadCoord; }
 
@@ -51,7 +57,8 @@ public:
    void ParseMapList(TXMLNode *node);
    void ParseAtTPCMap(TXMLNode *node);
    Bool_t DumpAtTPCMap();
-   std::vector<int> GetPadRef(int padNum);
+   AtMap::PadReference GetPadRef(int padNum) const;
+   // PadReference GetPadRef(const AtPad &pad) const {return GetPadRef(pad.GetPadNum())};
 
    inline void SetGUIMode() { kGUIMode = 1; }
    inline void SetDebugMode() { kDebug = 1; }
@@ -68,13 +75,14 @@ public:
    std::set<Int_t> fIniPads;
    TCanvas *cAtTPCPlane;
    TH2Poly *hPlane;
-   std::map<std::vector<int>, int> AtTPCPadMap;
-   std::map<int, std::vector<int>> AtTPCPadMapInverse;
+   std::map<AtMap::PadReference, int> AtTPCPadMap;
+   std::map<int, AtMap::PadReference> AtTPCPadMapInverse;
    std::map<int, int> AtTPCPadSize;
-   std::vector<int> PadKey;
 
 private:
    ClassDefOverride(AtMap, 1);
 };
+
+bool operator<(const AtMap::PadReference &l, const AtMap::PadReference &r);
 
 #endif
