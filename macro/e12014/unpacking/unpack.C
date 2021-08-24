@@ -91,7 +91,7 @@ void unpack(int runNumber)
    auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
    // numEvents = 1700;//217;
-   //numEvents = 100;
+   numEvents = 10;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 

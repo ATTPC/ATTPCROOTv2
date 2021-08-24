@@ -80,6 +80,7 @@ void unpackReduced(int runNumber)
 
    // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(psa);
+   psaTask->SetInputBranch("AtRawEventFiltered");
    psaTask->SetPersistence(kTRUE);
 
    // Create data reduction task

@@ -11,7 +11,7 @@ void linkRunsTask(int tpcRunNum = 118, int nsclRunNum = 310)
    // Set the input/output directories
    TString inputDir = "/mnt/rawdata/e12014_attpc/h5";
    TString outDir = "./";
-   
+
    // Set the in/out files
    TString inputFile = inputDir + TString::Format("/run_%04d.h5", tpcRunNum);
    TString outputFile = outDir + TString::Format("/run_%04d.root", tpcRunNum);
