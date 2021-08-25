@@ -55,14 +55,10 @@ void unpack(int runNumber)
    HDFParserTask->SetBaseLineSubtraction(kTRUE);
 
    // Add the aux channels from the experiment
-   auto hash = HDFParserTask->CalculateHash(10, 0, 0, 0);
-   HDFParserTask->SetAuxChannel(hash, "MCP_US");
-   hash = HDFParserTask->CalculateHash(10, 0, 0, 34);
-   HDFParserTask->SetAuxChannel(hash, "TPC_Mesh");
-   hash = HDFParserTask->CalculateHash(10, 0, 1, 0);
-   HDFParserTask->SetAuxChannel(hash, "MCP_DS");
-   hash = HDFParserTask->CalculateHash(10, 0, 2, 34);
-   HDFParserTask->SetAuxChannel(hash, "IC");
+   HDFParserTask->SetAuxChannel({10, 0, 0, 0}, "MCP_US");
+   HDFParserTask->SetAuxChannel({10, 0, 0, 34}, "TPC_Mesh");
+   HDFParserTask->SetAuxChannel({10, 0, 1, 0}, "MCP_DS");
+   HDFParserTask->SetAuxChannel({10, 0, 2, 34}, "IC");
 
    AtPSASimple2 *psa = new AtPSASimple2();
    psa->SetThreshold(35);

@@ -88,27 +88,14 @@ Bool_t AtHDFParserTask::SetBaseLineSubtraction(Bool_t value)
    return kTRUE;
 }
 
-bool AtHDFParserTask::SetAuxChannel(uint32_t hash, std::string channel_name)
+bool AtHDFParserTask::SetAuxChannel(PadReference pad, std::string channel_name)
 {
-   auto value = fAuxTable.emplace(hash, channel_name);
+   auto value = fAuxTable.emplace(pad, channel_name);
 
-   std::cout << cGREEN << " Auxiliary channel added " << channel_name << " - Hash " << hash << cNORMAL << "\n";
+   std::cout << cGREEN << " Auxiliary channel added " << channel_name << " - Hash " << std::hash<PadReference>()(pad)
+             << cNORMAL << "\n";
 
    return value.second;
-}
-
-std::pair<bool, std::string> AtHDFParserTask::FindAuxChannel(uint32_t hash)
-{
-   fAuxTableIt = fAuxTable.find(hash);
-
-   if (fAuxTableIt != fAuxTable.end()) {
-      // std::cout << "Element Found - ";
-      // std::cout << fAuxTableIt->first << "::" << fAuxTableIt->second << std::endl;
-      return std::make_pair(true, fAuxTableIt->second);
-   } else {
-      // std::cout << "Element Not Found" << std::endl;
-      return std::make_pair(false, "not_found");
-   }
 }
 
 bool AtHDFParserTask::SetAtTPCMap(Char_t const *lookup)
@@ -245,7 +232,7 @@ void AtHDFParserTask::Exec(Option_t *opt)
       int iCh = rawadc[3];
       int iPad = rawadc[4];
 
-      AtMap::PadReference PadRef = {iCobo, iAsad, iAget, iCh};
+      PadReference PadRef = {iCobo, iAsad, iAget, iCh};
       int PadRefNum = fAtMapPtr->GetPadNum(PadRef);
 
       // std::cout<<iCobo<<" "<<iAsad<<" "<<iAget<<" "<<iCh<<" "<<iPad<<"  "<<PadRefNum<<"\n";
@@ -260,12 +247,11 @@ void AtHDFParserTask::Exec(Option_t *opt)
       pad->SetPadYCoord(PadCenterCoord[1]);
       pad->SetSizeID(pSizeID);
 
-      auto hash = CalculateHash(uint32_t(iCobo), uint32_t(iAsad), uint32_t(iAget), uint32_t(iCh));
-      std::pair<bool, std::string> isAux = FindAuxChannel(hash);
-
-      if (isAux.first) {
+      // Check to see if it is an aux channel
+      auto auxName = fAuxTable.find(PadRef);
+      if (auxName != fAuxTable.end()) {
          pad->SetIsAux(true);
-         pad->SetAuxName(isAux.second);
+         pad->SetAuxName(auxName->second);
       }
 
       // std::cout<<PadCenterCoord[0]<<" "<<PadCenterCoord[1]<<"\n";

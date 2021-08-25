@@ -5,11 +5,10 @@
 #include "FairLogger.h"
 
 #include "AtHDFParser.h"
-#include "AtMap.h"
 #include "AtTpcProtoMap.h"
 #include "AtPedestal.h"
 #include "AtRawEvent.h"
-
+#include "AtMap.h"
 #include "AtDigiPar.h"
 
 // ROOT classes
@@ -41,7 +40,9 @@ public:
    Bool_t SetProtoMapFile(TString mapfile); // Only for Prototype Map
    Bool_t SetInitialEvent(std::size_t inievent);
    Bool_t SetOldFormat(Bool_t oldF = kFALSE);
-   bool SetAuxChannel(uint32_t hash, std::string channel_name);
+
+   bool SetAuxChannel(PadReference pad, std::string channel_name);
+
    std::pair<bool, std::string> FindAuxChannel(uint32_t hash);
    Bool_t SetBaseLineSubtraction(Bool_t value = kFALSE);
 
@@ -55,18 +56,6 @@ public:
    virtual void SetParContainers();
    virtual void Exec(Option_t *opt);
    virtual void FinishEvent();
-
-   static uint32_t CalculateHash(uint8_t cobo, uint8_t asad, uint8_t aget, uint8_t channel)
-   {
-      auto wcobo = uint32_t(cobo);
-      auto wasad = uint32_t(asad);
-      auto waget = uint32_t(aget);
-      auto wchannel = uint32_t(channel);
-
-      auto result = wchannel + waget * 100 + wasad * 10000 + wcobo * 1000000;
-
-      return result;
-   }
 
 private:
    AtHDFParser *HDFParser;
@@ -96,10 +85,9 @@ private:
    Bool_t fIsBaseLineSubtraction;
 
    std::vector<std::string> fEventsByName;
-   std::unordered_map<uint32_t, std::string> fAuxTable;
-   std::unordered_map<uint32_t, std::string>::iterator fAuxTableIt;
+   std::unordered_map<PadReference, std::string> fAuxTable;
 
-   ClassDef(AtHDFParserTask, 1);
+   ClassDef(AtHDFParserTask, 2);
 };
 
 #endif

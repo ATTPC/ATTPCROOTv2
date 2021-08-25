@@ -11,8 +11,7 @@ void run_eve(int runNum = 210, bool displayFilteredData = false, TString OutputD
 {
    TString InputDataFile;
    if (!displayFilteredData)
-      InputDataFile =
-         TString::Format("/mnt/analysis/hira_collaboration/e12014/Joe/UnpackedRunsDataReduced/run-%d.root", runNum);
+      InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpacked/run_%04d.root", runNum);
    else
       InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/filterTesting/run_%04d.root", runNum);
 

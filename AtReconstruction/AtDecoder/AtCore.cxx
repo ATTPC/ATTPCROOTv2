@@ -256,7 +256,7 @@ AtRawEvent *AtCore::GetRawEvent(Int_t eventID)
 
             // fAtMapPtr->Dump();
 
-            AtMap::PadReference PadRef = {.cobo = iCobo, .asad = iAsad, .aget = iAget, .ch = iCh};
+            PadReference PadRef = {.cobo = iCobo, .asad = iAsad, .aget = iAget, .ch = iCh};
             Int_t PadRefNum = fAtMapPtr->GetPadNum(PadRef);
             std::vector<Float_t> PadCenterCoord;
             PadCenterCoord.reserve(2);

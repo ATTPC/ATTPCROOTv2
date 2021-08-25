@@ -8,7 +8,7 @@ AtMap::AtMap() : AtPadCoord(boost::extents[10240][3][2]) {}
 
 AtMap::~AtMap() {}
 
-Int_t AtMap::GetPadNum(const AtMap::PadReference &PadRef) const
+Int_t AtMap::GetPadNum(const PadReference &PadRef) const
 {
 
    // Option 1: Int key - vector<int> value
@@ -127,10 +127,10 @@ void AtMap::ParseAtTPCMap(TXMLNode *node)
             fSizeID = atoi(node->GetText());
       }
    }
-   AtMap::PadReference ref = {fCoboID, fAsadID, fAgetID, fChannelID};
+   PadReference ref = {fCoboID, fAsadID, fAgetID, fChannelID};
 
-   AtTPCPadMap.insert(std::pair<AtMap::PadReference, int>(ref, fPadID));
-   AtTPCPadMapInverse.insert(std::pair<int, AtMap::PadReference>(fPadID, ref));
+   AtTPCPadMap.insert(std::pair<PadReference, int>(ref, fPadID));
+   AtTPCPadMapInverse.insert(std::pair<int, PadReference>(fPadID, ref));
    AtTPCPadSize.insert(std::pair<int, int>(fPadID, fSizeID));
 }
 
@@ -222,25 +222,31 @@ Bool_t AtMap::DumpAtTPCMap()
    return true;
 }
 
-AtMap::PadReference AtMap::GetPadRef(int padNum) const
+PadReference AtMap::GetPadRef(int padNum) const
 {
    if (AtTPCPadMapInverse.find(padNum) == AtTPCPadMapInverse.end())
       return PadReference();
    return AtTPCPadMapInverse.at(padNum);
 }
 
-bool operator<(const AtMap::PadReference &l, const AtMap::PadReference &r)
+bool operator<(const PadReference &l, const PadReference &r)
 {
-   if (l.cobo == r.cobo)
-      if (l.asad == r.asad)
-         if (l.aget == r.aget)
-            return l.ch < r.ch;
-         else
-            return l.aget < r.aget;
-      else
-         return l.asad < r.asad;
-   else
-      return l.cobo < r.cobo;
+   return std::hash<PadReference>()(l) < std::hash<PadReference>()(r);
 }
+
+bool operator==(const PadReference &l, const PadReference &r)
+{
+   return l.cobo == r.cobo && l.asad == r.asad && l.aget == r.aget && l.ch == r.ch;
+}
+
+/*inline std::size_t std::hash<PadReference>::operator()(const PadReference &x) const
+{
+   auto wcobo = uint32_t(x.cobo);
+   auto wasad = uint32_t(x.asad);
+   auto waget = uint32_t(x.aget);
+   auto wch = uint32_t(x.ch);
+
+
+   }*/
 
 ClassImp(AtMap)
