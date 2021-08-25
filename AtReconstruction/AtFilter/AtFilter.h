@@ -20,6 +20,9 @@ public:
 
    // Called on each pad
    virtual void Filter(AtPad *pad) = 0;
+
+   // Called at the end of an event. Returns if filtering was successful.
+   virtual bool IsGoodEvent() = 0;
 };
 
 #endif //#ifndef ATFILTER_H

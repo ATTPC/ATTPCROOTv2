@@ -1,14 +1,17 @@
 #include "AtFilterSubtraction.h"
-
+#include "FairLogger.h"
 #include "AtRawEvent.h"
 #include "AtMap.h"
 #include "AtPad.h"
 
-AtFilterSubtraction::AtFilterSubtraction(AtMap *map, Int_t numCoBos)
+#include <algorithm>
+
+AtFilterSubtraction::AtFilterSubtraction(AtMapPtr map, Int_t numCoBos)
    : fNumberCoBo(numCoBos), fMapping(map), fThreshold(0)
 {
    fBaseline.resize(fNumberCoBo);
    fRawBaseline.resize(fNumberCoBo);
+   fAgetCount.resize(fNumberCoBo);
 }
 
 void AtFilterSubtraction::Clear()
@@ -23,30 +26,41 @@ void AtFilterSubtraction::Clear()
    for (auto &cobo : fAgetCount)
       for (auto &asad : cobo)
          asad = 0;
+   fNumberMissedAsads = 0;
 }
 
 void AtFilterSubtraction::InitEvent(AtRawEvent *event)
 {
    Clear();
 
-   for (int i = 0; i < event->GetNumPads(); ++i) {
-      auto pad = event->GetPad(i);
-      auto padRef = fMapping->GetPadRef(pad->GetPadNum());
-
-      if (padRef.ch == 0 && fThreshold < pad->GetADC(pad->GetMaxADCIdx()))
-         AddChToBaseline(event->GetPad(i));
-   }
+   for (const auto &pad : *event->GetPads())
+      processPad(pad);
 
    AverageBaseline();
+
+   // LOG(INFO) << "AtFilterSubtraction: Used " << fNumberChUsed << " channels out of a possible " << fNumberChAvail;
 }
 
-void AtFilterSubtraction::AddChToBaseline(AtPad *pad)
+void AtFilterSubtraction::processPad(const AtPad &pad)
 {
-   auto padRef = fMapping->GetPadRef(pad->GetPadNum());
+   auto padRef = fMapping->GetPadRef(pad.GetPadNum());
+   if (padRef.ch != 0)
+      return;
+
+   for (int tb = 0; tb < 512; ++tb)
+      if (pad.GetADC(tb) > fThreshold)
+         return;
+
+   AddChToBaseline(pad);
+}
+
+void AtFilterSubtraction::AddChToBaseline(const AtPad &pad)
+{
+   auto padRef = fMapping->GetPadRef(pad.GetPadNum());
    fAgetCount[padRef.cobo][padRef.asad]++;
    for (int tb = 0; tb < 512; ++tb) {
-      fBaseline.at(padRef.cobo)[padRef.asad][tb] += pad->GetADC(tb);
-      fRawBaseline.at(padRef.cobo)[padRef.asad][tb] += pad->GetRawADC(tb);
+      fBaseline[padRef.cobo][padRef.asad][tb] += pad.GetADC(tb);
+      fRawBaseline[padRef.cobo][padRef.asad][tb] += pad.GetRawADC(tb);
    }
 }
 
@@ -54,9 +68,14 @@ void AtFilterSubtraction::AverageBaseline()
 {
    for (int cobo = 0; cobo < fBaseline.size(); ++cobo)
       for (int asad = 0; asad < fBaseline[cobo].size(); ++asad)
-         for (int tb = 0; tb < 512; ++tb) {
-            fBaseline[cobo][asad][tb] /= fAgetCount[cobo][asad];
-            fRawBaseline[cobo][asad][tb] /= fAgetCount[cobo][asad];
+         if (fAgetCount[cobo][asad] != 0)
+            for (int tb = 0; tb < 512; ++tb) {
+               fBaseline[cobo][asad].at(tb) /= fAgetCount[cobo].at(asad);
+               fRawBaseline[cobo][asad][tb] /= fAgetCount[cobo][asad];
+            }
+         else {
+            LOG(ERROR) << "All AGET ch0s had data for cobo " << cobo << " asad " << asad;
+            fNumberMissedAsads++;
          }
 }
 
@@ -77,3 +96,8 @@ void AtFilterSubtraction::Filter(AtPad *pad)
 }
 
 void AtFilterSubtraction::Init() {}
+
+bool AtFilterSubtraction::IsGoodEvent()
+{
+   return fNumberMissedAsads == 0;
+}

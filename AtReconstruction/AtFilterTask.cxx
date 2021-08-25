@@ -58,21 +58,16 @@ void AtFilterTask::Exec(Option_t *opt)
 
    // Get the raw event, and create filtered event
    AtRawEvent *rawEvent = (AtRawEvent *)fInputEventArray->At(0);
-
-   std::cout << "Copying event" << std::endl;
-
    AtRawEvent *filteredEvent = (AtRawEvent *)new ((*fOutputEventArray)[0]) AtRawEvent(rawEvent);
-   std::cout << "Filtering event." << std::endl;
 
-   if (filteredEvent->IsGood())
-
-      fFilter->InitEvent(filteredEvent);
-
-   // Loop through every pad
+   if (!filteredEvent->IsGood())
+      return;
+   fFilter->InitEvent(filteredEvent);
    for (auto &pad : *(filteredEvent->GetPads())) {
-      // If it is an aux pad, do not filter
       if (pad.IsAux())
          continue;
       fFilter->Filter(&pad);
-   } // end loop over pads
+   }
+
+   filteredEvent->SetIsGood(fFilter->IsGoodEvent());
 }
