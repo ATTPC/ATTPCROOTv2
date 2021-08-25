@@ -38,7 +38,6 @@ void AtPad::Initialize()
 {
 
    fIsPedestalSubtracted = 0;
-   fMaxAdcIdx = 0;
 
    memset(fRawAdc, 0, sizeof(fRawAdc));
    memset(fAdc, 0, sizeof(fAdc));
@@ -69,10 +68,6 @@ void AtPad::SetSizeID(Int_t val)
    fSizeID = val;
 }
 // void AtPad::SetGainCalibrated(Bool_t val)       { fIsGainCalibrated = val; }//TODO
-void AtPad::SetMaxADCIdx(Int_t val)
-{
-   fMaxAdcIdx = val;
-}
 void AtPad::SetADC(Double_t *val)
 {
    memcpy(fAdc, val, sizeof(fAdc));
@@ -132,8 +127,6 @@ AtPad &AtPad::operator=(AtPad right)
    memcpy(fRawAdc, right.GetRawADC(), sizeof(fRawAdc));
    memcpy(fAdc, right.GetADC(), sizeof(fAdc));
 
-   fMaxAdcIdx = right.GetMaxADCIdx();
-
    fIsPedestalSubtracted = right.IsPedestalSubtracted();
    kIsAux = right.IsAux();
    // fIsGainCalibrated = right.IsGainCalibrated();//todo
@@ -156,10 +149,6 @@ Int_t *AtPad::GetRawADC()
 Int_t AtPad::GetRawADC(Int_t idx) const
 {
    return fRawAdc[idx];
-}
-Int_t AtPad::GetMaxADCIdx() const
-{
-   return fMaxAdcIdx;
 }
 Bool_t AtPad::IsPedestalSubtracted() const
 {

@@ -1,4 +1,5 @@
 #include "AtMap.h"
+#include "FairLogger.h"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
@@ -178,6 +179,10 @@ Bool_t AtMap::ParseXMLMap(Char_t const *xmlfile)
    ParseMapList(node->GetChildren());
    // itrEnd = pmap.end();
    delete domParser;
+
+   LOG(INFO) << "Pad map has an average load of " << AtTPCPadMap.load_factor() << " and a max load of "
+             << AtTPCPadMap.max_load_factor() << " with buckets " << AtTPCPadMap.bucket_count() << " for "
+             << AtTPCPadMap.size() << " pads.";
 
    return true;
 }
