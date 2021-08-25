@@ -21,12 +21,12 @@ void unpack(int runNumber)
    std::cout << "Saving in: " << outputFile << std::endl;
 
    // Set the mapping for the TPC
-   TString scriptfile = "e12014_pad_mapping.xml"; //"Lookup20150611.xml";
+   TString mapFile = "e12014_pad_mapping.xml"; //"Lookup20150611.xml";
    TString parameterFile = "ATTPC.e12014.par";
 
    // Set directories
    TString dir = gSystem->Getenv("VMCWORKDIR");
-   TString scriptdir = dir + "/scripts/" + scriptfile;
+   TString mapDir = dir + "/scripts/" + mapFile;
    TString geomDir = dir + "/geometry/";
    gSystem->Setenv("GEOMPATH", geomDir.Data());
    TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -45,10 +45,15 @@ void unpack(int runNumber)
    parIo1->open(digiParFile.Data(), "in");
    rtdb->setSecondInput(parIo1);
 
+   // Create the detector map
+   auto fAtMapPtr = std::make_shared<AtTpcMap>();
+   fAtMapPtr->ParseXMLMap(mapDir.Data());
+   fAtMapPtr->GenerateAtTpc();
+
    // Create the unpacker task
    AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
    HDFParserTask->SetPersistence(kTRUE);
-   HDFParserTask->SetAtTPCMap(scriptdir.Data());
+   HDFParserTask->SetMap(fAtMapPtr);
    HDFParserTask->SetFileName(inputFile.Data());
    HDFParserTask->SetOldFormat(false);
    HDFParserTask->SetNumberTimestamps(2);

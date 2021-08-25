@@ -301,7 +301,6 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          // PadMultiplicity.insert(std::pair<Int_t,Int_t>(PadNum,PadHitNum));std::cout<<" PadNum : "<<PadNum<<"
          // PadHitNum : "<<PadHitNum<<std::endl;}
          //#pragma omp ordered
-         std::cout << "Emplacing pair: " << PadNum << " " << PadHitNum << std::endl;
          PadMultiplicity.insert(std::pair<Int_t, Int_t>(PadNum, PadHitNum));
 
       } // if Valid Num Peaks

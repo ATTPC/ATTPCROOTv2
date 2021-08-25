@@ -14,7 +14,7 @@
 
 ClassImp(AtHDFParserTask);
 
-AtHDFParserTask::AtHDFParserTask() : AtPadCoordArr(boost::extents[10240][3][2])
+AtHDFParserTask::AtHDFParserTask()
 {
    fIsPersistence = kFALSE;
    fRawEventArray = new TClonesArray("AtRawEvent");
@@ -24,68 +24,12 @@ AtHDFParserTask::AtHDFParserTask() : AtPadCoordArr(boost::extents[10240][3][2])
    fRawEvent = new AtRawEvent();
    fIsOldFormat = kFALSE;
    fIsBaseLineSubtraction = kFALSE;
-   kOpt = 0;
-
-   fIsProtoGeoSet = kFALSE;
-   fIsProtoMapSet = kFALSE;
-   if (kOpt == 0)
-      fAtMapPtr = new AtTpcMap();
-   else if (kOpt == 1)
-      fAtMapPtr = new AtTpcProtoMap();
-   else
-      std::cout << "== AtHDFParserTask Initialization Error : Option not found. Current available options: AtTPC Map 0 "
-                   "/ Prototype Map 1"
-                << std::endl;
-}
-
-AtHDFParserTask::AtHDFParserTask(Int_t opt) : AtPadCoordArr(boost::extents[10240][3][2]), kOpt(0)
-{
-   fIsPersistence = kFALSE;
-   fIsOldFormat = kFALSE;
-   fIsBaseLineSubtraction = kFALSE;
-   fRawEventArray = new TClonesArray("AtRawEvent");
-   fEventID = 0;
-   fIniEventID = 0;
-   fNumberTimestamps = 1;
-   fRawEvent = new AtRawEvent();
-
-   kOpt = opt;
-
-   fIsProtoGeoSet = kFALSE;
-   fIsProtoMapSet = kFALSE;
-
-   if (kOpt == 0)
-      fAtMapPtr = new AtTpcMap();
-   else if (kOpt == 1)
-      fAtMapPtr = new AtTpcProtoMap();
-   else
-      std::cout << "== AtHDFParserTask Initialization Error : Option not found. Current available options: AtTPC Map 0 "
-                   "/ Prototype Map 1"
-                << std::endl;
 }
 
 AtHDFParserTask::~AtHDFParserTask()
 {
    delete fRawEventArray;
    delete fRawEvent;
-   delete fAtMapPtr;
-}
-
-void AtHDFParserTask::SetPersistence(Bool_t value)
-{
-   fIsPersistence = value;
-}
-
-Bool_t AtHDFParserTask::SetOldFormat(Bool_t oldF)
-{
-   fIsOldFormat = oldF;
-   return kTRUE;
-}
-
-Bool_t AtHDFParserTask::SetBaseLineSubtraction(Bool_t value)
-{
-   fIsBaseLineSubtraction = value;
-   return kTRUE;
 }
 
 bool AtHDFParserTask::SetAuxChannel(PadReference pad, std::string channel_name)
@@ -96,62 +40,6 @@ bool AtHDFParserTask::SetAuxChannel(PadReference pad, std::string channel_name)
              << cNORMAL << "\n";
 
    return value.second;
-}
-
-bool AtHDFParserTask::SetAtTPCMap(Char_t const *lookup)
-{
-
-   if (kOpt == 0)
-      dynamic_cast<AtTpcMap *>(fAtMapPtr)->GenerateAtTpc();
-
-   Bool_t MapIn = fAtMapPtr->ParseXMLMap(lookup);
-
-   if (!MapIn)
-      return false;
-
-   std::cout << cGREEN << " Open lookup table " << lookup << cNORMAL << "\n";
-
-   // AtPadCoordArr = fAtMapPtr->GetPadCoordArr();//TODO Use a pointer to a simpler container
-   //**** For debugging purposes only! ******//
-   // fAtMapPtr->SetGUIMode();
-   // fAtMapPtr->GetAtTPCPlane();
-   return true;
-}
-
-Bool_t AtHDFParserTask::SetProtoGeoFile(TString geofile)
-{
-
-   if (kOpt == 1) {
-
-      fIsProtoGeoSet = dynamic_cast<AtTpcProtoMap *>(fAtMapPtr)->SetGeoFile(geofile);
-      return fIsProtoGeoSet;
-
-   } else {
-      std::cout << "== AtHDFParserTask::SetProtoGeoMap. This method must be used only with Prototype mapping (kOpt=1)!"
-                << std::endl;
-      return kFALSE;
-   }
-}
-
-Bool_t AtHDFParserTask::SetProtoMapFile(TString mapfile)
-{
-
-   if (kOpt == 1) {
-
-      fIsProtoMapSet = dynamic_cast<AtTpcProtoMap *>(fAtMapPtr)->SetProtoMap(mapfile);
-      return fIsProtoMapSet;
-
-   } else {
-      std::cout << "== AtHDFParserTask::SetProtoMapFile. This method must be used only with Prototype mapping (kOpt=1)!"
-                << std::endl;
-      return kFALSE;
-   }
-}
-
-Bool_t AtHDFParserTask::SetInitialEvent(std::size_t inievent)
-{
-   fIniEventID = inievent;
-   return true;
 }
 
 InitStatus AtHDFParserTask::Init()
@@ -194,6 +82,79 @@ void AtHDFParserTask::SetParContainers()
       LOG(fatal) << "Cannot find AtDigiPar!";
 }
 
+void AtHDFParserTask::processHeader()
+{
+   TString header_name = TString::Format("evt%lu_header", fEventID);
+   auto header = HDFParser->get_header(header_name.Data());
+
+   fRawEvent->SetEventID(header.at(0));
+
+   fRawEvent->SetNumberOfTimestamps(fNumberTimestamps);
+   for (int i = 0; i < fNumberTimestamps; ++i)
+      fRawEvent->SetTimestamp(header.at(i + 1), i);
+}
+
+void AtHDFParserTask::processData()
+{
+   TString event_name = TString::Format("evt%lu_data", fEventID);
+   std::size_t npads = HDFParser->n_pads(event_name.Data());
+
+   for (auto ipad = 0; ipad < npads; ++ipad)
+      processPad(ipad);
+}
+
+void AtHDFParserTask::processPad(std::size_t ipad)
+{
+   std::vector<int16_t> rawadc = HDFParser->pad_raw_data(ipad);
+   PadReference PadRef = {rawadc[0], rawadc[1], rawadc[2], rawadc[3]};
+   int PadRefNum = fAtMapPtr->GetPadNum(PadRef);
+   AtPad *pad = new AtPad(PadRefNum);
+
+   setIsAux(pad);
+   setDimensions(pad);
+   setAdc(pad, rawadc);
+
+   fRawEvent->SetIsGood(kTRUE);
+   fRawEvent->SetPad(pad);
+   delete pad;
+}
+void AtHDFParserTask::setAdc(AtPad *pad, const std::vector<int16_t> &data)
+{
+   auto baseline = getBaseline(data);
+   for (Int_t iTb = 0; iTb < 512; iTb++) {
+      pad->SetRawADC(iTb, data.at(iTb + 5));
+      pad->SetADC(iTb, data.at(iTb + 5) - baseline);
+   }
+   pad->SetPedestalSubtracted(fIsBaseLineSubtraction);
+}
+
+Float_t AtHDFParserTask::getBaseline(const std::vector<int16_t> &data)
+{
+   Float_t baseline = 0;
+
+   if (fIsBaseLineSubtraction) {
+      for (Int_t iTb = 5; iTb < 25; iTb++)
+         baseline += data[iTb];
+      baseline /= 20.0;
+   }
+   return baseline;
+}
+void AtHDFParserTask::setIsAux(AtPad *pad)
+{
+
+   auto auxIt = fAuxTable.find(fAtMapPtr->GetPadRef(pad->GetPadNum()));
+   pad->SetIsAux(auxIt != fAuxTable.end());
+   if (pad->IsAux())
+      pad->SetAuxName(auxIt->second);
+}
+void AtHDFParserTask::setDimensions(AtPad *pad)
+{
+   auto PadCenterCoord = fAtMapPtr->CalcPadCenter(pad->GetPadNum());
+   Int_t pSizeID = fAtMapPtr->GetPadSize(pad->GetPadNum());
+   pad->SetPadXCoord(PadCenterCoord[0]);
+   pad->SetPadYCoord(PadCenterCoord[1]);
+   pad->SetSizeID(pSizeID);
+}
 void AtHDFParserTask::Exec(Option_t *opt)
 {
    fRawEventArray->Delete();
@@ -204,85 +165,10 @@ void AtHDFParserTask::Exec(Option_t *opt)
       return;
    }
 
-   // Get the names of the header and data
-   TString event_name = TString::Format("evt%lu_data", fEventID);
-   TString header_name = TString::Format("evt%lu_header", fEventID);
+   processHeader();
+   processData();
 
-   auto header = HDFParser->get_header(header_name.Data());
-
-   fRawEvent->SetEventID(header.at(0));
-
-   // Get the timestamps
-   fRawEvent->SetNumberOfTimestamps(fNumberTimestamps);
-   for (int i = 0; i < fNumberTimestamps; ++i)
-      fRawEvent->SetTimestamp(header.at(i + 1), i);
-
-   std::size_t npads = HDFParser->n_pads(event_name.Data());
-
-   // std::cout << "Found at " << fEventID << " event " << fRawEvent->GetEventID() << " Event name " << event_name
-   //<< " with timestamp " << fRawEvent->GetTimestamp() << std::endl;
-
-   for (auto ipad = 0; ipad < npads; ++ipad) {
-
-      std::vector<int16_t> rawadc = HDFParser->pad_raw_data(ipad);
-
-      int iCobo = rawadc[0];
-      int iAsad = rawadc[1];
-      int iAget = rawadc[2];
-      int iCh = rawadc[3];
-      int iPad = rawadc[4];
-
-      PadReference PadRef = {iCobo, iAsad, iAget, iCh};
-      int PadRefNum = fAtMapPtr->GetPadNum(PadRef);
-
-      // std::cout<<iCobo<<" "<<iAsad<<" "<<iAget<<" "<<iCh<<" "<<iPad<<"  "<<PadRefNum<<"\n";
-
-      std::vector<Float_t> PadCenterCoord;
-      PadCenterCoord.reserve(2);
-      PadCenterCoord = fAtMapPtr->CalcPadCenter(PadRefNum);
-      Int_t pSizeID = fAtMapPtr->GetPadSize(PadRefNum);
-
-      AtPad *pad = new AtPad(PadRefNum);
-      pad->SetPadXCoord(PadCenterCoord[0]);
-      pad->SetPadYCoord(PadCenterCoord[1]);
-      pad->SetSizeID(pSizeID);
-
-      // Check to see if it is an aux channel
-      auto auxName = fAuxTable.find(PadRef);
-      if (auxName != fAuxTable.end()) {
-         pad->SetIsAux(true);
-         pad->SetAuxName(auxName->second);
-      }
-
-      // std::cout<<PadCenterCoord[0]<<" "<<PadCenterCoord[1]<<"\n";
-
-      // Baseline subtraction
-      double adc[512] = {0};
-      double baseline = 0;
-
-      if (fIsBaseLineSubtraction) {
-         for (Int_t iTb = 5; iTb < 25; iTb++)
-            baseline += rawadc[iTb];
-
-         baseline /= 20.0;
-      }
-
-      for (Int_t iTb = 0; iTb < 512; iTb++) {
-         // First 5 entries in array are electronic ID
-         pad->SetRawADC(iTb, rawadc.at(iTb + 5));
-         adc[iTb] = (double)rawadc[iTb + 5] - baseline;
-         // std::cout<<" iTb "<<iTb<<" rawadc "<<rawadc[iTb]<<"	"<<adc[iTb]<<"\n";
-         pad->SetADC(iTb, adc[iTb]);
-      }
-
-      pad->SetPedestalSubtracted(kTRUE);
-
-      fRawEvent->SetIsGood(kTRUE);
-      fRawEvent->SetPad(pad);
-      delete pad;
-
-   } // End loop over pads
-   // std::cout << "Unpacked event: " << fEventID << std::endl;
+   // Copy the filled raw event to the tree to be written
    new ((*fRawEventArray)[0]) AtRawEvent(fRawEvent);
 
    ++fEventID;
