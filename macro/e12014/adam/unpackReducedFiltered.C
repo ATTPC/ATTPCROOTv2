@@ -77,6 +77,7 @@ void unpackReduced(int runNumber)
    filter->SetThreshold(threshold);
    AtFilterTask *filterTask = new AtFilterTask(filter);
    filterTask->SetPersistence(kTRUE);
+   filterTask->SetFilterAux(true);
 
    AtPSASimple2 *psa = new AtPSASimple2();
    psa->SetThreshold(threshold);
