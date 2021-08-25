@@ -58,6 +58,7 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       } */
 
    Int_t iPad = 0;
+
    //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
    for (iPad = 0; iPad < numPads; iPad++) {
 
@@ -223,11 +224,8 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
             }
             TBCorr = TBCorr / TB_TotQ;
 
-            // if(fIsBaseCorr) charge = adc[maxAdcIdx] - basecorr/10.0; //Number of timebuckets taken into account
-            // else charge = adc[maxAdcIdx];
-
             if (fIsBaseCorr)
-               charge = floatADC[maxAdcIdx] - basecorr / 10.0; // Number of timebuckets taken into account
+               charge = floatADC[maxAdcIdx] - basecorr / 10.0;
             else
                charge = floatADC[maxAdcIdx];
 
@@ -235,21 +233,16 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                zPos = CalculateZGeo(TBCorr);
             else
                zPos = CalculateZGeo(maxAdcIdx);
-            // std::cout<<" zPos : "<<zPos<<" maxAdcIdx : "<<maxAdcIdx<<" timemax : "<<timemax<<std::endl;
 
             if (fIsMaxFinder) {
-               // if ((fThreshold > 0 && charge < fThreshold ) || maxTime<20 || maxTime>500)// TODO: Does this work when
-               // the polarity is negative??
                if ((gthreshold > 0 && charge < gthreshold) || maxTime < 20 ||
                    maxTime > 500) // TODO: Does this work when the polarity is negative??
                   fValidThreshold = kFALSE;
             }
             if (fIsPeakFinder) {
-               // if (fThreshold > 0 && charge < fThreshold)
                if (gthreshold > 0 && charge < gthreshold)
                   fValidThreshold = kFALSE;
             }
-            // continue;
 
             // if (zPos > 0 || zPos < -fMaxDriftLength)
             // if (zPos < 0 || zPos > fMaxDriftLength)
@@ -261,24 +254,14 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
             if (fValidThreshold && fValidDerivative) {
 
+               // Sum only if Hit is valid - We only sum once (iPeak==0) to account for the
+               // whole spectrum.
                if (iPeak == 0)
-                  QEventTot += QHitTot; // Sum only if Hit is valid - We only sum once (iPeak==0) to account for the
-                                        // whole spectrum.
-
-               /*HitPosRot = r * TVector3(xPos,yPos,zPos); // 1.- Rotate the pad plane
-                  xPosCorr = CalculateXCorr(HitPosRot.X(),maxAdcIdx);// 2.- Correct for the Lorentz transformation
-                  yPosCorr = CalculateYCorr(HitPosRot.Y(),maxAdcIdx);
-                  zPosCorr = CalculateZCorr(HitPosRot.Z(),maxAdcIdx);
-                  TVector3 RotAux(xPosCorr,yPosCorr,zPosCorr);
-                  //3.- Rotate the tracks to put them in the beam direction
-                  yPosCorr+=TMath::Tan(fTiltAng*TMath::Pi()/180.0)*(1000.0-zPosCorr); */
+                  QEventTot += QHitTot;
 
                TVector3 posRot = RotateDetector(xPos, yPos, zPos, maxAdcIdx);
 
-               // AtHit *hit = new AtHit(PadNum,hitNum, HitPosRot.X(), HitPosRot.Y(),HitPosRot.Z(), charge);
                AtHit *hit = new AtHit(PadNum, hitNum, xPos, yPos, zPos, charge);
-               // AtHit *hit = new AtHit(PadNum,hitNum, xPosCorr, yPosCorr, zPosCorr, charge);
-               // hit->SetPositionCorr(xPosCorr, yPosCorr, zPosCorr);
                hit->SetPositionCorr(posRot.X(), posRot.Y(), posRot.Z());
                hit->SetTimeStamp(maxAdcIdx);
                hit->SetTimeStampCorr(TBCorr);
@@ -286,22 +269,16 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                hit->SetBaseCorr(basecorr / 10.0);
                hit->SetSlopeCnt(slope_cnt);
                PadHitNum++;
-               hit->SetQHit(QHitTot); // TODO: The charge of each hit is the total charge of the spectrum, so for double
-                                      // structures this is unrealistic.
+               hit->SetQHit(QHitTot);
+               // TODO: The charge of each hit is the total charge of the spectrum, so for double
+               // structures this is unrealistic.
+
                HitPos = hit->GetPosition();
                Rho2 += HitPos.Mag2();
                RhoMean += HitPos.Mag();
                if ((xPos < -9000 || yPos < -9000) && pad->GetPadNum() != -1)
                   std::cout << " AtPSASimple2::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum()
                             << std::endl;
-               // std::cout<<"  =============== Next Hit Variance Info  =============== "<<std::endl;
-               // std::cout<<" Hit Num : "<<hitNum<<"  - Hit Pos Rho2 : "<<HitPos.Mag2()<<"  - Hit Pos Rho :
-               // "<<HitPos.Mag()<<std::endl; std::cout<<" Valid Threshold : "<<fValidThreshold<<" Valid Peaks :
-               // "<<fValidBuff<<std::endl; std::cout<<" Pad Number before loop ends : "<<pad->GetPadNum()<<std::endl;
-               // std::cout<<" Pad Num : "<<PadNum<<" Peak : "<<iPeak<<"/"<<numPeaks<<" - Charge : "<<charge<<" - zPos :
-               // "<<zPos<<std::endl; std::cout<<" Hit Coordinates : "<<xPos<<"  -  "<<yPos<<" - "<<zPos<<"  -
-               // "<<std::endl; std::cout<<" Is Pad"<<pad->GetPadNum()<<" Valid? "<<pad->GetValidPad()<<std::endl;
-               // std::cout<<" TimeStamp : "<<maxAdcIdx<<" Time Max Interpolated : "<<timemax<<std::endl;
 
                // Tracking MC points
                if (mcPointsMap.size() > 0)
@@ -313,18 +290,11 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
                hitNum++;
 
-               for (Int_t iTb = 0; iTb < fNumTbs; iTb++) {
-                  // if(floatADC[iTb]!=0)std::cout << "Pad  "<<iPad<<"  tb  "<<iTb<<"  ADC  "<<floatADC[iTb] << '\n';
+               for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
                   mesh[iTb] += floatADC[iTb];
-                  // if(iTb==511){
-                  // std::cout<<" IPad : "<<iPad<<std::endl;
-                  // std::cout<<" iTb : "<<iTb<<" FloatADC : "<<floatADC[iTb]<<" mesh : "<<mesh[iTb]<<std::endl;
-                  //}
-               }
 
             } // Valid Threshold
-
-         } // Peak Loop
+         }    // Peak Loop
 
          //    #pragma omp ordered
          // if(fValidThreshold && fValidBuff){
@@ -340,14 +310,8 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
    } // Pad Loop
 
-   // std::cout << "number of hits from  PSA!!  "<<hitNum << '\n';
-
-   // std::cout<<"  --------------------------------- "<<std::endl;
-   // std::cout<<" Rho2 : "<<Rho2<<" - RhoMean : "<<RhoMean<<" Num of Hits : "<<event->GetNumHits()<<std::endl;
    RhoVariance = Rho2 - (pow(RhoMean, 2) / (event->GetNumHits()));
    RhoVariance = Rho2 - (event->GetNumHits() * pow((RhoMean / event->GetNumHits()), 2));
-   // std::cout<<" Rho Variance : "<<RhoVariance<<std::endl;
-   // std::cout<<" Q Event Tot : "<<QEventTot<<std::endl;
 
    for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
       event->SetMeshSignal(iTb, mesh[iTb]);

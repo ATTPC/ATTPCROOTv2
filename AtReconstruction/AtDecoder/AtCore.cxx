@@ -256,7 +256,7 @@ AtRawEvent *AtCore::GetRawEvent(Int_t eventID)
 
             // fAtMapPtr->Dump();
 
-            std::vector<int> PadRef = {iCobo, iAsad, iAget, iCh};
+            PadReference PadRef = {.cobo = iCobo, .asad = iAsad, .aget = iAget, .ch = iCh};
             Int_t PadRefNum = fAtMapPtr->GetPadNum(PadRef);
             std::vector<Float_t> PadCenterCoord;
             PadCenterCoord.reserve(2);
@@ -310,7 +310,6 @@ AtRawEvent *AtCore::GetRawEvent(Int_t eventID)
                if (maxADCIdx < 0 || maxADCIdx >= fGETDecoderPtr->GetNumTbs())
                   maxADCIdx = 0;
 
-               pad->SetMaxADCIdx(maxADCIdx);
                pad->SetPedestalSubtracted(kTRUE);
 
             } else if (fPedestalMode != kNoPedestal) {
@@ -362,7 +361,6 @@ AtRawEvent *AtCore::GetRawEvent(Int_t eventID)
                if (maxADCIdx < 0 || maxADCIdx >= fGETDecoderPtr->GetNumTbs())
                   maxADCIdx = 0;
 
-               pad->SetMaxADCIdx(maxADCIdx);
                pad->SetPedestalSubtracted(kTRUE);
             }
 

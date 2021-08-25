@@ -1,6 +1,10 @@
 #include "AtPulseTask.h"
 #include "AtHit.h"
 #include "AtTpcPoint.h"
+#include "AtMap.h"
+#include "AtSpecMATMap.h"
+#include "AtGadgetIIMap.h"
+#include "AtTpcMap.h"
 
 // Fair class header
 #include "FairRootManager.h"
@@ -89,19 +93,19 @@ InitStatus AtPulseTask::Init()
    case kAtTpc:
       std::cout << cGREEN << " ATTPC\n" << cNORMAL;
       fNumPads = 10240;
-      fMap = new AtTpcMap();
+      fMap = std::make_shared<AtTpcMap>();
       break;
 
    case kGADGETII:
       std::cout << cGREEN << " GADGETII\n" << cNORMAL;
       fNumPads = 1012;
-      fMap = new AtGadgetIIMap();
+      fMap = std::make_shared<AtGadgetIIMap>();
       break;
 
    case kSpecMAT:
       std::cout << cGREEN << " SpecMAT\n" << cNORMAL;
       fNumPads = 3162;
-      fMap = new AtSpecMATMap(fNumPads);
+      fMap = std::make_shared<AtSpecMATMap>(fNumPads);
       break;
 
    default:

@@ -19,29 +19,16 @@
 #include "TH1D.h"
 #include "AtDigiPar.h"
 #include "TH2Poly.h"
-#include "AtMap.h"
-#include "AtSpecMATMap.h"
-#include "AtGadgetIIMap.h"
-#include "AtTpcMap.h"
 #include "AtRawEvent.h"
 #include "AtGas.h"
+
+#include <memory>
+class AtMap;
+using AtMapPtr = std::shared_ptr<AtMap>;
 
 enum DetectorId { kAtTpc, kGADGETII, kSpecMAT };
 
 class AtPulseTask : public FairTask {
-
-public:
-   AtPulseTask();
-   ~AtPulseTask();
-
-   void SetPersistence(Bool_t val) { fIsPersistent = val; }
-   void SetSaveMCInfo() { fIsSaveMCInfo = kTRUE; }
-   virtual InitStatus Init();        //!< Initiliazation of task at the beginning of a run.
-   virtual void Exec(Option_t *opt); //!< Executed for each event.
-   virtual void SetParContainers();  //!< Load the parameter container from the runtime database.
-   void SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap);
-   inline void IsInhibitMap(Bool_t val) { fIsInhibitMap = val; }
-   inline void SelectDetectorId(DetectorId val) { fDetectorId = val; };
 
 private:
    AtGas *fGas;                         //!< Gas parameter container.
@@ -58,7 +45,7 @@ private:
    TClonesArray *fMCPointArray;         //!< MC Point Array
    AtRawEvent *fRawEvent;               //!< Raw Event Object
    TH2Poly *fPadPlane;                  //!< pad plane
-   AtMap *fMap;                         //!< AtTPC map
+   AtMapPtr fMap;                       //!< AtTPC map
    Int_t fInternalID;                   //!< Internal ID
    Int_t fNumPads;                      //!< Number of pads
 
@@ -75,6 +62,19 @@ private:
    TString fXtalkMap;
    Bool_t fIsInhibitMap;
    Bool_t fIsSaveMCInfo; //!<< Propagates MC information
+
+public:
+   AtPulseTask();
+   ~AtPulseTask();
+
+   void SetPersistence(Bool_t val) { fIsPersistent = val; }
+   void SetSaveMCInfo() { fIsSaveMCInfo = kTRUE; }
+   virtual InitStatus Init();        //!< Initiliazation of task at the beginning of a run.
+   virtual void Exec(Option_t *opt); //!< Executed for each event.
+   virtual void SetParContainers();  //!< Load the parameter container from the runtime database.
+   void SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap);
+   inline void IsInhibitMap(Bool_t val) { fIsInhibitMap = val; }
+   inline void SelectDetectorId(DetectorId val) { fDetectorId = val; };
 
    ClassDef(AtPulseTask, 1);
 };

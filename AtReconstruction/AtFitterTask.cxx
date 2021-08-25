@@ -72,7 +72,7 @@ InitStatus AtFitterTask::Init()
 
    fPatternEventArray = (TClonesArray *)ioMan->GetObject("AtPatternEvent");
    if (fPatternEventArray == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtPatternEvent array!");
+      LOG(error) << "Cannot find AtPatternEvent array!";
       return kERROR;
    }
 

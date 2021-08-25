@@ -28,36 +28,32 @@
 #include <fstream>
 #include <iostream>
 
+// The definition of this struct, and the operator overloads have to
+// be before AtMap where an unordered_map using this as a key is
+// instatiated.
+struct PadReference {
+   Int_t cobo;
+   Int_t asad;
+   Int_t aget;
+   Int_t ch;
+};
+bool operator<(const PadReference &l, const PadReference &r);
+bool operator==(const PadReference &l, const PadReference &r);
+namespace std {
+template <>
+struct hash<PadReference> {
+   inline size_t operator()(const PadReference &x) const
+   {
+      return x.ch + x.aget * 100 + x.asad * 10000 + x.cobo * 1000000;
+   }
+};
+} // namespace std
+
 class AtMap : public TNamed {
 
-public:
-   AtMap();
-   ~AtMap();
-
+protected:
    typedef boost::multi_array<double, 3> multiarray;
    typedef multiarray::index index;
-
-   virtual void Dump() = 0;
-   virtual void GenerateAtTpc() = 0;
-   virtual std::vector<Float_t> CalcPadCenter(Int_t PadRef) = 0;
-   virtual TH2Poly *GetAtTpcPlane() = 0;
-   virtual Int_t BinToPad(Int_t binval) = 0;
-
-   Int_t GetPadNum(std::vector<int> PadRef);
-   multiarray GetPadCoordArr() { return AtPadCoord; }
-   multiarray *GetPadCoord() { return fAtPadCoordPtr = &AtPadCoord; }
-
-   Bool_t ParseXMLMap(Char_t const *xmlfile);
-   void ParseMapList(TXMLNode *node);
-   void ParseAtTPCMap(TXMLNode *node);
-   Bool_t DumpAtTPCMap();
-   std::vector<int> GetPadRef(int padNum);
-
-   inline void SetGUIMode() { kGUIMode = 1; }
-   inline void SetDebugMode() { kDebug = 1; }
-   Bool_t ParseInhibitMap(TString inimap, TString lowgmap, TString xtalkmap);
-   Bool_t GetIsInhibited(Int_t PadNum);
-   Int_t GetPadSize(int padNum);
 
    multiarray AtPadCoord;
    multiarray *fAtPadCoordPtr;
@@ -68,12 +64,37 @@ public:
    std::set<Int_t> fIniPads;
    TCanvas *cAtTPCPlane;
    TH2Poly *hPlane;
-   std::map<std::vector<int>, int> AtTPCPadMap;
-   std::map<int, std::vector<int>> AtTPCPadMapInverse;
+   std::unordered_map<PadReference, int> AtTPCPadMap;
+   std::map<int, PadReference> AtTPCPadMapInverse;
    std::map<int, int> AtTPCPadSize;
-   std::vector<int> PadKey;
 
-private:
+public:
+   AtMap();
+   ~AtMap();
+
+   virtual void Dump() = 0;
+   virtual void GenerateAtTpc() = 0;
+   virtual std::vector<Float_t> CalcPadCenter(Int_t PadRef) = 0;
+   virtual TH2Poly *GetAtTpcPlane() = 0;
+   virtual Int_t BinToPad(Int_t binval) = 0;
+
+   Int_t GetPadNum(const PadReference &PadRef) const;
+   multiarray GetPadCoordArr() { return AtPadCoord; }
+   multiarray *GetPadCoord() { return fAtPadCoordPtr = &AtPadCoord; }
+
+   Bool_t ParseXMLMap(Char_t const *xmlfile);
+   void ParseMapList(TXMLNode *node);
+   void ParseAtTPCMap(TXMLNode *node);
+   Bool_t DumpAtTPCMap();
+   PadReference GetPadRef(int padNum) const;
+   // PadReference GetPadRef(const AtPad &pad) const {return GetPadRef(pad.GetPadNum())};
+
+   inline void SetGUIMode() { kGUIMode = 1; }
+   inline void SetDebugMode() { kDebug = 1; }
+   Bool_t ParseInhibitMap(TString inimap, TString lowgmap, TString xtalkmap);
+   Bool_t GetIsInhibited(Int_t PadNum);
+   Int_t GetPadSize(int padNum);
+
    ClassDefOverride(AtMap, 1);
 };
 

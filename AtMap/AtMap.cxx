@@ -1,4 +1,5 @@
 #include "AtMap.h"
+#include "FairLogger.h"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
@@ -8,44 +9,26 @@ AtMap::AtMap() : AtPadCoord(boost::extents[10240][3][2]) {}
 
 AtMap::~AtMap() {}
 
-Int_t AtMap::GetPadNum(std::vector<int> PadRef)
-{ // TODO Better to pass a pointer!
-
-   PadRef.resize(4);
-
-   // for(int i=0;i<4;i++) std::cout<<PadRef[i]<<endl;
+Int_t AtMap::GetPadNum(const PadReference &PadRef) const
+{
 
    // Option 1: Int key - vector<int> value
    // std::map<int, std::vector<int>>::const_iterator ite = AtTPCPadMap.find(1);
    // std::string value = it->second;
    // Option 2: vector<int> key - int value
 
-   std::map<std::vector<int>, int>::const_iterator its = AtTPCPadMap.find(PadRef);
-   int value = (*its).second;
+   auto its = AtTPCPadMap.find(PadRef);
 
    // std::cout<<int(AtTPCPadMap.find(test) == AtTPCPadMap.end())<<endl;
-   Int_t kIs = int(AtTPCPadMap.find(PadRef) == AtTPCPadMap.end());
-   if (kIs) {
+   if (its == AtTPCPadMap.end()) {
       if (kDebug)
-         std::cerr << " AtTpcMap::GetPadNum - Pad key not found - CoboID : " << PadRef[0] << "  AsadID : " << PadRef[1]
-                   << "  AgetID : " << PadRef[2] << "  ChannelID : " << PadRef[3] << std::endl;
+         std::cerr << " AtTpcMap::GetPadNum - Pad key not found - CoboID : " << PadRef.cobo
+                   << "  AsadID : " << PadRef.asad << "  AgetID : " << PadRef.aget << "  ChannelID : " << PadRef.ch
+                   << std::endl;
       return -1;
    }
-   // std::cout<<value<<std::endl;
-   // std::map<std::vector<int>,int>::const_iterator its;
-   // std::cout<<AtTPCPadMap.find(test)->second<<std::endl;
-   //  auto its = AtTPCPadMap.find(test);
-   //  std::cout << "x: " << (int)its->second << "\n";
 
-   else
-      return value;
-
-   /*for (auto& m : AtTPCPadMap){ //C+11 style
-
-     for(auto& kv : m.second){
-     std::cout<<m.first<<'\n';
-     }
-     }*/
+   return (*its).second;
 }
 
 Bool_t AtMap::ParseInhibitMap(TString inimap, TString lowgmap, TString xtalkmap)
@@ -145,19 +128,11 @@ void AtMap::ParseAtTPCMap(TXMLNode *node)
             fSizeID = atoi(node->GetText());
       }
    }
+   PadReference ref = {fCoboID, fAsadID, fAgetID, fChannelID};
 
-   PadKey.push_back(fCoboID);
-   PadKey.push_back(fAsadID);
-   PadKey.push_back(fAgetID);
-   PadKey.push_back(fChannelID);
-
-   AtTPCPadMap.insert(std::pair<std::vector<int>, int>(PadKey, fPadID));
-   AtTPCPadMapInverse.insert(std::pair<int, std::vector<int>>(fPadID, PadKey));
+   AtTPCPadMap.insert(std::pair<PadReference, int>(ref, fPadID));
+   AtTPCPadMapInverse.insert(std::pair<int, PadReference>(fPadID, ref));
    AtTPCPadSize.insert(std::pair<int, int>(fPadID, fSizeID));
-
-   PadKey.clear();
-   // std::cout<<"PadID : "<<fPadID<<" - CoboID : "<<fCoboID<<"  - AsadID : "<<fAsadID<<"  - AgetID : "<<fAgetID<<"  -
-   // ChannelID : "<<fChannelID<<std::endl;
 }
 
 void AtMap::ParseMapList(TXMLNode *node)
@@ -205,6 +180,10 @@ Bool_t AtMap::ParseXMLMap(Char_t const *xmlfile)
    // itrEnd = pmap.end();
    delete domParser;
 
+   LOG(INFO) << "Pad map has an average load of " << AtTPCPadMap.load_factor() << " and a max load of "
+             << AtTPCPadMap.max_load_factor() << " with buckets " << AtTPCPadMap.bucket_count() << " for "
+             << AtTPCPadMap.size() << " pads.";
+
    return true;
 }
 
@@ -236,12 +215,11 @@ Bool_t AtMap::DumpAtTPCMap()
       return false;
    }
 
-   std::map<std::vector<int>, int>::iterator it;
    std::ostream_iterator<int> ii(std::cout, ", ");
 
-   for (it = this->AtTPCPadMap.begin(); it != this->AtTPCPadMap.end(); ++it) {
+   for (auto it = this->AtTPCPadMap.begin(); it != this->AtTPCPadMap.end(); ++it) {
       std::cout << " [ " << (*it).second << ", ";
-      std::copy((*it).first.begin(), (*it).first.end(), ii);
+      std::cout << it->first.cobo << "," << it->first.asad << "," << it->first.aget << "," << it->first.ch;
       std::cout << "]" << std::endl;
       ;
    }
@@ -249,11 +227,31 @@ Bool_t AtMap::DumpAtTPCMap()
    return true;
 }
 
-std::vector<int> AtMap::GetPadRef(int padNum)
+PadReference AtMap::GetPadRef(int padNum) const
 {
    if (AtTPCPadMapInverse.find(padNum) == AtTPCPadMapInverse.end())
-      return std::vector<int>(4, -1);
-   return AtTPCPadMapInverse[padNum];
+      return PadReference();
+   return AtTPCPadMapInverse.at(padNum);
 }
+
+bool operator<(const PadReference &l, const PadReference &r)
+{
+   return std::hash<PadReference>()(l) < std::hash<PadReference>()(r);
+}
+
+bool operator==(const PadReference &l, const PadReference &r)
+{
+   return l.cobo == r.cobo && l.asad == r.asad && l.aget == r.aget && l.ch == r.ch;
+}
+
+/*inline std::size_t std::hash<PadReference>::operator()(const PadReference &x) const
+{
+   auto wcobo = uint32_t(x.cobo);
+   auto wasad = uint32_t(x.asad);
+   auto waget = uint32_t(x.aget);
+   auto wch = uint32_t(x.ch);
+
+
+   }*/
 
 ClassImp(AtMap)

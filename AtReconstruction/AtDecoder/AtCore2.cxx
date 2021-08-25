@@ -301,7 +301,7 @@ void AtCore2::ProcessCobo(Int_t coboIdx)
       for (Int_t iAget = 0; iAget < 4; iAget++) {
          for (Int_t iCh = 0; iCh < 68; iCh++) {
 
-            std::vector<int> PadRef = {iCobo, iAsad, iAget, iCh};
+            PadReference PadRef = {.cobo = iCobo, .asad = iAsad, .aget = iAget, .ch = iCh};
             Int_t PadRefNum = fAtMapPtr->GetPadNum(PadRef);
             std::vector<Float_t> PadCenterCoord;
             PadCenterCoord.reserve(2);
@@ -617,7 +617,7 @@ void AtCore2::ProcessLayeredFrame(GETLayeredFrame *layeredFrame)
       for (Int_t iAget = 0; iAget < 4; iAget++) {
          for (Int_t iCh = 0; iCh < 68; iCh++) {
 
-            std::vector<int> PadRef = {iCobo, iAsad, iAget, iCh};
+            PadReference PadRef = {iCobo, iAsad, iAget, iCh};
             Int_t PadRefNum = fAtMapPtr->GetPadNum(PadRef);
             std::vector<Float_t> PadCenterCoord;
             PadCenterCoord.reserve(2);
@@ -667,7 +667,7 @@ void AtCore2::ProcessBasicFrame(GETBasicFrame *basicFrame)
    for (Int_t iAget = 0; iAget < 4; iAget++) {
       for (Int_t iCh = 0; iCh < 68; iCh++) {
 
-         std::vector<int> PadRef = {iCobo, iAsad, iAget, iCh};
+         PadReference PadRef = {.cobo = iCobo, .asad = iAsad, .aget = iAget, .ch = iCh};
          Int_t PadRefNum = fAtMapPtr->GetPadNum(PadRef);
          std::vector<Float_t> PadCenterCoord;
          PadCenterCoord.reserve(2);

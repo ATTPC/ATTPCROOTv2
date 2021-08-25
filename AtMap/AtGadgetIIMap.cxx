@@ -17,7 +17,6 @@ AtGadgetIIMap::AtGadgetIIMap()
    std::cout << " GADGETII Map initialized " << std::endl;
    std::cout << " GADGETII Pad Coordinates container initialized " << std::endl;
    fPadInd = 0;
-   PadKey.clear();
    fIniPads.clear();
    hPlane = new TH2Poly();
 }

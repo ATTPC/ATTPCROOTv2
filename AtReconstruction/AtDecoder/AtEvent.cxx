@@ -189,15 +189,12 @@ Double_t AtEvent::GetRhoVariance()
 
 Int_t AtEvent::GetHitPadMult(Int_t PadNum)
 {
-
-   std::map<Int_t, Int_t>::const_iterator its = fMultiMap.find(PadNum);
-   Int_t padval = (*its).second;
-   Int_t kIs = int(fMultiMap.find(PadNum) == fMultiMap.end());
-   if (kIs) {
+   auto its = fMultiMap.find(PadNum);
+   if (its == fMultiMap.end()) {
       std::cerr << " = AtEvent::GetHitPadMult - PadNum not found " << PadNum << std::endl;
       return -1;
    } else
-      return padval;
+      return its->second;
 }
 
 Bool_t AtEvent::SortHitArray()

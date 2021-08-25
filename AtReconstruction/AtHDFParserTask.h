@@ -5,11 +5,10 @@
 #include "FairLogger.h"
 
 #include "AtHDFParser.h"
-#include "AtMap.h"
 #include "AtTpcProtoMap.h"
 #include "AtPedestal.h"
 #include "AtRawEvent.h"
-
+#include "AtMap.h"
 #include "AtDigiPar.h"
 
 // ROOT classes
@@ -27,79 +26,61 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
+using mapPtr = std::shared_ptr<AtMap>;
+
 class AtHDFParserTask : public FairTask {
-
-public:
-   AtHDFParserTask();
-   AtHDFParserTask(Int_t opt);
-   ~AtHDFParserTask();
-
-   void SetPersistence(Bool_t value = kTRUE);
-   void SetFileName(std::string filename) { fFileName = filename; }
-   bool SetAtTPCMap(Char_t const *lookup);
-   Bool_t SetProtoGeoFile(TString geofile); // Only for Prototype Map
-   Bool_t SetProtoMapFile(TString mapfile); // Only for Prototype Map
-   Bool_t SetInitialEvent(std::size_t inievent);
-   Bool_t SetOldFormat(Bool_t oldF = kFALSE);
-   bool SetAuxChannel(uint32_t hash, std::string channel_name);
-   std::pair<bool, std::string> FindAuxChannel(uint32_t hash);
-   Bool_t SetBaseLineSubtraction(Bool_t value = kFALSE);
-
-   void SetNumberTimestamps(int numTimestamps) { fNumberTimestamps = numTimestamps; };
-   int GetNumberTimestamps() { return fNumberTimestamps; };
-   std::size_t GetNumEvents() { return fNumEvents; };
-
-   AtMap *GetMap() { return fAtMapPtr; }
-
-   virtual InitStatus Init();
-   virtual void SetParContainers();
-   virtual void Exec(Option_t *opt);
-   virtual void FinishEvent();
-
-   static uint32_t CalculateHash(uint8_t cobo, uint8_t asad, uint8_t aget, uint8_t channel)
-   {
-      auto wcobo = uint32_t(cobo);
-      auto wasad = uint32_t(asad);
-      auto waget = uint32_t(aget);
-      auto wchannel = uint32_t(channel);
-
-      auto result = wchannel + waget * 100 + wasad * 10000 + wcobo * 1000000;
-
-      return result;
-   }
 
 private:
    AtHDFParser *HDFParser;
    AtDigiPar *fPar;
    TClonesArray *fRawEventArray;
    AtRawEvent *fRawEvent;
+   mapPtr fAtMapPtr;
+
+   std::string fFileName;
+   Int_t fNumberTimestamps;
+   Bool_t fIsPersistence;
+   Bool_t fIsOldFormat;
+   Bool_t fIsProtoGeoSet;
+   Bool_t fIsProtoMapSet;
+   Bool_t fIsBaseLineSubtraction;
 
    std::size_t fIniEventID;
    std::size_t fNumEvents;
    std::size_t fEventID;
 
-   Bool_t fIsPersistence;
-   std::string fFileName;
-   Bool_t fIsOldFormat;
+   std::unordered_map<PadReference, std::string> fAuxTable;
 
-   char const *fMap;
-   AtMap *fAtMapPtr;
+   void processHeader();
+   void processData();
+   void processPad(std::size_t padIndex);
+   void setIsAux(AtPad *pad);
+   void setDimensions(AtPad *pad);
+   Float_t getBaseline(const std::vector<int16_t> &data);
+   void setAdc(AtPad *pad, const std::vector<int16_t> &data);
 
-   typedef boost::multi_array<double, 3> multiarray;
-   typedef multiarray::index index;
-   multiarray AtPadCoordArr;
+public:
+   AtHDFParserTask();
+   ~AtHDFParserTask();
 
-   Int_t kOpt;
-   Int_t fNumberTimestamps;
-   Bool_t fIsProtoGeoSet;
-   Bool_t fIsProtoMapSet;
-   Bool_t fIsBaseLineSubtraction;
+   void SetFileName(std::string filename) { fFileName = filename; }
+   void SetPersistence(Bool_t value) { fIsPersistence = value; }
+   void SetMap(mapPtr map) { fAtMapPtr = map; }
+   void SetInitialEvent(std::size_t inievent) { fIniEventID = inievent; }
+   void SetOldFormat(Bool_t value) { fIsOldFormat = value; }
+   void SetBaseLineSubtraction(Bool_t value) { fIsBaseLineSubtraction = value; }
+   void SetNumberTimestamps(int numTimestamps) { fNumberTimestamps = numTimestamps; };
+   bool SetAuxChannel(PadReference pad, std::string channel_name);
 
-   std::vector<std::string> fEventsByName;
-   std::unordered_map<uint32_t, std::string> fAuxTable;
-   std::unordered_map<uint32_t, std::string>::iterator fAuxTableIt;
+   int GetNumberTimestamps() { return fNumberTimestamps; };
+   std::size_t GetNumEvents() { return fNumEvents; };
 
-   ClassDef(AtHDFParserTask, 1);
+   virtual InitStatus Init();
+   virtual void SetParContainers();
+   virtual void Exec(Option_t *opt);
+   virtual void FinishEvent();
+
+   ClassDef(AtHDFParserTask, 3);
 };
 
 #endif
