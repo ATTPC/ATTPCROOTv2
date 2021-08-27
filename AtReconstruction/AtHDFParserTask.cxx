@@ -36,7 +36,7 @@ bool AtHDFParserTask::SetAuxChannel(PadReference pad, std::string channel_name)
 {
    auto value = fAuxTable.emplace(pad, channel_name);
 
-   std::cout << cGREEN << " Auxiliary channel added " << channel_name << " - Hash " << std::hash<PadReference>()(pad)
+   std::cout << cGREEN << " Auxiliary channel added " << fAuxTable[pad] << " - Hash " << std::hash<PadReference>()(pad)
              << cNORMAL << "\n";
 
    return value.second;
@@ -110,7 +110,7 @@ void AtHDFParserTask::processPad(std::size_t ipad)
    int PadRefNum = fAtMapPtr->GetPadNum(PadRef);
    AtPad *pad = new AtPad(PadRefNum);
 
-   setIsAux(pad);
+   setIsAux(pad, PadRef);
    setDimensions(pad);
    setAdc(pad, rawadc);
 
@@ -139,10 +139,9 @@ Float_t AtHDFParserTask::getBaseline(const std::vector<int16_t> &data)
    }
    return baseline;
 }
-void AtHDFParserTask::setIsAux(AtPad *pad)
+void AtHDFParserTask::setIsAux(AtPad *pad, const PadReference &padRef)
 {
-
-   auto auxIt = fAuxTable.find(fAtMapPtr->GetPadRef(pad->GetPadNum()));
+   auto auxIt = fAuxTable.find(padRef);
    pad->SetIsAux(auxIt != fAuxTable.end());
    if (pad->IsAux())
       pad->SetAuxName(auxIt->second);
