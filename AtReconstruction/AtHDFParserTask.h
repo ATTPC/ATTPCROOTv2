@@ -49,8 +49,6 @@ private:
    std::size_t fNumEvents;
    std::size_t fEventID;
 
-   std::unordered_map<PadReference, std::string> fAuxTable;
-
    void processHeader();
    void processData();
    void processPad(std::size_t padIndex);
@@ -70,7 +68,6 @@ public:
    void SetOldFormat(Bool_t value) { fIsOldFormat = value; }
    void SetBaseLineSubtraction(Bool_t value) { fIsBaseLineSubtraction = value; }
    void SetNumberTimestamps(int numTimestamps) { fNumberTimestamps = numTimestamps; };
-   bool SetAuxChannel(PadReference pad, std::string channel_name);
 
    int GetNumberTimestamps() { return fNumberTimestamps; };
    std::size_t GetNumEvents() { return fNumEvents; };

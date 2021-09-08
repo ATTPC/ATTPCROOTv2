@@ -4,6 +4,7 @@
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
 #define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
 
 AtMap::AtMap() : AtPadCoord(boost::extents[10240][3][2]) {}
 
@@ -189,24 +190,6 @@ Bool_t AtMap::ParseXMLMap(Char_t const *xmlfile)
 
 Bool_t AtMap::DumpAtTPCMap()
 {
-
-   // Option 1: Int key - vector<int> value
-   /*	std::map<int,std::vector<int>>::iterator it;
-    std::ostream_iterator<int> ii (std::cout,", ");
-
-    for(it=this->AtTPCPadMap.begin(); it!=this->AtTPCPadMap.end(); ++it){
-    std::cout<<" [ "<<(*it).first<<", ";
-    std::copy ((*it).second.begin(), (*it).second.end(), ii );
-    std::cout<<"]"<<std::endl;;
-
-    }
-
-    std::map<int, std::vector<int>>::const_iterator ite = AtTPCPadMap.find(1);
-    std::string value = it->second;
-   */
-
-   // Option 2: vector<int> key - int value
-
    if (!fPadInd || !kIsParsed) {
 
       std::cout << " AtTpcMap::DumpAtTPCMap Error : Pad plane has not been generated or parsed - Exiting... "
@@ -227,6 +210,25 @@ Bool_t AtMap::DumpAtTPCMap()
    return true;
 }
 
+bool AtMap::AddAuxPad(const PadReference &ref, std::string auxName)
+{
+   auto emplacePair = fAuxPadMap.emplace(ref, auxName);
+   std::cout << cGREEN << " Auxiliary channel added " << fAuxPadMap[ref] << " - Hash " << std::hash<PadReference>()(ref)
+             << cNORMAL << "\n";
+
+   return emplacePair.second;
+}
+bool AtMap::IsAuxPad(const PadReference &ref) const
+{
+   return fAuxPadMap.find(ref) != fAuxPadMap.end();
+}
+std::string AtMap::GetAuxName(const PadReference &ref) const
+{
+   if (IsAuxPad(ref))
+      return fAuxPadMap.find(ref)->second;
+   else
+      return "";
+}
 PadReference AtMap::GetPadRef(int padNum) const
 {
    if (AtTPCPadMapInverse.find(padNum) == AtTPCPadMapInverse.end())
@@ -243,15 +245,5 @@ bool operator==(const PadReference &l, const PadReference &r)
 {
    return l.cobo == r.cobo && l.asad == r.asad && l.aget == r.aget && l.ch == r.ch;
 }
-
-/*inline std::size_t std::hash<PadReference>::operator()(const PadReference &x) const
-{
-   auto wcobo = uint32_t(x.cobo);
-   auto wasad = uint32_t(x.asad);
-   auto waget = uint32_t(x.aget);
-   auto wch = uint32_t(x.ch);
-
-
-   }*/
 
 ClassImp(AtMap)

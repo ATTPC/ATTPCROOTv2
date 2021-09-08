@@ -32,16 +32,6 @@ AtHDFParserTask::~AtHDFParserTask()
    delete fRawEvent;
 }
 
-bool AtHDFParserTask::SetAuxChannel(PadReference pad, std::string channel_name)
-{
-   auto value = fAuxTable.emplace(pad, channel_name);
-
-   std::cout << cGREEN << " Auxiliary channel added " << fAuxTable[pad] << " - Hash " << std::hash<PadReference>()(pad)
-             << cNORMAL << "\n";
-
-   return value.second;
-}
-
 InitStatus AtHDFParserTask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
@@ -116,9 +106,8 @@ void AtHDFParserTask::processPad(std::size_t ipad)
 }
 AtPad &AtHDFParserTask::createPadAndSetIsAux(const PadReference &padRef)
 {
-   auto auxIt = fAuxTable.find(padRef);
-   if (auxIt != fAuxTable.end()) {
-      return fRawEvent->AddAuxPad(auxIt->second).first->second;
+   if (fAtMapPtr->IsAuxPad(padRef)) {
+      return fRawEvent->AddAuxPad(fAtMapPtr->GetAuxName(padRef)).first->second;
    } else {
       auto padNumber = fAtMapPtr->GetPadNum(padRef);
       return fRawEvent->AddPad(padNumber);

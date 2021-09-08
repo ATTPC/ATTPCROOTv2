@@ -55,6 +55,10 @@ void unpackReducedFiltered(int runNumber)
    mapping->GenerateAtTpc();
 
    /**** Should not have to change code between this line and the above star comment ****/
+   mapping->AddAuxPad({10, 0, 0, 0}, "MCP_US");
+   mapping->AddAuxPad({10, 0, 0, 34}, "TPC_Mesh");
+   mapping->AddAuxPad({10, 0, 1, 0}, "MCP_DS");
+   mapping->AddAuxPad({10, 0, 2, 34}, "IC");
 
    // Create the unpacker task
    AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
@@ -64,12 +68,6 @@ void unpackReducedFiltered(int runNumber)
    HDFParserTask->SetOldFormat(false);
    HDFParserTask->SetNumberTimestamps(2);
    HDFParserTask->SetBaseLineSubtraction(kTRUE);
-
-   // Add the aux channels from the experiment
-   HDFParserTask->SetAuxChannel({10, 0, 0, 0}, "MCP_US");
-   HDFParserTask->SetAuxChannel({10, 0, 0, 34}, "TPC_Mesh");
-   HDFParserTask->SetAuxChannel({10, 0, 1, 0}, "MCP_DS");
-   HDFParserTask->SetAuxChannel({10, 0, 2, 34}, "IC");
 
    auto threshold = 45;
 
@@ -106,7 +104,7 @@ void unpackReducedFiltered(int runNumber)
    auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
    // numEvents = 1700;//217;
-   // numEvents = 200;
+   numEvents = 200;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
