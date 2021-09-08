@@ -1,9 +1,8 @@
-// Unpacks tpc files from /mnt/rawdata/ to /mnt/analysis/e12014/TPC/unpacked
+// Unpacks and then filters data using the dividefilter which just divides the signal size in half,
+// to test the fitler skelaton
+// NB: It unpacks the data to /mnt/analysis/e12014/TPC/filterTesting/
 
-bool reduceFunc(AtRawEvent *evt);
-
-// Requires the TPC run number
-void unpackReduced(int runNumber)
+void filterData(int runNumber)
 {
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
@@ -11,26 +10,22 @@ void unpackReduced(int runNumber)
    TStopwatch timer;
    timer.Start();
 
-   // Set the input/output directories
-   TString inputDir = "/mnt/rawdata/e12014_attpc/h5";
-   TString outDir = "/mnt/analysis/e12014/TPC/unpackedReducedFiltered";
+   // Set the input file
+   TString inputFile = TString::Format("/mnt/rawdata/e12014_attpc/h5/run_%04d.h5", runNumber);
 
-   /**** Should not have to change code between this line and the next star comment ****/
-
-   // Set the in/out files
-   TString inputFile = inputDir + TString::Format("/run_%04d.h5", runNumber);
-   TString outputFile = outDir + TString::Format("/run_%04d.root", runNumber);
+   // Set the output file
+   TString outputFile = TString::Format("/mnt/analysis/e12014/TPC/filterTesting/run_%04d.root", runNumber);
 
    std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
    std::cout << "Saving in: " << outputFile << std::endl;
 
    // Set the mapping for the TPC
-   TString mapFile = "e12014_pad_mapping.xml"; //"Lookup20150611.xml";
+   TString scriptfile = "e12014_pad_mapping.xml"; //"Lookup20150611.xml";
    TString parameterFile = "ATTPC.e12014.par";
 
    // Set directories
    TString dir = gSystem->Getenv("VMCWORKDIR");
-   TString mapDir = dir + "/scripts/" + mapFile;
+   TString scriptdir = dir + "/scripts/" + scriptfile;
    TString geomDir = dir + "/geometry/";
    gSystem->Setenv("GEOMPATH", geomDir.Data());
    TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -49,63 +44,54 @@ void unpackReduced(int runNumber)
    parIo1->open(digiParFile.Data(), "in");
    rtdb->setSecondInput(parIo1);
 
-   // Create the detector map
-   auto mapping = std::make_shared<AtTpcMap>();
-   mapping->ParseXMLMap(mapDir.Data());
-   mapping->GenerateAtTpc();
-
-   /**** Should not have to change code between this line and the above star comment ****/
-
    // Create the unpacker task
    AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
    HDFParserTask->SetPersistence(kTRUE);
-   HDFParserTask->SetMap(mapping);
+   HDFParserTask->SetAtTPCMap(scriptdir.Data());
    HDFParserTask->SetFileName(inputFile.Data());
    HDFParserTask->SetOldFormat(false);
    HDFParserTask->SetNumberTimestamps(2);
    HDFParserTask->SetBaseLineSubtraction(kTRUE);
 
    // Add the aux channels from the experiment
-   HDFParserTask->SetAuxChannel({10, 0, 0, 0}, "MCP_US");
-   HDFParserTask->SetAuxChannel({10, 0, 0, 34}, "TPC_Mesh");
-   HDFParserTask->SetAuxChannel({10, 0, 1, 0}, "MCP_DS");
-   HDFParserTask->SetAuxChannel({10, 0, 2, 34}, "IC");
+   auto hash = HDFParserTask->CalculateHash(10, 0, 0, 0);
+   HDFParserTask->SetAuxChannel(hash, "MCP_US");
+   hash = HDFParserTask->CalculateHash(10, 0, 0, 34);
+   HDFParserTask->SetAuxChannel(hash, "TPC_Mesh");
+   hash = HDFParserTask->CalculateHash(10, 0, 1, 0);
+   HDFParserTask->SetAuxChannel(hash, "MCP_DS");
+   hash = HDFParserTask->CalculateHash(10, 0, 2, 34);
+   HDFParserTask->SetAuxChannel(hash, "IC");
 
-   auto threshold = 45;
-
-   AtFilterSubtraction *filter = new AtFilterSubtraction(mapping);
-   filter->SetThreshold(threshold);
+   // Add the filter task
+   AtFilterDivide *filter = new AtFilterDivide();
+   filter->SetDivisor(2);
    AtFilterTask *filterTask = new AtFilterTask(filter);
-   filterTask->SetPersistence(kTRUE);
+   filterTask->SetPersistence(true);
 
+   // Create the PSA method and task
    AtPSASimple2 *psa = new AtPSASimple2();
-   psa->SetThreshold(threshold);
+   psa->SetThreshold(0);
    psa->SetMaxFinder();
 
-   // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetInputBranch("AtRawEventFiltered");
    psaTask->SetPersistence(kTRUE);
+   psaTask->SetInputBranch("AtRawEventFiltered");
+   psaTask->SetOutputBranch("AtEventFiltered");
 
-   // Create data reduction task
-   AtDataReductionTask *reduceTask = new AtDataReductionTask();
-   reduceTask->SetInputBranch("AtRawEventFiltered");
-   reduceTask->SetReductionFunction(&reduceFunc);
-
-   AtRansacTask *RansacTask = new AtRansacTask();
-   RansacTask->SetPersistence(kTRUE);
-   RansacTask->SetVerbose(kFALSE);
-   RansacTask->SetDistanceThreshold(20.0);
-   RansacTask->SetTiltAngle(0);
-   RansacTask->SetMinHitsLine(10);
-   RansacTask->SetFullMode();
+   // ATRansacTask *RansacTask = new ATRansacTask();
+   // RansacTask -> SetPersistence(kTRUE);
+   // RansacTask -> SetVerbose(kFALSE);
+   // RansacTask -> SetDistanceThreshold(20.0);
+   // RansacTask -> SetTiltAngle(0);
+   // RansacTask -> SetMinHitsLine(1000);
+   // RansacTask -> SetFullMode();
 
    // Add unpacker to the run
    run->AddTask(HDFParserTask);
    run->AddTask(filterTask);
    run->AddTask(psaTask);
-   run->AddTask(reduceTask);
-   // run->AddTask(RansacTask);
+   // run -> AddTask(RansacTask);
 
    run->Init();
 
@@ -113,7 +99,7 @@ void unpackReduced(int runNumber)
    auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
    // numEvents = 1700;//217;
-   // numEvents = 10;
+   numEvents = 10;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
@@ -133,10 +119,4 @@ void unpackReduced(int runNumber)
    // ------------------------------------------------------------------------
 
    return 0;
-}
-
-bool reduceFunc(AtRawEvent *evt)
-{
-   // return (evt->GetNumPads() > 0);
-   return (evt->GetNumPads() > 250) && evt->IsGood();
 }

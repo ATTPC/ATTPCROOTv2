@@ -13,7 +13,7 @@
 // stdlib headers
 #include <iostream>
 
-AtFilterTask::AtFilterTask(AtFilter *filter) : fFilter(filter), fIsPersistent(false)
+AtFilterTask::AtFilterTask(AtFilter *filter) : fFilter(filter), fIsPersistent(false), fFilterAux(false)
 {
    fOutputEventArray = new TClonesArray("AtRawEvent");
 }
@@ -23,6 +23,10 @@ AtFilterTask::~AtFilterTask() {}
 void AtFilterTask::SetPersistence(Bool_t value)
 {
    fIsPersistent = value;
+}
+void AtFilterTask::SetFilterAux(Bool_t value)
+{
+   fFilterAux = value;
 }
 
 InitStatus AtFilterTask::Init()
@@ -62,9 +66,11 @@ void AtFilterTask::Exec(Option_t *opt)
 
    if (!filteredEvent->IsGood())
       return;
+
    fFilter->InitEvent(filteredEvent);
+
    for (auto &pad : *(filteredEvent->GetPads())) {
-      if (pad.IsAux())
+      if (pad.IsAux() && !fFilterAux)
          continue;
       fFilter->Filter(&pad);
    }
