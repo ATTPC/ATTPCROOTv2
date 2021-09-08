@@ -7,10 +7,10 @@
 #include "FairRunAna.h"
 */
 
-void run_eve(int runNum = 210, TString OutputDataFile = "data/output.reco_display.root")
+void run_eveFiltered(int runNum = 210, TString OutputDataFile = "data/output.reco_display.root")
 {
    TString InputDataFile;
-   InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpackedReduced/run_%04d.root", runNum);
+   InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpackedReducedFiltered/run_%04d.root", runNum);
 
    // InputDataFile = "./run_0200.root";
    std::cout << "Opening: " << InputDataFile << std::endl;
@@ -45,8 +45,8 @@ void run_eve(int runNum = 210, TString OutputDataFile = "data/output.reco_displa
    eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
    eve->SetSaveTextData();
 
-   eve->SetRawEventBranch("AtRawEvent");
-   eve->SetEventBranch("AtEventH");
+   eve->SetRawEventBranch("AtRawEventFiltered");
+   eve->SetEventBranch("AtEventFiltered");
 
    // eve->UnpackHoughSpace();
 

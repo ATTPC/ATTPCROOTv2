@@ -18,7 +18,7 @@ GatingWirePlaneY:Double_t      -14   # mm
 EField:Double_t               7000   # V/m
 NumTbs:Int_t                   512
 SamplingRate:Int_t             3.125 # Real value is 6.25 MHz
-DriftVelocity:Double_t        0.80   # cm/us
+DriftVelocity:Double_t        0.82   # cm/us
 DriftLength:Double_t          1000   # mm //ATTPC : 1000 - Prototype : 500
 YDivider:Int_t                1000   # Full drift length will be divided by this number when finding cluster
 GasFile:Int_t                    2
@@ -26,9 +26,9 @@ PadPlaneFile:Int_t               3
 PadShapeFile:Int_t               4   # might not be needed because the shape is simply rectangle
 BField:Double_t                0.0   # Tesla
 TiltAng:Double_t               0.0   # Degrees
-TB0:Int_t                       98   # Time Bucket reference for micromegas position (DEPRECATED)
+TB0:Int_t                       80   # Time Bucket reference for micromegas position (DEPRECATED)
 LorentzAngle:Double_t          0.0   # Lorentz Angle
-TBEntrance:Int_t               391   # Beam position at detector entrance in TB
+TBEntrance:Int_t               455   # Beam position at detector entrance in TB
 ZPadPlane:Double_t          1000.0   # Position of the micromegas pad plane
 Density:Double_t             0.175   # Gas density (kg/m3 or mg/cm3)
 ThetaPad:Double_t            110.9   # AT-TPC pad plane rotation

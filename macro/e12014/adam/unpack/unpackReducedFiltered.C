@@ -3,7 +3,7 @@
 bool reduceFunc(AtRawEvent *evt);
 
 // Requires the TPC run number
-void unpackReduced(int runNumber)
+void unpackReducedFiltered(int runNumber)
 {
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
@@ -86,6 +86,7 @@ void unpackReduced(int runNumber)
    // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetInputBranch("AtRawEventFiltered");
+   psaTask->SetOutputBranch("AtEventFiltered");
    psaTask->SetPersistence(kTRUE);
 
    // Create data reduction task
@@ -93,20 +94,11 @@ void unpackReduced(int runNumber)
    reduceTask->SetInputBranch("AtRawEventFiltered");
    reduceTask->SetReductionFunction(&reduceFunc);
 
-   AtRansacTask *RansacTask = new AtRansacTask();
-   RansacTask->SetPersistence(kTRUE);
-   RansacTask->SetVerbose(kFALSE);
-   RansacTask->SetDistanceThreshold(20.0);
-   RansacTask->SetTiltAngle(0);
-   RansacTask->SetMinHitsLine(10);
-   RansacTask->SetFullMode();
-
    // Add unpacker to the run
    run->AddTask(HDFParserTask);
    run->AddTask(filterTask);
    run->AddTask(psaTask);
    run->AddTask(reduceTask);
-   // run->AddTask(RansacTask);
 
    run->Init();
 
