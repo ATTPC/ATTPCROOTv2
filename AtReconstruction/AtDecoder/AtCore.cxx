@@ -261,13 +261,15 @@ AtRawEvent *AtCore::GetRawEvent(Int_t eventID)
             std::vector<Float_t> PadCenterCoord;
             PadCenterCoord.reserve(2);
             PadCenterCoord = fAtMapPtr->CalcPadCenter(PadRefNum);
-            AtPad *pad = new AtPad(PadRefNum); // TODO Return all pads with a flag??????
-            pad->SetPadXCoord(PadCenterCoord[0]);
-            pad->SetPadYCoord(PadCenterCoord[1]);
+
+            auto &pad = fRawEventPtr->AddPad(PadRefNum);
+
+            pad.SetPadXCoord(PadCenterCoord[0]);
+            pad.SetPadYCoord(PadCenterCoord[1]);
             if (PadRefNum == -1)
-               pad->SetValidPad(kFALSE);
+               pad.SetValidPad(kFALSE);
             else
-               pad->SetValidPad(kTRUE);
+               pad.SetValidPad(kTRUE);
             // else continue;
 
             Int_t *rawadc = frame->GetRawADC(iAget, iCh);
@@ -275,7 +277,7 @@ AtRawEvent *AtCore::GetRawEvent(Int_t eventID)
             for (Int_t iTb = 0; iTb < fGETDecoderPtr->GetNumTbs(); iTb++) {
                // if(*rawadc>0) std::cout<<" AGet "<<iAget<<" Channel : "<<iCh<<" ADC : "<<*rawadc<<" Time Bucket :
                // "<<iTb<<std::endl;
-               pad->SetRawADC(iTb, rawadc[iTb]);
+               pad.SetRawADC(iTb, rawadc[iTb]);
                // wave-> Fill(iTb, rawadc[iTb]);
             }
 
@@ -303,14 +305,14 @@ AtRawEvent *AtCore::GetRawEvent(Int_t eventID)
 
                   // pad -> SetADC(iTb, delayedADC);
 
-                  pad->SetADC(iTb, adc[iTb]); // TODO For the moment we fill it without delay
+                  pad.SetADC(iTb, adc[iTb]); // TODO For the moment we fill it without delay
                }
 
                Int_t maxADCIdx = frame->GetMaxADCIdx(iAget, iCh) + signalDelay;
                if (maxADCIdx < 0 || maxADCIdx >= fGETDecoderPtr->GetNumTbs())
                   maxADCIdx = 0;
 
-               pad->SetPedestalSubtracted(kTRUE);
+               pad.SetPedestalSubtracted(kTRUE);
 
             } else if (fPedestalMode != kNoPedestal) {
                /* if (fPedestalMode == kPedestalBothIE)//TODO
@@ -329,7 +331,6 @@ AtRawEvent *AtCore::GetRawEvent(Int_t eventID)
                fRawEventPtr->SetIsGood(good);
 
                if (!good) {
-                  delete pad;
                   iAget = 4;
                   iCh = 68;
 
@@ -351,7 +352,7 @@ AtRawEvent *AtCore::GetRawEvent(Int_t eventID)
 
                   //  std::cout<<delayedADC<<"   "<<adc[delayedTb]<<std::endl;
                   // pad -> SetADC(iTb, delayedADC);
-                  pad->SetADC(iTb, adc[iTb]); // TODO For the moment we fill it without delay
+                  pad.SetADC(iTb, adc[iTb]); // TODO For the moment we fill it without delay
                   // wave-> Fill(iTb, adc[iTb]);
                }
 
@@ -361,11 +362,8 @@ AtRawEvent *AtCore::GetRawEvent(Int_t eventID)
                if (maxADCIdx < 0 || maxADCIdx >= fGETDecoderPtr->GetNumTbs())
                   maxADCIdx = 0;
 
-               pad->SetPedestalSubtracted(kTRUE);
+               pad.SetPedestalSubtracted(kTRUE);
             }
-
-            fRawEventPtr->SetPad(pad);
-            delete pad;
          }
       }
 

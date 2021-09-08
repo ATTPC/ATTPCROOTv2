@@ -68,10 +68,12 @@ void AtFilterTask::Exec(Option_t *opt)
       return;
 
    fFilter->InitEvent(filteredEvent);
+   if (fFilterAux)
+      for (auto &padIt : filteredEvent->GetAuxPads()) {
+         fFilter->Filter(&(padIt.second));
+      }
 
-   for (auto &pad : *(filteredEvent->GetPads())) {
-      if (pad.IsAux() && !fFilterAux)
-         continue;
+   for (auto &pad : filteredEvent->GetPads()) {
       fFilter->Filter(&pad);
    }
 

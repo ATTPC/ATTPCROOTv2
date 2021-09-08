@@ -43,7 +43,7 @@ void AtPSAFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    Float_t mesh[512] = {0};
 
    for (auto iPad = 0; iPad < numPads; iPad++) {
-      AtPad *pad = rawEvent->GetPad(iPad);
+      AtPad *pad = &(rawEvent->GetPads().at(iPad));
       Int_t PadNum = pad->GetPadNum();
       Int_t PadHitNum = 0;
       TVector3 HitPos;

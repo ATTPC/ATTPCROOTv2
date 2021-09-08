@@ -17,7 +17,6 @@ ClassImp(AtRawEvent);
 AtRawEvent::AtRawEvent() : TNamed("AtRawEvent", "Raw event container")
 {
    fEventID = -1;
-   fPadArray.reserve(10240); // TODO Prototype size is smaller we do not need such size
    SetNumberOfTimestamps(1);
    fIsGood = kTRUE;
    fIsinGate = kFALSE;
@@ -28,19 +27,19 @@ AtRawEvent::AtRawEvent() : TNamed("AtRawEvent", "Raw event container")
 AtRawEvent::AtRawEvent(AtRawEvent *object) : TNamed("AtRawEvent", "Raw event container")
 {
    fEventID = object->GetEventID();
-   fPadArray = *(object->GetPads());
+   fPadList = object->GetPads();
+   fAuxPadMap = object->GetAuxPads();
    fIsGood = object->IsGood();
 
    fSimMCPointMap = object->GetSimMCPointMap();
    fTimestamp = *(object->GetTimestamps());
 }
 
-AtRawEvent::~AtRawEvent() {}
-
 void AtRawEvent::Clear()
 {
    fEventID = 0;
-   fPadArray.clear();
+   fPadList.clear();
+   fAuxPadMap.clear();
 
    fIsGood = kTRUE;
 }
@@ -50,9 +49,18 @@ void AtRawEvent::SetEventID(ULong_t evtid)
 {
    fEventID = evtid;
 }
-void AtRawEvent::SetPad(AtPad *pad)
+AtPad &AtRawEvent::AddPad(int padNum)
 {
-   fPadArray.push_back(*pad);
+   fPadList.emplace_back(AtPad{padNum});
+   return fPadList.back();
+}
+std::pair<AuxPadMap::iterator, bool> AtRawEvent::AddAuxPad(std::string auxName)
+{
+   auto ret = fAuxPadMap.emplace(auxName, AtPad{});
+   auto &pad = ret.first->second;
+   pad.SetIsAux(true);
+   pad.SetAuxName(auxName);
+   return ret;
 }
 void AtRawEvent::SetIsGood(Bool_t value)
 {
@@ -75,45 +83,47 @@ void AtRawEvent::SetSimMCPointMap(std::multimap<Int_t, std::size_t> map)
    fSimMCPointMap = map;
 };
 
-void AtRawEvent::RemovePad(Int_t padNo)
+void AtRawEvent::RemovePad(Int_t padNum)
 {
-   if (!(padNo < GetNumPads()))
-      return;
-
-   fPadArray.erase(fPadArray.begin() + padNo);
+   for (auto it = fPadList.begin(); it != fPadList.end(); ++it)
+      if (it->GetPadNum() == padNum)
+         fPadList.erase(it);
 }
 
 // getters
-
-ULong_t AtRawEvent::GetEventID()
+ULong_t AtRawEvent::GetEventID() const
 {
    return fEventID;
 }
-Int_t AtRawEvent::GetNumPads()
+Int_t AtRawEvent::GetNumPads() const
 {
-   return fPadArray.size();
+   return fPadList.size();
 }
-Bool_t AtRawEvent::IsGood()
+Int_t AtRawEvent::GetNumAuxPads() const
+{
+   return fAuxPadMap.size();
+}
+Bool_t AtRawEvent::IsGood() const
 {
    return fIsGood;
 }
-ULong64_t AtRawEvent::GetTimestamp(int index)
+ULong64_t AtRawEvent::GetTimestamp(int index) const
 {
    return fTimestamp.at(index);
 }
-std::vector<ULong64_t> *AtRawEvent::GetTimestamps()
+const std::vector<ULong64_t> *AtRawEvent::GetTimestamps() const
 {
    return &fTimestamp;
 }
-AtPad *AtRawEvent::GetPad(Int_t padNo)
+PadVector &AtRawEvent::GetPads()
 {
-   return (padNo < GetNumPads() ? &fPadArray[padNo] : NULL);
+   return fPadList;
 }
-std::vector<AtPad> *AtRawEvent::GetPads()
+AuxPadMap &AtRawEvent::GetAuxPads()
 {
-   return &fPadArray;
+   return fAuxPadMap;
 }
-Bool_t AtRawEvent::GetIsExtGate()
+Bool_t AtRawEvent::GetIsExtGate() const
 {
    return fIsinGate;
 }
@@ -122,17 +132,19 @@ std::multimap<Int_t, std::size_t> &AtRawEvent::GetSimMCPointMap()
    return fSimMCPointMap;
 }
 
-AtPad *AtRawEvent::GetPad(Int_t PadNum, Bool_t &IsValid)
+AtPad *AtRawEvent::GetPad(Int_t padNum)
 {
-   for (std::vector<AtPad>::iterator it = fPadArray.begin(); it != fPadArray.end(); ++it) {
-      // std::cout<<" AtRawEvent::GetPad : "<<(*it).GetPadNum()<<std::endl;
+   for (auto &pad : fPadList)
+      if (pad.GetPadNum() == padNum)
+         return &pad;
+   return nullptr;
+}
 
-      if ((*it).GetPadNum() == PadNum) {
-         IsValid = kTRUE;
-         return &(*it);
-      }
-   } // End loop over all valid pads
-
-   IsValid = kFALSE;
-   return NULL;
+AtPad *AtRawEvent::GetAuxPad(std::string auxName)
+{
+   auto padIt = fAuxPadMap.find(auxName);
+   if (padIt == fAuxPadMap.end())
+      return nullptr;
+   else
+      return &(padIt->second);
 }

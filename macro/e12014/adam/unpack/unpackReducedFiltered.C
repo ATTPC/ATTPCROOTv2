@@ -106,7 +106,7 @@ void unpackReducedFiltered(int runNumber)
    auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
    // numEvents = 1700;//217;
-   // numEvents = 10;
+   // numEvents = 200;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 

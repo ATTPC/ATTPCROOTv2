@@ -380,9 +380,9 @@ void AtEventDrawTask::DrawHitPoints()
       int numAux = 0;
       auto padArray = fRawevent->GetPads();
 
-      // Loop through each pad
-      for (auto &&pad : *padArray)
-         if (pad.IsAux() && numAux < 9) {
+      for (auto &padIt : fRawevent->GetAuxPads()) {
+         AtPad &pad = padIt.second;
+         if (numAux < 9) {
             std::cout << cYELLOW << " Auxiliary Channel " << numAux << " - Name " << pad.GetAuxName() << cNORMAL
                       << std::endl;
             auto rawAdc = pad.GetRawADC();
@@ -390,7 +390,7 @@ void AtEventDrawTask::DrawHitPoints()
                fAuxChannels[numAux]->SetBinContent(i, rawAdc[i]);
             numAux++;
          }
-
+      }
       if (numAux + 1 == 9)
          std::cout << cYELLOW << "Warning: More auxiliary channels than expected (max 9)" << cNORMAL << std::endl;
    }
@@ -670,22 +670,17 @@ void AtEventDrawTask::DrawHitPoints()
          Atbin = fPadPlane->Fill(positioncorr.X(), positioncorr.Y(), hit.GetCharge());
       }
 
-      /*std::cout<<"  --------------------- "<<std::endl;
-       std::cout<<" Hit : "<<iHit<<" AtHit Pad Number :  "<<PadNumHit<<" Pad Hit Mult : "<<PadMultHit<<" Pad Time Bucket
-       : "<<hit.GetTimeStamp()<<" Hit X Position : "<<position.X()<<" Hit Y Position : "<<position.Y()<<" Hit Z Position
-       : "<<position.Z()<<std::endl; std::cout<<"  Hit number : "<<iHit<<" - AtHit Pad Number :  "<<PadNumHit<<" - Hit
-       Charge : "<<hit.GetCharge()<<" - Hit Base Correction : "<<BaseCorr<<std::endl;*/
-
-      Bool_t fValidPad;
 
       if (fIsRawData) {
-         AtPad *RawPad = fRawevent->GetPad(PadNumHit, fValidPad);
-         Double_t *adc = RawPad->GetADC();
-         for (Int_t i = 0; i < 512; i++) {
+         AtPad *RawPad = fRawevent->GetPad(PadNumHit);
+         if (RawPad != nullptr) {
+            Double_t *adc = RawPad->GetADC();
+            for (Int_t i = 0; i < 512; i++) {
 
-            f3DThreshold = fEventManager->Get3DThreshold();
-            if (adc[i] > f3DThreshold)
-               f3DHist->Fill(position.X() / 10., position.Y() / 10., i, adc[i]);
+               f3DThreshold = fEventManager->Get3DThreshold();
+               if (adc[i] > f3DThreshold)
+                  f3DHist->Fill(position.X() / 10., position.Y() / 10., i, adc[i]);
+            }
          }
       }
 
@@ -696,40 +691,6 @@ void AtEventDrawTask::DrawHitPoints()
          else if (fEventManager->GetToggleCorrData())
             dumpEvent << positioncorr.X() << " " << positioncorr.Y() << " " << positioncorr.Z() << " "
                       << hit.GetTimeStamp() << " " << hit.GetCharge() << std::endl;
-      // std::cout<<"  Hit number : "<<iHit<<" - Position X : "<<position.X()<<" - Position Y : "<<position.Y()<<" -
-      // Position Z : "<<position.Z()<<" - AtHit Pad Number :  "<<PadNumHit<<" - Pad bin :"<<Atbin<<" - Hit Charge :
-      // "<<hit.GetCharge()<<std::endl;
-
-      /*  x = new TEveGeoShape(Form("hitShape_%d",iHit));
-       x->SetShape(new TGeoSphere(0, 0.1*hit.GetCharge()/300.));
-       x->RefMainTrans().SetPos(position.X()/10.,
-       position.Y()/10.,
-       position.Z()/10.);
-       hitSphereArray.push_back(x);*/
-
-      // Float_t HitBoxYDim = TMath::Log(hit.GetCharge())*0.05;
-      //   Float_t HitBoxYDim = hit.GetCharge()*0.001;
-      //   Float_t HitBoxZDim = 0.05;
-      //  Float_t HitBoxXDim = 0.05;
-
-      // fhitBoxSet->AddBox(position.X()/10. - HitBoxXDim/2.0, position.Y()/10., position.Z()/10. - HitBoxZDim/2.0,
-      //          HitBoxXDim,HitBoxYDim,HitBoxZDim); //This coordinates are x,y,z in our system
-
-      //   Float_t xrgb=255,yrgb=0,zrgb=0;
-      /*  if(fPadPlanePal){
-
-       //  Int_t cHit = fPadPlanePal->GetValueColor();
-       // Int_t cHit = 100;
-       //TColor *hitBoxColor = gROOT->GetColor(cHit);
-       //hitBoxColor->GetRGB(xrgb,yrgb,zrgb);
-
-       std::cout<<" xrgb : "<<xrgb<<std::endl;
-       std::cout<<" yrgb : "<<yrgb<<std::endl;
-       std::cout<<" zrgb : "<<zrgb<<std::endl;
-
-       }*/
-
-      //  fhitBoxSet->DigitColor(xrgb,yrgb,zrgb, 0);
    }
 
    //////////////     Minimization from Hough Space   ///////////////
@@ -1675,7 +1636,6 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
          // std::cout<<bin_name<<std::endl;
          std::cout << " ==========================" << std::endl;
          std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
-         Bool_t IsValid = kFALSE;
 
          AtMap *tmap = NULL;
          tmap = (AtMap *)gROOT->GetListOfSpecials()->FindObject("fMap");
@@ -1690,14 +1650,13 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
          }
 
          std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
-         AtPad *tPad = tRawEvent->GetPad(tPadNum, IsValid);
+         AtPad *tPad = tRawEvent->GetPad(tPadNum);
 
-         // Check to make sure pad is valid
-         if (!tPad)
+         if (tPad == nullptr)
             return;
 
          std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
-         std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << " Is Valid? : " << IsValid << std::endl;
+         std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << std::endl;
          std::cout << std::endl;
 
          TH1I *tPadWave = NULL;

@@ -33,7 +33,7 @@ void AtFilterSubtraction::InitEvent(AtRawEvent *event)
 {
    Clear();
 
-   for (const auto &pad : *event->GetPads())
+   for (const auto &pad : event->GetPads())
       processPad(pad);
 
    AverageBaseline();
