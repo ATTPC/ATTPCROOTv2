@@ -12,12 +12,10 @@ public:
    void SetDivisor(Double_t divisor);
    Double_t GetDivisor() { return fDivisor; }
 
-   // Called at the init stage of the AtFilterTask
    virtual void Init() override;
-   // Called on each pad if no baseline subtraction
-   virtual void Filter(Int_t *trace) override;
-   // Called on each pad if baseline subtraction
-   virtual void Filter(Double_t *trace) override;
+   virtual void InitEvent(AtRawEvent *event) override;
+   virtual void Filter(AtPad *pad) override;
+   virtual bool IsGoodEvent() override;
 };
 
 #endif //#ifndef ATFILTERDIVIDE_H

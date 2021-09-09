@@ -74,5 +74,6 @@ void AtFilterTask::Exec(Option_t *opt)
    for (auto &pad : filteredEvent->GetPads())
       fFilter->Filter(&pad);
 
-   filteredEvent->SetIsGood(fFilter->IsGoodEvent());
+   auto isGood = filteredEvent->IsGood() && fFilter->IsGoodEvent();
+   filteredEvent->SetIsGood(isGood);
 }

@@ -385,9 +385,9 @@ void AtEventDrawTask::DrawHitPoints()
          if (numAux < 9) {
             std::cout << cYELLOW << " Auxiliary Channel " << numAux << " - Name " << pad.GetAuxName() << cNORMAL
                       << std::endl;
-            auto rawAdc = pad.GetRawADC();
+            auto adc = pad.GetADC();
             for (int i = 0; i < 512; ++i)
-               fAuxChannels[numAux]->SetBinContent(i, rawAdc[i]);
+               fAuxChannels[numAux]->SetBinContent(i, adc[i]);
             numAux++;
          }
       }

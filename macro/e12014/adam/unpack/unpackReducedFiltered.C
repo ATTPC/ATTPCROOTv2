@@ -82,6 +82,14 @@ void unpackReducedFiltered(int runNumber)
    filterTask->SetPersistence(kTRUE);
    filterTask->SetFilterAux(true);
 
+   AtTrapezoidFilter *auxFilter = new AtTrapezoidFilter();
+   auxFilter->SetM(17.5);
+   auxFilter->SetRiseTime(4);
+   auxFilter->SetTopTime(10);
+   AtAuxFilterTask *auxFilterTask = new AtAuxFilterTask(auxFilter);
+   auxFilterTask->SetInputBranchName("AtRawEventFiltered");
+   auxFilterTask->AddAuxPad("IC");
+
    AtPSASimple2 *psa = new AtPSASimple2();
    psa->SetThreshold(threshold);
    psa->SetMaxFinder();
@@ -96,6 +104,7 @@ void unpackReducedFiltered(int runNumber)
    run->AddTask(HDFParserTask);
    run->AddTask(reduceTask);
    run->AddTask(filterTask);
+   run->AddTask(auxFilterTask);
    run->AddTask(psaTask);
 
    run->Init();
