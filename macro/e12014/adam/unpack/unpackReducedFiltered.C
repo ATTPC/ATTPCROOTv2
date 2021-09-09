@@ -69,6 +69,11 @@ void unpackReducedFiltered(int runNumber)
    HDFParserTask->SetNumberTimestamps(2);
    HDFParserTask->SetBaseLineSubtraction(kTRUE);
 
+   // Create data reduction task
+   AtDataReductionTask *reduceTask = new AtDataReductionTask();
+   reduceTask->SetInputBranch("AtRawEvent");
+   reduceTask->SetReductionFunction(&reduceFunc);
+
    auto threshold = 45;
 
    AtFilterSubtraction *filter = new AtFilterSubtraction(mapping);
@@ -87,16 +92,11 @@ void unpackReducedFiltered(int runNumber)
    psaTask->SetOutputBranch("AtEventFiltered");
    psaTask->SetPersistence(kTRUE);
 
-   // Create data reduction task
-   AtDataReductionTask *reduceTask = new AtDataReductionTask();
-   reduceTask->SetInputBranch("AtRawEventFiltered");
-   reduceTask->SetReductionFunction(&reduceFunc);
-
    // Add unpacker to the run
    run->AddTask(HDFParserTask);
+   run->AddTask(reduceTask);
    run->AddTask(filterTask);
    run->AddTask(psaTask);
-   run->AddTask(reduceTask);
 
    run->Init();
 
@@ -104,7 +104,7 @@ void unpackReducedFiltered(int runNumber)
    auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
    // numEvents = 1700;//217;
-   numEvents = 200;
+   // numEvents = 200;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 

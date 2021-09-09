@@ -50,13 +50,12 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    Float_t mesh[512] = {0};
 
    std::multimap<Int_t, std::size_t> mcPointsMap = rawEvent->GetSimMCPointMap();
-   std::cout << " MC Simulated points Map size " << mcPointsMap.size() << "\n";
+   LOG(debug) << " MC Simulated points Map size " << mcPointsMap.size();
 
    /* for (const auto& entry : mcPointsMap)
       {
       std::cout<<entry.first<<"  "<<entry.second<<"\n";
       } */
-
 
    //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
    for (auto &pad : rawEvent->GetPads()) {

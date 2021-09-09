@@ -84,29 +84,20 @@ void AtPSAtask::Exec(Option_t *opt)
       return;
 
    AtRawEvent *rawEvent = (AtRawEvent *)fRawEventArray->At(0);
-
-   std::cout << " Event Number :  " << rawEvent->GetEventID() << " Valid pads : " << rawEvent->GetNumPads()
-             << std::endl;
-
    AtEvent *event = (AtEvent *)new ((*fEventHArray)[0]) AtEvent();
 
-   if (!(rawEvent->IsGood())) {
-      event->SetIsGood(kFALSE);
-   } else {
-      if (fMCPointArray != 0) {
-         std::cout << " point array size " << fMCPointArray->GetEntries() << "\n";
-         fPSA->SetSimulatedEvent(fMCPointArray);
-      }
+   event->SetIsGood(rawEvent->IsGood());
+   event->SetEventID(rawEvent->GetEventID());
+   event->SetTimestamp(rawEvent->GetTimestamp());
+   event->SetIsExtGate(rawEvent->GetIsExtGate());
 
-      // Analyze the event
-      fPSA->Analyze(rawEvent, event);
-
-      // Copy parameters from raw event
-      event->SetIsGood(kTRUE);
-      event->SetEventID(rawEvent->GetEventID());
-      event->SetTimestamp(rawEvent->GetTimestamp());
-      event->SetIsExtGate(rawEvent->GetIsExtGate());
+   if (!rawEvent->IsGood())
+      return;
+   if (fMCPointArray != 0) {
+      LOG(debug) << " point array size " << fMCPointArray->GetEntries();
+      fPSA->SetSimulatedEvent(fMCPointArray);
    }
+   LOG(debug) << " Event Number :  " << rawEvent->GetEventID() << " Valid pads : " << rawEvent->GetNumPads();
 
-   // std::cout << "PSA events  "<<event->GetNumHits()  << '\n';
+   fPSA->Analyze(rawEvent, event);
 }

@@ -113,14 +113,6 @@ InitStatus AtRansacTask::Init()
 
    if (kIsReprocess) {
       ioMan->Register("AtEventH", "AtTPC", fEventHArray, kIsPersistence);
-      /*
-      fS800CalcBr = (TClonesArray *) ioMan -> GetObject("s800cal");
-      if (fS800CalcBr == 0) {
-        fLogger -> Error(MESSAGE_ORIGIN, "Cannot find AtEvent array!");
-        return kERROR;
-      }
-      ioMan -> Register("s800cal", "S800", fS800CalcBr, fIsPersistence);
-      */
    }
 
    return kSUCCESS;

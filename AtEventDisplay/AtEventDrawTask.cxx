@@ -670,7 +670,6 @@ void AtEventDrawTask::DrawHitPoints()
          Atbin = fPadPlane->Fill(positioncorr.X(), positioncorr.Y(), hit.GetCharge());
       }
 
-
       if (fIsRawData) {
          AtPad *RawPad = fRawevent->GetPad(PadNumHit);
          if (RawPad != nullptr) {
