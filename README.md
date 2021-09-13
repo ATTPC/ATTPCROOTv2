@@ -15,7 +15,7 @@ module load xerces/3.2.3
 
 To install ATTPCROOT checkout the repository from github and then create a folder in the repository to build the code and cd into it. From this directory you can call CMake to configure the build. Then you can build the source. You will need to tell CMake where you installed things besides FairRoot and FairSoft by setting the DCMAKE_PREFIX_PATH:
 ```
-git clone https://github.com/ATTPC/ATTPCROOTv2.git
+git clone https://github.com/anthoak13/ATTPCROOTv2.git
 cd ATTPCROOTv2
 mkdir build
 cd build
