@@ -31,6 +31,15 @@ public:
    void SetPersistence(Bool_t value = kTRUE);
    void SetPRAlgorithm(Int_t value = 0);
 
+   void SetScluster(float s){ fHCs = s;}
+   void SetKtriplet(size_t k){ fHCk = k;}
+   void SetNtriplet(size_t n){  fHCn = n;}
+   void SetMcluster(size_t m){  fHCm = m;}
+   void SetRsmooth(float r){  fHCr = r;}
+   void SetAtriplet(float a){ fHCa = a;}
+   void SetTcluster(float t){ fHCt = t;}
+   void SetPadding(size_t padding){  fHCpadding = padding;}        
+  
 private:
    TClonesArray *fEventHArray;
    TClonesArray *fPatternEventArray;
@@ -44,6 +53,16 @@ private:
    Int_t fMinNumHits;
 
    Bool_t kIsPersistence;
+
+   //HC parameters
+  float fHCs;
+  size_t fHCk;
+  size_t fHCn;
+  size_t fHCm;
+  float fHCr;
+  float fHCa;
+  float fHCt;
+  size_t fHCpadding;
 
    ClassDef(AtPRAtask, 1);
 };

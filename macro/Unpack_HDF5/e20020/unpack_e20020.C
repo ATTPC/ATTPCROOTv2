@@ -65,18 +65,23 @@ void unpack_e20020(TString fileName)
   HDFParserTask->SetFileName(dataFile.Data());
   HDFParserTask->SetBaseLineSubtraction(kTRUE);
   
-  AtPSASimple2 *psa = new AtPSASimple2();
+  //AtPSASimple2 *psa = new AtPSASimple2();
    // psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
    // psa -> SetBaseCorrection(kFALSE);
    // psa -> SetTimeCorrection(kFALSE);
 
+  AtPSAFilter *psa = new AtPSAFilter();
+
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);
-   psa->SetThreshold(50);
+   psa->SetThreshold(30);
    psa->SetMaxFinder();
-  
+   psa-> SetMeanK(10);
+   psa-> SetStddevMulThresh(0.1);
+   
   AtPRAtask *praTask = new AtPRAtask();
-   praTask->SetPersistence(kTRUE);
+  praTask->SetPersistence(kTRUE);
+  praTask->SetTcluster(5.0);
    
   run -> AddTask(HDFParserTask);
   run -> AddTask(psaTask);
@@ -84,7 +89,7 @@ void unpack_e20020(TString fileName)
   
   run -> Init();
 
-   run->Run(0,5000);
+  run->Run(0,10);
    //run->RunOnTBData();
 
   std::cout << std::endl << std::endl;

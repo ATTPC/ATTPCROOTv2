@@ -6,8 +6,16 @@
 
 ClassImp(AtPATTERN::AtTrackFinderHC)
 
-   AtPATTERN::AtTrackFinderHC::AtTrackFinderHC()
+AtPATTERN::AtTrackFinderHC::AtTrackFinderHC()
 {
+   inputParams.s = -1.0;
+   inputParams.r = -1.0;
+   inputParams.k = 19;
+   inputParams.n = 3;
+   inputParams.a = 0.03;
+   inputParams.t = 3.5;
+   inputParams.m = 8;
+   
 }
 
 AtPATTERN::AtTrackFinderHC::~AtTrackFinderHC() {}
@@ -24,17 +32,19 @@ bool AtPATTERN::AtTrackFinderHC::FindTracks(AtEvent &event, AtPatternEvent *patt
 
    hc_params opt_params;
 
-   hc_params bestParams;
+   //hc_params bestParams;
    // AtTPC
    // Defaultvalues
-   bestParams.s = -1.0;
-   bestParams.r = -1.0;
-   bestParams.k = 19;
-   bestParams.n = 3;
-   bestParams.a = 0.03;
-   bestParams.t = 3.5;
-   bestParams.m = 8;
-   opt_params = bestParams;
+   //bestParams.s = -1.0;
+   //bestParams.r = -1.0;
+   //bestParams.k = 19;
+   //bestParams.n = 3;
+   //bestParams.a = 0.03;
+   //bestParams.t = 3.5;
+   //bestParams.m = 8;
+   //opt_params = bestParams;
+
+   opt_params = inputParams;
 
    // Parse AtTPCROOT date into PCL format
    pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_xyzti(new pcl::PointCloud<pcl::PointXYZI>());

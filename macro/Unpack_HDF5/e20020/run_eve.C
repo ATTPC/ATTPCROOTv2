@@ -1,7 +1,13 @@
-void run_eve(TString  InputDataFile = "output.root",TString  OutputDataFile = "output.reco_display.root", TString unpackDir="/Unpack_HDF5/")
+void run_eve(TString  InputDataFileName = "output")
 {
+
+  TString  InputDataFile = InputDataFileName + ".root";
+  
+  TString OutputDataFile = InputDataFileName + ".reco_display.root";
+  TString unpackDir="/Unpack_HDF5/e20020/";
+  
   FairLogger *fLogger = FairLogger::GetLogger();
-  fLogger -> SetLogToScreen(kTRUE);
+  fLogger->SetLogToScreen(kTRUE);
   fLogger->SetLogVerbosityLevel("MEDIUM");
   TString dir = getenv("VMCWORKDIR");
   TString geoFile = "ATTPC_He1bar_v2_geomanager.root";
