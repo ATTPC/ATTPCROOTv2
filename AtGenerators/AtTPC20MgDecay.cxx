@@ -68,11 +68,8 @@ Bool_t AtTPC20MgDecay::ReadEvent(FairPrimaryGenerator *primGen)
    std::cout<<" gammaMass: "<<gammaMass<<std::endl;
    std::cout << "alphaMass: " << alphaMass << std::endl;
 
-   // Double32_t kinEneProton = 0.001210;  //GeV
-   // Double32_t kinEneAlpha = 0.000506;  //GeV
-//Double32_t kinEneGamma =0.004033; //GeV  and it has zero rest mass
    Double32_t ptProton = 0, pxProton = 0, pyProton = 0, pzProton = 0;
-   Double32_t pabsProton = 0.0469; // GeV/c
+   Double32_t pabsProton = 0.0470; // GeV/c
    Double32_t thetaProton = acos(gRandom->Uniform(-1, 1));
    Double32_t brp=0;
    Double32_t phiProton = gRandom->Uniform(0, 360) * TMath::DegToRad();
