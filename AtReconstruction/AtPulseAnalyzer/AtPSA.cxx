@@ -28,7 +28,6 @@ using std::min_element;
 AtPSA::AtPSA()
 {
    std::cout << "Calling AtPSA Constructor" << std::endl;
-
    // TODO:Move to class that needs them
    fIniTB = 0;
    fEndTB = 512;
@@ -119,8 +118,15 @@ Double_t AtPSA::CalculateZ(Double_t peakIdx)
 Double_t AtPSA::CalculateZGeo(Double_t peakIdx)
 {
 
-   // This function must be consistent with the re-calibrations done before.
-   return -fZk + (fEntTB - peakIdx) * fTBTime * fDriftVelocity / 100.+400;
+   fvariable = kFALSE; // fvariable = kFALSE for default cases and for GADGETII fvariable = kTRUE
+   fdet_len = 400.;    // detector length in mm
+                       // This function must be consistent with the re-calibrations done before.
+   if (!fvariable) {
+      return fZk - (fEntTB - peakIdx) * fTBTime * fDriftVelocity / 100.;
+   }
+   if (fvariable) {
+      return -fZk + (fEntTB - peakIdx) * fTBTime * fDriftVelocity / 100. + fdet_len;
+   }
 }
 
 Double_t AtPSA::CalculateY(Double_t layer)

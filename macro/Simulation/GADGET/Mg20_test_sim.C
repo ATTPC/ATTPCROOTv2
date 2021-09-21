@@ -57,9 +57,6 @@ void Mg20_test_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
 
   AtTPC20MgDecay* decay = new AtTPC20MgDecay();
   decay->SetNuclearDecayChain();
-  //decay->SetDecayChainPoint(1000040020,0.005485,0.853);
-//decay->SetDecayChainPoint(0.005443,0.146);
-//decay->SetDecayChainPoint(22,0.000059,0.37);
 decay->SetDecayChainPoint(0.001210,1);
 //decay->SetDecayChainPoint(22, 0.004033,0.284);
 decay->SetDecayChainPoint(0.000506,0.716);

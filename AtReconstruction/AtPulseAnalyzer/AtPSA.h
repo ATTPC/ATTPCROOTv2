@@ -72,7 +72,9 @@ protected:
    Double_t fDriftVelocity;  ///< drift velocity of electron in cm/us
    Double_t fMaxDriftLength; ///< maximum drift length in mm
    Double_t fZk;             // Relative position of micromegas-cathode
-
+   Double_t fdet_len;        // GADGETII detector length
+   Bool_t fvariable;         // fvariable defined for GADGETII, fvariable = kFALSE for default and fvariable = kTRUE for
+                             // GADGETII
    // Protected functions
    void TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit *hit); //< Assign MC Points kinematics to each hit.
 

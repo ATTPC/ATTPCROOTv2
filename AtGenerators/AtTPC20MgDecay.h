@@ -58,7 +58,7 @@ Bool_t fNuclearDecayChainIsSet;
 Int_t fParticlesDefinedInNuclearDecay;
 Double32_t fParticleEnergies[3];
 Double32_t fParticleBranchingRatios[3];
-   ClassDef(AtTPC20MgDecay, 3)
+ClassDef(AtTPC20MgDecay, 1)
 };
 
 #endif
