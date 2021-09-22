@@ -56,7 +56,7 @@ void AtPATTERN::AtPRA::SetTrackCurvature(AtTrack &track)
 void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 {
 
-   // std::cout<<" Processing track with "<<track.GetHitArray()->size()<<" points."<<"\n";
+  //std::cout<<" Processing track with "<<track.GetHitArray()->size()<<" points."<<"\n";
    // Get the radius of curvature from RANSAC
    AtRANSACN::AtRansac RansacSmoothRadius;
    RansacSmoothRadius.SetModelType(pcl::SACMODEL_CIRCLE2D);
@@ -67,13 +67,15 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
                                                       // This function also sets the coefficients
                                                       // i.e. radius of curvature and center
 
+   //Local PCL RANSAC
+   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
+      
+   
    // if(circularTracks[0]->GetHitArray() != nullptr)
 
    
    
-   if (!circularTracks.empty()) {
-
-    
+   if (!circularTracks.empty()) {    
 
       std::vector<AtHit> *hits = circularTracks[0]->GetHitArray();
 
@@ -91,6 +93,8 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
       TGraph *arclengthGraph = new TGraph();
 
       TVector3 posPCA = hits->at(0).GetPosition();
+
+      cloud->points.resize (hits->size());
 
       std::vector<AtHit> *thetaHits = new std::vector<AtHit>();
 
@@ -118,6 +122,11 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
          Double_t yPos = pos.Z();
          Double_t zPos = 0.0;
 
+	 cloud->points[i].x = arclength.at(i);
+         cloud->points[i].y = pos.Z();
+         cloud->points[i].z = 0;
+
+
          thetaHits->push_back(AtHit(hits->at(i).GetHitPadNum(), i, xPos, yPos, zPos, hits->at(i).GetCharge()));
       }
 
@@ -135,14 +144,35 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
       try{
 	
-	if(thetaHits->size()>0){
+      if(thetaHits->size()>0){
       // std::cout<<" RANSAC Theta "<<"\n";
+
+           	
       AtRANSACN::AtRansac RansacTheta;
       RansacTheta.SetModelType(pcl::SACMODEL_LINE);
       RansacTheta.SetRANSACPointThreshold(0.1);
       RansacTheta.SetDistanceThreshold(6.0);
       std::vector<AtTrack *> thetaTracks = RansacTheta.Ransac(thetaHits);
 
+      pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
+      pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
+
+      pcl::SACSegmentation<pcl::PointXYZ> seg;
+
+      seg.setOptimizeCoefficients (true);
+
+      seg.setModelType (pcl::SACMODEL_LINE);
+      seg.setMethodType (pcl::SAC_RANSAC);
+      seg.setDistanceThreshold (6.0);
+
+      seg.setInputCloud (cloud);
+      seg.segment(*inliers, *coefficients);
+
+      //std::cerr << " Model coefficients ("<<coefficients->values.size()<<"): "<<"\n";
+      //for(auto iCoeff =0;iCoeff<coefficients->values.size();++iCoeff)
+      //std::cout << coefficients ->values[iCoeff] << std::endl;
+
+      
       // RansacTheta.MinimizeTrack(thetaTracks[0]);
       if(thetaTracks.size()>0){
 
@@ -151,22 +181,28 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
       //double angle = (TMath::ATan2(slope, 1) * 180.0 / TMath::Pi());
 
-      /*std::cout<<" Coeff theta 0 : "<<coeffTheta.at(0)<<"\n";
-      std::cout<<" Coeff theta 1 : "<<coeffTheta.at(1)<<"\n";
-      std::cout<<" Coeff theta 2 : "<<coeffTheta.at(2)<<"\n";
-      std::cout<<" Coeff theta 3 : "<<coeffTheta.at(3)<<"\n";
-      std::cout<<" Coeff theta 4 : "<<coeffTheta.at(4)<<"\n";
-      std::cout<<" Coeff theta 5 : "<<coeffTheta.at(5)<<"\n";*/
-
+      //for(auto iCoeff =0;iCoeff<coeffTheta.size();++iCoeff)
+	//std::cout<<" Coeff theta 0 : "<<coeffTheta.at(iCoeff)<<"\n";
+      
       int sign = 0;
 
-      if (coeffTheta.at(3) * coeffTheta.at(4) < 0)
+      /*if (coeffTheta.at(3) * coeffTheta.at(4) < 0)
          sign = -1;
       else
          sign = 1;
 
       if (coeffTheta.at(3) != 0)
-         angle = acos(sign * fabs(coeffTheta.at(4))) * TMath::RadToDeg();
+      angle = acos(sign * fabs(coeffTheta.at(4))) * TMath::RadToDeg();*/
+
+       if (coefficients->values[3] * coefficients->values[4] < 0)
+      sign = -1;
+    else
+      sign = 1;
+
+    if (coefficients->values[3] != 0)
+      angle = acos(sign * fabs(coefficients->values[4])) * TMath::RadToDeg();
+
+      
       // angle = (TMath::ATan2(coeffTheta.at(3),coeffTheta.at(4)) * 180.0 / TMath::Pi());
       /*{
         double w_c = TMath::Sqrt( TMath::Power(coeffTheta.at(4),2) + TMath::Power(coeffTheta.at(3),2)   );
@@ -183,9 +219,9 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
       }//thetaTracks
 
-      /*std::cout<<" AtPRA::SetTrackInitialParameters : "<<"\n";
-      std::cout<<" Theta angle : "<<angle<<"\n";
-      std::cout<<" Phi angle : "<<phi0*TMath::RadToDeg()<<"\n";*/
+      //std::cout<<" AtPRA::SetTrackInitialParameters : "<<"\n";
+      //std::cout<<" Theta angle : "<<angle<<"\n";
+      //std::cout<<" Phi angle : "<<phi0*TMath::RadToDeg()<<"\n";
 
       track.SetGeoTheta(angle * TMath::Pi()/180.0);     
       track.SetGeoPhi(phi0);

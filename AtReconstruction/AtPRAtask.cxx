@@ -21,7 +21,6 @@ AtPRAtask::AtPRAtask() : FairTask("AtPRAtask")
    kIsPersistence = kFALSE;
    fMinNumHits = 10;
 
-
    fHCs = -1.0;
    fHCk = 19;
    fHCn = 3;
@@ -30,8 +29,6 @@ AtPRAtask::AtPRAtask() : FairTask("AtPRAtask")
    fHCa = 0.03;
    fHCt = 3.5;
    fHCpadding = 0.0;
-
-   
 }
 
 AtPRAtask::~AtPRAtask()
@@ -75,17 +72,15 @@ InitStatus AtPRAtask::Init()
       fLogger->Info(MESSAGE_ORIGIN, "Using Track Finder Hierarchical Clustering algorithm");
 
       fPRA = new AtPATTERN::AtTrackFinderHC();
-      dynamic_cast<AtPATTERN::AtTrackFinderHC*>(fPRA)->SetTcluster(fHCt);
-      dynamic_cast<AtPATTERN::AtTrackFinderHC*>(fPRA)->SetScluster(fHCs);
-      dynamic_cast<AtPATTERN::AtTrackFinderHC*>(fPRA)->SetKtriplet(19);
-						dynamic_cast<AtPATTERN::AtTrackFinderHC*>(fPRA)->SetNtriplet(fHCn);
-						dynamic_cast<AtPATTERN::AtTrackFinderHC*>(fPRA)->SetMcluster(fHCm);
-						dynamic_cast<AtPATTERN::AtTrackFinderHC*>(fPRA)->SetRsmooth(fHCr);
-      dynamic_cast<AtPATTERN::AtTrackFinderHC*>(fPRA)->SetAtriplet(fHCa);
-      //dynamic_cast<AtPATTERN::AtTrackFinderHC*>fPRA->SetPadding(fHCpadding);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetTcluster(fHCt);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetScluster(fHCs);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetKtriplet(19);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetNtriplet(fHCn);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetMcluster(fHCm);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetRsmooth(fHCr);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetAtriplet(fHCa);
+      // dynamic_cast<AtPATTERN::AtTrackFinderHC*>fPRA->SetPadding(fHCpadding);
 
-
-      
    } else if (fPRAlgorithm == 1) {
       fLogger->Info(MESSAGE_ORIGIN, "Using RANSAC algorithm");
 

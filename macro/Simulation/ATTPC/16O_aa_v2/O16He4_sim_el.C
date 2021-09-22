@@ -1,4 +1,4 @@
-void O16He4_sim_el(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
+void O16He4_sim_el(Int_t nEvents = 2, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");

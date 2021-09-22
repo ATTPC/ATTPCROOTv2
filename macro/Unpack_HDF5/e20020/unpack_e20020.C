@@ -64,33 +64,33 @@ void unpack_e20020(TString fileName)
   HDFParserTask->SetAtTPCMap(scriptdir.Data());
   HDFParserTask->SetFileName(dataFile.Data());
   HDFParserTask->SetBaseLineSubtraction(kTRUE);
-  
-  //AtPSASimple2 *psa = new AtPSASimple2();
-   // psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
-   // psa -> SetBaseCorrection(kFALSE);
-   // psa -> SetTimeCorrection(kFALSE);
+
+  // AtPSASimple2 *psa = new AtPSASimple2();
+  // psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
+  // psa -> SetBaseCorrection(kFALSE);
+  // psa -> SetTimeCorrection(kFALSE);
 
   AtPSAFilter *psa = new AtPSAFilter();
 
-   AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetPersistence(kTRUE);
-   psa->SetThreshold(30);
-   psa->SetMaxFinder();
-   psa-> SetMeanK(10);
-   psa-> SetStddevMulThresh(0.1);
-   
+  AtPSAtask *psaTask = new AtPSAtask(psa);
+  psaTask->SetPersistence(kTRUE);
+  psa->SetThreshold(30);
+  psa->SetMaxFinder();
+  psa->SetMeanK(4);
+  psa->SetStddevMulThresh(0.1);
+
   AtPRAtask *praTask = new AtPRAtask();
   praTask->SetPersistence(kTRUE);
   praTask->SetTcluster(5.0);
-   
+
   run -> AddTask(HDFParserTask);
   run -> AddTask(psaTask);
   run -> AddTask(praTask);
   
   run -> Init();
 
-  run->Run(0,10);
-   //run->RunOnTBData();
+  run->Run(0,5000);
+  // run->RunOnTBData();
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
