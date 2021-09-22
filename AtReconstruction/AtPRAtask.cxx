@@ -6,7 +6,7 @@
 #include <iostream>
 #include <memory>
 
-// FAIRROOT classes
+//// FAIRROOT classes
 #include "FairRootManager.h"
 #include "FairRun.h"
 #include "FairRuntimeDb.h"

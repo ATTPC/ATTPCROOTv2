@@ -219,9 +219,10 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
       }//thetaTracks
 
-      //std::cout<<" AtPRA::SetTrackInitialParameters : "<<"\n";
-      //std::cout<<" Theta angle : "<<angle<<"\n";
-      //std::cout<<" Phi angle : "<<phi0*TMath::RadToDeg()<<"\n";
+      std::cout << " AtPRA::SetTrackInitialParameters : "
+                << "\n";
+      std::cout << " Theta angle : " << angle << "\n";
+      std::cout << " Phi angle : " << phi0 * TMath::RadToDeg() << "\n";
 
       track.SetGeoTheta(angle * TMath::Pi()/180.0);     
       track.SetGeoPhi(phi0);
