@@ -118,6 +118,7 @@ Double_t AtPSA::CalculateZ(Double_t peakIdx)
 Double_t AtPSA::CalculateZGeo(Double_t peakIdx)
 {
 
+<<<<<<< HEAD
    Bool_t fswitch = kFALSE; // In order to ficx the evnts that are happening on the opposite of the detector a new parameter "fswitch" is defined. fswitch = kFALSE for default cases and for GADGETII fvariable = kTRUE
    Double_t fdet_len = 400.;    // detector length in mm
                        // This function must be consistent with the re-calibrations done before.
@@ -125,6 +126,15 @@ Double_t AtPSA::CalculateZGeo(Double_t peakIdx)
       return fZk - (fEntTB - peakIdx) * fTBTime * fDriftVelocity / 100.;
    }
    if (fswitch) {
+=======
+   fvariable = kFALSE; // fvariable = kFALSE for default cases and for GADGETII fvariable = kTRUE
+   fdet_len = 400.;    // detector length in mm
+                       // This function must be consistent with the re-calibrations done before.
+   if (!fvariable) {
+      return fZk - (fEntTB - peakIdx) * fTBTime * fDriftVelocity / 100.;
+   }
+   if (fvariable) {
+>>>>>>> 9fae9e35e96a068e55f7ee943e36bd9f8c37e1c5
       return -fZk + (fEntTB - peakIdx) * fTBTime * fDriftVelocity / 100. + fdet_len;
    }
 }
