@@ -78,7 +78,7 @@ include(CTest)
 include(CheckCompiler)
 #include(CheckFortran)
 
-set(CMAKE_CXX_FLAGS -std=c++14)
+set(CMAKE_CXX_FLAGS -std=c++11)
 
 #Check the compiler and set the compile and link flags
 If(NOT CMAKE_BUILD_TYPE)
@@ -87,10 +87,10 @@ If(NOT CMAKE_BUILD_TYPE)
 EndIf(NOT CMAKE_BUILD_TYPE)
 Check_Compiler()
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS -std=c++14)
+set(CMAKE_CXX_FLAGS -std=c++11)
 
 #String(FIND "${CMAKE_CXX_FLAGS}" "-std=c++14" POS_C++11)
 #If(${POS_C++11} EQUAL -1)

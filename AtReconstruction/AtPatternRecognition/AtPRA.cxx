@@ -120,11 +120,11 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
          // Add a hit in the Arc legnth - Z plane
          Double_t xPos = arclength.at(i);
          Double_t yPos = pos.Z();
-         Double_t zPos = 0.0;
+         Double_t zPos = i*1E-19;
 
 	 cloud->points[i].x = arclength.at(i);
          cloud->points[i].y = pos.Z();
-         cloud->points[i].z = 0;
+         cloud->points[i].z = i*1E-19;
 
 
          thetaHits->push_back(AtHit(hits->at(i).GetHitPadNum(), i, xPos, yPos, zPos, hits->at(i).GetCharge()));
@@ -186,21 +186,21 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
       
       int sign = 0;
 
-      /*if (coeffTheta.at(3) * coeffTheta.at(4) < 0)
+      if (coeffTheta.at(3) * coeffTheta.at(4) < 0)
          sign = -1;
       else
          sign = 1;
 
       if (coeffTheta.at(3) != 0)
-      angle = acos(sign * fabs(coeffTheta.at(4))) * TMath::RadToDeg();*/
+      angle = acos(sign * fabs(coeffTheta.at(4))) * TMath::RadToDeg();
 
-       if (coefficients->values[3] * coefficients->values[4] < 0)
+      /* if (coefficients->values[3] * coefficients->values[4] < 0)
       sign = -1;
     else
       sign = 1;
 
     if (coefficients->values[3] != 0)
-      angle = acos(sign * fabs(coefficients->values[4])) * TMath::RadToDeg();
+    angle = acos(sign * fabs(coefficients->values[4])) * TMath::RadToDeg();*/
 
       
       // angle = (TMath::ATan2(coeffTheta.at(3),coeffTheta.at(4)) * 180.0 / TMath::Pi());
@@ -215,14 +215,15 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
       // angle = 90.0 + angle;
 
       //Tangent line at the first point of the spiral
-      phi0 = TMath::ATan2(posPCA.Y() - coeff.at(1),posPCA.X()-coeff.at(0));
+      phi0 = TMath::ATan2(posPCA.Y() - coeffTheta.at(1),posPCA.X()-coeffTheta.at(0));
+      // phi0 = TMath::ATan2(posPCA.Y() - coeff.at(1),posPCA.X()-coeff.at(0));
 
       }//thetaTracks
 
-      std::cout << " AtPRA::SetTrackInitialParameters : "
+      /*std::cout << " AtPRA::SetTrackInitialParameters : "
                 << "\n";
       std::cout << " Theta angle : " << angle << "\n";
-      std::cout << " Phi angle : " << phi0 * TMath::RadToDeg() << "\n";
+      std::cout << " Phi angle : " << phi0 * TMath::RadToDeg() << "\n";*/
 
       track.SetGeoTheta(angle * TMath::Pi()/180.0);     
       track.SetGeoPhi(phi0);
