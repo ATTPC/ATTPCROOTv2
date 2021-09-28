@@ -154,7 +154,7 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
       RansacTheta.SetDistanceThreshold(6.0);
       std::vector<AtTrack *> thetaTracks = RansacTheta.Ransac(thetaHits);
 
-      pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
+      /*pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
       pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
 
       pcl::SACSegmentation<pcl::PointXYZ> seg;
@@ -166,7 +166,7 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
       seg.setDistanceThreshold (6.0);
 
       seg.setInputCloud (cloud);
-      seg.segment(*inliers, *coefficients);
+      seg.segment(*inliers, *coefficients);*/
 
       //std::cerr << " Model coefficients ("<<coefficients->values.size()<<"): "<<"\n";
       //for(auto iCoeff =0;iCoeff<coefficients->values.size();++iCoeff)
