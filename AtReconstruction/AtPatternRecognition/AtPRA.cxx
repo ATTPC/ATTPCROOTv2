@@ -9,8 +9,13 @@
 
 ClassImp(AtPATTERN::AtPRA)
 
-   AtPATTERN::AtPRA::~AtPRA()
+AtPATTERN::AtPRA::~AtPRA()
 {
+   fMaxHits = 5000;
+   fMinHits = 0;
+   fMeanDistance = 1E9;
+  
+  
 }
 
 void AtPATTERN::AtPRA::SetTrackCurvature(AtTrack &track)
@@ -215,8 +220,8 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
       // angle = 90.0 + angle;
 
       //Tangent line at the first point of the spiral
-      phi0 = TMath::ATan2(posPCA.Y() - coeffTheta.at(1),posPCA.X()-coeffTheta.at(0));
-      // phi0 = TMath::ATan2(posPCA.Y() - coeff.at(1),posPCA.X()-coeff.at(0));
+      
+        phi0 = TMath::ATan2(posPCA.Y() - coeff.at(1),posPCA.X()-coeff.at(0));
 
       }//thetaTracks
 

@@ -20,6 +20,7 @@ AtPRAtask::AtPRAtask() : FairTask("AtPRAtask")
    fPRAlgorithm = 0;
    kIsPersistence = kFALSE;
    fMinNumHits = 10;
+   fMaxNumHits = 5000;
 
    fHCs = -1.0;
    fHCk = 19;
@@ -128,7 +129,7 @@ void AtPRAtask::Exec(Option_t *option)
 
       AtPatternEvent *patternEvent = (AtPatternEvent *)new ((*fPatternEventArray)[0]) AtPatternEvent();
 
-      if (hitArray.size() > fMinNumHits)
+      if (hitArray.size() > fMinNumHits && hitArray.size() < fMaxNumHits )
          fPRA->FindTracks(event, patternEvent);
 
    } catch (std::runtime_error e) {

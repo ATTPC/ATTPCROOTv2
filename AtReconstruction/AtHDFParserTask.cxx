@@ -294,10 +294,10 @@ void AtHDFParserTask::Exec(Option_t *opt)
       fRawEvent->SetPad(pad);
       delete pad;
 
-   } // End loop over pads
+      } // End loop over pads 
 
    new ((*fRawEventArray)[0]) AtRawEvent(fRawEvent);
-
+   HDFParser->end_raw_event();
    ++fEventID;
 }
 

@@ -75,6 +75,12 @@ void plotFit(std::string fileFolder = "anaSet1/")
 
    TH2F *x_y_Xtr = new TH2F("x_y_Xtr", "x_y_Xtr", 1000, -10, 10, 1000, -10, 10);
 
+   TH1F *POCAXtrH = new TH1F("POCAXtrH", "POCAXtrH", 1000, -10, 10);
+
+   TH1F *tracklengthH = new TH1F("tracklengthH", "tracklengthH", 1000,0, 1000);
+
+   TH2F *ZposvsEvH = new TH2F("ZposvsEvH", "ZposvsEvH", 200, -100, 100,1000, 0, 10000);
+   
    // Q-value calculation
    Double_t m_p = 1.007825 * 931.49401;
    Double_t m_d = 2.0135532 * 931.49401;
@@ -109,6 +115,9 @@ void plotFit(std::string fileFolder = "anaSet1/")
       }
    }
 
+
+   int fileCnt=0;
+   
    // Plot data
    for (auto dataFile : files) {
 
@@ -182,6 +191,9 @@ void plotFit(std::string fileFolder = "anaSet1/")
          outputTree->SetBranchAddress("POCAXtrVec", &POCAXtrVec);
          outputTree->SetBranchAddress("trackIDVec", &trackIDVec);
 
+
+	 ++fileCnt;
+	 
          Int_t nentries = (Int_t)outputTree->GetEntries();
          for (Int_t i = 0; i < nentries; i++) {
             outputTree->GetEntry(i);
@@ -192,11 +204,11 @@ void plotFit(std::string fileFolder = "anaSet1/")
 
             for (auto index = 0; index < EFitVec->size(); ++index) {
 
-               if ((*ziniFitXtrVec)[index] > 20.0 && (*ziniFitXtrVec)[index] < 30.0) {
+	      //               if ((*ziniFitXtrVec)[index] > 20.0 && (*ziniFitXtrVec)[index] < 30.0) {
 
                   Double_t angle = (*AFitVec)[index];
 
-                  // if(angle>30 && angle<90 ){
+		  //if(angle>20 && angle<90 ){
 
                   if (dataFile.find("sim") != std::string::npos) {
                      angle = (*AFitVec)[index];
@@ -214,7 +226,10 @@ void plotFit(std::string fileFolder = "anaSet1/")
                   hzpos_fit_Xtr->Fill((*ziniFitXtrVec)[index]);
                   x_y_Xtr->Fill((*xiniFitXtrVec)[index], (*yiniFitXtrVec)[index]);
                   QvsAng_Xtr->Fill((*ExXtrVec)[index], AFit);
-                  // }// x-y
+		  POCAXtrH->Fill((*POCAXtrVec)[index]);
+		  tracklengthH->Fill((*trackLengthVec)[index]);
+		  ZposvsEvH->Fill((*ziniFitXtrVec)[index],i*fileCnt);
+		  // }// x-y
                   //}//Energy and angle
 
                   // 	  	}//IC
@@ -224,9 +239,9 @@ void plotFit(std::string fileFolder = "anaSet1/")
                   Ang_Ener_PRA->Fill(APRA, EPRA);
 
                   // HQval->Fill(Ex);
-                  // hxpos_fit->Fill(xiniFit);
-                  // hypos_fit->Fill(yiniFit);
-                  // hzpos_fit->Fill(ziniFit);
+                   hxpos_fit->Fill((*xiniFitVec)[index]);
+                   hypos_fit->Fill((*yiniFitVec)[index]);
+                   hzpos_fit->Fill((*ziniFitVec)[index]);
 
                   QvsAng->Fill(Ex, AFit);
                   QvsZpos->Fill(Ex, ziniFit);
@@ -237,14 +252,14 @@ void plotFit(std::string fileFolder = "anaSet1/")
                   Ang_Phi->Fill(AFit, PhiFit * TMath::RadToDeg());
                   x_Phi->Fill(xiniFit, PhiFit * TMath::RadToDeg());
                   y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
-
+ 
                   QvsXpos->Fill(Ex, xiniFit);
 
                   // Excitation energy
                   // Double_t ex_energy_exp = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, AFit*TMath::DegToRad(),EFit);
                   // HQval->Fill(Ex);
                }
-            } // Z vertex
+            //} // Z vertex
             //}//Angle
          }
       }
@@ -422,4 +437,22 @@ void plotFit(std::string fileFolder = "anaSet1/")
    HIC->Draw();
    c5->cd(4);
    x_y_Xtr->Draw("zcol");
+
+   TCanvas *c6 = new TCanvas();
+   c6->Divide(3, 3);
+   c6->Draw();
+   c6->cd(1);
+   POCAXtrH->Draw();
+   c6->cd(2);
+   hxpos_fit->Draw();
+   c6->cd(3);
+   hypos_fit->Draw();
+   c6->cd(4);
+   hzpos_fit->Draw();
+   c6->cd(5);
+   tracklengthH->Draw();
+   c6->cd(6);
+   ZposvsEvH->Draw();
+
+   
 }

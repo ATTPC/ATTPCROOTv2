@@ -40,6 +40,9 @@ public:
    void SetTcluster(float t) { fHCt = t; }
    void SetPadding(size_t padding) { fHCpadding = padding; }
 
+  void SetMaxNumHits(Int_t maxHits){ fMaxNumHits = maxHits;}
+  void SetMinNumHits(Int_t minHits){ fMinNumHits = minHits;}
+  
 private:
    TClonesArray *fEventHArray;
    TClonesArray *fPatternEventArray;
@@ -50,8 +53,10 @@ private:
    AtPATTERN::AtPRA *fPRA;
 
    Int_t fPRAlgorithm;
-   Int_t fMinNumHits;
 
+   Int_t fMinNumHits;
+   Int_t fMaxNumHits;
+  
    Bool_t kIsPersistence;
 
    // HC parameters

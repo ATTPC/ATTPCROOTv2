@@ -3,7 +3,7 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
-void unpack_e20020(TString fileName)
+void unpack_e20020_full(TString fileName)
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -82,15 +82,22 @@ void unpack_e20020(TString fileName)
   AtPRAtask *praTask = new AtPRAtask();
   praTask->SetPersistence(kTRUE);
   praTask->SetTcluster(5.0);
+  praTask->SetMaxNumHits(3000);
+  praTask->SetMinNumHits(300);
 
+  
   run -> AddTask(HDFParserTask);
   run -> AddTask(psaTask);
   run -> AddTask(praTask);
   
   run -> Init();
 
-  run->Run(0,100);
-  // run->RunOnTBData();
+  auto numEvents = HDFParserTask->GetNumEvents() / 2;
+
+   
+   run->Run(0, numEvents);
+   //run->Run(0,5000);
+  
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
