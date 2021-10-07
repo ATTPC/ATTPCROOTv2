@@ -25,11 +25,10 @@ public:
    virtual bool FindTracks(AtEvent &event, AtPatternEvent *patternEvent) = 0;
 
    void SetTrackInitialParameters(AtTrack &track);
-    void SetMaxHits(Int_t maxHits) { fMaxHits = maxHits;}
-   void SetMinHits(Int_t minHits) { fMinHits = minHits;}
-   void SetMeanDistance(Float_t meanDistance) {fMeanDistance = meanDistance;}
-  
-  
+   void SetMaxHits(Int_t maxHits) { fMaxHits = maxHits; }
+   void SetMinHits(Int_t minHits) { fMinHits = minHits; }
+   void SetMeanDistance(Float_t meanDistance) { fMeanDistance = meanDistance; }
+
 protected:
    FairLogger *fLogger; ///< logger pointer
    AtDigiPar *fPar;     ///< parameter container
@@ -38,11 +37,11 @@ protected:
    void Clusterize(AtTrack &track);
    void Clusterize3D(AtTrack &track);
    void Clusterize3D(AtTrack &track, Float_t distance, Float_t radius);
-   
+
    Int_t fMaxHits;
    Int_t fMinHits;
    Float_t fMeanDistance;
-  
+
    ClassDef(AtPRA, 1)
 };
 

@@ -70,14 +70,14 @@ void unpack_e20020(TString fileName)
   // psa -> SetBaseCorrection(kFALSE);
   // psa -> SetTimeCorrection(kFALSE);
 
-  //AtPSAFilter *psa = new AtPSAFilter();
+  // AtPSAFilter *psa = new AtPSAFilter();
 
   AtPSAtask *psaTask = new AtPSAtask(psa);
   psaTask->SetPersistence(kTRUE);
   psa->SetThreshold(30);
   psa->SetMaxFinder();
-  //psa->SetMeanK(4);
-  //psa->SetStddevMulThresh(0.1);
+  // psa->SetMeanK(4);
+  // psa->SetStddevMulThresh(0.1);
 
   AtPRAtask *praTask = new AtPRAtask();
   praTask->SetPersistence(kTRUE);
@@ -89,7 +89,7 @@ void unpack_e20020(TString fileName)
   
   run -> Init();
 
-  run->Run(0,100);
+  run->Run(0, 100);
   // run->RunOnTBData();
 
   std::cout << std::endl << std::endl;

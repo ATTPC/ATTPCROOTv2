@@ -810,7 +810,8 @@ void AtHoughSpaceCircle::CalcHoughSpace(AtEvent *event, Bool_t YZplane, Bool_t X
 
 void AtHoughSpaceCircle::CalcHoughSpace(AtEvent *event, TH2Poly *hPadPlane, const multiarray &PadCoord)
 {
-
+  //DEPRECATED Yassid 07/10/2021
+  /*
    Int_t nHits = event->GetNumHits();
    Int_t nstep = 10;
    Double_t drift_cal = fDriftVelocity * fTBTime / 100.0; // mm
@@ -1342,6 +1343,7 @@ void AtHoughSpaceCircle::CalcHoughSpace(AtEvent *event, TH2Poly *hPadPlane, cons
 
    delete min;
    delete[] parameter;
+   */
 }
 
 double AtHoughSpaceCircle::calcAngleFromArcLength(AtTrack *track)
@@ -1395,10 +1397,13 @@ double AtHoughSpaceCircle::calcAngleFromArcLength(AtTrack *track)
 std::vector<AtTrack *> AtHoughSpaceCircle::smoothRadius(AtTrack &trackCand)
 {
 
-   RansacSmoothRadius.SetModelType(pcl::SACMODEL_CIRCLE2D);
+  //DEPRECATED Yassid 07/10/2021
+  /*  RansacSmoothRadius.SetModelType(pcl::SACMODEL_CIRCLE2D);
    RansacSmoothRadius.SetRANSACPointThreshold(0.1);
    RansacSmoothRadius.SetDistanceThreshold(6.0);
-   return RansacSmoothRadius.Ransac(trackCand.GetHitArray());
+   return RansacSmoothRadius.Ransac(trackCand.GetHitArray());*/
+
+   
 }
 
 std::pair<Double_t, Double_t> AtHoughSpaceCircle::CalHoughParameters(TH2F *hist)

@@ -141,8 +141,6 @@ std::size_t AtHDFParser::open(char const *file)
       return 0;
    _group = std::get<0>(group_n_entries);
 
-   
-
    return std::get<1>(group_n_entries);
 }
 
@@ -180,7 +178,7 @@ std::vector<int64_t> AtHDFParser::get_header(std::string headerName)
       retVec.push_back(data[i]);
 
    delete data;
-   
+
    return retVec;
 }
 

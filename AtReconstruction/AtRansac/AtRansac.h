@@ -107,8 +107,8 @@ public:
 
    void CalcRANSAC(AtEvent *event);
    void CalcRANSACFull(AtEvent *event);
-   std::vector<AtTrack *> RansacPCL(AtEvent *event);
-   std::vector<AtTrack *> Ransac(std::vector<AtHit> *hits);
+   std::vector<AtTrack>* RansacPCL(AtEvent *event);
+   std::vector<AtTrack>* Ransac(std::vector<AtHit> *hits);
    TVector3 GetVertex1();
    TVector3 GetVertex2();
    Double_t GetVertexTime();
@@ -170,6 +170,8 @@ protected:
    Double_t fTiltAng;  // From parameter file
    Int_t fMinHitsLine; // Minimum number of hits per line
 
+   std::vector<AtTrack> fRansacTracks;
+  
    struct SumDistance2 {
       TGraph2D *fGraph;
 

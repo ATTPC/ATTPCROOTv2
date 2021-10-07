@@ -163,9 +163,9 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
                   break;
                }
             }
-         }
+	 }
 
-      } // Indices loop
+	    } // Indices loop
 
       track.SetTrackID(clusterIndex);
       Clusterize3D(track, 5.0, 20.0);

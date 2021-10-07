@@ -44,8 +44,7 @@ AtPSA::AtPSA()
 AtPSA::~AtPSA()
 {
 
-  delete fCalibration;
-  
+   delete fCalibration;
 }
 
 void AtPSA::Init()
