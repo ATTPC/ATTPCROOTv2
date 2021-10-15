@@ -130,7 +130,7 @@ void AtPRAtask::Exec(Option_t *option)
       AtPatternEvent *patternEvent = (AtPatternEvent *)new ((*fPatternEventArray)[0]) AtPatternEvent();
 
       if (hitArray.size() > fMinNumHits && hitArray.size() < fMaxNumHits )
-	fPRA->FindTracks(event, patternEvent);
+         fPRA->FindTracks(event, patternEvent);
 
    } catch (std::runtime_error e) {
       std::cout << "Analyzation failed! Error: " << e.what() << std::endl;

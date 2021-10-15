@@ -119,7 +119,7 @@ void AtRANSACN::AtRansac::SetVertexTime(Double_t val)
 void AtRANSACN::AtRansac::CalcRANSAC(AtEvent *event)
 {
 
-  std::vector<AtTrack>* tracks = RansacPCL(event);
+   std::vector<AtTrack> *tracks = RansacPCL(event);
 
    Int_t tracksSize = tracks->size();
    std::cout << "RansacPCL tracks size : " << tracksSize << std::endl;
@@ -133,7 +133,7 @@ void AtRANSACN::AtRansac::CalcRANSAC(AtEvent *event)
             double mychi2 = Fit3D(&tracks->at(ntrack));
          }
       } // Tracks loop
-      //FindVertex(tracks);
+      // FindVertex(tracks);
 
    } // Minimum tracks
 
@@ -200,7 +200,7 @@ void AtRANSACN::AtRansac::CalcRANSAC(AtEvent *event)
 void AtRANSACN::AtRansac::CalcRANSACFull(AtEvent *event)
 {
 
-   std::vector<AtTrack>* tracks = RansacPCL(event);
+   std::vector<AtTrack> *tracks = RansacPCL(event);
 
    XYZVector Z_1(0.0, 0.0, 1.0); // Beam direction
 
@@ -226,12 +226,12 @@ void AtRANSACN::AtRansac::CalcRANSACFull(AtEvent *event)
          fTrackCand.resize(5);
    } // Minimum tracks
 
-   //FindVertex(tracks);
+   // FindVertex(tracks);
 }
 
-std::vector<AtTrack>* AtRANSACN::AtRansac::Ransac(std::vector<AtHit> *hits)
+std::vector<AtTrack> *AtRANSACN::AtRansac::Ransac(std::vector<AtHit> *hits)
 {
- 
+
    // Data writer
    // pcl::PCDWriter writer;
 
@@ -337,7 +337,7 @@ std::vector<AtTrack>* AtRANSACN::AtRansac::Ransac(std::vector<AtHit> *hits)
 
          fRansacTracks.push_back(track);
 
-	 //delete track;
+         // delete track;
       }
       // std::stringstream ss;
       // ss << "../track_" << i << ".pcd";
@@ -353,7 +353,7 @@ std::vector<AtTrack>* AtRANSACN::AtRansac::Ransac(std::vector<AtHit> *hits)
    return &fRansacTracks;
 }
 
-std::vector<AtTrack>* AtRANSACN::AtRansac::RansacPCL(AtEvent *event)
+std::vector<AtTrack> *AtRANSACN::AtRansac::RansacPCL(AtEvent *event)
 {
 
    return AtRANSACN::AtRansac::Ransac(event->GetHitArray());

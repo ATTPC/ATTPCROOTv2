@@ -46,6 +46,9 @@ ClassImp(AtFITTER::AtGenfit)
    genfit::FieldManager::getInstance()->init(new genfit::ConstField(0., 0., fMagneticField)); // TODO kGauss
    genfit::MaterialEffects *materialEffects = genfit::MaterialEffects::getInstance();
    materialEffects->setEnergyLossFile(fEnergyLossFile);
+   materialEffects->setEnergyLossBrems(false);
+   materialEffects->setNoiseBrems(false);
+   materialEffects->useEnergyLossParam();
    materialEffects->init(new genfit::TGeoMaterialInterface());
 
    // fPDGCandidateArray = new std::vector<Int_t>; // TODO

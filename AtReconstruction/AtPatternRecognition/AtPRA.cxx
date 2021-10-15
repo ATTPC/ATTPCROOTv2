@@ -65,24 +65,21 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
    RansacSmoothRadius.SetModelType(pcl::SACMODEL_CIRCLE2D);
    RansacSmoothRadius.SetRANSACPointThreshold(0.1);
    RansacSmoothRadius.SetDistanceThreshold(6.0);
-   std::vector<AtTrack>* circularTracks =
+   std::vector<AtTrack> *circularTracks =
       RansacSmoothRadius.Ransac(track.GetHitArray()); // Only part of the spiral is used
                                                       // This function also sets the coefficients
                                                       // i.e. radius of curvature and center
 
-   //Local PCL RANSAC
-   //pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
-      
-   
+   // Local PCL RANSAC
+   // pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
+
    // if(circularTracks[0]->GetHitArray() != nullptr)
 
-   
-   
-   if (!circularTracks->empty()) {    
+   if (!circularTracks->empty()) {
 
-     std::vector<AtHit> *hits = circularTracks->at(0).GetHitArray();
+      std::vector<AtHit> *hits = circularTracks->at(0).GetHitArray();
 
-     std::vector<Double_t> coeff = circularTracks->at(0).GetRANSACCoeff();
+      std::vector<Double_t> coeff = circularTracks->at(0).GetRANSACCoeff();
 
       track.SetGeoCenter(std::make_pair(coeff.at(0), coeff.at(1)));
       track.SetGeoRadius(coeff.at(2));
@@ -97,7 +94,7 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
       TVector3 posPCA = hits->at(0).GetPosition();
 
-      //cloud->points.resize (hits->size());
+      // cloud->points.resize (hits->size());
 
       std::vector<AtHit> *thetaHits = new std::vector<AtHit>();
 
@@ -125,10 +122,9 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
          Double_t yPos = pos.Z();
          Double_t zPos = i*1E-19;
 
-	 //cloud->points[i].x = arclength.at(i);
-         //cloud->points[i].y = pos.Z();
-         //cloud->points[i].z = i*1E-19;
-
+         // cloud->points[i].x = arclength.at(i);
+         // cloud->points[i].y = pos.Z();
+         // cloud->points[i].z = i*1E-19;
 
          thetaHits->push_back(AtHit(hits->at(i).GetHitPadNum(), i, xPos, yPos, zPos, hits->at(i).GetCharge()));
       }
@@ -155,7 +151,7 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
       RansacTheta.SetModelType(pcl::SACMODEL_LINE);
       RansacTheta.SetRANSACPointThreshold(0.1);
       RansacTheta.SetDistanceThreshold(6.0);
-      std::vector<AtTrack>* thetaTracks = RansacTheta.Ransac(thetaHits);
+      std::vector<AtTrack> *thetaTracks = RansacTheta.Ransac(thetaHits);
 
       /*pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
       pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
@@ -177,51 +173,50 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
       
       // RansacTheta.MinimizeTrack(thetaTracks[0]);
-      if(thetaTracks->size()>0){
+      if (thetaTracks->size() > 0) {
 
-	//NB: Only the most intense line is taken, if any	
-	std::vector<Double_t> coeffTheta = thetaTracks->at(0).GetRANSACCoeff();
+         // NB: Only the most intense line is taken, if any
+         std::vector<Double_t> coeffTheta = thetaTracks->at(0).GetRANSACCoeff();
 
-      //double angle = (TMath::ATan2(slope, 1) * 180.0 / TMath::Pi());
+         // double angle = (TMath::ATan2(slope, 1) * 180.0 / TMath::Pi());
 
-      //for(auto iCoeff =0;iCoeff<coeffTheta.size();++iCoeff)
-	//std::cout<<" Coeff theta 0 : "<<coeffTheta.at(iCoeff)<<"\n";
-      
-      int sign = 0;
+         // for(auto iCoeff =0;iCoeff<coeffTheta.size();++iCoeff)
+         // std::cout<<" Coeff theta 0 : "<<coeffTheta.at(iCoeff)<<"\n";
 
-      if (coeffTheta.at(3) * coeffTheta.at(4) < 0)
+         int sign = 0;
+
+         if (coeffTheta.at(3) * coeffTheta.at(4) < 0)
+            sign = -1;
+         else
+            sign = 1;
+
+         if (coeffTheta.at(3) != 0)
+            angle = acos(sign * fabs(coeffTheta.at(4))) * TMath::RadToDeg();
+
+         /* if (coefficients->values[3] * coefficients->values[4] < 0)
          sign = -1;
-      else
+       else
          sign = 1;
 
-      if (coeffTheta.at(3) != 0)
-      angle = acos(sign * fabs(coeffTheta.at(4))) * TMath::RadToDeg();
+       if (coefficients->values[3] != 0)
+       angle = acos(sign * fabs(coefficients->values[4])) * TMath::RadToDeg();*/
 
-      /* if (coefficients->values[3] * coefficients->values[4] < 0)
-      sign = -1;
-    else
-      sign = 1;
+         // angle = (TMath::ATan2(coeffTheta.at(3),coeffTheta.at(4)) * 180.0 / TMath::Pi());
+         /*{
+           double w_c = TMath::Sqrt( TMath::Power(coeffTheta.at(4),2) + TMath::Power(coeffTheta.at(3),2)   );
+           angle      = asin(coeffTheta.at(3)/w_c)*TMath::RadToDeg();
+           }*/
 
-    if (coefficients->values[3] != 0)
-    angle = acos(sign * fabs(coefficients->values[4])) * TMath::RadToDeg();*/
+         // std::cout<<" pre  Angle "<<angle<<"\n";
 
-      
-      // angle = (TMath::ATan2(coeffTheta.at(3),coeffTheta.at(4)) * 180.0 / TMath::Pi());
-      /*{
-        double w_c = TMath::Sqrt( TMath::Power(coeffTheta.at(4),2) + TMath::Power(coeffTheta.at(3),2)   );
-        angle      = asin(coeffTheta.at(3)/w_c)*TMath::RadToDeg();
-        }*/
+         // if (angle < 0)
+         // angle = 90.0 + angle;
 
-      // std::cout<<" pre  Angle "<<angle<<"\n";
+         // Tangent line at the first point of the spiral
 
-      // if (angle < 0)
-      // angle = 90.0 + angle;
+         phi0 = TMath::ATan2(posPCA.Y() - coeff.at(1), posPCA.X() - coeff.at(0));
 
-      //Tangent line at the first point of the spiral
-
-      phi0 = TMath::ATan2(posPCA.Y() - coeff.at(1), posPCA.X() - coeff.at(0));
-
-      }//thetaTracks
+      } // thetaTracks
 
       /*std::cout << " AtPRA::SetTrackInitialParameters : "
                 << "\n";

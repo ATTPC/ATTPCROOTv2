@@ -484,7 +484,7 @@ int main(int argc, char *argv[])
 
                try {
                   fitTrack = fFitter->FitTracks(&track);
-               } catch (std::exception &e) {
+               } catch (genfit::Exception &e) {
                   std::cout << " Exception fitting track !" << e.what() << "\n";
                   continue;
                }
@@ -511,6 +511,7 @@ int main(int argc, char *argv[])
                      auto KalmanFitStatus = fitTrack->getKalmanFitStatus();
                      auto trackRep = fitTrack->getTrackRep(0); // Only one representation is sved for the moment.
 
+                     // if(1){
                      if (KalmanFitStatus->isFitConverged(false)) {
                         // KalmanFitStatus->Print();
                         genfit::MeasuredStateOnPlane fitState = fitTrack->getFittedState();

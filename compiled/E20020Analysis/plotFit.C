@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit(std::string fileFolder = "anaSet1/")
+void plotFit(std::string fileFolder = "data/")
 {
 
    // Data histograms
@@ -96,9 +96,9 @@ void plotFit(std::string fileFolder = "anaSet1/")
    m_B = m_Be10;
 
    // Find every valid file
-   // std::system("find ./anaSet1 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
+   std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
    // >test.txt"
-   std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
+   // std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::ifstream file;
    file.open("test.txt");
    std::string line;
@@ -202,7 +202,7 @@ void plotFit(std::string fileFolder = "anaSet1/")
 
             for (auto index = 0; index < EFitVec->size(); ++index) {
 
-               //               if ((*ziniFitXtrVec)[index] > 20.0 && (*ziniFitXtrVec)[index] < 30.0) {
+               // if ((*ziniFitXtrVec)[index] > 20.0 && (*ziniFitXtrVec)[index] < 30.0) {
 
                Double_t angle = (*AFitVec)[index];
 
@@ -210,7 +210,7 @@ void plotFit(std::string fileFolder = "anaSet1/")
 
                if (dataFile.find("sim") != std::string::npos) {
                   angle = (*AFitVec)[index];
-                  }
+               }
 
                   // if((*AFitVec)[index]>20.0 && (*EFitVec)[index]>4.0){
                   //	if( ((*xiniFitXtrVec)[index]<0.3 && (*xiniFitXtrVec)[index]>-0.3) && ((*yiniFitXtrVec)[index]<0.3
