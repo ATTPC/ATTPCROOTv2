@@ -34,16 +34,16 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit(std::string fileFolder = "data/")
+void plotFit_full(std::string fileFolder = "data_t30_t1_1_5_10/")
 {
 
    // Data histograms
    TH2F *Ang_Ener = new TH2F("Ang_Ener", "Ang_Ener", 720, 0, 179, 1000, 0, 100.0);
-   TH1F *HQval = new TH1F("HQval", "HQval", 1000, -10, 10);
+   TH1F *HQval = new TH1F("HQval", "HQval", 1000, -5, 15);
    TH1F *HIC = new TH1F("HIC", "HIC", 1000, 0, 4095);
 
    TH2F *Ang_Ener_Xtr = new TH2F("Ang_Ener_Xtr", "Ang_Ener_Xtr", 720, 0, 179, 1000, 0, 100.0);
-   TH1F *HQval_Xtr = new TH1F("HQval_Xtr", "HQval_Xtr", 1000, -10, 10);
+   TH1F *HQval_Xtr = new TH1F("HQval_Xtr", "HQval_Xtr", 1000, -5, 15);
 
    TH2F *QvsAng = new TH2F("QvsAng", "QvsAng", 1000, -10, 10, 720, 0, 179);
    TH2F *QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 10, 200, -100, 100);
@@ -62,7 +62,6 @@ void plotFit(std::string fileFolder = "data/")
 
    // PRA
    TH2F *Ang_Ener_PRA = new TH2F("Ang_Ener_PRA", "Ang_Ener_PRA", 720, 0, 179, 1000, 0, 100.0);
-   TH2F *Ang_Ener_PRA_rot = new TH2F("Ang_Ener_PRA_rot", "Ang_Ener_PRA_rot", 720, 0, 179, 1000, 0, 100.0);
 
    // Correlations
    TH2F *Ang_AngPRA = new TH2F("Ang_AngPRA", "Ang_AngPRA", 720, 0, 179, 720, 0, 179);
@@ -82,6 +81,8 @@ void plotFit(std::string fileFolder = "data/")
 
    TH2F *ZposvsEvH = new TH2F("ZposvsEvH", "ZposvsEvH", 200, -100, 100, 1000, 0, 10000);
 
+
+   // NB: Not used
    // Q-value calculation
    Double_t m_p = 1.007825 * 931.49401;
    Double_t m_d = 2.0135532 * 931.49401;
@@ -97,7 +98,7 @@ void plotFit(std::string fileFolder = "data/")
    m_B = m_Be10;
 
    // Find every valid file
-   std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
+   std::system("find ./data_t30_t1_1_5_10 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
    // >test.txt"
    // std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::ifstream file;
@@ -111,8 +112,8 @@ void plotFit(std::string fileFolder = "data/")
       std::istringstream iss(line);
       if (line.find(fileType) != std::string::npos) {
          std::cout << " Found fit file : " << line << "\n";
-         // files.push_back(fileFolder + line);
-         files.push_back(line);
+          files.push_back(fileFolder + line);
+         //files.push_back(line);
       }
    }
 
@@ -203,7 +204,9 @@ void plotFit(std::string fileFolder = "data/")
 
             for (auto index = 0; index < EFitVec->size(); ++index) {
 
-               // if ((*ziniFitXtrVec)[index] > 20.0 && (*ziniFitXtrVec)[index] < 30.0) {
+	      if ((*POCAXtrVec)[index]<1.0) {
+	      
+	        if ((*ziniFitXtrVec)[index] > 0.0 && (*ziniFitXtrVec)[index] < 100.0) {
 
                Double_t angle = (*AFitVec)[index];
 
@@ -212,10 +215,12 @@ void plotFit(std::string fileFolder = "data/")
                if (dataFile.find("sim") != std::string::npos) {
                   angle = (*AFitVec)[index];
                }
+	       if((*trackLengthVec)[index]<80.0){
 
+		 if((*EFitVec)[index]>0){
+	       
                   // if((*AFitVec)[index]>20.0 && (*EFitVec)[index]>4.0){
-                  //	if( ((*xiniFitXtrVec)[index]<0.3 && (*xiniFitXtrVec)[index]>-0.3) && ((*yiniFitXtrVec)[index]<0.3
-                  //&& (*yiniFitXtrVec)[index]>-0.3) ){
+               //if( ((*xiniFitXtrVec)[index]<0.3 && (*xiniFitXtrVec)[index]>-0.3) && ((*yiniFitXtrVec)[index]<0.3 && (*yiniFitXtrVec)[index]>-0.3) ){
                   Ang_Ener->Fill(angle, (*EFitVec)[index]);
                   HQval->Fill((*ExVec)[index]);
                   Ang_Ener_Xtr->Fill((angle), (*EFitXtrVec)[index]);
@@ -236,8 +241,7 @@ void plotFit(std::string fileFolder = "data/")
                   HIC->Fill(IC);
 
                   Ang_Ener_PRA->Fill(APRA, EPRA);
-		  Ang_Ener_PRA_rot->Fill(180.0-APRA, EPRA);
-		  
+
                   // HQval->Fill(Ex);
                   hxpos_fit->Fill((*xiniFitVec)[index]);
                   hypos_fit->Fill((*yiniFitVec)[index]);
@@ -259,8 +263,12 @@ void plotFit(std::string fileFolder = "data/")
                   // Double_t ex_energy_exp = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, AFit*TMath::DegToRad(),EFit);
                   // HQval->Fill(Ex);
                }
-               //} // Z vertex
-               //}//Angle
+		 } // Z vertex
+	      //}//X-Y
+	      }//POCA
+	      //}//Angle
+	    }//Track length
+	    }//Energy
          }
       }
    }
@@ -318,7 +326,7 @@ void plotFit(std::string fileFolder = "data/")
 
    TGraph *Kine_AngRec_EnerRec_in = new TGraph(numKin, ThetaLabRec, EnerLabRec);
 
-   fileKine = "Be10dp_gs.txt";
+   fileKine = "O16_aa_gs_11.txt";
    std::ifstream *kineStr3 = new std::ifstream(fileKine.Data());
    numKin = 0;
 
@@ -413,13 +421,6 @@ void plotFit(std::string fileFolder = "data/")
    Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
-   c3->cd(2);
-   Ang_Ener_PRA_rot->Draw("COlZ");
-   Kine_AngRec_EnerRec->Draw("SAME");
-   Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
-   Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
-   Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
-   
 
    TCanvas *c4 = new TCanvas();
    c4->Divide(2, 2);

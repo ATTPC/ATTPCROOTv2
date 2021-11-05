@@ -186,7 +186,7 @@ void Be10pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
               run->Run(nEvents);
 
               // You can export your ROOT geometry ot a separate file
-              run->CreateGeometryFile("../data/geofile_full.root");
+              run->CreateGeometryFile("./data/geofile_full.root");
               // ------------------------------------------------------------------------
 
               // -----   Finish   -------------------------------------------------------

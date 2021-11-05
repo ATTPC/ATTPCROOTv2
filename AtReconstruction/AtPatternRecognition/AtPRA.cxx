@@ -14,6 +14,11 @@ ClassImp(AtPATTERN::AtPRA)
    fMaxHits = 5000;
    fMinHits = 0;
    fMeanDistance = 1E9;
+
+   fKNN = 5 ;
+   fStdDevMulkNN = 0.1 ;
+
+
 }
 
 void AtPATTERN::AtPRA::SetTrackCurvature(AtTrack &track)
@@ -569,3 +574,45 @@ void AtPATTERN::AtPRA::Clusterize(AtTrack &track)
                 << " - Charge : " << clusterQ << "\n";
       }*/
 }
+
+void AtPATTERN::AtPRA::PruneTrack(AtTrack &track)
+{
+  std::vector<AtHit> *hitArray = track.GetHitArray();
+
+  if(hitArray->size()==0) return;
+
+}  
+
+int AtPATTERN::AtPRA::kNN(std::vector<AtHit>* hits,AtHit &hitRef, int k)
+{
+  
+  std::vector<Double_t> distances;
+  distances.reserve(hits->size());
+
+  std::for_each(hits->begin(), hits->end(), [&distances,&hitRef](AtHit &hit) {
+      distances.push_back(TMath::Abs((hitRef.GetPosition() - hit.GetPosition()).Mag()) ); 
+					  });
+
+  std::sort(distances.begin(),distances.end(), [](Double_t a, Double_t b) {
+        return a < b;
+    });
+
+  Double_t mean=0.0;
+  Double_t stdDev = 0.0;
+
+  //Compute mean distance of kNN
+  for(auto i=0;i<k;++k)
+    mean+=distances.at(k);
+
+  mean/=k;
+
+  //Compute std dev
+  for(auto i=0;i<k;++k)
+    stdDev+=TMath::Power( (distances.at(k) - mean),2);
+
+  stdDev=TMath::Sqrt(stdDev/k);
+  
+
+  
+}   
+   

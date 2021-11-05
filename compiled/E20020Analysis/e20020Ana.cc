@@ -128,6 +128,9 @@ int main(int argc, char *argv[])
    TH2F *angle_vs_energy = new TH2F("angle_vs_energy", "angle_vs_energy", 720, 0, 179, 1000, 0, 100.0);
    TH2F *angle_vs_energy_pattern =
       new TH2F("angle_vs_energy_pattern", "angle_vs_energy_pattern", 720, 0, 179, 1000, 0, 100.0);
+   TH2F *angle_vs_energy_pattern_rot =
+      new TH2F("angle_vs_energy_pattern_rot", "angle_vs_energy_pattern_rot", 720, 0, 179, 1000, 0, 100.0);
+  
    TH1F *HQval = new TH1F("HQval", "HQval", 1000, -10, 10);
 
    TH2F *evtNum_vs_trkNum = new TH2F("evtNum_vs_trkNum", "evtNum_vs_trkNum", 1000, 0, 1000, 10, 0, 10);
@@ -145,7 +148,7 @@ int main(int argc, char *argv[])
    TString filePath;
 
    if (simulationConv)
-      filePath = dir + "/macro/Simulation/ATTPC/16O_aa/";
+      filePath = dir + "/macro/Simulation/ATTPC/16O_aa_v2/";
    else
       filePath = "/mnt/analysis/e20020/ATTPCROOTv2_develop/macro/Unpack_HDF5/e20020/";
 
@@ -672,7 +675,7 @@ int main(int argc, char *argv[])
    Double_t *EnerLabSca = new Double_t[20000];
    Double_t *MomLabRec = new Double_t[20000];
 
-   TString fileKine = "../Be10pp_el.txt";
+   TString fileKine = "../O16_aa_gs.txt";
    std::ifstream *kineStr = new std::ifstream(fileKine.Data());
    Int_t numKin = 0;
 

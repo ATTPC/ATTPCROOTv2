@@ -5,7 +5,7 @@ void run_eve_el(TString InputDataFile = "output_digi_gs.root", TString OutputDat
    fLogger->SetLogToScreen(kTRUE);
    fLogger->SetLogVerbosityLevel("MEDIUM");
    TString dir = getenv("VMCWORKDIR");
-   TString geoFile = "ATTPC_D1bar_v2_geomanager.root";
+   TString geoFile = "ATTPC_D600torr_v2_geomanager.root";
 
    TString InputDataPath = dir + "/macro/" + unpackDir + InputDataFile;
    TString OutputDataPath = dir + "/macro/" + unpackDir + OutputDataFile;

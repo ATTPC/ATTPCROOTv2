@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 
    FairRunAna* run = new FairRunAna(); //Forcing a dummy run
    TString FileName =
-      "/mnt/simulations/attpcroot/fair_install_2020/ATTPCROOTv2/macro/Simulation/ATTPC/22Mg_aa/Mg22_Ne20pp_8MeV.root";
+      "/mnt/analysis/e20020/ATTPCROOTv2_develop/macro/Unpack_HDF5/e15250/output.root";
    std::cout<<" Opening File : "<<FileName.Data()<<std::endl;
    TFile* file = new TFile(FileName.Data(),"READ");
 
@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
    TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtEventH");
 
    const int   RANK = 1;
-   const H5std_string FILE_NAME("output_digi_HDF_Mg22_Ne20pp_8MeV.h5");
+   const H5std_string FILE_NAME("output.h5");
 
    H5File *HDFfile = new H5File(FILE_NAME, H5F_ACC_TRUNC);
 

@@ -1,13 +1,21 @@
+#include <stdio.h>      /* printf, NULL */
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
+
 void Be10dp_sim_gs(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 {
 
+   srand( (unsigned)time( NULL ) );
+   UInt_t seed=(float) rand()/RAND_MAX * 100000;
+   gRandom->SetSeed(seed);
+  
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name
-   TString outFile = "./data/attpcsim_dp_in.root";
+   TString outFile = "./data/attpcsim_dp_gs.root";
 
    // Parameter file name
-   TString parFile = "./data/attpcpar_dp_in.root";
+   TString parFile = "./data/attpcpar_dp_gs.root";
 
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
@@ -42,7 +50,7 @@ void Be10dp_sim_gs(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    run->AddModule(pipe);*/
 
    FairDetector *ATTPC = new AtTpc("ATTPC", kTRUE);
-   ATTPC->SetGeometryFileName("ATTPC_D1bar_v2.root");
+   ATTPC->SetGeometryFileName("ATTPC_D600torr_v2.root");
    // ATTPC->SetModifyGeometry(kTRUE);
    run->AddModule(ATTPC);
 
@@ -129,7 +137,7 @@ void Be10dp_sim_gs(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
    Mass.push_back(11.021657749); // uma
-   ExE.push_back(0.320);
+   ExE.push_back(0.0);
 
    // ---- Recoil -----
    Zp.push_back(1); // p  TRACKID=2
@@ -141,7 +149,7 @@ void Be10dp_sim_gs(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    Mass.push_back(1.00727646); // uma
    ExE.push_back(0.0);         // In MeV
 
-   Double_t ThetaMinCMS = 20.0;
+   Double_t ThetaMinCMS = 10.0;
    Double_t ThetaMaxCMS = 40.0;
 
    AtTPC2Body *TwoBody =
