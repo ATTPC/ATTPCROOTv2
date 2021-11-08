@@ -7,10 +7,11 @@
 #include "FairRunAna.h"
 */
 
-void run_eve(int runNum, bool displayFilteredData = true, TString OutputDataFile = "data/output.reco_display.root")
+void run_eve(int runNum = 118, bool displayFilteredData = true,
+             TString OutputDataFile = "data/output.reco_display.root")
 {
    TString InputDataFile;
-   InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpackedCalibration/run_%04dCal.root", runNum);
+   InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpackedLinked/run_%04d.root", runNum);
 
    // InputDataFile = "./run_0200.root";
    std::cout << "Opening: " << InputDataFile << std::endl;
@@ -46,8 +47,8 @@ void run_eve(int runNum, bool displayFilteredData = true, TString OutputDataFile
    eve->SetSaveTextData();
    if (displayFilteredData) {
       eve->SetRawEventBranch("AtRawEventFiltered");
+      eve->SetEventBranch("AtEventFiltered");
    }
-   eve->SetEventBranch("AtEventFiltered");
    // eve->UnpackHoughSpace();
 
    eveMan->AddTask(eve);

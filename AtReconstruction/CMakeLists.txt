@@ -106,6 +106,7 @@ set(SRCS
   AtFilter/AtFilterSubtraction.cxx
   AtFilter/AtFilterDivide.cxx
   AtFilter/AtTrapezoidFilter.cxx
+  AtFilter/AtFilterCalibrate.cxx
 
   #HierarchicalClustering/AtCubicSplineFit.cxx
   #HierarchicalClustering/AtFindVertex.cxx
