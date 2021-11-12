@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_full(std::string fileFolder = "data_t30_t1_1_5_10/")
+void plotFit_full(std::string fileFolder = "data_t30_t0_9_10_20/")
 {
 
    // Data histograms
@@ -43,7 +43,9 @@ void plotFit_full(std::string fileFolder = "data_t30_t1_1_5_10/")
    TH1F *HIC = new TH1F("HIC", "HIC", 1000, 0, 4095);
 
    TH2F *Ang_Ener_Xtr = new TH2F("Ang_Ener_Xtr", "Ang_Ener_Xtr", 720, 0, 179, 1000, 0, 100.0);
-   TH1F *HQval_Xtr = new TH1F("HQval_Xtr", "HQval_Xtr", 1000, -5, 15);
+   TH1F *HQval_Xtr = new TH1F("HQval_Xtr", "HQval_Xtr", 600, -5, 55);
+
+   TH1F *HQval_Xtr_recalc = new TH1F("HQval_Xtr_recalc", "HQval_Xtr_recalc", 600, -5, 55);
 
    TH2F *QvsAng = new TH2F("QvsAng", "QvsAng", 1000, -10, 10, 720, 0, 179);
    TH2F *QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 10, 200, -100, 100);
@@ -89,16 +91,21 @@ void plotFit_full(std::string fileFolder = "data_t30_t1_1_5_10/")
    Double_t m_Be10 = 10.013533818 * 931.49401;
    Double_t m_Be11 = 11.021657749 * 931.49401;
    Double_t m_beam = m_Be10;
+   Float_t aMass = 4.00260325415;
+   Float_t O16Mass = 15.99491461956;
 
-   Double_t Ebeam_buff = 100.0; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
+   Double_t m_a = 4.00260325415 * 931.49401;
+   Double_t m_O16 = 15.99491461956 * 931.49401;
+
+   Double_t Ebeam_buff =150.0; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
    Double_t m_b;
    Double_t m_B;
 
-   m_b = m_d;
-   m_B = m_Be10;
+   m_b = m_a;
+   m_B = m_O16;
 
    // Find every valid file
-   std::system("find ./data_t30_t1_1_5_10 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
+   std::system("find ./data_t30_t0_9_10_20 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
    // >test.txt"
    // std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::ifstream file;
@@ -206,7 +213,7 @@ void plotFit_full(std::string fileFolder = "data_t30_t1_1_5_10/")
 
 	      if ((*POCAXtrVec)[index]<1.0) {
 	      
-	        if ((*ziniFitXtrVec)[index] > 0.0 && (*ziniFitXtrVec)[index] < 100.0) {
+	        if ((*ziniFitXtrVec)[index] > 20.0 && (*ziniFitXtrVec)[index] < 25.0) {
 
                Double_t angle = (*AFitVec)[index];
 
@@ -215,7 +222,7 @@ void plotFit_full(std::string fileFolder = "data_t30_t1_1_5_10/")
                if (dataFile.find("sim") != std::string::npos) {
                   angle = (*AFitVec)[index];
                }
-	       if((*trackLengthVec)[index]<80.0){
+	       if((*trackLengthVec)[index]<1000.0){
 
 		 if((*EFitVec)[index]>0){
 	       
@@ -260,8 +267,9 @@ void plotFit_full(std::string fileFolder = "data_t30_t1_1_5_10/")
                   QvsXpos->Fill(Ex, xiniFit);
 
                   // Excitation energy
-                  // Double_t ex_energy_exp = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, AFit*TMath::DegToRad(),EFit);
-                  // HQval->Fill(Ex);
+                   Double_t ex_energy_exp = kine_2b(m_O16, m_a, m_b, m_B, Ebeam_buff, angle*TMath::DegToRad(),(*EFitVec)[index]);
+		   HQval_Xtr_recalc->Fill(ex_energy_exp);
+		   // HQval->Fill(Ex);
                }
 		 } // Z vertex
 	      //}//X-Y
@@ -461,4 +469,7 @@ void plotFit_full(std::string fileFolder = "data_t30_t1_1_5_10/")
    tracklengthH->Draw();
    c6->cd(6);
    ZposvsEvH->Draw();
+
+   TCanvas *c7 = new TCanvas();
+   HQval_Xtr_recalc->Draw();
 }

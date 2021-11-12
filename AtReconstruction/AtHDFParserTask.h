@@ -7,6 +7,7 @@
 #include "AtHDFParser.h"
 #include "AtMap.h"
 #include "AtTpcProtoMap.h"
+#include "AtGadgetIIMap.h"
 #include "AtPedestal.h"
 #include "AtRawEvent.h"
 

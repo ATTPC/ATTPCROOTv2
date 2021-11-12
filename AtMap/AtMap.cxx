@@ -178,6 +178,7 @@ void AtMap::ParseMapList(TXMLNode *node)
              strcmp(node->GetNodeName(), "LookupProto20181201v2") == 0 ||
              strcmp(node->GetNodeName(), "e12014_pad_mapping") == 0 ||
              strcmp(node->GetNodeName(), "e12014_pad_map_size") == 0 ||
+	     strcmp(node->GetNodeName(), "LookupGADGET08232021") == 0 ||
              strcmp(node->GetNodeName(), "LookupProtoND") == 0) { // TODO Implement this as function parameter
             // cout<<node->GetNodeName()<<endl;
             // if(strcmp(node->GetNodeName(),"Lookup20141208") == 0){
