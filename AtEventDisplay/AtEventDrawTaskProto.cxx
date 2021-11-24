@@ -95,8 +95,8 @@ InitStatus AtEventDrawTaskProto::Init()
    FairRootManager *ioMan = FairRootManager::Instance();
    fEventManager = AtEventManagerProto::Instance();
    fDetmap = new AtTpcProtoMap();
-   fDetmap->SetProtoMap(fMap.Data());
-   fDetmap->SetGeoFile("proto20181201_geo_hires.root");
+   dynamic_cast<AtTpcProtoMap *>(fDetmap)->SetProtoMap(fMap.Data());
+   dynamic_cast<AtTpcProtoMap *>(fDetmap)->SetGeoFile("proto20181201_geo_hires.root");
    fDetmap->SetName("fMap");
    gROOT->GetListOfSpecials()->Add(fDetmap);
 
@@ -134,11 +134,13 @@ InitStatus AtEventDrawTaskProto::Init()
    fCvsPadPlane = fEventManager->GetCvsPadPlane(); // There is a problem if the pad plane is drawn first
    fCvsPadPlane->ToggleEventStatus();
    fCvsPadPlane->AddExec("ex", "AtEventDrawTaskProto::SelectPad(\"fRawEvent\")");
-   DrawPadPlane();
+   DrawPadPlane();   
    fCvsPadAll = fEventManager->GetCvsPadAll();
    DrawPadAll();
    fCvsMesh = fEventManager->GetCvsMesh();
    DrawMesh();
+
+   
    /*fCvsQuadrant1 = fEventManager->GetCvsQuadrant1();
    fCvsQuadrant2 = fEventManager->GetCvsQuadrant2();
    fCvsQuadrant3 = fEventManager->GetCvsQuadrant3();
@@ -156,6 +158,8 @@ InitStatus AtEventDrawTaskProto::Init()
    DrawProtoKine();*/
    fCvsAux = fEventManager->GetCvsAux();
    DrawProtoAux();
+
+   std::cout<<" AtEventDrawTaskProto::Init -  End of initialization "<<"\n";
 }
 
 void AtEventDrawTaskProto::Exec(Option_t *option)
@@ -650,15 +654,17 @@ void AtEventDrawTaskProto::DrawPadPlane()
      return;
    }*/
 
-   fPadPlane = fDetmap->GetAtTpcPlane("AtTPC_Proto");
+  fPadPlane = dynamic_cast<AtTpcProtoMap *>(fDetmap)->GetAtTpcPlane("ATTPC_Proto");//NB: Do not change the pad plane name
    fCvsPadPlane->cd();
    // fPadPlane -> Draw("zcol");
    // fPadPlane -> Draw("COL L0");
    fPadPlane->Draw("COL L");
-   fPadPlane->SetMinimum(1.0);
+   fPadPlane->SetMinimum(1.0); 
    gStyle->SetOptStat(0);
    gStyle->SetPalette(103);
    gPad->Update();
+
+   
 }
 
 void AtEventDrawTaskProto::DrawPadAll()
@@ -968,6 +974,8 @@ void AtEventDrawTaskProto::UpdateCvsProtoAux()
 
 void AtEventDrawTaskProto::SelectPad(const char *rawevt)
 {
+
+ try {
    int event = gPad->GetEvent();
    if (event != 11)
       return; // may be comment this line
@@ -1052,6 +1060,11 @@ void AtEventDrawTaskProto::SelectPad(const char *rawevt)
       tPadWave->Draw();
       // tPadWaveSub->Draw("SAME");
       tCvsPadWave->Update();
+   }
+
+   } catch (const std::exception &e) {
+
+      std::cout << cRED << " Exception caught in Select Pad " << e.what() << cNORMAL << "\n";
    }
 }
 

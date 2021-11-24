@@ -31,6 +31,7 @@
 #include "AtHoughSpace.h"
 #include "AtHit.h"
 #include "AtTpcProtoMap.h"
+#include "AtMap.h"
 #include "AtProtoQuadrant.h"
 #include "AtPatternEvent.h"
 #include <fstream>
@@ -150,7 +151,7 @@ protected:
 
    AtEventManagerProto *fEventManager;
    AtHit *fIniHit;
-   AtTpcProtoMap *fDetmap;
+   AtMap *fDetmap;
    AtRawEvent *fRawevent;
    AtHoughSpaceLine *fHoughSpaceLine;
 

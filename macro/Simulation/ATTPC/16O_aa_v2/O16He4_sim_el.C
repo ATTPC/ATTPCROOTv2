@@ -8,10 +8,10 @@ void O16He4_sim_el(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name
-   TString outFile = "./data/attpcsim.root";
+   TString outFile = "./data/attpcsim_in.root";
 
    // Parameter file name
-   TString parFile = "./data/attpcpar.root";
+   TString parFile = "./data/attpcpar_in.root";
 
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
@@ -133,7 +133,7 @@ void O16He4_sim_el(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
    Mass.push_back(15.99491461956); // uma
-   ExE.push_back(0.0);
+   ExE.push_back(6.0494);
 
    // ---- Recoil -----
    Zp.push_back(2); //

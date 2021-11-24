@@ -28,19 +28,20 @@ AtHDFParserTask::AtHDFParserTask() : AtPadCoordArr(boost::extents[10240][3][2])
 
    fIsProtoGeoSet = kFALSE;
    fIsProtoMapSet = kFALSE;
-   if (kOpt == 0){
+   if (kOpt == 0) {
       fAtMapPtr = new AtTpcMap();
-      std::cout<< cGREEN <<" AtHDFParserTask - AT-TPC map selected. "<< cNORMAL <<"\n";
-   }else if (kOpt == 1){
+      std::cout << cGREEN << " AtHDFParserTask - AT-TPC map selected. " << cNORMAL << "\n";
+   } else if (kOpt == 1) {
       fAtMapPtr = new AtTpcProtoMap();
-      std::cout<< cGREEN <<" AtHDFParserTask - pAT-TPC map selected. "<< cNORMAL <<"\n";
-   }else if (kOpt == 2){
-     std::cout<< cGREEN <<" AtHDFParserTask - GADGETII map selected. "<< cNORMAL <<"\n";
+      std::cout << cGREEN << " AtHDFParserTask - pAT-TPC map selected. " << cNORMAL << "\n";
+   } else if (kOpt == 2) {
+      std::cout << cGREEN << " AtHDFParserTask - GADGETII map selected. " << cNORMAL << "\n";
       fAtMapPtr = new AtGadgetIIMap();
-   }else
-     std::cout << cRED << "== AtHDFParserTask Initialization Error : Option not found. Current available options: AtTPC Map 0 "
+   } else
+      std::cout << cRED
+                << "== AtHDFParserTask Initialization Error : Option not found. Current available options: AtTPC Map 0 "
                    "/ Prototype Map 1"
-	       << cNORMAL << std::endl;
+                << cNORMAL << std::endl;
 }
 
 AtHDFParserTask::AtHDFParserTask(Int_t opt) : AtPadCoordArr(boost::extents[10240][3][2]), kOpt(0)
@@ -60,19 +61,20 @@ AtHDFParserTask::AtHDFParserTask(Int_t opt) : AtPadCoordArr(boost::extents[10240
    fIsProtoGeoSet = kFALSE;
    fIsProtoMapSet = kFALSE;
 
-   if (kOpt == 0){
+   if (kOpt == 0) {
       fAtMapPtr = new AtTpcMap();
-      std::cout<< cGREEN <<" AtHDFParserTask - AT-TPC map selected. "<< cNORMAL <<"\n";
-   }else if (kOpt == 1){
+      std::cout << cGREEN << " AtHDFParserTask - AT-TPC map selected. " << cNORMAL << "\n";
+   } else if (kOpt == 1) {
       fAtMapPtr = new AtTpcProtoMap();
-      std::cout<< cGREEN <<" AtHDFParserTask - pAT-TPC map selected. "<< cNORMAL <<"\n";
-   }else if (kOpt == 2){
-     std::cout<< cGREEN <<" AtHDFParserTask - GADGETII map selected. "<< cNORMAL <<"\n";
+      std::cout << cGREEN << " AtHDFParserTask - pAT-TPC map selected. " << cNORMAL << "\n";
+   } else if (kOpt == 2) {
+      std::cout << cGREEN << " AtHDFParserTask - GADGETII map selected. " << cNORMAL << "\n";
       fAtMapPtr = new AtGadgetIIMap();
-   }else
-     std::cout << cRED << "== AtHDFParserTask Initialization Error : Option not found. Current available options: AtTPC Map 0 "
+   } else
+      std::cout << cRED
+                << "== AtHDFParserTask Initialization Error : Option not found. Current available options: AtTPC Map 0 "
                    "/ Prototype Map 1"
-	       << cNORMAL << std::endl;
+                << cNORMAL << std::endl;
 }
 
 AtHDFParserTask::~AtHDFParserTask()
@@ -131,7 +133,6 @@ bool AtHDFParserTask::SetAtTPCMap(Char_t const *lookup)
    else if (kOpt == 2)
       dynamic_cast<AtGadgetIIMap *>(fAtMapPtr)->GenerateAtTpc();
 
-   
    Bool_t MapIn = fAtMapPtr->ParseXMLMap(lookup);
 
    if (!MapIn)
@@ -282,7 +283,7 @@ void AtHDFParserTask::Exec(Option_t *opt)
          pad->SetAuxName(isAux.second);
       }
 
-      //std::cout<<PadCenterCoord[0]<<" "<<PadCenterCoord[1]<<"\n";
+      // std::cout<<PadCenterCoord[0]<<" "<<PadCenterCoord[1]<<"\n";
 
       // Baseline subtraction
       double adc[512] = {0};
