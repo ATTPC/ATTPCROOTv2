@@ -12,8 +12,11 @@
 #include "TRandom.h"
 #include "TColor.h"
 
+#include "AtMap.h"
 #include "AtTpcMap.h"
 #include "AtTpcProtoMap.h"
+#include "AtGadgetIIMap.h"
+#include "AtSpecMATMap.h"
 #include "TH2Poly.h"
 #include "TF1.h"
 
@@ -134,13 +137,12 @@ InitStatus AtEventDrawTaskProto::Init()
    fCvsPadPlane = fEventManager->GetCvsPadPlane(); // There is a problem if the pad plane is drawn first
    fCvsPadPlane->ToggleEventStatus();
    fCvsPadPlane->AddExec("ex", "AtEventDrawTaskProto::SelectPad(\"fRawEvent\")");
-   DrawPadPlane();   
+   DrawPadPlane();
    fCvsPadAll = fEventManager->GetCvsPadAll();
    DrawPadAll();
    fCvsMesh = fEventManager->GetCvsMesh();
    DrawMesh();
 
-   
    /*fCvsQuadrant1 = fEventManager->GetCvsQuadrant1();
    fCvsQuadrant2 = fEventManager->GetCvsQuadrant2();
    fCvsQuadrant3 = fEventManager->GetCvsQuadrant3();
@@ -159,7 +161,8 @@ InitStatus AtEventDrawTaskProto::Init()
    fCvsAux = fEventManager->GetCvsAux();
    DrawProtoAux();
 
-   std::cout<<" AtEventDrawTaskProto::Init -  End of initialization "<<"\n";
+   std::cout << " AtEventDrawTaskProto::Init -  End of initialization "
+             << "\n";
 }
 
 void AtEventDrawTaskProto::Exec(Option_t *option)
@@ -436,7 +439,7 @@ void AtEventDrawTaskProto::DrawHitPoints()
 
    if (fEventManager->GetDrawPatternRecognition()) {
 
-      for (Int_t i = 0; i < 10; i++)
+      for (Int_t i = 0; i < 20; i++)
          fLineArray[i] = new TEveLine();
       int n = 100;
       double t0 = 0;
@@ -449,13 +452,13 @@ void AtEventDrawTaskProto::DrawHitPoints()
 
          if (patternEvent != NULL) {
             TrackCand = patternEvent->GetTrackCand();
-            for (Int_t i = 0; i < 10; i++)
+            for (Int_t i = 0; i < 20; i++)
                fHitSetPR[i] = 0;
 
             fLineNum = TrackCand.size();
             std::cout << cRED << " Found " << TrackCand.size() << " track candidates " << cNORMAL << std::endl;
 
-            if (TrackCand.size() < 10) {
+            if (TrackCand.size() < 20) {
                for (Int_t i = 0; i < TrackCand.size(); i++) {
 
                   AtTrack track = TrackCand.at(i);
@@ -654,17 +657,16 @@ void AtEventDrawTaskProto::DrawPadPlane()
      return;
    }*/
 
-  fPadPlane = dynamic_cast<AtTpcProtoMap *>(fDetmap)->GetAtTpcPlane("ATTPC_Proto");//NB: Do not change the pad plane name
+   fPadPlane =
+      dynamic_cast<AtTpcProtoMap *>(fDetmap)->GetAtTpcPlane("ATTPC_Proto"); // NB: Do not change the pad plane name
    fCvsPadPlane->cd();
    // fPadPlane -> Draw("zcol");
    // fPadPlane -> Draw("COL L0");
    fPadPlane->Draw("COL L");
-   fPadPlane->SetMinimum(1.0); 
+   fPadPlane->SetMinimum(1.0);
    gStyle->SetOptStat(0);
    gStyle->SetPalette(103);
    gPad->Update();
-
-   
 }
 
 void AtEventDrawTaskProto::DrawPadAll()
@@ -975,92 +977,109 @@ void AtEventDrawTaskProto::UpdateCvsProtoAux()
 void AtEventDrawTaskProto::SelectPad(const char *rawevt)
 {
 
- try {
-   int event = gPad->GetEvent();
-   if (event != 11)
-      return; // may be comment this line
-   TObject *select = gPad->GetSelected();
-   if (!select)
-      return;
-   if (select->InheritsFrom(TH2Poly::Class())) {
-      TH2Poly *h = (TH2Poly *)select;
-      gPad->GetCanvas()->FeedbackMode(kTRUE);
-      AtRawEvent *tRawEvent = NULL;
-      tRawEvent = (AtRawEvent *)gROOT->GetListOfSpecials()->FindObject(rawevt);
-      if (tRawEvent == NULL) {
-         std::cout
-            << " = AtEventDrawTaskProto::SelectPad NULL pointer for the AtRawEvent! Please select an event first "
-            << std::endl;
+   try {
+      int event = gPad->GetEvent();
+      if (event != 11)
+         return; // may be comment this line
+      TObject *select = gPad->GetSelected();
+      if (!select)
          return;
-      }
+      if (select->InheritsFrom(TH2Poly::Class())) {
+         TH2Poly *h = (TH2Poly *)select;
+         gPad->GetCanvas()->FeedbackMode(kTRUE);
+         AtRawEvent *tRawEvent = NULL;
+         tRawEvent = (AtRawEvent *)gROOT->GetListOfSpecials()->FindObject(rawevt);
+         if (tRawEvent == NULL) {
+            std::cout
+               << " = AtEventDrawTaskProto::SelectPad NULL pointer for the AtRawEvent! Please select an event first "
+               << std::endl;
+            return;
+         }
 
-      int pyold = gPad->GetUniqueID();
-      int px = gPad->GetEventX();
-      int py = gPad->GetEventY();
-      float uxmin = gPad->GetUxmin();
-      float uxmax = gPad->GetUxmax();
-      int pxmin = gPad->XtoAbsPixel(uxmin);
-      int pxmax = gPad->XtoAbsPixel(uxmax);
-      if (pyold)
-         gVirtualX->DrawLine(pxmin, pyold, pxmax, pyold);
-      gVirtualX->DrawLine(pxmin, py, pxmax, py);
-      gPad->SetUniqueID(py);
-      Float_t upx = gPad->AbsPixeltoX(px);
-      Float_t upy = gPad->AbsPixeltoY(py);
-      Double_t x = gPad->PadtoX(upx);
-      Double_t y = gPad->PadtoY(upy);
-      Int_t bin = h->FindBin(x, y);
-      const char *bin_name = h->GetBinName(bin);
-      // std::cout<<" X : "<<x<<"  Y: "<<y<<std::endl;
-      // std::cout<<bin_name<<std::endl;
-      std::cout << " ==========================" << std::endl;
-      std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
-      Bool_t IsValid = kFALSE;
+         int pyold = gPad->GetUniqueID();
+         int px = gPad->GetEventX();
+         int py = gPad->GetEventY();
+         float uxmin = gPad->GetUxmin();
+         float uxmax = gPad->GetUxmax();
+         int pxmin = gPad->XtoAbsPixel(uxmin);
+         int pxmax = gPad->XtoAbsPixel(uxmax);
+         if (pyold)
+            gVirtualX->DrawLine(pxmin, pyold, pxmax, pyold);
+         gVirtualX->DrawLine(pxmin, py, pxmax, py);
+         gPad->SetUniqueID(py);
+         Float_t upx = gPad->AbsPixeltoX(px);
+         Float_t upy = gPad->AbsPixeltoY(py);
+         Double_t x = gPad->PadtoX(upx);
+         Double_t y = gPad->PadtoY(upy);
+         Int_t bin = h->FindBin(x, y);
+         const char *bin_name = h->GetBinName(bin);
+         // std::cout<<" X : "<<x<<"  Y: "<<y<<std::endl;
+         // std::cout<<bin_name<<std::endl;
+         std::cout << " ==========================" << std::endl;
+         std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
+         Bool_t IsValid = kFALSE;
 
-      AtTpcMap *tmap = NULL;
-      tmap = (AtTpcMap *)gROOT->GetListOfSpecials()->FindObject("fMap");
-      // new AtTpcProtoMap();
-      // TString map = "/Users/yassidayyad/fair_install/AtTPCROOT_v2_06042015/scripts/proto.map";
-      // tmap->SetProtoMap(map.Data());
-      Int_t tPadNum = tmap->BinToPad(bin);
-      std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
-      AtPad *tPad = tRawEvent->GetPad(tPadNum, IsValid);
-      std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
-      std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << " Is Valid? : " << IsValid << std::endl;
-      std::cout << std::endl;
-      // TH1D* tPadWaveSub = NULL;
-      // tPadWaveSub = new TH1D("tPadWaveSub","tPadWaveSub",512.0,0.0,511.0);
-      // tPadWaveSub->SetLineColor(kRed);
-      TH1I *tPadWave = NULL;
-      tPadWave = (TH1I *)gROOT->GetListOfSpecials()->FindObject("fPadWave");
-      Int_t *rawadc = tPad->GetRawADC();
-      Double_t *adc = tPad->GetADC();
-      if (tPadWave == NULL) {
-         std::cout << " = AtEventDrawTask::SelectPad NULL pointer for the TH1I! Please select an event first "
-                   << std::endl;
-         return;
-      }
-      tPadWave->Reset();
-      // tPadWaveSub->Reset();
-      for (Int_t i = 0; i < 512; i++) {
+         AtTpcMap *tmap = NULL;
+         tmap = (AtTpcMap *)gROOT->GetListOfSpecials()->FindObject("fMap");
+         // new AtTpcProtoMap();
+         // TString map = "/Users/yassidayyad/fair_install/AtTPCROOT_v2_06042015/scripts/proto.map";
+         // tmap->SetProtoMap(map.Data());
+         //Int_t tPadNum = tmap->BinToPad(bin);
 
-         // tPadWave->SetBinContent(i,rawadc[i]);
-         tPadWave->SetBinContent(i, adc[i]);
-         // tPadWaveSub->SetBinContent(i,adc[i]);
-      }
+	 Int_t tPadNum = 0;
+	 
+	 if (dynamic_cast<AtTpcMap *>(tmap)) {
+            tPadNum = dynamic_cast<AtTpcMap *>(tmap)->BinToPad(bin);
+         } else if (dynamic_cast<AtGadgetIIMap *>(tmap)) {
+            tPadNum = dynamic_cast<AtGadgetIIMap *>(tmap)->BinToPad(bin);
+         } else if (dynamic_cast<AtSpecMATMap *>(tmap)) {
+            tPadNum = dynamic_cast<AtSpecMATMap *>(tmap)->BinToPad(bin);
+         }
+	 
+	 std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
+         AtPad *tPad = tRawEvent->GetPad(tPadNum, IsValid);
 
-      TCanvas *tCvsPadWave = NULL;
-      tCvsPadWave = (TCanvas *)gROOT->GetListOfSpecials()->FindObject("fCvsPadWave");
-      if (tCvsPadWave == NULL) {
-         std::cout << " = AtEventDrawTask::SelectPad NULL pointer for the TCanvas! Please select an event first "
-                   << std::endl;
-         return;
+
+	 // Check to make sure pad is valid
+         if (!tPad)
+            return;
+
+	 std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
+         std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << " Is Valid? : " << IsValid << std::endl;
+         std::cout << std::endl;
+         // TH1D* tPadWaveSub = NULL;
+         // tPadWaveSub = new TH1D("tPadWaveSub","tPadWaveSub",512.0,0.0,511.0);
+         // tPadWaveSub->SetLineColor(kRed);
+         TH1I *tPadWave = NULL;
+         tPadWave = (TH1I *)gROOT->GetListOfSpecials()->FindObject("fPadWave");
+         Int_t *rawadc = tPad->GetRawADC();
+         Double_t *adc = tPad->GetADC();
+         if (tPadWave == NULL) {
+            std::cout << " = AtEventDrawTask::SelectPad NULL pointer for the TH1I! Please select an event first "
+                      << std::endl;
+            return;
+         }
+         tPadWave->Reset();
+         // tPadWaveSub->Reset();
+         for (Int_t i = 0; i < 512; i++) {
+
+            // tPadWave->SetBinContent(i,rawadc[i]);
+            tPadWave->SetBinContent(i, adc[i]);
+            // tPadWaveSub->SetBinContent(i,adc[i]);
+         }
+
+         TCanvas *tCvsPadWave = NULL;
+         tCvsPadWave = (TCanvas *)gROOT->GetListOfSpecials()->FindObject("fCvsPadWave");
+         if (tCvsPadWave == NULL) {
+            std::cout << " = AtEventDrawTask::SelectPad NULL pointer for the TCanvas! Please select an event first "
+                      << std::endl;
+            return;
+         }
+         tCvsPadWave->cd();
+         tPadWave->Draw();
+         // tPadWaveSub->Draw("SAME");
+         tCvsPadWave->Update();
       }
-      tCvsPadWave->cd();
-      tPadWave->Draw();
-      // tPadWaveSub->Draw("SAME");
-      tCvsPadWave->Update();
-   }
 
    } catch (const std::exception &e) {
 

@@ -1,8 +1,6 @@
-void rundigi_sim(
-   TString mcFile = "./data/attpcsim_in.root",
-   TString mapParFile =
-      "/mnt/analysis/e20020/ATTPCROOTv2_develop/scripts/scripts/Lookup20150611.xml",
-   TString trigParFile = "/mnt/analysis/e20020/ATTPCROOTv2_develop/parameters/AT.trigger.par")
+void rundigi_sim(TString mcFile = "./data/attpcsim_in.root",
+                 TString mapParFile = "/mnt/analysis/e20020/ATTPCROOTv2_develop/scripts/scripts/Lookup20150611.xml",
+                 TString trigParFile = "/mnt/analysis/e20020/ATTPCROOTv2_develop/parameters/AT.trigger.par")
 {
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;

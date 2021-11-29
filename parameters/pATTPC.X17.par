@@ -28,7 +28,7 @@ BField:Double_t                2.0   # Tesla
 TiltAng:Double_t               0.0   # Degrees
 TB0:Int_t                       98   # Time Bucket reference for micromegas position (DEPRECATED)
 LorentzAngle:Double_t          0.0   # Lorentz Angle
-TBEntrance:Int_t               512   # Beam position at detector entrance in TB
+TBEntrance:Int_t               200   # Beam position at detector entrance in TB
 ZPadPlane:Double_t           500.0   # Position of the micromegas pad plane
 Density:Double_t             0.197   # Gas density (kg/m3 or mg/cm3)
 ThetaPad:Double_t            110.9   # AT-TPC pad plane rotation

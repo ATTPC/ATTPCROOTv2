@@ -145,7 +145,7 @@ protected:
 
    TEvePointSet *fHitSet;
    TEveBoxSet *fhitBoxSet;
-   TEvePointSet *fHitSetPR[10];
+   TEvePointSet *fHitSetPR[20];
 
    /// AtTPCROOT objects
 
@@ -155,7 +155,7 @@ protected:
    AtRawEvent *fRawevent;
    AtHoughSpaceLine *fHoughSpaceLine;
 
-   TEveLine *fLineArray[10];
+   TEveLine *fLineArray[20];
    Int_t fLineNum;
    Int_t fTrackNum;
 

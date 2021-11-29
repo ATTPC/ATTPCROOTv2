@@ -3,8 +3,8 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
-void run_unpack_HC(std::string dataFile = "/projects/temp/gadget/run_0002.h5",
-                   TString parameterFile = "GADGET.sim.par", TString mappath = "")
+void run_unpack_HC(std::string dataFile = "/projects/temp/gadget/run_0002.h5", TString parameterFile = "GADGET.sim.par",
+                   TString mappath = "")
 {
 
    // -----   Timer   --------------------------------------------------------
@@ -80,7 +80,7 @@ void run_unpack_HC(std::string dataFile = "/projects/temp/gadget/run_0002.h5",
 
    run->Init();
 
-   run->Run(0, 10000);
+   run->Run(0, 10);
    // run->RunOnTBData();
 
    std::cout << std::endl << std::endl;
