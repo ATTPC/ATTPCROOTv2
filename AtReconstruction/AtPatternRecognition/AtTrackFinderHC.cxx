@@ -4,7 +4,16 @@
 #include "FairRuntimeDb.h"
 #include "FairRun.h"
 
-AtPATTERN::AtTrackFinderHC::AtTrackFinderHC() {}
+AtPATTERN::AtTrackFinderHC::AtTrackFinderHC()
+{
+   inputParams.s = -1.0;
+   inputParams.r = -1.0;
+   inputParams.k = 19;
+   inputParams.n = 3;
+   inputParams.a = 0.03;
+   inputParams.t = 3.5;
+   inputParams.m = 8;
+}
 
 AtPATTERN::AtTrackFinderHC::~AtTrackFinderHC() {}
 
@@ -20,17 +29,19 @@ bool AtPATTERN::AtTrackFinderHC::FindTracks(AtEvent &event, AtPatternEvent *patt
 
    hc_params opt_params;
 
-   hc_params bestParams;
+   // hc_params bestParams;
    // AtTPC
    // Defaultvalues
-   bestParams.s = -1.0;
-   bestParams.r = -1.0;
-   bestParams.k = 19;
-   bestParams.n = 3;
-   bestParams.a = 0.03;
-   bestParams.t = 3.5;
-   bestParams.m = 8;
-   opt_params = bestParams;
+   // bestParams.s = -1.0;
+   // bestParams.r = -1.0;
+   // bestParams.k = 19;
+   // bestParams.n = 3;
+   // bestParams.a = 0.03;
+   // bestParams.t = 3.5;
+   // bestParams.m = 8;
+   // opt_params = bestParams;
+
+   opt_params = inputParams;
 
    // Parse AtTPCROOT date into PCL format
    pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_xyzti(new pcl::PointCloud<pcl::PointXYZI>());
@@ -157,7 +168,9 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
       } // Indices loop
 
       track.SetTrackID(clusterIndex);
-      Clusterize(track);
+      // Clusterize3D(track, 5.0, 20.0);
+      // Clusterize3D(track, 5.5, 10.0);
+      Clusterize3D(track, 10.5, 20.0);
       tracks.push_back(track);
 
    } // Clusters loop
@@ -165,14 +178,14 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
    std::cout << cRED << " Tracks found " << tracks.size() << cNORMAL << "\n";
 
    // Dump noise into a track
-   AtTrack track;
+   AtTrack ntrack;
    for (std::vector<pcl::PointXYZI, Eigen::aligned_allocator<pcl::PointXYZI>>::iterator it = points.begin();
         it != points.end(); ++it) {
       if (event.GetHit(it->intensity))
-         track.AddHit(event.GetHit(it->intensity));
+         ntrack.AddHit(event.GetHit(it->intensity));
    }
-   track.SetIsNoise(kTRUE);
-   tracks.push_back(track);
+   ntrack.SetIsNoise(kTRUE);
+   tracks.push_back(ntrack);
 
    for (auto &track : tracks)
       if (track.GetHitArray()->size() > 0)

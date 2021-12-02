@@ -41,11 +41,11 @@ void O16_ana()
 
       double bro = B_f * rad / TMath::Sin(theta) / 1000.0;
       double ener = 0;
-	   Double_t  Am = 4.0;
+      Double_t Am = 4.0;
 
-           GetEnergy(Am,2.0,bro,ener);
+      GetEnergy(Am, 2.0, bro, ener);
 
-	   angle_vs_energy->Fill(theta*TMath::RadToDeg(),ener*Am);
+      angle_vs_energy->Fill(180.0 - theta * TMath::RadToDeg(), ener * Am);
 
       std::cout << " Brho : " << bro << " - Theta : " << theta * TMath::RadToDeg()
                 << " - Phi : " << phi * TMath::RadToDeg() << " - Radius : " << rad << " - Energy :" << ener * Am

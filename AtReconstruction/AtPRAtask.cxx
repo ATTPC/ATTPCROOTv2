@@ -6,7 +6,7 @@
 #include <iostream>
 #include <memory>
 
-// FAIRROOT classes
+//// FAIRROOT classes
 #include "FairRootManager.h"
 #include "FairRun.h"
 #include "FairRuntimeDb.h"
@@ -15,11 +15,21 @@
 AtPRAtask::AtPRAtask() : FairTask("AtPRAtask")
 {
    fLogger = FairLogger::GetLogger();
-   LOG(debug) << "Defaul Constructor of AtPRAtask";
+   LOG(debug) << "Default Constructor of AtPRAtask";
    fPar = NULL;
    fPRAlgorithm = 0;
    kIsPersistence = kFALSE;
    fMinNumHits = 10;
+   fMaxNumHits = 5000;
+
+   fHCs = -1.0;
+   fHCk = 19;
+   fHCn = 3;
+   fHCm = 8;
+   fHCr = -1.0;
+   fHCa = 0.03;
+   fHCt = 3.5;
+   fHCpadding = 0.0;
 }
 
 AtPRAtask::~AtPRAtask()
@@ -63,6 +73,14 @@ InitStatus AtPRAtask::Init()
       LOG(info) << "Using Track Finder Hierarchical Clustering algorithm";
 
       fPRA = new AtPATTERN::AtTrackFinderHC();
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetTcluster(fHCt);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetScluster(fHCs);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetKtriplet(19);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetNtriplet(fHCn);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetMcluster(fHCm);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetRsmooth(fHCr);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetAtriplet(fHCa);
+      // dynamic_cast<AtPATTERN::AtTrackFinderHC*>fPRA->SetPadding(fHCpadding);
 
    } else if (fPRAlgorithm == 1) {
       LOG(info) << "Using RANSAC algorithm";
@@ -111,7 +129,7 @@ void AtPRAtask::Exec(Option_t *option)
 
       AtPatternEvent *patternEvent = (AtPatternEvent *)new ((*fPatternEventArray)[0]) AtPatternEvent();
 
-      if (hitArray.size() > fMinNumHits)
+      if (hitArray.size() > fMinNumHits && hitArray.size() < fMaxNumHits)
          fPRA->FindTracks(event, patternEvent);
 
    } catch (std::runtime_error e) {

@@ -12,7 +12,7 @@ struct auxchannel
   uint8_t channel;
 };
 
-void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_0214.h5",
+void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_0250.h5",
                    TString parameterFile = "ATTPC.e15250_sim.par", TString mappath = "")
 {
 
@@ -81,43 +81,45 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_021
   auxchannel ch_6{"unknown_4",4,1,0,59};
   aux_channels.push_back(ch_6);
 
-
-  ATHDFParserTask* HDFParserTask = new ATHDFParserTask();
-  HDFParserTask->SetPersistence(kTRUE);
-  HDFParserTask->SetATTPCMap(scriptdir.Data());
-  HDFParserTask->SetOldFormat(kFALSE);
-  HDFParserTask->SetBaseLineSubtraction(kTRUE);
+  AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
+  HDFParserTask->SetPersistence(kFALSE);
+  HDFParserTask->SetAtTPCMap(scriptdir.Data());
   HDFParserTask->SetFileName(dataFile);
+  HDFParserTask->SetBaseLineSubtraction(kTRUE);
 
-  for(auto iaux : aux_channels)
-  {
-   auto hash  = HDFParserTask->CalculateHash(iaux.cobo,iaux.asad,iaux.aget,iaux.channel);  
-   auto isaux = HDFParserTask->SetAuxChannel(hash,iaux.name);  
+  for (auto iaux : aux_channels) {
+     auto hash = HDFParserTask->CalculateHash(iaux.cobo, iaux.asad, iaux.aget, iaux.channel);
+     auto isaux = HDFParserTask->SetAuxChannel(hash, iaux.name);
   }
 
-  ATPSATask *psaTask = new ATPSATask();
-  psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(100);
-  psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets
-  //psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
-  psaTask -> SetMaxFinder();
-  //psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
-  //psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
+  AtPSASimple2 *psa = new AtPSASimple2();
+  // psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
+  // psa -> SetBaseCorrection(kFALSE);
+  // psa -> SetTimeCorrection(kFALSE);
 
-  ATPRATask *praTask = new ATPRATask();
-  praTask -> SetPersistence(kTRUE);
-  
-  
-  
+  // AtPSAFilter *psa = new AtPSAFilter();
+
+  AtPSAtask *psaTask = new AtPSAtask(psa);
+  psaTask->SetPersistence(kTRUE);
+  psa->SetThreshold(30);
+  psa->SetMaxFinder();
+  // psa->SetMeanK(4);
+  // psa->SetStddevMulThresh(0.1);
+
+  // AtPRATask *praTask = new AtPRATask();
+  // praTask -> SetPersistence(kTRUE);
+
   run -> AddTask(HDFParserTask);
   run -> AddTask(psaTask);
   //run -> AddTask(praTask);
 
   run -> Init();
 
-  run->Run(0, 1000);
-  //run -> RunOnTBData();
+  auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
+  run->Run(0, numEvents);
+  // run->Run(0, 1000);
+  // run -> RunOnTBData();
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

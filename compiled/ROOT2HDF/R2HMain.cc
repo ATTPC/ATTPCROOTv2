@@ -7,8 +7,7 @@ int main(int argc, char* argv[])
    gSystem->Load("libATTPCReco.so");
 
    FairRunAna* run = new FairRunAna(); //Forcing a dummy run
-   TString FileName = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/macro/Simulation/ATTPC/10Be_aa/"
-                      "output_digi_10Be_aaHe6.root";
+   TString FileName = "/mnt/analysis/e20020/ATTPCROOTv2_develop/macro/Unpack_HDF5/e15250/output.root";
    std::cout<<" Opening File : "<<FileName.Data()<<std::endl;
    TFile* file = new TFile(FileName.Data(),"READ");
 
@@ -17,79 +16,73 @@ int main(int argc, char* argv[])
    std::cout<<" Number of events : "<<nEvents<<std::endl;
 
    TTreeReader Reader1("cbmsim", file);
-   TTreeReaderValue<TClonesArray> eventArray(Reader1, "ATEventH");
+   TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtEventH");
 
    const int   RANK = 1;
-   const H5std_string FILE_NAME( "output_digi_HDF_2Body.h5" );
+   const H5std_string FILE_NAME("output.h5");
 
+   H5File *HDFfile = new H5File(FILE_NAME, H5F_ACC_TRUNC);
 
-      H5File* HDFfile = new H5File( FILE_NAME, H5F_ACC_TRUNC );
+   for (Int_t i = 0; i < nEvents; i++) {
+      // while (Reader1.Next()) {
 
-		   for(Int_t i=0;i<nEvents;i++){
-			  //while (Reader1.Next()) {
-			  			 			     
-			      Reader1.Next();
-			      ATEvent* event = (ATEvent*) eventArray->At(0);
-			      Int_t nHits = event->GetNumHits();
-			      std::cout<<" Event number "<<i<<" Number of hits "<<nHits<<"\n";
+      Reader1.Next();
+      AtEvent *event = (AtEvent *)eventArray->At(0);
+      Int_t nHits = event->GetNumHits();
+      std::cout << " Event number " << i << " Number of hits " << nHits << "\n";
 
-			      H5std_string DATASET_NAME( Form("Event_[%i]",i) );
+      H5std_string DATASET_NAME(Form("Event_[%i]", i));
 
-			      hsize_t dim[] = {(hsize_t)nHits};   /* Dataspace dimensions */
-			      DataSpace space( RANK, dim );
+      hsize_t dim[] = {(hsize_t)nHits}; /* Dataspace dimensions */
+      DataSpace space(RANK, dim);
 
-			      ATHit_t hits[nHits];
-			  
+      ATHit_t hits[nHits];
 
-				for(Int_t iHit=0; iHit<nHits; iHit++){
-				    ATHit* hit = event->GetHit(iHit);
-			  	    TVector3 hitPos = hit->GetPosition();
-				    std::vector<ATHit::MCSimPoint> MCPoints = hit-> GetMCSimPointArray();
-				    
-				    hits[iHit].x       = hitPos.X();
-				    hits[iHit].y       = hitPos.Y();
-				    hits[iHit].z       = hitPos.Z();
-				    hits[iHit].t       = hit->GetTimeStamp();
-				    hits[iHit].A       = hit->GetCharge();
+      for (Int_t iHit = 0; iHit < nHits; iHit++) {
+         AtHit *hit = event->GetHit(iHit);
+         TVector3 hitPos = hit->GetPosition();
+         std::vector<AtHit::MCSimPoint> MCPoints = hit->GetMCSimPointArray();
 
-				    if(MCPoints.size()>0){ //N.B. Only one MC hit information is saved.				    
-					hits[iHit].trackID   = MCPoints.at(0).trackID;
-				        hits[iHit].pointIDMC = MCPoints.at(0).pointID;
-					hits[iHit].energyMC  = MCPoints.at(0).energy;
-        				hits[iHit].elossMC   = MCPoints.at(0).eloss;
-				        hits[iHit].angleMC   = MCPoints.at(0).angle;
-					hits[iHit].AMC       = MCPoints.at(0).A;
-					hits[iHit].ZMC       = MCPoints.at(0).Z;
-				    }
-				    //std::cout<<hits[iHit].x<<"\n";
-				    //std::cout<<" MC points size "<<MCPoints.size()<<"\n";
+         hits[iHit].x = hitPos.X();
+         hits[iHit].y = hitPos.Y();
+         hits[iHit].z = hitPos.Z();
+         hits[iHit].t = hit->GetTimeStamp();
+         hits[iHit].A = hit->GetCharge();
 
-				}
+         if (MCPoints.size() > 0) { // N.B. Only one MC hit information is saved.
+            hits[iHit].trackID = MCPoints.at(0).trackID;
+            hits[iHit].pointIDMC = MCPoints.at(0).pointID;
+            hits[iHit].energyMC = MCPoints.at(0).energy;
+            hits[iHit].elossMC = MCPoints.at(0).eloss;
+            hits[iHit].angleMC = MCPoints.at(0).angle;
+            hits[iHit].AMC = MCPoints.at(0).A;
+            hits[iHit].ZMC = MCPoints.at(0).Z;
+         }
+         // std::cout<<hits[iHit].x<<"\n";
+         // std::cout<<" MC points size "<<MCPoints.size()<<"\n";
+      }
 
-			       CompType mtype1( sizeof(ATHit_t) );
-			       mtype1.insertMember( MEMBER1,  HOFFSET(ATHit_t, x), PredType::NATIVE_DOUBLE);
-      			       mtype1.insertMember( MEMBER2,  HOFFSET(ATHit_t, y), PredType::NATIVE_DOUBLE);
-      			       mtype1.insertMember( MEMBER3,  HOFFSET(ATHit_t, z), PredType::NATIVE_DOUBLE);
-			       mtype1.insertMember( MEMBER4,  HOFFSET(ATHit_t, t), PredType::NATIVE_INT);
-      			       mtype1.insertMember( MEMBER5,  HOFFSET(ATHit_t, A), PredType::NATIVE_DOUBLE);
-      			       mtype1.insertMember( MEMBER6,  HOFFSET(ATHit_t, trackID), PredType::NATIVE_INT);
-			       mtype1.insertMember( MEMBER7,  HOFFSET(ATHit_t, pointIDMC), PredType::NATIVE_INT);
-                               mtype1.insertMember( MEMBER8,  HOFFSET(ATHit_t, energyMC), PredType::NATIVE_DOUBLE);
-                               mtype1.insertMember( MEMBER9,  HOFFSET(ATHit_t, elossMC), PredType::NATIVE_DOUBLE);
-                               mtype1.insertMember( MEMBER10, HOFFSET(ATHit_t, angleMC), PredType::NATIVE_DOUBLE);
-                               mtype1.insertMember( MEMBER11, HOFFSET(ATHit_t, AMC), PredType::NATIVE_INT);
-			       mtype1.insertMember( MEMBER12, HOFFSET(ATHit_t, ZMC), PredType::NATIVE_INT);
+      CompType mtype1(sizeof(ATHit_t));
+      mtype1.insertMember(MEMBER1, HOFFSET(ATHit_t, x), PredType::NATIVE_DOUBLE);
+      mtype1.insertMember(MEMBER2, HOFFSET(ATHit_t, y), PredType::NATIVE_DOUBLE);
+      mtype1.insertMember(MEMBER3, HOFFSET(ATHit_t, z), PredType::NATIVE_DOUBLE);
+      mtype1.insertMember(MEMBER4, HOFFSET(ATHit_t, t), PredType::NATIVE_INT);
+      mtype1.insertMember(MEMBER5, HOFFSET(ATHit_t, A), PredType::NATIVE_DOUBLE);
+      mtype1.insertMember(MEMBER6, HOFFSET(ATHit_t, trackID), PredType::NATIVE_INT);
+      mtype1.insertMember(MEMBER7, HOFFSET(ATHit_t, pointIDMC), PredType::NATIVE_INT);
+      mtype1.insertMember(MEMBER8, HOFFSET(ATHit_t, energyMC), PredType::NATIVE_DOUBLE);
+      mtype1.insertMember(MEMBER9, HOFFSET(ATHit_t, elossMC), PredType::NATIVE_DOUBLE);
+      mtype1.insertMember(MEMBER10, HOFFSET(ATHit_t, angleMC), PredType::NATIVE_DOUBLE);
+      mtype1.insertMember(MEMBER11, HOFFSET(ATHit_t, AMC), PredType::NATIVE_INT);
+      mtype1.insertMember(MEMBER12, HOFFSET(ATHit_t, ZMC), PredType::NATIVE_INT);
 
-				DataSet* dataset;
-      				dataset = new DataSet(HDFfile->createDataSet(DATASET_NAME, mtype1, space));
+      DataSet *dataset;
+      dataset = new DataSet(HDFfile->createDataSet(DATASET_NAME, mtype1, space));
 
+      dataset->write(hits, mtype1);
 
-				dataset->write(hits, mtype1 );
-
-				delete dataset;
-
-		   }
-
+      delete dataset;
+   }
 
    delete HDFfile;
 
