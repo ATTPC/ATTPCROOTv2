@@ -1,3 +1,4 @@
+
 /*********************************************************************
  *   Base class for Active Targets AtMap.h			     *
  *   Author: Y. Ayyad ayyadlim@frib.msu.edu            	             *
@@ -66,6 +67,7 @@ protected:
    TH2Poly *hPlane;
    std::unordered_map<PadReference, int> AtTPCPadMap;
    std::map<int, PadReference> AtTPCPadMapInverse;
+   std::unordered_map<PadReference, std::string> fAuxPadMap;
    std::map<int, int> AtTPCPadSize;
 
 public:
@@ -87,7 +89,9 @@ public:
    void ParseAtTPCMap(TXMLNode *node);
    Bool_t DumpAtTPCMap();
    PadReference GetPadRef(int padNum) const;
-   // PadReference GetPadRef(const AtPad &pad) const {return GetPadRef(pad.GetPadNum())};
+   bool AddAuxPad(const PadReference &ref, std::string auxName);
+   bool IsAuxPad(const PadReference &ref) const;
+   std::string GetAuxName(const PadReference &ref) const;
 
    inline void SetGUIMode() { kGUIMode = 1; }
    inline void SetDebugMode() { kDebug = 1; }
@@ -95,7 +99,7 @@ public:
    Bool_t GetIsInhibited(Int_t PadNum);
    Int_t GetPadSize(int padNum);
 
-   ClassDefOverride(AtMap, 1);
+   ClassDefOverride(AtMap, 2);
 };
 
 #endif

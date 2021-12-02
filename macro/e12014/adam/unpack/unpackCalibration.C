@@ -1,9 +1,7 @@
 // Unpacks tpc files from /mnt/rawdata/ to /mnt/analysis/e12014/TPC/unpacked
 
-bool reduceFunc(AtRawEvent *evt);
-
 // Requires the TPC run number
-void unpackReducedFiltered(int runNumber)
+void unpackCalibration(int runNumber)
 {
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
@@ -13,13 +11,13 @@ void unpackReducedFiltered(int runNumber)
 
    // Set the input/output directories
    TString inputDir = "/mnt/rawdata/e12014_attpc/h5";
-   TString outDir = "/mnt/analysis/e12014/TPC/unpackedReducedFiltered";
+   TString outDir = "/mnt/analysis/e12014/TPC/unpackedCalibration";
 
    /**** Should not have to change code between this line and the next star comment ****/
 
    // Set the in/out files
    TString inputFile = inputDir + TString::Format("/run_%04d.h5", runNumber);
-   TString outputFile = outDir + TString::Format("/run_%04d.root", runNumber);
+   TString outputFile = outDir + TString::Format("/run_%04dCal.root", runNumber);
 
    std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
    std::cout << "Saving in: " << outputFile << std::endl;
@@ -55,10 +53,6 @@ void unpackReducedFiltered(int runNumber)
    mapping->GenerateAtTpc();
 
    /**** Should not have to change code between this line and the above star comment ****/
-   mapping->AddAuxPad({10, 0, 0, 0}, "MCP_US");
-   mapping->AddAuxPad({10, 0, 0, 34}, "TPC_Mesh");
-   mapping->AddAuxPad({10, 0, 1, 0}, "MCP_DS");
-   mapping->AddAuxPad({10, 0, 2, 34}, "IC");
 
    // Create the unpacker task
    AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
@@ -69,42 +63,26 @@ void unpackReducedFiltered(int runNumber)
    HDFParserTask->SetNumberTimestamps(2);
    HDFParserTask->SetBaseLineSubtraction(kTRUE);
 
-   // Create data reduction task
-   AtDataReductionTask *reduceTask = new AtDataReductionTask();
-   reduceTask->SetInputBranch("AtRawEvent");
-   reduceTask->SetReductionFunction(&reduceFunc);
-
-   auto threshold = 45;
-
-   AtFilterSubtraction *filter = new AtFilterSubtraction(mapping);
-   filter->SetThreshold(threshold);
+   AtFilterCalibrate *filter = new AtFilterCalibrate();
+   std::cout << "Created calibration filter: " << filter << std::endl;
+   filter->SetCalibrationFile("output/calibrationFormated.txt");
    AtFilterTask *filterTask = new AtFilterTask(filter);
    filterTask->SetPersistence(kTRUE);
-   filterTask->SetFilterAux(true);
-
-   AtTrapezoidFilter *auxFilter = new AtTrapezoidFilter();
-   auxFilter->SetM(17.5);
-   auxFilter->SetRiseTime(4);
-   auxFilter->SetTopTime(10);
-   AtAuxFilterTask *auxFilterTask = new AtAuxFilterTask(auxFilter);
-   auxFilterTask->SetInputBranchName("AtRawEventFiltered");
-   auxFilterTask->AddAuxPad("IC");
+   filterTask->SetFilterAux(false);
 
    AtPSASimple2 *psa = new AtPSASimple2();
-   psa->SetThreshold(threshold);
+   psa->SetThreshold(45);
    psa->SetMaxFinder();
 
-   // Create PSA task
+   // Create PSA task for calibrated data
    AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetInputBranch("AtRawEventFiltered");
+   psaTask->SetInputBranch("AtRawEvent");
    psaTask->SetOutputBranch("AtEventFiltered");
    psaTask->SetPersistence(kTRUE);
 
    // Add unpacker to the run
    run->AddTask(HDFParserTask);
-   run->AddTask(reduceTask);
    run->AddTask(filterTask);
-   run->AddTask(auxFilterTask);
    run->AddTask(psaTask);
 
    run->Init();
@@ -113,7 +91,7 @@ void unpackReducedFiltered(int runNumber)
    auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
    // numEvents = 1700;//217;
-   // numEvents = 200;
+   // numEvents = 20;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 

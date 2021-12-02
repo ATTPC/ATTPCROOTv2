@@ -104,6 +104,9 @@ set(SRCS
 
   AtFilter/AtFilter.cxx
   AtFilter/AtFilterSubtraction.cxx
+  AtFilter/AtFilterDivide.cxx
+  AtFilter/AtTrapezoidFilter.cxx
+  AtFilter/AtFilterCalibrate.cxx
 
   #HierarchicalClustering/AtCubicSplineFit.cxx
   #HierarchicalClustering/AtFindVertex.cxx
@@ -125,6 +128,7 @@ set(SRCS
   AtHDFParserTask.cxx
   AtPSAtask.cxx
   AtFilterTask.cxx
+  AtAuxFilterTask.cxx
   AtDataReductionTask.cxx
   
   #AtPhiRecoTask.cxx

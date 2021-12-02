@@ -292,8 +292,7 @@ void AtPulseTask::Exec(Option_t *option)
          signal[kk] = 0;
       Int_t thePadNumber = (ite2->first);
       eleAccumulated[thePadNumber] = (ite2->second);
-      // Set Pad and add to event
-      AtPad *pad = new AtPad();
+
       // std::cout<<" Pad number "<<thePadNumber<<"\n";
 
       for (Int_t kk = 0; kk < fNumTbs; kk++) {
@@ -310,13 +309,15 @@ void AtPulseTask::Exec(Option_t *option)
          }
       }
 
-      pad->SetPad(thePadNumber);
+      // Create pad
+      auto &pad = fRawEvent->AddPad(thePadNumber);
+
       PadCenterCoord = fMap->CalcPadCenter(thePadNumber);
-      pad->SetValidPad(kTRUE);
-      pad->SetPadXCoord(PadCenterCoord[0]);
-      pad->SetPadYCoord(PadCenterCoord[1]);
+      pad.SetValidPad(kTRUE);
+      pad.SetPadXCoord(PadCenterCoord[0]);
+      pad.SetPadYCoord(PadCenterCoord[1]);
       // std::cout<<" X "<<PadCenterCoord[0]<<" Y "<<PadCenterCoord[1]<<"\n";
-      pad->SetPedestalSubtracted(kTRUE);
+      pad.SetPedestalSubtracted(kTRUE);
       Double_t gAvg = 0;
       gRandom->SetSeed(0);
       Int_t nEleAcc = eleAccumulated[thePadNumber]->GetEntries();
@@ -326,13 +327,8 @@ void AtPulseTask::Exec(Option_t *option)
          gAvg = gAvg / nEleAcc;
 
       for (Int_t bin = 0; bin < fNumTbs; bin++) {
-         pad->SetADC(bin, signal[bin] * gAvg * fGETGain);
-         // if(signal[bin]!=0)std::cout<<" bin "<<bin<<" signal "<<signal[bin]<<" gAvg "<<gAvg<<" GET gain
-         // "<<fGETGain<<" nEleAcc "<<nEleAcc<<"\n";
+         pad.SetADC(bin, signal[bin] * gAvg * fGETGain);
       }
-
-      fRawEvent->SetPad(pad);
-      delete pad;
       // std::cout <<" Event "<<aux<<" "<<electronsMap.size()<< "*"<< std::flush;
       ite2++;
    }

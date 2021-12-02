@@ -50,21 +50,18 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    Float_t mesh[512] = {0};
 
    std::multimap<Int_t, std::size_t> mcPointsMap = rawEvent->GetSimMCPointMap();
-   std::cout << " MC Simulated points Map size " << mcPointsMap.size() << "\n";
+   LOG(debug) << " MC Simulated points Map size " << mcPointsMap.size();
 
    /* for (const auto& entry : mcPointsMap)
       {
       std::cout<<entry.first<<"  "<<entry.second<<"\n";
       } */
 
-   Int_t iPad = 0;
-
    //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
-   for (iPad = 0; iPad < numPads; iPad++) {
+   for (auto &pad : rawEvent->GetPads()) {
 
-      AtPad *pad = rawEvent->GetPad(iPad);
-      Int_t PadNum = pad->GetPadNum();
-      Int_t pSizeID = pad->GetSizeID();
+      Int_t PadNum = pad.GetPadNum();
+      Int_t pSizeID = pad.GetSizeID();
       Double_t gthreshold = -1;
       if (pSizeID == 0)
          gthreshold = fThresholdlow; // threshold for central pads
@@ -87,8 +84,8 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       ry.RotateY(180.0 * TMath::Pi() / 180.0);
       rx.RotateX(6.0 * TMath::Pi() / 180.0);
 
-      Double_t xPos = pad->GetPadXCoord();
-      Double_t yPos = pad->GetPadYCoord();
+      Double_t xPos = pad.GetPadXCoord();
+      Double_t yPos = pad.GetPadYCoord();
       Double_t zPos = 0;
       Double_t xPosRot = 0;
       Double_t yPosRot = 0;
@@ -100,23 +97,23 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       Int_t maxAdcIdx = 0;
       Int_t numPeaks = 0;
 
-      if ((xPos < -9000 || yPos < -9000) && !pad->IsAux()) {
-         // std::cout<<" Is Auxiliary? "<<pad->IsAux()<<" Pad Num "<<PadNum<<"\n";
+      if ((xPos < -9000 || yPos < -9000) && !pad.IsAux()) {
+         // std::cout<<" Is Auxiliary? "<<pad.IsAux()<<" Pad Num "<<PadNum<<"\n";
          continue; // Skip invalid pads that are not
-      } else if (pad->IsAux()) {
+      } else if (pad.IsAux()) {
 
-         // std::cout<<" Is Auxiliary 2? "<<pad->IsAux()<<" Pad Num "<<PadNum<<"\n";
-         event->AddAuxPad(pad);
+         // std::cout<<" Is Auxiliary 2? "<<pad.IsAux()<<" Pad Num "<<PadNum<<"\n";
+         event->AddAuxPad(&pad);
          continue;
       }
 
       CalcLorentzVector();
 
-      if (!(pad->IsPedestalSubtracted())) {
+      if (!(pad.IsPedestalSubtracted())) {
          LOG(ERROR) << "Pedestal should be subtracted to use this class!";
       }
 
-      Double_t *adc = pad->GetADC();
+      Double_t *adc = pad.GetADC();
       Double_t floatADC[512] = {0};
       Double_t dummy[512] = {0};
       Double_t bg[512] = {0};
@@ -276,8 +273,8 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                HitPos = hit->GetPosition();
                Rho2 += HitPos.Mag2();
                RhoMean += HitPos.Mag();
-               if ((xPos < -9000 || yPos < -9000) && pad->GetPadNum() != -1)
-                  std::cout << " AtPSASimple2::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum()
+               if ((xPos < -9000 || yPos < -9000) && pad.GetPadNum() != -1)
+                  std::cout << " AtPSASimple2::Analysis Warning! Wrong Coordinates for Pad : " << pad.GetPadNum()
                             << std::endl;
 
                // Tracking MC points

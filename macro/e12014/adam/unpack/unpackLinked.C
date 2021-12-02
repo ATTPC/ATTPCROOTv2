@@ -39,7 +39,7 @@ void linkRunsTask(int tpcRunNum = 118, int nsclRunNum = 310)
    TString geoManFile = dir + "/geometry/ATTPC_v1.1.root";
 
    // Create a run
-   FairRunAna *run = new FairRunAna();
+   AtRunAna *run = new AtRunAna();
    run->SetOutputFile(outputFile);
    run->SetGeomFile(geoManFile);
 
@@ -57,25 +57,51 @@ void linkRunsTask(int tpcRunNum = 118, int nsclRunNum = 310)
    mapping->GenerateAtTpc();
 
    /**** Should not have to change code between this line and the above star comment ****/
+   auto threshold = 45;
+
+   // Add aux pads to map
+   mapping->AddAuxPad({10, 0, 0, 0}, "MCP_US");
+   mapping->AddAuxPad({10, 0, 0, 34}, "TPC_Mesh");
+   mapping->AddAuxPad({10, 0, 1, 0}, "MCP_DS");
+   mapping->AddAuxPad({10, 0, 2, 34}, "IC");
 
    // Create the unpacker task
    AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
    HDFParserTask->SetPersistence(kTRUE);
    HDFParserTask->SetMap(mapping);
+   HDFParserTask->SetFileName(inputFile.Data());
    HDFParserTask->SetOldFormat(false);
    HDFParserTask->SetNumberTimestamps(2);
    HDFParserTask->SetBaseLineSubtraction(kTRUE);
 
-   // Add the aux channels from the experiment
-   HDFParserTask->SetAuxChannel({10, 0, 0, 0}, "MCP_US");
-   HDFParserTask->SetAuxChannel({10, 0, 0, 34}, "TPC_Mesh");
-   HDFParserTask->SetAuxChannel({10, 0, 1, 0}, "MCP_DS");
-   HDFParserTask->SetAuxChannel({10, 0, 2, 34}, "IC");
-
    // Create data reduction task
-   AtDataReductionTask *reduceTask = new AtDataReductionTask();
-   reduceTask->SetInputBranch("AtRawEvent");
-   reduceTask->SetReductionFunction(&reduceFunc);
+   // AtDataReductionTask *reduceTask = new AtDataReductionTask();
+   // reduceTask->SetInputBranch("AtRawEvent");
+   // reduceTask->SetReductionFunction(&reduceFunc);
+
+   AtFilterSubtraction *filter = new AtFilterSubtraction(mapping);
+   filter->SetThreshold(threshold);
+   AtFilterTask *filterTask = new AtFilterTask(filter);
+   filterTask->SetPersistence(kTRUE);
+   filterTask->SetFilterAux(true);
+
+   AtTrapezoidFilter *auxFilter = new AtTrapezoidFilter();
+   auxFilter->SetM(17.5);
+   auxFilter->SetRiseTime(4);
+   auxFilter->SetTopTime(10);
+   AtAuxFilterTask *auxFilterTask = new AtAuxFilterTask(auxFilter);
+   auxFilterTask->SetInputBranchName("AtRawEventFiltered");
+   auxFilterTask->AddAuxPad("IC");
+
+   AtPSASimple2 *psa = new AtPSASimple2();
+   psa->SetThreshold(threshold);
+   psa->SetMaxFinder();
+
+   // Create PSA task
+   AtPSAtask *psaTask = new AtPSAtask(psa);
+   psaTask->SetInputBranch("AtRawEventFiltered");
+   psaTask->SetOutputBranch("AtEventFiltered");
+   psaTask->SetPersistence(kTRUE);
 
    AtLinkDAQTask *linker = new AtLinkDAQTask();
    auto success = linker->SetInputTree(nsclTreeFile, "E12014");
@@ -88,7 +114,9 @@ void linkRunsTask(int tpcRunNum = 118, int nsclRunNum = 310)
 
    // Add unpacker to the run
    run->AddTask(HDFParserTask);
-   run->AddTask(reducer);
+   run->AddTask(filterTask);
+   run->AddTask(auxFilterTask);
+   run->AddTask(psaTask);
    run->AddTask(linker);
 
    run->Init();
@@ -97,7 +125,7 @@ void linkRunsTask(int tpcRunNum = 118, int nsclRunNum = 310)
    auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
    // numEvents = 5000;//217;
-   // numEvents = 10;
+   // numEvents = 200;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 

@@ -1803,7 +1803,6 @@ void AtEventDrawTaskS800::SelectPad(const char *rawevt)
       // std::cout<<bin_name<<std::endl;
       std::cout << " ==========================" << std::endl;
       std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
-      Bool_t IsValid = kFALSE;
 
       AtMap *tmap = NULL;
       tmap = (AtMap *)gROOT->GetListOfSpecials()->FindObject("fMap");
@@ -1812,9 +1811,12 @@ void AtEventDrawTaskS800::SelectPad(const char *rawevt)
       // tmap->SetProtoMap(map.Data());
       Int_t tPadNum = dynamic_cast<AtTpcMap *>(tmap)->BinToPad(bin);
       std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
-      AtPad *tPad = tRawEvent->GetPad(tPadNum, IsValid);
+      AtPad *tPad = tRawEvent->GetPad(tPadNum);
+      if (tPad == nullptr)
+         return;
+
       std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
-      std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << " Is Valid? : " << IsValid << std::endl;
+      std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << std::endl;
       std::cout << std::endl;
       // TH1D* tPadWaveSub = NULL;
       // tPadWaveSub = new TH1D("tPadWaveSub","tPadWaveSub",512.0,0.0,511.0);

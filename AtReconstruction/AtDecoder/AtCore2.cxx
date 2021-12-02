@@ -452,8 +452,10 @@ AtRawEvent *AtCore2::GetRawEvent(Long64_t frameID)
       for (Int_t i = 0; i < iNumPads; i++) {
 
          AtPad *pad = (AtPad *)fPadArray->At(i);
+         auto padNum = pad->GetPadNum();
+
          if (pad != NULL)
-            fRawEventPtr->SetPad(pad);
+            fRawEventPtr->AddPad(pad->GetPadNum()) = *pad;
       }
 
       delete[] cobo;
@@ -651,7 +653,7 @@ void AtCore2::ProcessLayeredFrame(GETLayeredFrame *layeredFrame)
                pad->SetPedestalSubtracted(kTRUE);
                fRawEventPtr->SetIsGood(good);
 
-               fRawEventPtr->SetPad(pad);
+               fRawEventPtr->AddPad(pad->GetPadNum()) = *pad;
             }
          }
       }
@@ -703,7 +705,7 @@ void AtCore2::ProcessBasicFrame(GETBasicFrame *basicFrame)
             pad->SetPedestalSubtracted(kTRUE);
             fRawEventPtr->SetIsGood(good);
 
-            fRawEventPtr->SetPad(pad);
+            fRawEventPtr->AddPad(pad->GetPadNum()) = *pad;
          }
       }
    }

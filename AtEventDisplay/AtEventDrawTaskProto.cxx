@@ -367,39 +367,25 @@ void AtEventDrawTaskProto::DrawHitPoints()
          fRawevent->SetName("fRawEvent");
          gROOT->GetListOfSpecials()->Add(fRawevent);
 
-         Int_t aux_cnt = 0;
+         Int_t numAux = 0;
+         auto padArray = fRawevent->GetPads();
 
-         std::vector<AtPad> *PadArray = fRawevent->GetPads();
-         for (Int_t i = 0; i < PadArray->size(); i++) {
-            AtPad Pad = PadArray->at(i);
-            if (Pad.IsAux()) {
-               if (aux_cnt < 9) {
-                  std::cout << cYELLOW << " Auxiliary Channel " << aux_cnt << " - Name " << Pad.GetAuxName() << cNORMAL
-                            << "\n";
-                  Int_t *rawadc = Pad.GetRawADC();
-                  for (Int_t j = 0; j < 512; j++)
-                     fAuxChannels[aux_cnt]->SetBinContent(j, rawadc[j]);
-                  aux_cnt++;
-               } else
-                  std::cout << cYELLOW << " Warning : More auxiliary external channels than expected (max. 9)"
-                            << cNORMAL << std::endl;
+         for (auto &padIt : fRawevent->GetAuxPads()) {
+            AtPad &pad = padIt.second;
+            if (numAux < 9) {
+               std::cout << cYELLOW << " Auxiliary Channel " << numAux << " - Name " << pad.GetAuxName() << cNORMAL
+                         << std::endl;
+               auto rawAdc = pad.GetRawADC();
+               for (int i = 0; i < 512; ++i)
+                  fAuxChannels[numAux]->SetBinContent(i, rawAdc[i]);
+               numAux++;
             }
          }
+         if (numAux + 1 == 9)
+            std::cout << cYELLOW << "Warning: More auxiliary channels than expected (max 9)" << cNORMAL << std::endl;
 
       } // if raw event
    }
-
-   /*if(fIsRawData){
-   AtPad *RawPad = fRawevent->GetPad(PadNumHit,fValidPad);
-   Double_t *adc = RawPad->GetADC();
-       for(Int_t i=0;i<512;i++){
-
-           //f3DThreshold = fEventManager->Get3DThreshold();
-           //if(adc[i]>f3DThreshold)
-           //f3DHist->Fill(position.X()/10.,position.Y()/10.,i,adc[i]);
-
-         }
-   }*/
 
    if (fIsRawData) {
 
@@ -1010,7 +996,6 @@ void AtEventDrawTaskProto::SelectPad(const char *rawevt)
       // std::cout<<bin_name<<std::endl;
       std::cout << " ==========================" << std::endl;
       std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
-      Bool_t IsValid = kFALSE;
 
       AtTpcMap *tmap = NULL;
       tmap = (AtTpcMap *)gROOT->GetListOfSpecials()->FindObject("fMap");
@@ -1019,13 +1004,14 @@ void AtEventDrawTaskProto::SelectPad(const char *rawevt)
       // tmap->SetProtoMap(map.Data());
       Int_t tPadNum = tmap->BinToPad(bin);
       std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
-      AtPad *tPad = tRawEvent->GetPad(tPadNum, IsValid);
+      AtPad *tPad = tRawEvent->GetPad(tPadNum);
+      if (tPad == nullptr)
+         return;
+
       std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
-      std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << " Is Valid? : " << IsValid << std::endl;
+      std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << std::endl;
       std::cout << std::endl;
-      // TH1D* tPadWaveSub = NULL;
-      // tPadWaveSub = new TH1D("tPadWaveSub","tPadWaveSub",512.0,0.0,511.0);
-      // tPadWaveSub->SetLineColor(kRed);
+
       TH1I *tPadWave = NULL;
       tPadWave = (TH1I *)gROOT->GetListOfSpecials()->FindObject("fPadWave");
       Int_t *rawadc = tPad->GetRawADC();

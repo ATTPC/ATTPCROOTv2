@@ -32,16 +32,6 @@ AtHDFParserTask::~AtHDFParserTask()
    delete fRawEvent;
 }
 
-bool AtHDFParserTask::SetAuxChannel(PadReference pad, std::string channel_name)
-{
-   auto value = fAuxTable.emplace(pad, channel_name);
-
-   std::cout << cGREEN << " Auxiliary channel added " << fAuxTable[pad] << " - Hash " << std::hash<PadReference>()(pad)
-             << cNORMAL << "\n";
-
-   return value.second;
-}
-
 InitStatus AtHDFParserTask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
@@ -107,25 +97,30 @@ void AtHDFParserTask::processPad(std::size_t ipad)
 {
    std::vector<int16_t> rawadc = HDFParser->pad_raw_data(ipad);
    PadReference PadRef = {rawadc[0], rawadc[1], rawadc[2], rawadc[3]};
-   int PadRefNum = fAtMapPtr->GetPadNum(PadRef);
-   AtPad *pad = new AtPad(PadRefNum);
 
-   setIsAux(pad, PadRef);
+   auto &pad = createPadAndSetIsAux(PadRef);
    setDimensions(pad);
    setAdc(pad, rawadc);
 
    fRawEvent->SetIsGood(kTRUE);
-   fRawEvent->SetPad(pad);
-   delete pad;
 }
-void AtHDFParserTask::setAdc(AtPad *pad, const std::vector<int16_t> &data)
+AtPad &AtHDFParserTask::createPadAndSetIsAux(const PadReference &padRef)
+{
+   if (fAtMapPtr->IsAuxPad(padRef)) {
+      return fRawEvent->AddAuxPad(fAtMapPtr->GetAuxName(padRef)).first->second;
+   } else {
+      auto padNumber = fAtMapPtr->GetPadNum(padRef);
+      return fRawEvent->AddPad(padNumber);
+   }
+}
+void AtHDFParserTask::setAdc(AtPad &pad, const std::vector<int16_t> &data)
 {
    auto baseline = getBaseline(data);
    for (Int_t iTb = 0; iTb < 512; iTb++) {
-      pad->SetRawADC(iTb, data.at(iTb + 5));
-      pad->SetADC(iTb, data.at(iTb + 5) - baseline);
+      pad.SetRawADC(iTb, data.at(iTb + 5));
+      pad.SetADC(iTb, data.at(iTb + 5) - baseline);
    }
-   pad->SetPedestalSubtracted(fIsBaseLineSubtraction);
+   pad.SetPedestalSubtracted(fIsBaseLineSubtraction);
 }
 
 Float_t AtHDFParserTask::getBaseline(const std::vector<int16_t> &data)
@@ -139,20 +134,13 @@ Float_t AtHDFParserTask::getBaseline(const std::vector<int16_t> &data)
    }
    return baseline;
 }
-void AtHDFParserTask::setIsAux(AtPad *pad, const PadReference &padRef)
+void AtHDFParserTask::setDimensions(AtPad &pad)
 {
-   auto auxIt = fAuxTable.find(padRef);
-   pad->SetIsAux(auxIt != fAuxTable.end());
-   if (pad->IsAux())
-      pad->SetAuxName(auxIt->second);
-}
-void AtHDFParserTask::setDimensions(AtPad *pad)
-{
-   auto PadCenterCoord = fAtMapPtr->CalcPadCenter(pad->GetPadNum());
-   Int_t pSizeID = fAtMapPtr->GetPadSize(pad->GetPadNum());
-   pad->SetPadXCoord(PadCenterCoord[0]);
-   pad->SetPadYCoord(PadCenterCoord[1]);
-   pad->SetSizeID(pSizeID);
+   auto PadCenterCoord = fAtMapPtr->CalcPadCenter(pad.GetPadNum());
+   Int_t pSizeID = fAtMapPtr->GetPadSize(pad.GetPadNum());
+   pad.SetPadXCoord(PadCenterCoord[0]);
+   pad.SetPadYCoord(PadCenterCoord[1]);
+   pad.SetSizeID(pSizeID);
 }
 void AtHDFParserTask::Exec(Option_t *opt)
 {

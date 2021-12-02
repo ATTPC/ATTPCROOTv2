@@ -37,6 +37,8 @@ void AtDataReductionTask::Exec(Option_t *opt)
    // If we should skip this event
    if ((*reduceFunc)(fRawEvent))
       LOG(info) << "Keeping event " << fRawEvent->GetEventID() << " with " << fRawEvent->GetNumPads() << " pads";
-   else
+   else {
+      fRawEvent->SetIsGood(false);
       FairRunAna::Instance()->MarkFill(false);
+   }
 }

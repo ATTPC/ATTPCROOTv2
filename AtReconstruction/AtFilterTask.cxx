@@ -60,20 +60,20 @@ void AtFilterTask::Exec(Option_t *opt)
    if (fInputEventArray->GetEntriesFast() == 0)
       return;
 
-   // Get the raw event, and create filtered event
    AtRawEvent *rawEvent = (AtRawEvent *)fInputEventArray->At(0);
-   AtRawEvent *filteredEvent = (AtRawEvent *)new ((*fOutputEventArray)[0]) AtRawEvent(rawEvent);
-
-   if (!filteredEvent->IsGood())
+   if (!rawEvent->IsGood())
       return;
+   AtRawEvent *filteredEvent = (AtRawEvent *)new ((*fOutputEventArray)[0]) AtRawEvent(rawEvent);
 
    fFilter->InitEvent(filteredEvent);
 
-   for (auto &pad : *(filteredEvent->GetPads())) {
-      if (pad.IsAux() && !fFilterAux)
-         continue;
-      fFilter->Filter(&pad);
-   }
+   if (fFilterAux)
+      for (auto &padIt : filteredEvent->GetAuxPads())
+         fFilter->Filter(&(padIt.second));
 
-   filteredEvent->SetIsGood(fFilter->IsGoodEvent());
+   for (auto &pad : filteredEvent->GetPads())
+      fFilter->Filter(&pad);
+
+   auto isGood = filteredEvent->IsGood() && fFilter->IsGoodEvent();
+   filteredEvent->SetIsGood(isGood);
 }
