@@ -7,10 +7,10 @@
 #include "FairRunAna.h"
 */
 
-void run_eve(int runNum = 206, bool displayFilteredData = false, TString OutputDataFile = "output.reco_display.root")
+void run_eve(TString OutputDataFile = "data/output.reco_display.root")
 {
    TString InputDataFile;
-   InputDataFile = "./output_digi.root";
+   InputDataFile = "./data/output_digi.root";
    std::cout << "Opening: " << InputDataFile << std::endl;
 
    FairLogger *fLogger = FairLogger::GetLogger();
@@ -42,11 +42,6 @@ void run_eve(int runNum = 206, bool displayFilteredData = false, TString OutputD
    eve->Set3DHitStyleBox();
    eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
    eve->SetSaveTextData();
-   if (displayFilteredData) {
-      eve->SetRawEventBranch("AtRawEventFiltered");
-      eve->SetEventBranch("AtEventFiltered");
-   }
-   // eve->UnpackHoughSpace();
 
    eveMan->AddTask(eve);
    eveMan->Init();

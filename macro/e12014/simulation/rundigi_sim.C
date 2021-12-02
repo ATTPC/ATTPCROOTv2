@@ -8,7 +8,7 @@ void rundigi_sim()
 
    TString dir = getenv("VMCWORKDIR");
 
-   TString mcFile = "./data/attpcsim.root";
+   TString mcFile = "./data/sim_attpc.root";
 
    // Create the full parameter file paths
    TString digiParFile = dir + "/parameters/" + paramFile;
@@ -23,7 +23,7 @@ void rundigi_sim()
    FairRunAna *fRun = new FairRunAna();
    FairFileSource *source = new FairFileSource(mcFile);
    fRun->SetSource(source);
-   fRun->SetOutputFile("output_digi.root");
+   fRun->SetOutputFile("data/output_digi.root");
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
    FairParAsciiFileIo *parIo1 = new FairParAsciiFileIo();
