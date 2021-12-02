@@ -53,6 +53,7 @@ class TVector3;
 
 #include <Rtypes.h>
 #include <fstream>
+#include "TF1.h"
 
 #ifndef __CINT__ // Boost
 #include <boost/multi_array.hpp>
@@ -171,7 +172,7 @@ private:
    TEvePointSet *fHitSetMin;
 
    TEvePointSet *fHitSetMC[5];    // For MC results
-   TEvePointSet *fHitSetTFHC[10]; // for TrackFinderHC
+   TEvePointSet *fHitSetTFHC[20]; // for TrackFinderHC
 
    // TEveGeoShape* x;
    // std::vector<TEveGeoShape*> hitSphereArray;

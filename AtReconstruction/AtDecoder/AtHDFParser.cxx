@@ -132,6 +132,8 @@ std::size_t AtHDFParser::open(char const *file)
 
       _firstEvent = data[0];
       _lastEvent = data[1];
+
+      delete data;
    }
 
    auto group_n_entries = open_group(f, "get");
@@ -174,6 +176,8 @@ std::vector<uint64_t> AtHDFParser::get_header(std::string headerName)
    // Add read data to the vector and return it
    for (int i = 0; i < len; ++i)
       retVec.push_back(data[i]);
+
+   delete data;
 
    return retVec;
 }

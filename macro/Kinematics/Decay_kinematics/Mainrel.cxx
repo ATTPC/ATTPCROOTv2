@@ -74,7 +74,7 @@ int Mainrel()
    double ex3 = 0.0;  // excitation energy of the scattered particle
    double ex4 = 0.0;  // excitation energy of the recoil
 
-   double tbt = 10.0; // incident energy (total Lab energy in MeV)
+   double tbt = 11.0; // incident energy (total Lab energy in MeV)
 
    double Energyrdec, Anglerdec;
 

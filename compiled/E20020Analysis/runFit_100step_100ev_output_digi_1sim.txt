@@ -1,0 +1,1 @@
+./build/e20020AnaExe 0 100 0 output_digi 0 1

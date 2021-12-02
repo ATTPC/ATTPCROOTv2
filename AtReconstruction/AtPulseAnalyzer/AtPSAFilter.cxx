@@ -261,6 +261,12 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
                TVector3 posRot = RotateDetector(xPos, yPos, zPos, maxAdcIdx);
 
+               // Skip invalid positions
+               if ((xPos > 300 || xPos < -300) || (yPos > 300 || yPos < -300) || (zPos > 2000 || zPos < -2000)) {
+
+                  continue;
+               }
+
                AtHit *hit = new AtHit(PadNum, hitNum, xPos, yPos, zPos, charge);
                cloud->points[hitNum].x = xPos;
                cloud->points[hitNum].y = yPos;
@@ -282,7 +288,7 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                Rho2 += HitPos.Mag2();
                RhoMean += HitPos.Mag();
                if ((xPos < -9000 || yPos < -9000) && pad->GetPadNum() != -1)
-                  std::cout << " AtPSASimple2::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum()
+                  std::cout << " AtPSAFilter::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum()
                             << std::endl;
 
                //#pragma omp ordered
@@ -312,11 +318,13 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
    // Inliers
    cloud->points.resize(hitNum);
+   std::cout << " Cloud size " << cloud->points.size() << "\n";
    pcl::StatisticalOutlierRemoval<pcl::PointXYZRGBA> sor;
    sor.setInputCloud(cloud);
    sor.setMeanK(fMeanK);
    sor.setStddevMulThresh(fStdDev);
    sor.filter(*cloud_filtered);
+   std::cout << " Cloud filtered size " << cloud_filtered->points.size() << "\n";
    // Outliers
    // sor.setNegative(true);
    // sor.filter(*cloud_filtered);

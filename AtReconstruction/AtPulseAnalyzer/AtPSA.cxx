@@ -41,7 +41,11 @@ AtPSA::AtPSA()
    fIsJitterCalibrated = kFALSE;
 }
 
-AtPSA::~AtPSA() {}
+AtPSA::~AtPSA()
+{
+
+   delete fCalibration;
+}
 
 void AtPSA::Init()
 {

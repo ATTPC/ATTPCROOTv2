@@ -7,10 +7,16 @@
 // STL
 #include <algorithm>
 
-ClassImp(AtPATTERN::AtPRA)
+ClassImp(AtPATTERN::AtPRA);
 
-   AtPATTERN::AtPRA::~AtPRA()
+AtPATTERN::AtPRA::~AtPRA()
 {
+   fMaxHits = 5000;
+   fMinHits = 0;
+   fMeanDistance = 1E9;
+
+   fKNN = 5;
+   fStdDevMulkNN = 0.1;
 }
 
 void AtPATTERN::AtPRA::SetTrackCurvature(AtTrack &track)
@@ -57,23 +63,26 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 {
 
    // std::cout<<" Processing track with "<<track.GetHitArray()->size()<<" points."<<"\n";
-   // Get the radius of curvature from RANSAC
+   //  Get the radius of curvature from RANSAC
    AtRANSACN::AtRansac RansacSmoothRadius;
    RansacSmoothRadius.SetModelType(pcl::SACMODEL_CIRCLE2D);
    RansacSmoothRadius.SetRANSACPointThreshold(0.1);
    RansacSmoothRadius.SetDistanceThreshold(6.0);
-   std::vector<AtTrack *> circularTracks =
+   std::vector<AtTrack> *circularTracks =
       RansacSmoothRadius.Ransac(track.GetHitArray()); // Only part of the spiral is used
                                                       // This function also sets the coefficients
                                                       // i.e. radius of curvature and center
 
+   // Local PCL RANSAC
+   // pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
+
    // if(circularTracks[0]->GetHitArray() != nullptr)
 
-   if (!circularTracks.empty()) {
+   if (!circularTracks->empty()) {
 
-      std::vector<AtHit> *hits = circularTracks[0]->GetHitArray();
+      std::vector<AtHit> *hits = circularTracks->at(0).GetHitArray();
 
-      std::vector<Double_t> coeff = circularTracks[0]->GetRANSACCoeff();
+      std::vector<Double_t> coeff = circularTracks->at(0).GetRANSACCoeff();
 
       track.SetGeoCenter(std::make_pair(coeff.at(0), coeff.at(1)));
       track.SetGeoRadius(coeff.at(2));
@@ -87,6 +96,8 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
       TGraph *arclengthGraph = new TGraph();
 
       TVector3 posPCA = hits->at(0).GetPosition();
+
+      // cloud->points.resize (hits->size());
 
       std::vector<AtHit> *thetaHits = new std::vector<AtHit>();
 
@@ -112,7 +123,11 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
          // Add a hit in the Arc legnth - Z plane
          Double_t xPos = arclength.at(i);
          Double_t yPos = pos.Z();
-         Double_t zPos = 0.0;
+         Double_t zPos = i * 1E-19;
+
+         // cloud->points[i].x = arclength.at(i);
+         // cloud->points[i].y = pos.Z();
+         // cloud->points[i].z = i*1E-19;
 
          thetaHits->push_back(AtHit(hits->at(i).GetHitPadNum(), i, xPos, yPos, zPos, hits->at(i).GetCharge()));
       }
@@ -133,26 +148,18 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
          if (thetaHits->size() > 0) {
             // std::cout<<" RANSAC Theta "<<"\n";
+
             AtRANSACN::AtRansac RansacTheta;
             RansacTheta.SetModelType(pcl::SACMODEL_LINE);
             RansacTheta.SetRANSACPointThreshold(0.1);
             RansacTheta.SetDistanceThreshold(6.0);
-            std::vector<AtTrack *> thetaTracks = RansacTheta.Ransac(thetaHits);
+            std::vector<AtTrack> *thetaTracks = RansacTheta.Ransac(thetaHits);
 
             // RansacTheta.MinimizeTrack(thetaTracks[0]);
-            if (thetaTracks.size() > 0) {
+            if (thetaTracks->size() > 0) {
 
                // NB: Only the most intense line is taken, if any
-               std::vector<Double_t> coeffTheta = thetaTracks[0]->GetRANSACCoeff();
-
-               // double angle = (TMath::ATan2(slope, 1) * 180.0 / TMath::Pi());
-
-               /*std::cout<<" Coeff theta 0 : "<<coeffTheta.at(0)<<"\n";
-               std::cout<<" Coeff theta 1 : "<<coeffTheta.at(1)<<"\n";
-               std::cout<<" Coeff theta 2 : "<<coeffTheta.at(2)<<"\n";
-               std::cout<<" Coeff theta 3 : "<<coeffTheta.at(3)<<"\n";
-               std::cout<<" Coeff theta 4 : "<<coeffTheta.at(4)<<"\n";
-               std::cout<<" Coeff theta 5 : "<<coeffTheta.at(5)<<"\n";*/
+               std::vector<Double_t> coeffTheta = thetaTracks->at(0).GetRANSACCoeff();
 
                int sign = 0;
 
@@ -163,25 +170,10 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
                if (coeffTheta.at(3) != 0)
                   angle = acos(sign * fabs(coeffTheta.at(4))) * TMath::RadToDeg();
-               // angle = (TMath::ATan2(coeffTheta.at(3),coeffTheta.at(4)) * 180.0 / TMath::Pi());
-               /*{
-                 double w_c = TMath::Sqrt( TMath::Power(coeffTheta.at(4),2) + TMath::Power(coeffTheta.at(3),2)   );
-                 angle      = asin(coeffTheta.at(3)/w_c)*TMath::RadToDeg();
-                 }*/
 
-               // std::cout<<" pre  Angle "<<angle<<"\n";
-
-               // if (angle < 0)
-               // angle = 90.0 + angle;
-
-               // Tangent line at the first point of the spiral
                phi0 = TMath::ATan2(posPCA.Y() - coeff.at(1), posPCA.X() - coeff.at(0));
 
             } // thetaTracks
-
-            /*std::cout<<" AtPRA::SetTrackInitialParameters : "<<"\n";
-            std::cout<<" Theta angle : "<<angle<<"\n";
-            std::cout<<" Phi angle : "<<phi0*TMath::RadToDeg()<<"\n";*/
 
             track.SetGeoTheta(angle * TMath::Pi() / 180.0);
             track.SetGeoPhi(phi0);
@@ -196,7 +188,8 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
       // delete f1;
       delete arclengthGraph;
       delete thetaHits;
-   }
+
+   } // end if (!circularTracks->empty())
 }
 
 Double_t fitf(Double_t *x, Double_t *par)
@@ -205,26 +198,172 @@ Double_t fitf(Double_t *x, Double_t *par)
    return par[0] + par[1] * x[0];
 }
 
+void AtPATTERN::AtPRA::Clusterize3D(AtTrack &track, Float_t distance, Float_t radius)
+{
+   std::vector<AtHit> *hitArray = track.GetHitArray();
+   std::vector<AtHit> hitTBArray;
+   int clusterID = 0;
+
+   // std::cout<<" ================================================================= "<<"\n";
+   // std::cout<<" Clusterizing track : "<<track.GetTrackID()<<"\n";
+
+   /*for(auto iHits=0;iHits<hitArray->size();++iHits)
+     {
+       TVector3 pos    = hitArray->at(iHits).GetPosition();
+       double Q = hitArray->at(iHits).GetCharge();
+       int TB          = hitArray->at(iHits).GetTimeStamp();
+       //std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<Q<<"\n";
+
+       }*/
+
+   // Diffusion coefficients (TODO: Get them from the parameter file)
+   Double_t driftVel = 1.0;       // cm/us
+   Double_t samplingRate = 0.320; // us
+   Double_t d_t = 0.0009;         // cm^2/us
+   Double_t d_l = 0.0009;         // cm^2/us
+   Double_t D_T = TMath::Sqrt((2.0 * d_t) / driftVel);
+   Double_t D_L = TMath::Sqrt((2.0 * d_l) / driftVel);
+
+   if (hitArray->size() > 0) {
+
+      TVector3 refPos = hitArray->at(0).GetPosition(); // First hit
+      // TODO: Create a clustered hit from the very first hit (test)
+
+      for (auto iHit = 0; iHit < hitArray->size(); ++iHit) {
+
+         auto hit = hitArray->at(iHit);
+
+         // Check distance with respect to reference Hit
+         Double_t distRef = TMath::Abs((hit.GetPosition() - refPos).Mag());
+
+         if (distRef < distance) {
+
+            continue;
+
+         } else {
+
+            // std::cout<<" Clustering "<<iHit<<" of "<<hitArray->size()<<"\n";
+            // std::cout<<" Distance to reference : "<<distRef<<"\n";
+            // std::cout<<" Reference position : "<<refPos.X()<<" - "<<refPos.Y()<<" - "<<refPos.Z()<<" -
+            // "<<refPos.Mag()<<"\n";
+
+            Double_t clusterQ = 0.0;
+            hitTBArray.clear();
+            std::copy_if(
+               hitArray->begin(), hitArray->end(), std::back_inserter(hitTBArray),
+               [&refPos, radius](AtHit &hitIn) { return TMath::Abs((hitIn.GetPosition() - refPos).Mag()) < radius; });
+
+            // std::cout<<" Clustered "<<hitTBArray.size()<<" Hits "<<"\n";
+
+            if (hitTBArray.size() > 0) {
+               double x = 0, y = 0, z = 0;
+               double sigma_x = 0, sigma_y = 0, sigma_z = 0;
+
+               int timeStamp;
+               std::shared_ptr<AtHitCluster> hitCluster = std::make_shared<AtHitCluster>();
+               hitCluster->SetIsClustered();
+               hitCluster->SetClusterID(clusterID);
+               Double_t hitQ = 0.0;
+               std::for_each(hitTBArray.begin(), hitTBArray.end(),
+                             [&x, &y, &z, &hitQ, &timeStamp, &sigma_x, &sigma_y, &sigma_z, &D_T, &D_L, &driftVel,
+                              &samplingRate](AtHit &hitInQ) {
+                                TVector3 pos = hitInQ.GetPosition();
+                                x += pos.X() * hitInQ.GetCharge();
+                                y += pos.Y() * hitInQ.GetCharge();
+                                z += pos.Z();
+                                hitQ += hitInQ.GetCharge();
+                                timeStamp += hitInQ.GetTimeStamp();
+
+                                // Calculation of variance (DOI: 10.1051/,00010 (2017)715001EPJ Web of
+                                // Conferences50epjconf/2010010)
+                                sigma_x += hitInQ.GetCharge() *
+                                           TMath::Sqrt(TMath::Power(0.2, 2) +
+                                                       pos.Z() * TMath::Power(D_T, 2)); // 0.2 mm of position resolution
+                                sigma_y += sigma_x;
+                                sigma_z += TMath::Sqrt((1.0 / 6.0) * TMath::Power(driftVel * samplingRate, 2) +
+                                                       pos.Z() * TMath::Power(D_L, 2));
+                             });
+               x /= hitQ;
+               y /= hitQ;
+               z /= hitTBArray.size();
+               timeStamp /= std::round(timeStamp);
+
+               sigma_x /= hitQ;
+               sigma_y /= hitQ;
+               sigma_z /= hitTBArray.size();
+
+               TVector3 clustPos(x, y, z);
+               Bool_t checkDistance = kTRUE;
+
+               // Check distance with respect to existing clusters
+               for (auto iClusterHit : *track.GetHitClusterArray()) {
+                  if (TMath::Abs((iClusterHit.GetPosition() - clustPos).Mag()) < distance) {
+                     // std::cout<<" Cluster with less than  : "<<distance<<" found "<<"\n";
+                     checkDistance = kFALSE;
+                     continue;
+                  }
+               }
+
+               if (checkDistance) {
+                  hitCluster->SetCharge(hitQ);
+                  hitCluster->SetPosition(x, y, z);
+                  hitCluster->SetTimeStamp(timeStamp);
+                  TMatrixDSym cov(3); // TODO: Setting covariant matrix based on pad size and drift time resolution.
+                                      // Using estimations for the moment.
+                  cov(0, 1) = 0;
+                  cov(1, 2) = 0;
+                  cov(2, 0) = 0;
+                  cov(0, 0) = TMath::Power(sigma_x, 2); // 0.04;
+                  cov(1, 1) = TMath::Power(sigma_y, 2); // 0.04;
+                  cov(2, 2) = TMath::Power(sigma_z, 2); // 0.01;
+                  hitCluster->SetCovMatrix(cov);
+                  ++clusterID;
+                  track.AddClusterHit(hitCluster);
+               }
+            }
+         }
+
+         // Sanity check
+         /*std::cout<<" Hits for cluster "<<iHit<<" centered in "<<refPos.X()<<" - "<<refPos.Y()<<"
+    -"<<refPos.Z()<<"\n"; for(auto iHits=0;iHits<hitTBArray.size();++iHits)
+         {
+           TVector3 pos    = hitTBArray.at(iHits).GetPosition();
+           double Q = hitTBArray.at(iHits).GetCharge();
+           int TB          = hitTBArray.at(iHits).GetTimeStamp();
+           std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<Q<<"\n";
+      std::cout<<" Distance to cluster center "<<TMath::Abs((track.GetHitClusterArray()->back().GetPosition() -
+    pos).Mag())<<"\n";
+
+    }
+         std::cout<<"=================================================="<<"\n";*/
+
+         refPos = hitArray->at(iHit).GetPosition();
+
+         //} // if distance
+
+      } // for
+
+   } // if array size
+}
+
 void AtPATTERN::AtPRA::Clusterize3D(AtTrack &track)
 {
    std::vector<AtHit> *hitArray = track.GetHitArray();
    std::vector<AtHit> hitTBArray;
    int clusterID = 0;
 
-   Float_t distance = 5.0;
-   Float_t radius = 5.0;
+   Float_t distance = 10.0;
+   Float_t radius = 30.0;
 
-   /*std::cout<<" ================================================================= "<<"\n";
-   std::cout<<" Clusterizing track : "<<track.GetTrackID()<<"\n";
+   // std::cout<<" ================================================================= "<<"\n";
+   // std::cout<<" Clusterizing track : "<<track.GetTrackID()<<"\n";
 
-   for(auto iHits=0;iHits<hitArray->size();++iHits)
-     {
-       TVector3 pos    = hitArray->at(iHits).GetPosition();
-       double Q = hitArray->at(iHits).GetCharge();
-       int TB          = hitArray->at(iHits).GetTimeStamp();
-       std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<Q<<"\n";
-
-  }*/
+   for (auto iHits = 0; iHits < hitArray->size(); ++iHits) {
+      TVector3 pos = hitArray->at(iHits).GetPosition();
+      double Q = hitArray->at(iHits).GetCharge();
+      int TB = hitArray->at(iHits).GetTimeStamp();
+      // std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<Q<<"\n";
+   }
 
    if (hitArray->size() > 0) {
 
@@ -234,11 +373,19 @@ void AtPATTERN::AtPRA::Clusterize3D(AtTrack &track)
 
          auto hit = hitArray->at(iHit);
 
-         if (TMath::Abs((hit.GetPosition() - refPos).Mag()) < distance) {
+         // Check distance with respect to reference Hit
+         Double_t distRef = TMath::Abs((hit.GetPosition() - refPos).Mag());
+
+         if (distRef < distance) {
 
             continue;
 
          } else {
+
+            // std::cout<<" Clustering "<<iHit<<" of "<<hitArray->size()<<"\n";
+            // std::cout<<" Distance to reference : "<<distRef<<"\n";
+            // std::cout<<" Reference position : "<<refPos.X()<<" - "<<refPos.Y()<<" - "<<refPos.Z()<<" -
+            // "<<refPos.Mag()<<"\n";
 
             Double_t clusterQ = 0.0;
             hitTBArray.clear();
@@ -246,22 +393,27 @@ void AtPATTERN::AtPRA::Clusterize3D(AtTrack &track)
                hitArray->begin(), hitArray->end(), std::back_inserter(hitTBArray),
                [&refPos, radius](AtHit &hitIn) { return TMath::Abs((hitIn.GetPosition() - refPos).Mag()) < radius; });
 
+            // std::cout<<" Clustered "<<hitTBArray.size()<<" Hits "<<"\n";
+
             if (hitTBArray.size() > 0) {
-               double x = 0, y = 0;
+               double x = 0, y = 0, z = 0;
                std::shared_ptr<AtHitCluster> hitCluster = std::make_shared<AtHitCluster>();
                hitCluster->SetIsClustered();
                hitCluster->SetClusterID(clusterID);
                Double_t hitQ = 0.0;
-               std::for_each(hitTBArray.begin(), hitTBArray.end(), [&x, &y, &hitQ](AtHit &hitInQ) {
+               std::for_each(hitTBArray.begin(), hitTBArray.end(), [&x, &y, &z, &hitQ](AtHit &hitInQ) {
                   TVector3 pos = hitInQ.GetPosition();
                   x += pos.X() * hitInQ.GetCharge();
                   y += pos.Y() * hitInQ.GetCharge();
+                  z += pos.Z();
                   hitQ += hitInQ.GetCharge();
                });
                x /= hitQ;
                y /= hitQ;
+               z /= hitTBArray.size();
+
                hitCluster->SetCharge(hitQ);
-               hitCluster->SetPosition(x, y, hitTBArray.at(0).GetPosition().Z());
+               hitCluster->SetPosition(x, y, z);
                hitCluster->SetTimeStamp(hitTBArray.at(0).GetTimeStamp());
                TMatrixDSym cov(3); // TODO: Setting covariant matrix based on pad size and drift time resolution. Using
                                    // estimations for the moment.
@@ -275,22 +427,23 @@ void AtPATTERN::AtPRA::Clusterize3D(AtTrack &track)
                ++clusterID;
                track.AddClusterHit(hitCluster);
             }
+         }
 
-            // Sanity check
-            /*std::cout<<" Hits for cluster "<<iHit<<" centered in "<<refPos.X()<<" - "<<refPos.Y()<<" -
-            "<<refPos.Z()<<"\n"; for(auto iHits=0;iHits<hitTBArray.size();++iHits)
-            {
-              TVector3 pos    = hitTBArray.at(iHits).GetPosition();
-              double Q = hitTBArray.at(iHits).GetCharge();
-              int TB          = hitTBArray.at(iHits).GetTimeStamp();
-              std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<Q<<"\n";
+         // Sanity check
+         /*std::cout<<" Hits for cluster "<<iHit<<" centered in "<<refPos.X()<<" - "<<refPos.Y()<<"
+    -"<<refPos.Z()<<"\n"; for(auto iHits=0;iHits<hitTBArray.size();++iHits)
+         {
+           TVector3 pos    = hitTBArray.at(iHits).GetPosition();
+           double Q = hitTBArray.at(iHits).GetCharge();
+           int TB          = hitTBArray.at(iHits).GetTimeStamp();
+           std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<Q<<"\n";
 
-            }
-            std::cout<<"=================================================="<<"\n";*/
+    }
+         std::cout<<"=================================================="<<"\n";*/
 
-            refPos = hitArray->at(iHit).GetPosition();
+         refPos = hitArray->at(iHit).GetPosition();
 
-         } // if distance
+         //} // if distance
 
       } // for
 
@@ -363,4 +516,41 @@ void AtPATTERN::AtPRA::Clusterize(AtTrack &track)
       std::cout << " Pos : " << pos.X() << " - " << pos.Y() << " - " << pos.Z() << " - TB : " << TB
                 << " - Charge : " << clusterQ << "\n";
       }*/
+}
+
+void AtPATTERN::AtPRA::PruneTrack(AtTrack &track)
+{
+   std::vector<AtHit> *hitArray = track.GetHitArray();
+
+   if (hitArray->size() == 0)
+      return;
+}
+
+int AtPATTERN::AtPRA::kNN(std::vector<AtHit> *hits, AtHit &hitRef, int k)
+{
+
+   std::vector<Double_t> distances;
+   distances.reserve(hits->size());
+
+   std::for_each(hits->begin(), hits->end(), [&distances, &hitRef](AtHit &hit) {
+      distances.push_back(TMath::Abs((hitRef.GetPosition() - hit.GetPosition()).Mag()));
+   });
+
+   std::sort(distances.begin(), distances.end(), [](Double_t a, Double_t b) { return a < b; });
+
+   Double_t mean = 0.0;
+   Double_t stdDev = 0.0;
+
+   // Compute mean distance of kNN
+   for (auto i = 0; i < k; ++k)
+      mean += distances.at(k);
+
+   mean /= k;
+
+   // Compute std dev
+   for (auto i = 0; i < k; ++k)
+      stdDev += TMath::Power((distances.at(k) - mean), 2);
+
+   stdDev = TMath::Sqrt(stdDev / k);
+   return 0;
 }

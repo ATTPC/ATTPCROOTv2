@@ -31,6 +31,7 @@
 #include "AtHoughSpace.h"
 #include "AtHit.h"
 #include "AtTpcProtoMap.h"
+#include "AtMap.h"
 #include "AtProtoQuadrant.h"
 #include "AtPatternEvent.h"
 #include <fstream>
@@ -144,17 +145,17 @@ protected:
 
    TEvePointSet *fHitSet;
    TEveBoxSet *fhitBoxSet;
-   TEvePointSet *fHitSetPR[10];
+   TEvePointSet *fHitSetPR[20];
 
    /// AtTPCROOT objects
 
    AtEventManagerProto *fEventManager;
    AtHit *fIniHit;
-   AtTpcProtoMap *fDetmap;
+   AtMap *fDetmap;
    AtRawEvent *fRawevent;
    AtHoughSpaceLine *fHoughSpaceLine;
 
-   TEveLine *fLineArray[10];
+   TEveLine *fLineArray[20];
    Int_t fLineNum;
    Int_t fTrackNum;
 

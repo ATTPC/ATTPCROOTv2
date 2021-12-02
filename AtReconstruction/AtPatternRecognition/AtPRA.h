@@ -25,6 +25,14 @@ public:
    virtual bool FindTracks(AtEvent &event, AtPatternEvent *patternEvent) = 0;
 
    void SetTrackInitialParameters(AtTrack &track);
+   void PruneTrack(AtTrack &track);
+   void SetMaxHits(Int_t maxHits) { fMaxHits = maxHits; }
+   void SetMinHits(Int_t minHits) { fMinHits = minHits; }
+   void SetMeanDistance(Float_t meanDistance) { fMeanDistance = meanDistance; }
+   int kNN(std::vector<AtHit> *hits, AtHit &hit, int k);
+
+   void SetkNN(Double_t knn) { fKNN = knn; }
+   void SetStdDevMulkNN(Double_t stdDevMul) { fStdDevMulkNN = stdDevMul; }
 
 protected:
    FairLogger *fLogger; ///< logger pointer
@@ -33,6 +41,14 @@ protected:
    void SetTrackCurvature(AtTrack &track);
    void Clusterize(AtTrack &track);
    void Clusterize3D(AtTrack &track);
+   void Clusterize3D(AtTrack &track, Float_t distance, Float_t radius);
+
+   Int_t fMaxHits;
+   Int_t fMinHits;
+   Float_t fMeanDistance;
+
+   Int_t fKNN;             //<! Number of nearest neighbors kNN
+   Double_t fStdDevMulkNN; //<! Std dev multiplier for kNN
 
    ClassDef(AtPRA, 1)
 };

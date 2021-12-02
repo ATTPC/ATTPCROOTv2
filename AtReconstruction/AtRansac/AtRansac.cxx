@@ -119,21 +119,21 @@ void AtRANSACN::AtRansac::SetVertexTime(Double_t val)
 void AtRANSACN::AtRansac::CalcRANSAC(AtEvent *event)
 {
 
-   std::vector<AtTrack *> tracks = RansacPCL(event);
+   std::vector<AtTrack> *tracks = RansacPCL(event);
 
-   Int_t tracksSize = tracks.size();
+   Int_t tracksSize = tracks->size();
    std::cout << "RansacPCL tracks size : " << tracksSize << std::endl;
    if (tracksSize > 1) {
       for (Int_t ntrack = 0; ntrack < tracksSize; ntrack++) {
-         std::vector<AtHit> *trackHits = tracks.at(ntrack)->GetHitArray();
+         std::vector<AtHit> *trackHits = tracks->at(ntrack).GetHitArray();
          Int_t nHits = trackHits->size();
          // std::cout<<" Num  Hits : "<<nHits<<std::endl;
          if (nHits > 5) {
             // MinimizeTrack(tracks.at(ntrack));
-            double mychi2 = Fit3D(tracks.at(ntrack));
+            double mychi2 = Fit3D(&tracks->at(ntrack));
          }
       } // Tracks loop
-      FindVertex(tracks);
+      // FindVertex(tracks);
 
    } // Minimum tracks
 
@@ -200,25 +200,25 @@ void AtRANSACN::AtRansac::CalcRANSAC(AtEvent *event)
 void AtRANSACN::AtRansac::CalcRANSACFull(AtEvent *event)
 {
 
-   std::vector<AtTrack *> tracks = RansacPCL(event);
+   std::vector<AtTrack> *tracks = RansacPCL(event);
 
    XYZVector Z_1(0.0, 0.0, 1.0); // Beam direction
 
-   if (tracks.size() > 1) { // Defined in CalcGenHoughSpace
-      for (Int_t ntrack = 0; ntrack < tracks.size(); ntrack++) {
-         std::vector<AtHit> *trackHits = tracks.at(ntrack)->GetHitArray();
+   if (tracks->size() > 1) { // Defined in CalcGenHoughSpace
+      for (Int_t ntrack = 0; ntrack < tracks->size(); ntrack++) {
+         std::vector<AtHit> *trackHits = tracks->at(ntrack).GetHitArray();
          Int_t nHits = trackHits->size();
 
          if (nHits > fMinHitsLine) // We only accept lines with more than 5 hits and a maximum number of lines of 5
          {
-            MinimizeTrack(tracks.at(ntrack));
-            tracks.at(ntrack)->SetTrackID(ntrack);
-            std::vector<Double_t> p = tracks.at(ntrack)->GetFitPar();
+            MinimizeTrack(&tracks->at(ntrack));
+            tracks->at(ntrack).SetTrackID(ntrack);
+            std::vector<Double_t> p = tracks->at(ntrack).GetFitPar();
             if (p.size() == 4) {
                XYZVector L_1(p[1], p[3], 1.);
                Double_t angZDeti = GetAngleTracks(L_1, Z_1);
-               tracks.at(ntrack)->SetAngleZAxis(angZDeti);
-               fTrackCand.push_back(*tracks.at(ntrack));
+               tracks->at(ntrack).SetAngleZAxis(angZDeti);
+               fTrackCand.push_back(tracks->at(ntrack));
             }
          }
       } // Tracks loop
@@ -226,12 +226,11 @@ void AtRANSACN::AtRansac::CalcRANSACFull(AtEvent *event)
          fTrackCand.resize(5);
    } // Minimum tracks
 
-   FindVertex(tracks);
+   // FindVertex(tracks);
 }
 
-std::vector<AtTrack *> AtRANSACN::AtRansac::Ransac(std::vector<AtHit> *hits)
+std::vector<AtTrack> *AtRANSACN::AtRansac::Ransac(std::vector<AtHit> *hits)
 {
-   std::vector<AtTrack *> tracks;
 
    // Data writer
    // pcl::PCDWriter writer;
@@ -245,7 +244,7 @@ std::vector<AtTrack *> AtRANSACN::AtRansac::Ransac(std::vector<AtHit> *hits)
    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_f(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
    if (hits->size() < 5)
-      return tracks;
+      return &fRansacTracks;
 
    Int_t nHits = hits->size();
    cloud->points.resize(nHits);
@@ -327,16 +326,18 @@ std::vector<AtTrack *> AtRANSACN::AtRansac::Ransac(std::vector<AtHit> *hits)
       // std::cout<<" Cloud p size "<<cloud_p->points.size()<<" "<<cloud_p->width<<"  "<<cloud_p->height<<"\n";
 
       if (cloud_p->points.size() > 0) {
-         AtTrack *track = new AtTrack();
+         AtTrack track;
 
          for (Int_t iHit = 0; iHit < cloud_p->points.size(); iHit++) {
             if (&hits->at(cloud_p->points[iHit].rgb))
-               track->AddHit(&hits->at(cloud_p->points[iHit].rgb));
+               track.AddHit(&hits->at(cloud_p->points[iHit].rgb));
          }
 
-         track->SetRANSACCoeff(coeff);
+         track.SetRANSACCoeff(coeff);
 
-         tracks.push_back(track);
+         fRansacTracks.push_back(track);
+
+         // delete track;
       }
       // std::stringstream ss;
       // ss << "../track_" << i << ".pcd";
@@ -349,10 +350,10 @@ std::vector<AtTrack *> AtRANSACN::AtRansac::Ransac(std::vector<AtHit> *hits)
       i++;
    }
 
-   return tracks;
+   return &fRansacTracks;
 }
 
-std::vector<AtTrack *> AtRANSACN::AtRansac::RansacPCL(AtEvent *event)
+std::vector<AtTrack> *AtRANSACN::AtRansac::RansacPCL(AtEvent *event)
 {
 
    return AtRANSACN::AtRansac::Ransac(event->GetHitArray());
