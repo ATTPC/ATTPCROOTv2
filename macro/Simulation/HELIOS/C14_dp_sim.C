@@ -14,8 +14,7 @@ void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   timer.Start();
   // ------------------------------------------------------------------------
 
-  ATVertexPropagator* vertex_prop = new ATVertexPropagator();
-
+  AtVertexPropagator *vertex_prop = new AtVertexPropagator();
 
   // -----   Create simulation run   ----------------------------------------
   FairRunSim* run = new FairRunSim();
@@ -151,57 +150,51 @@ void C14_dp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
                  Double_t ThetaMinCMS = 10.0;
                  Double_t ThetaMaxCMS = 40.0;
 
+                 AtTPC2Body *TwoBody = new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE,
+                                                      ResEner, ThetaMinCMS, ThetaMaxCMS);
+                 TwoBody->SetFixedTargetPosition(0.0, 0.0, 0.0);
+                 TwoBody->SetFixedBeamMomentum(0.0, 0.0, pz * a);
+                 primGen->AddGenerator(TwoBody);
 
-        ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
-        TwoBody->SetFixedTargetPosition(0.0,0.0,0.0);
-        TwoBody->SetFixedBeamMomentum(0.0,0.0,pz*a);
-        primGen->AddGenerator(TwoBody);
+                 run->SetGenerator(primGen);
 
+                 // ------------------------------------------------------------------------
 
-	run->SetGenerator(primGen);
+                 //---Store the visualiztion info of the tracks, this make the output file very large!!
+                 //--- Use it only to display but not for production!
+                 run->SetStoreTraj(kTRUE);
 
-// ------------------------------------------------------------------------
+                 // -----   Initialize simulation run   ------------------------------------
+                 run->Init();
+                 // ------------------------------------------------------------------------
 
-  //---Store the visualiztion info of the tracks, this make the output file very large!!
-  //--- Use it only to display but not for production!
-  run->SetStoreTraj(kTRUE);
-  
+                 // Trajectory filters
 
+                 // -----   Runtime database   ---------------------------------------------
 
-  // -----   Initialize simulation run   ------------------------------------
-  run->Init();
-  // ------------------------------------------------------------------------
+                 Bool_t kParameterMerged = kTRUE;
+                 FairParRootFileIo *parOut = new FairParRootFileIo(kParameterMerged);
+                 parOut->open(parFile.Data());
+                 rtdb->setOutput(parOut);
+                 rtdb->saveOutput();
+                 rtdb->print();
+                 // ------------------------------------------------------------------------
 
-  //Trajectory filters
-  
+                 // -----   Start run   ----------------------------------------------------
+                 run->Run(nEvents);
 
+                 // You can export your ROOT geometry ot a separate file
+                 run->CreateGeometryFile("geofile_helios_full.root");
+                 // ------------------------------------------------------------------------
 
-  // -----   Runtime database   ---------------------------------------------
-
-  Bool_t kParameterMerged = kTRUE;
-  FairParRootFileIo* parOut = new FairParRootFileIo(kParameterMerged);
-  parOut->open(parFile.Data());
-  rtdb->setOutput(parOut);
-  rtdb->saveOutput();
-  rtdb->print();
-  // ------------------------------------------------------------------------
-
-  // -----   Start run   ----------------------------------------------------
-  run->Run(nEvents);
-
-  //You can export your ROOT geometry ot a separate file
-  run->CreateGeometryFile("geofile_helios_full.root");
-  // ------------------------------------------------------------------------
-
-  // -----   Finish   -------------------------------------------------------
-  timer.Stop();
-  Double_t rtime = timer.RealTime();
-  Double_t ctime = timer.CpuTime();
-  cout << endl << endl;
-  cout << "Macro finished succesfully." << endl;
-  cout << "Output file is "    << outFile << endl;
-  cout << "Parameter file is " << parFile << endl;
-  cout << "Real time " << rtime << " s, CPU time " << ctime
-       << "s" << endl << endl;
-  // ------------------------------------------------------------------------
+                 // -----   Finish   -------------------------------------------------------
+                 timer.Stop();
+                 Double_t rtime = timer.RealTime();
+                 Double_t ctime = timer.CpuTime();
+                 cout << endl << endl;
+                 cout << "Macro finished succesfully." << endl;
+                 cout << "Output file is " << outFile << endl;
+                 cout << "Parameter file is " << parFile << endl;
+                 cout << "Real time " << rtime << " s, CPU time " << ctime << "s" << endl << endl;
+                 // ------------------------------------------------------------------------
 }

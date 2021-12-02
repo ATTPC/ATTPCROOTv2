@@ -53,6 +53,8 @@ AtFitterTask::AtFitterTask()
    fNumFitPoints = 0.90;
    fMaxBrho = 3.0;  // Tm
    fMinBrho = 0.01; // Tm
+
+   fELossFile = "";
 }
 
 AtFitterTask::~AtFitterTask() {}
@@ -91,9 +93,10 @@ InitStatus AtFitterTask::Init()
       std::cout << " Minimum iterations   : " << fMinIterations << "\n";
       std::cout << " Maximum brho         : " << fMaxBrho << "\n";
       std::cout << " Minimum brho         : " << fMinBrho << "\n";
+      std::cout << " Energy loss file     : " << fELossFile << "\n";
       std::cout << " --------------------------------------------- " << cNORMAL << "\n";
 
-      fFitter = new AtFITTER::AtGenfit(fMagneticField, fMinBrho, fMaxBrho, fMinIterations, fMaxIterations);
+      fFitter = new AtFITTER::AtGenfit(fMagneticField, fMinBrho, fMaxBrho, fELossFile, fMinIterations, fMaxIterations);
       dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetPDGCode(fPDGCode);
       dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetMass(fMass);
       dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetAtomicNumber(fAtomicNumber);

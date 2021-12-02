@@ -1,0 +1,4 @@
+To run the fitting program with GNU parallel with different timeout options(remove timeout option to cancel manually)
+
+parallel --verbose --timeout 60  < runAna.txt 
+parallel --verbose --timeout 400%  < runAna.txt

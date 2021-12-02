@@ -55,17 +55,16 @@ void runreco_sim(
 
    AtFitterTask *fitterTask = new AtFitterTask();
    fitterTask->SetPersistence(kTRUE);
-   fitterTask->SetMagneticField(3.0);//T
+   fitterTask->SetMagneticField(3.0); // T
    fitterTask->SetMinIterations(5);
    fitterTask->SetMaxIterations(20);
-   fitterTask->SetPDGCode(100002004);
+   fitterTask->SetPDGCode(1000020040);
    fitterTask->SetMass(4.00150618);
    fitterTask->SetAtomicNumber(2);
    fitterTask->SetNumFitPoints(0.9);
    fitterTask->SetMaxBrho(1.5);
    fitterTask->SetMinBhro(0.1);
-   
-   
+
    /*ATTriggerTask *trigTask = new ATTriggerTask();
    trigTask  ->  SetAtMap(mapParFile);
    trigTask  ->  SetPersistence(kTRUE);*/

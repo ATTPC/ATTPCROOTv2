@@ -91,6 +91,14 @@ public:
 
    bool FindTracks(AtEvent &event, AtPatternEvent *patternEvent);
    std::vector<AtTrack> GetTrackCand();
+   void SetScluster(float s) { inputParams.s = s; }
+   void SetKtriplet(size_t k) { inputParams.k = k; }
+   void SetNtriplet(size_t n) { inputParams.n = n; }
+   void SetMcluster(size_t m) { inputParams.m = m; }
+   void SetRsmooth(float r) { inputParams.r = r; }
+   void SetAtriplet(float a) { inputParams.a = a; }
+   void SetTcluster(float t) { inputParams.t = t; }
+   void SetPadding(size_t padding) { inputParams._padding = padding; }
 
 private:
    Cluster use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::vector<hc::triplet> triplets, float scale,
@@ -102,6 +110,8 @@ private:
    void eventToClusters(AtEvent &event, pcl::PointCloud<pcl::PointXYZI>::Ptr cloud);
 
    std::vector<AtTrack> fTrackCand; // Candidate tracks
+
+   hc_params inputParams;
 
    ClassDef(AtTrackFinderHC, 1);
 };
