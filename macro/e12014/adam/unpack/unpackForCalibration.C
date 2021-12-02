@@ -1,7 +1,7 @@
 // Unpacks tpc files from /mnt/rawdata/ to /mnt/analysis/e12014/TPC/unpacked
 
 // Requires the TPC run number
-void unpackCalibration(int runNumber)
+void unpack(int runNumber)
 {
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
@@ -11,19 +11,17 @@ void unpackCalibration(int runNumber)
 
    // Set the input/output directories
    TString inputDir = "/mnt/rawdata/e12014_attpc/h5";
-   TString outDir = "/mnt/analysis/e12014/TPC/unpackedCalibration";
-
-   /**** Should not have to change code between this line and the next star comment ****/
-
+   TString outDir = "/mnt/analysis/e12014/TPC/unpacked";
+   
    // Set the in/out files
    TString inputFile = inputDir + TString::Format("/run_%04d.h5", runNumber);
-   TString outputFile = outDir + TString::Format("/run_%04dCal.root", runNumber);
+   TString outputFile = outDir + TString::Format("/run_%04d.root", runNumber);
 
    std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
    std::cout << "Saving in: " << outputFile << std::endl;
 
    // Set the mapping for the TPC
-   TString mapFile = "e12014_pad_mapping.xml"; //"Lookup20150611.xml";
+   TString mapFile = "e12014_pad_map_size.xml"; //"Lookup20150611.xml";
    TString parameterFile = "ATTPC.e12014.par";
 
    // Set directories
@@ -48,42 +46,36 @@ void unpackCalibration(int runNumber)
    rtdb->setSecondInput(parIo1);
 
    // Create the detector map
-   auto mapping = std::make_shared<AtTpcMap>();
-   mapping->ParseXMLMap(mapDir.Data());
-   mapping->GenerateAtTpc();
-
-   /**** Should not have to change code between this line and the above star comment ****/
-
+   auto fAtMapPtr = std::make_shared<AtTpcMap>();
+   fAtMapPtr->ParseXMLMap(mapDir.Data());
+   fAtMapPtr->AddAuxPad({10, 0, 0, 0}, "MCP_US");
+   fAtMapPtr->AddAuxPad({10, 0, 0, 34}, "TPC_Mesh");
+   fAtMapPtr->AddAuxPad({10, 0, 1, 0}, "MCP_DS");
+   fAtMapPtr->AddAuxPad({10, 0, 2, 34}, "IC");
+   fAtMapPtr->GenerateAtTpc();
+   
    // Create the unpacker task
    AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
    HDFParserTask->SetPersistence(kTRUE);
-   HDFParserTask->SetMap(mapping);
+   HDFParserTask->SetMap(fAtMapPtr);
    HDFParserTask->SetFileName(inputFile.Data());
    HDFParserTask->SetOldFormat(false);
    HDFParserTask->SetNumberTimestamps(2);
    HDFParserTask->SetBaseLineSubtraction(kTRUE);
 
-   AtFilterCalibrate *filter = new AtFilterCalibrate();
-   std::cout << "Created calibration filter: " << filter << std::endl;
-   filter->SetCalibrationFile("output/calibrationFormated.txt");
-   AtFilterTask *filterTask = new AtFilterTask(filter);
-   filterTask->SetPersistence(kTRUE);
-   filterTask->SetFilterAux(false);
+   // Add the aux channels from the experiment
 
    AtPSASimple2 *psa = new AtPSASimple2();
-   psa->SetThreshold(45);
    psa->SetMaxFinder();
 
-   // Create PSA task for calibrated data
+   // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetInputBranch("AtRawEvent");
-   psaTask->SetOutputBranch("AtEventFiltered");
    psaTask->SetPersistence(kTRUE);
 
    // Add unpacker to the run
    run->AddTask(HDFParserTask);
-   run->AddTask(filterTask);
    run->AddTask(psaTask);
+   //run->AddTask(RansacTask);
 
    run->Init();
 
@@ -91,7 +83,7 @@ void unpackCalibration(int runNumber)
    auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
    // numEvents = 1700;//217;
-   // numEvents = 20;
+   //numEvents = 10;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
@@ -111,10 +103,4 @@ void unpackCalibration(int runNumber)
    // ------------------------------------------------------------------------
 
    return 0;
-}
-
-bool reduceFunc(AtRawEvent *evt)
-{
-   // return (evt->GetNumPads() > 0);
-   return (evt->GetNumPads() > 250) && evt->IsGood();
 }

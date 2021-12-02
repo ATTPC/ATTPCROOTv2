@@ -4,12 +4,12 @@
 using namespace std;
 void formatCalibration()
 {
-   ifstream calFile("calibration.txt");
+   ifstream calFile("output/calibration.csv");
    if (!calFile.is_open()) {
       cout << "Can't open input calibration file" << endl;
    }
 
-   ofstream outFile("calibrationFormated.rxt");
+   ofstream outFile("output/calibrationFormated.txt");
    if (!outFile.is_open()) {
       cout << "Can't open output calibration file" << endl;
    }
@@ -17,8 +17,8 @@ void formatCalibration()
    while (!calFile.eof()) {
       int padNum;
       float a, b, c, d;
-      calFile >> padNum >> a >> b >> c >> d;
-      if (b != 0)
-         outFile << padNum << "\t" << -a / b << "\t" << 1.0 / b << endl;
+      char t1, t2;
+      calFile >> padNum >> t1 >> a >> t2 >> b;
+      outFile << padNum << "\t" << 0 << "\t" << b << endl;
    }
 }
