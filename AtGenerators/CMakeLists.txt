@@ -36,6 +36,8 @@ set(DEPENDENCIES
   Base
   FairTools
   ROOT::Core
+  ROOT::MathCore
+  ROOT::GenVector
   AtData
   AtTpc
   )

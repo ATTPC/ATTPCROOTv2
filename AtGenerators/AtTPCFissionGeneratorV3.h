@@ -8,40 +8,47 @@
  * Adam Anthony 8/23/2019
  *
  */
-
-#include "FairGenerator.h"
-#include "FairIon.h"
-#include "FairLogger.h"
-#include "FairParticle.h"
-#include "FairPrimaryGenerator.h"
-#include "FairRunSim.h"
-
-#include "TDatabasePDG.h"
-#include "TVirtualMC.h" //For gMC
-#include "Math/GenVector/LorentzVector.h"
-
-#include "AtStack.h"
-#include "AtVertexPropagator.h"
-
-#include <cstdlib>
 #include <fstream>
 #include <iostream>
+
+#include "FairGenerator.h"
+
+#include "Math/GenVector/LorentzVector.h"
+#include "Math/Boost.h"
+
+class TFile;
+class TTree;
+
+using VecPE = ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<>>;
+using Cartesian3D = ROOT::Math::Cartesian3D<>;
 
 class AtTPCFissionGeneratorV3 : public FairGenerator {
 
 private:
-   using VecXYZE = ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<>>;
-   // Tree
    TFile *fEventFile; //!
    TTree *fEventTree; //!
 
    // Variables read from the file for each event
-   std::vector<VecXYZE> *fDecayFrags; //!
-   std::vector<Int_t> *fA;            //!
-   std::vector<Int_t> *fZ;            //!
+   std::vector<VecPE> *fDecayFrags; //!
+   std::vector<Int_t> *fA;          //!
+   std::vector<Int_t> *fZ;          //!
 
    Int_t fNumEvents; //! Number of unique fission simualtion events
    Int_t fCurrEvent; //! Track what event we are at. Reset to 0 if we flow over the number of events in the tree
+
+   // Varibles set for each event
+   FairPrimaryGenerator *fPrimeGen; //!
+   ROOT::Math::Boost fBeamBoost;
+   Cartesian3D fVertex;
+
+   void loadIonList(TString ionList);
+   void loadFissionFragmentTree(TString fissionDistro);
+
+   VecPE getBeam4Vec();
+   Cartesian3D getVertex();
+   void setBeamParameters();
+   void generateEvent();
+   void generateFragment(VecPE &P, Int_t A, Int_t Z);
 
 public:
    // Default constructor
@@ -64,7 +71,7 @@ public:
 
    // Internal variables for tracking the physics
 
-   ClassDefOverride(AtTPCFissionGeneratorV3, 5)
+   ClassDefOverride(AtTPCFissionGeneratorV3, 6)
 };
 
 #endif //#ifndef AtTPCFISSIONGENERAtORV3_H
