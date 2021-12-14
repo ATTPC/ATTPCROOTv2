@@ -23,7 +23,7 @@ void rundigi_sim()
    FairRunAna *fRun = new FairRunAna();
    FairFileSource *source = new FairFileSource(mcFile);
    fRun->SetSource(source);
-   fRun->SetOutputFile("data/output_digi.root");
+   fRun->SetOutputFile("data/output_digiFull.root");
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
    FairParAsciiFileIo *parIo1 = new FairParAsciiFileIo();
@@ -42,20 +42,28 @@ void rundigi_sim()
    pulse->SetPersistence(kTRUE);
 
    AtPSASimple2 *psa = new AtPSASimple2();
-   psa->SetThreshold(0);
+   psa->SetThreshold(35);
    psa->SetMaxFinder();
 
    // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);
 
+   AtRansacTask *ransacTask = new AtRansacTask();
+   ransacTask->SetPersistence(kTRUE);
+   ransacTask->SetVerbose(kFALSE);
+   ransacTask->SetDistanceThreshold(20.0);
+   ransacTask->SetTiltAngle(0);
+   ransacTask->SetMinHitsLine(10);
+   ransacTask->SetFullMode();
+
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
    fRun->AddTask(psaTask);
-
+   fRun->AddTask(ransacTask);
    // __ Init and run ___________________________________
    fRun->Init();
-   fRun->Run(0, 10);
+   fRun->Run(0, 1000);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;

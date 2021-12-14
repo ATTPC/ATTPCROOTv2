@@ -119,7 +119,7 @@ public:
    TVector3 GetVertexMean();
    Int_t MinimizeTrack(AtTrack *track);
    Int_t MinimizeTrackRPhi(AtTrack *track);
-   std::vector<AtTrack> GetTrackCand();
+   std::vector<AtTrack> &GetTrackCand();
    void SetModelType(int model);                 // RANSAC Model: Line, plane...
    void SetDistanceThreshold(Float_t threshold); // Distance to RANSAC line
    void SetMinHitsLine(Int_t nhits);

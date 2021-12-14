@@ -16,10 +16,11 @@
 #include "../../../build/include/AtDecoder/AtRawEvent.h"
 #include "../../../build/include/AtDecoder/AtEvent.h"
 #include "../../../build/include/AtTpcMap.h"
+#include "../../../build/include/AtRansac/AtRansac.h"
 
 // "public functions"
 void loadRun(TString filePath, TString rawEventBranchName = "AtRawEventFiltered",
-             TString eventBranchName = "AtEventFiltered");
+             TString eventBranchName = "AtEventFiltered", TString ransacBranchName = "AtRansac");
 bool loadEvent(ULong64_t eventNumber);
 void loadPad(int padNum);
 bool nextEvent();
@@ -27,6 +28,7 @@ bool nextEvent();
 /**** "public" variables ******/
 AtRawEvent *rawEventPtr;
 AtEvent *eventPtr;
+AtRANSACN::AtRansac *ransacPtr;
 AtTpcMap *tpcMap = nullptr;
 
 /***** "Private" variables *******/
@@ -34,10 +36,11 @@ TChain *tpcTree = nullptr;
 TTreeReader *reader = nullptr;
 TTreeReaderValue<TClonesArray> *rawEventReader = nullptr;
 TTreeReaderValue<TClonesArray> *eventReader = nullptr;
+TTreeReaderValue<TClonesArray> *ransacReader = nullptr;
 
 TH1F *hTrace = new TH1F("trace", "Trace", 512, 0, 511);
 
-void loadRun(TString filePath, TString rawEventBranchName, TString eventBranchName)
+void loadRun(TString filePath, TString rawEventBranchName, TString eventBranchName, TString ransacBranchName)
 {
    if(tpcMap == nullptr)
    {
@@ -66,6 +69,13 @@ void loadRun(TString filePath, TString rawEventBranchName, TString eventBranchNa
    if(eventReader != nullptr)
       delete eventReader;
    eventReader = new TTreeReaderValue<TClonesArray>(*reader, eventBranchName);
+
+   if (ransacReader != nullptr)
+      delete ransacReader;
+   if (tpcTree->GetBranch(ransacBranchName) != nullptr)
+      ransacReader = new TTreeReaderValue<TClonesArray>(*reader, ransacBranchName);
+   else
+      LOG(error) << "Could not find RANSAC branch " << ransacBranchName;
 }
 
 bool loadEvent(ULong64_t eventNumber)
@@ -78,6 +88,9 @@ bool loadEvent(ULong64_t eventNumber)
 
    rawEventPtr = dynamic_cast<AtRawEvent *>((*rawEventReader)->At(0));
    eventPtr = dynamic_cast<AtEvent *>((*eventReader)->At(0));
+   if (ransacReader != nullptr)
+      ransacPtr = dynamic_cast<AtRANSACN::AtRansac *>((*ransacReader)->At(0));
+
    return true;
 }
 

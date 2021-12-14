@@ -6,9 +6,9 @@
 
 using namespace ROOT::Math;
 
-ClassImp(AtRANSACN::AtRansac)
+ClassImp(AtRANSACN::AtRansac);
 
-   AtRANSACN::AtRansac::AtRansac()
+AtRANSACN::AtRansac::AtRansac()
 {
    fVertex_1.SetXYZ(-10000, -10000, -10000);
    fVertex_2.SetXYZ(-10000, -10000, -10000);
@@ -61,7 +61,7 @@ Double_t AtRANSACN::AtRansac::GetMinimum()
 {
    return fMinimum;
 }
-std::vector<AtTrack> AtRANSACN::AtRansac::GetTrackCand()
+std::vector<AtTrack> &AtRANSACN::AtRansac::GetTrackCand()
 {
    return fTrackCand;
 }

@@ -46,6 +46,7 @@ void run_eve(int runNum = 210, bool displayFilteredData = false, TString OutputD
    eve->SetSaveTextData();
    if (displayFilteredData) {
       eve->SetRawEventBranch("AtRawEventFiltered");
+      eve->SetEventBranch("AtEventFiltered");
    }
    // eve->UnpackHoughSpace();
 

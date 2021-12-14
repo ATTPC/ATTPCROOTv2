@@ -91,7 +91,7 @@ void runMC_sim(Int_t nEvents = 5, TString mcEngine = "TGeant4")
 
    //---Store the visualiztion info of the tracks, this make the output file very large!!
    //--- Use it only to display but not for production!
-   run->SetStoreTraj(kTRUE);
+   // run->SetStoreTraj(kTRUE);
 
    // -----   Runtime database   ---------------------------------------------
 

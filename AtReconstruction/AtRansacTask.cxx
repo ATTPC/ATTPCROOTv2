@@ -10,11 +10,8 @@
 
 ClassImp(AtRansacTask);
 
-AtRansacTask::AtRansacTask()
+AtRansacTask::AtRansacTask() : fInputBranchName("AtEventH"), fOutputBranchName("AtRansac")
 {
-
-   fLogger = FairLogger::GetLogger();
-   fPar = NULL;
 
    kIsPersistence = kFALSE;
    kIsFullMode = kFALSE;
@@ -36,6 +33,16 @@ void AtRansacTask::SetPersistence(Bool_t value)
 {
    kIsPersistence = value;
 }
+void AtRansacTask::SetInputBranch(TString branchName)
+{
+   fInputBranchName = branchName;
+}
+
+void AtRansacTask::SetOutputBranch(TString branchName)
+{
+   fOutputBranchName = branchName;
+}
+
 void AtRansacTask::SetModelType(int model)
 {
    fRANSACModel = model;
@@ -98,40 +105,24 @@ InitStatus AtRansacTask::Init()
    }
 
    FairRootManager *ioMan = FairRootManager::Instance();
-   if (ioMan == 0) {
+   if (ioMan == nullptr) {
       LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 
-   fEventHArray = (TClonesArray *)ioMan->GetObject("AtEventH");
-   if (fEventHArray == 0) {
+   fEventArray = (TClonesArray *)ioMan->GetObject(fInputBranchName);
+   if (fEventArray == nullptr) {
       LOG(error) << "Cannot find AtEvent array!";
       return kERROR;
    }
 
-   ioMan->Register("AtRansac", "AtTPC", fRansacArray, kIsPersistence);
+   ioMan->Register(fOutputBranchName, "AtTPC", fRansacArray, kIsPersistence);
 
    if (kIsReprocess) {
-      ioMan->Register("AtEventH", "AtTPC", fEventHArray, kIsPersistence);
+      ioMan->Register("AtEventH", "AtTPC", fEventArray, kIsPersistence);
    }
 
    return kSUCCESS;
-}
-
-void AtRansacTask::SetParContainers()
-{
-
-   FairRun *run = FairRun::Instance();
-   if (!run)
-      LOG(fatal) << "No analysis run!";
-
-   FairRuntimeDb *db = run->GetRuntimeDb();
-   if (!db)
-      LOG(fatal) << "No runtime database!";
-
-   fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
-   if (!fPar)
-      LOG(fatal) << "AtDigiPar not found!!";
 }
 
 void AtRansacTask::Exec(Option_t *opt)
@@ -139,10 +130,10 @@ void AtRansacTask::Exec(Option_t *opt)
 
    fRansacArray->Delete();
 
-   if (fEventHArray->GetEntriesFast() == 0)
+   if (fEventArray->GetEntriesFast() == 0)
       return;
 
-   fEvent = (AtEvent *)fEventHArray->At(0);
+   fEvent = (AtEvent *)fEventArray->At(0);
 
    if (fRANSACAlg == 0) {
       AtRANSACN::AtRansac *Ransac = (AtRANSACN::AtRansac *)new ((*fRansacArray)[0]) AtRANSACN::AtRansac();
