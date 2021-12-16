@@ -65,6 +65,7 @@ protected:
    std::set<Int_t> fIniPads;
    TCanvas *cAtTPCPlane;
    TH2Poly *hPlane;
+   UInt_t fNumberPads;
    std::unordered_map<PadReference, int> AtTPCPadMap;
    std::map<int, PadReference> AtTPCPadMapInverse;
    std::unordered_map<PadReference, std::string> fAuxPadMap;
@@ -79,6 +80,8 @@ public:
    virtual std::vector<Float_t> CalcPadCenter(Int_t PadRef) = 0;
    virtual TH2Poly *GetAtTpcPlane() = 0;
    virtual Int_t BinToPad(Int_t binval) = 0;
+
+   UInt_t GetNumPads() const { return fNumberPads; }
 
    Int_t GetPadNum(const PadReference &PadRef) const;
    multiarray GetPadCoordArr() { return AtPadCoord; }
@@ -99,7 +102,7 @@ public:
    Bool_t GetIsInhibited(Int_t PadNum);
    Int_t GetPadSize(int padNum);
 
-   ClassDefOverride(AtMap, 2);
+   ClassDefOverride(AtMap, 3);
 };
 
 #endif

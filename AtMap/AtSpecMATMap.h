@@ -27,9 +27,6 @@ public:
 
    void SpecMATPadPlane();
 
-private:
-   Int_t fNumPads;
-
    ClassDefOverride(AtSpecMATMap, 1);
 };
 

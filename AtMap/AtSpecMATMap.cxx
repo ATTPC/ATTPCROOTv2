@@ -18,6 +18,7 @@ AtSpecMATMap::AtSpecMATMap(Int_t numPads)
    std::cout << " SpecMAT Map initialized " << std::endl;
    std::cout << " SpecMAT Pad Coordinates container initialized " << std::endl;
    fPadInd = 0;
+   fNumberPads = numPads;
    fIniPads.clear();
    hPlane = new TH2Poly();
 }

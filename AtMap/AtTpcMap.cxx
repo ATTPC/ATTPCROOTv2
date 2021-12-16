@@ -30,6 +30,7 @@ AtTpcMap::AtTpcMap()
    std::cout << " ATTPC Map initialized " << std::endl;
    std::cout << " ATTPC Pad Coordinates container initialized " << std::endl;
    fPadInd = 0;
+   fNumberPads = 10240;
    fIniPads.clear();
    hPlane = new TH2Poly();
 }
