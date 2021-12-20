@@ -80,7 +80,7 @@ void run_unpack_HC(std::string dataFile = "/projects/temp/gadget/run_0002.h5", T
 
    run->Init();
 
-   run->Run(0, 10);
+   run->Run(0, 100);
    // run->RunOnTBData();
 
    std::cout << std::endl << std::endl;

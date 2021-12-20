@@ -1024,27 +1024,26 @@ void AtEventDrawTaskProto::SelectPad(const char *rawevt)
          // new AtTpcProtoMap();
          // TString map = "/Users/yassidayyad/fair_install/AtTPCROOT_v2_06042015/scripts/proto.map";
          // tmap->SetProtoMap(map.Data());
-         //Int_t tPadNum = tmap->BinToPad(bin);
+         // Int_t tPadNum = tmap->BinToPad(bin);
 
-	 Int_t tPadNum = 0;
-	 
-	 if (dynamic_cast<AtTpcMap *>(tmap)) {
+         Int_t tPadNum = 0;
+
+         if (dynamic_cast<AtTpcMap *>(tmap)) {
             tPadNum = dynamic_cast<AtTpcMap *>(tmap)->BinToPad(bin);
          } else if (dynamic_cast<AtGadgetIIMap *>(tmap)) {
             tPadNum = dynamic_cast<AtGadgetIIMap *>(tmap)->BinToPad(bin);
          } else if (dynamic_cast<AtSpecMATMap *>(tmap)) {
             tPadNum = dynamic_cast<AtSpecMATMap *>(tmap)->BinToPad(bin);
          }
-	 
-	 std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
+
+         std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
          AtPad *tPad = tRawEvent->GetPad(tPadNum, IsValid);
 
-
-	 // Check to make sure pad is valid
+         // Check to make sure pad is valid
          if (!tPad)
             return;
 
-	 std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
+         std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
          std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << " Is Valid? : " << IsValid << std::endl;
          std::cout << std::endl;
          // TH1D* tPadWaveSub = NULL;

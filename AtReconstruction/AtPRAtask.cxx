@@ -75,12 +75,22 @@ InitStatus AtPRAtask::Init()
       fPRA = new AtPATTERN::AtTrackFinderHC();
       dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetTcluster(fHCt);
       dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetScluster(fHCs);
-      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetKtriplet(19);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetKtriplet(fHCk);
       dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetNtriplet(fHCn);
       dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetMcluster(fHCm);
       dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetRsmooth(fHCr);
       dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetAtriplet(fHCa);
       // dynamic_cast<AtPATTERN::AtTrackFinderHC*>fPRA->SetPadding(fHCpadding);
+
+      std::cout<<" Track Finder HC parameters (see Dalitz et al.) "<<"\n";
+      std::cout<<" T Cluster : "<<fHCt<<"\n";
+      std::cout<<" S Cluster : "<<fHCs<<"\n";
+      std::cout<<" K Triplet : "<<fHCk<<"\n";
+      std::cout<<" N Triplet : "<<fHCn<<"\n";
+      std::cout<<" M Cluster : "<<fHCm<<"\n";
+      std::cout<<" R Smooth  : "<<fHCr<<"\n";
+      std::cout<<" A Triplet : "<<fHCa<<"\n";
+      
 
    } else if (fPRAlgorithm == 1) {
       fLogger->Info(MESSAGE_ORIGIN, "Using RANSAC algorithm");

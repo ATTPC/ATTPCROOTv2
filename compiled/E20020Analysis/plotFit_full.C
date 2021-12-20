@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_full(std::string fileFolder = "data_t30_t0_8_10_20/")
+void plotFit_full(std::string fileFolder = "data_t30_t0_87_10_20/")
 {
 
    // Data histograms
@@ -116,7 +116,7 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_8_10_20/")
    Double_t m_a = 4.00260325415 * 931.49401;
    Double_t m_O16 = 15.99491461956 * 931.49401;
 
-   Double_t Ebeam_buff = 162.0; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
+   Double_t Ebeam_buff = 160.0; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
    Double_t m_b;
    Double_t m_B;
 
@@ -124,7 +124,7 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_8_10_20/")
    m_B = m_O16;
 
    // Find every valid file
-   std::system("find ./data_t30_t0_8_10_20 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
+   std::system("find ./data_t30_t0_87_10_20 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
    // >test.txt"
    // std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::ifstream file;
@@ -232,11 +232,11 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_8_10_20/")
 
 	      if ((*POCAXtrVec)[index]<1.0) {
 
-            if ((*ziniFitXtrVec)[index] > 60.0 && (*ziniFitXtrVec)[index] < 70.0) {
+            if ((*ziniFitXtrVec)[index] > -100.0 && (*ziniFitXtrVec)[index] < 1000.0) {
 
                Double_t angle = (*AFitVec)[index];
 
-               if (angle > 50 && angle < 180) {
+               if (angle > 0 && angle < 180) {
 
                   if (dataFile.find("sim") != std::string::npos) {
                      angle = (*AFitVec)[index];
@@ -310,7 +310,7 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_8_10_20/")
                }    // POCA
             }       // Angle
          }          // Track length
-       }//Energy
+            }       // Energy
          }
       }
    }

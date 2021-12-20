@@ -9,7 +9,7 @@ void test_GADGETIIMap()
    TH2Poly *padplane = gadget->GetAtTpcPlane();
 
    for (auto i = 0; i < 10; ++i)
-      padplane->Fill(i, -i, i * 100);
+      padplane->Fill(-i, -i, i * 100);
 
    gPad->Update();
 }

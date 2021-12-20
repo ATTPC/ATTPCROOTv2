@@ -198,57 +198,52 @@ TH2Poly *AtGadgetIIMap::GetAtTpcPlane()
 
 void AtGadgetIIMap::SetBinToPadMap()
 {
-  TString dir = getenv("VMCWORKDIR");
-  TString mapFile = "GADGETII_BinToPad_08232021.txt"; //hardcoded for now
-  TString mapFileWithPath = dir + "/scripts/" + mapFile;
+   TString dir = getenv("VMCWORKDIR");
+   TString mapFile = "GADGETII_BinToPad_08232021.txt"; // hardcoded for now
+   TString mapFileWithPath = dir + "/scripts/" + mapFile;
 
-  std::ifstream file;
-  //file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-  
-  try {
+   std::ifstream file;
+   // file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
-    file.open(mapFileWithPath.Data());
+   try {
 
-    while (!file.eof()) {
+      file.open(mapFileWithPath.Data());
+
+      while (!file.eof()) {
 
          std::string line;
          std::getline(file, line);
 
-         Int_t pad=0,bin=0; // Energy, cross section, placeholder
+         Int_t pad = 0, bin = 0; // Energy, cross section, placeholder
 
          // read with default seperator (space) seperated elements
          std::istringstream isxs(line);
-	 
-         isxs >> pad >> bin ;
 
-	 std::cout<<" Pad "<<pad<<" - Bin "<<bin<<"\n";
-	 
-	 fBinToPadTable.emplace(bin,pad);
-    } 
-	 
+         isxs >> pad >> bin;
 
-	 
-    
-  } catch (...) {
-    std::cout << " AtGadgetIIMap::SetBinToPadMap : Error when reading "<<mapFileWithPath.Data()<<"!" <<cNORMAL<< std::endl;
-  }
+         std::cout << " Pad " << pad << " - Bin " << bin << "\n";
 
+         fBinToPadTable.emplace(bin, pad);
+      }
+
+   } catch (...) {
+      std::cout << " AtGadgetIIMap::SetBinToPadMap : Error when reading " << mapFileWithPath.Data() << "!" << cNORMAL
+                << std::endl;
+   }
 }
 
 Int_t AtGadgetIIMap::BinToPad(Int_t binval)
 {
-  fBinToPadTableIt = fBinToPadTable.find(binval);
+   fBinToPadTableIt = fBinToPadTable.find(binval);
 
    if (fBinToPadTableIt != fBinToPadTable.end()) {
-       std::cout << "Element Found - ";
-       std::cout << fBinToPadTableIt->first << "::" << fBinToPadTableIt->second << std::endl;
-      return  fBinToPadTableIt->second;
+      std::cout << "Element Found - ";
+      std::cout << fBinToPadTableIt->first << "::" << fBinToPadTableIt->second << std::endl;
+      return fBinToPadTableIt->second;
    } else {
-     std::cout << "Element Not Found" << std::endl;
-     return -1;
+      std::cout << "Element Not Found" << std::endl;
+      return -1;
    }
 }
-
-
 
 ClassImp(AtGadgetIIMap)
