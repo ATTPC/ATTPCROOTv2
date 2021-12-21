@@ -11,6 +11,7 @@
 #include "FairTask.h"
 
 #include "TCanvas.h"
+#include "TFile.h"
 
 #ifndef __CINT__ // Boost
 #include <boost/multi_array.hpp>

@@ -1,5 +1,4 @@
 #ifndef FAIRROOT_VERSION
-#define FAIRROOT_VERSION "v-2.0-509-g4fc70da"
-#define FAIRROOT_GIT_DATE "Mon Jul 19 09:56:05 2021 -0400"
+#define FAIRROOT_VERSION 0.0.9
+#define FAIRROOT_GIT_DATE "Sun Jan 1 00:00:00 0"
 #endif
-

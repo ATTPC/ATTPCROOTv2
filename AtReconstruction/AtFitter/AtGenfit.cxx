@@ -11,7 +11,7 @@
 
 ClassImp(AtFITTER::AtGenfit)
 
-   AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile, Int_t minit,
+AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile, Float_t gasMediumDensity, Int_t minit,
                                 Int_t maxit)
 {
 
@@ -45,12 +45,14 @@ ClassImp(AtFITTER::AtGenfit)
 
    genfit::FieldManager::getInstance()->init(new genfit::ConstField(0., 0., fMagneticField)); // TODO kGauss
    genfit::MaterialEffects *materialEffects = genfit::MaterialEffects::getInstance();
-   materialEffects->setEnergyLossFile(fEnergyLossFile);
    materialEffects->setEnergyLossBrems(false);
    materialEffects->setNoiseBrems(false);
    materialEffects->useEnergyLossParam();
    materialEffects->init(new genfit::TGeoMaterialInterface());
-
+   //Parameteres set after initialization
+   materialEffects->setGasMediumDensity(gasMediumDensity);
+   materialEffects->setEnergyLossFile(fEnergyLossFile);
+   
    // fPDGCandidateArray = new std::vector<Int_t>; // TODO
    // fPDGCandidateArray->push_back(2212);
 

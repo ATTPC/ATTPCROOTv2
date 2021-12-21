@@ -232,7 +232,7 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_87_10_20/")
 
 	      if ((*POCAXtrVec)[index]<1.0) {
 
-            if ((*ziniFitXtrVec)[index] > -100.0 && (*ziniFitXtrVec)[index] < 1000.0) {
+            if ((*ziniFitXtrVec)[index] > 0.0 && (*ziniFitXtrVec)[index] < 10.0) {
 
                Double_t angle = (*AFitVec)[index];
 

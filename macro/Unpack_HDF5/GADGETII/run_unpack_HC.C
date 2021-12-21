@@ -3,7 +3,7 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
-void run_unpack_HC(std::string dataFile = "/projects/temp/gadget/run_0002.h5", TString parameterFile = "GADGET.sim.par",
+void run_unpack_HC(std::string dataFile = "/mnt/analysis/attpc/run_0002.h5", TString parameterFile = "GADGET.sim.par",
                    TString mappath = "")
 {
 
@@ -68,7 +68,7 @@ void run_unpack_HC(std::string dataFile = "/projects/temp/gadget/run_0002.h5", T
 
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);
-   psa->SetThreshold(10);
+   psa->SetThreshold(5);
    psa->SetMaxFinder();
 
    // AtPRAtask *praTask = new AtPRAtask();
@@ -80,7 +80,7 @@ void run_unpack_HC(std::string dataFile = "/projects/temp/gadget/run_0002.h5", T
 
    run->Init();
 
-   run->Run(0, 100);
+   run->Run(0, 1000);
    // run->RunOnTBData();
 
    std::cout << std::endl << std::endl;

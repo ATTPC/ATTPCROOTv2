@@ -12,6 +12,7 @@
 #include "FitStatus.h"
 #include "AbsFitterInfo.h"
 #include "KalmanFitterInfo.h"
+#include "Exception.h"
 
 #include <ios>
 #include <iostream>
