@@ -29,11 +29,11 @@ public:
    void SetMaxHits(Int_t maxHits) { fMaxHits = maxHits; }
    void SetMinHits(Int_t minHits) { fMinHits = minHits; }
    void SetMeanDistance(Float_t meanDistance) { fMeanDistance = meanDistance; }
-   int  kNN(std::vector<AtHit>* hits,AtHit &hit, int k);
+   int kNN(std::vector<AtHit> *hits, AtHit &hit, int k);
 
-   void SetkNN(Double_t knn) { fKNN = knn;}
-   void SetStdDevMulkNN(Double_t stdDevMul) { fStdDevMulkNN = stdDevMul;}
-  
+   void SetkNN(Double_t knn) { fKNN = knn; }
+   void SetStdDevMulkNN(Double_t stdDevMul) { fStdDevMulkNN = stdDevMul; }
+
 protected:
    FairLogger *fLogger; ///< logger pointer
    AtDigiPar *fPar;     ///< parameter container
@@ -47,9 +47,9 @@ protected:
    Int_t fMinHits;
    Float_t fMeanDistance;
 
-   Int_t fKNN; //<! Number of nearest neighbors kNN
-   Double_t fStdDevMulkNN;//<! Std dev multiplier for kNN
-  
+   Int_t fKNN;             //<! Number of nearest neighbors kNN
+   Double_t fStdDevMulkNN; //<! Std dev multiplier for kNN
+
    ClassDef(AtPRA, 1)
 };
 

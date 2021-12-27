@@ -178,15 +178,15 @@ int main(int argc, char *argv[])
    if (fInteractiveMode)
       display = genfit::EventDisplay::getInstance();
 
-   AtFITTER::AtFitter *fFitter = new AtFITTER::AtGenfit(magneticField, 0.00001, 1000.0, eLossFileNameWithPath.Data(),gasMediumDensity);
+   AtFITTER::AtFitter *fFitter =
+      new AtFITTER::AtGenfit(magneticField, 0.00001, 1000.0, eLossFileNameWithPath.Data(), gasMediumDensity);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetPDGCode(particlePDG);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetMass(particleMass);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetAtomicNumber(atomicNumber);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetNumFitPoints(1.0);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetVerbosityLevel(1);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetSimulationConvention(simulationConv);
-   
-   
+
    // Output file
    Float_t EFit;
    Float_t AFit;
