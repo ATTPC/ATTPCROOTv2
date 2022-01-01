@@ -15,6 +15,13 @@ ClassImp(AtPATTERN::AtTrackFinderHC)
    inputParams.a = 0.03;
    inputParams.t = 3.5;
    inputParams.m = 8;
+   kSetPrunning = kFALSE;
+   fKNN = 5 ;
+   fStdDevMulkNN = 0.0 ;
+   fkNNDist = 10.0;
+   kSetPrunning = kFALSE;
+
+   
 }
 
 AtPATTERN::AtTrackFinderHC::~AtTrackFinderHC() {}
@@ -168,9 +175,11 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
       } // Indices loop
 
       track.SetTrackID(clusterIndex);
-      // Clusterize3D(track, 5.0, 20.0);
-      // Clusterize3D(track, 5.5, 10.0);
       Clusterize3D(track, 10.5, 20.0);
+      
+      if(kSetPrunning)
+	PruneTrack(track);
+
       tracks.push_back(track);
 
    } // Clusters loop

@@ -30,6 +30,11 @@ AtPRAtask::AtPRAtask() : FairTask("AtPRAtask")
    fHCa = 0.03;
    fHCt = 3.5;
    fHCpadding = 0.0;
+
+   kSetPrunning = kFALSE;
+   fKNN = 5;  
+   fStdDevMulkNN = 0.0;
+   fkNNDist = 10.0;
 }
 
 AtPRAtask::~AtPRAtask()
@@ -95,12 +100,26 @@ InitStatus AtPRAtask::Init()
    } else if (fPRAlgorithm == 1) {
       fLogger->Info(MESSAGE_ORIGIN, "Using RANSAC algorithm");
 
-      // fPSA = new AtPSASimple2();
+      
 
    } else if (fPRAlgorithm == 2) {
       fLogger->Info(MESSAGE_ORIGIN, "Using Hough transform algorithm");
-      // fPSA = new AtPSAProto();
+      
    }
+
+   //Prunning options
+   std::cout<<" Track prunning : "<<kSetPrunning<<"\n";
+   if(kSetPrunning)
+     {
+       fPRA->SetPrunning();
+       std::cout<<" Number of k-nearest neighbors (kNN) : "<<fKNN<<"\n";
+       fPRA->SetkNN(fKNN);
+       std::cout<<" Std deviation multiplier : "<<fStdDevMulkNN<<"\n";
+       fPRA->SetStdDevMulkNN(fStdDevMulkNN);
+       std::cout<<" kNN Distance threshold : "<<fkNNDist<<"\n";
+       fPRA->SetkNNDist(fkNNDist);
+     }
+   
 
    // Get a handle from the IO manager
    FairRootManager *ioMan = FairRootManager::Instance();

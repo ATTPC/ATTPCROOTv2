@@ -74,7 +74,7 @@ void unpack_e20020_full(TString fileName)
 
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);
-   psa->SetThreshold(30);
+   psa->SetThreshold(20);
    psa->SetMaxFinder();
    // psa->SetMeanK(4);
    // psa->SetStddevMulThresh(0.1);
