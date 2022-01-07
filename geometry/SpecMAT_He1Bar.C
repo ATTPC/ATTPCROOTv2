@@ -334,15 +334,15 @@ TGeoVolume *create_detector()
    double sciReflPosZ =
       sciCrystPosZ - sciReflWindThick / 2; // Position of the Reflector relative to the Al Housing along the Z axis
 
-   TGeoVolume *sci_cryst_reflbox =
-      gGeoManager->MakeBox("sci_cryst_reflbox", TiO2mat, sciReflSizeX, sciReflSizeY, sciReflSizeZ);
+   TGeoVolume *sci_crystreflbox =
+      gGeoManager->MakeBox("sci_crystreflbox", TiO2mat, sciReflSizeX, sciReflSizeY, sciReflSizeZ);
    TGeoTranslation *m1 = new TGeoTranslation(sciCrystPosX, sciCrystPosY, sciReflWindThick / 2);
    m1->SetName("m1");
    m1->RegisterYourself();
-   TGeoCompositeShape *cs = new TGeoCompositeShape("cs", "sci_cryst_reflbox-(sci_cryst_vol:m1)");
-   TGeoVolume *sci_cryst_refl = new TGeoVolume("sci_cryst_refl", cs, TiO2mat);
-   sci_cryst_refl->SetLineColor(kRed + 3);
-   sci_cryst_refl->SetTransparency(35);
+   TGeoCompositeShape *cs = new TGeoCompositeShape("cs", "sci_crystreflbox-(sci_cryst_vol:m1)");
+   TGeoVolume *sci_crystrefl = new TGeoVolume("sci_crystrefl", cs, TiO2mat);
+   sci_crystrefl->SetLineColor(kRed + 3);
+   sci_crystrefl->SetTransparency(35);
 
    // Dimensions of Housing (half-side)
    double sciHousWallThickX = 0.3;
@@ -364,7 +364,7 @@ TGeoVolume *create_detector()
    TGeoTranslation *m2 = new TGeoTranslation(sciReflPosX, sciReflPosY, sciHousWindThick / 2);
    m2->SetName("m2");
    m2->RegisterYourself();
-   TGeoCompositeShape *cs2 = new TGeoCompositeShape("cs2", "sci_hous_box-(sci_cryst_reflbox:m2)");
+   TGeoCompositeShape *cs2 = new TGeoCompositeShape("cs2", "sci_hous_box-(sci_crystreflbox:m2)");
    TGeoVolume *sci_hous = new TGeoVolume("sci_hous", cs2, Aluminum5083mat);
    sci_hous->SetLineColor(kGreen + 3);
    sci_hous->SetTransparency(35);
@@ -455,7 +455,7 @@ TGeoVolume *create_detector()
                                             new TGeoRotation("sci_window", 0, tpc_rot, 0)));
 
             gGeoMan->GetVolume(Current_seg_name)
-               ->AddNode(sci_cryst_refl, crysNb,
+               ->AddNode(sci_crystrefl, crysNb,
                          new TGeoCombiTrans(transformRefl.X(), transformRefl.Y(), transformRefl.Z(),
                                             new TGeoRotation("sci_reflector", 0, tpc_rot, 0)));
 
@@ -476,6 +476,9 @@ TGeoVolume *create_detector()
       TGeoTranslation transformSegment_translation(positionSegment.X(), positionSegment.Y(), positionSegment.Z());
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(sci_seg[iseg], iseg + 1, new TGeoCombiTrans(transformSegment_translation, rotmGeo));
+      // cout << "Segment number is:" << iseg << endl;
+      // cout << "segment position is: (" << positionSegment.X() << "," << positionSegment.Y() << ","
+      << positionSegment.Z() << ")" << endl;
    }
 
    return drift_volume;

@@ -1,14 +1,10 @@
-void rundigi_sim(
-   TString mcFile = "./data/attpcsim.root",
-   TString mapParFile =
-      "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
-   TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
+void rundigi_sim(TString mcFile = "./data/attpcsim.root")
 {
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
    timer.Start();
 
-   TString scriptfile = "Lookup20150611.xml";
+   TString scriptfile = "LookupSpecMATnoScint.xml";
    TString dir = getenv("VMCWORKDIR");
    TString scriptdir = dir + "/scripts/" + scriptfile;
    TString dataDir = dir + "/macro/data/";
@@ -21,8 +17,11 @@ void rundigi_sim(
    fRun->SetInputFile(mcFile);
    fRun->SetOutputFile("output_digi.root");
 
-   TString parameterFile = "ATTPC.e15250_sim.par";
+   TString parameterFile = "SpecMAT.10Be_aa_sim.par";
    TString digiParFile = dir + "/parameters/" + parameterFile;
+
+   TString triggerFile = "SpecMAT.trigger.par";
+   TString trigParFile = dir + "/parameters/" + triggerFile;
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
    FairParAsciiFileIo *parIo1 = new FairParAsciiFileIo();
@@ -37,6 +36,7 @@ void rundigi_sim(
    AtPulseTask *pulse = new AtPulseTask();
    pulse->SetPersistence(kTRUE);
    pulse->SetSaveMCInfo();
+   pulse->SelectDetectorId(kSpecMAT);
 
    AtPSASimple2 *psa = new AtPSASimple2();
    // psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
@@ -52,7 +52,7 @@ void rundigi_sim(
    praTask->SetPersistence(kTRUE);
 
    /*ATTriggerTask *trigTask = new ATTriggerTask();
-   trigTask  ->  SetAtMap(mapParFile);
+   trigTask  ->  SetAtMap(scriptdir);
    trigTask  ->  SetPersistence(kTRUE);*/
 
    fRun->AddTask(clusterizer);

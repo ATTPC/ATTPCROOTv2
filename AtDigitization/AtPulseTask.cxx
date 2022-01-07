@@ -90,18 +90,21 @@ InitStatus AtPulseTask::Init()
       std::cout << cGREEN << " ATTPC\n" << cNORMAL;
       fNumPads = 10240;
       fMap = new AtTpcMap();
+      fLookupTableFile = "Lookup20150611.xml";
       break;
 
    case kGADGETII:
       std::cout << cGREEN << " GADGETII\n" << cNORMAL;
       fNumPads = 1012;
       fMap = new AtGadgetIIMap();
+      fLookupTableFile = "Lookup20150611.xml"; // needs to be changed later
       break;
 
    case kSpecMAT:
       std::cout << cGREEN << " SpecMAT\n" << cNORMAL;
-      fNumPads = 3162;
+      fNumPads = 3174;
       fMap = new AtSpecMATMap(fNumPads);
+      fLookupTableFile = "LookupSpecMATnoScint.xml";
       break;
 
    default:
@@ -135,11 +138,12 @@ InitStatus AtPulseTask::Init()
    fNumTbs = fPar->GetNumTbs();
 
    // ***************Create AtTPC Pad Plane***************************
-   TString scriptfile = "Lookup20150611.xml";
+
    TString dir = getenv("VMCWORKDIR");
-   TString scriptdir = dir + "/scripts/" + scriptfile;
+   TString scriptdir = dir + "/scripts/" + fLookupTableFile;
 
    fMap->GenerateAtTpc();
+
    Bool_t MapIn = fMap->ParseXMLMap(scriptdir);
    fPadPlane = fMap->GetAtTpcPlane();
    if (fIsInhibitMap)
@@ -311,7 +315,6 @@ void AtPulseTask::Exec(Option_t *option)
       pad->SetValidPad(kTRUE);
       pad->SetPadXCoord(PadCenterCoord[0]);
       pad->SetPadYCoord(PadCenterCoord[1]);
-      // std::cout<<" X "<<PadCenterCoord[0]<<" Y "<<PadCenterCoord[1]<<"\n";
       pad->SetPedestalSubtracted(kTRUE);
       Double_t gAvg = 0;
       gRandom->SetSeed(0);
@@ -332,6 +335,7 @@ void AtPulseTask::Exec(Option_t *option)
       // std::cout <<" Event "<<aux<<" "<<electronsMap.size()<< "*"<< std::flush;
       ite2++;
    }
+
    // if electronsMap.size==0, fEventID still needs to be set
    fRawEvent->SetEventID(fEventID);
    fRawEvent->SetSimMCPointMap(MCPointsMap);
