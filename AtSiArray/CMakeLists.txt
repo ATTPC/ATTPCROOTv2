@@ -16,7 +16,6 @@ ${FAIRROOT_LIBRARY_DIR}
 )
 
 set(SRCS
-AtSiArrayPoint.cxx
 AtSiArrayContFact.cxx
 AtSiArrayGeo.cxx
 AtSiArrayGeoPar.cxx
