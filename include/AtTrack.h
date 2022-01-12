@@ -51,6 +51,7 @@ public:
 
    std::vector<AtHit> *GetHitArray();
    std::vector<AtHitCluster> *GetHitClusterArray();
+   void ResetHitClusterArray();
    std::vector<Double_t> GetFitPar();
    Double_t GetMinimum();
    Int_t GetNFree();

@@ -43,6 +43,11 @@ public:
    void SetMaxNumHits(Int_t maxHits) { fMaxNumHits = maxHits; }
    void SetMinNumHits(Int_t minHits) { fMinNumHits = minHits; }
 
+   void SetPrunning() { kSetPrunning = kTRUE; }
+   void SetkNN(Double_t knn) { fKNN = knn; }
+   void SetStdDevMulkNN(Double_t stdDevMul) { fStdDevMulkNN = stdDevMul; }
+   void SetkNNDist(Double_t dist) { fkNNDist = dist; }
+
 private:
    TClonesArray *fEventHArray;
    TClonesArray *fPatternEventArray;
@@ -68,6 +73,12 @@ private:
    float fHCa;
    float fHCt;
    size_t fHCpadding;
+
+   // Prunning parameters
+   Bool_t kSetPrunning;
+   Int_t fKNN;             //<! Number of nearest neighbors kNN
+   Double_t fStdDevMulkNN; //<! Std dev multiplier for kNN
+   Double_t fkNNDist;      //<! Distance threshold for outlier rejection in kNN
 
    ClassDef(AtPRAtask, 1);
 };

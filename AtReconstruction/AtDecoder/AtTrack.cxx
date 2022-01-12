@@ -257,6 +257,11 @@ void AtTrack::AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster)
    fHitClusterArray.push_back(std::move(*hitCluster));
 }
 
+void AtTrack::ResetHitClusterArray()
+{
+  fHitClusterArray.clear();
+}  
+
 TVector3 AtTrack::GetLastPoint()
 {
    Double_t maxR = 0.;

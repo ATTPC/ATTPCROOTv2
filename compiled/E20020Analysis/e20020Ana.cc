@@ -517,8 +517,8 @@ int main(int argc, char *argv[])
                      auto KalmanFitStatus = fitTrack->getKalmanFitStatus();
                      auto trackRep = fitTrack->getTrackRep(0); // Only one representation is sved for the moment.
 
-                     // if(1){
-                     if (KalmanFitStatus->isFitConverged(false)) {
+		     //  if(1){
+		     if (KalmanFitStatus->isFitConverged(false)) {
                         // KalmanFitStatus->Print();
                         genfit::MeasuredStateOnPlane fitState = fitTrack->getFittedState();
                         // fitState.Print();

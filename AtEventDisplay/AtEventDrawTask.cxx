@@ -440,7 +440,6 @@ void AtEventDrawTask::DrawHitPoints()
       double t0 = 0;
       double dt = 2000;
       std::vector<AtTrack> TrackCand;
-      
 
       if (fIsLinearHough)
          TrackCand = fHoughSpaceLine_buff->GetTrackCand();
@@ -522,20 +521,19 @@ void AtEventDrawTask::DrawHitPoints()
          AtPatternEvent *patternEvent = dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0));
          TrackCand = patternEvent->GetTrackCand();
 
-	 for (Int_t i = 0; i < 20; i++)
-	   {
-	     fHitSetTFHC[i] = 0;
-	     fHitClusterSet[i] = 0;
-	   }    
-	       
+         for (Int_t i = 0; i < 20; i++) {
+            fHitSetTFHC[i] = 0;
+            fHitClusterSet[i] = 0;
+         }
+
          if (TrackCand.size() < 20) {
             for (Int_t i = 0; i < TrackCand.size(); i++) {
 
                AtTrack track = TrackCand.at(i);
                std::vector<AtHit> *trackHits = track.GetHitArray();
-	       std::vector<AtHitCluster> *hitClusters = track.GetHitClusterArray();
+               std::vector<AtHitCluster> *hitClusters = track.GetHitClusterArray();
 
-	       Color_t trackColor = GetTrackColor(i)+1;
+               Color_t trackColor = GetTrackColor(i) + 1;
 
                fHitSetTFHC[i] = new TEvePointSet(Form("HitMC_%d", i), nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
                if (track.GetIsNoise())
@@ -550,33 +548,27 @@ void AtEventDrawTask::DrawHitPoints()
                   fHitSetTFHC[i]->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.);
                }
 
-	       fHitClusterSet[i] = new TEveBoxSet(Form("HitCluster_%d", i));
-	       fHitClusterSet[i]->Reset(TEveBoxSet::kBT_AABox, kFALSE, 64);
-               //fHitClusterSet[i]->SetPalette(fRGBAPalette);
-	       //fHitClusterSet[i]->DigitValue(2000);
-	       
-	       if(hitClusters->size()>0 && !track.GetIsNoise())
-		 {
-		    
-		   
+               fHitClusterSet[i] = new TEveBoxSet(Form("HitCluster_%d", i));
+               fHitClusterSet[i]->Reset(TEveBoxSet::kBT_AABox, kFALSE, 64);
+               // fHitClusterSet[i]->SetPalette(fRGBAPalette);
+               // fHitClusterSet[i]->DigitValue(2000);
 
-		   for(auto hitCluster : *hitClusters)
-		     {
-		       auto clusPos =  hitCluster.GetPosition();
-		       double boxSize = 0.6;
-		       
-		       fHitClusterSet[i]->AddBox(clusPos.X() / 10. - boxSize / 2.0, clusPos.Y() / 10. - boxSize / 2.0, clusPos.Z() / 10. - boxSize / 2.0, boxSize, boxSize, boxSize);
-		     }
-		   
-		   
-		 }
+               if (hitClusters->size() > 0 && !track.GetIsNoise()) {
 
-	       fHitClusterSet[i]->UseSingleColor();
-	       fHitClusterSet[i]->SetMainColor(trackColor);
-	       fHitClusterSet[i]->SetMainTransparency(50);
-	       
+                  for (auto hitCluster : *hitClusters) {
+                     auto clusPos = hitCluster.GetPosition();
+                     double boxSize = 0.6;
 
-	       fHitClusterSet[i]->RefitPlex();
+                     fHitClusterSet[i]->AddBox(clusPos.X() / 10. - boxSize / 2.0, clusPos.Y() / 10. - boxSize / 2.0,
+                                               clusPos.Z() / 10. - boxSize / 2.0, boxSize, boxSize, boxSize);
+                  }
+               }
+
+               fHitClusterSet[i]->UseSingleColor();
+               fHitClusterSet[i]->SetMainColor(trackColor);
+               fHitClusterSet[i]->SetMainTransparency(50);
+
+               fHitClusterSet[i]->RefitPlex();
                TEveTrans &tHitClusterBoxPos = fHitClusterSet[i]->RefMainTrans();
                tHitClusterBoxPos.SetPos(0.0, 0.0, 0.0);
             }
@@ -902,11 +894,10 @@ void AtEventDrawTask::DrawHitPoints()
 
       if (fPatternEventArray)
          if (fLineNum > 0)
-	   for (Int_t i = 0; i < fLineNum; i++)
-	     {
+            for (Int_t i = 0; i < fLineNum; i++) {
                gEve->AddElement(fHitSetTFHC[i]);
-	       gEve->AddElement(fHitClusterSet[i]);
-	     }
+               gEve->AddElement(fHitClusterSet[i]);
+            }
 
       if (fTrackingEventAnaArray)
          if (fTrackNum > 0 && fTrackNum < 5)
@@ -1154,14 +1145,13 @@ void AtEventDrawTask::Reset()
          if (fLineNum > 0) {
             for (Int_t i = 0; i < fLineNum; i++) {
                if (fHitSetTFHC[i]) {
-		 fHitSetTFHC[i]->Reset();
-		 gEve->RemoveElement(fHitSetTFHC[i], fEventManager);
+                  fHitSetTFHC[i]->Reset();
+                  gEve->RemoveElement(fHitSetTFHC[i], fEventManager);
                }
-	       if(fHitClusterSet[i])
-	      {
-		fHitClusterSet[i]->Reset();
-		gEve->RemoveElement(fHitClusterSet[i],fEventManager);
-	      }
+               if (fHitClusterSet[i]) {
+                  fHitClusterSet[i]->Reset();
+                  gEve->RemoveElement(fHitClusterSet[i], fEventManager);
+               }
             }
          }
       }
@@ -1171,9 +1161,8 @@ void AtEventDrawTask::Reset()
          for (Int_t i = 0; i < fTrackNum; i++) {
             if (fHitSetMC[i]) {
                fHitSetMC[i]->Reset();
-               gEve->RemoveElement(fHitSetMC[i], fEventManager);	       
+               gEve->RemoveElement(fHitSetMC[i], fEventManager);
             }
-	    	
          }
       }
 

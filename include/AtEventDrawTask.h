@@ -50,6 +50,8 @@ class TH3F;
 class TPaletteAxis;
 class TVector3;
 
+#include "TEveRGBAPalette.h"
+
 #include <Rtypes.h>
 #include <fstream>
 #include "TF1.h"
@@ -172,6 +174,7 @@ private:
 
    TEvePointSet *fHitSetMC[5];    // For MC results
    TEvePointSet *fHitSetTFHC[20]; // for TrackFinderHC
+   TEveBoxSet *fHitClusterSet[20]; // Track clusterization
 
    // TEveGeoShape* x;
    // std::vector<TEveGeoShape*> hitSphereArray;
@@ -262,6 +265,8 @@ private:
    Int_t fLineNum;
    Int_t fTrackNum;
    // TEveLine* fLine;
+
+   TEveRGBAPalette *fRGBAPalette;
 
    ClassDef(AtEventDrawTask, 1);
 };

@@ -29,14 +29,13 @@ public:
    void SetMaxHits(Int_t maxHits) { fMaxHits = maxHits; }
    void SetMinHits(Int_t minHits) { fMinHits = minHits; }
    void SetMeanDistance(Float_t meanDistance) { fMeanDistance = meanDistance; }
-   bool  kNN(std::vector<AtHit>* hits,AtHit &hit, int k);
+   bool kNN(std::vector<AtHit> *hits, AtHit &hit, int k);
 
    void SetkNN(Double_t knn) { fKNN = knn;}
    void SetStdDevMulkNN(Double_t stdDevMul) { fStdDevMulkNN = stdDevMul;}
-   void SetkNNDist(Double_t dist) {fkNNDist = dist;}
-   void SetPrunning() { kSetPrunning = kTRUE;}
-  
-  
+   void SetkNNDist(Double_t dist) { fkNNDist = dist; }
+   void SetPrunning() { kSetPrunning = kTRUE; }
+
 protected:
    FairLogger *fLogger; ///< logger pointer
    AtDigiPar *fPar;     ///< parameter container
@@ -45,6 +44,7 @@ protected:
    void Clusterize(AtTrack &track);
    void Clusterize3D(AtTrack &track);
    void Clusterize3D(AtTrack &track, Float_t distance, Float_t radius);
+   void ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius);
 
    Int_t fMaxHits;
    Int_t fMinHits;
@@ -52,10 +52,10 @@ protected:
 
    Int_t fKNN; //<! Number of nearest neighbors kNN
    Double_t fStdDevMulkNN;//<! Std dev multiplier for kNN
-   Double_t fkNNDist;//<! Distance threshold for outlier rejection in kNN
+   Double_t fkNNDist;     //<! Distance threshold for outlier rejection in kNN
 
-   Bool_t kSetPrunning;//<<! Enable prunning of tracks
-  
+   Bool_t kSetPrunning; //<<! Enable prunning of tracks
+
    ClassDef(AtPRA, 1)
 };
 
