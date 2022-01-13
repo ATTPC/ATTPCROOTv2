@@ -18,7 +18,7 @@
 #include "TClonesArray.h"
 #include "AtDigiPar.h"
 #include "AtGas.h"
-#include "AtTpcPoint.h"
+#include "AtMCPoint.h"
 
 class AtClusterizeTask : public FairTask {
 public:
@@ -45,7 +45,7 @@ private:
    AtDigiPar *fPar; //!< Base parameter container.
 
    TClonesArray *fMCPointArray;
-   AtTpcPoint *fMCPoint;
+   AtMCPoint *fMCPoint;
    TClonesArray *fElectronNumberArray; //!< Primary cluster array
    Bool_t fIsPersistent;               //!< If true, save container
 

@@ -1,6 +1,6 @@
 #include "AtPulseTask.h"
 #include "AtHit.h"
-#include "AtTpcPoint.h"
+#include "AtMCPoint.h"
 #include "AtMap.h"
 #include "AtSpecMATMap.h"
 #include "AtGadgetIIMap.h"
@@ -80,7 +80,7 @@ InitStatus AtPulseTask::Init()
    ioman->Register("AtRawEvent", "cbmsim", fRawEventArray, fIsPersistent);
 
    // Retrieve kinematics for each simulated point
-   fMCPointArray = (TClonesArray *)ioman->GetObject("AtTpcPoint");
+   fMCPointArray = (TClonesArray *)ioman->GetObject("AtMCPoint");
    if (fMCPointArray == 0) {
       LOG(error) << "Cannot find fMCPointArray array!";
       return kERROR;
@@ -215,7 +215,7 @@ void AtPulseTask::Exec(Option_t *option)
       auto yElectron = coord(1); // mm
       auto eTime = coord(2);     // us
       auto padNumber = (int)fPadPlane->Fill(xElectron, yElectron) - 1;
-      auto mcPoint = (AtTpcPoint *)fMCPointArray->At(dElectron->GetPointID());
+      auto mcPoint = (AtMCPoint *)fMCPointArray->At(dElectron->GetPointID());
       auto trackID = mcPoint->GetTrackID();
 
       // std::cout<<" Electron Number "<<iEvents<<" mcPointID : "<<dElectron->GetPointID()<<" Pad number "<<padNumber<<"
@@ -243,7 +243,7 @@ void AtPulseTask::Exec(Option_t *option)
          // The same MC point ID is saved per pad only once, but duplicates are allowed in other pads
          std::multimap<Int_t, std::size_t>::iterator it;
          for (it = MCPointsMap.equal_range(padNumber).first; it != MCPointsMap.equal_range(padNumber).second; ++it) {
-            auto mcPointMap = (AtTpcPoint *)fMCPointArray->At(val);
+            auto mcPointMap = (AtMCPoint *)fMCPointArray->At(val);
             auto trackIDMap = mcPointMap->GetTrackID();
             if (it->second == val || (trackID == trackIDMap)) {
                // std::cout<<" padNumber "<<padNumber<<" it->second "<<it->second<<" "<<" val "<<val<<" count

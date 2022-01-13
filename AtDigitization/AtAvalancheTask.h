@@ -14,7 +14,7 @@
 #include "TClonesArray.h"
 #include "AtDigiPar.h"
 #include "AtGas.h"
-#include "AtTpcPoint.h"
+#include "AtMCPoint.h"
 
 class AtAvalancheTask : public FairTask {
 public:
@@ -29,7 +29,7 @@ private:
    Int_t fEventID; //!< EventID
 
    TClonesArray *fMCPointArray;
-   AtTpcPoint *fMCPoint;
+   AtMCPoint *fMCPoint;
 
    // TClonesArray* fElectronArray;
 

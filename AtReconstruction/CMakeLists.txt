@@ -37,7 +37,7 @@ Set(DEPENDENCIES
   AtAnalysis
   AtTpcMap
   AtParameter
-  AtTpc
+  AtData
   AtGenerators
   ROOT::Spectrum
   ROOT::Core
