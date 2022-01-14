@@ -8,60 +8,48 @@
 #ifndef AtPulseTask_H
 #define AtPulseTask_H
 
-#include "FairRootManager.h"
-#include "FairRunAna.h"
-#include "FairRuntimeDb.h"
-
 #include "FairTask.h"
-#include "FairMCPoint.h"
 
-#include "TClonesArray.h"
-#include "TH1D.h"
-#include "AtDigiPar.h"
-#include "TH2Poly.h"
-#include "AtRawEvent.h"
-#include "AtGas.h"
-
-#include <memory>
+class TClonesArray;
+class AtDigiPar;
 class AtMap;
-using AtMapPtr = std::shared_ptr<AtMap>;
+class AtRawEvent;
+class TF1;
+class TH1F;
+class TH2Poly;
 
-enum DetectorId { kAtTpc, kGADGETII, kSpecMAT };
+using AtMapPtr = std::shared_ptr<AtMap>;
 
 class AtPulseTask : public FairTask {
 
 private:
-   AtGas *fGas;                         //!< Gas parameter container.
-   AtDigiPar *fPar;                     //!< Base parameter container.
-   Int_t fEventID;                      //!< EventID
-   Double_t fGain;                      //!< Gain.
-   Double_t fGETGain;                   //!< GET Gain.
-   Int_t fPeakingTime;                  //!< Electronic peaking time
-   Int_t fTBTime;                       //!< Time bucket size
-   Int_t fNumTbs;                       //!< Number of time buckers
-   Bool_t fIsPersistent;                //!< If true, save container
+   AtMapPtr fMap; //!< AtTPC map
+
+   AtDigiPar *fPar;      //!< Base parameter container.
+   Int_t fEventID;       //!< EventID
+   Double_t fGain;       //!< Gain.
+   Double_t fGETGain;    //!< GET Gain.
+   Int_t fPeakingTime;   //!< Electronic peaking time
+   Int_t fTBTime;        //!< Time bucket size
+   Int_t fNumTbs;        //!< Number of time buckers
+   Bool_t fIsPersistent; //!< If true, save container
+
    TClonesArray *fDriftedElectronArray; //!< drifted electron array (input)
    TClonesArray *fRawEventArray;        //!< Raw Event array(only one)
    TClonesArray *fMCPointArray;         //!< MC Point Array
    AtRawEvent *fRawEvent;               //!< Raw Event Object
    TH2Poly *fPadPlane;                  //!< pad plane
-   AtMapPtr fMap;                       //!< AtTPC map
-   Int_t fInternalID;                   //!< Internal ID
-   Int_t fNumPads;                      //!< Number of pads
+
+   Int_t fInternalID; //!< Internal ID
 
    std::map<Int_t, TH1F *> electronsMap;          //!<
    TH1F **eleAccumulated;                         //!<
    std::multimap<Int_t, std::size_t> MCPointsMap; //!< Correspondance between MC Points and pads
 
-   DetectorId fDetectorId;
-
    TF1 *gain; //!<
 
-   TString fIniMap;
-   TString fLowgMap;
-   TString fXtalkMap;
-   Bool_t fIsInhibitMap;
    Bool_t fIsSaveMCInfo; //!<< Propagates MC information
+   void saveMCInfo(int mcPointID, int padNumber, int trackID);
 
 public:
    AtPulseTask();
@@ -69,14 +57,13 @@ public:
 
    void SetPersistence(Bool_t val) { fIsPersistent = val; }
    void SetSaveMCInfo() { fIsSaveMCInfo = kTRUE; }
-   virtual InitStatus Init();        //!< Initiliazation of task at the beginning of a run.
-   virtual void Exec(Option_t *opt); //!< Executed for each event.
-   virtual void SetParContainers();  //!< Load the parameter container from the runtime database.
-   void SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap);
-   inline void IsInhibitMap(Bool_t val) { fIsInhibitMap = val; }
-   inline void SelectDetectorId(DetectorId val) { fDetectorId = val; };
+   void SetMap(AtMapPtr map) { fMap = map; };
 
-   ClassDef(AtPulseTask, 1);
+   virtual InitStatus Init() override;        //!< Initiliazation of task at the beginning of a run.
+   virtual void Exec(Option_t *opt) override; //!< Executed for each event.
+   virtual void SetParContainers() override;  //!< Load the parameter container from the runtime database.
+
+   ClassDefOverride(AtPulseTask, 2);
 };
 
 template <typename Iterator>

@@ -1,47 +1,45 @@
 #ifndef AtSIMULAtEDPOINT_H
 #define AtSIMULAtEDPOINT_H
 
-#include "TROOT.h"
+//#include "TROOT.h"
 #include "TObject.h"
-#include "TVector3.h"
+#include "Math/Vector3D.h"
 
 class AtSimulatedPoint : public TObject {
+
+protected:
+   //!< Cluster number
+   std::size_t fMCPointID;
+   std::size_t fMCEventID;
+   Int_t fClusterID;
+   Int_t fCharge; // in units e-
+   Double_t fSigmaLongDiffusion;
+
+   ROOT::Math::XYZVector fPosition;
+
 public:
    AtSimulatedPoint();
-   AtSimulatedPoint(std::size_t id, Int_t electronNumber, Double_t x, Double_t y, Double_t atime);
+   AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, Double_t x, Double_t y, Double_t atime,
+                    Double_t longitudinalDiffusionSigma);
    ~AtSimulatedPoint();
 
-   //!< Track ID setter
-   void SetElectronNumber(Int_t electronNumber);
-   //!< Position setter
-   void SetPoint(std::size_t id, Int_t electronNumber, Double_t x, Double_t y, Double_t atime);
-   //!< Position setter
+   void SetClusterID(Int_t clusterID);
+   void SetPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, Double_t x, Double_t y, Double_t atime,
+                 Double_t longitudinalDiffusionSigma);
    void SetPosition(Double_t x, Double_t y, Double_t atime);
-   //!< ID setter
-   void SetPointID(std::size_t id);
-   //!< MCID setter
+   void SetCharge(Int_t charge);
+   void SetMCPointID(std::size_t id);
    void SetMCEventID(std::size_t mcid);
+   void SetLongitudinalDiffusion(Double_t sigma);
 
-   //!< Track ID getter
-   Int_t GetElectronNumber();
-   //!< Position getter
-   TVector3 GetPosition();
-   //!< ID getter
-   std::size_t GetPointID();
-   //!< MC ID getter
+   Int_t GetClusterID(); // Unique to each MCPoint in each MCEvent
+   ROOT::Math::XYZVector GetPosition();
+   Int_t GetCharge();
+   Double_t GetLongitudinalDiffusion();
+   std::size_t GetMCPointID();
    std::size_t GetMCEventID();
 
-private:
-   //!< Track ID having this hit
-   Int_t fElectronNumber;
-   //!< Position
-   TVector3 fPosition;
-   //!< Point ID
-   std::size_t fPointID;
-   //!< MC Event ID;
-   std::size_t fMCEventID;
-
-   ClassDef(AtSimulatedPoint, 1);
+   ClassDef(AtSimulatedPoint, 2);
 };
 
 #endif

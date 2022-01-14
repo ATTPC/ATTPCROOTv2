@@ -8,30 +8,15 @@
 #ifndef AtClusterizeTask_H
 #define AtClusterizeTask_H
 
-#include "FairRootManager.h"
-#include "FairRunAna.h"
-#include "FairRuntimeDb.h"
-
 #include "FairTask.h"
-#include "FairMCPoint.h"
 
-#include "TClonesArray.h"
-#include "AtDigiPar.h"
-#include "AtGas.h"
-#include "AtTpcPoint.h"
+class AtGas;
+class AtDigiPar;
+class AtTpcPoint;
+
+class TClonesArray;
 
 class AtClusterizeTask : public FairTask {
-public:
-   AtClusterizeTask();
-   ~AtClusterizeTask();
-
-   void SetPersistence(Bool_t val) { fIsPersistent = val; }
-   // void SetTestMode()              { fTestMode = kTRUE; };
-
-   virtual InitStatus Init();        //!< Initiliazation of task at the beginning of a run.
-   virtual void Exec(Option_t *opt); //!< Executed for each event.
-   virtual void SetParContainers();  //!< Load the parameter container from the runtime database.
-
 private:
    Int_t fEventID;        //!< EventID
    Double_t fEIonize;     //!< Effective ionization energy of gas. [eV]
@@ -49,7 +34,17 @@ private:
    TClonesArray *fElectronNumberArray; //!< Primary cluster array
    Bool_t fIsPersistent;               //!< If true, save container
 
-   ClassDef(AtClusterizeTask, 1);
+public:
+   AtClusterizeTask();
+   ~AtClusterizeTask();
+
+   void SetPersistence(Bool_t val) { fIsPersistent = val; }
+
+   virtual InitStatus Init() override;        //!< Initiliazation of task at the beginning of a run.
+   virtual void Exec(Option_t *opt) override; //!< Executed for each event.
+   virtual void SetParContainers() override;  //!< Load the parameter container from the runtime database.
+
+   ClassDefOverride(AtClusterizeTask, 1);
 };
 
 #endif

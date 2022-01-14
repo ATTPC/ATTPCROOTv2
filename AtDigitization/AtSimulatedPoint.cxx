@@ -1,61 +1,79 @@
 #include "AtSimulatedPoint.h"
 
-ClassImp(AtSimulatedPoint)
+using XYZVector = ROOT::Math::XYZVector;
 
-   AtSimulatedPoint::AtSimulatedPoint()
+ClassImp(AtSimulatedPoint);
+
+AtSimulatedPoint::AtSimulatedPoint()
 {
-   SetPoint(-1, -1, -1, -1, -1);
+   SetPoint(-1, -1, -1, -1, -1, -1, -1);
 }
 
-AtSimulatedPoint::AtSimulatedPoint(std::size_t id, Int_t electronNumber, Double_t x, Double_t y, Double_t atime)
+AtSimulatedPoint::AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, Double_t x, Double_t y,
+                                   Double_t atime, Double_t longitudinalDiff)
 {
-   SetPoint(id, electronNumber, x, y, atime);
-   fMCEventID = -1; // Undefined by construction
+   SetPoint(mcPointID, clusterID, charge, x, y, atime, longitudinalDiff);
 }
 
 AtSimulatedPoint::~AtSimulatedPoint() {}
 
-void AtSimulatedPoint::SetElectronNumber(Int_t electronNumber)
+void AtSimulatedPoint::SetClusterID(Int_t clusterID)
 {
-   fElectronNumber = electronNumber;
+   fClusterID = clusterID;
 }
 
 void AtSimulatedPoint::SetPosition(Double_t x, Double_t y, Double_t atime)
 {
-   fPosition = TVector3(x, y, atime);
+   fPosition = XYZVector(x, y, atime);
 }
 
-void AtSimulatedPoint::SetPoint(std::size_t id, Int_t electronNumber, Double_t x, Double_t y, Double_t atime)
+void AtSimulatedPoint::SetPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, Double_t x, Double_t y,
+                                Double_t atime, Double_t longitudinalDiffusionSigma)
 {
-   fElectronNumber = electronNumber;
-   fPosition = TVector3(x, y, atime);
-   fPointID = id;
+   SetClusterID(clusterID);
+   SetPosition(x, y, atime);
+   SetMCEventID(-1); // Undefined by construction (AA does not know what the purpose is)
+   SetMCPointID(mcPointID);
+   SetCharge(charge);
 }
-
-void AtSimulatedPoint::SetPointID(std::size_t id)
+void AtSimulatedPoint::SetCharge(Int_t charge)
 {
-   fPointID = id;
+   fCharge = charge;
 }
-
+void AtSimulatedPoint::SetMCPointID(std::size_t id)
+{
+   fMCPointID = id;
+}
 void AtSimulatedPoint::SetMCEventID(std::size_t mcid)
 {
    fMCEventID = mcid;
 }
-
-Int_t AtSimulatedPoint::GetElectronNumber()
+void AtSimulatedPoint::SetLongitudinalDiffusion(Double_t sigma)
 {
-   return fElectronNumber;
+   fSigmaLongDiffusion = sigma;
 }
-TVector3 AtSimulatedPoint::GetPosition()
+
+Int_t AtSimulatedPoint::GetClusterID()
+{
+   return fClusterID;
+}
+XYZVector AtSimulatedPoint::GetPosition()
 {
    return fPosition;
 }
-
-std::size_t AtSimulatedPoint::GetPointID()
+Int_t AtSimulatedPoint::GetCharge()
 {
-   return fPointID;
+   return fCharge;
+}
+std::size_t AtSimulatedPoint::GetMCPointID()
+{
+   return fMCPointID;
 }
 std::size_t AtSimulatedPoint::GetMCEventID()
 {
    return fMCEventID;
+}
+Double_t AtSimulatedPoint::GetLongitudinalDiffusion()
+{
+   return fSigmaLongDiffusion;
 }

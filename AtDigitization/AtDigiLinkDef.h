@@ -6,8 +6,10 @@
 
 #pragma link C++ class AtAvalancheTask + ;
 #pragma link C++ class AtClusterizeTask + ;
+#pragma link C++ class AtClusterizeFastTask + ;
 #pragma link C++ class AtPulseTask + ;
 #pragma link C++ class AtSimulatedPoint + ;
+#pragma link C++ class AtSimulatedElectron + ;
 #pragma link C++ class AtTrigger + ;
 #pragma link C++ class AtTriggerTask + ;
 
