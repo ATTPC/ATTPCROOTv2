@@ -80,14 +80,14 @@ Modified directions from https://github.com/FairRootGroup/FairRoot
 1. Grab the source `wget https://github.com/flann-lib/flann/archive/refs/tags/1.9.1.tar.gz`
 2. Unpack the source `tar -xzf 1.9.1.tar.gz`
 3. Create a build directory `mkdir /mnt/analysis/e12014/fair_install/flann/`
-4. Modify flann per issue #369 to build with newer versions of cmake:
+4. Modify flann per issue [#369](https://github.com/flann-lib/flann/issues/369) to build with newer versions of cmake:
 ```
 touch src/cpp/empty.cpp
 sed -e '/add_library(flann_cpp SHARED/ s/""/empty.cpp/' \
 -e '/add_library(flann SHARED/ s/""/empty.cpp/' \
 -i src/cpp/CMakeLists.txt
 ```
-5. In the build directory, run cmake `cmake -DCMAKE_INSTALL_PREFIX=/mnt/simulations/attpcroot/fair_install_18.6/flann /mnt/simulations/attpcroot/fair_install_18.6/src/flann
+5. In the build directory, run cmake `cmake -DCMAKE_INSTALL_PREFIX=/mnt/simulations/attpcroot/fair_install_18.6/flann /mnt/simulations/attpcroot/fair_install_18.6/src/flann`
 6. `make && make install` (might yell about pyFlann but idc)
 
 #### Eigen3 (Required for PCL)
@@ -112,13 +112,20 @@ cmake -DCMAKE_INSTALL_PREFIX=/mnt/simulations/attpcroot/fair_install_18.6/pcl -D
 #### GenFit (Optional dependency)
 1. Get the source `git clone https://github.com/Yassid/GenFit.git`
 2. Make build directory `mkdir /mnt/analysis/e12014/fair_install/genfit`
-3. Run cmake from build directory, making sure it can find our version of root `cmake -DCMAKE_INSTALL_PREFIX=/mnt/simulations/attpcroot/fair_install_18.6/GenFit -DCMAKE_PREFIX_PATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/ -DBUILD_TESTING=OFF /mnt/simulations/attpcroot/fair_install_18.6/src/GenFit/`
+3. Run cmake from build directory, making sure it can find our version of root 
+```
+cmake -DCMAKE_INSTALL_PREFIX=/mnt/simulations/attpcroot/fair_install_18.6/GenFit -DCMAKE_PREFIX_PATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/ -DBUILD_TESTING=OFF /mnt/simulations/attpcroot/fair_install_18.6/src/GenFit/
+```
 4. Build and install `make` and `make install`
 
 ### HiRAEVT (Optional dependency)
 1. Get the source `git clone https://github.com/nscl-hira/HiRAEVT.git`
 2. Create build directory `mkdir /mnt/analysis/e12014/fair_install/HiRAEVT`
-4. Run cmake in build directory, disabling unpacking modules `cmake -DCMAKE_INSTALL_PREFIX=/mnt/simulations/attpcroot/fair_install_18.6/HiRAEVT -DCMAKE_PREFIX_PATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/ -DBUILD_UNPACKERS=OFF /mnt/simulations/attpcroot/fair_install_18.6/src/HiRAEVT/`
+3. Run cmake in build directory, disabling unpacking modules 
+```
+cmake -DCMAKE_INSTALL_PREFIX=/mnt/simulations/attpcroot/fair_install_18.6/HiRAEVT -DCMAKE_PREFIX_PATH=/mnt/simulations/attpcroot/fair_install_18.6/FairSoft/ -DBUILD_UNPACKERS=OFF /mnt/simulations/attpcroot/fair_install_18.6/src/HiRAEVT/
+```
+4. Build and install `make` and `make install`
 
 # For developers
 
