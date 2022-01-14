@@ -8,8 +8,8 @@
 #   GENFIT2_LIBRARY_DIR         The path to where the GENFIT2 library files are.
 #
 
-Message(STATUS "Looking for GENFIT2...")
-Message(STATUS $ENV{GENFIT})
+#Message(STATUS "Looking for GENFIT2...")
+#Message(STATUS $ENV{GENFIT})
 Set(GENFIT $ENV{GENFIT})
 
 
@@ -17,7 +17,7 @@ Set(GENFIT2_LIBRARY_SEARCHPATH
   ${GENFIT}/lib
 )
 
-Message(STATUS ${GENFIT}/lib)
+#Message(STATUS ${GENFIT}/lib)
 
 Set(GENFIT2_FOUND FALSE)
 
@@ -26,7 +26,7 @@ Find_Library(GENFIT2_LIBRARY NAMES genfit2
              NO_DEFAULT_PATH
             )
 
-Message(STATUS "Genfit2 ${GENFIT2_LIBRARY}")
+#Message(STATUS "Genfit2 ${GENFIT2_LIBRARY}")
 
 If(GENFIT2_LIBRARY)
 
