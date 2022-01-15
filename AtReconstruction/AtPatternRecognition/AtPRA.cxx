@@ -788,7 +788,7 @@ void AtPATTERN::AtPRA::PruneTrack(AtTrack &track)
    std::cout << "      = Hit Array size after prunning : " << hitArray->size() << "\n";
 }
 
-int AtPATTERN::AtPRA::kNN(std::vector<AtHit> *hits, AtHit &hitRef, int k)
+bool AtPATTERN::AtPRA::kNN(std::vector<AtHit> *hits, AtHit &hitRef, int k)
 {
 
    std::vector<Double_t> distances;
@@ -803,16 +803,23 @@ int AtPATTERN::AtPRA::kNN(std::vector<AtHit> *hits, AtHit &hitRef, int k)
    Double_t mean = 0.0;
    Double_t stdDev = 0.0;
 
+   if (k > hits->size())
+      k = hits->size();
+
    // Compute mean distance of kNN
-   for (auto i = 0; i < k; ++k)
-      mean += distances.at(k);
+   for (auto i = 0; i < k; ++i)
+      mean += distances.at(i);
 
    mean /= k;
 
    // Compute std dev
-   for (auto i = 0; i < k; ++k)
-      stdDev += TMath::Power((distances.at(k) - mean), 2);
+   for (auto i = 0; i < k; ++i)
+      stdDev += TMath::Power((distances.at(i) - mean), 2);
 
    stdDev = TMath::Sqrt(stdDev / k);
-   return 0;
+
+   // Compute threshold
+   Double_t T = mean + stdDev * fStdDevMulkNN;
+
+   return (T < fkNNDist) ? 0 : 1;
 }
