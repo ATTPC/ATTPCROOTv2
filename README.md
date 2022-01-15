@@ -26,6 +26,7 @@ source config.sh -a
 After the source builds, you should be good to go. The CMake script will output a configuration file in the build directory called `config.sh`. This script should be sourced before building or running any macros. For those working on the FRIB fishtank computers, the enviroment script `env_fishtank.sh` can be sourced instead.
 
 ## Installation on other systems
+
 The ATTPCROOT code depends on the following external packages, with tested version numbers:
 
 - Required dependencies
@@ -41,11 +42,14 @@ The ATTPCROOT code depends on the following external packages, with tested versi
   - [GenFit](https://github.com/Yassid/GenFit)
   - [HiRAEVT](https://github.com/nscl-hira/HiRAEVT)
 
+Note: It was also tested with FairSoft may18, and FairRoot 18.0.8
 
 ### Installation of prequisites
+
 Coppied below are the instructions for building and installing the prequisites on FRIB fishtank. Hopefully they will be of use installing the software on other systems:
 
 #### FairSoft
+
 Run `module purge`, `module load gnu/gcc/9.3`, `module load xerces/3.2.3`
 run `export XercesC_ROOT=/mnt/misc/sw/x86_64/Debian/10/xerces/3.2.3/`
 
@@ -62,6 +66,7 @@ I decided to do this by modifying the cmake cache file for root, found at Build/
 
 
 #### FairRoot 18.6.5
+
 Modified directions from https://github.com/FairRootGroup/FairRoot
 
 1. `export SIMPATH=FairSoftInstallDirectory`
@@ -71,6 +76,7 @@ Modified directions from https://github.com/FairRootGroup/FairRoot
 5. Build and install the code in the build directory `make` `make install`
 
 #### HDF5 1.10.4
+
 1. Grab source code `wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.4/src/hdf5-1.10.4.tar.gz`
 2. Untar source `tar -xvf hdf5-1.10.4.tar.gz`
 3. Make build directory `mkdir /mnt/analysis/e12014/fair_install/hdf5`
@@ -78,6 +84,7 @@ Modified directions from https://github.com/FairRootGroup/FairRoot
 5. Make and install `make && make install`
 
 #### FLANN 1.9.1 (Required for PCL)
+
 1. Grab the source `wget https://github.com/flann-lib/flann/archive/refs/tags/1.9.1.tar.gz`
 2. Unpack the source `tar -xzf 1.9.1.tar.gz`
 3. Create a build directory `mkdir /mnt/analysis/e12014/fair_install/flann/`
@@ -99,6 +106,7 @@ sed -e '/add_library(flann_cpp SHARED/ s/""/empty.cpp/' \
 5. Install `make install`
 
 #### PCL 1.10.1 (Optional dependency)
+
 0. Make sure FLANN, and Eigen are all installed
 1. Grab the source code `https://github.com/PointCloudLibrary/pcl/archive/refs/tags/pcl-1.10.1.tar.gz`
 2. Untar source `tar -xvf pcl-1.10.1.tar.gz`
@@ -111,6 +119,7 @@ cmake -DCMAKE_INSTALL_PREFIX=/mnt/simulations/attpcroot/fair_install_18.6/pcl -D
 
 
 #### GenFit (Optional dependency)
+
 1. Get the source `git clone https://github.com/Yassid/GenFit.git`
 2. Make build directory `mkdir /mnt/analysis/e12014/fair_install/genfit`
 3. Run cmake from build directory, making sure it can find our version of root 
@@ -120,6 +129,7 @@ cmake -DCMAKE_INSTALL_PREFIX=/mnt/simulations/attpcroot/fair_install_18.6/GenFit
 4. Build and install `make` and `make install`
 
 ### HiRAEVT (Optional dependency)
+
 1. Get the source `git clone https://github.com/nscl-hira/HiRAEVT.git`
 2. Create build directory `mkdir /mnt/analysis/e12014/fair_install/HiRAEVT`
 3. Run cmake in build directory, disabling unpacking modules 
@@ -131,11 +141,12 @@ cmake -DCMAKE_INSTALL_PREFIX=/mnt/simulations/attpcroot/fair_install_18.6/HiRAEV
 # For developers
 
 ### Formatting code for pull requests
+
 Pull requests submitted should have the code formated in the [ROOT style](https://root.cern/contribute/coding_conventions/). Never include a header file when a forward decleration is sufficient. Only include header files for base classes or classes that are used by value in the class definition.
 
 Before submitting a pull request, reformat the code using `clang-format`. If run from within the repository it will pick up the `.clang-format` file detail the style. This file is also reproduced on the page detailing ROOT the ROOT coding style. If for some reason you need a section of code to not be formatted, you can turn off formatting using comment flags. Formatting of code is turned off with the comment `// clang-format off` and re-enabled with the comment `// clang-format on`. This process can be simplified using the command `git-clang-format` which when given no options will tun `clang-format` on all lines of code that differ between the working directory and HEAD. Detailed documentation is [here](https://github.com/llvm-mirror/clang/blob/master/tools/clang-format/git-clang-format).
 
-All data members of a class should be private or protected and begin with the letter `f`, followed by a capital letter. All member functions should begin with a capital letter. Private data members should be declared first, followed by the private static members, the private methods and the private static methods. Then the protected members and methods and finally the public methods. 
+All data members of a class should be private or protected and begin with the letter `f`, followed by a capital letter. All public member functions should begin with a capital letter. Private data members should be declared first, followed by the private static members, the private methods and the private static methods. Then the protected members and methods and finally the public methods. 
 
 Avoid raw c types for anything that might be written to disk (any memeber variable), instead use ROOT defined types like `Int_t` defined in `Rtypes.h`. If any changes are made to the memory layout of a class, the version number in the ROOT macro `ClassDef` needs to be incremented. If the class overrides any virtual function, the macro `ClassDefOverride` should be used instead.
 
