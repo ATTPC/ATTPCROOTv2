@@ -29,6 +29,7 @@ After the source builds, you should be good to go. The CMake script will output 
 The ATTPCROOT code depends on the following external packages, with tested version numbers:
 
 - Required dependencies
+  - Compiler with support for C++14 standard
   - [Xerces](https://xerces.apache.org/) (3.2.3)
   - [FairSoft](https://github.com/FairRootGroup/FairSoft/releases/tag/apr21p2) (apr21 with ROOT fftw3 module)
   - [FairRoot](https://github.com/FairRootGroup/FairRoot/releases/tag/v18.6.5) (18.6.5)
