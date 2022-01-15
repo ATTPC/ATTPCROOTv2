@@ -253,7 +253,7 @@ void plotFit(std::string fileFolder = "data/")
                x_Phi->Fill(xiniFit, PhiFit * TMath::RadToDeg());
                y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
 
-               QvsXpos->Fill(Ex, xiniFit);
+               QvsXpos->Fill(Ex, (*xiniFitXtrVec)[index]);
 
                // Excitation energy
                // Double_t ex_energy_exp = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, AFit*TMath::DegToRad(),EFit);

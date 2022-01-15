@@ -30,6 +30,11 @@ AtPRAtask::AtPRAtask() : FairTask("AtPRAtask")
    fHCa = 0.03;
    fHCt = 3.5;
    fHCpadding = 0.0;
+
+   kSetPrunning = kFALSE;
+   fKNN = 5;
+   fStdDevMulkNN = 0.0;
+   fkNNDist = 10.0;
 }
 
 AtPRAtask::~AtPRAtask()
@@ -75,21 +80,41 @@ InitStatus AtPRAtask::Init()
       fPRA = new AtPATTERN::AtTrackFinderHC();
       dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetTcluster(fHCt);
       dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetScluster(fHCs);
-      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetKtriplet(19);
+      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetKtriplet(fHCk);
       dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetNtriplet(fHCn);
       dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetMcluster(fHCm);
       dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetRsmooth(fHCr);
       dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetAtriplet(fHCa);
       // dynamic_cast<AtPATTERN::AtTrackFinderHC*>fPRA->SetPadding(fHCpadding);
 
+      std::cout << " Track Finder HC parameters (see Dalitz et al.) "
+                << "\n";
+      std::cout << " T Cluster : " << fHCt << "\n";
+      std::cout << " S Cluster : " << fHCs << "\n";
+      std::cout << " K Triplet : " << fHCk << "\n";
+      std::cout << " N Triplet : " << fHCn << "\n";
+      std::cout << " M Cluster : " << fHCm << "\n";
+      std::cout << " R Smooth  : " << fHCr << "\n";
+      std::cout << " A Triplet : " << fHCa << "\n";
+
    } else if (fPRAlgorithm == 1) {
       LOG(info) << "Using RANSAC algorithm";
-
-      // fPSA = new AtPSASimple2();
 
    } else if (fPRAlgorithm == 2) {
       LOG(info) << "Using Hough transform algorithm";
       // fPSA = new AtPSAProto();
+   }
+
+   // Prunning options
+   std::cout << " Track prunning : " << kSetPrunning << "\n";
+   if (kSetPrunning) {
+      fPRA->SetPrunning();
+      std::cout << " Number of k-nearest neighbors (kNN) : " << fKNN << "\n";
+      fPRA->SetkNN(fKNN);
+      std::cout << " Std deviation multiplier : " << fStdDevMulkNN << "\n";
+      fPRA->SetStdDevMulkNN(fStdDevMulkNN);
+      std::cout << " kNN Distance threshold : " << fkNNDist << "\n";
+      fPRA->SetkNNDist(fkNNDist);
    }
 
    // Get a handle from the IO manager

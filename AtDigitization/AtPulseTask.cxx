@@ -244,6 +244,7 @@ void AtPulseTask::Exec(Option_t *option)
          pad.SetADC(bin, signal[bin] * gAvg * fGETGain);
       }
    }
+
    // if electronsMap.size==0, fEventID still needs to be set
    fRawEvent->SetEventID(fEventID);
    fRawEvent->SetSimMCPointMap(MCPointsMap);

@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_full(std::string fileFolder = "data_t30_t0_8_10_20/")
+void plotFit_full(std::string fileFolder = "data_t30_t0_87_10_20/")
 {
 
    // Data histograms
@@ -116,7 +116,7 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_8_10_20/")
    Double_t m_a = 4.00260325415 * 931.49401;
    Double_t m_O16 = 15.99491461956 * 931.49401;
 
-   Double_t Ebeam_buff = 162.0; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
+   Double_t Ebeam_buff = 160.0; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
    Double_t m_b;
    Double_t m_B;
 
@@ -124,7 +124,7 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_8_10_20/")
    m_B = m_O16;
 
    // Find every valid file
-   std::system("find ./data_t30_t0_8_10_20 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
+   std::system("find ./data_t30_t0_87_10_20 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
    // >test.txt"
    // std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::ifstream file;
@@ -232,85 +232,30 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_8_10_20/")
 
                if ((*POCAXtrVec)[index] < 1.0) {
 
-                  if ((*ziniFitXtrVec)[index] > 60.0 && (*ziniFitXtrVec)[index] < 70.0) {
+                  if ((*ziniFitXtrVec)[index] > 0.0 && (*ziniFitXtrVec)[index] < 10.0) {
 
                      Double_t angle = (*AFitVec)[index];
 
-                     if (angle > 50 && angle < 180) {
+                     if (angle > 0 && angle < 180) {
 
                         if (dataFile.find("sim") != std::string::npos) {
                            angle = (*AFitVec)[index];
                         }
-                        if ((*trackLengthVec)[index] < 1000.0) {
 
-                           if ((*EFitVec)[index] < 1000) {
+                        for (auto iEb = 0; iEb < 300; ++iEb) {
+                           double Qdep =
+                              kine_2b(m_O16, m_a, m_b, m_B, iEb, angle * TMath::DegToRad(), (*EFitVec)[index]);
+                           QvsEb->Fill(Qdep, iEb);
+                        }
 
-                              // if((*AFitVec)[index]>20.0 && (*EFitVec)[index]>4.0){
-                              // if( ((*xiniFitXtrVec)[index]<0.2 && (*xiniFitXtrVec)[index]>-0.0) &&
-                              // ((*yiniFitXtrVec)[index]<-0.1 && (*yiniFitXtrVec)[index]>-0.3) ){
-                              Ang_Ener->Fill(angle, (*EFitVec)[index]);
-                              HQval->Fill((*ExVec)[index]);
-                              Ang_Ener_Xtr->Fill((angle), (*EFitXtrVec)[index]);
-                              HQval_Xtr->Fill((*ExXtrVec)[index]);
-                              hxpos_fit_Xtr->Fill((*xiniFitXtrVec)[index]);
-                              hypos_fit_Xtr->Fill((*yiniFitXtrVec)[index]);
-                              hzpos_fit_Xtr->Fill((*ziniFitXtrVec)[index]);
-                              x_y_Xtr->Fill((*xiniFitXtrVec)[index], (*yiniFitXtrVec)[index]);
-                              QvsAng_Xtr->Fill((*ExXtrVec)[index], AFit);
-                              POCAXtrH->Fill((*POCAXtrVec)[index]);
-                              tracklengthH->Fill((*trackLengthVec)[index]);
-                              ZposvsEvH->Fill((*ziniFitXtrVec)[index], i * fileCnt);
-                              // }// x-y
-                              //}//Energy and angle
-
-                              // 	  	}//IC
-
-                              HIC->Fill(IC);
-
-                              Ang_Ener_PRA->Fill(APRA, EPRA);
-
-                              // HQval->Fill(Ex);
-                              hxpos_fit->Fill((*xiniFitVec)[index]);
-                              hypos_fit->Fill((*yiniFitVec)[index]);
-                              hzpos_fit->Fill((*ziniFitVec)[index]);
-
-                              x_y_Fit->Fill((*xiniFitVec)[index], (*yiniFitVec)[index]);
-
-                              QvsAng->Fill(Ex, AFit);
-                              QvsZpos->Fill(Ex, ziniFit);
-                              ZposvsAng->Fill(ziniFit, AFit);
-                              Ang_AngPRA->Fill(AFit, APRA);
-                              zfit_zPRA->Fill(ziniFit, ziniPRA / 10.0);
-                              Phi_PhiPRA->Fill(PhiFit * TMath::RadToDeg(), PhiPRA);
-                              Ang_Phi->Fill(AFit, PhiFit * TMath::RadToDeg());
-                              x_Phi->Fill(xiniFit, PhiFit * TMath::RadToDeg());
-                              y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
-
-                              QvsXpos->Fill(Ex, xiniFit);
-
-                              // Excitation energy
-                              Double_t ex_energy_exp = kine_2b(m_O16, m_a, m_b, m_B, Ebeam_buff,
-                                                               angle * TMath::DegToRad(), (*EFitVec)[index]);
-                              HQval_Xtr_recalc->Fill(ex_energy_exp);
-
-                              if (cutGS->IsInside(angle, (*EFitVec)[index])) {
-                                 HQval_Xtr_recalc_cutgs->Fill(ex_energy_exp);
-                              }
-
-                              for (auto iEb = 0; iEb < 300; ++iEb) {
-                                 double Qdep =
-                                    kine_2b(m_O16, m_a, m_b, m_B, iEb, angle * TMath::DegToRad(), (*EFitVec)[index]);
-                                 QvsEb->Fill(Qdep, iEb);
-                              }
-
-                              // HQval->Fill(Ex);
-                           }
-                        } // Z vertex
-                          // }//X-Y
-                     }    // POCA
-                  }       // Angle
-               }          // Track length
-            }             // Energy
+                        // HQval->Fill(Ex);
+                     }
+                  } // Z vertex
+                    // }//X-Y
+               }    // POCA
+            }       // Angle
+         }          // Track length
+      }             // Energy
          }
       }
    }

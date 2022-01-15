@@ -25,7 +25,7 @@
 #include <iostream>
 
 // Name of geometry version and output file
-const TString geoVersion = "SpecMAT_He1Bar";
+const TString geoVersion = "SpecMAT_He1Bar_noscint";
 const TString FileName = geoVersion + ".root";
 const TString FileName1 = geoVersion + "_geomanager.root";
 
@@ -57,7 +57,7 @@ TGeoVolume *create_detector();
 void position_detector();
 void add_alignable_volumes();
 
-void SpecMAT_He1Bar()
+void SpecMAT_He1Bar_noscint()
 {
    // Load the necessary FairRoot libraries
    // gROOT->LoadMacro("$VMCWORKDIR/gconfig/basiclibs.C");
@@ -301,185 +301,6 @@ TGeoVolume *create_detector()
       ->AddNode(vacuum_chamber7, 1,
                 new TGeoCombiTrans(0.0, 0.0, 20.225, new TGeoRotation("vacuum_chamber7", 0, tpc_rot, 0)));
    vacuum_chamber7->SetTransparency(35);
-
-   // SpecMAT scintillator array
-
-   // Dimensions of the crystal
-   double sciCrystSizeX = 2.4; // Size and position of all components depends on Crystal size and position.
-   double sciCrystSizeY = 2.4;
-   double sciCrystSizeZ = 2.4;
-   // Position of the crystal
-   double sciCrystPosX = 0; // Position of the Crystal along the X axis
-   double sciCrystPosY = 0; // Position of the Crystal along the Y axis
-   double sciCrystPosZ = 0; // Position of the Crystal along the Z axis
-
-   TGeoVolume *sci_cryst_vol =
-      gGeoManager->MakeBox("sci_cryst_vol", CeBr3mat, sciCrystSizeX, sciCrystSizeY, sciCrystSizeZ);
-   sci_cryst_vol->SetLineColor(kBlue + 3);
-   sci_cryst_vol->SetTransparency(35);
-
-   // Thickness of reflector walls
-   double sciReflWallThickX = 0.05;
-   double sciReflWallThickY = 0.05;
-   double sciReflWindThick = 0.05;
-
-   // Outer dimensions of the reflector relative to the crystal size
-   double sciReflSizeX = sciCrystSizeX + sciReflWallThickX;
-   double sciReflSizeY = sciCrystSizeY + sciReflWallThickY;
-   double sciReflSizeZ = sciCrystSizeZ + sciReflWindThick / 2;
-
-   // Position of the reflector relative to the crystal position
-   double sciReflPosX = sciCrystPosX;
-   double sciReflPosY = sciCrystPosY;
-   double sciReflPosZ =
-      sciCrystPosZ - sciReflWindThick / 2; // Position of the Reflector relative to the Al Housing along the Z axis
-
-   TGeoVolume *sci_crystreflbox =
-      gGeoManager->MakeBox("sci_crystreflbox", TiO2mat, sciReflSizeX, sciReflSizeY, sciReflSizeZ);
-   TGeoTranslation *m1 = new TGeoTranslation(sciCrystPosX, sciCrystPosY, sciReflWindThick / 2);
-   m1->SetName("m1");
-   m1->RegisterYourself();
-   TGeoCompositeShape *cs = new TGeoCompositeShape("cs", "sci_crystreflbox-(sci_cryst_vol:m1)");
-   TGeoVolume *sci_crystrefl = new TGeoVolume("sci_crystrefl", cs, TiO2mat);
-   sci_crystrefl->SetLineColor(kRed + 3);
-   sci_crystrefl->SetTransparency(35);
-
-   // Dimensions of Housing (half-side)
-   double sciHousWallThickX = 0.3;
-   double sciHousWallThickY = 0.3;
-   double sciHousWindThick = 0.1;
-
-   // Outer dimensions of the housing relative to the crystal size and to the thickness of the reflector
-   double sciHousSizeX = sciCrystSizeX + sciReflWallThickX + sciHousWallThickX;
-   double sciHousSizeY = sciCrystSizeY + sciReflWallThickY + sciHousWallThickY;
-   double sciHousSizeZ = sciCrystSizeZ + sciReflWindThick / 2 + sciHousWindThick / 2;
-
-   // Position of the housing relative to the crystal position
-   double sciHousPosX = sciCrystPosX;
-   double sciHousPosY = sciCrystPosY;
-   double sciHousPosZ = sciCrystPosZ - (sciReflWindThick / 2 + sciHousWindThick / 2);
-
-   TGeoVolume *sci_hous_box =
-      gGeoManager->MakeBox("sci_hous_box", Aluminum5083mat, sciHousSizeX, sciHousSizeY, sciHousSizeZ);
-   TGeoTranslation *m2 = new TGeoTranslation(sciReflPosX, sciReflPosY, sciHousWindThick / 2);
-   m2->SetName("m2");
-   m2->RegisterYourself();
-   TGeoCompositeShape *cs2 = new TGeoCompositeShape("cs2", "sci_hous_box-(sci_crystreflbox:m2)");
-   TGeoVolume *sci_hous = new TGeoVolume("sci_hous", cs2, Aluminum5083mat);
-   sci_hous->SetLineColor(kGreen + 3);
-   sci_hous->SetTransparency(35);
-
-   // Dimensions of the Window (half-side)
-   double sciWindSizeX = sciCrystSizeX + sciReflWallThickX + sciHousWallThickX; // X half-size of the Window
-   double sciWindSizeY = sciCrystSizeY + sciReflWallThickY + sciHousWallThickY; // Y half-size of the Window
-   double sciWindSizeZ = 0.1;                                                   // Z half-size of the Window
-
-   // Position of the window relative to the crystal
-   double sciWindPosX = sciCrystPosX; // Position of the Window along the X axis
-   double sciWindPosY = sciCrystPosY; // Position of the Window along the Y axis
-   double sciWindPosZ =
-      sciCrystPosZ + sciCrystSizeZ + sciWindSizeZ; // Position of the Window relative to the Al Housing along the Z axis
-
-   TGeoVolume *sci_window =
-      gGeoManager->MakeBox("sci_window", Aluminum5083mat, sciWindSizeX, sciWindSizeY, sciWindSizeZ);
-
-   // Positioning of segments and crystals in the segment
-
-   // In TotalCrystNb array will be stored coordinates of the all crystals, which could be used for further Doppler
-   // correction
-
-   TVector3 crystalPositionsArray[TotalCrystNb]; // Dinamic mamory allocation for the array
-   for (int i = 0; i < TotalCrystNb; i++) {
-      crystalPositionsArray[i].SetXYZ(0., 0., 0.); // Initialize all elements of the array to zero.
-   }
-
-   int i = 0;      // counter for reconstruction of crystal positions
-   int crysNb = 1; // crystal counter
-   double phi;
-   double twopi = TMath::Pi() * 2;
-   for (int iseg = 0; iseg < 15; iseg++) {
-      phi = (iseg * twopi / 15 + twopi / 4) * 360 / twopi; // +twopi/4  Rotates crystalls around the Z axes by 90deg to
-                                                           // reproduce the same position as in the real setup
-      TRotation rotm, rotm2, rotm3;                        //** rotation matrix definition
-
-      rotm.RotateY(90);  //** rotation matrix for positioning segments
-      rotm.RotateZ(phi); //** rotation matrix for positioning segments
-      TGeoRotation rotmGeo;
-      rotmGeo.RotateY(90);  //** rotation matrix for positioning segments
-      rotmGeo.RotateZ(phi); //** rotation matrix for positioning segments
-
-      rotm2.RotateX(360 - phi); //### rotation matrix for reconstruction of crystal positions
-      rotm3.RotateY(90);        //### rotation matrix for reconstruction of crystal positions
-
-      TVector3 uz(std::cos(phi * twopi / 360), std::sin(phi * twopi / 360),
-                  0.); // coeficient which will be used for preliminary rotation of the segments and crystals
-      // segmentBoxLog = new G4LogicalVolume(segmentBox, segment_mat, "segmentBoxLog");
-      // TGeoVolume *sci_seg = gGeoManager->MakeBox("sci_seg", Vacuummat, sciHousSizeX*3+3*(3-1)/2, sciHousSizeY*1,
-      // sciHousSizeZ+sciWindSizeZ);
-      TString Segnr;
-      Segnr.Form("%d", iseg);
-      const TString Current_seg_name = geoSegments + Segnr;
-      sci_seg[iseg] = new TGeoVolumeAssembly(Current_seg_name);
-      TVector3 positionInSegment;
-      positionInSegment = TVector3(-(3 * sciHousSizeX + 0.3 * (3 - 1) / 2 - sciHousSizeX),
-                                   -(1 * sciHousSizeY - sciHousSizeY), (sciHousSizeZ - sciCrystSizeZ - sciWindSizeZ));
-
-      for (int icrystRow = 0; icrystRow < 1; icrystRow++) {
-         for (int icrystCol = 0; icrystCol < 3; icrystCol++) {
-            TRotation rotm1;
-
-            TVector3 positionCryst, positionWind, positionRefl, positionHous;
-            positionCryst = (TVector3(0., 0., sciCrystPosZ) + positionInSegment);
-            positionWind = (TVector3(0., 0., sciWindPosZ) + positionInSegment);
-            positionRefl = (TVector3(0., 0., sciReflPosZ) + positionInSegment);
-            positionHous = (TVector3(0., 0., sciHousPosZ) + positionInSegment);
-
-            crystalPositionsArray[crysNb - 1] =
-               positionCryst; // assigning initial crystal positions in a segment into array
-
-            TVector3 transformCryst, transformWind, transformRefl, transformHous;
-            transformCryst = positionCryst.Transform(rotm1);
-            transformWind = positionWind.Transform(rotm1);
-            transformRefl = positionRefl.Transform(rotm1);
-            transformHous = positionHous.Transform(rotm1);
-
-            // Placement of scintillator parts inside segment
-            gGeoMan->GetVolume(Current_seg_name)
-               ->AddNode(sci_cryst_vol, crysNb,
-                         new TGeoCombiTrans(transformCryst.X(), transformCryst.Y(), transformCryst.Z(),
-                                            new TGeoRotation("sci_crystal", 0, tpc_rot, 0)));
-
-            gGeoMan->GetVolume(Current_seg_name)
-               ->AddNode(sci_window, crysNb,
-                         new TGeoCombiTrans(transformWind.X(), transformWind.Y(), transformWind.Z(),
-                                            new TGeoRotation("sci_window", 0, tpc_rot, 0)));
-
-            gGeoMan->GetVolume(Current_seg_name)
-               ->AddNode(sci_crystrefl, crysNb,
-                         new TGeoCombiTrans(transformRefl.X(), transformRefl.Y(), transformRefl.Z(),
-                                            new TGeoRotation("sci_reflector", 0, tpc_rot, 0)));
-
-            gGeoMan->GetVolume(Current_seg_name)
-               ->AddNode(sci_hous, crysNb,
-                         new TGeoCombiTrans(transformHous.X(), transformHous.Y(), transformHous.Z(),
-                                            new TGeoRotation("sci_housing", 0, tpc_rot, 0)));
-
-            crysNb += 1;
-            positionInSegment += TVector3(sciHousSizeX * 2 + 0.3, 0., 0.);
-         }
-         positionInSegment -= TVector3(3 * sciHousSizeX * 2 + 0.3 * (3), 0., 0.);
-         positionInSegment += TVector3(0., sciHousSizeY * 2, 0.);
-      }
-
-      // Placement of segment inside main volume
-      TVector3 positionSegment = (13.125 + (sciHousSizeZ + sciWindSizeZ)) * uz;
-      TGeoTranslation transformSegment_translation(positionSegment.X(), positionSegment.Y(), positionSegment.Z());
-      gGeoMan->GetVolume(geoVersion)
-         ->AddNode(sci_seg[iseg], iseg + 1, new TGeoCombiTrans(transformSegment_translation, rotmGeo));
-      // cout << "Segment number is:" << iseg << endl;
-      // cout << "segment position is: (" << positionSegment.X() << "," << positionSegment.Y() << ","
-      // << positionSegment.Z() << ")" << endl;
-   }
 
    return drift_volume;
 }

@@ -1,9 +1,9 @@
 void eventDisplay()
 {
    //-----User Settings:-----------------------------------------------
-   TString InputFile = "attpcsim.root";
-   TString ParFile = "attpcpar.root";
-   TString OutFile = "attpctest.root";
+   TString InputFile = "./data/attpcsim.root";
+   TString ParFile = "./data/attpcpar.root";
+   TString OutFile = "./data/attpctest.root";
 
    // -----   Reconstruction run   -------------------------------------------
    FairRunAna *fRun = new FairRunAna();

@@ -139,13 +139,6 @@ void AtMap::ParseAtTPCMap(TXMLNode *node)
 void AtMap::ParseMapList(TXMLNode *node)
 {
 
-   /*std::vector<int> test;
-     test.resize(4);
-     test[0] = 0;
-     test[1] = 0;
-     test[2] = 0;
-     test[3] = 0;*/
-
    for (; node; node = node->GetNextNode()) {
       if (node->GetNodeType() == TXMLNode::kXMLElementNode) { // Element node
          if (strcmp(node->GetNodeName(), "e17504_fission") == 0 || strcmp(node->GetNodeName(), "Lookup20150611") == 0 ||
@@ -157,12 +150,13 @@ void AtMap::ParseMapList(TXMLNode *node)
              strcmp(node->GetNodeName(), "e12014_pad_map_size") == 0 ||
              strcmp(node->GetNodeName(), "LookupGADGET08232021") == 0 ||
              strcmp(node->GetNodeName(), "Lookup20141208") == 0 ||
+             strcmp(node->GetNodeName(), "LookupSpecMATnoScint") == 0 ||
              strcmp(node->GetNodeName(), "LookupProtoND") == 0) { // TODO Implement this as function parameter
-            // cout<<node->GetNodeName()<<endl;
-            // if(strcmp(node->GetNodeName(),"Lookup20141208") == 0){
+
             ParseAtTPCMap(node->GetChildren());
          } else
             std::cout << " AtTpcMap::ParseMapList - Node not found! Check node name" << std::endl;
+         // std::cout <<node->GetNodeName()<<std::endl;
       }
    }
 

@@ -1,4 +1,4 @@
-void Mg22_alpha_e15250_sim_elastic(Int_t nEvents = 2000, TString mcEngine = "TGeant4")
+void Mg22_alpha_e15250_sim_elastic(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -16,8 +16,7 @@ void Mg22_alpha_e15250_sim_elastic(Int_t nEvents = 2000, TString mcEngine = "TGe
 
   //gSystem->Load("libAtGen.so");
 
-  ATVertexPropagator* vertex_prop = new ATVertexPropagator();
-
+  AtVertexPropagator *vertex_prop = new AtVertexPropagator();
 
   // -----   Create simulation run   ----------------------------------------
   FairRunSim* run = new FairRunSim();
@@ -77,12 +76,11 @@ void Mg22_alpha_e15250_sim_elastic(Int_t nEvents = 2000, TString mcEngine = "TGe
   Double_t NomEnergy = 120.0; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
   Double_t TargetMass = 4.00150618;//Mass in GeV
 
+  AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
+  ionGen->SetSpotRadius(0, -100, 0);
+  // add the ion generator
 
-	ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
-	ionGen->SetSpotRadius(0,-100,0);
-	// add the ion generator
-
-	primGen->AddGenerator(ionGen);
+  primGen->AddGenerator(ionGen);
 
   //primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track added to the Primary Generator
 	// primGen->SetTarget(30,0);
@@ -148,9 +146,10 @@ void Mg22_alpha_e15250_sim_elastic(Int_t nEvents = 2000, TString mcEngine = "TGe
 
 
   Double_t ThetaMinCMS = 10.0;
-  Double_t ThetaMaxCMS = 120.0;
+  Double_t ThetaMaxCMS = 90.0;
 
-  ATTPC2Body* TwoBody = new ATTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
+  AtTPC2Body *TwoBody =
+     new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);
   primGen->AddGenerator(TwoBody);
 
 	run->SetGenerator(primGen);

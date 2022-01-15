@@ -74,7 +74,7 @@ void unpack_e20020(TString fileName)
 
   AtPSAtask *psaTask = new AtPSAtask(psa);
   psaTask->SetPersistence(kTRUE);
-  psa->SetThreshold(30);
+  psa->SetThreshold(20);
   psa->SetMaxFinder();
   // psa->SetMeanK(4);
   // psa->SetStddevMulThresh(0.1);
@@ -82,6 +82,10 @@ void unpack_e20020(TString fileName)
   AtPRAtask *praTask = new AtPRAtask();
   praTask->SetPersistence(kTRUE);
   praTask->SetTcluster(5.0);
+  // praTask->SetPrunning();
+  // praTask->SetkNN(20);
+  // praTask->SetStdDevMulkNN(0);
+  // praTask->SetkNNDist(20);
 
   run -> AddTask(HDFParserTask);
   run -> AddTask(psaTask);
@@ -89,7 +93,7 @@ void unpack_e20020(TString fileName)
   
   run -> Init();
 
-  run->Run(0, 100);
+  run->Run(0, 20);
   // run->RunOnTBData();
 
   std::cout << std::endl << std::endl;

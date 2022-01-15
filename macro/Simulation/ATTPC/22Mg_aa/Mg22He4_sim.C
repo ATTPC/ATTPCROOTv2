@@ -51,7 +51,7 @@ void Mg22He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    // -----   Magnetic field   -------------------------------------------
    // Constant Field
    AtConstField *fMagField = new AtConstField();
-   fMagField->SetField(0., 0., 30.);                      // values are in kG
+   fMagField->SetField(0., 0., 20.);                      // values are in kG
    fMagField->SetFieldRegion(-50, 50, -50, 50, -10, 230); // values are in cm
                                                           //  (xmin,xmax,ymin,ymax,zmin,zmax)
    run->SetField(fMagField);

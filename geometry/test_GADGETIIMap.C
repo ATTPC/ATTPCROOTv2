@@ -8,8 +8,11 @@ void test_GADGETIIMap()
 
    TH2Poly *padplane = gadget->GetAtTpcPlane();
 
-   for (auto i = 0; i < 10; ++i)
-      padplane->Fill(i, -i, i * 100);
+   for (auto i = 0; i < 20; ++i) {
+
+      Int_t bin = padplane->Fill(i + 0.5, -i - 0.5, i * 100);
+      std::cout << " Bin : " << bin << "\n";
+   }
 
    gPad->Update();
 }
