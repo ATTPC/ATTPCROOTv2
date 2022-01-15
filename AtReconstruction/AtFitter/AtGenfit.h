@@ -33,8 +33,8 @@ namespace AtFITTER {
 class AtGenfit : public AtFitter {
 
 public:
-   AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile, Int_t minit = 5,
-            Int_t maxit = 20);
+   AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile, Float_t gasMediumDensity,
+            Int_t minit = 5, Int_t maxit = 20);
    ~AtGenfit();
 
    genfit::Track *FitTracks(AtTrack *track);
@@ -52,6 +52,7 @@ public:
    inline void SetVerbosityLevel(Int_t verbosity) { fVerbosity = verbosity; }
    inline void SetEnergyLossFile(std::string file) { fEnergyLossFile = file; }
    inline void SetSimulationConvention(Bool_t simconv) { fSimulationConv = simconv; }
+   inline void SetGasMediumDensity(Float_t mediumDensity) { fGasMediumDensity = mediumDensity; }
 
    TClonesArray *GetGenfitTrackArray();
 
@@ -73,6 +74,7 @@ private:
    Int_t fVerbosity;            //<! Fit verbosity
    std::string fEnergyLossFile; //<! Energy loss file
    Bool_t fSimulationConv;      //<! Switch to simulation convention
+   Float_t fGasMediumDensity;   //<! Medium density in mg/cm3
 
    genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement> *fMeasurementProducer;
    genfit::MeasurementFactory<genfit::AbsMeasurement> *fMeasurementFactory;

@@ -15,7 +15,7 @@
 class AtSpecMATMap : public AtMap {
 
 public:
-   AtSpecMATMap(Int_t fNumPads);
+   AtSpecMATMap(Int_t fNumPads = 3174);
    ~AtSpecMATMap();
 
    void Dump() override;                                         // pure virtual member

@@ -1,11 +1,11 @@
-void run_eve(TString InputDataFile = "output_digi_10Be_aaHe6_test.root",
-             TString OutputDataFile = "output.reco_display.root", TString unpackDir = "/Simulation/ATTPC/10Be_aa/")
+void run_eve(TString InputDataFile = "output_digi.root", TString OutputDataFile = "output.reco_display.root",
+             TString unpackDir = "Simulation/SpecMAT/10Be_aa/")
 {
    FairLogger *fLogger = FairLogger::GetLogger();
    fLogger->SetLogToScreen(kTRUE);
    fLogger->SetLogVerbosityLevel("MEDIUM");
    TString dir = getenv("VMCWORKDIR");
-   TString geoFile = "ATTPC_He1bar_geomanager.root";
+   TString geoFile = "SpecMAT_He1Bar.root";
 
    TString InputDataPath = dir + "/macro/" + unpackDir + InputDataFile;
    TString OutputDataPath = dir + "/macro/" + unpackDir + OutputDataFile;
@@ -23,11 +23,12 @@ void run_eve(TString InputDataFile = "output_digi_10Be_aaHe6_test.root",
 
    FairRootManager *ioman = FairRootManager::Instance();
 
-   ATEventManager *eveMan = new ATEventManager();
-   ATEventDrawTask *eve = new ATEventDrawTask();
+   AtEventManager *eveMan = new AtEventManager();
+   AtEventDrawTask *eve = new AtEventDrawTask();
    eve->Set3DHitStyleBox();
    eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
    eve->SetSaveTextData();
+   eve->SelectDetectorId(kSpecMAT);
    eve->UnpackHoughSpace();
 
    eveMan->AddTask(eve);

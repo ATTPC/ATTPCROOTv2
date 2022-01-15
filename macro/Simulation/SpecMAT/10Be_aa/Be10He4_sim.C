@@ -1,4 +1,4 @@
-void Be10He4_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
+void Be10He4_sim(Int_t nEvents = 50, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
@@ -41,8 +41,8 @@ void Be10He4_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
    /*FairModule* pipe = new AtPipe("Pipe");
    run->AddModule(pipe);*/
 
-   FairDetector *ATTPC = new AtTpc("ATTPC", kTRUE);
-   ATTPC->SetGeometryFileName("ATTPC_He1bar.root");
+   FairDetector *ATTPC = new AtTpc("SpecMAT", kTRUE);
+   ATTPC->SetGeometryFileName("SpecMAT_He1Bar.root");
    // ATTPC->SetModifyGeometry(kTRUE);
    run->AddModule(ATTPC);
 
@@ -71,10 +71,18 @@ void Be10He4_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
    Double_t pz = 0.86515 / a; // Z-Momentum / per nucleon!!!!!!
    Double_t BExcEner = 0.0;
    Double_t Bmass = 10.013533818;
-   Double_t NomEnergy = 40.0;
+   // Double_t NomEnergy = 40.0;
+   Double_t NomEnergy = 5.0;
+
+   // set the following three variables to zero if do not want beam spot
+   Double_t fwhmFocus = 0.5;     // cm, FWHM of the gaussian distribution at beam spot
+   Double_t angularDiv = 10.E-3; // rad, angular divergence of the beam
+   Double_t zFocus = 50.;        // cm, z position (beam direction) of the beam spot
+   Double_t rHole = 2.;          // cm, hole radius in the pad plane
 
    AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
-   ionGen->SetSpotRadius(0, -100, 0);
+   ionGen->SetBeamEmittance(fwhmFocus, angularDiv, zFocus, rHole);
+   // ionGen->SetSpotRadius(0, -100, 0);
    // add the ion generator
 
    primGen->AddGenerator(ionGen);

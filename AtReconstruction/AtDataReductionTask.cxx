@@ -1,6 +1,7 @@
 #include "AtDataReductionTask.h"
 #include "AtRawEvent.h"
 
+#include "FairLogger.h"
 #include "FairRunAna.h"
 #include "FairRootManager.h"
 

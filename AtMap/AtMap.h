@@ -28,6 +28,7 @@
 #include "TFile.h"
 #include <fstream>
 #include <iostream>
+#include <unordered_map>
 
 // The definition of this struct, and the operator overloads have to
 // be before AtMap where an unordered_map using this as a key is
