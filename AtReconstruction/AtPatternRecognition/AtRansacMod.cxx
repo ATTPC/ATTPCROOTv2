@@ -8,9 +8,9 @@
 
 using namespace std;
 
-ClassImp(AtRansacMod)
+ClassImp(AtRansacMod);
 
-   AtRansacMod::AtRansacMod()
+AtRansacMod::AtRansacMod()
 {
 
    fRANSACMaxIteration = 500;

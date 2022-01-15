@@ -3,6 +3,7 @@
 void rundigi_sim()
 {
 
+   TString outputFile = "data/output_digiFast.root";
    TString scriptfile = "e12014_pad_mapping.xml";
    TString paramFile = "ATTPC.e12014.par";
 
@@ -23,23 +24,26 @@ void rundigi_sim()
    FairRunAna *fRun = new FairRunAna();
    FairFileSource *source = new FairFileSource(mcFile);
    fRun->SetSource(source);
-   fRun->SetOutputFile("data/output_digiFull.root");
+   fRun->SetOutputFile(outputFile);
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
    FairParAsciiFileIo *parIo1 = new FairParAsciiFileIo();
    parIo1->open(digiParFile.Data(), "in");
    rtdb->setFirstInput(parIo1);
 
-   // FairParAsciiFileIo* parIo2 = new FairParAsciiFileIo();
-   // parIo2 -> open(trigParFile.Data(), "in");
-   // rtdb -> setSecondInput(parIo2);
+   //Create the detector map to pass to the simulation
+   auto mapping = std::make_shared<AtTpcMap>();
+   mapping->ParseXMLMap(mapParFile.Data());
+   mapping->GenerateAtTpc();
 
    // __ AT digi tasks___________________________________
-   AtClusterizeTask *clusterizer = new AtClusterizeTask();
+   AtClusterizeFastTask *clusterizer = new AtClusterizeFastTask();
+   //AtClusterizeTask *clusterizer = new AtClusterizeTask();
    clusterizer->SetPersistence(kFALSE);
-
+   
    AtPulseTask *pulse = new AtPulseTask();
    pulse->SetPersistence(kTRUE);
+   pulse->SetMap(mapping);
 
    AtPSASimple2 *psa = new AtPSASimple2();
    psa->SetThreshold(35);
@@ -60,10 +64,10 @@ void rundigi_sim()
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
    fRun->AddTask(psaTask);
-   fRun->AddTask(ransacTask);
+   //fRun->AddTask(ransacTask);
    // __ Init and run ___________________________________
    fRun->Init();
-   fRun->Run(0, 1000);
+   fRun->Run(0, 10);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;

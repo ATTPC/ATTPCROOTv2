@@ -34,7 +34,7 @@ Density:Double_t             0.175   # Gas density (kg/m3 or mg/cm3)
 ThetaPad:Double_t            110.9   # AT-TPC pad plane rotation
 ThetaRot:Double_t              0.0   # Second Lorentz Angle
 GasPressure:Double_t           800   # Gas pressure in torr
-EIonize:Double_t             40.00   # Ionization energy of gas in eV
+EIonize:Double_t             42.70   # Ionization energy of gas in eV
 Fano:Double_t                 0.24   # Fano factor of the gas
 CoefL:Double_t               0.0055   # Longitudal coefficient of diffusion [cm^-0.5]
 CoefT:Double_t               0.0038   # Transverse coefficient of diffusion [cm^-0.5]
