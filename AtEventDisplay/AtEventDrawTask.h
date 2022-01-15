@@ -173,8 +173,8 @@ private:
    TEvePointSet *fHitSet;
    TEvePointSet *fHitSetMin;
 
-   TEvePointSet *fHitSetMC[5];    // For MC results
-   TEvePointSet *fHitSetTFHC[20]; // for TrackFinderHC
+   TEvePointSet *fHitSetMC[5];     // For MC results
+   TEvePointSet *fHitSetTFHC[20];  // for TrackFinderHC
    TEveBoxSet *fHitClusterSet[20]; // Track clusterization
 
    // TEveGeoShape* x;
