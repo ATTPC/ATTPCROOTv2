@@ -98,7 +98,7 @@ public:
    std::string GetAuxName(const PadReference &ref) const;
 
    inline void SetGUIMode() { kGUIMode = 1; }
-   inline void SetDebugMode() { kDebug = 1; }
+   inline void SetDebugMode(Bool_t flag = true) { kDebug = flag; }
    Bool_t ParseInhibitMap(TString inimap, TString lowgmap, TString xtalkmap);
    Bool_t GetIsInhibited(Int_t PadNum);
    Int_t GetPadSize(int padNum);

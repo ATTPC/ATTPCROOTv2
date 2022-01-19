@@ -3,7 +3,8 @@
 void rundigi_sim()
 {
 
-   TString outputFile = "data/output_digiFast.root";
+   // TString outputFile = "data/output_digiFast.root";
+   TString outputFile = "data/output_digiFull.root";
    TString scriptfile = "e12014_pad_mapping.xml";
    TString paramFile = "ATTPC.e12014.par";
 
@@ -17,7 +18,7 @@ void rundigi_sim()
 
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
-   timer.Start();
+
    // ------------------------------------------------------------------------
 
    // __ Run ____________________________________________
@@ -31,22 +32,24 @@ void rundigi_sim()
    parIo1->open(digiParFile.Data(), "in");
    rtdb->setFirstInput(parIo1);
 
-   //Create the detector map to pass to the simulation
+   // Create the detector map to pass to the simulation
    auto mapping = std::make_shared<AtTpcMap>();
    mapping->ParseXMLMap(mapParFile.Data());
    mapping->GenerateAtTpc();
 
    // __ AT digi tasks___________________________________
-   AtClusterizeFastTask *clusterizer = new AtClusterizeFastTask();
-   //AtClusterizeTask *clusterizer = new AtClusterizeTask();
+   // AtClusterizeFastTask *clusterizer = new AtClusterizeFastTask();
+   AtClusterizeTask *clusterizer = new AtClusterizeTask();
+   // AtClusterizeLineTask *clusterizer = new AtClusterizeLineTask();
    clusterizer->SetPersistence(kFALSE);
-   
+
    AtPulseTask *pulse = new AtPulseTask();
+   // AtPulseLineTask *pulse = new AtPulseLineTask();
    pulse->SetPersistence(kTRUE);
    pulse->SetMap(mapping);
 
    AtPSASimple2 *psa = new AtPSASimple2();
-   psa->SetThreshold(35);
+   // psa->SetThreshold(35);
    psa->SetMaxFinder();
 
    // Create PSA task
@@ -64,15 +67,18 @@ void rundigi_sim()
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
    fRun->AddTask(psaTask);
-   //fRun->AddTask(ransacTask);
-   // __ Init and run ___________________________________
+   // fRun->AddTask(ransacTask);
+   //  __ Init and run ___________________________________
    fRun->Init();
-   fRun->Run(0, 10);
+
+   timer.Start();
+   fRun->Run(0, 100);
+   timer.Stop();
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;
    // -----   Finish   -------------------------------------------------------
-   timer.Stop();
+
    Double_t rtime = timer.RealTime();
    Double_t ctime = timer.CpuTime();
    cout << endl;

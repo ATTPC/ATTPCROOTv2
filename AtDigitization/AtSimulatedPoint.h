@@ -12,34 +12,29 @@ protected:
    std::size_t fMCPointID;
    std::size_t fMCEventID;
    Int_t fClusterID;
-   Int_t fCharge; // in units e-
-   Double_t fSigmaLongDiffusion;
-
-   ROOT::Math::XYZVector fPosition;
+   Int_t fCharge;
+   
+   ROOT::Math::XYZVector fPosition; //(mm,mm,us)
 
 public:
    AtSimulatedPoint();
-   AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, Double_t x, Double_t y, Double_t atime,
-                    Double_t longitudinalDiffusionSigma);
+   AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, const ROOT::Math::XYZVector &pointLocation);
+   AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, const ROOT::Math::XYZVector &pointLocation);
+
    ~AtSimulatedPoint();
 
    void SetClusterID(Int_t clusterID);
-   void SetPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, Double_t x, Double_t y, Double_t atime,
-                 Double_t longitudinalDiffusionSigma);
-   void SetPosition(Double_t x, Double_t y, Double_t atime);
-   void SetCharge(Int_t charge);
    void SetMCPointID(std::size_t id);
    void SetMCEventID(std::size_t mcid);
-   void SetLongitudinalDiffusion(Double_t sigma);
+   void SetCharge(Int_t charge);
 
-   Int_t GetClusterID(); // Unique to each MCPoint in each MCEvent
-   ROOT::Math::XYZVector GetPosition();
    Int_t GetCharge();
-   Double_t GetLongitudinalDiffusion();
+   Int_t GetClusterID(); // Unique to each MCPoint in each MCEvent
+   virtual ROOT::Math::XYZVector GetPosition();
    std::size_t GetMCPointID();
    std::size_t GetMCEventID();
 
-   ClassDef(AtSimulatedPoint, 2);
+   ClassDef(AtSimulatedPoint, 3);
 };
 
 #endif

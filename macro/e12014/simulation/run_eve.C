@@ -11,6 +11,7 @@ void run_eve(TString OutputDataFile = "data/output.reco_display.root")
 {
    TString InputDataFile;
    InputDataFile = "./data/output_digiFast.root";
+   // InputDataFile = "./data/output_digiFull.root";
    std::cout << "Opening: " << InputDataFile << std::endl;
 
    FairLogger *fLogger = FairLogger::GetLogger();

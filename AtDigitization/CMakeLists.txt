@@ -28,9 +28,11 @@ set(SRCS
 AtAvalancheTask.cxx
 AtClusterizeTask.cxx
 #AtClusterizeFastTask.cxx
+AtClusterizeLineTask.cxx
 AtPulseTask.cxx
+AtPulseLineTask.cxx
 AtSimulatedPoint.cxx
-AtSimulatedElectron.cxx
+AtSimulatedLine.cxx
 AtTrigger.cxx
 AtTriggerTask.cxx
 )

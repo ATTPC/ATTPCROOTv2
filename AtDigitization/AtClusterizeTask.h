@@ -9,6 +9,7 @@
 #define AtClusterizeTask_H
 
 #include "FairTask.h"
+#include "Math/Vector3D.h"
 
 class AtGas;
 class AtDigiPar;
@@ -17,7 +18,7 @@ class AtTpcPoint;
 class TClonesArray;
 
 class AtClusterizeTask : public FairTask {
-private:
+protected:
    Int_t fEventID;        //!< EventID
    Double_t fEIonize;     //!< Effective ionization energy of gas. [eV]
    Double_t fFano;        //!< Fano factor of the gas
@@ -31,11 +32,30 @@ private:
 
    TClonesArray *fMCPointArray;
    AtTpcPoint *fMCPoint;
-   TClonesArray *fElectronNumberArray; //!< Primary cluster array
+   TClonesArray *fSimulatedPointArray; //!< Primary cluster array
    Bool_t fIsPersistent;               //!< If true, save container
 
+
+   ROOT::Math::XYZVector fPrevPoint;
+   Int_t fCurrTrackID;
+
+private:
+   ROOT::Math::XYZVector applyDiffusion(const ROOT::Math::XYZVector &loc, double_t sigTrans, double sigLong);
+   
+protected:
+   
+   virtual void getParameters();
+   virtual void processPoint(Int_t mcPointID);
+
+   void setNewTrack();
+   Double_t getTransverseDiffusion(Double_t driftTime); // in cm
+   Double_t getLongitudinalDiffusion(Double_t driftTime); // in us
+   UInt_t getNumberOfElectronsGenerated();
+   ROOT::Math::XYZVector getCurrentPointLocation();
+   
 public:
    AtClusterizeTask();
+   AtClusterizeTask(const char *name);
    ~AtClusterizeTask();
 
    void SetPersistence(Bool_t val) { fIsPersistent = val; }

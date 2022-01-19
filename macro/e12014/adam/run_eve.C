@@ -12,6 +12,7 @@ void run_eve(int runNum, bool displayFilteredData = true, TString OutputDataFile
    TString InputDataFile;
    //InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpackedCalibration/run_%04dCal.root", runNum);
    InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpacked/run_%04d.root", runNum);
+   InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpackedReducedFiltered/run_%04d.root", runNum);
    // InputDataFile = "./run_0200.root";
    std::cout << "Opening: " << InputDataFile << std::endl;
 
@@ -46,10 +47,12 @@ void run_eve(int runNum, bool displayFilteredData = true, TString OutputDataFile
    eve->SetSaveTextData();
    if (displayFilteredData) {
       eve->SetRawEventBranch("AtRawEventFiltered");
-   }
-   else
+      eve->SetEventBranch("AtEventFiltered");
+   } else {
       eve->SetRawEventBranch("AtRawEvent");
-   eve->SetEventBranch("AtEventH");
+      eve->SetEventBranch("AtEventH");
+   }
+
    // eve->UnpackHoughSpace();
 
    eveMan->AddTask(eve);
