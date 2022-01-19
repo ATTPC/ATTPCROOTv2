@@ -24,7 +24,7 @@ void run_eve(TString  InputDataFile = "output_digi.root",TString  OutputDataFile
   FairRootManager* ioman = FairRootManager::Instance();
 
   AtEventManager *eveMan = new AtEventManager();
-  AtEventDrawTask* eve = new AtEventDrawTask();
+  AtEventDrawTask *eve = new AtEventDrawTask();
   eve->Set3DHitStyleBox();
   eve->SetMultiHit(100); //Set the maximum number of multihits in the visualization
   eve->SetSaveTextData();

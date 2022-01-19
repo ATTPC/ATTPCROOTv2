@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_full(std::string fileFolder = "data_t30_t0_87_10_20/")
+void plotFit_full(std::string fileFolder = "data_t20_t0_87_10_20_cov01/")
 {
 
    // Data histograms
@@ -88,6 +88,8 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_87_10_20/")
 
    TH2F *ZposvsEvH = new TH2F("ZposvsEvH", "ZposvsEvH", 200, -100, 100, 1000, 0, 10000);
 
+   TH2F *ZposvsRad = new TH2F("ZposvsRad", "ZposvsRad", 200, -100, 100, 1000, 0, 10);
+   
    // Cut for gs 75-76 mm vertex
    TCutG *cutGS = new TCutG("CUTGS", 8);
    cutGS->SetVarX("Ang_Ener_Xtr");
@@ -116,7 +118,7 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_87_10_20/")
    Double_t m_a = 4.00260325415 * 931.49401;
    Double_t m_O16 = 15.99491461956 * 931.49401;
 
-   Double_t Ebeam_buff = 160.0; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
+   Double_t Ebeam_buff = 165.0; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
    Double_t m_b;
    Double_t m_B;
 
@@ -124,7 +126,7 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_87_10_20/")
    m_B = m_O16;
 
    // Find every valid file
-   std::system("find ./data_t30_t0_87_10_20 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
+   std::system("find ./data_t20_t0_87_10_20_cov01 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
    // >test.txt"
    // std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::ifstream file;
@@ -224,19 +226,28 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_87_10_20/")
          for (Int_t i = 0; i < nentries; i++) {
             outputTree->GetEntry(i);
 
+	    
+
             // if ((IC > 900 && IC < 1500)) {
             // From std::vector
             assert(EFitVec->size() == AFitVec->size());
 
             for (auto index = 0; index < EFitVec->size(); ++index) {
 
-	      if ((*POCAXtrVec)[index]<1.0) {
+	      Double_t rad = TMath::Sqrt((*xiniFitXtrVec)[index]*(*xiniFitXtrVec)[index] + (*yiniFitXtrVec)[index]*(*yiniFitXtrVec)[index]);
 
-            if ((*ziniFitXtrVec)[index] > 0.0 && (*ziniFitXtrVec)[index] < 10.0) {
+	      Ang_Ener_PRA->Fill(APRA, EPRA);
+	      
+	      if ((*POCAXtrVec)[index]<100.0) {
+
+            if ((*ziniFitXtrVec)[index] > 23.0 && (*ziniFitXtrVec)[index] < 26.0) {
 
                Double_t angle = (*AFitVec)[index];
 
-               if (angle > 0 && angle < 180) {
+	       if((*xiniFitVec)[index]>1.0)
+	       {
+
+               if (angle > 40 && angle < 75) {
 
                   if (dataFile.find("sim") != std::string::npos) {
                      angle = (*AFitVec)[index];
@@ -245,9 +256,10 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_87_10_20/")
 
                      if ((*EFitVec)[index] < 1000) {
 
+		       if(rad<100.5){
+
                         // if((*AFitVec)[index]>20.0 && (*EFitVec)[index]>4.0){
-                        // if( ((*xiniFitXtrVec)[index]<0.2 && (*xiniFitXtrVec)[index]>-0.0) &&
-                        // ((*yiniFitXtrVec)[index]<-0.1 && (*yiniFitXtrVec)[index]>-0.3) ){
+                        // if( ((*xiniFitXtrVec)[index]<2.2 && (*xiniFitXtrVec)[index]>-0.0) && ((*yiniFitXtrVec)[index]<-0.7 && (*yiniFitXtrVec)[index]>-3.7) ){
                         Ang_Ener->Fill(angle, (*EFitVec)[index]);
                         HQval->Fill((*ExVec)[index]);
                         Ang_Ener_Xtr->Fill((angle), (*EFitXtrVec)[index]);
@@ -260,14 +272,16 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_87_10_20/")
                         POCAXtrH->Fill((*POCAXtrVec)[index]);
                         tracklengthH->Fill((*trackLengthVec)[index]);
                         ZposvsEvH->Fill((*ziniFitXtrVec)[index], i * fileCnt);
-                        // }// x-y
+			Double_t rad = TMath::Sqrt((*xiniFitXtrVec)[index]*(*xiniFitXtrVec)[index] + (*yiniFitXtrVec)[index]*(*yiniFitXtrVec)[index]);
+			ZposvsRad->Fill((*ziniFitXtrVec)[index],rad);
+			// }// x-y
                         //}//Energy and angle
 
                         // 	  	}//IC
 
                         HIC->Fill(IC);
 
-                        Ang_Ener_PRA->Fill(APRA, EPRA);
+                        
 
                         // HQval->Fill(Ex);
                         hxpos_fit->Fill((*xiniFitVec)[index]);
@@ -286,7 +300,7 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_87_10_20/")
                         x_Phi->Fill(xiniFit, PhiFit * TMath::RadToDeg());
                         y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
 
-                        QvsXpos->Fill(Ex, xiniFit);
+                        QvsXpos->Fill(Ex,(*xiniFitVec)[index]);
 
                         // Excitation energy
                         Double_t ex_energy_exp =
@@ -305,8 +319,10 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_87_10_20/")
 
                         // HQval->Fill(Ex);
                      }
+		     }//Xini
+		     }//Rad
                   } // Z vertex
-                    // }//X-Y
+		  //}//X-Y
                }    // POCA
             }       // Angle
          }          // Track length
@@ -510,7 +526,7 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_87_10_20/")
    x_y_Fit->Draw("zcol");
 
    TCanvas *c7 = new TCanvas();
-   c7->Divide(2, 1);
+   c7->Divide(2, 2);
    c7->Draw();
    c7->cd(1);
    HQval_Xtr_recalc->Draw();
@@ -518,4 +534,6 @@ void plotFit_full(std::string fileFolder = "data_t30_t0_87_10_20/")
    HQval_Xtr_recalc_cutgs->Draw();
    c7->cd(3);
    QvsEb->Draw("zcol");
+   c7->cd(4);
+   ZposvsRad->Draw("zcol");
 }

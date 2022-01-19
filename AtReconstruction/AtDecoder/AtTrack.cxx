@@ -259,8 +259,8 @@ void AtTrack::AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster)
 
 void AtTrack::ResetHitClusterArray()
 {
-  fHitClusterArray.clear();
-}  
+   fHitClusterArray.clear();
+}
 
 TVector3 AtTrack::GetLastPoint()
 {

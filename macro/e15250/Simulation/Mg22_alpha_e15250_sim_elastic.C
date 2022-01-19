@@ -16,8 +16,7 @@ void Mg22_alpha_e15250_sim_elastic(Int_t nEvents = 10000, TString mcEngine = "TG
 
   //gSystem->Load("libAtGen.so");
 
-  AtVertexPropagator* vertex_prop = new AtVertexPropagator();
-
+  AtVertexPropagator *vertex_prop = new AtVertexPropagator();
 
   // -----   Create simulation run   ----------------------------------------
   FairRunSim* run = new FairRunSim();
@@ -77,12 +76,11 @@ void Mg22_alpha_e15250_sim_elastic(Int_t nEvents = 10000, TString mcEngine = "TG
   Double_t NomEnergy = 120.0; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
   Double_t TargetMass = 4.00150618;//Mass in GeV
 
+  AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
+  ionGen->SetSpotRadius(0, -100, 0);
+  // add the ion generator
 
-	AtTPCIonGenerator* ionGen = new AtTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
-	ionGen->SetSpotRadius(0,-100,0);
-	// add the ion generator
-
-	primGen->AddGenerator(ionGen);
+  primGen->AddGenerator(ionGen);
 
   //primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track added to the Primary Generator
 	// primGen->SetTarget(30,0);
@@ -150,7 +148,8 @@ void Mg22_alpha_e15250_sim_elastic(Int_t nEvents = 10000, TString mcEngine = "TG
   Double_t ThetaMinCMS = 10.0;
   Double_t ThetaMaxCMS = 90.0;
 
-  AtTPC2Body* TwoBody = new AtTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
+  AtTPC2Body *TwoBody =
+     new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);
   primGen->AddGenerator(TwoBody);
 
 	run->SetGenerator(primGen);

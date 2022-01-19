@@ -174,7 +174,8 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
 
       track.SetTrackID(clusterIndex);
       ClusterizeSmooth3D(track, 15.0, 30.5); //10.5,20.0
-
+      //Clusterize3D(track, 15.0, 30.5); //10.5,20.0
+      
       if (kSetPrunning)
          PruneTrack(track);
 

@@ -91,6 +91,8 @@ int main(int argc, char *argv[])
    Double_t m_b;
    Double_t m_B;
 
+   Float_t gasMediumDensity = 0.13129;
+   
    TString elossFileName = "deuteron_D2_1bar.txt";
 
    switch (fitDirection) {
@@ -148,7 +150,7 @@ int main(int argc, char *argv[])
    if(simulationConv)
      filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/";
      else    
-   filePath = "/mnt/analysis/e20009/root_files/";
+   filePath = dir + "/macro/Unpack_HDF5/e20009/";
 
    TString fileName = "run_0108.root";
 
@@ -174,7 +176,7 @@ int main(int argc, char *argv[])
    if (fInteractiveMode)
       display = genfit::EventDisplay::getInstance();
 
-   AtFITTER::AtFitter *fFitter = new AtFITTER::AtGenfit(magneticField, 0.00001, 1000.0, eLossFileNameWithPath.Data());
+   AtFITTER::AtFitter *fFitter = new AtFITTER::AtGenfit(magneticField, 0.00001, 1000.0, eLossFileNameWithPath.Data(),gasMediumDensity);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetPDGCode(particlePDG);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetMass(particleMass);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetAtomicNumber(atomicNumber);
@@ -233,6 +235,11 @@ int main(int argc, char *argv[])
    std::vector<Float_t> trackLengthVec;
    std::vector<Float_t> POCAXtrVec;
    std::vector<Int_t> trackIDVec;
+   std::vector<Float_t> fChi2Vec; 
+   std::vector<Float_t> bChi2Vec;
+   std::vector<Float_t> fNdfVec;
+   std::vector<Float_t> bNdfVec;
+
 
    TString simFile;
 
@@ -296,7 +303,12 @@ int main(int argc, char *argv[])
    outputTree->Branch("trackLengthVec", &trackLengthVec);
    outputTree->Branch("POCAXtrVec", &POCAXtrVec);
    outputTree->Branch("trackIDVec", &trackIDVec);
-
+   outputTree->Branch("fChi2Vec",&fChi2Vec); 
+   outputTree->Branch("bChi2Vec",&bChi2Vec);
+   outputTree->Branch("fNdfVec",&fNdfVec);
+   outputTree->Branch("bNdfVec",&bNdfVec);
+   
+   
    for (auto iFile = 0; iFile < files.size(); ++iFile) {
 
      //fileNameWithPath = dir + filePath + files.at(iFile).Data();
@@ -372,7 +384,12 @@ int main(int argc, char *argv[])
         trackLengthVec.clear();
         POCAXtrVec.clear();
         trackIDVec.clear();
+	fChi2Vec.clear(); 
+        bChi2Vec.clear();
+	fNdfVec.clear();
+	bNdfVec.clear();
 
+	
         std::cout << cGREEN << " Event Number : " << i << cNORMAL << "\n";
 
         Reader1.Next();
@@ -409,8 +426,8 @@ int main(int argc, char *argv[])
               trackID = track.GetTrackID();
               trackIDVec.push_back(trackID);
 
-              if (track.GetIsNoise() || track.GetHitClusterArray()->size() < 5) {
-                 std::cout << cRED << " Track is noise or has less than 5 clusters! " << cNORMAL << "\n";
+              if (track.GetIsNoise() || track.GetHitClusterArray()->size() < 3) {
+                 std::cout << cRED << " Track is noise or has less than 3 clusters! " << cNORMAL << "\n";
                  continue;
               }
 
@@ -518,9 +535,13 @@ int main(int argc, char *argv[])
                     auto trackRep = fitTrack->getTrackRep(0); // Only one representation is sved for the moment.
 
                     if (KalmanFitStatus->isFitConverged(false)) {
-                       // KalmanFitStatus->Print();
+		       // KalmanFitStatus->Print();
                        genfit::MeasuredStateOnPlane fitState = fitTrack->getFittedState();
-                       // fitState.Print();
+		       fChi2 = KalmanFitStatus->getForwardChi2();
+		       bChi2 = KalmanFitStatus->getBackwardChi2();
+		       fNdf  = KalmanFitStatus->getForwardNdf();
+		       bNdf  = KalmanFitStatus->getBackwardNdf();
+		       // fitState.Print();
                        fitState.getPosMomCov(pos_res, mom_res, cov_res);
                        trackLength = KalmanFitStatus->getTrackLen();
                        pVal = KalmanFitStatus->getPVal();
@@ -655,6 +676,12 @@ int main(int argc, char *argv[])
               ExVec.push_back(Ex);
               ExXtrVec.push_back(ExXtr);
 
+	      fChi2Vec.push_back(fChi2); 
+              bChi2Vec.push_back(bChi2);
+	      fNdfVec.push_back(fNdf);
+	      bNdfVec.push_back(bNdf);
+
+	      
            } // track loop
 
            outputTree->Fill();

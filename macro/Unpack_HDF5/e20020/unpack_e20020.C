@@ -82,10 +82,10 @@ void unpack_e20020(TString fileName)
   AtPRAtask *praTask = new AtPRAtask();
   praTask->SetPersistence(kTRUE);
   praTask->SetTcluster(5.0);
-  //praTask->SetPrunning();
-  //praTask->SetkNN(20);
-  //praTask->SetStdDevMulkNN(0);
-  //praTask->SetkNNDist(20);
+  // praTask->SetPrunning();
+  // praTask->SetkNN(20);
+  // praTask->SetStdDevMulkNN(0);
+  // praTask->SetkNNDist(20);
 
   run -> AddTask(HDFParserTask);
   run -> AddTask(psaTask);

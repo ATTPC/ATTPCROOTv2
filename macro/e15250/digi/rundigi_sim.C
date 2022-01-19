@@ -1,8 +1,7 @@
-void rundigi_sim
-(TString mcFile = "../data/attpcsim_e15250.root",
- TString digiParFile = "../../../parameters/ATTPC.e20020_sim.par",
- TString mapParFile = "../../../scripts/Lookup20150611.txt",
- TString trigParFile = "../../../parameters/AT.trigger.par")
+void rundigi_sim(TString mcFile = "../data/attpcsim_e15250.root",
+                 TString digiParFile = "../../../parameters/ATTPC.e20020_sim.par",
+                 TString mapParFile = "../../../scripts/Lookup20150611.txt",
+                 TString trigParFile = "../../../parameters/AT.trigger.par")
 {
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -22,25 +21,25 @@ void rundigi_sim
   rtdb -> setSecondInput(parIo2);
   
   // __ AT digi tasks___________________________________
-  AtClusterizeTask* clusterizer = new AtClusterizeTask();
+  AtClusterizeTask *clusterizer = new AtClusterizeTask();
   clusterizer -> SetPersistence(kFALSE);
-  
-  AtPulseTask* pulse = new AtPulseTask();
+
+  AtPulseTask *pulse = new AtPulseTask();
   pulse -> SetPersistence(kTRUE);
 
-   AtPSASimple2 *psa = new AtPSASimple2();
-   // psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
-   // psa -> SetBaseCorrection(kFALSE);
-   // psa -> SetTimeCorrection(kFALSE);
+  AtPSASimple2 *psa = new AtPSASimple2();
+  // psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
+  // psa -> SetBaseCorrection(kFALSE);
+  // psa -> SetTimeCorrection(kFALSE);
 
-   AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetPersistence(kTRUE);
-   psa->SetThreshold(3);
-   psa->SetMaxFinder();
+  AtPSAtask *psaTask = new AtPSAtask(psa);
+  psaTask->SetPersistence(kTRUE);
+  psa->SetThreshold(3);
+  psa->SetMaxFinder();
 
-   AtPRAtask *praTask = new AtPRAtask();
-   praTask->SetPersistence(kTRUE);
-  
+  AtPRAtask *praTask = new AtPRAtask();
+  praTask->SetPersistence(kTRUE);
+
   fRun -> AddTask(clusterizer);
   fRun -> AddTask(pulse);
   fRun -> AddTask(psaTask);
@@ -50,8 +49,8 @@ void rundigi_sim
   
   // __ Init and run ___________________________________
   fRun -> Init();
-  fRun -> Run(0,10000);
-  
+  fRun->Run(0, 10000);
+
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
   // -----   Finish   -------------------------------------------------------

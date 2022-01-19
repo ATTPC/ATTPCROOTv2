@@ -4,7 +4,7 @@
 <ID>1</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>18</PadID>
 </LookupGADGET08232021>
@@ -12,7 +12,7 @@
 <ID>2</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>0</PadID>
 </LookupGADGET08232021>
@@ -20,7 +20,7 @@
 <ID>3</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>88</PadID>
 </LookupGADGET08232021>
@@ -28,7 +28,7 @@
 <ID>4</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>71</PadID>
 </LookupGADGET08232021>
@@ -36,7 +36,7 @@
 <ID>5</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>154</PadID>
 </LookupGADGET08232021>
@@ -44,7 +44,7 @@
 <ID>6</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>138</PadID>
 </LookupGADGET08232021>
@@ -52,7 +52,7 @@
 <ID>7</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>185</PadID>
 </LookupGADGET08232021>
@@ -60,7 +60,7 @@
 <ID>8</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>186</PadID>
 </LookupGADGET08232021>
@@ -68,7 +68,7 @@
 <ID>9</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>211</PadID>
 </LookupGADGET08232021>
@@ -76,7 +76,7 @@
 <ID>10</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>199</PadID>
 </LookupGADGET08232021>
@@ -84,7 +84,7 @@
 <ID>11</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>225</PadID>
 </LookupGADGET08232021>
@@ -92,7 +92,7 @@
 <ID>12</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>223</PadID>
 </LookupGADGET08232021>
@@ -100,7 +100,7 @@
 <ID>13</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>237</PadID>
 </LookupGADGET08232021>
@@ -108,7 +108,7 @@
 <ID>14</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>234</PadID>
 </LookupGADGET08232021>
@@ -116,7 +116,7 @@
 <ID>15</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>246</PadID>
 </LookupGADGET08232021>
@@ -124,7 +124,7 @@
 <ID>16</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>243</PadID>
 </LookupGADGET08232021>
@@ -132,7 +132,7 @@
 <ID>17</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>252</PadID>
 </LookupGADGET08232021>
@@ -140,7 +140,7 @@
 <ID>18</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>250</PadID>
 </LookupGADGET08232021>
@@ -148,7 +148,7 @@
 <ID>19</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>90</PadID>
 </LookupGADGET08232021>
@@ -156,7 +156,7 @@
 <ID>20</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>188</PadID>
 </LookupGADGET08232021>
@@ -164,7 +164,7 @@
 <ID>21</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>107</PadID>
 </LookupGADGET08232021>
@@ -172,7 +172,7 @@
 <ID>22</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>75</PadID>
 </LookupGADGET08232021>
@@ -180,7 +180,7 @@
 <ID>23</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>171</PadID>
 </LookupGADGET08232021>
@@ -188,7 +188,7 @@
 <ID>24</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>38</PadID>
 </LookupGADGET08232021>
@@ -196,7 +196,7 @@
 <ID>25</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>108</PadID>
 </LookupGADGET08232021>
@@ -204,7 +204,7 @@
 <ID>26</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>74</PadID>
 </LookupGADGET08232021>
@@ -212,7 +212,7 @@
 <ID>27</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>172</PadID>
 </LookupGADGET08232021>
@@ -220,7 +220,7 @@
 <ID>28</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>106</PadID>
 </LookupGADGET08232021>
@@ -228,7 +228,7 @@
 <ID>29</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>55</PadID>
 </LookupGADGET08232021>
@@ -236,7 +236,7 @@
 <ID>30</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>89</PadID>
 </LookupGADGET08232021>
@@ -244,7 +244,7 @@
 <ID>31</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>157</PadID>
 </LookupGADGET08232021>
@@ -252,7 +252,7 @@
 <ID>32</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>155</PadID>
 </LookupGADGET08232021>
@@ -260,7 +260,7 @@
 <ID>33</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>36</PadID>
 </LookupGADGET08232021>
@@ -268,7 +268,7 @@
 <ID>34</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>54</PadID>
 </LookupGADGET08232021>
@@ -276,7 +276,7 @@
 <ID>35</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>105</PadID>
 </LookupGADGET08232021>
@@ -284,7 +284,7 @@
 <ID>36</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>122</PadID>
 </LookupGADGET08232021>
@@ -292,7 +292,7 @@
 <ID>37</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>169</PadID>
 </LookupGADGET08232021>
@@ -300,7 +300,7 @@
 <ID>38</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>184</PadID>
 </LookupGADGET08232021>
@@ -308,7 +308,7 @@
 <ID>39</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>198</PadID>
 </LookupGADGET08232021>
@@ -316,7 +316,7 @@
 <ID>40</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>200</PadID>
 </LookupGADGET08232021>
@@ -324,7 +324,7 @@
 <ID>41</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>213</PadID>
 </LookupGADGET08232021>
@@ -332,7 +332,7 @@
 <ID>42</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>212</PadID>
 </LookupGADGET08232021>
@@ -340,7 +340,7 @@
 <ID>43</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>226</PadID>
 </LookupGADGET08232021>
@@ -348,7 +348,7 @@
 <ID>44</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>224</PadID>
 </LookupGADGET08232021>
@@ -356,7 +356,7 @@
 <ID>45</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>236</PadID>
 </LookupGADGET08232021>
@@ -364,7 +364,7 @@
 <ID>46</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>235</PadID>
 </LookupGADGET08232021>
@@ -372,7 +372,7 @@
 <ID>47</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>245</PadID>
 </LookupGADGET08232021>
@@ -380,7 +380,7 @@
 <ID>48</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>244</PadID>
 </LookupGADGET08232021>
@@ -388,7 +388,7 @@
 <ID>49</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>251</PadID>
 </LookupGADGET08232021>
@@ -396,7 +396,7 @@
 <ID>50</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>156</PadID>
 </LookupGADGET08232021>
@@ -404,7 +404,7 @@
 <ID>51</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>124</PadID>
 </LookupGADGET08232021>
@@ -412,7 +412,7 @@
 <ID>52</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>56</PadID>
 </LookupGADGET08232021>
@@ -420,7 +420,7 @@
 <ID>53</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>73</PadID>
 </LookupGADGET08232021>
@@ -428,7 +428,7 @@
 <ID>54</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>140</PadID>
 </LookupGADGET08232021>
@@ -436,7 +436,7 @@
 <ID>55</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>37</PadID>
 </LookupGADGET08232021>
@@ -444,7 +444,7 @@
 <ID>56</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>214</PadID>
 </LookupGADGET08232021>
@@ -452,7 +452,7 @@
 <ID>57</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>72</PadID>
 </LookupGADGET08232021>
@@ -460,7 +460,7 @@
 <ID>58</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>141</PadID>
 </LookupGADGET08232021>
@@ -468,7 +468,7 @@
 <ID>59</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>139</PadID>
 </LookupGADGET08232021>
@@ -476,7 +476,7 @@
 <ID>60</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>201</PadID>
 </LookupGADGET08232021>
@@ -484,7 +484,7 @@
 <ID>61</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>123</PadID>
 </LookupGADGET08232021>
@@ -492,7 +492,7 @@
 <ID>62</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>125</PadID>
 </LookupGADGET08232021>
@@ -500,7 +500,7 @@
 <ID>63</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>170</PadID>
 </LookupGADGET08232021>
@@ -508,7 +508,7 @@
 <ID>64</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>187</PadID>
 </LookupGADGET08232021>
@@ -516,7 +516,7 @@
 <ID>65</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>91</PadID>
 </LookupGADGET08232021>
@@ -524,7 +524,7 @@
 <ID>66</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>253</PadID>
 </LookupGADGET08232021>
@@ -532,7 +532,7 @@
 <ID>67</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>203</PadID>
 </LookupGADGET08232021>
@@ -540,7 +540,7 @@
 <ID>68</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>241</PadID>
 </LookupGADGET08232021>
@@ -548,7 +548,7 @@
 <ID>69</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>215</PadID>
 </LookupGADGET08232021>
@@ -556,7 +556,7 @@
 <ID>70</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>247</PadID>
 </LookupGADGET08232021>
@@ -564,7 +564,7 @@
 <ID>71</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>160</PadID>
 </LookupGADGET08232021>
@@ -572,7 +572,7 @@
 <ID>72</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>217</PadID>
 </LookupGADGET08232021>
@@ -580,7 +580,7 @@
 <ID>73</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>190</PadID>
 </LookupGADGET08232021>
@@ -588,7 +588,7 @@
 <ID>74</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>240</PadID>
 </LookupGADGET08232021>
@@ -596,7 +596,7 @@
 <ID>75</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>109</PadID>
 </LookupGADGET08232021>
@@ -604,7 +604,7 @@
 <ID>76</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>202</PadID>
 </LookupGADGET08232021>
@@ -612,7 +612,7 @@
 <ID>77</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>248</PadID>
 </LookupGADGET08232021>
@@ -620,7 +620,7 @@
 <ID>78</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>175</PadID>
 </LookupGADGET08232021>
@@ -628,7 +628,7 @@
 <ID>79</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>228</PadID>
 </LookupGADGET08232021>
@@ -636,7 +636,7 @@
 <ID>80</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>239</PadID>
 </LookupGADGET08232021>
@@ -644,7 +644,7 @@
 <ID>81</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>174</PadID>
 </LookupGADGET08232021>
@@ -652,7 +652,7 @@
 <ID>82</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>189</PadID>
 </LookupGADGET08232021>
@@ -660,7 +660,7 @@
 <ID>83</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>219</PadID>
 </LookupGADGET08232021>
@@ -668,7 +668,7 @@
 <ID>84</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>233</PadID>
 </LookupGADGET08232021>
@@ -676,7 +676,7 @@
 <ID>85</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>206</PadID>
 </LookupGADGET08232021>
@@ -684,7 +684,7 @@
 <ID>86</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>222</PadID>
 </LookupGADGET08232021>
@@ -692,7 +692,7 @@
 <ID>87</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>209</PadID>
 </LookupGADGET08232021>
@@ -700,7 +700,7 @@
 <ID>88</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>208</PadID>
 </LookupGADGET08232021>
@@ -708,7 +708,7 @@
 <ID>89</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>193</PadID>
 </LookupGADGET08232021>
@@ -716,7 +716,7 @@
 <ID>90</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>192</PadID>
 </LookupGADGET08232021>
@@ -724,7 +724,7 @@
 <ID>91</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>178</PadID>
 </LookupGADGET08232021>
@@ -732,7 +732,7 @@
 <ID>92</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>177</PadID>
 </LookupGADGET08232021>
@@ -740,7 +740,7 @@
 <ID>93</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>146</PadID>
 </LookupGADGET08232021>
@@ -748,7 +748,7 @@
 <ID>94</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>162</PadID>
 </LookupGADGET08232021>
@@ -756,7 +756,7 @@
 <ID>95</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>127</PadID>
 </LookupGADGET08232021>
@@ -764,7 +764,7 @@
 <ID>96</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>128</PadID>
 </LookupGADGET08232021>
@@ -772,7 +772,7 @@
 <ID>97</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>242</PadID>
 </LookupGADGET08232021>
@@ -780,7 +780,7 @@
 <ID>98</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>159</PadID>
 </LookupGADGET08232021>
@@ -788,7 +788,7 @@
 <ID>99</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>238</PadID>
 </LookupGADGET08232021>
@@ -796,7 +796,7 @@
 <ID>100</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>218</PadID>
 </LookupGADGET08232021>
@@ -804,7 +804,7 @@
 <ID>101</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>231</PadID>
 </LookupGADGET08232021>
@@ -812,7 +812,7 @@
 <ID>102</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>227</PadID>
 </LookupGADGET08232021>
@@ -820,7 +820,7 @@
 <ID>103</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>158</PadID>
 </LookupGADGET08232021>
@@ -828,7 +828,7 @@
 <ID>104</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>92</PadID>
 </LookupGADGET08232021>
@@ -836,7 +836,7 @@
 <ID>105</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>204</PadID>
 </LookupGADGET08232021>
@@ -844,7 +844,7 @@
 <ID>106</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>126</PadID>
 </LookupGADGET08232021>
@@ -852,7 +852,7 @@
 <ID>107</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>142</PadID>
 </LookupGADGET08232021>
@@ -860,7 +860,7 @@
 <ID>108</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>229</PadID>
 </LookupGADGET08232021>
@@ -868,7 +868,7 @@
 <ID>109</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>173</PadID>
 </LookupGADGET08232021>
@@ -876,7 +876,7 @@
 <ID>110</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>249</PadID>
 </LookupGADGET08232021>
@@ -884,7 +884,7 @@
 <ID>111</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>230</PadID>
 </LookupGADGET08232021>
@@ -892,7 +892,7 @@
 <ID>112</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>216</PadID>
 </LookupGADGET08232021>
@@ -900,7 +900,7 @@
 <ID>113</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>143</PadID>
 </LookupGADGET08232021>
@@ -908,7 +908,7 @@
 <ID>114</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>232</PadID>
 </LookupGADGET08232021>
@@ -916,7 +916,7 @@
 <ID>115</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>220</PadID>
 </LookupGADGET08232021>
@@ -924,7 +924,7 @@
 <ID>116</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>221</PadID>
 </LookupGADGET08232021>
@@ -932,7 +932,7 @@
 <ID>117</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>205</PadID>
 </LookupGADGET08232021>
@@ -940,7 +940,7 @@
 <ID>118</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>207</PadID>
 </LookupGADGET08232021>
@@ -948,7 +948,7 @@
 <ID>119</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>210</PadID>
 </LookupGADGET08232021>
@@ -956,7 +956,7 @@
 <ID>120</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>191</PadID>
 </LookupGADGET08232021>
@@ -964,7 +964,7 @@
 <ID>121</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>194</PadID>
 </LookupGADGET08232021>
@@ -972,7 +972,7 @@
 <ID>122</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>176</PadID>
 </LookupGADGET08232021>
@@ -980,7 +980,7 @@
 <ID>123</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>179</PadID>
 </LookupGADGET08232021>
@@ -988,7 +988,7 @@
 <ID>124</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>161</PadID>
 </LookupGADGET08232021>
@@ -996,7 +996,7 @@
 <ID>125</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>145</PadID>
 </LookupGADGET08232021>
@@ -1004,7 +1004,7 @@
 <ID>126</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>144</PadID>
 </LookupGADGET08232021>
@@ -1012,7 +1012,7 @@
 <ID>127</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>111</PadID>
 </LookupGADGET08232021>
@@ -1020,7 +1020,7 @@
 <ID>128</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>110</PadID>
 </LookupGADGET08232021>
@@ -1028,7 +1028,7 @@
 <ID>129</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>129</PadID>
 </LookupGADGET08232021>
@@ -1036,7 +1036,7 @@
 <ID>130</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>94</PadID>
 </LookupGADGET08232021>
@@ -1044,7 +1044,7 @@
 <ID>131</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>130</PadID>
 </LookupGADGET08232021>
@@ -1052,7 +1052,7 @@
 <ID>132</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>113</PadID>
 </LookupGADGET08232021>
@@ -1060,7 +1060,7 @@
 <ID>133</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>195</PadID>
 </LookupGADGET08232021>
@@ -1068,7 +1068,7 @@
 <ID>134</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>131</PadID>
 </LookupGADGET08232021>
@@ -1076,7 +1076,7 @@
 <ID>135</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>180</PadID>
 </LookupGADGET08232021>
@@ -1084,7 +1084,7 @@
 <ID>136</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>132</PadID>
 </LookupGADGET08232021>
@@ -1092,7 +1092,7 @@
 <ID>137</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>-1</PadID>
 </LookupGADGET08232021>
@@ -1100,7 +1100,7 @@
 <ID>138</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>133</PadID>
 </LookupGADGET08232021>
@@ -1108,7 +1108,7 @@
 <ID>139</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>134</PadID>
 </LookupGADGET08232021>
@@ -1116,7 +1116,7 @@
 <ID>140</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>166</PadID>
 </LookupGADGET08232021>
@@ -1124,7 +1124,7 @@
 <ID>141</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>167</PadID>
 </LookupGADGET08232021>
@@ -1132,7 +1132,7 @@
 <ID>142</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>182</PadID>
 </LookupGADGET08232021>
@@ -1140,7 +1140,7 @@
 <ID>143</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>96</PadID>
 </LookupGADGET08232021>
@@ -1148,7 +1148,7 @@
 <ID>144</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>168</PadID>
 </LookupGADGET08232021>
@@ -1156,7 +1156,7 @@
 <ID>145</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>136</PadID>
 </LookupGADGET08232021>
@@ -1164,7 +1164,7 @@
 <ID>146</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>101</PadID>
 </LookupGADGET08232021>
@@ -1172,7 +1172,7 @@
 <ID>147</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>81</PadID>
 </LookupGADGET08232021>
@@ -1180,7 +1180,7 @@
 <ID>148</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>121</PadID>
 </LookupGADGET08232021>
@@ -1188,7 +1188,7 @@
 <ID>149</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>79</PadID>
 </LookupGADGET08232021>
@@ -1196,7 +1196,7 @@
 <ID>150</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>119</PadID>
 </LookupGADGET08232021>
@@ -1204,7 +1204,7 @@
 <ID>151</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>117</PadID>
 </LookupGADGET08232021>
@@ -1212,7 +1212,7 @@
 <ID>152</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>78</PadID>
 </LookupGADGET08232021>
@@ -1220,7 +1220,7 @@
 <ID>153</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>80</PadID>
 </LookupGADGET08232021>
@@ -1228,7 +1228,7 @@
 <ID>154</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>76</PadID>
 </LookupGADGET08232021>
@@ -1236,7 +1236,7 @@
 <ID>155</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>152</PadID>
 </LookupGADGET08232021>
@@ -1244,7 +1244,7 @@
 <ID>156</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>85</PadID>
 </LookupGADGET08232021>
@@ -1252,7 +1252,7 @@
 <ID>157</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>86</PadID>
 </LookupGADGET08232021>
@@ -1260,7 +1260,7 @@
 <ID>158</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>135</PadID>
 </LookupGADGET08232021>
@@ -1268,7 +1268,7 @@
 <ID>159</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>153</PadID>
 </LookupGADGET08232021>
@@ -1276,7 +1276,7 @@
 <ID>160</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>97</PadID>
 </LookupGADGET08232021>
@@ -1284,7 +1284,7 @@
 <ID>161</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>95</PadID>
 </LookupGADGET08232021>
@@ -1292,7 +1292,7 @@
 <ID>162</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>112</PadID>
 </LookupGADGET08232021>
@@ -1300,7 +1300,7 @@
 <ID>163</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>163</PadID>
 </LookupGADGET08232021>
@@ -1308,7 +1308,7 @@
 <ID>164</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>147</PadID>
 </LookupGADGET08232021>
@@ -1316,7 +1316,7 @@
 <ID>165</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>164</PadID>
 </LookupGADGET08232021>
@@ -1324,7 +1324,7 @@
 <ID>166</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>148</PadID>
 </LookupGADGET08232021>
@@ -1332,7 +1332,7 @@
 <ID>167</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>165</PadID>
 </LookupGADGET08232021>
@@ -1340,7 +1340,7 @@
 <ID>168</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>149</PadID>
 </LookupGADGET08232021>
@@ -1348,7 +1348,7 @@
 <ID>169</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>196</PadID>
 </LookupGADGET08232021>
@@ -1356,7 +1356,7 @@
 <ID>170</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>181</PadID>
 </LookupGADGET08232021>
@@ -1364,7 +1364,7 @@
 <ID>171</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>150</PadID>
 </LookupGADGET08232021>
@@ -1372,7 +1372,7 @@
 <ID>172</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>197</PadID>
 </LookupGADGET08232021>
@@ -1380,7 +1380,7 @@
 <ID>173</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>151</PadID>
 </LookupGADGET08232021>
@@ -1388,7 +1388,7 @@
 <ID>174</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>183</PadID>
 </LookupGADGET08232021>
@@ -1396,7 +1396,7 @@
 <ID>175</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>98</PadID>
 </LookupGADGET08232021>
@@ -1404,7 +1404,7 @@
 <ID>176</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>99</PadID>
 </LookupGADGET08232021>
@@ -1412,7 +1412,7 @@
 <ID>177</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>102</PadID>
 </LookupGADGET08232021>
@@ -1420,7 +1420,7 @@
 <ID>178</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>103</PadID>
 </LookupGADGET08232021>
@@ -1428,7 +1428,7 @@
 <ID>179</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>104</PadID>
 </LookupGADGET08232021>
@@ -1436,7 +1436,7 @@
 <ID>180</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>115</PadID>
 </LookupGADGET08232021>
@@ -1444,7 +1444,7 @@
 <ID>181</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>77</PadID>
 </LookupGADGET08232021>
@@ -1452,7 +1452,7 @@
 <ID>182</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>83</PadID>
 </LookupGADGET08232021>
@@ -1460,7 +1460,7 @@
 <ID>183</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>116</PadID>
 </LookupGADGET08232021>
@@ -1468,7 +1468,7 @@
 <ID>184</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>120</PadID>
 </LookupGADGET08232021>
@@ -1476,7 +1476,7 @@
 <ID>185</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>114</PadID>
 </LookupGADGET08232021>
@@ -1484,7 +1484,7 @@
 <ID>186</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>118</PadID>
 </LookupGADGET08232021>
@@ -1492,7 +1492,7 @@
 <ID>187</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>84</PadID>
 </LookupGADGET08232021>
@@ -1500,7 +1500,7 @@
 <ID>188</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>87</PadID>
 </LookupGADGET08232021>
@@ -1508,7 +1508,7 @@
 <ID>189</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>100</PadID>
 </LookupGADGET08232021>
@@ -1516,7 +1516,7 @@
 <ID>190</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>137</PadID>
 </LookupGADGET08232021>
@@ -1524,7 +1524,7 @@
 <ID>191</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>59</PadID>
 </LookupGADGET08232021>
@@ -1532,7 +1532,7 @@
 <ID>192</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>254</PadID>
 </LookupGADGET08232021>
@@ -1540,7 +1540,7 @@
 <ID>193</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>28</PadID>
 </LookupGADGET08232021>
@@ -1548,7 +1548,7 @@
 <ID>194</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>65</PadID>
 </LookupGADGET08232021>
@@ -1556,7 +1556,7 @@
 <ID>195</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>25</PadID>
 </LookupGADGET08232021>
@@ -1564,7 +1564,7 @@
 <ID>196</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>61</PadID>
 </LookupGADGET08232021>
@@ -1572,7 +1572,7 @@
 <ID>197</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>26</PadID>
 </LookupGADGET08232021>
@@ -1580,7 +1580,7 @@
 <ID>198</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>66</PadID>
 </LookupGADGET08232021>
@@ -1588,7 +1588,7 @@
 <ID>199</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>22</PadID>
 </LookupGADGET08232021>
@@ -1596,7 +1596,7 @@
 <ID>200</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>62</PadID>
 </LookupGADGET08232021>
@@ -1604,7 +1604,7 @@
 <ID>201</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>20</PadID>
 </LookupGADGET08232021>
@@ -1612,7 +1612,7 @@
 <ID>202</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>67</PadID>
 </LookupGADGET08232021>
@@ -1620,7 +1620,7 @@
 <ID>203</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>40</PadID>
 </LookupGADGET08232021>
@@ -1628,7 +1628,7 @@
 <ID>204</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>44</PadID>
 </LookupGADGET08232021>
@@ -1636,7 +1636,7 @@
 <ID>205</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>43</PadID>
 </LookupGADGET08232021>
@@ -1644,7 +1644,7 @@
 <ID>206</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>39</PadID>
 </LookupGADGET08232021>
@@ -1652,7 +1652,7 @@
 <ID>207</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>35</PadID>
 </LookupGADGET08232021>
@@ -1660,7 +1660,7 @@
 <ID>208</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>45</PadID>
 </LookupGADGET08232021>
@@ -1668,7 +1668,7 @@
 <ID>209</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>52</PadID>
 </LookupGADGET08232021>
@@ -1676,7 +1676,7 @@
 <ID>210</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>34</PadID>
 </LookupGADGET08232021>
@@ -1684,7 +1684,7 @@
 <ID>211</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>51</PadID>
 </LookupGADGET08232021>
@@ -1692,7 +1692,7 @@
 <ID>212</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>33</PadID>
 </LookupGADGET08232021>
@@ -1700,7 +1700,7 @@
 <ID>213</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>68</PadID>
 </LookupGADGET08232021>
@@ -1708,7 +1708,7 @@
 <ID>214</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>32</PadID>
 </LookupGADGET08232021>
@@ -1716,7 +1716,7 @@
 <ID>215</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>49</PadID>
 </LookupGADGET08232021>
@@ -1724,7 +1724,7 @@
 <ID>216</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>31</PadID>
 </LookupGADGET08232021>
@@ -1732,7 +1732,7 @@
 <ID>217</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>12</PadID>
 </LookupGADGET08232021>
@@ -1740,7 +1740,7 @@
 <ID>218</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>48</PadID>
 </LookupGADGET08232021>
@@ -1748,7 +1748,7 @@
 <ID>219</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>10</PadID>
 </LookupGADGET08232021>
@@ -1756,7 +1756,7 @@
 <ID>220</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>11</PadID>
 </LookupGADGET08232021>
@@ -1764,7 +1764,7 @@
 <ID>221</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>6</PadID>
 </LookupGADGET08232021>
@@ -1772,7 +1772,7 @@
 <ID>222</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>7</PadID>
 </LookupGADGET08232021>
@@ -1780,7 +1780,7 @@
 <ID>223</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>2</PadID>
 </LookupGADGET08232021>
@@ -1788,7 +1788,7 @@
 <ID>224</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>3</PadID>
 </LookupGADGET08232021>
@@ -1796,7 +1796,7 @@
 <ID>225</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>63</PadID>
 </LookupGADGET08232021>
@@ -1804,7 +1804,7 @@
 <ID>226</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>27</PadID>
 </LookupGADGET08232021>
@@ -1812,7 +1812,7 @@
 <ID>227</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>21</PadID>
 </LookupGADGET08232021>
@@ -1820,7 +1820,7 @@
 <ID>228</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>23</PadID>
 </LookupGADGET08232021>
@@ -1828,7 +1828,7 @@
 <ID>229</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>64</PadID>
 </LookupGADGET08232021>
@@ -1836,7 +1836,7 @@
 <ID>230</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>24</PadID>
 </LookupGADGET08232021>
@@ -1844,7 +1844,7 @@
 <ID>231</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>60</PadID>
 </LookupGADGET08232021>
@@ -1852,7 +1852,7 @@
 <ID>232</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>58</PadID>
 </LookupGADGET08232021>
@@ -1860,7 +1860,7 @@
 <ID>233</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>46</PadID>
 </LookupGADGET08232021>
@@ -1868,7 +1868,7 @@
 <ID>234</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>57</PadID>
 </LookupGADGET08232021>
@@ -1876,7 +1876,7 @@
 <ID>235</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>42</PadID>
 </LookupGADGET08232021>
@@ -1884,7 +1884,7 @@
 <ID>236</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>93</PadID>
 </LookupGADGET08232021>
@@ -1892,7 +1892,7 @@
 <ID>237</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>41</PadID>
 </LookupGADGET08232021>
@@ -1900,7 +1900,7 @@
 <ID>238</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>82</PadID>
 </LookupGADGET08232021>
@@ -1908,7 +1908,7 @@
 <ID>239</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>53</PadID>
 </LookupGADGET08232021>
@@ -1916,7 +1916,7 @@
 <ID>240</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>17</PadID>
 </LookupGADGET08232021>
@@ -1924,7 +1924,7 @@
 <ID>241</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>70</PadID>
 </LookupGADGET08232021>
@@ -1932,7 +1932,7 @@
 <ID>242</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>16</PadID>
 </LookupGADGET08232021>
@@ -1940,7 +1940,7 @@
 <ID>243</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>69</PadID>
 </LookupGADGET08232021>
@@ -1948,7 +1948,7 @@
 <ID>244</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>15</PadID>
 </LookupGADGET08232021>
@@ -1956,7 +1956,7 @@
 <ID>245</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>50</PadID>
 </LookupGADGET08232021>
@@ -1964,7 +1964,7 @@
 <ID>246</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>14</PadID>
 </LookupGADGET08232021>
@@ -1972,7 +1972,7 @@
 <ID>247</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>13</PadID>
 </LookupGADGET08232021>
@@ -1980,7 +1980,7 @@
 <ID>248</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>30</PadID>
 </LookupGADGET08232021>
@@ -1988,7 +1988,7 @@
 <ID>249</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>29</PadID>
 </LookupGADGET08232021>
@@ -1996,7 +1996,7 @@
 <ID>250</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>47</PadID>
 </LookupGADGET08232021>
@@ -2004,7 +2004,7 @@
 <ID>251</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>9</PadID>
 </LookupGADGET08232021>
@@ -2012,7 +2012,7 @@
 <ID>252</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>8</PadID>
 </LookupGADGET08232021>
@@ -2020,7 +2020,7 @@
 <ID>253</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>5</PadID>
 </LookupGADGET08232021>
@@ -2028,7 +2028,7 @@
 <ID>254</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>4</PadID>
 </LookupGADGET08232021>
@@ -2036,7 +2036,7 @@
 <ID>255</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>1</PadID>
 </LookupGADGET08232021>
@@ -2044,7 +2044,7 @@
 <ID>256</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>19</PadID>
 </LookupGADGET08232021>
@@ -2052,7 +2052,7 @@
 <ID>257</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>766</PadID>
 </LookupGADGET08232021>
@@ -2060,7 +2060,7 @@
 <ID>258</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>765</PadID>
 </LookupGADGET08232021>
@@ -2068,7 +2068,7 @@
 <ID>259</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>770</PadID>
 </LookupGADGET08232021>
@@ -2076,7 +2076,7 @@
 <ID>260</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>769</PadID>
 </LookupGADGET08232021>
@@ -2084,7 +2084,7 @@
 <ID>261</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>774</PadID>
 </LookupGADGET08232021>
@@ -2092,7 +2092,7 @@
 <ID>262</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>773</PadID>
 </LookupGADGET08232021>
@@ -2100,7 +2100,7 @@
 <ID>263</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>794</PadID>
 </LookupGADGET08232021>
@@ -2108,7 +2108,7 @@
 <ID>264</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>812</PadID>
 </LookupGADGET08232021>
@@ -2116,7 +2116,7 @@
 <ID>265</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>778</PadID>
 </LookupGADGET08232021>
@@ -2124,7 +2124,7 @@
 <ID>266</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>795</PadID>
 </LookupGADGET08232021>
@@ -2132,7 +2132,7 @@
 <ID>267</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>815</PadID>
 </LookupGADGET08232021>
@@ -2140,7 +2140,7 @@
 <ID>268</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>779</PadID>
 </LookupGADGET08232021>
@@ -2148,7 +2148,7 @@
 <ID>269</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>834</PadID>
 </LookupGADGET08232021>
@@ -2156,7 +2156,7 @@
 <ID>270</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>780</PadID>
 </LookupGADGET08232021>
@@ -2164,7 +2164,7 @@
 <ID>271</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>835</PadID>
 </LookupGADGET08232021>
@@ -2172,7 +2172,7 @@
 <ID>272</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>781</PadID>
 </LookupGADGET08232021>
@@ -2180,7 +2180,7 @@
 <ID>273</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>818</PadID>
 </LookupGADGET08232021>
@@ -2188,7 +2188,7 @@
 <ID>274</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>782</PadID>
 </LookupGADGET08232021>
@@ -2196,7 +2196,7 @@
 <ID>275</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>806</PadID>
 </LookupGADGET08232021>
@@ -2204,7 +2204,7 @@
 <ID>276</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>847</PadID>
 </LookupGADGET08232021>
@@ -2212,7 +2212,7 @@
 <ID>277</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>807</PadID>
 </LookupGADGET08232021>
@@ -2220,7 +2220,7 @@
 <ID>278</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>840</PadID>
 </LookupGADGET08232021>
@@ -2228,7 +2228,7 @@
 <ID>279</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>811</PadID>
 </LookupGADGET08232021>
@@ -2236,7 +2236,7 @@
 <ID>280</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>803</PadID>
 </LookupGADGET08232021>
@@ -2244,7 +2244,7 @@
 <ID>281</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>825</PadID>
 </LookupGADGET08232021>
@@ -2252,7 +2252,7 @@
 <ID>282</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>823</PadID>
 </LookupGADGET08232021>
@@ -2260,7 +2260,7 @@
 <ID>283</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>829</PadID>
 </LookupGADGET08232021>
@@ -2268,7 +2268,7 @@
 <ID>284</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>789</PadID>
 </LookupGADGET08232021>
@@ -2276,7 +2276,7 @@
 <ID>285</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>786</PadID>
 </LookupGADGET08232021>
@@ -2284,7 +2284,7 @@
 <ID>286</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>788</PadID>
 </LookupGADGET08232021>
@@ -2292,7 +2292,7 @@
 <ID>287</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>828</PadID>
 </LookupGADGET08232021>
@@ -2300,7 +2300,7 @@
 <ID>288</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>792</PadID>
 </LookupGADGET08232021>
@@ -2308,7 +2308,7 @@
 <ID>289</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>767</PadID>
 </LookupGADGET08232021>
@@ -2316,7 +2316,7 @@
 <ID>290</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>768</PadID>
 </LookupGADGET08232021>
@@ -2324,7 +2324,7 @@
 <ID>291</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>771</PadID>
 </LookupGADGET08232021>
@@ -2332,7 +2332,7 @@
 <ID>292</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>772</PadID>
 </LookupGADGET08232021>
@@ -2340,7 +2340,7 @@
 <ID>293</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>775</PadID>
 </LookupGADGET08232021>
@@ -2348,7 +2348,7 @@
 <ID>294</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>776</PadID>
 </LookupGADGET08232021>
@@ -2356,7 +2356,7 @@
 <ID>295</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>777</PadID>
 </LookupGADGET08232021>
@@ -2364,7 +2364,7 @@
 <ID>296</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>813</PadID>
 </LookupGADGET08232021>
@@ -2372,7 +2372,7 @@
 <ID>297</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>814</PadID>
 </LookupGADGET08232021>
@@ -2380,7 +2380,7 @@
 <ID>298</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>796</PadID>
 </LookupGADGET08232021>
@@ -2388,7 +2388,7 @@
 <ID>299</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>833</PadID>
 </LookupGADGET08232021>
@@ -2396,7 +2396,7 @@
 <ID>300</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>797</PadID>
 </LookupGADGET08232021>
@@ -2404,7 +2404,7 @@
 <ID>301</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>816</PadID>
 </LookupGADGET08232021>
@@ -2412,7 +2412,7 @@
 <ID>302</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>798</PadID>
 </LookupGADGET08232021>
@@ -2420,7 +2420,7 @@
 <ID>303</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>817</PadID>
 </LookupGADGET08232021>
@@ -2428,7 +2428,7 @@
 <ID>304</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>799</PadID>
 </LookupGADGET08232021>
@@ -2436,7 +2436,7 @@
 <ID>305</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>800</PadID>
 </LookupGADGET08232021>
@@ -2444,7 +2444,7 @@
 <ID>306</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>810</PadID>
 </LookupGADGET08232021>
@@ -2452,7 +2452,7 @@
 <ID>307</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>808</PadID>
 </LookupGADGET08232021>
@@ -2460,7 +2460,7 @@
 <ID>308</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>804</PadID>
 </LookupGADGET08232021>
@@ -2468,7 +2468,7 @@
 <ID>309</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>805</PadID>
 </LookupGADGET08232021>
@@ -2476,7 +2476,7 @@
 <ID>310</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>809</PadID>
 </LookupGADGET08232021>
@@ -2484,7 +2484,7 @@
 <ID>311</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>785</PadID>
 </LookupGADGET08232021>
@@ -2492,7 +2492,7 @@
 <ID>312</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>832</PadID>
 </LookupGADGET08232021>
@@ -2500,7 +2500,7 @@
 <ID>313</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>787</PadID>
 </LookupGADGET08232021>
@@ -2508,7 +2508,7 @@
 <ID>314</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>827</PadID>
 </LookupGADGET08232021>
@@ -2516,7 +2516,7 @@
 <ID>315</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>791</PadID>
 </LookupGADGET08232021>
@@ -2524,7 +2524,7 @@
 <ID>316</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>831</PadID>
 </LookupGADGET08232021>
@@ -2532,7 +2532,7 @@
 <ID>317</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>790</PadID>
 </LookupGADGET08232021>
@@ -2540,7 +2540,7 @@
 <ID>318</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>826</PadID>
 </LookupGADGET08232021>
@@ -2548,7 +2548,7 @@
 <ID>319</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>793</PadID>
 </LookupGADGET08232021>
@@ -2556,7 +2556,7 @@
 <ID>320</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>830</PadID>
 </LookupGADGET08232021>
@@ -2564,7 +2564,7 @@
 <ID>321</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>824</PadID>
 </LookupGADGET08232021>
@@ -2572,7 +2572,7 @@
 <ID>322</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>1019</PadID>
 </LookupGADGET08232021>
@@ -2580,7 +2580,7 @@
 <ID>323</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>865</PadID>
 </LookupGADGET08232021>
@@ -2588,7 +2588,7 @@
 <ID>324</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>902</PadID>
 </LookupGADGET08232021>
@@ -2596,7 +2596,7 @@
 <ID>325</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>849</PadID>
 </LookupGADGET08232021>
@@ -2604,7 +2604,7 @@
 <ID>326</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>850</PadID>
 </LookupGADGET08232021>
@@ -2612,7 +2612,7 @@
 <ID>327</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>879</PadID>
 </LookupGADGET08232021>
@@ -2620,7 +2620,7 @@
 <ID>328</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>883</PadID>
 </LookupGADGET08232021>
@@ -2628,7 +2628,7 @@
 <ID>329</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>881</PadID>
 </LookupGADGET08232021>
@@ -2636,7 +2636,7 @@
 <ID>330</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>885</PadID>
 </LookupGADGET08232021>
@@ -2644,7 +2644,7 @@
 <ID>331</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>842</PadID>
 </LookupGADGET08232021>
@@ -2652,7 +2652,7 @@
 <ID>332</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>848</PadID>
 </LookupGADGET08232021>
@@ -2660,7 +2660,7 @@
 <ID>333</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>869</PadID>
 </LookupGADGET08232021>
@@ -2668,7 +2668,7 @@
 <ID>334</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>880</PadID>
 </LookupGADGET08232021>
@@ -2676,7 +2676,7 @@
 <ID>335</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>867</PadID>
 </LookupGADGET08232021>
@@ -2684,7 +2684,7 @@
 <ID>336</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>868</PadID>
 </LookupGADGET08232021>
@@ -2692,7 +2692,7 @@
 <ID>337</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>863</PadID>
 </LookupGADGET08232021>
@@ -2700,7 +2700,7 @@
 <ID>338</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>864</PadID>
 </LookupGADGET08232021>
@@ -2708,7 +2708,7 @@
 <ID>339</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>916</PadID>
 </LookupGADGET08232021>
@@ -2716,7 +2716,7 @@
 <ID>340</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>948</PadID>
 </LookupGADGET08232021>
@@ -2724,7 +2724,7 @@
 <ID>341</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>915</PadID>
 </LookupGADGET08232021>
@@ -2732,7 +2732,7 @@
 <ID>342</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>962</PadID>
 </LookupGADGET08232021>
@@ -2740,7 +2740,7 @@
 <ID>343</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>961</PadID>
 </LookupGADGET08232021>
@@ -2748,7 +2748,7 @@
 <ID>344</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>946</PadID>
 </LookupGADGET08232021>
@@ -2756,7 +2756,7 @@
 <ID>345</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>930</PadID>
 </LookupGADGET08232021>
@@ -2764,7 +2764,7 @@
 <ID>346</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>914</PadID>
 </LookupGADGET08232021>
@@ -2772,7 +2772,7 @@
 <ID>347</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>929</PadID>
 </LookupGADGET08232021>
@@ -2780,7 +2780,7 @@
 <ID>348</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>913</PadID>
 </LookupGADGET08232021>
@@ -2788,7 +2788,7 @@
 <ID>349</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>911</PadID>
 </LookupGADGET08232021>
@@ -2796,7 +2796,7 @@
 <ID>350</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>912</PadID>
 </LookupGADGET08232021>
@@ -2804,7 +2804,7 @@
 <ID>351</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>860</PadID>
 </LookupGADGET08232021>
@@ -2812,7 +2812,7 @@
 <ID>352</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>877</PadID>
 </LookupGADGET08232021>
@@ -2820,7 +2820,7 @@
 <ID>353</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>918</PadID>
 </LookupGADGET08232021>
@@ -2828,7 +2828,7 @@
 <ID>354</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>862</PadID>
 </LookupGADGET08232021>
@@ -2836,7 +2836,7 @@
 <ID>355</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>851</PadID>
 </LookupGADGET08232021>
@@ -2844,7 +2844,7 @@
 <ID>356</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>900</PadID>
 </LookupGADGET08232021>
@@ -2852,7 +2852,7 @@
 <ID>357</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>917</PadID>
 </LookupGADGET08232021>
@@ -2860,7 +2860,7 @@
 <ID>358</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>850</PadID>
 </LookupGADGET08232021>
@@ -2868,7 +2868,7 @@
 <ID>359</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>845</PadID>
 </LookupGADGET08232021>
@@ -2876,7 +2876,7 @@
 <ID>360</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>841</PadID>
 </LookupGADGET08232021>
@@ -2884,7 +2884,7 @@
 <ID>361</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>882</PadID>
 </LookupGADGET08232021>
@@ -2892,7 +2892,7 @@
 <ID>362</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>843</PadID>
 </LookupGADGET08232021>
@@ -2900,7 +2900,7 @@
 <ID>363</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>844</PadID>
 </LookupGADGET08232021>
@@ -2908,7 +2908,7 @@
 <ID>364</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>884</PadID>
 </LookupGADGET08232021>
@@ -2916,7 +2916,7 @@
 <ID>365</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>846</PadID>
 </LookupGADGET08232021>
@@ -2924,7 +2924,7 @@
 <ID>366</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>886</PadID>
 </LookupGADGET08232021>
@@ -2932,7 +2932,7 @@
 <ID>367</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>901</PadID>
 </LookupGADGET08232021>
@@ -2940,7 +2940,7 @@
 <ID>368</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>866</PadID>
 </LookupGADGET08232021>
@@ -2948,7 +2948,7 @@
 <ID>369</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>861</PadID>
 </LookupGADGET08232021>
@@ -2956,7 +2956,7 @@
 <ID>370</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>933</PadID>
 </LookupGADGET08232021>
@@ -2964,7 +2964,7 @@
 <ID>371</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>932</PadID>
 </LookupGADGET08232021>
@@ -2972,7 +2972,7 @@
 <ID>372</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>947</PadID>
 </LookupGADGET08232021>
@@ -2980,7 +2980,7 @@
 <ID>373</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>899</PadID>
 </LookupGADGET08232021>
@@ -2988,7 +2988,7 @@
 <ID>374</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>931</PadID>
 </LookupGADGET08232021>
@@ -2996,7 +2996,7 @@
 <ID>375</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>975</PadID>
 </LookupGADGET08232021>
@@ -3004,7 +3004,7 @@
 <ID>376</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>898</PadID>
 </LookupGADGET08232021>
@@ -3012,7 +3012,7 @@
 <ID>377</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>945</PadID>
 </LookupGADGET08232021>
@@ -3020,7 +3020,7 @@
 <ID>378</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>897</PadID>
 </LookupGADGET08232021>
@@ -3028,7 +3028,7 @@
 <ID>379</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>944</PadID>
 </LookupGADGET08232021>
@@ -3036,7 +3036,7 @@
 <ID>380</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>896</PadID>
 </LookupGADGET08232021>
@@ -3044,7 +3044,7 @@
 <ID>381</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>895</PadID>
 </LookupGADGET08232021>
@@ -3052,7 +3052,7 @@
 <ID>382</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>878</PadID>
 </LookupGADGET08232021>
@@ -3060,7 +3060,7 @@
 <ID>383</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>876</PadID>
 </LookupGADGET08232021>
@@ -3068,7 +3068,7 @@
 <ID>384</ID>
 <CoboID>0</CoboID>
 <AsadID>2</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>859</PadID>
 </LookupGADGET08232021>
@@ -3076,7 +3076,7 @@
 <ID>385</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>894</PadID>
 </LookupGADGET08232021>
@@ -3084,7 +3084,7 @@
 <ID>386</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>875</PadID>
 </LookupGADGET08232021>
@@ -3092,7 +3092,7 @@
 <ID>387</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>910</PadID>
 </LookupGADGET08232021>
@@ -3100,7 +3100,7 @@
 <ID>388</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>909</PadID>
 </LookupGADGET08232021>
@@ -3108,7 +3108,7 @@
 <ID>389</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>960</PadID>
 </LookupGADGET08232021>
@@ -3116,7 +3116,7 @@
 <ID>390</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>926</PadID>
 </LookupGADGET08232021>
@@ -3124,7 +3124,7 @@
 <ID>391</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>959</PadID>
 </LookupGADGET08232021>
@@ -3132,7 +3132,7 @@
 <ID>392</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>941</PadID>
 </LookupGADGET08232021>
@@ -3140,7 +3140,7 @@
 <ID>393</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>-1</PadID>
 </LookupGADGET08232021>
@@ -3148,7 +3148,7 @@
 <ID>394</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>956</PadID>
 </LookupGADGET08232021>
@@ -3156,7 +3156,7 @@
 <ID>395</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>970</PadID>
 </LookupGADGET08232021>
@@ -3164,7 +3164,7 @@
 <ID>396</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>972</PadID>
 </LookupGADGET08232021>
@@ -3172,7 +3172,7 @@
 <ID>397</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>985</PadID>
 </LookupGADGET08232021>
@@ -3180,7 +3180,7 @@
 <ID>398</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>986</PadID>
 </LookupGADGET08232021>
@@ -3188,7 +3188,7 @@
 <ID>399</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>908</PadID>
 </LookupGADGET08232021>
@@ -3196,7 +3196,7 @@
 <ID>400</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>997</PadID>
 </LookupGADGET08232021>
@@ -3204,7 +3204,7 @@
 <ID>401</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>995</PadID>
 </LookupGADGET08232021>
@@ -3212,7 +3212,7 @@
 <ID>402</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>981</PadID>
 </LookupGADGET08232021>
@@ -3220,7 +3220,7 @@
 <ID>403</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>938</PadID>
 </LookupGADGET08232021>
@@ -3228,7 +3228,7 @@
 <ID>404</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>1014</PadID>
 </LookupGADGET08232021>
@@ -3236,7 +3236,7 @@
 <ID>405</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>907</PadID>
 </LookupGADGET08232021>
@@ -3244,7 +3244,7 @@
 <ID>406</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>994</PadID>
 </LookupGADGET08232021>
@@ -3252,7 +3252,7 @@
 <ID>407</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>969</PadID>
 </LookupGADGET08232021>
@@ -3260,7 +3260,7 @@
 <ID>408</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>891</PadID>
 </LookupGADGET08232021>
@@ -3268,7 +3268,7 @@
 <ID>409</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>923</PadID>
 </LookupGADGET08232021>
@@ -3276,7 +3276,7 @@
 <ID>410</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>857</PadID>
 </LookupGADGET08232021>
@@ -3284,7 +3284,7 @@
 <ID>411</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>980</PadID>
 </LookupGADGET08232021>
@@ -3292,7 +3292,7 @@
 <ID>412</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>992</PadID>
 </LookupGADGET08232021>
@@ -3300,7 +3300,7 @@
 <ID>413</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>1003</PadID>
 </LookupGADGET08232021>
@@ -3308,7 +3308,7 @@
 <ID>414</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>983</PadID>
 </LookupGADGET08232021>
@@ -3316,7 +3316,7 @@
 <ID>415</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>1007</PadID>
 </LookupGADGET08232021>
@@ -3324,7 +3324,7 @@
 <ID>416</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>924</PadID>
 </LookupGADGET08232021>
@@ -3332,7 +3332,7 @@
 <ID>417</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>892</PadID>
 </LookupGADGET08232021>
@@ -3340,7 +3340,7 @@
 <ID>418</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>893</PadID>
 </LookupGADGET08232021>
@@ -3348,7 +3348,7 @@
 <ID>419</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>928</PadID>
 </LookupGADGET08232021>
@@ -3356,7 +3356,7 @@
 <ID>420</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>927</PadID>
 </LookupGADGET08232021>
@@ -3364,7 +3364,7 @@
 <ID>421</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>943</PadID>
 </LookupGADGET08232021>
@@ -3372,7 +3372,7 @@
 <ID>422</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>942</PadID>
 </LookupGADGET08232021>
@@ -3380,7 +3380,7 @@
 <ID>423</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>958</PadID>
 </LookupGADGET08232021>
@@ -3388,7 +3388,7 @@
 <ID>424</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>957</PadID>
 </LookupGADGET08232021>
@@ -3396,7 +3396,7 @@
 <ID>425</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>974</PadID>
 </LookupGADGET08232021>
@@ -3404,7 +3404,7 @@
 <ID>426</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>973</PadID>
 </LookupGADGET08232021>
@@ -3412,7 +3412,7 @@
 <ID>427</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>971</PadID>
 </LookupGADGET08232021>
@@ -3420,7 +3420,7 @@
 <ID>428</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>987</PadID>
 </LookupGADGET08232021>
@@ -3428,7 +3428,7 @@
 <ID>429</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>984</PadID>
 </LookupGADGET08232021>
@@ -3436,7 +3436,7 @@
 <ID>430</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>998</PadID>
 </LookupGADGET08232021>
@@ -3444,7 +3444,7 @@
 <ID>431</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>939</PadID>
 </LookupGADGET08232021>
@@ -3452,7 +3452,7 @@
 <ID>432</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>954</PadID>
 </LookupGADGET08232021>
@@ -3460,7 +3460,7 @@
 <ID>433</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>993</PadID>
 </LookupGADGET08232021>
@@ -3468,7 +3468,7 @@
 <ID>434</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>1004</PadID>
 </LookupGADGET08232021>
@@ -3476,7 +3476,7 @@
 <ID>435</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>1013</PadID>
 </LookupGADGET08232021>
@@ -3484,7 +3484,7 @@
 <ID>436</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>940</PadID>
 </LookupGADGET08232021>
@@ -3492,7 +3492,7 @@
 <ID>437</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>874</PadID>
 </LookupGADGET08232021>
@@ -3500,7 +3500,7 @@
 <ID>438</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>967</PadID>
 </LookupGADGET08232021>
@@ -3508,7 +3508,7 @@
 <ID>439</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>955</PadID>
 </LookupGADGET08232021>
@@ -3516,7 +3516,7 @@
 <ID>440</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>1005</PadID>
 </LookupGADGET08232021>
@@ -3524,7 +3524,7 @@
 <ID>441</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>925</PadID>
 </LookupGADGET08232021>
@@ -3532,7 +3532,7 @@
 <ID>442</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>982</PadID>
 </LookupGADGET08232021>
@@ -3540,7 +3540,7 @@
 <ID>443</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>980</PadID>
 </LookupGADGET08232021>
@@ -3548,7 +3548,7 @@
 <ID>444</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>1012</PadID>
 </LookupGADGET08232021>
@@ -3556,7 +3556,7 @@
 <ID>445</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>968</PadID>
 </LookupGADGET08232021>
@@ -3564,7 +3564,7 @@
 <ID>446</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>1006</PadID>
 </LookupGADGET08232021>
@@ -3572,7 +3572,7 @@
 <ID>447</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>856</PadID>
 </LookupGADGET08232021>
@@ -3580,7 +3580,7 @@
 <ID>448</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>1018</PadID>
 </LookupGADGET08232021>
@@ -3588,7 +3588,7 @@
 <ID>449</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>935</PadID>
 </LookupGADGET08232021>
@@ -3596,7 +3596,7 @@
 <ID>450</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>952</PadID>
 </LookupGADGET08232021>
@@ -3604,7 +3604,7 @@
 <ID>451</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>888</PadID>
 </LookupGADGET08232021>
@@ -3612,7 +3612,7 @@
 <ID>452</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>890</PadID>
 </LookupGADGET08232021>
@@ -3620,7 +3620,7 @@
 <ID>453</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>904</PadID>
 </LookupGADGET08232021>
@@ -3628,7 +3628,7 @@
 <ID>454</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>966</PadID>
 </LookupGADGET08232021>
@@ -3636,7 +3636,7 @@
 <ID>455</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>837</PadID>
 </LookupGADGET08232021>
@@ -3644,7 +3644,7 @@
 <ID>456</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>906</PadID>
 </LookupGADGET08232021>
@@ -3652,7 +3652,7 @@
 <ID>457</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>802</PadID>
 </LookupGADGET08232021>
@@ -3660,7 +3660,7 @@
 <ID>458</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>979</PadID>
 </LookupGADGET08232021>
@@ -3668,7 +3668,7 @@
 <ID>459</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>838</PadID>
 </LookupGADGET08232021>
@@ -3676,7 +3676,7 @@
 <ID>460</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>905</PadID>
 </LookupGADGET08232021>
@@ -3684,7 +3684,7 @@
 <ID>461</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>889</PadID>
 </LookupGADGET08232021>
@@ -3692,7 +3692,7 @@
 <ID>462</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>821</PadID>
 </LookupGADGET08232021>
@@ -3700,7 +3700,7 @@
 <ID>463</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>1016</PadID>
 </LookupGADGET08232021>
@@ -3708,7 +3708,7 @@
 <ID>464</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>921</PadID>
 </LookupGADGET08232021>
@@ -3716,7 +3716,7 @@
 <ID>465</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>1010</PadID>
 </LookupGADGET08232021>
@@ -3724,7 +3724,7 @@
 <ID>466</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>1009</PadID>
 </LookupGADGET08232021>
@@ -3732,7 +3732,7 @@
 <ID>467</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>1001</PadID>
 </LookupGADGET08232021>
@@ -3740,7 +3740,7 @@
 <ID>468</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>1000</PadID>
 </LookupGADGET08232021>
@@ -3748,7 +3748,7 @@
 <ID>469</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>991</PadID>
 </LookupGADGET08232021>
@@ -3756,7 +3756,7 @@
 <ID>470</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>989</PadID>
 </LookupGADGET08232021>
@@ -3764,7 +3764,7 @@
 <ID>471</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>978</PadID>
 </LookupGADGET08232021>
@@ -3772,7 +3772,7 @@
 <ID>472</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>977</PadID>
 </LookupGADGET08232021>
@@ -3780,7 +3780,7 @@
 <ID>473</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>963</PadID>
 </LookupGADGET08232021>
@@ -3788,7 +3788,7 @@
 <ID>474</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>965</PadID>
 </LookupGADGET08232021>
@@ -3796,7 +3796,7 @@
 <ID>475</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>934</PadID>
 </LookupGADGET08232021>
@@ -3804,7 +3804,7 @@
 <ID>476</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>949</PadID>
 </LookupGADGET08232021>
@@ -3812,7 +3812,7 @@
 <ID>477</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>870</PadID>
 </LookupGADGET08232021>
@@ -3820,7 +3820,7 @@
 <ID>478</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>887</PadID>
 </LookupGADGET08232021>
@@ -3828,7 +3828,7 @@
 <ID>479</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>801</PadID>
 </LookupGADGET08232021>
@@ -3836,7 +3836,7 @@
 <ID>480</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>819</PadID>
 </LookupGADGET08232021>
@@ -3844,7 +3844,7 @@
 <ID>481</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>922</PadID>
 </LookupGADGET08232021>
@@ -3852,7 +3852,7 @@
 <ID>482</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>920</PadID>
 </LookupGADGET08232021>
@@ -3860,7 +3860,7 @@
 <ID>483</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>820</PadID>
 </LookupGADGET08232021>
@@ -3868,7 +3868,7 @@
 <ID>484</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>854</PadID>
 </LookupGADGET08232021>
@@ -3876,7 +3876,7 @@
 <ID>485</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>937</PadID>
 </LookupGADGET08232021>
@@ -3884,7 +3884,7 @@
 <ID>486</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>871</PadID>
 </LookupGADGET08232021>
@@ -3892,7 +3892,7 @@
 <ID>487</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>873</PadID>
 </LookupGADGET08232021>
@@ -3900,7 +3900,7 @@
 <ID>488</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>839</PadID>
 </LookupGADGET08232021>
@@ -3908,7 +3908,7 @@
 <ID>489</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>936</PadID>
 </LookupGADGET08232021>
@@ -3916,7 +3916,7 @@
 <ID>490</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>822</PadID>
 </LookupGADGET08232021>
@@ -3924,7 +3924,7 @@
 <ID>491</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>872</PadID>
 </LookupGADGET08232021>
@@ -3932,7 +3932,7 @@
 <ID>492</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>858</PadID>
 </LookupGADGET08232021>
@@ -3940,7 +3940,7 @@
 <ID>493</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>855</PadID>
 </LookupGADGET08232021>
@@ -3948,7 +3948,7 @@
 <ID>494</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>953</PadID>
 </LookupGADGET08232021>
@@ -3956,7 +3956,7 @@
 <ID>495</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>1017</PadID>
 </LookupGADGET08232021>
@@ -3964,7 +3964,7 @@
 <ID>496</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>1015</PadID>
 </LookupGADGET08232021>
@@ -3972,7 +3972,7 @@
 <ID>497</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>1011</PadID>
 </LookupGADGET08232021>
@@ -3980,7 +3980,7 @@
 <ID>498</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>1008</PadID>
 </LookupGADGET08232021>
@@ -3988,7 +3988,7 @@
 <ID>499</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>1002</PadID>
 </LookupGADGET08232021>
@@ -3996,7 +3996,7 @@
 <ID>500</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>999</PadID>
 </LookupGADGET08232021>
@@ -4004,7 +4004,7 @@
 <ID>501</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>990</PadID>
 </LookupGADGET08232021>
@@ -4012,7 +4012,7 @@
 <ID>502</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>988</PadID>
 </LookupGADGET08232021>
@@ -4020,7 +4020,7 @@
 <ID>503</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>976</PadID>
 </LookupGADGET08232021>
@@ -4028,7 +4028,7 @@
 <ID>504</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>964</PadID>
 </LookupGADGET08232021>
@@ -4036,7 +4036,7 @@
 <ID>505</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>950</PadID>
 </LookupGADGET08232021>
@@ -4044,7 +4044,7 @@
 <ID>506</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>951</PadID>
 </LookupGADGET08232021>
@@ -4052,7 +4052,7 @@
 <ID>507</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>919</PadID>
 </LookupGADGET08232021>
@@ -4060,7 +4060,7 @@
 <ID>508</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>903</PadID>
 </LookupGADGET08232021>
@@ -4068,7 +4068,7 @@
 <ID>509</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>853</PadID>
 </LookupGADGET08232021>
@@ -4076,7 +4076,7 @@
 <ID>510</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>836</PadID>
 </LookupGADGET08232021>
@@ -4084,7 +4084,7 @@
 <ID>511</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>783</PadID>
 </LookupGADGET08232021>
@@ -4092,7 +4092,7 @@
 <ID>512</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>784</PadID>
 </LookupGADGET08232021>
@@ -4100,7 +4100,7 @@
 <ID>513</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>528</PadID>
 </LookupGADGET08232021>
@@ -4108,7 +4108,7 @@
 <ID>514</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>510</PadID>
 </LookupGADGET08232021>
@@ -4116,7 +4116,7 @@
 <ID>515</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>598</PadID>
 </LookupGADGET08232021>
@@ -4124,7 +4124,7 @@
 <ID>516</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>581</PadID>
 </LookupGADGET08232021>
@@ -4132,7 +4132,7 @@
 <ID>517</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>664</PadID>
 </LookupGADGET08232021>
@@ -4140,7 +4140,7 @@
 <ID>518</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>648</PadID>
 </LookupGADGET08232021>
@@ -4148,7 +4148,7 @@
 <ID>519</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>695</PadID>
 </LookupGADGET08232021>
@@ -4156,7 +4156,7 @@
 <ID>520</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>696</PadID>
 </LookupGADGET08232021>
@@ -4164,7 +4164,7 @@
 <ID>521</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>721</PadID>
 </LookupGADGET08232021>
@@ -4172,7 +4172,7 @@
 <ID>522</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>709</PadID>
 </LookupGADGET08232021>
@@ -4180,7 +4180,7 @@
 <ID>523</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>735</PadID>
 </LookupGADGET08232021>
@@ -4188,7 +4188,7 @@
 <ID>524</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>733</PadID>
 </LookupGADGET08232021>
@@ -4196,7 +4196,7 @@
 <ID>525</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>747</PadID>
 </LookupGADGET08232021>
@@ -4204,7 +4204,7 @@
 <ID>526</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>744</PadID>
 </LookupGADGET08232021>
@@ -4212,7 +4212,7 @@
 <ID>527</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>756</PadID>
 </LookupGADGET08232021>
@@ -4220,7 +4220,7 @@
 <ID>528</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>753</PadID>
 </LookupGADGET08232021>
@@ -4228,7 +4228,7 @@
 <ID>529</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>762</PadID>
 </LookupGADGET08232021>
@@ -4236,7 +4236,7 @@
 <ID>530</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>760</PadID>
 </LookupGADGET08232021>
@@ -4244,7 +4244,7 @@
 <ID>531</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>600</PadID>
 </LookupGADGET08232021>
@@ -4252,7 +4252,7 @@
 <ID>532</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>698</PadID>
 </LookupGADGET08232021>
@@ -4260,7 +4260,7 @@
 <ID>533</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>617</PadID>
 </LookupGADGET08232021>
@@ -4268,7 +4268,7 @@
 <ID>534</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>585</PadID>
 </LookupGADGET08232021>
@@ -4276,7 +4276,7 @@
 <ID>535</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>681</PadID>
 </LookupGADGET08232021>
@@ -4284,7 +4284,7 @@
 <ID>536</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>548</PadID>
 </LookupGADGET08232021>
@@ -4292,7 +4292,7 @@
 <ID>537</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>618</PadID>
 </LookupGADGET08232021>
@@ -4300,7 +4300,7 @@
 <ID>538</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>584</PadID>
 </LookupGADGET08232021>
@@ -4308,7 +4308,7 @@
 <ID>539</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>682</PadID>
 </LookupGADGET08232021>
@@ -4316,7 +4316,7 @@
 <ID>540</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>616</PadID>
 </LookupGADGET08232021>
@@ -4324,7 +4324,7 @@
 <ID>541</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>565</PadID>
 </LookupGADGET08232021>
@@ -4332,7 +4332,7 @@
 <ID>542</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>599</PadID>
 </LookupGADGET08232021>
@@ -4340,7 +4340,7 @@
 <ID>543</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>667</PadID>
 </LookupGADGET08232021>
@@ -4348,7 +4348,7 @@
 <ID>544</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>665</PadID>
 </LookupGADGET08232021>
@@ -4356,7 +4356,7 @@
 <ID>545</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>546</PadID>
 </LookupGADGET08232021>
@@ -4364,7 +4364,7 @@
 <ID>546</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>564</PadID>
 </LookupGADGET08232021>
@@ -4372,7 +4372,7 @@
 <ID>547</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>615</PadID>
 </LookupGADGET08232021>
@@ -4380,7 +4380,7 @@
 <ID>548</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>632</PadID>
 </LookupGADGET08232021>
@@ -4388,7 +4388,7 @@
 <ID>549</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>679</PadID>
 </LookupGADGET08232021>
@@ -4396,7 +4396,7 @@
 <ID>550</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>694</PadID>
 </LookupGADGET08232021>
@@ -4404,7 +4404,7 @@
 <ID>551</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>708</PadID>
 </LookupGADGET08232021>
@@ -4412,7 +4412,7 @@
 <ID>552</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>710</PadID>
 </LookupGADGET08232021>
@@ -4420,7 +4420,7 @@
 <ID>553</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>723</PadID>
 </LookupGADGET08232021>
@@ -4428,7 +4428,7 @@
 <ID>554</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>722</PadID>
 </LookupGADGET08232021>
@@ -4436,7 +4436,7 @@
 <ID>555</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>736</PadID>
 </LookupGADGET08232021>
@@ -4444,7 +4444,7 @@
 <ID>556</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>734</PadID>
 </LookupGADGET08232021>
@@ -4452,7 +4452,7 @@
 <ID>557</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>746</PadID>
 </LookupGADGET08232021>
@@ -4460,7 +4460,7 @@
 <ID>558</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>745</PadID>
 </LookupGADGET08232021>
@@ -4468,7 +4468,7 @@
 <ID>559</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>755</PadID>
 </LookupGADGET08232021>
@@ -4476,7 +4476,7 @@
 <ID>560</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>754</PadID>
 </LookupGADGET08232021>
@@ -4484,7 +4484,7 @@
 <ID>561</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>761</PadID>
 </LookupGADGET08232021>
@@ -4492,7 +4492,7 @@
 <ID>562</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>666</PadID>
 </LookupGADGET08232021>
@@ -4500,7 +4500,7 @@
 <ID>563</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>634</PadID>
 </LookupGADGET08232021>
@@ -4508,7 +4508,7 @@
 <ID>564</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>566</PadID>
 </LookupGADGET08232021>
@@ -4516,7 +4516,7 @@
 <ID>565</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>583</PadID>
 </LookupGADGET08232021>
@@ -4524,7 +4524,7 @@
 <ID>566</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>650</PadID>
 </LookupGADGET08232021>
@@ -4532,7 +4532,7 @@
 <ID>567</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>547</PadID>
 </LookupGADGET08232021>
@@ -4540,7 +4540,7 @@
 <ID>568</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>724</PadID>
 </LookupGADGET08232021>
@@ -4548,7 +4548,7 @@
 <ID>569</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>582</PadID>
 </LookupGADGET08232021>
@@ -4556,7 +4556,7 @@
 <ID>570</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>651</PadID>
 </LookupGADGET08232021>
@@ -4564,7 +4564,7 @@
 <ID>571</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>649</PadID>
 </LookupGADGET08232021>
@@ -4572,7 +4572,7 @@
 <ID>572</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>711</PadID>
 </LookupGADGET08232021>
@@ -4580,7 +4580,7 @@
 <ID>573</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>633</PadID>
 </LookupGADGET08232021>
@@ -4588,7 +4588,7 @@
 <ID>574</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>635</PadID>
 </LookupGADGET08232021>
@@ -4596,7 +4596,7 @@
 <ID>575</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>680</PadID>
 </LookupGADGET08232021>
@@ -4604,7 +4604,7 @@
 <ID>576</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>697</PadID>
 </LookupGADGET08232021>
@@ -4612,7 +4612,7 @@
 <ID>577</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>601</PadID>
 </LookupGADGET08232021>
@@ -4620,7 +4620,7 @@
 <ID>578</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>763</PadID>
 </LookupGADGET08232021>
@@ -4628,7 +4628,7 @@
 <ID>579</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>713</PadID>
 </LookupGADGET08232021>
@@ -4636,7 +4636,7 @@
 <ID>580</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>751</PadID>
 </LookupGADGET08232021>
@@ -4644,7 +4644,7 @@
 <ID>581</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>725</PadID>
 </LookupGADGET08232021>
@@ -4652,7 +4652,7 @@
 <ID>582</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>757</PadID>
 </LookupGADGET08232021>
@@ -4660,7 +4660,7 @@
 <ID>583</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>670</PadID>
 </LookupGADGET08232021>
@@ -4668,7 +4668,7 @@
 <ID>584</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>727</PadID>
 </LookupGADGET08232021>
@@ -4676,7 +4676,7 @@
 <ID>585</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>700</PadID>
 </LookupGADGET08232021>
@@ -4684,7 +4684,7 @@
 <ID>586</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>750</PadID>
 </LookupGADGET08232021>
@@ -4692,7 +4692,7 @@
 <ID>587</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>619</PadID>
 </LookupGADGET08232021>
@@ -4700,7 +4700,7 @@
 <ID>588</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>712</PadID>
 </LookupGADGET08232021>
@@ -4708,7 +4708,7 @@
 <ID>589</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>758</PadID>
 </LookupGADGET08232021>
@@ -4716,7 +4716,7 @@
 <ID>590</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>685</PadID>
 </LookupGADGET08232021>
@@ -4724,7 +4724,7 @@
 <ID>591</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>738</PadID>
 </LookupGADGET08232021>
@@ -4732,7 +4732,7 @@
 <ID>592</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>749</PadID>
 </LookupGADGET08232021>
@@ -4740,7 +4740,7 @@
 <ID>593</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>684</PadID>
 </LookupGADGET08232021>
@@ -4748,7 +4748,7 @@
 <ID>594</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>699</PadID>
 </LookupGADGET08232021>
@@ -4756,7 +4756,7 @@
 <ID>595</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>729</PadID>
 </LookupGADGET08232021>
@@ -4764,7 +4764,7 @@
 <ID>596</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>743</PadID>
 </LookupGADGET08232021>
@@ -4772,7 +4772,7 @@
 <ID>597</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>716</PadID>
 </LookupGADGET08232021>
@@ -4780,7 +4780,7 @@
 <ID>598</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>732</PadID>
 </LookupGADGET08232021>
@@ -4788,7 +4788,7 @@
 <ID>599</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>719</PadID>
 </LookupGADGET08232021>
@@ -4796,7 +4796,7 @@
 <ID>600</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>718</PadID>
 </LookupGADGET08232021>
@@ -4804,7 +4804,7 @@
 <ID>601</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>703</PadID>
 </LookupGADGET08232021>
@@ -4812,7 +4812,7 @@
 <ID>602</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>702</PadID>
 </LookupGADGET08232021>
@@ -4820,7 +4820,7 @@
 <ID>603</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>688</PadID>
 </LookupGADGET08232021>
@@ -4828,7 +4828,7 @@
 <ID>604</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>687</PadID>
 </LookupGADGET08232021>
@@ -4836,7 +4836,7 @@
 <ID>605</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>656</PadID>
 </LookupGADGET08232021>
@@ -4844,7 +4844,7 @@
 <ID>606</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>672</PadID>
 </LookupGADGET08232021>
@@ -4852,7 +4852,7 @@
 <ID>607</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>637</PadID>
 </LookupGADGET08232021>
@@ -4860,7 +4860,7 @@
 <ID>608</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>638</PadID>
 </LookupGADGET08232021>
@@ -4868,7 +4868,7 @@
 <ID>609</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>752</PadID>
 </LookupGADGET08232021>
@@ -4876,7 +4876,7 @@
 <ID>610</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>669</PadID>
 </LookupGADGET08232021>
@@ -4884,7 +4884,7 @@
 <ID>611</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>748</PadID>
 </LookupGADGET08232021>
@@ -4892,7 +4892,7 @@
 <ID>612</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>728</PadID>
 </LookupGADGET08232021>
@@ -4900,7 +4900,7 @@
 <ID>613</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>741</PadID>
 </LookupGADGET08232021>
@@ -4908,7 +4908,7 @@
 <ID>614</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>737</PadID>
 </LookupGADGET08232021>
@@ -4916,7 +4916,7 @@
 <ID>615</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>668</PadID>
 </LookupGADGET08232021>
@@ -4924,7 +4924,7 @@
 <ID>616</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>602</PadID>
 </LookupGADGET08232021>
@@ -4932,7 +4932,7 @@
 <ID>617</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>714</PadID>
 </LookupGADGET08232021>
@@ -4940,7 +4940,7 @@
 <ID>618</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>636</PadID>
 </LookupGADGET08232021>
@@ -4948,7 +4948,7 @@
 <ID>619</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>652</PadID>
 </LookupGADGET08232021>
@@ -4956,7 +4956,7 @@
 <ID>620</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>739</PadID>
 </LookupGADGET08232021>
@@ -4964,7 +4964,7 @@
 <ID>621</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>683</PadID>
 </LookupGADGET08232021>
@@ -4972,7 +4972,7 @@
 <ID>622</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>759</PadID>
 </LookupGADGET08232021>
@@ -4980,7 +4980,7 @@
 <ID>623</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>740</PadID>
 </LookupGADGET08232021>
@@ -4988,7 +4988,7 @@
 <ID>624</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>726</PadID>
 </LookupGADGET08232021>
@@ -4996,7 +4996,7 @@
 <ID>625</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>653</PadID>
 </LookupGADGET08232021>
@@ -5004,7 +5004,7 @@
 <ID>626</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>742</PadID>
 </LookupGADGET08232021>
@@ -5012,7 +5012,7 @@
 <ID>627</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>730</PadID>
 </LookupGADGET08232021>
@@ -5020,7 +5020,7 @@
 <ID>628</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>731</PadID>
 </LookupGADGET08232021>
@@ -5028,7 +5028,7 @@
 <ID>629</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>715</PadID>
 </LookupGADGET08232021>
@@ -5036,7 +5036,7 @@
 <ID>630</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>717</PadID>
 </LookupGADGET08232021>
@@ -5044,7 +5044,7 @@
 <ID>631</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>720</PadID>
 </LookupGADGET08232021>
@@ -5052,7 +5052,7 @@
 <ID>632</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>701</PadID>
 </LookupGADGET08232021>
@@ -5060,7 +5060,7 @@
 <ID>633</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>704</PadID>
 </LookupGADGET08232021>
@@ -5068,7 +5068,7 @@
 <ID>634</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>686</PadID>
 </LookupGADGET08232021>
@@ -5076,7 +5076,7 @@
 <ID>635</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>689</PadID>
 </LookupGADGET08232021>
@@ -5084,7 +5084,7 @@
 <ID>636</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>671</PadID>
 </LookupGADGET08232021>
@@ -5092,7 +5092,7 @@
 <ID>637</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>655</PadID>
 </LookupGADGET08232021>
@@ -5100,7 +5100,7 @@
 <ID>638</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>654</PadID>
 </LookupGADGET08232021>
@@ -5108,7 +5108,7 @@
 <ID>639</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>621</PadID>
 </LookupGADGET08232021>
@@ -5116,7 +5116,7 @@
 <ID>640</ID>
 <CoboID>0</CoboID>
 <AsadID>3</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>620</PadID>
 </LookupGADGET08232021>
@@ -5124,7 +5124,7 @@
 <ID>641</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>639</PadID>
 </LookupGADGET08232021>
@@ -5132,7 +5132,7 @@
 <ID>642</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>604</PadID>
 </LookupGADGET08232021>
@@ -5140,7 +5140,7 @@
 <ID>643</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>640</PadID>
 </LookupGADGET08232021>
@@ -5148,7 +5148,7 @@
 <ID>644</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>623</PadID>
 </LookupGADGET08232021>
@@ -5156,7 +5156,7 @@
 <ID>645</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>705</PadID>
 </LookupGADGET08232021>
@@ -5164,7 +5164,7 @@
 <ID>646</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>641</PadID>
 </LookupGADGET08232021>
@@ -5172,7 +5172,7 @@
 <ID>647</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>690</PadID>
 </LookupGADGET08232021>
@@ -5180,7 +5180,7 @@
 <ID>648</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>642</PadID>
 </LookupGADGET08232021>
@@ -5188,7 +5188,7 @@
 <ID>649</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>-1</PadID>
 </LookupGADGET08232021>
@@ -5196,7 +5196,7 @@
 <ID>650</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>643</PadID>
 </LookupGADGET08232021>
@@ -5204,7 +5204,7 @@
 <ID>651</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>644</PadID>
 </LookupGADGET08232021>
@@ -5212,7 +5212,7 @@
 <ID>652</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>676</PadID>
 </LookupGADGET08232021>
@@ -5220,7 +5220,7 @@
 <ID>653</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>677</PadID>
 </LookupGADGET08232021>
@@ -5228,7 +5228,7 @@
 <ID>654</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>692</PadID>
 </LookupGADGET08232021>
@@ -5236,7 +5236,7 @@
 <ID>655</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>606</PadID>
 </LookupGADGET08232021>
@@ -5244,7 +5244,7 @@
 <ID>656</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>678</PadID>
 </LookupGADGET08232021>
@@ -5252,7 +5252,7 @@
 <ID>657</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>646</PadID>
 </LookupGADGET08232021>
@@ -5260,7 +5260,7 @@
 <ID>658</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>611</PadID>
 </LookupGADGET08232021>
@@ -5268,7 +5268,7 @@
 <ID>659</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>591</PadID>
 </LookupGADGET08232021>
@@ -5276,7 +5276,7 @@
 <ID>660</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>631</PadID>
 </LookupGADGET08232021>
@@ -5284,7 +5284,7 @@
 <ID>661</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>589</PadID>
 </LookupGADGET08232021>
@@ -5292,7 +5292,7 @@
 <ID>662</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>629</PadID>
 </LookupGADGET08232021>
@@ -5300,7 +5300,7 @@
 <ID>663</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>627</PadID>
 </LookupGADGET08232021>
@@ -5308,7 +5308,7 @@
 <ID>664</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>588</PadID>
 </LookupGADGET08232021>
@@ -5316,7 +5316,7 @@
 <ID>665</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>590</PadID>
 </LookupGADGET08232021>
@@ -5324,7 +5324,7 @@
 <ID>666</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>586</PadID>
 </LookupGADGET08232021>
@@ -5332,7 +5332,7 @@
 <ID>667</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>662</PadID>
 </LookupGADGET08232021>
@@ -5340,7 +5340,7 @@
 <ID>668</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>595</PadID>
 </LookupGADGET08232021>
@@ -5348,7 +5348,7 @@
 <ID>669</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>596</PadID>
 </LookupGADGET08232021>
@@ -5356,7 +5356,7 @@
 <ID>670</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>645</PadID>
 </LookupGADGET08232021>
@@ -5364,7 +5364,7 @@
 <ID>671</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>663</PadID>
 </LookupGADGET08232021>
@@ -5372,7 +5372,7 @@
 <ID>672</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>607</PadID>
 </LookupGADGET08232021>
@@ -5380,7 +5380,7 @@
 <ID>673</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>605</PadID>
 </LookupGADGET08232021>
@@ -5388,7 +5388,7 @@
 <ID>674</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>622</PadID>
 </LookupGADGET08232021>
@@ -5396,7 +5396,7 @@
 <ID>675</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>673</PadID>
 </LookupGADGET08232021>
@@ -5404,7 +5404,7 @@
 <ID>676</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>657</PadID>
 </LookupGADGET08232021>
@@ -5412,7 +5412,7 @@
 <ID>677</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>674</PadID>
 </LookupGADGET08232021>
@@ -5420,7 +5420,7 @@
 <ID>678</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>658</PadID>
 </LookupGADGET08232021>
@@ -5428,7 +5428,7 @@
 <ID>679</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>675</PadID>
 </LookupGADGET08232021>
@@ -5436,7 +5436,7 @@
 <ID>680</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>659</PadID>
 </LookupGADGET08232021>
@@ -5444,7 +5444,7 @@
 <ID>681</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>706</PadID>
 </LookupGADGET08232021>
@@ -5452,7 +5452,7 @@
 <ID>682</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>691</PadID>
 </LookupGADGET08232021>
@@ -5460,7 +5460,7 @@
 <ID>683</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>660</PadID>
 </LookupGADGET08232021>
@@ -5468,7 +5468,7 @@
 <ID>684</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>707</PadID>
 </LookupGADGET08232021>
@@ -5476,7 +5476,7 @@
 <ID>685</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>661</PadID>
 </LookupGADGET08232021>
@@ -5484,7 +5484,7 @@
 <ID>686</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>693</PadID>
 </LookupGADGET08232021>
@@ -5492,7 +5492,7 @@
 <ID>687</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>608</PadID>
 </LookupGADGET08232021>
@@ -5500,7 +5500,7 @@
 <ID>688</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>609</PadID>
 </LookupGADGET08232021>
@@ -5508,7 +5508,7 @@
 <ID>689</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>612</PadID>
 </LookupGADGET08232021>
@@ -5516,7 +5516,7 @@
 <ID>690</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>613</PadID>
 </LookupGADGET08232021>
@@ -5524,7 +5524,7 @@
 <ID>691</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>614</PadID>
 </LookupGADGET08232021>
@@ -5532,7 +5532,7 @@
 <ID>692</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>625</PadID>
 </LookupGADGET08232021>
@@ -5540,7 +5540,7 @@
 <ID>693</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>587</PadID>
 </LookupGADGET08232021>
@@ -5548,7 +5548,7 @@
 <ID>694</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>593</PadID>
 </LookupGADGET08232021>
@@ -5556,7 +5556,7 @@
 <ID>695</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>626</PadID>
 </LookupGADGET08232021>
@@ -5564,7 +5564,7 @@
 <ID>696</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>630</PadID>
 </LookupGADGET08232021>
@@ -5572,7 +5572,7 @@
 <ID>697</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>624</PadID>
 </LookupGADGET08232021>
@@ -5580,7 +5580,7 @@
 <ID>698</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>628</PadID>
 </LookupGADGET08232021>
@@ -5588,7 +5588,7 @@
 <ID>699</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>594</PadID>
 </LookupGADGET08232021>
@@ -5596,7 +5596,7 @@
 <ID>700</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>597</PadID>
 </LookupGADGET08232021>
@@ -5604,7 +5604,7 @@
 <ID>701</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>610</PadID>
 </LookupGADGET08232021>
@@ -5612,7 +5612,7 @@
 <ID>702</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>647</PadID>
 </LookupGADGET08232021>
@@ -5620,7 +5620,7 @@
 <ID>703</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>569</PadID>
 </LookupGADGET08232021>
@@ -5628,7 +5628,7 @@
 <ID>704</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>764</PadID>
 </LookupGADGET08232021>
@@ -5636,7 +5636,7 @@
 <ID>705</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>538</PadID>
 </LookupGADGET08232021>
@@ -5644,7 +5644,7 @@
 <ID>706</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>575</PadID>
 </LookupGADGET08232021>
@@ -5652,7 +5652,7 @@
 <ID>707</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>535</PadID>
 </LookupGADGET08232021>
@@ -5660,7 +5660,7 @@
 <ID>708</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>571</PadID>
 </LookupGADGET08232021>
@@ -5668,7 +5668,7 @@
 <ID>709</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>536</PadID>
 </LookupGADGET08232021>
@@ -5676,7 +5676,7 @@
 <ID>710</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>576</PadID>
 </LookupGADGET08232021>
@@ -5684,7 +5684,7 @@
 <ID>711</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>532</PadID>
 </LookupGADGET08232021>
@@ -5692,7 +5692,7 @@
 <ID>712</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>572</PadID>
 </LookupGADGET08232021>
@@ -5700,7 +5700,7 @@
 <ID>713</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>530</PadID>
 </LookupGADGET08232021>
@@ -5708,7 +5708,7 @@
 <ID>714</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>577</PadID>
 </LookupGADGET08232021>
@@ -5716,7 +5716,7 @@
 <ID>715</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>550</PadID>
 </LookupGADGET08232021>
@@ -5724,7 +5724,7 @@
 <ID>716</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>554</PadID>
 </LookupGADGET08232021>
@@ -5732,7 +5732,7 @@
 <ID>717</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>553</PadID>
 </LookupGADGET08232021>
@@ -5740,7 +5740,7 @@
 <ID>718</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>549</PadID>
 </LookupGADGET08232021>
@@ -5748,7 +5748,7 @@
 <ID>719</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>545</PadID>
 </LookupGADGET08232021>
@@ -5756,7 +5756,7 @@
 <ID>720</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>555</PadID>
 </LookupGADGET08232021>
@@ -5764,7 +5764,7 @@
 <ID>721</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>562</PadID>
 </LookupGADGET08232021>
@@ -5772,7 +5772,7 @@
 <ID>722</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>544</PadID>
 </LookupGADGET08232021>
@@ -5780,7 +5780,7 @@
 <ID>723</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>561</PadID>
 </LookupGADGET08232021>
@@ -5788,7 +5788,7 @@
 <ID>724</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>543</PadID>
 </LookupGADGET08232021>
@@ -5796,7 +5796,7 @@
 <ID>725</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>578</PadID>
 </LookupGADGET08232021>
@@ -5804,7 +5804,7 @@
 <ID>726</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>542</PadID>
 </LookupGADGET08232021>
@@ -5812,7 +5812,7 @@
 <ID>727</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>559</PadID>
 </LookupGADGET08232021>
@@ -5820,7 +5820,7 @@
 <ID>728</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>541</PadID>
 </LookupGADGET08232021>
@@ -5828,7 +5828,7 @@
 <ID>729</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>522</PadID>
 </LookupGADGET08232021>
@@ -5836,7 +5836,7 @@
 <ID>730</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>558</PadID>
 </LookupGADGET08232021>
@@ -5844,7 +5844,7 @@
 <ID>731</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>520</PadID>
 </LookupGADGET08232021>
@@ -5852,7 +5852,7 @@
 <ID>732</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>521</PadID>
 </LookupGADGET08232021>
@@ -5860,7 +5860,7 @@
 <ID>733</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>516</PadID>
 </LookupGADGET08232021>
@@ -5868,7 +5868,7 @@
 <ID>734</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>517</PadID>
 </LookupGADGET08232021>
@@ -5876,7 +5876,7 @@
 <ID>735</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>512</PadID>
 </LookupGADGET08232021>
@@ -5884,7 +5884,7 @@
 <ID>736</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>513</PadID>
 </LookupGADGET08232021>
@@ -5892,7 +5892,7 @@
 <ID>737</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>573</PadID>
 </LookupGADGET08232021>
@@ -5900,7 +5900,7 @@
 <ID>738</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>537</PadID>
 </LookupGADGET08232021>
@@ -5908,7 +5908,7 @@
 <ID>739</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>531</PadID>
 </LookupGADGET08232021>
@@ -5916,7 +5916,7 @@
 <ID>740</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>533</PadID>
 </LookupGADGET08232021>
@@ -5924,7 +5924,7 @@
 <ID>741</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>574</PadID>
 </LookupGADGET08232021>
@@ -5932,7 +5932,7 @@
 <ID>742</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>534</PadID>
 </LookupGADGET08232021>
@@ -5940,7 +5940,7 @@
 <ID>743</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>570</PadID>
 </LookupGADGET08232021>
@@ -5948,7 +5948,7 @@
 <ID>744</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>568</PadID>
 </LookupGADGET08232021>
@@ -5956,7 +5956,7 @@
 <ID>745</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>556</PadID>
 </LookupGADGET08232021>
@@ -5964,7 +5964,7 @@
 <ID>746</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>567</PadID>
 </LookupGADGET08232021>
@@ -5972,7 +5972,7 @@
 <ID>747</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>552</PadID>
 </LookupGADGET08232021>
@@ -5980,7 +5980,7 @@
 <ID>748</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>603</PadID>
 </LookupGADGET08232021>
@@ -5988,7 +5988,7 @@
 <ID>749</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>551</PadID>
 </LookupGADGET08232021>
@@ -5996,7 +5996,7 @@
 <ID>750</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>592</PadID>
 </LookupGADGET08232021>
@@ -6004,7 +6004,7 @@
 <ID>751</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>563</PadID>
 </LookupGADGET08232021>
@@ -6012,7 +6012,7 @@
 <ID>752</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>527</PadID>
 </LookupGADGET08232021>
@@ -6020,7 +6020,7 @@
 <ID>753</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>580</PadID>
 </LookupGADGET08232021>
@@ -6028,7 +6028,7 @@
 <ID>754</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>526</PadID>
 </LookupGADGET08232021>
@@ -6036,7 +6036,7 @@
 <ID>755</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>579</PadID>
 </LookupGADGET08232021>
@@ -6044,7 +6044,7 @@
 <ID>756</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>525</PadID>
 </LookupGADGET08232021>
@@ -6052,7 +6052,7 @@
 <ID>757</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>560</PadID>
 </LookupGADGET08232021>
@@ -6060,7 +6060,7 @@
 <ID>758</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>524</PadID>
 </LookupGADGET08232021>
@@ -6068,7 +6068,7 @@
 <ID>759</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>523</PadID>
 </LookupGADGET08232021>
@@ -6076,7 +6076,7 @@
 <ID>760</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>540</PadID>
 </LookupGADGET08232021>
@@ -6084,7 +6084,7 @@
 <ID>761</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>539</PadID>
 </LookupGADGET08232021>
@@ -6092,7 +6092,7 @@
 <ID>762</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>557</PadID>
 </LookupGADGET08232021>
@@ -6100,7 +6100,7 @@
 <ID>763</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>519</PadID>
 </LookupGADGET08232021>
@@ -6108,7 +6108,7 @@
 <ID>764</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>518</PadID>
 </LookupGADGET08232021>
@@ -6116,7 +6116,7 @@
 <ID>765</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>515</PadID>
 </LookupGADGET08232021>
@@ -6124,7 +6124,7 @@
 <ID>766</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>514</PadID>
 </LookupGADGET08232021>
@@ -6132,7 +6132,7 @@
 <ID>767</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>511</PadID>
 </LookupGADGET08232021>
@@ -6140,7 +6140,7 @@
 <ID>768</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>529</PadID>
 </LookupGADGET08232021>
@@ -6148,7 +6148,7 @@
 <ID>769</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>256</PadID>
 </LookupGADGET08232021>
@@ -6156,7 +6156,7 @@
 <ID>770</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>255</PadID>
 </LookupGADGET08232021>
@@ -6164,7 +6164,7 @@
 <ID>771</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>260</PadID>
 </LookupGADGET08232021>
@@ -6172,7 +6172,7 @@
 <ID>772</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>259</PadID>
 </LookupGADGET08232021>
@@ -6180,7 +6180,7 @@
 <ID>773</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>264</PadID>
 </LookupGADGET08232021>
@@ -6188,7 +6188,7 @@
 <ID>774</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>263</PadID>
 </LookupGADGET08232021>
@@ -6196,7 +6196,7 @@
 <ID>775</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>284</PadID>
 </LookupGADGET08232021>
@@ -6204,7 +6204,7 @@
 <ID>776</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>302</PadID>
 </LookupGADGET08232021>
@@ -6212,7 +6212,7 @@
 <ID>777</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>268</PadID>
 </LookupGADGET08232021>
@@ -6220,7 +6220,7 @@
 <ID>778</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>285</PadID>
 </LookupGADGET08232021>
@@ -6228,7 +6228,7 @@
 <ID>779</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>305</PadID>
 </LookupGADGET08232021>
@@ -6236,7 +6236,7 @@
 <ID>780</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>269</PadID>
 </LookupGADGET08232021>
@@ -6244,7 +6244,7 @@
 <ID>781</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>324</PadID>
 </LookupGADGET08232021>
@@ -6252,7 +6252,7 @@
 <ID>782</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>270</PadID>
 </LookupGADGET08232021>
@@ -6260,7 +6260,7 @@
 <ID>783</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>325</PadID>
 </LookupGADGET08232021>
@@ -6268,7 +6268,7 @@
 <ID>784</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>271</PadID>
 </LookupGADGET08232021>
@@ -6276,7 +6276,7 @@
 <ID>785</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>308</PadID>
 </LookupGADGET08232021>
@@ -6284,7 +6284,7 @@
 <ID>786</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>272</PadID>
 </LookupGADGET08232021>
@@ -6292,7 +6292,7 @@
 <ID>787</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>296</PadID>
 </LookupGADGET08232021>
@@ -6300,7 +6300,7 @@
 <ID>788</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>337</PadID>
 </LookupGADGET08232021>
@@ -6308,7 +6308,7 @@
 <ID>789</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>297</PadID>
 </LookupGADGET08232021>
@@ -6316,7 +6316,7 @@
 <ID>790</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>330</PadID>
 </LookupGADGET08232021>
@@ -6324,7 +6324,7 @@
 <ID>791</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>301</PadID>
 </LookupGADGET08232021>
@@ -6332,7 +6332,7 @@
 <ID>792</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>293</PadID>
 </LookupGADGET08232021>
@@ -6340,7 +6340,7 @@
 <ID>793</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>315</PadID>
 </LookupGADGET08232021>
@@ -6348,7 +6348,7 @@
 <ID>794</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>313</PadID>
 </LookupGADGET08232021>
@@ -6356,7 +6356,7 @@
 <ID>795</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>319</PadID>
 </LookupGADGET08232021>
@@ -6364,7 +6364,7 @@
 <ID>796</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>279</PadID>
 </LookupGADGET08232021>
@@ -6372,7 +6372,7 @@
 <ID>797</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>276</PadID>
 </LookupGADGET08232021>
@@ -6380,7 +6380,7 @@
 <ID>798</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>278</PadID>
 </LookupGADGET08232021>
@@ -6388,7 +6388,7 @@
 <ID>799</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>318</PadID>
 </LookupGADGET08232021>
@@ -6396,7 +6396,7 @@
 <ID>800</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>282</PadID>
 </LookupGADGET08232021>
@@ -6404,7 +6404,7 @@
 <ID>801</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>257</PadID>
 </LookupGADGET08232021>
@@ -6412,7 +6412,7 @@
 <ID>802</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>258</PadID>
 </LookupGADGET08232021>
@@ -6420,7 +6420,7 @@
 <ID>803</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>261</PadID>
 </LookupGADGET08232021>
@@ -6428,7 +6428,7 @@
 <ID>804</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>262</PadID>
 </LookupGADGET08232021>
@@ -6436,7 +6436,7 @@
 <ID>805</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>265</PadID>
 </LookupGADGET08232021>
@@ -6444,7 +6444,7 @@
 <ID>806</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>266</PadID>
 </LookupGADGET08232021>
@@ -6452,7 +6452,7 @@
 <ID>807</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>267</PadID>
 </LookupGADGET08232021>
@@ -6460,7 +6460,7 @@
 <ID>808</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>303</PadID>
 </LookupGADGET08232021>
@@ -6468,7 +6468,7 @@
 <ID>809</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>304</PadID>
 </LookupGADGET08232021>
@@ -6476,7 +6476,7 @@
 <ID>810</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>286</PadID>
 </LookupGADGET08232021>
@@ -6484,7 +6484,7 @@
 <ID>811</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>323</PadID>
 </LookupGADGET08232021>
@@ -6492,7 +6492,7 @@
 <ID>812</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>287</PadID>
 </LookupGADGET08232021>
@@ -6500,7 +6500,7 @@
 <ID>813</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>306</PadID>
 </LookupGADGET08232021>
@@ -6508,7 +6508,7 @@
 <ID>814</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>288</PadID>
 </LookupGADGET08232021>
@@ -6516,7 +6516,7 @@
 <ID>815</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>307</PadID>
 </LookupGADGET08232021>
@@ -6524,7 +6524,7 @@
 <ID>816</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>289</PadID>
 </LookupGADGET08232021>
@@ -6532,7 +6532,7 @@
 <ID>817</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>290</PadID>
 </LookupGADGET08232021>
@@ -6540,7 +6540,7 @@
 <ID>818</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>300</PadID>
 </LookupGADGET08232021>
@@ -6548,7 +6548,7 @@
 <ID>819</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>298</PadID>
 </LookupGADGET08232021>
@@ -6556,7 +6556,7 @@
 <ID>820</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>294</PadID>
 </LookupGADGET08232021>
@@ -6564,7 +6564,7 @@
 <ID>821</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>295</PadID>
 </LookupGADGET08232021>
@@ -6572,7 +6572,7 @@
 <ID>822</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>299</PadID>
 </LookupGADGET08232021>
@@ -6580,7 +6580,7 @@
 <ID>823</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>275</PadID>
 </LookupGADGET08232021>
@@ -6588,7 +6588,7 @@
 <ID>824</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>322</PadID>
 </LookupGADGET08232021>
@@ -6596,7 +6596,7 @@
 <ID>825</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>277</PadID>
 </LookupGADGET08232021>
@@ -6604,7 +6604,7 @@
 <ID>826</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>317</PadID>
 </LookupGADGET08232021>
@@ -6612,7 +6612,7 @@
 <ID>827</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>281</PadID>
 </LookupGADGET08232021>
@@ -6620,7 +6620,7 @@
 <ID>828</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>321</PadID>
 </LookupGADGET08232021>
@@ -6628,7 +6628,7 @@
 <ID>829</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>280</PadID>
 </LookupGADGET08232021>
@@ -6636,7 +6636,7 @@
 <ID>830</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>316</PadID>
 </LookupGADGET08232021>
@@ -6644,7 +6644,7 @@
 <ID>831</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>283</PadID>
 </LookupGADGET08232021>
@@ -6652,7 +6652,7 @@
 <ID>832</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>1</AgetID>
+<AgetID>2</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>320</PadID>
 </LookupGADGET08232021>
@@ -6660,7 +6660,7 @@
 <ID>833</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>314</PadID>
 </LookupGADGET08232021>
@@ -6668,7 +6668,7 @@
 <ID>834</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>509</PadID>
 </LookupGADGET08232021>
@@ -6676,7 +6676,7 @@
 <ID>835</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>355</PadID>
 </LookupGADGET08232021>
@@ -6684,7 +6684,7 @@
 <ID>836</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>392</PadID>
 </LookupGADGET08232021>
@@ -6692,7 +6692,7 @@
 <ID>837</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>339</PadID>
 </LookupGADGET08232021>
@@ -6700,7 +6700,7 @@
 <ID>838</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>342</PadID>
 </LookupGADGET08232021>
@@ -6708,7 +6708,7 @@
 <ID>839</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>369</PadID>
 </LookupGADGET08232021>
@@ -6716,7 +6716,7 @@
 <ID>840</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>373</PadID>
 </LookupGADGET08232021>
@@ -6724,7 +6724,7 @@
 <ID>841</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>371</PadID>
 </LookupGADGET08232021>
@@ -6732,7 +6732,7 @@
 <ID>842</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>375</PadID>
 </LookupGADGET08232021>
@@ -6740,7 +6740,7 @@
 <ID>843</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>332</PadID>
 </LookupGADGET08232021>
@@ -6748,7 +6748,7 @@
 <ID>844</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>338</PadID>
 </LookupGADGET08232021>
@@ -6756,7 +6756,7 @@
 <ID>845</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>359</PadID>
 </LookupGADGET08232021>
@@ -6764,7 +6764,7 @@
 <ID>846</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>370</PadID>
 </LookupGADGET08232021>
@@ -6772,7 +6772,7 @@
 <ID>847</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>357</PadID>
 </LookupGADGET08232021>
@@ -6780,7 +6780,7 @@
 <ID>848</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>358</PadID>
 </LookupGADGET08232021>
@@ -6788,7 +6788,7 @@
 <ID>849</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>353</PadID>
 </LookupGADGET08232021>
@@ -6796,7 +6796,7 @@
 <ID>850</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>354</PadID>
 </LookupGADGET08232021>
@@ -6804,7 +6804,7 @@
 <ID>851</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>406</PadID>
 </LookupGADGET08232021>
@@ -6812,7 +6812,7 @@
 <ID>852</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>438</PadID>
 </LookupGADGET08232021>
@@ -6820,7 +6820,7 @@
 <ID>853</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>405</PadID>
 </LookupGADGET08232021>
@@ -6828,7 +6828,7 @@
 <ID>854</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>452</PadID>
 </LookupGADGET08232021>
@@ -6836,7 +6836,7 @@
 <ID>855</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>451</PadID>
 </LookupGADGET08232021>
@@ -6844,7 +6844,7 @@
 <ID>856</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>436</PadID>
 </LookupGADGET08232021>
@@ -6852,7 +6852,7 @@
 <ID>857</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>420</PadID>
 </LookupGADGET08232021>
@@ -6860,7 +6860,7 @@
 <ID>858</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>404</PadID>
 </LookupGADGET08232021>
@@ -6868,7 +6868,7 @@
 <ID>859</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>419</PadID>
 </LookupGADGET08232021>
@@ -6876,7 +6876,7 @@
 <ID>860</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>403</PadID>
 </LookupGADGET08232021>
@@ -6884,7 +6884,7 @@
 <ID>861</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>401</PadID>
 </LookupGADGET08232021>
@@ -6892,7 +6892,7 @@
 <ID>862</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>402</PadID>
 </LookupGADGET08232021>
@@ -6900,7 +6900,7 @@
 <ID>863</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>350</PadID>
 </LookupGADGET08232021>
@@ -6908,7 +6908,7 @@
 <ID>864</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>367</PadID>
 </LookupGADGET08232021>
@@ -6916,7 +6916,7 @@
 <ID>865</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>408</PadID>
 </LookupGADGET08232021>
@@ -6924,7 +6924,7 @@
 <ID>866</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>352</PadID>
 </LookupGADGET08232021>
@@ -6932,7 +6932,7 @@
 <ID>867</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>341</PadID>
 </LookupGADGET08232021>
@@ -6940,7 +6940,7 @@
 <ID>868</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>390</PadID>
 </LookupGADGET08232021>
@@ -6948,7 +6948,7 @@
 <ID>869</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>407</PadID>
 </LookupGADGET08232021>
@@ -6956,7 +6956,7 @@
 <ID>870</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>340</PadID>
 </LookupGADGET08232021>
@@ -6964,7 +6964,7 @@
 <ID>871</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>335</PadID>
 </LookupGADGET08232021>
@@ -6972,7 +6972,7 @@
 <ID>872</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>331</PadID>
 </LookupGADGET08232021>
@@ -6980,7 +6980,7 @@
 <ID>873</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>372</PadID>
 </LookupGADGET08232021>
@@ -6988,7 +6988,7 @@
 <ID>874</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>333</PadID>
 </LookupGADGET08232021>
@@ -6996,7 +6996,7 @@
 <ID>875</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>334</PadID>
 </LookupGADGET08232021>
@@ -7004,7 +7004,7 @@
 <ID>876</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>374</PadID>
 </LookupGADGET08232021>
@@ -7012,7 +7012,7 @@
 <ID>877</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>336</PadID>
 </LookupGADGET08232021>
@@ -7020,7 +7020,7 @@
 <ID>878</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>376</PadID>
 </LookupGADGET08232021>
@@ -7028,7 +7028,7 @@
 <ID>879</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>370</PadID>
 </LookupGADGET08232021>
@@ -7036,7 +7036,7 @@
 <ID>880</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>356</PadID>
 </LookupGADGET08232021>
@@ -7044,7 +7044,7 @@
 <ID>881</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>351</PadID>
 </LookupGADGET08232021>
@@ -7052,7 +7052,7 @@
 <ID>882</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>423</PadID>
 </LookupGADGET08232021>
@@ -7060,7 +7060,7 @@
 <ID>883</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>422</PadID>
 </LookupGADGET08232021>
@@ -7068,7 +7068,7 @@
 <ID>884</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>437</PadID>
 </LookupGADGET08232021>
@@ -7076,7 +7076,7 @@
 <ID>885</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>389</PadID>
 </LookupGADGET08232021>
@@ -7084,7 +7084,7 @@
 <ID>886</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>421</PadID>
 </LookupGADGET08232021>
@@ -7092,7 +7092,7 @@
 <ID>887</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>465</PadID>
 </LookupGADGET08232021>
@@ -7100,7 +7100,7 @@
 <ID>888</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>388</PadID>
 </LookupGADGET08232021>
@@ -7108,7 +7108,7 @@
 <ID>889</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>435</PadID>
 </LookupGADGET08232021>
@@ -7116,7 +7116,7 @@
 <ID>890</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>387</PadID>
 </LookupGADGET08232021>
@@ -7124,7 +7124,7 @@
 <ID>891</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>434</PadID>
 </LookupGADGET08232021>
@@ -7132,7 +7132,7 @@
 <ID>892</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>386</PadID>
 </LookupGADGET08232021>
@@ -7140,7 +7140,7 @@
 <ID>893</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>385</PadID>
 </LookupGADGET08232021>
@@ -7148,7 +7148,7 @@
 <ID>894</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>368</PadID>
 </LookupGADGET08232021>
@@ -7156,7 +7156,7 @@
 <ID>895</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>366</PadID>
 </LookupGADGET08232021>
@@ -7164,7 +7164,7 @@
 <ID>896</ID>
 <CoboID>0</CoboID>
 <AsadID>0</AsadID>
-<AgetID>0</AgetID>
+<AgetID>3</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>349</PadID>
 </LookupGADGET08232021>
@@ -7172,7 +7172,7 @@
 <ID>897</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>384</PadID>
 </LookupGADGET08232021>
@@ -7180,7 +7180,7 @@
 <ID>898</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>365</PadID>
 </LookupGADGET08232021>
@@ -7188,7 +7188,7 @@
 <ID>899</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>400</PadID>
 </LookupGADGET08232021>
@@ -7196,7 +7196,7 @@
 <ID>900</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>399</PadID>
 </LookupGADGET08232021>
@@ -7204,7 +7204,7 @@
 <ID>901</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>450</PadID>
 </LookupGADGET08232021>
@@ -7212,7 +7212,7 @@
 <ID>902</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>416</PadID>
 </LookupGADGET08232021>
@@ -7220,7 +7220,7 @@
 <ID>903</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>449</PadID>
 </LookupGADGET08232021>
@@ -7228,7 +7228,7 @@
 <ID>904</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>431</PadID>
 </LookupGADGET08232021>
@@ -7236,7 +7236,7 @@
 <ID>905</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>-1</PadID>
 </LookupGADGET08232021>
@@ -7244,7 +7244,7 @@
 <ID>906</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>446</PadID>
 </LookupGADGET08232021>
@@ -7252,7 +7252,7 @@
 <ID>907</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>460</PadID>
 </LookupGADGET08232021>
@@ -7260,7 +7260,7 @@
 <ID>908</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>462</PadID>
 </LookupGADGET08232021>
@@ -7268,7 +7268,7 @@
 <ID>909</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>475</PadID>
 </LookupGADGET08232021>
@@ -7276,7 +7276,7 @@
 <ID>910</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>476</PadID>
 </LookupGADGET08232021>
@@ -7284,7 +7284,7 @@
 <ID>911</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>398</PadID>
 </LookupGADGET08232021>
@@ -7292,7 +7292,7 @@
 <ID>912</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>487</PadID>
 </LookupGADGET08232021>
@@ -7300,7 +7300,7 @@
 <ID>913</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>485</PadID>
 </LookupGADGET08232021>
@@ -7308,7 +7308,7 @@
 <ID>914</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>471</PadID>
 </LookupGADGET08232021>
@@ -7316,7 +7316,7 @@
 <ID>915</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>428</PadID>
 </LookupGADGET08232021>
@@ -7324,7 +7324,7 @@
 <ID>916</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>504</PadID>
 </LookupGADGET08232021>
@@ -7332,7 +7332,7 @@
 <ID>917</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>397</PadID>
 </LookupGADGET08232021>
@@ -7340,7 +7340,7 @@
 <ID>918</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>484</PadID>
 </LookupGADGET08232021>
@@ -7348,7 +7348,7 @@
 <ID>919</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>459</PadID>
 </LookupGADGET08232021>
@@ -7356,7 +7356,7 @@
 <ID>920</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>381</PadID>
 </LookupGADGET08232021>
@@ -7364,7 +7364,7 @@
 <ID>921</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>413</PadID>
 </LookupGADGET08232021>
@@ -7372,7 +7372,7 @@
 <ID>922</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>347</PadID>
 </LookupGADGET08232021>
@@ -7380,7 +7380,7 @@
 <ID>923</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>486</PadID>
 </LookupGADGET08232021>
@@ -7388,7 +7388,7 @@
 <ID>924</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>482</PadID>
 </LookupGADGET08232021>
@@ -7396,7 +7396,7 @@
 <ID>925</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>493</PadID>
 </LookupGADGET08232021>
@@ -7404,7 +7404,7 @@
 <ID>926</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>473</PadID>
 </LookupGADGET08232021>
@@ -7412,7 +7412,7 @@
 <ID>927</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>497</PadID>
 </LookupGADGET08232021>
@@ -7420,7 +7420,7 @@
 <ID>928</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>414</PadID>
 </LookupGADGET08232021>
@@ -7428,7 +7428,7 @@
 <ID>929</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>382</PadID>
 </LookupGADGET08232021>
@@ -7436,7 +7436,7 @@
 <ID>930</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>383</PadID>
 </LookupGADGET08232021>
@@ -7444,7 +7444,7 @@
 <ID>931</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>418</PadID>
 </LookupGADGET08232021>
@@ -7452,7 +7452,7 @@
 <ID>932</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>417</PadID>
 </LookupGADGET08232021>
@@ -7460,7 +7460,7 @@
 <ID>933</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>433</PadID>
 </LookupGADGET08232021>
@@ -7468,7 +7468,7 @@
 <ID>934</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>432</PadID>
 </LookupGADGET08232021>
@@ -7476,7 +7476,7 @@
 <ID>935</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>448</PadID>
 </LookupGADGET08232021>
@@ -7484,7 +7484,7 @@
 <ID>936</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>447</PadID>
 </LookupGADGET08232021>
@@ -7492,7 +7492,7 @@
 <ID>937</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>464</PadID>
 </LookupGADGET08232021>
@@ -7500,7 +7500,7 @@
 <ID>938</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>463</PadID>
 </LookupGADGET08232021>
@@ -7508,7 +7508,7 @@
 <ID>939</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>461</PadID>
 </LookupGADGET08232021>
@@ -7516,7 +7516,7 @@
 <ID>940</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>477</PadID>
 </LookupGADGET08232021>
@@ -7524,7 +7524,7 @@
 <ID>941</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>474</PadID>
 </LookupGADGET08232021>
@@ -7532,7 +7532,7 @@
 <ID>942</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>488</PadID>
 </LookupGADGET08232021>
@@ -7540,7 +7540,7 @@
 <ID>943</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>429</PadID>
 </LookupGADGET08232021>
@@ -7548,7 +7548,7 @@
 <ID>944</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>444</PadID>
 </LookupGADGET08232021>
@@ -7556,7 +7556,7 @@
 <ID>945</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>483</PadID>
 </LookupGADGET08232021>
@@ -7564,7 +7564,7 @@
 <ID>946</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>494</PadID>
 </LookupGADGET08232021>
@@ -7572,7 +7572,7 @@
 <ID>947</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>503</PadID>
 </LookupGADGET08232021>
@@ -7580,7 +7580,7 @@
 <ID>948</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>430</PadID>
 </LookupGADGET08232021>
@@ -7588,7 +7588,7 @@
 <ID>949</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>364</PadID>
 </LookupGADGET08232021>
@@ -7596,7 +7596,7 @@
 <ID>950</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>457</PadID>
 </LookupGADGET08232021>
@@ -7604,7 +7604,7 @@
 <ID>951</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>445</PadID>
 </LookupGADGET08232021>
@@ -7612,7 +7612,7 @@
 <ID>952</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>495</PadID>
 </LookupGADGET08232021>
@@ -7620,7 +7620,7 @@
 <ID>953</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>415</PadID>
 </LookupGADGET08232021>
@@ -7628,7 +7628,7 @@
 <ID>954</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>472</PadID>
 </LookupGADGET08232021>
@@ -7636,7 +7636,7 @@
 <ID>955</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>470</PadID>
 </LookupGADGET08232021>
@@ -7644,7 +7644,7 @@
 <ID>956</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>502</PadID>
 </LookupGADGET08232021>
@@ -7652,7 +7652,7 @@
 <ID>957</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>458</PadID>
 </LookupGADGET08232021>
@@ -7660,7 +7660,7 @@
 <ID>958</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>496</PadID>
 </LookupGADGET08232021>
@@ -7668,7 +7668,7 @@
 <ID>959</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>346</PadID>
 </LookupGADGET08232021>
@@ -7676,7 +7676,7 @@
 <ID>960</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>3</AgetID>
+<AgetID>0</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>508</PadID>
 </LookupGADGET08232021>
@@ -7684,7 +7684,7 @@
 <ID>961</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>67</ChannelID>
 <PadID>425</PadID>
 </LookupGADGET08232021>
@@ -7692,7 +7692,7 @@
 <ID>962</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>65</ChannelID>
 <PadID>442</PadID>
 </LookupGADGET08232021>
@@ -7700,7 +7700,7 @@
 <ID>963</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>63</ChannelID>
 <PadID>378</PadID>
 </LookupGADGET08232021>
@@ -7708,7 +7708,7 @@
 <ID>964</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>61</ChannelID>
 <PadID>380</PadID>
 </LookupGADGET08232021>
@@ -7716,7 +7716,7 @@
 <ID>965</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>59</ChannelID>
 <PadID>394</PadID>
 </LookupGADGET08232021>
@@ -7724,7 +7724,7 @@
 <ID>966</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>57</ChannelID>
 <PadID>456</PadID>
 </LookupGADGET08232021>
@@ -7732,7 +7732,7 @@
 <ID>967</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>54</ChannelID>
 <PadID>327</PadID>
 </LookupGADGET08232021>
@@ -7740,7 +7740,7 @@
 <ID>968</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>52</ChannelID>
 <PadID>396</PadID>
 </LookupGADGET08232021>
@@ -7748,7 +7748,7 @@
 <ID>969</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>50</ChannelID>
 <PadID>292</PadID>
 </LookupGADGET08232021>
@@ -7756,7 +7756,7 @@
 <ID>970</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>48</ChannelID>
 <PadID>469</PadID>
 </LookupGADGET08232021>
@@ -7764,7 +7764,7 @@
 <ID>971</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>46</ChannelID>
 <PadID>328</PadID>
 </LookupGADGET08232021>
@@ -7772,7 +7772,7 @@
 <ID>972</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>43</ChannelID>
 <PadID>395</PadID>
 </LookupGADGET08232021>
@@ -7780,7 +7780,7 @@
 <ID>973</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>41</ChannelID>
 <PadID>379</PadID>
 </LookupGADGET08232021>
@@ -7788,7 +7788,7 @@
 <ID>974</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>39</ChannelID>
 <PadID>311</PadID>
 </LookupGADGET08232021>
@@ -7796,7 +7796,7 @@
 <ID>975</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>37</ChannelID>
 <PadID>506</PadID>
 </LookupGADGET08232021>
@@ -7804,7 +7804,7 @@
 <ID>976</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>35</ChannelID>
 <PadID>411</PadID>
 </LookupGADGET08232021>
@@ -7812,7 +7812,7 @@
 <ID>977</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>33</ChannelID>
 <PadID>500</PadID>
 </LookupGADGET08232021>
@@ -7820,7 +7820,7 @@
 <ID>978</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>31</ChannelID>
 <PadID>499</PadID>
 </LookupGADGET08232021>
@@ -7828,7 +7828,7 @@
 <ID>979</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>29</ChannelID>
 <PadID>491</PadID>
 </LookupGADGET08232021>
@@ -7836,7 +7836,7 @@
 <ID>980</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>27</ChannelID>
 <PadID>490</PadID>
 </LookupGADGET08232021>
@@ -7844,7 +7844,7 @@
 <ID>981</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>25</ChannelID>
 <PadID>481</PadID>
 </LookupGADGET08232021>
@@ -7852,7 +7852,7 @@
 <ID>982</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>23</ChannelID>
 <PadID>479</PadID>
 </LookupGADGET08232021>
@@ -7860,7 +7860,7 @@
 <ID>983</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>20</ChannelID>
 <PadID>468</PadID>
 </LookupGADGET08232021>
@@ -7868,7 +7868,7 @@
 <ID>984</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>18</ChannelID>
 <PadID>467</PadID>
 </LookupGADGET08232021>
@@ -7876,7 +7876,7 @@
 <ID>985</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>16</ChannelID>
 <PadID>453</PadID>
 </LookupGADGET08232021>
@@ -7884,7 +7884,7 @@
 <ID>986</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>14</ChannelID>
 <PadID>455</PadID>
 </LookupGADGET08232021>
@@ -7892,7 +7892,7 @@
 <ID>987</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>12</ChannelID>
 <PadID>424</PadID>
 </LookupGADGET08232021>
@@ -7900,7 +7900,7 @@
 <ID>988</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>9</ChannelID>
 <PadID>439</PadID>
 </LookupGADGET08232021>
@@ -7908,7 +7908,7 @@
 <ID>989</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>7</ChannelID>
 <PadID>360</PadID>
 </LookupGADGET08232021>
@@ -7916,7 +7916,7 @@
 <ID>990</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>5</ChannelID>
 <PadID>377</PadID>
 </LookupGADGET08232021>
@@ -7924,7 +7924,7 @@
 <ID>991</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>3</ChannelID>
 <PadID>291</PadID>
 </LookupGADGET08232021>
@@ -7932,7 +7932,7 @@
 <ID>992</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>1</ChannelID>
 <PadID>309</PadID>
 </LookupGADGET08232021>
@@ -7940,7 +7940,7 @@
 <ID>993</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>66</ChannelID>
 <PadID>412</PadID>
 </LookupGADGET08232021>
@@ -7948,7 +7948,7 @@
 <ID>994</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>64</ChannelID>
 <PadID>410</PadID>
 </LookupGADGET08232021>
@@ -7956,7 +7956,7 @@
 <ID>995</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>62</ChannelID>
 <PadID>310</PadID>
 </LookupGADGET08232021>
@@ -7964,7 +7964,7 @@
 <ID>996</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>60</ChannelID>
 <PadID>344</PadID>
 </LookupGADGET08232021>
@@ -7972,7 +7972,7 @@
 <ID>997</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>58</ChannelID>
 <PadID>427</PadID>
 </LookupGADGET08232021>
@@ -7980,7 +7980,7 @@
 <ID>998</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>55</ChannelID>
 <PadID>361</PadID>
 </LookupGADGET08232021>
@@ -7988,7 +7988,7 @@
 <ID>999</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>53</ChannelID>
 <PadID>363</PadID>
 </LookupGADGET08232021>
@@ -7996,7 +7996,7 @@
 <ID>1000</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>51</ChannelID>
 <PadID>329</PadID>
 </LookupGADGET08232021>
@@ -8004,7 +8004,7 @@
 <ID>1001</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>49</ChannelID>
 <PadID>426</PadID>
 </LookupGADGET08232021>
@@ -8012,7 +8012,7 @@
 <ID>1002</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>47</ChannelID>
 <PadID>312</PadID>
 </LookupGADGET08232021>
@@ -8020,7 +8020,7 @@
 <ID>1003</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>44</ChannelID>
 <PadID>362</PadID>
 </LookupGADGET08232021>
@@ -8028,7 +8028,7 @@
 <ID>1004</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>42</ChannelID>
 <PadID>348</PadID>
 </LookupGADGET08232021>
@@ -8036,7 +8036,7 @@
 <ID>1005</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>40</ChannelID>
 <PadID>345</PadID>
 </LookupGADGET08232021>
@@ -8044,7 +8044,7 @@
 <ID>1006</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>38</ChannelID>
 <PadID>443</PadID>
 </LookupGADGET08232021>
@@ -8052,7 +8052,7 @@
 <ID>1007</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>36</ChannelID>
 <PadID>507</PadID>
 </LookupGADGET08232021>
@@ -8060,7 +8060,7 @@
 <ID>1008</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>34</ChannelID>
 <PadID>505</PadID>
 </LookupGADGET08232021>
@@ -8068,7 +8068,7 @@
 <ID>1009</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>32</ChannelID>
 <PadID>501</PadID>
 </LookupGADGET08232021>
@@ -8076,7 +8076,7 @@
 <ID>1010</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>30</ChannelID>
 <PadID>498</PadID>
 </LookupGADGET08232021>
@@ -8084,7 +8084,7 @@
 <ID>1011</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>28</ChannelID>
 <PadID>492</PadID>
 </LookupGADGET08232021>
@@ -8092,7 +8092,7 @@
 <ID>1012</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>26</ChannelID>
 <PadID>489</PadID>
 </LookupGADGET08232021>
@@ -8100,7 +8100,7 @@
 <ID>1013</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>24</ChannelID>
 <PadID>480</PadID>
 </LookupGADGET08232021>
@@ -8108,7 +8108,7 @@
 <ID>1014</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>21</ChannelID>
 <PadID>478</PadID>
 </LookupGADGET08232021>
@@ -8116,7 +8116,7 @@
 <ID>1015</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>19</ChannelID>
 <PadID>466</PadID>
 </LookupGADGET08232021>
@@ -8124,7 +8124,7 @@
 <ID>1016</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>17</ChannelID>
 <PadID>454</PadID>
 </LookupGADGET08232021>
@@ -8132,7 +8132,7 @@
 <ID>1017</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>15</ChannelID>
 <PadID>440</PadID>
 </LookupGADGET08232021>
@@ -8140,7 +8140,7 @@
 <ID>1018</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>13</ChannelID>
 <PadID>441</PadID>
 </LookupGADGET08232021>
@@ -8148,7 +8148,7 @@
 <ID>1019</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>10</ChannelID>
 <PadID>409</PadID>
 </LookupGADGET08232021>
@@ -8156,7 +8156,7 @@
 <ID>1020</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>8</ChannelID>
 <PadID>393</PadID>
 </LookupGADGET08232021>
@@ -8164,7 +8164,7 @@
 <ID>1021</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>6</ChannelID>
 <PadID>343</PadID>
 </LookupGADGET08232021>
@@ -8172,7 +8172,7 @@
 <ID>1022</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>4</ChannelID>
 <PadID>326</PadID>
 </LookupGADGET08232021>
@@ -8180,7 +8180,7 @@
 <ID>1023</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>2</ChannelID>
 <PadID>273</PadID>
 </LookupGADGET08232021>
@@ -8188,7 +8188,7 @@
 <ID>1024</ID>
 <CoboID>0</CoboID>
 <AsadID>1</AsadID>
-<AgetID>2</AgetID>
+<AgetID>1</AgetID>
 <ChannelID>0</ChannelID>
 <PadID>274</PadID>
 </LookupGADGET08232021>
