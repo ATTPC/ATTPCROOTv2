@@ -150,7 +150,7 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    std::cout << cYELLOW << " Track " << track->GetTrackID() << " with " << hitClusterArray->size() << " clusters "
              << cNORMAL << "\n";
 
-   if (hitClusterArray->size() < 5 ||
+   if (hitClusterArray->size() < 3 ||
        track->GetIsNoise()) //&& patternTrackCand.size()<5) { // TODO Check minimum number of clusters
       return nullptr;
 
@@ -186,16 +186,17 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
          theta = track->GetGeoTheta();
          phi = 180.0 * TMath::DegToRad() - track->GetGeoPhi();
       }
+
       std::reverse(hitClusterArray->begin(), hitClusterArray->end());
 
    } else if (thetaConv > 90.0 * TMath::DegToRad()) { // Backward (Forward) for experiment (simulation)
 
       if (fSimulationConv) {
          theta = track->GetGeoTheta();
-         phi = 180.0 * TMath::DegToRad() - track->GetGeoPhi();
+         phi = track->GetGeoPhi(); // 180.0 * TMath::DegToRad() - track->GetGeoPhi();
       } else {
          theta = 180.0 * TMath::DegToRad() - track->GetGeoTheta();
-         phi = track->GetGeoPhi();
+         phi = -track->GetGeoPhi();
       }
    } else {
       std::cout << cRED << " AtGenfit::FitTracks - Warning! Undefined theta angle. Skipping event..." << cNORMAL
@@ -243,6 +244,11 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
             clusterClone.SetPosition(pos.X(), pos.Y(), 1000.0 - pos.Z());
          else
             clusterClone.SetPosition(-pos.X(), pos.Y(), 1000.0 - pos.Z());
+      } else if (thetaConv > 90.0 * TMath::DegToRad()) {
+         if (fSimulationConv)
+            clusterClone.SetPosition(pos.X(), pos.Y(), pos.Z());
+         else
+            clusterClone.SetPosition(-pos.X(), pos.Y(), pos.Z());
       }
 
       Int_t idx = fHitClusterArray->GetEntriesFast();
@@ -277,7 +283,12 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       // iniCluster = hitClusterArray->back();
       iniPos = iniCluster.GetPosition();
       zIniCal = iniPos.Z();
-      xIniCal = iniPos.X();
+
+      if (fSimulationConv)
+         xIniCal = iniPos.X();
+      else
+         xIniCal = -iniPos.X();
+
    } else {
       std::cout << cRED << " AtGenfit::FitTracks - Warning! Undefined theta angle. Skipping event..." << cNORMAL
                 << "\n";

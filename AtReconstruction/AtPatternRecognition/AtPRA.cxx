@@ -362,7 +362,6 @@ void AtPATTERN::AtPRA::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Floa
        double Q = hitArray->at(iHits).GetCharge();
        int TB          = hitArray->at(iHits).GetTimeStamp();
        //std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<Q<<"\n";
-
        }*/
 
    // Diffusion coefficients (TODO: Get them from the parameter file)
@@ -482,7 +481,6 @@ void AtPATTERN::AtPRA::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Floa
            std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<Q<<"\n";
       std::cout<<" Distance to cluster center "<<TMath::Abs((track.GetHitClusterArray()->back().GetPosition() -
     pos).Mag())<<"\n";
-
     }
          std::cout<<"=================================================="<<"\n";*/
 
@@ -502,13 +500,16 @@ void AtPATTERN::AtPRA::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Floa
       if (hitClusterArray->size() > 2) {
 
          for (auto iHitCluster = 0; iHitCluster < hitClusterArray->size() - 1;
-              iHitCluster += 2) // Calculating distances between pairs of clusters
+              ++iHitCluster) // Calculating distances between pairs of clusters
          {
 
             TVector3 clusBack = hitClusterArray->at(iHitCluster).GetPosition();
             TVector3 clusForw = hitClusterArray->at(iHitCluster + 1).GetPosition();
             TVector3 clusMidPos = (clusBack + clusForw) * 0.5;
-            std::vector<TVector3> renormClus{clusBack, clusMidPos, clusForw};
+            std::vector<TVector3> renormClus{clusBack, clusMidPos};
+
+            if (iHitCluster == (hitClusterArray->size() - 2))
+               renormClus.push_back(clusForw);
 
             // Create a new cluster and renormalize the charge of the other with half the radius.
             for (auto iClus : renormClus) {
