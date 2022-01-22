@@ -9,16 +9,8 @@ ${BASE_INCLUDE_DIRECTORIES}
 ${GENFIT2_INCLUDE_DIR}
 
 # Add all the folders having header files you used in the code.
-${CMAKE_SOURCE_DIR}/AtReconstruction/GETDecoder
-${CMAKE_SOURCE_DIR}/AtReconstruction/GETDecoder2
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtDecoder
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPulseAnalyzer
-#${CMAKE_SOURCE_DIR}/AtReconstruction/HierarchicalClustering
-${CMAKE_SOURCE_DIR}/AtReconstruction/HoughTransformation
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtProtoPhiReco
-${CMAKE_SOURCE_DIR}/AtReconstruction/VMEDecoder
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtMinimization
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtAnalysis
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
@@ -58,28 +50,7 @@ set(LINK_DIRECTORIES
 
 set(SRCS
   # Add all the source files below this line. Those must have cxx for their extension.
-  GETDecoder/GETDecoder.cxx
-  GETDecoder/GETFrame.cxx
-  GETDecoder/GETMath.cxx
-  GETDecoder/GETPlot.cxx
 
-  GETDecoder2/GETDecoder2.cxx
-  GETDecoder2/GETFrameInfo.cxx
-
-  GETDecoder2/GETHeaderBase.cxx
-  GETDecoder2/GETBasicFrameHeader.cxx
-  GETDecoder2/GETLayerHeader.cxx
-
-  GETDecoder2/GETTopologyFrame.cxx
-  GETDecoder2/GETBasicFrame.cxx
-  GETDecoder2/GETCoboFrame.cxx
-  GETDecoder2/GETLayeredFrame.cxx
-
-  GETDecoder2/GETMath2.cxx
-  GETDecoder2/GETFileChecker.cxx
-
-  AtDecoder/AtCore.cxx
-  AtDecoder/AtCore2.cxx
   AtDecoder/AtPad.cxx
   AtDecoder/AtRawEvent.cxx
   AtDecoder/AtHit.cxx
@@ -90,7 +61,6 @@ set(SRCS
   AtDecoder/AtTrackingEventAna.cxx
   AtDecoder/AtPatternEvent.cxx
   AtDecoder/AtProtoQuadrant.cxx
-  AtDecoder/AtPedestal.cxx
   AtDecoder/AtTrack.cxx
   AtDecoder/AtHDFParser.cxx
 
@@ -108,31 +78,12 @@ set(SRCS
   AtFilter/AtTrapezoidFilter.cxx
   AtFilter/AtFilterCalibrate.cxx
 
-  #HierarchicalClustering/AtCubicSplineFit.cxx
-  #HierarchicalClustering/AtFindVertex.cxx
-  #HierarchicalClustering/AtHierarchicalClusteringHc.cxx
-  #HierarchicalClustering/AtHierarchicalClusteringSmoothenCloud.cxx
-  #HierarchicalClustering/AtTrajectory.cxx
-
-  #AtProtoPhiReco/AtPhiReco.cxx
-  #AtProtoPhiReco/AtPhiRecoSimple.cxx
-  #AtProtoPhiReco/AtPhiRecoTriple.cxx
-
-  #VMEDecoder/VMEDecoder.cxx
-  #VMEDecoder/VMECore.cxx
-  #VMEDecoder/AtRawIC.cxx
-  #VMEDecoder/VMERawEvent.cxx
-
-  AtDecoderTask.cxx
-  AtDecoder2Task.cxx
   AtHDFParserTask.cxx
   AtPSAtask.cxx
   AtFilterTask.cxx
   AtAuxFilterTask.cxx
   AtDataReductionTask.cxx
   
-  #AtPhiRecoTask.cxx
-  #AtVMEUnpackTask.cxx
   )
 
 ### Add additional sources and libraries if we found certain modules ###
@@ -153,22 +104,9 @@ if(PCL_FOUND)
     AtPatternRecognition/AtRansacMod.cxx
     AtPatternRecognition/AtMlesacMod.cxx
     AtPatternRecognition/AtLmedsMod.cxx
-    AtMinimization/AtMinimization.cxx
-    AtMinimization/AtMCMinimization.cxx
-    AtMinimization/AtMCQMinimization.cxx
-    AtAnalysis/AtAnalysis.cxx
-    AtAnalysis/AtProtoAnalysis.cxx
-    AtAnalysis/AtTrackingAnalysis.cxx
-    AtAnalysis/Atd2HeAnalysis.cxx
-    HoughTransformation/AtHoughSpace.cxx
-    HoughTransformation/AtHoughSpaceLine.cxx
-    HoughTransformation/AtHoughSpaceCircle.cxx
     AtRansac/AtRansac.cxx
     AtPRAtask.cxx
-    AtHoughTask.cxx
-    AtAnalysisTask.cxx
     AtRansacTask.cxx
-    #AtHierarchicalClusteringTask.cxx
     )
   set(DEPENDENCIES ${DEPENDENCIES}
     ${PCL_LIBRARIES}

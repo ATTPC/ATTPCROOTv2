@@ -5,9 +5,6 @@
 #include "FairLogger.h"
 
 #include "AtHDFParser.h"
-#include "AtTpcProtoMap.h"
-#include "AtGadgetIIMap.h"
-#include "AtPedestal.h"
 #include "AtRawEvent.h"
 #include "AtMap.h"
 #include "AtDigiPar.h"

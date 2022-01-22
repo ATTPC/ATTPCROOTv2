@@ -32,9 +32,6 @@
 #include "AtProtoEvent.h"
 #include "AtPatternEvent.h"
 #include "AtTrackingEventAna.h"
-#include "AtHoughSpaceLine.h"
-#include "AtHoughSpaceCircle.h"
-#include "AtHoughSpace.h"
 #include "AtRansac.h"
 #include "AtRansacMod.h"
 #include "AtMlesacMod.h"
@@ -155,8 +152,6 @@ protected:
    TClonesArray *fPatternEventArray;
    // TClonesArray* fS800CalcArray;
 
-   AtHoughSpaceLine *fHoughSpaceLine_buff;
-   AtHoughSpaceCircle *fHoughSpaceCircle_buff;
    AtRANSACN::AtRansac *fRansac;
    AtRansacMod *fRansacMod;
    AtMlesacMod *fMlesacMod;

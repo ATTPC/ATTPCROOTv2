@@ -530,36 +530,7 @@ void AtEventDrawTaskProto::DrawProtoPattern()
    }
 }
 
-void AtEventDrawTaskProto::DrawProtoHough()
-{
-
-   fHoughSpaceLine = dynamic_cast<AtHoughSpaceLine *>(fHoughSpaceArray->At(0));
-   std::vector<std::pair<Double_t, Double_t>> HoughPar = fHoughSpaceLine->GetHoughPar();
-
-   std::vector<Double_t> par0_fit;
-   std::vector<Double_t> par1_fit;
-   std::vector<Double_t> Angle;
-   std::vector<Double_t> Angle_fit;
-
-   Double_t tHoughPar0[4] = {0};
-   Double_t tHoughPar1[4] = {0};
-   Double_t tFitPar0[4] = {0};
-   Double_t tFitPar1[4] = {0};
-   Double_t tAngleHough[4] = {0};
-   Double_t tAngleFit[4] = {0};
-
-   for (Int_t i = 0; i < HoughPar.size(); i++) {
-
-      Angle.push_back(180 - HoughPar.at(i).first * 180 / TMath::Pi());
-
-      tHoughPar0[i] = HoughPar.at(i).first;
-      tHoughPar1[i] = HoughPar.at(i).second;
-      tAngleHough[i] = 180 - HoughPar.at(i).first * 180 / TMath::Pi();
-
-      fHoughFit[i]->SetParameter(0, HoughPar.at(i).first);
-      fHoughFit[i]->SetParameter(1, HoughPar.at(i).second);
-   }
-}
+void AtEventDrawTaskProto::DrawProtoHough() {}
 
 void AtEventDrawTaskProto::DrawProtoPatternAna()
 {
@@ -685,49 +656,7 @@ void AtEventDrawTaskProto::DrawMesh()
    fMesh->Draw();
 }
 
-void AtEventDrawTaskProto::DrawProtoSpace()
-{
-
-   for (Int_t i = 0; i < 4; i++) {
-      fQHitPattern[i] = new TGraph();
-      fQHitPattern[i]->SetMarkerStyle(22);
-      fQHitPattern[i]->SetMarkerSize(0.7);
-      fQHitPattern[i]->SetPoint(1, 0, 0);
-      if (i == 0) {
-         fCvsQuadrant1->cd();
-         fQHitPattern[0]->Draw("A*");
-         if (fHoughSpaceArray) {
-            fHoughFit[0]->Draw("SAME");
-            if (fProtoEventAnaArray)
-               fFit[0]->Draw("SAME");
-         }
-      } else if (i == 1) {
-         fCvsQuadrant2->cd();
-         fQHitPattern[1]->Draw("A*");
-         if (fHoughSpaceArray) {
-            fHoughFit[1]->Draw("SAME");
-            if (fProtoEventAnaArray)
-               fFit[1]->Draw("SAME");
-         }
-      } else if (i == 2) {
-         fCvsQuadrant3->cd();
-         fQHitPattern[2]->Draw("A*");
-         if (fHoughSpaceArray) {
-            fHoughFit[2]->Draw("SAME");
-            if (fProtoEventAnaArray)
-               fFit[2]->Draw("SAME");
-         }
-      } else if (i == 3) {
-         fCvsQuadrant4->cd();
-         fQHitPattern[3]->Draw("A*");
-         if (fHoughSpaceArray) {
-            fHoughFit[3]->Draw("SAME");
-            if (fProtoEventAnaArray)
-               fFit[3]->Draw("SAME");
-         }
-      }
-   }
-}
+void AtEventDrawTaskProto::DrawProtoSpace() {}
 
 void AtEventDrawTaskProto::DrawProtoEL()
 {

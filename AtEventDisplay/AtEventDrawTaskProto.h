@@ -26,9 +26,6 @@
 #include "AtEvent.h"
 #include "AtProtoEvent.h"
 #include "AtProtoEventAna.h"
-#include "AtHoughSpaceLine.h"
-#include "AtHoughSpaceCircle.h"
-#include "AtHoughSpace.h"
 #include "AtHit.h"
 #include "AtTpcProtoMap.h"
 #include "AtMap.h"
@@ -138,7 +135,6 @@ protected:
 
    TClonesArray *fHitArray;
    TClonesArray *fRawEventArray;
-   TClonesArray *fHoughSpaceArray;
    TClonesArray *fProtoEventArray;
    TClonesArray *fProtoEventAnaArray;
    TClonesArray *fPatternEventArray;
@@ -153,7 +149,6 @@ protected:
    AtHit *fIniHit;
    AtMap *fDetmap;
    AtRawEvent *fRawevent;
-   AtHoughSpaceLine *fHoughSpaceLine;
 
    TEveLine *fLineArray[20];
    Int_t fLineNum;

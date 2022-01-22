@@ -17,9 +17,6 @@ class AtRansac;
 class AtEvent;
 class AtEventManager;
 class AtHit;
-class AtHoughSpace;
-class AtHoughSpaceCircle;
-class AtHoughSpaceLine;
 class AtLmedsMod;
 class AtMlesacMod;
 class AtRansacMod;
@@ -147,14 +144,11 @@ private:
 
    TClonesArray *fHitArray;
    TClonesArray *fRawEventArray;
-   TClonesArray *fHoughSpaceArray;
    TClonesArray *fRansacArray;
    TClonesArray *fTrackFinderHCArray;
    TClonesArray *fTrackingEventAnaArray;
    TClonesArray *fPatternEventArray;
 
-   AtHoughSpaceLine *fHoughSpaceLine_buff;
-   AtHoughSpaceCircle *fHoughSpaceCircle_buff;
    AtRANSACN::AtRansac *fRansac;
    AtRansacMod *fRansacMod;
    AtMlesacMod *fMlesacMod;
