@@ -25,8 +25,8 @@ class AtPulseLineTask : public AtPulseTask {
 private:
    UInt_t fNumIntegrationPoints = 1000;
    UShort_t fNumSigmaToIntegrateZ = 3;
-   
-   std::map<Int_t, Float_t> fXYintegrationMap;     //! xyIntegrationMap[padNum] = % of e- in event here
+
+   std::map<Int_t, Float_t> fXYintegrationMap; //! xyIntegrationMap[padNum] = % of e- in event here
 
    void generateIntegrationMap(AtSimulatedLine *line);
    Int_t throwRandomAndGetBinAfterDiffusion(const ROOT::Math::XYZVector &loc, Double_t diffusionSigma);
@@ -35,14 +35,14 @@ private:
    // fills zIntegral with the integral for bins starting with binMin, inclusive
    Int_t integrateTimebuckets(std::vector<double> &zIntegral, AtSimulatedLine *line);
    virtual bool gatherElectronsFromSimulatedPoint(AtSimulatedPoint *line) override;
-   
+
 public:
    AtPulseLineTask();
    ~AtPulseLineTask();
 
    void SetNumIntegrationPoints(UInt_t numPoints) { fNumIntegrationPoints = numPoints; }
-   void SetNumSigmaToIntegrateZ(UShort_t zScore) { fNumSigmaToIntegrateZ = zScore;}
-   UInt_t GetNumIntegrationPoints() {  return fNumIntegrationPoints; }
+   void SetNumSigmaToIntegrateZ(UShort_t zScore) { fNumSigmaToIntegrateZ = zScore; }
+   UInt_t GetNumIntegrationPoints() { return fNumIntegrationPoints; }
    UShort_t SetNumSigmaToIntegrateZ() { return fNumSigmaToIntegrateZ; }
 
    ClassDefOverride(AtPulseLineTask, 2);

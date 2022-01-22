@@ -13,7 +13,7 @@ protected:
    std::size_t fMCEventID;
    Int_t fClusterID;
    Int_t fCharge;
-   
+
    ROOT::Math::XYZVector fPosition; //(mm,mm,us)
 
 public:

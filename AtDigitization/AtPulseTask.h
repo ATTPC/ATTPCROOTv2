@@ -26,25 +26,25 @@ class AtPulseTask : public FairTask {
 protected:
    AtMapPtr fMap; //!< AtTPC map
 
-   AtDigiPar *fPar;      //!< Base parameter container.
-   Int_t fEventID = 0;       //!< EventID
-   Double_t fGain = 0;       //!< Gain.
-   Double_t fGETGain = 0;    //!< GET Gain.
-   Double_t fPeakingTime = 0;   //!< Electronic peaking time in us
-   Double_t fTBTime = 0;        //!< Time bucket size in us
-   Int_t fNumTbs = 0;        //!< Number of time buckers
-   Int_t fTBEntrance = 0; //! Window location in timebuckets (from config)
-   Int_t fTBPadPlane = 0; //! Pad plane location in TBs (calculated from DriftVelocity, TBEntrance, ZPadPlane
-   
-   Bool_t fIsPersistent = kTRUE; //!< If true, save container
+   AtDigiPar *fPar;           //!< Base parameter container.
+   Int_t fEventID = 0;        //!< EventID
+   Double_t fGain = 0;        //!< Gain.
+   Double_t fGETGain = 0;     //!< GET Gain.
+   Double_t fPeakingTime = 0; //!< Electronic peaking time in us
+   Double_t fTBTime = 0;      //!< Time bucket size in us
+   Int_t fNumTbs = 0;         //!< Number of time buckers
+   Int_t fTBEntrance = 0;     //! Window location in timebuckets (from config)
+   Int_t fTBPadPlane = 0;     //! Pad plane location in TBs (calculated from DriftVelocity, TBEntrance, ZPadPlane
+
+   Bool_t fIsPersistent = kTRUE;  //!< If true, save container
    Bool_t fIsSaveMCInfo = kFALSE; //!<< Propagates MC information
    Bool_t fUseFastGain = kTRUE;
-   
+
    TClonesArray *fSimulatedPointArray; //!< drifted electron array (input)
-   TClonesArray *fRawEventArray;        //!< Raw Event array(only one)
-   TClonesArray *fMCPointArray;         //!< MC Point Array
-   AtRawEvent *fRawEvent;               //!< Raw Event Object
-   TH2Poly *fPadPlane;                  //!< pad plane
+   TClonesArray *fRawEventArray;       //!< Raw Event array(only one)
+   TClonesArray *fMCPointArray;        //!< MC Point Array
+   AtRawEvent *fRawEvent;              //!< Raw Event Object
+   TH2Poly *fPadPlane;                 //!< pad plane
 
    std::map<Int_t, TH1F *> electronsMap;          //!<
    TH1F **eleAccumulated;                         //!<
@@ -52,7 +52,6 @@ protected:
 
    TF1 *gain; //!<
    Double_t avgGainDeviation;
-   
 
    void saveMCInfo(int mcPointID, int padNumber, int trackID);
    void setParameters();
@@ -64,7 +63,7 @@ protected:
    // Add all electrons for AtSimulatedPoint to the electronMap
    // Returns if any electrons were added
    virtual bool gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point);
-   
+
 public:
    AtPulseTask();
    AtPulseTask(const char *name);
@@ -73,7 +72,7 @@ public:
    void SetPersistence(Bool_t val) { fIsPersistent = val; }
    void SetSaveMCInfo() { fIsSaveMCInfo = kTRUE; }
    void SetMap(AtMapPtr map) { fMap = map; };
-   void UseFastGain(Bool_t val) { fUseFastGain = val;}
+   void UseFastGain(Bool_t val) { fUseFastGain = val; }
    virtual InitStatus Init() override;        //!< Initiliazation of task at the beginning of a run.
    virtual void Exec(Option_t *opt) override; //!< Executed for each event.
    virtual void SetParContainers() override;  //!< Load the parameter container from the runtime database.

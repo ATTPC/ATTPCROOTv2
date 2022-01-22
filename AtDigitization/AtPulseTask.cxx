@@ -31,15 +31,12 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
-AtPulseTask::AtPulseTask() : FairTask("AtPulseTask")
-{
-}
-AtPulseTask::AtPulseTask(const char *name) : FairTask(name)
-{}
+AtPulseTask::AtPulseTask() : FairTask("AtPulseTask") {}
+AtPulseTask::AtPulseTask(const char *name) : FairTask(name) {}
 
 AtPulseTask::~AtPulseTask()
 {
-   if(fMap == nullptr)
+   if (fMap == nullptr)
       return;
    for (Int_t padS = 0; padS < fMap->GetNumPads(); padS++) {
       delete eleAccumulated[padS];
@@ -60,12 +57,12 @@ void AtPulseTask::setParameters()
    fGETGain = fPar->GetGETGain();                    // Get the electronics gain in fC
    fGETGain = 1.602e-19 * 4096 / (fGETGain * 1e-15); // Scale to gain and correct for ADC
    fPeakingTime = fPar->GetPeakingTime() / 1000.;
-   fTBTime = fPar->GetTBTime() / 1000.; //in us
+   fTBTime = fPar->GetTBTime() / 1000.; // in us
    fNumTbs = fPar->GetNumTbs();
 
    fTBEntrance = fPar->GetTBEntrance();
-   fTBPadPlane = fTBEntrance - fPar->GetZPadPlane()/10./fTBTime/fPar->GetDriftVelocity();
-   
+   fTBPadPlane = fTBEntrance - fPar->GetZPadPlane() / 10. / fTBTime / fPar->GetDriftVelocity();
+
    // GET gain: 120fC, 240fC, 1pC or 10pC in 4096 channels
    //  1.6e-19*4096/120e-15 = 5.4613e-03
    //  1.6e-19*4096/240e-15 = 2.731e-03
@@ -78,18 +75,19 @@ void AtPulseTask::setParameters()
    std::cout << "  Number of pads: " << fMap->GetNumPads() << std::endl;
    std::cout << "  Window at TB: " << fTBEntrance << std::endl;
    std::cout << "  Pad plane at TB: " << fTBPadPlane << std::endl;
-   
+
    gain = new TF1("gain", "pow([1]+1,[1]+1)/ROOT::Math::tgamma([1]+1)*pow((x/[0]),[1])*exp(-([1]+1)*(x/[0]))", 0,
                   fGain * 5); // Polya distribution of gain
    gain->SetParameter(0, fGain);
    gain->SetParameter(1, 1);
 
    auto b = gain->GetParameter(1);
-   avgGainDeviation = fGain/(b+1);
-   avgGainDeviation *= TMath::Sqrt(TMath::Gamma(b+3)/TMath::Gamma(b+1) - TMath::Gamma(b+2)*TMath::Gamma(b+2)/TMath::Gamma(b+1)/TMath::Gamma(b+1));
+   avgGainDeviation = fGain / (b + 1);
+   avgGainDeviation *=
+      TMath::Sqrt(TMath::Gamma(b + 3) / TMath::Gamma(b + 1) -
+                  TMath::Gamma(b + 2) * TMath::Gamma(b + 2) / TMath::Gamma(b + 1) / TMath::Gamma(b + 1));
 
    std::cout << "  GET gain deviation: " << avgGainDeviation << std::endl;
-
 }
 
 void AtPulseTask::getPadPlaneAndCreatePadHist()
@@ -176,10 +174,10 @@ void AtPulseTask::reset()
 bool AtPulseTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
 {
    auto coord = point->GetPosition();
-   auto xElectron = coord.x();           // mm
-   auto yElectron = coord.y();           // mm
-   auto eTime = coord.z();               // us
-   eTime += fTBPadPlane*fTBTime; // correct time for pad plane location
+   auto xElectron = coord.x();       // mm
+   auto yElectron = coord.y();       // mm
+   auto eTime = coord.z();           // us
+   eTime += fTBPadPlane * fTBTime;   // correct time for pad plane location
    auto charge = point->GetCharge(); // number of electrons
 
    auto binNumber = fPadPlane->Fill(xElectron, yElectron);
@@ -200,7 +198,7 @@ bool AtPulseTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
       eleAccumulated[padNumber]->Fill(eTime, charge);
       electronsMap[padNumber] = eleAccumulated[padNumber];
    }
-   
+
    return true;
 }
 
@@ -220,11 +218,11 @@ void AtPulseTask::Exec(Option_t *option)
       if (dElectron == nullptr)
          LOG(fatal) << "The TClonesArray AtSimulatedPoint did not contain type AtSimulatedPoint!";
       if (!gatherElectronsFromSimulatedPoint(dElectron))
-	 skippedPoints++;
+         skippedPoints++;
    }
-   
+
    std::cout << "...End of collection of electrons in this event." << std::endl;
-   std::cout << "Skipped " << (double)skippedPoints/nMCPoints*100. << "% of " << nMCPoints << std::endl;
+   std::cout << "Skipped " << (double)skippedPoints / nMCPoints * 100. << "% of " << nMCPoints << std::endl;
 
    generateTracesFromGatheredElectrons();
 }
@@ -248,7 +246,7 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
                Double_t factor = (((((Double_t)nn) + 0.5) * binWidth) - binCenter) / fPeakingTime;
                Double_t factor_2 = pow(2.718, -3 * factor) * sin(factor) * pow(factor, 3);
                signal[nn] += eleAccumulated[thePadNumber]->GetBinContent(kk) * pow(2.718, -3 * factor) * sin(factor) *
-		  pow(factor, 3);
+                             pow(factor, 3);
             }
          }
       }
@@ -279,14 +277,13 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
 double AtPulseTask::getAvgGETgain(Int_t numElectrons)
 {
    Double_t gAvg = 0;
-   if(fUseFastGain && numElectrons > 10)
-      gAvg = gRandom->Gaus(fGain, avgGainDeviation/TMath::Sqrt(numElectrons));
-   else
-   {
+   if (fUseFastGain && numElectrons > 10)
+      gAvg = gRandom->Gaus(fGain, avgGainDeviation / TMath::Sqrt(numElectrons));
+   else {
       for (Int_t i = 0; i < numElectrons; i++)
-	 gAvg += gain->GetRandom();
+         gAvg += gain->GetRandom();
       if (numElectrons > 0)
-	 gAvg = gAvg / numElectrons;
+         gAvg = gAvg / numElectrons;
    }
    return gAvg;
 }

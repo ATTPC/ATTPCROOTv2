@@ -35,24 +35,22 @@ protected:
    TClonesArray *fSimulatedPointArray; //!< Primary cluster array
    Bool_t fIsPersistent;               //!< If true, save container
 
-
    ROOT::Math::XYZVector fPrevPoint;
    Int_t fCurrTrackID;
 
 private:
    ROOT::Math::XYZVector applyDiffusion(const ROOT::Math::XYZVector &loc, double_t sigTrans, double sigLong);
-   
+
 protected:
-   
    virtual void getParameters();
    virtual void processPoint(Int_t mcPointID);
 
    void setNewTrack();
-   Double_t getTransverseDiffusion(Double_t driftTime); // in cm
+   Double_t getTransverseDiffusion(Double_t driftTime);   // in cm
    Double_t getLongitudinalDiffusion(Double_t driftTime); // in us
    UInt_t getNumberOfElectronsGenerated();
    ROOT::Math::XYZVector getCurrentPointLocation();
-   
+
 public:
    AtClusterizeTask();
    AtClusterizeTask(const char *name);

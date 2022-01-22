@@ -4,15 +4,15 @@ using XYZVector = ROOT::Math::XYZVector;
 
 ClassImp(AtSimulatedPoint);
 
-AtSimulatedPoint::AtSimulatedPoint() : fMCEventID(-1), fMCPointID(-1), fClusterID(-1)
+AtSimulatedPoint::AtSimulatedPoint() : fMCEventID(-1), fMCPointID(-1), fClusterID(-1) {}
+
+AtSimulatedPoint::AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, const XYZVector &position)
+   : fPosition(position), fMCEventID(-1), fMCPointID(mcPointID), fClusterID(clusterID), fCharge(1)
 {
 }
 
-AtSimulatedPoint::AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, const XYZVector &position) : fPosition(position), fMCEventID(-1), fMCPointID(mcPointID), fClusterID(clusterID), fCharge(1)
-{
-}
-
-AtSimulatedPoint::AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, const XYZVector &position) : fPosition(position), fMCEventID(-1), fMCPointID(mcPointID), fClusterID(clusterID), fCharge(charge)
+AtSimulatedPoint::AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, const XYZVector &position)
+   : fPosition(position), fMCEventID(-1), fMCPointID(mcPointID), fClusterID(clusterID), fCharge(charge)
 {
 }
 
@@ -47,5 +47,11 @@ std::size_t AtSimulatedPoint::GetMCEventID()
 {
    return fMCEventID;
 }
-void AtSimulatedPoint::SetCharge(Int_t charge) { fCharge = charge;}
-Int_t AtSimulatedPoint::GetCharge() { return fCharge;}
+void AtSimulatedPoint::SetCharge(Int_t charge)
+{
+   fCharge = charge;
+}
+Int_t AtSimulatedPoint::GetCharge()
+{
+   return fCharge;
+}

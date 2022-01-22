@@ -25,7 +25,7 @@ using XYZVector = ROOT::Math::XYZVector;
 
 AtClusterizeTask::AtClusterizeTask() : FairTask("AtClusterizeTask"), fEventID(0), fIsPersistent(kFALSE) {}
 
-AtClusterizeTask::AtClusterizeTask(const char* name) : FairTask(name), fEventID(0), fIsPersistent(kFALSE) {}
+AtClusterizeTask::AtClusterizeTask(const char *name) : FairTask(name), fEventID(0), fIsPersistent(kFALSE) {}
 
 AtClusterizeTask::~AtClusterizeTask()
 {
@@ -78,7 +78,7 @@ InitStatus AtClusterizeTask::Init()
    ioman->Register("AtSimulatedPoint", "cbmsim", fSimulatedPointArray, fIsPersistent);
 
    getParameters();
-   
+
    return kSUCCESS;
 }
 
@@ -108,19 +108,16 @@ void AtClusterizeTask::processPoint(Int_t mcPointID)
    XYZVector step;
    if (genElectrons > 0) {
       step = (currentPoint - fPrevPoint) / genElectrons;
-   }   
+   }
 
-   auto sigTrans = getTransverseDiffusion(currentPoint.z()); // mm
+   auto sigTrans = getTransverseDiffusion(currentPoint.z());  // mm
    auto sigLong = getLongitudinalDiffusion(currentPoint.z()); // us
 
-   //Need to loop through electrons
-   for(int i = 0; i <genElectrons; ++i)
-   {
-      auto loc = applyDiffusion(currentPoint +i*step, sigTrans, sigLong);
+   // Need to loop through electrons
+   for (int i = 0; i < genElectrons; ++i) {
+      auto loc = applyDiffusion(currentPoint + i * step, sigTrans, sigLong);
       auto size = fSimulatedPointArray->GetEntriesFast();
-      AtSimulatedPoint *simElec = new
-	 ((*fSimulatedPointArray)[size]) AtSimulatedPoint(mcPointID, i, loc); 
-     
+      AtSimulatedPoint *simElec = new ((*fSimulatedPointArray)[size]) AtSimulatedPoint(mcPointID, i, loc);
    }
 
    fPrevPoint = currentPoint;
@@ -163,19 +160,20 @@ UInt_t AtClusterizeTask::getNumberOfElectronsGenerated()
 
 XYZVector AtClusterizeTask::getCurrentPointLocation()
 {
-   auto zInCm = fDetPadPlane/10. - fMCPoint->GetZIn();
+   auto zInCm = fDetPadPlane / 10. - fMCPoint->GetZIn();
    auto driftTime = TMath::Abs(zInCm) / fVelDrift; // us
 
    return XYZVector(fMCPoint->GetXIn() * 10., fMCPoint->GetYIn() * 10., driftTime);
 }
 
-ROOT::Math::XYZVector AtClusterizeTask::applyDiffusion(const ROOT::Math::XYZVector &loc, double_t sigTrans, double sigLong)
+ROOT::Math::XYZVector
+AtClusterizeTask::applyDiffusion(const ROOT::Math::XYZVector &loc, double_t sigTrans, double sigLong)
 {
    auto r = gRandom->Gaus(0, sigTrans);
    auto phi = gRandom->Uniform(0, TMath::TwoPi());
    auto dz = gRandom->Gaus(0, sigLong);
 
-   return loc + XYZVector(r*TMath::Cos(phi), r*TMath::Sin(phi), dz);
+   return loc + XYZVector(r * TMath::Cos(phi), r * TMath::Sin(phi), dz);
 }
 
 ClassImp(AtClusterizeTask);

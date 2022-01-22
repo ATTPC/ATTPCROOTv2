@@ -10,7 +10,7 @@
 
 class AtClusterizeLineTask : public AtClusterizeTask {
 private:
-   Double_t fTBTime;      //!< Width of a time bucket [us]
+   Double_t fTBTime; //!< Width of a time bucket [us]
 
 protected:
    virtual void getParameters() override;
@@ -20,7 +20,7 @@ public:
    AtClusterizeLineTask();
    ~AtClusterizeLineTask();
 
-   virtual InitStatus Init() override;        //!< Initiliazation of task at the beginning of a run.
+   virtual InitStatus Init() override; //!< Initiliazation of task at the beginning of a run.
 
    ClassDefOverride(AtClusterizeLineTask, 1);
 };

@@ -37,9 +37,7 @@ AtPulseLineTask::AtPulseLineTask() : AtPulseTask("AtPulseLineTask")
    LOG(debug) << "Constructor of AtPulseLineTask";
 }
 
-AtPulseLineTask::~AtPulseLineTask() 
-{
-}
+AtPulseLineTask::~AtPulseLineTask() {}
 
 Int_t AtPulseLineTask::throwRandomAndGetBinAfterDiffusion(const ROOT::Math::XYZVector &loc, Double_t diffusionSigma)
 {
@@ -76,9 +74,9 @@ void AtPulseLineTask::generateIntegrationMap(AtSimulatedLine *line)
 bool AtPulseLineTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
 {
    auto line = dynamic_cast<AtSimulatedLine *>(point);
-   if(line == nullptr)
+   if (line == nullptr)
       LOG(fatal) << "Data in branch AtSimulatedPoint is not of type AtSimulatedLine!";
-   
+
    generateIntegrationMap(line);
    std::vector<double> zIntegration; // zero is binMin
    auto binMin = integrateTimebuckets(zIntegration, line);
@@ -87,7 +85,7 @@ bool AtPulseLineTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
    for (const auto &pad : fXYintegrationMap) {
       if (fMap->GetIsInhibited(pad.first))
          continue;
-      
+
       for (int i = 0; i < zIntegration.size(); ++i) {
          auto zLoc = eleAccumulated[0]->GetXaxis()->GetBinCenter(i + binMin);
          auto charge = line->GetCharge() * zIntegration[i] * pad.second;
@@ -103,7 +101,6 @@ bool AtPulseLineTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
    }
 
    return true;
-
 }
 // Returns the bin ID (binMin) that the zIntegral starts from
 // fills zIntegral with the integral for bins starting with binMin, inclusive
@@ -112,8 +109,8 @@ Int_t AtPulseLineTask::integrateTimebuckets(std::vector<double> &zIntegral, AtSi
    zIntegral.clear();
 
    // Shift the times by the pad plane location
-   auto tMax = line->GetInitialPosition().z() + fTBPadPlane*fTBTime;
-   auto tMin = line->GetFinalPosition().z()+ fTBPadPlane*fTBTime;
+   auto tMax = line->GetInitialPosition().z() + fTBPadPlane * fTBTime;
+   auto tMin = line->GetFinalPosition().z() + fTBPadPlane * fTBTime;
    auto dT = (tMax - tMin);
    if (dT > fTBTime) {
       LOG(warn) << "This line charge spans multiple TB widths from " << tMin << " us to " << tMax << " us.";
@@ -121,36 +118,35 @@ Int_t AtPulseLineTask::integrateTimebuckets(std::vector<double> &zIntegral, AtSi
                 << "ns TB width: " << fTBTime << "ns";
    }
 
-   auto tMean = (tMax + tMin)/2.;
+   auto tMean = (tMax + tMin) / 2.;
    auto tIntegrationMinimum = tMin - fNumSigmaToIntegrateZ * line->GetLongitudinalDiffusion();
    auto tIntegrationMaximum = tMax + fNumSigmaToIntegrateZ * line->GetLongitudinalDiffusion();
 
    const TAxis *axis = eleAccumulated[0]->GetXaxis();
    auto binMin = axis->FindBin(tIntegrationMinimum);
    auto binMax = axis->FindBin(tIntegrationMaximum);
-   if(binMin < fTBPadPlane)
+   if (binMin < fTBPadPlane)
       binMin = fTBPadPlane;
-   if(binMax > fTBEntrance)
+   if (binMax > fTBEntrance)
       binMax = fTBEntrance;
-   
+
    // Integrate G(tMean, sigmaLongDiff) over each time bucket from binMin to binMax
    // and fill zIntegral with the result.
    double lowerBound;
    auto denominator = line->GetLongitudinalDiffusion() * TMath::Sqrt(2);
-   lowerBound = TMath::Erf((axis->GetBinLowEdge(binMin) - tMean)/denominator);
+   lowerBound = TMath::Erf((axis->GetBinLowEdge(binMin) - tMean) / denominator);
    for (int i = binMin; i <= binMax; ++i) {
-      auto upperBound = TMath::Erf((axis->GetBinUpEdge(i) - tMean)/denominator);
+      auto upperBound = TMath::Erf((axis->GetBinUpEdge(i) - tMean) / denominator);
       auto integral = 0.5 * (upperBound - lowerBound);
       zIntegral.emplace_back(integral);
       lowerBound = upperBound;
    }
 
    // Renormalize the integral if we're up against the pad plane or window
-   if(binMin == fTBPadPlane || binMax == fTBEntrance)
-   {
+   if (binMin == fTBPadPlane || binMax == fTBEntrance) {
       auto sum = std::accumulate(zIntegral.begin(), zIntegral.end(), 0.);
-      for(auto &elem : zIntegral)
-	 elem /= sum;
+      for (auto &elem : zIntegral)
+         elem /= sum;
    }
 
    return binMin;

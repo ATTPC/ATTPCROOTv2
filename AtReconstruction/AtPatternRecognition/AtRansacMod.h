@@ -41,7 +41,6 @@
 #include "AtTpcMap.h"
 #include "AtTrack.h"
 
-
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
 #define cNORMAL "\033[0m"

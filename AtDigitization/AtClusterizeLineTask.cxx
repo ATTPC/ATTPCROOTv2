@@ -10,12 +10,11 @@
 #include "AtTpcPoint.h"
 #include "AtSimulatedLine.h"
 
-AtClusterizeLineTask::AtClusterizeLineTask() : AtClusterizeTask("AtClusterizeLineTask")
-{}
+AtClusterizeLineTask::AtClusterizeLineTask() : AtClusterizeTask("AtClusterizeLineTask") {}
 
 AtClusterizeLineTask::~AtClusterizeLineTask() {}
 
-InitStatus AtClusterizeLineTask::Init() 
+InitStatus AtClusterizeLineTask::Init()
 {
    FairRootManager *ioman = FairRootManager::Instance();
 
@@ -34,11 +33,9 @@ InitStatus AtClusterizeLineTask::Init()
 void AtClusterizeLineTask::getParameters()
 {
    AtClusterizeTask::getParameters();
-   fTBTime = fPar->GetTBTime() / 1000.;    // in us
+   fTBTime = fPar->GetTBTime() / 1000.; // in us
    std::cout << "  TB width: " << fTBTime << std::endl;
-   
 }
-
 
 void AtClusterizeLineTask::processPoint(Int_t mcPointID)
 {
@@ -53,7 +50,7 @@ void AtClusterizeLineTask::processPoint(Int_t mcPointID)
    }
 
    ROOT::Math::XYZVector currentPoint = getCurrentPointLocation();
-   
+
    auto size = fSimulatedPointArray->GetEntriesFast();
    AtSimulatedLine *simLine = new ((*fSimulatedPointArray)[size]) AtSimulatedLine();
 
@@ -71,6 +68,5 @@ void AtClusterizeLineTask::processPoint(Int_t mcPointID)
 
    fPrevPoint = currentPoint;
 }
-
 
 ClassImp(AtClusterizeLineTask);
