@@ -126,17 +126,17 @@ void AtApollo::Reset()
 void AtApollo::Print(Option_t *option) const
 {
    Int_t nHits = fAtApolloPointCollection->GetEntriesFast();
-   LOG(INFO) << "APOLLO: " << nHits << " points registered in this event" << FairLogger::endl;
+   LOG(INFO) << "APOLLO: " << nHits << " points registered in this event";
 }
 
 void AtApollo::ConstructGeometry()
 {
    TString fileName = GetGeometryFileName();
    if (fileName.EndsWith(".geo")) {
-      LOG(INFO) << "Constructing APOLLO geometry from ASCII file " << fileName << FairLogger::endl;
+      LOG(INFO) << "Constructing APOLLO geometry from ASCII file " << fileName;
       // ConstructASCIIGeometry();
    } else if (fileName.EndsWith(".root")) {
-      LOG(INFO) << "Constructing APOLLO geometry from ROOT file " << fileName << FairLogger::endl;
+      LOG(INFO) << "Constructing APOLLO geometry from ROOT file " << fileName;
       ConstructRootGeometry();
    } else {
       std::cout << "Geometry format not supported." << std::endl;
@@ -147,7 +147,7 @@ Bool_t AtApollo::CheckIfSensitive(std::string name)
 {
    TString tsname = name;
    if (tsname.Contains("Crystal_")) {
-      LOG(INFO) << " APOLLO geometry: Sensitive volume found: " << tsname << FairLogger::endl;
+      LOG(INFO) << " APOLLO geometry: Sensitive volume found: " << tsname;
       return kTRUE;
    }
    return kFALSE;
@@ -161,7 +161,7 @@ AtApolloPoint *AtApollo::AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVec
    Int_t size = clref.GetEntriesFast();
    if (fVerboseLevel > 1)
       LOG(INFO) << "APOLLO: Adding Point in detector " << detID << ", track " << trackID << ", energy loss "
-                << eLoss * 1e06 << " keV" << FairLogger::endl;
+                << eLoss * 1e06 << " keV";
 
    return new (clref[size]) AtApolloPoint(trackID, detID, pos, mom, crystalID, time, length, eLoss);
 }

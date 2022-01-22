@@ -9,9 +9,6 @@
 #include "AtEvent.h"
 #include "AtEventManager.h"
 #include "AtHit.h"
-#include "AtHoughSpace.h"
-#include "AtHoughSpaceCircle.h"
-#include "AtHoughSpaceLine.h"
 #include "AtLmedsMod.h"
 #include "AtMlesacMod.h"
 #include "AtPatternEvent.h"
@@ -46,6 +43,7 @@
 #include "TRandom.h"
 #include "TStyle.h"
 #include "TVector3.h"
+#include "TVirtualX.h"
 
 #ifndef __CINT__ // Boost
 #include <boost/multi_array.hpp>
@@ -68,7 +66,7 @@ AtEventDrawTask::AtEventDrawTask()
      // fHitClusterArray(0),
      // fRiemannTrackArray(0),
      // fKalmanArray(0),
-     fEventManager(0), fRawevent(0), fHoughSpaceArray(0), fDetmap(0), fThreshold(0), fHitSet(0),
+     fEventManager(0), fRawevent(0), fDetmap(0), fThreshold(0), fHitSet(0),
      // x(0),
      // hitSphereArray(0),
      fhitBoxSet(0), fPadPlanePal(0), fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium),
@@ -192,10 +190,6 @@ InitStatus AtEventDrawTask::Init()
       fIsRawData = kTRUE;
    }
 
-   fHoughSpaceArray = (TClonesArray *)ioMan->GetObject("AtHough");
-   if (fHoughSpaceArray)
-      LOG(INFO) << cGREEN << "Hough Array Found." << cNORMAL << std::endl;
-
    fRansacArray = (TClonesArray *)ioMan->GetObject("AtRansac");
    if (fRansacArray)
       LOG(INFO) << cGREEN << "RANSAC Array Found." << cNORMAL << std::endl;
@@ -264,6 +258,7 @@ InitStatus AtEventDrawTask::Init()
 
    std::cout << " AtEventDrawTask::Init : Initialization complete! "
              << "\n";
+   return kSUCCESS;
 }
 
 void AtEventDrawTask::Exec(Option_t *option)
@@ -272,29 +267,6 @@ void AtEventDrawTask::Exec(Option_t *option)
    ResetPadAll();
    ResetPhiDistr();
 
-   if (fHoughSpaceArray) {
-      if (fHoughSpaceLine_buff = dynamic_cast<AtHoughSpaceLine *>(fHoughSpaceArray->At(0))) {
-         std::cout << " Linear Hough Space Found!" << std::endl;
-         fIsLinearHough = kTRUE;
-      } else if (fHoughSpaceCircle_buff = dynamic_cast<AtHoughSpaceCircle *>(fHoughSpaceArray->At(0))) {
-         std::cout << "Circular Hough Space Found!" << std::endl;
-         fIsCircularHough = kTRUE;
-      } else
-         std::cout << "Hough Space Type NOT Found!" << std::endl;
-
-      if (fIsCircularHough) {
-         Double_t XCenter = fHoughSpaceCircle_buff->GetXCenter();
-         Double_t YCenter = fHoughSpaceCircle_buff->GetYCenter();
-         std::pair<Double_t, Double_t> LinearHoughPar = fHoughSpaceCircle_buff->GetHoughPar();
-         std::cout << cYELLOW << " ---- Spiral Hough Space Calculation ----" << std::endl;
-         std::cout << " X Center : " << XCenter << " Y Center : " << YCenter << std::endl;
-         std::cout << " Radius x Phi Linear Hough parameters - Angle : " << LinearHoughPar.first << "  - Distance "
-                   << LinearHoughPar.second << cNORMAL << std::endl;
-         fHoughLinearFit->SetParameter(0, TMath::Pi() / 2.0 - LinearHoughPar.first);
-         fHoughLinearFit->SetParameter(1, LinearHoughPar.second);
-      }
-   }
-
    // if (fRawEventArray)
    //  DrawPadAll();
 
@@ -302,8 +274,6 @@ void AtEventDrawTask::Exec(Option_t *option)
       DrawHitPoints();
       DrawMeshSpace();
    }
-   if (fHoughSpaceArray && fUnpackHough)
-      DrawHSpace();
 
    gEve->Redraw3D(kFALSE);
 
@@ -380,17 +350,17 @@ void AtEventDrawTask::DrawHitPoints()
       int numAux = 0;
       auto padArray = fRawevent->GetPads();
 
-      // Loop through each pad
-      for (auto &&pad : *padArray)
-         if (pad.IsAux() && numAux < 9) {
+      for (auto &padIt : fRawevent->GetAuxPads()) {
+         AtPad &pad = padIt.second;
+         if (numAux < 9) {
             std::cout << cYELLOW << " Auxiliary Channel " << numAux << " - Name " << pad.GetAuxName() << cNORMAL
                       << std::endl;
-            auto rawAdc = pad.GetRawADC();
+            auto adc = pad.GetADC();
             for (int i = 0; i < 512; ++i)
-               fAuxChannels[numAux]->SetBinContent(i, rawAdc[i]);
+               fAuxChannels[numAux]->SetBinContent(i, adc[i]);
             numAux++;
          }
-
+      }
       if (numAux + 1 == 9)
          std::cout << cYELLOW << "Warning: More auxiliary channels than expected (max 9)" << cNORMAL << std::endl;
    }
@@ -415,23 +385,6 @@ void AtEventDrawTask::DrawHitPoints()
 
    if (fEventManager->GetDrawHoughSpace()) {
 
-      if (fIsCircularHough) {
-
-         fPosXMin = fHoughSpaceCircle_buff->GetPosXMin();
-         fPosYMin = fHoughSpaceCircle_buff->GetPosYMin();
-         fPosZMin = fHoughSpaceCircle_buff->GetPosZMin();
-         nHitsMin = fPosXMin.size();
-
-         fHitSetMin = new TEvePointSet("HitMin", nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
-         fHitSetMin->SetOwnIds(kTRUE);
-         fHitSetMin->SetMarkerColor(kGreen);
-         fHitSetMin->SetMarkerSize(fHitSize);
-         fHitSetMin->SetMarkerStyle(fHitStyle);
-      }
-   }
-
-   if (fEventManager->GetDrawHoughSpace()) {
-
       //  if(fIsLinearHough){
       // fLineArray.clear();
       for (Int_t i = 0; i < 5; i++)
@@ -441,9 +394,7 @@ void AtEventDrawTask::DrawHitPoints()
       double dt = 2000;
       std::vector<AtTrack> TrackCand;
 
-      if (fIsLinearHough)
-         TrackCand = fHoughSpaceLine_buff->GetTrackCand();
-      else if (fRansacArray) {
+      if (fRansacArray) {
          if (fRANSACAlg == 0) {
             fRansac = dynamic_cast<AtRANSACN::AtRansac *>(fRansacArray->At(0));
             TrackCand = fRansac->GetTrackCand();
@@ -700,22 +651,16 @@ void AtEventDrawTask::DrawHitPoints()
          Atbin = fPadPlane->Fill(positioncorr.X(), positioncorr.Y(), hit.GetCharge());
       }
 
-      /*std::cout<<"  --------------------- "<<std::endl;
-       std::cout<<" Hit : "<<iHit<<" AtHit Pad Number :  "<<PadNumHit<<" Pad Hit Mult : "<<PadMultHit<<" Pad Time Bucket
-       : "<<hit.GetTimeStamp()<<" Hit X Position : "<<position.X()<<" Hit Y Position : "<<position.Y()<<" Hit Z Position
-       : "<<position.Z()<<std::endl; std::cout<<"  Hit number : "<<iHit<<" - AtHit Pad Number :  "<<PadNumHit<<" - Hit
-       Charge : "<<hit.GetCharge()<<" - Hit Base Correction : "<<BaseCorr<<std::endl;*/
-
-      Bool_t fValidPad;
-
       if (fIsRawData) {
-         AtPad *RawPad = fRawevent->GetPad(PadNumHit, fValidPad);
-         Double_t *adc = RawPad->GetADC();
-         for (Int_t i = 0; i < 512; i++) {
+         AtPad *RawPad = fRawevent->GetPad(PadNumHit);
+         if (RawPad != nullptr) {
+            Double_t *adc = RawPad->GetADC();
+            for (Int_t i = 0; i < 512; i++) {
 
-            f3DThreshold = fEventManager->Get3DThreshold();
-            if (adc[i] > f3DThreshold)
-               f3DHist->Fill(position.X() / 10., position.Y() / 10., i, adc[i]);
+               f3DThreshold = fEventManager->Get3DThreshold();
+               if (adc[i] > f3DThreshold)
+                  f3DHist->Fill(position.X() / 10., position.Y() / 10., i, adc[i]);
+            }
          }
       }
 
@@ -726,40 +671,6 @@ void AtEventDrawTask::DrawHitPoints()
          else if (fEventManager->GetToggleCorrData())
             dumpEvent << positioncorr.X() << " " << positioncorr.Y() << " " << positioncorr.Z() << " "
                       << hit.GetTimeStamp() << " " << hit.GetCharge() << std::endl;
-      // std::cout<<"  Hit number : "<<iHit<<" - Position X : "<<position.X()<<" - Position Y : "<<position.Y()<<" -
-      // Position Z : "<<position.Z()<<" - AtHit Pad Number :  "<<PadNumHit<<" - Pad bin :"<<Atbin<<" - Hit Charge :
-      // "<<hit.GetCharge()<<std::endl;
-
-      /*  x = new TEveGeoShape(Form("hitShape_%d",iHit));
-       x->SetShape(new TGeoSphere(0, 0.1*hit.GetCharge()/300.));
-       x->RefMainTrans().SetPos(position.X()/10.,
-       position.Y()/10.,
-       position.Z()/10.);
-       hitSphereArray.push_back(x);*/
-
-      // Float_t HitBoxYDim = TMath::Log(hit.GetCharge())*0.05;
-      //   Float_t HitBoxYDim = hit.GetCharge()*0.001;
-      //   Float_t HitBoxZDim = 0.05;
-      //  Float_t HitBoxXDim = 0.05;
-
-      // fhitBoxSet->AddBox(position.X()/10. - HitBoxXDim/2.0, position.Y()/10., position.Z()/10. - HitBoxZDim/2.0,
-      //          HitBoxXDim,HitBoxYDim,HitBoxZDim); //This coordinates are x,y,z in our system
-
-      //   Float_t xrgb=255,yrgb=0,zrgb=0;
-      /*  if(fPadPlanePal){
-
-       //  Int_t cHit = fPadPlanePal->GetValueColor();
-       // Int_t cHit = 100;
-       //TColor *hitBoxColor = gROOT->GetColor(cHit);
-       //hitBoxColor->GetRGB(xrgb,yrgb,zrgb);
-
-       std::cout<<" xrgb : "<<xrgb<<std::endl;
-       std::cout<<" yrgb : "<<yrgb<<std::endl;
-       std::cout<<" zrgb : "<<zrgb<<std::endl;
-
-       }*/
-
-      //  fhitBoxSet->DigitColor(xrgb,yrgb,zrgb, 0);
    }
 
    //////////////     Minimization from Hough Space   ///////////////
@@ -911,190 +822,7 @@ void AtEventDrawTask::DrawHitPoints()
    // if(fLineArray.size()>0) gEve -> AddElement(fLineArray.at(0));
 }
 
-void AtEventDrawTask::DrawHSpace()
-{
-
-   fRadVSTb->Reset(0);
-   fTheta->Reset(0);
-   fThetaxPhi->Reset(0);
-   fThetaxPhi_Ini->Reset(0);
-   fThetaxPhi_Ini_RANSAC->Reset(0);
-   fMC_XY->Set(0);
-   fMC_ZX->Set(0);
-   fMC_ZY->Set(0);
-   fMC_XY_exp->Set(0);
-   fMC_XY_int->Set(0);
-   fMC_ZX_int->Set(0);
-   fMC_ZY_int->Set(0);
-   fMC_XY_back->Set(0);
-   fMC_ZX_back->Set(0);
-   fMC_ZY_back->Set(0);
-
-   if (fEventManager->GetDrawHoughSpace()) {
-      if (fIsCircularHough) {
-         fHoughSpace = fHoughSpaceCircle_buff->GetHoughSpace("XY");
-         std::vector<Double_t> const *Radius = fHoughSpaceCircle_buff->GetRadiusDist();
-         std::vector<Int_t> const *TimeStamp = fHoughSpaceCircle_buff->GetTimeStamp();
-         std::vector<Double_t> const *Theta = fHoughSpaceCircle_buff->GetTheta();
-         std::vector<Double_t> const *Dl = fHoughSpaceCircle_buff->GetDl();
-         std::vector<Double_t> const *Phi = fHoughSpaceCircle_buff->GetPhi();
-         fIniHit = fHoughSpaceCircle_buff->GetIniHit();
-         fIniHitRansac = fHoughSpaceCircle_buff->GetIniHitRansac();
-
-         Int_t numRad = Radius->size();
-         Int_t numTheta = Theta->size();
-
-         for (Int_t i = 0; i < numRad; i++) {
-            fRadVSTb->Fill(TimeStamp->at(i), Radius->at(i));
-            // fTheta->SetBinContent(TimeStamp->at(i),Theta->at(i));
-            fThetaxPhi->Fill(TimeStamp->at(i), Phi->at(i) * Radius->at(i));
-         }
-
-         for (Int_t i = 0; i < numTheta; i++) {
-            fTheta->Fill(Dl->at(i), Theta->at(i));
-            // std::cout<<" Dl : "<<Dl->at(i)<<" Theta : "<<Theta->at(i)<<std::endl;
-         }
-
-         fThetaxPhi_Ini->Fill(fIniHit->GetTimeStamp(),
-                              fHoughSpaceCircle_buff->GetIniPhi() * fHoughSpaceCircle_buff->GetIniRadius());
-         fThetaxPhi_Ini_RANSAC->Fill(fIniHitRansac->GetTimeStamp(), fHoughSpaceCircle_buff->GetIniPhiRansac() *
-                                                                       fHoughSpaceCircle_buff->GetIniRadiusRansac());
-
-         std::vector<Double_t> fPosXMin = fHoughSpaceCircle_buff->GetPosXMin();
-         std::vector<Double_t> fPosYMin = fHoughSpaceCircle_buff->GetPosYMin();
-         std::vector<Double_t> fPosZMin = fHoughSpaceCircle_buff->GetPosZMin();
-
-         std::vector<Double_t> fPosXExp = fHoughSpaceCircle_buff->GetPosXExp();
-         std::vector<Double_t> fPosYExp = fHoughSpaceCircle_buff->GetPosYExp();
-
-         std::vector<Double_t> fPosXInt = fHoughSpaceCircle_buff->GetPosXInt();
-         std::vector<Double_t> fPosYInt = fHoughSpaceCircle_buff->GetPosYInt();
-         std::vector<Double_t> fPosZInt = fHoughSpaceCircle_buff->GetPosZInt();
-
-         std::vector<Double_t> fPosXBack = fHoughSpaceCircle_buff->GetPosXBack();
-         std::vector<Double_t> fPosYBack = fHoughSpaceCircle_buff->GetPosYBack();
-         std::vector<Double_t> fPosZBack = fHoughSpaceCircle_buff->GetPosZBack();
-
-         for (Int_t i = 0; i < fPosXMin.size(); i++) {
-            fMC_XY->SetPoint(fMC_XY->GetN(), fPosXMin.at(i), fPosYMin.at(i));
-            fMC_ZX->SetPoint(fMC_ZX->GetN(), fPosZMin.at(i), fPosXMin.at(i));
-            fMC_ZY->SetPoint(fMC_ZY->GetN(), fPosZMin.at(i), fPosYMin.at(i));
-         }
-
-         for (Int_t i = 0; i < fPosXExp.size(); i++) {
-            fMC_XY_exp->SetPoint(fMC_XY_exp->GetN(), fPosXExp.at(i), fPosYExp.at(i));
-         }
-
-         for (Int_t i = 0; i < fPosXInt.size(); i++) {
-            fMC_XY_int->SetPoint(fMC_XY_int->GetN(), fPosXInt.at(i), fPosYInt.at(i));
-            fMC_ZX_int->SetPoint(fMC_ZX_int->GetN(), fPosZInt.at(i), fPosXInt.at(i));
-            fMC_ZY_int->SetPoint(fMC_ZY_int->GetN(), fPosZInt.at(i), fPosYInt.at(i));
-         }
-
-         for (Int_t i = 0; i < fPosXBack.size(); i++) {
-            fMC_XY_back->SetPoint(fMC_XY_back->GetN(), fPosXBack.at(i), fPosYBack.at(i));
-            fMC_ZX_back->SetPoint(fMC_ZX_back->GetN(), fPosZBack.at(i), fPosXBack.at(i));
-            fMC_ZY_back->SetPoint(fMC_ZY_back->GetN(), fPosZBack.at(i), fPosYBack.at(i));
-         }
-
-         std::cout << cGREEN << "  = Initial conditions for MC : " << std::endl;
-         std::cout << "  Theta                 : " << fHoughSpaceCircle_buff->GetIniTheta() * 180 / TMath::Pi()
-                   << std::endl;
-         std::cout << "  Phi                   : " << fHoughSpaceCircle_buff->GetIniPhi() * 180 / TMath::Pi()
-                   << std::endl;
-         std::cout << "  Radius                : " << fHoughSpaceCircle_buff->GetIniRadius() << std::endl;
-         std::cout << "  Time Bucket           : " << fIniHit->GetTimeStamp() << std::endl;
-         std::cout << "  Time Bucket RANSAC    : " << fIniHitRansac->GetTimeStamp() << std::endl;
-         std::cout << "  Radius x Phi          : "
-                   << fHoughSpaceCircle_buff->GetIniPhi() * fHoughSpaceCircle_buff->GetIniRadius() << cNORMAL
-                   << std::endl;
-
-         std::cout << cGREEN << "  = MC results : " << std::endl;
-         std::cout << "  Theta          : " << fHoughSpaceCircle_buff->FitParameters.sThetaMin * 180 / TMath::Pi()
-                   << std::endl;
-         std::cout << "  Phi            : " << fHoughSpaceCircle_buff->FitParameters.sPhiMin * 180 / TMath::Pi()
-                   << std::endl;
-         std::cout << "  Energy         : " << fHoughSpaceCircle_buff->FitParameters.sEnerMin << std::endl;
-         std::cout << "  Brho           : " << fHoughSpaceCircle_buff->FitParameters.sBrhoMin << std::endl;
-         std::cout << "  Magnetic field : " << fHoughSpaceCircle_buff->FitParameters.sBMin << std::endl;
-         std::cout << "  Norm. Chi-2    : " << fHoughSpaceCircle_buff->FitParameters.sNormChi2 << cNORMAL << std::endl;
-
-      } else if (fIsLinearHough) {
-         fHoughSpace = fHoughSpaceLine_buff->GetHoughSpace("XY");
-         std::vector<std::pair<Double_t, Double_t>> LinearHoughPar = fHoughSpaceLine_buff->GetHoughPar();
-         std::vector<Double_t> LinearHoughMax = fHoughSpaceLine_buff->GetHoughMax();
-         TVector3 Vertex_1 = fHoughSpaceLine_buff->GetVertex1();
-         TVector3 Vertex_2 = fHoughSpaceLine_buff->GetVertex2();
-         // std::vector<AtTrack> TrackCand = fHoughSpaceLine_buff->GetTrackCand();
-
-         std::cout << std::endl;
-         std::cout << cGREEN << "  = Number of lines found by Linear Hough Space : " << LinearHoughPar.size()
-                   << std::endl;
-
-         // int n = 1000;
-         // double t0 = 0;
-         // double dt = 1000;
-
-         /*if(TrackCand.size()>0)
-         {
-
-           for(Int_t i=0;i<TrackCand.size();i++){
-           AtTrack track = TrackCand.at(i);
-           std::vector<Double_t> parFit = track.GetFitPar();
-           //std::cout<<cRED<<parFit[0]<<" "<<parFit[1]<<" "<<parFit[2]<<" "<<parFit[3]<<cNORMAL<<std::endl;
-           TEveLine* line = new TEveLine(n);
-           for (int i = 0; i <n;++i) {
-           double t = t0+ dt*i/n;
-           double x,y,z;
-           SetLine(t,parFit,x,y,z);
-           line->SetNextPoint(x, y, z);
-           //l->SetPoint(i,x,y,z);
-           //std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
-           }
-           line->SetMainColor(kRed);
-           //l->Draw("same");
-           fLineArray.push_back(fLine);
-
-           }
-
-           }*/
-
-         for (Int_t i = 0; i < LinearHoughPar.size(); i++) {
-            std::cout << cYELLOW << "  Hough Maximum " << i << "  : " << std::endl;
-            std::cout << cYELLOW << "  Hough Angle : " << LinearHoughPar.at(i).first << std::endl;
-            std::cout << cYELLOW << "  Hough Distance : " << LinearHoughPar.at(i).second << std::endl;
-            std::cout << cYELLOW << "  Maximum Bin Content : " << LinearHoughMax.at(i) << cNORMAL << std::endl;
-            std::cout << cYELLOW << "  Vertex 1 -  X : " << Vertex_1.X() << "   Y : " << Vertex_1.Y()
-                      << "  Z : " << Vertex_1.Z() << cNORMAL << std::endl;
-            std::cout << cYELLOW << "  Vertex 2 -  X : " << Vertex_2.X() << "   Y : " << Vertex_2.Y()
-                      << "  Z : " << Vertex_2.Z() << cNORMAL << std::endl;
-            std::cout << std::endl;
-         }
-      }
-
-      // Test to see if the histograms are there
-      /*TCanvas *test = new TCanvas();
-       test->Divide(2,3);
-       test->cd(1);
-       fQuadrant1->Draw("zcol");
-       test->cd(2);
-       fQuadrant2->Draw("zcol");
-       test->cd(3);
-       fQuadrant3->Draw("zcol");
-       test->cd(4);
-       fQuadrant4->Draw("zcol");
-       test->cd(5);
-       test->Modified();
-       test->Update();*/
-
-   } else {
-      fHoughSpace = new TH2F();
-      // fQuadrant1 = new TH2F();
-      // fQuadrant2 = new TH2F();
-      // fQuadrant3 = new TH2F();
-      // fQuadrant4 = new TH2F();
-   }
-}
+void AtEventDrawTask::DrawHSpace() {}
 
 void AtEventDrawTask::DrawMeshSpace() {}
 
@@ -1699,8 +1427,8 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
          int pxmin = gPad->XtoAbsPixel(uxmin);
          int pxmax = gPad->XtoAbsPixel(uxmax);
          if (pyold)
-            gVirtualX->DrawLine(pxmin, pyold, pxmax, pyold);
-         gVirtualX->DrawLine(pxmin, py, pxmax, py);
+            TVirtualX::Instance()->DrawLine(pxmin, pyold, pxmax, pyold);
+         TVirtualX::Instance()->DrawLine(pxmin, py, pxmax, py);
          gPad->SetUniqueID(py);
          Float_t upx = gPad->AbsPixeltoX(px);
          Float_t upy = gPad->AbsPixeltoY(py);
@@ -1712,7 +1440,6 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
          // std::cout<<bin_name<<std::endl;
          std::cout << " ==========================" << std::endl;
          std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
-         Bool_t IsValid = kFALSE;
 
          AtMap *tmap = NULL;
          tmap = (AtMap *)gROOT->GetListOfSpecials()->FindObject("fMap");
@@ -1727,14 +1454,13 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
          }
 
          std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
-         AtPad *tPad = tRawEvent->GetPad(tPadNum, IsValid);
+         AtPad *tPad = tRawEvent->GetPad(tPadNum);
 
-         // Check to make sure pad is valid
-         if (!tPad)
+         if (tPad == nullptr)
             return;
 
          std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
-         std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << " Is Valid? : " << IsValid << std::endl;
+         std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << std::endl;
          std::cout << std::endl;
 
          TH1I *tPadWave = NULL;

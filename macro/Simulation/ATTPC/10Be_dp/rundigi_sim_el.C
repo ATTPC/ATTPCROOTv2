@@ -19,7 +19,7 @@ void rundigi_sim_el(
    // __ Run ____________________________________________
    FairRunAna *fRun = new FairRunAna();
    fRun->SetInputFile(mcFile);
-   fRun->SetGeomFile(geomDir+"ATTPC_D600torr_v2_geomanager.root");
+   fRun->SetGeomFile(geomDir + "ATTPC_D600torr_v2_geomanager.root");
    fRun->SetOutputFile("output_digi_gs.root");
 
    TString parameterFile = "ATTPC.e20009_sim.par";

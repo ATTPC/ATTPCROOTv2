@@ -53,6 +53,7 @@ public:
    std::vector<AtHitCluster> *GetHitClusterArray();
    void ResetHitClusterArray();
    std::vector<Double_t> GetFitPar();
+   const std::vector<AtHit> &GetHitArrayConst() const { return fHitArray; }
    Double_t GetMinimum();
    Int_t GetNFree();
    Int_t GetTrackID();

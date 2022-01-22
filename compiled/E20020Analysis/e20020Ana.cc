@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
       new TH2F("angle_vs_energy_pattern", "angle_vs_energy_pattern", 720, 0, 179, 1000, 0, 100.0);
    TH2F *angle_vs_energy_pattern_rot =
       new TH2F("angle_vs_energy_pattern_rot", "angle_vs_energy_pattern_rot", 720, 0, 179, 1000, 0, 100.0);
-  
+
    TH1F *HQval = new TH1F("HQval", "HQval", 1000, -10, 10);
 
    TH2F *evtNum_vs_trkNum = new TH2F("evtNum_vs_trkNum", "evtNum_vs_trkNum", 1000, 0, 1000, 10, 0, 10);

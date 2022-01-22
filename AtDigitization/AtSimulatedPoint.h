@@ -1,47 +1,40 @@
 #ifndef AtSIMULAtEDPOINT_H
 #define AtSIMULAtEDPOINT_H
 
-#include "TROOT.h"
+//#include "TROOT.h"
 #include "TObject.h"
-#include "TVector3.h"
+#include "Math/Vector3D.h"
 
 class AtSimulatedPoint : public TObject {
+
+protected:
+   //!< Cluster number
+   std::size_t fMCPointID;
+   std::size_t fMCEventID;
+   Int_t fClusterID;
+   Int_t fCharge;
+
+   ROOT::Math::XYZVector fPosition; //(mm,mm,us)
+
 public:
    AtSimulatedPoint();
-   AtSimulatedPoint(std::size_t id, Int_t electronNumber, Double_t x, Double_t y, Double_t atime);
+   AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, const ROOT::Math::XYZVector &pointLocation);
+   AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, const ROOT::Math::XYZVector &pointLocation);
+
    ~AtSimulatedPoint();
 
-   //!< Track ID setter
-   void SetElectronNumber(Int_t electronNumber);
-   //!< Position setter
-   void SetPoint(std::size_t id, Int_t electronNumber, Double_t x, Double_t y, Double_t atime);
-   //!< Position setter
-   void SetPosition(Double_t x, Double_t y, Double_t atime);
-   //!< ID setter
-   void SetPointID(std::size_t id);
-   //!< MCID setter
+   void SetClusterID(Int_t clusterID);
+   void SetMCPointID(std::size_t id);
    void SetMCEventID(std::size_t mcid);
+   void SetCharge(Int_t charge);
 
-   //!< Track ID getter
-   Int_t GetElectronNumber();
-   //!< Position getter
-   TVector3 GetPosition();
-   //!< ID getter
-   std::size_t GetPointID();
-   //!< MC ID getter
+   Int_t GetCharge();
+   Int_t GetClusterID(); // Unique to each MCPoint in each MCEvent
+   virtual ROOT::Math::XYZVector GetPosition();
+   std::size_t GetMCPointID();
    std::size_t GetMCEventID();
 
-private:
-   //!< Track ID having this hit
-   Int_t fElectronNumber;
-   //!< Position
-   TVector3 fPosition;
-   //!< Point ID
-   std::size_t fPointID;
-   //!< MC Event ID;
-   std::size_t fMCEventID;
-
-   ClassDef(AtSimulatedPoint, 1);
+   ClassDef(AtSimulatedPoint, 3);
 };
 
 #endif

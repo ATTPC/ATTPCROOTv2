@@ -39,7 +39,7 @@ protected:
    GetMomFromBrho(Double_t A, Double_t Z,
                   Double_t brho); ///< Returns momentum (in GeV) from Brho assuming M (amu) and Z;
 
-   ClassDef(AtFitter, 1)
+   ClassDef(AtFitter, 1);
 };
 
 } // namespace AtFITTER

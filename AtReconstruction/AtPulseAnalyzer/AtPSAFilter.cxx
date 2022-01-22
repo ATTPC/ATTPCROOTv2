@@ -80,7 +80,7 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
    for (iPad = 0; iPad < numPads; iPad++) {
 
-      AtPad *pad = rawEvent->GetPad(iPad);
+      AtPad *pad = &(rawEvent->GetPads().at(iPad));
       Int_t PadNum = pad->GetPadNum();
       Int_t pSizeID = pad->GetSizeID();
       Double_t gthreshold = -1;

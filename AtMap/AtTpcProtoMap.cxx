@@ -6,9 +6,12 @@
  *********************************************************************/
 
 #include "AtTpcProtoMap.h"
-#include "TMultiGraph.h"
+#include "TCanvas.h"
 #include "TKey.h"
+#include "TMultiGraph.h"
+#include "TStyle.h"
 
+#include <iostream>
 #include <fstream>
 
 #define cRED "\033[1;31m"
@@ -218,9 +221,9 @@ Int_t AtTpcProtoMap::BinToPad(Int_t binval)
       std::cout
          << " = AtTpcProtoMap::BinToPad - Warning: Bin value out of expected boundaries for prototype bin mapping : "
          << binval << std::endl;
+   }
 
-   } else
-      return padval;
+   return padval;
 }
 
 void AtTpcProtoMap::Dump() {}

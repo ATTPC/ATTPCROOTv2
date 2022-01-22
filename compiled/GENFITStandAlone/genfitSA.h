@@ -46,8 +46,7 @@
 #include "AtTrack.h"
 #include "AtPatternEvent.h"
 
-
-//ROOT
+// ROOT
 #include "TGraph.h"
 #include "TCanvas.h"
 #include "TApplication.h"

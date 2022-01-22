@@ -213,54 +213,54 @@ void plotFit(std::string fileFolder = "data/")
                   angle = (*AFitVec)[index];
                }
 
-                  // if((*AFitVec)[index]>20.0 && (*EFitVec)[index]>4.0){
-                  //	if( ((*xiniFitXtrVec)[index]<0.3 && (*xiniFitXtrVec)[index]>-0.3) && ((*yiniFitXtrVec)[index]<0.3
-                  //&& (*yiniFitXtrVec)[index]>-0.3) ){
-                  Ang_Ener->Fill(angle, (*EFitVec)[index]);
-                  HQval->Fill((*ExVec)[index]);
-                  Ang_Ener_Xtr->Fill((angle), (*EFitXtrVec)[index]);
-                  HQval_Xtr->Fill((*ExXtrVec)[index]);
-                  hxpos_fit_Xtr->Fill((*xiniFitXtrVec)[index]);
-                  hypos_fit_Xtr->Fill((*yiniFitXtrVec)[index]);
-                  hzpos_fit_Xtr->Fill((*ziniFitXtrVec)[index]);
-                  x_y_Xtr->Fill((*xiniFitXtrVec)[index], (*yiniFitXtrVec)[index]);
-                  QvsAng_Xtr->Fill((*ExXtrVec)[index], AFit);
-                  POCAXtrH->Fill((*POCAXtrVec)[index]);
-                  tracklengthH->Fill((*trackLengthVec)[index]);
-                  ZposvsEvH->Fill((*ziniFitXtrVec)[index], i * fileCnt);
-                  // }// x-y
-                  //}//Energy and angle
+               // if((*AFitVec)[index]>20.0 && (*EFitVec)[index]>4.0){
+               //	if( ((*xiniFitXtrVec)[index]<0.3 && (*xiniFitXtrVec)[index]>-0.3) && ((*yiniFitXtrVec)[index]<0.3
+               //&& (*yiniFitXtrVec)[index]>-0.3) ){
+               Ang_Ener->Fill(angle, (*EFitVec)[index]);
+               HQval->Fill((*ExVec)[index]);
+               Ang_Ener_Xtr->Fill((angle), (*EFitXtrVec)[index]);
+               HQval_Xtr->Fill((*ExXtrVec)[index]);
+               hxpos_fit_Xtr->Fill((*xiniFitXtrVec)[index]);
+               hypos_fit_Xtr->Fill((*yiniFitXtrVec)[index]);
+               hzpos_fit_Xtr->Fill((*ziniFitXtrVec)[index]);
+               x_y_Xtr->Fill((*xiniFitXtrVec)[index], (*yiniFitXtrVec)[index]);
+               QvsAng_Xtr->Fill((*ExXtrVec)[index], AFit);
+               POCAXtrH->Fill((*POCAXtrVec)[index]);
+               tracklengthH->Fill((*trackLengthVec)[index]);
+               ZposvsEvH->Fill((*ziniFitXtrVec)[index], i * fileCnt);
+               // }// x-y
+               //}//Energy and angle
 
-                  // 	  	}//IC
+               // 	  	}//IC
 
-                  HIC->Fill(IC);
+               HIC->Fill(IC);
 
-                  Ang_Ener_PRA->Fill(APRA, EPRA);
-		  Ang_Ener_PRA_rot->Fill(180.0-APRA, EPRA);
-		  
-                  // HQval->Fill(Ex);
-                  hxpos_fit->Fill((*xiniFitVec)[index]);
-                  hypos_fit->Fill((*yiniFitVec)[index]);
-                  hzpos_fit->Fill((*ziniFitVec)[index]);
+               Ang_Ener_PRA->Fill(APRA, EPRA);
+               Ang_Ener_PRA_rot->Fill(180.0 - APRA, EPRA);
 
-                  QvsAng->Fill(Ex, AFit);
-                  QvsZpos->Fill(Ex, ziniFit);
-                  ZposvsAng->Fill(ziniFit, AFit);
-                  Ang_AngPRA->Fill(AFit, APRA);
-                  zfit_zPRA->Fill(ziniFit, ziniPRA / 10.0);
-                  Phi_PhiPRA->Fill(PhiFit * TMath::RadToDeg(), PhiPRA);
-                  Ang_Phi->Fill(AFit, PhiFit * TMath::RadToDeg());
-                  x_Phi->Fill(xiniFit, PhiFit * TMath::RadToDeg());
-                  y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
+               // HQval->Fill(Ex);
+               hxpos_fit->Fill((*xiniFitVec)[index]);
+               hypos_fit->Fill((*yiniFitVec)[index]);
+               hzpos_fit->Fill((*ziniFitVec)[index]);
 
-                  QvsXpos->Fill(Ex, (*xiniFitXtrVec)[index]);
+               QvsAng->Fill(Ex, AFit);
+               QvsZpos->Fill(Ex, ziniFit);
+               ZposvsAng->Fill(ziniFit, AFit);
+               Ang_AngPRA->Fill(AFit, APRA);
+               zfit_zPRA->Fill(ziniFit, ziniPRA / 10.0);
+               Phi_PhiPRA->Fill(PhiFit * TMath::RadToDeg(), PhiPRA);
+               Ang_Phi->Fill(AFit, PhiFit * TMath::RadToDeg());
+               x_Phi->Fill(xiniFit, PhiFit * TMath::RadToDeg());
+               y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
 
-                  // Excitation energy
-                  // Double_t ex_energy_exp = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, AFit*TMath::DegToRad(),EFit);
-                  // HQval->Fill(Ex);
-               }
-               //} // Z vertex
-               //}//Angle
+               QvsXpos->Fill(Ex, (*xiniFitXtrVec)[index]);
+
+               // Excitation energy
+               // Double_t ex_energy_exp = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, AFit*TMath::DegToRad(),EFit);
+               // HQval->Fill(Ex);
+            }
+            //} // Z vertex
+            //}//Angle
          }
       }
    }
@@ -419,7 +419,6 @@ void plotFit(std::string fileFolder = "data/")
    Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
-   
 
    TCanvas *c4 = new TCanvas();
    c4->Divide(2, 2);

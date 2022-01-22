@@ -9,10 +9,9 @@
 
 #include "TDatabasePDG.h"
 
-ClassImp(AtFITTER::AtGenfit)
+AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile,
+                             Float_t gasMediumDensity, Int_t minit, Int_t maxit)
 
-   AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile,
-                                Float_t gasMediumDensity, Int_t minit, Int_t maxit)
 {
 
    fTPCDetID = 0;
@@ -33,7 +32,7 @@ ClassImp(AtFITTER::AtGenfit)
    fKalmanFitter = std::make_shared<genfit::KalmanFitterRefTrack>();
    fKalmanFitter->setMinIterations(fMinIterations);
    fKalmanFitter->setMaxIterations(fMaxIterations);
-   //fKalmanFitter->setDebugLvl();
+   // fKalmanFitter->setDebugLvl();
 
    fGenfitTrackArray = new TClonesArray("genfit::Track");
    fHitClusterArray = new TClonesArray("AtHitCluster");
@@ -123,7 +122,6 @@ void AtFITTER::AtGenfit::Init()
    fGenfitTrackArray->Delete();
 }
 
-
 TClonesArray *AtFITTER::AtGenfit::GetGenfitTrackArray()
 {
    return fGenfitTrackArray;
@@ -183,23 +181,22 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
 
       if (fSimulationConv) {
          theta = 180.0 * TMath::DegToRad() - track->GetGeoTheta();
-         phi =  track->GetGeoPhi();
+         phi = track->GetGeoPhi();
       } else {
          theta = track->GetGeoTheta();
          phi = 180.0 * TMath::DegToRad() - track->GetGeoPhi();
       }
 
-      
-	std::reverse(hitClusterArray->begin(), hitClusterArray->end());
+      std::reverse(hitClusterArray->begin(), hitClusterArray->end());
 
    } else if (thetaConv > 90.0 * TMath::DegToRad()) { // Backward (Forward) for experiment (simulation)
 
       if (fSimulationConv) {
          theta = track->GetGeoTheta();
-         phi =  track->GetGeoPhi(); //180.0 * TMath::DegToRad() - track->GetGeoPhi();
+         phi = track->GetGeoPhi(); // 180.0 * TMath::DegToRad() - track->GetGeoPhi();
       } else {
          theta = 180.0 * TMath::DegToRad() - track->GetGeoTheta();
-         phi =  -track->GetGeoPhi();
+         phi = -track->GetGeoPhi();
       }
    } else {
       std::cout << cRED << " AtGenfit::FitTracks - Warning! Undefined theta angle. Skipping event..." << cNORMAL
@@ -223,7 +220,6 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
                 << " - Max. Brho : " << fMaxBrho << "\n";
       std::cout << " Theta : " << theta * TMath::RadToDeg() << " - Phi : " << phi * TMath::RadToDeg()
                 << " - Brho : " << brho << "\n";
-      
    }
 
    // hitClusterArray->resize(hitClusterArray->size() * 0.50);
@@ -235,27 +231,25 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       TVector3 pos = cluster.GetPosition();
       auto clusterClone(cluster);
 
-      if(iCluster==0)
-      {
-	std::cout<<" First cluster : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<"\n"; 
+      if (iCluster == 0) {
+         std::cout << " First cluster : " << pos.X() << " - " << pos.Y() << " - " << pos.Z() << "\n";
 
-      }else if(iCluster==(hitClusterArray->size()-1)){
+      } else if (iCluster == (hitClusterArray->size() - 1)) {
 
-	std::cout<<" Last cluster : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<"\n";
+         std::cout << " Last cluster : " << pos.X() << " - " << pos.Y() << " - " << pos.Z() << "\n";
       }
 
-      
-      if (thetaConv < 90.0 * TMath::DegToRad()) {//Experiment forward
-	if(fSimulationConv)
-	  clusterClone.SetPosition(pos.X(), pos.Y(), 1000.0 - pos.Z());
-	else  
-	  clusterClone.SetPosition(-pos.X(), pos.Y(), 1000.0 - pos.Z());
-      }else if (thetaConv > 90.0 * TMath::DegToRad()) {
-	if(fSimulationConv)
-	  clusterClone.SetPosition(pos.X(), pos.Y(), pos.Z());
-	else  
-	  clusterClone.SetPosition(-pos.X(), pos.Y(), pos.Z());
-      }	
+      if (thetaConv < 90.0 * TMath::DegToRad()) { // Experiment forward
+         if (fSimulationConv)
+            clusterClone.SetPosition(pos.X(), pos.Y(), 1000.0 - pos.Z());
+         else
+            clusterClone.SetPosition(-pos.X(), pos.Y(), 1000.0 - pos.Z());
+      } else if (thetaConv > 90.0 * TMath::DegToRad()) {
+         if (fSimulationConv)
+            clusterClone.SetPosition(pos.X(), pos.Y(), pos.Z());
+         else
+            clusterClone.SetPosition(-pos.X(), pos.Y(), pos.Z());
+      }
 
       Int_t idx = fHitClusterArray->GetEntriesFast();
       new ((*fHitClusterArray)[idx]) AtHitCluster(clusterClone);
@@ -278,11 +272,11 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       // iniCluster = hitClusterArray->back();
       iniPos = iniCluster.GetPosition();
       zIniCal = 1000.0 - iniPos.Z();
-      
-      if(fSimulationConv)
-	xIniCal = iniPos.X();
+
+      if (fSimulationConv)
+         xIniCal = iniPos.X();
       else
-       xIniCal = -iniPos.X();
+         xIniCal = -iniPos.X();
 
    } else if (thetaConv > 90.0 * TMath::DegToRad()) {
       iniCluster = hitClusterArray->front();
@@ -290,12 +284,11 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       iniPos = iniCluster.GetPosition();
       zIniCal = iniPos.Z();
 
-      if(fSimulationConv)
-       xIniCal = iniPos.X();
+      if (fSimulationConv)
+         xIniCal = iniPos.X();
       else
-       xIniCal = -iniPos.X();
+         xIniCal = -iniPos.X();
 
-      
    } else {
       std::cout << cRED << " AtGenfit::FitTracks - Warning! Undefined theta angle. Skipping event..." << cNORMAL
                 << "\n";
@@ -304,9 +297,9 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
 
    Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
 
-   //std::cout<<cRED<<" Distance to Z "<<dist<<cNORMAL<<"\n";
-   //if (dist > 70.0)
-   //  return nullptr;
+   // std::cout<<cRED<<" Distance to Z "<<dist<<cNORMAL<<"\n";
+   // if (dist > 70.0)
+   //   return nullptr;
 
    // if(fVerbosity>1)
    std::cout << " Initial position : " << xIniCal << " - " << iniPos.Y() << " - " << zIniCal << "\n";
@@ -363,73 +356,126 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       return nullptr;
    }
 
-         // gfTrack->prune("FCW");
+   // gfTrack->prune("FCW");
 
-         genfit::FitStatus *fitStatus;
-         try {
-            if (fVerbosity > 0) {
-               fitStatus = gfTrack->getFitStatus(trackRep);
-               std::cout << cYELLOW << " Is fitted? " << fitStatus->isFitted() << "\n";
-               std::cout << " Is Converged ? " << fitStatus->isFitConverged() << "\n";
-               std::cout << " Is Converged Partially? " << fitStatus->isFitConvergedPartially() << "\n";
-               std::cout << " Is pruned ? " << fitStatus->isTrackPruned() << cNORMAL << "\n";
-               fitStatus->Print();
-            }
-         } catch (genfit::Exception &e) {
-            return nullptr;
-         }
+   genfit::FitStatus *fitStatus;
+   try {
+      if (fVerbosity > 0) {
+         fitStatus = gfTrack->getFitStatus(trackRep);
+         std::cout << cYELLOW << " Is fitted? " << fitStatus->isFitted() << "\n";
+         std::cout << " Is Converged ? " << fitStatus->isFitConverged() << "\n";
+         std::cout << " Is Converged Partially? " << fitStatus->isFitConvergedPartially() << "\n";
+         std::cout << " Is pruned ? " << fitStatus->isTrackPruned() << cNORMAL << "\n";
+         fitStatus->Print();
+      }
+   } catch (genfit::Exception &e) {
+      return nullptr;
+   }
 
-         genfit::MeasuredStateOnPlane fitState;
-         // genfit::TrackPoint* firstPoint;
-         // genfit::TrackPoint* lastPoint;
-         // genfit::KalmanFitterInfo* pointKFitterInfo;
-         try {
-            fitState = gfTrack->getFittedState();
-            if (fVerbosity > 0)
-               fitState.Print();
-            // Fit result
-            fitState.getPosMomCov(pos_res, mom_res, cov_res);
-            if (fVerbosity > 0)
-               std::cout << cYELLOW << " Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
-                         << pos_res.Y() << "  " << pos_res.Z() << cNORMAL << "\n";
-            // firstPoint = gfTrack->getPointWithMeasurement(0);
-            // lastPoint  = gfTrack->getPointWithMeasurement(gfTrack->getNumPoints()-1);
-            // firstPoint->Print();
-            // lastPoint->Print();
-            // pointKFitterInfo = firstPoint->getKalmanFitterInfo();
+   genfit::MeasuredStateOnPlane fitState;
+   // genfit::TrackPoint* firstPoint;
+   // genfit::TrackPoint* lastPoint;
+   // genfit::KalmanFitterInfo* pointKFitterInfo;
+   try {
+      fitState = gfTrack->getFittedState();
+      if (fVerbosity > 0)
+         fitState.Print();
+      // Fit result
+      fitState.getPosMomCov(pos_res, mom_res, cov_res);
+      if (fVerbosity > 0)
+         std::cout << cYELLOW << " Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
+                   << pos_res.Y() << "  " << pos_res.Z() << cNORMAL << "\n";
+      // firstPoint = gfTrack->getPointWithMeasurement(0);
+      // lastPoint  = gfTrack->getPointWithMeasurement(gfTrack->getNumPoints()-1);
+      // firstPoint->Print();
+      // lastPoint->Print();
+      // pointKFitterInfo = firstPoint->getKalmanFitterInfo();
 
-         } catch (genfit::Exception &e) {
-            return nullptr;
-         }
+   } catch (genfit::Exception &e) {
+      return nullptr;
+   }
 
-         // TODO: Extrapolate back to Z axis (done in e20009 analysis for the moment)
-         /*TVector3 posVertex(0,0,pos_res.Z());
-              TVector3 normalVertex(0, 0, 1);
+   // TODO: Extrapolate back to Z axis (done in e20009 analysis for the moment)
+   /*TVector3 posVertex(0,0,pos_res.Z());
+        TVector3 normalVertex(0, 0, 1);
 
 
-         try {
-           for(auto iStep=0;iStep<20;++iStep){
-           trackRep -> extrapolateBy(fitState, -0.1*iStep);
-           //trackRep -> extrapolateToPlane(fitState,genfit::SharedPlanePtr(new
-         genfit::DetPlane(posVertex,normalVertex))); mom_res = fitState.getMom(); pos_res = fitState.getPos(); double
-         distance = TMath::Sqrt(pos_res.X()*pos_res.X() + pos_res.Y()*pos_res.Y()); if (fVerbosity > 0) std::cout <<
-         cYELLOW << " Extrapolation: Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
-                              << pos_res.Y() << "  " << pos_res.Z() <<" - POCA : "<<POCA<< cNORMAL << "\n";
-           }
+   try {
+     for(auto iStep=0;iStep<20;++iStep){
+     trackRep -> extrapolateBy(fitState, -0.1*iStep);
+     //trackRep -> extrapolateToPlane(fitState,genfit::SharedPlanePtr(new
+   genfit::DetPlane(posVertex,normalVertex))); mom_res = fitState.getMom(); pos_res = fitState.getPos(); double
+   distance = TMath::Sqrt(pos_res.X()*pos_res.X() + pos_res.Y()*pos_res.Y()); if (fVerbosity > 0) std::cout <<
+   cYELLOW << " Extrapolation: Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
+                        << pos_res.Y() << "  " << pos_res.Z() <<" - POCA : "<<POCA<< cNORMAL << "\n";
+     }
 
-              } catch (genfit::Exception &e) {
-           mom_res.SetXYZ(0, 0, 0);
-           pos_res.SetXYZ(0, 0, 0);
-           }*/
+        } catch (genfit::Exception &e) {
+     mom_res.SetXYZ(0, 0, 0);
+     pos_res.SetXYZ(0, 0, 0);
+     }*/
 
-         // gfTrack ->Print();
+   // gfTrack ->Print();
 
-         //} // iTrack
+   //} // iTrack
 
-         std::cout << " End of GENFIT "
-                   << "\n";
-         std::cout << "               "
-                   << "\n";
+   std::cout << " End of GENFIT "
+             << "\n";
+   std::cout << "               "
+             << "\n";
 
-         return gfTrack;
+   try {
+      fKalmanFitter->processTrackWithRep(gfTrack, trackRep, false);
+      // fKalmanFitter->processTrackPartially(gfTrack, trackRep,0,hitClusterArray->size()*0.30);
+   } catch (genfit::Exception &e) {
+
+      std::cout << " AtGenfit -  Exception caught from Kalman Fitter : " << e.what() << "\n";
+   }
+
+   // gfTrack->prune("FCW");
+
+   // genfit::FitStatus *fitStatus;
+   try {
+      fitStatus = gfTrack->getFitStatus(trackRep);
+      std::cout << cYELLOW << " Is fitted? " << fitStatus->isFitted() << "\n";
+      std::cout << " Is Converged ? " << fitStatus->isFitConverged() << "\n";
+      std::cout << " Is Converged Partially? " << fitStatus->isFitConvergedPartially() << "\n";
+      std::cout << " Is pruned ? " << fitStatus->isTrackPruned() << cNORMAL << "\n";
+      fitStatus->Print();
+   } catch (genfit::Exception &e) {
+      return nullptr;
+   }
+
+   /*genfit::MeasuredStateOnPlane fitState;
+genfit::TrackPoint* firstPoint;
+genfit::TrackPoint* lastPoint;
+genfit::KalmanFitterInfo* pointKFitterInfo;*/
+   /*try {
+fitState = gfTrack->getFittedState();
+fitState.Print();
+// Fit result
+      fitState.getPosMomCov(pos_res, mom_res, cov_res);
+      std::cout << cYELLOW << " Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
+         << pos_res.Y() << "  " << pos_res.Z() << cNORMAL << "\n";
+ firstPoint = gfTrack->getPointWithMeasurement(0);
+ lastPoint  = gfTrack->getPointWithMeasurement(gfTrack->getNumPoints()-1);
+ //firstPoint->Print();
+ //lastPoint->Print();
+ //pointKFitterInfo = firstPoint->getKalmanFitterInfo();
+
+   } catch (genfit::Exception &e) {
+   }*/
+
+   // gfTrack ->Print();
+
+   //} // iTrack
+
+   std::cout << " End of GENFIT "
+             << "\n";
+   std::cout << "               "
+             << "\n";
+
+   return gfTrack;
 }
+
+ClassImp(AtFITTER::AtGenfit);

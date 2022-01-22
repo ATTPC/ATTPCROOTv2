@@ -121,8 +121,8 @@ std::size_t AtHDFParser::open(char const *file)
    auto meta_size = open_group(_file, "meta");
    auto metaID = std::get<0>(meta_size);
    if (metaID > 0) {
-      char *datasetName = "meta";
-      auto dataset_dims = open_dataset(metaID, datasetName);
+      std::string datasetName = "meta";
+      auto dataset_dims = open_dataset(metaID, datasetName.c_str());
       auto datasetId = std::get<0>(dataset_dims);
       auto len = std::get<1>(dataset_dims).at(0);
 
@@ -157,9 +157,9 @@ std::string AtHDFParser::get_event_name(std::size_t idx)
    }
 }
 
-std::vector<int64_t> AtHDFParser::get_header(std::string headerName)
+std::vector<uint64_t> AtHDFParser::get_header(std::string headerName)
 {
-   std::vector<int64_t> retVec;
+   std::vector<uint64_t> retVec;
 
    auto dataset_dims = open_dataset(_group, headerName.c_str());
    if (std::get<0>(dataset_dims) == 0)
@@ -170,7 +170,7 @@ std::vector<int64_t> AtHDFParser::get_header(std::string headerName)
    // Get the length of the header
    auto len = std::get<1>(dataset_dims).at(0);
 
-   int64_t *data = new int64_t[len];
+   uint64_t *data = new uint64_t[len];
    auto status = H5Dread(_dataset, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
 
    // Add read data to the vector and return it
@@ -211,6 +211,7 @@ std::size_t AtHDFParser::inievent()
 std::size_t AtHDFParser::datasets()
 {
    herr_t idx = H5Literate(_group, H5_INDEX_NAME, H5_ITER_INC, NULL, file_info, NULL);
+   return 0;
 }
 
 herr_t AtHDFParser::file_info(hid_t loc_id, const char *name, const H5L_info_t *linfo, void *opdata)

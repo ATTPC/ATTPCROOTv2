@@ -68,7 +68,7 @@ AtTPCIonDecay::AtTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
    kProton->SetPdgCode(2212);
    TParticle *kNeutron = new TParticle();
    kNeutron->SetPdgCode(2112);
-   char buffer[20];
+   char buffer[40];
 
    fgNIon++;
    fNbCases = a->size();

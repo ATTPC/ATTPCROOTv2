@@ -41,10 +41,11 @@
 //#define Be11 1000040110
 #define particlePDG 1000010020
 
-#define m_beam M_10B //select your beam particle here
-#define Ebeam_buff 143.94 //MeV
+#define m_beam M_10B      // select your beam particle here
+#define Ebeam_buff 143.94 // MeV
 /////////////////////////////////////////////////////////////////////////////
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
 
    std::size_t firstEvt = 0;
    std::size_t lastEvt = 0;
@@ -52,7 +53,7 @@ int main(int argc, char *argv[]){
    TString inputFileName = "";
    bool fitDirection = 0; // 0: Forward (d,d) - 1: Backwards (d,p)
    bool simulationConv = 0;
-   
+
    //  Arguments
    if (argc == 7) {
       firstEvt = std::atoi(argv[1]);
@@ -64,16 +65,18 @@ int main(int argc, char *argv[]){
       std::cout << cGREEN << " Processing file " << inputFileName << "\n";
       std::cout << " Processing events from : " << firstEvt << " to " << lastEvt << "\n";
       std::cout << " Fit direction : " << fitDirection << " (0: Forward (d,d) - 1: Backwards (d,p))\n ";
-      std::cout << " Simulation ? "<<simulationConv<<"\n ";
+      std::cout << " Simulation ? " << simulationConv << "\n ";
       std::cout << " Interactive mode? : " << fInteractiveMode << cNORMAL << "\n";
    } else {
       std::cout << " Wrong number of arguments. Expecting 7: first_event last_event interactive_mode_bool "
-                   "fileNameWithoutExtension fitDirection_bool simulation_convention."<< "\n";
+                   "fileNameWithoutExtension fitDirection_bool simulation_convention."
+                << "\n";
       return 0;
    }
 
    if (lastEvt < firstEvt) {
-      std::cerr << " Error!: Inconsistent numbers for first/last event. Exiting... "<< "\n";
+      std::cerr << " Error!: Inconsistent numbers for first/last event. Exiting... "
+                << "\n";
       return 0;
    }
 
@@ -85,7 +88,7 @@ int main(int argc, char *argv[]){
 
    std::vector<TString> files;
    files.push_back(rootFileName);
-   
+
    Float_t particleMass = 0;
    Int_t recoilPDG = 0;
    Float_t recoilMass = 0;
@@ -95,7 +98,7 @@ int main(int argc, char *argv[]){
    Double_t M_D = m_d * Conv_AMU_to_MeV;
    Double_t M_10B = m_10B * Conv_AMU_to_MeV;
    Double_t M_11B = m_11B * Conv_AMU_to_MeV;
-   
+
    Double_t m_b;
    Double_t m_B;
 
@@ -150,23 +153,23 @@ int main(int argc, char *argv[]){
 
    TString geoManFile = dir + "/geometry/ATTPC_D600torr_NR_v1_geomanager.root";
    std::cout << " Geometry file : " << geoManFile.Data() << "\n";
-   
+
    TString filePath;
 
-   if(simulationConv){
-     //filePath = dir + "/macro/Simulation/ATTPC/10B_dp/";
-     filePath = dir + "/mnt/analysis/e20009/e20009_Nabin/analysis/simulation/rootfiles/";//change it
-   }else{ 
-     //filePath = "/mnt/analysis/e20009/root_files/";
-     filePath = "/mnt/analysis/e20009/e20009_Nabin/analysis/unpacker/DV0p9372/";//change it
-     //filePath = "/mnt/analysis/e20009/e20009_Nabin/analysis/unpacker/Good_files_10252021/";//change it
+   if (simulationConv) {
+      // filePath = dir + "/macro/Simulation/ATTPC/10B_dp/";
+      filePath = dir + "/mnt/analysis/e20009/e20009_Nabin/analysis/simulation/rootfiles/"; // change it
+   } else {
+      // filePath = "/mnt/analysis/e20009/root_files/";
+      filePath = "/mnt/analysis/e20009/e20009_Nabin/analysis/unpacker/DV0p9372/"; // change it
+      // filePath = "/mnt/analysis/e20009/e20009_Nabin/analysis/unpacker/Good_files_10252021/";//change it
    }
-   
-   TString fileName = "run_0344DV_0.9372.root";//run_0280DV_1.00.root
-   //TString fileName = "Sim_out_digi_B10dp_gs_2500ev_09012021.root";
-   
+
+   TString fileName = "run_0344DV_0.9372.root"; // run_0280DV_1.00.root
+   // TString fileName = "Sim_out_digi_B10dp_gs_2500ev_09012021.root";
+
    TString fileNameWithPath = dir + filePath + fileName;
-   
+
    TString eLossFilePath = dir + "/resources/energy_loss/";
    TString eLossFileNameWithPath = eLossFilePath + elossFileName;
 
@@ -194,7 +197,6 @@ int main(int argc, char *argv[]){
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetNumFitPoints(1.0);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetVerbosityLevel(1);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetSimulationConvention(simulationConv);
-   
 
    // Output file
    Float_t EFit;
@@ -211,7 +213,7 @@ int main(int argc, char *argv[]){
    Float_t yiniPRA;
    Float_t ziniPRA;
    Float_t pVal;
-   
+
    Float_t IC;
    Double_t IC_sca;
    Double_t DB_beam;
@@ -219,7 +221,7 @@ int main(int argc, char *argv[]){
    Double_t trigger_free;
    Double_t mesh;
    Double_t mesh_MCA;
-   
+
    Float_t EFitXtr;
    Float_t ExXtr;
    Float_t xiniFitXtr;
@@ -244,7 +246,7 @@ int main(int argc, char *argv[]){
    std::vector<Float_t> yiniPRAVec;
    std::vector<Float_t> ziniPRAVec;
    std::vector<Float_t> pValVec;
-   
+
    std::vector<Float_t> ICVec;
    std::vector<Double_t> IC_sca_Vec;
    std::vector<Double_t> DB_beam_Vec;
@@ -252,7 +254,7 @@ int main(int argc, char *argv[]){
    std::vector<Double_t> trigger_free_Vec;
    std::vector<Double_t> mesh_Vec;
    std::vector<Double_t> mesh_MCA_Vec;
-   
+
    std::vector<Float_t> EFitXtrVec;
    std::vector<Float_t> ExXtrVec;
    std::vector<Float_t> xiniFitXtrVec;
@@ -265,14 +267,14 @@ int main(int argc, char *argv[]){
 
    TString simFile;
 
-   if(simulationConv)
-     simFile = "_sim_";
+   if (simulationConv)
+      simFile = "_sim_";
    else
-     simFile = "";
-   
-   TString outputFileName = "fit_analysis_"+ simFile + inputFileName;
+      simFile = "";
+
+   TString outputFileName = "fit_analysis_" + simFile + inputFileName;
    outputFileName += "_" + std::to_string(firstEvt) + "_" + std::to_string(lastEvt) + ".root";
-   
+
    TFile *outputFile = new TFile(outputFileName.Data(), "RECREATE");
    TTree *outputTree = new TTree("outputTree", "OutputTree");
    outputTree->Branch("EFit", &EFit, "EFit/F");
@@ -295,7 +297,7 @@ int main(int argc, char *argv[]){
    outputTree->Branch("ziniFitXtr", &ziniFitXtr, "ziniFitXtr/F");
    outputTree->Branch("distXtr", &distXtr, "distXtr/F");
    outputTree->Branch("pVal", &pVal, "pVal/F");
-   
+
    outputTree->Branch("IC", &IC, "IC/F");
    outputTree->Branch("IC_sca", &IC_sca, "IC_sca/F");
    outputTree->Branch("DB_beam", &DB_beam, "DB_beam/F");
@@ -303,7 +305,7 @@ int main(int argc, char *argv[]){
    outputTree->Branch("trigger_free", &trigger_free, "trigger_free/F");
    outputTree->Branch("mesh", &mesh, "mesh/F");
    outputTree->Branch("mesh_MCA", &mesh_MCA, "mesh_MCA/F");
-   
+
    outputTree->Branch("trackLength", &trackLength, "trackLength/F");
    outputTree->Branch("POCAXtr", &POCAXtr, "POCAXtr/F");
    outputTree->Branch("trackID", &trackID, "trackID/F");
@@ -328,7 +330,7 @@ int main(int argc, char *argv[]){
    outputTree->Branch("ziniFitXtrVec", &ziniFitXtrVec);
    outputTree->Branch("distXtrVec", &distXtrVec);
    outputTree->Branch("pValVec", &pValVec);
-   
+
    outputTree->Branch("ICVec", &ICVec);
    outputTree->Branch("IC_sca_Vec", &IC_sca_Vec);
    outputTree->Branch("DB_beam_Vec", &DB_beam_Vec);
@@ -336,446 +338,448 @@ int main(int argc, char *argv[]){
    outputTree->Branch("ICVec", &ICVec);
    outputTree->Branch("mesh_Vec", &mesh_Vec);
    outputTree->Branch("mesh_MCA_Vec", &mesh_MCA_Vec);
-   
+
    outputTree->Branch("trackLengthVec", &trackLengthVec);
    outputTree->Branch("POCAXtrVec", &POCAXtrVec);
    outputTree->Branch("trackIDVec", &trackIDVec);
 
    for (auto iFile = 0; iFile < files.size(); ++iFile) {
 
-     //fileNameWithPath = dir + filePath + files.at(iFile).Data();
-     fileNameWithPath = filePath + files.at(iFile).Data();
-     std::cout << " Opening File : " << fileNameWithPath.Data() << std::endl;
+      // fileNameWithPath = dir + filePath + files.at(iFile).Data();
+      fileNameWithPath = filePath + files.at(iFile).Data();
+      std::cout << " Opening File : " << fileNameWithPath.Data() << std::endl;
 
-     file = new TFile(fileNameWithPath.Data(), "READ");
+      file = new TFile(fileNameWithPath.Data(), "READ");
 
-     Int_t nEvents = lastEvt - firstEvt;
+      Int_t nEvents = lastEvt - firstEvt;
 
-     TTree *tree = (TTree *)file->Get("cbmsim");
-     // Int_t nEvents = 100;//tree->GetEntries();
-     std::cout << " Number of events : " << nEvents << std::endl;
+      TTree *tree = (TTree *)file->Get("cbmsim");
+      // Int_t nEvents = 100;//tree->GetEntries();
+      std::cout << " Number of events : " << nEvents << std::endl;
 
-     TTreeReader Reader1("cbmsim", file);
-     TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtPatternEvent");
-     TTreeReaderValue<TClonesArray> evArray(Reader1, "AtEventH");
-     Reader1.SetEntriesRange(firstEvt, lastEvt);
+      TTreeReader Reader1("cbmsim", file);
+      TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtPatternEvent");
+      TTreeReaderValue<TClonesArray> evArray(Reader1, "AtEventH");
+      Reader1.SetEntriesRange(firstEvt, lastEvt);
 
-     for (Int_t i = firstEvt; i < lastEvt; i++) {
+      for (Int_t i = firstEvt; i < lastEvt; i++) {
 
-        // std::chrono::seconds tickingBomb(10);
-        // std::chrono::time_point<std::chrono::system_clock> end;
-        // end = std::chrono::system_clock::now() + tickingBomb;
+         // std::chrono::seconds tickingBomb(10);
+         // std::chrono::time_point<std::chrono::system_clock> end;
+         // end = std::chrono::system_clock::now() + tickingBomb;
 
-        // if(i%2==0)
-        // continue;
+         // if(i%2==0)
+         // continue;
 
-        EFit = std::sqrt(-1);
-        EFitXtr = std::sqrt(-1);
-        AFit = std::sqrt(-1);
-        PhiFit = std::sqrt(-1);
-        EPRA = std::sqrt(-1);
-        APRA = std::sqrt(-1);
-        PhiPRA = std::sqrt(-1);
-        Ex = std::sqrt(-1);
-        ExXtr = std::sqrt(-1);
-        xiniFit = std::sqrt(-1);
-        yiniFit = std::sqrt(-1);
-        ziniFit = std::sqrt(-1);
-        xiniFitXtr = std::sqrt(-1);
-        yiniFitXtr = std::sqrt(-1);
-        ziniFitXtr = std::sqrt(-1);
-        xiniPRA = std::sqrt(-1);
-        yiniPRA = std::sqrt(-1);
-        ziniPRA = std::sqrt(-1);
-        pVal = std::sqrt(-1);
-	
-        IC = std::sqrt(-1);
-	IC_sca = std::sqrt(-1);
-	DB_beam = std::sqrt(-1);
-	trigger_live = std::sqrt(-1);
-	trigger_free = std::sqrt(-1);
-	mesh = std::sqrt(-1);
-	mesh_MCA = std::sqrt(-1);
-	
-        trackLength = std::sqrt(-1);
-        POCAXtr = std::sqrt(-1);
+         EFit = std::sqrt(-1);
+         EFitXtr = std::sqrt(-1);
+         AFit = std::sqrt(-1);
+         PhiFit = std::sqrt(-1);
+         EPRA = std::sqrt(-1);
+         APRA = std::sqrt(-1);
+         PhiPRA = std::sqrt(-1);
+         Ex = std::sqrt(-1);
+         ExXtr = std::sqrt(-1);
+         xiniFit = std::sqrt(-1);
+         yiniFit = std::sqrt(-1);
+         ziniFit = std::sqrt(-1);
+         xiniFitXtr = std::sqrt(-1);
+         yiniFitXtr = std::sqrt(-1);
+         ziniFitXtr = std::sqrt(-1);
+         xiniPRA = std::sqrt(-1);
+         yiniPRA = std::sqrt(-1);
+         ziniPRA = std::sqrt(-1);
+         pVal = std::sqrt(-1);
 
-        EFitVec.clear();
-        AFitVec.clear();
-        PhiFitVec.clear();
-        EPRAVec.clear();
-        APRAVec.clear();
-        PhiPRAVec.clear();
-        ExVec.clear();
-        xiniFitVec.clear();
-        yiniFitVec.clear();
-        ziniFitVec.clear();
-        xiniPRAVec.clear();
-        yiniPRAVec.clear();
-        ziniPRAVec.clear();
-        pValVec.clear();
-	
-        ICVec.clear();
-	IC_sca_Vec.clear();
-	DB_beam_Vec.clear();
-	trigger_live_Vec.clear();
-	trigger_free_Vec.clear();
-	mesh_Vec.clear();
-	mesh_MCA_Vec.clear();
-	
-	
-        EFitXtrVec.clear();
-        ExXtrVec.clear();
-        xiniFitXtrVec.clear();
-        yiniFitXtrVec.clear();
-        ziniFitXtrVec.clear();
-        distXtrVec.clear();
-        trackLengthVec.clear();
-        POCAXtrVec.clear();
-        trackIDVec.clear();
+         IC = std::sqrt(-1);
+         IC_sca = std::sqrt(-1);
+         DB_beam = std::sqrt(-1);
+         trigger_live = std::sqrt(-1);
+         trigger_free = std::sqrt(-1);
+         mesh = std::sqrt(-1);
+         mesh_MCA = std::sqrt(-1);
 
-        std::cout << cGREEN << " Event Number : " << i << cNORMAL << "\n";
+         trackLength = std::sqrt(-1);
+         POCAXtr = std::sqrt(-1);
 
-        Reader1.Next();
+         EFitVec.clear();
+         AFitVec.clear();
+         PhiFitVec.clear();
+         EPRAVec.clear();
+         APRAVec.clear();
+         PhiPRAVec.clear();
+         ExVec.clear();
+         xiniFitVec.clear();
+         yiniFitVec.clear();
+         ziniFitVec.clear();
+         xiniPRAVec.clear();
+         yiniPRAVec.clear();
+         ziniPRAVec.clear();
+         pValVec.clear();
 
-        AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
-        AtEvent *event = (AtEvent *)evArray->At(0);
+         ICVec.clear();
+         IC_sca_Vec.clear();
+         DB_beam_Vec.clear();
+         trigger_live_Vec.clear();
+         trigger_free_Vec.clear();
+         mesh_Vec.clear();
+         mesh_MCA_Vec.clear();
 
-        if (patternEvent) {
+         EFitXtrVec.clear();
+         ExXtrVec.clear();
+         xiniFitXtrVec.clear();
+         yiniFitXtrVec.clear();
+         ziniFitXtrVec.clear();
+         distXtrVec.clear();
+         trackLengthVec.clear();
+         POCAXtrVec.clear();
+         trackIDVec.clear();
 
-           std::vector<AtPad> *auxPadArray = event->GetAuxPadArray();
-           std::cout << " Number of auxiliary pads : " << auxPadArray->size() << "\n";
+         std::cout << cGREEN << " Event Number : " << i << cNORMAL << "\n";
 
-           std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
-           std::cout << " Number of pattern tracks " << patternTrackCand.size() << "\n";
-	   //---------------------------
-           for (auto auxpad : *auxPadArray) {
-              if (auxpad.GetAuxName().compare(std::string("IC")) == 0) {
-                 std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
-                 Double_t *adc = auxpad.GetADC();
-                 IC = GetMaximum(adc);
-              }
-           }
-           ICVec.push_back(IC);
-	   //---------------------------
-	   for (auto auxpad : *auxPadArray) {
-              if (auxpad.GetAuxName().compare(std::string("IC_sca")) == 0) {
-                 std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
-                 Double_t *adc_a = auxpad.GetADC();
-                 //IC_sca = GetMaximum(adc_a);
-		 //	 IC_sca = GetNPeaksHRS(adc_a);
-		 IC_sca = GetNPeaksHRS(adc_a);
-		 //IC_sca = adc_a;
-              }
-           }
-           IC_sca_Vec.push_back(IC_sca);
-	   //---------------------------
-	   for (auto auxpad : *auxPadArray) {
-              if (auxpad.GetAuxName().compare(std::string("DB_beam")) == 0) {
-                 std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
-                 Double_t *adc_b = auxpad.GetADC();
-                 DB_beam = GetMaximum(adc_b);
-		 //DB_beam = adc_b;
-              }
-           }
-           DB_beam_Vec.push_back(DB_beam);
-	   //---------------------------
-	   for (auto auxpad : *auxPadArray) {
-              if (auxpad.GetAuxName().compare(std::string("trigger_live")) == 0) {
-                 std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
-                 Double_t *adc_c = auxpad.GetADC();
-		 trigger_live = GetMaximum(adc_c);
-		 //trigger_live = adc_c;
-              }
-           }
-           trigger_live_Vec.push_back(trigger_live);
-	   //---------------------------
-	   for (auto auxpad : *auxPadArray) {
-              if (auxpad.GetAuxName().compare(std::string("trigger_free")) == 0) {
-                 std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
-                 Double_t *adc_d = auxpad.GetADC();         
-		 trigger_free = GetMaximum(adc_d);
-		 //trigger_free = adc_d;
-              }
-           }
-           trigger_free_Vec.push_back(trigger_free);
-	   //---------------------------
-	   for (auto auxpad : *auxPadArray) {
-              if (auxpad.GetAuxName().compare(std::string("mesh")) == 0) {
-                 std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
-                 Double_t *adc_e = auxpad.GetADC();
-		 mesh = GetMaximum(adc_e);
-		 //mesh = adc_e;
-              }
-           }
-           mesh_Vec.push_back(mesh);
-	   //---------------------------
-	   for (auto auxpad : *auxPadArray) {
-              if (auxpad.GetAuxName().compare(std::string("mesh_MCA")) == 0) {
-                 std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
-                 Double_t *adc_f = auxpad.GetADC();
-		 mesh_MCA = GetMaximum(adc_f);
-		 //mesh_MCA = adc_f;
-              }
-           }
-           mesh_MCA_Vec.push_back(mesh_MCA);
-	   //---------------------------
-           evtNum_vs_trkNum->Fill(i, patternTrackCand.size());
+         Reader1.Next();
 
-           for (auto track : patternTrackCand) {
+         AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
+         AtEvent *event = (AtEvent *)evArray->At(0);
 
-              std::cout << " Track " << track.GetTrackID() << " with " << track.GetHitClusterArray()->size()     << " clusters "<< "\n";
+         if (patternEvent) {
 
-              trackID = track.GetTrackID();
-              trackIDVec.push_back(trackID);
+            std::vector<AtPad> *auxPadArray = event->GetAuxPadArray();
+            std::cout << " Number of auxiliary pads : " << auxPadArray->size() << "\n";
 
-              if (track.GetIsNoise() || track.GetHitClusterArray()->size() < 5) {
-                 std::cout << cRED << " Track is noise or has less than 5 clusters! " << cNORMAL << "\n";
-                 continue;
-              }
+            std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
+            std::cout << " Number of pattern tracks " << patternTrackCand.size() << "\n";
+            //---------------------------
+            for (auto auxpad : *auxPadArray) {
+               if (auxpad.GetAuxName().compare(std::string("IC")) == 0) {
+                  std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
+                  Double_t *adc = auxpad.GetADC();
+                  IC = GetMaximum(adc);
+               }
+            }
+            ICVec.push_back(IC);
+            //---------------------------
+            for (auto auxpad : *auxPadArray) {
+               if (auxpad.GetAuxName().compare(std::string("IC_sca")) == 0) {
+                  std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
+                  Double_t *adc_a = auxpad.GetADC();
+                  // IC_sca = GetMaximum(adc_a);
+                  //	 IC_sca = GetNPeaksHRS(adc_a);
+                  IC_sca = GetNPeaksHRS(adc_a);
+                  // IC_sca = adc_a;
+               }
+            }
+            IC_sca_Vec.push_back(IC_sca);
+            //---------------------------
+            for (auto auxpad : *auxPadArray) {
+               if (auxpad.GetAuxName().compare(std::string("DB_beam")) == 0) {
+                  std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
+                  Double_t *adc_b = auxpad.GetADC();
+                  DB_beam = GetMaximum(adc_b);
+                  // DB_beam = adc_b;
+               }
+            }
+            DB_beam_Vec.push_back(DB_beam);
+            //---------------------------
+            for (auto auxpad : *auxPadArray) {
+               if (auxpad.GetAuxName().compare(std::string("trigger_live")) == 0) {
+                  std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
+                  Double_t *adc_c = auxpad.GetADC();
+                  trigger_live = GetMaximum(adc_c);
+                  // trigger_live = adc_c;
+               }
+            }
+            trigger_live_Vec.push_back(trigger_live);
+            //---------------------------
+            for (auto auxpad : *auxPadArray) {
+               if (auxpad.GetAuxName().compare(std::string("trigger_free")) == 0) {
+                  std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
+                  Double_t *adc_d = auxpad.GetADC();
+                  trigger_free = GetMaximum(adc_d);
+                  // trigger_free = adc_d;
+               }
+            }
+            trigger_free_Vec.push_back(trigger_free);
+            //---------------------------
+            for (auto auxpad : *auxPadArray) {
+               if (auxpad.GetAuxName().compare(std::string("mesh")) == 0) {
+                  std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
+                  Double_t *adc_e = auxpad.GetADC();
+                  mesh = GetMaximum(adc_e);
+                  // mesh = adc_e;
+               }
+            }
+            mesh_Vec.push_back(mesh);
+            //---------------------------
+            for (auto auxpad : *auxPadArray) {
+               if (auxpad.GetAuxName().compare(std::string("mesh_MCA")) == 0) {
+                  std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
+                  Double_t *adc_f = auxpad.GetADC();
+                  mesh_MCA = GetMaximum(adc_f);
+                  // mesh_MCA = adc_f;
+               }
+            }
+            mesh_MCA_Vec.push_back(mesh_MCA);
+            //---------------------------
+            evtNum_vs_trkNum->Fill(i, patternTrackCand.size());
 
-              Double_t theta = track.GetGeoTheta();            // 180.0 * TMath::DegToRad() - track.GetGeoTheta();
-              Double_t radius = track.GetGeoRadius() / 1000.0; // mm to m
-              Double_t phi = track.GetGeoPhi();
-              Double_t brho = magneticField * radius / TMath::Sin(theta); // Tm
-              std::tuple<Double_t, Double_t> mom_ener = GetMomFromBrho(particleMass, atomicNumber, brho);
-              angle_vs_energy_pattern->Fill(theta * TMath::RadToDeg(), std::get<1>(mom_ener) * 1000.0);
-              phi_pattern->Fill(phi * TMath::RadToDeg());
-              // phi_phi_pattern->Fill(phi * TMath::RadToDeg(), mom_res.Phi() * TMath::RadToDeg());
-              EPRA = std::get<1>(mom_ener) * 1000.0;
-              APRA = theta * TMath::RadToDeg();
-              PhiPRA = phi * TMath::RadToDeg();
+            for (auto track : patternTrackCand) {
 
-	      std::cout<<" Theta : "<<theta*TMath::RadToDeg()<<" Phi : "<<phi*TMath::RadToDeg()<<"\n";
-	      
-              auto hitClusterArray = track.GetHitClusterArray();
-              AtHitCluster iniCluster;
-              Double_t zIniCal = std::sqrt(-1);
-              TVector3 iniPos;
+               std::cout << " Track " << track.GetTrackID() << " with " << track.GetHitClusterArray()->size()
+                         << " clusters "
+                         << "\n";
 
-              /*for (auto cluster : *hitClusterArray) {
-		TVector3 pos = cluster.GetPosition();
-		std::cout<<pos.X()<<"     "<<pos.Y()<<"   "<<pos.Z()<<"\n";
-		}*/
+               trackID = track.GetTrackID();
+               trackIDVec.push_back(trackID);
 
-	       // Variable for convention (simulation comes reversed)
-	      Double_t thetaConv;
-	      if (simulationConv) {
-		thetaConv = 180.0 - theta*TMath::RadToDeg();
-	      } else {
-		thetaConv = theta*TMath::RadToDeg();
-	      }
-	      
-	      
-              if (thetaConv < 90.0 ) {
-                 iniCluster = hitClusterArray->back();
-		 // NB: Use back because We do not reverse the cluster vector like in AtGenfit!
-                 iniPos = iniCluster.GetPosition();
-                 zIniCal = 1000.0 - iniPos.Z();
-              } else if (thetaConv > 90.0 ) {
-                 iniCluster = hitClusterArray->front();
-                 iniPos = iniCluster.GetPosition();
-                 zIniCal = iniPos.Z();
-              }
+               if (track.GetIsNoise() || track.GetHitClusterArray()->size() < 5) {
+                  std::cout << cRED << " Track is noise or has less than 5 clusters! " << cNORMAL << "\n";
+                  continue;
+               }
 
-              xiniPRA = iniPos.X();
-              yiniPRA = iniPos.Y();
-              ziniPRA = zIniCal;
+               Double_t theta = track.GetGeoTheta();            // 180.0 * TMath::DegToRad() - track.GetGeoTheta();
+               Double_t radius = track.GetGeoRadius() / 1000.0; // mm to m
+               Double_t phi = track.GetGeoPhi();
+               Double_t brho = magneticField * radius / TMath::Sin(theta); // Tm
+               std::tuple<Double_t, Double_t> mom_ener = GetMomFromBrho(particleMass, atomicNumber, brho);
+               angle_vs_energy_pattern->Fill(theta * TMath::RadToDeg(), std::get<1>(mom_ener) * 1000.0);
+               phi_pattern->Fill(phi * TMath::RadToDeg());
+               // phi_phi_pattern->Fill(phi * TMath::RadToDeg(), mom_res.Phi() * TMath::RadToDeg());
+               EPRA = std::get<1>(mom_ener) * 1000.0;
+               APRA = theta * TMath::RadToDeg();
+               PhiPRA = phi * TMath::RadToDeg();
 
-	      //This is just to select distances
-	      std::cout<<" Initial position : "<<xiniPRA<<" - "<<yiniPRA<<" - "<<ziniPRA<<"\n";
-	      
-              // Fit
-              if (fitDirection == 0 && thetaConv > 90) // O is between 0 and 90 (simulation goes from 90 to 180) (d,d)
-                 continue;
-              else if (fitDirection == 1 && thetaConv < 90) // 1 is between 90 and 180 (simulation goes from 0 to 90) (d,p)
-                 continue;
+               std::cout << " Theta : " << theta * TMath::RadToDeg() << " Phi : " << phi * TMath::RadToDeg() << "\n";
 
-              // Skip border angles
-              if (theta * TMath::RadToDeg() < 10 || theta * TMath::RadToDeg() > 170)
-                 continue;
+               auto hitClusterArray = track.GetHitClusterArray();
+               AtHitCluster iniCluster;
+               Double_t zIniCal = std::sqrt(-1);
+               TVector3 iniPos;
 
-              // Skip tracks that are far from Z (to be checked against number of iterations for extrapolation)
-              Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
+               /*for (auto cluster : *hitClusterArray) {
+       TVector3 pos = cluster.GetPosition();
+       std::cout<<pos.X()<<"     "<<pos.Y()<<"   "<<pos.Z()<<"\n";
+       }*/
 
-               std::cout<<cRED<<" Distance to Z "<<dist<<cNORMAL<<"\n";
-              if (dist > 50.0)
-                 continue;
+               // Variable for convention (simulation comes reversed)
+               Double_t thetaConv;
+               if (simulationConv) {
+                  thetaConv = 180.0 - theta * TMath::RadToDeg();
+               } else {
+                  thetaConv = theta * TMath::RadToDeg();
+               }
 
-              fFitter->Init();
-              genfit::Track *fitTrack;
+               if (thetaConv < 90.0) {
+                  iniCluster = hitClusterArray->back();
+                  // NB: Use back because We do not reverse the cluster vector like in AtGenfit!
+                  iniPos = iniCluster.GetPosition();
+                  zIniCal = 1000.0 - iniPos.Z();
+               } else if (thetaConv > 90.0) {
+                  iniCluster = hitClusterArray->front();
+                  iniPos = iniCluster.GetPosition();
+                  zIniCal = iniPos.Z();
+               }
 
-              try {
-                 fitTrack = fFitter->FitTracks(&track);
-              } catch (std::exception &e) {
-                 std::cout << " Exception fitting track !" << e.what() << "\n";
-                 continue;
-              }
+               xiniPRA = iniPos.X();
+               yiniPRA = iniPos.Y();
+               ziniPRA = zIniCal;
 
-              if (fitTrack == nullptr)
-                 continue;
+               // This is just to select distances
+               std::cout << " Initial position : " << xiniPRA << " - " << yiniPRA << " - " << ziniPRA << "\n";
 
-              TVector3 pos_res;
-              TVector3 mom_res;
-              TMatrixDSym cov_res;
-              // Double_t pVal = std::sqrt(-1);
-              Double_t bChi2 = 0, fChi2 = 0, bNdf = 0, fNdf = 0;
-              Double_t distance = std::sqrt(-1);;
-              Double_t POCA = 1E6;
-              TVector3 mom_ext;
-              TVector3 pos_ext;
-              TVector3 mom_ext_buff;
-              TVector3 pos_ext_buff;
+               // Fit
+               if (fitDirection == 0 && thetaConv > 90) // O is between 0 and 90 (simulation goes from 90 to 180) (d,d)
+                  continue;
+               else if (fitDirection == 1 &&
+                        thetaConv < 90) // 1 is between 90 and 180 (simulation goes from 0 to 90) (d,p)
+                  continue;
 
-              try {
+               // Skip border angles
+               if (theta * TMath::RadToDeg() < 10 || theta * TMath::RadToDeg() > 170)
+                  continue;
 
-                 if (fitTrack && fitTrack->hasKalmanFitStatus()) {
+               // Skip tracks that are far from Z (to be checked against number of iterations for extrapolation)
+               Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
 
-                    auto KalmanFitStatus = fitTrack->getKalmanFitStatus();
-                    auto trackRep = fitTrack->getTrackRep(0); // Only one representation is sved for the moment.
+               std::cout << cRED << " Distance to Z " << dist << cNORMAL << "\n";
+               if (dist > 50.0)
+                  continue;
 
-                    if (KalmanFitStatus->isFitConverged(false)) {
-                       // KalmanFitStatus->Print();
-                       genfit::MeasuredStateOnPlane fitState = fitTrack->getFittedState();
-                       // fitState.Print();
-                       fitState.getPosMomCov(pos_res, mom_res, cov_res);
-                       trackLength = KalmanFitStatus->getTrackLen();
-                       pVal = KalmanFitStatus->getPVal();
+               fFitter->Init();
+               genfit::Track *fitTrack;
 
-                       // fKalmanFitter -> getChiSquNdf(gfTrack, trackRep, bChi2, fChi2, bNdf, fNdf);
-                       Float_t stepXtr = -0.1;
-                       Int_t minCnt = 0;
-                       Int_t minCntExt = 0;
+               try {
+                  fitTrack = fFitter->FitTracks(&track);
+               } catch (std::exception &e) {
+                  std::cout << " Exception fitting track !" << e.what() << "\n";
+                  continue;
+               }
 
-                       try {
-                          for (auto iStep = 0; iStep < 40; ++iStep) {
+               if (fitTrack == nullptr)
+                  continue;
 
-                             trackRep->extrapolateBy(fitState, stepXtr * iStep);
-                             mom_ext_buff = fitState.getMom();
-                             pos_ext_buff = fitState.getPos();
-                             double distance =
-                                TMath::Sqrt(pos_ext_buff.X() * pos_ext_buff.X() + pos_ext_buff.Y() * pos_ext_buff.Y());
-                             // if (fVerbosityLevel > 2){
-                             /*std::cout << cYELLOW << " Extrapolation: Total Momentum : " << mom_ext_buff.Mag()
-                                       << " - Position : " << pos_ext_buff.X() << "  " << pos_ext_buff.Y() << "  "
-                                       << pos_ext_buff.Z() << " - distance : " << distance << cNORMAL << "\n";*/
-                             //}
+               TVector3 pos_res;
+               TVector3 mom_res;
+               TMatrixDSym cov_res;
+               // Double_t pVal = std::sqrt(-1);
+               Double_t bChi2 = 0, fChi2 = 0, bNdf = 0, fNdf = 0;
+               Double_t distance = std::sqrt(-1);
+               ;
+               Double_t POCA = 1E6;
+               TVector3 mom_ext;
+               TVector3 pos_ext;
+               TVector3 mom_ext_buff;
+               TVector3 pos_ext_buff;
 
-                             if (distance < POCA) {
-                                POCA = distance;
-                                POCAXtr = distance;
-                                mom_ext = mom_ext_buff;
-                                pos_ext = pos_ext_buff;
-                                distXtr = iStep * stepXtr;
-                                ++minCnt;
-                                minCntExt = 0;
-                             }
-                             // Loop control
-                             // if(minCntExt>20) //Break the loop if a new minimum is not found after several iterations
-                             // break;
+               try {
 
-                             ++minCntExt;
-                          }
+                  if (fitTrack && fitTrack->hasKalmanFitStatus()) {
 
-                       } catch (genfit::Exception &e) {
-                          mom_ext.SetXYZ(0, 0, 0);
-                          pos_ext.SetXYZ(0, 0, 0);
-                       }
+                     auto KalmanFitStatus = fitTrack->getKalmanFitStatus();
+                     auto trackRep = fitTrack->getTrackRep(0); // Only one representation is sved for the moment.
 
-                       // mom_res = mom_ext;
-                       // pos_res = pos_ext;
-                       xiniFitXtr = pos_ext.X();
-                       yiniFitXtr = pos_ext.Y();
-                       ziniFitXtr = pos_ext.Z();
+                     if (KalmanFitStatus->isFitConverged(false)) {
+                        // KalmanFitStatus->Print();
+                        genfit::MeasuredStateOnPlane fitState = fitTrack->getFittedState();
+                        // fitState.Print();
+                        fitState.getPosMomCov(pos_res, mom_res, cov_res);
+                        trackLength = KalmanFitStatus->getTrackLen();
+                        pVal = KalmanFitStatus->getPVal();
 
-                       std::cout << cYELLOW << " Extrapolation: Total Momentum : " << mom_ext.Mag()
-                                 << " - Position : " << pos_ext.X() << "  " << pos_ext.Y() << "  " << pos_ext.Z()
-                                 << " - POCA : " << POCA << cNORMAL << "\n";
+                        // fKalmanFitter -> getChiSquNdf(gfTrack, trackRep, bChi2, fChi2, bNdf, fNdf);
+                        Float_t stepXtr = -0.1;
+                        Int_t minCnt = 0;
+                        Int_t minCntExt = 0;
 
-                       // Building histograms
-                       if (fInteractiveMode)
-                          display->addEvent(fitTrack);
+                        try {
+                           for (auto iStep = 0; iStep < 40; ++iStep) {
 
-		       
-                       Double_t thetaA = 0.0;
-                       if (thetaConv > 90.0) {
-                          thetaA = 180.0 * TMath::DegToRad() - mom_res.Theta();
+                              trackRep->extrapolateBy(fitState, stepXtr * iStep);
+                              mom_ext_buff = fitState.getMom();
+                              pos_ext_buff = fitState.getPos();
+                              double distance =
+                                 TMath::Sqrt(pos_ext_buff.X() * pos_ext_buff.X() + pos_ext_buff.Y() * pos_ext_buff.Y());
+                              // if (fVerbosityLevel > 2){
+                              /*std::cout << cYELLOW << " Extrapolation: Total Momentum : " << mom_ext_buff.Mag()
+                                        << " - Position : " << pos_ext_buff.X() << "  " << pos_ext_buff.Y() << "  "
+                                        << pos_ext_buff.Z() << " - distance : " << distance << cNORMAL << "\n";*/
+                              //}
 
-                       } else {
-                          thetaA = mom_res.Theta();
-                       }
+                              if (distance < POCA) {
+                                 POCA = distance;
+                                 POCAXtr = distance;
+                                 mom_ext = mom_ext_buff;
+                                 pos_ext = pos_ext_buff;
+                                 distXtr = iStep * stepXtr;
+                                 ++minCnt;
+                                 minCntExt = 0;
+                              }
+                              // Loop control
+                              // if(minCntExt>20) //Break the loop if a new minimum is not found after several
+                              // iterations break;
 
-                       angle->Fill(thetaA * TMath::RadToDeg());
-                       // std::cout<<" Angle "<<mom_res.Theta()<<"\n";
-                       auto pos_radial = TMath::Sqrt(TMath::Power(pos_res.X(), 2) + TMath::Power(pos_res.Y(), 2));
-                       momentum->Fill(mom_res.Mag());
-                       angle_vs_momentum->Fill(thetaA * TMath::RadToDeg(), mom_res.Mag());
-                       pos_vs_momentum->Fill(pos_res.Mag(), mom_res.Mag());
-                       auto len = fitTrack->getTrackLen();
-                       length_vs_momentum->Fill(len, mom_res.Mag());
-                       auto numHits = fitTrack->getNumPoints();
-                       hits_vs_momentum->Fill(numHits, mom_res.Mag());
-                       Double_t E = TMath::Sqrt(TMath::Power(mom_res.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener;
-                       angle_vs_energy->Fill(thetaA * TMath::RadToDeg(), E * 1000.0);
-                       hphi->Fill(mom_res.Phi() * TMath::RadToDeg());
+                              ++minCntExt;
+                           }
 
-                       EFit = E * 1000.0;
-                       AFit = thetaA * TMath::RadToDeg();
-                       PhiFit = mom_res.Phi();
+                        } catch (genfit::Exception &e) {
+                           mom_ext.SetXYZ(0, 0, 0);
+                           pos_ext.SetXYZ(0, 0, 0);
+                        }
 
-                       xiniFit = pos_res.X();
-                       yiniFit = pos_res.Y();
-                       ziniFit = pos_res.Z();
+                        // mom_res = mom_ext;
+                        // pos_res = pos_ext;
+                        xiniFitXtr = pos_ext.X();
+                        yiniFitXtr = pos_ext.Y();
+                        ziniFitXtr = pos_ext.Z();
 
-                       // Excitation energy
-                       Double_t ex_energy_exp = kine_2b(M_10B, M_D, m_b, m_B, Ebeam_buff, thetaA, E * 1000);
-                       EFitXtr = 1000.0 * (TMath::Sqrt(TMath::Power(mom_ext.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener);
-                       ExXtr = kine_2b(M_10B, M_D, m_b, m_B, Ebeam_buff, thetaA, EFitXtr);
+                        std::cout << cYELLOW << " Extrapolation: Total Momentum : " << mom_ext.Mag()
+                                  << " - Position : " << pos_ext.X() << "  " << pos_ext.Y() << "  " << pos_ext.Z()
+                                  << " - POCA : " << POCA << cNORMAL << "\n";
 
-                       HQval->Fill(ex_energy_exp);
+                        // Building histograms
+                        if (fInteractiveMode)
+                           display->addEvent(fitTrack);
 
-                       Ex = ex_energy_exp;
-                    }
-                 }
-              } catch (std::exception &e) {
-                 std::cout << " " << e.what() << "\n";
-                 continue;
-              }
+                        Double_t thetaA = 0.0;
+                        if (thetaConv > 90.0) {
+                           thetaA = 180.0 * TMath::DegToRad() - mom_res.Theta();
 
-              EPRAVec.push_back(EPRA);
-              APRAVec.push_back(APRA);
-              PhiPRAVec.push_back(PhiPRA);
+                        } else {
+                           thetaA = mom_res.Theta();
+                        }
 
-              xiniPRAVec.push_back(xiniPRA);
-              yiniPRAVec.push_back(yiniPRA);
-              ziniPRAVec.push_back(ziniPRA);
+                        angle->Fill(thetaA * TMath::RadToDeg());
+                        // std::cout<<" Angle "<<mom_res.Theta()<<"\n";
+                        auto pos_radial = TMath::Sqrt(TMath::Power(pos_res.X(), 2) + TMath::Power(pos_res.Y(), 2));
+                        momentum->Fill(mom_res.Mag());
+                        angle_vs_momentum->Fill(thetaA * TMath::RadToDeg(), mom_res.Mag());
+                        pos_vs_momentum->Fill(pos_res.Mag(), mom_res.Mag());
+                        auto len = fitTrack->getTrackLen();
+                        length_vs_momentum->Fill(len, mom_res.Mag());
+                        auto numHits = fitTrack->getNumPoints();
+                        hits_vs_momentum->Fill(numHits, mom_res.Mag());
+                        Double_t E = TMath::Sqrt(TMath::Power(mom_res.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener;
+                        angle_vs_energy->Fill(thetaA * TMath::RadToDeg(), E * 1000.0);
+                        hphi->Fill(mom_res.Phi() * TMath::RadToDeg());
 
-              trackLengthVec.push_back(trackLength);
-              pValVec.push_back(pVal);
+                        EFit = E * 1000.0;
+                        AFit = thetaA * TMath::RadToDeg();
+                        PhiFit = mom_res.Phi();
 
-              xiniFitXtrVec.push_back(xiniFitXtr);
-              yiniFitXtrVec.push_back(yiniFitXtr);
-              ziniFitXtrVec.push_back(ziniFitXtr);
-              POCAXtrVec.push_back(POCAXtr);
-              distXtrVec.push_back(distXtr);
+                        xiniFit = pos_res.X();
+                        yiniFit = pos_res.Y();
+                        ziniFit = pos_res.Z();
 
-              xiniFitVec.push_back(xiniFit);
-              yiniFitVec.push_back(yiniFit);
-              ziniFitVec.push_back(ziniFit);
+                        // Excitation energy
+                        Double_t ex_energy_exp = kine_2b(M_10B, M_D, m_b, m_B, Ebeam_buff, thetaA, E * 1000);
+                        EFitXtr =
+                           1000.0 * (TMath::Sqrt(TMath::Power(mom_ext.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener);
+                        ExXtr = kine_2b(M_10B, M_D, m_b, m_B, Ebeam_buff, thetaA, EFitXtr);
 
-              EFitVec.push_back(EFit);
-              AFitVec.push_back(AFit);
-              PhiFitVec.push_back(PhiFit);
+                        HQval->Fill(ex_energy_exp);
 
-              EFitXtrVec.push_back(EFitXtr);
-              ExVec.push_back(Ex);
-              ExXtrVec.push_back(ExXtr);
+                        Ex = ex_energy_exp;
+                     }
+                  }
+               } catch (std::exception &e) {
+                  std::cout << " " << e.what() << "\n";
+                  continue;
+               }
 
-           } // track loop
+               EPRAVec.push_back(EPRA);
+               APRAVec.push_back(APRA);
+               PhiPRAVec.push_back(PhiPRA);
 
-           outputTree->Fill();
+               xiniPRAVec.push_back(xiniPRA);
+               yiniPRAVec.push_back(yiniPRA);
+               ziniPRAVec.push_back(ziniPRA);
 
-        } // if pattern event
+               trackLengthVec.push_back(trackLength);
+               pValVec.push_back(pVal);
+
+               xiniFitXtrVec.push_back(xiniFitXtr);
+               yiniFitXtrVec.push_back(yiniFitXtr);
+               ziniFitXtrVec.push_back(ziniFitXtr);
+               POCAXtrVec.push_back(POCAXtr);
+               distXtrVec.push_back(distXtr);
+
+               xiniFitVec.push_back(xiniFit);
+               yiniFitVec.push_back(yiniFit);
+               ziniFitVec.push_back(ziniFit);
+
+               EFitVec.push_back(EFit);
+               AFitVec.push_back(AFit);
+               PhiFitVec.push_back(PhiFit);
+
+               EFitXtrVec.push_back(EFitXtr);
+               ExVec.push_back(Ex);
+               ExXtrVec.push_back(ExXtr);
+
+            } // track loop
+
+            outputTree->Fill();
+
+         } // if pattern event
 
       } // Event
 
@@ -788,7 +792,8 @@ int main(int argc, char *argv[]){
    return 0;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
-std::tuple<Double_t, Double_t> GetMomFromBrho(Double_t M, Double_t Z, Double_t brho){
+std::tuple<Double_t, Double_t> GetMomFromBrho(Double_t M, Double_t Z, Double_t brho)
+{
 
    const Double_t M_Ener = M * Conv_AMU_to_MeV / 1000.0;
    Double_t p = brho * Z * (2.99792458 / 10.0); // In GeV
@@ -797,7 +802,8 @@ std::tuple<Double_t, Double_t> GetMomFromBrho(Double_t M, Double_t Z, Double_t b
    return std::make_tuple(p, E);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
-double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t thetalab, Double_t K_eject){
+double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t thetalab, Double_t K_eject)
+{
 
    // in this definition: m1(projectile); m2(target); m3(ejectile); and m4(recoil);
    double Et1 = K_proj + m1;
@@ -810,8 +816,10 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    s = pow(m1, 2) + pow(m2, 2) + 2 * m2 * Et1;
    u = pow(m2, 2) + pow(m3, 2) - 2 * m2 * Et3;
 
-   m4_ex = sqrt((cos(thetalab) * omega(s, pow(m1, 2),pow(m2, 2))*omega(u, pow(m2, 2),pow(m3, 2)) -
-                 (s - pow(m1,2)-pow(m2, 2))*(pow(m2, 2) + pow(m3, 2) - u)) /(2 * pow(m2, 2)) + s + u - pow(m2, 2));
+   m4_ex = sqrt((cos(thetalab) * omega(s, pow(m1, 2), pow(m2, 2)) * omega(u, pow(m2, 2), pow(m3, 2)) -
+                 (s - pow(m1, 2) - pow(m2, 2)) * (pow(m2, 2) + pow(m3, 2) - u)) /
+                   (2 * pow(m2, 2)) +
+                s + u - pow(m2, 2));
    Ex = m4_ex - m4;
 
    t = pow(m2, 2) + pow(m4_ex, 2) - 2 * m2 * Et4;
@@ -825,11 +833,12 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
-double GetMaximum(double *adc){
+double GetMaximum(double *adc)
+{
 
    double max = 0;
 
-   for (int indTB = 50; indTB < 90; ++indTB) {//change it to 50-70//0-512
+   for (int indTB = 50; indTB < 90; ++indTB) { // change it to 50-70//0-512
       // std::cout<<" TB "<<indTB<<" adc "<<adc[indTB]<<"\n";
       if (adc[indTB] > max)
          max = adc[indTB];
@@ -839,36 +848,38 @@ double GetMaximum(double *adc){
 }
 
 //---------------------------------
-double GetNPeaks(double *adc_test){
-  //Int_t npeaks =2;
-  //TSpectrum *s = 0;
-  //if(s!=0){delete s;}
+double GetNPeaks(double *adc_test)
+{
+   // Int_t npeaks =2;
+   // TSpectrum *s = 0;
+   // if(s!=0){delete s;}
 
-  TH1D *h1_test = new TH1D("h1_test","h1_test",512,0,511);
-  
-  for (int iTB = 0; iTB < 512; ++iTB) {
-    h1_test->Fill(adc_test[iTB]);
-  }
-  
-  //TSpectrum *s = new TSpectrum(npeaks+1);
-  TSpectrum *s = new TSpectrum();
-  Int_t nfound = s->Search(h1_test,2," ",0.25);//2 and 0.15
- 
-  delete s;
-  delete h1_test;
-  return nfound;
+   TH1D *h1_test = new TH1D("h1_test", "h1_test", 512, 0, 511);
+
+   for (int iTB = 0; iTB < 512; ++iTB) {
+      h1_test->Fill(adc_test[iTB]);
+   }
+
+   // TSpectrum *s = new TSpectrum(npeaks+1);
+   TSpectrum *s = new TSpectrum();
+   Int_t nfound = s->Search(h1_test, 2, " ", 0.25); // 2 and 0.15
+
+   delete s;
+   delete h1_test;
+   return nfound;
 }
 //---------------------------------
-double GetNPeaksHRS(double *adc_test){
+double GetNPeaksHRS(double *adc_test)
+{
 
-  TSpectrum *s = new TSpectrum();
-  Double_t dest[512];
-  
-  //Int_t nfound = s->Search(h1_test,2," ",0.25);//2 and 0.15
-  Int_t nfound;
-  //nfound = s->SearchHighRes(adc_test, dest, 512, 8, 2, kFALSE, 1, kFALSE, 1);
-  nfound = s->SearchHighRes(adc_test, dest, 512, 8, 2, kTRUE, 3, kTRUE, 3);
-  return nfound; 
+   TSpectrum *s = new TSpectrum();
+   Double_t dest[512];
+
+   // Int_t nfound = s->Search(h1_test,2," ",0.25);//2 and 0.15
+   Int_t nfound;
+   // nfound = s->SearchHighRes(adc_test, dest, 512, 8, 2, kFALSE, 1, kFALSE, 1);
+   nfound = s->SearchHighRes(adc_test, dest, 512, 8, 2, kTRUE, 3, kTRUE, 3);
+   return nfound;
 }
 
 ///////////////////////////

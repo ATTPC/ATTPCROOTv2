@@ -132,6 +132,15 @@ If(ROOT_FOUND)
                  )
   String(STRIP ${ROOT_LIBRARIES} ROOT_LIBRARIES)
 
+  if("${ROOT_VERSION_MAJOR}.${ROOT_VERSION_MINOR}" VERSION_GREATER 6.16)
+    Execute_Process(COMMAND ${ROOT_CONFIG_EXECUTABLE} --has-vmc
+      OUTPUT_VARIABLE ROOT_vmc_FOUND
+      )
+    String(STRIP ${ROOT_vmc_FOUND} ROOT_vmc_FOUND)
+  else()
+    set(ROOT_vmc_FOUND yes)
+  endif()
+  
   # Make variables changeble to the advanced user
   Mark_As_Advanced(ROOT_LIBRARY_DIR ROOT_INCLUDE_DIR ROOT_DEFINITIONS)
 
@@ -159,7 +168,17 @@ If(ROOT_FOUND)
     NO_DEFAULT_PATH
     )
 
-    Include(ROOTMacros)
+  #Include(ROOTMacros)
+  # Aliases for imported VMC packages ROOT dependencies
+  foreach(_root_dep VMC Core RIO Tree Rint Physics MathCore Thread Geom EG Eve Spectrum TreePlayer GenVector)
+    find_library(${_root_dep}_LIB ${_root_dep} PATHS ${ROOT_LIBRARY_DIR})
+    if(${_root_dep}_LIB)
+      add_library(${_root_dep} SHARED IMPORTED GLOBAL)
+      set_target_properties(${_root_dep} PROPERTIES IMPORTED_LOCATION ${${_root_dep}_LIB})
+      add_library(ROOT::${_root_dep} ALIAS ${_root_dep})
+      message(STATUS "ROOT::${_root_dep} target added by hand.")
+    endif()
+  endforeach(_root_dep)
 
 Else(ROOT_FOUND)
 

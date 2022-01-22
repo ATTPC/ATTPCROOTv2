@@ -15,16 +15,17 @@ class AtFilterTask : public FairTask {
 private:
    TClonesArray *fInputEventArray;  // AtRawEvent
    TClonesArray *fOutputEventArray; // AtRawEvent
-   TClonesArray *fMCPointArray;     // AtRawEvent
 
    AtFilter *fFilter;
    Bool_t fIsPersistent;
+   Bool_t fFilterAux;
 
 public:
    AtFilterTask(AtFilter *filter);
    ~AtFilterTask();
 
    void SetPersistence(Bool_t value);
+   void SetFilterAux(Bool_t value);
    virtual InitStatus Init() override;
    virtual void Exec(Option_t *opt) override;
 };

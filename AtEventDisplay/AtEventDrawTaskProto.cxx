@@ -11,6 +11,7 @@
 #include "TStyle.h"
 #include "TRandom.h"
 #include "TColor.h"
+#include "TVirtualX.h"
 
 #include "AtMap.h"
 #include "AtTpcMap.h"
@@ -105,17 +106,17 @@ InitStatus AtEventDrawTaskProto::Init()
 
    fHitArray = (TClonesArray *)ioMan->GetObject("AtEventH"); // TODO: Why this confusing name? It should be fEventArray
    if (fHitArray)
-      LOG(INFO) << cGREEN << "Hit Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Hit Array Found." << cNORMAL;
 
    fRawEventArray = (TClonesArray *)ioMan->GetObject("AtRawEvent");
    if (fRawEventArray) {
-      LOG(INFO) << cGREEN << "Raw Event Array  Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Raw Event Array  Found." << cNORMAL;
       fIsRawData = kTRUE;
    }
 
    fPatternEventArray = (TClonesArray *)ioMan->GetObject("AtPatternEvent");
    if (fPatternEventArray)
-      LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL;
 
    // fHoughSpaceArray =  (TClonesArray*) ioMan->GetObject("AtHough");
    // if(fHoughSpaceArray) LOG(INFO)<<cGREEN<<"Hough Array Found."<<cNORMAL<<FairLogger::endl;
@@ -125,7 +126,7 @@ InitStatus AtEventDrawTaskProto::Init()
 
    fProtoEventAnaArray = (TClonesArray *)ioMan->GetObject("AtProtoEventAna");
    if (fProtoEventAnaArray)
-      LOG(INFO) << cGREEN << "Prototype Event Analysis Array Found." << cNORMAL << FairLogger::endl;
+      LOG(INFO) << cGREEN << "Prototype Event Analysis Array Found." << cNORMAL;
 
    // Drawing histograms
 
@@ -161,8 +162,8 @@ InitStatus AtEventDrawTaskProto::Init()
    fCvsAux = fEventManager->GetCvsAux();
    DrawProtoAux();
 
-   std::cout << " AtEventDrawTaskProto::Init -  End of initialization "
-             << "\n";
+   std::cout << " AtEventDrawTaskProto::Init -  End of initialization " << std::endl;
+   return kSUCCESS;
 }
 
 void AtEventDrawTaskProto::Exec(Option_t *option)
@@ -371,39 +372,25 @@ void AtEventDrawTaskProto::DrawHitPoints()
          fRawevent->SetName("fRawEvent");
          gROOT->GetListOfSpecials()->Add(fRawevent);
 
-         Int_t aux_cnt = 0;
+         Int_t numAux = 0;
+         auto padArray = fRawevent->GetPads();
 
-         std::vector<AtPad> *PadArray = fRawevent->GetPads();
-         for (Int_t i = 0; i < PadArray->size(); i++) {
-            AtPad Pad = PadArray->at(i);
-            if (Pad.IsAux()) {
-               if (aux_cnt < 9) {
-                  std::cout << cYELLOW << " Auxiliary Channel " << aux_cnt << " - Name " << Pad.GetAuxName() << cNORMAL
-                            << "\n";
-                  Int_t *rawadc = Pad.GetRawADC();
-                  for (Int_t j = 0; j < 512; j++)
-                     fAuxChannels[aux_cnt]->SetBinContent(j, rawadc[j]);
-                  aux_cnt++;
-               } else
-                  std::cout << cYELLOW << " Warning : More auxiliary external channels than expected (max. 9)"
-                            << cNORMAL << std::endl;
+         for (auto &padIt : fRawevent->GetAuxPads()) {
+            AtPad &pad = padIt.second;
+            if (numAux < 9) {
+               std::cout << cYELLOW << " Auxiliary Channel " << numAux << " - Name " << pad.GetAuxName() << cNORMAL
+                         << std::endl;
+               auto rawAdc = pad.GetRawADC();
+               for (int i = 0; i < 512; ++i)
+                  fAuxChannels[numAux]->SetBinContent(i, rawAdc[i]);
+               numAux++;
             }
          }
+         if (numAux + 1 == 9)
+            std::cout << cYELLOW << "Warning: More auxiliary channels than expected (max 9)" << cNORMAL << std::endl;
 
       } // if raw event
    }
-
-   /*if(fIsRawData){
-   AtPad *RawPad = fRawevent->GetPad(PadNumHit,fValidPad);
-   Double_t *adc = RawPad->GetADC();
-       for(Int_t i=0;i<512;i++){
-
-           //f3DThreshold = fEventManager->Get3DThreshold();
-           //if(adc[i]>f3DThreshold)
-           //f3DHist->Fill(position.X()/10.,position.Y()/10.,i,adc[i]);
-
-         }
-   }*/
 
    if (fIsRawData) {
 
@@ -543,36 +530,7 @@ void AtEventDrawTaskProto::DrawProtoPattern()
    }
 }
 
-void AtEventDrawTaskProto::DrawProtoHough()
-{
-
-   fHoughSpaceLine = dynamic_cast<AtHoughSpaceLine *>(fHoughSpaceArray->At(0));
-   std::vector<std::pair<Double_t, Double_t>> HoughPar = fHoughSpaceLine->GetHoughPar();
-
-   std::vector<Double_t> par0_fit;
-   std::vector<Double_t> par1_fit;
-   std::vector<Double_t> Angle;
-   std::vector<Double_t> Angle_fit;
-
-   Double_t tHoughPar0[4] = {0};
-   Double_t tHoughPar1[4] = {0};
-   Double_t tFitPar0[4] = {0};
-   Double_t tFitPar1[4] = {0};
-   Double_t tAngleHough[4] = {0};
-   Double_t tAngleFit[4] = {0};
-
-   for (Int_t i = 0; i < HoughPar.size(); i++) {
-
-      Angle.push_back(180 - HoughPar.at(i).first * 180 / TMath::Pi());
-
-      tHoughPar0[i] = HoughPar.at(i).first;
-      tHoughPar1[i] = HoughPar.at(i).second;
-      tAngleHough[i] = 180 - HoughPar.at(i).first * 180 / TMath::Pi();
-
-      fHoughFit[i]->SetParameter(0, HoughPar.at(i).first);
-      fHoughFit[i]->SetParameter(1, HoughPar.at(i).second);
-   }
-}
+void AtEventDrawTaskProto::DrawProtoHough() {}
 
 void AtEventDrawTaskProto::DrawProtoPatternAna()
 {
@@ -698,49 +656,7 @@ void AtEventDrawTaskProto::DrawMesh()
    fMesh->Draw();
 }
 
-void AtEventDrawTaskProto::DrawProtoSpace()
-{
-
-   for (Int_t i = 0; i < 4; i++) {
-      fQHitPattern[i] = new TGraph();
-      fQHitPattern[i]->SetMarkerStyle(22);
-      fQHitPattern[i]->SetMarkerSize(0.7);
-      fQHitPattern[i]->SetPoint(1, 0, 0);
-      if (i == 0) {
-         fCvsQuadrant1->cd();
-         fQHitPattern[0]->Draw("A*");
-         if (fHoughSpaceArray) {
-            fHoughFit[0]->Draw("SAME");
-            if (fProtoEventAnaArray)
-               fFit[0]->Draw("SAME");
-         }
-      } else if (i == 1) {
-         fCvsQuadrant2->cd();
-         fQHitPattern[1]->Draw("A*");
-         if (fHoughSpaceArray) {
-            fHoughFit[1]->Draw("SAME");
-            if (fProtoEventAnaArray)
-               fFit[1]->Draw("SAME");
-         }
-      } else if (i == 2) {
-         fCvsQuadrant3->cd();
-         fQHitPattern[2]->Draw("A*");
-         if (fHoughSpaceArray) {
-            fHoughFit[2]->Draw("SAME");
-            if (fProtoEventAnaArray)
-               fFit[2]->Draw("SAME");
-         }
-      } else if (i == 3) {
-         fCvsQuadrant4->cd();
-         fQHitPattern[3]->Draw("A*");
-         if (fHoughSpaceArray) {
-            fHoughFit[3]->Draw("SAME");
-            if (fProtoEventAnaArray)
-               fFit[3]->Draw("SAME");
-         }
-      }
-   }
-}
+void AtEventDrawTaskProto::DrawProtoSpace() {}
 
 void AtEventDrawTaskProto::DrawProtoEL()
 {
@@ -1017,34 +933,25 @@ void AtEventDrawTaskProto::SelectPad(const char *rawevt)
          // std::cout<<bin_name<<std::endl;
          std::cout << " ==========================" << std::endl;
          std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
-         Bool_t IsValid = kFALSE;
 
-         AtTpcMap *tmap = NULL;
-         tmap = (AtTpcMap *)gROOT->GetListOfSpecials()->FindObject("fMap");
+         AtMap *tmap = nullptr;
+         tmap = (AtMap *)gROOT->GetListOfSpecials()->FindObject("fMap");
          // new AtTpcProtoMap();
          // TString map = "/Users/yassidayyad/fair_install/AtTPCROOT_v2_06042015/scripts/proto.map";
          // tmap->SetProtoMap(map.Data());
          // Int_t tPadNum = tmap->BinToPad(bin);
 
-         Int_t tPadNum = 0;
-
-         if (dynamic_cast<AtTpcMap *>(tmap)) {
-            tPadNum = dynamic_cast<AtTpcMap *>(tmap)->BinToPad(bin);
-         } else if (dynamic_cast<AtGadgetIIMap *>(tmap)) {
-            tPadNum = dynamic_cast<AtGadgetIIMap *>(tmap)->BinToPad(bin);
-         } else if (dynamic_cast<AtSpecMATMap *>(tmap)) {
-            tPadNum = dynamic_cast<AtSpecMATMap *>(tmap)->BinToPad(bin);
-         }
+         Int_t tPadNum = tmap->BinToPad(bin);
 
          std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
-         AtPad *tPad = tRawEvent->GetPad(tPadNum, IsValid);
+         AtPad *tPad = tRawEvent->GetPad(tPadNum);
 
          // Check to make sure pad is valid
          if (!tPad)
             return;
 
          std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
-         std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << " Is Valid? : " << IsValid << std::endl;
+         std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << std::endl;
          std::cout << std::endl;
          // TH1D* tPadWaveSub = NULL;
          // tPadWaveSub = new TH1D("tPadWaveSub","tPadWaveSub",512.0,0.0,511.0);

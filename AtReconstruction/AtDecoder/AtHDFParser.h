@@ -47,7 +47,7 @@ public:
    std::size_t open(char const *file);
    std::size_t n_pads(std::string i_raw_event);
    std::vector<int16_t> pad_raw_data(std::size_t i_pad);
-   std::vector<int64_t> get_header(std::string headerName);
+   std::vector<uint64_t> get_header(std::string headerName);
    std::size_t datasets();
    std::size_t inievent();
    static herr_t file_info(hid_t loc_id, const char *name, const H5L_info_t *linfo, void *opdata);

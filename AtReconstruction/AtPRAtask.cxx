@@ -15,7 +15,7 @@
 AtPRAtask::AtPRAtask() : FairTask("AtPRAtask")
 {
    fLogger = FairLogger::GetLogger();
-   fLogger->Debug(MESSAGE_ORIGIN, "Default Constructor of AtPRAtask");
+   LOG(debug) << "Default Constructor of AtPRAtask";
    fPar = NULL;
    fPRAlgorithm = 0;
    kIsPersistence = kFALSE;
@@ -39,7 +39,7 @@ AtPRAtask::AtPRAtask() : FairTask("AtPRAtask")
 
 AtPRAtask::~AtPRAtask()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Destructor of AtPRAtask");
+   LOG(debug) << "Destructor of AtPRAtask";
 }
 
 void AtPRAtask::SetPersistence(Bool_t value)
@@ -53,29 +53,29 @@ void AtPRAtask::SetPRAlgorithm(Int_t value)
 
 void AtPRAtask::SetParContainers()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "SetParContainers of AtPRAtask");
+   LOG(debug) << "SetParContainers of AtPRAtask";
 
    FairRun *run = FairRun::Instance();
    if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+      LOG(fatal) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+      LOG(fatal) << "No runtime database!";
 
    fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
    if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");
+      LOG(fatal) << "AtDigiPar not found!!";
 }
 
 InitStatus AtPRAtask::Init()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Initilization of AtPRAtask");
+   LOG(debug) << "Initilization of AtPRAtask";
 
    fPatternEventArray = new TClonesArray("AtPatternEvent");
 
    if (fPRAlgorithm == 0) {
-      fLogger->Info(MESSAGE_ORIGIN, "Using Track Finder Hierarchical Clustering algorithm");
+      LOG(info) << "Using Track Finder Hierarchical Clustering algorithm";
 
       fPRA = new AtPATTERN::AtTrackFinderHC();
       dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetTcluster(fHCt);
@@ -87,21 +87,22 @@ InitStatus AtPRAtask::Init()
       dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetAtriplet(fHCa);
       // dynamic_cast<AtPATTERN::AtTrackFinderHC*>fPRA->SetPadding(fHCpadding);
 
-      std::cout<<" Track Finder HC parameters (see Dalitz et al.) "<<"\n";
-      std::cout<<" T Cluster : "<<fHCt<<"\n";
-      std::cout<<" S Cluster : "<<fHCs<<"\n";
-      std::cout<<" K Triplet : "<<fHCk<<"\n";
-      std::cout<<" N Triplet : "<<fHCn<<"\n";
-      std::cout<<" M Cluster : "<<fHCm<<"\n";
-      std::cout<<" R Smooth  : "<<fHCr<<"\n";
-      std::cout<<" A Triplet : "<<fHCa<<"\n";
-      
+      std::cout << " Track Finder HC parameters (see Dalitz et al.) "
+                << "\n";
+      std::cout << " T Cluster : " << fHCt << "\n";
+      std::cout << " S Cluster : " << fHCs << "\n";
+      std::cout << " K Triplet : " << fHCk << "\n";
+      std::cout << " N Triplet : " << fHCn << "\n";
+      std::cout << " M Cluster : " << fHCm << "\n";
+      std::cout << " R Smooth  : " << fHCr << "\n";
+      std::cout << " A Triplet : " << fHCa << "\n";
 
    } else if (fPRAlgorithm == 1) {
-      fLogger->Info(MESSAGE_ORIGIN, "Using RANSAC algorithm");
+      LOG(info) << "Using RANSAC algorithm";
 
    } else if (fPRAlgorithm == 2) {
-      fLogger->Info(MESSAGE_ORIGIN, "Using Hough transform algorithm");
+      LOG(info) << "Using Hough transform algorithm";
+      // fPSA = new AtPSAProto();
    }
 
    // Prunning options
@@ -119,13 +120,13 @@ InitStatus AtPRAtask::Init()
    // Get a handle from the IO manager
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 
    fEventHArray = (TClonesArray *)ioMan->GetObject("AtEventH");
    if (fEventHArray == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtEvent array!");
+      LOG(error) << "Cannot find AtEvent array!";
       return kERROR;
    }
 
@@ -136,7 +137,7 @@ InitStatus AtPRAtask::Init()
 
 void AtPRAtask::Exec(Option_t *option)
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Exec of AtPRAtask");
+   LOG(debug) << "Exec of AtPRAtask";
 
    fPatternEventArray->Delete();
 
@@ -153,7 +154,7 @@ void AtPRAtask::Exec(Option_t *option)
 
       AtPatternEvent *patternEvent = (AtPatternEvent *)new ((*fPatternEventArray)[0]) AtPatternEvent();
 
-      if (hitArray.size() > fMinNumHits && hitArray.size() < fMaxNumHits )
+      if (hitArray.size() > fMinNumHits && hitArray.size() < fMaxNumHits)
          fPRA->FindTracks(event, patternEvent);
 
    } catch (std::runtime_error e) {
@@ -165,5 +166,5 @@ void AtPRAtask::Exec(Option_t *option)
 
 void AtPRAtask::Finish()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Finish of AtPRAtask");
+   LOG(debug) << "Finish of AtPRAtask";
 }

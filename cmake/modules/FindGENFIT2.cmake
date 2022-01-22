@@ -8,8 +8,8 @@
 #   GENFIT2_LIBRARY_DIR         The path to where the GENFIT2 library files are.
 #
 
-Message(STATUS "Looking for GENFIT2...")
-Message(STATUS $ENV{GENFIT})
+#Message(STATUS "Looking for GENFIT2...")
+#Message(STATUS $ENV{GENFIT})
 Set(GENFIT $ENV{GENFIT})
 
 
@@ -17,7 +17,7 @@ Set(GENFIT2_LIBRARY_SEARCHPATH
   ${GENFIT}/lib
 )
 
-Message(STATUS ${GENFIT}/lib)
+#Message(STATUS ${GENFIT}/lib)
 
 Set(GENFIT2_FOUND FALSE)
 
@@ -26,18 +26,21 @@ Find_Library(GENFIT2_LIBRARY NAMES genfit2
              NO_DEFAULT_PATH
             )
 
-Message(STATUS "Genfit2 ${GENFIT2_LIBRARY}")
+#Message(STATUS "Genfit2 ${GENFIT2_LIBRARY}")
 
 If(GENFIT2_LIBRARY)
 
   MESSAGE(STATUS "Looking for GENFIT2... - found ${GENFIT}/lib")
 
-  Set(GENFIT2_LIBRARY_DIR ${GENFIT}/lib)
-  Set(GENFIT2_LDFLAGS "-L${GENFIT}/lib -lgenfit2")
+  get_filename_component(GENFIT2_LIBRARY_DIR ${GENFIT2_LIBRARY} DIRECTORY)
+  get_filename_component(GENFIT2_INCLUDE_DIR ${GENFIT2_LIBRARY_DIR}/../include ABSOLUTE)
+
+#  Set(GENFIT2_LIBRARY_DIR ${GENFIT}/lib)
+  Set(GENFIT2_LDFLAGS "-L${GENFIT_LIBRARY_PATH} -lgenfit2")
 
   #MESSAGE(STATUS ${GENFIT2_LDFLAGS})
 
-  Set(GENFIT2_INCLUDE_DIR ${GENFIT}/include)
+  #Set(GENFIT2_INCLUDE_DIR ${GENFIT}/include)
 
   Mark_As_Advanced(GENFIT2_LIBRARY_DIR GENFIT2_INCLUDE_DIR)
 

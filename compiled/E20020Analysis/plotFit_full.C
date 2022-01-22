@@ -140,8 +140,8 @@ void plotFit_full(std::string fileFolder = "data_t20_t0_87_10_20_cov01/")
       std::istringstream iss(line);
       if (line.find(fileType) != std::string::npos) {
          std::cout << " Found fit file : " << line << "\n";
-          files.push_back(fileFolder + line);
-         //files.push_back(line);
+         files.push_back(fileFolder + line);
+         // files.push_back(line);
       }
    }
 
@@ -242,7 +242,7 @@ void plotFit_full(std::string fileFolder = "data_t20_t0_87_10_20_cov01/")
 
             if ((*ziniFitXtrVec)[index] > 23.0 && (*ziniFitXtrVec)[index] < 26.0) {
 
-               Double_t angle = (*AFitVec)[index];
+                     Double_t angle = (*AFitVec)[index];
 
 	       if((*xiniFitVec)[index]>1.0)
 	       {
@@ -326,7 +326,7 @@ void plotFit_full(std::string fileFolder = "data_t20_t0_87_10_20_cov01/")
                }    // POCA
             }       // Angle
          }          // Track length
-            }       // Energy
+      }             // Energy
          }
       }
    }

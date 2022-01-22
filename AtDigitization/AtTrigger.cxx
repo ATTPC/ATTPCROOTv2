@@ -101,9 +101,11 @@ Bool_t AtTrigger::ImplementTrigger(AtRawEvent *rawEvent, AtEvent *event)
       fHit = fEvent->GetHitArray()->at(iHit);
       Int_t PadNumHit = fHit.GetHitPadNum();
 
-      fPad = fRawEvent->GetPad(PadNumHit, fValidPad);
-      fRawAdc = fPad->GetADC();
+      fPad = fRawEvent->GetPad(PadNumHit);
+      if (fPad == nullptr)
+         continue;
 
+      fRawAdc = fPad->GetADC();
       fPadNum = fPad->GetPadNum();
 
       //*************************************************************************************************

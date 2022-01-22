@@ -1,6 +1,11 @@
 #include "AtGadgetIIMap.h"
 
+#include "TCanvas.h"
+#include "TH2Poly.h"
+#include "TStyle.h"
+
 #include <iostream>
+#include <fstream>
 #include <cassert>
 
 #define cRED "\033[1;31m"
@@ -18,7 +23,7 @@ AtGadgetIIMap::AtGadgetIIMap()
    std::cout << " GADGETII Pad Coordinates container initialized " << std::endl;
    SetBinToPadMap();
    fPadInd = 0;
-   PadKey.clear();
+   fNumberPads = 1012;
    fIniPads.clear();
    hPlane = new TH2Poly();
 }

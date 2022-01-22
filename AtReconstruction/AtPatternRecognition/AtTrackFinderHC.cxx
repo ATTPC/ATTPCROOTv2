@@ -4,9 +4,7 @@
 #include "FairRuntimeDb.h"
 #include "FairRun.h"
 
-ClassImp(AtPATTERN::AtTrackFinderHC)
-
-   AtPATTERN::AtTrackFinderHC::AtTrackFinderHC()
+AtPATTERN::AtTrackFinderHC::AtTrackFinderHC()
 {
    inputParams.s = -1.0;
    inputParams.r = -1.0;
@@ -98,6 +96,8 @@ bool AtPATTERN::AtTrackFinderHC::FindTracks(AtEvent &event, AtPatternEvent *patt
    // fTrackCand = clustersToTrack(cloud_xyzti,cluster,event);
 
    patternEvent->SetTrackCand(clustersToTrack(cloud_xyzti, cluster, event));
+
+   return true;
 }
 
 Cluster AtPATTERN::AtTrackFinderHC::use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
@@ -173,9 +173,9 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
       } // Indices loop
 
       track.SetTrackID(clusterIndex);
-      ClusterizeSmooth3D(track, 15.0, 30.5); //10.5,20.0
-      //Clusterize3D(track, 15.0, 30.5); //10.5,20.0
-      
+      ClusterizeSmooth3D(track, 15.0, 30.5); // 10.5,20.0
+      // Clusterize3D(track, 15.0, 30.5); //10.5,20.0
+
       if (kSetPrunning)
          PruneTrack(track);
 
@@ -196,8 +196,8 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
    tracks.push_back(ntrack);
 
    for (auto &track : tracks)
-     if(track.GetHitArray()->size()>0)SetTrackInitialParameters(track);
-   
+      if (track.GetHitArray()->size() > 0)
+         SetTrackInitialParameters(track);
 
    /*ROOT::EnableThreadSafety();
 
@@ -231,3 +231,5 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
 
    return tracks;
 }
+
+ClassImp(AtPATTERN::AtTrackFinderHC)

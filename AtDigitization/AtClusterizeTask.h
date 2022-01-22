@@ -8,31 +8,17 @@
 #ifndef AtClusterizeTask_H
 #define AtClusterizeTask_H
 
-#include "FairRootManager.h"
-#include "FairRunAna.h"
-#include "FairRuntimeDb.h"
-
 #include "FairTask.h"
-#include "FairMCPoint.h"
+#include "Math/Vector3D.h"
 
-#include "TClonesArray.h"
-#include "AtDigiPar.h"
-#include "AtGas.h"
-#include "AtTpcPoint.h"
+class AtGas;
+class AtDigiPar;
+class AtTpcPoint;
+
+class TClonesArray;
 
 class AtClusterizeTask : public FairTask {
-public:
-   AtClusterizeTask();
-   ~AtClusterizeTask();
-
-   void SetPersistence(Bool_t val) { fIsPersistent = val; }
-   // void SetTestMode()              { fTestMode = kTRUE; };
-
-   virtual InitStatus Init();        //!< Initiliazation of task at the beginning of a run.
-   virtual void Exec(Option_t *opt); //!< Executed for each event.
-   virtual void SetParContainers();  //!< Load the parameter container from the runtime database.
-
-private:
+protected:
    Int_t fEventID;        //!< EventID
    Double_t fEIonize;     //!< Effective ionization energy of gas. [eV]
    Double_t fFano;        //!< Fano factor of the gas
@@ -46,10 +32,37 @@ private:
 
    TClonesArray *fMCPointArray;
    AtTpcPoint *fMCPoint;
-   TClonesArray *fElectronNumberArray; //!< Primary cluster array
+   TClonesArray *fSimulatedPointArray; //!< Primary cluster array
    Bool_t fIsPersistent;               //!< If true, save container
 
-   ClassDef(AtClusterizeTask, 1);
+   ROOT::Math::XYZVector fPrevPoint;
+   Int_t fCurrTrackID;
+
+private:
+   ROOT::Math::XYZVector applyDiffusion(const ROOT::Math::XYZVector &loc, double_t sigTrans, double sigLong);
+
+protected:
+   virtual void getParameters();
+   virtual void processPoint(Int_t mcPointID);
+
+   void setNewTrack();
+   Double_t getTransverseDiffusion(Double_t driftTime);   // in cm
+   Double_t getLongitudinalDiffusion(Double_t driftTime); // in us
+   UInt_t getNumberOfElectronsGenerated();
+   ROOT::Math::XYZVector getCurrentPointLocation();
+
+public:
+   AtClusterizeTask();
+   AtClusterizeTask(const char *name);
+   ~AtClusterizeTask();
+
+   void SetPersistence(Bool_t val) { fIsPersistent = val; }
+
+   virtual InitStatus Init() override;        //!< Initiliazation of task at the beginning of a run.
+   virtual void Exec(Option_t *opt) override; //!< Executed for each event.
+   virtual void SetParContainers() override;  //!< Load the parameter container from the runtime database.
+
+   ClassDefOverride(AtClusterizeTask, 1);
 };
 
 #endif

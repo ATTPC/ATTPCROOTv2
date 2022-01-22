@@ -1,10 +1,10 @@
 void O16He4_sim_el(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 {
 
-   srand( (unsigned)time( NULL ) );
-   UInt_t seed=(float) rand()/RAND_MAX * 100000;
+   srand((unsigned)time(NULL));
+   UInt_t seed = (float)rand() / RAND_MAX * 100000;
    gRandom->SetSeed(seed);
-  
+
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name

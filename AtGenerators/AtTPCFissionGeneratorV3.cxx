@@ -1,68 +1,72 @@
 #include "AtTPCFissionGeneratorV3.h"
+
+#include <fstream>
+#include <iostream>
+
+#include "FairIon.h"
+#include "FairLogger.h"
+#include "FairParticle.h"
+#include "FairPrimaryGenerator.h"
+#include "FairRunSim.h"
+
+#include "TDatabasePDG.h"
+#include "TVirtualMC.h" //For gMC
 #include "TFile.h"
-// Default constructor
-AtTPCFissionGeneratorV3::AtTPCFissionGeneratorV3() : nTracks(0) {}
+#include "TTree.h"
 
-// Generator that takes in a file that specifies the expected distribution of
-// fission particles.
-AtTPCFissionGeneratorV3::AtTPCFissionGeneratorV3(const char *name, TString ionList, TString fissionDistro) : nTracks(0)
+#include "Math/GenVector/LorentzVector.h"
+#include "Math/Boost.h"
+
+#include "AtVertexPropagator.h"
+#include "AtCSVReader.h"
+
+void AtTPCFissionGeneratorV3::loadIonList(TString ionList)
 {
-
-   // Get the working directory
-   TString workingDir = std::getenv("VCMWORKDIR");
-
-   // Look for the file defining the fission mass distrobution
    std::ifstream fileIn(ionList.Data());
 
    if (!fileIn.is_open())
-      Fatal("AtTPCFissionGeneratorV3", Form("Cannot open input file: %s", ionList.Data()));
+      LOG(fatal) << "Failed to open file: " << ionList;
 
-   // Read the file until all of the ions have been generated
-   std::set<std::vector<int>> ionSet;
+   // Loop through each row in the csv and cast each entry to an integer.
+   for (auto &row : CSVRange<int>(fileIn)) {
+      if (row.size() != 2)
+         continue;
 
-   while (!fileIn.eof()) {
-
-      int A = 0, Z = 0;
-      fileIn >> Z >> A;
-
-      // If this wasn't a valid ion, then look to make sure we've hit the end of the ion section
-      if (A == 0 && Z == 0) {
-         char strIn[100];
-         fileIn.getline(strIn, 100);
-         std::cout << "Invalid ion (A,Z): (" << A << ", " << Z << ") "
-                   << " next line: " << strIn << std::endl;
-         break;
-      }
-
-      ionSet.emplace(std::vector<int>({Z, A}));
-      std::cout << "Found ion: " << Z << " " << A << std::endl;
-
-      // Add the ion to the set of found ions
-   } // end loop through ion list
-
-   // Get the run instance and register the ions
-   auto run = FairRunSim::Instance();
-   for (auto it : ionSet) {
-      FairIon *ion = new FairIon(TString::Format("Ion_%d_%d", it.at(0), it.at(1)), it.at(0), it.at(1), 0);
-      run->AddNewIon(ion);
+      int A = row[0];
+      int Z = row[1];
+      FairIon *ion = new FairIon(TString::Format("Ion_%d_%d", Z, A), Z, A, Z);
+      FairRunSim::Instance()->AddNewIon(ion);
    }
+}
 
-   // Load the tree
-   TFile *treeFile = new TFile(fissionDistro, "READ");
-   if (treeFile->IsZombie())
-      std::cout << "No file of fission events found!" << std::endl;
+void AtTPCFissionGeneratorV3::loadFissionFragmentTree(TString fissionDistro)
+{
 
-   fissionEvents = (TTree *)treeFile->Get("trEvents");
-   fissionEvents->SetBranchAddress("nTracks", &nTracks);
-   fissionEvents->SetBranchAddress("Aout", Aout);
-   fissionEvents->SetBranchAddress("Zout", Zout);
-   fissionEvents->SetBranchAddress("pX", pX);
-   fissionEvents->SetBranchAddress("pY", pY);
-   fissionEvents->SetBranchAddress("pZ", pZ);
-   fissionEvents->SetBranchAddress("pT", pT);
+   fEventFile = new TFile(fissionDistro, "READ");
 
-   nEvents = fissionEvents->GetEntries();
-   event = 0;
+   if (fEventFile->IsZombie())
+      LOG(fatal) << "Could not open file with decay fragments: " << fissionDistro;
+
+   fEventTree = (TTree *)fEventFile->Get("fragments");
+   if (!fEventTree)
+      LOG(fatal) << "Failed to find the tree fragments";
+
+   fEventTree->SetBranchAddress("decayFragments", &fDecayFrags);
+   fEventTree->SetBranchAddress("A", &fA);
+   fEventTree->SetBranchAddress("Z", &fZ);
+
+   fNumEvents = fEventTree->GetEntries();
+}
+// Default constructor
+AtTPCFissionGeneratorV3::AtTPCFissionGeneratorV3() {}
+
+// Generator that takes in a file that specifies the expected distribution of
+// fission particles.
+AtTPCFissionGeneratorV3::AtTPCFissionGeneratorV3(const char *name, TString ionList, TString fissionDistro)
+   : fDecayFrags(new std::vector<VecPE>()), fA(new std::vector<Int_t>()), fZ(new std::vector<Int_t>()), fCurrEvent(0)
+{
+   loadIonList(ionList);
+   loadFissionFragmentTree(fissionDistro);
 }
 
 // Deep copy constructor
@@ -72,74 +76,78 @@ AtTPCFissionGeneratorV3::~AtTPCFissionGeneratorV3() {}
 
 Bool_t AtTPCFissionGeneratorV3::ReadEvent(FairPrimaryGenerator *primeGen)
 {
+   fPrimeGen = primeGen;
+
    // If this is a beam-like event don't do anything
    if (gAtVP->GetDecayEvtCnt() % 2 == 0) {
       std::cout << "AtTPCFissionGeneratorV3: Skipping beam-like event" << std::endl;
-      gAtVP->IncDecayEvtCnt();
-      return true;
-   } else
+   } else {
       std::cout << "AtTPCFissionGeneratorV3: Runing reaction-like event" << std::endl;
+      generateEvent();
+   }
 
-   auto fPDG = TDatabasePDG::Instance();
-   auto stack = (AtStack *)gMC->GetStack();
+   gAtVP->IncDecayEvtCnt();
+   return true;
+}
 
-   // Read this event and get the current vertex
-   Double_t fVx = gAtVP->GetVx();
-   Double_t fVy = gAtVP->GetVy();
-   Double_t fVz = gAtVP->GetVz();
+void AtTPCFissionGeneratorV3::generateEvent()
+{
+   setBeamParameters();
+   fEventTree->GetEntry(fCurrEvent);
 
-   // Get the energy and momentum of the beam in MeV and MeV/c
+   for (int i = 0; i < fDecayFrags->size(); ++i)
+      generateFragment(fDecayFrags->at(i), fA->at(i), fZ->at(i));
+
+   std::cout << "Wrote tracks for fission root event: " << fCurrEvent << std::endl;
+   std::cout << "Wrote tracks for MC event: " << gAtVP->GetDecayEvtCnt() << std::endl;
+   fCurrEvent++;
+}
+
+VecPE AtTPCFissionGeneratorV3::getBeam4Vec()
+{
    Double_t fVEn = gAtVP->GetEnergy() + gAtVP->GetBeamMass() * 931.494;
    Double_t fVPx = gAtVP->GetPx() * 1000;
    Double_t fVPy = gAtVP->GetPy() * 1000;
    Double_t fVPz = gAtVP->GetPz() * 1000;
-
-   TLorentzVector beam;
+   VecPE beam;
    beam.SetPxPyPzE(fVPx, fVPy, fVPz, fVEn);
+   return beam;
+}
 
-   // Get the vector to boost back to the lab frame
-   auto boostVec = beam.BoostVector();
+Cartesian3D AtTPCFissionGeneratorV3::getVertex()
+{
+   return Cartesian3D(gAtVP->GetVx(), gAtVP->GetVy(), gAtVP->GetVz());
+}
 
-   fissionEvents->GetEntry(event);
+void AtTPCFissionGeneratorV3::setBeamParameters()
+{
+   fVertex = getVertex();
+   std::cout << "Setting boost" << std::endl;
 
-   for (int i = 0; i < nTracks; ++i) {
-      // Create the particle
-      Int_t pdgType = 0;
-      TString partName = TString::Format("Ion_%d_%d", Zout[i], Aout[i]);
-      auto part = fPDG->GetParticle(partName);
+   fBeamBoost = ROOT::Math::Boost(getBeam4Vec().BoostToCM());
 
-      if (!part)
-         std::cout << "Couldn't find particle " << partName << " in database!" << std::endl;
-      else
-         pdgType = part->PdgCode();
+   fBeamBoost.Invert();
+}
 
-      auto px = pX[i] / 1000; // Change to GeV/c
-      auto py = pY[i] / 1000;
-      auto pz = pZ[i] / 1000;
-      auto pt = pT[i] / 1000;
-      TLorentzVector frag(px, py, pz, pt);
-      frag.Boost(boostVec);
+void AtTPCFissionGeneratorV3::generateFragment(VecPE &P, Int_t A, Int_t Z)
+{
+   TString particleName = TString::Format("Ion_%d_%d", Z, A);
+   auto particle = TDatabasePDG::Instance()->GetParticle(particleName);
+   if (!particle)
+      LOG(fatal) << "Couldn't find particle " << particleName << " in database!";
 
-      std::cout << std::endl;
-      std::cout << "AtTPCFissionGeneratorV3: Generating ion of type " << partName << " with CoM momentum (" << px
-                << ", " << py << ", " << pz << ") GeV/c at vertex (" << fVx << ", " << fVy << ", " << fVz << ") cm."
-                << std::endl;
-      std::cout << "AtTPCFissionGeneratorV3: Generating ion of type " << partName << " with lab momentum (" << frag.Px()
-                << ", " << frag.Py() << ", " << frag.Pz() << ") GeV/c at vertex (" << fVx << ", " << fVy << ", " << fVz
-                << ") cm." << std::endl
-                << std::endl;
+   auto labP = fBeamBoost(P);
 
-      // Requires GeV
-      primeGen->AddTrack(pdgType, frag.Px(), frag.Py(), frag.Pz(), fVx, fVy, fVz);
+   std::cout << std::endl;
+   LOG(info) << TString::Format(
+      "AtTPCFissionGeneratorV3: Generating ion of type %s with  CoM momentum (%f, %f, %f) MeV/c", particleName.Data(),
+      P.Px(), P.Py(), P.Pz());
+   LOG(info) << TString::Format("Lab momentum (%f, %f, %f) MeV/c at (%f, %f, %f) cm", labP.Px(), labP.Py(), labP.Pz(),
+                                fVertex.X(), fVertex.Y(), fVertex.Z());
 
-   } // End loop over tracks
-
-   std::cout << "Wrote tracks for fission root event: " << event << std::endl;
-   std::cout << "Wrote tracks for MC event: " << gAtVP->GetDecayEvtCnt() << std::endl;
-   event++;
-
-   gAtVP->IncDecayEvtCnt();
-   return true;
+   // Requires GeV
+   fPrimeGen->AddTrack(particle->PdgCode(), labP.Px() / 1000, labP.Py() / 1000, labP.Pz() / 1000, fVertex.X(),
+                       fVertex.Y(), fVertex.Z());
 }
 
 ClassImp(AtTPCFissionGeneratorV3);

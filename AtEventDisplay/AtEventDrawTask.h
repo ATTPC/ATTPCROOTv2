@@ -17,9 +17,6 @@ class AtRansac;
 class AtEvent;
 class AtEventManager;
 class AtHit;
-class AtHoughSpace;
-class AtHoughSpaceCircle;
-class AtHoughSpaceLine;
 class AtLmedsMod;
 class AtMlesacMod;
 class AtRansacMod;
@@ -43,6 +40,7 @@ class TGraph;
 class TH1I;
 class TH1D;
 class TH1F;
+class TF1;
 class TH2D;
 class TH2F;
 class TH2Poly;
@@ -146,14 +144,11 @@ private:
 
    TClonesArray *fHitArray;
    TClonesArray *fRawEventArray;
-   TClonesArray *fHoughSpaceArray;
    TClonesArray *fRansacArray;
    TClonesArray *fTrackFinderHCArray;
    TClonesArray *fTrackingEventAnaArray;
    TClonesArray *fPatternEventArray;
 
-   AtHoughSpaceLine *fHoughSpaceLine_buff;
-   AtHoughSpaceCircle *fHoughSpaceCircle_buff;
    AtRANSACN::AtRansac *fRansac;
    AtRansacMod *fRansacMod;
    AtMlesacMod *fMlesacMod;
@@ -172,8 +167,8 @@ private:
    TEvePointSet *fHitSet;
    TEvePointSet *fHitSetMin;
 
-   TEvePointSet *fHitSetMC[5];    // For MC results
-   TEvePointSet *fHitSetTFHC[20]; // for TrackFinderHC
+   TEvePointSet *fHitSetMC[5];     // For MC results
+   TEvePointSet *fHitSetTFHC[20];  // for TrackFinderHC
    TEveBoxSet *fHitClusterSet[20]; // Track clusterization
 
    // TEveGeoShape* x;

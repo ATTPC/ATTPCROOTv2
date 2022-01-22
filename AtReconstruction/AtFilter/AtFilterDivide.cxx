@@ -1,5 +1,6 @@
 // Example filter to divide the signal by some amount specified at run time
 #include "AtFilterDivide.h"
+#include "AtPad.h"
 
 void AtFilterDivide::SetDivisor(Double_t div)
 {
@@ -8,14 +9,18 @@ void AtFilterDivide::SetDivisor(Double_t div)
 
 void AtFilterDivide::Init() {}
 
-void AtFilterDivide::Filter(Int_t *trace)
+void AtFilterDivide::InitEvent(AtRawEvent *event) {}
+
+void AtFilterDivide::Filter(AtPad *pad)
 {
-   for (int i = 0; i < 512; ++i)
-      trace[i] /= fDivisor;
+   for (int i = 0; i < 512; ++i) {
+      pad->SetRawADC(i, pad->GetRawADC(i) / fDivisor);
+      if (pad->IsPedestalSubtracted())
+         pad->SetADC(i, pad->GetADC(i) / fDivisor);
+   }
 }
 
-void AtFilterDivide::Filter(Double_t *trace)
+bool AtFilterDivide::IsGoodEvent()
 {
-   for (int i = 0; i < 512; ++i)
-      trace[i] /= fDivisor;
+   return true;
 }

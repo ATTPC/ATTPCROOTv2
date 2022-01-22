@@ -8,7 +8,16 @@
 #include "AtTpcMap.h"
 
 #include <iostream>
+#include <fstream>
 #include <cassert>
+
+#include "TCanvas.h"
+#include "TH2Poly.h"
+#include "TStyle.h"
+
+#undef BOOST_MULTI_ARRAY_NO_GENERATORS
+#define BOOST_MULTI_ARRAY_NO_GENERATORS
+#include "boost/multi_array.hpp"
 
 using std::cout;
 using std::endl;
@@ -22,11 +31,12 @@ AtTpcMap::AtTpcMap()
    kIsParsed = 0;
    kGUIMode = 0;
    kDebug = 0;
+   // AtPadCoord = // multiarray(boost::extents[10240][3][2]);
    std::fill(AtPadCoord.data(), AtPadCoord.data() + AtPadCoord.num_elements(), 0);
    std::cout << " ATTPC Map initialized " << std::endl;
    std::cout << " ATTPC Pad Coordinates container initialized " << std::endl;
    fPadInd = 0;
-   PadKey.clear();
+   fNumberPads = 10240;
    fIniPads.clear();
    hPlane = new TH2Poly();
 }
@@ -103,7 +113,6 @@ void AtTpcMap::GenerateAtTpc()
    Float_t yoff = 0.;
 
    for (Int_t j = 0; j < row_len_l; j++) {
-
       pads_in_half_hex = 0;
       pads_in_hex = 0;
       // row_length = TMath::Abs(sqrt(umega_radius**2 - (j*dotted_l_tri_hi + dotted_l_tri_hi/2.)**2));
@@ -124,8 +133,8 @@ void AtTpcMap::GenerateAtTpc()
 
       for (Int_t i = 0; i < pads_in_row; i++) {
 
+         // set initial ort
          if (i == 0) {
-
             if (j % 2 == 0)
                ort = -1;
             if (((pads_in_row - 1) / 2) % 2 == 1)
@@ -143,6 +152,7 @@ void AtTpcMap::GenerateAtTpc()
             pad_y_off = j * dotted_l_tri_hi + large_y_spacing + yoff;
             if (ort == -1)
                pad_y_off += large_tri_hi;
+
             fill_coord(pad_index, pad_x_off, pad_y_off, large_tri_side, ort);
             pad_index += 1;
 
@@ -153,13 +163,16 @@ void AtTpcMap::GenerateAtTpc()
             if (ort == -1)
                pad_y_off = j * dotted_l_tri_hi + 2 * dotted_s_tri_hi - small_y_spacing + yoff;
             fill_coord(pad_index, pad_x_off, pad_y_off, small_tri_side, ort);
+
             pad_index += 1;
             tmp_pad_x_off = pad_x_off + dotted_s_tri_side / 2.;
             tmp_pad_y_off = pad_y_off + ort * dotted_s_tri_hi - 2 * ort * small_y_spacing;
             fill_coord(pad_index, tmp_pad_x_off, tmp_pad_y_off, small_tri_side, -ort);
+
             pad_index += 1;
             tmp_pad_y_off = pad_y_off + ort * dotted_s_tri_hi;
             fill_coord(pad_index, tmp_pad_x_off, tmp_pad_y_off, small_tri_side, ort);
+
             pad_index += 1;
             tmp_pad_x_off = pad_x_off + dotted_s_tri_side;
             fill_coord(pad_index, tmp_pad_x_off, pad_y_off, small_tri_side, ort);
@@ -183,13 +196,13 @@ void AtTpcMap::GenerateAtTpc()
 
 Int_t AtTpcMap::fill_coord(int pindex, float padxoff, float padyoff, float triside, float fort)
 {
-
    AtPadCoord[pindex][0][0] = padxoff;
    AtPadCoord[pindex][0][1] = padyoff;
    AtPadCoord[pindex][1][0] = padxoff + triside / 2.;
    AtPadCoord[pindex][1][1] = padyoff + fort * triside * TMath::Sqrt(3.) / 2.;
    AtPadCoord[pindex][2][0] = padxoff + triside;
    AtPadCoord[pindex][2][1] = padyoff;
+   return 0;
 }
 
 TH2Poly *AtTpcMap::GetAtTpcPlane()
@@ -235,7 +248,7 @@ std::vector<Float_t> AtTpcMap::CalcPadCenter(Int_t PadRef)
       return PadCenter;
    }
 
-   if (PadRef != -1) { // Boost multi_array crashes with a negative index
+   if (PadRef >= 0) { // Boost multi_array crashes with a negative index
 
       Float_t x = (AtPadCoord[PadRef][0][0] + AtPadCoord[PadRef][1][0] + AtPadCoord[PadRef][2][0]) / 3.;
       PadCenter[0] = x;

@@ -32,7 +32,7 @@ void AtPSASimple::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    Int_t hitNum = 0;
 
    for (Int_t iPad = 0; iPad < numPads; iPad++) {
-      AtPad *pad = rawEvent->GetPad(iPad);
+      AtPad *pad = &(rawEvent->GetPads().at(iPad));
 
       Double_t xPos = pad->GetPadXCoord();
       Double_t yPos = pad->GetPadYCoord();

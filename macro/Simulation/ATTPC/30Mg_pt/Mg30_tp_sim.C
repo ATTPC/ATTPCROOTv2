@@ -16,8 +16,7 @@ void Mg30_tp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 
   //gSystem->Load("libAtGen.so");
 
-  AtVertexPropagator* vertex_prop = new AtVertexPropagator();
-
+  AtVertexPropagator *vertex_prop = new AtVertexPropagator();
 
   // -----   Create simulation run   ----------------------------------------
   FairRunSim* run = new FairRunSim();
@@ -81,59 +80,56 @@ void Mg30_tp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
                 Double_t NomEnergy = 1.2; //Used to force the beam to stop within a certain energy range.
                 Double_t TargetMass = 3.01605;//Mass in GeV
 
+                AtTPCIonGenerator *ionGen =
+                   new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
+                ionGen->SetSpotRadius(0, -100, 0);
+                // add the ion generator
 
-	          AtTPCIonGenerator* ionGen = new AtTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
-	          ionGen->SetSpotRadius(0,-100,0);
-	          // add the ion generator
+                primGen->AddGenerator(ionGen);
 
-	          primGen->AddGenerator(ionGen);
+                // primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track added
+                // to the Primary Generator
+                //  primGen->SetTarget(30,0);
 
-  		  //primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track added to the Primary Generator
-		  // primGen->SetTarget(30,0);
+                // Variables for 2-Body kinematics reaction
+                std::vector<Int_t> Zp;      // Zp
+                std::vector<Int_t> Ap;      // Ap
+                std::vector<Int_t> Qp;      // Electric charge
+                Int_t mult;                 // Number of particles
+                std::vector<Double_t> Pxp;  // Px momentum X
+                std::vector<Double_t> Pyp;  // Py momentum Y
+                std::vector<Double_t> Pzp;  // Pz momentum Z
+                std::vector<Double_t> Mass; // Masses
+                std::vector<Double_t> ExE;  // Excitation energy
+                Double_t ResEner;           // Energy of the beam (Useless for the moment)
 
+                // Note: Momentum will be calculated from the phase Space according to the residual energy of the beam
 
+                mult = 4; // Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY
+                          // (and the number of particles must be the same)
+                ResEner = 0.0; // Useless
 
+                // ---- Beam ----
+                Zp.push_back(z); // 40Ar TRACKID=0
+                Ap.push_back(a); //
+                Qp.push_back(q);
+                Pxp.push_back(px);
+                Pyp.push_back(py);
+                Pzp.push_back(pz);
+                Mass.push_back(Bmass);
+                ExE.push_back(BExcEner);
 
-		 // Variables for 2-Body kinematics reaction
-                  std::vector<Int_t> Zp; // Zp
-		              std::vector<Int_t> Ap; // Ap
-                  std::vector<Int_t> Qp;//Electric charge
-                  Int_t mult;  //Number of particles
- 		              std::vector<Double_t> Pxp; //Px momentum X
-		              std::vector<Double_t> Pyp; //Py momentum Y
-		              std::vector<Double_t> Pzp; //Pz momentum Z
-                  std::vector<Double_t> Mass; // Masses
-		              std::vector<Double_t> ExE; // Excitation energy
- 		              Double_t ResEner; // Energy of the beam (Useless for the moment)
+                // ---- Target ----
+                Zp.push_back(1); // t
+                Ap.push_back(3); //
+                Qp.push_back(0); //
+                Pxp.push_back(0.0);
+                Pyp.push_back(0.0);
+                Pzp.push_back(0.0);
+                Mass.push_back(3.01605);
+                ExE.push_back(0.0); // In MeV
 
-
-		  // Note: Momentum will be calculated from the phase Space according to the residual energy of the beam
-
-
-	                mult = 4; //Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY (and the number of particles must be the same)
-                  ResEner = 0.0; // Useless
-
-                  // ---- Beam ----
-                  Zp.push_back(z); // 40Ar TRACKID=0
-            		  Ap.push_back(a); //
-            		  Qp.push_back(q);
-            		  Pxp.push_back(px);
-            		  Pyp.push_back(py);
-            		  Pzp.push_back(pz);
-            		  Mass.push_back(Bmass);
-            		  ExE.push_back(BExcEner);
-
-                  // ---- Target ----
-                 Zp.push_back(1); // t
-		             Ap.push_back(3); //
-		             Qp.push_back(0); //
-		             Pxp.push_back(0.0);
-                 Pyp.push_back(0.0);
-		             Pzp.push_back(0.0);
-                 Mass.push_back(3.01605);
-		             ExE.push_back(0.0);//In MeV
-
-                  //--- Scattered -----
+                //--- Scattered -----
                 Zp.push_back(12); // 32Mg TRACKID=1
           	 	  Ap.push_back(32); //
           		  Qp.push_back(0);
@@ -158,51 +154,47 @@ void Mg30_tp_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
                  Double_t ThetaMinCMS = 10.0;
                  Double_t ThetaMaxCMS = 160.0;
 
+                 AtTPC2Body *TwoBody = new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE,
+                                                      ResEner, ThetaMinCMS, ThetaMaxCMS);
+                 primGen->AddGenerator(TwoBody);
 
-        AtTPC2Body* TwoBody = new AtTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
-        primGen->AddGenerator(TwoBody);
+                 run->SetGenerator(primGen);
 
+                 // ------------------------------------------------------------------------
 
-	run->SetGenerator(primGen);
+                 //---Store the visualiztion info of the tracks, this make the output file very large!!
+                 //--- Use it only to display but not for production!
+                 run->SetStoreTraj(kTRUE);
 
-// ------------------------------------------------------------------------
+                 // -----   Initialize simulation run   ------------------------------------
+                 run->Init();
+                 // ------------------------------------------------------------------------
 
-  //---Store the visualiztion info of the tracks, this make the output file very large!!
-  //--- Use it only to display but not for production!
-  run->SetStoreTraj(kTRUE);
+                 // -----   Runtime database   ---------------------------------------------
 
+                 Bool_t kParameterMerged = kTRUE;
+                 FairParRootFileIo *parOut = new FairParRootFileIo(kParameterMerged);
+                 parOut->open(parFile.Data());
+                 rtdb->setOutput(parOut);
+                 rtdb->saveOutput();
+                 rtdb->print();
+                 // ------------------------------------------------------------------------
 
+                 // -----   Start run   ----------------------------------------------------
+                 run->Run(nEvents);
 
-  // -----   Initialize simulation run   ------------------------------------
-  run->Init();
-  // ------------------------------------------------------------------------
+                 // You can export your ROOT geometry ot a separate file
+                 run->CreateGeometryFile("./data/geofile_proto_full.root");
+                 // ------------------------------------------------------------------------
 
-  // -----   Runtime database   ---------------------------------------------
-
-  Bool_t kParameterMerged = kTRUE;
-  FairParRootFileIo* parOut = new FairParRootFileIo(kParameterMerged);
-  parOut->open(parFile.Data());
-  rtdb->setOutput(parOut);
-  rtdb->saveOutput();
-  rtdb->print();
-  // ------------------------------------------------------------------------
-
-  // -----   Start run   ----------------------------------------------------
-   run->Run(nEvents);
-
-  //You can export your ROOT geometry ot a separate file
-  run->CreateGeometryFile("./data/geofile_proto_full.root");
-  // ------------------------------------------------------------------------
-
-  // -----   Finish   -------------------------------------------------------
-  timer.Stop();
-  Double_t rtime = timer.RealTime();
-  Double_t ctime = timer.CpuTime();
-  cout << endl << endl;
-  cout << "Macro finished succesfully." << endl;
-  cout << "Output file is "    << outFile << endl;
-  cout << "Parameter file is " << parFile << endl;
-  cout << "Real time " << rtime << " s, CPU time " << ctime
-       << "s" << endl << endl;
-  // ------------------------------------------------------------------------
+                 // -----   Finish   -------------------------------------------------------
+                 timer.Stop();
+                 Double_t rtime = timer.RealTime();
+                 Double_t ctime = timer.CpuTime();
+                 cout << endl << endl;
+                 cout << "Macro finished succesfully." << endl;
+                 cout << "Output file is " << outFile << endl;
+                 cout << "Parameter file is " << parFile << endl;
+                 cout << "Real time " << rtime << " s, CPU time " << ctime << "s" << endl << endl;
+                 // ------------------------------------------------------------------------
 }

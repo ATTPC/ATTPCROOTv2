@@ -1,5 +1,5 @@
-#ifndef AtGENFIT_H
-#define AtGENFIT_H
+#ifndef ATGENFIT_H
+#define ATGENFIT_H
 
 #include "AtFitter.h"
 
@@ -81,7 +81,7 @@ private:
 
    std::vector<Int_t> *fPDGCandidateArray;
 
-   ClassDef(AtGenfit, 1);
+   ClassDefOverride(AtGenfit, 1);
 };
 
 } // namespace AtFITTER

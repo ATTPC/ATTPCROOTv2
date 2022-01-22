@@ -1,5 +1,11 @@
 #include "AtSpecMATMap.h"
 
+#include "FairLogger.h"
+
+#include "TH2Poly.h"
+#include "TCanvas.h"
+#include "TStyle.h"
+
 #include <cassert>
 #include <iostream>
 
@@ -7,10 +13,9 @@
 #define cYELLOW "\033[1;33m"
 #define cNORMAL "\033[0m"
 
-AtSpecMATMap::AtSpecMATMap(Int_t NumberOfPads = 3174)
+AtSpecMATMap::AtSpecMATMap(Int_t numPads)
 {
-   fNumPads = NumberOfPads;
-   AtPadCoord.resize(boost::extents[fNumPads][4][2]);
+   AtPadCoord.resize(boost::extents[numPads][4][2]);
    kIsParsed = 0;
    kGUIMode = 0;
    kDebug = 0;
@@ -18,7 +23,7 @@ AtSpecMATMap::AtSpecMATMap(Int_t NumberOfPads = 3174)
    std::cout << " SpecMAT Map initialized " << std::endl;
    std::cout << " SpecMAT Pad Coordinates container initialized " << std::endl;
    fPadInd = 0;
-   PadKey.clear();
+   fNumberPads = numPads;
    fIniPads.clear();
    hPlane = new TH2Poly();
 }
@@ -234,7 +239,7 @@ void AtSpecMATMap::GenerateAtTpc()
    std::vector<double> arrayAllCoord;
    arrayAllCoord = TrianglesGenerator();
 
-   for (int i = 0; i < fNumPads; i++) {
+   for (int i = 0; i < fNumberPads; i++) {
       AtPadCoord[i][0][0] = arrayAllCoord[8 * i];     // x coordinate of first vertex pad
       AtPadCoord[i][0][1] = arrayAllCoord[8 * i + 1]; // y coordinate of first vertex pad
       AtPadCoord[i][1][0] = arrayAllCoord[8 * i + 2]; // x coordinate of second vertex pad

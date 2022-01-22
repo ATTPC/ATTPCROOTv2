@@ -1,116 +1,88 @@
 #include "AtMap.h"
 
+#include "FairLogger.h"
+
+#include "TH2Poly.h"
+#include "TDOMParser.h"
+#include "TXMLNode.h"
+
+#include <iostream>
+
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
 #define cNORMAL "\033[0m"
+#define cGREEN "\033[1;32m"
+
+std::ostream &operator<<(std::ostream &os, const InhibitType &t)
+{
+   switch (t) {
+   case kNONE: os << "kNONE"; break;
+   case kTOTAL: os << "kTOTAL"; break;
+   case kLOWGAIN: os << "kLOWGAIN"; break;
+   case kXTALK: os << "kXTALK"; break;
+   }
+   return os;
+}
 
 AtMap::AtMap() : AtPadCoord(boost::extents[10240][3][2]) {}
 
 AtMap::~AtMap() {}
 
-Int_t AtMap::GetPadNum(std::vector<int> PadRef)
-{ // TODO Better to pass a pointer!
-
-   PadRef.resize(4);
-
-   // for(int i=0;i<4;i++) std::cout<<PadRef[i]<<endl;
+Int_t AtMap::GetPadNum(const PadReference &PadRef) const
+{
 
    // Option 1: Int key - vector<int> value
    // std::map<int, std::vector<int>>::const_iterator ite = AtTPCPadMap.find(1);
    // std::string value = it->second;
    // Option 2: vector<int> key - int value
 
-   std::map<std::vector<int>, int>::const_iterator its = AtTPCPadMap.find(PadRef);
-   int value = (*its).second;
+   auto its = AtTPCPadMap.find(PadRef);
 
    // std::cout<<int(AtTPCPadMap.find(test) == AtTPCPadMap.end())<<endl;
-   Int_t kIs = int(AtTPCPadMap.find(PadRef) == AtTPCPadMap.end());
-   if (kIs) {
+   if (its == AtTPCPadMap.end()) {
       if (kDebug)
-         std::cerr << " AtTpcMap::GetPadNum - Pad key not found - CoboID : " << PadRef[0] << "  AsadID : " << PadRef[1]
-                   << "  AgetID : " << PadRef[2] << "  ChannelID : " << PadRef[3] << std::endl;
+         std::cerr << " AtTpcMap::GetPadNum - Pad key not found - CoboID : " << PadRef.cobo
+                   << "  AsadID : " << PadRef.asad << "  AgetID : " << PadRef.aget << "  ChannelID : " << PadRef.ch
+                   << std::endl;
       return -1;
    }
-   // std::cout<<value<<std::endl;
-   // std::map<std::vector<int>,int>::const_iterator its;
-   // std::cout<<AtTPCPadMap.find(test)->second<<std::endl;
-   //  auto its = AtTPCPadMap.find(test);
-   //  std::cout << "x: " << (int)its->second << "\n";
 
-   else
-      return value;
-
-   /*for (auto& m : AtTPCPadMap){ //C+11 style
-
-     for(auto& kv : m.second){
-     std::cout<<m.first<<'\n';
-     }
-     }*/
+   return (*its).second;
 }
 
-Bool_t AtMap::ParseInhibitMap(TString inimap, TString lowgmap, TString xtalkmap)
+Bool_t AtMap::ParseInhibitMap(TString inimap, InhibitType type)
 {
 
-   std::ifstream *fIni = new std::ifstream(inimap.Data());
-   std::ifstream *fLowg = new std::ifstream(lowgmap.Data());
-   std::ifstream *fXtalk = new std::ifstream(xtalkmap.Data());
+   std::ifstream fIni(inimap.Data());
 
    Int_t pad;
-   Bool_t IsIniPar = kTRUE;
-   Bool_t IsLowgPar = kTRUE;
-   Bool_t IsXtalkPar = kTRUE;
 
-   std::cout << cYELLOW << __func__ << " - Parsing map for inhibited pads " << cNORMAL << std::endl;
-
-   if (fIni->fail()) {
-      std::cout << cRED << __func__
-                << " = Warning : No Inhibit Pad Map found! Please, check the path. Current :" << inimap.Data()
-                << cNORMAL << std::endl;
-      IsIniPar = kFALSE;
-   }
-   if (fLowg->fail()) {
-      std::cout << cRED << __func__
-                << " = Warning : No Inhibit Pad Map found! Please, check the path. Current :" << lowgmap.Data()
-                << cNORMAL << std::endl;
-      IsLowgPar = kFALSE;
-   }
-   if (fXtalk->fail()) {
-      std::cout << cRED << __func__
-                << " = Warning : No Inhibit Pad Map found! Please, check the path. Current :" << xtalkmap.Data()
-                << cNORMAL << std::endl;
-      IsXtalkPar = kFALSE;
+   LOG(info) << cYELLOW << __func__ << " - Parsing map for inhibited pads of type " << type << cNORMAL;
+   if (fIni.fail()) {
+      LOG(error) << cRED << " = Warning : No Inhibit Pad Map found! Please, check the path. Current :" << inimap.Data()
+                 << cNORMAL;
+      return false;
    }
 
-   while (!fIni->eof() && IsIniPar) {
-      *fIni >> pad;
-      fIniPads.insert(pad);
+   if (fIniPads.size() != 0)
+      LOG(info) << "Will overriding any existing inhibited pads with new type";
+
+   while (!fIni.eof()) {
+      fIni >> pad;
+      fIniPads[pad] = type;
    }
 
-   while (!fLowg->eof() && IsLowgPar) {
-      *fLowg >> pad;
-      fIniPads.insert(pad);
-   }
-
-   while (!fXtalk->eof() && IsXtalkPar) {
-      *fXtalk >> pad;
-      fIniPads.insert(pad);
-   }
-
-   std::cout << cYELLOW << __func__ << "     " << fIniPads.size() << " pads added to inhibition list" << cNORMAL
-             << std::endl;
-
-   delete fIni;
-   delete fLowg;
-   delete fXtalk;
-
-   return kTRUE;
+   LOG(info) << cYELLOW << fIniPads.size() << " pads in inhibition list." << cNORMAL;
+   return true;
 }
 
-Bool_t AtMap::GetIsInhibited(Int_t PadNum)
+InhibitType AtMap::GetIsInhibited(Int_t PadNum)
 {
-   // std::find(fIniPads.begin(),fIniPads.end(),PadNum);
-   const Bool_t kIsInhibit = fIniPads.find(PadNum) != fIniPads.end();
-   return kIsInhibit;
+   auto pad = fIniPads.find(PadNum);
+   if (pad == fIniPads.end())
+      return kNONE;
+   else
+      return pad->second;
 }
 
 int AtMap::GetPadSize(int padNum)
@@ -145,19 +117,11 @@ void AtMap::ParseAtTPCMap(TXMLNode *node)
             fSizeID = atoi(node->GetText());
       }
    }
+   PadReference ref = {fCoboID, fAsadID, fAgetID, fChannelID};
 
-   PadKey.push_back(fCoboID);
-   PadKey.push_back(fAsadID);
-   PadKey.push_back(fAgetID);
-   PadKey.push_back(fChannelID);
-
-   AtTPCPadMap.insert(std::pair<std::vector<int>, int>(PadKey, fPadID));
-   AtTPCPadMapInverse.insert(std::pair<int, std::vector<int>>(fPadID, PadKey));
+   AtTPCPadMap.insert(std::pair<PadReference, int>(ref, fPadID));
+   AtTPCPadMapInverse.insert(std::pair<int, PadReference>(fPadID, ref));
    AtTPCPadSize.insert(std::pair<int, int>(fPadID, fSizeID));
-
-   PadKey.clear();
-   // std::cout<<"PadID : "<<fPadID<<" - CoboID : "<<fCoboID<<"  - AsadID : "<<fAsadID<<"  - AgetID : "<<fAgetID<<"  -
-   // ChannelID : "<<fChannelID<<std::endl;
 }
 
 void AtMap::ParseMapList(TXMLNode *node)
@@ -202,29 +166,15 @@ Bool_t AtMap::ParseXMLMap(Char_t const *xmlfile)
    // itrEnd = pmap.end();
    delete domParser;
 
+   LOG(INFO) << "Pad map has an average load of " << AtTPCPadMap.load_factor() << " and a max load of "
+             << AtTPCPadMap.max_load_factor() << " with buckets " << AtTPCPadMap.bucket_count() << " for "
+             << AtTPCPadMap.size() << " pads.";
+
    return true;
 }
 
 Bool_t AtMap::DumpAtTPCMap()
 {
-
-   // Option 1: Int key - vector<int> value
-   /*	std::map<int,std::vector<int>>::iterator it;
-    std::ostream_iterator<int> ii (std::cout,", ");
-
-    for(it=this->AtTPCPadMap.begin(); it!=this->AtTPCPadMap.end(); ++it){
-    std::cout<<" [ "<<(*it).first<<", ";
-    std::copy ((*it).second.begin(), (*it).second.end(), ii );
-    std::cout<<"]"<<std::endl;;
-
-    }
-
-    std::map<int, std::vector<int>>::const_iterator ite = AtTPCPadMap.find(1);
-    std::string value = it->second;
-   */
-
-   // Option 2: vector<int> key - int value
-
    if (!fPadInd || !kIsParsed) {
 
       std::cout << " AtTpcMap::DumpAtTPCMap Error : Pad plane has not been generated or parsed - Exiting... "
@@ -233,12 +183,11 @@ Bool_t AtMap::DumpAtTPCMap()
       return false;
    }
 
-   std::map<std::vector<int>, int>::iterator it;
    std::ostream_iterator<int> ii(std::cout, ", ");
 
-   for (it = this->AtTPCPadMap.begin(); it != this->AtTPCPadMap.end(); ++it) {
+   for (auto it = this->AtTPCPadMap.begin(); it != this->AtTPCPadMap.end(); ++it) {
       std::cout << " [ " << (*it).second << ", ";
-      std::copy((*it).first.begin(), (*it).first.end(), ii);
+      std::cout << it->first.cobo << "," << it->first.asad << "," << it->first.aget << "," << it->first.ch;
       std::cout << "]" << std::endl;
       ;
    }
@@ -246,11 +195,40 @@ Bool_t AtMap::DumpAtTPCMap()
    return true;
 }
 
-std::vector<int> AtMap::GetPadRef(int padNum)
+bool AtMap::AddAuxPad(const PadReference &ref, std::string auxName)
+{
+   auto emplacePair = fAuxPadMap.emplace(ref, auxName);
+   std::cout << cGREEN << " Auxiliary channel added " << fAuxPadMap[ref] << " - Hash " << std::hash<PadReference>()(ref)
+             << cNORMAL << "\n";
+
+   return emplacePair.second;
+}
+bool AtMap::IsAuxPad(const PadReference &ref) const
+{
+   return fAuxPadMap.find(ref) != fAuxPadMap.end();
+}
+std::string AtMap::GetAuxName(const PadReference &ref) const
+{
+   if (IsAuxPad(ref))
+      return fAuxPadMap.find(ref)->second;
+   else
+      return "";
+}
+PadReference AtMap::GetPadRef(int padNum) const
 {
    if (AtTPCPadMapInverse.find(padNum) == AtTPCPadMapInverse.end())
-      return std::vector<int>(4, -1);
-   return AtTPCPadMapInverse[padNum];
+      return PadReference();
+   return AtTPCPadMapInverse.at(padNum);
+}
+
+bool operator<(const PadReference &l, const PadReference &r)
+{
+   return std::hash<PadReference>()(l) < std::hash<PadReference>()(r);
+}
+
+bool operator==(const PadReference &l, const PadReference &r)
+{
+   return l.cobo == r.cobo && l.asad == r.asad && l.aget == r.aget && l.ch == r.ch;
 }
 
 ClassImp(AtMap)

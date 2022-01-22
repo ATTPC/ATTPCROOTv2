@@ -6,17 +6,23 @@
 
 #include <vector>
 
+class AtRawEvent;
+class AtPad;
+
 class AtFilter {
 
 public:
    // Called at the init stage of the AtFilterTask
    virtual void Init() = 0;
 
-   // Called on each pad if no baseline subtraction
-   virtual void Filter(Int_t *trace) = 0;
+   // Called once for each event at the start of the Exec phase
+   virtual void InitEvent(AtRawEvent *event) = 0;
 
-   // Called on each pad if baseline subtraction
-   virtual void Filter(Double_t *trace) = 0;
+   // Called on each pad
+   virtual void Filter(AtPad *pad) = 0;
+
+   // Called at the end of an event. Returns if filtering was successful.
+   virtual bool IsGoodEvent() = 0;
 };
 
 #endif //#ifndef ATFILTER_H

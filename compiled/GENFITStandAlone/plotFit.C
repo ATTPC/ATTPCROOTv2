@@ -5,28 +5,28 @@ void plotFit(std::string fileFolder = "dd_520/")
    TH2F *Ang_Ener = new TH2F("Ang_Ener", "Ang_Ener", 720, 0, 179, 1000, 0, 100.0);
    TH1F *HQval = new TH1F("HQval", "HQval", 1000, -10, 10);
 
-   TH2F *QvsAng = new TH2F("QvsAng", "QvsAng", 1000, -10, 10,720, 0, 179);
-   TH2F *QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 10,200,-100,100);
-   TH2F *ZposvsAng = new TH2F("ZposvsAng", "ZposvsAng", 200, -100, 100,720, 0, 179);
-   
+   TH2F *QvsAng = new TH2F("QvsAng", "QvsAng", 1000, -10, 10, 720, 0, 179);
+   TH2F *QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 10, 200, -100, 100);
+   TH2F *ZposvsAng = new TH2F("ZposvsAng", "ZposvsAng", 200, -100, 100, 720, 0, 179);
+
    TH1F *hxpos_fit = new TH1F("hxpos_fit", "hxpos_fit", 100, -10, 10);
    TH1F *hypos_fit = new TH1F("hypos_fit", "hypos_fit", 100, -10, 10);
    TH1F *hzpos_fit = new TH1F("hzpos_fit", "hzpos_fit", 200, -100, 100);
 
-   //PRA
-    TH2F *Ang_Ener_PRA = new TH2F("Ang_Ener_PRA", "Ang_Ener_PRA", 720, 0, 179, 1000, 0, 100.0);
+   // PRA
+   TH2F *Ang_Ener_PRA = new TH2F("Ang_Ener_PRA", "Ang_Ener_PRA", 720, 0, 179, 1000, 0, 100.0);
 
-    //Correlations
-    TH2F *Ang_AngPRA = new TH2F("Ang_AngPRA", "Ang_AngPRA", 720, 0, 179, 720,0,179);
-    TH2F *Phi_PhiPRA = new TH2F("Phi_PhiPRA", "Phi_PhiPRA", 720, -179, 179, 720,-179,179);
-    TH2F *zfit_zPRA  = new TH2F("zfit_zPRA","zfit_zPRA",1000,-100,100,1000,-100,100);
+   // Correlations
+   TH2F *Ang_AngPRA = new TH2F("Ang_AngPRA", "Ang_AngPRA", 720, 0, 179, 720, 0, 179);
+   TH2F *Phi_PhiPRA = new TH2F("Phi_PhiPRA", "Phi_PhiPRA", 720, -179, 179, 720, -179, 179);
+   TH2F *zfit_zPRA = new TH2F("zfit_zPRA", "zfit_zPRA", 1000, -100, 100, 1000, -100, 100);
 
-    TH2F *Ang_Phi = new TH2F("Ang_Phi", "Ang_Phi", 720, 0, 179, 720,-179,179);
+   TH2F *Ang_Phi = new TH2F("Ang_Phi", "Ang_Phi", 720, 0, 179, 720, -179, 179);
 
-    TH2F *x_Phi = new TH2F("x_Phi", "x_Phi", 1000, -10, 10, 720,-179,179);
-    TH2F *y_Phi = new TH2F("y_Phi", "y_Phi", 1000, -10, 10, 720,-179,179);
-    
-    // Find every valid file
+   TH2F *x_Phi = new TH2F("x_Phi", "x_Phi", 1000, -10, 10, 720, -179, 179);
+   TH2F *y_Phi = new TH2F("y_Phi", "y_Phi", 1000, -10, 10, 720, -179, 179);
+
+   // Find every valid file
    // std::system("find ./dd_520 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::ifstream file;
@@ -52,41 +52,40 @@ void plotFit(std::string fileFolder = "dd_520/")
       if (!rootfile.IsZombie()) {
          std::cout << " Opening file : " << dataFile << "\n";
          TTree *outputTree = (TTree *)rootfile.Get("outputTree");
-         Float_t EFit, AFit, EPRA, APRA, Ex,PhiFit,PhiPRA, xiniPRA, yiniPRA, ziniPRA, xiniFit, yiniFit, ziniFit;
+         Float_t EFit, AFit, EPRA, APRA, Ex, PhiFit, PhiPRA, xiniPRA, yiniPRA, ziniPRA, xiniFit, yiniFit, ziniFit;
          outputTree->SetBranchAddress("EFit", &EFit);
          outputTree->SetBranchAddress("AFit", &AFit);
-	 outputTree->SetBranchAddress("PhiFit", &PhiFit);
+         outputTree->SetBranchAddress("PhiFit", &PhiFit);
          outputTree->SetBranchAddress("EPRA", &EPRA);
          outputTree->SetBranchAddress("APRA", &APRA);
-	 outputTree->SetBranchAddress("PhiPRA", &PhiPRA);
+         outputTree->SetBranchAddress("PhiPRA", &PhiPRA);
          outputTree->SetBranchAddress("Ex", &Ex);
          outputTree->SetBranchAddress("xiniFit", &xiniFit);
          outputTree->SetBranchAddress("yiniFit", &yiniFit);
          outputTree->SetBranchAddress("ziniFit", &ziniFit);
-	 outputTree->SetBranchAddress("xiniPRA", &xiniPRA);
+         outputTree->SetBranchAddress("xiniPRA", &xiniPRA);
          outputTree->SetBranchAddress("yiniPRA", &yiniPRA);
          outputTree->SetBranchAddress("ziniPRA", &ziniPRA);
 
          Int_t nentries = (Int_t)outputTree->GetEntries();
          for (Int_t i = 0; i < nentries; i++) {
-            outputTree->GetEntry(i);       
+            outputTree->GetEntry(i);
             Ang_Ener->Fill(AFit, EFit);
-	    Ang_Ener_PRA->Fill(APRA, EPRA);
-            if (AFit>90.0 && AFit<180.0 && ziniFit > 70 && ziniFit < 80)
+            Ang_Ener_PRA->Fill(APRA, EPRA);
+            if (AFit > 90.0 && AFit < 180.0 && ziniFit > 70 && ziniFit < 80)
                HQval->Fill(Ex);
             hxpos_fit->Fill(xiniFit);
             hypos_fit->Fill(yiniFit);
             hzpos_fit->Fill(ziniFit);
-	    QvsAng->Fill(Ex,AFit);
-	    QvsZpos->Fill(Ex,ziniFit);
-	    ZposvsAng->Fill(ziniFit,AFit);
-	    Ang_AngPRA->Fill(AFit,APRA);
-	    zfit_zPRA->Fill(ziniFit,ziniPRA/10.0);
-	    Phi_PhiPRA->Fill(PhiFit*TMath::RadToDeg(),PhiPRA);
-	    Ang_Phi->Fill(AFit,PhiFit*TMath::RadToDeg());
-	    x_Phi->Fill(xiniFit,PhiFit*TMath::RadToDeg());
-	    y_Phi->Fill(yiniFit,PhiFit*TMath::RadToDeg());
-	    
+            QvsAng->Fill(Ex, AFit);
+            QvsZpos->Fill(Ex, ziniFit);
+            ZposvsAng->Fill(ziniFit, AFit);
+            Ang_AngPRA->Fill(AFit, APRA);
+            zfit_zPRA->Fill(ziniFit, ziniPRA / 10.0);
+            Phi_PhiPRA->Fill(PhiFit * TMath::RadToDeg(), PhiPRA);
+            Ang_Phi->Fill(AFit, PhiFit * TMath::RadToDeg());
+            x_Phi->Fill(xiniFit, PhiFit * TMath::RadToDeg());
+            y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
          }
       }
    }
@@ -196,7 +195,6 @@ void plotFit(std::string fileFolder = "dd_520/")
    c2->cd(5);
    ZposvsAng->Draw();
 
-
    TCanvas *c3 = new TCanvas();
    c3->Divide(1, 2);
    c3->Draw();
@@ -205,7 +203,7 @@ void plotFit(std::string fileFolder = "dd_520/")
    Ang_Ener_PRA->SetMarkerSize(0.5);
    Ang_Ener_PRA->Draw();
    Kine_AngRec_EnerRec->Draw("SAME");
-   Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");  
+   Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
 
@@ -222,7 +220,7 @@ void plotFit(std::string fileFolder = "dd_520/")
    Ang_Phi->Draw();
 
    TCanvas *c5 = new TCanvas();
-   c5->Divide(1,2);
+   c5->Divide(1, 2);
    c5->Draw();
    c5->cd(1);
    x_Phi->Draw();

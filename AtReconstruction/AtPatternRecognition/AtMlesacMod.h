@@ -57,16 +57,16 @@ public:
    void Reset();
    void Init(AtEvent *event);
    void Solve();
-   vector<int> RandSam(vector<int> indX, Int_t mode);
+   std::vector<int> RandSam(vector<int> indX, Int_t mode);
    void EstimModel(const std::vector<int> samplesIdx);
    double EstimError(int i);
    void CalcMlesacMod(AtEvent *event);
-   vector<double> GetChargeOfTracks();
-   vector<double> GetTrackLength();
-   vector<double> GetPDF(const std::vector<int> samplesIdx);
+   std::vector<double> GetChargeOfTracks();
+   std::vector<double> GetTrackLength();
+   std::vector<double> GetPDF(const std::vector<int> samplesIdx);
    void SetAvCharge(double charge) { Avcharge = charge; };
    double GetAvCharge() { return Avcharge; };
-   double Fit3D(vector<int> inliners, TVector3 &V1, TVector3 &V2);
+   double Fit3D(std::vector<int> inliners, TVector3 &V1, TVector3 &V2);
    void SetDistanceThreshold(Float_t threshold) { fMlesacThreshold = threshold; };
    void SetMinHitsLine(Int_t nhits) { fMlesacMinPoints = nhits; };
    void SetNumItera(Int_t niterations) { fMlesacMaxIteration = niterations; };
@@ -112,8 +112,8 @@ protected:
    Int_t fRandSamplMode;
    Int_t fVertexMod;
 
-   vector<double> vX, vY, vZ, vQ;
-   vector<double> vTrackCharge;
+   std::vector<double> vX, vY, vZ, vQ;
+   std::vector<double> vTrackCharge;
    float fMlesacMinPoints;
    float fMlesacPointThreshold;
    float fMlesacChargeThreshold;

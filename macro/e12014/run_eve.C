@@ -7,13 +7,12 @@
 #include "FairRunAna.h"
 */
 
-void run_eve(int runNum = 206, bool displayFilteredData = false, TString OutputDataFile = "output.reco_display.root")
+void run_eve(int runNum = 210, TString OutputDataFile = "data/output.reco_display.root")
 {
    TString InputDataFile;
-   if (!displayFilteredData)
-      InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpacked/run_%04d.root", runNum);
-   else
-      InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/filterTesting/run_%04d.root", runNum);
+   InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpacked/run_%04d.root", runNum);
+
+   // InputDataFile = "./run_0200.root";
    std::cout << "Opening: " << InputDataFile << std::endl;
 
    FairLogger *fLogger = FairLogger::GetLogger();
@@ -27,8 +26,10 @@ void run_eve(int runNum = 206, bool displayFilteredData = false, TString OutputD
    TString GeoDataPath = dir + "/geometry/" + geoFile;
 
    FairRunAna *fRun = new FairRunAna();
-   fRun->SetInputFile(InputDataPath);
-   fRun->SetOutputFile(OutputDataPath);
+   FairRootFileSink *sink = new FairRootFileSink(OutputDataFile);
+   FairFileSource *source = new FairFileSource(InputDataFile);
+   fRun->SetSource(source);
+   fRun->SetSink(sink);
    fRun->SetGeomFile(GeoDataPath);
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
@@ -43,14 +44,15 @@ void run_eve(int runNum = 206, bool displayFilteredData = false, TString OutputD
    eve->Set3DHitStyleBox();
    eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
    eve->SetSaveTextData();
-   if (displayFilteredData) {
-      eve->SetRawEventBranch("AtRawEventFiltered");
-      eve->SetEventBranch("AtEventFiltered");
-   }
+
+   eve->SetRawEventBranch("AtRawEventFiltered");
+   eve->SetEventBranch("AtEventFiltered");
+
    // eve->UnpackHoughSpace();
 
    eveMan->AddTask(eve);
    eveMan->Init();
 
+   std::cout << "Finished init" << std::endl;
    // eveMan->RunEvent(27);
 }

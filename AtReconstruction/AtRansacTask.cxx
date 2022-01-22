@@ -10,11 +10,8 @@
 
 ClassImp(AtRansacTask);
 
-AtRansacTask::AtRansacTask()
+AtRansacTask::AtRansacTask() : fInputBranchName("AtEventH"), fOutputBranchName("AtRansac")
 {
-
-   fLogger = FairLogger::GetLogger();
-   fPar = NULL;
 
    kIsPersistence = kFALSE;
    kIsFullMode = kFALSE;
@@ -36,6 +33,16 @@ void AtRansacTask::SetPersistence(Bool_t value)
 {
    kIsPersistence = value;
 }
+void AtRansacTask::SetInputBranch(TString branchName)
+{
+   fInputBranchName = branchName;
+}
+
+void AtRansacTask::SetOutputBranch(TString branchName)
+{
+   fOutputBranchName = branchName;
+}
+
 void AtRansacTask::SetModelType(int model)
 {
    fRANSACModel = model;
@@ -93,53 +100,29 @@ InitStatus AtRansacTask::Init()
    else if (fRANSACAlg == 3)
       fRansacArray = new TClonesArray("AtLmedsMod");
    else {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find Ransac algorithm!");
+      LOG(error) << "Cannot find Ransac algorithm!";
       return kERROR;
    }
 
    FairRootManager *ioMan = FairRootManager::Instance();
-   if (ioMan == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+   if (ioMan == nullptr) {
+      LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 
-   fEventHArray = (TClonesArray *)ioMan->GetObject("AtEventH");
-   if (fEventHArray == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtEvent array!");
+   fEventArray = (TClonesArray *)ioMan->GetObject(fInputBranchName);
+   if (fEventArray == nullptr) {
+      LOG(error) << "Cannot find AtEvent array!";
       return kERROR;
    }
 
-   ioMan->Register("AtRansac", "AtTPC", fRansacArray, kIsPersistence);
+   ioMan->Register(fOutputBranchName, "AtTPC", fRansacArray, kIsPersistence);
 
    if (kIsReprocess) {
-      ioMan->Register("AtEventH", "AtTPC", fEventHArray, kIsPersistence);
-      /*
-      fS800CalcBr = (TClonesArray *) ioMan -> GetObject("s800cal");
-      if (fS800CalcBr == 0) {
-        fLogger -> Error(MESSAGE_ORIGIN, "Cannot find AtEvent array!");
-        return kERROR;
-      }
-      ioMan -> Register("s800cal", "S800", fS800CalcBr, fIsPersistence);
-      */
+      ioMan->Register("AtEventH", "AtTPC", fEventArray, kIsPersistence);
    }
 
    return kSUCCESS;
-}
-
-void AtRansacTask::SetParContainers()
-{
-
-   FairRun *run = FairRun::Instance();
-   if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
-
-   FairRuntimeDb *db = run->GetRuntimeDb();
-   if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
-
-   fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
-   if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");
 }
 
 void AtRansacTask::Exec(Option_t *opt)
@@ -147,10 +130,10 @@ void AtRansacTask::Exec(Option_t *opt)
 
    fRansacArray->Delete();
 
-   if (fEventHArray->GetEntriesFast() == 0)
+   if (fEventArray->GetEntriesFast() == 0)
       return;
 
-   fEvent = (AtEvent *)fEventHArray->At(0);
+   fEvent = (AtEvent *)fEventArray->At(0);
 
    if (fRANSACAlg == 0) {
       AtRANSACN::AtRansac *Ransac = (AtRANSACN::AtRansac *)new ((*fRansacArray)[0]) AtRANSACN::AtRansac();

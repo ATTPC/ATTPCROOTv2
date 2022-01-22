@@ -17,8 +17,7 @@ void rundigi_sim(TString mcFile = "./data/attpcsim_in.root",
    // __ Run ____________________________________________
    FairRunAna *fRun = new FairRunAna();
    fRun->SetInputFile(mcFile);
-   fRun->SetGeomFile(
-      "/mnt/analysis/e20020/ATTPCROOTv2_develop/geometry/ATTPC_He1bar_v2_geomanager.root");
+   fRun->SetGeomFile("/mnt/analysis/e20020/ATTPCROOTv2_develop/geometry/ATTPC_He1bar_v2_geomanager.root");
    fRun->SetOutputFile("output_digi.root");
 
    TString parameterFile = "ATTPC.e20020_sim.par";

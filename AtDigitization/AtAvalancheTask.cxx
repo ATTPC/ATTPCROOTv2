@@ -20,12 +20,12 @@ AtAvalancheTask::AtAvalancheTask() : FairTask("AtAvalanacheTask"), fEventID(0) {
 
 AtAvalancheTask::~AtAvalancheTask()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Destructor of AtAvalancheTask");
+   LOG(debug) << "Destructor of AtAvalancheTask";
 }
 
 void AtAvalancheTask::SetParContainers()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "SetParContainers of AtAvalancheTask");
+   LOG(debug) << "SetParContainers of AtAvalancheTask";
 
    FairRunAna *ana = FairRunAna::Instance();
    FairRuntimeDb *rtdb = ana->GetRuntimeDb();
@@ -34,13 +34,13 @@ void AtAvalancheTask::SetParContainers()
 
 InitStatus AtAvalancheTask::Init()
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Initilization of AtAvalancheTask");
+   LOG(debug) << "Initilization of AtAvalancheTask";
 
    FairRootManager *ioman = FairRootManager::Instance();
 
    fMCPointArray = (TClonesArray *)ioman->GetObject("AtTpcPoint");
    if (fMCPointArray == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find fMCPointArray array!");
+      LOG(error) << "Cannot find fMCPointArray array!";
       return kERROR;
    }
 
@@ -60,7 +60,7 @@ InitStatus AtAvalancheTask::Init()
 
 void AtAvalancheTask::Exec(Option_t *option)
 {
-   fLogger->Debug(MESSAGE_ORIGIN, "Exec of AtAvalancheTask");
+   LOG(debug) << "Exec of AtAvalancheTask";
 
    /* if(!fElectronArray)
       fLogger->Fatal(MESSAGE_ORIGIN,"No DigitizedElectronArray!");
@@ -69,7 +69,7 @@ void AtAvalancheTask::Exec(Option_t *option)
    Int_t nMCPoints = fMCPointArray->GetEntries();
    std::cout << " Number of MC Points " << nMCPoints << std::endl;
    if (nMCPoints < 10) {
-      fLogger->Warning(MESSAGE_ORIGIN, "Not enough hits for digitization! (<10)");
+      LOG(warning) << "Not enough hits for digitization! (<10)";
       return;
    }
 

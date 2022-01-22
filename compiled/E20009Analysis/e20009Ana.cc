@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
    TString inputFileName = "";
    bool fitDirection = 0; // 0: Forward (d,d) - 1: Backwards (d,p)
    bool simulationConv = 0;
-   
+
    //  Arguments
    if (argc == 7) {
       firstEvt = std::atoi(argv[1]);
@@ -33,11 +33,9 @@ int main(int argc, char *argv[])
       std::cout << cGREEN << " Processing file " << inputFileName << "\n";
       std::cout << " Processing events from : " << firstEvt << " to " << lastEvt << "\n";
       std::cout << " Fit direction : " << fitDirection << " (0: Forward (d,d) - 1: Backwards (d,p))\n ";
-      std::cout << " Simulation ? "<<simulationConv<<"\n ";
+      std::cout << " Simulation ? " << simulationConv << "\n ";
       std::cout << " Interactive mode? : " << fInteractiveMode << cNORMAL << "\n";
 
-      
-      
    } else {
       std::cout << " Wrong number of arguments. Expecting 7: first_event last_event interactive_mode_bool "
                    "fileNameWithoutExtension fitDirection_bool simulation_convention."
@@ -144,7 +142,7 @@ int main(int argc, char *argv[])
 
    TString geoManFile = dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
    std::cout << " Geometry file : " << geoManFile.Data() << "\n";
-   
+
    TString filePath;
 
    if(simulationConv)
@@ -183,7 +181,6 @@ int main(int argc, char *argv[])
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetNumFitPoints(1.0);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetVerbosityLevel(1);
    dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetSimulationConvention(simulationConv);
-   
 
    // Output file
    Float_t EFit;
@@ -243,15 +240,14 @@ int main(int argc, char *argv[])
 
    TString simFile;
 
-   if(simulationConv)
-     simFile = "_sim_";
+   if (simulationConv)
+      simFile = "_sim_";
    else
-     simFile = "";
-   
-   TString outputFileName = "fit_analysis_"+ simFile + inputFileName;
+      simFile = "";
+
+   TString outputFileName = "fit_analysis_" + simFile + inputFileName;
    outputFileName += "_" + std::to_string(firstEvt) + "_" + std::to_string(lastEvt) + ".root";
-   
-   
+
    TFile *outputFile = new TFile(outputFileName.Data(), "RECREATE");
    TTree *outputTree = new TTree("outputTree", "OutputTree");
    outputTree->Branch("EFit", &EFit, "EFit/F");
@@ -720,8 +716,6 @@ int main(int argc, char *argv[])
 
    TGraph *Kine_AngRec_EnerRec = new TGraph(numKin, ThetaLabRec, EnerLabRec);
 
-
-
    fileKine = "../Be10pp_el_9AMeV.txt";
    std::ifstream *kineStr5 = new std::ifstream(fileKine.Data());
    numKin = 0;
@@ -737,10 +731,6 @@ int main(int argc, char *argv[])
 
    TGraph *Kine_AngRec_EnerRec_9AMeV = new TGraph(numKin, ThetaLabRec, EnerLabRec);
 
-
-
-
-   
    fileKine = "../Be10pp_in_2+1.txt";
    std::ifstream *kineStr2 = new std::ifstream(fileKine.Data());
    numKin = 0;
@@ -811,7 +801,7 @@ int main(int argc, char *argv[])
       Kine_AngRec_EnerRec->SetLineColor(kRed);
       Kine_AngRec_EnerRec->Draw("SAME");
       Kine_AngRec_EnerRec_9AMeV->SetLineWidth(1);
-      Kine_AngRec_EnerRec_9AMeV->SetLineColor(kRed+1);
+      Kine_AngRec_EnerRec_9AMeV->SetLineColor(kRed + 1);
       Kine_AngRec_EnerRec_9AMeV->Draw("SAME");
       Kine_AngRec_EnerRec_in->SetLineWidth(1);
       Kine_AngRec_EnerRec_in->SetLineColor(kBlue);

@@ -18,34 +18,12 @@
 #include "TClonesArray.h"
 
 class AtRansacTask : public FairTask {
-
-public:
-   AtRansacTask();
-   ~AtRansacTask();
-
-   void SetIsReprocess(Bool_t value = kFALSE);
-   void SetPersistence(Bool_t value = kTRUE);
-   void SetModelType(int model);
-   void SetDistanceThreshold(Float_t threshold);
-   void SetNumItera(Int_t niterations);
-   void SetFullMode();               // Mode that calculates the RANSAC method for every potential line
-   void SetMinHitsLine(Int_t nhits); // Set Mininum number of hits per line
-   void SetTiltAngle(Double_t val);
-   void SetAlgorithm(Int_t val);
-   void SetRanSamMode(Int_t mode);
-   void SetChargeThreshold(Double_t value);
-   void SetVertexMode(Int_t value);
-
-   virtual InitStatus Init();
-   virtual void SetParContainers();
-   virtual void Exec(Option_t *opt);
-
 private:
-   FairLogger *fLogger;
-   AtDigiPar *fPar;
-   TClonesArray *fEventHArray;
+   TString fInputBranchName;
+   TString fOutputBranchName;
+
+   TClonesArray *fEventArray;
    TClonesArray *fRansacArray;
-   TClonesArray *fS800CalcBr;
 
    AtEvent *fEvent;
 
@@ -62,7 +40,30 @@ private:
    Bool_t fCharThres;
    Int_t fVertexMode;
 
-   ClassDef(AtRansacTask, 1);
+public:
+   AtRansacTask();
+   ~AtRansacTask();
+
+   void SetIsReprocess(Bool_t value = kFALSE);
+   void SetInputBranch(TString branchName);
+   void SetOutputBranch(TString branchName);
+   void SetPersistence(Bool_t value = kTRUE);
+
+   void SetModelType(int model);
+   void SetDistanceThreshold(Float_t threshold);
+   void SetNumItera(Int_t niterations);
+   void SetFullMode();               // Mode that calculates the RANSAC method for every potential line
+   void SetMinHitsLine(Int_t nhits); // Set Mininum number of hits per line
+   void SetTiltAngle(Double_t val);
+   void SetAlgorithm(Int_t val);
+   void SetRanSamMode(Int_t mode);
+   void SetChargeThreshold(Double_t value);
+   void SetVertexMode(Int_t value);
+
+   virtual InitStatus Init() override;
+   virtual void Exec(Option_t *opt) override;
+
+   ClassDefOverride(AtRansacTask, 2);
 };
 
 #endif

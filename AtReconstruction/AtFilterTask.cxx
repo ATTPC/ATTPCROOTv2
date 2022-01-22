@@ -13,7 +13,7 @@
 // stdlib headers
 #include <iostream>
 
-AtFilterTask::AtFilterTask(AtFilter *filter) : fFilter(filter), fIsPersistent(false)
+AtFilterTask::AtFilterTask(AtFilter *filter) : fFilter(filter), fIsPersistent(false), fFilterAux(false)
 {
    fOutputEventArray = new TClonesArray("AtRawEvent");
 }
@@ -23,6 +23,10 @@ AtFilterTask::~AtFilterTask() {}
 void AtFilterTask::SetPersistence(Bool_t value)
 {
    fIsPersistent = value;
+}
+void AtFilterTask::SetFilterAux(Bool_t value)
+{
+   fFilterAux = value;
 }
 
 InitStatus AtFilterTask::Init()
@@ -56,27 +60,20 @@ void AtFilterTask::Exec(Option_t *opt)
    if (fInputEventArray->GetEntriesFast() == 0)
       return;
 
-   // Get the raw event, and create filtered event
    AtRawEvent *rawEvent = (AtRawEvent *)fInputEventArray->At(0);
-
-   std::cout << "Copying event" << std::endl;
-
+   if (!rawEvent->IsGood())
+      return;
    AtRawEvent *filteredEvent = (AtRawEvent *)new ((*fOutputEventArray)[0]) AtRawEvent(rawEvent);
-   std::cout << "Filtering event." << std::endl;
 
-   if (filteredEvent->IsGood())
+   fFilter->InitEvent(filteredEvent);
 
-      // Loop through every pad
-      for (auto &pad : *(filteredEvent->GetPads())) {
-         // If it is an aux pad, do not filter
-         if (pad.IsAux())
-            continue;
+   if (fFilterAux)
+      for (auto &padIt : filteredEvent->GetAuxPads())
+         fFilter->Filter(&(padIt.second));
 
-         // Filter the raw ADC
-         fFilter->Filter(pad.GetRawADC());
+   for (auto &pad : filteredEvent->GetPads())
+      fFilter->Filter(&pad);
 
-         // Check if the pad is baseline subtracted
-         if (pad.IsPedestalSubtracted())
-            fFilter->Filter(pad.GetADC());
-      } // end loop over pads
+   auto isGood = filteredEvent->IsGood() && fFilter->IsGoodEvent();
+   filteredEvent->SetIsGood(isGood);
 }

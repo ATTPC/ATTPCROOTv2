@@ -6,9 +6,9 @@
 
 using namespace ROOT::Math;
 
-ClassImp(AtRANSACN::AtRansac)
+ClassImp(AtRANSACN::AtRansac);
 
-   AtRANSACN::AtRansac::AtRansac()
+AtRANSACN::AtRansac::AtRansac()
 {
    fVertex_1.SetXYZ(-10000, -10000, -10000);
    fVertex_2.SetXYZ(-10000, -10000, -10000);
@@ -27,22 +27,7 @@ ClassImp(AtRANSACN::AtRansac)
 
    fVertexTime = -1000.0;
 
-   /*FairLogger *fLogger=FairLogger::GetLogger();
-   AtDigiPar *fPar;
-
-   FairRun *run = FairRun::Instance();
-   if (!run)
-     fLogger -> Fatal(MESSAGE_ORIGIN, "No analysis run!");
-
-   FairRuntimeDb *db = run -> GetRuntimeDb();
-   if (!db)
-     fLogger -> Fatal(MESSAGE_ORIGIN, "No runtime database!");
-
-   fPar = (AtDigiPar *) db -> getContainer("AtDigiPar");
-   if (!fPar)
-     fLogger -> Fatal(MESSAGE_ORIGIN, "AtDigiPar not found!!");*/
-
-   fTiltAng = 6.4; // fPar->GetTiltAngle();
+   fTiltAng = 0; // fPar->GetTiltAngle();
 
    pcl::console::setVerbosityLevel(pcl::console::L_ALWAYS);
 }
@@ -61,7 +46,7 @@ Double_t AtRANSACN::AtRansac::GetMinimum()
 {
    return fMinimum;
 }
-std::vector<AtTrack> AtRANSACN::AtRansac::GetTrackCand()
+std::vector<AtTrack> &AtRANSACN::AtRansac::GetTrackCand()
 {
    return fTrackCand;
 }

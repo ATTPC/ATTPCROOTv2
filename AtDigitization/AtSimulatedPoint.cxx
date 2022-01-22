@@ -1,61 +1,57 @@
 #include "AtSimulatedPoint.h"
 
-ClassImp(AtSimulatedPoint)
+using XYZVector = ROOT::Math::XYZVector;
 
-   AtSimulatedPoint::AtSimulatedPoint()
+ClassImp(AtSimulatedPoint);
+
+AtSimulatedPoint::AtSimulatedPoint() : fMCEventID(-1), fMCPointID(-1), fClusterID(-1) {}
+
+AtSimulatedPoint::AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, const XYZVector &position)
+   : fPosition(position), fMCEventID(-1), fMCPointID(mcPointID), fClusterID(clusterID), fCharge(1)
 {
-   SetPoint(-1, -1, -1, -1, -1);
 }
 
-AtSimulatedPoint::AtSimulatedPoint(std::size_t id, Int_t electronNumber, Double_t x, Double_t y, Double_t atime)
+AtSimulatedPoint::AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, const XYZVector &position)
+   : fPosition(position), fMCEventID(-1), fMCPointID(mcPointID), fClusterID(clusterID), fCharge(charge)
 {
-   SetPoint(id, electronNumber, x, y, atime);
-   fMCEventID = -1; // Undefined by construction
 }
 
 AtSimulatedPoint::~AtSimulatedPoint() {}
 
-void AtSimulatedPoint::SetElectronNumber(Int_t electronNumber)
+void AtSimulatedPoint::SetClusterID(Int_t clusterID)
 {
-   fElectronNumber = electronNumber;
+   fClusterID = clusterID;
 }
-
-void AtSimulatedPoint::SetPosition(Double_t x, Double_t y, Double_t atime)
+void AtSimulatedPoint::SetMCPointID(std::size_t id)
 {
-   fPosition = TVector3(x, y, atime);
+   fMCPointID = id;
 }
-
-void AtSimulatedPoint::SetPoint(std::size_t id, Int_t electronNumber, Double_t x, Double_t y, Double_t atime)
-{
-   fElectronNumber = electronNumber;
-   fPosition = TVector3(x, y, atime);
-   fPointID = id;
-}
-
-void AtSimulatedPoint::SetPointID(std::size_t id)
-{
-   fPointID = id;
-}
-
 void AtSimulatedPoint::SetMCEventID(std::size_t mcid)
 {
    fMCEventID = mcid;
 }
 
-Int_t AtSimulatedPoint::GetElectronNumber()
+Int_t AtSimulatedPoint::GetClusterID()
 {
-   return fElectronNumber;
+   return fClusterID;
 }
-TVector3 AtSimulatedPoint::GetPosition()
+XYZVector AtSimulatedPoint::GetPosition()
 {
    return fPosition;
 }
-
-std::size_t AtSimulatedPoint::GetPointID()
+std::size_t AtSimulatedPoint::GetMCPointID()
 {
-   return fPointID;
+   return fMCPointID;
 }
 std::size_t AtSimulatedPoint::GetMCEventID()
 {
    return fMCEventID;
+}
+void AtSimulatedPoint::SetCharge(Int_t charge)
+{
+   fCharge = charge;
+}
+Int_t AtSimulatedPoint::GetCharge()
+{
+   return fCharge;
 }

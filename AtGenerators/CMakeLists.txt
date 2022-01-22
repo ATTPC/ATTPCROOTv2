@@ -2,27 +2,8 @@
 # the array .
 # The extension is already found.  Any number of sources could be listed here.
 
-set(INCLUDE_DIRECTORIES
-${ROOT_INCLUDE_DIR}
-${PYTHIA8_INCLUDE_DIR}
-${Boost_INCLUDE_DIRS}
-${SIMPAtH}/include
-${BASE_INCLUDE_DIRECTORIES}
-${CMAKE_SOURCE_DIR}/AtGenerators
-${CMAKE_SOURCE_DIR}/AtData
-${CMAKE_SOURCE_DIR}/AtTpc
-
-)
-
-include_directories( ${INCLUDE_DIRECTORIES})
-
-set(LINK_DIRECTORIES
-${ROOT_LIBRARY_DIR}
-${FAIRROOT_LIBRARY_DIR}
-${SIMPAtH}/lib
-)
-
-link_directories(${LINK_DIRECTORIES})
+set(LIBRARY_NAME AtGenerators)
+set(LINKDEF  GenLinkDef.h)
 
 set(SRCS
 #Pythia6Generator.cxx
@@ -30,7 +11,7 @@ set(SRCS
 AtTPCIonDecay.cxx
 AtTPCIonGenerator.cxx
 AtTPCIonPhaseSpace.cxx
-AtVertexPropagator.cxx
+
 AtTPC2Body.cxx
 AtTPC_d2He.cxx
 AtTPC_Background.cxx
@@ -42,12 +23,34 @@ AtTPCXSReader.cxx
 AtTPCXSManager.cxx
 AtTPCGammaDummyGenerator.cxx
 AtTPC20MgDecay.cxx
+
+AtCSVReader.h
 )
 
-set(LINKDEF  GenLinkDef.h)
-set(LIBRARY_NAME AtGenerators)
+set(INCLUDE_DIRECTORIES
+${PYTHIA8_INCLUDE_DIR}
+${BASE_INCLUDE_DIRECTORIES}
+)
 
-#set(DEPENDENCIES  Base AtData pythia8 Pythia6)
-set(DEPENDENCIES  Base AtData FairLogger::FairLogger)
+set(DEPENDENCIES
+  Base
+  FairTools
+  ROOT::Core
+  ROOT::MathCore
+  ROOT::GenVector
+  AtData
+  AtTpc
+  )
 
-GENERAtE_LIBRARY()
+set(LINK_DIRECTORIES
+${FAIRROOT_LIBRARY_DIR}
+)
+
+generate_target_root_library(${LIBRARY_NAME}
+  LINKDEF ${LINKDEF}
+  SRCS ${SRCS}
+  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
+  LIBRARY_DIR ${LINK_DIRECTORIES}
+  DEPS_PUBLIC ${DEPENDENCIES}
+  )
+

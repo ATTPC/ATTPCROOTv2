@@ -81,40 +81,34 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_025
   auxchannel ch_6{"unknown_4",4,1,0,59};
   aux_channels.push_back(ch_6);
 
-
   AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
-   HDFParserTask->SetPersistence(kFALSE);
-   HDFParserTask->SetAtTPCMap(scriptdir.Data());
-   HDFParserTask->SetFileName(dataFile);
-   HDFParserTask->SetBaseLineSubtraction(kTRUE);
+  HDFParserTask->SetPersistence(kFALSE);
+  HDFParserTask->SetAtTPCMap(scriptdir.Data());
+  HDFParserTask->SetFileName(dataFile);
+  HDFParserTask->SetBaseLineSubtraction(kTRUE);
 
-   for(auto iaux : aux_channels)
-  {
-   auto hash  = HDFParserTask->CalculateHash(iaux.cobo,iaux.asad,iaux.aget,iaux.channel);  
-   auto isaux = HDFParserTask->SetAuxChannel(hash,iaux.name);  
+  for (auto iaux : aux_channels) {
+     auto hash = HDFParserTask->CalculateHash(iaux.cobo, iaux.asad, iaux.aget, iaux.channel);
+     auto isaux = HDFParserTask->SetAuxChannel(hash, iaux.name);
   }
 
-   AtPSASimple2 *psa = new AtPSASimple2();
-   // psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
-   // psa -> SetBaseCorrection(kFALSE);
-   // psa -> SetTimeCorrection(kFALSE);
+  AtPSASimple2 *psa = new AtPSASimple2();
+  // psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
+  // psa -> SetBaseCorrection(kFALSE);
+  // psa -> SetTimeCorrection(kFALSE);
 
-   // AtPSAFilter *psa = new AtPSAFilter();
+  // AtPSAFilter *psa = new AtPSAFilter();
 
-   AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetPersistence(kTRUE);
-   psa->SetThreshold(30);
-   psa->SetMaxFinder();
-   // psa->SetMeanK(4);
-   // psa->SetStddevMulThresh(0.1);
-  
-  
-  
-   //AtPRATask *praTask = new AtPRATask();
-   //praTask -> SetPersistence(kTRUE);
-  
-  
-  
+  AtPSAtask *psaTask = new AtPSAtask(psa);
+  psaTask->SetPersistence(kTRUE);
+  psa->SetThreshold(30);
+  psa->SetMaxFinder();
+  // psa->SetMeanK(4);
+  // psa->SetStddevMulThresh(0.1);
+
+  // AtPRATask *praTask = new AtPRATask();
+  // praTask -> SetPersistence(kTRUE);
+
   run -> AddTask(HDFParserTask);
   run -> AddTask(psaTask);
   //run -> AddTask(praTask);
@@ -124,9 +118,8 @@ void run_unpack_HC(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_025
   auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
   run->Run(0, numEvents);
-  //run->Run(0, 1000);
-  //run -> RunOnTBData();
-
+  // run->Run(0, 1000);
+  // run -> RunOnTBData();
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;

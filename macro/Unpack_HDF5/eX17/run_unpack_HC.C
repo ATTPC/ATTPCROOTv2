@@ -71,7 +71,7 @@ void run_unpack_HC(std::string dataFile = "/mnt/daqtesting/e20009_attpc_transfer
    HDFParserTask->SetFileName(dataFile);
 
    AtPSASimple2 *psa = new AtPSASimple2();
-   psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
+   psa->SetPeakFinder(); // NB: Use either peak finder of maximum finder but not both at the same time
    // psa -> SetBaseCorrection(kFALSE);
    // psa -> SetTimeCorrection(kFALSE);
 
