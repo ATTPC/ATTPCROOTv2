@@ -1,8 +1,13 @@
 #include "AtSpecMATMap.h"
 
+#include "FairLogger.h"
+
+#include "TH2Poly.h"
+#include "TCanvas.h"
+#include "TStyle.h"
+
 #include <cassert>
 #include <iostream>
-#include "FairLogger.h"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

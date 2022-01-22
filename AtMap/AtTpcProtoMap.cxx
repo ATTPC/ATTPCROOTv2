@@ -6,9 +6,12 @@
  *********************************************************************/
 
 #include "AtTpcProtoMap.h"
-#include "TMultiGraph.h"
+#include "TCanvas.h"
 #include "TKey.h"
+#include "TMultiGraph.h"
+#include "TStyle.h"
 
+#include <iostream>
 #include <fstream>
 
 #define cRED "\033[1;31m"

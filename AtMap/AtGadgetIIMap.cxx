@@ -1,6 +1,11 @@
 #include "AtGadgetIIMap.h"
 
+#include "TCanvas.h"
+#include "TH2Poly.h"
+#include "TStyle.h"
+
 #include <iostream>
+#include <fstream>
 #include <cassert>
 
 #define cRED "\033[1;31m"

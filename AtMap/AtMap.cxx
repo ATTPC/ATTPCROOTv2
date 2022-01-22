@@ -1,10 +1,28 @@
 #include "AtMap.h"
+
 #include "FairLogger.h"
+
+#include "TH2Poly.h"
+#include "TDOMParser.h"
+#include "TXMLNode.h"
+
+#include <iostream>
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
+
+std::ostream &operator<<(std::ostream &os, const InhibitType &t)
+{
+   switch (t) {
+   case kNONE: os << "kNONE"; break;
+   case kTOTAL: os << "kTOTAL"; break;
+   case kLOWGAIN: os << "kLOWGAIN"; break;
+   case kXTALK: os << "kXTALK"; break;
+   }
+   return os;
+}
 
 AtMap::AtMap() : AtPadCoord(boost::extents[10240][3][2]) {}
 
@@ -32,69 +50,39 @@ Int_t AtMap::GetPadNum(const PadReference &PadRef) const
    return (*its).second;
 }
 
-Bool_t AtMap::ParseInhibitMap(TString inimap, TString lowgmap, TString xtalkmap)
+Bool_t AtMap::ParseInhibitMap(TString inimap, InhibitType type)
 {
 
-   std::ifstream *fIni = new std::ifstream(inimap.Data());
-   std::ifstream *fLowg = new std::ifstream(lowgmap.Data());
-   std::ifstream *fXtalk = new std::ifstream(xtalkmap.Data());
+   std::ifstream fIni(inimap.Data());
 
    Int_t pad;
-   Bool_t IsIniPar = kTRUE;
-   Bool_t IsLowgPar = kTRUE;
-   Bool_t IsXtalkPar = kTRUE;
 
-   std::cout << cYELLOW << __func__ << " - Parsing map for inhibited pads " << cNORMAL << std::endl;
-
-   if (fIni->fail()) {
-      std::cout << cRED << __func__
-                << " = Warning : No Inhibit Pad Map found! Please, check the path. Current :" << inimap.Data()
-                << cNORMAL << std::endl;
-      IsIniPar = kFALSE;
-   }
-   if (fLowg->fail()) {
-      std::cout << cRED << __func__
-                << " = Warning : No Inhibit Pad Map found! Please, check the path. Current :" << lowgmap.Data()
-                << cNORMAL << std::endl;
-      IsLowgPar = kFALSE;
-   }
-   if (fXtalk->fail()) {
-      std::cout << cRED << __func__
-                << " = Warning : No Inhibit Pad Map found! Please, check the path. Current :" << xtalkmap.Data()
-                << cNORMAL << std::endl;
-      IsXtalkPar = kFALSE;
+   LOG(info) << cYELLOW << __func__ << " - Parsing map for inhibited pads of type " << type << cNORMAL;
+   if (fIni.fail()) {
+      LOG(error) << cRED << " = Warning : No Inhibit Pad Map found! Please, check the path. Current :" << inimap.Data()
+                 << cNORMAL;
+      return false;
    }
 
-   while (!fIni->eof() && IsIniPar) {
-      *fIni >> pad;
-      fIniPads.insert(pad);
+   if (fIniPads.size() != 0)
+      LOG(info) << "Will overriding any existing inhibited pads with new type";
+
+   while (!fIni.eof()) {
+      fIni >> pad;
+      fIniPads[pad] = type;
    }
 
-   while (!fLowg->eof() && IsLowgPar) {
-      *fLowg >> pad;
-      fIniPads.insert(pad);
-   }
-
-   while (!fXtalk->eof() && IsXtalkPar) {
-      *fXtalk >> pad;
-      fIniPads.insert(pad);
-   }
-
-   std::cout << cYELLOW << __func__ << "     " << fIniPads.size() << " pads added to inhibition list" << cNORMAL
-             << std::endl;
-
-   delete fIni;
-   delete fLowg;
-   delete fXtalk;
-
-   return kTRUE;
+   LOG(info) << cYELLOW << fIniPads.size() << " pads in inhibition list." << cNORMAL;
+   return true;
 }
 
-Bool_t AtMap::GetIsInhibited(Int_t PadNum)
+InhibitType AtMap::GetIsInhibited(Int_t PadNum)
 {
-   // std::find(fIniPads.begin(),fIniPads.end(),PadNum);
-   const Bool_t kIsInhibit = fIniPads.find(PadNum) != fIniPads.end();
-   return kIsInhibit;
+   auto pad = fIniPads.find(PadNum);
+   if (pad == fIniPads.end())
+      return kNONE;
+   else
+      return pad->second;
 }
 
 int AtMap::GetPadSize(int padNum)

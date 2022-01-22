@@ -14,24 +14,6 @@
 
 #include "AtMap.h"
 
-#include <cassert>
-#include "TObject.h"
-#include "TROOT.h"
-#include "TMath.h"
-#include "TCanvas.h"
-#include "TH2Poly.h"
-#include "TMath.h"
-#include "TROOT.h"
-#include "TStyle.h"
-#include <map>
-#include <vector>
-#include <set>
-#include "TDOMParser.h"
-#include "TXMLNode.h"
-#include "TFile.h"
-#include <fstream>
-#include <iostream>
-
 class AtTpcMap : public AtMap {
 
 public:

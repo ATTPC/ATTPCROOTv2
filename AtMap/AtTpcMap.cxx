@@ -8,7 +8,13 @@
 #include "AtTpcMap.h"
 
 #include <iostream>
+#include <fstream>
 #include <cassert>
+
+#include "TCanvas.h"
+#include "TH2Poly.h"
+#include "TStyle.h"
+
 #undef BOOST_MULTI_ARRAY_NO_GENERATORS
 #define BOOST_MULTI_ARRAY_NO_GENERATORS
 #include "boost/multi_array.hpp"

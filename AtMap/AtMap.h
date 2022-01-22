@@ -11,24 +11,16 @@
 
 #include <boost/multi_array.hpp>
 
-#include <cassert>
 #include "TObject.h"
 #include "TROOT.h"
 #include "TMath.h"
-#include "TCanvas.h"
-#include "TH2Poly.h"
-#include "TMath.h"
-#include "TROOT.h"
-#include "TStyle.h"
+
+#include <unordered_map>
 #include <map>
 #include <vector>
-#include <set>
-#include "TDOMParser.h"
-#include "TXMLNode.h"
-#include "TFile.h"
-#include <fstream>
-#include <iostream>
-#include <unordered_map>
+
+class TH2Poly;
+class TXMLNode;
 
 // The definition of this struct, and the operator overloads have to
 // be before AtMap where an unordered_map using this as a key is
@@ -51,6 +43,9 @@ struct hash<PadReference> {
 };
 } // namespace std
 
+enum InhibitType { kNONE, kTOTAL, kLOWGAIN, kXTALK };
+std::ostream &operator<<(std::ostream &os, const InhibitType &t);
+
 class AtMap : public TNamed {
 
 protected:
@@ -63,7 +58,7 @@ protected:
    Bool_t kIsParsed;
    Bool_t kGUIMode;
    Bool_t kDebug;
-   std::set<Int_t> fIniPads;
+   std::map<Int_t, InhibitType> fIniPads;
    TCanvas *cAtTPCPlane;
    TH2Poly *hPlane;
    UInt_t fNumberPads;
@@ -99,8 +94,8 @@ public:
 
    inline void SetGUIMode() { kGUIMode = 1; }
    inline void SetDebugMode(Bool_t flag = true) { kDebug = flag; }
-   Bool_t ParseInhibitMap(TString inimap, TString lowgmap, TString xtalkmap);
-   Bool_t GetIsInhibited(Int_t PadNum);
+   Bool_t ParseInhibitMap(TString inimap, InhibitType type);
+   InhibitType GetIsInhibited(Int_t PadNum);
    Int_t GetPadSize(int padNum);
 
    ClassDefOverride(AtMap, 3);
