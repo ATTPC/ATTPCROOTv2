@@ -7,11 +7,14 @@
  ********************************************************************************/
 #include "AtTpc.h"
 
-#include "AtTpcPoint.h"
 #include "AtTpcGeo.h"
 #include "AtTpcGeoPar.h"
-#include "AtVertexPropagator.h"
 //#include "AtTPCXSManager.h"
+
+#include "AtVertexPropagator.h"
+#include "AtDetectorList.h"
+#include "AtMCPoint.h"
+#include "AtStack.h"
 
 #include "FairVolume.h"
 #include "FairGeoVolume.h"
@@ -21,8 +24,6 @@
 #include "FairGeoInterface.h"
 #include "FairRun.h"
 #include "FairRuntimeDb.h"
-#include "AtDetectorList.h"
-#include "AtStack.h"
 
 #include "TClonesArray.h"
 #include "TVirtualMC.h"
@@ -48,13 +49,13 @@ using std::endl;
 
 AtTpc::AtTpc()
    : FairDetector("AtTpc", kTRUE, kAtTpc), fTrackID(-1), fVolumeID(-1), fPos(), fMom(), fTime(-1.), fLength(-1.),
-     fELoss(-1), fPosIndex(-1), fAtTpcPointCollection(new TClonesArray("AtTpcPoint")), fELossAcc(-1)
+     fELoss(-1), fPosIndex(-1), fAtTpcPointCollection(new TClonesArray("AtMCPoint")), fELossAcc(-1)
 {
 }
 
 AtTpc::AtTpc(const char *name, Bool_t active)
    : FairDetector(name, active, kAtTpc), fTrackID(-1), fVolumeID(-1), fPos(), fMom(), fTime(-1.), fLength(-1.),
-     fELoss(-1), fPosIndex(-1), fAtTpcPointCollection(new TClonesArray("AtTpcPoint")), fELossAcc(-1)
+     fELoss(-1), fPosIndex(-1), fAtTpcPointCollection(new TClonesArray("AtMCPoint")), fELossAcc(-1)
 {
 }
 
@@ -371,18 +372,18 @@ Bool_t AtTpc::CheckIfSensitive(std::string name)
    return kFALSE;
 }
 
-AtTpcPoint *
+AtMCPoint *
 AtTpc::AddHit(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t time, Double_t length, Double_t eLoss)
 {
    TClonesArray &clref = *fAtTpcPointCollection;
    Int_t size = clref.GetEntriesFast();
-   return new (clref[size]) AtTpcPoint(trackID, detID, pos, mom, time, length, eLoss);
+   return new (clref[size]) AtMCPoint(trackID, detID, pos, mom, time, length, eLoss);
 }
 
 // -----   Private method AddHit   --------------------------------------------
-AtTpcPoint *AtTpc::AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t detCopyID, TVector3 posIn, TVector3 posOut,
-                          TVector3 momIn, TVector3 momOut, Double_t time, Double_t length, Double_t eLoss,
-                          Double_t EIni, Double_t AIni, Int_t A, Int_t Z)
+AtMCPoint *AtTpc::AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t detCopyID, TVector3 posIn, TVector3 posOut,
+                         TVector3 momIn, TVector3 momOut, Double_t time, Double_t length, Double_t eLoss, Double_t EIni,
+                         Double_t AIni, Int_t A, Int_t Z)
 {
    TClonesArray &clref = *fAtTpcPointCollection;
    Int_t size = clref.GetEntriesFast();
@@ -393,8 +394,8 @@ AtTpcPoint *AtTpc::AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t det
       LOG(INFO) << "AtTPC: Adding Point at (" << posIn.X() << ", " << posIn.Y() << ", " << posIn.Z()
                 << ") cm,  detector " << detID << ", track " << trackID << ", energy loss " << eLoss * 1e06 << " keV";
 
-   return new (clref[size]) AtTpcPoint(trackID, detID, VolName, detCopyID, posIn, posOut, momIn, momOut, time, length,
-                                       eLoss, EIni, AIni, A, Z);
+   return new (clref[size]) AtMCPoint(trackID, detID, VolName, detCopyID, posIn, posOut, momIn, momOut, time, length,
+                                      eLoss, EIni, AIni, A, Z);
 }
 
 std::pair<Int_t, Int_t> AtTpc::DecodePdG(Int_t PdG_Code)

@@ -13,7 +13,7 @@
 
 class AtGas;
 class AtDigiPar;
-class AtTpcPoint;
+class AtMCPoint;
 
 class TClonesArray;
 
@@ -31,7 +31,7 @@ protected:
    AtDigiPar *fPar; //!< Base parameter container.
 
    TClonesArray *fMCPointArray;
-   AtTpcPoint *fMCPoint;
+   AtMCPoint *fMCPoint;
    TClonesArray *fSimulatedPointArray; //!< Primary cluster array
    Bool_t fIsPersistent;               //!< If true, save container
 

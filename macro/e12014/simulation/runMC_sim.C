@@ -1,10 +1,10 @@
 // Code to simulate fission event from a file
 
-void runMC_sim(Int_t nEvents = 5, TString mcEngine = "TGeant4")
+void runMC_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 {
    // Output file name
    TString dir = getenv("VMCWORKDIR");
-   TString outputDirectory = "/macro/e12014/simulation/data/";
+   TString outputDirectory = "/macro/e12014/simulation/eventGenerator/asymSmear/";
    TString parFileName = dir + outputDirectory + "par_attpc.root";
    TString simFileName = dir + outputDirectory + "sim_attpc.root";
 
@@ -14,19 +14,22 @@ void runMC_sim(Int_t nEvents = 5, TString mcEngine = "TGeant4")
    TString paramFileName = "ATTPC.e12014.par";
    paramFileName = dir + "/parameters/" + paramFileName;
    TString geoFileInputName = dir + "/geometry/" + geoFileName;
-   
-   TString ionList = "./data/ion_list.csv";
-   TString fissionDistro = "./data/fissionFragments.root";
+
+   TString ionList = "./eventGenerator/asymSmear/ion_list.csv";
+   TString fissionDistro = "./eventGenerator/asymSmear/fissionFragments.root";
 
    TStopwatch timer;
    timer.Start();
+   cout << "TIME IS " << timer.RealTime() << endl;
    AtVertexPropagator *vertex_prop = new AtVertexPropagator();
 
+   cout << "TIME IS " << timer.RealTime() << endl;
 
    FairRunSim *run = new FairRunSim();
    run->SetName(mcEngine);      // Transport engine
    run->SetSink(new FairRootFileSink(simFileName)); // Output file
    FairRuntimeDb *rtdb = run->GetRuntimeDb();
+   cout << "TIME IS " << timer.RealTime() << endl;
 
    run->SetMaterials("media.geo"); // Materials
 
@@ -48,9 +51,9 @@ void runMC_sim(Int_t nEvents = 5, TString mcEngine = "TGeant4")
    FairPrimaryGenerator *primGen = new FairPrimaryGenerator();
 
    /***** Primary Beam Information *****/
-   Int_t z = 81;  // Atomic number
-   Int_t a = 195; // Mass number
-   Int_t q = 78;  // Charge State
+   Int_t z = 82;  // Atomic number
+   Int_t a = 197; // Mass number
+   Int_t q = 80;  // Charge State
 
    // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays
    // the maximum multiplicity has been set to 10 particles.
@@ -60,20 +63,20 @@ void runMC_sim(Int_t nEvents = 5, TString mcEngine = "TGeant4")
    Double_t py = 0.000 / a; // Y-Momentum / per nucleon!!!!!!
 
    // 70 MeV / nucleon
-   Double_t pz = 42348.9 / a; // Z-Momentum (MeV)/ per nucleon!!!!!!
+   Double_t pz = 33918.7 / a; // Z-Momentum (MeV/c)/ per nucleon!!!!!!
    pz /= 1000;                // change to GeV/c for FairSoft
 
    Double_t BExcEner = 0.0;
 
-   // TODO: Fix to right mass
-   Double_t Bmass = 194.9259; // Mass in amu
+   Double_t Bmass = 196.9299; // Mass in amu
 
    // Nominal Energy of the beam: Only used for cross section calculation
    // (Tracking energy is determined with momentum).
-   Double_t NomEnergy = 25.0 * a; // Depricated
+   Double_t NomEnergy = 3109.5; // MeV Depricated
 
    // E loss until reaction occurs in MeV
-   Double_t eLoss = 1000;
+   Double_t eAtEndOfTPC = 1190.4; // MeV
+   Double_t eLoss = NomEnergy - eAtEndOfTPC;
 
    // Create the ion generator
    AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy, eLoss);

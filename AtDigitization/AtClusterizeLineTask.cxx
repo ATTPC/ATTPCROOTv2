@@ -7,7 +7,7 @@
 #include "Math/Vector3D.h"
 
 #include "AtDigiPar.h"
-#include "AtTpcPoint.h"
+#include "AtMCPoint.h"
 #include "AtSimulatedLine.h"
 
 AtClusterizeLineTask::AtClusterizeLineTask() : AtClusterizeTask("AtClusterizeLineTask") {}

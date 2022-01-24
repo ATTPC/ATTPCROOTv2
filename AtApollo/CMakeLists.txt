@@ -16,7 +16,7 @@ Set(DEPENDENCIES
   FairTools
   ROOT::Core
   Cling
-  AtGenerators
+
   AtData
 )
 

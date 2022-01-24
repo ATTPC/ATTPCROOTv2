@@ -3,7 +3,6 @@
 void rundigi_sim()
 {
 
-   // TString outputFile = "data/output_digiFast.root";
    TString outputFile = "data/output_digiFull.root";
    TString scriptfile = "e12014_pad_mapping.xml";
    TString paramFile = "ATTPC.e12014.par";
@@ -47,6 +46,7 @@ void rundigi_sim()
    // AtPulseLineTask *pulse = new AtPulseLineTask();
    pulse->SetPersistence(kTRUE);
    pulse->SetMap(mapping);
+   pulse->SetLowGainFactor(0.08);
 
    AtPSASimple2 *psa = new AtPSASimple2();
    // psa->SetThreshold(35);
@@ -72,7 +72,7 @@ void rundigi_sim()
    fRun->Init();
 
    timer.Start();
-   fRun->Run(0, 100);
+   fRun->Run(0, 1000);
    timer.Stop();
 
    std::cout << std::endl << std::endl;

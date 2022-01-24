@@ -2,11 +2,11 @@
 
 #include "AtDigiPar.h"
 #include "AtHit.h"
+#include "AtMCPoint.h"
 #include "AtMap.h"
 #include "AtPad.h"
 #include "AtRawEvent.h"
 #include "AtSimulatedPoint.h"
-#include "AtTpcPoint.h"
 #include "AtVertexPropagator.h"
 
 // Fair class header
@@ -145,7 +145,7 @@ void AtPulseTask::saveMCInfo(int mcPointID, int padNumber, int trackID)
    // The same MC point ID is saved per pad only once, but duplicates are allowed in other pads
    std::multimap<Int_t, std::size_t>::iterator it;
    for (it = MCPointsMap.equal_range(padNumber).first; it != MCPointsMap.equal_range(padNumber).second; ++it) {
-      auto mcPointMap = (AtTpcPoint *)fMCPointArray->At(mcPointID);
+      auto mcPointMap = (AtMCPoint *)fMCPointArray->At(mcPointID);
       auto trackIDMap = mcPointMap->GetTrackID();
       if (it->second == mcPointID || (trackID == trackIDMap)) {
          ++count;
@@ -182,7 +182,7 @@ bool AtPulseTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
 
    auto binNumber = fPadPlane->Fill(xElectron, yElectron);
    auto padNumber = fMap->BinToPad(binNumber);
-   auto mcPoint = (AtTpcPoint *)fMCPointArray->At(point->GetMCPointID());
+   auto mcPoint = (AtMCPoint *)fMCPointArray->At(point->GetMCPointID());
    auto trackID = mcPoint->GetTrackID();
 
    if (padNumber < 0 || padNumber > fMap->GetNumPads()) {

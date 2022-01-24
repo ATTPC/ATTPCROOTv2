@@ -53,6 +53,10 @@ void unpackCalibration(int runNumber)
    mapping->GenerateAtTpc();
 
    /**** Should not have to change code between this line and the above star comment ****/
+   mapping->AddAuxPad({10, 0, 0, 0}, "MCP_US");
+   mapping->AddAuxPad({10, 0, 0, 34}, "TPC_Mesh");
+   mapping->AddAuxPad({10, 0, 1, 0}, "MCP_DS");
+   mapping->AddAuxPad({10, 0, 2, 34}, "IC");
 
    // Create the unpacker task
    AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
@@ -63,12 +67,20 @@ void unpackCalibration(int runNumber)
    HDFParserTask->SetNumberTimestamps(2);
    HDFParserTask->SetBaseLineSubtraction(kTRUE);
 
-   AtFilterCalibrate *filter = new AtFilterCalibrate();
+   AtFilterSubtraction *filterSub = new AtFilterSubtraction(mapping);
+   filter->SetThreshold(threshold);
+   AtFilterTask *subTask = new AtFilterTask(filterSub);
+   filterTask->SetPersistence(kFALSE);
+   filterTask->SetFilterAux(true);
+   // filterTask->SetOutputBranch("AtRawEventSub");
+
+   AtFilterCalibrate *filterCal = new AtFilterCalibrate();
    std::cout << "Created calibration filter: " << filter << std::endl;
    filter->SetCalibrationFile("output/calibrationFormated.txt");
-   AtFilterTask *filterTask = new AtFilterTask(filter);
+   AtFilterTask *calTask = new AtFilterTask(filterCal);
    filterTask->SetPersistence(kTRUE);
    filterTask->SetFilterAux(false);
+   // filterTask->SetInputBranch("AtRawEventSub")
 
    AtPSASimple2 *psa = new AtPSASimple2();
    psa->SetThreshold(45);
@@ -76,13 +88,14 @@ void unpackCalibration(int runNumber)
 
    // Create PSA task for calibrated data
    AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetInputBranch("AtRawEvent");
+   psaTask->SetInputBranch("AtRawEventFiltered");
    psaTask->SetOutputBranch("AtEventFiltered");
    psaTask->SetPersistence(kTRUE);
 
    // Add unpacker to the run
    run->AddTask(HDFParserTask);
-   run->AddTask(filterTask);
+   run->AddTask(subTask);
+   run->AddTask(calTask);
    run->AddTask(psaTask);
 
    run->Init();

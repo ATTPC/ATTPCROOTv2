@@ -12,7 +12,6 @@
 #include "AtEvent.h"
 #include "AtCalibration.h"
 #include "AtHit.h"
-#include "AtTpcPoint.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshadow"

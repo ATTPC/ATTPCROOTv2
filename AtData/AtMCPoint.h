@@ -1,16 +1,26 @@
-#ifndef AtSIARRAYPOINT_H
-#define AtSIARRAYPOINT_H 1
+/********************************************************************************
+ *    Copyright (C) 2014 GSI Helmholtzzentrum fuer Schwerionenforschung GmbH    *
+ *                                                                              *
+ *              This software is distributed under the terms of the             *
+ *         GNU Lesser General Public Licence version 3 (LGPL) version 3,        *
+ *                  copied verbatim in the file "LICENSE"                       *
+ ********************************************************************************/
+#ifndef NEWDETECTORPOINT_H
+#define NEWDETECTORPOINT_H 1
 
 #include "FairMCPoint.h"
+#include "AtVertexPropagator.h"
 
 #include "TObject.h"
 #include "TVector3.h"
 
-class AtSiArrayPoint : public FairMCPoint {
+class AtVertexPropagator;
+
+class AtMCPoint : public FairMCPoint {
 
 public:
    /** Default constructor **/
-   AtSiArrayPoint();
+   AtMCPoint();
 
    /** Constructor with arguments
     *@param trackID  Index of MCTrack
@@ -21,18 +31,17 @@ public:
     *@param length   Track length since creation [cm]
     *@param eLoss    Energy deposit [GeV]
     **/
-   AtSiArrayPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length,
-                  Double_t eLoss);
+   AtMCPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length, Double_t eLoss);
 
-   AtSiArrayPoint(Int_t trackID, Int_t detID, TString VolName, Int_t detCopyID, TVector3 posIn, TVector3 posOut,
-                  TVector3 momIn, TVector3 momOut, Double_t tof, Double_t length, Double_t eLoss, Double_t EIni,
-                  Double_t AIni, Int_t A, Int_t Z);
+   AtMCPoint(Int_t trackID, Int_t detID, TString VolName, Int_t detCopyID, TVector3 posIn, TVector3 posOut,
+             TVector3 momIn, TVector3 momOut, Double_t tof, Double_t length, Double_t eLoss, Double_t EIni,
+             Double_t AIni, Int_t A, Int_t Z);
 
    /** Destructor **/
-   virtual ~AtSiArrayPoint();
+   virtual ~AtMCPoint();
 
    /** Accessors **/
-   Int_t GetDetCopyID() const { return fDetCopyID; }
+   Int_t GetDetCopyID() const { return fDetCopyID; } // added by Marc
    Double_t GetXIn() const { return fX; }
    Double_t GetYIn() const { return fY; }
    Double_t GetZIn() const { return fZ; }
@@ -59,15 +68,15 @@ public:
    /** Modifiers **/
    void SetPositionOut(TVector3 pos);
    void SetMomentumOut(TVector3 mom);
-   void SetDetCopyID(Int_t id) { fDetCopyID = id; };
+   void SetDetCopyID(Int_t id) { fDetCopyID = id; }; // added by Marc
 
    /** Output to screen **/
    virtual void Print(const Option_t *opt) const;
 
 private:
    /** Copy constructor **/
-   AtSiArrayPoint(const AtSiArrayPoint &point);
-   AtSiArrayPoint operator=(const AtSiArrayPoint &point);
+   AtMCPoint(const AtMCPoint &point);
+   AtMCPoint operator=(const AtMCPoint &point);
 
 protected:
    Double32_t fX_out, fY_out, fZ_out;
@@ -79,17 +88,17 @@ protected:
    Int_t fAiso;
    Int_t fZiso;
 
-   ClassDef(AtSiArrayPoint, 1)
+   ClassDef(AtMCPoint, 1)
 };
 
-inline void AtSiArrayPoint::SetPositionOut(TVector3 pos)
+inline void AtMCPoint::SetPositionOut(TVector3 pos)
 {
    fX_out = pos.X();
    fY_out = pos.Y();
    fZ_out = pos.Z();
 }
 
-inline void AtSiArrayPoint::SetMomentumOut(TVector3 mom)
+inline void AtMCPoint::SetMomentumOut(TVector3 mom)
 {
    fPx_out = mom.Px();
    fPy_out = mom.Py();

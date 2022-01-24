@@ -62,7 +62,7 @@ InitStatus AtPSAtask::Init()
       return kERROR;
    }
    // Retrieving simulated points, if available
-   fMCPointArray = (TClonesArray *)ioMan->GetObject("AtTpcPoint");
+   fMCPointArray = (TClonesArray *)ioMan->GetObject("AtMCPoint");
    if (fMCPointArray != 0) {
       LOG(INFO) << " Simulated points found (simulation analysis) ";
    } else if (fMCPointArray != 0) {

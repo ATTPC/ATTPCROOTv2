@@ -6,7 +6,7 @@
 #include "AtPad.h"
 #include "AtRawEvent.h"
 #include "AtSimulatedLine.h"
-#include "AtTpcPoint.h"
+#include "AtMCPoint.h"
 #include "AtVertexPropagator.h"
 
 // Fair class header
@@ -94,7 +94,7 @@ bool AtPulseLineTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
       }
 
       if (fIsSaveMCInfo) {
-         auto mcPoint = (AtTpcPoint *)fMCPointArray->At(line->GetMCPointID());
+         auto mcPoint = (AtMCPoint *)fMCPointArray->At(line->GetMCPointID());
          auto trackID = mcPoint->GetTrackID();
          saveMCInfo(line->GetMCPointID(), pad.first, trackID);
       }

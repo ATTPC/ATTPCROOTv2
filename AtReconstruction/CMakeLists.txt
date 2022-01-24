@@ -26,11 +26,12 @@ Set(DEPENDENCIES
   Base
   FairTools
   XMLParser
+
   AtAnalysis
   AtTpcMap
   AtParameter
-  AtTpc
-  AtGenerators
+  AtData
+  
   ROOT::Spectrum
   ROOT::Core
   

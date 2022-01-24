@@ -16,7 +16,6 @@ ${FAIRROOT_LIBRARY_DIR}
 )
 
 set(SRCS
-AtSiArrayPoint.cxx
 AtSiArrayContFact.cxx
 AtSiArrayGeo.cxx
 AtSiArrayGeoPar.cxx
@@ -27,7 +26,7 @@ Set(DEPENDENCIES
   Base
   FairTools
   ROOT::Core
-  AtGenerators
+  AtData
 )
 
 generate_target_root_library(${LIBRARY_NAME}

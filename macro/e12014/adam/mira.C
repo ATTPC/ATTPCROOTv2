@@ -30,10 +30,21 @@ TH1F *hTrace = new TH1F("trace", "Trace", 512, 0, 511);
 
 void loadRun(TString filePath)
 {
+   if (tpcTree != nullptr)
+      delete tpcTree;
    tpcTree = new TChain("cbmsim");
    tpcTree->Add(filePath);
+
+   if (reader != nullptr)
+      delete reader;
    reader = new TTreeReader(tpcTree);
+
+   if (rawEventReader != nullptr)
+      delete rawEventReader;
    rawEventReader = new TTreeReaderValue<TClonesArray>(*reader, "AtRawEventFiltered");
+
+   if (eventReader != nullptr)
+      delete eventReader;
    eventReader = new TTreeReaderValue<TClonesArray>(*reader, "AtEventFiltered");
 }
 
