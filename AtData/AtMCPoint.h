@@ -17,6 +17,15 @@
 class AtVertexPropagator;
 
 class AtMCPoint : public FairMCPoint {
+protected:
+   Double32_t fX_out, fY_out, fZ_out;
+   Double32_t fPx_out, fPy_out, fPz_out;
+   Int_t fDetCopyID;
+   TString fVolName;
+   Double_t fEnergyIni;
+   Double_t fAngleIni;
+   Int_t fAiso;
+   Int_t fZiso;
 
 public:
    /** Default constructor **/
@@ -78,15 +87,6 @@ private:
    AtMCPoint(const AtMCPoint &point);
    AtMCPoint operator=(const AtMCPoint &point);
 
-protected:
-   Double32_t fX_out, fY_out, fZ_out;
-   Double32_t fPx_out, fPy_out, fPz_out;
-   Int_t fDetCopyID;
-   TString fVolName;
-   Double_t fEnergyIni;
-   Double_t fAngleIni;
-   Int_t fAiso;
-   Int_t fZiso;
 
    ClassDef(AtMCPoint, 1)
 };

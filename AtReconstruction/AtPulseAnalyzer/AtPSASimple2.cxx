@@ -48,8 +48,8 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    std::map<Int_t, Int_t> PadMultiplicity;
    Float_t mesh[512] = {0};
 
-   std::multimap<Int_t, std::size_t> mcPointsMap = rawEvent->GetSimMCPointMap();
-   LOG(debug) << " MC Simulated points Map size " << mcPointsMap.size();
+   auto mcPointsMap = rawEvent->GetSimMCPointMap();
+   LOG(info) << "MC Simulated points Map size " << mcPointsMap.size();
 
    /* for (const auto& entry : mcPointsMap)
       {

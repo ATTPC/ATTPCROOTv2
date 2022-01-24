@@ -49,7 +49,7 @@ protected:
 
    std::map<Int_t, TH1F *> electronsMap;          //!<
    TH1F **eleAccumulated;                         //!<
-   std::multimap<Int_t, std::size_t> MCPointsMap; //!< Correspondance between MC Points and pads
+   std::multimap<Int_t, std::size_t> MCPointsMap; //!< [padNum] = mcPointID
 
    TF1 *gain; //!<
    Double_t avgGainDeviation;

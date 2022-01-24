@@ -62,9 +62,10 @@ InitStatus AtPSAtask::Init()
       return kERROR;
    }
    // Retrieving simulated points, if available
-   fMCPointArray = (TClonesArray *)ioMan->GetObject("AtMCPoint");
+   fMCPointArray = (TClonesArray *)ioMan->GetObject("AtTpcPoint");
    if (fMCPointArray != 0) {
       LOG(INFO) << " Simulated points found (simulation analysis) ";
+      fPSA->SetSimulatedEvent(fMCPointArray);
    } else if (fMCPointArray != 0) {
       LOG(INFO) << " Simulated points not found (experimental data analysis) ";
    }
@@ -93,10 +94,6 @@ void AtPSAtask::Exec(Option_t *opt)
 
    if (!rawEvent->IsGood())
       return;
-   if (fMCPointArray != 0) {
-      LOG(debug) << " point array size " << fMCPointArray->GetEntries();
-      fPSA->SetSimulatedEvent(fMCPointArray);
-   }
    LOG(debug) << " Event Number :  " << rawEvent->GetEventID() << " Valid pads : " << rawEvent->GetNumPads();
 
    fPSA->Analyze(rawEvent, event);

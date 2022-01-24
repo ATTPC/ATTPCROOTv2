@@ -218,17 +218,8 @@ void AtPSA::SetTBLimits(std::pair<Int_t, Int_t> limits)
 
 void AtPSA::TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit *hit)
 {
-   typedef std::multimap<Int_t, std::size_t>::iterator MCMapIterator;
-
-   // Find every simulated point ID for each valid pad
-   std::pair<MCMapIterator, MCMapIterator> result = map.equal_range(hit->GetHitPadNum());
-   for (MCMapIterator it = result.first; it != result.second; it++) {
-      // std::cout<<fMCSimPointArray->GetEntries()<<"\n";
-
-      int count = std::distance(result.first, result.second);
-
-      // if(count>1){
-      //  std::cout<<" Count "<<count<<"\n";
+   auto padNum = hit->GetHitPadNum();
+   for (auto it = map.lower_bound(padNum); it != map.upper_bound(padNum); ++it) {
 
       if (fMCSimPointArray != 0) {
          AtMCPoint *MCPoint = (AtMCPoint *)fMCSimPointArray->At(it->second);
