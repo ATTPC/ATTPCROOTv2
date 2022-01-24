@@ -28,7 +28,7 @@
 #include "TParticle.h"
 
 #include "AtStack.h"
-#include "AtTpcPoint.h"
+#include "AtMCPoint.h"
 #include "AtVertexPropagator.h"
 
 Int_t AtTPCIonPhaseSpace::fgNIon = 0;
@@ -175,12 +175,12 @@ Bool_t AtTPCIonPhaseSpace::ReadEvent(FairPrimaryGenerator *primGen)
 
    /*  FairRootManager* ioMan = FairRootManager::Instance();
 
-     TClonesArray* fPointArray = (TClonesArray*) ioMan->GetObject("AtTpcPoint"); // TODO: Why this confusing name? It
-     should be fEventArray if(fPointArray) LOG(INFO)<<"-I- AtTPCIonPhaseSpace : AtTpcPoint Array Found with size :
+     TClonesArray* fPointArray = (TClonesArray*) ioMan->GetObject("AtMCPoint"); // TODO: Why this confusing name? It
+     should be fEventArray if(fPointArray) LOG(INFO)<<"-I- AtTPCIonPhaseSpace : AtMCPoint Array Found with size :
      "<<fPointArray->GetSize()<<FairLogger::endl;
-     if(fPointArray->IsEmpty()) std::cout<<" AtTpcPoint TClonesArray Empty !!!"<<std::endl;*/
+     if(fPointArray->IsEmpty()) std::cout<<" AtMCPoint TClonesArray Empty !!!"<<std::endl;*/
 
-   //  AtTpcPoint* SimPoint = (AtTpcPoint*) fPointArray->At(0);
+   //  AtMCPoint* SimPoint = (AtMCPoint*) fPointArray->At(0);
    // SimPoint->GetXIn();
 
    // fBeamEnergy = fBeamEnergy_buff/1000.0; //GeV

@@ -8,7 +8,7 @@
 #include "AtDigiPar.h"
 #include "AtGas.h"
 #include "AtSimulatedPoint.h"
-#include "AtTpcPoint.h"
+#include "AtMCPoint.h"
 #include "AtVertexPropagator.h"
 
 // STL class headers
@@ -86,8 +86,6 @@ void AtClusterizeTask::setNewTrack()
 {
    fPrevPoint = getCurrentPointLocation();
    fCurrTrackID = fMCPoint->GetTrackID();
-   std::cout << "New track at: " << fMCPoint->GetZIn() << std::endl;
-   std::cout << "Time is: " << fPrevPoint.z() << " us" << std::endl;
 }
 
 void AtClusterizeTask::processPoint(Int_t mcPointID)
@@ -128,7 +126,7 @@ void AtClusterizeTask::Exec(Option_t *option)
    fSimulatedPointArray->Delete();
 
    for (int i = 0; i < fMCPointArray->GetEntries(); ++i) {
-      fMCPoint = dynamic_cast<AtTpcPoint *>(fMCPointArray->At(i));
+      fMCPoint = dynamic_cast<AtMCPoint *>(fMCPointArray->At(i));
       if (fMCPoint->GetVolName() == "drift_volume")
          processPoint(i);
       else

@@ -9,12 +9,11 @@ Set(DEPENDENCIES
   ROOT::Core
   ROOT::GenVector
   
-  AtTpc
-  AtGenerators
+  AtData
   AtParameter
   AtReconstruction
   AtTpcMap
-  )
+)
 
 set(INCLUDE_DIRECTORIES
   ${BASE_INCLUDE_DIRECTORIES}
@@ -27,7 +26,6 @@ set(SRCS
 # Add all the source files below this line.
 AtAvalancheTask.cxx
 AtClusterizeTask.cxx
-#AtClusterizeFastTask.cxx
 AtClusterizeLineTask.cxx
 AtPulseTask.cxx
 AtPulseLineTask.cxx

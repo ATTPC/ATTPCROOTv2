@@ -5,7 +5,7 @@
 #include "FairRunAna.h"
 #include "FairRuntimeDb.h"
 
-#include "AtTpcPoint.h"
+#include "AtMCPoint.h"
 #include "AtVertexPropagator.h"
 
 // STL class headers
@@ -38,7 +38,7 @@ InitStatus AtAvalancheTask::Init()
 
    FairRootManager *ioman = FairRootManager::Instance();
 
-   fMCPointArray = (TClonesArray *)ioman->GetObject("AtTpcPoint");
+   fMCPointArray = (TClonesArray *)ioman->GetObject("AtMCPoint");
    if (fMCPointArray == 0) {
       LOG(error) << "Cannot find fMCPointArray array!";
       return kERROR;
@@ -79,7 +79,7 @@ void AtAvalancheTask::Exec(Option_t *option)
     */
 
    for (Int_t iPoint = 0; iPoint < nMCPoints; iPoint++) {
-      fMCPoint = (AtTpcPoint *)fMCPointArray->At(iPoint);
+      fMCPoint = (AtMCPoint *)fMCPointArray->At(iPoint);
       Double_t eLoss = (fMCPoint->GetEnergyLoss()) * 1.E9; // [GeV] to [eV]
 
       //  std::cout<<" Base GetZ : "<<fMCPoint->FairMCPoint::GetZ()<<std::endl;

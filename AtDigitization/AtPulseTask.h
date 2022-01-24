@@ -26,15 +26,16 @@ class AtPulseTask : public FairTask {
 protected:
    AtMapPtr fMap; //!< AtTPC map
 
-   AtDigiPar *fPar;           //!< Base parameter container.
-   Int_t fEventID = 0;        //!< EventID
-   Double_t fGain = 0;        //!< Gain.
-   Double_t fGETGain = 0;     //!< GET Gain.
-   Double_t fPeakingTime = 0; //!< Electronic peaking time in us
-   Double_t fTBTime = 0;      //!< Time bucket size in us
-   Int_t fNumTbs = 0;         //!< Number of time buckers
-   Int_t fTBEntrance = 0;     //! Window location in timebuckets (from config)
-   Int_t fTBPadPlane = 0;     //! Pad plane location in TBs (calculated from DriftVelocity, TBEntrance, ZPadPlane
+   AtDigiPar *fPar;             //!< Base parameter container.
+   Int_t fEventID = 0;          //!< EventID
+   Double_t fGain = 0;          //!< Micromegas gain.
+   Double_t fLowGainFactor = 0; //! If pad is AtMap::kLowGain multiply gain by this factor
+   Double_t fGETGain = 0;       //!< GET Gain.
+   Double_t fPeakingTime = 0;   //!< Electronic peaking time in us
+   Double_t fTBTime = 0;        //!< Time bucket size in us
+   Int_t fNumTbs = 0;           //!< Number of time buckers
+   Int_t fTBEntrance = 0;       //! Window location in timebuckets (from config)
+   Int_t fTBPadPlane = 0;       //! Pad plane location in TBs (calculated from DriftVelocity, TBEntrance, ZPadPlane
 
    Bool_t fIsPersistent = kTRUE;  //!< If true, save container
    Bool_t fIsSaveMCInfo = kFALSE; //!<< Propagates MC information
@@ -69,15 +70,17 @@ public:
    AtPulseTask(const char *name);
    ~AtPulseTask();
 
+   void SetLowGainFactor(Double_t factor) { fLowGainFactor = factor; }
    void SetPersistence(Bool_t val) { fIsPersistent = val; }
    void SetSaveMCInfo() { fIsSaveMCInfo = kTRUE; }
    void SetMap(AtMapPtr map) { fMap = map; };
    void UseFastGain(Bool_t val) { fUseFastGain = val; }
+
    virtual InitStatus Init() override;        //!< Initiliazation of task at the beginning of a run.
    virtual void Exec(Option_t *opt) override; //!< Executed for each event.
    virtual void SetParContainers() override;  //!< Load the parameter container from the runtime database.
 
-   ClassDefOverride(AtPulseTask, 3);
+   ClassDefOverride(AtPulseTask, 4);
 };
 
 template <typename Iterator>

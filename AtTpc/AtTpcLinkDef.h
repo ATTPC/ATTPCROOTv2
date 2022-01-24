@@ -15,7 +15,5 @@
 #pragma link C++ class AtTpcGeo;
 #pragma link C++ class AtTpcGeoPar;
 #pragma link C++ class AtTpc;
-#pragma link C++ class AtTpcPoint + ;
-#pragma link C++ class AtVertexPropagator + ;
 
 #endif

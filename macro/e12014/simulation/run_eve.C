@@ -7,10 +7,10 @@
 #include "FairRunAna.h"
 */
 
-void run_eve(TString OutputDataFile = "data/output.reco_display.root")
+void run_eve(TString InputDataFile, TString OutputDataFile = "data/output.reco_display.root")
 {
-   TString InputDataFile;
-   InputDataFile = "./data/output_digiFast.root";
+   // TString InputDataFile;
+   // InputDataFile = "./data/output_digiFast.root";
    // InputDataFile = "./data/output_digiFull.root";
    std::cout << "Opening: " << InputDataFile << std::endl;
 

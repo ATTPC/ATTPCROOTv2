@@ -15,7 +15,7 @@ class AtEvent;
 class AtDigiPar;
 class AtCalibration;
 class AtHit;
-class AtTpcPoint;
+class AtMCPoint;
 
 class AtPSA {
 public:

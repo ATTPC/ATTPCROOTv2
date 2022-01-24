@@ -6,7 +6,7 @@
 #include "AtPad.h"
 #include "AtRawEvent.h"
 #include "AtSimulatedLine.h"
-#include "AtTpcPoint.h"
+#include "AtMCPoint.h"
 #include "AtVertexPropagator.h"
 
 // Fair class header
@@ -83,7 +83,7 @@ bool AtPulseLineTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
 
    // Now loop through all pads in the integration map, and add electrons
    for (const auto &pad : fXYintegrationMap) {
-      if (fMap->GetIsInhibited(pad.first))
+      if (fMap->IsInhibited(pad.first) == AtMap::kTotal)
          continue;
 
       for (int i = 0; i < zIntegration.size(); ++i) {
@@ -94,7 +94,7 @@ bool AtPulseLineTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
       }
 
       if (fIsSaveMCInfo) {
-         auto mcPoint = (AtTpcPoint *)fMCPointArray->At(line->GetMCPointID());
+         auto mcPoint = (AtMCPoint *)fMCPointArray->At(line->GetMCPointID());
          auto trackID = mcPoint->GetTrackID();
          saveMCInfo(line->GetMCPointID(), pad.first, trackID);
       }

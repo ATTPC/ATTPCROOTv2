@@ -13,13 +13,13 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
-std::ostream &operator<<(std::ostream &os, const InhibitType &t)
+std::ostream &operator<<(std::ostream &os, const AtMap::InhibitType &t)
 {
    switch (t) {
-   case kNONE: os << "kNONE"; break;
-   case kTOTAL: os << "kTOTAL"; break;
-   case kLOWGAIN: os << "kLOWGAIN"; break;
-   case kXTALK: os << "kXTALK"; break;
+   case AtMap::kNone: os << "kNone"; break;
+   case AtMap::kTotal: os << "kTotal"; break;
+   case AtMap::kLowGain: os << "kLowGain"; break;
+   case AtMap::kXTalk: os << "kXTalk"; break;
    }
    return os;
 }
@@ -50,7 +50,7 @@ Int_t AtMap::GetPadNum(const PadReference &PadRef) const
    return (*its).second;
 }
 
-Bool_t AtMap::ParseInhibitMap(TString inimap, InhibitType type)
+Bool_t AtMap::ParseInhibitMap(TString inimap, AtMap::InhibitType type)
 {
 
    std::ifstream fIni(inimap.Data());
@@ -69,18 +69,24 @@ Bool_t AtMap::ParseInhibitMap(TString inimap, InhibitType type)
 
    while (!fIni.eof()) {
       fIni >> pad;
-      fIniPads[pad] = type;
+      inhibitPad(pad, type);
    }
 
    LOG(info) << cYELLOW << fIniPads.size() << " pads in inhibition list." << cNORMAL;
    return true;
 }
 
-InhibitType AtMap::GetIsInhibited(Int_t PadNum)
+void AtMap::inhibitPad(Int_t padNum, AtMap::InhibitType type)
+{
+   auto pad = fIniPads.find(padNum);
+   if (pad == fIniPads.end() || pad->second < type)
+      fIniPads[padNum] = type;
+}
+AtMap::InhibitType AtMap::IsInhibited(Int_t PadNum)
 {
    auto pad = fIniPads.find(PadNum);
    if (pad == fIniPads.end())
-      return kNONE;
+      return kNone;
    else
       return pad->second;
 }

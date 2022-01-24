@@ -19,7 +19,7 @@
 #include "AtDigiPar.h"
 #include "AtCalibration.h"
 #include "AtHit.h"
-#include "AtTpcPoint.h"
+#include "AtMCPoint.h"
 
 using std::distance;
 using std::max_element;
@@ -231,7 +231,7 @@ void AtPSA::TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit *hit)
       //  std::cout<<" Count "<<count<<"\n";
 
       if (fMCSimPointArray != 0) {
-         AtTpcPoint *MCPoint = (AtTpcPoint *)fMCSimPointArray->At(it->second);
+         AtMCPoint *MCPoint = (AtMCPoint *)fMCSimPointArray->At(it->second);
          AtHit::MCSimPoint mcpoint(it->second, MCPoint->GetTrackID(), MCPoint->GetEIni(), MCPoint->GetEnergyLoss(),
                                    MCPoint->GetAIni(), MCPoint->GetMassNum(), MCPoint->GetAtomicNum());
          hit->SetMCSimPoint(mcpoint);

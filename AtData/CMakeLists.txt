@@ -1,11 +1,13 @@
-# Create a library called "libAtData" 
+# Create a library called "libAtData"
 
 Set(target AtData)
 Set(LINKDEF MCStackLinkDef.h)
 
 set(sources
-  AtStack.cxx 
+  AtStack.cxx
   AtMCTrack.cxx
+  AtVertexPropagator.cxx
+  AtMCPoint.cxx
 )
 set(LIB_DIR
 
@@ -17,7 +19,7 @@ set(LIB_DIR
 set(dependencies
   Base # FairRunIdGenerator
   FairTools # FairLogger
-  
+
   ROOT::Core
   ROOT::Physics # TLorentzVector, TVector3
   ROOT::EG # TDatabasePDG, TParticle

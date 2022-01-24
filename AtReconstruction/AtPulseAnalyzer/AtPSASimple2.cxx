@@ -7,7 +7,6 @@
 #include "AtRawEvent.h"
 #include "AtEvent.h"
 #include "AtHit.h"
-#include "AtTpcPoint.h"
 
 // ROOT classes
 #include "TH1F.h"

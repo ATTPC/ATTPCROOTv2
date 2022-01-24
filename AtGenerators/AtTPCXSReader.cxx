@@ -35,7 +35,6 @@
 #include "TParticle.h"
 
 #include "AtStack.h"
-#include "AtTpcPoint.h"
 #include "AtVertexPropagator.h"
 #include "AtEulerTransformation.h"
 

@@ -43,10 +43,9 @@ struct hash<PadReference> {
 };
 } // namespace std
 
-enum InhibitType { kNONE, kTOTAL, kLOWGAIN, kXTALK };
-std::ostream &operator<<(std::ostream &os, const InhibitType &t);
-
 class AtMap : public TNamed {
+public:
+   enum InhibitType : char; // forward declare of enum
 
 protected:
    typedef boost::multi_array<double, 3> multiarray;
@@ -58,7 +57,7 @@ protected:
    Bool_t kIsParsed;
    Bool_t kGUIMode;
    Bool_t kDebug;
-   std::map<Int_t, InhibitType> fIniPads;
+   std::map<Int_t, AtMap::InhibitType> fIniPads;
    TCanvas *cAtTPCPlane;
    TH2Poly *hPlane;
    UInt_t fNumberPads;
@@ -67,13 +66,15 @@ protected:
    std::unordered_map<PadReference, std::string> fAuxPadMap;
    std::map<int, int> AtTPCPadSize;
 
+   void inhibitPad(Int_t padNum, AtMap::InhibitType type);
+
 public:
    AtMap();
    ~AtMap();
 
    virtual void Dump() = 0;
    virtual void GenerateAtTpc() = 0;
-   virtual std::vector<Float_t> CalcPadCenter(Int_t PadRef) = 0;
+   virtual std::vector<Float_t> CalcPadCenter(Int_t PadRef) = 0; // units mm
    virtual TH2Poly *GetAtTpcPlane() = 0;
    virtual Int_t BinToPad(Int_t binval) = 0;
 
@@ -94,11 +95,17 @@ public:
 
    inline void SetGUIMode() { kGUIMode = 1; }
    inline void SetDebugMode(Bool_t flag = true) { kDebug = flag; }
-   Bool_t ParseInhibitMap(TString inimap, InhibitType type);
-   InhibitType GetIsInhibited(Int_t PadNum);
+   Bool_t ParseInhibitMap(TString inimap, AtMap::InhibitType type);
+   AtMap::InhibitType IsInhibited(Int_t PadNum);
    Int_t GetPadSize(int padNum);
 
-   ClassDefOverride(AtMap, 3);
+   // The higher the number, the higher the priority
+   // i.e. Adding a pad to the inhibit map with kTotal and kLowGain
+   // will inhibit the pad. kLowGain and kXTalk will be kXTalk
+   enum InhibitType : char { kNone = 0, kLowGain = 1, kXTalk = 2, kTotal = 3 };
+
+   ClassDefOverride(AtMap, 4);
 };
 
+std::ostream &operator<<(std::ostream &os, const AtMap::InhibitType &t);
 #endif

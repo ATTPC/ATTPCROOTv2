@@ -33,7 +33,6 @@
 #include "TParticle.h"
 
 #include "AtStack.h"
-#include "AtTpcPoint.h"
 #include "AtVertexPropagator.h"
 
 #define amu 931.494

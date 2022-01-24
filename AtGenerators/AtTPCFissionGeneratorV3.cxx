@@ -80,9 +80,9 @@ Bool_t AtTPCFissionGeneratorV3::ReadEvent(FairPrimaryGenerator *primeGen)
 
    // If this is a beam-like event don't do anything
    if (gAtVP->GetDecayEvtCnt() % 2 == 0) {
-      std::cout << "AtTPCFissionGeneratorV3: Skipping beam-like event" << std::endl;
+      LOG(debug) << "AtTPCFissionGeneratorV3: Skipping beam-like event";
    } else {
-      std::cout << "AtTPCFissionGeneratorV3: Runing reaction-like event" << std::endl;
+      LOG(debug) << "AtTPCFissionGeneratorV3: Runing reaction-like event";
       generateEvent();
    }
 
@@ -98,8 +98,8 @@ void AtTPCFissionGeneratorV3::generateEvent()
    for (int i = 0; i < fDecayFrags->size(); ++i)
       generateFragment(fDecayFrags->at(i), fA->at(i), fZ->at(i));
 
-   std::cout << "Wrote tracks for fission root event: " << fCurrEvent << std::endl;
-   std::cout << "Wrote tracks for MC event: " << gAtVP->GetDecayEvtCnt() << std::endl;
+   LOG(debug) << "Wrote tracks for fission root event: " << fCurrEvent;
+   LOG(debug) << "Wrote tracks for MC event: " << gAtVP->GetDecayEvtCnt();
    fCurrEvent++;
 }
 
@@ -122,10 +122,7 @@ Cartesian3D AtTPCFissionGeneratorV3::getVertex()
 void AtTPCFissionGeneratorV3::setBeamParameters()
 {
    fVertex = getVertex();
-   std::cout << "Setting boost" << std::endl;
-
    fBeamBoost = ROOT::Math::Boost(getBeam4Vec().BoostToCM());
-
    fBeamBoost.Invert();
 }
 
@@ -139,11 +136,11 @@ void AtTPCFissionGeneratorV3::generateFragment(VecPE &P, Int_t A, Int_t Z)
    auto labP = fBeamBoost(P);
 
    std::cout << std::endl;
-   LOG(info) << TString::Format(
+   LOG(debug) << TString::Format(
       "AtTPCFissionGeneratorV3: Generating ion of type %s with  CoM momentum (%f, %f, %f) MeV/c", particleName.Data(),
       P.Px(), P.Py(), P.Pz());
-   LOG(info) << TString::Format("Lab momentum (%f, %f, %f) MeV/c at (%f, %f, %f) cm", labP.Px(), labP.Py(), labP.Pz(),
-                                fVertex.X(), fVertex.Y(), fVertex.Z());
+   LOG(debug) << TString::Format("Lab momentum (%f, %f, %f) MeV/c at (%f, %f, %f) cm", labP.Px(), labP.Py(), labP.Pz(),
+                                 fVertex.X(), fVertex.Y(), fVertex.Z());
 
    // Requires GeV
    fPrimeGen->AddTrack(particle->PdgCode(), labP.Px() / 1000, labP.Py() / 1000, labP.Pz() / 1000, fVertex.X(),
