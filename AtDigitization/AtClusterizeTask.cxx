@@ -5,7 +5,7 @@
 #include "FairRunAna.h"
 #include "FairRuntimeDb.h"
 
-#include "AtTpcPoint.h"
+#include "AtMCPoint.h"
 #include "AtVertexPropagator.h"
 #include "AtSimulatedPoint.h"
 
@@ -40,7 +40,7 @@ InitStatus AtClusterizeTask::Init()
 
    FairRootManager *ioman = FairRootManager::Instance();
 
-   fMCPointArray = (TClonesArray *)ioman->GetObject("AtTpcPoint");
+   fMCPointArray = (TClonesArray *)ioman->GetObject("AtMCPoint");
    if (fMCPointArray == 0) {
       LOG(error) << "Cannot find fMCPointArray array!";
       return kERROR;
@@ -121,7 +121,7 @@ void AtClusterizeTask::Exec(Option_t *option)
 
    for (Int_t i = 0; i < nMCPoints; i++) {
 
-      fMCPoint = (AtTpcPoint *)fMCPointArray->At(i);
+      fMCPoint = (AtMCPoint *)fMCPointArray->At(i);
 
       VolName = fMCPoint->GetVolName();
       Int_t trackID = fMCPoint->GetTrackID();
@@ -132,7 +132,7 @@ void AtClusterizeTask::Exec(Option_t *option)
          // THAt IS MOST PROBABLY NOT CORRECT
          /*
       if (i+1>nMCPoints){ //all but the last MCPoint
-      AtTpcPoint* nextPoint = (AtTpcPoint*) fMCPointArray-> At(i+1);
+      AtMCPoint* nextPoint = (AtMCPoint*) fMCPointArray-> At(i+1);
       if((nextPoint->GetTrackID()) == (fMCPoint->GetTrackID())){ //next MCPoint of same track
       x_post  = nextPoint->GetXIn()*10; //mm
       y_post  = nextPoint->GetYIn()*10; //mm

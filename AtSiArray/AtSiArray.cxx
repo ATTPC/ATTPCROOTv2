@@ -1,9 +1,12 @@
 #include "AtSiArray.h"
 
-#include "AtSiArrayPoint.h"
 #include "AtSiArrayGeo.h"
 #include "AtSiArrayGeoPar.h"
+
+#include "AtMCPoint.h"
 #include "AtVertexPropagator.h"
+#include "AtDetectorList.h"
+#include "AtStack.h"
 
 #include "FairVolume.h"
 #include "FairGeoVolume.h"
@@ -13,8 +16,6 @@
 #include "FairGeoInterface.h"
 #include "FairRun.h"
 #include "FairRuntimeDb.h"
-#include "AtDetectorList.h"
-#include "AtStack.h"
 
 #include "TClonesArray.h"
 #include "TVirtualMC.h"
@@ -34,7 +35,7 @@ using std::endl;
 
 AtSiArray::AtSiArray()
    : FairDetector("AtSiArray", kTRUE, kAtSiArray), fTrackID(-1), fVolumeID(-1), fPos(), fMom(), fTime(-1.),
-     fLength(-1.), fELoss(-1), fPosIndex(-1), fAtSiArrayPointCollection(new TClonesArray("AtSiArrayPoint")),
+     fLength(-1.), fELoss(-1), fPosIndex(-1), fAtSiArrayPointCollection(new TClonesArray("AtMCPoint")),
      fELossAcc(-1)
 {
    // LOG(INFO)<<" AtSiArray detector initialized ";
@@ -42,7 +43,7 @@ AtSiArray::AtSiArray()
 
 AtSiArray::AtSiArray(const char *name, Bool_t active)
    : FairDetector(name, active, kAtSiArray), fTrackID(-1), fVolumeID(-1), fPos(), fMom(), fTime(-1.), fLength(-1.),
-     fELoss(-1), fPosIndex(-1), fAtSiArrayPointCollection(new TClonesArray("AtSiArrayPoint")), fELossAcc(-1)
+     fELoss(-1), fPosIndex(-1), fAtSiArrayPointCollection(new TClonesArray("AtMCPoint")), fELossAcc(-1)
 {
    // LOG(INFO)<<" AtSiArray detector initialized ";
 }
@@ -263,16 +264,16 @@ Bool_t AtSiArray::CheckIfSensitive(std::string name)
    return kFALSE;
 }
 
-AtSiArrayPoint *AtSiArray::AddHit(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t time,
+AtMCPoint *AtSiArray::AddHit(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t time,
                                   Double_t length, Double_t eLoss)
 {
    TClonesArray &clref = *fAtSiArrayPointCollection;
    Int_t size = clref.GetEntriesFast();
-   return new (clref[size]) AtSiArrayPoint(trackID, detID, pos, mom, time, length, eLoss);
+   return new (clref[size]) AtMCPoint(trackID, detID, pos, mom, time, length, eLoss);
 }
 
 // -----   Private method AddHit   --------------------------------------------
-AtSiArrayPoint *AtSiArray::AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t detCopyID, TVector3 posIn,
+AtMCPoint *AtSiArray::AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t detCopyID, TVector3 posIn,
                                   TVector3 posOut, TVector3 momIn, TVector3 momOut, Double_t time, Double_t length,
                                   Double_t eLoss, Double_t EIni, Double_t AIni, Int_t A, Int_t Z)
 {
@@ -285,7 +286,7 @@ AtSiArrayPoint *AtSiArray::AddHit(Int_t trackID, Int_t detID, TString VolName, I
       LOG(INFO) << "Si Array: Adding Point at (" << posIn.X() << ", " << posIn.Y() << ", " << posIn.Z()
                 << ") cm,  detector " << detID << ", track " << trackID << ", energy loss " << eLoss * 1e06 << " keV";
 
-   return new (clref[size]) AtSiArrayPoint(trackID, detID, VolName, detCopyID, posIn, posOut, momIn, momOut, time,
+   return new (clref[size]) AtMCPoint(trackID, detID, VolName, detCopyID, posIn, posOut, momIn, momOut, time,
                                            length, eLoss, EIni, AIni, A, Z);
 }
 

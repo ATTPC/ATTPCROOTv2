@@ -6,13 +6,11 @@ Set(DEPENDENCIES
   Base
   FairTools
   ROOT::Core
-  
-  AtTpc
-  AtGenerators
+
+  AtData
   AtParameter
   AtReconstruction
   AtTpcMap
-  
 )
 
 set(INCLUDE_DIRECTORIES

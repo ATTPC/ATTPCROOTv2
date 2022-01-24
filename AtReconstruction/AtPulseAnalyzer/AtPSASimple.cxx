@@ -6,7 +6,6 @@
 #include "AtDigiPar.h"
 #include "AtCalibration.h"
 #include "AtHit.h"
-#include "AtTpcPoint.h"
 
 // ROOT classes
 #include "TH1F.h"
