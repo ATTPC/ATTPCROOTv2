@@ -104,27 +104,27 @@ TParticle* beam_part0 = stack->GetParticle(stack->GetCurrentTrackNumber());
 
       // LOG(INFO)<<cGREEN<< " ==================================================== ";
       if (gAtVP->GetBeamEvtCnt() % 2 != 0)
-         LOG(INFO) << cGREEN << " AtTPC: Beam Event ";
+         LOG(debug) << cGREEN << " AtTPC: Beam Event ";
       else if (gAtVP->GetDecayEvtCnt() % 2 == 0)
-         LOG(INFO) << cBLUE << " AtTPC: Reaction/Decay Event ";
+         LOG(debug) << cBLUE << " AtTPC: Reaction/Decay Event ";
       AZ = DecodePdG(gMC->TrackPid());
-      LOG(INFO) << " AtTPC: First hit in Volume " << fVolName;
-      LOG(INFO) << " Particle : " << gMC->ParticleName(gMC->TrackPid());
-      LOG(INFO) << " PID PdG : " << gMC->TrackPid();
-      LOG(INFO) << " Atomic Mass : " << AZ.first;
-      LOG(INFO) << " Atomic Number : " << AZ.second;
-      LOG(INFO) << " Volume ID " << gMC->CurrentVolID(VolumeID);
-      LOG(INFO) << " Track ID : " << fTrackID;
-      LOG(INFO) << " Position : " << fPosIn.X() << " " << fPosIn.Y() << "  " << fPosIn.Z();
-      LOG(INFO) << " Momentum : " << fMomIn.X() << " " << fMomIn.Y() << "  " << fMomIn.Z();
-      LOG(INFO) << " Total relativistic energy " << gMC->Etot();
-      LOG(INFO) << " Mass of the Beam particle (gAVTP) : " << gAtVP->GetBeamMass();
-      LOG(INFO) << " Mass of the Tracked particle (gMC) : " << gMC->TrackMass(); // NB: with electrons
-      LOG(INFO) << " Initial energy of the beam particle in this volume : "
-                << ((gMC->Etot() - gAtVP->GetBeamMass() * 0.93149401) * 1000.); // Relativistic Mass
-      LOG(INFO) << " Total energy of the current track (gMC) : "
-                << ((gMC->Etot() - gMC->TrackMass()) * 1000.); // Relativistic Mass
-      LOG(INFO) << " ==================================================== " << cNORMAL;
+      LOG(debug) << " AtTPC: First hit in Volume " << fVolName;
+      LOG(debug) << " Particle : " << gMC->ParticleName(gMC->TrackPid());
+      LOG(debug) << " PID PdG : " << gMC->TrackPid();
+      LOG(debug) << " Atomic Mass : " << AZ.first;
+      LOG(debug) << " Atomic Number : " << AZ.second;
+      LOG(debug) << " Volume ID " << gMC->CurrentVolID(VolumeID);
+      LOG(debug) << " Track ID : " << fTrackID;
+      LOG(debug) << " Position : " << fPosIn.X() << " " << fPosIn.Y() << "  " << fPosIn.Z();
+      LOG(debug) << " Momentum : " << fMomIn.X() << " " << fMomIn.Y() << "  " << fMomIn.Z();
+      LOG(debug) << " Total relativistic energy " << gMC->Etot();
+      LOG(debug) << " Mass of the Beam particle (gAVTP) : " << gAtVP->GetBeamMass();
+      LOG(debug) << " Mass of the Tracked particle (gMC) : " << gMC->TrackMass(); // NB: with electrons
+      LOG(debug) << " Initial energy of the beam particle in this volume : "
+                 << ((gMC->Etot() - gAtVP->GetBeamMass() * 0.93149401) * 1000.); // Relativistic Mass
+      LOG(debug) << " Total energy of the current track (gMC) : "
+                 << ((gMC->Etot() - gMC->TrackMass()) * 1000.); // Relativistic Mass
+      LOG(debug) << " ==================================================== " << cNORMAL;
       /*
        std::cout<<" Recoil Energy : "<<gAtVP->GetRecoilE()<<std::endl;
   std::cout<<" Scattered Energy : "<<gAtVP->GetScatterE()<<std::endl;
@@ -266,20 +266,20 @@ Double_t Er = r.Rndm();
    if (fELossAcc * 1000 > gAtVP->GetRndELoss() && (gAtVP->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0) &&
        (fVolName == "drift_volume" || fVolName == "cell")) {
 
-      LOG(INFO) << cYELLOW << " Beam energy loss before reaction : " << fELossAcc * 1000;
+      LOG(debug) << cYELLOW << " Beam energy loss before reaction : " << fELossAcc * 1000;
       gMC->StopTrack();
       gAtVP->ResetVertex();
       TLorentzVector StopPos;
       TLorentzVector StopMom;
       gMC->TrackPosition(StopPos);
       gMC->TrackMomentum(StopMom);
-      LOG(INFO) << " Mass of the Tracked particle : " << gMC->TrackMass();
-      LOG(INFO) << " Mass of the Beam particle (gAVTP)  : " << gAtVP->GetBeamMass();
-      // LOG(INFO)<<" Total energy of the current track : "<<((gMC->Etot() - gMC->TrackMass()) *
+      LOG(debug) << " Mass of the Tracked particle : " << gMC->TrackMass();
+      LOG(debug) << " Mass of the Beam particle (gAVTP)  : " << gAtVP->GetBeamMass();
+      // LOG(debug)<<" Total energy of the current track : "<<((gMC->Etot() - gMC->TrackMass()) *
       // 1000.)<<FairLogger::endl;// Relativistic Mass
       Double_t StopEnergy = ((gMC->Etot() - gAtVP->GetBeamMass() * 0.93149401) * 1000.);
-      LOG(INFO) << " Total energy of the Beam particle before reaction : " << StopEnergy
-                << cNORMAL; // Relativistic Mass
+      LOG(debug) << " Total energy of the Beam particle before reaction : " << StopEnergy
+                 << cNORMAL; // Relativistic Mass
       gAtVP->SetVertex(StopPos.X(), StopPos.Y(), StopPos.Z(), InPos.X(), InPos.Y(), InPos.Z(), StopMom.Px(),
                        StopMom.Py(), StopMom.Pz(), StopEnergy);
       // std::cout<<" Entrance Position 2 - X : "<<InPos.X()<<" - Y : "<<InPos.Y()<<" - Z : "<<InPos.Z()<<std::endl;

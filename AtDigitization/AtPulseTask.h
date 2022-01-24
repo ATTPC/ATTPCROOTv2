@@ -28,7 +28,8 @@ protected:
 
    AtDigiPar *fPar;           //!< Base parameter container.
    Int_t fEventID = 0;        //!< EventID
-   Double_t fGain = 0;        //!< Gain.
+   Double_t fGain = 0;        //!< Micromegas gain.
+   Double_t fLowGainFactor = 0; //! If pad is AtMap::kLowGain multiply gain by this factor
    Double_t fGETGain = 0;     //!< GET Gain.
    Double_t fPeakingTime = 0; //!< Electronic peaking time in us
    Double_t fTBTime = 0;      //!< Time bucket size in us
@@ -69,15 +70,17 @@ public:
    AtPulseTask(const char *name);
    ~AtPulseTask();
 
+   void SetLowGainFactor(Double_t factor) { fLowGainFactor = factor; }
    void SetPersistence(Bool_t val) { fIsPersistent = val; }
    void SetSaveMCInfo() { fIsSaveMCInfo = kTRUE; }
    void SetMap(AtMapPtr map) { fMap = map; };
    void UseFastGain(Bool_t val) { fUseFastGain = val; }
+
    virtual InitStatus Init() override;        //!< Initiliazation of task at the beginning of a run.
    virtual void Exec(Option_t *opt) override; //!< Executed for each event.
    virtual void SetParContainers() override;  //!< Load the parameter container from the runtime database.
 
-   ClassDefOverride(AtPulseTask, 3);
+   ClassDefOverride(AtPulseTask, 4);
 };
 
 template <typename Iterator>

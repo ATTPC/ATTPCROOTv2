@@ -193,8 +193,8 @@ bool AtPulseTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
    if (fIsSaveMCInfo)
       saveMCInfo(point->GetMCPointID(), padNumber, trackID);
 
-   Bool_t IsInhibited = fMap->GetIsInhibited(padNumber);
-   if (!IsInhibited) {
+   auto totalyInhibited = fMap->IsInhibited(padNumber) == AtMap::kTotal;
+   if (!totalyInhibited) {
       eleAccumulated[padNumber]->Fill(eTime, charge);
       electronsMap[padNumber] = eleAccumulated[padNumber];
    }
@@ -261,14 +261,17 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
       pad.SetPedestalSubtracted(kTRUE);
 
       auto gAvg = getAvgGETgain(eleAccumulated[thePadNumber]->GetEntries());
+      auto lowGain = fMap->IsInhibited(thePadNumber) == AtMap::kLowGain ? fLowGainFactor : 1;
+
       for (Int_t bin = 0; bin < fNumTbs; bin++) {
-         pad.SetADC(bin, signal[bin] * gAvg * fGETGain);
+         pad.SetADC(bin, signal[bin] * gAvg * fGETGain * lowGain);
       }
    }
 
    // if electronsMap.size==0, fEventID still needs to be set
    fRawEvent->SetEventID(fEventID);
    fRawEvent->SetSimMCPointMap(MCPointsMap);
+   fRawEvent->SetIsGood(true);
 
    std::cout << "AtPulseTask Event ID : " << fEventID << "\n";
    ++fEventID;

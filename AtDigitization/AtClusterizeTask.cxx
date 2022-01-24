@@ -86,8 +86,6 @@ void AtClusterizeTask::setNewTrack()
 {
    fPrevPoint = getCurrentPointLocation();
    fCurrTrackID = fMCPoint->GetTrackID();
-   std::cout << "New track at: " << fMCPoint->GetZIn() << std::endl;
-   std::cout << "Time is: " << fPrevPoint.z() << " us" << std::endl;
 }
 
 void AtClusterizeTask::processPoint(Int_t mcPointID)
