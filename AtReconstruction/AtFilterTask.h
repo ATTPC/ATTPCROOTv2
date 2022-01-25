@@ -20,12 +20,17 @@ private:
    Bool_t fIsPersistent;
    Bool_t fFilterAux;
 
+   TString fInputBranchName;
+   TString fOutputBranchName;
+
 public:
    AtFilterTask(AtFilter *filter);
    ~AtFilterTask();
 
    void SetPersistence(Bool_t value);
    void SetFilterAux(Bool_t value);
+   void SetInputBranch(TString name) { fInputBranchName = name; }
+   void SetOutputBranch(TString name) { fOutputBranchName = name; }
    virtual InitStatus Init() override;
    virtual void Exec(Option_t *opt) override;
 };

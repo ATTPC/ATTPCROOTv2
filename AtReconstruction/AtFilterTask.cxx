@@ -13,7 +13,9 @@
 // stdlib headers
 #include <iostream>
 
-AtFilterTask::AtFilterTask(AtFilter *filter) : fFilter(filter), fIsPersistent(false), fFilterAux(false)
+AtFilterTask::AtFilterTask(AtFilter *filter)
+   : fFilter(filter), fIsPersistent(false), fFilterAux(false), fInputBranchName("AtRawEvent"),
+     fOutputBranchName("AtRawEventFiltered")
 {
    fOutputEventArray = new TClonesArray("AtRawEvent");
 }
@@ -39,14 +41,14 @@ InitStatus AtFilterTask::Init()
    }
 
    // Get the old data from the io manager
-   fInputEventArray = (TClonesArray *)ioManager->GetObject("AtRawEvent");
+   fInputEventArray = (TClonesArray *)ioManager->GetObject(fInputBranchName);
    if (fInputEventArray == nullptr) {
       LOG(ERROR) << "AtFilterTask: Cannot find AtRawEvent array!";
       return kERROR;
    }
 
    // Set the raw event array, and new output event array
-   ioManager->Register("AtRawEventFiltered", "AtTPC", fOutputEventArray, fIsPersistent);
+   ioManager->Register(fOutputBranchName, "AtTPC", fOutputEventArray, fIsPersistent);
 
    fFilter->Init();
 
