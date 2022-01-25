@@ -43,8 +43,8 @@ InitStatus AtFilterTask::Init()
    // Get the old data from the io manager
    fInputEventArray = (TClonesArray *)ioManager->GetObject(fInputBranchName);
    if (fInputEventArray == nullptr) {
-      LOG(ERROR) << "AtFilterTask: Cannot find AtRawEvent array!";
-      return kERROR;
+      LOG(fatal) << "AtFilterTask: Cannot find AtRawEvent array!";
+      return kFATAL;
    }
 
    // Set the raw event array, and new output event array
@@ -63,9 +63,10 @@ void AtFilterTask::Exec(Option_t *opt)
       return;
 
    AtRawEvent *rawEvent = (AtRawEvent *)fInputEventArray->At(0);
+   AtRawEvent *filteredEvent = (AtRawEvent *)new ((*fOutputEventArray)[0]) AtRawEvent(rawEvent);
+
    if (!rawEvent->IsGood())
       return;
-   AtRawEvent *filteredEvent = (AtRawEvent *)new ((*fOutputEventArray)[0]) AtRawEvent(rawEvent);
 
    fFilter->InitEvent(filteredEvent);
 
