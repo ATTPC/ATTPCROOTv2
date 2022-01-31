@@ -33,6 +33,7 @@
 #include "TCanvas.h"
 #include "TStopwatch.h"
 #include "TGeoManager.h"
+#include "TSpectrum.h"
 
 #include "FairRootManager.h"
 #include "FairLogger.h"
@@ -80,4 +81,5 @@ Double_t omega(Double_t x, Double_t y, Double_t z)
 {
    return sqrt(x * x + y * y + z * z - 2 * x * y - 2 * y * z - 2 * x * z);
 }
+Double_t GetNPeaksHRS(std::vector<Int_t> *timeMax, std::vector<Float_t> *adcMax, double *adc_test);
 double GetMaximum(double *adc);

@@ -103,6 +103,7 @@ int main(int argc, char *argv[])
       recoilPDG = 1000040110;
       m_b = m_p;
       m_B = m_Be11;
+      particlePDG = 2212;
       elossFileName = "proton_D2_600torr.txt";
       break;
    case 0:
@@ -112,6 +113,7 @@ int main(int argc, char *argv[])
       recoilPDG = 1000040100;
       m_b = m_d;
       m_B = m_Be10;
+      particlePDG = 1000010020;
       elossFileName = "deuteron_D2_600torr.txt";
       break;
    }
@@ -149,8 +151,8 @@ int main(int argc, char *argv[])
 
    if(simulationConv)
      filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/";
-     else    
-   filePath = dir + "/macro/Unpack_HDF5/e20009/";
+     else
+        filePath = dir + "/macro/Unpack_HDF5/e20009/rootFiles/";
 
    TString fileName = "run_0108.root";
 
@@ -210,6 +212,7 @@ int main(int argc, char *argv[])
    Float_t trackLength;
    Float_t POCAXtr;
    Int_t trackID;
+   Int_t ICMult;
 
    std::vector<Float_t> EFitVec;
    std::vector<Float_t> AFitVec;
@@ -226,6 +229,7 @@ int main(int argc, char *argv[])
    std::vector<Float_t> ziniPRAVec;
    std::vector<Float_t> pValVec;
    std::vector<Float_t> ICVec;
+   std::vector<Int_t> ICTimeVec;
    std::vector<Float_t> EFitXtrVec;
    std::vector<Float_t> ExXtrVec;
    std::vector<Float_t> xiniFitXtrVec;
@@ -239,7 +243,7 @@ int main(int argc, char *argv[])
    std::vector<Float_t> bChi2Vec;
    std::vector<Float_t> fNdfVec;
    std::vector<Float_t> bNdfVec;
-
+   std::vector<Float_t> ICEVec;
 
    TString simFile;
 
@@ -275,6 +279,7 @@ int main(int argc, char *argv[])
    outputTree->Branch("distXtr", &distXtr, "distXtr/F");
    outputTree->Branch("pVal", &pVal, "pVal/F");
    outputTree->Branch("IC", &IC, "IC/F");
+   outputTree->Branch("ICMult", &ICMult, "ICMult/I");
    outputTree->Branch("trackLength", &trackLength, "trackLength/F");
    outputTree->Branch("POCAXtr", &POCAXtr, "POCAXtr/F");
    outputTree->Branch("trackID", &trackID, "trackID/F");
@@ -300,6 +305,7 @@ int main(int argc, char *argv[])
    outputTree->Branch("distXtrVec", &distXtrVec);
    outputTree->Branch("pValVec", &pValVec);
    outputTree->Branch("ICVec", &ICVec);
+   outputTree->Branch("ICTimeVec", &ICTimeVec);
    outputTree->Branch("trackLengthVec", &trackLengthVec);
    outputTree->Branch("POCAXtrVec", &POCAXtrVec);
    outputTree->Branch("trackIDVec", &trackIDVec);
@@ -307,8 +313,8 @@ int main(int argc, char *argv[])
    outputTree->Branch("bChi2Vec",&bChi2Vec);
    outputTree->Branch("fNdfVec",&fNdfVec);
    outputTree->Branch("bNdfVec",&bNdfVec);
-   
-   
+   outputTree->Branch("ICEVec", &ICEVec);
+
    for (auto iFile = 0; iFile < files.size(); ++iFile) {
 
      //fileNameWithPath = dir + filePath + files.at(iFile).Data();
@@ -357,6 +363,7 @@ int main(int argc, char *argv[])
         ziniPRA = -1000;
         pVal = 0;
         IC = 0;
+        ICMult = 0;
         trackLength = -1000.0;
         POCAXtr = -1000.0;
 
@@ -375,6 +382,7 @@ int main(int argc, char *argv[])
         ziniPRAVec.clear();
         pValVec.clear();
         ICVec.clear();
+        ICTimeVec.clear();
         EFitXtrVec.clear();
         ExXtrVec.clear();
         xiniFitXtrVec.clear();
@@ -388,60 +396,65 @@ int main(int argc, char *argv[])
         bChi2Vec.clear();
 	fNdfVec.clear();
 	bNdfVec.clear();
+   ICEVec.clear();
 
-	
-        std::cout << cGREEN << " Event Number : " << i << cNORMAL << "\n";
+   std::cout << cGREEN << " Event Number : " << i << cNORMAL << "\n";
 
-        Reader1.Next();
+   Reader1.Next();
 
-        AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
-        AtEvent *event = (AtEvent *)evArray->At(0);
+   AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
+   AtEvent *event = (AtEvent *)evArray->At(0);
 
-        if (patternEvent) {
+   if (patternEvent) {
 
-           std::vector<AtPad> *auxPadArray = event->GetAuxPadArray();
-           std::cout << " Number of auxiliary pads : " << auxPadArray->size() << "\n";
+      std::vector<AtPad> *auxPadArray = event->GetAuxPadArray();
+      std::cout << " Number of auxiliary pads : " << auxPadArray->size() << "\n";
 
-           std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
-           std::cout << " Number of pattern tracks " << patternTrackCand.size() << "\n";
+      std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
+      std::cout << " Number of pattern tracks " << patternTrackCand.size() << "\n";
 
-           for (auto auxpad : *auxPadArray) {
-              if (auxpad.GetAuxName().compare(std::string("IC")) == 0) {
-                 std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
-                 Double_t *adc = auxpad.GetADC();
-                 IC = GetMaximum(adc);
-              }
-           }
+      for (auto auxpad : *auxPadArray) {
+         if (auxpad.GetAuxName().compare(std::string("IC_sca")) == 0) {
+            std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
+            Double_t *adc = auxpad.GetADC();
+            ICMult = GetNPeaksHRS(&ICTimeVec, &ICVec, adc);
+         }
+         if (auxpad.GetAuxName().compare(std::string("IC")) == 0) {
+            Double_t *adc = auxpad.GetADC();
 
-           ICVec.push_back(IC);
+            for (auto iadc = 0; iadc < 512; ++iadc)
+               ICEVec.push_back(adc[iadc]);
+         }
+      }
 
-           evtNum_vs_trkNum->Fill(i, patternTrackCand.size());
+      // ICVec.push_back(IC);
 
-           for (auto track : patternTrackCand) {
+      evtNum_vs_trkNum->Fill(i, patternTrackCand.size());
 
-              std::cout << " Track " << track.GetTrackID() << " with " << track.GetHitClusterArray()->size()
-                        << " clusters "
-                        << "\n";
+      for (auto track : patternTrackCand) {
 
-              trackID = track.GetTrackID();
-              trackIDVec.push_back(trackID);
+         std::cout << " Track " << track.GetTrackID() << " with " << track.GetHitClusterArray()->size() << " clusters "
+                   << "\n";
 
-              if (track.GetIsNoise() || track.GetHitClusterArray()->size() < 3) {
-                 std::cout << cRED << " Track is noise or has less than 3 clusters! " << cNORMAL << "\n";
-                 continue;
-              }
+         trackID = track.GetTrackID();
+         trackIDVec.push_back(trackID);
 
-              Double_t theta = track.GetGeoTheta();            // 180.0 * TMath::DegToRad() - track.GetGeoTheta();
-              Double_t radius = track.GetGeoRadius() / 1000.0; // mm to m
-              Double_t phi = track.GetGeoPhi();
-              Double_t brho = magneticField * radius / TMath::Sin(theta); // Tm
-              std::tuple<Double_t, Double_t> mom_ener = GetMomFromBrho(particleMass, atomicNumber, brho);
-              angle_vs_energy_pattern->Fill(theta * TMath::RadToDeg(), std::get<1>(mom_ener) * 1000.0);
-              phi_pattern->Fill(phi * TMath::RadToDeg());
-              // phi_phi_pattern->Fill(phi * TMath::RadToDeg(), mom_res.Phi() * TMath::RadToDeg());
-              EPRA = std::get<1>(mom_ener) * 1000.0;
-              APRA = theta * TMath::RadToDeg();
-              PhiPRA = phi * TMath::RadToDeg();
+         if (track.GetIsNoise() || track.GetHitClusterArray()->size() < 3) {
+            std::cout << cRED << " Track is noise or has less than 3 clusters! " << cNORMAL << "\n";
+            continue;
+         }
+
+         Double_t theta = track.GetGeoTheta();            // 180.0 * TMath::DegToRad() - track.GetGeoTheta();
+         Double_t radius = track.GetGeoRadius() / 1000.0; // mm to m
+         Double_t phi = track.GetGeoPhi();
+         Double_t brho = magneticField * radius / TMath::Sin(theta); // Tm
+         std::tuple<Double_t, Double_t> mom_ener = GetMomFromBrho(particleMass, atomicNumber, brho);
+         angle_vs_energy_pattern->Fill(theta * TMath::RadToDeg(), std::get<1>(mom_ener) * 1000.0);
+         phi_pattern->Fill(phi * TMath::RadToDeg());
+         // phi_phi_pattern->Fill(phi * TMath::RadToDeg(), mom_res.Phi() * TMath::RadToDeg());
+         EPRA = std::get<1>(mom_ener) * 1000.0;
+         APRA = theta * TMath::RadToDeg();
+         PhiPRA = phi * TMath::RadToDeg();
 
 	      std::cout<<" Theta : "<<theta*TMath::RadToDeg()<<" Phi : "<<phi*TMath::RadToDeg()<<"\n";
 	      
@@ -900,6 +913,26 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
 
    // THcm = theta_cm*TMath::RadToDeg();
    return Ex;
+}
+
+Double_t GetNPeaksHRS(std::vector<Int_t> *timeMax, std::vector<Float_t> *adcMax, double *adc_test)
+{
+   TSpectrum *s = new TSpectrum();
+   Double_t dest[512];
+   // Int_t nfound = s->Search(h1_test,2," ",0.25);//2 and 0.15
+   Int_t nfound;
+   nfound = s->SearchHighRes(adc_test, dest, 512, 2, 2, kFALSE, 1, kFALSE, 1);
+   // nfound = s->SearchHighRes(adc_test, dest, 512, 2, 2, kTRUE, 3, kTRUE, 3);
+
+   for (auto iPeak = 0; iPeak < nfound; ++iPeak) {
+
+      Int_t time = (Int_t)(ceil((s->GetPositionX())[iPeak]));
+      timeMax->push_back(time);
+      adcMax->push_back(adc_test[time]);
+   }
+
+   delete s;
+   return nfound;
 }
 
 double GetMaximum(double *adc)

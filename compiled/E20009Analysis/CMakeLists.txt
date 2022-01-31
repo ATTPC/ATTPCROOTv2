@@ -91,4 +91,5 @@ AtReconstruction
 AtTpcMap
 FairTools
 Geom
+Spectrum
 Base)
