@@ -47,9 +47,9 @@ void run_eve(int runNum = 210, TString OutputDataFile = "data/output.reco_displa
 
    eve->SetRawEventBranch("AtRawEventFiltered");
    eve->SetEventBranch("AtEventFiltered");
-
+   
    // eve->UnpackHoughSpace();
-
+   eve->SetHitAttributes(kRed,2,kFullCircle);
    eveMan->AddTask(eve);
    eveMan->Init();
 

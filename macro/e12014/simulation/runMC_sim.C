@@ -4,10 +4,9 @@ void runMC_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 {
    // Output file name
    TString dir = getenv("VMCWORKDIR");
-   TString outputDirectory = "/macro/e12014/simulation/eventGenerator/asymSmear/";
-   TString parFileName = dir + outputDirectory + "par_attpc.root";
-   TString simFileName = dir + outputDirectory + "sim_attpc.root";
-
+   TString inOutDir = "/macro/e12014/simulation/eventGenerator/asym/";
+   TString parFileName = dir + inOutDir + "par_attpc.root";
+   TString simFileName = dir + inOutDir + "sim_attpc.root";
 
    //Input file names
    TString geoFileName = "ATTPC_He1bar.root";
@@ -15,8 +14,8 @@ void runMC_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
    paramFileName = dir + "/parameters/" + paramFileName;
    TString geoFileInputName = dir + "/geometry/" + geoFileName;
 
-   TString ionList = "./eventGenerator/asymSmear/ion_list.csv";
-   TString fissionDistro = "./eventGenerator/asymSmear/fissionFragments.root";
+   TString ionList = dir + inOutDir + "ion_list.csv";
+   TString fissionDistro = dir + inOutDir + "fissionFragments.root";
 
    TStopwatch timer;
    timer.Start();

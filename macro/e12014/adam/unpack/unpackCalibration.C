@@ -68,19 +68,18 @@ void unpackCalibration(int runNumber)
    HDFParserTask->SetBaseLineSubtraction(kTRUE);
 
    AtFilterSubtraction *filterSub = new AtFilterSubtraction(mapping);
-   filter->SetThreshold(threshold);
+   filterSub->SetThreshold(45);
    AtFilterTask *subTask = new AtFilterTask(filterSub);
-   filterTask->SetPersistence(kFALSE);
-   filterTask->SetFilterAux(true);
-   // filterTask->SetOutputBranch("AtRawEventSub");
+   subTask->SetPersistence(kFALSE);
+   subTask->SetFilterAux(true);
+   subTask->SetOutputBranch("AtRawEventSub");
 
    AtFilterCalibrate *filterCal = new AtFilterCalibrate();
-   std::cout << "Created calibration filter: " << filter << std::endl;
-   filter->SetCalibrationFile("output/calibrationFormated.txt");
+   filterCal->SetCalibrationFile("calibrationFormated.txt");
    AtFilterTask *calTask = new AtFilterTask(filterCal);
-   filterTask->SetPersistence(kTRUE);
-   filterTask->SetFilterAux(false);
-   // filterTask->SetInputBranch("AtRawEventSub")
+   calTask->SetPersistence(kTRUE);
+   calTask->SetFilterAux(false);
+   calTask->SetInputBranch("AtRawEventSub");
 
    AtPSASimple2 *psa = new AtPSASimple2();
    psa->SetThreshold(45);
