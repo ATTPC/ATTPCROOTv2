@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_full_dp(std::string fileFolder = "data_t20_10_20_cov01_dp/")
+void plotFit_full_dp(std::string fileFolder = "dataFull/") //"dataFull/")//"data_t20_10_20_cov01_dp/")
 {
 
    // Data histograms
@@ -44,12 +44,14 @@ void plotFit_full_dp(std::string fileFolder = "data_t20_10_20_cov01_dp/")
 
    TH2F *Ang_Ener_Xtr = new TH2F("Ang_Ener_Xtr", "Ang_Ener_Xtr", 720, 0, 179, 1000, 0, 100.0);
    TH1F *HQval_Xtr = new TH1F("HQval_Xtr", "HQval_Xtr", 600, -5, 55);
+   TH1F *HQCorr = new TH1F("HQCorr", "HQCorr", 600, -5, 55);
 
    TH1F *HQval_Xtr_recalc = new TH1F("HQval_Xtr_recalc", "HQval_Xtr_recalc", 1200, -5, 55);
    TH1F *HQval_Xtr_recalc_cutgs = new TH1F("HQval_Xtr_recalc_cutgs", "HQval_Xtr_recalc_cutgs", 1200, -5, 55);
 
    TH2F *QvsAng = new TH2F("QvsAng", "QvsAng", 1000, -10, 10, 720, 0, 179);
    TH2F *QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 10, 200, -100, 100);
+   TH2F *QcorrvsZpos = new TH2F("QcorrvsZpos", "QcorrvsZpos", 1000, -10, 10, 200, -100, 100);
    TH2F *ZposvsAng = new TH2F("ZposvsAng", "ZposvsAng", 200, -100, 100, 720, 0, 179);
    TH2F *QvsXpos = new TH2F("QvsXpos", "QvsXpos", 1000, -10, 10, 100, -10, 10);
 
@@ -111,6 +113,8 @@ void plotFit_full_dp(std::string fileFolder = "data_t20_10_20_cov01_dp/")
    for (auto iHist = 0; iHist < 10; ++iHist)
       ExZ[iHist] = new TH1F(Form("ExZ[%i]", iHist), Form("ExZ[%i]", iHist), 1000, -2, 18);
 
+   TH2F *QvsEvent = new TH2F("QvsEvent", "QvsEvent", 1000, -10, 10, 100, 0, 3000000);
+
    // Cut for gs 75-76 mm vertex
    TCutG *cutGS = new TCutG("CUTGS", 8);
    cutGS->SetVarX("Ang_Ener_Xtr");
@@ -139,7 +143,7 @@ void plotFit_full_dp(std::string fileFolder = "data_t20_10_20_cov01_dp/")
    Double_t m_a = 4.00260325415 * 931.49401;
    Double_t m_O16 = 15.99491461956 * 931.49401;
 
-   Double_t Ebeam_buff = 95.0; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
+   Double_t Ebeam_buff = 92.0; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
    Double_t m_b;
    Double_t m_B;
 
@@ -147,8 +151,7 @@ void plotFit_full_dp(std::string fileFolder = "data_t20_10_20_cov01_dp/")
    m_B = m_Be11;
 
    // Find every valid file
-   std::system(
-      "find ./data_t20_10_20_cov01_dp -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
+   std::system("find ./dataFull -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
    // >test.txt"
    // std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::ifstream file;
@@ -159,6 +162,7 @@ void plotFit_full_dp(std::string fileFolder = "data_t20_10_20_cov01_dp/")
    std::vector<std::string> files;
 
    // Final merging
+   Bool_t kIsMerging = 0;
    TChain *m_Chain = new TChain("outputTree");
 
    while (std::getline(file, line)) {
@@ -173,12 +177,15 @@ void plotFit_full_dp(std::string fileFolder = "data_t20_10_20_cov01_dp/")
 
    int fileCnt = 0;
 
+   int iEvt = 0;
+
    // Plot data
    for (auto dataFile : files) {
 
       TFile rootfile(dataFile.c_str(), "READ");
       if (!rootfile.IsZombie()) {
-         m_Chain->Add(dataFile.c_str());
+         if (kIsMerging)
+            m_Chain->Add(dataFile.c_str());
          std::cout << " Opening file : " << dataFile << "\n";
          TTree *outputTree = (TTree *)rootfile.Get("outputTree");
          Float_t EFit, AFit, EPRA, APRA, Ex, PhiFit, PhiPRA, xiniPRA, yiniPRA, ziniPRA, xiniFit, yiniFit, ziniFit, IC;
@@ -265,7 +272,13 @@ void plotFit_full_dp(std::string fileFolder = "data_t20_10_20_cov01_dp/")
 
          Int_t nentries = (Int_t)outputTree->GetEntries();
          for (Int_t i = 0; i < nentries; i++) {
+
+            if (i % 100000 == 0)
+               std::cout << " Processing entry : " << i << "/" << nentries << "\n";
+
             outputTree->GetEntry(i);
+
+            ++iEvt;
 
             if (ICMult != 1)
                continue;
@@ -324,9 +337,14 @@ void plotFit_full_dp(std::string fileFolder = "data_t20_10_20_cov01_dp/")
 
                Ang_Ener_PRA->Fill(APRA, EPRA);
 
+               // if( ((*xiniFitXtrVec)[index]>0.5 || (*xiniFitXtrVec)[index]<-0.5) )
+               // continue;
+               // if( ((*yiniFitXtrVec)[index]>0.5 || (*yiniFitXtrVec)[index]<-0.5) )
+               //		 continue;
+
                if ((*POCAXtrVec)[index] < 100.0) {
 
-                  if ((*ziniFitXtrVec)[index] > 20.0 && (*ziniFitXtrVec)[index] < 35.0) {
+                  if ((*ziniFitXtrVec)[index] > 0.0 && (*ziniFitXtrVec)[index] < 30.0) {
 
                      Double_t angle = (*AFitVec)[index];
 
@@ -396,13 +414,26 @@ void plotFit_full_dp(std::string fileFolder = "data_t20_10_20_cov01_dp/")
                                        y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
 
                                        // Excitation energy
-                                       Double_t ex_energy_exp = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff,
-                                                                        angle * TMath::DegToRad(), (*EFitVec)[index]);
+                                       Double_t ex_energy_exp =
+                                          kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(),
+                                                  (*EFitXtrVec)[index]);
                                        HQval_Xtr_recalc->Fill(ex_energy_exp);
+
+                                       QvsEvent->Fill(ex_energy_exp, iEvt);
+
+                                       // Z correction for the Ex energy
+                                       Double_t mFactor = 1.0;
+                                       Double_t offSet = 0.0;
+                                       Double_t QcorrZ =
+                                          ex_energy_exp -
+                                          mFactor * ((1.39 - 2.1509) / (87.62 - 0.627)) * ((*ziniFitXtrVec)[index]) +
+                                          offSet;
+                                       HQCorr->Fill(QcorrZ);
 
                                        QvsChi2->Fill(ex_energy_exp, (*fChi2Vec)[index] / (*fNdfVec)[index]);
                                        QvsXpos->Fill(ex_energy_exp, (*xiniFitXtrVec)[index]);
                                        QvsZpos->Fill(ex_energy_exp, (*ziniFitXtrVec)[index]);
+                                       QcorrvsZpos->Fill(QcorrZ, (*ziniFitXtrVec)[index]);
 
                                        if ((*ziniFitXtrVec)[index] > 0.0 && (*ziniFitXtrVec)[index] < 100.0) {
                                           Int_t zIndex = (Int_t)floor((*ziniFitXtrVec)[index] / 10);
@@ -436,7 +467,8 @@ void plotFit_full_dp(std::string fileFolder = "data_t20_10_20_cov01_dp/")
    }
 
    // Merging
-   m_Chain->Merge("finalDp.root", "C");
+   if (kIsMerging)
+      m_Chain->Merge("finalDp.root", "C");
 
    // Adding kinematic lines
    Double_t *ThetaCMS = new Double_t[20000];
@@ -676,4 +708,14 @@ void plotFit_full_dp(std::string fileFolder = "data_t20_10_20_cov01_dp/")
    fChi2NH->Draw();
    cChi->cd(6);
    QvsChi2->Draw("zcol");
+
+   TCanvas *c8 = new TCanvas();
+   c8->Divide(2, 2);
+   c8->Draw();
+   c8->cd(1);
+   HQCorr->Draw();
+   c8->cd(2);
+   QcorrvsZpos->Draw();
+   c8->cd(3);
+   QvsEvent->Draw();
 }

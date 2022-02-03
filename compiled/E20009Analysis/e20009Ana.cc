@@ -151,8 +151,8 @@ int main(int argc, char *argv[])
 
    if(simulationConv)
      filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/";
-     else
-        filePath = dir + "/macro/Unpack_HDF5/e20009/rootFiles/";
+   else
+      filePath = dir + "/macro/Unpack_HDF5/e20009/rootFiles/";
 
    TString fileName = "run_0108.root";
 
@@ -456,22 +456,22 @@ int main(int argc, char *argv[])
          APRA = theta * TMath::RadToDeg();
          PhiPRA = phi * TMath::RadToDeg();
 
-	      std::cout<<" Theta : "<<theta*TMath::RadToDeg()<<" Phi : "<<phi*TMath::RadToDeg()<<"\n";
-	      
-              auto hitClusterArray = track.GetHitClusterArray();
-              AtHitCluster iniCluster;
-              Double_t zIniCal = 0;
-              TVector3 iniPos;
+         std::cout << " Theta : " << theta * TMath::RadToDeg() << " Phi : " << phi * TMath::RadToDeg() << "\n";
 
-              /*for (auto cluster : *hitClusterArray) {
+         auto hitClusterArray = track.GetHitClusterArray();
+         AtHitCluster iniCluster;
+         Double_t zIniCal = 0;
+         TVector3 iniPos;
+
+         /*for (auto cluster : *hitClusterArray) {
 
 
-		TVector3 pos = cluster.GetPosition();
-		std::cout<<pos.X()<<"     "<<pos.Y()<<"   "<<pos.Z()<<"\n";
+ TVector3 pos = cluster.GetPosition();
+ std::cout<<pos.X()<<"     "<<pos.Y()<<"   "<<pos.Z()<<"\n";
 
-		}*/
+ }*/
 
-	       // Variable for convention (simulation comes reversed)
+         // Variable for convention (simulation comes reversed)
 	      Double_t thetaConv;
 	      if (simulationConv) {
 		thetaConv = 180.0 - theta*TMath::RadToDeg();
@@ -694,12 +694,11 @@ int main(int argc, char *argv[])
 	      fNdfVec.push_back(fNdf);
 	      bNdfVec.push_back(bNdf);
 
-	      
-           } // track loop
+      } // track loop
 
            outputTree->Fill();
 
-        } // if pattern event
+   } // if pattern event
 
       } // Event
 

@@ -88,6 +88,8 @@ void plotFit(std::string fileFolder = "data/")
 
    TH2F *ICEvsTime = new TH2F("ICEvsTime", "ICEvsTime", 1000, 0, 4095, 512, 0, 511);
 
+   TH2F *ICCorr = new TH2F("ICCorr", "ICCorr", 1000, 0, 4096, 1000, 0, 4096);
+
    // Q-value calculation
    Double_t m_p = 1.007825 * 931.49401;
    Double_t m_d = 2.0135532 * 931.49401;
@@ -244,15 +246,16 @@ void plotFit(std::string fileFolder = "data/")
                }
                //}
 
-               if (ICA < 500 || ICA > 900)
-                  continue;
-
                for (ICIndex = 0; ICIndex < ICVec->size(); ++ICIndex) {
 
                   HIC->Fill((*ICVec)[ICIndex]);
                   ICEvsTime->Fill((*ICVec)[ICIndex], (*ICTimeVec)[ICIndex]);
                   ICTimeH->Fill((*ICTimeVec)[ICIndex]);
+                  ICCorr->Fill((*ICVec)[ICIndex], ICA);
                }
+
+               if (ICA < 500 || ICA > 900)
+                  continue;
 
                // if(ICMult==1){
 
@@ -304,7 +307,7 @@ void plotFit(std::string fileFolder = "data/")
                //hypos_fit->Fill(yiniFit);
                //hzpos_fit->Fill(ziniFit);
 
-          QvsAng->Fill(Ex, AFit);
+               QvsAng->Fill(Ex, AFit);
                QvsZpos->Fill(Ex, ziniFit);
                ZposvsAng->Fill(ziniFit, AFit);
                Ang_AngPRA->Fill(AFit, APRA);
@@ -319,7 +322,7 @@ void plotFit(std::string fileFolder = "data/")
                // Excitation energy
                // Double_t ex_energy_exp = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, AFit*TMath::DegToRad(),EFit);
                 //HQval->Fill(Ex);
-          }
+            }
          }
       }
    }
@@ -494,7 +497,8 @@ void plotFit(std::string fileFolder = "data/")
    c5->cd(2);
    y_Phi->Draw();
    c5->cd(3);
-   HIC->Draw();
+   // HIC->Draw();
+   ICCorr->Draw("zcol");
    c5->cd(4);
    x_y_Xtr->Draw("zcol");
    c5->cd(5);
