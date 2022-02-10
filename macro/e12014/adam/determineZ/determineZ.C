@@ -23,7 +23,7 @@ double Zcn = 84;
 
 THStack *dEdxStack = nullptr;
 TH1F *dEdx[] = {nullptr, nullptr};
-TH1F *hdEratio = new TH1F("ratio", "% diff at same x", 50, -1, 1);
+TH1F *hdEratio = new TH1F("ratio", "Proxy for Z", 50, -1, 1);
 TH1F *hAngle = new TH1F("angle", "Angle between tracks", 45, 0, 45);
 TH1F *hZDistro = new TH1F("hZDistro", "Z", 80, 22, 62);
 TH1F *hZAvg = new TH1F("hZAvg", "Z", 80, 22, 62);
@@ -36,7 +36,7 @@ void determineZ(TString fileName = "/mnt/simulations/attpcroot/adam/ATTPCROOTv2/
    createHistograms(binWidth);
 }
 
-void constructdEdx(int eventNum, double angleCut, double zCut, int numPoints)
+void constructdEdx(int eventNum, double angleCut=25, double zCut=600, int numPoints=2)
 {
    loadEvent(eventNum);
 
@@ -178,10 +178,10 @@ void createHistograms(double binWidth)
    
    dEdx[0] = new TH1F("dEdx1", "dEdX Frag 1", nBins, 0, maxLength);
    dEdx[0]->SetMarkerStyle(21);
-   dEdx[0]->SetMarkerColor(kRed);
+   dEdx[0]->SetMarkerColor(9);
    dEdx[1] = new TH1F("dEdx2", "dEdX Frag 2", nBins, 0, maxLength);
    dEdx[1]->SetMarkerStyle(21);
-   dEdx[1]->SetMarkerColor(kGreen);
+   dEdx[1]->SetMarkerColor(31);
 
    dEdxStack->Add(dEdx[0]);
    dEdxStack->Add(dEdx[1]);
