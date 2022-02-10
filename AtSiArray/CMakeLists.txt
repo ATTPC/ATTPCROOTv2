@@ -20,6 +20,7 @@ AtSiArrayContFact.cxx
 AtSiArrayGeo.cxx
 AtSiArrayGeoPar.cxx
 AtSiArray.cxx
+AtSiPoint.cxx
 )
 
 Set(DEPENDENCIES

@@ -85,10 +85,10 @@ void AtAvalancheTask::Exec(Option_t *option)
       //  std::cout<<" Base GetZ : "<<fMCPoint->FairMCPoint::GetZ()<<std::endl;
       // std::cout<<" Derived GetZIn : "<<fMCPoint->GetZIn()<<std::endl;
 
-      Double_t lDrift = (fMCPoint->GetZIn()) * 10; // drift length [mm]
-      Double_t tDrift = lDrift / fVelDrift;        // drift time [ns]
-      Double_t sigmaL = fCoefL * sqrt(lDrift);     // sigma in longitudinal direction
-      Double_t sigmaT = fCoefT * sqrt(lDrift);     // sigma in transversal direction
+      Double_t lDrift = (fMCPoint->GetZ()) * 10; // drift length [mm]
+      Double_t tDrift = lDrift / fVelDrift;      // drift time [ns]
+      Double_t sigmaL = fCoefL * sqrt(lDrift);   // sigma in longitudinal direction
+      Double_t sigmaT = fCoefT * sqrt(lDrift);   // sigma in transversal direction
 
       Int_t nElectrons = (Int_t)floor(fabs(eLoss / fEIonize)); // TODO: Include fluctuation
 

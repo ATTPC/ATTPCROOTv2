@@ -20,6 +20,7 @@ private:
 
    TString fInputBranchName;
    TString fOutputBranchName;
+   TString fSimulatedPointBranchName;
 
    AtPSA *fPSA;
 
@@ -32,6 +33,7 @@ public:
    void SetPersistence(Bool_t value);
    void SetInputBranch(TString branchName);
    void SetOutputBranch(TString branchName);
+   void SetSimlulatedPointBranch(TString branchName);
    virtual InitStatus Init();
    virtual void Exec(Option_t *opt);
 

@@ -227,14 +227,13 @@ void AtPSA::TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit *hit)
 
       int count = std::distance(result.first, result.second);
 
-      // if(count>1){
-      //  std::cout<<" Count "<<count<<"\n";
-
-      if (fMCSimPointArray != 0) {
+      if (fMCSimPointArray != nullptr) {
          AtMCPoint *MCPoint = (AtMCPoint *)fMCSimPointArray->At(it->second);
+
          AtHit::MCSimPoint mcpoint(it->second, MCPoint->GetTrackID(), MCPoint->GetEIni(), MCPoint->GetEnergyLoss(),
                                    MCPoint->GetAIni(), MCPoint->GetMassNum(), MCPoint->GetAtomicNum());
          hit->SetMCSimPoint(mcpoint);
+
          // std::cout << " Pad Num : "<<hit->GetHitPadNum()<<" MC Point ID : "<<it->second << std::endl;
          // std::cout << " Track ID : "<<MCPoint->GetTrackID()<<" Energy (MeV) : "<<MCPoint->GetEIni()<<" Angle (deg) :
          // "<<MCPoint->GetAIni()<<"\n"; std::cout << " Mass Number : "<<MCPoint->GetMassNum()<<" Atomic Number

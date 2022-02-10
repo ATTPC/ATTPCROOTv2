@@ -8,5 +8,6 @@
 #pragma link C++ class AtSiArrayGeo;
 #pragma link C++ class AtSiArrayGeoPar;
 #pragma link C++ class AtSiArray;
+#pragma link C++ class AtSiPoint;
 
 #endif

@@ -3,7 +3,7 @@
 #include "AtSiArrayGeo.h"
 #include "AtSiArrayGeoPar.h"
 
-#include "AtMCPoint.h"
+#include "AtSiPoint.h"
 #include "AtVertexPropagator.h"
 #include "AtDetectorList.h"
 #include "AtStack.h"
@@ -35,14 +35,14 @@ using std::endl;
 
 AtSiArray::AtSiArray()
    : FairDetector("AtSiArray", kTRUE, kAtSiArray), fTrackID(-1), fVolumeID(-1), fPos(), fMom(), fTime(-1.),
-     fLength(-1.), fELoss(-1), fPosIndex(-1), fAtSiArrayPointCollection(new TClonesArray("AtMCPoint")), fELossAcc(-1)
+     fLength(-1.), fELoss(-1), fPosIndex(-1), fAtSiArrayPointCollection(new TClonesArray("AtSiPoint")), fELossAcc(-1)
 {
    // LOG(INFO)<<" AtSiArray detector initialized ";
 }
 
 AtSiArray::AtSiArray(const char *name, Bool_t active)
    : FairDetector(name, active, kAtSiArray), fTrackID(-1), fVolumeID(-1), fPos(), fMom(), fTime(-1.), fLength(-1.),
-     fELoss(-1), fPosIndex(-1), fAtSiArrayPointCollection(new TClonesArray("AtMCPoint")), fELossAcc(-1)
+     fELoss(-1), fPosIndex(-1), fAtSiArrayPointCollection(new TClonesArray("AtSiPoint")), fELossAcc(-1)
 {
    // LOG(INFO)<<" AtSiArray detector initialized ";
 }
@@ -263,16 +263,16 @@ Bool_t AtSiArray::CheckIfSensitive(std::string name)
    return kFALSE;
 }
 
-AtMCPoint *AtSiArray::AddHit(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t time, Double_t length,
+AtSiPoint *AtSiArray::AddHit(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t time, Double_t length,
                              Double_t eLoss)
 {
    TClonesArray &clref = *fAtSiArrayPointCollection;
    Int_t size = clref.GetEntriesFast();
-   return new (clref[size]) AtMCPoint(trackID, detID, pos, mom, time, length, eLoss);
+   return new (clref[size]) AtSiPoint(trackID, detID, pos, mom, time, length, eLoss);
 }
 
 // -----   Private method AddHit   --------------------------------------------
-AtMCPoint *AtSiArray::AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t detCopyID, TVector3 posIn,
+AtSiPoint *AtSiArray::AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t detCopyID, TVector3 posIn,
                              TVector3 posOut, TVector3 momIn, TVector3 momOut, Double_t time, Double_t length,
                              Double_t eLoss, Double_t EIni, Double_t AIni, Int_t A, Int_t Z)
 {
@@ -285,8 +285,8 @@ AtMCPoint *AtSiArray::AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t 
       LOG(INFO) << "Si Array: Adding Point at (" << posIn.X() << ", " << posIn.Y() << ", " << posIn.Z()
                 << ") cm,  detector " << detID << ", track " << trackID << ", energy loss " << eLoss * 1e06 << " keV";
 
-   return new (clref[size]) AtMCPoint(trackID, detID, VolName, detCopyID, posIn, posOut, momIn, momOut, time, length,
-                                      eLoss, EIni, AIni, A, Z);
+   return new (clref[size]) AtSiPoint(trackID, detID, posIn, posOut, momIn, momOut, time, length, eLoss, VolName,
+                                      detCopyID, EIni, AIni, A, Z);
 }
 
 std::pair<Int_t, Int_t> AtSiArray::DecodePdG(Int_t PdG_Code)
@@ -310,4 +310,4 @@ std::pair<Int_t, Int_t> AtSiArray::DecodePdG(Int_t PdG_Code)
    return nucleus;
 }
 
-ClassImp(AtSiArray)
+ClassImp(AtSiArray);
