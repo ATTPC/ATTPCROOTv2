@@ -235,35 +235,15 @@ void AtTpc::addHit()
    auto AZ = DecodePdG(gMC->TrackPid());
 
    Double_t EIni, AIni;
+
    // We assume that the beam-like particle is fTrackID==0 since it is the first one added in the
    // primary generator
    if (gAtVP->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0) {
       EIni = 0;
       AIni = 0;
-
-   } else if (gAtVP->GetDecayEvtCnt() % 2 == 0 && fTrackID == 1) {
-      EIni = gAtVP->GetScatterE();
-      AIni = gAtVP->GetScatterA();
-
-   } else if (gAtVP->GetDecayEvtCnt() % 2 == 0 && fTrackID == 2) {
-
-      EIni = gAtVP->GetRecoilE();
-      AIni = gAtVP->GetRecoilA();
-
-   } else if (gAtVP->GetDecayEvtCnt() % 2 == 0 && fTrackID == 3) {
-
-      EIni = gAtVP->GetBURes2E();
-      AIni = gAtVP->GetBURes2A();
-
-   } else if (gAtVP->GetDecayEvtCnt() % 2 == 0 && fTrackID == 4) {
-      EIni = 0;
-      AIni = 0;
-   } else if (gAtVP->GetDecayEvtCnt() % 2 == 0 && fTrackID == 5) {
-      EIni = 0;
-      AIni = 0;
-   } else if (gAtVP->GetDecayEvtCnt() % 2 == 0 && fTrackID == 6) {
-      EIni = 0;
-      AIni = 0;
+   } else if (gAtVP->GetDecayEvtCnt() % 2 == 0) {
+      EIni = gAtVP->GetTrackEnergy(fTrackID);
+      AIni = gAtVP->GetTrackAngle(fTrackID);
    }
 
    AddHit(fTrackID, fVolumeID, fVolName, fDetCopyID, TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),

@@ -329,10 +329,12 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
             std::cout << " Recoiled angle:" << Ang.at(1) * 180.0 / TMath::Pi() << " deg" << cNORMAL << std::endl;
          }
 
-         gAtVP->SetRecoilE(Ene.at(1));
-         gAtVP->SetRecoilA(Ang.at(1) * 180.0 / TMath::Pi());
-         gAtVP->SetScatterE(Ene.at(0));
-         gAtVP->SetScatterA(Ang.at(0) * 180.0 / TMath::Pi());
+         // gAtVP->SetRecoilE(Ene.at(1));
+         gAtVP->SetTrackEnergy(2, Ene.at(1));
+         gAtVP->SetTrackAngle(2, Ang.at(1) * 180.0 / TMath::Pi());
+
+         gAtVP->SetTrackEnergy(1, Ene.at(0));
+         gAtVP->SetTrackAngle(1, Ang.at(0) * 180.0 / TMath::Pi());
 
          fPx.at(0) = 0.0;
          fPy.at(0) = 0.0;
