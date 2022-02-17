@@ -45,7 +45,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
    TH2F *Ang_Ener_Xtr = new TH2F("Ang_Ener_Xtr", "Ang_Ener_Xtr", 720, 0, 179, 1000, 0, 100.0);
    TH1F *HQval_Xtr = new TH1F("HQval_Xtr", "HQval_Xtr", 600, -5, 55);
    TH1F *HQCorr = new TH1F("HQCorr", "HQCorr", 600, -5, 55);
-   TH1F *HQCorrArray[10]; 
+   TH1F *HQCorrArray[10];
 
    TH1F *HQval_Xtr_recalc = new TH1F("HQval_Xtr_recalc", "HQval_Xtr_recalc", 1200, -5, 55);
    TH1F *HQval_Xtr_recalc_cutgs = new TH1F("HQval_Xtr_recalc_cutgs", "HQval_Xtr_recalc_cutgs", 1200, -5, 55);
@@ -117,8 +117,8 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
       ExZ[iHist] = new TH1F(Form("ExZ[%i]", iHist), Form("ExZ[%i]", iHist), 1000, -2, 18);
 
    for (auto iHist = 0; iHist < 10; ++iHist)
-     HQCorrArray[iHist] = new TH1F(Form("HQCorrArray[%i]",iHist), Form("HQCorrArray[%i]",iHist), 600, -5, 55);
-   
+      HQCorrArray[iHist] = new TH1F(Form("HQCorrArray[%i]", iHist), Form("HQCorrArray[%i]", iHist), 600, -5, 55);
+
    TH2F *QvsEvent = new TH2F("QvsEvent", "QvsEvent", 1000, -10, 10, 100, 0, 3000000);
 
    // Cut for gs 75-76 mm vertex
@@ -428,45 +428,42 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
                                        QvsEvent->Fill(ex_energy_exp, iEvt);
 
                                        // Z correction for the Ex energy
-				       //p0                        =      1.66382   +/-   0.00764931
-				       //p1                        =  -0.00916142   +/-   0.000176617
+                                       // p0                        =      1.66382   +/-   0.00764931
+                                       // p1                        =  -0.00916142   +/-   0.000176617
 
-				       //p0                        =      1.72831   +/-   0.0239778
-				       //p1                        =     -0.01095   +/-   0.000542567
+                                       // p0                        =      1.72831   +/-   0.0239778
+                                       // p1                        =     -0.01095   +/-   0.000542567
 
+                                       Double_t p0 = 1.72831;
+                                       Double_t p1 = -0.00892026; //-0.01095;
 
-				       
-				       Double_t p0 =  1.72831;
-				       Double_t p1 = -0.00892026;//-0.01095;
-				       
-				       Double_t mFactor = 1.1;
+                                       Double_t mFactor = 1.1;
                                        Double_t offSet = 0.0;
                                        Double_t QcorrZ =
                                           ex_energy_exp -
                                           mFactor * ((1.39 - 2.1509) / (87.62 - 0.627)) * ((*ziniFitXtrVec)[index]) +
                                           offSet;
-				       QcorrZ = ex_energy_exp - p1*((*ziniFitXtrVec)[index]);
+                                       QcorrZ = ex_energy_exp - p1 * ((*ziniFitXtrVec)[index]);
                                        HQCorr->Fill(QcorrZ);
 
-				       for(auto iCorr = 0;iCorr<10;++iCorr){
-					 mFactor = 1.0+0.1*iCorr-0.5;
-					 Double_t QcorrZL =
-                                          ex_energy_exp -
-                                          mFactor * ((1.39 - 2.1509) / (87.62 - 0.627)) * ((*ziniFitXtrVec)[index]) +
-                                          offSet;
-                                      
-					  QcorrZL = ex_energy_exp - p1*((*ziniFitXtrVec)[index]);
-					 
-					 
-					 HQCorrArray[iCorr]->Fill(QcorrZL);
-				        } 	   
-					   
+                                       for (auto iCorr = 0; iCorr < 10; ++iCorr) {
+                                          mFactor = 1.0 + 0.1 * iCorr - 0.5;
+                                          Double_t QcorrZL =
+                                             ex_energy_exp -
+                                             mFactor * ((1.39 - 2.1509) / (87.62 - 0.627)) * ((*ziniFitXtrVec)[index]) +
+                                             offSet;
+
+                                          QcorrZL = ex_energy_exp - p1 * ((*ziniFitXtrVec)[index]);
+
+                                          HQCorrArray[iCorr]->Fill(QcorrZL);
+                                       }
+
                                        QvsChi2->Fill(ex_energy_exp, (*fChi2Vec)[index] / (*fNdfVec)[index]);
                                        QvsXpos->Fill(ex_energy_exp, (*xiniFitXtrVec)[index]);
                                        QvsZpos->Fill(ex_energy_exp, (*ziniFitXtrVec)[index]);
                                        QcorrvsZpos->Fill(QcorrZ, (*ziniFitXtrVec)[index]);
 
-				       QvsTrackLengthH->Fill(QcorrZ,(*trackLengthVec)[index]);
+                                       QvsTrackLengthH->Fill(QcorrZ, (*trackLengthVec)[index]);
 
                                        if ((*ziniFitXtrVec)[index] > 0.0 && (*ziniFitXtrVec)[index] < 100.0) {
                                           Int_t zIndex = (Int_t)floor((*ziniFitXtrVec)[index] / 10);
@@ -723,7 +720,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
    cEx->Divide(2, 5);
    for (auto cIndex = 0; cIndex < 10; ++cIndex) {
       cEx->cd(cIndex + 1);
-      //ExZ[cIndex]->Draw();
+      // ExZ[cIndex]->Draw();
       HQCorrArray[cIndex]->Draw();
    }
 

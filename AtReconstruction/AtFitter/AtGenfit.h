@@ -53,8 +53,8 @@ public:
    inline void SetEnergyLossFile(std::string file) { fEnergyLossFile = file; }
    inline void SetSimulationConvention(Bool_t simconv) { fSimulationConv = simconv; }
    inline void SetGasMediumDensity(Float_t mediumDensity) { fGasMediumDensity = mediumDensity; }
-   inline void RotatePhi(Double_t phi) { fPhiOrientation = phi;}
-  
+   inline void RotatePhi(Double_t phi) { fPhiOrientation = phi; }
+
    TClonesArray *GetGenfitTrackArray();
 
 private:
@@ -76,10 +76,9 @@ private:
    std::string fEnergyLossFile; //<! Energy loss file
    Bool_t fSimulationConv;      //<! Switch to simulation convention
    Float_t fGasMediumDensity;   //<! Medium density in mg/cm3
-   Double_t fPhiOrientation;     //<! Phi angle orientation for fit
+   Double_t fPhiOrientation;    //<! Phi angle orientation for fit
 
-
-  genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement> *fMeasurementProducer;
+   genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement> *fMeasurementProducer;
    genfit::MeasurementFactory<genfit::AbsMeasurement> *fMeasurementFactory;
 
    std::vector<Int_t> *fPDGCandidateArray;

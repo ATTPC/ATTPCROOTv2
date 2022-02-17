@@ -3,7 +3,6 @@
 #include "AtFitter.h"
 #include "AtGenfit.h"
 
-
 #include <memory>
 #include <chrono>
 #include <thread>
@@ -25,7 +24,7 @@ int main(int argc, char *argv[])
    bool simulationConv = 0;
 
    bool enableMerging = 0;
-   
+
    //  Arguments
    if (argc == 7) {
       firstEvt = std::atoi(argv[1]);
@@ -439,7 +438,7 @@ int main(int argc, char *argv[])
 
       evtNum_vs_trkNum->Fill(i, patternTrackCand.size());
 
-        for (auto track : patternTrackCand) {
+      for (auto track : patternTrackCand) {
 
          std::cout << " Track " << track.GetTrackID() << " with " << track.GetHitClusterArray()->size() << " clusters "
                    << "\n";
@@ -452,81 +451,77 @@ int main(int argc, char *argv[])
             continue;
          }
 
+         // Track merging
+         Double_t theta = track.GetGeoTheta();
+         std::pair<Double_t, Double_t> center = track.GetGeoCenter();
+         Double_t thetaConv;
+         if (simulationConv) {
+            thetaConv = 180.0 - theta * TMath::RadToDeg();
+         } else {
+            thetaConv = theta * TMath::RadToDeg();
+         }
 
-	 //Track merging
-	 Double_t theta = track.GetGeoTheta();
-	 std::pair<Double_t, Double_t> center = track.GetGeoCenter();
-	 Double_t thetaConv;
-	      if (simulationConv) {
-		thetaConv = 180.0 - theta*TMath::RadToDeg();
-	      } else {
-		thetaConv = theta*TMath::RadToDeg();
-	      }
+         auto hitClusterArray = track.GetHitClusterArray();
+         AtHitCluster iniCluster;
+         AtHitCluster endCluster;
+         Double_t zIniCal = 0;
+         Double_t zEndCal = 0;
+         TVector3 iniPos;
+         TVector3 endPos;
 
-	      auto hitClusterArray = track.GetHitClusterArray();
-	      AtHitCluster iniCluster;
-	      AtHitCluster endCluster;
-	      Double_t zIniCal = 0;
-	      Double_t zEndCal = 0;
-	      TVector3 iniPos;
-	      TVector3 endPos;
+         if (thetaConv < 90.0) {
+            iniCluster =
+               hitClusterArray->back(); // NB: Use back because We do not reverse the cluster vector like in AtGenfit!
+            iniPos = iniCluster.GetPosition();
+            endCluster = hitClusterArray->front();
+            endPos = endCluster.GetPosition();
+            zIniCal = 1000.0 - iniPos.Z();
+            zEndCal = 1000.0 - endPos.Z();
+         } else if (thetaConv > 90.0) {
+            iniCluster = hitClusterArray->front();
+            iniPos = iniCluster.GetPosition();
+            endCluster = hitClusterArray->back();
+            endPos = endCluster.GetPosition();
+            zIniCal = iniPos.Z();
+            zEndCal = endPos.Z();
+         }
 
-	      
-              if (thetaConv < 90.0 ) {
-                 iniCluster = hitClusterArray->back(); // NB: Use back because We do not reverse the cluster vector like in AtGenfit!
-                 iniPos = iniCluster.GetPosition();
-		 endCluster = hitClusterArray->front();
-		 endPos = endCluster.GetPosition();
-		 zIniCal = 1000.0 - iniPos.Z();
-		 zEndCal = 1000.0 - endPos.Z();
-              } else if (thetaConv > 90.0 ) {
-                 iniCluster = hitClusterArray->front();
-                 iniPos = iniCluster.GetPosition();
-		 endCluster = hitClusterArray->back();
-		 endPos = endCluster.GetPosition();
-                 zIniCal = iniPos.Z();
-		 zEndCal = endPos.Z();
-              }
+         xiniPRA = iniPos.X();
+         yiniPRA = iniPos.Y();
+         ziniPRA = zIniCal;
 
+         // This is just to select distances
+         std::cout << " Initial position : " << xiniPRA << " - " << yiniPRA << " - " << ziniPRA << "\n";
+         std::cout << " End position : " << endPos.X() << " - " << endPos.Y() << " - " << zEndCal << "\n";
+         std::cout << " Theta (convention) : " << thetaConv << "\n";
+         std::cout << " Track center - X :  " << center.first << " - Y : " << center.second << "\n";
 
-	      xiniPRA = iniPos.X();
-              yiniPRA = iniPos.Y();
-              ziniPRA = zIniCal;
+         // Skip tracks that are far from Z (to be checked against number of iterations for extrapolation)
+         Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
 
-	      
-	      //This is just to select distances
-	      std::cout<<" Initial position : "<<xiniPRA<<" - "<<yiniPRA<<" - "<<ziniPRA<<"\n";
-	      std::cout<<" End position : "<<endPos.X()<<" - "<<endPos.Y()<<" - "<<zEndCal<<"\n";
-	      std::cout << " Theta (convention) : " << thetaConv << "\n";
-	      std::cout << " Track center - X :  "<<center.first<<" - Y : "<<center.second<<"\n"; 
-                           
-              // Skip tracks that are far from Z (to be checked against number of iterations for extrapolation)
-              Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
+         std::cout << cRED << " Distance to Z " << dist << cNORMAL << "\n";
+         if (dist > 100.0) { // mm
+            junkTrackPool.push_back(track);
+         } else
+            candTrackPool.push_back(track);
+      }
 
-               std::cout<<cRED<<" Distance to Z "<<dist<<cNORMAL<<"\n";
-	       if (dist > 100.0){//mm                 
-		 junkTrackPool.push_back(track);
-	       }else
-		 candTrackPool.push_back(track);
+      if (enableMerging)
+         fFitter->MergeTracks(&candTrackPool, &junkTrackPool, &mergedTrackPool, fitDirection, simulationConv);
+      else {
+         mergedTrackPool = candTrackPool;
+      }
 
-       }
+      for (auto track : mergedTrackPool) {
 
-	if(enableMerging)
-	  fFitter->MergeTracks(&candTrackPool,&junkTrackPool,&mergedTrackPool,fitDirection,simulationConv);
-	else{
-	  mergedTrackPool = candTrackPool;
-	}
-	
-	for (auto track : mergedTrackPool) {      
-      
-	  std::cout<<" Merge Tracks Pool Size : "<<mergedTrackPool.size()<<"\n";
+         std::cout << " Merge Tracks Pool Size : " << mergedTrackPool.size() << "\n";
 
-	  if(enableMerging){
-	    track.ResetHitClusterArray();
-	    ClusterizeSmooth3D(track,10.0,30.0); //Reclusterizing
-	  }
-	  
-	 Double_t theta = track.GetGeoTheta();            // 180.0 * TMath::DegToRad() - track.GetGeoTheta();
+         if (enableMerging) {
+            track.ResetHitClusterArray();
+            ClusterizeSmooth3D(track, 10.0, 30.0); // Reclusterizing
+         }
+
+         Double_t theta = track.GetGeoTheta();            // 180.0 * TMath::DegToRad() - track.GetGeoTheta();
          Double_t radius = track.GetGeoRadius() / 1000.0; // mm to m
          Double_t phi = track.GetGeoPhi();
          Double_t brho = magneticField * radius / TMath::Sin(theta); // Tm
@@ -545,10 +540,10 @@ int main(int argc, char *argv[])
          Double_t zIniCal = 0;
          TVector3 iniPos;
 
-	 //for (auto cluster : *hitClusterArray) {
-	 //TVector3 pos = cluster.GetPosition();
-	 // std::cout<<pos.X()<<"     "<<pos.Y()<<"   "<<pos.Z()<<"\n";
-	 // }
+         // for (auto cluster : *hitClusterArray) {
+         // TVector3 pos = cluster.GetPosition();
+         // std::cout<<pos.X()<<"     "<<pos.Y()<<"   "<<pos.Z()<<"\n";
+         // }
 
          // Variable for convention (simulation comes reversed)
 	      Double_t thetaConv;
@@ -584,21 +579,20 @@ int main(int argc, char *argv[])
                  continue;
 
               // Skip border angles
-              if (theta * TMath::RadToDeg() <5 || theta * TMath::RadToDeg() > 170)
+              if (theta * TMath::RadToDeg() < 5 || theta * TMath::RadToDeg() > 170)
                  continue;
 
               // Skip tracks that are far from Z (to be checked against number of iterations for extrapolation)
               Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
 
-               std::cout<<cRED<<" Distance to Z (Candidate Track Pool) "<<dist<<cNORMAL<<"\n";
-	       
+              std::cout << cRED << " Distance to Z (Candidate Track Pool) " << dist << cNORMAL << "\n";
+
               fFitter->Init();
               genfit::Track *fitTrack;
 
-
               try {
-		
-		fitTrack = fFitter->FitTracks(&track);
+
+                 fitTrack = fFitter->FitTracks(&track);
               } catch (std::exception &e) {
                  std::cout << " Exception fitting track !" << e.what() << "\n";
                  continue;
@@ -671,12 +665,12 @@ int main(int argc, char *argv[])
                              // break;
 
                              ++minCntExt;
-                          }//Extrapolation loop
+                          } // Extrapolation loop
 
                        } catch (genfit::Exception &e) {
                           mom_ext.SetXYZ(0, 0, 0);
                           pos_ext.SetXYZ(0, 0, 0);
-                       }//try
+                       } // try
 
                        // mom_res = mom_ext;
                        // pos_res = pos_ext;
@@ -732,8 +726,8 @@ int main(int argc, char *argv[])
                        HQval->Fill(ex_energy_exp);
 
                        Ex = ex_energy_exp;
-                    }//Kalman fit
-                 }//Kalman status
+                    } // Kalman fit
+                 }    // Kalman status
               } catch (std::exception &e) {
                  std::cout << " " << e.what() << "\n";
                  continue;
@@ -775,7 +769,6 @@ int main(int argc, char *argv[])
 
       } // track loop
 
-       
            outputTree->Fill();
 
    } // if pattern event
@@ -950,7 +943,6 @@ int main(int argc, char *argv[])
 
    } // Interactive mode
 
-   
    return 0;
 }
 
@@ -1031,20 +1023,20 @@ double GetMaximum(double *adc)
 
 void Clusterize3D(AtTrack &track, Float_t distance, Float_t radius)
 {
-  std::vector<AtHit> *hitArray = track.GetHitArray();
+   std::vector<AtHit> *hitArray = track.GetHitArray();
    std::vector<AtHit> hitTBArray;
    int clusterID = 0;
 
    // std::cout<<" ================================================================= "<<"\n";
    // std::cout<<" Clusterizing track : "<<track.GetTrackID()<<"\n";
 
-   for(auto iHits=0;iHits<hitArray->size();++iHits)
-     {
-       TVector3 pos    = hitArray->at(iHits).GetPosition();
-       double Q = hitArray->at(iHits).GetCharge();
-       int TB          = hitArray->at(iHits).GetTimeStamp();
-      std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<Q<<"\n";
-       }
+   for (auto iHits = 0; iHits < hitArray->size(); ++iHits) {
+      TVector3 pos = hitArray->at(iHits).GetPosition();
+      double Q = hitArray->at(iHits).GetCharge();
+      int TB = hitArray->at(iHits).GetTimeStamp();
+      std::cout << " Pos : " << pos.X() << " - " << pos.Y() << " - " << pos.Z() << " - TB : " << TB
+                << " - Charge : " << Q << "\n";
+   }
    // Diffusion coefficients (TODO: Get them from the parameter file)
    Double_t driftVel = 1.0;       // cm/us
    Double_t samplingRate = 0.320; // us
@@ -1172,7 +1164,6 @@ void Clusterize3D(AtTrack &track, Float_t distance, Float_t radius)
       } // for
 
    } // if array size
-  
 }
 
 void ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius)
@@ -1212,7 +1203,7 @@ void ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius)
          // Check distance with respect to reference Hit
          Double_t distRef = TMath::Abs((hit.GetPosition() - refPos).Mag());
 
-         if (distRef < distance && iHit!=0) {
+         if (distRef < distance && iHit != 0) {
 
             continue;
 
@@ -1312,9 +1303,9 @@ void ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius)
     }
          std::cout<<"=================================================="<<"\n";*/
 
-	 if(iHit==0)
-	   continue;
-	 
+         if (iHit == 0)
+            continue;
+
          refPos = hitArray->at(iHit).GetPosition();
 
          //} // if distance

@@ -267,7 +267,6 @@ void AtTrack::ResetHitArray()
    fHitArray.clear();
 }
 
-
 TVector3 AtTrack::GetLastPoint()
 {
    Double_t maxR = 0.;
@@ -415,5 +414,5 @@ Bool_t AtTrack::SortHitArrayTime()
 Bool_t AtTrack::SortClusterHitArrayZ()
 {
 
-std::sort(fHitClusterArray.begin(), fHitClusterArray.end(), SortClusterHitZ);
-}  
+   std::sort(fHitClusterArray.begin(), fHitClusterArray.end(), SortClusterHitZ);
+}

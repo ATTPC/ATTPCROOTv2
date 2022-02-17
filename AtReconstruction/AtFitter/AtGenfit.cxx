@@ -30,8 +30,7 @@ ClassImp(AtFITTER::AtGenfit)
    fEnergyLossFile = eLossFile;
    fSimulationConv = kFALSE;
    fPhiOrientation = 0;
-   
-   
+
    fKalmanFitter = std::make_shared<genfit::KalmanFitterRefTrack>();
    fKalmanFitter->setMinIterations(fMinIterations);
    fKalmanFitter->setMaxIterations(fMaxIterations);
@@ -198,10 +197,10 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
 
       if (fSimulationConv) {
          theta = track->GetGeoTheta();
-         phi =  180.0 * TMath::DegToRad() -track->GetGeoPhi(); //180.0 * TMath::DegToRad() - track->GetGeoPhi();
+         phi = 180.0 * TMath::DegToRad() - track->GetGeoPhi(); // 180.0 * TMath::DegToRad() - track->GetGeoPhi();
       } else {
          theta = 180.0 * TMath::DegToRad() - track->GetGeoTheta();
-         phi =  track->GetGeoPhi();
+         phi = track->GetGeoPhi();
       }
    } else {
       std::cout << cRED << " AtGenfit::FitTracks - Warning! Undefined theta angle. Skipping event..." << cNORMAL
