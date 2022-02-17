@@ -149,8 +149,8 @@ void Be10dp_sim_gs(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    Mass.push_back(1.00727646); // uma
    ExE.push_back(0.0);         // In MeV
 
-   Double_t ThetaMinCMS = 10.0;
-   Double_t ThetaMaxCMS = 40.0;
+   Double_t ThetaMinCMS = 30.0;
+   Double_t ThetaMaxCMS = 30.0;
 
    AtTPC2Body *TwoBody =
       new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);

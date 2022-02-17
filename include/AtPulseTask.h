@@ -73,6 +73,7 @@ private:
    TString fIniMap;
    TString fLowgMap;
    TString fXtalkMap;
+   TString fLookupTableFile; //!< Lookup table file name
    Bool_t fIsInhibitMap;
    Bool_t fIsSaveMCInfo; //!<< Propagates MC information
 

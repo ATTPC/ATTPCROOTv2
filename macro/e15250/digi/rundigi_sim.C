@@ -26,7 +26,8 @@ void rundigi_sim(TString mcFile = "../data/attpcsim_e15250.root",
 
   AtPulseTask *pulse = new AtPulseTask();
   pulse -> SetPersistence(kTRUE);
-
+  pulse->SetSaveMCInfo();
+  
   AtPSASimple2 *psa = new AtPSASimple2();
   // psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
   // psa -> SetBaseCorrection(kFALSE);

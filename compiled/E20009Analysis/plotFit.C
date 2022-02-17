@@ -214,8 +214,8 @@ void plotFit(std::string fileFolder = "data/")
          for (Int_t i = 0; i < nentries; i++) {
             outputTree->GetEntry(i);
 
-            if (ICMult != 1)
-               continue;
+	    //  if (ICMult != 1)
+	    //	continue;
 
             Int_t ICIndex = 0;
             Int_t iQindex = 0;
@@ -254,8 +254,8 @@ void plotFit(std::string fileFolder = "data/")
                   ICCorr->Fill((*ICVec)[ICIndex], ICA);
                }
 
-               if (ICA < 500 || ICA > 900)
-                  continue;
+	       //    if (ICA < 500 || ICA > 900)
+	       //   continue;
 
                // if(ICMult==1){
 

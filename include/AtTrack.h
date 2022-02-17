@@ -52,6 +52,7 @@ public:
    std::vector<AtHit> *GetHitArray();
    std::vector<AtHitCluster> *GetHitClusterArray();
    void ResetHitClusterArray();
+   void ResetHitArray();
    std::vector<Double_t> GetFitPar();
    Double_t GetMinimum();
    Int_t GetNFree();
@@ -73,6 +74,7 @@ public:
    std::pair<Double_t, Double_t> GetGeoCenter();
    Double_t GetGeoRadius();
    Bool_t SortHitArrayTime();
+  Bool_t  SortClusterHitArrayZ();
 
    // MC result and projections
    std::vector<Double_t> fPosXmin;
@@ -156,6 +158,7 @@ protected:
    Bool_t kIsNoise;
 
    static Bool_t SortHitTime(const AtHit &lhs, const AtHit &rhs) { return lhs.fTimeStamp < rhs.fTimeStamp; }
+  static Bool_t SortClusterHitZ(const AtHitCluster &lhs, const AtHitCluster &rhs) { return lhs.GetPosition().Z() < rhs.GetPosition().Z(); }
 
    friend inline std::ostream &operator<<(std::ostream &o, const AtTrack &track)
    {

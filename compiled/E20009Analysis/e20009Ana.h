@@ -83,3 +83,6 @@ Double_t omega(Double_t x, Double_t y, Double_t z)
 }
 Double_t GetNPeaksHRS(std::vector<Int_t> *timeMax, std::vector<Float_t> *adcMax, double *adc_test);
 double GetMaximum(double *adc);
+void ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius);
+void Clusterize3D(AtTrack &track, Float_t distance, Float_t radius);
+void Clusterize(AtTrack &track);

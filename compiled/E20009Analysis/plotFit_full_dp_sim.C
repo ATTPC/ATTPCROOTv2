@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"data_t20_10_20_cov01_dp/")
+void plotFit_full_dp_sim(std::string fileFolder = "dataSim/") //"dataFull/")//"data_t20_10_20_cov01_dp/")
 {
 
    // Data histograms
@@ -149,7 +149,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
    Double_t m_a = 4.00260325415 * 931.49401;
    Double_t m_O16 = 15.99491461956 * 931.49401;
 
-   Double_t Ebeam_buff = 90.5; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
+   Double_t Ebeam_buff = 96.0; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
    Double_t m_b;
    Double_t m_B;
 
@@ -157,7 +157,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
    m_B = m_Be11;
 
    // Find every valid file
-   std::system("find ./data_300_301 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
+   std::system("find ./dataSim -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
    // >test.txt"
    // std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::ifstream file;
@@ -286,8 +286,8 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
 
             ++iEvt;
 
-            if (ICMult != 1)
-               continue;
+            //if (ICMult != 1)
+	      //continue;
 
             Int_t ICIndex = 0;
             Int_t iQindex = 0;
@@ -319,8 +319,8 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
                //}
 
                //   if(ICA<900)
-               if (ICA < 500 || ICA > 900)
-                  continue;
+               //if (ICA < 500 || ICA > 900)
+	       // continue;
 
                for (ICIndex = 0; ICIndex < ICVec->size(); ++ICIndex) {
 
@@ -348,7 +348,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
                // if( ((*yiniFitXtrVec)[index]>0.5 || (*yiniFitXtrVec)[index]<-0.5) )
                //		 continue;
 
-               if ((*POCAXtrVec)[index] < 2000.0) {
+               if ((*POCAXtrVec)[index] < 100.0) {
 
                   if ((*ziniFitXtrVec)[index] > -20.0 && (*ziniFitXtrVec)[index] < 200.0) {
 
@@ -363,7 +363,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
                               if (dataFile.find("sim") != std::string::npos) {
                                  angle = (*AFitVec)[index];
                               }
-                              if ((*trackLengthVec)[index] > 0.0) {
+                              if ((*trackLengthVec)[index] >0.0) {
 
                                  if ((*EFitVec)[index] < 100) {
 
@@ -430,14 +430,8 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
                                        // Z correction for the Ex energy
 				       //p0                        =      1.66382   +/-   0.00764931
 				       //p1                        =  -0.00916142   +/-   0.000176617
-
-				       //p0                        =      1.72831   +/-   0.0239778
-				       //p1                        =     -0.01095   +/-   0.000542567
-
-
-				       
-				       Double_t p0 =  1.72831;
-				       Double_t p1 = -0.00892026;//-0.01095;
+				       Double_t p0 = 1.66382;
+				       Double_t p1 = -0.00916142;
 				       
 				       Double_t mFactor = 1.1;
                                        Double_t offSet = 0.0;
@@ -455,7 +449,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
                                           mFactor * ((1.39 - 2.1509) / (87.62 - 0.627)) * ((*ziniFitXtrVec)[index]) +
                                           offSet;
                                       
-					  QcorrZL = ex_energy_exp - p1*((*ziniFitXtrVec)[index]);
+					  
 					 
 					 
 					 HQCorrArray[iCorr]->Fill(QcorrZL);
