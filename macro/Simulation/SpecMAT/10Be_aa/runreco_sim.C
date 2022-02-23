@@ -1,16 +1,11 @@
 void runreco_sim(
-   TString mcFile = "output_digi_10Be_aaHe6.root",
-   TString digiParFile =
-      "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/ATTPC.e15250_sim.par",
-   TString mapParFile =
-      "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
-   TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
+   TString mcFile = "output_digi.root")
 {
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
    timer.Start();
 
-   TString scriptfile = "Lookup20150611.xml";
+   TString scriptfile = "LookupSpecMATnoScint.xml";
    TString dir = getenv("VMCWORKDIR");
    TString scriptdir = dir + "/scripts/" + scriptfile;
    TString dataDir = dir + "/macro/data/";
@@ -21,7 +16,15 @@ void runreco_sim(
    // __ Run ____________________________________________
    FairRunAna *fRun = new FairRunAna();
    fRun->SetInputFile(mcFile);
-   fRun->SetOutputFile("output_digi_10Be_aaHe6_PRA.root");
+   fRun->SetOutputFile("output_digi_PRA.root");
+
+   TString parameterFile = "SpecMAT.10Be_aa_sim.par";
+   TString digiParFile = dir + "/parameters/" + parameterFile;
+
+   TString triggerFile = "SpecMAT.trigger.par";
+   TString trigParFile = dir + "/parameters/" + triggerFile;
+
+   TString mapParFile = scriptdir;
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
    FairParAsciiFileIo *parIo1 = new FairParAsciiFileIo();
@@ -33,10 +36,10 @@ void runreco_sim(
 
    // __ AT digi tasks___________________________________
 
-   ATPRATask *praTask = new ATPRATask();
+   AtPRAtask *praTask = new AtPRAtask();
    praTask->SetPersistence(kTRUE);
 
-   /*ATTriggerTask *trigTask = new ATTriggerTask();
+   /*AtTriggertask *trigTask = new AtTriggertask();
    trigTask  ->  SetAtMap(mapParFile);
    trigTask  ->  SetPersistence(kTRUE);*/
 
