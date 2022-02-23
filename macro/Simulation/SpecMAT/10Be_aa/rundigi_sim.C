@@ -57,14 +57,14 @@ void rundigi_sim(TString mcFile = "./data/attpcsim.root")
 
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
-   // fRun -> AddTask(psaTask);
+   fRun->AddTask(psaTask);
    // fRun -> AddTask(praTask);
    // fRun -> AddTask(trigTask);
 
    // __ Init and run ___________________________________
 
    fRun->Init();
-   fRun->Run(0, 10);
+   fRun->Run(0, 20);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;
