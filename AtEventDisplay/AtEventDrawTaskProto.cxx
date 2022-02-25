@@ -227,7 +227,7 @@ void AtEventDrawTaskProto::Reset()
 void AtEventDrawTaskProto::DrawHitPoints()
 {
 
-   Float_t *MeshArray;
+   // Float_t *MeshArray;
    fMesh->Reset(0);
    for (Int_t i = 0; i < 9; i++)
       fAuxChannels[i]->Reset(0);
@@ -251,7 +251,7 @@ void AtEventDrawTaskProto::DrawHitPoints()
    if (event != NULL) {
       Double_t Qevent = event->GetEventCharge();
       Double_t RhoVariance = event->GetRhoVariance();
-      MeshArray = event->GetMesh();
+      auto MeshArray = event->GetMesh();
       Int_t eventID = event->GetEventID();
       nHits = event->GetNumHits();
       TString TSevt = " Event ID : ";
@@ -287,16 +287,16 @@ void AtEventDrawTaskProto::DrawHitPoints()
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
-      AtHit hit = event->GetHitArray()->at(iHit);
-      Int_t PadNumHit = hit.GetHitPadNum();
+      AtHit hit = event->GetHitArray().at(iHit);
+      Int_t PadNumHit = hit.GetPadNum();
       Int_t PadMultHit = event->GetHitPadMult(PadNumHit);
       Double_t BaseCorr = hit.GetBaseCorr();
       Int_t Atbin = -1;
 
       // if(hit.GetCharge()<fThreshold) continue;
       // if(PadMultHit>fMultiHit) continue;
-      TVector3 position = hit.GetPosition();
-      TVector3 positioncorr = hit.GetPositionCorr();
+      auto position = hit.GetPosition();
+      auto positioncorr = hit.GetPositionCorr();
 
       fHitSet->SetMarkerColor(fHitColor);
       fHitSet->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.); // Convert into cm
@@ -317,9 +317,9 @@ void AtEventDrawTaskProto::DrawHitPoints()
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
-      AtHit hit = event->GetHitArray()->at(iHit);
-      TVector3 position = hit.GetPosition();
-      TVector3 positioncorr = hit.GetPositionCorr();
+      AtHit hit = event->GetHitArray().at(iHit);
+      auto position = hit.GetPosition();
+      auto positioncorr = hit.GetPositionCorr();
 
       if (f3DHitStyle == 0) {
 
@@ -449,8 +449,8 @@ void AtEventDrawTaskProto::DrawHitPoints()
                for (Int_t i = 0; i < TrackCand.size(); i++) {
 
                   AtTrack track = TrackCand.at(i);
-                  std::vector<AtHit> *trackHits = track.GetHitArray();
-                  int nHitsMin = trackHits->size();
+                  std::vector<AtHit> trackHits = track.GetHitArray();
+                  int nHitsMin = trackHits.size();
 
                   fHitSetPR[i] = new TEvePointSet(Form("HitPR_%d", i), nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
                   if (track.GetIsNoise())
@@ -460,8 +460,8 @@ void AtEventDrawTaskProto::DrawHitPoints()
                   fHitSetPR[i]->SetMarkerSize(fHitSize);
                   fHitSetPR[i]->SetMarkerStyle(fHitStyle);
 
-                  for (int j = 0; j < trackHits->size(); ++j) {
-                     TVector3 position = trackHits->at(j).GetPosition();
+                  for (int j = 0; j < trackHits.size(); ++j) {
+                     auto position = trackHits.at(j).GetPosition();
                      fHitSetPR[i]->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.);
                   }
 
@@ -519,8 +519,8 @@ void AtEventDrawTaskProto::DrawProtoPattern()
          for (Int_t j = 0; j < qNumHit; j++) {
 
             AtHit *qhit = quadrant.GetHit(j);
-            TVector3 position = qhit->GetPosition();
-            TVector3 positionCorr = qhit->GetPositionCorr();
+            auto position = qhit->GetPosition();
+            auto positionCorr = qhit->GetPositionCorr();
             Double_t radius = TMath::Sqrt(TMath::Power(position.X(), 2) + TMath::Power(position.Y(), 2));
             // fQHitPattern[iQ]   ->SetPoint(fQHitPattern[iQ]->GetN(),radius,position.Z());//
             fQHitPattern[iQ]->SetPoint(fQHitPattern[iQ]->GetN(), radius, positionCorr.Z());

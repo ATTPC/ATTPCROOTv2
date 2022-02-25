@@ -103,7 +103,7 @@ void AtTriggerTask::Exec(Option_t *option)
 
       std::cerr << "Event triggered by DAQ" << std::endl;
 
-      AtEvent *event_acc = (AtEvent *)new ((*fAtEventArray_acc)[0]) AtEvent(fEvent);
+      AtEvent *event_acc = (AtEvent *)new ((*fAtEventArray_acc)[0]) AtEvent(*fEvent);
       AtRawEvent *rawEvent_acc = (AtRawEvent *)new ((*fAtRawEventArray_acc)[0]) AtRawEvent(fRawEvent);
    }
 }

@@ -14,6 +14,8 @@
 #include "TMatrixD.h"
 #include "TArrayD.h"
 #include "TSpectrum.h"
+#include "Math/Point3D.h"
+#include "Math/Rotation3D.h"
 
 // STL
 #include <algorithm>
@@ -71,8 +73,9 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
       Double_t QHitTot = 0.0;
       Int_t PadHitNum = 0;
-      TVector3 HitPos;
-      TVector3 HitPosRot;
+      XYZPoint HitPos;
+      ROOT::Math::Rotation3D HitPosRot;
+
       Bool_t fValidBuff = kTRUE;
       Bool_t fValidThreshold = kTRUE;
       Bool_t fValidDerivative = kTRUE;
@@ -97,12 +100,11 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       Int_t numPeaks = 0;
 
       if ((xPos < -9000 || yPos < -9000) && !pad.IsAux()) {
-         // std::cout<<" Is Auxiliary? "<<pad.IsAux()<<" Pad Num "<<PadNum<<"\n";
-         continue; // Skip invalid pads that are not
+         continue;
       } else if (pad.IsAux()) {
 
-         // std::cout<<" Is Auxiliary 2? "<<pad.IsAux()<<" Pad Num "<<PadNum<<"\n";
-         event->AddAuxPad(&pad);
+         LOG(debug) << "Adding aux pad: " << pad.GetAuxName();
+         event->AddAuxPad(pad);
          continue;
       }
 
@@ -257,21 +259,21 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
                TVector3 posRot = RotateDetector(xPos, yPos, zPos, maxAdcIdx);
 
-               AtHit *hit = new AtHit(PadNum, hitNum, xPos, yPos, zPos, charge);
-               hit->SetPositionCorr(posRot.X(), posRot.Y(), posRot.Z());
-               hit->SetTimeStamp(maxAdcIdx);
-               hit->SetTimeStampCorr(TBCorr);
-               hit->SetTimeStampCorrInter(timemax);
-               hit->SetBaseCorr(basecorr / 10.0);
-               hit->SetSlopeCnt(slope_cnt);
+               auto hit = event->AddHit(PadNum, XYZPoint(xPos, yPos, zPos), charge);
+               hit.SetPositionCorr(posRot.X(), posRot.Y(), posRot.Z());
+               hit.SetTimeStamp(maxAdcIdx);
+               hit.SetTimeStampCorr(TBCorr);
+               hit.SetTimeStampCorrInter(timemax);
+               hit.SetBaseCorr(basecorr / 10.0);
+               hit.SetSlopeCnt(slope_cnt);
                PadHitNum++;
-               hit->SetQHit(QHitTot);
+               hit.SetTraceIntegral(QHitTot);
                // TODO: The charge of each hit is the total charge of the spectrum, so for double
                // structures this is unrealistic.
 
-               HitPos = hit->GetPosition();
+               HitPos = hit.GetPosition();
                Rho2 += HitPos.Mag2();
-               RhoMean += HitPos.Mag();
+               RhoMean += HitPos.Rho();
                if ((xPos < -9000 || yPos < -9000) && pad.GetPadNum() != -1)
                   std::cout << " AtPSASimple2::Analysis Warning! Wrong Coordinates for Pad : " << pad.GetPadNum()
                             << std::endl;
@@ -280,11 +282,6 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                if (mcPointsMap.size() > 0)
                   TrackMCPoints(mcPointsMap, hit);
 
-               //#pragma omp ordered
-               event->AddHit(hit);
-               delete hit;
-
-               hitNum++;
 
                for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
                   mesh[iTb] += floatADC[iTb];

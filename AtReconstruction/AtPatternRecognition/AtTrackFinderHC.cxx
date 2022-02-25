@@ -124,9 +124,9 @@ void AtPATTERN::AtTrackFinderHC::eventToClusters(AtEvent &event, pcl::PointCloud
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
-      AtHit *hit = event.GetHit(iHit);
-      Int_t PadNumHit = hit->GetHitPadNum();
-      TVector3 position = hit->GetPosition();
+      const AtHit hit = event.GetHit(iHit);
+      Int_t PadNumHit = hit.GetPadNum();
+      auto position = hit.GetPosition();
       cloud->points[iHit].x = position.X();
       cloud->points[iHit].y = position.Y();
       cloud->points[iHit].z = position.Z();
@@ -155,8 +155,7 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
          int index = pointIndices->indices[i];
          pcl::PointXYZI point = cloud->points[index];
 
-         if (event.GetHit(point.intensity))
-            track.AddHit(event.GetHit(point.intensity));
+         track.AddHit(event.GetHit(point.intensity));
 
          // remove clustered points from point-vector
          for (std::vector<pcl::PointXYZI, Eigen::aligned_allocator<pcl::PointXYZI>>::iterator it = points.end();
@@ -189,14 +188,13 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
    AtTrack ntrack;
    for (std::vector<pcl::PointXYZI, Eigen::aligned_allocator<pcl::PointXYZI>>::iterator it = points.begin();
         it != points.end(); ++it) {
-      if (event.GetHit(it->intensity))
-         ntrack.AddHit(event.GetHit(it->intensity));
+      ntrack.AddHit(event.GetHit(it->intensity));
    }
    ntrack.SetIsNoise(kTRUE);
    tracks.push_back(ntrack);
 
    for (auto &track : tracks)
-      if (track.GetHitArray()->size() > 0)
+      if (track.GetHitArray().size() > 0)
          SetTrackInitialParameters(track);
 
    /*ROOT::EnableThreadSafety();

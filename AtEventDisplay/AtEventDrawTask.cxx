@@ -298,7 +298,6 @@ void AtEventDrawTask::Exec(Option_t *option)
 void AtEventDrawTask::DrawHitPoints()
 {
 
-   Float_t *MeshArray;
    fMesh->Reset(0);
 
    for (int i = 0; i < 9; ++i)
@@ -315,11 +314,11 @@ void AtEventDrawTask::DrawHitPoints()
    std::vector<Double_t> fPosZMin;
 
    fQEventHist_H->Reset(0);
-   AtEvent *event = (AtEvent *)fHitArray->At(0); // TODO: Why this confusing name? It should be fEventArray
+   AtEvent *event = (AtEvent *)fHitArray->At(0); // TODO: Why this confusing name? It should be fEventAgrray
    // event->SortHitArray(); // Works surprisingly well
    Double_t Qevent = event->GetEventCharge();
    Double_t RhoVariance = event->GetRhoVariance();
-   MeshArray = event->GetMesh();
+   auto MeshArray = event->GetMesh();
    Int_t eventID = event->GetEventID();
    //  std::ofstream dumpEvent;
    //  dumpEvent.open ("event.dat");
@@ -481,7 +480,7 @@ void AtEventDrawTask::DrawHitPoints()
             for (Int_t i = 0; i < TrackCand.size(); i++) {
 
                AtTrack track = TrackCand.at(i);
-               std::vector<AtHit> *trackHits = track.GetHitArray();
+               std::vector<AtHit> trackHits = track.GetHitArray();
                std::vector<AtHitCluster> *hitClusters = track.GetHitClusterArray();
 
                Color_t trackColor = GetTrackColor(i) + 1;
@@ -494,8 +493,8 @@ void AtEventDrawTask::DrawHitPoints()
                fHitSetTFHC[i]->SetMarkerSize(fHitSize);
                fHitSetTFHC[i]->SetMarkerStyle(fHitStyle);
 
-               for (int j = 0; j < trackHits->size(); ++j) {
-                  TVector3 position = trackHits->at(j).GetPosition();
+               for (int j = 0; j < trackHits.size(); ++j) {
+                  auto position = trackHits.at(j).GetPosition();
                   fHitSetTFHC[i]->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.);
                }
 
@@ -533,6 +532,7 @@ void AtEventDrawTask::DrawHitPoints()
 
          fTrackingEventAna = (AtTrackingEventAna *)fTrackingEventAnaArray->At(0);
          std::vector<AtTrack> anaTracks = fTrackingEventAna->GetTrackArray();
+         std::cout << cRED << "Calling code for MC Minimization which is depricated!!!" << std::endl;
          std::cout << cYELLOW << "  ====   Tracking analysis ==== " << std::endl;
          std::cout << " Number of analyzed tracks : " << anaTracks.size() << std::endl;
          std::cout << " Vertex of reaction : " << fTrackingEventAna->GetVertex() << std::endl;
@@ -543,10 +543,13 @@ void AtEventDrawTask::DrawHitPoints()
             for (Int_t i = 0; i < anaTracks.size(); i++) {
                AtTrack track = anaTracks.at(i);
                std::cout << track << std::endl;
-               fPosXMin = track.GetPosXMin();
-               fPosYMin = track.GetPosYMin();
-               fPosZMin = track.GetPosZMin();
-               nHitsMin = fPosXMin.size();
+
+               /* MC Minimization stuff
+                    fPosXMin = track.GetPosXMin();
+                    fPosYMin = track.GetPosYMin();
+                    fPosZMin = track.GetPosZMin();
+                    nHitsMin = fPosXMin.size();
+               */
                fHitSetMC[i] = new TEvePointSet(Form("HitMC_%d", i), nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
                fHitSetMC[i]->SetOwnIds(kTRUE);
                fHitSetMC[i]->SetMarkerColor(kGreen);
@@ -624,8 +627,8 @@ void AtEventDrawTask::DrawHitPoints()
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
-      AtHit hit = event->GetHitArray()->at(iHit);
-      Int_t PadNumHit = hit.GetHitPadNum();
+      AtHit hit = event->GetHitArray().at(iHit);
+      Int_t PadNumHit = hit.GetPadNum();
       Int_t PadMultHit = event->GetHitPadMult(PadNumHit);
       Double_t BaseCorr = hit.GetBaseCorr();
       Int_t Atbin = -1;
@@ -634,8 +637,8 @@ void AtEventDrawTask::DrawHitPoints()
          continue;
       if (PadMultHit > fMultiHit)
          continue;
-      TVector3 position = hit.GetPosition();
-      TVector3 positioncorr = hit.GetPositionCorr();
+      auto position = hit.GetPosition();
+      auto positioncorr = hit.GetPositionCorr();
 
       if (!fEventManager->GetToggleCorrData()) {
          fHitSet->SetMarkerColor(fHitColor);
@@ -692,9 +695,9 @@ void AtEventDrawTask::DrawHitPoints()
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
-      AtHit hit = event->GetHitArray()->at(iHit);
-      TVector3 position = hit.GetPosition();
-      TVector3 positioncorr = hit.GetPositionCorr();
+      AtHit hit = event->GetHitArray().at(iHit);
+      auto position = hit.GetPosition();
+      auto positioncorr = hit.GetPositionCorr();
 
       if (f3DHitStyle == 0) {
 

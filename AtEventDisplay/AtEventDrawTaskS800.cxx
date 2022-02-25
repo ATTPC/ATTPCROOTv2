@@ -366,7 +366,6 @@ void AtEventDrawTaskS800::DrawHitPoints()
 
    // std::cout<<"draw hit Points "<<fHitArray->At(0)<<std::endl;
 
-   Float_t *MeshArray;
    fMesh->Reset(0);
    // f3DHist->Reset(0);
    TRandom r(0);
@@ -383,7 +382,7 @@ void AtEventDrawTaskS800::DrawHitPoints()
    // event->SortHitArray(); // Works surprisingly well
    // Double_t Qevent=event->GetEventCharge();
    // Double_t RhoVariance=event->GetRhoVariance();
-   MeshArray = event->GetMesh();
+   auto MeshArray = event->GetMesh();
    Int_t eventID = event->GetEventID();
    //  std::ofstream dumpEvent;
    //  dumpEvent.open ("event.dat");
@@ -521,7 +520,7 @@ void AtEventDrawTaskS800::DrawHitPoints()
             for (Int_t i = 0; i < TrackCand.size(); i++) {
 
                AtTrack track = TrackCand.at(i);
-               std::vector<AtHit> *trackHits = track.GetHitArray();
+               std::vector<AtHit> trackHits = track.GetHitArray();
 
                fHitSetTFHC[i] = new TEvePointSet(Form("HitMC_%d", i), nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
                if (track.GetIsNoise())
@@ -531,8 +530,8 @@ void AtEventDrawTaskS800::DrawHitPoints()
                fHitSetTFHC[i]->SetMarkerSize(fHitSize);
                fHitSetTFHC[i]->SetMarkerStyle(fHitStyle);
 
-               for (int j = 0; j < trackHits->size(); ++j) {
-                  TVector3 position = trackHits->at(j).GetPosition();
+               for (int j = 0; j < trackHits.size(); ++j) {
+                  auto position = trackHits.at(j).GetPosition();
                   fHitSetTFHC[i]->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.);
                }
             }
@@ -546,6 +545,7 @@ void AtEventDrawTaskS800::DrawHitPoints()
 
          fTrackingEventAna = (AtTrackingEventAna *)fTrackingEventAnaArray->At(0);
          std::vector<AtTrack> anaTracks = fTrackingEventAna->GetTrackArray();
+         std::cout << cRED << "Calling code for MC Minimization which is depricated!!!" << std::endl;
          std::cout << cYELLOW << "  ====   Tracking analysis ==== " << std::endl;
          std::cout << " Number of analyzed tracks : " << anaTracks.size() << std::endl;
          std::cout << " Vertex of reaction : " << fTrackingEventAna->GetVertex() << std::endl;
@@ -556,10 +556,12 @@ void AtEventDrawTaskS800::DrawHitPoints()
             for (Int_t i = 0; i < anaTracks.size(); i++) {
                AtTrack track = anaTracks.at(i);
                std::cout << track << std::endl;
-               fPosXMin = track.GetPosXMin();
+               /*
+       fPosXMin = track.GetPosXMin();
                fPosYMin = track.GetPosYMin();
                fPosZMin = track.GetPosZMin();
                nHitsMin = fPosXMin.size();
+          */
                fHitSetMC[i] = new TEvePointSet(Form("HitMC_%d", i), nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
                fHitSetMC[i]->SetOwnIds(kTRUE);
                fHitSetMC[i]->SetMarkerColor(kGreen);
@@ -611,12 +613,12 @@ void AtEventDrawTaskS800::DrawHitPoints()
                   << std::endl;
 
             //---------------get info from tracks
-            TVector3 LastPoint = track.GetLastPoint();
-            TVector3 tvertex = track.GetTrackVertex();
+            auto LastPoint = track.GetLastPoint();
+            auto tvertex = track.GetTrackVertex();
             std::pair<Double_t, Double_t> pThePhi = track.GetThetaPhi(tvertex, LastPoint, 1);
             Double_t tTheta = pThePhi.first * 180. / 3.1415;
-            TVector3 tLeng = LastPoint - tvertex;
-            Double_t tLength = tLeng.Mag();
+            auto tLeng = LastPoint - tvertex;
+            Double_t tLength = TMath::Sqrt(tLeng.Mag2());
             fLvsTheta->Fill(tTheta, tLength);
             // multiple vertex per event
             fVertex = new TEvePointSet(TString::Format("Vertex%d", j), 1, TEvePointSelectorConsumer::kTVT_XYZ);
@@ -653,8 +655,8 @@ void AtEventDrawTaskS800::DrawHitPoints()
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
-      AtHit hit = event->GetHitArray()->at(iHit);
-      Int_t PadNumHit = hit.GetHitPadNum();
+      AtHit hit = event->GetHitArray().at(iHit);
+      Int_t PadNumHit = hit.GetPadNum();
       Int_t PadMultHit = event->GetHitPadMult(PadNumHit);
       Double_t BaseCorr = hit.GetBaseCorr();
       Int_t Atbin = -1;
@@ -663,8 +665,8 @@ void AtEventDrawTaskS800::DrawHitPoints()
          continue;
       if (PadMultHit > fMultiHit)
          continue;
-      TVector3 position = hit.GetPosition();
-      TVector3 positioncorr = hit.GetPositionCorr();
+      auto position = hit.GetPosition();
+      auto positioncorr = hit.GetPositionCorr();
 
       if (!fEventManager->GetToggleCorrData()) {
          fHitSet->SetMarkerColor(fHitColor);
@@ -763,9 +765,9 @@ void AtEventDrawTaskS800::DrawHitPoints()
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
-      AtHit hit = event->GetHitArray()->at(iHit);
-      TVector3 position = hit.GetPosition();
-      TVector3 positioncorr = hit.GetPositionCorr();
+      AtHit hit = event->GetHitArray().at(iHit);
+      auto position = hit.GetPosition();
+      auto positioncorr = hit.GetPositionCorr();
 
       if (f3DHitStyle == 0) {
 

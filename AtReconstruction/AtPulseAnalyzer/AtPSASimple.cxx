@@ -9,10 +9,6 @@
 
 // ROOT classes
 #include "TH1F.h"
-#include "TRotation.h"
-#include "TMatrixD.h"
-#include "TArrayD.h"
-#include "TSpectrum.h"
 
 // STL
 #include <algorithm>
@@ -28,7 +24,6 @@ AtPSASimple::~AtPSASimple() {}
 void AtPSASimple::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 {
    Int_t numPads = rawEvent->GetNumPads();
-   Int_t hitNum = 0;
 
    for (Int_t iPad = 0; iPad < numPads; iPad++) {
       AtPad *pad = &(rawEvent->GetPads().at(iPad));
@@ -58,10 +53,6 @@ void AtPSASimple::Analyze(AtRawEvent *rawEvent, AtEvent *event)
             continue;
       }
 
-      AtHit *hit = new AtHit(hitNum, xPos, yPos, zPos, charge);
-      event->AddHit(hit);
-      delete hit;
-
-      hitNum++;
+      event->AddHit(pad->GetPadNum(), XYZPoint(xPos, yPos, zPos), charge);
    }
 }

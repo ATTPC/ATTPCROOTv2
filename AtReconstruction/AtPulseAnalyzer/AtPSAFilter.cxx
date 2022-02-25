@@ -92,7 +92,7 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
       Double_t QHitTot = 0.0;
       Int_t PadHitNum = 0;
-      TVector3 HitPos;
+      XYZPoint HitPos;
       TVector3 HitPosRot;
       Bool_t fValidBuff = kTRUE;
       Bool_t fValidThreshold = kTRUE;
@@ -281,11 +281,11 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                hit->SetBaseCorr(basecorr / 10.0);
                hit->SetSlopeCnt(slope_cnt);
                PadHitNum++;
-               hit->SetQHit(QHitTot); // TODO: The charge of each hit is the total charge of the spectrum, so for double
-                                      // structures this is unrealistic.
+               hit->SetTraceIntegral(QHitTot); // TODO: The charge of each hit is the total charge of the spectrum, so
+                                               // for double structures this is unrealistic.
                HitPos = hit->GetPosition();
                Rho2 += HitPos.Mag2();
-               RhoMean += HitPos.Mag();
+               RhoMean += HitPos.Rho();
                if ((xPos < -9000 || yPos < -9000) && pad->GetPadNum() != -1)
                   std::cout << " AtPSAFilter::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum()
                             << std::endl;
@@ -329,8 +329,10 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    // sor.filter(*cloud_filtered);
 
    for (Int_t pc = 0; pc < cloud_filtered->points.size(); pc++) {
-      // cloud_fil->Fill(cloud_filtered->points[pc].x,cloud_filtered->points[pc].y);
-      event->AddHit(&hitBuff.at(cloud_filtered->points[pc].rgb));
+      // TODO: Check this logic and make sure it works, I did not looks at it enough
+      auto hit = event->AddHit();
+      hit = hitBuff.at(cloud_filtered->points[pc].rgb);
+      // event->AddHit(&hitBuff.at(cloud_filtered->points[pc].rgb));
    }
 
    RhoVariance = Rho2 - (pow(RhoMean, 2) / (event->GetNumHits()));

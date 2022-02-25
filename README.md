@@ -146,9 +146,12 @@ Pull requests submitted should have the code formated in the [ROOT style](https:
 
 Before submitting a pull request, reformat the code using `clang-format`. If run from within the repository it will pick up the `.clang-format` file detail the style. This file is also reproduced on the page detailing ROOT the ROOT coding style. If for some reason you need a section of code to not be formatted, you can turn off formatting using comment flags. Formatting of code is turned off with the comment `// clang-format off` and re-enabled with the comment `// clang-format on`. This process can be simplified using the command `git-clang-format` which when given no options will tun `clang-format` on all lines of code that differ between the working directory and HEAD. Detailed documentation is [here](https://github.com/llvm-mirror/clang/blob/master/tools/clang-format/git-clang-format).
 
-All data members of a class should be private or protected and begin with the letter `f`, followed by a capital letter. All public member functions should begin with a capital letter. Private data members should be declared first, followed by the private static members, the private methods and the private static methods. Then the protected members and methods and finally the public methods. 
+All data members of a class should be private or protected and begin with the letter `f`, followed by a capital letter. All public member functions should begin with a capital letter. Private data members should be declared first, followed by the private static members, the private methods and the private static methods. Then the protected members and methods and finally the public methods. Add trivial get or setters directly in the class definition. Add more complex inlines (longer than one line) at the bottom of the .h file. 
 
 Avoid raw c types for anything that might be written to disk (any memeber variable), instead use ROOT defined types like `Int_t` defined in `Rtypes.h`. If any changes are made to the memory layout of a class, the version number in the ROOT macro `ClassDef` needs to be incremented. If the class overrides any virtual function, the macro `ClassDefOverride` should be used instead.
+
+An object should always be created in a valid state. Instance variables that are set to the same value in all constructors should be instantiated in the header file. Variables whose initial value can change depending on the constructor called, should be intialized in the constructor's braced-init-list. Prefer delegating constructors to repeating code. 
+
 
 ### Adding a class
 

@@ -110,8 +110,8 @@ void AtRANSACN::AtRansac::CalcRANSAC(AtEvent *event)
    std::cout << "RansacPCL tracks size : " << tracksSize << std::endl;
    if (tracksSize > 1) {
       for (Int_t ntrack = 0; ntrack < tracksSize; ntrack++) {
-         std::vector<AtHit> *trackHits = tracks->at(ntrack).GetHitArray();
-         Int_t nHits = trackHits->size();
+         std::vector<AtHit> trackHits = tracks->at(ntrack).GetHitArray();
+         Int_t nHits = trackHits.size();
          // std::cout<<" Num  Hits : "<<nHits<<std::endl;
          if (nHits > 5) {
             // MinimizeTrack(tracks.at(ntrack));
@@ -191,8 +191,8 @@ void AtRANSACN::AtRansac::CalcRANSACFull(AtEvent *event)
 
    if (tracks->size() > 1) { // Defined in CalcGenHoughSpace
       for (Int_t ntrack = 0; ntrack < tracks->size(); ntrack++) {
-         std::vector<AtHit> *trackHits = tracks->at(ntrack).GetHitArray();
-         Int_t nHits = trackHits->size();
+         std::vector<AtHit> trackHits = tracks->at(ntrack).GetHitArray();
+         Int_t nHits = trackHits.size();
 
          if (nHits > fMinHitsLine) // We only accept lines with more than 5 hits and a maximum number of lines of 5
          {
@@ -214,11 +214,9 @@ void AtRANSACN::AtRansac::CalcRANSACFull(AtEvent *event)
    // FindVertex(tracks);
 }
 
-std::vector<AtTrack> *AtRANSACN::AtRansac::Ransac(std::vector<AtHit> *hits)
+std::vector<AtTrack> *AtRANSACN::AtRansac::Ransac(const std::vector<AtHit> &hits)
 {
-
-   // Data writer
-   // pcl::PCDWriter writer;
+   LOG(debug) << "Running ransac with PCL";
 
    // initialize PointClouds
    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGBA>);
@@ -228,32 +226,35 @@ std::vector<AtTrack> *AtRANSACN::AtRansac::Ransac(std::vector<AtHit> *hits)
    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_p(new pcl::PointCloud<pcl::PointXYZRGBA>);
    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_f(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
-   if (hits->size() < 5)
+   if (hits.size() < 5)
       return &fRansacTracks;
 
-   Int_t nHits = hits->size();
+   Int_t nHits = hits.size();
    cloud->points.resize(nHits);
 
-   for (Int_t iHit = 0; iHit < nHits; iHit++) {
+   LOG(debug) << "Filling cloud point";
 
-      AtHit *hit = &hits->at(iHit);
-      Int_t PadNumHit = hit->GetHitPadNum();
-      TVector3 position = hit->GetPosition();
+   for (const auto &hit : hits) {
 
-      if (fRPhiSpace) { // TODO: Pass a vector of hits with the proper RxPhi conversion
-         cloud->points[iHit].x = hit->GetTimeStamp();
-         cloud->points[iHit].y =
+      Int_t PadNumHit = hit.GetPadNum();
+      auto position = hit.GetPosition();
+      auto hitID = hit.GetHitID();
+      LOG(debug) << "Looking for hitID " << hitID << " in hit array of size " << nHits;
+
+      if (fRPhiSpace) {
+         // TODO: Pass a vector of hits with the proper RxPhi conversion
+         cloud->points[hitID].x = hit.GetTimeStamp();
+         cloud->points[hitID].y =
             TMath::Sqrt(TMath::Power((fXCenter - position.X()), 2) + TMath::Power((fYCenter - position.Y()), 2)) *
             TMath::ATan2(fXCenter - position.X(), fYCenter - position.Y());
-         cloud->points[iHit].z = 0.0;
-         cloud->points[iHit].rgb = iHit;
+         cloud->points[hitID].z = 0.0;
+         cloud->points[hitID].rgb = hitID;
 
       } else {
-         cloud->points[iHit].x = position.X();
-         cloud->points[iHit].y = position.Y();
-         cloud->points[iHit].z = position.Z();
-         cloud->points[iHit].rgb = iHit; // Storing the position of the hit in the event container
-                                         // std::cout << position.X()<<"  "<<position.Y()<<"  "<<position.Z() << '\n';
+         cloud->points[hitID].x = position.X();
+         cloud->points[hitID].y = position.Y();
+         cloud->points[hitID].z = position.Z();
+         cloud->points[hitID].rgb = hitID; // Storing the position of the hit in the event container
       }
    }
 
@@ -282,40 +283,32 @@ std::vector<AtTrack> *AtRANSACN::AtRansac::Ransac(std::vector<AtHit> *hits)
 
       std::vector<Double_t> coeff;
 
-      /*std::cerr << "Model coefficients: " << coefficients->values[0] << " "
-                                          << coefficients->values[1] << " "
-                                          << coefficients->values[2] << " "
-                                          << coefficients->values[3] << " "
-                                          << coefficients->values[4] << "  "
-                                          << coefficients->values[5] << std::endl;*/
-
       // size of vector coefficients->values is not always 6!
       int Coefsize = coefficients->values.size();
 
       for (auto icoeff = 0; icoeff < Coefsize; ++icoeff)
          coeff.push_back(coefficients->values[icoeff]);
 
-      if (inliers->indices.size() == 0) {
-         // std::cerr << "Could not estimate a planar model for the given dataset." << std::endl;
+      if (inliers->indices.size() == 0)
          break;
-      }
+
       // Extract the inliers
       extract.setInputCloud(cloud);
       extract.setIndices(inliers);
       extract.setNegative(false);
       extract.filter(*cloud_p);
-      // std::cerr << "PointCloud representing the planar component: " << cloud_p->width * cloud_p->height << " data
-      // points." << std::endl;
-      // TODO: Possible memory leak, change to vector of objects!
-
-      // std::cout<<" Cloud p size "<<cloud_p->points.size()<<" "<<cloud_p->width<<"  "<<cloud_p->height<<"\n";
 
       if (cloud_p->points.size() > 0) {
          AtTrack track;
 
+         LOG(debug) << "Filling a track with hits";
          for (Int_t iHit = 0; iHit < cloud_p->points.size(); iHit++) {
-            if (&hits->at(cloud_p->points[iHit].rgb))
-               track.AddHit(&hits->at(cloud_p->points[iHit].rgb));
+
+            /*if (&hits.at(cloud_p->points[iHit].rgb))
+               track.AddHit(&hits.at(cloud_p->points[iHit].rgb));
+       */
+            LOG(debug) << "Getting hitID: " << cloud_p->points[iHit].rgb << " from hits";
+            track.AddHit(hits.at(cloud_p->points[iHit].rgb));
          }
 
          track.SetRANSACCoeff(coeff);
@@ -335,6 +328,7 @@ std::vector<AtTrack> *AtRANSACN::AtRansac::Ransac(std::vector<AtHit> *hits)
       i++;
    }
 
+   LOG(debug) << "Finishing ransac with PCL";
    return &fRansacTracks;
 }
 
@@ -351,14 +345,13 @@ Int_t AtRANSACN::AtRansac::MinimizeTrack(AtTrack *track)
    Int_t nd = 10000;
    TGraph2D *gr = new TGraph2D(); /////NB: This should be created on the heap only once so it should move outside of
                                   /// this function!!!!!!!!!!!!!!!
-   std::vector<AtHit> *HitArray = track->GetHitArray();
+   std::vector<AtHit> HitArray = track->GetHitArray();
 
    double p0[4] = {10, 20, 1, 2}; // For the moment those are dummy parameters
 
-   for (Int_t N = 0; N < HitArray->size(); N++) {
-      AtHit hit = HitArray->at(N);
-      TVector3 pos = hit.GetPosition();
-      gr->SetPoint(N, pos.X(), pos.Y(), pos.Z());
+   for (const auto &hit : HitArray) {
+      auto pos = hit.GetPosition();
+      gr->SetPoint(hit.GetHitID(), pos.X(), pos.Y(), pos.Z());
    }
 
    ROOT::Fit::Fitter fitter;
@@ -428,11 +421,11 @@ Int_t AtRANSACN::AtRansac::MinimizeTrackRPhi(AtTrack *track)
    gErrorIgnoreLevel = kFatal;
    TGraph *gr = new TGraph();
 
-   std::vector<AtHit> *HitArray = track->GetHitArray();
+   std::vector<AtHit> HitArray = track->GetHitArray();
 
-   for (Int_t N = 0; N < HitArray->size(); N++) {
-      AtHit hit = HitArray->at(N);
-      TVector3 pos = hit.GetPosition();
+   for (Int_t N = 0; N < HitArray.size(); N++) {
+      AtHit hit = HitArray.at(N);
+      auto pos = hit.GetPosition();
       Double_t xdum = hit.GetTimeStamp();
       Double_t ydum = TMath::Sqrt(TMath::Power((fXCenter - pos.X()), 2) + TMath::Power((fYCenter - pos.Y()), 2)) *
                       TMath::ATan2(fXCenter - pos.X(), fYCenter - pos.Y());
@@ -557,9 +550,9 @@ void AtRANSACN::AtRansac::FindVertex(std::vector<AtTrack *> tracks)
                   // the mean time of the track are needed to determine the direction of the track and then add 90
                   // degrees.
                   Double_t ang2 = TMath::ACos(num / den);
-                  TVector3 vertex1_buff;
+                  XYZVector vertex1_buff;
                   vertex1_buff.SetXYZ(c_1.X(), c_1.Y(), c_1.Z());
-                  TVector3 vertex2_buff;
+                  XYZVector vertex2_buff;
                   vertex2_buff.SetXYZ(c_2.X(), c_2.Y(), c_2.Z());
 
                   // Angle with respect to solenoid
@@ -580,8 +573,9 @@ void AtRANSACN::AtRansac::FindVertex(std::vector<AtTrack *> tracks)
                   track_f->SetAngleZDet(angZDetj);
                   track_f->SetAngleYDet(angYDetj);
 
-                  track->SetTrackVertex(0.5 * (vertex1_buff + vertex2_buff));
-                  track_f->SetTrackVertex(0.5 * (vertex1_buff + vertex2_buff));
+                  XYZPoint vertexAvg(0.5 * (vertex1_buff + vertex2_buff));
+                  track->SetTrackVertex(vertexAvg);
+                  track_f->SetTrackVertex(vertexAvg);
 
                   if (d < mad) {
 
@@ -609,7 +603,7 @@ void AtRANSACN::AtRansac::FindVertex(std::vector<AtTrack *> tracks)
                         PL.AngleYDet.first = angYDeti;
                         PL.AngleYDet.second = angYDetj;
                         PL.minDist = mad;
-                        PL.meanVertex = 0.5 * (fVertex_1 + fVertex_2);
+                        PL.meanVertex = fVertex_mean;
                         PL.angle = ang2;
                         PLines.push_back(PL);
                      }
@@ -625,7 +619,7 @@ void AtRANSACN::AtRansac::FindVertex(std::vector<AtTrack *> tracks)
                         PL.AngleYDet.first = angYDeti;
                         PL.AngleYDet.second = angYDetj;
                         PL.minDist = mad;
-                        PL.meanVertex = 0.5 * (fVertex_1 + fVertex_2);
+                        PL.meanVertex = fVertex_mean;
                         PL.angle = ang2;
                         PLines.push_back(PL);
                      }
@@ -646,7 +640,7 @@ void AtRANSACN::AtRansac::FindVertex(std::vector<AtTrack *> tracks)
                         PL.AngleYDet.first = angYDeti;
                         PL.AngleYDet.second = angYDetj;
                         PL.minDist = d;
-                        PL.meanVertex = 0.5 * (vertex1_buff + vertex2_buff);
+                        PL.meanVertex = TVector3(vertexAvg.X(), vertexAvg.Y(), vertexAvg.Z());
                         PL.angle = ang2;
                         PLines.push_back(PL);
                      }
@@ -664,7 +658,7 @@ void AtRANSACN::AtRansac::FindVertex(std::vector<AtTrack *> tracks)
                         PL.AngleYDet.first = angYDeti;
                         PL.AngleYDet.second = angYDetj;
                         PL.minDist = d;
-                        PL.meanVertex = 0.5 * (vertex1_buff + vertex2_buff);
+                        PL.meanVertex = TVector3(vertexAvg.X(), vertexAvg.Y(), vertexAvg.Z());
                         PL.angle = ang2;
                         PLines.push_back(PL);
                      }
@@ -761,15 +755,15 @@ Double_t AtRANSACN::AtRansac::Fit3D(AtTrack *track)
    Q = Xm = Ym = Zm = 0.;
    Sxx = Syy = Szz = Sxy = Sxz = Syz = 0.;
 
-   std::vector<AtHit> *HitArray = track->GetHitArray();
+   std::vector<AtHit> HitArray = track->GetHitArray();
    std::vector<double> X;
    std::vector<double> Y;
    std::vector<double> Z;
    std::vector<double> Charge;
 
-   for (Int_t i = 0; i < HitArray->size(); i++) {
-      AtHit hit = HitArray->at(i);
-      TVector3 pos = hit.GetPosition();
+   for (Int_t i = 0; i < HitArray.size(); i++) {
+      AtHit hit = HitArray.at(i);
+      auto pos = hit.GetPosition();
       Double_t tq = hit.GetCharge();
       X.push_back(pos.X());
       Y.push_back(pos.Y());
@@ -777,7 +771,7 @@ Double_t AtRANSACN::AtRansac::Fit3D(AtTrack *track)
       Charge.push_back(q);
    }
 
-   for (Int_t i = 0; i < HitArray->size(); i++) {
+   for (Int_t i = 0; i < HitArray.size(); i++) {
       Q += Charge[i] / 10.;
       Xm += X[i] * Charge[i] / 10.;
       Ym += Y[i] * Charge[i] / 10.;

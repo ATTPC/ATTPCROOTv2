@@ -108,7 +108,7 @@ public:
    void CalcRANSAC(AtEvent *event);
    void CalcRANSACFull(AtEvent *event);
    std::vector<AtTrack> *RansacPCL(AtEvent *event);
-   std::vector<AtTrack> *Ransac(std::vector<AtHit> *hits);
+   std::vector<AtTrack> *Ransac(const std::vector<AtHit> &hits);
    TVector3 GetVertex1();
    TVector3 GetVertex2();
    Double_t GetVertexTime();

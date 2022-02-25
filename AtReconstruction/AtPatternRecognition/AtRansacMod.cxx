@@ -34,13 +34,13 @@ void AtRansacMod::Init(AtEvent *event)
 
    Reset();
 
-   std::vector<AtHit> *hitArray = event->GetHitArray();
-   Int_t nHits = hitArray->size();
+   auto hitArray = event->GetHitArray();
+   Int_t nHits = hitArray.size();
    // std::cout << "Init   Hitarray size    "<<nHits << '\n';
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
-      AtHit hit = hitArray->at(iHit);
-      TVector3 position = hit.GetPosition();
+      AtHit hit = hitArray.at(iHit);
+      auto position = hit.GetPosition();
       Double_t tq = hit.GetCharge();
       if (tq < fChargeThres)
          continue;
@@ -374,7 +374,7 @@ std::vector<AtTrack *> AtRansacMod::Clusters2Tracks(AllClusters NClusters, AtEve
 
    std::vector<AtTrack *> tracks;
 
-   std::vector<AtHit> *hits = event->GetHitArray();
+   auto hits = event->GetHitArray();
 
    int numclus = NClusters.size();
    // std::cout << "numero de clusters "<<numclus << '\n';
@@ -390,7 +390,7 @@ std::vector<AtTrack *> AtRansacMod::Clusters2Tracks(AllClusters NClusters, AtEve
       AtTrack *track = new AtTrack();
       // std::cout << "hits en el cluster   "<<clustersize<<"   "<<indicesCluster.size() << '\n';
       for (int j = 0; j < clustersize; j++) {
-         track->AddHit(&hits->at(indicesCluster[j]));
+         track->AddHit(hits.at(indicesCluster[j]));
          // std::cout << j <<"  "<<indicesCluster[j]<< '\n';
       }
       // std::cout << "hits en el track   "<<track->GetHitArray()->size()<<"   "<<
@@ -480,8 +480,8 @@ void AtRansacMod::FindVertex(std::vector<AtTrack *> tracks)
 
             if (vertexbuff.Z() > 0 && vertexbuff.Z() < 1000 && radius < 25.0) {
 
-               track->SetTrackVertex(vertexbuff);
-               track_f->SetTrackVertex(vertexbuff);
+               track->SetTrackVertex(XYZPoint(vertexbuff));
+               track_f->SetTrackVertex(XYZPoint(vertexbuff));
                fVertex_1.SetXYZ(vertexbuff.X(), vertexbuff.Y(), vertexbuff.Z());
                fVertex_2.SetXYZ(vertexbuff.X(), vertexbuff.Y(), vertexbuff.Z());
                fVertex_mean = vertexbuff;
@@ -509,8 +509,8 @@ void AtRansacMod::FindVertex(std::vector<AtTrack *> tracks)
                if (vertexbuffdif.Mag() > 2 * fLineDistThreshold)
                   continue;
 
-               track->SetTrackVertex(vertexbuffav);
-               track_f->SetTrackVertex(vertexbuffav);
+               track->SetTrackVertex(XYZPoint(vertexbuffav));
+               track_f->SetTrackVertex(XYZPoint(vertexbuffav));
                fVertex_1.SetXYZ(vertexbuffav.X(), vertexbuffav.Y(), vertexbuffav.Z());
                fVertex_2.SetXYZ(vertexbuffav.X(), vertexbuffav.Y(), vertexbuffav.Z());
                fVertex_mean = vertexbuffav;
@@ -592,7 +592,7 @@ void AtRansacMod::FindVertexOneTrack(std::vector<AtTrack *> tracks)
 
          // if(vertexbuff.Z()>0 && vertexbuff.Z()<1000 && radius<25.0){
          if (radius < 25.0) {
-            track->SetTrackVertex(vertexbuff);
+            track->SetTrackVertex(XYZPoint(vertexbuff));
             fVertex_1.SetXYZ(vertexbuff.X(), vertexbuff.Y(), vertexbuff.Z());
             fVertex_mean = vertexbuff;
 

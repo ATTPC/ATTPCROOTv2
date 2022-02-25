@@ -33,7 +33,7 @@ ClassImp(genfit::AtSpacepointMeasurement)
    AtSpacepointMeasurement::AtSpacepointMeasurement(const AtHitCluster *detHit, const TrackCandHit *hit)
       : SpacepointMeasurement()
    {
-      TVector3 pos = detHit->GetPosition();
+      auto pos = detHit->GetPosition();
       TMatrixD mat = detHit->GetCovMatrix();
 
       rawHitCoords_(0) = pos.X() / 10.;

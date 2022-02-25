@@ -145,8 +145,8 @@ void AtPRAtask::Exec(Option_t *option)
       return;
 
    std::vector<AtHit> hitArray;
-   AtEvent &event = *((AtEvent *)fEventHArray->At(0));
-   hitArray = *event.GetHitArray();
+   AtEvent &event = *((AtEvent *)fEventHArray->At(0)); // TODO: Make sure we are not copying
+   hitArray = event.GetHitArray();
 
    std::cout << "  -I- AtTrackFinderHCTask -  Event Number :  " << event.GetEventID() << "\n";
 

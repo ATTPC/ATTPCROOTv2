@@ -96,7 +96,7 @@ void AtPSAtask::Exec(Option_t *opt)
    event->SetIsGood(rawEvent->IsGood());
    event->SetEventID(rawEvent->GetEventID());
    event->SetTimestamp(rawEvent->GetTimestamp());
-   event->SetIsExtGate(rawEvent->GetIsExtGate());
+   event->SetIsInGate(rawEvent->GetIsExtGate());
 
    if (!rawEvent->IsGood())
       return;
@@ -104,4 +104,6 @@ void AtPSAtask::Exec(Option_t *opt)
    LOG(debug) << " Event Number :  " << rawEvent->GetEventID() << " Valid pads : " << rawEvent->GetNumPads();
 
    fPSA->Analyze(rawEvent, event);
+
+   LOG(debug) << "Finished running PSA";
 }

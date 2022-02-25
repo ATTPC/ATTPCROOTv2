@@ -11,100 +11,74 @@
 #include "AtPad.h"
 
 using std::map;
-using std::vector;
+using hitVector = std::vector<AtHit>;
+using padVector = std::vector<AtPad>;
+using traceArray = std::array<Float_t, 512>;
 
 class AtEvent : public TNamed {
+private:
+   Int_t fEventID;
+   Bool_t fIsGood;
+   Bool_t fIsInGate = false;
+   Double_t fEventCharge = -100;
+   Double_t fRhoVariance = 0;
+   ULong_t fTimestamp = 0;
+
+   hitVector fHitArray;
+   padVector fAuxPadArray;
+   map<Int_t, Int_t> fMultiplicityMap;
+
+   traceArray fMeshSig;
+
 public:
-   // Constructor
-   AtEvent(Bool_t isClustered = kFALSE, Bool_t isTracked = kFALSE, Bool_t isChanged = kFALSE);
-   // Deep copy of event
-   AtEvent(AtEvent *object);
+   AtEvent();
+   AtEvent(Int_t eventID, Bool_t isGood);
+   AtEvent(const AtEvent &copy) = default;
+   ~AtEvent() = default;
 
-   ~AtEvent();
+   // Adds a new hit to the hit array, and returns a referece to the new hit to be
+   // filled. This is done to avoid the create and subsequent copy of a hit and also
+   // avoid dealing with the memory managment
+   AtHit &AddHit(const XYZPoint &loc, Double_t charge);
+   AtHit &AddHit(Int_t padNum, const XYZPoint &loc, Double_t charge);
+   AtHit &AddHit();
 
-   // setters
-   void SetEventID(Int_t evtid);
-   void SetTimestamp(ULong_t timestamp);
-   void AddHit(AtHit *hit);
-   void SetHitArray(vector<AtHit> *hitArray);
+   // Adds a new auxiliary pad to the auxiliary pad array, and returns a referece to
+   // the new auxiliary pad to be filled. This is done to avoid the create and subsequent
+   // copy of a hit and also avoid dealing with the memory managment
+   AtPad &AddAuxPad();
+   // Copies passed aux pad into the event's auxiliary pad array
+   void AddAuxPad(const AtPad &auxPad) { fAuxPadArray.push_back(auxPad); }
 
-   void AddAuxPad(AtPad *pad);
-   void SetAuxPadArray(vector<AtPad> *padArray);
+   void SetEventID(Int_t evtid) { fEventID = evtid; }
+   void SetTimestamp(ULong_t timestamp) { fTimestamp = timestamp; }
+   void SetEventCharge(Double_t Qevent) { fEventCharge = Qevent; }
+   void SetRhoVariance(Double_t RhoVariance) { fRhoVariance = RhoVariance; }
+   void SetIsGood(Bool_t value) { fIsGood = value; }
+   void SetIsInGate(Bool_t value) { fIsInGate = value; }
 
-   void SetEventCharge(Double_t Qevent);
-   void SetRhoVariance(Double_t RhoVariance);
-
-   void SetIsClustered(Bool_t value);
-   void SetIsTracked(Bool_t value);
-   void SetIsChanged(Bool_t value);
-   void SetMultiplicityMap(std::map<Int_t, Int_t> MultiMap);
-   void SetMeshSignal(Float_t *mesharray);
+   void SetMultiplicityMap(const std::map<Int_t, Int_t> &MultiMap);
+   void SetMeshSignal(const traceArray &mesharray);
    void SetMeshSignal(Int_t idx, Float_t val);
 
-   void SetIsGood(Bool_t value);
-   void SetIsExtGate(Bool_t value);
-
-   // getters
-   Int_t GetEventID();
-   Long_t GetTimestamp();
-   Int_t GetNumHits();
-   AtHit *GetHit(Int_t hitNo);
-   void RemoveHit(Int_t hitNo);
-   vector<AtHit> *GetHitArray();
-   vector<AtHit> GetHitArrayObj();
-
-   std::vector<AtPad> *GetAuxPadArray();
-
-   Bool_t IsExtGate();
-
-   Int_t GetNumClusters();
-   // AtHitCluster *GetCluster(Int_t clusterNo);
-   // void RemoveCluster(Int_t clusterNo);
-   // vector<AtHitCluster> *GetClusterArray();
-   //
-   // Int_t GetNumTracks();
-   // STTrack *GetTrack(Int_t trackNo);
-   // STTrack *RemoveTrack(Int_t trackNo);
-   // vector<STTrack> *GetTrackArray();
-
-   Double_t GetEventCharge();
-   Double_t GetRhoVariance();
+   const AtHit &GetHit(Int_t hitNo) const { return fHitArray.at(hitNo); }
+   const hitVector &GetHitArray() const { return fHitArray; }
+   const padVector &GetAuxPadArray() const { return fAuxPadArray; }
+   Int_t GetEventID() const { return fEventID; }
+   Long_t GetTimestamp() const { return fTimestamp; }
+   Int_t GetNumHits() const { return fHitArray.size(); }
+   Double_t GetEventCharge() const { return fEventCharge; }
+   Double_t GetRhoVariance() const { return fRhoVariance; }
+   const traceArray &GetMesh() const { return fMeshSig; }
    Int_t GetHitPadMult(Int_t PadNum); // Returns the multiplicity of the pad where this hit belongs to
-   Float_t *GetMesh();
 
-   Bool_t IsClustered();
-   Bool_t IsTracked();
-   Bool_t IsChanged();
+   Bool_t IsGood() const { return fIsGood; }
+   Bool_t IsInGate() const { return fIsInGate; }
 
-   Bool_t IsGood();
+   void SortHitArray();
+   void SortHitArrayTime();
 
-   static Bool_t SortHit(const AtHit &lhs, const AtHit &rhs) { return lhs.fPadNum < rhs.fPadNum; }
-   static Bool_t SortHitTime(const AtHit &lhs, const AtHit &rhs) { return lhs.fTimeStamp < rhs.fTimeStamp; }
-   Bool_t SortHitArray();
-   Bool_t SortHitArrayTime();
-
-private:
-   Bool_t fIsClustered;
-   Bool_t fIsTracked;
-   Bool_t fIsChanged;
-
-   Bool_t fIsGood;
-   Bool_t fIsinGate;
-
-   Int_t fEventID;
-   ULong_t fTimestamp;
-
-   vector<AtHit> fHitArray;
-   vector<AtPad> fAuxPadArray;
-
-   Double_t fQevent;
-   Double_t fRhoVariance;
-
-   map<Int_t, Int_t> fMultiMap;
-
-   Float_t fMeshSig[512];
-
-   ClassDef(AtEvent, 3);
+   ClassDef(AtEvent, 4);
 };
 
 // Bool_t operator<(const AtHit &s1, const AtHit &s2);

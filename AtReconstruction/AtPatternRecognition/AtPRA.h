@@ -29,7 +29,7 @@ public:
    void SetMaxHits(Int_t maxHits) { fMaxHits = maxHits; }
    void SetMinHits(Int_t minHits) { fMinHits = minHits; }
    void SetMeanDistance(Float_t meanDistance) { fMeanDistance = meanDistance; }
-   bool kNN(std::vector<AtHit> *hits, AtHit &hit, int k);
+   bool kNN(const std::vector<AtHit> &hits, AtHit &hit, int k);
 
    void SetkNN(Double_t knn) { fKNN = knn; }
    void SetStdDevMulkNN(Double_t stdDevMul) { fStdDevMulkNN = stdDevMul; }
