@@ -4,9 +4,14 @@ bool reduceFunc(AtRawEvent *evt);
 
 void rundigi_fast()
 {
+   auto verbSpec =
+      fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
+   fair::Logger::DefineVerbosity("user1", verbSpec);
+   // fair::Logger::SetVerbosity("user1");
+   // fair::Logger::SetConsoleSeverity("debug");
 
    //TString outputFile = "data/output_digiFast.root";
-   TString inOutDir = "./eventGenerator/sym/";
+   TString inOutDir = "./eventGenerator/symFull/";
    TString outputFile = inOutDir + "output_digi.root";
    TString scriptfile = "e12014_pad_mapping.xml";
    TString paramFile = "ATTPC.e12014.par";
@@ -52,7 +57,6 @@ void rundigi_fast()
    AtPulseLineTask *pulse = new AtPulseLineTask();
    pulse->SetPersistence(kTRUE);
    pulse->SetMap(mapping);
-   pulse->SetLowGainFactor(0.08);
    pulse->SetSaveMCInfo();
 
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
@@ -73,7 +77,7 @@ void rundigi_fast()
    ransacTask->SetDistanceThreshold(20.0);
    ransacTask->SetTiltAngle(0);
    ransacTask->SetMinHitsLine(10);
-   ransacTask->SetFullMode();
+   // ransacTask->SetFullMode();
 
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
@@ -84,8 +88,8 @@ void rundigi_fast()
    fRun->Init();
 
    timer.Start();
-   fRun->Run(0, 20001);
-   //fRun->Run(0, 2);
+   // fRun->Run(0, 20001);
+   fRun->Run(0, 50);
    timer.Stop();
 
    std::cout << std::endl << std::endl;

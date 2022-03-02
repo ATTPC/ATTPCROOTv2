@@ -3,13 +3,14 @@
 void rundigi_sim()
 {
 
-   TString outputFile = "data/output_digiFull.root";
    TString scriptfile = "e12014_pad_mapping.xml";
    TString paramFile = "ATTPC.e12014.par";
 
    TString dir = getenv("VMCWORKDIR");
+   TString outputDirectory = "/macro/e12014/simulation/eventGenerator/sym90/";
 
-   TString mcFile = "./data/sim_attpc.root";
+   TString mcFile = dir + outputDirectory + "simNew_attpc.root";
+   TString outputFile = dir + outputDirectory + "outputNew_digi.root";
 
    // Create the full parameter file paths
    TString digiParFile = dir + "/parameters/" + paramFile;
@@ -38,12 +39,12 @@ void rundigi_sim()
 
    // __ AT digi tasks___________________________________
    // AtClusterizeFastTask *clusterizer = new AtClusterizeFastTask();
-   AtClusterizeTask *clusterizer = new AtClusterizeTask();
-   // AtClusterizeLineTask *clusterizer = new AtClusterizeLineTask();
+   // AtClusterizeTask *clusterizer = new AtClusterizeTask();
+   AtClusterizeLineTask *clusterizer = new AtClusterizeLineTask();
    clusterizer->SetPersistence(kFALSE);
 
-   AtPulseTask *pulse = new AtPulseTask();
-   // AtPulseLineTask *pulse = new AtPulseLineTask();
+   // AtPulseTask *pulse = new AtPulseTask();
+   AtPulseLineTask *pulse = new AtPulseLineTask();
    pulse->SetPersistence(kTRUE);
    pulse->SetMap(mapping);
    pulse->SetLowGainFactor(0.08);

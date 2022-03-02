@@ -1,10 +1,12 @@
 // Code to simulate fission event from a file
+#include "FairLogger.h"
 
 void runMC_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 {
+   // fair::Logger::SetConsoleSeverity("debug");
    // Output file name
    TString dir = getenv("VMCWORKDIR");
-   TString inOutDir = "/macro/e12014/simulation/eventGenerator/asym/";
+   TString inOutDir = "/macro/e12014/simulation/eventGenerator/symFull/";
    TString parFileName = dir + inOutDir + "par_attpc.root";
    TString simFileName = dir + inOutDir + "sim_attpc.root";
 
@@ -33,7 +35,7 @@ void runMC_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
    run->SetMaterials("media.geo"); // Materials
 
    FairModule *cave = new AtCave("CAVE");
-   cave->SetGeometryFileName("cave.geo");
+   cave->SetGeometryFileName("caveSmall.geo");
    run->AddModule(cave);
 
    AtTpc *ATTPC = new AtTpc("ATTPC", kTRUE);
