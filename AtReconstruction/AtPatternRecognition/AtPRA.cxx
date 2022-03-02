@@ -70,9 +70,9 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
    RansacSmoothRadius.SetRANSACPointThreshold(0.1);
    RansacSmoothRadius.SetDistanceThreshold(6.0);
    std::vector<AtTrack> *circularTracks =
-      RansacSmoothRadius.Ransac(track.GetHitArray()); // Only part of the spiral is used
-                                                      // This function also sets the coefficients
-                                                      // i.e. radius of curvature and center
+      RansacSmoothRadius.RansacPCL(track.GetHitArray()); // Only part of the spiral is used
+                                                         // This function also sets the coefficients
+                                                         // i.e. radius of curvature and center
 
    // Local PCL RANSAC
    // pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
@@ -154,7 +154,7 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
             RansacTheta.SetModelType(pcl::SACMODEL_LINE);
             RansacTheta.SetRANSACPointThreshold(0.1);
             RansacTheta.SetDistanceThreshold(6.0);
-            std::vector<AtTrack> *thetaTracks = RansacTheta.Ransac(thetaHits);
+            std::vector<AtTrack> *thetaTracks = RansacTheta.RansacPCL(thetaHits);
 
             // RansacTheta.MinimizeTrack(thetaTracks[0]);
             if (thetaTracks->size() > 0) {

@@ -15,29 +15,9 @@ AtTrack::AtTrack()
    fAngleZAxis = -20;
    fAngleZDet = -20;
    fAngleYDet = -20;
-   fRange = 0.0;
-   fQuadrant = -1;
-   fGeoEnergy = -10.0;
-   fGeoQEnergy = -10.0;
    kIsNoise = kFALSE;
 }
 
-void AtTrack::AddHit(const AtHit &hit)
-{
-   fHitArray.push_back(hit);
-}
-void AtTrack::SetTrackID(Int_t val)
-{
-   fTrackID = val;
-}
-void AtTrack::SetFitPar(std::vector<Double_t> par)
-{
-   fParFit = par;
-}
-void AtTrack::SetMinimum(Double_t min)
-{
-   fMinimum = min;
-}
 void AtTrack::SetNFree(Int_t ndf)
 {
    fNFree = ndf;
@@ -58,10 +38,6 @@ void AtTrack::SetTrackVertex(XYZPoint vertex)
 {
    fTrackVertex = vertex;
 }
-void AtTrack::SetRange(Double_t range)
-{
-   fRange = range;
-}
 void AtTrack::SetGeoTheta(Double_t angle)
 {
    fGeoThetaAngle = angle;
@@ -69,22 +45,6 @@ void AtTrack::SetGeoTheta(Double_t angle)
 void AtTrack::SetGeoPhi(Double_t angle)
 {
    fGeoPhiAngle = angle;
-}
-void AtTrack::SetGeoRange(Double_t range)
-{
-   fRange = range;
-}
-void AtTrack::SetQuadrant(Int_t quad)
-{
-   fQuadrant = quad;
-}
-void AtTrack::SetGeoEnergy(Double_t energy)
-{
-   fGeoEnergy = energy;
-}
-void AtTrack::SetGeoQEnergy(Double_t qenergy)
-{
-   fGeoQEnergy = qenergy;
 }
 void AtTrack::SetIsNoise(Bool_t value)
 {
@@ -109,7 +69,7 @@ std::vector<AtHitCluster> *AtTrack::GetHitClusterArray()
 }
 std::vector<Double_t> AtTrack::GetFitPar()
 {
-   return fParFit;
+   return fFitPar;
 }
 Double_t AtTrack::GetMinimum()
 {
@@ -139,10 +99,6 @@ XYZPoint AtTrack::GetTrackVertex()
 {
    return fTrackVertex;
 }
-Int_t AtTrack::GetQuadrant()
-{
-   return fQuadrant;
-}
 Double_t AtTrack::GetGeoTheta()
 {
    return fGeoThetaAngle;
@@ -150,10 +106,6 @@ Double_t AtTrack::GetGeoTheta()
 Double_t AtTrack::GetGeoPhi()
 {
    return fGeoPhiAngle;
-}
-Double_t AtTrack::GetGeoEnergy()
-{
-   return fGeoEnergy;
 }
 Bool_t AtTrack::GetIsNoise()
 {
@@ -216,14 +168,14 @@ std::pair<Double_t, Double_t>
 AtTrack::GetThetaPhi(const XYZPoint &vertex, const XYZPoint &maxPos, int zdir) // zdir -1 for simu // +1 for data
 {
    std::pair<Double_t, Double_t> thetaPhi;
-   if (fParFit.size() > 0) {
+   if (fFitPar.size() > 0) {
 
-      XYZPoint vp(TMath::Sign(1, maxPos.X()) * fabs(fParFit[1]), TMath::Sign(1, maxPos.Y()) * fabs(fParFit[3]),
-                  zdir * TMath::Sign(1, (maxPos.Z() - vertex.Z())) * fabs(fParFit[5])); // works with simu
+      XYZPoint vp(TMath::Sign(1, maxPos.X()) * fabs(fFitPar[1]), TMath::Sign(1, maxPos.Y()) * fabs(fFitPar[3]),
+                  zdir * TMath::Sign(1, (maxPos.Z() - vertex.Z())) * fabs(fFitPar[5])); // works with simu
       // XYZPoint
-      // vp(TMath::Sign(1,maxPos.X())*fabs(fParFit[1]),TMath::Sign(1,maxPos.Y())*fabs(fParFit[3]),TMath::Sign(1,(maxPos.Z()-vertex.Z()))*fabs(fParFit[5]));//works
+      // vp(TMath::Sign(1,maxPos.X())*fabs(fFitPar[1]),TMath::Sign(1,maxPos.Y())*fabs(fFitPar[3]),TMath::Sign(1,(maxPos.Z()-vertex.Z()))*fabs(fFitPar[5]));//works
       // with data
-      //		std::cout<<" fParFit "<<fParFit[1]<<" "<<fParFit[3]<<" "<<fParFit[5]<<std::endl;
+      //		std::cout<<" fFitPar "<<fFitPar[1]<<" "<<fFitPar[3]<<" "<<fFitPar[5]<<std::endl;
       //		std::cout<<" maxPos "<<maxPos.X()<<" "<<maxPos.Y()<<" "<<maxPos.Z()<<std::endl;
 
       thetaPhi.first = vp.Theta();

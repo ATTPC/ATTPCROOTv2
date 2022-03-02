@@ -19,7 +19,6 @@ AtRANSACN::AtRansac::AtRansac()
    fRANSACThreshold = 5.0;
    fMinHitsLine = 5;
 
-   fRPhiSpace = kFALSE;
    fXCenter = 0.0;
    fYCenter = 0.0;
 
@@ -83,10 +82,6 @@ void AtRANSACN::AtRansac::SetMinHitsLine(Int_t nhits)
 {
    fMinHitsLine = nhits;
 }
-void AtRANSACN::AtRansac::SetRPhiSpace()
-{
-   fRPhiSpace = kTRUE;
-}
 void AtRANSACN::AtRansac::SetXYCenter(Double_t xc, Double_t yc)
 {
    fXCenter = xc;
@@ -104,7 +99,7 @@ void AtRANSACN::AtRansac::SetVertexTime(Double_t val)
 void AtRANSACN::AtRansac::CalcRANSAC(AtEvent *event)
 {
 
-   std::vector<AtTrack> *tracks = RansacPCL(event);
+   std::vector<AtTrack> *tracks = RansacPCL(event->GetHitArray());
 
    Int_t tracksSize = tracks->size();
    std::cout << "RansacPCL tracks size : " << tracksSize << std::endl;
@@ -116,76 +111,20 @@ void AtRANSACN::AtRansac::CalcRANSAC(AtEvent *event)
          if (nHits > 5) {
             // MinimizeTrack(tracks.at(ntrack));
             double mychi2 = Fit3D(&tracks->at(ntrack));
+            tracks->at(ntrack).SetTrackID(ntrack);
+            fTrackCand.push_back(tracks->at(ntrack));
          }
       } // Tracks loop
       // FindVertex(tracks);
 
    } // Minimum tracks
 
-   // Drawing tracks against the Event
-   /*TH2F* vis_RAD = new TH2F("vis_RAD","vis_RAD",1000,0,1000,1000,-250,250);
-   TH2F* exp_RAD = new TH2F("exp_RAD","exp_RAD",1000,0,1000,1000,-250,250);
-
-   TH2F* exp_amp =  new TH2F("exp_amp","exp_amp",1000,-250,250,1000,0,4000);
-   TH2F* track_amp =  new TH2F("track_amp","track_amp",1000,-250,250,1000,0,4000);
-
-   vis_RAD->SetMarkerColor(kGreen);
-   vis_RAD->SetMarkerStyle(20);
-   vis_RAD->SetMarkerSize(1.5);
-
-   exp_RAD->SetMarkerColor(kRed);
-   exp_RAD->SetMarkerStyle(20);
-   exp_RAD->SetMarkerSize(1.0);
-
-   exp_amp->SetMarkerColor(kGreen);
-   exp_amp->SetMarkerStyle(20);
-   exp_amp->SetMarkerSize(1.5);
-
-   track_amp->SetMarkerColor(kRed);
-   track_amp->SetMarkerStyle(20);
-   track_amp->SetMarkerSize(1.0);
-
-   if(tracks.size()>0){
-       for(Int_t i=0;i<1;i++){
-        std::vector<AtHit> hit_track = *tracks.at(i)->GetHitArray();
-
-               for(Int_t j=0;j<hit_track.size();j++)
-               {
-                 AtHit hitT =  hit_track.at(j);
-                 TVector3 posSol = hitT.GetPosition();
-                 Double_t rad = TMath::Sqrt( TMath::Power(posSol.X(),2) + TMath::Power(posSol.Y(),2) );
-                 vis_RAD->Fill(posSol.Z(),rad);
-                 track_amp->Fill(posSol.Y(),hitT.GetCharge());
-
-               }
-
-      }
-   }
-
-   std::vector<AtHit> *hit_track = event->GetHitArray();
-
-       for(Int_t i=0;i<hit_track->size();i++){
-             AtHit hit =  hit_track->at(i);
-             TVector3 pos = hit.GetPosition();
-             Double_t rad = TMath::Sqrt( TMath::Power(pos.X(),2) + TMath::Power(pos.Y(),2) );
-             exp_RAD->Fill(pos.Z(),rad);
-             exp_amp->Fill(pos.Y(),hit.GetCharge());
-
-       }
-
-       track_amp->Draw();
-       exp_amp->Draw("SAME");
-
-     //vis_RAD->Draw();
-     //exp_RAD->Draw("SAME");
-
-     */
 }
 
 void AtRANSACN::AtRansac::CalcRANSACFull(AtEvent *event)
 {
 
-   std::vector<AtTrack> *tracks = RansacPCL(event);
+   std::vector<AtTrack> *tracks = RansacPCL(event->GetHitArray());
 
    XYZVector Z_1(0.0, 0.0, 1.0); // Beam direction
 
@@ -214,7 +153,7 @@ void AtRANSACN::AtRansac::CalcRANSACFull(AtEvent *event)
    // FindVertex(tracks);
 }
 
-std::vector<AtTrack> *AtRANSACN::AtRansac::Ransac(const std::vector<AtHit> &hits)
+std::vector<AtTrack> *AtRANSACN::AtRansac::RansacPCL(const std::vector<AtHit> &hits)
 {
    LOG(debug) << "Running ransac with PCL";
 
@@ -236,26 +175,13 @@ std::vector<AtTrack> *AtRANSACN::AtRansac::Ransac(const std::vector<AtHit> &hits
 
    for (const auto &hit : hits) {
 
-      Int_t PadNumHit = hit.GetPadNum();
       auto position = hit.GetPosition();
       auto hitID = hit.GetHitID();
-      LOG(debug) << "Looking for hitID " << hitID << " in hit array of size " << nHits;
 
-      if (fRPhiSpace) {
-         // TODO: Pass a vector of hits with the proper RxPhi conversion
-         cloud->points[hitID].x = hit.GetTimeStamp();
-         cloud->points[hitID].y =
-            TMath::Sqrt(TMath::Power((fXCenter - position.X()), 2) + TMath::Power((fYCenter - position.Y()), 2)) *
-            TMath::ATan2(fXCenter - position.X(), fYCenter - position.Y());
-         cloud->points[hitID].z = 0.0;
-         cloud->points[hitID].rgb = hitID;
-
-      } else {
-         cloud->points[hitID].x = position.X();
-         cloud->points[hitID].y = position.Y();
-         cloud->points[hitID].z = position.Z();
-         cloud->points[hitID].rgb = hitID; // Storing the position of the hit in the event container
-      }
+      cloud->points[hitID].x = position.X();
+      cloud->points[hitID].y = position.Y();
+      cloud->points[hitID].z = position.Z();
+      cloud->points[hitID].rgb = hitID; // Storing the position of the hit in the event container
    }
 
    pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients());
@@ -264,7 +190,7 @@ std::vector<AtTrack> *AtRANSACN::AtRansac::Ransac(const std::vector<AtHit> &hits
    // Create the segmentation object
    pcl::SACSegmentation<pcl::PointXYZRGBA> seg;
    seg.setOptimizeCoefficients(true);
-   seg.setModelType(fRANSACModel);
+   seg.setModelType(fRANSACModel); // https://pointclouds.org/documentation/group__sample__consensus.html
    seg.setMethodType(pcl::SAC_RANSAC);
    seg.setMaxIterations(1000);
    seg.setDistanceThreshold(fRANSACThreshold);
@@ -330,12 +256,6 @@ std::vector<AtTrack> *AtRANSACN::AtRansac::Ransac(const std::vector<AtHit> &hits
 
    LOG(debug) << "Finishing ransac with PCL";
    return &fRansacTracks;
-}
-
-std::vector<AtTrack> *AtRANSACN::AtRansac::RansacPCL(AtEvent *event)
-{
-
-   return AtRANSACN::AtRansac::Ransac(event->GetHitArray());
 }
 
 Int_t AtRANSACN::AtRansac::MinimizeTrack(AtTrack *track)
@@ -412,48 +332,6 @@ Int_t AtRANSACN::AtRansac::MinimizeTrack(AtTrack *track)
    l->SetLineColor(kRed);
    l->Draw("same");*/
 
-   return 0;
-}
-
-Int_t AtRANSACN::AtRansac::MinimizeTrackRPhi(AtTrack *track)
-{
-
-   gErrorIgnoreLevel = kFatal;
-   TGraph *gr = new TGraph();
-
-   std::vector<AtHit> HitArray = track->GetHitArray();
-
-   for (Int_t N = 0; N < HitArray.size(); N++) {
-      AtHit hit = HitArray.at(N);
-      auto pos = hit.GetPosition();
-      Double_t xdum = hit.GetTimeStamp();
-      Double_t ydum = TMath::Sqrt(TMath::Power((fXCenter - pos.X()), 2) + TMath::Power((fYCenter - pos.Y()), 2)) *
-                      TMath::ATan2(fXCenter - pos.X(), fYCenter - pos.Y());
-      gr->SetPoint(N, xdum, ydum);
-   }
-
-   gr->Fit("pol1", "FQ");
-   int npoints = gr->GetN();
-   // gr->Draw("A*");
-   TF1 *fit = gr->GetFunction("pol1");
-   std::vector<Double_t> parFit;
-   parFit.push_back(fit->GetParameter(0));
-   parFit.push_back(fit->GetParameter(1));
-   double Chi2_min = fit->GetChisquare();
-   double sigma2 = 25.0; // Size of the pad squared
-   Int_t NDF = fit->GetNDF();
-   track->SetFitPar(parFit);
-   track->SetMinimum(Chi2_min);
-   track->SetNFree(NDF);
-
-   /*std::cout<<" Line Fit Results : "<<std::endl;
-   std::cout<<parFit[0]<<" "<<parFit[1]<<"  "<<std::endl;
-   std::cout<<" Chi2          : "<<Chi2_min<<" NDF : "<<NDF<<std::endl;
-   std::cout<<" Chi2 reduced  : "<<(Chi2_min/sigma2/(double) npoints)<<std::endl;
-   std::cout<<" Angle : "<<TMath::ATan2(parFit[1],1)*180.0/TMath::Pi()<<std::endl;*/
-
-   // delete fit;
-   // delete gr;
    return 0;
 }
 
