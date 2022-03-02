@@ -111,5 +111,8 @@ bool nextEvent()
    auto ret = reader->Next();
    rawEventPtr = dynamic_cast<AtRawEvent *>((*rawEventReader)->At(0));
    eventPtr = dynamic_cast<AtEvent *>((*eventReader)->At(0));
+   if (ransacReader != nullptr)
+      ransacPtr = dynamic_cast<AtRANSACN::AtRansac *>((*ransacReader)->At(0));
+
    return ret;
 }

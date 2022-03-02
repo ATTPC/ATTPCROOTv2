@@ -14,7 +14,8 @@
 #include "TLorentzVector.h"
 #include "TString.h"
 #include "TCanvas.h"
-#include "Math/GenVector/LorentzVector.h"
+#include "Math/Vector3D.h"
+#include "Math/Vector4D.h"
 #include "TTree.h"
 
 #include <iostream>
@@ -25,6 +26,7 @@
 const double AtoE = 939.0;
 const double c = 2.998e8; // In m/s
 using VecXYZE = ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<>>;
+using VecPolar = ROOT::Math::Polar3D<double>;
 using vecInt = std::vector<Int_t>;
 
 // Function prototypes
@@ -33,8 +35,7 @@ vecInt getProductChargeSameDistro(Int_t Z, const vecInt &masses);
 vecInt getProductChargeMaxBE(Int_t Z, const vecInt &masses);
 vecInt getProductChargeMaxBEA(Int_t Z, const vecInt &masses);
 
-std::vector<VecXYZE>
-getProductMomenta(const vecInt &fragA, const vecInt &fragZ, TRandom *rand = new TRandom3(), TVector3 *p = nullptr);
+std::vector<VecXYZE> getProductMomenta(const vecInt &fragA, const vecInt &fragZ, TRandom *rand, VecPolar &decayAng);
 
 Int_t sumVector(const vecInt &vec)
 {
@@ -58,6 +59,7 @@ A: Atomic mass number
 optional:
 massFrac: Central value of the mass distro for the more massive product as a fraction of A
 massDev: Deviation of the gaussian in amu
+polarAng: Angle of decay with respect to beam axis (in degrees)
 
 Output:
 fissionFragments.root with histograms of results and a TTree of generated events in rest frame
@@ -93,13 +95,9 @@ int fissionMC(int N, int Z = 82, int A = 196, float massFrac = 0.56, float massD
 
       // Generate an array of products in the rest frame using the supplied angle
       // or a random angle if 0 was supplied
-      TVector3 *pOfLightFragment = nullptr;
-      if (polarAng != 0) {
-         pOfLightFragment = new TVector3(1, 0, 0);
-         pOfLightFragment->SetTheta(polarAng);
-      }
+      VecPolar decayAngle(1, TMath::DegToRad() * polarAng, 0); // r, theta, phi
 
-      decayMomenta = getProductMomenta(fragA, fragZ, &rand, pOfLightFragment);
+      decayMomenta = getProductMomenta(fragA, fragZ, &rand, decayAngle);
       for (int j = 0; j < fragA.size(); ++j)
          ionSet.insert(std::pair<int, int>(fragA.at(j), fragZ.at(j)));
 
@@ -169,8 +167,10 @@ vecInt getProductChargeMaxBE(Int_t Z, const vecInt &masses)
 
 vecInt getProductChargeMaxBEA(Int_t Z, const vecInt &masses)
 {
+   // LDM parameters
    auto asym = 23.2;
    auto coul = 0.714;
+
    Int_t A = sumVector(masses);
    auto A1 = masses.at(0);
    auto A2 = masses.at(1);
@@ -192,7 +192,7 @@ vecInt getProductChargeMaxBEA(Int_t Z, const vecInt &masses)
    return fragZ;
 }
 
-std::vector<VecXYZE> getProductMomenta(const vecInt &fragA, const vecInt &fragZ, TRandom *rand, TVector3 *p)
+std::vector<VecXYZE> getProductMomenta(const vecInt &fragA, const vecInt &fragZ, TRandom *rand, VecPolar &decayAng)
 {
 
    Int_t Z = sumVector(fragZ);
@@ -214,18 +214,21 @@ std::vector<VecXYZE> getProductMomenta(const vecInt &fragA, const vecInt &fragZ,
    E[0] = TMath::Sqrt(E[1] * E[1] + m[0] * m[0] - m[1] * m[1]);
 
    // Set the momentum unit vector if nullptr
-   if (p == nullptr) {
+   if (decayAng.Theta() != 0)
+      decayAng.SetPhi(rand->Uniform(TMath::TwoPi()));
+   else {
       Double_t x, y, z;
       rand->Sphere(x, y, z, 1.0);
-      p = new TVector3(x, y, z);
+      decayAng = ROOT::Math::XYZVectorD(x, y, z);
    }
 
    // Set the momentum of first particles
-   p->SetMag(TMath::Sqrt(E[0] * E[0] - m[0] * m[0]));
+   decayAng.SetR(TMath::Sqrt(E[0] * E[0] - m[0] * m[0]));
 
    std::vector<VecXYZE> ret;
-   ret.push_back(VecXYZE(p->X(), p->Y(), p->Z(), E[0]));
-   ret.push_back(VecXYZE(-p->X(), -p->Y(), -p->Z(), E[1]));
+   ret.push_back(VecXYZE(decayAng.X(), decayAng.Y(), decayAng.Z(), E[0]));
+   ret.push_back(VecXYZE(-decayAng.X(), -decayAng.Y(), -decayAng.Z(), E[1]));
+
    return ret;
 }
 
