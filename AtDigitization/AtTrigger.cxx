@@ -105,7 +105,7 @@ Bool_t AtTrigger::ImplementTrigger(AtRawEvent *rawEvent, AtEvent *event)
       if (fPad == nullptr)
          continue;
 
-      fRawAdc = fPad->GetADC();
+      auto fRawAdc = fPad->GetADC();
       fPadNum = fPad->GetPadNum();
 
       //*************************************************************************************************

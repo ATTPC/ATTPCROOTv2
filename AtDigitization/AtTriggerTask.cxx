@@ -59,7 +59,7 @@ InitStatus AtTriggerTask::Init()
 
    //**********Get and set parameters*************************
    Double_t read, write, MSB, LSB, width, fraction, threshold, window, height;
-   fTrigger = new AtTrigger();
+   fTrigger = new AtTrigger(); // TODO: Replace with smart pointer
 
    write = fPar->GetWrite_Clock();
    read = fPar->GetRead_Clock();
@@ -104,7 +104,7 @@ void AtTriggerTask::Exec(Option_t *option)
       std::cerr << "Event triggered by DAQ" << std::endl;
 
       AtEvent *event_acc = (AtEvent *)new ((*fAtEventArray_acc)[0]) AtEvent(*fEvent);
-      AtRawEvent *rawEvent_acc = (AtRawEvent *)new ((*fAtRawEventArray_acc)[0]) AtRawEvent(fRawEvent);
+      AtRawEvent *rawEvent_acc = (AtRawEvent *)new ((*fAtRawEventArray_acc)[0]) AtRawEvent(*fRawEvent);
    }
 }
 

@@ -65,7 +65,7 @@ void AtAuxFilterTask::Exec(Option_t *opt)
 
       auto itPair = rawEvent->AddAuxPad(auxName + "Filtered");
 
-      auto pad = &(itPair.first->second);
+      auto pad = itPair.first;
       pad->SetRawADC(unfilteredPad->GetRawADC());
       if (unfilteredPad->IsPedestalSubtracted()) {
          pad->SetADC(unfilteredPad->GetADC());

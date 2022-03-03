@@ -53,23 +53,17 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    std::multimap<Int_t, std::size_t> mcPointsMap = rawEvent->GetSimMCPointMap();
    LOG(debug) << " MC Simulated points Map size " << mcPointsMap.size();
 
-   /* for (const auto& entry : mcPointsMap)
-      {
-      std::cout<<entry.first<<"  "<<entry.second<<"\n";
-      } */
-
    //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
    for (auto &pad : rawEvent->GetPads()) {
 
+      LOG(debug) << "Running PSA on pad " << pad.GetPadNum();
       Int_t PadNum = pad.GetPadNum();
       Int_t pSizeID = pad.GetSizeID();
       Double_t gthreshold = -1;
       if (pSizeID == 0)
          gthreshold = fThresholdlow; // threshold for central pads
-      else if (pSizeID == 1)
-         gthreshold = fThreshold; // threshold for big pads
       else
-         gthreshold = fThreshold; // default threshold for all pads
+         gthreshold = fThreshold; // threshold for big pads (or all other not small)
 
       Double_t QHitTot = 0.0;
       Int_t PadHitNum = 0;
@@ -79,15 +73,8 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       Bool_t fValidBuff = kTRUE;
       Bool_t fValidThreshold = kTRUE;
       Bool_t fValidDerivative = kTRUE;
-      TRotation r;
-      TRotation ry;
-      TRotation rx;
-      r.RotateZ(272.0 * TMath::Pi() / 180.0);
-      ry.RotateY(180.0 * TMath::Pi() / 180.0);
-      rx.RotateX(6.0 * TMath::Pi() / 180.0);
 
-      Double_t xPos = pad.GetPadXCoord();
-      Double_t yPos = pad.GetPadYCoord();
+      auto pos = pad.GetPadCoord();
       Double_t zPos = 0;
       Double_t xPosRot = 0;
       Double_t yPosRot = 0;
@@ -99,10 +86,10 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       Int_t maxAdcIdx = 0;
       Int_t numPeaks = 0;
 
-      if ((xPos < -9000 || yPos < -9000) && !pad.IsAux()) {
+      if ((pos.X() < -9000 || pos.Y() < -9000) && !pad.IsAux()) {
+         LOG(debug) << "Skipping pad, position is invalid";
          continue;
       } else if (pad.IsAux()) {
-
          LOG(debug) << "Adding aux pad: " << pad.GetAuxName();
          event->AddAuxPad(pad);
          continue;
@@ -114,11 +101,12 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          LOG(ERROR) << "Pedestal should be subtracted to use this class!";
       }
 
-      Double_t *adc = pad.GetADC();
+      auto adc = pad.GetADC();
       Double_t floatADC[512] = {0};
       Double_t dummy[512] = {0};
       Double_t bg[512] = {0};
 
+      // TODO: Add in warning that fCalibration is depricated in favor of AtFilter framework
       if (fCalibration->IsGainFile()) {
          adc = fCalibration->CalibrateGain(adc, PadNum);
       }
@@ -130,7 +118,6 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          floatADC[iTb] = adc[iTb];
          QHitTot += adc[iTb];
          bg[iTb] = adc[iTb];
-         // if(floatADC[iTb]!=0)std::cout << "Pad  "<<iPad<<"  tb  "<<iTb<<"  ADC  "<<floatADC[iTb] << '\n';
       }
 
       TSpectrum *PeakFinder = new TSpectrum;
@@ -172,8 +159,6 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
             if (fIsMaxFinder) {
                for (Int_t ij = 20; ij < 500; ij++) // Excluding first and last 12 Time Buckets
                {
-                  // if(PadNum==9788) std::cout<<" Time Bucket "<<i<<" floatADC "<<floatADC[i]<<std::endl;
-
                   if (floatADC[ij] > max) {
                      max = floatADC[ij];
                      maxTime = ij;
@@ -232,23 +217,14 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
             else
                zPos = CalculateZGeo(maxAdcIdx);
 
-            if (fIsMaxFinder) {
-               if ((gthreshold > 0 && charge < gthreshold) || maxTime < 20 ||
-                   maxTime > 500) // TODO: Does this work when the polarity is negative??
-                  fValidThreshold = kFALSE;
+            if (gthreshold > 0 && charge < gthreshold) {
+               fValidThreshold = false;
+               LOG(debug) << "Invalid threshold with charge: " << charge << " and threshold: " << gthreshold;
             }
-            if (fIsPeakFinder) {
-               if (gthreshold > 0 && charge < gthreshold)
-                  fValidThreshold = kFALSE;
+            if (fIsMaxFinder && (maxTime < 20 || maxTime > 500)) {
+               fValidThreshold = kFALSE;
+               LOG(debug) << "Peak is outside valid time window (20,500) TBs.";
             }
-
-            // if (zPos > 0 || zPos < -fMaxDriftLength)
-            // if (zPos < 0 || zPos > fMaxDriftLength)
-            // continue;
-            /*   if(PadNum== 9611){
-               std::cout<<" PadNum "<<PadNum<<" Charge "<<charge<<" maxTime "<<maxTime<<std::endl;
-               std::cout<<" Valid Threshold : "<<fValidThreshold<<std::endl;
-               } */
 
             if (fValidThreshold && fValidDerivative) {
 
@@ -257,16 +233,16 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                if (iPeak == 0)
                   QEventTot += QHitTot;
 
-               TVector3 posRot = RotateDetector(xPos, yPos, zPos, maxAdcIdx);
+               TVector3 posRot = RotateDetector(pos.X(), pos.Y(), zPos, maxAdcIdx);
 
-               auto hit = event->AddHit(PadNum, XYZPoint(xPos, yPos, zPos), charge);
+               LOG(debug) << "Adding hit...";
+               auto hit = event->AddHit(PadNum, XYZPoint(pos.X(), pos.Y(), zPos), charge);
                hit.SetPositionCorr(posRot.X(), posRot.Y(), posRot.Z());
                hit.SetTimeStamp(maxAdcIdx);
                hit.SetTimeStampCorr(TBCorr);
                hit.SetTimeStampCorrInter(timemax);
                hit.SetBaseCorr(basecorr / 10.0);
                hit.SetSlopeCnt(slope_cnt);
-               PadHitNum++;
                hit.SetTraceIntegral(QHitTot);
                // TODO: The charge of each hit is the total charge of the spectrum, so for double
                // structures this is unrealistic.
@@ -274,7 +250,7 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                HitPos = hit.GetPosition();
                Rho2 += HitPos.Mag2();
                RhoMean += HitPos.Rho();
-               if ((xPos < -9000 || yPos < -9000) && pad.GetPadNum() != -1)
+               if ((pos.X() < -9000 || pos.Y() < -9000) && pad.GetPadNum() != -1)
                   std::cout << " AtPSASimple2::Analysis Warning! Wrong Coordinates for Pad : " << pad.GetPadNum()
                             << std::endl;
 
@@ -290,9 +266,9 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          }    // Peak Loop
 
          //    #pragma omp ordered
-         // if(fValidThreshold && fValidBuff){
-         // PadMultiplicity.insert(std::pair<Int_t,Int_t>(PadNum,PadHitNum));std::cout<<" PadNum : "<<PadNum<<"
-         // PadHitNum : "<<PadHitNum<<std::endl;}
+         // if(fValidThreshold && fValidBuff)
+         // PadMultiplicity.insert(std::pair<Int_t,Int_t>(PadNum,PadHitNum));
+
          //#pragma omp ordered
          PadMultiplicity.insert(std::pair<Int_t, Int_t>(PadNum, PadHitNum));
 

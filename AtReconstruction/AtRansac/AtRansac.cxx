@@ -233,7 +233,7 @@ std::vector<AtTrack> *AtRANSACN::AtRansac::RansacPCL(const std::vector<AtHit> &h
             /*if (&hits.at(cloud_p->points[iHit].rgb))
                track.AddHit(&hits.at(cloud_p->points[iHit].rgb));
        */
-            LOG(debug) << "Getting hitID: " << cloud_p->points[iHit].rgb << " from hits";
+            LOG(debug2) << "Getting hitID: " << cloud_p->points[iHit].rgb << " from hits";
             track.AddHit(hits.at(cloud_p->points[iHit].rgb));
          }
 

@@ -8,7 +8,6 @@
 #include "AtRawEvent.h"
 #include "AtEvent.h"
 #include "AtDigiPar.h"
-#include "AtCalibration.h"
 #include "AtHit.h"
 
 // ROOT classes
@@ -41,7 +40,8 @@ void AtPSAFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    Float_t mesh[512] = {0};
 
    for (auto iPad = 0; iPad < numPads; iPad++) {
-      AtPad *pad = &(rawEvent->GetPads().at(iPad));
+
+      const AtPad *pad = &(rawEvent->GetPads().at(iPad));
       Int_t PadNum = pad->GetPadNum();
       Int_t PadHitNum = 0;
       TVector3 HitPos;
@@ -64,7 +64,7 @@ void AtPSAFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          // return;
       }
 
-      Double_t *adc = pad->GetADC();
+      auto adc = pad->GetADC();
       Double_t floatADC[512] = {0};
       Double_t dummy[512] = {0};
 
@@ -114,12 +114,11 @@ void AtPSAFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
       if (size < divider) {
          double zPos = CalculateZGeo(maxTime);
-         double xPos = pad->GetPadXCoord();
-         double yPos = pad->GetPadYCoord();
-         if ((xPos < -9000 || yPos < -9000) && pad->GetPadNum() != -1)
+         auto pos = pad->GetPadCoord();
+         if ((pos.X() < -9000 || pos.Y() < -9000) && pad->GetPadNum() != -1)
             std::cout << " AtPSAFull::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum() << std::endl;
 
-         auto hit = event->AddHit(PadNum, XYZPoint(xPos, yPos, zPos), charge);
+         auto hit = event->AddHit(PadNum, XYZPoint(pos.X(), pos.Y(), zPos), charge);
          hit.SetTimeStamp(maxTime);
 
          PadMultiplicity.insert(std::pair<Int_t, Int_t>(PadNum, hit.GetHitID()));
@@ -138,16 +137,15 @@ void AtPSAFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                   endInterval = initial + ((points + 1) * divider) - 1;
 
                double zPos = CalculateZGeo(initInterval);
-               double xPos = pad->GetPadXCoord();
-               double yPos = pad->GetPadYCoord();
-               if ((xPos < -9000 || yPos < -9000) && pad->GetPadNum() != -1)
+               auto pos = pad->GetPadCoord();
+               if ((pos.X() < -9000 || pos.Y() < -9000) && pad->GetPadNum() != -1)
                   std::cout << " AtPSAFull::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum()
                             << std::endl;
 
                for (Int_t iIn = initInterval; iIn < endInterval; iIn++)
                   charge += floatADC[iIn] / divider; // reduced by divider!!!
 
-               auto hit = event->AddHit(PadNum, XYZPoint(xPos, yPos, zPos), charge);
+               auto hit = event->AddHit(PadNum, XYZPoint(pos.X(), pos.Y(), zPos), charge);
                hit.SetTimeStamp(initInterval);
                charge = 0;
 

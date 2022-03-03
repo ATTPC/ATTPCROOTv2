@@ -837,8 +837,8 @@ void AtEventDrawTaskS800::DrawHitPoints()
             AtPad *fPad = fRawevent->GetPad(iPad);
             // std::cout<<"Pad num : "<<iPad<<" Is Valid? : "<<fPad->GetValidPad()<<" Pad num in pad object
             // :"<<fPad->GetPadNum()<<std::endl;
-            Int_t *rawadc = fPad->GetRawADC();
-            Double_t *adc = fPad->GetADC();
+            auto rawadc = fPad->GetRawADC();
+            auto adc = fPad->GetADC();
             // dumpEvent<<TSpad<<fPad->GetPadNum()<<std::endl;
 
             for (Int_t j = 0; j < 512; j++) { // TODO: This is limited to 256 pads only. Increment the size of the array
@@ -1600,8 +1600,8 @@ void AtEventDrawTaskS800::SelectPad(const char *rawevt)
       // tPadWaveSub->SetLineColor(kRed);
       TH1I *tPadWave = NULL;
       tPadWave = (TH1I *)gROOT->GetListOfSpecials()->FindObject("fPadWave");
-      Int_t *rawadc = tPad->GetRawADC();
-      Double_t *adc = tPad->GetADC();
+      auto rawadc = tPad->GetRawADC();
+      auto adc = tPad->GetADC();
       if (tPadWave == NULL) {
          std::cout << " = AtEventDrawTaskS800::SelectPad NULL pointer for the TH1I! Please enable SetPersistance for "
                       "Unpacking task or select an event first "

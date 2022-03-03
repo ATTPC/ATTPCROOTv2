@@ -376,7 +376,7 @@ void AtEventDrawTaskProto::DrawHitPoints()
          auto padArray = fRawevent->GetPads();
 
          for (auto &padIt : fRawevent->GetAuxPads()) {
-            AtPad &pad = padIt.second;
+            const AtPad &pad = padIt.second;
             if (numAux < 9) {
                std::cout << cYELLOW << " Auxiliary Channel " << numAux << " - Name " << pad.GetAuxName() << cNORMAL
                          << std::endl;
@@ -406,8 +406,8 @@ void AtEventDrawTaskProto::DrawHitPoints()
             // :"<<fPad->GetPadNum()<<std::endl;
 
             if (fPad != NULL) {
-               Int_t *rawadc = fPad->GetRawADC();
-               Double_t *adc = fPad->GetADC();
+               auto rawadc = fPad->GetRawADC();
+               auto adc = fPad->GetADC();
                Int_t PadNum_temp = fPad->GetPadNum();
                // dumpEvent<<TSpad<<fPad->GetPadNum()<<std::endl;
                if (fPad->GetValidPad() && PadNum_temp < 2015 && PadNum_temp > -1) {
@@ -958,8 +958,8 @@ void AtEventDrawTaskProto::SelectPad(const char *rawevt)
          // tPadWaveSub->SetLineColor(kRed);
          TH1I *tPadWave = NULL;
          tPadWave = (TH1I *)gROOT->GetListOfSpecials()->FindObject("fPadWave");
-         Int_t *rawadc = tPad->GetRawADC();
-         Double_t *adc = tPad->GetADC();
+         auto rawadc = tPad->GetRawADC();
+         auto adc = tPad->GetADC();
          if (tPadWave == NULL) {
             std::cout << " = AtEventDrawTask::SelectPad NULL pointer for the TH1I! Please select an event first "
                       << std::endl;

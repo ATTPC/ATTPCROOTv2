@@ -87,8 +87,10 @@ void AtPSAtask::Exec(Option_t *opt)
 {
    fEventHArray->Delete();
 
-   if (fRawEventArray->GetEntriesFast() == 0)
+   if (fRawEventArray->GetEntriesFast() == 0) {
+      LOG(debug2) << "Skipping PSA because raw event array is empty";
       return;
+   }
 
    AtRawEvent *rawEvent = (AtRawEvent *)fRawEventArray->At(0);
    AtEvent *event = (AtEvent *)new ((*fEventHArray)[0]) AtEvent();
@@ -101,7 +103,8 @@ void AtPSAtask::Exec(Option_t *opt)
    if (!rawEvent->IsGood())
       return;
 
-   LOG(debug) << " Event Number :  " << rawEvent->GetEventID() << " Valid pads : " << rawEvent->GetNumPads();
+   LOG(debug) << "Staring PSA on event Number: " << rawEvent->GetEventID() << " with " << rawEvent->GetNumPads()
+              << " valid pads";
 
    fPSA->Analyze(rawEvent, event);
 

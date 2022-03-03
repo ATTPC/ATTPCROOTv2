@@ -85,6 +85,7 @@ void AtFilterSubtraction::Filter(AtPad *pad)
    auto padRef = fMapping->GetPadRef(pad->GetPadNum());
    auto cobo = padRef.cobo;
    auto asad = padRef.asad;
+
    auto adc = pad->GetADC();
    auto adcRaw = pad->GetRawADC();
 

@@ -91,7 +91,7 @@ void AtLinkDAQTask::DoFirstEvent()
 {
    evtTree->GetEntry(0);
    fEvtTimestamp = fEvtTS->GetTimestamp();
-   fTpcTimestamp = *(fRawEvent->GetTimestamps());
+   fTpcTimestamp = fRawEvent->GetTimestamps();
 
    LOG(info) << "Initial timestamps: " << fTpcTimestamp.at(fTpcTimestampIndex) << " " << fEvtTimestamp;
    kFirstEvent = false;
@@ -101,7 +101,7 @@ void AtLinkDAQTask::DoFirstEvent()
 
    // Get the number of timestamps in the the AtRawEvent
    // And create the graphs to plot
-   auto numTimestamps = fRawEvent->GetTimestamps()->size();
+   auto numTimestamps = fRawEvent->GetTimestamps().size();
    for (int i = 0; i < numTimestamps; ++i) {
       fGrDataRatio.push_back({});
       fGrDataAbs.push_back({});
@@ -116,7 +116,7 @@ void AtLinkDAQTask::UpdateTimestamps()
    fOldEvtTimestamp = fEvtTimestamp;
    fOldTpcTimestamp = fTpcTimestamp;
    fEvtTimestamp = fEvtTS->GetTimestamp();
-   fTpcTimestamp = *(fRawEvent->GetTimestamps());
+   fTpcTimestamp = fRawEvent->GetTimestamps();
 }
 
 void AtLinkDAQTask::ResetFlags()

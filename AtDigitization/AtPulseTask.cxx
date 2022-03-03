@@ -252,19 +252,18 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
       }
 
       // Create pad
-      auto &pad = fRawEvent->AddPad(thePadNumber);
+      auto pad = fRawEvent->AddPad(thePadNumber);
 
       PadCenterCoord = fMap->CalcPadCenter(thePadNumber);
-      pad.SetValidPad(kTRUE);
-      pad.SetPadXCoord(PadCenterCoord[0]);
-      pad.SetPadYCoord(PadCenterCoord[1]);
-      pad.SetPedestalSubtracted(kTRUE);
+      pad->SetValidPad(kTRUE);
+      pad->SetPadCoord({PadCenterCoord[0], PadCenterCoord[1]});
+      pad->SetPedestalSubtracted(kTRUE);
 
       auto gAvg = getAvgGETgain(eleAccumulated[thePadNumber]->GetEntries());
       auto lowGain = fMap->IsInhibited(thePadNumber) == AtMap::kLowGain ? fLowGainFactor : 1;
 
       for (Int_t bin = 0; bin < fNumTbs; bin++) {
-         pad.SetADC(bin, signal[bin] * gAvg * fGETGain * lowGain);
+         pad->SetADC(bin, signal[bin] * gAvg * fGETGain * lowGain);
       }
    }
 

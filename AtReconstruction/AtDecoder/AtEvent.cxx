@@ -14,6 +14,7 @@ AtEvent::AtEvent(Int_t eventID, Bool_t isGood)
 {
 }
 
+/*
 AtHit &AtEvent::AddHit(const XYZPoint &loc, Double_t charge)
 {
    fHitArray.emplace_back(fHitArray.size(), loc, charge);
@@ -30,7 +31,7 @@ AtHit &AtEvent::AddHit()
    fHitArray.emplace_back(fHitArray.size());
    return fHitArray.back();
 }
-
+*/
 AtPad &AtEvent::AddAuxPad()
 {
    fAuxPadArray.push_back({});

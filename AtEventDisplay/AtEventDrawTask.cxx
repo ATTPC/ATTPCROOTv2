@@ -350,7 +350,7 @@ void AtEventDrawTask::DrawHitPoints()
       auto padArray = fRawevent->GetPads();
 
       for (auto &padIt : fRawevent->GetAuxPads()) {
-         AtPad &pad = padIt.second;
+         const AtPad &pad = padIt.second;
          if (numAux < 9) {
             std::cout << cYELLOW << " Auxiliary Channel " << numAux << " - Name " << pad.GetAuxName() << cNORMAL
                       << std::endl;
@@ -657,7 +657,7 @@ void AtEventDrawTask::DrawHitPoints()
       if (fIsRawData) {
          AtPad *RawPad = fRawevent->GetPad(PadNumHit);
          if (RawPad != nullptr) {
-            Double_t *adc = RawPad->GetADC();
+            auto adc = RawPad->GetADC();
             for (Int_t i = 0; i < 512; i++) {
 
                f3DThreshold = fEventManager->Get3DThreshold();
@@ -773,8 +773,8 @@ void AtEventDrawTask::DrawHitPoints()
             if (!fPad->GetValidPad())
                continue;
 
-            Int_t *rawadc = fPad->GetRawADC();
-            Double_t *adc = fPad->GetADC();
+            auto rawadc = fPad->GetRawADC();
+            auto adc = fPad->GetADC();
             // dumpEvent<<TSpad<<fPad->GetPadNum()<<std::endl;
 
             for (Int_t j = 0; j < 512; j++)
@@ -1468,8 +1468,8 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
 
          TH1I *tPadWave = NULL;
          tPadWave = (TH1I *)gROOT->GetListOfSpecials()->FindObject("fPadWave");
-         Int_t *rawadc = tPad->GetRawADC();
-         Double_t *adc = tPad->GetADC();
+         auto rawadc = tPad->GetRawADC();
+         auto adc = tPad->GetADC();
          if (tPadWave == NULL) {
             std::cout << " = AtEventDrawTask::SelectPad NULL pointer for the TH1I! Please enable SetPersistance for "
                          "Unpacking task or select an event first "

@@ -135,6 +135,8 @@ void AtRansacTask::Exec(Option_t *opt)
 
    fEvent = (AtEvent *)fEventArray->At(0);
 
+   LOG(debug) << "Running RANSAC with " << fEvent->GetNumHits() << " hits.";
+
    if (fRANSACAlg == 0) {
       LOG(debug) << "Running RANSAC algorithm AtRANSACN::AtRansac";
       AtRANSACN::AtRansac *Ransac = (AtRANSACN::AtRansac *)new ((*fRansacArray)[0]) AtRANSACN::AtRansac();
@@ -148,7 +150,6 @@ void AtRansacTask::Exec(Option_t *opt)
          Ransac->CalcRANSAC(fEvent);
    }
 
-   // std::cout << "/* Number of hits in the task    */"<<fEvent->GetNumHits() << '\n';
    if (fRANSACAlg == 1) {
       LOG(debug) << "Running RANSAC algorithm AtRansacMod";
       AtRansacMod *Rantest = (AtRansacMod *)new ((*fRansacArray)[0]) AtRansacMod();

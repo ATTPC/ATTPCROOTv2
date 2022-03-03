@@ -3,6 +3,7 @@
 
 #include "TROOT.h"
 #include "TObject.h"
+#include "FairLogger.h"
 
 #include <map>
 #include <vector>
@@ -39,9 +40,17 @@ public:
    // Adds a new hit to the hit array, and returns a referece to the new hit to be
    // filled. This is done to avoid the create and subsequent copy of a hit and also
    // avoid dealing with the memory managment
-   AtHit &AddHit(const XYZPoint &loc, Double_t charge);
+   template <typename... Ts>
+   AtHit &AddHit(Ts &&... params)
+   {
+      LOG(debug) << "Adding hit with ID " << fHitArray.size() << " to event " << fEventID;
+      fHitArray.emplace_back(fHitArray.size(), std::forward<Ts>(params)...);
+      return fHitArray.back();
+   }
+   /*AtHit &AddHit(const XYZPoint &loc, Double_t charge);
    AtHit &AddHit(Int_t padNum, const XYZPoint &loc, Double_t charge);
    AtHit &AddHit();
+   */
 
    // Adds a new auxiliary pad to the auxiliary pad array, and returns a referece to
    // the new auxiliary pad to be filled. This is done to avoid the create and subsequent

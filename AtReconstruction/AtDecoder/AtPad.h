@@ -9,64 +9,65 @@
 #ifndef AtPAD_H
 #define AtPAD_H
 
+#include <array>
+
 #include "TObject.h"
 #include "TROOT.h"
+#include "Math/Point2D.h"
+
+using rawTrace = std::array<Int_t, 512>;
+using trace = std::array<Double_t, 512>;
+using XYPoint = ROOT::Math::XYPointF;
 
 class AtPad : public TObject {
-private:
+protected:
    Int_t fPadNum; // Pad reference number in AtMap
-   Int_t fSizeID;
-   Float_t fPadXCoord;
-   Float_t fPadYCoord;
-   Bool_t kIsValid;
-   Int_t fRawAdc[512];
+   Int_t fSizeID = -1000;
+   XYPoint fPadCoord{-9999, -9999};
+   Bool_t fIsValid = true;
+   Bool_t fIsPedestalSubtracted = false;
 
-   Bool_t fIsPedestalSubtracted;
-   // Bool_t fIsGainCalibrated;
-   Double_t fAdc[512];
-   Bool_t kIsAux;
+   rawTrace fRawAdc;
+   trace fAdc;
+
+   Bool_t fIsAux;
    std::string fAuxName;
 
 public:
-   AtPad();
-   AtPad(Int_t PadNum);
-   ~AtPad();
+   AtPad(Int_t PadNum = -1);
+   AtPad(const AtPad &obj) = default;
+   ~AtPad() = default;
 
-   void Initialize();
-   void SetValidPad(Bool_t val = kTRUE);
-   void SetPad(Int_t val);
-   void SetRawADC(Int_t *val);
-   void SetRawADC(Int_t idx, Int_t val);
-   void SetSizeID(Int_t val);
+   void SetValidPad(Bool_t val = kTRUE) { fIsValid = val; }
+   void SetPadNum(Int_t padNum) { fPadNum = padNum; }
+   void SetSizeID(Int_t sizeID) { fSizeID = sizeID; }
 
-   void SetPedestalSubtracted(Bool_t val = kTRUE);
-   // void SetGainCalibrated(Bool_t val = kTRUE); //TODO
-   void SetADC(Double_t *val);
-   void SetADC(Int_t idx, Double_t val);
-   void SetPadXCoord(Double_t val);
-   void SetPadYCoord(Double_t val);
-   void SetIsAux(Bool_t val);
-   void SetAuxName(std::string val);
+   void SetPedestalSubtracted(Bool_t val = kTRUE) { fIsPedestalSubtracted = val; }
+   void SetPadCoord(const XYPoint &point) { fPadCoord = point; }
+   void SetIsAux(Bool_t val) { fIsAux = val; }
+   void SetAuxName(std::string val) { fAuxName = std::move(val); }
 
-   AtPad &operator=(AtPad right);
+   void SetRawADC(const rawTrace &val) { fRawAdc = val; }
+   void SetRawADC(Int_t idx, Int_t val) { fRawAdc[idx] = val; }
+   void SetADC(const trace &val) { fAdc = val; }
+   void SetADC(Int_t idx, Double_t val) { fAdc[idx] = val; }
 
-   Bool_t IsPedestalSubtracted() const;
-   Bool_t IsAux() const;
+   Bool_t IsPedestalSubtracted() const { return fIsPedestalSubtracted; }
+   Bool_t IsAux() const { return fIsAux; }
 
-   Int_t GetPadNum() const;
-   Int_t *GetRawADC();
-   Int_t GetRawADC(Int_t idx) const;
-   Bool_t GetValidPad() const;
-   std::string GetAuxName() const;
-   Int_t GetSizeID() const;
+   Int_t GetPadNum() const { return fPadNum; }
+   Bool_t GetValidPad() const { return fIsValid; }
+   std::string GetAuxName() const { return fAuxName; }
+   Int_t GetSizeID() const { return fSizeID; }
 
-   Double_t *GetADC();
+   const trace &GetADC() const;
    Double_t GetADC(Int_t idx) const;
+   const rawTrace &GetRawADC() const { return fRawAdc; }
+   Int_t GetRawADC(Int_t idx) const { return fRawAdc[idx]; }
 
-   Float_t GetPadXCoord() const;
-   Float_t GetPadYCoord() const;
+   XYPoint GetPadCoord() const { return fPadCoord; }
 
-   ClassDef(AtPad, 1);
+   ClassDef(AtPad, 2);
 };
 
 #endif

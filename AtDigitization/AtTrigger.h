@@ -39,7 +39,6 @@ public:
 protected:
    Bool_t fValidPad;
 
-   Double_t *fRawAdc;
    Int_t fPadNum;
 
    Double_t fMultiplicity_threshold;
@@ -68,6 +67,6 @@ protected:
    Int_t fAccum;
    Bool_t fTrigger;
 
-   ClassDef(AtTrigger, 1);
+   ClassDef(AtTrigger, 2);
 };
 #endif
