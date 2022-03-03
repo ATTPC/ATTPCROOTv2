@@ -30,13 +30,11 @@ void AtRawEvent::Clear()
    fIsGood = kTRUE;
 }
 
-std::pair<AtPad *, bool> AtRawEvent::AddAuxPad(std::string auxName)
+std::pair<AtAuxPad *, bool> AtRawEvent::AddAuxPad(std::string auxName)
 {
-   auto ret = fAuxPadMap.emplace(auxName, AtPad{});
+   auto ret = fAuxPadMap.emplace(auxName, AtAuxPad(auxName));
    auto pad = &(ret.first->second);
-   pad->SetIsAux(true);
-   pad->SetAuxName(auxName);
-   return std::pair<AtPad *, bool>(pad, ret.second);
+   return std::pair<AtAuxPad *, bool>(pad, ret.second);
 }
 
 void AtRawEvent::SetTimestamp(ULong64_t timestamp, int index)

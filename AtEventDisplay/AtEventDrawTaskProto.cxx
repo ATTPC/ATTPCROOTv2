@@ -376,7 +376,7 @@ void AtEventDrawTaskProto::DrawHitPoints()
          auto padArray = fRawevent->GetPads();
 
          for (auto &padIt : fRawevent->GetAuxPads()) {
-            const AtPad &pad = padIt.second;
+            const AtAuxPad &pad = padIt.second;
             if (numAux < 9) {
                std::cout << cYELLOW << " Auxiliary Channel " << numAux << " - Name " << pad.GetAuxName() << cNORMAL
                          << std::endl;

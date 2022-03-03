@@ -86,12 +86,8 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       Int_t maxAdcIdx = 0;
       Int_t numPeaks = 0;
 
-      if ((pos.X() < -9000 || pos.Y() < -9000) && !pad.IsAux()) {
+      if (pos.X() < -9000 || pos.Y() < -9000) {
          LOG(debug) << "Skipping pad, position is invalid";
-         continue;
-      } else if (pad.IsAux()) {
-         LOG(debug) << "Adding aux pad: " << pad.GetAuxName();
-         event->AddAuxPad(pad);
          continue;
       }
 

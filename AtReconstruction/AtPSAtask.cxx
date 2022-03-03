@@ -99,6 +99,8 @@ void AtPSAtask::Exec(Option_t *opt)
    event->SetEventID(rawEvent->GetEventID());
    event->SetTimestamp(rawEvent->GetTimestamp());
    event->SetIsInGate(rawEvent->GetIsExtGate());
+   for (const auto &auxIt : rawEvent->GetAuxPads())
+      event->AddAuxPad(auxIt.second);
 
    if (!rawEvent->IsGood())
       return;
@@ -108,5 +110,5 @@ void AtPSAtask::Exec(Option_t *opt)
 
    fPSA->Analyze(rawEvent, event);
 
-   LOG(debug) << "Finished running PSA";
+   LOG(debug) << "Finished running PSA, copying aux pads";
 }

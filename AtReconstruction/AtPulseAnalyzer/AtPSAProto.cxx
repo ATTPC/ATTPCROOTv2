@@ -52,15 +52,8 @@ void AtPSAProto::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       Double_t zPosCorr = 0.0;
       Double_t charge = 0;
 
-      if ((pos.X() < -9000 || pos.Y() < -9000) && !pad->IsAux()) {
-         // std::cout<<" Is Auxiliary? "<<pad->IsAux()<<" Pad Num "<<PadNum<<"\n";
+      if (pos.X() < -9000 || pos.Y() < -9000)
          continue; // Skip invalid pads that are not
-      } else if (pad->IsAux()) {
-
-         // std::cout<<" Is Auxiliary 2? "<<pad->IsAux()<<" Pad Num "<<PadNum<<"\n";
-         event->AddAuxPad(*pad);
-         continue;
-      }
 
       if (!(pad->IsPedestalSubtracted())) {
          LOG(ERROR) << "Pedestal should be subtracted to use this class!";

@@ -14,14 +14,14 @@ ClassImp(AtPad);
 
 AtPad::AtPad(Int_t PadNum) : fPadNum(PadNum)
 {
-   fIsAux = kFALSE;
-   fAuxName = "noname";
+   // fIsAux = kFALSE;
+   // fAuxName = "noname";
 }
 
 const trace &AtPad::GetADC() const
 {
    if (!fIsPedestalSubtracted)
-      LOG(fatal) << "Pedestal subtraction was not done on pad " << fPadNum << " " << fAuxName;
+      LOG(fatal) << "Pedestal subtraction was not done on pad " << fPadNum;
 
    return fAdc;
 }

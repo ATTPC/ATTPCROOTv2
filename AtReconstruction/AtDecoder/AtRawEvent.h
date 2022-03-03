@@ -14,13 +14,14 @@
 #include "TObject.h"
 
 #include "AtPad.h"
+#include "AtAuxPad.h"
 
 #include <vector>
 #include <iostream>
 #include <map>
 #include <iterator>
 
-using AuxPadMap = std::map<std::string, AtPad>;
+using AuxPadMap = std::map<std::string, AtAuxPad>;
 using PadVector = std::vector<AtPad>;
 class AtFilterTask;
 
@@ -52,10 +53,12 @@ public:
       fPadList.emplace_back(std::forward<Ts>(params)...);
       return &fPadList.back();
    }
+   // Returns a pointer to the newly added pad, or existing pad if auxName is already used
+   // bool returned is true if insert occurred.
+   std::pair<AtAuxPad *, bool> AddAuxPad(std::string auxName);
    AtPad *GetPad(Int_t padNum);
    AtPad *GetAuxPad(std::string auxPad);
 
-   std::pair<AtPad *, bool> AddAuxPad(std::string auxName);
    void RemovePad(Int_t padNum);
    void SetSimMCPointMap(std::multimap<Int_t, std::size_t> map) { fSimMCPointMap = std::move(map); }
 
