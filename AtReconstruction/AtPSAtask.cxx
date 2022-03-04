@@ -4,9 +4,9 @@
 #include "FairLogger.h"
 
 // Root Classes
+#include "AtEvent.h"
 #include "AtPSA.h"
 #include "AtRawEvent.h"
-#include "AtEvent.h"
 
 // AtTPCRoot Classes
 #include "TClonesArray.h"
@@ -26,86 +26,82 @@
 ClassImp(AtPSAtask);
 
 AtPSAtask::AtPSAtask(AtPSA *psa)
-   : fInputBranchName("AtRawEvent"), fOutputBranchName("AtEventH"), fPSA(psa), fIsPersistence(false)
-{
-   fEventHArray = new TClonesArray("AtEvent");
+    : fInputBranchName("AtRawEvent"), fOutputBranchName("AtEventH"), fPSA(psa),
+      fIsPersistence(false) {
+  fEventHArray = new TClonesArray("AtEvent");
 }
 
 AtPSAtask::~AtPSAtask() {}
 
-void AtPSAtask::SetPersistence(Bool_t value)
-{
-   fIsPersistence = value;
+void AtPSAtask::SetPersistence(Bool_t value) { fIsPersistence = value; }
+
+void AtPSAtask::SetInputBranch(TString branchName) {
+  fInputBranchName = branchName;
 }
 
-void AtPSAtask::SetInputBranch(TString branchName)
-{
-   fInputBranchName = branchName;
+void AtPSAtask::SetOutputBranch(TString branchName) {
+  fOutputBranchName = branchName;
 }
 
-void AtPSAtask::SetOutputBranch(TString branchName)
-{
-   fOutputBranchName = branchName;
+InitStatus AtPSAtask::Init() {
+  FairRootManager *ioMan = FairRootManager::Instance();
+  if (ioMan == 0) {
+    LOG(ERROR) << "Cannot find RootManager!";
+    return kERROR;
+  }
+
+  fRawEventArray = (TClonesArray *)ioMan->GetObject(fInputBranchName);
+  if (fRawEventArray == 0) {
+    LOG(ERROR) << "Cannot find AtRawEvent array in branch " << fInputBranchName
+               << "!";
+    return kERROR;
+  }
+  // Retrieving simulated points, if available
+  fMCPointArray = (TClonesArray *)ioMan->GetObject("AtTpcPoint");
+  if (fMCPointArray != 0) {
+    LOG(INFO) << " Simulated points found (simulation analysis) ";
+  } else if (fMCPointArray == 0) {
+    LOG(INFO) << " Simulated points not found (experimental data analysis) ";
+  }
+
+  ioMan->Register(fOutputBranchName, "AtTPC", fEventHArray, fIsPersistence);
+
+  fPSA->Init();
+
+  return kSUCCESS;
 }
 
-InitStatus AtPSAtask::Init()
-{
-   FairRootManager *ioMan = FairRootManager::Instance();
-   if (ioMan == 0) {
-      LOG(ERROR) << "Cannot find RootManager!";
-      return kERROR;
-   }
+void AtPSAtask::Exec(Option_t *opt) {
+  fEventHArray->Delete();
 
-   fRawEventArray = (TClonesArray *)ioMan->GetObject(fInputBranchName);
-   if (fRawEventArray == 0) {
-      LOG(ERROR) << "Cannot find AtRawEvent array in branch " << fInputBranchName << "!";
-      return kERROR;
-   }
-   // Retrieving simulated points, if available
-   fMCPointArray = (TClonesArray *)ioMan->GetObject("AtTpcPoint");
-   if (fMCPointArray != 0) {
-      LOG(INFO) << " Simulated points found (simulation analysis) ";
-   } else if (fMCPointArray != 0) {
-      LOG(INFO) << " Simulated points not found (experimental data analysis) ";
-   }
+  if (fRawEventArray->GetEntriesFast() == 0)
+    return;
 
-   ioMan->Register(fOutputBranchName, "AtTPC", fEventHArray, fIsPersistence);
+  AtRawEvent *rawEvent = (AtRawEvent *)fRawEventArray->At(0);
 
-   fPSA->Init();
+  std::cout << " Event Number :  " << rawEvent->GetEventID()
+            << " Valid pads : " << rawEvent->GetNumPads() << std::endl;
 
-   return kSUCCESS;
-}
+  AtEvent *event = (AtEvent *)new ((*fEventHArray)[0]) AtEvent();
 
-void AtPSAtask::Exec(Option_t *opt)
-{
-   fEventHArray->Delete();
+  // std::cout << " Is event good? :  " << rawEvent->IsGood() << std::endl;
 
-   if (fRawEventArray->GetEntriesFast() == 0)
-      return;
+  if (!(rawEvent->IsGood())) {
+    event->SetIsGood(kFALSE);
+  } else {
+    if (fMCPointArray != 0) {
+      std::cout << " point array size " << fMCPointArray->GetEntries() << "\n";
+      fPSA->SetSimulatedEvent(fMCPointArray);
+    }
+    // Analyze the event
+    fPSA->Analyze(rawEvent, event);
 
-   AtRawEvent *rawEvent = (AtRawEvent *)fRawEventArray->At(0);
+    // Copy parameters from raw event
+    event->SetIsGood(kTRUE);
+    event->SetEventID(rawEvent->GetEventID());
+    event->SetTimestamp(rawEvent->GetTimestamp());
+    event->SetIsExtGate(rawEvent->GetIsExtGate());
+  }
 
-   std::cout << " Event Number :  " << rawEvent->GetEventID() << " Valid pads : " << rawEvent->GetNumPads()
-             << std::endl;
-
-   AtEvent *event = (AtEvent *)new ((*fEventHArray)[0]) AtEvent();
-
-   if (!(rawEvent->IsGood())) {
-      event->SetIsGood(kFALSE);
-   } else {
-      if (fMCPointArray != 0) {
-         std::cout << " point array size " << fMCPointArray->GetEntries() << "\n";
-         fPSA->SetSimulatedEvent(fMCPointArray);
-      }
-      // Analyze the event
-      fPSA->Analyze(rawEvent, event);
-
-      // Copy parameters from raw event
-      event->SetIsGood(kTRUE);
-      event->SetEventID(rawEvent->GetEventID());
-      event->SetTimestamp(rawEvent->GetTimestamp());
-      event->SetIsExtGate(rawEvent->GetIsExtGate());
-   }
-
-   // std::cout << "PSA events  "<<event->GetNumHits()  << '\n';
+  // std::cout << "PSA events  "<<event->GetNumHits()  << '\n';
 }

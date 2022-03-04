@@ -96,6 +96,7 @@ GETDecoder2/GETFileChecker.cxx
 
 AtDecoder/AtCore.cxx
 AtDecoder/AtCore2.cxx
+AtDecoder/AtCoreSpecMAT.cxx
 AtDecoder/AtPad.cxx
 AtDecoder/AtRawEvent.cxx
 AtDecoder/AtHit.cxx
@@ -140,6 +141,7 @@ AtFilter/AtFilterDivide.cxx
 
 AtDecoderTask.cxx
 AtDecoder2Task.cxx
+AtDecoderSpecMATTask.cxx
 AtHDFParserTask.cxx
 AtPSAtask.cxx
 AtFilterTask.cxx
