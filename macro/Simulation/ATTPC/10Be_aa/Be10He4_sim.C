@@ -1,4 +1,4 @@
-void Be10He4_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
+void Be10He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -44,7 +44,7 @@ void Be10He4_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_He1bar.root");
+  ATTPC->SetGeometryFileName("ATTPC_He1bar_v2.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
@@ -54,7 +54,7 @@ void Be10He4_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
     // -----   Magnetic field   -------------------------------------------
     // Constant Field
     AtConstField  *fMagField = new AtConstField();
-    fMagField->SetField(0., 0. ,20. ); // values are in kG
+    fMagField->SetField(0., 0. ,30. ); // values are in kG
     fMagField->SetFieldRegion(-50, 50,-50, 50, -10,230); // values are in cm
                           //  (xmin,xmax,ymin,ymax,zmin,zmax)
     run->SetField(fMagField);
@@ -155,7 +155,7 @@ void Be10He4_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 		  ExE.push_back(0.0);//In MeV
 
 
-                  Double_t ThetaMinCMS = 0.0;
+                  Double_t ThetaMinCMS = 5.0;
                   Double_t ThetaMaxCMS = 90.0;
 
 
@@ -169,7 +169,7 @@ void Be10He4_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 
   //---Store the visualiztion info of the tracks, this make the output file very large!!
   //--- Use it only to display but not for production!
-  run->SetStoreTraj(kTRUE);
+  //run->SetStoreTraj(kTRUE);
 
 
 

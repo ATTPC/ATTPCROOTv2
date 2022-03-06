@@ -1,5 +1,5 @@
 void rundigi_sim(
-   TString mcFile = "./data/attpcsim.root",
+   TString mcFile = "attpcsim.root",
    TString mapParFile =
       "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
    TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
@@ -69,7 +69,7 @@ void rundigi_sim(
   // __ Init and run ___________________________________
 
   fRun -> Init();
-  fRun->Run(0, 10);
+  fRun->Run(0, 10000);
 
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
