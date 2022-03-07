@@ -1,0 +1,6 @@
+
+/mnt/analysis/e17023/TPC/Ruchi_GADGET/ATTPCROOTv2/macro/Unpack_GETDecoder2/CoBo0_AsAd0_0.graw
+/mnt/analysis/e17023/TPC/Ruchi_GADGET/ATTPCROOTv2/macro/Unpack_GETDecoder2/CoBo0_AsAd1_1.graw
+/mnt/analysis/e17023/TPC/Ruchi_GADGET/ATTPCROOTv2/macro/Unpack_GETDecoder2/CoBo0_AsAd2_2.graw
+/mnt/analysis/e17023/TPC/Ruchi_GADGET/ATTPCROOTv2/macro/Unpack_GETDecoder2/CoBo0_AsAd3_3.graw
+

@@ -33,6 +33,15 @@ AtCore2::AtCore2(Int_t opt) : AtPadCoordArr(boost::extents[10240][3][2]), kOpt(0
    SetNumTbs(512);
 }
 
+AtCore2::AtCore2(Int_t opt, Int_t numCobos)
+{
+
+  kOpt = opt;
+  fNumCobo = numCobos;
+  Initialize();
+  SetNumTbs(512);
+  
+}
 AtCore2::AtCore2(TString filename, Int_t opt) : AtPadCoordArr(boost::extents[10240][3][2]), kOpt(0)
 {
 
@@ -62,46 +71,48 @@ AtCore2::~AtCore2()
 
 void AtCore2::Initialize()
 {
-   fRawEventPtr = new AtRawEvent();
+
+  std::cout<<" ======= AtCore2::Initialize "<<"\n"; 
+  
+  fRawEventPtr = new AtRawEvent();
 
    if (kOpt == 0)
       fAtMapPtr = new AtTpcMap();
    else if (kOpt == 1)
       fAtMapPtr = new AtTpcProtoMap();
+   else if (kOpt == 2)
+     fAtMapPtr = new AtGadgetIIMap();
    else
       std::cout << "== AtCore Initialization Error : Option not found. Current available options: AtTPC Map 0 / "
-                   "Prototype Map 1"
+                   "Prototype Map 1 / Gadget Map 2"
                 << std::endl;
 
    fIsNegativePolarity = kTRUE;
    fPedestalPtr[0] = new AtPedestal();
-   for (Int_t iCobo = 1; iCobo < 40; iCobo++)
+   for (Int_t iCobo = 1; iCobo < fNumCobo; iCobo++)
       fPedestalPtr[iCobo] = NULL;
 
-   // fPlotPtr = NULL;
 
    fDecoderPtr[0] = new GETDecoder2();
-   //  fDecoderPtr[0] -> SetDebugMode(1);
    fPadArray = new TClonesArray("AtPad", 10240);
 
    fIsData = kFALSE;
    fFPNSigmaThreshold = 5;
    fIsProtoGeoSet = kFALSE;
    fIsProtoMapSet = kFALSE;
-
-   // fGainCalibrationPtr = new STGainCalibration();
-   // fIsGainCalibrationData = kFALSE;
-
+   
    fNumTbs = 512;
 
    fTargetFrameID = -1;
-   memset(fCurrentEventID, 0, sizeof(Int_t) * 40);
+   memset(fCurrentEventID, 0, sizeof(Int_t) * fNumCobo);
 
    fIsSeparatedData = kFALSE;
    kEnableAuxChannel = kFALSE;
    fAuxChannels.clear();
 
-   fNumCobo = 40;
+   
+
+   std::cout<<" =========== End of AtCore2 Initialization. Number of Cobo/AsAd : "<<fNumCobo<<"\n";
 }
 
 Bool_t AtCore2::AddData(TString filename, Int_t coboIdx)
@@ -140,7 +151,7 @@ Bool_t AtCore2::SetData(Int_t value)
    }
 
    fTargetFrameID = -1;
-   memset(fCurrentEventID, 0, sizeof(Int_t) * 40);
+   memset(fCurrentEventID, 0, sizeof(Int_t) * fNumCobo);
 
    return fIsData;
 }
@@ -185,19 +196,16 @@ Bool_t AtCore2::SetAtTpcMap(Char_t const *lookup)
 
    if (kOpt == 0) {
       dynamic_cast<AtTpcMap *>(fAtMapPtr)->GenerateAtTpc();
-      // NOTE: In the case of the AtTPC Map we need to generate
-      // the coordinates to calculate the Pad Center
+   }else if (kOpt == 2) {
+      dynamic_cast<AtGadgetIIMap *>(fAtMapPtr)->GenerateAtTpc();
    }
+
 
    Bool_t MapIn = fAtMapPtr->ParseXMLMap(lookup);
    if (!MapIn)
       return false;
    Bool_t kIsIniParsed = fAtMapPtr->ParseInhibitMap(fIniMap, fLowgMap, fXtalkMap);
 
-   // AtPadCoordArr = fAtMapPtr->GetPadCoordArr();//TODO Use a pointer to a simpler container
-   //**** For debugging purposes only! ******//
-   // fAtMapPtr->SetGUIMode();
-   // fAtMapPtr->GetAtTPCPlane();
    return true;
 }
 
@@ -239,59 +247,22 @@ Bool_t AtCore2::SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap
    return kTRUE;
 }
 
-/*Bool_t STCore::SetGainCalibrationData(TString filename, TString dataType)
-{
-  fIsGainCalibrationData = fGainCalibrationPtr -> SetGainCalibrationData(filename, dataType);
-
-  std::cout << "== [STCore] Gain calibration data is set!" << std::endl;
-  return fIsGainCalibrationData;
-}*/
-
-/*void STCore::SetGainReference(Int_t row, Int_t layer)
-{
-  if (!fIsGainCalibrationData) {
-    std::cout << "== [STCore] Set gain calibration data first!" << std::endl;
-
-    return;
-  }
-
-  fGainCalibrationPtr -> SetGainReference(row, layer);
-}*/
-
-/*void STCore::SetGainReference(Double_t constant, Double_t linear, Double_t quadratic)
-{
-  if (!fIsGainCalibrationData) {
-    std::cout << "== [STCore] Set gain calibration data first!" << std::endl;
-
-    return;
-  }
-
-  fGainCalibrationPtr -> SetGainReference(constant, linear, quadratic);
-}*/
-
-/*Bool_t STCore::SetUAMap(TString filename)
-{
-  return fMapPtr -> SetUAMap(filename);
-}*/
-
-/*Bool_t STCore::SetAGETMap(TString filename)
-{
-  return fMapPtr -> SetAGETMap(filename);
-}*/
 
 void AtCore2::ProcessCobo(Int_t coboIdx)
 {
 
    GETCoboFrame *coboFrame = fDecoderPtr[coboIdx]->GetCoboFrame(fTargetFrameID);
-
+   
    if (coboFrame == NULL) {
       fRawEventPtr->SetIsGood(kFALSE);
-
+      std::cout<<" Null frame! CoboIdx "<<coboIdx<<"\n";
       return;
    }
 
+
    fCurrentEventID[coboIdx] = coboFrame->GetEventID();
    Int_t numFrames = coboFrame->GetNumFrames();
+   
    for (Int_t iFrame = 0; iFrame < numFrames; iFrame++) {
       GETBasicFrame *frame = coboFrame->GetFrame(iFrame);
 
@@ -327,9 +298,7 @@ void AtCore2::ProcessCobo(Int_t coboIdx)
                fPedestalPtr[coboIdx]->SubtractPedestal(fNumTbs, frame->GetSample(iAget, fpnCh), rawadc, adc,
                                                        fFPNSigmaThreshold);
 
-               // if (fIsGainCalibrationData)
-               //   fGainCalibrationPtr -> CalibrateADC(row, layer, fNumTbs, adc);
-
+               
                for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
                   pad->SetADC(iTb, adc[iTb]);
 
@@ -340,6 +309,63 @@ void AtCore2::ProcessCobo(Int_t coboIdx)
    }
 }
 
+void AtCore2::ProcessBasicCobo(Int_t coboIdx)
+{
+    
+
+   GETBasicFrame* basicFrame = fDecoderPtr[coboIdx]->GetBasicFrame(fTargetFrameID);
+    
+   if (basicFrame == NULL) {
+      fRawEventPtr->SetIsGood(kFALSE);
+      
+      return;
+   }  
+   
+      Int_t iCobo = basicFrame->GetCoboID();
+      Int_t iAsad = basicFrame->GetAsadID();
+
+      for (Int_t iAget = 0; iAget < 4; iAget++) {
+         for (Int_t iCh = 0; iCh < 68; iCh++) {
+
+            std::vector<int> PadRef = {iCobo, iAsad, iAget, iCh};
+            Int_t PadRefNum = fAtMapPtr->GetPadNum(PadRef);
+            std::vector<Float_t> PadCenterCoord;
+            PadCenterCoord.reserve(2);
+            PadCenterCoord = fAtMapPtr->CalcPadCenter(PadRefNum);
+            Bool_t IsInhibited = fAtMapPtr->GetIsInhibited(PadRefNum);
+
+            if (PadRefNum != -1 && !fAtMapPtr->GetIsInhibited(PadRefNum)) {
+               AtPad *pad = new ((*fPadArray)[PadRefNum]) AtPad(PadRefNum);
+               // if(PadRefNum)
+               pad->SetPadXCoord(PadCenterCoord[0]);
+               pad->SetPadYCoord(PadCenterCoord[1]);
+               if (PadRefNum == -1)
+                  pad->SetValidPad(kFALSE);
+               else
+                  pad->SetValidPad(kTRUE);
+
+               Int_t *rawadc = basicFrame->GetSample(iAget, iCh);
+               for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
+                  pad->SetRawADC(iTb, rawadc[iTb]);
+
+               Int_t fpnCh = GetFPNChannel(iCh);
+               Double_t adc[512] = {0};
+               fPedestalPtr[coboIdx]->SubtractPedestal(fNumTbs, basicFrame->GetSample(iAget, fpnCh), rawadc, adc,
+                                                       fFPNSigmaThreshold);
+              
+
+               for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
+                  pad->SetADC(iTb, adc[iTb]);
+
+               pad->SetPedestalSubtracted(kTRUE);
+            }
+         }
+      }
+   
+
+
+}
+  
 Bool_t AtCore2::SetWriteFile(TString filename, Int_t coboIdx, Bool_t overwrite)
 {
    return fDecoderPtr[coboIdx]->SetWriteFile(filename, overwrite);
@@ -380,64 +406,27 @@ AtRawEvent *AtCore2::GetRawEvent(Long64_t frameID)
       else
          fTargetFrameID = frameID;
 
-      /*  if(fNumCobo==10){
-          std::thread cobo0([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 0);
-          std::thread cobo1([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 1);
-          std::thread cobo2([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 2);
-          std::thread cobo3([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 3);
-          std::thread cobo4([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 4);
-          std::thread cobo5([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 5);
-          std::thread cobo6([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 6);
-          std::thread cobo7([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 7);
-          std::thread cobo8([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 8);
-          std::thread cobo9([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 9);
-          //std::thread cobo10([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 10);
-          //std::thread cobo11([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 11);
-
-          cobo0.join();
-          cobo1.join();
-          cobo2.join();
-          cobo3.join();
-          cobo4.join();
-          cobo5.join();
-          cobo6.join();
-          cobo7.join();
-          cobo8.join();
-          cobo9.join();
-          //cobo10.join();
-          //cobo11.join();
-        }else if(fNumCobo==9){
-
-          std::thread cobo0([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 0);
-          std::thread cobo1([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 1);
-          std::thread cobo2([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 2);
-          std::thread cobo3([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 3);
-          std::thread cobo4([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 4);
-          std::thread cobo5([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 5);
-          std::thread cobo6([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 6);
-          std::thread cobo7([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 7);
-          std::thread cobo8([this](Int_t coboIdx) { this -> ProcessCobo(coboIdx); }, 8);
-          cobo0.join();
-          cobo1.join();
-          cobo2.join();
-          cobo3.join();
-          cobo4.join();
-          cobo5.join();
-          cobo6.join();
-          cobo7.join();
-          cobo8.join();
+           
+      std::thread *cobo = new std::thread[fNumCobo];
+      
+            
+      for (Int_t iCobo = 0; iCobo < fNumCobo; iCobo++){	 
+	 cobo[iCobo] = std::thread([this](Int_t coboIdx) { this->ProcessBasicCobo(coboIdx); }, iCobo);
+      }
+	 
+      
+      for (Int_t iCobo = 0; iCobo < fNumCobo; iCobo++)		  
+          cobo[iCobo].join();
+        
 
 
-        }*/
-
-      std::thread *cobo = new std::thread[40];
-
-      for (Int_t iCobo = 0; iCobo < fNumCobo; iCobo++)
-         cobo[iCobo] = std::thread([this](Int_t coboIdx) { this->ProcessCobo(coboIdx); }, iCobo);
-
-      for (Int_t iCobo = 0; iCobo < fNumCobo; iCobo++)
-         cobo[iCobo].join();
-
+      //NB: Do not delete. To be refactored using functors
+      /* for (Int_t iCobo = 0; iCobo < fNumCobo; iCobo++){	
+	cobo[iCobo] = std::thread([this](Int_t coboIdx) { this->ProcessCobo(coboIdx); }, iCobo);
+      }*/
+	  
+      
+      
       for (Int_t iCobo = 0; iCobo < fNumCobo; iCobo++)
          if (fCurrentEventID[0] != fCurrentEventID[iCobo]) {
             std::cout << "== [AtCore] Event IDs don't match between CoBos! fCurrentEventID[0]: " << fCurrentEventID[0]
@@ -457,7 +446,8 @@ AtRawEvent *AtCore2::GetRawEvent(Long64_t frameID)
       }
 
       delete[] cobo;
-
+      
+      
       if (fRawEventPtr->GetNumPads() == 0 && fRawEventPtr->IsGood() == kFALSE)
          return NULL;
       else
@@ -482,7 +472,7 @@ AtRawEvent *AtCore2::GetRawEvent(Long64_t frameID)
          if (basicFrame == NULL)
             return NULL;
          ProcessBasicFrame(basicFrame);
-      }
+	 }
 
       /*  fRawEventPtr -> SetEventID(layeredFrame -> GetEventID());
 
@@ -559,26 +549,14 @@ void AtCore2::SetUseSeparatedData(Bool_t value)
       std::cout << "            Make sure to call this method right after the instance created!" << cNORMAL
                 << std::endl;
 
-      //    fDecoderPtr[0] -> SetDebugMode(1);
+      
       for (Int_t iCobo = 1; iCobo < fNumCobo; iCobo++) {
          fDecoderPtr[iCobo] = new GETDecoder2();
-         //      fDecoderPtr[iCobo] -> SetDebugMode(1);
+	 
       }
    }
 }
 
-/*STMap *STCore2::GetSTMap()
-{
-  return fMapPtr;
-}*/
-
-/*STPlot *STCore::GetSTPlot()
-{
-  if (fPlotPtr == NULL)
-    fPlotPtr = new STPlot(this);
-
-  return fPlotPtr;
-}*/
 
 Int_t AtCore2::GetFPNChannel(Int_t chIdx)
 {
@@ -669,7 +647,7 @@ void AtCore2::ProcessBasicFrame(GETBasicFrame *basicFrame)
 
          std::vector<int> PadRef = {iCobo, iAsad, iAget, iCh};
          Int_t PadRefNum = fAtMapPtr->GetPadNum(PadRef);
-         std::vector<Float_t> PadCenterCoord;
+	  std::vector<Float_t> PadCenterCoord;
          PadCenterCoord.reserve(2);
          PadCenterCoord = fAtMapPtr->CalcPadCenter(PadRefNum);
 
@@ -686,14 +664,19 @@ void AtCore2::ProcessBasicFrame(GETBasicFrame *basicFrame)
                pad->SetValidPad(kTRUE);
 
             Int_t *rawadc = basicFrame->GetSample(iAget, iCh);
-            for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
+            for (Int_t iTb = 0; iTb < fNumTbs; iTb++){
+	      //std::cout<<" iTb "<<iTb<<" "<<rawadc[iTb]<<"\n";
                pad->SetRawADC(iTb, rawadc[iTb]);
-
+	    }
+	       
             Int_t fpnCh = GetFPNChannel(iCh);
             Double_t adc[512] = {0};
             Bool_t good = fPedestalPtr[0]->SubtractPedestal(fNumTbs, basicFrame->GetSample(iAget, fpnCh), rawadc, adc,
                                                             fFPNSigmaThreshold);
-
+	    //std::cout<<" PadRef "<<PadRefNum<<"\n";
+	    //std::cout<<" PadRefNum "<<iCobo<<" "<<iAsad<<" "<<iAget<<" "<<iCh<<"\n";
+	
+	    
             // if (fIsGainCalibrationData)
             //=fGainCalibrationPtr -> CalibrateADC(row, layer, fNumTbs, adc);
 

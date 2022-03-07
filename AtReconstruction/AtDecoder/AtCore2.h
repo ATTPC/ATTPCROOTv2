@@ -16,6 +16,7 @@
 #include "AtTpcMap.h"
 #include "AtTpcProtoMap.h"
 #include "AtPedestal.h"
+#include "AtGadgetIIMap.h"
 
 #include "GETDecoder2.h"
 
@@ -27,6 +28,7 @@ class AtCore2 : public TObject {
 public:
    AtCore2();
    AtCore2(Int_t opt);
+   AtCore2(Int_t opt, Int_t numCobos=4);
    AtCore2(TString filename, Int_t opt);
    AtCore2(TString filename, Int_t numTbs, Int_t windowNumTbs = 512, Int_t windowStartTb = 0);
    ~AtCore2();
@@ -57,6 +59,7 @@ public:
    void SetUseSeparatedData(Bool_t value = kTRUE);
 
    void ProcessCobo(Int_t coboIdx);
+   void ProcessBasicCobo(Int_t coboIdx);
    void ProcessLayeredFrame(GETLayeredFrame *layeredFrame);
    void ProcessBasicFrame(GETBasicFrame *basicFrame);
 
@@ -91,10 +94,10 @@ private:
 
    Int_t fNumTbs;
 
-   GETDecoder2 *fDecoderPtr[40];
+   GETDecoder2 *fDecoderPtr[4];
    Bool_t fIsData;
 
-   AtPedestal *fPedestalPtr[40];
+   AtPedestal *fPedestalPtr[4];
    Bool_t fIsNegativePolarity;
    Double_t fFPNSigmaThreshold;
    Bool_t fIsProtoGeoSet;
@@ -106,7 +109,7 @@ private:
    AtRawEvent *fRawEventPtr;
    TClonesArray *fPadArray;
 
-   Int_t fCurrentEventID[40];
+   Int_t fCurrentEventID[4];
    Int_t fTargetFrameID;
 
    Bool_t fIsSeparatedData;

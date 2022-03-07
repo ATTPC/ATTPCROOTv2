@@ -141,7 +141,12 @@ Long64_t AtDecoder2Task::GetEventID()
 
 InitStatus AtDecoder2Task::Init()
 {
-   FairRootManager *ioMan = FairRootManager::Instance();
+
+  std::cout<<" ==== AtDecoder2Task::Init() "<<"\n";
+  std::cout<<" Number of Cobo/Asad : "<<fNumCobo<<"\n";
+  std::cout<<" Map option : "<<fOpt<<"\n";
+  
+  FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
       fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
 
@@ -150,10 +155,11 @@ InitStatus AtDecoder2Task::Init()
 
    ioMan->Register("AtRawEvent", "AtTPC", fRawEventArray, fIsPersistence);
 
-   fDecoder = new AtCore2(fOpt);
+   fDecoder = new AtCore2(fOpt,fNumCobo);
+   fDecoder->SetNumCobo(fNumCobo);
    fDecoder->SetUseSeparatedData(fIsSeparatedData);
    fDecoder->SetInhibitMaps(fIniMap, fLowgMap, fXtalkMap);
-   fDecoder->SetNumCobo(fNumCobo);
+   
 
    for (Int_t iFile = 0; iFile < fDataList[0].size(); iFile++)
       fDecoder->AddData(fDataList[0].at(iFile));
@@ -180,7 +186,7 @@ InitStatus AtDecoder2Task::Init()
    fDecoder->SetFPNPedestal(fFPNPedestalRMS);
 
    Bool_t kMapIn = fDecoder->SetAtTpcMap(fMap);
-   // std::cout<<kMapIn<<std::endl;
+   
    if (!kMapIn) {
       fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtTPC Map!");
 
@@ -194,38 +200,7 @@ InitStatus AtDecoder2Task::Init()
          fDecoder->SetAuxChannel(fAuxChannels);
    }
 
-   /*  if (fGainCalibrationFile.EqualTo("") && fUseGainCalibration == kFALSE)
-       fLogger -> Info(MESSAGE_ORIGIN, "Gain not calibrated!");
-     else if (fGainCalibrationFile.EqualTo("") && fUseGainCalibration == kTRUE) {
-       Bool_t isSetGainCalibrationData = fDecoder -> SetGainCalibrationData(fPar -> GetGainCalibrationDataFileName());
-       if (!isSetGainCalibrationData) {
-         fLogger -> Error(MESSAGE_ORIGIN, "Cannot find gain calibration data file!");
-
-         return kERROR;
-       }*/
-   //  LOG(INFO) << fPar -> GetGainCalibrationDataFileName() << " " << fPar -> GetGCConstant() << " " << fPar ->
-   //  GetGCLinear() << " " << fPar -> GetGCQuadratic() << FairLogger::endl;
-
-   /*  fDecoder -> SetGainReference(fPar -> GetGCConstant(), fPar -> GetGCLinear(), fPar -> GetGCQuadratic());
-     fLogger -> Info(MESSAGE_ORIGIN, "Gain calibration data is set from parameter list!");
-   } else {
-     Bool_t isSetGainCalibrationData = fDecoder -> SetGainCalibrationData(fGainCalibrationFile);
-     if (!isSetGainCalibrationData) {
-       fLogger -> Error(MESSAGE_ORIGIN, "Cannot find gain calibration data file!");
-
-       return kERROR;
-     }
-
-     if (fGainConstant == -9999 || fGainLinear == -9999) {
-       fLogger -> Error(MESSAGE_ORIGIN, "Cannot find gain calibration data file!");
-
-       return kERROR;
-     }
-
-     fDecoder -> SetGainReference(fGainConstant, fGainLinear, fGainQuadratic);
-     fLogger -> Info(MESSAGE_ORIGIN, "Gain calibration data is set!");
-   }*/
-
+   
    return kSUCCESS;
 }
 
@@ -254,7 +229,7 @@ void AtDecoder2Task::Exec(Option_t *opt)
    if (fRawEvent == NULL)
       fRawEvent = fDecoder->GetRawEvent(fEventID++);
    fInternalID++;
-   if (fInternalID % 100 == 0)
+   if (fInternalID % 1 == 0)
       std::cout << " Event Number " << fEventID << " Internal ID : " << fInternalID
                 << " Number of Pads : " << fRawEvent->GetNumPads() << std::endl;
 

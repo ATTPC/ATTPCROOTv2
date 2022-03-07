@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_full_dp(std::string fileFolder = "data_300_400/") //"dataFull/")//"data_t20_10_20_cov01_dp/")
+void plotFit_full_dp(std::string fileFolder = "data_200_300/") //"dataFull/")//"data_t20_10_20_cov01_dp/")
 {
 
    // Data histograms
@@ -72,8 +72,8 @@ void plotFit_full_dp(std::string fileFolder = "data_300_400/") //"dataFull/")//"
 
    // PRA
    TH2F *Ang_Ener_PRA = new TH2F("Ang_Ener_PRA", "Ang_Ener_PRA", 720, 0, 179, 1000, 0, 100.0);
-   TH1F *PhiPRAH = new TH1F("PhiPRAH", "PhiPRAH",720, -179, 179);
-   
+   TH1F *PhiPRAH = new TH1F("PhiPRAH", "PhiPRAH", 720, -179, 179);
+
    // Correlations
    TH2F *Ang_AngPRA = new TH2F("Ang_AngPRA", "Ang_AngPRA", 720, 0, 179, 720, 0, 179);
    TH2F *Phi_PhiPRA = new TH2F("Phi_PhiPRA", "Phi_PhiPRA", 720, -179, 179, 720, -179, 179);
@@ -122,7 +122,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_400/") //"dataFull/")//"
    for (auto iHist = 0; iHist < 10; ++iHist)
       HQCorrArray[iHist] = new TH1F(Form("HQCorrArray[%i]", iHist), Form("HQCorrArray[%i]", iHist), 600, -5, 55);
 
-   TH2F *QvsEvent = new TH2F("QvsEvent", "QvsEvent", 1000, -10, 10, 1000, 0,1000);
+   TH2F *QvsEvent = new TH2F("QvsEvent", "QvsEvent", 1000, -10, 10, 1000, 0, 1000);
 
    // Cut for gs 75-76 mm vertex
    TCutG *cutGS = new TCutG("CUTGS", 8);
@@ -160,7 +160,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_400/") //"dataFull/")//"
    m_B = m_Be11;
 
    // Find every valid file
-   std::system("find ./data_300_400 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
+   std::system("find ./data_200_300 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
    // >test.txt"
    // std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::ifstream file;
@@ -245,8 +245,8 @@ void plotFit_full_dp(std::string fileFolder = "data_300_400/") //"dataFull/")//"
          std::vector<Float_t> *fNdfVec = 0;
          std::vector<Float_t> *bNdfVec = 0;
          std::vector<Float_t> *ICEVec = 0;
-	 std::vector<Float_t> *particleQVec = 0;
-	 
+         std::vector<Float_t> *particleQVec = 0;
+
          outputTree->SetBranchAddress("EFitVec", &EFitVec);
          outputTree->SetBranchAddress("AFitVec", &AFitVec);
          outputTree->SetBranchAddress("PhiFitVec", &PhiFitVec);
@@ -277,7 +277,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_400/") //"dataFull/")//"
          outputTree->SetBranchAddress("fNdfVec", &fNdfVec);
          outputTree->SetBranchAddress("bNdfVec", &bNdfVec);
          outputTree->SetBranchAddress("ICEVec", &ICEVec);
-	 outputTree->SetBranchAddress("particleQVec", &particleQVec);
+         outputTree->SetBranchAddress("particleQVec", &particleQVec);
 
          ++fileCnt;
 
@@ -348,8 +348,8 @@ void plotFit_full_dp(std::string fileFolder = "data_300_400/") //"dataFull/")//"
 
                Ang_Ener_PRA->Fill(APRA, EPRA);
 
-	       PhiPRAH->Fill(PhiPRA);
-	       // if( ((*xiniFitXtrVec)[index]>0.5 || (*xiniFitXtrVec)[index]<-0.5) )
+               PhiPRAH->Fill(PhiPRA);
+               // if( ((*xiniFitXtrVec)[index]>0.5 || (*xiniFitXtrVec)[index]<-0.5) )
                // continue;
                // if( ((*yiniFitXtrVec)[index]>0.5 || (*yiniFitXtrVec)[index]<-0.5) )
                //		 continue;
@@ -369,7 +369,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_400/") //"dataFull/")//"
                               if (dataFile.find("sim") != std::string::npos) {
                                  angle = (*AFitVec)[index];
                               }
-                              if ((*trackLengthVec)[index] > 30.0) {
+                              if ((*trackLengthVec)[index] > 0.0) {
 
                                  if ((*EFitVec)[index] < 100) {
 
@@ -379,7 +379,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_400/") //"dataFull/")//"
                                        bChi2H->Fill((*bChi2Vec)[index]);
                                        fNdfH->Fill((*fNdfVec)[index]);
                                        bNdfH->Fill((*bNdfVec)[index]);
-				       particleQH->Fill((*particleQVec)[index]);
+                                       particleQH->Fill((*particleQVec)[index]);
                                        fChi2NH->Fill((*fChi2Vec)[index]);
 
                                        // if((*AFitVec)[index]>20.0 && (*EFitVec)[index]>4.0){
@@ -420,7 +420,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_400/") //"dataFull/")//"
                                        ZposvsAng->Fill(ziniFit, AFit);
                                        Ang_AngPRA->Fill(AFit, APRA);
                                        zfit_zPRA->Fill(ziniFit, ziniPRA / 10.0);
-                                       Phi_PhiPRA->Fill((*PhiFitVec)[index] * TMath::RadToDeg(),(*PhiPRAVec)[index]);
+                                       Phi_PhiPRA->Fill((*PhiFitVec)[index] * TMath::RadToDeg(), (*PhiPRAVec)[index]);
                                        Ang_Phi->Fill(AFit, PhiFit * TMath::RadToDeg());
                                        x_Phi->Fill(xiniFit, PhiFit * TMath::RadToDeg());
                                        y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
@@ -449,7 +449,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_400/") //"dataFull/")//"
                                           ex_energy_exp -
                                           mFactor * ((1.39 - 2.1509) / (87.62 - 0.627)) * ((*ziniFitXtrVec)[index]) +
                                           offSet;
-                                       QcorrZ = ex_energy_exp - mFactor*p1 * ((*ziniFitXtrVec)[index]);
+                                       QcorrZ = ex_energy_exp - mFactor * p1 * ((*ziniFitXtrVec)[index]);
                                        HQCorr->Fill(QcorrZ);
 
                                        for (auto iCorr = 0; iCorr < 10; ++iCorr) {
@@ -459,7 +459,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_400/") //"dataFull/")//"
                                              mFactor * ((1.39 - 2.1509) / (87.62 - 0.627)) * ((*ziniFitXtrVec)[index]) +
                                              offSet;
 
-                                          QcorrZL = ex_energy_exp - mFactor*p1 * ((*ziniFitXtrVec)[index]);
+                                          QcorrZL = ex_energy_exp - mFactor * p1 * ((*ziniFitXtrVec)[index]);
 
                                           HQCorrArray[iCorr]->Fill(QcorrZL);
                                        }
@@ -659,7 +659,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_400/") //"dataFull/")//"
    Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
    c3->cd(2);
    PhiPRAH->Draw();
-   
+
    TCanvas *c4 = new TCanvas();
    c4->Divide(2, 2);
    c4->Draw();

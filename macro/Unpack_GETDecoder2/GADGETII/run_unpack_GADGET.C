@@ -1,6 +1,6 @@
-void run_reco
-(TString dataFile = "output.root",TString parameterFile = "ATTPC.e15503b.par",
-TString mappath="/data/ar46/run_0085/")
+void run_unpack_GADGET(TString dataFile ="GADGET-alpha-source-data1.txt", TString parameterFile = "GADGET.sim.par" , TString mappath="") 
+//void run_unpack_GADGET(TString dataFile ="",TString parameterFile = "GADGET.sim.par", TString mappath="") 
+
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -10,21 +10,19 @@ TString mappath="/data/ar46/run_0085/")
 
   gSystem->Load("libXMLParser.so");
   // -----------------------------------------------------------------
-  // Set file names
-  TString scriptfile = "Lookup20150611.xml";
+  // Set file names  
+  TString scriptfile = "LookupGADGET08232021.xml";
   TString dir = getenv("VMCWORKDIR");
   TString scriptdir = dir + "/scripts/"+ scriptfile;
-  TString dataDir = dir + "/macro/data/";
+  TString dataDir = dir + "/macro/Unpack_GETDecoder2/";
   TString geomDir = dir + "/geometry/";
   gSystem -> Setenv("GEOMPATH", geomDir.Data());
+  //TString loggerFile  = dataDir + "ATTPCLog.log";
 
-  //TString inputFile   = dataDir + name + ".digi.root";
-  //TString outputFile  = dataDir + "output.root";
-  TString outputFile  = "output_reco.root";
-  //TString mcParFile   = dataDir + name + ".params.root";
-  TString loggerFile  = dataDir + "ATTPCLog_Reco.log";
+  TString outputFile  = "output.root";
   TString digiParFile = dir + "/parameters/" + parameterFile;
-  TString geoManFile  = dir + "/geometry/ATTPC_v1.2.root";
+  TString geoManFile  = dir + "/geometry/GADGET_II.root";
+ 
 
   TString inimap   = mappath + "inhib.txt";
   TString lowgmap  = mappath + "lowgain.txt";
@@ -33,17 +31,14 @@ TString mappath="/data/ar46/run_0085/")
   // -----------------------------------------------------------------
   // Logger
   FairLogger *fLogger = FairLogger::GetLogger();
-  fLogger -> SetLogFileName(loggerFile);
+  /*fLogger -> SetLogFileName(loggerFile);
   fLogger -> SetLogToScreen(kTRUE);
   fLogger -> SetLogToFile(kTRUE);
-  fLogger -> SetLogVerbosityLevel("LOW");
+  fLogger -> SetLogVerbosityLevel("MEDIUM");*/
 
   FairRunAna* run = new FairRunAna();
-  run ->SetInputFile(dataFile);
-  run -> SetOutputFile(outputFile);
-  //run -> SetGeomFile("../geometry/ATTPC_Proto_v1.0.root");
-  run -> SetGeomFile(geoManFile);
-
+  run -> SetOutputFile(outputFile); 
+  run -> SetGeomFile(geoManFile);  
   FairRuntimeDb* rtdb = run->GetRuntimeDb();
   FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo();
   parIo1 -> open(digiParFile.Data(), "in");
@@ -52,22 +47,82 @@ TString mappath="/data/ar46/run_0085/")
  // rtdb -> setFirstInput(parIo2);
   rtdb -> setSecondInput(parIo1);
 
+  // Settings
+ Bool_t fUseDecoder = kTRUE;
+  if (dataFile.IsNull() == kTRUE)
+    fUseDecoder = kFALSE;
 
-  ATHoughTask *HoughTask = new ATHoughTask();
-	HoughTask ->SetPersistence();
-	//HoughTask ->SetLinearHough();
-	HoughTask ->SetCircularHough();
-  HoughTask ->SetHoughThreshold(100.0); // Charge threshold for Hough
-	run -> AddTask(HoughTask);
+  Bool_t fUseSeparatedData = kFALSE;
+    if (dataFile.EndsWith(".txt"))
+      fUseSeparatedData = kTRUE;
 
+ /*
+  *     Unpacking options:
+  *         - SetUseSeparatedData:      To be used with 10 CoBo files without merging. Mainly for the ATTPC. Enabled if the input file is a txt.
+  *         - SetPseudoTopologyFrame:   Used to force the graw file to have a Topology frame.
+  *         - SetPersistance:           Save the unpacked data into the root file.
+  *         - SetMap:                   Chose the lookup table.
+  *         - SetMapOpt                 Chose the pad plane geometry. In addition forces the unpacker to use Basic Frames for 1 single file (p-ATTPC case) of Layered
+  *                                     Frames for Merged Data (10 Cobos merged data).
+  */
+    
+  AtDecoder2Task *fDecoderTask = new AtDecoder2Task();
+  fDecoderTask -> SetNumCobo(4);
+ // fDecoderTask -> SetPTFMask(0x1);
+  fDecoderTask -> SetUseSeparatedData(fUseSeparatedData);
+  if(fUseSeparatedData) fDecoderTask -> SetPseudoTopologyFrame(kFALSE);
+  //fDecoderTask -> SetPositivePolarity(kTRUE);
+  fDecoderTask -> SetPersistence(kTRUE);
+  fDecoderTask -> SetMap(scriptdir.Data());
+  //fDecoderTask -> SetInhibitMaps(inimap,lowgmap,xtalkmap); // TODO: Only implemented for fUseSeparatedData!!!!!!!!!!!!!!!!!!!1
+  fDecoderTask -> SetMapOpt(0); // ATTPC : 0  - Prototype: 1 |||| Default value = 0  
+  //fDecoderTask -> SetEventID(0);
+   
 
-  run -> Init();
+  if (!fUseSeparatedData)
+    fDecoderTask -> AddData(dataFile);
+    else {
+    std::ifstream listFile(dataFile.Data());
+    TString dataFileWithPath;
+    Int_t iAsAd = 0;
+    while (dataFileWithPath.ReadLine(listFile)) {
+      if (dataFileWithPath.Contains(Form("AsAd%i",iAsAd)) ){
+              fDecoderTask -> AddData(dataFileWithPath, iAsAd);
+        	std::cout<<" Added file : "<<dataFileWithPath<<" - iAsAd : "<<iAsAd<<"\n";
+    }else{
+          
+          fDecoderTask -> AddData(dataFileWithPath, iAsAd);
+          cout<<" Add data file "<<endl;
+        }
 
-  //run -> RunOnTBData();
-  run->Run(0,10);
+      iAsAd++;
+    }
+  }
+   
+ 
+   AtPSASimple2 *psa = new AtPSASimple2();
+
+   AtPSAtask *psaTask = new AtPSAtask(psa);
+   
+   psaTask->SetPersistence(kTRUE);   
+   //psaTask->SetPSAMode(1);
+   //psaTask->SetMaxFinder();
+   //psaTask -> SetBaseCorrection(kTRUE);
+   //psaTask -> SetTimeCorrection(kTRUE);
+   psa->SetThreshold(5);
+   psa->SetMaxFinder();
+  
+
+   run -> AddTask(fDecoderTask);
+   run -> AddTask(psaTask);
+
+   run -> Init();
+   
+   //run -> RunOnTBData();
+    run->Run(0,100);
 
   std::cout << std::endl << std::endl;
-  std::cout << "Reconstruction macro finished succesfully."  << std::endl << std::endl;
+  std::cout << "Macro finished succesfully."  << std::endl << std::endl;
   std::cout << "- Output file : " << outputFile << std::endl << std::endl;
   // -----   Finish   -------------------------------------------------------
   timer.Stop();
@@ -77,6 +132,8 @@ TString mappath="/data/ar46/run_0085/")
   cout << "Real time " << rtime << " s, CPU time " << ctime << " s" << endl;
   cout << endl;
   // ------------------------------------------------------------------------
+
+  //gApplication->Terminate();
 
 }
 

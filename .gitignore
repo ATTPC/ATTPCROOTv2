@@ -1,6 +1,7 @@
 *.swp
 *.root
 *.log
+*.graw
 gphysi.dat
 core_dump*
 build
