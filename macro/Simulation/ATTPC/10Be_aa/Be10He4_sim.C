@@ -157,7 +157,6 @@ void Be10He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
         Double_t ThetaMinCMS = 5.0;
         Double_t ThetaMaxCMS = 90.0;
 
-
         AtTPC2Body* TwoBody = new AtTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner,ThetaMinCMS,ThetaMaxCMS);
         primGen->AddGenerator(TwoBody);
 

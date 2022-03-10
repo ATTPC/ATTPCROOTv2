@@ -142,11 +142,12 @@ Long64_t AtDecoder2Task::GetEventID()
 InitStatus AtDecoder2Task::Init()
 {
 
-  std::cout<<" ==== AtDecoder2Task::Init() "<<"\n";
-  std::cout<<" Number of Cobo/Asad : "<<fNumCobo<<"\n";
-  std::cout<<" Map option : "<<fOpt<<"\n";
-  
-  FairRootManager *ioMan = FairRootManager::Instance();
+   std::cout << " ==== AtDecoder2Task::Init() "
+             << "\n";
+   std::cout << " Number of Cobo/Asad : " << fNumCobo << "\n";
+   std::cout << " Map option : " << fOpt << "\n";
+
+   FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
       fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
 
@@ -155,11 +156,10 @@ InitStatus AtDecoder2Task::Init()
 
    ioMan->Register("AtRawEvent", "AtTPC", fRawEventArray, fIsPersistence);
 
-   fDecoder = new AtCore2(fOpt,fNumCobo);
+   fDecoder = new AtCore2(fOpt, fNumCobo);
    fDecoder->SetNumCobo(fNumCobo);
    fDecoder->SetUseSeparatedData(fIsSeparatedData);
    fDecoder->SetInhibitMaps(fIniMap, fLowgMap, fXtalkMap);
-   
 
    for (Int_t iFile = 0; iFile < fDataList[0].size(); iFile++)
       fDecoder->AddData(fDataList[0].at(iFile));
@@ -186,7 +186,7 @@ InitStatus AtDecoder2Task::Init()
    fDecoder->SetFPNPedestal(fFPNPedestalRMS);
 
    Bool_t kMapIn = fDecoder->SetAtTpcMap(fMap);
-   
+
    if (!kMapIn) {
       fLogger->Error(MESSAGE_ORIGIN, "Cannot find AtTPC Map!");
 
@@ -200,7 +200,6 @@ InitStatus AtDecoder2Task::Init()
          fDecoder->SetAuxChannel(fAuxChannels);
    }
 
-   
    return kSUCCESS;
 }
 

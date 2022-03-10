@@ -28,7 +28,7 @@ class AtCore2 : public TObject {
 public:
    AtCore2();
    AtCore2(Int_t opt);
-   AtCore2(Int_t opt, Int_t numCobos=4);
+   AtCore2(Int_t opt, Int_t numCobos = 4);
    AtCore2(TString filename, Int_t opt);
    AtCore2(TString filename, Int_t numTbs, Int_t windowNumTbs = 512, Int_t windowStartTb = 0);
    ~AtCore2();
