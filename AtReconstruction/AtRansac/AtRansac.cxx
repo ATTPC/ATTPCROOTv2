@@ -118,7 +118,6 @@ void AtRANSACN::AtRansac::CalcRANSAC(AtEvent *event)
       // FindVertex(tracks);
 
    } // Minimum tracks
-
 }
 
 void AtRANSACN::AtRansac::CalcRANSACFull(AtEvent *event)

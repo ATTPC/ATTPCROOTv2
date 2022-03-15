@@ -9,11 +9,10 @@
 #include <vector>
 
 #include "AtHit.h"
-#include "AtPad.h"
+#include "AtAuxPad.h"
 
-using std::map;
 using hitVector = std::vector<AtHit>;
-using padVector = std::vector<AtPad>;
+using auxPadVector = std::vector<AtAuxPad>;
 using traceArray = std::array<Float_t, 512>;
 
 class AtEvent : public TNamed {
@@ -25,9 +24,9 @@ private:
    Double_t fRhoVariance = 0;
    ULong_t fTimestamp = 0;
 
-   hitVector fHitArray;
-   padVector fAuxPadArray;
-   map<Int_t, Int_t> fMultiplicityMap;
+   std::vector<AtHit> fHitArray;
+   std::vector<AtAuxPad> fAuxPadArray;
+   std::map<Int_t, Int_t> fMultiplicityMap;
 
    traceArray fMeshSig;
 
@@ -40,24 +39,18 @@ public:
    // Adds a new hit to the hit array, and returns a referece to the new hit to be
    // filled. This is done to avoid the create and subsequent copy of a hit and also
    // avoid dealing with the memory managment
+   // Takes arguments to any constructor of AtHit, leaving out the first (the hit ID).
+   // AtEvent handles the assignment of hit IDs to ensure they are unique within an event.
    template <typename... Ts>
-   AtHit &AddHit(Ts &&... params)
+   AtHit &AddHit(Ts &&...params)
    {
       LOG(debug) << "Adding hit with ID " << fHitArray.size() << " to event " << fEventID;
       fHitArray.emplace_back(fHitArray.size(), std::forward<Ts>(params)...);
       return fHitArray.back();
    }
-   /*AtHit &AddHit(const XYZPoint &loc, Double_t charge);
-   AtHit &AddHit(Int_t padNum, const XYZPoint &loc, Double_t charge);
-   AtHit &AddHit();
-   */
 
-   // Adds a new auxiliary pad to the auxiliary pad array, and returns a referece to
-   // the new auxiliary pad to be filled. This is done to avoid the create and subsequent
-   // copy of a hit and also avoid dealing with the memory managment
-   AtPad &AddAuxPad();
    // Copies passed aux pad into the event's auxiliary pad array
-   void AddAuxPad(const AtPad &auxPad) { fAuxPadArray.push_back(auxPad); }
+   void AddAuxPad(AtAuxPad auxPad) { fAuxPadArray.push_back(std::move(auxPad)); }
 
    void SetEventID(Int_t evtid) { fEventID = evtid; }
    void SetTimestamp(ULong_t timestamp) { fTimestamp = timestamp; }
@@ -66,13 +59,13 @@ public:
    void SetIsGood(Bool_t value) { fIsGood = value; }
    void SetIsInGate(Bool_t value) { fIsInGate = value; }
 
-   void SetMultiplicityMap(const std::map<Int_t, Int_t> &MultiMap);
+   void SetMultiplicityMap(std::map<Int_t, Int_t> MultiMap) { fMultiplicityMap = std::move(MultiMap); }
    void SetMeshSignal(const traceArray &mesharray);
    void SetMeshSignal(Int_t idx, Float_t val);
 
    const AtHit &GetHit(Int_t hitNo) const { return fHitArray.at(hitNo); }
    const hitVector &GetHitArray() const { return fHitArray; }
-   const padVector &GetAuxPadArray() const { return fAuxPadArray; }
+   const auxPadVector &GetAuxPadArray() const { return fAuxPadArray; }
    Int_t GetEventID() const { return fEventID; }
    Long_t GetTimestamp() const { return fTimestamp; }
    Int_t GetNumHits() const { return fHitArray.size(); }
@@ -89,7 +82,5 @@ public:
 
    ClassDef(AtEvent, 4);
 };
-
-// Bool_t operator<(const AtHit &s1, const AtHit &s2);
 
 #endif

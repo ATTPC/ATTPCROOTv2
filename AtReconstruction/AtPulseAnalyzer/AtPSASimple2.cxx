@@ -254,7 +254,6 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                if (mcPointsMap.size() > 0)
                   TrackMCPoints(mcPointsMap, hit);
 
-
                for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
                   mesh[iTb] += floatADC[iTb];
 

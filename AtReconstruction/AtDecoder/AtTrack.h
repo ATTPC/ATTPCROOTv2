@@ -28,10 +28,10 @@ protected:
    std::vector<AtHit> fHitArray; // TrackHC, AtGenfit, all ransacs
 
    // Used by all ransac classes
-   XYZPoint fTrackVertex;              // Mean Vertex of the track
-   Double_t fMinimum;                  // Minimizer result (chi2)
-   Int_t fNFree;                       // Free paramets (NDF)
-   std::vector<Double_t> fFitPar;      // fit parameters
+   XYZPoint fTrackVertex;         // Mean Vertex of the track
+   Double_t fMinimum;             // Minimizer result (chi2)
+   Int_t fNFree;                  // Free paramets (NDF)
+   std::vector<Double_t> fFitPar; // fit parameters
 
    // Used by AtRansac only
    Double_t fAngleZAxis;               // Angle of the track w.r.t. the X axis.
@@ -40,9 +40,9 @@ protected:
    std::vector<Double_t> fRANSACCoeff; // Coefficients for radius smoothing using RANSAC: x, y and radius of curvature
 
    // Used by AtPRA
-   Double_t fGeoThetaAngle;            // Geometrical scattering angle with respect to the detector FitParameters
-   Double_t fGeoPhiAngle;              //  " azimuthal "
-   Double_t fGeoRadius;                // Initial radius of curvature
+   Double_t fGeoThetaAngle;                  // Geometrical scattering angle with respect to the detector FitParameters
+   Double_t fGeoPhiAngle;                    //  " azimuthal "
+   Double_t fGeoRadius;                      // Initial radius of curvature
    std::pair<Double_t, Double_t> fGeoCenter; // Center of the spiral track
    std::vector<AtHitCluster> fHitClusterArray; ///< Clusterized hits container
 

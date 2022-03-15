@@ -53,7 +53,6 @@ void AtRawEvent::RemovePad(Int_t padNum)
          fPadList.erase(it);
 }
 
-
 AtPad *AtRawEvent::GetPad(Int_t padNum)
 {
    for (auto &pad : fPadList)

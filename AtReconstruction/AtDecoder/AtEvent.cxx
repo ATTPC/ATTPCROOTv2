@@ -14,34 +14,6 @@ AtEvent::AtEvent(Int_t eventID, Bool_t isGood)
 {
 }
 
-/*
-AtHit &AtEvent::AddHit(const XYZPoint &loc, Double_t charge)
-{
-   fHitArray.emplace_back(fHitArray.size(), loc, charge);
-   return fHitArray.back();
-}
-AtHit &AtEvent::AddHit(Int_t padNum, const XYZPoint &loc, Double_t charge)
-{
-   fHitArray.emplace_back(fHitArray.size(), padNum, loc, charge);
-   return fHitArray.back();
-}
-
-AtHit &AtEvent::AddHit()
-{
-   fHitArray.emplace_back(fHitArray.size());
-   return fHitArray.back();
-}
-*/
-AtPad &AtEvent::AddAuxPad()
-{
-   fAuxPadArray.push_back({});
-   return fAuxPadArray.back();
-}
-
-void AtEvent::SetMultiplicityMap(const std::map<Int_t, Int_t> &MultiMap)
-{
-   fMultiplicityMap = MultiMap;
-}
 void AtEvent::SetMeshSignal(const traceArray &mesharray)
 {
    fMeshSig = mesharray;

@@ -11,7 +11,7 @@ void rundigi_fast()
    // fair::Logger::SetConsoleSeverity("debug");
 
    //TString outputFile = "data/output_digiFast.root";
-   TString inOutDir = "./eventGenerator/symFull/";
+   TString inOutDir = "./eventGenerator/sym/";
    TString outputFile = inOutDir + "output_digi.root";
    TString scriptfile = "e12014_pad_mapping.xml";
    TString paramFile = "ATTPC.e12014.par";
@@ -88,8 +88,8 @@ void rundigi_fast()
    fRun->Init();
 
    timer.Start();
-   // fRun->Run(0, 20001);
-   fRun->Run(0, 50);
+   fRun->Run(0, 20001);
+   // fRun->Run(0, 50);
    timer.Stop();
 
    std::cout << std::endl << std::endl;

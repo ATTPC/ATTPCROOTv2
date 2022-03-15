@@ -167,7 +167,6 @@ protected:
    void FindVertex(std::vector<AtTrack *> tracks);
    Bool_t CheckTrackID(Int_t trackID, std::vector<AtTrack> *trackArray); // Check if Track ID is in the list
 
-
    struct SumDistance2 {
       TGraph2D *fGraph;
 

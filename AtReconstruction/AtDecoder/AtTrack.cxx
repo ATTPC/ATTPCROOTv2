@@ -248,7 +248,6 @@ Double_t AtTrack::GetGeoQEnergy()
       return -10.0;
 }
 
-
 Bool_t AtTrack::SortHitArrayTime()
 {
    std::sort(fHitArray.begin(), fHitArray.end(), AtHit::SortHitTime);
