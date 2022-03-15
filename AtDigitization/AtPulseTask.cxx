@@ -121,6 +121,11 @@ InitStatus AtPulseTask::Init()
    fRawEventArray = new TClonesArray("AtRawEvent", 1); //!< Raw Event array (only one)
    ioman->Register("AtRawEvent", "cbmsim", fRawEventArray, fIsPersistent);
 
+   setParameters();
+   getPadPlaneAndCreatePadHist();
+   fEventID = 0;
+   fRawEvent = nullptr;
+
    // Retrieve kinematics for each simulated point
    fMCPointArray = (TClonesArray *)ioman->GetObject("AtTpcPoint");
    if (fMCPointArray == 0) {
@@ -128,23 +133,17 @@ InitStatus AtPulseTask::Init()
       return kERROR;
    }
 
-   setParameters();
-   getPadPlaneAndCreatePadHist();
-   fEventID = 0;
-   fRawEvent = nullptr;
-
    LOG(info) << " AtPulseLineTask : Initialization of parameters complete!";
    return kSUCCESS;
 }
 
 void AtPulseTask::saveMCInfo(int mcPointID, int padNumber, int trackID)
 {
-   // Count occurrences of electrons coming from the same point
+   // Count occurrences of simPoints coming from the same mcPoint
    int count = 0;
 
    // The same MC point ID is saved per pad only once, but duplicates are allowed in other pads
-   std::multimap<Int_t, std::size_t>::iterator it;
-   for (it = MCPointsMap.equal_range(padNumber).first; it != MCPointsMap.equal_range(padNumber).second; ++it) {
+   for (auto it = MCPointsMap.lower_bound(padNumber); it != MCPointsMap.upper_bound(padNumber); ++it) {
       auto mcPointMap = (AtMCPoint *)fMCPointArray->At(mcPointID);
       auto trackIDMap = mcPointMap->GetTrackID();
       if (it->second == mcPointID || (trackID == trackIDMap)) {
