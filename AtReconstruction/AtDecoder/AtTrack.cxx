@@ -3,10 +3,11 @@
 // FairRoot classes
 #include "FairRuntimeDb.h"
 #include "FairRun.h"
+#include "Math/Point3D.h"
 
-ClassImp(AtTrack)
+ClassImp(AtTrack);
 
-   AtTrack::AtTrack()
+AtTrack::AtTrack()
 {
    fTrackID = -1;
    fMinimum = -1;
@@ -14,53 +15,9 @@ ClassImp(AtTrack)
    fAngleZAxis = -20;
    fAngleZDet = -20;
    fAngleYDet = -20;
-   fRange = 0.0;
-   fQuadrant = -1;
-   fGeoEnergy = -10.0;
-   fGeoQEnergy = -10.0;
-   kIsMCFit = kFALSE;
    kIsNoise = kFALSE;
-   FitParameters.sThetaMin = 0;
-   FitParameters.sThetaMin = 0;
-   FitParameters.sEnerMin = 0;
-   FitParameters.sPosMin.SetXYZ(0, 0, 0);
-   FitParameters.sBrhoMin = 0;
-   FitParameters.sBMin = 0;
-   FitParameters.sPhiMin = 0;
-   FitParameters.sChi2Min = 0;
-   FitParameters.sVertexPos.SetXYZ(0, 0, 0);
-   FitParameters.sVertexEner = 0;
-   FitParameters.sMinDistAppr = 0;
-   FitParameters.sNumMCPoint = 0;
-   FitParameters.sNormChi2 = 0;
-   FitParameters.sChi2Q = 0;
-   FitParameters.sChi2Range = 0;
 }
 
-/*AtTrack::AtTrack(const AtTrack &obj)
-{
-
-
-}*/
-
-AtTrack::~AtTrack() {}
-
-void AtTrack::AddHit(AtHit *hit)
-{
-   fHitArray.push_back(*hit);
-}
-void AtTrack::SetTrackID(Int_t val)
-{
-   fTrackID = val;
-}
-void AtTrack::SetFitPar(std::vector<Double_t> par)
-{
-   fParFit = par;
-}
-void AtTrack::SetMinimum(Double_t min)
-{
-   fMinimum = min;
-}
 void AtTrack::SetNFree(Int_t ndf)
 {
    fNFree = ndf;
@@ -77,13 +34,9 @@ void AtTrack::SetAngleYDet(Double_t angle)
 {
    fAngleYDet = angle;
 }
-void AtTrack::SetTrackVertex(TVector3 vertex)
+void AtTrack::SetTrackVertex(XYZPoint vertex)
 {
    fTrackVertex = vertex;
-}
-void AtTrack::SetRange(Double_t range)
-{
-   fRange = range;
 }
 void AtTrack::SetGeoTheta(Double_t angle)
 {
@@ -92,26 +45,6 @@ void AtTrack::SetGeoTheta(Double_t angle)
 void AtTrack::SetGeoPhi(Double_t angle)
 {
    fGeoPhiAngle = angle;
-}
-void AtTrack::SetGeoRange(Double_t range)
-{
-   fRange = range;
-}
-void AtTrack::SetQuadrant(Int_t quad)
-{
-   fQuadrant = quad;
-}
-void AtTrack::SetMCFit(Bool_t value)
-{
-   kIsMCFit = value;
-}
-void AtTrack::SetGeoEnergy(Double_t energy)
-{
-   fGeoEnergy = energy;
-}
-void AtTrack::SetGeoQEnergy(Double_t qenergy)
-{
-   fGeoQEnergy = qenergy;
 }
 void AtTrack::SetIsNoise(Bool_t value)
 {
@@ -130,17 +63,13 @@ void AtTrack::SetGeoRadius(Double_t radius)
    fGeoRadius = radius;
 }
 
-std::vector<AtHit> *AtTrack::GetHitArray()
-{
-   return &fHitArray;
-}
 std::vector<AtHitCluster> *AtTrack::GetHitClusterArray()
 {
    return &fHitClusterArray;
 }
 std::vector<Double_t> AtTrack::GetFitPar()
 {
-   return fParFit;
+   return fFitPar;
 }
 Double_t AtTrack::GetMinimum()
 {
@@ -166,13 +95,9 @@ Double_t AtTrack::GetAngleYDet()
 {
    return fAngleYDet;
 }
-TVector3 AtTrack::GetTrackVertex()
+XYZPoint AtTrack::GetTrackVertex()
 {
    return fTrackVertex;
-}
-Int_t AtTrack::GetQuadrant()
-{
-   return fQuadrant;
 }
 Double_t AtTrack::GetGeoTheta()
 {
@@ -181,10 +106,6 @@ Double_t AtTrack::GetGeoTheta()
 Double_t AtTrack::GetGeoPhi()
 {
    return fGeoPhiAngle;
-}
-Double_t AtTrack::GetGeoEnergy()
-{
-   return fGeoEnergy;
 }
 Bool_t AtTrack::GetIsNoise()
 {
@@ -203,55 +124,6 @@ Double_t AtTrack::GetGeoRadius()
    return fGeoRadius;
 }
 
-std::vector<Double_t> AtTrack::GetPosXMin() const
-{
-   return fPosXmin;
-}
-std::vector<Double_t> AtTrack::GetPosYMin() const
-{
-   return fPosYmin;
-}
-std::vector<Double_t> AtTrack::GetPosZMin() const
-{
-   return fPosZmin;
-}
-std::vector<Double_t> AtTrack::GetPosXExp() const
-{
-   return fPosXexp;
-}
-std::vector<Double_t> AtTrack::GetPosYExp() const
-{
-   return fPosYexp;
-}
-std::vector<Double_t> AtTrack::GetPosZExp() const
-{
-   return fPosZexp;
-}
-std::vector<Double_t> AtTrack::GetPosXInt() const
-{
-   return fPosXinter;
-}
-std::vector<Double_t> AtTrack::GetPosYInt() const
-{
-   return fPosYinter;
-}
-std::vector<Double_t> AtTrack::GetPosZInt() const
-{
-   return fPosZinter;
-}
-std::vector<Double_t> AtTrack::GetPosXBack() const
-{
-   return fPosXBack;
-}
-std::vector<Double_t> AtTrack::GetPosYBack() const
-{
-   return fPosYBack;
-}
-std::vector<Double_t> AtTrack::GetPosZBack() const
-{
-   return fPosZBack;
-}
-
 void AtTrack::AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster)
 {
    fHitClusterArray.push_back(std::move(*hitCluster));
@@ -262,10 +134,10 @@ void AtTrack::ResetHitClusterArray()
    fHitClusterArray.clear();
 }
 
-TVector3 AtTrack::GetLastPoint()
+XYZPoint AtTrack::GetLastPoint()
 {
    Double_t maxR = 0.;
-   TVector3 maxPos, temp;
+   XYZPoint maxPos, temp;
    for (Int_t nHit = 0; nHit < fHitArray.size(); nHit++) {
       temp = fHitArray.at(nHit).GetPosition();
       if (sqrt(pow(temp.X(), 2) + pow(temp.Y(), 2)) > maxR) {
@@ -277,14 +149,14 @@ TVector3 AtTrack::GetLastPoint()
 }
 // alternative, but noticed that the last point in time is not alway the further away
 /*
-TVector3 AtTrack::GetLastPoint()
+XYZPoint AtTrack::GetLastPoint()
 {
-   TVector3 maxPos;
+   XYZPoint maxPos;
    if(fHitArray.size()>0){
       AtHit fhit = fHitArray.front(); // Last hit of the track (Low TB)
          AtHit lhit = fHitArray.back(); // First hit of the track (High TB)
-         TVector3 fhitPos = fhit.GetPosition();
-         TVector3 lhitPos = lhit.GetPosition();
+         XYZPoint fhitPos = fhit.GetPosition();
+         XYZPoint lhitPos = lhit.GetPosition();
          if( pow(fhitPos.X(),2) + pow(fhitPos.Y(),2) > pow(lhitPos.X(),2) + pow(lhitPos.Y(),2) ) maxPos = fhitPos;
       else maxPos = lhitPos;
    }
@@ -293,17 +165,17 @@ TVector3 AtTrack::GetLastPoint()
 */
 
 std::pair<Double_t, Double_t>
-AtTrack::GetThetaPhi(const TVector3 &vertex, const TVector3 &maxPos, int zdir) // zdir -1 for simu // +1 for data
+AtTrack::GetThetaPhi(const XYZPoint &vertex, const XYZPoint &maxPos, int zdir) // zdir -1 for simu // +1 for data
 {
    std::pair<Double_t, Double_t> thetaPhi;
-   if (fParFit.size() > 0) {
+   if (fFitPar.size() > 0) {
 
-      TVector3 vp(TMath::Sign(1, maxPos.X()) * fabs(fParFit[1]), TMath::Sign(1, maxPos.Y()) * fabs(fParFit[3]),
-                  zdir * TMath::Sign(1, (maxPos.Z() - vertex.Z())) * fabs(fParFit[5])); // works with simu
-      // TVector3
-      // vp(TMath::Sign(1,maxPos.X())*fabs(fParFit[1]),TMath::Sign(1,maxPos.Y())*fabs(fParFit[3]),TMath::Sign(1,(maxPos.Z()-vertex.Z()))*fabs(fParFit[5]));//works
+      XYZPoint vp(TMath::Sign(1, maxPos.X()) * fabs(fFitPar[1]), TMath::Sign(1, maxPos.Y()) * fabs(fFitPar[3]),
+                  zdir * TMath::Sign(1, (maxPos.Z() - vertex.Z())) * fabs(fFitPar[5])); // works with simu
+      // XYZPoint
+      // vp(TMath::Sign(1,maxPos.X())*fabs(fFitPar[1]),TMath::Sign(1,maxPos.Y())*fabs(fFitPar[3]),TMath::Sign(1,(maxPos.Z()-vertex.Z()))*fabs(fFitPar[5]));//works
       // with data
-      //		std::cout<<" fParFit "<<fParFit[1]<<" "<<fParFit[3]<<" "<<fParFit[5]<<std::endl;
+      //		std::cout<<" fFitPar "<<fFitPar[1]<<" "<<fFitPar[3]<<" "<<fFitPar[5]<<std::endl;
       //		std::cout<<" maxPos "<<maxPos.X()<<" "<<maxPos.Y()<<" "<<maxPos.Z()<<std::endl;
 
       thetaPhi.first = vp.Theta();
@@ -329,8 +201,8 @@ Double_t AtTrack::GetLinearRange()
    if (fHitArray.size() > 0) {
       AtHit fhit = fHitArray.front(); // Last hit of the track (Low TB)
       AtHit lhit = fHitArray.back();  // First hit of the track (High TB)
-      TVector3 fhitPos = fhit.GetPosition();
-      TVector3 lhitPos = lhit.GetPosition();
+      auto fhitPos = fhit.GetPosition();
+      auto lhitPos = lhit.GetPosition();
 
       return TMath::Sqrt(TMath::Power((fhitPos.X() - lhitPos.X()), 2) + TMath::Power((fhitPos.Y() - lhitPos.Y()), 2) +
                          TMath::Power((fhitPos.Z() - lhitPos.Z()), 2));
@@ -338,12 +210,12 @@ Double_t AtTrack::GetLinearRange()
       return 0;
 }
 
-Double_t AtTrack::GetLinearRange(TVector3 vertex)
+Double_t AtTrack::GetLinearRange(XYZPoint vertex)
 {
 
    if (fHitArray.size() > 0) {
       AtHit fhit = fHitArray.front();
-      TVector3 fhitPos = fhit.GetPosition();
+      auto fhitPos = fhit.GetPosition();
 
       return TMath::Sqrt(TMath::Power((fhitPos.X() - vertex.X()), 2) + TMath::Power((fhitPos.Y() - vertex.Y()), 2) +
                          TMath::Power((fhitPos.Z() - vertex.Z()), 2));
@@ -351,7 +223,7 @@ Double_t AtTrack::GetLinearRange(TVector3 vertex)
       return 0;
 }
 
-Double_t AtTrack::GetLinearRange(const TVector3 &vertex, const TVector3 &maxPos)
+Double_t AtTrack::GetLinearRange(const XYZPoint &vertex, const XYZPoint &maxPos)
 {
    if (fHitArray.size() > 0) {
       return TMath::Sqrt(TMath::Power((maxPos.X() - vertex.X()), 2) + TMath::Power((maxPos.Y() - vertex.Y()), 2) +
@@ -376,32 +248,8 @@ Double_t AtTrack::GetGeoQEnergy()
       return -10.0;
 }
 
-void AtTrack::SetPosMin(const std::vector<Double_t> &xmin, const std::vector<Double_t> &ymin,
-                        const std::vector<Double_t> &zmin, const std::vector<Double_t> &xback,
-                        const std::vector<Double_t> &yback, const std::vector<Double_t> &zback)
-{
-   fPosXmin = xmin;
-   fPosYmin = ymin;
-   fPosZmin = zmin;
-   fPosXBack = xback;
-   fPosYBack = yback;
-   fPosZBack = zback;
-}
-
-void AtTrack::SetPosExp(const std::vector<Double_t> &xexp, const std::vector<Double_t> &yexp,
-                        const std::vector<Double_t> &zexp, const std::vector<Double_t> &xint,
-                        const std::vector<Double_t> &yint, const std::vector<Double_t> &zint)
-{
-   fPosXexp = xexp;
-   fPosYexp = yexp;
-   fPosZexp = zexp;
-   fPosXinter = xint;
-   fPosYinter = yint;
-   fPosZinter = zint;
-}
-
 Bool_t AtTrack::SortHitArrayTime()
 {
-   std::sort(fHitArray.begin(), fHitArray.end(), SortHitTime);
+   std::sort(fHitArray.begin(), fHitArray.end(), AtHit::SortHitTime);
    return kTRUE;
 }

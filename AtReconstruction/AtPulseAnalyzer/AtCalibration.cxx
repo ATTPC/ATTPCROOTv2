@@ -69,10 +69,10 @@ void AtCalibration::SetJitterFile(TString jitterFile)
    }
 }
 
-Double_t *AtCalibration::CalibrateGain(Double_t adc[512], Int_t padNum)
+const trace &AtCalibration::CalibrateGain(const trace &adc, Int_t padNum)
 {
    if (!fIsGainCalibrated) {
-      return 0;
+      return adc;
    }
 
    fPadNum = padNum;
@@ -84,10 +84,10 @@ Double_t *AtCalibration::CalibrateGain(Double_t adc[512], Int_t padNum)
    return fGnewadc;
 }
 
-Double_t *AtCalibration::CalibrateJitter(Double_t adc[512], Int_t padNum)
+const trace &AtCalibration::CalibrateJitter(const trace &adc, Int_t padNum)
 {
    if (!fIsJitterCalibrated) {
-      return 0;
+      return adc;
    }
 
    fPadNum = padNum;

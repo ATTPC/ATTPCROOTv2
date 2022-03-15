@@ -27,7 +27,6 @@ AtPSAProto::~AtPSAProto() {}
 void AtPSAProto::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 {
    Int_t numPads = rawEvent->GetNumPads();
-   Int_t hitNum = 0;
    Double_t QEventTot = 0.0;
    Double_t RhoVariance = 0.0;
    Double_t RhoMean = 0.0;
@@ -40,29 +39,21 @@ void AtPSAProto::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
    for (iPad = 0; iPad < numPads; iPad++) {
 
-      AtPad *pad = &(rawEvent->GetPads().at(iPad));
+      const AtPad *pad = &(rawEvent->GetPads().at(iPad));
       Int_t PadNum = pad->GetPadNum();
       Double_t QHitTot = 0.0;
       Int_t PadHitNum = 0;
-      TVector3 HitPos;
+      XYZPoint HitPos;
       Bool_t fValidBuff = kTRUE;
       Bool_t fValidThreshold = kTRUE;
 
-      Double_t xPos = pad->GetPadXCoord();
-      Double_t yPos = pad->GetPadYCoord();
+      auto pos = pad->GetPadCoord();
       Double_t zPos = 0;
       Double_t zPosCorr = 0.0;
       Double_t charge = 0;
 
-      if ((xPos < -9000 || yPos < -9000) && !pad->IsAux()) {
-         // std::cout<<" Is Auxiliary? "<<pad->IsAux()<<" Pad Num "<<PadNum<<"\n";
+      if (pos.X() < -9000 || pos.Y() < -9000)
          continue; // Skip invalid pads that are not
-      } else if (pad->IsAux()) {
-
-         // std::cout<<" Is Auxiliary 2? "<<pad->IsAux()<<" Pad Num "<<PadNum<<"\n";
-         event->AddAuxPad(pad);
-         continue;
-      }
 
       if (!(pad->IsPedestalSubtracted())) {
          LOG(ERROR) << "Pedestal should be subtracted to use this class!";
@@ -70,7 +61,7 @@ void AtPSAProto::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          // return;
       }
 
-      Double_t *adc = pad->GetADC();
+      auto adc = pad->GetADC();
       Double_t floatADC[512] = {0};
       Double_t dummy[512] = {0};
       Int_t zeroPeak = 0;
@@ -140,7 +131,7 @@ void AtPSAProto::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
             //#pragma omp ordered
             // std::cout<<" Pad Num : "<<PadNum<<" Peak : "<<iPeak<<"/"<<numPeaks<<" - Charge : "<<charge<<" - zPos :
-            // "<<zPos<<std::endl; std::cout<<" xPos : "<<xPos<<" yPos : "<<yPos<<"\n";
+            // "<<zPos<<std::endl; std::cout<<" pos.X() : "<<pos.X()<<" pos.Y() : "<<pos.Y()<<"\n";
 
             if (fThreshold > 0 && charge < fThreshold) // TODO: Does this work when the polarity is negative??
                fValidThreshold = kFALSE;
@@ -158,28 +149,26 @@ void AtPSAProto::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                                                // the whole spectrum.
                // std::cout<<" maxAdcIdx : "<<maxAdcIdx<<" TBCorr : "<<TBCorr<<std::endl;
                // std::cout<<zPos<<"    "<<zPosCorr<<std::endl;
-               AtHit *hit = new AtHit(PadNum, hitNum, xPos, yPos, zPos, charge);
+
+               //#pragma omp ordered
+               auto hit = event->AddHit(PadNum, XYZPoint(pos.X(), pos.Y(), zPos), charge);
                PadHitNum++;
-               hit->SetQHit(QHitTot); // TODO: The charge of each hit is the total charge of the spectrum, so for double
-                                      // structures this is unrealistic.
-               hit->SetTimeStamp(maxAdcIdx);
-               hit->SetTimeStampCorr(TBCorr);
-               hit->SetPositionCorr(xPos, yPos, zPosCorr); // Only Z is corrected here
-               HitPos = hit->GetPosition();
+               hit.SetTraceIntegral(QHitTot); // TODO: The charge of each hit is the total charge of the spectrum, so
+                                              // for double structures this is unrealistic.
+               hit.SetTimeStamp(maxAdcIdx);
+               hit.SetTimeStampCorr(TBCorr);
+               hit.SetPositionCorr(pos.X(), pos.Y(), zPosCorr); // Only Z is corrected here
+               HitPos = hit.GetPosition();
                Rho2 += HitPos.Mag2();
-               RhoMean += HitPos.Mag();
-               if ((xPos < -9000 || yPos < -9000) && pad->GetPadNum() != -1)
+               RhoMean += HitPos.Rho();
+               if ((pos.X() < -9000 || pos.Y() < -9000) && pad->GetPadNum() != -1)
                   std::cout << " AtPSAProto::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum()
                             << std::endl;
                // std::cout<<"  =============== Next Hit Variance Info  =============== "<<std::endl;
                // std::cout<<" Hit Num : "<<hitNum<<"  - Hit Pos Rho2 : "<<HitPos.Mag2()<<"  - Hit Pos Rho :
-               // "<<HitPos.Mag()<<std::endl; std::cout<<" Hit Coordinates : "<<xPos<<"  -  "<<yPos<<" - "<<zPos<<"  -
+               // "<<HitPos.Mag()<<std::endl; std::cout<<" Hit Coordinates : "<<pos.X()<<"  -  "<<pos.Y()<<" -
+               // "<<zPos<<"  -
                // "<<std::endl; std::cout<<" Is Pad"<<pad->GetPadNum()<<" Valid? "<<pad->GetValidPad()<<std::endl;
-               //#pragma omp ordered
-               event->AddHit(hit);
-               delete hit;
-               //#pragma omp ordered
-               hitNum++;
 
                if (PadHitNum == 1) { // Construct mesh signal only once per PAD
                   for (Int_t iTb = 0; iTb < fNumTbs; iTb++) {

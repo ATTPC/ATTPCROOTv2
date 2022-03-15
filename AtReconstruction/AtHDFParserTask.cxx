@@ -98,29 +98,30 @@ void AtHDFParserTask::processPad(std::size_t ipad)
    std::vector<int16_t> rawadc = HDFParser->pad_raw_data(ipad);
    PadReference PadRef = {rawadc[0], rawadc[1], rawadc[2], rawadc[3]};
 
-   auto &pad = createPadAndSetIsAux(PadRef);
+   auto pad = createPadAndSetIsAux(PadRef);
    setDimensions(pad);
    setAdc(pad, rawadc);
 
    fRawEvent->SetIsGood(kTRUE);
 }
-AtPad &AtHDFParserTask::createPadAndSetIsAux(const PadReference &padRef)
+AtPad *AtHDFParserTask::createPadAndSetIsAux(const PadReference &padRef)
 {
    if (fAtMapPtr->IsAuxPad(padRef)) {
-      return fRawEvent->AddAuxPad(fAtMapPtr->GetAuxName(padRef)).first->second;
+      auto padName = fAtMapPtr->GetAuxName(padRef);
+      return fRawEvent->AddAuxPad(padName).first;
    } else {
       auto padNumber = fAtMapPtr->GetPadNum(padRef);
       return fRawEvent->AddPad(padNumber);
    }
 }
-void AtHDFParserTask::setAdc(AtPad &pad, const std::vector<int16_t> &data)
+void AtHDFParserTask::setAdc(AtPad *pad, const std::vector<int16_t> &data)
 {
    auto baseline = getBaseline(data);
    for (Int_t iTb = 0; iTb < 512; iTb++) {
-      pad.SetRawADC(iTb, data.at(iTb + 5));
-      pad.SetADC(iTb, data.at(iTb + 5) - baseline);
+      pad->SetRawADC(iTb, data.at(iTb + 5)); // First 5 words are electronic id
+      pad->SetADC(iTb, data.at(iTb + 5) - baseline);
    }
-   pad.SetPedestalSubtracted(fIsBaseLineSubtraction);
+   pad->SetPedestalSubtracted(fIsBaseLineSubtraction);
 }
 
 Float_t AtHDFParserTask::getBaseline(const std::vector<int16_t> &data)
@@ -128,24 +129,23 @@ Float_t AtHDFParserTask::getBaseline(const std::vector<int16_t> &data)
    Float_t baseline = 0;
 
    if (fIsBaseLineSubtraction) {
-      for (Int_t iTb = 5; iTb < 25; iTb++)
+      for (Int_t iTb = 5; iTb < 25; iTb++) // First 5 words are electronic id
          baseline += data[iTb];
       baseline /= 20.0;
    }
    return baseline;
 }
-void AtHDFParserTask::setDimensions(AtPad &pad)
+void AtHDFParserTask::setDimensions(AtPad *pad)
 {
-   auto PadCenterCoord = fAtMapPtr->CalcPadCenter(pad.GetPadNum());
-   Int_t pSizeID = fAtMapPtr->GetPadSize(pad.GetPadNum());
-   pad.SetPadXCoord(PadCenterCoord[0]);
-   pad.SetPadYCoord(PadCenterCoord[1]);
-   pad.SetSizeID(pSizeID);
+   auto PadCenterCoord = fAtMapPtr->CalcPadCenter(pad->GetPadNum());
+   Int_t pSizeID = fAtMapPtr->GetPadSize(pad->GetPadNum());
+   pad->SetPadCoord({PadCenterCoord[0], PadCenterCoord[0]});
+   pad->SetSizeID(pSizeID);
 }
 void AtHDFParserTask::Exec(Option_t *opt)
 {
    fRawEventArray->Delete();
-   fRawEvent->Clear();
+   fRawEvent->Clear(); // TODO: Look into/think about this weird fill/copy/clear thing going on
 
    if (fEventID > HDFParser->getLastEvent()) {
       LOG(fatal) << "Tried to unpack an event that was too large!";
@@ -156,7 +156,7 @@ void AtHDFParserTask::Exec(Option_t *opt)
    processData();
 
    // Copy the filled raw event to the tree to be written
-   new ((*fRawEventArray)[0]) AtRawEvent(fRawEvent);
+   new ((*fRawEventArray)[0]) AtRawEvent(*fRawEvent);
 
    ++fEventID;
 }

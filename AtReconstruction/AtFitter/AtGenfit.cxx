@@ -228,7 +228,7 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    // for (auto cluster : *hitClusterArray) {
    for (auto iCluster = 0; iCluster < hitClusterArray->size(); ++iCluster) {
       auto cluster = hitClusterArray->at(iCluster);
-      TVector3 pos = cluster.GetPosition();
+      auto pos = cluster.GetPosition();
       auto clusterClone(cluster);
 
       if (iCluster == 0) {
@@ -265,7 +265,7 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    AtHitCluster iniCluster;
    Double_t zIniCal = 0;
    Double_t xIniCal = 0;
-   TVector3 iniPos;
+   XYZPoint iniPos;
 
    if (thetaConv < 90.0 * TMath::DegToRad()) {
       iniCluster = hitClusterArray->front();

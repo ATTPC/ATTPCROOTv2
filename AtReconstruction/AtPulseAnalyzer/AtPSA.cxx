@@ -216,25 +216,24 @@ void AtPSA::SetTBLimits(std::pair<Int_t, Int_t> limits)
    }
 }
 
-void AtPSA::TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit *hit)
+void AtPSA::TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit &hit)
 {
    typedef std::multimap<Int_t, std::size_t>::iterator MCMapIterator;
 
    // Find every simulated point ID for each valid pad
-   std::pair<MCMapIterator, MCMapIterator> result = map.equal_range(hit->GetHitPadNum());
+   std::pair<MCMapIterator, MCMapIterator> result = map.equal_range(hit.GetPadNum());
    for (MCMapIterator it = result.first; it != result.second; it++) {
       // std::cout<<fMCSimPointArray->GetEntries()<<"\n";
 
       int count = std::distance(result.first, result.second);
 
-      // if(count>1){
-      //  std::cout<<" Count "<<count<<"\n";
-
-      if (fMCSimPointArray != 0) {
+      if (fMCSimPointArray != nullptr) {
          AtMCPoint *MCPoint = (AtMCPoint *)fMCSimPointArray->At(it->second);
+
          AtHit::MCSimPoint mcpoint(it->second, MCPoint->GetTrackID(), MCPoint->GetEIni(), MCPoint->GetEnergyLoss(),
                                    MCPoint->GetAIni(), MCPoint->GetMassNum(), MCPoint->GetAtomicNum());
-         hit->SetMCSimPoint(mcpoint);
+         hit.AddMCSimPoint(mcpoint);
+
          // std::cout << " Pad Num : "<<hit->GetHitPadNum()<<" MC Point ID : "<<it->second << std::endl;
          // std::cout << " Track ID : "<<MCPoint->GetTrackID()<<" Energy (MeV) : "<<MCPoint->GetEIni()<<" Angle (deg) :
          // "<<MCPoint->GetAIni()<<"\n"; std::cout << " Mass Number : "<<MCPoint->GetMassNum()<<" Atomic Number

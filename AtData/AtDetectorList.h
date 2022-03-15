@@ -11,7 +11,7 @@
 // -----                  M. Al-Turany   June 2014                     -----
 // -------------------------------------------------------------------------
 
-/** Defines unique identifier for all At detectors system **/
+/** Defines unique identifier for all detectors system **/
 /** THis is needed for stack filtring **/
 
 #ifndef AtDetectorList_H

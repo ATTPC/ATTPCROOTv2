@@ -53,6 +53,7 @@ set(SRCS
   # Add all the source files below this line. Those must have cxx for their extension.
 
   AtDecoder/AtPad.cxx
+  AtDecoder/AtAuxPad.cxx
   AtDecoder/AtRawEvent.cxx
   AtDecoder/AtHit.cxx
   AtDecoder/AtHitCluster.cxx

@@ -226,11 +226,11 @@ Bool_t AtTPCXSReader::ReadEvent(FairPrimaryGenerator *primGen)
       Ang.push_back(theta_scatter); // set angle ION   DUMMY FOR THE MOMENT!!!!!!!!!!!!!!! CHECK AND SOLVE
       Ene.push_back(t_scatter);     // set energy ION
 
-      gAtVP->SetRecoilE(Ene.at(0));
-      gAtVP->SetRecoilA(Ang.at(0) * 180.0 / TMath::Pi()); // in degrees
+      gAtVP->SetTrackEnergy(2, Ene.at(0));
+      gAtVP->SetTrackAngle(2, Ang.at(0) * 180.0 / TMath::Pi());
 
-      gAtVP->SetScatterE(Ene.at(1));
-      gAtVP->SetScatterA(Ang.at(1) * 180.0 / TMath::Pi());
+      gAtVP->SetTrackEnergy(1, Ene.at(1));
+      gAtVP->SetTrackAngle(1, Ang.at(1) * 180.0 / TMath::Pi());
 
       fPx.at(0) = 0.0;
       fPy.at(0) = 0.0;

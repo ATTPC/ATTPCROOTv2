@@ -74,7 +74,7 @@ protected:
    Double_t fZk;             // Relative position of micromegas-cathode
 
    // Protected functions
-   void TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit *hit); //< Assign MC Points kinematics to each hit.
+   void TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit &hit); //< Assign MC Points kinematics to each hit.
 
    Double_t
    CalculateX(Double_t row); ///< Calculate x position in mm. This returns the center position of given pad row.

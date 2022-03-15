@@ -417,7 +417,7 @@ void AtEventManagerS800::NextEvent()
       fRootManager->ReadEvent(fEntry);
       cArray = (TClonesArray *)fRootManager->GetObject("AtEventH");
       cevent = (AtEvent *)cArray->At(0);
-      gated = cevent->IsExtGate();
+      gated = cevent->IsInGate();
    }
 
    std::cout << " Event number : " << fEntry << std::endl;
@@ -440,7 +440,7 @@ void AtEventManagerS800::PrevEvent()
       fRootManager->ReadEvent(fEntry);
       cArray = (TClonesArray *)fRootManager->GetObject("AtEventH");
       cevent = (AtEvent *)cArray->At(0);
-      gated = cevent->IsExtGate();
+      gated = cevent->IsInGate();
    }
 
    std::cout << " Event number : " << fEntry << std::endl;

@@ -12,6 +12,8 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
+using trace = std::array<Double_t, 512>;
+
 class AtCalibration : public TObject {
 public:
    AtCalibration();
@@ -20,8 +22,8 @@ public:
    void SetGainFile(TString gainFile);
    void SetJitterFile(TString jitterFile);
 
-   Double_t *CalibrateGain(Double_t adc[512], Int_t padNum);
-   Double_t *CalibrateJitter(Double_t adc[512], Int_t padNum);
+   const trace &CalibrateGain(const trace &adc, Int_t padNum);
+   const trace &CalibrateJitter(const trace &adc, Int_t padNum);
 
    Bool_t IsGainFile();
    Bool_t IsJitterFile();
@@ -31,9 +33,9 @@ protected:
    TString fJitterFile;
 
    Double_t fGadc[512];
-   Double_t fGnewadc[512];
+   trace fGnewadc;
    Double_t fJadc[512];
-   Double_t fJnewadc[512];
+   trace fJnewadc;
 
    Bool_t fIsGainCalibrated;
    Bool_t fIsJitterCalibrated;
@@ -43,6 +45,6 @@ protected:
 
    Int_t fPadNum;
 
-   ClassDef(AtCalibration, 1);
+   ClassDef(AtCalibration, 2);
 };
 #endif

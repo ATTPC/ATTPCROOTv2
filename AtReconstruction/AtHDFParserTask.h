@@ -50,10 +50,10 @@ private:
    void processHeader();
    void processData();
    void processPad(std::size_t padIndex);
-   AtPad &createPadAndSetIsAux(const PadReference &padRef);
-   void setDimensions(AtPad &pad);
+   AtPad *createPadAndSetIsAux(const PadReference &padRef);
+   void setDimensions(AtPad *pad);
    Float_t getBaseline(const std::vector<int16_t> &data);
-   void setAdc(AtPad &pad, const std::vector<int16_t> &data);
+   void setAdc(AtPad *pad, const std::vector<int16_t> &data);
 
 public:
    AtHDFParserTask();

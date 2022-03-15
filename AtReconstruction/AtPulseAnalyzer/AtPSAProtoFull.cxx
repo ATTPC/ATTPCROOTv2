@@ -7,7 +7,6 @@
 // AtTPCROOT classes
 #include "AtRawEvent.h"
 #include "AtEvent.h"
-#include "AtCalibration.h"
 #include "AtHit.h"
 
 // STL
@@ -29,7 +28,6 @@ AtPSAProtoFull::~AtPSAProtoFull() {}
 void AtPSAProtoFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 {
    Int_t numPads = rawEvent->GetNumPads();
-   Int_t hitNum = 0;
    Double_t QEventTot = 0.0;
    Double_t RhoVariance = 0.0;
    std::map<Int_t, Int_t> PadMultiplicity;
@@ -40,15 +38,14 @@ void AtPSAProtoFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
    for (iPad = 0; iPad < numPads; iPad++) {
 
-      AtPad *pad = &(rawEvent->GetPads().at(iPad));
+      const AtPad *pad = &(rawEvent->GetPads().at(iPad));
       Int_t PadNum = pad->GetPadNum();
       Int_t PadHitNum = 0;
       TVector3 HitPos;
       Bool_t fValidBuff = kTRUE;
       Bool_t fValidThreshold = kTRUE;
 
-      Double_t xPos = pad->GetPadXCoord();
-      Double_t yPos = pad->GetPadYCoord();
+      auto pos = pad->GetPadCoord();
       Double_t zPos = 0;
       Double_t charge = 0;
 
@@ -58,7 +55,7 @@ void AtPSAProtoFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          // return;
       }
 
-      Double_t *adc = pad->GetADC();
+      auto adc = pad->GetADC();
       Double_t floatADC[512] = {0};
       Double_t dummy[512] = {0};
       Int_t zeroPeak = 0;
@@ -74,20 +71,17 @@ void AtPSAProtoFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                   floatADC[iTb]; // This allows to constrain the calculation of the charge avoiding noisy timebuckets
             zPos = CalculateZGeo(iTb);
             charge = adc[iTb];
-            AtHit *hit = new AtHit(PadNum, hitNum, xPos, yPos, zPos, charge);
+
+            auto hit = event->AddHit(PadNum, XYZPoint(pos.X(), pos.Y(), zPos), charge);
             PadHitNum++;
-            hit->SetTimeStamp(iTb);
-            if ((xPos < -9000 || yPos < -9000) && pad->GetPadNum() != -1)
+            hit.SetTimeStamp(iTb);
+            if ((pos.X() < -9000 || pos.Y() < -9000) && pad->GetPadNum() != -1)
                std::cout << " AtPSAProtoFull::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum()
                          << std::endl;
             // std::cout<<"  =============== Next Hit Variance Info  =============== "<<std::endl;
             // std::cout<<" Hit Num : "<<hitNum<<"  - Hit Pos Rho2 : "<<HitPos.Mag2()<<"  - Hit Pos Rho :
-            // "<<HitPos.Mag()<<std::endl; std::cout<<" Hit Coordinates : "<<xPos<<"  -  "<<yPos<<" - "<<zPos<<"  -
+            // "<<HitPos.Mag()<<std::endl; std::cout<<" Hit Coordinates : "<<pos.X()<<"  -  "<<pos.Y()<<" - "<<zPos<<" -
             // "<<std::endl; std::cout<<" Is Pad"<<pad->GetPadNum()<<" Valid? "<<pad->GetValidPad()<<std::endl;
-
-            event->AddHit(hit);
-            delete hit;
-            hitNum++;
 
          } // if Threshold
       }    // For iTb

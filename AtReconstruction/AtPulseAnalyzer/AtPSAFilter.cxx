@@ -10,7 +10,6 @@
 // AtTPCROOT classes
 #include "AtRawEvent.h"
 #include "AtEvent.h"
-#include "AtCalibration.h"
 #include "AtHit.h"
 
 #pragma GCC diagnostic push
@@ -79,7 +78,7 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
    for (iPad = 0; iPad < numPads; iPad++) {
 
-      AtPad *pad = &(rawEvent->GetPads().at(iPad));
+      const AtPad *pad = &(rawEvent->GetPads().at(iPad));
       Int_t PadNum = pad->GetPadNum();
       Int_t pSizeID = pad->GetSizeID();
       Double_t gthreshold = -1;
@@ -92,7 +91,7 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
       Double_t QHitTot = 0.0;
       Int_t PadHitNum = 0;
-      TVector3 HitPos;
+      XYZPoint HitPos;
       TVector3 HitPosRot;
       Bool_t fValidBuff = kTRUE;
       Bool_t fValidThreshold = kTRUE;
@@ -104,8 +103,7 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       ry.RotateY(180.0 * TMath::Pi() / 180.0);
       rx.RotateX(6.0 * TMath::Pi() / 180.0);
 
-      Double_t xPos = pad->GetPadXCoord();
-      Double_t yPos = pad->GetPadYCoord();
+      auto pos = pad->GetPadCoord();
       Double_t zPos = 0;
       Double_t xPosRot = 0;
       Double_t yPosRot = 0;
@@ -125,7 +123,7 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          // return;
       }
 
-      Double_t *adc = pad->GetADC();
+      auto adc = pad->GetADC();
       Double_t floatADC[512] = {0};
       Double_t dummy[512] = {0};
       Double_t bg[512] = {0};
@@ -258,21 +256,22 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                   QEventTot += QHitTot; // Sum only if Hit is valid - We only sum once (iPeak==0) to account for the
                                         // whole spectrum.
 
-               TVector3 posRot = RotateDetector(xPos, yPos, zPos, maxAdcIdx);
+               TVector3 posRot = RotateDetector(pos.X(), pos.Y(), zPos, maxAdcIdx);
 
                // Skip invalid positions
-               if ((xPos > 300 || xPos < -300) || (yPos > 300 || yPos < -300) || (zPos > 2000 || zPos < -2000)) {
+               if ((pos.X() > 300 || pos.X() < -300) || (pos.Y() > 300 || pos.Y() < -300) ||
+                   (zPos > 2000 || zPos < -2000)) {
 
                   continue;
                }
 
-               AtHit *hit = new AtHit(PadNum, hitNum, xPos, yPos, zPos, charge);
-               cloud->points[hitNum].x = xPos;
-               cloud->points[hitNum].y = yPos;
+               AtHit *hit = new AtHit(PadNum, hitNum, pos.X(), pos.Y(), zPos, charge);
+               cloud->points[hitNum].x = pos.X();
+               cloud->points[hitNum].y = pos.Y();
                cloud->points[hitNum].z = zPos;
                cloud->points[hitNum].rgb = hitNum;
 
-               // cloud_ini->Fill(xPos,yPos);
+               // cloud_ini->Fill(pos.X(),pos.Y());
 
                hit->SetPositionCorr(posRot.X(), posRot.Y(), posRot.Z());
                hit->SetTimeStamp(maxAdcIdx);
@@ -281,12 +280,12 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                hit->SetBaseCorr(basecorr / 10.0);
                hit->SetSlopeCnt(slope_cnt);
                PadHitNum++;
-               hit->SetQHit(QHitTot); // TODO: The charge of each hit is the total charge of the spectrum, so for double
-                                      // structures this is unrealistic.
+               hit->SetTraceIntegral(QHitTot); // TODO: The charge of each hit is the total charge of the spectrum, so
+                                               // for double structures this is unrealistic.
                HitPos = hit->GetPosition();
                Rho2 += HitPos.Mag2();
-               RhoMean += HitPos.Mag();
-               if ((xPos < -9000 || yPos < -9000) && pad->GetPadNum() != -1)
+               RhoMean += HitPos.Rho();
+               if ((pos.X() < -9000 || pos.Y() < -9000) && pad->GetPadNum() != -1)
                   std::cout << " AtPSAFilter::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum()
                             << std::endl;
 
@@ -329,8 +328,10 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    // sor.filter(*cloud_filtered);
 
    for (Int_t pc = 0; pc < cloud_filtered->points.size(); pc++) {
-      // cloud_fil->Fill(cloud_filtered->points[pc].x,cloud_filtered->points[pc].y);
-      event->AddHit(&hitBuff.at(cloud_filtered->points[pc].rgb));
+      // TODO: Check this logic and make sure it works, I did not looks at it enough
+      auto hit = event->AddHit();
+      hit = hitBuff.at(cloud_filtered->points[pc].rgb);
+      // event->AddHit(&hitBuff.at(cloud_filtered->points[pc].rgb));
    }
 
    RhoVariance = Rho2 - (pow(RhoMean, 2) / (event->GetNumHits()));

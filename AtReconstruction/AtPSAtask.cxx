@@ -26,7 +26,8 @@
 ClassImp(AtPSAtask);
 
 AtPSAtask::AtPSAtask(AtPSA *psa)
-   : fInputBranchName("AtRawEvent"), fOutputBranchName("AtEventH"), fPSA(psa), fIsPersistence(false)
+   : fInputBranchName("AtRawEvent"), fOutputBranchName("AtEventH"), fSimulatedPointBranchName("AtTpcPoint"), fPSA(psa),
+     fIsPersistence(false)
 {
    fEventHArray = new TClonesArray("AtEvent");
 }
@@ -47,7 +48,10 @@ void AtPSAtask::SetOutputBranch(TString branchName)
 {
    fOutputBranchName = branchName;
 }
-
+void AtPSAtask::SetSimlulatedPointBranch(TString branchName)
+{
+   fSimulatedPointBranchName = branchName;
+}
 InitStatus AtPSAtask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
@@ -61,17 +65,20 @@ InitStatus AtPSAtask::Init()
       LOG(ERROR) << "Cannot find AtRawEvent array in branch " << fInputBranchName << "!";
       return kERROR;
    }
+
+   fPSA->Init();
+
    // Retrieving simulated points, if available
-   fMCPointArray = (TClonesArray *)ioMan->GetObject("AtMCPoint");
-   if (fMCPointArray != 0) {
-      LOG(INFO) << " Simulated points found (simulation analysis) ";
-   } else if (fMCPointArray != 0) {
-      LOG(INFO) << " Simulated points not found (experimental data analysis) ";
+   fMCPointArray = (TClonesArray *)ioMan->GetObject(fSimulatedPointBranchName);
+   if (fMCPointArray != nullptr) {
+      LOG(INFO) << " Simulated points found (simulation analysis) in branch " << fSimulatedPointBranchName;
+      fPSA->SetSimulatedEvent(fMCPointArray);
+   } else {
+      LOG(INFO) << " Simulated points not found (experimental data analysis) looking at branch "
+                << fSimulatedPointBranchName;
    }
 
    ioMan->Register(fOutputBranchName, "AtTPC", fEventHArray, fIsPersistence);
-
-   fPSA->Init();
 
    return kSUCCESS;
 }
@@ -80,8 +87,10 @@ void AtPSAtask::Exec(Option_t *opt)
 {
    fEventHArray->Delete();
 
-   if (fRawEventArray->GetEntriesFast() == 0)
+   if (fRawEventArray->GetEntriesFast() == 0) {
+      LOG(debug2) << "Skipping PSA because raw event array is empty";
       return;
+   }
 
    AtRawEvent *rawEvent = (AtRawEvent *)fRawEventArray->At(0);
    AtEvent *event = (AtEvent *)new ((*fEventHArray)[0]) AtEvent();
@@ -89,15 +98,17 @@ void AtPSAtask::Exec(Option_t *opt)
    event->SetIsGood(rawEvent->IsGood());
    event->SetEventID(rawEvent->GetEventID());
    event->SetTimestamp(rawEvent->GetTimestamp());
-   event->SetIsExtGate(rawEvent->GetIsExtGate());
+   event->SetIsInGate(rawEvent->GetIsExtGate());
+   for (const auto &auxIt : rawEvent->GetAuxPads())
+      event->AddAuxPad(auxIt.second);
 
    if (!rawEvent->IsGood())
       return;
-   if (fMCPointArray != 0) {
-      LOG(debug) << " point array size " << fMCPointArray->GetEntries();
-      fPSA->SetSimulatedEvent(fMCPointArray);
-   }
-   LOG(debug) << " Event Number :  " << rawEvent->GetEventID() << " Valid pads : " << rawEvent->GetNumPads();
+
+   LOG(debug) << "Staring PSA on event Number: " << rawEvent->GetEventID() << " with " << rawEvent->GetNumPads()
+              << " valid pads";
 
    fPSA->Analyze(rawEvent, event);
+
+   LOG(debug) << "Finished running PSA, copying aux pads";
 }

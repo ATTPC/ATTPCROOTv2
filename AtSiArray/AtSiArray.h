@@ -6,7 +6,7 @@
 #include "TVector3.h"
 #include "TLorentzVector.h"
 
-class AtMCPoint;
+class AtSiPoint;
 class FairVolume;
 class TClonesArray;
 
@@ -56,10 +56,10 @@ public:
    /**      This method is an example of how to add your own point
     *       of type AtTpcPoint to the clones array
     */
-   AtMCPoint *
+   AtSiPoint *
    AddHit(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t time, Double_t length, Double_t eLoss);
 
-   AtMCPoint *AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t detCopyID, TVector3 posIn, TVector3 pos_out,
+   AtSiPoint *AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t detCopyID, TVector3 posIn, TVector3 pos_out,
                      TVector3 momIn, TVector3 momOut, Double_t time, Double_t length, Double_t eLoss, Double_t EIni,
                      Double_t AIni, Int_t A, Int_t Z);
 

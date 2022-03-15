@@ -140,27 +140,42 @@ cmake -DCMAKE_INSTALL_PREFIX=/mnt/simulations/attpcroot/fair_install_18.6/HiRAEV
 
 # For developers
 
-### Formatting code for pull requests
+
+## Coding conventions
 
 Pull requests submitted should have the code formated in the [ROOT style](https://root.cern/contribute/coding_conventions/). Never include a header file when a forward decleration is sufficient. Only include header files for base classes or classes that are used by value in the class definition.
 
-Before submitting a pull request, reformat the code using `clang-format`. If run from within the repository it will pick up the `.clang-format` file detail the style. This file is also reproduced on the page detailing ROOT the ROOT coding style. If for some reason you need a section of code to not be formatted, you can turn off formatting using comment flags. Formatting of code is turned off with the comment `// clang-format off` and re-enabled with the comment `// clang-format on`. This process can be simplified using the command `git-clang-format` which when given no options will tun `clang-format` on all lines of code that differ between the working directory and HEAD. Detailed documentation is [here](https://github.com/llvm-mirror/clang/blob/master/tools/clang-format/git-clang-format).
-
-All data members of a class should be private or protected and begin with the letter `f`, followed by a capital letter. All public member functions should begin with a capital letter. Private data members should be declared first, followed by the private static members, the private methods and the private static methods. Then the protected members and methods and finally the public methods. 
+All data members of a class should be private or protected and begin with the letter `f`, followed by a capital letter. All public member functions should begin with a capital letter. Private data members should be declared first, followed by the private static members, the private methods and the private static methods. Then the protected members and methods and finally the public methods. Add trivial get or setters directly in the class definition. Add more complex inlines (longer than one line) at the bottom of the .h file. 
 
 Avoid raw c types for anything that might be written to disk (any memeber variable), instead use ROOT defined types like `Int_t` defined in `Rtypes.h`. If any changes are made to the memory layout of a class, the version number in the ROOT macro `ClassDef` needs to be incremented. If the class overrides any virtual function, the macro `ClassDefOverride` should be used instead.
 
-### Adding a class
+An object should always be created in a valid state. Instance variables that are set to the same value in all constructors should be instantiated in the header file. Variables whose initial value can change depending on the constructor called, should be intialized in the constructor's braced-init-list. Prefer delegating constructors to repeating code. 
+
+### Object ownership
+
+When we talk about object ownership we mean the right to free the associated resources (in otherwords `delete` an object). ROOT has some weird quirks of ownership, where you may not own the things you think you do. This is particularly true of histograms, TTrees, and TEventLists. Details of ROOT ownership practices can be found [here](https://root.cern.ch/root/htmldoc/guides/users-guide/ObjectOwnership.html). For everything not discussed here we use the following conventions (modified from the [C++ Core Guidlines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#S-resource):
+
+* Express ownership explicitly through use of smart pointers `std::unique_ptr` and `std::shared_ptr`. This means there should never be an explicit call to `new` or `delete`. The exception to this is ROOT cannot yet create streamer for writing `std::shared_ptr` to disk. In that case, a raw pointer (`T*`) with a comment explaining the intended ownership is acceptible until ROOT fixes that problem.
+* Prefer `std::unique_ptr` over `std::shared_ptr` unless ownership must be shared.
+* Raw pointers (`T*`) and raw references are non-owning (`T&`). They should never be deleted. 
+* Take smart pointers as parameters only to express lifetime semantics (transfer ownership)
+* In interfaces (headers), use raw pointers to denote individual objects. Arrays should be represented by a containter (unless it is c-style string).
+
+### Formatting code for pull requests
+
+Before submitting a pull request, reformat the code using `clang-format`. If run from within the repository it will pick up the `.clang-format` file detail the style. This file is also reproduced on the page detailing ROOT the ROOT coding style. If for some reason you need a section of code to not be formatted, you can turn off formatting using comment flags. Formatting of code is turned off with the comment `// clang-format off` and re-enabled with the comment `// clang-format on`. This process can be simplified using the command `git-clang-format` which when given no options will tun `clang-format` on all lines of code that differ between the working directory and HEAD. Detailed documentation is [here](https://github.com/llvm-mirror/clang/blob/master/tools/clang-format/git-clang-format).
+
+## Adding a class
 
 Classes, for example a new generator, can be added by created the header and source files. In that directory the `CMakeLists.txt` file must be edited to add any include directories needed as well as add the source file so the make file knows to compile it. In addition the class should be added the the local `GenLinkDef.h` file, if needed. In addition, a symbolic link should be created to the new header in the `include` directory. Classes should respect the naming convention of `AtName.cxx` for source, and `AtName.h` for headers. The FairRoot macro used to generate the ROOT dictionaries for each library, assumes these file extensions.
 
 In general, any class added or modified should try to respect backwards compatibilty. In addition, it should avoid modifying important base classes unless there is a good reason. That is, if you're adding a feature only used in a certain experiment to a certain class you should extend that class rather then modify it.
 
-### Adding a task
+## Adding a task
 
 Each task class (something that inherits from FairTask) should be primarily responsible for setting up the input and output. The logic of the task should be handled by another class, an instance of which is a member of the task class. When adding new features or options to a task the base logic class should be extended rather then modified.
 
-### Adding a library
+## Adding a library
 
 Each folder in the root directory names `AtName` will build into a shared object with the name `libAtName` as defined by a `CMakelists.txt` file in each folder. Other folders, (eg macro, icon, parameters, etc), are not built and do not contain a CMakeLists.txt folder. In order for the new library to be built, it must be added as a subdirectory to the global CMakeList.txt in the root directory.
 

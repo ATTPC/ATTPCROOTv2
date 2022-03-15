@@ -134,13 +134,19 @@ void AtTPCFissionGeneratorV3::generateFragment(VecPE &P, Int_t A, Int_t Z)
       LOG(fatal) << "Couldn't find particle " << particleName << " in database!";
 
    auto labP = fBeamBoost(P);
+   auto kinE = labP.E() - labP.mass();
+   auto angle = labP.Theta();
 
    std::cout << std::endl;
    LOG(debug) << TString::Format(
       "AtTPCFissionGeneratorV3: Generating ion of type %s with  CoM momentum (%f, %f, %f) MeV/c", particleName.Data(),
       P.Px(), P.Py(), P.Pz());
-   LOG(debug) << TString::Format("Lab momentum (%f, %f, %f) MeV/c at (%f, %f, %f) cm", labP.Px(), labP.Py(), labP.Pz(),
-                                 fVertex.X(), fVertex.Y(), fVertex.Z());
+   LOG(debug) << TString::Format("Lab momentum (%f, %f, %f) MeV/c at (%f, %f, %f) cm with E = %f and angle = %f",
+                                 labP.Px(), labP.Py(), labP.Pz(), fVertex.X(), fVertex.Y(), fVertex.Z(), kinE, angle);
+
+   auto nextTrackID = gMC->GetStack()->GetNtrack();
+   gAtVP->SetTrackEnergy(nextTrackID, kinE);
+   gAtVP->SetTrackAngle(nextTrackID, angle);
 
    // Requires GeV
    fPrimeGen->AddTrack(particle->PdgCode(), labP.Px() / 1000, labP.Py() / 1000, labP.Pz() / 1000, fVertex.X(),

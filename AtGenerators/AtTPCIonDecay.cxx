@@ -215,7 +215,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
 
       if (fIsSequentialDecay) // NB: Decay modelled as two-step (coming from reaction generator)
       {
-         fBeamEnergy = gAtVP->GetScatterE() / 1000.0;
+         fBeamEnergy = gAtVP->GetTrackEnergy(1) / 1000.0;
          TVector3 ScatP = gAtVP->GetScatterP();
          fPxBeam = ScatP.X();
          fPyBeam = ScatP.Y();

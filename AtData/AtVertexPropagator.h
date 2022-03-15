@@ -9,27 +9,65 @@
 
 class AtVertexPropagator : public TObject {
 
-public:
-   AtVertexPropagator();
-   virtual ~AtVertexPropagator();
-
-   Bool_t Test();
-
+private:
    Int_t fGlobalEvtCnt;
    Int_t fBeamEvtCnt;
    Int_t fDecayEvtCnt;
 
+   std::map<int, double> fTrackEn;
+   std::map<int, double> fTrackAngle;
+
+   Double_t fVx;
+   Double_t fVy;
+   Double_t fVz;
+   Double_t fPx;
+   Double_t fPy;
+   Double_t fPz;
+   Double_t fE;
+   Double_t fBeamMass;
+   Double_t fRndELoss;
+   Double_t fBeamNomE;
+   Double_t fInVx;
+   Double_t fInVy;
+   Double_t fInVz;
+
+   Double_t fRecoilE;
+   Double_t fRecoilA;
+   Double_t fScatterE;
+   Double_t fScatterA;
+   Double_t fBURes1E;
+   Double_t fBURes1A;
+   Double_t fBURes2E;
+   Double_t fBURes2A;
+
+   Bool_t fIsValidKine;
+   Int_t fAiso;
+   Int_t fZiso;
+   TVector3 fScatP;
+   TVector3 fd2HeVtx;
+   Double_t fExEjectile;
+
+public:
+   AtVertexPropagator();
+   virtual ~AtVertexPropagator();
+
    void SetVertex(Double_t vx, Double_t vy, Double_t vz, Double_t invx, Double_t invy, Double_t invz, Double_t px,
                   Double_t py, Double_t pz, Double_t E);
    void SetBeamMass(Double_t m);
-   void SetRecoilE(Double_t val);
-   void SetRecoilA(Double_t val);
-   void SetScatterE(Double_t val);
-   void SetScatterA(Double_t val);
-   void SetBURes1E(Double_t val); // Recoil(Scatt) breaks up. Residual 1
-   void SetBURes1A(Double_t val);
-   void SetBURes2E(Double_t val); // Recoil(Scatt) breaks up. Residual 2
-   void SetBURes2A(Double_t val);
+
+   void SetTrackEnergy(int trackID, double energy);
+   void SetTrackAngle(int trackID, double angle);
+
+   /*   void SetRecoilE(Double_t val);
+      void SetRecoilA(Double_t val);
+      void SetScatterE(Double_t val);
+      void SetScatterA(Double_t val);
+      void SetBURes1E(Double_t val); // Recoil(Scatt) breaks up. Residual 1
+      void SetBURes1A(Double_t val);
+      void SetBURes2E(Double_t val); // Recoil(Scatt) breaks up. Residual 2
+      void SetBURes2A(Double_t val);
+   */
+
    void SetRndELoss(Double_t eloss);
    void SetBeamNomE(Double_t ener);
    void ResetVertex();
@@ -56,6 +94,11 @@ public:
    Double_t GetEnergy();
    Double_t GetRndELoss();
    Double_t GetBeamNomE();
+
+   Double_t GetTrackAngle(int trackID);
+   Double_t GetTrackEnergy(int trackID);
+
+   /*
    Double_t GetRecoilE();
    Double_t GetRecoilA();
    Double_t GetScatterE();
@@ -64,6 +107,8 @@ public:
    Double_t GetBURes1A();
    Double_t GetBURes2E(); // Recoil(Scatt) breaks up. Residual 2
    Double_t GetBURes2A();
+   */
+
    Int_t GetMassNum();
    Int_t GetAtomicNum();
    TVector3 GetScatterP();
@@ -77,35 +122,7 @@ public:
    void SetValidKine(Bool_t val);
    Bool_t GetValidKine();
 
-   Double_t fVx;
-   Double_t fVy;
-   Double_t fVz;
-   Double_t fPx;
-   Double_t fPy;
-   Double_t fPz;
-   Double_t fE;
-   Double_t fBeamMass;
-   Double_t fRndELoss;
-   Double_t fBeamNomE;
-   Double_t fInVx;
-   Double_t fInVy;
-   Double_t fInVz;
-   Double_t fRecoilE;
-   Double_t fRecoilA;
-   Double_t fScatterE;
-   Double_t fScatterA;
-   Double_t fBURes1E;
-   Double_t fBURes1A;
-   Double_t fBURes2E;
-   Double_t fBURes2A;
-   Bool_t fIsValidKine;
-   Int_t fAiso;
-   Int_t fZiso;
-   TVector3 fScatP;
-   TVector3 fd2HeVtx;
-   Double_t fExEjectile;
-
-   ClassDef(AtVertexPropagator, 1)
+   ClassDef(AtVertexPropagator, 2)
 };
 
 extern AtVertexPropagator *gAtVP; // global

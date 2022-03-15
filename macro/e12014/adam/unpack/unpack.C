@@ -5,6 +5,12 @@ bool reduceFunc(AtRawEvent *evt);
 // Requires the TPC run number
 void unpack(int runNumber)
 {
+   auto verbSpec =
+      fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
+   fair::Logger::DefineVerbosity("user1", verbSpec);
+   // fair::Logger::SetVerbosity("user1");
+   // fair::Logger::SetConsoleSeverity("debug");
+
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
 
@@ -113,7 +119,7 @@ void unpack(int runNumber)
    run->AddTask(HDFParserTask);
    run->AddTask(reduceTask);
    run->AddTask(filterTask);
-   run->AddTask(auxFilterTask);
+   // run->AddTask(auxFilterTask);
    run->AddTask(psaTask);
    run->AddTask(ransacTask);
 
@@ -123,7 +129,7 @@ void unpack(int runNumber)
    auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
    // numEvents = 1700;//217;
-   // numEvents = 200;
+   numEvents = 200;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 

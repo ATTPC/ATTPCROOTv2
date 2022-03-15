@@ -158,10 +158,10 @@ UInt_t AtClusterizeTask::getNumberOfElectronsGenerated()
 
 XYZVector AtClusterizeTask::getCurrentPointLocation()
 {
-   auto zInCm = fDetPadPlane / 10. - fMCPoint->GetZIn();
+   auto zInCm = fDetPadPlane / 10. - fMCPoint->GetZ();
    auto driftTime = TMath::Abs(zInCm) / fVelDrift; // us
 
-   return XYZVector(fMCPoint->GetXIn() * 10., fMCPoint->GetYIn() * 10., driftTime);
+   return XYZVector(fMCPoint->GetX() * 10., fMCPoint->GetY() * 10., driftTime);
 }
 
 ROOT::Math::XYZVector

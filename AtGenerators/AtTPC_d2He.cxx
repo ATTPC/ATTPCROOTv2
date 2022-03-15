@@ -518,12 +518,12 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
    std::cout << " 2He kinetic energy:"  <<  Ene.at(1) << " MeV" << std::endl;
    std::cout << " 2He lab angle:"  <<  Ang.at(1) << " deg" << std::endl;*/
 
-   gAtVP->SetBURes2E(Ene.at(3));
-   gAtVP->SetBURes2A(Ang.at(3));
-   gAtVP->SetRecoilE(Ene.at(2));
-   gAtVP->SetRecoilA(Ang.at(2));
-   gAtVP->SetScatterE(Ene.at(0));
-   gAtVP->SetScatterA(Ang.at(0));
+   gAtVP->SetTrackEnergy(1, Ene.at(0));
+   gAtVP->SetTrackAngle(1, Ang.at(0));
+   gAtVP->SetTrackEnergy(2, Ene.at(2));
+   gAtVP->SetTrackAngle(2, Ang.at(2));
+   gAtVP->SetTrackEnergy(3, Ene.at(3));
+   gAtVP->SetTrackAngle(3, Ang.at(3));
 
    TVector3 ScatP(fPx.at(2), fPy.at(2), fPz.at(2));
    gAtVP->SetScatterP(ScatP);
