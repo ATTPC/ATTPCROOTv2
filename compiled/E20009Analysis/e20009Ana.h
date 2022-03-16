@@ -12,6 +12,10 @@
 #include "FitStatus.h"
 #include "AbsFitterInfo.h"
 #include "KalmanFitterInfo.h"
+#include "MeasuredStateOnPlane.h"
+#include "MeasurementOnPlane.h"
+#include "TrackPoint.h"
+#include "Exception.h"
 
 #include <ios>
 #include <iostream>
@@ -33,6 +37,7 @@
 #include "TCanvas.h"
 #include "TStopwatch.h"
 #include "TGeoManager.h"
+#include "TSpectrum.h"
 
 #include "FairRootManager.h"
 #include "FairLogger.h"
@@ -80,4 +85,11 @@ Double_t omega(Double_t x, Double_t y, Double_t z)
 {
    return sqrt(x * x + y * y + z * z - 2 * x * y - 2 * y * z - 2 * x * z);
 }
+Double_t GetNPeaksHRS(std::vector<Int_t> *timeMax, std::vector<Float_t> *adcMax, double *adc_test);
 double GetMaximum(double *adc);
+void ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius);
+void Clusterize3D(AtTrack &track, Float_t distance, Float_t radius);
+void Clusterize(AtTrack &track);
+Double_t GetFirstOrbit(genfit::Track *track, genfit::AbsTrackRep *rep, TVector3 vertex);
+void ConstructTrack(const genfit::StateOnPlane *prevState, const genfit::StateOnPlane *state,
+                    const genfit::AbsTrackRep *rep, std::vector<TVector3> &track);

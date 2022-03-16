@@ -32,6 +32,9 @@ public:
    virtual genfit::Track *FitTracks(AtTrack *track) = 0;
    virtual void Init() = 0;
 
+   void MergeTracks(std::vector<AtTrack> *trackCandSource, std::vector<AtTrack> *trackJunkSource,
+                    std::vector<AtTrack> *trackDest, bool fitDirection, bool simulationConv);
+
 protected:
    FairLogger *fLogger; ///< logger pointer
    AtDigiPar *fPar;     ///< parameter container

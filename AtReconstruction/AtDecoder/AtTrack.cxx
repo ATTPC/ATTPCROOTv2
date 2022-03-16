@@ -129,11 +129,6 @@ void AtTrack::AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster)
    fHitClusterArray.push_back(std::move(*hitCluster));
 }
 
-void AtTrack::ResetHitClusterArray()
-{
-   fHitClusterArray.clear();
-}
-
 XYZPoint AtTrack::GetLastPoint()
 {
    Double_t maxR = 0.;
@@ -248,8 +243,13 @@ Double_t AtTrack::GetGeoQEnergy()
       return -10.0;
 }
 
-Bool_t AtTrack::SortHitArrayTime()
+void AtTrack::SortHitArrayTime()
 {
    std::sort(fHitArray.begin(), fHitArray.end(), AtHit::SortHitTime);
-   return kTRUE;
+}
+
+void AtTrack::SortClusterHitArrayZ()
+{
+
+   std::sort(fHitClusterArray.begin(), fHitClusterArray.end(), SortClusterHitZ);
 }

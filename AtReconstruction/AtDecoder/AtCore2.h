@@ -112,7 +112,7 @@ public:
    multiarray AtPadCoordArr;
 #endif //__CINT__
 
-   ClassDef(AtCore2, 1);
+   ClassDef(AtCore2, 2);
 };
 
 #endif

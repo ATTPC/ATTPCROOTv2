@@ -30,7 +30,21 @@ AtSpecMATMap::AtSpecMATMap(Int_t numPads)
 
 AtSpecMATMap::~AtSpecMATMap() {}
 
-void AtSpecMATMap::Dump() {}
+void AtSpecMATMap::Dump()
+{
+
+   std::ofstream coordmap;
+   coordmap.open("coordmap_specmat.txt");
+   coordmap << " SpecMAT Triangular pad coordinates (centers) - Pad Index - (x,y)" << std::endl;
+
+   for (index i = 0; i < 3174; ++i) {
+      coordmap << i << "  ";
+      coordmap << AtPadCoord[i][3][0] << "  " << AtPadCoord[i][3][1];
+      coordmap << std::endl;
+   }
+
+   coordmap.close();
+}
 
 std::vector<double> TrianglesGenerator()
 {
@@ -151,17 +165,13 @@ TH2Poly *AtSpecMATMap::GetAtTpcPlane()
    double y[3];
    int arrayAllCoordinatesSize = arrayAllCoordinates.size();
    for (int i2 = 0; i2 < arrayAllCoordinatesSize / 8; i2++) {
-      if (i2 != 0 && i2 != arrayAllCoordinatesSize * 1 / (6 * 8) && i2 != arrayAllCoordinatesSize * 2 / (6 * 8) &&
-          i2 != arrayAllCoordinatesSize * 3 / (6 * 8) && i2 != arrayAllCoordinatesSize * 4 / (6 * 8) &&
-          i2 != arrayAllCoordinatesSize * 5 / (6 * 8)) {
-         x[0] = arrayAllCoordinates[8 * i2];
-         y[0] = arrayAllCoordinates[8 * i2 + 1];
-         x[1] = arrayAllCoordinates[8 * i2 + 2];
-         y[1] = arrayAllCoordinates[8 * i2 + 3];
-         x[2] = arrayAllCoordinates[8 * i2 + 4];
-         y[2] = arrayAllCoordinates[8 * i2 + 5];
-         hPlane->AddBin(3, x, y);
-      }
+      x[0] = arrayAllCoordinates[8 * i2];
+      y[0] = arrayAllCoordinates[8 * i2 + 1];
+      x[1] = arrayAllCoordinates[8 * i2 + 2];
+      y[1] = arrayAllCoordinates[8 * i2 + 3];
+      x[2] = arrayAllCoordinates[8 * i2 + 4];
+      y[2] = arrayAllCoordinates[8 * i2 + 5];
+      hPlane->AddBin(3, x, y);
    }
 
    if (kGUIMode) {

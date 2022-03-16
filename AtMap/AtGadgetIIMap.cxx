@@ -34,7 +34,7 @@ void AtGadgetIIMap::Dump() {}
 
 void AtGadgetIIMap::GenerateAtTpc()
 {
-   Float_t pad_size = 2.0;      // mm
+   Float_t pad_size = 2.2;      // mm
    Float_t pad_spacing = 0.001; // mm
 
    std::vector<int> pads_per_row{18, 18, 18, 17, 17, 17, 17, 16, 16, 15, 15, 14, 13, 12, 11, 9, 7, 3};
@@ -44,14 +44,14 @@ void AtGadgetIIMap::GenerateAtTpc()
    for (auto irow = 0; irow < pads_per_row.size(); ++irow) {
 
       for (auto ipad = 0; ipad < pads_per_row[irow]; ++ipad) {
-         AtPadCoord[ipad + pad_num][0][0] = ipad * 2;
-         AtPadCoord[ipad + pad_num][0][1] = -irow * 2;
-         AtPadCoord[ipad + pad_num][1][0] = ipad * 2 + 2;
-         AtPadCoord[ipad + pad_num][1][1] = -irow * 2;
-         AtPadCoord[ipad + pad_num][2][0] = ipad * 2 + 2;
-         AtPadCoord[ipad + pad_num][2][1] = -2 - irow * 2;
-         AtPadCoord[ipad + pad_num][3][0] = ipad * 2;
-         AtPadCoord[ipad + pad_num][3][1] = -2 - irow * 2;
+         AtPadCoord[ipad + pad_num][0][0] = ipad * pad_size;
+         AtPadCoord[ipad + pad_num][0][1] = -irow * pad_size;
+         AtPadCoord[ipad + pad_num][1][0] = ipad * pad_size + pad_size;
+         AtPadCoord[ipad + pad_num][1][1] = -irow * pad_size;
+         AtPadCoord[ipad + pad_num][2][0] = ipad * pad_size + pad_size;
+         AtPadCoord[ipad + pad_num][2][1] = -pad_size - irow * pad_size;
+         AtPadCoord[ipad + pad_num][3][0] = ipad * pad_size;
+         AtPadCoord[ipad + pad_num][3][1] = -pad_size - irow * pad_size;
       }
 
       std::cout << " Row " << irow << " Number of pads " << pad_num << "\n";
@@ -59,39 +59,39 @@ void AtGadgetIIMap::GenerateAtTpc()
    }
 
    // Veto Pads
-   AtPadCoord[pad_num][0][0] = 20.0;
-   AtPadCoord[pad_num][0][1] = -32.0;
-   AtPadCoord[pad_num][1][0] = 20.0;
-   AtPadCoord[pad_num][1][1] = -34.0;
-   AtPadCoord[pad_num][2][0] = 22.0;
-   AtPadCoord[pad_num][2][1] = -34.0;
-   AtPadCoord[pad_num][3][0] = 22.0;
-   AtPadCoord[pad_num][3][1] = -32.0;
+   AtPadCoord[pad_num][0][0] = 22.0;
+   AtPadCoord[pad_num][0][1] = -34.0;
+   AtPadCoord[pad_num][1][0] = 22.0;
+   AtPadCoord[pad_num][1][1] = -36.0;
+   AtPadCoord[pad_num][2][0] = 24.0;
+   AtPadCoord[pad_num][2][1] = -36.0;
+   AtPadCoord[pad_num][3][0] = 24.0;
+   AtPadCoord[pad_num][3][1] = -34.0;
 
    pad_num += 1;
 
-   AtPadCoord[pad_num][0][0] = 32.0;
-   AtPadCoord[pad_num][0][1] = -20.0;
-   AtPadCoord[pad_num][1][0] = 34.0;
-   AtPadCoord[pad_num][1][1] = -20.0;
-   AtPadCoord[pad_num][2][0] = 34.0;
-   AtPadCoord[pad_num][2][1] = -22.0;
-   AtPadCoord[pad_num][3][0] = 32.0;
-   AtPadCoord[pad_num][3][1] = -22.0;
+   AtPadCoord[pad_num][0][0] = 34.0;
+   AtPadCoord[pad_num][0][1] = -22.0;
+   AtPadCoord[pad_num][1][0] = 36.0;
+   AtPadCoord[pad_num][1][1] = -22.0;
+   AtPadCoord[pad_num][2][0] = 36.0;
+   AtPadCoord[pad_num][2][1] = -24.0;
+   AtPadCoord[pad_num][3][0] = 34.0;
+   AtPadCoord[pad_num][3][1] = -24.0;
 
    pad_num += 1;
 
    for (auto irow = 0; irow < pads_per_row.size(); ++irow) {
 
       for (auto ipad = 0; ipad < pads_per_row[irow]; ++ipad) {
-         AtPadCoord[ipad + pad_num][0][0] = -ipad * 2;
-         AtPadCoord[ipad + pad_num][0][1] = -irow * 2;
-         AtPadCoord[ipad + pad_num][1][0] = -ipad * 2 - 2;
-         AtPadCoord[ipad + pad_num][1][1] = -irow * 2;
-         AtPadCoord[ipad + pad_num][2][0] = -ipad * 2 - 2;
-         AtPadCoord[ipad + pad_num][2][1] = -2 - irow * 2;
-         AtPadCoord[ipad + pad_num][3][0] = -ipad * 2;
-         AtPadCoord[ipad + pad_num][3][1] = -2 - irow * 2;
+         AtPadCoord[ipad + pad_num][0][0] = -ipad * pad_size;
+         AtPadCoord[ipad + pad_num][0][1] = -irow * pad_size;
+         AtPadCoord[ipad + pad_num][1][0] = -ipad * pad_size - pad_size;
+         AtPadCoord[ipad + pad_num][1][1] = -irow * pad_size;
+         AtPadCoord[ipad + pad_num][2][0] = -ipad * pad_size - pad_size;
+         AtPadCoord[ipad + pad_num][2][1] = -pad_size - irow * pad_size;
+         AtPadCoord[ipad + pad_num][3][0] = -ipad * pad_size;
+         AtPadCoord[ipad + pad_num][3][1] = -pad_size - irow * pad_size;
       }
 
       std::cout << " Row " << irow << " Number of pads " << pad_num << "\n";
@@ -99,39 +99,39 @@ void AtGadgetIIMap::GenerateAtTpc()
    }
 
    // Veto Pads
-   AtPadCoord[pad_num][0][0] = -20.0;
-   AtPadCoord[pad_num][0][1] = -32.0;
-   AtPadCoord[pad_num][1][0] = -20.0;
-   AtPadCoord[pad_num][1][1] = -34.0;
-   AtPadCoord[pad_num][2][0] = -22.0;
-   AtPadCoord[pad_num][2][1] = -34.0;
-   AtPadCoord[pad_num][3][0] = -22.0;
-   AtPadCoord[pad_num][3][1] = -32.0;
+   AtPadCoord[pad_num][0][0] = -22.0;
+   AtPadCoord[pad_num][0][1] = -34.0;
+   AtPadCoord[pad_num][1][0] = -22.0;
+   AtPadCoord[pad_num][1][1] = -36.0;
+   AtPadCoord[pad_num][2][0] = -24.0;
+   AtPadCoord[pad_num][2][1] = -36.0;
+   AtPadCoord[pad_num][3][0] = -24.0;
+   AtPadCoord[pad_num][3][1] = -34.0;
 
    pad_num += 1;
 
-   AtPadCoord[pad_num][0][0] = -32.0;
-   AtPadCoord[pad_num][0][1] = -20.0;
-   AtPadCoord[pad_num][1][0] = -34.0;
-   AtPadCoord[pad_num][1][1] = -20.0;
-   AtPadCoord[pad_num][2][0] = -34.0;
-   AtPadCoord[pad_num][2][1] = -22.0;
-   AtPadCoord[pad_num][3][0] = -32.0;
-   AtPadCoord[pad_num][3][1] = -22.0;
+   AtPadCoord[pad_num][0][0] = -34.0;
+   AtPadCoord[pad_num][0][1] = -22.0;
+   AtPadCoord[pad_num][1][0] = -36.0;
+   AtPadCoord[pad_num][1][1] = -22.0;
+   AtPadCoord[pad_num][2][0] = -36.0;
+   AtPadCoord[pad_num][2][1] = -24.0;
+   AtPadCoord[pad_num][3][0] = -34.0;
+   AtPadCoord[pad_num][3][1] = -24.0;
 
    pad_num += 1;
 
    for (auto irow = 0; irow < pads_per_row.size(); ++irow) {
 
       for (auto ipad = 0; ipad < pads_per_row[irow]; ++ipad) {
-         AtPadCoord[ipad + pad_num][0][0] = -ipad * 2;
-         AtPadCoord[ipad + pad_num][0][1] = irow * 2;
-         AtPadCoord[ipad + pad_num][1][0] = -ipad * 2 - 2;
-         AtPadCoord[ipad + pad_num][1][1] = irow * 2;
-         AtPadCoord[ipad + pad_num][2][0] = -ipad * 2 - 2;
-         AtPadCoord[ipad + pad_num][2][1] = 2 + irow * 2;
-         AtPadCoord[ipad + pad_num][3][0] = -ipad * 2;
-         AtPadCoord[ipad + pad_num][3][1] = 2 + irow * 2;
+         AtPadCoord[ipad + pad_num][0][0] = -ipad * pad_size;
+         AtPadCoord[ipad + pad_num][0][1] = irow * pad_size;
+         AtPadCoord[ipad + pad_num][1][0] = -ipad * pad_size - pad_size;
+         AtPadCoord[ipad + pad_num][1][1] = irow * pad_size;
+         AtPadCoord[ipad + pad_num][2][0] = -ipad * pad_size - pad_size;
+         AtPadCoord[ipad + pad_num][2][1] = pad_size + irow * pad_size;
+         AtPadCoord[ipad + pad_num][3][0] = -ipad * pad_size;
+         AtPadCoord[ipad + pad_num][3][1] = pad_size + irow * pad_size;
       }
 
       std::cout << " Row " << irow << " Number of pads " << pad_num << "\n";
@@ -139,39 +139,39 @@ void AtGadgetIIMap::GenerateAtTpc()
    }
 
    // Veto Pads
-   AtPadCoord[pad_num][0][0] = -20.0;
-   AtPadCoord[pad_num][0][1] = 32.0;
-   AtPadCoord[pad_num][1][0] = -20.0;
-   AtPadCoord[pad_num][1][1] = 34.0;
-   AtPadCoord[pad_num][2][0] = -22.0;
-   AtPadCoord[pad_num][2][1] = 34.0;
-   AtPadCoord[pad_num][3][0] = -22.0;
-   AtPadCoord[pad_num][3][1] = 32.0;
+   AtPadCoord[pad_num][0][0] = -22.0;
+   AtPadCoord[pad_num][0][1] = 34.0;
+   AtPadCoord[pad_num][1][0] = -22.0;
+   AtPadCoord[pad_num][1][1] = 36.0;
+   AtPadCoord[pad_num][2][0] = -24.0;
+   AtPadCoord[pad_num][2][1] = 36.0;
+   AtPadCoord[pad_num][3][0] = -24.0;
+   AtPadCoord[pad_num][3][1] = 34.0;
 
    pad_num += 1;
 
-   AtPadCoord[pad_num][0][0] = -32.0;
-   AtPadCoord[pad_num][0][1] = 20.0;
-   AtPadCoord[pad_num][1][0] = -34.0;
-   AtPadCoord[pad_num][1][1] = 20.0;
-   AtPadCoord[pad_num][2][0] = -34.0;
-   AtPadCoord[pad_num][2][1] = 22.0;
-   AtPadCoord[pad_num][3][0] = -32.0;
-   AtPadCoord[pad_num][3][1] = 22.0;
+   AtPadCoord[pad_num][0][0] = -34.0;
+   AtPadCoord[pad_num][0][1] = 22.0;
+   AtPadCoord[pad_num][1][0] = -36.0;
+   AtPadCoord[pad_num][1][1] = 22.0;
+   AtPadCoord[pad_num][2][0] = -36.0;
+   AtPadCoord[pad_num][2][1] = 24.0;
+   AtPadCoord[pad_num][3][0] = -34.0;
+   AtPadCoord[pad_num][3][1] = 24.0;
 
    pad_num += 1;
 
    for (auto irow = 0; irow < pads_per_row.size(); ++irow) {
 
       for (auto ipad = 0; ipad < pads_per_row[irow]; ++ipad) {
-         AtPadCoord[ipad + pad_num][0][0] = ipad * 2;
-         AtPadCoord[ipad + pad_num][0][1] = irow * 2;
-         AtPadCoord[ipad + pad_num][1][0] = ipad * 2 + 2;
-         AtPadCoord[ipad + pad_num][1][1] = irow * 2;
-         AtPadCoord[ipad + pad_num][2][0] = ipad * 2 + 2;
-         AtPadCoord[ipad + pad_num][2][1] = 2 + irow * 2;
-         AtPadCoord[ipad + pad_num][3][0] = ipad * 2;
-         AtPadCoord[ipad + pad_num][3][1] = 2 + irow * 2;
+         AtPadCoord[ipad + pad_num][0][0] = ipad * pad_size;
+         AtPadCoord[ipad + pad_num][0][1] = irow * pad_size;
+         AtPadCoord[ipad + pad_num][1][0] = ipad * pad_size + pad_size;
+         AtPadCoord[ipad + pad_num][1][1] = irow * pad_size;
+         AtPadCoord[ipad + pad_num][2][0] = ipad * pad_size + pad_size;
+         AtPadCoord[ipad + pad_num][2][1] = pad_size + irow * pad_size;
+         AtPadCoord[ipad + pad_num][3][0] = ipad * pad_size;
+         AtPadCoord[ipad + pad_num][3][1] = pad_size + irow * pad_size;
       }
 
       std::cout << " Row " << irow << " Number of pads " << pad_num << "\n";
@@ -179,25 +179,25 @@ void AtGadgetIIMap::GenerateAtTpc()
    }
 
    // Veto Pads
-   AtPadCoord[pad_num][0][0] = 20.0;
-   AtPadCoord[pad_num][0][1] = 32.0;
-   AtPadCoord[pad_num][1][0] = 20.0;
-   AtPadCoord[pad_num][1][1] = 34.0;
-   AtPadCoord[pad_num][2][0] = 22.0;
-   AtPadCoord[pad_num][2][1] = 34.0;
-   AtPadCoord[pad_num][3][0] = 22.0;
-   AtPadCoord[pad_num][3][1] = 32.0;
+   AtPadCoord[pad_num][0][0] = 22.0;
+   AtPadCoord[pad_num][0][1] = 34.0;
+   AtPadCoord[pad_num][1][0] = 22.0;
+   AtPadCoord[pad_num][1][1] = 36.0;
+   AtPadCoord[pad_num][2][0] = 24.0;
+   AtPadCoord[pad_num][2][1] = 36.0;
+   AtPadCoord[pad_num][3][0] = 24.0;
+   AtPadCoord[pad_num][3][1] = 34.0;
 
    pad_num += 1;
 
-   AtPadCoord[pad_num][0][0] = 32.0;
-   AtPadCoord[pad_num][0][1] = 20.0;
-   AtPadCoord[pad_num][1][0] = 34.0;
-   AtPadCoord[pad_num][1][1] = 20.0;
-   AtPadCoord[pad_num][2][0] = 34.0;
-   AtPadCoord[pad_num][2][1] = 22.0;
-   AtPadCoord[pad_num][3][0] = 32.0;
-   AtPadCoord[pad_num][3][1] = 22.0;
+   AtPadCoord[pad_num][0][0] = 34.0;
+   AtPadCoord[pad_num][0][1] = 22.0;
+   AtPadCoord[pad_num][1][0] = 36.0;
+   AtPadCoord[pad_num][1][1] = 22.0;
+   AtPadCoord[pad_num][2][0] = 36.0;
+   AtPadCoord[pad_num][2][1] = 24.0;
+   AtPadCoord[pad_num][3][0] = 34.0;
+   AtPadCoord[pad_num][3][1] = 24.0;
 
    pad_num += 1;
 
@@ -329,9 +329,12 @@ void AtGadgetIIMap::SetBinToPadMap()
    }
 }
 
-Int_t AtGadgetIIMap::BinToPad(Int_t binval)
+/*Int_t AtGadgetIIMap::BinToPad(Int_t binval)
 {
-   fBinToPadTableIt = fBinToPadTable.find(binval);
+
+
+
+  fBinToPadTableIt = fBinToPadTable.find(binval);
 
    if (fBinToPadTableIt != fBinToPadTable.end()) {
       std::cout << "Element Found - ";
@@ -340,7 +343,7 @@ Int_t AtGadgetIIMap::BinToPad(Int_t binval)
    } else {
       std::cout << "Element Not Found" << std::endl;
       return -1;
-   }
-}
+      }
+      }*/
 
 ClassImp(AtGadgetIIMap)

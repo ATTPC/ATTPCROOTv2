@@ -14,7 +14,7 @@ void Be10_He6aa_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    timer.Start();
    // ------------------------------------------------------------------------
 
-   ATVertexPropagator *vertex_prop = new ATVertexPropagator();
+   AtVertexPropagator *vertex_prop = new AtVertexPropagator();
 
    // -----   Create simulation run   ----------------------------------------
    FairRunSim *run = new FairRunSim();
@@ -40,14 +40,14 @@ void Be10_He6aa_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    run->AddModule(pipe);*/
 
    FairDetector *ATTPC = new AtTpc("ATTPC", kTRUE);
-   ATTPC->SetGeometryFileName("ATTPC_He1bar.root");
+   ATTPC->SetGeometryFileName("ATTPC_He1bar_v2.root");
    // ATTPC->SetModifyGeometry(kTRUE);
    run->AddModule(ATTPC);
 
    // -----   Magnetic field   -------------------------------------------
    // Constant Field
    AtConstField *fMagField = new AtConstField();
-   fMagField->SetField(0., 0., 20.);                      // values are in kG
+   fMagField->SetField(0., 0., 30.);                      // values are in kG
    fMagField->SetFieldRegion(-50, 50, -50, 50, -10, 230); // values are in cm (xmin,xmax,ymin,ymax,zmin,zmax)
    run->SetField(fMagField);
    // --------------------------------------------------------------------
@@ -71,7 +71,7 @@ void Be10_He6aa_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    Double_t pz = 0.86515 / a; // Z-Momentum / per nucleon!!!!!!
    // Double_t pz = sqrt( pow(kBeam * a / 1000.0 + Bmass,2) - pow(Bmass,2) )/a;  // Z-Momentum / per nucleon!!!!!!
 
-   ATTPCIonGenerator *ionGen = new ATTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy, -1);
+   AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy, -1);
 
    primGen->AddGenerator(ionGen);
 
@@ -151,8 +151,8 @@ void Be10_He6aa_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    qDecay.at(0).push_back(0);
    massDecay.at(0).push_back(6.018885);
 
-   ATTPCIonDecay *decay =
-      new ATTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay, zB, aB, massDecayB, massTarget, exEnergy, &SepEne);
+   AtTPCIonDecay *decay =
+      new AtTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay, zB, aB, massDecayB, massTarget, exEnergy, &SepEne);
 
    primGen->AddGenerator(decay);
 

@@ -75,6 +75,20 @@ void plotFit(std::string fileFolder = "data/")
 
    TH2F *x_y_Xtr = new TH2F("x_y_Xtr", "x_y_Xtr", 1000, -10, 10, 1000, -10, 10);
 
+   TH1F *fChi2H = new TH1F("fChi2H", "fChi2H", 100, -10, 10);
+   TH1F *bChi2H = new TH1F("bChi2H", "bChi2H", 100, -10, 10);
+   TH1F *fNdfH = new TH1F("fNdfH", "fNdfH", 100, -10, 10);
+   TH1F *bNdfH = new TH1F("bNdfH", "fbNdfH", 100, -10, 10);
+
+   TH1I *ICMultH = new TH1I("ICMultH", "ICMultH", 100, 0, 100);
+   TH1I *ICTimeH = new TH1I("ICTimeH", "ICTimeH", 512, 0, 511);
+   TH1I *ICQH = new TH1I("ICQH", "ICQH", 1000, 0, 20000);
+   TH1I *ICAH = new TH1I("ICAH", "ICAH", 1000, 0, 4096);
+
+   TH2F *ICEvsTime = new TH2F("ICEvsTime", "ICEvsTime", 1000, 0, 4095, 512, 0, 511);
+
+   TH2F *ICCorr = new TH2F("ICCorr", "ICCorr", 1000, 0, 4096, 1000, 0, 4096);
+
    // Q-value calculation
    Double_t m_p = 1.007825 * 931.49401;
    Double_t m_d = 2.0135532 * 931.49401;
@@ -116,6 +130,7 @@ void plotFit(std::string fileFolder = "data/")
          std::cout << " Opening file : " << dataFile << "\n";
          TTree *outputTree = (TTree *)rootfile.Get("outputTree");
          Float_t EFit, AFit, EPRA, APRA, Ex, PhiFit, PhiPRA, xiniPRA, yiniPRA, ziniPRA, xiniFit, yiniFit, ziniFit, IC;
+         Int_t ICMult;
          outputTree->SetBranchAddress("EFit", &EFit);
          outputTree->SetBranchAddress("AFit", &AFit);
          outputTree->SetBranchAddress("PhiFit", &PhiFit);
@@ -130,6 +145,7 @@ void plotFit(std::string fileFolder = "data/")
          outputTree->SetBranchAddress("yiniPRA", &yiniPRA);
          outputTree->SetBranchAddress("ziniPRA", &ziniPRA);
          outputTree->SetBranchAddress("IC", &IC);
+         outputTree->SetBranchAddress("ICMult", &ICMult);
 
          std::vector<Float_t> *EFitVec = 0;
          std::vector<Float_t> *AFitVec = 0;
@@ -146,6 +162,7 @@ void plotFit(std::string fileFolder = "data/")
          std::vector<Float_t> *yiniPRAVec = 0;
          std::vector<Float_t> *ziniPRAVec = 0;
          std::vector<Float_t> *ICVec = 0;
+         std::vector<Int_t> *ICTimeVec = 0;
          std::vector<Float_t> *EFitXtrVec = 0;
          std::vector<Float_t> *xiniFitXtrVec = 0;
          std::vector<Float_t> *yiniFitXtrVec = 0;
@@ -155,6 +172,11 @@ void plotFit(std::string fileFolder = "data/")
          std::vector<Float_t> *trackLengthVec = 0;
          std::vector<Float_t> *POCAXtrVec = 0;
          std::vector<Float_t> *trackIDVec = 0;
+         std::vector<Float_t> *fChi2Vec = 0;
+         std::vector<Float_t> *bChi2Vec = 0;
+         std::vector<Float_t> *fNdfVec = 0;
+         std::vector<Float_t> *bNdfVec = 0;
+         std::vector<Float_t> *ICEVec = 0;
 
          outputTree->SetBranchAddress("EFitVec", &EFitVec);
          outputTree->SetBranchAddress("AFitVec", &AFitVec);
@@ -171,6 +193,7 @@ void plotFit(std::string fileFolder = "data/")
          outputTree->SetBranchAddress("yiniPRAVec", &yiniPRAVec);
          outputTree->SetBranchAddress("ziniPRAVec", &ziniPRAVec);
          outputTree->SetBranchAddress("ICVec", &ICVec);
+         outputTree->SetBranchAddress("ICTimeVec", &ICTimeVec);
          outputTree->SetBranchAddress("EFitXtrVec", &EFitXtrVec);
          outputTree->SetBranchAddress("xiniFitXtrVec", &xiniFitXtrVec);
          outputTree->SetBranchAddress("yiniFitXtrVec", &yiniFitXtrVec);
@@ -180,12 +203,68 @@ void plotFit(std::string fileFolder = "data/")
          outputTree->SetBranchAddress("trackLengthVec", &trackLengthVec);
          outputTree->SetBranchAddress("POCAXtrVec", &POCAXtrVec);
          outputTree->SetBranchAddress("trackIDVec", &trackIDVec);
+         outputTree->SetBranchAddress("fChi2Vec", &fChi2Vec);
+         outputTree->SetBranchAddress("bChi2Vec", &bChi2Vec);
+         outputTree->SetBranchAddress("fNdfVec", &fNdfVec);
+         outputTree->SetBranchAddress("bNdfVec", &bNdfVec);
+         outputTree->SetBranchAddress("ICEVec", &ICEVec);
 
          Int_t nentries = (Int_t)outputTree->GetEntries();
          for (Int_t i = 0; i < nentries; i++) {
             outputTree->GetEntry(i);
 
-            // if ((IC > 900 && IC < 1500)) {
+            //  if (ICMult != 1)
+            //	continue;
+
+            Int_t ICIndex = 0;
+            Int_t iQindex = 0;
+            Float_t ICQ = 0;
+            Float_t ICBL = 0;
+            Float_t ICA = 0;
+
+            try {
+
+               if (ICEVec->size() > 0) {
+
+                  for (iQindex = 0; iQindex < 20; ++iQindex)
+                     ICBL += (*ICEVec)[iQindex];
+
+                  ICBL /= 20.0;
+
+                  for (iQindex = 60; iQindex < 80; ++iQindex) {
+                     ICQ += (*ICEVec)[iQindex] - ICBL;
+
+                     Float_t max = (*ICEVec)[iQindex] - ICBL;
+
+                     if (max > ICA)
+                        ICA = max;
+                  }
+
+                  ICQH->Fill(ICQ);
+                  ICAH->Fill(ICA);
+               }
+               //}
+
+               for (ICIndex = 0; ICIndex < ICVec->size(); ++ICIndex) {
+
+                  HIC->Fill((*ICVec)[ICIndex]);
+                  ICEvsTime->Fill((*ICVec)[ICIndex], (*ICTimeVec)[ICIndex]);
+                  ICTimeH->Fill((*ICTimeVec)[ICIndex]);
+                  ICCorr->Fill((*ICVec)[ICIndex], ICA);
+               }
+
+               //    if (ICA < 500 || ICA > 900)
+               //   continue;
+
+               // if(ICMult==1){
+
+            } catch (...) {
+            }
+
+            // if(ICA>850)
+            // continue;
+
+            //	   	     if ((IC >0 && IC < 1620)) {
             // From std::vector
             assert(EFitVec->size() == AFitVec->size());
 
@@ -196,6 +275,11 @@ void plotFit(std::string fileFolder = "data/")
                if (dataFile.find("sim") != std::string::npos) {
                   angle = (*AFitVec)[index];
                }
+
+               fChi2H->Fill((*fChi2Vec)[index]);
+               bChi2H->Fill((*bChi2Vec)[index]);
+               fNdfH->Fill((*fNdfVec)[index]);
+               bNdfH->Fill((*bNdfVec)[index]);
 
                // if((*AFitVec)[index]>20.0 && (*EFitVec)[index]>4.0){
                //	if( ((*xiniFitXtrVec)[index]<0.3 && (*xiniFitXtrVec)[index]>-0.3) && ((*yiniFitXtrVec)[index]<0.3 &&
@@ -212,9 +296,8 @@ void plotFit(std::string fileFolder = "data/")
                // }// x-y
                //}//Energy and angle
 
-               // 	  	}//IC
-
-               HIC->Fill(IC);
+               //	  	 	  	}//IC
+               ICMultH->Fill(ICMult);
 
                Ang_Ener_PRA->Fill(APRA, EPRA);
 
@@ -405,14 +488,37 @@ void plotFit(std::string fileFolder = "data/")
    Ang_Phi->Draw();
 
    TCanvas *c5 = new TCanvas();
-   c5->Divide(2, 2);
+   c5->Divide(3, 3);
    c5->Draw();
    c5->cd(1);
    x_Phi->Draw();
    c5->cd(2);
    y_Phi->Draw();
    c5->cd(3);
-   HIC->Draw();
+   // HIC->Draw();
+   ICCorr->Draw("zcol");
    c5->cd(4);
    x_y_Xtr->Draw("zcol");
+   c5->cd(5);
+   ICMultH->Draw();
+   c5->cd(6);
+   ICTimeH->Draw();
+   c5->cd(7);
+   ICEvsTime->Draw("zcol");
+   c5->cd(8);
+   ICQH->Draw();
+   c5->cd(9);
+   ICAH->Draw();
+
+   TCanvas *cChi = new TCanvas();
+   cChi->Divide(2, 2);
+   cChi->Draw();
+   cChi->cd(1);
+   fChi2H->Draw();
+   cChi->cd(2);
+   bChi2H->Draw();
+   cChi->cd(3);
+   fNdfH->Draw();
+   cChi->cd(4);
+   bNdfH->Draw();
 }

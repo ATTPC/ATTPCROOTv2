@@ -94,7 +94,7 @@ void run_unpack_HC(std::string dataFile = "/mnt/daqtesting/e20009_attpc_transfer
 
    run->Init();
 
-   run->Run(0, 2000);
+   run->Run(0, 1000);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;

@@ -28,6 +28,7 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,
    fVerbosity = 0;
    fEnergyLossFile = eLossFile;
    fSimulationConv = kFALSE;
+   fPhiOrientation = 0;
 
    fKalmanFitter = std::make_shared<genfit::KalmanFitterRefTrack>();
    fKalmanFitter->setMinIterations(fMinIterations);
@@ -193,7 +194,7 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
 
       if (fSimulationConv) {
          theta = track->GetGeoTheta();
-         phi = track->GetGeoPhi(); // 180.0 * TMath::DegToRad() - track->GetGeoPhi();
+         phi = 180.0 * TMath::DegToRad() - track->GetGeoPhi(); // 180.0 * TMath::DegToRad() - track->GetGeoPhi();
       } else {
          theta = 180.0 * TMath::DegToRad() - track->GetGeoTheta();
          phi = -track->GetGeoPhi();
@@ -273,6 +274,11 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       iniPos = iniCluster.GetPosition();
       zIniCal = 1000.0 - iniPos.Z();
 
+      /*if(iniPos.X()>0 && iniPos.Y()<0)
+    phi=2.0*TMath::Pi()+phi;
+       else if(iniPos.X()<0)
+       phi=TMath::Pi()+phi;*/
+
       if (fSimulationConv)
          xIniCal = iniPos.X();
       else
@@ -306,6 +312,8 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
 
    TVector3 posSeed(xIniCal / 10.0, iniPos.Y() / 10.0, zIniCal / 10.0);
    posSeed.SetMag(posSeed.Mag());
+
+   // Starting wih fit...
 
    TMatrixDSym covSeed(6); // TODO Check where COV matrix is defined, likely in AtPattern clusterize (hard coded
                            // in AtSpacePoint measurement)

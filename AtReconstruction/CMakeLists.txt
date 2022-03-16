@@ -68,6 +68,7 @@ set(SRCS
   AtDecoder/AtHDFParser.cxx
 
   AtDecoder/AtCore2.cxx
+  AtDecoder/AtCoreSpecMAT.cxx
   AtDecoder/AtPedestal.cxx
   GETDecoder2/GETDecoder2.cxx
   GETDecoder2/GETFrameInfo.cxx
@@ -101,6 +102,7 @@ set(SRCS
   AtAuxFilterTask.cxx
   AtDataReductionTask.cxx
   AtDecoder2Task.cxx
+  AtDecoderSpecMATTask.cxx
   )
 
 ### Add additional sources and libraries if we found certain modules ###

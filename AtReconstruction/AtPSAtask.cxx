@@ -4,9 +4,9 @@
 #include "FairLogger.h"
 
 // Root Classes
+#include "AtEvent.h"
 #include "AtPSA.h"
 #include "AtRawEvent.h"
-#include "AtEvent.h"
 
 // AtTPCRoot Classes
 #include "TClonesArray.h"

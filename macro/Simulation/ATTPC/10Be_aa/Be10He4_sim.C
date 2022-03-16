@@ -1,4 +1,4 @@
-void Be10He4_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
+void Be10He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
@@ -44,7 +44,7 @@ void Be10He4_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_He1bar.root");
+  ATTPC->SetGeometryFileName("ATTPC_He1bar_v2.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
@@ -54,7 +54,7 @@ void Be10He4_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
     // -----   Magnetic field   -------------------------------------------
     // Constant Field
     AtConstField  *fMagField = new AtConstField();
-    fMagField->SetField(0., 0. ,20. ); // values are in kG
+    fMagField->SetField(0., 0., 30.);                    // values are in kG
     fMagField->SetFieldRegion(-50, 50,-50, 50, -10,230); // values are in cm
                           //  (xmin,xmax,ymin,ymax,zmin,zmax)
     run->SetField(fMagField);
@@ -154,10 +154,8 @@ void Be10He4_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
                   Mass.push_back(4.00260325415);//uma
 		  ExE.push_back(0.0);//In MeV
 
-
-                  Double_t ThetaMinCMS = 0.0;
-                  Double_t ThetaMaxCMS = 90.0;
-
+        Double_t ThetaMinCMS = 5.0;
+        Double_t ThetaMaxCMS = 90.0;
 
         AtTPC2Body* TwoBody = new AtTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner,ThetaMinCMS,ThetaMaxCMS);
         primGen->AddGenerator(TwoBody);
@@ -167,27 +165,25 @@ void Be10He4_sim(Int_t nEvents = 10, TString mcEngine = "TGeant4")
 
 // ------------------------------------------------------------------------
 
-  //---Store the visualiztion info of the tracks, this make the output file very large!!
-  //--- Use it only to display but not for production!
-  run->SetStoreTraj(kTRUE);
+   //---Store the visualiztion info of the tracks, this make the output file very large!!
+   //--- Use it only to display but not for production!
+   // run->SetStoreTraj(kTRUE);
 
+   // -----   Initialize simulation run   ------------------------------------
+   run->Init();
+   // ------------------------------------------------------------------------
 
+   // -----   Runtime database   ---------------------------------------------
 
-  // -----   Initialize simulation run   ------------------------------------
-  run->Init();
-  // ------------------------------------------------------------------------
+   Bool_t kParameterMerged = kTRUE;
+   FairParRootFileIo *parOut = new FairParRootFileIo(kParameterMerged);
+   parOut->open(parFile.Data());
+   rtdb->setOutput(parOut);
+   rtdb->saveOutput();
+   rtdb->print();
+   // ------------------------------------------------------------------------
 
-  // -----   Runtime database   ---------------------------------------------
-
-  Bool_t kParameterMerged = kTRUE;
-  FairParRootFileIo* parOut = new FairParRootFileIo(kParameterMerged);
-  parOut->open(parFile.Data());
-  rtdb->setOutput(parOut);
-  rtdb->saveOutput();
-  rtdb->print();
-  // ------------------------------------------------------------------------
-
-  // -----   Start run   ----------------------------------------------------
+   // -----   Start run   ----------------------------------------------------
    run->Run(nEvents);
 
   //You can export your ROOT geometry ot a separate file

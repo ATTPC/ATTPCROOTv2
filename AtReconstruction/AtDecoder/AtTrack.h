@@ -83,7 +83,8 @@ public:
 
    std::vector<AtHit> &GetHitArray() { return fHitArray; }
    std::vector<AtHitCluster> *GetHitClusterArray();
-
+   // void ResetHitClusterArray();
+   // void ResetHitArray();
    std::vector<Double_t> GetFitPar();
    const std::vector<AtHit> &GetHitArrayConst() const { return fHitArray; }
    Double_t GetMinimum();
@@ -95,6 +96,7 @@ public:
    Double_t GetMeanTime();
    Double_t GetLinearRange();
    Double_t GetLinearRange(XYZPoint vertex);
+   Double_t GetLinearRange(const XYZPoint &vertex, const XYZPoint &maxPos);
    XYZPoint GetTrackVertex();
    Int_t GetQuadrant();
    Double_t GetGeoTheta();
@@ -105,13 +107,17 @@ public:
    std::vector<Double_t> &GetRANSACCoeff();
    std::pair<Double_t, Double_t> GetGeoCenter();
    Double_t GetGeoRadius();
-
-   void ResetHitClusterArray();
-   Bool_t SortHitArrayTime();
-
    XYZPoint GetLastPoint();
-   Double_t GetLinearRange(const XYZPoint &vertex, const XYZPoint &maxPos);
    std::pair<Double_t, Double_t> GetThetaPhi(const XYZPoint &vertex, const XYZPoint &maxPos, int zdir);
+
+   void SortHitArrayTime();
+   void SortClusterHitArrayZ();
+
+protected:
+   static Bool_t SortClusterHitZ(const AtHitCluster &lhs, const AtHitCluster &rhs)
+   {
+      return lhs.GetPosition().Z() < rhs.GetPosition().Z();
+   }
 
    friend inline std::ostream &operator<<(std::ostream &o, const AtTrack &track)
    {

@@ -119,11 +119,10 @@ void unpack_e20009_test(TString fileName)
 
    run->Init();
 
-   //auto numEvents = HDFParserTask->GetNumEvents() / 2;
+   auto numEvents = HDFParserTask->GetNumEvents() / 2;
 
-    run->Run(0, 200);
-   //run->Run(0, numEvents);
-   
+   // run->Run(0, 20);
+   run->Run(0, numEvents);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;
