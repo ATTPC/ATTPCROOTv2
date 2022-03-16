@@ -14,6 +14,6 @@ jobs:
       # These are optional (defaults displayed)
       with:
         source: '.'
-        exclude: './macro ./scripts ./compiled ./resources'
+        exclude: './macro ./scripts ./compiled ./resources ./include'
         extensions: 'h,cxx,C'
         clangFormatVersion: 11
