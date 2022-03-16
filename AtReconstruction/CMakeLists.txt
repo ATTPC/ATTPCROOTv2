@@ -10,6 +10,7 @@ ${GENFIT2_INCLUDE_DIR}
 
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtDecoder
+${CMAKE_SOURCE_DIR}/AtReconstruction/GETDecoder2
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPulseAnalyzer
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
@@ -66,6 +67,20 @@ set(SRCS
   AtDecoder/AtTrack.cxx
   AtDecoder/AtHDFParser.cxx
 
+  AtDecoder/AtCore2.cxx
+  AtDecoder/AtPedestal.cxx
+  GETDecoder2/GETDecoder2.cxx
+  GETDecoder2/GETFrameInfo.cxx
+  GETDecoder2/GETHeaderBase.cxx
+  GETDecoder2/GETBasicFrameHeader.cxx
+  GETDecoder2/GETLayerHeader.cxx
+  GETDecoder2/GETTopologyFrame.cxx
+  GETDecoder2/GETBasicFrame.cxx
+  GETDecoder2/GETCoboFrame.cxx
+  GETDecoder2/GETLayeredFrame.cxx
+  GETDecoder2/GETMath2.cxx
+  GETDecoder2/GETFileChecker.cxx
+  
   AtPulseAnalyzer/AtPSA.cxx
   AtPulseAnalyzer/AtPSASimple.cxx
   AtPulseAnalyzer/AtPSASimple2.cxx
@@ -85,7 +100,7 @@ set(SRCS
   AtFilterTask.cxx
   AtAuxFilterTask.cxx
   AtDataReductionTask.cxx
-  
+  AtDecoder2Task.cxx
   )
 
 ### Add additional sources and libraries if we found certain modules ###

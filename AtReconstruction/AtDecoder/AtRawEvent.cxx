@@ -26,6 +26,7 @@ void AtRawEvent::Clear()
    fEventID = 0;
    fPadList.clear();
    fAuxPadMap.clear();
+   fTimestamp.clear();
 
    fIsGood = kTRUE;
 }
