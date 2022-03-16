@@ -7,7 +7,6 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
-#include <thread>
 
 #include "AtCoreSpecMAT.h"
 
@@ -21,29 +20,27 @@
 
 ClassImp(AtCoreSpecMAT);
 
-AtCoreSpecMAT::AtCoreSpecMAT() : AtPadCoordArr(boost::extents[3174][3][2]), kOpt(0)
+AtCoreSpecMAT::AtCoreSpecMAT() : AtPadCoordArr(boost::extents[3174][3][2])
 {
    Initialize();
 }
 
-AtCoreSpecMAT::AtCoreSpecMAT(Int_t opt) : AtPadCoordArr(boost::extents[3174][3][2]), kOpt(0)
+AtCoreSpecMAT::AtCoreSpecMAT(std::shared_ptr<AtSpecMATMap> map) : AtPadCoordArr(boost::extents[3174][3][2]), fMap(map)
 {
-   kOpt = opt;
    Initialize();
    SetNumTbs(512);
 }
 
-AtCoreSpecMAT::AtCoreSpecMAT(TString filename, Int_t opt) : AtPadCoordArr(boost::extents[3174][3][2]), kOpt(0)
+AtCoreSpecMAT::AtCoreSpecMAT(TString filename, std::shared_ptr<AtSpecMATMap> map)
+   : AtPadCoordArr(boost::extents[3174][3][2]), fMap(map)
 {
-
-   kOpt = opt;
    Initialize();
    AddData(filename);
    SetNumTbs(512);
 }
 
 AtCoreSpecMAT::AtCoreSpecMAT(TString filename, Int_t numTbs, Int_t windowNumTbs, Int_t windowStartTb)
-   : AtPadCoordArr(boost::extents[3174][3][2]), kOpt(0)
+   : AtPadCoordArr(boost::extents[3174][3][2])
 {
    Initialize();
    AddData(filename);
@@ -63,8 +60,6 @@ AtCoreSpecMAT::~AtCoreSpecMAT()
 void AtCoreSpecMAT::Initialize()
 {
    fRawEventPtr = new AtRawEvent();
-
-   fAtMapPtr = new AtSpecMATMap(3174);
 
    fPedestalPtr[0] = new AtPedestal();
    for (Int_t iCobo = 1; iCobo < 16; iCobo++)
@@ -88,8 +83,12 @@ void AtCoreSpecMAT::Initialize()
    memset(fCurrentEventID, 0, sizeof(Int_t) * 40);
 
    fIsSeparatedData = kFALSE;
-   kEnableAuxChannel = kFALSE;
-   fAuxChannels.clear();
+
+   /* old map style
+    kEnableAuxChannel = kFALSE;
+    fAuxChannels.clear();
+    fAtMapPtr = new AtSpecMATMap(3174);
+    */
 
    fNumCobo = 4;
 
@@ -98,6 +97,58 @@ void AtCoreSpecMAT::Initialize()
       fIsNegativePolarity[i] = kTRUE;
    }
 }
+
+/* old map style
+Bool_t AtCoreSpecMAT::SetAtTpcMap(Char_t const *lookup)
+{
+
+   dynamic_cast<AtSpecMATMap *>(fAtMapPtr)->GenerateAtTpc();
+   // NOTE: In the case of the AtTPC Map we need to generate
+   // the coordinates to calculate the Pad Center
+
+   Bool_t MapIn = fAtMapPtr->ParseXMLMap(lookup);
+   if (!MapIn)
+      return false;
+   // Bool_t kIsIniParsed = fAtMapPtr->ParseInhibitMap(fIniMap, fLowgMap,
+   // fXtalkMap);
+
+   // AtPadCoordArr = fAtMapPtr->GetPadCoordArr();//TODO Use a pointer to a
+   // simpler container
+
+   // For debugging purposes only!
+   // fAtMapPtr->SetGUIMode();
+   // fAtMapPtr->GetAtTPCPlane();
+   return true;
+}
+
+Bool_t AtCoreSpecMAT::SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap)
+{
+   fIniMap = inimap;
+   fLowgMap = lowgmap;
+   fXtalkMap = xtalkmap;
+   return kTRUE;
+}
+void AtCoreSpecMAT::SetAuxChannel(std::vector<Int_t> AuxCh)
+{
+   kEnableAuxChannel = kTRUE;
+   fAuxChannels = AuxCh;
+
+   if (AuxCh.size() == 0)
+      std::cout << cRED << " AtPSAtask : No auxiliary channels found --" << cNORMAL << std::endl;
+   else {
+      std::cout << cGREEN << " AtPSAtask : Auxiliary pads found : " << std::endl;
+      for (Int_t i = 0; i < AuxCh.size(); i++)
+         std::cout << "  " << AuxCh.at(i) << std::endl;
+   }
+   std::cout << cNORMAL << std::endl;
+}
+
+Bool_t AtCoreSpecMAT::GetIsAuxChannel(Int_t val)
+{
+
+   return std::find(fAuxChannels.begin(), fAuxChannels.end(), val) != fAuxChannels.end();
+}
+*/
 
 Bool_t AtCoreSpecMAT::AddData(TString filename, Int_t coboIdx)
 {
@@ -149,9 +200,9 @@ Int_t AtCoreSpecMAT::GetNumData(Int_t coboIdx)
    return fDecoderPtr[coboIdx]->GetNumData();
 }
 
-TString AtCoreSpecMAT::GetDataName(Int_t index, Int_t coboIdx)
+TString AtCoreSpecMAT::GetDataName(Int_t ind, Int_t coboIdx)
 {
-   return fDecoderPtr[coboIdx]->GetDataName(index);
+   return fDecoderPtr[coboIdx]->GetDataName(ind);
 }
 
 void AtCoreSpecMAT::SetNumTbs(Int_t value)
@@ -169,35 +220,6 @@ void AtCoreSpecMAT::SetFPNPedestal(Double_t sigmaThreshold)
    fFPNSigmaThreshold = sigmaThreshold;
 
    std::cout << "== [AtCore] Using FPN pedestal is set!" << std::endl;
-}
-
-Bool_t AtCoreSpecMAT::SetAtTpcMap(Char_t const *lookup)
-{
-
-   dynamic_cast<AtSpecMATMap *>(fAtMapPtr)->GenerateAtTpc();
-   // NOTE: In the case of the AtTPC Map we need to generate
-   // the coordinates to calculate the Pad Center
-
-   Bool_t MapIn = fAtMapPtr->ParseXMLMap(lookup);
-   if (!MapIn)
-      return false;
-   // Bool_t kIsIniParsed = fAtMapPtr->ParseInhibitMap(fIniMap, fLowgMap,
-   // fXtalkMap);
-
-   // AtPadCoordArr = fAtMapPtr->GetPadCoordArr();//TODO Use a pointer to a
-   // simpler container
-   //**** For debugging purposes only! ******//
-   // fAtMapPtr->SetGUIMode();
-   // fAtMapPtr->GetAtTPCPlane();
-   return true;
-}
-
-Bool_t AtCoreSpecMAT::SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap)
-{
-   fIniMap = inimap;
-   fLowgMap = lowgmap;
-   fXtalkMap = xtalkmap;
-   return kTRUE;
 }
 
 void AtCoreSpecMAT::SetIsPadPlaneCobo(Bool_t *IsPadPlane)
@@ -252,25 +274,25 @@ void AtCoreSpecMAT::GetFPNChannelsFromROOTFILE(Long64_t eventID)
    Bool_t EventCompleted = false;
    while (myReader.Next() && (!EventCompleted)) {
       if (*myInternalEventNr == eventID) {
-         std::vector<int> PadRef = {*myCoboNr, *myAsadNr, *myAgetNr, *myChannelNr};
+         PadReference PadRef = {*myCoboNr, *myAsadNr, *myAgetNr, *myChannelNr};
          for (Int_t i = 0; i < 4; i++) { // loop over number of fpn channels
-            if ((PadRef[3] == ChannelsFPNpp[i]) && fIsPadPlaneCobo[PadRef[0]]) {
+            if ((PadRef.ch == ChannelsFPNpp[i]) && fIsPadPlaneCobo[PadRef.cobo]) {
                Nr_fpn_found++;
                // std::cout << "Added fpnchannel" << std::endl;
                // std::cout << ", corresponding to Cobo: " << PadRef[0] << "   Asad:
                // "  << PadRef[1] << "   Aget: "  << PadRef[2] << "   Ch: "  <<
                // PadRef[3] << std::endl;
                for (Int_t j = 0; j < 512; j++) {
-                  fFPNChannels[i][PadRef[0]][PadRef[1]][PadRef[2]][j] = mySamples[j];
+                  fFPNChannels[i][PadRef.cobo][PadRef.asad][PadRef.aget][j] = mySamples[j];
                }
-            } else if ((PadRef[3] == ChannelsFPNsc[i]) && !(fIsPadPlaneCobo[PadRef[0]])) {
+            } else if ((PadRef.ch == ChannelsFPNsc[i]) && !(fIsPadPlaneCobo[PadRef.cobo])) {
                Nr_fpn_found++;
                // std::cout << "Added fpnchannel" << std::endl;
                // std::cout << ", corresponding to Cobo: " << PadRef[0] << "   Asad:
                // "  << PadRef[1] << "   Aget: "  << PadRef[2] << "   Ch: "  <<
                // PadRef[3] << std::endl;
                for (Int_t j = 0; j < 512; j++) {
-                  fFPNChannels[i][PadRef[0]][PadRef[1]][PadRef[2]][j] = mySamples[j];
+                  fFPNChannels[i][PadRef.cobo][PadRef.asad][PadRef.aget][j] = mySamples[j];
                }
             }
          }
@@ -321,22 +343,23 @@ void AtCoreSpecMAT::ProcessROOTFILE(Long64_t eventID)
       // std::cout << "InternalEventNr is" << *myInternalEventNr << "   eventID is
       // " << eventID << std::endl;
       if (*myInternalEventNr == eventID) {
-         std::vector<int> PadRef = {*myCoboNr, *myAsadNr, *myAgetNr, *myChannelNr};
+         PadReference PadRef = {*myCoboNr, *myAsadNr, *myAgetNr, *myChannelNr};
          fCurrentEventID[0] = *myInternalEventNr;
-         Int_t PadRefNum = fAtMapPtr->GetPadNum(PadRef);
+         Int_t PadRefNum = fMap->GetPadNum(PadRef);
          // std::cout << "Fired pad nr: " << PadRefNum << std::endl;
          // std::cout << ", corresponding to Cobo: " << PadRef[0] << "   Asad: " <<
          // PadRef[1] << "   Aget: "  << PadRef[2] << "   Ch: "  << PadRef[3] <<
          // std::endl;
          std::vector<Float_t> PadCenterCoord;
          PadCenterCoord.reserve(2);
-         PadCenterCoord = fAtMapPtr->CalcPadCenter(PadRefNum);
-         Bool_t IsInhibited = fAtMapPtr->GetIsInhibited(PadRefNum);
+         PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
+         Bool_t IsInhibited = fMap->IsInhibited(PadRefNum);
 
          if (PadRefNum != -1 && !IsInhibited) {
-            AtPad *pad = new ((*fPadArray)[PadRefNum]) AtPad(PadRefNum);
-            pad->SetPadXCoord(PadCenterCoord[0]);
-            pad->SetPadYCoord(PadCenterCoord[1]);
+            // AtPad *pad = new ((*fPadArray)[PadRefNum]) AtPad(PadRefNum);
+            AtPad *pad = fRawEventPtr->AddPad(PadRefNum);
+            pad->SetPadCoord({PadCenterCoord[0], PadCenterCoord[1]});
+
             // std::cout << "pad coordinates are (" << PadCenterCoord[0] << ", " <<
             // PadCenterCoord[1] << ")" << std::endl;
 
@@ -357,14 +380,14 @@ void AtCoreSpecMAT::ProcessROOTFILE(Long64_t eventID)
             Double_t adc[512] = {0};
             Int_t fpn_adc[512] = {0};
             for (int i = 0; i < 512; i++) {
-               fpn_adc[i] = (fFPNChannels[0][PadRef[0]][PadRef[1]][PadRef[2]][i] +
-                             fFPNChannels[1][PadRef[0]][PadRef[1]][PadRef[2]][i] +
-                             fFPNChannels[2][PadRef[0]][PadRef[1]][PadRef[2]][i] +
-                             fFPNChannels[3][PadRef[0]][PadRef[1]][PadRef[2]][i]) /
+               fpn_adc[i] = (fFPNChannels[0][PadRef.cobo][PadRef.asad][PadRef.aget][i] +
+                             fFPNChannels[1][PadRef.cobo][PadRef.asad][PadRef.aget][i] +
+                             fFPNChannels[2][PadRef.cobo][PadRef.asad][PadRef.aget][i] +
+                             fFPNChannels[3][PadRef.cobo][PadRef.asad][PadRef.aget][i]) /
                             4;
             }
             Bool_t good = fPedestalPtr[0]->SubtractPedestal(fNumTbs, fpn_adc, rawadc, adc, 5,
-                                                            fIsNegativePolarity[PadRef[0]], 5, 20);
+                                                            fIsNegativePolarity[PadRef.cobo], 5, 20);
             // std::cout << "Is this pad good? " << good << std::endl;
 
             for (Int_t iTb = 0; iTb < fNumTbs; iTb++) {
@@ -374,8 +397,6 @@ void AtCoreSpecMAT::ProcessROOTFILE(Long64_t eventID)
             }
             pad->SetPedestalSubtracted(kTRUE);
             fRawEventPtr->SetIsGood(good);
-
-            fRawEventPtr->SetPad(pad);
          }
       } else if (*myInternalEventNr > eventID) {
          EventCompleted = true;
@@ -431,13 +452,13 @@ AtRawEvent *AtCoreSpecMAT::GetRawEvent(Long64_t eventID)
 
    fRawEventPtr->SetEventID(fCurrentEventID[0]);
 
-   Int_t iNumPads = 3174;
-   for (Int_t i = 0; i < iNumPads; i++) {
-      AtPad *pad = (AtPad *)fPadArray->At(i);
-      if (pad != NULL)
-         fRawEventPtr->SetPad(pad);
-   }
-
+   /*   Int_t iNumPads = 3174;
+      for (Int_t i = 0; i < iNumPads; i++) {
+         AtPad *pad = (AtPad *)fPadArray->At(i);
+         if (pad != NULL)
+            fRawEventPtr->SetPad(pad);
+      }
+   */
    if (fRawEventPtr->GetNumPads() == 0 && fRawEventPtr->IsGood() == kFALSE)
       return NULL;
    else
@@ -476,27 +497,6 @@ void AtCoreSpecMAT::SetPseudoTopologyFrame(Int_t asadMask, Bool_t check)
 {
    for (Int_t i = 0; i < fNumCobo; i++)
       fDecoderPtr[i]->SetPseudoTopologyFrame(asadMask, check);
-}
-
-void AtCoreSpecMAT::SetAuxChannel(std::vector<Int_t> AuxCh)
-{
-   kEnableAuxChannel = kTRUE;
-   fAuxChannels = AuxCh;
-
-   if (AuxCh.size() == 0)
-      std::cout << cRED << " AtPSAtask : No auxiliary channels found --" << cNORMAL << std::endl;
-   else {
-      std::cout << cGREEN << " AtPSAtask : Auxiliary pads found : " << std::endl;
-      for (Int_t i = 0; i < AuxCh.size(); i++)
-         std::cout << "  " << AuxCh.at(i) << std::endl;
-   }
-   std::cout << cNORMAL << std::endl;
-}
-
-Bool_t AtCoreSpecMAT::GetIsAuxChannel(Int_t val)
-{
-
-   return std::find(fAuxChannels.begin(), fAuxChannels.end(), val) != fAuxChannels.end();
 }
 
 void AtCoreSpecMAT::SetNumCobo(Int_t numCobo)

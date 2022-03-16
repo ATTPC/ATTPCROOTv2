@@ -18,9 +18,9 @@ AtDecoderSpecMATTask::AtDecoderSpecMATTask()
 {
    fLogger = FairLogger::GetLogger();
 
-   fDecoder = NULL;
+   fDecoder = nullptr;
    fDataNum = 0;
-   fOpt = 0;
+   // fOpt = 0;
 
    fFPNPedestalRMS = -1;
 
@@ -35,9 +35,9 @@ AtDecoderSpecMATTask::AtDecoderSpecMATTask()
 
    fIsPersistence = kFALSE;
 
-   fPar = NULL;
+   fPar = nullptr;
    fRawEventArray = new TClonesArray("AtRawEvent");
-   fRawEvent = NULL;
+   fRawEvent = nullptr;
 
    fIsSeparatedData = kFALSE;
    fIsPseudoTopology = kFALSE;
@@ -45,7 +45,7 @@ AtDecoderSpecMATTask::AtDecoderSpecMATTask()
    fInternalID = 1;
    fEventID = 0; // For SpecMAT data events start from 1 not 0
 
-   fAuxChannels.clear();
+   // fAuxChannels.clear();
    fNumCobo = 4;
 
    for (Int_t i = 0; i < fNumCobo; i++) {
@@ -55,8 +55,6 @@ AtDecoderSpecMATTask::AtDecoderSpecMATTask()
 
    fMask = 0xF;
 }
-
-AtDecoderSpecMATTask::~AtDecoderSpecMATTask() {}
 
 void AtDecoderSpecMATTask::SetPersistence(Bool_t value)
 {
@@ -100,6 +98,7 @@ void AtDecoderSpecMATTask::SetEventID(Long64_t eventid)
 {
    fEventID = eventid;
 }
+/* Old map style
 void AtDecoderSpecMATTask::SetGeo(TString geofile)
 {
    fGeoFile = geofile;
@@ -112,13 +111,9 @@ void AtDecoderSpecMATTask::SetMapOpt(Int_t value)
 {
    fOpt = value;
 }
-Bool_t AtDecoderSpecMATTask::SetMap(Char_t const *map)
+void AtDecoderSpecMATTask::SetMap(Char_t const *map)
 {
    fMap = map;
-}
-void AtDecoderSpecMATTask::SetPseudoTopologyFrame(Bool_t value)
-{
-   fIsPseudoTopology = value;
 }
 void AtDecoderSpecMATTask::SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap)
 {
@@ -131,6 +126,12 @@ void AtDecoderSpecMATTask::SetAuxChannels(std::vector<Int_t> AuxCh)
 {
    fAuxChannels = AuxCh;
 }
+*/
+void AtDecoderSpecMATTask::SetPseudoTopologyFrame(Bool_t value)
+{
+   fIsPseudoTopology = value;
+}
+
 void AtDecoderSpecMATTask::SetNumCobo(Int_t numCobo)
 {
    fNumCobo = numCobo;
@@ -156,13 +157,17 @@ InitStatus AtDecoderSpecMATTask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == 0) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find RootManager!");
+      LOG(error) << "Cannot find RootManager!";
 
       return kERROR;
    }
 
+   /* old map style
    fDecoder = new AtCoreSpecMAT(fOpt);
    fDecoder->SetInhibitMaps(fIniMap, fLowgMap, fXtalkMap);
+   */
+   // new map style
+   fDecoder = std::make_unique<AtCoreSpecMAT>(fMap);
    fDecoder->SetNumCobo(fNumCobo);
    fDecoder->SetIsPadPlaneCobo(fIsCoboPadPlane);
    fDecoder->SetPositivePolarity(fIsPositive);
@@ -186,53 +191,26 @@ InitStatus AtDecoderSpecMATTask::Init()
 
    fDecoder->SetFPNPedestal(fFPNPedestalRMS);
 
-   Bool_t kMapIn = fDecoder->SetAtTpcMap(fMap);
-   // std::cout<<kMapIn<<std::endl;
+   /* old map style
+     Bool_t kMapIn = fDecoder->SetAtTpcMap(fMap);
+
    if (!kMapIn) {
-      fLogger->Error(MESSAGE_ORIGIN, "Cannot find SpecMAT Map!");
+      LOG(error) << "Cannot find SpecMAT Map!";
 
       return kERROR;
    }
 
+
    if (fAuxChannels.size() > 0) {
       fDecoder->SetAuxChannel(fAuxChannels);
    }
-
-   /*  if (fGainCalibrationFile.EqualTo("") && fUseGainCalibration == kFALSE)
-       fLogger -> Info(MESSAGE_ORIGIN, "Gain not calibrated!");
-     else if (fGainCalibrationFile.EqualTo("") && fUseGainCalibration == kTRUE) {
-       Bool_t isSetGainCalibrationData = fDecoder -> SetGainCalibrationData(fPar
-     -> GetGainCalibrationDataFileName()); if (!isSetGainCalibrationData) {
-         fLogger -> Error(MESSAGE_ORIGIN, "Cannot find gain calibration data
-     file!");
-
-         return kERROR;
-       }*/
-   //  LOG(INFO) << fPar -> GetGainCalibrationDataFileName() << " " << fPar ->
-   //  GetGCConstant() << " " << fPar -> GetGCLinear() << " " << fPar ->
-   //  GetGCQuadratic() << FairLogger::endl;
-
-   /*  fDecoder -> SetGainReference(fPar -> GetGCConstant(), fPar ->
-   GetGCLinear(), fPar -> GetGCQuadratic()); fLogger -> Info(MESSAGE_ORIGIN,
-   "Gain calibration data is set from parameter list!"); } else { Bool_t
-   isSetGainCalibrationData = fDecoder ->
-   SetGainCalibrationData(fGainCalibrationFile); if (!isSetGainCalibrationData) {
-       fLogger -> Error(MESSAGE_ORIGIN, "Cannot find gain calibration data
-   file!");
-
-       return kERROR;
-     }
-
-     if (fGainConstant == -9999 || fGainLinear == -9999) {
-       fLogger -> Error(MESSAGE_ORIGIN, "Cannot find gain calibration data
-   file!");
-
-       return kERROR;
-     }
-
-     fDecoder -> SetGainReference(fGainConstant, fGainLinear, fGainQuadratic);
-     fLogger -> Info(MESSAGE_ORIGIN, "Gain calibration data is set!");
-   }*/
+   */
+   // new map style
+   if (fMap == nullptr) {
+      LOG(error) << "SpecMAT Map was never set!";
+      return kERROR;
+   } else
+      fDecoder->SetMap(fMap);
 
    ioMan->Register("AtRawEvent", "AtTPC", fRawEventArray, fIsPersistence);
    return kSUCCESS;
@@ -242,15 +220,15 @@ void AtDecoderSpecMATTask::SetParContainers()
 {
    FairRun *run = FairRun::Instance();
    if (!run)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No analysis run!");
+      LOG(fatal) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)
-      fLogger->Fatal(MESSAGE_ORIGIN, "No runtime database!");
+      LOG(fatal) << "No runtime database!";
 
    fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
    if (!fPar)
-      fLogger->Fatal(MESSAGE_ORIGIN, "Cannot find AtDigiPar!");
+      LOG(fatal) << "Cannot find AtDigiPar!";
 }
 
 void AtDecoderSpecMATTask::Exec(Option_t *opt)
@@ -260,16 +238,16 @@ void AtDecoderSpecMATTask::Exec(Option_t *opt)
    //#endif
    fRawEventArray->Delete();
    std::cout << "Start of SpecMAT decoder task for event" << fEventID + 1 << std::endl;
-   if (fRawEvent == NULL)
+   if (fRawEvent == nullptr)
       fRawEvent = fDecoder->GetRawEvent(fEventID++);
    fInternalID++;
    // if (fInternalID % 100 == 0)
    std::cout << " Event Number " << fEventID << " Internal ID : " << fInternalID
              << " Number of Pads : " << fRawEvent->GetNumPads() << std::endl;
 
-   new ((*fRawEventArray)[0]) AtRawEvent(fRawEvent);
+   new ((*fRawEventArray)[0]) AtRawEvent(*fRawEvent);
 
-   fRawEvent = NULL;
+   fRawEvent = nullptr;
    //#ifdef TASKTIMER
    //  STDebugLogger::Instance() -> TimerStop("DecoderTask");
    //#endif
@@ -282,10 +260,10 @@ Int_t AtDecoderSpecMATTask::ReadEvent(Int_t eventID)
    fRawEvent = fDecoder->GetRawEvent(eventID);
    fEventIDLast = fDecoder->GetEventID();
 
-   if (fRawEvent == NULL)
+   if (fRawEvent == nullptr)
       return 1;
 
-   new ((*fRawEventArray)[0]) AtRawEvent(fRawEvent);
+   new ((*fRawEventArray)[0]) AtRawEvent(*fRawEvent);
 
    return 0;
 }
@@ -294,8 +272,8 @@ void AtDecoderSpecMATTask::FinishEvent()
 {
    fRawEvent = fDecoder->GetRawEvent();
 
-   if (fRawEvent == NULL) {
-      fLogger->Info(MESSAGE_ORIGIN, "End of file. Terminating FairRun.");
+   if (fRawEvent == nullptr) {
+      LOG(info) << "End of file. Terminating FairRun.";
       FairRootManager::Instance()->SetFinishRun();
    }
 }

@@ -83,7 +83,7 @@ public:
 
    std::vector<AtHit> &GetHitArray() { return fHitArray; }
    std::vector<AtHitCluster> *GetHitClusterArray();
-   // void ResetHitClusterArray();
+   void ResetHitClusterArray() { fHitClusterArray.clear(); }
    // void ResetHitArray();
    std::vector<Double_t> GetFitPar();
    const std::vector<AtHit> &GetHitArrayConst() const { return fHitArray; }

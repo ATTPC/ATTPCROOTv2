@@ -17,6 +17,7 @@
 #pragma link C++ class GETMath2 + ;
 
 #pragma link C++ class AtCore2 + ;
+#pragma link C++ class AtPedestal + ;
 #pragma link C++ class AtCoreSpecMAT + ;
 #pragma link C++ class AtHDFParser + ;
 #pragma link C++ class AtPad + ;

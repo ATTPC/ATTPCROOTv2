@@ -69,9 +69,9 @@ void AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack> *trackCandSource, std:
          if (fitDirection == 1 && thetaCand > 90) {
 
             if ((thetaCand + angleSpread) > thetaJunk && (thetaCand - angleSpread) < thetaJunk) {
-               for (auto hit : *hitArrayJunk) {
+               for (auto hit : hitArrayJunk) {
 
-                  track.AddHit(&hit);
+                  track.AddHit(hit);
                   ++jnkHitCnt;
                }
             }
@@ -90,14 +90,14 @@ void AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack> *trackCandSource, std:
 
       if (trackJunkSource->size() > 0) {
          Double_t pruneFraction = 10.0;
-         if (jnkHitCnt > hitArrayCand->size())
+         if (jnkHitCnt > hitArrayCand.size())
             pruneFraction = 4.0; // 25%
          else
             pruneFraction = 10.0; // 10%
 
-         Int_t numHits = (Int_t)track.GetHitArray()->size() / pruneFraction;
+         Int_t numHits = (Int_t)track.GetHitArray().size() / pruneFraction;
          for (auto iHit = 0; iHit < numHits; ++iHit)
-            track.GetHitArray()->pop_back();
+            track.GetHitArray().pop_back();
       }
 
       trackDest->push_back(track);

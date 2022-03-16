@@ -27,10 +27,56 @@
 #include <tuple>
 
 class AtCoreSpecMAT : public TObject {
+private:
+   Int_t fNumTbs;
+
+   GETDecoder2 *fDecoderPtr[16];
+   Bool_t fIsData;
+
+   AtPedestal *fPedestalPtr[16];
+   Bool_t fIsNegativePolarity[4];
+   Double_t fFPNSigmaThreshold;
+
+   AtRawEvent *fRawEventPtr;
+   TClonesArray *fPadArray;
+
+   Int_t fCurrentEventID[16];
+   Int_t fTargetFrameID;
+
+   Bool_t fIsSeparatedData;
+
+   /* old map style
+   Int_t kOpt;
+   TString fIniMap;
+   TString fLowgMap;
+   TString fXtalkMap;
+   Bool_t GetIsAuxChannel(Int_t val);
+   Bool_t kEnableAuxChannel;
+   std::vector<Int_t> fAuxChannels;
+   AtMap *fAtMapPtr;
+   */
+   // new map style
+   std::shared_ptr<AtSpecMATMap> fMap;
+
+   TString fFileName;
+
+   Int_t fNumCobo;
+
+   Int_t fFPNChannels[4][4][4][4][512];
+   Bool_t fIsPadPlaneCobo[4];
+
+#ifndef __CINT__
+   typedef boost::multi_array<double, 3> multiarray;
+   typedef multiarray::index index;
+   multiarray AtPadCoordArr;
+#endif //__CINT__
+
+   Bool_t kDebug;
+
 public:
    AtCoreSpecMAT();
-   AtCoreSpecMAT(Int_t opt);
-   AtCoreSpecMAT(TString filename, Int_t opt);
+   AtCoreSpecMAT(std::shared_ptr<AtSpecMATMap> map);
+   AtCoreSpecMAT(TString filename, std::shared_ptr<AtSpecMATMap> map);
    AtCoreSpecMAT(TString filename, Int_t numTbs, Int_t windowNumTbs = 512, Int_t windowStartTb = 0);
    ~AtCoreSpecMAT();
 
@@ -44,16 +90,13 @@ public:
    TString GetDataName(Int_t index, Int_t coboIdx = 0);
    void SetNumTbs(Int_t value);
    void SetFPNPedestal(Double_t sigmaThreshold = 5);
+
+   /* old map style
    Bool_t SetAtTpcMap(Char_t const *lookup);
    Bool_t SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap);
-
-   // Bool_t SetGainCalibrationData(TString filename, TString dataType = "f");
-   // void SetGainReference(Int_t row, Int_t layer);
-   // void SetGainReference(Double_t constant, Double_t linear, Double_t
-   // quadratic = 0.);
-
-   // Bool_t SetUAMap(TString filename);
-   // Bool_t SetAGETMap(TString filename);
+   */
+   // new map style
+   void SetMap(std::shared_ptr<AtSpecMATMap> map) { fMap = map; }
 
    void GetFPNChannelsFromROOTFILE(Long64_t EventNr);
    void ProcessROOTFILE(Long64_t EventNr);
@@ -66,9 +109,6 @@ public:
    Int_t GetEventID();                             ///< Returns the current event ID
    Int_t GetNumTbs(Int_t coboIdx = 0);             ///< Returns the number of time buckets of the data
 
-   // STMap *GetSTMap();
-   // STPlot *GetSTPlot();
-
    Int_t GetFPNChannel(Int_t chIdx);
    void SetPseudoTopologyFrame(Int_t asadMask, Bool_t check = kFALSE);
    void SetAuxChannel(std::vector<Int_t> AuxCh);
@@ -76,55 +116,7 @@ public:
    void SetIsPadPlaneCobo(Bool_t *IsPadPlane); // Sets whether cobo belongs reads out padplane
                                                // signals or scintillator signals
 
-   AtMap *fAtMapPtr;
-
-#ifndef __CINT__
-   typedef boost::multi_array<double, 3> multiarray;
-   typedef multiarray::index index;
-   multiarray AtPadCoordArr;
-#endif //__CINT__
-
-   Bool_t kDebug;
-
-private:
-   Bool_t GetIsAuxChannel(Int_t val);
-
-   Int_t fNumTbs;
-
-   GETDecoder2 *fDecoderPtr[16];
-   Bool_t fIsData;
-
-   AtPedestal *fPedestalPtr[16];
-   Bool_t fIsNegativePolarity[4];
-   Double_t fFPNSigmaThreshold;
-
-   // STGainCalibration *fGainCalibrationPtr;
-   // Bool_t fIsGainCalibrationData;
-
-   AtRawEvent *fRawEventPtr;
-   TClonesArray *fPadArray;
-
-   Int_t fCurrentEventID[16];
-   Int_t fTargetFrameID;
-
-   Bool_t fIsSeparatedData;
-   Int_t kOpt;
-
-   TString fIniMap;
-   TString fLowgMap;
-   TString fXtalkMap;
-
-   TString fFileName;
-
-   Bool_t kEnableAuxChannel;
-   std::vector<Int_t> fAuxChannels;
-
-   Int_t fNumCobo;
-
-   Int_t fFPNChannels[4][4][4][4][512];
-   Bool_t fIsPadPlaneCobo[4];
-
-   ClassDef(AtCoreSpecMAT, 1);
+   ClassDef(AtCoreSpecMAT, 2);
 };
 
 #endif

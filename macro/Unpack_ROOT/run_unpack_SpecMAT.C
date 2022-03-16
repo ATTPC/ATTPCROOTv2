@@ -92,6 +92,14 @@ void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root", TStr
     * addition forces the unpacker to use Basic Frames for 1 single file (p-ATTPC
     * case) of Layered Frames for Merged Data (10 Cobos merged data).
     */
+
+   // Create the map that will be pased to tasks that require it
+   auto fMapPtr = std::make_shared<AtSpecMATMap>(3174);
+   fMapPtr->ParseXMLMap(scriptdir.Data());
+   fMapPtr->GenerateAtTpc();
+   // mapPtr->SetInhibitMaps(inimap,lowgmap,xtalkmap); // TODO: Only
+   // implemented for fUseSeparatedData!!!!!!!!!!!!!!!!!!!1
+
    AtDecoderSpecMATTask *fDecoderTask = new AtDecoderSpecMATTask();
    fDecoderTask->SetUseSeparatedData(fUseSeparatedData);
    if (fUseSeparatedData)
@@ -101,13 +109,12 @@ void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root", TStr
                                        true}; // Positive polarity for padplane, negative for scintillators
    fDecoderTask->SetPositivePolarity(IsCoboPositivePolarity);
    fDecoderTask->SetPersistence(kTRUE);
-   fDecoderTask->SetMap(scriptdir.Data());
+   // fDecoderTask->SetMap(scriptdir.Data());
+   fDecoderTask->SetMap(fMapPtr);
    fDecoderTask->SetNumCobo(4);
    Bool_t IsCoboPadPlane[4] = {true, false, true, true};
    fDecoderTask->SetIsCoboPadPlane(IsCoboPadPlane);
-   // fDecoderTask -> SetInhibitMaps(inimap,lowgmap,xtalkmap); // TODO: Only
-   // implemented for fUseSeparatedData!!!!!!!!!!!!!!!!!!!1
-   fDecoderTask->SetMapOpt(2); // Does not do anything for SpecMAT for the moment
+   // fDecoderTask->SetMapOpt(2); // Does not do anything for SpecMAT for the moment
    fDecoderTask->AddData(dataFile);
 
    run->AddTask(fDecoderTask);
@@ -115,7 +122,8 @@ void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root", TStr
    AtPulseTask *pulse = new AtPulseTask();
    pulse->SetPersistence(kTRUE);
    pulse->SetSaveMCInfo();
-   pulse->SelectDetectorId(kSpecMAT);
+   // pulse->SelectDetectorId(kSpecMAT);
+   pulse->SetMap(fMapPtr);
    run->AddTask(pulse);
 
    AtPSASimple2 *psa = new AtPSASimple2();
