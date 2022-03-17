@@ -231,8 +231,8 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
                TVector3 posRot = RotateDetector(pos.X(), pos.Y(), zPos, maxAdcIdx);
 
-               LOG(debug) << "Adding hit...";
                auto hit = event->AddHit(PadNum, XYZPoint(pos.X(), pos.Y(), zPos), charge);
+               LOG(debug) << "Added hit with ID" << hit.GetHitID();
                hit.SetPositionCorr(posRot.X(), posRot.Y(), posRot.Z());
                hit.SetTimeStamp(maxAdcIdx);
                hit.SetTimeStampCorr(TBCorr);

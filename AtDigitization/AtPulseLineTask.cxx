@@ -55,7 +55,7 @@ void AtPulseLineTask::generateIntegrationMap(AtSimulatedLine *line)
    auto loc = line->GetPosition();
    Int_t validPoints = 0;
 
-   LOG(debug) << "Sampling with transverse diffusion of: " << line->GetTransverseDiffusion();
+   LOG(debug2) << "Sampling with transverse diffusion of: " << line->GetTransverseDiffusion();
    for (int i = 0; i < fNumIntegrationPoints; ++i) {
       auto binNumber = throwRandomAndGetBinAfterDiffusion(loc, line->GetTransverseDiffusion());
 

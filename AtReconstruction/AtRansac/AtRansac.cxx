@@ -127,8 +127,10 @@ void AtRANSACN::AtRansac::CalcRANSACFull(AtEvent *event)
 
    XYZVector Z_1(0.0, 0.0, 1.0); // Beam direction
 
-   if (tracks->size() > 1) { // Defined in CalcGenHoughSpace
-      for (Int_t ntrack = 0; ntrack < tracks->size(); ntrack++) {
+   Int_t tracksSize = tracks->size();
+   std::cout << "RansacPCL tracks size : " << tracksSize << std::endl;
+   if (tracksSize > 1) { // Defined in CalcGenHoughSpace
+      for (Int_t ntrack = 0; ntrack < tracksSize; ntrack++) {
          std::vector<AtHit> trackHits = tracks->at(ntrack).GetHitArray();
          Int_t nHits = trackHits.size();
 
@@ -143,7 +145,9 @@ void AtRANSACN::AtRansac::CalcRANSACFull(AtEvent *event)
                tracks->at(ntrack).SetAngleZAxis(angZDeti);
                fTrackCand.push_back(tracks->at(ntrack));
             }
-         }
+         } else
+            LOG(error) << "Rejecting track: " << ntrack << " only " << nHits << " require " << fMinHitsLine;
+
       } // Tracks loop
       if (fTrackCand.size() > 5)
          fTrackCand.resize(5);
@@ -172,15 +176,16 @@ std::vector<AtTrack> *AtRANSACN::AtRansac::RansacPCL(const std::vector<AtHit> &h
 
    LOG(debug) << "Filling cloud point";
 
-   for (const auto &hit : hits) {
+   for (int hitIndex = 0; hitIndex < hits.size(); ++hitIndex) {
 
+      const auto hit = hits[hitIndex];
       auto position = hit.GetPosition();
       auto hitID = hit.GetHitID();
 
       cloud->points[hitID].x = position.X();
       cloud->points[hitID].y = position.Y();
       cloud->points[hitID].z = position.Z();
-      cloud->points[hitID].rgb = hitID; // Storing the position of the hit in the event container
+      cloud->points[hitID].rgb = hitIndex; // Storing the position of the hit in the event container
    }
 
    pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients());
@@ -232,7 +237,7 @@ std::vector<AtTrack> *AtRANSACN::AtRansac::RansacPCL(const std::vector<AtHit> &h
             /*if (&hits.at(cloud_p->points[iHit].rgb))
                track.AddHit(&hits.at(cloud_p->points[iHit].rgb));
        */
-            LOG(debug2) << "Getting hitID: " << cloud_p->points[iHit].rgb << " from hits";
+            LOG(debug2) << "Getting hit index: " << cloud_p->points[iHit].rgb << " from hits";
             track.AddHit(hits.at(cloud_p->points[iHit].rgb));
          }
 
@@ -268,9 +273,9 @@ Int_t AtRANSACN::AtRansac::MinimizeTrack(AtTrack *track)
 
    double p0[4] = {10, 20, 1, 2}; // For the moment those are dummy parameters
 
-   for (const auto &hit : HitArray) {
-      auto pos = hit.GetPosition();
-      gr->SetPoint(hit.GetHitID(), pos.X(), pos.Y(), pos.Z());
+   for (int hitIndex = 0; hitIndex < HitArray.size(); hitIndex++) {
+      auto pos = HitArray[hitIndex].GetPosition();
+      gr->SetPoint(hitIndex, pos.X(), pos.Y(), pos.Z());
    }
 
    ROOT::Fit::Fitter fitter;
