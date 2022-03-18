@@ -328,7 +328,7 @@ void AtGadgetIIMap::SetBinToPadMap()
 {
 
 
-  
+
   fBinToPadTableIt = fBinToPadTable.find(binval);
 
    if (fBinToPadTableIt != fBinToPadTable.end()) {

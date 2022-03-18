@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_full_dp(std::string fileFolder = "data_200_300/") //"dataFull/")//"data_t20_10_20_cov01_dp/")
+void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"data_t20_10_20_cov01_dp/")
 {
 
    // Data histograms
@@ -124,6 +124,17 @@ void plotFit_full_dp(std::string fileFolder = "data_200_300/") //"dataFull/")//"
 
    TH2F *QvsEvent = new TH2F("QvsEvent", "QvsEvent", 1000, -10, 10, 1000, 0, 1000);
 
+   TH2F *fOrbZvsfOrbLength = new TH2F("fOrbZvsfOrbLength", "fOrbZvsfOrbLength", 500,-250,250, 500, 0, 500);
+   TH2F *fOrbZvsEFit = new TH2F("fOrbZvsEFit", "fOrbZvsEFit", 1000,0,200, 1000, 0, 100);
+   TH2F *fOrbLengthvsEFit = new TH2F("fOrbLengthvsEFit", "fOrbLengthvsEFit", 500,0,500, 1000, 0, 100);
+   TH1F *PhiOrbZH = new TH1F("PhiOrbZH", "PhiOrbZH", 1000,0,100);
+   TH2F *fOrbZvsEx = new TH2F("fOrbZvsEx","fOrbZvsEx",200,0,200,100,-10,10);
+   TH2F *fOrbZvsZ = new TH2F("fOrbZvsZ", "fOrbZvsZ", 1000,-200,200,1000,-200,200);
+   TH1F *HQCorrOrbZ = new TH1F("HQCorrOrbZ", "HQCorrOrbZ", 600, -5, 55);
+   TH2F *fOrbZvsAFit = new TH2F("fOrbZvsAFit", "fOrbZvsAFit", 1000,0,200, 720, 0, 180);
+   TH2F *fOrbZvsMomLoss = new TH2F("fOrbZvsMomLoss", "fOrbZvsMomLoss", 1000,0,200, 100, 0, 10);
+   TH2F *fOrbLengthvsMomLoss = new TH2F("fOrbLengthvsMomLoss", "fOrbLengthvsMomLoss", 500,0,500, 100, 0, 10);
+   
    // Cut for gs 75-76 mm vertex
    TCutG *cutGS = new TCutG("CUTGS", 8);
    cutGS->SetVarX("Ang_Ener_Xtr");
@@ -160,7 +171,7 @@ void plotFit_full_dp(std::string fileFolder = "data_200_300/") //"dataFull/")//"
    m_B = m_Be11;
 
    // Find every valid file
-   std::system("find ./data_200_300 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
+   std::system("find ./data_300_301 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
    // >test.txt"
    // std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::ifstream file;
@@ -246,7 +257,13 @@ void plotFit_full_dp(std::string fileFolder = "data_200_300/") //"dataFull/")//"
          std::vector<Float_t> *bNdfVec = 0;
          std::vector<Float_t> *ICEVec = 0;
          std::vector<Float_t> *particleQVec = 0;
+	 std::vector<Float_t> *POCAOrbZVec = 0;
+	 std::vector<Float_t> *firstOrbZVec = 0;
+	 std::vector<Float_t> *phiOrbZVec = 0;
+	 std::vector<Float_t> *lengthOrbZVec = 0;
+	 std::vector<Float_t> *eLossOrbZVec = 0;
 
+	 
          outputTree->SetBranchAddress("EFitVec", &EFitVec);
          outputTree->SetBranchAddress("AFitVec", &AFitVec);
          outputTree->SetBranchAddress("PhiFitVec", &PhiFitVec);
@@ -278,7 +295,13 @@ void plotFit_full_dp(std::string fileFolder = "data_200_300/") //"dataFull/")//"
          outputTree->SetBranchAddress("bNdfVec", &bNdfVec);
          outputTree->SetBranchAddress("ICEVec", &ICEVec);
          outputTree->SetBranchAddress("particleQVec", &particleQVec);
+         outputTree->SetBranchAddress("POCAOrbZVec",&POCAOrbZVec);
+         outputTree->SetBranchAddress("firstOrbZVec",&firstOrbZVec);
+         outputTree->SetBranchAddress("phiOrbZVec",&phiOrbZVec);
+         outputTree->SetBranchAddress("lengthOrbZVec",&lengthOrbZVec);
+	 outputTree->SetBranchAddress("eLossOrbZVec",&eLossOrbZVec);
 
+	 
          ++fileCnt;
 
          Int_t nentries = (Int_t)outputTree->GetEntries();
@@ -405,7 +428,8 @@ void plotFit_full_dp(std::string fileFolder = "data_200_300/") //"dataFull/")//"
 
                                        // 	  	}//IC
 
-                                       // HIC->Fill(IC);
+
+				        // HIC->Fill(IC);
                                        ICMultH->Fill(ICMult);
 
                                        // HQval->Fill(Ex);
@@ -471,6 +495,21 @@ void plotFit_full_dp(std::string fileFolder = "data_200_300/") //"dataFull/")//"
 
                                        QvsTrackLengthH->Fill(QcorrZ, (*trackLengthVec)[index]);
 
+				       //First Orbit
+				       if((*phiOrbZVec)[index]>0.0 && (*phiOrbZVec)[index]<100.0){
+				       fOrbZvsfOrbLength->Fill((*firstOrbZVec)[index]-(*ziniFitXtrVec)[index],(*lengthOrbZVec)[index]);
+				       PhiOrbZH->Fill((*phiOrbZVec)[index]);
+				       fOrbLengthvsEFit->Fill((*lengthOrbZVec)[index],(*EFitVec)[index]);
+				       fOrbZvsEFit->Fill((*firstOrbZVec)[index]-(*ziniFitXtrVec)[index],(*EFitVec)[index]);
+				       fOrbZvsEx->Fill((*firstOrbZVec)[index],QcorrZ);
+				       fOrbZvsZ->Fill((*firstOrbZVec)[index],(*ziniFitXtrVec)[index]);
+				       HQCorrOrbZ->Fill(QcorrZ);
+				       fOrbZvsAFit->Fill((*firstOrbZVec)[index]-(*ziniFitXtrVec)[index],(*AFitVec)[index]);
+				       fOrbZvsMomLoss->Fill((*firstOrbZVec)[index]-(*ziniFitXtrVec)[index],(*eLossOrbZVec)[index]);
+				       fOrbLengthvsMomLoss->Fill((*lengthOrbZVec)[index],(*eLossOrbZVec)[index]);
+				       }
+                                      
+				       
                                        if ((*ziniFitXtrVec)[index] > 0.0 && (*ziniFitXtrVec)[index] < 100.0) {
                                           Int_t zIndex = (Int_t)floor((*ziniFitXtrVec)[index] / 10);
                                           // std::cout<<" zIndex "<<zIndex<<"\n";
@@ -749,7 +788,32 @@ void plotFit_full_dp(std::string fileFolder = "data_200_300/") //"dataFull/")//"
    QvsChi2->Draw("zcol");
    cChi->cd(7);
    particleQH->Draw();
+   //cChi->cd(8);
 
+   TCanvas *cOrb = new TCanvas();
+   cOrb->Divide(3, 4);
+   cOrb->Draw();
+   cOrb->cd(1);
+   PhiOrbZH->Draw();
+   cOrb->cd(2);
+   fOrbLengthvsEFit->Draw();
+   cOrb->cd(3);
+   fOrbZvsEFit->Draw();
+   cOrb->cd(4);
+   fOrbZvsfOrbLength->Draw();
+   cOrb->cd(5);
+   fOrbZvsEx->Draw();
+   cOrb->cd(6);
+   fOrbZvsZ->Draw();
+   cOrb->cd(7);
+   HQCorrOrbZ->Draw();
+   cOrb->cd(8);
+   fOrbZvsAFit->Draw();
+   cOrb->cd(9);
+   fOrbZvsMomLoss->Draw();
+   cOrb->cd(10);
+   fOrbLengthvsMomLoss->Draw();
+   
    TCanvas *c8 = new TCanvas();
    c8->Divide(2, 2);
    c8->Draw();

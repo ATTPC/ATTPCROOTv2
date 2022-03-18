@@ -327,7 +327,7 @@ void AtCore2::ProcessBasicCobo(Int_t coboIdx)
       for (Int_t iAget = 0; iAget < 4; iAget++) {
          for (Int_t iCh = 0; iCh < 68; iCh++) {
 
-	   //std::cout<<" iAget "<<iAget<<" iCh "<<iCh<<"\n";
+            // std::cout<<" iAget "<<iAget<<" iCh "<<iCh<<"\n";
 
             std::vector<int> PadRef = {iCobo, iAsad, iAget, iCh};
             Int_t PadRefNum = fAtMapPtr->GetPadNum(PadRef);
@@ -347,17 +347,15 @@ void AtCore2::ProcessBasicCobo(Int_t coboIdx)
                   pad->SetValidPad(kTRUE);
 
                Int_t *rawadc = basicFrame->GetSample(iAget, iCh);
-               for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
-		 {
-		   pad->SetRawADC(iTb, rawadc[iTb]);
-		   //std::cout<<iTb<<" "<<rawadc[iTb]<<"\n";
-		 }
-		   
+               for (Int_t iTb = 0; iTb < fNumTbs; iTb++) {
+                  pad->SetRawADC(iTb, rawadc[iTb]);
+                  // std::cout<<iTb<<" "<<rawadc[iTb]<<"\n";
+               }
+
                Int_t fpnCh = GetFPNChannel(iCh);
                Double_t adc[512] = {0};
                fPedestalPtr[coboIdx]->SubtractPedestal(fNumTbs, basicFrame->GetSample(iAget, fpnCh), rawadc, adc,
-	                                              fFPNSigmaThreshold);
-              
+                                                       fFPNSigmaThreshold);
 
                for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
                   pad->SetADC(iTb, adc[iTb]);

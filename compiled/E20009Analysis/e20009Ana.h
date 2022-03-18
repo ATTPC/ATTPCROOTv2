@@ -77,6 +77,39 @@
 #include "Math/GenVector/RotationZ.h"
 #include "Math/GenVector/RotationZYX.h"
 
+struct trackSegment{
+  Double_t eLoss;
+  TVector3 iniPos;
+  TVector3 deltaMom;
+  TVector3 deltaPos;
+  Double_t theta;
+  Double_t phi;
+  UInt_t   id;
+  
+  friend std::ostream& operator<<(std::ostream& os, const trackSegment& ts);
+};  
+
+std::ostream& operator<<(std::ostream& os, const trackSegment& ts)
+{
+  os << "\n";
+  os << " Track segment : "<<ts.id<< " - Momentum:  " << ts.deltaMom.X() << " - " << ts.deltaMom.Y() << " - " << ts.deltaMom.Z()<<" - Energy Loss : "<<ts.eLoss<<"\n";
+  os << " =============   - Position :  " << ts.iniPos.X() << " - " << ts.iniPos.Y() << " - " << ts.iniPos.Z()<<" . Mag Dir : "<<ts.iniPos.Mag()<<"\n";
+  os << " =============   - Position direction :  " << ts.deltaPos.X() << " - " << ts.deltaPos.Y() << " - " << ts.deltaPos.Z()<<" . Mag Dir : "<<ts.deltaPos.Mag()<<"\n";
+  os << " =============   - Theta    :  " << ts.theta*TMath::RadToDeg() <<" - Phi : "<<ts.phi*TMath::RadToDeg()<<"\n";
+  return os;
+}
+
+struct firstOrbit
+{
+  Double_t POCA;
+  Double_t Z;
+  Double_t phi;
+  Double_t length;
+  Double_t eLoss;
+}; 
+
+
+
 std::tuple<Double_t, Double_t>
 GetMomFromBrho(Double_t A, Double_t Z, Double_t brho); ///< Returns momentum (in GeV) from Brho assuming M (amu) and Z;
 double
@@ -90,6 +123,6 @@ double GetMaximum(double *adc);
 void ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius);
 void Clusterize3D(AtTrack &track, Float_t distance, Float_t radius);
 void Clusterize(AtTrack &track);
-Double_t GetFirstOrbit(genfit::Track *track, genfit::AbsTrackRep *rep, TVector3 vertex);
+firstOrbit GetFirstOrbit(genfit::Track *track, genfit::AbsTrackRep *rep, TVector3 vertex);
 void ConstructTrack(const genfit::StateOnPlane *prevState, const genfit::StateOnPlane *state,
-                    const genfit::AbsTrackRep *rep, std::vector<TVector3> &track);
+                    const genfit::AbsTrackRep *rep, std::vector<TVector3> &track, std::vector<trackSegment> &segments);

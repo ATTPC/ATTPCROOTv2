@@ -253,6 +253,11 @@ int main(int argc, char *argv[])
    std::vector<Float_t> bNdfVec;
    std::vector<Float_t> ICEVec;
    std::vector<Int_t> particleQVec;
+   std::vector<Float_t> POCAOrbZVec;
+   std::vector<Float_t> firstOrbZVec;
+   std::vector<Float_t> phiOrbZVec;
+   std::vector<Float_t> lengthOrbZVec;
+   std::vector<Float_t> eLossOrbZVec;
 
    TString simFile;
 
@@ -323,7 +328,13 @@ int main(int argc, char *argv[])
    outputTree->Branch("bNdfVec", &bNdfVec);
    outputTree->Branch("ICEVec", &ICEVec);
    outputTree->Branch("particleQVec",&particleQVec);
+   outputTree->Branch("POCAOrbZVec",&POCAOrbZVec);
+   outputTree->Branch("firstOrbZVec",&firstOrbZVec);
+   outputTree->Branch("phiOrbZVec",&phiOrbZVec);
+   outputTree->Branch("lengthOrbZVec",&lengthOrbZVec);
+   outputTree->Branch("eLossOrbZVec",&eLossOrbZVec);
 
+   
    for (auto iFile = 0; iFile < files.size(); ++iFile) {
 
       // fileNameWithPath = dir + filePath + files.at(iFile).Data();
@@ -408,7 +419,12 @@ int main(int argc, char *argv[])
          bNdfVec.clear();
          ICEVec.clear();
 	 particleQVec.clear();
-
+	 POCAOrbZVec.clear();
+	 firstOrbZVec.clear();
+	 phiOrbZVec.clear();
+         lengthOrbZVec.clear();
+	 eLossOrbZVec.clear();
+	 
          std::cout << cGREEN << " Event Number : " << i << cNORMAL << "\n";
 
          Reader1.Next();
@@ -533,6 +549,7 @@ int main(int argc, char *argv[])
                   candTrackPool.push_back(track);
             }
 
+	    
             if (enableMerging)
                fFitter->MergeTracks(&candTrackPool, &junkTrackPool, &mergedTrackPool, fitDirection, simulationConv);
             else {
@@ -644,6 +661,13 @@ int main(int argc, char *argv[])
                TVector3 pos_ext_buff;
                Int_t nSteps = 0;
 
+	       //First orbit
+	       Double_t POCAOrbZ = 1E6;
+               Double_t firstOrbZ = 0.0;
+               Double_t phiOrbZ = 0.0;
+               Double_t lengthOrbZ = 0.0;
+	       Double_t eLossOrbZ = 0.0;
+	       
                try {
 
                   if (fitTrack && fitTrack->hasKalmanFitStatus()) {
@@ -666,24 +690,34 @@ int main(int argc, char *argv[])
                         pVal = KalmanFitStatus->getPVal();
 
                         // fKalmanFitter -> getChiSquNdf(gfTrack, trackRep, bChi2, fChi2, bNdf, fNdf);
-                        Float_t stepXtr = -0.1;
+                        Float_t stepXtr = -0.01;
                         Int_t minCnt = 0;
                         Int_t minCntExt = 0;
 
+			TVector3 pos_ini_buff = pos_res;
+			Double_t length = 0.0;
+			
                         try {
                            for (auto iStep = 0; iStep < 200; ++iStep) {
 
                               trackRep->extrapolateBy(fitState, stepXtr * iStep);
                               mom_ext_buff = fitState.getMom();
                               pos_ext_buff = fitState.getPos();
-                              double distance =
+
+			      length += (pos_ext_buff - pos_ini_buff).Mag();
+				pos_ini_buff = pos_ext_buff;
+			      
+			      double distance =
                                  TMath::Sqrt(pos_ext_buff.X() * pos_ext_buff.X() + pos_ext_buff.Y() * pos_ext_buff.Y());
                               // if (fVerbosityLevel > 2){
                               /*std::cout << cYELLOW << " Extrapolation: Total Momentum : " << mom_ext_buff.Mag()
                                         << " - Position : " << pos_ext_buff.X() << "  " << pos_ext_buff.Y() << "  "
-                                        << pos_ext_buff.Z() << " - distance : " << distance << cNORMAL << "\n";*/
+                                        << pos_ext_buff.Z() << " - distance of approach : " << distance <<" - length : "<<length<< cNORMAL << "\n";*/
                               //}
 
+			      //if(pos_ext_buff.Z()<0)
+			      //break;
+			      
                               if (distance < POCA) {
                                  POCA = distance;
                                  POCAXtr = distance;
@@ -702,8 +736,12 @@ int main(int argc, char *argv[])
                            } // Extrapolation loop
 
                            // Find the first orbit
-			   GetFirstOrbit(fitTrack,trackRep,pos_ext);
-
+			   firstOrbit fOrbit = GetFirstOrbit(fitTrack,trackRep,pos_ext);
+			   POCAOrbZ = fOrbit.POCA;
+			   firstOrbZ = fOrbit.Z;
+			   phiOrbZ = fOrbit.phi;
+			   lengthOrbZ = fOrbit.length;
+			   eLossOrbZ = fOrbit.eLoss;
 
 			   
 			   
@@ -810,7 +848,14 @@ int main(int argc, char *argv[])
                bNdfVec.push_back(bNdf);
 
 	       particleQVec.push_back(particleQ);
-	       
+
+	       POCAOrbZVec.push_back(POCAOrbZ);
+               firstOrbZVec.push_back(firstOrbZ);
+               phiOrbZVec.push_back(phiOrbZ);
+               lengthOrbZVec.push_back(lengthOrbZ);
+	       eLossOrbZVec.push_back(eLossOrbZ);
+
+	         
             } // track loop
 
             outputTree->Fill();
@@ -987,7 +1032,7 @@ int main(int argc, char *argv[])
    return 0;
 }
 
-Double_t GetFirstOrbit(genfit::Track *track, genfit::AbsTrackRep *rep, TVector3 vertex)
+firstOrbit GetFirstOrbit(genfit::Track *track, genfit::AbsTrackRep *rep, TVector3 vertex)
 {
    genfit::KalmanFitterInfo *fi;
    genfit::KalmanFitterInfo *prevFi = 0;
@@ -996,11 +1041,12 @@ Double_t GetFirstOrbit(genfit::Track *track, genfit::AbsTrackRep *rep, TVector3 
    const genfit::MeasuredStateOnPlane *prevFittedState(nullptr);
 
    std::vector<TVector3> xtrTrack;
+   std::vector<trackSegment> segments;
 
    // Loop over hits
    for (unsigned int j = 0; j < numhits; j++) { // loop over all hits in the track
 
-     std::cout<<" Hit number "<<j<<"\n";
+     //std::cout<<" Hit number "<<j<<"\n";
      
       fittedState = nullptr;
 
@@ -1054,13 +1100,11 @@ Double_t GetFirstOrbit(genfit::Track *track, genfit::AbsTrackRep *rep, TVector3 
          continue;
       }
 
-      TVector3 pos = fittedState->getPos();
-      TVector3 mom = fittedState->getMom();
+      TVector3 pos     = fittedState->getPos();
+      TVector3 mom     = fittedState->getMom();
       double charge = fittedState->getCharge();
-      std::cout<<" Position "<<pos.X()<<" "<<pos.Y()<<" "<<pos.Z()<<"\n";
-      std::cout<<" Momentum "<<mom.X()<<" "<<mom.Y()<<" "<<mom.Z()<<" "<<mom.Mag()<<"\n";
 
-      ConstructTrack(prevFittedState,fittedState,rep,xtrTrack);
+      ConstructTrack(prevFittedState,fittedState,rep,xtrTrack,segments);
 
       /*
       unsigned int nMeas = fi->getNumMeasurements();      
@@ -1087,13 +1131,67 @@ Double_t GetFirstOrbit(genfit::Track *track, genfit::AbsTrackRep *rep, TVector3 
       prevFi = fi;
       prevFittedState = fittedState;
 
+      
+
    } // Loop over hits
 
+   //Determination of first orbit
+   Double_t deltaPhi = 0.0;
+   Double_t firstOrbZ = 0.0;
+   Double_t POCAOrbZ = 1E6;
+   Double_t phiOrbZ = 0.0;
+   Double_t lengthOrbZ = 0;
+   Double_t length    = 0;
+   Double_t eLossOrbZ = 0.0;
+   Double_t eLoss  = 0;   
+
+   if(segments.size()>0)
+     eLoss+=segments.at(0).eLoss;
    
+   
+   for(auto iseg=1;iseg<segments.size();++iseg)
+     {
+       
+       auto prevSegment = segments.at(iseg-1);
+       auto segment = segments.at(iseg);
+       //std::cout<< prevSegment;
+       //std::cout<< segment;
+       auto prevSegPos = prevSegment.iniPos;
+       auto dir = segment.iniPos - prevSegment.iniPos;
+       length+= dir.Mag();
+       eLoss+= prevSegment.eLoss; 
+       Double_t phiInc = prevSegment.phi - segment.phi;
+       Double_t distance = TMath::Sqrt(prevSegPos.X() * prevSegPos.X() + prevSegPos.Y() * prevSegPos.Y());
+       phiInc = ( phiInc > 0) ? phiInc : 2.0*TMath::Pi()+phiInc;
+       deltaPhi+=phiInc; 
+              
+       //std::cout<<phiInc*TMath::RadToDeg()<<"    "<<deltaPhi*TMath::RadToDeg()<<"\n";
+       //std::cout<<" Distance to z axis : "<<distance<<"\n";
+       //std::cout<<" Length : "<<length<<"\n";
+       //std::cout<<" Z projection : "<<prevSegPos.Z()<<"\n";
+       //std::cout<<" momLoss "<<momLoss<<"\n";
+       
+       //NB: Find poca after at least half turn.
+       if(distance<POCAOrbZ && deltaPhi>TMath::Pi()){
+	 POCAOrbZ  = distance;
+	 firstOrbZ = prevSegPos.Z(); 
+	 phiOrbZ  = deltaPhi;
+	 lengthOrbZ = length;
+	 eLossOrbZ = eLoss;
+	}
+       
+     }
+   
+   firstOrbit fOrbit={POCAOrbZ,firstOrbZ,phiOrbZ,lengthOrbZ,eLossOrbZ};
+
+   
+   //std::cout<<" POCAOrbZ : "<<POCAOrbZ<<" - firstOrbZ : "<<firstOrbZ<<" - phiOrbZ : "<<phiOrbZ*TMath::RadToDeg()<<" lengthOrbZ : "<<lengthOrbZ<<" - eLossOrbZ : "<<eLossOrbZ<<"\n";
+
+   return fOrbit;  
    
 }
 
-void ConstructTrack(const genfit::StateOnPlane* prevState, const genfit::StateOnPlane* state, const genfit::AbsTrackRep* rep,std::vector<TVector3>& track)
+void ConstructTrack(const genfit::StateOnPlane* prevState, const genfit::StateOnPlane* state, const genfit::AbsTrackRep* rep,std::vector<TVector3>& track, std::vector<trackSegment> &segments)
 {
 
     if (prevState == nullptr || state == nullptr) {
@@ -1105,6 +1203,9 @@ void ConstructTrack(const genfit::StateOnPlane* prevState, const genfit::StateOn
 	  TVector3 mom, mdir,oldMom, oldmDir;
 	  rep->getPosDir(*state, pos, dir);
           rep->getPosDir(*prevState, oldPos, oldDir);
+	  mom = state->getMom();
+	  oldMom = prevState->getMom();
+	  Double_t momLoss = (mom - oldMom).Mag();
 	  
 	  
 	   double distA = (pos-oldPos).Mag();
@@ -1121,16 +1222,25 @@ void ConstructTrack(const genfit::StateOnPlane* prevState, const genfit::StateOn
 	   //Manually calculating phi
 	   Double_t phi = TMath::ATan2(pos.Y()-oldPos.Y(),pos.X()-oldPos.X());
 
-	   std::cout<<" Old Pos "<<oldPos(0)<<" "<<oldPos(1)<<" "<< oldPos(2)<<"\n";
+	   /* std::cout<<" Old Pos "<<oldPos(0)<<" "<<oldPos(1)<<" "<< oldPos(2)<<"\n";
            std::cout<<" Intermediate 1 "<<intermediate1(0)<<" "<<intermediate1(1)<<" "<< intermediate1(2)<<"\n";
 	   std::cout<<" Intermediate 2 "<<intermediate2(0)<<" "<<intermediate2(1)<<" "<< intermediate2(2)<<"\n";
 	   std::cout<<" Pos "<<pos(0)<<" "<<pos(1)<<" "<<pos(2)<<"\n";
 	   std::cout<<" Direction angles : "<<"\n";
 	   std::cout<<cYELLOW<<" Dir : "<<dir.Theta()*TMath::RadToDeg()<<" "<<dir.Phi()*TMath::RadToDeg()<<cNORMAL<<"\n";
 	   std::cout<<cYELLOW<<" DirToMom : "<<dirToMom.Theta()*TMath::RadToDeg()<<" "<<dirToMom.Phi()*TMath::RadToDeg()<<cNORMAL<<"\n";
-	   std::cout<<cYELLOW<<" Phi (ATan2) : "<<phi*TMath::RadToDeg()<<cNORMAL<<"\n";
+	   std::cout<<cYELLOW<<" Phi (ATan2) : "<<phi*TMath::RadToDeg()<<cNORMAL<<"\n";*/
 	   //std::cout<<" Old dir : "<<oldDir.Theta()*TMath::RadToDeg()<<" "<<oldDir.Phi()*TMath::RadToDeg()<<"\n";
+	   // std::cout<<" Momentum Loss "<<1000.0*momLoss<<" MeV "<<"\n";
+
+	   //NB Just for testing (d,p)
+	   Double_t mass = 1.007276466812 * 931.49401 / 1000.0;	   
+	   Double_t ELoss2 = 1000.0 * (TMath::Sqrt(TMath::Power((mom).Mag(), 2) + TMath::Power(mass, 2)) - mass);
+	   Double_t ELoss1 = 1000.0 * (TMath::Sqrt(TMath::Power((oldMom).Mag(), 2) + TMath::Power(mass, 2)) - mass);
+	   Double_t ELoss = ELoss1-ELoss2;
 	   
+	   trackSegment segment = {ELoss,pos,dirToMom,dir,dirToMom.Theta(),dirToMom.Phi(),(UInt_t)segments.size()};
+	   segments.push_back(segment);
 	   
 	   track.push_back(oldPos);
 	   track.push_back(intermediate1);
