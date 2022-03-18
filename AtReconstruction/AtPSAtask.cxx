@@ -88,22 +88,25 @@ void AtPSAtask::Exec(Option_t *opt)
    fEventHArray->Delete();
 
    if (fRawEventArray->GetEntriesFast() == 0) {
-      LOG(debug2) << "Skipping PSA because raw event array is empty";
+      LOG(debug) << "Skipping PSA because raw event array is empty";
       return;
    }
 
    AtRawEvent *rawEvent = (AtRawEvent *)fRawEventArray->At(0);
    AtEvent *event = (AtEvent *)new ((*fEventHArray)[0]) AtEvent();
 
+   LOG(debug) << "Setting AtEvent Parameters";
    event->SetIsGood(rawEvent->IsGood());
    event->SetEventID(rawEvent->GetEventID());
    event->SetTimestamp(rawEvent->GetTimestamp());
    event->SetIsInGate(rawEvent->GetIsExtGate());
-   for (const auto &auxIt : rawEvent->GetAuxPads())
-      event->AddAuxPad(auxIt.second);
 
-   if (!rawEvent->IsGood())
+   LOG(debug) << "Finished setting AtEvent Parameters";
+
+   if (!rawEvent->IsGood()) {
+      LOG(debug) << "Event is not good, skipping PSA";
       return;
+   }
 
    LOG(debug) << "Staring PSA on event Number: " << rawEvent->GetEventID() << " with " << rawEvent->GetNumPads()
               << " valid pads";
@@ -111,4 +114,6 @@ void AtPSAtask::Exec(Option_t *opt)
    fPSA->Analyze(rawEvent, event);
 
    LOG(debug) << "Finished running PSA, copying aux pads";
+   for (const auto &auxIt : rawEvent->GetAuxPads())
+      event->AddAuxPad(auxIt.second);
 }

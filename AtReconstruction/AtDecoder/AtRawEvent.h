@@ -73,7 +73,7 @@ public:
    ULong_t GetEventID() const { return fEventID; }
    Int_t GetNumPads() const { return fPadList.size(); }
    Int_t GetNumAuxPads() const { return fAuxPadMap.size(); }
-   ULong64_t GetTimestamp(int index = 0) const { return fTimestamp.at(index); }
+   ULong64_t GetTimestamp(int index = 0) const { return index < fTimestamp.size() ? fTimestamp.at(index) : 0; }
    const std::vector<ULong64_t> &GetTimestamps() const { return fTimestamp; }
    Bool_t IsGood() const { return fIsGood; }
    Bool_t GetIsExtGate() const { return fIsInGate; }
