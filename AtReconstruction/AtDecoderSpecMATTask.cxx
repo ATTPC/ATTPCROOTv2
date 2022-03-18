@@ -55,6 +55,10 @@ AtDecoderSpecMATTask::AtDecoderSpecMATTask()
 
    fMask = 0xF;
 }
+AtDecoderSpecMATTask::~AtDecoderSpecMATTask()
+{
+   std::cout << cRED << "GOING OUT OF SCOPE!!!!!!!" << std::endl << cNORMAL;
+}
 
 void AtDecoderSpecMATTask::SetPersistence(Bool_t value)
 {
@@ -67,6 +71,7 @@ void AtDecoderSpecMATTask::SetNumTbs(Int_t numTbs)
 }
 void AtDecoderSpecMATTask::AddData(TString filename, Int_t coboIdx)
 {
+   LOG(debug) << "In task adding file " << filename << " to cobo " << coboIdx;
    fDataList[coboIdx].push_back(filename);
 }
 void AtDecoderSpecMATTask::SetData(Int_t value)
@@ -175,10 +180,14 @@ InitStatus AtDecoderSpecMATTask::Init()
    for (Int_t iFile = 0; iFile < fDataList[0].size(); iFile++)
       fDecoder->AddData(fDataList[0].at(iFile));
 
+   LOG(debug) << "After adding data filename is: " << fDecoder->GetFileName();
+
    if (fIsPseudoTopology)
       fDecoder->SetPseudoTopologyFrame(fMask, kFALSE);
 
    fDecoder->SetData(fDataNum);
+
+   LOG(debug) << "After setting data filename is: " << fDecoder->GetFileName();
 
    if (fExternalNumTbs)
       fDecoder->SetNumTbs(fNumTbs);
@@ -213,6 +222,7 @@ InitStatus AtDecoderSpecMATTask::Init()
       fDecoder->SetMap(fMap);
 
    ioMan->Register("AtRawEvent", "AtTPC", fRawEventArray, fIsPersistence);
+   LOG(debug) << "At end of init filename is: " << fDecoder->GetFileName();
    return kSUCCESS;
 }
 
@@ -233,11 +243,8 @@ void AtDecoderSpecMATTask::SetParContainers()
 
 void AtDecoderSpecMATTask::Exec(Option_t *opt)
 {
-   //#ifdef TASKTIMER
-   //  STDebugLogger::Instance() -> TimerStart("DecoderTask");
-   //#endif
    fRawEventArray->Delete();
-   std::cout << "Start of SpecMAT decoder task for event" << fEventID + 1 << std::endl;
+   std::cout << "Start of SpecMAT decoder task for event " << fEventID + 1 << std::endl;
    if (fRawEvent == nullptr)
       fRawEvent = fDecoder->GetRawEvent(fEventID++);
    fInternalID++;
@@ -248,9 +255,8 @@ void AtDecoderSpecMATTask::Exec(Option_t *opt)
    new ((*fRawEventArray)[0]) AtRawEvent(*fRawEvent);
 
    fRawEvent = nullptr;
-   //#ifdef TASKTIMER
-   //  STDebugLogger::Instance() -> TimerStop("DecoderTask");
-   //#endif
+
+   LOG(debug) << "Finished unpacking event";
 }
 
 Int_t AtDecoderSpecMATTask::ReadEvent(Int_t eventID)

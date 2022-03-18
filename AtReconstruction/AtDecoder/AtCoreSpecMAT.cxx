@@ -7,6 +7,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include "FairLogger.h"
 
 #include "AtCoreSpecMAT.h"
 
@@ -49,6 +50,7 @@ AtCoreSpecMAT::AtCoreSpecMAT(TString filename, Int_t numTbs, Int_t windowNumTbs,
 
 AtCoreSpecMAT::~AtCoreSpecMAT()
 {
+   std::cout << cRED << "CORE GOING OUT OF SCOPE!!!!!!!" << std::endl << cNORMAL;
    /*for(Int_t i=0;i<10;i++)
    {
      delete fDecoderPtr[i];
@@ -170,7 +172,7 @@ Bool_t AtCoreSpecMAT::SetData(Int_t value)
 
    if (fIsSeparatedData) {
       for (Int_t iCobo = 1; iCobo < fNumCobo; iCobo++) {
-         if (fPedestalPtr[iCobo] == NULL)
+         if (fPedestalPtr[iCobo] == nullptr)
             fPedestalPtr[iCobo] = new AtPedestal();
 
          fIsData &= fDecoderPtr[iCobo]->SetData(value);
@@ -190,7 +192,7 @@ Bool_t AtCoreSpecMAT::SetData(Int_t value)
    }
 
    fTargetFrameID = -1;
-   memset(fCurrentEventID, 0, sizeof(Int_t) * 40);
+   memset(fCurrentEventID, 0, sizeof(Int_t) * 16);
 
    return fIsData;
 }
@@ -219,7 +221,7 @@ void AtCoreSpecMAT::SetFPNPedestal(Double_t sigmaThreshold)
 {
    fFPNSigmaThreshold = sigmaThreshold;
 
-   std::cout << "== [AtCore] Using FPN pedestal is set!" << std::endl;
+   std::cout << "== [AtCoreSpecMAT] Using FPN pedestal is set!" << std::endl;
 }
 
 void AtCoreSpecMAT::SetIsPadPlaneCobo(Bool_t *IsPadPlane)
@@ -242,8 +244,9 @@ void AtCoreSpecMAT::GetFPNChannelsFromROOTFILE(Long64_t eventID)
    std::vector<int> ChannelsFPNsc = {43, 44, 46, 47}; // fpn channels for scintillators
    Int_t Nr_fpn_found{0};
 
+   LOG(debug) << "Opening " << fFileName;
    TFile *RawDataTreeFile = new TFile(fFileName, "READ");
-   if (!RawDataTreeFile) {
+   if (RawDataTreeFile->IsZombie()) {
       std::cout << cRED
                 << "[AtCoreSpecMAT] File containing tree not found, check if "
                    "input file name is correct ("
@@ -256,6 +259,8 @@ void AtCoreSpecMAT::GetFPNChannelsFromROOTFILE(Long64_t eventID)
                 << "[AtCoreSpecMAT] File does not contain raw data ttree (must "
                    "be named EventDataTree)"
                 << cNORMAL << std::endl;
+      std::cout << "Input file " << fFileName << " contains: " << std::endl;
+      RawDataTreeFile->ls();
       return;
    }
 
@@ -310,7 +315,7 @@ void AtCoreSpecMAT::ProcessROOTFILE(Long64_t eventID)
    fRawEventPtr->SetEventID(eventID);
 
    TFile *RawDataTreeFile = new TFile(fFileName, "READ");
-   if (!RawDataTreeFile) {
+   if (RawDataTreeFile->IsZombie()) {
       std::cout << cRED
                 << "[AtCoreSpecMAT] File containing tree not found, check if "
                    "input file name is correct ("

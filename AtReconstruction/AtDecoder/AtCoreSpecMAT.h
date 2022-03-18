@@ -90,6 +90,11 @@ public:
    TString GetDataName(Int_t index, Int_t coboIdx = 0);
    void SetNumTbs(Int_t value);
    void SetFPNPedestal(Double_t sigmaThreshold = 5);
+   void SetPseudoTopologyFrame(Int_t asadMask, Bool_t check = kFALSE);
+   void SetAuxChannel(std::vector<Int_t> AuxCh);
+   void SetNumCobo(Int_t numCobo);
+   void SetIsPadPlaneCobo(Bool_t *IsPadPlane); // Sets whether cobo belongs reads out padplane
+                                               // signals or scintillator signals
 
    /* old map style
    Bool_t SetAtTpcMap(Char_t const *lookup);
@@ -108,13 +113,8 @@ public:
    AtRawEvent *GetRawEvent(Long64_t eventID = -1); ///< Returns STRawEvent object filled with the data
    Int_t GetEventID();                             ///< Returns the current event ID
    Int_t GetNumTbs(Int_t coboIdx = 0);             ///< Returns the number of time buckets of the data
-
    Int_t GetFPNChannel(Int_t chIdx);
-   void SetPseudoTopologyFrame(Int_t asadMask, Bool_t check = kFALSE);
-   void SetAuxChannel(std::vector<Int_t> AuxCh);
-   void SetNumCobo(Int_t numCobo);
-   void SetIsPadPlaneCobo(Bool_t *IsPadPlane); // Sets whether cobo belongs reads out padplane
-                                               // signals or scintillator signals
+   TString GetFileName() const { return fFileName; }
 
    ClassDef(AtCoreSpecMAT, 2);
 };

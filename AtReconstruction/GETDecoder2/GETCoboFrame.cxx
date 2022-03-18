@@ -1,6 +1,6 @@
 #include "GETCoboFrame.h"
 
-GETCoboFrame::GETCoboFrame()
+GETCoboFrame::GETCoboFrame() : fNumFrames(0)
 {
    Clear();
 }
