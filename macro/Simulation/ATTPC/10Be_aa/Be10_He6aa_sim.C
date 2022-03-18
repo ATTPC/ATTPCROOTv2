@@ -63,12 +63,12 @@ void Be10_He6aa_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    // Double_t kBeam = 0.222;
    Double_t BExcEner = 0.0;
    Double_t Bmass = 10.013533818; // Mass in amu
-   Double_t NomEnergy = 38; // Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is
+   Double_t NomEnergy = 10; // Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is
                             // determined with momentum). TODO: Change this to the energy after the IC
 
    Double_t px = 0.000 / a;
    Double_t py = 0.000 / a;   // Y-Momentum / per nucleon!!!!!!
-   Double_t pz = 0.86515 / a; // Z-Momentum / per nucleon!!!!!!
+   Double_t pz = 1.369 / a;   // Z-Momentum / per nucleon!!!!!!
    // Double_t pz = sqrt( pow(kBeam * a / 1000.0 + Bmass,2) - pow(Bmass,2) )/a;  // Z-Momentum / per nucleon!!!!!!
 
    AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy, -1);
