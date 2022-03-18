@@ -72,7 +72,7 @@ public:
    /// Constructor
    AtDecoderSpecMATTask();
    /// Destructor
-   ~AtDecoderSpecMATTask();
+   ~AtDecoderSpecMATTask() = default;
 
    /// Setting the number of time buckets used when taking data
    void SetNumTbs(Int_t numTbs);

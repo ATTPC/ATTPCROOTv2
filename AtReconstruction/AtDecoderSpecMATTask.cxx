@@ -55,10 +55,6 @@ AtDecoderSpecMATTask::AtDecoderSpecMATTask()
 
    fMask = 0xF;
 }
-AtDecoderSpecMATTask::~AtDecoderSpecMATTask()
-{
-   std::cout << cRED << "GOING OUT OF SCOPE!!!!!!!" << std::endl << cNORMAL;
-}
 
 void AtDecoderSpecMATTask::SetPersistence(Bool_t value)
 {

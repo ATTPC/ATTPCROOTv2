@@ -50,7 +50,6 @@ AtCoreSpecMAT::AtCoreSpecMAT(TString filename, Int_t numTbs, Int_t windowNumTbs,
 
 AtCoreSpecMAT::~AtCoreSpecMAT()
 {
-   std::cout << cRED << "CORE GOING OUT OF SCOPE!!!!!!!" << std::endl << cNORMAL;
    /*for(Int_t i=0;i<10;i++)
    {
      delete fDecoderPtr[i];
@@ -82,7 +81,7 @@ void AtCoreSpecMAT::Initialize()
    fNumTbs = 512;
 
    fTargetFrameID = -1;
-   memset(fCurrentEventID, 0, sizeof(Int_t) * 40);
+   memset(fCurrentEventID, 0, sizeof(Int_t) * 16);
 
    fIsSeparatedData = kFALSE;
 
