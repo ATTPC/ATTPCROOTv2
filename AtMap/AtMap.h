@@ -14,6 +14,9 @@
 #include "TObject.h"
 #include "TROOT.h"
 #include "TMath.h"
+#include "Math/Point2D.h"
+
+#include "PadReference.h"
 
 #include <unordered_map>
 #include <map>
@@ -21,27 +24,6 @@
 
 class TH2Poly;
 class TXMLNode;
-
-// The definition of this struct, and the operator overloads have to
-// be before AtMap where an unordered_map using this as a key is
-// instatiated.
-struct PadReference {
-   Int_t cobo;
-   Int_t asad;
-   Int_t aget;
-   Int_t ch;
-};
-bool operator<(const PadReference &l, const PadReference &r);
-bool operator==(const PadReference &l, const PadReference &r);
-namespace std {
-template <>
-struct hash<PadReference> {
-   inline size_t operator()(const PadReference &x) const
-   {
-      return x.ch + x.aget * 100 + x.asad * 10000 + x.cobo * 1000000;
-   }
-};
-} // namespace std
 
 class AtMap : public TNamed {
 public:
@@ -53,29 +35,30 @@ protected:
 
    multiarray AtPadCoord;
    multiarray *fAtPadCoordPtr;
-   Int_t fPadInd;
-   Bool_t kIsParsed;
-   Bool_t kGUIMode;
-   Bool_t kDebug;
+   Bool_t kIsParsed = false;
+   Bool_t kGUIMode = false;
+   Bool_t kDebug = false;
    std::map<Int_t, AtMap::InhibitType> fIniPads;
-   TCanvas *cAtTPCPlane;
-   TH2Poly *hPlane;
+   TCanvas *fPadPlaneCanvas; // Raw pointer because owned by gROOT
+   TH2Poly *fPadPlane;       // Raw pointer because owned by gDirectory
    UInt_t fNumberPads;
-   std::unordered_map<PadReference, int> AtTPCPadMap;
-   std::map<int, PadReference> AtTPCPadMapInverse;
+
+   std::unordered_map<PadReference, int> fPadMap;
+   std::map<int, PadReference> fPadMapInverse;
    std::unordered_map<PadReference, std::string> fAuxPadMap;
-   std::map<int, int> AtTPCPadSize;
+   std::map<int, int> fPadSizeMap;
 
    void inhibitPad(Int_t padNum, AtMap::InhibitType type);
+   void drawPadPlane();
 
 public:
    AtMap();
-   ~AtMap();
+   ~AtMap() = default;
 
    virtual void Dump() = 0;
-   virtual void GenerateAtTpc() = 0;
-   virtual std::vector<Float_t> CalcPadCenter(Int_t PadRef) = 0; // units mm
-   virtual TH2Poly *GetAtTpcPlane() = 0;
+   virtual void GeneratePadPlane() = 0;
+   virtual ROOT::Math::XYPoint CalcPadCenter(Int_t PadRef) = 0; // units mm
+   virtual TH2Poly *GetPadPlane() = 0;
    virtual Int_t BinToPad(Int_t binval) = 0;
 
    UInt_t GetNumPads() const { return fNumberPads; }
@@ -104,7 +87,7 @@ public:
    // will inhibit the pad. kLowGain and kXTalk will be kXTalk
    enum InhibitType : char { kNone = 0, kLowGain = 1, kXTalk = 2, kTotal = 3 };
 
-   ClassDefOverride(AtMap, 4);
+   ClassDefOverride(AtMap, 5);
 };
 
 std::ostream &operator<<(std::ostream &os, const AtMap::InhibitType &t);

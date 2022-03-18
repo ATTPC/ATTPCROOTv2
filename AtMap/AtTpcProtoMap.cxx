@@ -18,18 +18,15 @@
 #define cYELLOW "\033[1;33m"
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
+using XYPoint = ROOT::Math::XYPoint;
 
-ClassImp(AtTpcProtoMap)
+ClassImp(AtTpcProtoMap);
 
-   AtTpcProtoMap::AtTpcProtoMap()
+AtTpcProtoMap::AtTpcProtoMap() : AtMap()
 {
-
    kIsFileSet = kFALSE;
    kIsGenerated = kFALSE;
    kIsProtoMapSet = kFALSE;
-   hProto = new TH2Poly();
-   hProto->SetName("ATTPC_Proto");
-   hProto->SetTitle("ATTPC_Proto");
 }
 
 AtTpcProtoMap::~AtTpcProtoMap() {}
@@ -52,7 +49,7 @@ Bool_t AtTpcProtoMap::SetGeoFile(TString geofile)
    return kTRUE;
 }
 
-void AtTpcProtoMap::GenerateAtTpc()
+void AtTpcProtoMap::GeneratePadPlane()
 {
 
    if (f->IsZombie()) {
@@ -70,7 +67,7 @@ void AtTpcProtoMap::GenerateAtTpc()
       TMultiGraph *obj = (TMultiGraph *)key->ReadObj();
       if (obj->InheritsFrom("TMultiGraph")) {
          mg = (TMultiGraph *)obj;
-         bin = hProto->AddBin(mg);
+         bin = fPadPlane->AddBin(mg);
          // std::cout<<bin<<std::endl;
       }
    }
@@ -78,7 +75,7 @@ void AtTpcProtoMap::GenerateAtTpc()
    kIsGenerated = kTRUE;
 }
 
-TH2Poly *AtTpcProtoMap::GetAtTpcPlane()
+TH2Poly *AtTpcProtoMap::GetPadPlane()
 {
    // This method must be called after GenerateAtTPC()
 
@@ -96,13 +93,10 @@ TH2Poly *AtTpcProtoMap::GetAtTpcPlane()
       return NULL;
    }
 
-   if (kGUIMode) {
-      cAtTPCPlane = new TCanvas("cAtTPCPlane", "cAtTPCPlane", 1000, 1000);
-      gStyle->SetPalette(1);
-      hProto->Draw("Lcol");
-   }
+   if (kGUIMode)
+      drawPadPlane();
 
-   return hProto;
+   return fPadPlane;
 }
 
 TH2Poly *AtTpcProtoMap::GetAtTpcPlane(TString TH2Poly_name)
@@ -112,33 +106,27 @@ TH2Poly *AtTpcProtoMap::GetAtTpcPlane(TString TH2Poly_name)
       std::cout
          << " AtTPC Proto Map : No geometry file found! Please set the geometry file first via SetGeoFile method "
          << std::endl;
-      return NULL;
+      return nullptr;
    }
-   hProto = (TH2Poly *)f->Get(TH2Poly_name.Data());
-   // cAtTPCPlane = new TCanvas("cAtTPCPlane","cAtTPCPlane",1000,1000);
-   // gStyle->SetPalette(1);
-   // hProto->Draw("Lcol");
-   return hProto;
+   fPadPlane = (TH2Poly *)f->Get(TH2Poly_name.Data());
+   return fPadPlane;
 }
 
-std::vector<Float_t> AtTpcProtoMap::CalcPadCenter(Int_t PadRef)
+XYPoint AtTpcProtoMap::CalcPadCenter(Int_t PadRef)
 {
-
-   std::vector<Float_t> PadCenter = {-9999, -9999};
-   PadCenter.reserve(2);
 
    if (!kIsProtoMapSet) {
       std::cout << " AtTPC Proto Map : No map file for prototype found! Please set the geometry file first via the "
                    "SetProtoMap method "
                 << std::endl;
-      return PadCenter;
+      return XYPoint(-9999, -9999);
    }
 
    if (f->IsZombie()) {
       std::cout
          << " AtTPC Proto Map : No geometry file found! Please set the geometry file first via the SetGeoFile method "
          << std::endl;
-      return PadCenter;
+      return XYPoint(-9999, -9999);
    }
 
    if (PadRef != -1) { // Boost multi_array crashes with a negative index
@@ -148,17 +136,17 @@ std::vector<Float_t> AtTpcProtoMap::CalcPadCenter(Int_t PadRef)
       if (kIs) {
          if (kDebug)
             std::cerr << " AtTpcProtoMap::CalcPadCenter - Pad  not found - CoboID : " << PadRef << std::endl;
-         return PadCenter;
+         return XYPoint(-9999, -9999);
       }
 
-      PadCenter = (*its).second;
-      return PadCenter;
+      auto padCenter = (*its).second;
+      return XYPoint(padCenter[0], padCenter[1]);
 
    } else {
 
       if (kDebug)
          std::cout << " AtTpcProtoMap::CalcPadCenter Error : Pad not found" << std::endl;
-      return PadCenter;
+      return XYPoint(-9999, -9999);
    }
 }
 
@@ -173,7 +161,7 @@ Bool_t AtTpcProtoMap::SetProtoMap(TString file)
    Int_t bin_num = -1;
    std::vector<Float_t> PadCoord;
    PadCoord.reserve(2);
-   InProtoMap = new std::ifstream(file.Data());
+   auto InProtoMap = std::make_unique<std::ifstream>(file.Data());
 
    if (InProtoMap->fail()) {
       std::cout << " = AtTpcProtoMap::SetProtoMap : No Prototype Map file found! Please, check the path. Current :"

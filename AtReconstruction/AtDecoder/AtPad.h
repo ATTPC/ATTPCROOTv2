@@ -17,7 +17,7 @@
 
 using rawTrace = std::array<Int_t, 512>;
 using trace = std::array<Double_t, 512>;
-using XYPoint = ROOT::Math::XYPointF;
+using XYPoint = ROOT::Math::XYPoint;
 
 class AtPad : public TObject {
 protected:

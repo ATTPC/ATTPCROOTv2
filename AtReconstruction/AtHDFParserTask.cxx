@@ -139,7 +139,7 @@ void AtHDFParserTask::setDimensions(AtPad *pad)
 {
    auto PadCenterCoord = fAtMapPtr->CalcPadCenter(pad->GetPadNum());
    Int_t pSizeID = fAtMapPtr->GetPadSize(pad->GetPadNum());
-   pad->SetPadCoord({PadCenterCoord[0], PadCenterCoord[0]});
+   pad->SetPadCoord(PadCenterCoord);
    pad->SetSizeID(pSizeID);
 }
 void AtHDFParserTask::Exec(Option_t *opt)

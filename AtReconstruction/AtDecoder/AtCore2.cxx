@@ -193,9 +193,7 @@ void AtCore2::ProcessCobo(Int_t coboIdx)
 
             PadReference PadRef = {iCobo, iAsad, iAget, iCh};
             Int_t PadRefNum = fMap->GetPadNum(PadRef);
-            std::vector<Float_t> PadCenterCoord;
-            PadCenterCoord.reserve(2);
-            PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
+            auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
             Bool_t IsInhibited = fMap->IsInhibited(PadRefNum);
 
             if (PadRefNum != -1 && !fMap->IsInhibited(PadRefNum)) {
@@ -206,7 +204,7 @@ void AtCore2::ProcessCobo(Int_t coboIdx)
                   pad = fRawEventPtr->AddPad(PadRefNum);
                }
 
-               pad->SetPadCoord({PadCenterCoord[0], PadCenterCoord[1]});
+               pad->SetPadCoord(PadCenterCoord);
                if (PadRefNum == -1)
                   pad->SetValidPad(kFALSE);
                else
@@ -252,9 +250,7 @@ void AtCore2::ProcessBasicCobo(Int_t coboIdx)
 
          PadReference PadRef = {iCobo, iAsad, iAget, iCh};
          Int_t PadRefNum = fMap->GetPadNum(PadRef);
-         std::vector<Float_t> PadCenterCoord;
-         PadCenterCoord.reserve(2);
-         PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
+         auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
          Bool_t IsInhibited = fMap->IsInhibited(PadRefNum);
 
          if (PadRefNum != -1 && !fMap->IsInhibited(PadRefNum)) {
@@ -266,7 +262,7 @@ void AtCore2::ProcessBasicCobo(Int_t coboIdx)
                pad = fRawEventPtr->AddPad(PadRefNum);
             }
 
-            pad->SetPadCoord({PadCenterCoord[0], PadCenterCoord[1]});
+            pad->SetPadCoord(PadCenterCoord);
             if (PadRefNum == -1)
                pad->SetValidPad(kFALSE);
             else
@@ -463,9 +459,7 @@ void AtCore2::ProcessLayeredFrame(GETLayeredFrame *layeredFrame)
 
             PadReference PadRef = {iCobo, iAsad, iAget, iCh};
             Int_t PadRefNum = fMap->GetPadNum(PadRef);
-            std::vector<Float_t> PadCenterCoord;
-            PadCenterCoord.reserve(2);
-            PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
+            auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
 
             if (PadRefNum != -1) {
                AtPad *pad;
@@ -475,7 +469,7 @@ void AtCore2::ProcessLayeredFrame(GETLayeredFrame *layeredFrame)
                   pad = fRawEventPtr->AddPad(PadRefNum);
                }
 
-               pad->SetPadCoord({PadCenterCoord[0], PadCenterCoord[0]});
+               pad->SetPadCoord(PadCenterCoord);
 
                if (PadRefNum == -1)
                   pad->SetValidPad(kFALSE);
@@ -513,9 +507,7 @@ void AtCore2::ProcessBasicFrame(GETBasicFrame *basicFrame)
 
          PadReference PadRef = {iCobo, iAsad, iAget, iCh};
          Int_t PadRefNum = fMap->GetPadNum(PadRef);
-         std::vector<Float_t> PadCenterCoord;
-         PadCenterCoord.reserve(2);
-         PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
+         auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
 
          if (PadRefNum != -1) {
             // AtPad *pad = new ((*fPadArray)[PadRefNum]) AtPad(PadRefNum);
@@ -528,7 +520,7 @@ void AtCore2::ProcessBasicFrame(GETBasicFrame *basicFrame)
                pad = fRawEventPtr->AddPad(PadRefNum);
             }
 
-            pad->SetPadCoord({PadCenterCoord[0], PadCenterCoord[1]});
+            pad->SetPadCoord(PadCenterCoord);
 
             if (PadRefNum == -1)
                pad->SetValidPad(kFALSE);

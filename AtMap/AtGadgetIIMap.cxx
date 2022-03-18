@@ -12,27 +12,23 @@
 #define cYELLOW "\033[1;33m"
 #define cNORMAL "\033[0m"
 
-AtGadgetIIMap::AtGadgetIIMap()
+using XYPoint = ROOT::Math::XYPoint;
+
+AtGadgetIIMap::AtGadgetIIMap() : AtMap()
 {
    AtPadCoord.resize(boost::extents[1024][4][2]);
-   kIsParsed = 0;
-   kGUIMode = 0;
-   kDebug = 0;
    std::fill(AtPadCoord.data(), AtPadCoord.data() + AtPadCoord.num_elements(), 0);
    std::cout << " GADGETII Map initialized " << std::endl;
    std::cout << " GADGETII Pad Coordinates container initialized " << std::endl;
    SetBinToPadMap();
-   fPadInd = 0;
    fNumberPads = 1012;
-   fIniPads.clear();
-   hPlane = new TH2Poly();
 }
 
 AtGadgetIIMap::~AtGadgetIIMap() {}
 
 void AtGadgetIIMap::Dump() {}
 
-void AtGadgetIIMap::GenerateAtTpc()
+void AtGadgetIIMap::GeneratePadPlane()
 {
    Float_t pad_size = 2.2;      // mm
    Float_t pad_spacing = 0.001; // mm
@@ -203,14 +199,14 @@ void AtGadgetIIMap::GenerateAtTpc()
 
    std::cout << " Total pads " << pad_num << "\n";
 
-   fPadInd = pad_num;
-
-   for (auto ipad = 0; ipad < fPadInd; ++ipad) {
+   // fPadInd = pad_num;
+   kIsParsed = true;
+   for (auto ipad = 0; ipad < pad_num; ++ipad) {
       Double_t px[] = {AtPadCoord[ipad][0][0], AtPadCoord[ipad][1][0], AtPadCoord[ipad][2][0], AtPadCoord[ipad][3][0],
                        AtPadCoord[ipad][0][0]};
       Double_t py[] = {AtPadCoord[ipad][0][1], AtPadCoord[ipad][1][1], AtPadCoord[ipad][2][1], AtPadCoord[ipad][3][1],
                        AtPadCoord[ipad][0][1]};
-      hPlane->AddBin(5, px, py);
+      fPadPlane->AddBin(5, px, py);
    }
 
    // for(auto isec = 0; isec < 2; ++isec){
@@ -222,7 +218,7 @@ void AtGadgetIIMap::GenerateAtTpc()
    //	      Double_t py[] = {AtPadCoord[ipad][0][1]*TMath::Power(-1,isec), AtPadCoord[ipad][1][1]*TMath::Power(-1,isec),
    // AtPadCoord[ipad][2][1]*TMath::Power(-1,isec), AtPadCoord[ipad][3][1]*TMath::Power(-1,isec),
    //			       AtPadCoord[ipad][0][1]*TMath::Power(-1,isec)};
-   //	      hPlane->AddBin(5, px, py);
+   //	      fPadPlane->AddBin(5, px, py);
    //	   }
    // }
    //
@@ -236,61 +232,53 @@ void AtGadgetIIMap::GenerateAtTpc()
    // Double_t py[] = {AtPadCoord[ipad][0][1]*TMath::Power(-1,isec+1), AtPadCoord[ipad][1][1]*TMath::Power(-1,isec+1),
    // AtPadCoord[ipad][2][1]*TMath::Power(-1,isec+1), AtPadCoord[ipad][3][1]*TMath::Power(-1,isec+1),
    //					       AtPadCoord[ipad][0][1]*TMath::Power(-1,isec+1)};
-   //			      hPlane->AddBin(5, px, py);
+   //			      fPadPlane->AddBin(5, px, py);
    //			   }
    //		}
    //
 }
 
-std::vector<Float_t> AtGadgetIIMap::CalcPadCenter(Int_t PadRef)
+XYPoint AtGadgetIIMap::CalcPadCenter(Int_t PadRef)
 {
 
-   std::vector<Float_t> PadCenter = {-9999, -9999};
-   PadCenter.reserve(2);
-
-   if (!fPadInd || !kIsParsed) {
+   if (!kIsParsed) {
 
       std::cout << " AtTpcMap::CalcPadCenter Error : Pad plane has not been generated or parsed " << std::endl;
-      return PadCenter;
+      return XYPoint(-9999, 9999);
    }
 
    if (PadRef != -1) { // Boost multi_array crashes with a negative index
 
       Float_t x = (AtPadCoord[PadRef][0][0] + AtPadCoord[PadRef][1][0]) / 2.0;
-      PadCenter[0] = x;
       Float_t y = (AtPadCoord[PadRef][1][1] + AtPadCoord[PadRef][2][1]) / 2.0;
-      PadCenter[1] = y;
-      return PadCenter;
+      return XYPoint(x, y);
 
    } else {
 
       if (kDebug)
          std::cout << " AtTpcMap::CalcPadCenter Error : Pad not found" << std::endl;
-      return PadCenter;
+      return XYPoint(-9999, 9999);
    }
 }
 
-TH2Poly *AtGadgetIIMap::GetAtTpcPlane()
+TH2Poly *AtGadgetIIMap::GetPadPlane()
 {
 
-   if (fPadInd == 0) {
+   if (!kIsParsed) {
 
       std::cout << " AtGadgetIIMap::GetAtTPCPlane Error : Pad plane has not been generated - Exiting... " << std::endl;
 
-      return NULL;
+      return nullptr;
    }
 
-   hPlane->SetName("GADGETII_Plane");
-   hPlane->SetTitle("GADGETII_Plane");
-   hPlane->ChangePartition(500, 500);
+   fPadPlane->SetName("GADGETII_Plane");
+   fPadPlane->SetTitle("GADGETII_Plane");
+   fPadPlane->ChangePartition(500, 500);
 
-   if (kGUIMode) {
-      cAtTPCPlane = new TCanvas("cAtTPCPlane", "cAtTPCPlane", 1000, 1000);
-      gStyle->SetPalette(1);
-      hPlane->Draw("COL L");
-   }
+   if (kGUIMode)
+      drawPadPlane();
 
-   return hPlane;
+   return fPadPlane;
 }
 
 void AtGadgetIIMap::SetBinToPadMap()

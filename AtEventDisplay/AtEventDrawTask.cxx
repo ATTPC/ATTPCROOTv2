@@ -954,9 +954,9 @@ void AtEventDrawTask::DrawPadPlane()
       return;
    }
 
-   fAtMapPtr->GenerateAtTpc();
+   fAtMapPtr->GeneratePadPlane();
    // fAtMapPtr->SetGUIMode();// This method does not need to be called since it generates the Canvas we do not want
-   fPadPlane = fAtMapPtr->GetAtTpcPlane();
+   fPadPlane = fAtMapPtr->GetPadPlane();
    fCvsPadPlane->cd();
    // fPadPlane -> Draw("COLZ L0"); //0  == bin lines adre not drawn
    fPadPlane->Draw("COL L0");

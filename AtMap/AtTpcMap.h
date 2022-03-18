@@ -21,12 +21,10 @@ public:
    ~AtTpcMap();
 
    virtual void Dump() override;
-   virtual void GenerateAtTpc() override;
-   virtual std::vector<Float_t> CalcPadCenter(Int_t PadRef) override;
-   virtual TH2Poly *GetAtTpcPlane() override;
+   virtual void GeneratePadPlane() override;
+   virtual ROOT::Math::XYPoint CalcPadCenter(Int_t PadRef) override;
+   virtual TH2Poly *GetPadPlane() override;
    virtual Int_t BinToPad(Int_t binval) override { return binval - 1; };
-
-   Int_t fill_coord(int pindex, float padxoff, float padyoff, float triside, float fort);
 
    /*  friend ostream & operator << (ostream& out, const AtTpcMap& p){
 
@@ -46,6 +44,9 @@ public:
        }*/
 
    ClassDefOverride(AtTpcMap, 1);
+
+protected:
+   Int_t fill_coord(int pindex, float padxoff, float padyoff, float triside, float fort);
 };
 
 #endif

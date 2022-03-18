@@ -350,15 +350,13 @@ void AtCoreSpecMAT::ProcessROOTFILE(Long64_t eventID)
          // std::cout << ", corresponding to Cobo: " << PadRef[0] << "   Asad: " <<
          // PadRef[1] << "   Aget: "  << PadRef[2] << "   Ch: "  << PadRef[3] <<
          // std::endl;
-         std::vector<Float_t> PadCenterCoord;
-         PadCenterCoord.reserve(2);
-         PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
+         auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
          Bool_t IsInhibited = fMap->IsInhibited(PadRefNum);
 
          if (PadRefNum != -1 && !IsInhibited) {
             // AtPad *pad = new ((*fPadArray)[PadRefNum]) AtPad(PadRefNum);
             AtPad *pad = fRawEventPtr->AddPad(PadRefNum);
-            pad->SetPadCoord({PadCenterCoord[0], PadCenterCoord[1]});
+            pad->SetPadCoord(PadCenterCoord);
 
             // std::cout << "pad coordinates are (" << PadCenterCoord[0] << ", " <<
             // PadCenterCoord[1] << ")" << std::endl;

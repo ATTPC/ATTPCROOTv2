@@ -95,8 +95,8 @@ void AtPulseTask::getPadPlaneAndCreatePadHist()
    if (fMap == nullptr)
       LOG(fatal) << "The detector map was not set in AtPulseLineTask!";
 
-   fMap->GenerateAtTpc();
-   fPadPlane = fMap->GetAtTpcPlane();
+   fMap->GeneratePadPlane();
+   fPadPlane = fMap->GetPadPlane();
 
    char buff[100];
    eleAccumulated = new TH1F *[fMap->GetNumPads() + 1];
@@ -231,7 +231,6 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
    TAxis *axis = eleAccumulated[0]->GetXaxis();
    Double_t binWidth = axis->GetBinWidth(10);
 
-   std::vector<Float_t> PadCenterCoord;
    Int_t signal[fNumTbs];
    for (auto ite2 = electronsMap.begin(); ite2 != electronsMap.end(); ++ite2) {
       for (Int_t kk = 0; kk < fNumTbs; kk++)
@@ -253,9 +252,9 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
       // Create pad
       auto pad = fRawEvent->AddPad(thePadNumber);
 
-      PadCenterCoord = fMap->CalcPadCenter(thePadNumber);
+      auto PadCenterCoord = fMap->CalcPadCenter(thePadNumber);
       pad->SetValidPad(kTRUE);
-      pad->SetPadCoord({PadCenterCoord[0], PadCenterCoord[1]});
+      pad->SetPadCoord(PadCenterCoord);
       pad->SetPedestalSubtracted(kTRUE);
 
       auto gAvg = getAvgGETgain(eleAccumulated[thePadNumber]->GetEntries());

@@ -2,8 +2,10 @@
 
 #include "FairLogger.h"
 
-#include "TH2Poly.h"
+#include "TCanvas.h"
 #include "TDOMParser.h"
+#include "TH2Poly.h"
+#include "TStyle.h"
 #include "TXMLNode.h"
 
 #include <iostream>
@@ -24,22 +26,20 @@ std::ostream &operator<<(std::ostream &os, const AtMap::InhibitType &t)
    return os;
 }
 
-AtMap::AtMap() : AtPadCoord(boost::extents[10240][3][2]) {}
-
-AtMap::~AtMap() {}
+AtMap::AtMap() : AtPadCoord(boost::extents[10240][3][2]), fPadPlane(new TH2Poly()) {}
 
 Int_t AtMap::GetPadNum(const PadReference &PadRef) const
 {
 
    // Option 1: Int key - vector<int> value
-   // std::map<int, std::vector<int>>::const_iterator ite = AtTPCPadMap.find(1);
+   // std::map<int, std::vector<int>>::const_iterator ite = fPadMap.find(1);
    // std::string value = it->second;
    // Option 2: vector<int> key - int value
 
-   auto its = AtTPCPadMap.find(PadRef);
+   auto its = fPadMap.find(PadRef);
 
-   // std::cout<<int(AtTPCPadMap.find(test) == AtTPCPadMap.end())<<endl;
-   if (its == AtTPCPadMap.end()) {
+   // std::cout<<int(fPadMap.find(test) == fPadMap.end())<<endl;
+   if (its == fPadMap.end()) {
       if (kDebug)
          std::cerr << " AtTpcMap::GetPadNum - Pad key not found - CoboID : " << PadRef.cobo
                    << "  AsadID : " << PadRef.asad << "  AgetID : " << PadRef.aget << "  ChannelID : " << PadRef.ch
@@ -93,9 +93,9 @@ AtMap::InhibitType AtMap::IsInhibited(Int_t PadNum)
 
 int AtMap::GetPadSize(int padNum)
 {
-   if (AtTPCPadSize.find(padNum) == AtTPCPadSize.end())
+   if (fPadSizeMap.find(padNum) == fPadSizeMap.end())
       return -1000;
-   return AtTPCPadSize[padNum];
+   return fPadSizeMap[padNum];
 }
 void AtMap::ParseAtTPCMap(TXMLNode *node)
 {
@@ -125,9 +125,9 @@ void AtMap::ParseAtTPCMap(TXMLNode *node)
    }
    PadReference ref = {fCoboID, fAsadID, fAgetID, fChannelID};
 
-   AtTPCPadMap.insert(std::pair<PadReference, int>(ref, fPadID));
-   AtTPCPadMapInverse.insert(std::pair<int, PadReference>(fPadID, ref));
-   AtTPCPadSize.insert(std::pair<int, int>(fPadID, fSizeID));
+   fPadMap.insert(std::pair<PadReference, int>(ref, fPadID));
+   fPadMapInverse.insert(std::pair<int, PadReference>(fPadID, ref));
+   fPadSizeMap.insert(std::pair<int, int>(fPadID, fSizeID));
 }
 
 void AtMap::ParseMapList(TXMLNode *node)
@@ -172,16 +172,16 @@ Bool_t AtMap::ParseXMLMap(Char_t const *xmlfile)
    // itrEnd = pmap.end();
    delete domParser;
 
-   LOG(INFO) << "Pad map has an average load of " << AtTPCPadMap.load_factor() << " and a max load of "
-             << AtTPCPadMap.max_load_factor() << " with buckets " << AtTPCPadMap.bucket_count() << " for "
-             << AtTPCPadMap.size() << " pads.";
+   LOG(INFO) << "Pad map has an average load of " << fPadMap.load_factor() << " and a max load of "
+             << fPadMap.max_load_factor() << " with buckets " << fPadMap.bucket_count() << " for " << fPadMap.size()
+             << " pads.";
 
    return true;
 }
 
 Bool_t AtMap::DumpAtTPCMap()
 {
-   if (!fPadInd || !kIsParsed) {
+   if (!kIsParsed) {
 
       std::cout << " AtTpcMap::DumpAtTPCMap Error : Pad plane has not been generated or parsed - Exiting... "
                 << std::endl;
@@ -191,7 +191,7 @@ Bool_t AtMap::DumpAtTPCMap()
 
    std::ostream_iterator<int> ii(std::cout, ", ");
 
-   for (auto it = this->AtTPCPadMap.begin(); it != this->AtTPCPadMap.end(); ++it) {
+   for (auto it = this->fPadMap.begin(); it != this->fPadMap.end(); ++it) {
       std::cout << " [ " << (*it).second << ", ";
       std::cout << it->first.cobo << "," << it->first.asad << "," << it->first.aget << "," << it->first.ch;
       std::cout << "]" << std::endl;
@@ -222,9 +222,16 @@ std::string AtMap::GetAuxName(const PadReference &ref) const
 }
 PadReference AtMap::GetPadRef(int padNum) const
 {
-   if (AtTPCPadMapInverse.find(padNum) == AtTPCPadMapInverse.end())
+   if (fPadMapInverse.find(padNum) == fPadMapInverse.end())
       return PadReference();
-   return AtTPCPadMapInverse.at(padNum);
+   return fPadMapInverse.at(padNum);
+}
+
+void AtMap::drawPadPlane()
+{
+   fPadPlaneCanvas = new TCanvas("padPlaneCanvas", "Pad Plane", 1000, 1000);
+   gStyle->SetPalette(1);
+   fPadPlane->Draw("col");
 }
 
 bool operator<(const PadReference &l, const PadReference &r)

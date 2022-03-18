@@ -19,11 +19,11 @@ public:
    ~AtSpecMATMap();
 
    void Dump() override;                                         // pure virtual member
-   void GenerateAtTpc() override;                                // pure virtual member
-   std::vector<Float_t> CalcPadCenter(Int_t PadRef) override;    // pure virtual member
+   void GeneratePadPlane() override;                             // pure virtual member
+   ROOT::Math::XYPoint CalcPadCenter(Int_t PadRef) override;     // pure virtual member
    Int_t BinToPad(Int_t binval) override { return binval - 1; }; // pure virtual member
 
-   TH2Poly *GetAtTpcPlane() override; // virtual member
+   TH2Poly *GetPadPlane() override; // virtual member
 
    void SpecMATPadPlane();
 
