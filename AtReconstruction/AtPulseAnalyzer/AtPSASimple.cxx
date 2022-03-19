@@ -26,7 +26,7 @@ void AtPSASimple::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    Int_t numPads = rawEvent->GetNumPads();
 
    for (Int_t iPad = 0; iPad < numPads; iPad++) {
-      const AtPad *pad = &(rawEvent->GetPads().at(iPad));
+      const AtPad *pad = rawEvent->GetPads().at(iPad).get();
 
       auto pos = pad->GetPadCoord();
       Double_t zPos = 0;

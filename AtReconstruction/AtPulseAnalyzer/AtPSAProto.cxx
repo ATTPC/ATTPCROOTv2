@@ -39,7 +39,7 @@ void AtPSAProto::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
    for (iPad = 0; iPad < numPads; iPad++) {
 
-      const AtPad *pad = &(rawEvent->GetPads().at(iPad));
+      const AtPad *pad = rawEvent->GetPads().at(iPad).get();
       Int_t PadNum = pad->GetPadNum();
       Double_t QHitTot = 0.0;
       Int_t PadHitNum = 0;

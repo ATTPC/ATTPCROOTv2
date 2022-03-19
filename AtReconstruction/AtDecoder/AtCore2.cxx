@@ -10,6 +10,7 @@
 #include <thread>
 
 #include "AtCore2.h"
+#include "FairLogger.h"
 
 #include "GETCoboFrame.h"
 #include "GETLayeredFrame.h"
@@ -246,29 +247,24 @@ void AtCore2::ProcessBasicCobo(Int_t coboIdx)
    for (Int_t iAget = 0; iAget < 4; iAget++) {
       for (Int_t iCh = 0; iCh < 68; iCh++) {
 
-         // std::cout<<" iAget "<<iAget<<" iCh "<<iCh<<"\n";
-
          PadReference PadRef = {iCobo, iAsad, iAget, iCh};
-         Int_t PadRefNum = fMap->GetPadNum(PadRef);
+         auto PadRefNum = fMap->GetPadNum(PadRef);
          auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
          Bool_t IsInhibited = fMap->IsInhibited(PadRefNum);
 
          if (PadRefNum != -1 && !fMap->IsInhibited(PadRefNum)) {
-            AtPad *pad;
+            AtPad *pad = nullptr;
             {
                // Ensure the threads aren't both trying to create pads at the same time
                std::lock_guard<std::mutex> lk(fRawEventMutex);
-               // pad = new ((*fPadArray)[PadRefNum]) AtPad(PadRefNum);
                pad = fRawEventPtr->AddPad(PadRefNum);
             }
 
             pad->SetPadCoord(PadCenterCoord);
-            if (PadRefNum == -1)
-               pad->SetValidPad(kFALSE);
-            else
-               pad->SetValidPad(kTRUE);
+            pad->SetValidPad(kTRUE);
 
             Int_t *rawadc = basicFrame->GetSample(iAget, iCh);
+
             for (Int_t iTb = 0; iTb < fNumTbs; iTb++) {
                pad->SetRawADC(iTb, rawadc[iTb]);
                // std::cout<<iTb<<" "<<rawadc[iTb]<<"\n";
@@ -351,15 +347,6 @@ AtRawEvent *AtCore2::GetRawEvent(Long64_t frameID)
          }
 
       fRawEventPtr->SetEventID(fCurrentEventID[0]);
-
-      /*Int_t iNumPads = 10240;
-      for (Int_t i = 0; i < iNumPads; i++) {
-
-         AtPad *pad = (AtPad *)fPadArray->At(i);
-         if (pad != nullptr)
-            fRawEventPtr->SetPad(pad);
-      }
-      */
 
       delete[] cobo;
 

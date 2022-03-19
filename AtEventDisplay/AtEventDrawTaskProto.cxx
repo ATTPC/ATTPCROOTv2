@@ -373,7 +373,6 @@ void AtEventDrawTaskProto::DrawHitPoints()
          gROOT->GetListOfSpecials()->Add(fRawevent);
 
          Int_t numAux = 0;
-         auto padArray = fRawevent->GetPads();
 
          for (auto &padIt : fRawevent->GetAuxPads()) {
             const AtAuxPad &pad = padIt.second;

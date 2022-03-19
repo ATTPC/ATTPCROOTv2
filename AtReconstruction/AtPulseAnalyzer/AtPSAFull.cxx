@@ -41,7 +41,7 @@ void AtPSAFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
    for (auto iPad = 0; iPad < numPads; iPad++) {
 
-      const AtPad *pad = &(rawEvent->GetPads().at(iPad));
+      const AtPad *pad = rawEvent->GetPads().at(iPad).get();
       Int_t PadNum = pad->GetPadNum();
       Int_t PadHitNum = 0;
       TVector3 HitPos;

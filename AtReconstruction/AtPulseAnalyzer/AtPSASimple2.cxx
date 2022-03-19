@@ -54,11 +54,11 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    LOG(info) << "MC Simulated points Map size " << mcPointsMap.size();
 
    //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
-   for (auto &pad : rawEvent->GetPads()) {
+   for (const auto &pad : rawEvent->GetPads()) {
 
-      LOG(debug) << "Running PSA on pad " << pad.GetPadNum();
-      Int_t PadNum = pad.GetPadNum();
-      Int_t pSizeID = pad.GetSizeID();
+      LOG(debug) << "Running PSA on pad " << pad->GetPadNum();
+      Int_t PadNum = pad->GetPadNum();
+      Int_t pSizeID = pad->GetSizeID();
       Double_t gthreshold = -1;
       if (pSizeID == 0)
          gthreshold = fThresholdlow; // threshold for central pads
@@ -74,7 +74,7 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       Bool_t fValidThreshold = kTRUE;
       Bool_t fValidDerivative = kTRUE;
 
-      auto pos = pad.GetPadCoord();
+      auto pos = pad->GetPadCoord();
       Double_t zPos = 0;
       Double_t xPosRot = 0;
       Double_t yPosRot = 0;
@@ -93,11 +93,11 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
       CalcLorentzVector();
 
-      if (!(pad.IsPedestalSubtracted())) {
+      if (!(pad->IsPedestalSubtracted())) {
          LOG(ERROR) << "Pedestal should be subtracted to use this class!";
       }
 
-      auto adc = pad.GetADC();
+      auto adc = pad->GetADC();
       Double_t floatADC[512] = {0};
       Double_t dummy[512] = {0};
       Double_t bg[512] = {0};
@@ -246,8 +246,8 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                HitPos = hit.GetPosition();
                Rho2 += HitPos.Mag2();
                RhoMean += HitPos.Rho();
-               if ((pos.X() < -9000 || pos.Y() < -9000) && pad.GetPadNum() != -1)
-                  std::cout << " AtPSASimple2::Analysis Warning! Wrong Coordinates for Pad : " << pad.GetPadNum()
+               if ((pos.X() < -9000 || pos.Y() < -9000) && pad->GetPadNum() != -1)
+                  std::cout << " AtPSASimple2::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum()
                             << std::endl;
 
                // Tracking MC points

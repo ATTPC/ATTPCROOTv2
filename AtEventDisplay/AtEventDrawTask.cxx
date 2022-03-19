@@ -347,7 +347,6 @@ void AtEventDrawTask::DrawHitPoints()
 
       // Draw aux channels
       int numAux = 0;
-      auto padArray = fRawevent->GetPads();
 
       for (auto &padIt : fRawevent->GetAuxPads()) {
          const AtAuxPad &pad = padIt.second;

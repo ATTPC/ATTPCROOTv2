@@ -15,6 +15,7 @@
 
 #include "AtPad.h"
 #include "AtAuxPad.h"
+#include "FairLogger.h"
 
 #include <vector>
 #include <iostream>
@@ -22,7 +23,8 @@
 #include <iterator>
 
 using AuxPadMap = std::map<std::string, AtAuxPad>;
-using PadVector = std::vector<AtPad>;
+using AtPadPtr = std::unique_ptr<AtPad>;
+using PadVector = std::vector<AtPadPtr>;
 class AtFilterTask;
 
 class AtRawEvent : public TNamed {
@@ -41,7 +43,9 @@ private:
 
 public:
    AtRawEvent();
-   AtRawEvent(const AtRawEvent &object) = default;
+   AtRawEvent(AtRawEvent &&obj) = default;
+   AtRawEvent &operator=(AtRawEvent &&obj) = default;
+   AtRawEvent(const AtRawEvent &object);
    ~AtRawEvent() = default;
 
    void Clear();
@@ -50,8 +54,8 @@ public:
    template <typename... Ts>
    AtPad *AddPad(Ts &&...params)
    {
-      fPadList.emplace_back(std::forward<Ts>(params)...);
-      return &fPadList.back();
+      fPadList.push_back(std::make_unique<AtPad>(std::forward<Ts>(params)...));
+      return fPadList.back().get();
    }
    // Returns a pointer to the newly added pad, or existing pad if auxName is already used
    // bool returned is true if insert occurred.
