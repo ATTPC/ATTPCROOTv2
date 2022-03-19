@@ -17,6 +17,8 @@
 #include "../../../build/include/AtDecoder/AtEvent.h"
 #include "../../../build/include/AtTpcMap.h"
 #include "../../../build/include/AtRansac/AtRansac.h"
+#include "../../../build/include/AtDecoder/AtPad.h"
+#include "../../../build/include/AtDecoder/AtAuxPad.h"
 
 // "public functions"
 void loadRun(TString filePath, TString rawEventBranchName = "AtRawEventFiltered",

@@ -44,7 +44,7 @@ void rundigi_fast()
    // Create the detector map to pass to the simulation
    auto mapping = std::make_shared<AtTpcMap>();
    mapping->ParseXMLMap(mapParFile.Data());
-   mapping->GenerateAtTpc();
+   mapping->GeneratePadPlane();
    mapping->ParseInhibitMap("inhibit.txt", AtMap::kTotal);
    
    // __ AT digi tasks___________________________________
@@ -77,7 +77,7 @@ void rundigi_fast()
    ransacTask->SetDistanceThreshold(20.0);
    ransacTask->SetTiltAngle(0);
    ransacTask->SetMinHitsLine(10);
-   // ransacTask->SetFullMode();
+   ransacTask->SetFullMode();
 
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
@@ -88,8 +88,8 @@ void rundigi_fast()
    fRun->Init();
 
    timer.Start();
-   fRun->Run(0, 20001);
-   // fRun->Run(0, 50);
+   // fRun->Run(0, 20001);
+   fRun->Run(0, 50);
    timer.Stop();
 
    std::cout << std::endl << std::endl;

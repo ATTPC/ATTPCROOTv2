@@ -9,8 +9,8 @@ build
 data
 .vscode
 *~
-
 *#*
+event.dat
 
 # Executables
 *.exe
