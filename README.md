@@ -140,7 +140,6 @@ cmake -DCMAKE_INSTALL_PREFIX=/mnt/simulations/attpcroot/fair_install_18.6/HiRAEV
 
 # For developers
 
-
 ## Coding conventions
 
 Pull requests submitted should have the code formated in the [ROOT style](https://root.cern/contribute/coding_conventions/). Never include a header file when a forward decleration is sufficient. Only include header files for base classes or classes that are used by value in the class definition.
@@ -165,6 +164,8 @@ When we talk about object ownership we mean the right to free the associated res
 
 Before submitting a pull request, reformat the code using `clang-format`. If run from within the repository it will pick up the `.clang-format` file detail the style. This file is also reproduced on the page detailing ROOT the ROOT coding style. If for some reason you need a section of code to not be formatted, you can turn off formatting using comment flags. Formatting of code is turned off with the comment `// clang-format off` and re-enabled with the comment `// clang-format on`. This process can be simplified using the command `git-clang-format` which when given no options will tun `clang-format` on all lines of code that differ between the working directory and HEAD. Detailed documentation is [here](https://github.com/llvm-mirror/clang/blob/master/tools/clang-format/git-clang-format).
 
+Before submitting a pull request run the tests as described [below](#running-tests).
+
 ## Adding a class
 
 Classes, for example a new generator, can be added by created the header and source files. In that directory the `CMakeLists.txt` file must be edited to add any include directories needed as well as add the source file so the make file knows to compile it. In addition the class should be added the the local `GenLinkDef.h` file, if needed. In addition, a symbolic link should be created to the new header in the `include` directory. Classes should respect the naming convention of `AtName.cxx` for source, and `AtName.h` for headers. The FairRoot macro used to generate the ROOT dictionaries for each library, assumes these file extensions.
@@ -179,7 +180,15 @@ Each task class (something that inherits from FairTask) should be primarily resp
 
 Each folder in the root directory names `AtName` will build into a shared object with the name `libAtName` as defined by a `CMakelists.txt` file in each folder. Other folders, (eg macro, icon, parameters, etc), are not built and do not contain a CMakeLists.txt folder. In order for the new library to be built, it must be added as a subdirectory to the global CMakeList.txt in the root directory.
 
+## Running tests
 
+There is a suite of tests located in `macro/tests` to check the unpacking of AT-TPC, SpecMAT, and GADGET data. It also tests the simulation of AT-TPC data. To run the tests, the following pre-requites must be met:
+
+* Generate the required geometry files by running the script `macro/tests/generateGeometry.sh`
+* GADGETII tests must be run on fishtank (the data is to large to package with the repository)
+* SpecMAT tests require the ROOT file TTreesGETrun_9993.root be placed in the `macro/tests/SpecMAT/data` folder.
+
+To run all tests run the bash script `macro/tests/runAllTest.sh`. To the screen it will print a summary of each test run and the return value. The output of the test scripts run are saved in a text file in each test directory (test.log).
 
 # Creating geometry files
 
