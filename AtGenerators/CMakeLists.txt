@@ -38,7 +38,7 @@ set(DEPENDENCIES
   ROOT::Core
   ROOT::MathCore
   ROOT::GenVector
-  AtData
+  AtSimulationData
   AtTpc
   )
 

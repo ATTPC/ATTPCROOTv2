@@ -31,6 +31,7 @@ Set(DEPENDENCIES
   AtAnalysis
   AtTpcMap
   AtParameter
+  AtSimulationData
   AtData
   
   ROOT::Spectrum
@@ -53,18 +54,6 @@ set(LINK_DIRECTORIES
 set(SRCS
   # Add all the source files below this line. Those must have cxx for their extension.
 
-  AtDecoder/AtPad.cxx
-  AtDecoder/AtAuxPad.cxx
-  AtDecoder/AtRawEvent.cxx
-  AtDecoder/AtHit.cxx
-  AtDecoder/AtHitCluster.cxx
-  AtDecoder/AtEvent.cxx
-  AtDecoder/AtProtoEvent.cxx
-  AtDecoder/AtProtoEventAna.cxx
-  AtDecoder/AtTrackingEventAna.cxx
-  AtDecoder/AtPatternEvent.cxx
-  AtDecoder/AtProtoQuadrant.cxx
-  AtDecoder/AtTrack.cxx
   AtDecoder/AtHDFParser.cxx
 
   AtDecoder/AtCore2.cxx

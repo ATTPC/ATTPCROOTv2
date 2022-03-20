@@ -29,6 +29,7 @@ Set(DEPENDENCIES
     ROOT::Eve
 
     AtReconstruction
+    AtData
     AtTpcMap
     AtS800
     AtParameter

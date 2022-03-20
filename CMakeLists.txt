@@ -278,6 +278,7 @@ ENDIF(HAS_CXX11_SHAREDPOINTER)
 # I have seen this cause all sorts of errors in the code from segfaults to
 # infinite loops. 
 
+add_subdirectory (AtSimulationData)
 add_subdirectory (AtData)
 add_subdirectory (AtGenerators)
 add_subdirectory (AtTpc)

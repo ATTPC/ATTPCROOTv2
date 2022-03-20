@@ -42,7 +42,7 @@ Set(DEPENDENCIES
     ROOT::Core
     ROOT::TreePlayer
 
-    AtReconstruction
+    AtData
 )
 
 generate_target_root_library(${LIBRARY_NAME}

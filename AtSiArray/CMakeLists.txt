@@ -5,10 +5,6 @@ Set(LINKDEF AtSiArrayLinkDef.h)
 set(INCLUDE_DIRECTORIES
 #${Boost_INCLUDE_DIRS}
 ${BASE_INCLUDE_DIRECTORIES}
-#put here all directories where header files are located
-#${CMAKE_SOURCE_DIR}/AtData
-#${CMAKE_SOURCE_DIR}/AtSiArray
-#${CMAKE_SOURCE_DIR}/AtGenerators
 )
 
 set(LINK_DIRECTORIES
@@ -27,7 +23,7 @@ Set(DEPENDENCIES
   Base
   FairTools
   ROOT::Core
-  AtData
+  AtSimulationData
 )
 
 generate_target_root_library(${LIBRARY_NAME}

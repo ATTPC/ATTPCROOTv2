@@ -39,7 +39,7 @@ Set(DEPENDENCIES
   FairTools
   ROOT::Core
   Cling
-  AtData
+  AtSimulationData
   )
 
 generate_target_root_library(${LIBRARY_NAME}

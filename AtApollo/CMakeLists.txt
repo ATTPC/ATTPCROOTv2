@@ -17,7 +17,7 @@ Set(DEPENDENCIES
   ROOT::Core
   Cling
 
-  AtData
+  AtSimulationData
 )
 
 set(SRCS
