@@ -48,7 +48,7 @@ public:
    AtRawEvent(const AtRawEvent &object);
    ~AtRawEvent() = default;
 
-   void Clear();
+   void Clear(Option_t *opt = nullptr) override;
 
    // As an input takes parameters for any constructor of AtPad
    template <typename... Ts>
@@ -86,7 +86,7 @@ public:
    const AuxPadMap &GetAuxPads() { return fAuxPadMap; }
    std::multimap<Int_t, std::size_t> &GetSimMCPointMap() { return fSimMCPointMap; }
 
-   ClassDef(AtRawEvent, 5);
+   ClassDefOverride(AtRawEvent, 5);
 };
 
 #endif

@@ -19,10 +19,12 @@
 #pragma link C++ class AtCore2 + ;
 #pragma link C++ class AtPedestal + ;
 #pragma link C++ class AtCoreSpecMAT + ;
-#pragma link C++ class AtHDFParser + ;
+
+#pragma link C++ class AtUnpacker + ;
+#pragma link C++ class AtHDFUnpacker + ;
 
 #pragma link C++ class AtDecoder2Task + ;
 #pragma link C++ class AtDecoderSpecMATTask + ;
-#pragma link C++ class AtHDFParserTask + ;
+#pragma link C++ class AtUnpackTask + ;
 
 #endif

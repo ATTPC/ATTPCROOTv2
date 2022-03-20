@@ -35,7 +35,7 @@ AtRawEvent::AtRawEvent(const AtRawEvent &obj)
    fSimMCPointMap = obj.fSimMCPointMap;
 }
 
-void AtRawEvent::Clear()
+void AtRawEvent::Clear(Option_t *opt)
 {
    fEventID = 0;
    fPadList.clear();

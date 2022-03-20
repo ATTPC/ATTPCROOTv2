@@ -37,7 +37,7 @@ void run_unpack_attpc(int runNumber = 174)
 
    // Create a run
    FairRunAna *run = new FairRunAna();
-   run->SetOutputFile(outputFile);
+   run->SetSink(new FairRootFileSink(outputFile));
    run->SetGeomFile(geoManFile);
 
    // Set the parameter file
@@ -46,7 +46,10 @@ void run_unpack_attpc(int runNumber = 174)
 
    std::cout << "Setting par file: " << digiParFile << std::endl;
    parIo1->open(digiParFile.Data(), "in");
-   rtdb->setSecondInput(parIo1);
+   rtdb->setFirstInput(parIo1);
+   std::cout << "Getting containers..." << std::endl;
+   // We must get the container before initializing a run
+   rtdb->getContainer("AtDigiPar");
 
    // Create the detector map
    auto fAtMapPtr = std::make_shared<AtTpcMap>();
@@ -59,14 +62,22 @@ void run_unpack_attpc(int runNumber = 174)
    fAtMapPtr->AddAuxPad({10, 0, 2, 34}, "IC");
 
    // Create the unpacker task
-   AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
-   HDFParserTask->SetPersistence(kTRUE);
-   HDFParserTask->SetMap(fAtMapPtr);
-   HDFParserTask->SetFileName(inputFile.Data());
-   HDFParserTask->SetOldFormat(false);
-   HDFParserTask->SetNumberTimestamps(2);
-   HDFParserTask->SetBaseLineSubtraction(kTRUE);
+   auto unpacker = std::make_unique<AtHDFUnpacker>(fAtMapPtr);
+   unpacker->SetInputFileName(inputFile.Data());
+   unpacker->SetNumberTimestamps(2);
+   unpacker->SetBaseLineSubtraction(true);
 
+   auto unpackTask = new AtUnpackTask(std::move(unpacker));
+   unpackTask->SetPersistence(true);
+   /*
+      AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
+      HDFParserTask->SetPersistence(kTRUE);
+      HDFParserTask->SetMap(fAtMapPtr);
+      HDFParserTask->SetFileName(inputFile.Data());
+      HDFParserTask->SetOldFormat(false);
+      HDFParserTask->SetNumberTimestamps(2);
+      HDFParserTask->SetBaseLineSubtraction(kTRUE);
+   */
    // Create data reduction task
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
    reduceTask->SetInputBranch("AtRawEvent");
@@ -93,15 +104,17 @@ void run_unpack_attpc(int runNumber = 174)
    psaTask->SetPersistence(kTRUE);
 
    // Add unpacker to the run
-   run->AddTask(HDFParserTask);
+   run->AddTask(unpackTask);
    run->AddTask(reduceTask);
    run->AddTask(filterTask);
    run->AddTask(psaTask);
 
+   std::cout << "***** Starting Init ******" << std::endl;
    run->Init();
+   std::cout << "***** Ending Init ******" << std::endl;
 
    // Get the number of events and unpack the whole run
-   auto numEvents = HDFParserTask->GetNumEvents() / 2;
+   auto numEvents = unpackTask->GetNumEvents();
 
    // numEvents = 1700;//217;
    // numEvents = 100;

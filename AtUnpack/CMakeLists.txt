@@ -37,11 +37,14 @@ set(LINK_DIRECTORIES
 set(SRCS
   # Add all the source files below this line. Those must have cxx for their extension.
 
-  AtHDFParser.cxx
+  #AtHDFParser.cxx
   AtCore2.cxx
   AtCoreSpecMAT.cxx
   AtPedestal.cxx
-
+  AtUnpackTask.cxx
+  AtUnpacker.cxx
+  AtHDFUnpacker.cxx
+  
   GETDecoder2/GETDecoder2.cxx
   GETDecoder2/GETFrameInfo.cxx
   GETDecoder2/GETHeaderBase.cxx
@@ -54,7 +57,7 @@ set(SRCS
   GETDecoder2/GETMath2.cxx
   GETDecoder2/GETFileChecker.cxx
   
-  AtHDFParserTask.cxx
+  #AtHDFParserTask.cxx
   AtDecoder2Task.cxx
   AtDecoderSpecMATTask.cxx
   )
