@@ -9,8 +9,6 @@ ${BASE_INCLUDE_DIRECTORIES}
 ${GENFIT2_INCLUDE_DIR}
 
 # Add all the folders having header files you used in the code.
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtDecoder
-${CMAKE_SOURCE_DIR}/AtReconstruction/GETDecoder2
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPulseAnalyzer
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
@@ -37,7 +35,6 @@ Set(DEPENDENCIES
   ROOT::Spectrum
   ROOT::Core
   
-  hdf5::hdf5-shared
   ${Boost_LOG_LIBRARY}
   ${Boost_LOG_SETUP_LIBRARY}
   ${Boost_THREAD_LIBRARY}
@@ -54,23 +51,6 @@ set(LINK_DIRECTORIES
 set(SRCS
   # Add all the source files below this line. Those must have cxx for their extension.
 
-  AtDecoder/AtHDFParser.cxx
-
-  AtDecoder/AtCore2.cxx
-  AtDecoder/AtCoreSpecMAT.cxx
-  AtDecoder/AtPedestal.cxx
-  GETDecoder2/GETDecoder2.cxx
-  GETDecoder2/GETFrameInfo.cxx
-  GETDecoder2/GETHeaderBase.cxx
-  GETDecoder2/GETBasicFrameHeader.cxx
-  GETDecoder2/GETLayerHeader.cxx
-  GETDecoder2/GETTopologyFrame.cxx
-  GETDecoder2/GETBasicFrame.cxx
-  GETDecoder2/GETCoboFrame.cxx
-  GETDecoder2/GETLayeredFrame.cxx
-  GETDecoder2/GETMath2.cxx
-  GETDecoder2/GETFileChecker.cxx
-  
   AtPulseAnalyzer/AtPSA.cxx
   AtPulseAnalyzer/AtPSASimple.cxx
   AtPulseAnalyzer/AtPSASimple2.cxx
@@ -85,13 +65,10 @@ set(SRCS
   AtFilter/AtTrapezoidFilter.cxx
   AtFilter/AtFilterCalibrate.cxx
 
-  AtHDFParserTask.cxx
   AtPSAtask.cxx
   AtFilterTask.cxx
   AtAuxFilterTask.cxx
   AtDataReductionTask.cxx
-  AtDecoder2Task.cxx
-  AtDecoderSpecMATTask.cxx
   )
 
 ### Add additional sources and libraries if we found certain modules ###

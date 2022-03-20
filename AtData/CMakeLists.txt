@@ -15,10 +15,10 @@ Set(DEPENDENCIES
   FairTools
   XMLParser
 
-  AtAnalysis
-  AtTpcMap
-  AtParameter
-  AtSimulationData
+  #AtAnalysis
+  #AtTpcMap
+  #AtParameter
+  #AtSimulationData
   
   ROOT::Core
   )
