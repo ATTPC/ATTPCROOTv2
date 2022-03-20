@@ -23,6 +23,7 @@ AtRawEvent::AtRawEvent() : TNamed("AtRawEvent", "Raw event container")
 
 AtRawEvent::AtRawEvent(const AtRawEvent &obj)
 {
+   std::cout << "Copying AtRawEvent " << obj.fEventID << " with " << obj.fPadList.size() << " pads" << std::endl;
    fEventID = obj.fEventID;
    fAuxPadMap = obj.fAuxPadMap;
    for (const auto &pad : obj.fPadList)

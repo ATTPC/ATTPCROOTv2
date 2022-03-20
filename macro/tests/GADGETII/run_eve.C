@@ -1,4 +1,4 @@
-void run_eve(TString InputDataFile = "output.root", TString OutputDataFile = "output.reco_display.root",
+void run_eve(TString InputDataFile = "./data/output.root", TString OutputDataFile = "./data/output.reco_display.root",
              TString unpackDir = "/Unpack_GETDecoder2/GADGETII/")
 {
    FairLogger *fLogger = FairLogger::GetLogger();
@@ -30,10 +30,11 @@ void run_eve(TString InputDataFile = "output.root", TString OutputDataFile = "ou
    AtEventDrawTask *eve = new AtEventDrawTask();
    eve->Set3DHitStyleBox();
    eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
-   eve->SetSaveTextData();
+   // eve->SetSaveTextData();
    eve->SelectDetectorId(kGADGETII);
    eve->UnpackHoughSpace();
 
    eveMan->AddTask(eve);
    eveMan->Init();
+   eveMan->GotoEvent(0);
 }

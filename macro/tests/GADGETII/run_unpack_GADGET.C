@@ -1,8 +1,7 @@
 #include "FairLogger.h"
 
-void run_unpack_GADGET(TString dataFile = "GADGET-alpha-source-data2.txt",
-		       TString parameterFile = "GADGET.sim.par",
-                       TString mappath = "")
+void run_unpack_GADGET(TString dataFile = "./data/GADGET-alpha-source-data2.txt",
+                       TString parameterFile = "GADGET.sim.par", TString mappath = "")
 
 {
 
@@ -21,7 +20,7 @@ void run_unpack_GADGET(TString dataFile = "GADGET-alpha-source-data2.txt",
    TString geomDir = dir + "/geometry/";
    gSystem->Setenv("GEOMPATH", geomDir.Data());
 
-   TString outputFile = "output.root";
+   TString outputFile = "./data/output.root";
    TString digiParFile = dir + "/parameters/" + parameterFile;
    TString geoManFile = dir + "/geometry/GADGET_II.root";
 
@@ -29,7 +28,6 @@ void run_unpack_GADGET(TString dataFile = "GADGET-alpha-source-data2.txt",
    TString lowgmap = mappath + "lowgain.txt";
    TString xtalkmap = mappath + "beampads_e15503b.txt";
 
-   //fair::Logger::SetConsoleSeverity("debug");
       
    FairRunAna *run = new FairRunAna();
    run->SetOutputFile(outputFile);
@@ -44,24 +42,12 @@ void run_unpack_GADGET(TString dataFile = "GADGET-alpha-source-data2.txt",
 
    rtdb->setSecondInput(parIo1);
 
-   // Settings
-   Bool_t fUseDecoder = kTRUE;
-   if (dataFile.IsNull() == kTRUE)
-      fUseDecoder = kFALSE;
-
-   Bool_t fUseSeparatedData = kFALSE;
-   if (dataFile.EndsWith(".txt"))
-      fUseSeparatedData = kTRUE;
-
    /*
     *     Unpacking options:
     *         - SetUseSeparatedData:      To be used with multiple CoBos without merging.
     *         - SetPseudoTopologyFrame:   Used to force the graw file to have a Topology frame.
     *         - SetPersistance:           Save the unpacked data into the root file.
-    *         - SetMap:                   Chose the lookup table.
-    *         - SetMapOpt                 Chose the pad plane geometry. In addition forces the 
-    * unpacker to use Basic frames for 1 single file (p-ATTPC case) or Layered Frames for 
-    * Merged Data (10 Cobos merged data).
+    *         - SetMap:                   Set map.
     */
    auto fMapPtr = std::make_shared<AtGadgetIIMap>();
    fMapPtr->ParseXMLMap(scriptdir.Data());
@@ -69,45 +55,30 @@ void run_unpack_GADGET(TString dataFile = "GADGET-alpha-source-data2.txt",
    
    AtDecoder2Task *fDecoderTask = new AtDecoder2Task();
    fDecoderTask->SetNumCobo(4);
-   // fDecoderTask -> SetPTFMask(0x1);
-   fDecoderTask->SetUseSeparatedData(fUseSeparatedData);
-   if (fUseSeparatedData)
-      fDecoderTask->SetPseudoTopologyFrame(kFALSE);
-   // fDecoderTask -> SetPositivePolarity(kTRUE);
+   fDecoderTask->SetUseSeparatedData(true);
+   fDecoderTask->SetPseudoTopologyFrame(kFALSE);
    fDecoderTask->SetPersistence(kTRUE);
    fDecoderTask->SetMap(fMapPtr);
-   // fDecoderTask -> SetInhibitMaps(inimap,lowgmap,xtalkmap); // TODO: Only implemented for
-   // fUseSeparatedData!!!!!!!!!!!!!!!!!!!1
-   // fDecoderTask->SetMapOpt(2); // ATTPC : 0  - Prototype: 1 - GADGETII: 2 |||| Default value = 0
-   // fDecoderTask -> SetEventID(0);
 
-   if (!fUseSeparatedData)
-      fDecoderTask->AddData(dataFile);
-   else {
-      std::ifstream listFile(dataFile.Data());
-      TString dataFileWithPath;
-      Int_t iAsAd = 0;
-      while (dataFileWithPath.ReadLine(listFile)) {
-         if (dataFileWithPath.Contains(Form("AsAd%i", iAsAd))) {
-            fDecoderTask->AddData(dataFileWithPath, iAsAd);
-            std::cout << " Added file : " << dataFileWithPath << " - iAsAd : " << iAsAd << "\n";
-         } else {
+   std::ifstream listFile(dataFile.Data());
+   TString dataFileWithPath;
+   Int_t iAsAd = 0;
+   while (dataFileWithPath.ReadLine(listFile)) {
+      if (dataFileWithPath.Contains(Form("AsAd%i", iAsAd))) {
+         fDecoderTask->AddData(dataFileWithPath, iAsAd);
+         std::cout << " Added file : " << dataFileWithPath << " - iAsAd : " << iAsAd << "\n";
+      } else {
 
-            fDecoderTask->AddData(dataFileWithPath, iAsAd);
-            cout << " Add data file " << endl;
-         }
-
-         iAsAd++;
+         fDecoderTask->AddData(dataFileWithPath, iAsAd);
+         cout << " Add data file " << endl;
       }
+
+      iAsAd++;
    }
 
    AtPSASimple2 *psa = new AtPSASimple2();
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);
-   // psaTask->SetPSAMode(1);
-   // psaTask->SetMaxFinder();
-   // psaTask -> SetBaseCorrection(kTRUE);
-   // psaTask -> SetTimeCorrection(kTRUE);
    psa->SetThreshold(5);
    psa->SetMaxFinder();
 

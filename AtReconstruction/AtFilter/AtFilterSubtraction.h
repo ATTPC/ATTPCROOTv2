@@ -25,9 +25,10 @@ using AtMapPtr = std::shared_ptr<AtMap>;
 class AtFilterSubtraction : public AtFilter {
 private:
    const Int_t fNumberCoBo;
-   Double_t fThreshold;
+   Double_t fThreshold = 0;
    AtMapPtr fMapping;
    Int_t fNumberMissedAsads;
+   Bool_t fSetIsGood = true; // if true will set the IsGood flag on the filtered AtRawEvent
 
    // Avg with baseline subtraction baseline[cobo][asad][tb]
    vecDoubleCoBo fBaseline;
@@ -45,7 +46,8 @@ public:
    AtFilterSubtraction(AtMapPtr map, Int_t numCoBos = 10);
 
    void SetThreshold(Double_t thresh) { fThreshold = thresh; }
-   Double_t GetThreshold() { return fThreshold; }
+   void SetIsGood(Bool_t val) { fSetIsGood = val; }
+   Double_t GetThreshold() const { return fThreshold; }
 
    // Called at the init stage of the AtFilterTask
    virtual void Init() override;

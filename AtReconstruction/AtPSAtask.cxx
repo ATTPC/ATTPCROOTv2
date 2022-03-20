@@ -104,7 +104,7 @@ void AtPSAtask::Exec(Option_t *opt)
    LOG(debug) << "Finished setting AtEvent Parameters";
 
    if (!rawEvent->IsGood()) {
-      LOG(debug) << "Event is not good, skipping PSA";
+      LOG(info) << "Event is not good, skipping PSA";
       return;
    }
 

@@ -6,8 +6,7 @@
 
 #include <algorithm>
 
-AtFilterSubtraction::AtFilterSubtraction(AtMapPtr map, Int_t numCoBos)
-   : fNumberCoBo(numCoBos), fMapping(map), fThreshold(0)
+AtFilterSubtraction::AtFilterSubtraction(AtMapPtr map, Int_t numCoBos) : fNumberCoBo(numCoBos), fMapping(map)
 {
    fBaseline.resize(fNumberCoBo);
    fRawBaseline.resize(fNumberCoBo);
@@ -100,5 +99,9 @@ void AtFilterSubtraction::Init() {}
 
 bool AtFilterSubtraction::IsGoodEvent()
 {
-   return fNumberMissedAsads == 0;
+   bool isGoodEvent = (fNumberMissedAsads == 0);
+   if (fSetIsGood)
+      return isGoodEvent;
+   else
+      return true;
 }

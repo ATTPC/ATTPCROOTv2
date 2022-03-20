@@ -1,4 +1,0 @@
-/mnt/analysis/e20020/ATTPCROOTv2_develop/macro/Unpack_GETDecoder2/GADGETII/CoBo0_AsAd0_0.graw
-/mnt/analysis/e20020/ATTPCROOTv2_develop/macro/Unpack_GETDecoder2/GADGETII/CoBo0_AsAd1_1.graw
-/mnt/analysis/e20020/ATTPCROOTv2_develop/macro/Unpack_GETDecoder2/GADGETII/CoBo0_AsAd2_2.graw
-/mnt/analysis/e20020/ATTPCROOTv2_develop/macro/Unpack_GETDecoder2/GADGETII/CoBo0_AsAd3_3.graw
