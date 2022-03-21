@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"data_t20_10_20_cov01_dp/")
+void plotFit_full_dp(std::string fileFolder = "data_181_366/") //"dataFull/")//"data_t20_10_20_cov01_dp/")
 {
 
    // Data histograms
@@ -171,7 +171,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
    m_B = m_Be11;
 
    // Find every valid file
-   std::system("find ./data_300_301 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
+   std::system("find ./data_181_366 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
    // >test.txt"
    // std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::ifstream file;
@@ -467,7 +467,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
                                        Double_t p0 = 1.72831;
                                        Double_t p1 = -0.00892026; //-0.01095;
 
-                                       Double_t mFactor = 1.20;
+                                       Double_t mFactor = 1.10;
                                        Double_t offSet = 0.0;
                                        Double_t QcorrZ =
                                           ex_energy_exp -
@@ -496,8 +496,10 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
                                        QvsTrackLengthH->Fill(QcorrZ, (*trackLengthVec)[index]);
 
 				       //First Orbit
-				       if((*phiOrbZVec)[index]>0.0 && (*phiOrbZVec)[index]<100.0){
-				       fOrbZvsfOrbLength->Fill((*firstOrbZVec)[index]-(*ziniFitXtrVec)[index],(*lengthOrbZVec)[index]);
+				       if((*phiOrbZVec)[index]>5.5 && (*phiOrbZVec)[index]<14.8){
+					 Double_t OrbZ = (*firstOrbZVec)[index];
+					 if((*lengthOrbZVec)[index]>25 && OrbZ>0.0 && QcorrZ>-0.3 && QcorrZ<2.0){
+					 fOrbZvsfOrbLength->Fill((*firstOrbZVec)[index]-(*ziniFitXtrVec)[index],(*lengthOrbZVec)[index]);
 				       PhiOrbZH->Fill((*phiOrbZVec)[index]);
 				       fOrbLengthvsEFit->Fill((*lengthOrbZVec)[index],(*EFitVec)[index]);
 				       fOrbZvsEFit->Fill((*firstOrbZVec)[index]-(*ziniFitXtrVec)[index],(*EFitVec)[index]);
@@ -507,6 +509,7 @@ void plotFit_full_dp(std::string fileFolder = "data_300_301/") //"dataFull/")//"
 				       fOrbZvsAFit->Fill((*firstOrbZVec)[index]-(*ziniFitXtrVec)[index],(*AFitVec)[index]);
 				       fOrbZvsMomLoss->Fill((*firstOrbZVec)[index]-(*ziniFitXtrVec)[index],(*eLossOrbZVec)[index]);
 				       fOrbLengthvsMomLoss->Fill((*lengthOrbZVec)[index],(*eLossOrbZVec)[index]);
+				       }
 				       }
                                       
 				       
