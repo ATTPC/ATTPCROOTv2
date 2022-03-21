@@ -16,17 +16,10 @@
 #pragma link C++ class GETFileChecker + ;
 #pragma link C++ class GETMath2 + ;
 
-#pragma link C++ class AtCore2 + ;
 #pragma link C++ class AtPedestal + ;
-#pragma link C++ class AtCoreSpecMAT + ;
-
 #pragma link C++ class AtUnpacker + ;
 #pragma link C++ class AtHDFUnpacker + ;
 #pragma link C++ class AtROOTUnpacker + ;
 #pragma link C++ class AtGRAWUnpacker + ;
-
-#pragma link C++ class AtDecoder2Task + ;
-#pragma link C++ class AtDecoderSpecMATTask + ;
 #pragma link C++ class AtUnpackTask + ;
-
 #endif

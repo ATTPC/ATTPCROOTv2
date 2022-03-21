@@ -37,16 +37,13 @@ set(LINK_DIRECTORIES
 set(SRCS
   # Add all the source files below this line. Those must have cxx for their extension.
 
-  #AtHDFParser.cxx
-  AtCore2.cxx
-  AtCoreSpecMAT.cxx
   AtPedestal.cxx
-
   AtUnpackTask.cxx
   AtUnpacker.cxx
   AtHDFUnpacker.cxx
   AtROOTUnpacker.cxx
   AtGRAWUnpacker.cxx
+
   GETDecoder2/GETDecoder2.cxx
   GETDecoder2/GETFrameInfo.cxx
   GETDecoder2/GETHeaderBase.cxx
@@ -59,9 +56,6 @@ set(SRCS
   GETDecoder2/GETMath2.cxx
   GETDecoder2/GETFileChecker.cxx
   
-  #AtHDFParserTask.cxx
-  AtDecoder2Task.cxx
-  AtDecoderSpecMATTask.cxx
   )
 
 generate_target_root_library(${LIBRARY_NAME}
