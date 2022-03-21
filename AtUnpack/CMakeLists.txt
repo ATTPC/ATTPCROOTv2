@@ -41,9 +41,11 @@ set(SRCS
   AtCore2.cxx
   AtCoreSpecMAT.cxx
   AtPedestal.cxx
+
   AtUnpackTask.cxx
   AtUnpacker.cxx
   AtHDFUnpacker.cxx
+  AtROOTUnpacker.cxx
   
   GETDecoder2/GETDecoder2.cxx
   GETDecoder2/GETFrameInfo.cxx

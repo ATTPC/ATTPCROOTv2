@@ -22,6 +22,7 @@
 
 #pragma link C++ class AtUnpacker + ;
 #pragma link C++ class AtHDFUnpacker + ;
+#pragma link C++ class AtROOTUnpacker + ;
 
 #pragma link C++ class AtDecoder2Task + ;
 #pragma link C++ class AtDecoderSpecMATTask + ;
