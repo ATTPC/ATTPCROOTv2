@@ -39,10 +39,12 @@ void AtUnpackTask::Exec(Option_t *opt)
 
    // Hacked solution to the fact that FinishEvent() is not normally called with how
    // we unpack runs.
-   if (fUnpacker->GetNextEventID() < fUnpacker->GetNumEvents())
+   if (!fUnpacker->IsLastEvent())
       fUnpacker->FillRawEvent(*rawEvent);
-   else
+   else {
+      LOG(warn) << "Hit last event at: " << fUnpacker->GetNextEventID();
       fRawEvent->SetIsGood(false);
+   }
 }
 
 void AtUnpackTask::FinishEvent()

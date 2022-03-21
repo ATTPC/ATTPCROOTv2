@@ -22,13 +22,15 @@ public:
    AtUnpacker(mapPtr map);
    ~AtUnpacker() = default;
 
-   void SetInputFileName(std::string fileName) { fInputFileName = std::move(fileName); }
+   virtual void SetInputFileName(std::string fileName) { fInputFileName = std::move(fileName); }
    void SetMap(mapPtr map) { fMap = map; }
    void SetInitialEventID(Long64_t evtID) { fEventID = evtID; }
    Long64_t GetNextEventID() { return fEventID; }
 
    virtual void Init() = 0;
-   virtual void FillRawEvent(AtRawEvent &event) = 0; // Pass by ref to ensure it's a valid object
+   // Pass by ref to ensure it's a valid object
+   virtual void FillRawEvent(AtRawEvent &event) = 0;
+   // Returns true if we have unpacked the last valid event
    virtual bool IsLastEvent() = 0;
    virtual Long64_t GetNumEvents() = 0;
 

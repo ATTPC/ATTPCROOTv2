@@ -41,18 +41,17 @@ void run_unpack_GADGET(TString dataFile = "./data/GADGET-alpha-source-data2.txt"
    // rtdb -> setFirstInput(parIo2);
 
    rtdb->setSecondInput(parIo1);
+   rtdb->getContainer("AtDigiPar");
 
-   /*
-    *     Unpacking options:
-    *         - SetUseSeparatedData:      To be used with multiple CoBos without merging.
-    *         - SetPseudoTopologyFrame:   Used to force the graw file to have a Topology frame.
-    *         - SetPersistance:           Save the unpacked data into the root file.
-    *         - SetMap:                   Set map.
-    */
    auto fMapPtr = std::make_shared<AtGadgetIIMap>();
    fMapPtr->ParseXMLMap(scriptdir.Data());
    fMapPtr->GeneratePadPlane();
-   
+
+   auto unpacker = std::make_unique<AtGRAWUnpacker>(fMapPtr, 4);
+   unpacker->SetInputFileName(dataFile.Data(), "AsAd%i");
+   auto unpackTask = new AtUnpackTask(std::move(unpacker));
+   unpackTask->SetPersistence(true);
+   /*
    AtDecoder2Task *fDecoderTask = new AtDecoder2Task();
    fDecoderTask->SetNumCobo(4);
    fDecoderTask->SetUseSeparatedData(true);
@@ -75,14 +74,14 @@ void run_unpack_GADGET(TString dataFile = "./data/GADGET-alpha-source-data2.txt"
 
       iAsAd++;
    }
-
+   */
    AtPSASimple2 *psa = new AtPSASimple2();
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);
    psa->SetThreshold(5);
    psa->SetMaxFinder();
 
-   run->AddTask(fDecoderTask);
+   run->AddTask(unpackTask);
    run->AddTask(psaTask);
 
    run->Init();

@@ -72,17 +72,6 @@ public:
    void SetFPNPedestal(Double_t sigmaThreshold = 5);
    void SetMap(std::shared_ptr<AtMap> map) { fMap = map; }
 
-   // Bool_t SetProtoGeoFile(TString geofile); // Only for Prototype Map
-   // Bool_t SetProtoMapFile(TString mapfile); // Only for Prototype Map
-   // Bool_t SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap);
-
-   // Bool_t SetGainCalibrationData(TString filename, TString dataType = "f");
-   // void SetGainReference(Int_t row, Int_t layer);
-   // void SetGainReference(Double_t constant, Double_t linear, Double_t quadratic = 0.);
-
-   // Bool_t SetUAMap(TString filename);
-   // Bool_t SetAGETMap(TString filename);
-
    void SetUseSeparatedData(Bool_t value = kTRUE);
 
    void ProcessCobo(Int_t coboIdx);
@@ -98,21 +87,11 @@ public:
    Int_t GetEventID();                             ///< Returns the current event ID
    Int_t GetNumTbs(Int_t coboIdx = 0);             ///< Returns the number of time buckets of the data
 
-   // STMap *GetSTMap();
-   // STPlot *GetSTPlot();
-
    Int_t GetFPNChannel(Int_t chIdx);
    void SetPseudoTopologyFrame(Int_t asadMask, Bool_t check = kFALSE);
-   // void SetAuxChannel(std::vector<Int_t> AuxCh);
    void SetNumCobo(Int_t numCobo);
 
-#ifndef __CINT__
-   typedef boost::multi_array<double, 3> multiarray;
-   typedef multiarray::index index;
-   multiarray AtPadCoordArr;
-#endif //__CINT__
-
-   ClassDef(AtCore2, 2);
+   ClassDef(AtCore2, 3);
 };
 
 #endif
