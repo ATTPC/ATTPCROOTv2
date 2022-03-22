@@ -22,12 +22,12 @@
 
 ClassImp(AtCore2);
 
-AtCore2::AtCore2() : AtPadCoordArr(boost::extents[10240][3][2])
+AtCore2::AtCore2()
 {
    Initialize();
 }
 
-AtCore2::AtCore2(std::shared_ptr<AtMap> map) : AtPadCoordArr(boost::extents[10240][3][2]), fMap(map)
+AtCore2::AtCore2(std::shared_ptr<AtMap> map) : fMap(map)
 {
    Initialize();
    SetNumTbs(512);
@@ -38,7 +38,7 @@ AtCore2::AtCore2(std::shared_ptr<AtMap> map, Int_t numCobos) : fNumCobo(numCobos
    Initialize();
    SetNumTbs(512);
 }
-AtCore2::AtCore2(TString filename, std::shared_ptr<AtMap> map) : AtPadCoordArr(boost::extents[10240][3][2])
+AtCore2::AtCore2(TString filename, std::shared_ptr<AtMap> map) : fMap(map)
 {
 
    Initialize();
@@ -47,22 +47,13 @@ AtCore2::AtCore2(TString filename, std::shared_ptr<AtMap> map) : AtPadCoordArr(b
 }
 
 AtCore2::AtCore2(TString filename, Int_t numTbs, Int_t windowNumTbs, Int_t windowStartTb)
-   : AtPadCoordArr(boost::extents[10240][3][2])
 {
    Initialize();
    AddData(filename);
    SetNumTbs(numTbs);
 }
 
-AtCore2::~AtCore2()
-{
-   /*for(Int_t i=0;i<10;i++)
-   {
-     delete fDecoderPtr[i];
-     delete fPedestalPtr[i];
-   }
-   delete fAtMapPtr;*/
-}
+AtCore2::~AtCore2() {}
 
 void AtCore2::Initialize()
 {
@@ -93,6 +84,7 @@ void AtCore2::Initialize()
    std::cout << " =========== End of AtCore2 Initialization. Number of Cobo/AsAd : " << fNumCobo << "\n";
 }
 
+// Default coboIdx is 0
 Bool_t AtCore2::AddData(TString filename, Int_t coboIdx)
 {
    return fDecoderPtr[coboIdx]->AddData(filename);

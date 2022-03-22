@@ -280,6 +280,7 @@ ENDIF(HAS_CXX11_SHAREDPOINTER)
 
 add_subdirectory (AtSimulationData)
 add_subdirectory (AtData)
+add_subdirectory (AtUnpack)
 add_subdirectory (AtGenerators)
 add_subdirectory (AtTpc)
 add_subdirectory (AtSiArray)

@@ -2,8 +2,8 @@
  *
  *********************************************************************/
 
-#ifndef _AtHDFPARSER_H_
-#define _AtHDFPARSER_H_
+#ifndef _AtHDFUNPACKER_H_
+#define _AtHDFUNPACKER_H_
 
 #include "TObject.h"
 #include "TROOT.h"
@@ -16,13 +16,49 @@
 
 #include <iostream>
 
-class AtHDFParser : public TObject {
+#include "AtUnpacker.h"
+
+class AtRawEvent;
+class AtPad;
+struct PadReference;
+
+class AtHDFUnpacker : public AtUnpacker {
+
+private:
+   Int_t fNumberTimestamps;
+   Bool_t fIsBaseLineSubtraction;
+
+   hid_t _file;
+   hid_t _group;
+   hid_t _dataset;
+   std::vector<std::string> _eventsbyname;
+
+   std::size_t fFirstEvent;
+   std::size_t fLastEvent;
 
 public:
-   AtHDFParser();
-   ~AtHDFParser();
+   AtHDFUnpacker(mapPtr map);
+   ~AtHDFUnpacker() = default;
+
+   void SetBaseLineSubtraction(Bool_t value) { fIsBaseLineSubtraction = value; }
+   void SetNumberTimestamps(int numTimestamps) { fNumberTimestamps = numTimestamps; };
+
+   void Init() override;
+   void FillRawEvent(AtRawEvent &event) override;
+   bool IsLastEvent() override;
+   Long64_t GetNumEvents() override;
+
+private:
+   void setEventIDAndTimestamps();
+   void processData();
+   void processPad(std::size_t padIndex);
+   AtPad *createPadAndSetIsAux(const PadReference &padRef);
+   void setDimensions(AtPad *pad);
+   Float_t getBaseline(const std::vector<int16_t> &data);
+   void setAdc(AtPad *pad, const std::vector<int16_t> &data);
 
    enum class IO_MODE { READ, WRITE };
+
    hid_t open_file(char const *file, IO_MODE mode);
    std::tuple<hid_t, hsize_t> open_group(hid_t fileId, char const *group);
 
@@ -49,29 +85,12 @@ public:
    std::vector<int16_t> pad_raw_data(std::size_t i_pad);
    std::vector<uint64_t> get_header(std::string headerName);
    std::size_t datasets();
-   std::size_t inievent();
    static herr_t file_info(hid_t loc_id, const char *name, const H5L_info_t *linfo, void *opdata);
    void end_raw_event();
    void close();
-
-   std::vector<std::string> get_events_by_name() { return _eventsbyname; }
-   void set_inievent(std::size_t inievent) { _inievent = inievent; }
    std::string get_event_name(std::size_t idx);
 
-   std::size_t getFirstEvent() { return _firstEvent; };
-   std::size_t getLastEvent() { return _lastEvent; };
-
-private:
-   hid_t _file;
-   hid_t _group;
-   hid_t _dataset;
-   std::size_t _inievent;
-   std::vector<std::string> _eventsbyname;
-
-   std::size_t _firstEvent;
-   std::size_t _lastEvent;
-
-   ClassDef(AtHDFParser, 1);
+   ClassDefOverride(AtHDFUnpacker, 1);
 };
 
 #endif

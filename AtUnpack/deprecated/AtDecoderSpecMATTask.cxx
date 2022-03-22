@@ -163,11 +163,6 @@ InitStatus AtDecoderSpecMATTask::Init()
       return kERROR;
    }
 
-   /* old map style
-   fDecoder = new AtCoreSpecMAT(fOpt);
-   fDecoder->SetInhibitMaps(fIniMap, fLowgMap, fXtalkMap);
-   */
-   // new map style
    fDecoder = std::make_unique<AtCoreSpecMAT>(fMap);
    fDecoder->SetNumCobo(fNumCobo);
    fDecoder->SetIsPadPlaneCobo(fIsCoboPadPlane);
@@ -196,21 +191,6 @@ InitStatus AtDecoderSpecMATTask::Init()
 
    fDecoder->SetFPNPedestal(fFPNPedestalRMS);
 
-   /* old map style
-     Bool_t kMapIn = fDecoder->SetAtTpcMap(fMap);
-
-   if (!kMapIn) {
-      LOG(error) << "Cannot find SpecMAT Map!";
-
-      return kERROR;
-   }
-
-
-   if (fAuxChannels.size() > 0) {
-      fDecoder->SetAuxChannel(fAuxChannels);
-   }
-   */
-   // new map style
    if (fMap == nullptr) {
       LOG(error) << "SpecMAT Map was never set!";
       return kERROR;

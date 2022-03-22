@@ -96,11 +96,6 @@ public:
    void SetIsPadPlaneCobo(Bool_t *IsPadPlane); // Sets whether cobo belongs reads out padplane
                                                // signals or scintillator signals
 
-   /* old map style
-   Bool_t SetAtTpcMap(Char_t const *lookup);
-   Bool_t SetInhibitMaps(TString inimap, TString lowgmap, TString xtalkmap);
-   */
-   // new map style
    void SetMap(std::shared_ptr<AtSpecMATMap> map) { fMap = map; }
 
    void GetFPNChannelsFromROOTFILE(Long64_t EventNr);

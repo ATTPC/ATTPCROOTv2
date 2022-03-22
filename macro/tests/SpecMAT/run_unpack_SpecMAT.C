@@ -70,35 +70,37 @@ void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root")
    FairParAsciiFileIo *parIo2 = new FairParAsciiFileIo();
    parIo2->open(trigParFile.Data(), "in");
    rtdb->setSecondInput(parIo2);
-
+   rtdb->getContainer("AtDigiPar");
    // ------------------------------------------------------------------------
 
    // Create the map that will be pased to tasks that require it
    auto fMapPtr = std::make_shared<AtSpecMATMap>(3174);
    fMapPtr->ParseXMLMap(scriptdir.Data());
    fMapPtr->GeneratePadPlane();
-   // mapPtr->SetInhibitMaps(inimap,lowgmap,xtalkmap); // TODO: Only
-   // implemented for fUseSeparatedData!!!!!!!!!!!!!!!!!!!1
 
-   AtDecoderSpecMATTask *fDecoderTask = new AtDecoderSpecMATTask();
-   fDecoderTask->SetUseSeparatedData(false);
+   // Set arrays required of unpacker
+   std::vector<bool> isCoboPadPlane = {true, false, true, true};
+   std::vector<bool> isCoboNegativePolarity;
+   // Positive polarity for padplane, negative for scintillators
+   for (auto elem : isCoboPadPlane)
+      isCoboNegativePolarity.push_back(!elem);
 
-   Bool_t IsCoboPositivePolarity[4] = {true, false, true,
-                                       true}; // Positive polarity for padplane, negative for scintillators
-   fDecoderTask->SetPositivePolarity(IsCoboPositivePolarity);
-   fDecoderTask->SetPersistence(kTRUE);
-   fDecoderTask->SetMap(fMapPtr);
-   fDecoderTask->SetNumCobo(4);
-   Bool_t IsCoboPadPlane[4] = {true, false, true, true};
-   fDecoderTask->SetIsCoboPadPlane(IsCoboPadPlane);
-   fDecoderTask->AddData(dataFile);
-   run->AddTask(fDecoderTask);
+   // Create unpacker and fill set required info
+   auto unpacker = std::make_unique<AtROOTUnpacker>(fMapPtr);
+   unpacker->SetIsPadPlaneCobo(isCoboPadPlane);
+   unpacker->SetIsNegativePolarity(isCoboNegativePolarity);
+   unpacker->SetInputFileName(dataFile.Data());
+   // Create task and add to run
+   auto unpackTask = new AtUnpackTask(std::move(unpacker));
+   unpackTask->SetPersistence(true);
+   run->AddTask(unpackTask);
 
    AtPSASimple2 *psa = new AtPSASimple2();
-   AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetPersistence(kTRUE);
    psa->SetThreshold(50);
    psa->SetMaxFinder();
+
+   AtPSAtask *psaTask = new AtPSAtask(psa);
+   psaTask->SetPersistence(kTRUE);
    run->AddTask(psaTask);
 
    /*
