@@ -11,9 +11,10 @@
 #include "AtHit.h"
 #include "AtAuxPad.h"
 
-using hitVector = std::vector<AtHit>;
 using auxPadVector = std::vector<AtAuxPad>;
 using traceArray = std::array<Float_t, 512>;
+using hitPtr = std::unique_ptr<AtHit>;
+using hitVector = std::vector<AtHit>;
 
 class AtEvent : public TNamed {
 private:
@@ -24,7 +25,7 @@ private:
    Double_t fRhoVariance = 0;
    ULong_t fTimestamp = 0;
 
-   std::vector<AtHit> fHitArray;
+   hitVector fHitArray;
    std::vector<AtAuxPad> fAuxPadArray;
    std::map<Int_t, Int_t> fMultiplicityMap;
 
@@ -46,6 +47,16 @@ public:
    {
       LOG(debug) << "Adding hit with ID " << fHitArray.size() << " to event " << fEventID;
       fHitArray.emplace_back(fHitArray.size(), std::forward<Ts>(params)...);
+      return fHitArray.back();
+   }
+
+   // Clones the hit and adds it to the event, setting the hitID to the next valid for
+   // this event. It is not coppied from the passed hit.
+   AtHit &AddHit(AtHit &hit)
+   {
+      LOG(debug) << "Adding hit with ID " << fHitArray.size() << " to event " << fEventID;
+      fHitArray.emplace_back(hit);
+      fHitArray.back().SetHitID(fHitArray.size() - 1);
       return fHitArray.back();
    }
 
