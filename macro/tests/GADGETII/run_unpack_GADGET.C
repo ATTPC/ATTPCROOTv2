@@ -51,30 +51,7 @@ void run_unpack_GADGET(TString dataFile = "./data/GADGET-alpha-source-data2.txt"
    unpacker->SetInputFileName(dataFile.Data(), "AsAd%i");
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetPersistence(true);
-   /*
-   AtDecoder2Task *fDecoderTask = new AtDecoder2Task();
-   fDecoderTask->SetNumCobo(4);
-   fDecoderTask->SetUseSeparatedData(true);
-   fDecoderTask->SetPseudoTopologyFrame(kFALSE);
-   fDecoderTask->SetPersistence(kTRUE);
-   fDecoderTask->SetMap(fMapPtr);
 
-   std::ifstream listFile(dataFile.Data());
-   TString dataFileWithPath;
-   Int_t iAsAd = 0;
-   while (dataFileWithPath.ReadLine(listFile)) {
-      if (dataFileWithPath.Contains(Form("AsAd%i", iAsAd))) {
-         fDecoderTask->AddData(dataFileWithPath, iAsAd);
-         std::cout << " Added file : " << dataFileWithPath << " - iAsAd : " << iAsAd << "\n";
-      } else {
-
-         fDecoderTask->AddData(dataFileWithPath, iAsAd);
-         cout << " Add data file " << endl;
-      }
-
-      iAsAd++;
-   }
-   */
    AtPSASimple2 *psa = new AtPSASimple2();
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);

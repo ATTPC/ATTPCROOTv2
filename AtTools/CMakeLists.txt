@@ -5,6 +5,7 @@ set(SRCS
   AtParsers.cxx
   AtELossManager.cxx
   AtCSVReader.h
+  AtEulerTransformation.cxx
   )
 
 

@@ -26,7 +26,6 @@
 #pragma link C++ class AtTPC2Body + ;
 #pragma link C++ class AtTPC_d2He + ;
 #pragma link C++ class AtTPC_Background + ;
-#pragma link C++ class AtEulerTransformation + ;
 #pragma link C++ class AtTPCFissionGenerator + ;
 #pragma link C++ class AtTPCFissionGeneratorV2 + ;
 #pragma link C++ class AtTPCFissionGeneratorV3 + ;
