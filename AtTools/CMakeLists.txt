@@ -1,44 +1,33 @@
-set(INCLUDE_DIRECTORIES
-${BASE_INCLUDE_DIRECTORIES}
-${ROOT_INCLUDE_DIR}
-${Boost_INCLUDE_DIRS}
-${CMAKE_SOURCE_DIR}
-${CMAKE_SOURCE_DIR}/AtTools
-)
-
-
-include_directories(${INCLUDE_DIRECTORIES})
-
-set(LINK_DIRECTORIES
-  ${ROOT_LIBRARY_DIR}
-  ${FAIRROOT_LIBRARY_DIR}
-  ${Boost_LIBRARY_DIRS}
-  )
-
-link_directories( ${LINK_DIRECTORIES})
+Set(LIBRARY_NAME AtTools)
+Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
 set(SRCS
-
   AtParsers.cxx
   AtELossManager.cxx
-
+  AtCSVReader.h
   )
+
+
+set(INCLUDE_DIRECTORIES
+${BASE_INCLUDE_DIRECTORIES}
+)
+
+set(LINK_DIRECTORIES
+  ${FAIRROOT_LIBRARY_DIR}
+)
 
 Set(DEPENDENCIES
   Base
   FairTools
   XMLParser
-  Core
-  FairLogger::FairLogger
-  ${Boost_LOG_LIBRARY}
-  ${Boost_LOG_SETUP_LIBRARY}
-  ${Boost_THREAD_LIBRARY}
-  ${Boost_DAtE_TIME_LIBRARY}
-  ${Boost_FILESYSTEM_LIBRARY}
-  ${Boost_SYSTEM_LIBRARY}
+  ROOT::Core
 )
 
-Set(LIBRARY_NAME AtTools)
-Set(LINKDEF AtToolsLinkDef.h)
+generate_target_root_library(${LIBRARY_NAME}
+  LINKDEF ${LINKDEF}
+  SRCS ${SRCS}
+  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
+  LIBRARY_DIR ${LINK_DIRECTORIES}
+  DEPS_PUBLIC ${DEPENDENCIES}
+  )
 
-GENERATE_LIBRARY()

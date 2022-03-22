@@ -24,7 +24,6 @@ AtTPCXSManager.cxx
 AtTPCGammaDummyGenerator.cxx
 AtTPC20MgDecay.cxx
 
-AtCSVReader.h
 )
 
 set(INCLUDE_DIRECTORIES
@@ -38,8 +37,10 @@ set(DEPENDENCIES
   ROOT::Core
   ROOT::MathCore
   ROOT::GenVector
+
   AtSimulationData
   AtTpc
+  AtTools
   )
 
 set(LINK_DIRECTORIES
