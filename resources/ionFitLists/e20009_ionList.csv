@@ -1,0 +1,7 @@
+Ion,PDG,Mass,Atomic Number,Mass number,Eloss File
+proton,2212,1.00727646,1,1,/resources/energy_loss/proton_D2_600torr.txt
+deuteron,1000010020,2.0135532,1,2,/resources/energy_loss/deuteron_D2_600torr.txt
+He-4,1000020040,4.002603254,2,4,/resources/energy_loss/alpha_D2_600torr.txt
+He-6,1000020060,6.018889124,2,6,/resources/energy_loss/He6_D2_600torr.txt
+Be-10,1000040100,10.01353382,4,10,/resources/energy_loss/Be10_D2_600torr.txt
+Be-11,1000040110,11.02165775,4,11,/resources/energy_loss/Be11_D2_600torr.txt

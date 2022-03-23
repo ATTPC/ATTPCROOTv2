@@ -496,23 +496,27 @@ void plotFit_full_dp(std::string fileFolder = "data_181_366/") //"dataFull/")//"
                                        QvsTrackLengthH->Fill(QcorrZ, (*trackLengthVec)[index]);
 
 				       //First Orbit
-				       if((*phiOrbZVec)[index]>5.5 && (*phiOrbZVec)[index]<14.8){
-					 Double_t OrbZ = (*firstOrbZVec)[index];
-					 if((*lengthOrbZVec)[index]>25 && OrbZ>0.0 && QcorrZ>-0.3 && QcorrZ<2.0){
-					 fOrbZvsfOrbLength->Fill((*firstOrbZVec)[index]-(*ziniFitXtrVec)[index],(*lengthOrbZVec)[index]);
-				       PhiOrbZH->Fill((*phiOrbZVec)[index]);
-				       fOrbLengthvsEFit->Fill((*lengthOrbZVec)[index],(*EFitVec)[index]);
-				       fOrbZvsEFit->Fill((*firstOrbZVec)[index]-(*ziniFitXtrVec)[index],(*EFitVec)[index]);
-				       fOrbZvsEx->Fill((*firstOrbZVec)[index],QcorrZ);
-				       fOrbZvsZ->Fill((*firstOrbZVec)[index],(*ziniFitXtrVec)[index]);
-				       HQCorrOrbZ->Fill(QcorrZ);
-				       fOrbZvsAFit->Fill((*firstOrbZVec)[index]-(*ziniFitXtrVec)[index],(*AFitVec)[index]);
-				       fOrbZvsMomLoss->Fill((*firstOrbZVec)[index]-(*ziniFitXtrVec)[index],(*eLossOrbZVec)[index]);
-				       fOrbLengthvsMomLoss->Fill((*lengthOrbZVec)[index],(*eLossOrbZVec)[index]);
-				       }
-				       }
-                                      
-				       
+                                       if ((*phiOrbZVec)[index] > 5.5 && (*phiOrbZVec)[index] < 14.8) {
+                                          Double_t OrbZ = (*firstOrbZVec)[index];
+                                          if ((*lengthOrbZVec)[index] > 25 && OrbZ > 0.0 && QcorrZ > -0.3 &&
+                                              QcorrZ < 2.0) {
+                                             fOrbZvsfOrbLength->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index],
+                                                                     (*lengthOrbZVec)[index]);
+                                             PhiOrbZH->Fill((*phiOrbZVec)[index]);
+                                             fOrbLengthvsEFit->Fill((*lengthOrbZVec)[index], (*EFitVec)[index]);
+                                             fOrbZvsEFit->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index],
+                                                               (*EFitVec)[index]);
+                                             fOrbZvsEx->Fill((*firstOrbZVec)[index], QcorrZ);
+                                             fOrbZvsZ->Fill((*firstOrbZVec)[index], (*ziniFitXtrVec)[index]);
+                                             HQCorrOrbZ->Fill(QcorrZ);
+                                             fOrbZvsAFit->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index],
+                                                               (*AFitVec)[index]);
+                                             fOrbZvsMomLoss->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index],
+                                                                  (*eLossOrbZVec)[index]);
+                                             fOrbLengthvsMomLoss->Fill((*lengthOrbZVec)[index], (*eLossOrbZVec)[index]);
+                                          }
+                                       }
+
                                        if ((*ziniFitXtrVec)[index] > 0.0 && (*ziniFitXtrVec)[index] < 100.0) {
                                           Int_t zIndex = (Int_t)floor((*ziniFitXtrVec)[index] / 10);
                                           // std::cout<<" zIndex "<<zIndex<<"\n";

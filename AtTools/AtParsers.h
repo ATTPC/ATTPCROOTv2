@@ -17,37 +17,52 @@
 #include "TXMLNode.h"
 #include "TList.h"
 
+#include "AtFormat.h"
 
-namespace AtTools{
+namespace AtTools {
 
-  struct IonFitInfo{
-     std::string _ionName;
-     UInt_t _PDG;
-     Int_t _mass;
-     Int_t _atomicNumber;
-     std::string _eLossFile;
-   };
-  
-   class AtParsers : public TObject{
+struct IonFitInfo {
+   std::string _ionName;
+   UInt_t _PDG;
+   Int_t _mass;
+   Int_t _atomicNumber;
+   UInt_t _MassNumber;
+   std::string _eLossFile;
 
-   public:
-    AtParsers();
-    ~AtParsers();
+  friend std::ostream& operator << (std::ostream& out, const AtTools::IonFitInfo& ifi)
+   {
 
-    Int_t ParseIonFitXML(TString filename);
+     out<<cGREEN<<" Ion name :"<<ifi._ionName<<"\n";
+     out<<" PDG : "<<ifi._PDG<<"\n";
+     out<<" Mass (AMU) : "<<ifi._mass<<"\n";
+     out<<" Atomic Number : "<<ifi._atomicNumber<<"\n";
+     out<<" Mass Number : "<<ifi._MassNumber<<"\n";
+     out<<" Energy loss file : "<<ifi._eLossFile<<cNORMAL<<"\n"; 
+     return out;
+   }
 
-   private:
+};
 
-    std::vector<IonFitInfo> ionList;
+class AtParsers : public TObject {
+
+public:
+   AtParsers();
+   ~AtParsers();
+
+   Int_t ParseIonFitXML(TString filename);
+   std::vector<IonFitInfo>* GetIonFile() {return &ionList;}
     
-   ClassDef(AtParsers,1)
+private:
 
-     };
+  void ParseIonList(TXMLNode *node);
+  IonFitInfo ParseIon(TXMLNode *node, Int_t id);
+  
+  std::vector<IonFitInfo> ionList;
+  
+  
+   ClassDef(AtParsers, 1)
+};
 
-   
-
-}   
-
+} // namespace AtTools
 
 #endif
-  

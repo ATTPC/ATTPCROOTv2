@@ -10,7 +10,6 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
- 
 
 #include <iomanip>
 #include <cstdlib>
@@ -21,7 +20,7 @@
 #include <vector>
 #include <set>
 #include <string>
-#include <math.h>   
+#include <math.h>
 #include <cassert>
 
 #include "TRandom3.h"
@@ -29,7 +28,7 @@
 #include "TPolyMarker3D.h"
 #include "TCanvas.h"
 #include "TMath.h"
-#include "TROOT.h"  
+#include "TROOT.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
 #include "TTree.h"
@@ -38,59 +37,56 @@
 #include "TFile.h"
 #include "TGraph.h"
 
-namespace AtTools{
+namespace AtTools {
 
+class AtELossManager : public TObject {
 
-  class AtELossManager : public TObject{
+public:
+   AtELossManager();
+   AtELossManager(std::string Eloss_file, Double_t Mass);
+   ~AtELossManager();
 
-   public:
-    AtELossManager();
-    AtELossManager(std::string Eloss_file, Double_t Mass);
-    ~AtELossManager();
+   Double_t GetEnergyLossLinear(Double_t energy, Double_t distance);
+   Double_t GetEnergyLoss(Double_t energy, Double_t distance);
+   Double_t GetInitialEnergy(Double_t FinalEnergy, Double_t PathLength, Double_t StepSize);
+   Double_t GetFinalEnergy(Double_t InitialEnergy, Double_t PathLength, Double_t StepSize);
+   Double_t GetDistance(Double_t InitialE, Double_t FinalE, Double_t StepSize);
+   Double_t GetPathLength(Float_t InitialEnergy, Float_t FinalEnergy, Float_t DeltaT);
+   Double_t LoadRange(Float_t energy1);
+   Double_t GetTimeOfFlight(Double_t InitialEnergy, Double_t PathLength, Double_t StepSize);
+   void SetIonMass(Double_t IonMass);
+   void InitializeLookupTables(Double_t MaximumEnergy, Double_t MaximumDistance, Double_t DeltaE, Double_t DeltaD);
+   void PrintLookupTables();
+   Double_t GetLookupEnergy(Double_t InitialEnergy, Double_t distance);
 
-    Double_t GetEnergyLossLinear(Double_t energy, Double_t distance);
-    Double_t GetEnergyLoss(Double_t energy, Double_t distance);
-    Double_t GetInitialEnergy(Double_t FinalEnergy, Double_t PathLength, Double_t StepSize);
-    Double_t GetFinalEnergy(Double_t InitialEnergy, Double_t PathLength, Double_t StepSize);
-    Double_t GetDistance(Double_t InitialE, Double_t FinalE, Double_t StepSize);
-    Double_t GetPathLength(Float_t InitialEnergy, Float_t FinalEnergy, Float_t DeltaT);
-    Double_t LoadRange(Float_t energy1);
-    Double_t GetTimeOfFlight(Double_t InitialEnergy, Double_t PathLength, Double_t StepSize);
-    void SetIonMass(Double_t IonMass); 
-    void InitializeLookupTables(Double_t MaximumEnergy, Double_t MaximumDistance, Double_t DeltaE, Double_t DeltaD);
-    void PrintLookupTables();
-    Double_t GetLookupEnergy(Double_t InitialEnergy, Double_t distance);
-    
-   private:
+private:
+   std::shared_ptr<TGraph> EvD;
 
-    std::shared_ptr<TGraph> EvD;
-    
-  Double_t c;
-  Double_t IonMass;
+   Double_t c;
+   Double_t IonMass;
 
-  Double_t* IonEnergy;
-  Double_t* dEdx_e;
-  Double_t* dEdx_n;
-  Double_t* Range;
+   Double_t *IonEnergy;
+   Double_t *dEdx_e;
+   Double_t *dEdx_n;
+   Double_t *Range;
 
-  Double_t fMaximumEnergy;
-  Double_t fMaximumDistance;
-  Double_t fDeltaD;
-  Double_t fDeltaE;
+   Double_t fMaximumEnergy;
+   Double_t fMaximumDistance;
+   Double_t fDeltaD;
+   Double_t fDeltaE;
 
-  Double_t* EtoDtab;
-  Double_t* DtoEtab;
+   Double_t *EtoDtab;
+   Double_t *DtoEtab;
 
-  Int_t points;
-  Int_t last_point;
-  Int_t points1;
-  Int_t last_point1;
-  Bool_t Energy_in_range;
-  Bool_t GoodELossFile;
+   Int_t points;
+   Int_t last_point;
+   Int_t points1;
+   Int_t last_point1;
+   Bool_t Energy_in_range;
+   Bool_t GoodELossFile;
 
-    ClassDef(AtELossManager,1)
-
-  };
-}
+   ClassDef(AtELossManager, 1)
+};
+} // namespace AtTools
 
 #endif
