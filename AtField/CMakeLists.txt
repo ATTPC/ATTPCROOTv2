@@ -12,7 +12,7 @@ AtFieldPar.cxx
 )
 
 set(INCLUDE_DIRECTORIES
-${BASE_INCLUDE_DIRECTORIES} 
+  ${FAIRROOT_INCLUDE_DIR}
 )
 
 set(LINK_DIRECTORIES
@@ -23,6 +23,7 @@ Set(DEPENDENCIES
     Base 
     FairTools
     ROOT::Core
+    #ROOT::VMC
 )
 
 

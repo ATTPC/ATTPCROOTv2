@@ -1,7 +1,7 @@
-# The name of our project is “ATTPC”.  CMakeLists files in this project can
-# refer to the root source directory of the project as ${ATTPC_SOURCE_DIR}
+# The name of our project is “ATTPCROOT”.  CMakeLists files in this project can
+# refer to the root source directory of the project as ${ATTPCROOT_SOURCE_DIR}
 # or as ${CMAKE_SOURCE_DIR} and to the root binary directory of the project as
-# ${ATTPC_BINARY_DIR} or ${CMAKE_BINARY_DIR}.
+# ${ATTPCROOT_BINARY_DIR} or ${CMAKE_BINARY_DIR}.
 # This difference is important for the base classes which are in FAIRROOT
 # and the experiment part.
 
@@ -29,27 +29,25 @@ endif()
 CMAKE_MINIMUM_REQUIRED(VERSION  3.11.0 FATAL_ERROR)
 cmake_policy(VERSION 3.11...3.14)
 
-### CMP0025   Compiler id for Apple Clang is now AppleClang.
-### CMP0042   MACOSX_RPATH is enabled by default.
-
 foreach(p
-  CMP0025 # CMake 3.0
+  CMP0025 # Compiler id for Apple Clang is now AppleClang.
   CMP0028 # double colon for imported and alias targets
-  CMP0042 # CMake 3.0
+  CMP0042 # MACOSX_RPATH is enabled by default.
   )
   if(POLICY ${p})
   cmake_policy(SET ${p} NEW)
   endif()
 endforeach()
 
-# Set name of our project to “ATTPC". Has to be done
-# after check of cmake version since this is a new feature
-project(ATTPC)
+# Set name of our project to “ATTPCROOT", and set the version numbers (replaces old method of setting
+# version variables).
+project(ATTPCROOT
+  VERSION 1.0.0)
 
+# Create a JSON compilation database 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-#In case you need Fortran
-#ENABLE_LANGUAGE(Fortran)
+
 
 # Check for needed environment variables
 IF(NOT DEFINED ENV{FAIRROOTPATH})
@@ -63,10 +61,8 @@ ENDIF(NOT DEFINED ENV{SIMPATH})
 SET(SIMPATH $ENV{SIMPATH})
 SET(FAIRROOTPATH $ENV{FAIRROOTPATH})
 
-# where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/
-# is checked
-#Remove defaults becuse we want to fource config loading over FindModules
-#set(CMAKE_MODULE_PATH "${FAIRROOTPATH}/share/fairbase/cmake/modules"  ${CMAKE_MODULE_PATH})
+# where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
+# Remove defaults becuse we want to force config loading over FindModules
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 Set(CheckSrcDir "${FAIRROOTPATH}/share/fairbase/cmake/checks")
@@ -84,11 +80,10 @@ include(FairMacros)
 include(WriteConfigFile)
 include(CTest)
 include(CheckCompiler)
-include(AtROOTMacros)
-include(FairRootTargetRootDictionary)
+include(ROOTTargetMacros)
 include(GNUInstallDirs)
-  
-#include(CheckFortran)
+
+CHECK_OUT_OF_SOURCE_BUILD()
 
 #Check the compiler and set the compile and link flags
 If(NOT CMAKE_BUILD_TYPE)
@@ -101,19 +96,13 @@ Check_Compiler()
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -std=c++14)
+
 # If we are building debug then
 message("Building in ${CMAKE_BUILD_TYPE}")
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   message("Suppressing warning from precompiler conditions because of FairLogger!")
   add_compile_options(-Wno-cpp "-Wno-#warnings")
 endif()
-
-#String(FIND "${CMAKE_CXX_FLAGS}" "-std=c++14" POS_C++11)
-#If(${POS_C++11} EQUAL -1)
-#      Message(FATAL_ERROR "FairSoft wasn't compiled with c++11, c++14 or c++17 support. Please recompile FairSoft with a compiler which supports at least c++11.")
-# EndIf()
-
 
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
@@ -133,26 +122,16 @@ Else(USE_PATH_INFO)
   STRING(REGEX MATCHALL "[^:]+" PATH $ENV{PATH})
 EndIf(USE_PATH_INFO)
 
-
-# Check if the user wants to build the project in the source
-# directory
-CHECK_OUT_OF_SOURCE_BUILD()
-
 # Check if we are on an UNIX system. If not stop with an error
 # message
 IF(NOT UNIX)
   MESSAGE(FATAL_ERROR "You're not on an UNIX system. The project was up to now only tested on UNIX systems, so we break here. If you want to go on please edit the CMakeLists.txt in the source directory.")
 ENDIF(NOT UNIX)
 
-# Check if the external packages are installed into a separate install
-# directory
-CHECK_EXTERNAL_PACKAGE_INSTALL_DIR()
-
 # searches for needed packages
 # REQUIRED means that cmake will stop if this packages are not found
 # For example the framework can run without GEANT4, but ROOT is
 # mandatory
-
 
 find_package2(PUBLIC ROOT 6.16 CONFIG)
 if(NOT ROOT_FOUND)
@@ -160,15 +139,22 @@ if(NOT ROOT_FOUND)
   message("Looked for ROOT using modules and found ${ROOT_VERSION}")
 endif()
 
-include(ROOTMacros)
-if(ROOT_vmc_FOUND)
-  set(VMCLIB ROOT::VMC)
-else()
+if(NOT ROOT_vmc_FOUND)
   message("NO VMC in ROOT install, looking for seperate package")
-  find_package2(PUBLIC VMC REQUIRED)
-  set(VMCLIB VMCLibrary)
+  find_package2(PUBLIC VMC REQUIRED CONFIG)
+  set_target_properties(VMCLibrary PROPERTIES IMPORTED_GLOBAL TRUE)
+  add_library(ROOT::VMC ALIAS VMCLibrary)
 endif()
 
+ 
+#if(ROOT_vmc_FOUND)
+#  set(VMCLIB ROOT::VMC)
+#else()
+#  message("NO VMC in ROOT install, looking for seperate package")
+#  find_package2(PUBLIC VMC REQUIRED CONFIG)
+#  add_library(ROOT::VMC ALIAS VMCLibrary)
+#  set(VMCLIB VMCLibrary)
+#endif()
 
 find_package2(PUBLIC FairLogger  VERSION 1.2.0 REQUIRED)
 foreach(dep IN LISTS FairLogger_PACKAGE_DEPENDENCIES)
@@ -234,49 +220,27 @@ find_package2(PUBLIC OpenMP)
 find_package2(PUBLIC CUDA)
 find_package2(PUBLIC Eigen3 CONFIG)
 find_package2(PUBLIC FLANN)
-#find_package2(PUBLIC VTK)
 find_package2(PUBLIC HiRAEVT CONFIG)
 
-# set a variable which should be used in all CMakeLists.txt
-# Defines all basic include directories from fairbase
-SetBasicVariables()
+# FAIRROOT depends on VMC in a way that it exposes the headers, but does not
+# need someone who is linking against it to also link against VMC. Until FairRoot
+# finally finished the move to modern CMake this is a hacky way of ensure that if
+# you include FairRoot, you are also getting the headers it depends on
+# This replaces the call to SetBasicVariables in FairMacros.cmake which did some
+# nasty things like calling link_directories() and include_directories()
+set(FAIRROOT_INCLUDE_DIR ${FAIRROOT_INCLUDE_DIR}
+  ${VMC_INCLUDE_DIRS}
+  )
 
-# Set the library version in the main CMakeLists.txt
-SET(ATTPCROOT_MAJOR_VERSION 0)
-SET(ATTPCROOT_MINOR_VERSION 0)
-SET(ATTPCROOT_PATCH_VERSION 0)
-SET(ATTPCROOT_VERSION "${ATTPCROOT_MAJOR_VERSION}.${ATTPCROOT_MINOR_VERSION}.${ATTPCROOT_PATCH_VERSION}")
-
-set(ATTPCROOT_LIBRARY_PROPERTIES ${ATTPCROOT_LIBRARY_PROPERTIES}
-  VERSION "${ATTPCROOT_VERSION}"
-  SOVERSION "${ATTPCROOT_MAJOR_VERSION}.${ATTPCROOT_MINOR_VERSION}"
-)
-set(PROJECT_LIBRARY_PROPERTIES ${ATTPCROOT_LIBRARY_PROPERTIES})
-
-configure_file(${CMAKE_SOURCE_DIR}/cmake/scripts/FairRootConfigVersion.cmake.in "${CMAKE_BINARY_DIR}/FairRootConfigVersion.cmake" @ONLY)
-
-Generate_Version_Info()
-
-SET(_LIBDIR ${CMAKE_BINARY_DIR}/lib)
-SET(LD_LIBRARY_PATH  ${_LIBDIR} ${LD_LIBRARY_PATH})
-
-
-# Check if the compiler support specific C++11 features
-# Up to now this is only a check since the code does not use
-# any of the features of the new standard
-include(CheckCXX11Features)
-
-IF(HAS_CXX11_SHAREDPOINTER)
-  Add_Definitions(-DHAS_SHAREDPOINTER)
-ENDIF(HAS_CXX11_SHAREDPOINTER)
-
-# Recurse into the given subdirectories.  This does not actually
-# cause another cmake executable to run.  The same process will walk through
-# the project's entire directory structure.
+set(LD_LIBRARY_PATH  ${CMAKE_BINARY_DIR}/lib ${LD_LIBRARY_PATH})
 
 # Make sure that we always return something when we say we are
 # I have seen this cause all sorts of errors in the code from segfaults to
 # infinite loops. 
+
+# Recurse into the given subdirectories.  This does not actually
+# cause another cmake executable to run.  The same process will walk through
+# the project's entire directory structure.
 
 add_subdirectory (AtSimulationData)
 add_subdirectory (AtData)
@@ -303,8 +267,6 @@ WRITE_CONFIG_FILE(config.sh)
 
 #### Summary of what was found #####
 
-#MESSAGE("${Green} ROOT_FOUND_VERSION = ${ROOT_VERSION}${ColourReset}")
-
 if (OPENMP_CXX_FOUND)
  # MESSAGE("${Green} OpenMP Support Found ${OpenMP_CXX_SPEC_DATE} ${ColourReset}")
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
@@ -314,32 +276,14 @@ if (OPENMP_CXX_FOUND)
   
 endif()
  
-#if (PCL_FOUND)
-#  MESSAGE("${Green} PCL Support Found ${ColourReset}")
-  #MESSAGE(${PCL_INCLUDE_DIRS})
-  #MESSAGE(${PCL_DEFINITIONS})
-#Else()
-#  MESSAGE("${BoldRed} PCL Support NOT Found: Classes and modules depending on PCL will not be built. ${ColourReset}")
-#endif()
-
-#if(GENFITA2_FOUND)
-#  MESSAGE("${Green} GENFIT FOUND ${ColourReset}")
-#  MESSAGE("${Green} ${GENFIT2_INCLUDE_DIR} ${ColourReset}")
-#  MESSAGE("${Green} ${GENFIT2_LIBRARY_DIR} ${ColourReset}")
-#  MESSAGE("${Green} ${GENFIT2_LDFLAGS} ${ColourReset}")
-#endif()
-#if(VTK_FOUND)
-#  MESSAGE("${Green} VTK Support Found ${ColourReset}")
-  #MESSAGE(${VTK_INCLUDE_DIRS})
-#endif()
 
 configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake
   ${CMAKE_BINARY_DIR}/CTestCustom.cmake
   )
 
 # Print nice summary
-
-
+message(STATUS "  ")
+message(STATUS "  ${Cyan}Compiling ${PROJECT_NAME} Version ${PROJECT_VERSION}${ColourReset}")
 if(CMAKE_CXX_FLAGS)
   message(STATUS "  ")
   message(STATUS "  ${Cyan}GLOBAL CXX FLAGS${CR}  ${BGreen}${CMAKE_CXX_FLAGS}${ColourReset}")
@@ -497,3 +441,4 @@ endif()
 
 message(STATUS "")
 message(STATUS "Searched for cmake config files in : ${CMAKE_PREFIX_PATH}")
+message(STATUS "${VMCLIB}")

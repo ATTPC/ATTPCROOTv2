@@ -7,10 +7,15 @@ set(LINK_DIRECTORIES
   ${FAIRROOT_LIBRARY_DIR}
   )
 
+set(INCLUDE_DIRECTORIES
+  ${FAIRROOT_INCLUDE_DIR}
+  )
+
 set(DEPENDENCIES
   Base
   FairTools
   ROOT::Core
+  #ROOT::VMC
   )
 
 set(SRCS

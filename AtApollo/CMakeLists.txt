@@ -15,7 +15,7 @@ Set(DEPENDENCIES
   Base
   FairTools
   ROOT::Core
-  Cling
+# Cling
 
   AtSimulationData
 )
@@ -29,7 +29,7 @@ AtApolloCrystalCalData.cxx
 AtApolloDigitizer.cxx
 )
 set(INCLUDE_DIRECTORIES
-${BASE_INCLUDE_DIRECTORIES}
+${FAIRROOT_INCLUDE_DIR}
 )
 set(LINK_DIRECTORIES
 ${FAIRROOT_LIBRARY_DIR}

@@ -3,7 +3,7 @@ Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
 
 set(INCLUDE_DIRECTORIES
-${BASE_INCLUDE_DIRECTORIES}
+  ${FAIRROOT_INCLUDE_DIR}
 )
 
 set(LINK_DIRECTORIES
@@ -13,14 +13,9 @@ ${FAIRROOT_LIBRARY_DIR}
 Set(DEPENDENCIES
   Base
   FairTools
-  XMLParser
 
-  #AtAnalysis
-  #AtTpcMap
-  #AtParameter
-  #AtSimulationData
-  
   ROOT::Core
+  ROOT::XMLParser
   )
 
 set(LINK_DIRECTORIES

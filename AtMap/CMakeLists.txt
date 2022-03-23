@@ -8,11 +8,12 @@
 # Create a library called "libAtTpc" which includes the source files given in
 # the array .
 # The extension is already found.  Any number of sources could be listed here.
-Set(LINKDEF AtTpcMapLinkDef.h)
-Set(LIBRARY_NAME AtTpcMap)
+Set(LIBRARY_NAME AtMap)
+Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
+
 
 set(INCLUDE_DIRECTORIES
-${BASE_INCLUDE_DIRECTORIES}
+${FAIRROOT_INCLUDE_DIR}
 )
 set(LINK_DIRECTORIES
 ${FAIRROOT_LIBRARY_DIR}
@@ -29,7 +30,7 @@ AtSpecMATMap.cxx
 Set(DEPENDENCIES
   Base
   FairTools
-  XMLParser
+  ROOT::XMLParser
   ROOT::Core
   )
 

@@ -5,7 +5,7 @@ Set(LINKDEF PassiveLinkDef.h)
 Set(LIBRARY_NAME AtPassive)
 
 set(INCLUDE_DIRECTORIES
-${BASE_INCLUDE_DIRECTORIES}
+${FAIRROOT_INCLUDE_DIR}
 )
 set(LINK_DIRECTORIES
 ${FAIRROOT_LIBRARY_DIR}
@@ -23,8 +23,10 @@ Set(DEPENDENCIES
   FairTools
   GeoBase
   ParBase
-  Geom
+
+  ROOT::Geom
   ROOT::Core
+  ROOT::VMC
   )
 
 

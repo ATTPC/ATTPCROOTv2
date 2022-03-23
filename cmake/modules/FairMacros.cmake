@@ -190,7 +190,7 @@ MACRO (CHECK_OUT_OF_SOURCE_BUILD)
   IF(insource)
     FILE(REMOVE_RECURSE ${CMAKE_SOURCE_DIR}/Testing)
     FILE(REMOVE ${CMAKE_SOURCE_DIR}/DartConfiguration.tcl)
-    MESSAGE(FATAL_ERROR "FAIRROOT should be installed as an out of source build, to keep the source directory clean. Please create a extra build directory and run the command 'cmake path_to_source_dir' in this newly created directory. You have also to delete the directory CMakeFiles and the file CMakeCache.txt in the source directory. Otherwise cmake will complain even if you run it from an out-of-source directory.")
+    MESSAGE(FATAL_ERROR "${PROJECT_NAME} should be installed as an out of source build, to keep the source directory clean. Please create a extra build directory and run the command 'cmake path_to_source_dir' in this newly created directory. You have also to delete the directory CMakeFiles and the file CMakeCache.txt in the source directory. Otherwise cmake will complain even if you run it from an out-of-source directory.")
   ENDIF(insource)
   
 ENDMACRO (CHECK_OUT_OF_SOURCE_BUILD)
@@ -343,14 +343,6 @@ IF(FAIRROOT_FOUND)
     ${FAIRROOT_INCLUDE_DIR}
     ${VMC_INCLUDE_DIRS}
   )
-  Set(SYSTEM_INCLUDE_DIRECTORIES
-    ${ROOT_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIRS}
-  )
-  Set(ROOT_INCLUDE_PATH
-      ${FAIRROOT_INCLUDE_DIR}
-     )
-
 ELSE(FAIRROOT_FOUND)
   Set(BASE_INCLUDE_DIRECTORIES
     ${CMAKE_SOURCE_DIR}/logger
@@ -373,18 +365,7 @@ ELSE(FAIRROOT_FOUND)
     ${CMAKE_SOURCE_DIR}/dbase/dbIO
     ${CMAKE_SOURCE_DIR}/alignment
   )
-  Set(SYSTEM_INCLUDE_DIRECTORIES
-    ${ROOT_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIRS}
-  )
-  Set(ROOT_INCLUDE_PATH
-      ${BASE_INCLUDE_DIRECTORIES}
-  )
 ENDIF(FAIRROOT_FOUND)
-
-Set(BASE_LINK_DIRECTORIES
-    ${ROOT_LIBRARY_DIR}
-)
 
 IF(FAIRROOT_FOUND)
   Set(FAIRLIBDIR ${FAIRROOT_LIBRARY_DIR})
@@ -392,10 +373,6 @@ ELSE(FAIRROOT_FOUND)
   Set(FAIRLIBDIR ${CMAKE_BINARY_DIR}/lib)
 ENDIF(FAIRROOT_FOUND)
 Set(LD_LIBRARY_PATH  ${FAIRLIBDIR} ${LD_LIBRARY_PATH})
-
-include_directories(${BASE_INCLUDE_DIRECTORIES})
-include_directories(SYSTEM ${SYSTEM_INCLUDE_DIRECTORIES})
-link_directories(${BASE_LINK_DIRECTORIES})
 
 EndMacro (SetBasicVariables)
 

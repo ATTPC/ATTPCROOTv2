@@ -1,11 +1,11 @@
-# Create a library called "libAtReco" which includes the source files given in the array .
+# Create a library called "libAtReco" which includes the source files given in the array .o
 
 Set(LIBRARY_NAME AtReconstruction)
 Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
 
 set(INCLUDE_DIRECTORIES
-${BASE_INCLUDE_DIRECTORIES}
+${FAIRROOT_INCLUDE_DIR}
 ${GENFIT2_INCLUDE_DIR}
 
 # Add all the folders having header files you used in the code.
@@ -24,16 +24,16 @@ ${GENFIT2_LIBRARY_DIR}
 Set(DEPENDENCIES
   Base
   FairTools
-  XMLParser
 
   AtAnalysis
-  AtTpcMap
+  AtMap
   AtParameter
   AtSimulationData
   AtData
   
   ROOT::Spectrum
   ROOT::Core
+  ROOT::XMLParser
   
   ${Boost_LOG_LIBRARY}
   ${Boost_LOG_SETUP_LIBRARY}

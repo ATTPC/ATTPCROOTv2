@@ -5,7 +5,7 @@ Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
 
 set(INCLUDE_DIRECTORIES
-${BASE_INCLUDE_DIRECTORIES}
+${FAIRROOT_INCLUDE_DIR}
 
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtUnpack/GETDecoder2
@@ -19,13 +19,14 @@ Set(DEPENDENCIES
   Base
   FairTools
 
-  AtTpcMap
+  AtMap
   AtParameter
   AtData
   
   ROOT::Core
   ROOT::Tree
   ROOT::TreePlayer
+  #ROOT::VMC # Needed for multi-threading (TMCtls.h)
   
   hdf5::hdf5-shared
   )

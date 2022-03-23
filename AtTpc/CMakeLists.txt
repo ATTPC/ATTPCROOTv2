@@ -13,14 +13,7 @@ Set(LINKDEF AtTpcLinkDef.h)
 
 
 set(INCLUDE_DIRECTORIES
-#${Boost_INCLUDE_DIRS}
-${BASE_INCLUDE_DIRECTORIES}
-
-#put here all directories where header files are located
-#${CMAKE_SOURCE_DIR}/AtData
-#${CMAKE_SOURCE_DIR}/AtTpc
-#${CMAKE_SOURCE_DIR}/AtGenerators
-
+${FAIRROOT_INCLUDE_DIR}
 )
 set(LINK_DIRECTORIES
 ${FAIRROOT_LIBRARY_DIR}
@@ -38,7 +31,7 @@ Set(DEPENDENCIES
   Base
   FairTools
   ROOT::Core
-  Cling
+  #Cling
   AtSimulationData
   )
 

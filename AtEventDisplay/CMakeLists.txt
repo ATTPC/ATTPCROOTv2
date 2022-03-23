@@ -4,7 +4,7 @@ Set(LINKDEF AtEventDisplayLinkDef.h) # Change the linkdef name and delete this c
 Set(LIBRARY_NAME AtEventDisplay) # Change the library name and delete this comment
 
 set(INCLUDE_DIRECTORIES
-${BASE_INCLUDE_DIRECTORIES}
+${FAIRROOT_INCLUDE_DIR}
 )
 set(LINK_DIRECTORIES
 ${FAIRROOT_LIBRARY_DIR}
@@ -30,7 +30,7 @@ Set(DEPENDENCIES
 
     AtReconstruction
     AtData
-    AtTpcMap
+    AtMap
     AtS800
     AtParameter
 )
