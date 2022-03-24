@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 project(E20020Analysis)
 
-SET(GENFIT2_DIR "/mnt/simulations/attpcroot/fair_install_2020/GenFit_Inst/")
+#SET(GENFIT2_DIR "/mnt/simulations/attpcroot/fair_install_2020/GenFit_Inst/")
 
 # Check for needed environment variables
 IF(NOT DEFINED ENV{FAIRROOTPATH})
@@ -21,10 +21,10 @@ set(CMAKE_MODULE_PATH "${ATTPCROOTPATH}/cmake/modules" ${CMAKE_MODULE_PATH} "${C
 
 message(${CMAKE_MODULE_PATH})
 
-# You need to tell CMake where to find the ROOT installation. This can be done in a number of ways:
-#   - ROOT built with classic configure/make use the provided $ROOTSYS/etc/cmake/FindROOT.cmake
-#   - ROOT built with CMake. Add in CMAKE_PREFIX_PATH the installation prefix for ROOT
-list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
+#list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
+list(APPEND CMAKE_PREFIX_PATH ${SIMPATH}/..)  #Need access to dependecies of ATTPCROOT
+list(APPEND CMAKE_PREFIX_PATH ${ATTPCROOTPATH}/build/install) #Need access to ATTPCROOT
+
 
 #---Locate the ROOT and VMC packages
 find_package(ROOT 6.16 CONFIG)
@@ -40,47 +40,37 @@ else()
   set(VMCLIB VMCLibrary)
 endif()
 
+message("Looking in: ${CMAKE_PREFIX_PATH}")
 #---Locate other external packages
 find_package(Boost 1.67 REQUIRED)
-find_package(GENFIT2)
-
-include_directories( ${Boost_INCLUDE_DIRS}
-                     ${BASE_INCLUDE_DIRECTORIES}
-                     ${ATTPCROOTPATH}/build/include
-		     ${ATTPCROOTPATH}/build/include/AtDecoder
-		     ${ATTPCROOTPATH}/build/include/AtFitter
-                     ${FAIRROOTPATH}/include
-                     ${CMAKE_SOURCE_DIR}
-		     ${GENFIT2_INCLUDE_DIR}
-                     #${PCL_INCLUDE_DIRS}
-		     )
-
-link_directories( ${FAIRROOT_LIBRARY_DIR}
-                  ${FAIRROOTPATH}/lib
-                  ${ATTPCROOTPATH}/build/lib
-                  ${GENFIT2_LIBRARY_DIR}
-                  #${PCL_LIBRARY_DIRS}
-                  )
-
-#add_definitions(${PCL_DEFINITIONS})
+find_package(GENFIT2 REQUIRED)
+find_package(PCL) # temp until ATTPCROOT properly exports its dependencies
+find_package(HiRAEVT) # temp until ATTPCROOT properly exports its dependencies
+find_package(ATTPCROOT REQUIRED)
 
 message(STATUS ${ATTPCROOTPATH})
 
 add_library(e20020Ana SHARED e20020Ana.cc)
 target_link_libraries(e20020Ana
   ROOT::Core
+  ROOT::GenVector
   ${VMCLIB}
   AtReconstruction
   AtTpc
+  AtSimulationData
   FairTools
   Base
   ${GENFIT2_LIBRARY_DIR}/libgenfit2.so)
+
+target_include_directories(e20020Ana PRIVATE ${GENFIT2_INCLUDE_DIR} ${FAIRROOTPATH}/include)
+  
 
 add_executable(e20020AnaExe e20020Ana.cc)
 target_link_libraries (e20020AnaExe e20020Ana
 ${GENFIT2_LIBRARY_DIR}/libgenfit2.so
 ROOT::EG
 ROOT::Core
+ROOT::GenVector
 ROOT::Gpad
 ROOT::Graf
 ROOT::Graf3d
@@ -100,7 +90,10 @@ ROOT::TreePlayer
 ROOT::Geom
 
 AtReconstruction
-AtTpcMap
+AtMap
 AtTpc
+AtSimulationData
+
 FairTools
 Base)
+target_include_directories(e20020AnaExe PRIVATE ${GENFIT2_INCLUDE_DIR} ${FAIRROOTPATH}/include)

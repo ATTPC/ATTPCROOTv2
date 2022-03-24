@@ -40,7 +40,7 @@
 #include "FairRun.h"
 #include "FairRunAna.h"
 
-#include "AtTpcPoint.h"
+#include "AtMCPoint.h"
 #include "AtEvent.h"
 #include "AtPad.h"
 #include "AtHit.h"
@@ -81,4 +81,4 @@ Double_t omega(Double_t x, Double_t y, Double_t z)
 {
    return sqrt(x * x + y * y + z * z - 2 * x * y - 2 * y * z - 2 * x * z);
 }
-double GetMaximum(double *adc);
+double GetMaximum(const double *adc);
