@@ -1,4 +1,3 @@
-#include "FairLogger.h"
 
 void run_unpack_GADGET(TString dataFile = "./data/GADGET-alpha-source-data2.txt",
                        TString parameterFile = "GADGET.sim.par", TString mappath = "")
