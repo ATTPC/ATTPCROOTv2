@@ -26,7 +26,7 @@ Set(DEPENDENCIES
 
   ROOT::Geom
   ROOT::Core
-  ROOT::VMC
+  #ROOT::VMC
   )
 
 

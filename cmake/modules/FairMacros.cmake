@@ -5,7 +5,7 @@
 #              GNU Lesser General Public Licence (LGPL) version 3,             #
 #                  copied verbatim in the file "LICENSE"                       #
 ################################################################################
-
+# Functions for ATTPCROOT code. Based on FairMacros.cmake from FairRoot.
 
 
 

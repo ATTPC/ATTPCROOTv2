@@ -26,8 +26,6 @@ set(SRCS
   AtMCPoint.cxx
 )
 
-message("****** ${FAIRROOT_INCLUDE_DIR}")
-
 generate_target_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}

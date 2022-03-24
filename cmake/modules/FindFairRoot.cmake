@@ -53,14 +53,14 @@ if(_fairroot_fairmq_cmake)
 endif()
 
 if(FAIRROOT_INCLUDE_DIR AND FAIRROOT_LIBRARY_DIR)
-   set(FAIRROOT_FOUND TRUE)
+   set(FairRoot_FOUND TRUE)
    MESSAGE(STATUS "  FairRoot prefix            : ${FAIRROOTPATH}")
    MESSAGE(STATUS "  FairRoot Library directory : ${FAIRROOT_LIBRARY_DIR}")
    MESSAGE(STATUS "  FairRoot Include path      : ${FAIRROOT_INCLUDE_DIR}")
    MESSAGE(STATUS "  FairRoot Cmake Modules     : ${FAIRROOT_CMAKEMOD_DIR}")
 
 else(FAIRROOT_INCLUDE_DIR AND FAIRROOT_LIBRARY_DIR)
-   set(FAIRROOT_FOUND FALSE)
+   set(FairRoot_FOUND FALSE)
    MESSAGE(FATAL_ERROR "FairRoot installation not found")
 endif (FAIRROOT_INCLUDE_DIR AND FAIRROOT_LIBRARY_DIR)
 
