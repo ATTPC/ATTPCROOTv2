@@ -2,11 +2,6 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(E20009Analysis)
 
-#SET(BOOST_ROOT "/mnt/data/fair_install/boost_1_67_0/")
-#SET(PCL_DIR "/mnt/data/fair_install/pcl_1.8.1/share/pcl-1.8/")
-
-SET(GENFIT2_DIR "/mnt/simulations/attpcroot/fair_install_2020/GenFit_Inst/")
-
 # Check for needed environment variables
 IF(NOT DEFINED ENV{FAIRROOTPATH})
   MESSAGE(FATAL_ERROR "You did not define the environment variable FAIRROOTPATH which is needed to find FairRoot. Please set this variable and execute cmake again.")
@@ -20,76 +15,74 @@ SET(SIMPATH $ENV{SIMPATH})
 SET(FAIRROOTPATH $ENV{FAIRROOTPATH})
 SET(ATTPCROOTPATH $ENV{VMCWORKDIR})
 
-#set(CMAKE_MODULE_PATH "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/cmake/modules")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
+set(CMAKE_MODULE_PATH "${ATTPCROOTPATH}/cmake/modules" ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 
-message(${CMAKE_MODULE_PATH})
+list(APPEND CMAKE_PREFIX_PATH ${SIMPATH}/..)  #Need access to dependecies of ATTPCROOT
+list(APPEND CMAKE_PREFIX_PATH ${ATTPCROOTPATH}/build/install) #Need access to ATTPCROOT
 
-# You need to tell CMake where to find the ROOT installation. This can be done in a number of ways:
-#   - ROOT built with classic configure/make use the provided $ROOTSYS/etc/cmake/FindROOT.cmake
-#   - ROOT built with CMake. Add in CMAKE_PREFIX_PATH the installation prefix for ROOT
-list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
 
-#---Locate the ROOT package and defines a number of variables (e.g. ROOT_INCLUDE_DIRS)
-find_package(ROOT REQUIRED)
+#---Locate the ROOT and VMC packages
+find_package(ROOT 6.16 CONFIG)
+if(NOT ROOT_FOUND)
+  find_package(ROOT 6.0 REQUIRED)
+  message("Looked for ROOT using modules and found ${ROOT_VERSION}")
+endif()
+if(ROOT_vmc_FOUND)
+  set(VMCLIB ROOT::VMC)
+else()
+  message("NO VMC in ROOT install, looking for seperate package")
+  find_package(VMC REQUIRED)
+  set(VMCLIB VMCLibrary)
+endif()
 
-#---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
-include(${ROOT_USE_FILE})
-
+message("Looking in: ${CMAKE_PREFIX_PATH}")
 #---Locate other external packages
 find_package(Boost 1.67 REQUIRED)
-find_package(GENFIT2)
-
-include_directories( ${ROOT_INCLUDE_DIR}
-                     ${Boost_INCLUDE_DIRS}
-                     ${BASE_INCLUDE_DIRECTORIES}
-                     ${ATTPCROOTPATH}/include
-                     ${FAIRROOTPATH}/include
-                     ${CMAKE_SOURCE_DIR}
-		     ${GENFIT2_INCLUDE_DIR}
-                     #${PCL_INCLUDE_DIRS}
-		     )
-
-link_directories( ${FAIRROOT_LIBRARY_DIR}
-                  ${FAIRROOTPATH}/lib
-                  ${ATTPCROOTPATH}/build/lib
-                  ${GENFIT2_LIBRARY_DIR}
-                  #${PCL_LIBRARY_DIRS}
-                  )
-
-#add_definitions(${PCL_DEFINITIONS})
+find_package(GENFIT2 REQUIRED)
+find_package(PCL) # temp until ATTPCROOT properly exports its dependencies
+find_package(HiRAEVT) # temp until ATTPCROOT properly exports its dependencies
+find_package(ATTPCROOT REQUIRED)
 
 message(STATUS ${ATTPCROOTPATH})
 
 add_library(e20009Ana SHARED e20009Ana.cc)
-#target_link_libraries(genfit_Test ${ROOT_LIBRARIES} ATTPCReco FairTools Base ${PCL_LIBRARIES})
-target_link_libraries(e20009Ana ${ROOT_LIBRARIES} AtReconstruction FairTools Base ${GENFIT2_LIBRARY_DIR}/libgenfit2.so)
+target_link_libraries(e20009Ana
+  ROOT::Core
+  ROOT::GenVector
+  ${VMCLIB}
+  AtReconstruction
+  FairTools
+  Base
+  ${GENFIT2_LIBRARY_DIR}/libgenfit2.so)
+target_include_directories(e20009Ana PRIVATE ${GENFIT2_INCLUDE_DIR} ${FAIRROOTPATH}/include)
 
 add_executable(e20009AnaExe e20009Ana.cc)
 target_link_libraries (e20009AnaExe e20009Ana
-  ${ROOT_LIBRARIES}
 ${GENFIT2_LIBRARY_DIR}/libgenfit2.so
-EG
-Core
-Gpad
-Graf
-Graf3d
-Gui
-Hist
-MathCore
-Matrix
-Minuit
-Net
-Physics
-Postscript
-Rint
-RIO
-Thread
-Tree
-TreePlayer
+ROOT::EG
+ROOT::Core
+ROOT::Gpad
+ROOT::Graf
+ROOT::Graf3d
+ROOT::Gui
+ROOT::Hist
+ROOT::MathCore
+ROOT::Matrix
+ROOT::Minuit
+ROOT::Net
+ROOT::Physics
+ROOT::Postscript
+ROOT::Rint
+ROOT::RIO
+ROOT::Thread
+ROOT::Tree
+ROOT::TreePlayer
+
 AtReconstruction
-AtTpcMap
+AtMap
+
 FairTools
 Geom
 Spectrum
 Base)
+target_include_directories(e20009AnaExe PRIVATE ${GENFIT2_INCLUDE_DIR} ${FAIRROOTPATH}/include)
