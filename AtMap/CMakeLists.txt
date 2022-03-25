@@ -32,6 +32,8 @@ Set(DEPENDENCIES
   FairTools
   ROOT::XMLParser
   ROOT::Core
+
+  Boost::headers
   )
 
 generate_target_root_library(${LIBRARY_NAME}

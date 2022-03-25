@@ -36,7 +36,7 @@ If(GENFIT2_LIBRARY)
   get_filename_component(GENFIT2_INCLUDE_DIR ${GENFIT2_LIBRARY_DIR}/../include ABSOLUTE)
 
 #  Set(GENFIT2_LIBRARY_DIR ${GENFIT}/lib)
-  Set(GENFIT2_LDFLAGS "-L${GENFIT_LIBRARY_PATH} -lgenfit2")
+#Set(GENFIT2_LDFLAGS "-L${GENFIT_LIBRARY_PATH} -lgenfit2")
 
   #MESSAGE(STATUS ${GENFIT2_LDFLAGS})
 
@@ -44,10 +44,43 @@ If(GENFIT2_LIBRARY)
 
   Mark_As_Advanced(GENFIT2_LIBRARY_DIR GENFIT2_INCLUDE_DIR)
 
-  Set(LD_LIBRARY_PATH ${LD_LIBRARY_PATH} ${GENFIT2_LIBRARY_DIR})
+  #Set(LD_LIBRARY_PATH ${LD_LIBRARY_PATH} ${GENFIT2_LIBRARY_DIR})
 
   Set(GENFIT2_FOUND TRUE)
 
+  # For God knows what reason, GENFIT has decided it has to link against every single possible ROOT
+  # library. So until that is fixed on their side, we will just define a target and add them all
+  # to the interface
+  add_library(GENFIT2::genfit2 UNKNOWN IMPORTED GLOBAL)
+  set_target_properties(GENFIT2::genfit2 PROPERTIES
+    IMPORTED_LOCATION ${GENFIT2_LIBRARY}
+    INTERFACE_INCLUDE_DIRECTORIES ${GENFIT2_INCLUDE_DIR})
+  target_link_libraries(GENFIT2::genfit2 INTERFACE
+    ROOT::Eve
+    ROOT::EG
+    ROOT::Geom
+    ROOT::Ged
+    ROOT::RGL
+    ROOT::Gui
+    ROOT::Core
+    ROOT::Imt
+    ROOT::RIO
+    ROOT::Net
+    ROOT::Hist
+    ROOT::Graf
+    ROOT::ROOTVecOps
+    ROOT::Tree
+    ROOT::TreePlayer
+    ROOT::Rint
+    ROOT::Postscript
+    ROOT::Matrix
+    ROOT::Physics
+    ROOT::MathCore
+    ROOT::Thread
+    ROOT::MultiProc
+    ROOT::ROOTDataFrame
+    )
+  
 Else(GENFIT2_LIBRARY)
 
   If(GENFIT2_FIND_REQUIRED)

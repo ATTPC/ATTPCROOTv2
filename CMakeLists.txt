@@ -35,25 +35,12 @@ check_out_of_source_build()
 check_install_directory()
 check_compiler()
 
+
 message("Library paht: ${LD_LIBRARY_PATH}")
 
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 set(INCLUDE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/include")
-
-Option(USE_PATH_INFO "Information from PATH and LD_LIBRARY_PATH are
-used." OFF
-)
-If(USE_PATH_INFO)
-  Set(PATH "$PATH")
-  If (APPLE)
-    Set(LD_LIBRARY_PATH $ENV{DYLD_LIBRARY_PATH})
-  Else (APPLE)
-    Set(LD_LIBRARY_PATH $ENV{LD_LIBRARY_PATH})
-  EndIf (APPLE)
-Else(USE_PATH_INFO)
-  STRING(REGEX MATCHALL "[^:]+" PATH $ENV{PATH})
-EndIf(USE_PATH_INFO)
 
 # Install path is changed to "install" if not given a value by the user
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -67,11 +54,28 @@ If(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE RELWITHDEBINFO)
 EndIf(NOT CMAKE_BUILD_TYPE)
 
-# searches for needed packages
-# REQUIRED means that cmake will stop if this packages are not found
-# For example the framework can run without GEANT4, but ROOT is
-# mandatory
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
+# https://cmake.org/Wiki/CMake_RPATH_handling
+# Set the RPATH for installed libraries as well as build libraries
+# so the user does not have to fiddle around with the LD_LIBRARY_PATH
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES
+  "${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_LIBDIR}" isSystemDir)
+if("${isSystemDir}" STREQUAL "-1")
+  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    # If we are on linux, set the DT_RUNPATH tag instead of the DT_RPATH tag this
+    # has a lower presedence than LD_LIBRARY_PATH if the user would like to override
+    # the automatic selection of libraries to link against
+    # https://news.ycombinator.com/item?id=14222349
+    set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} "-Wl,--enable-new-dtags")
+    set(CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS} "-Wl,--enable-new-dtags")
+    set(CMAKE_INSTALL_RPATH "$ORIGIN/${PROJECT_INSTALL_LIBDIR}")
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(CMAKE_INSTALL_RPATH "@loader_path/${PROJECT_INSTALL_LIBDIR}")
+  else()
+    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_LIBDIR}")
+  endif()
+endif()
+
 
 find_package2(PUBLIC FairRoot REQUIRED)
 
@@ -80,6 +84,9 @@ if(NOT ROOT_FOUND)
   find_package2(PUBLIC ROOT 6.0 REQUIRED)
   message("Looked for ROOT using modules and found ${ROOT_VERSION}")
 endif()
+
+get_target_property(root_deps ROOT::Core INTERFACE_LINK_DEPENDS)
+message("ROOT Core deps: ${root_deps}")
 
 if(NOT ROOT_vmc_FOUND)
   message("NO VMC in ROOT install, looking for seperate package")
@@ -106,21 +113,15 @@ find_package2(PRIVATE Geant4VMC)
 find_package2(PRIVATE CLHEP)
 find_package2(PRIVATE HEPMC)
 
-if(NOT DEFINED Boost_NO_BOOST_CMAKE AND CMAKE_VERSION VERSION_LESS 3.15)
-  Set(Boost_NO_BOOST_CMAKE ON)
-  # If an older version of boost is found both of the variables below are
-  # cached and in a second cmake run, a good boost version is found even
-  # if the version is to old.
-  # To overcome this problem both variables are cleared before checking
-  # for boost.
-  Unset(Boost_INCLUDE_DIR CACHE)
-  Unset(Boost_LIBRARY_DIRS CACHE)
-endif()
-
-find_package2(PUBLIC Boost
-  VERSION 1.67
+# Right now, we just use header-only features of Boost (multi_array)
+find_package2(PUBLIC Boost 1.67
+  REQUIRED headers
   ADD_REQUIREMENTS_OF FairRoot FairMQ FairLogger
-)
+  )
+  
+if(NOT TARGET Boost::headers)
+  message("Didn't set target...")
+endif()
 
 if(CMAKE_VERSION VERSION_LESS 3.15)
   set(Boost_VERSION "${Boost_MAJOR_VERSION}.${Boost_MINOR_VERSION}.${Boost_SUBMINOR_VERSION}")
@@ -163,7 +164,7 @@ if(NOT TARGET hdf5::hdf5-shared)
 endif()
 
 # Now find the rest of out dependencies
-find_package2(PRIVATE PCL 1.8 CONFIG)
+#find_package2(PRIVATE PCL 1.8 CONFIG REQUIRED QUIET)
 find_package2(PRIVATE GEANT4DATA)
 find_package2(PRIVATE OpenMP)
 find_package2(PRIVATE CUDA)

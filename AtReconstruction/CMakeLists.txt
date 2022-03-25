@@ -6,7 +6,6 @@ Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
 set(INCLUDE_DIRECTORIES
 ${FAIRROOT_INCLUDE_DIR}
-${GENFIT2_INCLUDE_DIR}
 
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPulseAnalyzer
@@ -14,11 +13,6 @@ ${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
-)
-
-set(LINK_DIRECTORIES
-${FAIRROOT_LIBRARY_DIR}
-${GENFIT2_LIBRARY_DIR}
 )
 
 Set(DEPENDENCIES
@@ -34,18 +28,12 @@ Set(DEPENDENCIES
   ROOT::Spectrum
   ROOT::Core
   ROOT::XMLParser
-  
-  ${Boost_LOG_LIBRARY}
-  ${Boost_LOG_SETUP_LIBRARY}
-  ${Boost_THREAD_LIBRARY}
-  ${Boost_DAtE_TIME_LIBRARY}
-  ${Boost_FILESYSTEM_LIBRARY}
-  ${Boost_SYSTEM_LIBRARY}
+
+  Boost::headers #multi_array
   )
 
 set(LINK_DIRECTORIES
   ${FAIRROOT_LIBRARY_DIR}
-  ${GENFIT2_LIBRARY_DIR}
   )
 
 set(SRCS
@@ -119,7 +107,7 @@ if(GENFIT2_FOUND)
     AtFitterTask.cxx
     )
   set(DEPENDENCIES ${DEPENDENCIES}
-    ${GENFIT2_LIBRARY_DIR}/libgenfit2.so
+    GENFIT2::genfit2
     )
 endif()
 
