@@ -11,27 +11,17 @@ AtFieldCreator.cxx
 AtFieldPar.cxx
 )
 
-set(INCLUDE_DIRECTORIES
-  ${FAIRROOT_INCLUDE_DIR}
-)
-
-set(LINK_DIRECTORIES
-${FAIRROOT_LIBRARY_DIR}
-)
-
 Set(DEPENDENCIES
-    Base 
-    FairTools
-    ROOT::Core
-    #ROOT::VMC
+  FairRoot::Base 
+  FairRoot::FairTools
+  ROOT::Core
+  ROOT::VMC
 )
 
 
 generate_target_root_library(${target}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
-  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
-  LIBRARY_DIR ${LINK_DIRECTORIES}
   DEPS_PUBLIC ${DEPENDENCIES}
   )
 

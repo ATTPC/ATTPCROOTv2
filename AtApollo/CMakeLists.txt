@@ -12,10 +12,9 @@
 Set(LINKDEF AtApolloLinkDef.h)
 Set(LIBRARY_NAME AtApollo)
 Set(DEPENDENCIES
-  Base
-  FairTools
+  FairRoot::Base
+  FairRoot::FairTools
   ROOT::Core
-# Cling
 
   AtSimulationData
 )
@@ -28,17 +27,9 @@ AtApolloPoint.cxx
 AtApolloCrystalCalData.cxx
 AtApolloDigitizer.cxx
 )
-set(INCLUDE_DIRECTORIES
-${FAIRROOT_INCLUDE_DIR}
-)
-set(LINK_DIRECTORIES
-${FAIRROOT_LIBRARY_DIR}
-)
 
 generate_target_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
-  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
-  LIBRARY_DIR ${LINK_DIRECTORIES}
   DEPS_PUBLIC ${DEPENDENCIES}
   )

@@ -48,9 +48,6 @@ If(GENFIT2_LIBRARY)
 
   Set(GENFIT2_FOUND TRUE)
 
-  # For God knows what reason, GENFIT has decided it has to link against every single possible ROOT
-  # library. So until that is fixed on their side, we will just define a target and add them all
-  # to the interface
   add_library(GENFIT2::genfit2 UNKNOWN IMPORTED GLOBAL)
   set_target_properties(GENFIT2::genfit2 PROPERTIES
     IMPORTED_LOCATION ${GENFIT2_LIBRARY}

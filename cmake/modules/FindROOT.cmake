@@ -23,9 +23,7 @@
 #
 #   ROOT_INCLUDE_DIR         ROOT include directories: not cached
 #
-#   ROOT_INCLUDES            Same as above,
-#
-#   ROOT_LIBRARIESS          Link to these to use the ROOT libraries, not cached
+#   ROOT_LIBRARIES          Link to these to use the ROOT libraries, not cached
 #
 #   ROOT_LIBRARY_DIR         The path to where the ROOT library files are.
 #
@@ -125,7 +123,9 @@ if(NOT ROOT_FOUND)
     String(REGEX REPLACE "^[0-9]+\\.[0-9][0-9]+\\/([0-9][0-9]+).*" "\\1" ROOT_VERSION_PATCH "${ROOT_VERSION_STRING}")
 
     # compute overall version numbers which can be compared at once
-    Math(EXPR req_vers "${ROOT_FIND_VERSION_MAJOR}*10000 + ${ROOT_FIND_VERSION_MINOR}*100 + ${ROOT_FIND_VERSION_PATCH}")
+    if(DEFINED ROOT_FIND_VERSION_MAJOR AND DEFINED ROOT_FIND_VERSION_MINOR)
+      Math(EXPR req_vers "${ROOT_FIND_VERSION_MAJOR}*10000 + ${ROOT_FIND_VERSION_MINOR}*100 + ${ROOT_FIND_VERSION_PATCH}")
+    endif()
     Math(EXPR found_vers "${ROOT_VERSION_MAJOR}*10000 + ${ROOT_VERSION_MINOR}*100 + ${ROOT_VERSION_PATCH}")
 
     Set(ROOT_Version ${found_vers})
@@ -183,10 +183,6 @@ If(ROOT_FOUND)
   # Make variables changeble to the advanced user
   Mark_As_Advanced(ROOT_LIBRARY_DIR ROOT_INCLUDE_DIR ROOT_DEFINITIONS)
 
-  # Set ROOT_INCLUDES
-  Set(ROOT_INCLUDES ${ROOT_INCLUDE_DIR})
-
-  Set(LD_LIBRARY_PATH ${LD_LIBRARY_PATH} ${ROOT_LIBRARY_DIR})
 
   #######################################
   #
@@ -200,7 +196,9 @@ If(ROOT_FOUND)
     PATHS ${ROOT_BINARY_DIR}
     NO_DEFAULT_PATH
     )
-
+  # Set rootcling to have the same name as the internal root target
+  set(ROOT_rootcling_CMD ${ROOT_CINT_EXECUTABLE})
+  
   Find_Program(RLIBMAP_EXECUTABLE
     NAMES rlibmap
     PATHS ${ROOT_BINARY_DIR}
@@ -208,7 +206,34 @@ If(ROOT_FOUND)
     )
 
   # Aliases for imported ROOT dependencies will probably need a lot more listed here eventually
-  set(_root_deps Core RIO Tree Rint Physics MathCore Thread Geom EG Eve Spectrum TreePlayer GenVector)
+  set(_root_deps 
+    Eve
+    EG
+    Geom
+    Ged
+    RGL
+    Gui
+    Core
+    Imt
+    RIO
+    Net
+    Hist
+    Graf
+    ROOTVecOps
+    Tree
+    TreePlayer
+    Rint
+    Postscript
+    Matrix
+    Physics
+    MathCore
+    Thread
+    XMLParser
+    Spectrum
+    GenVector
+    MultiProc
+    ROOTDataFrame
+    )
   if(ROOT_vmc_FOUND)
     list(APPEND _root_deps VMC)
   endif()
@@ -218,8 +243,9 @@ If(ROOT_FOUND)
     if(${_root_dep}_LIB)
       add_library(${_root_dep} SHARED IMPORTED GLOBAL)
       set_target_properties(${_root_dep} PROPERTIES IMPORTED_LOCATION ${${_root_dep}_LIB})
+      target_include_directories(${_root_dep} INTERFACE ${ROOT_INCLUDE_DIR})
       add_library(ROOT::${_root_dep} ALIAS ${_root_dep})
-      message(STATUS "ROOT::${_root_dep} target added by hand.")
+      message(STATUS "ROOT::${_root_dep} (${${_root_dep}_LIB}) target added by hand.")
     endif()
   endforeach(_root_dep)
 

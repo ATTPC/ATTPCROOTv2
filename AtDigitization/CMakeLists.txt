@@ -3,8 +3,8 @@
 Set(LINKDEF AtDigiLinkDef.h)
 Set(LIBRARY_NAME AtDigitization)
 Set(DEPENDENCIES
-  Base
-  FairTools
+  FairRoot::Base
+  FairRoot::FairTools
 
   ROOT::Core
   ROOT::GenVector
@@ -13,13 +13,6 @@ Set(DEPENDENCIES
   AtParameter
   AtData
   AtMap
-)
-
-set(INCLUDE_DIRECTORIES
-  ${FAIRROOT_INCLUDE_DIR}
-)
-set(LINK_DIRECTORIES
-${FAIRROOT_LIBRARY_DIR}
 )
 
 set(SRCS
@@ -38,7 +31,5 @@ AtTriggerTask.cxx
 generate_target_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
-  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
-  LIBRARY_DIR ${LINK_DIRECTORIES}
   DEPS_PUBLIC ${DEPENDENCIES}
   )

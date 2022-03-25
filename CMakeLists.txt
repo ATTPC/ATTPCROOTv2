@@ -1,14 +1,5 @@
 cmake_minimum_required(VERSION  3.11.0 FATAL_ERROR)
 cmake_policy(VERSION 3.11...3.14)
-foreach(p
-  CMP0025 # Compiler id for Apple Clang is now AppleClang.
-  CMP0028 # double colon for imported and alias targets
-  CMP0042 # MACOSX_RPATH is enabled by default.
-  )
-  if(POLICY ${p})
-  cmake_policy(SET ${p} NEW)
-  endif()
-endforeach()
 
 # Set project name and version
 project(ATTPCROOT VERSION 1.0.0)
@@ -78,18 +69,11 @@ endif()
 
 
 find_package2(PUBLIC FairRoot REQUIRED)
+set(ROOT_NO_FIND_PACKAGE_CONFIG_FILE TRUE)
+find_package2(PUBLIC ROOT REQUIRED)
 
-find_package2(PUBLIC ROOT 6.16 CONFIG)
-if(NOT ROOT_FOUND)
-  find_package2(PUBLIC ROOT 6.0 REQUIRED)
-  message("Looked for ROOT using modules and found ${ROOT_VERSION}")
-endif()
-
-get_target_property(root_deps ROOT::Core INTERFACE_LINK_DEPENDS)
-message("ROOT Core deps: ${root_deps}")
-
-if(NOT ROOT_vmc_FOUND)
-  message("NO VMC in ROOT install, looking for seperate package")
+if(NOT TARGET ROOT::VMC)
+  message("NO VMC target in ROOT install, looking for seperate package")
   find_package2(PUBLIC VMC REQUIRED CONFIG)
   set_target_properties(VMCLibrary PROPERTIES IMPORTED_GLOBAL TRUE)
   add_library(ROOT::VMC ALIAS VMCLibrary)
@@ -119,15 +103,10 @@ find_package2(PUBLIC Boost 1.67
   ADD_REQUIREMENTS_OF FairRoot FairMQ FairLogger
   )
   
-if(NOT TARGET Boost::headers)
-  message("Didn't set target...")
-endif()
-
 if(CMAKE_VERSION VERSION_LESS 3.15)
   set(Boost_VERSION "${Boost_MAJOR_VERSION}.${Boost_MINOR_VERSION}.${Boost_SUBMINOR_VERSION}")
 endif()
 
-## Add additional packages beyond the initial required for FairRoot
 
 # Look for HDF5 and if it didn't import the target becuase is couldn't
 # find a config file, generate the target by hand using the output
@@ -164,7 +143,7 @@ if(NOT TARGET hdf5::hdf5-shared)
 endif()
 
 # Now find the rest of out dependencies
-#find_package2(PRIVATE PCL 1.8 CONFIG REQUIRED QUIET)
+find_package2(PRIVATE PCL 1.8 CONFIG REQUIRED QUIET)
 find_package2(PRIVATE GEANT4DATA)
 find_package2(PRIVATE OpenMP)
 find_package2(PRIVATE CUDA)

@@ -5,8 +5,6 @@ Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
 
 set(INCLUDE_DIRECTORIES
-${FAIRROOT_INCLUDE_DIR}
-
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPulseAnalyzer
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
@@ -16,8 +14,8 @@ ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
 )
 
 Set(DEPENDENCIES
-  Base
-  FairTools
+  FairRoot::Base
+  FairRoot::FairTools
 
   AtAnalysis
   AtMap
@@ -30,10 +28,6 @@ Set(DEPENDENCIES
   ROOT::XMLParser
 
   Boost::headers #multi_array
-  )
-
-set(LINK_DIRECTORIES
-  ${FAIRROOT_LIBRARY_DIR}
   )
 
 set(SRCS

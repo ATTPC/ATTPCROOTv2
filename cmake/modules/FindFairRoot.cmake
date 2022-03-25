@@ -7,7 +7,10 @@
  ################################################################################
 # Find FairRoot installation 
 # Check the environment variable "FAIRROOTPATH"
+# FairRoot does not (as of yet) export a FairRootConfig.cmake file for us to digest
 
+
+# Set the FAIRROOTPATH variable to get location of install
 if(FairRoot_DIR)
   set(FAIRROOTPATH ${FairRoot_DIR})
 else()
@@ -15,31 +18,25 @@ else()
     set(user_message "You did not define the environment variable FAIRROOTPATH which is needed to find FairRoot.\
          Please set this variable and execute cmake again." )
     if(FairRoot_FIND_REQUIRED)
-      MESSAGE(FATAL_ERROR ${user_message})
+      message(FATAL_ERROR ${user_message})
     else(FairRoot_FIND_REQUIRED)
-      MESSAGE(WARNING ${user_message})
+      message(WARNING ${user_message})
       return()
     endif(FairRoot_FIND_REQUIRED)
   endif(NOT DEFINED ENV{FAIRROOTPATH})
-
   set(FAIRROOTPATH $ENV{FAIRROOTPATH})
 endif()
 
-MESSAGE(STATUS "Setting FairRoot environment:")
+message(STATUS "Setting FairRoot environment:")
 
-FIND_PATH(FAIRROOT_INCLUDE_DIR NAMES FairRun.h PATHS
+find_path(FAIRROOT_INCLUDE_DIR NAMES FairRun.h PATHS
   ${FAIRROOTPATH}/include
   NO_DEFAULT_PATH
 )
 
-FIND_PATH(FAIRROOT_LIBRARY_DIR NAMES libBase.so libBase.dylib PATHS
+find_path(FAIRROOT_LIBRARY_DIR NAMES libBase.so libBase.dylib PATHS
    ${FAIRROOTPATH}/lib
    ${FAIRROOTPATH}/lib64
-  NO_DEFAULT_PATH
-)
-
-FIND_PATH(FAIRROOT_CMAKEMOD_DIR NAMES CMakeLists.txt  PATHS
-   ${FAIRROOTPATH}/share/fairbase/cmake
   NO_DEFAULT_PATH
 )
 
@@ -54,13 +51,29 @@ endif()
 
 if(FAIRROOT_INCLUDE_DIR AND FAIRROOT_LIBRARY_DIR)
    set(FairRoot_FOUND TRUE)
-   MESSAGE(STATUS "  FairRoot prefix            : ${FAIRROOTPATH}")
-   MESSAGE(STATUS "  FairRoot Library directory : ${FAIRROOT_LIBRARY_DIR}")
-   MESSAGE(STATUS "  FairRoot Include path      : ${FAIRROOT_INCLUDE_DIR}")
-   MESSAGE(STATUS "  FairRoot Cmake Modules     : ${FAIRROOT_CMAKEMOD_DIR}")
+   message(STATUS "  FairRoot prefix            : ${FAIRROOTPATH}")
+   message(STATUS "  FairRoot Library directory : ${FAIRROOT_LIBRARY_DIR}")
+   message(STATUS "  FairRoot Include path      : ${FAIRROOT_INCLUDE_DIR}")
 
 else(FAIRROOT_INCLUDE_DIR AND FAIRROOT_LIBRARY_DIR)
    set(FairRoot_FOUND FALSE)
-   MESSAGE(FATAL_ERROR "FairRoot installation not found")
+   if(FairRoot_FIND_REQUIRED)
+     message(FATAL_ERROR "FairRoot installation not found")
+   endif()
 endif (FAIRROOT_INCLUDE_DIR AND FAIRROOT_LIBRARY_DIR)
+
+set(_fairroot_deps Base FairTools Alignment GeoBase ParBase Generators)
+foreach(_fairroot_dep ${_fairroot_deps})
+  find_library(${_fairroot_dep}_LIB ${_fairroot_dep} PATHS ${FAIRROOT_LIBRARY_DIR})
+  if(${_fairroot_dep}_LIB)
+    add_library(FairRoot::${_fairroot_dep} SHARED IMPORTED GLOBAL)
+    set_target_properties(FairRoot::${_fairroot_dep} PROPERTIES IMPORTED_LOCATION ${${_fairroot_dep}_LIB})
+    target_include_directories(FairRoot::${_fairroot_dep} INTERFACE ${FAIRROOT_INCLUDE_DIR})
+    target_link_directories(FairRoot::${_fairroot_dep} INTERFACE ${SIMPATH}/lib)
+    #add_library(FairRoot::${_fairroot_dep} ALIAS ${_fairroot_dep})
+    message(STATUS "FairRoot::${_fairroot_dep} (${${_fairroot_dep}_LIB}) target added by hand.")
+  else()
+    message(STATUS "Failed to add target FairRoot::${_fairroot_dep}")
+  endif()
+endforeach()
 

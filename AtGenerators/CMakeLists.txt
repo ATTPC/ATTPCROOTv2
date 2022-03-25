@@ -26,14 +26,9 @@ AtTPC20MgDecay.cxx
 
 )
 
-set(INCLUDE_DIRECTORIES
-${PYTHIA8_INCLUDE_DIR}
-${FAIRROOT_INCLUDE_DIR}
-)
-
 set(DEPENDENCIES
-  Base
-  FairTools
+  FairRoot::Base
+  FairRoot::FairTools
   ROOT::Core
   ROOT::MathCore
   ROOT::GenVector
@@ -41,17 +36,13 @@ set(DEPENDENCIES
   AtSimulationData
   AtTpc
   AtTools
-  )
 
-set(LINK_DIRECTORIES
-${FAIRROOT_LIBRARY_DIR}
-)
+  Pythia8
+  )
 
 generate_target_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
-  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
-  LIBRARY_DIR ${LINK_DIRECTORIES}
   DEPS_PUBLIC ${DEPENDENCIES}
   )
 
