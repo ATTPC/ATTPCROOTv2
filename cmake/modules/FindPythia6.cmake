@@ -6,11 +6,13 @@
 #                  copied verbatim in the file "LICENSE"                       #
 ################################################################################
 
+message("Looking for library in ${Pythia6_LIBRARY_DIR}")
 find_library(Pythia6_LIBRARY
   NAMES Pythia6 pythia6
-  HINTS "${PYTHIA6_ROOT}" "${Pythia6_LIBRARY_DIR}"
+  HINTS "${PYTHIA6_ROOT}" "${Pythia6_LIBRARY_DIR}" "$ENV{Pythia6_LIBRARY_DIR}"
   PATH_SUFFIXES lib
 )
+message("Found ${Pythia6_LIBRARY}")
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Pythia6

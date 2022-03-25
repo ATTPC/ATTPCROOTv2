@@ -96,6 +96,7 @@ if(PCL_FOUND)
   set(DEPENDENCIES ${DEPENDENCIES}
     ${PCL_LIBRARIES}
     )
+  
   # Add include directory and link directory if no targets
   if(NOT TARGET pcl_common)
     message("No set targets for PCL!")

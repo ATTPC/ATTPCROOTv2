@@ -35,9 +35,25 @@ check_out_of_source_build()
 check_install_directory()
 check_compiler()
 
+message("Library paht: ${LD_LIBRARY_PATH}")
+
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 set(INCLUDE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/include")
+
+Option(USE_PATH_INFO "Information from PATH and LD_LIBRARY_PATH are
+used." OFF
+)
+If(USE_PATH_INFO)
+  Set(PATH "$PATH")
+  If (APPLE)
+    Set(LD_LIBRARY_PATH $ENV{DYLD_LIBRARY_PATH})
+  Else (APPLE)
+    Set(LD_LIBRARY_PATH $ENV{LD_LIBRARY_PATH})
+  EndIf (APPLE)
+Else(USE_PATH_INFO)
+  STRING(REGEX MATCHALL "[^:]+" PATH $ENV{PATH})
+EndIf(USE_PATH_INFO)
 
 # Install path is changed to "install" if not given a value by the user
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -50,16 +66,12 @@ If(NOT CMAKE_BUILD_TYPE)
   Message("Set BuildType to RELWITHDEBINFO")
   set(CMAKE_BUILD_TYPE RELWITHDEBINFO)
 EndIf(NOT CMAKE_BUILD_TYPE)
-# If we are building debug then
-#f(CMAKE_BUILD_TYPE STREQUAL "Debug")
-#  message("Suppressing warning from precompiler conditions because of FairLogger!")
-#  add_compile_options(-Wno-cpp "-Wno-#warnings")
-#endif()
 
 # searches for needed packages
 # REQUIRED means that cmake will stop if this packages are not found
 # For example the framework can run without GEANT4, but ROOT is
 # mandatory
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
 
 find_package2(PUBLIC FairRoot REQUIRED)
 
@@ -81,23 +93,21 @@ foreach(dep IN LISTS FairLogger_PACKAGE_DEPENDENCIES)
   if(NOT dep STREQUAL "Boost")
     find_package2(PUBLIC ${dep} REQUIRED VERSION ${FairLogger_${dep}_VERSION})
     set(PROJECT_${dep}_VERSION ${FairLogger_${dep}_VERSION})
+    message("Loaded ${dep}")
   endif()
 endforeach()
 
-find_package2(PUBLIC Pythia6 REQUIRED)
-find_package2(PUBLIC Pythia8)
-find_package2(PUBLIC Geant3)
-find_package2(PUBLIC Geant4)
-Find_Package2(PUBLIC VGM)
-find_package2(PUBLIC Geant4VMC)
-find_package2(PUBLIC CLHEP)
-find_package2(PUBLIC HEPMC)
+find_package2(PRIVATE Pythia6)
+find_package2(PRIVATE Pythia8)
+find_package2(PRIVATE Geant3)
+find_package2(PRIVATE Geant4)
+Find_Package2(PRIVATE VGM)
+find_package2(PRIVATE Geant4VMC)
+find_package2(PRIVATE CLHEP)
+find_package2(PRIVATE HEPMC)
 
 if(NOT DEFINED Boost_NO_BOOST_CMAKE AND CMAKE_VERSION VERSION_LESS 3.15)
   Set(Boost_NO_BOOST_CMAKE ON)
-endif()
-
-if(Boost_NO_BOOST_CMAKE)
   # If an older version of boost is found both of the variables below are
   # cached and in a second cmake run, a good boost version is found even
   # if the version is to old.
@@ -117,22 +127,56 @@ if(CMAKE_VERSION VERSION_LESS 3.15)
 endif()
 
 ## Add additional packages beyond the initial required for FairRoot
-find_package2(PUBLIC HDF5 REQUIRED CONFIG)
-find_package2(PUBLIC PCL 1.8 CONFIG)
-find_package2(PUBLIC GEANT4DATA)
-find_package2(PUBLIC GENFIT2)
-find_package2(PUBLIC OpenMP)
-find_package2(PUBLIC CUDA)
-find_package2(PUBLIC Eigen3 CONFIG)
-find_package2(PUBLIC FLANN)
+
+# Look for HDF5 and if it didn't import the target becuase is couldn't
+# find a config file, generate the target by hand using the output
+# of FindHDF5.cmake
+#set(HDF5_FIND_DEBUG TRUE)
+find_package2(PRIVATE HDF5 REQUIRED)
+if(NOT TARGET hdf5::hdf5-shared)
+  add_library(hdf5::hdf5-shared SHARED IMPORTED GLOBAL)
+  # This may have to be changed to HDF5_CXX_LIBRARIES depending on your hdf5 install
+  # set(HDF5_FIND_DEBUG TRUE) before the find_package to see what you're working with
+  foreach(_lib ${HDF5_C_LIBRARIES})
+    get_filename_component(libName "${_lib}" NAME_WE)
+    if(${libName} STREQUAL libhdf5)
+      set_target_properties(hdf5::hdf5-shared PROPERTIES
+	IMPORTED_LOCATION ${_lib})
+    else()
+      # This is a dependecy so remove lib prefix and add it to the interface
+      # because it is a raw library name we will hope the linker can sort it
+      # out. These should all be standard libraries. If that doesn't work force
+      # you, add ${_lib} to the interface and it will hard-code the link
+      # to the version of the dependencies hdf5 was compiled against on the system.
+      string(REGEX REPLACE "^lib" "" lib_name_wo_prefix ${libName})
+      target_link_libraries(hdf5::hdf5-shared INTERFACE ${lib_name_wo_prefix})
+    endif()
+  endforeach()
+  set_target_properties(hdf5::hdf5-shared PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES ${HDF5_INCLUDE_DIRS}
+    )
+  message(STATUS "hdf5::hdf5-shared target added by hand.")
+  get_target_property(hdf_libdir hdf5::hdf5-shared LOCATION)
+  get_target_property(hdf_inc hdf5::hdf5-shared INTERFACE_INCLUDE_DIRECTORIES)
+  message(STATUS "hdf5 library in use: ${hdf_libdir}")
+  message(STATUS "hdf5 include directory: ${hdf_inc}")
+endif()
+
+# Now find the rest of out dependencies
+find_package2(PRIVATE PCL 1.8 CONFIG)
+find_package2(PRIVATE GEANT4DATA)
+find_package2(PRIVATE OpenMP)
+find_package2(PRIVATE CUDA)
 find_package2(PUBLIC HiRAEVT CONFIG)
+find_package2(PUBLIC GENFIT2)
 
 # FAIRROOT depends on VMC in a way that it exposes the headers, but does not
-# need someone who is linking against it to also link against VMC. Until FairRoot
-# finally finished the move to modern CMake this is a hacky way of ensure that if
+# seem to need someone who is linking against it to also link against the VMCLibrary.
+# Until FairRoot finally finished the move to modern CMake this is a hacky way of ensure that if
 # you include FairRoot, you are also getting the headers it depends on
 # This replaces the call to SetBasicVariables in FairMacros.cmake which did some
 # nasty things like calling link_directories() and include_directories()
+set(ROOT_INCLUDE_PATH ${FAIRROOT_INCLUDE_DIR})
 set(FAIRROOT_INCLUDE_DIR ${FAIRROOT_INCLUDE_DIR}
   ${VMC_INCLUDE_DIRS}
   )
@@ -177,12 +221,13 @@ configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake
   ${CMAKE_BINARY_DIR}/CTestCustom.cmake
   )
 
-# Install files and make config file
-message("${headers} Include dir: ${CMAKE_INSTALL_LIBDIR}")
+
+
+####### Install files and make config file for loading into cmake project ########
 
 # Add install targets for libraries
 install(EXPORT GeneratedRootLibTargets
-  FILE ${PROJECT_NAME}.cmake
+  FILE ${PROJECT_NAME}Targets.cmake
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME} )
 
 include(CMakePackageConfigHelpers)
@@ -191,8 +236,6 @@ include(CMakePackageConfigHelpers)
 configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
   INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-  NO_SET_AND_CHECK_MACRO
-  NO_CHECK_REQUIRED_COMPONENTS_MACRO
   )
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake

@@ -177,27 +177,14 @@ MACRO (WRITE_CONFIG_FILE filename)
   Set(ROOT_INCLUDE_PATH ${output})
 
   IF(${filename} MATCHES "[.]csh.*$")
-    IF(FAIRROOTPATH)
-    configure_file(${FAIRROOTPATH}/share/fairbase/cmake/scripts/config.csh.in
-	           ${CMAKE_CURRENT_BINARY_DIR}/${filename}
-                  )
-    ELSE(FAIRROOTPATH)
     configure_file(${PROJECT_SOURCE_DIR}/cmake/scripts/config.csh.in
 	           ${CMAKE_CURRENT_BINARY_DIR}/${filename}
                   )
-    ENDIF(FAIRROOTPATH)
-
 
   ELSE(${filename} MATCHES "[.]csh.*$")
-    IF(FAIRROOTPATH)
-    configure_file(${FAIRROOTPATH}/share/fairbase/cmake/scripts/config.sh.in
-	           ${CMAKE_CURRENT_BINARY_DIR}/${filename}
-                  )
-    ELSE(FAIRROOTPATH)
     configure_file(${PROJECT_SOURCE_DIR}/cmake/scripts/config.sh.in
 	           ${CMAKE_CURRENT_BINARY_DIR}/${filename}
                   )
-    ENDIF(FAIRROOTPATH)
 
   ENDIF(${filename} MATCHES "[.]csh.*$")
 

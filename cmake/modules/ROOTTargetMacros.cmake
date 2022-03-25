@@ -211,8 +211,8 @@ function(make_target_root_dictionary target)
     TARGET ${target}
     PROPERTY LIBRARY_OUTPUT_DIRECTORY)
 
-  set(lib_output_dir ${CMAKE_BINARY_DIR}/lib)
 
+  set(lib_output_dir ${CMAKE_BINARY_DIR}/lib)
 
   # Define the names of generated files
   get_property(basename TARGET ${target} PROPERTY OUTPUT_NAME)
@@ -270,7 +270,6 @@ function(make_target_root_dictionary target)
   if(NOT ROOT::RIO IN_LIST libs)
     # add ROOT::IO if not already there as a target that has a Root dictionary
     # has to depend on ... Root
-    #target_link_libraries(${target} PUBLIC RIO)
     target_link_libraries(${target} PUBLIC ROOT::RIO)
   endif()
 
@@ -287,7 +286,7 @@ function(make_target_root_dictionary target)
   list(REMOVE_DUPLICATES dirs)
   
   target_include_directories(${target} PRIVATE ${dirs})
-  #target_include_directories(${target}
+  #target_include_directories(${target} TODO:Update headers includes so only the include directory is needed
   #  PRIVATE
   #  $<BUILD_INTERFACE:${dirs}>
   #  $<INSTALL_INTERFACE:include>)
