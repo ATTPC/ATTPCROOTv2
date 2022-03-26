@@ -98,7 +98,7 @@ function(generate_target_root_library target)
   # https://stackoverflow.com/questions/44425257/how-to-properly-use-target-include-directories-with-lists-of-includes
   target_include_directories(${target}
     PUBLIC
-    $<INSTALL_INTERFACE:include> 
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}> 
     "$<BUILD_INTERFACE:${HT_INCLUDE_DIR}>"
     )
   

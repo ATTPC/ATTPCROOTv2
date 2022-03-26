@@ -206,5 +206,6 @@ function(PrintSummary)
 
   message(STATUS "")
   message(STATUS "Searched for cmake config files in : ${CMAKE_PREFIX_PATH}")
+  message(STATUS "Searched for cmake module files in : ${CMAKE_MODULE_PATH}")
 
 endfunction()

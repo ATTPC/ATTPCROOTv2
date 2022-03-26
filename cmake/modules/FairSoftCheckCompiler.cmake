@@ -14,6 +14,13 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE RelWithDebInfo)
 endif (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 
+unset(FAIRSOFT_C_COMPILER)
+unset(FAIRSOFT_CXX_COMPILER)
+unset(FAIRSOFT_Fortran_COMPILER)
+unset(FAIRROOT_C_COMPILER)
+unset(FAIRROOT_CXX_COMPILER)
+unset(FAIRROOT_Fortran_COMPILER)
+
 # Check for the existence of fairsoft-config
 # This program only exist in newer versions of fairsoft. If the file exist extract information about
 # the compiler and compiler flags used to install fairsoft.
@@ -145,7 +152,6 @@ if (CMAKE_SYSTEM_NAME MATCHES Linux)
 
      set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g")
      set(CMAKE_C_FLAGS_RELEASE          "-O2")
-#     set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
      set(CMAKE_C_FLAGS_DEBUG            "-g")
      set(CMAKE_C_FLAGS_DEBUGFULL        "-g3 -fno-inline -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common -fexceptions")
      set(CMAKE_C_FLAGS_PROFILE          "-g3 -fno-inline -ftest-coverage -fprofile-arcs")
@@ -241,7 +247,10 @@ if (CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE_CXXFLAGS_KEY CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE_UPPER})
 endif ()
 
-#MESSAGE("--- Build Type: ${CMAKE_BUILD_TYPE}")
-#MESSAGE("--- Compiler Flags: ${CMAKE_CXX_FLAGS}  ${${CMAKE_BUILD_TYPE_CXXFLAGS_KEY}}")
-
+unset(FAIRSOFT_C_COMPILER)
+unset(FAIRSOFT_CXX_COMPILER)
+unset(FAIRSOFT_Fortran_COMPILER)
+unset(FAIRROOT_C_COMPILER)
+unset(FAIRROOT_CXX_COMPILER)
+unset(FAIRROOT_Fortran_COMPILER)
 ENDMACRO ( Check_Compiler )

@@ -1,5 +1,6 @@
-cmake_minimum_required(VERSION  3.11.0 FATAL_ERROR)
-cmake_policy(VERSION 3.11...3.14)
+# Fairsoft requires an even higher version, so you can use that version if needed
+cmake_minimum_required(VERSION  3.12.0 FATAL_ERROR)
+cmake_policy(VERSION 3.11...3.15)
 
 # Set project name and version
 project(ATTPCROOT VERSION 1.0.0)
@@ -11,7 +12,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 include(AtTpcRootMacros)
-include(CheckCompiler)
+include(FairSoftCheckCompiler)
 include(WriteConfigFile)
 include(CTest)
 include(ROOTTargetMacros)
@@ -25,7 +26,6 @@ check_and_set_enviroment()
 check_out_of_source_build()
 check_install_directory()
 check_compiler()
-
 
 message("Library paht: ${LD_LIBRARY_PATH}")
 
@@ -69,7 +69,7 @@ endif()
 
 
 find_package2(PUBLIC FairRoot REQUIRED)
-set(ROOT_NO_FIND_PACKAGE_CONFIG_FILE TRUE)
+#set(ROOT_NO_FIND_PACKAGE_CONFIG_FILE TRUE)
 find_package2(PUBLIC ROOT REQUIRED)
 
 if(NOT TARGET ROOT::VMC)
@@ -92,6 +92,7 @@ find_package2(PRIVATE Pythia6)
 find_package2(PRIVATE Pythia8)
 find_package2(PRIVATE Geant3)
 find_package2(PRIVATE Geant4)
+find_package2(PRIVATE GEANT4DATA)
 Find_Package2(PRIVATE VGM)
 find_package2(PRIVATE Geant4VMC)
 find_package2(PRIVATE CLHEP)
@@ -142,9 +143,19 @@ if(NOT TARGET hdf5::hdf5-shared)
   message(STATUS "hdf5 include directory: ${hdf_inc}")
 endif()
 
-# Now find the rest of out dependencies
+# Include PCL and hide some of their warnings
+# see here: https://github.com/PointCloudLibrary/pcl/issues/3680
+# when this is fixed, we can remove the following 3 lines.
+if(NOT DEFINED CMAKE_SUPPRESS_DEVELOPER_WARNINGS)
+  set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS 1)
+  set(_temp_mod_dev_warning 1)
+endif()
 find_package2(PRIVATE PCL 1.8 CONFIG REQUIRED QUIET)
-find_package2(PRIVATE GEANT4DATA)
+if(_temp_mod_dev_warning)
+  unset(CMAKE_SUPPRESS_DEVELOPER_WARNINGS)
+endif()
+
+#Include all of the other dependecies that  we need
 find_package2(PRIVATE OpenMP)
 find_package2(PRIVATE CUDA)
 find_package2(PUBLIC HiRAEVT CONFIG)
@@ -156,10 +167,6 @@ find_package2(PUBLIC GENFIT2)
 # you include FairRoot, you are also getting the headers it depends on
 # This replaces the call to SetBasicVariables in FairMacros.cmake which did some
 # nasty things like calling link_directories() and include_directories()
-set(ROOT_INCLUDE_PATH ${FAIRROOT_INCLUDE_DIR})
-set(FAIRROOT_INCLUDE_DIR ${FAIRROOT_INCLUDE_DIR}
-  ${VMC_INCLUDE_DIRS}
-  )
 
 if (OPENMP_CXX_FOUND)
  # MESSAGE("${Green} OpenMP Support Found ${OpenMP_CXX_SPEC_DATE} ${ColourReset}")
@@ -195,15 +202,29 @@ if (PCL_FOUND)
   add_subdirectory (AtEventDisplay)
 endif()
 
-WRITE_CONFIG_FILE(config.sh)
+#WRITE_CONFIG_FILE(config.sh)
+fairroot_generate_config_sh(${CMAKE_BINARY_DIR}/config.sh
+  BUILD
+  PATH ${ROOT_BINARY_DIR}
+  DEPENDENCIES ${PROJECT_PACKAGE_DEPENDENCIES}
+  VMCWORKDIR ${CMAKE_SOURCE_DIR}
+  )
+
+message(${CMAKE_INSTALL_PREFIX})
+fairroot_generate_config_sh(${CMAKE_BINARY_DIR}/bin/ATTPCROOTConfig.sh_install
+  INSTALL
+  PATH ${ROOT_BINARY_DIR}
+  DEPENDENCIES ${PROJECT_PACKAGE_DEPENDENCIES}
+  VMCWORKDIR ${CMAKE_SOURCE_DIR}
+  )
 
 configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake
   ${CMAKE_BINARY_DIR}/CTestCustom.cmake
   )
 
-
-
 ####### Install files and make config file for loading into cmake project ########
+message(" install lib dir: ${CMAKE_INSTALL_LIBDIR}")
+message("install prefix: ${CMAKE_INSTALL_PREFIX}") 
 
 # Add install targets for libraries
 install(EXPORT GeneratedRootLibTargets
@@ -228,6 +249,10 @@ write_basic_package_version_file(
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY AnyNewerVersion
   )
+
+# Install config script
+install(PROGRAMS ${CMAKE_BINARY_DIR}/bin/ATTPCROOTConfig.sh_install
+  DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME ATTPCROOTConfig.sh)
 
 PrintSummary()
 

@@ -11,7 +11,7 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(${CMAKE_FIND_PACKAGE_NAME} HANDLE_COMPONENTS CONFIG_MODE)
 
 # Add missing include directory properties on Geant4 imported targets
-if(Geant4_FOUND AND Geant4_INCLUDE_DIRS AND Geant4_VERSION VERSION_LESS "10.6")
+if(Geant4_FOUND AND Geant4_INCLUDE_DIRS)
   set(_g4_targets G4analysis G4digits_hits G4error_propagation G4event G4clhep G4zlib G3toG4 G4geometry G4global G4graphics_reps G4intercoms G4interfaces G4materials G4parmodels G4particles G4persistency G4physicslists G4processes G4readout G4run G4track G4tracking G4FR G4vis HepRep G4RayTracer G4Tree G4VRML G4visXXX G4GMocren G4vis_management G4modeling)
   foreach(_g4_target IN LISTS _g4_targets)
     if(TARGET ${_g4_target})
@@ -23,8 +23,28 @@ if(Geant4_FOUND AND Geant4_INCLUDE_DIRS AND Geant4_VERSION VERSION_LESS "10.6")
   endforeach()
 
 
-  if(TARGET CLHEP::CLHEP AND TARGET G4global AND Geant4_system_clhep_FOUND)
-    set_property(TARGET G4global APPEND PROPERTY
-                 INTERFACE_LINK_LIBRARIES CLHEP::CLHEP)
+  list(GET Geant4_INCLUDE_DIRS 0 geant4_include)
+  get_filename_component(Geant4_PREFIX ${geant4_include}/../.. ABSOLUTE)
+  unset(geant4_include)
+
+  if(NOT Geant4_BINARY_DIR)
+    set(Geant4_BINARY_DIR "${Geant4_PREFIX}/bin")
   endif()
+
+  
+  function(geant4_generate_data_config)
+    cmake_parse_arguments(PARSE_ARGV 1 A "" "OUTVAR" "")
+    
+    if(NOT A_OUTVAR)
+      set(A_OUTVAR "Geant4_DATA_CONFIG_SH")
+    endif()
+    
+    foreach(DATASET ${Geant4_DATASETS})
+      string(CONCAT ${A_OUTVAR} ${${A_OUTVAR}}
+        "export ${Geant4_DATASET_${DATASET}_ENVVAR}=\"${Geant4_DATASET_${DATASET}_PATH}\"\n")
+    endforeach()
+    
+    set(${A_OUTVAR} ${${A_OUTVAR}} PARENT_SCOPE)
+  endfunction()
 endif()
+

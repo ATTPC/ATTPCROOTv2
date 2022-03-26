@@ -25,75 +25,50 @@ message(${CMAKE_MODULE_PATH})
 list(APPEND CMAKE_PREFIX_PATH ${SIMPATH}/..)  #Need access to dependecies of ATTPCROOT
 list(APPEND CMAKE_PREFIX_PATH ${ATTPCROOTPATH}/build/install) #Need access to ATTPCROOT
 
-
-#---Locate the ROOT and VMC packages
-find_package(ROOT 6.16 CONFIG)
-if(NOT ROOT_FOUND)
-  find_package(ROOT 6.0 REQUIRED)
-  message("Looked for ROOT using modules and found ${ROOT_VERSION}")
-endif()
-if(ROOT_vmc_FOUND)
-  set(VMCLIB ROOT::VMC)
-else()
-  message("NO VMC in ROOT install, looking for seperate package")
-  find_package(VMC REQUIRED)
-  set(VMCLIB VMCLibrary)
-endif()
-
-message("Looking in: ${CMAKE_PREFIX_PATH}")
-#---Locate other external packages
-find_package(Boost 1.67 REQUIRED)
-find_package(GENFIT2 REQUIRED)
-find_package(PCL) # temp until ATTPCROOT properly exports its dependencies
-find_package(HiRAEVT) # temp until ATTPCROOT properly exports its dependencies
 find_package(ATTPCROOT REQUIRED)
-
-message(STATUS ${ATTPCROOTPATH})
 
 add_library(e20020Ana SHARED e20020Ana.cc)
 target_link_libraries(e20020Ana
   ROOT::Core
   ROOT::GenVector
-  ${VMCLIB}
+  ROOT::VMC
   AtReconstruction
   AtTpc
   AtSimulationData
-  FairTools
-  Base
-  ${GENFIT2_LIBRARY_DIR}/libgenfit2.so)
-
-target_include_directories(e20020Ana PRIVATE ${GENFIT2_INCLUDE_DIR} ${FAIRROOTPATH}/include)
-  
+  FairRoot::FairTools
+  FairRoot::Base
+  GENFIT2::genfit2
+)
 
 add_executable(e20020AnaExe e20020Ana.cc)
 target_link_libraries (e20020AnaExe e20020Ana
-${GENFIT2_LIBRARY_DIR}/libgenfit2.so
-ROOT::EG
-ROOT::Core
-ROOT::GenVector
-ROOT::Gpad
-ROOT::Graf
-ROOT::Graf3d
-ROOT::Gui
-ROOT::Hist
-ROOT::MathCore
-ROOT::Matrix
-ROOT::Minuit
-ROOT::Net
-ROOT::Physics
-ROOT::Postscript
-ROOT::Rint
-ROOT::RIO
-ROOT::Thread
-ROOT::Tree
-ROOT::TreePlayer
-ROOT::Geom
+  GENFIT2::genfit2
+  
+  ROOT::EG
+  ROOT::Core
+  ROOT::GenVector
+  ROOT::Gpad
+  ROOT::Graf
+  ROOT::Graf3d
+  ROOT::Gui
+  ROOT::Hist
+  ROOT::MathCore
+  ROOT::Matrix
+  ROOT::Minuit
+  ROOT::Net
+  ROOT::Physics
+  ROOT::Postscript
+  ROOT::Rint
+  ROOT::RIO
+  ROOT::Thread
+  ROOT::Tree
+  ROOT::TreePlayer
+  ROOT::Geom
 
-AtReconstruction
-AtMap
-AtTpc
-AtSimulationData
+  AtReconstruction
+  AtMap
+  AtTpc
+  AtSimulationData
 
-FairTools
-Base)
-target_include_directories(e20020AnaExe PRIVATE ${GENFIT2_INCLUDE_DIR} ${FAIRROOTPATH}/include)
+  FairRoot::FairTools
+  FairRoot::Base)
