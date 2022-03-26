@@ -10,12 +10,15 @@ macro(set_attpcroot_defaults)
   set(CMAKE_CXX_EXTENSIONS OFF)
   
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Create JSON compilation database
-
+  
   # Install path is changed to "install" if not given a value by the user
   if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "install" CACHE PATH "..." FORCE)
     message("Setting default install prefix to: ${CMAKE_INSTALL_PREFIX}")
   endif()
+
+  set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
+  set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 
   # Set default build type if not specified
   If(NOT CMAKE_BUILD_TYPE)
