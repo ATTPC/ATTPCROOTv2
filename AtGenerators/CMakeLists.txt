@@ -33,14 +33,14 @@ set(DEPENDENCIES
   ROOT::MathCore
   ROOT::GenVector
 
-  AtSimulationData
-  AtTpc
-  AtTools
+  ATTPCROOT::AtSimulationData
+  ATTPCROOT::AtTpc
+  ATTPCROOT::AtTools
 
   Pythia8
   )
 
-generate_target_root_library(${LIBRARY_NAME}
+generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   DEPS_PUBLIC ${DEPENDENCIES}

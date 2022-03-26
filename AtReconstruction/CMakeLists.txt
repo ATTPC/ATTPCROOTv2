@@ -17,11 +17,11 @@ Set(DEPENDENCIES
   FairRoot::Base
   FairRoot::FairTools
 
-  AtAnalysis
-  AtMap
-  AtParameter
-  AtSimulationData
-  AtData
+  ATTPCROOT::AtAnalysis
+  ATTPCROOT::AtMap
+  ATTPCROOT::AtParameter
+  ATTPCROOT::AtSimulationData
+  ATTPCROOT::AtData
   
   ROOT::Spectrum
   ROOT::Core
@@ -115,7 +115,7 @@ if(HiRAEVT_FOUND)
     )
 endif()
 
-generate_target_root_library(${LIBRARY_NAME}
+generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   INCLUDE_DIR ${INCLUDE_DIRECTORIES}

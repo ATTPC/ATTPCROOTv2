@@ -5,68 +5,23 @@ cmake_policy(VERSION 3.11...3.15)
 # Set project name and version
 project(ATTPCROOT VERSION 1.0.0)
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
+set(PROJECT_MINIMUM_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
-include(AtTpcRootMacros)
+include(ATTPCRootChecks)
 include(FairSoftCheckCompiler)
+attpcroot_sanity_checks()
+check_compiler()
+
+include(ATTPCRootUtils)
+include(ATTPCRootFindPackage2)
+include(ROOTTargetMacros)
 include(WriteConfigFile)
 include(CTest)
-include(ROOTTargetMacros)
 include(GNUInstallDirs)
 include(PrintSummary)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Create JSON compilation database
-
-# Check for needed enviroment variables
-check_and_set_enviroment()
-check_out_of_source_build()
-check_install_directory()
-check_compiler()
-
-message("Library paht: ${LD_LIBRARY_PATH}")
-
-set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
-set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
-set(INCLUDE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/include")
-
-# Install path is changed to "install" if not given a value by the user
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX "install" CACHE PATH "..." FORCE)
-  message("Setting default install prefix to: ${CMAKE_INSTALL_PREFIX}")
-endif()
-
-# Set default build type if not specified
-If(NOT CMAKE_BUILD_TYPE)
-  Message("Set BuildType to RELWITHDEBINFO")
-  set(CMAKE_BUILD_TYPE RELWITHDEBINFO)
-EndIf(NOT CMAKE_BUILD_TYPE)
-
-# https://cmake.org/Wiki/CMake_RPATH_handling
-# Set the RPATH for installed libraries as well as build libraries
-# so the user does not have to fiddle around with the LD_LIBRARY_PATH
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES
-  "${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_LIBDIR}" isSystemDir)
-if("${isSystemDir}" STREQUAL "-1")
-  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    # If we are on linux, set the DT_RUNPATH tag instead of the DT_RPATH tag this
-    # has a lower presedence than LD_LIBRARY_PATH if the user would like to override
-    # the automatic selection of libraries to link against
-    # https://news.ycombinator.com/item?id=14222349
-    set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} "-Wl,--enable-new-dtags")
-    set(CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS} "-Wl,--enable-new-dtags")
-    set(CMAKE_INSTALL_RPATH "$ORIGIN/${PROJECT_INSTALL_LIBDIR}")
-  elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(CMAKE_INSTALL_RPATH "@loader_path/${PROJECT_INSTALL_LIBDIR}")
-  else()
-    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${PROJECT_INSTALL_LIBDIR}")
-  endif()
-endif()
-
+set_attpcroot_defaults()
 
 find_package2(PUBLIC FairRoot REQUIRED)
 #set(ROOT_NO_FIND_PACKAGE_CONFIG_FILE TRUE)
@@ -88,15 +43,14 @@ foreach(dep IN LISTS FairLogger_PACKAGE_DEPENDENCIES)
   endif()
 endforeach()
 
-find_package2(PRIVATE Pythia6)
-find_package2(PRIVATE Pythia8)
-find_package2(PRIVATE Geant3)
-find_package2(PRIVATE Geant4)
-find_package2(PRIVATE GEANT4DATA)
-Find_Package2(PRIVATE VGM)
-find_package2(PRIVATE Geant4VMC)
-find_package2(PRIVATE CLHEP)
-find_package2(PRIVATE HEPMC)
+find_package2(PUBLIC Pythia6 REQUIRED)
+find_package2(PUBLIC Pythia8)
+find_package2(PUBLIC Geant3)
+find_package2(PUBLIC Geant4)
+Find_Package2(PUBLIC VGM)
+find_package2(PUBLIC Geant4VMC)
+find_package2(PUBLIC CLHEP)
+find_package2(PUBLIC HEPMC)
 
 # Right now, we just use header-only features of Boost (multi_array)
 find_package2(PUBLIC Boost 1.67
@@ -113,7 +67,7 @@ endif()
 # find a config file, generate the target by hand using the output
 # of FindHDF5.cmake
 #set(HDF5_FIND_DEBUG TRUE)
-find_package2(PRIVATE HDF5 REQUIRED)
+find_package2(PUBLIC HDF5 REQUIRED)
 if(NOT TARGET hdf5::hdf5-shared)
   add_library(hdf5::hdf5-shared SHARED IMPORTED GLOBAL)
   # This may have to be changed to HDF5_CXX_LIBRARIES depending on your hdf5 install
@@ -150,23 +104,16 @@ if(NOT DEFINED CMAKE_SUPPRESS_DEVELOPER_WARNINGS)
   set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS 1)
   set(_temp_mod_dev_warning 1)
 endif()
-find_package2(PRIVATE PCL 1.8 CONFIG REQUIRED QUIET)
+find_package2(PUBLIC PCL 1.8 CONFIG REQUIRED QUIET)
 if(_temp_mod_dev_warning)
   unset(CMAKE_SUPPRESS_DEVELOPER_WARNINGS)
 endif()
 
 #Include all of the other dependecies that  we need
-find_package2(PRIVATE OpenMP)
-find_package2(PRIVATE CUDA)
+find_package2(PUBLIC OpenMP)
+find_package2(PUBLIC CUDA)
 find_package2(PUBLIC HiRAEVT CONFIG)
 find_package2(PUBLIC GENFIT2)
-
-# FAIRROOT depends on VMC in a way that it exposes the headers, but does not
-# seem to need someone who is linking against it to also link against the VMCLibrary.
-# Until FairRoot finally finished the move to modern CMake this is a hacky way of ensure that if
-# you include FairRoot, you are also getting the headers it depends on
-# This replaces the call to SetBasicVariables in FairMacros.cmake which did some
-# nasty things like calling link_directories() and include_directories()
 
 if (OPENMP_CXX_FOUND)
  # MESSAGE("${Green} OpenMP Support Found ${OpenMP_CXX_SPEC_DATE} ${ColourReset}")
@@ -202,7 +149,8 @@ if (PCL_FOUND)
   add_subdirectory (AtEventDisplay)
 endif()
 
-#WRITE_CONFIG_FILE(config.sh)
+# Generate config files for build and install
+
 fairroot_generate_config_sh(${CMAKE_BINARY_DIR}/config.sh
   BUILD
   PATH ${ROOT_BINARY_DIR}
@@ -210,16 +158,11 @@ fairroot_generate_config_sh(${CMAKE_BINARY_DIR}/config.sh
   VMCWORKDIR ${CMAKE_SOURCE_DIR}
   )
 
-message(${CMAKE_INSTALL_PREFIX})
 fairroot_generate_config_sh(${CMAKE_BINARY_DIR}/bin/ATTPCROOTConfig.sh_install
   INSTALL
   PATH ${ROOT_BINARY_DIR}
   DEPENDENCIES ${PROJECT_PACKAGE_DEPENDENCIES}
   VMCWORKDIR ${CMAKE_SOURCE_DIR}
-  )
-
-configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake
-  ${CMAKE_BINARY_DIR}/CTestCustom.cmake
   )
 
 ####### Install files and make config file for loading into cmake project ########
@@ -229,7 +172,8 @@ message("install prefix: ${CMAKE_INSTALL_PREFIX}")
 # Add install targets for libraries
 install(EXPORT GeneratedRootLibTargets
   FILE ${PROJECT_NAME}Targets.cmake
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME} )
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+  NAMESPACE ${PROJECT_NAME}::)
 
 include(CMakePackageConfigHelpers)
 
@@ -243,11 +187,15 @@ install(FILES
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
   )
 
-# Generate the version file for the config
+# Generate the version file for the config and install
 write_basic_package_version_file(
   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY AnyNewerVersion
+  )
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
   )
 
 # Install config script
@@ -255,4 +203,3 @@ install(PROGRAMS ${CMAKE_BINARY_DIR}/bin/ATTPCROOTConfig.sh_install
   DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME ATTPCROOTConfig.sh)
 
 PrintSummary()
-

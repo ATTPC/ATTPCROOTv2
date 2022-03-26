@@ -2,20 +2,19 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(E20009Analysis)
 
-SET(SIMPATH $ENV{SIMPATH})
-SET(FAIRROOTPATH $ENV{FAIRROOTPATH})
 SET(ATTPCROOTPATH $ENV{VMCWORKDIR})
 
 list(APPEND CMAKE_PREFIX_PATH ${ATTPCROOTPATH}/build/install) #Need access to ATTPCROOT
 
-find_package(ATTPCROOT REQUIRED 1.0)
+# Will also load all of its dependecies
+find_package(ATTPCROOT 1.0 REQUIRED)
 
 add_library(e20009Ana SHARED e20009Ana.cc)
 target_link_libraries(e20009Ana
   ROOT::Core
   ROOT::GenVector
   ROOT::VMC
-  AtReconstruction
+  ATTPCROOT::AtReconstruction
   FairRoot::FairTools
   FairRoot::Base
   GENFIT2::genfit2
@@ -42,12 +41,12 @@ ROOT::RIO
 ROOT::Thread
 ROOT::Tree
 ROOT::TreePlayer
+ROOT::Geom
+ROOT::Spectrum
 
-AtReconstruction
-AtMap
+ATTPCROOT::AtReconstruction
+ATTPCROOT::AtMap
 
 FairRoot::Base
 FairRoot::FairTools
-ROOT::Geom
-ROOT::Spectrum
 )

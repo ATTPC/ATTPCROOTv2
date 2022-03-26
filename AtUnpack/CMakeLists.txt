@@ -12,10 +12,10 @@ ${CMAKE_SOURCE_DIR}/AtUnpack/GETDecoder2
 Set(DEPENDENCIES
   FairRoot::Base
   FairRoot::FairTools
-
-  AtMap
-  AtParameter
-  AtData
+  
+  ATTPCROOT::AtMap
+  ATTPCROOT::AtParameter
+  ATTPCROOT::AtData
   
   ROOT::Core
   ROOT::Tree
@@ -49,7 +49,7 @@ set(SRCS
   
   )
 
-generate_target_root_library(${LIBRARY_NAME}
+generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   INCLUDE_DIR ${INCLUDE_DIRECTORIES}

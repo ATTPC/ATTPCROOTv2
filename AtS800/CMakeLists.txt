@@ -36,10 +36,10 @@ Set(DEPENDENCIES
     ROOT::TreePlayer
     ROOT::VMC
     
-    AtData
+    ATTPCROOT::AtData
 )
 
-generate_target_root_library(${LIBRARY_NAME}
+generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   DEPS_PUBLIC ${DEPENDENCIES}

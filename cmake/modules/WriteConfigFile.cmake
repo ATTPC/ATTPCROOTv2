@@ -65,6 +65,7 @@ function(fairroot_generate_config_sh file)
     message(FATAL_ERROR "BUILD and INSTALL are mutually exclusive")
   endif()
 
+  # Turn dependecy names into targets we can pull interface info from
   list(APPEND ARGS_DEPENDENCIES ${PROJECT_NAME})
   foreach(dep IN LISTS ARGS_DEPENDENCIES)
     fairroot_get_root_config_library_targets(${dep} OUTVAR targets)
@@ -74,27 +75,32 @@ function(fairroot_generate_config_sh file)
   endforeach()
 
   if(ARGS_BUILD)
-    set(lib config_sh_build_interface)
+    add_library(config_sh_build_interface INTERFACE)
+    target_link_libraries(config_sh_build_interface INTERFACE ${target_deps})
   else()
-    set(lib config_sh_install_interface)
+    add_library(config_sh_install_interface INTERFACE)
+    target_link_libraries(config_sh_install_interface INTERFACE ${target_deps})
   endif()
-  add_library(${lib} INTERFACE)
-  target_link_libraries(${lib} INTERFACE ${target_deps})
 
-  # ld library path
+  # Add to LD_LIBRARY_PATH for each imported target
+  unset(ld_library_path)
   foreach(target_dep IN LISTS target_deps)
     get_property(imported TARGET ${target_dep} PROPERTY IMPORTED)
     if(imported)
       get_property(ld_path TARGET ${target_dep} PROPERTY LOCATION)
       get_filename_component(ld_path ${ld_path} DIRECTORY)
       list(APPEND ld_library_path ${ld_path})
+      message(" ${target_dep} ${ld_path}")
+      message("${ld_library_path}")
     endif()
   endforeach()
 
   if(ARGS_BUILD)
     list(APPEND ld_library_path "${CMAKE_BINARY_DIR}/lib")
   else()
-    list(APPEND ld_library_path "${CMAKE_INSTALL_PREFIX}/lib")
+    get_filename_component(absLibPath ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}
+      ABSOLUTE BASE_DIR "${CMAKE_BINARY_DIR}")
+    list(APPEND ld_library_path "${absLibPath}")
   endif()
   
   if(ld_library_path)
@@ -134,23 +140,33 @@ function(fairroot_generate_config_sh file)
     file(APPEND ${file} "export VMCWORKDIR=\"${ARGS_VMCWORKDIR}\"\n")
   endif()
 
-  # root include dirs (only for build)
-  set(rgenfile ${file}.gen_root_include_path)
-  if(ARGS_BUILD)
-    file(GENERATE OUTPUT ${rgenfile} CONTENT
-      "export ROOT_INCLUDE_PATH=\"$<JOIN:$<REMOVE_DUPLICATES:$<TARGET_PROPERTY:${lib},INTERFACE_INCLUDE_DIRECTORIES>>,:>:${CMAKE_BINARY_DIR}/include:$ROOT_INCLUDE_PATH\"\n")
-  else()
-    get_filename_component(absInclude ${CMAKE_INSTALL_INCLUDEDIR}
-      ABSOLUTE BASE_DIR "${CMAKE_BINARY_DIR}")
-    file(GENERATE OUTPUT ${rgenfile} CONTENT
-      "export ROOT_INCLUDE_PATH=\"$<JOIN:$<REMOVE_DUPLICATES:$<TARGET_PROPERTY:${lib},INTERFACE_INCLUDE_DIRECTORIES>>,:>:${absInclude}:$ROOT_INCLUDE_PATH\"\n")
-  endif()
+  # If we are using an old version of CMAKE, can't auto export 
+  if(CMAKE_VERSION VERSION_LESS 3.15)
+    message(WARNING "Requires CMake 3.15 or higher to automatically generate ROOT_INCLUDE_PATH.\
+ You are currently running ${CMAKE_VERSION}")
+  else(CMAKE_VERSION VERSION_LESS 3.15)
 
-  if(ARGS_BUILD)
-    set(name update_root_include_path_build_interface)
-    add_custom_target(${name} ALL
-    sed -i '/^export ROOT_INCLUDE_PATH=/d' ${file}
-    COMMAND cat ${rgenfile} >> ${file}
-    DEPENDS ${file} ${rgenfile})
-  endif()
+    set(rgenfile ${file}.gen_root_include_path)
+    if(ARGS_BUILD)
+      file(GENERATE OUTPUT ${rgenfile} CONTENT
+	"export ROOT_INCLUDE_PATH=\"$<JOIN:$<REMOVE_DUPLICATES:$<TARGET_PROPERTY:config_sh_build_interface,INTERFACE_INCLUDE_DIRECTORIES>>,:>:${CMAKE_BINARY_DIR}/include:$ROOT_INCLUDE_PATH\"\n")
+    else()
+      get_filename_component(absInclude ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}
+	ABSOLUTE BASE_DIR "${CMAKE_BINARY_DIR}")
+      file(GENERATE OUTPUT ${rgenfile} CONTENT
+	"export ROOT_INCLUDE_PATH=\"$<JOIN:$<REMOVE_DUPLICATES:$<TARGET_PROPERTY:config_sh_install_interface,INTERFACE_INCLUDE_DIRECTORIES>>,:>:${absInclude}:$ROOT_INCLUDE_PATH\"\n")
+    endif()
+
+    if(ARGS_BUILD)
+      add_custom_target(update_root_include_path_build_interface ALL
+	sed -i '/^export ROOT_INCLUDE_PATH=/d' ${file}
+	COMMAND cat ${rgenfile} >> ${file}
+	DEPENDS ${file} ${rgenfile})
+    else()
+      add_custom_target(update_root_include_path_install_interface ALL
+	sed -i '/^export ROOT_INCLUDE_PATH=/d' ${file}
+	COMMAND cat ${rgenfile} >> ${file}
+	DEPENDS ${file} ${rgenfile})
+    endif()    
+  endif(CMAKE_VERSION VERSION_LESS 3.15)
 endfunction()

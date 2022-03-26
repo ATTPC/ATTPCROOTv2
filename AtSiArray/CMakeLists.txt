@@ -14,10 +14,10 @@ Set(DEPENDENCIES
   FairRoot::Base
   FairRoot::FairTools
   ROOT::Core
-  AtSimulationData
+  ATTPCROOT::AtSimulationData
 )
 
-generate_target_root_library(${LIBRARY_NAME}
+generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   DEPS_PUBLIC ${DEPENDENCIES}

@@ -19,7 +19,7 @@ Set(DEPENDENCIES
 )
 
 
-generate_target_root_library(${target}
+generate_target_and_root_library(${target}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   DEPS_PUBLIC ${DEPENDENCIES}

@@ -5,95 +5,38 @@
 #              GNU Lesser General Public Licence (LGPL) version 3,             #
 #                  copied verbatim in the file "LICENSE"                       #
 ################################################################################
-# Functions for ATTPCROOT code. Based on FairMacros.cmake from FairRoot.
-if(NOT WIN32 AND NOT DISABLE_COLOR)
-  string(ASCII 27 Esc)
-  set(CR       "${Esc}[m")
-  set(CB       "${Esc}[1m")
-  set(Red      "${Esc}[31m")
-  set(Green    "${Esc}[32m")
-  set(Yellow   "${Esc}[33m")
-  set(Blue     "${Esc}[34m")
-  set(Magenta  "${Esc}[35m")
-  set(Cyan     "${Esc}[36m")
-  set(White    "${Esc}[37m")
-  set(BRed     "${Esc}[1;31m")
-  set(BGreen   "${Esc}[1;32m")
-  set(BYellow  "${Esc}[1;33m")
-  set(BBlue    "${Esc}[1;34m")
-  set(BMagenta "${Esc}[1;35m")
-  set(BCyan    "${Esc}[1;36m")
-  set(BWhite   "${Esc}[1;37m")
-endif()
-
-# Must be a macro so the variables set are in the scope of the caller (unlike a function)
-macro(check_and_set_enviroment)
-  # Check for needed environment variables
-  if(NOT DEFINED ENV{FAIRROOTPATH})
-    message(FATAL_ERROR "You did not define the environment variable FAIRROOTPATH which is needed to find FairRoot. Please set this variable and execute cmake again.")
-  endif(NOT DEFINED ENV{FAIRROOTPATH})
-  
-  if(NOT DEFINED ENV{SIMPATH})
-    message(FATAL_ERROR "You did not define the environment variable SIMPATH which is nedded to find the external packages. Please set this variable and execute cmake again.")
-  endif(NOT DEFINED ENV{SIMPATH})
-
-  if(NOT UNIX)
-    message(FATAL_ERROR "You're not on an UNIX system. The project was up to now only tested on UNIX systems, so we break here. If you want to go on please edit the CMakeLists.txt in the source directory.")
-  endif(NOT UNIX)
-
-set(SIMPATH $ENV{SIMPATH})
-set(FAIRROOTPATH $ENV{FAIRROOTPATH})
-set(CMAKE_PREFIX_PATH ${SIMPATH} ${CMAKE_PREFIX_PATH})
-set(LD_LIBRARY_PATH ${LD_LIBRARY_PATH} ${SIMPATH}/lib)
-#set(LD_LIBRARY_PATH ${LD_LIBRARY_PATH} ${FAIRROOTPATH}/lib)
-Set(VMCWORKDIR ${CMAKE_SOURCE_DIR})
-
-endmacro()
-  
-macro (check_out_of_source_build)
-  if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
-    message(FATAL_ERROR "${PROJECT_NAME} should be installed as an out of source build, to keep the source directory clean. Please create a extra build directory and run the command 'cmake path_to_source_dir' in this newly created directory. You have also to delete the directory CMakeFiles and the file CMakeCache.txt in the source directory. Otherwise cmake will complain even if you run it from an out-of-source directory.")
-  endif()
-endmacro()
-
-#################################################################################
-# The macro checks if the build directory is different from the
-# installation directory. In case both are the same
-# stop the execution of cmake with an error message.
-#
-################################################################################
-
-macro (check_install_directory)
-  if(CMAKE_INSTALL_PREFIX STREQUAL CMAKE_BINARY_DIR)
-    message(FATAL_ERROR "Cannot install into the build directory!")
-  endif()
-endmacro ()
-
-################################################################################
+# Based on the FindPackage2 macro introduced by FairRoot
 
 ################################################################################
 #
 # find_package2(PRIVATE|PUBLIC|INTERFACE <pkgname>
 #               [VERSION <version>]
 #               [COMPONENTS <list of components>]
+#               [OPTIONAL_COMPONENTS <list of components>]
 #               [ADD_REQUIREMENTS_OF <list of dep_pgkname>]
+#               [FIND_DEPENDENCIES [EXCEPT <list of dep_pgkname>]
 #               [any other option the native find_package supports]...)
 #
 # Wrapper around CMake's native find_package command to add some features and bookkeeping.
 #
 # The qualifier (PRIVATE|PUBLIC|INTERFACE) to the package to populate
 # the variables PROJECT_[INTERFACE]_<pkgname>_([VERSION]|[COMPONENTS]|PACKAGE_DEPENDENCIES)
-# accordingly. This bookkeeping information is used to print our dependency found summary
-# table and to generate a part of our CMake package.
+# accordingly. If a package is not found, it is added to the list PROJECT_PACKAGE_NOT_FOUND.
+# This bookkeeping information is used to print our dependency found summary table and to generate
+# a part of our CMake package.
 #
 # When a dependending package is listed with ADD_REQUIREMENTS_OF the variables
 # <dep_pkgname>_<pkgname>_VERSION|COMPONENTS are looked up to and added to the native
 # VERSION (selected highest version) and COMPONENTS (deduplicated) args.
 #
-# COMPONENTS and VERSION args are then just passed to the native find_package.
+# COMPONENTS, OPTIONAL_COMPONENTS, VERSION args are then just passed to the native find_package.
 #
+# If <pkgname> is found, FIND_DEPENDENCIES loops over the <pkgname>_PACKAGE_DEPENDENCIES list and
+# calls find_package2 on each list item recursively. The loop will skip any item listed in the
+# EXCEPT argument. ADD_REQUIREMENTS_OF args will be passed to each recursive find_package2 call.
+
 macro(find_package2 qualifier pkgname)
-  cmake_parse_arguments(ARGS "" "VERSION" "COMPONENTS;ADD_REQUIREMENTS_OF" ${ARGN})
+  cmake_parse_arguments(ARGS "FIND_DEPENDENCIES" "VERSION" "COMPONENTS;ADD_REQUIREMENTS_OF;OPTIONAL_COMPONENTS;EXCEPT" ${ARGN})
 
   string(TOUPPER ${pkgname} pkgname_upper)
   set(__old_cpp__ ${CMAKE_PREFIX_PATH})
@@ -102,12 +45,17 @@ macro(find_package2 qualifier pkgname)
   # build lists of required versions and components
   unset(__required_versions__)
   unset(__components__)
+  unset(__optional_components__)
   if(ARGS_VERSION)
     list(APPEND __required_versions__ ${ARGS_VERSION})
   endif()
   if(ARGS_COMPONENTS)
     list(APPEND __components__ ${ARGS_COMPONENTS})
   endif()
+  if(ARGS_OPTIONAL_COMPONENTS)
+    list(APPEND __optional_components__ ${ARGS_OPTIONAL_COMPONENTS})
+  endif()
+  
   if(ARGS_ADD_REQUIREMENTS_OF)
     foreach(dep_pkgname IN LISTS ARGS_ADD_REQUIREMENTS_OF)
       if(${dep_pkgname}_${pkgname}_VERSION)
@@ -115,6 +63,9 @@ macro(find_package2 qualifier pkgname)
       endif()
       if(${dep_pkgname}_${pkgname}_COMPONENTS)
         list(APPEND __components__ ${${dep_pkgname}_${pkgname}_COMPONENTS})
+      endif()
+      if(${dep_pkgname}_${pkgname}_OPTIONAL_COMPONENTS)
+        list(APPEND __optional_components__ ${${dep_pkgname}_${pkgname}_OPTIONAL_COMPONENTS})
       endif()
     endforeach()
   endif()
@@ -134,38 +85,83 @@ macro(find_package2 qualifier pkgname)
     list(REMOVE_DUPLICATES __components__)
   endif()
 
+
   # call native find_package
-  #message("Looking in ${CMAKE_PREFIX_PATH} for ${pkgname}")
-  if(__components__)
-    find_package(${pkgname} ${__version__} QUIET COMPONENTS ${__components__} ${ARGS_UNPARSED_ARGUMENTS})
+  if(__components__ AND __optional_components__)
+    find_package(${pkgname} ${__version__} QUIET
+      COMPONENTS ${__components__}
+      OPTIONAL_COMPONENTS ${__optional_components__} ${ARGS_UNPARSED_ARGUMENTS})
+  elseif(__components__ AND NOT __optional_components__)
+    find_package(${pkgname} ${__version__} QUIET
+      COMPONENTS ${__components__} ${ARGS_UNPARSED_ARGUMENTS})
+  elseif(NOT __components__ AND __optional_components__)
+    find_package(${pkgname} ${__version__} QUIET
+      OPTIONAL_COMPONENTS ${__optional_components__} ${ARGS_UNPARSED_ARGUMENTS})
   else()
     find_package(${pkgname} ${__version__} QUIET ${ARGS_UNPARSED_ARGUMENTS})
   endif()
-
+  
   if(${pkgname}_FOUND)
     if(${qualifier} STREQUAL PRIVATE)
       set(PROJECT_${pkgname}_VERSION ${__version__})
       set(PROJECT_${pkgname}_COMPONENTS ${__components__})
+      set(PROJECT_${pkgname}_OPTIONAL_COMPONENTS ${__optional_components__})
       set(PROJECT_PACKAGE_DEPENDENCIES ${PROJECT_PACKAGE_DEPENDENCIES} ${pkgname})
     elseif(${qualifier} STREQUAL PUBLIC)
       set(PROJECT_${pkgname}_VERSION ${__version__})
       set(PROJECT_${pkgname}_COMPONENTS ${__components__})
+      set(PROJECT_${pkgname}_OPTIONAL_COMPONENTS ${__optional_components__})
       set(PROJECT_PACKAGE_DEPENDENCIES ${PROJECT_PACKAGE_DEPENDENCIES} ${pkgname})
       set(PROJECT_INTERFACE_${pkgname}_VERSION ${__version__})
       set(PROJECT_INTERFACE_${pkgname}_COMPONENTS ${__components__})
+      set(PROJECT_INTERFACE_${pkgname}_OPTIONAL_COMPONENTS ${__optional_components__})
       set(PROJECT_INTERFACE_PACKAGE_DEPENDENCIES ${PROJECT_INTERFACE_PACKAGE_DEPENDENCIES} ${pkgname})
     elseif(${qualifier} STREQUAL INTERFACE)
       set(PROJECT_INTERFACE_${pkgname}_VERSION ${__version__})
       set(PROJECT_INTERFACE_${pkgname}_COMPONENTS ${__components__})
+      set(PROJECT_INTERFACE_${pkgname}_OPTIONAL_COMPONENTS ${__optional_components__})
       set(PROJECT_INTERFACE_PACKAGE_DEPENDENCIES ${PROJECT_INTERFACE_PACKAGE_DEPENDENCIES} ${pkgname})
     endif()
+  else(${pkgname}_FOUND)
+    list(APPEND PROJECT_PACKAGE_NOT_FOUND ${pkgname})
+  endif(${pkgname}_FOUND)
 
+  # Remove dups from global project dependecy list
+  if(PROJECT_PACKAGE_DEPENDENCIES)
+    list(REMOVE_DUPLICATES PROJECT_PACKAGE_DEPENDENCIES)
   endif()
-  
-  unset(__version__)
+  if(PROJECT_INTERFACE_PACKAGE_DEPENDENCIES)
+    list(REMOVE_DUPLICATES PROJECT_INTERFACE_PACKAGE_DEPENDENCIES)
+  endif()
+  if(PROJECT_PACKAGE_NOT_FOUND)
+    list(REMOVE_DUPLICATES PROJECT_PACKAGE_NOT_FOUND)
+  endif()
+
+  unset(__required_versions__)
   unset(__components__)
+  unset(__optional_components__)
   unset(__required_versions__)
   set(CMAKE_PREFIX_PATH ${__old_cpp__})
   unset(__old_cpp__)
+
+  # Recursively call for FIND_DEPENDENCIES
+  if(${pkgname}_FOUND AND ARGS_FIND_DEPENDENCIES)
+    foreach(dep IN LISTS ${pkgname}_PACKAGE_DEPENDENCIES)
+      if(NOT dep IN_LIST ARGS_EXCEPT)
+	set(__exceptions__ ${ARGS_EXCEPT} ${pkgname}_PACKAGE_DEPENDENCIES)
+	if(__exceptions__)
+	  list(REMOVE_DUPLICATES __exceptions__)
+	  find_package2(${qualifier} ${dep} REQUIRED
+	    ADD_REQUIREMENTS_OF ${PROJECT_PACKAGE_DEPENDENCIES}
+	    FIND_DEPENDENCIES EXCEPT ${__exceptions__})
+	else()
+	  find_package2(${qualifier} ${dep} REQUIRED
+	    ADD_REQUIREMENTS_OF ${PROJECT_PACKAGE_DEPENDENCIES}
+	    FIND_DEPENDENCIES)
+	endif()
+      endif()
+    endforeach()
+  endif()
+  
 endmacro()
 

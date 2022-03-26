@@ -9,10 +9,6 @@ Set(DEPENDENCIES
   ROOT::XMLParser
   )
 
-set(LINK_DIRECTORIES
-  ${FAIRROOT_LIBRARY_DIR}
-  )
-
 set(SRCS
   # Add all the source files below this line. Those must have cxx for their extension.
 
@@ -30,9 +26,7 @@ set(SRCS
   AtTrack.cxx
   )
 
-### Add additional sources and libraries if we found certain modules ###
-
-generate_target_root_library(${LIBRARY_NAME}
+generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   DEPS_PUBLIC ${DEPENDENCIES}

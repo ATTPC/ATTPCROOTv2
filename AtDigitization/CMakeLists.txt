@@ -9,10 +9,10 @@ Set(DEPENDENCIES
   ROOT::Core
   ROOT::GenVector
   
-  AtSimulationData
-  AtParameter
-  AtData
-  AtMap
+  ATTPCROOT::AtSimulationData
+  ATTPCROOT::AtParameter
+  ATTPCROOT::AtData
+  ATTPCROOT::AtMap
 )
 
 set(SRCS
@@ -28,7 +28,7 @@ AtTrigger.cxx
 AtTriggerTask.cxx
 )
 
-generate_target_root_library(${LIBRARY_NAME}
+generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   DEPS_PUBLIC ${DEPENDENCIES}
