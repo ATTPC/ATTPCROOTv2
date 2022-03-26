@@ -37,7 +37,7 @@ set(DEPENDENCIES
   ATTPCROOT::AtTpc
   ATTPCROOT::AtTools
 
-  Pythia8
+  #Pythia8
   )
 
 generate_target_and_root_library(${LIBRARY_NAME}

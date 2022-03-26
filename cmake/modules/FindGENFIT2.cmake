@@ -8,25 +8,27 @@
 #   GENFIT2_LIBRARY_DIR         The path to where the GENFIT2 library files are.
 #
 
-#Message(STATUS "Looking for GENFIT2...")
-#Message(STATUS $ENV{GENFIT})
-Set(GENFIT $ENV{GENFIT})
+if(NOT DEFINED ENV{GENFIT} AND NOT DEFINED GENFIT)
+  message(WARNING "Looking for GENFIT but did not set enviroment or cmake variable GENFIT")
+endif()
+
+if(DEFINED ENV{GENFIT})
+  message(STATUS "Using enviroment variable GENFIT to search")
+  Set(GENFIT $ENV{GENFIT})
+endif()
 
 
 Set(GENFIT2_LIBRARY_SEARCHPATH
   ${GENFIT}/lib
 )
 
-#Message(STATUS ${GENFIT}/lib)
 
 Set(GENFIT2_FOUND FALSE)
 
 Find_Library(GENFIT2_LIBRARY NAMES genfit2
-             PATHS ${GENFIT2_LIBRARY_SEARCHPATH}
-             NO_DEFAULT_PATH
-            )
-
-#Message(STATUS "Genfit2 ${GENFIT2_LIBRARY}")
+  PATHS ${GENFIT2_LIBRARY_SEARCHPATH}
+  NO_DEFAULT_PATH
+  )
 
 If(GENFIT2_LIBRARY)
 
@@ -35,16 +37,7 @@ If(GENFIT2_LIBRARY)
   get_filename_component(GENFIT2_LIBRARY_DIR ${GENFIT2_LIBRARY} DIRECTORY)
   get_filename_component(GENFIT2_INCLUDE_DIR ${GENFIT2_LIBRARY_DIR}/../include ABSOLUTE)
 
-#  Set(GENFIT2_LIBRARY_DIR ${GENFIT}/lib)
-#Set(GENFIT2_LDFLAGS "-L${GENFIT_LIBRARY_PATH} -lgenfit2")
-
-  #MESSAGE(STATUS ${GENFIT2_LDFLAGS})
-
-  #Set(GENFIT2_INCLUDE_DIR ${GENFIT}/include)
-
   Mark_As_Advanced(GENFIT2_LIBRARY_DIR GENFIT2_INCLUDE_DIR)
-
-  #Set(LD_LIBRARY_PATH ${LD_LIBRARY_PATH} ${GENFIT2_LIBRARY_DIR})
 
   Set(GENFIT2_FOUND TRUE)
 

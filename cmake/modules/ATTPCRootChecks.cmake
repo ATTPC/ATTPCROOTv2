@@ -25,14 +25,16 @@ endfunction()
 
 function(attpcroot_check_enviroment)
 
-  if(NOT DEFINED ENV{FAIRROOTPATH})
-    message(FATAL_ERROR "You did not define the environment variable FAIRROOTPATH which is needed to find FairRoot. Please set this variable and execute cmake again.")
-  endif(NOT DEFINED ENV{FAIRROOTPATH})
+  if(NOT DEFINED ENV{FAIRROOTPATH} AND NOT DEFINED FAIRROOTPATH)
+    message(FATAL_ERROR "You did not define the environment or cmake variable FAIRROOTPATH which is needed to find FairRoot. Please set this variable and execute cmake again.")
+  endif()
+  set(FAIRROOTPATH "$ENV{FAIRROOTPATH}" CACHE INTERNAL "FAIRROOTPATH")
   
-  if(NOT DEFINED ENV{SIMPATH})
-    message(FATAL_ERROR "You did not define the environment variable SIMPATH which is nedded to find the external packages. Please set this variable and execute cmake again.")
-  endif(NOT DEFINED ENV{SIMPATH})
-
+  if(NOT DEFINED ENV{SIMPATH} AND NOT DEFINED SIMPATH)
+    message(FATAL_ERROR "You did not define the environment or cmake variable SIMPATH which is nedded to find the external packages. Please set this variable and execute cmake again.")
+  endif()
+  set(SIMPATH "$ENV{SIMPATH}" CACHE INTERNAL "SIMPATH")
+  
 endfunction()
 
 function(attpcroot_sanity_checks)

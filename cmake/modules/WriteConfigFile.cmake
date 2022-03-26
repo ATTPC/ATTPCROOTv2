@@ -90,8 +90,6 @@ function(fairroot_generate_config_sh file)
       get_property(ld_path TARGET ${target_dep} PROPERTY LOCATION)
       get_filename_component(ld_path ${ld_path} DIRECTORY)
       list(APPEND ld_library_path ${ld_path})
-      message(" ${target_dep} ${ld_path}")
-      message("${ld_library_path}")
     endif()
   endforeach()
 

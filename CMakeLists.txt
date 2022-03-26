@@ -27,6 +27,7 @@ find_package2(PUBLIC FairRoot REQUIRED)
 #set(ROOT_NO_FIND_PACKAGE_CONFIG_FILE TRUE)
 find_package2(PUBLIC ROOT REQUIRED)
 
+
 if(NOT TARGET ROOT::VMC)
   message("NO VMC target in ROOT install, looking for seperate package")
   find_package2(PUBLIC VMC REQUIRED CONFIG)
@@ -43,7 +44,7 @@ foreach(dep IN LISTS FairLogger_PACKAGE_DEPENDENCIES)
   endif()
 endforeach()
 
-find_package2(PUBLIC Pythia6 REQUIRED)
+find_package2(PUBLIC Pythia6)
 find_package2(PUBLIC Pythia8)
 find_package2(PUBLIC Geant3)
 find_package2(PUBLIC Geant4)
@@ -149,7 +150,7 @@ if (PCL_FOUND)
   add_subdirectory (AtEventDisplay)
 endif()
 
-# Generate config files for build and install
+# Generate config file for build
 
 fairroot_generate_config_sh(${CMAKE_BINARY_DIR}/config.sh
   BUILD
@@ -158,16 +159,9 @@ fairroot_generate_config_sh(${CMAKE_BINARY_DIR}/config.sh
   VMCWORKDIR ${CMAKE_SOURCE_DIR}
   )
 
-fairroot_generate_config_sh(${CMAKE_BINARY_DIR}/bin/ATTPCROOTConfig.sh_install
-  INSTALL
-  PATH ${ROOT_BINARY_DIR}
-  DEPENDENCIES ${PROJECT_PACKAGE_DEPENDENCIES}
-  VMCWORKDIR ${CMAKE_SOURCE_DIR}
-  )
 
 ####### Install files and make config file for loading into cmake project ########
-message(" install lib dir: ${CMAKE_INSTALL_LIBDIR}")
-message("install prefix: ${CMAKE_INSTALL_PREFIX}") 
+include(CMakePackageConfigHelpers)
 
 # Add install targets for libraries
 install(EXPORT GeneratedRootLibTargets
@@ -175,9 +169,10 @@ install(EXPORT GeneratedRootLibTargets
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
   NAMESPACE ${PROJECT_NAME}::)
 
-include(CMakePackageConfigHelpers)
+generate_package_dependencies()
+generate_package_components()
 
-#generate the config file that includes the exports
+# Generate the config file for others to use us and install it
 configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
   INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
@@ -187,7 +182,7 @@ install(FILES
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
   )
 
-# Generate the version file for the config and install
+# Generate the version file for the config and install it
 write_basic_package_version_file(
   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
   VERSION ${PROJECT_VERSION}
@@ -198,7 +193,38 @@ install(FILES
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
   )
 
-# Install config script
+# Install our "Find..." modules so we can load dependecies when used
+install(FILES
+  cmake/modules/FindFairRoot.cmake
+  cmake/modules/FindGeant3.cmake
+  cmake/modules/FindGeant4.cmake
+  cmake/modules/FindGeant4VMC.cmake
+  cmake/modules/FindGENFIT2.cmake
+  cmake/modules/FindHEPMC.cmake
+  cmake/modules/FindPythia6.cmake
+  cmake/modules/FindPythia8.cmake
+  cmake/modules/FindROOT.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}/modules)
+
+# Install our utility scripts for others if they want
+install(FILES
+  cmake/modules/ATTPCRootChecks.cmake
+  cmake/modules/ATTPCRootFindPackage2.cmake
+  cmake/modules/ATTPCRootUtils.cmake
+  cmake/modules/PrintSummary.cmake
+  cmake/modules/ROOTTargetMacros.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}/modules
+  )
+    
+
+# Install config script and install it
+fairroot_generate_config_sh(${CMAKE_BINARY_DIR}/bin/ATTPCROOTConfig.sh_install
+  INSTALL
+  PATH ${ROOT_BINARY_DIR}
+  DEPENDENCIES ${PROJECT_PACKAGE_DEPENDENCIES}
+  VMCWORKDIR ${CMAKE_SOURCE_DIR}
+  )
+
 install(PROGRAMS ${CMAKE_BINARY_DIR}/bin/ATTPCROOTConfig.sh_install
   DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME ATTPCROOTConfig.sh)
 

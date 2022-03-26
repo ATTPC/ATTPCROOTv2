@@ -7,7 +7,9 @@
 ################################################################################
 
 find_library(Pythia6_LIBRARY
-  NAMES Pythia6 pythia6)
+  NAMES Pythia6 pythia6
+  HINTS $ENV{SIMPATH}
+  PATH_SUFFIXES lib)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Pythia6

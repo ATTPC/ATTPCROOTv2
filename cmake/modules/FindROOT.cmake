@@ -179,6 +179,15 @@ If(ROOT_FOUND)
   else()
     set(ROOT_vmc_FOUND yes)
   endif()
+
+  # Try to extract the CXX standard used to compile root
+  execute_process(COMMAND ${ROOT_CONFIG_EXECUTABLE} --cflags
+    OUTPUT_VARIABLE _root_c_flags)
+
+  unset(_root_standard)
+  String(REGEX MATCH "std=c\\+\\+([0-9]+)"  _root_standard "${_root_c_flags}")
+  string(REGEX MATCH "([0-9]+)" _root_standard "${_root_standard}")
+  message(STATUS "ROOT was built with CXX standard ${_root_standard} from flags ${_root_c_flags}")
   
   # Make variables changeble to the advanced user
   Mark_As_Advanced(ROOT_LIBRARY_DIR ROOT_INCLUDE_DIR ROOT_DEFINITIONS)
@@ -211,6 +220,8 @@ If(ROOT_FOUND)
     EG
     Geom
     Ged
+    Gpad
+    Graf3d
     RGL
     Gui
     Core
@@ -227,6 +238,7 @@ If(ROOT_FOUND)
     Matrix
     Physics
     MathCore
+    Minuit
     Thread
     XMLParser
     Spectrum
@@ -242,13 +254,16 @@ If(ROOT_FOUND)
     find_library(${_root_dep}_LIB ${_root_dep} PATHS ${ROOT_LIBRARY_DIR})
     if(${_root_dep}_LIB)
       add_library(${_root_dep} SHARED IMPORTED GLOBAL)
-      set_target_properties(${_root_dep} PROPERTIES IMPORTED_LOCATION ${${_root_dep}_LIB})
+      set_target_properties(${_root_dep} PROPERTIES
+	IMPORTED_LOCATION ${${_root_dep}_LIB}
+	)
       target_include_directories(${_root_dep} INTERFACE ${ROOT_INCLUDE_DIR})
+      target_compile_features(${_root_dep} INTERFACE cxx_std_${_root_standard})
       add_library(ROOT::${_root_dep} ALIAS ${_root_dep})
       message(STATUS "ROOT::${_root_dep} (${${_root_dep}_LIB}) target added by hand.")
     endif()
   endforeach(_root_dep)
-
+  unset(_root_standard)
 Else(ROOT_FOUND)
 
   If(ROOT_FIND_REQUIRED)

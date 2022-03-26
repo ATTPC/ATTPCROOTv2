@@ -57,7 +57,6 @@ set(SRCS
 
 # Adding libraries that depend on PCL
 if(PCL_FOUND)
-  MESSAGE("${Green} libAtTPCReco - Building PCL classes: RANSAC, Pattern Recognition, Hough Transformation, Minimization, Analysis, PSA/PSAFilter ${ColourReset} ")
   set(SRCS ${SRCS} 
     AtRansac/AtRansac.cxx
     AtPulseAnalyzer/AtPSAFilter.cxx
@@ -93,7 +92,6 @@ if(PCL_FOUND)
 endif()
 
 if(GENFIT2_FOUND)
-  MESSAGE("${Green} libAtTPCReco - Building GENFIT classes: AtFitter/Genfit ${ColourReset} ")
   set(SRCS ${SRCS}
     AtFitter/AtFitter.cxx
     AtFitter/AtGenfit.cxx
@@ -106,7 +104,6 @@ if(GENFIT2_FOUND)
 endif()
 
 if(HiRAEVT_FOUND)
-  MESSAGE("${Green} libAtTPCReco - Building HiRAEVT classes ${ColourReset} ")
   set(SRCS ${SRCS}
     AtLinkDAQTask.cxx
     )

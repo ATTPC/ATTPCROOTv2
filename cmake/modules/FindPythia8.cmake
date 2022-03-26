@@ -5,22 +5,29 @@
  #              GNU Lesser General Public Licence (LGPL) version 3,             #
  #                  copied verbatim in the file "LICENSE"                       #
  ################################################################################
-find_path(Pythia8_INCLUDE_DIR
-  NAMES Pythia.h pythia.h
-  PATH_SUFFIXES include/Pythia8 include/pythia8)
-
-if(Pythia8_INCLUDE_DIR)
-  get_filename_component(Pythia8_PREFIX ${Pythia8_INCLUDE_DIR}/../.. ABSOLUTE)
-endif()
 
 find_library(Pythia8_LIBRARY
-  NAMES pythia8 Pythia8)
+  NAMES Pythia8 pythia8
+  HINTS $ENV{SIMPATH}
+  PATH_SUFFIXES lib)
+
+if(Pythia8_LIBRARY)
+  get_filename_component(Pythia8_PREFIX ${Pythia8_LIBRARY}/../.. ABSOLUTE)
+endif()
+
+find_path(Pythia8_INCLUDE_DIR
+  NAMES Pythia.h pythia.h
+  HINTS ${Pythia8_PREFIX}
+  PATH_SUFFIXES include/Pythia8 include/pythia8)
 
 find_library(PYTHIA8_hepmcinterface_LIBRARY
-  NAMES hepmcinterface pythia8tohepmc)
+  NAMES hepmcinterface pythia8tohepmc
+  ${Pythia8_PREFIX}
+  )
 
 find_library(PYTHIA8_lhapdfdummy_LIBRARY
-  NAMES lhapdfdummy)
+  NAMES lhapdfdummy
+  ${Pythia8_PREFIX})
 
 find_path(Pythia8_DATA
   NAMES MainProgramSettings.xml
