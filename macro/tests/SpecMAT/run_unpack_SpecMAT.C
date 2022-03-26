@@ -4,7 +4,7 @@
 #define cGREEN "\033[1;32m"
 
 #include <sys/stat.h>
-#include "FairLogger.h"
+//#include "FairLogger.h"
 
 bool check_file(const std::string &name);
 
