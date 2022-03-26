@@ -12,13 +12,6 @@
 Set(LINKDEF S800LinkDef.h)
 Set(LIBRARY_NAME AtS800)
 
-set(INCLUDE_DIRECTORIES
-  ${FAIRROOT_INCLUDE_DIR}
-)
-set(LINK_DIRECTORIES
-${FAIRROOT_LIBRARY_DIR}
-)
-
 set(SRCS
 #Put here your sourcefiles
 S800Calc.cxx
@@ -37,19 +30,17 @@ AtMergeTask.cxx
 )
 
 Set(DEPENDENCIES
-    Base
-    FairTools
+    FairRoot::Base
+    FairRoot::FairTools
     ROOT::Core
     ROOT::TreePlayer
-    #ROOT::VMC
+    ROOT::VMC
     
-    AtData
+    ATTPCROOT::AtData
 )
 
-generate_target_root_library(${LIBRARY_NAME}
+generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
-  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
-  LIBRARY_DIR ${LINK_DIRECTORIES}
   DEPS_PUBLIC ${DEPENDENCIES}
   )

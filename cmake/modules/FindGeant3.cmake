@@ -19,9 +19,15 @@ if(Geant3_FOUND AND Geant3_INCLUDE_DIRS AND TARGET geant321)
 endif()
 
 if(Geant3_FOUND)
-  set(Geant3_LIBRARY_DIR ${Geant3_DIR}/../../${Geant3_CMAKE_INSTALL_LIBDIR})
-  get_filename_component(Geant3_LIBRARY_DIR ${Geant3_LIBRARY_DIR} ABSOLUTE)
-  find_path(Geant3_SYSTEM_DIR NAMES data PATHS
-           ${Geant3_DIR}/../../share/geant3
-           NO_DEFAULT_PATH)
+  get_target_property(geant3_include geant321 INTERFACE_INCLUDE_DIRECTORIES)
+  string(REPLACE ":" ";" geant3_include ${geant3_include})
+  list(GET geant3_include 0 geant3_include)
+  get_filename_component(Geant3_PREFIX ${geant3_include}/../.. ABSOLUTE)
+  unset(geant3_include)
+  
+  find_path(Geant3_SYSTEM_DIR NAMES data
+    HINTS
+    "${Geant3_PREFIX}/share/geant3"
+    "${Geant3_PREFIX}/share/Geant3-${Geant3_VERSION}"
+    NO_DEFAULT_PATH)
 endif()

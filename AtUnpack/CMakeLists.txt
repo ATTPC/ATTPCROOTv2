@@ -5,34 +5,24 @@ Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
 
 set(INCLUDE_DIRECTORIES
-${FAIRROOT_INCLUDE_DIR}
-
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtUnpack/GETDecoder2
 )
 
-set(LINK_DIRECTORIES
-${FAIRROOT_LIBRARY_DIR}
-)
-
 Set(DEPENDENCIES
-  Base
-  FairTools
-
-  AtMap
-  AtParameter
-  AtData
+  FairRoot::Base
+  FairRoot::FairTools
+  
+  ATTPCROOT::AtMap
+  ATTPCROOT::AtParameter
+  ATTPCROOT::AtData
   
   ROOT::Core
   ROOT::Tree
   ROOT::TreePlayer
-  #ROOT::VMC # Needed for multi-threading (TMCtls.h)
+  ROOT::VMC # Needed for multi-threading (TMCtls.h)
   
   hdf5::hdf5-shared
-  )
-
-set(LINK_DIRECTORIES
-  ${FAIRROOT_LIBRARY_DIR}
   )
 
 set(SRCS
@@ -59,10 +49,9 @@ set(SRCS
   
   )
 
-generate_target_root_library(${LIBRARY_NAME}
+generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   INCLUDE_DIR ${INCLUDE_DIRECTORIES}
-  LIBRARY_DIR ${LINK_DIRECTORIES}
   DEPS_PUBLIC ${DEPENDENCIES}
   )

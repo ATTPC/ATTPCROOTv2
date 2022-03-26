@@ -1,99 +1,55 @@
 cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 project(E20020Analysis)
 
-#SET(GENFIT2_DIR "/mnt/simulations/attpcroot/fair_install_2020/GenFit_Inst/")
-
-# Check for needed environment variables
-IF(NOT DEFINED ENV{FAIRROOTPATH})
-  MESSAGE(FATAL_ERROR "You did not define the environment variable FAIRROOTPATH which is needed to find FairRoot. Please set this variable and execute cmake again.")
-ENDIF(NOT DEFINED ENV{FAIRROOTPATH})
-
-IF(NOT DEFINED ENV{SIMPATH})
-   MESSAGE(FATAL_ERROR "You did not define the environment variable SIMPATH which is nedded to find the external packages. Please set this variable and execute cmake again.")
-ENDIF(NOT DEFINED ENV{SIMPATH})
-
-SET(SIMPATH $ENV{SIMPATH})
-SET(FAIRROOTPATH $ENV{FAIRROOTPATH})
 SET(ATTPCROOTPATH $ENV{VMCWORKDIR})
 
-
-set(CMAKE_MODULE_PATH "${ATTPCROOTPATH}/cmake/modules" ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
-
-message(${CMAKE_MODULE_PATH})
-
-#list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
-list(APPEND CMAKE_PREFIX_PATH ${SIMPATH}/..)  #Need access to dependecies of ATTPCROOT
 list(APPEND CMAKE_PREFIX_PATH ${ATTPCROOTPATH}/build/install) #Need access to ATTPCROOT
 
-
-#---Locate the ROOT and VMC packages
-find_package(ROOT 6.16 CONFIG)
-if(NOT ROOT_FOUND)
-  find_package(ROOT 6.0 REQUIRED)
-  message("Looked for ROOT using modules and found ${ROOT_VERSION}")
-endif()
-if(ROOT_vmc_FOUND)
-  set(VMCLIB ROOT::VMC)
-else()
-  message("NO VMC in ROOT install, looking for seperate package")
-  find_package(VMC REQUIRED)
-  set(VMCLIB VMCLibrary)
-endif()
-
-message("Looking in: ${CMAKE_PREFIX_PATH}")
-#---Locate other external packages
-find_package(Boost 1.67 REQUIRED)
-find_package(GENFIT2 REQUIRED)
-find_package(PCL) # temp until ATTPCROOT properly exports its dependencies
-find_package(HiRAEVT) # temp until ATTPCROOT properly exports its dependencies
-find_package(ATTPCROOT REQUIRED)
-
-message(STATUS ${ATTPCROOTPATH})
+# Will also load all of its dependecies
+find_package(ATTPCROOT 1.0 REQUIRED CONFIG)
 
 add_library(e20020Ana SHARED e20020Ana.cc)
 target_link_libraries(e20020Ana
   ROOT::Core
   ROOT::GenVector
-  ${VMCLIB}
-  AtReconstruction
-  AtTpc
-  AtSimulationData
-  FairTools
-  Base
-  ${GENFIT2_LIBRARY_DIR}/libgenfit2.so)
-
-target_include_directories(e20020Ana PRIVATE ${GENFIT2_INCLUDE_DIR} ${FAIRROOTPATH}/include)
-  
+  ROOT::VMC
+  ATTPCROOT::AtReconstruction
+  ATTPCROOT::AtTpc
+  ATTPCROOT::AtSimulationData
+  FairRoot::FairTools
+  FairRoot::Base
+  GENFIT2::genfit2
+)
 
 add_executable(e20020AnaExe e20020Ana.cc)
 target_link_libraries (e20020AnaExe e20020Ana
-${GENFIT2_LIBRARY_DIR}/libgenfit2.so
-ROOT::EG
-ROOT::Core
-ROOT::GenVector
-ROOT::Gpad
-ROOT::Graf
-ROOT::Graf3d
-ROOT::Gui
-ROOT::Hist
-ROOT::MathCore
-ROOT::Matrix
-ROOT::Minuit
-ROOT::Net
-ROOT::Physics
-ROOT::Postscript
-ROOT::Rint
-ROOT::RIO
-ROOT::Thread
-ROOT::Tree
-ROOT::TreePlayer
-ROOT::Geom
+  GENFIT2::genfit2
+  
+  ROOT::EG
+  ROOT::Core
+  ROOT::GenVector
+  ROOT::Gpad
+  ROOT::Graf
+  ROOT::Graf3d
+  ROOT::Gui
+  ROOT::Hist
+  ROOT::MathCore
+  ROOT::Matrix
+  ROOT::Minuit
+  ROOT::Net
+  ROOT::Physics
+  ROOT::Postscript
+  ROOT::Rint
+  ROOT::RIO
+  ROOT::Thread
+  ROOT::Tree
+  ROOT::TreePlayer
+  ROOT::Geom
 
-AtReconstruction
-AtMap
-AtTpc
-AtSimulationData
+  ATTPCROOT::AtReconstruction
+  ATTPCROOT::AtMap
+  ATTPCROOT::AtTpc
+  ATTPCROOT::AtSimulationData
 
-FairTools
-Base)
-target_include_directories(e20020AnaExe PRIVATE ${GENFIT2_INCLUDE_DIR} ${FAIRROOTPATH}/include)
+  FairRoot::FairTools
+  FairRoot::Base)

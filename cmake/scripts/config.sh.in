@@ -27,7 +27,6 @@ if [ $same_system -eq 1 ]; then
 	export ROOT_INCLUDE_DIR="@ROOT_INCLUDE_DIR@"
 	export ROOT_INCLUDE_PATH="@Geant3_INCLUDE_DIRS@:@ROOT_INCLUDE_PATH@"
 	export VMCWORKDIR="@VMCWORKDIR@"
-	export FAIRLIBDIR="@FAIRLIBDIR@"
 	export PYTHONPATH="@MY_PYTHONPATH@"
 	case $1 in
 		-a | --append )

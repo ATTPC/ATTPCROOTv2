@@ -11,13 +11,6 @@
 Set(LIBRARY_NAME AtMap)
 Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
-
-set(INCLUDE_DIRECTORIES
-${FAIRROOT_INCLUDE_DIR}
-)
-set(LINK_DIRECTORIES
-${FAIRROOT_LIBRARY_DIR}
-) 
 set(SRCS
 #Put here your sourcefiles
 AtMap.cxx
@@ -28,16 +21,15 @@ AtSpecMATMap.cxx
 )
 
 Set(DEPENDENCIES
-  Base
-  FairTools
+  FairRoot::FairTools
   ROOT::XMLParser
   ROOT::Core
+
+  Boost::headers
   )
 
-generate_target_root_library(${LIBRARY_NAME}
+generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
-  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
-  LIBRARY_DIR ${LINK_DIRECTORIES}
   DEPS_PUBLIC ${DEPENDENCIES}
   )

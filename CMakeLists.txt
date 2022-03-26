@@ -1,88 +1,35 @@
-cmake_minimum_required(VERSION  3.11.0 FATAL_ERROR)
-cmake_policy(VERSION 3.11...3.14)
-foreach(p
-  CMP0025 # Compiler id for Apple Clang is now AppleClang.
-  CMP0028 # double colon for imported and alias targets
-  CMP0042 # MACOSX_RPATH is enabled by default.
-  )
-  if(POLICY ${p})
-  cmake_policy(SET ${p} NEW)
-  endif()
-endforeach()
+# Fairsoft requires an even higher version, so you can use that version if needed
+cmake_minimum_required(VERSION  3.12.0 FATAL_ERROR)
+cmake_policy(VERSION 3.11...3.15)
 
 # Set project name and version
 project(ATTPCROOT VERSION 1.0.0)
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
+set(PROJECT_MINIMUM_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
-include(AtTpcRootMacros)
-include(CheckCompiler)
+include(ATTPCRootChecks)
+include(FairSoftCheckCompiler)
+attpcroot_sanity_checks()
+check_compiler()
+
+include(ATTPCRootUtils)
+include(ATTPCRootFindPackage2)
+include(ROOTTargetMacros)
 include(WriteConfigFile)
 include(CTest)
-include(ROOTTargetMacros)
 include(GNUInstallDirs)
 include(PrintSummary)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Create JSON compilation database
-
-# Check for needed enviroment variables
-check_and_set_enviroment()
-check_out_of_source_build()
-check_install_directory()
-check_compiler()
-
-message("Library paht: ${LD_LIBRARY_PATH}")
-
-set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
-set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
-set(INCLUDE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/include")
-
-Option(USE_PATH_INFO "Information from PATH and LD_LIBRARY_PATH are
-used." OFF
-)
-If(USE_PATH_INFO)
-  Set(PATH "$PATH")
-  If (APPLE)
-    Set(LD_LIBRARY_PATH $ENV{DYLD_LIBRARY_PATH})
-  Else (APPLE)
-    Set(LD_LIBRARY_PATH $ENV{LD_LIBRARY_PATH})
-  EndIf (APPLE)
-Else(USE_PATH_INFO)
-  STRING(REGEX MATCHALL "[^:]+" PATH $ENV{PATH})
-EndIf(USE_PATH_INFO)
-
-# Install path is changed to "install" if not given a value by the user
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX "install" CACHE PATH "..." FORCE)
-  message("Setting default install prefix to: ${CMAKE_INSTALL_PREFIX}")
-endif()
-
-# Set default build type if not specified
-If(NOT CMAKE_BUILD_TYPE)
-  Message("Set BuildType to RELWITHDEBINFO")
-  set(CMAKE_BUILD_TYPE RELWITHDEBINFO)
-EndIf(NOT CMAKE_BUILD_TYPE)
-
-# searches for needed packages
-# REQUIRED means that cmake will stop if this packages are not found
-# For example the framework can run without GEANT4, but ROOT is
-# mandatory
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
+set_attpcroot_defaults()
 
 find_package2(PUBLIC FairRoot REQUIRED)
+#set(ROOT_NO_FIND_PACKAGE_CONFIG_FILE TRUE)
+find_package2(PUBLIC ROOT REQUIRED)
 
-find_package2(PUBLIC ROOT 6.16 CONFIG)
-if(NOT ROOT_FOUND)
-  find_package2(PUBLIC ROOT 6.0 REQUIRED)
-  message("Looked for ROOT using modules and found ${ROOT_VERSION}")
-endif()
 
-if(NOT ROOT_vmc_FOUND)
-  message("NO VMC in ROOT install, looking for seperate package")
+if(NOT TARGET ROOT::VMC)
+  message("NO VMC target in ROOT install, looking for seperate package")
   find_package2(PUBLIC VMC REQUIRED CONFIG)
   set_target_properties(VMCLibrary PROPERTIES IMPORTED_GLOBAL TRUE)
   add_library(ROOT::VMC ALIAS VMCLibrary)
@@ -97,42 +44,31 @@ foreach(dep IN LISTS FairLogger_PACKAGE_DEPENDENCIES)
   endif()
 endforeach()
 
-find_package2(PRIVATE Pythia6)
-find_package2(PRIVATE Pythia8)
-find_package2(PRIVATE Geant3)
-find_package2(PRIVATE Geant4)
-Find_Package2(PRIVATE VGM)
-find_package2(PRIVATE Geant4VMC)
-find_package2(PRIVATE CLHEP)
-find_package2(PRIVATE HEPMC)
+find_package2(PUBLIC Pythia6)
+find_package2(PUBLIC Pythia8)
+find_package2(PUBLIC Geant3)
+find_package2(PUBLIC Geant4)
+Find_Package2(PUBLIC VGM)
+find_package2(PUBLIC Geant4VMC)
+find_package2(PUBLIC CLHEP)
+find_package2(PUBLIC HEPMC)
 
-if(NOT DEFINED Boost_NO_BOOST_CMAKE AND CMAKE_VERSION VERSION_LESS 3.15)
-  Set(Boost_NO_BOOST_CMAKE ON)
-  # If an older version of boost is found both of the variables below are
-  # cached and in a second cmake run, a good boost version is found even
-  # if the version is to old.
-  # To overcome this problem both variables are cleared before checking
-  # for boost.
-  Unset(Boost_INCLUDE_DIR CACHE)
-  Unset(Boost_LIBRARY_DIRS CACHE)
-endif()
-
-find_package2(PUBLIC Boost
-  VERSION 1.67
+# Right now, we just use header-only features of Boost (multi_array)
+find_package2(PUBLIC Boost 1.67
+  REQUIRED headers
   ADD_REQUIREMENTS_OF FairRoot FairMQ FairLogger
-)
-
+  )
+  
 if(CMAKE_VERSION VERSION_LESS 3.15)
   set(Boost_VERSION "${Boost_MAJOR_VERSION}.${Boost_MINOR_VERSION}.${Boost_SUBMINOR_VERSION}")
 endif()
 
-## Add additional packages beyond the initial required for FairRoot
 
 # Look for HDF5 and if it didn't import the target becuase is couldn't
 # find a config file, generate the target by hand using the output
 # of FindHDF5.cmake
 #set(HDF5_FIND_DEBUG TRUE)
-find_package2(PRIVATE HDF5 REQUIRED)
+find_package2(PUBLIC HDF5 REQUIRED)
 if(NOT TARGET hdf5::hdf5-shared)
   add_library(hdf5::hdf5-shared SHARED IMPORTED GLOBAL)
   # This may have to be changed to HDF5_CXX_LIBRARIES depending on your hdf5 install
@@ -162,24 +98,23 @@ if(NOT TARGET hdf5::hdf5-shared)
   message(STATUS "hdf5 include directory: ${hdf_inc}")
 endif()
 
-# Now find the rest of out dependencies
-find_package2(PRIVATE PCL 1.8 CONFIG)
-find_package2(PRIVATE GEANT4DATA)
-find_package2(PRIVATE OpenMP)
-find_package2(PRIVATE CUDA)
+# Include PCL and hide some of their warnings
+# see here: https://github.com/PointCloudLibrary/pcl/issues/3680
+# when this is fixed, we can remove the following 3 lines.
+if(NOT DEFINED CMAKE_SUPPRESS_DEVELOPER_WARNINGS)
+  set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS 1)
+  set(_temp_mod_dev_warning 1)
+endif()
+find_package2(PUBLIC PCL 1.8 CONFIG REQUIRED QUIET)
+if(_temp_mod_dev_warning)
+  unset(CMAKE_SUPPRESS_DEVELOPER_WARNINGS)
+endif()
+
+#Include all of the other dependecies that  we need
+find_package2(PUBLIC OpenMP)
+find_package2(PUBLIC CUDA)
 find_package2(PUBLIC HiRAEVT CONFIG)
 find_package2(PUBLIC GENFIT2)
-
-# FAIRROOT depends on VMC in a way that it exposes the headers, but does not
-# seem to need someone who is linking against it to also link against the VMCLibrary.
-# Until FairRoot finally finished the move to modern CMake this is a hacky way of ensure that if
-# you include FairRoot, you are also getting the headers it depends on
-# This replaces the call to SetBasicVariables in FairMacros.cmake which did some
-# nasty things like calling link_directories() and include_directories()
-set(ROOT_INCLUDE_PATH ${FAIRROOT_INCLUDE_DIR})
-set(FAIRROOT_INCLUDE_DIR ${FAIRROOT_INCLUDE_DIR}
-  ${VMC_INCLUDE_DIRS}
-  )
 
 if (OPENMP_CXX_FOUND)
  # MESSAGE("${Green} OpenMP Support Found ${OpenMP_CXX_SPEC_DATE} ${ColourReset}")
@@ -215,24 +150,29 @@ if (PCL_FOUND)
   add_subdirectory (AtEventDisplay)
 endif()
 
-WRITE_CONFIG_FILE(config.sh)
+# Generate config file for build
 
-configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake
-  ${CMAKE_BINARY_DIR}/CTestCustom.cmake
+fairroot_generate_config_sh(${CMAKE_BINARY_DIR}/config.sh
+  BUILD
+  PATH ${ROOT_BINARY_DIR}
+  DEPENDENCIES ${PROJECT_PACKAGE_DEPENDENCIES}
+  VMCWORKDIR ${CMAKE_SOURCE_DIR}
   )
 
 
-
 ####### Install files and make config file for loading into cmake project ########
+include(CMakePackageConfigHelpers)
 
 # Add install targets for libraries
 install(EXPORT GeneratedRootLibTargets
   FILE ${PROJECT_NAME}Targets.cmake
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME} )
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+  NAMESPACE ${PROJECT_NAME}::)
 
-include(CMakePackageConfigHelpers)
+generate_package_dependencies()
+generate_package_components()
 
-#generate the config file that includes the exports
+# Generate the config file for others to use us and install it
 configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
   INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
@@ -242,12 +182,50 @@ install(FILES
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
   )
 
-# Generate the version file for the config
+# Generate the version file for the config and install it
 write_basic_package_version_file(
   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY AnyNewerVersion
   )
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+  )
+
+# Install our "Find..." modules so we can load dependecies when used
+install(FILES
+  cmake/modules/FindFairRoot.cmake
+  cmake/modules/FindGeant3.cmake
+  cmake/modules/FindGeant4.cmake
+  cmake/modules/FindGeant4VMC.cmake
+  cmake/modules/FindGENFIT2.cmake
+  cmake/modules/FindHEPMC.cmake
+  cmake/modules/FindPythia6.cmake
+  cmake/modules/FindPythia8.cmake
+  cmake/modules/FindROOT.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}/modules)
+
+# Install our utility scripts for others if they want
+install(FILES
+  cmake/modules/ATTPCRootChecks.cmake
+  cmake/modules/ATTPCRootFindPackage2.cmake
+  cmake/modules/ATTPCRootUtils.cmake
+  cmake/modules/PrintSummary.cmake
+  cmake/modules/ROOTTargetMacros.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}/modules
+  )
+    
+
+# Install config script and install it
+fairroot_generate_config_sh(${CMAKE_BINARY_DIR}/bin/ATTPCROOTConfig.sh_install
+  INSTALL
+  PATH ${ROOT_BINARY_DIR}
+  DEPENDENCIES ${PROJECT_PACKAGE_DEPENDENCIES}
+  VMCWORKDIR ${CMAKE_SOURCE_DIR}
+  )
+
+install(PROGRAMS ${CMAKE_BINARY_DIR}/bin/ATTPCROOTConfig.sh_install
+  DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME ATTPCROOTConfig.sh)
 
 PrintSummary()
-

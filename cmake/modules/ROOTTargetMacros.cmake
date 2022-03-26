@@ -12,6 +12,7 @@
 # All file paths should be relative ones to the calling CMakeLists.txt file
 # By default all of the header files are assumed to be public headers and added to the target
 # as such. That way anyone depending on this library will know about these headers.
+# Also creates a target alias from target to PROJECT_NAME::target
 #
 # Adam Anthony 5/20/21
 #
@@ -28,7 +29,7 @@
 # DEPS_PUBLIC: Public dependencies
 # DEPS_PRIVATE: Private dependencies
 
-function(generate_target_root_library target)
+function(generate_target_and_root_library target)
   cmake_parse_arguments(PARSE_ARGV
     1
     HT
@@ -74,15 +75,17 @@ function(generate_target_root_library target)
     if(NOT EXISTS ${habs})
       message(
 	FATAL_ERROR
-	"generate_target_root_library was passed a non-existant input file: ${h}")
+	"generate_target_and_root_library was passed a non-existant input file: ${h}")
     endif()
     list(APPEND headers ${habs})
-    configure_file(${habs} "${CMAKE_BINARY_DIR}/include/${h}")
+    get_filename_component(hName ${habs} NAME)
+    configure_file(${habs} "${CMAKE_BINARY_DIR}/include/${hName}")
   endforeach()
 
   
   # Create the target and add the dependencies
   add_library(${target} SHARED)
+  add_library(${PROJECT_NAME}::${target} ALIAS ${target})
   target_sources(${target} PRIVATE ${HT_SRCS})
   set_target_properties(${target} PROPERTIES
     VERSION "${PROJECT_VERSION}"
@@ -98,7 +101,7 @@ function(generate_target_root_library target)
   # https://stackoverflow.com/questions/44425257/how-to-properly-use-target-include-directories-with-lists-of-includes
   target_include_directories(${target}
     PUBLIC
-    $<INSTALL_INTERFACE:include> 
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}> 
     "$<BUILD_INTERFACE:${HT_INCLUDE_DIR}>"
     )
   
@@ -114,7 +117,6 @@ function(generate_target_root_library target)
       LINKDEF ${HT_LINKDEF})
   endif()
 
-  #message("${headers} Include dir: ${CMAKE_INSTALL_INCLUDEDIR}")
   install(FILES ${headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
   install(TARGETS ${target}
     DESTINATION ${CMAKE_INSTALL_LIBDIR}

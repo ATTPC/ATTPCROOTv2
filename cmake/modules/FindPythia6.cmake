@@ -6,13 +6,10 @@
 #                  copied verbatim in the file "LICENSE"                       #
 ################################################################################
 
-message("Looking for library in ${Pythia6_LIBRARY_DIR}")
 find_library(Pythia6_LIBRARY
   NAMES Pythia6 pythia6
-  HINTS "${PYTHIA6_ROOT}" "${Pythia6_LIBRARY_DIR}" "$ENV{Pythia6_LIBRARY_DIR}"
-  PATH_SUFFIXES lib
-)
-message("Found ${Pythia6_LIBRARY}")
+  HINTS $ENV{SIMPATH}
+  PATH_SUFFIXES lib)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Pythia6
@@ -21,12 +18,14 @@ find_package_handle_standard_args(Pythia6
 
 if(Pythia6_FOUND)
   get_filename_component(Pythia6_LIBRARY_DIR ${Pythia6_LIBRARY} DIRECTORY)
-  set(PYTHIA6_LIBRARY_DIR ${Pythia6_LIBRARY_DIR}) # legacy
+  get_filename_component(Pythia6_PREFIX ${Pythia6_LIBRARY_DIR}/.. ABSOLUTE)
 
   if(NOT TARGET Pythia6)
-    add_library(Pythia6 UNKNOWN IMPORTED)
+    add_library(Pythia6 UNKNOWN IMPORTED GLOBAL)
     set_target_properties(Pythia6 PROPERTIES
       IMPORTED_LOCATION ${Pythia6_LIBRARY}
-    )
+      )
+    # Requires CMake 3.15
+    #add_library(Pythia6::Pythia6 ALIAS Pythia6) 
   endif()
 endif()
