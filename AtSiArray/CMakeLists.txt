@@ -2,15 +2,6 @@ Set(LIBRARY_NAME AtSiArray)
 Set(LINKDEF AtSiArrayLinkDef.h)
 
 
-set(INCLUDE_DIRECTORIES
-#${Boost_INCLUDE_DIRS}
-${BASE_INCLUDE_DIRECTORIES}
-)
-
-set(LINK_DIRECTORIES
-${FAIRROOT_LIBRARY_DIR}
-)
-
 set(SRCS
 AtSiArrayContFact.cxx
 AtSiArrayGeo.cxx
@@ -20,16 +11,14 @@ AtSiPoint.cxx
 )
 
 Set(DEPENDENCIES
-  Base
-  FairTools
+  FairRoot::Base
+  FairRoot::FairTools
   ROOT::Core
-  AtSimulationData
+  ATTPCROOT::AtSimulationData
 )
 
-generate_target_root_library(${LIBRARY_NAME}
+generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
-  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
-  LIBRARY_DIR ${LINK_DIRECTORIES}
   DEPS_PUBLIC ${DEPENDENCIES}
   )

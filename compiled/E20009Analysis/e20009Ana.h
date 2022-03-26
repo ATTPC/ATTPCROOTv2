@@ -44,7 +44,7 @@
 #include "FairRun.h"
 #include "FairRunAna.h"
 
-#include "AtTpcPoint.h"
+#include "AtMCPoint.h"
 #include "AtEvent.h"
 #include "AtPad.h"
 #include "AtHit.h"

@@ -400,16 +400,16 @@ int main(int argc, char *argv[])
 
          if (patternEvent) {
 
-            std::vector<AtPad> *auxPadArray = event->GetAuxPadArray();
-            std::cout << " Number of auxiliary pads : " << auxPadArray->size() << "\n";
+            auto auxPadArray = event->GetAuxPadArray();
+            std::cout << " Number of auxiliary pads : " << auxPadArray.size() << "\n";
 
             std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
             std::cout << " Number of pattern tracks " << patternTrackCand.size() << "\n";
 
-            for (auto auxpad : *auxPadArray) {
+            for (auto auxpad : auxPadArray) {
                if (auxpad.GetAuxName().compare(std::string("IC")) == 0) {
                   std::cout << " Auxiliary pad name " << auxpad.GetAuxName() << "\n";
-                  Double_t *adc = auxpad.GetADC();
+                  const Double_t *adc = auxpad.GetADC().data();
                   IC = GetMaximum(adc);
                }
             }
@@ -448,7 +448,7 @@ int main(int argc, char *argv[])
                auto hitClusterArray = track.GetHitClusterArray();
                AtHitCluster iniCluster;
                Double_t zIniCal = 0;
-               TVector3 iniPos;
+	       ROOT::Math::XYZPoint iniPos;
 
                /*for (auto cluster : *hitClusterArray) {
        TVector3 pos = cluster.GetPosition();
@@ -895,7 +895,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-double GetMaximum(double *adc)
+double GetMaximum(const double *adc)
 {
 
    double max = 0;

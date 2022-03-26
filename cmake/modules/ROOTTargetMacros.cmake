@@ -11,6 +11,7 @@
 # All file paths should be relative ones to the calling CMakeLists.txt file
 # By default all of the header files are assumed to be public headers and added to the target
 # as such. That way anyone depending on this library will know about these headers.
+# Also creates a target alias from target to PROJECT_NAME::target
 #
 # Adam Anthony 5/20/21
 #
@@ -22,12 +23,12 @@
 # HDRS: List of all header files to use in library generation.
 #     - Will use all SRCS renamed from .cxx to .h if empty
 # INCLUDE_DIR: List of include directories in addition to:
-#     -ROOT_INCLUDE_DIR, CMAKE_CURRENT_SOURCE_DIR
+#     -CMAKE_CURRENT_SOURCE_DIR
 # LIBRARY_DIR: List of link directories in addition to ROOT_LIBRARY_DIR
 # DEPS_PUBLIC: Public dependencies
 # DEPS_PRIVATE: Private dependencies
 
-function(generate_target_root_library target)
+function(generate_target_and_root_library target)
   cmake_parse_arguments(PARSE_ARGV
     1
     HT
@@ -36,7 +37,6 @@ function(generate_target_root_library target)
     "SRCS;HDRS;INCLUDE_DIR;LIBRARY_DIR;DEPS_PUBLIC;DEPS_PRIVATE"
     )
 
-  message(" Gen lib: " )
   # Check for required and set defaults
   if(HT_UNPARSED_ARGUMENTS)
     message(
@@ -48,7 +48,9 @@ function(generate_target_root_library target)
   endif()
 
   if(NOT HT_HDRS)
-    CHANGE_FILE_EXTENSION(*.cxx *.h HT_HDRS "${SRCS}")
+    change_extensions_if_exists(.cxx .h
+      FILES "${HT_SRCS}"
+      OUTVAR HT_HDRS)
   endif()
 
   # Add defaults to include directories
@@ -72,22 +74,25 @@ function(generate_target_root_library target)
     if(NOT EXISTS ${habs})
       message(
 	FATAL_ERROR
-	"generate_target_root_library was passed a non-existant input file: ${h}")
+	"generate_target_and_root_library was passed a non-existant input file: ${h}")
     endif()
     list(APPEND headers ${habs})
-    configure_file(${habs} "${CMAKE_BINARY_DIR}/include/${h}")
+    get_filename_component(hName ${habs} NAME)
+    configure_file(${habs} "${CMAKE_BINARY_DIR}/include/${hName}")
   endforeach()
 
   
   # Create the target and add the dependencies
   add_library(${target} SHARED)
+  add_library(${PROJECT_NAME}::${target} ALIAS ${target})
   target_sources(${target} PRIVATE ${HT_SRCS})
-  set_target_properties(${target} PROPERTIES ${PROJECT_LIBRARY_PROPERTIES})
-
-  # Add root includes publicly. They are not in the same location for
-  # build and install
-  target_include_directories(${target} PUBLIC ${ROOT_INCLUDE_DIR})
-
+  set_target_properties(${target} PROPERTIES
+    VERSION "${PROJECT_VERSION}"
+    SOVERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
+    )
+  
+  target_compile_options(${target} PRIVATE -Werror=return-type)
+  
   # Add our includes either in the include directory for install or normal build paths
   # Build interface need to be commented because ${HT_INCLUDE_DIR} includes a ';'
   # which CMake does not like outside a string. It just appends the <BUILD_INTERFACE:...
@@ -95,24 +100,22 @@ function(generate_target_root_library target)
   # https://stackoverflow.com/questions/44425257/how-to-properly-use-target-include-directories-with-lists-of-includes
   target_include_directories(${target}
     PUBLIC
-    $<INSTALL_INTERFACE:include> 
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}> 
     "$<BUILD_INTERFACE:${HT_INCLUDE_DIR}>"
     )
   
-  target_link_directories(${target} PUBLIC ${HT_LIBRARY_DIR} ${ROOT_LIBRARY_DIR})
-
+  target_link_directories(${target} PUBLIC ${HT_LIBRARY_DIR})
   target_link_libraries(${target} PUBLIC ${HT_DEPS_PUBLIC})
   target_link_libraries(${target} PRIVATE ${HT_DEPS_PRIVATE})
 
   
   # Make the dictionary
   if(HT_LINKDEF)
-    attpc_target_root_dictionary( ${target}
+    make_target_root_dictionary( ${target}
       HEADERS ${HT_HDRS}
       LINKDEF ${HT_LINKDEF})
   endif()
 
-  #message("${headers} Include dir: ${CMAKE_INSTALL_INCLUDEDIR}")
   install(FILES ${headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
   install(TARGETS ${target}
     DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -123,7 +126,7 @@ endfunction()
 # based on the work in https://github.com/AliceO2Group/AliceO2
 
 #
-# attpc_target_root_dictionary generates one dictionary to be added to a target.
+# make_target_root_dictionary generates one dictionary to be added to a target.
 #
 # Besides the dictionary source itself two files are also generated : a rootmap
 # file and a pcm file. Those two will be installed alongside the target's
@@ -155,7 +158,7 @@ endfunction()
 # the target.
 #
 
-function(attpc_target_root_dictionary target)
+function(make_target_root_dictionary target)
   cmake_parse_arguments(PARSE_ARGV
     1
     A
@@ -209,8 +212,8 @@ function(attpc_target_root_dictionary target)
     TARGET ${target}
     PROPERTY LIBRARY_OUTPUT_DIRECTORY)
 
-  set(lib_output_dir ${CMAKE_BINARY_DIR}/lib)
 
+  set(lib_output_dir ${CMAKE_BINARY_DIR}/lib)
 
   # Define the names of generated files
   get_property(basename TARGET ${target} PROPERTY OUTPUT_NAME)
@@ -247,7 +250,7 @@ function(attpc_target_root_dictionary target)
     OUTPUT ${dictionaryFile} ${pcmFile} ${rootmapFile}
     VERBATIM
     COMMAND ${CMAKE_COMMAND} -E env "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$ENV{LD_LIBRARY_PATH}"
-    ${ROOT_CINT_EXECUTABLE}
+    ${ROOT_rootcling_CMD}
     -f ${dictionaryFile}
     -inlineInputHeader
     -rmf ${rootmapFile}
@@ -264,12 +267,11 @@ function(attpc_target_root_dictionary target)
   target_sources(${target} PRIVATE ${dictionaryFile})
 
   get_property(libs TARGET ${target} PROPERTY INTERFACE_LINK_LIBRARIES)
-  if(NOT RIO IN_LIST libs)
-    # if(NOT ROOT::RIO IN_LIST libs)
+  #if(NOT RIO IN_LIST libs)
+  if(NOT ROOT::RIO IN_LIST libs)
     # add ROOT::IO if not already there as a target that has a Root dictionary
     # has to depend on ... Root
-    target_link_libraries(${target} PUBLIC RIO)
-    # target_link_libraries(${target} PUBLIC ROOT::RIO)
+    target_link_libraries(${target} PUBLIC ROOT::RIO)
   endif()
 
   # Get the list of include directories that will be required to compile the
@@ -285,7 +287,7 @@ function(attpc_target_root_dictionary target)
   list(REMOVE_DUPLICATES dirs)
   
   target_include_directories(${target} PRIVATE ${dirs})
-  #target_include_directories(${target}
+  #target_include_directories(${target} TODO:Update headers includes so only the include directory is needed
   #  PRIVATE
   #  $<BUILD_INTERFACE:${dirs}>
   #  $<INSTALL_INTERFACE:include>)
@@ -300,42 +302,39 @@ function(attpc_target_root_dictionary target)
 
 endfunction()
 
+################################################################################
+# Exchange file extention of file in list from ext1 to ext2,
+# only if the resulting file exists in CMAKE_CURRENT_SOURCE_DIR,
+# and assign the newly created list to 'output'.
+# The input list is not changed at all
+# Ex: change_file_extension_if_exists(*.cxx *.h "${TRD_SRCS}" TRD_HEADERS)
+################################################################################
+function(change_extensions_if_exists ext1 ext2)
+  cmake_parse_arguments(ARGS "" "OUTVAR" "FILES" ${ARGN})
 
-################################################################################
-#
-# Exchange file extention of LIST from FILE_EXT1 to FILE_EXT2
-# and assign the newly created list to OUTVAR.
-# The input list LIST is not changed at all
-# Ex : CHANGE_FILE_EXTENSION(*.cxx *.h TRD_HEADERS "${TRD_SRCS}")
-#
-################################################################################
-MACRO (CHANGE_FILE_EXTENSION FILE_EXT1 FILE_EXT2 OUTVAR LIST)
-  SET(BLA)
-  IF (${FILE_EXT1} MATCHES "^[*][.]+.*$")
-    STRING(REGEX REPLACE "^[*]+([.].*)$" "\\1" FILE_EXT1_NEW ${FILE_EXT1})
-  ENDIF  (${FILE_EXT1} MATCHES "^[*][.]+.*$")
-  IF (${FILE_EXT2} MATCHES "^[*][.]+.*$")
-    STRING(REGEX REPLACE "^[*]+([.].*)" "\\1" FILE_EXT2_NEW ${FILE_EXT2})
-  ENDIF  (${FILE_EXT2} MATCHES "^[*][.]+.*$")
-  foreach (_current_FILE ${LIST})
-    STRING(REGEX REPLACE "^(.*)${FILE_EXT1_NEW}$" "\\1${FILE_EXT2_NEW}" test ${_current_FILE})
-    SET (BLA ${BLA} ${test})
-  endforeach (_current_FILE ${ARGN})
-  SET (${OUTVAR} ${BLA})
-ENDMACRO (CHANGE_FILE_EXTENSION)
+  set(required_args "FILES;OUTVAR")
+  foreach(required_arg IN LISTS required_args)
+    if(NOT ARGS_${required_arg})
+      message(FATAL_ERROR "fair_change_extensions_if_exists is missing a required argument: ${required_arg}")
+    endif()
+  endforeach()
 
-################################################################################
-# Make the given list have only one instance of each unique element and
-# store it in var_name.
-################################################################################
-
-MACRO(UNIQUE var_name list)
-  SET(unique_tmp "")
-  FOREACH(l ${list})
-    STRING(REGEX REPLACE "[+]" "\\\\+" l1 ${l})
-    IF(NOT "${unique_tmp}" MATCHES "(^|;)${l1}(;|$)")
-      SET(unique_tmp ${unique_tmp} ${l})
-    ENDIF(NOT "${unique_tmp}" MATCHES "(^|;)${l1}(;|$)")
-  ENDFOREACH(l)
-  SET(${var_name} ${unique_tmp})
-ENDMACRO(UNIQUE)
+  if(${ext1} MATCHES "^[*][.]+.*$")
+    string(REGEX REPLACE "^[*]+([.].*)$" "\\1" ext1new ${ext1})
+  else()
+    set(ext1new ${ext1})
+  endif()
+  if(${ext2} MATCHES "^[*][.]+.*$")
+    string(REGEX REPLACE "^[*]+([.].*)$" "\\1" ext2new ${ext2})
+  else()
+    set(ext2new ${ext2})
+  endif()
+  foreach(file ${ARGS_FILES})
+    set(newFile "")
+    string(REGEX REPLACE "^(.*)${ext1new}$" "\\1${ext2new}" newFile ${file})
+    if(NOT ${file} STREQUAL ${newFile} AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${newFile})
+      list(APPEND result ${newFile})
+    endif()
+  endforeach()
+  set(${ARGS_OUTVAR} ${result} PARENT_SCOPE)
+endfunction()

@@ -1,5 +1,5 @@
 // Code to simulate fission event from a file
-#include "FairLogger.h"
+//#include "FairLogger.h"
 
 void run_sim_attpc(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 {

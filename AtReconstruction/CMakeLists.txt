@@ -1,13 +1,10 @@
-# Create a library called "libAtReco" which includes the source files given in the array .
+# Create a library called "libAtReco" which includes the source files given in the array .o
 
 Set(LIBRARY_NAME AtReconstruction)
 Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
 
 set(INCLUDE_DIRECTORIES
-${BASE_INCLUDE_DIRECTORIES}
-${GENFIT2_INCLUDE_DIR}
-
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPulseAnalyzer
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
@@ -16,36 +13,21 @@ ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
 )
 
-set(LINK_DIRECTORIES
-${FAIRROOT_LIBRARY_DIR}
-${GENFIT2_LIBRARY_DIR}
-)
-
 Set(DEPENDENCIES
-  Base
-  FairTools
-  XMLParser
+  FairRoot::Base
+  FairRoot::FairTools
 
-  AtAnalysis
-  AtTpcMap
-  AtParameter
-  AtSimulationData
-  AtData
+  ATTPCROOT::AtAnalysis
+  ATTPCROOT::AtMap
+  ATTPCROOT::AtParameter
+  ATTPCROOT::AtSimulationData
+  ATTPCROOT::AtData
   
   ROOT::Spectrum
   ROOT::Core
-  
-  ${Boost_LOG_LIBRARY}
-  ${Boost_LOG_SETUP_LIBRARY}
-  ${Boost_THREAD_LIBRARY}
-  ${Boost_DAtE_TIME_LIBRARY}
-  ${Boost_FILESYSTEM_LIBRARY}
-  ${Boost_SYSTEM_LIBRARY}
-  )
+  ROOT::XMLParser
 
-set(LINK_DIRECTORIES
-  ${FAIRROOT_LIBRARY_DIR}
-  ${GENFIT2_LIBRARY_DIR}
+  Boost::headers #multi_array
   )
 
 set(SRCS
@@ -75,7 +57,6 @@ set(SRCS
 
 # Adding libraries that depend on PCL
 if(PCL_FOUND)
-  MESSAGE("${Green} libAtTPCReco - Building PCL classes: RANSAC, Pattern Recognition, Hough Transformation, Minimization, Analysis, PSA/PSAFilter ${ColourReset} ")
   set(SRCS ${SRCS} 
     AtRansac/AtRansac.cxx
     AtPulseAnalyzer/AtPSAFilter.cxx
@@ -96,6 +77,7 @@ if(PCL_FOUND)
   set(DEPENDENCIES ${DEPENDENCIES}
     ${PCL_LIBRARIES}
     )
+  
   # Add include directory and link directory if no targets
   if(NOT TARGET pcl_common)
     message("No set targets for PCL!")
@@ -110,7 +92,6 @@ if(PCL_FOUND)
 endif()
 
 if(GENFIT2_FOUND)
-  MESSAGE("${Green} libAtTPCReco - Building GENFIT classes: AtFitter/Genfit ${ColourReset} ")
   set(SRCS ${SRCS}
     AtFitter/AtFitter.cxx
     AtFitter/AtGenfit.cxx
@@ -118,12 +99,11 @@ if(GENFIT2_FOUND)
     AtFitterTask.cxx
     )
   set(DEPENDENCIES ${DEPENDENCIES}
-    ${GENFIT2_LIBRARY_DIR}/libgenfit2.so
+    GENFIT2::genfit2
     )
 endif()
 
 if(HiRAEVT_FOUND)
-  MESSAGE("${Green} libAtTPCReco - Building HiRAEVT classes ${ColourReset} ")
   set(SRCS ${SRCS}
     AtLinkDAQTask.cxx
     )
@@ -132,7 +112,7 @@ if(HiRAEVT_FOUND)
     )
 endif()
 
-generate_target_root_library(${LIBRARY_NAME}
+generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   INCLUDE_DIR ${INCLUDE_DIRECTORIES}

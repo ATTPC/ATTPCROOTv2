@@ -1,0 +1,60 @@
+@PACKAGE_INIT@
+
+set(__old_prefixpath__ ${CMAKE_PREFIX_PATH})
+set(__old_modulepath__ ${CMAKE_MODULE_PATH})
+
+# Set the variables required to find all of the dependencies if they are not already
+# defined by the user of the package
+list(APPEND CMAKE_PREFIX_PATH @CMAKE_PREFIX_PATH@)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/modules" )
+if(NOT DEFINED SIMPATH)
+  set(SIMPATH @SIMPATH@)
+endif()
+if(NOT DEFINED FAIRROOTPATH)
+  set(FAIRROOTPATH @FAIRROOTPATH@)
+endif()
+if(NOT DEFINED GENFIT)
+  set(GENFIT @GENFIT@)
+endif()
+
+include(CMakeFindDependencyMacro)
+include(ATTPCRootChecks)
+attpcroot_sanity_checks()
+
+message(STATUS "Searching for dependencies for @PROJECT_NAME@ in: ${CMAKE_PREFIX_PATH}")
+message(STATUS "Searching for FindModules in: ${CMAKE_MODULE_PATH}")
+
+@PACKAGE_DEPENDENCIES@
+
+# Loop throughy dependecies and load them, with special logic for VMC and PCL
+foreach(_dep ${@PROJECT_NAME@_PACKAGE_DEPENDENCIES})
+
+  # If PCL, suppress developer warnings
+  if(${_dep} STREQUAL PCL AND NOT DEFINED CMAKE_SUPPRESS_DEVELOPER_WARNINGS)
+    set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS 1)
+    set(_temp_mod_dev_warning 1)
+  endif()
+  
+  find_dependency(${_dep} QUIET)
+  
+  # If it was VMC set a target alias for compatability with old ROOT
+  if(${_dep} STREQUAL VMC)
+    set_target_properties(VMCLibrary PROPERTIES IMPORTED_GLOBAL TRUE)
+    add_library(ROOT::VMC ALIAS VMCLibrary)
+  endif()
+  
+  # If it was PCL we just found, reset developer warnings
+  if(${_dep} STREQUAL PCL AND _temp_mod_dev_warning)
+    unset(CMAKE_SUPPRESS_DEVELOPER_WARNINGS)
+  endif()
+endforeach()
+
+# include the exported targets
+include ("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+
+set(CMAKE_PREFIX_PATH ${__old_prefixpath__})
+set(CMAKE_MODULE_PATH ${__old_modulepath__})
+unset(__old_prefixpath__)
+unset(__old_modulepath__)
+
+

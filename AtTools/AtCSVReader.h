@@ -4,8 +4,16 @@
 // Assumes no commas or newlines in the file except as deliminators
 // ie you can't escape them
 // Will work for strings or basic numbers (basically anything that stringstream is overloaded for
-// Skips over entries that don't match the type is CSVRow<int> will parse "0,tr,-2" into {0,-2}
-// Supports ranged loops.
+// Skips over entries that don't match the type. i.e. CSVRow<int> will parse "0,tr,-2" into {0,-2}
+// Supports ranged loops, example below
+//
+//    std::ifstream file("input.csv");
+//
+//    for(auto& row : CSVRange<double>(file))
+//      std::cout << "4th Element(" << row[3] << ")" << std::endl;
+//    for(auto& row : CSVRange<double>(file))
+//      for(int i = 0; i < row.size(); ++i)
+//        std::cout << i + 1 << "th Element(" << row[i] << ")" << std::endl;
 //
 // Based on: https://stackoverflow.com/questions/1120140/how-can-i-read-and-parse-csv-files-in-c
 //

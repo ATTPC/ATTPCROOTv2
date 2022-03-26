@@ -1,30 +1,12 @@
 Set(LIBRARY_NAME AtData)
 Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
-
-set(INCLUDE_DIRECTORIES
-${BASE_INCLUDE_DIRECTORIES}
-)
-
-set(LINK_DIRECTORIES
-${FAIRROOT_LIBRARY_DIR}
-)
-
 Set(DEPENDENCIES
-  Base
-  FairTools
-  XMLParser
+  FairRoot::Base
+  FairRoot::FairTools
 
-  #AtAnalysis
-  #AtTpcMap
-  #AtParameter
-  #AtSimulationData
-  
   ROOT::Core
-  )
-
-set(LINK_DIRECTORIES
-  ${FAIRROOT_LIBRARY_DIR}
+  ROOT::XMLParser
   )
 
 set(SRCS
@@ -44,12 +26,8 @@ set(SRCS
   AtTrack.cxx
   )
 
-### Add additional sources and libraries if we found certain modules ###
-
-generate_target_root_library(${LIBRARY_NAME}
+generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
-  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
-  LIBRARY_DIR ${LINK_DIRECTORIES}
   DEPS_PUBLIC ${DEPENDENCIES}
   )

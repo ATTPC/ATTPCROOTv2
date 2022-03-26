@@ -190,6 +190,61 @@ There is a suite of tests located in `macro/tests` to check the unpacking of AT-
 
 To run all tests run the bash script `macro/tests/runAllTest.sh`. To the screen it will print a summary of each test run and the return value. The output of the test scripts run are saved in a text file in each test directory (test.log).
 
+### Coverage of tests
+
+- [ ] Simulation Coverage
+  * Generators
+    - [ ] AtTPC20MgDecay
+	- [ ] AtTPC2Body
+	- [ ] AtTPC_Background
+	- [ ] AtTPC_d2He
+	- [ ] AtTPCFissionGenerator
+	- [ ] AtTPCFissionGeneratorv2
+	- [x] AtTPCFissionGeneratorv3
+	- [ ] AtTPCGammaDummyGenerator
+	- [ ] AtTPCIonDecay
+	- [x] AtTPCIonGenerator
+	- [ ] AtTPCXSManager
+	- [ ] AtTPCXSReader
+  - [ ] AtAvalanchTask
+  - [x] AtClusterizeLineTask
+  - [ ] AtClusterizeTask
+  - [x] AtPulseLineTask
+  - [ ] AtPulseTask
+  - [ ] AtSpaceChargeTask
+  - [ ] AtTriggerTask
+- [x] Unpacking Coverage
+  - [x] AtUnpackTask
+    - [x] AtHDFUnpacker
+    - [x] AtROOTUnpacker
+    - [x] AtGRAWUnpacker
+- [ ] Reconstruction Coverage
+  - [ ] AtAuxFilterTask
+  - [x] AtDataReductionTask
+  - [x] AtFilterTask
+    - [x] AtFilterSubtraction
+	- [ ] AtFilterCalibrate
+	- [ ] AtTrapezoidFilter
+  - [ ] AtFitterTask
+  - [ ] AtLinkDAQtask
+  - [ ] AtPRAtask 
+    - [ ] AtLmedsMod
+	- [ ] AtMlesacMod
+	- [ ] AtPRA
+    - [ ] AtRansacMod
+	- [ ] AtTrackFinderHC
+  - [x] AtPSAtask
+    - [ ] AtCalibration
+	- [ ] AtPSAFilter
+	- [ ] AtPSAFull
+	- [ ] AtPSAProto
+	- [ ] AtPSAProtoFull
+    - [x] AtPSASimple2
+	- [ ] AtPSASimple
+  - [x] AtRansacTask
+    - [x] AtRansac
+  - [ ] AtTrackFinderHCTask
+  
 # Creating geometry files
 
 ### Adding materials

@@ -1,8 +1,4 @@
 #include "AtTrack.h"
-
-// FairRoot classes
-#include "FairRuntimeDb.h"
-#include "FairRun.h"
 #include "Math/Point3D.h"
 
 ClassImp(AtTrack);
