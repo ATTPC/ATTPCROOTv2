@@ -228,7 +228,7 @@ function(make_target_root_dictionary target)
   file(MAKE_DIRECTORY ${lib_output_dir})
   
   # get the list of compile_definitions
-  set(prop $<TARGET_PROPERTY:${target},COMPILE_DEFINITIONS>)
+  set(prop $<REMOVE_DUPLICATES:$<TARGET_PROPERTY:${target},COMPILE_DEFINITIONS>>)
 
   # Build the LD_LIBRARY_PATH required to get rootcling running fine
   #
@@ -241,8 +241,8 @@ function(make_target_root_dictionary target)
     set(LD_LIBRARY_PATH "${LD_LIBRARY_PATH}:$ENV{GCC_TOOLCHAIN_ROOT}/lib64")
   endif()
 
-  set(includeDirs $<TARGET_PROPERTY:${target},INCLUDE_DIRECTORIES>)
-
+  set(includeDirs $<REMOVE_DUPLICATES:$<TARGET_PROPERTY:${target},INCLUDE_DIRECTORIES>>)
+    
   # add a custom command to generate the dictionary using rootcling
   # cmake-format: off
   set(space " ")

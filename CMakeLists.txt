@@ -1,5 +1,5 @@
 # Fairsoft requires an even higher version, so you can use that version if needed
-cmake_minimum_required(VERSION  3.12.0 FATAL_ERROR)
+cmake_minimum_required(VERSION  3.15.0 FATAL_ERROR)
 cmake_policy(VERSION 3.11...3.15)
 
 # Set project name and version
@@ -69,6 +69,9 @@ endif()
 # of FindHDF5.cmake
 #set(HDF5_FIND_DEBUG TRUE)
 find_package2(PUBLIC HDF5 REQUIRED)
+if(TARGET hdf5-shared AND NOT TARGET hdf5::hdf5-shared)
+  add_library(hdf5::hdf5-shared ALIAS hdf5-shared)
+endif()
 if(NOT TARGET hdf5::hdf5-shared)
   add_library(hdf5::hdf5-shared SHARED IMPORTED GLOBAL)
   # This may have to be changed to HDF5_CXX_LIBRARIES depending on your hdf5 install
