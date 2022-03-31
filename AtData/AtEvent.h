@@ -43,7 +43,7 @@ public:
    // Takes arguments to any constructor of AtHit, leaving out the first (the hit ID).
    // AtEvent handles the assignment of hit IDs to ensure they are unique within an event.
    template <typename... Ts>
-   AtHit &AddHit(Ts &&...params)
+   AtHit &AddHit(Ts &&... params)
    {
       LOG(debug) << "Adding hit with ID " << fHitArray.size() << " to event " << fEventID;
       fHitArray.emplace_back(fHitArray.size(), std::forward<Ts>(params)...);
@@ -52,13 +52,15 @@ public:
 
    // Clones the hit and adds it to the event, setting the hitID to the next valid for
    // this event. It is not coppied from the passed hit.
-   AtHit &AddHit(AtHit &hit)
+   AtHit &AddHit(const AtHit &hit)
    {
       LOG(debug) << "Adding hit with ID " << fHitArray.size() << " to event " << fEventID;
       fHitArray.emplace_back(hit);
       fHitArray.back().SetHitID(fHitArray.size() - 1);
       return fHitArray.back();
    }
+
+   AtHit &AddHit(AtHit &hit) { return AddHit(const_cast<const AtHit &>(hit)); }
 
    // Copies passed aux pad into the event's auxiliary pad array
    void AddAuxPad(AtAuxPad auxPad) { fAuxPadArray.push_back(std::move(auxPad)); }

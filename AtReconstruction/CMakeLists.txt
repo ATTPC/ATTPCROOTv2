@@ -51,6 +51,9 @@ set(SRCS
   AtFilterTask.cxx
   AtAuxFilterTask.cxx
   AtDataReductionTask.cxx
+  AtSpaceChargeTask.cxx
+  AtSpaceChargeModel.cxx
+  AtLineChargeModel.cxx
   )
 
 ### Add additional sources and libraries if we found certain modules ###

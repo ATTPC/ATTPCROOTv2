@@ -52,7 +52,7 @@ public:
 
    // As an input takes parameters for any constructor of AtPad
    template <typename... Ts>
-   AtPad *AddPad(Ts &&...params)
+   AtPad *AddPad(Ts &&... params)
    {
       fPadList.push_back(std::make_unique<AtPad>(std::forward<Ts>(params)...));
       return fPadList.back().get();

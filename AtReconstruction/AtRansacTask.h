@@ -59,6 +59,8 @@ public:
    void SetRanSamMode(Int_t mode);
    void SetChargeThreshold(Double_t value);
    void SetVertexMode(Int_t value);
+   void SetInputBranchName(TString inputName);
+   void SetOutputBranchName(TString outputName);
 
    virtual InitStatus Init() override;
    virtual void Exec(Option_t *opt) override;

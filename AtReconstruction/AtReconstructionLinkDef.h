@@ -42,6 +42,10 @@
 
 #pragma link C++ class AtDataReductionTask + ;
 
+#pragma link C++ class AtSpaceChargeTask + ;
+#pragma link C++ class AtSpaceChargeModel + ;
+#pragma link C++ class AtLineChargeModel + ;
+
 //#pragma link C++ function AtHoughSpaceLine::CalcGenHoughSpace<AtEvent*>(GenHough event);
 
 #endif
