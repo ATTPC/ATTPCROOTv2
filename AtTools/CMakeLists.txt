@@ -13,6 +13,8 @@ set(SRCS
 Set(DEPENDENCIES
   ROOT::XMLParser
   ROOT::Core
+
+  FairRoot::FairTools
 )
 
 generate_target_and_root_library(${LIBRARY_NAME}

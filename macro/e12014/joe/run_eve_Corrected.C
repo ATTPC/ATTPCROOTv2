@@ -44,10 +44,9 @@ void run_eve_Corrected(int runNum = 206, TString OutputDataFile = "output.reco_d
    // eve->SetSaveTextData();
    eve->SetRawEventBranch("AtRawEventFiltered");
    eve->SetEventBranch("AtEventFiltered");
-   //eve->SetCorrectedEventBranch("AtEventCorrected");
+   eve->SetCorrectedEventBranch("AtEventCorrected");
    eveMan->AddTask(eve);
    eveMan->Init();
 
    std::cout << "Finished init" << std::endl;
-   eveMan->RunEvent(0);
 }

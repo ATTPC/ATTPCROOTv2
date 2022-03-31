@@ -815,8 +815,8 @@ void AtEventDrawTask::DrawHitPoints()
    // Adding raw data points
    if (!fEventManager->GetDrawHoughSpace()) {
 
-      if(fCorrectedHitSet)
-	 gEve->AddElement(fCorrectedHitSet);
+      if (fCorrectedHitSet)
+         gEve->AddElement(fCorrectedHitSet);
       gEve->AddElement(fHitSet);
       gEve->AddElement(fhitBoxSet);
 
@@ -831,8 +831,8 @@ void AtEventDrawTask::DrawHitPoints()
             for (Int_t i = 0; i < fLineNum; i++)
                gEve->AddElement(fLineArray[i]);
          // Lines plto together with data points
-	 if(fCorrectedHitSet)
-	    gEve->AddElement(fCorrectedHitSet);
+         if (fCorrectedHitSet)
+            gEve->AddElement(fCorrectedHitSet);
          gEve->AddElement(fHitSet);
          gEve->AddElement(fhitBoxSet);
          if (fVertex)

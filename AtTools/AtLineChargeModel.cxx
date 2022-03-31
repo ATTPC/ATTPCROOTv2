@@ -1,6 +1,6 @@
 
 #include "AtLineChargeModel.h"
-
+#include "FairLogger.h"
 #include "Math/Point3D.h"
 
 using XYZPoint = ROOT::Math::XYZPoint;
@@ -18,6 +18,7 @@ XYZPoint AtLineChargeModel::CorrectSpaceCharge(const XYZPoint &directInputPositi
 
    // 256787 is numerical value of constant factors in distortion expression
    auto rhoF = sqrt(rhoI * rhoI + (256787 / fField) * (70000) * fLambda * delZ) * 1e3;
+   LOG(debug) << "Correcting rho: " << rhoI * 1e3 << " to " << rhoF;
    return (XYZPoint)RZPPoint(rhoF, directInputPosition.Z(), directInputPosition.Phi());
 }
 
