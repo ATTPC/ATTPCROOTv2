@@ -22,6 +22,7 @@ Set(DEPENDENCIES
   ATTPCROOT::AtParameter
   ATTPCROOT::AtSimulationData
   ATTPCROOT::AtData
+  ATTPCROOT::AtTools
   
   ROOT::Spectrum
   ROOT::Core
@@ -51,9 +52,7 @@ set(SRCS
   AtFilterTask.cxx
   AtAuxFilterTask.cxx
   AtDataReductionTask.cxx
-  AtSpaceChargeTask.cxx
-  AtSpaceChargeModel.cxx
-  AtLineChargeModel.cxx
+  AtSpaceChargeCorrectionTask.cxx
   )
 
 ### Add additional sources and libraries if we found certain modules ###

@@ -82,6 +82,7 @@ public:
    void SetLine6(double t, std::vector<Double_t> p, double &x, double &y, double &z);
    void SetRawEventBranch(TString branchName);
    void SetEventBranch(TString branchName);
+   void SetCorrectedEventBranch(TString branchName) { fCorrectedEventBranchName = branchName; }
 
    static void SelectPad(const char *rawevt);
    void DrawWave(Int_t PadNum);
@@ -141,8 +142,10 @@ private:
 
    TString fRawEventBranchName;
    TString fEventBranchName;
+   TString fCorrectedEventBranchName;
 
-   TClonesArray *fHitArray;
+   TClonesArray *fEventArray;
+   TClonesArray *fCorrectedEventArray;
    TClonesArray *fRawEventArray;
    TClonesArray *fRansacArray;
    TClonesArray *fTrackFinderHCArray;
@@ -165,6 +168,7 @@ private:
    TString fMap;
 
    TEvePointSet *fHitSet;
+   TEvePointSet *fCorrectedHitSet;
    TEvePointSet *fHitSetMin;
 
    TEvePointSet *fHitSetMC[5];     // For MC results

@@ -62,11 +62,11 @@ using namespace std;
 ClassImp(AtEventDrawTask);
 
 AtEventDrawTask::AtEventDrawTask()
-   : fIs2DPlotRange(kFALSE), fUnpackHough(kFALSE), fHitArray(0),
+   : fIs2DPlotRange(kFALSE), fUnpackHough(kFALSE), fEventArray(0),
      // fHitClusterArray(0),
      // fRiemannTrackArray(0),
      // fKalmanArray(0),
-     fEventManager(0), fRawevent(0), fDetmap(0), fThreshold(0), fHitSet(0),
+     fEventManager(0), fRawevent(0), fDetmap(0), fThreshold(0), fHitSet(0), fCorrectedHitSet(0),
      // x(0),
      // hitSphereArray(0),
      fhitBoxSet(0), fPadPlanePal(0), fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium),
@@ -180,9 +180,14 @@ InitStatus AtEventDrawTask::Init()
    fDetmap->SetName("fMap");
    gROOT->GetListOfSpecials()->Add(fDetmap);
 
-   fHitArray = (TClonesArray *)ioMan->GetObject(fEventBranchName);
-   if (fHitArray)
-      LOG(INFO) << cGREEN << "Hit Array Found in branch " << fEventBranchName << "." << cNORMAL << std::endl;
+   fEventArray = (TClonesArray *)ioMan->GetObject(fEventBranchName);
+   if (fEventArray)
+      LOG(INFO) << cGREEN << "Event Array Found in branch " << fEventBranchName << "." << cNORMAL << std::endl;
+
+   fCorrectedEventArray = (TClonesArray *)ioMan->GetObject(fCorrectedEventBranchName);
+   if (fCorrectedEventArray)
+      LOG(INFO) << cGREEN << "Corrected Event Array Found in branch " << fCorrectedEventBranchName << "." << cNORMAL
+                << std::endl;
 
    fRawEventArray = (TClonesArray *)ioMan->GetObject(fRawEventBranchName);
    if (fRawEventArray) {
@@ -270,7 +275,7 @@ void AtEventDrawTask::Exec(Option_t *option)
    // if (fRawEventArray)
    //  DrawPadAll();
 
-   if (fHitArray) {
+   if (fEventArray) {
       DrawHitPoints();
       DrawMeshSpace();
    }
@@ -314,8 +319,8 @@ void AtEventDrawTask::DrawHitPoints()
    std::vector<Double_t> fPosZMin;
 
    fQEventHist_H->Reset(0);
-   AtEvent *event = (AtEvent *)fHitArray->At(0); // TODO: Why this confusing name? It should be fEventAgrray
-   // event->SortHitArray(); // Works surprisingly well
+   AtEvent *event = (AtEvent *)fEventArray->At(0);
+
    Double_t Qevent = event->GetEventCharge();
    Double_t RhoVariance = event->GetRhoVariance();
    auto MeshArray = event->GetMesh();
@@ -368,13 +373,6 @@ void AtEventDrawTask::DrawHitPoints()
    // std::cout<<" AtRawEvent Event ID : "<<rawevent->GetEventID()<<std::endl;
    // if(event->GetEventID()!=rawevent->GetEventID()) std::cout<<" = AtEventDrawTask::DrawHitPoints : Warning, EventID
    // mismatch."<<std::endl;
-   Int_t nHits = event->GetNumHits();
-   fHitSet = new TEvePointSet("Hit", nHits, TEvePointSelectorConsumer::kTVT_XYZ);
-   fHitSet->SetOwnIds(kTRUE);
-   fHitSet->SetMarkerColor(fHitColor);
-   fHitSet->SetMarkerSize(fHitSize);
-   fHitSet->SetMarkerStyle(fHitStyle);
-   std::cout << cBLUE << " Number of hits : " << nHits << cNORMAL << std::endl;
 
    // 3D visualization of the Minimized data
 
@@ -624,6 +622,14 @@ void AtEventDrawTask::DrawHitPoints()
    fhitBoxSet = new TEveBoxSet("hitBox");
    fhitBoxSet->Reset(TEveBoxSet::kBT_AABox, kTRUE, 64);
 
+   Int_t nHits = event->GetNumHits();
+   fHitSet = new TEvePointSet("Hit", nHits, TEvePointSelectorConsumer::kTVT_XYZ);
+   fHitSet->SetOwnIds(kTRUE);
+   fHitSet->SetMarkerColor(fHitColor);
+   fHitSet->SetMarkerSize(fHitSize);
+   fHitSet->SetMarkerStyle(fHitStyle);
+   std::cout << cBLUE << " Number of hits : " << nHits << cNORMAL << std::endl;
+
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
       AtHit hit = event->GetHitArray().at(iHit);
@@ -673,6 +679,30 @@ void AtEventDrawTask::DrawHitPoints()
          else if (fEventManager->GetToggleCorrData())
             dumpEvent << positioncorr.X() << " " << positioncorr.Y() << " " << positioncorr.Z() << " "
                       << hit.GetTimeStamp() << " " << hit.GetCharge() << std::endl;
+   }
+
+   if (fCorrectedEventArray != nullptr) {
+      std::cout << "Adding corrected hits" << std::endl;
+      AtEvent *eventCorr = (AtEvent *)fCorrectedEventArray->At(0);
+      fCorrectedHitSet = new TEvePointSet("Hit2", nHits, TEvePointSelectorConsumer::kTVT_XYZ);
+      fCorrectedHitSet->SetOwnIds(kTRUE);
+      fCorrectedHitSet->SetMarkerColor(kBlue);
+      fCorrectedHitSet->SetMarkerSize(fHitSize);
+      fCorrectedHitSet->SetMarkerStyle(fHitStyle);
+
+      for (Int_t iHit = 0; iHit < nHits; iHit++) {
+         if (eventCorr == nullptr) {
+            std::cout << "Corrected event was empty!" << std::endl;
+            break;
+         }
+         AtHit hit = eventCorr->GetHitArray().at(iHit);
+         Int_t PadNumHit = hit.GetPadNum();
+         auto position = hit.GetPosition();
+         if (hit.GetCharge() < fThreshold)
+            continue;
+         fCorrectedHitSet->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.); // Convert into cm
+         fCorrectedHitSet->SetPointId(new TNamed(Form("HitCorr %d", iHit), ""));
+      }
    }
 
    //////////////     Minimization from Hough Space   ///////////////
@@ -785,6 +815,8 @@ void AtEventDrawTask::DrawHitPoints()
    // Adding raw data points
    if (!fEventManager->GetDrawHoughSpace()) {
 
+      if(fCorrectedHitSet)
+	 gEve->AddElement(fCorrectedHitSet);
       gEve->AddElement(fHitSet);
       gEve->AddElement(fhitBoxSet);
 
@@ -799,6 +831,8 @@ void AtEventDrawTask::DrawHitPoints()
             for (Int_t i = 0; i < fLineNum; i++)
                gEve->AddElement(fLineArray[i]);
          // Lines plto together with data points
+	 if(fCorrectedHitSet)
+	    gEve->AddElement(fCorrectedHitSet);
          gEve->AddElement(fHitSet);
          gEve->AddElement(fhitBoxSet);
          if (fVertex)
@@ -833,6 +867,11 @@ void AtEventDrawTask::Reset()
    if (fHitSet) {
       fHitSet->Reset();
       gEve->RemoveElement(fHitSet, fEventManager);
+   }
+
+   if (fCorrectedHitSet) {
+      fCorrectedHitSet->Reset();
+      gEve->RemoveElement(fCorrectedHitSet, fEventManager);
    }
 
    if (fhitBoxSet) {

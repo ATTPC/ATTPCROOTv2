@@ -6,6 +6,8 @@ set(SRCS
   AtELossManager.cxx
   AtCSVReader.h
   AtEulerTransformation.cxx
+  AtSpaceChargeModel.cxx
+  AtLineChargeModel.cxx
   )
 
 Set(DEPENDENCIES

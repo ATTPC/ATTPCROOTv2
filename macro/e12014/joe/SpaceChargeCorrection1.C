@@ -70,15 +70,7 @@ void SpaceChargeCorrection1(int runNumber = 206)
 
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetPersistence(true);
-   /*
-      AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
-      HDFParserTask->SetPersistence(kTRUE);
-      HDFParserTask->SetMap(fAtMapPtr);
-      HDFParserTask->SetFileName(inputFile.Data());
-      HDFParserTask->SetOldFormat(false);
-      HDFParserTask->SetNumberTimestamps(2);
-      HDFParserTask->SetBaseLineSubtraction(kTRUE);
-   */
+
    // Create data reduction task
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
    reduceTask->SetInputBranch("AtRawEvent");
@@ -106,7 +98,7 @@ void SpaceChargeCorrection1(int runNumber = 206)
 
    // Add SC Model
    auto SCModel = std::make_unique<AtLineChargeModel>();
-   auto SCTask = new AtSpaceChargeTask(std::move(SCModel));
+   auto SCTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
    SCTask->SetInputBranchName("AtEventFiltered");
 
    AtRansacTask *ransacTask = new AtRansacTask();

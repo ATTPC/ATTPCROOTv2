@@ -1,4 +1,4 @@
-#include "AtSpaceChargeTask.h"
+#include "AtSpaceChargeCorrectionTask.h"
 #include "AtSpaceChargeModel.h"
 
 #include "FairLogger.h"
@@ -9,14 +9,14 @@
 
 using XYZPoint = ROOT::Math::XYZPoint;
 
-ClassImp(AtSpaceChargeTask);
+ClassImp(AtSpaceChargeCorrectionTask);
 
-AtSpaceChargeTask::AtSpaceChargeTask(SCModelPtr &&SCModel)
+AtSpaceChargeCorrectionTask::AtSpaceChargeCorrectionTask(SCModelPtr &&SCModel)
    : fSCModel(std::move(SCModel)), fOutputEventArray(TClonesArray("AtEvent", 1)), fInputEventArray(nullptr)
 {
 }
 
-InitStatus AtSpaceChargeTask::Init()
+InitStatus AtSpaceChargeCorrectionTask::Init()
 {
    if (FairRootManager::Instance() == nullptr) {
       LOG(fatal) << "Cannot find RootManager!";
@@ -34,9 +34,9 @@ InitStatus AtSpaceChargeTask::Init()
    return kSUCCESS;
 }
 
-void AtSpaceChargeTask::SetParContainers() {}
+void AtSpaceChargeCorrectionTask::SetParContainers() {}
 
-void AtSpaceChargeTask::Exec(Option_t *opt)
+void AtSpaceChargeCorrectionTask::Exec(Option_t *opt)
 {
    fOutputEventArray.Clear("C");
 
@@ -46,8 +46,8 @@ void AtSpaceChargeTask::Exec(Option_t *opt)
    auto inputEvent = dynamic_cast<AtEvent *>(fInputEventArray->At(0));
    auto outputEvent = dynamic_cast<AtEvent *>(fOutputEventArray.ConstructedAt(0));
    outputEvent->CopyFrom(*inputEvent);
-   for (auto &inHit : inputEvent->GetHitArray()) {
 
+   for (auto &inHit : inputEvent->GetHitArray()) {
       XYZPoint newPosition;
       newPosition = fSCModel->ApplySpaceCharge(inHit.GetPosition());
       auto newHit = outputEvent->AddHit(inHit);

@@ -3,8 +3,8 @@
  * modifying the position values of hits in AtEvent
  *
  */
-#ifndef _ATSPACECHARGETASK_H_
-#define _ATSPACECHARGETASK_H_
+#ifndef _ATSPACECHARGECORRECTIONTASK_H_
+#define _ATSPACECHARGECORRECTIONTASK_H_
 
 #include "FairTask.h"
 #include "TClonesArray.h"
@@ -18,7 +18,7 @@ class AtEvent;
 
 using SCModelPtr = std::unique_ptr<AtSpaceChargeModel>;
 
-class AtSpaceChargeTask : public FairTask {
+class AtSpaceChargeCorrectionTask : public FairTask {
 
 private:
    std::string fInputBranchName = "AtEventH";
@@ -30,8 +30,8 @@ private:
    SCModelPtr fSCModel;
 
 public:
-   AtSpaceChargeTask(SCModelPtr &&model);
-   ~AtSpaceChargeTask() = default;
+   AtSpaceChargeCorrectionTask(SCModelPtr &&model);
+   ~AtSpaceChargeCorrectionTask() = default;
 
    void SetInputBranchName(std::string branchName) { fInputBranchName = branchName; }
    void SetOuputBranchName(std::string branchName) { fOuputBranchName = branchName; }
@@ -42,7 +42,7 @@ public:
    virtual void Exec(Option_t *opt) override;
    // virtual void FinishEvent() override;
 
-   ClassDefOverride(AtSpaceChargeTask, 1);
+   ClassDefOverride(AtSpaceChargeCorrectionTask, 1);
 };
 
 #endif //_ATSPACECHARGETASK_H_

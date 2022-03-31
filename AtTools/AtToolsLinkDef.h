@@ -12,4 +12,7 @@
 #pragma link C++ class AtTools::AtParsers + ;
 #pragma link C++ class AtEulerTransformation + ;
 
+#pragma link C++ class AtSpaceChargeModel + ;
+#pragma link C++ class AtLineChargeModel + ;
+
 #endif
