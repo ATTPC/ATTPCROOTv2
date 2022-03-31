@@ -23,6 +23,7 @@
 
 #pragma link C++ class AtCore + ;
 #pragma link C++ class AtCore2 + ;
+#pragma link C++ class AtCoreSpecMAT + ;
 #pragma link C++ class AtHDFParser + ;
 #pragma link C++ class AtPad + ;
 #pragma link C++ class AtRawEvent + ;
@@ -40,6 +41,7 @@
 
 #pragma link C++ class AtDecoderTask + ;
 #pragma link C++ class AtDecoder2Task + ;
+#pragma link C++ class AtDecoderSpecMATTask + ;
 
 #pragma link C++ class AtPSA + ;
 #pragma link C++ class AtPSASimple + ;

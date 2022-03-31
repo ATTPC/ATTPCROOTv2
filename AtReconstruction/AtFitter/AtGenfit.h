@@ -21,7 +21,6 @@
 #include "EventDisplay.h"
 #include "TrackPoint.h"
 
-//#include "GFRaveVertexFactory.h"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
@@ -33,7 +32,7 @@ namespace AtFITTER {
 class AtGenfit : public AtFitter {
 
 public:
-   AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile, Float_t gasMediumDensity,
+  AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile, Float_t gasMediumDensity,Int_t pdg = 2212,
             Int_t minit = 5, Int_t maxit = 20);
    ~AtGenfit();
 
@@ -54,9 +53,12 @@ public:
    inline void SetSimulationConvention(Bool_t simconv) { fSimulationConv = simconv; }
    inline void SetGasMediumDensity(Float_t mediumDensity) { fGasMediumDensity = mediumDensity; }
    inline void RotatePhi(Double_t phi) { fPhiOrientation = phi; }
-
+   inline void SetIonName(std::string name) {fIonName = name;}
+  
    TClonesArray *GetGenfitTrackArray();
-
+   Int_t GetPDGCode(){ return fPDGCode;}
+   std::string& GetIonName(){ return fIonName; } 
+  
 private:
    std::shared_ptr<genfit::AbsKalmanFitter> fKalmanFitter;
    TClonesArray *fGenfitTrackArray;
@@ -77,7 +79,8 @@ private:
    Bool_t fSimulationConv;      //<! Switch to simulation convention
    Float_t fGasMediumDensity;   //<! Medium density in mg/cm3
    Double_t fPhiOrientation;    //<! Phi angle orientation for fit
-
+   std::string fIonName;         //<! Name of ion to fit
+  
    genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement> *fMeasurementProducer;
    genfit::MeasurementFactory<genfit::AbsMeasurement> *fMeasurementFactory;
 

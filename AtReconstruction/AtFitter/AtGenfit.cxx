@@ -12,7 +12,7 @@
 ClassImp(AtFITTER::AtGenfit)
 
    AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile,
-                                Float_t gasMediumDensity, Int_t minit, Int_t maxit)
+                                Float_t gasMediumDensity, Int_t pdg, Int_t minit, Int_t maxit)
 {
 
    fTPCDetID = 0;
@@ -25,7 +25,7 @@ ClassImp(AtFITTER::AtGenfit)
    fNumFitPoints = 0.90;             // Percentage of processed points
    fMass = 1.00727647;               //<! Particle mass in amu
    fAtomicNumber = 1;
-   fPDGCode = 2212;
+   fPDGCode = pdg;
    fVerbosity = 0;
    fEnergyLossFile = eLossFile;
    fSimulationConv = kFALSE;
@@ -52,7 +52,7 @@ ClassImp(AtFITTER::AtGenfit)
    materialEffects->init(new genfit::TGeoMaterialInterface());
    // Parameteres set after initialization
    materialEffects->setGasMediumDensity(gasMediumDensity);
-   materialEffects->setEnergyLossFile(fEnergyLossFile);
+   materialEffects->setEnergyLossFile(fEnergyLossFile,fPDGCode);
 
    // fPDGCandidateArray = new std::vector<Int_t>; // TODO
    // fPDGCandidateArray->push_back(2212);
@@ -102,8 +102,13 @@ ClassImp(AtFITTER::AtGenfit)
    TDatabasePDG *db = TDatabasePDG::Instance();
    db->AddParticle("Deuteron", "Deuteron", 1.875612928, kTRUE, 0, 3, "Ion", 1000010020);
    db->AddParticle("Triton", "Triton", 2.80943211, kFALSE, khShGev / (12.33 * kYear2Sec), 3, "Ion", 1000010030);
-   db->AddParticle("Alpha", "Alpha", 3.7284, kTRUE, khShGev / (12.33 * kYear2Sec), 6, "Ion", 1000020040);
-   db->AddParticle("HE3", "HE3", 2.80941352, kFALSE, 0, 6, "Ion", 1000020030);
+   db->AddParticle("Alpha", "Alpha", 3.7284, kTRUE,0, 6, "Ion", 1000020040);
+   db->AddParticle("He3", "He3", 2.80941352, kTRUE, 0, 6, "Ion", 1000020030);
+   db->AddParticle("He6","He6",5.60655972, kFALSE,khShGev / 0.806 ,6,"Ion",1000020060);
+   db->AddParticle("Be10","Be10",9.3275477,kFALSE,khShGev / (1.51E6 * kYear2Sec),12,"Ion",1000040100);
+   db->AddParticle("Be11","Be11",10.2666092,kFALSE,khShGev / (13.76),12,"Ion",1000040110);
+   db->AddParticle("C12","C12",11.18,kTRUE,0,18,"Ion",1000060120);
+   db->AddParticle("O16","O16",14.8991686,kTRUE,0,24,"Ion",1000080160);
 }
 
 AtFITTER::AtGenfit::~AtGenfit()
@@ -119,7 +124,10 @@ AtFITTER::AtGenfit::~AtGenfit()
 void AtFITTER::AtGenfit::Init()
 {
    std::cout << cGREEN << " AtFITTER::AtGenfit::Init() " << cNORMAL << "\n";
-
+   //std::cout << cGREEN << " PDG : "<<fPDGCode<<"\n";
+   //std::cout << cGREEN << " Ion : "<<fIonName<<"\n";
+   
+   
    fHitClusterArray->Delete();
    fGenfitTrackArray->Delete();
 }
@@ -192,7 +200,7 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
          phi = 180.0 * TMath::DegToRad() - track->GetGeoPhi();
       }
 
-      
+      //Needs to be reversed back for multifit
 	std::reverse(hitClusterArray->begin(), hitClusterArray->end());
 
    } else if (thetaConv > 90.0 * TMath::DegToRad()) { // Backward (Forward) for experiment (simulation)
@@ -226,9 +234,9 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       std::cout << " B field : " << fMagneticField / 10.0 << " - Min. Bhro : " << fMinBrho
                 << " - Max. Brho : " << fMaxBrho << "\n";
       std::cout << " Theta : " << theta * TMath::RadToDeg() << " - Phi : " << phi * TMath::RadToDeg()
-                << " - Brho : " << brho << "\n";
+                << " - Brho (geo) : " << brho << "\n";
       
-   }
+    }
 
    // hitClusterArray->resize(hitClusterArray->size() * 0.50);
 
@@ -284,18 +292,15 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       // iniCluster = hitClusterArray->back();
       iniPos = iniCluster.GetPosition();
       zIniCal = 1000.0 - iniPos.Z();
-
-      /*if(iniPos.X()>0 && iniPos.Y()<0)
-	 phi=2.0*TMath::Pi()+phi;
-       else if(iniPos.X()<0)
-       phi=TMath::Pi()+phi;*/
-
-      
+     
       if(fSimulationConv)
 	xIniCal = iniPos.X();
       else
        xIniCal = -iniPos.X();
 
+      //Leave hit cluster array in its original state
+      std::reverse(hitClusterArray->begin(), hitClusterArray->end());
+      
    } else if (thetaConv > 90.0 * TMath::DegToRad()) {
       iniCluster = hitClusterArray->front();
       // iniCluster = hitClusterArray->back();
@@ -312,7 +317,7 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    } else {
       std::cout << cRED << " AtGenfit::FitTracks - Warning! Undefined theta angle. Skipping event..." << cNORMAL
                 << "\n";
-      return nullptr;
+      
    }
 
    
@@ -342,6 +347,9 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
 
    std::tuple<Double_t, Double_t> mom_ener =
       GetMomFromBrho(p_mass, p_Z, brho); // TODO Change to structured bindings when C++17
+
+   std::cout<<" p_mass "<<p_mass<<" p_Z "<<p_Z<<"\n";
+   std::cout<<" Momentum from Brho : "<<std::get<0>(mom_ener)<<"\n";
 
    // Momentum calculation
    Double_t px = 0, py = 0, pz = 0;

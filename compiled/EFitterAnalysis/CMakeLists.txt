@@ -34,23 +34,34 @@ find_package(ROOT REQUIRED)
 include(${ROOT_USE_FILE})
 
 #---Locate other external packages
-find_package(Boost 1.67 REQUIRED)
+find_package(Boost 1.67 COMPONENTS system REQUIRED)
 find_package(GENFIT2)
+find_package(Curses)
 
-include_directories( ${ROOT_INCLUDE_DIR}
+include_directories( INCLUDE_DIRECTORIES
+                     ${ROOT_INCLUDE_DIR}
                      ${Boost_INCLUDE_DIRS}
                      ${BASE_INCLUDE_DIRECTORIES}
                      ${ATTPCROOTPATH}/include
                      ${FAIRROOTPATH}/include
                      ${CMAKE_SOURCE_DIR}
 		     ${GENFIT2_INCLUDE_DIR}
-                     #${PCL_INCLUDE_DIRS}
+		     ${CURSES_INCLUDE_DIRS}
+		     #${PCL_INCLUDE_DIRS}
 		     )
 
-link_directories( ${FAIRROOT_LIBRARY_DIR}
+link_directories(LINK_DIRECTORIES
+		  ${FAIRROOT_LIBRARY_DIR}
                   ${FAIRROOTPATH}/lib
                   ${ATTPCROOTPATH}/build/lib
                   ${GENFIT2_LIBRARY_DIR}
+		  ${CURSES_LIBRARIES}
+		  ${Boost_LOG_LIBRARY}
+		  ${Boost_LOG_SETUP_LIBRARY}
+		  ${Boost_THREAD_LIBRARY}
+		  ${Boost_DAtE_TIME_LIBRARY}
+		  ${Boost_FILESYSTEM_LIBRARY}
+		  ${Boost_SYSTEM_LIBRARY}
                   #${PCL_LIBRARY_DIRS}
                   )
 
@@ -60,14 +71,20 @@ link_directories( ${FAIRROOT_LIBRARY_DIR}
 message(STATUS ${ATTPCROOTPATH})
 
 add_library(eFitterAnalysis SHARED eFitterAnalysis.cc)
-#target_link_libraries(genfit_Test ${ROOT_LIBRARIES} ATTPCReco FairTools Base ${PCL_LIBRARIES})
-target_link_libraries(eFitterAnalysis ${ROOT_LIBRARIES} AtReconstruction FairTools Base ${GENFIT2_LIBRARY_DIR}/libgenfit2.so)
+target_link_libraries(eFitterAnalysis ${ROOT_LIBRARIES}   ${GENFIT2_LIBRARY_DIR}/libgenfit2.so)
 
 add_executable(eFitterAnaExe eFitterAnalysis.cc)
 		
 target_link_libraries (eFitterAnaExe eFitterAnalysis
-  ${ROOT_LIBRARIES}
+${ROOT_LIBRARIES}
 ${GENFIT2_LIBRARY_DIR}/libgenfit2.so
+${CURSES_LIBRARIES}
+${Boost_LOG_LIBRARY}
+${Boost_LOG_SETUP_LIBRARY}
+${Boost_THREAD_LIBRARY}
+${Boost_DAtE_TIME_LIBRARY}
+${Boost_FILESYSTEM_LIBRARY}
+${Boost_SYSTEM_LIBRARY}
 EG
 Core
 Gpad
@@ -87,6 +104,7 @@ Thread
 Tree
 TreePlayer
 AtReconstruction
+AtTools
 AtTpcMap
 FairTools
 Geom

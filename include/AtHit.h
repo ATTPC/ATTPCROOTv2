@@ -116,11 +116,14 @@ protected:
    //!< Cluster ID having this hit
    Int_t fClusterID;
 
-   Int_t fHitMult; //!< Hit multiplicity in the pad where the hit was found
+   
+   Int_t fHitMult; //!<Hit multiplicity in the pad where the hit was found
 
    std::vector<AtHit::MCSimPoint> fMCSimPointArray;
 
    bool kIsAux;
+
+   
 
    ClassDef(AtHit, 3);
 };

@@ -21,7 +21,8 @@ set(SRCS
 
   AtParsers.cxx
   AtELossManager.cxx
-
+  AtVirtualTerminal.cxx
+  AtKinematics.cxx
   )
 
 Set(DEPENDENCIES

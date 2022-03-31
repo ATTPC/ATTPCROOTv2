@@ -70,39 +70,6 @@
 
 #include <boost/filesystem.hpp>
 
-struct trackSegment{
-  Double_t eLoss;
-  TVector3 iniPos;
-  TVector3 deltaMom;
-  TVector3 deltaPos;
-  Double_t theta;
-  Double_t phi;
-  UInt_t   id;
-  
-  friend std::ostream& operator<<(std::ostream& os, const trackSegment& ts);
-};  
-
-std::ostream& operator<<(std::ostream& os, const trackSegment& ts)
-{
-  os << "\n";
-  os << " Track segment : "<<ts.id<< " - Momentum:  " << ts.deltaMom.X() << " - " << ts.deltaMom.Y() << " - " << ts.deltaMom.Z()<<" - Energy Loss : "<<ts.eLoss<<"\n";
-  os << " =============   - Position :  " << ts.iniPos.X() << " - " << ts.iniPos.Y() << " - " << ts.iniPos.Z()<<" . Mag Dir : "<<ts.iniPos.Mag()<<"\n";
-  os << " =============   - Position direction :  " << ts.deltaPos.X() << " - " << ts.deltaPos.Y() << " - " << ts.deltaPos.Z()<<" . Mag Dir : "<<ts.deltaPos.Mag()<<"\n";
-  os << " =============   - Theta    :  " << ts.theta*TMath::RadToDeg() <<" - Phi : "<<ts.phi*TMath::RadToDeg()<<"\n";
-  return os;
-}
-
-struct firstOrbit
-{
-  Double_t POCA;
-  Double_t Z;
-  Double_t phi;
-  Double_t length;
-  Double_t eLoss;
-}; 
-
-
-
 class FitManager{
 
 public:
@@ -112,14 +79,12 @@ public:
 
   //Event display
   Bool_t EnableGenfitDisplay();
-  genfit::EventDisplay* GetEventDisplay() {return display;}
-  
+
   //Setters
   Bool_t SetFitters(Bool_t simConv);
   Bool_t SetGeometry(TString file,Float_t field,Float_t density);  
   Bool_t SetInputFile(TString& file,std::size_t firstEve, std::size_t lastEve);
   Bool_t SetOutputFile(TString& file);
-  void SetFitDirection(Int_t direction) {fFitDirection = direction;}
 
   //Getters
   std::shared_ptr<TTreeReader> GetReader() { return fReader;}
@@ -136,7 +101,6 @@ public:
 
   //Fit management
   Bool_t FitTracks(std::vector<AtTrack> &tracks);
-  void EnableMerging(Bool_t merging) {fEnableMerging = merging;}
   
   //TODO: Move to tools and AtFitter
   Double_t GetNPeaksHRS(std::vector<Int_t> *timeMax, std::vector<Float_t> *adcMax, double *adc_test);
@@ -150,8 +114,6 @@ private:
   Bool_t fSimulationConv;
   Float_t fMagneticField;
   Float_t fGasDensity;
-  Bool_t fEnableMerging;
-  Int_t fFitDirection;
   std::vector<AtTools::IonFitInfo>* ionList;
   AtTools::AtParsers fParser;
   
@@ -166,10 +128,6 @@ private:
   std::shared_ptr<TTreeReaderValue<TClonesArray>> fEveArray;
   std::vector<AtFITTER::AtFitter*> fFitters;
   AtFITTER::AtFitter* fFitter;
-  std::shared_ptr<AtTools::AtKinematics> fKinematics;
-  firstOrbit GetFirstOrbit(genfit::Track *track, genfit::AbsTrackRep *rep, TVector3 vertex);
-  void ConstructTrack(const genfit::StateOnPlane *prevState, const genfit::StateOnPlane *state,
-                    const genfit::AbsTrackRep *rep, std::vector<TVector3> &track, std::vector<trackSegment> &segments);
   
 public:
   //Output tree format (TODO: To be moved to other src file)
