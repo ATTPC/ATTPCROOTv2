@@ -105,17 +105,26 @@ void SpaceChargeCorrection1(int runNumber = 206)
    psaTask->SetPersistence(kTRUE);
 
    // Add SC Model
-   auto SCModel = std::make_unique<LineChargeModel>();
-   auto SCTask = new SpaceChargeTask(std::move(SCModel));
+   auto SCModel = std::make_unique<AtLineChargeModel>();
+   auto SCTask = new AtSpaceChargeTask(std::move(SCModel));
    SCTask->SetInputBranchName("AtEventFiltered");
-   //
-   
+
+   AtRansacTask *ransacTask = new AtRansacTask();
+   ransacTask->SetPersistence(kTRUE);
+   ransacTask->SetVerbose(kFALSE);
+   ransacTask->SetDistanceThreshold(20.0);
+   ransacTask->SetTiltAngle(0);
+   ransacTask->SetMinHitsLine(10);
+   ransacTask->SetFullMode();
+   ransacTask->SetInputBranch("AtEventCorrected");
+
    // Add unpacker to the run
    run->AddTask(unpackTask);
    run->AddTask(reduceTask);
    run->AddTask(filterTask);
    run->AddTask(psaTask);
    run->AddTask(SCTask);
+   run->AddTask(ransacTask);
 
    std::cout << "***** Starting Init ******" << std::endl;
    run->Init();
@@ -125,7 +134,7 @@ void SpaceChargeCorrection1(int runNumber = 206)
    auto numEvents = unpackTask->GetNumEvents();
 
    // numEvents = 1700;//217;
-   // numEvents = 100;
+   numEvents = 200;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 

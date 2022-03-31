@@ -37,13 +37,18 @@ public:
    AtEvent(const AtEvent &copy) = default;
    ~AtEvent() = default;
 
+   void Clear(Option_t *opt = nullptr) override;
+
+   // Copies everything except the hit array from the passed AtEvent
+   void CopyFrom(const AtEvent &event);
+
    // Adds a new hit to the hit array, and returns a referece to the new hit to be
    // filled. This is done to avoid the create and subsequent copy of a hit and also
    // avoid dealing with the memory managment
    // Takes arguments to any constructor of AtHit, leaving out the first (the hit ID).
    // AtEvent handles the assignment of hit IDs to ensure they are unique within an event.
    template <typename... Ts>
-   AtHit &AddHit(Ts &&... params)
+   AtHit &AddHit(Ts &&...params)
    {
       LOG(debug) << "Adding hit with ID " << fHitArray.size() << " to event " << fEventID;
       fHitArray.emplace_back(fHitArray.size(), std::forward<Ts>(params)...);
@@ -72,7 +77,12 @@ public:
    void SetIsGood(Bool_t value) { fIsGood = value; }
    void SetIsInGate(Bool_t value) { fIsInGate = value; }
 
-   void SetMultiplicityMap(std::map<Int_t, Int_t> MultiMap) { fMultiplicityMap = std::move(MultiMap); }
+   void SetMultiplicityMap(std::map<Int_t, Int_t> MultiMap)
+   {
+      std::cout << "Input map size: " << MultiMap.size() << std::endl;
+      fMultiplicityMap = std::move(MultiMap);
+      std::cout << "Iternal map size: " << fMultiplicityMap.size() << std::endl;
+   }
    void SetMeshSignal(const traceArray &mesharray);
    void SetMeshSignal(Int_t idx, Float_t val);
 
@@ -86,6 +96,7 @@ public:
    Double_t GetRhoVariance() const { return fRhoVariance; }
    const traceArray &GetMesh() const { return fMeshSig; }
    Int_t GetHitPadMult(Int_t PadNum); // Returns the multiplicity of the pad where this hit belongs to
+   const std::map<Int_t, Int_t> &GetMultiMap() { return fMultiplicityMap; }
 
    Bool_t IsGood() const { return fIsGood; }
    Bool_t IsInGate() const { return fIsInGate; }
@@ -93,7 +104,7 @@ public:
    void SortHitArray();
    void SortHitArrayTime();
 
-   ClassDef(AtEvent, 4);
+   ClassDefOverride(AtEvent, 4);
 };
 
 #endif

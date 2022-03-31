@@ -66,7 +66,6 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          gthreshold = fThreshold; // threshold for big pads (or all other not small)
 
       Double_t QHitTot = 0.0;
-      Int_t PadHitNum = 0;
       XYZPoint HitPos;
       ROOT::Math::Rotation3D HitPosRot;
 
@@ -265,7 +264,7 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          // PadMultiplicity.insert(std::pair<Int_t,Int_t>(PadNum,PadHitNum));
 
          //#pragma omp ordered
-         PadMultiplicity.insert(std::pair<Int_t, Int_t>(PadNum, PadHitNum));
+         PadMultiplicity.insert(std::pair<Int_t, Int_t>(pad->GetPadNum(), 1));
 
       } // if Valid Num Peaks
 

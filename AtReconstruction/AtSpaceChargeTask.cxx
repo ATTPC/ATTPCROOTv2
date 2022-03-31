@@ -3,13 +3,9 @@
 
 #include "FairLogger.h"
 #include "FairRootManager.h"
-#include "FairRunAna.h"
 
-#include "AtRawEvent.h"
 #include "AtEvent.h"
 #include "TClonesArray.h"
-
-#include <iostream>
 
 using XYZPoint = ROOT::Math::XYZPoint;
 
@@ -33,8 +29,6 @@ InitStatus AtSpaceChargeTask::Init()
       return kFATAL;
    }
 
-   // fSCModel->Init();
-
    FairRootManager::Instance()->Register(fOuputBranchName.data(), "AtTpc", &fOutputEventArray, fIsPersistent);
 
    return kSUCCESS;
@@ -51,11 +45,11 @@ void AtSpaceChargeTask::Exec(Option_t *opt)
 
    auto inputEvent = dynamic_cast<AtEvent *>(fInputEventArray->At(0));
    auto outputEvent = dynamic_cast<AtEvent *>(fOutputEventArray.ConstructedAt(0));
-
+   outputEvent->CopyFrom(*inputEvent);
    for (auto &inHit : inputEvent->GetHitArray()) {
 
       XYZPoint newPosition;
-      newPosition = fSCModel->DirectCorrection(inHit.GetPosition());
+      newPosition = fSCModel->ApplySpaceCharge(inHit.GetPosition());
       auto newHit = outputEvent->AddHit(inHit);
       newHit.SetPosition(newPosition);
    }
