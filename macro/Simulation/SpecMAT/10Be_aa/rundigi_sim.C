@@ -37,7 +37,7 @@ void rundigi_sim(TString mcFile = "./data/attpcsim.root")
    auto fMapPtr = std::make_shared<AtSpecMATMap>(3174);
    fMapPtr->ParseXMLMap(scriptdir.Data());
    fMapPtr->GeneratePadPlane();
-   //mapping->ParseInhibitMap("./data/inhibit.txt", AtMap::kTotal);
+   // mapping->ParseInhibitMap("./data/inhibit.txt", AtMap::kTotal);
 
    // __ AT digi tasks___________________________________
 
@@ -48,12 +48,11 @@ void rundigi_sim(TString mcFile = "./data/attpcsim.root")
    pulse->SetPersistence(kTRUE);
    pulse->SetSaveMCInfo();
    pulse->SetMap(fMapPtr);
-   //pulse->SelectDetectorId(kSpecMAT);
+   // pulse->SelectDetectorId(kSpecMAT);
 
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
    reduceTask->SetInputBranch("AtRawEvent");
    reduceTask->SetReductionFunction(&reduceFunc);
-   
 
    AtPSASimple2 *psa = new AtPSASimple2();
    psa->SetThreshold(10);

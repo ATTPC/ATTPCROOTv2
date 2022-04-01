@@ -5,7 +5,7 @@ void run_eve(TString InputDataFile = "output_digi.root", TString OutputDataFile 
    fLogger->SetLogToScreen(kTRUE);
    fLogger->SetLogVerbosityLevel("MEDIUM");
    TString dir = getenv("VMCWORKDIR");
-   
+
    TString scriptfile = "LookupSpecMATnoScint.xml";
    TString scriptdir = dir + "/scripts/" + scriptfile;
    TString geoFile = "SpecMAT_He1Bar.root";
@@ -36,7 +36,7 @@ void run_eve(TString InputDataFile = "output_digi.root", TString OutputDataFile 
    eve->Set3DHitStyleBox();
    eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
    eve->SetSaveTextData();
-   //eve->SetMap(fMapPtr);
+   // eve->SetMap(fMapPtr);
    eve->SelectDetectorId(kSpecMAT);
    eve->UnpackHoughSpace();
 

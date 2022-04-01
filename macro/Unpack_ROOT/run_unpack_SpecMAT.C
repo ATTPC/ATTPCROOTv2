@@ -54,8 +54,7 @@ void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root")
    fair::Logger::SetVerbosity("user1");
    fair::Logger::SetConsoleSeverity("debug");
    */
-      
-   
+
    FairRunAna *run = new FairRunAna();
    run->SetOutputFile(outputFile);
    run->SetGeomFile(geoManFile);
