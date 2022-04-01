@@ -1,3 +1,7 @@
+// Code to take MC tracks and digitize
+
+bool reduceFunc(AtRawEvent *evt);
+
 void rundigi_sim(TString mcFile = "./data/attpcsim.root")
 {
    // -----   Timer   --------------------------------------------------------
@@ -9,13 +13,14 @@ void rundigi_sim(TString mcFile = "./data/attpcsim.root")
    TString scriptdir = dir + "/scripts/" + scriptfile;
    TString dataDir = dir + "/macro/data/";
    TString geomDir = dir + "/geometry/";
+   TString OutFile = "./output_digi.root";
    gSystem->Setenv("GEOMPATH", geomDir.Data());
 
    // ------------------------------------------------------------------------
    // __ Run ____________________________________________
    FairRunAna *fRun = new FairRunAna();
-   fRun->SetInputFile(mcFile);
-   fRun->SetOutputFile("output_digi.root");
+   fRun->SetSource(new FairFileSource(mcFile));
+   fRun->SetSink(new FairRootFileSink(OutFile));
 
    TString parameterFile = "SpecMAT.10Be_aa_sim.par";
    TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -28,28 +33,45 @@ void rundigi_sim(TString mcFile = "./data/attpcsim.root")
    parIo1->open(digiParFile.Data(), "in");
    rtdb->setFirstInput(parIo1);
 
+   // Create the map that will be pased to tasks that require it
+   auto fMapPtr = std::make_shared<AtSpecMATMap>(3174);
+   fMapPtr->ParseXMLMap(scriptdir.Data());
+   fMapPtr->GeneratePadPlane();
+   //mapping->ParseInhibitMap("./data/inhibit.txt", AtMap::kTotal);
+
    // __ AT digi tasks___________________________________
 
-   AtClusterizeTask *clusterizer = new AtClusterizeTask();
+   AtClusterizeTask *clusterizer = new AtClusterizeLineTask();
    clusterizer->SetPersistence(kFALSE);
 
-   AtPulseTask *pulse = new AtPulseTask();
+   AtPulseTask *pulse = new AtPulseLineTask();
    pulse->SetPersistence(kTRUE);
    pulse->SetSaveMCInfo();
-   pulse->SelectDetectorId(kSpecMAT);
+   pulse->SetMap(fMapPtr);
+   //pulse->SelectDetectorId(kSpecMAT);
+
+   AtDataReductionTask *reduceTask = new AtDataReductionTask();
+   reduceTask->SetInputBranch("AtRawEvent");
+   reduceTask->SetReductionFunction(&reduceFunc);
+   
 
    AtPSASimple2 *psa = new AtPSASimple2();
+   psa->SetThreshold(10);
+   psa->SetMaxFinder();
    // psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
    // psa -> SetBaseCorrection(kFALSE);
    // psa -> SetTimeCorrection(kFALSE);
 
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);
-   psa->SetThreshold(10);
-   psa->SetMaxFinder();
 
-   AtPRAtask *praTask = new AtPRAtask();
-   praTask->SetPersistence(kTRUE);
+   AtRansacTask *ransacTask = new AtRansacTask();
+   ransacTask->SetPersistence(kTRUE);
+   ransacTask->SetVerbose(kFALSE);
+   ransacTask->SetDistanceThreshold(20.0);
+   ransacTask->SetTiltAngle(0);
+   ransacTask->SetMinHitsLine(10);
+   ransacTask->SetFullMode();
 
    /*ATTriggerTask *trigTask = new ATTriggerTask();
    trigTask  ->  SetAtMap(scriptdir);
@@ -57,7 +79,9 @@ void rundigi_sim(TString mcFile = "./data/attpcsim.root")
 
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
+   fRun->AddTask(reduceTask);
    fRun->AddTask(psaTask);
+   fRun->AddTask(ransacTask);
    // fRun -> AddTask(praTask);
    // fRun -> AddTask(trigTask);
 
@@ -76,4 +100,9 @@ void rundigi_sim(TString mcFile = "./data/attpcsim.root")
    cout << "Real time " << rtime << " s, CPU time " << ctime << " s" << endl;
    cout << endl;
    // ------------------------------------------------------------------------
+}
+
+bool reduceFunc(AtRawEvent *evt)
+{
+   return (evt->GetNumPads() > 0) && evt->IsGood();
 }

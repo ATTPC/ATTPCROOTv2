@@ -10,12 +10,14 @@ void runreco_sim(TString mcFile = "output_digi.root")
    TString dataDir = dir + "/macro/data/";
    TString geomDir = dir + "/geometry/";
    gSystem->Setenv("GEOMPATH", geomDir.Data());
+   TString outFile = "output_digi_PRA.root"; 
 
    // ------------------------------------------------------------------------
    // __ Run ____________________________________________
    FairRunAna *fRun = new FairRunAna();
-   fRun->SetInputFile(mcFile);
-   fRun->SetOutputFile("output_digi_PRA.root");
+   fRun->SetSource(new FairFileSource(mcFile));
+   fRun->SetSink(new FairRootFileSink(outFile));
+   //fRun->SetGeomFile(GeoDataPath);
 
    TString parameterFile = "SpecMAT.10Be_aa_sim.par";
    TString digiParFile = dir + "/parameters/" + parameterFile;
