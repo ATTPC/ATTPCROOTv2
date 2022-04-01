@@ -12,8 +12,10 @@ void run_eve(TString InputDataFile = "./data/run_9993.root",
    TString GeoDataPath = dir + "/geometry/" + geoFile;
 
    FairRunAna *fRun = new FairRunAna();
-   fRun->SetInputFile(InputDataPath);
-   fRun->SetOutputFile(OutputDataPath);
+   FairRootFileSink *sink = new FairRootFileSink(OutputDataFile);
+   FairFileSource *source = new FairFileSource(InputDataFile);
+   fRun->SetSource(source);
+   fRun->SetSink(sink);
    fRun->SetGeomFile(GeoDataPath);
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();

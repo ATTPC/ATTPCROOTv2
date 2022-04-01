@@ -20,8 +20,8 @@ void Be10He4_sim(Int_t nEvents = 50, TString mcEngine = "TGeant4")
 
    // -----   Create simulation run   ----------------------------------------
    FairRunSim *run = new FairRunSim();
-   run->SetName(mcEngine);      // Transport engine
-   run->SetOutputFile(outFile); // Output file
+   run->SetName(mcEngine);                      // Transport engine
+   run->SetSink(new FairRootFileSink(outFile)); // Output file
    FairRuntimeDb *rtdb = run->GetRuntimeDb();
    // ------------------------------------------------------------------------
 

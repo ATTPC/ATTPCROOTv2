@@ -4,10 +4,11 @@
 #define cGREEN "\033[1;32m"
 
 #include <sys/stat.h>
+#include "FairLogger.h"
 
 bool check_file(const std::string &name);
 
-void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root", TString mappath = "../../")
+void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root")
 {
 
    if (!check_file(dataFile.Data())) {
@@ -26,35 +27,33 @@ void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root", TStr
    TString scriptfile = "LookupSpecMATnoScint.xml";
    TString dir = getenv("VMCWORKDIR");
    TString scriptdir = dir + "/scripts/" + scriptfile;
-   TString dataDir = dir + "/macro/data/";
    TString geomDir = dir + "/geometry/";
    gSystem->Setenv("GEOMPATH", geomDir.Data());
 
-   // Parameter file name
-   TString parFile = "./data/attpcpar.root";
-
    TString outputFile = "./data/run_9993.root";
    // TString mcParFile   = dataDir + name + ".params.root";
-   TString loggerFile = dataDir + "SpecMATLog.log";
+   TString loggerFile = "./data/SpecMATLog.log";
 
    TString parameterFile = "SpecMAT.run_9993.par";
    TString triggerFile = "SpecMAT.trigger.par";
-   TString trigParFile = dir + "/parameters/" + triggerFile;
-   TString digiParFile = dir + "/parameters/" + parameterFile;
+   TString trigParFile = "./data/" + triggerFile;
+   TString digiParFile = "./data/" + parameterFile;
 
    TString geoManFile = geomDir + "SpecMAT_He1Bar.root";
 
-   TString inimap = mappath + "inhib.txt";
-   TString lowgmap = mappath + "lowgain.txt";
-   TString xtalkmap = mappath + "beampads_e15503b.txt";
+   /*TString inimap = mappath + "inhib.txt";
+     TString lowgmap = mappath + "lowgain.txt";
+     TString xtalkmap = mappath + "beampads_e15503b.txt";
+   */
 
    // -----------------------------------------------------------------
    // Logger
-   FairLogger *fLogger = FairLogger::GetLogger();
-   fLogger->SetLogFileName(loggerFile.Data());
-   fLogger->SetLogToScreen(kTRUE);
-   fLogger->SetLogToFile(kTRUE);
-   fLogger->SetLogVerbosityLevel("MEDIUM");
+   /*auto verbSpec =
+      fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
+   fair::Logger::DefineVerbosity("user1", verbSpec);
+   fair::Logger::SetVerbosity("user1");
+   fair::Logger::SetConsoleSeverity("debug");
+   */
 
    FairRunAna *run = new FairRunAna();
    run->SetOutputFile(outputFile);
@@ -67,78 +66,37 @@ void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root", TStr
    FairParAsciiFileIo *parIo2 = new FairParAsciiFileIo();
    parIo2->open(trigParFile.Data(), "in");
    rtdb->setSecondInput(parIo2);
-
+   rtdb->getContainer("AtDigiPar");
    // ------------------------------------------------------------------------
-
-   // Settings
-   Bool_t fUseDecoder = kTRUE;
-   if (dataFile.IsNull() == kTRUE)
-      fUseDecoder = kFALSE;
-
-   Bool_t fUseSeparatedData = kFALSE;
-   if (dataFile.EndsWith(".txt"))
-      fUseSeparatedData = kTRUE;
-
-   /*
-    *     Unpacking options:
-    *         - SetUseSeparatedData:      To be used with 10 CoBo files without
-    * merging. Mainly for the ATTPC. Enabled if the input file is a txt.
-    *         - SetPseudoTopologyFrame:   Used to force the graw file to have a
-    * Topology frame.
-    *         - SetPersistance:           Save the unpacked data into the root
-    * file.
-    *         - SetMap:                   Chose the lookup table.
-    *         - SetMapOpt                 Chose the pad plane geometry. In
-    * addition forces the unpacker to use Basic Frames for 1 single file (p-ATTPC
-    * case) of Layered Frames for Merged Data (10 Cobos merged data).
-    */
 
    // Create the map that will be pased to tasks that require it
    auto fMapPtr = std::make_shared<AtSpecMATMap>(3174);
    fMapPtr->ParseXMLMap(scriptdir.Data());
-   fMapPtr->GenerateAtTpc();
-   // mapPtr->SetInhibitMaps(inimap,lowgmap,xtalkmap); // TODO: Only
-   // implemented for fUseSeparatedData!!!!!!!!!!!!!!!!!!!1
+   fMapPtr->GeneratePadPlane();
 
-   AtDecoderSpecMATTask *fDecoderTask = new AtDecoderSpecMATTask();
-   fDecoderTask->SetUseSeparatedData(fUseSeparatedData);
-   if (fUseSeparatedData)
-      fDecoderTask->SetPseudoTopologyFrame(kTRUE); //! This calls the method 10 times so for less than 10 CoBos
-                                                   //! ATCore2 must be modified
-   Bool_t IsCoboPositivePolarity[4] = {true, false, true,
-                                       true}; // Positive polarity for padplane, negative for scintillators
-   fDecoderTask->SetPositivePolarity(IsCoboPositivePolarity);
-   fDecoderTask->SetPersistence(kTRUE);
-   // fDecoderTask->SetMap(scriptdir.Data());
-   fDecoderTask->SetMap(fMapPtr);
-   fDecoderTask->SetNumCobo(4);
-   Bool_t IsCoboPadPlane[4] = {true, false, true, true};
-   fDecoderTask->SetIsCoboPadPlane(IsCoboPadPlane);
-   // fDecoderTask->SetMapOpt(2); // Does not do anything for SpecMAT for the moment
-   fDecoderTask->AddData(dataFile);
+   // Set arrays required of unpacker
+   std::vector<bool> isCoboPadPlane = {true, false, true, true};
+   std::vector<bool> isCoboNegativePolarity;
+   // Positive polarity for padplane, negative for scintillators
+   for (auto elem : isCoboPadPlane)
+      isCoboNegativePolarity.push_back(!elem);
 
-   run->AddTask(fDecoderTask);
-
-   AtPulseTask *pulse = new AtPulseTask();
-   pulse->SetPersistence(kTRUE);
-   pulse->SetSaveMCInfo();
-   // pulse->SelectDetectorId(kSpecMAT);
-   pulse->SetMap(fMapPtr);
-   run->AddTask(pulse);
+   // Create unpacker and fill set required info
+   auto unpacker = std::make_unique<AtROOTUnpacker>(fMapPtr);
+   unpacker->SetIsPadPlaneCobo(isCoboPadPlane);
+   unpacker->SetIsNegativePolarity(isCoboNegativePolarity);
+   unpacker->SetInputFileName(dataFile.Data());
+   // Create task and add to run
+   auto unpackTask = new AtUnpackTask(std::move(unpacker));
+   unpackTask->SetPersistence(true);
+   run->AddTask(unpackTask);
 
    AtPSASimple2 *psa = new AtPSASimple2();
+   psa->SetThreshold(50);
+   psa->SetMaxFinder();
+
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);
-   psa->SetThreshold(50);
-   // psaTask -> SetPSAMode(1); //NB: 1 is ATTPC - 2 is pATTPC
-   // psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder
-   // but not both at the same time
-   psa->SetMaxFinder();
-   // psa-> SetBaseCorrection(kTRUE); //Directly apply the base line correction
-   // to the pulse amplitude to correct for the mesh induction. If false the
-   // correction is just saved psa -> SetTimeCorrection(kTRUE); //Interpolation
-   // around the maximum of the signal peak. Only affect Z calibration at PSA
-   // stage
    run->AddTask(psaTask);
 
    /*
@@ -160,7 +118,9 @@ void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root", TStr
      run->AddTask(clusterizer);
      */
 
+   std::cout << std::endl << "**** Begining Init ****" << std::endl;
    run->Init();
+   std::cout << "**** Ending Init ****" << std::endl << std::endl;
 
    // run -> RunOnTBData();
    run->Run(0, 30);
