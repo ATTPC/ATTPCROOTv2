@@ -65,4 +65,13 @@
 <MassNumber>11</MassNumber>
 <ElossFile>/resources/energy_loss/Be11_D2_600torr.txt</ElossFile>
 </ion>
+<ion>
+<ID>7</ID>
+<Ion>He-3</Ion>
+<PDG>1000020030</PDG>
+<Mass>3.016029</Mass>
+<AtomicNumber>2</AtomicNumber>
+<MassNumber>3</MassNumber>
+<ElossFile>/resources/energy_loss/He3_D2_600torr.txt</ElossFile>
+</ion>
 </e20009_ionList>

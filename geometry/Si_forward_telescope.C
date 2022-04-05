@@ -26,17 +26,13 @@ const TString MediumSteel = "steel";
 const TString MediumPCB = "pcbmvd";
 const TString MediumVacuum = "vacuum4";
 
-TGeoManager *gGeoMan = new TGeoManager("ATTPCSi", "ATTPCSi");// Pointer to TGeoManager instance
-TGeoVolume *gModules; // Global storage for module types
+TGeoManager *gGeoMan = new TGeoManager("ATTPCSi", "ATTPCSi"); // Pointer to TGeoManager instance
+TGeoVolume *gModules;                                         // Global storage for module types
 
 void create_materials_from_media_file();
 TGeoVolume *create_detector();
 
-void Si_forward_telescope()
-{ 
-
-
-}
+void Si_forward_telescope() {}
 
 void create_materials_from_media_file()
 {
@@ -57,7 +53,6 @@ void create_materials_from_media_file()
    FairGeoMedium *vacuum4 = geoMedia->getMedium("vacuum4");
    FairGeoMedium *silicon = geoMedia->getMedium("silicon");
    FairGeoMedium *csi = geoMedia->getMedium("csi");
-   
 
    // include check if all media are found
 
@@ -66,11 +61,6 @@ void create_materials_from_media_file()
    geoBuild->createMedium(pcb);
    geoBuild->createMedium(vacuum4);
    geoBuild->createMedium(csi);
-   
 }
 
-TGeoVolume *create_detector()
-{
-
-
-}
+TGeoVolume *create_detector() {}

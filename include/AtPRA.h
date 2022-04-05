@@ -31,8 +31,8 @@ public:
    void SetMeanDistance(Float_t meanDistance) { fMeanDistance = meanDistance; }
    bool kNN(std::vector<AtHit> *hits, AtHit &hit, int k);
 
-   void SetkNN(Double_t knn) { fKNN = knn;}
-   void SetStdDevMulkNN(Double_t stdDevMul) { fStdDevMulkNN = stdDevMul;}
+   void SetkNN(Double_t knn) { fKNN = knn; }
+   void SetStdDevMulkNN(Double_t stdDevMul) { fStdDevMulkNN = stdDevMul; }
    void SetkNNDist(Double_t dist) { fkNNDist = dist; }
    void SetPrunning() { kSetPrunning = kTRUE; }
 
@@ -50,9 +50,9 @@ protected:
    Int_t fMinHits;
    Float_t fMeanDistance;
 
-   Int_t fKNN; //<! Number of nearest neighbors kNN
-   Double_t fStdDevMulkNN;//<! Std dev multiplier for kNN
-   Double_t fkNNDist;     //<! Distance threshold for outlier rejection in kNN
+   Int_t fKNN;             //<! Number of nearest neighbors kNN
+   Double_t fStdDevMulkNN; //<! Std dev multiplier for kNN
+   Double_t fkNNDist;      //<! Distance threshold for outlier rejection in kNN
 
    Bool_t kSetPrunning; //<<! Enable prunning of tracks
 

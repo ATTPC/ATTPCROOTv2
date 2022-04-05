@@ -200,7 +200,8 @@ public:
    Int_t trackID;
    Int_t ICMult;
    Int_t particleQ;
-
+   Int_t evMult;
+  
    std::vector<Float_t> EFitVec;
    std::vector<Float_t> AFitVec;
    std::vector<Float_t> PhiFitVec;
@@ -237,6 +238,8 @@ public:
    std::vector<Float_t> phiOrbZVec;
    std::vector<Float_t> lengthOrbZVec;
    std::vector<Float_t> eLossOrbZVec;
-  
-  
+   std::vector<Float_t> brhoVec;
+   std::vector<Float_t> eLossADC;
+   std::vector<std::string> pdgVec;
+   std::vector<Int_t> trackPointsVec;
 };  

@@ -84,8 +84,7 @@ AtTools::IonFitInfo AtTools::AtParsers::ParseIon(TXMLNode *node, Int_t id)
 	      
 	    }
 	    if (strcmp(node->GetNodeName(), "Mass") == 0){
-	      mass = std::stod(node->GetText());
-	      
+          mass = std::stod(node->GetText());
             }
             if (strcmp(node->GetNodeName(), "AtomicNumber") == 0){
 	      atomicNumber = std::atoi(node->GetText());
@@ -104,6 +103,6 @@ AtTools::IonFitInfo AtTools::AtParsers::ParseIon(TXMLNode *node, Int_t id)
      }
  
       AtTools::IonFitInfo ionInfo={ionName, PDG, mass,atomicNumber,MassNumber,eLossFile};
-         
+
       return ionInfo;
 }  

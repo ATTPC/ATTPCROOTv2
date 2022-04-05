@@ -9,8 +9,7 @@
 
 namespace AtTools {
 
-
-  class AtVirtualTerminal : public TObject {
+class AtVirtualTerminal : public TObject {
 
 public:
    AtVirtualTerminal();
@@ -19,13 +18,12 @@ public:
    Int_t CreateXterm();
    void StreamViaXTerm();
 
-  private:
+private:
    std::string xTermID;
-   
+
    ClassDef(AtVirtualTerminal, 1)
 };
 
 } // namespace AtTools
 
 #endif
-  
