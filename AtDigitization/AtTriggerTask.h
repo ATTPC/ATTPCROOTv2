@@ -9,9 +9,7 @@
 #define AtTriggerTask_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TString.h>
-
 #include <FairTask.h>
 
 class AtEvent;

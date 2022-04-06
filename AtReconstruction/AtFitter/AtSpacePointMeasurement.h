@@ -20,7 +20,6 @@
 #define ATSPACEPOINTMEASUREMENT
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 
 #include "SpacepointMeasurement.h"
 

@@ -9,14 +9,12 @@
 #define AtTPC_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TString.h>
-#include <string>
-#include <utility>
-
 #include <FairDetector.h>
 #include <TVector3.h>
 #include <TLorentzVector.h>
+#include <string>
+#include <utility>
 
 class AtMCPoint;
 class FairVolume;

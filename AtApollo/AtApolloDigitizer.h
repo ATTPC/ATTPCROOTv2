@@ -10,10 +10,8 @@
 #define ATAPOLLODIGITIZER_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-//Needed for streamer generation
+// Needed for streamer generation
 #include <TClonesArray.h> // IWYU pragma: keep
-
 #include <FairTask.h>
 
 class AtApolloCrystalCalData;

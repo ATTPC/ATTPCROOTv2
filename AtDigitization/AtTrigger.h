@@ -2,10 +2,9 @@
 #define AtTrigger_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-
 #include <TObject.h>
 #include <TString.h>
+
 #include "AtHit.h"
 
 class AtEvent;

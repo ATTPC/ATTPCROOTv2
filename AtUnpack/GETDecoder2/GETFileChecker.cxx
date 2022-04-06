@@ -11,15 +11,13 @@
 // GETDecoder
 #include "GETFileChecker.h"
 
-#include <RtypesCore.h>
-// STL
-#include <iostream>
-
 // ROOT
 #include <TString.h>
 #include <TSystem.h>
 #include <TObjArray.h>
 #include <TObjString.h>
+// STL
+#include <iostream>
 
 TString GETFileChecker::CheckFile(TString filename)
 {

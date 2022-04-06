@@ -9,9 +9,7 @@
 #define ATMCPOINT_H 1
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TString.h>
-
 #include <FairMCPoint.h>
 #include <TVector3.h>
 

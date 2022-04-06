@@ -1,11 +1,10 @@
 #ifndef ATFILTERTASK_H
 #define ATFILTERTASK_H
 
-#include <RtypesCore.h>
 #include <TString.h>
-
 // FairRoot classes
 #include <FairTask.h>
+#include <Rtypes.h>
 
 // ATTPCROOT classes;
 class AtFilter;

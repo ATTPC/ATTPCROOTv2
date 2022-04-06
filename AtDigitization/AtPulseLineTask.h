@@ -9,7 +9,6 @@
 #define AtPULSELINETASK_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <map>
 #include <vector>
 

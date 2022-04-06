@@ -2,8 +2,6 @@
 #define AtGAS_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-
 // ROOT classes
 #include <TString.h>
 

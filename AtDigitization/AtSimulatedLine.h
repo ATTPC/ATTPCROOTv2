@@ -3,7 +3,6 @@
 
 #include <Math/Vector3Dfwd.h>
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <Math/Vector3D.h>
 #include <cstddef>
 

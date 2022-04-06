@@ -8,8 +8,6 @@
 #define AtTPCGAMMADUMMYGENERAtOR_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-
 #include <FairGenerator.h>
 
 class FairPrimaryGenerator;

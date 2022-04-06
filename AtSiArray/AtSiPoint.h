@@ -2,11 +2,10 @@
 #define ATSIPOINT_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TString.h>
+#include <TVector3.h>
 
 #include "AtMCPoint.h"
-#include <TVector3.h>
 
 class TBuffer;
 class TClass;

@@ -10,7 +10,6 @@
 #define AtAUXPAD_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <string>
 #include <utility>
 

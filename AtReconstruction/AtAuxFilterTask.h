@@ -7,14 +7,13 @@
  *
  */
 
-#include <RtypesCore.h>
-#include <string>
-#include <vector>
-
 // FairRoot classes
 #include <FairTask.h>
 // ROOT classes
 #include <TString.h>
+#include <Rtypes.h>
+#include <string>
+#include <vector>
 
 // ATTPCROOT classes;
 class AtFilter;

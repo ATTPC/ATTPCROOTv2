@@ -9,8 +9,6 @@
 #define AtAVALANCHETASK_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-
 #include <FairTask.h>
 
 class AtDigiPar;

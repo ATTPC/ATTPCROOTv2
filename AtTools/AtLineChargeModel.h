@@ -4,7 +4,6 @@
 
 #include <Math/Point3Dfwd.h>
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <Math/Point3D.h>
 
 #include "AtSpaceChargeModel.h"

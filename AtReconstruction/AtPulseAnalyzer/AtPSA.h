@@ -2,14 +2,12 @@
 #define AtPSA_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TString.h>
+#include <TVector3.h>
 // STL
 #include <map>
 #include <cstddef>
 #include <utility>
-
-#include <TVector3.h>
 
 class TClonesArray;
 // AtTPCROOT classes

@@ -3,7 +3,6 @@
 
 #include <TNamed.h>
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <map>
 #include <iostream>
 #include <algorithm>

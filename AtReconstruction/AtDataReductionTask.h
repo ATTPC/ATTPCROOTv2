@@ -10,11 +10,10 @@
  *
  */
 
-#include <RtypesCore.h>
 #include <TString.h>
-#include <type_traits>
-
 #include <FairTask.h>
+#include <Rtypes.h>
+#include <type_traits>
 
 class AtRawEvent;
 class TClonesArray;

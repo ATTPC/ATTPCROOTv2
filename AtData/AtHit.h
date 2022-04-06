@@ -4,13 +4,11 @@
 #include <Math/Point3Dfwd.h>
 #include <Math/Vector3Dfwd.h>
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <Math/Point3D.h>
 #include <Math/Vector3D.h>
+#include <TObject.h>
 #include <algorithm>
 #include <vector>
-
-#include <TObject.h>
 
 class TBuffer;
 class TClass;

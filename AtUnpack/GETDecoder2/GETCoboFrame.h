@@ -2,7 +2,6 @@
 #define GETCOBOFRAME
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <iosfwd>
 
 #include "GETBasicFrame.h"

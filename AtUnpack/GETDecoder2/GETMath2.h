@@ -14,8 +14,6 @@
 #ifndef GETMAtH2
 #define GETMAtH2
 
-#include <RtypesCore.h>
-
 #include <Rtypes.h>
 
 class TBuffer;

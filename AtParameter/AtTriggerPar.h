@@ -3,13 +3,11 @@
 #define AtTRIGGERPAR_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-#include <vector>
-
 // FAIRROOT classes
 #include <FairParGenericSet.h>
 // ROOT classes
 #include <TString.h>
+#include <vector>
 
 class FairLogger;
 class FairParamList;

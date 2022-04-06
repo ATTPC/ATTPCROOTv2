@@ -14,10 +14,8 @@
 #ifndef Cave_H
 #define Cave_H
 
-#include <RtypesCore.h>
-
 #include <FairModule.h> // for FairModule
-#include <Rtypes.h> // for AtCave::Class, ClassDef, etc
+#include <Rtypes.h>     // for AtCave::Class, ClassDef, etc
 
 class TBuffer;
 class TClass;

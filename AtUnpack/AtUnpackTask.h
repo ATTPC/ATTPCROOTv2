@@ -7,13 +7,12 @@
 #define _ATUNPACKTASK_H_
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
+#include <FairTask.h>
+#include <TClonesArray.h>
 #include <memory>
 #include <string>
 
-#include <FairTask.h>
 #include "AtUnpacker.h"
-#include <TClonesArray.h>
 
 class AtRawEvent;
 class AtMap;

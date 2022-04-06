@@ -9,7 +9,6 @@
 #define ATTPCMAP_H
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
-#include <RtypesCore.h>
 
 #include "AtMap.h"
 

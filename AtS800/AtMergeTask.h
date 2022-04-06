@@ -2,12 +2,10 @@
 #define AtMergeTask_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TString.h>
-#include <vector>
-
 // FAIRROOT classes
 #include <FairTask.h>
+#include <vector>
 
 // AtTPCROOT classes
 

@@ -2,10 +2,8 @@
 #define AtTPCIonDecay_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-#include <vector>
-
 #include <FairGenerator.h>
+#include <vector>
 
 class FairPrimaryGenerator;
 class FairIon;

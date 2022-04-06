@@ -3,8 +3,6 @@
 #define AtDIGIPAR_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-
 // FAIRROOT classes
 #include <FairParGenericSet.h>
 // ROOT classes

@@ -2,7 +2,6 @@
 #define GETTOPOLOGYFRAME
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <stdint.h>
 #include <bitset>
 #include <iosfwd>

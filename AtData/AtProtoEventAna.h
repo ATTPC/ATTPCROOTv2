@@ -2,7 +2,6 @@
 #define AtPROTOEVENTANA_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TNamed.h>
 #include <vector>
 #include <utility>

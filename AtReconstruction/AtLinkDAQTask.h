@@ -22,13 +22,12 @@
  *
  */
 
-#include <RtypesCore.h>
 #include <TString.h>
 #include <TTree.h>
-#include <vector>
-
 // FairRoot classes
 #include <FairTask.h>
+#include <Rtypes.h>
+#include <vector>
 
 // HiRAEVT classes
 class HTTimestamp;

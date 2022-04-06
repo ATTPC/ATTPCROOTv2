@@ -10,7 +10,6 @@
 #define __SETTINGS_HH
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TNamed.h>
 #include <string>
 #include <iostream>

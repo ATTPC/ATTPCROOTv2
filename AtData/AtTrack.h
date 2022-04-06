@@ -3,16 +3,15 @@
 
 #include <Math/Point3Dfwd.h>
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <Math/Point3D.h>
+#include <TObject.h>
+#include <TMath.h>
 #include <algorithm>
 #include <iostream>
 #include <memory>
 #include <utility>
 #include <vector>
 
-#include <TObject.h>
-#include <TMath.h>
 // AtTPCROOT
 #include "AtHit.h"
 #include "AtHitCluster.h"

@@ -2,7 +2,6 @@
 #define GETBASICFRAME
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <iosfwd>
 
 #include "GETBasicFrameHeader.h"

@@ -12,7 +12,6 @@
 #define _ATGRAWUNPACKER_H_
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TString.h>
 #include <mutex>
 #include <vector>

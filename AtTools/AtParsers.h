@@ -9,12 +9,10 @@
 #define ATPARSERS_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TString.h>
+#include <TObject.h>
 #include <string>
 #include <vector>
-
-#include <TObject.h>
 
 class TBuffer;
 class TClass;

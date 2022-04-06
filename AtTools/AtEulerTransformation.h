@@ -8,8 +8,6 @@
 #define AtEULERTRANSFORMAtION_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-
 #include <TNamed.h>
 
 class TBuffer;

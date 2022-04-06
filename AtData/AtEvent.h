@@ -2,7 +2,6 @@
 #define AtEVENT_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TNamed.h>
 #include <map>
 #include <vector>

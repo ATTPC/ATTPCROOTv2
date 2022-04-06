@@ -2,7 +2,6 @@
 #define __S800SETTINGS_HH
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TObject.h>
 #include <string>
 

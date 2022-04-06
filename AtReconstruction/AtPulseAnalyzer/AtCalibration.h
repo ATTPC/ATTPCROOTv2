@@ -2,11 +2,9 @@
 #define AtCALIBRAtION_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-#include <array>
-
 #include <TObject.h>
 #include <TString.h>
+#include <array>
 
 class TBuffer;
 class TClass;

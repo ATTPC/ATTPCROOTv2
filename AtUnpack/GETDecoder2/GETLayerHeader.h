@@ -2,7 +2,6 @@
 #define GETLAYERHEADER
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <stdint.h>
 #include <iosfwd>
 

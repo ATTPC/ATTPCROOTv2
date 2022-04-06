@@ -2,8 +2,6 @@
 #define AtS800TASK_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-
 // FAIRROOT classes
 #include <FairTask.h>
 

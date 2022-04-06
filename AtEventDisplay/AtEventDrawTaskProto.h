@@ -2,9 +2,7 @@
 #define AtEVENTDRAWTASKPROTO_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TString.h>
-
 // FairRoot classes
 #include <FairTask.h>
 

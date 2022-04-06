@@ -14,9 +14,7 @@
 #include "AtPipe.h"
 
 #include <FairModule.h>
-#include <RtypesCore.h>
 #include <TGeoVolume.h>
-
 #include <TGeoPcon.h>
 #include <TGeoMaterial.h>
 #include <TGeoMedium.h>

@@ -8,11 +8,9 @@
 #define AtTPC_d2He_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TString.h>
-#include <vector>
-
 #include <FairGenerator.h>
+#include <vector>
 
 class FairPrimaryGenerator;
 class FairIon;

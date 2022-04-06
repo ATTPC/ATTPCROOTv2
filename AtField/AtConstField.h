@@ -23,8 +23,6 @@
 #define AtConstField_H 1
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-
 #include <FairField.h>
 
 class AtFieldPar;

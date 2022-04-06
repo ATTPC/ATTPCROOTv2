@@ -9,13 +9,11 @@
 #define AtPulseTask_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
+#include <FairTask.h>
 #include <cstddef>
 #include <iterator>
 #include <map>
 #include <memory>
-
-#include <FairTask.h>
 
 class TClonesArray;
 class AtDigiPar;

@@ -12,7 +12,6 @@
 #include <boost/multi_array.hpp>
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TNamed.h>
 #include <TString.h>
 #include <unordered_map>

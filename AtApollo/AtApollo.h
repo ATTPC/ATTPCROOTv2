@@ -9,12 +9,10 @@
 #define APOLLO_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TString.h>
-#include <string>
-
 #include <FairDetector.h>
 #include <TVector3.h>
+#include <string>
 
 class FairVolume;
 class TClonesArray;

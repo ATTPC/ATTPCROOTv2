@@ -26,6 +26,9 @@
     { include: ["<Math/GenVector/PtEtaPhiM4D.h>", "private", "<Math/Vector4D.h>", "public"]},
     { include: ["<Math/GenVector/LorentzVector.h>", "private", "<Math/Vector4D.h>", "public"]},
 
-    # Mappings for RTypes and the private stuff it includes
-    { include: ["<RTypesCore.h>", "private", "<RTypes.h>", "public"]}
+    # Mappings for Rtypes and the private stuff it includes
+    { include: ["<RtypesCore.h>", "private", "<Rtypes.h>", "public"]},
+    { symbol: ["TClass", "private", "<Rtypes.h>", "public"]},
+    { symbol: ["TMemberInspector", "private", "<Rtypes.h>", "public"]},
+    { symbol: ["TBuffer", "private", "<Rtypes.h>", "public"]}
 ]

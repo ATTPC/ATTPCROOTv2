@@ -14,8 +14,6 @@
 #define AtPEDESTAL
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-
 #include <TObject.h>
 
 class GETMath2;

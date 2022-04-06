@@ -8,7 +8,6 @@
 #define _ATROOTUNPACKER_H_
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <memory>
 #include <vector>
 

@@ -10,8 +10,6 @@
 #define ATAPOLLOCRYSTALCALDATA_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-
 #include <FairMultiLinkedData.h>
 
 class TBuffer;

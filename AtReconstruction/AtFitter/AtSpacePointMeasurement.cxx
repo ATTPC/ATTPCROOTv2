@@ -34,7 +34,7 @@ Adapted to AtTPCROOTv2 by Yassid Ayyad ayyadlim@frib.msu.edu
 
 namespace genfit {
 class AbsMeasurement;
-}  // namespace genfit
+} // namespace genfit
 
 ClassImp(genfit::AtSpacepointMeasurement)
 

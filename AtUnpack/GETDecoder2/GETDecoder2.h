@@ -14,11 +14,9 @@
 #define GETDECODER2
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
+#include <TString.h>
 #include <fstream>
 #include <vector>
-
-#include <TString.h>
 
 class GETBasicFrame;
 class GETBasicFrameHeader;

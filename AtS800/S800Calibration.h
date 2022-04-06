@@ -1,8 +1,8 @@
 #ifndef __S800CALIBRAtION_HH
 #define __S800CALIBRAtION_HH
 
-#include <RtypesCore.h>
 #include <ext/alloc_traits.h>
+#include <Rtypes.h>
 #include <algorithm>
 #include <memory>
 #include <vector>

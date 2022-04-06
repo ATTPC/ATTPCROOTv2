@@ -20,8 +20,6 @@
 #ifndef AtMCTrack_H
 #define AtMCTrack_H 1
 
-#include <RtypesCore.h>
-
 #include <TObject.h>        // for TObject
 #include <Rtypes.h>         // for Double_t, Int_t, Double32_t, etc
 #include <TLorentzVector.h> // for TLorentzVector

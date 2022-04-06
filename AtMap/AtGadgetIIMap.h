@@ -10,7 +10,6 @@
 
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <unordered_map>
 
 #include "AtMap.h"

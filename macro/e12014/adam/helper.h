@@ -44,31 +44,30 @@ TH1F *hTrace = new TH1F("trace", "Trace", 512, 0, 511);
 
 void loadRun(TString filePath, TString rawEventBranchName, TString eventBranchName, TString ransacBranchName)
 {
-   if(tpcMap == nullptr)
-   {
+   if (tpcMap == nullptr) {
       tpcMap = new AtTpcMap();
       tpcMap->ParseXMLMap(TString(gSystem->Getenv("VMCWORKDIR")) + "/scripts/e12014_pad_map_size.xml");
       tpcMap->AddAuxPad({10, 0, 0, 0}, "MCP_US");
-      tpcMap->AddAuxPad({10, 0, 0, 34},"TPC_Mesh");
+      tpcMap->AddAuxPad({10, 0, 0, 34}, "TPC_Mesh");
       tpcMap->AddAuxPad({10, 0, 1, 0}, "MCP_DS");
-      tpcMap->AddAuxPad({10, 0, 2, 34},"IC");
+      tpcMap->AddAuxPad({10, 0, 2, 34}, "IC");
       tpcMap->GenerateAtTpc();
    }
 
-   if(tpcTree != nullptr)
+   if (tpcTree != nullptr)
       delete tpcTree;
    tpcTree = new TChain("cbmsim");
    tpcTree->Add(filePath);
 
-   if(reader != nullptr)
+   if (reader != nullptr)
       delete reader;
    reader = new TTreeReader(tpcTree);
 
-   if(rawEventReader != nullptr)
+   if (rawEventReader != nullptr)
       delete rawEventReader;
    rawEventReader = new TTreeReaderValue<TClonesArray>(*reader, rawEventBranchName);
 
-   if(eventReader != nullptr)
+   if (eventReader != nullptr)
       delete eventReader;
    eventReader = new TTreeReaderValue<TClonesArray>(*reader, eventBranchName);
 

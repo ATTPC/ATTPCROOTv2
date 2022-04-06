@@ -7,12 +7,10 @@
 #define _ATSPACECHARGECORRECTIONTASK_H_
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-#include <memory>
-#include <string>
-
 #include <FairTask.h>
 #include <TClonesArray.h>
+#include <memory>
+#include <string>
 
 #include "AtSpaceChargeModel.h" // IWYU pragma: keep
 

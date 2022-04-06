@@ -2,7 +2,6 @@
 #define GETLAYEREDFRAME
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <iosfwd>
 
 #include "GETLayerHeader.h"

@@ -11,7 +11,6 @@
 
 #include <TObject.h>
 #include <Rtypes.h>
-#include <RtypesCore.h>
 
 #include "S800.h"
 

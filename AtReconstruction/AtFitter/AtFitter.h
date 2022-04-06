@@ -2,7 +2,6 @@
 #define AtFITTER_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TObject.h>
 #include <tuple>
 #include <vector>
@@ -16,7 +15,7 @@ class TMemberInspector;
 
 namespace genfit {
 class Track;
-}  // namespace genfit
+} // namespace genfit
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

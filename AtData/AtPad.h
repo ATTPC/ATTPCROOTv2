@@ -11,11 +11,9 @@
 
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <Math/Point2D.h>
-#include <array>
-
 #include <TObject.h>
+#include <array>
 
 class TBuffer;
 class TClass;

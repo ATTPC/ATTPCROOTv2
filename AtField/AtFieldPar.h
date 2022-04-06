@@ -15,9 +15,7 @@
 #define AtFieldPar_H 1
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TString.h>
-
 #include <FairParGenericSet.h>
 
 class FairField;

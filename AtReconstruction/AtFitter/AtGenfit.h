@@ -2,7 +2,6 @@
 #define ATGENFIT_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <Track.h>
 #include <memory>
 #include <string>
@@ -21,9 +20,11 @@ namespace genfit {
 class AbsKalmanFitter;
 class AbsMeasurement;
 class AtSpacepointMeasurement;
-template <class hit_T, class measurement_T> class MeasurementProducer;
-template <class measurement_T> class MeasurementFactory;
-}  // namespace genfit
+template <class hit_T, class measurement_T>
+class MeasurementProducer;
+template <class measurement_T>
+class MeasurementFactory;
+} // namespace genfit
 
 //#include "GFRaveVertexFactory.h"
 

@@ -2,7 +2,6 @@
 #define ATHITCLUSTER_HH
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TMatrixDfwd.h>
 #include <TMatrixT.h>
 

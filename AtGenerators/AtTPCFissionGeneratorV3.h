@@ -3,13 +3,11 @@
 
 #include <Math/GenVector/Boost.h>
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TString.h>
 #include <Math/Point3D.h>
 #include <Math/Vector4D.h>
-#include <vector>
-
 #include <FairGenerator.h>
+#include <vector>
 
 class TFile;
 class TTree;

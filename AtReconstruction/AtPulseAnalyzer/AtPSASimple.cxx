@@ -1,7 +1,7 @@
 #include "AtPSASimple.h"
 
-#include <RtypesCore.h>
 #include <Math/Point2D.h>
+#include <Rtypes.h>
 // STL
 #include <algorithm>
 #include <array>
@@ -13,7 +13,6 @@
 #include "AtEvent.h"
 #include "AtHit.h"
 #include "AtPad.h"
-#include <Rtypes.h>
 
 using std::distance;
 using std::max_element;

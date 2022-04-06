@@ -2,14 +2,12 @@
 #define __S800CALC_HH
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
+#include <TObject.h>
+#include <TNamed.h>
 #include <iostream>
 #include <vector>
 #include <cmath>
 #include <algorithm>
-
-#include <TObject.h>
-#include <TNamed.h>
 
 class TBuffer;
 class TClass;

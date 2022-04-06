@@ -11,7 +11,6 @@
 #include <H5Spublic.h>
 #include <H5public.h>
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <stdint.h>
 #include <tuple>
 #include <vector>

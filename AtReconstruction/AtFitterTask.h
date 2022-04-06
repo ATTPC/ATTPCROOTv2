@@ -9,13 +9,11 @@
 #define ATFITTERTASK
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
+// FAIRROOT classes
+#include <FairTask.h>
 #include <cstddef>
 #include <string>
 #include <vector>
-
-// FAIRROOT classes
-#include <FairTask.h>
 
 class AtDigiPar;
 class FairLogger;
@@ -26,10 +24,10 @@ class TMemberInspector;
 
 namespace AtFITTER {
 class AtFitter;
-}  // namespace AtFITTER
+} // namespace AtFITTER
 namespace genfit {
 class Track;
-}  // namespace genfit
+} // namespace genfit
 
 class AtFitterTask : public FairTask {
 

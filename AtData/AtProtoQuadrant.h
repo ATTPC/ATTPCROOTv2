@@ -2,12 +2,11 @@
 #define AtPROTOQUADRANT_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
+#include <TObject.h>
+#include <TH1.h>
 #include <vector>
 
-#include <TObject.h>
 #include "AtHit.h"
-#include <TH1.h>
 
 class TBuffer;
 class TClass;

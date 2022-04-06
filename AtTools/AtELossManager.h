@@ -8,11 +8,9 @@
 #define AtELOSSMANAGER_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
+#include <TObject.h>
 #include <string>
 #include <memory>
-
-#include <TObject.h>
 
 class TBuffer;
 class TClass;

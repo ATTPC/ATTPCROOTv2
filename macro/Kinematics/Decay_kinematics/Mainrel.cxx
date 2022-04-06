@@ -69,10 +69,10 @@ int Mainrel()
    int ZD2 = 2; // charge of the daugther 2
    char *ElD2 = new char[2];
 
-   double ex1 = 0;    // excitation energy of the incident particle
-   double ex2 = 0;    // excitation energy of the target
-   double ex3 = 0.0;  // excitation energy of the scattered particle
-   double ex4 = 0.0;  // excitation energy of the recoil
+   double ex1 = 0;   // excitation energy of the incident particle
+   double ex2 = 0;   // excitation energy of the target
+   double ex3 = 0.0; // excitation energy of the scattered particle
+   double ex4 = 0.0; // excitation energy of the recoil
 
    double tbt = 11.0; // incident energy (total Lab energy in MeV)
 

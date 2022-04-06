@@ -7,7 +7,6 @@
 #define AtTPCXSMANAGER_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
 #include <TObject.h>
 #include <string>
 #include <memory>

@@ -1,6 +1,6 @@
 #ifndef ATFILTERDIVIDE_H
 #define ATFILTERDIVIDE_H
-#include <RtypesCore.h>
+#include <Rtypes.h>
 
 // Example filter to divide the signal by some amount specified at run time
 #include "AtFilter.h"

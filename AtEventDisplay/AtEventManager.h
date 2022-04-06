@@ -2,8 +2,6 @@
 #define AtEVENTMANAGER_H
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
-
 #include <TEveEventManager.h>
 #include <FairRunAna.h>
 

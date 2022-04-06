@@ -2,12 +2,10 @@
 #define _ATUNPACKER_H_
 
 #include <Rtypes.h>
-#include <RtypesCore.h>
+#include <TObject.h>
 #include <memory>
 #include <string>
 #include <utility>
-
-#include <TObject.h>
 
 class AtRawEvent;
 class AtMap;
