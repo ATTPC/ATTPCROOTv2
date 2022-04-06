@@ -1,7 +1,15 @@
 #ifndef GETBASICFRAME
 #define GETBASICFRAME
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <iosfwd>
+
 #include "GETBasicFrameHeader.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class GETBasicFrame : public GETBasicFrameHeader {
 public:

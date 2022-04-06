@@ -1,8 +1,8 @@
 #include "AtTrapezoidFilter.h"
 
-#include "AtPad.h"
+#include <algorithm>
 
-#include <iostream>
+#include "AtPad.h"
 
 void AtTrapezoidFilter::Filter(AtPad *pad)
 {

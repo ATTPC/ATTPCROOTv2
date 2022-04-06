@@ -16,7 +16,10 @@
 
 #include "FairModule.h" // for FairModule
 #include "Rtypes.h"     // for AtMagnet::Class, Bool_t, etc
-#include <string>       // for string
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtMagnet : public FairModule {
 public:

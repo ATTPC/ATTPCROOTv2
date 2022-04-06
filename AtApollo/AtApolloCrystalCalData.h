@@ -9,8 +9,14 @@
 #ifndef ATAPOLLOCRYSTALCALDATA_H
 #define ATAPOLLOCRYSTALCALDATA_H
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+
 #include "FairMultiLinkedData.h"
-#include "TObject.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtApolloCrystalCalData : public FairMultiLinkedData {
 public:

@@ -7,13 +7,16 @@
 #define GETFRAMEMERGEDBYID 0xff01
 #define GETFRAMEMERGEDBYTIME 0xff02
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <stdint.h>
+#include <fstream>
+
 #include "TObject.h"
 
-#include <fstream>
-#include <iostream>
-#include <bitset>
-#include <cmath>
-#include <cstdio>
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using namespace std;
 

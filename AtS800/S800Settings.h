@@ -1,13 +1,14 @@
 #ifndef __S800SETTINGS_HH
 #define __S800SETTINGS_HH
 
-#include <iostream>
-#include <fstream>
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TObject.h>
 #include <string>
-#include <map>
 
-#include "TSystem.h"
-#include "TEnv.h"
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class S800Settings : public TObject {
 public:

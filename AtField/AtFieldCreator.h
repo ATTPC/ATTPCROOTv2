@@ -14,11 +14,15 @@
 #ifndef AtFieldCreator_H
 #define AtFieldCreator_H
 
+#include <Rtypes.h>
+
 #include "FairFieldFactory.h"
 
 class AtFieldPar;
-
 class FairField;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtFieldCreator : public FairFieldFactory {
 

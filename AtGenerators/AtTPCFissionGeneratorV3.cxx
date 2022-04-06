@@ -1,24 +1,19 @@
 #include "AtTPCFissionGeneratorV3.h"
 
-#include <fstream>
+#include <TParticlePDG.h>
+#include <TVirtualMCStack.h>
 #include <iostream>
 
 #include "FairIon.h"
-#include "FairLogger.h"
-#include "FairParticle.h"
 #include "FairPrimaryGenerator.h"
 #include "FairRunSim.h"
-
 #include "TDatabasePDG.h"
 #include "TVirtualMC.h" //For gMC
 #include "TFile.h"
 #include "TTree.h"
-
-#include "Math/GenVector/LorentzVector.h"
-#include "Math/Boost.h"
-
 #include "AtVertexPropagator.h"
 #include "AtCSVReader.h"
+#include "fairlogger/Logger.h"
 
 void AtTPCFissionGeneratorV3::loadIonList(TString ionList)
 {

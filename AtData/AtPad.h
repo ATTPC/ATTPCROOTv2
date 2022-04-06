@@ -9,11 +9,17 @@
 #ifndef AtPAD_H
 #define AtPAD_H
 
+#include <Math/Point2Dfwd.h>
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <Math/Point2D.h>
 #include <array>
 
 #include "TObject.h"
-#include "TROOT.h"
-#include "Math/Point2D.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using rawTrace = std::array<Int_t, 512>;
 using trace = std::array<Double_t, 512>;

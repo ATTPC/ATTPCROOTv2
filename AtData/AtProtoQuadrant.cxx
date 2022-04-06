@@ -1,5 +1,11 @@
 #include "AtProtoQuadrant.h"
 
+#include <TH1.h>
+#include <stddef.h>
+#include <algorithm>
+
+#include "Rtypes.h"
+
 ClassImp(AtProtoQuadrant)
 
    AtProtoQuadrant::AtProtoQuadrant()

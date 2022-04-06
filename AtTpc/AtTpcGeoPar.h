@@ -8,10 +8,16 @@
 #ifndef NEWDETECTORGEOPAR_H
 #define NEWDETECTORGEOPAR_H
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+
 #include "FairParGenericSet.h"
 
 class TObjArray;
 class FairParamList;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtTpcGeoPar : public FairParGenericSet {
 public:

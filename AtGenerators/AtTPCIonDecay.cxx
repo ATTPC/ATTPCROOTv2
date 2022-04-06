@@ -4,36 +4,28 @@
 
 #include "AtTPCIonDecay.h"
 
-#include "FairPrimaryGenerator.h"
-#include "FairRootManager.h"
-#include "FairLogger.h"
-#include "FairMCEventHeader.h"
+#include <FairParticle.h>
+#include <TString.h>
+#include <math.h>
+#include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <iterator>
+#include <memory>
 
+#include "FairPrimaryGenerator.h"
 #include "FairIon.h"
 #include "FairRunSim.h"
-#include "FairRunAna.h"
-
 #include "TDatabasePDG.h"
 #include "TParticlePDG.h"
-#include "TObjArray.h"
-
 #include "TRandom.h"
 #include "TMath.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
 #include "TGenPhaseSpace.h"
-#include "TVirtualMC.h"
 #include "TParticle.h"
-#include "TClonesArray.h"
-
-#include "FairRunSim.h"
-#include "FairIon.h"
-#include <iostream>
-#include <string>
-#include "TParticle.h"
-
-#include "AtStack.h"
 #include "AtVertexPropagator.h"
+#include "fairlogger/Logger.h"
 
 #define amu 931.494
 

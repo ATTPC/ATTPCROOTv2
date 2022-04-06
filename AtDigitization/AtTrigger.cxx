@@ -1,7 +1,19 @@
 #include "AtTrigger.h"
 
+#include <TMatrixDfwd.h>
+#include <TMatrixT.h>
+#include <TString.h>
+#include <math.h>
+#include <string.h>
 #include <string>
-#include <sstream>
+#include <algorithm>
+#include <array>
+#include <iostream>
+
+#include "AtEvent.h"
+#include "AtPad.h"
+#include "AtRawEvent.h"
+#include "Rtypes.h"
 
 ClassImp(AtTrigger)
 

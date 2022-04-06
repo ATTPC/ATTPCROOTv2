@@ -1,5 +1,10 @@
 #include "GETLayerHeader.h"
 
+#include <string.h>
+#include <iostream>
+
+#include "Rtypes.h"
+
 ClassImp(GETLayerHeader)
 
    GETLayerHeader::GETLayerHeader()

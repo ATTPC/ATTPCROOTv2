@@ -2,19 +2,20 @@
 #ifndef AtDIGIPAR_H
 #define AtDIGIPAR_H
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+
 // FAIRROOT classes
 #include "FairParGenericSet.h"
-#include "FairParamList.h"
-#include "FairLogger.h"
-#include <iostream>
-#include <fstream>
-
-// SPiRITROOT classes
-#include "AtGas.h"
-
 // ROOT classes
 #include "TString.h"
-#include "TSystem.h"
+
+class AtGas;
+class FairLogger;
+class FairParamList;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtDigiPar : public FairParGenericSet {
 public:

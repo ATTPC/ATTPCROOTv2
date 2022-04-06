@@ -1,5 +1,10 @@
 #include "AtTPCXSManager.h"
 
+#include <TH2.h>
+#include <fstream> // IWYU pragma: keep
+#include <iostream>
+#include <sstream> // IWYU pragma: keep
+
 AtTPCXSManager *gAtXS = (AtTPCXSManager *)0;
 
 AtTPCXSManager::AtTPCXSManager()

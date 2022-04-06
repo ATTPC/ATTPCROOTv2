@@ -1,6 +1,9 @@
 // Example filter to divide the signal by some amount specified at run time
 #include "AtFilterDivide.h"
+
 #include "AtPad.h"
+
+class AtRawEvent;
 
 void AtFilterDivide::SetDivisor(Double_t div)
 {

@@ -7,11 +7,15 @@
 #ifndef AtTPCGAMMADUMMYGENERAtOR_H
 #define AtTPCGAMMADUMMYGENERAtOR_H
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+
 #include "FairGenerator.h"
 
-#include <iostream>
-
 class FairPrimaryGenerator;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtTPCGammaDummyGenerator : public FairGenerator {
 

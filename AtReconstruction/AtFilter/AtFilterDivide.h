@@ -1,7 +1,12 @@
 #ifndef ATFILTERDIVIDE_H
 #define ATFILTERDIVIDE_H
+#include <RtypesCore.h>
+
 // Example filter to divide the signal by some amount specified at run time
 #include "AtFilter.h"
+
+class AtPad;
+class AtRawEvent;
 
 class AtFilterDivide : public AtFilter {
 

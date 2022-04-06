@@ -1,9 +1,15 @@
 #ifndef AtGAS_H
 #define AtGAS_H
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+
 // ROOT classes
 #include "TString.h"
-#include "TSystem.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 //#include "Rtypes.h"
 

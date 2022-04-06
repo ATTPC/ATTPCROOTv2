@@ -8,14 +8,21 @@
 #ifndef AtClusterizeTask_H
 #define AtClusterizeTask_H
 
+#include <Math/Vector3Dfwd.h>
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <math.h>
+#include <Math/Vector3D.h>
+
 #include "FairTask.h"
-#include "Math/Vector3D.h"
 
 class AtGas;
 class AtDigiPar;
 class AtMCPoint;
-
 class TClonesArray;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtClusterizeTask : public FairTask {
 protected:

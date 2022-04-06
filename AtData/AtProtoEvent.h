@@ -1,14 +1,16 @@
 #ifndef AtPROTOEVENT_H
 #define AtPROTOEVENT_H
 
-#include "TROOT.h"
-#include "TObject.h"
-
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TNamed.h>
 #include <vector>
-#include <map>
 
 #include "AtProtoQuadrant.h"
-#include "AtHit.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtProtoEvent : public TNamed {
 public:

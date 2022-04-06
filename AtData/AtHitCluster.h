@@ -1,13 +1,16 @@
 #ifndef ATHITCLUSTER_HH
 #define ATHITCLUSTER_HH
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TMatrixDfwd.h>
+#include <TMatrixT.h>
+
 #include "AtHit.h"
 
-#include "TObject.h"
-#include "TVector3.h"
-#include "TMatrixD.h"
-
-#include <vector>
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtHitCluster : public AtHit {
 protected:

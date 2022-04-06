@@ -1,20 +1,22 @@
 #include "AtAvalancheTask.h"
 
+#include <FairTask.h>
+#include <TClonesArray.h>
+#include <fairlogger/Logger.h>
+// STL class headers
+#include <cmath>
+#include <iostream>
+#include <memory>
+
 // Fair class header
 #include "FairRootManager.h"
 #include "FairRunAna.h"
 #include "FairRuntimeDb.h"
-
 #include "AtMCPoint.h"
-#include "AtVertexPropagator.h"
-
-// STL class headers
-#include <cmath>
-#include <iostream>
-#include <iomanip>
-
 #include "TRandom.h"
 #include "TMath.h"
+#include "AtDigiPar.h"
+#include "AtGas.h"
 
 AtAvalancheTask::AtAvalancheTask() : FairTask("AtAvalanacheTask"), fEventID(0) {}
 

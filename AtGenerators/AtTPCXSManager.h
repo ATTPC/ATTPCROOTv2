@@ -6,23 +6,16 @@
 #ifndef AtTPCXSMANAGER_H
 #define AtTPCXSMANAGER_H
 
-#include "FairGenerator.h"
-#include "FairIon.h"
-#include "FairParticle.h"
-#include "TH1F.h"
-#include "TH2F.h"
-
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TObject.h>
 #include <string>
-#include <sstream>
-#include <fstream>
-#include <iostream>
 #include <memory>
-#include <thread>
-#include <chrono>
-#include <mutex>
-#include <map>
 
-class AtTPCXSManager;
+class TBuffer;
+class TClass;
+class TH2F;
+class TMemberInspector;
 
 class AtTPCXSManager : public TObject {
 

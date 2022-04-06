@@ -8,9 +8,14 @@
 #ifndef APOLLOCONTFACT_H
 #define APOLLOCONTFACT_H
 
+#include <Rtypes.h>
+
 #include "FairContFact.h"
 
-class FairContainer;
+class FairParSet;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtApolloContFact : public FairContFact {
 private:

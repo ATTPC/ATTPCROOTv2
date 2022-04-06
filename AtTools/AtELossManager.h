@@ -7,35 +7,17 @@
 #ifndef AtELOSSMANAGER_H
 #define AtELOSSMANAGER_H
 
-#include <iostream>
-#include <fstream>
-#include <string.h>
-
-#include <iomanip>
-#include <cstdlib>
-#include <cstring>
-#include <sstream>
-#include <cmath>
-#include <map>
-#include <vector>
-#include <set>
+#include <Rtypes.h>
+#include <RtypesCore.h>
 #include <string>
-#include <math.h>
-#include <cassert>
+#include <memory>
 
-#include "TRandom3.h"
-#include "TPolyLine3D.h"
-#include "TPolyMarker3D.h"
-#include "TCanvas.h"
-#include "TMath.h"
-#include "TROOT.h"
-#include "TLorentzVector.h"
-#include "TVector3.h"
-#include "TTree.h"
 #include "TObject.h"
-#include "TStyle.h"
-#include "TFile.h"
-#include "TGraph.h"
+
+class TBuffer;
+class TClass;
+class TGraph;
+class TMemberInspector;
 
 namespace AtTools {
 

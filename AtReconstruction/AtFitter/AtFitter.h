@@ -1,20 +1,22 @@
 #ifndef AtFITTER_H
 #define AtFITTER_H
 
-#include "AtDigiPar.h"
-#include "AtTrack.h"
-#include "AtEvent.h"
-#include "AtPatternEvent.h"
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TObject.h>
+#include <tuple>
+#include <vector>
 
-// FairRoot classes
-#include "FairRootManager.h"
-#include "FairLogger.h"
+class AtDigiPar;
+class AtTrack;
+class FairLogger;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
-// GENFIT
-#include "Track.h"
-#include "TrackCand.h"
-#include "RKTrackRep.h"
-#include "Exception.h"
+namespace genfit {
+class Track;
+}  // namespace genfit
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

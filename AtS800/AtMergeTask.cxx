@@ -1,27 +1,29 @@
 #include "AtMergeTask.h"
+
+#include <FairLogger.h>
+#include <FairTask.h>
+#include <Math/ParamFunctor.h>
+#include <TClonesArray.h>
+#include <TCollection.h>
+#include <TList.h>
+#include <ext/alloc_traits.h>
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+#include <memory>
+
 #include "TFile.h"
 // FAIRROOT classes
 #include "FairRootManager.h"
-#include "FairRun.h"
-#include "FairRuntimeDb.h"
-
-// ROOT classes
-#include "TCanvas.h"
 #include "TGraph.h"
 #include "TF1.h"
 #include "TKey.h"
-#include "TMath.h"
 #include "TCutG.h"
 #include "TTreeReader.h"
 #include "TTreeReaderValue.h"
-#include "TTreeReaderArray.h"
-
-// S800 Classes
-#include "S800Event.h"
-#include "S800.h"
 #include "S800Calc.h"
-
-#include <iostream>
+#include "AtRawEvent.h"
+#include "fairlogger/Logger.h"
 
 ClassImp(AtMergeTask);
 

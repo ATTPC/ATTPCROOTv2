@@ -5,8 +5,15 @@
 #ifndef ATCLUSTERIZELINETASK_H
 #define ATCLUSTERIZELINETASK_H
 
+#include <FairTask.h>
+#include <Rtypes.h>
+#include <RtypesCore.h>
+
 #include "AtClusterizeTask.h"
-#include "Math/Vector3D.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtClusterizeLineTask : public AtClusterizeTask {
 private:

@@ -1,23 +1,22 @@
 #include "AtClusterizeTask.h"
 
+#include <FairParSet.h>
+#include <FairTask.h>
+#include <TMathBase.h>
+#include <TObject.h>
+#include <TString.h>
+#include <fairlogger/Logger.h>
+#include <iostream>
+#include <memory>
+
 // Fair class header
 #include "FairRootManager.h"
 #include "FairRunAna.h"
 #include "FairRuntimeDb.h"
-
 #include "AtDigiPar.h"
-#include "AtGas.h"
 #include "AtSimulatedPoint.h"
 #include "AtMCPoint.h"
-#include "AtVertexPropagator.h"
-
-// STL class headers
-#include <cmath>
-#include <iostream>
-#include <iomanip>
-
 #include "TClonesArray.h"
-#include "TF1.h"
 #include "TMath.h"
 #include "TRandom.h"
 

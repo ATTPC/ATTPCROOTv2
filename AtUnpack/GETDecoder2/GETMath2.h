@@ -14,7 +14,13 @@
 #ifndef GETMAtH2
 #define GETMAtH2
 
+#include <RtypesCore.h>
+
 #include "Rtypes.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 /**
  * Basically, what this class does is the same as TH1D class in ROOT.

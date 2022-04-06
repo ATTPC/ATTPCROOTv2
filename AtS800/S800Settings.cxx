@@ -1,5 +1,8 @@
 #include "S800Settings.h"
 
+#include <TEnv.h>
+#include <TString.h>
+
 S800Settings::S800Settings() {}
 
 S800Settings::S800Settings(const char *filename)

@@ -6,20 +6,26 @@
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
 #include "AtApollo.h"
-#include "AtApolloPoint.h"
 
+#include <FairDetector.h>
+#include <TVector3.h>
+#include <TVirtualMCStack.h>
+#include <stddef.h>
+#include <iostream>
+
+#include "AtApolloPoint.h"
 #include "FairVolume.h"
 #include "FairRootManager.h"
 #include "FairRun.h"
-#include "FairRuntimeDb.h"
 #include "AtDetectorList.h"
 #include "AtStack.h"
 #include "TVirtualMC.h"
 #include "TClonesArray.h"
-#include "TGeoManager.h"
 #include "TLorentzVector.h"
+#include "fairlogger/Logger.h"
 
-#include <iostream>
+class FairRuntimeDb;
+
 using std::cout;
 using std::endl;
 

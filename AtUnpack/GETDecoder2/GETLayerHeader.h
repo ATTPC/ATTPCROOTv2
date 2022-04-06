@@ -1,7 +1,16 @@
 #ifndef GETLAYERHEADER
 #define GETLAYERHEADER
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <stdint.h>
+#include <iosfwd>
+
 #include "GETHeaderBase.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 #define GETLAYERHEADERBYIDSIZE (GETHEADERBASESIZE + 12)
 #define GETLAYERHEADERBYTIMESIZE (GETHEADERBASESIZE + 16)

@@ -7,14 +7,17 @@
  *
  */
 
+#include <RtypesCore.h>
+#include <string>
+#include <vector>
+
 // FairRoot classes
 #include "FairTask.h"
+// ROOT classes
+#include "TString.h"
 
 // ATTPCROOT classes;
 class AtFilter;
-
-// ROOT classes
-#include "TString.h"
 class TClonesArray;
 
 using stringVec = std::vector<std::string>;

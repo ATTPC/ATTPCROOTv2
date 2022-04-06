@@ -1,11 +1,16 @@
 #ifndef AtVertexPropagator_H
 #define AtVertexPropagator_H
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <map>
+
 #include "TObject.h"
 #include "TVector3.h"
 
-#include <iostream>
-#include <map>
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtVertexPropagator : public TObject {
 

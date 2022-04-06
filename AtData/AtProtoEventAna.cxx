@@ -1,5 +1,7 @@
 #include "AtProtoEventAna.h"
 
+#include "Rtypes.h"
+
 ClassImp(AtProtoEventAna);
 
 AtProtoEventAna::AtProtoEventAna() : TNamed("AtProtoEventAna", "Proto Event Analysis")

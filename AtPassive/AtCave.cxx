@@ -12,20 +12,14 @@
 // -----                Created 26/03/14  by M. Al-Turany              -----
 // -------------------------------------------------------------------------
 #include "AtCave.h"
+
+#include <FairModule.h>
+#include <Rtypes.h>
+
 #include "AtGeoCave.h"        // for AtGeoCave
 #include "FairGeoInterface.h" // for FairGeoInterface
 #include "FairGeoLoader.h"    // for FairGeoLoader
-#include "FairGeoNode.h"      // for FairGeoNode
-//#include "FairGeoPassivePar.h"          // for FairGeoPassivePar
-#include "FairGeoVolume.h" // for FairGeoVolume
-#include "FairRun.h"       // for FairRun
-#include "FairRuntimeDb.h" // for FairRuntimeDb
-
-#include "TList.h"     // for TListIter, TList (ptr only)
-#include "TObjArray.h" // for TObjArray
 #include "TString.h"   // for TString
-
-#include <stddef.h> // for NULL
 
 ClassImp(AtCave)
 

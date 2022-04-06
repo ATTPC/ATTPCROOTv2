@@ -13,11 +13,15 @@
 #ifndef AtPEDESTAL
 #define AtPEDESTAL
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+
 #include "TObject.h"
 
-#include "GETMath2.h"
-
-#include <fstream>
+class GETMath2;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtPedestal : public TObject {
 public:

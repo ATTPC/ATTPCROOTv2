@@ -1,7 +1,15 @@
 #ifndef SIARRAYGEO_H
 #define SIARRAYGEO_H
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TString.h>
+
 #include "FairGeoSet.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtSiArrayGeo : public FairGeoSet {
 

@@ -8,10 +8,15 @@
 #ifndef APOLLOPOINT_H
 #define APOLLOPOINT_H 1
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+
 #include "FairMCPoint.h"
 #include "TVector3.h"
 
-#include "TObject.h"
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtApolloPoint : public FairMCPoint {
 

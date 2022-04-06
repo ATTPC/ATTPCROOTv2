@@ -18,6 +18,9 @@
 #include "Rtypes.h"       // for AtPassiveContFact::Class, etc
 
 class FairParSet;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtPassiveContFact : public FairContFact {
 private:

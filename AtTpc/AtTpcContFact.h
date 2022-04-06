@@ -8,9 +8,14 @@
 #ifndef NEWDETECTORCONTFACT_H
 #define NEWDETECTORCONTFACT_H
 
+#include <Rtypes.h>
+
 #include "FairContFact.h"
 
-class FairContainer;
+class FairParSet;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtTpcContFact : public FairContFact {
 private:

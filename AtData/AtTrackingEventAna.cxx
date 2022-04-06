@@ -1,5 +1,10 @@
 #include "AtTrackingEventAna.h"
 
+#include <TVector3.h>
+#include <algorithm>
+
+#include "Rtypes.h"
+
 ClassImp(AtTrackingEventAna);
 
 AtTrackingEventAna::AtTrackingEventAna() : TNamed("AtTrackingEventAna", "Tracking Event Analysis")

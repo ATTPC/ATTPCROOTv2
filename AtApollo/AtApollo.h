@@ -8,12 +8,21 @@
 #ifndef APOLLO_H
 #define APOLLO_H
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TString.h>
+#include <string>
+
 #include "FairDetector.h"
 #include "TVector3.h"
 
 class FairVolume;
 class TClonesArray;
 class AtApolloPoint;
+class TBuffer;
+class TClass;
+class TList;
+class TMemberInspector;
 
 class AtApollo : public FairDetector {
 public:

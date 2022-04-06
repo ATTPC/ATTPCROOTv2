@@ -1,21 +1,26 @@
 #ifndef AtPSA_H
 #define AtPSA_H
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TString.h>
 // STL
 #include <map>
+#include <cstddef>
+#include <utility>
 
-// ROOT classes
-#include "TObject.h"
 #include "TVector3.h"
-class TClonesArray;
 
+class TClonesArray;
 // AtTPCROOT classes
 class AtRawEvent;
 class AtEvent;
 class AtDigiPar;
 class AtCalibration;
 class AtHit;
-class AtMCPoint;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtPSA {
 public:

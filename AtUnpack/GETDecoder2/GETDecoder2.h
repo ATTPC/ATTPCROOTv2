@@ -13,23 +13,25 @@
 #ifndef GETDECODER2
 #define GETDECODER2
 
-#include "GETHeaderBase.h"
-#include "GETBasicFrameHeader.h"
-#include "GETLayerHeader.h"
-
-#include "GETTopologyFrame.h"
-#include "GETBasicFrame.h"
-#include "GETCoboFrame.h"
-#include "GETLayeredFrame.h"
-
-#include "GETFrameInfo.h"
-
+#include <Rtypes.h>
+#include <RtypesCore.h>
 #include <fstream>
 #include <vector>
 
-#include "TROOT.h"
 #include "TString.h"
-#include "TClonesArray.h"
+
+class GETBasicFrame;
+class GETBasicFrameHeader;
+class GETCoboFrame;
+class GETFrameInfo;
+class GETHeaderBase;
+class GETLayerHeader;
+class GETLayeredFrame;
+class GETTopologyFrame;
+class TBuffer;
+class TClass;
+class TClonesArray;
+class TMemberInspector;
 
 // class GETPlot;
 

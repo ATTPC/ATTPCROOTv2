@@ -8,15 +8,19 @@
 #ifndef AtTPC2Body_H
 #define AtTPC2Body_H
 
-#include "FairGenerator.h"
-#include "FairIon.h"
-#include "FairParticle.h"
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TString.h>
+#include <vector>
 
-#include <iostream>
-#include <map>
+#include "FairGenerator.h"
 
 class FairPrimaryGenerator;
-class AtTPC2Body;
+class FairIon;
+class FairParticle;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtTPC2Body : public FairGenerator {
 

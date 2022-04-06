@@ -1,9 +1,14 @@
 #ifndef STCONTFACT_H
 #define STCONTFACT_H
 
+#include <Rtypes.h>
+
 #include "FairContFact.h"
 
-class FairContainer;
+class FairParSet;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtContFact : public FairContFact {
 public:

@@ -1,15 +1,24 @@
 #ifndef AtEVENT_H
 #define AtEVENT_H
 
-#include "TROOT.h"
-#include "TObject.h"
-#include "FairLogger.h"
-
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TNamed.h>
 #include <map>
 #include <vector>
+#include <algorithm>
+#include <array>
+#include <iostream>
+#include <memory>
+#include <utility>
 
 #include "AtHit.h"
 #include "AtAuxPad.h"
+#include "fairlogger/Logger.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using auxPadVector = std::vector<AtAuxPad>;
 using traceArray = std::array<Float_t, 512>;

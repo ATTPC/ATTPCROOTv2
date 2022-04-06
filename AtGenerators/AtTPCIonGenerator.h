@@ -9,12 +9,16 @@
 #ifndef AtTPCIONGENERAtOR_H
 #define AtTPCIONGENERAtOR_H
 
-#include "FairGenerator.h"
-#include "FairIon.h"
+#include <Rtypes.h>
+#include <RtypesCore.h>
 
-#include <iostream>
+#include "FairGenerator.h"
 
 class FairPrimaryGenerator;
+class FairIon;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtTPCIonGenerator : public FairGenerator {
 

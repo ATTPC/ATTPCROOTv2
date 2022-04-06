@@ -1,12 +1,19 @@
 #ifndef _ATUNPACKER_H_
 #define _ATUNPACKER_H_
 
-#include "TObject.h"
-
+#include <Rtypes.h>
+#include <RtypesCore.h>
 #include <memory>
+#include <string>
+#include <utility>
+
+#include "TObject.h"
 
 class AtRawEvent;
 class AtMap;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using mapPtr = std::shared_ptr<AtMap>;
 

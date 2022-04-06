@@ -5,22 +5,28 @@
 #ifndef _AtHDFUNPACKER_H_
 #define _AtHDFUNPACKER_H_
 
-#include "TObject.h"
-#include "TROOT.h"
-
-#include <hdf5.h>
-
-#include <memory>
+#include <H5Dpublic.h>
+#include <H5Ipublic.h>
+#include <H5Lpublic.h>
+#include <H5Spublic.h>
+#include <H5public.h>
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <stdint.h>
 #include <tuple>
 #include <vector>
-
-#include <iostream>
+#include <cstddef>
+#include <string>
 
 #include "AtUnpacker.h"
+#include "H5Ppublic.h"
 
 class AtRawEvent;
 class AtPad;
 struct PadReference;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtHDFUnpacker : public AtUnpacker {
 

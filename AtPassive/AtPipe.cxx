@@ -12,11 +12,12 @@
 // -------------------------------------------------------------------------
 
 #include "AtPipe.h"
-#include "TList.h"
-#include "TObjArray.h"
+
+#include <FairModule.h>
+#include <RtypesCore.h>
+#include <TGeoVolume.h>
 
 #include "TGeoPcon.h"
-#include "TGeoTube.h"
 #include "TGeoMaterial.h"
 #include "TGeoMedium.h"
 #include "TGeoManager.h"

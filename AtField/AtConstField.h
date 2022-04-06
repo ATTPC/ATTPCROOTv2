@@ -22,9 +22,15 @@
 #ifndef AtConstField_H
 #define AtConstField_H 1
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+
 #include "FairField.h"
 
 class AtFieldPar;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtConstField : public FairField {
 

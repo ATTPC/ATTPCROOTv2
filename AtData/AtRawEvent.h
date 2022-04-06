@@ -10,22 +10,27 @@
 #ifndef AtRAWEVENT_H
 #define AtRAWEVENT_H
 
-#include "TROOT.h"
-#include "TObject.h"
-
-#include "AtPad.h"
-#include "AtAuxPad.h"
-#include "FairLogger.h"
-
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TNamed.h>
 #include <vector>
-#include <iostream>
 #include <map>
-#include <iterator>
+#include <algorithm>
+#include <cstddef>
+#include <memory>
+#include <string>
+#include <utility>
+
+#include "AtAuxPad.h"
+
+class AtPad;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using AuxPadMap = std::map<std::string, AtAuxPad>;
 using AtPadPtr = std::unique_ptr<AtPad>;
 using PadVector = std::vector<AtPadPtr>;
-class AtFilterTask;
 
 class AtRawEvent : public TNamed {
 private:

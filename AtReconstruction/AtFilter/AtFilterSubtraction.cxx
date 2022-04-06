@@ -1,10 +1,12 @@
 #include "AtFilterSubtraction.h"
-#include "FairLogger.h"
+
+#include <ext/alloc_traits.h>
+#include <fairlogger/Logger.h>
+
 #include "AtRawEvent.h"
 #include "AtMap.h"
 #include "AtPad.h"
-
-#include <algorithm>
+#include "PadReference.h"
 
 AtFilterSubtraction::AtFilterSubtraction(AtMapPtr map, Int_t numCoBos) : fNumberCoBo(numCoBos), fMapping(map)
 {

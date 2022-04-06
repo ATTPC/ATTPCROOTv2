@@ -10,20 +10,24 @@
 #define ATMAP_H
 
 #include <boost/multi_array.hpp>
-
-#include "TObject.h"
-#include "TROOT.h"
-#include "TMath.h"
-#include "Math/Point2D.h"
+#include <Math/Point2Dfwd.h>
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TNamed.h>
+#include <TString.h>
+#include <unordered_map>
+#include <map>
+#include <iosfwd>
+#include <string>
 
 #include "PadReference.h"
 
-#include <unordered_map>
-#include <map>
-#include <vector>
-
 class TH2Poly;
 class TXMLNode;
+class TBuffer;
+class TCanvas;
+class TClass;
+class TMemberInspector;
 
 class AtMap : public TNamed {
 public:

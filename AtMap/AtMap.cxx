@@ -1,14 +1,21 @@
 #include "AtMap.h"
 
-#include "FairLogger.h"
+#include <TXMLDocument.h>
+#include <fairlogger/Logger.h>
+#include <stdlib.h>
+#include <string.h>
+#include <boost/multi_array/base.hpp>
+#include <boost/multi_array/extent_gen.hpp>
+#include <iostream>
+#include <iterator>
+#include <utility>
 
 #include "TCanvas.h"
 #include "TDOMParser.h"
 #include "TH2Poly.h"
 #include "TStyle.h"
 #include "TXMLNode.h"
-
-#include <iostream>
+#include "Rtypes.h"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

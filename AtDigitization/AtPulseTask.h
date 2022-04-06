@@ -8,6 +8,13 @@
 #ifndef AtPulseTask_H
 #define AtPulseTask_H
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <cstddef>
+#include <iterator>
+#include <map>
+#include <memory>
+
 #include "FairTask.h"
 
 class TClonesArray;
@@ -18,6 +25,9 @@ class TF1;
 class TH1F;
 class TH2Poly;
 class AtSimulatedPoint;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using AtMapPtr = std::shared_ptr<AtMap>;
 

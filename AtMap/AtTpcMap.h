@@ -7,12 +7,16 @@
 
 #ifndef ATTPCMAP_H
 #define ATTPCMAP_H
-
-#ifndef __CINT__ // Boost
-#include <boost/multi_array.hpp>
-#endif //__CINT__
+#include <Math/Point2Dfwd.h>
+#include <Rtypes.h>
+#include <RtypesCore.h>
 
 #include "AtMap.h"
+
+class TBuffer;
+class TClass;
+class TH2Poly;
+class TMemberInspector;
 
 class AtTpcMap : public AtMap {
 

@@ -3,24 +3,22 @@
 // -----            Created 30/01/15  by Y. Ayyad                      -----
 // -------------------------------------------------------------------------
 #include "AtTPCIonGenerator.h"
+
+#include <FairParticle.h>
+#include <TString.h>
+#include <math.h>
+#include <stddef.h>
+#include <iostream>
+
 #include "AtVertexPropagator.h"
-
 #include "FairPrimaryGenerator.h"
-
 #include "FairIon.h"
 #include "FairRunSim.h"
-
 #include "TDatabasePDG.h"
 #include "TParticlePDG.h"
 #include "TObjArray.h"
-
 #include "TRandom.h"
 #include "TMath.h"
-#include "TLorentzVector.h"
-
-#include "FairRunSim.h"
-#include "FairIon.h"
-#include <iostream>
 #include "TParticle.h"
 
 #define cRED "\033[1;31m"

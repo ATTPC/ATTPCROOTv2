@@ -1,12 +1,14 @@
 
 #include "AtS800Task.h"
 
-// FAIRROOT classes
-#include "FairRootManager.h"
-#include "FairRun.h"
-#include "FairRuntimeDb.h"
+#include <FairLogger.h>
+#include <FairTask.h>
+#include <memory>
 
-#include <iostream>
+#include "FairRun.h"
+#include "fairlogger/Logger.h"
+
+class FairRuntimeDb;
 
 ClassImp(AtS800Task);
 

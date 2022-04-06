@@ -7,17 +7,20 @@
  ********************************************************************************/
 
 #include "AtApolloDigitizer.h"
+
+#include <stdlib.h>
+#include <FairRuntimeDb.h>
+#include <FairTask.h>
+#include <math.h>
+#include <iostream>
+#include <memory>
+
 #include "FairRootManager.h"
-#include "AtApollo.h"
 #include "AtApolloCrystalCalData.h"
 #include "AtApolloPoint.h"
-#include "TArrayD.h"
 #include "TClonesArray.h"
-#include "TMath.h"
 #include "TRandom.h"
-#include "TVector3.h"
-#include <iostream>
-#include <stdlib.h>
+#include "fairlogger/Logger.h"
 
 using std::cerr;
 using std::cout;
@@ -269,3 +272,5 @@ Bool_t AtApolloDigitizer::isLaBr(Int_t id)
    else
       return kFALSE;
 }
+
+ClassImp(AtApolloDigitizer);

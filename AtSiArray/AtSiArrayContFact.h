@@ -1,9 +1,14 @@
 #ifndef AtSIARRAYCONTFACT_H
 #define AtSIARRAYCONTFACT_H
 
+#include <Rtypes.h>
+
 #include "FairContFact.h"
 
-class FairContainer;
+class FairParSet;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtSiArrayContFact : public FairContFact {
 private:

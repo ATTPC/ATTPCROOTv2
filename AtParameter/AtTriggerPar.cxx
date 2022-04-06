@@ -1,5 +1,13 @@
 #include "AtTriggerPar.h"
 
+#include <FairParGenericSet.h>
+#include <FairParamList.h>
+#include <TString.h>
+#include <TSystem.h>
+#include <fstream>
+
+#include "fairlogger/Logger.h"
+
 ClassImp(AtTriggerPar)
 
    AtTriggerPar::AtTriggerPar(const Char_t *name, const Char_t *title, const Char_t *context)

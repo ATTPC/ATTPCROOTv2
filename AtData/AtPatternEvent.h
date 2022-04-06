@@ -1,13 +1,15 @@
 #ifndef AtPAtTERNEVENT_H
 #define AtPAtTERNEVENT_H
 
-#include "TROOT.h"
-#include "TObject.h"
-#include "AtTrack.h"
-#include "TVector3.h"
-
+#include <Rtypes.h>
+#include <TNamed.h>
 #include <vector>
-#include <map>
+
+#include "AtTrack.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtPatternEvent : public TNamed {
 

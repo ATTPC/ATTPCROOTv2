@@ -2,16 +2,20 @@
 #ifndef AtTRIGGERPAR_H
 #define AtTRIGGERPAR_H
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <vector>
+
 // FAIRROOT classes
 #include "FairParGenericSet.h"
-#include "FairParamList.h"
-#include "FairLogger.h"
-#include <iostream>
-#include <fstream>
-
 // ROOT classes
 #include "TString.h"
-#include "TSystem.h"
+
+class FairLogger;
+class FairParamList;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtTriggerPar : public FairParGenericSet {
 public:

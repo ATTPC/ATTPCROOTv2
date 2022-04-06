@@ -1,9 +1,18 @@
 #ifndef AtSIMULAtEDPOINT_H
 #define AtSIMULAtEDPOINT_H
 
+#include <Math/Vector3Dfwd.h>
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <Math/Vector3D.h>
+#include <cstddef>
+
 //#include "TROOT.h"
 #include "TObject.h"
-#include "Math/Vector3D.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtSimulatedPoint : public TObject {
 

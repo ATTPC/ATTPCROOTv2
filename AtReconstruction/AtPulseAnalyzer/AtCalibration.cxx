@@ -1,6 +1,12 @@
 #include "AtCalibration.h"
 
-ClassImp(AtCalibration) AtCalibration::AtCalibration()
+#include <TString.h>
+#include <fstream> // IWYU pragma: keep
+#include <iostream>
+
+ClassImp(AtCalibration);
+
+AtCalibration::AtCalibration()
 {
    fIsGainCalibrated = kFALSE;
    fIsJitterCalibrated = kFALSE;

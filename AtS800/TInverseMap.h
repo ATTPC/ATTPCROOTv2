@@ -1,13 +1,19 @@
 #ifndef TINVERSEMAP_H_
 #define TINVERSEMAP_H_
 
+#include <TNamed.h>
+#include <Rtypes.h>
+#include <RtypesCore.h>
 #include <map>
 #include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
 
-#include <TNamed.h>
-#include <TSpline.h>
-
-class TS800;
+class TBuffer;
+class TClass;
+class TMemberInspector;
+class TSpline3;
 
 class TInverseMap : public TNamed {
 

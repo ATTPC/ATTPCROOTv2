@@ -1,3 +1,6 @@
+#ifndef _PADREFERENCE_H
+#define _PADREFERENCE_H
+
 // The definition of this struct, and the operator overloads have to
 // be before AtMap where an unordered_map using this as a key is
 // instatiated.
@@ -18,3 +21,5 @@ struct hash<PadReference> {
    }
 };
 } // namespace std
+
+#endif //#ifndef _PADREFERENCE_H

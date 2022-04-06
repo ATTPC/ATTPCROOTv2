@@ -1,10 +1,14 @@
 #include "AtSiArrayContFact.h"
 
-#include "AtSiArrayGeoPar.h"
+#include <FairContFact.h>
+#include <TList.h>
+#include <TString.h>
+#include <string.h>
 
+#include "AtSiArrayGeoPar.h"
 #include "FairRuntimeDb.h"
 
-#include <iostream>
+class FairParSet;
 
 ClassImp(AtSiArrayContFact)
 

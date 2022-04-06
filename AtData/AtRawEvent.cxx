@@ -7,12 +7,10 @@
  *********************************************************************/
 
 #include <iostream>
-#include <iomanip>
-
-#include "FairLogger.h"
 
 #include "AtRawEvent.h"
 #include "AtPad.h"
+#include "fairlogger/Logger.h"
 
 ClassImp(AtRawEvent);
 

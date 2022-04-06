@@ -8,14 +8,17 @@
 #ifndef ATPARSERS_H
 #define ATPARSERS_H
 
-#include <iostream>
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TString.h>
+#include <string>
+#include <vector>
 
-#include "TROOT.h"
 #include "TObject.h"
-#include "TDOMParser.h"
-#include "TXMLAttr.h"
-#include "TXMLNode.h"
-#include "TList.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 namespace AtTools {
 

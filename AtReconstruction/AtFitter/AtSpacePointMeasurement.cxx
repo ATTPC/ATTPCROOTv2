@@ -19,9 +19,22 @@ Adapted to AtTPCROOTv2 by Yassid Ayyad ayyadlim@frib.msu.edu
 */
 
 #include "AtSpacePointMeasurement.h"
-#include "TMatrixD.h"
-#include <cmath>
-#include <iostream>
+
+#include <SpacepointMeasurement.h>
+#include <TMatrixDSymfwd.h>
+#include <TMatrixDfwd.h>
+#include <TMatrixT.h>
+#include <TMatrixTSym.h>
+#include <TVectorDfwd.h>
+#include <TVectorT.h>
+#include <TrackCandHit.h>
+#include <Math/Point3D.h>
+
+#include "AtHitCluster.h"
+
+namespace genfit {
+class AbsMeasurement;
+}  // namespace genfit
 
 ClassImp(genfit::AtSpacepointMeasurement)
 

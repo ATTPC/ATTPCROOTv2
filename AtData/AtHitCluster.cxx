@@ -1,8 +1,6 @@
 #include "AtHitCluster.h"
 
-#include "TMath.h"
-
-#include <iostream>
+#include "Rtypes.h"
 
 ClassImp(AtHitCluster);
 

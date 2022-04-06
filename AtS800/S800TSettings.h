@@ -9,12 +9,17 @@
 #ifndef __SETTINGS_HH
 #define __SETTINGS_HH
 
-#include <TFile.h>
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TNamed.h>
 #include <string>
-#include <vector>
 #include <iostream>
 #include <map>
-#include <cstdio>
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
+
 using namespace std;
 
 class S800TSettings : public TNamed {

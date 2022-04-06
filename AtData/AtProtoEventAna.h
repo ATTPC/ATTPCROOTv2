@@ -1,11 +1,15 @@
 #ifndef AtPROTOEVENTANA_H
 #define AtPROTOEVENTANA_H
 
-#include "TROOT.h"
-#include "TObject.h"
-
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TNamed.h>
 #include <vector>
-#include <map>
+#include <utility>
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtProtoEventAna : public TNamed {
 public:

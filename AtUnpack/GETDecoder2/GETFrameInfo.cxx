@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <iostream>
 
+#include "Rtypes.h"
+
 using std::cout;
 using std::endl;
 

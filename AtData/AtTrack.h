@@ -1,18 +1,25 @@
 #ifndef ATTRACK_H
 #define ATTRACK_H
 
-#include "TROOT.h"
-#include "TObject.h"
-#include "TMath.h"
-#include "Math/Point3D.h"
-
-#include <numeric>
+#include <Math/Point3Dfwd.h>
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <Math/Point3D.h>
 #include <algorithm>
 #include <iostream>
+#include <memory>
+#include <utility>
+#include <vector>
 
+#include "TObject.h"
+#include "TMath.h"
 // AtTPCROOT
 #include "AtHit.h"
 #include "AtHitCluster.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

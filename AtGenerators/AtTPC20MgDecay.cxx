@@ -1,18 +1,15 @@
 #include "AtTPC20MgDecay.h"
 
+#include <math.h>
+#include <iostream>
+#include <map>
+
 #include "FairPrimaryGenerator.h"
-#include "FairRootManager.h"
-#include "FairLogger.h"
-#include "FairMCEventHeader.h"
-
-#include "FairRunSim.h"
-#include "FairRunAna.h"
-
 #include "TDatabasePDG.h"
 #include "TParticlePDG.h"
-
 #include "TRandom.h"
 #include "TMath.h"
+#include "fairlogger/Logger.h"
 
 // -----   Default constructor   ------------------------------------------
 AtTPC20MgDecay::AtTPC20MgDecay()

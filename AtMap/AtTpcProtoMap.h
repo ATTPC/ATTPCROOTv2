@@ -8,12 +8,20 @@
 #ifndef ATTPCPROTOMAP_H
 #define ATTPCPROTOMAP_H
 
-#include "AtTpcMap.h"
-#include "TFile.h"
-#include "TH2Poly.h"
+#include <Math/Point2Dfwd.h>
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TString.h>
 #include <vector>
-#include <fstream>
 #include <map>
+
+#include "AtMap.h"
+
+class TBuffer;
+class TClass;
+class TFile;
+class TH2Poly;
+class TMemberInspector;
 
 class AtTpcProtoMap : public AtMap {
 protected:

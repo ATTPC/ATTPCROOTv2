@@ -1,5 +1,7 @@
 #include "AtSimulatedPoint.h"
 
+#include "Rtypes.h"
+
 using XYZVector = ROOT::Math::XYZVector;
 
 ClassImp(AtSimulatedPoint);

@@ -1,11 +1,19 @@
 #ifndef __S800CALC_HH
 #define __S800CALC_HH
 
+#include <Rtypes.h>
+#include <RtypesCore.h>
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <algorithm>
+
 #include "TObject.h"
 #include "TNamed.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using namespace std;
 class S800;

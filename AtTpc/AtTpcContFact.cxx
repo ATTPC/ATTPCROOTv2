@@ -7,11 +7,15 @@
  ********************************************************************************/
 #include "AtTpcContFact.h"
 
-#include "AtTpcGeoPar.h"
+#include <FairContFact.h>
+#include <TList.h>
+#include <TString.h>
+#include <string.h>
 
+#include "AtTpcGeoPar.h"
 #include "FairRuntimeDb.h"
 
-#include <iostream>
+class FairParSet;
 
 ClassImp(AtTpcContFact)
 

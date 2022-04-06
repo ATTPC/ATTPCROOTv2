@@ -1,24 +1,26 @@
 #include "AtPulseTask.h"
 
+#include <FairTask.h>
+#include <TAxis.h>
+#include <TObject.h>
+#include <fairlogger/Logger.h>
+#include <Math/Vector3D.h>
+// STL class headers
+#include <cmath>
+#include <iostream>
+#include <cstdio>
+#include <utility>
+
 #include "AtDigiPar.h"
-#include "AtHit.h"
 #include "AtMCPoint.h"
 #include "AtMap.h"
 #include "AtPad.h"
 #include "AtRawEvent.h"
 #include "AtSimulatedPoint.h"
-#include "AtVertexPropagator.h"
-
 // Fair class header
 #include "FairRootManager.h"
 #include "FairRunAna.h"
 #include "FairRuntimeDb.h"
-
-// STL class headers
-#include <cmath>
-#include <iostream>
-#include <iomanip>
-
 #include "TClonesArray.h"
 #include "TF1.h"
 #include "TH1.h"

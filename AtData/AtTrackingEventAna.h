@@ -1,13 +1,17 @@
 #ifndef AtTRACKINGEVENTANA_H
 #define AtTRACKINGEVENTANA_H
 
-#include "TROOT.h"
-#include "TObject.h"
+#include <Rtypes.h>
+#include <RtypesCore.h>
+#include <TNamed.h>
+#include <vector>
+
 #include "AtTrack.h"
 #include "TVector3.h"
 
-#include <vector>
-#include <map>
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtTrackingEventAna : public TNamed {
 
