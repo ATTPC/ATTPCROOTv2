@@ -11,8 +11,8 @@
 #include <utility>
 #include <vector>
 
-#include "TObject.h"
-#include "TMath.h"
+#include <TObject.h>
+#include <TMath.h>
 // AtTPCROOT
 #include "AtHit.h"
 #include "AtHitCluster.h"

@@ -4,7 +4,7 @@
 #include <vector>
 
 // ROOT
-#include "TClonesArray.h"
+#include <TClonesArray.h>
 
 // AtTPCROOT classes
 #include "AtEvent.h"
@@ -15,8 +15,8 @@
 #include "AtTrackFinderHC.h"
 
 // FAIRROOT classes
-#include "FairTask.h"
-#include "FairLogger.h"
+#include <FairTask.h>
+#include <FairLogger.h>
 
 class AtPRAtask : public FairTask {
 public:

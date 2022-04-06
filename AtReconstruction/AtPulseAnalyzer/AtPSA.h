@@ -9,7 +9,7 @@
 #include <cstddef>
 #include <utility>
 
-#include "TVector3.h"
+#include <TVector3.h>
 
 class TClonesArray;
 // AtTPCROOT classes

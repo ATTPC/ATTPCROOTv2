@@ -11,8 +11,8 @@
 #include <memory>
 #include <string>
 
-#include "FairTask.h"
-#include "TClonesArray.h"
+#include <FairTask.h>
+#include <TClonesArray.h>
 
 #include "AtSpaceChargeModel.h" // IWYU pragma: keep
 

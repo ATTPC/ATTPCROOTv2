@@ -20,7 +20,7 @@
 #include <memory>
 #include <string>
 
-#include "TString.h"
+#include <TString.h>
 #include "GETDecoder2.h"
 #include "GETFileChecker.h"
 #include "GETBasicFrame.h"

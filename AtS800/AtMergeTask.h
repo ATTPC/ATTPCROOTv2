@@ -7,7 +7,7 @@
 #include <vector>
 
 // FAIRROOT classes
-#include "FairTask.h"
+#include <FairTask.h>
 
 // AtTPCROOT classes
 

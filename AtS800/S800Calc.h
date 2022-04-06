@@ -8,8 +8,8 @@
 #include <cmath>
 #include <algorithm>
 
-#include "TObject.h"
-#include "TNamed.h"
+#include <TObject.h>
+#include <TNamed.h>
 
 class TBuffer;
 class TClass;

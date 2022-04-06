@@ -8,7 +8,7 @@
 #ifndef ATSPACECHARGETASK_H
 #define ATSPACECHARGETASK_H
 
-#include "FairTask.h"
+#include <FairTask.h>
 
 class TClonesArray;
 class AtDigiPar;

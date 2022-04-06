@@ -12,9 +12,9 @@
 #include <vector>
 
 // FairRoot classes
-#include "FairTask.h"
+#include <FairTask.h>
 // ROOT classes
-#include "TString.h"
+#include <TString.h>
 
 // ATTPCROOT classes;
 class AtFilter;

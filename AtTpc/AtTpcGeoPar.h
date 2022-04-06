@@ -11,7 +11,7 @@
 #include <Rtypes.h>
 #include <RtypesCore.h>
 
-#include "FairParGenericSet.h"
+#include <FairParGenericSet.h>
 
 class TObjArray;
 class FairParamList;

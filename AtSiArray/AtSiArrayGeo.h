@@ -5,7 +5,7 @@
 #include <RtypesCore.h>
 #include <TString.h>
 
-#include "FairGeoSet.h"
+#include <FairGeoSet.h>
 
 class TBuffer;
 class TClass;

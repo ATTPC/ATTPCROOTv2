@@ -12,7 +12,7 @@
 #include <stdint.h>
 #include <fstream>
 
-#include "TObject.h"
+#include <TObject.h>
 
 class TBuffer;
 class TClass;

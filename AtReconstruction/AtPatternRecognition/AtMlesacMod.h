@@ -18,16 +18,16 @@
 #include <vector>
 
 // FairRoot classes
-#include "FairRootManager.h"
-#include "FairLogger.h"
+#include <FairRootManager.h>
+#include <FairLogger.h>
 
 // ROOT Headers
 #include <TObject.h>
 #include <TMath.h>
 #include <TVector3.h>
 #include <TRandom.h>
-#include "TApplication.h"
-#include "TROOT.h"
+#include <TApplication.h>
+#include <TROOT.h>
 
 #ifdef _OPENMP
 #include <omp.h>

@@ -12,28 +12,28 @@
 #include <assert.h>
 #define G__DICTIONARY
 #include "RConfig.h"
-#include "TClass.h"
-#include "TDictAttributeMap.h"
-#include "TInterpreter.h"
-#include "TROOT.h"
-#include "TBuffer.h"
-#include "TMemberInspector.h"
-#include "TInterpreter.h"
-#include "TVirtualMutex.h"
-#include "TError.h"
+#include <TClass.h>
+#include <TDictAttributeMap.h>
+#include <TInterpreter.h>
+#include <TROOT.h>
+#include <TBuffer.h>
+#include <TMemberInspector.h>
+#include <TInterpreter.h>
+#include <TVirtualMutex.h>
+#include <TError.h>
 
 #ifndef G__ROOT
 #define G__ROOT
 #endif
 
 #include "RtypesImp.h"
-#include "TIsAProxy.h"
-#include "TFileMergeInfo.h"
+#include <TIsAProxy.h>
+#include <TFileMergeInfo.h>
 #include <algorithm>
-#include "TCollectionProxyInfo.h"
+#include <TCollectionProxyInfo.h>
 /*******************************************************************/
 
-#include "TDataMember.h"
+#include <TDataMember.h>
 
 // Since CINT ignores the std namespace, we need to do so in this file.
 namespace std {

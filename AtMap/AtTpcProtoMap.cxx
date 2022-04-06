@@ -19,8 +19,8 @@
 #include <memory>
 #include <utility>
 
-#include "TKey.h"
-#include "TMultiGraph.h"
+#include <TKey.h>
+#include <TMultiGraph.h>
 #include "Rtypes.h"
 
 #define cRED "\033[1;31m"

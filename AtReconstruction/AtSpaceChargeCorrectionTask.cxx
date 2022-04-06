@@ -11,7 +11,7 @@
 #include "AtSpaceChargeModel.h"
 #include <FairRootManager.h>
 #include "AtEvent.h"
-#include "TClonesArray.h"
+#include <TClonesArray.h>
 #include "AtHit.h"
 
 using XYZPoint = ROOT::Math::XYZPoint;

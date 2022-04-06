@@ -15,7 +15,7 @@
 #include <Math/Point2D.h>
 #include <array>
 
-#include "TObject.h"
+#include <TObject.h>
 
 class TBuffer;
 class TClass;

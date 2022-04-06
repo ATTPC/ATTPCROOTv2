@@ -15,7 +15,7 @@
 #include <vector>
 
 // FAIRROOT classes
-#include "FairTask.h"
+#include <FairTask.h>
 
 class AtDigiPar;
 class FairLogger;

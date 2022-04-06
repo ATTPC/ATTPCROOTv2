@@ -13,7 +13,7 @@
 
 #include <Rtypes.h>
 
-#include "TString.h"
+#include <TString.h>
 
 class TBuffer;
 class TClass;

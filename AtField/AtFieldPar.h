@@ -18,7 +18,7 @@
 #include <RtypesCore.h>
 #include <TString.h>
 
-#include "FairParGenericSet.h"
+#include <FairParGenericSet.h>
 
 class FairField;
 class FairParamList;

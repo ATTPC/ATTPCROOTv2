@@ -5,7 +5,7 @@
 #include <RtypesCore.h>
 
 // ROOT classes
-#include "TString.h"
+#include <TString.h>
 
 class TBuffer;
 class TClass;

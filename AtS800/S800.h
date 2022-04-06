@@ -8,7 +8,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "TObject.h"
+#include <TObject.h>
 
 class TBuffer;
 class TClass;

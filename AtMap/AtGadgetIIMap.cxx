@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-#include "TH2Poly.h"
+#include <TH2Poly.h>
 #include "Rtypes.h"
 
 #define cRED "\033[1;31m"

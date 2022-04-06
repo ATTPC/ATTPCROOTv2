@@ -37,10 +37,10 @@
 #include <stack>   // for stack
 #include <utility> // for pair
 
-#include "FairGenericStack.h" // for FairGenericStack
+#include <FairGenericStack.h> // for FairGenericStack
 #include "AtDetectorList.h" // for DetectorId
 #include "Rtypes.h"     // for Int_t, Double_t, Bool_t, etc
-#include "TMCProcess.h" // for TMCProcess
+#include <TMCProcess.h> // for TMCProcess
 
 class TClonesArray;
 class TParticle;

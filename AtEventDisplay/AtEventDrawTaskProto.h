@@ -6,7 +6,7 @@
 #include <TString.h>
 
 // FairRoot classes
-#include "FairTask.h"
+#include <FairTask.h>
 
 class AtEventManagerProto;
 class AtHit;

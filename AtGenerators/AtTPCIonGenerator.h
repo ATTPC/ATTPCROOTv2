@@ -12,7 +12,7 @@
 #include <Rtypes.h>
 #include <RtypesCore.h>
 
-#include "FairGenerator.h"
+#include <FairGenerator.h>
 
 class FairPrimaryGenerator;
 class FairIon;

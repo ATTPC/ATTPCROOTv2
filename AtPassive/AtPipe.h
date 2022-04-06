@@ -16,7 +16,7 @@
 
 #include <Rtypes.h>
 
-#include "FairModule.h"
+#include <FairModule.h>
 
 class TBuffer;
 class TClass;

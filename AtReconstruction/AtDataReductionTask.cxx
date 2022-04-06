@@ -8,7 +8,7 @@
 #include "AtRawEvent.h"
 #include <FairRunAna.h>
 #include <FairRootManager.h>
-#include "TClonesArray.h"
+#include <TClonesArray.h>
 
 AtDataReductionTask::AtDataReductionTask() : reduceFunc(nullptr), fInputBranchName("AtRawEvent") {}
 

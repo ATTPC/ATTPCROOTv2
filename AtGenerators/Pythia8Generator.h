@@ -12,11 +12,11 @@
 #ifndef PNDP8GENERAtOR_H
 #define PNDP8GENERAtOR_H 1
 
-#include "TROOT.h"
-#include "FairGenerator.h"
+#include <TROOT.h>
+#include <FairGenerator.h>
 #include "Pythia.h"
-#include "TRandom1.h"
-#include "TRandom3.h"
+#include <TRandom1.h>
+#include <TRandom3.h>
 
 class FairPrimaryGenerator;
 using namespace Pythia8;

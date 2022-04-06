@@ -11,7 +11,7 @@
 #include <Rtypes.h>
 #include <RtypesCore.h>
 
-#include "FairTask.h"
+#include <FairTask.h>
 
 class AtDigiPar;
 class AtGas;

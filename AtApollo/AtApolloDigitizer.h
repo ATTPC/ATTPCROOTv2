@@ -14,7 +14,7 @@
 //Needed for streamer generation
 #include <TClonesArray.h> // IWYU pragma: keep
 
-#include "FairTask.h"
+#include <FairTask.h>
 
 class AtApolloCrystalCalData;
 class TBuffer;

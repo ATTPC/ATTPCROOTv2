@@ -8,8 +8,8 @@
 #include <string>
 
 // ROOT class headers
-#include "TRandom.h"
-#include "TString.h"
+#include <TRandom.h>
+#include <TString.h>
 #include "Rtypes.h"
 
 using namespace std;

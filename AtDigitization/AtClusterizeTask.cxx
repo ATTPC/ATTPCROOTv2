@@ -16,9 +16,9 @@
 #include "AtDigiPar.h"
 #include "AtSimulatedPoint.h"
 #include "AtMCPoint.h"
-#include "TClonesArray.h"
-#include "TMath.h"
-#include "TRandom.h"
+#include <TClonesArray.h>
+#include <TMath.h>
+#include <TRandom.h>
 
 using XYZVector = ROOT::Math::XYZVector;
 

@@ -9,7 +9,7 @@
 #include "AtRawEvent.h"
 
 // AtTPCRoot Classes
-#include "TClonesArray.h"
+#include <TClonesArray.h>
 
 // stdlib headers
 #include <iostream>

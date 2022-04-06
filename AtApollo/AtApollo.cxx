@@ -19,9 +19,9 @@
 #include <FairRun.h>
 #include "AtDetectorList.h"
 #include "AtStack.h"
-#include "TVirtualMC.h"
-#include "TClonesArray.h"
-#include "TLorentzVector.h"
+#include <TVirtualMC.h>
+#include <TClonesArray.h>
+#include <TLorentzVector.h>
 #include "fairlogger/Logger.h"
 
 class FairRuntimeDb;

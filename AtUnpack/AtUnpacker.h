@@ -7,7 +7,7 @@
 #include <string>
 #include <utility>
 
-#include "TObject.h"
+#include <TObject.h>
 
 class AtRawEvent;
 class AtMap;

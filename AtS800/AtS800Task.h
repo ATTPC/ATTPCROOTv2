@@ -5,7 +5,7 @@
 #include <RtypesCore.h>
 
 // FAIRROOT classes
-#include "FairTask.h"
+#include <FairTask.h>
 
 // AtTPCROOT classes
 

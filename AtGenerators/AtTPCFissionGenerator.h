@@ -10,7 +10,7 @@
 #include <RtypesCore.h>
 #include <TString.h>
 
-#include "FairGenerator.h"
+#include <FairGenerator.h>
 
 class FairPrimaryGenerator;
 class TDatabasePDG;

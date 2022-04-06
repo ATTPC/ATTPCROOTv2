@@ -12,7 +12,7 @@
 #include <string>
 #include <memory>
 
-#include "TObject.h"
+#include <TObject.h>
 
 class TBuffer;
 class TClass;

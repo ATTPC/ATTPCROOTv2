@@ -31,7 +31,7 @@
 #include <FairGeoMedium.h>     // for FairGeoMedium
 #include <FairGeoNode.h>       // for FairGeoNode, etc
 #include <FairGeoShapes.h>     // for FairGeoShapes
-#include "TList.h" // for TList
+#include <TList.h> // for TList
 
 using namespace std;
 ClassImp(AtGeoCave)

@@ -5,8 +5,8 @@
 #include <RtypesCore.h>
 #include <array>
 
-#include "TObject.h"
-#include "TString.h"
+#include <TObject.h>
+#include <TString.h>
 
 class TBuffer;
 class TClass;

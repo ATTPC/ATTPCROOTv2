@@ -13,8 +13,8 @@
 #include <TString.h>
 #include <string>
 
-#include "FairDetector.h"
-#include "TVector3.h"
+#include <FairDetector.h>
+#include <TVector3.h>
 
 class FairVolume;
 class TClonesArray;

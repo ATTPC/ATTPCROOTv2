@@ -28,7 +28,7 @@
 #include <vector>
 
 // FairRoot classes
-#include "FairTask.h"
+#include <FairTask.h>
 
 // HiRAEVT classes
 class HTTimestamp;

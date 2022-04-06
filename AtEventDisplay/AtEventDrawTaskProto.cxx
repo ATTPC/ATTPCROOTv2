@@ -33,16 +33,16 @@
 
 #include <FairRootManager.h>
 #include "AtEventDrawTaskProto.h"
-#include "TEveManager.h"
-#include "TEveTrans.h"
-#include "TPaletteAxis.h"
-#include "TStyle.h"
-#include "TColor.h"
-#include "TVirtualX.h"
+#include <TEveManager.h>
+#include <TEveTrans.h>
+#include <TPaletteAxis.h>
+#include <TStyle.h>
+#include <TColor.h>
+#include <TVirtualX.h>
 #include "AtMap.h"
 #include "AtTpcProtoMap.h"
-#include "TH2Poly.h"
-#include "TF1.h"
+#include <TH2Poly.h>
+#include <TF1.h>
 #include "AtAuxPad.h"
 #include "AtEvent.h"
 #include "AtEventManagerProto.h"
