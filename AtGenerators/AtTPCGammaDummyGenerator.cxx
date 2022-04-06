@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <memory>
 
-#include "FairPrimaryGenerator.h"
+#include <FairPrimaryGenerator.h>
 #include "TDatabasePDG.h"
 #include "TParticlePDG.h"
 #include "TRandom.h"

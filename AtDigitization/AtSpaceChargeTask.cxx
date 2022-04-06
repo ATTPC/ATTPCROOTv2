@@ -3,9 +3,9 @@
 #include "AtMCPoint.h"
 #include "AtDigiPar.h"
 
-#include "FairLogger.h"
-#include "FairRunAna.h"
-#include "FairRuntimeDb.h"
+#include <FairLogger.h>
+#include <FairRunAna.h>
+#include <FairRuntimeDb.h>
 
 #include "TClonesArray.h"
 

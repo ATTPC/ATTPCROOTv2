@@ -5,7 +5,7 @@
 #include <FairTask.h>
 #include <memory>
 
-#include "FairRun.h"
+#include <FairRun.h>
 #include "fairlogger/Logger.h"
 
 class FairRuntimeDb;

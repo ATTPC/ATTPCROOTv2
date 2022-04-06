@@ -14,7 +14,7 @@
 #include "TFile.h"
 #include "TGraph.h"
 #include "HTTimestamp.h"
-#include "FairRootManager.h"
+#include <FairRootManager.h>
 #include "AtRunAna.h"
 #include "AtRawEvent.h"
 

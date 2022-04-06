@@ -4,7 +4,7 @@
 #include <Rtypes.h>
 #include <RtypesCore.h>
 
-#include "FairRunAna.h"
+#include <FairRunAna.h>
 
 class TBuffer;
 class TClass;

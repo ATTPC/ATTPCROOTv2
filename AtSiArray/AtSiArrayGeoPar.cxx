@@ -2,7 +2,7 @@
 
 #include <FairParGenericSet.h>
 
-#include "FairParamList.h"
+#include <FairParamList.h>
 #include "TObjArray.h"
 
 ClassImp(AtSiArrayGeoPar)

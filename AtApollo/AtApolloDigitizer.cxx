@@ -15,7 +15,7 @@
 #include <iostream>
 #include <memory>
 
-#include "FairRootManager.h"
+#include <FairRootManager.h>
 #include "AtApolloCrystalCalData.h"
 #include "AtApolloPoint.h"
 #include "TClonesArray.h"

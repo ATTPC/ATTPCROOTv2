@@ -11,7 +11,7 @@
 #include <TString.h>
 #include <stddef.h>
 
-#include "FairRuntimeDb.h"
+#include <FairRuntimeDb.h>
 
 class FairParSet;
 

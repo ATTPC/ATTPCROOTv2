@@ -8,7 +8,7 @@
 //#include "AtGeoPar.h"
 #include "AtDigiPar.h"
 #include "AtTriggerPar.h"
-#include "FairRuntimeDb.h"
+#include <FairRuntimeDb.h>
 
 class FairParSet;
 

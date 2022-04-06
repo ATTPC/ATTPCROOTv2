@@ -22,8 +22,8 @@
 #include "AtTrackFinderHC.h"
 #include "AtTrackingEventAna.h"
 
-#include "FairLogger.h"
-#include "FairRootManager.h"
+#include <FairLogger.h>
+#include <FairRootManager.h>
 
 #include "TClonesArray.h"
 #include "TColor.h"

@@ -14,9 +14,9 @@
 #include <iostream>
 
 #include "AtApolloPoint.h"
-#include "FairVolume.h"
-#include "FairRootManager.h"
-#include "FairRun.h"
+#include <FairVolume.h>
+#include <FairRootManager.h>
+#include <FairRun.h>
 #include "AtDetectorList.h"
 #include "AtStack.h"
 #include "TVirtualMC.h"

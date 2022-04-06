@@ -5,7 +5,7 @@
 #include <fairlogger/Logger.h>
 #include <utility>
 
-#include "FairRootManager.h"
+#include <FairRootManager.h>
 #include "AtRawEvent.h"
 #include "TClonesArray.h"
 

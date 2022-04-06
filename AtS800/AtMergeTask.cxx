@@ -14,7 +14,7 @@
 
 #include "TFile.h"
 // FAIRROOT classes
-#include "FairRootManager.h"
+#include <FairRootManager.h>
 #include "TGraph.h"
 #include "TF1.h"
 #include "TKey.h"

@@ -1,11 +1,11 @@
 #include "AtDecoder2Task.h"
 
 // FAIRROOT classes
-#include "FairRootManager.h"
-#include "FairRunOnline.h"
-#include "FairRun.h"
-#include "FairRunAna.h"
-#include "FairRuntimeDb.h"
+#include <FairRootManager.h>
+#include <FairRunOnline.h>
+#include <FairRun.h>
+#include <FairRunAna.h>
+#include <FairRuntimeDb.h>
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

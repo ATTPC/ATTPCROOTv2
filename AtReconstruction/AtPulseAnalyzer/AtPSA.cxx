@@ -6,8 +6,8 @@
 #include <iterator>
 
 // FairRoot classes
-#include "FairRuntimeDb.h"
-#include "FairRun.h"
+#include <FairRuntimeDb.h>
+#include <FairRun.h>
 // ROOT classes
 #include "TClonesArray.h"
 #include "TVector3.h"

@@ -1,6 +1,6 @@
 #include "AtPSAFilter.h"
 
-#include "FairLogger.h"
+#include <FairLogger.h>
 
 // ROOT files
 #include "TH1F.h"

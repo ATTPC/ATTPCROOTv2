@@ -9,9 +9,9 @@
 
 #include "AtTrigger.h"
 // Fair class header
-#include "FairRootManager.h"
-#include "FairRunAna.h"
-#include "FairRuntimeDb.h"
+#include <FairRootManager.h>
+#include <FairRunAna.h>
+#include <FairRuntimeDb.h>
 #include "AtEvent.h"
 #include "AtRawEvent.h"
 #include "AtTriggerPar.h"

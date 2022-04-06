@@ -27,7 +27,7 @@
 #include <Rtypes.h>
 #include <iosfwd>
 
-#include "FairRuntimeDb.h" // for FairRuntimeDb
+#include <FairRuntimeDb.h> // for FairRuntimeDb
 #include "TList.h"   // for TList
 #include "TString.h" // for TString
 

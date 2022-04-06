@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "AtSpaceChargeModel.h"
-#include "FairRootManager.h"
+#include <FairRootManager.h>
 #include "AtEvent.h"
 #include "TClonesArray.h"
 #include "AtHit.h"

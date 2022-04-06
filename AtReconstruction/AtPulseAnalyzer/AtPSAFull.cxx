@@ -1,8 +1,8 @@
 #include "AtPSAFull.h"
 
 // FairRoot classes
-#include "FairRuntimeDb.h"
-#include "FairRun.h"
+#include <FairRuntimeDb.h>
+#include <FairRun.h>
 
 // AtTPCROOT classes
 #include "AtRawEvent.h"

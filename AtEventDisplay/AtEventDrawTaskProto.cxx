@@ -31,7 +31,7 @@
 #include <utility>
 #include <vector>
 
-#include "FairRootManager.h"
+#include <FairRootManager.h>
 #include "AtEventDrawTaskProto.h"
 #include "TEveManager.h"
 #include "TEveTrans.h"

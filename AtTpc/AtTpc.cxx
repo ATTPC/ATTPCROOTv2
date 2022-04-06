@@ -19,10 +19,10 @@
 #include "AtDetectorList.h"
 #include "AtMCPoint.h"
 #include "AtStack.h"
-#include "FairVolume.h"
-#include "FairRootManager.h"
-#include "FairRun.h"
-#include "FairRuntimeDb.h"
+#include <FairVolume.h>
+#include <FairRootManager.h>
+#include <FairRun.h>
+#include <FairRuntimeDb.h>
 #include "TClonesArray.h"
 #include "TVirtualMC.h"
 #include "TGeoManager.h"

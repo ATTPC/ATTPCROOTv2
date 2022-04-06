@@ -10,7 +10,7 @@
 #include <thread>
 
 #include "AtCore2.h"
-#include "FairLogger.h"
+#include <FairLogger.h>
 
 #include "GETCoboFrame.h"
 #include "GETLayeredFrame.h"

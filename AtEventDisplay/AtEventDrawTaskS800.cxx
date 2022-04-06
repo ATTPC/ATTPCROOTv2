@@ -4,7 +4,7 @@
  *         Adapted for AtTPCROOT by Yassid Ayyad (NSCL)
  */
 
-#include "FairRootManager.h"
+#include <FairRootManager.h>
 
 #include "AtEventDrawTaskS800.h"
 

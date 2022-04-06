@@ -19,9 +19,9 @@
 
 #include "AtFieldPar.h"
 #include "AtConstField.h"
-#include "FairRunAna.h"
-#include "FairRuntimeDb.h"
-#include "FairField.h"
+#include <FairRunAna.h>
+#include <FairRuntimeDb.h>
+#include <FairField.h>
 
 using std::cerr;
 using std::cout;

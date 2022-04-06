@@ -1,6 +1,6 @@
 #include "AtPSAProtoFull.h"
 
-#include "FairLogger.h"
+#include <FairLogger.h>
 
 #include "TH1.h"
 

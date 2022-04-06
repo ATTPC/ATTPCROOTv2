@@ -11,9 +11,9 @@
 #include "AtPatternEvent.h"
 #include "AtTrack.h"
 // FAIRROOT classes
-#include "FairRootManager.h"
-#include "FairRun.h"
-#include "FairRuntimeDb.h"
+#include <FairRootManager.h>
+#include <FairRun.h>
+#include <FairRuntimeDb.h>
 // GENFIT2 classes
 #include "Track.h"
 #include "AtDigiPar.h"

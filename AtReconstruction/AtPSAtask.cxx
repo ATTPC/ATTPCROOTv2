@@ -1,7 +1,7 @@
 #include "AtPSAtask.h"
 
 // FairRoot Classes
-#include "FairLogger.h"
+#include <FairLogger.h>
 
 // Root Classes
 #include "AtEvent.h"

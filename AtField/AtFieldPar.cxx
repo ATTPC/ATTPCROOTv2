@@ -18,7 +18,7 @@
 #include <iostream>
 
 #include "AtConstField.h"
-#include "FairParamList.h"
+#include <FairParamList.h>
 
 using std::cerr;
 using std::cout;

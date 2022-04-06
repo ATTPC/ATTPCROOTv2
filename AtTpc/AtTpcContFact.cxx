@@ -13,7 +13,7 @@
 #include <string.h>
 
 #include "AtTpcGeoPar.h"
-#include "FairRuntimeDb.h"
+#include <FairRuntimeDb.h>
 
 class FairParSet;
 

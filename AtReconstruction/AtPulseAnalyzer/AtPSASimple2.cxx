@@ -1,6 +1,6 @@
 #include "AtPSASimple2.h"
 
-#include "FairLogger.h"
+#include <FairLogger.h>
 
 // AtTPCROOT classes
 #include "AtCalibration.h"

@@ -11,9 +11,9 @@
 #include <iostream>
 
 #include "AtVertexPropagator.h"
-#include "FairPrimaryGenerator.h"
-#include "FairIon.h"
-#include "FairRunSim.h"
+#include <FairPrimaryGenerator.h>
+#include <FairIon.h>
+#include <FairRunSim.h>
 #include "TDatabasePDG.h"
 #include "TParticlePDG.h"
 #include "TObjArray.h"

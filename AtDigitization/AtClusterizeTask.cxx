@@ -10,9 +10,9 @@
 #include <memory>
 
 // Fair class header
-#include "FairRootManager.h"
-#include "FairRunAna.h"
-#include "FairRuntimeDb.h"
+#include <FairRootManager.h>
+#include <FairRunAna.h>
+#include <FairRuntimeDb.h>
 #include "AtDigiPar.h"
 #include "AtSimulatedPoint.h"
 #include "AtMCPoint.h"

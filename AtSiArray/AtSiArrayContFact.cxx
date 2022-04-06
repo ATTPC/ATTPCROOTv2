@@ -6,7 +6,7 @@
 #include <string.h>
 
 #include "AtSiArrayGeoPar.h"
-#include "FairRuntimeDb.h"
+#include <FairRuntimeDb.h>
 
 class FairParSet;
 

@@ -6,7 +6,7 @@
 #include "AtRawEvent.h"
 #include "AtEvent.h"
 
-#include "FairLogger.h"
+#include <FairLogger.h>
 
 // STL
 #include <cmath>

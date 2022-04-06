@@ -7,7 +7,7 @@
 #include <iostream>
 #include <memory>
 
-#include "FairRootManager.h"
+#include <FairRootManager.h>
 #include "TClonesArray.h"
 #include "AtDigiPar.h"
 #include "AtMCPoint.h"

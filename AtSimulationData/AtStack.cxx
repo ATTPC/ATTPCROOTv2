@@ -19,12 +19,12 @@
 #include <iostream> // for operator<<, etc
 #include <iterator>
 
-#include "FairDetector.h"    // for FairDetector
-#include "FairLink.h"        // for FairLink
-#include "FairMCPoint.h"     // for FairMCPoint
+#include <FairDetector.h>    // for FairDetector
+#include <FairLink.h>        // for FairLink
+#include <FairMCPoint.h>     // for FairMCPoint
 #include "AtMCTrack.h"       // for AtMCTrack
-#include "FairRootManager.h" // for FairRootManager
-#include "FairLogger.h"
+#include <FairRootManager.h> // for FairRootManager
+#include <FairLogger.h>
 #include "fairlogger/Logger.h"
 #include "TClonesArray.h"   // for TClonesArray
 #include "TIterator.h"      // for TIterator
