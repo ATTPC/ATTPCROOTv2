@@ -6,9 +6,9 @@
 #include <RtypesCore.h>
 
 // FAIRROOT classes
-#include "FairParGenericSet.h"
+#include <FairParGenericSet.h>
 // ROOT classes
-#include "TString.h"
+#include <TString.h>
 
 class AtGas;
 class FairLogger;

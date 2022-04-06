@@ -5,9 +5,9 @@
 #include <RtypesCore.h>
 #include <vector>
 
-#include "TObject.h"
+#include <TObject.h>
 #include "AtHit.h"
-#include "TH1.h"
+#include <TH1.h>
 
 class TBuffer;
 class TClass;

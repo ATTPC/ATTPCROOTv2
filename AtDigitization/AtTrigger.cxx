@@ -13,7 +13,7 @@
 #include "AtEvent.h"
 #include "AtPad.h"
 #include "AtRawEvent.h"
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 ClassImp(AtTrigger)
 

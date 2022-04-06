@@ -18,12 +18,12 @@
 #include <TGeoMatrix.h>
 #include <TGeoVolume.h>
 
-#include "TGeoManager.h"
-#include "TGeoBBox.h"
-#include "TGeoCompositeShape.h"
-#include "TGeoTube.h"
-#include "TGeoMaterial.h"
-#include "TGeoMedium.h"
+#include <TGeoManager.h>
+#include <TGeoBBox.h>
+#include <TGeoCompositeShape.h>
+#include <TGeoTube.h>
+#include <TGeoMaterial.h>
+#include <TGeoMedium.h>
 
 AtMagnet::~AtMagnet() {}
 AtMagnet::AtMagnet() : FairModule("AtMagnet", "") {}

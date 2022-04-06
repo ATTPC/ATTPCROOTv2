@@ -4,7 +4,7 @@
 #include <Rtypes.h>
 #include <RtypesCore.h>
 
-#include "TObject.h"
+#include <TObject.h>
 
 class TBuffer;
 class TClass;

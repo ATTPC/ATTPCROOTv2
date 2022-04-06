@@ -21,9 +21,9 @@
 #include <TObject.h>
 #include <memory>
 
-#include "TDatabasePDG.h" // for TDatabasePDG
-#include "TParticle.h"    // for TParticle
-#include "TParticlePDG.h" // for TParticlePDG
+#include <TDatabasePDG.h> // for TDatabasePDG
+#include <TParticle.h>    // for TParticle
+#include <TParticlePDG.h> // for TParticlePDG
 #include "fairlogger/Logger.h"
 
 // -----   Default constructor   -------------------------------------------

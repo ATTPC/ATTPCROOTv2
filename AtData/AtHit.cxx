@@ -1,6 +1,6 @@
 #include "AtHit.h"
 
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 ClassImp(AtHit);
 

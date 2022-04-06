@@ -10,7 +10,7 @@
 #include <Rtypes.h>
 #include <RtypesCore.h>
 
-#include "TNamed.h"
+#include <TNamed.h>
 
 class TBuffer;
 class TClass;

@@ -21,12 +21,12 @@
 #include <FairRootManager.h>
 #include <FairRunAna.h>
 #include <FairRuntimeDb.h>
-#include "TClonesArray.h"
-#include "TF1.h"
-#include "TH1.h"
-#include "TH2Poly.h"
-#include "TMath.h"
-#include "TRandom.h"
+#include <TClonesArray.h>
+#include <TF1.h>
+#include <TH1.h>
+#include <TH2Poly.h>
+#include <TMath.h>
+#include <TRandom.h>
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

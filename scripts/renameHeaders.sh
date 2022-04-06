@@ -11,11 +11,13 @@ echo "Changing root includes to #include <>"
 #    return
 #fi
 
-#for file in `find "$PWD" -type f | grep -w cxx$`
 for file in `find -L $VMCWORKDIR -type f | grep -w cxx$`
+#for file in `find -L $VMCWORKDIR -type f | grep -w h$`
 do
     echo Updating $file
     sed -i -E 's/#include \"(Fair.+\.h)\"/#include <\1>/' $file
+    sed -i -E 's/#include \"(T.+\.h)\"/#include <\1>/' $file
+    sed -i -E 's/#include \"(R.+\.h)\"/#include <\1>/' $file
     
 done
 

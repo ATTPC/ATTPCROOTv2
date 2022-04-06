@@ -15,7 +15,7 @@
 #include <map>
 #include <memory>
 
-#include "FairTask.h"
+#include <FairTask.h>
 
 class TClonesArray;
 class AtDigiPar;

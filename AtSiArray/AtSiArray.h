@@ -7,9 +7,9 @@
 #include <string>
 #include <utility>
 
-#include "FairDetector.h"
-#include "TVector3.h"
-#include "TLorentzVector.h"
+#include <FairDetector.h>
+#include <TVector3.h>
+#include <TLorentzVector.h>
 
 class AtSiPoint;
 class FairVolume;

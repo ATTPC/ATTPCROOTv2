@@ -16,10 +16,10 @@
 #include <iostream>
 
 // ROOT
-#include "TString.h"
-#include "TSystem.h"
-#include "TObjArray.h"
-#include "TObjString.h"
+#include <TString.h>
+#include <TSystem.h>
+#include <TObjArray.h>
+#include <TObjString.h>
 
 TString GETFileChecker::CheckFile(TString filename)
 {

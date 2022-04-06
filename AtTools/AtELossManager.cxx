@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cmath>
 
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 ClassImp(AtTools::AtELossManager)
 

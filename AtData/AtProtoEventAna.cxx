@@ -1,6 +1,6 @@
 #include "AtProtoEventAna.h"
 
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 ClassImp(AtProtoEventAna);
 

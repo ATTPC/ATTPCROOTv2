@@ -1,6 +1,6 @@
 #include "AtSpaceChargeModel.h"
 
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 AtSpaceChargeModel::AtSpaceChargeModel() {}
 

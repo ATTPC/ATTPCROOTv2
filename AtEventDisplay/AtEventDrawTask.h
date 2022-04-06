@@ -27,7 +27,7 @@ class AtTpcMap;
 class AtPatternEvent;
 
 // FairRoot classes
-#include "FairTask.h"
+#include <FairTask.h>
 
 // ROOT classes
 class TCanvas;
@@ -48,11 +48,11 @@ class TH3F;
 class TPaletteAxis;
 class TVector3;
 
-#include "TEveRGBAPalette.h"
+#include <TEveRGBAPalette.h>
 
 #include <Rtypes.h>
 #include <fstream>
-#include "TF1.h"
+#include <TF1.h>
 
 #ifndef __CINT__ // Boost
 #include <boost/multi_array.hpp>

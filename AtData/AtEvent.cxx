@@ -2,7 +2,7 @@
 #include <algorithm>
 
 #include "AtEvent.h"
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 ClassImp(AtEvent);
 

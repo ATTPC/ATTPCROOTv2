@@ -16,7 +16,7 @@
 #include "AtPedestal.h"
 #include "GETDecoder2.h"
 #include "PadReference.h"
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 AtGRAWUnpacker::AtGRAWUnpacker(mapPtr map, Int_t numGrawFiles)
    : AtUnpacker(map), fNumFiles(numGrawFiles), fCurrentEventID(fNumFiles, 0)

@@ -7,7 +7,7 @@
 #include <FairRunAna.h>
 #include <FairRuntimeDb.h>
 
-#include "TClonesArray.h"
+#include <TClonesArray.h>
 
 AtSpaceChargeTask::AtSpaceChargeTask() : FairTask("AtSpaceChargeTask") {}
 

@@ -12,7 +12,7 @@
 #include <Rtypes.h>
 #include <RtypesCore.h>
 
-#include "FairMultiLinkedData.h"
+#include <FairMultiLinkedData.h>
 
 class TBuffer;
 class TClass;

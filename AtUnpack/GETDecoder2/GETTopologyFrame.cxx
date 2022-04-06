@@ -3,7 +3,7 @@
 #include <string.h>
 #include <iostream>
 
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 ClassImp(GETTopologyFrame)
 

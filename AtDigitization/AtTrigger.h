@@ -4,8 +4,8 @@
 #include <Rtypes.h>
 #include <RtypesCore.h>
 
-#include "TObject.h"
-#include "TString.h"
+#include <TObject.h>
+#include <TString.h>
 #include "AtHit.h"
 
 class AtEvent;

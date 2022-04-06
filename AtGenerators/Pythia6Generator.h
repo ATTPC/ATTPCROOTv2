@@ -73,7 +73,7 @@
 #ifndef PND_PYTHIAGENERAtOR_H
 #define PND_PYTHIAGENERAtOR_H
 
-#include "FairGenerator.h"
+#include <FairGenerator.h>
 
 class TDatabasePDG;
 class FairPrimaryGenerator;

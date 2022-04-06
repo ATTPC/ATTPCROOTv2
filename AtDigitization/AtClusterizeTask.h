@@ -14,7 +14,7 @@
 #include <math.h>
 #include <Math/Vector3D.h>
 
-#include "FairTask.h"
+#include <FairTask.h>
 
 class AtGas;
 class AtDigiPar;

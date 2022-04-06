@@ -26,11 +26,11 @@
 #include <FairRootManager.h> // for FairRootManager
 #include <FairLogger.h>
 #include "fairlogger/Logger.h"
-#include "TClonesArray.h"   // for TClonesArray
-#include "TIterator.h"      // for TIterator
-#include "TLorentzVector.h" // for TLorentzVector
-#include "TParticle.h"      // for TParticle
-#include "TRefArray.h"      // for TRefArray
+#include <TClonesArray.h>   // for TClonesArray
+#include <TIterator.h>      // for TIterator
+#include <TLorentzVector.h> // for TLorentzVector
+#include <TParticle.h>      // for TParticle
+#include <TRefArray.h>      // for TRefArray
 
 using std::cout;
 using std::endl;

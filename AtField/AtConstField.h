@@ -25,7 +25,7 @@
 #include <Rtypes.h>
 #include <RtypesCore.h>
 
-#include "FairField.h"
+#include <FairField.h>
 
 class AtFieldPar;
 class TBuffer;

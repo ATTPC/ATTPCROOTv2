@@ -12,7 +12,7 @@
 #include <RtypesCore.h>
 #include <TString.h>
 
-#include "FairTask.h"
+#include <FairTask.h>
 
 class AtEvent;
 class AtRawEvent;

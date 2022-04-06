@@ -18,7 +18,7 @@
 #include <fstream>
 #include <vector>
 
-#include "TString.h"
+#include <TString.h>
 
 class GETBasicFrame;
 class GETBasicFrameHeader;

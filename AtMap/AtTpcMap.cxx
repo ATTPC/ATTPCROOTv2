@@ -18,10 +18,10 @@
 #include <fstream> // IWYU pragma: keep
 #include <vector>
 
-#include "TH2Poly.h"
-#include "Rtypes.h"
-#include "TMath.h"
-#include "TMathBase.h"
+#include <TH2Poly.h>
+#include <Rtypes.h>
+#include <TMath.h>
+#include <TMathBase.h>
 
 #undef BOOST_MULTI_ARRAY_NO_GENERATORS
 #define BOOST_MULTI_ARRAY_NO_GENERATORS

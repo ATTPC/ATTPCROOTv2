@@ -14,9 +14,9 @@
 #include <string>
 #include <utility>
 
-#include "FairDetector.h"
-#include "TVector3.h"
-#include "TLorentzVector.h"
+#include <FairDetector.h>
+#include <TVector3.h>
+#include <TLorentzVector.h>
 
 class AtMCPoint;
 class FairVolume;

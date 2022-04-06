@@ -1,6 +1,6 @@
 #include "AtHitCluster.h"
 
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 ClassImp(AtHitCluster);
 

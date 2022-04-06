@@ -7,9 +7,9 @@
 #include <vector>
 
 // FAIRROOT classes
-#include "FairParGenericSet.h"
+#include <FairParGenericSet.h>
 // ROOT classes
-#include "TString.h"
+#include <TString.h>
 
 class FairLogger;
 class FairParamList;

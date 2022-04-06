@@ -1,6 +1,6 @@
 #include "AtPatternEvent.h"
 
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 ClassImp(AtPatternEvent);
 

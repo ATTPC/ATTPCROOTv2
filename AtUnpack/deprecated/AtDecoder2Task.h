@@ -2,8 +2,8 @@
 #ifndef _AtDECODER2TASK_H_
 #define _AtDECODER2TASK_H_
 
-#include "FairTask.h"
-#include "FairLogger.h"
+#include <FairTask.h>
+#include <FairLogger.h>
 
 #include "AtCore2.h"
 #include "AtTpcMap.h"
@@ -13,8 +13,8 @@
 #include "AtDigiPar.h"
 
 // ROOT classes
-#include "TClonesArray.h"
-#include "TString.h"
+#include <TClonesArray.h>
+#include <TString.h>
 
 // STL
 #include <vector>

@@ -4,7 +4,7 @@
 #include <math.h>
 #include <memory>
 
-#include "Rtypes.h"
+#include <Rtypes.h>
 #include "fairlogger/Logger.h"
 
 using XYZPoint = ROOT::Math::XYZPoint;

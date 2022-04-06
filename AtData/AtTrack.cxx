@@ -6,7 +6,7 @@
 #include <iterator>
 #include <numeric>
 
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 ClassImp(AtTrack);
 

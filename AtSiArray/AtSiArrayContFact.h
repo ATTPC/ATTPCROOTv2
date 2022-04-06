@@ -3,7 +3,7 @@
 
 #include <Rtypes.h>
 
-#include "FairContFact.h"
+#include <FairContFact.h>
 
 class FairParSet;
 class TBuffer;

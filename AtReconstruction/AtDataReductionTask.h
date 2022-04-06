@@ -14,7 +14,7 @@
 #include <TString.h>
 #include <type_traits>
 
-#include "FairTask.h"
+#include <FairTask.h>
 
 class AtRawEvent;
 class TClonesArray;

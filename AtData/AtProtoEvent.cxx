@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include <algorithm>
 
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 ClassImp(AtProtoEvent);
 

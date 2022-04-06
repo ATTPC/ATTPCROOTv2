@@ -15,7 +15,7 @@
 #include <iostream>
 
 #include "GETMath2.h"
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 ClassImp(AtPedestal);
 

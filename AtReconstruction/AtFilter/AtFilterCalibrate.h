@@ -6,7 +6,7 @@
 #include <memory>
 
 #include "AtFilter.h"
-#include "TString.h"
+#include <TString.h>
 
 class AtPad;
 class AtRawEvent;

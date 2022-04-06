@@ -7,9 +7,9 @@
 #ifndef _ATCORE2_H_
 #define _ATCORE2_H_
 
-#include "TObject.h"
-#include "TString.h"
-#include "TClonesArray.h"
+#include <TObject.h>
+#include <TString.h>
+#include <TClonesArray.h>
 
 #include "AtRawEvent.h"
 #include "AtMap.h"

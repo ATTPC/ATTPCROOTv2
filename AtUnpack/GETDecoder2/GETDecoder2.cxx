@@ -20,7 +20,7 @@
 #include <memory>
 #include <string>
 
-#include "TString.h"
+#include <TString.h>
 #include "GETDecoder2.h"
 #include "GETFileChecker.h"
 #include "GETBasicFrame.h"
@@ -31,7 +31,7 @@
 #include "GETLayerHeader.h"
 #include "GETLayeredFrame.h"
 #include "GETTopologyFrame.h"
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 //#define DEBUG
 

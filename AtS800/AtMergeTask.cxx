@@ -12,15 +12,15 @@
 #include <cmath>
 #include <memory>
 
-#include "TFile.h"
+#include <TFile.h>
 // FAIRROOT classes
 #include <FairRootManager.h>
-#include "TGraph.h"
-#include "TF1.h"
-#include "TKey.h"
-#include "TCutG.h"
-#include "TTreeReader.h"
-#include "TTreeReaderValue.h"
+#include <TGraph.h>
+#include <TF1.h>
+#include <TKey.h>
+#include <TCutG.h>
+#include <TTreeReader.h>
+#include <TTreeReaderValue.h>
 #include "S800Calc.h"
 #include "AtRawEvent.h"
 #include "fairlogger/Logger.h"

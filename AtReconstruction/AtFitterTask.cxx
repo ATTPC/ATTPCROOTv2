@@ -15,7 +15,7 @@
 #include <FairRun.h>
 #include <FairRuntimeDb.h>
 // GENFIT2 classes
-#include "Track.h"
+#include <Track.h>
 #include "AtDigiPar.h"
 #include "AtFitter.h"
 #include "AtGenfit.h"

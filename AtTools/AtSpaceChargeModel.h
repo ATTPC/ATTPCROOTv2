@@ -6,7 +6,7 @@
 #include <Rtypes.h>
 #include <Math/Point3D.h>
 
-#include "TObject.h"
+#include <TObject.h>
 
 class TBuffer;
 class TClass;

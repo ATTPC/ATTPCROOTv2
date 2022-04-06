@@ -16,7 +16,7 @@
 
 #include <RtypesCore.h>
 
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 class TBuffer;
 class TClass;

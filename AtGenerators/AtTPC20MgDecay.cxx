@@ -5,10 +5,10 @@
 #include <map>
 
 #include <FairPrimaryGenerator.h>
-#include "TDatabasePDG.h"
-#include "TParticlePDG.h"
-#include "TRandom.h"
-#include "TMath.h"
+#include <TDatabasePDG.h>
+#include <TParticlePDG.h>
+#include <TRandom.h>
+#include <TMath.h>
 #include "fairlogger/Logger.h"
 
 // -----   Default constructor   ------------------------------------------

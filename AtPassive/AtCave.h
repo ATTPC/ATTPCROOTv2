@@ -16,8 +16,8 @@
 
 #include <RtypesCore.h>
 
-#include "FairModule.h" // for FairModule
-#include "Rtypes.h" // for AtCave::Class, ClassDef, etc
+#include <FairModule.h> // for FairModule
+#include <Rtypes.h> // for AtCave::Class, ClassDef, etc
 
 class TBuffer;
 class TClass;

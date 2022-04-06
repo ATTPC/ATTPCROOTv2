@@ -9,14 +9,14 @@
 #include <FairRuntimeDb.h>
 #include <FairRun.h>
 // ROOT classes
-#include "TClonesArray.h"
-#include "TVector3.h"
-#include "TMath.h"
+#include <TClonesArray.h>
+#include <TVector3.h>
+#include <TMath.h>
 #include "AtDigiPar.h"
 #include "AtCalibration.h"
 #include "AtHit.h"
 #include "AtMCPoint.h"
-#include "Rtypes.h"
+#include <Rtypes.h>
 
 using std::distance;
 using std::max_element;

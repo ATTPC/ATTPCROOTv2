@@ -16,7 +16,7 @@
 
 #include <Rtypes.h>
 
-#include "FairFieldFactory.h"
+#include <FairFieldFactory.h>
 
 class AtFieldPar;
 class FairField;

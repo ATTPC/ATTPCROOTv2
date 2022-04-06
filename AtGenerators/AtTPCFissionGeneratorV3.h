@@ -9,7 +9,7 @@
 #include <Math/Vector4D.h>
 #include <vector>
 
-#include "FairGenerator.h"
+#include <FairGenerator.h>
 
 class TFile;
 class TTree;

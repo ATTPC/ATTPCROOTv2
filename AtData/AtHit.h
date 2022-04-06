@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <vector>
 
-#include "TObject.h"
+#include <TObject.h>
 
 class TBuffer;
 class TClass;

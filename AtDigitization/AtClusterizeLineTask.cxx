@@ -8,7 +8,7 @@
 #include <memory>
 
 #include <FairRootManager.h>
-#include "TClonesArray.h"
+#include <TClonesArray.h>
 #include "AtDigiPar.h"
 #include "AtMCPoint.h"
 #include "AtSimulatedLine.h"

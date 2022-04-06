@@ -11,7 +11,7 @@
 #include <TString.h>
 #include <vector>
 
-#include "FairGenerator.h"
+#include <FairGenerator.h>
 
 class FairPrimaryGenerator;
 class FairIon;
