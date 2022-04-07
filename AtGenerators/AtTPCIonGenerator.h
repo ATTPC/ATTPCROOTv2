@@ -57,7 +57,7 @@ public:
    AtTPCIonGenerator &operator=(const AtTPCIonGenerator &) { return *this; }
 
    /** Destructor **/
-   virtual ~AtTPCIonGenerator();
+   virtual ~AtTPCIonGenerator() = default;
 
    /** Modifiers **/
    void SetCharge(Int_t charge) { fQ = charge; }

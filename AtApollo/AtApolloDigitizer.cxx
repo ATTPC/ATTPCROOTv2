@@ -8,10 +8,10 @@
 
 #include "AtApolloDigitizer.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <FairRuntimeDb.h>
 #include <FairTask.h>
-#include <math.h>
+#include <cmath>
 #include <FairRootManager.h>
 #include <TClonesArray.h>
 #include <TRandom.h>
@@ -27,7 +27,7 @@ using std::cout;
 using std::endl;
 
 AtApolloDigitizer::AtApolloDigitizer()
-   : FairTask("ATTPC APOLLO Digitizer"), fApolloPointDataCA(NULL), fApolloCryCalDataCA(NULL), fNonUniformity(0)
+   : FairTask("ATTPC APOLLO Digitizer"), fApolloPointDataCA(nullptr), fApolloCryCalDataCA(nullptr), fNonUniformity(0)
 {
    fNonUniformity = 0.;  // perfect crystals
    fResolutionCsI = 0.;  // perfect crystals
@@ -65,8 +65,10 @@ InitStatus AtApolloDigitizer::Init()
    LOG(INFO) << "AtApolloDigitizer::Init ";
 
    FairRootManager *rootManager = FairRootManager::Instance();
-   if (!rootManager)
+   if (!rootManager) {
       LOG(fatal) << "Init: No FairRootManager";
+      return kFATAL;
+   }
 
    fApolloPointDataCA = (TClonesArray *)rootManager->GetObject("AtApolloPoint");
    if (!fApolloPointDataCA) {
@@ -91,7 +93,7 @@ void AtApolloDigitizer::Exec(Option_t *option)
    if (!nHits)
       return;
 
-   AtApolloPoint **pointData = NULL;
+   AtApolloPoint **pointData = nullptr;
    pointData = new AtApolloPoint *[nHits];
    for (Int_t i = 0; i < nHits; i++)
       pointData[i] = (AtApolloPoint *)(fApolloPointDataCA->At(i));
@@ -106,7 +108,7 @@ void AtApolloDigitizer::Exec(Option_t *option)
       energy = pointData[i]->GetEnergyLoss();
 
       Int_t nCrystalCals = fApolloCryCalDataCA->GetEntriesFast();
-      Bool_t existHit = 0;
+      Bool_t existHit = false;
       if (nCrystalCals == 0)
          AddCrystalCal(crystalId, NUSmearing(energy), time);
       else {
@@ -116,7 +118,7 @@ void AtApolloDigitizer::Exec(Option_t *option)
                if (((AtApolloCrystalCalData *)(fApolloCryCalDataCA->At(j)))->GetTime() > time) {
                   ((AtApolloCrystalCalData *)(fApolloCryCalDataCA->At(j)))->SetTime(time);
                }
-               existHit = 1; // to avoid the creation of a new CrystalHit
+               existHit = true; // to avoid the creation of a new CrystalHit
 
                break;
             }
@@ -124,7 +126,6 @@ void AtApolloDigitizer::Exec(Option_t *option)
          if (!existHit)
             AddCrystalCal(crystalId, NUSmearing(energy), time);
       }
-      existHit = 0;
    }
 
    if (pointData)

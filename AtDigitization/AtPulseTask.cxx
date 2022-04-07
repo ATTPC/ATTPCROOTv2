@@ -115,7 +115,7 @@ InitStatus AtPulseTask::Init()
    FairRootManager *ioman = FairRootManager::Instance();
 
    fSimulatedPointArray = (TClonesArray *)ioman->GetObject("AtSimulatedPoint");
-   if (fSimulatedPointArray == 0) {
+   if (fSimulatedPointArray == nullptr) {
       LOG(INFO) << "ERROR: Cannot find fSimulatedPointArray array!";
       return kERROR;
    }
@@ -130,7 +130,7 @@ InitStatus AtPulseTask::Init()
 
    // Retrieve kinematics for each simulated point
    fMCPointArray = (TClonesArray *)ioman->GetObject("AtTpcPoint");
-   if (fMCPointArray == 0) {
+   if (fMCPointArray == nullptr) {
       LOG(error) << "Cannot find fMCPointArray array!";
       return kERROR;
    }
@@ -156,7 +156,7 @@ void AtPulseTask::saveMCInfo(int mcPointID, int padNumber, int trackID)
 
    // insert if the mcPointID and trackID do not both match any existing point
    if (count == 0)
-      auto const insertionResult = MCPointsMap.insert(std::make_pair(padNumber, mcPointID));
+      MCPointsMap.insert(std::make_pair(padNumber, mcPointID));
 }
 
 void AtPulseTask::reset()
@@ -169,11 +169,14 @@ void AtPulseTask::reset()
    fRawEventArray->Delete();
    fRawEvent = nullptr;
    fRawEvent = (AtRawEvent *)fRawEventArray->ConstructedAt(0);
-   fPadPlane->Reset(0);
+   fPadPlane->Reset(nullptr);
 }
 
 bool AtPulseTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
 {
+   if (point == nullptr)
+      return false;
+
    auto coord = point->GetPosition();
    auto xElectron = coord.x();       // mm
    auto yElectron = coord.y();       // mm
@@ -234,17 +237,16 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
    Double_t binWidth = axis->GetBinWidth(10);
 
    Int_t signal[fNumTbs];
-   for (auto ite2 = electronsMap.begin(); ite2 != electronsMap.end(); ++ite2) {
+   for (auto &ite2 : electronsMap) {
       for (Int_t kk = 0; kk < fNumTbs; kk++)
          signal[kk] = 0;
-      Int_t thePadNumber = (ite2->first);
+      Int_t thePadNumber = (ite2.first);
 
       for (Int_t kk = 0; kk < fNumTbs; kk++) {
          if (eleAccumulated[thePadNumber]->GetBinContent(kk) > 0) {
             for (Int_t nn = kk; nn < fNumTbs; nn++) {
                Double_t binCenter = axis->GetBinCenter(kk);
                Double_t factor = (((((Double_t)nn) + 0.5) * binWidth) - binCenter) / fPeakingTime;
-               Double_t factor_2 = pow(2.718, -3 * factor) * sin(factor) * pow(factor, 3);
                signal[nn] += eleAccumulated[thePadNumber]->GetBinContent(kk) * pow(2.718, -3 * factor) * sin(factor) *
                              pow(factor, 3);
             }
@@ -263,7 +265,7 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
       auto lowGain = fMap->IsInhibited(thePadNumber) == AtMap::kLowGain ? fLowGainFactor : 1;
 
       for (Int_t bin = 0; bin < fNumTbs; bin++) {
-         pad->SetADC(bin, signal[bin] * gAvg * fGETGain * lowGain);
+         pad->SetADC(bin, signal[bin] * gAvg * fGETGain * lowGain); // NOLINT
       }
    }
 

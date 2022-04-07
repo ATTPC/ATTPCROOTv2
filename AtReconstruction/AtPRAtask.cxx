@@ -16,7 +16,7 @@ AtPRAtask::AtPRAtask() : FairTask("AtPRAtask")
 {
    fLogger = FairLogger::GetLogger();
    LOG(debug) << "Default Constructor of AtPRAtask";
-   fPar = NULL;
+   fPar = nullptr;
    fPRAlgorithm = 0;
    kIsPersistence = kFALSE;
    fMinNumHits = 10;
@@ -59,11 +59,11 @@ void AtPRAtask::SetParContainers()
    if (!run)
       LOG(fatal) << "No analysis run!";
 
-   FairRuntimeDb *db = run->GetRuntimeDb();
+   FairRuntimeDb *db = run->GetRuntimeDb(); // NOLINT
    if (!db)
       LOG(fatal) << "No runtime database!";
 
-   fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
+   fPar = (AtDigiPar *)db->getContainer("AtDigiPar"); // NOLINT
    if (!fPar)
       LOG(fatal) << "AtDigiPar not found!!";
 }
@@ -119,13 +119,13 @@ InitStatus AtPRAtask::Init()
 
    // Get a handle from the IO manager
    FairRootManager *ioMan = FairRootManager::Instance();
-   if (ioMan == 0) {
+   if (ioMan == nullptr) {
       LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 
    fEventHArray = (TClonesArray *)ioMan->GetObject("AtEventH");
-   if (fEventHArray == 0) {
+   if (fEventHArray == nullptr) {
       LOG(error) << "Cannot find AtEvent array!";
       return kERROR;
    }
@@ -152,7 +152,7 @@ void AtPRAtask::Exec(Option_t *option)
 
    try {
 
-      AtPatternEvent *patternEvent = (AtPatternEvent *)new ((*fPatternEventArray)[0]) AtPatternEvent();
+      auto *patternEvent = (AtPatternEvent *)new ((*fPatternEventArray)[0]) AtPatternEvent();
 
       if (hitArray.size() > fMinNumHits && hitArray.size() < fMaxNumHits)
          fPRA->FindTracks(event, patternEvent);

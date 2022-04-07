@@ -1,0 +1,28 @@
+---
+Checks:          'clang-diagnostic-*,clang-analyzer-*,modernize-*,-modernize-use-trailing-return-type,-modernize-avoid-c-arrays'
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+AnalyzeTemporaryDtors: false
+FormatStyle:     none
+User:            anthonya
+CheckOptions:
+  - key:             llvm-else-after-return.WarnOnConditionVariables
+    value:           '0'
+  - key:             modernize-loop-convert.MinConfidence
+    value:           reasonable
+  - key:             modernize-replace-auto-ptr.IncludeStyle
+    value:           llvm
+  - key:             modernize-pass-by-value.IncludeStyle
+    value:           llvm
+  - key:             modernize-loop-convert.MaxCopySize
+    value:           '16'
+  - key:             modernize-use-nullptr.NullMacros
+    value:           'NULL'
+  - key:             llvm-qualified-auto.AddConstToQualified
+    value:           '0'
+  - key:             modernize-loop-convert.NamingStyle
+    value:           CamelCase
+  - key:             llvm-else-after-return.WarnOnUnfixable
+    value:           '0'
+...
+

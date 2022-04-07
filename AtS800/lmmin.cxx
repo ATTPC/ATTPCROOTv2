@@ -23,10 +23,10 @@
  * and you think this work is worth it, you can buy me a beer in return.
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include <float.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <cfloat>
 #include "lmmin.h"
 
 /*****************************************************************************/
@@ -140,19 +140,21 @@ void lmmin(int n_par, double *par, int m_dat, const void *data,
 
    /*** allocate work space. ***/
 
-   double *fvec, *diag, *fjac, *qtf, *wa1, *wa2, *wa3, *wa4;
+   double *fvec, *diag, *fjac, *qtf, *wa1, *wa2, *wa3, *wa4; // NOLINT
    int *ipvt, j;
 
    int n = n_par;
    int m = m_dat;
 
-   if ((fvec = (double *)malloc(m * sizeof(double))) == NULL || (diag = (double *)malloc(n * sizeof(double))) == NULL ||
-       (qtf = (double *)malloc(n * sizeof(double))) == NULL ||
-       (fjac = (double *)malloc(n * m * sizeof(double))) == NULL ||
-       (wa1 = (double *)malloc(n * sizeof(double))) == NULL || (wa2 = (double *)malloc(n * sizeof(double))) == NULL ||
-       (wa3 = (double *)malloc(n * sizeof(double))) == NULL || (wa4 = (double *)malloc(m * sizeof(double))) == NULL ||
-       (ipvt = (int *)malloc(n * sizeof(int))) == NULL) {
-      status->info = 9;
+   if ((fvec = (double *)malloc(m * sizeof(double))) == nullptr ||
+       (diag = (double *)malloc(n * sizeof(double))) == nullptr ||
+       (qtf = (double *)malloc(n * sizeof(double))) == nullptr ||
+       (fjac = (double *)malloc(n * m * sizeof(double))) == nullptr ||
+       (wa1 = (double *)malloc(n * sizeof(double))) == nullptr ||
+       (wa2 = (double *)malloc(n * sizeof(double))) == nullptr ||
+       (wa3 = (double *)malloc(n * sizeof(double))) == nullptr ||
+       (wa4 = (double *)malloc(m * sizeof(double))) == nullptr || (ipvt = (int *)malloc(n * sizeof(int))) == nullptr) {
+      status->info = 9; // NOLINT
       return;
    }
 
@@ -649,7 +651,7 @@ void lm_lmdif(int m, int n, double *x, double *fvec, double ftol, double xtol, d
 
       /*** outer: end of the loop. ***/
 
-   } while (1);
+   } while (true);
 
 } /*** lm_lmdif. ***/
 

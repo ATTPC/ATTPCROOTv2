@@ -5,7 +5,7 @@
 #include <iostream>
 #include <sstream> // IWYU pragma: keep
 
-AtTPCXSManager *gAtXS = (AtTPCXSManager *)0;
+AtTPCXSManager *gAtXS = (AtTPCXSManager *)nullptr;
 
 AtTPCXSManager::AtTPCXSManager()
 {
@@ -16,7 +16,7 @@ AtTPCXSManager::AtTPCXSManager()
    kIsExFunction = kTRUE;
 }
 
-AtTPCXSManager::~AtTPCXSManager() {}
+AtTPCXSManager::~AtTPCXSManager() = default;
 
 Bool_t AtTPCXSManager::SetExcitationFunction(std::string filename)
 {
@@ -50,8 +50,8 @@ Bool_t AtTPCXSManager::SetExcitationFunction(std::string filename)
                 << " - Angular range Up : " << ARangeUp << " - Angular range Down : " << ARangeDown
                 << " - Total cross section : " << XSTot << "\n";
 
-      Int_t nEbins = static_cast<Int_t>(((ERangeUp + 0.000001) - ERangeDown) / Ebinsize);
-      Int_t nAbins = static_cast<Int_t>(((ARangeUp + 0.000001) - ARangeDown) / Abinsize);
+      auto nEbins = static_cast<Int_t>(((ERangeUp + 0.000001) - ERangeDown) / Ebinsize);
+      auto nAbins = static_cast<Int_t>(((ARangeUp + 0.000001) - ARangeDown) / Abinsize);
 
       std::cout << " Number of energy - angle bins : " << nEbins << " - " << nAbins << "\n";
 

@@ -88,7 +88,7 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,
    std::cout << " AtFITTER::AtGenfit::AtGenfit(): Checking materials that GENFIT will use "
              << "\n";
 
-   TGeoManager *gGeoMan = (TGeoManager *)gROOT->FindObject("FAIRGeom");
+   auto *gGeoMan = (TGeoManager *)gROOT->FindObject("FAIRGeom");
    TObjArray *volume_list = gGeoMan->GetListOfVolumes();
    if (!volume_list) {
       std::cout << cRED << " Warning! Null list of geometry volumes." << cNORMAL << "\n";
@@ -97,7 +97,7 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,
    int numVol = volume_list->GetEntries();
 
    for (int ivol = 0; ivol < numVol; ivol++) {
-      TGeoVolume *volume = dynamic_cast<TGeoVolume *>(volume_list->At(ivol));
+      auto *volume = dynamic_cast<TGeoVolume *>(volume_list->At(ivol));
       if (!volume) {
 
          std::cout << "Got a null geometry volume!! Skipping current list element"
@@ -109,15 +109,8 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,
 
       TGeoMaterial *mat = volume->GetMedium()->GetMaterial();
 
-      Int_t mat_indx = mat->GetIndex();
-
-      if (mat->IsMixture()) {
-         TGeoMixture *mixt = dynamic_cast<TGeoMixture *>(mat);
-         int Nelements = mixt->GetNelements();
-         std::cout << cYELLOW << " - Material : " << mat->GetName() << cNORMAL << "\n";
-      } else {
-         std::cout << cYELLOW << " - Material : " << mat->GetName() << cNORMAL << "\n";
-      }
+      // Int_t mat_indx = mat->GetIndex();
+      std::cout << cYELLOW << " - Material : " << mat->GetName() << cNORMAL << "\n";
    }
 
    // PDG definitions
@@ -192,8 +185,8 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    }
 
    // Saving original PRA angles
-   Double_t thetaPRA = track->GetGeoTheta();
-   Double_t phiPRA = track->GetGeoPhi();
+   // Double_t thetaPRA = track->GetGeoTheta();
+   // Double_t phiPRA = track->GetGeoPhi();
 
    // New angle convention
    Double_t theta = 0.0;
@@ -330,7 +323,7 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       return nullptr;
    }
 
-   Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
+   // Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
 
    // std::cout<<cRED<<" Distance to Z "<<dist<<cNORMAL<<"\n";
    // if (dist > 70.0)
@@ -366,8 +359,8 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    if (fVerbosity > 0)
       std::cout << " Momentum from PRA- px : " << px << " - py : " << py << " - pz : " << pz << "\n";
 
-   Double_t momSeedMag = std::get<0>(mom_ener);
-   // TVector3 momSeed(0., 0., momSeedMag); //
+   // Double_t momSeedMag = std::get<0>(mom_ener);
+   //  TVector3 momSeed(0., 0., momSeedMag); //
    TVector3 momSeed(px, py, pz);
    momSeed.SetTheta(theta); // TODO: Check angle conventions
    momSeed.SetPhi(phi);     // TODO
@@ -379,11 +372,11 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    if (brho > fMaxBrho && brho < fMinBrho)
       return nullptr;
 
-   genfit::Track *gfTrack =
+   auto *gfTrack =
       new ((*fGenfitTrackArray)[fGenfitTrackArray->GetEntriesFast()]) genfit::Track(trackCand, *fMeasurementFactory);
    gfTrack->addTrackRep(new genfit::RKTrackRep(fPDGCode));
 
-   genfit::RKTrackRep *trackRep = (genfit::RKTrackRep *)gfTrack->getTrackRep(0);
+   auto *trackRep = (genfit::RKTrackRep *)gfTrack->getTrackRep(0);
    // trackRep->setPropDir(-1);
 
    try {

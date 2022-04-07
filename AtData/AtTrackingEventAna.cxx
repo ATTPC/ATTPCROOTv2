@@ -14,7 +14,7 @@ AtTrackingEventAna::AtTrackingEventAna() : TNamed("AtTrackingEventAna", "Trackin
    fVertexEnergy = -10.0;
 }
 
-AtTrackingEventAna::~AtTrackingEventAna() {}
+AtTrackingEventAna::~AtTrackingEventAna() = default;
 
 void AtTrackingEventAna::SetTrackArray(std::vector<AtTrack> *trackArray)
 {

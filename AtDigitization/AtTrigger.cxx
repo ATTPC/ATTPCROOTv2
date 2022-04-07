@@ -3,8 +3,8 @@
 #include <TMatrixDfwd.h>
 #include <TMatrixT.h>
 #include <TString.h>
-#include <math.h>
-#include <string.h>
+#include <cmath>
+#include <cstring>
 #include <string>
 #include <algorithm>
 #include <array>
@@ -17,11 +17,9 @@
 
 ClassImp(AtTrigger)
 
-   AtTrigger::AtTrigger()
-{
-}
+   AtTrigger::AtTrigger() = default;
 
-AtTrigger::~AtTrigger() {}
+AtTrigger::~AtTrigger() = default;
 
 void AtTrigger::SetAtMap(TString mapPath)
 {
@@ -106,7 +104,6 @@ Bool_t AtTrigger::ImplementTrigger(AtRawEvent *rawEvent, AtEvent *event)
    TMatrixD result(10, 512);
 
    Int_t numHits = fEvent->GetNumHits();
-   Int_t numPads = fRawEvent->GetNumPads();
 
    // Loop over the NUMBER of SIGNALS in the EVENT
    for (Int_t iHit = 0; iHit < numHits; iHit++) {

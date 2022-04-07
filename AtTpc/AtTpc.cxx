@@ -11,7 +11,7 @@
 #include <TLorentzVector.h>
 #include <TVector3.h>
 #include <TVirtualMCStack.h>
-#include <stddef.h>
+#include <cstddef>
 #include <FairVolume.h>
 #include <FairRootManager.h>
 #include <FairRun.h>
@@ -61,7 +61,7 @@ void AtTpc::Initialize()
 {
    FairDetector::Initialize();
    FairRuntimeDb *rtdb = FairRun::Instance()->GetRuntimeDb();
-   AtTpcGeoPar *par = (AtTpcGeoPar *)(rtdb->getContainer("AtTpcGeoPar"));
+   rtdb->getContainer("AtTpcGeoPar");
 }
 
 void AtTpc::trackEnteringVolume()
@@ -176,7 +176,7 @@ Bool_t AtTpc::ProcessHits(FairVolume *vol)
 {
    /** This method is called from the MC stepping */
 
-   AtStack *stack = (AtStack *)gMC->GetStack();
+   auto *stack = (AtStack *)gMC->GetStack();
    fVolName = gMC->CurrentVolName();
    fVolumeID = vol->getMCid();
    fDetCopyID = vol->getCopyNo();
@@ -225,7 +225,8 @@ void AtTpc::addHit()
 {
    auto AZ = DecodePdG(gMC->TrackPid());
 
-   Double_t EIni, AIni;
+   Double_t EIni = 0;
+   Double_t AIni = 0;
 
    // We assume that the beam-like particle is fTrackID==0 since it is the first one added in the
    // primary generator
@@ -257,7 +258,7 @@ TClonesArray *AtTpc::GetCollection(Int_t iColl) const
    if (iColl == 0) {
       return fAtTpcPointCollection;
    } else {
-      return NULL;
+      return nullptr;
    }
 }
 

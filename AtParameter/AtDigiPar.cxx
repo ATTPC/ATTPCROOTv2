@@ -5,7 +5,7 @@
 #include <FairParamList.h>
 #include <TString.h>
 #include <TSystem.h>
-#include <stddef.h>
+#include <cstddef>
 #include <iostream>
 #include <memory>
 
@@ -14,14 +14,14 @@
 ClassImp(AtDigiPar);
 
 AtDigiPar::AtDigiPar(const Char_t *name, const Char_t *title, const Char_t *context)
-   : FairParGenericSet("AtDigiPar", "AtTPC Parameter Container", ""), fGas(NULL)
+   : FairParGenericSet("AtDigiPar", "AtTPC Parameter Container", ""), fGas(nullptr)
 {
    fInitialized = kFALSE;
 
    fLogger = FairLogger::GetLogger();
 }
 
-AtDigiPar::~AtDigiPar() {}
+AtDigiPar::~AtDigiPar() = default;
 
 // Getters
 Int_t AtDigiPar::GetPadPlaneX()
@@ -155,7 +155,7 @@ Double_t AtDigiPar::GetMaxRange()
 
 AtGas *AtDigiPar::GetGas()
 {
-   if (fGas == NULL) {
+   if (fGas == nullptr) {
       std::cerr << "Initializing gas file with " << fGasFileName.Data() << std::endl;
       fGas = new AtGas(fGasFileName.Data());
    }
@@ -405,19 +405,16 @@ TString AtDigiPar::GetFile(Int_t fileNum)
 
    if (!fileList) {
       LOG(fatal) << Form("File %s not found!", parFile.Data());
-
       throw;
    }
 
-   Char_t buffer[256];
+   std::string buffer;
    for (Int_t iFileNum = 0; iFileNum < fileNum + 1; ++iFileNum) {
       if (fileList.eof()) {
          LOG(fatal) << Form("Did not find string #%d in file %s.", fileNum, parFile.Data());
-
          throw;
       }
-
-      fileList.getline(buffer, 256);
+      std::getline(fileList, buffer);
    }
 
    fileList.close();

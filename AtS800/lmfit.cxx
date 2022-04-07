@@ -8,7 +8,7 @@
  * Author:   Shumpei Noji
  */
 
-#include <math.h>
+#include <cmath>
 
 #include "lmfit.h"
 

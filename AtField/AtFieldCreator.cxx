@@ -13,7 +13,7 @@
 #include "AtFieldCreator.h"
 
 #include <FairFieldFactory.h>
-#include <stddef.h>
+#include <cstddef>
 #include <FairRunAna.h>
 #include <FairRuntimeDb.h>
 #include <FairField.h>
@@ -28,12 +28,12 @@ using std::endl;
 
 static AtFieldCreator gAtFieldCreator;
 
-AtFieldCreator::AtFieldCreator() : FairFieldFactory(), fFieldPar(NULL)
+AtFieldCreator::AtFieldCreator() : FairFieldFactory(), fFieldPar(nullptr)
 {
    fCreator = this;
 }
 
-AtFieldCreator::~AtFieldCreator() {}
+AtFieldCreator::~AtFieldCreator() = default;
 
 void AtFieldCreator::SetParm()
 {
@@ -44,7 +44,7 @@ void AtFieldCreator::SetParm()
 
 FairField *AtFieldCreator::createFairField()
 {
-   FairField *fMagneticField = 0;
+   FairField *fMagneticField = nullptr;
 
    if (!fFieldPar) {
       cerr << "-E-  No field parameters available!" << endl;

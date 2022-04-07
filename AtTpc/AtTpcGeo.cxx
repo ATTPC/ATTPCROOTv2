@@ -8,7 +8,7 @@
 #include "AtTpcGeo.h"
 
 #include <FairGeoSet.h>
-#include <stdio.h>
+#include <cstdio>
 
 ClassImp(AtTpcGeo)
 

@@ -363,6 +363,7 @@ public:
 
    t_index Find(t_index idx) const
    {
+      // NOLINTNEXTLINE
       if (parent[idx] != 0) { // a → b
          t_index p = idx;
          idx = parent[idx];

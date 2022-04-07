@@ -4,7 +4,7 @@
 #include <TLorentzVector.h>
 #include <TVector3.h>
 #include <TVirtualMCStack.h>
-#include <stddef.h>
+#include <cstddef>
 #include <FairVolume.h>
 #include <FairRootManager.h>
 #include <FairRun.h>
@@ -48,15 +48,15 @@ AtSiArray::~AtSiArray()
 void AtSiArray::Initialize()
 {
    FairDetector::Initialize();
-   FairRuntimeDb *rtdb = FairRun::Instance()->GetRuntimeDb();
-   AtSiArrayGeoPar *par = (AtSiArrayGeoPar *)(rtdb->getContainer("AtSiArrayGeoPar"));
+   // FairRuntimeDb *rtdb = FairRun::Instance()->GetRuntimeDb();
+   // auto *par = (AtSiArrayGeoPar *)(rtdb->getContainer("AtSiArrayGeoPar"));
 }
 
 Bool_t AtSiArray::ProcessHits(FairVolume *vol)
 {
    /** This method is called from the MC stepping */
 
-   AtStack *stack = static_cast<AtStack *>(TVirtualMC::GetMC()->GetStack());
+   auto *stack = static_cast<AtStack *>(TVirtualMC::GetMC()->GetStack());
    std::pair<Int_t, Int_t> AZ;
    AZ = DecodePdG(gMC->TrackPid());
    fVolName = gMC->CurrentVolName();
@@ -213,7 +213,7 @@ TClonesArray *AtSiArray::GetCollection(Int_t iColl) const
    if (iColl == 0) {
       return fAtSiArrayPointCollection;
    } else {
-      return NULL;
+      return nullptr;
    }
 }
 

@@ -1,6 +1,6 @@
 #include "AtProtoEvent.h"
 
-#include <stddef.h>
+#include <cstddef>
 #include <algorithm>
 
 #include <Rtypes.h>
@@ -9,7 +9,7 @@ ClassImp(AtProtoEvent);
 
 AtProtoEvent::AtProtoEvent() : TNamed("AtProtoEvent", "Proto Event container") {}
 
-AtProtoEvent::~AtProtoEvent() {}
+AtProtoEvent::~AtProtoEvent() = default;
 
 void AtProtoEvent::SetEventID(Int_t evtid)
 {
@@ -31,7 +31,7 @@ Int_t AtProtoEvent::GetNumQuadrants()
 
 AtProtoQuadrant *AtProtoEvent::GetQuadrant(Int_t quadrantNo)
 {
-   return (quadrantNo < GetNumQuadrants() ? &fQuadrantArray[quadrantNo] : NULL);
+   return (quadrantNo < GetNumQuadrants() ? &fQuadrantArray[quadrantNo] : nullptr);
 }
 
 std::vector<AtProtoQuadrant> *AtProtoEvent::GetQuadrantArray()

@@ -1,7 +1,7 @@
 #include "AtProtoQuadrant.h"
 
 #include <TH1.h>
-#include <stddef.h>
+#include <cstddef>
 #include <algorithm>
 
 #include <Rtypes.h>
@@ -39,7 +39,7 @@ AtProtoQuadrant::AtProtoQuadrant(std::vector<AtHit> *HitArray, Int_t QuadrantID,
    fPhiQ = PhiQ;
 }
 
-AtProtoQuadrant::~AtProtoQuadrant() {}
+AtProtoQuadrant::~AtProtoQuadrant() = default;
 
 void AtProtoQuadrant::SetEventID(Int_t evtid)
 {
@@ -97,7 +97,7 @@ Int_t AtProtoQuadrant::GetNumPhiVal()
 
 AtHit *AtProtoQuadrant::GetHit(Int_t hitNo)
 {
-   return (hitNo < GetNumHits() ? &fHitArrayQ[hitNo] : NULL);
+   return (hitNo < GetNumHits() ? &fHitArrayQ[hitNo] : nullptr);
 }
 
 std::vector<AtHit> *AtProtoQuadrant::GetHitArray()

@@ -5,8 +5,8 @@
 
 class AtPSAProto : public AtPSA {
 public:
-   AtPSAProto();
-   ~AtPSAProto();
+   AtPSAProto() = default;
+   ~AtPSAProto() = default;
 
    void SetBackGroundSuppression();
 

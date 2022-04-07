@@ -1,13 +1,13 @@
 #include "GETLayeredFrame.h"
 
 #include <TClonesArray.h>
-#include <stddef.h>
+#include <cstddef>
 
 #include "GETBasicFrame.h"
 
 GETLayeredFrame::GETLayeredFrame()
 {
-   fFrames = NULL;
+   fFrames = nullptr;
 
    Clear();
 }
@@ -27,7 +27,7 @@ GETBasicFrame *GETLayeredFrame::GetFrame(Int_t index)
 
 void GETLayeredFrame::Clear(Option_t *)
 {
-   if (fFrames == NULL)
+   if (fFrames == nullptr)
       fFrames = new TClonesArray("GETBasicFrame", 48);
 
    GETLayerHeader::Clear();
@@ -41,7 +41,7 @@ void GETLayeredFrame::Read(ifstream &stream)
    GETLayerHeader::Read(stream);
 
    for (Int_t iFrame = 0; iFrame < GetNItems(); iFrame++) {
-      GETBasicFrame *frame = (GETBasicFrame *)fFrames->ConstructedAt(iFrame);
+      auto *frame = (GETBasicFrame *)fFrames->ConstructedAt(iFrame);
       frame->Read(stream);
    }
 }

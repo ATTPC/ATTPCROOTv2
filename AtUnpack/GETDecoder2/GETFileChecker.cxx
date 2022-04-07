@@ -26,7 +26,7 @@ TString GETFileChecker::CheckFile(TString filename)
 
    TString nextData = filename;
 
-   TObjArray *pathElements = 0;
+   TObjArray *pathElements = nullptr;
    pathElements = nextData.Tokenize("/");
 
    Int_t numElements = pathElements->GetLast();

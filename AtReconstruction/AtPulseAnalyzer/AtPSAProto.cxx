@@ -12,17 +12,11 @@
 #include <cmath>
 #include <map>
 
+/*
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-
-AtPSAProto::AtPSAProto()
-{
-   // fPeakFinder = new TSpectrum();
-   // HPeak = new TH1F("HPeak","HPeak",512,0,511);
-}
-
-AtPSAProto::~AtPSAProto() {}
+*/
 
 void AtPSAProto::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 {
@@ -71,7 +65,7 @@ void AtPSAProto::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          QHitTot += adc[iTb];
       }
 
-      TSpectrum *PeakFinder = new TSpectrum;
+      auto *PeakFinder = new TSpectrum;
       Int_t numPeaks = 0;
       //#pragma omp ordered
       numPeaks = PeakFinder->SearchHighRes(floatADC, dummy, fNumTbs, 4.7, 5, fBackGroundSuppression, 3, kTRUE, 3);
@@ -194,7 +188,7 @@ void AtPSAProto::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    //  std::cout<<"  --------------------------------- "<<std::endl;
    // std::cout<<" Rho2 : "<<Rho2<<" - RhoMean : "<<RhoMean<<" Num of Hits : "<<event->GetNumHits()<<" - Number of
    // auxiliary pads : "<<auxPadArray->size()<<std::endl;
-   RhoVariance = Rho2 - (pow(RhoMean, 2) / (event->GetNumHits()));
+   // RhoVariance = Rho2 - (pow(RhoMean, 2) / (event->GetNumHits()));
    RhoVariance = Rho2 - (event->GetNumHits() * pow((RhoMean / event->GetNumHits()), 2));
    // std::cout<<" Rho Variance : "<<RhoVariance<<std::endl;
    for (Int_t iTb = 0; iTb < fNumTbs; iTb++)

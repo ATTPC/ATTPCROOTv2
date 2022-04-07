@@ -7,7 +7,7 @@
 
 #include "AtPad.h"
 
-AtFilterCalibrate::AtFilterCalibrate() {}
+AtFilterCalibrate::AtFilterCalibrate() = default;
 
 void AtFilterCalibrate::Init()
 {

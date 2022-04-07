@@ -6,8 +6,8 @@
 
 #include <FairParticle.h>
 #include <TString.h>
-#include <math.h>
-#include <stdio.h>
+#include <cmath>
+#include <cstdio>
 #include <FairPrimaryGenerator.h>
 #include <FairIon.h>
 #include <FairRunSim.h>
@@ -55,9 +55,9 @@ AtTPCIonDecay::AtTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
      fSepEne(0), fMasses(0), fQ(0), fPxBeam(0.), fPyBeam(0.), fPzBeam(0.)
 {
 
-   TParticle *kProton = new TParticle();
+   auto *kProton = new TParticle();
    kProton->SetPdgCode(2212);
-   TParticle *kNeutron = new TParticle();
+   auto *kNeutron = new TParticle();
    kNeutron->SetPdgCode(2112);
    char buffer[40];
 
@@ -98,7 +98,7 @@ AtTPCIonDecay::AtTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
                                   mass->at(k).at(i) * amu / 1000.0);
             ParticleBuff = new FairParticle("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);
             fPType.at(k).push_back("Ion");
-            run->AddNewIon(IonBuff);
+            run->AddNewIon(IonBuff); // NOLINT
 
          } else if (a->at(k).at(i) == 1 && z->at(k).at(i) == 1) {
             IonBuff = new FairIon(buffer, z->at(k).at(i), a->at(k).at(i), q->at(k).at(i), 0.0,
@@ -116,12 +116,6 @@ AtTPCIonDecay::AtTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
          fParticle.at(k).push_back(ParticleBuff);
       } // for mult
    }    // for case
-}
-
-// -----   Destructor   ---------------------------------------------------
-AtTPCIonDecay::~AtTPCIonDecay()
-{
-   // if (fIon) delete fIon;
 }
 
 // -----   Public method ReadEvent   --------------------------------------
@@ -245,7 +239,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
       fEnergyImpulsionLab_Total = fEnergyImpulsionLab_beam + fEnergyImpulsionLab_target;
 
       s = fEnergyImpulsionLab_Total.M2();
-      beta = fEnergyImpulsionLab_Total.Beta();
+      // beta = fEnergyImpulsionLab_Total.Beta();
 
       for (Int_t i = 0; i < fMult.at(Case); i++) {
          M_tot += fMasses.at(Case).at(i) * amu / 1000.0;
@@ -261,7 +255,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
          // if(ExEject*1000.0>fSepEne){
          fIsDecay = kTRUE;
          event1.SetDecay(fEnergyImpulsionLab_Total, fMult.at(Case), mass_1);
-         Double_t weight1 = event1.Generate();
+         // Double_t weight1 = event1.Generate();
 
          std::vector<Double_t> KineticEnergy;
          std::vector<Double_t> ThetaLab;

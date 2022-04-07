@@ -18,7 +18,7 @@
 
 AtAuxFilterTask::AtAuxFilterTask(AtFilter *filter) : fFilter(filter), fInputEventBranchName("AtRawEvent") {}
 
-AtAuxFilterTask::~AtAuxFilterTask() {}
+AtAuxFilterTask::~AtAuxFilterTask() = default;
 
 void AtAuxFilterTask::AddAuxPad(std::string pad)
 {
@@ -56,7 +56,7 @@ void AtAuxFilterTask::Exec(Option_t *opt)
    if (fInputEventArray->GetEntriesFast() == 0)
       return;
 
-   AtRawEvent *rawEvent = (AtRawEvent *)fInputEventArray->At(0);
+   auto *rawEvent = (AtRawEvent *)fInputEventArray->At(0);
    if (!rawEvent->IsGood())
       return;
 

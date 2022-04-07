@@ -48,7 +48,7 @@ public:
    void SetSequentialDecay(Bool_t var) { fIsSequentialDecay = var; }
 
    /** Destructor **/
-   virtual ~AtTPCIonDecay();
+   virtual ~AtTPCIonDecay() = default;
 
 private:
    static Int_t fgNIon;                        //! Number of the instance of this class

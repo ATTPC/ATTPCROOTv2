@@ -31,7 +31,7 @@ AtRANSACN::AtRansac::AtRansac()
    pcl::console::setVerbosityLevel(pcl::console::L_ALWAYS);
 }
 
-AtRANSACN::AtRansac::~AtRansac() {}
+AtRANSACN::AtRansac::~AtRansac() = default;
 
 TVector3 AtRANSACN::AtRansac::GetVertex1()
 {
@@ -110,7 +110,7 @@ void AtRANSACN::AtRansac::CalcRANSAC(AtEvent *event)
          // std::cout<<" Num  Hits : "<<nHits<<std::endl;
          if (nHits > 5) {
             // MinimizeTrack(tracks.at(ntrack));
-            double mychi2 = Fit3D(&tracks->at(ntrack));
+            Fit3D(&tracks->at(ntrack));
             tracks->at(ntrack).SetTrackID(ntrack);
             fTrackCand.push_back(tracks->at(ntrack));
          }
@@ -232,13 +232,13 @@ std::vector<AtTrack> *AtRANSACN::AtRansac::RansacPCL(const std::vector<AtHit> &h
          AtTrack track;
 
          LOG(debug) << "Filling a track with hits";
-         for (Int_t iHit = 0; iHit < cloud_p->points.size(); iHit++) {
+         for (auto &point : cloud_p->points) {
 
             /*if (&hits.at(cloud_p->points[iHit].rgb))
                track.AddHit(&hits.at(cloud_p->points[iHit].rgb));
        */
-            LOG(debug2) << "Getting hit index: " << cloud_p->points[iHit].rgb << " from hits";
-            track.AddHit(hits.at(cloud_p->points[iHit].rgb));
+            LOG(debug2) << "Getting hit index: " << point.rgb << " from hits";
+            track.AddHit(hits.at(point.rgb));
          }
 
          track.SetRANSACCoeff(coeff);
@@ -267,8 +267,8 @@ Int_t AtRANSACN::AtRansac::MinimizeTrack(AtTrack *track)
 
    gErrorIgnoreLevel = kFatal;
    Int_t nd = 10000;
-   TGraph2D *gr = new TGraph2D(); /////NB: This should be created on the heap only once so it should move outside of
-                                  /// this function!!!!!!!!!!!!!!!
+   auto *gr = new TGraph2D(); /////NB: This should be created on the heap only once so it should move outside of
+                              /// this function!!!!!!!!!!!!!!!
    std::vector<AtHit> HitArray = track->GetHitArray();
 
    double p0[4] = {10, 20, 1, 2}; // For the moment those are dummy parameters
@@ -371,10 +371,10 @@ void AtRANSACN::AtRansac::FindVertex(std::vector<AtTrack *> tracks)
    // Direction of the Z and Y axis in the detector frame (This is the rotated detector), this is used to calculater the
    // theta and phi angles
    RotationX rx(-fTiltAng * TMath::Pi() / 180.0);
-   XYZVector Z_1_rot(rx * Z_1);
+   // XYZVector Z_1_rot(rx * Z_1);
 
    RotationX ry(-fTiltAng * TMath::Pi() / 180.0);
-   XYZVector Y_1_rot(ry * Y_1);
+   // XYZVector Y_1_rot(ry * Y_1);
 
    // Vector of the beam determined from the experimental data
    // XYZVector BeamDir_1(-0.106359,-0.0348344,1.0);
@@ -584,11 +584,7 @@ Bool_t AtRANSACN::AtRansac::CheckTrackID(Int_t trackID, std::vector<AtTrack> *tr
 {
    auto it = find_if(trackArray->begin(), trackArray->end(),
                      [&trackID](AtTrack &track) { return track.GetTrackID() == trackID; });
-   if (it != trackArray->end()) {
-      auto hitInd = std::distance<std::vector<AtTrack>::const_iterator>(trackArray->begin(), it);
-      return kTRUE;
-   } else
-      return kFALSE;
+   return it != trackArray->end();
 }
 
 Double_t AtRANSACN::AtRansac::GetAngleTracks(const ROOT::Math::XYZVector &vec1, const ROOT::Math::XYZVector &vec2)
@@ -643,10 +639,9 @@ Double_t AtRANSACN::AtRansac::Fit3D(AtTrack *track)
    std::vector<double> Z;
    std::vector<double> Charge;
 
-   for (Int_t i = 0; i < HitArray.size(); i++) {
-      AtHit hit = HitArray.at(i);
+   for (auto hit : HitArray) {
       auto pos = hit.GetPosition();
-      Double_t tq = hit.GetCharge();
+      // Double_t tq = hit.GetCharge();
       X.push_back(pos.X());
       Y.push_back(pos.Y());
       Z.push_back(pos.Z());
@@ -686,7 +681,7 @@ Double_t AtRANSACN::AtRansac::Fit3D(AtTrack *track)
 
    K11 = (Syy + Szz) * pow(cos(theta), 2) + (Sxx + Szz) * pow(sin(theta), 2) - 2. * Sxy * cos(theta) * sin(theta);
    K22 = (Syy + Szz) * pow(sin(theta), 2) + (Sxx + Szz) * pow(cos(theta), 2) + 2. * Sxy * cos(theta) * sin(theta);
-   K12 = -Sxy * (pow(cos(theta), 2) - pow(sin(theta), 2)) + (Sxx - Syy) * cos(theta) * sin(theta);
+   // K12 = -Sxy * (pow(cos(theta), 2) - pow(sin(theta), 2)) + (Sxx - Syy) * cos(theta) * sin(theta);
    K10 = Sxz * cos(theta) + Syz * sin(theta);
    K01 = -Sxz * sin(theta) + Syz * cos(theta);
    K00 = Sxx + Syy;
@@ -701,7 +696,7 @@ Double_t AtRANSACN::AtRansac::Fit3D(AtTrack *track)
 
    if (r > 0)
       dm2 = -c2 / 3. + pow(-q / 2. + sqrt(r), 1. / 3.) + pow(-q / 2. - sqrt(r), 1. / 3.);
-   if (r < 0) {
+   else {
       rho = sqrt(-pow(p, 3) / 27.);
       phi = acos(-q / (2. * rho));
       dm2 = std::min(-c2 / 3. + 2. * pow(rho, 1. / 3.) * cos(phi / 3.),

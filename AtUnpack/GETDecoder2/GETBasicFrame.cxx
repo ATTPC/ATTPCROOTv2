@@ -1,7 +1,7 @@
 #include "GETBasicFrame.h"
 
-#include <stdint.h>
-#include <string.h>
+#include <cstdint>
+#include <cstring>
 #include <istream>
 
 #include "GETHeaderBase.h"

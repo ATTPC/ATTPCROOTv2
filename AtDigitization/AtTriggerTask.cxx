@@ -3,7 +3,7 @@
 #include <FairTask.h>
 #include <TClonesArray.h>
 #include <fairlogger/Logger.h>
-#include <stddef.h>
+#include <cstddef>
 #include <iostream>
 #include <memory>
 
@@ -40,13 +40,13 @@ InitStatus AtTriggerTask::Init()
 
    //********Get AtEventH and AtRawEvent*************
    fAtEventArray = (TClonesArray *)ioman->GetObject("AtEventH");
-   if (fAtEventArray == 0) {
+   if (fAtEventArray == nullptr) {
       LOG(error) << "Cannot find fAtEventArray array!";
       return kERROR;
    }
 
    fAtRawEventArray = (TClonesArray *)ioman->GetObject("AtRawEvent");
-   if (fAtRawEventArray == 0) {
+   if (fAtRawEventArray == nullptr) {
       LOG(error) << "Cannot find fAtRawEventArray array!";
       return kERROR;
    }
@@ -90,8 +90,8 @@ void AtTriggerTask::Exec(Option_t *option)
    // fAtEventArray_acc     ->Delete();
    // fAtRawEventArray_acc  ->Delete();
 
-   fEvent = NULL;
-   fRawEvent = NULL;
+   fEvent = nullptr;
+   fRawEvent = nullptr;
 
    fEvent = (AtEvent *)fAtEventArray->At(0);
    fRawEvent = (AtRawEvent *)fAtRawEventArray->At(0);
@@ -104,8 +104,8 @@ void AtTriggerTask::Exec(Option_t *option)
 
       std::cerr << "Event triggered by DAQ" << std::endl;
 
-      AtEvent *event_acc = (AtEvent *)new ((*fAtEventArray_acc)[0]) AtEvent(*fEvent);
-      AtRawEvent *rawEvent_acc = (AtRawEvent *)new ((*fAtRawEventArray_acc)[0]) AtRawEvent(*fRawEvent);
+      new ((*fAtEventArray_acc)[0]) AtEvent(*fEvent);
+      new ((*fAtRawEventArray_acc)[0]) AtRawEvent(*fRawEvent);
    }
 }
 

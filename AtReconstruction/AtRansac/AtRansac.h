@@ -7,9 +7,11 @@
 #ifndef AtRANSAC_H
 #define AtRANSAC_H
 
+/*
 #ifdef _OPENMP
 #include <omp.h>
 #endif
+*/
 
 #include <fstream>
 #include <iostream>

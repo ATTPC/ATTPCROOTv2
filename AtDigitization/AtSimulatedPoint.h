@@ -25,8 +25,8 @@ protected:
 
 public:
    AtSimulatedPoint();
-   AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, const ROOT::Math::XYZVector &pointLocation);
-   AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, const ROOT::Math::XYZVector &pointLocation);
+   AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, ROOT::Math::XYZVector pointLocation);
+   AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, ROOT::Math::XYZVector pointLocation);
 
    ~AtSimulatedPoint();
 

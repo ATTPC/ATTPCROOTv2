@@ -1,6 +1,6 @@
 #include "GETBasicFrameHeader.h"
 
-#include <string.h>
+#include <cstring>
 #include <iostream>
 
 #include <Rtypes.h>

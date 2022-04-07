@@ -22,8 +22,7 @@ protected:
 public:
    AtSimulatedLine();
    AtSimulatedLine(std::size_t mcPointID, Int_t clusterID, Int_t charge, const ROOT::Math::XYZVector &posIn,
-                   const ROOT::Math::XYZVector &posOut, Double_t longitudalDiffusionSigma,
-                   Double_t transverseDiffusionSigma);
+                   ROOT::Math::XYZVector posOut, Double_t longitudalDiffusionSigma, Double_t transverseDiffusionSigma);
 
    void SetFinalPosition(Double_t x, Double_t y, Double_t zTime);
    void SetInitialPosition(Double_t x, Double_t y, Double_t zTime);

@@ -37,7 +37,7 @@ public:
       fmaxchg = sqrt(-1.0);
       ffitprm.resize(3);
    }
-   ~CRDC() { Clear(); };
+   ~CRDC() = default;
 
    void Clear(Option_t * /*option*/ = "")
    { // modified to suppress warnings
@@ -154,7 +154,7 @@ public:
       ftac_obj = sqrt(-1.0);
       ftac_xfp = sqrt(-1.0);
    }
-   ~TOF() { Clear(); };
+   ~TOF() = default;
    void Clear(Option_t * /*option*/ = "")
    { // modified to suppress warnings
       //  void Clear(){

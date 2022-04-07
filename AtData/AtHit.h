@@ -57,7 +57,7 @@ protected:
 public:
    AtHit(Int_t hitID = -1);
    AtHit(Int_t hitID, const XYZPoint &location, Double_t charge);
-   AtHit(Int_t hitID, Int_t padNum, const XYZPoint &location, Double_t charge);
+   AtHit(Int_t hitID, Int_t padNum, XYZPoint location, Double_t charge);
    AtHit(Int_t hitID, Double_t x, Double_t y, Double_t z, Double_t charge);
    AtHit(Int_t hitID, Int_t padNum, Double_t x, Double_t y, Double_t z, Double_t charge);
    AtHit(const AtHit &hit) = default;

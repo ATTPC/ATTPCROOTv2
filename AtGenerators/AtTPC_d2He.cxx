@@ -1,7 +1,7 @@
 #include "AtTPC_d2He.h"
 
 #include <TMathBase.h>
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include <algorithm>
 #include <cmath>
@@ -50,12 +50,10 @@ AtTPC_d2He::AtTPC_d2He(const char *name, std::vector<Int_t> *z, std::vector<Int_
    fIon.reserve(fMult);
 
    char buffer[30];
-   TDatabasePDG *pdgDB = TDatabasePDG::Instance();
-   TParticlePDG *kProtonPDG = pdgDB->GetParticle(2212);
-   TParticle *kProton = new TParticle();
+   auto *kProton = new TParticle();
    kProton->SetPdgCode(2212);
 
-   TParticle *kNeutron = new TParticle();
+   auto *kNeutron = new TParticle();
    kNeutron->SetPdgCode(2112);
 
    // Read the cross section table
@@ -86,20 +84,20 @@ AtTPC_d2He::AtTPC_d2He(const char *name, std::vector<Int_t> *z, std::vector<Int_
       if (a->at(i) != 1) {
          IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i) * amu / 1000.0);
          ParticleBuff = new FairParticle("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);
-         fPType.push_back("Ion");
+         fPType.emplace_back("Ion");
          //          std::cout<<" Adding : "<<buffer<<std::endl;
 
       } else if (a->at(i) == 1 && z->at(i) == 1) {
 
          IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i) * amu / 1000.0);
          ParticleBuff = new FairParticle(2212, kProton);
-         fPType.push_back("Proton");
+         fPType.emplace_back("Proton");
 
       } else if (a->at(i) == 1 && z->at(i) == 0) {
 
          IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i) * amu / 1000.0);
          ParticleBuff = new FairParticle(2112, kNeutron);
-         fPType.push_back("Neutron");
+         fPType.emplace_back("Neutron");
       }
 
       //	       std::cout<<" Z "<<z->at(i)<<" A "<<a->at(i)<<std::endl;
@@ -118,7 +116,7 @@ AtTPC_d2He::AtTPC_d2He(const char *name, std::vector<Int_t> *z, std::vector<Int_
 
       if (fPType.at(i) == "Ion") {
          //                 std::cout<<" In position "<<i<<" adding an : "<<fPType.at(i)<<std::endl;
-         run->AddNewIon(fIon.at(i));
+         run->AddNewIon(fIon.at(i)); // NOLINT
          //		             std::cout<<" fIon name :"<<fIon.at(i)->GetName()<<std::endl;
          //                 std::cout<<" fParticle name :"<<fParticle.at(i)->GetName()<<std::endl;
 
@@ -138,12 +136,6 @@ AtTPC_d2He::AtTPC_d2He(const char *name, std::vector<Int_t> *z, std::vector<Int_
          //                 std::cout<<fParticle.at(i)->GetName()<<std::endl;
       }
    }
-}
-
-// -----   Destructor   ---------------------------------------------------
-AtTPC_d2He::~AtTPC_d2He()
-{
-   // if (fIon) delete fIon;
 }
 
 // Rotation of a 3D vector around an arbitrary axis
@@ -208,8 +200,6 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
    std::vector<Double_t> Ene; // Lab Energy of the products
    Ang.resize(4);
    Ene.resize(4);
-
-   AtStack *stack = (AtStack *)gMC->GetStack();
 
    fIsDecay = kFALSE;
 
@@ -484,14 +474,15 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
 
    } // if solution is valid
 
-   Double_t phi7 = atan2(p7L[1], p7L[0]) * TMath::RadToDeg();
-   if (phi7 < 0)
-      phi7 = (phi7 + 360.0);
+   /*
+      Double_t phi7 = atan2(p7L[1], p7L[0]) * TMath::RadToDeg();
+      if (phi7 < 0)
+         phi7 = (phi7 + 360.0);
 
-   Double_t phi8 = atan2(p8L[1], p8L[0]) * TMath::RadToDeg();
-   if (phi8 < 0)
-      phi8 = (phi8 + 360.0);
-
+      Double_t phi8 = atan2(p8L[1], p8L[0]) * TMath::RadToDeg();
+      if (phi8 < 0)
+         phi8 = (phi8 + 360.0);
+   */
    /*std::cout << " -I- ===== AtTPC_d2He - Kinematics ====== "<<Ex_ejectile<<std::endl;
    std::cout << " Scattered energy:" << Ene.at(0)  << " MeV" << std::endl;
    std::cout << " Scattered  angle:"  << Ang.at(0) << " deg" << std::endl;

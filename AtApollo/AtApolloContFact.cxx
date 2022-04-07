@@ -9,7 +9,7 @@
 
 #include <FairContFact.h>
 #include <TString.h>
-#include <stddef.h>
+#include <cstddef>
 
 #include <FairRuntimeDb.h>
 
@@ -50,11 +50,6 @@ FairParSet *AtApolloContFact::createContainer(FairContainer *c)
        the default context
        of this container, the name is concatinated with the context.
    */
-   const char *name = c->GetName();
-   FairParSet *p = NULL;
-   // if (strcmp(name,"AtApolloGeoPar")==0) {
-   //   p=new AtApolloGeoPar(c->getConcatName().Data(),
-   //                           c->GetTitle(),c->getContext());
-   // }
+   FairParSet *p = nullptr;
    return p;
 }

@@ -53,7 +53,7 @@ void AtPassiveContFact::setAllContainers()
    /** Creates the Container objects with all accepted contexts and adds them to
     *  the list of containers for the STS library.*/
 
-   FairContainer *p = new FairContainer("FairGeoPassivePar", "Passive Geometry Parameters", "TestDefaultContext");
+   auto *p = new FairContainer("FairGeoPassivePar", "Passive Geometry Parameters", "TestDefaultContext");
    p->addContext("TestNonDefaultContext");
 
    containers->Add(p);

@@ -29,6 +29,7 @@ AtPSA::AtPSA()
    // TODO:Move to class that needs them
    fIniTB = 0;
    fEndTB = 512;
+   fNumTbs = 512; // This was hard coded too many places to leave as a variable...
 
    fThreshold = -1;
    fThresholdlow = -1;
@@ -52,20 +53,20 @@ void AtPSA::Init()
    if (!run)
       LOG(FATAL) << "No analysis run!";
 
-   FairRuntimeDb *db = run->GetRuntimeDb();
+   FairRuntimeDb *db = run->GetRuntimeDb(); // NOLINT
    if (!db)
       LOG(FATAL) << "No runtime database!";
 
-   fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
+   fPar = (AtDigiPar *)db->getContainer("AtDigiPar"); // NOLINT
    if (!fPar)
       LOG(FATAL) << "AtDigiPar not found!!";
 
-   fPadPlaneX = fPar->GetPadPlaneX();
+   fPadPlaneX = fPar->GetPadPlaneX(); // NOLINT
    fPadSizeX = fPar->GetPadSizeX();
    fPadSizeZ = fPar->GetPadSizeZ();
    fPadRows = fPar->GetPadRows();
    fPadLayers = fPar->GetPadLayers();
-   fNumTbs = fPar->GetNumTbs();
+   // fNumTbs = fPar->GetNumTbs();
    fTBTime = fPar->GetTBTime();
    fDriftVelocity = fPar->GetDriftVelocity();
    fMaxDriftLength = fPar->GetDriftLength();
@@ -219,7 +220,7 @@ void AtPSA::TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit &hit)
    for (auto it = map.lower_bound(padNum); it != map.upper_bound(padNum); ++it) {
 
       if (fMCSimPointArray != nullptr) {
-         AtMCPoint *MCPoint = (AtMCPoint *)fMCSimPointArray->At(it->second);
+         auto *MCPoint = (AtMCPoint *)fMCSimPointArray->At(it->second);
 
          AtHit::MCSimPoint mcpoint(it->second, MCPoint->GetTrackID(), MCPoint->GetEIni(), MCPoint->GetEnergyLoss(),
                                    MCPoint->GetAIni(), MCPoint->GetMassNum(), MCPoint->GetAtomicNum());

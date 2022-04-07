@@ -45,7 +45,7 @@ AtFieldPar::AtFieldPar()
 // -------------------------------------------------------------------------
 
 // ------   Destructor   ---------------------------------------------------
-AtFieldPar::~AtFieldPar() {}
+AtFieldPar::~AtFieldPar() = default;
 // -------------------------------------------------------------------------
 
 // ------   Put parameters   -----------------------------------------------
@@ -147,7 +147,7 @@ void AtFieldPar::SetParameters(FairField *field)
    fType = field->GetType();
 
    if (fType == 0) { // constant field
-      AtConstField *fieldConst = (AtConstField *)field;
+      auto *fieldConst = (AtConstField *)field;
       fBx = fieldConst->GetBx();
       fBy = fieldConst->GetBy();
       fBz = fieldConst->GetBz();

@@ -15,7 +15,7 @@
 
 AtClusterizeLineTask::AtClusterizeLineTask() : AtClusterizeTask("AtClusterizeLineTask") {}
 
-AtClusterizeLineTask::~AtClusterizeLineTask() {}
+AtClusterizeLineTask::~AtClusterizeLineTask() = default;
 
 InitStatus AtClusterizeLineTask::Init()
 {
@@ -55,7 +55,7 @@ void AtClusterizeLineTask::processPoint(Int_t mcPointID)
    ROOT::Math::XYZVector currentPoint = getCurrentPointLocation();
 
    auto size = fSimulatedPointArray->GetEntriesFast();
-   AtSimulatedLine *simLine = new ((*fSimulatedPointArray)[size]) AtSimulatedLine();
+   auto *simLine = new ((*fSimulatedPointArray)[size]) AtSimulatedLine();
 
    simLine->SetMCPointID(mcPointID);
    simLine->SetMCEventID(fMCPoint->GetEventID());

@@ -61,7 +61,7 @@ macro(set_attpcroot_defaults)
 
     # Look for iwyu
     find_program(iwyu_path NAMES include-what-you-use iwyu PATHS ENV IWYU ENV PATH)
-    if(NOT iwyu_path)
+    if(NOT iwyu_path OR PROJECT_iwyu_DISABLE)
       message(WARNING "Could not find iwyu executable by looking at enviroment variable IWYU")
       set(iwyu_FOUND FALSE)
     else()
@@ -74,7 +74,25 @@ macro(set_attpcroot_defaults)
       set(iwyu_FOUND TRUE)
     endif()
     list(APPEND PROJECT_STATIC_ANALYZERS iwyu)
-    # Other analyzers would go here...
+
+    # Look for clang-tidy
+    find_program(clang-tidy_path NAMES clang-tidy)
+    if(NOT clang-tidy_path OR PROJECT_clang-tidy_DISABLE)
+      message(WARNING "Could not find clang-tidy executable or asked to note use clang-tidy")
+      set(clang-tidy_FOUND FALSE)
+    else()
+      message(STATUS "Using clang-tidy at: ${clang-tidy_path}")
+      #extra-args fixes error with fenv.h (possible fixewd in gcc 11+?)(https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100017)
+      set(clang-tidy_path_and_args
+	${clang-tidy_path}
+	#--fix
+	--extra-arg=-nostdinc++
+	)
+      message(STATUS "Setting clang tidy to: ${clang-tidy_path_and_args}") 
+      set(CMAKE_CXX_CLANG_TIDY ${clang-tidy_path_and_args})
+      set(clang-tidy_FOUND TRUE)
+    endif()
+    list(APPEND PROJECT_STATIC_ANALYZERS clang-tidy)
 
   endif(RUN_STATIC_ANALYSIS)
 

@@ -1,6 +1,6 @@
 #include "AtEulerTransformation.h"
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 
 #include <Rtypes.h>
@@ -31,11 +31,6 @@ AtEulerTransformation::AtEulerTransformation()
    BeamDirectionAtVertexPhi = 0.0;
    ThetaInLabSystem = 0.0;
    PhiInLabSystem = 0.0;
-}
-
-AtEulerTransformation::~AtEulerTransformation()
-{
-   // destructor
 }
 
 void AtEulerTransformation::DoTheEulerTransformationBeam2Lab()

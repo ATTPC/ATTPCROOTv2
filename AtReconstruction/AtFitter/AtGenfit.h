@@ -42,8 +42,8 @@ public:
             Int_t minit = 5, Int_t maxit = 20);
    ~AtGenfit();
 
-   genfit::Track *FitTracks(AtTrack *track);
-   void Init();
+   genfit::Track *FitTracks(AtTrack *track) override;
+   void Init() override;
 
    inline void SetMinIterations(Int_t minit) { fMinIterations = minit; }
    inline void SetMaxIterations(Int_t maxit) { fMaxIterations = maxit; }

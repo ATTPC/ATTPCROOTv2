@@ -1,7 +1,7 @@
 #include "AtSpecMATMap.h"
 
 #include <TAxis.h>
-#include <math.h>
+#include <cmath>
 #include <boost/multi_array/base.hpp>
 #include <boost/multi_array/extent_gen.hpp>
 #include <boost/multi_array/multi_array_ref.hpp>
@@ -11,6 +11,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <FairLogger.h>
 
 #include <TH2Poly.h>
 #include <Rtypes.h>
@@ -30,7 +31,7 @@ AtSpecMATMap::AtSpecMATMap(Int_t numPads) : AtMap()
    fNumberPads = numPads;
 }
 
-AtSpecMATMap::~AtSpecMATMap() {}
+AtSpecMATMap::~AtSpecMATMap() = default;
 
 void AtSpecMATMap::Dump()
 {
@@ -60,10 +61,10 @@ std::vector<double> TrianglesGenerator()
    int counter = 0;
    int a = 0;
    const int arrayLength = nElementsInSegment * nSegments;
-   double x0[arrayLength], x1[arrayLength], x2[arrayLength], xCentre[arrayLength], x0next[arrayLength],
-      x1next[arrayLength], x2next[arrayLength];
-   double y0[arrayLength], y1[arrayLength], y2[arrayLength], yCentre[arrayLength], y0next[arrayLength],
-      y1next[arrayLength], y2next[arrayLength];
+   std::vector<double> x0(arrayLength), x1(arrayLength), x2(arrayLength), xCentre(arrayLength), x0next(arrayLength),
+      x1next(arrayLength), x2next(arrayLength);
+   std::vector<double> y0(arrayLength), y1(arrayLength), y2(arrayLength), yCentre(arrayLength), y0next(arrayLength),
+      y1next(arrayLength), y2next(arrayLength);
    double h = 4.725;
 
    for (int i = 1; i < nRaws + 1; i++) {
@@ -204,8 +205,8 @@ void AtSpecMATMap::SpecMATPadPlane()
    double InitialPoInt_Y = 50;
    double particleEnergy = 50;
 
-   double binXcentroid;
-   double binYcentroid;
+   double binXcentroid = 0;
+   double binYcentroid = 0;
 
    // Histogram filling example
    XY->Fill(InitialPoInt_X, InitialPoInt_Y, particleEnergy);
@@ -267,23 +268,18 @@ void AtSpecMATMap::GeneratePadPlane()
 XYPoint AtSpecMATMap::CalcPadCenter(Int_t PadRef)
 {
    if (!kIsParsed) {
-
-      std::cout << " AtSpecMATMap::CalcPadCenter Error : Pad plane has not been generated or parsed " << std::endl;
-      return XYPoint(-9999, -9999);
+      LOG(error) << " AtSpecMATMap::CalcPadCenter Error : Pad plane has not been generated or parsed";
+      return {-9999, -9999};
    }
 
-   if (PadRef != -1) { // Boost multi_array crashes with a negative index
-
-      auto x = AtPadCoord[PadRef][3][0];
-      auto y = AtPadCoord[PadRef][3][1];
-      return XYPoint(x, y);
-
-   } else {
-
-      if (kDebug)
-         std::cout << " AtSpecMATMap::CalcPadCenter Error : Pad not found" << std::endl;
-      return XYPoint(-9999, -9999);
+   if (PadRef == -1) { // Boost multi_array crashes with a negative index
+      LOG(debug) << " AtSpecMATMap::CalcPadCenter Error : Pad not found";
+      return {-9999, -9999};
    }
+
+   auto x = AtPadCoord[PadRef][3][0];
+   auto y = AtPadCoord[PadRef][3][1];
+   return {x, y};
 }
 
 ClassImp(AtSpecMATMap);

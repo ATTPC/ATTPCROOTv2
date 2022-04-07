@@ -29,7 +29,7 @@ private:
 
 public:
    AtEulerTransformation();
-   ~AtEulerTransformation();
+   ~AtEulerTransformation() = default;
 
    void SetThetaInBeamSystem(Double_t value) { ThetaInBeamSystem = value; }
    void SetPhiInBeamSystem(Double_t value) { PhiInBeamSystem = value; }

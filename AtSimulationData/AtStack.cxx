@@ -83,7 +83,7 @@ void AtStack::PushTrack(Int_t toBeDone, Int_t parentId, Int_t pdgCode, Double_t 
    Int_t nPoints = 0;
    Int_t daughter1Id = -1;
    Int_t daughter2Id = -1;
-   TParticle *particle = new (partArray[fNParticles++])
+   auto *particle = new (partArray[fNParticles++])
       TParticle(pdgCode, trackId, parentId, nPoints, daughter1Id, daughter2Id, px, py, pz, e, vx, vy, vz, time);
    particle->SetPolarisation(polx, poly, polz);
    particle->SetWeight(weight);
@@ -140,15 +140,13 @@ TParticle *AtStack::PopPrimaryForTracking(Int_t iPrim)
    // Test for index
    if (iPrim < 0 || iPrim >= fNPrimaries) {
       LOG(fatal) << "AtStack: Primary index out of range! " << iPrim;
-      Fatal("AtStack::PopPrimaryForTracking", "Index out of range");
    }
 
    // Return the iPrim-th TParticle from the fParticle array. This should be
    // a primary.
-   TParticle *part = (TParticle *)fParticles->At(iPrim);
+   auto *part = (TParticle *)fParticles->At(iPrim);
    if (!(part->GetMother(0) < 0)) {
       LOG(fatal) << "AtStack:: Not a primary track! " << iPrim;
-      Fatal("AtStack::PopPrimaryForTracking", "Not a primary track");
    }
 
    return part;
@@ -161,7 +159,6 @@ TParticle *AtStack::GetCurrentTrack() const
    TParticle *currentPart = GetParticle(fCurrentTrack);
    if (!currentPart) {
       LOG(warning) << "AtStack: Current track not found in stack!";
-      Warning("AtStack::GetCurrentTrack", "Track not found in stack");
    }
    return currentPart;
 }
@@ -171,7 +168,7 @@ TParticle *AtStack::GetCurrentTrack() const
 void AtStack::AddParticle(TParticle *oldPart)
 {
    TClonesArray &array = *fParticles;
-   TParticle *newPart = new (array[fIndex]) TParticle(*oldPart);
+   auto *newPart = new (array[fIndex]) TParticle(*oldPart);
    newPart->SetWeight(oldPart->GetWeight());
    newPart->SetUniqueID(oldPart->GetUniqueID());
    fIndex++;
@@ -182,7 +179,7 @@ void AtStack::AddParticle(TParticle *oldPart)
 void AtStack::FillTrackArray()
 {
 
-   LOG(debug) << "AtStack: Filling MCTrack array...";
+   LOG(debug) << "AtStack: Filling MCTrack array..."; // NOLINT
 
    // --> Reset index map and number of output tracks
    fIndexMap.clear();
@@ -197,20 +194,21 @@ void AtStack::FillTrackArray()
       fStoreIter = fStoreMap.find(iPart);
       if (fStoreIter == fStoreMap.end()) {
          LOG(fatal) << "AtStack: Particle " << iPart << " not found in storage map! ";
-         Fatal("AtStack::FillTrackArray", "Particle not found in storage map.");
       }
       Bool_t store = (*fStoreIter).second;
 
       if (store) {
-         AtMCTrack *track = new ((*fTracks)[fNTracks]) AtMCTrack(GetParticle(iPart));
-         fIndexMap[iPart] = fNTracks;
-         // --> Set the number of points in the detectors for this track
-         for (Int_t iDet = kAtTpc; iDet < kSTOPHERE; iDet++) {
-            pair<Int_t, Int_t> a(iPart, iDet);
-            // commented because this function did not do anything
-            // it was fully commented out in the source code. (5/23/21)
-            // track->SetNPoints(iDet, fPointsMap[a]);
-         }
+
+         /*auto *track = new ((*fTracks)[fNTracks]) AtMCTrack(GetParticle(iPart));
+              fIndexMap[iPart] = fNTracks;
+              // --> Set the number of points in the detectors for this track
+              for (Int_t iDet = kAtTpc; iDet < kSTOPHERE; iDet++) {
+                 pair<Int_t, Int_t> a(iPart, iDet);
+                 // commented because this function did not do anything
+                 // it was fully commented out in the source code. (5/23/21)
+                 // track->SetNPoints(iDet, fPointsMap[a]);
+              }
+         */
          fNTracks++;
       } else {
          fIndexMap[iPart] = -2;
@@ -234,17 +232,16 @@ void AtStack::UpdateTrackIndex(TRefArray *detList)
 
    // First update mother ID in MCTracks
    for (Int_t i = 0; i < fNTracks; i++) {
-      AtMCTrack *track = (AtMCTrack *)fTracks->At(i);
+      auto *track = (AtMCTrack *)fTracks->At(i);
       Int_t iMotherOld = track->GetMotherId();
       fIndexIter = fIndexMap.find(iMotherOld);
       if (fIndexIter == fIndexMap.end()) {
          LOG(fatal) << "AtStack: Particle index " << iMotherOld << " not found in dex map! ";
-         Fatal("AtStack::UpdateTrackIndex", "Particle index not found in map");
       }
       track->SetMotherId((*fIndexIter).second);
    }
 
-   if (fDetList == 0) {
+   if (fDetList == nullptr) {
       // Now iterate through all active detectors
       fDetIter = detList->MakeIterator();
       fDetIter->Reset();
@@ -264,7 +261,7 @@ void AtStack::UpdateTrackIndex(TRefArray *detList)
 
          // --> Update track index for all MCPoints in the collection
          for (Int_t iPoint = 0; iPoint < nPoints; iPoint++) {
-            FairMCPoint *point = (FairMCPoint *)hitArray->At(iPoint);
+            auto *point = (FairMCPoint *)hitArray->At(iPoint);
             Int_t iTrack = point->GetTrackID();
 
             fIndexIter = fIndexMap.find(iTrack);

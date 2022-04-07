@@ -1,7 +1,7 @@
 
 #include "AtLineChargeModel.h"
 
-#include <math.h>
+#include <cmath>
 #include <Rtypes.h>
 #include <FairLogger.h>
 #include <memory>

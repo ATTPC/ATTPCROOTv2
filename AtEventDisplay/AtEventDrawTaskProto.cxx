@@ -19,7 +19,7 @@
 #include <TSeqCollection.h>
 #include <TVirtualPad.h>
 #include <fairlogger/Logger.h>
-#include <stdio.h>
+#include <cstdio>
 #include <Math/Point3D.h>
 #include <iostream>
 #include <algorithm>
@@ -65,7 +65,8 @@ using namespace std;
 ClassImp(AtEventDrawTaskProto);
 
 AtEventDrawTaskProto::AtEventDrawTaskProto()
-   : fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium), fHitSet(0), fSaveTextData(0), fhitBoxSet(0)
+   : fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium), fHitSet(nullptr), fSaveTextData(false),
+     fhitBoxSet(nullptr)
 {
    Char_t padhistname[256];
    fMultiHit = 10;
@@ -232,11 +233,11 @@ void AtEventDrawTaskProto::Reset()
 
    if (fEventManager->GetDrawPatternRecognition()) {
 
-      if (fPatternEventArray != NULL & kIsPRDrawn == kTRUE) {
+      if (fPatternEventArray != nullptr & kIsPRDrawn == kTRUE) {
 
          if (fLineNum > 0) {
             for (Int_t i = 0; i < fLineNum; i++) {
-               if (fHitSetPR[i] != NULL) {
+               if (fHitSetPR[i] != nullptr) {
                   gEve->RemoveElement(fHitSetPR[i], fEventManager);
                }
             }
@@ -246,8 +247,8 @@ void AtEventDrawTaskProto::Reset()
       kIsPRDrawn = kFALSE;
    }
 
-   if (fPadPlane != NULL)
-      fPadPlane->Reset(0);
+   if (fPadPlane != nullptr)
+      fPadPlane->Reset(nullptr);
 }
 
 // Filling functions
@@ -256,14 +257,14 @@ void AtEventDrawTaskProto::DrawHitPoints()
 {
 
    // Float_t *MeshArray;
-   fMesh->Reset(0);
-   for (Int_t i = 0; i < 9; i++)
-      fAuxChannels[i]->Reset(0);
+   fMesh->Reset(nullptr);
+   for (auto &fAuxChannel : fAuxChannels)
+      fAuxChannel->Reset(nullptr);
    // f3DHist->Reset(0);
    // TRandom r(0);
 
-   for (Int_t i = 0; i < 2015; i++)
-      fPadAll[i]->Reset(0);
+   for (auto &i : fPadAll)
+      i->Reset(nullptr);
 
    std::ofstream dumpEvent;
    dumpEvent.open("event.dat");
@@ -273,12 +274,10 @@ void AtEventDrawTaskProto::DrawHitPoints()
    std::vector<Double_t> fPosZMin;
 
    // fQEventHist_H->Reset(0);
-   AtEvent *event = (AtEvent *)fHitArray->At(0); // TODO: Why this confusing name? It should be fEventArray
+   auto *event = (AtEvent *)fHitArray->At(0); // TODO: Why this confusing name? It should be fEventArray
    Int_t nHits = 0;
 
-   if (event != NULL) {
-      Double_t Qevent = event->GetEventCharge();
-      Double_t RhoVariance = event->GetRhoVariance();
+   if (event != nullptr) {
       auto MeshArray = event->GetMesh();
       Int_t eventID = event->GetEventID();
       nHits = event->GetNumHits();
@@ -316,10 +315,6 @@ void AtEventDrawTaskProto::DrawHitPoints()
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
       AtHit hit = event->GetHitArray().at(iHit);
-      Int_t PadNumHit = hit.GetPadNum();
-      Int_t PadMultHit = event->GetHitPadMult(PadNumHit);
-      Double_t BaseCorr = hit.GetBaseCorr();
-      Int_t Atbin = -1;
 
       // if(hit.GetCharge()<fThreshold) continue;
       // if(PadMultHit>fMultiHit) continue;
@@ -329,7 +324,7 @@ void AtEventDrawTaskProto::DrawHitPoints()
       fHitSet->SetMarkerColor(fHitColor);
       fHitSet->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.); // Convert into cm
       fHitSet->SetPointId(new TNamed(Form("Hit %d", iHit), ""));
-      Atbin = fPadPlane->Fill(position.X(), position.Y(), hit.GetCharge());
+      fPadPlane->Fill(position.X(), position.Y(), hit.GetCharge());
 
       Bool_t fValidPad;
 
@@ -421,7 +416,7 @@ void AtEventDrawTaskProto::DrawHitPoints()
 
    if (fIsRawData) {
 
-      if (fRawevent != NULL) {
+      if (fRawevent != nullptr) {
 
          Int_t nPads = fRawevent->GetNumPads();
          std::cout << "Num of pads : " << nPads << std::endl;
@@ -432,7 +427,7 @@ void AtEventDrawTaskProto::DrawHitPoints()
             // std::cout<<"Pad num : "<<iPad<<" Is Valid? : "<<fPad->GetValidPad()<<" Pad num in pad object
             // :"<<fPad->GetPadNum()<<std::endl;
 
-            if (fPad != NULL) {
+            if (fPad != nullptr) {
                auto rawadc = fPad->GetRawADC();
                auto adc = fPad->GetADC();
                Int_t PadNum_temp = fPad->GetPadNum();
@@ -453,8 +448,8 @@ void AtEventDrawTaskProto::DrawHitPoints()
 
    if (fEventManager->GetDrawPatternRecognition()) {
 
-      for (Int_t i = 0; i < 20; i++)
-         fLineArray[i] = new TEveLine();
+      for (auto &i : fLineArray)
+         i = new TEveLine();
       int n = 100;
       double t0 = 0;
       double dt = 2000;
@@ -462,12 +457,12 @@ void AtEventDrawTaskProto::DrawHitPoints()
 
       if (fPatternEventArray) {
 
-         AtPatternEvent *patternEvent = dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0));
+         auto *patternEvent = dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0));
 
-         if (patternEvent != NULL) {
+         if (patternEvent != nullptr) {
             TrackCand = patternEvent->GetTrackCand();
-            for (Int_t i = 0; i < 20; i++)
-               fHitSetPR[i] = 0;
+            for (auto &i : fHitSetPR)
+               i = nullptr;
 
             fLineNum = TrackCand.size();
             std::cout << cRED << " Found " << TrackCand.size() << " track candidates " << cNORMAL << std::endl;
@@ -487,8 +482,8 @@ void AtEventDrawTaskProto::DrawHitPoints()
                   fHitSetPR[i]->SetMarkerSize(fHitSize);
                   fHitSetPR[i]->SetMarkerStyle(fHitStyle);
 
-                  for (int j = 0; j < trackHits.size(); ++j) {
-                     auto position = trackHits.at(j).GetPosition();
+                  for (auto &trackHit : trackHits) {
+                     auto position = trackHit.GetPosition();
                      fHitSetPR[i]->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.);
                   }
 
@@ -522,7 +517,7 @@ void AtEventDrawTaskProto::DrawProtoPattern()
       fQHitPattern[i]->Set(0);
       fQELossPattern[i]->Set(0);
    }
-   AtProtoEvent *protoevent = (AtProtoEvent *)fProtoEventArray->At(0);
+   auto *protoevent = (AtProtoEvent *)fProtoEventArray->At(0);
    Int_t nQuads = protoevent->GetNumQuadrants();
    std::vector<AtProtoQuadrant> quadrantArray;
 
@@ -536,8 +531,8 @@ void AtEventDrawTaskProto::DrawProtoPattern()
          quadrantArray.push_back(protoevent->GetQuadrantArray()->at(iQ));
          std::vector<Double_t> *PhiArray = quadrantArray[iQ].GetPhiArray();
 
-         for (Int_t pval = 0; pval < PhiArray->size(); pval++) {
-            fPhiDistr[iQ]->Fill(PhiArray->at(pval));
+         for (double pval : *PhiArray) {
+            fPhiDistr[iQ]->Fill(pval);
          }
          PhiArray->clear();
 
@@ -562,20 +557,18 @@ void AtEventDrawTaskProto::DrawProtoHough() {}
 void AtEventDrawTaskProto::DrawProtoPatternAna()
 {
 
-   for (Int_t i = 0; i < 4; i++)
-      fQELossPatternAna[i]->Set(0);
+   for (auto &i : fQELossPatternAna)
+      i->Set(0);
 
-   fQVertex[2]->Reset(0);
-   fQVertex[3]->Reset(0);
-   fQKine[2]->Reset(0);
-   fQKine[3]->Reset(0);
+   fQVertex[2]->Reset(nullptr);
+   fQVertex[3]->Reset(nullptr);
+   fQKine[2]->Reset(nullptr);
+   fQKine[3]->Reset(nullptr);
 
-   AtProtoEventAna *protoeventAna = (AtProtoEventAna *)fProtoEventAnaArray->At(0);
+   auto *protoeventAna = (AtProtoEventAna *)fProtoEventAnaArray->At(0);
 
    std::vector<Double_t> *Par0 = protoeventAna->GetPar0();
    std::vector<Double_t> *Par1 = protoeventAna->GetPar1();
-
-   std::vector<Double_t> *Range = protoeventAna->GetRange();
 
    // std::vector<std::pair<Double_t,Double_t>>* ELossHitPattern = protoeventAna->GetELossHitPattern();
    std::vector<std::vector<std::pair<Double_t, Double_t>>> *QELossHitPattern = protoeventAna->GetQELossHitPattern();
@@ -585,8 +578,7 @@ void AtEventDrawTaskProto::DrawProtoPatternAna()
       fFit[i]->SetParameter(0, Par0->at(i));
       fFit[i]->SetParameter(1, Par1->at(i));
 
-      for (Int_t j = 0; j < ELossHitPattern.size(); j++) {
-         std::pair<Double_t, Double_t> HPbuffer = ELossHitPattern.at(j);
+      for (auto HPbuffer : ELossHitPattern) {
          Double_t radius = HPbuffer.second;
          Double_t charge = HPbuffer.first;
          fQELossPatternAna[i]->SetPoint(fQELossPatternAna[i]->GetN(), radius, charge);
@@ -659,11 +651,11 @@ void AtEventDrawTaskProto::DrawPadAll()
 
    fCvsPadAll->cd();
 
-   for (Int_t i = 0; i < 2015; i++) {
+   for (auto &i : fPadAll) {
       // fPadAll[i]->Reset(0);
       // fPadAll[i] = new TH1I("fPadAll","fPadAll",512,0,511);
-      fPadAll[i]->GetYaxis()->SetRangeUser(0, 2500);
-      fPadAll[i]->SetLineColor(8);
+      i->GetYaxis()->SetRangeUser(0, 2500);
+      i->SetLineColor(8);
 
       /*if (i<64) fPadAll[i]->SetLineColor(6);                         // Q1, pink
       else if(i>=64 && i<127) fPadAll[i]->SetLineColor(8);           // Q2, green
@@ -671,7 +663,7 @@ void AtEventDrawTaskProto::DrawPadAll()
       else if(i>=190 && i<253) fPadAll[i]->SetLineColor(kOrange-3);   // Q4, orange
       else fPadAll[i]->SetLineColor(0);                              //white for non physical pads*/
 
-      fPadAll[i]->Draw("SAME");
+      i->Draw("SAME");
    }
 }
 
@@ -928,11 +920,11 @@ void AtEventDrawTaskProto::SelectPad(const char *rawevt)
       if (!select)
          return;
       if (select->InheritsFrom(TH2Poly::Class())) {
-         TH2Poly *h = (TH2Poly *)select;
+         auto *h = (TH2Poly *)select;
          gPad->GetCanvas()->FeedbackMode(kTRUE);
-         AtRawEvent *tRawEvent = NULL;
+         AtRawEvent *tRawEvent = nullptr;
          tRawEvent = (AtRawEvent *)gROOT->GetListOfSpecials()->FindObject(rawevt);
-         if (tRawEvent == NULL) {
+         if (tRawEvent == nullptr) {
             std::cout
                << " = AtEventDrawTaskProto::SelectPad NULL pointer for the AtRawEvent! Please select an event first "
                << std::endl;
@@ -983,11 +975,11 @@ void AtEventDrawTaskProto::SelectPad(const char *rawevt)
          // TH1D* tPadWaveSub = NULL;
          // tPadWaveSub = new TH1D("tPadWaveSub","tPadWaveSub",512.0,0.0,511.0);
          // tPadWaveSub->SetLineColor(kRed);
-         TH1I *tPadWave = NULL;
+         TH1I *tPadWave = nullptr;
          tPadWave = (TH1I *)gROOT->GetListOfSpecials()->FindObject("fPadWave");
          auto rawadc = tPad->GetRawADC();
          auto adc = tPad->GetADC();
-         if (tPadWave == NULL) {
+         if (tPadWave == nullptr) {
             std::cout << " = AtEventDrawTask::SelectPad NULL pointer for the TH1I! Please select an event first "
                       << std::endl;
             return;
@@ -1001,9 +993,9 @@ void AtEventDrawTaskProto::SelectPad(const char *rawevt)
             // tPadWaveSub->SetBinContent(i,adc[i]);
          }
 
-         TCanvas *tCvsPadWave = NULL;
+         TCanvas *tCvsPadWave = nullptr;
          tCvsPadWave = (TCanvas *)gROOT->GetListOfSpecials()->FindObject("fCvsPadWave");
-         if (tCvsPadWave == NULL) {
+         if (tCvsPadWave == nullptr) {
             std::cout << " = AtEventDrawTask::SelectPad NULL pointer for the TCanvas! Please select an event first "
                       << std::endl;
             return;

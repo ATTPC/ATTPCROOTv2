@@ -1,7 +1,7 @@
 #include "AtTPC2Body.h"
 
-#include <math.h>
-#include <stdio.h>
+#include <cmath>
+#include <cstdio>
 #include <FairPrimaryGenerator.h>
 #include <FairIon.h>
 #include <FairParticle.h>
@@ -53,12 +53,10 @@ AtTPC2Body::AtTPC2Body(const char *name, std::vector<Int_t> *z, std::vector<Int_
    fNoSolution = kFALSE;
 
    char buffer[30];
-   TDatabasePDG *pdgDB = TDatabasePDG::Instance();
-   TParticlePDG *kProtonPDG = pdgDB->GetParticle(2212);
-   TParticle *kProton = new TParticle();
+   auto *kProton = new TParticle();
    kProton->SetPdgCode(2212);
 
-   TParticle *kNeutron = new TParticle();
+   auto *kNeutron = new TParticle();
    kNeutron->SetPdgCode(2112);
 
    fIsFixedTargetPos = kFALSE;
@@ -85,20 +83,20 @@ AtTPC2Body::AtTPC2Body(const char *name, std::vector<Int_t> *z, std::vector<Int_
 
          IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i));
          ParticleBuff = new FairParticle("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);
-         fPType.push_back("Ion");
+         fPType.emplace_back("Ion");
          std::cout << " Adding : " << buffer << std::endl;
 
       } else if (a->at(i) == 1 && z->at(i) == 1) {
 
          IonBuff = new FairIon("dummyIon", 50, 50, 0, 0.0, 100); // We fill the std::vector with a dummy ion
          ParticleBuff = new FairParticle(2212, kProton);
-         fPType.push_back("Proton");
+         fPType.emplace_back("Proton");
 
       } else if (a->at(i) == 1 && z->at(i) == 0) {
 
          IonBuff = new FairIon("dummyIon", 50, 50, 0, 0.0, 100); // We fill the std::vector with a dummy ion
          ParticleBuff = new FairParticle(2112, kNeutron);
-         fPType.push_back("Neutron");
+         fPType.emplace_back("Neutron");
       }
 
       std::cout << " Z " << z->at(i) << " A " << a->at(i) << std::endl;
@@ -118,7 +116,7 @@ AtTPC2Body::AtTPC2Body(const char *name, std::vector<Int_t> *z, std::vector<Int_
       if (fPType.at(i) == "Ion") {
 
          std::cout << " In position " << i << " adding an : " << fPType.at(i) << std::endl;
-         run->AddNewIon(fIon.at(i));
+         run->AddNewIon(fIon.at(i)); // NOLINT
          std::cout << " fIon name :" << fIon.at(i)->GetName() << std::endl;
          std::cout << " fParticle name :" << fParticle.at(i)->GetName() << std::endl;
 
@@ -139,12 +137,6 @@ AtTPC2Body::AtTPC2Body(const char *name, std::vector<Int_t> *z, std::vector<Int_
          std::cout << fParticle.at(i)->GetName() << std::endl;
       }
    }
-}
-
-// -----   Destructor   ---------------------------------------------------
-AtTPC2Body::~AtTPC2Body()
-{
-   // if (fIon) delete fIon;
 }
 
 void AtTPC2Body::SetFixedTargetPosition(double vx, double vy, double vz)
@@ -191,8 +183,6 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
    std::cout << cBLUE << " -I- AtTPC2Body : Random CMS Theta angle in degrees : " << thetacmsInput << cNORMAL
              << std::endl;
    const Double_t rad2deg = 0.0174532925;
-
-   AtStack *stack = (AtStack *)gMC->GetStack();
 
    if (fIsFixedTargetPos) {
       fBeamEnergy = fBeamEnergy_buff;
@@ -358,7 +348,7 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
          LOG(DEBUG) << " Beam Phi (Mom) : " << BeamPos.Phi() * 180.0 / TMath::Pi();
 
          Double_t thetaLab1, phiLab1, thetaLab2, phiLab2;
-         AtEulerTransformation *EulerTransformer = new AtEulerTransformation();
+         auto *EulerTransformer = new AtEulerTransformation();
          EulerTransformer->SetBeamDirectionAtVertexTheta(BeamPos.Theta());
          EulerTransformer->SetBeamDirectionAtVertexPhi(BeamPos.Phi());
 
@@ -463,7 +453,7 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
 
       for (Int_t i = 0; i < fMult; i++) {
 
-         TParticlePDG *thisPart;
+         TParticlePDG *thisPart = nullptr;
 
          if (fPType.at(i) == "Ion")
             thisPart = TDatabasePDG::Instance()->GetParticle(fIon.at(i)->GetName());

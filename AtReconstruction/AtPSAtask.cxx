@@ -14,9 +14,11 @@
 // stdlib headers
 #include <iostream>
 
+/*
 #ifdef _OPENMP
 #include <omp.h>
 #endif
+*/
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
@@ -32,7 +34,7 @@ AtPSAtask::AtPSAtask(AtPSA *psa)
    fEventHArray = new TClonesArray("AtEvent");
 }
 
-AtPSAtask::~AtPSAtask() {}
+AtPSAtask::~AtPSAtask() = default;
 
 void AtPSAtask::SetPersistence(Bool_t value)
 {
@@ -55,13 +57,13 @@ void AtPSAtask::SetSimlulatedPointBranch(TString branchName)
 InitStatus AtPSAtask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
-   if (ioMan == 0) {
+   if (ioMan == nullptr) {
       LOG(ERROR) << "Cannot find RootManager!";
       return kERROR;
    }
 
    fRawEventArray = (TClonesArray *)ioMan->GetObject(fInputBranchName);
-   if (fRawEventArray == 0) {
+   if (fRawEventArray == nullptr) {
       LOG(ERROR) << "Cannot find AtRawEvent array in branch " << fInputBranchName << "!";
       return kERROR;
    }
@@ -92,8 +94,8 @@ void AtPSAtask::Exec(Option_t *opt)
       return;
    }
 
-   AtRawEvent *rawEvent = (AtRawEvent *)fRawEventArray->At(0);
-   AtEvent *event = (AtEvent *)new ((*fEventHArray)[0]) AtEvent();
+   auto *rawEvent = (AtRawEvent *)fRawEventArray->At(0);
+   auto *event = (AtEvent *)new ((*fEventHArray)[0]) AtEvent();
 
    LOG(debug) << "Setting AtEvent Parameters";
    event->SetIsGood(rawEvent->IsGood());

@@ -27,7 +27,7 @@ ClassImp(AtCave)
 {
    FairGeoLoader *loader = FairGeoLoader::Instance();
    FairGeoInterface *GeoInterface = loader->getGeoInterface();
-   AtGeoCave *MGeo = new AtGeoCave();
+   auto *MGeo = new AtGeoCave();
    MGeo->setGeomFile(GetGeometryFileName());
    GeoInterface->addGeoModule(MGeo);
    Bool_t rc = GeoInterface->readSet(MGeo);
@@ -37,7 +37,7 @@ ClassImp(AtCave)
 }
 AtCave::AtCave() : FairModule() {}
 
-AtCave::~AtCave() {}
+AtCave::~AtCave() = default;
 AtCave::AtCave(const char *name, const char *Title) : FairModule(name, Title)
 {
    world[0] = 0;

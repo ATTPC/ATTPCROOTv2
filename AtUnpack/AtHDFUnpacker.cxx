@@ -216,8 +216,8 @@ std::size_t AtHDFUnpacker::open(char const *file)
       auto datasetId = std::get<0>(dataset_dims);
       auto len = std::get<1>(dataset_dims).at(0);
 
-      int64_t *data = new int64_t[len];
-      auto status = H5Dread(datasetId, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+      auto *data = new int64_t[len];
+      H5Dread(datasetId, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
       std::cout << "Events: " << data[0] << " to " << data[2] << std::endl;
 
       fFirstEvent = data[0];
@@ -260,14 +260,14 @@ std::vector<uint64_t> AtHDFUnpacker::get_header(std::string headerName)
    // Get the length of the header
    auto len = std::get<1>(dataset_dims).at(0);
 
-   uint64_t *data = new uint64_t[len];
-   auto status = H5Dread(_dataset, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+   auto *data = new uint64_t[len];
+   H5Dread(_dataset, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
 
    // Add read data to the vector and return it
    for (int i = 0; i < len; ++i)
       retVec.push_back(data[i]);
 
-   delete data;
+   delete[] data;
 
    return retVec;
 }
@@ -301,7 +301,7 @@ std::vector<int16_t> AtHDFUnpacker::pad_raw_data(std::size_t i_pad)
 
 std::size_t AtHDFUnpacker::datasets()
 {
-   herr_t idx = H5Literate(_group, H5_INDEX_NAME, H5_ITER_INC, NULL, file_info, NULL);
+   H5Literate(_group, H5_INDEX_NAME, H5_ITER_INC, nullptr, file_info, nullptr);
    return 0;
 }
 

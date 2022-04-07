@@ -7,7 +7,7 @@
 
 #include "AtTpcMap.h"
 
-#include <math.h>
+#include <cmath>
 #include <boost/multi_array/base.hpp>
 #include <boost/multi_array/extent_gen.hpp>
 #include <boost/multi_array/multi_array_ref.hpp>
@@ -22,6 +22,8 @@
 #include <Rtypes.h>
 #include <TMath.h>
 #include <TMathBase.h>
+
+#include <FairLogger.h>
 
 #undef BOOST_MULTI_ARRAY_NO_GENERATORS
 #define BOOST_MULTI_ARRAY_NO_GENERATORS
@@ -43,7 +45,7 @@ AtTpcMap::AtTpcMap() : AtMap()
    fNumberPads = 10240;
 }
 
-AtTpcMap::~AtTpcMap() {}
+AtTpcMap::~AtTpcMap() = default;
 
 void AtTpcMap::Dump()
 {
@@ -236,29 +238,17 @@ TH2Poly *AtTpcMap::GetPadPlane()
 
 XYPoint AtTpcMap::CalcPadCenter(Int_t PadRef)
 {
-
-   std::vector<Float_t> PadCenter = {-9999, -9999};
-   PadCenter.reserve(2);
-
    if (!kIsParsed) {
-
-      std::cout << " AtTpcMap::CalcPadCenter Error : Pad plane has not been generated or parsed " << std::endl;
-      return XYPoint(-9999, -9999);
+      LOG(error) << " AtTpcMap::CalcPadCenter Error : Pad plane has not been generated or parsed ";
+      return {-9999, -9999};
+   }
+   if (PadRef < 0) { // Boost multi_array crashes with a negative index
+      LOG(debug) << " AtTpcMap::CalcPadCenter Error : Pad not found";
+      return {-9999, -9999};
    }
 
-   if (PadRef >= 0) { // Boost multi_array crashes with a negative index
-
-      Float_t x = (AtPadCoord[PadRef][0][0] + AtPadCoord[PadRef][1][0] + AtPadCoord[PadRef][2][0]) / 3.;
-      PadCenter[0] = x;
-      Float_t y = (AtPadCoord[PadRef][0][1] + AtPadCoord[PadRef][1][1] + AtPadCoord[PadRef][2][1]) / 3.;
-      PadCenter[1] = y;
-      return XYPoint(x, y);
-
-   } else {
-
-      if (kDebug)
-         std::cout << " AtTpcMap::CalcPadCenter Error : Pad not found" << std::endl;
-      return XYPoint(-9999, -9999);
-   }
+   Float_t x = (AtPadCoord[PadRef][0][0] + AtPadCoord[PadRef][1][0] + AtPadCoord[PadRef][2][0]) / 3.;
+   Float_t y = (AtPadCoord[PadRef][0][1] + AtPadCoord[PadRef][1][1] + AtPadCoord[PadRef][2][1]) / 3.;
+   return {x, y};
 }
 ClassImp(AtTpcMap)

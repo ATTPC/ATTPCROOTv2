@@ -12,18 +12,18 @@
 
 AtDataReductionTask::AtDataReductionTask() : reduceFunc(nullptr), fInputBranchName("AtRawEvent") {}
 
-AtDataReductionTask::~AtDataReductionTask() {}
+AtDataReductionTask::~AtDataReductionTask() = default;
 
 InitStatus AtDataReductionTask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
-   if (ioMan == 0) {
+   if (ioMan == nullptr) {
       LOG(fatal) << "Cannot find RootManager!";
       return kFATAL;
    }
 
    fInputEventArray = (TClonesArray *)ioMan->GetObject(fInputBranchName);
-   if (fInputEventArray == 0) {
+   if (fInputEventArray == nullptr) {
       LOG(fatal) << "Cannot find AtRawEvent array in branch " << fInputBranchName << "!";
       return kFATAL;
    }

@@ -3,7 +3,7 @@
 #include <FairContFact.h>
 #include <TList.h>
 #include <TString.h>
-#include <string.h>
+#include <cstring>
 
 //#include "AtGeoPar.h"
 #include "AtDigiPar.h"
@@ -25,7 +25,7 @@ AtContFact::AtContFact() : FairContFact()
    FairRuntimeDb::instance()->addContFactory(this);
 }
 
-AtContFact::~AtContFact() {}
+AtContFact::~AtContFact() = default;
 
 void AtContFact::setAllContainers()
 {
@@ -40,11 +40,11 @@ void AtContFact::setAllContainers()
 
    containers -> Add(p);*/
 
-   FairContainer *p = new FairContainer("AtDigiPar", "AtTPC Parameter Container", "");
+   auto *p = new FairContainer("AtDigiPar", "AtTPC Parameter Container", "");
 
    containers->Add(p);
 
-   FairContainer *pp = new FairContainer("AtTriggerPar", "AtTPC Parameter Container", "");
+   auto *pp = new FairContainer("AtTriggerPar", "AtTPC Parameter Container", "");
 
    containers->Add(pp);
 }
@@ -57,7 +57,7 @@ FairParSet *AtContFact::createContainer(FairContainer *c)
        of this container, the name is concatinated with the context.
    */
    const char *name = c->GetName();
-   FairParSet *p = NULL;
+   FairParSet *p = nullptr;
 
    /*if (strcmp(name, "STGeoPar") == 0) {
      p = new STGeoPar(c->getConcatName().Data(),

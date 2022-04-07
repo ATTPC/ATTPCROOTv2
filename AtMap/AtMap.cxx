@@ -2,8 +2,8 @@
 
 #include <TXMLDocument.h>
 #include <fairlogger/Logger.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #include <boost/multi_array/base.hpp>
 #include <boost/multi_array/extent_gen.hpp>
 #include <iostream>
@@ -161,13 +161,13 @@ void AtMap::ParseMapList(TXMLNode *node)
       }
    }
 
-   kIsParsed = 1;
+   kIsParsed = true;
 }
 
 Bool_t AtMap::ParseXMLMap(Char_t const *xmlfile)
 {
 
-   TDOMParser *domParser = new TDOMParser();
+   auto *domParser = new TDOMParser();
    domParser->SetValidate(false);
    Int_t parsecode = domParser->ParseFile(xmlfile);
    if (parsecode < 0) {
@@ -198,9 +198,9 @@ Bool_t AtMap::DumpAtTPCMap()
 
    std::ostream_iterator<int> ii(std::cout, ", ");
 
-   for (auto it = this->fPadMap.begin(); it != this->fPadMap.end(); ++it) {
-      std::cout << " [ " << (*it).second << ", ";
-      std::cout << it->first.cobo << "," << it->first.asad << "," << it->first.aget << "," << it->first.ch;
+   for (auto &it : this->fPadMap) {
+      std::cout << " [ " << it.second << ", ";
+      std::cout << it.first.cobo << "," << it.first.asad << "," << it.first.aget << "," << it.first.ch;
       std::cout << "]" << std::endl;
       ;
    }
@@ -230,7 +230,7 @@ std::string AtMap::GetAuxName(const PadReference &ref) const
 PadReference AtMap::GetPadRef(int padNum) const
 {
    if (fPadMapInverse.find(padNum) == fPadMapInverse.end())
-      return PadReference();
+      return {};
    return fPadMapInverse.at(padNum);
 }
 

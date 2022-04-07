@@ -15,7 +15,7 @@ ClassImp(AtTriggerPar)
    fInitialized = kFALSE;
 }
 
-AtTriggerPar::~AtTriggerPar() {}
+AtTriggerPar::~AtTriggerPar() = default;
 
 // Getters
 
@@ -144,7 +144,7 @@ TString AtTriggerPar::GetFile(Int_t fileNum)
       throw;
    }
 
-   Char_t buffer[256];
+   std::string buffer;
    for (Int_t iFileNum = 0; iFileNum < fileNum + 1; ++iFileNum) {
       if (fileList.eof()) {
          LOG(fatal) << Form("Did not find string #%d in file %s.", fileNum, parFile.Data());
@@ -152,7 +152,7 @@ TString AtTriggerPar::GetFile(Int_t fileNum)
          throw;
       }
 
-      fileList.getline(buffer, 256);
+      std::getline(fileList, buffer);
    }
 
    fileList.close();

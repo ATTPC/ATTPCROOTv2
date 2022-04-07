@@ -17,7 +17,6 @@ Set(DEPENDENCIES
 
 set(SRCS
 # Add all the source files below this line.
-AtAvalancheTask.cxx
 AtClusterizeTask.cxx
 AtClusterizeLineTask.cxx
 AtPulseTask.cxx

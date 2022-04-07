@@ -44,11 +44,8 @@ AtMCTrack::AtMCTrack(Int_t pdgCode, Int_t motherId, Double_t px, Double_t py, Do
 
 // -----   Copy constructor   ----------------------------------------------
 AtMCTrack::AtMCTrack(const AtMCTrack &track)
-   : TObject(track), fPdgCode(track.fPdgCode), fMotherId(track.fMotherId), fPx(track.fPx), fPy(track.fPy),
-     fPz(track.fPz), fStartX(track.fStartX), fStartY(track.fStartY), fStartZ(track.fStartZ), fStartT(track.fStartT),
-     fNPoints(track.fNPoints)
-{
-}
+
+   = default;
 // -------------------------------------------------------------------------
 
 // -----   Constructor from TParticle   ------------------------------------
@@ -61,7 +58,7 @@ AtMCTrack::AtMCTrack(TParticle *part)
 // -------------------------------------------------------------------------
 
 // -----   Destructor   ----------------------------------------------------
-AtMCTrack::~AtMCTrack() {}
+AtMCTrack::~AtMCTrack() = default;
 // -------------------------------------------------------------------------
 
 // -----   Public method Print   -------------------------------------------

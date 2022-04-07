@@ -26,7 +26,7 @@ AtFilterTask::AtFilterTask(AtFilter *filter)
    fOutputEventArray = new TClonesArray("AtRawEvent");
 }
 
-AtFilterTask::~AtFilterTask() {}
+AtFilterTask::~AtFilterTask() = default;
 
 void AtFilterTask::SetPersistence(Bool_t value)
 {
@@ -68,8 +68,8 @@ void AtFilterTask::Exec(Option_t *opt)
    if (fInputEventArray->GetEntriesFast() == 0)
       return;
 
-   AtRawEvent *rawEvent = (AtRawEvent *)fInputEventArray->At(0);
-   AtRawEvent *filteredEvent = (AtRawEvent *)new ((*fOutputEventArray)[0]) AtRawEvent(*rawEvent);
+   auto *rawEvent = (AtRawEvent *)fInputEventArray->At(0);
+   auto *filteredEvent = (AtRawEvent *)new ((*fOutputEventArray)[0]) AtRawEvent(*rawEvent);
 
    if (!rawEvent->IsGood())
       return;

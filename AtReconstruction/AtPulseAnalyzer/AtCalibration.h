@@ -18,6 +18,23 @@ class TMemberInspector;
 using trace = std::array<Double_t, 512>;
 
 class AtCalibration : public TObject {
+protected:
+   TString fGainFile;
+   TString fJitterFile;
+
+   trace fGadc;
+   trace fGnewadc;
+   trace fJadc;
+   trace fJnewadc;
+
+   Bool_t fIsGainCalibrated;
+   Bool_t fIsJitterCalibrated;
+
+   std::array<Double_t, 10240> fGainCalib;
+   std::array<Double_t, 10240> fJitterCalib;
+
+   Int_t fPadNum;
+
 public:
    AtCalibration();
    ~AtCalibration();
@@ -31,23 +48,6 @@ public:
    Bool_t IsGainFile();
    Bool_t IsJitterFile();
 
-protected:
-   TString fGainFile;
-   TString fJitterFile;
-
-   Double_t fGadc[512];
-   trace fGnewadc;
-   Double_t fJadc[512];
-   trace fJnewadc;
-
-   Bool_t fIsGainCalibrated;
-   Bool_t fIsJitterCalibrated;
-
-   Double_t fGainCalib[10240];
-   Double_t fJitterCalib[10240];
-
-   Int_t fPadNum;
-
-   ClassDef(AtCalibration, 2);
+   ClassDef(AtCalibration, 3);
 };
 #endif

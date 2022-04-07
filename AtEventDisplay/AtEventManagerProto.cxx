@@ -44,7 +44,7 @@ using namespace std;
 
 ClassImp(AtEventManagerProto);
 
-AtEventManagerProto *AtEventManagerProto::fInstance = 0;
+AtEventManagerProto *AtEventManagerProto::fInstance = nullptr;
 AtEventManagerProto *AtEventManagerProto::Instance()
 {
    return fInstance;
@@ -52,15 +52,15 @@ AtEventManagerProto *AtEventManagerProto::Instance()
 
 AtEventManagerProto::AtEventManagerProto()
    : TEveEventManager("AtEventManagerProto", ""), fRootManager(FairRootManager::Instance()),
-     fRunAna(FairRunAna::Instance()), fEntry(0), fEvent(0), kDrawPROn(0), drawPatternRecognition(0), saveASCIIevent(0),
-     fCurrentEvent(0)
+     fRunAna(FairRunAna::Instance()), fEntry(0), fEvent(nullptr), kDrawPROn(false), drawPatternRecognition(nullptr),
+     saveASCIIevent(nullptr), fCurrentEvent(nullptr)
 
 {
    fInstance = this;
    kEraseQ = kFALSE;
 }
 
-AtEventManagerProto::~AtEventManagerProto() {}
+AtEventManagerProto::~AtEventManagerProto() = default;
 
 void AtEventManagerProto::Init(Int_t option, Int_t level, Int_t nNodes)
 {
@@ -72,18 +72,20 @@ void AtEventManagerProto::Init(Int_t option, Int_t level, Int_t nNodes)
    Int_t dummy;
    UInt_t width, height;
    UInt_t widthMax = 1400, heightMax = 650;
-   Double_t ratio = (Double_t)widthMax / heightMax;
+   // Double_t ratio = (Double_t)widthMax / heightMax;
    gVirtualX->GetWindowSize(gClient->GetRoot()->GetId(), dummy, dummy, width, height);
    // Assume that width of screen is always larger than the height of screen
-   if (width > widthMax) {
-      width = widthMax;
-      height = heightMax;
-   } else
-      height = (Int_t)(width / ratio);
+   /*
+      if (width > widthMax) {
+         width = widthMax;
+         height = heightMax;
+      } else
+         height = (Int_t)(width / ratio);
+   */
    // gEve->GetMainWindow()->Resize(width,height);
 
-   TEveWindowSlot *slot = 0;
-   TEveWindowPack *pack = 0;
+   TEveWindowSlot *slot = nullptr;
+   TEveWindowPack *pack = nullptr;
 
    // 3D
    slot = TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
@@ -112,7 +114,7 @@ void AtEventManagerProto::Init(Int_t option, Int_t level, Int_t nNodes)
 
    // Pad Plane
    slot = pack2->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvs = new TRootEmbeddedCanvas();
+   auto *ecvs = new TRootEmbeddedCanvas();
    TEveWindowFrame *frame = slot->MakeFrame(ecvs);
    frame->SetElementName("AtTPC Pad Plane");
    pack->GetEveFrame()->SetShowTitleBar(kFALSE);
@@ -125,13 +127,13 @@ void AtEventManagerProto::Init(Int_t option, Int_t level, Int_t nNodes)
    pack3->SetElementName("Pad plane raw signals");
 
    slot2 = pack3->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvs3 = new TRootEmbeddedCanvas();
+   auto *ecvs3 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frame3 = slot2->MakeFrame(ecvs3);
    frame3->SetElementName("AtTPC Pad Plane All");
    fPadAll = ecvs3->GetCanvas();
 
    slot2 = pack3->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvs31 = new TRootEmbeddedCanvas();
+   auto *ecvs31 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frame31 = slot2->MakeFrame(ecvs31);
    frame31->SetElementName("AtTPC Mesh");
    fCvsMesh = ecvs31->GetCanvas();
@@ -145,25 +147,25 @@ void AtEventManagerProto::Init(Int_t option, Int_t level, Int_t nNodes)
    packH->SetElementName("Radius - Z ");
 
    slotH = packH->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsH1 = new TRootEmbeddedCanvas();
+   auto *ecvsH1 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameH1 = slotH->MakeFrame(ecvsH1);
    frameH1->SetElementName("Quadrant 1");
    fCvsQuadrant1 = ecvsH1->GetCanvas();
 
    slotH = packH->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsH2 = new TRootEmbeddedCanvas();
+   auto *ecvsH2 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameH2 = slotH->MakeFrame(ecvsH2);
    frameH2->SetElementName("Quadrant 2");
    fCvsQuadrant2 = ecvsH2->GetCanvas();
 
    slotH = packH->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsH3 = new TRootEmbeddedCanvas();
+   auto *ecvsH3 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameH3 = slotH->MakeFrame(ecvsH3);
    frameH3->SetElementName("Quadrant 3");
    fCvsQuadrant3 = ecvsH3->GetCanvas();
 
    slotH = packH->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsH4 = new TRootEmbeddedCanvas();
+   auto *ecvsH4 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameH4 = slotH->MakeFrame(ecvsH4);
    frameH4->SetElementName("Quadrant 4");
    fCvsQuadrant4 = ecvsH4->GetCanvas();
@@ -177,25 +179,25 @@ void AtEventManagerProto::Init(Int_t option, Int_t level, Int_t nNodes)
    packHEL->SetElementName("Radius - Energy Loss ");
 
    slotHEL = packHEL->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsHEL1 = new TRootEmbeddedCanvas();
+   auto *ecvsHEL1 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameHEL1 = slotHEL->MakeFrame(ecvsHEL1);
    frameHEL1->SetElementName("Quadrant Energy Loss 1");
    fCvsELQuadrant1 = ecvsHEL1->GetCanvas();
 
    slotHEL = packHEL->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsHEL2 = new TRootEmbeddedCanvas();
+   auto *ecvsHEL2 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameHEL2 = slotHEL->MakeFrame(ecvsHEL2);
    frameHEL2->SetElementName("Quadrant Energy Loss 2");
    fCvsELQuadrant2 = ecvsHEL2->GetCanvas();
 
    slotHEL = packHEL->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsHEL3 = new TRootEmbeddedCanvas();
+   auto *ecvsHEL3 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameHEL3 = slotHEL->MakeFrame(ecvsHEL3);
    frameHEL3->SetElementName("Quadrant Energy Loss 3");
    fCvsELQuadrant3 = ecvsHEL3->GetCanvas();
 
    slotHEL = packHEL->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsHEL4 = new TRootEmbeddedCanvas();
+   auto *ecvsHEL4 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameHEL4 = slotHEL->MakeFrame(ecvsHEL4);
    frameHEL4->SetElementName("Quadrant Energy Loss 4");
    fCvsELQuadrant4 = ecvsHEL4->GetCanvas();
@@ -208,13 +210,13 @@ void AtEventManagerProto::Init(Int_t option, Int_t level, Int_t nNodes)
    packHK->SetElementName("Vertex - Kinematics ");
 
    slotHK = packHK->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsHK1 = new TRootEmbeddedCanvas();
+   auto *ecvsHK1 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameHK1 = slotHK->MakeFrame(ecvsHK1);
    frameHK1->SetElementName("Vertex Position");
    fCvsVertex = ecvsHK1->GetCanvas();
 
    slotHK = packHK->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsHK2 = new TRootEmbeddedCanvas();
+   auto *ecvsHK2 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameHK2 = slotHK->MakeFrame(ecvsHK2);
    frameHK2->SetElementName("Angle-Angle Kinematics");
    fCvsKineAA = ecvsHK2->GetCanvas();
@@ -226,7 +228,7 @@ void AtEventManagerProto::Init(Int_t option, Int_t level, Int_t nNodes)
    packAux->SetElementName("Auxiliary GET Channels");
 
    slotAux = packAux->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsAux1 = new TRootEmbeddedCanvas();
+   auto *ecvsAux1 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameAux1 = slotAux->MakeFrame(ecvsAux1);
    frameAux1->SetElementName("Auxiliary GET Channels");
    fCvsAux = ecvsAux1->GetCanvas();
@@ -235,7 +237,7 @@ void AtEventManagerProto::Init(Int_t option, Int_t level, Int_t nNodes)
 
    if (gGeoManager) {
       TGeoNode *geoNode = gGeoManager->GetTopNode();
-      TEveGeoTopNode *topNode = new TEveGeoTopNode(gGeoManager, geoNode, option, level, nNodes);
+      auto *topNode = new TEveGeoTopNode(gGeoManager, geoNode, option, level, nNodes);
       gEve->AddGlobalElement(topNode);
 
       Int_t transparency = 80;
@@ -308,7 +310,7 @@ void AtEventManagerProto::DrawWave()
    if (!select)
       return;
    if (select->InheritsFrom(TH2::Class())) {
-      TH2Poly *h = (TH2Poly *)select;
+      auto *h = (TH2Poly *)select;
       gPad->GetCanvas()->FeedbackMode(kTRUE);
       // Char_t *bin_name = h->GetBinName();
 
@@ -350,11 +352,11 @@ void AtEventManagerProto::make_gui()
    TEveBrowser *browser = gEve->GetBrowser();
    browser->StartEmbedding(TRootBrowser::kLeft);
 
-   TGMainFrame *frmMain = new TGMainFrame(gClient->GetRoot(), 1000, 600);
+   auto *frmMain = new TGMainFrame(gClient->GetRoot(), 1000, 600);
    frmMain->SetWindowName("XX GUI");
    frmMain->SetCleanup(kDeepCleanup);
 
-   TGVerticalFrame *hf = new TGVerticalFrame(frmMain);
+   auto *hf = new TGVerticalFrame(frmMain);
    {
 
       // drawallpad = new TGTextButton(hf, "&Enable Draw All Pads");
@@ -406,22 +408,22 @@ void AtEventManagerProto::make_gui()
    //  TFile* file =FairRunAna::Instance()->GetInputFile();
    TFile *file = FairRootManager::Instance()->GetInChain()->GetFile();
    Infile += file->GetName();
-   TGLabel *TFName = new TGLabel(frmMain, Infile.Data());
+   auto *TFName = new TGLabel(frmMain, Infile.Data());
    frmMain->AddFrame(TFName);
 
    UInt_t RunId = FairRunAna::Instance()->getRunId();
    TString run = "Run Id : ";
    run += RunId;
-   TGLabel *TRunId = new TGLabel(frmMain, run.Data());
+   auto *TRunId = new TGLabel(frmMain, run.Data());
    frmMain->AddFrame(TRunId);
 
    TString nevent = "No of events : ";
    nevent += Entries;
-   TGLabel *TEvent = new TGLabel(frmMain, nevent.Data());
+   auto *TEvent = new TGLabel(frmMain, nevent.Data());
    frmMain->AddFrame(TEvent);
 
-   TGHorizontalFrame *f = new TGHorizontalFrame(frmMain);
-   TGLabel *l = new TGLabel(f, "Current Event:");
+   auto *f = new TGHorizontalFrame(frmMain);
+   auto *l = new TGLabel(f, "Current Event:");
    f->AddFrame(l, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
 
    fCurrentEvent = new TGNumberEntry(f, 0., 6, -1, TGNumberFormat::kNESInteger, TGNumberFormat::kNEANonNegative,

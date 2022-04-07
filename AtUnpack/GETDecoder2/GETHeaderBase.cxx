@@ -1,7 +1,7 @@
 #include "GETHeaderBase.h"
 
 #include <cmath> // IWYU pragma: keep
-#include <string.h>
+#include <cstring>
 #include <iostream>
 #include <string>
 

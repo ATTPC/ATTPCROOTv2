@@ -42,7 +42,7 @@ public:
    Int_t badEvts;
 
    /** Destructor **/
-   virtual ~AtTPC_d2He();
+   virtual ~AtTPC_d2He() = default;
 
 private:
    static Int_t fgNIon; //! Number of the instance of this class

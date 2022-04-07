@@ -73,7 +73,7 @@ void AtROOTUnpacker::GetFPNChannelsFromROOTFILE()
    Int_t Nr_fpn_found{0};
 
    LOG(debug) << "Opening " << fInputFileName;
-   TFile *RawDataTreeFile = new TFile(fInputFileName.data(), "READ");
+   auto *RawDataTreeFile = new TFile(fInputFileName.data(), "READ");
    if (RawDataTreeFile->IsZombie()) {
       std::cout << cRED
                 << "[AtCoreSpecMAT] File containing tree not found, check if "
@@ -81,7 +81,7 @@ void AtROOTUnpacker::GetFPNChannelsFromROOTFILE()
                 << fInputFileName << ")" << cNORMAL << std::endl;
       return;
    }
-   TTree *RawDataTree = (TTree *)RawDataTreeFile->Get("EventDataTree");
+   auto *RawDataTree = (TTree *)RawDataTreeFile->Get("EventDataTree");
    if (!RawDataTree) {
       std::cout << cRED
                 << "[AtCoreSpecMAT] File does not contain raw data ttree (must "
@@ -140,7 +140,7 @@ void AtROOTUnpacker::GetFPNChannelsFromROOTFILE()
 void AtROOTUnpacker::ProcessROOTFILE(AtRawEvent &eventToFill)
 {
 
-   TFile *RawDataTreeFile = new TFile(fInputFileName.data(), "READ");
+   auto *RawDataTreeFile = new TFile(fInputFileName.data(), "READ");
    if (RawDataTreeFile->IsZombie()) {
       std::cout << cRED
                 << "[AtCoreSpecMAT] File containing tree not found, check if "
@@ -148,7 +148,7 @@ void AtROOTUnpacker::ProcessROOTFILE(AtRawEvent &eventToFill)
                 << fInputFileName << ")" << cNORMAL << std::endl;
       return;
    }
-   TTree *RawDataTree = (TTree *)RawDataTreeFile->Get("EventDataTree");
+   auto *RawDataTree = (TTree *)RawDataTreeFile->Get("EventDataTree");
    if (!RawDataTree) {
       std::cout << cRED
                 << "[AtCoreSpecMAT] File does not contain raw data ttree (must "
@@ -203,7 +203,6 @@ void AtROOTUnpacker::ProcessROOTFILE(AtRawEvent &eventToFill)
             for (Int_t iTb = 0; iTb < 512; iTb++)
                pad->SetRawADC(iTb, rawadc[iTb]);
 
-            Int_t fpnCh = GetFPNChannel(*myChannelNr);
             Double_t adc[512] = {0};
             Int_t fpn_adc[512] = {0};
             for (int i = 0; i < 512; i++) {
@@ -260,7 +259,7 @@ bool AtROOTUnpacker::IsLastEvent()
 
 void AtROOTUnpacker::SetNumEvents()
 {
-   TFile *RawDataTreeFile = new TFile(fInputFileName.data(), "READ");
+   auto *RawDataTreeFile = new TFile(fInputFileName.data(), "READ");
    if (RawDataTreeFile->IsZombie()) {
       std::cout << cRED
                 << "[AtCoreSpecMAT] File containing tree not found, check if "
@@ -268,7 +267,7 @@ void AtROOTUnpacker::SetNumEvents()
                 << fInputFileName << ")" << cNORMAL << std::endl;
       return;
    }
-   TTree *RawDataTree = (TTree *)RawDataTreeFile->Get("EventDataTree");
+   auto *RawDataTree = (TTree *)RawDataTreeFile->Get("EventDataTree");
    if (!RawDataTree) {
       std::cout << cRED
                 << "[AtCoreSpecMAT] File does not contain raw data ttree (must "

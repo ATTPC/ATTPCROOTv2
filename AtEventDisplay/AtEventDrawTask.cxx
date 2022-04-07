@@ -62,14 +62,15 @@ using namespace std;
 ClassImp(AtEventDrawTask);
 
 AtEventDrawTask::AtEventDrawTask()
-   : fIs2DPlotRange(kFALSE), fUnpackHough(kFALSE), fEventArray(0),
+   : fIs2DPlotRange(kFALSE), fUnpackHough(kFALSE), fEventArray(nullptr),
      // fHitClusterArray(0),
      // fRiemannTrackArray(0),
      // fKalmanArray(0),
-     fEventManager(0), fRawevent(0), fDetmap(0), fThreshold(0), fHitSet(0), fCorrectedHitSet(0),
+     fEventManager(nullptr), fRawevent(nullptr), fDetmap(nullptr), fThreshold(0), fHitSet(nullptr),
+     fCorrectedHitSet(nullptr),
      // x(0),
      // hitSphereArray(0),
-     fhitBoxSet(0), fPadPlanePal(0), fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium),
+     fhitBoxSet(nullptr), fPadPlanePal(nullptr), fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium),
      // fHitClusterSet(0),
      // fHitClusterColor(kAzure-5),
      // fHitClusterColor(kYellow-5),
@@ -79,11 +80,13 @@ AtEventDrawTask::AtEventDrawTask()
      // fRiemannColor(kBlue),
      // fRiemannSize(1.5),
      // fRiemannStyle(kOpenCircle),
-     fCvsPadPlane(0), fPadPlane(0), fCvsPadWave(0), fPadWave(0), fCvsPadAll(0), fCvsQEvent(0), fQEventHist(0),
-     fQEventHist_H(0), fCvsHoughSpace(0), fHoughSpace(0), fCvsRhoVariance(0), fRhoVariance(0), fCvsPhi(0), fCvsMesh(0),
-     fMesh(0), fCvs3DHist(0), f3DHist(0), fCvsRad(0), fRadVSTb(0), fCvsTheta(0), fTheta(0), fAtMapPtr(0), fMinZ(0),
-     fMaxZ(1344), fMinX(432), fMaxX(-432), f3DHitStyle(0), fMultiHit(0), fSaveTextData(0), f3DThreshold(0),
-     fRANSACAlg(0), fDetNumPads(10240), fRawEventBranchName("AtRawEvent"), fEventBranchName("AtEventH")
+     fCvsPadPlane(nullptr), fPadPlane(nullptr), fCvsPadWave(nullptr), fPadWave(nullptr), fCvsPadAll(nullptr),
+     fCvsQEvent(nullptr), fQEventHist(nullptr), fQEventHist_H(nullptr), fCvsHoughSpace(nullptr), fHoughSpace(nullptr),
+     fCvsRhoVariance(nullptr), fRhoVariance(nullptr), fCvsPhi(nullptr), fCvsMesh(nullptr), fMesh(nullptr),
+     fCvs3DHist(nullptr), f3DHist(nullptr), fCvsRad(nullptr), fRadVSTb(nullptr), fCvsTheta(nullptr), fTheta(nullptr),
+     fAtMapPtr(nullptr), fMinZ(0), fMaxZ(1344), fMinX(432), fMaxX(-432), f3DHitStyle(0), fMultiHit(0),
+     fSaveTextData(false), f3DThreshold(0), fRANSACAlg(0), fDetNumPads(10240), fRawEventBranchName("AtRawEvent"),
+     fEventBranchName("AtEventH")
 {
 
    Char_t padhistname[256];
@@ -303,12 +306,12 @@ void AtEventDrawTask::Exec(Option_t *option)
 void AtEventDrawTask::DrawHitPoints()
 {
 
-   fMesh->Reset(0);
+   fMesh->Reset(nullptr);
 
-   for (int i = 0; i < 9; ++i)
-      fAuxChannels[i]->Reset(0);
+   for (auto &fAuxChannel : fAuxChannels)
+      fAuxChannel->Reset(nullptr);
 
-   f3DHist->Reset(0);
+   f3DHist->Reset(nullptr);
    TRandom r(0);
 
    std::ofstream dumpEvent;
@@ -318,8 +321,8 @@ void AtEventDrawTask::DrawHitPoints()
    std::vector<Double_t> fPosYMin;
    std::vector<Double_t> fPosZMin;
 
-   fQEventHist_H->Reset(0);
-   AtEvent *event = (AtEvent *)fEventArray->At(0);
+   fQEventHist_H->Reset(nullptr);
+   auto *event = (AtEvent *)fEventArray->At(0);
 
    Double_t Qevent = event->GetEventCharge();
    Double_t RhoVariance = event->GetRhoVariance();
@@ -383,8 +386,8 @@ void AtEventDrawTask::DrawHitPoints()
 
       //  if(fIsLinearHough){
       // fLineArray.clear();
-      for (Int_t i = 0; i < 5; i++)
-         fLineArray[i] = new TEveLine();
+      for (auto &i : fLineArray)
+         i = new TEveLine();
       int n = 100;
       double t0 = 0;
       double dt = 2000;
@@ -409,8 +412,7 @@ void AtEventDrawTask::DrawHitPoints()
             std::vector<AtRANSACN::AtRansac::PairedLines> trackCorr = fRansac->GetPairedLinesArray();
             // std::ostream_iterator<AtRANSACN::AtRansac::PairedLines> pairLine_it (std::cout,"  ");
             if (trackCorr.size() > 0) {
-               for (Int_t i = 0; i < trackCorr.size(); i++) {
-                  AtRANSACN::AtRansac::PairedLines pl = trackCorr.at(i);
+               for (auto pl : trackCorr) {
                   std::cout << pl << std::endl;
                }
             }
@@ -465,12 +467,12 @@ void AtEventDrawTask::DrawHitPoints()
          }
 
       } else if (fPatternEventArray) {
-         AtPatternEvent *patternEvent = dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0));
+         auto *patternEvent = dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0));
          TrackCand = patternEvent->GetTrackCand();
 
          for (Int_t i = 0; i < 20; i++) {
-            fHitSetTFHC[i] = 0;
-            fHitClusterSet[i] = 0;
+            fHitSetTFHC[i] = nullptr;
+            fHitClusterSet[i] = nullptr;
          }
 
          if (TrackCand.size() < 20) {
@@ -490,8 +492,8 @@ void AtEventDrawTask::DrawHitPoints()
                fHitSetTFHC[i]->SetMarkerSize(fHitSize);
                fHitSetTFHC[i]->SetMarkerStyle(fHitStyle);
 
-               for (int j = 0; j < trackHits.size(); ++j) {
-                  auto position = trackHits.at(j).GetPosition();
+               for (auto &trackHit : trackHits) {
+                  auto position = trackHit.GetPosition();
                   fHitSetTFHC[i]->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.);
                }
 
@@ -524,8 +526,8 @@ void AtEventDrawTask::DrawHitPoints()
 
       if (fTrackingEventAnaArray) {
 
-         for (Int_t i = 0; i < 5; i++)
-            fHitSetMC[i] = 0;
+         for (auto &i : fHitSetMC)
+            i = nullptr;
 
          fTrackingEventAna = (AtTrackingEventAna *)fTrackingEventAnaArray->At(0);
          std::vector<AtTrack> anaTracks = fTrackingEventAna->GetTrackArray();
@@ -635,8 +637,6 @@ void AtEventDrawTask::DrawHitPoints()
       AtHit hit = event->GetHitArray().at(iHit);
       Int_t PadNumHit = hit.GetPadNum();
       Int_t PadMultHit = event->GetHitPadMult(PadNumHit);
-      Double_t BaseCorr = hit.GetBaseCorr();
-      Int_t Atbin = -1;
 
       if (hit.GetCharge() < fThreshold)
          continue;
@@ -649,14 +649,14 @@ void AtEventDrawTask::DrawHitPoints()
          fHitSet->SetMarkerColor(fHitColor);
          fHitSet->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.); // Convert into cm
          fHitSet->SetPointId(new TNamed(Form("Hit %d", iHit), ""));
-         Atbin = fPadPlane->Fill(position.X(), position.Y(), hit.GetCharge());
+         fPadPlane->Fill(position.X(), position.Y(), hit.GetCharge());
 
       } else if (fEventManager->GetToggleCorrData()) {
          fHitSet->SetMarkerColor(kBlue);
          fHitSet->SetNextPoint(positioncorr.X() / 10., positioncorr.Y() / 10.,
                                positioncorr.Z() / 10.); // Convert into ccm
          fHitSet->SetPointId(new TNamed(Form("Corrected Hit %d", iHit), ""));
-         Atbin = fPadPlane->Fill(positioncorr.X(), positioncorr.Y(), hit.GetCharge());
+         fPadPlane->Fill(positioncorr.X(), positioncorr.Y(), hit.GetCharge());
       }
 
       if (fIsRawData) {
@@ -672,18 +672,19 @@ void AtEventDrawTask::DrawHitPoints()
          }
       }
 
-      if (fSaveTextData)
+      if (fSaveTextData) {
          if (!fEventManager->GetToggleCorrData())
             dumpEvent << position.X() << " " << position.Y() << " " << position.Z() << " " << hit.GetTimeStamp() << " "
                       << hit.GetCharge() << std::endl;
          else if (fEventManager->GetToggleCorrData())
             dumpEvent << positioncorr.X() << " " << positioncorr.Y() << " " << positioncorr.Z() << " "
                       << hit.GetTimeStamp() << " " << hit.GetCharge() << std::endl;
+      }
    }
 
    if (fCorrectedEventArray != nullptr) {
       std::cout << "Adding corrected hits" << std::endl;
-      AtEvent *eventCorr = (AtEvent *)fCorrectedEventArray->At(0);
+      auto *eventCorr = (AtEvent *)fCorrectedEventArray->At(0);
       fCorrectedHitSet = new TEvePointSet("Hit2", nHits, TEvePointSelectorConsumer::kTVT_XYZ);
       fCorrectedHitSet->SetOwnIds(kTRUE);
       fCorrectedHitSet->SetMarkerColor(kBlue);
@@ -696,7 +697,6 @@ void AtEventDrawTask::DrawHitPoints()
             break;
          }
          AtHit hit = eventCorr->GetHitArray().at(iHit);
-         Int_t PadNumHit = hit.GetPadNum();
          auto position = hit.GetPosition();
          if (hit.GetCharge() < fThreshold)
             continue;
@@ -961,8 +961,8 @@ void AtEventDrawTask::Reset()
     fRiemannSetArray.clear();
     }*/
 
-   if (fPadPlane != NULL)
-      fPadPlane->Reset(0);
+   if (fPadPlane != nullptr)
+      fPadPlane->Reset(nullptr);
 }
 
 /*void
@@ -988,7 +988,7 @@ void AtEventDrawTask::DrawPadPlane()
    // fAtMapPtr = new AtTpcMap();
    fAtMapPtr = fDetmap;
    if (fPadPlane) {
-      fPadPlane->Reset(0);
+      fPadPlane->Reset(nullptr);
       return;
    }
 
@@ -1042,10 +1042,10 @@ void AtEventDrawTask::DrawPadAll()
    fCvsPadAll->cd();
 
    std::cout << "Starting to draw pads" << std::endl;
-   for (Int_t i = 0; i < fNumPads; i++) {
-      fPadAll[i]->GetYaxis()->SetRangeUser(0, 2500);
+   for (auto &i : fPadAll) {
+      i->GetYaxis()->SetRangeUser(0, 2500);
       // TODO: make it pad number independent / retrieve the quadrant info
-      fPadAll[i]->Draw("SAME");
+      i->Draw("SAME");
    }
    std::cout << "Finished drawing." << std::endl;
 }
@@ -1082,8 +1082,8 @@ void AtEventDrawTask::DrawPhiReco()
 {
    fCvsPhi->cd();
    // fPhiDistr = new TH1D("PhiDist","PhiDist",90.0,0.0,90.0);
-   for (Int_t i = 0; i < 5; i++) {
-      fPhiDistr[i]->Draw("SAME");
+   for (auto &i : fPhiDistr) {
+      i->Draw("SAME");
    }
 }
 
@@ -1450,11 +1450,11 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
       if (!select)
          return;
       if (select->InheritsFrom(TH2Poly::Class())) {
-         TH2Poly *h = (TH2Poly *)select;
+         auto *h = (TH2Poly *)select;
          gPad->GetCanvas()->FeedbackMode(kTRUE);
-         AtRawEvent *tRawEvent = NULL;
+         AtRawEvent *tRawEvent = nullptr;
          tRawEvent = (AtRawEvent *)gROOT->GetListOfSpecials()->FindObject(rawevt);
-         if (tRawEvent == NULL) {
+         if (tRawEvent == nullptr) {
             std::cout << " = AtEventDrawTask::SelectPad NULL pointer for the AtRawEvent! Please select an event first "
                       << std::endl;
             return;
@@ -1482,7 +1482,7 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
          std::cout << " ==========================" << std::endl;
          std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
 
-         AtMap *tmap = NULL;
+         AtMap *tmap = nullptr;
          tmap = (AtMap *)gROOT->GetListOfSpecials()->FindObject("fMap");
          Int_t tPadNum = 0;
 
@@ -1504,11 +1504,11 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
          std::cout << " Raw Event Pad Num " << tPad->GetPadNum() << std::endl;
          std::cout << std::endl;
 
-         TH1I *tPadWave = NULL;
+         TH1I *tPadWave = nullptr;
          tPadWave = (TH1I *)gROOT->GetListOfSpecials()->FindObject("fPadWave");
          auto rawadc = tPad->GetRawADC();
          auto adc = tPad->GetADC();
-         if (tPadWave == NULL) {
+         if (tPadWave == nullptr) {
             std::cout << " = AtEventDrawTask::SelectPad NULL pointer for the TH1I! Please enable SetPersistance for "
                          "Unpacking task or select an event first "
                       << std::endl;
@@ -1523,9 +1523,9 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
             // tPadWaveSub->SetBinContent(i,adc[i]);
          }
 
-         TCanvas *tCvsPadWave = NULL;
+         TCanvas *tCvsPadWave = nullptr;
          tCvsPadWave = (TCanvas *)gROOT->GetListOfSpecials()->FindObject("fCvsPadWave");
-         if (tCvsPadWave == NULL) {
+         if (tCvsPadWave == nullptr) {
             std::cout << " = AtEventDrawTask::SelectPad NULL pointer for the TCanvas! Please select an event first "
                       << std::endl;
             return;
@@ -1553,16 +1553,16 @@ void AtEventDrawTask::DrawWave(Int_t PadNum)
 
 void AtEventDrawTask::ResetPadAll()
 {
-   for (Int_t i = 0; i < fNumPads; i++) {
-      fPadAll[i]->Reset(0);
+   for (auto &i : fPadAll) {
+      i->Reset(nullptr);
    }
 }
 
 void AtEventDrawTask::ResetPhiDistr()
 {
 
-   for (Int_t i = 0; i < 5; i++) {
-      fPhiDistr[i]->Reset(0);
+   for (auto &i : fPhiDistr) {
+      i->Reset(nullptr);
    }
 }
 

@@ -45,7 +45,7 @@ AtPSAFilter::AtPSAFilter()
    fStdDev = 0.01;
 }
 
-AtPSAFilter::~AtPSAFilter() {}
+AtPSAFilter::~AtPSAFilter() = default;
 
 void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 {
@@ -134,13 +134,13 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          bg[iTb] = adc[iTb];
       }
 
-      TSpectrum *PeakFinder = new TSpectrum;
+      auto *PeakFinder = new TSpectrum;
       if (fIsPeakFinder)
          numPeaks = PeakFinder->SearchHighRes(floatADC, dummy, fNumTbs, 4.7, 5, fBackGroundSuppression, 3, kTRUE, 3);
       if (fIsMaxFinder)
          numPeaks = 1;
 
-      TSpectrum *BGInter = new TSpectrum;
+      auto *BGInter = new TSpectrum;
       if (fBackGroundInterp) {
          BGInter->Background(bg, fNumTbs, 6, TSpectrum::kBackDecreasingWindow, TSpectrum::kBackOrder2, kTRUE,
                              TSpectrum::kBackSmoothing7, kTRUE);
@@ -265,7 +265,7 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                   continue;
                }
 
-               AtHit *hit = new AtHit(PadNum, hitNum, pos.X(), pos.Y(), zPos, charge);
+               auto *hit = new AtHit(PadNum, hitNum, pos.X(), pos.Y(), zPos, charge);
                cloud->points[hitNum].x = pos.X();
                cloud->points[hitNum].y = pos.Y();
                cloud->points[hitNum].z = zPos;
@@ -327,14 +327,14 @@ void AtPSAFilter::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    // sor.setNegative(true);
    // sor.filter(*cloud_filtered);
 
-   for (Int_t pc = 0; pc < cloud_filtered->points.size(); pc++) {
+   for (auto &point : cloud_filtered->points) {
       // TODO: Check this logic and make sure it works, I did not looks at it enough
       auto hit = event->AddHit();
-      hit = hitBuff.at(cloud_filtered->points[pc].rgb);
+      hit = hitBuff.at(point.rgb);
       // event->AddHit(&hitBuff.at(cloud_filtered->points[pc].rgb));
    }
 
-   RhoVariance = Rho2 - (pow(RhoMean, 2) / (event->GetNumHits()));
+   // RhoVariance = Rho2 - (pow(RhoMean, 2) / (event->GetNumHits()));
    RhoVariance = Rho2 - (event->GetNumHits() * pow((RhoMean / event->GetNumHits()), 2));
 
    for (Int_t iTb = 0; iTb < fNumTbs; iTb++)

@@ -41,7 +41,7 @@ void GETFrameInfo::SetEndByte(ULong64_t value)
 }
 void GETFrameInfo::SetNextInfo(GETFrameInfo *pointer)
 {
-   if (fNextInfo != NULL)
+   if (fNextInfo != nullptr)
       fNextInfo->SetNextInfo(pointer);
    else
       fNextInfo = pointer;
@@ -84,7 +84,7 @@ UInt_t GETFrameInfo::GetNumFrames()
       numFrames++;
       GETFrameInfo *frameInfo = this;
       while ((frameInfo = frameInfo->GetNextInfo())) {
-         if (frameInfo != NULL)
+         if (frameInfo != nullptr)
             numFrames++;
          else
             break;
@@ -106,7 +106,7 @@ void GETFrameInfo::Clear(Option_t *)
    fDeltaT = 0;
    fStartByte = 0;
    fEndByte = 0;
-   fNextInfo = NULL;
+   fNextInfo = nullptr;
 }
 
 void GETFrameInfo::Print()

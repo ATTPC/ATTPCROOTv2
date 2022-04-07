@@ -12,9 +12,9 @@ ClassImp(AtSiArrayGeoPar)
 {
 }
 
-AtSiArrayGeoPar::~AtSiArrayGeoPar(void) {}
+AtSiArrayGeoPar::~AtSiArrayGeoPar() = default;
 
-void AtSiArrayGeoPar::clear(void)
+void AtSiArrayGeoPar::clear()
 {
    if (fGeoSensNodes) {
       delete fGeoSensNodes;

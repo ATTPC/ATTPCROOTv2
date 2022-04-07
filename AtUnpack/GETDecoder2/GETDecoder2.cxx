@@ -10,7 +10,7 @@
 // =================================================
 
 #include <TClonesArray.h>
-#include <stddef.h>
+#include <cstddef>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -38,9 +38,9 @@
 ClassImp(GETDecoder2);
 
 GETDecoder2::GETDecoder2()
-   : fFrameInfoArray(NULL), fCoboFrameInfoArray(NULL), fFrameInfo(NULL), fCoboFrameInfo(NULL), fHeaderBase(NULL),
-     fBasicFrameHeader(NULL), fLayerHeader(NULL), fTopologyFrame(NULL), fBasicFrame(NULL), fCoboFrame(NULL),
-     fLayeredFrame(NULL)
+   : fFrameInfoArray(nullptr), fCoboFrameInfoArray(nullptr), fFrameInfo(nullptr), fCoboFrameInfo(nullptr),
+     fHeaderBase(nullptr), fBasicFrameHeader(nullptr), fLayerHeader(nullptr), fTopologyFrame(nullptr),
+     fBasicFrame(nullptr), fCoboFrame(nullptr), fLayeredFrame(nullptr)
 {
    /**
     * If you use this constructor, you have to add the rawdata using
@@ -51,9 +51,9 @@ GETDecoder2::GETDecoder2()
 }
 
 GETDecoder2::GETDecoder2(TString filename)
-   : fFrameInfoArray(NULL), fCoboFrameInfoArray(NULL), fFrameInfo(NULL), fCoboFrameInfo(NULL), fHeaderBase(NULL),
-     fBasicFrameHeader(NULL), fLayerHeader(NULL), fTopologyFrame(NULL), fBasicFrame(NULL), fCoboFrame(NULL),
-     fLayeredFrame(NULL)
+   : fFrameInfoArray(nullptr), fCoboFrameInfoArray(nullptr), fFrameInfo(nullptr), fCoboFrameInfo(nullptr),
+     fHeaderBase(nullptr), fBasicFrameHeader(nullptr), fLayerHeader(nullptr), fTopologyFrame(nullptr),
+     fBasicFrame(nullptr), fCoboFrame(nullptr), fLayeredFrame(nullptr)
 {
    /**
     * Automatically add the rawdata file to the list
@@ -85,48 +85,48 @@ void GETDecoder2::Initialize()
    fCoboFrameInfoIdx = 0;
    fTargetFrameInfoIdx = -1;
 
-   fBuffer = NULL;
+   fBuffer = nullptr;
    fWriteFile = "";
 
-   if (fFrameInfoArray == NULL)
+   if (fFrameInfoArray == nullptr)
       fFrameInfoArray = new TClonesArray("GETFrameInfo", 10000);
    fFrameInfoArray->Clear("C");
 
-   if (fCoboFrameInfoArray == NULL)
+   if (fCoboFrameInfoArray == nullptr)
       fCoboFrameInfoArray = new TClonesArray("GETFrameInfo", 10000);
    fCoboFrameInfoArray->Clear("C");
 
-   if (fHeaderBase == NULL)
+   if (fHeaderBase == nullptr)
       fHeaderBase = new GETHeaderBase();
    else
       fHeaderBase->Clear();
 
-   if (fBasicFrameHeader == NULL)
+   if (fBasicFrameHeader == nullptr)
       fBasicFrameHeader = new GETBasicFrameHeader();
    else
       fBasicFrameHeader->Clear();
 
-   if (fLayerHeader == NULL)
+   if (fLayerHeader == nullptr)
       fLayerHeader = new GETLayerHeader();
    else
       fLayerHeader->Clear();
 
-   if (fTopologyFrame == NULL)
+   if (fTopologyFrame == nullptr)
       fTopologyFrame = new GETTopologyFrame();
    else
       fTopologyFrame->Clear();
 
-   if (fBasicFrame == NULL)
+   if (fBasicFrame == nullptr)
       fBasicFrame = new GETBasicFrame();
    else
       fBasicFrame->Clear();
 
-   if (fCoboFrame == NULL)
+   if (fCoboFrame == nullptr)
       fCoboFrame = new GETCoboFrame();
    else
       fCoboFrame->Clear();
 
-   if (fLayeredFrame == NULL)
+   if (fLayeredFrame == nullptr)
       fLayeredFrame = new GETLayeredFrame();
    else
       fLayeredFrame->Clear();
@@ -149,7 +149,7 @@ void GETDecoder2::Clear()
    fCoboFrameInfoIdx = 0;
    fTargetFrameInfoIdx = -1;
 
-   fBuffer = NULL;
+   fBuffer = nullptr;
    fWriteFile = "";
 
    fFrameInfoArray->Clear("C");
@@ -186,11 +186,11 @@ Bool_t GETDecoder2::AddData(TString filename)
 
    TString nextData = GETFileChecker::CheckFile(filename);
    if (!nextData.EqualTo("")) {
-      Bool_t isExist = 0;
+      Bool_t isExist = false;
       for (Int_t iIdx = 0; iIdx < fDataList.size(); iIdx++) {
          if (fDataList.at(0).EqualTo(nextData)) {
             std::cout << "== [GETDecoder] The file already exists in the list!" << std::endl;
-            isExist = 1;
+            isExist = true;
          }
       }
 
@@ -322,7 +322,7 @@ TString GETDecoder2::GetDataName(Int_t index)
    if (index >= fDataList.size()) {
       std::cout << "== [GETDecoder] Size of the list is " << fDataList.size() << "!" << std::endl;
 
-      return TString("No data!");
+      return {"No data!"};
    }
 
    return fDataList.at(index);
@@ -363,7 +363,7 @@ GETBasicFrame *GETDecoder2::GetBasicFrame(Int_t frameID)
 
       if (fIsDoneAnalyzing)
          if (fTargetFrameInfoIdx > fFrameInfoArray->GetLast())
-            return NULL;
+            return nullptr;
 
       if (fFrameInfoIdx > fTargetFrameInfoIdx)
          fFrameInfoIdx = fTargetFrameInfoIdx;
@@ -425,7 +425,7 @@ GETCoboFrame *GETDecoder2::GetCoboFrame(Int_t frameID)
 
       if (fIsDoneAnalyzing)
          if (fTargetFrameInfoIdx > fCoboFrameInfoArray->GetLast())
-            return NULL;
+            return nullptr;
 
       if (fCoboFrameInfoIdx > fTargetFrameInfoIdx)
          fCoboFrameInfoIdx = fTargetFrameInfoIdx;
@@ -502,7 +502,7 @@ GETCoboFrame *GETDecoder2::GetCoboFrame(Int_t frameID)
          fCoboFrameInfo->SetNextInfo(fFrameInfo);
       else {
          Int_t iChecker = (fCoboFrameInfoIdx - 10 < 0 ? 0 : fCoboFrameInfoIdx - 10);
-         while (GETFrameInfo *checkCoboFrameInfo = (GETFrameInfo *)fCoboFrameInfoArray->ConstructedAt(iChecker)) {
+         while (auto *checkCoboFrameInfo = (GETFrameInfo *)fCoboFrameInfoArray->ConstructedAt(iChecker)) {
             if (checkCoboFrameInfo->IsFill()) {
                if (checkCoboFrameInfo->GetEventID() == fFrameInfo->GetEventID()) {
                   checkCoboFrameInfo->SetNextInfo(fFrameInfo);
@@ -532,7 +532,7 @@ GETLayeredFrame *GETDecoder2::GetLayeredFrame(Int_t frameID)
 
       if (fIsDoneAnalyzing)
          if (fTargetFrameInfoIdx > fFrameInfoArray->GetLast())
-            return NULL;
+            return nullptr;
 
       if (fFrameInfoIdx > fTargetFrameInfoIdx)
          fFrameInfoIdx = fTargetFrameInfoIdx;
@@ -605,14 +605,14 @@ void GETDecoder2::PrintCoboFrameInfo(Int_t frameID)
 {
    if (frameID == -1) {
       for (Int_t iEntry = 0; iEntry < fCoboFrameInfoArray->GetEntriesFast(); iEntry++) {
-         GETFrameInfo *frameInfo = (GETFrameInfo *)fCoboFrameInfoArray->At(iEntry);
+         auto *frameInfo = (GETFrameInfo *)fCoboFrameInfoArray->At(iEntry);
          do {
             frameInfo->Print();
             frameInfo = frameInfo->GetNextInfo();
          } while (frameInfo);
       }
    } else {
-      GETFrameInfo *frameInfo = (GETFrameInfo *)fCoboFrameInfoArray->At(frameID);
+      auto *frameInfo = (GETFrameInfo *)fCoboFrameInfoArray->At(frameID);
       do {
          frameInfo->Print();
          frameInfo = frameInfo->GetNextInfo();
@@ -636,7 +636,7 @@ Bool_t GETDecoder2::SetWriteFile(TString filename, Bool_t overwrite)
    std::ofstream dummy(fWriteFile.Data(), std::ios::trunc);
    dummy.close();
 
-   if (fBuffer == NULL)
+   if (fBuffer == nullptr)
       fBuffer = new Char_t[14000000];
 
    if (fFrameType == kCobo) {

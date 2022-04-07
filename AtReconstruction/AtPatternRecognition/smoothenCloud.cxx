@@ -42,15 +42,15 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr smoothenCloud(pcl::PointCloud<pcl::PointXYZ
             zList.push_back(point.z);
          }
 
-         std::vector<float>::iterator xMedianIt = xList.begin() + (xList.size() / 2);
+         auto xMedianIt = xList.begin() + (xList.size() / 2);
          std::nth_element(xList.begin(), xMedianIt, xList.end());
          newPoint.x = *xMedianIt;
 
-         std::vector<float>::iterator yMedianIt = yList.begin() + (yList.size() / 2);
+         auto yMedianIt = yList.begin() + (yList.size() / 2);
          std::nth_element(yList.begin(), yMedianIt, yList.end());
          newPoint.y = *yMedianIt;
 
-         std::vector<float>::iterator zMedianIt = zList.begin() + (zList.size() / 2);
+         auto zMedianIt = zList.begin() + (zList.size() / 2);
          std::nth_element(zList.begin(), zMedianIt, zList.end());
          newPoint.z = *zMedianIt;
       } else

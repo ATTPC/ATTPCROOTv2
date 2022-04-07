@@ -19,9 +19,9 @@ ClassImp(AtTpcGeoPar)
 {
 }
 
-AtTpcGeoPar::~AtTpcGeoPar(void) {}
+AtTpcGeoPar::~AtTpcGeoPar() = default;
 
-void AtTpcGeoPar::clear(void)
+void AtTpcGeoPar::clear()
 {
    if (fGeoSensNodes) {
       delete fGeoSensNodes;

@@ -8,11 +8,9 @@
 
 ClassImp(AtTools::AtParsers)
 
-   AtTools::AtParsers::AtParsers()
-{
-}
+   AtTools::AtParsers::AtParsers() = default;
 
-AtTools::AtParsers::~AtParsers() {}
+AtTools::AtParsers::~AtParsers() = default;
 
 Int_t AtTools::AtParsers::ParseIonFitXML(TString filename)
 {

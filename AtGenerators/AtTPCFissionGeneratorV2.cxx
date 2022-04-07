@@ -1,8 +1,8 @@
 #include "AtTPCFissionGeneratorV2.h"
 
 #include <TTree.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <iostream>
 #include <algorithm>
 #include <map>
@@ -57,7 +57,7 @@ AtTPCFissionGeneratorV2::AtTPCFissionGeneratorV2(const char *name, TString simfi
 
    // Define track variables to be read from file
    Int_t iPid = -1;
-   Int_t A, Z, qq;
+   Int_t A, Z, qq = 0;
 
    fIonMap.clear();
 
@@ -72,7 +72,7 @@ AtTPCFissionGeneratorV2::AtTPCFissionGeneratorV2(const char *name, TString simfi
       sprintf(buffer, "Ion_%d_%d", A, Z);
       TString ionName(buffer);
 
-      FairIon *ion = new FairIon(ionName, Z, A, qq);
+      auto *ion = new FairIon(ionName, Z, A, qq);
       fIonMap[ionName] = ion;
       nIons++;
 
@@ -90,16 +90,17 @@ AtTPCFissionGeneratorV2::AtTPCFissionGeneratorV2(const char *name, TString simfi
    std::cout << cYELLOW << "AtTPCFissionGenerator: " << nIons << " ions registered." << cNORMAL << std::endl;
 
    TString simfilepath = dir + "/macro/Simulation/data/" + simfile;
-   TFile *f = new TFile(simfilepath.Data());
+   auto *f = new TFile(simfilepath.Data());
    if (f->IsZombie()) {
       std::cout << cRED << " AtTPCFissionGenerator: No simulation file found! Check VMCWORKDIR variable. Exiting... "
                 << cNORMAL << std::endl;
       delete f;
+      return;
    } else
       std::cout << cGREEN << " AtTPCFissionGenerator : Prototype geometry found in : " << simfilepath.Data() << cNORMAL
                 << std::endl;
 
-   TTree *fTree = (TTree *)f->Get("tree101");
+   auto *fTree = (TTree *)f->Get("tree101");
    Int_t nEvents = fTree->GetEntriesFast();
    std::cout << " Number of events : " << nEvents << std::endl;
    fTree->SetBranchAddress("Evnt", &Evnt);
@@ -114,12 +115,6 @@ AtTPCFissionGeneratorV2::AtTPCFissionGeneratorV2(const char *name, TString simfi
    event = 0;
 }
 
-// -----   Destructor   ---------------------------------------------------
-AtTPCFissionGeneratorV2::~AtTPCFissionGeneratorV2()
-{
-   // if (fIon) delete fIon;
-}
-
 // -----   Public method ReadEvent   --------------------------------------
 Bool_t AtTPCFissionGeneratorV2::ReadEvent(FairPrimaryGenerator *primGen)
 {
@@ -131,8 +126,6 @@ Bool_t AtTPCFissionGeneratorV2::ReadEvent(FairPrimaryGenerator *primGen)
    TDatabasePDG *fPDG = TDatabasePDG::Instance();
 
    pTree.at(0)->GetEntry(event);
-
-   AtStack *stack = (AtStack *)gMC->GetStack();
 
    // fIsDecay = kFALSE;
 

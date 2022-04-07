@@ -27,7 +27,7 @@ AtLinkDAQTask::AtLinkDAQTask()
    fEvtTS = new HTTimestamp();
 }
 
-AtLinkDAQTask::~AtLinkDAQTask() {}
+AtLinkDAQTask::~AtLinkDAQTask() = default;
 
 bool AtLinkDAQTask::SetInputTree(TString fileName, TString treeName)
 {
@@ -56,19 +56,19 @@ bool AtLinkDAQTask::AddInputTree(TString fileName)
 
 InitStatus AtLinkDAQTask::Init()
 {
-   AtRunAna *run = dynamic_cast<AtRunAna *>(FairRunAna::Instance());
+   auto *run = dynamic_cast<AtRunAna *>(FairRunAna::Instance());
    if (run == nullptr)
       LOG(fatal) << "Run must be of type AtRunAna or a derived type!";
 
    // Register the input and output branches with the IO manager
    FairRootManager *ioMan = FairRootManager::Instance();
-   if (ioMan == 0) {
+   if (ioMan == nullptr) {
       LOG(ERROR) << "Cannot find RootManager!";
       return kERROR;
    }
 
    fInputEventArray = (TClonesArray *)ioMan->GetObject(fInputBranchName);
-   if (fInputEventArray == 0) {
+   if (fInputEventArray == nullptr) {
       LOG(ERROR) << "Cannot find AtRawEvent array in branch " << fInputBranchName << "!";
       return kERROR;
    }
@@ -109,8 +109,8 @@ void AtLinkDAQTask::DoFirstEvent()
    // And create the graphs to plot
    auto numTimestamps = fRawEvent->GetTimestamps().size();
    for (int i = 0; i < numTimestamps; ++i) {
-      fGrDataRatio.push_back({});
-      fGrDataAbs.push_back({});
+      fGrDataRatio.emplace_back();
+      fGrDataAbs.emplace_back();
    }
 }
 
@@ -127,7 +127,7 @@ void AtLinkDAQTask::UpdateTimestamps()
 
 void AtLinkDAQTask::ResetFlags()
 {
-   AtRunAna *run = dynamic_cast<AtRunAna *>(FairRunAna::Instance());
+   auto *run = dynamic_cast<AtRunAna *>(FairRunAna::Instance());
    kFillEvt = run->GetMarkFill();
    kCorruptedTimestamp = false;
 }
@@ -240,7 +240,7 @@ void AtLinkDAQTask::Exec(Option_t *opt)
       // we can match the event interval,
       auto currentIndex = fEvtTreeIndex;
       auto maxIndex = currentIndex + 3;
-      auto currentTS = fEvtTimestamp;
+      // auto currentTS = fEvtTimestamp;
       if (maxIndex > evtTree->GetEntries())
          maxIndex = evtTree->GetEntries();
 
@@ -305,8 +305,8 @@ void AtLinkDAQTask::Finish()
 
    for (int index = 0; index < fGrDataRatio.size(); ++index) {
       fEvtOutputFile->cd();
-      TGraph *gr = new TGraph(fGrDataRatio[index].size());
-      TGraph *gr2 = new TGraph(fGrDataAbs[index].size());
+      auto *gr = new TGraph(fGrDataRatio[index].size());
+      auto *gr2 = new TGraph(fGrDataAbs[index].size());
       gr->SetTitle(TString::Format("Relative intercal difference. TS_%d", index));
       gr2->SetTitle(TString::Format("Abs interval difference. TS_%d", index));
 

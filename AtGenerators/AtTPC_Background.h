@@ -45,7 +45,7 @@ public:
    virtual std::vector<Double_t> BreakUp(std::vector<Double_t> *Pdeuteron);
 
    /** Destructor **/
-   virtual ~AtTPC_Background();
+   virtual ~AtTPC_Background() = default;
 
 private:
    static Int_t fgNIon; //! Number of the instance of this class

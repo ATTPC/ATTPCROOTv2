@@ -1,6 +1,6 @@
 #include "AtTPCFissionGenerator.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <iostream>
 
 #include <TDatabasePDG.h>
@@ -28,11 +28,12 @@ AtTPCFissionGenerator::AtTPCFissionGenerator(const char *name, TString simfile)
    // simfile ="240Cf.root";
    TString dir = getenv("VMCWORKDIR");
    TString simfilepath = dir + "/macro/Simulation/data/" + simfile;
-   TFile *f = new TFile(simfilepath.Data());
+   auto *f = new TFile(simfilepath.Data());
    if (f->IsZombie()) {
       std::cout << cRED << " AtTPCFissionGenerator: No simulation file found! Check VMCWORKDIR variable. Exiting... "
                 << cNORMAL << std::endl;
       delete f;
+      return;
    } else
       std::cout << cGREEN << " AtTPCFissionGenerator : Prototype geometry found in : " << simfilepath.Data() << cNORMAL
                 << std::endl;
@@ -63,7 +64,7 @@ AtTPCFissionGenerator::AtTPCFissionGenerator(const char *name, TString simfile)
      //std::cout <<cYELLOW<< "AtTPCFissionGenerator: " << nIons << " ions registered."<<cNORMAL<< std::endl;*/
 }
 
-AtTPCFissionGenerator::~AtTPCFissionGenerator() {}
+AtTPCFissionGenerator::~AtTPCFissionGenerator() = default;
 
 Bool_t AtTPCFissionGenerator::ReadEvent(FairPrimaryGenerator *primGen)
 {

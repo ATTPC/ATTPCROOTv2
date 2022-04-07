@@ -24,11 +24,11 @@ AtRansacTask::AtRansacTask() : fInputBranchName("AtEventH"), fOutputBranchName("
    fNumItera = 500;
    fRANSACAlg = 0;
    fRandSamplMode = 0;
-   fCharThres = 0;
+   fCharThres = false;
    fVertexMode = 0;
 }
 
-AtRansacTask::~AtRansacTask() {}
+AtRansacTask::~AtRansacTask() = default;
 
 void AtRansacTask::SetPersistence(Bool_t value)
 {
@@ -150,7 +150,7 @@ void AtRansacTask::Exec(Option_t *opt)
 
    if (fRANSACAlg == 0) {
       LOG(debug) << "Running RANSAC algorithm AtRANSACN::AtRansac";
-      AtRANSACN::AtRansac *Ransac = (AtRANSACN::AtRansac *)new ((*fRansacArray)[0]) AtRANSACN::AtRansac();
+      auto *Ransac = (AtRANSACN::AtRansac *)new ((*fRansacArray)[0]) AtRANSACN::AtRansac();
       Ransac->SetTiltAngle(fTiltAngle);
       Ransac->SetModelType(fRANSACModel);
       Ransac->SetDistanceThreshold(fRANSACThreshold);
@@ -163,7 +163,7 @@ void AtRansacTask::Exec(Option_t *opt)
 
    if (fRANSACAlg == 1) {
       LOG(debug) << "Running RANSAC algorithm AtRansacMod";
-      AtRansacMod *Rantest = (AtRansacMod *)new ((*fRansacArray)[0]) AtRansacMod();
+      auto *Rantest = (AtRansacMod *)new ((*fRansacArray)[0]) AtRansacMod();
       Rantest->SetDistanceThreshold(fRANSACThreshold);
       Rantest->SetMinHitsLine(fMinHitsLine);
       Rantest->SetNumItera(fNumItera);
@@ -175,7 +175,7 @@ void AtRansacTask::Exec(Option_t *opt)
 
    if (fRANSACAlg == 2) {
       LOG(debug) << "Running RANSAC algorithm AtMlesacMod";
-      AtMlesacMod *Rantest = (AtMlesacMod *)new ((*fRansacArray)[0]) AtMlesacMod();
+      auto *Rantest = (AtMlesacMod *)new ((*fRansacArray)[0]) AtMlesacMod();
       Rantest->SetDistanceThreshold(fRANSACThreshold);
       Rantest->SetMinHitsLine(fMinHitsLine);
       Rantest->SetNumItera(fNumItera);
@@ -187,7 +187,7 @@ void AtRansacTask::Exec(Option_t *opt)
 
    if (fRANSACAlg == 3) {
       LOG(debug) << "Running RANSAC algorithm AtLmedsMod";
-      AtLmedsMod *Rantest = (AtLmedsMod *)new ((*fRansacArray)[0]) AtLmedsMod();
+      auto *Rantest = (AtLmedsMod *)new ((*fRansacArray)[0]) AtLmedsMod();
       Rantest->SetDistanceThreshold(fRANSACThreshold);
       Rantest->SetMinHitsLine(fMinHitsLine);
       Rantest->SetNumItera(fNumItera);

@@ -94,7 +94,7 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
       std::vector<double> whit;
       std::vector<double> arclength;
 
-      TGraph *arclengthGraph = new TGraph();
+      auto *arclengthGraph = new TGraph();
 
       auto posPCA = hits.at(0).GetPosition();
 
@@ -520,7 +520,7 @@ void AtPATTERN::AtPRA::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Floa
                   double x = 0, y = 0, z = 0;
                   double sigma_x = 0, sigma_y = 0, sigma_z = 0;
 
-                  int timeStamp;
+                  int timeStamp = 0;
                   std::shared_ptr<AtHitCluster> hitCluster = std::make_shared<AtHitCluster>();
                   hitCluster->SetClusterID(clusterID);
                   Double_t hitQ = 0.0;
@@ -601,11 +601,11 @@ void AtPATTERN::AtPRA::Clusterize3D(AtTrack &track)
    // std::cout<<" ================================================================= "<<"\n";
    // std::cout<<" Clusterizing track : "<<track.GetTrackID()<<"\n";
 
-   for (auto iHits = 0; iHits < hitArray.size(); ++iHits) {
-      XYZPoint pos = hitArray.at(iHits).GetPosition();
-      double Q = hitArray.at(iHits).GetCharge();
-      int TB = hitArray.at(iHits).GetTimeStamp();
-      // std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<Q<<"\n";
+   for (auto &iHits : hitArray) {
+      XYZPoint pos = iHits.GetPosition();
+      // double Q = iHits.GetCharge();
+      // int TB = iHits.GetTimeStamp();
+      //  std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<Q<<"\n";
    }
 
    if (hitArray.size() > 0) {
@@ -817,5 +817,5 @@ bool AtPATTERN::AtPRA::kNN(const std::vector<AtHit> &hits, AtHit &hitRef, int k)
    // Compute threshold
    Double_t T = mean + stdDev * fStdDevMulkNN;
 
-   return (T < fkNNDist) ? 0 : 1;
+   return (T < fkNNDist) ? false : true;
 }

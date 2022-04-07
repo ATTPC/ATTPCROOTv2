@@ -4,7 +4,6 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class AtAvalancheTask + ;
 #pragma link C++ class AtClusterizeTask + ;
 #pragma link C++ class AtClusterizeFastTask + ;
 #pragma link C++ class AtClusterizeLineTask + ;

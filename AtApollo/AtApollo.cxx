@@ -10,7 +10,7 @@
 #include <FairDetector.h>
 #include <TVector3.h>
 #include <TVirtualMCStack.h>
-#include <stddef.h>
+#include <cstddef>
 #include <FairVolume.h>
 #include <FairRootManager.h>
 #include <FairRun.h>
@@ -52,8 +52,8 @@ AtApollo::~AtApollo()
 void AtApollo::Initialize()
 {
    FairDetector::Initialize();
-   FairRuntimeDb *rtdb = FairRun::Instance()->GetRuntimeDb();
-   // AtApolloGeoPar* par=(AtApolloGeoPar*)(rtdb->getContainer("AtApolloGeoPar"));
+   // FairRuntimeDb *rtdb = FairRun::Instance()->GetRuntimeDb();
+   //  AtApolloGeoPar* par=(AtApolloGeoPar*)(rtdb->getContainer("AtApolloGeoPar"));
    LOG(INFO) << "AtApollo: initialisation";
 }
 
@@ -61,7 +61,7 @@ Bool_t AtApollo::ProcessHits(FairVolume *vol)
 {
    /** This method is called from the MC stepping */
 
-   AtStack *stack = (AtStack *)gMC->GetStack();
+   auto *stack = (AtStack *)gMC->GetStack();
    fVolName = gMC->CurrentVolName();
 
    TLorentzVector fPosIn;
@@ -120,7 +120,7 @@ TClonesArray *AtApollo::GetCollection(Int_t iColl) const
    if (iColl == 0) {
       return fAtApolloPointCollection;
    } else {
-      return NULL;
+      return nullptr;
    }
 }
 

@@ -2,6 +2,8 @@
 
 #include <Rtypes.h>
 
+#include <utility>
+
 ClassImp(AtHit);
 
 AtHit::AtHit(Int_t hitID) : AtHit(hitID, XYZPoint(0, 0, -1000), -1) {}
@@ -13,8 +15,8 @@ AtHit::AtHit(Int_t hitID, Double_t x, Double_t y, Double_t z, Double_t charge) :
 {
 }
 
-AtHit::AtHit(Int_t hitID, Int_t PadNum, const XYZPoint &loc, Double_t charge)
-   : fPadNum(PadNum), fHitID(hitID), fPosition(loc), fCharge(charge)
+AtHit::AtHit(Int_t hitID, Int_t PadNum, XYZPoint loc, Double_t charge)
+   : fPadNum(PadNum), fHitID(hitID), fPosition(std::move(loc)), fCharge(charge)
 {
 }
 

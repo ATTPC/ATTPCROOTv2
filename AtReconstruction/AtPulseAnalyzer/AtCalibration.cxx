@@ -12,7 +12,7 @@ AtCalibration::AtCalibration()
    fIsJitterCalibrated = kFALSE;
 }
 
-AtCalibration::~AtCalibration() {}
+AtCalibration::~AtCalibration() = default;
 
 Bool_t AtCalibration::IsGainFile()
 {
@@ -38,7 +38,7 @@ void AtCalibration::SetGainFile(TString gainFile)
       std::cout << " == Gain calibration using: " << cRED << fGainFile.Data() << cNORMAL << std::endl;
       Double_t nPadNum, nCal;
       Int_t intPadNum;
-      fGainCalib[10240] = {0};
+      fGainCalib.fill(0);
 
       while (!gainData->eof()) {
          *gainData >> nPadNum >> nCal;
@@ -62,7 +62,7 @@ void AtCalibration::SetJitterFile(TString jitterFile)
       fIsJitterCalibrated = kFALSE;
    } else {
       std::cout << " == Jitter calibration using: " << cRED << fJitterFile.Data() << cNORMAL << std::endl;
-      fJitterCalib[10240] = {0};
+      fJitterCalib.fill(0);
       Int_t jiPadNum, jiCal;
       Double_t jdCal, jdPadNum;
 

@@ -11,7 +11,7 @@
 #include <TDirectory.h>
 #include <TFile.h>
 #include <TH2Poly.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <Math/Point2D.h>
 #include <iostream>
 #include <fstream>
@@ -38,7 +38,7 @@ AtTpcProtoMap::AtTpcProtoMap() : AtMap()
    kIsProtoMapSet = kFALSE;
 }
 
-AtTpcProtoMap::~AtTpcProtoMap() {}
+AtTpcProtoMap::~AtTpcProtoMap() = default;
 
 Bool_t AtTpcProtoMap::SetGeoFile(TString geofile)
 {
@@ -72,8 +72,8 @@ void AtTpcProtoMap::GeneratePadPlane()
    TMultiGraph *mg;
    TKey *key;
    TIter nextkey(gDirectory->GetListOfKeys());
-   while (key = (TKey *)nextkey()) {
-      TMultiGraph *obj = (TMultiGraph *)key->ReadObj();
+   while ((key = (TKey *)nextkey())) {
+      auto *obj = (TMultiGraph *)key->ReadObj();
       if (obj->InheritsFrom("TMultiGraph")) {
          mg = (TMultiGraph *)obj;
          bin = fPadPlane->AddBin(mg);
@@ -92,14 +92,14 @@ TH2Poly *AtTpcProtoMap::GetPadPlane()
       std::cout
          << " AtTPC Proto Map : No geometry file found! Please set the geometry file first via the SetGeoFile method "
          << std::endl;
-      return NULL;
+      return nullptr;
    }
 
    if (!kIsGenerated) {
       std::cout
          << "  AtTPC Proto Map : Pad plane has not been generated. Please generate it via the GenerateAtTPC method "
          << std::endl;
-      return NULL;
+      return nullptr;
    }
 
    if (kGUIMode)
@@ -128,34 +128,34 @@ XYPoint AtTpcProtoMap::CalcPadCenter(Int_t PadRef)
       std::cout << " AtTPC Proto Map : No map file for prototype found! Please set the geometry file first via the "
                    "SetProtoMap method "
                 << std::endl;
-      return XYPoint(-9999, -9999);
+      return {-9999, -9999};
    }
 
    if (f->IsZombie()) {
       std::cout
          << " AtTPC Proto Map : No geometry file found! Please set the geometry file first via the SetGeoFile method "
          << std::endl;
-      return XYPoint(-9999, -9999);
+      return {-9999, -9999};
    }
 
    if (PadRef != -1) { // Boost multi_array crashes with a negative index
-      std::map<Int_t, std::vector<Float_t>>::const_iterator its = ProtoGeoMap.find(PadRef);
+      auto its = ProtoGeoMap.find(PadRef);
 
       Int_t kIs = Int_t(ProtoGeoMap.find(PadRef) == ProtoGeoMap.end());
       if (kIs) {
          if (kDebug)
             std::cerr << " AtTpcProtoMap::CalcPadCenter - Pad  not found - CoboID : " << PadRef << std::endl;
-         return XYPoint(-9999, -9999);
+         return {-9999, -9999};
       }
 
       auto padCenter = (*its).second;
-      return XYPoint(padCenter[0], padCenter[1]);
+      return {padCenter[0], padCenter[1]};
 
    } else {
 
       if (kDebug)
          std::cout << " AtTpcProtoMap::CalcPadCenter Error : Pad not found" << std::endl;
-      return XYPoint(-9999, -9999);
+      return {-9999, -9999};
    }
 }
 
@@ -206,7 +206,7 @@ Int_t AtTpcProtoMap::BinToPad(Int_t binval)
       return -1;
    }
 
-   std::map<Int_t, Int_t>::const_iterator its = ProtoBinMap.find(binval);
+   auto its = ProtoBinMap.find(binval);
    Int_t padval = (*its).second;
    Int_t kIs = int(ProtoBinMap.find(binval) == ProtoBinMap.end());
    if (kIs) {

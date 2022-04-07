@@ -6,7 +6,7 @@ ClassImp(AtPatternEvent);
 
 AtPatternEvent::AtPatternEvent() : TNamed("AtPatternEvent", "Pattern Recognition Event") {}
 
-AtPatternEvent::~AtPatternEvent() {}
+AtPatternEvent::~AtPatternEvent() = default;
 
 void AtPatternEvent::SetTrackCand(std::vector<AtTrack> tracks)
 {

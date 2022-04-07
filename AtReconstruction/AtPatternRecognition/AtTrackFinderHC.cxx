@@ -20,7 +20,7 @@ AtPATTERN::AtTrackFinderHC::AtTrackFinderHC()
    kSetPrunning = kFALSE;
 }
 
-AtPATTERN::AtTrackFinderHC::~AtTrackFinderHC() {}
+AtPATTERN::AtTrackFinderHC::~AtTrackFinderHC() = default;
 
 std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::GetTrackCand()
 {
@@ -59,7 +59,7 @@ bool AtPATTERN::AtTrackFinderHC::FindTracks(AtEvent &event, AtPatternEvent *patt
    if (cloud_xyz->size() == 0) {
       std::cerr << "Error: empty cloud <<"
                    "\n";
-      return 0;
+      return false;
    }
 
    // compute default r if it is not given
@@ -125,7 +125,6 @@ void AtPATTERN::AtTrackFinderHC::eventToClusters(AtEvent &event, pcl::PointCloud
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
       const AtHit hit = event.GetHit(iHit);
-      Int_t PadNumHit = hit.GetPadNum();
       auto position = hit.GetPosition();
       cloud->points[iHit].x = position.X();
       cloud->points[iHit].y = position.Y();
@@ -151,15 +150,13 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
       pcl::PointIndicesPtr const &pointIndices = clusters[clusterIndex];
       // get color colour
 
-      for (size_t i = 0; i < pointIndices->indices.size(); ++i) {
-         int index = pointIndices->indices[i];
+      for (int index : pointIndices->indices) {
          pcl::PointXYZI point = cloud->points[index];
 
          track.AddHit(event.GetHit(point.intensity));
 
          // remove clustered points from point-vector
-         for (std::vector<pcl::PointXYZI, Eigen::aligned_allocator<pcl::PointXYZI>>::iterator it = points.end();
-              it != points.begin(); --it) {
+         for (auto it = points.end(); it != points.begin(); --it) {
             if (it->x == point.x && it->y == point.y && it->z == point.z) {
 
                if (it != points.end()) {
@@ -186,9 +183,8 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
 
    // Dump noise into a track
    AtTrack ntrack;
-   for (std::vector<pcl::PointXYZI, Eigen::aligned_allocator<pcl::PointXYZI>>::iterator it = points.begin();
-        it != points.end(); ++it) {
-      ntrack.AddHit(event.GetHit(it->intensity));
+   for (auto &point : points) {
+      ntrack.AddHit(event.GetHit(point.intensity));
    }
    ntrack.SetIsNoise(kTRUE);
    tracks.push_back(ntrack);

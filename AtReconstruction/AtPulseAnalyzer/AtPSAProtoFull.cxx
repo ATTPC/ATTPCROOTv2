@@ -13,17 +13,11 @@
 #include <cmath>
 #include <map>
 
+/*
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-
-AtPSAProtoFull::AtPSAProtoFull()
-{
-   // fPeakFinder = new TSpectrum();
-   // HPeak = new TH1F("HPeak","HPeak",512,0,511);
-}
-
-AtPSAProtoFull::~AtPSAProtoFull() {}
+*/
 
 void AtPSAProtoFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 {

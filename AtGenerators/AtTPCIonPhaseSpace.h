@@ -47,7 +47,7 @@ public:
    virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
 
    /** Destructor **/
-   virtual ~AtTPCIonPhaseSpace();
+   virtual ~AtTPCIonPhaseSpace() = default;
 
 private:
    static Int_t fgNIon;                 //! Number of the instance of this class

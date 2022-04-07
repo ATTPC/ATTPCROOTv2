@@ -18,9 +18,9 @@ using std::distance;
 using std::max_element;
 using std::min_element;
 
-ClassImp(AtPSASimple) AtPSASimple::AtPSASimple() {}
+ClassImp(AtPSASimple) AtPSASimple::AtPSASimple() = default;
 
-AtPSASimple::~AtPSASimple() {}
+AtPSASimple::~AtPSASimple() = default;
 
 void AtPSASimple::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 {

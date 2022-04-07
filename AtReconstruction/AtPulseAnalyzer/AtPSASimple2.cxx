@@ -22,11 +22,12 @@
 #include <cmath>
 #include <map>
 
-#ifdef _OPENMP
-#include <omp.h>
-#endif
+//#ifdef _OPENMP
+//#include <omp.h>
+//#endif
 
-ClassImp(AtPSASimple2) AtPSASimple2::AtPSASimple2()
+ClassImp(AtPSASimple2);
+AtPSASimple2::AtPSASimple2()
 {
    fBackGroundSuppression = kFALSE;
    fBackGroundInterp = kFALSE;
@@ -36,19 +37,19 @@ ClassImp(AtPSASimple2) AtPSASimple2::AtPSASimple2()
    fIsTimeCorr = kFALSE;
 }
 
-AtPSASimple2::~AtPSASimple2() {}
+AtPSASimple2::~AtPSASimple2() = default;
 
 void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 {
 
-   Int_t numPads = rawEvent->GetNumPads();
    Int_t hitNum = 0;
    Double_t QEventTot = 0.0;
    Double_t RhoVariance = 0.0;
    Double_t RhoMean = 0.0;
    Double_t Rho2 = 0.0;
    std::map<Int_t, Int_t> PadMultiplicity;
-   Float_t mesh[512] = {0};
+   std::array<Float_t, 512> mesh;
+   mesh.fill(0);
 
    auto mcPointsMap = rawEvent->GetSimMCPointMap();
    LOG(info) << "MC Simulated points Map size " << mcPointsMap.size();
@@ -97,9 +98,12 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       }
 
       auto adc = pad->GetADC();
-      Double_t floatADC[512] = {0};
-      Double_t dummy[512] = {0};
-      Double_t bg[512] = {0};
+      std::array<Double_t, 512> floatADC;
+      std::array<Double_t, 512> dummy;
+      std::array<Double_t, 512> bg;
+      floatADC.fill(0);
+      dummy.fill(0);
+      bg.fill(0);
 
       // TODO: Add in warning that fCalibration is depricated in favor of AtFilter framework
       if (fCalibration->IsGainFile()) {
@@ -115,15 +119,16 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          bg[iTb] = adc[iTb];
       }
 
-      TSpectrum *PeakFinder = new TSpectrum;
+      auto *PeakFinder = new TSpectrum;
       if (fIsPeakFinder)
-         numPeaks = PeakFinder->SearchHighRes(floatADC, dummy, fNumTbs, 4.7, 5, fBackGroundSuppression, 3, kTRUE, 3);
+         numPeaks = PeakFinder->SearchHighRes(floatADC.data(), dummy.data(), fNumTbs, 4.7, 5, fBackGroundSuppression, 3,
+                                              kTRUE, 3);
       if (fIsMaxFinder)
          numPeaks = 1;
 
-      TSpectrum *BGInter = new TSpectrum;
+      auto *BGInter = new TSpectrum;
       if (fBackGroundInterp) {
-         BGInter->Background(bg, fNumTbs, 6, TSpectrum::kBackDecreasingWindow, TSpectrum::kBackOrder2, kTRUE,
+         BGInter->Background(bg.data(), fNumTbs, 6, TSpectrum::kBackDecreasingWindow, TSpectrum::kBackOrder2, kTRUE,
                              TSpectrum::kBackSmoothing7, kTRUE);
          for (Int_t iTb = 1; iTb < fNumTbs; iTb++) {
             floatADC[iTb] = floatADC[iTb] - bg[iTb];
@@ -273,7 +278,7 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
    } // Pad Loop
 
-   RhoVariance = Rho2 - (pow(RhoMean, 2) / (event->GetNumHits()));
+   // RhoVariance = Rho2 - (pow(RhoMean, 2) / (event->GetNumHits()));
    RhoVariance = Rho2 - (event->GetNumHits() * pow((RhoMean / event->GetNumHits()), 2));
 
    for (Int_t iTb = 0; iTb < fNumTbs; iTb++)

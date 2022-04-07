@@ -2,23 +2,25 @@
 
 #include <Rtypes.h>
 
+#include <utility>
+
 using XYZVector = ROOT::Math::XYZVector;
 
 ClassImp(AtSimulatedPoint);
 
 AtSimulatedPoint::AtSimulatedPoint() : fMCEventID(-1), fMCPointID(-1), fClusterID(-1) {}
 
-AtSimulatedPoint::AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, const XYZVector &position)
-   : fPosition(position), fMCEventID(-1), fMCPointID(mcPointID), fClusterID(clusterID), fCharge(1)
+AtSimulatedPoint::AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, XYZVector position)
+   : fPosition(std::move(position)), fMCEventID(-1), fMCPointID(mcPointID), fClusterID(clusterID), fCharge(1)
 {
 }
 
-AtSimulatedPoint::AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, const XYZVector &position)
-   : fPosition(position), fMCEventID(-1), fMCPointID(mcPointID), fClusterID(clusterID), fCharge(charge)
+AtSimulatedPoint::AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, XYZVector position)
+   : fPosition(std::move(position)), fMCEventID(-1), fMCPointID(mcPointID), fClusterID(clusterID), fCharge(charge)
 {
 }
 
-AtSimulatedPoint::~AtSimulatedPoint() {}
+AtSimulatedPoint::~AtSimulatedPoint() = default;
 
 void AtSimulatedPoint::SetClusterID(Int_t clusterID)
 {

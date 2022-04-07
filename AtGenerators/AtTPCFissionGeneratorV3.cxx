@@ -29,7 +29,7 @@ void AtTPCFissionGeneratorV3::loadIonList(TString ionList)
 
       int A = row[0];
       int Z = row[1];
-      FairIon *ion = new FairIon(TString::Format("Ion_%d_%d", Z, A), Z, A, Z);
+      auto *ion = new FairIon(TString::Format("Ion_%d_%d", Z, A), Z, A, Z);
       FairRunSim::Instance()->AddNewIon(ion);
    }
 }
@@ -46,14 +46,14 @@ void AtTPCFissionGeneratorV3::loadFissionFragmentTree(TString fissionDistro)
    if (!fEventTree)
       LOG(fatal) << "Failed to find the tree fragments";
 
-   fEventTree->SetBranchAddress("decayFragments", &fDecayFrags);
+   fEventTree->SetBranchAddress("decayFragments", &fDecayFrags); // NOLINT
    fEventTree->SetBranchAddress("A", &fA);
    fEventTree->SetBranchAddress("Z", &fZ);
 
    fNumEvents = fEventTree->GetEntries();
 }
 // Default constructor
-AtTPCFissionGeneratorV3::AtTPCFissionGeneratorV3() {}
+AtTPCFissionGeneratorV3::AtTPCFissionGeneratorV3() = default;
 
 // Generator that takes in a file that specifies the expected distribution of
 // fission particles.
@@ -67,7 +67,7 @@ AtTPCFissionGeneratorV3::AtTPCFissionGeneratorV3(const char *name, TString ionLi
 // Deep copy constructor
 AtTPCFissionGeneratorV3::AtTPCFissionGeneratorV3(AtTPCFissionGeneratorV3 &rhs) {}
 
-AtTPCFissionGeneratorV3::~AtTPCFissionGeneratorV3() {}
+AtTPCFissionGeneratorV3::~AtTPCFissionGeneratorV3() = default;
 
 Bool_t AtTPCFissionGeneratorV3::ReadEvent(FairPrimaryGenerator *primeGen)
 {
@@ -111,7 +111,7 @@ VecPE AtTPCFissionGeneratorV3::getBeam4Vec()
 
 Cartesian3D AtTPCFissionGeneratorV3::getVertex()
 {
-   return Cartesian3D(gAtVP->GetVx(), gAtVP->GetVy(), gAtVP->GetVz());
+   return {gAtVP->GetVx(), gAtVP->GetVy(), gAtVP->GetVz()};
 }
 
 void AtTPCFissionGeneratorV3::setBeamParameters()
@@ -144,6 +144,7 @@ void AtTPCFissionGeneratorV3::generateFragment(VecPE &P, Int_t A, Int_t Z)
    gAtVP->SetTrackAngle(nextTrackID, angle);
 
    // Requires GeV
+   // NOLINTNEXTLINE
    fPrimeGen->AddTrack(particle->PdgCode(), labP.Px() / 1000, labP.Py() / 1000, labP.Pz() / 1000, fVertex.X(),
                        fVertex.Y(), fVertex.Z());
 }

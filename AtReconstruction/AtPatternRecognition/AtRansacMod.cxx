@@ -27,7 +27,7 @@ AtRansacMod::AtRansacMod()
    // fVertexMod = 0;
 }
 
-AtRansacMod::~AtRansacMod() {}
+AtRansacMod::~AtRansacMod() = default;
 
 void AtRansacMod::Init(AtEvent *event)
 {
@@ -52,8 +52,8 @@ void AtRansacMod::Init(AtEvent *event)
 
    fOriginalCloudSize = vX.size();
    double TotalCharge = 0;
-   for (unsigned int i = 0; i < vQ.size(); i++) {
-      TotalCharge += vQ[i];
+   for (double i : vQ) {
+      TotalCharge += i;
    }
    fTotalCharge = TotalCharge;
 }
@@ -150,7 +150,7 @@ vector<int> AtRansacMod::RandSam(vector<int> indX, Int_t mode)
             if (Proba[p2] >= w2)
                cond = true;
          } else {
-            w2 = 1;
+            // w2 = 1; never used
             cond = true;
          }
       } while (p2 == p1 || cond == false);
@@ -187,7 +187,7 @@ vector<int> AtRansacMod::RandSam(vector<int> indX, Int_t mode)
             if (Proba[p2] >= w2)
                cond = true;
          } else {
-            w2 = 1;
+            // w2 = 1; never used
             cond = true;
          }
 
@@ -248,9 +248,9 @@ void AtRansacMod::Solve()
       int nbInliers = 0;
       double weight = 0;
 
-      for (auto j = remainIndex.begin(); j != remainIndex.end(); ++j) {
+      for (int &j : remainIndex) {
 
-         double error = EstimError(*j); // error of each point relative to the model
+         double error = EstimError(j); // error of each point relative to the model
          error = error * error;
          if (error < (fRANSACThreshold * fRANSACThreshold)) {
             // inlIdxR.push_back(*j);
@@ -262,8 +262,8 @@ void AtRansacMod::Solve()
       if (nbInliers > fRANSACMinPoints) {
          // getting the best models
          double scale = weight / nbInliers;
-         IdxMod1.push_back(std::make_pair(scale, Rsamples[0]));
-         IdxMod2.push_back(std::make_pair(scale, Rsamples[1]));
+         IdxMod1.emplace_back(scale, Rsamples[0]);
+         IdxMod2.emplace_back(scale, Rsamples[1]);
       } // if a cluster was found
 
    } // for RANSAC interactions
@@ -289,11 +289,11 @@ void AtRansacMod::Solve()
 
       int counter = 0;
 
-      for (auto j = remainIndex.begin(); j != remainIndex.end(); ++j) {
-         double error = EstimError(*j);
+      for (int &j : remainIndex) {
+         double error = EstimError(j);
 
          if ((error * error) < (fRANSACThreshold * fRANSACThreshold)) {
-            inlIdxR.push_back(*j);
+            inlIdxR.push_back(j);
             counter++;
          }
       }
@@ -387,7 +387,7 @@ std::vector<AtTrack *> AtRansacMod::Clusters2Tracks(AllClusters NClusters, AtEve
       TVector3 punto1 = NClusters[i].ClusterFitP1;
       TVector3 punto2 = NClusters[i].ClusterFitP2;
       TVector3 pdiff = punto2 - punto1;
-      AtTrack *track = new AtTrack();
+      auto *track = new AtTrack();
       // std::cout << "hits en el cluster   "<<clustersize<<"   "<<indicesCluster.size() << '\n';
       for (int j = 0; j < clustersize; j++) {
          track->AddHit(hits.at(indicesCluster[j]));
@@ -569,9 +569,8 @@ void AtRansacMod::FindVertexOneTrack(std::vector<AtTrack *> tracks)
       IsFilled.push_back(kFALSE);
 
    // Test each line against the others to find a vertex candidate
-   for (Int_t i = 0; i < int(tracks.size()); i++) {
+   for (auto track : tracks) {
 
-      AtTrack *track = tracks.at(i);
       std::vector<Double_t> p = track->GetFitPar();
 
       if (p.size() == 0)
@@ -580,7 +579,7 @@ void AtRansacMod::FindVertexOneTrack(std::vector<AtTrack *> tracks)
       TVector3 p1(p[0], p[2], p[4]); // p1
       TVector3 e1(p[1], p[3], p[5]); // d1
 
-      double angle = e1.Angle(BeamDir) * 180. / 3.1415;
+      // double angle = e1.Angle(BeamDir) * 180. / 3.1415;
 
       TVector3 n = e1.Cross(BeamDir);
       double sdist = fabs(n.Dot(p1 - BeamPoint) / n.Mag());
@@ -681,7 +680,7 @@ Double_t AtRansacMod::Fit3D(vector<int> inliners, TVector3 &V1, TVector3 &V2)
 
    K11 = (Syy + Szz) * pow(cos(theta), 2) + (Sxx + Szz) * pow(sin(theta), 2) - 2. * Sxy * cos(theta) * sin(theta);
    K22 = (Syy + Szz) * pow(sin(theta), 2) + (Sxx + Szz) * pow(cos(theta), 2) + 2. * Sxy * cos(theta) * sin(theta);
-   K12 = -Sxy * (pow(cos(theta), 2) - pow(sin(theta), 2)) + (Sxx - Syy) * cos(theta) * sin(theta);
+   // K12 = -Sxy * (pow(cos(theta), 2) - pow(sin(theta), 2)) + (Sxx - Syy) * cos(theta) * sin(theta);
    K10 = Sxz * cos(theta) + Syz * sin(theta);
    K01 = -Sxz * sin(theta) + Syz * cos(theta);
    K00 = Sxx + Syy;
@@ -696,7 +695,7 @@ Double_t AtRansacMod::Fit3D(vector<int> inliners, TVector3 &V1, TVector3 &V2)
 
    if (r > 0)
       dm2 = -c2 / 3. + pow(-q / 2. + sqrt(r), 1. / 3.) + pow(-q / 2. - sqrt(r), 1. / 3.);
-   if (r < 0) {
+   else {
       rho = sqrt(-pow(p, 3) / 27.);
       phi = acos(-q / (2. * rho));
       dm2 = min(-c2 / 3. + 2. * pow(rho, 1. / 3.) * cos(phi / 3.),

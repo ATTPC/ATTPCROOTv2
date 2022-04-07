@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream> // IWYU pragma: keep
 #include <string>
+#include <utility>
 
 // ROOT class headers
 #include <TRandom.h>
@@ -17,7 +18,7 @@ using namespace std;
 ClassImp(AtGas)
 
    AtGas::AtGas(TString GasFileName)
-   : fGasFileName(GasFileName)
+   : fGasFileName(std::move(GasFileName))
 {
    InitializeParameters();
 }
@@ -56,7 +57,7 @@ void AtGas::InitializeParameters()
    }
 }
 
-AtGas::~AtGas() {}
+AtGas::~AtGas() = default;
 
 void AtGas::operator=(const AtGas &GasToCopy)
 {
@@ -94,7 +95,7 @@ Int_t AtGas::GetGain()
 }
 UInt_t AtGas::GetRandomCS()
 {
-   UInt_t CS = (UInt_t)(gRandom->Gaus(50, 20));
+   auto CS = (UInt_t)(gRandom->Gaus(50, 20));
    if (CS <= 0)
       CS = 1;
    return CS;

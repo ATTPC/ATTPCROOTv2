@@ -1,6 +1,6 @@
 #include "GETTopologyFrame.h"
 
-#include <string.h>
+#include <cstring>
 #include <iostream>
 
 #include <Rtypes.h>
@@ -18,7 +18,7 @@ UInt_t GETTopologyFrame::GetCoboIdx()
 }
 bitset<4> GETTopologyFrame::GetAsadMask()
 {
-   return bitset<4>((UInt_t)fAsadMask);
+   return {(UInt_t)fAsadMask};
 }
 UInt_t GETTopologyFrame::Get2pMode()
 {

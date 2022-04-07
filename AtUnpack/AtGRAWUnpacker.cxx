@@ -57,7 +57,7 @@ void AtGRAWUnpacker::FillRawEvent(AtRawEvent &event)
    }
 
    if (fIsSeparatedData) {
-      std::thread *file = new std::thread[fNumFiles];
+      auto *file = new std::thread[fNumFiles];
 
       for (Int_t iFile = 0; iFile < fNumFiles; iFile++) {
          file[iFile] = std::thread([this](Int_t fileIdx) { this->ProcessBasicFile(fileIdx); }, iFile);
@@ -201,7 +201,6 @@ void AtGRAWUnpacker::ProcessFile(Int_t coboIdx)
             PadReference PadRef = {iCobo, iAsad, iAget, iCh};
             Int_t PadRefNum = fMap->GetPadNum(PadRef);
             auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
-            Bool_t IsInhibited = fMap->IsInhibited(PadRefNum);
 
             if (PadRefNum != -1 && !fMap->IsInhibited(PadRefNum)) {
                AtPad *pad;
@@ -256,7 +255,6 @@ void AtGRAWUnpacker::ProcessBasicFile(Int_t coboIdx)
          PadReference PadRef = {iCobo, iAsad, iAget, iCh};
          auto PadRefNum = fMap->GetPadNum(PadRef);
          auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
-         Bool_t IsInhibited = fMap->IsInhibited(PadRefNum);
 
          if (PadRefNum != -1 && !fMap->IsInhibited(PadRefNum)) {
             AtPad *pad = nullptr;

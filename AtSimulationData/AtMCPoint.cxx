@@ -41,7 +41,7 @@ AtMCPoint::AtMCPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Dou
 // -------------------------------------------------------------------------
 
 // -----   Destructor   ----------------------------------------------------
-AtMCPoint::~AtMCPoint() {}
+AtMCPoint::~AtMCPoint() = default;
 // -------------------------------------------------------------------------
 
 // -----   Public method Print   -------------------------------------------

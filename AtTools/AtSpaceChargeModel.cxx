@@ -2,6 +2,6 @@
 
 #include <Rtypes.h>
 
-AtSpaceChargeModel::AtSpaceChargeModel() {}
+AtSpaceChargeModel::AtSpaceChargeModel() = default;
 
 ClassImp(AtSpaceChargeModel);

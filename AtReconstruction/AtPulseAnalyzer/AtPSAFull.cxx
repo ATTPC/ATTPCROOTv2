@@ -22,16 +22,11 @@
 #include <cmath>
 #include <map>
 
+/*
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-
-AtPSAFull::AtPSAFull()
-{
-   // fPeakFinder = new TSpectrum();
-}
-
-AtPSAFull::~AtPSAFull() {}
+*/
 
 void AtPSAFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 {
@@ -88,7 +83,7 @@ void AtPSAFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       }
 
       Int_t size = 0;
-      maxAdcIdx = maxTime;
+      // maxAdcIdx = maxTime;
 
       for (Int_t iTb = 0; iTb < fNumTbs; iTb++) {
 
@@ -123,7 +118,7 @@ void AtPSAFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
          PadMultiplicity.insert(std::pair<Int_t, Int_t>(PadNum, hit.GetHitID()));
       } else {
-         std::map<Int_t, Int_t>::iterator ite = interval.begin();
+         auto ite = interval.begin();
          // Double_t *thePar = new Double_t[3];
          while (ite != interval.end()) {
             final = (ite->second);

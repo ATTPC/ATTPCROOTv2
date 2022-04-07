@@ -12,12 +12,12 @@ ClassImp(AtTools::AtELossManager)
    AtTools::AtELossManager::AtELossManager()
 {
    c = 29.9792458; // Speed of light in cm/ns.
-   dEdx_e = 0;
-   dEdx_n = 0;
-   Energy_in_range = 1;
+   dEdx_e = nullptr;
+   dEdx_n = nullptr;
+   Energy_in_range = true;
    EvD = std::make_shared<TGraph>();
-   GoodELossFile = 0;
-   IonEnergy = 0;
+   GoodELossFile = false;
+   IonEnergy = nullptr;
    IonMass = 0;
    last_point = 0;
    points = 0;
@@ -42,9 +42,9 @@ AtTools::AtELossManager::AtELossManager(std::string Eloss_file, Double_t Mass)
    if (!Read.is_open()) {
       std::cout << "*** EnergyLoss Error: File " << Eloss_file << " was not found."
                 << "\n";
-      GoodELossFile = 0;
+      GoodELossFile = false;
    } else {
-      GoodELossFile = 1;
+      GoodELossFile = true;
       Read >> aux >> aux >> aux >> aux >> aux >> aux; // The first line has 6 strings (columns' description).
       points = 0;                                     // Cout the number of points.
 
@@ -78,14 +78,14 @@ AtTools::AtELossManager::AtELossManager(std::string Eloss_file, Double_t Mass)
          Range[p] = _Range;
       }
 
-      Energy_in_range = 1;
+      Energy_in_range = true;
       IonMass = Mass; // In MeV/c^2
       c = 29.9792458; // Speed of light in cm/ns.
       EvD = std::make_shared<TGraph>();
    }
 }
 
-AtTools::AtELossManager::~AtELossManager() {}
+AtTools::AtELossManager::~AtELossManager() = default;
 
 Double_t AtTools::AtELossManager::GetEnergyLossLinear(Double_t energy, Double_t distance)
 {
@@ -109,7 +109,7 @@ Double_t AtTools::AtELossManager::GetEnergyLossLinear(Double_t energy, Double_t 
       // If after this two loop i is still -1 it means the energy was out of range.
       if (i == -1) {
          // cout << "*** EnergyLoss Error: energy not within range: " << energy << endl;
-         Energy_in_range = 0;
+         Energy_in_range = false;
          return 0;
       }
 
@@ -178,7 +178,7 @@ double AtTools::AtELossManager::GetEnergyLoss(double energy /*MeV*/, double dist
 
       std::cout << "*** EnergyLoss Error: energy not within range: " << energy << "\n";
 
-      Energy_in_range = 0;
+      Energy_in_range = false;
 
       return 0;
    }
@@ -214,21 +214,21 @@ double AtTools::AtELossManager::GetEnergyLoss(double energy /*MeV*/, double dist
    // curvatures
    K0 = (N2 - N3) / N1;
    K1 = (b11 - a11 * K0) / a12;
-   K2 = (b33 - a32 * K1) / a33;
-   // cout<<"K0="<<K0<<" K1="<<K1<<" K2="<<K2<<endl;
+   // K2 = (b33 - a32 * K1) / a33;
+   //  cout<<"K0="<<K0<<" K1="<<K1<<" K2="<<K2<<endl;
 
    a1 = K0 * (x1 - x0) - (y1 - y0);
    b1 = -K1 * (x1 - x0) + (y1 - y0);
-   a2 = K1 * (x2 - x1) - (y2 - y1);
-   b2 = -K2 * (x2 - x1) + (y2 - y1);
-   // cout<<"a1="<<a1<<" b1="<<b1<<" a2="<<a2<<" b2="<<b2<<endl;
+   // a2 = K1 * (x2 - x1) - (y2 - y1);
+   // b2 = -K2 * (x2 - x1) + (y2 - y1);
+   //  cout<<"a1="<<a1<<" b1="<<b1<<" a2="<<a2<<" b2="<<b2<<endl;
 
    T1 = (energy - x0) / (x1 - x0);
-   T2 = (energy - x1) / (x2 - x1);
+   // T2 = (energy - x1) / (x2 - x1);
 
    // polynomials //which gives the value of energy loss for given energy.
    q1 = (1 - T1) * y0 + T1 * y1 + T1 * (1 - T1) * (a1 * (1 - T1) + b1 * T1);
-   q2 = (1 - T2) * y1 + T2 * y2 + T2 * (1 - T2) * (a2 * (1 - T2) + b2 * T2);
+   // q2 = (1 - T2) * y1 + T2 * y2 + T2 * (1 - T2) * (a2 * (1 - T2) + b2 * T2);
 
    // cout<<"q1="<<q1<<" q2="<<q2<<endl;
 
@@ -246,7 +246,7 @@ Double_t AtTools::AtELossManager::GetInitialEnergy(Double_t FinalEnergy /*MeV*/,
    // The function starts by assuming FinalEnergy is within the energy range,
    // but this could be changed in the GetEnergyLoss() function.
 
-   Energy_in_range = 1;
+   Energy_in_range = true;
 
    for (int s = 0; s < Steps; s++) {
 
@@ -275,7 +275,7 @@ Double_t AtTools::AtELossManager::GetFinalEnergy(Double_t InitialEnergy /*MeV*/,
    // The function starts by assuming InitialEnergy is within the energy range, but
    // this could be changes in the GetEnergyLoss() function.
 
-   Energy_in_range = 1;
+   Energy_in_range = true;
 
    for (int s = 0; s < Steps; s++) {
 
@@ -392,7 +392,7 @@ Double_t AtTools::AtELossManager::LoadRange(Float_t energy1)
 
       if (i == -1) {
          std::cout << "*** EnergyLoss Error: energy not within range: " << energy1 << "\n";
-         Energy_in_range = 0;
+         Energy_in_range = false;
          return 0;
       }
       Range1 = Range[i];

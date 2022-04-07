@@ -120,7 +120,7 @@ function(generate_target_and_root_library target)
   install(TARGETS ${target}
     DESTINATION ${CMAKE_INSTALL_LIBDIR}
     EXPORT GeneratedRootLibTargets)
-
+  
 endfunction()
 
 # based on the work in https://github.com/AliceO2Group/AliceO2

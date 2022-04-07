@@ -27,7 +27,7 @@ AtPedestal::AtPedestal()
 Bool_t AtPedestal::SubtractPedestal(Int_t numTbs, Int_t *fpn, Int_t *rawADC, Double_t *dest, Double_t rmsCut,
                                     Bool_t signalNegativePolarity, Int_t startTb, Int_t averageTbs)
 {
-   while (1) {
+   while (true) {
       fMath->Reset();
       for (Int_t iTb = startTb; iTb < startTb + averageTbs; iTb++)
          fMath->Add(rawADC[iTb]);

@@ -19,7 +19,7 @@ AtS800Task::AtS800Task()
    kIsFullMode = kFALSE;
 }
 
-AtS800Task::~AtS800Task() {}
+AtS800Task::~AtS800Task() = default;
 
 void AtS800Task::SetPersistence(Bool_t value)
 {
@@ -62,8 +62,10 @@ void AtS800Task::SetParContainers()
 {
 
    FairRun *run = FairRun::Instance();
-   if (!run)
+   if (!run) {
       LOG(fatal) << "No analysis run!";
+      return;
+   }
 
    FairRuntimeDb *db = run->GetRuntimeDb();
    if (!db)

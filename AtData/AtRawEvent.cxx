@@ -47,7 +47,7 @@ std::pair<AtAuxPad *, bool> AtRawEvent::AddAuxPad(std::string auxName)
 {
    auto ret = fAuxPadMap.emplace(auxName, AtAuxPad(auxName));
    auto pad = &(ret.first->second);
-   return std::pair<AtAuxPad *, bool>(pad, ret.second);
+   return {pad, ret.second};
 }
 
 void AtRawEvent::SetTimestamp(ULong64_t timestamp, int index)

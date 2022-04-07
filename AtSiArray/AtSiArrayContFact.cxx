@@ -3,7 +3,7 @@
 #include <FairContFact.h>
 #include <TList.h>
 #include <TString.h>
-#include <string.h>
+#include <cstring>
 
 #include "AtSiArrayGeoPar.h"
 #include <FairRuntimeDb.h>
@@ -30,7 +30,7 @@ void AtSiArrayContFact::setAllContainers()
        the list of containers for the AtTpc library.
    */
 
-   FairContainer *p = new FairContainer("AtSiArrayGeoPar", "AtSiArray Geometry Parameters", "TestDefaultContext");
+   auto *p = new FairContainer("AtSiArrayGeoPar", "AtSiArray Geometry Parameters", "TestDefaultContext");
    p->addContext("TestNonDefaultContext");
 
    containers->Add(p);
@@ -44,7 +44,7 @@ FairParSet *AtSiArrayContFact::createContainer(FairContainer *c)
        of this container, the name is concatinated with the context.
    */
    const char *name = c->GetName();
-   FairParSet *p = NULL;
+   FairParSet *p = nullptr;
    if (strcmp(name, "AtSiArrayGeoPar") == 0) {
       p = new AtSiArrayGeoPar(c->getConcatName().Data(), c->GetTitle(), c->getContext());
    }

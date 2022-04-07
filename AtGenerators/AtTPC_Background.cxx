@@ -1,7 +1,7 @@
 #include "AtTPC_Background.h"
 
-#include <math.h>
-#include <stdio.h>
+#include <cmath>
+#include <cstdio>
 #include <iostream>
 #include <algorithm>
 
@@ -42,9 +42,7 @@ AtTPC_Background::AtTPC_Background(const char *name, std::vector<Int_t> *z, std:
    fIon.reserve(fMult);
 
    char buffer[30];
-   TDatabasePDG *pdgDB = TDatabasePDG::Instance();
-   TParticlePDG *kProtonPDG = pdgDB->GetParticle(2212);
-   TParticle *kProton = new TParticle();
+   auto *kProton = new TParticle();
    kProton->SetPdgCode(2212);
 
    for (Int_t i = 0; i < fMult; i++) {
@@ -62,14 +60,14 @@ AtTPC_Background::AtTPC_Background(const char *name, std::vector<Int_t> *z, std:
       if (a->at(i) != 1) {
          IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i) * amu / 1000.0);
          ParticleBuff = new FairParticle("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);
-         fPType.push_back("Ion");
+         fPType.emplace_back("Ion");
          std::cout << " Adding : " << buffer << std::endl;
 
       } else if (a->at(i) == 1 && z->at(i) == 1) {
 
          IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i) * amu / 1000.0);
          ParticleBuff = new FairParticle(2212, kProton);
-         fPType.push_back("Proton");
+         fPType.emplace_back("Proton");
       }
 
       std::cout << " Z " << z->at(i) << " A " << a->at(i) << std::endl;
@@ -88,24 +86,18 @@ AtTPC_Background::AtTPC_Background(const char *name, std::vector<Int_t> *z, std:
 
       if (fPType.at(i) == "Ion") {
          std::cout << " In position " << i << " adding an : " << fPType.at(i) << std::endl;
-         run->AddNewIon(fIon.at(i));
+         run->AddNewIon(fIon.at(i)); // NOLINT
          std::cout << " fIon name :" << fIon.at(i)->GetName() << std::endl;
          std::cout << " fParticle name :" << fParticle.at(i)->GetName() << std::endl;
 
       } else if (fPType.at(i) == "Proton") {
          std::cout << " In position " << i << " adding an : " << fPType.at(i) << std::endl;
-         run->AddNewParticle(fParticle.at(i));
+         run->AddNewParticle(fParticle.at(i)); // NOLINT
          std::cout << " fIon name :" << fIon.at(i)->GetName() << std::endl;
          std::cout << " fParticle name :" << fParticle.at(i)->GetName() << std::endl;
          std::cout << fParticle.at(i)->GetName() << std::endl;
       }
    }
-}
-
-// -----   Destructor   ---------------------------------------------------
-AtTPC_Background::~AtTPC_Background()
-{
-   // if (fIon) delete fIon;
 }
 
 Double_t AtTPC_Background::omega(Double_t x, Double_t y, Double_t z)
@@ -180,13 +172,13 @@ Double_t *AtTPC_Background::TwoB(Double_t m1b, Double_t m2b, Double_t m3b, Doubl
       AtTPC_Background::omega(s, pow(m1b, 2), pow(m2b, 2)) * AtTPC_Background::omega(s, pow(m3b, 2), pow(m4b, 2));
 
    double Et3 = (c * cos((180. - thetacm) * 3.1415926535 / 180) - b) / a; // estamos viendo el recoil en cm (pi-theta)
-   double Et4 = (Et1 + m2b - Et3);
+   // double Et4 = (Et1 + m2b - Et3);
 
    double K3 = Et3 - m3b;
-   double K4 = Et4 - m4b;
+   // double K4 = Et4 - m4b;
 
    //------------------Mandestam variables
-   t = pow(m2b, 2) + pow(m4b, 2) - 2 * m2b * Et4;
+   // t = pow(m2b, 2) + pow(m4b, 2) - 2 * m2b * Et4;
    u = pow(m2b, 2) + pow(m3b, 2) - 2 * m2b * Et3;
 
    double theta_lab = acos(
@@ -242,12 +234,12 @@ std::vector<Double_t> AtTPC_Background::BreakUp(std::vector<Double_t> *Pdeuteron
    ppL[0] = pprest[0];
    ppL[1] = pprest[1];
    ppL[2] = gammad * (pprest[2] + betad * Eprest);
-   double EpL = sqrt(pow(mp, 2) + pow(ppL[0], 2) + pow(ppL[1], 2) + pow(ppL[2], 2));
+   // double EpL = sqrt(pow(mp, 2) + pow(ppL[0], 2) + pow(ppL[1], 2) + pow(ppL[2], 2));
 
    pnL[0] = pnrest[0];
    pnL[1] = pnrest[1];
    pnL[2] = gammad * (pnrest[2] + betad * Enrest);
-   double EnL = sqrt(pow(mn, 2) + pow(pnL[0], 2) + pow(pnL[1], 2) + pow(pnL[2], 2));
+   // double EnL = sqrt(pow(mn, 2) + pow(pnL[0], 2) + pow(pnL[1], 2) + pow(pnL[2], 2));
 
    // rotate to the 2H direction
    std::vector<double> fvfrom(3);
@@ -276,8 +268,6 @@ std::vector<Double_t> AtTPC_Background::BreakUp(std::vector<Double_t> *Pdeuteron
 // -----   Public method ReadEvent   --------------------------------------
 Bool_t AtTPC_Background::ReadEvent(FairPrimaryGenerator *primGen)
 {
-
-   AtStack *stack = (AtStack *)gMC->GetStack();
 
    fIsDecay = kFALSE;
 

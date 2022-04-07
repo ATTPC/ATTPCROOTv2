@@ -10,9 +10,9 @@
 
 ClassImp(AtFITTER::AtFitter);
 
-AtFITTER::AtFitter::AtFitter() {}
+AtFITTER::AtFitter::AtFitter() = default;
 
-AtFITTER::AtFitter::~AtFitter() {}
+AtFITTER::AtFitter::~AtFitter() = default;
 
 std::tuple<Double_t, Double_t> AtFITTER::AtFitter::GetMomFromBrho(Double_t M, Double_t Z, Double_t brho)
 {
@@ -41,7 +41,7 @@ void AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack> *trackCandSource, std:
    for (auto trackCand : *trackCandSource) {
       Double_t thetaCand = trackCand.GetGeoTheta();
       auto hitArrayCand = trackCand.GetHitArray();
-      std::pair<Double_t, Double_t> centerCand = trackCand.GetGeoCenter();
+      // std::pair<Double_t, Double_t> centerCand = trackCand.GetGeoCenter();
 
       AtTrack track = trackCand;
       Int_t jnkCnt = 0;
@@ -57,7 +57,7 @@ void AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack> *trackCandSource, std:
       for (auto trackJunk : *trackJunkSource) {
          Double_t thetaJunk = trackJunk.GetGeoTheta();
          auto hitArrayJunk = trackJunk.GetHitArray();
-         std::pair<Double_t, Double_t> centerJunk = trackJunk.GetGeoCenter();
+         // std::pair<Double_t, Double_t> centerJunk = trackJunk.GetGeoCenter();
 
          if (simulationConv) {
 

@@ -29,7 +29,7 @@ AtApolloPoint::AtApolloPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 
 // -------------------------------------------------------------------------
 
 // -----   Destructor   ----------------------------------------------------
-AtApolloPoint::~AtApolloPoint() {}
+AtApolloPoint::~AtApolloPoint() = default;
 // -------------------------------------------------------------------------
 
 // -----   Public method Print   -------------------------------------------

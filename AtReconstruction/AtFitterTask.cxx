@@ -30,7 +30,7 @@ ClassImp(AtFitterTask);
 AtFitterTask::AtFitterTask()
 {
    fLogger = FairLogger::GetLogger();
-   fPar = NULL;
+   fPar = nullptr;
    fIsPersistence = kFALSE;
    fPatternEventArray = new TClonesArray("ATPatternEvent");
    fGenfitTrackArray = new TClonesArray("genfit::Track");
@@ -51,7 +51,7 @@ AtFitterTask::AtFitterTask()
    fELossFile = "";
 }
 
-AtFitterTask::~AtFitterTask() {}
+AtFitterTask::~AtFitterTask() = default;
 
 void AtFitterTask::SetPersistence(Bool_t value)
 {
@@ -61,13 +61,13 @@ void AtFitterTask::SetPersistence(Bool_t value)
 InitStatus AtFitterTask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
-   if (ioMan == 0) {
+   if (ioMan == nullptr) {
       LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 
    fPatternEventArray = (TClonesArray *)ioMan->GetObject("AtPatternEvent");
-   if (fPatternEventArray == 0) {
+   if (fPatternEventArray == nullptr) {
       LOG(error) << "Cannot find AtPatternEvent array!";
       return kERROR;
    }
@@ -118,11 +118,11 @@ void AtFitterTask::SetParContainers()
    if (!run)
       LOG(fatal) << "No analysis run!";
 
-   FairRuntimeDb *db = run->GetRuntimeDb();
+   FairRuntimeDb *db = run->GetRuntimeDb(); // NOLINT
    if (!db)
       LOG(fatal) << "No runtime database!";
 
-   fPar = (AtDigiPar *)db->getContainer("AtDigiPar");
+   fPar = (AtDigiPar *)db->getContainer("AtDigiPar"); // NOLINT
    if (!fPar)
       LOG(fatal) << "AtDigiPar not found!!";
 }

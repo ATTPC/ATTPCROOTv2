@@ -21,7 +21,7 @@ AtProtoEventAna::AtProtoEventAna() : TNamed("AtProtoEventAna", "Proto Event Anal
    fVertex13 = -500.0;
 }
 
-AtProtoEventAna::~AtProtoEventAna() {}
+AtProtoEventAna::~AtProtoEventAna() = default;
 
 std::vector<Double_t> *AtProtoEventAna::GetAngleFit()
 {

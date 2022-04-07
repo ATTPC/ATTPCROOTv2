@@ -28,7 +28,7 @@ public:
    virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
 
    /** Destructor **/
-   virtual ~AtTPCFissionGeneratorV2();
+   virtual ~AtTPCFissionGeneratorV2() = default;
 
 private:
    static Int_t fgNIon; //! Number of the instance of this class

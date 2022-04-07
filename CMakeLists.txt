@@ -118,7 +118,7 @@ if(_temp_mod_dev_warning)
 endif()
 
 #Include all of the other dependecies that  we need
-find_package2(PUBLIC OpenMP)
+#find_package2(PUBLIC OpenMP)
 find_package2(PUBLIC CUDA)
 find_package2(PUBLIC HiRAEVT CONFIG)
 find_package2(PUBLIC GENFIT2)

@@ -35,7 +35,7 @@ public:
    AtTPCXSReader &operator=(const AtTPCXSReader &) { return *this; }
 
    /** Destructor **/
-   virtual ~AtTPCXSReader();
+   virtual ~AtTPCXSReader() = default;
 
    /** Method ReadEvent
     ** Generates particles according to the XS file and send them to the

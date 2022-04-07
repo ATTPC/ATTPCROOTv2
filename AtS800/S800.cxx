@@ -1,6 +1,6 @@
 #include "S800.h"
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "S800defs.h"
 
@@ -147,7 +147,7 @@ unsigned short *S800::DecodeS800TimeOfFlight(unsigned short *p)
       else if (ch == 4)
          tac_xfp = (tmp)&0xfff;
       else if (ch > 0 && ch < 8)
-         dum = (tmp)&0xfff;
+         dum = (tmp)&0xfff; // NOLINT
       words--;
    }
    this->GetTimeOfFlight()->Set(rf, obj, xfp, si);

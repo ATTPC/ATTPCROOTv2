@@ -5,8 +5,8 @@
 
 class AtPSAProtoFull : public AtPSA {
 public:
-   AtPSAProtoFull();
-   ~AtPSAProtoFull();
+   AtPSAProtoFull() = default;
+   ~AtPSAProtoFull() = default;
 
    void Analyze(AtRawEvent *rawEvent, AtEvent *event) override;
 

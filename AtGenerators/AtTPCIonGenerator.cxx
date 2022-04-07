@@ -6,8 +6,8 @@
 
 #include <FairParticle.h>
 #include <TString.h>
-#include <math.h>
-#include <stddef.h>
+#include <cmath>
+#include <cstddef>
 #include <iostream>
 
 #include "AtVertexPropagator.h"
@@ -36,7 +36,7 @@ Int_t AtTPCIonGenerator::fgNIon = 0;
 
 // -----   Default constructor   ------------------------------------------
 AtTPCIonGenerator::AtTPCIonGenerator()
-   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fR(0.), fz(0.), fOffset(0.), fVx(0.), fVy(0.), fVz(0.), fIon(NULL), fQ(0),
+   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fR(0.), fz(0.), fOffset(0.), fVx(0.), fVy(0.), fVz(0.), fIon(nullptr), fQ(0),
      fBeamOpt(0), fWhmFocus(0.), fDiv(0.), fZFocus(0.), fRHole(0.)
 {
    //  cout << "-W- AtTPCIonGenerator: "
@@ -45,14 +45,14 @@ AtTPCIonGenerator::AtTPCIonGenerator()
 // ------------------------------------------------------------------------
 
 AtTPCIonGenerator::AtTPCIonGenerator(const Char_t *ionName, Int_t mult, Double_t px, Double_t py, Double_t pz)
-   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fR(0.), fz(0.), fOffset(0.), fVx(0.), fVy(0.), fVz(0.), fIon(NULL), fQ(0),
+   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fR(0.), fz(0.), fOffset(0.), fVx(0.), fVy(0.), fVz(0.), fIon(nullptr), fQ(0),
      fBeamOpt(0), fWhmFocus(0.), fDiv(0.), fZFocus(0.), fRHole(0.)
 {
 
    FairRunSim *fRun = FairRunSim::Instance();
    TObjArray *UserIons = fRun->GetUserDefIons();
    TObjArray *UserParticles = fRun->GetUserDefParticles();
-   FairParticle *part = 0;
+   FairParticle *part = nullptr;
    fIon = (FairIon *)UserIons->FindObject(ionName);
    if (fIon) {
       fgNIon++;
@@ -79,7 +79,7 @@ AtTPCIonGenerator::AtTPCIonGenerator(const Char_t *ionName, Int_t mult, Double_t
          // fVz   = vz;
       }
    }
-   if (fIon == 0 && part == 0) {
+   if (fIon == nullptr && part == nullptr) {
       cout << "-E- AtTPCIonGenerator: Ion or Particle is not defined !" << endl;
       Fatal("AtTPCIonGenerator", "No FairRun instantised!");
    }
@@ -89,7 +89,7 @@ AtTPCIonGenerator::AtTPCIonGenerator(const Char_t *ionName, Int_t mult, Double_t
 // -----   Default constructor   ------------------------------------------
 AtTPCIonGenerator::AtTPCIonGenerator(const char *name, Int_t z, Int_t a, Int_t q, Int_t mult, Double_t px, Double_t py,
                                      Double_t pz, Double_t Ex, Double_t m, Double_t ener, Double_t eLoss)
-   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fR(0.), fz(0.), fOffset(0.), fVx(0.), fVy(0.), fVz(0.), fIon(NULL), fQ(0),
+   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fR(0.), fz(0.), fOffset(0.), fVx(0.), fVy(0.), fVz(0.), fIon(nullptr), fQ(0),
      fNomEner(0.), fBeamOpt(0), fWhmFocus(0.), fDiv(0.), fZFocus(0.), fRHole(0.)
 {
    fgNIon++;
@@ -105,7 +105,6 @@ AtTPCIonGenerator::AtTPCIonGenerator(const char *name, Int_t z, Int_t a, Int_t q
    // fVy   = vy;
    // fVz   = vz;
 
-   double IonMass = m * 0.93149410242;
    fIon = new FairIon(TString::Format("FairIon%d", fgNIon).Data(), z, a, q, Ex, m);
    cout << " Beam Ion mass : " << fIon->GetMass() << endl;
    gAtVP->SetBeamMass(fIon->GetMass());
@@ -114,6 +113,7 @@ AtTPCIonGenerator::AtTPCIonGenerator(const char *name, Int_t z, Int_t a, Int_t q
    if (!run) {
       cout << "-E- FairIonGenerator: No FairRun instantised!" << endl;
       Fatal("FairIonGenerator", "No FairRun instantised!");
+      return;
    }
    run->AddNewIon(fIon);
 }
@@ -126,13 +126,6 @@ AtTPCIonGenerator::AtTPCIonGenerator(const AtTPCIonGenerator &right)
      fRHole(right.fRHole)
 {
 }
-
-// -----   Destructor   ---------------------------------------------------
-AtTPCIonGenerator::~AtTPCIonGenerator()
-{
-   // if (fIon) delete fIon;
-}
-//_________________________________________________________________________
 
 // -----   Public method SetExcitationEnergy   ----------------------------
 void AtTPCIonGenerator::SetExcitationEnergy(Double_t eExc)

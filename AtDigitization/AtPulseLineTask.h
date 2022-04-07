@@ -29,7 +29,7 @@ private:
 
    std::map<Int_t, Float_t> fXYintegrationMap; //! xyIntegrationMap[padNum] = % of e- in event here
 
-   void generateIntegrationMap(AtSimulatedLine *line);
+   void generateIntegrationMap(AtSimulatedLine &line);
    Int_t throwRandomAndGetBinAfterDiffusion(const ROOT::Math::XYZVector &loc, Double_t diffusionSigma);
 
    // Returns the bin ID (binMin) that the zIntegral starts from

@@ -5,9 +5,9 @@
 #include "AtTPCXSReader.h"
 
 #include <TH2.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
 #include <iostream>
 #include <algorithm>
 
@@ -51,7 +51,7 @@ AtTPCXSReader::AtTPCXSReader(const char *name, std::vector<Int_t> *z, std::vecto
    TString dir = getenv("VMCWORKDIR");
    TString XSFileName = dir + "/AtGenerators/" + fXSFileName;
    std::cout << " AtTPCXSReader: Opening input file " << XSFileName << std::endl;
-   std::ifstream *fInputXSFile = new std::ifstream(XSFileName);
+   auto *fInputXSFile = new std::ifstream(XSFileName);
    // std::ifstream*  fInputXSFile = new
    // std::ifstream("/home/ayyadlim/fair_install/AtTPCROOTv2_HAP/AtGenerators/xs_22Mgp_fusionEvaporation.txt");
    if (!fInputXSFile->is_open())
@@ -81,12 +81,10 @@ AtTPCXSReader::AtTPCXSReader(const char *name, std::vector<Int_t> *z, std::vecto
    }
    // fh_pdf->Write();
 
-   TDatabasePDG *pdgDB = TDatabasePDG::Instance();
-   TParticlePDG *kProtonPDG = pdgDB->GetParticle(2212);
-   TParticle *kProton = new TParticle();
+   auto *kProton = new TParticle();
    kProton->SetPdgCode(2212);
 
-   TParticle *kNeutron = new TParticle();
+   auto *kNeutron = new TParticle();
    kNeutron->SetPdgCode(2112);
 
    char buffer[30];
@@ -103,16 +101,16 @@ AtTPCXSReader::AtTPCXSReader(const char *name, std::vector<Int_t> *z, std::vecto
       if (a->at(i) != 1) {
          IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i));
          ParticleBuff = new FairParticle("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);
-         fPType.push_back("Ion");
+         fPType.emplace_back("Ion");
          std::cout << " Adding : " << buffer << std::endl;
       } else if (a->at(i) == 1 && z->at(i) == 1) {
          IonBuff = new FairIon("dummyIon", 50, 50, 0, 0.0, 100); // We fill the std::vector with a dummy ion
          ParticleBuff = new FairParticle(2212, kProton);
-         fPType.push_back("Proton");
+         fPType.emplace_back("Proton");
       } else if (a->at(i) == 1 && z->at(i) == 0) {
          IonBuff = new FairIon("dummyIon", 50, 50, 0, 0.0, 100); // We fill the std::vector with a dummy ion
          ParticleBuff = new FairParticle(2112, kNeutron);
-         fPType.push_back("Neutron");
+         fPType.emplace_back("Neutron");
       }
 
       std::cout << " Z " << z->at(i) << " A " << a->at(i) << std::endl;
@@ -149,11 +147,6 @@ AtTPCXSReader::AtTPCXSReader(const char *name, std::vector<Int_t> *z, std::vecto
    }
 }
 
-AtTPCXSReader::~AtTPCXSReader()
-{
-   //
-}
-
 Bool_t AtTPCXSReader::ReadEvent(FairPrimaryGenerator *primGen)
 {
    const Double_t rad2deg = 0.0174532925;
@@ -168,8 +161,6 @@ Bool_t AtTPCXSReader::ReadEvent(FairPrimaryGenerator *primGen)
    fPx.resize(fMult);
    fPy.resize(fMult);
    fPx.resize(fMult);
-
-   AtStack *stack = (AtStack *)gMC->GetStack();
 
    fBeamEnergy = gAtVP->GetEnergy();
 
@@ -186,11 +177,11 @@ Bool_t AtTPCXSReader::ReadEvent(FairPrimaryGenerator *primGen)
       fPyBeam = gAtVP->GetPy();
       fPzBeam = gAtVP->GetPz();
 
-      Double_t eb = fBeamEnergy + fWm.at(0); // total (beam) projectile energy = projectile kinetic e + mass
+      // Double_t eb = fBeamEnergy + fWm.at(0); // total (beam) projectile energy = projectile kinetic e + mass
       Double_t pb2 = fBeamEnergy * fBeamEnergy + 2.0 * fBeamEnergy * fWm.at(0); //(beam) projectile momentum squared
-      Double_t pb = TMath::Sqrt(pb2);                                           //(beam)projectile momentum
-      // Double_t beta = pb/(eb+fWm.at(1));         // ??check beta of the projectile+target compound check??
-      // Double_t gamma = 1.0/sqrt(1.0-beta*beta);
+      // Double_t pb = TMath::Sqrt(pb2);                                           //(beam)projectile momentum
+      //  Double_t beta = pb/(eb+fWm.at(1));         // ??check beta of the projectile+target compound check??
+      //  Double_t gamma = 1.0/sqrt(1.0-beta*beta);
       Double_t e = fBeamEnergy + fWm.at(0) + fWm.at(1); // total energy (beam+target)
       Double_t e_cm2 = e * e - pb2;                     // cm energy (beam+target) squared
       Double_t e_cm = TMath::Sqrt(e_cm2);               // cm energy (beam+target)

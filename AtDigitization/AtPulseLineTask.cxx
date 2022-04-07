@@ -29,7 +29,7 @@ AtPulseLineTask::AtPulseLineTask() : AtPulseTask("AtPulseLineTask")
    LOG(debug) << "Constructor of AtPulseLineTask";
 }
 
-AtPulseLineTask::~AtPulseLineTask() {}
+AtPulseLineTask::~AtPulseLineTask() = default;
 
 Int_t AtPulseLineTask::throwRandomAndGetBinAfterDiffusion(const ROOT::Math::XYZVector &loc, Double_t diffusionSigma)
 {
@@ -40,16 +40,16 @@ Int_t AtPulseLineTask::throwRandomAndGetBinAfterDiffusion(const ROOT::Math::XYZV
    return fPadPlane->FindBin(propX, propY);
 }
 
-void AtPulseLineTask::generateIntegrationMap(AtSimulatedLine *line)
+void AtPulseLineTask::generateIntegrationMap(AtSimulatedLine &line)
 {
    // MC the integration over the pad plane
    fXYintegrationMap.clear();
-   auto loc = line->GetPosition();
+   auto loc = line.GetPosition();
    Int_t validPoints = 0;
 
-   LOG(debug2) << "Sampling with transverse diffusion of: " << line->GetTransverseDiffusion();
+   LOG(debug2) << "Sampling with transverse diffusion of: " << line.GetTransverseDiffusion();
    for (int i = 0; i < fNumIntegrationPoints; ++i) {
-      auto binNumber = throwRandomAndGetBinAfterDiffusion(loc, line->GetTransverseDiffusion());
+      auto binNumber = throwRandomAndGetBinAfterDiffusion(loc, line.GetTransverseDiffusion());
 
       if (binNumber < 0)
          continue;
@@ -66,10 +66,12 @@ void AtPulseLineTask::generateIntegrationMap(AtSimulatedLine *line)
 bool AtPulseLineTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
 {
    auto line = dynamic_cast<AtSimulatedLine *>(point);
-   if (line == nullptr)
+   if (line == nullptr) {
       LOG(fatal) << "Data in branch AtSimulatedPoint is not of type AtSimulatedLine!";
+      return false;
+   }
 
-   generateIntegrationMap(line);
+   generateIntegrationMap(*line);
    std::vector<double> zIntegration; // zero is binMin
    auto binMin = integrateTimebuckets(zIntegration, line);
 

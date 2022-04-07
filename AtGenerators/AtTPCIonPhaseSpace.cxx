@@ -1,7 +1,7 @@
 #include "AtTPCIonPhaseSpace.h"
 
 #include <TString.h>
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <algorithm>
 
@@ -56,7 +56,7 @@ AtTPCIonPhaseSpace::AtTPCIonPhaseSpace(const char *name, std::vector<Int_t> *z, 
       fPz.push_back(Double_t(a->at(i)) * pz->at(i));
       Masses.push_back(mass->at(i));
 
-      FairIon *IonBuff =
+      auto *IonBuff =
          new FairIon(TString::Format("Product_Ion%d", i).Data(), z->at(i), a->at(i), q->at(i), 0.0, mass->at(i));
       // FairIon *IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i));
       // std::cout<<" Z "<<z->at(i)<<" A "<<a->at(i)<<std::endl;
@@ -72,16 +72,10 @@ AtTPCIonPhaseSpace::AtTPCIonPhaseSpace(const char *name, std::vector<Int_t> *z, 
    }
 
    for (Int_t i = 0; i < fMult; i++) {
-      run->AddNewIon(fIon.at(i));
+      run->AddNewIon(fIon.at(i)); // NOLINT
       std::cout << " Z " << z->at(i) << " A " << a->at(i) << std::endl;
       std::cout << fIon.at(i)->GetName() << std::endl;
    }
-}
-
-// -----   Destructor   ---------------------------------------------------
-AtTPCIonPhaseSpace::~AtTPCIonPhaseSpace()
-{
-   // if (fIon) delete fIon;
 }
 
 // -----   Public method ReadEvent   --------------------------------------
@@ -134,8 +128,6 @@ Bool_t AtTPCIonPhaseSpace::ReadEvent(FairPrimaryGenerator *primGen)
    fPx.resize(fMult);
    fPy.resize(fMult);
    fPx.resize(fMult);
-
-   AtStack *stack = (AtStack *)gMC->GetStack();
 
    fIsDecay = kFALSE;
 
@@ -201,7 +193,6 @@ Bool_t AtTPCIonPhaseSpace::ReadEvent(FairPrimaryGenerator *primGen)
 
    fEnergyImpulsionLab_Total = fEnergyImpulsionLab_beam + fEnergyImpulsionLab_target;
    s = fEnergyImpulsionLab_Total.M2();
-   beta = fEnergyImpulsionLab_Total.Beta();
 
    std::cout << " fABeam : " << fABeam << " fPzBeam : " << fPzBeam << " fBeamEnergy : " << fBeamEnergy << std::endl;
 
@@ -224,7 +215,7 @@ Bool_t AtTPCIonPhaseSpace::ReadEvent(FairPrimaryGenerator *primGen)
       fIsDecay = kTRUE;
 
       event1.SetDecay(fEnergyImpulsionLab_Total, fMult, mass_1);
-      Double_t weight1 = event1.Generate();
+      // Double_t weight1 = event1.Generate();
 
       /* p1  = event1.GetDecay(0);
        p2  = event1.GetDecay(1);

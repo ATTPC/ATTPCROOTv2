@@ -114,7 +114,7 @@ void AtClusterizeTask::processPoint(Int_t mcPointID)
    for (int i = 0; i < genElectrons; ++i) {
       auto loc = applyDiffusion(currentPoint + i * step, sigTrans, sigLong);
       auto size = fSimulatedPointArray->GetEntriesFast();
-      AtSimulatedPoint *simElec = new ((*fSimulatedPointArray)[size]) AtSimulatedPoint(mcPointID, i, loc);
+      new ((*fSimulatedPointArray)[size]) AtSimulatedPoint(mcPointID, i, loc);
    }
 
    fPrevPoint = currentPoint;
@@ -160,7 +160,7 @@ XYZVector AtClusterizeTask::getCurrentPointLocation()
    auto zInCm = fDetPadPlane / 10. - fMCPoint->GetZ();
    auto driftTime = TMath::Abs(zInCm) / fVelDrift; // us
 
-   return XYZVector(fMCPoint->GetX() * 10., fMCPoint->GetY() * 10., driftTime);
+   return {fMCPoint->GetX() * 10., fMCPoint->GetY() * 10., driftTime};
 }
 
 ROOT::Math::XYZVector

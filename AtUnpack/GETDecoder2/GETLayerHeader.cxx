@@ -1,6 +1,6 @@
 #include "GETLayerHeader.h"
 
-#include <string.h>
+#include <cstring>
 #include <iostream>
 
 #include <Rtypes.h>

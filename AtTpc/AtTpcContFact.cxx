@@ -10,7 +10,7 @@
 #include <FairContFact.h>
 #include <TList.h>
 #include <TString.h>
-#include <string.h>
+#include <cstring>
 
 #include "AtTpcGeoPar.h"
 #include <FairRuntimeDb.h>
@@ -37,7 +37,7 @@ void AtTpcContFact::setAllContainers()
        the list of containers for the AtTpc library.
    */
 
-   FairContainer *p = new FairContainer("AtTpcGeoPar", "AtTpc Geometry Parameters", "TestDefaultContext");
+   auto *p = new FairContainer("AtTpcGeoPar", "AtTpc Geometry Parameters", "TestDefaultContext");
    p->addContext("TestNonDefaultContext");
 
    containers->Add(p);
@@ -51,7 +51,7 @@ FairParSet *AtTpcContFact::createContainer(FairContainer *c)
        of this container, the name is concatinated with the context.
    */
    const char *name = c->GetName();
-   FairParSet *p = NULL;
+   FairParSet *p = nullptr;
    if (strcmp(name, "AtTpcGeoPar") == 0) {
       p = new AtTpcGeoPar(c->getConcatName().Data(), c->GetTitle(), c->getContext());
    }

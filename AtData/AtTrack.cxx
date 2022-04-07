@@ -2,7 +2,7 @@
 
 #include <TMath.h>
 #include <TMathBase.h>
-#include <math.h>
+#include <cmath>
 #include <iterator>
 #include <numeric>
 
@@ -136,8 +136,8 @@ XYZPoint AtTrack::GetLastPoint()
 {
    Double_t maxR = 0.;
    XYZPoint maxPos, temp;
-   for (Int_t nHit = 0; nHit < fHitArray.size(); nHit++) {
-      temp = fHitArray.at(nHit).GetPosition();
+   for (auto &nHit : fHitArray) {
+      temp = nHit.GetPosition();
       if (sqrt(pow(temp.X(), 2) + pow(temp.Y(), 2)) > maxR) {
          maxR = sqrt(pow(temp.X(), 2) + pow(temp.Y(), 2));
          maxPos = temp;
@@ -189,7 +189,7 @@ Double_t AtTrack::GetMeanTime()
    if (fHitArray.size() > 0) {
       Int_t sum =
          std::accumulate(begin(fHitArray), end(fHitArray), 0, [](int i, AtHit &hit) { return hit.GetTimeStamp() + i; });
-      return meanTime = sum / (Double_t)fHitArray.size();
+      return sum / (Double_t)fHitArray.size();
    } else
       return meanTime;
 }
@@ -236,8 +236,8 @@ Double_t AtTrack::GetGeoQEnergy()
    Double_t charge = 0;
 
    if (fHitArray.size() > 0) {
-      for (Int_t i = 0; i < fHitArray.size(); i++) {
-         charge += fHitArray.at(i).GetCharge();
+      for (auto &i : fHitArray) {
+         charge += i.GetCharge();
       }
 
       return charge;

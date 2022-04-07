@@ -3,12 +3,14 @@
 #include <ext/alloc_traits.h>
 #include <fairlogger/Logger.h>
 
+#include <utility>
+
 #include "AtRawEvent.h"
 #include "AtMap.h"
 #include "AtPad.h"
 #include "PadReference.h"
 
-AtFilterSubtraction::AtFilterSubtraction(AtMapPtr map, Int_t numCoBos) : fNumberCoBo(numCoBos), fMapping(map)
+AtFilterSubtraction::AtFilterSubtraction(AtMapPtr map, Int_t numCoBos) : fNumberCoBo(numCoBos), fMapping(std::move(map))
 {
    fBaseline.resize(fNumberCoBo);
    fRawBaseline.resize(fNumberCoBo);
