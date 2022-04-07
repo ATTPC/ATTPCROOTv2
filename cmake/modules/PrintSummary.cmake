@@ -233,7 +233,7 @@ function(PrintStaticAnalyzers)
 
   else()
     message(STATUS "  ${Cyan}RUN STATIC ANALYSIS OFF ${ColourReset}")
-    message(STATUS "  (Enable with ${BMagenta}-DRUN_STATIC_ANALYSIS=OFF${ColourReset})")
+    message(STATUS "  (Enable with ${BMagenta}-DRUN_STATIC_ANALYSIS=ON${ColourReset})")
   endif()
 endfunction()
 
