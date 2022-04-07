@@ -35,14 +35,15 @@ The ATTPCROOT code depends on the following external packages, with tested versi
   - [FairSoft](https://github.com/FairRootGroup/FairSoft/releases/tag/apr21p2) (apr21 with ROOT fftw3 module)
   - [FairRoot](https://github.com/FairRootGroup/FairRoot/releases/tag/v18.6.5) (18.6.5)
   - [HDF5](https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.4/src/) (1.10.4)
-- Optional dependencies 
-  - [PCL](https://github.com/PointCloudLibrary/pcl/releases/tag/pcl-1.10.1) (1.10.1)
+    - [PCL](https://github.com/PointCloudLibrary/pcl/releases/tag/pcl-1.10.1) (1.10.1)
     - [FLANN](https://github.com/flann-lib/flann/releases/tag/1.9.1) (1.9.1)
     - [Eigen](https://gitlab.com/libeigen/eigen/-/releases/3.3.9) (3.3.9)
+
+- Optional dependencies 
   - [GenFit](https://github.com/Yassid/GenFit)
   - [HiRAEVT](https://github.com/nscl-hira/HiRAEVT)
+  - [IWYU](https://github.com/include-what-you-use/include-what-you-use) for static analysis
 
-Note: It was also tested with FairSoft may18, and FairRoot 18.0.8
 
 ### Installation of prequisites
 

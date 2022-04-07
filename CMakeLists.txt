@@ -23,18 +23,6 @@ include(PrintSummary)
 
 set_attpcroot_defaults()
 
-find_program(iwyu_path NAMES include-what-you-use iwyu PATHS ENV IWYU ENV PATH)
-if(NOT iwyu_path)
-  message(WARNING "Could not find iwyu executable by looking at enviroment variable IWYU")
-else()
-  message(STATUS "Using iwyu at: ${iwyu_path}")
-endif()
-set(iwyu_crap
-  ${iwyu_path}
-  -Xiwyu
-  --mapping_file=${CMAKE_SOURCE_DIR}/cmake/scripts/root.imp)
-set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${iwyu_crap})
-
 find_package2(PUBLIC FairRoot REQUIRED)
 #set(ROOT_NO_FIND_PACKAGE_CONFIG_FILE TRUE)
 find_package2(PUBLIC ROOT REQUIRED)

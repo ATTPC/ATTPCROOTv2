@@ -38,8 +38,8 @@ function(pad str width char out)
   set(${out} ${str} PARENT_SCOPE)
 endfunction()
 
-function(PrintSummary)
-  #Print out version of project and C++ standard used
+function(PrintProjectAndStandard)
+#Print out version of project and C++ standard used
   message(STATUS "  ")
   message(STATUS "  ${Cyan}Compiling ${PROJECT_NAME} Version ${PROJECT_VERSION}${ColourReset}")
   if(CMAKE_CXX_FLAGS)
@@ -50,8 +50,10 @@ function(PrintSummary)
     message(STATUS "  ")
     message(STATUS "  ${Cyan}GLOBAL CXX STANDARD${CR}  ${BGreen}c++${CMAKE_CXX_STANDARD}${ColourReset}")
   endif()
+endfunction()  
 
-  # Print out summary of possible configuration types
+function(PrintConfiguration)
+# Print out summary of possible configuration types
   if(CMAKE_CONFIGURATION_TYPES)
     message(STATUS "  ")
     message(STATUS "  ${Cyan}BUILD TYPE         CXX FLAGS$${ColourReset}")
@@ -71,7 +73,9 @@ function(PrintSummary)
     message(STATUS "  ")
     message(STATUS "  (Change the build type with ${BMagenta}-DCMAKE_BUILD_TYPE=...${ColourReset})")
   endif()
+endfunction()  
 
+function(PrintDependencies)
   # Print out all of the dependencies and their locations
   if(PROJECT_PACKAGE_DEPENDENCIES)
     message(STATUS "  ")
@@ -209,6 +213,36 @@ function(PrintSummary)
     message(STATUS "  ${BWhite}${dep}${ColourReset}")
   endforeach()
 
+endfunction()
+
+function(PrintStaticAnalyzers)
+  message(STATUS "  ")
+
+  if(RUN_STATIC_ANALYSIS)
+    message(STATUS "  ${Cyan}RUN STATIC ANALYSIS ON ${ColourReset}")
+    message(STATUS "  (Disable with ${BMagenta}-DRUN_STATIC_ANALYSIS=OFF${ColourReset})")    
+    foreach(analyzer IN LISTS PROJECT_STATIC_ANALYZERS)
+      if(${analyzer}_FOUND)
+	set(${analyzer}_status "${analyzer} ${BGreen}FOUND${ColourReset}")
+      else()
+	set(${analyzer}_status "${analyzer} ${BRed}NOT FOUND${ColourReset}")
+      endif()
+
+      message(STATUS "  ${${analyzer}_status}")
+    endforeach()
+
+  else()
+    message(STATUS "  ${Cyan}RUN STATIC ANALYSIS OFF ${ColourReset}")
+    message(STATUS "  (Enable with ${BMagenta}-DRUN_STATIC_ANALYSIS=OFF${ColourReset})")
+  endif()
+endfunction()
+
+function(PrintSummary)
+  PrintProjectAndStandard()
+  PrintConfiguration()
+  PrintDependencies()
+  PrintStaticAnalyzers()
+  
   message(STATUS "")
   message(STATUS "Searched for cmake config files in : ${CMAKE_PREFIX_PATH}")
   message(STATUS "Searched for cmake module files in : ${CMAKE_MODULE_PATH}")
