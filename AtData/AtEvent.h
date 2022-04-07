@@ -3,6 +3,7 @@
 
 #include <Rtypes.h>
 #include <TNamed.h>
+#include <FairLogger.h>
 #include <map>
 #include <vector>
 #include <algorithm>
@@ -13,7 +14,6 @@
 
 #include "AtHit.h"
 #include "AtAuxPad.h"
-#include "fairlogger/Logger.h"
 
 class TBuffer;
 class TClass;

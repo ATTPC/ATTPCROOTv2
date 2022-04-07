@@ -19,12 +19,11 @@
 #include <Rtypes.h>
 #include <TMath.h>
 #include <TObject.h>
-#include <memory>
-
 #include <TDatabasePDG.h> // for TDatabasePDG
 #include <TParticle.h>    // for TParticle
 #include <TParticlePDG.h> // for TParticlePDG
-#include "fairlogger/Logger.h"
+#include <FairLogger.h>
+#include <memory>
 
 // -----   Default constructor   -------------------------------------------
 AtMCTrack::AtMCTrack()

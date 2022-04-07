@@ -2,9 +2,6 @@
 
 #include <math.h>
 #include <stdio.h>
-#include <iostream>
-#include <algorithm>
-
 #include <FairPrimaryGenerator.h>
 #include <FairIon.h>
 #include <FairParticle.h>
@@ -16,10 +13,13 @@
 #include <TVector3.h>
 #include <TVirtualMC.h>
 #include <TParticle.h>
+#include <FairLogger.h>
+#include <iostream>
+#include <algorithm>
+
 #include "AtStack.h"
 #include "AtVertexPropagator.h"
 #include "AtEulerTransformation.h"
-#include "fairlogger/Logger.h"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

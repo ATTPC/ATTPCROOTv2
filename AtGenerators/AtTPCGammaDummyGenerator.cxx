@@ -7,14 +7,13 @@
 
 #include <math.h>
 #include <stdio.h>
-#include <memory>
-
 #include <FairPrimaryGenerator.h>
 #include <TDatabasePDG.h>
 #include <TParticlePDG.h>
 #include <TRandom.h>
 #include <TMath.h>
-#include "fairlogger/Logger.h"
+#include <FairLogger.h>
+#include <memory>
 
 AtTPCGammaDummyGenerator::AtTPCGammaDummyGenerator()
    : fPDGType(0), fMult(0), fPDGMass(0), fPtMin(0), fPtMax(0), fPhiMin(0), fPhiMax(0), fEtaMin(0), fEtaMax(0), fYMin(0),

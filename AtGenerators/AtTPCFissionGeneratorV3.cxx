@@ -2,8 +2,6 @@
 
 #include <TParticlePDG.h>
 #include <TVirtualMCStack.h>
-#include <iostream>
-
 #include <FairIon.h>
 #include <FairPrimaryGenerator.h>
 #include <FairRunSim.h>
@@ -11,9 +9,11 @@
 #include <TVirtualMC.h> //For gMC
 #include <TFile.h>
 #include <TTree.h>
+#include <FairLogger.h>
+#include <iostream>
+
 #include "AtVertexPropagator.h"
 #include "AtCSVReader.h"
-#include "fairlogger/Logger.h"
 
 void AtTPCFissionGeneratorV3::loadIonList(TString ionList)
 {

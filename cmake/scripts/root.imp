@@ -28,7 +28,7 @@
 
     # Mappings for Rtypes and the private stuff it includes
     { include: ["<RtypesCore.h>", "private", "<Rtypes.h>", "public"]},
-    { symbol: ["TClass", "private", "<Rtypes.h>", "public"]},
-    { symbol: ["TMemberInspector", "private", "<Rtypes.h>", "public"]},
-    { symbol: ["TBuffer", "private", "<Rtypes.h>", "public"]}
+
+    # Mappings for fairlogger
+    { include: ["\"fairlogger/Logger.h\"", "private", "<FairLogger.h>", "public"]}
 ]

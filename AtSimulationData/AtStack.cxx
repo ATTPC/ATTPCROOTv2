@@ -16,21 +16,21 @@
 #include <FairGenericStack.h>
 #include <Rtypes.h>
 #include <TMCProcess.h>
-#include <iostream> // for operator<<, etc
-#include <iterator>
-
 #include <FairDetector.h>    // for FairDetector
 #include <FairLink.h>        // for FairLink
 #include <FairMCPoint.h>     // for FairMCPoint
-#include "AtMCTrack.h"       // for AtMCTrack
 #include <FairRootManager.h> // for FairRootManager
 #include <FairLogger.h>
-#include "fairlogger/Logger.h"
 #include <TClonesArray.h>   // for TClonesArray
 #include <TIterator.h>      // for TIterator
 #include <TLorentzVector.h> // for TLorentzVector
 #include <TParticle.h>      // for TParticle
 #include <TRefArray.h>      // for TRefArray
+#include <iostream>         // for operator<<, etc
+#include <iterator>
+#include <algorithm>
+
+#include "AtMCTrack.h" // for AtMCTrack
 
 using std::cout;
 using std::endl;

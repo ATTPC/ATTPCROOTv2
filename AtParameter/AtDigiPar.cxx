@@ -10,7 +10,6 @@
 #include <memory>
 
 #include "AtGas.h"
-#include "fairlogger/Logger.h"
 
 ClassImp(AtDigiPar);
 

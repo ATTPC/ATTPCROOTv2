@@ -8,11 +8,6 @@
 #include <TString.h>
 #include <math.h>
 #include <stdio.h>
-#include <iostream>
-#include <algorithm>
-#include <iterator>
-#include <memory>
-
 #include <FairPrimaryGenerator.h>
 #include <FairIon.h>
 #include <FairRunSim.h>
@@ -24,8 +19,13 @@
 #include <TVector3.h>
 #include <TGenPhaseSpace.h>
 #include <TParticle.h>
+#include <FairLogger.h>
+#include <iostream>
+#include <algorithm>
+#include <iterator>
+#include <memory>
+
 #include "AtVertexPropagator.h"
-#include "fairlogger/Logger.h"
 
 #define amu 931.494
 

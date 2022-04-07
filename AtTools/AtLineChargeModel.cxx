@@ -2,10 +2,9 @@
 #include "AtLineChargeModel.h"
 
 #include <math.h>
-#include <memory>
-
 #include <Rtypes.h>
-#include "fairlogger/Logger.h"
+#include <FairLogger.h>
+#include <memory>
 
 using XYZPoint = ROOT::Math::XYZPoint;
 using RZPPoint = ROOT::Math::RhoZPhiPoint;

@@ -7,11 +7,6 @@
 #include <TCollection.h>
 #include <TList.h>
 #include <ext/alloc_traits.h>
-#include <iostream>
-#include <algorithm>
-#include <cmath>
-#include <memory>
-
 #include <TFile.h>
 // FAIRROOT classes
 #include <FairRootManager.h>
@@ -21,9 +16,13 @@
 #include <TCutG.h>
 #include <TTreeReader.h>
 #include <TTreeReaderValue.h>
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+#include <memory>
+
 #include "S800Calc.h"
 #include "AtRawEvent.h"
-#include "fairlogger/Logger.h"
 
 ClassImp(AtMergeTask);
 

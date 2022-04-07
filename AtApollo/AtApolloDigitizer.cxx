@@ -12,15 +12,15 @@
 #include <FairRuntimeDb.h>
 #include <FairTask.h>
 #include <math.h>
+#include <FairRootManager.h>
+#include <TClonesArray.h>
+#include <TRandom.h>
+#include <FairLogger.h>
 #include <iostream>
 #include <memory>
 
-#include <FairRootManager.h>
 #include "AtApolloCrystalCalData.h"
 #include "AtApolloPoint.h"
-#include <TClonesArray.h>
-#include <TRandom.h>
-#include "fairlogger/Logger.h"
 
 using std::cerr;
 using std::cout;

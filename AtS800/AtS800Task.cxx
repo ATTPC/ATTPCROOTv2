@@ -3,10 +3,8 @@
 
 #include <FairLogger.h>
 #include <FairTask.h>
-#include <memory>
-
 #include <FairRun.h>
-#include "fairlogger/Logger.h"
+#include <memory>
 
 class FairRuntimeDb;
 

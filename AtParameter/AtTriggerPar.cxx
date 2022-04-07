@@ -4,9 +4,8 @@
 #include <FairParamList.h>
 #include <TString.h>
 #include <TSystem.h>
+#include <FairLogger.h>
 #include <fstream>
-
-#include "fairlogger/Logger.h"
 
 ClassImp(AtTriggerPar)
 
