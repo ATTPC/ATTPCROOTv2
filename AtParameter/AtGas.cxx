@@ -1,17 +1,16 @@
 // This class header
 #include "AtGas.h"
 
-// ROOT class headers
-#include "TRandom.h"
-
-// C/C++ class headers
-#include <stdio.h>
-#include <string.h>
 #include <cstdlib>
-#include <cstring>
-#include <fstream>
-#include <sstream>
+#include <fstream> // IWYU pragma: keep
 #include <iostream>
+#include <sstream> // IWYU pragma: keep
+#include <string>
+
+// ROOT class headers
+#include <TRandom.h>
+#include <TString.h>
+#include <Rtypes.h>
 
 using namespace std;
 

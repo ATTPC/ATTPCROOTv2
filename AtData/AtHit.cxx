@@ -1,5 +1,7 @@
 #include "AtHit.h"
 
+#include <Rtypes.h>
+
 ClassImp(AtHit);
 
 AtHit::AtHit(Int_t hitID) : AtHit(hitID, XYZPoint(0, 0, -1000), -1) {}

@@ -6,15 +6,18 @@
 #ifndef AtTPCXSREADER_H
 #define AtTPCXSREADER_H
 
-#include "FairGenerator.h"
-#include "FairIon.h"
-#include "FairParticle.h"
-#include "TH2F.h"
-
-#include <iostream>
-#include <map>
+#include <Rtypes.h>
+#include <TString.h>
+#include <FairGenerator.h>
+#include <vector>
 
 class FairPrimaryGenerator;
+class FairIon;
+class FairParticle;
+class TBuffer;
+class TClass;
+class TH2F;
+class TMemberInspector;
 
 class AtTPCXSReader : public FairGenerator {
 

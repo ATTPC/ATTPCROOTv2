@@ -3,40 +3,27 @@
 // -----                Created 03/07/18  by H. Alvarez                -----
 // -------------------------------------------------------------------------
 #include "AtTPCXSReader.h"
-#include "AtVertexPropagator.h"
 
-#include "FairPrimaryGenerator.h"
-#include "FairRootManager.h"
-#include "FairLogger.h"
-#include "FairMCEventHeader.h"
-
-#include "FairIon.h"
-#include "FairParticle.h"
-#include "FairRunSim.h"
-#include "FairRunAna.h"
-
-#include "TDatabasePDG.h"
-#include "TParticlePDG.h"
-#include "TObjArray.h"
-
-#include "TRandom.h"
-#include "TMath.h"
-#include "TLorentzVector.h"
-#include "TVector3.h"
-#include "TGenPhaseSpace.h"
-#include "TVirtualMC.h"
-#include "TParticle.h"
-#include "TClonesArray.h"
-
-#include "FairRunSim.h"
-#include "FairIon.h"
+#include <TH2.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <iostream>
-#include <fstream>
-#include "TParticle.h"
+#include <algorithm>
 
-#include "AtStack.h"
 #include "AtVertexPropagator.h"
-#include "AtEulerTransformation.h"
+#include <FairPrimaryGenerator.h>
+#include <FairIon.h>
+#include <FairParticle.h>
+#include <FairRunSim.h>
+#include <TDatabasePDG.h>
+#include <TParticlePDG.h>
+#include <TRandom.h>
+#include <TMath.h>
+#include <TVector3.h>
+#include <TVirtualMC.h>
+#include <TParticle.h>
+#include "AtStack.h"
 
 using std::cout;
 using std::endl;

@@ -1,38 +1,22 @@
 #include "AtTPCFissionGeneratorV2.h"
-#include "TFile.h"
-#include "FairPrimaryGenerator.h"
-#include "FairRootManager.h"
-#include "FairLogger.h"
-#include "FairMCEventHeader.h"
 
-#include "FairIon.h"
-#include "FairParticle.h"
-#include "FairRunSim.h"
-#include "FairRunAna.h"
-
-#include "TDatabasePDG.h"
-#include "TParticlePDG.h"
-#include "TObjArray.h"
-
-#include "TRandom.h"
-#include "TMath.h"
-#include "TLorentzVector.h"
-#include "TVector3.h"
-#include "TGenPhaseSpace.h"
-#include "TVirtualMC.h"
-#include "TParticle.h"
-#include "TClonesArray.h"
-
-#include "FairRunSim.h"
-#include "FairIon.h"
+#include <TTree.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <iostream>
-#include "TParticle.h"
+#include <algorithm>
+#include <map>
+#include <utility>
 
+#include <TFile.h>
+#include <FairPrimaryGenerator.h>
+#include <FairIon.h>
+#include <FairRunSim.h>
+#include <TDatabasePDG.h>
+#include <TParticlePDG.h>
+#include <TVirtualMC.h>
 #include "AtStack.h"
 #include "AtVertexPropagator.h"
-#include "AtEulerTransformation.h"
-
-#include "TVector3.h"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

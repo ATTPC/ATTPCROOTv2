@@ -8,10 +8,16 @@
 #ifndef ATGADGETIIMAP_H
 #define ATGADGETIIMAP_H
 
-#include <boost/multi_array.hpp>
+#include <Math/Point2Dfwd.h>
+#include <Rtypes.h>
+#include <unordered_map>
 
 #include "AtMap.h"
-#include "unordered_map"
+
+class TBuffer;
+class TClass;
+class TH2Poly;
+class TMemberInspector;
 
 class AtGadgetIIMap : public AtMap {
 

@@ -7,17 +7,24 @@
 
 #include "AtTpcMap.h"
 
+#include <math.h>
+#include <boost/multi_array/base.hpp>
+#include <boost/multi_array/extent_gen.hpp>
+#include <boost/multi_array/multi_array_ref.hpp>
+#include <boost/multi_array/subarray.hpp>
+#include <Math/Point2D.h>
+#include <algorithm>
 #include <iostream>
-#include <fstream>
-#include <cassert>
+#include <fstream> // IWYU pragma: keep
+#include <vector>
 
-#include "TCanvas.h"
-#include "TH2Poly.h"
-#include "TStyle.h"
+#include <TH2Poly.h>
+#include <Rtypes.h>
+#include <TMath.h>
+#include <TMathBase.h>
 
 #undef BOOST_MULTI_ARRAY_NO_GENERATORS
 #define BOOST_MULTI_ARRAY_NO_GENERATORS
-#include "boost/multi_array.hpp"
 
 using std::cout;
 using std::endl;

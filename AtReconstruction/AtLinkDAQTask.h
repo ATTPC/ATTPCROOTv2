@@ -22,21 +22,21 @@
  *
  */
 
+#include <TString.h>
+#include <TTree.h>
 // FairRoot classes
-#include "FairTask.h"
-
+#include <FairTask.h>
+#include <Rtypes.h>
 #include <vector>
 
 // HiRAEVT classes
 class HTTimestamp;
-
 // ROOT classes
 class TClonesArray;
 class TChain;
-class TGraph;
-
 // ATTPCROOT classes
 class AtRawEvent;
+class TFile;
 
 class AtLinkDAQTask : public FairTask {
 

@@ -7,8 +7,12 @@
 #ifndef AtEULERTRANSFORMAtION_H
 #define AtEULERTRANSFORMAtION_H
 
-#include "TNamed.h"
-#include "TObject.h"
+#include <Rtypes.h>
+#include <TNamed.h>
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtEulerTransformation : public TNamed {
 private:

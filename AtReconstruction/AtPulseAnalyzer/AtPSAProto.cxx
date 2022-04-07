@@ -1,12 +1,12 @@
 #include "AtPSAProto.h"
 
-#include "TH1.h"
-#include "TSpectrum.h"
+#include <TH1.h>
+#include <TSpectrum.h>
 
 #include "AtRawEvent.h"
 #include "AtEvent.h"
 
-#include "FairLogger.h"
+#include <FairLogger.h>
 
 // STL
 #include <cmath>

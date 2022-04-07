@@ -7,15 +7,17 @@
 #ifndef AtTPC_d2He_H
 #define AtTPC_d2He_H
 
-#include "FairGenerator.h"
-#include "FairIon.h"
-#include "FairParticle.h"
-
-#include <iostream>
-#include <map>
+#include <Rtypes.h>
+#include <TString.h>
+#include <FairGenerator.h>
+#include <vector>
 
 class FairPrimaryGenerator;
-class AtTPC_d2He;
+class FairIon;
+class FairParticle;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtTPC_d2He : public FairGenerator {
 

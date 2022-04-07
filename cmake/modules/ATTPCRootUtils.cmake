@@ -51,6 +51,34 @@ macro(set_attpcroot_defaults)
   # Add SIMPATH to module path so we can find everything...
   list(APPEND CMAKE_PREFIX_PATH ${SIMPATH})
   
+  # Make list of static analyzers to run
+  if(NOT DEFINED RUN_STATIC_ANALYSIS)
+    set(RUN_STATIC_ANALYSIS OFF)
+  endif()
+  unset(PROJECT_STATIC_ANALYZERS)
+
+  if(RUN_STATIC_ANALYSIS)
+
+    # Look for iwyu
+    find_program(iwyu_path NAMES include-what-you-use iwyu PATHS ENV IWYU ENV PATH)
+    if(NOT iwyu_path)
+      message(WARNING "Could not find iwyu executable by looking at enviroment variable IWYU")
+      set(iwyu_FOUND FALSE)
+    else()
+      message(STATUS "Using iwyu at: ${iwyu_path}")
+      set(iwyu_path_and_args
+	${iwyu_path}
+	-Xiwyu
+	--mapping_file=${CMAKE_SOURCE_DIR}/cmake/scripts/root.imp)
+      set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path_and_args})
+      set(iwyu_FOUND TRUE)
+    endif()
+    list(APPEND PROJECT_STATIC_ANALYZERS iwyu)
+    # Other analyzers would go here...
+
+  endif(RUN_STATIC_ANALYSIS)
+
+  
 endmacro(set_attpcroot_defaults)
 
 function(join VALUES GLUE OUTPUT)

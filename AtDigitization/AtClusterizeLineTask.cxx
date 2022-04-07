@@ -1,11 +1,14 @@
 #include "AtClusterizeLineTask.h"
 
-#include "FairLogger.h"
-#include "FairRootManager.h"
+#include <Math/Vector3Dfwd.h>
+#include <TObject.h>
+#include <fairlogger/Logger.h>
+#include <Math/Vector3D.h>
+#include <iostream>
+#include <memory>
 
-#include "TClonesArray.h"
-#include "Math/Vector3D.h"
-
+#include <FairRootManager.h>
+#include <TClonesArray.h>
 #include "AtDigiPar.h"
 #include "AtMCPoint.h"
 #include "AtSimulatedLine.h"

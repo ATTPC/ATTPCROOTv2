@@ -8,9 +8,15 @@
 #ifndef ATSPECMATMAP_H
 #define ATSPECMATMAP_H
 
+#include <Math/Point2Dfwd.h>
+#include <Rtypes.h>
+
 #include "AtMap.h"
 
-#include <boost/multi_array.hpp>
+class TBuffer;
+class TClass;
+class TH2Poly;
+class TMemberInspector;
 
 class AtSpecMATMap : public AtMap {
 

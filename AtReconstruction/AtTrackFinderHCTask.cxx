@@ -7,10 +7,10 @@
 #include <memory>
 
 // FAIRROOT classes
-#include "FairRootManager.h"
-#include "FairRun.h"
-#include "FairRuntimeDb.h"
-#include "FairLogger.h"
+#include <FairRootManager.h>
+#include <FairRun.h>
+#include <FairRuntimeDb.h>
+#include <FairLogger.h>
 
 AtTrackFinderHCTask::AtTrackFinderHCTask() : FairTask("AtTrackFinderHCTask")
 {

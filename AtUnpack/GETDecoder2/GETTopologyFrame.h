@@ -1,9 +1,16 @@
 #ifndef GETTOPOLOGYFRAME
 #define GETTOPOLOGYFRAME
 
+#include <Rtypes.h>
+#include <stdint.h>
+#include <bitset>
+#include <iosfwd>
+
 #include "GETHeaderBase.h"
 
-#include <bitset>
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using std::bitset;
 

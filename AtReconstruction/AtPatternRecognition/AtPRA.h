@@ -9,11 +9,11 @@
 #include "AtRansac.h"
 
 // FairRoot classes
-#include "FairRootManager.h"
-#include "FairLogger.h"
+#include <FairRootManager.h>
+#include <FairLogger.h>
 
 // ROOT
-#include "TVirtualFitter.h"
+#include <TVirtualFitter.h>
 
 namespace AtPATTERN {
 

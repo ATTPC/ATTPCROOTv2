@@ -1,41 +1,32 @@
 #ifndef AtEVENTDRAWTASKPROTO_H
 #define AtEVENTDRAWTASKPROTO_H
 
+#include <Rtypes.h>
+#include <TString.h>
 // FairRoot classes
-#include "FairTask.h"
-#include "FairLogger.h"
+#include <FairTask.h>
 
-// ROOT classes
-#include "TEvePointSet.h"
-#include "TEveGeoShape.h"
-#include "TEveBoxSet.h"
-#include "TClonesArray.h"
-#include "TVector3.h"
-#include "TPaletteAxis.h"
-
-#include "TCanvas.h"
-#include "TH2.h"
-#include "TH1.h"
-#include "TH3.h"
-#include "TGraph.h"
-#include "TH2Poly.h"
-#include "TEveLine.h"
-
-#include "AtEventManagerProto.h"
-#include "AtRawEvent.h"
-#include "AtEvent.h"
-#include "AtProtoEvent.h"
-#include "AtProtoEventAna.h"
-#include "AtHit.h"
-#include "AtTpcProtoMap.h"
-#include "AtMap.h"
-#include "AtProtoQuadrant.h"
-#include "AtPatternEvent.h"
-#include <fstream>
-
-#ifndef __CINT__ // Boost
-#include <boost/multi_array.hpp>
-#endif //__CINT__
+class AtEventManagerProto;
+class AtHit;
+class AtMap;
+class AtRawEvent;
+class TBuffer;
+class TCanvas;
+class TClass;
+class TClonesArray;
+class TEveBoxSet;
+class TEveLine;
+class TEvePointSet;
+class TF1;
+class TGraph;
+class TH1D;
+class TH1F;
+class TH1I;
+class TH2F;
+class TH2Poly;
+class TH3F;
+class TMemberInspector;
+class TPaletteAxis;
 
 class AtEventDrawTaskProto : public FairTask {
 public:

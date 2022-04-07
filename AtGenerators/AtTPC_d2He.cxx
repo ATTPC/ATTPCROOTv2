@@ -1,38 +1,24 @@
 #include "AtTPC_d2He.h"
 
-#include "FairPrimaryGenerator.h"
-#include "FairRootManager.h"
-#include "FairLogger.h"
-#include "FairMCEventHeader.h"
-
-#include "FairIon.h"
-#include "FairParticle.h"
-#include "FairRunSim.h"
-#include "FairRunAna.h"
-
-#include "TDatabasePDG.h"
-#include "TParticlePDG.h"
-#include "TObjArray.h"
-
-#include "TRandom.h"
-#include "TMath.h"
-#include "TLorentzVector.h"
-#include "TVector3.h"
-#include "TGenPhaseSpace.h"
-#include "TVirtualMC.h"
-#include "TParticle.h"
-#include "TClonesArray.h"
-
-#include "FairRunSim.h"
-#include "FairIon.h"
+#include <TMathBase.h>
+#include <stdio.h>
 #include <iostream>
-#include "TParticle.h"
+#include <algorithm>
+#include <cmath>
 
+#include <FairPrimaryGenerator.h>
+#include <FairIon.h>
+#include <FairParticle.h>
+#include <FairRunSim.h>
+#include <TDatabasePDG.h>
+#include <TParticlePDG.h>
+#include <TRandom.h>
+#include <TMath.h>
+#include <TVector3.h>
+#include <TVirtualMC.h>
+#include <TParticle.h>
 #include "AtStack.h"
 #include "AtVertexPropagator.h"
-#include "AtEulerTransformation.h"
-
-#include "TVector3.h"
 
 #define amu 931.494
 

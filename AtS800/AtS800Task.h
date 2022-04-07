@@ -1,14 +1,17 @@
 #ifndef AtS800TASK_H
 #define AtS800TASK_H
 
+#include <Rtypes.h>
 // FAIRROOT classes
-#include "FairTask.h"
-#include "FairLogger.h"
+#include <FairTask.h>
 
 // AtTPCROOT classes
 
-// ROOT classes
-#include "TClonesArray.h"
+class FairLogger;
+class TBuffer;
+class TClass;
+class TClonesArray;
+class TMemberInspector;
 
 class AtS800Task : public FairTask {
 

@@ -1,24 +1,17 @@
 #ifndef __S800CALIBRAtION_HH
 #define __S800CALIBRAtION_HH
 
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <string>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
-#include <map>
+#include <ext/alloc_traits.h>
+#include <Rtypes.h>
+#include <algorithm>
+#include <memory>
+#include <vector>
 
-#include "TSystem.h"
-#include "TEnv.h"
-#include "TMath.h"
-
-#include "S800Settings.h"
 #include "S800Calc.h"
 
 class GTimeOfFlight;
+class S800;
+class S800Settings;
 
 /**Class responsible for calibrating the S800.  Takes a S800 raw data object as input
 and creates a S800Calc object.  This requires a variety of input files that are specfied

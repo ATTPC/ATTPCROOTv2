@@ -1,13 +1,16 @@
 #ifndef __S800_HH
 #define __S800_HH
 
+#include <Rtypes.h>
+#include <string.h>
+#include <TObject.h>
 #include <iostream>
 #include <vector>
-#include "TObject.h"
-#include "TString.h"
+#include <algorithm>
 
-//#include "PacketIDdefs.h"
-#include "S800defs.h"
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using namespace std;
 

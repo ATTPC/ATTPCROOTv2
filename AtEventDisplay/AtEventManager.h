@@ -1,22 +1,18 @@
 #ifndef AtEVENTMANAGER_H
 #define AtEVENTMANAGER_H
 
-#include "TEveEventManager.h"
-#include "FairEventManager.h"
-#include "TGNumberEntry.h"
-#include "TGCanvas.h"
+#include <Rtypes.h>
+#include <TEveEventManager.h>
+#include <FairRunAna.h>
 
-#include "FairRunAna.h"
-#include "FairRootManager.h"
-#include "FairTask.h"
-
-#include "TCanvas.h"
-#include "TFile.h"
-
-#ifndef __CINT__ // Boost
-#include <boost/multi_array.hpp>
-#endif //__CINT__
-
+class FairRootManager;
+class FairTask;
+class TBuffer;
+class TCanvas;
+class TClass;
+class TGNumberEntry;
+class TGTextButton;
+class TMemberInspector;
 class TGListTreeItem;
 
 class AtEventManager : public TEveEventManager {

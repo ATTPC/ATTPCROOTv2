@@ -1,0 +1,34 @@
+[
+    # Mappings for GenVector
+    { include: ["<Math/GenVector/PositionVector2D.h>", "private", "<Math/Point2D.h>", "public"]},
+    { include: ["<Math/GenVector/Cartesian2D.h>", "private", "<Math/Point2D.h>", "public"]},
+    { include: ["<Math/GenVector/Polar2D.h>", "private", "<Math/Point2D.h>", "public"]},
+
+    { include: ["<Math/GenVector/DisplacementVector2D.h>", "private", "<Math/Vector2D.h>", "public"]},
+    { include: ["<Math/GenVector/Cartesian2D.h>", "private", "<Math/Vector2D.h>", "public"]},
+    { include: ["<Math/GenVector/Polar2D.h>", "private", "<Math/Vector2D.h>", "public"]},
+
+    { include: ["<Math/GenVector/PositionVector3D.h>", "private", "<Math/Point3D.h>", "public"]},
+    { include: ["<Math/GenVector/Cartesian3D.h>", "private", "<Math/Point3D.h>", "public"]},
+    { include: ["<Math/GenVector/Polar3D.h>", "private", "<Math/Point3D.h>", "public"]},
+    { include: ["<Math/GenVector/Cylindrical3D.h>", "private", "<Math/Point3D.h>", "public"]},
+    { include: ["<Math/GenVector/CylindricalEta3D.h>", "private", "<Math/Point3D.h>", "public"]},
+
+    { include: ["<Math/GenVector/DisplacementVector3D.h>", "private", "<Math/Vector3D.h>", "public"]},
+    { include: ["<Math/GenVector/Cartesian3D.h>", "private", "<Math/Vector3D.h>", "public"]},
+    { include: ["<Math/GenVector/Polar3D.h>", "private", "<Math/Vector3D.h>", "public"]},
+    { include: ["<Math/GenVector/Cylindrical3D.h>", "private", "<Math/Vector3D.h>", "public"]},
+    { include: ["<Math/GenVector/CylindricalEta3D.h>", "private", "<Math/Vector3D.h>", "public"]},
+
+    { include: ["<Math/GenVector/PxPyPzE4D.h>", "private", "<Math/Vector4D.h>", "public"]},
+    { include: ["<Math/GenVector/PtEtaPhiE4D.h>", "private", "<Math/Vector4D.h>", "public"]},
+    { include: ["<Math/GenVector/PxPyPzM4D.h>", "private", "<Math/Vector4D.h>", "public"]},
+    { include: ["<Math/GenVector/PtEtaPhiM4D.h>", "private", "<Math/Vector4D.h>", "public"]},
+    { include: ["<Math/GenVector/LorentzVector.h>", "private", "<Math/Vector4D.h>", "public"]},
+
+    # Mappings for Rtypes and the private stuff it includes
+    { include: ["<RtypesCore.h>", "private", "<Rtypes.h>", "public"]},
+
+    # Mappings for fairlogger
+    { include: ["\"fairlogger/Logger.h\"", "private", "<FairLogger.h>", "public"]}
+]

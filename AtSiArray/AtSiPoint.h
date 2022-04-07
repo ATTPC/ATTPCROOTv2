@@ -1,13 +1,15 @@
 #ifndef ATSIPOINT_H
 #define ATSIPOINT_H
 
+#include <Rtypes.h>
+#include <TString.h>
+#include <TVector3.h>
+
 #include "AtMCPoint.h"
-#include "AtVertexPropagator.h"
 
-#include "TObject.h"
-#include "TVector3.h"
-
-class AtVertexPropagator;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtSiPoint : public AtMCPoint {
 

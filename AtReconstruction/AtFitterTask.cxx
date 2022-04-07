@@ -1,30 +1,24 @@
 #include "AtFitterTask.h"
 
-// AtTPCROOT classes
-#include "AtEvent.h"
-#include "AtPatternEvent.h"
-#include "AtTrack.h"
-
-// FAIRROOT classes
-#include "FairRootManager.h"
-#include "FairRun.h"
-#include "FairRuntimeDb.h"
-
-// GENFIT2 classes
-#include "Track.h"
-#include "TrackCand.h"
-#include "RKTrackRep.h"
-#include "Exception.h"
-
+#include <FairLogger.h>
+#include <FairTask.h>
+#include <TClonesArray.h>
+#include <fairlogger/Logger.h>
 // STL
 #include <iostream>
+#include <algorithm>
 
-// ROOT classes
-#include "TMatrixDSym.h"
-#include "TMatrixD.h"
-#include "TMath.h"
-#include "TGeoManager.h"
-#include "Math/DistFunc.h"
+#include "AtPatternEvent.h"
+#include "AtTrack.h"
+// FAIRROOT classes
+#include <FairRootManager.h>
+#include <FairRun.h>
+#include <FairRuntimeDb.h>
+// GENFIT2 classes
+#include <Track.h>
+#include "AtDigiPar.h"
+#include "AtFitter.h"
+#include "AtGenfit.h"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

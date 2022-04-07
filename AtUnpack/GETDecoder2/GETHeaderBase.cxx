@@ -1,8 +1,15 @@
 #include "GETHeaderBase.h"
 
-ClassImp(GETHeaderBase)
+#include <cmath> // IWYU pragma: keep
+#include <string.h>
+#include <iostream>
+#include <string>
 
-   GETHeaderBase::GETHeaderBase()
+#include <Rtypes.h>
+
+ClassImp(GETHeaderBase);
+
+GETHeaderBase::GETHeaderBase()
 {
    Clear();
 }

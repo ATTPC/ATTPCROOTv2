@@ -6,7 +6,9 @@
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
 #include "AtTpcGeo.h"
-#include "FairGeoNode.h"
+
+#include <FairGeoSet.h>
+#include <stdio.h>
 
 ClassImp(AtTpcGeo)
 

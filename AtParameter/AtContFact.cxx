@@ -1,11 +1,16 @@
 #include "AtContFact.h"
+
+#include <FairContFact.h>
+#include <TList.h>
+#include <TString.h>
+#include <string.h>
+
 //#include "AtGeoPar.h"
 #include "AtDigiPar.h"
 #include "AtTriggerPar.h"
+#include <FairRuntimeDb.h>
 
-#include "FairRuntimeDb.h"
-
-#include <iostream>
+class FairParSet;
 
 ClassImp(AtContFact)
 

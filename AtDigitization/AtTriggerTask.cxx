@@ -1,19 +1,20 @@
 #include "AtTriggerTask.h"
-#include "AtTrigger.h"
 
-// Fair class header
-#include "FairRootManager.h"
-#include "FairRunAna.h"
-#include "FairRuntimeDb.h"
-
-// STL class headers
-#include <cmath>
+#include <FairTask.h>
+#include <TClonesArray.h>
+#include <fairlogger/Logger.h>
+#include <stddef.h>
 #include <iostream>
-#include <iomanip>
+#include <memory>
 
-#include "TRandom.h"
-#include "TMath.h"
-#include "TF1.h"
+#include "AtTrigger.h"
+// Fair class header
+#include <FairRootManager.h>
+#include <FairRunAna.h>
+#include <FairRuntimeDb.h>
+#include "AtEvent.h"
+#include "AtRawEvent.h"
+#include "AtTriggerPar.h"
 
 AtTriggerTask::AtTriggerTask() : FairTask("AtTriggerTask"), fIsPersistent(kTRUE) {}
 

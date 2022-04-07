@@ -1,10 +1,16 @@
 #ifndef GETLAYEREDFRAME
 #define GETLAYEREDFRAME
 
-#include "GETLayerHeader.h"
-#include "GETBasicFrame.h"
+#include <Rtypes.h>
+#include <iosfwd>
 
-#include "TClonesArray.h"
+#include "GETLayerHeader.h"
+
+class GETBasicFrame;
+class TBuffer;
+class TClass;
+class TClonesArray;
+class TMemberInspector;
 
 class GETLayeredFrame : public GETLayerHeader {
 public:

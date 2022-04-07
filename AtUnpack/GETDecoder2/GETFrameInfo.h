@@ -1,7 +1,12 @@
 #ifndef GETFRAMEINFO
 #define GETFRAMEINFO
 
-#include "TObject.h"
+#include <Rtypes.h>
+#include <TObject.h>
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class GETFrameInfo : public TObject {
 public:

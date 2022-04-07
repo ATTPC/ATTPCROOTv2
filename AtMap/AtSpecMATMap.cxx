@@ -1,13 +1,19 @@
 #include "AtSpecMATMap.h"
 
-#include "FairLogger.h"
-
-#include "TH2Poly.h"
-#include "TCanvas.h"
-#include "TStyle.h"
-
-#include <cassert>
+#include <TAxis.h>
+#include <math.h>
+#include <boost/multi_array/base.hpp>
+#include <boost/multi_array/extent_gen.hpp>
+#include <boost/multi_array/multi_array_ref.hpp>
+#include <boost/multi_array/subarray.hpp>
+#include <Math/Point2D.h>
+#include <fstream> // IWYU pragma: keep
 #include <iostream>
+#include <algorithm>
+#include <vector>
+
+#include <TH2Poly.h>
+#include <Rtypes.h>
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

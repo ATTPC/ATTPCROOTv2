@@ -1,8 +1,16 @@
 #ifndef AtSIMULATEDLINE_H
 #define AtSIMULATEDLINE_H
 
+#include <Math/Vector3Dfwd.h>
+#include <Rtypes.h>
+#include <Math/Vector3D.h>
+#include <cstddef>
+
 #include "AtSimulatedPoint.h"
-#include "Math/Vector3D.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtSimulatedLine : public AtSimulatedPoint {
 

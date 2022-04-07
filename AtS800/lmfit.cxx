@@ -8,11 +8,9 @@
  * Author:   Shumpei Noji
  */
 
-#include "lmmin.h"
-#include "lmcurve.h"
-#include "lmfit.h"
-#include <stdio.h>
 #include <math.h>
+
+#include "lmfit.h"
 
 double sechs(double x, const double *p)
 {

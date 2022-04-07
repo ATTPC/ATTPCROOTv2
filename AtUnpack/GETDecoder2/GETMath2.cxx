@@ -11,6 +11,7 @@
 //      Adopted to the new version
 // =================================================
 
+#include <Rtypes.h>
 #include <cmath>
 
 #include "GETMath2.h"

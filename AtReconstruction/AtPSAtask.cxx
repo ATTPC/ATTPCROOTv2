@@ -1,7 +1,7 @@
 #include "AtPSAtask.h"
 
 // FairRoot Classes
-#include "FairLogger.h"
+#include <FairLogger.h>
 
 // Root Classes
 #include "AtEvent.h"
@@ -9,7 +9,7 @@
 #include "AtRawEvent.h"
 
 // AtTPCRoot Classes
-#include "TClonesArray.h"
+#include <TClonesArray.h>
 
 // stdlib headers
 #include <iostream>

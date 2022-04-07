@@ -1,5 +1,12 @@
 #include "AtTrack.h"
-#include "Math/Point3D.h"
+
+#include <TMath.h>
+#include <TMathBase.h>
+#include <math.h>
+#include <iterator>
+#include <numeric>
+
+#include <Rtypes.h>
 
 ClassImp(AtTrack);
 

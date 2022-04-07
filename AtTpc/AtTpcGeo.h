@@ -8,7 +8,13 @@
 #ifndef NEWDETECTORGEO_H
 #define NEWDETECTORGEO_H
 
-#include "FairGeoSet.h"
+#include <Rtypes.h>
+#include <TString.h>
+#include <FairGeoSet.h>
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtTpcGeo : public FairGeoSet {
 

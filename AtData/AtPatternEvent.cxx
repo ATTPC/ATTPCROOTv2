@@ -1,5 +1,7 @@
 #include "AtPatternEvent.h"
 
+#include <Rtypes.h>
+
 ClassImp(AtPatternEvent);
 
 AtPatternEvent::AtPatternEvent() : TNamed("AtPatternEvent", "Pattern Recognition Event") {}

@@ -1,12 +1,13 @@
 #ifndef ATFILTERTASK_H
 #define ATFILTERTASK_H
 
+#include <TString.h>
 // FairRoot classes
-#include "FairTask.h"
+#include <FairTask.h>
+#include <Rtypes.h>
 
 // ATTPCROOT classes;
 class AtFilter;
-
 // ROOT classes
 class TClonesArray;
 

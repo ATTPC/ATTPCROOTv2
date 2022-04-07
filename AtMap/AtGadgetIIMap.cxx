@@ -1,12 +1,20 @@
 #include "AtGadgetIIMap.h"
 
-#include "TCanvas.h"
-#include "TH2Poly.h"
-#include "TStyle.h"
-
+#include <TString.h>
+#include <stdlib.h>
+#include <boost/multi_array/base.hpp>
+#include <boost/multi_array/extent_gen.hpp>
+#include <boost/multi_array/multi_array_ref.hpp>
+#include <boost/multi_array/subarray.hpp>
+#include <Math/Point2D.h>
 #include <iostream>
-#include <fstream>
-#include <cassert>
+#include <fstream> // IWYU pragma: keep
+#include <algorithm>
+#include <string>
+#include <vector>
+
+#include <TH2Poly.h>
+#include <Rtypes.h>
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

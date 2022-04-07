@@ -1,10 +1,14 @@
 #ifndef AtSIARRAYGEOPAR_H
 #define AtSIARRAYGEOPAR_H
 
-#include "FairParGenericSet.h"
+#include <Rtypes.h>
+#include <FairParGenericSet.h>
 
 class TObjArray;
 class FairParamList;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtSiArrayGeoPar : public FairParGenericSet {
 public:

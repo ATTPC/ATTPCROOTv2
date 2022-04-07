@@ -14,7 +14,7 @@
 // -------------------------------------------------------------------------
 #include "Pythia6Generator.h"
 
-#include "FairPrimaryGenerator.h"
+#include <FairPrimaryGenerator.h>
 
 #include <iostream>
 #include <cstdio>

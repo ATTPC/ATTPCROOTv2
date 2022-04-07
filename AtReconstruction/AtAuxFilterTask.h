@@ -8,13 +8,15 @@
  */
 
 // FairRoot classes
-#include "FairTask.h"
+#include <FairTask.h>
+// ROOT classes
+#include <TString.h>
+#include <Rtypes.h>
+#include <string>
+#include <vector>
 
 // ATTPCROOT classes;
 class AtFilter;
-
-// ROOT classes
-#include "TString.h"
 class TClonesArray;
 
 using stringVec = std::vector<std::string>;

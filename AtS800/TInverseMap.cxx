@@ -1,13 +1,16 @@
 
 #include <TInverseMap.h>
-
-#include <fstream>
-#include <iostream>
-#include <cstdio>
 #include <unistd.h>
-#include <sstream>
-
 #include <TSpline.h>
+#include <math.h>
+#include <string.h>
+#include <fstream> // IWYU pragma: keep
+#include <iostream>
+#include <sstream> // IWYU pragma: keep
+#include <cstdio>
+#include <cstdlib>
+#include <memory>
+#include <utility>
 
 TInverseMap *TInverseMap::fInverseMap = 0;
 

@@ -12,14 +12,13 @@
 // -------------------------------------------------------------------------
 
 #include "AtPipe.h"
-#include "TList.h"
-#include "TObjArray.h"
 
-#include "TGeoPcon.h"
-#include "TGeoTube.h"
-#include "TGeoMaterial.h"
-#include "TGeoMedium.h"
-#include "TGeoManager.h"
+#include <FairModule.h>
+#include <TGeoVolume.h>
+#include <TGeoPcon.h>
+#include <TGeoMaterial.h>
+#include <TGeoMedium.h>
+#include <TGeoManager.h>
 
 AtPipe::~AtPipe() {}
 AtPipe::AtPipe() : FairModule() {}

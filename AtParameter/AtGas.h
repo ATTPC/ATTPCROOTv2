@@ -1,11 +1,15 @@
 #ifndef AtGAS_H
 #define AtGAS_H
 
+#include <Rtypes.h>
 // ROOT classes
-#include "TString.h"
-#include "TSystem.h"
+#include <TString.h>
 
-//#include "Rtypes.h"
+class TBuffer;
+class TClass;
+class TMemberInspector;
+
+//#include <Rtypes.h>
 
 class AtGas {
 public:

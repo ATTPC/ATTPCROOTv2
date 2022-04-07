@@ -4,16 +4,17 @@
 // -------------------------------------------------------------------------
 
 #include "AtTPCGammaDummyGenerator.h"
-#include "FairPrimaryGenerator.h"
 
-#include "FairRunSim.h"
-#include "FairLogger.h"
+#include <math.h>
+#include <stdio.h>
+#include <FairPrimaryGenerator.h>
+#include <TDatabasePDG.h>
+#include <TParticlePDG.h>
+#include <TRandom.h>
+#include <TMath.h>
+#include <FairLogger.h>
+#include <memory>
 
-#include "TDatabasePDG.h"
-#include "TParticlePDG.h"
-
-#include "TRandom.h"
-#include "TMath.h"
 AtTPCGammaDummyGenerator::AtTPCGammaDummyGenerator()
    : fPDGType(0), fMult(0), fPDGMass(0), fPtMin(0), fPtMax(0), fPhiMin(0), fPhiMax(0), fEtaMin(0), fEtaMax(0), fYMin(0),
      fYMax(0), fPMin(0), fPMax(0), fThetaMin(0), fThetaMax(0), fX(0), fY(0), fZ(0), fX1(0), fY1(0), fZ1(0), fX2(0),

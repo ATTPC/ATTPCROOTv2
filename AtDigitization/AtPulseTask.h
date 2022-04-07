@@ -8,7 +8,12 @@
 #ifndef AtPulseTask_H
 #define AtPulseTask_H
 
-#include "FairTask.h"
+#include <Rtypes.h>
+#include <FairTask.h>
+#include <cstddef>
+#include <iterator>
+#include <map>
+#include <memory>
 
 class TClonesArray;
 class AtDigiPar;
@@ -18,6 +23,9 @@ class TF1;
 class TH1F;
 class TH2Poly;
 class AtSimulatedPoint;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using AtMapPtr = std::shared_ptr<AtMap>;
 

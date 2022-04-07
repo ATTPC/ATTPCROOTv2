@@ -1,5 +1,9 @@
 #include "S800TSettings.h"
 
+#include <TString.h>
+#include <cstdio>
+#include <utility>
+
 S800TSettings::S800TSettings()
 {
 

@@ -1,35 +1,25 @@
 #include "AtSiArray.h"
 
-#include "AtSiArrayGeo.h"
-#include "AtSiArrayGeoPar.h"
+#include <FairDetector.h>
+#include <TLorentzVector.h>
+#include <TVector3.h>
+#include <TVirtualMCStack.h>
+#include <stddef.h>
+#include <FairVolume.h>
+#include <FairRootManager.h>
+#include <FairRun.h>
+#include <FairRuntimeDb.h>
+#include <TClonesArray.h>
+#include <TVirtualMC.h>
+#include <TGeoManager.h>
+#include <FairLogger.h>
+#include <iostream>
 
+#include "AtSiArrayGeoPar.h"
 #include "AtSiPoint.h"
-#include "AtVertexPropagator.h"
 #include "AtDetectorList.h"
 #include "AtStack.h"
 
-#include "FairVolume.h"
-#include "FairGeoVolume.h"
-#include "FairGeoNode.h"
-#include "FairRootManager.h"
-#include "FairGeoLoader.h"
-#include "FairGeoInterface.h"
-#include "FairRun.h"
-#include "FairRuntimeDb.h"
-
-#include "TClonesArray.h"
-#include "TVirtualMC.h"
-#include "TGeoManager.h"
-#include "TGeoBBox.h"
-#include "TGeoCompositeShape.h"
-#include "TGeoTube.h"
-#include "TGeoMaterial.h"
-#include "TGeoMedium.h"
-#include "TParticle.h"
-#include "TRandom.h"
-#include "TRandom3.h"
-
-#include <iostream>
 using std::cout;
 using std::endl;
 

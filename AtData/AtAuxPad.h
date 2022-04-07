@@ -9,8 +9,15 @@
 #ifndef AtAUXPAD_H
 #define AtAUXPAD_H
 
+#include <Rtypes.h>
 #include <string>
+#include <utility>
+
 #include "AtPad.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtAuxPad : public AtPad {
 protected:

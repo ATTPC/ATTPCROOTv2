@@ -1,13 +1,42 @@
 #include "AtGenfit.h"
 
-// FairRoot classes
-#include "FairRuntimeDb.h"
-#include "FairRun.h"
-#include "FairRunAna.h"
+#include <AbsKalmanFitter.h>
+#include <AbsMeasurement.h>
+#include <ConstField.h>
+#include <Exception.h>
+#include <FieldManager.h>
+#include <FitStatus.h>
+#include <KalmanFitterRefTrack.h>
+#include <MaterialEffects.h>
+#include <MeasuredStateOnPlane.h>
+#include <MeasurementFactory.h>
+#include <MeasurementProducer.h>
+#include <RKTrackRep.h>
+#include <TClonesArray.h>
+#include <TGeoMaterial.h>
+#include <TGeoMaterialInterface.h>
+#include <TGeoMedium.h>
+#include <TGeoVolume.h>
+#include <TMath.h>
+#include <TMatrixDSymfwd.h>
+#include <TMatrixDfwd.h>
+#include <TMatrixT.h>
+#include <TMatrixTSym.h>
+#include <TObjArray.h>
+#include <TObject.h>
+#include <TROOT.h>
+#include <TVector3.h>
+#include <TrackCand.h>
+#include <Math/Point3D.h>
+#include <algorithm>
+#include <iostream>
+#include <tuple>
 
-#include "TGeoManager.h"
-
-#include "TDatabasePDG.h"
+#include <TGeoManager.h>
+#include <TDatabasePDG.h>
+#include "AtHitCluster.h"
+#include "AtSpacePointMeasurement.h"
+#include "AtTrack.h"
 
 AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile,
                              Float_t gasMediumDensity, Int_t minit, Int_t maxit)

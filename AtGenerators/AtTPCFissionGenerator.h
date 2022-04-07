@@ -6,19 +6,16 @@
 #ifndef AtTPCFISSIONGENERAtOR_H
 #define AtTPCFISSIONGENERAtOR_H
 
-#include "FairGenerator.h"
-#include "FairIon.h"
-
-#include <iostream>
-
-#include "TTree.h"
-#include "TTreeReader.h"
-
-#include <fstream>
-#include <map>
+#include <Rtypes.h>
+#include <TString.h>
+#include <FairGenerator.h>
 
 class FairPrimaryGenerator;
 class TDatabasePDG;
+class TBuffer;
+class TClass;
+class TMemberInspector;
+class TTree;
 
 class AtTPCFissionGenerator : public FairGenerator {
 

@@ -10,10 +10,10 @@
 // -------------------------------------------------------------------------
 
 #include <math.h>
-#include "TROOT.h"
+#include <TROOT.h>
 #include "Pythia.h"
-#include "FairPrimaryGenerator.h"
-//#include "FairGenerator.h"
+#include <FairPrimaryGenerator.h>
+//#include <FairGenerator.h>
 
 #include "Pythia8Generator.h"
 

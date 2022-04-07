@@ -1,5 +1,10 @@
 #include "GETBasicFrameHeader.h"
 
+#include <string.h>
+#include <iostream>
+
+#include <Rtypes.h>
+
 ClassImp(GETBasicFrameHeader)
 
    GETBasicFrameHeader::GETBasicFrameHeader()

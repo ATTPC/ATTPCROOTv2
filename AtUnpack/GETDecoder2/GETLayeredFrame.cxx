@@ -1,5 +1,10 @@
 #include "GETLayeredFrame.h"
 
+#include <TClonesArray.h>
+#include <stddef.h>
+
+#include "GETBasicFrame.h"
+
 GETLayeredFrame::GETLayeredFrame()
 {
    fFrames = NULL;

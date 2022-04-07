@@ -7,14 +7,15 @@
 #ifndef AtTPCIonPhaseSpace_H
 #define AtTPCIonPhaseSpace_H
 
-#include "FairGenerator.h"
-#include "FairIon.h"
-
-#include <iostream>
-#include <map>
+#include <Rtypes.h>
+#include <FairGenerator.h>
+#include <vector>
 
 class FairPrimaryGenerator;
-class AtTPCIonGenerator;
+class FairIon;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtTPCIonPhaseSpace : public FairGenerator {
 

@@ -9,12 +9,15 @@
 #ifndef ATAPOLLODIGITIZER_H
 #define ATAPOLLODIGITIZER_H
 
-#include "FairTask.h"
-#include "AtApollo.h"
-#include "AtApolloCrystalCalData.h"
-#include "AtApolloPoint.h"
-#include "TClonesArray.h"
-#include "string"
+#include <Rtypes.h>
+// Needed for streamer generation
+#include <TClonesArray.h> // IWYU pragma: keep
+#include <FairTask.h>
+
+class AtApolloCrystalCalData;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtApolloDigitizer : public FairTask {
 

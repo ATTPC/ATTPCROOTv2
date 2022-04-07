@@ -1,5 +1,7 @@
 #include "AtSiArrayGeo.h"
-#include "FairGeoNode.h"
+
+#include <FairGeoSet.h>
+#include <stdio.h>
 
 ClassImp(AtSiArrayGeo)
 

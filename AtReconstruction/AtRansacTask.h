@@ -2,8 +2,8 @@
 #define AtRANSACTASK_H
 
 // FAIRROOT classes
-#include "FairTask.h"
-#include "FairLogger.h"
+#include <FairTask.h>
+#include <FairLogger.h>
 
 // AtTPCROOT classes
 #include "AtEvent.h"
@@ -15,7 +15,7 @@
 #include "AtLmedsMod.h"
 
 // ROOT classes
-#include "TClonesArray.h"
+#include <TClonesArray.h>
 
 class AtRansacTask : public FairTask {
 private:

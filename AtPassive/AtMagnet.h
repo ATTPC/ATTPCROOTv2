@@ -14,9 +14,12 @@
 #ifndef MAGNET_H
 #define MAGNET_H
 
-#include "FairModule.h" // for FairModule
-#include "Rtypes.h"     // for AtMagnet::Class, Bool_t, etc
-#include <string>       // for string
+#include <FairModule.h> // for FairModule
+#include <Rtypes.h>     // for AtMagnet::Class, Bool_t, etc
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtMagnet : public FairModule {
 public:

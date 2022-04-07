@@ -7,7 +7,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
-#include "FairLogger.h"
+#include <FairLogger.h>
 
 #include "AtCoreSpecMAT.h"
 

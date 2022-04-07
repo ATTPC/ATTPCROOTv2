@@ -2,9 +2,9 @@
 #include "AtRansacTask.h"
 
 // FAIRROOT classes
-#include "FairRootManager.h"
-#include "FairRun.h"
-#include "FairRuntimeDb.h"
+#include <FairRootManager.h>
+#include <FairRun.h>
+#include <FairRuntimeDb.h>
 
 #include <iostream>
 

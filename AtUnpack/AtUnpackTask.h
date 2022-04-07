@@ -6,17 +6,19 @@
 #ifndef _ATUNPACKTASK_H_
 #define _ATUNPACKTASK_H_
 
-#include "FairTask.h"
-
-#include "AtUnpacker.h"
-
-#include "TClonesArray.h"
-
+#include <Rtypes.h>
+#include <FairTask.h>
+#include <TClonesArray.h>
 #include <memory>
 #include <string>
 
+#include "AtUnpacker.h"
+
 class AtRawEvent;
 class AtMap;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using mapPtr = std::shared_ptr<AtMap>;
 using unpackerPtr = std::unique_ptr<AtUnpacker>;

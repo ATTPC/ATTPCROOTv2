@@ -8,17 +8,21 @@
 #ifndef AtTPC_H
 #define AtTPC_H
 
-#include "FairDetector.h"
-
-#include "TVector3.h"
-#include "TLorentzVector.h"
-
-#include "AtVertexPropagator.h"
+#include <Rtypes.h>
+#include <TString.h>
+#include <FairDetector.h>
+#include <TVector3.h>
+#include <TLorentzVector.h>
+#include <string>
+#include <utility>
 
 class AtMCPoint;
 class FairVolume;
 class TClonesArray;
-class AtVertexPropagator;
+class TBuffer;
+class TClass;
+class TList;
+class TMemberInspector;
 
 class AtTpc : public FairDetector {
 private:

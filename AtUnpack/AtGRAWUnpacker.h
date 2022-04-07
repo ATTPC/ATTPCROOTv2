@@ -11,15 +11,23 @@
 #ifndef _ATGRAWUNPACKER_H_
 #define _ATGRAWUNPACKER_H_
 
-#include "AtUnpacker.h"
-#include "AtPedestal.h"
-#include "GETDecoder2.h"
-
+#include <Rtypes.h>
+#include <TString.h>
 #include <mutex>
 #include <vector>
+#include <memory>
+#include <string>
+
+#include "AtUnpacker.h"
 
 class GETLayeredFrame;
 class GETBasicFrame;
+class AtPedestal;
+class AtRawEvent;
+class GETDecoder2;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using GETDecoder2Ptr = std::unique_ptr<GETDecoder2>;
 using AtPedestalPtr = std::unique_ptr<AtPedestal>;

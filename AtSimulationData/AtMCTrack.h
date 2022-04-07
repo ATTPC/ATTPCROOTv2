@@ -20,14 +20,16 @@
 #ifndef AtMCTrack_H
 #define AtMCTrack_H 1
 
-#include "TObject.h"        // for TObject
-#include "AtDetectorList.h" // for DetectorId
-#include "Rtypes.h"         // for Double_t, Int_t, Double32_t, etc
-#include "TLorentzVector.h" // for TLorentzVector
-#include "TMath.h"          // for Sqrt
-#include "TVector3.h"       // for TVector3
+#include <TObject.h>        // for TObject
+#include <Rtypes.h>         // for Double_t, Int_t, Double32_t, etc
+#include <TLorentzVector.h> // for TLorentzVector
+#include <TMath.h>          // for Sqrt
+#include <TVector3.h>       // for TVector3
 
 class TParticle;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtMCTrack : public TObject {
 

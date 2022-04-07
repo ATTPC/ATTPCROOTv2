@@ -20,16 +20,18 @@
 
 #include "AtGeoCave.h"
 
-#include "FairGeoBasicShape.h" // for FairGeoBasicShape
-#include "FairGeoMedia.h"      // for FairGeoMedia
-#include "FairGeoMedium.h"     // for FairGeoMedium
-#include "FairGeoNode.h"       // for FairGeoNode, etc
-#include "FairGeoShapes.h"     // for FairGeoShapes
-
-#include "TList.h" // for TList
-
 #include <string.h> // for strcmp
+#include <FairGeoSet.h>
+#include <Rtypes.h>
+#include <TString.h>
 #include <iostream> // for cout
+
+#include <FairGeoBasicShape.h> // for FairGeoBasicShape
+#include <FairGeoMedia.h>      // for FairGeoMedia
+#include <FairGeoMedium.h>     // for FairGeoMedium
+#include <FairGeoNode.h>       // for FairGeoNode, etc
+#include <FairGeoShapes.h>     // for FairGeoShapes
+#include <TList.h>             // for TList
 
 using namespace std;
 ClassImp(AtGeoCave)

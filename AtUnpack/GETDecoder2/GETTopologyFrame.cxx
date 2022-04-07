@@ -1,5 +1,10 @@
 #include "GETTopologyFrame.h"
 
+#include <string.h>
+#include <iostream>
+
+#include <Rtypes.h>
+
 ClassImp(GETTopologyFrame)
 
    GETTopologyFrame::GETTopologyFrame()

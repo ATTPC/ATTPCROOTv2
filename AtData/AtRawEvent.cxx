@@ -6,10 +6,8 @@
  *   Edited by Adam Anthony 2/17/2020                                *
  *********************************************************************/
 
+#include <FairLogger.h>
 #include <iostream>
-#include <iomanip>
-
-#include "FairLogger.h"
 
 #include "AtRawEvent.h"
 #include "AtPad.h"

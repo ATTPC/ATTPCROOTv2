@@ -1,5 +1,10 @@
 #include "AtProtoEvent.h"
 
+#include <stddef.h>
+#include <algorithm>
+
+#include <Rtypes.h>
+
 ClassImp(AtProtoEvent);
 
 AtProtoEvent::AtProtoEvent() : TNamed("AtProtoEvent", "Proto Event container") {}

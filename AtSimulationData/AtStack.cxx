@@ -13,21 +13,24 @@
 
 #include "AtStack.h"
 
-#include "FairDetector.h"    // for FairDetector
-#include "FairLink.h"        // for FairLink
-#include "FairMCPoint.h"     // for FairMCPoint
-#include "AtMCTrack.h"       // for AtMCTrack
-#include "FairRootManager.h" // for FairRootManager
-#include "FairLogger.h"      // for FairLogger, MESSAGE_ORIGIN
+#include <FairGenericStack.h>
+#include <Rtypes.h>
+#include <TMCProcess.h>
+#include <FairDetector.h>    // for FairDetector
+#include <FairLink.h>        // for FairLink
+#include <FairMCPoint.h>     // for FairMCPoint
+#include <FairRootManager.h> // for FairRootManager
+#include <FairLogger.h>
+#include <TClonesArray.h>   // for TClonesArray
+#include <TIterator.h>      // for TIterator
+#include <TLorentzVector.h> // for TLorentzVector
+#include <TParticle.h>      // for TParticle
+#include <TRefArray.h>      // for TRefArray
+#include <iostream>         // for operator<<, etc
+#include <iterator>
+#include <algorithm>
 
-#include "TClonesArray.h"   // for TClonesArray
-#include "TIterator.h"      // for TIterator
-#include "TLorentzVector.h" // for TLorentzVector
-#include "TParticle.h"      // for TParticle
-#include "TRefArray.h"      // for TRefArray
-
-#include <stddef.h> // for NULL
-#include <iostream> // for operator<<, etc
+#include "AtMCTrack.h" // for AtMCTrack
 
 using std::cout;
 using std::endl;
@@ -108,7 +111,7 @@ TParticle *AtStack::PopNextTrack(Int_t &iTrack)
    // If end of stack: Return empty pointer
    if (fStack.empty()) {
       iTrack = -1;
-      return NULL;
+      return nullptr;
    }
 
    // If not, get next particle from stack
@@ -117,7 +120,7 @@ TParticle *AtStack::PopNextTrack(Int_t &iTrack)
 
    if (!thisParticle) {
       iTrack = 0;
-      return NULL;
+      return nullptr;
    }
 
    fCurrentTrack = thisParticle->GetStatusCode();
@@ -249,7 +252,7 @@ void AtStack::UpdateTrackIndex(TRefArray *detList)
       fDetIter->Reset();
    }
 
-   FairDetector *det = NULL;
+   FairDetector *det = nullptr;
    while ((det = (FairDetector *)fDetIter->Next())) {
 
       // --> Get hit collections from detector

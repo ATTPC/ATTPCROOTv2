@@ -1,8 +1,9 @@
 #include "AtEulerTransformation.h"
 
-#include "TMath.h"
-
+#include <math.h>
 #include <iostream>
+
+#include <Rtypes.h>
 
 AtEulerTransformation::AtEulerTransformation()
 {

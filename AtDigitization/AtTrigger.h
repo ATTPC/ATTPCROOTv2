@@ -1,24 +1,18 @@
 #ifndef AtTrigger_H
 #define AtTrigger_H
 
-#include <fstream>
-#include <iostream>
-#include <limits>
-#include <algorithm> //std::min
+#include <Rtypes.h>
+#include <TObject.h>
+#include <TString.h>
 
-#include "TObject.h"
-#include "TString.h"
-#include "TClonesArray.h"
-#include "TMath.h"
-#include "TClonesArray.h"
-#include "TStyle.h"
-#include "TFileCollection.h"
-#include "TError.h"
-#include "TMinuit.h"
-#include "AtRawEvent.h"
-#include "AtEvent.h"
 #include "AtHit.h"
-#include "TMatrixD.h"
+
+class AtEvent;
+class AtPad;
+class AtRawEvent;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

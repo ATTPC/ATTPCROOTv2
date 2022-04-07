@@ -2,8 +2,8 @@
 #ifndef _AtDECODERSpecMATTASK_H_
 #define _AtDECODERSpecMATTASK_H_
 
-#include "FairLogger.h"
-#include "FairTask.h"
+#include <FairLogger.h>
+#include <FairTask.h>
 
 #include "AtCoreSpecMAT.h"
 #include "AtPedestal.h"
@@ -13,8 +13,8 @@
 #include "AtDigiPar.h"
 
 // ROOT classes
-#include "TClonesArray.h"
-#include "TString.h"
+#include <TClonesArray.h>
+#include <TString.h>
 
 // STL
 #include <vector>

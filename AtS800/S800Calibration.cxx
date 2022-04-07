@@ -1,17 +1,18 @@
+#include <TEnv.h>
+#include <TError.h>
+#include <TMath.h>
+#include <TString.h>
 #include <iostream>
-#include <fstream>
 #include <cmath>
-#include <cstdio>
-#include <cstdlib>
-#include <iomanip>
 
 #include "S800Calibration.h"
 #include "S800.h"
 #include "S800defs.h"
-
 #include "lmcurve.h"
 #include "lmmin.h"
 #include "lmfit.h"
+#include "S800Settings.h"
+
 using namespace std;
 
 S800Calibration::S800Calibration()

@@ -1,25 +1,30 @@
 #ifndef ATGENFIT_H
 #define ATGENFIT_H
 
+#include <Rtypes.h>
+#include <Track.h>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "AtFitter.h"
 
-#include "AtHit.h"
-#include "AtHitCluster.h"
-#include "AtSpacePointMeasurement.h"
+class AtHitCluster;
+class AtTrack;
+class TBuffer;
+class TClass;
+class TClonesArray;
+class TMemberInspector;
 
-// GENFIT2 classes
-#include "AbsKalmanFitter.h"
-#include "KalmanFitterRefTrack.h"
-#include "KalmanFitter.h"
-#include "DAF.h"
-#include "ConstField.h"
-#include "FieldManager.h"
-#include "MaterialEffects.h"
-#include "TGeoMaterialInterface.h"
-#include "MeasurementFactory.h"
-#include "MeasurementProducer.h"
-#include "EventDisplay.h"
-#include "TrackPoint.h"
+namespace genfit {
+class AbsKalmanFitter;
+class AbsMeasurement;
+class AtSpacepointMeasurement;
+template <class hit_T, class measurement_T>
+class MeasurementProducer;
+template <class measurement_T>
+class MeasurementFactory;
+} // namespace genfit
 
 //#include "GFRaveVertexFactory.h"
 

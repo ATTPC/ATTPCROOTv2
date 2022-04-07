@@ -1,5 +1,11 @@
 #include "GETBasicFrame.h"
 
+#include <stdint.h>
+#include <string.h>
+#include <istream>
+
+#include "GETHeaderBase.h"
+
 GETBasicFrame::GETBasicFrame()
 {
    Clear();

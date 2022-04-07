@@ -6,9 +6,14 @@
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
 #include "AtApolloContFact.h"
-#include "FairRuntimeDb.h"
 
-#include <iostream>
+#include <FairContFact.h>
+#include <TString.h>
+#include <stddef.h>
+
+#include <FairRuntimeDb.h>
+
+class FairParSet;
 
 ClassImp(AtApolloContFact)
 

@@ -19,12 +19,18 @@
 #ifndef ATSPACEPOINTMEASUREMENT
 #define ATSPACEPOINTMEASUREMENT
 
-#include "SpacepointMeasurement.h"
-#include "TrackCandHit.h"
+#include <Rtypes.h>
 
-#include "AtHitCluster.h"
+#include "SpacepointMeasurement.h"
+
+class AtHitCluster;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 namespace genfit {
+class AbsMeasurement;
+class TrackCandHit;
 
 /** @brief Class for a spacepoint measurement which can be created
  *         from STHitCluster via the MeasurementFactory.

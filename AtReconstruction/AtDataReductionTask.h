@@ -10,7 +10,9 @@
  *
  */
 
-#include "FairTask.h"
+#include <TString.h>
+#include <FairTask.h>
+#include <Rtypes.h>
 #include <type_traits>
 
 class AtRawEvent;

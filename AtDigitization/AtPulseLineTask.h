@@ -8,17 +8,18 @@
 #ifndef AtPULSELINETASK_H
 #define AtPULSELINETASK_H
 
+#include <Rtypes.h>
+#include <map>
+#include <vector>
+
 #include "AtPulseTask.h"
 #include "Math/Vector3Dfwd.h"
 
-class TClonesArray;
-class AtDigiPar;
-class AtMap;
-class AtRawEvent;
 class AtSimulatedLine;
-class TF1;
-class TH1F;
-class TH2Poly;
+class AtSimulatedPoint;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtPulseLineTask : public AtPulseTask {
 

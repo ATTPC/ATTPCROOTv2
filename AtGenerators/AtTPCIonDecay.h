@@ -1,15 +1,17 @@
 #ifndef AtTPCIonDecay_H
 #define AtTPCIonDecay_H
 
-#include "FairGenerator.h"
-#include "FairIon.h"
-#include "FairParticle.h"
-
-#include <iostream>
-#include <map>
+#include <Rtypes.h>
+#include <FairGenerator.h>
+#include <vector>
 
 class FairPrimaryGenerator;
-class AtTPCIonGenerator;
+class FairIon;
+class FairParticle;
+class TBuffer;
+class TClass;
+class TMemberInspector;
+class TString;
 
 class AtTPCIonDecay : public FairGenerator {
 

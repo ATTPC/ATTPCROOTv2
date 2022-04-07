@@ -6,13 +6,22 @@
  *********************************************************************/
 
 #include "AtTpcProtoMap.h"
-#include "TCanvas.h"
-#include "TKey.h"
-#include "TMultiGraph.h"
-#include "TStyle.h"
 
+#include <TCollection.h>
+#include <TDirectory.h>
+#include <TFile.h>
+#include <TH2Poly.h>
+#include <stdlib.h>
+#include <Math/Point2D.h>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
+#include <memory>
+#include <utility>
+
+#include <TKey.h>
+#include <TMultiGraph.h>
+#include <Rtypes.h>
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

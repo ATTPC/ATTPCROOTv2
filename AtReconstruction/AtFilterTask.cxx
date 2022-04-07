@@ -1,17 +1,23 @@
 #include "AtFilterTask.h"
 
-// FairRoot Classes
-#include "FairLogger.h"
+#include <FairRootManager.h>
+#include <FairTask.h>
+#include <fairlogger/Logger.h>
+// stdlib headers
+#include <iostream>
+#include <map>
+#include <memory>
+#include <utility>
+#include <vector>
 
 // Root Classes
 #include "AtFilter.h"
 #include "AtRawEvent.h"
-
 // AtTPCRoot Classes
-#include "TClonesArray.h"
+#include <TClonesArray.h>
+#include "AtAuxPad.h"
 
-// stdlib headers
-#include <iostream>
+class AtPad;
 
 AtFilterTask::AtFilterTask(AtFilter *filter)
    : fFilter(filter), fIsPersistent(false), fFilterAux(false), fInputBranchName("AtRawEvent"),

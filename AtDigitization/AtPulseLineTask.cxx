@@ -1,31 +1,23 @@
 #include "AtPulseLineTask.h"
 
-#include "AtDigiPar.h"
-#include "AtHit.h"
+#include <Math/Vector3Dfwd.h>
+#include <TAxis.h>
+#include <fairlogger/Logger.h>
+#include <Math/Vector3D.h>
+#include <algorithm>
+#include <memory>
+#include <numeric>
+#include <utility>
+
 #include "AtMap.h"
-#include "AtPad.h"
-#include "AtRawEvent.h"
 #include "AtSimulatedLine.h"
 #include "AtMCPoint.h"
-#include "AtVertexPropagator.h"
-
-// Fair class header
-#include "FairRootManager.h"
-#include "FairRunAna.h"
-#include "FairRuntimeDb.h"
-
-// STL class headers
-#include <cmath>
-#include <iostream>
-#include <iomanip>
-
-#include "Math/Vector3D.h"
-#include "TClonesArray.h"
-#include "TF1.h"
-#include "TH1.h"
-#include "TH2Poly.h"
-#include "TMath.h"
-#include "TRandom.h"
+#include <TClonesArray.h>
+#include <TH1.h>
+#include <TH2Poly.h>
+#include <TMath.h>
+#include <TRandom.h>
+#include "AtSimulatedPoint.h"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

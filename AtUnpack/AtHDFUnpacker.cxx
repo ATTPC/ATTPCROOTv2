@@ -2,13 +2,24 @@
  *
  *********************************************************************/
 
+#include <H5Gpublic.h>
+#include <TString.h>
+#include <fairlogger/Logger.h>
+#include <H5Ppublic.h>
 #include <iostream>
-
-#include "FairLogger.h"
+#include <algorithm>
+#include <cstdint>
+#include <memory>
+#include <type_traits>
+#include <utility>
 
 #include "AtHDFUnpacker.h"
 #include "AtMap.h"
 #include "AtRawEvent.h"
+#include "AtAuxPad.h"
+#include "AtPad.h"
+#include "PadReference.h"
+#include <Rtypes.h>
 
 ClassImp(AtHDFUnpacker);
 

@@ -12,11 +12,10 @@
 #include "GETFileChecker.h"
 
 // ROOT
-#include "TString.h"
-#include "TSystem.h"
-#include "TObjArray.h"
-#include "TObjString.h"
-
+#include <TString.h>
+#include <TSystem.h>
+#include <TObjArray.h>
+#include <TObjString.h>
 // STL
 #include <iostream>
 

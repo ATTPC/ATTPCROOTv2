@@ -1,23 +1,20 @@
 #ifndef AtTPCFISSIONGENERAtORV3_H
 #define AtTPCFISSIONGENERAtORV3_H
 
-/* Fission generator for beam induced fission events
- * Takes a csv file that defines the distribution of fission fragments
- * availible. An example can be found in ______.
- *
- * Adam Anthony 8/23/2019
- *
- */
-#include <fstream>
-#include <iostream>
-
-#include "FairGenerator.h"
-
-#include "Math/GenVector/LorentzVector.h"
-#include "Math/Boost.h"
+#include <Math/GenVector/Boost.h>
+#include <Rtypes.h>
+#include <TString.h>
+#include <Math/Point3D.h>
+#include <Math/Vector4D.h>
+#include <FairGenerator.h>
+#include <vector>
 
 class TFile;
 class TTree;
+class FairPrimaryGenerator;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using VecPE = ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<>>;
 using Cartesian3D = ROOT::Math::Cartesian3D<>;

@@ -14,10 +14,13 @@
 #ifndef PNDPASSIVECONTFACT_H
 #define PNDPASSIVECONTFACT_H
 
-#include "FairContFact.h" // for FairContFact, etc
-#include "Rtypes.h"       // for AtPassiveContFact::Class, etc
+#include <FairContFact.h> // for FairContFact, etc
+#include <Rtypes.h>       // for AtPassiveContFact::Class, etc
 
 class FairParSet;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtPassiveContFact : public FairContFact {
 private:

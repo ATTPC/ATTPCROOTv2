@@ -33,11 +33,11 @@
 #include "AtDigiPar.h"
 #include "AtTpcMap.h"
 #include "AtTrack.h"
-#include "TObject.h"
+#include <TObject.h>
 
 // FairRoot classes
-#include "FairRootManager.h"
-#include "FairLogger.h"
+#include <FairRootManager.h>
+#include <FairLogger.h>
 
 // PCL
 #include <pcl/common/common.h>

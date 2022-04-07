@@ -2,14 +2,14 @@
 #define AtPSAtASK_H
 
 // FAIRROOT classes
-#include "FairTask.h"
+#include <FairTask.h>
 class FairLogger;
 
 // AtTPCROOT classes
 class AtPSA;
 
 // ROOT classes
-#include "TString.h"
+#include <TString.h>
 class TClonesArray;
 
 class AtPSAtask : public FairTask {

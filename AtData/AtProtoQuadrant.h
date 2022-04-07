@@ -1,13 +1,16 @@
 #ifndef AtPROTOQUADRANT_H
 #define AtPROTOQUADRANT_H
 
-#include "TROOT.h"
-#include "TObject.h"
-#include "AtHit.h"
-#include "TH1D.h"
-#include "TH1.h"
-
+#include <Rtypes.h>
+#include <TObject.h>
+#include <TH1.h>
 #include <vector>
+
+#include "AtHit.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtProtoQuadrant : public TObject {
 public:

@@ -1,14 +1,21 @@
 #ifndef AtSIARRAY_H
 #define AtSIARRAY_H
 
-#include "FairDetector.h"
-
-#include "TVector3.h"
-#include "TLorentzVector.h"
+#include <Rtypes.h>
+#include <TString.h>
+#include <FairDetector.h>
+#include <TVector3.h>
+#include <TLorentzVector.h>
+#include <string>
+#include <utility>
 
 class AtSiPoint;
 class FairVolume;
 class TClonesArray;
+class TBuffer;
+class TClass;
+class TList;
+class TMemberInspector;
 
 class AtSiArray : public FairDetector {
 

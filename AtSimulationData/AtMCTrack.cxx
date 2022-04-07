@@ -16,10 +16,14 @@
 
 #include "AtMCTrack.h"
 
-#include "FairLogger.h"   // for FairLogger, etc
-#include "TDatabasePDG.h" // for TDatabasePDG
-#include "TParticle.h"    // for TParticle
-#include "TParticlePDG.h" // for TParticlePDG
+#include <Rtypes.h>
+#include <TMath.h>
+#include <TObject.h>
+#include <TDatabasePDG.h> // for TDatabasePDG
+#include <TParticle.h>    // for TParticle
+#include <TParticlePDG.h> // for TParticlePDG
+#include <FairLogger.h>
+#include <memory>
 
 // -----   Default constructor   -------------------------------------------
 AtMCTrack::AtMCTrack()

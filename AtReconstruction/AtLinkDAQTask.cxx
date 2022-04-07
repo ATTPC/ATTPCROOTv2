@@ -1,14 +1,20 @@
 #include "AtLinkDAQTask.h"
 
-#include "TClonesArray.h"
-#include "TChain.h"
-#include "TFile.h"
-#include "TGraph.h"
+#include <FairRunAna.h>
+#include <FairTask.h>
+#include <TMathBase.h>
+#include <TObject.h>
+#include <fairlogger/Logger.h>
+#include <algorithm>
+#include <iostream>
+#include <memory>
 
+#include <TClonesArray.h>
+#include <TChain.h>
+#include <TFile.h>
+#include <TGraph.h>
 #include "HTTimestamp.h"
-
-#include "FairRootManager.h"
-
+#include <FairRootManager.h>
 #include "AtRunAna.h"
 #include "AtRawEvent.h"
 

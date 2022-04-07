@@ -3,9 +3,16 @@
 
 #include "GETHeaderBase.h"
 
+class TBuffer;
+class TClass;
+class TMemberInspector;
+
 #define GETBASICFRAMEHEADERSIZE (GETHEADERBASESIZE + 79)
 
+#include <Rtypes.h>
+#include <stdint.h>
 #include <bitset>
+#include <iosfwd>
 
 using std::bitset;
 

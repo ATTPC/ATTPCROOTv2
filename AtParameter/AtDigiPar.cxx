@@ -1,5 +1,16 @@
 #include "AtDigiPar.h"
 
+#include <FairLogger.h>
+#include <FairParGenericSet.h>
+#include <FairParamList.h>
+#include <TString.h>
+#include <TSystem.h>
+#include <stddef.h>
+#include <iostream>
+#include <memory>
+
+#include "AtGas.h"
+
 ClassImp(AtDigiPar);
 
 AtDigiPar::AtDigiPar(const Char_t *name, const Char_t *title, const Char_t *context)

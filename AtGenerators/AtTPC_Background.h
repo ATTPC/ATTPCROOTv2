@@ -7,15 +7,17 @@
 #ifndef AtTPC_Background_H
 #define AtTPC_Background_H
 
-#include "FairGenerator.h"
-#include "FairIon.h"
-#include "FairParticle.h"
-
-#include <iostream>
-#include <map>
+#include <Rtypes.h>
+#include <TString.h>
+#include <FairGenerator.h>
+#include <vector>
 
 class FairPrimaryGenerator;
-class AtTPC_Background;
+class FairIon;
+class FairParticle;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtTPC_Background : public FairGenerator {
 

@@ -13,20 +13,17 @@
 
 #include "AtMagnet.h"
 
-#include "TGeoManager.h"
-#include "FairRun.h"       // for FairRun
-#include "FairRuntimeDb.h" // for FairRuntimeDb
-#include "TList.h"         // for TListIter, TList (ptr only)
-#include "TObjArray.h"     // for TObjArray
-#include "TString.h"       // for TString
-#include "TGeoBBox.h"
-#include "TGeoCompositeShape.h"
-#include "TGeoTube.h"
-#include "TGeoMaterial.h"
-#include "TGeoElement.h"
-#include "TGeoMedium.h"
-#include <stddef.h> // for NULL
-#include <iostream> // for operator<<, basic_ostream, etc
+#include <FairModule.h>
+#include <Rtypes.h>
+#include <TGeoMatrix.h>
+#include <TGeoVolume.h>
+
+#include <TGeoManager.h>
+#include <TGeoBBox.h>
+#include <TGeoCompositeShape.h>
+#include <TGeoTube.h>
+#include <TGeoMaterial.h>
+#include <TGeoMedium.h>
 
 AtMagnet::~AtMagnet() {}
 AtMagnet::AtMagnet() : FairModule("AtMagnet", "") {}

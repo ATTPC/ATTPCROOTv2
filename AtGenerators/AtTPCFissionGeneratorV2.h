@@ -2,17 +2,16 @@
 #ifndef AtTPCFISSIONGENERAtORV2_H
 #define AtTPCFISSIONGENERAtORV2_H
 
-#include "FairGenerator.h"
-#include "FairIon.h"
-#include "FairParticle.h"
-
-#include "TTree.h"
-
-#include <iostream>
-#include <map>
+#include <Rtypes.h>
+#include <TString.h>
+#include <FairGenerator.h>
+#include <vector>
 
 class FairPrimaryGenerator;
-class AtTPCFissionGeneratorV2;
+class TBuffer;
+class TClass;
+class TMemberInspector;
+class TTree;
 
 class AtTPCFissionGeneratorV2 : public FairGenerator {
 

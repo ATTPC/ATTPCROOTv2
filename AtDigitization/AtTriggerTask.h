@@ -8,16 +8,18 @@
 #ifndef AtTriggerTask_H
 #define AtTriggerTask_H
 
-#include "FairRootManager.h"
-#include "FairRunAna.h"
-#include "FairRuntimeDb.h"
+#include <Rtypes.h>
+#include <TString.h>
+#include <FairTask.h>
 
-#include "FairTask.h"
-#include "FairMCPoint.h"
-
-#include "TClonesArray.h"
-#include "AtTriggerPar.h"
-#include "AtTrigger.h"
+class AtEvent;
+class AtRawEvent;
+class AtTrigger;
+class AtTriggerPar;
+class TBuffer;
+class TClass;
+class TClonesArray;
+class TMemberInspector;
 
 class AtTriggerTask : public FairTask {
 public:

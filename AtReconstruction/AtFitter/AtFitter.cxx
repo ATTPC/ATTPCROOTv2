@@ -1,11 +1,12 @@
 #include "AtFitter.h"
 
-// FairRoot classes
-#include "FairRuntimeDb.h"
-#include "FairRun.h"
-
+#include <TMath.h>
 // STL
 #include <algorithm>
+#include <utility>
+
+#include "AtHit.h"
+#include "AtTrack.h"
 
 ClassImp(AtFITTER::AtFitter);
 

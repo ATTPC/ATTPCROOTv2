@@ -10,7 +10,13 @@
 #define S800EVENT_H
 
 #include <TObject.h>
+#include <Rtypes.h>
+
 #include "S800.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class S800Event : public TObject {
 public:

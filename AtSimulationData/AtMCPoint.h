@@ -8,13 +8,14 @@
 #ifndef ATMCPOINT_H
 #define ATMCPOINT_H 1
 
-#include "FairMCPoint.h"
-#include "AtVertexPropagator.h"
+#include <Rtypes.h>
+#include <TString.h>
+#include <FairMCPoint.h>
+#include <TVector3.h>
 
-#include "TObject.h"
-#include "TVector3.h"
-
-class AtVertexPropagator;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtMCPoint : public FairMCPoint {
 

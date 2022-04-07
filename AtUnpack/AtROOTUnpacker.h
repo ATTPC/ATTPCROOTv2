@@ -7,9 +7,18 @@
 #ifndef _ATROOTUNPACKER_H_
 #define _ATROOTUNPACKER_H_
 
+#include <Rtypes.h>
+#include <memory>
+#include <vector>
+
 #include "AtUnpacker.h"
 
 class AtPedestal;
+class AtRawEvent;
+class TBuffer;
+class TClass;
+class TMemberInspector;
+
 using vecBool = std::vector<bool>;
 using vecFPN = std::vector<Int_t[4][4][4][512]>;
 using pedestalPtr = std::unique_ptr<AtPedestal>;

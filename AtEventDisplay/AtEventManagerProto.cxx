@@ -1,39 +1,42 @@
 #include "AtEventManagerProto.h"
-#include "FairEventManagerEditor.h"
 
-#include "TEveGeoNode.h"
-#include "TEveManager.h"
-#include "TEveProjectionManager.h"
-#include "TEveScene.h"
-#include "TEveViewer.h"
-#include "TEveWindow.h"
-#include "TEveBrowser.h"
-
-#include "TRootEmbeddedCanvas.h"
-
-#include "TGTab.h"
-#include "TGLViewer.h"
-#include "TGeoManager.h"
-#include "TVirtualX.h"
-#include "TGWindow.h"
-#include "TGButton.h"
-#include "TGLabel.h"
-#include "TGWidget.h"
-#include "TGCanvas.h"
-
-#include "TEveGedEditor.h"
-#include "TGLEmbeddedViewer.h"
-#include "TCanvas.h"
-#include "TROOT.h"
-#include "TStyle.h"
-#include "TObject.h"
-#include "TH2.h"
-#include "TH2Poly.h"
-#include "TMultiGraph.h"
-#include "TPolyLine.h"
-#include "TFile.h"
-
+#include <FairRootManager.h>
+#include <FairRunAna.h>
+#include <TChain.h>
+#include <TEveEventManager.h>
+#include <TGClient.h>
+#include <TGFrame.h>
+#include <TGLCamera.h>
+#include <TGLayout.h>
+#include <TGNumberEntry.h>
+#include <TGeoVolume.h>
+#include <TRootBrowser.h>
+#include <TString.h>
+#include <TSystem.h>
+#include <TVirtualPad.h>
 #include <iostream>
+#include <string>
+
+#include <TEveGeoNode.h>
+#include <TEveManager.h>
+#include <TEveViewer.h>
+#include <TEveWindow.h>
+#include <TEveBrowser.h>
+#include <TRootEmbeddedCanvas.h>
+#include <TGTab.h>
+#include <TGLViewer.h>
+#include <TGeoManager.h>
+#include <TVirtualX.h>
+#include <TGWindow.h>
+#include <TGButton.h>
+#include <TGLabel.h>
+#include <TCanvas.h>
+#include <TStyle.h>
+#include <TObject.h>
+#include <TH2.h>
+#include <TH2Poly.h>
+#include <TFile.h>
+#include <Rtypes.h>
 
 class TGeoNode;
 

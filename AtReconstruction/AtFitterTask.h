@@ -8,29 +8,26 @@
 #ifndef ATFITTERTASK
 #define ATFITTERTASK
 
+#include <Rtypes.h>
 // FAIRROOT classes
-#include "FairTask.h"
-#include "FairLogger.h"
+#include <FairTask.h>
+#include <cstddef>
+#include <string>
+#include <vector>
 
-#include "AtFitter.h"
-#include "AtGenfit.h"
+class AtDigiPar;
+class FairLogger;
+class TBuffer;
+class TClass;
+class TClonesArray;
+class TMemberInspector;
 
-// GENFIT2 classes
-#include "AbsKalmanFitter.h"
-#include "KalmanFitterRefTrack.h"
-#include "DAF.h"
-//#include "GFRaveVertexFactory.h"
-#include "ConstField.h"
-#include "FieldManager.h"
-#include "MaterialEffects.h"
-#include "TGeoMaterialInterface.h"
-#include "MeasurementFactory.h"
-#include "MeasurementProducer.h"
-#include "EventDisplay.h"
-
-#include "TClonesArray.h"
-
-#include <exception>
+namespace AtFITTER {
+class AtFitter;
+} // namespace AtFITTER
+namespace genfit {
+class Track;
+} // namespace genfit
 
 class AtFitterTask : public FairTask {
 

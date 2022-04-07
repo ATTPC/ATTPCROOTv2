@@ -1,11 +1,14 @@
 #ifndef AtCALIBRAtION_H
 #define AtCALIBRAtION_H
 
-#include <fstream>
-#include <iostream>
+#include <Rtypes.h>
+#include <TObject.h>
+#include <TString.h>
+#include <array>
 
-#include "TObject.h"
-#include "TString.h"
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

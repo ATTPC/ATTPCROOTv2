@@ -1,31 +1,59 @@
-#include "FairRootManager.h"
-
-#include "AtEventDrawTaskProto.h"
-
-#include "TEveManager.h"
-#include "TEveGeoShape.h"
-#include "TEveTrans.h"
-#include "TGeoSphere.h"
-#include "TEveTrans.h"
-#include "TPaletteAxis.h"
-#include "TStyle.h"
-#include "TRandom.h"
-#include "TColor.h"
-#include "TVirtualX.h"
-
-#include "AtMap.h"
-#include "AtTpcMap.h"
-#include "AtTpcProtoMap.h"
-#include "AtGadgetIIMap.h"
-#include "AtSpecMATMap.h"
-#include "TH2Poly.h"
-#include "TF1.h"
-
-#ifndef __CINT__ // Boost
-#include <boost/multi_array.hpp>
-#endif //__CINT__
-
+#include <FairTask.h>
+#include <TAttMarker.h>
+#include <TAxis.h>
+#include <TCanvas.h>
+#include <TClonesArray.h>
+#include <TEveBoxSet.h>
+#include <TEveLine.h>
+#include <TEvePointSet.h>
+#include <TEveTreeTools.h>
+#include <TGraph.h>
+#include <TH1.h>
+#include <TH2.h>
+#include <TList.h>
+#include <TMath.h>
+#include <TNamed.h>
+#include <TObject.h>
+#include <TPad.h>
+#include <TROOT.h>
+#include <TSeqCollection.h>
+#include <TVirtualPad.h>
+#include <fairlogger/Logger.h>
+#include <stdio.h>
+#include <Math/Point3D.h>
 #include <iostream>
+#include <algorithm>
+#include <array>
+#include <exception>
+#include <map>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include <FairRootManager.h>
+#include "AtEventDrawTaskProto.h"
+#include <TEveManager.h>
+#include <TEveTrans.h>
+#include <TPaletteAxis.h>
+#include <TStyle.h>
+#include <TColor.h>
+#include <TVirtualX.h>
+#include "AtMap.h"
+#include "AtTpcProtoMap.h"
+#include <TH2Poly.h>
+#include <TF1.h>
+#include "AtAuxPad.h"
+#include "AtEvent.h"
+#include "AtEventManagerProto.h"
+#include "AtHit.h"
+#include "AtPad.h"
+#include "AtPatternEvent.h"
+#include "AtProtoEvent.h"
+#include "AtProtoEventAna.h"
+#include "AtProtoQuadrant.h"
+#include "AtRawEvent.h"
+#include "AtTrack.h"
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"

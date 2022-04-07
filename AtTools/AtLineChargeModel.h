@@ -2,8 +2,15 @@
 #ifndef ATLINECHARGEMODEL_H
 #define ATLINECHARGEMODEL_H
 
+#include <Math/Point3Dfwd.h>
+#include <Rtypes.h>
+#include <Math/Point3D.h>
+
 #include "AtSpaceChargeModel.h"
-#include "Math/Point3D.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using XYZPoint = ROOT::Math::XYZPoint;
 

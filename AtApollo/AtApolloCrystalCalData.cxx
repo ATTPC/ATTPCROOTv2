@@ -8,6 +8,7 @@
 
 #include "AtApolloCrystalCalData.h"
 
+#include <FairMultiLinkedData.h>
 #include <iostream>
 
 using std::cout;

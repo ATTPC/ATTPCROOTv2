@@ -1,12 +1,15 @@
 #ifndef ATFILTERCALIBRATE_H
 #define ATFILTERCALIBRATE_H
 
-#include "AtFilter.h"
-
-#include "TString.h"
-
-#include <vector>
 #include <unordered_map>
+#include <iosfwd>
+#include <memory>
+
+#include "AtFilter.h"
+#include <TString.h>
+
+class AtPad;
+class AtRawEvent;
 
 using calibrationMap = std::unordered_map<int, float>;
 using filePtr = std::unique_ptr<std::ifstream>;

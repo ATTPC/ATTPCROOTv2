@@ -1,11 +1,18 @@
 #ifndef ATHIT_H
 #define ATHIT_H
 
-#include "TROOT.h"
-#include "TObject.h"
-#include "TVector3.h"
-#include "Math/Vector3D.h"
-#include "Math/Point3D.h"
+#include <Math/Point3Dfwd.h>
+#include <Math/Vector3Dfwd.h>
+#include <Rtypes.h>
+#include <Math/Point3D.h>
+#include <Math/Vector3D.h>
+#include <TObject.h>
+#include <algorithm>
+#include <vector>
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using XYZPoint = ROOT::Math::XYZPoint;
 using XYZVector = ROOT::Math::XYZVector;

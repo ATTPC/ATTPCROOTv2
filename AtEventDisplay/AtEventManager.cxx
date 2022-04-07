@@ -1,37 +1,41 @@
 
 #include "AtEventManager.h"
-#include "FairEventManagerEditor.h"
-#include "TFile.h"
-#include "TEveGeoNode.h"
-#include "TEveManager.h"
-#include "TEveProjectionManager.h"
-#include "TEveScene.h"
-#include "TEveViewer.h"
-#include "TEveWindow.h"
-#include "TEveBrowser.h"
-#include "TFile.h"
-#include "TRootEmbeddedCanvas.h"
 
-#include "TGTab.h"
-#include "TGLViewer.h"
-#include "TGeoManager.h"
-#include "TVirtualX.h"
-#include "TGWindow.h"
-#include "TGButton.h"
-#include "TGLabel.h"
-#include "TGWidget.h"
-#include "TGCanvas.h"
+#include <FairRootManager.h>
+#include <FairRunAna.h>
+#include <TChain.h>
+#include <TEveEventManager.h>
+#include <TGClient.h>
+#include <TGFrame.h>
+#include <TGLCamera.h>
+#include <TGLayout.h>
+#include <TGNumberEntry.h>
+#include <TGeoVolume.h>
+#include <TRootBrowser.h>
+#include <TString.h>
+#include <TSystem.h>
+#include <TVirtualPad.h>
 
-#include "TEveGedEditor.h"
-#include "TGLEmbeddedViewer.h"
-#include "TCanvas.h"
-#include "TROOT.h"
-#include "TStyle.h"
-#include "TObject.h"
-#include "TH2.h"
-#include "TH2Poly.h"
-#include "TMultiGraph.h"
-#include "TPolyLine.h"
+#include <TFile.h>
+#include <TEveGeoNode.h>
+#include <TEveManager.h>
+#include <TEveViewer.h>
+#include <TEveWindow.h>
+#include <TEveBrowser.h>
+#include <TRootEmbeddedCanvas.h>
+#include <TGTab.h>
+#include <TGLViewer.h>
+#include <TGeoManager.h>
+#include <TVirtualX.h>
+#include <TGWindow.h>
+#include <TGButton.h>
+#include <TGLabel.h>
+#include <TCanvas.h>
+#include <TStyle.h>
+#include <TObject.h>
+#include <TH2.h>
+#include <TH2Poly.h>
+#include <Rtypes.h>
 
 #define cRED "\033[1;31m"
 #define cYELLOW "\033[1;33m"
@@ -41,6 +45,7 @@
 #define cWHITERED "\033[37;41m"
 
 #include <iostream>
+#include <string>
 
 class TGeoNode;
 

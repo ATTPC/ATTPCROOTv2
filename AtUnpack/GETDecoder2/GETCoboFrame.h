@@ -1,7 +1,14 @@
 #ifndef GETCOBOFRAME
 #define GETCOBOFRAME
 
+#include <Rtypes.h>
+#include <iosfwd>
+
 #include "GETBasicFrame.h"
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class GETCoboFrame {
 public:

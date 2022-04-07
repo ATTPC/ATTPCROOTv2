@@ -2,10 +2,6 @@
 #define ATFILTER_H
 // Interface for filters that can be applied to the raw signal traces
 
-#include "Rtypes.h"
-
-#include <vector>
-
 class AtRawEvent;
 class AtPad;
 

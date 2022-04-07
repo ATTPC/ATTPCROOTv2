@@ -1,8 +1,8 @@
 #include "AtRansacMod.h"
 
 // FairRoot classes
-#include "FairRuntimeDb.h"
-#include "FairRun.h"
+#include <FairRuntimeDb.h>
+#include <FairRun.h>
 
 #include <iostream>
 

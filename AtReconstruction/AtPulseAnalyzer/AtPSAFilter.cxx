@@ -1,11 +1,11 @@
 #include "AtPSAFilter.h"
 
-#include "FairLogger.h"
+#include <FairLogger.h>
 
 // ROOT files
-#include "TH1F.h"
-#include "TRotation.h"
-#include "TSpectrum.h"
+#include <TH1F.h>
+#include <TRotation.h>
+#include <TSpectrum.h>
 
 // AtTPCROOT classes
 #include "AtRawEvent.h"

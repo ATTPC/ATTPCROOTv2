@@ -1,6 +1,6 @@
 #include "AtPSASimple2.h"
 
-#include "FairLogger.h"
+#include <FairLogger.h>
 
 // AtTPCROOT classes
 #include "AtCalibration.h"
@@ -9,11 +9,11 @@
 #include "AtHit.h"
 
 // ROOT classes
-#include "TH1F.h"
-#include "TRotation.h"
-#include "TMatrixD.h"
-#include "TArrayD.h"
-#include "TSpectrum.h"
+#include <TH1F.h>
+#include <TRotation.h>
+#include <TMatrixD.h>
+#include <TArrayD.h>
+#include <TSpectrum.h>
 #include "Math/Point3D.h"
 #include "Math/Rotation3D.h"
 

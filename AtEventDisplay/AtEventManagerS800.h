@@ -1,28 +1,22 @@
 #ifndef AtEVENTMANAGERS800_H
 #define AtEVENTMANAGERS800_H
 
-#include "TEveEventManager.h"
-#include "FairEventManager.h"
-#include "TGNumberEntry.h"
-#include "TGCanvas.h"
+#include <Rtypes.h>
+#include <TEveEventManager.h>
+#include <FairRunAna.h>
 
-#include "FairRunAna.h"
-#include "FairRootManager.h"
-#include "FairTask.h"
-
-#include "TH2.h"
-#include "TFile.h"
-#include "TCanvas.h"
-#include "TClonesArray.h"
-
-#include "AtEvent.h"
-#include "S800Calc.h"
 class TH2F;
-
-#ifndef __CINT__ // Boost
-#include <boost/multi_array.hpp>
-#endif //__CINT__
-
+class AtEvent;
+class FairRootManager;
+class FairTask;
+class S800Calc;
+class TBuffer;
+class TCanvas;
+class TClass;
+class TClonesArray;
+class TGNumberEntry;
+class TGTextButton;
+class TMemberInspector;
 class TGListTreeItem;
 
 class AtEventManagerS800 : public TEveEventManager {

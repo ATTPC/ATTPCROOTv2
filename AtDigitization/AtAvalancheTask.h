@@ -8,13 +8,16 @@
 #ifndef AtAVALANCHETASK_H
 #define AtAVALANCHETASK_H
 
-#include "FairTask.h"
-#include "FairMCPoint.h"
+#include <Rtypes.h>
+#include <FairTask.h>
 
-#include "TClonesArray.h"
-#include "AtDigiPar.h"
-#include "AtGas.h"
-#include "AtMCPoint.h"
+class AtDigiPar;
+class AtGas;
+class AtMCPoint;
+class TBuffer;
+class TClass;
+class TClonesArray;
+class TMemberInspector;
 
 class AtAvalancheTask : public FairTask {
 public:

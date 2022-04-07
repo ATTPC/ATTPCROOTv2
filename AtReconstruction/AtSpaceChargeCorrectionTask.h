@@ -6,15 +6,17 @@
 #ifndef _ATSPACECHARGECORRECTIONTASK_H_
 #define _ATSPACECHARGECORRECTIONTASK_H_
 
-#include "FairTask.h"
-#include "TClonesArray.h"
-#include "AtSpaceChargeModel.h"
-
+#include <Rtypes.h>
+#include <FairTask.h>
+#include <TClonesArray.h>
 #include <memory>
 #include <string>
 
-class AtEvent;
-// class AtSpaceChargeModel;
+#include "AtSpaceChargeModel.h" // IWYU pragma: keep
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 using SCModelPtr = std::unique_ptr<AtSpaceChargeModel>;
 

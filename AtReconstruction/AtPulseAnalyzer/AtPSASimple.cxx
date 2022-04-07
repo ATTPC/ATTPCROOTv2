@@ -1,17 +1,18 @@
 #include "AtPSASimple.h"
 
+#include <Math/Point2D.h>
+#include <Rtypes.h>
+// STL
+#include <algorithm>
+#include <array>
+#include <iterator>
+#include <memory>
+
 // AtTPCROOT classes
 #include "AtRawEvent.h"
 #include "AtEvent.h"
-#include "AtDigiPar.h"
-#include "AtCalibration.h"
 #include "AtHit.h"
-
-// ROOT classes
-#include "TH1F.h"
-
-// STL
-#include <algorithm>
+#include "AtPad.h"
 
 using std::distance;
 using std::max_element;
