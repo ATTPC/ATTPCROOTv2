@@ -27,17 +27,6 @@
 //#endif
 
 ClassImp(AtPSASimple2);
-AtPSASimple2::AtPSASimple2()
-{
-   fBackGroundSuppression = kFALSE;
-   fBackGroundInterp = kFALSE;
-   fIsPeakFinder = kFALSE;
-   fIsMaxFinder = kFALSE;
-   fIsBaseCorr = kFALSE;
-   fIsTimeCorr = kFALSE;
-}
-
-AtPSASimple2::~AtPSASimple2() = default;
 
 void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 {
@@ -48,7 +37,7 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    Double_t RhoMean = 0.0;
    Double_t Rho2 = 0.0;
    std::map<Int_t, Int_t> PadMultiplicity;
-   std::array<Float_t, 512> mesh;
+   std::array<Float_t, 512> mesh{};
    mesh.fill(0);
 
    auto mcPointsMap = rawEvent->GetSimMCPointMap();
@@ -98,9 +87,9 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       }
 
       auto adc = pad->GetADC();
-      std::array<Double_t, 512> floatADC;
-      std::array<Double_t, 512> dummy;
-      std::array<Double_t, 512> bg;
+      std::array<Double_t, 512> floatADC{};
+      std::array<Double_t, 512> dummy{};
+      std::array<Double_t, 512> bg{};
       floatADC.fill(0);
       dummy.fill(0);
       bg.fill(0);
@@ -119,14 +108,14 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          bg[iTb] = adc[iTb];
       }
 
-      auto *PeakFinder = new TSpectrum;
+      auto PeakFinder = std::make_unique<TSpectrum>();
       if (fIsPeakFinder)
          numPeaks = PeakFinder->SearchHighRes(floatADC.data(), dummy.data(), fNumTbs, 4.7, 5, fBackGroundSuppression, 3,
                                               kTRUE, 3);
       if (fIsMaxFinder)
          numPeaks = 1;
 
-      auto *BGInter = new TSpectrum;
+      auto BGInter = std::make_unique<TSpectrum>();
       if (fBackGroundInterp) {
          BGInter->Background(bg.data(), fNumTbs, 6, TSpectrum::kBackDecreasingWindow, TSpectrum::kBackOrder2, kTRUE,
                              TSpectrum::kBackSmoothing7, kTRUE);
@@ -272,11 +261,7 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          PadMultiplicity.insert(std::pair<Int_t, Int_t>(pad->GetPadNum(), 1));
 
       } // if Valid Num Peaks
-
-      delete PeakFinder;
-      delete BGInter;
-
-   } // Pad Loop
+   }    // Pad Loop
 
    // RhoVariance = Rho2 - (pow(RhoMean, 2) / (event->GetNumHits()));
    RhoVariance = Rho2 - (event->GetNumHits() * pow((RhoMean / event->GetNumHits()), 2));

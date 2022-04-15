@@ -8,8 +8,20 @@
 #include <TRandom.h>
 #include <Rtypes.h>
 
-AtVertexPropagator *gAtVP = nullptr;
-// AtVertexPropagator *gAtVP = new AtVertexPropagator();
+// Allow us use std::make_unique using a protected constructor this struct
+// is only defined in this translation unit (.cpp file)
+namespace {
+struct concrete_AtVertexPropagator : public AtVertexPropagator {
+};
+} // namespace
+std::unique_ptr<AtVertexPropagator> AtVertexPropagator::fInstance = nullptr;
+
+AtVertexPropagator *AtVertexPropagator::Instance()
+{
+   if (fInstance == nullptr)
+      fInstance = std::make_unique<concrete_AtVertexPropagator>();
+   return fInstance.get();
+}
 
 AtVertexPropagator::AtVertexPropagator()
    : fGlobalEvtCnt(0), fBeamEvtCnt(0), fDecayEvtCnt(0), fVx(0.), fVy(0.), fVz(0.), fPx(0.), fPy(0.), fPz(0.), fE(0.),
@@ -21,17 +33,6 @@ AtVertexPropagator::AtVertexPropagator()
    fScatP(0) = 0.0;
    fScatP(1) = 0.0;
    fScatP(2) = 0.0;
-
-   if (gAtVP)
-      delete gAtVP;
-   gAtVP = this;
-}
-
-AtVertexPropagator::~AtVertexPropagator()
-{
-
-   delete gAtVP;
-   std::cout << " AtVertexPropagator: Global pointer AtVertexPropagator succesfully deleted " << std::endl;
 }
 
 void AtVertexPropagator::SetVertex(Double_t vx, Double_t vy, Double_t vz, Double_t invx, Double_t invy, Double_t invz,

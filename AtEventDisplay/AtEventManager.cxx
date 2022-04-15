@@ -37,12 +37,12 @@
 #include <TH2Poly.h>
 #include <Rtypes.h>
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
-#define cBLUE "\033[1;34m"
-#define cWHITERED "\033[37;41m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
+constexpr auto cBLUE = "\033[1;34m";
+constexpr auto cWHITERED = "\033[37;41m";
 
 #include <iostream>
 #include <string>
@@ -69,7 +69,6 @@ AtEventManager::AtEventManager()
 
 {
    fInstance = this;
-   kEraseQ = kFALSE;
 }
 
 AtEventManager::~AtEventManager() = default;
@@ -406,7 +405,7 @@ void AtEventManager::DrawWave()
    if (!select)
       return;
    if (select->InheritsFrom(TH2::Class())) {
-      auto *h = (TH2Poly *)select;
+      auto *h = dynamic_cast<TH2Poly *>(select);
       gPad->GetCanvas()->FeedbackMode(kTRUE);
       // Char_t *bin_name = h->GetBinName();
 

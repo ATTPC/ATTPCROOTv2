@@ -12,7 +12,7 @@
 #include <memory>
 #include <utility>
 
-TInverseMap *TInverseMap::fInverseMap = nullptr;
+std::unique_ptr<TInverseMap> TInverseMap::fInverseMap = nullptr;
 
 TInverseMap::TInverseMap(const char *filename) : TNamed("InverseMap", filename)
 {
@@ -26,13 +26,13 @@ TInverseMap::~TInverseMap() = default;
 TInverseMap *TInverseMap::Get(const char *filename)
 {
    if (fInverseMap)
-      return fInverseMap;
+      return fInverseMap.get();
    if (strlen(filename) == 0 || access(filename, F_OK) == -1) {
       printf("no inverse map loaded and file \"%s\" not found.\n", filename);
       return nullptr;
    }
-   fInverseMap = new TInverseMap(filename);
-   return fInverseMap;
+   fInverseMap = std::make_unique<TInverseMap>(filename);
+   return fInverseMap.get();
 }
 
 bool TInverseMap::ReadMapFile(const char *filename)
@@ -62,7 +62,7 @@ bool TInverseMap::ReadMapFile(const char *filename)
          continue;
       }
       unsigned int index;
-      InvMapRow invrow;
+      InvMapRow invrow{};
       std::stringstream ss(line);
       ss >> index;
       /*if((index-1) != fMap[par-1].size()) {
@@ -109,7 +109,7 @@ bool TInverseMap::ReadMultiMapFile(std::vector<std::string> &mapfile_v)
    std::vector<InvMapRow> invrow_v;
    std::vector<std::vector<double>> coeff_v;
    Int_t icoeff = 0;
-   TSpline3 *spline[fsize]; // NOLINT
+   TSpline3 *spline[fsize]; // NOLINT TODO:This plus code below looks like a memory leak...
    // TGraph *graph[fsize];
 
    if (fMap_v.size() > 0)
@@ -118,7 +118,7 @@ bool TInverseMap::ReadMultiMapFile(std::vector<std::string> &mapfile_v)
          for (int k = 0; k < fMap_v.at(0).at(j).size(); k++) { // loop on coeff in par
             std::vector<double> buff_v;
             std::vector<InvMapRowS> blabla;
-            InvMapRowS invrow_s;
+            InvMapRowS invrow_s{};
             for (auto &i : fMap_v) { // loop on maps
                // std::cout<<"mapcoeff : "<<i<<" "<<j<<" "<<k<<" "<<fMap_v.at(i).at(j).at(k).coefficient<<std::endl;
                buff_v.push_back((Double_t)i.at(j).at(k).coefficient);

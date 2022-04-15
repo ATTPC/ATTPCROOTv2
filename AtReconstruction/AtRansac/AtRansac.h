@@ -39,15 +39,6 @@
 #include <TArrayD.h>
 #include <TVectorD.h>
 
-#include "Math/GenVector/Rotation3D.h"
-#include "Math/GenVector/EulerAngles.h"
-#include "Math/GenVector/AxisAngle.h"
-#include "Math/GenVector/Quaternion.h"
-#include "Math/GenVector/RotationX.h"
-#include "Math/GenVector/RotationY.h"
-#include "Math/GenVector/RotationZ.h"
-#include "Math/GenVector/RotationZYX.h"
-
 #include "AtHit.h"
 #include "AtEvent.h"
 #include "AtProtoEvent.h"
@@ -72,51 +63,29 @@
 // PCL
 #include <iostream>
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshadow"
-#include <pcl/console/parse.h>
-#include <pcl/filters/extract_indices.h>
-#include <pcl/io/pcd_io.h>
-#include <pcl/point_types.h>
-#include <pcl/sample_consensus/ransac.h>
-#include <pcl/sample_consensus/sac_model_plane.h>
-#include <pcl/sample_consensus/sac_model_sphere.h>
-#pragma GCC diagnostic pop
-
 //#include <pcl/visualization/pcl_visualizer.h>
 #include <boost/thread/thread.hpp>
 
-#include <pcl/ModelCoefficients.h>
-#include <pcl/sample_consensus/method_types.h>
-#include <pcl/sample_consensus/model_types.h>
-#include <pcl/segmentation/sac_segmentation.h>
-#include <pcl/filters/voxel_grid.h>
-#include <pcl/filters/extract_indices.h>
 #include <boost/shared_ptr.hpp>
-
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
 
 namespace AtRANSACN {
 
 class AtRansac : public TObject {
 protected:
-   TVector3 fVertex_1;
-   TVector3 fVertex_2;
+   TVector3 fVertex_1{-10000, -10000, -10000};
+   TVector3 fVertex_2{-10000, -10000, -10000};
    TVector3 fVertex_mean;
-   Double_t fMinimum;
-   Int_t fLineDistThreshold;
-   int fRANSACModel;
-   Float_t fRANSACThreshold;
-   Double_t fXCenter;
-   Double_t fYCenter;
-   Float_t fRANSACPointThreshold;          // Number of points in percentage
+   Double_t fMinimum{-1};
+   Int_t fLineDistThreshold{3};
+   int fRANSACModel{0};
+   Float_t fRANSACThreshold{5};
+   Double_t fXCenter{0};
+   Double_t fYCenter{0};
+   Float_t fRANSACPointThreshold{0.01};    // Number of points in percentage
    std::pair<Int_t, Int_t> fVertex_tracks; // ID of the tracks that form the best vertex
-   Double_t fVertexTime;
-   Double_t fTiltAng;  // From parameter file
-   Int_t fMinHitsLine; // Minimum number of hits per line
+   Double_t fVertexTime{-1000};
+   Double_t fTiltAng{0}; // From parameter file
+   Int_t fMinHitsLine{}; // Minimum number of hits per line
 
    std::vector<AtTrack> fRansacTracks;
    std::vector<AtTrack> fTrackCand; // Candidate tracks
@@ -202,7 +171,7 @@ protected:
    friend inline std::ostream &operator<<(std::ostream &o, const AtRANSACN::AtRansac::PairedLines &pl)
    {
 
-      o << cGREEN << " =============================================== " << std::endl;
+      o << " =============================================== " << std::endl;
       o << " Lines ID : " << pl.LinesID.first << " - " << pl.LinesID.second << std::endl;
       o << " Minimum distance between line : " << pl.minDist << std::endl;
       o << " Mean vertex between line - X : " << pl.meanVertex.X() << "  - Y : " << pl.meanVertex.Y()
@@ -213,7 +182,7 @@ protected:
         << std::endl;
       o << " Angle with Y detector axis - Line 1 : " << pl.AngleYDet.first << "  - Line 2 : " << pl.AngleYDet.second
         << std::endl;
-      o << " Angle between lines : " << pl.angle << cNORMAL << std::endl;
+      o << " Angle between lines : " << pl.angle << std::endl;
       return o;
    }
 

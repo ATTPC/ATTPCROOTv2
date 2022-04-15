@@ -38,12 +38,12 @@ protected:
    std::string fBadFile;
    std::string fCalFileIC;
 
-   Int_t fXFit;
-   Int_t fXFitFunc;
-   Float_t fxOffset[2];
-   Float_t fxSlope[2];
-   Float_t fyOffset[2];
-   Float_t fySlope[2];
+   Int_t fXFit{};
+   Int_t fXFitFunc{};
+   Float_t fxOffset[2]{};
+   Float_t fxSlope[2]{};
+   Float_t fyOffset[2]{};
+   Float_t fySlope[2]{};
 
    ClassDef(S800Settings, 1)
 };

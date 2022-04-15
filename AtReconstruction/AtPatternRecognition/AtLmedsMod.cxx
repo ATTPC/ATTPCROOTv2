@@ -6,11 +6,16 @@
 
 #include <iostream>
 
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
+
 using namespace std;
 
-ClassImp(AtLmedsMod)
+ClassImp(AtLmedsMod);
 
-   AtLmedsMod::AtLmedsMod()
+AtLmedsMod::AtLmedsMod()
 {
 
    fLmedsMaxIteration = 500;

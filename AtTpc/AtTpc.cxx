@@ -31,17 +31,13 @@
 using std::cout;
 using std::endl;
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
-#define cBLUE "\033[1;34m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
+constexpr auto cBLUE = "\033[1;34m";
 
-AtTpc::AtTpc()
-   : FairDetector("AtTpc", kTRUE, kAtTpc), fTrackID(-1), fVolumeID(-1), fPos(), fMom(), fTime(-1.), fLength(-1.),
-     fELoss(-1), fPosIndex(-1), fAtTpcPointCollection(new TClonesArray("AtMCPoint")), fELossAcc(-1)
-{
-}
+AtTpc::AtTpc() : AtTpc("AtTpc", true) {}
 
 AtTpc::AtTpc(const char *name, Bool_t active)
    : FairDetector(name, active, kAtTpc), fTrackID(-1), fVolumeID(-1), fPos(), fMom(), fTime(-1.), fLength(-1.),
@@ -76,14 +72,15 @@ void AtTpc::trackEnteringVolume()
    fTrackID = gMC->GetStack()->GetCurrentTrackNumber();
 
    // Position of the first hit of the beam in the TPC volume ( For tracking purposes in the TPC)
-   if (gAtVP->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0 && (fVolName == "drift_volume" || fVolName == "cell"))
+   if (AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0 &&
+       (fVolName == "drift_volume" || fVolName == "cell"))
       InPos = fPosIn;
 
-   Int_t VolumeID;
+   Int_t VolumeID = 0;
 
-   if (gAtVP->GetBeamEvtCnt() % 2 != 0)
+   if (AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 != 0)
       LOG(debug) << cGREEN << " AtTPC: Beam Event ";
-   else if (gAtVP->GetDecayEvtCnt() % 2 == 0)
+   else if (AtVertexPropagator::Instance()->GetDecayEvtCnt() % 2 == 0)
       LOG(debug) << cBLUE << " AtTPC: Reaction/Decay Event ";
 
    LOG(debug) << " AtTPC: First hit in Volume " << fVolName;
@@ -96,10 +93,11 @@ void AtTpc::trackEnteringVolume()
    LOG(debug) << " Position : " << fPosIn.X() << " " << fPosIn.Y() << "  " << fPosIn.Z();
    LOG(debug) << " Momentum : " << fMomIn.X() << " " << fMomIn.Y() << "  " << fMomIn.Z();
    LOG(debug) << " Total relativistic energy " << gMC->Etot();
-   LOG(debug) << " Mass of the Beam particle (gAVTP) : " << gAtVP->GetBeamMass();
+   LOG(debug) << " Mass of the Beam particle (gAVTP) : " << AtVertexPropagator::Instance()->GetBeamMass();
    LOG(debug) << " Mass of the Tracked particle (gMC) : " << gMC->TrackMass(); // NB: with electrons
    LOG(debug) << " Initial energy of the beam particle in this volume : "
-              << ((gMC->Etot() - gAtVP->GetBeamMass() * 0.93149401) * 1000.); // Relativistic Mass
+              << ((gMC->Etot() - AtVertexPropagator::Instance()->GetBeamMass() * 0.93149401) *
+                  1000.); // Relativistic Mass
    LOG(debug) << " Total energy of the current track (gMC) : "
               << ((gMC->Etot() - gMC->TrackMass()) * 1000.); // Relativistic Mass
    LOG(debug) << " ==================================================== " << cNORMAL;
@@ -125,24 +123,25 @@ void AtTpc::getTrackParametersWhileExiting()
    // Correct fPosOut
    if (gMC->IsTrackExiting()) {
       correctPosOut();
-      if ((fVolName == "drift_volume" || fVolName == "cell") && gAtVP->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0)
+      if ((fVolName == "drift_volume" || fVolName == "cell") &&
+          AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0)
          resetVertex();
    }
 }
 
 void AtTpc::resetVertex()
 {
-   gAtVP->ResetVertex();
+   AtVertexPropagator::Instance()->ResetVertex();
    LOG(INFO) << cRED << " - AtTpc Warning : Beam punched through the AtTPC. Reseting Vertex! " << cNORMAL << std::endl;
 }
 
 void AtTpc::correctPosOut()
 {
-   const Double_t *oldpos;
-   const Double_t *olddirection;
+   const Double_t *oldpos = nullptr;
+   const Double_t *olddirection = nullptr;
    Double_t newpos[3];
    Double_t newdirection[3];
-   Double_t safety;
+   Double_t safety = 0;
 
    gGeoManager->FindNode(fPosOut.X(), fPosOut.Y(), fPosOut.Z());
    oldpos = gGeoManager->GetCurrentPoint();
@@ -167,8 +166,8 @@ void AtTpc::correctPosOut()
 
 bool AtTpc::reactionOccursHere()
 {
-   bool atEnergyLoss = fELossAcc * 1000 > gAtVP->GetRndELoss();
-   bool isPrimaryBeam = gAtVP->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0;
+   bool atEnergyLoss = fELossAcc * 1000 > AtVertexPropagator::Instance()->GetRndELoss();
+   bool isPrimaryBeam = AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0;
    bool isInRightVolume = fVolName == "drift_volume" || fVolName == "cell";
    return atEnergyLoss && isPrimaryBeam && isInRightVolume;
 }
@@ -176,7 +175,7 @@ Bool_t AtTpc::ProcessHits(FairVolume *vol)
 {
    /** This method is called from the MC stepping */
 
-   auto *stack = (AtStack *)gMC->GetStack();
+   auto *stack = dynamic_cast<AtStack *>(gMC->GetStack());
    fVolName = gMC->CurrentVolName();
    fVolumeID = vol->getMCid();
    fDetCopyID = vol->getCopyNo();
@@ -204,21 +203,21 @@ void AtTpc::startReactionEvent()
 {
 
    gMC->StopTrack();
-   gAtVP->ResetVertex();
+   AtVertexPropagator::Instance()->ResetVertex();
 
    TLorentzVector StopPos;
    TLorentzVector StopMom;
    gMC->TrackPosition(StopPos);
    gMC->TrackMomentum(StopMom);
-   Double_t StopEnergy = ((gMC->Etot() - gAtVP->GetBeamMass() * 0.93149401) * 1000.);
+   Double_t StopEnergy = ((gMC->Etot() - AtVertexPropagator::Instance()->GetBeamMass() * 0.93149401) * 1000.);
 
    LOG(debug) << cYELLOW << " Beam energy loss before reaction : " << fELossAcc * 1000;
    LOG(debug) << " Mass of the Tracked particle : " << gMC->TrackMass();
-   LOG(debug) << " Mass of the Beam particle (gAVTP)  : " << gAtVP->GetBeamMass();
+   LOG(debug) << " Mass of the Beam particle (gAVTP)  : " << AtVertexPropagator::Instance()->GetBeamMass();
    LOG(debug) << " Total energy of the Beam particle before reaction : " << StopEnergy << cNORMAL; // Relativistic Mass
 
-   gAtVP->SetVertex(StopPos.X(), StopPos.Y(), StopPos.Z(), InPos.X(), InPos.Y(), InPos.Z(), StopMom.Px(), StopMom.Py(),
-                    StopMom.Pz(), StopEnergy);
+   AtVertexPropagator::Instance()->SetVertex(StopPos.X(), StopPos.Y(), StopPos.Z(), InPos.X(), InPos.Y(), InPos.Z(),
+                                             StopMom.Px(), StopMom.Py(), StopMom.Pz(), StopEnergy);
 }
 
 void AtTpc::addHit()
@@ -230,12 +229,12 @@ void AtTpc::addHit()
 
    // We assume that the beam-like particle is fTrackID==0 since it is the first one added in the
    // primary generator
-   if (gAtVP->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0) {
+   if (AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0) {
       EIni = 0;
       AIni = 0;
-   } else if (gAtVP->GetDecayEvtCnt() % 2 == 0) {
-      EIni = gAtVP->GetTrackEnergy(fTrackID);
-      AIni = gAtVP->GetTrackAngle(fTrackID);
+   } else if (AtVertexPropagator::Instance()->GetDecayEvtCnt() % 2 == 0) {
+      EIni = AtVertexPropagator::Instance()->GetTrackEnergy(fTrackID);
+      AIni = AtVertexPropagator::Instance()->GetTrackAngle(fTrackID);
    }
 
    AddHit(fTrackID, fVolumeID, fVolName, fDetCopyID, TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),

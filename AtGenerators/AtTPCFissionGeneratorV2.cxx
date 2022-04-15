@@ -18,10 +18,10 @@
 #include "AtStack.h"
 #include "AtVertexPropagator.h"
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
 
 Int_t AtTPCFissionGeneratorV2::fgNIon = 0;
 
@@ -38,15 +38,14 @@ AtTPCFissionGeneratorV2::AtTPCFissionGeneratorV2(const char *name, TString simfi
 {
 
    TString dir = getenv("VMCWORKDIR");
-   std::ifstream *fInputFilebase;
    TString fFileNamebase;
    std::map<TString, FairIon *> fIonMap; //!
 
    fFileNamebase = dir + "/macro/Simulation/database/ionlist.txt";
    std::cout << " AtTPCFissionGenerator: Opening input file " << fFileNamebase << std::endl;
    // Open first the file to register all new ions.
-   fInputFilebase = new std::ifstream(fFileNamebase);
-   if (!fInputFilebase->is_open())
+   std::ifstream fInputFilebase(fFileNamebase);
+   if (!fInputFilebase.is_open())
       Fatal("AtTPCFissionGenerator", "Cannot open input file.");
 
    std::cout << "AtTPCFissionGenerator: Looking for ions..." << std::endl;
@@ -61,11 +60,11 @@ AtTPCFissionGeneratorV2::AtTPCFissionGeneratorV2(const char *name, TString simfi
 
    fIonMap.clear();
 
-   *fInputFilebase >> Z >> A;
+   fInputFilebase >> Z >> A;
 
-   while (!fInputFilebase->eof()) {
+   while (!fInputFilebase.eof()) {
 
-      if (fInputFilebase->eof())
+      if (fInputFilebase.eof())
          continue;
 
       char buffer[40];
@@ -76,7 +75,7 @@ AtTPCFissionGeneratorV2::AtTPCFissionGeneratorV2(const char *name, TString simfi
       fIonMap[ionName] = ion;
       nIons++;
 
-      *fInputFilebase >> Z >> A;
+      fInputFilebase >> Z >> A;
 
    } //!
 
@@ -90,17 +89,16 @@ AtTPCFissionGeneratorV2::AtTPCFissionGeneratorV2(const char *name, TString simfi
    std::cout << cYELLOW << "AtTPCFissionGenerator: " << nIons << " ions registered." << cNORMAL << std::endl;
 
    TString simfilepath = dir + "/macro/Simulation/data/" + simfile;
-   auto *f = new TFile(simfilepath.Data());
+   auto *f = new TFile(simfilepath.Data()); // NOLINT (belongs to ROOT)
    if (f->IsZombie()) {
       std::cout << cRED << " AtTPCFissionGenerator: No simulation file found! Check VMCWORKDIR variable. Exiting... "
                 << cNORMAL << std::endl;
-      delete f;
       return;
    } else
       std::cout << cGREEN << " AtTPCFissionGenerator : Prototype geometry found in : " << simfilepath.Data() << cNORMAL
                 << std::endl;
 
-   auto *fTree = (TTree *)f->Get("tree101");
+   auto *fTree = dynamic_cast<TTree *>(f->Get("tree101"));
    Int_t nEvents = fTree->GetEntriesFast();
    std::cout << " Number of events : " << nEvents << std::endl;
    fTree->SetBranchAddress("Evnt", &Evnt);
@@ -186,7 +184,8 @@ Bool_t AtTPCFissionGeneratorV2::ReadEvent(FairPrimaryGenerator *primGen)
       }
    }
 
-   gAtVP->IncDecayEvtCnt(); // TODO: Okay someone should put a more suitable name but we are on a hurry...
+   AtVertexPropagator::Instance()
+      ->IncDecayEvtCnt(); // TODO: Okay someone should put a more suitable name but we are on a hurry...
    std::cout << cRED << " Fission event : " << event << cNORMAL << std::endl;
    event++;
 

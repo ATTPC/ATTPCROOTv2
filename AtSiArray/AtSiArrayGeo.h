@@ -12,8 +12,8 @@ class TMemberInspector;
 class AtSiArrayGeo : public FairGeoSet {
 
 protected:
-   char modName[20]; // name of module
-   char eleName[20]; // substring for elements in module
+   char modName[20]{}; // name of module
+   char eleName[20]{}; // substring for elements in module
 public:
    AtSiArrayGeo();
    ~AtSiArrayGeo() {}

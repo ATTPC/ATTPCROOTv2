@@ -30,7 +30,8 @@ void AtSiArrayContFact::setAllContainers()
        the list of containers for the AtTpc library.
    */
 
-   auto *p = new FairContainer("AtSiArrayGeoPar", "AtSiArray Geometry Parameters", "TestDefaultContext");
+   auto *p = new FairContainer("AtSiArrayGeoPar", "AtSiArray Geometry Parameters",
+                               "TestDefaultContext"); // NOLINT (I think FairRoot owns this memory)
    p->addContext("TestNonDefaultContext");
 
    containers->Add(p);

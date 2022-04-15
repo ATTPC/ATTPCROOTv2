@@ -24,7 +24,7 @@ using stringVec = std::vector<std::string>;
 class AtAuxFilterTask : public FairTask {
 
 private:
-   TClonesArray *fInputEventArray; // AtRawEvent
+   TClonesArray *fInputEventArray{}; // AtRawEvent
    TString fInputEventBranchName;
 
    AtFilter *fFilter;

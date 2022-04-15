@@ -19,10 +19,10 @@
 #include <TRandom.h>
 #include "AtSimulatedPoint.h"
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
 
 AtPulseLineTask::AtPulseLineTask() : AtPulseTask("AtPulseLineTask")
 {
@@ -84,11 +84,11 @@ bool AtPulseLineTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
          auto zLoc = eleAccumulated[0]->GetXaxis()->GetBinCenter(i + binMin);
          auto charge = line->GetCharge() * zIntegration[i] * pad.second;
          eleAccumulated[pad.first]->Fill(zLoc, charge);
-         electronsMap[pad.first] = eleAccumulated[pad.first];
+         electronsMap[pad.first] = eleAccumulated[pad.first].get();
       }
 
       if (fIsSaveMCInfo) {
-         auto mcPoint = (AtMCPoint *)fMCPointArray->At(line->GetMCPointID());
+         auto mcPoint = dynamic_cast<AtMCPoint *>(fMCPointArray->At(line->GetMCPointID()));
          auto trackID = mcPoint->GetTrackID();
          saveMCInfo(line->GetMCPointID(), pad.first, trackID);
       }
@@ -126,9 +126,8 @@ Int_t AtPulseLineTask::integrateTimebuckets(std::vector<double> &zIntegral, AtSi
 
    // Integrate G(tMean, sigmaLongDiff) over each time bucket from binMin to binMax
    // and fill zIntegral with the result.
-   double lowerBound;
    auto denominator = line->GetLongitudinalDiffusion() * TMath::Sqrt(2);
-   lowerBound = TMath::Erf((axis->GetBinLowEdge(binMin) - tMean) / denominator);
+   double lowerBound = TMath::Erf((axis->GetBinLowEdge(binMin) - tMean) / denominator);
    for (int i = binMin; i <= binMax; ++i) {
       auto upperBound = TMath::Erf((axis->GetBinUpEdge(i) - tMean) / denominator);
       auto integral = 0.5 * (upperBound - lowerBound);

@@ -21,13 +21,13 @@
 #include <FairGeoLoader.h>    // for FairGeoLoader
 #include <TString.h>          // for TString
 
-ClassImp(AtCave)
+ClassImp(AtCave);
 
-   void AtCave::ConstructGeometry()
+void AtCave::ConstructGeometry()
 {
    FairGeoLoader *loader = FairGeoLoader::Instance();
    FairGeoInterface *GeoInterface = loader->getGeoInterface();
-   auto *MGeo = new AtGeoCave();
+   auto *MGeo = new AtGeoCave(); // NOLINT I have no idea who owns this...
    MGeo->setGeomFile(GetGeometryFileName());
    GeoInterface->addGeoModule(MGeo);
    Bool_t rc = GeoInterface->readSet(MGeo);

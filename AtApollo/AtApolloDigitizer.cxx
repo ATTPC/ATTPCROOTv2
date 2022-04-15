@@ -16,6 +16,7 @@
 #include <TClonesArray.h>
 #include <TRandom.h>
 #include <FairLogger.h>
+#include <cmath>
 #include <iostream>
 #include <memory>
 
@@ -27,12 +28,8 @@ using std::cout;
 using std::endl;
 
 AtApolloDigitizer::AtApolloDigitizer()
-   : FairTask("ATTPC APOLLO Digitizer"), fApolloPointDataCA(nullptr), fApolloCryCalDataCA(nullptr), fNonUniformity(0)
+   : FairTask("ATTPC APOLLO Digitizer"), fApolloPointDataCA(nullptr), fApolloCryCalDataCA("AtApolloCrystalCalData", 5)
 {
-   fNonUniformity = 0.;  // perfect crystals
-   fResolutionCsI = 0.;  // perfect crystals
-   fResolutionLaBr = 0.; // perfect crystals
-   fThreshold = 0.;      // no threshold
 }
 
 AtApolloDigitizer::~AtApolloDigitizer()
@@ -43,10 +40,7 @@ AtApolloDigitizer::~AtApolloDigitizer()
       fApolloPointDataCA->Delete();
       delete fApolloPointDataCA;
    }
-   if (fApolloCryCalDataCA) {
-      fApolloCryCalDataCA->Delete();
-      delete fApolloCryCalDataCA;
-   }
+   fApolloCryCalDataCA.Delete();
 }
 
 void AtApolloDigitizer::SetParContainers()
@@ -70,14 +64,13 @@ InitStatus AtApolloDigitizer::Init()
       return kFATAL;
    }
 
-   fApolloPointDataCA = (TClonesArray *)rootManager->GetObject("AtApolloPoint");
+   fApolloPointDataCA = dynamic_cast<TClonesArray *>(rootManager->GetObject("AtApolloPoint"));
    if (!fApolloPointDataCA) {
       LOG(fatal) << "Init: No AtApolloPoint CA";
       return kFATAL;
    }
 
-   fApolloCryCalDataCA = new TClonesArray("AtApolloCrystalCalData", 5);
-   rootManager->Register("ApolloCrystalCalData", "CALIFA Crystal Cal", fApolloCryCalDataCA, kTRUE);
+   rootManager->Register("ApolloCrystalCalData", "CALIFA Crystal Cal", &fApolloCryCalDataCA, kTRUE);
 
    SetParameter();
    return kSUCCESS;
@@ -93,10 +86,11 @@ void AtApolloDigitizer::Exec(Option_t *option)
    if (!nHits)
       return;
 
-   AtApolloPoint **pointData = nullptr;
-   pointData = new AtApolloPoint *[nHits];
+   std::vector<AtApolloPoint *> pointData;
+   // AtApolloPoint **pointData = nullptr;
+   // pointData = new AtApolloPoint *[nHits];
    for (Int_t i = 0; i < nHits; i++)
-      pointData[i] = (AtApolloPoint *)(fApolloPointDataCA->At(i));
+      pointData.push_back(dynamic_cast<AtApolloPoint *>(fApolloPointDataCA->At(i)));
 
    Int_t crystalId;
    Double_t time;
@@ -107,16 +101,16 @@ void AtApolloDigitizer::Exec(Option_t *option)
       time = pointData[i]->GetTime();
       energy = pointData[i]->GetEnergyLoss();
 
-      Int_t nCrystalCals = fApolloCryCalDataCA->GetEntriesFast();
+      Int_t nCrystalCals = fApolloCryCalDataCA.GetEntriesFast();
       Bool_t existHit = false;
       if (nCrystalCals == 0)
          AddCrystalCal(crystalId, NUSmearing(energy), time);
       else {
          for (Int_t j = 0; j < nCrystalCals; j++) {
-            if (((AtApolloCrystalCalData *)(fApolloCryCalDataCA->At(j)))->GetCrystalId() == crystalId) {
-               ((AtApolloCrystalCalData *)(fApolloCryCalDataCA->At(j)))->AddMoreEnergy(NUSmearing(energy));
-               if (((AtApolloCrystalCalData *)(fApolloCryCalDataCA->At(j)))->GetTime() > time) {
-                  ((AtApolloCrystalCalData *)(fApolloCryCalDataCA->At(j)))->SetTime(time);
+            if ((dynamic_cast<AtApolloCrystalCalData *>(fApolloCryCalDataCA.At(j)))->GetCrystalId() == crystalId) {
+               (dynamic_cast<AtApolloCrystalCalData *>(fApolloCryCalDataCA.At(j)))->AddMoreEnergy(NUSmearing(energy));
+               if ((dynamic_cast<AtApolloCrystalCalData *>(fApolloCryCalDataCA.At(j)))->GetTime() > time) {
+                  (dynamic_cast<AtApolloCrystalCalData *>(fApolloCryCalDataCA.At(j)))->SetTime(time);
                }
                existHit = true; // to avoid the creation of a new CrystalHit
 
@@ -128,10 +122,7 @@ void AtApolloDigitizer::Exec(Option_t *option)
       }
    }
 
-   if (pointData)
-      delete[] pointData;
-
-   Int_t nCrystalCals = fApolloCryCalDataCA->GetEntriesFast();
+   Int_t nCrystalCals = fApolloCryCalDataCA.GetEntriesFast();
    if (nCrystalCals == 0)
       return;
 
@@ -143,21 +134,21 @@ void AtApolloDigitizer::Exec(Option_t *option)
 
    for (Int_t i = 0; i < nCrystalCals; i++) {
 
-      tempCryID = ((AtApolloCrystalCalData *)(fApolloCryCalDataCA->At(i)))->GetCrystalId();
+      tempCryID = (dynamic_cast<AtApolloCrystalCalData *>(fApolloCryCalDataCA.At(i)))->GetCrystalId();
 
-      temp = ((AtApolloCrystalCalData *)(fApolloCryCalDataCA->At(i)))->GetEnergy();
+      temp = (dynamic_cast<AtApolloCrystalCalData *>(fApolloCryCalDataCA.At(i)))->GetEnergy();
       if (temp < fThreshold) {
-         fApolloCryCalDataCA->RemoveAt(i);
-         fApolloCryCalDataCA->Compress();
+         fApolloCryCalDataCA.RemoveAt(i);
+         fApolloCryCalDataCA.Compress();
          nCrystalCals--; // remove from CalData those below threshold
          i--;
          continue;
       }
 
       if (isCsI(tempCryID) && fResolutionCsI > 0)
-         ((AtApolloCrystalCalData *)(fApolloCryCalDataCA->At(i)))->SetEnergy(ExpResSmearingCsI(temp));
+         (dynamic_cast<AtApolloCrystalCalData *>(fApolloCryCalDataCA.At(i)))->SetEnergy(ExpResSmearingCsI(temp));
       if (isLaBr(tempCryID) && fResolutionLaBr > 0)
-         ((AtApolloCrystalCalData *)(fApolloCryCalDataCA->At(i)))->SetEnergy(ExpResSmearingLaBr(temp));
+         (dynamic_cast<AtApolloCrystalCalData *>(fApolloCryCalDataCA.At(i)))->SetEnergy(ExpResSmearingLaBr(temp));
    }
 }
 
@@ -165,21 +156,20 @@ void AtApolloDigitizer::Exec(Option_t *option)
 void AtApolloDigitizer::EndOfEvent()
 {
    // fApolloPointDataCA->Clear();
-   // fApolloCryCalDataCA->Clear();
+   // fApolloCryCalDataCA.Clear();
    ResetParameters();
 }
 
 void AtApolloDigitizer::Register()
 {
-   FairRootManager::Instance()->Register("CrystalCal", GetName(), fApolloCryCalDataCA, kTRUE);
+   FairRootManager::Instance()->Register("CrystalCal", GetName(), &fApolloCryCalDataCA, kTRUE);
 }
 
 void AtApolloDigitizer::Reset()
 {
    // Clear the CA structure
    LOG(DEBUG) << "Clearing ApolloCrystalCalData Structure";
-   if (fApolloCryCalDataCA)
-      fApolloCryCalDataCA->Clear();
+   fApolloCryCalDataCA.Clear();
 
    ResetParameters();
 }
@@ -194,14 +184,14 @@ void AtApolloDigitizer::SetDetectionThreshold(Double_t thresholdEne)
 
 AtApolloCrystalCalData *AtApolloDigitizer::AddCrystalCal(Int_t ident, Double_t energy, ULong64_t time)
 {
-   TClonesArray &clref = *fApolloCryCalDataCA;
+   TClonesArray &clref = fApolloCryCalDataCA;
    Int_t size = clref.GetEntriesFast();
    if (fVerbose > 1)
       LOG(INFO) << "-I- AtApolloDigitizer: Adding CrystalCalData "
                 << " with unique identifier " << ident << " entering with " << energy * 1e06 << " keV "
                 << " Time=" << time;
 
-   return new (clref[size]) AtApolloCrystalCalData(ident, energy, time);
+   return new (clref[size]) AtApolloCrystalCalData(ident, energy, time); // NOLINT
 }
 
 void AtApolloDigitizer::SetExpEnergyRes(Double_t crystalResCsI, Double_t crystalResLaBr)

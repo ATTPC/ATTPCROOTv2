@@ -41,7 +41,7 @@ ClassImp(AtGeoCave)
 {
    // Constructor
    fName = "cave";
-   name = "cave";
+
    maxModules = 1;
 }
 
@@ -54,7 +54,7 @@ Bool_t AtGeoCave::read(fstream &fin, FairGeoMedia *media)
    const Int_t maxbuf = 256;
    char buf[maxbuf];
    FairGeoNode *volu = nullptr;
-   FairGeoMedium *medium;
+   FairGeoMedium *medium = nullptr;
    Bool_t rc = kTRUE;
    do {
       fin.getline(buf, maxbuf);

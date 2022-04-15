@@ -56,11 +56,11 @@ Bool_t AtSiArray::ProcessHits(FairVolume *vol)
 {
    /** This method is called from the MC stepping */
 
-   auto *stack = static_cast<AtStack *>(TVirtualMC::GetMC()->GetStack());
+   auto *stack = dynamic_cast<AtStack *>(TVirtualMC::GetMC()->GetStack());
    std::pair<Int_t, Int_t> AZ;
    AZ = DecodePdG(gMC->TrackPid());
    fVolName = gMC->CurrentVolName();
-   Int_t VolumeID;
+   Int_t VolumeID = 0;
 
    LOG(debug) << "In AtSiArray::ProcessHits";
    // Set parameters at entrance of volume. Reset ELoss.
@@ -85,10 +85,10 @@ Bool_t AtSiArray::ProcessHits(FairVolume *vol)
       LOG(INFO) << " Position Out : " << fPosOut.X() << " " << fPosOut.Y() << "  " << fPosOut.Z() << std::endl;
       LOG(INFO) << " Momentum In: " << fMomIn.X() << " " << fMomIn.Y() << "  " << fMomIn.Z() << std::endl;
       // LOG(INFO)<<" Total relativistic energy " <<gMC->Etot()<< FairLogger::endl;
-      // LOG(INFO)<<" Mass of the Tracked particle (gAVTP) : "<<gAtVP->GetBeamMass()<<std::endl;
-      // LOG(INFO)<<" Mass of the Tracked particle (gMC) : "<<gMC->TrackMass()<<std::endl;
-      // LOG(INFO)<<" Initial energy of the current particle in this volume : "<<((gMC->Etot() - gMC->TrackMass()) *
-      // 1000.)<<FairLogger::endl;// Relativistic Mass
+      // LOG(INFO)<<" Mass of the Tracked particle (gAVTP) :
+      // "<<AtVertexPropagator::Instance()->GetBeamMass()<<std::endl; LOG(INFO)<<" Mass of the Tracked particle (gMC) :
+      // "<<gMC->TrackMass()<<std::endl; LOG(INFO)<<" Initial energy of the current particle in this volume :
+      // "<<((gMC->Etot() - gMC->TrackMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
    }
 
    // Sum energy loss for all steps in the active volume
@@ -115,11 +115,11 @@ Bool_t AtSiArray::ProcessHits(FairVolume *vol)
 
       if (gMC->IsTrackExiting()) {
 
-         const Double_t *oldpos;
-         const Double_t *olddirection;
+         const Double_t *oldpos = nullptr;
+         const Double_t *olddirection = nullptr;
          Double_t newpos[3];
          Double_t newdirection[3];
-         Double_t safety;
+         Double_t safety = 0;
 
          gGeoManager->FindNode(fPosOut.X(), fPosOut.Y(), fPosOut.Z());
          oldpos = gGeoManager->GetCurrentPoint();

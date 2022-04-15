@@ -30,16 +30,16 @@ class TMemberInspector;
 class AtHDFUnpacker : public AtUnpacker {
 
 private:
-   Int_t fNumberTimestamps;
-   Bool_t fIsBaseLineSubtraction;
+   Int_t fNumberTimestamps{};
+   Bool_t fIsBaseLineSubtraction{};
 
-   hid_t _file;
-   hid_t _group;
-   hid_t _dataset;
+   hid_t _file{};
+   hid_t _group{};
+   hid_t _dataset{};
    std::vector<std::string> _eventsbyname;
 
-   std::size_t fFirstEvent;
-   std::size_t fLastEvent;
+   std::size_t fFirstEvent{};
+   std::size_t fLastEvent{};
 
 public:
    AtHDFUnpacker(mapPtr map);

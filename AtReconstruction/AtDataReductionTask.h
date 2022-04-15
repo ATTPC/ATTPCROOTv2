@@ -25,9 +25,9 @@ class AtDataReductionTask : public FairTask {
 private:
    funcType reduceFunc;
 
-   TClonesArray *fInputEventArray; // AtRawEvent
-   TString fInputBranchName;       // Name if AtRawEvent branch
-   AtRawEvent *fRawEvent;
+   TClonesArray *fInputEventArray{}; // AtRawEvent
+   TString fInputBranchName;         // Name if AtRawEvent branch
+   AtRawEvent *fRawEvent{};
 
 public:
    AtDataReductionTask();

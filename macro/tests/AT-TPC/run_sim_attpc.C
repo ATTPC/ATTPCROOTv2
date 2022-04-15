@@ -22,9 +22,6 @@ void run_sim_attpc(Int_t nEvents = 100, TString mcEngine = "TGeant4")
    TStopwatch timer;
    timer.Start();
    cout << "TIME IS " << timer.RealTime() << endl;
-   AtVertexPropagator *vertex_prop = new AtVertexPropagator();
-
-   cout << "TIME IS " << timer.RealTime() << endl;
 
    FairRunSim *run = new FairRunSim();
    run->SetName(mcEngine);                          // Transport engine

@@ -19,10 +19,7 @@
 
 ClassImp(AtPedestal);
 
-AtPedestal::AtPedestal()
-{
-   fMath = new GETMath2();
-}
+AtPedestal::AtPedestal() : fMath(std::make_unique<GETMath2>()) {}
 
 Bool_t AtPedestal::SubtractPedestal(Int_t numTbs, Int_t *fpn, Int_t *rawADC, Double_t *dest, Double_t rmsCut,
                                     Bool_t signalNegativePolarity, Int_t startTb, Int_t averageTbs)

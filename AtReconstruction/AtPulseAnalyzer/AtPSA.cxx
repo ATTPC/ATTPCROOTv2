@@ -22,32 +22,9 @@ using std::distance;
 using std::max_element;
 using std::min_element;
 
-AtPSA::AtPSA()
-{
-   std::cout << "Calling AtPSA Constructor" << std::endl;
-
-   // TODO:Move to class that needs them
-   fIniTB = 0;
-   fEndTB = 512;
-   fNumTbs = 512; // This was hard coded too many places to leave as a variable...
-
-   fThreshold = -1;
-   fThresholdlow = -1;
-   fUsingLowThreshold = kFALSE;
-
-   fIsGainCalibrated = kFALSE;
-   fIsJitterCalibrated = kFALSE;
-}
-
-AtPSA::~AtPSA()
-{
-
-   delete fCalibration;
-}
-
 void AtPSA::Init()
 {
-   fCalibration = new AtCalibration();
+   fCalibration = std::make_unique<AtCalibration>();
 
    FairRun *run = FairRun::Instance();
    if (!run)
@@ -220,7 +197,7 @@ void AtPSA::TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit &hit)
    for (auto it = map.lower_bound(padNum); it != map.upper_bound(padNum); ++it) {
 
       if (fMCSimPointArray != nullptr) {
-         auto *MCPoint = (AtMCPoint *)fMCSimPointArray->At(it->second);
+         auto *MCPoint = dynamic_cast<AtMCPoint *>(fMCSimPointArray->At(it->second));
 
          AtHit::MCSimPoint mcpoint(it->second, MCPoint->GetTrackID(), MCPoint->GetEIni(), MCPoint->GetEnergyLoss(),
                                    MCPoint->GetAIni(), MCPoint->GetMassNum(), MCPoint->GetAtomicNum());

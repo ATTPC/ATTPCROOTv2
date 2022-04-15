@@ -17,8 +17,6 @@ AtProtoEventAna::AtProtoEventAna() : TNamed("AtProtoEventAna", "Proto Event Anal
    fQVertex.clear();
    fChi2.clear();
    fNDF.clear();
-   fVertex02 = -500.0;
-   fVertex13 = -500.0;
 }
 
 AtProtoEventAna::~AtProtoEventAna() = default;

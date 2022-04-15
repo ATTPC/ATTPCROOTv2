@@ -40,7 +40,7 @@ InitStatus AtAuxFilterTask::Init()
    }
 
    // Get the old data from the io manager
-   fInputEventArray = (TClonesArray *)ioManager->GetObject(fInputEventBranchName);
+   fInputEventArray = dynamic_cast<TClonesArray *>(ioManager->GetObject(fInputEventBranchName));
    if (fInputEventArray == nullptr) {
       LOG(ERROR) << "AtAuxFilterTask: Cannot find AtRawEvent array " << fInputEventBranchName;
       return kERROR;
@@ -56,7 +56,7 @@ void AtAuxFilterTask::Exec(Option_t *opt)
    if (fInputEventArray->GetEntriesFast() == 0)
       return;
 
-   auto *rawEvent = (AtRawEvent *)fInputEventArray->At(0);
+   auto *rawEvent = dynamic_cast<AtRawEvent *>(fInputEventArray->At(0));
    if (!rawEvent->IsGood())
       return;
 

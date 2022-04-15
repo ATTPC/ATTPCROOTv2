@@ -57,7 +57,6 @@ AtEventManagerProto::AtEventManagerProto()
 
 {
    fInstance = this;
-   kEraseQ = kFALSE;
 }
 
 AtEventManagerProto::~AtEventManagerProto() = default;
@@ -310,7 +309,7 @@ void AtEventManagerProto::DrawWave()
    if (!select)
       return;
    if (select->InheritsFrom(TH2::Class())) {
-      auto *h = (TH2Poly *)select;
+      auto *h = dynamic_cast<TH2Poly *>(select);
       gPad->GetCanvas()->FeedbackMode(kTRUE);
       // Char_t *bin_name = h->GetBinName();
 

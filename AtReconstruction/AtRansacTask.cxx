@@ -10,22 +10,10 @@
 
 ClassImp(AtRansacTask);
 
-AtRansacTask::AtRansacTask() : fInputBranchName("AtEventH"), fOutputBranchName("AtRansac")
-
+AtRansacTask::AtRansacTask()
+   : fInputBranchName("AtEventH"), fOutputBranchName("AtRansac"), kIsPersistence(kFALSE), kIsFullMode(kFALSE),
+     kIsReprocess(kFALSE)
 {
-
-   kIsPersistence = kFALSE;
-   kIsFullMode = kFALSE;
-   kIsReprocess = kFALSE;
-
-   fRANSACModel = pcl::SACMODEL_LINE;
-   fRANSACThreshold = 5.0;
-   fMinHitsLine = 5;
-   fNumItera = 500;
-   fRANSACAlg = 0;
-   fRandSamplMode = 0;
-   fCharThres = false;
-   fVertexMode = 0;
 }
 
 AtRansacTask::~AtRansacTask() = default;
@@ -119,7 +107,7 @@ InitStatus AtRansacTask::Init()
       return kERROR;
    }
 
-   fEventArray = (TClonesArray *)ioMan->GetObject(fInputBranchName);
+   fEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fInputBranchName));
    if (fEventArray == nullptr) {
 
       LOG(error) << "Cannot find AtEvent array!";
@@ -144,7 +132,7 @@ void AtRansacTask::Exec(Option_t *opt)
    if (fEventArray->GetEntriesFast() == 0)
       return;
 
-   fEvent = (AtEvent *)fEventArray->At(0);
+   fEvent = dynamic_cast<AtEvent *>(fEventArray->At(0));
 
    LOG(debug) << "Running RANSAC with " << fEvent->GetNumHits() << " hits.";
 
@@ -152,7 +140,8 @@ void AtRansacTask::Exec(Option_t *opt)
       LOG(debug) << "Running RANSAC algorithm AtRANSACN::AtRansac";
       auto *Ransac = (AtRANSACN::AtRansac *)new ((*fRansacArray)[0]) AtRANSACN::AtRansac();
       Ransac->SetTiltAngle(fTiltAngle);
-      Ransac->SetModelType(fRANSACModel);
+      if (fRANSACModel != -1)
+         Ransac->SetModelType(fRANSACModel);
       Ransac->SetDistanceThreshold(fRANSACThreshold);
       Ransac->SetMinHitsLine(fMinHitsLine);
       if (kIsFullMode)

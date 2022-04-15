@@ -29,7 +29,7 @@ private:
    const Int_t fNumberCoBo;
    Double_t fThreshold = 0;
    AtMapPtr fMapping;
-   Int_t fNumberMissedAsads;
+   Int_t fNumberMissedAsads{};
    Bool_t fSetIsGood = true; // if true will set the IsGood flag on the filtered AtRawEvent
 
    // Avg with baseline subtraction baseline[cobo][asad][tb]

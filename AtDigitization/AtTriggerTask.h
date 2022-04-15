@@ -9,6 +9,7 @@
 #define AtTriggerTask_H
 
 #include <Rtypes.h>
+#include <TClonesArray.h>
 #include <TString.h>
 #include <FairTask.h>
 
@@ -18,7 +19,6 @@ class AtTrigger;
 class AtTriggerPar;
 class TBuffer;
 class TClass;
-class TClonesArray;
 class TMemberInspector;
 
 class AtTriggerTask : public FairTask {
@@ -34,17 +34,17 @@ public:
    virtual void SetParContainers();  //!< Load the parameter container from the runtime database.
 
 private:
-   AtTriggerPar *fPar;
-   AtTrigger *fTrigger;
-   TClonesArray *fAtRawEventArray;
-   TClonesArray *fAtEventArray;
-   TClonesArray *fAtRawEventArray_acc;
-   TClonesArray *fAtEventArray_acc;
-   AtEvent *fEvent;
-   AtRawEvent *fRawEvent;
+   AtTriggerPar *fPar{};
+   std::unique_ptr<AtTrigger> fTrigger;
+   TClonesArray *fAtRawEventArray{};
+   TClonesArray *fAtEventArray{};
+   TClonesArray fAtRawEventArray_acc;
+   TClonesArray fAtEventArray_acc;
+   AtEvent *fEvent{};
+   AtRawEvent *fRawEvent{};
    TString fMapPath;
 
-   Bool_t fIsTrigger;
+   Bool_t fIsTrigger{};
    Bool_t fIsPersistent;
 
    ClassDef(AtTriggerTask, 1);

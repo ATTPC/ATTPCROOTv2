@@ -9,7 +9,7 @@
 #include "AtEvent.h"
 #include "AtProtoEvent.h"
 #include "AtDigiPar.h"
-#include "AtRansac.h"
+//#include "AtRansac.h"
 #include "AtRansacMod.h"
 #include "AtMlesacMod.h"
 #include "AtLmedsMod.h"
@@ -22,23 +22,23 @@ private:
    TString fInputBranchName;
    TString fOutputBranchName;
 
-   TClonesArray *fEventArray;
-   TClonesArray *fRansacArray;
+   TClonesArray *fEventArray{};
+   TClonesArray *fRansacArray{};
 
-   AtEvent *fEvent;
+   AtEvent *fEvent{};
 
    Bool_t kIsReprocess;
    Bool_t kIsPersistence;
    Bool_t kIsFullMode;
-   int fRANSACModel;
-   Float_t fRANSACThreshold;
-   Int_t fMinHitsLine; // Minimum number of hits
-   Double_t fTiltAngle;
-   Int_t fNumItera;
-   Int_t fRANSACAlg;
-   Int_t fRandSamplMode;
-   Bool_t fCharThres;
-   Int_t fVertexMode;
+   int fRANSACModel{-1};
+   Float_t fRANSACThreshold{5.0};
+   Int_t fMinHitsLine{5}; // Minimum number of hits
+   Double_t fTiltAngle{};
+   Int_t fNumItera{500};
+   Int_t fRANSACAlg{0};
+   Int_t fRandSamplMode{0};
+   Bool_t fCharThres{false};
+   Int_t fVertexMode{0};
 
 public:
    AtRansacTask();

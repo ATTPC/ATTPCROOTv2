@@ -5,34 +5,6 @@
 
 #include <Rtypes.h>
 
-AtEulerTransformation::AtEulerTransformation()
-{
-   //
-   // Constructor
-   //
-
-   // ***  Transformation  coordinate system (Euler angles) :  ***
-   // DEFINITIONS:
-   //  --from beam to lab system
-   //     alpha = phi
-   //     beta  = theta
-   //     gamma = 0
-   // *** inputs: theta_beam, phi_beam, alpha, beta, gamma
-   // *** calculate: theta_lab, phi_lab (from beam to lab)
-   //
-   //  --or from lab to beam system
-   //     alpha = pi
-   //     beta  = theta_beam
-   //     gamma = pi - phi_beam
-
-   ThetaInBeamSystem = 0.0;
-   PhiInBeamSystem = 0.0;
-   BeamDirectionAtVertexTheta = 0.0;
-   BeamDirectionAtVertexPhi = 0.0;
-   ThetaInLabSystem = 0.0;
-   PhiInLabSystem = 0.0;
-}
-
 void AtEulerTransformation::DoTheEulerTransformationBeam2Lab()
 {
 

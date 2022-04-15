@@ -37,12 +37,12 @@ void AtTPCFissionGeneratorV3::loadIonList(TString ionList)
 void AtTPCFissionGeneratorV3::loadFissionFragmentTree(TString fissionDistro)
 {
 
-   fEventFile = new TFile(fissionDistro, "READ");
+   fEventFile = new TFile(fissionDistro, "READ"); // NOLINT (belongs to ROOT)
 
    if (fEventFile->IsZombie())
       LOG(fatal) << "Could not open file with decay fragments: " << fissionDistro;
 
-   fEventTree = (TTree *)fEventFile->Get("fragments");
+   fEventTree = dynamic_cast<TTree *>(fEventFile->Get("fragments"));
    if (!fEventTree)
       LOG(fatal) << "Failed to find the tree fragments";
 
@@ -58,7 +58,7 @@ AtTPCFissionGeneratorV3::AtTPCFissionGeneratorV3() = default;
 // Generator that takes in a file that specifies the expected distribution of
 // fission particles.
 AtTPCFissionGeneratorV3::AtTPCFissionGeneratorV3(const char *name, TString ionList, TString fissionDistro)
-   : fDecayFrags(new std::vector<VecPE>()), fA(new std::vector<Int_t>()), fZ(new std::vector<Int_t>()), fCurrEvent(0)
+   : fDecayFrags(new std::vector<VecPE>()), fA(new std::vector<Int_t>()), fZ(new std::vector<Int_t>())
 {
    loadIonList(ionList);
    loadFissionFragmentTree(fissionDistro);
@@ -74,14 +74,14 @@ Bool_t AtTPCFissionGeneratorV3::ReadEvent(FairPrimaryGenerator *primeGen)
    fPrimeGen = primeGen;
 
    // If this is a beam-like event don't do anything
-   if (gAtVP->GetDecayEvtCnt() % 2 == 0) {
+   if (AtVertexPropagator::Instance()->GetDecayEvtCnt() % 2 == 0) {
       LOG(debug) << "AtTPCFissionGeneratorV3: Skipping beam-like event";
    } else {
       LOG(debug) << "AtTPCFissionGeneratorV3: Runing reaction-like event";
       generateEvent();
    }
 
-   gAtVP->IncDecayEvtCnt();
+   AtVertexPropagator::Instance()->IncDecayEvtCnt();
    return true;
 }
 
@@ -94,16 +94,17 @@ void AtTPCFissionGeneratorV3::generateEvent()
       generateFragment(fDecayFrags->at(i), fA->at(i), fZ->at(i));
 
    LOG(debug) << "Wrote tracks for fission root event: " << fCurrEvent;
-   LOG(debug) << "Wrote tracks for MC event: " << gAtVP->GetDecayEvtCnt();
+   LOG(debug) << "Wrote tracks for MC event: " << AtVertexPropagator::Instance()->GetDecayEvtCnt();
    fCurrEvent++;
 }
 
 VecPE AtTPCFissionGeneratorV3::getBeam4Vec()
 {
-   Double_t fVEn = gAtVP->GetEnergy() + gAtVP->GetBeamMass() * 931.494;
-   Double_t fVPx = gAtVP->GetPx() * 1000;
-   Double_t fVPy = gAtVP->GetPy() * 1000;
-   Double_t fVPz = gAtVP->GetPz() * 1000;
+   Double_t fVEn =
+      AtVertexPropagator::Instance()->GetEnergy() + AtVertexPropagator::Instance()->GetBeamMass() * 931.494;
+   Double_t fVPx = AtVertexPropagator::Instance()->GetPx() * 1000;
+   Double_t fVPy = AtVertexPropagator::Instance()->GetPy() * 1000;
+   Double_t fVPz = AtVertexPropagator::Instance()->GetPz() * 1000;
    VecPE beam;
    beam.SetPxPyPzE(fVPx, fVPy, fVPz, fVEn);
    return beam;
@@ -111,7 +112,8 @@ VecPE AtTPCFissionGeneratorV3::getBeam4Vec()
 
 Cartesian3D AtTPCFissionGeneratorV3::getVertex()
 {
-   return {gAtVP->GetVx(), gAtVP->GetVy(), gAtVP->GetVz()};
+   return {AtVertexPropagator::Instance()->GetVx(), AtVertexPropagator::Instance()->GetVy(),
+           AtVertexPropagator::Instance()->GetVz()};
 }
 
 void AtTPCFissionGeneratorV3::setBeamParameters()
@@ -140,8 +142,8 @@ void AtTPCFissionGeneratorV3::generateFragment(VecPE &P, Int_t A, Int_t Z)
                                  labP.Px(), labP.Py(), labP.Pz(), fVertex.X(), fVertex.Y(), fVertex.Z(), kinE, angle);
 
    auto nextTrackID = gMC->GetStack()->GetNtrack();
-   gAtVP->SetTrackEnergy(nextTrackID, kinE);
-   gAtVP->SetTrackAngle(nextTrackID, angle);
+   AtVertexPropagator::Instance()->SetTrackEnergy(nextTrackID, kinE);
+   AtVertexPropagator::Instance()->SetTrackAngle(nextTrackID, angle);
 
    // Requires GeV
    // NOLINTNEXTLINE

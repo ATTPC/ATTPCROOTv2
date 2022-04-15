@@ -29,7 +29,7 @@ public:
    virtual void ConstructGeometry();
 
 private:
-   Double_t world[3];
+   Double_t world[3]{0, 0, 0};
    ClassDef(AtCave, 1) // PNDCaveSD
 };
 

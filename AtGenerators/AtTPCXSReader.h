@@ -58,14 +58,14 @@ private:
    std::vector<FairIon *> fIon;         // Pointer to the FairIon to be generated
    std::vector<TString> fPType;
    std::vector<FairParticle *> fParticle;
-   std::vector<Int_t> fQ; // Electric charge [e]
-   Double_t fBeamEnergy;  // Residual beam energy for phase calculation
-   Double_t fPxBeam;
-   Double_t fPyBeam;
-   Double_t fPzBeam;
+   std::vector<Int_t> fQ;  // Electric charge [e]
+   Double_t fBeamEnergy{}; // Residual beam energy for phase calculation
+   Double_t fPxBeam{};
+   Double_t fPyBeam{};
+   Double_t fPzBeam{};
    std::vector<Double_t> fWm; // Total mass
 
-   TH2F *fh_pdf;
+   TH2F *fh_pdf{};
 
    ClassDef(AtTPCXSReader, 1)
 };

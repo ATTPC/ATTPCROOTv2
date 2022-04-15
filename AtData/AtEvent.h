@@ -37,7 +37,7 @@ private:
    std::vector<AtAuxPad> fAuxPadArray;
    std::map<Int_t, Int_t> fMultiplicityMap;
 
-   traceArray fMeshSig;
+   traceArray fMeshSig{};
 
 public:
    AtEvent();

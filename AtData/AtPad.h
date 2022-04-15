@@ -31,8 +31,8 @@ protected:
    Bool_t fIsValid = true;
    Bool_t fIsPedestalSubtracted = false;
 
-   rawTrace fRawAdc;
-   trace fAdc;
+   rawTrace fRawAdc{};
+   trace fAdc{};
 
    // Bool_t fIsAux;
    // std::string fAuxName;

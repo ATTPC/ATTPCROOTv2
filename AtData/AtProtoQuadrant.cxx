@@ -6,40 +6,19 @@
 
 #include <Rtypes.h>
 
-ClassImp(AtProtoQuadrant)
+ClassImp(AtProtoQuadrant);
 
-   AtProtoQuadrant::AtProtoQuadrant()
+AtProtoQuadrant::AtProtoQuadrant(Int_t QuadrantID) : AtProtoQuadrant({}, QuadrantID) {}
+
+AtProtoQuadrant::AtProtoQuadrant(std::vector<AtHit> HitArray, Int_t QuadrantID)
+   : AtProtoQuadrant(std::move(HitArray), QuadrantID, 0.0)
 {
-
-   fEventID = -1;
-   fPhiQ = 0.0;
 }
 
-AtProtoQuadrant::AtProtoQuadrant(Int_t QuadrantID)
+AtProtoQuadrant::AtProtoQuadrant(std::vector<AtHit> HitArray, Int_t QuadrantID, Double_t PhiQ)
+   : fQuadrantID(QuadrantID), fHitArrayQ(std::move(HitArray)), fPhiQ(PhiQ)
 {
-
-   fEventID = -1;
-   fQuadrantID = QuadrantID;
-   fPhiQ = 0.0;
 }
-
-AtProtoQuadrant::AtProtoQuadrant(std::vector<AtHit> *HitArray, Int_t QuadrantID)
-{
-   fEventID = -1;
-   fQuadrantID = QuadrantID;
-   fHitArrayQ = *HitArray;
-   fPhiQ = 0.0;
-}
-
-AtProtoQuadrant::AtProtoQuadrant(std::vector<AtHit> *HitArray, Int_t QuadrantID, Double_t PhiQ)
-{
-   fEventID = -1;
-   fQuadrantID = QuadrantID;
-   fHitArrayQ = *HitArray;
-   fPhiQ = PhiQ;
-}
-
-AtProtoQuadrant::~AtProtoQuadrant() = default;
 
 void AtProtoQuadrant::SetEventID(Int_t evtid)
 {
@@ -82,7 +61,7 @@ Int_t AtProtoQuadrant::GetEventID()
 {
    return fEventID;
 }
-Int_t AtProtoQuadrant::GetNumHits()
+std::size_t AtProtoQuadrant::GetNumHits()
 {
    return fHitArrayQ.size();
 }
@@ -90,7 +69,7 @@ TH1D *AtProtoQuadrant::GetPhiDistribution()
 {
    return &fPhiDistr;
 }
-Int_t AtProtoQuadrant::GetNumPhiVal()
+std::size_t AtProtoQuadrant::GetNumPhiVal()
 {
    return fPhiDistrArray.size();
 }

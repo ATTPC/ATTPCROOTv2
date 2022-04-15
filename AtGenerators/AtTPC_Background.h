@@ -50,7 +50,7 @@ public:
 private:
    static Int_t fgNIon; //! Number of the instance of this class
    Int_t fMult;         // Multiplicity per event
-   Bool_t fIsDecay;
+   Bool_t fIsDecay{};
    Double_t fVx, fVy, fVz;      // Vertex coordinates [cm]
    std::vector<FairIon *> fIon; // Pointer to the FairIon to be generated
    std::vector<TString> fPType;
@@ -59,28 +59,28 @@ private:
    std::vector<Double_t> Masses;        // Masses of the N products
    std::vector<Double_t> fExEnergy;     // Excitation energies of the products
    std::vector<Double_t> fWm;           // Total mass
-   Int_t fN;
+   Int_t fN{};
 
-   Double_t K1;
-   Double_t m1, m2, m3, m4, m7, m8;
-   Double_t Ex_ejectile, Ex_2he;
-   Double_t test_var;
+   Double_t K1{};
+   Double_t m1{}, m2{}, m3{}, m4{}, m7{}, m8{};
+   Double_t Ex_ejectile{}, Ex_2he{};
+   Double_t test_var{};
 
-   Double_t ranX;
-   Int_t ran_theta;
+   Double_t ranX{};
+   Int_t ran_theta{};
 
-   Double_t Prec;
+   Double_t Prec{};
 
    std::vector<Int_t> fQ; // Electric charge [e]
 
-   Double_t fBeamEnergy; // Residual beam energy for phase calculation
-   Double_t fPxBeam;
-   Double_t fPyBeam;
-   Double_t fPzBeam;
+   Double_t fBeamEnergy{}; // Residual beam energy for phase calculation
+   Double_t fPxBeam{};
+   Double_t fPyBeam{};
+   Double_t fPzBeam{};
 
-   Double_t random_z;
-   Double_t random_r;
-   Double_t random_phi;
+   Double_t random_z{};
+   Double_t random_r{};
+   Double_t random_phi{};
 
    ClassDef(AtTPC_Background, 2)
 };

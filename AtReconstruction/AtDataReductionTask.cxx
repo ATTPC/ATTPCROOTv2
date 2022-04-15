@@ -22,7 +22,7 @@ InitStatus AtDataReductionTask::Init()
       return kFATAL;
    }
 
-   fInputEventArray = (TClonesArray *)ioMan->GetObject(fInputBranchName);
+   fInputEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fInputBranchName));
    if (fInputEventArray == nullptr) {
       LOG(fatal) << "Cannot find AtRawEvent array in branch " << fInputBranchName << "!";
       return kFATAL;

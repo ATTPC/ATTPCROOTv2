@@ -51,11 +51,11 @@
 
 #include <iostream>
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
-#define cBLUE "\033[1;34m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
+constexpr auto cBLUE = "\033[1;34m";
 
 using namespace std;
 
@@ -90,7 +90,6 @@ AtEventDrawTask::AtEventDrawTask()
 {
 
    Char_t padhistname[256];
-   fMultiHit = 10;
 
    for (Int_t i = 0; i < fNumPads; i++) { // TODO: Full-scale must be accomodated
       sprintf(padhistname, "pad_%d", i);
@@ -183,22 +182,22 @@ InitStatus AtEventDrawTask::Init()
    fDetmap->SetName("fMap");
    gROOT->GetListOfSpecials()->Add(fDetmap);
 
-   fEventArray = (TClonesArray *)ioMan->GetObject(fEventBranchName);
+   fEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fEventBranchName));
    if (fEventArray)
       LOG(INFO) << cGREEN << "Event Array Found in branch " << fEventBranchName << "." << cNORMAL << std::endl;
 
-   fCorrectedEventArray = (TClonesArray *)ioMan->GetObject(fCorrectedEventBranchName);
+   fCorrectedEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fCorrectedEventBranchName));
    if (fCorrectedEventArray)
       LOG(INFO) << cGREEN << "Corrected Event Array Found in branch " << fCorrectedEventBranchName << "." << cNORMAL
                 << std::endl;
 
-   fRawEventArray = (TClonesArray *)ioMan->GetObject(fRawEventBranchName);
+   fRawEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fRawEventBranchName));
    if (fRawEventArray) {
       LOG(INFO) << cGREEN << "Raw Event Array Found in branch " << fRawEventBranchName << "." << cNORMAL << std::endl;
       fIsRawData = kTRUE;
    }
 
-   fRansacArray = (TClonesArray *)ioMan->GetObject("AtRansac");
+   fRansacArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtRansac"));
    if (fRansacArray)
       LOG(INFO) << cGREEN << "RANSAC Array Found." << cNORMAL << std::endl;
 
@@ -206,11 +205,11 @@ InitStatus AtEventDrawTask::Init()
    // if(fTrackFinderHCArray)  LOG(INFO)<<cGREEN<<"Track Finder Hierarchical Clustering Array
    // Found."<<cNORMAL<<std::endl;
 
-   fPatternEventArray = (TClonesArray *)ioMan->GetObject("AtPatternEvent");
+   fPatternEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtPatternEvent"));
    if (fPatternEventArray)
       LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL << std::endl;
 
-   fTrackingEventAnaArray = (TClonesArray *)ioMan->GetObject("AtTrackingEventAna");
+   fTrackingEventAnaArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtTrackingEventAna"));
    if (fTrackingEventAnaArray)
       LOG(INFO) << cGREEN << "Tracking Event Analysis Array Found." << cNORMAL << std::endl;
 
@@ -322,7 +321,7 @@ void AtEventDrawTask::DrawHitPoints()
    std::vector<Double_t> fPosZMin;
 
    fQEventHist_H->Reset(nullptr);
-   auto *event = (AtEvent *)fEventArray->At(0);
+   auto *event = dynamic_cast<AtEvent *>(fEventArray->At(0));
 
    Double_t Qevent = event->GetEventCharge();
    Double_t RhoVariance = event->GetRhoVariance();
@@ -349,7 +348,7 @@ void AtEventDrawTask::DrawHitPoints()
    }
 
    if (fIsRawData) {
-      fRawevent = (AtRawEvent *)fRawEventArray->At(0);
+      fRawevent = dynamic_cast<AtRawEvent *>(fRawEventArray->At(0));
       fRawevent->SetName("fRawEvent");
       gROOT->GetListOfSpecials()->Add(fRawevent);
 
@@ -529,7 +528,7 @@ void AtEventDrawTask::DrawHitPoints()
          for (auto &i : fHitSetMC)
             i = nullptr;
 
-         fTrackingEventAna = (AtTrackingEventAna *)fTrackingEventAnaArray->At(0);
+         fTrackingEventAna = dynamic_cast<AtTrackingEventAna *>(fTrackingEventAnaArray->At(0));
          std::vector<AtTrack> anaTracks = fTrackingEventAna->GetTrackArray();
          std::cout << cRED << "Calling code for MC Minimization which is depricated!!!" << std::endl;
          std::cout << cYELLOW << "  ====   Tracking analysis ==== " << std::endl;
@@ -684,7 +683,7 @@ void AtEventDrawTask::DrawHitPoints()
 
    if (fCorrectedEventArray != nullptr) {
       std::cout << "Adding corrected hits" << std::endl;
-      auto *eventCorr = (AtEvent *)fCorrectedEventArray->At(0);
+      auto *eventCorr = dynamic_cast<AtEvent *>(fCorrectedEventArray->At(0));
       fCorrectedHitSet = new TEvePointSet("Hit2", nHits, TEvePointSelectorConsumer::kTVT_XYZ);
       fCorrectedHitSet->SetOwnIds(kTRUE);
       fCorrectedHitSet->SetMarkerColor(kBlue);
@@ -720,7 +719,7 @@ void AtEventDrawTask::DrawHitPoints()
 
    fPadPlane->Draw("zcol");
    gPad->Update();
-   fPadPlanePal = (TPaletteAxis *)fPadPlane->GetListOfFunctions()->FindObject("palette");
+   fPadPlanePal = dynamic_cast<TPaletteAxis *>(fPadPlane->GetListOfFunctions()->FindObject("palette"));
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
@@ -1245,31 +1244,31 @@ void AtEventDrawTask::DrawAux()
 void AtEventDrawTask::UpdateCvsAux()
 {
 
-   TPad *Pad_1 = (TPad *)fCvsAux->GetPad(1);
+   TPad *Pad_1 = dynamic_cast<TPad *>(fCvsAux->GetPad(1));
    Pad_1->Modified();
    Pad_1->Update();
-   TPad *Pad_2 = (TPad *)fCvsAux->GetPad(2);
+   TPad *Pad_2 = dynamic_cast<TPad *>(fCvsAux->GetPad(2));
    Pad_2->Modified();
    Pad_2->Update();
-   TPad *Pad_3 = (TPad *)fCvsAux->GetPad(3);
+   TPad *Pad_3 = dynamic_cast<TPad *>(fCvsAux->GetPad(3));
    Pad_3->Modified();
    Pad_3->Update();
-   TPad *Pad_4 = (TPad *)fCvsAux->GetPad(4);
+   TPad *Pad_4 = dynamic_cast<TPad *>(fCvsAux->GetPad(4));
    Pad_4->Modified();
    Pad_4->Update();
-   TPad *Pad_5 = (TPad *)fCvsAux->GetPad(5);
+   TPad *Pad_5 = dynamic_cast<TPad *>(fCvsAux->GetPad(5));
    Pad_5->Modified();
    Pad_5->Update();
-   TPad *Pad_6 = (TPad *)fCvsAux->GetPad(6);
+   TPad *Pad_6 = dynamic_cast<TPad *>(fCvsAux->GetPad(6));
    Pad_6->Modified();
    Pad_6->Update();
-   TPad *Pad_7 = (TPad *)fCvsAux->GetPad(7);
+   TPad *Pad_7 = dynamic_cast<TPad *>(fCvsAux->GetPad(7));
    Pad_7->Modified();
    Pad_7->Update();
-   TPad *Pad_8 = (TPad *)fCvsAux->GetPad(8);
+   TPad *Pad_8 = dynamic_cast<TPad *>(fCvsAux->GetPad(8));
    Pad_8->Modified();
    Pad_8->Update();
-   TPad *Pad_9 = (TPad *)fCvsAux->GetPad(9);
+   TPad *Pad_9 = dynamic_cast<TPad *>(fCvsAux->GetPad(9));
    Pad_9->Modified();
    Pad_9->Update();
    fCvsAux->Modified();
@@ -1450,10 +1449,10 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
       if (!select)
          return;
       if (select->InheritsFrom(TH2Poly::Class())) {
-         auto *h = (TH2Poly *)select;
+         auto *h = dynamic_cast<TH2Poly *>(select);
          gPad->GetCanvas()->FeedbackMode(kTRUE);
          AtRawEvent *tRawEvent = nullptr;
-         tRawEvent = (AtRawEvent *)gROOT->GetListOfSpecials()->FindObject(rawevt);
+         tRawEvent = dynamic_cast<AtRawEvent *>(gROOT->GetListOfSpecials()->FindObject(rawevt));
          if (tRawEvent == nullptr) {
             std::cout << " = AtEventDrawTask::SelectPad NULL pointer for the AtRawEvent! Please select an event first "
                       << std::endl;
@@ -1483,7 +1482,7 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
          std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
 
          AtMap *tmap = nullptr;
-         tmap = (AtMap *)gROOT->GetListOfSpecials()->FindObject("fMap");
+         tmap = dynamic_cast<AtMap *>(gROOT->GetListOfSpecials()->FindObject("fMap"));
          Int_t tPadNum = 0;
 
          if (dynamic_cast<AtTpcMap *>(tmap)) {
@@ -1505,7 +1504,7 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
          std::cout << std::endl;
 
          TH1I *tPadWave = nullptr;
-         tPadWave = (TH1I *)gROOT->GetListOfSpecials()->FindObject("fPadWave");
+         tPadWave = dynamic_cast<TH1I *>(gROOT->GetListOfSpecials()->FindObject("fPadWave"));
          auto rawadc = tPad->GetRawADC();
          auto adc = tPad->GetADC();
          if (tPadWave == nullptr) {
@@ -1524,7 +1523,7 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
          }
 
          TCanvas *tCvsPadWave = nullptr;
-         tCvsPadWave = (TCanvas *)gROOT->GetListOfSpecials()->FindObject("fCvsPadWave");
+         tCvsPadWave = dynamic_cast<TCanvas *>(gROOT->GetListOfSpecials()->FindObject("fCvsPadWave"));
          if (tCvsPadWave == nullptr) {
             std::cout << " = AtEventDrawTask::SelectPad NULL pointer for the TCanvas! Please select an event first "
                       << std::endl;

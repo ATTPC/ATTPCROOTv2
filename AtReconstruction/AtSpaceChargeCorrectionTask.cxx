@@ -30,7 +30,7 @@ InitStatus AtSpaceChargeCorrectionTask::Init()
       return kFATAL;
    }
 
-   fInputEventArray = (TClonesArray *)FairRootManager::Instance()->GetObject(fInputBranchName.data());
+   fInputEventArray = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(fInputBranchName.data()));
    if (fInputEventArray == nullptr) {
       LOG(fatal) << "SpaceChargeTask: Cannot find AtEvent array!";
       return kFATAL;

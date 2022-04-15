@@ -82,22 +82,22 @@ public:
 
    void SaveASCIIEvent();
 
-   Int_t Entries;
+   Int_t Entries{};
    TCanvas *fCvsPIDFull;
-   TH2F *fPIDFull;
+   TH2F *fPIDFull{};
    virtual void DrawPIDFull();
    virtual void FillPIDFull();
    TCanvas *fCvsPID2Full;
-   TH2F *fPID2Full;
+   TH2F *fPID2Full{};
    virtual void DrawPID2Full();
 
 private:
    FairRootManager *fRootManager;
    FairRunAna *fRunAna;
-   TClonesArray *cArray;
-   TClonesArray *cS800Array;
-   AtEvent *cevent;
-   S800Calc *cS800Calc;
+   TClonesArray *cArray{};
+   TClonesArray *cS800Array{};
+   AtEvent *cevent{};
+   S800Calc *cS800Calc{};
 
    Int_t fEntry;
    TGListTreeItem *fEvent;
@@ -108,18 +108,18 @@ private:
    TCanvas *fPadAll;
    TCanvas *fCvsQEvent;
    TCanvas *fCvsHough;
-   TCanvas *fCvsPhi;
+   TCanvas *fCvsPhi{};
    TCanvas *fCvsMesh;
-   TCanvas *fCvs3DHist;
+   TCanvas *fCvs3DHist{};
    TCanvas *fCvsRad;
-   TCanvas *fCvsTheta;
-   TCanvas *fCvsThetaxPhi;
-   TCanvas *fCvsQuadrant1;
-   TCanvas *fCvsQuadrant2;
-   TCanvas *fCvsQuadrant3;
-   TCanvas *fCvsQuadrant4;
-   TCanvas *fCvsMC_XY;
-   TCanvas *fCvsMC_Z;
+   TCanvas *fCvsTheta{};
+   TCanvas *fCvsThetaxPhi{};
+   TCanvas *fCvsQuadrant1{};
+   TCanvas *fCvsQuadrant2{};
+   TCanvas *fCvsQuadrant3{};
+   TCanvas *fCvsQuadrant4{};
+   TCanvas *fCvsMC_XY{};
+   TCanvas *fCvsMC_Z{};
    TCanvas *fCvsLvsTheta;
    TCanvas *fCvsPID;
    TCanvas *fCvsPID2;

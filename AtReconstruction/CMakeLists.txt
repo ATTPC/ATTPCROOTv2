@@ -61,7 +61,7 @@ set(SRCS
 if(PCL_FOUND)
   set(SRCS ${SRCS} 
     AtRansac/AtRansac.cxx
-    AtPulseAnalyzer/AtPSAFilter.cxx
+    #AtPulseAnalyzer/AtPSAFilter.cxx
     AtPatternRecognition/AtTrackFinderHC.cxx
     AtPatternRecognition/smoothenCloud.cxx
     AtPatternRecognition/msd.cxx

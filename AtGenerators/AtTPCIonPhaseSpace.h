@@ -59,16 +59,16 @@ private:
    std::vector<Int_t> fQ;               // Electric charge [e]
    // std::vector<Int_t> fA;
    // std::vector<Int_t> fZ;
-   Double_t fBeamEnergy;      // Residual beam energy for phase calculation
-   Double_t fBeamEnergy_buff; // Residual beam energy for phase calculation
-   Int_t fZBeam;
-   Int_t fABeam;
-   Double_t fPxBeam;
-   Double_t fPyBeam;
-   Double_t fPzBeam;
-   Bool_t fIsDecay;
-   Double_t fBeamMass;
-   Double_t fTargetMass;
+   Double_t fBeamEnergy{};      // Residual beam energy for phase calculation
+   Double_t fBeamEnergy_buff{}; // Residual beam energy for phase calculation
+   Int_t fZBeam{};
+   Int_t fABeam{};
+   Double_t fPxBeam{};
+   Double_t fPyBeam{};
+   Double_t fPzBeam{};
+   Bool_t fIsDecay{};
+   Double_t fBeamMass{};
+   Double_t fTargetMass{};
 
    ClassDef(AtTPCIonPhaseSpace, 2)
 };

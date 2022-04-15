@@ -216,14 +216,14 @@ std::size_t AtHDFUnpacker::open(char const *file)
       auto datasetId = std::get<0>(dataset_dims);
       auto len = std::get<1>(dataset_dims).at(0);
 
-      auto *data = new int64_t[len];
+      auto *data = new int64_t[len]; // NOLINT
       H5Dread(datasetId, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
       std::cout << "Events: " << data[0] << " to " << data[2] << std::endl;
 
       fFirstEvent = data[0];
       fLastEvent = data[2];
 
-      delete[] data;
+      delete[] data; // NOLINT
    }
 
    auto group_n_entries = open_group(f, "get");
@@ -260,14 +260,15 @@ std::vector<uint64_t> AtHDFUnpacker::get_header(std::string headerName)
    // Get the length of the header
    auto len = std::get<1>(dataset_dims).at(0);
 
-   auto *data = new uint64_t[len];
-   H5Dread(_dataset, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+   retVec.resize(len);
+   // auto *data = new uint64_t[len];
+   H5Dread(_dataset, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, retVec.data());
 
    // Add read data to the vector and return it
-   for (int i = 0; i < len; ++i)
-      retVec.push_back(data[i]);
+   // for (int i = 0; i < len; ++i)
+   // retVec.push_back(data[i]);
 
-   delete[] data;
+   // delete[] data;
 
    return retVec;
 }

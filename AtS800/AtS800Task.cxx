@@ -10,17 +10,6 @@ class FairRuntimeDb;
 
 ClassImp(AtS800Task);
 
-AtS800Task::AtS800Task()
-{
-
-   fLogger = FairLogger::GetLogger();
-
-   kIsPersistence = kFALSE;
-   kIsFullMode = kFALSE;
-}
-
-AtS800Task::~AtS800Task() = default;
-
 void AtS800Task::SetPersistence(Bool_t value)
 {
    kIsPersistence = value;

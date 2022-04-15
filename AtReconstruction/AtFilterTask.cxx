@@ -20,10 +20,9 @@
 class AtPad;
 
 AtFilterTask::AtFilterTask(AtFilter *filter)
-   : fFilter(filter), fIsPersistent(false), fFilterAux(false), fInputBranchName("AtRawEvent"),
-     fOutputBranchName("AtRawEventFiltered")
+   : fOutputEventArray(new TClonesArray("AtRawEvent")), fFilter(filter), fIsPersistent(false), fFilterAux(false),
+     fInputBranchName("AtRawEvent"), fOutputBranchName("AtRawEventFiltered")
 {
-   fOutputEventArray = new TClonesArray("AtRawEvent");
 }
 
 AtFilterTask::~AtFilterTask() = default;
@@ -47,7 +46,7 @@ InitStatus AtFilterTask::Init()
    }
 
    // Get the old data from the io manager
-   fInputEventArray = (TClonesArray *)ioManager->GetObject(fInputBranchName);
+   fInputEventArray = dynamic_cast<TClonesArray *>(ioManager->GetObject(fInputBranchName));
    if (fInputEventArray == nullptr) {
       LOG(fatal) << "AtFilterTask: Cannot find AtRawEvent array!";
       return kFATAL;
@@ -68,7 +67,7 @@ void AtFilterTask::Exec(Option_t *opt)
    if (fInputEventArray->GetEntriesFast() == 0)
       return;
 
-   auto *rawEvent = (AtRawEvent *)fInputEventArray->At(0);
+   auto *rawEvent = dynamic_cast<AtRawEvent *>(fInputEventArray->At(0));
    auto *filteredEvent = (AtRawEvent *)new ((*fOutputEventArray)[0]) AtRawEvent(*rawEvent);
 
    if (!rawEvent->IsGood())

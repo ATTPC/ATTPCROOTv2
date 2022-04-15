@@ -36,7 +36,7 @@ void AtTpcContFact::setAllContainers()
        contexts and adds them to
        the list of containers for the AtTpc library.
    */
-
+   // NOLINTNEXTLINE I think FairRoot owns this memory
    auto *p = new FairContainer("AtTpcGeoPar", "AtTpc Geometry Parameters", "TestDefaultContext");
    p->addContext("TestNonDefaultContext");
 

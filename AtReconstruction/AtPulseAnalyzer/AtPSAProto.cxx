@@ -65,7 +65,7 @@ void AtPSAProto::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          QHitTot += adc[iTb];
       }
 
-      auto *PeakFinder = new TSpectrum;
+      auto PeakFinder = std::make_unique<TSpectrum>();
       Int_t numPeaks = 0;
       //#pragma omp ordered
       numPeaks = PeakFinder->SearchHighRes(floatADC, dummy, fNumTbs, 4.7, 5, fBackGroundSuppression, 3, kTRUE, 3);
@@ -179,10 +179,7 @@ void AtPSAProto::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          PadMultiplicity.insert(std::pair<Int_t, Int_t>(PadNum, PadHitNum));
 
       } // if Valid Num Peaks (ValidBuff)
-
-      delete PeakFinder;
-
-   } // Pad loop
+   }    // Pad loop
 
    // std::vector<AtPad> *auxPadArray = event->GetAuxPadArray();
    //  std::cout<<"  --------------------------------- "<<std::endl;

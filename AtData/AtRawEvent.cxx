@@ -20,17 +20,11 @@ AtRawEvent::AtRawEvent() : TNamed("AtRawEvent", "Raw event container")
 }
 
 AtRawEvent::AtRawEvent(const AtRawEvent &obj)
+   : fEventID(obj.fEventID), fAuxPadMap(obj.fAuxPadMap), fIsInGate(obj.fIsInGate), fSimMCPointMap(obj.fSimMCPointMap)
 {
    std::cout << "Copying AtRawEvent " << obj.fEventID << " with " << obj.fPadList.size() << " pads" << std::endl;
-   fEventID = obj.fEventID;
-   fAuxPadMap = obj.fAuxPadMap;
    for (const auto &pad : obj.fPadList)
       fPadList.push_back(std::make_unique<AtPad>(*pad));
-
-   fTimestamp = obj.fTimestamp;
-   fIsGood = obj.fIsGood;
-   fIsInGate = obj.fIsInGate;
-   fSimMCPointMap = obj.fSimMCPointMap;
 }
 
 void AtRawEvent::Clear(Option_t *opt)

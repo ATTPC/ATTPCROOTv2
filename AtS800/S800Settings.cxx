@@ -2,6 +2,7 @@
 
 #include <TEnv.h>
 #include <TString.h>
+#include <string>
 
 S800Settings::S800Settings() = default;
 
@@ -15,11 +16,11 @@ S800Settings::~S800Settings() = default;
 
 void S800Settings::ReadSettings()
 {
-   char *defaultfile = (char *)"~/analysis/settings/nocal.dat";
+   std::string defaultfile = "~/analysis/settings/nocal.dat";
 
-   TEnv *set = new TEnv(fInputFile.data());
-   fCalFile = set->GetValue("Crdc.File", defaultfile);
-   fPedestalFile = set->GetValue("Crdc.Ped.File", defaultfile);
+   auto set = std::make_unique<TEnv>(fInputFile.data());
+   fCalFile = set->GetValue("Crdc.File", defaultfile.data());
+   fPedestalFile = set->GetValue("Crdc.Ped.File", defaultfile.data());
    for (int i = 0; i < 2; i++) {
       fXFit = set->GetValue("Crdc.X.Fit", 0);
       fXFitFunc = set->GetValue("Crdc.X.FitFunc", 1);
@@ -28,7 +29,7 @@ void S800Settings::ReadSettings()
       fyOffset[i] = set->GetValue(Form("Crdc.Y.Offset.%d", i), 0.0);
       fySlope[i] = set->GetValue(Form("Crdc.Y.Slope.%d", i), 1.0);
    }
-   fBadFile = set->GetValue("BadPad.File", defaultfile);
+   fBadFile = set->GetValue("BadPad.File", defaultfile.data());
 }
 
 // void Settings::PrintSettings(){

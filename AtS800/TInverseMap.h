@@ -54,7 +54,7 @@ public:
 
 private:
    // TInverseMap(const char* filename);
-   static TInverseMap *fInverseMap;
+   static std::unique_ptr<TInverseMap> fInverseMap;
 
    bool ReadMapFile(const char *filename);
    // bool ReadMultiMapFile(std::vector<std::string> &str);
@@ -76,10 +76,10 @@ private:
    std::map<int, std::vector<InvMapRowS>> fMap_s;
    std::vector<std::map<int, std::vector<InvMapRow>>> fMap_v;
    std::vector<Double_t> fMapDist_v;
-   float fBrho;
-   int fMass;
-   int fCharge;
-   Int_t fsize;
+   float fBrho{};
+   int fMass{};
+   int fCharge{};
+   Int_t fsize{};
    std::string info;
 
    ClassDef(TInverseMap, 0)

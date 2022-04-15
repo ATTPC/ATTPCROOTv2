@@ -1,11 +1,13 @@
 ---
-Checks:          'clang-diagnostic-*,clang-analyzer-*,modernize-*,-modernize-use-trailing-return-type,-modernize-avoid-c-arrays'
+Checks:          'clang-diagnostic-*,clang-analyzer-*,modernize-*,-modernize-use-trailing-return-type,-modernize-avoid-c-arrays,cppcoreguidelines-avoid-goto,cppcoreguidelines-interfaces-global-init,cppcoreguidelines-macro-usage,cppcoreguidelines-no-malloc,cppcoreguidelines-owning-memory,cppcoreguidelines-prefer-member-initializer,cppcoreguidelines-slicing,cppcoreguidelines-special-member-functions,cppcoreguidelines-virtual-class-destructor,cppcoreguidelines-pro-type-*,-cppcoreguidelines-pro-type-vararg'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
 FormatStyle:     none
 User:            anthonya
 CheckOptions:
+  - key:             cppcoreguidelines-init-variables.MathHeader
+    value:           '<cmath>'
   - key:             llvm-else-after-return.WarnOnConditionVariables
     value:           '0'
   - key:             modernize-loop-convert.MinConfidence

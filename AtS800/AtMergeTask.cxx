@@ -26,21 +26,8 @@
 
 ClassImp(AtMergeTask);
 
-AtMergeTask::AtMergeTask()
+AtMergeTask::AtMergeTask() : fLogger(FairLogger::GetLogger()), fS800CalcBr(new S800Calc)
 {
-
-   fLogger = FairLogger::GetLogger();
-
-   fIsPersistence = kFALSE;
-   fEvtDelta = 5;
-   fGlom = 2;
-   fTsDelta = 1272;
-   fSetCut1 = kFALSE;
-   fSetCut2 = kFALSE;
-   fSetCut3 = kFALSE;
-
-   fS800CalcBr = new S800Calc;
-
    fcutPID1.clear();
    fcutPID1File.clear();
    fcutPID2.clear();
@@ -258,7 +245,7 @@ InitStatus AtMergeTask::Init()
       return kERROR;
    }
 
-   fRawEventArray = (TClonesArray *)ioMan->GetObject("AtRawEvent");
+   fRawEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtRawEvent"));
    if (fRawEventArray == nullptr) {
       LOG(error) << "Cannot find AtRawEvent array!";
       return kERROR;
@@ -267,7 +254,7 @@ InitStatus AtMergeTask::Init()
    fTsEvtS800Size = 0;
    fEvtMerged = 0;
 
-   fS800file = new TFile(fS800File);
+   fS800file = new TFile(fS800File); // NOLINT belongs to ROOT
    TTreeReader reader1("caltree", fS800file);
    TTreeReaderValue<Long64_t> ts(reader1, "fts");
 
@@ -304,33 +291,33 @@ InitStatus AtMergeTask::Init()
    for (auto &w : fcutPID1File) {
       TFile f(w);
       TIter next(f.GetListOfKeys());
-      TKey *key;
+      TKey *key = nullptr;
 
-      while ((key = (TKey *)next())) {
+      while ((key = dynamic_cast<TKey *>(next()))) {
          cout << "PID1 Loading Cut file:  " << key->GetName() << endl;
-         fcutPID1.push_back((TCutG *)f.Get(key->GetName()));
+         fcutPID1.push_back(dynamic_cast<TCutG *>(f.Get(key->GetName())));
       }
    }
 
    for (auto &w : fcutPID2File) {
       TFile f(w);
       TIter next(f.GetListOfKeys());
-      TKey *key;
+      TKey *key = nullptr;
 
-      while ((key = (TKey *)next())) {
+      while ((key = dynamic_cast<TKey *>(next()))) {
          cout << "PID2 Loading Cut file:  " << key->GetName() << endl;
-         fcutPID2.push_back((TCutG *)f.Get(key->GetName()));
+         fcutPID2.push_back(dynamic_cast<TCutG *>(f.Get(key->GetName())));
       }
    }
 
    for (auto &w : fcutPID3File) {
       TFile f(w);
       TIter next(f.GetListOfKeys());
-      TKey *key;
+      TKey *key = nullptr;
 
-      while ((key = (TKey *)next())) {
+      while ((key = dynamic_cast<TKey *>(next()))) {
          cout << "PID3 Loading Cut file:  " << key->GetName() << endl;
-         fcutPID3.push_back((TCutG *)f.Get(key->GetName()));
+         fcutPID3.push_back(dynamic_cast<TCutG *>(f.Get(key->GetName())));
       }
    }
    //----------- New 10/01 -------------------------------------
@@ -367,9 +354,9 @@ void AtMergeTask::Exec(Option_t *opt)
    if (fRawEventArray->GetEntriesFast() == 0)
       return;
 
-   auto *rawEvent = (AtRawEvent *)fRawEventArray->At(0);
+   auto *rawEvent = dynamic_cast<AtRawEvent *>(fRawEventArray->At(0));
    Long64_t AtTPCTs = rawEvent->GetTimestamp();
-   int minj, maxj;
+   int minj = 0, maxj = 0;
    Double_t S800EvtMatch = -1;
    minj = (int)fS800TsFunc->Eval(AtTPCTs) - fEvtDelta; // define the AtTPC entries range where the matching timestamp
                                                        // should be, to not loop over all the AtTPC entries.
@@ -411,7 +398,7 @@ void AtMergeTask::Exec(Option_t *opt)
 
    if (S800EvtMatch > 0) {
       TTreeReader reader2("caltree", fS800file);
-      TTreeReaderValue<S800Calc> *readerValueS800Calc;
+      TTreeReaderValue<S800Calc> *readerValueS800Calc = nullptr;
       readerValueS800Calc = new TTreeReaderValue<S800Calc>(reader2, "s800calc");
 
       reader2.SetEntry(S800EvtMatch);

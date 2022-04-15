@@ -7,12 +7,7 @@
 
 ClassImp(AtTrackingEventAna);
 
-AtTrackingEventAna::AtTrackingEventAna() : TNamed("AtTrackingEventAna", "Tracking Event Analysis")
-{
-
-   fVertex = -10.0;
-   fVertexEnergy = -10.0;
-}
+AtTrackingEventAna::AtTrackingEventAna() : TNamed("AtTrackingEventAna", "Tracking Event Analysis") {}
 
 AtTrackingEventAna::~AtTrackingEventAna() = default;
 

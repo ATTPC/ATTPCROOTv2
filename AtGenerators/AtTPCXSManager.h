@@ -17,23 +17,25 @@ class TH2F;
 class TMemberInspector;
 
 class AtTPCXSManager : public TObject {
+private:
+   static std::unique_ptr<AtTPCXSManager> fInstance;
+
+   std::string fExFunctionFile;
+   std::shared_ptr<TH2F> fExFunction;
+   Bool_t kIsExFunction = true;
+
+protected:
+   AtTPCXSManager() = default;
 
 public:
-   AtTPCXSManager();
-   ~AtTPCXSManager();
+   ~AtTPCXSManager() = default;
 
+   static AtTPCXSManager *Instance();
    bool SetExcitationFunction(std::string filename);
 
    inline std::shared_ptr<TH2F> GetExcitationFunction() { return fExFunction; }
 
-private:
-   std::string fExFunctionFile;
-   std::shared_ptr<TH2F> fExFunction;
-   Bool_t kIsExFunction;
-
    ClassDef(AtTPCXSManager, 1)
 };
-
-extern AtTPCXSManager *gAtXS; // global
 
 #endif

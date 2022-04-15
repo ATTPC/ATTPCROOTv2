@@ -23,7 +23,7 @@ using lmcurve_data_struct = struct {
 
 void lmcurve_evaluate(const double *par, int m_dat, const void *data, double *fvec, int *info)
 {
-   int i;
+   int i = 0;
    for (i = 0; i < m_dat; i++)
       fvec[i] = ((lmcurve_data_struct *)data)->y[i] -
                 ((lmcurve_data_struct *)data)->f(((lmcurve_data_struct *)data)->t[i], par);

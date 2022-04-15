@@ -27,17 +27,17 @@
 
 #include "AtVertexPropagator.h"
 
-#define amu 931.494
+constexpr float amu = 931.494;
 
 Int_t AtTPCIonDecay::fgNIon = 0;
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
-#define cBLUE "\033[1;34m"
-#define cORANGEWARNING "\033[29;5;202m"
-#define cBLINKINGRED "\033[32;5m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
+constexpr auto cBLUE = "\033[1;34m";
+constexpr auto cORANGEWARNING = "\033[29;5;202m";
+constexpr auto cBLINKINGRED = "\033[32;5m";
 
 AtTPCIonDecay::AtTPCIonDecay()
    : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0), fParticle(0), fPType(0), fNbCases(0),
@@ -51,27 +51,24 @@ AtTPCIonDecay::AtTPCIonDecay()
 AtTPCIonDecay::AtTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std::vector<Int_t>> *a,
                              std::vector<std::vector<Int_t>> *q, std::vector<std::vector<Double_t>> *mass, Int_t ZB,
                              Int_t AB, Double_t BMass, Double_t TMass, Double_t ExEnergy, std::vector<Double_t> *SepEne)
-   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0), fParticle(0), fPType(0), fNbCases(0),
-     fSepEne(0), fMasses(0), fQ(0), fPxBeam(0.), fPyBeam(0.), fPzBeam(0.)
+   : fMult(0), fNbCases(a->size()), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0), fParticle(0),
+     fPType(0), fSepEne(0), fMasses(0), fQ(0), fPxBeam(0.), fPyBeam(0.), fPzBeam(0.)
 {
 
-   auto *kProton = new TParticle();
+   auto *kProton = new TParticle(); // TODO: Memory leak, only cleaned if passed to FairParticle
    kProton->SetPdgCode(2212);
-   auto *kNeutron = new TParticle();
+   auto *kNeutron = new TParticle(); // TODO: Memory leak, only cleaned if passed to FairParticle
    kNeutron->SetPdgCode(2112);
    char buffer[40];
 
    fgNIon++;
-   fNbCases = a->size();
+
    for (Int_t i = 0; i < fNbCases; i++)
       fMult.push_back(a->at(i).size());
    fParticle.resize(fNbCases);
    fIon.resize(fNbCases);
    fPType.resize(fNbCases);
 
-   fPxBeam = 0;
-   fPyBeam = 0;
-   fPzBeam = 0;
    fZBeam = ZB;
    fABeam = AB;
    fBeamMass = BMass * amu / 1000.0;
@@ -85,20 +82,21 @@ AtTPCIonDecay::AtTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
    if (!run) {
       std::cout << "-E- FairIonGenerator: No FairRun instantised!" << std::endl;
       Fatal("FairIonGenerator", "No FairRun instantised!");
+      return;
    }
 
    for (Int_t k = 0; k < fNbCases; k++) {
       for (Int_t i = 0; i < fMult.at(k); i++) {
 
-         FairIon *IonBuff;
-         FairParticle *ParticleBuff;
+         FairIon *IonBuff = nullptr;
+         FairParticle *ParticleBuff = nullptr;
          sprintf(buffer, "Product_Ion_dec%d_%d", k, i);
          if (a->at(k).at(i) != 1) {
             IonBuff = new FairIon(buffer, z->at(k).at(i), a->at(k).at(i), q->at(k).at(i), 0.0,
                                   mass->at(k).at(i) * amu / 1000.0);
             ParticleBuff = new FairParticle("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);
             fPType.at(k).push_back("Ion");
-            run->AddNewIon(IonBuff); // NOLINT
+            run->AddNewIon(IonBuff);
 
          } else if (a->at(k).at(i) == 1 && z->at(k).at(i) == 1) {
             IonBuff = new FairIon(buffer, z->at(k).at(i), a->at(k).at(i), q->at(k).at(i), 0.0,
@@ -122,14 +120,15 @@ AtTPCIonDecay::AtTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
 Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
 {
 
-   Double_t ExEject = gAtVP->GetScatterEx() / 1000.0; // in GeV
+   Double_t ExEject = AtVertexPropagator::Instance()->GetScatterEx() / 1000.0; // in GeV
    Bool_t IsGoodCase = kFALSE;
    fIsDecay = kFALSE;
    Double_t excitationEnergy = 0.0;
 
    LOG(INFO) << cBLUE << " AtTPCIonDecay - Decay energy -  Excitation energy from reaction :  " << ExEject
-             << " and from task : " << fExEnergy << ". Beam energy : " << gAtVP->GetEnergy() / 1000.0
-             << " GeV . Is Sequential? " << fIsSequentialDecay << cNORMAL << "\n";
+             << " and from task : " << fExEnergy
+             << ". Beam energy : " << AtVertexPropagator::Instance()->GetEnergy() / 1000.0 << " GeV . Is Sequential? "
+             << fIsSequentialDecay << cNORMAL << "\n";
    LOG(INFO) << cORANGEWARNING
              << " AtTPCIonDecay - Warning: Temporary warning message to control the flow of generators.Please, check "
                 "that if the decay comes from beam fusion, the energy from reaction is 0"
@@ -201,21 +200,21 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
 
       if (fIsSequentialDecay) // NB: Decay modelled as two-step (coming from reaction generator)
       {
-         fBeamEnergy = gAtVP->GetTrackEnergy(1) / 1000.0;
-         TVector3 ScatP = gAtVP->GetScatterP();
+         fBeamEnergy = AtVertexPropagator::Instance()->GetTrackEnergy(1) / 1000.0;
+         TVector3 ScatP = AtVertexPropagator::Instance()->GetScatterP();
          fPxBeam = ScatP.X();
          fPyBeam = ScatP.Y();
          fPzBeam = ScatP.Z();
          excitationEnergy = ExEject; // From ejectile
       } else {                       // simultaneous
-         fBeamEnergy = gAtVP->GetEnergy() / 1000.0;
-         fPxBeam = gAtVP->GetPx();
-         fPyBeam = gAtVP->GetPy();
-         fPzBeam = gAtVP->GetPz();
+         fBeamEnergy = AtVertexPropagator::Instance()->GetEnergy() / 1000.0;
+         fPxBeam = AtVertexPropagator::Instance()->GetPx();
+         fPyBeam = AtVertexPropagator::Instance()->GetPy();
+         fPzBeam = AtVertexPropagator::Instance()->GetPz();
          excitationEnergy = fExEnergy; // From compound nucleus
       }
 
-      TParticlePDG *thisPart0;
+      TParticlePDG *thisPart0 = nullptr;
       thisPart0 = TDatabasePDG::Instance()->GetParticle(
          fIon.at(Case).at(0)->GetName()); // NB: The first particle of the list must be the decaying ion
       int pdgType0 = thisPart0->PdgCode();
@@ -249,7 +248,8 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
                    << std::endl;
       }
 
-      // std::cout<<" S : "<<s<<" Pow(M) "<<pow(M_tot,2)<<" "<<gAtVP->GetScatterEx()<<" "<<fSepEne.at(Case)<<std::endl;
+      // std::cout<<" S : "<<s<<" Pow(M) "<<pow(M_tot,2)<<" "<<AtVertexPropagator::Instance()->GetScatterEx()<<"
+      // "<<fSepEne.at(Case)<<std::endl;
 
       if (s > pow(M_tot, 2)) {
          // if(ExEject*1000.0>fSepEne){
@@ -283,7 +283,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
       // === Propagate the decay products from the vertex of the reaction
 
       for (Int_t i = 0; i < fMult.at(Case); i++) {
-         TParticlePDG *thisPart;
+         TParticlePDG *thisPart = nullptr;
 
          if (fPType.at(Case).at(i) == "Ion")
             thisPart = TDatabasePDG::Instance()->GetParticle(fIon.at(Case).at(i)->GetName());
@@ -308,14 +308,14 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
          int pdgType = thisPart->PdgCode();
 
          // To do: Add a member function to enable vertex from d2He generator
-         // TVector3 d2HeVtx = gAtVP->Getd2HeVtx();
+         // TVector3 d2HeVtx = AtVertexPropagator::Instance()->Getd2HeVtx();
          // fVx = d2HeVtx.X();
          // fVy = d2HeVtx.Y();
          // fVz = d2HeVtx.Z();
 
-         fVx = gAtVP->GetVx();
-         fVy = gAtVP->GetVy();
-         fVz = gAtVP->GetVz();
+         fVx = AtVertexPropagator::Instance()->GetVx();
+         fVy = AtVertexPropagator::Instance()->GetVy();
+         fVz = AtVertexPropagator::Instance()->GetVz();
 
          // std::cout << "-I- FairIonGenerator: Generating " <<" with mass "<<thisPart->Mass()<<" ions of type "<<
          // fIon.at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl; std::cout << "    Momentum (" <<
@@ -331,7 +331,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
    }    // if IsGoodCase
 
    // if (!fIsSequentialDecay)
-   gAtVP->IncDecayEvtCnt(); // Increase count only if no other generator is meant to do it.
+   AtVertexPropagator::Instance()->IncDecayEvtCnt(); // Increase count only if no other generator is meant to do it.
 
    return kTRUE;
 }

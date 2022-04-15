@@ -42,43 +42,43 @@ class AtLinkDAQTask : public FairTask {
 
 private:
    // Info for AT-TPC Tree
-   TClonesArray *fInputEventArray; // AtRawEvent
-   TString fInputBranchName;       // Name if AtRawEvent branch
-   AtRawEvent *fRawEvent;
+   TClonesArray *fInputEventArray{};       // AtRawEvent
+   TString fInputBranchName{"AtRawEvent"}; // Name if AtRawEvent branch
+   AtRawEvent *fRawEvent{nullptr};
 
    // Info for HiRAEVT Tree input
-   TChain *evtTree;
+   std::unique_ptr<TChain> evtTree{nullptr};
    TString fEvtTimestampName;
-   HTTimestamp *fEvtTS;
+   HTTimestamp *fEvtTS{nullptr};
 
    // Info for output HiRAEVT tree
-   TString fEvtOutputFileName;
-   TFile *fEvtOutputFile;
-   TTree *fEvtOutputTree;
+   TString fEvtOutputFileName{""};
+   TFile *fEvtOutputFile{};
+   TTree *fEvtOutputTree{};
 
    // Variables used during merging
-   ULong64_t fEvtTreeIndex;
-   ULong64_t fOldEvtTimestamp;
-   ULong64_t fEvtTimestamp;
-   Double_t fIntervalEvt;
+   ULong64_t fEvtTreeIndex{0};
+   ULong64_t fOldEvtTimestamp{0};
+   ULong64_t fEvtTimestamp{0};
+   Double_t fIntervalEvt{0};
 
-   ULong64_t fTpcTreeIndex;
+   ULong64_t fTpcTreeIndex{0};
    std::vector<ULong64_t> fOldTpcTimestamp;
    std::vector<ULong64_t> fTpcTimestamp;
-   Double_t fIntervalTpc;
+   Double_t fIntervalTpc{0};
 
-   Double_t fDifferenceOffset;
+   Double_t fDifferenceOffset{0};
 
    // Input parameters
-   Double_t fSearchMean; // This is the ratio of clock frequencies
-   Double_t fSearchRadius;
-   Double_t fCorruptedSearchRadius;
-   Int_t fTpcTimestampIndex;
+   Double_t fSearchMean{0}; // This is the ratio of clock frequencies
+   Double_t fSearchRadius{0};
+   Double_t fCorruptedSearchRadius{0};
+   Int_t fTpcTimestampIndex{0};
 
-   Bool_t kPersistent;
-   Bool_t kFirstEvent;
-   Bool_t kFillEvt;
-   Bool_t kCorruptedTimestamp;
+   Bool_t kPersistent{false};
+   Bool_t kFirstEvent{true};
+   Bool_t kFillEvt{};
+   Bool_t kCorruptedTimestamp{};
 
    // diagnostic graphs to write in HiRAEVT output file
    std::vector<std::vector<double>> fGrDataRatio;
@@ -94,8 +94,8 @@ private:
    bool ExtraEvtEvent();
 
 public:
-   AtLinkDAQTask();
-   ~AtLinkDAQTask();
+   AtLinkDAQTask() = default;
+   ~AtLinkDAQTask() = default;
 
    bool SetInputTree(TString fileName, TString treeName);
    bool AddInputTree(TString fileName);

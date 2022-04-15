@@ -17,10 +17,13 @@
 #include "AtPad.h"
 #include "AtRawEvent.h"
 #include "AtSimulatedPoint.h"
+
 // Fair class header
 #include <FairRootManager.h>
 #include <FairRunAna.h>
 #include <FairRuntimeDb.h>
+
+// ROOT headers
 #include <TClonesArray.h>
 #include <TF1.h>
 #include <TH1.h>
@@ -28,29 +31,19 @@
 #include <TMath.h>
 #include <TRandom.h>
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
 
-AtPulseTask::AtPulseTask() : FairTask("AtPulseTask") {}
-AtPulseTask::AtPulseTask(const char *name) : FairTask(name) {}
-
-AtPulseTask::~AtPulseTask()
-{
-   if (fMap == nullptr)
-      return;
-   for (Int_t padS = 0; padS < fMap->GetNumPads(); padS++) {
-      delete eleAccumulated[padS];
-   }
-   delete[] eleAccumulated;
-}
+AtPulseTask::AtPulseTask() : AtPulseTask("AtPulseTask") {}
+AtPulseTask::AtPulseTask(const char *name) : FairTask(name), fRawEventArray(TClonesArray("AtRawEvent", 1)) {}
 
 void AtPulseTask::SetParContainers()
 {
    FairRunAna *ana = FairRunAna::Instance();
    FairRuntimeDb *rtdb = ana->GetRuntimeDb();
-   fPar = (AtDigiPar *)rtdb->getContainer("AtDigiPar");
+   fPar = dynamic_cast<AtDigiPar *>(rtdb->getContainer("AtDigiPar"));
 }
 
 void AtPulseTask::setParameters()
@@ -78,8 +71,9 @@ void AtPulseTask::setParameters()
    std::cout << "  Window at TB: " << fTBEntrance << std::endl;
    std::cout << "  Pad plane at TB: " << fTBPadPlane << std::endl;
 
-   gain = new TF1("gain", "pow([1]+1,[1]+1)/ROOT::Math::tgamma([1]+1)*pow((x/[0]),[1])*exp(-([1]+1)*(x/[0]))", 0,
-                  fGain * 5); // Polya distribution of gain
+   gain = std::make_unique<TF1>("gain",
+                                "pow([1]+1,[1]+1)/ROOT::Math::tgamma([1]+1)*pow((x/[0]),[1])*exp(-([1]+1)*(x/[0]))", 0,
+                                fGain * 5); // Polya distribution of gain
    gain->SetParameter(0, fGain);
    gain->SetParameter(1, 1);
 
@@ -101,11 +95,11 @@ void AtPulseTask::getPadPlaneAndCreatePadHist()
    fPadPlane = fMap->GetPadPlane();
 
    char buff[100];
-   eleAccumulated = new TH1F *[fMap->GetNumPads() + 1];
+   eleAccumulated.reserve(fMap->GetNumPads() + 1);
    for (Int_t padS = 0; padS < fMap->GetNumPads(); padS++) {
       sprintf(buff, "%d", padS);
       auto maxTime = fTBTime * fNumTbs; // maxTime in ns
-      eleAccumulated[padS] = new TH1F(buff, buff, fNumTbs, 0, maxTime);
+      eleAccumulated.push_back(std::make_unique<TH1F>(buff, buff, fNumTbs, 0, maxTime));
    }
 }
 
@@ -114,14 +108,13 @@ InitStatus AtPulseTask::Init()
    LOG(INFO) << "Initilization of AtPulseTask";
    FairRootManager *ioman = FairRootManager::Instance();
 
-   fSimulatedPointArray = (TClonesArray *)ioman->GetObject("AtSimulatedPoint");
+   fSimulatedPointArray = dynamic_cast<TClonesArray *>(ioman->GetObject("AtSimulatedPoint"));
    if (fSimulatedPointArray == nullptr) {
       LOG(INFO) << "ERROR: Cannot find fSimulatedPointArray array!";
       return kERROR;
    }
 
-   fRawEventArray = new TClonesArray("AtRawEvent", 1); //!< Raw Event array (only one)
-   ioman->Register("AtRawEvent", "cbmsim", fRawEventArray, fIsPersistent);
+   ioman->Register("AtRawEvent", "cbmsim", &fRawEventArray, fIsPersistent);
 
    setParameters();
    getPadPlaneAndCreatePadHist();
@@ -129,13 +122,13 @@ InitStatus AtPulseTask::Init()
    fRawEvent = nullptr;
 
    // Retrieve kinematics for each simulated point
-   fMCPointArray = (TClonesArray *)ioman->GetObject("AtTpcPoint");
+   fMCPointArray = dynamic_cast<TClonesArray *>(ioman->GetObject("AtTpcPoint"));
    if (fMCPointArray == nullptr) {
       LOG(error) << "Cannot find fMCPointArray array!";
       return kERROR;
    }
 
-   LOG(info) << " AtPulseLineTask : Initialization of parameters complete!";
+   LOG(info) << " AtPulseTask : Initialization of parameters complete!";
    return kSUCCESS;
 }
 
@@ -146,7 +139,7 @@ void AtPulseTask::saveMCInfo(int mcPointID, int padNumber, int trackID)
 
    // The same MC point ID is saved per pad only once, but duplicates are allowed in other pads
    for (auto it = MCPointsMap.lower_bound(padNumber); it != MCPointsMap.upper_bound(padNumber); ++it) {
-      auto mcPointMap = (AtMCPoint *)fMCPointArray->At(mcPointID);
+      auto mcPointMap = dynamic_cast<AtMCPoint *>(fMCPointArray->At(mcPointID));
       auto trackIDMap = mcPointMap->GetTrackID();
       if (it->second == mcPointID || (trackID == trackIDMap)) {
          ++count;
@@ -161,14 +154,14 @@ void AtPulseTask::saveMCInfo(int mcPointID, int padNumber, int trackID)
 
 void AtPulseTask::reset()
 {
-   for (Int_t padS = 0; padS < fMap->GetNumPads(); padS++)
-      eleAccumulated[padS]->Reset();
+   for (auto &pad : eleAccumulated)
+      pad->Reset();
 
    electronsMap.clear();
    MCPointsMap.clear();
-   fRawEventArray->Delete();
+   fRawEventArray.Delete();
    fRawEvent = nullptr;
-   fRawEvent = (AtRawEvent *)fRawEventArray->ConstructedAt(0);
+   fRawEvent = dynamic_cast<AtRawEvent *>(fRawEventArray.ConstructedAt(0));
    fPadPlane->Reset(nullptr);
 }
 
@@ -186,7 +179,7 @@ bool AtPulseTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
 
    auto binNumber = fPadPlane->Fill(xElectron, yElectron);
    auto padNumber = fMap->BinToPad(binNumber);
-   auto mcPoint = (AtMCPoint *)fMCPointArray->At(point->GetMCPointID());
+   auto mcPoint = dynamic_cast<AtMCPoint *>(fMCPointArray->At(point->GetMCPointID()));
    auto trackID = mcPoint->GetTrackID();
 
    if (padNumber < 0 || padNumber > fMap->GetNumPads()) {
@@ -200,7 +193,7 @@ bool AtPulseTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
    auto totalyInhibited = fMap->IsInhibited(padNumber) == AtMap::kTotal;
    if (!totalyInhibited) {
       eleAccumulated[padNumber]->Fill(eTime, charge);
-      electronsMap[padNumber] = eleAccumulated[padNumber];
+      electronsMap[padNumber] = eleAccumulated[padNumber].get();
    }
 
    return true;
@@ -236,7 +229,7 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
    TAxis *axis = eleAccumulated[0]->GetXaxis();
    Double_t binWidth = axis->GetBinWidth(10);
 
-   Int_t signal[fNumTbs];
+   std::vector<Int_t> signal(fNumTbs, 0);
    for (auto &ite2 : electronsMap) {
       for (Int_t kk = 0; kk < fNumTbs; kk++)
          signal[kk] = 0;

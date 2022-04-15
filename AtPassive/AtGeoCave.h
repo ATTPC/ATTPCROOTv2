@@ -30,7 +30,7 @@ class FairGeoMedia;
 
 class AtGeoCave : public FairGeoSet {
 protected:
-   TString name;
+   TString name{"cave"};
 
 public:
    AtGeoCave();

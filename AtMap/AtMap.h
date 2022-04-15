@@ -37,14 +37,14 @@ protected:
    typedef multiarray::index index;
 
    multiarray AtPadCoord;
-   multiarray *fAtPadCoordPtr;
+   multiarray *fAtPadCoordPtr{};
    Bool_t kIsParsed = false;
    Bool_t kGUIMode = false;
    Bool_t kDebug = false;
    std::map<Int_t, AtMap::InhibitType> fIniPads;
-   TCanvas *fPadPlaneCanvas; // Raw pointer because owned by gROOT
-   TH2Poly *fPadPlane;       // Raw pointer because owned by gDirectory
-   UInt_t fNumberPads;
+   TCanvas *fPadPlaneCanvas{}; // Raw pointer because owned by gROOT
+   TH2Poly *fPadPlane;         // Raw pointer because owned by gDirectory
+   UInt_t fNumberPads{};
 
    std::unordered_map<PadReference, int> fPadMap;
    std::map<int, PadReference> fPadMapInverse;

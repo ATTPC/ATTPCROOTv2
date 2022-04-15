@@ -49,7 +49,7 @@ public:
    Double_t GetCharge();
 
 private:
-   Double_t fCharge;
+   Double_t fCharge{};
 
    ClassDef(AtSpacepointMeasurement, 1)
 };

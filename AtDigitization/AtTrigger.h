@@ -31,35 +31,35 @@ public:
    Bool_t ImplementTrigger(AtRawEvent *rawEvent, AtEvent *event);
 
 protected:
-   Bool_t fValidPad;
+   Bool_t fValidPad{};
 
-   Int_t fPadNum;
+   Int_t fPadNum{};
 
-   Double_t fMultiplicity_threshold;
-   Double_t fMultiplicity_window;
-   Double_t fTrigger_height;
-   Double_t fTime_factor;
-   Double_t fTrigger_width;
-   Double_t fPad_threshold;
-   Double_t fTime_window;
+   Double_t fMultiplicity_threshold{};
+   Double_t fMultiplicity_window{};
+   Double_t fTrigger_height{};
+   Double_t fTime_factor{};
+   Double_t fTrigger_width{};
+   Double_t fPad_threshold{};
+   Double_t fTime_window{};
 
-   AtRawEvent *fRawEvent;
-   AtEvent *fEvent;
+   AtRawEvent *fRawEvent{};
+   AtEvent *fEvent{};
    AtHit fHit;
-   AtPad *fPad;
+   AtPad *fPad{};
 
-   Int_t fTbIdx;
-   Int_t fCobo;
-   Int_t fCoboNumArray[10240];
+   Int_t fTbIdx{};
+   Int_t fCobo{};
+   Int_t fCoboNumArray[10240]{};
 
    Int_t fCount = 0.0;
    Int_t fMaxRawADC = 0.0;
    // vector<TH2I *> fHRawPulse;
 
-   Int_t fMinIdx;
-   Int_t fMaxIdx;
-   Int_t fAccum;
-   Bool_t fTrigger;
+   Int_t fMinIdx{};
+   Int_t fMaxIdx{};
+   Int_t fAccum{};
+   Bool_t fTrigger{};
 
    ClassDef(AtTrigger, 2);
 };

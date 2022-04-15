@@ -65,7 +65,7 @@ private:
    FairRootManager *fRootManager;
    FairRunAna *fRunAna;
 
-   Bool_t kEraseQ;
+   Bool_t kEraseQ{};
    Bool_t kDrawPROn;
 
    Int_t fEntry;
@@ -74,25 +74,25 @@ private:
    TGTextButton *drawPatternRecognition;
    TGTextButton *saveASCIIevent;
 
-   TCanvas *fCvsPadPlane;
-   TCanvas *fPadWave;
-   TCanvas *fPadAll;
-   TCanvas *fCvsQEvent;
-   TCanvas *fCvsHough;
-   TCanvas *fCvsPhi;
-   TCanvas *fCvsMesh;
-   TCanvas *fCvs3DHist;
-   TCanvas *fCvsQuadrant1;
-   TCanvas *fCvsQuadrant2;
-   TCanvas *fCvsQuadrant3;
-   TCanvas *fCvsQuadrant4;
-   TCanvas *fCvsELQuadrant1;
-   TCanvas *fCvsELQuadrant2;
-   TCanvas *fCvsELQuadrant3;
-   TCanvas *fCvsELQuadrant4;
-   TCanvas *fCvsVertex;
-   TCanvas *fCvsKineAA;
-   TCanvas *fCvsAux;
+   TCanvas *fCvsPadPlane{};
+   TCanvas *fPadWave{};
+   TCanvas *fPadAll{};
+   TCanvas *fCvsQEvent{};
+   TCanvas *fCvsHough{};
+   TCanvas *fCvsPhi{};
+   TCanvas *fCvsMesh{};
+   TCanvas *fCvs3DHist{};
+   TCanvas *fCvsQuadrant1{};
+   TCanvas *fCvsQuadrant2{};
+   TCanvas *fCvsQuadrant3{};
+   TCanvas *fCvsQuadrant4{};
+   TCanvas *fCvsELQuadrant1{};
+   TCanvas *fCvsELQuadrant2{};
+   TCanvas *fCvsELQuadrant3{};
+   TCanvas *fCvsELQuadrant4{};
+   TCanvas *fCvsVertex{};
+   TCanvas *fCvsKineAA{};
+   TCanvas *fCvsAux{};
 
    static AtEventManagerProto *fInstance;
 

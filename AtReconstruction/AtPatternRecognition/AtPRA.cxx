@@ -2,23 +2,12 @@
 // FairRoot classes
 #include <FairRuntimeDb.h>
 #include <FairRun.h>
+#include <pcl/sample_consensus/model_types.h>
 
 // STL
 #include <algorithm>
 
 ClassImp(AtPATTERN::AtPRA);
-
-AtPATTERN::AtPRA::~AtPRA()
-{
-   fMaxHits = 5000;
-   fMinHits = 0;
-   fMeanDistance = 1E9;
-
-   fKNN = 5;
-   fStdDevMulkNN = 0.0;
-   fkNNDist = 10.0;
-   kSetPrunning = kFALSE;
-}
 
 void AtPATTERN::AtPRA::SetTrackCurvature(AtTrack &track)
 {
@@ -94,7 +83,7 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
       std::vector<double> whit;
       std::vector<double> arclength;
 
-      auto *arclengthGraph = new TGraph();
+      auto arclengthGraph = std::make_unique<TGraph>();
 
       auto posPCA = hits.at(0).GetPosition();
 
@@ -185,9 +174,6 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
          std::cout << " AtPRA::SetTrackInitialParameters - Exception caught : " << e.what() << "\n";
       }
-
-      // delete f1;
-      delete arclengthGraph;
 
    } // end if (!circularTracks->empty())
 }

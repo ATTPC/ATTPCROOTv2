@@ -16,9 +16,9 @@
 #include <TH2Poly.h>
 #include <Rtypes.h>
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
 
 using XYPoint = ROOT::Math::XYPoint;
 
@@ -200,7 +200,7 @@ void AtSpecMATMap::SpecMATPadPlane()
    XY->GetXaxis()->SetTitle("X (mm)");
    XY->GetYaxis()->SetTitle("Y (mm)");
 
-   int currentBin;
+   int currentBin = 0;
    double InitialPoInt_X = 50;
    double InitialPoInt_Y = 50;
    double particleEnergy = 50;

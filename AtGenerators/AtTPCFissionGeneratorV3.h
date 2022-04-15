@@ -22,19 +22,19 @@ using Cartesian3D = ROOT::Math::Cartesian3D<>;
 class AtTPCFissionGeneratorV3 : public FairGenerator {
 
 private:
-   TFile *fEventFile; //!
-   TTree *fEventTree; //!
+   TFile *fEventFile{}; //!
+   TTree *fEventTree{}; //!
 
    // Variables read from the file for each event
-   std::vector<VecPE> *fDecayFrags; //!
-   std::vector<Int_t> *fA;          //!
-   std::vector<Int_t> *fZ;          //!
+   std::vector<VecPE> *fDecayFrags{}; //!
+   std::vector<Int_t> *fA{};          //!
+   std::vector<Int_t> *fZ{};          //!
 
-   Int_t fNumEvents; //! Number of unique fission simualtion events
-   Int_t fCurrEvent; //! Track what event we are at. Reset to 0 if we flow over the number of events in the tree
+   Int_t fNumEvents{}; //! Number of unique fission simualtion events
+   Int_t fCurrEvent{}; //! Track what event we are at. Reset to 0 if we flow over the number of events in the tree
 
    // Varibles set for each event
-   FairPrimaryGenerator *fPrimeGen; //!
+   FairPrimaryGenerator *fPrimeGen{}; //!
    ROOT::Math::Boost fBeamBoost;
    Cartesian3D fVertex;
 

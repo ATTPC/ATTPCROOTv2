@@ -28,23 +28,11 @@ AtMCPoint::AtMCPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Dou
 // -----   Standard constructor   ------------------------------------------
 AtMCPoint::AtMCPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length,
                      Double_t eLoss, TString VolName, Int_t detCopyID, Double_t EIni, Double_t AIni, Int_t A, Int_t Z)
-   : FairMCPoint(trackID, detID, pos, mom, tof, length, eLoss)
+   : FairMCPoint(trackID, detID, pos, mom, tof, length, eLoss), fDetCopyID(detCopyID), fVolName(std::move(VolName)),
+     fEnergyIni(EIni), fAngleIni(AIni), fAiso(A), fZiso(Z)
 {
-   fDetCopyID = detCopyID;
-   fVolName = VolName;
-   fEnergyIni = EIni;
-   fAngleIni = AIni;
-   fAiso = A;
-   fZiso = Z;
 }
 
-// -------------------------------------------------------------------------
-
-// -----   Destructor   ----------------------------------------------------
-AtMCPoint::~AtMCPoint() = default;
-// -------------------------------------------------------------------------
-
-// -----   Public method Print   -------------------------------------------
 void AtMCPoint::Print(const Option_t *opt) const
 {
    cout << "-I- AtMCPoint: AtMC point for track " << fTrackID << " in detector " << fDetectorID << endl;

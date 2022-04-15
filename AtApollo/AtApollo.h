@@ -92,10 +92,10 @@ private:
    Double32_t fELoss;    //!  energy loss
    Double32_t fELossAcc; //!  accumulated energy loss
 
-   TClonesArray *fTraCollection; //!  The hit collection
+   TClonesArray *fTraCollection{}; //!  The hit collection
 
-   Bool_t kGeoSaved; //!
-   TList *flGeoPar;  //!
+   Bool_t kGeoSaved{}; //!
+   TList *flGeoPar{};  //!
 
    /** container for data points */
    TClonesArray *fAtApolloPointCollection; //!

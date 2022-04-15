@@ -16,7 +16,7 @@ class TMemberInspector;
 
 class AtClusterizeLineTask : public AtClusterizeTask {
 private:
-   Double_t fTBTime; //!< Width of a time bucket [us]
+   Double_t fTBTime{}; //!< Width of a time bucket [us]
 
 protected:
    virtual void getParameters() override;

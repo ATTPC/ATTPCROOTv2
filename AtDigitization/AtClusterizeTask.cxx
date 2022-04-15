@@ -22,9 +22,9 @@
 
 using XYZVector = ROOT::Math::XYZVector;
 
-AtClusterizeTask::AtClusterizeTask() : FairTask("AtClusterizeTask"), fEventID(0), fIsPersistent(kFALSE) {}
+AtClusterizeTask::AtClusterizeTask() : AtClusterizeTask("AtClusterizeTask") {}
 
-AtClusterizeTask::AtClusterizeTask(const char *name) : FairTask(name), fEventID(0), fIsPersistent(kFALSE) {}
+AtClusterizeTask::AtClusterizeTask(const char *name) : FairTask(name) {}
 
 AtClusterizeTask::~AtClusterizeTask()
 {
@@ -73,8 +73,8 @@ InitStatus AtClusterizeTask::Init()
       return kERROR;
    }
 
-   fSimulatedPointArray = new TClonesArray("AtSimulatedPoint");
-   ioman->Register("AtSimulatedPoint", "cbmsim", fSimulatedPointArray, fIsPersistent);
+   fSimulatedPointArray = std::make_unique<TClonesArray>("AtSimulatedPoint");
+   ioman->Register("AtSimulatedPoint", "cbmsim", fSimulatedPointArray.get(), fIsPersistent);
 
    getParameters();
 

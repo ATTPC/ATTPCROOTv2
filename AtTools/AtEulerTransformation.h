@@ -3,6 +3,19 @@
 // -----             Adapted from ActarSim (H. Alvarez-Pol)            -----
 // -----   Created 04/08/15  by Y. Ayyad  (ayyadlim@nscl.msu.edu)      -----
 // -------------------------------------------------------------------------
+// ***  Transformation  coordinate system (Euler angles) :  ***
+// DEFINITIONS:
+//  --from beam to lab system
+//     alpha = phi
+//     beta  = theta
+//     gamma = 0
+// *** inputs: theta_beam, phi_beam, alpha, beta, gamma
+// *** calculate: theta_lab, phi_lab (from beam to lab)
+//
+//  --or from lab to beam system
+//     alpha = pi
+//     beta  = theta_beam
+//     gamma = pi - phi_beam
 
 #ifndef AtEULERTRANSFORMAtION_H
 #define AtEULERTRANSFORMAtION_H
@@ -19,16 +32,16 @@ private:
    // inputs: teta0,phi0, beamdirection=>(alpha,beta,gamma)
    // outputs: theta_1,phi_1
 
-   Double_t ThetaInBeamSystem;
-   Double_t PhiInBeamSystem;
-   Double_t BeamDirectionAtVertexTheta;
-   Double_t BeamDirectionAtVertexPhi;
+   Double_t ThetaInBeamSystem{0.0};
+   Double_t PhiInBeamSystem{0.0};
+   Double_t BeamDirectionAtVertexTheta{0.0};
+   Double_t BeamDirectionAtVertexPhi{0.0};
 
-   Double_t ThetaInLabSystem;
-   Double_t PhiInLabSystem;
+   Double_t ThetaInLabSystem{0.0};
+   Double_t PhiInLabSystem{0.0};
 
 public:
-   AtEulerTransformation();
+   AtEulerTransformation() = default;
    ~AtEulerTransformation() = default;
 
    void SetThetaInBeamSystem(Double_t value) { ThetaInBeamSystem = value; }

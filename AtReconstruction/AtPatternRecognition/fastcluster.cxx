@@ -148,11 +148,11 @@ int hclust_fast(int n, double *distmat, int method, int *merge, double *height)
       NN_chain_core<METHOD_METR_COMPLETE, t_float>(n, distmat, nullptr, Z2);
    } else if (method == HCLUST_METHOD_AVERAGE) {
       // best average distance
-      auto *members = new double[n];
+      auto *members = new double[n]; // NOLINT
       for (int i = 0; i < n; i++)
          members[i] = 1;
       NN_chain_core<METHOD_METR_AVERAGE, t_float>(n, distmat, members, Z2);
-      delete[] members;
+      delete[] members; // NOLINT
    } else if (method == HCLUST_METHOD_MEDIAN) {
       // best median distance (beware: O(n^3))
       generic_linkage<METHOD_METR_MEDIAN, t_float>(n, distmat, nullptr, Z2);
@@ -160,14 +160,14 @@ int hclust_fast(int n, double *distmat, int method, int *merge, double *height)
       return 1;
    }
 
-   int *order = new int[n];
+   int *order = new int[n]; // NOLINT
    if (method == HCLUST_METHOD_MEDIAN) {
       generate_R_dendrogram<true>(merge, height, order, Z2, n);
    } else {
       generate_R_dendrogram<false>(merge, height, order, Z2, n);
    }
 
-   delete[] order; // only needed for visualization
+   delete[] order; // NOLINT only needed for visualization
 
    return 0;
 }

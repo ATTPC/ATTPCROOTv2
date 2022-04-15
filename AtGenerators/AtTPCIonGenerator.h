@@ -97,8 +97,8 @@ private:
    Double_t fVx, fVy, fVz;     // Vertex coordinates [cm]
    FairIon *fIon;              // Pointer to the FairIon to be generated
    Int_t fQ;                   // Electric charge [e]
-   Int_t fNomEner;
-   Double_t fMaxEnLoss; // Max energy loss before reation happens
+   Int_t fNomEner{};
+   Double_t fMaxEnLoss{}; // Max energy loss before reation happens
    Double32_t fWhmFocus, fDiv, fZFocus,
       fRHole; // Beam whm at focus, beam divergence, z focus, radius of the pad plan hole
 

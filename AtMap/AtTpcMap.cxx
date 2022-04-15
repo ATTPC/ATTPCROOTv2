@@ -32,9 +32,9 @@ using std::cout;
 using std::endl;
 using XYPoint = ROOT::Math::XYPoint;
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
 
 AtTpcMap::AtTpcMap() : AtMap()
 {
@@ -76,8 +76,8 @@ void AtTpcMap::GeneratePadPlane()
 
    std::cout << " ATTPC Map : Generating the map geometry of the ATTPC " << std::endl;
    // Local variables
-   Float_t pads_in_half_hex;
-   Float_t pads_in_hex;
+   Float_t pads_in_half_hex = 0;
+   Float_t pads_in_hex = 0;
    Float_t row_length = 0;
    Float_t pads_in_half_row = 0;
    Int_t pads_out_half_hex = 0;

@@ -1,32 +1,38 @@
 #include "AtRansac.h"
+#include <Math/GenVector/RotationX.h>
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshadow"
+#include <pcl/console/parse.h>
+#include <pcl/filters/extract_indices.h>
+#include <pcl/io/pcd_io.h>
+#include <pcl/point_types.h>
+#include <pcl/sample_consensus/ransac.h>
+#include <pcl/sample_consensus/sac_model_plane.h>
+#include <pcl/sample_consensus/sac_model_sphere.h>
+#pragma GCC diagnostic pop
+#include <pcl/ModelCoefficients.h>
+#include <pcl/sample_consensus/method_types.h>
+#include <pcl/sample_consensus/model_types.h>
+#include <pcl/segmentation/sac_segmentation.h>
+#include <pcl/filters/voxel_grid.h>
+#include <pcl/filters/extract_indices.h>
 
 // FairRoot classes
 #include <FairRuntimeDb.h>
 #include <FairRun.h>
 
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
+
 using namespace ROOT::Math;
 
 ClassImp(AtRANSACN::AtRansac);
 
-AtRANSACN::AtRansac::AtRansac()
+AtRANSACN::AtRansac::AtRansac() : fRANSACModel(pcl::SACMODEL_LINE)
 {
-   fVertex_1.SetXYZ(-10000, -10000, -10000);
-   fVertex_2.SetXYZ(-10000, -10000, -10000);
-   fMinimum = -1.0;
-   fLineDistThreshold = 3.0;
-
-   fRANSACModel = pcl::SACMODEL_LINE;
-   fRANSACThreshold = 5.0;
-   fMinHitsLine = 5;
-
-   fXCenter = 0.0;
-   fYCenter = 0.0;
-
-   fRANSACPointThreshold = 0.01; // Default 10%
-
-   fVertexTime = -1000.0;
-
-   fTiltAng = 0; // fPar->GetTiltAngle();
 
    pcl::console::setVerbosityLevel(pcl::console::L_ALWAYS);
 }
@@ -267,8 +273,9 @@ Int_t AtRANSACN::AtRansac::MinimizeTrack(AtTrack *track)
 
    gErrorIgnoreLevel = kFatal;
    Int_t nd = 10000;
-   auto *gr = new TGraph2D(); /////NB: This should be created on the heap only once so it should move outside of
-                              /// this function!!!!!!!!!!!!!!!
+   auto gr =
+      std::make_unique<TGraph2D>(); /////NB: This should be created on the heap only once so it should move outside of
+                                    /// this function!!!!!!!!!!!!!!!
    std::vector<AtHit> HitArray = track->GetHitArray();
 
    double p0[4] = {10, 20, 1, 2}; // For the moment those are dummy parameters
@@ -279,7 +286,7 @@ Int_t AtRANSACN::AtRansac::MinimizeTrack(AtTrack *track)
    }
 
    ROOT::Fit::Fitter fitter;
-   SumDistance2 sdist(gr);
+   SumDistance2 sdist(gr.get());
 #ifdef __CINT__
    ROOT::Math::Functor fcn(&sdist, 4, "SumDistance2");
 #else

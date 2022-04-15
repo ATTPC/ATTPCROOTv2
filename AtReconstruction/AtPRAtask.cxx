@@ -12,9 +12,12 @@
 #include <FairRuntimeDb.h>
 #include <FairLogger.h>
 
-AtPRAtask::AtPRAtask() : FairTask("AtPRAtask")
+#include "AtTrackFinderHC.h"
+
+AtPRAtask::AtPRAtask()
+   : FairTask("AtPRAtask"), fLogger(FairLogger::GetLogger()), fPatternEventArray("AtPatternEvent", 1)
 {
-   fLogger = FairLogger::GetLogger();
+
    LOG(debug) << "Default Constructor of AtPRAtask";
    fPar = nullptr;
    fPRAlgorithm = 0;
@@ -72,8 +75,6 @@ InitStatus AtPRAtask::Init()
 {
    LOG(debug) << "Initilization of AtPRAtask";
 
-   fPatternEventArray = new TClonesArray("AtPatternEvent");
-
    if (fPRAlgorithm == 0) {
       LOG(info) << "Using Track Finder Hierarchical Clustering algorithm";
 
@@ -124,13 +125,13 @@ InitStatus AtPRAtask::Init()
       return kERROR;
    }
 
-   fEventHArray = (TClonesArray *)ioMan->GetObject("AtEventH");
+   fEventHArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtEventH"));
    if (fEventHArray == nullptr) {
       LOG(error) << "Cannot find AtEvent array!";
       return kERROR;
    }
 
-   ioMan->Register("AtPatternEvent", "AtTPC", fPatternEventArray, kIsPersistence);
+   ioMan->Register("AtPatternEvent", "AtTPC", &fPatternEventArray, kIsPersistence);
 
    return kSUCCESS;
 }
@@ -139,20 +140,20 @@ void AtPRAtask::Exec(Option_t *option)
 {
    LOG(debug) << "Exec of AtPRAtask";
 
-   fPatternEventArray->Delete();
+   fPatternEventArray.Delete();
 
    if (fEventHArray->GetEntriesFast() == 0)
       return;
 
    std::vector<AtHit> hitArray;
-   AtEvent &event = *((AtEvent *)fEventHArray->At(0)); // TODO: Make sure we are not copying
+   AtEvent &event = *(dynamic_cast<AtEvent *>(fEventHArray->At(0))); // TODO: Make sure we are not copying
    hitArray = event.GetHitArray();
 
    std::cout << "  -I- AtTrackFinderHCTask -  Event Number :  " << event.GetEventID() << "\n";
 
    try {
 
-      auto *patternEvent = (AtPatternEvent *)new ((*fPatternEventArray)[0]) AtPatternEvent();
+      auto *patternEvent = (AtPatternEvent *)new (fPatternEventArray[0]) AtPatternEvent();
 
       if (hitArray.size() > fMinNumHits && hitArray.size() < fMaxNumHits)
          fPRA->FindTracks(event, patternEvent);

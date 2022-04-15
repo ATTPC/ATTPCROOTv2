@@ -31,6 +31,7 @@
 #include <algorithm>
 #include <iostream>
 #include <tuple>
+#include <utility>
 
 #include <TGeoManager.h>
 #include <TDatabasePDG.h>
@@ -38,38 +39,26 @@
 #include "AtSpacePointMeasurement.h"
 #include "AtTrack.h"
 
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
+
 AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile,
                              Float_t gasMediumDensity, Int_t minit, Int_t maxit)
-
+   : fEnergyLossFile(std::move(eLossFile)), fSimulationConv(kFALSE), fPhiOrientation(0),
+     fMeasurementProducer(
+        new genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement>(fHitClusterArray)),
+     fMeasurementFactory(new genfit::MeasurementFactory<genfit::AbsMeasurement>()), fTPCDetID(0), fCurrentDirection(-1),
+     fMinIterations(minit), fMaxIterations(maxit), fMinBrho(minbrho), fMaxBrho(maxbrho),
+     fMagneticField(10.0 * magfield), fNumFitPoints(0.90), fMass(1.00727647), fAtomicNumber(1), fPDGCode(2212),
+     fVerbosity(0), fGenfitTrackArray(new TClonesArray("genfit::Track")),
+     fHitClusterArray(new TClonesArray("AtHitCluster"))
 {
-
-   fTPCDetID = 0;
-   fCurrentDirection = -1;
-   fMinIterations = minit;
-   fMaxIterations = maxit;
-   fMinBrho = minbrho;
-   fMaxBrho = maxbrho;
-   fMagneticField = 10.0 * magfield; // T to kGauss
-   fNumFitPoints = 0.90;             // Percentage of processed points
-   fMass = 1.00727647;               //<! Particle mass in amu
-   fAtomicNumber = 1;
-   fPDGCode = 2212;
-   fVerbosity = 0;
-   fEnergyLossFile = eLossFile;
-   fSimulationConv = kFALSE;
-   fPhiOrientation = 0;
-
    fKalmanFitter = std::make_shared<genfit::KalmanFitterRefTrack>();
    fKalmanFitter->setMinIterations(fMinIterations);
    fKalmanFitter->setMaxIterations(fMaxIterations);
    // fKalmanFitter->setDebugLvl();
-
-   fGenfitTrackArray = new TClonesArray("genfit::Track");
-   fHitClusterArray = new TClonesArray("AtHitCluster");
-
-   fMeasurementProducer =
-      new genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement>(fHitClusterArray);
-   fMeasurementFactory = new genfit::MeasurementFactory<genfit::AbsMeasurement>();
    fMeasurementFactory->addProducer(fTPCDetID, fMeasurementProducer);
 
    genfit::FieldManager::getInstance()->init(new genfit::ConstField(0., 0., fMagneticField)); // TODO kGauss
@@ -88,7 +77,7 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,
    std::cout << " AtFITTER::AtGenfit::AtGenfit(): Checking materials that GENFIT will use "
              << "\n";
 
-   auto *gGeoMan = (TGeoManager *)gROOT->FindObject("FAIRGeom");
+   auto *gGeoMan = dynamic_cast<TGeoManager *>(gROOT->FindObject("FAIRGeom"));
    TObjArray *volume_list = gGeoMan->GetListOfVolumes();
    if (!volume_list) {
       std::cout << cRED << " Warning! Null list of geometry volumes." << cNORMAL << "\n";
@@ -376,7 +365,7 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       new ((*fGenfitTrackArray)[fGenfitTrackArray->GetEntriesFast()]) genfit::Track(trackCand, *fMeasurementFactory);
    gfTrack->addTrackRep(new genfit::RKTrackRep(fPDGCode));
 
-   auto *trackRep = (genfit::RKTrackRep *)gfTrack->getTrackRep(0);
+   auto *trackRep = dynamic_cast<genfit::RKTrackRep *>(gfTrack->getTrackRep(0));
    // trackRep->setPropDir(-1);
 
    try {

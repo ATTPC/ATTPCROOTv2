@@ -44,7 +44,7 @@ ClassImp(genfit::AtSpacepointMeasurement)
    AtSpacepointMeasurement::AtSpacepointMeasurement() : SpacepointMeasurement() {}
 
    AtSpacepointMeasurement::AtSpacepointMeasurement(const AtHitCluster *detHit, const TrackCandHit *hit)
-      : SpacepointMeasurement()
+      : SpacepointMeasurement(), fCharge(detHit->GetCharge())
    {
       auto pos = detHit->GetPosition();
       TMatrixD mat = detHit->GetCovMatrix();
@@ -71,8 +71,6 @@ ClassImp(genfit::AtSpacepointMeasurement)
       rawHitCov_ = cov;
       detId_ = hit->getDetId();
       hitId_ = hit->getHitId();
-
-      fCharge = detHit->GetCharge();
 
       // std::cout<<" AtSpacepointMeasurement::AtSpacepointMeasurement "<<"\n";
       // std::cout<<rawHitCoords_(0)<<"	"<<rawHitCoords_(1)<<"	  "<<rawHitCoords_(2)<<"	"<<fCharge<<" "<<detId_<<"

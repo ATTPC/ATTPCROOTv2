@@ -17,10 +17,10 @@
 #include <TXMLNode.h>
 #include <Rtypes.h>
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
 
 std::ostream &operator<<(std::ostream &os, const AtMap::InhibitType &t)
 {
@@ -62,7 +62,7 @@ Bool_t AtMap::ParseInhibitMap(TString inimap, AtMap::InhibitType type)
 
    std::ifstream fIni(inimap.Data());
 
-   Int_t pad;
+   Int_t pad = 0;
 
    LOG(info) << cYELLOW << __func__ << " - Parsing map for inhibited pads of type " << type << cNORMAL;
    if (fIni.fail()) {
@@ -167,7 +167,7 @@ void AtMap::ParseMapList(TXMLNode *node)
 Bool_t AtMap::ParseXMLMap(Char_t const *xmlfile)
 {
 
-   auto *domParser = new TDOMParser();
+   auto domParser = std::make_unique<TDOMParser>();
    domParser->SetValidate(false);
    Int_t parsecode = domParser->ParseFile(xmlfile);
    if (parsecode < 0) {
@@ -177,7 +177,6 @@ Bool_t AtMap::ParseXMLMap(Char_t const *xmlfile)
    TXMLNode *node = domParser->GetXMLDocument()->GetRootNode();
    ParseMapList(node->GetChildren());
    // itrEnd = pmap.end();
-   delete domParser;
 
    LOG(INFO) << "Pad map has an average load of " << fPadMap.load_factor() << " and a max load of "
              << fPadMap.max_load_factor() << " with buckets " << fPadMap.bucket_count() << " for " << fPadMap.size()
@@ -236,6 +235,7 @@ PadReference AtMap::GetPadRef(int padNum) const
 
 void AtMap::drawPadPlane()
 {
+   // NOLINTNEXTLINE (memory belongs t root)
    fPadPlaneCanvas = new TCanvas("padPlaneCanvas", "Pad Plane", 1000, 1000);
    gStyle->SetPalette(1);
    fPadPlane->Draw("col");

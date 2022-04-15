@@ -41,11 +41,6 @@
 #include "AtTpcMap.h"
 #include "AtTrack.h"
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
-
 class AtLmedsMod : public TObject {
 
 public:
@@ -110,20 +105,20 @@ protected:
    std::pair<Int_t, Int_t> fVertex_tracks; // ID of the tracks that form the best vertex
    Int_t fLineDistThreshold;
    Int_t fRandSamplMode;
-   Int_t fVertexMod;
+   Int_t fVertexMod{};
 
    std::vector<double> vX, vY, vZ, vQ;
    std::vector<double> vTrackCharge;
    float fLmedsMinPoints;
-   float fLmedsPointThreshold;
-   float fLmedsChargeThreshold;
+   float fLmedsPointThreshold{};
+   float fLmedsChargeThreshold{};
    float fLmedsThreshold;
    float fLmedsMaxIteration;
-   int fNumberOfTracksMax;
-   int fOriginalCloudSize;
-   double fTotalCharge;
-   int fVerbose;
-   double Avcharge;
+   int fNumberOfTracksMax{};
+   int fOriginalCloudSize{};
+   double fTotalCharge{};
+   int fVerbose{};
+   double Avcharge{};
    double fChargeThres;
 
 public:

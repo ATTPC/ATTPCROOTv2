@@ -5,8 +5,8 @@
 
 class AtPSASimple2 : public AtPSA {
 public:
-   AtPSASimple2();
-   ~AtPSASimple2();
+   AtPSASimple2() = default;
+   ~AtPSASimple2() = default;
 
    void Analyze(AtRawEvent *rawEvent, AtEvent *event) override;
 
@@ -18,12 +18,12 @@ public:
    void SetTimeCorrection(Bool_t value);
 
 private:
-   Bool_t fBackGroundSuppression;
-   Bool_t fBackGroundInterp;
-   Bool_t fIsPeakFinder;
-   Bool_t fIsMaxFinder;
-   Bool_t fIsBaseCorr;
-   Bool_t fIsTimeCorr;
+   Bool_t fBackGroundSuppression{false};
+   Bool_t fBackGroundInterp{false};
+   Bool_t fIsPeakFinder{false};
+   Bool_t fIsMaxFinder{false};
+   Bool_t fIsBaseCorr{false};
+   Bool_t fIsTimeCorr{false};
 
    ClassDefOverride(AtPSASimple2, 2)
 };

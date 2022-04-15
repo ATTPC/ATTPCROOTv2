@@ -108,7 +108,7 @@ double *calculate_distance_matrix(pcl::PointCloud<pcl::PointXYZI>::ConstPtr clou
 {
    size_t const triplet_size = triplets.size();
    size_t k = 0;
-   auto *result = new double[(triplet_size * (triplet_size - 1)) / 2];
+   auto *result = new double[(triplet_size * (triplet_size - 1)) / 2]; // NOLINT
 
    for (size_t i = 0; i < triplet_size; ++i) {
       for (size_t j = i + 1; j < triplet_size; j++) {
@@ -143,8 +143,8 @@ cluster_group compute_hc(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, std::v
       return result;
    }
 
-   double *distance_matrix, *height = new double[triplet_size - 1];
-   int *merge = new int[2 * (triplet_size - 1)], *labels = new int[triplet_size];
+   double *distance_matrix, *height = new double[triplet_size - 1];               // NOLINT
+   int *merge = new int[2 * (triplet_size - 1)], *labels = new int[triplet_size]; // NOLINT
 
    distance_matrix = calculate_distance_matrix(cloud, triplets, triplet_metric);
 
@@ -185,10 +185,12 @@ cluster_group compute_hc(pcl::PointCloud<pcl::PointXYZI>::ConstPtr cloud, std::v
    }
 
    // cleanup
+   // NOLINTBEGIN
    delete[] distance_matrix;
    delete[] height;
    delete[] merge;
    delete[] labels;
+   // NOLINTEND
 
    return result;
 }

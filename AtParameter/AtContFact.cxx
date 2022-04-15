@@ -40,11 +40,11 @@ void AtContFact::setAllContainers()
 
    containers -> Add(p);*/
 
-   auto *p = new FairContainer("AtDigiPar", "AtTPC Parameter Container", "");
+   auto *p = new FairContainer("AtDigiPar", "AtTPC Parameter Container", ""); // NOLINT
 
    containers->Add(p);
 
-   auto *pp = new FairContainer("AtTriggerPar", "AtTPC Parameter Container", "");
+   auto *pp = new FairContainer("AtTriggerPar", "AtTPC Parameter Container", ""); // NOLINT
 
    containers->Add(pp);
 }

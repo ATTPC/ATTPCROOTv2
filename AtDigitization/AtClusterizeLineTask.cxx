@@ -25,8 +25,8 @@ InitStatus AtClusterizeLineTask::Init()
    if (fMCPointArray == nullptr)
       LOG(fatal) << "Cannot find AtTpcPoint array!";
 
-   fSimulatedPointArray = new TClonesArray("AtSimulatedLine");
-   ioman->Register("AtSimulatedPoint", "cbmsim", fSimulatedPointArray, fIsPersistent);
+   fSimulatedPointArray = std::make_unique<TClonesArray>("AtSimulatedLine");
+   ioman->Register("AtSimulatedPoint", "cbmsim", fSimulatedPointArray.get(), fIsPersistent);
 
    getParameters();
 
@@ -55,7 +55,7 @@ void AtClusterizeLineTask::processPoint(Int_t mcPointID)
    ROOT::Math::XYZVector currentPoint = getCurrentPointLocation();
 
    auto size = fSimulatedPointArray->GetEntriesFast();
-   auto *simLine = new ((*fSimulatedPointArray)[size]) AtSimulatedLine();
+   auto *simLine = new ((*fSimulatedPointArray)[size]) AtSimulatedLine(); // NOLINT
 
    simLine->SetMCPointID(mcPointID);
    simLine->SetMCEventID(fMCPoint->GetEventID());

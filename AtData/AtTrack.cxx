@@ -8,18 +8,12 @@
 
 #include <Rtypes.h>
 
-ClassImp(AtTrack);
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
 
-AtTrack::AtTrack()
-{
-   fTrackID = -1;
-   fMinimum = -1;
-   fNFree = -1;
-   fAngleZAxis = -20;
-   fAngleZDet = -20;
-   fAngleYDet = -20;
-   kIsNoise = kFALSE;
-}
+ClassImp(AtTrack);
 
 void AtTrack::SetNFree(Int_t ndf)
 {

@@ -4,23 +4,12 @@
 #include <FairRuntimeDb.h>
 #include <FairRun.h>
 
-AtPATTERN::AtTrackFinderHC::AtTrackFinderHC()
-{
-   inputParams.s = -1.0;
-   inputParams.r = -1.0;
-   inputParams.k = 19;
-   inputParams.n = 3;
-   inputParams.a = 0.03;
-   inputParams.t = 3.5;
-   inputParams.m = 8;
-   kSetPrunning = kFALSE;
-   fKNN = 5;
-   fStdDevMulkNN = 0.0;
-   fkNNDist = 10.0;
-   kSetPrunning = kFALSE;
-}
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
 
-AtPATTERN::AtTrackFinderHC::~AtTrackFinderHC() = default;
+AtPATTERN::AtTrackFinderHC::AtTrackFinderHC() : AtPATTERN::AtPRA() {}
 
 std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::GetTrackCand()
 {
@@ -32,7 +21,7 @@ bool AtPATTERN::AtTrackFinderHC::FindTracks(AtEvent &event, AtPatternEvent *patt
 
    int opt_verbose = 0;
 
-   hc_params opt_params;
+   hc_params opt_params{};
 
    // hc_params bestParams;
    // AtTPC

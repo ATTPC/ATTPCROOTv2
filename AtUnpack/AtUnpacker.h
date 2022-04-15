@@ -21,7 +21,7 @@ protected:
    std::string fInputFileName;
    Long64_t fEventID = 0;     // Internal event ID to be unpacked next (stored in AtRawEvent)
    Long64_t fDataEventID = 0; // Event ID as tracked whatever produced the data being unpacked
-   AtRawEvent *fRawEvent;
+   AtRawEvent *fRawEvent{};
 
 public:
    AtUnpacker(mapPtr map);

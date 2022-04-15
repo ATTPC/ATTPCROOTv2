@@ -24,7 +24,7 @@ void AtProtoEvent::SetQuadrantArray(std::vector<AtProtoQuadrant> *quadrantArray)
    fQuadrantArray = *quadrantArray;
 }
 
-Int_t AtProtoEvent::GetNumQuadrants()
+std::size_t AtProtoEvent::GetNumQuadrants()
 {
    return fQuadrantArray.size();
 }

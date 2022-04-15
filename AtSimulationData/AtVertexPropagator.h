@@ -13,6 +13,8 @@ class TMemberInspector;
 class AtVertexPropagator : public TObject {
 
 private:
+   static std::unique_ptr<AtVertexPropagator> fInstance;
+
    Int_t fGlobalEvtCnt;
    Int_t fBeamEvtCnt;
    Int_t fDecayEvtCnt;
@@ -50,9 +52,13 @@ private:
    TVector3 fd2HeVtx;
    Double_t fExEjectile;
 
-public:
+protected:
    AtVertexPropagator();
-   virtual ~AtVertexPropagator();
+
+public:
+   virtual ~AtVertexPropagator() = default;
+
+   static AtVertexPropagator *Instance();
 
    void SetVertex(Double_t vx, Double_t vy, Double_t vz, Double_t invx, Double_t invy, Double_t invz, Double_t px,
                   Double_t py, Double_t pz, Double_t E);
@@ -127,7 +133,5 @@ public:
 
    ClassDef(AtVertexPropagator, 2)
 };
-
-extern AtVertexPropagator *gAtVP; // global
 
 #endif

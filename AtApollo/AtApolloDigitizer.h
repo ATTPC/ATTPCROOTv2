@@ -89,13 +89,13 @@ public:
 private:
    void SetParameter();
 
-   TClonesArray *fApolloPointDataCA;  //!  The crystal hit collection
-   TClonesArray *fApolloCryCalDataCA; /**< Array with CALIFA Cal- output data. >*/
+   TClonesArray *fApolloPointDataCA; //!  The crystal hit collection
+   TClonesArray fApolloCryCalDataCA; /**< Array with CALIFA Cal- output data. >*/
 
-   Double_t fNonUniformity;  // Experimental non-uniformity parameter
-   Double_t fResolutionCsI;  // Experimental resolution @ 1 MeV for CsI
-   Double_t fResolutionLaBr; // Experimental resolution @ 1 MeV for LaBr
-   Double_t fThreshold;      // Minimum energy requested to create a Cal
+   Double_t fNonUniformity{0.};  // Experimental non-uniformity parameter
+   Double_t fResolutionCsI{0.};  // Experimental resolution @ 1 MeV for CsI
+   Double_t fResolutionLaBr{0.}; // Experimental resolution @ 1 MeV for LaBr
+   Double_t fThreshold{0.};      // Minimum energy requested to create a Cal
 
    /** Private method NUSmearing
     **

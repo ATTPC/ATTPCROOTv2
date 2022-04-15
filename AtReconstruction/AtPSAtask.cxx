@@ -20,18 +20,17 @@
 #endif
 */
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
 
 ClassImp(AtPSAtask);
 
 AtPSAtask::AtPSAtask(AtPSA *psa)
-   : fInputBranchName("AtRawEvent"), fOutputBranchName("AtEventH"), fSimulatedPointBranchName("AtTpcPoint"), fPSA(psa),
-     fIsPersistence(false)
+   : fEventHArray(new TClonesArray("AtEvent")), fInputBranchName("AtRawEvent"), fOutputBranchName("AtEventH"),
+     fSimulatedPointBranchName("AtTpcPoint"), fPSA(psa), fIsPersistence(false)
 {
-   fEventHArray = new TClonesArray("AtEvent");
 }
 
 AtPSAtask::~AtPSAtask() = default;
@@ -62,7 +61,7 @@ InitStatus AtPSAtask::Init()
       return kERROR;
    }
 
-   fRawEventArray = (TClonesArray *)ioMan->GetObject(fInputBranchName);
+   fRawEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fInputBranchName));
    if (fRawEventArray == nullptr) {
       LOG(ERROR) << "Cannot find AtRawEvent array in branch " << fInputBranchName << "!";
       return kERROR;
@@ -71,7 +70,7 @@ InitStatus AtPSAtask::Init()
    fPSA->Init();
 
    // Retrieving simulated points, if available
-   fMCPointArray = (TClonesArray *)ioMan->GetObject(fSimulatedPointBranchName);
+   fMCPointArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fSimulatedPointBranchName));
    if (fMCPointArray != nullptr) {
       LOG(INFO) << " Simulated points found (simulation analysis) in branch " << fSimulatedPointBranchName;
       fPSA->SetSimulatedEvent(fMCPointArray);
@@ -94,7 +93,7 @@ void AtPSAtask::Exec(Option_t *opt)
       return;
    }
 
-   auto *rawEvent = (AtRawEvent *)fRawEventArray->At(0);
+   auto *rawEvent = dynamic_cast<AtRawEvent *>(fRawEventArray->At(0));
    auto *event = (AtEvent *)new ((*fEventHArray)[0]) AtEvent();
 
    LOG(debug) << "Setting AtEvent Parameters";

@@ -11,10 +11,6 @@
 #include <omp.h>
 #endif
 
-#ifdef _OPENMP
-#include <omp.h>
-#endif
-
 // System
 #include <fstream>
 #include <iostream>
@@ -41,18 +37,11 @@
 
 // PCL
 #include <pcl/common/common.h>
-#include <pcl/filters/extract_indices.h>
-#include <pcl/io/pcd_io.h>
 
 // trackfinder
 #include "hc.h"
 #include "msd.h"
 #include "smoothenCloud.h"
-
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
 
 struct hc_params {
    float s;
@@ -71,7 +60,8 @@ struct Point {
    float z;
    std::vector<int> clIds;
 
-   Point(pcl::PointXYZ point)
+   template <typename T>
+   Point(T point)
    {
       x = point.x;
       y = point.y;
@@ -87,7 +77,7 @@ class AtTrackFinderHC : public AtPRA {
 
 public:
    AtTrackFinderHC();
-   ~AtTrackFinderHC();
+   ~AtTrackFinderHC() = default;
 
    bool FindTracks(AtEvent &event, AtPatternEvent *patternEvent);
    std::vector<AtTrack> GetTrackCand();
@@ -111,7 +101,7 @@ private:
 
    std::vector<AtTrack> fTrackCand; // Candidate tracks
 
-   hc_params inputParams;
+   hc_params inputParams{.s = -1, .k = 19, .n = 3, .m = 8, .r = -1, .a = 0.03, .t = 3.5};
 
    ClassDef(AtTrackFinderHC, 1);
 };

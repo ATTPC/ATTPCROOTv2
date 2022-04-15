@@ -20,12 +20,12 @@ class TMemberInspector;
 class AtMCPoint : public FairMCPoint {
 
 protected:
-   Int_t fDetCopyID;
+   Int_t fDetCopyID = 0;
    TString fVolName;
-   Double_t fEnergyIni;
-   Double_t fAngleIni;
-   Int_t fAiso;
-   Int_t fZiso;
+   Double_t fEnergyIni = 0;
+   Double_t fAngleIni = 0;
+   Int_t fAiso = 0;
+   Int_t fZiso = 0;
 
 public:
    /** Default constructor **/
@@ -46,7 +46,10 @@ public:
              TString VolName, Int_t detCopyID, Double_t EIni, Double_t AIni, Int_t A, Int_t Z);
 
    /** Destructor **/
-   virtual ~AtMCPoint();
+   virtual ~AtMCPoint() = default;
+   /** Copy constructor **/
+   AtMCPoint(const AtMCPoint &point) = delete;
+   AtMCPoint operator=(const AtMCPoint &point) = delete;
 
    /** Accessors **/
    Int_t GetDetCopyID() const { return fDetCopyID; } // added by Marc
@@ -59,14 +62,9 @@ public:
    void SetDetCopyID(Int_t id) { fDetCopyID = id; }; // added by Marc
 
    /** Output to screen **/
-   virtual void Print(const Option_t *opt) const;
+   virtual void Print(const Option_t *opt) const override;
 
-private:
-   /** Copy constructor **/
-   AtMCPoint(const AtMCPoint &point);
-   AtMCPoint operator=(const AtMCPoint &point);
-
-   ClassDef(AtMCPoint, 2)
+   ClassDefOverride(AtMCPoint, 2)
 };
 
 #endif

@@ -88,18 +88,18 @@ public:
    std::vector<Float_t> GetCRDCCal() { return fcrdccal; }
 
 private:
-   S800Settings *fSett;
+   S800Settings *fSett{};
    std::vector<std::vector<Float_t>> fped;
    std::vector<std::vector<Float_t>> fslope;
    std::vector<std::vector<Float_t>> foffset;
    std::vector<std::vector<Int_t>> fbad;
    std::vector<Float_t> fcrdccal;
-   Short_t fts800;
+   Short_t fts800{};
 
    std::vector<Float_t> fICoffset;
    std::vector<Float_t> fICslope;
-   Float_t fde_slope;
-   Float_t fde_offset;
+   Float_t fde_slope{};
+   Float_t fde_offset{};
 
    CRDC fcrdc;
    TOF ftof;

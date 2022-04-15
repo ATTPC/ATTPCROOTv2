@@ -23,29 +23,22 @@
 #include <TMultiGraph.h>
 #include <Rtypes.h>
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
 using XYPoint = ROOT::Math::XYPoint;
 
 ClassImp(AtTpcProtoMap);
 
-AtTpcProtoMap::AtTpcProtoMap() : AtMap()
-{
-   kIsFileSet = kFALSE;
-   kIsGenerated = kFALSE;
-   kIsProtoMapSet = kFALSE;
-}
-
-AtTpcProtoMap::~AtTpcProtoMap() = default;
+AtTpcProtoMap::AtTpcProtoMap() : AtMap() {}
 
 Bool_t AtTpcProtoMap::SetGeoFile(TString geofile)
 {
 
    TString dir = getenv("VMCWORKDIR");
    TString geodir = dir + "/geometry/" + geofile;
-   f = new TFile(geodir.Data());
+   f = new TFile(geodir.Data()); // NOLINT
 
    if (f->IsZombie()) {
       std::cout << cRED << " AtTPC Proto Map : No geometry file found! Check VMCWORKDIR variable. Exiting... "
@@ -69,11 +62,11 @@ void AtTpcProtoMap::GeneratePadPlane()
    }
 
    std::cout << " AtTPC Proto Map : Generating the map geometry of the AtTPC Prototype " << std::endl;
-   TMultiGraph *mg;
-   TKey *key;
+   TMultiGraph *mg = nullptr;
+   TKey *key = nullptr;
    TIter nextkey(gDirectory->GetListOfKeys());
-   while ((key = (TKey *)nextkey())) {
-      auto *obj = (TMultiGraph *)key->ReadObj();
+   while ((key = dynamic_cast<TKey *>(nextkey()))) {
+      auto *obj = dynamic_cast<TMultiGraph *>(key->ReadObj());
       if (obj->InheritsFrom("TMultiGraph")) {
          mg = (TMultiGraph *)obj;
          bin = fPadPlane->AddBin(mg);
@@ -117,7 +110,7 @@ TH2Poly *AtTpcProtoMap::GetAtTpcPlane(TString TH2Poly_name)
          << std::endl;
       return nullptr;
    }
-   fPadPlane = (TH2Poly *)f->Get(TH2Poly_name.Data());
+   fPadPlane = dynamic_cast<TH2Poly *>(f->Get(TH2Poly_name.Data()));
    return fPadPlane;
 }
 

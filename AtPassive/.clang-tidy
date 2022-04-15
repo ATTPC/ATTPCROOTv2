@@ -1,0 +1,4 @@
+---
+Checks:              '-cppcoreguidelines-owning-memory'
+InheritParentConfig: true
+...

@@ -57,8 +57,6 @@ void AtGas::InitializeParameters()
    }
 }
 
-AtGas::~AtGas() = default;
-
 void AtGas::operator=(const AtGas &GasToCopy)
 {
    fEIonize = GasToCopy.fEIonize;

@@ -56,11 +56,11 @@ public:
 private:
    FairLogger *fLogger;
 
-   TClonesArray *fRawEventArray;
+   TClonesArray *fRawEventArray{};
    S800Calc *fS800CalcBr;
-   TFile *fS800file;
+   TFile *fS800file{};
 
-   Int_t fTsEvtS800Size, fEvtMerged, fEvtDelta, fTsDelta;
+   Int_t fTsEvtS800Size{}, fEvtMerged{}, fEvtDelta{5}, fTsDelta{1272};
    TString fS800File;
    std::vector<Long64_t> fS800Ts;
    std::vector<Double_t> fS800Evt;
@@ -69,9 +69,9 @@ private:
    std::vector<Double_t> fMTDCObjRange;
    std::vector<Double_t> fMTDCXfRange;
 
-   TF1 *fS800TsFunc;
+   TF1 *fS800TsFunc{};
    // TF1 *fOptiFit;
-   Double_t fGlom;
+   Double_t fGlom{2};
 
    std::vector<TCutG *> fcutPID1;
    std::vector<TCutG *> fcutPID2;
@@ -80,12 +80,12 @@ private:
    std::vector<TString> fcutPID2File;
    std::vector<TString> fcutPID3File;
 
-   Bool_t fIsPersistence;
-   Bool_t fSetCut1;
-   Bool_t fSetCut2;
-   Bool_t fSetCut3;
+   Bool_t fIsPersistence{false};
+   Bool_t fSetCut1{false};
+   Bool_t fSetCut2{false};
+   Bool_t fSetCut3{false};
 
-   TGraph *fS800TsGraph;
+   TGraph *fS800TsGraph{};
 
    ClassDef(AtMergeTask, 1);
 };

@@ -24,19 +24,19 @@ class TMemberInspector;
 
 class AtTpcProtoMap : public AtMap {
 protected:
-   TFile *f; // Raw pointer, owned by gROOT
-   Int_t bin;
+   TFile *f{}; // Raw pointer, owned by gROOT
+   Int_t bin{};
 
-   Bool_t kIsFileSet;
-   Bool_t kIsGenerated;
-   Bool_t kIsProtoMapSet;
+   Bool_t kIsFileSet = false;
+   Bool_t kIsGenerated = false;
+   Bool_t kIsProtoMapSet = false;
 
    std::map<Int_t, std::vector<Float_t>> ProtoGeoMap;
    std::map<Int_t, Int_t> ProtoBinMap;
 
 public:
    AtTpcProtoMap();
-   ~AtTpcProtoMap();
+   ~AtTpcProtoMap() = default;
 
    virtual void GeneratePadPlane() override;
    virtual void Dump() override;

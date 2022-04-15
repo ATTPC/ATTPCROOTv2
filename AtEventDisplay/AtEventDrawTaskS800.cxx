@@ -30,11 +30,11 @@
 
 #include <iostream>
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
-#define cBLUE "\033[1;34m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
+constexpr auto cBLUE = "\033[1;34m";
 
 using namespace std;
 
@@ -71,10 +71,7 @@ AtEventDrawTaskS800::AtEventDrawTaskS800()
 
    // fAtMapPtr = new AtTpcMap();
 
-   fGeoOption = "AtTPC";
-
    Char_t padhistname[256];
-   fMultiHit = 10;
 
    /*
    for(Int_t i=0;i<300;i++){ // TODO: Full-scale must be accomodated
@@ -151,7 +148,8 @@ InitStatus AtEventDrawTaskS800::Init()
    fDetmap->SetName("fMap");
    gROOT->GetListOfSpecials()->Add(fDetmap);
 
-   fHitArray = (TClonesArray *)ioMan->GetObject("AtEventH"); // TODO: Why this confusing name? It should be fEventArray
+   fHitArray = dynamic_cast<TClonesArray *>(
+      ioMan->GetObject("AtEventH")); // TODO: Why this confusing name? It should be fEventArray
    if (fHitArray)
       LOG(INFO) << cGREEN << "Hit Array Found." << cNORMAL;
 
@@ -162,15 +160,15 @@ InitStatus AtEventDrawTaskS800::Init()
        fIsRawData=kTRUE;
    }
    */
-   fHoughSpaceArray = (TClonesArray *)ioMan->GetObject("AtHough");
+   fHoughSpaceArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtHough"));
    if (fHoughSpaceArray)
       LOG(INFO) << cGREEN << "Hough Array Found." << cNORMAL;
 
-   fProtoEventArray = (TClonesArray *)ioMan->GetObject("AtProtoEvent");
+   fProtoEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtProtoEvent"));
    if (fProtoEventArray)
       LOG(INFO) << cGREEN << "Prototype Event Array Found." << cNORMAL;
 
-   fRansacArray = (TClonesArray *)ioMan->GetObject("AtRansac");
+   fRansacArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtRansac"));
    if (fRansacArray)
       LOG(INFO) << cGREEN << "RANSAC Array Found." << cNORMAL;
 
@@ -178,15 +176,15 @@ InitStatus AtEventDrawTaskS800::Init()
    // if(fTrackFinderHCArray)  LOG(INFO)<<cGREEN<<"Track Finder Hierarchical Clustering Array
    // Found."<<cNORMAL<<FairLogger::endl;
 
-   fPatternEventArray = (TClonesArray *)ioMan->GetObject("AtPatternEvent");
+   fPatternEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtPatternEvent"));
    if (fPatternEventArray)
       LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL;
 
-   fTrackingEventAnaArray = (TClonesArray *)ioMan->GetObject("AtTrackingEventAna");
+   fTrackingEventAnaArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtTrackingEventAna"));
    if (fTrackingEventAnaArray)
       LOG(INFO) << cGREEN << "Tracking Event Analysis Array Found." << cNORMAL;
 
-   fS800Calc = (S800Calc *)ioMan->GetObject("s800cal");
+   fS800Calc = dynamic_cast<S800Calc *>(ioMan->GetObject("s800cal"));
    if (fS800Calc)
       LOG(INFO) << cGREEN << "S800Calc Found." << cNORMAL;
    // fS800CalcArray = (TClonesArray*) ioMan->GetObject("s800cal");
@@ -381,7 +379,7 @@ void AtEventDrawTaskS800::DrawHitPoints()
    std::vector<Double_t> fPosZMin;
 
    // fQEventHist_H->Reset(0);
-   auto *event = (AtEvent *)fHitArray->At(0); // TODO: Why this confusing name? It should be fEventArray
+   auto *event = dynamic_cast<AtEvent *>(fHitArray->At(0)); // TODO: Why this confusing name? It should be fEventArray
    // event->SortHitArray(); // Works surprisingly well
    // Double_t Qevent=event->GetEventCharge();
    // Double_t RhoVariance=event->GetRhoVariance();
@@ -408,7 +406,7 @@ void AtEventDrawTaskS800::DrawHitPoints()
    }
 
    if (fIsRawData) {
-      fRawevent = (AtRawEvent *)fRawEventArray->At(0);
+      fRawevent = dynamic_cast<AtRawEvent *>(fRawEventArray->At(0));
       fRawevent->SetName("fRawEvent");
       gROOT->GetListOfSpecials()->Add(fRawevent);
    }
@@ -545,7 +543,7 @@ void AtEventDrawTaskS800::DrawHitPoints()
          for (auto &i : fHitSetMC)
             i = nullptr;
 
-         fTrackingEventAna = (AtTrackingEventAna *)fTrackingEventAnaArray->At(0);
+         fTrackingEventAna = dynamic_cast<AtTrackingEventAna *>(fTrackingEventAnaArray->At(0));
          std::vector<AtTrack> anaTracks = fTrackingEventAna->GetTrackArray();
          std::cout << cRED << "Calling code for MC Minimization which is depricated!!!" << std::endl;
          std::cout << cYELLOW << "  ====   Tracking analysis ==== " << std::endl;
@@ -763,7 +761,7 @@ void AtEventDrawTaskS800::DrawHitPoints()
 
    fPadPlane->Draw("zcol");
    gPad->Update();
-   fPadPlanePal = (TPaletteAxis *)fPadPlane->GetListOfFunctions()->FindObject("palette");
+   fPadPlanePal = dynamic_cast<TPaletteAxis *>(fPadPlane->GetListOfFunctions()->FindObject("palette"));
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
@@ -904,7 +902,7 @@ void AtEventDrawTaskS800::DrawHSpace() {}
 
 void AtEventDrawTaskS800::DrawProtoSpace()
 {
-   auto *protoevent = (AtProtoEvent *)fProtoEventArray->At(0);
+   auto *protoevent = dynamic_cast<AtProtoEvent *>(fProtoEventArray->At(0));
    Int_t nQuads = protoevent->GetNumQuadrants();
    std::vector<AtProtoQuadrant> quadrant;
 
@@ -1551,10 +1549,10 @@ void AtEventDrawTaskS800::SelectPad(const char *rawevt)
    if (!select)
       return;
    if (select->InheritsFrom(TH2Poly::Class())) {
-      auto *h = (TH2Poly *)select;
+      auto *h = dynamic_cast<TH2Poly *>(select);
       gPad->GetCanvas()->FeedbackMode(kTRUE);
       AtRawEvent *tRawEvent = nullptr;
-      tRawEvent = (AtRawEvent *)gROOT->GetListOfSpecials()->FindObject(rawevt);
+      tRawEvent = dynamic_cast<AtRawEvent *>(gROOT->GetListOfSpecials()->FindObject(rawevt));
       if (tRawEvent == nullptr) {
          std::cout << " = AtEventDrawTaskS800::SelectPad NULL pointer for the AtRawEvent! Please select an event first "
                    << std::endl;
@@ -1584,7 +1582,7 @@ void AtEventDrawTaskS800::SelectPad(const char *rawevt)
       std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
 
       AtMap *tmap = nullptr;
-      tmap = (AtMap *)gROOT->GetListOfSpecials()->FindObject("fMap");
+      tmap = dynamic_cast<AtMap *>(gROOT->GetListOfSpecials()->FindObject("fMap"));
       // new AtTpcProtoMap();
       // TString map = "/Users/yassidayyad/fair_install/AtTPCROOT_v2_06042015/scripts/proto.map";
       // tmap->SetProtoMap(map.Data());
@@ -1601,7 +1599,7 @@ void AtEventDrawTaskS800::SelectPad(const char *rawevt)
       // tPadWaveSub = new TH1D("tPadWaveSub","tPadWaveSub",512.0,0.0,511.0);
       // tPadWaveSub->SetLineColor(kRed);
       TH1I *tPadWave = nullptr;
-      tPadWave = (TH1I *)gROOT->GetListOfSpecials()->FindObject("fPadWave");
+      tPadWave = dynamic_cast<TH1I *>(gROOT->GetListOfSpecials()->FindObject("fPadWave"));
       auto rawadc = tPad->GetRawADC();
       auto adc = tPad->GetADC();
       if (tPadWave == nullptr) {
@@ -1620,7 +1618,7 @@ void AtEventDrawTaskS800::SelectPad(const char *rawevt)
       }
 
       TCanvas *tCvsPadWave = nullptr;
-      tCvsPadWave = (TCanvas *)gROOT->GetListOfSpecials()->FindObject("fCvsPadWave");
+      tCvsPadWave = dynamic_cast<TCanvas *>(gROOT->GetListOfSpecials()->FindObject("fCvsPadWave"));
       if (tCvsPadWave == nullptr) {
          std::cout << " = AtEventDrawTaskS800::SelectPad NULL pointer for the TCanvas! Please select an event first "
                    << std::endl;

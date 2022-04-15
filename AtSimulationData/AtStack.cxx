@@ -83,7 +83,7 @@ void AtStack::PushTrack(Int_t toBeDone, Int_t parentId, Int_t pdgCode, Double_t 
    Int_t nPoints = 0;
    Int_t daughter1Id = -1;
    Int_t daughter2Id = -1;
-   auto *particle = new (partArray[fNParticles++])
+   auto *particle = new (partArray[fNParticles++]) // NOLINT
       TParticle(pdgCode, trackId, parentId, nPoints, daughter1Id, daughter2Id, px, py, pz, e, vx, vy, vz, time);
    particle->SetPolarisation(polx, poly, polz);
    particle->SetWeight(weight);
@@ -144,7 +144,7 @@ TParticle *AtStack::PopPrimaryForTracking(Int_t iPrim)
 
    // Return the iPrim-th TParticle from the fParticle array. This should be
    // a primary.
-   auto *part = (TParticle *)fParticles->At(iPrim);
+   auto *part = dynamic_cast<TParticle *>(fParticles->At(iPrim));
    if (!(part->GetMother(0) < 0)) {
       LOG(fatal) << "AtStack:: Not a primary track! " << iPrim;
    }
@@ -168,7 +168,7 @@ TParticle *AtStack::GetCurrentTrack() const
 void AtStack::AddParticle(TParticle *oldPart)
 {
    TClonesArray &array = *fParticles;
-   auto *newPart = new (array[fIndex]) TParticle(*oldPart);
+   auto *newPart = new (array[fIndex]) TParticle(*oldPart); // NOLINT
    newPart->SetWeight(oldPart->GetWeight());
    newPart->SetUniqueID(oldPart->GetUniqueID());
    fIndex++;
@@ -199,16 +199,16 @@ void AtStack::FillTrackArray()
 
       if (store) {
 
-         /*auto *track = new ((*fTracks)[fNTracks]) AtMCTrack(GetParticle(iPart));
-              fIndexMap[iPart] = fNTracks;
-              // --> Set the number of points in the detectors for this track
-              for (Int_t iDet = kAtTpc; iDet < kSTOPHERE; iDet++) {
-                 pair<Int_t, Int_t> a(iPart, iDet);
-                 // commented because this function did not do anything
-                 // it was fully commented out in the source code. (5/23/21)
-                 // track->SetNPoints(iDet, fPointsMap[a]);
-              }
-         */
+         new ((*fTracks)[fNTracks]) AtMCTrack(GetParticle(iPart)); // NOLINT
+         fIndexMap[iPart] = fNTracks;
+         // --> Set the number of points in the detectors for this track
+         for (Int_t iDet = kAtTpc; iDet < kSTOPHERE; iDet++) {
+            pair<Int_t, Int_t> a(iPart, iDet);
+            // commented because this function did not do anything
+            // it was fully commented out in the source code. (5/23/21)
+            // track->SetNPoints(iDet, fPointsMap[a]);
+         }
+
          fNTracks++;
       } else {
          fIndexMap[iPart] = -2;
@@ -232,7 +232,7 @@ void AtStack::UpdateTrackIndex(TRefArray *detList)
 
    // First update mother ID in MCTracks
    for (Int_t i = 0; i < fNTracks; i++) {
-      auto *track = (AtMCTrack *)fTracks->At(i);
+      auto *track = dynamic_cast<AtMCTrack *>(fTracks->At(i));
       Int_t iMotherOld = track->GetMotherId();
       fIndexIter = fIndexMap.find(iMotherOld);
       if (fIndexIter == fIndexMap.end()) {
@@ -250,18 +250,18 @@ void AtStack::UpdateTrackIndex(TRefArray *detList)
    }
 
    FairDetector *det = nullptr;
-   while ((det = (FairDetector *)fDetIter->Next())) {
+   while ((det = dynamic_cast<FairDetector *>(fDetIter->Next()))) {
 
       // --> Get hit collections from detector
       Int_t iColl = 0;
-      TClonesArray *hitArray;
+      TClonesArray *hitArray = nullptr;
       while ((hitArray = det->GetCollection(iColl++))) {
          nColl++;
          Int_t nPoints = hitArray->GetEntriesFast();
 
          // --> Update track index for all MCPoints in the collection
          for (Int_t iPoint = 0; iPoint < nPoints; iPoint++) {
-            auto *point = (FairMCPoint *)hitArray->At(iPoint);
+            auto *point = dynamic_cast<FairMCPoint *>(hitArray->At(iPoint));
             Int_t iTrack = point->GetTrackID();
 
             fIndexIter = fIndexMap.find(iTrack);
@@ -309,7 +309,7 @@ void AtStack::Print(Int_t iVerbose) const
    cout << "              Number of tracks in output = " << fNTracks << endl;
    if (iVerbose) {
       for (Int_t iTrack = 0; iTrack < fNTracks; iTrack++) {
-         ((AtMCTrack *)fTracks->At(iTrack))->Print(iTrack);
+         (dynamic_cast<AtMCTrack *>(fTracks->At(iTrack)))->Print(iTrack);
       }
    }
 }
@@ -364,7 +364,7 @@ TParticle *AtStack::GetParticle(Int_t trackID) const
       LOG(fatal) << "AtStack: Particle index " << trackID << " out of range.";
       Fatal("AtStack::GetParticle", "Index out of range");
    }
-   return (TParticle *)fParticles->At(trackID);
+   return dynamic_cast<TParticle *>(fParticles->At(trackID));
 }
 // -------------------------------------------------------------------------
 

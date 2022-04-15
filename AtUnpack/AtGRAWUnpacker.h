@@ -52,7 +52,7 @@ protected:
    std::string fFileIDString;
    std::mutex fRawEventMutex;
 
-   Int_t fTargetFrameID; // fDataEventID
+   Int_t fTargetFrameID{}; // fDataEventID
 
 public:
    AtGRAWUnpacker(mapPtr map, Int_t numGrawFiles = 4);

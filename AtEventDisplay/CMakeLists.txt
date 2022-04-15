@@ -19,7 +19,9 @@ Set(DEPENDENCIES
   FairRoot::FairTools
   FairRoot::EventDisplay
   ROOT::Eve
-
+  ROOT::Core
+  ROOT::HistPainter
+  
   ATTPCROOT::AtReconstruction
   ATTPCROOT::AtData
   ATTPCROOT::AtMap

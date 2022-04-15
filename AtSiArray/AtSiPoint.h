@@ -14,8 +14,8 @@ class TMemberInspector;
 class AtSiPoint : public AtMCPoint {
 
 protected:
-   Double32_t fX_out, fY_out, fZ_out;
-   Double32_t fPx_out, fPy_out, fPz_out;
+   Double32_t fX_out{}, fY_out{}, fZ_out{};
+   Double32_t fPx_out{}, fPy_out{}, fPz_out{};
 
 public:
    /** Default constructor **/

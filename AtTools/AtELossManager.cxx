@@ -7,36 +7,22 @@
 
 #include <Rtypes.h>
 
-ClassImp(AtTools::AtELossManager)
+ClassImp(AtTools::AtELossManager);
 
-   AtTools::AtELossManager::AtELossManager()
+AtTools::AtELossManager::AtELossManager()
 {
-   c = 29.9792458; // Speed of light in cm/ns.
-   dEdx_e = nullptr;
-   dEdx_n = nullptr;
-   Energy_in_range = true;
    EvD = std::make_shared<TGraph>();
-   GoodELossFile = false;
-   IonEnergy = nullptr;
-   IonMass = 0;
-   last_point = 0;
-   points = 0;
-   last_point1 = 0;
-   points1 = 0;
 }
 
 AtTools::AtELossManager::AtELossManager(std::string Eloss_file, Double_t Mass)
 {
-
-   Double_t _IonEnergy;
-   Double_t _dEdx_e, _dEdx_n;
-   Double_t _Range;
-   Double_t _Stragg_lon, _Stragg_lat;
+   Double_t _IonEnergy = 0;
+   Double_t _dEdx_e = 0, _dEdx_n = 0;
+   Double_t _Range = 0;
+   Double_t _Stragg_lon = 0, _Stragg_lat = 0;
    std::string aux;
 
    std::ifstream Read(Eloss_file.c_str());
-
-   last_point = 0;
 
    // cout << " Opening " << Eloss_file <<endl;
    if (!Read.is_open()) {
@@ -58,24 +44,17 @@ AtTools::AtELossManager::AtELossManager(std::string Eloss_file, Double_t Mass)
 
       // cout << points << endl ;
 
-      // Create the arrays depending on the number rows in the file.
-      IonEnergy = new Double_t[points];
-      dEdx_e = new Double_t[points];
-      dEdx_n = new Double_t[points];
-      Range = new Double_t[points];
-
       // Go to the begining of the file and read it again to now save the info in the newly created arrays.
-
       Read.open(Eloss_file.c_str());
       Read >> aux >> aux >> aux >> aux;
 
       for (int p = 0; p < points; p++) {
          Read >> _IonEnergy >> _dEdx_e >> _dEdx_n >> _Range;
 
-         IonEnergy[p] = _IonEnergy;
-         dEdx_e[p] = _dEdx_e;
-         dEdx_n[p] = _dEdx_n;
-         Range[p] = _Range;
+         IonEnergy.push_back(_IonEnergy);
+         dEdx_e.push_back(_dEdx_e);
+         dEdx_n.push_back(_dEdx_n);
+         Range.push_back(_Range);
       }
 
       Energy_in_range = true;
@@ -184,14 +163,14 @@ double AtTools::AtELossManager::GetEnergyLoss(double energy /*MeV*/, double dist
    }
 
    // Ion Energy
-   double x0 = IonEnergy[i - 1];
-   double x1 = IonEnergy[i];
-   double x2 = IonEnergy[i + 1];
+   Float_t x0 = IonEnergy[i - 1];
+   Float_t x1 = IonEnergy[i];
+   Float_t x2 = IonEnergy[i + 1];
 
    // Total Energy Loss (electric + nuclear) for one step
-   double y0 = dEdx_e[i - 1] + dEdx_n[i - 1];
-   double y1 = dEdx_e[i] + dEdx_n[i];
-   double y2 = dEdx_e[i + 1] + dEdx_n[i + 1];
+   Float_t y0 = dEdx_e[i - 1] + dEdx_n[i - 1];
+   Float_t y1 = dEdx_e[i] + dEdx_n[i];
+   Float_t y2 = dEdx_e[i + 1] + dEdx_n[i + 1];
 
    a11 = 2 / (x1 - x0);
    a12 = 1 / (x1 - x0);
@@ -447,12 +426,11 @@ void AtTools::AtELossManager::InitializeLookupTables(Double_t MaximumEnergy, Dou
    fDeltaD = DeltaD;
    fDeltaE = DeltaE;
 
-   if (!(EtoDtab = new Double_t[noE]) || !(DtoEtab = new Double_t[noD])) {
-      std::cerr << "Could not allocate memory for " << noE << " " << noD << "\n";
-   }
+   EtoDtab.resize(noE);
+   DtoEtab.resize(noD);
 
    // Double_t D;
-   int i;
+   int i = 0;
    //-----------------------------------------------------------
    DtoEtab[0] = MaximumEnergy;
    std::cout << " Number of distance entries " << noD << "\n";
@@ -470,7 +448,7 @@ void AtTools::AtELossManager::InitializeLookupTables(Double_t MaximumEnergy, Dou
    }
 
    // Double_t E;
-   int j;
+   int j = 0;
 
    std::cout << " Number of Energy entries " << noE << "\n";
 
@@ -510,7 +488,7 @@ void AtTools::AtELossManager::PrintLookupTables()
 
    int noE = (int)ceil(fMaximumEnergy / fDeltaE);
    int noD = (int)ceil(fMaximumDistance / fDeltaD);
-   int i;
+   int i = 0;
    std::cout << "Maximum Energy = " << fMaximumEnergy << " " << fDeltaE << noE << "\n";
    for (i = 0; i < noE; i++) {
       std::cout << "E,D= " << fMaximumEnergy - fDeltaE * i << "," << EtoDtab[i] << "\n";
@@ -524,10 +502,10 @@ void AtTools::AtELossManager::PrintLookupTables()
 Double_t AtTools::AtELossManager::GetLookupEnergy(Double_t InitialEnergy, Double_t distance)
 {
 
-   Double_t D1, D2, D;
-   Double_t E1, E2, E;
-   int index;
-   int imhere;
+   Double_t D1 = 0, D2 = 0, D = 0;
+   Double_t E1 = 0, E2 = 0, E = 0;
+   int index = 0;
+   int imhere = 0;
 
    if (InitialEnergy < 0 || InitialEnergy > fMaximumEnergy) {
       return (-1.);

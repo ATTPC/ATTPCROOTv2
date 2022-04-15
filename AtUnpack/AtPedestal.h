@@ -13,10 +13,11 @@
 #ifndef AtPEDESTAL
 #define AtPEDESTAL
 
+#include <memory>
 #include <Rtypes.h>
 #include <TObject.h>
+#include "GETMath2.h"
 
-class GETMath2;
 class TBuffer;
 class TClass;
 class TMemberInspector;
@@ -29,7 +30,7 @@ public:
                            Bool_t signalNegativePolarity = kFALSE, Int_t startTb = 3, Int_t averageTbs = 10);
 
 private:
-   GETMath2 *fMath;
+   std::unique_ptr<GETMath2> fMath;
 
    ClassDef(AtPedestal, 1);
 };

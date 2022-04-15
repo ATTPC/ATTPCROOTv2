@@ -10,11 +10,6 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
-
 using trace = std::array<Double_t, 512>;
 
 class AtCalibration : public TObject {
@@ -22,22 +17,22 @@ protected:
    TString fGainFile;
    TString fJitterFile;
 
-   trace fGadc;
-   trace fGnewadc;
-   trace fJadc;
-   trace fJnewadc;
+   trace fGadc{};
+   trace fGnewadc{};
+   trace fJadc{};
+   trace fJnewadc{};
 
-   Bool_t fIsGainCalibrated;
-   Bool_t fIsJitterCalibrated;
+   Bool_t fIsGainCalibrated{false};
+   Bool_t fIsJitterCalibrated{false};
 
-   std::array<Double_t, 10240> fGainCalib;
-   std::array<Double_t, 10240> fJitterCalib;
+   std::array<Double_t, 10240> fGainCalib{};
+   std::array<Double_t, 10240> fJitterCalib{};
 
-   Int_t fPadNum;
+   Int_t fPadNum{};
 
 public:
-   AtCalibration();
-   ~AtCalibration();
+   AtCalibration() = default;
+   ~AtCalibration() = default;
 
    void SetGainFile(TString gainFile);
    void SetJitterFile(TString jitterFile);

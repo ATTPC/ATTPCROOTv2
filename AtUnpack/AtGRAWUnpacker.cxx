@@ -19,9 +19,8 @@
 #include <Rtypes.h>
 
 AtGRAWUnpacker::AtGRAWUnpacker(mapPtr map, Int_t numGrawFiles)
-   : AtUnpacker(map), fNumFiles(numGrawFiles), fCurrentEventID(fNumFiles, 0)
+   : AtUnpacker(map), fNumFiles(numGrawFiles), fCurrentEventID(fNumFiles, 0), fIsSeparatedData(fNumFiles > 1)
 {
-   fIsSeparatedData = fNumFiles > 1;
    for (int i = 0; i < fNumFiles; ++i) {
       fDecoder.push_back(std::make_unique<GETDecoder2>());
       fPedestal.push_back(std::make_unique<AtPedestal>());
@@ -57,14 +56,15 @@ void AtGRAWUnpacker::FillRawEvent(AtRawEvent &event)
    }
 
    if (fIsSeparatedData) {
-      auto *file = new std::thread[fNumFiles];
+      std::vector<std::thread> file;
 
       for (Int_t iFile = 0; iFile < fNumFiles; iFile++) {
-         file[iFile] = std::thread([this](Int_t fileIdx) { this->ProcessBasicFile(fileIdx); }, iFile);
+         file.emplace_back([this](Int_t fileIdx) { this->ProcessBasicFile(fileIdx); }, iFile);
+         // file[iFile] = std::thread([this](Int_t fileIdx) { this->ProcessBasicFile(fileIdx); }, iFile);
       }
 
-      for (Int_t iFile = 0; iFile < fNumFiles; iFile++)
-         file[iFile].join();
+      for (auto &fileThread : file)
+         fileThread.join();
 
       // NB: Do not delete. To be refactored using functors
       /* for (Int_t iFile = 0; iFile < fNumFiles; iFile++){
@@ -81,7 +81,6 @@ void AtGRAWUnpacker::FillRawEvent(AtRawEvent &event)
 
       event.SetEventID(fEventID);
 
-      delete[] file;
    } else // not seperated data
    {
       if (dynamic_cast<AtTpcMap *>(fMap.get()) != nullptr) {
@@ -203,7 +202,7 @@ void AtGRAWUnpacker::ProcessFile(Int_t coboIdx)
             auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
 
             if (PadRefNum != -1 && !fMap->IsInhibited(PadRefNum)) {
-               AtPad *pad;
+               AtPad *pad = nullptr;
                {
                   std::lock_guard<std::mutex> lk(fRawEventMutex);
                   // pad = new ((*fPadArray)[PadRefNum]) AtPad(PadRefNum);

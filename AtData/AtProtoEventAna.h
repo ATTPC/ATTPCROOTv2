@@ -26,8 +26,8 @@ public:
    std::vector<Double_t> fQVertex;
    std::vector<Double_t> fChi2;
    std::vector<Int_t> fNDF;
-   Double_t fVertex02;
-   Double_t fVertex13;
+   Double_t fVertex02{-500.0};
+   Double_t fVertex13{-500.0};
 
    // Getters
    std::vector<Double_t> *GetAngleFit();

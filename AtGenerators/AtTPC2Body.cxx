@@ -21,16 +21,15 @@
 #include "AtVertexPropagator.h"
 #include "AtEulerTransformation.h"
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
-#define cBLUE "\033[1;34m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
+constexpr auto cBLUE = "\033[1;34m";
 
 Int_t AtTPC2Body::fgNIon = 0;
 
-AtTPC2Body::AtTPC2Body()
-   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0), fQ(0), kIsDecay(kFALSE)
+AtTPC2Body::AtTPC2Body() : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0), fQ(0)
 {
    //  cout << "-W- AtTPCIonGenerator: "
    //      << " Please do not use the default constructor! " << endl;
@@ -41,31 +40,18 @@ AtTPC2Body::AtTPC2Body(const char *name, std::vector<Int_t> *z, std::vector<Int_
                        Int_t mult, std::vector<Double_t> *px, std::vector<Double_t> *py, std::vector<Double_t> *pz,
                        std::vector<Double_t> *mass, std::vector<Double_t> *Ex, Double_t ResEner, Double_t MinCMSAng,
                        Double_t MaxCMSAng)
-   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0), fPType(0.), fQ(0), kIsDecay(kFALSE)
+   : fMult(mult), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0), fPType(0.), fQ(0),
+     fThetaCmsMin(MinCMSAng), fThetaCmsMax(MaxCMSAng), fBeamEnergy_buff(ResEner), fNoSolution(kFALSE),
+     fIsFixedTargetPos(kFALSE), fIsFixedMomentum(kFALSE)
 {
-
    fgNIon++;
-   fMult = mult;
    fIon.reserve(fMult);
-   fThetaCmsMin = MinCMSAng;
-   fThetaCmsMax = MaxCMSAng;
-
-   fNoSolution = kFALSE;
 
    char buffer[30];
    auto *kProton = new TParticle();
    kProton->SetPdgCode(2212);
-
    auto *kNeutron = new TParticle();
    kNeutron->SetPdgCode(2112);
-
-   fIsFixedTargetPos = kFALSE;
-   fIsFixedMomentum = kFALSE;
-   fPxBeam_buff = 0.0;
-   fPyBeam_buff = 0.0;
-   fPzBeam_buff = 0.0;
-
-   fBeamEnergy_buff = ResEner;
 
    for (Int_t i = 0; i < fMult; i++) {
 
@@ -186,18 +172,18 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
 
    if (fIsFixedTargetPos) {
       fBeamEnergy = fBeamEnergy_buff;
-      gAtVP->SetValidKine(kTRUE);
+      AtVertexPropagator::Instance()->SetValidKine(kTRUE);
       std::cout << cBLUE << " -I- AtTPC2Body Beam energy (Fixed Target mode) : " << fBeamEnergy << cNORMAL << std::endl;
 
    } else {
-      fBeamEnergy = gAtVP->GetEnergy();
+      fBeamEnergy = AtVertexPropagator::Instance()->GetEnergy();
 
-      std::cout << cBLUE << " -I- AtTPC2Body Residual energy (Active Target mode) : " << gAtVP->GetEnergy() << cNORMAL
-                << std::endl;
+      std::cout << cBLUE << " -I- AtTPC2Body Residual energy (Active Target mode) : "
+                << AtVertexPropagator::Instance()->GetEnergy() << cNORMAL << std::endl;
    }
 
    if (fBeamEnergy > 0 &&
-       (gAtVP->GetDecayEvtCnt() % 2 != 0 ||
+       (AtVertexPropagator::Instance()->GetDecayEvtCnt() % 2 != 0 ||
         fIsFixedTargetPos)) { // Requires a non zero vertex energy and pre-generated Beam event (not punch thorugh)
 
       if (fIsFixedTargetPos) {
@@ -207,9 +193,9 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
 
       } else {
 
-         fPxBeam = gAtVP->GetPx();
-         fPyBeam = gAtVP->GetPy();
-         fPzBeam = gAtVP->GetPz();
+         fPxBeam = AtVertexPropagator::Instance()->GetPx();
+         fPyBeam = AtVertexPropagator::Instance()->GetPy();
+         fPzBeam = AtVertexPropagator::Instance()->GetPz();
       }
 
       Double_t eb = fBeamEnergy + fWm.at(0);
@@ -229,11 +215,11 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
       if (t_cm < 0.0) {
          std::cout << "-I- AtTPC2Body : No solution!" << std::endl;
          fNoSolution = kTRUE;
-         gAtVP->SetValidKine(kFALSE);
+         AtVertexPropagator::Instance()->SetValidKine(kFALSE);
          // return kFALSE;
       }
 
-      if (gAtVP->GetValidKine()) {
+      if (AtVertexPropagator::Instance()->GetValidKine()) {
 
          Double_t t_cm2 = t_cm * t_cm;
          Double_t t3_cm = (t_cm2 + 2. * fWm.at(3) * t_cm) / (t_cm + fWm.at(2) + fWm.at(3)) / 2.0;
@@ -285,7 +271,7 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
          Double_t p4_lab = TMath::Sqrt(p4_labx * p4_labx + p4_labz * p4_labz);
          Ene.push_back(TMath::Sqrt(p4_lab * p4_lab + fWm.at(3) * fWm.at(3)) - fWm.at(3));
 
-         if (!gAtVP->GetValidKine()) {
+         if (!AtVertexPropagator::Instance()->GetValidKine()) {
             std::cout << " -I- ===== AtTPC2Body - Kinematics ====== " << std::endl;
             std::cout << " -I- ===== No Valid Solution on Beam Event for these kinematics (probably due to threshold "
                          "energy) ====== "
@@ -306,12 +292,12 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
             std::cout << " Recoiled angle:" << Ang.at(1) * 180.0 / TMath::Pi() << " deg" << cNORMAL << std::endl;
          }
 
-         // gAtVP->SetRecoilE(Ene.at(1));
-         gAtVP->SetTrackEnergy(2, Ene.at(1));
-         gAtVP->SetTrackAngle(2, Ang.at(1) * 180.0 / TMath::Pi());
+         // AtVertexPropagator::Instance()->SetRecoilE(Ene.at(1));
+         AtVertexPropagator::Instance()->SetTrackEnergy(2, Ene.at(1));
+         AtVertexPropagator::Instance()->SetTrackAngle(2, Ang.at(1) * 180.0 / TMath::Pi());
 
-         gAtVP->SetTrackEnergy(1, Ene.at(0));
-         gAtVP->SetTrackAngle(1, Ang.at(0) * 180.0 / TMath::Pi());
+         AtVertexPropagator::Instance()->SetTrackEnergy(1, Ene.at(0));
+         AtVertexPropagator::Instance()->SetTrackAngle(1, Ang.at(0) * 180.0 / TMath::Pi());
 
          fPx.at(0) = 0.0;
          fPy.at(0) = 0.0;
@@ -334,13 +320,18 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
          phiBeam1 = 2 * TMath::Pi() * gRandom->Uniform(); // flat probability in phi
          phiBeam2 = phiBeam1 + TMath::Pi();
 
-         // std::cout<<" Propagated Entrance Position 2 - X : "<<gAtVP->GetVx()<<" - Y : "<<gAtVP->GetVy()<<" - Z :
-         // "<<gAtVP->GetVz()<<std::endl; std::cout<<" Propagated Stop Position - X : "<<gAtVP->GetInVx()<<" - Y :
-         // "<<gAtVP->GetInVy()<<" - Z : "<<gAtVP->GetInVz()<<std::endl;
+         // std::cout<<" Propagated Entrance Position 2 - X : "<<AtVertexPropagator::Instance()->GetVx()<<" - Y :
+         // "<<AtVertexPropagator::Instance()->GetVy()<<" - Z :
+         // "<<AtVertexPropagator::Instance()->GetVz()<<std::endl; std::cout<<" Propagated Stop Position - X :
+         // "<<AtVertexPropagator::Instance()->GetInVx()<<" - Y :
+         // "<<AtVertexPropagator::Instance()->GetInVy()<<" - Z :
+         // "<<AtVertexPropagator::Instance()->GetInVz()<<std::endl;
 
-         /* TVector3 BeamPos( gAtVP->GetVx() - gAtVP->GetInVx() ,  gAtVP->GetVy() - gAtVP->GetInVy() ,  gAtVP->GetVz() -
-          gAtVP->GetInVz() ); std::cout << " Beam Theta (Pos) : "<<BeamPos.Theta()*180.0/TMath::Pi()<<std::endl;
-          std::cout << " Beam Phi  (Pos) : "<<BeamPos.Phi()*180.0/TMath::Pi()<<std::endl;*/
+         /* TVector3 BeamPos( AtVertexPropagator::Instance()->GetVx() - AtVertexPropagator::Instance()->GetInVx() ,
+          AtVertexPropagator::Instance()->GetVy() - AtVertexPropagator::Instance()->GetInVy() ,
+          AtVertexPropagator::Instance()->GetVz() - AtVertexPropagator::Instance()->GetInVz() ); std::cout << " Beam
+          Theta (Pos) : "<<BeamPos.Theta()*180.0/TMath::Pi()<<std::endl; std::cout << " Beam Phi  (Pos) :
+          "<<BeamPos.Phi()*180.0/TMath::Pi()<<std::endl;*/
 
          TVector3 BeamPos(fPxBeam * 1000, fPyBeam * 1000, fPzBeam * 1000); // To MeV for Euler Transformation
          // TVector3 BeamPos(1.0,1.0,0.0);
@@ -348,7 +339,7 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
          LOG(DEBUG) << " Beam Phi (Mom) : " << BeamPos.Phi() * 180.0 / TMath::Pi();
 
          Double_t thetaLab1, phiLab1, thetaLab2, phiLab2;
-         auto *EulerTransformer = new AtEulerTransformation();
+         auto EulerTransformer = std::make_unique<AtEulerTransformation>();
          EulerTransformer->SetBeamDirectionAtVertexTheta(BeamPos.Theta());
          EulerTransformer->SetBeamDirectionAtVertexPhi(BeamPos.Phi());
 
@@ -388,8 +379,6 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
          LOG(DEBUG) << "  Phi Diference (Euler) :" << (phiLab1 * 180.0 / TMath::Pi()) - (phiLab2 * 180.0 / TMath::Pi())
                     << " deg";
 
-         delete EulerTransformer;
-
          LOG(DEBUG) << " Direction 1 Theta : " << direction1.Theta() * 180.0 / TMath::Pi();
          LOG(DEBUG) << " Direction 1 Phi : " << direction1.Phi() * 180.0 / TMath::Pi();
          LOG(DEBUG) << " Direction 2 Theta : " << direction2.Theta() * 180.0 / TMath::Pi();
@@ -414,7 +403,7 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
          fPz.at(3) = 0.0;
       }
 
-      /* if(!gAtVP->GetValidKine()){
+      /* if(!AtVertexPropagator::Instance()->GetValidKine()){
 
          fPx.at(2) = 0.0; // To GeV for FairRoot
          fPy.at(2) = 0.0;
@@ -487,15 +476,15 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
             // fVz = 0.0;
 
          } else {
-            fVx = gAtVP->GetVx();
-            fVy = gAtVP->GetVy();
-            fVz = gAtVP->GetVz();
+            fVx = AtVertexPropagator::Instance()->GetVx();
+            fVy = AtVertexPropagator::Instance()->GetVy();
+            fVz = AtVertexPropagator::Instance()->GetVz();
          }
 
          // For decay generators
          TVector3 ScatP(fPx.at(2), fPy.at(2), fPz.at(2));
-         gAtVP->SetScatterP(ScatP);
-         gAtVP->SetScatterEx(fExEnergy.at(2));
+         AtVertexPropagator::Instance()->SetScatterP(ScatP);
+         AtVertexPropagator::Instance()->SetScatterEx(fExEnergy.at(2));
 
          Int_t trackIdCut = 0;
 
@@ -504,8 +493,8 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
          else
             trackIdCut = 1; // Remove beam
 
-         if (i > trackIdCut && (gAtVP->GetDecayEvtCnt() || fIsFixedTargetPos) && pdgType != 1000500500 &&
-             fPType.at(i) == "Ion") {
+         if (i > trackIdCut && (AtVertexPropagator::Instance()->GetDecayEvtCnt() || fIsFixedTargetPos) &&
+             pdgType != 1000500500 && fPType.at(i) == "Ion") {
 
             std::cout << cBLUE << "-I- FairIonGenerator: Generating ions of type " << fIon.at(i)->GetName()
                       << " (PDG code " << pdgType << ")" << std::endl;
@@ -513,8 +502,8 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
                       << ") Gev from vertex (" << fVx << ", " << fVy << ", " << fVz << ") cm" << std::endl;
             primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
 
-         } else if (i > 1 && (gAtVP->GetDecayEvtCnt() || fIsFixedTargetPos) && pdgType == 2212 &&
-                    fPType.at(i) == "Proton") {
+         } else if (i > 1 && (AtVertexPropagator::Instance()->GetDecayEvtCnt() || fIsFixedTargetPos) &&
+                    pdgType == 2212 && fPType.at(i) == "Proton") {
 
             std::cout << "-I- FairIonGenerator: Generating ions of type " << fParticle.at(i)->GetName() << " (PDG code "
                       << pdgType << ")" << std::endl;
@@ -522,8 +511,8 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
                       << ") Gev from vertex (" << fVx << ", " << fVy << ", " << fVz << ") cm" << std::endl;
             primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
 
-         } else if (i > 1 && (gAtVP->GetDecayEvtCnt() || fIsFixedTargetPos) && pdgType == 2112 &&
-                    fPType.at(i) == "Neutron") {
+         } else if (i > 1 && (AtVertexPropagator::Instance()->GetDecayEvtCnt() || fIsFixedTargetPos) &&
+                    pdgType == 2112 && fPType.at(i) == "Neutron") {
 
             std::cout << "-I- FairIonGenerator: Generating ions of type " << fParticle.at(i)->GetName() << " (PDG code "
                       << pdgType << ")" << std::endl;
@@ -536,7 +525,7 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
    } // if residual energy > 0
 
    if (kIsDecay == kFALSE) // Only increases the reaction counter if decay is not expected
-      gAtVP->IncDecayEvtCnt();
+      AtVertexPropagator::Instance()->IncDecayEvtCnt();
 
    return kTRUE;
 }

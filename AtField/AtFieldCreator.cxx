@@ -39,7 +39,7 @@ void AtFieldCreator::SetParm()
 {
    FairRunAna *Run = FairRunAna::Instance();
    FairRuntimeDb *RunDB = Run->GetRuntimeDb();
-   fFieldPar = (AtFieldPar *)RunDB->getContainer("AtFieldPar");
+   fFieldPar = dynamic_cast<AtFieldPar *>(RunDB->getContainer("AtFieldPar"));
 }
 
 FairField *AtFieldCreator::createFairField()

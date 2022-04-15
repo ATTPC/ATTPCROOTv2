@@ -17,10 +17,10 @@
 #include "PadReference.h"
 #include <Rtypes.h>
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
 
 AtROOTUnpacker::AtROOTUnpacker(mapPtr map, Int_t numCobo)
    : AtUnpacker(map), fNumCobo(numCobo), fIsNegativePolarity(numCobo, false), fIsPadPlaneCobo(numCobo, false),
@@ -73,7 +73,7 @@ void AtROOTUnpacker::GetFPNChannelsFromROOTFILE()
    Int_t Nr_fpn_found{0};
 
    LOG(debug) << "Opening " << fInputFileName;
-   auto *RawDataTreeFile = new TFile(fInputFileName.data(), "READ");
+   auto *RawDataTreeFile = new TFile(fInputFileName.data(), "READ"); // NOLINT (belongs to ROOT)
    if (RawDataTreeFile->IsZombie()) {
       std::cout << cRED
                 << "[AtCoreSpecMAT] File containing tree not found, check if "
@@ -81,7 +81,7 @@ void AtROOTUnpacker::GetFPNChannelsFromROOTFILE()
                 << fInputFileName << ")" << cNORMAL << std::endl;
       return;
    }
-   auto *RawDataTree = (TTree *)RawDataTreeFile->Get("EventDataTree");
+   auto *RawDataTree = dynamic_cast<TTree *>(RawDataTreeFile->Get("EventDataTree"));
    if (!RawDataTree) {
       std::cout << cRED
                 << "[AtCoreSpecMAT] File does not contain raw data ttree (must "
@@ -140,7 +140,7 @@ void AtROOTUnpacker::GetFPNChannelsFromROOTFILE()
 void AtROOTUnpacker::ProcessROOTFILE(AtRawEvent &eventToFill)
 {
 
-   auto *RawDataTreeFile = new TFile(fInputFileName.data(), "READ");
+   auto *RawDataTreeFile = new TFile(fInputFileName.data(), "READ"); // NOLINT (belongs to ROOT)
    if (RawDataTreeFile->IsZombie()) {
       std::cout << cRED
                 << "[AtCoreSpecMAT] File containing tree not found, check if "
@@ -148,7 +148,7 @@ void AtROOTUnpacker::ProcessROOTFILE(AtRawEvent &eventToFill)
                 << fInputFileName << ")" << cNORMAL << std::endl;
       return;
    }
-   auto *RawDataTree = (TTree *)RawDataTreeFile->Get("EventDataTree");
+   auto *RawDataTree = dynamic_cast<TTree *>(RawDataTreeFile->Get("EventDataTree"));
    if (!RawDataTree) {
       std::cout << cRED
                 << "[AtCoreSpecMAT] File does not contain raw data ttree (must "
@@ -259,7 +259,7 @@ bool AtROOTUnpacker::IsLastEvent()
 
 void AtROOTUnpacker::SetNumEvents()
 {
-   auto *RawDataTreeFile = new TFile(fInputFileName.data(), "READ");
+   auto *RawDataTreeFile = new TFile(fInputFileName.data(), "READ"); // NOLINT (belongs to ROOT)
    if (RawDataTreeFile->IsZombie()) {
       std::cout << cRED
                 << "[AtCoreSpecMAT] File containing tree not found, check if "
@@ -267,7 +267,7 @@ void AtROOTUnpacker::SetNumEvents()
                 << fInputFileName << ")" << cNORMAL << std::endl;
       return;
    }
-   auto *RawDataTree = (TTree *)RawDataTreeFile->Get("EventDataTree");
+   auto *RawDataTree = dynamic_cast<TTree *>(RawDataTreeFile->Get("EventDataTree"));
    if (!RawDataTree) {
       std::cout << cRED
                 << "[AtCoreSpecMAT] File does not contain raw data ttree (must "

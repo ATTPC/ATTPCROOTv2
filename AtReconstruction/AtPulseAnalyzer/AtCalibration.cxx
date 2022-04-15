@@ -4,15 +4,12 @@
 #include <fstream> // IWYU pragma: keep
 #include <iostream>
 
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
+
 ClassImp(AtCalibration);
-
-AtCalibration::AtCalibration()
-{
-   fIsGainCalibrated = kFALSE;
-   fIsJitterCalibrated = kFALSE;
-}
-
-AtCalibration::~AtCalibration() = default;
 
 Bool_t AtCalibration::IsGainFile()
 {
@@ -27,9 +24,8 @@ Bool_t AtCalibration::IsJitterFile()
 void AtCalibration::SetGainFile(TString gainFile)
 {
    fGainFile = gainFile;
-   std::ifstream *gainData;
-   gainData = new std::ifstream(fGainFile.Data());
-   if (gainData->fail()) {
+   std::ifstream gainData(fGainFile.Data());
+   if (gainData.fail()) {
       std::cout << " =  No Gain Calibration file found! Please, check the path. Current :" << fGainFile.Data()
                 << std::endl;
       std::cout << cRED << " =  Proceeding with no gain calibration!!" << cNORMAL << std::endl;
@@ -40,12 +36,12 @@ void AtCalibration::SetGainFile(TString gainFile)
       Int_t intPadNum;
       fGainCalib.fill(0);
 
-      while (!gainData->eof()) {
-         *gainData >> nPadNum >> nCal;
+      while (!gainData.eof()) {
+         gainData >> nPadNum >> nCal;
          intPadNum = (int)nPadNum;
          fGainCalib[intPadNum] = nCal;
       }
-      gainData->close();
+      gainData.close();
       fIsGainCalibrated = kTRUE;
    }
 }
@@ -53,9 +49,8 @@ void AtCalibration::SetGainFile(TString gainFile)
 void AtCalibration::SetJitterFile(TString jitterFile)
 {
    fJitterFile = jitterFile;
-   std::ifstream *jitterData;
-   jitterData = new std::ifstream(fJitterFile.Data());
-   if (jitterData->fail()) {
+   std::ifstream jitterData(fJitterFile.Data());
+   if (jitterData.fail()) {
       std::cout << " = No Jitter Calibration file found! Please check the path. Current :" << cNORMAL
                 << fJitterFile.Data() << std::endl;
       std::cout << cRED << " = Proceeding with no jitter calibration!!" << cNORMAL << std::endl;
@@ -66,11 +61,11 @@ void AtCalibration::SetJitterFile(TString jitterFile)
       Int_t jiPadNum, jiCal;
       Double_t jdCal, jdPadNum;
 
-      while (!jitterData->eof()) {
-         *jitterData >> jiPadNum >> jiCal;
+      while (!jitterData.eof()) {
+         jitterData >> jiPadNum >> jiCal;
          fJitterCalib[jiPadNum] = jiCal;
       }
-      jitterData->close();
+      jitterData.close();
       fIsJitterCalibrated = kTRUE;
    }
 }

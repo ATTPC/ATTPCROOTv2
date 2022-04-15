@@ -17,11 +17,6 @@ namespace genfit {
 class Track;
 } // namespace genfit
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
-
 namespace AtFITTER {
 
 class AtFitter : public TObject {
@@ -37,8 +32,8 @@ public:
                     std::vector<AtTrack> *trackDest, bool fitDirection, bool simulationConv);
 
 protected:
-   FairLogger *fLogger; ///< logger pointer
-   AtDigiPar *fPar;     ///< parameter container
+   FairLogger *fLogger{}; ///< logger pointer
+   AtDigiPar *fPar{};     ///< parameter container
    std::tuple<Double_t, Double_t>
    GetMomFromBrho(Double_t A, Double_t Z,
                   Double_t brho); ///< Returns momentum (in GeV) from Brho assuming M (amu) and Z;

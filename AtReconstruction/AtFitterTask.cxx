@@ -20,35 +20,17 @@
 #include "AtFitter.h"
 #include "AtGenfit.h"
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
 
 ClassImp(AtFitterTask);
 
 AtFitterTask::AtFitterTask()
+   : fLogger(FairLogger::GetLogger()), fIsPersistence(kFALSE), fPatternEventArray(new TClonesArray("ATPatternEvent")),
+     fGenfitTrackArray(new TClonesArray("genfit::Track")), fGenfitTrackVector(new std::vector<genfit::Track>())
 {
-   fLogger = FairLogger::GetLogger();
-   fPar = nullptr;
-   fIsPersistence = kFALSE;
-   fPatternEventArray = new TClonesArray("ATPatternEvent");
-   fGenfitTrackArray = new TClonesArray("genfit::Track");
-   fFitterAlgorithm = 0;
-   fEventCnt = 0;
-   fGenfitTrackVector = new std::vector<genfit::Track>();
-
-   fMagneticField = 2.0;
-   fMinIterations = 5.0;
-   fMaxIterations = 20.0;
-   fPDGCode = 2212;
-   fMass = 1.00727646;
-   fAtomicNumber = 1;
-   fNumFitPoints = 0.90;
-   fMaxBrho = 3.0;  // Tm
-   fMinBrho = 0.01; // Tm
-
-   fELossFile = "";
 }
 
 AtFitterTask::~AtFitterTask() = default;
@@ -66,7 +48,7 @@ InitStatus AtFitterTask::Init()
       return kERROR;
    }
 
-   fPatternEventArray = (TClonesArray *)ioMan->GetObject("AtPatternEvent");
+   fPatternEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtPatternEvent"));
    if (fPatternEventArray == nullptr) {
       LOG(error) << "Cannot find AtPatternEvent array!";
       return kERROR;
@@ -139,7 +121,7 @@ void AtFitterTask::Exec(Option_t *option)
 
    std::cout << " Event Counter " << fEventCnt << "\n";
 
-   AtPatternEvent &patternEvent = *((AtPatternEvent *)fPatternEventArray->At(0));
+   AtPatternEvent &patternEvent = *(dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0)));
    std::vector<AtTrack> &patternTrackCand = patternEvent.GetTrackCand();
    std::cout << " AtFitterTask:Exec -  Number of candidate tracks : " << patternTrackCand.size() << "\n";
 

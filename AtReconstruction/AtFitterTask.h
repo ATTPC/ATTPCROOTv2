@@ -55,25 +55,25 @@ public:
 private:
    Bool_t fIsPersistence; //!< Persistence check variable
    FairLogger *fLogger;
-   AtDigiPar *fPar;
+   AtDigiPar *fPar{nullptr};
    TClonesArray *fPatternEventArray;
-   AtFITTER::AtFitter *fFitter;
-   Int_t fFitterAlgorithm;
+   AtFITTER::AtFitter *fFitter{};
+   Int_t fFitterAlgorithm{0};
 
    TClonesArray *fGenfitTrackArray;
    std::vector<genfit::Track> *fGenfitTrackVector;
 
-   std::size_t fEventCnt;
-   Float_t fMagneticField;
-   Int_t fMinIterations;
-   Int_t fMaxIterations;
-   Int_t fPDGCode;
-   Float_t fMass;
-   Int_t fAtomicNumber;
-   Float_t fNumFitPoints;
-   Float_t fMaxBrho;
-   Float_t fMinBrho;
-   std::string fELossFile;
+   std::size_t fEventCnt{0};
+   Float_t fMagneticField{2.0};
+   Int_t fMinIterations{5};
+   Int_t fMaxIterations{20};
+   Int_t fPDGCode{2212};
+   Float_t fMass{1.00727646};
+   Int_t fAtomicNumber{1};
+   Float_t fNumFitPoints{0.90};
+   Float_t fMaxBrho{3.0};
+   Float_t fMinBrho{0.01};
+   std::string fELossFile{""};
 
    ClassDef(AtFitterTask, 1);
 };

@@ -31,8 +31,8 @@ public:
 
 private:
    std::vector<AtTrack> fTrackArray;
-   Double_t fVertex;
-   Double_t fVertexEnergy;
+   Double_t fVertex{-10.0};
+   Double_t fVertexEnergy{-10.0};
    TVector3 fGeoVertex;
 
    ClassDef(AtTrackingEventAna, 1);

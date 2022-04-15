@@ -9,12 +9,13 @@
 #include <cstddef>
 #include <utility>
 
+#include "AtCalibration.h"
+
 class TClonesArray;
 // AtTPCROOT classes
 class AtRawEvent;
 class AtEvent;
 class AtDigiPar;
-class AtCalibration;
 class AtHit;
 class TBuffer;
 class TClass;
@@ -22,8 +23,8 @@ class TMemberInspector;
 
 class AtPSA {
 public:
-   AtPSA();
-   virtual ~AtPSA();
+   AtPSA() = default;
+   virtual ~AtPSA() = default;
 
    void Init();
    //! Setting threshold
@@ -40,41 +41,42 @@ public:
    virtual void Analyze(AtRawEvent *rawEvent, AtEvent *event) = 0;
 
 protected:
-   AtDigiPar *fPar; ///< parameter container
+   AtDigiPar *fPar{}; ///< parameter container
 
-   Bool_t fIsGainCalibrated;
-   Bool_t fIsJitterCalibrated;
+   Bool_t fIsGainCalibrated{false};
+   Bool_t fIsJitterCalibrated{false};
 
-   AtCalibration *fCalibration;
-   TClonesArray *fMCSimPointArray;
+   std::unique_ptr<AtCalibration> fCalibration;
+   TClonesArray *fMCSimPointArray{};
 
-   Int_t fThreshold;    ///< threshold of ADC value
-   Int_t fThresholdlow; ///< threshold for Central pads
-   Bool_t fUsingLowThreshold;
+   Int_t fThreshold{-1};    ///< threshold of ADC value
+   Int_t fThresholdlow{-1}; ///< threshold for Central pads
+   Bool_t fUsingLowThreshold{false};
 
-   Int_t fIniTB; /// First TB for charge integration
-   Int_t fEndTB; /// Last TB for charge integration
+   Int_t fIniTB{0};   /// First TB for charge integration
+   Int_t fEndTB{512}; /// Last TB for charge integration
 
    // Variables from parameter file
-   Double_t fBField;
-   Double_t fEField;
-   Double_t fTiltAng;
+   Double_t fBField{};
+   Double_t fEField{};
+   Double_t fTiltAng{};
    TVector3 fLorentzVector;
-   Int_t fTB0;
-   Double_t fThetaPad;
+   Int_t fTB0{};
+   Double_t fThetaPad{};
 
-   Int_t fPadPlaneX; ///< pad plane size x in mm
-   Int_t fPadSizeX;  ///< pad size x in mm
-   Int_t fPadSizeZ;  ///< pad size y in mm
-   Int_t fPadRows;   ///< number of total pad rows
-   Int_t fPadLayers; ///< number of total pad layers
+   Int_t fPadPlaneX{}; ///< pad plane size x in mm
+   Int_t fPadSizeX{};  ///< pad size x in mm
+   Int_t fPadSizeZ{};  ///< pad size y in mm
+   Int_t fPadRows{};   ///< number of total pad rows
+   Int_t fPadLayers{}; ///< number of total pad layers
 
-   Int_t fNumTbs; ///< the number of time buckets used in taking data
-   Int_t fTBTime; ///< time duration of a time bucket in ns
-   Int_t fEntTB;
-   Double_t fDriftVelocity;  ///< drift velocity of electron in cm/us
-   Double_t fMaxDriftLength; ///< maximum drift length in mm
-   Double_t fZk;             // Relative position of micromegas-cathode
+   // This was hard coded too many places to leave as a variable...
+   Int_t fNumTbs{512}; ///< the number of time buckets used in taking data
+   Int_t fTBTime{};    ///< time duration of a time bucket in ns
+   Int_t fEntTB{};
+   Double_t fDriftVelocity{};  ///< drift velocity of electron in cm/us
+   Double_t fMaxDriftLength{}; ///< maximum drift length in mm
+   Double_t fZk{};             // Relative position of micromegas-cathode
 
    // Protected functions
    void TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit &hit); //< Assign MC Points kinematics to each hit.

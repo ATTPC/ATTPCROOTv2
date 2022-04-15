@@ -5,18 +5,21 @@
 #include <iostream>
 #include <sstream> // IWYU pragma: keep
 
-AtTPCXSManager *gAtXS = (AtTPCXSManager *)nullptr;
+// Allow us use std::make_unique using a protected constructor this struct
+// is only defined in this translation unit (.cpp file)
+namespace {
+struct concrete_AtTPCXSManager : public AtTPCXSManager {
+};
+} // namespace
 
-AtTPCXSManager::AtTPCXSManager()
+std::unique_ptr<AtTPCXSManager> AtTPCXSManager::fInstance = nullptr;
+
+AtTPCXSManager *AtTPCXSManager::Instance()
 {
-   if (gAtXS)
-      delete gAtXS;
-   gAtXS = this;
-
-   kIsExFunction = kTRUE;
+   if (fInstance == nullptr)
+      fInstance = std::make_unique<concrete_AtTPCXSManager>();
+   return fInstance.get();
 }
-
-AtTPCXSManager::~AtTPCXSManager() = default;
 
 Bool_t AtTPCXSManager::SetExcitationFunction(std::string filename)
 {

@@ -15,9 +15,6 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ global gAtVP;
-#pragma link C++ global gAtXS;
-
 //#pragma link C++ class  Pythia6Generator+;
 //#pragma link C++ class  Pythia8Generator+;
 #pragma link C++ class AtTPCIonDecay + ;

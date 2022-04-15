@@ -14,11 +14,11 @@ class TMemberInspector;
 
 class AtProtoQuadrant : public TObject {
 public:
-   AtProtoQuadrant();
+   AtProtoQuadrant() = default;
    AtProtoQuadrant(Int_t QuadrantID);
-   AtProtoQuadrant(std::vector<AtHit> *HitArray, Int_t QuadrantID);
-   AtProtoQuadrant(std::vector<AtHit> *HitArray, Int_t QuadrantID, Double_t PhiQ);
-   ~AtProtoQuadrant();
+   AtProtoQuadrant(std::vector<AtHit> HitArray, Int_t QuadrantID);
+   AtProtoQuadrant(std::vector<AtHit> HitArray, Int_t QuadrantID, Double_t PhiQ);
+   ~AtProtoQuadrant() = default;
 
    void SetEventID(Int_t evtid);
    void AddHit(AtHit *hit);
@@ -31,20 +31,20 @@ public:
    Int_t GetQuadrantID();
    Double_t GetPhiQ();
    Int_t GetEventID();
-   Int_t GetNumHits();
+   std::size_t GetNumHits();
    AtHit *GetHit(Int_t hitNo);
    std::vector<AtHit> *GetHitArray();
    TH1D *GetPhiDistribution();
    std::vector<Double_t> *GetPhiArray();
-   Int_t GetNumPhiVal();
+   std::size_t GetNumPhiVal();
 
 protected:
    std::vector<AtHit> fHitArrayQ; // Collection of hits in that quadrant
-   Double_t fPhiQ;                // Phi angle on the quadrant
-   Int_t fQuadrantID; // Quadrant ID : 1 (0-90) - 2 (90 - 180) -  3 (180-270) - 4 (270-360) - 0 (Central Pad) [Defined
-                      // in the Phi Task]
+   Double_t fPhiQ{0.0};           // Phi angle on the quadrant
+   Int_t fQuadrantID{}; // Quadrant ID : 1 (0-90) - 2 (90 - 180) -  3 (180-270) - 4 (270-360) - 0 (Central Pad) [Defined
+                        // in the Phi Task]
    // TODO: A AtTrack object must be collected here...Future stuff
-   Int_t fEventID;
+   Int_t fEventID{-1};
    TH1D fPhiDistr;
    std::vector<Double_t> fPhiDistrArray;
 

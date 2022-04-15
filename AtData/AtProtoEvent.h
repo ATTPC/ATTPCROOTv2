@@ -22,9 +22,9 @@ public:
 
    AtProtoQuadrant *GetQuadrant(Int_t quadrantNo);
    std::vector<AtProtoQuadrant> *GetQuadrantArray();
-   Int_t GetNumQuadrants();
+   std::size_t GetNumQuadrants();
 
-   Int_t fEventID;
+   Int_t fEventID{};
 
    ClassDef(AtProtoEvent, 1);
 

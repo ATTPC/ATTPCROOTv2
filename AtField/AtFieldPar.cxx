@@ -147,7 +147,7 @@ void AtFieldPar::SetParameters(FairField *field)
    fType = field->GetType();
 
    if (fType == 0) { // constant field
-      auto *fieldConst = (AtConstField *)field;
+      auto *fieldConst = dynamic_cast<AtConstField *>(field);
       fBx = fieldConst->GetBx();
       fBy = fieldConst->GetBy();
       fBz = fieldConst->GetBz();

@@ -7,15 +7,12 @@
 #include <FairLogger.h>
 #include <fstream>
 
-ClassImp(AtTriggerPar)
+ClassImp(AtTriggerPar);
 
-   AtTriggerPar::AtTriggerPar(const Char_t *name, const Char_t *title, const Char_t *context)
-   : FairParGenericSet("AtTriggerPar", "AtTPC Parameter Container", "")
+AtTriggerPar::AtTriggerPar(const Char_t *name, const Char_t *title, const Char_t *context)
+   : FairParGenericSet("AtTriggerPar", "AtTPC Parameter Container", ""), fInitialized(kFALSE)
 {
-   fInitialized = kFALSE;
 }
-
-AtTriggerPar::~AtTriggerPar() = default;
 
 // Getters
 

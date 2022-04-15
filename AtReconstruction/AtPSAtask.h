@@ -14,9 +14,9 @@ class TClonesArray;
 
 class AtPSAtask : public FairTask {
 private:
-   TClonesArray *fRawEventArray;
+   TClonesArray *fRawEventArray{};
    TClonesArray *fEventHArray;
-   TClonesArray *fMCPointArray;
+   TClonesArray *fMCPointArray{};
 
    TString fInputBranchName;
    TString fOutputBranchName;

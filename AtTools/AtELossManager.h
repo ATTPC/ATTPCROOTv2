@@ -42,28 +42,28 @@ public:
 private:
    std::shared_ptr<TGraph> EvD;
 
-   Double_t c;
-   Double_t IonMass;
+   Double_t c{29.9792458};
+   Double_t IonMass{0};
 
-   Double_t *IonEnergy;
-   Double_t *dEdx_e;
-   Double_t *dEdx_n;
-   Double_t *Range;
+   std::vector<Double_t> IonEnergy;
+   std::vector<Double_t> dEdx_e;
+   std::vector<Double_t> dEdx_n;
+   std::vector<Double_t> Range;
 
-   Double_t fMaximumEnergy;
-   Double_t fMaximumDistance;
-   Double_t fDeltaD;
-   Double_t fDeltaE;
+   Double_t fMaximumEnergy{};
+   Double_t fMaximumDistance{};
+   Double_t fDeltaD{};
+   Double_t fDeltaE{};
 
-   Double_t *EtoDtab;
-   Double_t *DtoEtab;
+   std::vector<Double_t> EtoDtab;
+   std::vector<Double_t> DtoEtab;
 
-   Int_t points;
-   Int_t last_point;
-   Int_t points1;
-   Int_t last_point1;
-   Bool_t Energy_in_range;
-   Bool_t GoodELossFile;
+   Int_t points{0};
+   Int_t last_point{0};
+   Int_t points1{0};
+   Int_t last_point1{0};
+   Bool_t Energy_in_range{true};
+   Bool_t GoodELossFile{false};
 
    ClassDef(AtELossManager, 1)
 };

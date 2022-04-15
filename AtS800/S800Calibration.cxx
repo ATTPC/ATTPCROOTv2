@@ -30,10 +30,8 @@ S800Calibration::S800Calibration()
    }
 }
 
-S800Calibration::S800Calibration(S800Settings *setting)
+S800Calibration::S800Calibration(S800Settings *setting) : fSett(setting)
 {
-   fSett = setting;
-
    // S800
    fped.resize(2);
    fslope.resize(2);
@@ -574,7 +572,7 @@ void S800Calibration::SetTof(GTimeOfFlight *tof)
 
 void S800Calibration::ReadICCalibration(const char *filename)
 {
-   TEnv *iccal = new TEnv(filename);
+   auto iccal = std::make_unique<TEnv>(filename);
    for (int i = 0; i < S800_FP_IC_CHANNELS; i++) {
       fICoffset[i] = iccal->GetValue(Form("IonChamber.Offset.%d", i), 0.0);
       fICslope[i] = iccal->GetValue(Form("IonChamber.Slope.%d", i), 1.0);

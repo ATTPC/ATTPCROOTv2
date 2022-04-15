@@ -20,43 +20,39 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-#define cRED "\033[1;31m"
-#define cYELLOW "\033[1;33m"
-#define cNORMAL "\033[0m"
-#define cGREEN "\033[1;32m"
 using XYZPoint = ROOT::Math::XYZPoint;
 
 class AtTrack : public TObject {
 
 protected:
    // Attributes shared by all track finding algorithms
-   Int_t fTrackID;
+   Int_t fTrackID{-1};
    std::vector<AtHit> fHitArray; // TrackHC, AtGenfit, all ransacs
 
    // Used by all ransac classes
    XYZPoint fTrackVertex;         // Mean Vertex of the track
-   Double_t fMinimum;             // Minimizer result (chi2)
-   Int_t fNFree;                  // Free paramets (NDF)
+   Double_t fMinimum{-1};         // Minimizer result (chi2)
+   Int_t fNFree{-1};              // Free paramets (NDF)
    std::vector<Double_t> fFitPar; // fit parameters
 
    // Used by AtRansac only
-   Double_t fAngleZAxis;               // Angle of the track w.r.t. the X axis.
-   Double_t fAngleZDet;                // Angle w.r.t. Z axis (beam axis) in the detector system.
-   Double_t fAngleYDet;                //  "         "           Y   "             "
+   Double_t fAngleZAxis{-20};          // Angle of the track w.r.t. the X axis.
+   Double_t fAngleZDet{-20};           // Angle w.r.t. Z axis (beam axis) in the detector system.
+   Double_t fAngleYDet{-20};           //  "         "           Y   "             "
    std::vector<Double_t> fRANSACCoeff; // Coefficients for radius smoothing using RANSAC: x, y and radius of curvature
 
    // Used by AtPRA
-   Double_t fGeoThetaAngle;                  // Geometrical scattering angle with respect to the detector FitParameters
-   Double_t fGeoPhiAngle;                    //  " azimuthal "
-   Double_t fGeoRadius;                      // Initial radius of curvature
+   Double_t fGeoThetaAngle{};                // Geometrical scattering angle with respect to the detector FitParameters
+   Double_t fGeoPhiAngle{};                  //  " azimuthal "
+   Double_t fGeoRadius{};                    // Initial radius of curvature
    std::pair<Double_t, Double_t> fGeoCenter; // Center of the spiral track
    std::vector<AtHitCluster> fHitClusterArray; ///< Clusterized hits container
 
    // Used by AtTrackFinderHC
-   Bool_t kIsNoise;
+   Bool_t kIsNoise = false;
 
 public:
-   AtTrack();
+   AtTrack() = default;
    AtTrack(const AtTrack &obj) = default;
    ~AtTrack() = default;
 
@@ -127,12 +123,12 @@ protected:
 
    friend inline std::ostream &operator<<(std::ostream &o, const AtTrack &track)
    {
-      std::cout << cYELLOW << " ====================================================== " << std::endl;
+      std::cout << " ====================================================== " << std::endl;
       std::cout << "  Track " << track.fTrackID << " Info : " << std::endl;
       std::cout << " Geomterical Scattering Angle : " << track.fGeoThetaAngle * (180.0 / TMath::Pi()) << " deg "
                 << " - Geomterical Azimuthal Angle : " << track.fGeoPhiAngle * (180.0 / TMath::Pi()) << " deg "
                 << std::endl;
-      std::cout << " Angle with respect to Z axis : " << track.fAngleZAxis << cNORMAL << std::endl;
+      std::cout << " Angle with respect to Z axis : " << track.fAngleZAxis << std::endl;
 
       return o;
    }

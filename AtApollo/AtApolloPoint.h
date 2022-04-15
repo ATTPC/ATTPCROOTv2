@@ -53,7 +53,7 @@ private:
    AtApolloPoint operator=(const AtApolloPoint &point);
 
 protected:
-   Int_t fCrystalID;
+   Int_t fCrystalID{};
 
    ClassDef(AtApolloPoint, 1)
 };

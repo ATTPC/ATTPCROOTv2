@@ -19,7 +19,7 @@
 
 class TParticlePDG;
 
-#define amu 931.494
+constexpr float amu = 931.494;
 
 Int_t AtTPC_Background::fgNIon = 0;
 
@@ -34,11 +34,11 @@ AtTPC_Background::AtTPC_Background(const char *name, std::vector<Int_t> *z, std:
                                    std::vector<Int_t> *q, Int_t mult, std::vector<Double_t> *px,
                                    std::vector<Double_t> *py, std::vector<Double_t> *pz, std::vector<Double_t> *mass,
                                    std::vector<Double_t> *Ex)
-   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0)
+   : fPx(0.), fPy(0.), fPz(0.), fMult(mult), fVx(0.), fVy(0.), fVz(0.), fIon(0)
 {
 
    fgNIon++;
-   fMult = mult;
+
    fIon.reserve(fMult);
 
    char buffer[30];
@@ -271,12 +271,12 @@ Bool_t AtTPC_Background::ReadEvent(FairPrimaryGenerator *primGen)
 
    fIsDecay = kFALSE;
 
-   fBeamEnergy = gAtVP->GetEnergy();
-   std::cout << " -I- AtTPC_Background Residual energy  : " << gAtVP->GetEnergy() << std::endl;
+   fBeamEnergy = AtVertexPropagator::Instance()->GetEnergy();
+   std::cout << " -I- AtTPC_Background Residual energy  : " << AtVertexPropagator::Instance()->GetEnergy() << std::endl;
 
-   fPxBeam = gAtVP->GetPx();
-   fPyBeam = gAtVP->GetPy();
-   fPzBeam = gAtVP->GetPz();
+   fPxBeam = AtVertexPropagator::Instance()->GetPx();
+   fPyBeam = AtVertexPropagator::Instance()->GetPy();
+   fPzBeam = AtVertexPropagator::Instance()->GetPz();
 
    // fPxBeam = fPx.at(0) ;
    // fPyBeam = fPy.at(0) ;
@@ -284,10 +284,10 @@ Bool_t AtTPC_Background::ReadEvent(FairPrimaryGenerator *primGen)
 
    if (fBeamEnergy == 0) {
       std::cout << "-I- AtTP_Background : No solution!" << std::endl;
-      gAtVP->SetValidKine(kFALSE);
+      AtVertexPropagator::Instance()->SetValidKine(kFALSE);
    }
 
-   if (!gAtVP->GetValidKine()) {
+   if (!AtVertexPropagator::Instance()->GetValidKine()) {
 
       fPx.at(2) = 0.; // To GeV for FairRoot
       fPy.at(2) = 0.;
@@ -443,7 +443,7 @@ fPz.at(3) = (Prec*cos(angrec) )/1000.0; // To GeV for FairRoot
       fVy = random_r * sin(random_phi);
       fVz = 100.0 * (gRandom->Uniform()); // cm
 
-      if (i > 1 && gAtVP->GetDecayEvtCnt() && pdgType == 2212) {
+      if (i > 1 && AtVertexPropagator::Instance()->GetDecayEvtCnt() && pdgType == 2212) {
          // TODO: Dirty way to propagate only the products (0 and 1 are beam and target respectively)
 
          // std::cout << "-I- FairIonGenerator: Generating ions of type "
@@ -455,7 +455,8 @@ fPz.at(3) = (Prec*cos(angrec) )/1000.0; // To GeV for FairRoot
       }
    }
 
-   gAtVP->IncDecayEvtCnt(); // TODO: Okay someone should put a more suitable name but we are on a hurry...
+   AtVertexPropagator::Instance()
+      ->IncDecayEvtCnt(); // TODO: Okay someone should put a more suitable name but we are on a hurry...
 
    return kTRUE;
 }

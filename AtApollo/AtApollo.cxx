@@ -61,7 +61,7 @@ Bool_t AtApollo::ProcessHits(FairVolume *vol)
 {
    /** This method is called from the MC stepping */
 
-   auto *stack = (AtStack *)gMC->GetStack();
+   auto *stack = dynamic_cast<AtStack *>(gMC->GetStack());
    fVolName = gMC->CurrentVolName();
 
    TLorentzVector fPosIn;
