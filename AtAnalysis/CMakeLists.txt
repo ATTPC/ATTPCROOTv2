@@ -5,10 +5,7 @@ Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
 set(DEPENDENCIES
   FairRoot::Base
-  FairRoot::FairTools
   ROOT::Core
-
-  ROOT::VMC
   )
 
 set(SRCS

@@ -21,9 +21,9 @@ AtTpcGeoPar.cxx
 
 Set(DEPENDENCIES
   FairRoot::Base
-  FairRoot::FairTools
+
   ROOT::Core
-  #Cling
+
   ATTPCROOT::AtSimulationData
   )
 

@@ -26,7 +26,6 @@ Set(DEPENDENCIES
   
   ROOT::Spectrum
   ROOT::Core
-  ROOT::XMLParser
 
   Boost::headers #multi_array
   )

@@ -13,10 +13,8 @@ AtFieldPar.cxx
 
 Set(DEPENDENCIES
   FairRoot::Base 
-  FairRoot::FairTools
   ROOT::Core
-  ROOT::VMC
-)
+  )
 
 
 generate_target_and_root_library(${target}

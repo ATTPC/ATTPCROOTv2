@@ -17,7 +17,7 @@ AtEventDrawTaskS800.cxx
 Set(DEPENDENCIES
   FairRoot::Base
   FairRoot::FairTools
-  FairRoot::EventDisplay
+
   ROOT::Eve
   ROOT::Core
   ROOT::HistPainter
@@ -26,7 +26,6 @@ Set(DEPENDENCIES
   ATTPCROOT::AtData
   ATTPCROOT::AtMap
   ATTPCROOT::AtS800
-  ATTPCROOT::AtParameter
   )
   
 generate_target_and_root_library(${LIBRARY_NAME}

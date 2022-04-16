@@ -12,7 +12,6 @@ AtSiPoint.cxx
 
 Set(DEPENDENCIES
   FairRoot::Base
-  FairRoot::FairTools
   ROOT::Core
   ATTPCROOT::AtSimulationData
 )

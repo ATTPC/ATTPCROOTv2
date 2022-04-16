@@ -60,41 +60,59 @@ macro(set_attpcroot_defaults)
   if(RUN_STATIC_ANALYSIS)
 
     # Look for iwyu
-    find_program(iwyu_path NAMES include-what-you-use iwyu PATHS ENV IWYU ENV PATH)
-    if(NOT iwyu_path OR PROJECT_iwyu_DISABLE)
+    list(APPEND PROJECT_STATIC_ANALYZERS iwyu)
+    find_program(iwyu_path NAMES include-what-you-use iwyu PATHS ENV IWYU)
+    if(NOT iwyu_path)
       message(WARNING "Could not find iwyu executable by looking at enviroment variable IWYU")
       set(iwyu_FOUND FALSE)
     else()
-      message(STATUS "Using iwyu at: ${iwyu_path}")
-      set(iwyu_path_and_args
-	${iwyu_path}
-	-Xiwyu
-	--mapping_file=${CMAKE_SOURCE_DIR}/cmake/scripts/root.imp)
-      set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path_and_args})
       set(iwyu_FOUND TRUE)
+      message(STATUS "Found IWYU")
+      if(NOT PROJECT_iwyu_DISABLE)
+	message(STATUS "Using iwyu at: ${iwyu_path}")
+	set(iwyu_path_and_args
+	  ${iwyu_path}
+	  -Xiwyu
+	  --mapping_file=${CMAKE_SOURCE_DIR}/cmake/scripts/root.imp)
+	set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path_and_args})
+      endif()
     endif()
-    list(APPEND PROJECT_STATIC_ANALYZERS iwyu)
+
+    # Use link what you use (LWYU)
+    list(APPEND PROJECT_STATIC_ANALYZERS lwyu)
+    set(lwyu_FOUND TRUE)
+    set(lwyu_path "CMake built-in")
+    if(NOT PROJECT_lwyu_DISABLE)
+      message(STATUS "Using lwyu at: ${iwyu_path}")
+      set(CMAKE_LINK_WHAT_YOU_USE ON)
+    endif()
+    
 
     # Look for clang-tidy
+    list(APPEND PROJECT_STATIC_ANALYZERS clang-tidy)
     find_program(clang-tidy_path NAMES clang-tidy)
-    if(NOT clang-tidy_path OR PROJECT_clang-tidy_DISABLE)
-      message(WARNING "Could not find clang-tidy executable or asked to note use clang-tidy")
+    if(NOT clang-tidy_path)
+      message(WARNING "Could not find clang-tidy executable")
       set(clang-tidy_FOUND FALSE)
     else()
-      message(STATUS "Using clang-tidy at: ${clang-tidy_path}")
-      #extra-args fixes error with fenv.h (possible fixewd in gcc 11+?)(https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100017)
-      set(clang-tidy_path_and_args
-	${clang-tidy_path}
-	#--fix
-	--extra-arg=-nostdinc++
-	)
-      message(STATUS "Setting clang tidy to: ${clang-tidy_path_and_args}") 
-      set(CMAKE_CXX_CLANG_TIDY ${clang-tidy_path_and_args})
       set(clang-tidy_FOUND TRUE)
+      message(STATUS "Found clang-tidy")
+      # extra-args=-nostdinc++ fixes error with fenv.h
+      # (possible fixewd in gcc 11+?)(https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100017)
+      if(NOT PROJECT_clang-tidy_DISABLE)
+	set(clang-tidy_path_and_args
+	  ${clang-tidy_path}
+	  #--fix
+	  --extra-arg=-nostdinc++
+	  )
+	message(STATUS "Setting clang tidy to: ${clang-tidy_path_and_args}") 
+	set(CMAKE_CXX_CLANG_TIDY ${clang-tidy_path_and_args})
 
-      configure_file(${CMAKE_SOURCE_DIR}/.clang-tidy-build ${CMAKE_BINARY_DIR}/.clang-tidy)
+	# Install a .clang-tidy file into the build directory to silence ROOT dictionary errors
+	configure_file(${CMAKE_SOURCE_DIR}/.clang-tidy-build ${CMAKE_BINARY_DIR}/.clang-tidy)
+      endif()
     endif()
-    list(APPEND PROJECT_STATIC_ANALYZERS clang-tidy)
+
 
   endif(RUN_STATIC_ANALYSIS)
 

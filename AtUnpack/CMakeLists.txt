@@ -11,16 +11,13 @@ ${CMAKE_SOURCE_DIR}/AtUnpack/GETDecoder2
 
 Set(DEPENDENCIES
   FairRoot::Base
-  FairRoot::FairTools
   
   ATTPCROOT::AtMap
-  ATTPCROOT::AtParameter
   ATTPCROOT::AtData
   
   ROOT::Core
   ROOT::Tree
   ROOT::TreePlayer
-  ROOT::VMC # Needed for multi-threading (TMCtls.h)
   
   hdf5::hdf5-shared
   )

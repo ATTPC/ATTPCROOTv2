@@ -34,10 +34,7 @@ set(DEPENDENCIES
   ROOT::GenVector
 
   ATTPCROOT::AtSimulationData
-  ATTPCROOT::AtTpc
   ATTPCROOT::AtTools
-
-  #Pythia8
   )
 
 generate_target_and_root_library(${LIBRARY_NAME}

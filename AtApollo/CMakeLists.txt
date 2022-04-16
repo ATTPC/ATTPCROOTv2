@@ -13,7 +13,6 @@ Set(LINKDEF AtApolloLinkDef.h)
 Set(LIBRARY_NAME AtApollo)
 Set(DEPENDENCIES
   FairRoot::Base
-  FairRoot::FairTools
   ROOT::Core
 
   ATTPCROOT::AtSimulationData

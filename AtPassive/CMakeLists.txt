@@ -14,13 +14,11 @@ AtPassiveContFact.cxx
 
 Set(DEPENDENCIES
   FairRoot::Base
-  FairRoot::FairTools
   FairRoot::GeoBase
   FairRoot::ParBase
 
   ROOT::Geom
   ROOT::Core
-  ROOT::VMC
   )
 
 

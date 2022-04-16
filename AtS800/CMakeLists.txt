@@ -33,8 +33,6 @@ Set(DEPENDENCIES
     FairRoot::Base
     FairRoot::FairTools
     ROOT::Core
-    ROOT::TreePlayer
-    ROOT::VMC
     
     ATTPCROOT::AtData
 )

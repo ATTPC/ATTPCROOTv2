@@ -2,7 +2,6 @@ Set(LIBRARY_NAME AtData)
 Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
 Set(DEPENDENCIES
-  FairRoot::Base
   FairRoot::FairTools
 
   ROOT::Core

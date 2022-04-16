@@ -8,7 +8,6 @@ set(DEPENDENCIES
   FairRoot::FairTools # FairLogger
 
   ROOT::Core
-  ROOT::VMC # TMCProcess
   )
 
 set(SRCS

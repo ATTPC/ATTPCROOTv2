@@ -14,9 +14,8 @@ AtTriggerPar.cxx
 
 
 Set(DEPENDENCIES
-  FairRoot::Base
-  FairRoot::FairTools
   ROOT::Core
+  FairRoot::ParBase
   )
 
 generate_target_and_root_library(${LIBRARY_NAME}
