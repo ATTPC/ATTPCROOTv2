@@ -13,60 +13,24 @@
 #endif
 */
 
-#include <fstream>
-#include <iostream>
-#include <string>
+#include "AtTrack.h" // for AtTrack
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <Math/Vector3Dfwd.h> // for XYZVector
+#include <Rtypes.h>           // for Double_t, Int_t, Float_t, THashConsist...
+#include <TGraph2D.h>         // for TGraph2D
+#include <TObject.h>          // for TObject
+#include <TVector3.h>         // for TVector3
 
-#include <TH1.h>
-#include <TCanvas.h>
-#include <TGraph2D.h>
-#include <TGraph.h>
-#include <TH2.h>
-#include <TMath.h>
-#include <TApplication.h>
-#include <TROOT.h>
-#include <TF1.h>
-#include "Math/Minimizer.h"
-#include "Math/Factory.h"
-#include "Math/Functor.h"
-#include "Fit/Fitter.h"
-#include <Math/Vector3D.h>
-#include <TRotation.h>
-#include <TMatrixD.h>
-#include <TArrayD.h>
-#include <TVectorD.h>
+#include <assert.h> // for assert
 
-#include "AtHit.h"
-#include "AtEvent.h"
-#include "AtProtoEvent.h"
-#include "AtProtoQuadrant.h"
-#include "AtDigiPar.h"
-#include "AtTpcMap.h"
-#include "AtTrack.h"
-
-// FairRoot classes
-#include <FairRootManager.h>
-#include <FairLogger.h>
-
-//#ifndef __CINT__ // Boost
-//#include <boost/multi_array.hpp>
-//#endif //__CINT__
-
-#include <TObject.h>
-
-//#include "mmprivate.h"
-//#undef BLOCKSIZE
-// Needed to avoid clash with FLANN library
-// PCL
-#include <iostream>
-
-//#include <pcl/visualization/pcl_visualizer.h>
-#include <boost/thread/thread.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include <fstream> // for operator<<, endl, basic_ostream, basic...
+#include <utility> // for pair
+#include <vector>  // for vector
+class AtEvent;
+class AtHit;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 namespace AtRANSACN {
 

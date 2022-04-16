@@ -6,13 +6,15 @@
 #ifndef _ATSPACECHARGECORRECTIONTASK_H_
 #define _ATSPACECHARGECORRECTIONTASK_H_
 
-#include <Rtypes.h>
+#include "AtSpaceChargeModel.h" // IWYU pragma: keep
+
 #include <FairTask.h>
+
+#include <Rtypes.h>
 #include <TClonesArray.h>
+
 #include <memory>
 #include <string>
-
-#include "AtSpaceChargeModel.h" // IWYU pragma: keep
 
 class TBuffer;
 class TClass;

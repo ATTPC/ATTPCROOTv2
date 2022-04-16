@@ -1,11 +1,13 @@
 #ifndef AtSIARRAY_H
 #define AtSIARRAY_H
 
-#include <Rtypes.h>
-#include <TString.h>
 #include <FairDetector.h>
-#include <TVector3.h>
+
+#include <Rtypes.h>
 #include <TLorentzVector.h>
+#include <TString.h>
+#include <TVector3.h>
+
 #include <string>
 #include <utility>
 

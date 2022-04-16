@@ -1,9 +1,9 @@
 #ifndef AtSIARRAYCONTFACT_H
 #define AtSIARRAYCONTFACT_H
 
-#include <Rtypes.h>
-
 #include <FairContFact.h>
+
+#include <Rtypes.h>
 
 class FairParSet;
 class TBuffer;

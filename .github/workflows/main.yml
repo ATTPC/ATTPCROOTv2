@@ -10,10 +10,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Run clang-format
-      uses: DoozyX/clang-format-lint-action@v0.12
+      uses: DoozyX/clang-format-lint-action@v0.13
       # These are optional (defaults displayed)
       with:
         source: '.'
         exclude: './macro ./scripts ./compiled ./resources ./include'
         extensions: 'h,cxx,C'
-        clangFormatVersion: 11
+        clangFormatVersion: 12

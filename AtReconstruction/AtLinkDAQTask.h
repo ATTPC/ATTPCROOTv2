@@ -22,18 +22,21 @@
  *
  */
 
+#include <TChain.h>
 #include <TString.h>
 #include <TTree.h>
 // FairRoot classes
 #include <FairTask.h>
+
 #include <Rtypes.h>
+
+#include <memory>
 #include <vector>
 
 // HiRAEVT classes
 class HTTimestamp;
 // ROOT classes
 class TClonesArray;
-class TChain;
 // ATTPCROOT classes
 class AtRawEvent;
 class TFile;

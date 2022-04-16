@@ -7,7 +7,6 @@
 
 // AtTPCROOT classes
 
-class FairLogger;
 class TBuffer;
 class TClass;
 class TClonesArray;

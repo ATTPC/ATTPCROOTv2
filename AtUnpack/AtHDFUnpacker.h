@@ -5,20 +5,22 @@
 #ifndef _AtHDFUNPACKER_H_
 #define _AtHDFUNPACKER_H_
 
+#include "AtUnpacker.h"
+
+#include <Rtypes.h>
+
 #include <H5Dpublic.h>
 #include <H5Ipublic.h>
 #include <H5Lpublic.h>
+#include <H5Ppublic.h>
 #include <H5Spublic.h>
 #include <H5public.h>
-#include <Rtypes.h>
 #include <stdint.h>
-#include <tuple>
-#include <vector>
+
 #include <cstddef>
 #include <string>
-
-#include "AtUnpacker.h"
-#include "H5Ppublic.h"
+#include <tuple>
+#include <vector>
 
 class AtRawEvent;
 class AtPad;

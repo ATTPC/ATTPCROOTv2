@@ -1,10 +1,11 @@
 #include "AtProtoQuadrant.h"
 
-#include <TH1.h>
-#include <cstddef>
-#include <algorithm>
-
 #include <Rtypes.h>
+#include <TH1.h>
+
+#include <algorithm>
+#include <cstddef>
+#include <utility> // for move
 
 ClassImp(AtProtoQuadrant);
 

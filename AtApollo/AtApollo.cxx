@@ -7,24 +7,22 @@
  ********************************************************************************/
 #include "AtApollo.h"
 
-#include <FairDetector.h>
-#include <TVector3.h>
-#include <TVirtualMCStack.h>
-#include <cstddef>
-#include <FairVolume.h>
-#include <FairRootManager.h>
-#include <FairRun.h>
-#include <TVirtualMC.h>
-#include <TClonesArray.h>
-#include <TLorentzVector.h>
-#include <FairLogger.h>
-#include <iostream>
-
 #include "AtApolloPoint.h"
 #include "AtDetectorList.h"
 #include "AtStack.h"
 
-class FairRuntimeDb;
+#include <FairDetector.h>
+#include <FairLogger.h>
+#include <FairRootManager.h>
+#include <FairVolume.h>
+
+#include <TClonesArray.h>
+#include <TLorentzVector.h>
+#include <TVector3.h>
+#include <TVirtualMC.h>
+#include <TVirtualMCStack.h>
+
+#include <iostream>
 
 using std::cout;
 using std::endl;

@@ -7,9 +7,11 @@
 #ifndef AtTPC_Background_H
 #define AtTPC_Background_H
 
+#include <FairGenerator.h>
+
 #include <Rtypes.h>
 #include <TString.h>
-#include <FairGenerator.h>
+
 #include <vector>
 
 class FairPrimaryGenerator;

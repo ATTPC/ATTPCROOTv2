@@ -6,11 +6,13 @@
  *   Edited by Adam Anthony 2/17/2020                                *
  *********************************************************************/
 
-#include <FairLogger.h>
-#include <iostream>
-
 #include "AtRawEvent.h"
+
 #include "AtPad.h"
+
+#include <FairLogger.h>
+
+#include <iostream>
 
 ClassImp(AtRawEvent);
 

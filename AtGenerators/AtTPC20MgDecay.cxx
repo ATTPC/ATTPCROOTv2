@@ -1,12 +1,14 @@
 #include "AtTPC20MgDecay.h"
 
-#include <cmath>
+#include <FairLogger.h>
 #include <FairPrimaryGenerator.h>
+
 #include <TDatabasePDG.h>
+#include <TMath.h>
 #include <TParticlePDG.h>
 #include <TRandom.h>
-#include <TMath.h>
-#include <FairLogger.h>
+
+#include <cmath>
 #include <iostream>
 #include <map>
 

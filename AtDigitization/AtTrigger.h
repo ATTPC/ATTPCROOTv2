@@ -1,11 +1,11 @@
 #ifndef AtTrigger_H
 #define AtTrigger_H
 
+#include "AtHit.h"
+
 #include <Rtypes.h>
 #include <TObject.h>
 #include <TString.h>
-
-#include "AtHit.h"
 
 class AtEvent;
 class AtPad;

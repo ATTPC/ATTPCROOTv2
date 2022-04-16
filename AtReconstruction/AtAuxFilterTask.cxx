@@ -1,9 +1,11 @@
 #include "AtAuxFilterTask.h"
 
+#include <FairLogger.h>
 #include <FairRootManager.h>
 #include <FairTask.h>
+
 #include <TString.h>
-#include <fairlogger/Logger.h>
+
 #include <algorithm>
 #include <ostream>
 #include <utility>
@@ -12,9 +14,11 @@
 #include "AtFilter.h"
 #include "AtRawEvent.h"
 // AtTPCRoot Classes
-#include <TClonesArray.h>
 #include "AtAuxPad.h"
 #include "AtPad.h"
+
+#include <TClonesArray.h>
+#include <TObject.h> // for TObject
 
 AtAuxFilterTask::AtAuxFilterTask(AtFilter *filter) : fFilter(filter), fInputEventBranchName("AtRawEvent") {}
 

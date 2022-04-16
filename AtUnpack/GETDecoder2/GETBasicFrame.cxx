@@ -1,10 +1,10 @@
 #include "GETBasicFrame.h"
 
+#include "GETHeaderBase.h"
+
 #include <cstdint>
 #include <cstring>
 #include <istream>
-
-#include "GETHeaderBase.h"
 
 GETBasicFrame::GETBasicFrame()
 {

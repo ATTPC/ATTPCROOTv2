@@ -13,13 +13,14 @@
 // -------------------------------------------------------------------------
 #include "AtCave.h"
 
-#include <FairModule.h>
-#include <Rtypes.h>
+#include "AtGeoCave.h" // for AtGeoCave
 
-#include "AtGeoCave.h"        // for AtGeoCave
 #include <FairGeoInterface.h> // for FairGeoInterface
 #include <FairGeoLoader.h>    // for FairGeoLoader
-#include <TString.h>          // for TString
+#include <FairModule.h>
+
+#include <Rtypes.h>
+#include <TString.h> // for TString
 
 ClassImp(AtCave);
 

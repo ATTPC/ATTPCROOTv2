@@ -9,8 +9,9 @@
 #ifndef AtTPCIONGENERAtOR_H
 #define AtTPCIONGENERAtOR_H
 
-#include <Rtypes.h>
 #include <FairGenerator.h>
+
+#include <Rtypes.h>
 
 class FairPrimaryGenerator;
 class FairIon;

@@ -1,9 +1,11 @@
 
 #include "AtLineChargeModel.h"
 
-#include <cmath>
-#include <Rtypes.h>
 #include <FairLogger.h>
+
+#include <Rtypes.h>
+
+#include <cmath>
 #include <memory>
 
 using XYZPoint = ROOT::Math::XYZPoint;

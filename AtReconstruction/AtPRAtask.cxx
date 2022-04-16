@@ -1,18 +1,23 @@
 #include "AtPRAtask.h"
 
-#include <chrono>
-#include <iostream>
-#include <thread>
-#include <iostream>
-#include <memory>
+#include "AtDigiPar.h"       // for AtDigiPar
+#include "AtEvent.h"         // for AtEvent
+#include "AtHit.h"           // for AtHit
+#include "AtPRA.h"           // for AtPRA
+#include "AtPatternEvent.h"  // for AtPatternEvent
+#include "AtTrackFinderHC.h" // for AtTrackFinderHC
 
-//// FAIRROOT classes
-#include <FairRootManager.h>
-#include <FairRun.h>
-#include <FairRuntimeDb.h>
-#include <FairLogger.h>
+#include <FairLogger.h>      // for LOG, FairLogger
+#include <FairRootManager.h> // for FairRootManager
+#include <FairRun.h>         // for FairRun
+#include <FairRuntimeDb.h>   // for FairRuntimeDb
 
-#include "AtTrackFinderHC.h"
+#include <TObject.h> // for TObject
+
+#include <algorithm> // for max
+#include <iostream>  // for operator<<, basic_ostream, cout, ostream
+#include <stdexcept> // for runtime_error
+#include <vector>    // for allocator, vector
 
 AtPRAtask::AtPRAtask()
    : FairTask("AtPRAtask"), fLogger(FairLogger::GetLogger()), fPatternEventArray("AtPatternEvent", 1)

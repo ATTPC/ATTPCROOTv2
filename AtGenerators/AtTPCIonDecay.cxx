@@ -4,28 +4,30 @@
 
 #include "AtTPCIonDecay.h"
 
-#include <FairParticle.h>
-#include <TString.h>
-#include <cmath>
-#include <cstdio>
-#include <FairPrimaryGenerator.h>
+#include "AtVertexPropagator.h"
+
 #include <FairIon.h>
+#include <FairLogger.h>
+#include <FairParticle.h>
+#include <FairPrimaryGenerator.h>
 #include <FairRunSim.h>
+
 #include <TDatabasePDG.h>
+#include <TGenPhaseSpace.h>
+#include <TLorentzVector.h>
+#include <TMath.h>
+#include <TParticle.h>
 #include <TParticlePDG.h>
 #include <TRandom.h>
-#include <TMath.h>
-#include <TLorentzVector.h>
+#include <TString.h>
 #include <TVector3.h>
-#include <TGenPhaseSpace.h>
-#include <TParticle.h>
-#include <FairLogger.h>
-#include <iostream>
+
 #include <algorithm>
+#include <cmath>
+#include <cstdio>
+#include <iostream>
 #include <iterator>
 #include <memory>
-
-#include "AtVertexPropagator.h"
 
 constexpr float amu = 931.494;
 

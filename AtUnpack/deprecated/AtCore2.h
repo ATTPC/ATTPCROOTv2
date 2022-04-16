@@ -7,16 +7,16 @@
 #ifndef _ATCORE2_H_
 #define _ATCORE2_H_
 
-#include <TObject.h>
-#include <TString.h>
-#include <TClonesArray.h>
-
-#include "AtRawEvent.h"
+#include "AtGadgetIIMap.h"
 #include "AtMap.h"
+#include "AtPedestal.h"
+#include "AtRawEvent.h"
 #include "AtTpcMap.h"
 #include "AtTpcProtoMap.h"
-#include "AtPedestal.h"
-#include "AtGadgetIIMap.h"
+
+#include <TClonesArray.h>
+#include <TObject.h>
+#include <TString.h>
 
 #include "GETDecoder2.h"
 

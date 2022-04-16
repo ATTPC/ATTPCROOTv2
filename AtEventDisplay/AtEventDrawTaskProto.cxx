@@ -1,59 +1,62 @@
-#include <FairTask.h>
-#include <TAttMarker.h>
-#include <TAxis.h>
-#include <TCanvas.h>
-#include <TClonesArray.h>
-#include <TEveBoxSet.h>
-#include <TEveLine.h>
-#include <TEvePointSet.h>
-#include <TEveTreeTools.h>
-#include <TGraph.h>
-#include <TH1.h>
-#include <TH2.h>
-#include <TList.h>
-#include <TMath.h>
-#include <TNamed.h>
-#include <TObject.h>
-#include <TPad.h>
-#include <TROOT.h>
-#include <TSeqCollection.h>
-#include <TVirtualPad.h>
-#include <fairlogger/Logger.h>
-#include <cstdio>
-#include <Math/Point3D.h>
-#include <iostream>
-#include <algorithm>
-#include <array>
-#include <exception>
-#include <map>
-#include <memory>
-#include <string>
-#include <utility>
-#include <vector>
-
-#include <FairRootManager.h>
 #include "AtEventDrawTaskProto.h"
-#include <TEveManager.h>
-#include <TEveTrans.h>
-#include <TPaletteAxis.h>
-#include <TStyle.h>
-#include <TColor.h>
-#include <TVirtualX.h>
-#include "AtMap.h"
-#include "AtTpcProtoMap.h"
-#include <TH2Poly.h>
-#include <TF1.h>
-#include "AtAuxPad.h"
-#include "AtEvent.h"
-#include "AtEventManagerProto.h"
-#include "AtHit.h"
-#include "AtPad.h"
-#include "AtPatternEvent.h"
-#include "AtProtoEvent.h"
-#include "AtProtoEventAna.h"
-#include "AtProtoQuadrant.h"
-#include "AtRawEvent.h"
-#include "AtTrack.h"
+
+#include "AtAuxPad.h"            // for AtAuxPad
+#include "AtEvent.h"             // for AtEvent, hitVector
+#include "AtEventManagerProto.h" // for AtEventManagerProto
+#include "AtHit.h"               // for AtHit
+#include "AtMap.h"               // for AtMap
+#include "AtPad.h"               // for AtPad
+#include "AtPatternEvent.h"      // for AtPatternEvent
+#include "AtProtoEvent.h"        // for AtProtoEvent
+#include "AtProtoEventAna.h"     // for AtProtoEventAna
+#include "AtProtoQuadrant.h"     // for AtProtoQuadrant
+#include "AtRawEvent.h"          // for AtRawEvent, AuxPadMap
+#include "AtTpcProtoMap.h"       // for AtTpcProtoMap
+#include "AtTrack.h"             // for AtTrack
+
+#include <FairLogger.h>      // for Logger, LOG
+#include <FairRootManager.h> // for FairRootManager
+#include <FairTask.h>        // for InitStatus, kSUCCESS
+
+#include <Math/Point3D.h>   // for PositionVector3D
+#include <TAttMarker.h>     // for kFullDotMedium
+#include <TAxis.h>          // for TAxis
+#include <TCanvas.h>        // for TCanvas
+#include <TClonesArray.h>   // for TClonesArray
+#include <TColor.h>         // for TColor
+#include <TEveBoxSet.h>     // for TEveBoxSet, TEveBoxSet::kBT_AABox
+#include <TEveLine.h>       // for TEveLine
+#include <TEveManager.h>    // for TEveManager, gEve
+#include <TEvePointSet.h>   // for TEvePointSet
+#include <TEveTrans.h>      // for TEveTrans
+#include <TEveTreeTools.h>  // for TEvePointSelectorConsumer, TEvePoin...
+#include <TF1.h>            // for TF1
+#include <TGraph.h>         // for TGraph
+#include <TH1.h>            // for TH1I, TH1D, TH1F
+#include <TH2.h>            // for TH2F
+#include <TH2Poly.h>        // for TH2Poly
+#include <TList.h>          // for TList
+#include <TMath.h>          // for Power, Sqrt
+#include <TNamed.h>         // for TNamed
+#include <TObject.h>        // for TObject
+#include <TPad.h>           // for TPad
+#include <TPaletteAxis.h>   // for TPaletteAxis
+#include <TROOT.h>          // for TROOT, gROOT
+#include <TSeqCollection.h> // for TSeqCollection
+#include <TStyle.h>         // for TStyle, gStyle
+#include <TVirtualPad.h>    // for TVirtualPad, gPad
+#include <TVirtualX.h>      // for TVirtualX, gVirtualX
+
+#include <algorithm> // for max
+#include <array>     // for array
+#include <cstdio>    // for sprintf
+#include <exception> // for exception
+#include <iostream>  // for operator<<, basic_ostream, endl
+#include <map>       // for operator!=, _Rb_tree_const_iterator
+#include <memory>    // for allocator, allocator_traits<>::valu...
+#include <string>    // for char_traits, operator<<
+#include <utility>   // for pair
+#include <vector>    // for vector
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

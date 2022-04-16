@@ -14,16 +14,16 @@
 #include "AtMagnet.h"
 
 #include <FairModule.h>
-#include <Rtypes.h>
-#include <TGeoMatrix.h>
-#include <TGeoVolume.h>
 
-#include <TGeoManager.h>
+#include <Rtypes.h>
 #include <TGeoBBox.h>
 #include <TGeoCompositeShape.h>
-#include <TGeoTube.h>
+#include <TGeoManager.h>
 #include <TGeoMaterial.h>
+#include <TGeoMatrix.h>
 #include <TGeoMedium.h>
+#include <TGeoTube.h>
+#include <TGeoVolume.h>
 
 AtMagnet::~AtMagnet() = default;
 AtMagnet::AtMagnet() : FairModule("AtMagnet", "") {}

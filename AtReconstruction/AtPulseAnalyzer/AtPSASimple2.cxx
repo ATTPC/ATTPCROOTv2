@@ -4,23 +4,25 @@
 
 // AtTPCROOT classes
 #include "AtCalibration.h"
-#include "AtRawEvent.h"
 #include "AtEvent.h"
 #include "AtHit.h"
+#include "AtPad.h"
+#include "AtRawEvent.h"
 
 // ROOT classes
-#include <TH1F.h>
-#include <TRotation.h>
-#include <TMatrixD.h>
-#include <TArrayD.h>
+#include <Math/Point2D.h>
+#include <Math/Rotation3D.h>
 #include <TSpectrum.h>
-#include "Math/Point3D.h"
-#include "Math/Rotation3D.h"
-
+#include <TVector3.h>
 // STL
 #include <algorithm>
+#include <array> // for array
 #include <cmath>
+#include <iostream> // for basic_ostream::operator<<
 #include <map>
+#include <memory>  // for unique_ptr, make_unique
+#include <utility> // for pair
+#include <vector>  // for vector
 
 //#ifdef _OPENMP
 //#include <omp.h>

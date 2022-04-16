@@ -1,13 +1,14 @@
 #ifndef __S800CALIBRAtION_HH
 #define __S800CALIBRAtION_HH
 
-#include <ext/alloc_traits.h>
 #include <Rtypes.h>
-#include <algorithm>
-#include <memory>
-#include <vector>
 
 #include "S800Calc.h"
+
+#include <algorithm>
+#include <ext/alloc_traits.h>
+#include <memory>
+#include <vector>
 
 class GTimeOfFlight;
 class S800;

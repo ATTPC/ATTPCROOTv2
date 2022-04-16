@@ -1,12 +1,13 @@
 #ifndef AtSIMULATEDLINE_H
 #define AtSIMULATEDLINE_H
 
+#include "AtSimulatedPoint.h"
+
+#include <Math/Vector3D.h>
 #include <Math/Vector3Dfwd.h>
 #include <Rtypes.h>
-#include <Math/Vector3D.h>
-#include <cstddef>
 
-#include "AtSimulatedPoint.h"
+#include <cstddef>
 
 class TBuffer;
 class TClass;

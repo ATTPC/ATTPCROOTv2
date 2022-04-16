@@ -1,12 +1,14 @@
 #ifndef AtPROTOQUADRANT_H
 #define AtPROTOQUADRANT_H
 
-#include <Rtypes.h>
-#include <TObject.h>
-#include <TH1.h>
-#include <vector>
-
 #include "AtHit.h"
+
+#include <Rtypes.h>
+#include <TH1.h>
+#include <TObject.h>
+
+#include <cstddef> // for size_t
+#include <vector>
 
 class TBuffer;
 class TClass;

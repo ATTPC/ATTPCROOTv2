@@ -2,23 +2,25 @@
 
 #include <FairLogger.h>
 #include <FairTask.h>
-#include <TClonesArray.h>
-#include <fairlogger/Logger.h>
-// STL
-#include <iostream>
-#include <algorithm>
 
+#include <TClonesArray.h>
+#include <TObject.h>
+// STL
 #include "AtPatternEvent.h"
 #include "AtTrack.h"
+
+#include <algorithm>
+#include <iostream>
 // FAIRROOT classes
 #include <FairRootManager.h>
 #include <FairRun.h>
 #include <FairRuntimeDb.h>
 // GENFIT2 classes
-#include <Track.h>
 #include "AtDigiPar.h"
 #include "AtFitter.h"
 #include "AtGenfit.h"
+
+#include <Track.h>
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

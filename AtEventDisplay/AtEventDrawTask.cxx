@@ -6,50 +6,69 @@
 
 #include "AtEventDrawTask.h"
 
-#include "AtEvent.h"
-#include "AtEventManager.h"
-#include "AtHit.h"
-#include "AtLmedsMod.h"
-#include "AtMlesacMod.h"
-#include "AtPatternEvent.h"
-#include "AtRansac.h"
-#include "AtRansacMod.h"
-#include "AtRawEvent.h"
-#include "AtMap.h"
-#include "AtGadgetIIMap.h"
-#include "AtSpecMATMap.h"
-#include "AtTpcMap.h"
-#include "AtTrackFinderHC.h"
-#include "AtTrackingEventAna.h"
+#include "AtAuxPad.h"           // for AtAuxPad
+#include "AtEvent.h"            // for AtEvent, hitVector
+#include "AtEventManager.h"     // for AtEventManager
+#include "AtGadgetIIMap.h"      // for AtGadgetIIMap
+#include "AtHit.h"              // for AtHit
+#include "AtHitCluster.h"       // for AtHitCluster
+#include "AtLmedsMod.h"         // for AtLmedsMod
+#include "AtMap.h"              // for AtMap
+#include "AtMlesacMod.h"        // for AtMlesacMod
+#include "AtPad.h"              // for AtPad
+#include "AtPatternEvent.h"     // for AtPatternEvent
+#include "AtRansac.h"           // for AtRansac, operator<<, AtRansac::Pair...
+#include "AtRansacMod.h"        // for AtRansacMod
+#include "AtRawEvent.h"         // for AtRawEvent, AuxPadMap
+#include "AtSpecMATMap.h"       // for AtSpecMATMap
+#include "AtTpcMap.h"           // for AtTpcMap
+#include "AtTrack.h"            // for AtTrack, operator<<
+#include "AtTrackingEventAna.h" // for AtTrackingEventAna
 
-#include <FairLogger.h>
-#include <FairRootManager.h>
+#include <FairLogger.h>      // for Logger, LOG
+#include <FairRootManager.h> // for FairRootManager
 
-#include <TClonesArray.h>
-#include <TColor.h>
-#include <TEveBoxSet.h>
-#include <TEveGeoShape.h>
-#include <TEveLine.h>
-#include <TEveManager.h>
-#include <TEvePointSet.h>
-#include <TEveTrans.h>
-#include <TF1.h>
-#include <TGeoSphere.h>
-#include <TH1.h>
-#include <TH2.h>
-#include <TH2Poly.h>
-#include <TH3.h>
-#include <TPaletteAxis.h>
-#include <TRandom.h>
-#include <TStyle.h>
-#include <TVector3.h>
-#include <TVirtualX.h>
+#include <Math/Point3D.h>    // for PositionVector3D
+#include <TAttMarker.h>      // for kFullDotMedium
+#include <TAxis.h>           // for TAxis
+#include <TCanvas.h>         // for TCanvas
+#include <TClonesArray.h>    // for TClonesArray
+#include <TColor.h>          // for TColor
+#include <TEveBoxSet.h>      // for TEveBoxSet, TEveBoxSet::kBT_AABox
+#include <TEveLine.h>        // for TEveLine
+#include <TEveManager.h>     // for TEveManager, gEve
+#include <TEvePointSet.h>    // for TEvePointSet
+#include <TEveRGBAPalette.h> // for TEveRGBAPalette
+#include <TEveTrans.h>       // for TEveTrans
+#include <TEveTreeTools.h>   // for TEvePointSelectorConsumer, TEvePoint...
+#include <TF1.h>             // for TF1
+#include <TGraph.h>          // for TGraph
+#include <TH1.h>             // for TH1D, TH1I, TH1F
+#include <TH2.h>             // for TH2F
+#include <TH2Poly.h>         // for TH2Poly
+#include <TH3.h>             // for TH3F
+#include <TList.h>           // for TList
+#include <TNamed.h>          // for TNamed
+#include <TObject.h>         // for TObject
+#include <TPad.h>            // for TPad
+#include <TPaletteAxis.h>    // for TPaletteAxis
+#include <TROOT.h>           // for TROOT, gROOT
+#include <TRandom.h>         // for TRandom
+#include <TSeqCollection.h>  // for TSeqCollection
+#include <TStyle.h>          // for TStyle, gStyle
+#include <TVector3.h>        // for TVector3
+#include <TVirtualPad.h>     // for TVirtualPad, gPad
+#include <TVirtualX.h>       // for TVirtualX
 
-#ifndef __CINT__ // Boost
-#include <boost/multi_array.hpp>
-#endif //__CINT__
-
-#include <iostream>
+#include <algorithm> // for max
+#include <array>     // for array
+#include <cstdio>    // for sprintf
+#include <cstdlib>   // for exit
+#include <exception> // for exception
+#include <iostream>  // for cout
+#include <map>       // for operator!=, _Rb_tree_const_iterator
+#include <string>    // for allocator, operator<<
+#include <utility>   // for pair
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

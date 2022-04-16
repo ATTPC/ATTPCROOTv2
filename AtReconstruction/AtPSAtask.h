@@ -1,9 +1,13 @@
 #ifndef AtPSAtASK_H
 #define AtPSAtASK_H
 
+#include <Rtypes.h> // for THashConsistencyHolder, Bool_t, ClassDef, Opti...
+class TBuffer;
+class TClass;
+class TMemberInspector;
+
 // FAIRROOT classes
 #include <FairTask.h>
-class FairLogger;
 
 // AtTPCROOT classes
 class AtPSA;

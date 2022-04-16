@@ -20,7 +20,9 @@ Adapted to AtTPCROOTv2 by Yassid Ayyad ayyadlim@frib.msu.edu
 
 #include "AtSpacePointMeasurement.h"
 
-#include <SpacepointMeasurement.h>
+#include "AtHitCluster.h"
+
+#include <Math/Point3D.h>
 #include <TMatrixDSymfwd.h>
 #include <TMatrixDfwd.h>
 #include <TMatrixT.h>
@@ -28,9 +30,8 @@ Adapted to AtTPCROOTv2 by Yassid Ayyad ayyadlim@frib.msu.edu
 #include <TVectorDfwd.h>
 #include <TVectorT.h>
 #include <TrackCandHit.h>
-#include <Math/Point3D.h>
 
-#include "AtHitCluster.h"
+#include <SpacepointMeasurement.h>
 
 namespace genfit {
 class AbsMeasurement;

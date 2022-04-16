@@ -14,9 +14,10 @@
 #ifndef AtFieldPar_H
 #define AtFieldPar_H 1
 
+#include <FairParGenericSet.h>
+
 #include <Rtypes.h>
 #include <TString.h>
-#include <FairParGenericSet.h>
 
 class FairField;
 class FairParamList;

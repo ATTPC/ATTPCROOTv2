@@ -6,51 +6,44 @@
 #ifndef AtEVENTDRAWTASKS800_H
 #define AtEVENTDRAWTASKS800_H
 
-// FairRoot classes
-#include <FairTask.h>
-#include <FairLogger.h>
+#include <FairTask.h> // for FairTask, InitStatus
 
-// ROOT classes
-#include <TEvePointSet.h>
-#include <TEveGeoShape.h>
-#include <TEveBoxSet.h>
-#include <TEveLine.h>
-#include <TClonesArray.h>
-#include <TVector3.h>
-#include <TPaletteAxis.h>
+#include <Rtypes.h>  // for Int_t, Bool_t, Option_t, THashConsistencyHolder
+#include <TString.h> // for TString
 
-#include <TCanvas.h>
-#include <TH2.h>
-#include <TH1.h>
-#include <TH3.h>
-#include <TGraph.h>
-#include <TH2Poly.h>
-
-#include "AtEventManagerS800.h"
-#include "AtRawEvent.h"
-#include "AtEvent.h"
-#include "AtProtoEvent.h"
-#include "AtPatternEvent.h"
-#include "AtTrackingEventAna.h"
-#include "AtRansac.h"
-#include "AtRansacMod.h"
-#include "AtMlesacMod.h"
-#include "AtLmedsMod.h"
-#include "AtTrackFinderHC.h"
-#include "AtHit.h"
-#include "AtTpcMap.h"
-#include "AtMap.h"
-#include "AtProtoQuadrant.h"
-#include <fstream>
-
-// S800 Classes
-#include "S800Event.h"
-#include "S800.h"
-#include "S800Calc.h"
-
-#ifndef __CINT__ // Boost
-#include <boost/multi_array.hpp>
-#endif //__CINT__
+#include <vector> // for vector
+class AtEventManagerS800;
+class AtHit;
+class AtLmedsMod;
+class AtMap;
+class AtMlesacMod;
+class AtRansacMod;
+class AtRawEvent;
+class AtTrackingEventAna;
+class S800Calc;
+class TBuffer;
+class TCanvas;
+class TClass;
+class TClonesArray;
+class TEveBoxSet;
+class TEveLine;
+class TEvePointSet;
+class TF1;
+class TGraph;
+class TH1D;
+class TH1F;
+class TH1I;
+class TH2F;
+class TH2Poly;
+class TH3F;
+class TMemberInspector;
+class TPaletteAxis;
+namespace AtPATTERN {
+class AtTrackFinderHC;
+}
+namespace AtRANSACN {
+class AtRansac;
+}
 
 class AtEventDrawTaskS800 : public FairTask {
 public:

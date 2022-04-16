@@ -1,11 +1,11 @@
 #ifndef ATHITCLUSTER_HH
 #define ATHITCLUSTER_HH
 
+#include "AtHit.h"
+
 #include <Rtypes.h>
 #include <TMatrixDfwd.h>
 #include <TMatrixT.h>
-
-#include "AtHit.h"
 
 class TBuffer;
 class TClass;

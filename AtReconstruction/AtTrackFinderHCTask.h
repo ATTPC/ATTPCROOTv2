@@ -7,15 +7,15 @@
 #include <TClonesArray.h>
 
 // AtTPCROOT classes
-#include "AtEvent.h"
-#include "AtProtoEvent.h"
 #include "AtDigiPar.h"
+#include "AtEvent.h"
 #include "AtHit.h"
+#include "AtProtoEvent.h"
 #include "AtTrackFinderHC.h"
 
 // FAIRROOT classes
-#include <FairTask.h>
 #include <FairLogger.h>
+#include <FairTask.h>
 
 class AtTrackFinderHCTask : public FairTask {
 public:

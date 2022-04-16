@@ -1,12 +1,12 @@
 #include "AtTrack.h"
 
+#include <Rtypes.h>
 #include <TMath.h>
 #include <TMathBase.h>
+
 #include <cmath>
 #include <iterator>
 #include <numeric>
-
-#include <Rtypes.h>
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

@@ -8,8 +8,9 @@
 #ifndef NEWDETECTORGEOPAR_H
 #define NEWDETECTORGEOPAR_H
 
-#include <Rtypes.h>
 #include <FairParGenericSet.h>
+
+#include <Rtypes.h>
 
 class TObjArray;
 class FairParamList;

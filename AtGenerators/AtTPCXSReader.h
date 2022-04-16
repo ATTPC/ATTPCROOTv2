@@ -6,9 +6,11 @@
 #ifndef AtTPCXSREADER_H
 #define AtTPCXSREADER_H
 
+#include <FairGenerator.h>
+
 #include <Rtypes.h>
 #include <TString.h>
-#include <FairGenerator.h>
+
 #include <vector>
 
 class FairPrimaryGenerator;

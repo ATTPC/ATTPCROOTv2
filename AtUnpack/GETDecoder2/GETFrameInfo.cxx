@@ -1,9 +1,8 @@
 #include "GETFrameInfo.h"
 
-#include <cstdio>
-#include <iostream>
-
 #include <Rtypes.h>
+
+#include <iostream>
 
 using std::cout;
 using std::endl;

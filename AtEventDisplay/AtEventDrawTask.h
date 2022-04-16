@@ -7,56 +7,44 @@
 #ifndef ATEVENTDRAWTASK_H
 #define ATEVENTDRAWTASK_H
 
-// ATTPCROOT classes
+#include <FairTask.h> // for FairTask, InitStatus
+
+#include <Rtypes.h>  // for Int_t, Bool_t, THashConsistencyHolder, Color_t
+#include <TString.h> // for TString
+
+#include <vector>         // for vector
+class AtEventManager;     // lines 17-17
+class AtHit;              // lines 18-18
+class AtLmedsMod;         // lines 19-19
+class AtMap;              // lines 24-24
+class AtMlesacMod;        // lines 20-20
+class AtRansacMod;        // lines 21-21
+class AtRawEvent;         // lines 22-22
+class AtTrackingEventAna; // lines 23-23
+class TBuffer;
+class TCanvas; // lines 30-30
+class TClass;
+class TClonesArray;    // lines 31-31
+class TEveBoxSet;      // lines 33-33
+class TEveLine;        // lines 34-34
+class TEvePointSet;    // lines 32-32
+class TEveRGBAPalette; // lines 44-44
+class TF1;             // lines 39-39
+class TGraph;          // lines 35-35
+class TH1D;            // lines 37-37
+class TH1F;            // lines 38-38
+class TH1I;            // lines 36-36
+class TH2F;            // lines 40-40
+class TH2Poly;         // lines 41-41
+class TH3F;            // lines 42-42
+class TMemberInspector;
+class TPaletteAxis; // lines 43-43
 namespace AtPATTERN {
 class AtTrackFinderHC;
-}
+} // namespace AtPATTERN
 namespace AtRANSACN {
 class AtRansac;
-}
-class AtEvent;
-class AtEventManager;
-class AtHit;
-class AtLmedsMod;
-class AtMlesacMod;
-class AtRansacMod;
-class AtRawEvent;
-class AtTrackingEventAna;
-class AtMap;
-class AtTpcMap;
-class AtPatternEvent;
-
-// FairRoot classes
-#include <FairTask.h>
-
-// ROOT classes
-class TCanvas;
-class TClonesArray;
-class TEvePointSet;
-class TEveGeoShape;
-class TEveBoxSet;
-class TEveLine;
-class TGraph;
-class TH1I;
-class TH1D;
-class TH1F;
-class TF1;
-class TH2D;
-class TH2F;
-class TH2Poly;
-class TH3F;
-class TPaletteAxis;
-class TVector3;
-
-#include <TEveRGBAPalette.h>
-
-#include <Rtypes.h>
-#include <fstream>
-#include <TF1.h>
-
-#ifndef __CINT__ // Boost
-#include <boost/multi_array.hpp>
-#endif //__CINT__
+} // namespace AtRANSACN
 
 enum DetectorId { kAtTpc, kGADGETII, kSpecMAT };
 

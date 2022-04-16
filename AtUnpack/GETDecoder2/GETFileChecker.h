@@ -12,7 +12,6 @@
 #define GETFILECHECKER
 
 #include <Rtypes.h>
-
 #include <TString.h>
 
 class TBuffer;

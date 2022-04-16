@@ -2,10 +2,9 @@
 #ifndef ATSPACECHARGEMODEL_H
 #define ATSPACECHARGEMODEL_H
 
+#include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h>
 #include <Rtypes.h>
-#include <Math/Point3D.h>
-
 #include <TObject.h>
 
 class TBuffer;

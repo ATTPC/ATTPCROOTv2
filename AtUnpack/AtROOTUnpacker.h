@@ -7,11 +7,12 @@
 #ifndef _ATROOTUNPACKER_H_
 #define _ATROOTUNPACKER_H_
 
+#include "AtUnpacker.h"
+
 #include <Rtypes.h>
+
 #include <memory>
 #include <vector>
-
-#include "AtUnpacker.h"
 
 class AtPedestal;
 class AtRawEvent;

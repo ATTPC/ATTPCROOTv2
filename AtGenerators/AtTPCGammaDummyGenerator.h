@@ -7,8 +7,9 @@
 #ifndef AtTPCGAMMADUMMYGENERAtOR_H
 #define AtTPCGAMMADUMMYGENERAtOR_H
 
-#include <Rtypes.h>
 #include <FairGenerator.h>
+
+#include <Rtypes.h>
 
 class FairPrimaryGenerator;
 class TBuffer;

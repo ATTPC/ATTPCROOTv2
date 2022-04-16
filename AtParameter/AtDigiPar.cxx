@@ -3,13 +3,13 @@
 #include <FairLogger.h>
 #include <FairParGenericSet.h>
 #include <FairParamList.h>
+
 #include <TString.h>
 #include <TSystem.h>
-#include <cstddef>
+
 #include <iostream>
 #include <memory>
-
-#include "AtGas.h"
+#include <string>
 
 ClassImp(AtDigiPar);
 

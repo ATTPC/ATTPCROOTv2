@@ -8,24 +8,24 @@
 #include <TSpectrum.h>
 
 // AtTPCROOT classes
-#include "AtRawEvent.h"
 #include "AtEvent.h"
 #include "AtHit.h"
+#include "AtRawEvent.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshadow"
 
+#include <pcl/filters/statistical_outlier_removal.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
-#include <pcl/filters/statistical_outlier_removal.h>
 
 #pragma GCC diagnostic pop
 
 // STL
 #include <algorithm>
 #include <cmath>
-#include <map>
 #include <iostream>
+#include <map>
 
 #ifdef _OPENMP
 #include <omp.h>

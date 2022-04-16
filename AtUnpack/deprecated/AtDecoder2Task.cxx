@@ -2,9 +2,9 @@
 
 // FAIRROOT classes
 #include <FairRootManager.h>
-#include <FairRunOnline.h>
 #include <FairRun.h>
 #include <FairRunAna.h>
+#include <FairRunOnline.h>
 #include <FairRuntimeDb.h>
 
 constexpr auto cRED = "\033[1;31m";

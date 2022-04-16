@@ -2,11 +2,13 @@
 #define __S800_HH
 
 #include <Rtypes.h>
-#include <string.h>
 #include <TObject.h>
+
+#include <string.h>
+
+#include <algorithm>
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 class TBuffer;
 class TClass;

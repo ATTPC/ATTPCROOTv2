@@ -7,39 +7,25 @@
 #ifndef AtMlesacMOD_H
 #define AtMlesacMOD_H
 
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <stdlib.h>
-#include <stdio.h>
-#include <iostream>
-#include <chrono>
-#include <ctime>
-#include <vector>
-
-// FairRoot classes
-#include <FairRootManager.h>
-#include <FairLogger.h>
-
-// ROOT Headers
-#include <TObject.h>
-#include <TMath.h>
-#include <TVector3.h>
-#include <TRandom.h>
-#include <TApplication.h>
-#include <TROOT.h>
-
 #ifdef _OPENMP
 #include <omp.h>
 #endif
 
-#include "AtHit.h"
-#include "AtEvent.h"
-#include "AtProtoEvent.h"
-#include "AtProtoQuadrant.h"
-#include "AtDigiPar.h"
-#include "AtTpcMap.h"
-#include "AtTrack.h"
+#include "AtTrack.h" // for AtTrack
+
+#include <Rtypes.h>   // for Int_t, Double_t, THashConsistencyHolder, ClassDef
+#include <TObject.h>  // for TObject
+#include <TVector3.h> // for TVector3
+
+#include <stdio.h> // for size_t
+
+#include <algorithm> // for max
+#include <utility>   // for pair
+#include <vector>    // for vector
+class AtEvent;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtMlesacMod : public TObject {
 

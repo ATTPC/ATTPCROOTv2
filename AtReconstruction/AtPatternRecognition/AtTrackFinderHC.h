@@ -11,37 +11,26 @@
 #include <omp.h>
 #endif
 
-// System
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <stdlib.h>
-#include <stdio.h>
-#include <sstream>
-#include <vector>
-#include <future>
+#include "AtPRA.h"   // for AtPRA
+#include "AtTrack.h" // for AtTrack
 
-// AtTPCROOT
-#include "AtPRA.h"
-#include "AtHit.h"
-#include "AtEvent.h"
-#include "AtPatternEvent.h"
-#include "AtDigiPar.h"
-#include "AtTpcMap.h"
-#include "AtTrack.h"
-#include <TObject.h>
+#include <Rtypes.h> // for THashConsistencyHolder, ClassDef
 
-// FairRoot classes
-#include <FairRootManager.h>
-#include <FairLogger.h>
+#include "cluster.h" // for Cluster
+#include <stdio.h>   // for size_t
 
-// PCL
-#include <pcl/common/common.h>
+#include <pcl/point_cloud.h> // for PointCloud, PointCloud<>::Ptr
+#include <pcl/point_types.h> // for PointXYZI
+#include <vector>            // for vector
 
-// trackfinder
-#include "hc.h"
-#include "msd.h"
-#include "smoothenCloud.h"
+class AtEvent;
+class AtPatternEvent;
+class TBuffer;
+class TClass;
+class TMemberInspector;
+namespace hc {
+struct triplet;
+}
 
 struct hc_params {
    float s;

@@ -9,29 +9,30 @@
 //      Start writing class
 // =================================================
 
-#include <TClonesArray.h>
-#include <cstddef>
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <algorithm>
-#include <bitset>
-#include <iterator>
-#include <memory>
-#include <string>
-
-#include <TString.h>
 #include "GETDecoder2.h"
-#include "GETFileChecker.h"
+
+#include <Rtypes.h>
+#include <TClonesArray.h>
+#include <TString.h>
+
 #include "GETBasicFrame.h"
 #include "GETBasicFrameHeader.h"
 #include "GETCoboFrame.h"
+#include "GETFileChecker.h"
 #include "GETFrameInfo.h"
 #include "GETHeaderBase.h"
 #include "GETLayerHeader.h"
 #include "GETLayeredFrame.h"
 #include "GETTopologyFrame.h"
-#include <Rtypes.h>
+
+#include <algorithm>
+#include <bitset>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <iterator>
+#include <memory>
+#include <string>
 
 //#define DEBUG
 

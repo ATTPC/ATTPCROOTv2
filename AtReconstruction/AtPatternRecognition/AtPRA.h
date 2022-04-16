@@ -1,19 +1,18 @@
 #ifndef AtPRA_H
 #define AtPRA_H
 
-#include "AtDigiPar.h"
-#include "AtTrack.h"
-#include "AtHitCluster.h"
-#include "AtEvent.h"
-#include "AtPatternEvent.h"
-#include "AtRansac.h"
+#include <Rtypes.h>  // for Double_t, Float_t, Int_t, THashConsistencyHolder
+#include <TObject.h> // for TObject
 
-// FairRoot classes
-#include <FairRootManager.h>
-#include <FairLogger.h>
-
-// ROOT
-#include <TVirtualFitter.h>
+#include <vector> // for vector
+class AtDigiPar;
+class AtEvent;
+class AtHit;
+class AtPatternEvent;
+class AtTrack;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 namespace AtPATTERN {
 

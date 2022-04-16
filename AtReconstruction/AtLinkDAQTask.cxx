@@ -1,22 +1,25 @@
 #include "AtLinkDAQTask.h"
 
+#include "AtRawEvent.h"
+#include "AtRunAna.h"
+
+#include <FairLogger.h>
+#include <FairRootManager.h>
 #include <FairRunAna.h>
 #include <FairTask.h>
+
+#include <TChain.h>
+#include <TClonesArray.h>
+#include <TFile.h>
+#include <TGraph.h>
 #include <TMathBase.h>
 #include <TObject.h>
-#include <fairlogger/Logger.h>
+
+#include "HTTimestamp.h"
+
 #include <algorithm>
 #include <iostream>
 #include <memory>
-
-#include <TClonesArray.h>
-#include <TChain.h>
-#include <TFile.h>
-#include <TGraph.h>
-#include "HTTimestamp.h"
-#include <FairRootManager.h>
-#include "AtRunAna.h"
-#include "AtRawEvent.h"
 
 bool AtLinkDAQTask::SetInputTree(TString fileName, TString treeName)
 {

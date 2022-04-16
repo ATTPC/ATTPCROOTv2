@@ -1,9 +1,9 @@
 #include "GETLayerHeader.h"
 
+#include <Rtypes.h>
+
 #include <cstring>
 #include <iostream>
-
-#include <Rtypes.h>
 
 ClassImp(GETLayerHeader)
 

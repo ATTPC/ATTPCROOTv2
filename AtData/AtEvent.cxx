@@ -1,8 +1,9 @@
-#include <iostream>
-#include <algorithm>
-
 #include "AtEvent.h"
+
 #include <Rtypes.h>
+
+#include <algorithm>
+#include <iostream>
 
 ClassImp(AtEvent);
 

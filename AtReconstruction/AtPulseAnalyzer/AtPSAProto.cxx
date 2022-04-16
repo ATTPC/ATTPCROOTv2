@@ -1,12 +1,19 @@
 #include "AtPSAProto.h"
 
-#include <TH1.h>
-#include <TSpectrum.h>
-
-#include "AtRawEvent.h"
 #include "AtEvent.h"
+#include "AtHit.h" // for AtHit, XYZPoint
+#include "AtPad.h" // for AtPad
+#include "AtRawEvent.h"
 
 #include <FairLogger.h>
+
+#include <Math/Point2D.h> // for PositionVector2D
+#include <TSpectrum.h>
+
+#include <array>    // for array
+#include <iostream> // for basic_ostream::operator<<, operator<<
+#include <memory>   // for make_unique, unique_ptr, allocator_tr...
+#include <utility>  // for pair
 
 // STL
 #include <cmath>

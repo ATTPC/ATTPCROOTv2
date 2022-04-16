@@ -14,11 +14,12 @@
 #include "AtPipe.h"
 
 #include <FairModule.h>
-#include <TGeoVolume.h>
-#include <TGeoPcon.h>
+
+#include <TGeoManager.h>
 #include <TGeoMaterial.h>
 #include <TGeoMedium.h>
-#include <TGeoManager.h>
+#include <TGeoPcon.h>
+#include <TGeoVolume.h>
 
 AtPipe::~AtPipe() = default;
 AtPipe::AtPipe() : FairModule() {}

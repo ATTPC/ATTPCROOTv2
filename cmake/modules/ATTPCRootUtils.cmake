@@ -91,6 +91,8 @@ macro(set_attpcroot_defaults)
       message(STATUS "Setting clang tidy to: ${clang-tidy_path_and_args}") 
       set(CMAKE_CXX_CLANG_TIDY ${clang-tidy_path_and_args})
       set(clang-tidy_FOUND TRUE)
+
+      configure_file(${CMAKE_SOURCE_DIR}/.clang-tidy-build ${CMAKE_BINARY_DIR}/.clang-tidy)
     endif()
     list(APPEND PROJECT_STATIC_ANALYZERS clang-tidy)
 

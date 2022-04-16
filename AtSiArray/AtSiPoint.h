@@ -1,11 +1,11 @@
 #ifndef ATSIPOINT_H
 #define ATSIPOINT_H
 
+#include "AtMCPoint.h"
+
 #include <Rtypes.h>
 #include <TString.h>
 #include <TVector3.h>
-
-#include "AtMCPoint.h"
 
 class TBuffer;
 class TClass;

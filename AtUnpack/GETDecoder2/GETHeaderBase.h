@@ -8,8 +8,10 @@
 #define GETFRAMEMERGEDBYTIME 0xff02
 
 #include <Rtypes.h>
-#include <stdint.h>
 #include <TObject.h>
+
+#include <stdint.h>
+
 #include <fstream>
 
 class TBuffer;

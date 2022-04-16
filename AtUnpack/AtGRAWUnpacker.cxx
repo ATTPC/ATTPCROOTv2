@@ -1,22 +1,25 @@
 #include "AtGRAWUnpacker.h"
 
-#include <fairlogger/Logger.h>
-#include <thread>
-#include <iostream>
-#include <algorithm>
-#include <utility>
-
 #include "AtMap.h"
 #include "AtPad.h"
+#include "AtPedestal.h"
+#include "AtRawEvent.h"
 #include "AtTpcMap.h"
 #include "AtTpcProtoMap.h"
-#include "AtRawEvent.h"
-#include "GETCoboFrame.h"
+
+#include <FairLogger.h>
+
+#include <Rtypes.h>
+
 #include "GETBasicFrame.h"
-#include "AtPedestal.h"
+#include "GETCoboFrame.h"
 #include "GETDecoder2.h"
 #include "PadReference.h"
-#include <Rtypes.h>
+
+#include <algorithm>
+#include <iostream>
+#include <thread>
+#include <utility>
 
 AtGRAWUnpacker::AtGRAWUnpacker(mapPtr map, Int_t numGrawFiles)
    : AtUnpacker(map), fNumFiles(numGrawFiles), fCurrentEventID(fNumFiles, 0), fIsSeparatedData(fNumFiles > 1)

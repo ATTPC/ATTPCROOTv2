@@ -8,13 +8,14 @@
 #ifndef ATTPCPROTOMAP_H
 #define ATTPCPROTOMAP_H
 
+#include "AtMap.h"
+
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
 #include <TString.h>
-#include <vector>
-#include <map>
 
-#include "AtMap.h"
+#include <map>
+#include <vector>
 
 class TBuffer;
 class TClass;

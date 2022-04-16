@@ -1,25 +1,26 @@
 #include "AtTPC2Body.h"
 
-#include <cmath>
-#include <cstdio>
-#include <FairPrimaryGenerator.h>
+#include "AtEulerTransformation.h"
+#include "AtVertexPropagator.h"
+
 #include <FairIon.h>
+#include <FairLogger.h>
 #include <FairParticle.h>
+#include <FairPrimaryGenerator.h>
 #include <FairRunSim.h>
+
 #include <TDatabasePDG.h>
+#include <TMath.h>
+#include <TParticle.h>
 #include <TParticlePDG.h>
 #include <TRandom.h>
-#include <TMath.h>
 #include <TVector3.h>
-#include <TVirtualMC.h>
-#include <TParticle.h>
-#include <FairLogger.h>
-#include <iostream>
-#include <algorithm>
 
-#include "AtStack.h"
-#include "AtVertexPropagator.h"
-#include "AtEulerTransformation.h"
+#include <algorithm>
+#include <cmath>
+#include <cstdio>
+#include <iostream>
+#include <memory>
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

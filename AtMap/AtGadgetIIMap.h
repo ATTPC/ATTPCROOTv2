@@ -8,11 +8,12 @@
 #ifndef ATGADGETIIMAP_H
 #define ATGADGETIIMAP_H
 
+#include "AtMap.h"
+
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
-#include <unordered_map>
 
-#include "AtMap.h"
+#include <unordered_map>
 
 class TBuffer;
 class TClass;

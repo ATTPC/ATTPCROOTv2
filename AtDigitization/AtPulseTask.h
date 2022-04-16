@@ -8,15 +8,18 @@
 #ifndef AtPulseTask_H
 #define AtPulseTask_H
 
+#include <FairTask.h>
+
 #include <Rtypes.h>
 #include <TClonesArray.h>
-#include <TH1F.h> //Needed for unique_ptr<TH1F>
-#include <TF1.h>  //Needed for unique_ptr<TF1>
-#include <FairTask.h>
+#include <TF1.h> //Needed for unique_ptr<TF1>
+#include <TH1.h> //Needed for unique_ptr<TH1F>
+
 #include <cstddef>
 #include <iterator>
 #include <map>
 #include <memory>
+#include <vector>
 
 class AtDigiPar;
 class AtMap;

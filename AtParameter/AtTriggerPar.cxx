@@ -1,11 +1,14 @@
 #include "AtTriggerPar.h"
 
+#include <FairLogger.h>
 #include <FairParGenericSet.h>
 #include <FairParamList.h>
+
 #include <TString.h>
 #include <TSystem.h>
-#include <FairLogger.h>
+
 #include <fstream>
+#include <string>
 
 ClassImp(AtTriggerPar);
 

@@ -1,12 +1,18 @@
-#include "AtRansac.h"
 #include "AtRansacTask.h"
 
-// FAIRROOT classes
-#include <FairRootManager.h>
-#include <FairRun.h>
-#include <FairRuntimeDb.h>
+#include "AtEvent.h"     // for AtEvent
+#include "AtLmedsMod.h"  // for AtLmedsMod
+#include "AtMlesacMod.h" // for AtMlesacMod
+#include "AtRansac.h"    // for AtRansac
+#include "AtRansacMod.h" // for AtRansacMod
 
-#include <iostream>
+#include <FairLogger.h>      // for LOG, Logger
+#include <FairRootManager.h> // for FairRootManager
+
+#include <TClonesArray.h> // for TClonesArray
+#include <TObject.h>      // for TObject
+
+#include <memory> // for allocator
 
 ClassImp(AtRansacTask);
 

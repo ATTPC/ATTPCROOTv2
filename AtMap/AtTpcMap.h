@@ -7,10 +7,10 @@
 
 #ifndef ATTPCMAP_H
 #define ATTPCMAP_H
+#include "AtMap.h"
+
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
-
-#include "AtMap.h"
 
 class TBuffer;
 class TClass;

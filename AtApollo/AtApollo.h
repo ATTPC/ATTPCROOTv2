@@ -8,10 +8,12 @@
 #ifndef APOLLO_H
 #define APOLLO_H
 
+#include <FairDetector.h>
+
 #include <Rtypes.h>
 #include <TString.h>
-#include <FairDetector.h>
 #include <TVector3.h>
+
 #include <string>
 
 class FairVolume;

@@ -1,10 +1,10 @@
 #include "AtParsers.h"
 
+#include <Rtypes.h>
 #include <TDOMParser.h>
+
 #include <iostream>
 #include <memory>
-
-#include <Rtypes.h>
 
 ClassImp(AtTools::AtParsers)
 

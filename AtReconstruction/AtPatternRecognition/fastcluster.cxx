@@ -7,10 +7,10 @@
 //            (see the file LICENSE for details)
 //
 
-#include <vector>
-#include <algorithm>
-
 #include "fastcluster.h"
+
+#include <algorithm>
+#include <vector>
 
 // Code by Daniel Müllner
 // workaround to make it usable as a standalone version (without R)
@@ -18,8 +18,11 @@ bool fc_isnan(double x)
 {
    return false;
 }
+
+// clang-format off
 #include "fastcluster_dm.cxx"
 #include "fastcluster_R_dm.cxx"
+// clang-format on
 
 //
 // Assigns cluster labels (0, ..., nclust-1) to the n points such

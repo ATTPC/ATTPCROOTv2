@@ -1,24 +1,24 @@
 #include "AtTPC_d2He.h"
 
-#include <TMathBase.h>
-#include <cstdio>
-#include <iostream>
-#include <algorithm>
-#include <cmath>
+#include "AtVertexPropagator.h"
 
-#include <FairPrimaryGenerator.h>
 #include <FairIon.h>
 #include <FairParticle.h>
+#include <FairPrimaryGenerator.h>
 #include <FairRunSim.h>
+
 #include <TDatabasePDG.h>
+#include <TMath.h>
+#include <TMathBase.h>
+#include <TParticle.h>
 #include <TParticlePDG.h>
 #include <TRandom.h>
-#include <TMath.h>
 #include <TVector3.h>
-#include <TVirtualMC.h>
-#include <TParticle.h>
-#include "AtStack.h"
-#include "AtVertexPropagator.h"
+
+#include <algorithm>
+#include <cmath>
+#include <cstdio>
+#include <iostream>
 
 constexpr float amu = 931.494;
 

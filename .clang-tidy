@@ -3,7 +3,7 @@ Checks:          'clang-diagnostic-*,clang-analyzer-*,modernize-*,-modernize-use
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
-FormatStyle:     none
+FormatStyle:     file
 User:            anthonya
 CheckOptions:
   - key:             cppcoreguidelines-init-variables.MathHeader

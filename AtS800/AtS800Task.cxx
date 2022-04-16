@@ -2,8 +2,9 @@
 #include "AtS800Task.h"
 
 #include <FairLogger.h>
-#include <FairTask.h>
 #include <FairRun.h>
+#include <FairTask.h>
+
 #include <memory>
 
 class FairRuntimeDb;

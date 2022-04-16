@@ -14,9 +14,9 @@
 #ifndef PIPE_H
 #define PIPE_H
 
-#include <Rtypes.h>
-
 #include <FairModule.h>
+
+#include <Rtypes.h>
 
 class TBuffer;
 class TClass;

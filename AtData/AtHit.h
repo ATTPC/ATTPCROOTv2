@@ -1,12 +1,13 @@
 #ifndef ATHIT_H
 #define ATHIT_H
 
+#include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h>
+#include <Math/Vector3D.h>
 #include <Math/Vector3Dfwd.h>
 #include <Rtypes.h>
-#include <Math/Point3D.h>
-#include <Math/Vector3D.h>
 #include <TObject.h>
+
 #include <algorithm>
 #include <vector>
 

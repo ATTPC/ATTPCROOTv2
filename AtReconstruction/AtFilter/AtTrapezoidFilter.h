@@ -1,10 +1,11 @@
 #ifndef ATTRAPEZOIDFILTER_H
 #define ATTRAPEZOIDFILTER_H
 
-#include <Rtypes.h>
-#include <vector>
-
 #include "AtFilter.h"
+
+#include <Rtypes.h>
+
+#include <vector>
 
 class AtPad;
 class AtRawEvent;

@@ -1,8 +1,8 @@
 #include "AtFilterTask.h"
 
+#include <FairLogger.h>
 #include <FairRootManager.h>
 #include <FairTask.h>
-#include <fairlogger/Logger.h>
 // stdlib headers
 #include <iostream>
 #include <map>
@@ -14,8 +14,10 @@
 #include "AtFilter.h"
 #include "AtRawEvent.h"
 // AtTPCRoot Classes
-#include <TClonesArray.h>
 #include "AtAuxPad.h"
+
+#include <TClonesArray.h>
+#include <TObject.h>
 
 class AtPad;
 

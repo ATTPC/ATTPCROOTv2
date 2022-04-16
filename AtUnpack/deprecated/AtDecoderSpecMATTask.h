@@ -2,15 +2,14 @@
 #ifndef _AtDECODERSpecMATTASK_H_
 #define _AtDECODERSpecMATTASK_H_
 
-#include <FairLogger.h>
-#include <FairTask.h>
-
 #include "AtCoreSpecMAT.h"
+#include "AtDigiPar.h"
 #include "AtPedestal.h"
 #include "AtRawEvent.h"
 #include "AtSpecMATMap.h"
 
-#include "AtDigiPar.h"
+#include <FairLogger.h>
+#include <FairTask.h>
 
 // ROOT classes
 #include <TClonesArray.h>

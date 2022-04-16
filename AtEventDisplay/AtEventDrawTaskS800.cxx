@@ -4,31 +4,72 @@
  *         Adapted for AtTPCROOT by Yassid Ayyad (NSCL)
  */
 
-#include <FairRootManager.h>
-
 #include "AtEventDrawTaskS800.h"
 
-#include <TEveManager.h>
-#include <TEveGeoShape.h>
-#include <TEveTrans.h>
-#include <TGeoSphere.h>
-#include <TEveTrans.h>
-#include <TPaletteAxis.h>
-#include <TStyle.h>
-#include <TRandom.h>
-#include <TColor.h>
-#include <TVirtualX.h>
+#include "AtEvent.h"            // for AtEvent, hitVector
+#include "AtEventManagerS800.h" // for AtEventManagerS800
+#include "AtHit.h"              // for AtHit
+#include "AtLmedsMod.h"         // for AtLmedsMod
+#include "AtMap.h"              // for AtMap
+#include "AtMlesacMod.h"        // for AtMlesacMod
+#include "AtPad.h"              // for AtPad
+#include "AtPatternEvent.h"     // for AtPatternEvent
+#include "AtProtoEvent.h"       // for AtProtoEvent
+#include "AtProtoQuadrant.h"    // for AtProtoQuadrant
+#include "AtRansac.h"           // for AtRansac, operator<<, AtRansac::Pair...
+#include "AtRansacMod.h"        // for AtRansacMod
+#include "AtRawEvent.h"         // for AtRawEvent
+#include "AtTpcMap.h"           // for AtTpcMap
+#include "AtTpcProtoMap.h"      // for AtTpcProtoMap
+#include "AtTrack.h"            // for AtTrack, operator<<
+#include "AtTrackingEventAna.h" // for AtTrackingEventAna
 
-#include "AtTpcMap.h"
-#include "AtTpcProtoMap.h"
-#include <TH2Poly.h>
-#include <TF1.h>
+#include <FairLogger.h>      // for Logger, LOG
+#include <FairRootManager.h> // for FairRootManager
 
-#ifndef __CINT__ // Boost
-#include <boost/multi_array.hpp>
-#endif //__CINT__
+#include <Math/Point3D.h>   // for PositionVector3D, Cartesian3D, opera...
+#include <Math/Vector3D.h>  // for DisplacementVector3D
+#include <TAttMarker.h>     // for kFullDotMedium
+#include <TAxis.h>          // for TAxis
+#include <TCanvas.h>        // for TCanvas
+#include <TClonesArray.h>   // for TClonesArray
+#include <TColor.h>         // for TColor
+#include <TEveBoxSet.h>     // for TEveBoxSet, TEveBoxSet::kBT_AABox
+#include <TEveLine.h>       // for TEveLine
+#include <TEveManager.h>    // for TEveManager, gEve
+#include <TEvePointSet.h>   // for TEvePointSet
+#include <TEveTrans.h>      // for TEveTrans
+#include <TEveTreeTools.h>  // for TEvePointSelectorConsumer, TEvePoint...
+#include <TF1.h>            // for TF1
+#include <TGraph.h>         // for TGraph
+#include <TH1.h>            // for TH1D, TH1I, TH1F
+#include <TH2.h>            // for TH2F
+#include <TH2Poly.h>        // for TH2Poly
+#include <TH3.h>            // for TH3F
+#include <TList.h>          // for TList
+#include <TMath.h>          // for Sqrt
+#include <TNamed.h>         // for TNamed
+#include <TObject.h>        // for TObject
+#include <TPaletteAxis.h>   // for TPaletteAxis
+#include <TROOT.h>          // for TROOT, gROOT
+#include <TRandom.h>        // for TRandom
+#include <TSeqCollection.h> // for TSeqCollection
+#include <TString.h>        // for TString, Form, operator==, operator<<
+#include <TStyle.h>         // for TStyle, gStyle
+#include <TVector3.h>       // for TVector3
+#include <TVirtualPad.h>    // for TVirtualPad, gPad
+#include <TVirtualX.h>      // for TVirtualX
 
-#include <iostream>
+#include "S800Calc.h" // for S800Calc, CRDC, MultiHitTOF, IC
+
+#include <algorithm> // for max
+#include <array>     // for array
+#include <cmath>     // for isnan, atan
+#include <cstdio>    // for sprintf
+#include <iostream>  // for cout
+#include <memory>    // for allocator_traits<>::value_type
+#include <utility>   // for pair
+#include <vector>    // for vector, allocator
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

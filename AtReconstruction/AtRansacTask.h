@@ -1,21 +1,15 @@
 #ifndef AtRANSACTASK_H
 #define AtRANSACTASK_H
 
-// FAIRROOT classes
-#include <FairTask.h>
-#include <FairLogger.h>
+#include <FairTask.h> // for FairTask, InitStatus
 
-// AtTPCROOT classes
-#include "AtEvent.h"
-#include "AtProtoEvent.h"
-#include "AtDigiPar.h"
-//#include "AtRansac.h"
-#include "AtRansacMod.h"
-#include "AtMlesacMod.h"
-#include "AtLmedsMod.h"
-
-// ROOT classes
-#include <TClonesArray.h>
+#include <Rtypes.h>  // for Int_t, Bool_t, Double_t, THashConsistencyHolder
+#include <TString.h> // for TString
+class AtEvent;
+class TBuffer;
+class TClass;
+class TClonesArray;
+class TMemberInspector;
 
 class AtRansacTask : public FairTask {
 private:

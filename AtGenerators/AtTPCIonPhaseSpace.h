@@ -7,8 +7,10 @@
 #ifndef AtTPCIonPhaseSpace_H
 #define AtTPCIonPhaseSpace_H
 
-#include <Rtypes.h>
 #include <FairGenerator.h>
+
+#include <Rtypes.h>
+
 #include <vector>
 
 class FairPrimaryGenerator;

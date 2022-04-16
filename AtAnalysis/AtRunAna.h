@@ -1,8 +1,9 @@
 #ifndef ATRUNANA_H
 #define ATRUNANA_H
 
-#include <Rtypes.h>
 #include <FairRunAna.h>
+
+#include <Rtypes.h>
 
 class TBuffer;
 class TClass;

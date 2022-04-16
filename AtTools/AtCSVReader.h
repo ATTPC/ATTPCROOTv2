@@ -19,11 +19,11 @@
 //
 // Adam Anthony 5/24/21
 
-#include <string>
-#include <iterator>
-#include <vector>
 #include <iostream>
+#include <iterator>
 #include <sstream>
+#include <string>
+#include <vector>
 
 // Represents a row of CSV file of type T
 template <typename T>

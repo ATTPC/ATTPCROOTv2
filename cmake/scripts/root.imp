@@ -26,9 +26,23 @@
     { include: ["<Math/GenVector/PtEtaPhiM4D.h>", "private", "<Math/Vector4D.h>", "public"]},
     { include: ["<Math/GenVector/LorentzVector.h>", "private", "<Math/Vector4D.h>", "public"]},
 
+    { include: ["<Math/GenVector/Rotation3D.h>", "private", "<Math/Rotation3D.h>", "public"]},
+
     # Mappings for Rtypes and the private stuff it includes
     { include: ["<RtypesCore.h>", "private", "<Rtypes.h>", "public"]},
-
+    { symbol: ["TClass", "private", "<RTypes.h>", "public"]},
+    { symbol: ["TBuffer", "private", "<RTypes.h>", "public"]},
+    { symbol: ["TMemberInspector", "private", "<RTypes.h>", "public"]},
+    
     # Mappings for fairlogger
-    { include: ["\"fairlogger/Logger.h\"", "private", "<FairLogger.h>", "public"]}
+    { include: ["\"fairlogger/Logger.h\"", "private", "<FairLogger.h>", "public"]},
+    { include: ["<fairlogger/Logger.h>", "private", "<FairLogger.h>", "public"]},
+
+    # Mappings for PCL
+    { include: ["<pcl/impl/point_types.hpp>", "private", "<pcl/point_types.h>", "public"]},
+
+    # Mappings for STL
+    { include: ["<pstl/glue_algorithm_defs.h>", "private", "<algorithm>", "public"]}
+    #{ include: ["<stddef.h>", "private", "<cstddef>", "public"]},
+    #{ include: ["<math.h>", "private", "<cmath>", "public"]}
 ]

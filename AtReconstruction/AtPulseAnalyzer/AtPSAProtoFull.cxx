@@ -2,16 +2,22 @@
 
 #include <FairLogger.h>
 
-#include <TH1.h>
-
 // AtTPCROOT classes
-#include "AtRawEvent.h"
 #include "AtEvent.h"
 #include "AtHit.h"
+#include "AtRawEvent.h"
 
 // STL
-#include <cmath>
+#include "AtPad.h" // for AtPad
+
+#include <Math/Point2D.h> // for PositionVector2D
+#include <TVector3.h>     // for TVector3
+
+#include <array>    // for array
+#include <iostream> // for basic_ostream::operator<<, operator<<
 #include <map>
+#include <memory>  // for allocator_traits<>::value_type
+#include <utility> // for pair
 
 /*
 #ifdef _OPENMP

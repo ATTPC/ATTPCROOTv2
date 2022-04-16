@@ -1,24 +1,22 @@
 #include "AtSiArray.h"
 
+#include "AtDetectorList.h"
+#include "AtSiPoint.h"
+#include "AtStack.h"
+
 #include <FairDetector.h>
+#include <FairLogger.h>
+#include <FairRootManager.h>
+#include <FairVolume.h>
+
+#include <TClonesArray.h>
+#include <TGeoManager.h>
 #include <TLorentzVector.h>
 #include <TVector3.h>
-#include <TVirtualMCStack.h>
-#include <cstddef>
-#include <FairVolume.h>
-#include <FairRootManager.h>
-#include <FairRun.h>
-#include <FairRuntimeDb.h>
-#include <TClonesArray.h>
 #include <TVirtualMC.h>
-#include <TGeoManager.h>
-#include <FairLogger.h>
-#include <iostream>
+#include <TVirtualMCStack.h>
 
-#include "AtSiArrayGeoPar.h"
-#include "AtSiPoint.h"
-#include "AtDetectorList.h"
-#include "AtStack.h"
+#include <iostream>
 
 using std::cout;
 using std::endl;

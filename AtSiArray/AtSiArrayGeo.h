@@ -1,9 +1,10 @@
 #ifndef SIARRAYGEO_H
 #define SIARRAYGEO_H
 
+#include <FairGeoSet.h>
+
 #include <Rtypes.h>
 #include <TString.h>
-#include <FairGeoSet.h>
 
 class TBuffer;
 class TClass;

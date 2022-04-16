@@ -1,18 +1,20 @@
 #include "AtSpaceChargeCorrectionTask.h"
 
+#include "AtEvent.h"
+#include "AtHit.h"
+#include "AtSpaceChargeModel.h"
+
+#include <FairLogger.h>
+#include <FairRootManager.h>
 #include <FairTask.h>
-#include <Math/Point3Dfwd.h>
-#include <TObject.h>
-#include <fairlogger/Logger.h>
+
 #include <Math/Point3D.h>
+#include <Math/Point3Dfwd.h>
+#include <TClonesArray.h>
+#include <TObject.h>
+
 #include <utility>
 #include <vector>
-
-#include "AtSpaceChargeModel.h"
-#include <FairRootManager.h>
-#include "AtEvent.h"
-#include <TClonesArray.h>
-#include "AtHit.h"
 
 using XYZPoint = ROOT::Math::XYZPoint;
 

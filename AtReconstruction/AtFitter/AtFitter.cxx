@@ -2,11 +2,10 @@
 
 #include <TMath.h>
 // STL
-#include <algorithm>
-#include <utility>
-
 #include "AtHit.h"
 #include "AtTrack.h"
+
+#include <algorithm>
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

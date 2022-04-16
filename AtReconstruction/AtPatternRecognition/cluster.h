@@ -1,8 +1,8 @@
 #ifndef CLUSTER_H
 #define CLUSTER_H
 
-#include <vector>
 #include <pcl/io/io.h>
+#include <vector>
 
 class Cluster {
 protected:

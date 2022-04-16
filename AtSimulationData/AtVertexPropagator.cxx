@@ -1,12 +1,11 @@
 #include "AtVertexPropagator.h"
 
-#include <cmath>
-#include <iostream>
-#include <utility>
-
-#include <TVector3.h>
-#include <TRandom.h>
 #include <Rtypes.h>
+#include <TRandom.h>
+#include <TVector3.h>
+
+#include <cmath>
+#include <utility>
 
 // Allow us use std::make_unique using a protected constructor this struct
 // is only defined in this translation unit (.cpp file)

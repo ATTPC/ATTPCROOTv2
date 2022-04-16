@@ -8,9 +8,9 @@
 #ifndef NEWDETECTORCONTFACT_H
 #define NEWDETECTORCONTFACT_H
 
-#include <Rtypes.h>
-
 #include <FairContFact.h>
+
+#include <Rtypes.h>
 
 class FairParSet;
 class TBuffer;

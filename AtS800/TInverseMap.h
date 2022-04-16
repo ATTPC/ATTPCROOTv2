@@ -1,11 +1,13 @@
 #ifndef TINVERSEMAP_H_
 #define TINVERSEMAP_H_
 
-#include <TNamed.h>
 #include <Rtypes.h>
-#include <map>
-#include <iostream>
+#include <TNamed.h>
+
 #include <algorithm>
+#include <iostream>
+#include <map>
+#include <memory>
 #include <string>
 #include <vector>
 

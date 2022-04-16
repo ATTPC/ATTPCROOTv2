@@ -7,26 +7,26 @@
  ********************************************************************************/
 #include "AtTpc.h"
 
-#include <FairDetector.h>
-#include <TLorentzVector.h>
-#include <TVector3.h>
-#include <TVirtualMCStack.h>
-#include <cstddef>
-#include <FairVolume.h>
-#include <FairRootManager.h>
-#include <FairRun.h>
-#include <FairRuntimeDb.h>
-#include <TClonesArray.h>
-#include <TVirtualMC.h>
-#include <TGeoManager.h>
-#include <FairLogger.h>
-#include <iostream>
-
-#include "AtTpcGeoPar.h"
-#include "AtVertexPropagator.h"
 #include "AtDetectorList.h"
 #include "AtMCPoint.h"
 #include "AtStack.h"
+#include "AtVertexPropagator.h"
+
+#include <FairDetector.h>
+#include <FairLogger.h>
+#include <FairRootManager.h>
+#include <FairRun.h>
+#include <FairRuntimeDb.h>
+#include <FairVolume.h>
+
+#include <TClonesArray.h>
+#include <TGeoManager.h>
+#include <TLorentzVector.h>
+#include <TVector3.h>
+#include <TVirtualMC.h>
+#include <TVirtualMCStack.h>
+
+#include <iostream>
 
 using std::cout;
 using std::endl;

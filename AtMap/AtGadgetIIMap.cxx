@@ -1,20 +1,23 @@
 #include "AtGadgetIIMap.h"
 
+#include <FairLogger.h>
+
+#include <Math/Point2D.h>
+#include <Rtypes.h>
+#include <TH2Poly.h>
 #include <TString.h>
-#include <cstdlib>
+
 #include <boost/multi_array/base.hpp>
 #include <boost/multi_array/extent_gen.hpp>
 #include <boost/multi_array/multi_array_ref.hpp>
 #include <boost/multi_array/subarray.hpp>
-#include <Math/Point2D.h>
-#include <iostream>
-#include <fstream> // IWYU pragma: keep
+
 #include <algorithm>
+#include <cstdlib>
+#include <fstream> // IWYU pragma: keep
+#include <iostream>
 #include <string>
 #include <vector>
-#include <FairLogger.h>
-#include <TH2Poly.h>
-#include <Rtypes.h>
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

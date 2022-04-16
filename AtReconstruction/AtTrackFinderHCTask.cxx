@@ -2,15 +2,14 @@
 
 #include <chrono>
 #include <iostream>
-#include <thread>
-#include <iostream>
 #include <memory>
+#include <thread>
 
 // FAIRROOT classes
+#include <FairLogger.h>
 #include <FairRootManager.h>
 #include <FairRun.h>
 #include <FairRuntimeDb.h>
-#include <FairLogger.h>
 
 AtTrackFinderHCTask::AtTrackFinderHCTask() : FairTask("AtTrackFinderHCTask")
 {

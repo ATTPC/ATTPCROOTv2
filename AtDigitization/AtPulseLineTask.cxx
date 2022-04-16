@@ -1,23 +1,26 @@
 #include "AtPulseLineTask.h"
 
-#include <Math/Vector3Dfwd.h>
-#include <TAxis.h>
-#include <fairlogger/Logger.h>
-#include <Math/Vector3D.h>
-#include <algorithm>
-#include <memory>
-#include <numeric>
-#include <utility>
-
+#include "AtMCPoint.h"
 #include "AtMap.h"
 #include "AtSimulatedLine.h"
-#include "AtMCPoint.h"
+#include "AtSimulatedPoint.h"
+
+#include <FairLogger.h>
+
+#include <Math/Vector3D.h>
+#include <Math/Vector3Dfwd.h>
+#include <TAxis.h>
 #include <TClonesArray.h>
 #include <TH1.h>
 #include <TH2Poly.h>
 #include <TMath.h>
+#include <TObject.h>
 #include <TRandom.h>
-#include "AtSimulatedPoint.h"
+
+#include <algorithm>
+#include <memory>
+#include <numeric>
+#include <utility>
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

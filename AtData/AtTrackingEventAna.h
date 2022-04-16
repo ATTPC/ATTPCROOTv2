@@ -1,12 +1,13 @@
 #ifndef AtTRACKINGEVENTANA_H
 #define AtTRACKINGEVENTANA_H
 
+#include "AtTrack.h"
+
 #include <Rtypes.h>
 #include <TNamed.h>
 #include <TVector3.h>
-#include <vector>
 
-#include "AtTrack.h"
+#include <vector>
 
 class TBuffer;
 class TClass;

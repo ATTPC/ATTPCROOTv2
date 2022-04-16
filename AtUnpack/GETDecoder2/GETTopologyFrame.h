@@ -2,11 +2,12 @@
 #define GETTOPOLOGYFRAME
 
 #include <Rtypes.h>
-#include <stdint.h>
-#include <bitset>
-#include <iosfwd>
 
 #include "GETHeaderBase.h"
+#include <stdint.h>
+
+#include <bitset>
+#include <iosfwd>
 
 class TBuffer;
 class TClass;

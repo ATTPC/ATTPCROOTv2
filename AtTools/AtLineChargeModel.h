@@ -2,11 +2,11 @@
 #ifndef ATLINECHARGEMODEL_H
 #define ATLINECHARGEMODEL_H
 
+#include "AtSpaceChargeModel.h"
+
+#include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h>
 #include <Rtypes.h>
-#include <Math/Point3D.h>
-
-#include "AtSpaceChargeModel.h"
 
 class TBuffer;
 class TClass;

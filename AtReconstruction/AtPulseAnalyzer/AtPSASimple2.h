@@ -3,6 +3,13 @@
 
 #include "AtPSA.h"
 
+#include <Rtypes.h> // for Bool_t, THashConsistencyHolder, ClassDefOverride
+class AtEvent;
+class AtRawEvent;
+class TBuffer;
+class TClass;
+class TMemberInspector;
+
 class AtPSASimple2 : public AtPSA {
 public:
    AtPSASimple2() = default;

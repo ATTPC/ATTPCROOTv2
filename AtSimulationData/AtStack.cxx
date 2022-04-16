@@ -13,24 +13,27 @@
 
 #include "AtStack.h"
 
+#include "AtMCTrack.h" // for AtMCTrack
+
+#include <FairDetector.h> // for FairDetector
 #include <FairGenericStack.h>
-#include <Rtypes.h>
-#include <TMCProcess.h>
-#include <FairDetector.h>    // for FairDetector
-#include <FairLink.h>        // for FairLink
+#include <FairLink.h> // for FairLink
+#include <FairLogger.h>
 #include <FairMCPoint.h>     // for FairMCPoint
 #include <FairRootManager.h> // for FairRootManager
-#include <FairLogger.h>
+
+#include <Rtypes.h>
 #include <TClonesArray.h>   // for TClonesArray
 #include <TIterator.h>      // for TIterator
 #include <TLorentzVector.h> // for TLorentzVector
-#include <TParticle.h>      // for TParticle
-#include <TRefArray.h>      // for TRefArray
-#include <iostream>         // for operator<<, etc
-#include <iterator>
-#include <algorithm>
+#include <TMCProcess.h>
+#include <TObject.h>
+#include <TParticle.h> // for TParticle
+#include <TRefArray.h> // for TRefArray
 
-#include "AtMCTrack.h" // for AtMCTrack
+#include <algorithm>
+#include <iostream> // for operator<<, etc
+#include <iterator>
 
 using std::cout;
 using std::endl;

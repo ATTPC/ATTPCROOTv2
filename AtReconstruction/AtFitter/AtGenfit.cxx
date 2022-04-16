@@ -1,18 +1,14 @@
 #include "AtGenfit.h"
 
-#include <AbsKalmanFitter.h>
-#include <AbsMeasurement.h>
-#include <ConstField.h>
-#include <Exception.h>
-#include <FieldManager.h>
-#include <FitStatus.h>
-#include <KalmanFitterRefTrack.h>
-#include <MaterialEffects.h>
-#include <MeasuredStateOnPlane.h>
-#include <MeasurementFactory.h>
-#include <MeasurementProducer.h>
+#include "AtHitCluster.h"
+#include "AtSpacePointMeasurement.h"
+#include "AtTrack.h"
+
+#include <Math/Point3D.h>
 #include <RKTrackRep.h>
 #include <TClonesArray.h>
+#include <TDatabasePDG.h>
+#include <TGeoManager.h>
 #include <TGeoMaterial.h>
 #include <TGeoMaterialInterface.h>
 #include <TGeoMedium.h>
@@ -27,17 +23,24 @@
 #include <TROOT.h>
 #include <TVector3.h>
 #include <TrackCand.h>
-#include <Math/Point3D.h>
+
+#include <AbsKalmanFitter.h>
+#include <AbsMeasurement.h>
+#include <AbsTrackRep.h>
+#include <ConstField.h>
+#include <Exception.h>
+#include <FieldManager.h>
+#include <FitStatus.h>
+#include <KalmanFitterRefTrack.h>
+#include <MaterialEffects.h>
+#include <MeasuredStateOnPlane.h>
+#include <MeasurementFactory.h>
+#include <MeasurementProducer.h>
+
 #include <algorithm>
 #include <iostream>
 #include <tuple>
 #include <utility>
-
-#include <TGeoManager.h>
-#include <TDatabasePDG.h>
-#include "AtHitCluster.h"
-#include "AtSpacePointMeasurement.h"
-#include "AtTrack.h"
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

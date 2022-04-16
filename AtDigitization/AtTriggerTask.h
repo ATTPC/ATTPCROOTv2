@@ -8,10 +8,13 @@
 #ifndef AtTriggerTask_H
 #define AtTriggerTask_H
 
+#include <FairTask.h>
+
 #include <Rtypes.h>
 #include <TClonesArray.h>
 #include <TString.h>
-#include <FairTask.h>
+
+#include <memory>
 
 class AtEvent;
 class AtRawEvent;

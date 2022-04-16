@@ -1,8 +1,11 @@
 #ifndef AtTPCIonDecay_H
 #define AtTPCIonDecay_H
 
-#include <Rtypes.h>
 #include <FairGenerator.h>
+
+#include <Rtypes.h>
+#include <TString.h>
+
 #include <vector>
 
 class FairPrimaryGenerator;
@@ -11,7 +14,6 @@ class FairParticle;
 class TBuffer;
 class TClass;
 class TMemberInspector;
-class TString;
 
 class AtTPCIonDecay : public FairGenerator {
 

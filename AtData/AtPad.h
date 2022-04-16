@@ -9,10 +9,11 @@
 #ifndef AtPAD_H
 #define AtPAD_H
 
+#include <Math/Point2D.h>
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
-#include <Math/Point2D.h>
 #include <TObject.h>
+
 #include <array>
 
 class TBuffer;

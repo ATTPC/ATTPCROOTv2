@@ -1,21 +1,24 @@
 #include "AtMap.h"
 
-#include <TXMLDocument.h>
-#include <fairlogger/Logger.h>
-#include <cstdlib>
-#include <cstring>
-#include <boost/multi_array/base.hpp>
-#include <boost/multi_array/extent_gen.hpp>
-#include <iostream>
-#include <iterator>
-#include <utility>
+#include <FairLogger.h>
 
+#include <Rtypes.h>
 #include <TCanvas.h>
 #include <TDOMParser.h>
 #include <TH2Poly.h>
 #include <TStyle.h>
+#include <TXMLDocument.h>
 #include <TXMLNode.h>
-#include <Rtypes.h>
+
+#include <boost/multi_array/base.hpp>
+#include <boost/multi_array/extent_gen.hpp>
+
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <iterator>
+#include <memory>
+#include <utility>
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

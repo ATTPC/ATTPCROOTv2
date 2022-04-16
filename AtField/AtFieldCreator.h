@@ -14,9 +14,9 @@
 #ifndef AtFieldCreator_H
 #define AtFieldCreator_H
 
-#include <Rtypes.h>
-
 #include <FairFieldFactory.h>
+
+#include <Rtypes.h>
 
 class AtFieldPar;
 class FairField;

@@ -1,45 +1,49 @@
-
 #include "AtEventManagerS800.h"
 
-#include <FairRootManager.h>
-#include <FairRunAna.h>
-#include <TChain.h>
-#include <TClonesArray.h>
-#include <TEveEventManager.h>
-#include <TGClient.h>
-#include <TGFrame.h>
-#include <TGLCamera.h>
-#include <TGLayout.h>
-#include <TGNumberEntry.h>
-#include <TGeoVolume.h>
-#include <TRootBrowser.h>
-#include <TString.h>
-#include <TSystem.h>
-#include <TVirtualPad.h>
-#include <cstddef>
+#include "AtEvent.h" // for AtEvent
 
-#include <TEveGeoNode.h>
-#include <TEveManager.h>
-#include <TEveViewer.h>
-#include <TEveWindow.h>
-#include <TEveBrowser.h>
-#include <TFile.h>
-#include <TVirtualX.h>
-#include <TRootEmbeddedCanvas.h>
-#include <TGTab.h>
-#include <TGLViewer.h>
-#include <TGeoManager.h>
-#include <TGWindow.h>
-#include <TGButton.h>
-#include <TGLabel.h>
-#include <TCanvas.h>
-#include <TStyle.h>
-#include <TObject.h>
-#include <TH2.h>
-#include <TH2Poly.h>
-#include "AtEvent.h"
-#include <Rtypes.h>
-#include "S800Calc.h"
+#include <FairRootManager.h> // for FairRootManager
+
+#include <TCanvas.h>             // for TCanvas
+#include <TChain.h>              // for TChain
+#include <TClonesArray.h>        // for TClonesArray
+#include <TEveBrowser.h>         // for TEveBrowser
+#include <TEveGeoNode.h>         // for TEveGeoTopNode
+#include <TEveManager.h>         // for TEveManager, gEve
+#include <TEveViewer.h>          // for TEveViewer
+#include <TEveWindow.h>          // for TEveWindowPack, TEveWindowFrame
+#include <TFile.h>               // for TFile
+#include <TGButton.h>            // for TGTextButton, TGPictureButton, kBut...
+#include <TGClient.h>            // for TGClient, gClient
+#include <TGFrame.h>             // for TGMainFrame, TGHorizontalFrame, TGV...
+#include <TGLCamera.h>           // for TGLCamera
+#include <TGLViewer.h>           // for TGLViewer
+#include <TGLabel.h>             // for TGLabel
+#include <TGLayout.h>            // for TGLayoutHints, kLHintsCenterX, kLHi...
+#include <TGNumberEntry.h>       // for TGNumberEntry, TGNumberFormat, TGNu...
+#include <TGTab.h>               // for TGTab
+#include <TGWindow.h>            // for TGWindow
+#include <TGeoManager.h>         // for gGeoManager, TGeoManager
+#include <TGeoVolume.h>          // for TGeoVolume
+#include <TH2.h>                 // for TH2F, TH2
+#include <TH2Poly.h>             // for TH2Poly
+#include <TObject.h>             // for TObject
+#include <TROOT.h>               // IWYU pragma: keep
+#include <TRootBrowser.h>        // for TRootBrowser, TRootBrowser::kLeft
+#include <TRootEmbeddedCanvas.h> // for TRootEmbeddedCanvas
+#include <TString.h>             // for TString, operator+, Form
+#include <TStyle.h>              // for TStyle, gStyle
+#include <TSystem.h>             // for TSystem, gSystem
+#include <TVirtualPad.h>         // for TVirtualPad, gPad
+#include <TVirtualX.h>           // for TVirtualX
+
+#include "S800Calc.h" // for S800Calc, CRDC, MultiHitTOF, IC
+
+#include <cmath>    // for isnan, atan
+#include <iostream> // for operator<<, basic_ostream::operator<<
+#include <string>   // for allocator, char_traits, operator+
+#include <vector>   // for vector
+class TGeoNode;     // lines 84-84
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -47,14 +51,6 @@ constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
 constexpr auto cBLUE = "\033[1;34m";
 constexpr auto cWHITERED = "\033[37;41m";
-
-#include <iostream>
-#include <cmath>
-#include <string>
-#include <vector>
-
-class TGeoNode;
-
 using namespace std;
 
 ClassImp(AtEventManagerS800);

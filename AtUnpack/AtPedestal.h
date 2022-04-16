@@ -13,10 +13,12 @@
 #ifndef AtPEDESTAL
 #define AtPEDESTAL
 
-#include <memory>
 #include <Rtypes.h>
 #include <TObject.h>
+
 #include "GETMath2.h"
+
+#include <memory>
 
 class TBuffer;
 class TClass;

@@ -1,21 +1,25 @@
 #include "AtROOTUnpacker.h"
 
-#include <TTreeReaderValue.h>
-#include <fairlogger/Logger.h>
-#include <iostream>
-#include <string>
-#include <utility>
-
 #include "AtMap.h"
+#include "AtPad.h"
 #include "AtPedestal.h"
 #include "AtRawEvent.h"
+
+#include <FairLogger.h>
+
+#include <Rtypes.h>
+#include <TFile.h>
+#include <TObject.h> // for TObject
 #include <TTree.h>
 #include <TTreeReader.h>
 #include <TTreeReaderArray.h>
-#include <TFile.h>
-#include "AtPad.h"
+#include <TTreeReaderValue.h>
+
 #include "PadReference.h"
-#include <Rtypes.h>
+
+#include <iostream>
+#include <string>
+#include <utility>
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

@@ -2,9 +2,10 @@
 #define GETLAYEREDFRAME
 
 #include <Rtypes.h>
-#include <iosfwd>
 
 #include "GETLayerHeader.h"
+
+#include <iosfwd>
 
 class GETBasicFrame;
 class TBuffer;

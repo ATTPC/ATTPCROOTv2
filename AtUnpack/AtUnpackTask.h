@@ -6,13 +6,15 @@
 #ifndef _ATUNPACKTASK_H_
 #define _ATUNPACKTASK_H_
 
-#include <Rtypes.h>
+#include "AtUnpacker.h"
+
 #include <FairTask.h>
+
+#include <Rtypes.h>
 #include <TClonesArray.h>
+
 #include <memory>
 #include <string>
-
-#include "AtUnpacker.h"
 
 class AtRawEvent;
 class AtMap;

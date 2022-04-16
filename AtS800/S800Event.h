@@ -9,8 +9,8 @@
 #ifndef S800EVENT_H
 #define S800EVENT_H
 
-#include <TObject.h>
 #include <Rtypes.h>
+#include <TObject.h>
 
 #include "S800.h"
 

@@ -4,7 +4,9 @@
 #include <Rtypes.h>
 #include <TObject.h>
 #include <TVector3.h>
+
 #include <map>
+#include <memory>
 
 class TBuffer;
 class TClass;

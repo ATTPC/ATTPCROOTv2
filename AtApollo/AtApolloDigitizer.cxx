@@ -8,20 +8,22 @@
 
 #include "AtApolloDigitizer.h"
 
-#include <cstdlib>
-#include <FairRuntimeDb.h>
-#include <FairTask.h>
-#include <cmath>
-#include <FairRootManager.h>
-#include <TClonesArray.h>
-#include <TRandom.h>
-#include <FairLogger.h>
-#include <cmath>
-#include <iostream>
-#include <memory>
-
 #include "AtApolloCrystalCalData.h"
 #include "AtApolloPoint.h"
+
+#include <FairLogger.h>
+#include <FairRootManager.h>
+#include <FairRuntimeDb.h>
+#include <FairTask.h>
+
+#include <TClonesArray.h>
+#include <TObject.h>
+#include <TRandom.h>
+
+#include <algorithm>
+#include <cmath>
+#include <iostream>
+#include <vector>
 
 using std::cerr;
 using std::cout;

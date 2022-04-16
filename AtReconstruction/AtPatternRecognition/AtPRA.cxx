@@ -1,11 +1,28 @@
 #include "AtPRA.h"
-// FairRoot classes
-#include <FairRuntimeDb.h>
-#include <FairRun.h>
-#include <pcl/sample_consensus/model_types.h>
 
-// STL
-#include <algorithm>
+#include "AtHit.h"        // for AtHit, XYZPoint
+#include "AtHitCluster.h" // for AtHitCluster
+#include "AtRansac.h"     // for AtRansac
+#include "AtTrack.h"      // for XYZPoint, AtTrack
+
+#include <Math/Point3D.h>   // for PositionVector3D, Cart...
+#include <Math/Vector3D.h>  // for DisplacementVector3D
+#include <TGraph.h>         // for TGraph
+#include <TMath.h>          // for Power, Sqrt, ATan2, Pi
+#include <TMatrixDSymfwd.h> // for TMatrixDSym
+#include <TMatrixTSym.h>    // for TMatrixTSym
+#include <TVector3.h>       // for TVector3
+
+#include <algorithm>                          // for max, for_each, copy_if
+#include <cmath>                              // for fabs, acos
+#include <cstddef>                            // for size_t
+#include <exception>                          // for exception
+#include <ext/alloc_traits.h>                 // for __alloc_traits<>::valu...
+#include <iostream>                           // for operator<<, basic_ostream
+#include <iterator>                           // for back_insert_iterator
+#include <memory>                             // for shared_ptr, __shared_p...
+#include <pcl/sample_consensus/model_types.h> // for SACMODEL_CIRCLE2D, SAC...
+#include <utility>                            // for make_pair
 
 ClassImp(AtPATTERN::AtPRA);
 

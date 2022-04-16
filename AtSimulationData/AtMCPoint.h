@@ -8,9 +8,10 @@
 #ifndef ATMCPOINT_H
 #define ATMCPOINT_H 1
 
+#include <FairMCPoint.h>
+
 #include <Rtypes.h>
 #include <TString.h>
-#include <FairMCPoint.h>
 #include <TVector3.h>
 
 class TBuffer;

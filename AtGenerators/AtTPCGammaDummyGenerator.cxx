@@ -5,14 +5,16 @@
 
 #include "AtTPCGammaDummyGenerator.h"
 
-#include <cmath>
-#include <cstdio>
+#include <FairLogger.h>
 #include <FairPrimaryGenerator.h>
+
 #include <TDatabasePDG.h>
+#include <TMath.h>
 #include <TParticlePDG.h>
 #include <TRandom.h>
-#include <TMath.h>
-#include <FairLogger.h>
+
+#include <cmath>
+#include <cstdio>
 #include <memory>
 
 AtTPCGammaDummyGenerator::AtTPCGammaDummyGenerator()

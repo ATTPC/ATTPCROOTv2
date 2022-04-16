@@ -1,6 +1,8 @@
 #include "AtCalibration.h"
 
 #include <TString.h>
+
+#include <algorithm>
 #include <fstream> // IWYU pragma: keep
 #include <iostream>
 

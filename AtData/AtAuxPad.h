@@ -9,11 +9,12 @@
 #ifndef AtAUXPAD_H
 #define AtAUXPAD_H
 
+#include "AtPad.h"
+
 #include <Rtypes.h>
+
 #include <string>
 #include <utility>
-
-#include "AtPad.h"
 
 class TBuffer;
 class TClass;

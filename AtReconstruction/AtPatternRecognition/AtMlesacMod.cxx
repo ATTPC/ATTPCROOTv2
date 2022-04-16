@@ -1,10 +1,16 @@
 #include "AtMlesacMod.h"
 
-// FairRoot classes
-#include <FairRuntimeDb.h>
-#include <FairRun.h>
+#include "AtEvent.h" // for AtEvent
+#include "AtHit.h"   // for AtHit
 
-#include <iostream>
+#include <Math/Point3D.h> // for PositionVector3D
+#include <TMath.h>        // for Pi
+#include <TRandom.h>      // for TRandom, gRandom
+
+#include <cmath>    // for cos, sin, pow, sqrt, exp, fabs, acos, atan
+#include <fstream>  // for std
+#include <iterator> // for insert_iterator, inserter
+#include <memory>   // for allocator_traits<>::value_type
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

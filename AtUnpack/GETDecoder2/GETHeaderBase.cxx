@@ -1,11 +1,11 @@
 #include "GETHeaderBase.h"
 
+#include <Rtypes.h>
+
 #include <cmath> // IWYU pragma: keep
 #include <cstring>
 #include <iostream>
 #include <string>
-
-#include <Rtypes.h>
 
 ClassImp(GETHeaderBase);
 

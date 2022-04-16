@@ -54,14 +54,13 @@
 #include <fenv.h>
 #endif
 
+#include <algorithm> // for std::fill_n
+#include <cfloat>    // also for DBL_MAX, DBL_MIN
 #include <cmath>     // for std::pow, std::sqrt
 #include <cstddef>   // for std::ptrdiff_t
 #include <limits>    // for std::numeric_limits<...>::infinity()
-#include <algorithm> // for std::fill_n
 #include <stdexcept> // for std::runtime_error
 #include <string>    // for std::string
-
-#include <cfloat> // also for DBL_MAX, DBL_MIN
 #ifndef DBL_MANT_DIG
 #error The constant DBL_MANT_DIG could not be defined.
 #endif

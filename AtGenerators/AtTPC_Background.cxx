@@ -1,23 +1,20 @@
 #include "AtTPC_Background.h"
 
+#include "AtVertexPropagator.h"
+
+#include <FairIon.h>
+#include <FairParticle.h>
+#include <FairPrimaryGenerator.h>
+#include <FairRunSim.h>
+
+#include <TMath.h>
+#include <TParticle.h>
+#include <TRandom.h>
+
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <iostream>
-#include <algorithm>
-
-#include <FairPrimaryGenerator.h>
-#include <FairIon.h>
-#include <FairParticle.h>
-#include <FairRunSim.h>
-#include <TDatabasePDG.h>
-#include <TRandom.h>
-#include <TMath.h>
-#include <TVirtualMC.h>
-#include <TParticle.h>
-#include "AtStack.h"
-#include "AtVertexPropagator.h"
-
-class TParticlePDG;
 
 constexpr float amu = 931.494;
 

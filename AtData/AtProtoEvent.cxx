@@ -1,9 +1,9 @@
 #include "AtProtoEvent.h"
 
-#include <cstddef>
-#include <algorithm>
-
 #include <Rtypes.h>
+
+#include <algorithm>
+#include <cstddef>
 
 ClassImp(AtProtoEvent);
 

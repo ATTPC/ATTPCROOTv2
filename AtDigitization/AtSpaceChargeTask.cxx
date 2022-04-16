@@ -1,7 +1,7 @@
 #include "AtSpaceChargeTask.h"
 
-#include "AtMCPoint.h"
 #include "AtDigiPar.h"
+#include "AtMCPoint.h"
 
 #include <FairLogger.h>
 #include <FairRunAna.h>

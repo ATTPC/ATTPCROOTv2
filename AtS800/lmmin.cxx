@@ -23,11 +23,12 @@
  * and you think this work is worth it, you can buy me a beer in return.
  */
 
-#include <cstdlib>
-#include <cstdio>
-#include <cmath>
-#include <cfloat>
 #include "lmmin.h"
+
+#include <cfloat>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
 
 /*****************************************************************************/
 /*  set numeric constants                                                    */

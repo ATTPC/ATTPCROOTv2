@@ -8,11 +8,15 @@
 #include "AtPSA.h"
 #include "AtRawEvent.h"
 
+#include <FairRootManager.h> // for FairRootManager
+
+#include <TObject.h> // for TObject
+
+#include <map>     // for allocator, operator!=, _Rb_tree_const_i...
+#include <utility> // for pair
+
 // AtTPCRoot Classes
 #include <TClonesArray.h>
-
-// stdlib headers
-#include <iostream>
 
 /*
 #ifdef _OPENMP

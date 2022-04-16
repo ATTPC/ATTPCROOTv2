@@ -4,26 +4,27 @@
 // -------------------------------------------------------------------------
 #include "AtTPCXSReader.h"
 
+#include "AtVertexPropagator.h"
+
+#include <FairIon.h>
+#include <FairParticle.h>
+#include <FairPrimaryGenerator.h>
+#include <FairRunSim.h>
+
+#include <TDatabasePDG.h>
 #include <TH2.h>
+#include <TMath.h>
+#include <TParticle.h>
+#include <TParticlePDG.h>
+#include <TRandom.h>
+#include <TVector3.h>
+
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
-#include <algorithm>
-
-#include "AtVertexPropagator.h"
-#include <FairPrimaryGenerator.h>
-#include <FairIon.h>
-#include <FairParticle.h>
-#include <FairRunSim.h>
-#include <TDatabasePDG.h>
-#include <TParticlePDG.h>
-#include <TRandom.h>
-#include <TMath.h>
-#include <TVector3.h>
-#include <TVirtualMC.h>
-#include <TParticle.h>
-#include "AtStack.h"
 
 using std::cout;
 using std::endl;

@@ -1,22 +1,25 @@
 #include "AtPSA.h"
 
-#include <fairlogger/Logger.h>
-#include <pstl/glue_algorithm_defs.h>
+#include <FairLogger.h>
+
+#include <algorithm>
 #include <iostream>
 #include <iterator>
 
 // FairRoot classes
-#include <FairRuntimeDb.h>
 #include <FairRun.h>
+#include <FairRuntimeDb.h>
 // ROOT classes
-#include <TClonesArray.h>
-#include <TVector3.h>
-#include <TMath.h>
-#include "AtDigiPar.h"
 #include "AtCalibration.h"
+#include "AtDigiPar.h"
 #include "AtHit.h"
 #include "AtMCPoint.h"
+
 #include <Rtypes.h>
+#include <TClonesArray.h>
+#include <TMath.h>
+#include <TObject.h> // for TObject
+#include <TVector3.h>
 
 using std::distance;
 using std::max_element;

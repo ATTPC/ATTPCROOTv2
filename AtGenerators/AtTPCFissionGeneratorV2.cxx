@@ -1,22 +1,23 @@
 #include "AtTPCFissionGeneratorV2.h"
 
+#include "AtVertexPropagator.h"
+
+#include <FairIon.h>
+#include <FairPrimaryGenerator.h>
+#include <FairRunSim.h>
+
+#include <TDatabasePDG.h>
+#include <TFile.h>
+#include <TObject.h> // for TObject
+#include <TParticlePDG.h>
 #include <TTree.h>
+
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
-#include <algorithm>
 #include <map>
 #include <utility>
-
-#include <TFile.h>
-#include <FairPrimaryGenerator.h>
-#include <FairIon.h>
-#include <FairRunSim.h>
-#include <TDatabasePDG.h>
-#include <TParticlePDG.h>
-#include <TVirtualMC.h>
-#include "AtStack.h"
-#include "AtVertexPropagator.h"
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

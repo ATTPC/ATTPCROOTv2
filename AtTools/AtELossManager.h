@@ -9,8 +9,10 @@
 
 #include <Rtypes.h>
 #include <TObject.h>
-#include <string>
+
 #include <memory>
+#include <string>
+#include <vector>
 
 class TBuffer;
 class TClass;

@@ -6,9 +6,10 @@
 #ifndef AtTPCFISSIONGENERAtOR_H
 #define AtTPCFISSIONGENERAtOR_H
 
+#include <FairGenerator.h>
+
 #include <Rtypes.h>
 #include <TString.h>
-#include <FairGenerator.h>
 
 class FairPrimaryGenerator;
 class TDatabasePDG;

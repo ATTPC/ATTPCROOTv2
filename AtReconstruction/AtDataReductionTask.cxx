@@ -1,14 +1,16 @@
 #include "AtDataReductionTask.h"
 
-#include <FairTask.h>
-#include <TObject.h>
-#include <fairlogger/Logger.h>
-#include <memory>
-
 #include "AtRawEvent.h"
-#include <FairRunAna.h>
+
+#include <FairLogger.h>
 #include <FairRootManager.h>
+#include <FairRunAna.h>
+#include <FairTask.h>
+
 #include <TClonesArray.h>
+#include <TObject.h>
+
+#include <memory>
 
 AtDataReductionTask::AtDataReductionTask() : reduceFunc(nullptr), fInputBranchName("AtRawEvent") {}
 

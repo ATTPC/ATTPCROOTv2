@@ -1,16 +1,12 @@
 #include "AtPulseTask.h"
 
+#include <FairLogger.h>
 #include <FairTask.h>
+
+#include <Math/Vector3D.h>
 #include <TAxis.h>
 #include <TObject.h>
-#include <fairlogger/Logger.h>
-#include <Math/Vector3D.h>
 // STL class headers
-#include <cmath>
-#include <iostream>
-#include <cstdio>
-#include <utility>
-
 #include "AtDigiPar.h"
 #include "AtMCPoint.h"
 #include "AtMap.h"
@@ -18,12 +14,20 @@
 #include "AtRawEvent.h"
 #include "AtSimulatedPoint.h"
 
+#include <algorithm> // for max
+#include <cmath>
+#include <cstdio>
+#include <iostream>
+#include <utility>
+
 // Fair class header
 #include <FairRootManager.h>
 #include <FairRunAna.h>
 #include <FairRuntimeDb.h>
 
 // ROOT headers
+#include <FairParSet.h> // for FairParSet
+
 #include <TClonesArray.h>
 #include <TF1.h>
 #include <TH1.h>

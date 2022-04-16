@@ -1,9 +1,10 @@
 #ifndef AtEVENTMANAGER_H
 #define AtEVENTMANAGER_H
 
+#include <FairRunAna.h>
+
 #include <Rtypes.h>
 #include <TEveEventManager.h>
-#include <FairRunAna.h>
 
 class FairRootManager;
 class FairTask;

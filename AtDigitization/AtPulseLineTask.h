@@ -8,11 +8,13 @@
 #ifndef AtPULSELINETASK_H
 #define AtPULSELINETASK_H
 
+#include "AtPulseTask.h"
+
 #include <Rtypes.h>
+
 #include <map>
 #include <vector>
 
-#include "AtPulseTask.h"
 #include "Math/Vector3Dfwd.h"
 
 class AtSimulatedLine;

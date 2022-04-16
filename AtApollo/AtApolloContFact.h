@@ -8,9 +8,9 @@
 #ifndef APOLLOCONTFACT_H
 #define APOLLOCONTFACT_H
 
-#include <Rtypes.h>
-
 #include <FairContFact.h>
+
+#include <Rtypes.h>
 
 class FairParSet;
 class TBuffer;

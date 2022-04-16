@@ -1,9 +1,9 @@
 #include "GETBasicFrameHeader.h"
 
+#include <Rtypes.h>
+
 #include <cstring>
 #include <iostream>
-
-#include <Rtypes.h>
 
 ClassImp(GETBasicFrameHeader)
 

@@ -1,20 +1,24 @@
 #include "AtTriggerTask.h"
 
+#include "AtTrigger.h"
+
+#include <FairLogger.h>
+#include <FairParSet.h>
 #include <FairTask.h>
+
 #include <TClonesArray.h>
-#include <fairlogger/Logger.h>
-#include <cstddef>
+#include <TObject.h>
+
 #include <iostream>
 #include <memory>
-
-#include "AtTrigger.h"
 // Fair class header
-#include <FairRootManager.h>
-#include <FairRunAna.h>
-#include <FairRuntimeDb.h>
 #include "AtEvent.h"
 #include "AtRawEvent.h"
 #include "AtTriggerPar.h"
+
+#include <FairRootManager.h>
+#include <FairRunAna.h>
+#include <FairRuntimeDb.h>
 
 AtTriggerTask::AtTriggerTask()
    : FairTask("AtTriggerTask"), fIsPersistent(kTRUE), fAtRawEventArray_acc("AtRawEvent", 1),

@@ -1,13 +1,14 @@
 #ifndef ATGENFIT_H
 #define ATGENFIT_H
 
+#include "AtFitter.h"
+
 #include <Rtypes.h>
 #include <Track.h>
+
 #include <memory>
 #include <string>
 #include <vector>
-
-#include "AtFitter.h"
 
 class AtHitCluster;
 class AtTrack;

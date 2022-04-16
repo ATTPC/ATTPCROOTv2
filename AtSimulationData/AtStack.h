@@ -32,14 +32,16 @@
 #ifndef AtStack_H
 #define AtStack_H
 
-#include <FairGenericStack.h> // for FairGenericStack
-#include <Rtypes.h>           // for Int_t, Double_t, Bool_t, etc
-#include <TMCProcess.h>       // for TMCProcess
-#include <map>                // for map, map<>::iterator
-#include <stack>              // for stack
-#include <utility>            // for pair
-
 #include "AtDetectorList.h" // for DetectorId
+
+#include <FairGenericStack.h> // for FairGenericStack
+
+#include <Rtypes.h>     // for Int_t, Double_t, Bool_t, etc
+#include <TMCProcess.h> // for TMCProcess
+
+#include <map>     // for map, map<>::iterator
+#include <stack>   // for stack
+#include <utility> // for pair
 
 class TClonesArray;
 class TParticle;

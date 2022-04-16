@@ -1,9 +1,9 @@
 #ifndef AtPSASIMPLE_H
 #define AtPSASIMPLE_H
 
-#include <Rtypes.h>
-
 #include "AtPSA.h"
+
+#include <Rtypes.h>
 
 class AtEvent;
 class AtRawEvent;

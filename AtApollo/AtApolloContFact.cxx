@@ -8,10 +8,9 @@
 #include "AtApolloContFact.h"
 
 #include <FairContFact.h>
-#include <TString.h>
-#include <cstddef>
-
 #include <FairRuntimeDb.h>
+
+#include <TString.h>
 
 class FairParSet;
 

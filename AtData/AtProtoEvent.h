@@ -1,11 +1,13 @@
 #ifndef AtPROTOEVENT_H
 #define AtPROTOEVENT_H
 
+#include "AtProtoQuadrant.h"
+
 #include <Rtypes.h>
 #include <TNamed.h>
-#include <vector>
 
-#include "AtProtoQuadrant.h"
+#include <cstddef>
+#include <vector>
 
 class TBuffer;
 class TClass;

@@ -5,11 +5,12 @@
 #include <TString.h>
 #include <TVector3.h>
 // STL
-#include <map>
-#include <cstddef>
-#include <utility>
-
 #include "AtCalibration.h"
+
+#include <cstddef>
+#include <map>
+#include <memory>
+#include <utility>
 
 class TClonesArray;
 // AtTPCROOT classes

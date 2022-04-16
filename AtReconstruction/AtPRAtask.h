@@ -1,21 +1,20 @@
 #ifndef AtPRATASK_H
 #define AtPRATASK_H
 
-#include <vector>
+#include <FairTask.h> // for FairTask, InitStatus
 
-// ROOT
-#include <TClonesArray.h>
+#include <Rtypes.h>       // for Int_t, Double_t, Bool_t, THashConsistencyH...
+#include <TClonesArray.h> // for TClonesArray
 
-// AtTPCROOT classes
-#include "AtEvent.h"
-#include "AtPatternEvent.h"
-#include "AtDigiPar.h"
-#include "AtHit.h"
-#include "AtPRA.h"
-
-// FAIRROOT classes
-#include <FairTask.h>
-#include <FairLogger.h>
+#include <stddef.h> // for size_t
+class AtDigiPar;
+class FairLogger;
+class TBuffer;
+class TClass;
+class TMemberInspector;
+namespace AtPATTERN {
+class AtPRA;
+}
 
 class AtPRAtask : public FairTask {
 private:

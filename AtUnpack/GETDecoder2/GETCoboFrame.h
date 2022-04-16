@@ -2,9 +2,10 @@
 #define GETCOBOFRAME
 
 #include <Rtypes.h>
-#include <iosfwd>
 
 #include "GETBasicFrame.h"
+
+#include <iosfwd>
 
 class TBuffer;
 class TClass;

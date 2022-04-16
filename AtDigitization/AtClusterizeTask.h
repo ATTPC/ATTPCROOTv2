@@ -8,16 +8,18 @@
 #ifndef AtClusterizeTask_H
 #define AtClusterizeTask_H
 
-#include <Math/Vector3Dfwd.h>
-#include <Rtypes.h>
-#include <math.h>
-#include <Math/Vector3D.h>
 #include <FairTask.h>
 
-class AtGas;
+#include <Math/Vector3D.h>
+#include <Math/Vector3Dfwd.h>
+#include <Rtypes.h>
+#include <TClonesArray.h>
+
+#include <cmath>
+#include <memory>
+
 class AtDigiPar;
 class AtMCPoint;
-class TClonesArray;
 class TBuffer;
 class TClass;
 class TMemberInspector;

@@ -7,21 +7,22 @@
 
 #include "AtTpcProtoMap.h"
 
+#include <Math/Point2D.h>
+#include <Rtypes.h>
 #include <TCollection.h>
 #include <TDirectory.h>
 #include <TFile.h>
 #include <TH2Poly.h>
-#include <cstdlib>
-#include <Math/Point2D.h>
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-#include <memory>
-#include <utility>
-
 #include <TKey.h>
 #include <TMultiGraph.h>
-#include <Rtypes.h>
+#include <TObject.h>
+
+#include <algorithm>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <memory>
+#include <utility>
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

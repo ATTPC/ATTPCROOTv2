@@ -1,26 +1,49 @@
+
 #include "AtRansac.h"
-#include <Math/GenVector/RotationX.h>
+
+#include "AtEvent.h" // for AtEvent
+#include "AtHit.h"   // for XYZVector, AtHit
+
+#include <FairLogger.h> // for Logger, LOG
+
+#include <Math/Functor.h>             // for Functor, FunctorHandl...
+#include <Math/GenVector/RotationX.h> // for RotationX
+#include <Math/Minimizer.h>           // for Minimizer
+#include <Math/Point3D.h>             // for PositionVector3D
+#include <Math/Vector3D.h>            // for Cartesian3D, Displace...
+#include <Rtypes.h>                   // for TGenericClassInfo
+#include <TError.h>                   // for gErrorIgnoreLevel
+#include <TMath.h>                    // for Pi, Sqrt, ACos
+#include <TMathBase.h>                // for Abs
+
+#include <boost/core/checked_delete.hpp>  // for checked_delete
+#include <boost/smart_ptr/shared_ptr.hpp> // for shared_ptr
+
+#include <Eigen/Core>              // for aligned_allocator
+#include <Fit/FitConfig.h>         // for FitConfig
+#include <Fit/FitResult.h>         // for FitResult
+#include <Fit/Fitter.h>            // for Fitter
+#include <Fit/ParameterSettings.h> // for ParameterSettings
+#include <algorithm>               // for max, find_if, min, copy
+#include <cmath>                   // for cos, sin, pow, sqrt
+#include <ext/alloc_traits.h>      // for __alloc_traits<>::val...
+#include <iostream>                // for cout
+#include <iterator>                // for distance
+#include <memory>                  // for allocator_traits<>::v...
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshadow"
-#include <pcl/console/parse.h>
-#include <pcl/filters/extract_indices.h>
-#include <pcl/io/pcd_io.h>
-#include <pcl/point_types.h>
-#include <pcl/sample_consensus/ransac.h>
-#include <pcl/sample_consensus/sac_model_plane.h>
-#include <pcl/sample_consensus/sac_model_sphere.h>
-#pragma GCC diagnostic pop
-#include <pcl/ModelCoefficients.h>
-#include <pcl/sample_consensus/method_types.h>
-#include <pcl/sample_consensus/model_types.h>
-#include <pcl/segmentation/sac_segmentation.h>
-#include <pcl/filters/voxel_grid.h>
-#include <pcl/filters/extract_indices.h>
+#include <pcl/ModelCoefficients.h>             // for ModelCoefficients
+#include <pcl/PointIndices.h>                  // for PointIndices, PointIn...
+#include <pcl/console/print.h>                 // for setVerbosityLevel
+#include <pcl/filters/extract_indices.h>       // for ExtractIndices
+#include <pcl/point_cloud.h>                   // for PointCloud, PointClou...
+#include <pcl/point_types.h>                   // for PointXYZRGBA, _PointX...
+#include <pcl/sample_consensus/method_types.h> // for SAC_RANSAC
+#include <pcl/sample_consensus/model_types.h>  // for SACMODEL_LINE
+#include <pcl/segmentation/sac_segmentation.h> // for SACSegmentation
 
-// FairRoot classes
-#include <FairRuntimeDb.h>
-#include <FairRun.h>
+#pragma GCC diagnostic pop
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

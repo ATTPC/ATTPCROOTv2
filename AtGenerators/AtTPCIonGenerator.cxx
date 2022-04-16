@@ -4,22 +4,24 @@
 // -------------------------------------------------------------------------
 #include "AtTPCIonGenerator.h"
 
-#include <FairParticle.h>
-#include <TString.h>
-#include <cmath>
-#include <cstddef>
-#include <iostream>
-
 #include "AtVertexPropagator.h"
-#include <FairPrimaryGenerator.h>
+
 #include <FairIon.h>
+#include <FairParticle.h>
+#include <FairPrimaryGenerator.h>
 #include <FairRunSim.h>
+
 #include <TDatabasePDG.h>
-#include <TParticlePDG.h>
-#include <TObjArray.h>
-#include <TRandom.h>
 #include <TMath.h>
+#include <TObjArray.h>
+#include <TObject.h> // for TObject
 #include <TParticle.h>
+#include <TParticlePDG.h>
+#include <TRandom.h>
+#include <TString.h>
+
+#include <cmath>
+#include <iostream>
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

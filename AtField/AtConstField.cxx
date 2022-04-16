@@ -13,12 +13,14 @@
 // -------------------------------------------------------------------------
 #include "AtConstField.h"
 
+#include "AtFieldPar.h"
+
 #include <FairField.h>
+
 #include <TString.h>
+
 #include <iomanip>
 #include <iostream>
-
-#include "AtFieldPar.h"
 
 using std::cerr;
 using std::cout;

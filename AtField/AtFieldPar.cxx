@@ -13,12 +13,13 @@
 
 #include "AtFieldPar.h"
 
+#include "AtConstField.h"
+
 #include <FairField.h>
 #include <FairParGenericSet.h>
-#include <iostream>
-
-#include "AtConstField.h"
 #include <FairParamList.h>
+
+#include <iostream>
 
 using std::cerr;
 using std::cout;

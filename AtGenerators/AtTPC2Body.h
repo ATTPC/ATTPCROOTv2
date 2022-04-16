@@ -8,9 +8,11 @@
 #ifndef AtTPC2Body_H
 #define AtTPC2Body_H
 
+#include <FairGenerator.h>
+
 #include <Rtypes.h>
 #include <TString.h>
-#include <FairGenerator.h>
+
 #include <vector>
 
 class FairPrimaryGenerator;

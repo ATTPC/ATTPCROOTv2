@@ -1,6 +1,6 @@
-#include <utility>
-
 #include "AtSimulatedLine.h"
+
+#include <utility>
 
 using XYZVector = ROOT::Math::XYZVector;
 

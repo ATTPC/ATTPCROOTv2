@@ -46,19 +46,6 @@ DerivePointerAlignment: false
 DisableFormat:   false
 ExperimentalAutoDetectBinPacking: false
 ForEachMacros:   [ foreach, Q_FOREACH, BOOST_FOREACH ]
-IncludeCategories:
-  - Regex:           '^("|<)T'
-    Priority:        4
-  - Regex:           '^("|<)ROOT/'
-    Priority:        5
-  - Regex:           '^<.*\.h>'
-    Priority:        1
-  - Regex:           '^"(llvm|llvm-c|clang|clang-c)/'
-    Priority:        2
-  - Regex:           '^(<|"(gtest|isl|json)/)'
-    Priority:        3
-  - Regex:           '.*'
-    Priority:        6
 IndentCaseLabels: false
 IndentWidth:     3
 IndentWrappedFunctionNames: false
@@ -78,7 +65,7 @@ PenaltyExcessCharacter: 1000000
 PenaltyReturnTypeOnItsOwnLine: 10
 PointerAlignment: Right
 ReflowComments:  true
-SortIncludes: false
+SortIncludes: true
 IncludeBlocks: Regroup
 SpaceAfterCStyleCast: false
 SpaceBeforeAssignmentOperators: true
@@ -100,19 +87,29 @@ UseTab:          Never
 IncludeCategories:
   - Regex:           '^"At[^/]+\"'
     Priority:        1
-  - Regex:           '^"Fair[^/]+\"'
+
+# FairRoot/FairSoft
+  - Regex:           '^<Fair[^/]+'
     Priority:        2
-  - Regex:           '^"T[^/]+\"'
+
+# ROOT  
+  - Regex:           '^<T[^/]+\.h'
     Priority:        3
-  - Regex:           '^"[^/]+\"'
-    Priority:        10
-  - Regex:           '^"ROOT/'
+  - Regex:           '^<R[^/]+\.h'
+    Priority:        3
+  - Regex:           '^<Math/'
+    Priority:        3
+
+# Boost    		   
+  - Regex:           '^<boost/'
     Priority:        15
-  - Regex:           '^"cling/'
+
+# Mis "header.h" and <header.h>
+  - Regex:           '^"[^/]+\.h'
     Priority:        20
-  - Regex:           '^"clang/'
-    Priority:        30
-  - Regex:           '^"llvm/'
-    Priority:        40
+  - Regex:           '^<[^/]+\.h'
+    Priority:        20
+
+# system headers
   - Regex:           '^<'
     Priority:        50

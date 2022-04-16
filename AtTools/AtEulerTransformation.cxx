@@ -1,9 +1,9 @@
 #include "AtEulerTransformation.h"
 
+#include <Rtypes.h>
+
 #include <cmath>
 #include <iostream>
-
-#include <Rtypes.h>
 
 void AtEulerTransformation::DoTheEulerTransformationBeam2Lab()
 {

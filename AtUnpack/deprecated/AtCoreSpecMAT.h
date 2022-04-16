@@ -7,6 +7,13 @@
 #ifndef _ATCORESPECMAT_H_
 #define _ATCORESPECMAT_H_
 
+#include "AtMap.h"
+#include "AtPedestal.h"
+#include "AtRawEvent.h"
+#include "AtSpecMATMap.h"
+#include "AtTpcMap.h"
+#include "AtTpcProtoMap.h"
+
 #include <TClonesArray.h>
 #include <TFile.h>
 #include <TObject.h>
@@ -14,13 +21,6 @@
 #include <TTree.h>
 #include <TTreeReader.h>
 #include <TTreeReaderArray.h>
-
-#include "AtMap.h"
-#include "AtPedestal.h"
-#include "AtRawEvent.h"
-#include "AtSpecMATMap.h"
-#include "AtTpcMap.h"
-#include "AtTpcProtoMap.h"
 
 #include "GETDecoder2.h"
 

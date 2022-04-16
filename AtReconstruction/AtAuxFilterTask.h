@@ -10,8 +10,9 @@
 // FairRoot classes
 #include <FairTask.h>
 // ROOT classes
-#include <TString.h>
 #include <Rtypes.h>
+#include <TString.h>
+
 #include <string>
 #include <vector>
 

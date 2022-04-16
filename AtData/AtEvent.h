@@ -1,19 +1,21 @@
 #ifndef AtEVENT_H
 #define AtEVENT_H
 
+#include "AtAuxPad.h"
+#include "AtHit.h"
+
+#include <FairLogger.h>
+
 #include <Rtypes.h>
 #include <TNamed.h>
-#include <FairLogger.h>
-#include <map>
-#include <vector>
+
 #include <algorithm>
 #include <array>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <utility>
-
-#include "AtHit.h"
-#include "AtAuxPad.h"
+#include <vector>
 
 class TBuffer;
 class TClass;

@@ -6,10 +6,11 @@
  *                                                                    *
  *********************************************************************/
 
-#include <FairLogger.h>
-#include <memory>
-
 #include "AtPad.h"
+
+#include <FairLogger.h>
+
+#include <memory>
 
 ClassImp(AtPad);
 

@@ -10,17 +10,18 @@
 #ifndef AtRAWEVENT_H
 #define AtRAWEVENT_H
 
+#include "AtAuxPad.h"
+
 #include <Rtypes.h>
 #include <TNamed.h>
-#include <vector>
-#include <map>
+
 #include <algorithm>
 #include <cstddef>
+#include <map>
 #include <memory>
 #include <string>
 #include <utility>
-
-#include "AtAuxPad.h"
+#include <vector>
 
 class AtPad;
 class TBuffer;

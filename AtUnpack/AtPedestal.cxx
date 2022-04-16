@@ -12,10 +12,11 @@
 
 #include "AtPedestal.h"
 
-#include <iostream>
+#include <Rtypes.h>
 
 #include "GETMath2.h"
-#include <Rtypes.h>
+
+#include <iostream>
 
 ClassImp(AtPedestal);
 

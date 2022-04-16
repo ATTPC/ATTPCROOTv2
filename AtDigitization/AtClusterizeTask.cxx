@@ -1,21 +1,25 @@
 #include "AtClusterizeTask.h"
 
+#include <FairLogger.h>
 #include <FairParSet.h>
 #include <FairTask.h>
+
 #include <TMathBase.h>
 #include <TObject.h>
 #include <TString.h>
-#include <fairlogger/Logger.h>
+
 #include <iostream>
 #include <memory>
 
 // Fair class header
+#include "AtDigiPar.h"
+#include "AtMCPoint.h"
+#include "AtSimulatedPoint.h"
+
 #include <FairRootManager.h>
 #include <FairRunAna.h>
 #include <FairRuntimeDb.h>
-#include "AtDigiPar.h"
-#include "AtSimulatedPoint.h"
-#include "AtMCPoint.h"
+
 #include <TClonesArray.h>
 #include <TMath.h>
 #include <TRandom.h>

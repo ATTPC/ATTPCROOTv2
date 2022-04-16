@@ -5,10 +5,11 @@
 #ifndef ATCLUSTERIZELINETASK_H
 #define ATCLUSTERIZELINETASK_H
 
-#include <FairTask.h>
-#include <Rtypes.h>
-
 #include "AtClusterizeTask.h"
+
+#include <FairTask.h>
+
+#include <Rtypes.h>
 
 class TBuffer;
 class TClass;

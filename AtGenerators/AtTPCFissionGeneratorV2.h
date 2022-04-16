@@ -2,9 +2,11 @@
 #ifndef AtTPCFISSIONGENERAtORV2_H
 #define AtTPCFISSIONGENERAtORV2_H
 
+#include <FairGenerator.h>
+
 #include <Rtypes.h>
 #include <TString.h>
-#include <FairGenerator.h>
+
 #include <vector>
 
 class FairPrimaryGenerator;

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <pcl/io/io.h>
+#include <vector>
 
 namespace mst {
 struct edge {

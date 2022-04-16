@@ -7,12 +7,13 @@
    Adam Anthony 7/16/21
 */
 
+#include "AtFilter.h"
+
 #include <Rtypes.h>
-#include <vector>
+
 #include <array>
 #include <memory>
-
-#include "AtFilter.h"
+#include <vector>
 
 // Class forward declerations
 class AtMap;

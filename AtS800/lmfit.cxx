@@ -8,9 +8,9 @@
  * Author:   Shumpei Noji
  */
 
-#include <cmath>
-
 #include "lmfit.h"
+
+#include <cmath>
 
 double sechs(double x, const double *p)
 {

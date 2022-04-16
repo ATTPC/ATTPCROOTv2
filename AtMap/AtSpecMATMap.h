@@ -8,10 +8,10 @@
 #ifndef ATSPECMATMAP_H
 #define ATSPECMATMAP_H
 
+#include "AtMap.h"
+
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
-
-#include "AtMap.h"
 
 class TBuffer;
 class TClass;

@@ -1,12 +1,13 @@
 #ifndef ATFILTERCALIBRATE_H
 #define ATFILTERCALIBRATE_H
 
-#include <unordered_map>
+#include "AtFilter.h"
+
+#include <TString.h>
+
 #include <iosfwd>
 #include <memory>
-
-#include "AtFilter.h"
-#include <TString.h>
+#include <unordered_map>
 
 class AtPad;
 class AtRawEvent;

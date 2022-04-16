@@ -4,16 +4,17 @@
 //  Adapted for AtTPCROOT by Y. Ayyad (ayyadlim@nscl.msu.edu)
 // =================================================
 
-#include <iostream>
-#include <fstream>
-#include <cmath>
-#include <thread>
-
 #include "AtCore2.h"
+
 #include <FairLogger.h>
 
 #include "GETCoboFrame.h"
 #include "GETLayeredFrame.h"
+
+#include <cmath>
+#include <fstream>
+#include <iostream>
+#include <thread>
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

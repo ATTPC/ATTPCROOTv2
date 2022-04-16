@@ -1,11 +1,12 @@
 #include "AtELossManager.h"
 
+#include <Rtypes.h>
 #include <TGraph.h>
+
+#include <algorithm>
+#include <cmath>
 #include <fstream> // IWYU pragma: keep
 #include <iostream>
-#include <cmath>
-
-#include <Rtypes.h>
 
 ClassImp(AtTools::AtELossManager);
 

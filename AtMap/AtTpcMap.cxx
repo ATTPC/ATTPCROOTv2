@@ -7,23 +7,24 @@
 
 #include "AtTpcMap.h"
 
-#include <cmath>
+#include <FairLogger.h>
+
+#include <Math/Point2D.h>
+#include <Rtypes.h>
+#include <TH2Poly.h>
+#include <TMath.h>
+#include <TMathBase.h>
+
 #include <boost/multi_array/base.hpp>
 #include <boost/multi_array/extent_gen.hpp>
 #include <boost/multi_array/multi_array_ref.hpp>
 #include <boost/multi_array/subarray.hpp>
-#include <Math/Point2D.h>
+
 #include <algorithm>
-#include <iostream>
+#include <cmath>
 #include <fstream> // IWYU pragma: keep
+#include <iostream>
 #include <vector>
-
-#include <TH2Poly.h>
-#include <Rtypes.h>
-#include <TMath.h>
-#include <TMathBase.h>
-
-#include <FairLogger.h>
 
 #undef BOOST_MULTI_ARRAY_NO_GENERATORS
 #define BOOST_MULTI_ARRAY_NO_GENERATORS

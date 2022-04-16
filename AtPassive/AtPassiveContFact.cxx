@@ -24,12 +24,13 @@
 #include "AtPassiveContFact.h"
 
 #include <FairContFact.h>
-#include <Rtypes.h>
-#include <iosfwd>
-
 #include <FairRuntimeDb.h> // for FairRuntimeDb
-#include <TList.h>         // for TList
-#include <TString.h>       // for TString
+
+#include <Rtypes.h>
+#include <TList.h>   // for TList
+#include <TString.h> // for TString
+
+#include <iosfwd>
 
 class FairParSet;
 

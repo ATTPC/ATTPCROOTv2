@@ -8,8 +8,9 @@
 #ifndef APOLLOPOINT_H
 #define APOLLOPOINT_H 1
 
-#include <Rtypes.h>
 #include <FairMCPoint.h>
+
+#include <Rtypes.h>
 #include <TVector3.h>
 
 class TBuffer;

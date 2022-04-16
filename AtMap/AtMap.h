@@ -9,17 +9,19 @@
 #ifndef ATMAP_H
 #define ATMAP_H
 
-#include <boost/multi_array.hpp>
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
 #include <TNamed.h>
 #include <TString.h>
-#include <unordered_map>
-#include <map>
-#include <iosfwd>
-#include <string>
+
+#include <boost/multi_array.hpp>
 
 #include "PadReference.h"
+
+#include <iosfwd>
+#include <map>
+#include <string>
+#include <unordered_map>
 
 class TH2Poly;
 class TXMLNode;

@@ -9,10 +9,10 @@
 #include <memory>
 
 // AtTPCROOT classes
-#include "AtRawEvent.h"
 #include "AtEvent.h"
 #include "AtHit.h"
 #include "AtPad.h"
+#include "AtRawEvent.h"
 
 using std::distance;
 using std::max_element;

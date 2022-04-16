@@ -1,9 +1,9 @@
 #ifndef STCONTFACT_H
 #define STCONTFACT_H
 
-#include <Rtypes.h>
-
 #include <FairContFact.h>
+
+#include <Rtypes.h>
 
 class FairParSet;
 class TBuffer;

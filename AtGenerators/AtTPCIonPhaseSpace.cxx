@@ -1,22 +1,22 @@
 #include "AtTPCIonPhaseSpace.h"
 
+#include "AtVertexPropagator.h"
+
+#include <FairIon.h>
+#include <FairPrimaryGenerator.h>
+#include <FairRunSim.h>
+
+#include <TDatabasePDG.h>
+#include <TGenPhaseSpace.h>
+#include <TLorentzVector.h>
+#include <TMath.h>
+#include <TParticlePDG.h>
 #include <TString.h>
+#include <TVector3.h>
+
+#include <algorithm>
 #include <cmath>
 #include <iostream>
-#include <algorithm>
-
-#include <FairPrimaryGenerator.h>
-#include <FairIon.h>
-#include <FairRunSim.h>
-#include <TDatabasePDG.h>
-#include <TParticlePDG.h>
-#include <TMath.h>
-#include <TLorentzVector.h>
-#include <TVector3.h>
-#include <TGenPhaseSpace.h>
-#include <TVirtualMC.h>
-#include "AtStack.h"
-#include "AtVertexPropagator.h"
 
 Int_t AtTPCIonPhaseSpace::fgNIon = 0;
 

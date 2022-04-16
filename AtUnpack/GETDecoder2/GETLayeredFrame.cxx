@@ -1,7 +1,6 @@
 #include "GETLayeredFrame.h"
 
 #include <TClonesArray.h>
-#include <cstddef>
 
 #include "GETBasicFrame.h"
 

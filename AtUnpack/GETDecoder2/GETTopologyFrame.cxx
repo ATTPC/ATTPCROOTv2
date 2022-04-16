@@ -1,9 +1,9 @@
 #include "GETTopologyFrame.h"
 
+#include <Rtypes.h>
+
 #include <cstring>
 #include <iostream>
-
-#include <Rtypes.h>
 
 ClassImp(GETTopologyFrame)
 

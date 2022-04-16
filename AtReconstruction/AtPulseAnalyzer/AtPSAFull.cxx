@@ -1,26 +1,27 @@
 #include "AtPSAFull.h"
 
-// FairRoot classes
-#include <FairRuntimeDb.h>
-#include <FairRun.h>
-
 // AtTPCROOT classes
-#include "AtRawEvent.h"
 #include "AtEvent.h"
-#include "AtDigiPar.h"
 #include "AtHit.h"
+#include "AtRawEvent.h"
 
 // ROOT classes
-#include <TH1F.h>
 #include <TRotation.h>
-#include <TMatrixD.h>
-#include <TArrayD.h>
-#include <TSpectrum.h>
 
 // STL
-#include <algorithm>
-#include <cmath>
+#include "AtPad.h" // for AtPad
+
+#include <FairLogger.h> // for LOG
+
+#include <Math/Point2D.h> // for PositionVector2D
+#include <TMath.h>        // for Pi
+#include <TVector3.h>     // for TVector3
+
+#include <array>    // for array
+#include <iostream> // for basic_ostream::operator<<, operator<<
 #include <map>
+#include <memory>  // for allocator_traits<>::value_type
+#include <utility> // for pair
 
 /*
 #ifdef _OPENMP

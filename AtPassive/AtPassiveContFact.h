@@ -15,7 +15,8 @@
 #define PNDPASSIVECONTFACT_H
 
 #include <FairContFact.h> // for FairContFact, etc
-#include <Rtypes.h>       // for AtPassiveContFact::Class, etc
+
+#include <Rtypes.h> // for AtPassiveContFact::Class, etc
 
 class FairParSet;
 class TBuffer;

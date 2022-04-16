@@ -1,8 +1,8 @@
 #include "S800.h"
 
-#include <cstdio>
-
 #include "S800defs.h"
+
+#include <cstdio>
 
 int S800::DecodeS800(unsigned short *pevent, unsigned short twords)
 {

@@ -2,6 +2,8 @@
 
 #include <TEnv.h>
 #include <TString.h>
+
+#include <memory>
 #include <string>
 
 S800Settings::S800Settings() = default;
