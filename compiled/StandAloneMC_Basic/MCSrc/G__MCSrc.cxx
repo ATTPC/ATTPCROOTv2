@@ -3,33 +3,33 @@
 #define R__DICTIONARY_FILENAME G__MCSrc
 
 /*******************************************************************/
+#include <assert.h>
+#include <math.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
-#include <assert.h>
 #define G__DICTIONARY
 #include <RConfig.h>
+#include <TBuffer.h>
 #include <TClass.h>
 #include <TDictAttributeMap.h>
-#include <TInterpreter.h>
-#include <TROOT.h>
-#include <TBuffer.h>
-#include <TMemberInspector.h>
-#include <TInterpreter.h>
-#include <TVirtualMutex.h>
 #include <TError.h>
+#include <TInterpreter.h>
+#include <TMemberInspector.h>
+#include <TROOT.h>
+#include <TVirtualMutex.h>
 
 #ifndef G__ROOT
 #define G__ROOT
 #endif
 
 #include <RtypesImp.h>
-#include <TIsAProxy.h>
-#include <TFileMergeInfo.h>
-#include <algorithm>
 #include <TCollectionProxyInfo.h>
+#include <TFileMergeInfo.h>
+#include <TIsAProxy.h>
+
+#include <algorithm>
 /*******************************************************************/
 
 #include <TDataMember.h>
@@ -40,9 +40,9 @@ namespace std {
 using namespace std;
 
 // Header files passed as explicit arguments
-#include "/Users/Yassid/fair_install_ROOT6/ATTPCROOTv2/compiled/StandAloneMC_Basic/MCSrc/MCSrc.hh"
 #include "/Users/Yassid/fair_install_ROOT6/ATTPCROOTv2/compiled/StandAloneMC_Basic/MCSrc/MCMinimization.hh"
 #include "/Users/Yassid/fair_install_ROOT6/ATTPCROOTv2/compiled/StandAloneMC_Basic/MCSrc/MCQMinimization.hh"
+#include "/Users/Yassid/fair_install_ROOT6/ATTPCROOTv2/compiled/StandAloneMC_Basic/MCSrc/MCSrc.hh"
 
 // Header files passed via #pragma extra_include
 
@@ -493,9 +493,9 @@ class __attribute__((annotate("$clingAutoload$MCQMinimization.hh")))  MCQMinimiz
 #endif
 
 #define _BACKWARD_BACKWARD_WARNING_H
-#include "MCSrc.hh"
 #include "MCMinimization.hh"
 #include "MCQMinimization.hh"
+#include "MCSrc.hh"
 
 #undef  _BACKWARD_BACKWARD_WARNING_H
 )DICTPAYLOAD";

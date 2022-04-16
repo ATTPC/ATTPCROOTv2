@@ -40,6 +40,7 @@
 
     # Mappings for PCL
     { include: ["<pcl/impl/point_types.hpp>", "private", "<pcl/point_types.h>", "public"]},
+    { include: ["<pcl/common/impl/io.hpp>", "private", "<pcl/common/io.h>", "public"]},
 
     # Mappings for STL
     { include: ["<pstl/glue_algorithm_defs.h>", "private", "<algorithm>", "public"]}

@@ -72,7 +72,7 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,
    materialEffects->init(new genfit::TGeoMaterialInterface());
    // Parameteres set after initialization
    materialEffects->setGasMediumDensity(gasMediumDensity);
-   materialEffects->setEnergyLossFile(fEnergyLossFile);
+   materialEffects->setEnergyLossFile(fEnergyLossFile, fPDGCode);
 
    // fPDGCandidateArray = new std::vector<Int_t>; // TODO
    // fPDGCandidateArray->push_back(2212);
@@ -115,8 +115,13 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,
    TDatabasePDG *db = TDatabasePDG::Instance();
    db->AddParticle("Deuteron", "Deuteron", 1.875612928, kTRUE, 0, 3, "Ion", 1000010020);
    db->AddParticle("Triton", "Triton", 2.80943211, kFALSE, khShGev / (12.33 * kYear2Sec), 3, "Ion", 1000010030);
-   db->AddParticle("Alpha", "Alpha", 3.7284, kTRUE, khShGev / (12.33 * kYear2Sec), 6, "Ion", 1000020040);
-   db->AddParticle("HE3", "HE3", 2.80941352, kFALSE, 0, 6, "Ion", 1000020030);
+   db->AddParticle("Alpha", "Alpha", 3.7284, kTRUE, 0, 6, "Ion", 1000020040);
+   db->AddParticle("He3", "He3", 2.80941352, kTRUE, 0, 6, "Ion", 1000020030);
+   db->AddParticle("He6", "He6", 5.60655972, kFALSE, khShGev / 0.806, 6, "Ion", 1000020060);
+   db->AddParticle("Be10", "Be10", 9.3275477, kFALSE, khShGev / (1.51E6 * kYear2Sec), 12, "Ion", 1000040100);
+   db->AddParticle("Be11", "Be11", 10.2666092, kFALSE, khShGev / (13.76), 12, "Ion", 1000040110);
+   db->AddParticle("C12", "C12", 11.18, kTRUE, 0, 18, "Ion", 1000060120);
+   db->AddParticle("O16", "O16", 14.8991686, kTRUE, 0, 24, "Ion", 1000080160);
 }
 
 AtFITTER::AtGenfit::~AtGenfit()
@@ -132,6 +137,8 @@ AtFITTER::AtGenfit::~AtGenfit()
 void AtFITTER::AtGenfit::Init()
 {
    std::cout << cGREEN << " AtFITTER::AtGenfit::Init() " << cNORMAL << "\n";
+   // std::cout << cGREEN << " PDG : "<<fPDGCode<<"\n";
+   // std::cout << cGREEN << " Ion : "<<fIonName<<"\n";
 
    fHitClusterArray->Delete();
    fGenfitTrackArray->Delete();
@@ -199,9 +206,10 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
          phi = track->GetGeoPhi();
       } else {
          theta = track->GetGeoTheta();
-         phi = 180.0 * TMath::DegToRad() - track->GetGeoPhi();
+         phi = track->GetGeoPhi(); // 180.0 * TMath::DegToRad() - track->GetGeoPhi();
       }
 
+      // Needs to be reversed back for multifit
       std::reverse(hitClusterArray->begin(), hitClusterArray->end());
 
    } else if (thetaConv > 90.0 * TMath::DegToRad()) { // Backward (Forward) for experiment (simulation)
@@ -228,13 +236,13 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    Int_t PDGCode = fPDGCode;
 
    if (fVerbosity > 0) {
-      std::cout << " Initial parameters "
+      std::cout << cYELLOW << "    ---- AtGenfit : Initial parameters "
                 << "\n";
-      std::cout << " PDG : " << PDGCode << " - Mass : " << p_mass << " - Atomic number : " << p_Z << "\n";
-      std::cout << " B field : " << fMagneticField / 10.0 << " - Min. Bhro : " << fMinBrho
-                << " - Max. Brho : " << fMaxBrho << "\n";
-      std::cout << " Theta : " << theta * TMath::RadToDeg() << " - Phi : " << phi * TMath::RadToDeg()
-                << " - Brho : " << brho << "\n";
+      std::cout << "    PDG : " << PDGCode << " - Mass : " << p_mass << " - Atomic number : " << p_Z << "\n";
+      std::cout << "    B field : " << fMagneticField / 10.0 << " - Min. Bhro : " << fMinBrho
+                << "    - Max. Brho : " << fMaxBrho << "\n";
+      std::cout << "    Theta : " << theta * TMath::RadToDeg() << " - Phi : " << phi * TMath::RadToDeg()
+                << "    - Brho (geo) : " << brho << cNORMAL << "\n";
    }
 
    // hitClusterArray->resize(hitClusterArray->size() * 0.50);
@@ -247,11 +255,13 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       auto clusterClone(cluster);
 
       if (iCluster == 0) {
-         std::cout << " First cluster : " << pos.X() << " - " << pos.Y() << " - " << pos.Z() << "\n";
+         std::cout << cYELLOW << "    First cluster : " << pos.X() << " - " << pos.Y() << " - " << pos.Z() << cNORMAL
+                   << "\n";
 
       } else if (iCluster == (hitClusterArray->size() - 1)) {
 
-         std::cout << " Last cluster : " << pos.X() << " - " << pos.Y() << " - " << pos.Z() << "\n";
+         std::cout << cYELLOW << "    Last cluster : " << pos.X() << " - " << pos.Y() << " - " << pos.Z() << cNORMAL
+                   << "\n";
       }
 
       if (thetaConv < 90.0 * TMath::DegToRad()) { // Experiment forward
@@ -280,23 +290,23 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    AtHitCluster iniCluster;
    Double_t zIniCal = 0;
    Double_t xIniCal = 0;
+
    XYZPoint iniPos;
 
+   // Initial track position
    if (thetaConv < 90.0 * TMath::DegToRad()) {
       iniCluster = hitClusterArray->front();
       // iniCluster = hitClusterArray->back();
       iniPos = iniCluster.GetPosition();
       zIniCal = 1000.0 - iniPos.Z();
 
-      /*if(iniPos.X()>0 && iniPos.Y()<0)
-    phi=2.0*TMath::Pi()+phi;
-       else if(iniPos.X()<0)
-       phi=TMath::Pi()+phi;*/
-
       if (fSimulationConv)
          xIniCal = iniPos.X();
       else
          xIniCal = -iniPos.X();
+
+      // Leave hit cluster array in its original state
+      std::reverse(hitClusterArray->begin(), hitClusterArray->end());
 
    } else if (thetaConv > 90.0 * TMath::DegToRad()) {
       iniCluster = hitClusterArray->front();
@@ -312,7 +322,6 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    } else {
       std::cout << cRED << " AtGenfit::FitTracks - Warning! Undefined theta angle. Skipping event..." << cNORMAL
                 << "\n";
-      return nullptr;
    }
 
    // Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
@@ -322,7 +331,7 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    //   return nullptr;
 
    // if(fVerbosity>1)
-   std::cout << " Initial position : " << xIniCal << " - " << iniPos.Y() << " - " << zIniCal << "\n";
+   std::cout << "    Initial position : " << xIniCal << " - " << iniPos.Y() << " - " << zIniCal << "\n";
 
    TVector3 posSeed(xIniCal / 10.0, iniPos.Y() / 10.0, zIniCal / 10.0);
    posSeed.SetMag(posSeed.Mag());
@@ -349,7 +358,8 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    pz = std::get<0>(mom_ener) * mom_dir.Z();
 
    if (fVerbosity > 0)
-      std::cout << " Momentum from PRA- px : " << px << " - py : " << py << " - pz : " << pz << "\n";
+      std::cout << cYELLOW << "    Momentum from PRA- px : " << px << " - py : " << py << " - pz : " << pz << cNORMAL
+                << "\n";
 
    // Double_t momSeedMag = std::get<0>(mom_ener);
    //  TVector3 momSeed(0., 0., momSeedMag); //
@@ -405,7 +415,7 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       // Fit result
       fitState.getPosMomCov(pos_res, mom_res, cov_res);
       if (fVerbosity > 0)
-         std::cout << cYELLOW << " Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
+         std::cout << cYELLOW << "    Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
                    << pos_res.Y() << "  " << pos_res.Z() << cNORMAL << "\n";
       // firstPoint = gfTrack->getPointWithMeasurement(0);
       // lastPoint  = gfTrack->getPointWithMeasurement(gfTrack->getNumPoints()-1);
@@ -436,57 +446,6 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
      mom_res.SetXYZ(0, 0, 0);
      pos_res.SetXYZ(0, 0, 0);
      }*/
-
-   // gfTrack ->Print();
-
-   //} // iTrack
-
-   std::cout << " End of GENFIT "
-             << "\n";
-   std::cout << "               "
-             << "\n";
-
-   try {
-      fKalmanFitter->processTrackWithRep(gfTrack, trackRep, false);
-      // fKalmanFitter->processTrackPartially(gfTrack, trackRep,0,hitClusterArray->size()*0.30);
-   } catch (genfit::Exception &e) {
-
-      std::cout << " AtGenfit -  Exception caught from Kalman Fitter : " << e.what() << "\n";
-   }
-
-   // gfTrack->prune("FCW");
-
-   // genfit::FitStatus *fitStatus;
-   try {
-      fitStatus = gfTrack->getFitStatus(trackRep);
-      std::cout << cYELLOW << " Is fitted? " << fitStatus->isFitted() << "\n";
-      std::cout << " Is Converged ? " << fitStatus->isFitConverged() << "\n";
-      std::cout << " Is Converged Partially? " << fitStatus->isFitConvergedPartially() << "\n";
-      std::cout << " Is pruned ? " << fitStatus->isTrackPruned() << cNORMAL << "\n";
-      fitStatus->Print();
-   } catch (genfit::Exception &e) {
-      return nullptr;
-   }
-
-   /*genfit::MeasuredStateOnPlane fitState;
-genfit::TrackPoint* firstPoint;
-genfit::TrackPoint* lastPoint;
-genfit::KalmanFitterInfo* pointKFitterInfo;*/
-   /*try {
-fitState = gfTrack->getFittedState();
-fitState.Print();
-// Fit result
-      fitState.getPosMomCov(pos_res, mom_res, cov_res);
-      std::cout << cYELLOW << " Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
-         << pos_res.Y() << "  " << pos_res.Z() << cNORMAL << "\n";
- firstPoint = gfTrack->getPointWithMeasurement(0);
- lastPoint  = gfTrack->getPointWithMeasurement(gfTrack->getNumPoints()-1);
- //firstPoint->Print();
- //lastPoint->Print();
- //pointKFitterInfo = firstPoint->getKalmanFitterInfo();
-
-   } catch (genfit::Exception &e) {
-   }*/
 
    // gfTrack ->Print();
 

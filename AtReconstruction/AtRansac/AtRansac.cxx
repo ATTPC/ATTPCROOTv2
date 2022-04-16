@@ -10,16 +10,17 @@
 #include <Math/GenVector/RotationX.h> // for RotationX
 #include <Math/Minimizer.h>           // for Minimizer
 #include <Math/Point3D.h>             // for PositionVector3D
-#include <Math/Vector3D.h>            // for Cartesian3D, Displace...
-#include <Rtypes.h>                   // for TGenericClassInfo
-#include <TError.h>                   // for gErrorIgnoreLevel
-#include <TMath.h>                    // for Pi, Sqrt, ACos
-#include <TMathBase.h>                // for Abs
+#include <Math/Point3Dfwd.h>
+#include <Math/Vector3D.h> // for Cartesian3D, Displace...
+#include <Rtypes.h>        // for TGenericClassInfo
+#include <TError.h>        // for gErrorIgnoreLevel
+#include <TMath.h>         // for Pi, Sqrt, ACos
+#include <TMathBase.h>     // for Abs
 
+#include <Eigen/Core>                     // for aligned_allocator
 #include <boost/core/checked_delete.hpp>  // for checked_delete
 #include <boost/smart_ptr/shared_ptr.hpp> // for shared_ptr
 
-#include <Eigen/Core>              // for aligned_allocator
 #include <Fit/FitConfig.h>         // for FitConfig
 #include <Fit/FitResult.h>         // for FitResult
 #include <Fit/Fitter.h>            // for Fitter

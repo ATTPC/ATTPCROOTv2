@@ -1,8 +1,9 @@
 #include "msd.h"
 
+#include <pcl/kdtree/kdtree_flann.h>
+
 #include <algorithm>
 #include <numeric>
-#include <pcl/kdtree/kdtree_flann.h>
 #include <vector>
 namespace msd {
 /*

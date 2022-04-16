@@ -68,7 +68,7 @@ void Be10_He6aa_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 
    Double_t px = 0.000 / a;
    Double_t py = 0.000 / a;   // Y-Momentum / per nucleon!!!!!!
-   Double_t pz = 1.369 / a;   // Z-Momentum / per nucleon!!!!!!
+   Double_t pz = 0.86515 / a; // 1.369 / a; // Z-Momentum / per nucleon!!!!!!
    // Double_t pz = sqrt( pow(kBeam * a / 1000.0 + Bmass,2) - pow(Bmass,2) )/a;  // Z-Momentum / per nucleon!!!!!!
 
    AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy, -1);

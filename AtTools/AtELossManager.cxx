@@ -89,6 +89,7 @@ Double_t AtTools::AtELossManager::GetEnergyLossLinear(Double_t energy, Double_t 
       // If after this two loop i is still -1 it means the energy was out of range.
       if (i == -1) {
          // cout << "*** EnergyLoss Error: energy not within range: " << energy << endl;
+
          Energy_in_range = false;
          return 0;
       }
@@ -159,7 +160,6 @@ double AtTools::AtELossManager::GetEnergyLoss(double energy /*MeV*/, double dist
       std::cout << "*** EnergyLoss Error: energy not within range: " << energy << "\n";
 
       Energy_in_range = false;
-
       return 0;
    }
 
@@ -503,10 +503,10 @@ void AtTools::AtELossManager::PrintLookupTables()
 Double_t AtTools::AtELossManager::GetLookupEnergy(Double_t InitialEnergy, Double_t distance)
 {
 
-   Double_t D1 = 0, D2 = 0, D = 0;
-   Double_t E1 = 0, E2 = 0, E = 0;
-   int index = 0;
-   int imhere = 0;
+   Double_t D1, D2, D;
+   Double_t E1, E2, E;
+   int index;
+   int imhere;
 
    if (InitialEnergy < 0 || InitialEnergy > fMaximumEnergy) {
       return (-1.);

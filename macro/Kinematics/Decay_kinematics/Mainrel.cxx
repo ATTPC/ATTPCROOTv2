@@ -1,19 +1,22 @@
-#include <iostream>
+#include <Riostream.h>
+#include <TApplication.h>
+#include <TAxis.h>
+#include <TBranch.h>
+#include <TFile.h>
+#include <TGraph.h>
+#include <TH1F.h>
+#include <TMath.h>
+#include <TROOT.h>
+#include <TRint.h>
+#include <TTree.h>
+
+#include "TRelativisticKinematics.hh"
+
+#include <cmath>
 #include <cstdlib>
 #include <cstring>
-#include <cmath>
-#include <Riostream.h>
-#include <TROOT.h>
-#include <TFile.h>
-#include <TTree.h>
-#include <TBranch.h>
-#include <TGraph.h>
-#include <TApplication.h>
-#include <TRint.h>
-#include <TMath.h>
-#include <TAxis.h>
-#include <TH1F.h>
-#include "TRelativisticKinematics.hh"
+#include <iostream>
+
 #include "TRelativisticKinematics.cxx"
 //#include "TRelativisticDecay.hh"
 //#include "TRelativisticDecay.cxx"

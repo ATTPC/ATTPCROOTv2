@@ -7,19 +7,19 @@
 #ifndef anaClassBg_h
 #define anaClassBg_h
 
-#include <TROOT.h>
-#include <TChain.h>
-#include <TFile.h>
-#include <TClonesArray.h>
-#include <TMath.h>
-#include <TRandom3.h>
-#include <TVector3.h>
-#include <TGraph2D.h>
-#include <TStyle.h>
 #include <TCanvas.h>
+#include <TChain.h>
+#include <TClonesArray.h>
 #include <TF2.h>
+#include <TFile.h>
+#include <TGraph2D.h>
 #include <TH1.h>
 #include <TH2.h>
+#include <TMath.h>
+#include <TROOT.h>
+#include <TRandom3.h>
+#include <TStyle.h>
+#include <TVector3.h>
 
 // Header file for the classes stored in the TTree if any.
 

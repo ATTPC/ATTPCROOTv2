@@ -3,15 +3,17 @@
 #include "fastcluster.h"
 
 #pragma warning(push, 0)
+#include <pcl/kdtree/kdtree_flann.h>
+
 #include <algorithm>
 #include <fstream>
-#include <pcl/kdtree/kdtree_flann.h>
 #pragma warning(pop)
 
 #pragma warning(push, 0)
+#include <pcl/kdtree/kdtree_flann.h>
+
 #include <algorithm>
 #include <fstream>
-#include <pcl/kdtree/kdtree_flann.h>
 #pragma warning(pop)
 
 namespace hc {

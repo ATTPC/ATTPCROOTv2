@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 class AtHitCluster;
@@ -50,6 +51,7 @@ private:
    Bool_t fSimulationConv;      //<! Switch to simulation convention
    Float_t fGasMediumDensity{}; //<! Medium density in mg/cm3
    Double_t fPhiOrientation;    //<! Phi angle orientation for fit
+   std::string fIonName;        //<! Name of ion to fit
 
    genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement> *fMeasurementProducer;
    genfit::MeasurementFactory<genfit::AbsMeasurement> *fMeasurementFactory;
@@ -78,8 +80,11 @@ public:
    inline void SetSimulationConvention(Bool_t simconv) { fSimulationConv = simconv; }
    inline void SetGasMediumDensity(Float_t mediumDensity) { fGasMediumDensity = mediumDensity; }
    inline void RotatePhi(Double_t phi) { fPhiOrientation = phi; }
+   inline void SetIonName(std::string ionName) { fIonName = std::move(ionName); }
 
    TClonesArray *GetGenfitTrackArray();
+   Int_t GetPDGCode() { return fPDGCode; }
+   std::string &GetIonName() { return fIonName; }
    ClassDefOverride(AtGenfit, 1);
 };
 

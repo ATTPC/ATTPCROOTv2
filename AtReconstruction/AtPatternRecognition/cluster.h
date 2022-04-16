@@ -2,6 +2,7 @@
 #define CLUSTER_H
 
 #include <pcl/io/io.h>
+
 #include <vector>
 
 class Cluster {

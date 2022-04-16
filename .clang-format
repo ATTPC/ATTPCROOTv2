@@ -103,6 +103,11 @@ IncludeCategories:
 # Boost    		   
   - Regex:           '^<boost/'
     Priority:        15
+# pcl    		   
+  - Regex:           '^<pcl/'
+    Priority:        15
+  - Regex:           '^<Eigen/'
+    Priority:        15
 
 # Mis "header.h" and <header.h>
   - Regex:           '^"[^/]+\.h'

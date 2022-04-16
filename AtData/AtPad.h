@@ -20,11 +20,12 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-using rawTrace = std::array<Int_t, 512>;
-using trace = std::array<Double_t, 512>;
-using XYPoint = ROOT::Math::XYPoint;
-
 class AtPad : public TObject {
+public:
+   using rawTrace = std::array<Int_t, 512>;
+   using trace = std::array<Double_t, 512>;
+   using XYPoint = ROOT::Math::XYPoint;
+
 protected:
    Int_t fPadNum; // Pad reference number in AtMap
    Int_t fSizeID = -1000;

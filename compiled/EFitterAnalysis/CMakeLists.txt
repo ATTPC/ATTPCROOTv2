@@ -2,94 +2,39 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(EFitterAnalysis)
 
-SET(GENFIT2_DIR "/mnt/simulations/attpcroot/fair_install_2020/GenFit_Inst/")
-
-# Check for needed environment variables
-IF(NOT DEFINED ENV{FAIRROOTPATH})
-  MESSAGE(FATAL_ERROR "You did not define the environment variable FAIRROOTPATH which is needed to find FairRoot. Please set this variable and execute cmake again.")
-ENDIF(NOT DEFINED ENV{FAIRROOTPATH})
-
-IF(NOT DEFINED ENV{SIMPATH})
-   MESSAGE(FATAL_ERROR "You did not define the environment variable SIMPATH which is nedded to find the external packages. Please set this variable and execute cmake again.")
-ENDIF(NOT DEFINED ENV{SIMPATH})
-
-SET(SIMPATH $ENV{SIMPATH})
-SET(FAIRROOTPATH $ENV{FAIRROOTPATH})
 SET(ATTPCROOTPATH $ENV{VMCWORKDIR})
+list(APPEND CMAKE_PREFIX_PATH ${ATTPCROOTPATH}/build/install) #Need access to ATTPCROOT
 
-#set(CMAKE_MODULE_PATH "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/cmake/modules")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
+# Will also load all of its dependecies
+find_package(ATTPCROOT 1.0 REQUIRED)
+find_package(Curses)
 
-message(${CMAKE_MODULE_PATH})
-
-# You need to tell CMake where to find the ROOT installation. This can be done in a number of ways:
-#   - ROOT built with classic configure/make use the provided $ROOTSYS/etc/cmake/FindROOT.cmake
-#   - ROOT built with CMake. Add in CMAKE_PREFIX_PATH the installation prefix for ROOT
-list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
-
-#---Locate the ROOT package and defines a number of variables (e.g. ROOT_INCLUDE_DIRS)
-find_package(ROOT REQUIRED)
-
-#---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
-include(${ROOT_USE_FILE})
-
-#---Locate other external packages
-find_package(Boost 1.67 REQUIRED)
-find_package(GENFIT2)
-
-include_directories( ${ROOT_INCLUDE_DIR}
-                     ${Boost_INCLUDE_DIRS}
-                     ${BASE_INCLUDE_DIRECTORIES}
-                     ${ATTPCROOTPATH}/include
-                     ${FAIRROOTPATH}/include
-                     ${CMAKE_SOURCE_DIR}
-		     ${GENFIT2_INCLUDE_DIR}
-                     #${PCL_INCLUDE_DIRS}
+include_directories( INCLUDE_DIRECTORIES
+		     ${CURSES_INCLUDE_DIRS}
 		     )
 
-link_directories( ${FAIRROOT_LIBRARY_DIR}
-                  ${FAIRROOTPATH}/lib
-                  ${ATTPCROOTPATH}/build/lib
-                  ${GENFIT2_LIBRARY_DIR}
-                  #${PCL_LIBRARY_DIRS}
-                  )
+link_directories(LINK_DIRECTORIES
+  ${CURSES_LIBRARIES}  )
 
-
-#add_definitions(${PCL_DEFINITIONS})
-
-message(STATUS ${ATTPCROOTPATH})
 
 add_library(eFitterAnalysis SHARED eFitterAnalysis.cc)
-#target_link_libraries(genfit_Test ${ROOT_LIBRARIES} ATTPCReco FairTools Base ${PCL_LIBRARIES})
-target_link_libraries(eFitterAnalysis ${ROOT_LIBRARIES} AtReconstruction FairTools Base ${GENFIT2_LIBRARY_DIR}/libgenfit2.so)
+target_link_libraries(eFitterAnalysis ${ROOT_LIBRARIES}
+  GENFIT2::genfit2
+
+  ATTPCROOT::AtData
+  ATTPCROOT::AtTools
+  ATTPCROOT::AtSimulationData
+  )
 
 add_executable(eFitterAnaExe eFitterAnalysis.cc)
 		
 target_link_libraries (eFitterAnaExe eFitterAnalysis
-  ${ROOT_LIBRARIES}
-${GENFIT2_LIBRARY_DIR}/libgenfit2.so
-EG
-Core
-Gpad
-Graf
-Graf3d
-Gui
-Hist
-MathCore
-Matrix
-Minuit
-Net
-Physics
-Postscript
-Rint
-RIO
-Thread
-Tree
-TreePlayer
-AtReconstruction
-AtTpcMap
-FairTools
-Geom
-Spectrum
-Base
+${ROOT_LIBRARIES}
+${CURSES_LIBRARIES}
+GENFIT2::genfit2
+ATTPCROOT::AtReconstruction
+ATTPCROOT::AtTools
+ATTPCROOT::AtMap
+FairRoot::Base
+FairRoot::FairTools
 )

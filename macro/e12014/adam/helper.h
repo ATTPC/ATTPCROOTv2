@@ -8,17 +8,18 @@
  *  - This fills the historgram hTrace
  */
 
-#include <TString.h>
 #include <TChain.h>
-#include <TTreeReader.h>
 #include <TH1.h>
+#include <TString.h>
 #include <TSystem.h>
-#include "../../../build/include/AtDecoder/AtRawEvent.h"
-#include "../../../build/include/AtDecoder/AtEvent.h"
-#include "../../../build/include/AtTpcMap.h"
-#include "../../../build/include/AtRansac/AtRansac.h"
-#include "../../../build/include/AtDecoder/AtPad.h"
+#include <TTreeReader.h>
+
 #include "../../../build/include/AtDecoder/AtAuxPad.h"
+#include "../../../build/include/AtDecoder/AtEvent.h"
+#include "../../../build/include/AtDecoder/AtPad.h"
+#include "../../../build/include/AtDecoder/AtRawEvent.h"
+#include "../../../build/include/AtRansac/AtRansac.h"
+#include "../../../build/include/AtTpcMap.h"
 
 // "public functions"
 void loadRun(TString filePath, TString rawEventBranchName = "AtRawEventFiltered",

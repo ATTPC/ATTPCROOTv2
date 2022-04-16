@@ -503,7 +503,9 @@ void plotFit_full_dp(std::string fileFolder = "data_181_366/") //"dataFull/")//"
                                              fOrbLengthvsEFit->Fill((*lengthOrbZVec)[index], (*EFitVec)[index]);
                                              fOrbZvsEFit->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index],
                                                                (*EFitVec)[index]);
-                                             n fOrbZvsEx->Fill((*firstOrbZVec)[index], QcorrZ);
+
+                                             fOrbZvsEx->Fill((*firstOrbZVec)[index], QcorrZ);
+
                                              fOrbZvsZ->Fill((*firstOrbZVec)[index], (*ziniFitXtrVec)[index]);
                                              HQCorrOrbZ->Fill(QcorrZ);
                                              fOrbZvsAFit->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index],

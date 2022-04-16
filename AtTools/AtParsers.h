@@ -8,13 +8,17 @@
 #ifndef ATPARSERS_H
 #define ATPARSERS_H
 
+#include "AtFormat.h"
+
 #include <Rtypes.h>
 #include <TObject.h>
 #include <TString.h>
 
+#include <ostream>
 #include <string>
 #include <vector>
 
+class TXMLNode;
 class TBuffer;
 class TClass;
 class TMemberInspector;
@@ -24,9 +28,22 @@ namespace AtTools {
 struct IonFitInfo {
    std::string _ionName;
    UInt_t _PDG;
-   Int_t _mass;
+   Double_t _mass;
    Int_t _atomicNumber;
+   UInt_t _MassNumber;
    std::string _eLossFile;
+
+   friend std::ostream &operator<<(std::ostream &out, const AtTools::IonFitInfo &ifi)
+   {
+
+      out << cGREEN << " Ion name :" << ifi._ionName << "\n";
+      out << " PDG : " << ifi._PDG << "\n";
+      out << " Mass (AMU) : " << ifi._mass << "\n";
+      out << " Atomic Number : " << ifi._atomicNumber << "\n";
+      out << " Mass Number : " << ifi._MassNumber << "\n";
+      out << " Energy loss file : " << ifi._eLossFile << cNORMAL << "\n";
+      return out;
+   }
 };
 
 class AtParsers : public TObject {
@@ -36,8 +53,12 @@ public:
    ~AtParsers();
 
    Int_t ParseIonFitXML(TString filename);
+   std::vector<IonFitInfo> *GetIonFile() { return &ionList; }
 
 private:
+   void ParseIonList(TXMLNode *node);
+   IonFitInfo ParseIon(TXMLNode *node, Int_t id);
+
    std::vector<IonFitInfo> ionList;
 
    ClassDef(AtParsers, 1)

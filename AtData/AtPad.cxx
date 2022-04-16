@@ -20,7 +20,7 @@ AtPad::AtPad(Int_t PadNum) : fPadNum(PadNum)
    // fAuxName = "noname";
 }
 
-const trace &AtPad::GetADC() const
+const AtPad::trace &AtPad::GetADC() const
 {
    if (!fIsPedestalSubtracted)
       LOG(fatal) << "Pedestal subtraction was not done on pad " << fPadNum;

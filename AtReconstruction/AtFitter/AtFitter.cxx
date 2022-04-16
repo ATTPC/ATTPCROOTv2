@@ -36,6 +36,7 @@ void AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack> *trackCandSource, std:
    // Track candidate source are the main tracks identified as candidates.
    // Track junk source are the tracks from which clusters will be extracted. Boundary conditions are applied: Proximity
    // in space, angle and center.
+   // NB: Only works for backward tracks
 
    Double_t trackDist = 20.0;  // Distance between clusters in mm
    Double_t angleSpread = 5.0; // Maximum angular spread between clusters

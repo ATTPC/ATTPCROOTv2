@@ -16,12 +16,13 @@
 
 #include <Rtypes.h> // for THashConsistencyHolder, ClassDef
 
+#include <pcl/point_cloud.h> // for PointCloud, PointCloud<>::Ptr
+#include <pcl/point_types.h> // for PointXYZI
+
 #include "cluster.h" // for Cluster
 #include <stdio.h>   // for size_t
 
-#include <pcl/point_cloud.h> // for PointCloud, PointCloud<>::Ptr
-#include <pcl/point_types.h> // for PointXYZI
-#include <vector>            // for vector
+#include <vector> // for vector
 
 class AtEvent;
 class AtPatternEvent;

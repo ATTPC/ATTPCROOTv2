@@ -1,6 +1,7 @@
 #pragma once
 
 #include <pcl/io/io.h>
+
 #include <vector>
 
 namespace mst {

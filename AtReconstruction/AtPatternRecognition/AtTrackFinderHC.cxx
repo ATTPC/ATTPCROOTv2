@@ -6,19 +6,20 @@
 
 #include <Math/Point3D.h> // for PositionVector3D
 
+#include <Eigen/Core>                     // for aligned_allocator
 #include <boost/core/checked_delete.hpp>  // for checked_delete
 #include <boost/smart_ptr/shared_ptr.hpp> // for shared_ptr
+#include <pcl/PointIndices.h>             // for PointIndicesPtr, PointIndices
+#include <pcl/common/io.h>                // for copyPointCloud
 
 #include "hc.h"            // for triplet, cleanupClusterGroup
 #include "msd.h"           // for first_quartile
 #include "smoothenCloud.h" // for smoothenCloud
 
-#include <Eigen/Core>             // for aligned_allocator
-#include <cmath>                  // for sqrt
-#include <iostream>               // for cout, cerr
-#include <memory>                 // for allocator_traits<>::value_...
-#include <pcl/PointIndices.h>     // for PointIndicesPtr, PointIndices
-#include <pcl/common/impl/io.hpp> // for copyPointCloud
+#include <algorithm>
+#include <cmath>    // for sqrt
+#include <iostream> // for cout, cerr
+#include <memory>   // for allocator_traits<>::value_...
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

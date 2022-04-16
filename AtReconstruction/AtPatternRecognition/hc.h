@@ -1,10 +1,11 @@
 #ifndef HC_H
 #define HC_H
 
+#include <pcl/io/io.h>
+
 #include "cluster.h"
 
 #include <limits>
-#include <pcl/io/io.h>
 #include <vector>
 
 namespace hc {

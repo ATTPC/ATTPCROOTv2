@@ -15,4 +15,7 @@
 #pragma link C++ class AtSpaceChargeModel + ;
 #pragma link C++ class AtLineChargeModel + ;
 
+#pragma link C++ class AtTools::AtKinematics + ;
+#pragma link C++ class AtTools::AtVirtualTerminal + ;
+
 #endif

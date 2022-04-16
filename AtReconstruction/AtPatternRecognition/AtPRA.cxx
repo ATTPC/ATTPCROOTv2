@@ -13,16 +13,17 @@
 #include <TMatrixTSym.h>    // for TMatrixTSym
 #include <TVector3.h>       // for TVector3
 
-#include <algorithm>                          // for max, for_each, copy_if
-#include <cmath>                              // for fabs, acos
-#include <cstddef>                            // for size_t
-#include <exception>                          // for exception
-#include <ext/alloc_traits.h>                 // for __alloc_traits<>::valu...
-#include <iostream>                           // for operator<<, basic_ostream
-#include <iterator>                           // for back_insert_iterator
-#include <memory>                             // for shared_ptr, __shared_p...
 #include <pcl/sample_consensus/model_types.h> // for SACMODEL_CIRCLE2D, SAC...
-#include <utility>                            // for make_pair
+
+#include <algorithm>          // for max, for_each, copy_if
+#include <cmath>              // for fabs, acos
+#include <cstddef>            // for size_t
+#include <exception>          // for exception
+#include <ext/alloc_traits.h> // for __alloc_traits<>::valu...
+#include <iostream>           // for operator<<, basic_ostream
+#include <iterator>           // for back_insert_iterator
+#include <memory>             // for shared_ptr, __shared_p...
+#include <utility>            // for make_pair
 
 ClassImp(AtPATTERN::AtPRA);
 
