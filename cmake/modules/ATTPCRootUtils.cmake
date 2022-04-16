@@ -109,7 +109,7 @@ macro(set_attpcroot_defaults)
 	set(CMAKE_CXX_CLANG_TIDY ${clang-tidy_path_and_args})
 
 	# Install a .clang-tidy file into the build directory to silence ROOT dictionary errors
-	configure_file(${CMAKE_SOURCE_DIR}/.clang-tidy-build ${CMAKE_BINARY_DIR}/.clang-tidy)
+	configure_file(${CMAKE_SOURCE_DIR}/cmake/scripts/clang-tidy-build ${CMAKE_BINARY_DIR}/.clang-tidy)
       endif()
     endif()
 

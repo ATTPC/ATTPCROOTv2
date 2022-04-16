@@ -1,4 +1,4 @@
 ---
 Checks:              'clang-analyzer-*'
-InheritParentConfig:  false
+InheritParentConfig: false
 ...
