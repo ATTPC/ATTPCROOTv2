@@ -49,14 +49,12 @@ constexpr auto cGREEN = "\033[1;32m";
 
 AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile,
                              Float_t gasMediumDensity, Int_t minit, Int_t maxit)
-   : fEnergyLossFile(std::move(eLossFile)), fSimulationConv(kFALSE), fPhiOrientation(0),
+   : fEnergyLossFile(std::move(eLossFile)),
      fMeasurementProducer(
         new genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement>(fHitClusterArray)),
-     fMeasurementFactory(new genfit::MeasurementFactory<genfit::AbsMeasurement>()), fTPCDetID(0), fCurrentDirection(-1),
-     fMinIterations(minit), fMaxIterations(maxit), fMinBrho(minbrho), fMaxBrho(maxbrho),
-     fMagneticField(10.0 * magfield), fNumFitPoints(0.90), fMass(1.00727647), fAtomicNumber(1), fPDGCode(2212),
-     fVerbosity(0), fGenfitTrackArray(new TClonesArray("genfit::Track")),
-     fHitClusterArray(new TClonesArray("AtHitCluster"))
+     fMeasurementFactory(new genfit::MeasurementFactory<genfit::AbsMeasurement>()), fMinIterations(minit),
+     fMaxIterations(maxit), fMinBrho(minbrho), fMaxBrho(maxbrho), fMagneticField(10.0 * magfield),
+     fGenfitTrackArray(new TClonesArray("genfit::Track")), fHitClusterArray(new TClonesArray("AtHitCluster"))
 {
    fKalmanFitter = std::make_shared<genfit::KalmanFitterRefTrack>();
    fKalmanFitter->setMinIterations(fMinIterations);

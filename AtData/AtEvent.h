@@ -89,9 +89,7 @@ public:
 
    void SetMultiplicityMap(std::map<Int_t, Int_t> MultiMap)
    {
-      std::cout << "Input map size: " << MultiMap.size() << std::endl;
       fMultiplicityMap = std::move(MultiMap);
-      std::cout << "Iternal map size: " << fMultiplicityMap.size() << std::endl;
    }
    void SetMeshSignal(const traceArray &mesharray);
    void SetMeshSignal(Int_t idx, Float_t val);

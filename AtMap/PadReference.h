@@ -1,6 +1,10 @@
 #ifndef _PADREFERENCE_H
 #define _PADREFERENCE_H
 
+#include <Rtypes.h>
+
+#include <cstddef>
+
 // The definition of this struct, and the operator overloads have to
 // be before AtMap where an unordered_map using this as a key is
 // instatiated.

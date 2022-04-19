@@ -35,22 +35,22 @@ private:
    std::shared_ptr<genfit::AbsKalmanFitter> fKalmanFitter;
    TClonesArray *fGenfitTrackArray;
    TClonesArray *fHitClusterArray;
-   Int_t fPDGCode; //<! Particle PGD code
-   Int_t fTPCDetID;
-   Int_t fCurrentDirection;
+   Int_t fPDGCode{2212}; //<! Particle PGD code
+   Int_t fTPCDetID{0};
+   Int_t fCurrentDirection{-1};
    Float_t fMaxBrho;            //<! Max Brho allowed in Tm
    Float_t fMinBrho;            //<! Min Brho allowed in Tm
    Int_t fMaxIterations;        //<! Max iterations for fitter
    Int_t fMinIterations;        //<! Min iterations for fitter
    Float_t fMagneticField;      //<! Constant magnetic field along Z in T
-   Float_t fMass;               //<! Particle mass in atomic mass unit
-   Int_t fAtomicNumber;         //<! Particle Atomic number Z
-   Float_t fNumFitPoints;       //<! % of processed track points for fit
-   Int_t fVerbosity;            //<! Fit verbosity
+   Float_t fMass{1.00727647};   //<! Particle mass in atomic mass unit
+   Int_t fAtomicNumber{1};      //<! Particle Atomic number Z
+   Float_t fNumFitPoints{0.90}; //<! % of processed track points for fit
+   Int_t fVerbosity{0};         //<! Fit verbosity
    std::string fEnergyLossFile; //<! Energy loss file
-   Bool_t fSimulationConv;      //<! Switch to simulation convention
+   Bool_t fSimulationConv{false}; //<! Switch to simulation convention
    Float_t fGasMediumDensity{}; //<! Medium density in mg/cm3
-   Double_t fPhiOrientation;    //<! Phi angle orientation for fit
+   Double_t fPhiOrientation{0}; //<! Phi angle orientation for fit
    std::string fIonName;        //<! Name of ion to fit
 
    genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement> *fMeasurementProducer;
