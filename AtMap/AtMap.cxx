@@ -38,7 +38,7 @@ std::ostream &operator<<(std::ostream &os, const AtMap::InhibitType &t)
 
 AtMap::AtMap() : AtPadCoord(boost::extents[10240][3][2]), fPadPlane(new TH2Poly()) {}
 
-Int_t AtMap::GetPadNum(const PadReference &PadRef) const
+Int_t AtMap::GetPadNum(const AtPadReference &PadRef) const
 {
 
    // Option 1: Int key - vector<int> value
@@ -62,7 +62,6 @@ Int_t AtMap::GetPadNum(const PadReference &PadRef) const
 
 Bool_t AtMap::ParseInhibitMap(TString inimap, AtMap::InhibitType type)
 {
-
    std::ifstream fIni(inimap.Data());
 
    Int_t pad = 0;
@@ -133,10 +132,10 @@ void AtMap::ParseAtTPCMap(TXMLNode *node)
             fSizeID = atoi(node->GetText());
       }
    }
-   PadReference ref = {fCoboID, fAsadID, fAgetID, fChannelID};
+   AtPadReference ref = {fCoboID, fAsadID, fAgetID, fChannelID};
 
-   fPadMap.insert(std::pair<PadReference, int>(ref, fPadID));
-   fPadMapInverse.insert(std::pair<int, PadReference>(fPadID, ref));
+   fPadMap.insert(std::pair<AtPadReference, int>(ref, fPadID));
+   fPadMapInverse.insert(std::pair<int, AtPadReference>(fPadID, ref));
    fPadSizeMap.insert(std::pair<int, int>(fPadID, fSizeID));
 }
 
@@ -210,26 +209,26 @@ Bool_t AtMap::DumpAtTPCMap()
    return true;
 }
 
-bool AtMap::AddAuxPad(const PadReference &ref, std::string auxName)
+bool AtMap::AddAuxPad(const AtPadReference &ref, std::string auxName)
 {
    auto emplacePair = fAuxPadMap.emplace(ref, auxName);
-   std::cout << cGREEN << " Auxiliary channel added " << fAuxPadMap[ref] << " - Hash " << std::hash<PadReference>()(ref)
-             << cNORMAL << "\n";
+   std::cout << cGREEN << " Auxiliary channel added " << fAuxPadMap[ref] << " - Hash "
+             << std::hash<AtPadReference>()(ref) << cNORMAL << "\n";
 
    return emplacePair.second;
 }
-bool AtMap::IsAuxPad(const PadReference &ref) const
+bool AtMap::IsAuxPad(const AtPadReference &ref) const
 {
    return fAuxPadMap.find(ref) != fAuxPadMap.end();
 }
-std::string AtMap::GetAuxName(const PadReference &ref) const
+std::string AtMap::GetAuxName(const AtPadReference &ref) const
 {
    if (IsAuxPad(ref))
       return fAuxPadMap.find(ref)->second;
    else
       return "";
 }
-PadReference AtMap::GetPadRef(int padNum) const
+AtPadReference AtMap::GetPadRef(int padNum) const
 {
    if (fPadMapInverse.find(padNum) == fPadMapInverse.end())
       return {};
@@ -242,16 +241,6 @@ void AtMap::drawPadPlane()
    fPadPlaneCanvas = new TCanvas("padPlaneCanvas", "Pad Plane", 1000, 1000);
    gStyle->SetPalette(1);
    fPadPlane->Draw("col");
-}
-
-bool operator<(const PadReference &l, const PadReference &r)
-{
-   return std::hash<PadReference>()(l) < std::hash<PadReference>()(r);
-}
-
-bool operator==(const PadReference &l, const PadReference &r)
-{
-   return l.cobo == r.cobo && l.asad == r.asad && l.aget == r.aget && l.ch == r.ch;
 }
 
 ClassImp(AtMap)

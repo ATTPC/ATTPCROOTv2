@@ -24,7 +24,7 @@
 
 class AtRawEvent;
 class AtPad;
-struct PadReference;
+struct AtPadReference;
 class TBuffer;
 class TClass;
 class TMemberInspector;
@@ -59,7 +59,7 @@ private:
    void setEventIDAndTimestamps();
    void processData();
    void processPad(std::size_t padIndex);
-   AtPad *createPadAndSetIsAux(const PadReference &padRef);
+   AtPad *createPadAndSetIsAux(const AtPadReference &padRef);
    void setDimensions(AtPad *pad);
    Float_t getBaseline(const std::vector<int16_t> &data);
    void setAdc(AtPad *pad, const std::vector<int16_t> &data);

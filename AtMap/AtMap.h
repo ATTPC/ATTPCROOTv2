@@ -9,14 +9,14 @@
 #ifndef ATMAP_H
 #define ATMAP_H
 
+#include "AtPadReference.h"
+
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
 #include <TNamed.h>
 #include <TString.h>
 
 #include <boost/multi_array.hpp>
-
-#include "PadReference.h"
 
 #include <iosfwd>
 #include <map>
@@ -48,9 +48,9 @@ protected:
    TH2Poly *fPadPlane;         // Raw pointer because owned by gDirectory
    UInt_t fNumberPads{};
 
-   std::unordered_map<PadReference, int> fPadMap;
-   std::map<int, PadReference> fPadMapInverse;
-   std::unordered_map<PadReference, std::string> fAuxPadMap;
+   std::unordered_map<AtPadReference, int> fPadMap;
+   std::map<int, AtPadReference> fPadMapInverse;
+   std::unordered_map<AtPadReference, std::string> fAuxPadMap;
    std::map<int, int> fPadSizeMap;
 
    void inhibitPad(Int_t padNum, AtMap::InhibitType type);
@@ -68,7 +68,7 @@ public:
 
    UInt_t GetNumPads() const { return fNumberPads; }
 
-   Int_t GetPadNum(const PadReference &PadRef) const;
+   Int_t GetPadNum(const AtPadReference &PadRef) const;
    multiarray GetPadCoordArr() { return AtPadCoord; }
    multiarray *GetPadCoord() { return fAtPadCoordPtr = &AtPadCoord; }
 
@@ -76,10 +76,10 @@ public:
    void ParseMapList(TXMLNode *node);
    void ParseAtTPCMap(TXMLNode *node);
    Bool_t DumpAtTPCMap();
-   PadReference GetPadRef(int padNum) const;
-   bool AddAuxPad(const PadReference &ref, std::string auxName);
-   bool IsAuxPad(const PadReference &ref) const;
-   std::string GetAuxName(const PadReference &ref) const;
+   AtPadReference GetPadRef(int padNum) const;
+   bool AddAuxPad(const AtPadReference &ref, std::string auxName);
+   bool IsAuxPad(const AtPadReference &ref) const;
+   std::string GetAuxName(const AtPadReference &ref) const;
 
    inline void SetGUIMode() { kGUIMode = 1; }
    inline void SetDebugMode(Bool_t flag = true) { kDebug = flag; }

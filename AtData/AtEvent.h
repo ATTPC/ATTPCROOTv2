@@ -87,10 +87,7 @@ public:
    void SetIsGood(Bool_t value) { fIsGood = value; }
    void SetIsInGate(Bool_t value) { fIsInGate = value; }
 
-   void SetMultiplicityMap(std::map<Int_t, Int_t> MultiMap)
-   {
-      fMultiplicityMap = std::move(MultiMap);
-   }
+   void SetMultiplicityMap(std::map<Int_t, Int_t> MultiMap) { fMultiplicityMap = std::move(MultiMap); }
    void SetMeshSignal(const traceArray &mesharray);
    void SetMeshSignal(Int_t idx, Float_t val);
 

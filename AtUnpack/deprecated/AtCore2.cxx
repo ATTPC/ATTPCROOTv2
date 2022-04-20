@@ -185,7 +185,7 @@ void AtCore2::ProcessCobo(Int_t coboIdx)
       for (Int_t iAget = 0; iAget < 4; iAget++) {
          for (Int_t iCh = 0; iCh < 68; iCh++) {
 
-            PadReference PadRef = {iCobo, iAsad, iAget, iCh};
+            AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
             Int_t PadRefNum = fMap->GetPadNum(PadRef);
             auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
             Bool_t IsInhibited = fMap->IsInhibited(PadRefNum);
@@ -240,7 +240,7 @@ void AtCore2::ProcessBasicCobo(Int_t coboIdx)
    for (Int_t iAget = 0; iAget < 4; iAget++) {
       for (Int_t iCh = 0; iCh < 68; iCh++) {
 
-         PadReference PadRef = {iCobo, iAsad, iAget, iCh};
+         AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
          auto PadRefNum = fMap->GetPadNum(PadRef);
          auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
          Bool_t IsInhibited = fMap->IsInhibited(PadRefNum);
@@ -437,7 +437,7 @@ void AtCore2::ProcessLayeredFrame(GETLayeredFrame *layeredFrame)
       for (Int_t iAget = 0; iAget < 4; iAget++) {
          for (Int_t iCh = 0; iCh < 68; iCh++) {
 
-            PadReference PadRef = {iCobo, iAsad, iAget, iCh};
+            AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
             Int_t PadRefNum = fMap->GetPadNum(PadRef);
             auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
 
@@ -485,7 +485,7 @@ void AtCore2::ProcessBasicFrame(GETBasicFrame *basicFrame)
    for (Int_t iAget = 0; iAget < 4; iAget++) {
       for (Int_t iCh = 0; iCh < 68; iCh++) {
 
-         PadReference PadRef = {iCobo, iAsad, iAget, iCh};
+         AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
          Int_t PadRefNum = fMap->GetPadNum(PadRef);
          auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
 

@@ -7,6 +7,7 @@
 #include "AtAuxPad.h"
 #include "AtMap.h"
 #include "AtPad.h"
+#include "AtPadReference.h"
 #include "AtRawEvent.h"
 
 #include <FairLogger.h>
@@ -14,7 +15,6 @@
 #include <Rtypes.h>
 #include <TString.h>
 
-#include "PadReference.h"
 #include <H5Gpublic.h>
 #include <H5Ppublic.h>
 
@@ -87,13 +87,13 @@ void AtHDFUnpacker::processData()
 void AtHDFUnpacker::processPad(std::size_t ipad)
 {
    std::vector<int16_t> rawadc = pad_raw_data(ipad);
-   PadReference PadRef = {rawadc[0], rawadc[1], rawadc[2], rawadc[3]};
+   AtPadReference PadRef = {rawadc[0], rawadc[1], rawadc[2], rawadc[3]};
 
    auto pad = createPadAndSetIsAux(PadRef);
    setDimensions(pad);
    setAdc(pad, rawadc);
 }
-AtPad *AtHDFUnpacker::createPadAndSetIsAux(const PadReference &padRef)
+AtPad *AtHDFUnpacker::createPadAndSetIsAux(const AtPadReference &padRef)
 {
    if (fMap->IsAuxPad(padRef)) {
       auto padName = fMap->GetAuxName(padRef);

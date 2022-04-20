@@ -2,6 +2,7 @@
 
 #include "AtMap.h"
 #include "AtPad.h"
+#include "AtPadReference.h"
 #include "AtPedestal.h"
 #include "AtRawEvent.h"
 
@@ -14,8 +15,6 @@
 #include <TTreeReader.h>
 #include <TTreeReaderArray.h>
 #include <TTreeReaderValue.h>
-
-#include "PadReference.h"
 
 #include <iostream>
 #include <string>
@@ -111,7 +110,7 @@ void AtROOTUnpacker::GetFPNChannelsFromROOTFILE()
    Bool_t EventCompleted = false;
    while (myReader.Next() && (!EventCompleted)) {
       if (*myInternalEventNr == fDataEventID) {
-         PadReference PadRef = {*myCoboNr, *myAsadNr, *myAgetNr, *myChannelNr};
+         AtPadReference PadRef = {*myCoboNr, *myAsadNr, *myAgetNr, *myChannelNr};
          for (Int_t i = 0; i < 4; i++) { // loop over number of fpn channels
             if ((PadRef.ch == ChannelsFPNpp[i]) && fIsPadPlaneCobo[PadRef.cobo]) {
                Nr_fpn_found++;
@@ -177,7 +176,7 @@ void AtROOTUnpacker::ProcessROOTFILE(AtRawEvent &eventToFill)
    while (myReader.Next() && (!EventCompleted)) {
       // std::cout << "InternalEventNr is" << *myInternalEventNr << " fDataEventID is " << fDataEventID << std::endl;
       if (*myInternalEventNr == fDataEventID) {
-         PadReference PadRef = {*myCoboNr, *myAsadNr, *myAgetNr, *myChannelNr};
+         AtPadReference PadRef = {*myCoboNr, *myAsadNr, *myAgetNr, *myChannelNr};
          Int_t PadRefNum = fMap->GetPadNum(PadRef);
          // std::cout << "Fired pad nr: " << PadRefNum << std::endl;
          // std::cout << ", corresponding to Cobo: " << PadRef.cobo << "   Asad: " <<

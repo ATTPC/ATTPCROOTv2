@@ -2,11 +2,10 @@
 
 #include "AtMap.h"
 #include "AtPad.h"
+#include "AtPadReference.h"
 #include "AtRawEvent.h"
 
 #include <FairLogger.h>
-
-#include "PadReference.h"
 
 #include <utility>
 

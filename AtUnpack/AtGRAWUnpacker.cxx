@@ -2,6 +2,7 @@
 
 #include "AtMap.h"
 #include "AtPad.h"
+#include "AtPadReference.h"
 #include "AtPedestal.h"
 #include "AtRawEvent.h"
 #include "AtTpcMap.h"
@@ -14,7 +15,6 @@
 #include "GETBasicFrame.h"
 #include "GETCoboFrame.h"
 #include "GETDecoder2.h"
-#include "PadReference.h"
 
 #include <algorithm>
 #include <iostream>
@@ -200,7 +200,7 @@ void AtGRAWUnpacker::ProcessFile(Int_t coboIdx)
       for (Int_t iAget = 0; iAget < 4; iAget++) {
          for (Int_t iCh = 0; iCh < 68; iCh++) {
 
-            PadReference PadRef = {iCobo, iAsad, iAget, iCh};
+            AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
             Int_t PadRefNum = fMap->GetPadNum(PadRef);
             auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
 
@@ -254,7 +254,7 @@ void AtGRAWUnpacker::ProcessBasicFile(Int_t coboIdx)
    for (Int_t iAget = 0; iAget < 4; iAget++) {
       for (Int_t iCh = 0; iCh < 68; iCh++) {
 
-         PadReference PadRef = {iCobo, iAsad, iAget, iCh};
+         AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
          auto PadRefNum = fMap->GetPadNum(PadRef);
          auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
 
