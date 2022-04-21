@@ -37,10 +37,7 @@ void AtFilterSubtraction::InitEvent(AtRawEvent *event)
 
    for (const auto &pad : event->GetPads())
       processPad(*pad);
-
    AverageBaseline();
-
-   // LOG(INFO) << "AtFilterSubtraction: Used " << fNumberChUsed << " channels out of a possible " << fNumberChAvail;
 }
 
 void AtFilterSubtraction::processPad(const AtPad &pad)
@@ -88,13 +85,13 @@ void AtFilterSubtraction::Filter(AtPad *pad)
    auto cobo = padRef.cobo;
    auto asad = padRef.asad;
 
-   auto adc = pad->GetADC();
-   auto adcRaw = pad->GetRawADC();
+   auto &adc = pad->GetADC();
+   auto &adcRaw = pad->GetRawADC();
 
    for (int tb = 0; tb < 512; ++tb) {
-      adcRaw[tb] -= fRawBaseline[cobo][asad][tb];
+      pad->SetRawADC(tb, adcRaw[tb] - fRawBaseline[cobo][asad][tb]);
       if (pad->IsPedestalSubtracted())
-         adc[tb] -= fBaseline[cobo][asad][tb];
+         pad->SetADC(tb, adc[tb] - fBaseline[cobo][asad][tb]);
    }
 }
 
