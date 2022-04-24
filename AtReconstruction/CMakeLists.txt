@@ -40,13 +40,14 @@ set(SRCS
   AtPulseAnalyzer/AtPSAProtoFull.cxx
   AtPulseAnalyzer/AtPSAFull.cxx
   AtPulseAnalyzer/AtCalibration.cxx
-
+  
   AtFilter/AtFilter.cxx
   AtFilter/AtFilterSubtraction.cxx
   AtFilter/AtFilterDivide.cxx
   AtFilter/AtTrapezoidFilter.cxx
   AtFilter/AtFilterCalibrate.cxx
-
+  AtFilter/AtFilterFFT.cxx
+  
   AtPSAtask.cxx
   AtFilterTask.cxx
   AtAuxFilterTask.cxx

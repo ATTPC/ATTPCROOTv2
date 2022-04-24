@@ -21,8 +21,7 @@
 #include <TObject.h>          // for TObject
 #include <TVector3.h>         // for TVector3
 
-#include <assert.h> // for assert
-
+#include <cassert> // for assert
 #include <fstream> // for operator<<, endl, basic_ostream, basic...
 #include <utility> // for pair
 #include <vector>  // for vector
@@ -41,7 +40,7 @@ protected:
    TVector3 fVertex_mean;
    Double_t fMinimum{-1};
    Int_t fLineDistThreshold{3};
-   int fRANSACModel{0};
+   int fRANSACModel;
    Float_t fRANSACThreshold{5};
    Double_t fXCenter{0};
    Double_t fYCenter{0};

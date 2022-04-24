@@ -43,7 +43,7 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    mesh.fill(0);
 
    auto mcPointsMap = rawEvent->GetSimMCPointMap();
-   LOG(info) << "MC Simulated points Map size " << mcPointsMap.size();
+   LOG(debug) << "MC Simulated points Map size " << mcPointsMap.size();
 
    //#pragma omp parallel for ordered schedule(dynamic,1) private(iPad)
    for (const auto &pad : rawEvent->GetPads()) {

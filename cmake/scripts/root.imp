@@ -43,7 +43,9 @@
     { include: ["<pcl/common/impl/io.hpp>", "private", "<pcl/common/io.h>", "public"]},
 
     # Mappings for STL
-    { include: ["<pstl/glue_algorithm_defs.h>", "private", "<algorithm>", "public"]}
-    #{ include: ["<stddef.h>", "private", "<cstddef>", "public"]},
-    #{ include: ["<math.h>", "private", "<cmath>", "public"]}
+    { include: ["<pstl/glue_algorithm_defs.h>", "private", "<algorithm>", "public"]},
+    # Fix iwyu trying to include <string_view> for std::hash instead of <functional> where it is
+    # actually defined
+    { symbol: ["std::hash", "private", "<functional>", "public"]}
+    
 ]

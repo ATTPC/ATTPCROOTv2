@@ -18,7 +18,6 @@
 #include <H5Gpublic.h>
 #include <H5Ppublic.h>
 
-#include <algorithm>
 #include <cstdint>
 #include <iostream>
 #include <memory>
@@ -45,13 +44,13 @@ void AtHDFUnpacker::Init()
 
 void AtHDFUnpacker::FillRawEvent(AtRawEvent &event)
 {
-   LOG(info) << " Unpacking event ID: " << fEventID << " with internal ID " << fDataEventID;
+   LOG(debug) << " Unpacking event ID: " << fEventID << " with internal ID " << fDataEventID;
    fRawEvent = &event;
    setEventIDAndTimestamps();
    processData();
 
    fRawEvent->SetIsGood(kTRUE);
-
+   LOG(debug) << " Unpacked " << fRawEvent->GetNumPads() << " pads";
    fEventID++;
    fDataEventID++;
 }

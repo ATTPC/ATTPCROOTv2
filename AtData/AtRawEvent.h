@@ -45,6 +45,7 @@ private:
    std::multimap<Int_t, std::size_t> fSimMCPointMap; //<! Monte Carlo Point - Hit map for kinematics
 
    friend class AtFilterTask;
+   friend class AtFilterFFT;
 
 public:
    AtRawEvent();
@@ -53,13 +54,21 @@ public:
    AtRawEvent(const AtRawEvent &object);
    ~AtRawEvent() = default;
 
+   // Copy everything but the data (pads, aux pads, and MCPointMap) to this event
+   void CopyAllButData(const AtRawEvent *event);
+
    void Clear(Option_t *opt = nullptr) override;
 
-   // As an input takes parameters for any constructor of AtPad
+   // As an input takes parameters for any constructor of AtPad, or a unique_ptr<AtPad>
    template <typename... Ts>
    AtPad *AddPad(Ts &&...params)
    {
       fPadList.push_back(std::make_unique<AtPad>(std::forward<Ts>(params)...));
+      return fPadList.back().get();
+   }
+   AtPad *AddPad(AtPadPtr ptr)
+   {
+      fPadList.push_back(std::move(ptr));
       return fPadList.back().get();
    }
    // Returns a pointer to the newly added pad, or existing pad if auxName is already used
@@ -87,8 +96,8 @@ public:
    Bool_t IsGood() const { return fIsGood; }
    Bool_t GetIsExtGate() const { return fIsInGate; }
 
-   const PadVector &GetPads() { return fPadList; }
-   const AuxPadMap &GetAuxPads() { return fAuxPadMap; }
+   const PadVector &GetPads() const { return fPadList; }
+   const AuxPadMap &GetAuxPads() const { return fAuxPadMap; }
    std::multimap<Int_t, std::size_t> &GetSimMCPointMap() { return fSimMCPointMap; }
 
    ClassDefOverride(AtRawEvent, 5);

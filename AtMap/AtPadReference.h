@@ -4,6 +4,8 @@
 #include <Rtypes.h>
 
 #include <cstddef>
+#include <functional> // IWYU pragma: keep
+#include <iosfwd>
 
 // The definition of this struct, and the operator overloads have to
 // be before AtMap where an unordered_map using this as a key is

@@ -1,6 +1,6 @@
 // Script to pull traces for a pad from a single event
 
-void getTraces(int tpcRun = 200)
+void getTraces(int tpcRun = 195, int eventNum = 0, int padID = 3309)
 {
 
    TChain tpc_tree("cbmsim");
@@ -10,7 +10,8 @@ void getTraces(int tpcRun = 200)
    TTreeReaderValue<TClonesArray> event(reader, "AtRawEvent");
 
    // Open file and skip header
-   std::ofstream traceFile("data/traces_" + std::to_string(tpcRun) + ".dat");
+   auto oFileName = "data/traces_" + std::to_string(tpcRun) + "," + std::to_string(padID) + ".dat";
+   std::ofstream traceFile(oFileName);
    if (!traceFile.good())
       std::cout << "Failed to open file" << std::endl;
 
@@ -22,49 +23,37 @@ void getTraces(int tpcRun = 200)
 
    auto fAtMapPtr = new AtTpcMap();
    fAtMapPtr->ParseXMLMap(mapDir.Data());
-   fAtMapPtr->GenerateAtTpc();
-   auto fPadPlane = fAtMapPtr->GetAtTpcPlane();
+   fAtMapPtr->GeneratePadPlane();
+   auto fPadPlane = fAtMapPtr->GetPadPlane();
    double fThreshold = 0;
 
-   const int numEvents = 5;
-   const int padID = 0;
-   std::vector<std::vector<Short_t>> traces; // traces[event][time]
-
    // Loop through every event
-   for (int i = 0; i < numEvents; ++i) {
-      if (!reader.Next())
-         break;
+   reader.SetEntry(eventNum);
 
-      //Get the event
-      AtRawEvent *eventPtr = (AtRawEvent *)(event->At(0));
-      auto numHits = eventPtr->GetNumPads();
-      for (int i = 0; i < numHits; ++i) {
-         // Get the padNum for the hit
-         auto pad = eventPtr->GetPad(i);
-         auto padNum = pad->GetPadNum();
-
-         // Save the pad if we should
-         if (padNum == padID) {
-            std::vector<Short_t> trace;
-            for (int t = 0; t < 512; ++t)
-               trace.push_back(pad->GetRawADC(t));
-            traces.push_back(trace);
-         }
-      }
+   // Get the event
+   AtRawEvent *eventPtr = (AtRawEvent *)(event->At(0));
+   auto pad = eventPtr->GetPad(padID);
+   if (!pad) {
+      std::cout << "Event had no pad " << padID << std::endl;
+      std::cout << "Aborting!" << std::endl;
+      return;
    }
+   std::cout << "Getting trace for pad " << padID << " at " << fAtMapPtr->GetPadRef(padID) << endl;
+
+   auto &rawTrace = pad->GetRawADC();
+   auto &trace = pad->GetADC();
 
    // Write header
    traceFile << "TB,";
-   for (int i = 0; i < numEvents; ++i)
-      traceFile << "Event" << i << ",";
+   traceFile << "Event" << eventNum << ",";
    traceFile << std::endl;
 
    // Loop through and print in csv file and fill pad plane
    for (int i = 0; i < 512; ++i) {
 
       traceFile << i;
-      for (auto &event : traces)
-         traceFile << "," << event[i];
+      traceFile << "," << rawTrace[i];
+      traceFile << "," << trace[i];
       traceFile << std::endl;
    }
 

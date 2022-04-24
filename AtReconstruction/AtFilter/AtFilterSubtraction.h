@@ -28,6 +28,7 @@ using AtMapPtr = std::shared_ptr<AtMap>;
 class AtFilterSubtraction : public AtFilter {
 private:
    const Int_t fNumberCoBo;
+   Int_t fEventNumber{-1};
    Double_t fThreshold = 0;
    AtMapPtr fMapping;
    Int_t fNumberMissedAsads{};

@@ -1,5 +1,7 @@
 #include "AtEvent.h"
 
+#include "AtRawEvent.h"
+
 #include <Rtypes.h>
 
 #include <algorithm>
@@ -9,11 +11,17 @@ ClassImp(AtEvent);
 
 AtEvent::AtEvent() : AtEvent(-1, false) {}
 
-AtEvent::AtEvent(Int_t eventID, Bool_t isGood)
-   : TNamed("AtEvent", "Event container"), fEventID(eventID), fIsGood(isGood)
+AtEvent::AtEvent(Int_t eventID, Bool_t isGood, Bool_t isInGate, ULong_t timestamp)
+   : TNamed("AtEvent", "Event container"), fEventID(eventID), fIsGood(isGood), fIsInGate(isInGate),
+     fTimestamp(timestamp)
 {
 }
-
+AtEvent::AtEvent(const AtRawEvent &copy)
+   : AtEvent(copy.GetEventID(), copy.IsGood(), copy.GetIsExtGate(), copy.GetTimestamp())
+{
+   for (const auto &[auxName, auxPad] : copy.GetAuxPads())
+      fAuxPadArray.emplace_back(auxPad);
+}
 void AtEvent::Clear(Option_t *opt)
 {
    fEventID = -1;

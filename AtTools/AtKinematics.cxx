@@ -29,7 +29,7 @@ Double_t AtTools::AtKinematics::TwoBodyEx(Double_t m1, Double_t m2, Double_t m3,
    double Et1 = K_proj + m1;
    double Et2 = m2;
    double Et3 = K_eject + m3;
-   double Et4 = Et1 + Et2 - Et3;
+   // double Et4 = Et1 + Et2 - Et3;
    double m4_ex, Ex, theta_cm;
    double s, t, u; //---Mandelstam variables
 

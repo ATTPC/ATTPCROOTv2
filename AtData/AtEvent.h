@@ -11,7 +11,6 @@
 
 #include <algorithm>
 #include <array>
-#include <iostream>
 #include <map>
 #include <memory>
 #include <utility>
@@ -20,6 +19,8 @@
 class TBuffer;
 class TClass;
 class TMemberInspector;
+
+class AtRawEvent;
 
 using auxPadVector = std::vector<AtAuxPad>;
 using traceArray = std::array<Float_t, 512>;
@@ -30,10 +31,10 @@ class AtEvent : public TNamed {
 private:
    Int_t fEventID;
    Bool_t fIsGood;
-   Bool_t fIsInGate = false;
+   Bool_t fIsInGate;
+   ULong_t fTimestamp;
    Double_t fEventCharge = -100;
    Double_t fRhoVariance = 0;
-   ULong_t fTimestamp = 0;
 
    hitVector fHitArray;
    std::vector<AtAuxPad> fAuxPadArray;
@@ -43,8 +44,9 @@ private:
 
 public:
    AtEvent();
-   AtEvent(Int_t eventID, Bool_t isGood);
+   AtEvent(Int_t eventID, Bool_t isGood, Bool_t isInGate = false, ULong_t timestamp = 0);
    AtEvent(const AtEvent &copy) = default;
+   AtEvent(const AtRawEvent &copy);
    ~AtEvent() = default;
 
    void Clear(Option_t *opt = nullptr) override;

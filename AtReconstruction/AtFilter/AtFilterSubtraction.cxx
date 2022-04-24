@@ -38,6 +38,7 @@ void AtFilterSubtraction::InitEvent(AtRawEvent *event)
    for (const auto &pad : event->GetPads())
       processPad(*pad);
    AverageBaseline();
+   fEventNumber = event->GetEventID();
 }
 
 void AtFilterSubtraction::processPad(const AtPad &pad)
@@ -73,7 +74,7 @@ void AtFilterSubtraction::AverageBaseline()
                fRawBaseline[cobo][asad][tb] /= fAgetCount[cobo][asad];
             }
          else {
-            LOG(ERROR) << "All AGET ch0s had data for cobo " << cobo << " asad " << asad;
+            LOG(ERROR) << "No baseline for cobo " << cobo << " asad " << asad << " in event " << fEventNumber;
             fNumberMissedAsads++;
          }
 }

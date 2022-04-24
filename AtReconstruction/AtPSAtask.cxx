@@ -12,8 +12,7 @@
 
 #include <TObject.h> // for TObject
 
-#include <map>     // for allocator, operator!=, _Rb_tree_const_i...
-#include <utility> // for pair
+#include <map> // for allocator, operator!=, _Rb_tree_const_i...
 
 // AtTPCRoot Classes
 #include <TClonesArray.h>
@@ -98,18 +97,10 @@ void AtPSAtask::Exec(Option_t *opt)
    }
 
    auto *rawEvent = dynamic_cast<AtRawEvent *>(fRawEventArray->At(0));
-   auto *event = (AtEvent *)new ((*fEventHArray)[0]) AtEvent();
-
-   LOG(debug) << "Setting AtEvent Parameters";
-   event->SetIsGood(rawEvent->IsGood());
-   event->SetEventID(rawEvent->GetEventID());
-   event->SetTimestamp(rawEvent->GetTimestamp());
-   event->SetIsInGate(rawEvent->GetIsExtGate());
-
-   LOG(debug) << "Finished setting AtEvent Parameters";
+   auto *event = (AtEvent *)new ((*fEventHArray)[0]) AtEvent(*rawEvent);
 
    if (!rawEvent->IsGood()) {
-      LOG(info) << "Event is not good, skipping PSA";
+      LOG(debug) << "Event " << rawEvent->GetEventID() << " is not good, skipping PSA";
       return;
    }
 
@@ -118,7 +109,5 @@ void AtPSAtask::Exec(Option_t *opt)
 
    fPSA->Analyze(rawEvent, event);
 
-   LOG(debug) << "Finished running PSA, copying aux pads";
-   for (const auto &auxIt : rawEvent->GetAuxPads())
-      event->AddAuxPad(auxIt.second);
+   LOG(debug) << "Finished running PSA";
 }

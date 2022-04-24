@@ -15,10 +15,12 @@
 #include <TObject.h>
 
 #include <array>
+#include <memory>
 
 class TBuffer;
 class TClass;
 class TMemberInspector;
+class TH1D;
 
 class AtPad : public TObject {
 public:
@@ -36,13 +38,11 @@ protected:
    rawTrace fRawAdc{};
    trace fAdc{};
 
-   // Bool_t fIsAux;
-   // std::string fAuxName;
-
 public:
    AtPad(Int_t PadNum = -1);
    AtPad(const AtPad &obj) = default;
-   ~AtPad() = default;
+   virtual ~AtPad() = default;
+   virtual std::unique_ptr<AtPad> Clone(); // Create a copy of sub-type
 
    void SetValidPad(Bool_t val = kTRUE) { fIsValid = val; }
    void SetPadNum(Int_t padNum) { fPadNum = padNum; }
@@ -68,6 +68,8 @@ public:
 
    const trace &GetADC() const;
    Double_t GetADC(Int_t idx) const;
+   std::unique_ptr<TH1D> GetADCHistrogram() const;
+
    const rawTrace &GetRawADC() const { return fRawAdc; }
    Int_t GetRawADC(Int_t idx) const { return fRawAdc[idx]; }
 

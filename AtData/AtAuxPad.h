@@ -13,6 +13,7 @@
 
 #include <Rtypes.h>
 
+#include <memory>
 #include <string>
 #include <utility>
 
@@ -27,7 +28,8 @@ protected:
 public:
    AtAuxPad(std::string fAuxName = "noname");
    AtAuxPad(const AtAuxPad &obj) = default;
-   ~AtAuxPad() = default;
+   virtual ~AtAuxPad() = default;
+   virtual std::unique_ptr<AtPad> Clone() override;
 
    void SetAuxName(std::string val) { fAuxName = std::move(val); }
    std::string GetAuxName() const { return fAuxName; }
@@ -40,7 +42,7 @@ public:
    Int_t GetSizeID() const = delete;
    XYPoint GetPadCoord() const = delete;
 
-   ClassDef(AtAuxPad, 1);
+   ClassDefOverride(AtAuxPad, 1);
 };
 
 #endif

@@ -73,6 +73,7 @@ macro(set_attpcroot_defaults)
 	set(iwyu_path_and_args
 	  ${iwyu_path}
 	  -Xiwyu
+	  #-v6
 	  --mapping_file=${CMAKE_SOURCE_DIR}/cmake/scripts/root.imp)
 	set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path_and_args})
       endif()

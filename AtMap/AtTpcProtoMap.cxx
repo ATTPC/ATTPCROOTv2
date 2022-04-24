@@ -17,7 +17,6 @@
 #include <TMultiGraph.h>
 #include <TObject.h>
 
-#include <algorithm>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>

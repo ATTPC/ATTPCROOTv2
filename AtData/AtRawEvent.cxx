@@ -12,8 +12,6 @@
 
 #include <FairLogger.h>
 
-#include <iostream>
-
 ClassImp(AtRawEvent);
 
 AtRawEvent::AtRawEvent() : TNamed("AtRawEvent", "Raw event container")
@@ -24,9 +22,16 @@ AtRawEvent::AtRawEvent() : TNamed("AtRawEvent", "Raw event container")
 AtRawEvent::AtRawEvent(const AtRawEvent &obj)
    : fEventID(obj.fEventID), fAuxPadMap(obj.fAuxPadMap), fIsInGate(obj.fIsInGate), fSimMCPointMap(obj.fSimMCPointMap)
 {
-   std::cout << "Copying AtRawEvent " << obj.fEventID << " with " << obj.fPadList.size() << " pads" << std::endl;
    for (const auto &pad : obj.fPadList)
-      fPadList.push_back(std::make_unique<AtPad>(*pad));
+      fPadList.push_back(pad->Clone());
+}
+
+void AtRawEvent::CopyAllButData(const AtRawEvent *event)
+{
+   fEventID = event->fEventID;
+   fTimestamp = event->fTimestamp;
+   fIsGood = event->fIsGood;
+   fIsInGate = event->fIsInGate;
 }
 
 void AtRawEvent::Clear(Option_t *opt)

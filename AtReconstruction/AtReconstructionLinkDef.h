@@ -4,6 +4,8 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
+#pragma link C++ class AtFFTFilter - !; // Don't generate any IO
+
 #pragma link C++ class AtPSA + ;
 #pragma link C++ class AtPSASimple + ;
 #pragma link C++ class AtPSASimple2 + ;
