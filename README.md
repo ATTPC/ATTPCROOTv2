@@ -1,12 +1,26 @@
-ATTPCROOT is a ROOT-based (root.cern.ch) framework to analyze data of the ATTPC detector (Active Target Time Projection Chamber) and the p-ATTPC (Prototype). For reference http://ribf.riken.jp/ARIS2014/slide/files/Jun2/Par2B06Bazin-final.pdf. The detector is based at the NSCL but experiments are performed at other facilities as well (Notre Dame, TRIUMF, Argonne...).
+ATTPCROOT is a ROOT-based (root.cern.ch) framework to analyze data of active target detectors including the ATTPC (Active Target Time Projection Chamber) detector and the p-ATTPC (Prototype). For reference http://ribf.riken.jp/ARIS2014/slide/files/Jun2/Par2B06Bazin-final.pdf. The detector is based at the NSCL but experiments are performed at other facilities as well (Notre Dame, TRIUMF, Argonne...).
  
 The framework allows the end user to unpack and analyze the data, as well as perform realistic simulations based on a Virtual Monte Carlo (VMC) package. The framework needs external libraries (FairSoft and FairRoot https://fairroot.gsi.de/) to be compiled and executed, which are developed by other groups and not directly supported by the AT-TPC group. Please refer to their forums for installation issues of these packages.
 
 There was also some documentation written as part of Alexander Carl's 2019 thesis which can be found [here](https://publications.nscl.msu.edu/thesis/%20Carls_2019_6009.pdf)
 
+# Table of contents
+
+- [For developers](#for-developers)
+  - [Coding conventions](#coding-conventions)
+    - [Object Ownership](#object-ownership)
+    - [Formatting code for PRs](#formatting-code-for-pull-requests)
+    - [Adding a class](#adding-a-class)
+    - [Adding a task](#adding-a-task)
+    - [Adding a library](#adding-a-library)
+- [Installation](#installation)
+  - [On NSCL/FRIB cluster](#installation-on-frib-cluster)
+  - [Building from scratch](#installation-from-scratch)
+  - [Linking against ATTPCROOT](#linking-against-attpcroot)
+
 # Installation
 
-## Installation on NSCL/FRIB cluster
+## Installation on FRIB cluster
 
 ROOT and FairROOT are already installed on the system. As of 1/14/2021 the IT department has decided they no longer want to maintain the installation, the the process has changed. The prequisites for installation can now bew found in the directory `/mnt/simulation/attpcroot/fair_install_18.6/`. It is recomended to use the `env_fishtank.sh` script to set the required modules and enviroment variables that used to be handled just through the fishtank module system.
 
@@ -19,13 +33,13 @@ source env_fishtank.sh
 mkdir build
 cd build
 cmake -DCMAKE_PREFIX_PATH=/mnt/simulations/attpcroot/fair_install_18.6/ ../
-make -j 4
-source config.sh -a
+make install -j 4 
+source config.sh
 ```
 
 After the source builds, you should be good to go. The CMake script will output a configuration file in the build directory called `config.sh`. This script should be sourced before building or running any macros. For those working on the FRIB fishtank computers, the enviroment script `env_fishtank.sh` can be sourced instead.
 
-## Installation on other systems
+## Installation from scratch
 
 The ATTPCROOT code depends on the following external packages, with tested version numbers:
 
@@ -139,17 +153,33 @@ cmake -DCMAKE_INSTALL_PREFIX=/mnt/simulations/attpcroot/fair_install_18.6/HiRAEV
 ```
 4. Build and install `make` and `make install`
 
+## Linking against ATTPCROOT
+ATTPCROOT can be included in an external project using CMake. When installed (`make install`) ATTPCROOT will export information on its targets (libraries) and dependencies for others to use. By default, the installation path is `build/install` but this can be changed by setting the `CMAKE_INSTALL_PREFIX` variable when building the ATTPCROOT code.
+
+The simplest use involves making sure the install directory sits on your project's `CMAKE_PREFIX_PATH` and using CMake's build in `find_package(ATTPCROOT)` command, and then adding the libraries required with `target_link_libraries()`. A minimally fuctioning CMakeLists.txt for an external project might look something like this:
+
+```
+list(APPEND CMAKE_PREFIX_PATH /path/to/ATTPCROOT/install/dir)
+
+find_package(ATTPCROOT REQUIRED)
+add_library(yourLib SHARED yourLib.cpp)
+target_link_libraries(yourLib PUBLIC ATTPCROOT::AtData)
+```
+This will build a shared library called `libyourLib.so` and link it against `libAtData.so` and all its dependencies.
+
 # For developers
 
 ## Coding conventions
 
-Pull requests submitted should have the code formated in the [ROOT style](https://root.cern/contribute/coding_conventions/). Never include a header file when a forward decleration is sufficient. Only include header files for base classes or classes that are used by value in the class definition.
+Pull requests submitted should have the code formated in the [ROOT style](https://root.cern/contribute/coding_conventions/). Never include a header file when a forward decleration is sufficient. Only include header files for base classes or classes that are used by value in the class definition. The static analyzer IWYU helps with this, but will ocassionally get things wrong, so use your judgment.
 
-All data members of a class should be private or protected and begin with the letter `f`, followed by a capital letter. All public member functions should begin with a capital letter. Private data members should be declared first, followed by the private static members, the private methods and the private static methods. Then the protected members and methods and finally the public methods. Add trivial get or setters directly in the class definition. Add more complex inlines (longer than one line) at the bottom of the .h file. 
+All data members of a class should be private or protected and begin with the letter `f`, followed by a capital letter. All public member functions should begin with a capital letter. Following ROOT's style guide, private data members should be declared first, followed by the private static members, the private methods and the private static methods. Then the protected members and methods, and finally the public methods. Add trivial get or setters directly in the class definition. Add more complex inlines (longer than one line) at the bottom of the .h file. 
 
-Avoid raw c types for anything that might be written to disk (any memeber variable), instead use ROOT defined types like `Int_t` defined in `Rtypes.h`. If any changes are made to the memory layout of a class, the version number in the ROOT macro `ClassDef` needs to be incremented. If the class overrides any virtual function, the macro `ClassDefOverride` should be used instead.
+Avoid raw c types for anything that might be written to disk (any memeber variable), instead use ROOT defined types like `Int_t` defined in `<Rtypes.h>`. If any changes are made to the memory layout of a class, the version number in the ROOT macro `ClassDef` needs to be incremented. If the class overrides any virtual function, the macro `ClassDefOverride` should be used instead.
 
-An object should always be created in a valid state. Instance variables that are set to the same value in all constructors should be instantiated in the header file. Variables whose initial value can change depending on the constructor called, should be intialized in the constructor's braced-init-list. Prefer delegating constructors to repeating code. 
+An object should always be created in a valid state. Instance variables that are set to the same value in all constructors should be instantiated in the header file. Variables whose initial value can change depending on the constructor called, should be intialized in the constructor's braced-init-list. Prefer delegating constructors to repeating code.
+
+Header files refrencing this code base should be included using quotes i.e. `#include "header.h"`. Header files from dependencies should be included using angle brackets i.e. `#include <Rtypes.h>`. This is the syntax assumed by the custom mapping file we use for running IWYU and will lead to false errors running the linter if deviated from. 
 
 ### Object ownership
 
@@ -169,13 +199,13 @@ Before submitting a pull request run the tests as described [below](#running-tes
 
 ## Adding a class
 
-Classes, for example a new generator, can be added by created the header and source files. In that directory the `CMakeLists.txt` file must be edited to add any include directories needed as well as add the source file so the make file knows to compile it. In addition the class should be added the the local `GenLinkDef.h` file, if needed. In addition, a symbolic link should be created to the new header in the `include` directory. Classes should respect the naming convention of `AtName.cxx` for source, and `AtName.h` for headers. The FairRoot macro used to generate the ROOT dictionaries for each library, assumes these file extensions.
+Classes, for example a new generator, can be added by creating the header and source files. In the library directory the `CMakeLists.txt` file must be edited to add any include directories needed as well as add the source file so CMake knows to compile it. In addition the class should be added the the local `LinkDef.h` file, if needed. Classes should respect the naming convention of `AtName.cxx` for source, and `AtName.h` for headers or the build system might fail. The macros used to generate the ROOT dictionaries for each library, assumes these file extensions.
 
 In general, any class added or modified should try to respect backwards compatibilty. In addition, it should avoid modifying important base classes unless there is a good reason. That is, if you're adding a feature only used in a certain experiment to a certain class you should extend that class rather then modify it.
 
 ## Adding a task
 
-Each task class (something that inherits from FairTask) should be primarily responsible for setting up the input and output. The logic of the task should be handled by another class, an instance of which is a member of the task class. When adding new features or options to a task the base logic class should be extended rather then modified.
+Each task class (something that inherits from FairTask) should be primarily responsible for setting up the input and output. The logic of the task should be handled by another class, an instance of which is a member of the task class. The goal here is to seperate the IO from the actualy loogic of the task. This makes it easier for someone linking against ATTPCROOT to use the logic without spinning up an entire instance of FairRoot. 
 
 ## Adding a library
 
