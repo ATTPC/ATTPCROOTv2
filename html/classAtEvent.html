@@ -66,6 +66,8 @@ $(function() {
 <div class="title">AtEvent Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="AtData_2AtEvent_8h_source.html">AtEvent.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for AtEvent:</div>
 <div class="dyncontent">
@@ -83,316 +85,2854 @@ Collaboration diagram for AtEvent:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0bf6534c4f32dba1a25e3b12808e43ee"><td class="memItemLeft" align="right" valign="top"><a id="a0bf6534c4f32dba1a25e3b12808e43ee"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AtEvent</b> (Int_t eventID, Bool_t isGood, Bool_t isInGate=false, ULong_t timestamp=0)</td></tr>
+<tr class="memitem:a290cb7c0d5f53f6f20cddae54d5b0915"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a290cb7c0d5f53f6f20cddae54d5b0915">AtEvent</a> ()</td></tr>
+<tr class="separator:a290cb7c0d5f53f6f20cddae54d5b0915"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bf6534c4f32dba1a25e3b12808e43ee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a0bf6534c4f32dba1a25e3b12808e43ee">AtEvent</a> (Int_t eventID, Bool_t isGood, Bool_t isInGate=false, ULong_t timestamp=0)</td></tr>
 <tr class="separator:a0bf6534c4f32dba1a25e3b12808e43ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa83867561cc0ada5cd0122d7ab4618c4"><td class="memItemLeft" align="right" valign="top"><a id="aa83867561cc0ada5cd0122d7ab4618c4"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AtEvent</b> (const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;copy)=default</td></tr>
+<tr class="memitem:aa83867561cc0ada5cd0122d7ab4618c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#aa83867561cc0ada5cd0122d7ab4618c4">AtEvent</a> (const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;copy)=default</td></tr>
 <tr class="separator:aa83867561cc0ada5cd0122d7ab4618c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05fb11e2f3f6d56a51106afb6aa23e6d"><td class="memItemLeft" align="right" valign="top"><a id="a05fb11e2f3f6d56a51106afb6aa23e6d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AtEvent</b> (const <a class="el" href="classAtRawEvent.html">AtRawEvent</a> &amp;copy)</td></tr>
+<tr class="memitem:a05fb11e2f3f6d56a51106afb6aa23e6d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a05fb11e2f3f6d56a51106afb6aa23e6d">AtEvent</a> (const <a class="el" href="classAtRawEvent.html">AtRawEvent</a> &amp;copy)</td></tr>
 <tr class="separator:a05fb11e2f3f6d56a51106afb6aa23e6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e794eab0edd5c989af6a43da750e1e0"><td class="memItemLeft" align="right" valign="top"><a id="a6e794eab0edd5c989af6a43da750e1e0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Clear</b> (Option_t *opt=nullptr) override</td></tr>
+<tr class="memitem:a31e58cd9de3cc87dd46a851e6a460d1b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a31e58cd9de3cc87dd46a851e6a460d1b">~AtEvent</a> ()=default</td></tr>
+<tr class="separator:a31e58cd9de3cc87dd46a851e6a460d1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e794eab0edd5c989af6a43da750e1e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a6e794eab0edd5c989af6a43da750e1e0">Clear</a> (Option_t *opt=nullptr) override</td></tr>
 <tr class="separator:a6e794eab0edd5c989af6a43da750e1e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c7269a388507abf0c8268c56c9f7442"><td class="memItemLeft" align="right" valign="top"><a id="a9c7269a388507abf0c8268c56c9f7442"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>CopyFrom</b> (const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;event)</td></tr>
+<tr class="memitem:a9c7269a388507abf0c8268c56c9f7442"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a9c7269a388507abf0c8268c56c9f7442">CopyFrom</a> (const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;event)</td></tr>
 <tr class="separator:a9c7269a388507abf0c8268c56c9f7442"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10cdc40598bb23c246058f3f874e7fe2"><td class="memTemplParams" colspan="2"><a id="a10cdc40598bb23c246058f3f874e7fe2"></a>
-template&lt;typename... Ts&gt; </td></tr>
-<tr class="memitem:a10cdc40598bb23c246058f3f874e7fe2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>AddHit</b> (Ts &amp;&amp;...params)</td></tr>
+<tr class="memitem:a10cdc40598bb23c246058f3f874e7fe2"><td class="memTemplParams" colspan="2">template&lt;typename... Ts&gt; </td></tr>
+<tr class="memitem:a10cdc40598bb23c246058f3f874e7fe2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a10cdc40598bb23c246058f3f874e7fe2">AddHit</a> (Ts &amp;&amp;...params)</td></tr>
 <tr class="separator:a10cdc40598bb23c246058f3f874e7fe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7166a1b99b1f2bffc2bc6ba4b1dc4f99"><td class="memItemLeft" align="right" valign="top"><a id="a7166a1b99b1f2bffc2bc6ba4b1dc4f99"></a>
-<a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>AddHit</b> (const <a class="el" href="classAtHit.html">AtHit</a> &amp;hit)</td></tr>
+<tr class="memitem:a7166a1b99b1f2bffc2bc6ba4b1dc4f99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a7166a1b99b1f2bffc2bc6ba4b1dc4f99">AddHit</a> (const <a class="el" href="classAtHit.html">AtHit</a> &amp;hit)</td></tr>
 <tr class="separator:a7166a1b99b1f2bffc2bc6ba4b1dc4f99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a0e55f42c185045fc24be3f4a7d9720"><td class="memItemLeft" align="right" valign="top"><a id="a2a0e55f42c185045fc24be3f4a7d9720"></a>
-<a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>AddHit</b> (<a class="el" href="classAtHit.html">AtHit</a> &amp;hit)</td></tr>
+<tr class="memitem:a2a0e55f42c185045fc24be3f4a7d9720"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a2a0e55f42c185045fc24be3f4a7d9720">AddHit</a> (<a class="el" href="classAtHit.html">AtHit</a> &amp;hit)</td></tr>
 <tr class="separator:a2a0e55f42c185045fc24be3f4a7d9720"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4942933cb856e955710b3ca880214dc"><td class="memItemLeft" align="right" valign="top"><a id="ab4942933cb856e955710b3ca880214dc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>AddAuxPad</b> (<a class="el" href="classAtAuxPad.html">AtAuxPad</a> auxPad)</td></tr>
+<tr class="memitem:ab4942933cb856e955710b3ca880214dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ab4942933cb856e955710b3ca880214dc">AddAuxPad</a> (<a class="el" href="classAtAuxPad.html">AtAuxPad</a> auxPad)</td></tr>
 <tr class="separator:ab4942933cb856e955710b3ca880214dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72636adc94368d7562a7563ed80781e5"><td class="memItemLeft" align="right" valign="top"><a id="a72636adc94368d7562a7563ed80781e5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetEventID</b> (Int_t evtid)</td></tr>
+<tr class="memitem:a72636adc94368d7562a7563ed80781e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a72636adc94368d7562a7563ed80781e5">SetEventID</a> (Int_t evtid)</td></tr>
 <tr class="separator:a72636adc94368d7562a7563ed80781e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c4221265117ac0d51fe2ce26cc75a52"><td class="memItemLeft" align="right" valign="top"><a id="a2c4221265117ac0d51fe2ce26cc75a52"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetTimestamp</b> (ULong_t timestamp)</td></tr>
+<tr class="memitem:a2c4221265117ac0d51fe2ce26cc75a52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a2c4221265117ac0d51fe2ce26cc75a52">SetTimestamp</a> (ULong_t timestamp)</td></tr>
 <tr class="separator:a2c4221265117ac0d51fe2ce26cc75a52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a241b6697bb9195544346141e0e9fc3ad"><td class="memItemLeft" align="right" valign="top"><a id="a241b6697bb9195544346141e0e9fc3ad"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetEventCharge</b> (Double_t Qevent)</td></tr>
+<tr class="memitem:a241b6697bb9195544346141e0e9fc3ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a241b6697bb9195544346141e0e9fc3ad">SetEventCharge</a> (Double_t Qevent)</td></tr>
 <tr class="separator:a241b6697bb9195544346141e0e9fc3ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1fea1db3f74086dffc30e48be94d7ce"><td class="memItemLeft" align="right" valign="top"><a id="ae1fea1db3f74086dffc30e48be94d7ce"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetRhoVariance</b> (Double_t RhoVariance)</td></tr>
+<tr class="memitem:ae1fea1db3f74086dffc30e48be94d7ce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ae1fea1db3f74086dffc30e48be94d7ce">SetRhoVariance</a> (Double_t RhoVariance)</td></tr>
 <tr class="separator:ae1fea1db3f74086dffc30e48be94d7ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88352589d61fdf8fbbccc23f6b84fa50"><td class="memItemLeft" align="right" valign="top"><a id="a88352589d61fdf8fbbccc23f6b84fa50"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetIsGood</b> (Bool_t value)</td></tr>
+<tr class="memitem:a88352589d61fdf8fbbccc23f6b84fa50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a88352589d61fdf8fbbccc23f6b84fa50">SetIsGood</a> (Bool_t value)</td></tr>
 <tr class="separator:a88352589d61fdf8fbbccc23f6b84fa50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b0fcae30dda8e073bfcf47fe2df9bfd"><td class="memItemLeft" align="right" valign="top"><a id="a8b0fcae30dda8e073bfcf47fe2df9bfd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetIsInGate</b> (Bool_t value)</td></tr>
+<tr class="memitem:a8b0fcae30dda8e073bfcf47fe2df9bfd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a8b0fcae30dda8e073bfcf47fe2df9bfd">SetIsInGate</a> (Bool_t value)</td></tr>
 <tr class="separator:a8b0fcae30dda8e073bfcf47fe2df9bfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a657cbf87e86e3e96a1f3e68b88bc25fb"><td class="memItemLeft" align="right" valign="top"><a id="a657cbf87e86e3e96a1f3e68b88bc25fb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetMultiplicityMap</b> (std::map&lt; Int_t, Int_t &gt; MultiMap)</td></tr>
+<tr class="memitem:a657cbf87e86e3e96a1f3e68b88bc25fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a657cbf87e86e3e96a1f3e68b88bc25fb">SetMultiplicityMap</a> (std::map&lt; Int_t, Int_t &gt; MultiMap)</td></tr>
 <tr class="separator:a657cbf87e86e3e96a1f3e68b88bc25fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbbd0e9e363fe5f267b46a452a5ee78b"><td class="memItemLeft" align="right" valign="top"><a id="abbbd0e9e363fe5f267b46a452a5ee78b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetMeshSignal</b> (const traceArray &amp;mesharray)</td></tr>
+<tr class="memitem:abbbd0e9e363fe5f267b46a452a5ee78b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#abbbd0e9e363fe5f267b46a452a5ee78b">SetMeshSignal</a> (const <a class="el" href="AtData_2AtEvent_8h.html#ab1f096ee04369041d59df237725f2952">traceArray</a> &amp;mesharray)</td></tr>
 <tr class="separator:abbbd0e9e363fe5f267b46a452a5ee78b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9806cd3cc3025ca4bfd20d7fb95940bb"><td class="memItemLeft" align="right" valign="top"><a id="a9806cd3cc3025ca4bfd20d7fb95940bb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetMeshSignal</b> (Int_t idx, Float_t val)</td></tr>
+<tr class="memitem:a9806cd3cc3025ca4bfd20d7fb95940bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a9806cd3cc3025ca4bfd20d7fb95940bb">SetMeshSignal</a> (Int_t idx, Float_t val)</td></tr>
 <tr class="separator:a9806cd3cc3025ca4bfd20d7fb95940bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16aae576ed906529c61be7fd84d88b1d"><td class="memItemLeft" align="right" valign="top"><a id="a16aae576ed906529c61be7fd84d88b1d"></a>
-const <a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetHit</b> (Int_t hitNo) const</td></tr>
+<tr class="memitem:a16aae576ed906529c61be7fd84d88b1d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a16aae576ed906529c61be7fd84d88b1d">GetHit</a> (Int_t hitNo) const</td></tr>
 <tr class="separator:a16aae576ed906529c61be7fd84d88b1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4835a130ed5e4ec7c62cfd520f6c3cd1"><td class="memItemLeft" align="right" valign="top"><a id="a4835a130ed5e4ec7c62cfd520f6c3cd1"></a>
-const hitVector &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetHitArray</b> () const</td></tr>
+<tr class="memitem:a4835a130ed5e4ec7c62cfd520f6c3cd1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="AtData_2AtEvent_8h.html#a7d4eefd40266a92db433dbf1d558d9bb">hitVector</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a4835a130ed5e4ec7c62cfd520f6c3cd1">GetHitArray</a> () const</td></tr>
 <tr class="separator:a4835a130ed5e4ec7c62cfd520f6c3cd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac04d4fcccf9f64077f967b4aeab58bd9"><td class="memItemLeft" align="right" valign="top"><a id="ac04d4fcccf9f64077f967b4aeab58bd9"></a>
-const auxPadVector &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetAuxPadArray</b> () const</td></tr>
+<tr class="memitem:ac04d4fcccf9f64077f967b4aeab58bd9"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="AtData_2AtEvent_8h.html#ab0c3dbe90c6122c1bc6a1aac8ad10354">auxPadVector</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ac04d4fcccf9f64077f967b4aeab58bd9">GetAuxPadArray</a> () const</td></tr>
 <tr class="separator:ac04d4fcccf9f64077f967b4aeab58bd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21eeb949653b1e61bcb66c594657ee78"><td class="memItemLeft" align="right" valign="top"><a id="a21eeb949653b1e61bcb66c594657ee78"></a>
-Int_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetEventID</b> () const</td></tr>
+<tr class="memitem:a21eeb949653b1e61bcb66c594657ee78"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a21eeb949653b1e61bcb66c594657ee78">GetEventID</a> () const</td></tr>
 <tr class="separator:a21eeb949653b1e61bcb66c594657ee78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b585092cb088217ef3c1ea47e6a14b9"><td class="memItemLeft" align="right" valign="top"><a id="a4b585092cb088217ef3c1ea47e6a14b9"></a>
-Long_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetTimestamp</b> () const</td></tr>
+<tr class="memitem:a4b585092cb088217ef3c1ea47e6a14b9"><td class="memItemLeft" align="right" valign="top">Long_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a4b585092cb088217ef3c1ea47e6a14b9">GetTimestamp</a> () const</td></tr>
 <tr class="separator:a4b585092cb088217ef3c1ea47e6a14b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bd2908ad4259bf382b41594bb26c35d"><td class="memItemLeft" align="right" valign="top"><a id="a5bd2908ad4259bf382b41594bb26c35d"></a>
-Int_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetNumHits</b> () const</td></tr>
+<tr class="memitem:a5bd2908ad4259bf382b41594bb26c35d"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a5bd2908ad4259bf382b41594bb26c35d">GetNumHits</a> () const</td></tr>
 <tr class="separator:a5bd2908ad4259bf382b41594bb26c35d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e39e7b4573a4907ae296d0e5a7253c1"><td class="memItemLeft" align="right" valign="top"><a id="a5e39e7b4573a4907ae296d0e5a7253c1"></a>
-Double_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetEventCharge</b> () const</td></tr>
+<tr class="memitem:a5e39e7b4573a4907ae296d0e5a7253c1"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a5e39e7b4573a4907ae296d0e5a7253c1">GetEventCharge</a> () const</td></tr>
 <tr class="separator:a5e39e7b4573a4907ae296d0e5a7253c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af44b50ce6ad4e2fb4673ca18abea29a0"><td class="memItemLeft" align="right" valign="top"><a id="af44b50ce6ad4e2fb4673ca18abea29a0"></a>
-Double_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetRhoVariance</b> () const</td></tr>
+<tr class="memitem:af44b50ce6ad4e2fb4673ca18abea29a0"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#af44b50ce6ad4e2fb4673ca18abea29a0">GetRhoVariance</a> () const</td></tr>
 <tr class="separator:af44b50ce6ad4e2fb4673ca18abea29a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a348fb8af2ee6aebfda5b783a8664d311"><td class="memItemLeft" align="right" valign="top"><a id="a348fb8af2ee6aebfda5b783a8664d311"></a>
-const traceArray &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetMesh</b> () const</td></tr>
+<tr class="memitem:a348fb8af2ee6aebfda5b783a8664d311"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="AtData_2AtEvent_8h.html#ab1f096ee04369041d59df237725f2952">traceArray</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a348fb8af2ee6aebfda5b783a8664d311">GetMesh</a> () const</td></tr>
 <tr class="separator:a348fb8af2ee6aebfda5b783a8664d311"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7aaddcd843911e6aa674be2229f9c48"><td class="memItemLeft" align="right" valign="top"><a id="af7aaddcd843911e6aa674be2229f9c48"></a>
-Int_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetHitPadMult</b> (Int_t PadNum)</td></tr>
+<tr class="memitem:af7aaddcd843911e6aa674be2229f9c48"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#af7aaddcd843911e6aa674be2229f9c48">GetHitPadMult</a> (Int_t PadNum)</td></tr>
 <tr class="separator:af7aaddcd843911e6aa674be2229f9c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac735820d1ddbd8228a7c5cf5782d6b9c"><td class="memItemLeft" align="right" valign="top"><a id="ac735820d1ddbd8228a7c5cf5782d6b9c"></a>
-const std::map&lt; Int_t, Int_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetMultiMap</b> ()</td></tr>
+<tr class="memitem:ac735820d1ddbd8228a7c5cf5782d6b9c"><td class="memItemLeft" align="right" valign="top">const std::map&lt; Int_t, Int_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ac735820d1ddbd8228a7c5cf5782d6b9c">GetMultiMap</a> ()</td></tr>
 <tr class="separator:ac735820d1ddbd8228a7c5cf5782d6b9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac56290bf4dde5166ff3f8338280b7f7f"><td class="memItemLeft" align="right" valign="top"><a id="ac56290bf4dde5166ff3f8338280b7f7f"></a>
-Bool_t&#160;</td><td class="memItemRight" valign="bottom"><b>IsGood</b> () const</td></tr>
+<tr class="memitem:ac56290bf4dde5166ff3f8338280b7f7f"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ac56290bf4dde5166ff3f8338280b7f7f">IsGood</a> () const</td></tr>
 <tr class="separator:ac56290bf4dde5166ff3f8338280b7f7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade06238dcb89508371a7ff05d7e108d1"><td class="memItemLeft" align="right" valign="top"><a id="ade06238dcb89508371a7ff05d7e108d1"></a>
-Bool_t&#160;</td><td class="memItemRight" valign="bottom"><b>IsInGate</b> () const</td></tr>
+<tr class="memitem:ade06238dcb89508371a7ff05d7e108d1"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ade06238dcb89508371a7ff05d7e108d1">IsInGate</a> () const</td></tr>
 <tr class="separator:ade06238dcb89508371a7ff05d7e108d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cd91892441a0a5fc26d99ccc03e2312"><td class="memItemLeft" align="right" valign="top"><a id="a8cd91892441a0a5fc26d99ccc03e2312"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SortHitArray</b> ()</td></tr>
+<tr class="memitem:a8cd91892441a0a5fc26d99ccc03e2312"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a8cd91892441a0a5fc26d99ccc03e2312">SortHitArray</a> ()</td></tr>
 <tr class="separator:a8cd91892441a0a5fc26d99ccc03e2312"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f0372d41cfc69d3d7d35159bac61ac4"><td class="memItemLeft" align="right" valign="top"><a id="a9f0372d41cfc69d3d7d35159bac61ac4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SortHitArrayTime</b> ()</td></tr>
+<tr class="memitem:a9f0372d41cfc69d3d7d35159bac61ac4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a9f0372d41cfc69d3d7d35159bac61ac4">SortHitArrayTime</a> ()</td></tr>
 <tr class="separator:a9f0372d41cfc69d3d7d35159bac61ac4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fd4ab148bdc0c9b15cbfe10aba95cf2"><td class="memItemLeft" align="right" valign="top"><a id="a1fd4ab148bdc0c9b15cbfe10aba95cf2"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ClassDefOverride</b> (<a class="el" href="classAtEvent.html">AtEvent</a>, 4)</td></tr>
+<tr class="memitem:a1fd4ab148bdc0c9b15cbfe10aba95cf2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a1fd4ab148bdc0c9b15cbfe10aba95cf2">ClassDefOverride</a> (<a class="el" href="classAtEvent.html">AtEvent</a>, 4)</td></tr>
 <tr class="separator:a1fd4ab148bdc0c9b15cbfe10aba95cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0bf6534c4f32dba1a25e3b12808e43ee"><td class="memItemLeft" align="right" valign="top"><a id="a0bf6534c4f32dba1a25e3b12808e43ee"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AtEvent</b> (Int_t eventID, Bool_t isGood, Bool_t isInGate=false, ULong_t timestamp=0)</td></tr>
+<tr class="memitem:a290cb7c0d5f53f6f20cddae54d5b0915"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a290cb7c0d5f53f6f20cddae54d5b0915">AtEvent</a> ()</td></tr>
+<tr class="separator:a290cb7c0d5f53f6f20cddae54d5b0915"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bf6534c4f32dba1a25e3b12808e43ee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a0bf6534c4f32dba1a25e3b12808e43ee">AtEvent</a> (Int_t eventID, Bool_t isGood, Bool_t isInGate=false, ULong_t timestamp=0)</td></tr>
 <tr class="separator:a0bf6534c4f32dba1a25e3b12808e43ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa83867561cc0ada5cd0122d7ab4618c4"><td class="memItemLeft" align="right" valign="top"><a id="aa83867561cc0ada5cd0122d7ab4618c4"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AtEvent</b> (const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;copy)=default</td></tr>
+<tr class="memitem:aa83867561cc0ada5cd0122d7ab4618c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#aa83867561cc0ada5cd0122d7ab4618c4">AtEvent</a> (const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;copy)=default</td></tr>
 <tr class="separator:aa83867561cc0ada5cd0122d7ab4618c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05fb11e2f3f6d56a51106afb6aa23e6d"><td class="memItemLeft" align="right" valign="top"><a id="a05fb11e2f3f6d56a51106afb6aa23e6d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AtEvent</b> (const <a class="el" href="classAtRawEvent.html">AtRawEvent</a> &amp;copy)</td></tr>
+<tr class="memitem:a05fb11e2f3f6d56a51106afb6aa23e6d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a05fb11e2f3f6d56a51106afb6aa23e6d">AtEvent</a> (const <a class="el" href="classAtRawEvent.html">AtRawEvent</a> &amp;copy)</td></tr>
 <tr class="separator:a05fb11e2f3f6d56a51106afb6aa23e6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e794eab0edd5c989af6a43da750e1e0"><td class="memItemLeft" align="right" valign="top"><a id="a6e794eab0edd5c989af6a43da750e1e0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Clear</b> (Option_t *opt=nullptr) override</td></tr>
+<tr class="memitem:a31e58cd9de3cc87dd46a851e6a460d1b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a31e58cd9de3cc87dd46a851e6a460d1b">~AtEvent</a> ()=default</td></tr>
+<tr class="separator:a31e58cd9de3cc87dd46a851e6a460d1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e794eab0edd5c989af6a43da750e1e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a6e794eab0edd5c989af6a43da750e1e0">Clear</a> (Option_t *opt=nullptr) override</td></tr>
 <tr class="separator:a6e794eab0edd5c989af6a43da750e1e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c7269a388507abf0c8268c56c9f7442"><td class="memItemLeft" align="right" valign="top"><a id="a9c7269a388507abf0c8268c56c9f7442"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>CopyFrom</b> (const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;event)</td></tr>
+<tr class="memitem:a9c7269a388507abf0c8268c56c9f7442"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a9c7269a388507abf0c8268c56c9f7442">CopyFrom</a> (const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;event)</td></tr>
 <tr class="separator:a9c7269a388507abf0c8268c56c9f7442"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10cdc40598bb23c246058f3f874e7fe2"><td class="memTemplParams" colspan="2"><a id="a10cdc40598bb23c246058f3f874e7fe2"></a>
-template&lt;typename... Ts&gt; </td></tr>
-<tr class="memitem:a10cdc40598bb23c246058f3f874e7fe2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>AddHit</b> (Ts &amp;&amp;...params)</td></tr>
+<tr class="memitem:a10cdc40598bb23c246058f3f874e7fe2"><td class="memTemplParams" colspan="2">template&lt;typename... Ts&gt; </td></tr>
+<tr class="memitem:a10cdc40598bb23c246058f3f874e7fe2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a10cdc40598bb23c246058f3f874e7fe2">AddHit</a> (Ts &amp;&amp;...params)</td></tr>
 <tr class="separator:a10cdc40598bb23c246058f3f874e7fe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7166a1b99b1f2bffc2bc6ba4b1dc4f99"><td class="memItemLeft" align="right" valign="top"><a id="a7166a1b99b1f2bffc2bc6ba4b1dc4f99"></a>
-<a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>AddHit</b> (const <a class="el" href="classAtHit.html">AtHit</a> &amp;hit)</td></tr>
+<tr class="memitem:a7166a1b99b1f2bffc2bc6ba4b1dc4f99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a7166a1b99b1f2bffc2bc6ba4b1dc4f99">AddHit</a> (const <a class="el" href="classAtHit.html">AtHit</a> &amp;hit)</td></tr>
 <tr class="separator:a7166a1b99b1f2bffc2bc6ba4b1dc4f99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a0e55f42c185045fc24be3f4a7d9720"><td class="memItemLeft" align="right" valign="top"><a id="a2a0e55f42c185045fc24be3f4a7d9720"></a>
-<a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>AddHit</b> (<a class="el" href="classAtHit.html">AtHit</a> &amp;hit)</td></tr>
+<tr class="memitem:a2a0e55f42c185045fc24be3f4a7d9720"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a2a0e55f42c185045fc24be3f4a7d9720">AddHit</a> (<a class="el" href="classAtHit.html">AtHit</a> &amp;hit)</td></tr>
 <tr class="separator:a2a0e55f42c185045fc24be3f4a7d9720"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4942933cb856e955710b3ca880214dc"><td class="memItemLeft" align="right" valign="top"><a id="ab4942933cb856e955710b3ca880214dc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>AddAuxPad</b> (<a class="el" href="classAtAuxPad.html">AtAuxPad</a> auxPad)</td></tr>
+<tr class="memitem:ab4942933cb856e955710b3ca880214dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ab4942933cb856e955710b3ca880214dc">AddAuxPad</a> (<a class="el" href="classAtAuxPad.html">AtAuxPad</a> auxPad)</td></tr>
 <tr class="separator:ab4942933cb856e955710b3ca880214dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72636adc94368d7562a7563ed80781e5"><td class="memItemLeft" align="right" valign="top"><a id="a72636adc94368d7562a7563ed80781e5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetEventID</b> (Int_t evtid)</td></tr>
+<tr class="memitem:a72636adc94368d7562a7563ed80781e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a72636adc94368d7562a7563ed80781e5">SetEventID</a> (Int_t evtid)</td></tr>
 <tr class="separator:a72636adc94368d7562a7563ed80781e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c4221265117ac0d51fe2ce26cc75a52"><td class="memItemLeft" align="right" valign="top"><a id="a2c4221265117ac0d51fe2ce26cc75a52"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetTimestamp</b> (ULong_t timestamp)</td></tr>
+<tr class="memitem:a2c4221265117ac0d51fe2ce26cc75a52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a2c4221265117ac0d51fe2ce26cc75a52">SetTimestamp</a> (ULong_t timestamp)</td></tr>
 <tr class="separator:a2c4221265117ac0d51fe2ce26cc75a52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a241b6697bb9195544346141e0e9fc3ad"><td class="memItemLeft" align="right" valign="top"><a id="a241b6697bb9195544346141e0e9fc3ad"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetEventCharge</b> (Double_t Qevent)</td></tr>
+<tr class="memitem:a241b6697bb9195544346141e0e9fc3ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a241b6697bb9195544346141e0e9fc3ad">SetEventCharge</a> (Double_t Qevent)</td></tr>
 <tr class="separator:a241b6697bb9195544346141e0e9fc3ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1fea1db3f74086dffc30e48be94d7ce"><td class="memItemLeft" align="right" valign="top"><a id="ae1fea1db3f74086dffc30e48be94d7ce"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetRhoVariance</b> (Double_t RhoVariance)</td></tr>
+<tr class="memitem:ae1fea1db3f74086dffc30e48be94d7ce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ae1fea1db3f74086dffc30e48be94d7ce">SetRhoVariance</a> (Double_t RhoVariance)</td></tr>
 <tr class="separator:ae1fea1db3f74086dffc30e48be94d7ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88352589d61fdf8fbbccc23f6b84fa50"><td class="memItemLeft" align="right" valign="top"><a id="a88352589d61fdf8fbbccc23f6b84fa50"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetIsGood</b> (Bool_t value)</td></tr>
+<tr class="memitem:a88352589d61fdf8fbbccc23f6b84fa50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a88352589d61fdf8fbbccc23f6b84fa50">SetIsGood</a> (Bool_t value)</td></tr>
 <tr class="separator:a88352589d61fdf8fbbccc23f6b84fa50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b0fcae30dda8e073bfcf47fe2df9bfd"><td class="memItemLeft" align="right" valign="top"><a id="a8b0fcae30dda8e073bfcf47fe2df9bfd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetIsInGate</b> (Bool_t value)</td></tr>
+<tr class="memitem:a8b0fcae30dda8e073bfcf47fe2df9bfd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a8b0fcae30dda8e073bfcf47fe2df9bfd">SetIsInGate</a> (Bool_t value)</td></tr>
 <tr class="separator:a8b0fcae30dda8e073bfcf47fe2df9bfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a657cbf87e86e3e96a1f3e68b88bc25fb"><td class="memItemLeft" align="right" valign="top"><a id="a657cbf87e86e3e96a1f3e68b88bc25fb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetMultiplicityMap</b> (std::map&lt; Int_t, Int_t &gt; MultiMap)</td></tr>
+<tr class="memitem:a657cbf87e86e3e96a1f3e68b88bc25fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a657cbf87e86e3e96a1f3e68b88bc25fb">SetMultiplicityMap</a> (std::map&lt; Int_t, Int_t &gt; MultiMap)</td></tr>
 <tr class="separator:a657cbf87e86e3e96a1f3e68b88bc25fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbbd0e9e363fe5f267b46a452a5ee78b"><td class="memItemLeft" align="right" valign="top"><a id="abbbd0e9e363fe5f267b46a452a5ee78b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetMeshSignal</b> (const traceArray &amp;mesharray)</td></tr>
+<tr class="memitem:abbbd0e9e363fe5f267b46a452a5ee78b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#abbbd0e9e363fe5f267b46a452a5ee78b">SetMeshSignal</a> (const <a class="el" href="AtData_2AtEvent_8h.html#ab1f096ee04369041d59df237725f2952">traceArray</a> &amp;mesharray)</td></tr>
 <tr class="separator:abbbd0e9e363fe5f267b46a452a5ee78b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9806cd3cc3025ca4bfd20d7fb95940bb"><td class="memItemLeft" align="right" valign="top"><a id="a9806cd3cc3025ca4bfd20d7fb95940bb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetMeshSignal</b> (Int_t idx, Float_t val)</td></tr>
+<tr class="memitem:a9806cd3cc3025ca4bfd20d7fb95940bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a9806cd3cc3025ca4bfd20d7fb95940bb">SetMeshSignal</a> (Int_t idx, Float_t val)</td></tr>
 <tr class="separator:a9806cd3cc3025ca4bfd20d7fb95940bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16aae576ed906529c61be7fd84d88b1d"><td class="memItemLeft" align="right" valign="top"><a id="a16aae576ed906529c61be7fd84d88b1d"></a>
-const <a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetHit</b> (Int_t hitNo) const</td></tr>
+<tr class="memitem:a16aae576ed906529c61be7fd84d88b1d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a16aae576ed906529c61be7fd84d88b1d">GetHit</a> (Int_t hitNo) const</td></tr>
 <tr class="separator:a16aae576ed906529c61be7fd84d88b1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4835a130ed5e4ec7c62cfd520f6c3cd1"><td class="memItemLeft" align="right" valign="top"><a id="a4835a130ed5e4ec7c62cfd520f6c3cd1"></a>
-const hitVector &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetHitArray</b> () const</td></tr>
+<tr class="memitem:a4835a130ed5e4ec7c62cfd520f6c3cd1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="AtData_2AtEvent_8h.html#a7d4eefd40266a92db433dbf1d558d9bb">hitVector</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a4835a130ed5e4ec7c62cfd520f6c3cd1">GetHitArray</a> () const</td></tr>
 <tr class="separator:a4835a130ed5e4ec7c62cfd520f6c3cd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac04d4fcccf9f64077f967b4aeab58bd9"><td class="memItemLeft" align="right" valign="top"><a id="ac04d4fcccf9f64077f967b4aeab58bd9"></a>
-const auxPadVector &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetAuxPadArray</b> () const</td></tr>
+<tr class="memitem:ac04d4fcccf9f64077f967b4aeab58bd9"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="AtData_2AtEvent_8h.html#ab0c3dbe90c6122c1bc6a1aac8ad10354">auxPadVector</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ac04d4fcccf9f64077f967b4aeab58bd9">GetAuxPadArray</a> () const</td></tr>
 <tr class="separator:ac04d4fcccf9f64077f967b4aeab58bd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21eeb949653b1e61bcb66c594657ee78"><td class="memItemLeft" align="right" valign="top"><a id="a21eeb949653b1e61bcb66c594657ee78"></a>
-Int_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetEventID</b> () const</td></tr>
+<tr class="memitem:a21eeb949653b1e61bcb66c594657ee78"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a21eeb949653b1e61bcb66c594657ee78">GetEventID</a> () const</td></tr>
 <tr class="separator:a21eeb949653b1e61bcb66c594657ee78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b585092cb088217ef3c1ea47e6a14b9"><td class="memItemLeft" align="right" valign="top"><a id="a4b585092cb088217ef3c1ea47e6a14b9"></a>
-Long_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetTimestamp</b> () const</td></tr>
+<tr class="memitem:a4b585092cb088217ef3c1ea47e6a14b9"><td class="memItemLeft" align="right" valign="top">Long_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a4b585092cb088217ef3c1ea47e6a14b9">GetTimestamp</a> () const</td></tr>
 <tr class="separator:a4b585092cb088217ef3c1ea47e6a14b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bd2908ad4259bf382b41594bb26c35d"><td class="memItemLeft" align="right" valign="top"><a id="a5bd2908ad4259bf382b41594bb26c35d"></a>
-Int_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetNumHits</b> () const</td></tr>
+<tr class="memitem:a5bd2908ad4259bf382b41594bb26c35d"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a5bd2908ad4259bf382b41594bb26c35d">GetNumHits</a> () const</td></tr>
 <tr class="separator:a5bd2908ad4259bf382b41594bb26c35d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e39e7b4573a4907ae296d0e5a7253c1"><td class="memItemLeft" align="right" valign="top"><a id="a5e39e7b4573a4907ae296d0e5a7253c1"></a>
-Double_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetEventCharge</b> () const</td></tr>
+<tr class="memitem:a5e39e7b4573a4907ae296d0e5a7253c1"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a5e39e7b4573a4907ae296d0e5a7253c1">GetEventCharge</a> () const</td></tr>
 <tr class="separator:a5e39e7b4573a4907ae296d0e5a7253c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af44b50ce6ad4e2fb4673ca18abea29a0"><td class="memItemLeft" align="right" valign="top"><a id="af44b50ce6ad4e2fb4673ca18abea29a0"></a>
-Double_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetRhoVariance</b> () const</td></tr>
+<tr class="memitem:af44b50ce6ad4e2fb4673ca18abea29a0"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#af44b50ce6ad4e2fb4673ca18abea29a0">GetRhoVariance</a> () const</td></tr>
 <tr class="separator:af44b50ce6ad4e2fb4673ca18abea29a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a348fb8af2ee6aebfda5b783a8664d311"><td class="memItemLeft" align="right" valign="top"><a id="a348fb8af2ee6aebfda5b783a8664d311"></a>
-const traceArray &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetMesh</b> () const</td></tr>
+<tr class="memitem:a348fb8af2ee6aebfda5b783a8664d311"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="AtData_2AtEvent_8h.html#ab1f096ee04369041d59df237725f2952">traceArray</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a348fb8af2ee6aebfda5b783a8664d311">GetMesh</a> () const</td></tr>
 <tr class="separator:a348fb8af2ee6aebfda5b783a8664d311"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7aaddcd843911e6aa674be2229f9c48"><td class="memItemLeft" align="right" valign="top"><a id="af7aaddcd843911e6aa674be2229f9c48"></a>
-Int_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetHitPadMult</b> (Int_t PadNum)</td></tr>
+<tr class="memitem:af7aaddcd843911e6aa674be2229f9c48"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#af7aaddcd843911e6aa674be2229f9c48">GetHitPadMult</a> (Int_t PadNum)</td></tr>
 <tr class="separator:af7aaddcd843911e6aa674be2229f9c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac735820d1ddbd8228a7c5cf5782d6b9c"><td class="memItemLeft" align="right" valign="top"><a id="ac735820d1ddbd8228a7c5cf5782d6b9c"></a>
-const std::map&lt; Int_t, Int_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetMultiMap</b> ()</td></tr>
+<tr class="memitem:ac735820d1ddbd8228a7c5cf5782d6b9c"><td class="memItemLeft" align="right" valign="top">const std::map&lt; Int_t, Int_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ac735820d1ddbd8228a7c5cf5782d6b9c">GetMultiMap</a> ()</td></tr>
 <tr class="separator:ac735820d1ddbd8228a7c5cf5782d6b9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac56290bf4dde5166ff3f8338280b7f7f"><td class="memItemLeft" align="right" valign="top"><a id="ac56290bf4dde5166ff3f8338280b7f7f"></a>
-Bool_t&#160;</td><td class="memItemRight" valign="bottom"><b>IsGood</b> () const</td></tr>
+<tr class="memitem:ac56290bf4dde5166ff3f8338280b7f7f"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ac56290bf4dde5166ff3f8338280b7f7f">IsGood</a> () const</td></tr>
 <tr class="separator:ac56290bf4dde5166ff3f8338280b7f7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade06238dcb89508371a7ff05d7e108d1"><td class="memItemLeft" align="right" valign="top"><a id="ade06238dcb89508371a7ff05d7e108d1"></a>
-Bool_t&#160;</td><td class="memItemRight" valign="bottom"><b>IsInGate</b> () const</td></tr>
+<tr class="memitem:ade06238dcb89508371a7ff05d7e108d1"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ade06238dcb89508371a7ff05d7e108d1">IsInGate</a> () const</td></tr>
 <tr class="separator:ade06238dcb89508371a7ff05d7e108d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cd91892441a0a5fc26d99ccc03e2312"><td class="memItemLeft" align="right" valign="top"><a id="a8cd91892441a0a5fc26d99ccc03e2312"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SortHitArray</b> ()</td></tr>
+<tr class="memitem:a8cd91892441a0a5fc26d99ccc03e2312"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a8cd91892441a0a5fc26d99ccc03e2312">SortHitArray</a> ()</td></tr>
 <tr class="separator:a8cd91892441a0a5fc26d99ccc03e2312"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f0372d41cfc69d3d7d35159bac61ac4"><td class="memItemLeft" align="right" valign="top"><a id="a9f0372d41cfc69d3d7d35159bac61ac4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SortHitArrayTime</b> ()</td></tr>
+<tr class="memitem:a9f0372d41cfc69d3d7d35159bac61ac4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a9f0372d41cfc69d3d7d35159bac61ac4">SortHitArrayTime</a> ()</td></tr>
 <tr class="separator:a9f0372d41cfc69d3d7d35159bac61ac4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fd4ab148bdc0c9b15cbfe10aba95cf2"><td class="memItemLeft" align="right" valign="top"><a id="a1fd4ab148bdc0c9b15cbfe10aba95cf2"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ClassDefOverride</b> (<a class="el" href="classAtEvent.html">AtEvent</a>, 4)</td></tr>
+<tr class="memitem:a1fd4ab148bdc0c9b15cbfe10aba95cf2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a1fd4ab148bdc0c9b15cbfe10aba95cf2">ClassDefOverride</a> (<a class="el" href="classAtEvent.html">AtEvent</a>, 4)</td></tr>
 <tr class="separator:a1fd4ab148bdc0c9b15cbfe10aba95cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a524c0b43662e35b0a6bc0fbd4e4938ca"><td class="memItemLeft" align="right" valign="top"><a id="a524c0b43662e35b0a6bc0fbd4e4938ca"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AtEvent</b> (Int_t eventID, Bool_t isGood)</td></tr>
+<tr class="memitem:a290cb7c0d5f53f6f20cddae54d5b0915"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a290cb7c0d5f53f6f20cddae54d5b0915">AtEvent</a> ()</td></tr>
+<tr class="separator:a290cb7c0d5f53f6f20cddae54d5b0915"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a524c0b43662e35b0a6bc0fbd4e4938ca"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a524c0b43662e35b0a6bc0fbd4e4938ca">AtEvent</a> (Int_t eventID, Bool_t isGood)</td></tr>
 <tr class="separator:a524c0b43662e35b0a6bc0fbd4e4938ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa83867561cc0ada5cd0122d7ab4618c4"><td class="memItemLeft" align="right" valign="top"><a id="aa83867561cc0ada5cd0122d7ab4618c4"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AtEvent</b> (const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;copy)=default</td></tr>
+<tr class="memitem:aa83867561cc0ada5cd0122d7ab4618c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#aa83867561cc0ada5cd0122d7ab4618c4">AtEvent</a> (const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;copy)=default</td></tr>
 <tr class="separator:aa83867561cc0ada5cd0122d7ab4618c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e794eab0edd5c989af6a43da750e1e0"><td class="memItemLeft" align="right" valign="top"><a id="a6e794eab0edd5c989af6a43da750e1e0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Clear</b> (Option_t *opt=nullptr) override</td></tr>
+<tr class="memitem:a31e58cd9de3cc87dd46a851e6a460d1b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a31e58cd9de3cc87dd46a851e6a460d1b">~AtEvent</a> ()=default</td></tr>
+<tr class="separator:a31e58cd9de3cc87dd46a851e6a460d1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e794eab0edd5c989af6a43da750e1e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a6e794eab0edd5c989af6a43da750e1e0">Clear</a> (Option_t *opt=nullptr) override</td></tr>
 <tr class="separator:a6e794eab0edd5c989af6a43da750e1e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c7269a388507abf0c8268c56c9f7442"><td class="memItemLeft" align="right" valign="top"><a id="a9c7269a388507abf0c8268c56c9f7442"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>CopyFrom</b> (const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;event)</td></tr>
+<tr class="memitem:a9c7269a388507abf0c8268c56c9f7442"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a9c7269a388507abf0c8268c56c9f7442">CopyFrom</a> (const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;event)</td></tr>
 <tr class="separator:a9c7269a388507abf0c8268c56c9f7442"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10cdc40598bb23c246058f3f874e7fe2"><td class="memTemplParams" colspan="2"><a id="a10cdc40598bb23c246058f3f874e7fe2"></a>
-template&lt;typename... Ts&gt; </td></tr>
-<tr class="memitem:a10cdc40598bb23c246058f3f874e7fe2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>AddHit</b> (Ts &amp;&amp;...params)</td></tr>
+<tr class="memitem:a10cdc40598bb23c246058f3f874e7fe2"><td class="memTemplParams" colspan="2">template&lt;typename... Ts&gt; </td></tr>
+<tr class="memitem:a10cdc40598bb23c246058f3f874e7fe2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a10cdc40598bb23c246058f3f874e7fe2">AddHit</a> (Ts &amp;&amp;...params)</td></tr>
 <tr class="separator:a10cdc40598bb23c246058f3f874e7fe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7166a1b99b1f2bffc2bc6ba4b1dc4f99"><td class="memItemLeft" align="right" valign="top"><a id="a7166a1b99b1f2bffc2bc6ba4b1dc4f99"></a>
-<a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>AddHit</b> (const <a class="el" href="classAtHit.html">AtHit</a> &amp;hit)</td></tr>
+<tr class="memitem:a7166a1b99b1f2bffc2bc6ba4b1dc4f99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a7166a1b99b1f2bffc2bc6ba4b1dc4f99">AddHit</a> (const <a class="el" href="classAtHit.html">AtHit</a> &amp;hit)</td></tr>
 <tr class="separator:a7166a1b99b1f2bffc2bc6ba4b1dc4f99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a0e55f42c185045fc24be3f4a7d9720"><td class="memItemLeft" align="right" valign="top"><a id="a2a0e55f42c185045fc24be3f4a7d9720"></a>
-<a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>AddHit</b> (<a class="el" href="classAtHit.html">AtHit</a> &amp;hit)</td></tr>
+<tr class="memitem:a2a0e55f42c185045fc24be3f4a7d9720"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a2a0e55f42c185045fc24be3f4a7d9720">AddHit</a> (<a class="el" href="classAtHit.html">AtHit</a> &amp;hit)</td></tr>
 <tr class="separator:a2a0e55f42c185045fc24be3f4a7d9720"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4942933cb856e955710b3ca880214dc"><td class="memItemLeft" align="right" valign="top"><a id="ab4942933cb856e955710b3ca880214dc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>AddAuxPad</b> (<a class="el" href="classAtAuxPad.html">AtAuxPad</a> auxPad)</td></tr>
+<tr class="memitem:ab4942933cb856e955710b3ca880214dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ab4942933cb856e955710b3ca880214dc">AddAuxPad</a> (<a class="el" href="classAtAuxPad.html">AtAuxPad</a> auxPad)</td></tr>
 <tr class="separator:ab4942933cb856e955710b3ca880214dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72636adc94368d7562a7563ed80781e5"><td class="memItemLeft" align="right" valign="top"><a id="a72636adc94368d7562a7563ed80781e5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetEventID</b> (Int_t evtid)</td></tr>
+<tr class="memitem:a72636adc94368d7562a7563ed80781e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a72636adc94368d7562a7563ed80781e5">SetEventID</a> (Int_t evtid)</td></tr>
 <tr class="separator:a72636adc94368d7562a7563ed80781e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c4221265117ac0d51fe2ce26cc75a52"><td class="memItemLeft" align="right" valign="top"><a id="a2c4221265117ac0d51fe2ce26cc75a52"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetTimestamp</b> (ULong_t timestamp)</td></tr>
+<tr class="memitem:a2c4221265117ac0d51fe2ce26cc75a52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a2c4221265117ac0d51fe2ce26cc75a52">SetTimestamp</a> (ULong_t timestamp)</td></tr>
 <tr class="separator:a2c4221265117ac0d51fe2ce26cc75a52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a241b6697bb9195544346141e0e9fc3ad"><td class="memItemLeft" align="right" valign="top"><a id="a241b6697bb9195544346141e0e9fc3ad"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetEventCharge</b> (Double_t Qevent)</td></tr>
+<tr class="memitem:a241b6697bb9195544346141e0e9fc3ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a241b6697bb9195544346141e0e9fc3ad">SetEventCharge</a> (Double_t Qevent)</td></tr>
 <tr class="separator:a241b6697bb9195544346141e0e9fc3ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1fea1db3f74086dffc30e48be94d7ce"><td class="memItemLeft" align="right" valign="top"><a id="ae1fea1db3f74086dffc30e48be94d7ce"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetRhoVariance</b> (Double_t RhoVariance)</td></tr>
+<tr class="memitem:ae1fea1db3f74086dffc30e48be94d7ce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ae1fea1db3f74086dffc30e48be94d7ce">SetRhoVariance</a> (Double_t RhoVariance)</td></tr>
 <tr class="separator:ae1fea1db3f74086dffc30e48be94d7ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88352589d61fdf8fbbccc23f6b84fa50"><td class="memItemLeft" align="right" valign="top"><a id="a88352589d61fdf8fbbccc23f6b84fa50"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetIsGood</b> (Bool_t value)</td></tr>
+<tr class="memitem:a88352589d61fdf8fbbccc23f6b84fa50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a88352589d61fdf8fbbccc23f6b84fa50">SetIsGood</a> (Bool_t value)</td></tr>
 <tr class="separator:a88352589d61fdf8fbbccc23f6b84fa50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b0fcae30dda8e073bfcf47fe2df9bfd"><td class="memItemLeft" align="right" valign="top"><a id="a8b0fcae30dda8e073bfcf47fe2df9bfd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetIsInGate</b> (Bool_t value)</td></tr>
+<tr class="memitem:a8b0fcae30dda8e073bfcf47fe2df9bfd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a8b0fcae30dda8e073bfcf47fe2df9bfd">SetIsInGate</a> (Bool_t value)</td></tr>
 <tr class="separator:a8b0fcae30dda8e073bfcf47fe2df9bfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a657cbf87e86e3e96a1f3e68b88bc25fb"><td class="memItemLeft" align="right" valign="top"><a id="a657cbf87e86e3e96a1f3e68b88bc25fb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetMultiplicityMap</b> (std::map&lt; Int_t, Int_t &gt; MultiMap)</td></tr>
+<tr class="memitem:a657cbf87e86e3e96a1f3e68b88bc25fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a657cbf87e86e3e96a1f3e68b88bc25fb">SetMultiplicityMap</a> (std::map&lt; Int_t, Int_t &gt; MultiMap)</td></tr>
 <tr class="separator:a657cbf87e86e3e96a1f3e68b88bc25fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbbd0e9e363fe5f267b46a452a5ee78b"><td class="memItemLeft" align="right" valign="top"><a id="abbbd0e9e363fe5f267b46a452a5ee78b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetMeshSignal</b> (const traceArray &amp;mesharray)</td></tr>
+<tr class="memitem:abbbd0e9e363fe5f267b46a452a5ee78b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#abbbd0e9e363fe5f267b46a452a5ee78b">SetMeshSignal</a> (const <a class="el" href="AtData_2AtEvent_8h.html#ab1f096ee04369041d59df237725f2952">traceArray</a> &amp;mesharray)</td></tr>
 <tr class="separator:abbbd0e9e363fe5f267b46a452a5ee78b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9806cd3cc3025ca4bfd20d7fb95940bb"><td class="memItemLeft" align="right" valign="top"><a id="a9806cd3cc3025ca4bfd20d7fb95940bb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetMeshSignal</b> (Int_t idx, Float_t val)</td></tr>
+<tr class="memitem:a9806cd3cc3025ca4bfd20d7fb95940bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a9806cd3cc3025ca4bfd20d7fb95940bb">SetMeshSignal</a> (Int_t idx, Float_t val)</td></tr>
 <tr class="separator:a9806cd3cc3025ca4bfd20d7fb95940bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16aae576ed906529c61be7fd84d88b1d"><td class="memItemLeft" align="right" valign="top"><a id="a16aae576ed906529c61be7fd84d88b1d"></a>
-const <a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetHit</b> (Int_t hitNo) const</td></tr>
+<tr class="memitem:a16aae576ed906529c61be7fd84d88b1d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a16aae576ed906529c61be7fd84d88b1d">GetHit</a> (Int_t hitNo) const</td></tr>
 <tr class="separator:a16aae576ed906529c61be7fd84d88b1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4835a130ed5e4ec7c62cfd520f6c3cd1"><td class="memItemLeft" align="right" valign="top"><a id="a4835a130ed5e4ec7c62cfd520f6c3cd1"></a>
-const hitVector &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetHitArray</b> () const</td></tr>
+<tr class="memitem:a4835a130ed5e4ec7c62cfd520f6c3cd1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="AtData_2AtEvent_8h.html#a7d4eefd40266a92db433dbf1d558d9bb">hitVector</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a4835a130ed5e4ec7c62cfd520f6c3cd1">GetHitArray</a> () const</td></tr>
 <tr class="separator:a4835a130ed5e4ec7c62cfd520f6c3cd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac04d4fcccf9f64077f967b4aeab58bd9"><td class="memItemLeft" align="right" valign="top"><a id="ac04d4fcccf9f64077f967b4aeab58bd9"></a>
-const auxPadVector &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetAuxPadArray</b> () const</td></tr>
+<tr class="memitem:ac04d4fcccf9f64077f967b4aeab58bd9"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="AtData_2AtEvent_8h.html#ab0c3dbe90c6122c1bc6a1aac8ad10354">auxPadVector</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ac04d4fcccf9f64077f967b4aeab58bd9">GetAuxPadArray</a> () const</td></tr>
 <tr class="separator:ac04d4fcccf9f64077f967b4aeab58bd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21eeb949653b1e61bcb66c594657ee78"><td class="memItemLeft" align="right" valign="top"><a id="a21eeb949653b1e61bcb66c594657ee78"></a>
-Int_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetEventID</b> () const</td></tr>
+<tr class="memitem:a21eeb949653b1e61bcb66c594657ee78"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a21eeb949653b1e61bcb66c594657ee78">GetEventID</a> () const</td></tr>
 <tr class="separator:a21eeb949653b1e61bcb66c594657ee78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b585092cb088217ef3c1ea47e6a14b9"><td class="memItemLeft" align="right" valign="top"><a id="a4b585092cb088217ef3c1ea47e6a14b9"></a>
-Long_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetTimestamp</b> () const</td></tr>
+<tr class="memitem:a4b585092cb088217ef3c1ea47e6a14b9"><td class="memItemLeft" align="right" valign="top">Long_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a4b585092cb088217ef3c1ea47e6a14b9">GetTimestamp</a> () const</td></tr>
 <tr class="separator:a4b585092cb088217ef3c1ea47e6a14b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bd2908ad4259bf382b41594bb26c35d"><td class="memItemLeft" align="right" valign="top"><a id="a5bd2908ad4259bf382b41594bb26c35d"></a>
-Int_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetNumHits</b> () const</td></tr>
+<tr class="memitem:a5bd2908ad4259bf382b41594bb26c35d"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a5bd2908ad4259bf382b41594bb26c35d">GetNumHits</a> () const</td></tr>
 <tr class="separator:a5bd2908ad4259bf382b41594bb26c35d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e39e7b4573a4907ae296d0e5a7253c1"><td class="memItemLeft" align="right" valign="top"><a id="a5e39e7b4573a4907ae296d0e5a7253c1"></a>
-Double_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetEventCharge</b> () const</td></tr>
+<tr class="memitem:a5e39e7b4573a4907ae296d0e5a7253c1"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a5e39e7b4573a4907ae296d0e5a7253c1">GetEventCharge</a> () const</td></tr>
 <tr class="separator:a5e39e7b4573a4907ae296d0e5a7253c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af44b50ce6ad4e2fb4673ca18abea29a0"><td class="memItemLeft" align="right" valign="top"><a id="af44b50ce6ad4e2fb4673ca18abea29a0"></a>
-Double_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetRhoVariance</b> () const</td></tr>
+<tr class="memitem:af44b50ce6ad4e2fb4673ca18abea29a0"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#af44b50ce6ad4e2fb4673ca18abea29a0">GetRhoVariance</a> () const</td></tr>
 <tr class="separator:af44b50ce6ad4e2fb4673ca18abea29a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a348fb8af2ee6aebfda5b783a8664d311"><td class="memItemLeft" align="right" valign="top"><a id="a348fb8af2ee6aebfda5b783a8664d311"></a>
-const traceArray &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetMesh</b> () const</td></tr>
+<tr class="memitem:a348fb8af2ee6aebfda5b783a8664d311"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="AtData_2AtEvent_8h.html#ab1f096ee04369041d59df237725f2952">traceArray</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a348fb8af2ee6aebfda5b783a8664d311">GetMesh</a> () const</td></tr>
 <tr class="separator:a348fb8af2ee6aebfda5b783a8664d311"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7aaddcd843911e6aa674be2229f9c48"><td class="memItemLeft" align="right" valign="top"><a id="af7aaddcd843911e6aa674be2229f9c48"></a>
-Int_t&#160;</td><td class="memItemRight" valign="bottom"><b>GetHitPadMult</b> (Int_t PadNum)</td></tr>
+<tr class="memitem:af7aaddcd843911e6aa674be2229f9c48"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#af7aaddcd843911e6aa674be2229f9c48">GetHitPadMult</a> (Int_t PadNum)</td></tr>
 <tr class="separator:af7aaddcd843911e6aa674be2229f9c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac735820d1ddbd8228a7c5cf5782d6b9c"><td class="memItemLeft" align="right" valign="top"><a id="ac735820d1ddbd8228a7c5cf5782d6b9c"></a>
-const std::map&lt; Int_t, Int_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GetMultiMap</b> ()</td></tr>
+<tr class="memitem:ac735820d1ddbd8228a7c5cf5782d6b9c"><td class="memItemLeft" align="right" valign="top">const std::map&lt; Int_t, Int_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ac735820d1ddbd8228a7c5cf5782d6b9c">GetMultiMap</a> ()</td></tr>
 <tr class="separator:ac735820d1ddbd8228a7c5cf5782d6b9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac56290bf4dde5166ff3f8338280b7f7f"><td class="memItemLeft" align="right" valign="top"><a id="ac56290bf4dde5166ff3f8338280b7f7f"></a>
-Bool_t&#160;</td><td class="memItemRight" valign="bottom"><b>IsGood</b> () const</td></tr>
+<tr class="memitem:ac56290bf4dde5166ff3f8338280b7f7f"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ac56290bf4dde5166ff3f8338280b7f7f">IsGood</a> () const</td></tr>
 <tr class="separator:ac56290bf4dde5166ff3f8338280b7f7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade06238dcb89508371a7ff05d7e108d1"><td class="memItemLeft" align="right" valign="top"><a id="ade06238dcb89508371a7ff05d7e108d1"></a>
-Bool_t&#160;</td><td class="memItemRight" valign="bottom"><b>IsInGate</b> () const</td></tr>
+<tr class="memitem:ade06238dcb89508371a7ff05d7e108d1"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#ade06238dcb89508371a7ff05d7e108d1">IsInGate</a> () const</td></tr>
 <tr class="separator:ade06238dcb89508371a7ff05d7e108d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cd91892441a0a5fc26d99ccc03e2312"><td class="memItemLeft" align="right" valign="top"><a id="a8cd91892441a0a5fc26d99ccc03e2312"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SortHitArray</b> ()</td></tr>
+<tr class="memitem:a8cd91892441a0a5fc26d99ccc03e2312"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a8cd91892441a0a5fc26d99ccc03e2312">SortHitArray</a> ()</td></tr>
 <tr class="separator:a8cd91892441a0a5fc26d99ccc03e2312"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f0372d41cfc69d3d7d35159bac61ac4"><td class="memItemLeft" align="right" valign="top"><a id="a9f0372d41cfc69d3d7d35159bac61ac4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SortHitArrayTime</b> ()</td></tr>
+<tr class="memitem:a9f0372d41cfc69d3d7d35159bac61ac4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a9f0372d41cfc69d3d7d35159bac61ac4">SortHitArrayTime</a> ()</td></tr>
 <tr class="separator:a9f0372d41cfc69d3d7d35159bac61ac4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fd4ab148bdc0c9b15cbfe10aba95cf2"><td class="memItemLeft" align="right" valign="top"><a id="a1fd4ab148bdc0c9b15cbfe10aba95cf2"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ClassDefOverride</b> (<a class="el" href="classAtEvent.html">AtEvent</a>, 4)</td></tr>
+<tr class="memitem:a1fd4ab148bdc0c9b15cbfe10aba95cf2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEvent.html#a1fd4ab148bdc0c9b15cbfe10aba95cf2">ClassDefOverride</a> (<a class="el" href="classAtEvent.html">AtEvent</a>, 4)</td></tr>
 <tr class="separator:a1fd4ab148bdc0c9b15cbfe10aba95cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a290cb7c0d5f53f6f20cddae54d5b0915"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a290cb7c0d5f53f6f20cddae54d5b0915">&#9670;&nbsp;</a></span>AtEvent() <span class="overload">[1/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::AtEvent </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0bf6534c4f32dba1a25e3b12808e43ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bf6534c4f32dba1a25e3b12808e43ee">&#9670;&nbsp;</a></span>AtEvent() <span class="overload">[2/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::AtEvent </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>eventID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Bool_t&#160;</td>
+          <td class="paramname"><em>isGood</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Bool_t&#160;</td>
+          <td class="paramname"><em>isInGate</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ULong_t&#160;</td>
+          <td class="paramname"><em>timestamp</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa83867561cc0ada5cd0122d7ab4618c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa83867561cc0ada5cd0122d7ab4618c4">&#9670;&nbsp;</a></span>AtEvent() <span class="overload">[3/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::AtEvent </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;&#160;</td>
+          <td class="paramname"><em>copy</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a05fb11e2f3f6d56a51106afb6aa23e6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05fb11e2f3f6d56a51106afb6aa23e6d">&#9670;&nbsp;</a></span>AtEvent() <span class="overload">[4/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::AtEvent </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtRawEvent.html">AtRawEvent</a> &amp;&#160;</td>
+          <td class="paramname"><em>copy</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a31e58cd9de3cc87dd46a851e6a460d1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31e58cd9de3cc87dd46a851e6a460d1b">&#9670;&nbsp;</a></span>~AtEvent() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::~AtEvent </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a290cb7c0d5f53f6f20cddae54d5b0915"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a290cb7c0d5f53f6f20cddae54d5b0915">&#9670;&nbsp;</a></span>AtEvent() <span class="overload">[5/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::AtEvent </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0bf6534c4f32dba1a25e3b12808e43ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bf6534c4f32dba1a25e3b12808e43ee">&#9670;&nbsp;</a></span>AtEvent() <span class="overload">[6/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::AtEvent </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>eventID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Bool_t&#160;</td>
+          <td class="paramname"><em>isGood</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Bool_t&#160;</td>
+          <td class="paramname"><em>isInGate</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ULong_t&#160;</td>
+          <td class="paramname"><em>timestamp</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa83867561cc0ada5cd0122d7ab4618c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa83867561cc0ada5cd0122d7ab4618c4">&#9670;&nbsp;</a></span>AtEvent() <span class="overload">[7/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::AtEvent </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;&#160;</td>
+          <td class="paramname"><em>copy</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a05fb11e2f3f6d56a51106afb6aa23e6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05fb11e2f3f6d56a51106afb6aa23e6d">&#9670;&nbsp;</a></span>AtEvent() <span class="overload">[8/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::AtEvent </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtRawEvent.html">AtRawEvent</a> &amp;&#160;</td>
+          <td class="paramname"><em>copy</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a31e58cd9de3cc87dd46a851e6a460d1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31e58cd9de3cc87dd46a851e6a460d1b">&#9670;&nbsp;</a></span>~AtEvent() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::~AtEvent </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a290cb7c0d5f53f6f20cddae54d5b0915"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a290cb7c0d5f53f6f20cddae54d5b0915">&#9670;&nbsp;</a></span>AtEvent() <span class="overload">[9/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::AtEvent </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a524c0b43662e35b0a6bc0fbd4e4938ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a524c0b43662e35b0a6bc0fbd4e4938ca">&#9670;&nbsp;</a></span>AtEvent() <span class="overload">[10/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::AtEvent </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>eventID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Bool_t&#160;</td>
+          <td class="paramname"><em>isGood</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa83867561cc0ada5cd0122d7ab4618c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa83867561cc0ada5cd0122d7ab4618c4">&#9670;&nbsp;</a></span>AtEvent() <span class="overload">[11/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::AtEvent </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;&#160;</td>
+          <td class="paramname"><em>copy</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a31e58cd9de3cc87dd46a851e6a460d1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31e58cd9de3cc87dd46a851e6a460d1b">&#9670;&nbsp;</a></span>~AtEvent() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::~AtEvent </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab4942933cb856e955710b3ca880214dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4942933cb856e955710b3ca880214dc">&#9670;&nbsp;</a></span>AddAuxPad() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::AddAuxPad </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAtAuxPad.html">AtAuxPad</a>&#160;</td>
+          <td class="paramname"><em>auxPad</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab4942933cb856e955710b3ca880214dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4942933cb856e955710b3ca880214dc">&#9670;&nbsp;</a></span>AddAuxPad() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::AddAuxPad </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAtAuxPad.html">AtAuxPad</a>&#160;</td>
+          <td class="paramname"><em>auxPad</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab4942933cb856e955710b3ca880214dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4942933cb856e955710b3ca880214dc">&#9670;&nbsp;</a></span>AddAuxPad() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::AddAuxPad </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAtAuxPad.html">AtAuxPad</a>&#160;</td>
+          <td class="paramname"><em>auxPad</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a10cdc40598bb23c246058f3f874e7fe2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10cdc40598bb23c246058f3f874e7fe2">&#9670;&nbsp;</a></span>AddHit() <span class="overload">[1/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... Ts&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAtHit.html">AtHit</a>&amp; AtEvent::AddHit </td>
+          <td>(</td>
+          <td class="paramtype">Ts &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>params</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a10cdc40598bb23c246058f3f874e7fe2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10cdc40598bb23c246058f3f874e7fe2">&#9670;&nbsp;</a></span>AddHit() <span class="overload">[2/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... Ts&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAtHit.html">AtHit</a>&amp; AtEvent::AddHit </td>
+          <td>(</td>
+          <td class="paramtype">Ts &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>params</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a10cdc40598bb23c246058f3f874e7fe2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10cdc40598bb23c246058f3f874e7fe2">&#9670;&nbsp;</a></span>AddHit() <span class="overload">[3/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... Ts&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAtHit.html">AtHit</a>&amp; AtEvent::AddHit </td>
+          <td>(</td>
+          <td class="paramtype">Ts &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>params</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7166a1b99b1f2bffc2bc6ba4b1dc4f99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7166a1b99b1f2bffc2bc6ba4b1dc4f99">&#9670;&nbsp;</a></span>AddHit() <span class="overload">[4/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAtHit.html">AtHit</a>&amp; AtEvent::AddHit </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td>
+          <td class="paramname"><em>hit</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7166a1b99b1f2bffc2bc6ba4b1dc4f99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7166a1b99b1f2bffc2bc6ba4b1dc4f99">&#9670;&nbsp;</a></span>AddHit() <span class="overload">[5/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAtHit.html">AtHit</a>&amp; AtEvent::AddHit </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td>
+          <td class="paramname"><em>hit</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7166a1b99b1f2bffc2bc6ba4b1dc4f99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7166a1b99b1f2bffc2bc6ba4b1dc4f99">&#9670;&nbsp;</a></span>AddHit() <span class="overload">[6/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAtHit.html">AtHit</a>&amp; AtEvent::AddHit </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td>
+          <td class="paramname"><em>hit</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2a0e55f42c185045fc24be3f4a7d9720"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a0e55f42c185045fc24be3f4a7d9720">&#9670;&nbsp;</a></span>AddHit() <span class="overload">[7/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAtHit.html">AtHit</a>&amp; AtEvent::AddHit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td>
+          <td class="paramname"><em>hit</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2a0e55f42c185045fc24be3f4a7d9720"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a0e55f42c185045fc24be3f4a7d9720">&#9670;&nbsp;</a></span>AddHit() <span class="overload">[8/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAtHit.html">AtHit</a>&amp; AtEvent::AddHit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td>
+          <td class="paramname"><em>hit</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2a0e55f42c185045fc24be3f4a7d9720"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a0e55f42c185045fc24be3f4a7d9720">&#9670;&nbsp;</a></span>AddHit() <span class="overload">[9/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAtHit.html">AtHit</a>&amp; AtEvent::AddHit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td>
+          <td class="paramname"><em>hit</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1fd4ab148bdc0c9b15cbfe10aba95cf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fd4ab148bdc0c9b15cbfe10aba95cf2">&#9670;&nbsp;</a></span>ClassDefOverride() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::ClassDefOverride </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAtEvent.html">AtEvent</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">4&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1fd4ab148bdc0c9b15cbfe10aba95cf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fd4ab148bdc0c9b15cbfe10aba95cf2">&#9670;&nbsp;</a></span>ClassDefOverride() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::ClassDefOverride </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAtEvent.html">AtEvent</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">4&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1fd4ab148bdc0c9b15cbfe10aba95cf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fd4ab148bdc0c9b15cbfe10aba95cf2">&#9670;&nbsp;</a></span>ClassDefOverride() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEvent::ClassDefOverride </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAtEvent.html">AtEvent</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">4&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6e794eab0edd5c989af6a43da750e1e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e794eab0edd5c989af6a43da750e1e0">&#9670;&nbsp;</a></span>Clear() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::Clear </td>
+          <td>(</td>
+          <td class="paramtype">Option_t *&#160;</td>
+          <td class="paramname"><em>opt</em> = <code>nullptr</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6e794eab0edd5c989af6a43da750e1e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e794eab0edd5c989af6a43da750e1e0">&#9670;&nbsp;</a></span>Clear() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::Clear </td>
+          <td>(</td>
+          <td class="paramtype">Option_t *&#160;</td>
+          <td class="paramname"><em>opt</em> = <code>nullptr</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6e794eab0edd5c989af6a43da750e1e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e794eab0edd5c989af6a43da750e1e0">&#9670;&nbsp;</a></span>Clear() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::Clear </td>
+          <td>(</td>
+          <td class="paramtype">Option_t *&#160;</td>
+          <td class="paramname"><em>opt</em> = <code>nullptr</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9c7269a388507abf0c8268c56c9f7442"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c7269a388507abf0c8268c56c9f7442">&#9670;&nbsp;</a></span>CopyFrom() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::CopyFrom </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9c7269a388507abf0c8268c56c9f7442"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c7269a388507abf0c8268c56c9f7442">&#9670;&nbsp;</a></span>CopyFrom() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::CopyFrom </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9c7269a388507abf0c8268c56c9f7442"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c7269a388507abf0c8268c56c9f7442">&#9670;&nbsp;</a></span>CopyFrom() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::CopyFrom </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtEvent.html">AtEvent</a> &amp;&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac04d4fcccf9f64077f967b4aeab58bd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac04d4fcccf9f64077f967b4aeab58bd9">&#9670;&nbsp;</a></span>GetAuxPadArray() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="AtData_2AtEvent_8h.html#ab0c3dbe90c6122c1bc6a1aac8ad10354">auxPadVector</a>&amp; AtEvent::GetAuxPadArray </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac04d4fcccf9f64077f967b4aeab58bd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac04d4fcccf9f64077f967b4aeab58bd9">&#9670;&nbsp;</a></span>GetAuxPadArray() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="AtData_2AtEvent_8h.html#ab0c3dbe90c6122c1bc6a1aac8ad10354">auxPadVector</a>&amp; AtEvent::GetAuxPadArray </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac04d4fcccf9f64077f967b4aeab58bd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac04d4fcccf9f64077f967b4aeab58bd9">&#9670;&nbsp;</a></span>GetAuxPadArray() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="AtData_2AtEvent_8h.html#ab0c3dbe90c6122c1bc6a1aac8ad10354">auxPadVector</a>&amp; AtEvent::GetAuxPadArray </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5e39e7b4573a4907ae296d0e5a7253c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e39e7b4573a4907ae296d0e5a7253c1">&#9670;&nbsp;</a></span>GetEventCharge() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t AtEvent::GetEventCharge </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5e39e7b4573a4907ae296d0e5a7253c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e39e7b4573a4907ae296d0e5a7253c1">&#9670;&nbsp;</a></span>GetEventCharge() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t AtEvent::GetEventCharge </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5e39e7b4573a4907ae296d0e5a7253c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e39e7b4573a4907ae296d0e5a7253c1">&#9670;&nbsp;</a></span>GetEventCharge() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t AtEvent::GetEventCharge </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a21eeb949653b1e61bcb66c594657ee78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21eeb949653b1e61bcb66c594657ee78">&#9670;&nbsp;</a></span>GetEventID() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEvent::GetEventID </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a21eeb949653b1e61bcb66c594657ee78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21eeb949653b1e61bcb66c594657ee78">&#9670;&nbsp;</a></span>GetEventID() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEvent::GetEventID </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a21eeb949653b1e61bcb66c594657ee78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21eeb949653b1e61bcb66c594657ee78">&#9670;&nbsp;</a></span>GetEventID() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEvent::GetEventID </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a16aae576ed906529c61be7fd84d88b1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16aae576ed906529c61be7fd84d88b1d">&#9670;&nbsp;</a></span>GetHit() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classAtHit.html">AtHit</a>&amp; AtEvent::GetHit </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>hitNo</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a16aae576ed906529c61be7fd84d88b1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16aae576ed906529c61be7fd84d88b1d">&#9670;&nbsp;</a></span>GetHit() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classAtHit.html">AtHit</a>&amp; AtEvent::GetHit </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>hitNo</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a16aae576ed906529c61be7fd84d88b1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16aae576ed906529c61be7fd84d88b1d">&#9670;&nbsp;</a></span>GetHit() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classAtHit.html">AtHit</a>&amp; AtEvent::GetHit </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>hitNo</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4835a130ed5e4ec7c62cfd520f6c3cd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4835a130ed5e4ec7c62cfd520f6c3cd1">&#9670;&nbsp;</a></span>GetHitArray() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="AtData_2AtEvent_8h.html#a7d4eefd40266a92db433dbf1d558d9bb">hitVector</a>&amp; AtEvent::GetHitArray </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4835a130ed5e4ec7c62cfd520f6c3cd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4835a130ed5e4ec7c62cfd520f6c3cd1">&#9670;&nbsp;</a></span>GetHitArray() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="AtData_2AtEvent_8h.html#a7d4eefd40266a92db433dbf1d558d9bb">hitVector</a>&amp; AtEvent::GetHitArray </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4835a130ed5e4ec7c62cfd520f6c3cd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4835a130ed5e4ec7c62cfd520f6c3cd1">&#9670;&nbsp;</a></span>GetHitArray() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="AtData_2AtEvent_8h.html#a7d4eefd40266a92db433dbf1d558d9bb">hitVector</a>&amp; AtEvent::GetHitArray </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af7aaddcd843911e6aa674be2229f9c48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7aaddcd843911e6aa674be2229f9c48">&#9670;&nbsp;</a></span>GetHitPadMult() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEvent::GetHitPadMult </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>PadNum</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af7aaddcd843911e6aa674be2229f9c48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7aaddcd843911e6aa674be2229f9c48">&#9670;&nbsp;</a></span>GetHitPadMult() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEvent::GetHitPadMult </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>PadNum</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af7aaddcd843911e6aa674be2229f9c48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7aaddcd843911e6aa674be2229f9c48">&#9670;&nbsp;</a></span>GetHitPadMult() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEvent::GetHitPadMult </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>PadNum</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a348fb8af2ee6aebfda5b783a8664d311"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a348fb8af2ee6aebfda5b783a8664d311">&#9670;&nbsp;</a></span>GetMesh() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="AtData_2AtEvent_8h.html#ab1f096ee04369041d59df237725f2952">traceArray</a>&amp; AtEvent::GetMesh </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a348fb8af2ee6aebfda5b783a8664d311"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a348fb8af2ee6aebfda5b783a8664d311">&#9670;&nbsp;</a></span>GetMesh() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="AtData_2AtEvent_8h.html#ab1f096ee04369041d59df237725f2952">traceArray</a>&amp; AtEvent::GetMesh </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a348fb8af2ee6aebfda5b783a8664d311"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a348fb8af2ee6aebfda5b783a8664d311">&#9670;&nbsp;</a></span>GetMesh() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="AtData_2AtEvent_8h.html#ab1f096ee04369041d59df237725f2952">traceArray</a>&amp; AtEvent::GetMesh </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac735820d1ddbd8228a7c5cf5782d6b9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac735820d1ddbd8228a7c5cf5782d6b9c">&#9670;&nbsp;</a></span>GetMultiMap() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::map&lt;Int_t, Int_t&gt;&amp; AtEvent::GetMultiMap </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac735820d1ddbd8228a7c5cf5782d6b9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac735820d1ddbd8228a7c5cf5782d6b9c">&#9670;&nbsp;</a></span>GetMultiMap() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::map&lt;Int_t, Int_t&gt;&amp; AtEvent::GetMultiMap </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac735820d1ddbd8228a7c5cf5782d6b9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac735820d1ddbd8228a7c5cf5782d6b9c">&#9670;&nbsp;</a></span>GetMultiMap() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::map&lt;Int_t, Int_t&gt;&amp; AtEvent::GetMultiMap </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5bd2908ad4259bf382b41594bb26c35d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5bd2908ad4259bf382b41594bb26c35d">&#9670;&nbsp;</a></span>GetNumHits() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEvent::GetNumHits </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5bd2908ad4259bf382b41594bb26c35d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5bd2908ad4259bf382b41594bb26c35d">&#9670;&nbsp;</a></span>GetNumHits() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEvent::GetNumHits </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5bd2908ad4259bf382b41594bb26c35d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5bd2908ad4259bf382b41594bb26c35d">&#9670;&nbsp;</a></span>GetNumHits() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEvent::GetNumHits </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af44b50ce6ad4e2fb4673ca18abea29a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af44b50ce6ad4e2fb4673ca18abea29a0">&#9670;&nbsp;</a></span>GetRhoVariance() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t AtEvent::GetRhoVariance </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af44b50ce6ad4e2fb4673ca18abea29a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af44b50ce6ad4e2fb4673ca18abea29a0">&#9670;&nbsp;</a></span>GetRhoVariance() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t AtEvent::GetRhoVariance </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af44b50ce6ad4e2fb4673ca18abea29a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af44b50ce6ad4e2fb4673ca18abea29a0">&#9670;&nbsp;</a></span>GetRhoVariance() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t AtEvent::GetRhoVariance </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4b585092cb088217ef3c1ea47e6a14b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b585092cb088217ef3c1ea47e6a14b9">&#9670;&nbsp;</a></span>GetTimestamp() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Long_t AtEvent::GetTimestamp </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4b585092cb088217ef3c1ea47e6a14b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b585092cb088217ef3c1ea47e6a14b9">&#9670;&nbsp;</a></span>GetTimestamp() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Long_t AtEvent::GetTimestamp </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4b585092cb088217ef3c1ea47e6a14b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b585092cb088217ef3c1ea47e6a14b9">&#9670;&nbsp;</a></span>GetTimestamp() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Long_t AtEvent::GetTimestamp </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac56290bf4dde5166ff3f8338280b7f7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac56290bf4dde5166ff3f8338280b7f7f">&#9670;&nbsp;</a></span>IsGood() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool_t AtEvent::IsGood </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac56290bf4dde5166ff3f8338280b7f7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac56290bf4dde5166ff3f8338280b7f7f">&#9670;&nbsp;</a></span>IsGood() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool_t AtEvent::IsGood </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac56290bf4dde5166ff3f8338280b7f7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac56290bf4dde5166ff3f8338280b7f7f">&#9670;&nbsp;</a></span>IsGood() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool_t AtEvent::IsGood </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ade06238dcb89508371a7ff05d7e108d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade06238dcb89508371a7ff05d7e108d1">&#9670;&nbsp;</a></span>IsInGate() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool_t AtEvent::IsInGate </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ade06238dcb89508371a7ff05d7e108d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade06238dcb89508371a7ff05d7e108d1">&#9670;&nbsp;</a></span>IsInGate() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool_t AtEvent::IsInGate </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ade06238dcb89508371a7ff05d7e108d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade06238dcb89508371a7ff05d7e108d1">&#9670;&nbsp;</a></span>IsInGate() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool_t AtEvent::IsInGate </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a241b6697bb9195544346141e0e9fc3ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a241b6697bb9195544346141e0e9fc3ad">&#9670;&nbsp;</a></span>SetEventCharge() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetEventCharge </td>
+          <td>(</td>
+          <td class="paramtype">Double_t&#160;</td>
+          <td class="paramname"><em>Qevent</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a241b6697bb9195544346141e0e9fc3ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a241b6697bb9195544346141e0e9fc3ad">&#9670;&nbsp;</a></span>SetEventCharge() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetEventCharge </td>
+          <td>(</td>
+          <td class="paramtype">Double_t&#160;</td>
+          <td class="paramname"><em>Qevent</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a241b6697bb9195544346141e0e9fc3ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a241b6697bb9195544346141e0e9fc3ad">&#9670;&nbsp;</a></span>SetEventCharge() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetEventCharge </td>
+          <td>(</td>
+          <td class="paramtype">Double_t&#160;</td>
+          <td class="paramname"><em>Qevent</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a72636adc94368d7562a7563ed80781e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72636adc94368d7562a7563ed80781e5">&#9670;&nbsp;</a></span>SetEventID() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetEventID </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>evtid</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a72636adc94368d7562a7563ed80781e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72636adc94368d7562a7563ed80781e5">&#9670;&nbsp;</a></span>SetEventID() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetEventID </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>evtid</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a72636adc94368d7562a7563ed80781e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72636adc94368d7562a7563ed80781e5">&#9670;&nbsp;</a></span>SetEventID() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetEventID </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>evtid</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a88352589d61fdf8fbbccc23f6b84fa50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88352589d61fdf8fbbccc23f6b84fa50">&#9670;&nbsp;</a></span>SetIsGood() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetIsGood </td>
+          <td>(</td>
+          <td class="paramtype">Bool_t&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a88352589d61fdf8fbbccc23f6b84fa50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88352589d61fdf8fbbccc23f6b84fa50">&#9670;&nbsp;</a></span>SetIsGood() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetIsGood </td>
+          <td>(</td>
+          <td class="paramtype">Bool_t&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a88352589d61fdf8fbbccc23f6b84fa50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88352589d61fdf8fbbccc23f6b84fa50">&#9670;&nbsp;</a></span>SetIsGood() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetIsGood </td>
+          <td>(</td>
+          <td class="paramtype">Bool_t&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8b0fcae30dda8e073bfcf47fe2df9bfd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b0fcae30dda8e073bfcf47fe2df9bfd">&#9670;&nbsp;</a></span>SetIsInGate() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetIsInGate </td>
+          <td>(</td>
+          <td class="paramtype">Bool_t&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8b0fcae30dda8e073bfcf47fe2df9bfd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b0fcae30dda8e073bfcf47fe2df9bfd">&#9670;&nbsp;</a></span>SetIsInGate() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetIsInGate </td>
+          <td>(</td>
+          <td class="paramtype">Bool_t&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8b0fcae30dda8e073bfcf47fe2df9bfd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b0fcae30dda8e073bfcf47fe2df9bfd">&#9670;&nbsp;</a></span>SetIsInGate() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetIsInGate </td>
+          <td>(</td>
+          <td class="paramtype">Bool_t&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abbbd0e9e363fe5f267b46a452a5ee78b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbbd0e9e363fe5f267b46a452a5ee78b">&#9670;&nbsp;</a></span>SetMeshSignal() <span class="overload">[1/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetMeshSignal </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="AtData_2AtEvent_8h.html#ab1f096ee04369041d59df237725f2952">traceArray</a> &amp;&#160;</td>
+          <td class="paramname"><em>mesharray</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abbbd0e9e363fe5f267b46a452a5ee78b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbbd0e9e363fe5f267b46a452a5ee78b">&#9670;&nbsp;</a></span>SetMeshSignal() <span class="overload">[2/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetMeshSignal </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="AtData_2AtEvent_8h.html#ab1f096ee04369041d59df237725f2952">traceArray</a> &amp;&#160;</td>
+          <td class="paramname"><em>mesharray</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9806cd3cc3025ca4bfd20d7fb95940bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9806cd3cc3025ca4bfd20d7fb95940bb">&#9670;&nbsp;</a></span>SetMeshSignal() <span class="overload">[3/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetMeshSignal </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Float_t&#160;</td>
+          <td class="paramname"><em>val</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9806cd3cc3025ca4bfd20d7fb95940bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9806cd3cc3025ca4bfd20d7fb95940bb">&#9670;&nbsp;</a></span>SetMeshSignal() <span class="overload">[4/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetMeshSignal </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Float_t&#160;</td>
+          <td class="paramname"><em>val</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abbbd0e9e363fe5f267b46a452a5ee78b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbbd0e9e363fe5f267b46a452a5ee78b">&#9670;&nbsp;</a></span>SetMeshSignal() <span class="overload">[5/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetMeshSignal </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="AtData_2AtEvent_8h.html#ab1f096ee04369041d59df237725f2952">traceArray</a> &amp;&#160;</td>
+          <td class="paramname"><em>mesharray</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9806cd3cc3025ca4bfd20d7fb95940bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9806cd3cc3025ca4bfd20d7fb95940bb">&#9670;&nbsp;</a></span>SetMeshSignal() <span class="overload">[6/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetMeshSignal </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Float_t&#160;</td>
+          <td class="paramname"><em>val</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a657cbf87e86e3e96a1f3e68b88bc25fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a657cbf87e86e3e96a1f3e68b88bc25fb">&#9670;&nbsp;</a></span>SetMultiplicityMap() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetMultiplicityMap </td>
+          <td>(</td>
+          <td class="paramtype">std::map&lt; Int_t, Int_t &gt;&#160;</td>
+          <td class="paramname"><em>MultiMap</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a657cbf87e86e3e96a1f3e68b88bc25fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a657cbf87e86e3e96a1f3e68b88bc25fb">&#9670;&nbsp;</a></span>SetMultiplicityMap() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetMultiplicityMap </td>
+          <td>(</td>
+          <td class="paramtype">std::map&lt; Int_t, Int_t &gt;&#160;</td>
+          <td class="paramname"><em>MultiMap</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a657cbf87e86e3e96a1f3e68b88bc25fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a657cbf87e86e3e96a1f3e68b88bc25fb">&#9670;&nbsp;</a></span>SetMultiplicityMap() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetMultiplicityMap </td>
+          <td>(</td>
+          <td class="paramtype">std::map&lt; Int_t, Int_t &gt;&#160;</td>
+          <td class="paramname"><em>MultiMap</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae1fea1db3f74086dffc30e48be94d7ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1fea1db3f74086dffc30e48be94d7ce">&#9670;&nbsp;</a></span>SetRhoVariance() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetRhoVariance </td>
+          <td>(</td>
+          <td class="paramtype">Double_t&#160;</td>
+          <td class="paramname"><em>RhoVariance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae1fea1db3f74086dffc30e48be94d7ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1fea1db3f74086dffc30e48be94d7ce">&#9670;&nbsp;</a></span>SetRhoVariance() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetRhoVariance </td>
+          <td>(</td>
+          <td class="paramtype">Double_t&#160;</td>
+          <td class="paramname"><em>RhoVariance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae1fea1db3f74086dffc30e48be94d7ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1fea1db3f74086dffc30e48be94d7ce">&#9670;&nbsp;</a></span>SetRhoVariance() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetRhoVariance </td>
+          <td>(</td>
+          <td class="paramtype">Double_t&#160;</td>
+          <td class="paramname"><em>RhoVariance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2c4221265117ac0d51fe2ce26cc75a52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c4221265117ac0d51fe2ce26cc75a52">&#9670;&nbsp;</a></span>SetTimestamp() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetTimestamp </td>
+          <td>(</td>
+          <td class="paramtype">ULong_t&#160;</td>
+          <td class="paramname"><em>timestamp</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2c4221265117ac0d51fe2ce26cc75a52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c4221265117ac0d51fe2ce26cc75a52">&#9670;&nbsp;</a></span>SetTimestamp() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetTimestamp </td>
+          <td>(</td>
+          <td class="paramtype">ULong_t&#160;</td>
+          <td class="paramname"><em>timestamp</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2c4221265117ac0d51fe2ce26cc75a52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c4221265117ac0d51fe2ce26cc75a52">&#9670;&nbsp;</a></span>SetTimestamp() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SetTimestamp </td>
+          <td>(</td>
+          <td class="paramtype">ULong_t&#160;</td>
+          <td class="paramname"><em>timestamp</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8cd91892441a0a5fc26d99ccc03e2312"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cd91892441a0a5fc26d99ccc03e2312">&#9670;&nbsp;</a></span>SortHitArray() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SortHitArray </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8cd91892441a0a5fc26d99ccc03e2312"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cd91892441a0a5fc26d99ccc03e2312">&#9670;&nbsp;</a></span>SortHitArray() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SortHitArray </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8cd91892441a0a5fc26d99ccc03e2312"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cd91892441a0a5fc26d99ccc03e2312">&#9670;&nbsp;</a></span>SortHitArray() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SortHitArray </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9f0372d41cfc69d3d7d35159bac61ac4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f0372d41cfc69d3d7d35159bac61ac4">&#9670;&nbsp;</a></span>SortHitArrayTime() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SortHitArrayTime </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9f0372d41cfc69d3d7d35159bac61ac4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f0372d41cfc69d3d7d35159bac61ac4">&#9670;&nbsp;</a></span>SortHitArrayTime() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SortHitArrayTime </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9f0372d41cfc69d3d7d35159bac61ac4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f0372d41cfc69d3d7d35159bac61ac4">&#9670;&nbsp;</a></span>SortHitArrayTime() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEvent::SortHitArrayTime </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtData/<a class="el" href="AtData_2AtEvent_8h_source.html">AtEvent.h</a></li>
-<li>/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtData/AtEvent.cxx</li>
+<li>/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtData/<a class="el" href="AtEvent_8cxx.html">AtEvent.cxx</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
