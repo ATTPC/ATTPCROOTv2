@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classAtFilter.html" title="AtFilter" alt="" coords="5,132,69,159"/>
+<area shape="rect" id="node2" href="$classAtFFTFilter.html" title="AtFFTFilter" alt="" coords="139,5,227,32"/>
+<area shape="rect" id="node3" href="$classAtFilterCalibrate.html" title="AtFilterCalibrate" alt="" coords="125,56,241,83"/>
+<area shape="rect" id="node4" href="$classAtFilterDivide.html" title="AtFilterDivide" alt="" coords="132,107,233,133"/>
+<area shape="rect" id="node5" href="$classAtFilterFFT.html" title="AtFilterFFT" alt="" coords="139,157,227,184"/>
+<area shape="rect" id="node6" href="$classAtFilterSubtraction.html" title="AtFilterSubtraction" alt="" coords="117,208,248,235"/>
+<area shape="rect" id="node7" href="$classAtTrapezoidFilter.html" title="AtTrapezoidFilter" alt="" coords="122,259,243,285"/>
+</map>

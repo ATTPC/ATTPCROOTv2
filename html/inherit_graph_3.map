@@ -1,0 +1,27 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node2" href="$classAtApolloDigitizer.html" title="AtApolloDigitizer" alt="" coords="169,5,287,32"/>
+<area shape="rect" id="node3" href="$classAtAuxFilterTask.html" title="AtAuxFilterTask" alt="" coords="170,56,286,83"/>
+<area shape="rect" id="node4" href="$classAtClusterizeTask.html" title="AtClusterizeTask" alt="" coords="167,107,289,133"/>
+<area shape="rect" id="node6" href="$classAtDataReductionTask.html" title="AtDataReductionTask" alt="" coords="153,157,303,184"/>
+<area shape="rect" id="node7" href="$classAtDecoder2Task.html" title="AtDecoder2Task" alt="" coords="168,208,288,235"/>
+<area shape="rect" id="node8" href="$classAtDecoderSpecMATTask.html" title="AtDecoderSpecMATTask" alt="" coords="143,259,313,285"/>
+<area shape="rect" id="node9" href="$classAtEventDrawTask.html" title="AtEventDrawTask" alt="" coords="163,309,293,336"/>
+<area shape="rect" id="node10" href="$classAtEventDrawTaskProto.html" title="AtEventDrawTaskProto" alt="" coords="148,360,308,387"/>
+<area shape="rect" id="node11" href="$classAtEventDrawTaskS800.html" title="AtEventDrawTaskS800" alt="" coords="149,411,307,437"/>
+<area shape="rect" id="node12" href="$classAtFilterTask.html" title="AtFilterTask" alt="" coords="181,461,275,488"/>
+<area shape="rect" id="node13" href="$classAtFitterTask.html" title="AtFitterTask" alt="" coords="181,512,275,539"/>
+<area shape="rect" id="node14" href="$classAtLinkDAQTask.html" title="AtLinkDAQTask" alt="" coords="169,563,287,589"/>
+<area shape="rect" id="node15" href="$classAtMergeTask.html" title="AtMergeTask" alt="" coords="178,613,278,640"/>
+<area shape="rect" id="node16" href="$classAtPRAtask.html" title="AtPRAtask" alt="" coords="184,664,272,691"/>
+<area shape="rect" id="node17" href="$classAtPSAtask.html" title="AtPSAtask" alt="" coords="185,715,271,741"/>
+<area shape="rect" id="node18" href="$classAtPulseTask.html" title="AtPulseTask" alt="" coords="179,765,277,792"/>
+<area shape="rect" id="node20" href="$classAtRansacTask.html" title="AtRansacTask" alt="" coords="173,816,283,843"/>
+<area shape="rect" id="node21" href="$classAtS800Task.html" title="AtS800Task" alt="" coords="181,867,275,893"/>
+<area shape="rect" id="node22" href="$classAtSpaceChargeCorrectionTask.html" title="AtSpaceChargeCorrectionTask" alt="" coords="127,917,329,944"/>
+<area shape="rect" id="node23" href="$classAtSpaceChargeTask.html" title="AtSpaceChargeTask" alt="" coords="157,968,299,995"/>
+<area shape="rect" id="node24" href="$classAtTrackFinderHCTask.html" title="AtTrackFinderHCTask" alt="" coords="151,1019,305,1045"/>
+<area shape="rect" id="node25" href="$classAtTriggerTask.html" title="AtTriggerTask" alt="" coords="176,1069,280,1096"/>
+<area shape="rect" id="node26" href="$classAtUnpackTask.html" title="AtUnpackTask" alt="" coords="173,1120,283,1147"/>
+<area shape="rect" id="node5" href="$classAtClusterizeLineTask.html" title="AtClusterizeLineTask" alt="" coords="377,107,524,133"/>
+<area shape="rect" id="node19" href="$classAtPulseLineTask.html" title="AtPulseLineTask" alt="" coords="390,765,511,792"/>
+</map>

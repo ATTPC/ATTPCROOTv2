@@ -1,0 +1,2 @@
+\form#0:$\text{mean}\Rightarrow \mu_{n+1} = \mu_n + \displaystyle\frac{x_{n+1} - \mu_n}{n + 1},\quad(n\geq0)$
+\form#1:$\text{RMS}\Rightarrow\sigma^2_{n+1} = \displaystyle\frac{n}{n + 1}\sigma^2_n + \displaystyle\frac{(x_{n+1} - *\mu_{n+1})^2}{n},\quad(n>0)$
