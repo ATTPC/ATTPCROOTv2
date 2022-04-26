@@ -69,15 +69,7 @@ void run_unpack_attpc(int runNumber = 174)
 
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetPersistence(true);
-   /*
-      AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
-      HDFParserTask->SetPersistence(kTRUE);
-      HDFParserTask->SetMap(fAtMapPtr);
-      HDFParserTask->SetFileName(inputFile.Data());
-      HDFParserTask->SetOldFormat(false);
-      HDFParserTask->SetNumberTimestamps(2);
-      HDFParserTask->SetBaseLineSubtraction(kTRUE);
-   */
+
    // Create data reduction task
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
    reduceTask->SetInputBranch("AtRawEvent");
@@ -97,7 +89,6 @@ void run_unpack_attpc(int runNumber = 174)
    psa->SetThreshold(threshold);
    psa->SetMaxFinder();
 
-   // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetInputBranch("AtRawEventFiltered");
    psaTask->SetOutputBranch("AtEventFiltered");
@@ -117,7 +108,7 @@ void run_unpack_attpc(int runNumber = 174)
    auto numEvents = unpackTask->GetNumEvents();
 
    // numEvents = 1700;//217;
-   // numEvents = 100;
+   // numEvents = 5;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 

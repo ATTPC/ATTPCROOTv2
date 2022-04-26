@@ -269,6 +269,7 @@ std::vector<uint64_t> AtHDFUnpacker::get_header(std::string headerName)
    // auto *data = new uint64_t[len];
    H5Dread(_dataset, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, retVec.data());
 
+   close_dataset(_dataset);
    // Add read data to the vector and return it
    // for (int i = 0; i < len; ++i)
    // retVec.push_back(data[i]);

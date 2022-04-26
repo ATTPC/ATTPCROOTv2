@@ -50,8 +50,6 @@ public:
 
    void SetPedestalSubtracted(Bool_t val = kTRUE) { fIsPedestalSubtracted = val; }
    void SetPadCoord(const XYPoint &point) { fPadCoord = point; }
-   // void SetIsAux(Bool_t val) { fIsAux = val; }
-   // void SetAuxName(std::string val) { fAuxName = std::move(val); }
 
    void SetRawADC(const rawTrace &val) { fRawAdc = val; }
    void SetRawADC(Int_t idx, Int_t val) { fRawAdc[idx] = val; }
@@ -59,11 +57,9 @@ public:
    void SetADC(Int_t idx, Double_t val) { fAdc[idx] = val; }
 
    Bool_t IsPedestalSubtracted() const { return fIsPedestalSubtracted; }
-   // Bool_t IsAux() const { return fIsAux; }
 
    Int_t GetPadNum() const { return fPadNum; }
    Bool_t GetValidPad() const { return fIsValid; }
-   // std::string GetAuxName() const { return fAuxName; }
    Int_t GetSizeID() const { return fSizeID; }
 
    const trace &GetADC() const;
