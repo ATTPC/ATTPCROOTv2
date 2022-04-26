@@ -81,6 +81,8 @@ void AtHDFUnpacker::processData()
 
    for (auto ipad = 0; ipad < npads; ++ipad)
       processPad(ipad);
+
+   end_raw_event(); // Close dataset
 }
 
 void AtHDFUnpacker::processPad(std::size_t ipad)

@@ -8,13 +8,12 @@
 
 #include <array>  // for array
 #include <memory> // for unique_ptr
-class TBuffer;
-class TClass;
-class TMemberInspector;
-
 #include <utility>
 
 class TVirtualFFT;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtPadFFT : public AtPad {
 public:

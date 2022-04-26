@@ -1,24 +1,21 @@
 #include "AtFilterTask.h"
 
+#include "AtAuxPad.h"
+#include "AtFilter.h"
+#include "AtRawEvent.h"
+
 #include <FairLogger.h>
 #include <FairRootManager.h>
 #include <FairTask.h>
-// stdlib headers
+
+#include <TClonesArray.h>
+#include <TObject.h>
+
 #include <iostream>
 #include <map>
 #include <memory>
 #include <utility>
 #include <vector>
-
-// Root Classes
-#include "AtFilter.h"
-#include "AtRawEvent.h"
-
-// AtTPCRoot Classes
-#include "AtAuxPad.h"
-
-#include <TClonesArray.h>
-#include <TObject.h>
 
 class AtPad;
 

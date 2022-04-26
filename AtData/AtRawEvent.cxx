@@ -36,12 +36,14 @@ void AtRawEvent::CopyAllButData(const AtRawEvent *event)
 
 void AtRawEvent::Clear(Option_t *opt)
 {
-   fEventID = 0;
+   fEventID = -1;
    fPadList.clear();
    fAuxPadMap.clear();
    fTimestamp.clear();
+   fSimMCPointMap.clear();
 
-   fIsGood = kTRUE;
+   fIsGood = true;
+   fIsInGate = false;
 }
 
 std::pair<AtAuxPad *, bool> AtRawEvent::AddAuxPad(std::string auxName)
