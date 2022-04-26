@@ -1,3 +1,6 @@
 <map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtDigitization/AtSpaceChargeTask.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtDigitization/AtSpaceChargeTask.cxx">
-<area shape="rect" id="node2" href="$AtSpaceChargeTask_8h.html" title="AtSpaceChargeTask.h" alt="" coords="5,109,160,136"/>
+<area shape="rect" id="node2" href="$AtSpaceChargeTask_8h.html" title="AtSpaceChargeTask.h" alt="" coords="10,109,165,136"/>
+<area shape="rect" id="node4" href="$AtDigiPar_8h.html" title="AtDigiPar.h" alt="" coords="229,109,319,136"/>
+<area shape="rect" id="node10" href="$AtMCPoint_8h.html" title="AtMCPoint.h" alt="" coords="569,184,667,211"/>
+<area shape="rect" id="node6" href="$AtGas_8h.html" title="AtGas.h" alt="" coords="165,184,236,211"/>
 </map>

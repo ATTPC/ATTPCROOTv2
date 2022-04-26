@@ -1,5 +1,5 @@
 <map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtSimulationData/AtStack.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtSimulationData/AtStack.cxx">
-<area shape="rect" id="node2" href="$AtSimulationData_2AtStack_8h.html" title="AtStack.h" alt="" coords="665,109,745,136"/>
-<area shape="rect" id="node10" href="$AtSimulationData_2AtMCTrack_8h.html" title="AtMCTrack.h" alt="" coords="254,109,354,136"/>
+<area shape="rect" id="node2" href="$AtStack_8h.html" title="AtStack.h" alt="" coords="665,109,745,136"/>
+<area shape="rect" id="node10" href="$AtMCTrack_8h.html" title="AtMCTrack.h" alt="" coords="254,109,354,136"/>
 <area shape="rect" id="node3" href="$AtDetectorList_8h.html" title="AtDetectorList.h" alt="" coords="947,184,1064,211"/>
 </map>

@@ -1,4 +1,12 @@
 <map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtDigitization/AtPulseTask.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtDigitization/AtPulseTask.cxx">
-<area shape="rect" id="node2" href="$AtDigitization_2AtPulseTask_8h.html" title="AtPulseTask.h" alt="" coords="468,109,576,136"/>
-<area shape="rect" id="node22" href="$AtDigitization_2AtSimulatedPoint_8h.html" title="AtSimulatedPoint.h" alt="" coords="719,109,853,136"/>
+<area shape="rect" id="node2" href="$AtPulseTask_8h.html" title="AtPulseTask.h" alt="" coords="2373,109,2481,136"/>
+<area shape="rect" id="node17" href="$AtDigiPar_8h.html" title="AtDigiPar.h" alt="" coords="404,184,493,211"/>
+<area shape="rect" id="node21" href="$AtMCPoint_8h.html" title="AtMCPoint.h" alt="" coords="60,259,157,285"/>
+<area shape="rect" id="node24" href="$AtMap_8h.html" title="AtMap.h" alt="" coords="1235,109,1305,136"/>
+<area shape="rect" id="node32" href="$AtPad_8h.html" title="AtPad.h" alt="" coords="1981,259,2050,285"/>
+<area shape="rect" id="node35" href="$AtRawEvent_8h.html" title="AtRawEvent.h" alt="" coords="1847,109,1954,136"/>
+<area shape="rect" id="node39" href="$AtSimulatedPoint_8h.html" title="AtSimulatedPoint.h" alt="" coords="639,184,773,211"/>
+<area shape="rect" id="node19" href="$AtGas_8h.html" title="AtGas.h" alt="" coords="397,259,468,285"/>
+<area shape="rect" id="node25" href="$AtPadReference_8h.html" title="AtPadReference.h" alt="" coords="1205,184,1335,211"/>
+<area shape="rect" id="node36" href="$AtAuxPad_8h.html" title="AtAuxPad.h" alt="" coords="1771,184,1863,211"/>
 </map>

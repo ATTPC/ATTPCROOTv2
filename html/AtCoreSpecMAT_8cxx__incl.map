@@ -1,3 +1,20 @@
 <map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtUnpack/deprecated/AtCoreSpecMAT.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtUnpack/deprecated/AtCoreSpecMAT.cxx">
-<area shape="rect" id="node2" href="$AtCoreSpecMAT_8h.html" title="AtCoreSpecMAT.h" alt="" coords="876,109,1008,136"/>
+<area shape="rect" id="node2" href="$AtCoreSpecMAT_8h.html" title="AtCoreSpecMAT.h" alt="" coords="1049,109,1181,136"/>
+<area shape="rect" id="node40" href="$GETCoboFrame_8h.html" title="GETCoboFrame.h" alt="" coords="2715,109,2843,136"/>
+<area shape="rect" id="node46" href="$GETLayeredFrame_8h.html" title="GETLayeredFrame.h" alt="" coords="1995,184,2138,211"/>
+<area shape="rect" id="node3" href="$AtMap_8h.html" title="AtMap.h" alt="" coords="1159,259,1230,285"/>
+<area shape="rect" id="node16" href="$AtPedestal_8h.html" title="AtPedestal.h" alt="" coords="1797,259,1894,285"/>
+<area shape="rect" id="node20" href="$AtRawEvent_8h.html" title="AtRawEvent.h" alt="" coords="296,184,403,211"/>
+<area shape="rect" id="node28" href="$AtSpecMATMap_8h.html" title="AtSpecMATMap.h" alt="" coords="1485,184,1614,211"/>
+<area shape="rect" id="node29" href="$AtTpcMap_8h.html" title="AtTpcMap.h" alt="" coords="1116,184,1209,211"/>
+<area shape="rect" id="node30" href="$AtTpcProtoMap_8h.html" title="AtTpcProtoMap.h" alt="" coords="1234,184,1358,211"/>
+<area shape="rect" id="node36" href="$GETDecoder2_8h.html" title="GETDecoder2.h" alt="" coords="1638,184,1754,211"/>
+<area shape="rect" id="node4" href="$AtPadReference_8h.html" title="AtPadReference.h" alt="" coords="1326,333,1455,360"/>
+<area shape="rect" id="node18" href="$GETMath2_8h.html" title="GETMath2.h" alt="" coords="1933,333,2029,360"/>
+<area shape="rect" id="node21" href="$AtAuxPad_8h.html" title="AtAuxPad.h" alt="" coords="169,259,261,285"/>
+<area shape="rect" id="node22" href="$AtPad_8h.html" title="AtPad.h" alt="" coords="83,333,152,360"/>
+<area shape="rect" id="node41" href="$GETBasicFrame_8h.html" title="GETBasicFrame.h" alt="" coords="2652,184,2783,211"/>
+<area shape="rect" id="node42" href="$GETBasicFrameHeader_8h.html" title="GETBasicFrameHeader.h" alt="" coords="2601,259,2773,285"/>
+<area shape="rect" id="node43" href="$GETHeaderBase_8h.html" title="GETHeaderBase.h" alt="" coords="2459,333,2591,360"/>
+<area shape="rect" id="node47" href="$GETLayerHeader_8h.html" title="GETLayerHeader.h" alt="" coords="2358,259,2493,285"/>
 </map>

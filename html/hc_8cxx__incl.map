@@ -1,5 +1,5 @@
 <map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtPatternRecognition/hc.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtPatternRecognition/hc.cxx">
-<area shape="rect" id="node2" href="$AtReconstruction_2AtPatternRecognition_2hc_8h.html" title="hc.h" alt="" coords="104,109,151,136"/>
-<area shape="rect" id="node7" href="$AtReconstruction_2AtPatternRecognition_2fastcluster_8h.html" title="fastcluster.h" alt="" coords="175,109,269,136"/>
-<area shape="rect" id="node4" href="$AtReconstruction_2AtPatternRecognition_2cluster_8h.html" title="cluster.h" alt="" coords="55,184,127,211"/>
+<area shape="rect" id="node2" href="$hc_8h.html" title="hc.h" alt="" coords="104,109,151,136"/>
+<area shape="rect" id="node7" href="$fastcluster_8h.html" title="fastcluster.h" alt="" coords="175,109,269,136"/>
+<area shape="rect" id="node4" href="$cluster_8h.html" title="cluster.h" alt="" coords="55,184,127,211"/>
 </map>

@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classauto__array__ptr.html" title="auto_array_ptr\&lt; type \&gt;" alt="" coords="5,5,160,32"/>
+<area shape="rect" id="node1" href="$classbase.html" title="base" alt="" coords="5,5,56,32"/>
+<area shape="rect" id="node2" href="$classsub.html" title="sub" alt="" coords="104,5,147,32"/>
+<area shape="rect" id="node3" href="$classimpossible.html" title="impossible" alt="" coords="195,5,279,32"/>
 </map>

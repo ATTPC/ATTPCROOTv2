@@ -1,3 +1,16 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structAtTools_1_1IonFitInfo.html" title="AtTools::IonFitInfo" alt="" coords="5,5,136,32"/>
+<area shape="rect" id="node2" href="$classAtTPC20MgDecay.html" title="AtTPC20MgDecay" alt="" coords="194,5,326,32"/>
+<area shape="rect" id="node3" href="$classAtTPC2Body.html" title="AtTPC2Body" alt="" coords="211,56,309,83"/>
+<area shape="rect" id="node4" href="$classAtTPC__Background.html" title="AtTPC_Background" alt="" coords="191,107,329,133"/>
+<area shape="rect" id="node5" href="$classAtTPC__d2He.html" title="AtTPC_d2He" alt="" coords="210,157,310,184"/>
+<area shape="rect" id="node6" href="$classAtTPCFissionGenerator.html" title="AtTPCFissionGenerator" alt="" coords="179,208,341,235"/>
+<area shape="rect" id="node7" href="$classAtTPCFissionGeneratorV2.html" title="AtTPCFissionGeneratorV2" alt="" coords="171,259,349,285"/>
+<area shape="rect" id="node8" href="$classAtTPCFissionGeneratorV3.html" title="AtTPCFissionGeneratorV3" alt="" coords="171,309,349,336"/>
+<area shape="rect" id="node9" href="$classAtTPCGammaDummyGenerator.html" title="AtTPCGammaDummyGenerator" alt="" coords="155,360,365,387"/>
+<area shape="rect" id="node10" href="$classAtTPCIonDecay.html" title="AtTPCIonDecay" alt="" coords="201,411,319,437"/>
+<area shape="rect" id="node11" href="$classAtTPCIonGenerator.html" title="AtTPCIonGenerator" alt="" coords="191,461,329,488"/>
+<area shape="rect" id="node12" href="$classAtTPCIonPhaseSpace.html" title="AtTPCIonPhaseSpace" alt="" coords="183,512,337,539"/>
+<area shape="rect" id="node13" href="$classAtTPCXSReader.html" title="AtTPCXSReader" alt="" coords="199,563,321,589"/>
+<area shape="rect" id="node14" href="$classPythia6Generator.html" title="Pythia6Generator" alt="" coords="199,613,321,640"/>
+<area shape="rect" id="node15" href="$classPythia8Generator.html" title="Pythia8Generator" alt="" coords="199,664,321,691"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="AtTrigger" name="AtTrigger">
-<area shape="rect" id="node5" href="$classAtPad.html" title="AtPad" alt="" coords="556,146,615,173"/>
-<area shape="rect" id="node8" href="$classAtHit.html" title="AtHit" alt="" coords="559,309,611,335"/>
-<area shape="rect" id="node3" href="$classAtRawEvent.html" title="AtRawEvent" alt="" coords="537,435,633,462"/>
-<area shape="rect" id="node11" href="$classAtEvent.html" title="AtEvent" alt="" coords="551,517,620,543"/>
-<area shape="rect" id="node10" href="$structAtHit_1_1MCSimPoint.html" title="AtHit::MCSimPoint" alt="" coords="5,367,140,394"/>
+<area shape="rect" id="node5" href="$classAtPad.html" title="AtPad" alt="" coords="556,91,615,118"/>
+<area shape="rect" id="node8" href="$classAtHit.html" title="AtHit" alt="" coords="559,206,611,233"/>
+<area shape="rect" id="node3" href="$classAtRawEvent.html" title="AtRawEvent" alt="" coords="537,257,633,283"/>
+<area shape="rect" id="node11" href="$classAtEvent.html" title="AtEvent" alt="" coords="551,307,620,334"/>
+<area shape="rect" id="node10" href="$structAtHit_1_1MCSimPoint.html" title="AtHit::MCSimPoint" alt="" coords="5,223,140,250"/>
 </map>

@@ -1,10 +1,10 @@
 <map id="S800" name="S800">
-<area shape="rect" id="node3" href="$classGScintillator.html" title="GScintillator" alt="" coords="281,1023,375,1049"/>
-<area shape="rect" id="node4" href="$classGTimeOfFlight.html" title="GTimeOfFlight" alt="" coords="275,401,381,428"/>
-<area shape="rect" id="node5" href="$classGHodoscope.html" title="GHodoscope" alt="" coords="279,727,377,753"/>
-<area shape="rect" id="node6" href="$classGCrdc__test.html" title="GCrdc_test" alt="" coords="283,483,373,509"/>
-<area shape="rect" id="node8" href="$classGIonChamber.html" title="GIonChamber" alt="" coords="277,164,379,191"/>
-<area shape="rect" id="node10" href="$classGMultiHitTOF.html" title="GMultiHitTOF" alt="" coords="277,645,379,672"/>
-<area shape="rect" id="node12" href="$classGCrdc.html" title="GCrdc" alt="" coords="298,320,358,347"/>
-<area shape="rect" id="node14" href="$classGTrigger.html" title="GTrigger" alt="" coords="292,564,364,591"/>
+<area shape="rect" id="node3" href="$classGScintillator.html" title="GScintillator" alt="" coords="281,272,375,299"/>
+<area shape="rect" id="node4" href="$classGTimeOfFlight.html" title="GTimeOfFlight" alt="" coords="275,323,381,350"/>
+<area shape="rect" id="node5" href="$classGHodoscope.html" title="GHodoscope" alt="" coords="279,30,377,56"/>
+<area shape="rect" id="node6" href="$classGCrdc__test.html" title="GCrdc_test" alt="" coords="283,374,373,400"/>
+<area shape="rect" id="node8" href="$classGIonChamber.html" title="GIonChamber" alt="" coords="277,430,379,456"/>
+<area shape="rect" id="node10" href="$classGMultiHitTOF.html" title="GMultiHitTOF" alt="" coords="277,120,379,147"/>
+<area shape="rect" id="node12" href="$classGCrdc.html" title="GCrdc" alt="" coords="298,524,358,551"/>
+<area shape="rect" id="node14" href="$classGTrigger.html" title="GTrigger" alt="" coords="292,171,364,198"/>
 </map>

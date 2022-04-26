@@ -1,7 +1,7 @@
 <map id="AtRansacMod" name="AtRansacMod">
-<area shape="rect" id="node7" href="$classAtTrack.html" title="AtTrack" alt="" coords="1341,115,1409,141"/>
-<area shape="rect" id="node11" href="$classAtHit.html" title="AtHit" alt="" coords="533,196,585,223"/>
-<area shape="rect" id="node4" href="$structAtMlesacMod_1_1Cluster.html" title="AtMlesacMod::Cluster" alt="" coords="1299,307,1451,333"/>
-<area shape="rect" id="node10" href="$classAtHitCluster.html" title="AtHitCluster" alt="" coords="691,196,785,223"/>
-<area shape="rect" id="node13" href="$structAtHit_1_1MCSimPoint.html" title="AtHit::MCSimPoint" alt="" coords="5,255,140,281"/>
+<area shape="rect" id="node7" href="$classAtTrack.html" title="AtTrack" alt="" coords="1341,121,1409,148"/>
+<area shape="rect" id="node11" href="$classAtHit.html" title="AtHit" alt="" coords="533,105,585,132"/>
+<area shape="rect" id="node4" href="$structAtMlesacMod_1_1Cluster.html" title="AtMlesacMod::Cluster" alt="" coords="1299,224,1451,251"/>
+<area shape="rect" id="node10" href="$classAtHitCluster.html" title="AtHitCluster" alt="" coords="691,93,785,120"/>
+<area shape="rect" id="node13" href="$structAtHit_1_1MCSimPoint.html" title="AtHit::MCSimPoint" alt="" coords="5,111,140,137"/>
 </map>

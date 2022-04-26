@@ -1,5 +1,10 @@
 <map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtPulseAnalyzer/AtPSAProto.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtPulseAnalyzer/AtPSAProto.cxx">
-<area shape="rect" id="node2" href="$AtReconstruction_2AtPulseAnalyzer_2AtPSAProto_8h.html" title="AtPSAProto.h" alt="" coords="279,109,383,136"/>
-<area shape="rect" id="node3" href="$AtReconstruction_2AtPulseAnalyzer_2AtPSA_8h.html" title="AtPSA.h" alt="" coords="294,184,367,211"/>
-<area shape="rect" id="node7" href="$AtReconstruction_2AtPulseAnalyzer_2AtCalibration_8h.html" title="AtCalibration.h" alt="" coords="333,259,441,285"/>
+<area shape="rect" id="node2" href="$AtPSAProto_8h.html" title="AtPSAProto.h" alt="" coords="275,109,379,136"/>
+<area shape="rect" id="node14" href="$AtEvent_8h.html" title="AtEvent.h" alt="" coords="1284,109,1364,136"/>
+<area shape="rect" id="node16" href="$AtPad_8h.html" title="AtPad.h" alt="" coords="1163,259,1232,285"/>
+<area shape="rect" id="node20" href="$AtHit_8h.html" title="AtHit.h" alt="" coords="1710,184,1773,211"/>
+<area shape="rect" id="node29" href="$AtRawEvent_8h.html" title="AtRawEvent.h" alt="" coords="717,109,824,136"/>
+<area shape="rect" id="node3" href="$AtPSA_8h.html" title="AtPSA.h" alt="" coords="305,184,378,211"/>
+<area shape="rect" id="node7" href="$AtCalibration_8h.html" title="AtCalibration.h" alt="" coords="34,259,142,285"/>
+<area shape="rect" id="node15" href="$AtAuxPad_8h.html" title="AtAuxPad.h" alt="" coords="809,184,901,211"/>
 </map>

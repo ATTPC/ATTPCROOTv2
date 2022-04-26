@@ -1,9 +1,7 @@
 var searchData=
 [
   ['cluster_2ecxx',['cluster.cxx',['../cluster_8cxx.html',1,'']]],
-  ['cluster_2eh',['cluster.h',['../AtReconstruction_2AtPatternRecognition_2cluster_8h.html',1,'(Global Namespace)'],['../build_2include_2cluster_8h.html',1,'(Global Namespace)'],['../build_2install_2include_2cluster_8h.html',1,'(Global Namespace)']]],
-  ['cmakeccompilerid_2ec',['CMakeCCompilerId.c',['../CMakeCCompilerId_8c.html',1,'']]],
-  ['cmakecxxcompilerid_2ecpp',['CMakeCXXCompilerId.cpp',['../CMakeCXXCompilerId_8cpp.html',1,'']]],
+  ['cluster_2eh',['cluster.h',['../cluster_8h.html',1,'']]],
   ['cxx11_2dtest_2d_5f_5ffunc_5f_5f_2ecpp',['cxx11-test-__func__.cpp',['../cxx11-test-____func_____8cpp.html',1,'']]],
   ['cxx11_2dtest_2dauto_2ecpp',['cxx11-test-auto.cpp',['../cxx11-test-auto_8cpp.html',1,'']]],
   ['cxx11_2dtest_2dauto_5ffail_5fcompile_2ecpp',['cxx11-test-auto_fail_compile.cpp',['../cxx11-test-auto__fail__compile_8cpp.html',1,'']]],

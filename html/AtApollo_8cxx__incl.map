@@ -1,5 +1,6 @@
 <map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtApollo/AtApollo.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtApollo/AtApollo.cxx">
-<area shape="rect" id="node2" href="$AtApollo_2AtApollo_8h.html" title="AtApollo.h" alt="" coords="209,109,291,136"/>
-<area shape="rect" id="node8" href="$AtApollo_2AtApolloPoint_8h.html" title="AtApolloPoint.h" alt="" coords="315,109,427,136"/>
-<area shape="rect" id="node10" href="$AtDetectorList_8h.html" title="AtDetectorList.h" alt="" coords="502,109,619,136"/>
+<area shape="rect" id="node2" href="$AtApollo_8h.html" title="AtApollo.h" alt="" coords="227,109,310,136"/>
+<area shape="rect" id="node8" href="$AtApolloPoint_8h.html" title="AtApolloPoint.h" alt="" coords="445,109,557,136"/>
+<area shape="rect" id="node10" href="$AtDetectorList_8h.html" title="AtDetectorList.h" alt="" coords="653,184,770,211"/>
+<area shape="rect" id="node11" href="$AtStack_8h.html" title="AtStack.h" alt="" coords="710,109,790,136"/>
 </map>

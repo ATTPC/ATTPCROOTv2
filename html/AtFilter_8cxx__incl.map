@@ -1,3 +1,6 @@
 <map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtFilter/AtFilter.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtFilter/AtFilter.cxx">
-<area shape="rect" id="node2" href="$AtReconstruction_2AtFilter_2AtFilter_8h.html" title="AtFilter.h" alt="" coords="5,109,80,136"/>
+<area shape="rect" id="node2" href="$AtFilter_8h.html" title="AtFilter.h" alt="" coords="484,109,559,136"/>
+<area shape="rect" id="node3" href="$AtRawEvent_8h.html" title="AtRawEvent.h" alt="" coords="583,109,689,136"/>
+<area shape="rect" id="node4" href="$AtAuxPad_8h.html" title="AtAuxPad.h" alt="" coords="351,184,443,211"/>
+<area shape="rect" id="node5" href="$AtPad_8h.html" title="AtPad.h" alt="" coords="287,259,356,285"/>
 </map>

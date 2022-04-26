@@ -1,0 +1,10 @@
+<map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtPatternRecognition" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtPatternRecognition">
+<area shape="rect" id="node3" href="dir_29ecbc9d584cab992caf504aafd2d5a9.html" title="AtData" alt="" coords="171,255,243,303"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000013_000002.html" title="16" alt="" coords="198,227,213,242"/>
+<area shape="rect" id="node4" href="dir_f4dc07ce03109e1f1e2f98cc5ced2124.html" title="AtRansac" alt="" coords="205,159,285,207"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000013_000016.html" title="1" alt="" coords="233,131,241,145"/>
+<area shape="rect" id="node2" href="dir_d95c9658274dfbd9dc7f8994c50df10b.html" title="src" alt="" coords="37,63,109,111"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000016_000002.html" title="3" alt="" coords="227,233,235,248"/>
+<area shape="rect" id="clust2" href="dir_9e9f569468dc2a59662c07838aeb1f6d.html" alt="" coords="27,52,291,121"/>
+<area shape="rect" id="clust1" href="dir_b4724c5ca6c4d299c31d2ca5fc322d19.html" title="AtReconstruction" alt="" coords="16,16,301,132"/>
+</map>

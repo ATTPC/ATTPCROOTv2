@@ -1,3 +1,13 @@
 <map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtRansacTask.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtRansacTask.cxx">
-<area shape="rect" id="node2" href="$AtReconstruction_2AtRansacTask_8h.html" title="AtRansacTask.h" alt="" coords="91,109,211,136"/>
+<area shape="rect" id="node2" href="$AtRansacTask_8h.html" title="AtRansacTask.h" alt="" coords="106,109,226,136"/>
+<area shape="rect" id="node6" href="$AtEvent_8h.html" title="AtEvent.h" alt="" coords="710,109,790,136"/>
+<area shape="rect" id="node26" href="$AtLmedsMod_8h.html" title="AtLmedsMod.h" alt="" coords="1696,109,1807,136"/>
+<area shape="rect" id="node35" href="$AtMlesacMod_8h.html" title="AtMlesacMod.h" alt="" coords="1217,109,1331,136"/>
+<area shape="rect" id="node36" href="$AtRansac_8h.html" title="AtRansac.h" alt="" coords="1909,109,1999,136"/>
+<area shape="rect" id="node40" href="$AtRansacMod_8h.html" title="AtRansacMod.h" alt="" coords="1379,109,1495,136"/>
+<area shape="rect" id="node7" href="$AtAuxPad_8h.html" title="AtAuxPad.h" alt="" coords="416,184,508,211"/>
+<area shape="rect" id="node16" href="$AtHit_8h.html" title="AtHit.h" alt="" coords="2068,333,2131,360"/>
+<area shape="rect" id="node8" href="$AtPad_8h.html" title="AtPad.h" alt="" coords="441,259,510,285"/>
+<area shape="rect" id="node27" href="$AtTrack_8h.html" title="AtTrack.h" alt="" coords="1992,184,2071,211"/>
+<area shape="rect" id="node30" href="$AtHitCluster_8h.html" title="AtHitCluster.h" alt="" coords="1867,259,1972,285"/>
 </map>

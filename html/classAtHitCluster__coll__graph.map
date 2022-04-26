@@ -1,4 +1,4 @@
 <map id="AtHitCluster" name="AtHitCluster">
-<area shape="rect" id="node2" href="$classAtHit.html" title="AtHit" alt="" coords="27,199,79,225"/>
-<area shape="rect" id="node5" href="$structAtHit_1_1MCSimPoint.html" title="AtHit::MCSimPoint" alt="" coords="107,5,241,32"/>
+<area shape="rect" id="node2" href="$classAtHit.html" title="AtHit" alt="" coords="55,199,107,225"/>
+<area shape="rect" id="node5" href="$structAtHit_1_1MCSimPoint.html" title="AtHit::MCSimPoint" alt="" coords="93,5,228,32"/>
 </map>

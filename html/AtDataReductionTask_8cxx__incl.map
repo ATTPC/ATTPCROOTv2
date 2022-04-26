@@ -1,3 +1,6 @@
 <map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtDataReductionTask.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtDataReductionTask.cxx">
-<area shape="rect" id="node2" href="$AtReconstruction_2AtDataReductionTask_8h.html" title="AtDataReductionTask.h" alt="" coords="85,109,247,136"/>
+<area shape="rect" id="node2" href="$AtDataReductionTask_8h.html" title="AtDataReductionTask.h" alt="" coords="173,109,335,136"/>
+<area shape="rect" id="node7" href="$AtRawEvent_8h.html" title="AtRawEvent.h" alt="" coords="737,109,843,136"/>
+<area shape="rect" id="node8" href="$AtAuxPad_8h.html" title="AtAuxPad.h" alt="" coords="921,184,1013,211"/>
+<area shape="rect" id="node9" href="$AtPad_8h.html" title="AtPad.h" alt="" coords="865,259,934,285"/>
 </map>

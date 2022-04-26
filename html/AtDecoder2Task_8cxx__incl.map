@@ -1,4 +1,17 @@
 <map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtUnpack/deprecated/AtDecoder2Task.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtUnpack/deprecated/AtDecoder2Task.cxx">
-<area shape="rect" id="node2" href="$AtDecoder2Task_8h.html" title="AtDecoder2Task.h" alt="" coords="697,109,827,136"/>
-<area shape="rect" id="node3" href="$AtCore2_8h.html" title="AtCore2.h" alt="" coords="617,184,699,211"/>
+<area shape="rect" id="node2" href="$AtDecoder2Task_8h.html" title="AtDecoder2Task.h" alt="" coords="1354,109,1485,136"/>
+<area shape="rect" id="node3" href="$AtCore2_8h.html" title="AtCore2.h" alt="" coords="812,184,893,211"/>
+<area shape="rect" id="node18" href="$AtPedestal_8h.html" title="AtPedestal.h" alt="" coords="729,333,827,360"/>
+<area shape="rect" id="node22" href="$AtRawEvent_8h.html" title="AtRawEvent.h" alt="" coords="1499,259,1606,285"/>
+<area shape="rect" id="node30" href="$AtTpcMap_8h.html" title="AtTpcMap.h" alt="" coords="113,259,206,285"/>
+<area shape="rect" id="node37" href="$AtDigiPar_8h.html" title="AtDigiPar.h" alt="" coords="1893,259,1983,285"/>
+<area shape="rect" id="node4" href="$AtGadgetIIMap_8h.html" title="AtGadgetIIMap.h" alt="" coords="447,259,568,285"/>
+<area shape="rect" id="node5" href="$AtMap_8h.html" title="AtMap.h" alt="" coords="624,333,695,360"/>
+<area shape="rect" id="node31" href="$AtTpcProtoMap_8h.html" title="AtTpcProtoMap.h" alt="" coords="903,259,1027,285"/>
+<area shape="rect" id="node33" href="$GETDecoder2_8h.html" title="GETDecoder2.h" alt="" coords="1051,259,1167,285"/>
+<area shape="rect" id="node6" href="$AtPadReference_8h.html" title="AtPadReference.h" alt="" coords="404,408,533,435"/>
+<area shape="rect" id="node20" href="$GETMath2_8h.html" title="GETMath2.h" alt="" coords="931,408,1027,435"/>
+<area shape="rect" id="node23" href="$AtAuxPad_8h.html" title="AtAuxPad.h" alt="" coords="1827,333,1919,360"/>
+<area shape="rect" id="node24" href="$AtPad_8h.html" title="AtPad.h" alt="" coords="1714,408,1783,435"/>
+<area shape="rect" id="node39" href="$AtGas_8h.html" title="AtGas.h" alt="" coords="1732,333,1803,360"/>
 </map>

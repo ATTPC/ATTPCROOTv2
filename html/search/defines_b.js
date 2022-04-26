@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['platform_5fid',['PLATFORM_ID',['../CMakeCCompilerId_8c.html#adbc5372f40838899018fadbc89bd588b',1,'PLATFORM_ID():&#160;CMakeCCompilerId.c'],['../CMakeCXXCompilerId_8cpp.html#adbc5372f40838899018fadbc89bd588b',1,'PLATFORM_ID():&#160;CMakeCXXCompilerId.cpp']]]
+  ['t_5ffloat_5fmant_5fdig',['T_FLOAt_MANT_DIG',['../fastcluster__dm_8cxx.html#a168219d630f589641c694f508ffe305e',1,'fastcluster_dm.cxx']]]
 ];

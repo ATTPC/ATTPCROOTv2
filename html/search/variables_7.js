@@ -1,7 +1,7 @@
 var searchData=
 [
   ['g',['g',['../structrgb__t.html#a6b91d7d8534878e4929617cc45597a17',1,'rgb_t']]],
-  ['gain',['gain',['../classAtPulseTask.html#a9f11d31617e11e82d451b066de6c62f7',1,'AtPulseTask']]],
+  ['gain',['gain',['../classAtPulseTask.html#aba779cfa31950a05adf4699d4aa0c10b',1,'AtPulseTask']]],
   ['gentripletsmaxerror',['genTripletsMaxError',['../structhc__params.html#a863d6617425470ddbc1e9a6dc96de780',1,'hc_params']]],
   ['gentripletsnbest',['genTripletsNBest',['../structhc__params.html#a1e9abd5172d4143f56efa3410e1f2934',1,'hc_params']]],
   ['gentripletsnnkandidates',['genTripletsNnKandidates',['../structhc__params.html#a532d639b0668ca97680e63b8dcbe46f8',1,'hc_params']]],

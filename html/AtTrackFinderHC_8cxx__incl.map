@@ -1,8 +1,15 @@
 <map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtPatternRecognition/AtTrackFinderHC.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtPatternRecognition/AtTrackFinderHC.cxx">
-<area shape="rect" id="node2" href="$AtReconstruction_2AtPatternRecognition_2AtTrackFinderHC_8h.html" title="AtTrackFinderHC.h" alt="" coords="531,117,665,143"/>
-<area shape="rect" id="node22" href="$AtReconstruction_2AtPatternRecognition_2hc_8h.html" title="hc.h" alt="" coords="272,117,319,143"/>
-<area shape="rect" id="node24" href="$AtReconstruction_2AtPatternRecognition_2msd_8h.html" title="msd.h" alt="" coords="1911,117,1970,143"/>
-<area shape="rect" id="node26" href="$AtReconstruction_2AtPatternRecognition_2smoothenCloud_8h.html" title="smoothenCloud.h" alt="" coords="5,199,129,225"/>
-<area shape="rect" id="node3" href="$AtReconstruction_2AtPatternRecognition_2AtPRA_8h.html" title="AtPRA.h" alt="" coords="711,199,786,225"/>
-<area shape="rect" id="node10" href="$AtReconstruction_2AtPatternRecognition_2cluster_8h.html" title="cluster.h" alt="" coords="333,199,405,225"/>
+<area shape="rect" id="node2" href="$AtTrackFinderHC_8h.html" title="AtTrackFinderHC.h" alt="" coords="871,117,1006,143"/>
+<area shape="rect" id="node15" href="$AtHit_8h.html" title="AtHit.h" alt="" coords="443,348,506,375"/>
+<area shape="rect" id="node26" href="$AtEvent_8h.html" title="AtEvent.h" alt="" coords="1441,199,1521,225"/>
+<area shape="rect" id="node36" href="$AtPatternEvent_8h.html" title="AtPatternEvent.h" alt="" coords="1181,117,1304,143"/>
+<area shape="rect" id="node42" href="$hc_8h.html" title="hc.h" alt="" coords="1389,117,1435,143"/>
+<area shape="rect" id="node44" href="$msd_8h.html" title="msd.h" alt="" coords="2256,117,2315,143"/>
+<area shape="rect" id="node46" href="$smoothenCloud_8h.html" title="smoothenCloud.h" alt="" coords="2439,199,2563,225"/>
+<area shape="rect" id="node3" href="$AtPRA_8h.html" title="AtPRA.h" alt="" coords="976,348,1051,375"/>
+<area shape="rect" id="node7" href="$AtTrack_8h.html" title="AtTrack.h" alt="" coords="822,199,901,225"/>
+<area shape="rect" id="node23" href="$cluster_8h.html" title="cluster.h" alt="" coords="1715,199,1787,225"/>
+<area shape="rect" id="node18" href="$AtHitCluster_8h.html" title="AtHitCluster.h" alt="" coords="745,273,850,300"/>
+<area shape="rect" id="node27" href="$AtAuxPad_8h.html" title="AtAuxPad.h" alt="" coords="1611,273,1703,300"/>
+<area shape="rect" id="node28" href="$AtPad_8h.html" title="AtPad.h" alt="" coords="1843,348,1912,375"/>
 </map>

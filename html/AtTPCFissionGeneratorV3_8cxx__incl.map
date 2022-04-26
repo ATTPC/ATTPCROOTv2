@@ -1,4 +1,5 @@
 <map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtGenerators/AtTPCFissionGeneratorV3.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtGenerators/AtTPCFissionGeneratorV3.cxx">
-<area shape="rect" id="node2" href="$AtGenerators_2AtTPCFissionGeneratorV3_8h.html" title="AtTPCFissionGeneratorV3.h" alt="" coords="392,109,580,136"/>
-<area shape="rect" id="node10" href="$AtCSVReader_8h.html" title="AtCSVReader.h" alt="" coords="965,109,1081,136"/>
+<area shape="rect" id="node2" href="$AtTPCFissionGeneratorV3_8h.html" title="AtTPCFissionGeneratorV3.h" alt="" coords="497,109,685,136"/>
+<area shape="rect" id="node10" href="$AtCSVReader_8h.html" title="AtCSVReader.h" alt="" coords="1251,109,1367,136"/>
+<area shape="rect" id="node15" href="$AtVertexPropagator_8h.html" title="AtVertexPropagator.h" alt="" coords="955,109,1101,136"/>
 </map>

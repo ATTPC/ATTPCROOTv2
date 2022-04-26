@@ -72,7 +72,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="AtReconstruction_2AtFilter_2AtFilterFFT_8h_source.html">AtFilterFFT.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="AtFilterFFT_8h_source.html">AtFilterFFT.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for AtFilterFFT:</div>
 <div class="dyncontent">
@@ -88,7 +88,7 @@ Collaboration diagram for AtFilterFFT:</div>
 <map name="AtFilterFFT_coll__map" id="AtFilterFFT_coll__map">
 <area shape="rect" id="node2" href="classAtFilter.html" title="AtFilter" alt="" coords="345,5,409,32"/>
 <area shape="rect" id="node4" href="structAtFilterFFT_1_1AtFreqRange.html" title="AtFilterFFT::AtFreqRange" alt="" coords="5,56,179,83"/>
-<area shape="rect" id="node6" href="classAtRawEvent.html" title="AtRawEvent" alt="" coords="329,161,425,188"/>
+<area shape="rect" id="node6" href="classAtRawEvent.html" title="AtRawEvent" alt="" coords="329,165,425,192"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -99,8 +99,6 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ab0d65f118e2818087c3515ab4ca7eca2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#ab0d65f118e2818087c3515ab4ca7eca2">FreqRanges</a> = std::vector&lt; <a class="el" href="structAtFilterFFT_1_1AtFreqRange.html">AtFreqRange</a> &gt;</td></tr>
-<tr class="separator:ab0d65f118e2818087c3515ab4ca7eca2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0d65f118e2818087c3515ab4ca7eca2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#ab0d65f118e2818087c3515ab4ca7eca2">FreqRanges</a> = std::vector&lt; <a class="el" href="structAtFilterFFT_1_1AtFreqRange.html">AtFreqRange</a> &gt;</td></tr>
 <tr class="separator:ab0d65f118e2818087c3515ab4ca7eca2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -128,80 +126,40 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:acc750f0d5613f341536e7685e92a90c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba8f0c529123e06b428f5f3262708a2d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#aba8f0c529123e06b428f5f3262708a2d">IsGoodEvent</a> () override</td></tr>
 <tr class="separator:aba8f0c529123e06b428f5f3262708a2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae321848998efac1ea672936a096e043"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#aae321848998efac1ea672936a096e043">AtFilterFFT</a> ()=default</td></tr>
-<tr class="separator:aae321848998efac1ea672936a096e043"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a328e00718e7a2727680cd74801914bcc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a328e00718e7a2727680cd74801914bcc">~AtFilterFFT</a> ()=default</td></tr>
-<tr class="separator:a328e00718e7a2727680cd74801914bcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad50dc7a37f15763a4e42f3bc4dcc8199"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#ad50dc7a37f15763a4e42f3bc4dcc8199">AddFreqRange</a> (<a class="el" href="structAtFilterFFT_1_1AtFreqRange.html">AtFreqRange</a> range)</td></tr>
-<tr class="separator:ad50dc7a37f15763a4e42f3bc4dcc8199"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9244151d18954ba542a8b3a65f98e21a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a9244151d18954ba542a8b3a65f98e21a">SetSaveTransform</a> (bool saveTransform)</td></tr>
-<tr class="separator:a9244151d18954ba542a8b3a65f98e21a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afbebfe60f0856fb267b2a3ba1c9cf4e0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#afbebfe60f0856fb267b2a3ba1c9cf4e0">GetSaveTransform</a> ()</td></tr>
-<tr class="separator:afbebfe60f0856fb267b2a3ba1c9cf4e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26ebbc0f967147006bac00f170f74272"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classAtFilterFFT.html#ab0d65f118e2818087c3515ab4ca7eca2">FreqRanges</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a26ebbc0f967147006bac00f170f74272">GetFreqRanges</a> ()</td></tr>
-<tr class="separator:a26ebbc0f967147006bac00f170f74272"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3ff88693feb0eb144e34e97e906bc3d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#ae3ff88693feb0eb144e34e97e906bc3d">DumpFactors</a> ()</td></tr>
-<tr class="separator:ae3ff88693feb0eb144e34e97e906bc3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a736e3b275027945bc3807c565a69278e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a736e3b275027945bc3807c565a69278e">Init</a> () override</td></tr>
-<tr class="separator:a736e3b275027945bc3807c565a69278e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2471c371eff791830e69ae77b4018be8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a2471c371eff791830e69ae77b4018be8">InitEvent</a> (<a class="el" href="classAtRawEvent.html">AtRawEvent</a> *event=nullptr) override</td></tr>
-<tr class="separator:a2471c371eff791830e69ae77b4018be8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc750f0d5613f341536e7685e92a90c3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#acc750f0d5613f341536e7685e92a90c3">Filter</a> (<a class="el" href="classAtPad.html">AtPad</a> *pad) override</td></tr>
-<tr class="separator:acc750f0d5613f341536e7685e92a90c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba8f0c529123e06b428f5f3262708a2d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#aba8f0c529123e06b428f5f3262708a2d">IsGoodEvent</a> () override</td></tr>
-<tr class="separator:aba8f0c529123e06b428f5f3262708a2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classAtFilter"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAtFilter')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAtFilter.html">AtFilter</a></td></tr>
 <tr class="memitem:a4127c2a19c1049e0b247ddb410c191be inherit pub_methods_classAtFilter"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#a4127c2a19c1049e0b247ddb410c191be">ConstructOutputEvent</a> (TClonesArray *outputEventArray, <a class="el" href="classAtRawEvent.html">AtRawEvent</a> *inputEvent)</td></tr>
 <tr class="separator:a4127c2a19c1049e0b247ddb410c191be inherit pub_methods_classAtFilter"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a9580bd449a18e8264018cfd9ba33e8 inherit pub_methods_classAtFilter"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#a4a9580bd449a18e8264018cfd9ba33e8">ConstructOutputEvent</a> (TClonesArray *outputEventArray, <a class="el" href="classAtRawEvent.html">AtRawEvent</a> *inputEvent)</td></tr>
-<tr class="separator:a4a9580bd449a18e8264018cfd9ba33e8 inherit pub_methods_classAtFilter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:afc971c6c37255c8611def650f39bb8e4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#afc971c6c37255c8611def650f39bb8e4">applyFrequencyCutsAndSetInverseFFT</a> ()</td></tr>
 <tr class="separator:afc971c6c37255c8611def650f39bb8e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b7b87331a9680a31eb35da4e9c3a74e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a0b7b87331a9680a31eb35da4e9c3a74e">applyFrequencyCutsAndSetInverseFFT</a> ()</td></tr>
-<tr class="separator:a0b7b87331a9680a31eb35da4e9c3a74e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:ae1d0fc72bddc141f415789de1b47c541"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtFilterFFT.html#ab0d65f118e2818087c3515ab4ca7eca2">FreqRanges</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#ae1d0fc72bddc141f415789de1b47c541">fFreqRanges</a></td></tr>
 <tr class="separator:ae1d0fc72bddc141f415789de1b47c541"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73b681a78e6189853bfa0c042ccb1ead"><td class="memItemLeft" align="right" valign="top">std::map&lt; Int_t, Double_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a73b681a78e6189853bfa0c042ccb1ead">fFactors</a></td></tr>
-<tr class="separator:a73b681a78e6189853bfa0c042ccb1ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36b00a5d756607e761f52b1c6d6f2b54"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; TVirtualFFT &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a36b00a5d756607e761f52b1c6d6f2b54">fFFT</a> {nullptr}</td></tr>
-<tr class="separator:a36b00a5d756607e761f52b1c6d6f2b54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d972e51675f8d0276657db99c7d0ae0"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; TVirtualFFT &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a6d972e51675f8d0276657db99c7d0ae0">fFFTbackward</a> {nullptr}</td></tr>
-<tr class="separator:a6d972e51675f8d0276657db99c7d0ae0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6db0f8fe644407798968eba10fdc7568"><td class="memItemLeft" align="right" valign="top">std::map&lt; Int_t, Double_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a6db0f8fe644407798968eba10fdc7568">fFactors</a></td></tr>
+<tr class="separator:a6db0f8fe644407798968eba10fdc7568"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9492a5e0fa1b39e694a7f677ed38fc61"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; TVirtualFFT &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a9492a5e0fa1b39e694a7f677ed38fc61">fFFT</a> {nullptr}</td></tr>
+<tr class="separator:a9492a5e0fa1b39e694a7f677ed38fc61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac913d4adf1d9ef490681d086696e2957"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; TVirtualFFT &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#ac913d4adf1d9ef490681d086696e2957">fFFTbackward</a> {nullptr}</td></tr>
+<tr class="separator:ac913d4adf1d9ef490681d086696e2957"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0f592476dad0df38a7e7994e2b4979f"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#ac0f592476dad0df38a7e7994e2b4979f">fSaveTransform</a> {false}</td></tr>
 <tr class="separator:ac0f592476dad0df38a7e7994e2b4979f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab014b948dee598d2715acba3dc5c1fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#aab014b948dee598d2715acba3dc5c1fe">fTransformedEvent</a> {nullptr}</td></tr>
-<tr class="separator:aab014b948dee598d2715acba3dc5c1fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada5715dd2b9d13dd2affff0b5c544b98"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#ada5715dd2b9d13dd2affff0b5c544b98">fFilteredEvent</a> {nullptr}</td></tr>
-<tr class="separator:ada5715dd2b9d13dd2affff0b5c544b98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42888a96f57b7aa28fb9a4a1c0b042e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a42888a96f57b7aa28fb9a4a1c0b042e6">fTransformedEvent</a> {nullptr}</td></tr>
+<tr class="separator:a42888a96f57b7aa28fb9a4a1c0b042e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6edcd48bf1587cef9626c998f5ed2ad9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a6edcd48bf1587cef9626c998f5ed2ad9">fFilteredEvent</a> {nullptr}</td></tr>
+<tr class="separator:a6edcd48bf1587cef9626c998f5ed2ad9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
-<tr class="memitem:a95be87c0467a7fde1004568e6aafa116"><td class="memItemLeft" align="right" valign="top">static constexpr Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a95be87c0467a7fde1004568e6aafa116">fTransformSize</a> = 512</td></tr>
-<tr class="separator:a95be87c0467a7fde1004568e6aafa116"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4982c4dced4d0bb43287640e6ed8d662"><td class="memItemLeft" align="right" valign="top">static constexpr Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterFFT.html#a4982c4dced4d0bb43287640e6ed8d662">fTransformSize</a> = 512</td></tr>
+<tr class="separator:a4982c4dced4d0bb43287640e6ed8d662"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ab0d65f118e2818087c3515ab4ca7eca2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab0d65f118e2818087c3515ab4ca7eca2">&#9670;&nbsp;</a></span>FreqRanges <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classAtFilterFFT.html#ab0d65f118e2818087c3515ab4ca7eca2">AtFilterFFT::FreqRanges</a> =  std::vector&lt;<a class="el" href="structAtFilterFFT_1_1AtFreqRange.html">AtFreqRange</a>&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab0d65f118e2818087c3515ab4ca7eca2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab0d65f118e2818087c3515ab4ca7eca2">&#9670;&nbsp;</a></span>FreqRanges <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0d65f118e2818087c3515ab4ca7eca2">&#9670;&nbsp;</a></span>FreqRanges</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -216,7 +174,7 @@ Static Protected Attributes</h2></td></tr>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aae321848998efac1ea672936a096e043"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae321848998efac1ea672936a096e043">&#9670;&nbsp;</a></span>AtFilterFFT() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aae321848998efac1ea672936a096e043">&#9670;&nbsp;</a></span>AtFilterFFT()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -241,57 +199,7 @@ Static Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a328e00718e7a2727680cd74801914bcc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a328e00718e7a2727680cd74801914bcc">&#9670;&nbsp;</a></span>~AtFilterFFT() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">AtFilterFFT::~AtFilterFFT </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">default</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aae321848998efac1ea672936a096e043"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae321848998efac1ea672936a096e043">&#9670;&nbsp;</a></span>AtFilterFFT() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">AtFilterFFT::AtFilterFFT </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">default</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a328e00718e7a2727680cd74801914bcc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a328e00718e7a2727680cd74801914bcc">&#9670;&nbsp;</a></span>~AtFilterFFT() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a328e00718e7a2727680cd74801914bcc">&#9670;&nbsp;</a></span>~AtFilterFFT()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -317,25 +225,7 @@ Static Protected Attributes</h2></td></tr>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="ad50dc7a37f15763a4e42f3bc4dcc8199"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad50dc7a37f15763a4e42f3bc4dcc8199">&#9670;&nbsp;</a></span>AddFreqRange() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool AtFilterFFT::AddFreqRange </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structAtFilterFFT_1_1AtFreqRange.html">AtFreqRange</a>&#160;</td>
-          <td class="paramname"><em>range</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad50dc7a37f15763a4e42f3bc4dcc8199"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad50dc7a37f15763a4e42f3bc4dcc8199">&#9670;&nbsp;</a></span>AddFreqRange() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad50dc7a37f15763a4e42f3bc4dcc8199">&#9670;&nbsp;</a></span>AddFreqRange()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -353,7 +243,7 @@ Static Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="afc971c6c37255c8611def650f39bb8e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc971c6c37255c8611def650f39bb8e4">&#9670;&nbsp;</a></span>applyFrequencyCutsAndSetInverseFFT() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afc971c6c37255c8611def650f39bb8e4">&#9670;&nbsp;</a></span>applyFrequencyCutsAndSetInverseFFT()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -377,50 +267,8 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a0b7b87331a9680a31eb35da4e9c3a74e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b7b87331a9680a31eb35da4e9c3a74e">&#9670;&nbsp;</a></span>applyFrequencyCutsAndSetInverseFFT() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void AtFilterFFT::applyFrequencyCutsAndSetInverseFFT </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="ae3ff88693feb0eb144e34e97e906bc3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3ff88693feb0eb144e34e97e906bc3d">&#9670;&nbsp;</a></span>DumpFactors() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void AtFilterFFT::DumpFactors </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae3ff88693feb0eb144e34e97e906bc3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3ff88693feb0eb144e34e97e906bc3d">&#9670;&nbsp;</a></span>DumpFactors() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3ff88693feb0eb144e34e97e906bc3d">&#9670;&nbsp;</a></span>DumpFactors()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -437,35 +285,7 @@ Static Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="acc750f0d5613f341536e7685e92a90c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc750f0d5613f341536e7685e92a90c3">&#9670;&nbsp;</a></span>Filter() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void AtFilterFFT::Filter </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classAtPad.html">AtPad</a> *&#160;</td>
-          <td class="paramname"><em>pad</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classAtFilter.html#ad0499f1b4860cd8d504d69514e4d8005">AtFilter</a>.</p>
-
-</div>
-</div>
-<a id="acc750f0d5613f341536e7685e92a90c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc750f0d5613f341536e7685e92a90c3">&#9670;&nbsp;</a></span>Filter() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#acc750f0d5613f341536e7685e92a90c3">&#9670;&nbsp;</a></span>Filter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -493,32 +313,7 @@ Static Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a26ebbc0f967147006bac00f170f74272"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26ebbc0f967147006bac00f170f74272">&#9670;&nbsp;</a></span>GetFreqRanges() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="classAtFilterFFT.html#ab0d65f118e2818087c3515ab4ca7eca2">FreqRanges</a>&amp; AtFilterFFT::GetFreqRanges </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a26ebbc0f967147006bac00f170f74272"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26ebbc0f967147006bac00f170f74272">&#9670;&nbsp;</a></span>GetFreqRanges() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a26ebbc0f967147006bac00f170f74272">&#9670;&nbsp;</a></span>GetFreqRanges()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -543,32 +338,7 @@ Static Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="afbebfe60f0856fb267b2a3ba1c9cf4e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afbebfe60f0856fb267b2a3ba1c9cf4e0">&#9670;&nbsp;</a></span>GetSaveTransform() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool AtFilterFFT::GetSaveTransform </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="afbebfe60f0856fb267b2a3ba1c9cf4e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afbebfe60f0856fb267b2a3ba1c9cf4e0">&#9670;&nbsp;</a></span>GetSaveTransform() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afbebfe60f0856fb267b2a3ba1c9cf4e0">&#9670;&nbsp;</a></span>GetSaveTransform()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -593,34 +363,7 @@ Static Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a736e3b275027945bc3807c565a69278e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a736e3b275027945bc3807c565a69278e">&#9670;&nbsp;</a></span>Init() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void AtFilterFFT::Init </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classAtFilter.html#a10b9c7088be2ccd5e6a9df5c6002955a">AtFilter</a>.</p>
-
-</div>
-</div>
-<a id="a736e3b275027945bc3807c565a69278e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a736e3b275027945bc3807c565a69278e">&#9670;&nbsp;</a></span>Init() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a736e3b275027945bc3807c565a69278e">&#9670;&nbsp;</a></span>Init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -647,35 +390,7 @@ Static Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a2471c371eff791830e69ae77b4018be8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2471c371eff791830e69ae77b4018be8">&#9670;&nbsp;</a></span>InitEvent() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void AtFilterFFT::InitEvent </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td>
-          <td class="paramname"><em>event</em> = <code>nullptr</code></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classAtFilter.html#aa0bcfc2d3d54a0a22cec29d754ebef67">AtFilter</a>.</p>
-
-</div>
-</div>
-<a id="a2471c371eff791830e69ae77b4018be8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2471c371eff791830e69ae77b4018be8">&#9670;&nbsp;</a></span>InitEvent() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2471c371eff791830e69ae77b4018be8">&#9670;&nbsp;</a></span>InitEvent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -703,34 +418,7 @@ Static Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="aba8f0c529123e06b428f5f3262708a2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba8f0c529123e06b428f5f3262708a2d">&#9670;&nbsp;</a></span>IsGoodEvent() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool AtFilterFFT::IsGoodEvent </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classAtFilter.html#a3e829564ee802ca80cf84eaab6ef253c">AtFilter</a>.</p>
-
-</div>
-</div>
-<a id="aba8f0c529123e06b428f5f3262708a2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba8f0c529123e06b428f5f3262708a2d">&#9670;&nbsp;</a></span>IsGoodEvent() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aba8f0c529123e06b428f5f3262708a2d">&#9670;&nbsp;</a></span>IsGoodEvent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -757,33 +445,7 @@ Static Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a9244151d18954ba542a8b3a65f98e21a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9244151d18954ba542a8b3a65f98e21a">&#9670;&nbsp;</a></span>SetSaveTransform() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void AtFilterFFT::SetSaveTransform </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>saveTransform</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9244151d18954ba542a8b3a65f98e21a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9244151d18954ba542a8b3a65f98e21a">&#9670;&nbsp;</a></span>SetSaveTransform() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9244151d18954ba542a8b3a65f98e21a">&#9670;&nbsp;</a></span>SetSaveTransform()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -809,8 +471,8 @@ Static Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a73b681a78e6189853bfa0c042ccb1ead"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a73b681a78e6189853bfa0c042ccb1ead">&#9670;&nbsp;</a></span>fFactors</h2>
+<a id="a6db0f8fe644407798968eba10fdc7568"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6db0f8fe644407798968eba10fdc7568">&#9670;&nbsp;</a></span>fFactors</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -819,7 +481,7 @@ Static Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt; Int_t, Double_t &gt; AtFilterFFT::fFactors</td>
+          <td class="memname">std::map&lt;Int_t, Double_t&gt; AtFilterFFT::fFactors</td>
         </tr>
       </table>
   </td>
@@ -831,8 +493,8 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a36b00a5d756607e761f52b1c6d6f2b54"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36b00a5d756607e761f52b1c6d6f2b54">&#9670;&nbsp;</a></span>fFFT</h2>
+<a id="a9492a5e0fa1b39e694a7f677ed38fc61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9492a5e0fa1b39e694a7f677ed38fc61">&#9670;&nbsp;</a></span>fFFT</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -841,7 +503,7 @@ Static Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt; TVirtualFFT &gt; AtFilterFFT::fFFT {nullptr}</td>
+          <td class="memname">std::unique_ptr&lt;TVirtualFFT&gt; AtFilterFFT::fFFT {nullptr}</td>
         </tr>
       </table>
   </td>
@@ -853,8 +515,8 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6d972e51675f8d0276657db99c7d0ae0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d972e51675f8d0276657db99c7d0ae0">&#9670;&nbsp;</a></span>fFFTbackward</h2>
+<a id="ac913d4adf1d9ef490681d086696e2957"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac913d4adf1d9ef490681d086696e2957">&#9670;&nbsp;</a></span>fFFTbackward</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -863,7 +525,7 @@ Static Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt; TVirtualFFT &gt; AtFilterFFT::fFFTbackward {nullptr}</td>
+          <td class="memname">std::unique_ptr&lt;TVirtualFFT&gt; AtFilterFFT::fFFTbackward {nullptr}</td>
         </tr>
       </table>
   </td>
@@ -875,8 +537,8 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ada5715dd2b9d13dd2affff0b5c544b98"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada5715dd2b9d13dd2affff0b5c544b98">&#9670;&nbsp;</a></span>fFilteredEvent</h2>
+<a id="a6edcd48bf1587cef9626c998f5ed2ad9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6edcd48bf1587cef9626c998f5ed2ad9">&#9670;&nbsp;</a></span>fFilteredEvent</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -885,7 +547,7 @@ Static Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classAtRawEvent.html">AtRawEvent</a> * AtFilterFFT::fFilteredEvent {nullptr}</td>
+          <td class="memname"><a class="el" href="classAtRawEvent.html">AtRawEvent</a>* AtFilterFFT::fFilteredEvent {nullptr}</td>
         </tr>
       </table>
   </td>
@@ -941,8 +603,8 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aab014b948dee598d2715acba3dc5c1fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab014b948dee598d2715acba3dc5c1fe">&#9670;&nbsp;</a></span>fTransformedEvent</h2>
+<a id="a42888a96f57b7aa28fb9a4a1c0b042e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42888a96f57b7aa28fb9a4a1c0b042e6">&#9670;&nbsp;</a></span>fTransformedEvent</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -951,7 +613,7 @@ Static Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classAtRawEvent.html">AtRawEvent</a> * AtFilterFFT::fTransformedEvent {nullptr}</td>
+          <td class="memname"><a class="el" href="classAtRawEvent.html">AtRawEvent</a>* AtFilterFFT::fTransformedEvent {nullptr}</td>
         </tr>
       </table>
   </td>
@@ -963,8 +625,8 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a95be87c0467a7fde1004568e6aafa116"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95be87c0467a7fde1004568e6aafa116">&#9670;&nbsp;</a></span>fTransformSize</h2>
+<a id="a4982c4dced4d0bb43287640e6ed8d662"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4982c4dced4d0bb43287640e6ed8d662">&#9670;&nbsp;</a></span>fTransformSize</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -973,7 +635,7 @@ Static Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static constexpr Int_t AtFilterFFT::fTransformSize = 512</td>
+          <td class="memname">constexpr Int_t AtFilterFFT::fTransformSize = 512</td>
         </tr>
       </table>
   </td>
@@ -986,7 +648,7 @@ Static Protected Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtFilter/<a class="el" href="AtReconstruction_2AtFilter_2AtFilterFFT_8h_source.html">AtFilterFFT.h</a></li>
+<li>/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtFilter/<a class="el" href="AtFilterFFT_8h_source.html">AtFilterFFT.h</a></li>
 <li>/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtFilter/<a class="el" href="AtFilterFFT_8cxx.html">AtFilterFFT.cxx</a></li>
 </ul>
 </div><!-- contents -->

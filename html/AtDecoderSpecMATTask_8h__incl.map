@@ -1,3 +1,16 @@
 <map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtUnpack/deprecated/AtDecoderSpecMATTask.h" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtUnpack/deprecated/AtDecoderSpecMATTask.h">
-<area shape="rect" id="node2" href="$AtCoreSpecMAT_8h.html" title="AtCoreSpecMAT.h" alt="" coords="704,109,836,136"/>
+<area shape="rect" id="node2" href="$AtCoreSpecMAT_8h.html" title="AtCoreSpecMAT.h" alt="" coords="1217,109,1349,136"/>
+<area shape="rect" id="node16" href="$AtPedestal_8h.html" title="AtPedestal.h" alt="" coords="371,259,468,285"/>
+<area shape="rect" id="node20" href="$AtRawEvent_8h.html" title="AtRawEvent.h" alt="" coords="2047,184,2154,211"/>
+<area shape="rect" id="node28" href="$AtSpecMATMap_8h.html" title="AtSpecMATMap.h" alt="" coords="593,184,723,211"/>
+<area shape="rect" id="node39" href="$AtDigiPar_8h.html" title="AtDigiPar.h" alt="" coords="231,184,320,211"/>
+<area shape="rect" id="node3" href="$AtMap_8h.html" title="AtMap.h" alt="" coords="1197,259,1268,285"/>
+<area shape="rect" id="node29" href="$AtTpcMap_8h.html" title="AtTpcMap.h" alt="" coords="938,184,1031,211"/>
+<area shape="rect" id="node30" href="$AtTpcProtoMap_8h.html" title="AtTpcProtoMap.h" alt="" coords="1659,184,1783,211"/>
+<area shape="rect" id="node36" href="$GETDecoder2_8h.html" title="GETDecoder2.h" alt="" coords="747,184,863,211"/>
+<area shape="rect" id="node4" href="$AtPadReference_8h.html" title="AtPadReference.h" alt="" coords="1355,333,1484,360"/>
+<area shape="rect" id="node18" href="$GETMath2_8h.html" title="GETMath2.h" alt="" coords="322,333,418,360"/>
+<area shape="rect" id="node21" href="$AtAuxPad_8h.html" title="AtAuxPad.h" alt="" coords="2091,259,2183,285"/>
+<area shape="rect" id="node22" href="$AtPad_8h.html" title="AtPad.h" alt="" coords="2071,333,2141,360"/>
+<area shape="rect" id="node41" href="$AtGas_8h.html" title="AtGas.h" alt="" coords="276,259,347,285"/>
 </map>
