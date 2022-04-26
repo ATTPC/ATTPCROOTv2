@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['x',['X',['../classX.html',1,'X'],['../structPoint.html#a05dfe2dfbde813ad234b514f30e662f1',1,'Point::x()'],['../classX.html#a07fb8cc31778606cc67dab13d720e32c',1,'X::X(int i)'],['../classX.html#ad0df9fcaa438f659091b4b71969085a6',1,'X::X()']]],
+  ['x',['x',['../structPoint.html#a05dfe2dfbde813ad234b514f30e662f1',1,'Point']]],
   ['xfit',['XFit',['../classS800Settings.html#abb5bdf52f2458a54c4b167afa0fb2f9b',1,'S800Settings']]],
   ['xfitfunc',['XFitFunc',['../classS800Settings.html#a4d73c61945f3b378098b7cb51c565765',1,'S800Settings']]],
   ['xoffset',['XOffset',['../classS800Settings.html#a3ecd7b2dfcd29c4274934bf1e09631cd',1,'S800Settings']]],

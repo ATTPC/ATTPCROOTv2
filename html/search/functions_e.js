@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['parse_5fline',['parse_line',['../cxx11-test-regex_8cpp.html#ae0e19ba0b0dea3ce4b370ff7bbbd269e',1,'cxx11-test-regex.cpp']]],
   ['parseattpcmap',['ParseAtTPCMap',['../classAtMap.html#ac64d65e54dfc5663ea65a8d910016e6c',1,'AtMap']]],
   ['parseinhibitmap',['ParseInhibitMap',['../classAtMap.html#a5df9b074a05327f73d8f69cde5520d2b',1,'AtMap']]],
   ['parseionfitxml',['ParseIonFitXML',['../classAtTools_1_1AtParsers.html#ab86d7107daa4692b13aef7d36aa96b49',1,'AtTools::AtParsers']]],

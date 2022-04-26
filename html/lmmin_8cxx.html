@@ -20,10 +20,12 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logoattpc.gif"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
    &#160;<span id="projectnumber">1.0.0</span>
    </div>
+   <div id="projectbrief">AROOT-basedframeworkforanalyzingdatafromactivetargetdetectors</div>
   </td>
  </tr>
  </tbody>
@@ -93,9 +95,9 @@ Macros</h2></td></tr>
 <tr class="separator:a01b46cc2cae4eee231acb7702df379db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ee34e0a4f4a4b860c14a8ab07e3cec3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lmmin_8cxx.html#a2ee34e0a4f4a4b860c14a8ab07e3cec3">LM_DWARF</a>&#160;&#160;&#160;DBL_MIN            /* smallest nonzero number */</td></tr>
 <tr class="separator:a2ee34e0a4f4a4b860c14a8ab07e3cec3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65e2a867eb21938170bb9a8a850b64ec"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lmmin_8cxx.html#a65e2a867eb21938170bb9a8a850b64ec">LM_SQRT_DWARF</a>&#160;&#160;&#160;sqrt(DBL_MIN) /* <a class="el" href="cxx11-test-constexpr_8cpp.html#a9ddd5b228b457d1df837583fa4f64035">square</a> should not underflow */</td></tr>
+<tr class="memitem:a65e2a867eb21938170bb9a8a850b64ec"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lmmin_8cxx.html#a65e2a867eb21938170bb9a8a850b64ec">LM_SQRT_DWARF</a>&#160;&#160;&#160;sqrt(DBL_MIN) /* square should not underflow */</td></tr>
 <tr class="separator:a65e2a867eb21938170bb9a8a850b64ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a057d1d13f0effa33d81c7615e4f3664d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lmmin_8cxx.html#a057d1d13f0effa33d81c7615e4f3664d">LM_SQRT_GIANT</a>&#160;&#160;&#160;sqrt(DBL_MAX) /* <a class="el" href="cxx11-test-constexpr_8cpp.html#a9ddd5b228b457d1df837583fa4f64035">square</a> should not overflow */</td></tr>
+<tr class="memitem:a057d1d13f0effa33d81c7615e4f3664d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lmmin_8cxx.html#a057d1d13f0effa33d81c7615e4f3664d">LM_SQRT_GIANT</a>&#160;&#160;&#160;sqrt(DBL_MAX) /* square should not overflow */</td></tr>
 <tr class="separator:a057d1d13f0effa33d81c7615e4f3664d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61b84f802abd9a0782dcb0c1b10e8819"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lmmin_8cxx.html#a61b84f802abd9a0782dcb0c1b10e8819">LM_USERTOL</a>&#160;&#160;&#160;30 * <a class="el" href="lmmin_8cxx.html#a01b46cc2cae4eee231acb7702df379db">LM_MACHEP</a>   /* users are recommended to require this */</td></tr>
 <tr class="separator:a61b84f802abd9a0782dcb0c1b10e8819"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,7 +176,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define LM_SQRT_DWARF&#160;&#160;&#160;sqrt(DBL_MIN) /* <a class="el" href="cxx11-test-constexpr_8cpp.html#a9ddd5b228b457d1df837583fa4f64035">square</a> should not underflow */</td>
+          <td class="memname">#define LM_SQRT_DWARF&#160;&#160;&#160;sqrt(DBL_MIN) /* square should not underflow */</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -190,7 +192,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define LM_SQRT_GIANT&#160;&#160;&#160;sqrt(DBL_MAX) /* <a class="el" href="cxx11-test-constexpr_8cpp.html#a9ddd5b228b457d1df837583fa4f64035">square</a> should not overflow */</td>
+          <td class="memname">#define LM_SQRT_GIANT&#160;&#160;&#160;sqrt(DBL_MAX) /* square should not overflow */</td>
         </tr>
       </table>
 </div><div class="memdoc">

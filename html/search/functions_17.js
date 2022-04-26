@@ -139,7 +139,6 @@ var searchData=
   ['_7epythia8generator',['~Pythia8Generator',['../classPythia8Generator.html#ac9f5d4d331f6ee38f2ee78a02d94c1d3',1,'Pythia8Generator']]],
   ['_7epytr1rng',['~PyTr1Rng',['../classPyTr1Rng.html#a5f86600df2ba2af5e47df7eba5ba1d9b',1,'PyTr1Rng']]],
   ['_7epytr3rng',['~PyTr3Rng',['../classPyTr3Rng.html#a1f30dab969858b8ed5d6195fac871302',1,'PyTr3Rng']]],
-  ['_7ervmove',['~rvmove',['../classrvmove.html#aef8f0561ff803fd4ccf6b62005b5ba38',1,'rvmove']]],
   ['_7es800calibration',['~S800Calibration',['../classS800Calibration.html#a81792ed2fa9862c62a82ee0c9ca2e175',1,'S800Calibration']]],
   ['_7es800settings',['~S800Settings',['../classS800Settings.html#ae07b3decd8f93ebb6ed745082f16b173',1,'S800Settings']]],
   ['_7es800tsettings',['~S800TSettings',['../classS800TSettings.html#a61868bd1b427735152af618edf3caeac',1,'S800TSettings']]],
