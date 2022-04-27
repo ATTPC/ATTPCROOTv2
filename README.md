@@ -2,6 +2,9 @@ ATTPCROOT is a ROOT-based (root.cern.ch) framework to analyze data of active tar
  
 The framework allows the end user to unpack and analyze the data, as well as perform realistic simulations based on a Virtual Monte Carlo (VMC) package. The framework needs external libraries (FairSoft and FairRoot https://fairroot.gsi.de/) to be compiled and executed, which are developed by other groups and not directly supported by the AT-TPC group. Please refer to their forums for installation issues of these packages.
 
+Doxygen documentation for the most recent release can be found [here](http://attpc.github.io/ATTPCROOTv2/).
+Doxygen documentation tracking the develop branch can be found [here](https://anthoak13.github.io/ATTPCROOTv2/)
+
 There was also some documentation written as part of Alexander Carl's 2019 thesis which can be found [here](https://publications.nscl.msu.edu/thesis/%20Carls_2019_6009.pdf)
 
 # Table of contents
