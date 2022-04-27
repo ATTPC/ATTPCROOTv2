@@ -1,0 +1,13 @@
+<map id="AtEventDrawTaskProto" name="AtEventDrawTaskProto">
+<area shape="rect" id="node1" title=" " alt="" coords="155,288,313,315"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,199,79,225"/>
+<area shape="rect" id="node3" href="$classAtMap.html" title=" " alt="" coords="103,199,163,225"/>
+<area shape="rect" id="node4" title=" " alt="" coords="97,102,169,129"/>
+<area shape="rect" id="node5" href="$classAtRawEvent.html" title=" " alt="" coords="187,199,281,225"/>
+<area shape="rect" id="node6" href="$classAtHit.html" title=" " alt="" coords="305,199,357,225"/>
+<area shape="rect" id="node7" title=" " alt="" coords="193,102,261,129"/>
+<area shape="rect" id="node8" title=" " alt="" coords="286,95,409,136"/>
+<area shape="rect" id="node9" href="$structAtHit_1_1MCSimPoint.html" title=" " alt="" coords="282,5,413,32"/>
+<area shape="rect" id="node10" href="$classAtEventManagerProto.html" title=" " alt="" coords="405,199,554,225"/>
+<area shape="rect" id="node11" title=" " alt="" coords="433,102,568,129"/>
+</map>

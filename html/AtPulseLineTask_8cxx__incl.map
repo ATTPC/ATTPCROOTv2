@@ -1,9 +1,0 @@
-<map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtDigitization/AtPulseLineTask.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtDigitization/AtPulseLineTask.cxx">
-<area shape="rect" id="node2" href="$AtPulseLineTask_8h.html" title="AtPulseLineTask.h" alt="" coords="445,109,577,136"/>
-<area shape="rect" id="node15" href="$AtMCPoint_8h.html" title="AtMCPoint.h" alt="" coords="801,109,899,136"/>
-<area shape="rect" id="node19" href="$AtMap_8h.html" title="AtMap.h" alt="" coords="1423,109,1493,136"/>
-<area shape="rect" id="node28" href="$AtSimulatedLine_8h.html" title="AtSimulatedLine.h" alt="" coords="2078,109,2206,136"/>
-<area shape="rect" id="node29" href="$AtSimulatedPoint_8h.html" title="AtSimulatedPoint.h" alt="" coords="2179,184,2313,211"/>
-<area shape="rect" id="node3" href="$AtPulseTask_8h.html" title="AtPulseTask.h" alt="" coords="340,184,448,211"/>
-<area shape="rect" id="node20" href="$AtPadReference_8h.html" title="AtPadReference.h" alt="" coords="1821,184,1951,211"/>
-</map>

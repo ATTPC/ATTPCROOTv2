@@ -1,0 +1,11 @@
+<map id="AtTrack" name="AtTrack">
+<area shape="rect" id="node1" title=" " alt="" coords="205,493,273,520"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,102,73,129"/>
+<area shape="rect" id="node6" href="$classAtHit.html" title=" " alt="" coords="136,199,188,225"/>
+<area shape="rect" id="node3" title=" " alt="" coords="377,389,531,416"/>
+<area shape="rect" id="node4" title=" " alt="" coords="75,389,249,416"/>
+<area shape="rect" id="node5" href="$classAtHitCluster.html" title=" " alt="" coords="115,288,209,315"/>
+<area shape="rect" id="node9" title=" " alt="" coords="228,339,363,365"/>
+<area shape="rect" id="node7" title=" " alt="" coords="101,95,223,136"/>
+<area shape="rect" id="node8" href="$structAtHit_1_1MCSimPoint.html" title=" " alt="" coords="97,5,227,32"/>
+</map>

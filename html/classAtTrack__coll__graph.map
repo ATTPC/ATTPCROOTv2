@@ -1,5 +1,0 @@
-<map id="AtTrack" name="AtTrack">
-<area shape="rect" id="node6" href="$classAtHit.html" title="AtHit" alt="" coords="137,199,189,225"/>
-<area shape="rect" id="node5" href="$classAtHitCluster.html" title="AtHitCluster" alt="" coords="116,288,211,315"/>
-<area shape="rect" id="node8" href="$structAtHit_1_1MCSimPoint.html" title="AtHit::MCSimPoint" alt="" coords="96,5,231,32"/>
-</map>

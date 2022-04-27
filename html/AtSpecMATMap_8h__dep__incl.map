@@ -1,8 +1,0 @@
-<map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtMap/AtSpecMATMap.h" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtMap/AtSpecMATMap.h">
-<area shape="rect" id="node2" href="$AtEventDrawTask_8cxx.html" title="/mnt/simulations/attpcroot\l/adam/ATTPCROOTv2/AtEventDisplay\l/AtEventDrawTask.cxx" alt="" coords="5,109,259,165"/>
-<area shape="rect" id="node3" href="$AtSpecMATMap_8cxx.html" title="/mnt/simulations/attpcroot\l/adam/ATTPCROOTv2/AtMap\l/AtSpecMATMap.cxx" alt="" coords="283,109,483,165"/>
-<area shape="rect" id="node4" href="$AtCoreSpecMAT_8h.html" title="/mnt/simulations/attpcroot\l/adam/ATTPCROOTv2/AtUnpack\l/deprecated/AtCoreSpecMAT.h" alt="" coords="507,109,727,165"/>
-<area shape="rect" id="node6" href="$AtDecoderSpecMATTask_8h.html" title="/mnt/simulations/attpcroot\l/adam/ATTPCROOTv2/AtUnpack\l/deprecated/AtDecoderSpecMATTask.h" alt="" coords="638,213,893,269"/>
-<area shape="rect" id="node5" href="$AtCoreSpecMAT_8cxx.html" title="/mnt/simulations/attpcroot\l/adam/ATTPCROOTv2/AtUnpack\l/deprecated/AtCoreSpecMAT.cxx" alt="" coords="394,213,614,269"/>
-<area shape="rect" id="node7" href="$AtDecoderSpecMATTask_8cxx.html" title="/mnt/simulations/attpcroot\l/adam/ATTPCROOTv2/AtUnpack\l/deprecated/AtDecoderSpecMATTask.cxx" alt="" coords="631,317,899,373"/>
-</map>

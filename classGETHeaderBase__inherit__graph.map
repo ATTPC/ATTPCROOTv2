@@ -1,0 +1,9 @@
+<map id="GETHeaderBase" name="GETHeaderBase">
+<area shape="rect" id="node1" title=" " alt="" coords="191,80,311,107"/>
+<area shape="rect" id="node3" href="$classGETBasicFrameHeader.html" title=" " alt="" coords="5,155,165,181"/>
+<area shape="rect" id="node5" href="$classGETLayerHeader.html" title=" " alt="" coords="189,155,312,181"/>
+<area shape="rect" id="node7" href="$classGETTopologyFrame.html" title=" " alt="" coords="337,155,474,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="217,5,285,32"/>
+<area shape="rect" id="node4" href="$classGETBasicFrame.html" title=" " alt="" coords="26,229,145,256"/>
+<area shape="rect" id="node6" href="$classGETLayeredFrame.html" title=" " alt="" coords="185,229,316,256"/>
+</map>

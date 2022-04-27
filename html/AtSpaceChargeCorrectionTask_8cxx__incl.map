@@ -1,8 +1,0 @@
-<map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtSpaceChargeCorrectionTask.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtReconstruction/AtSpaceChargeCorrectionTask.cxx">
-<area shape="rect" id="node2" href="$AtSpaceChargeCorrectionTask_8h.html" title="AtSpaceChargeCorrectionTask.h" alt="" coords="434,109,648,136"/>
-<area shape="rect" id="node3" href="$AtSpaceChargeModel_8h.html" title="AtSpaceChargeModel.h" alt="" coords="133,184,293,211"/>
-<area shape="rect" id="node12" href="$AtEvent_8h.html" title="AtEvent.h" alt="" coords="1200,109,1280,136"/>
-<area shape="rect" id="node19" href="$AtHit_8h.html" title="AtHit.h" alt="" coords="696,184,759,211"/>
-<area shape="rect" id="node13" href="$AtAuxPad_8h.html" title="AtAuxPad.h" alt="" coords="1308,184,1400,211"/>
-<area shape="rect" id="node14" href="$AtPad_8h.html" title="AtPad.h" alt="" coords="1402,259,1472,285"/>
-</map>

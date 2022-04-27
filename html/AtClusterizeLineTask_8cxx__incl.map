@@ -1,9 +1,0 @@
-<map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtDigitization/AtClusterizeLineTask.cxx" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtDigitization/AtClusterizeLineTask.cxx">
-<area shape="rect" id="node2" href="$AtClusterizeLineTask_8h.html" title="AtClusterizeLineTask.h" alt="" coords="263,109,421,136"/>
-<area shape="rect" id="node11" href="$AtDigiPar_8h.html" title="AtDigiPar.h" alt="" coords="965,109,1055,136"/>
-<area shape="rect" id="node15" href="$AtMCPoint_8h.html" title="AtMCPoint.h" alt="" coords="1373,184,1471,211"/>
-<area shape="rect" id="node18" href="$AtSimulatedLine_8h.html" title="AtSimulatedLine.h" alt="" coords="714,109,842,136"/>
-<area shape="rect" id="node3" href="$AtClusterizeTask_8h.html" title="AtClusterizeTask.h" alt="" coords="287,184,421,211"/>
-<area shape="rect" id="node13" href="$AtGas_8h.html" title="AtGas.h" alt="" coords="1012,184,1083,211"/>
-<area shape="rect" id="node19" href="$AtSimulatedPoint_8h.html" title="AtSimulatedPoint.h" alt="" coords="649,184,784,211"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtData/AtProtoQuadrant.h" name="/mnt/simulations/attpcroot/adam/ATTPCROOTv2/AtData/AtProtoQuadrant.h">
-<area shape="rect" id="node2" href="$AtProtoEvent_8h.html" title="/mnt/simulations/attpcroot\l/adam/ATTPCROOTv2/AtData\l/AtProtoEvent.h" alt="" coords="411,109,613,165"/>
-<area shape="rect" id="node4" href="$AtEventDrawTaskProto_8cxx.html" title="/mnt/simulations/attpcroot\l/adam/ATTPCROOTv2/AtEventDisplay\l/AtEventDrawTaskProto.cxx" alt="" coords="5,213,259,269"/>
-<area shape="rect" id="node5" href="$AtEventDrawTaskS800_8cxx.html" title="/mnt/simulations/attpcroot\l/adam/ATTPCROOTv2/AtEventDisplay\l/AtEventDrawTaskS800.cxx" alt="" coords="797,213,1051,269"/>
-<area shape="rect" id="node8" href="$AtProtoQuadrant_8cxx.html" title="/mnt/simulations/attpcroot\l/adam/ATTPCROOTv2/AtData\l/AtProtoQuadrant.cxx" alt="" coords="688,109,891,165"/>
-<area shape="rect" id="node3" href="$AtProtoEvent_8cxx.html" title="/mnt/simulations/attpcroot\l/adam/ATTPCROOTv2/AtData\l/AtProtoEvent.cxx" alt="" coords="283,213,485,269"/>
-<area shape="rect" id="node6" href="$AtTrackFinderHCTask_8h.html" title="/mnt/simulations/attpcroot\l/adam/ATTPCROOTv2/AtReconstruction\l/AtTrackFinderHCTask.h" alt="" coords="510,213,773,269"/>
-<area shape="rect" id="node7" href="$AtTrackFinderHCTask_8cxx.html" title="/mnt/simulations/attpcroot\l/adam/ATTPCROOTv2/AtReconstruction\l/AtTrackFinderHCTask.cxx" alt="" coords="510,317,773,373"/>
-</map>

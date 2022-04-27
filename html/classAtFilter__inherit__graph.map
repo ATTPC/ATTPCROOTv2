@@ -1,7 +1,0 @@
-<map id="AtFilter" name="AtFilter">
-<area shape="rect" id="node2" href="$classAtFilterCalibrate.html" title="AtFilterCalibrate" alt="" coords="5,80,121,107"/>
-<area shape="rect" id="node3" href="$classAtFilterDivide.html" title="AtFilterDivide" alt="" coords="146,80,247,107"/>
-<area shape="rect" id="node4" href="$classAtFilterFFT.html" title="AtFilterFFT" alt="" coords="271,80,359,107"/>
-<area shape="rect" id="node5" href="$classAtFilterSubtraction.html" title="AtFilterSubtraction" alt="" coords="383,80,514,107"/>
-<area shape="rect" id="node6" href="$classAtTrapezoidFilter.html" title="AtTrapezoidFilter" alt="" coords="539,80,660,107"/>
-</map>
