@@ -210,12 +210,11 @@ std::vector<AtTrack> *AtRANSACN::AtRansac::RansacPCL(const std::vector<AtHit> &h
 
       const auto hit = hits[hitIndex];
       auto position = hit.GetPosition();
-      auto hitID = hit.GetHitID();
 
-      cloud->points[hitID].x = position.X();
-      cloud->points[hitID].y = position.Y();
-      cloud->points[hitID].z = position.Z();
-      cloud->points[hitID].rgb = hitIndex; // Storing the position of the hit in the event container
+      cloud->points[hitIndex].x = position.X();
+      cloud->points[hitIndex].y = position.Y();
+      cloud->points[hitIndex].z = position.Z();
+      cloud->points[hitIndex].rgb = hitIndex; // Storing the position of the hit in the event container
    }
 
    pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients());
