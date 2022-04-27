@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION  3.15.0 FATAL_ERROR)
 cmake_policy(VERSION 3.11...3.15)
 
 # Set project name and version
-project(ATTPCROOT VERSION 1.0.0)
+project(ATTPCROOT VERSION 0.3.0)
 
 set(PROJECT_MINIMUM_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
