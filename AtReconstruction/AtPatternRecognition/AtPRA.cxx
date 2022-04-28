@@ -137,7 +137,7 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
          // cloud->points[i].y = pos.Z();
          // cloud->points[i].z = i*1E-19;
 
-         thetaHits.emplace_back(hits.at(i).GetPadNum(), i, xPos, yPos, zPos, hits.at(i).GetCharge());
+         thetaHits.emplace_back(i, hits.at(i).GetPadNum(), XYZPoint(xPos, yPos, zPos), hits.at(i).GetCharge());
       }
 
       // TF1 *f1 = new TF1("f1", "pol1", -500, 500);

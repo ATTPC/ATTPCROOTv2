@@ -54,30 +54,26 @@ public:
    // Copies everything except the hit array from the passed AtEvent
    void CopyFrom(const AtEvent &event);
 
-   // Adds a new hit to the hit array, and returns a referece to the new hit to be
-   // filled. This is done to avoid the create and subsequent copy of a hit and also
-   // avoid dealing with the memory managment
-   // Takes arguments to any constructor of AtHit, leaving out the first (the hit ID).
-   // AtEvent handles the assignment of hit IDs to ensure they are unique within an event.
+   /**
+    * @brief Create a new hit in this event
+    * Adds a new hit, calling a constructor of AtHit using the passed parameters.
+    * Will set the hitID to the next availible if it was not set by the
+    * AtHit constructor. Allowing this function to handle hitIDs will ensure they
+    * remain unique within an event.
+    *
+    * @param params Parameters to be perfect-forwarded to the constructor of AtHit
+    * @return Reference to added hit
+    */
    template <typename... Ts>
    AtHit &AddHit(Ts &&...params)
    {
-      LOG(debug) << "Adding hit with ID " << fHitArray.size() << " to event " << fEventID;
-      fHitArray.emplace_back(fHitArray.size(), std::forward<Ts>(params)...);
+      fHitArray.emplace_back(std::forward<Ts>(params)...);
+      if (fHitArray.back().GetHitID() == -1)
+         fHitArray.back().SetHitID(fHitArray.size() - 1);
+      LOG(debug) << "Adding hit with ID " << fHitArray.back().GetHitID() << " to event " << fEventID;
+
       return fHitArray.back();
    }
-
-   // Clones the hit and adds it to the event, setting the hitID to the next valid for
-   // this event. It is not coppied from the passed hit.
-   AtHit &AddHit(const AtHit &hit)
-   {
-      LOG(debug) << "Adding hit with ID " << fHitArray.size() << " to event " << fEventID;
-      fHitArray.emplace_back(hit);
-      fHitArray.back().SetHitID(fHitArray.size() - 1);
-      return fHitArray.back();
-   }
-
-   AtHit &AddHit(AtHit &hit) { return AddHit(const_cast<const AtHit &>(hit)); }
 
    // Copies passed aux pad into the event's auxiliary pad array
    void AddAuxPad(AtAuxPad auxPad) { fAuxPadArray.push_back(std::move(auxPad)); }

@@ -59,20 +59,39 @@ public:
 
    void Clear(Option_t *opt = nullptr) override;
 
-   // As an input takes parameters for any constructor of AtPad, or a unique_ptr<AtPad>
+   /**
+    * @brief Create a new pad in this event.
+    * Adds a new pad, calling a constructor of AtPad using the passed parameters.
+    *
+    * @param params Parameters to perfect-forward to the constructor of AtPad
+    * @return Pointer to newly created pad
+    */
    template <typename... Ts>
    AtPad *AddPad(Ts &&...params)
    {
       fPadList.push_back(std::make_unique<AtPad>(std::forward<Ts>(params)...));
       return fPadList.back().get();
    }
-   AtPad *AddPad(AtPadPtr ptr)
+
+   /**
+    * @brief Move a pad into the event
+    * Moves a std::unique_ptr of AtPad, or any type derived from AtPad, into the event.
+    *
+    * @param params std::unique_ptr of pad to move into the event
+    * @return Pointer to moved pad
+    */
+   template <typename T, typename = std::enable_if_t<std::is_base_of<AtPad, std::decay_t<T>>::value>>
+   AtPad *AddPad(std::unique_ptr<T> ptr)
    {
       fPadList.push_back(std::move(ptr));
       return fPadList.back().get();
    }
-   // Returns a pointer to the newly added pad, or existing pad if auxName is already used
-   // bool returned is true if insert occurred.
+   /**
+    * @brief Add new auxilary pad (AtAuxPad) to event
+    * @param Name of new auxiliary pad
+    * @return Returns a pointer to the newly added pad, or existing pad if auxName is already used,
+    * bool returned is true if insert occurred.
+    */
    std::pair<AtAuxPad *, bool> AddAuxPad(std::string auxName);
    AtPad *GetPad(Int_t padNum);
    AtPad *GetAuxPad(std::string auxPad);

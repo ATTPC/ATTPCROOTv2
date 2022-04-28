@@ -56,12 +56,13 @@ protected:
    std::vector<AtHit::MCSimPoint> fMCSimPointArray;
 
 public:
-   AtHit(Int_t hitID = -1);
-   AtHit(Int_t hitID, const XYZPoint &location, Double_t charge);
-   AtHit(Int_t hitID, Int_t padNum, XYZPoint location, Double_t charge);
-   AtHit(Int_t hitID, Double_t x, Double_t y, Double_t z, Double_t charge);
-   AtHit(Int_t hitID, Int_t padNum, Double_t x, Double_t y, Double_t z, Double_t charge);
-   AtHit(const AtHit &hit) = default;
+   AtHit(Int_t hitID = -1);                                              //< Default constructor for IO
+   AtHit(Int_t padNum, XYZPoint location, Double_t charge);              //< Primary constructor
+   AtHit(Int_t hitID, Int_t padNum, XYZPoint location, Double_t charge); //< Specify hit ID on creation
+   AtHit(const AtHit &) = default;                                       //< Copy constructor
+   AtHit(AtHit &&) = default;                                            //< Move constructor
+   AtHit &operator=(const AtHit &) = default;                            //< Copy assignment
+   AtHit &operator=(AtHit &&) = default;                                 //< Move assignment
    virtual ~AtHit() = default;
 
    void SetTrackID(Int_t trackID) { fTrackID = trackID; }

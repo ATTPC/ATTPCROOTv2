@@ -4,7 +4,7 @@
 
 ClassImp(AtHitCluster);
 
-AtHitCluster::AtHitCluster() : AtHit(-1, 0, 0, -1000, 0)
+AtHitCluster::AtHitCluster() : AtHit(-1, -1, {0, 0, -1000}, 0)
 {
    fCovMatrix.ResizeTo(3, 3);
    for (Int_t iElem = 0; iElem < 9; iElem++)
