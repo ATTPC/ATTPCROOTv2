@@ -5,7 +5,7 @@ set(SRCS
   AtParsers.cxx
   AtELossManager.cxx
 
-  AtCSVReader.h
+  AtCSVReader.cxx
   AtEulerTransformation.cxx
   AtSpaceChargeModel.cxx
   AtLineChargeModel.cxx
