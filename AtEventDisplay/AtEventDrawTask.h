@@ -46,8 +46,6 @@ namespace AtRANSACN {
 class AtRansac;
 } // namespace AtRANSACN
 
-enum DetectorId { kAtTpc, kGADGETII, kSpecMAT };
-
 class AtEventDrawTask : public FairTask {
 public:
    AtEventDrawTask();
@@ -60,6 +58,7 @@ public:
    void Reset();
 
    // void Set2DPlotRange(Int_t uaIdx);
+   void SetMap(std::shared_ptr<AtMap> map) { fDetmap = map; }
    void SetThreshold(Int_t val) { fThreshold = val; }
    void UnpackHoughSpace() { fUnpackHough = kTRUE; }
    void SetHitAttributes(Color_t, Size_t, Style_t);
@@ -76,7 +75,6 @@ public:
    void DrawWave(Int_t PadNum);
    void SetMultiHit(Int_t hitMax);
    void SetAlgorithm(Int_t val) { fRANSACAlg = val; };
-   inline void SelectDetectorId(DetectorId val) { fDetectorId = val; }
 
 private:
    void DrawPadPlane();
@@ -150,7 +148,7 @@ private:
    AtEventManager *fEventManager;
    AtRawEvent *fRawevent;
 
-   AtMap *fDetmap;
+   std::shared_ptr<AtMap> fDetmap;
 
    Int_t fThreshold;
    TString fMap;
@@ -239,7 +237,6 @@ private:
    Float_t f3DThreshold;
    Bool_t fIsRawData;
    Int_t fRANSACAlg;
-   DetectorId fDetectorId;
    Int_t fDetNumPads;
    TF1 *fHoughLinearFit;
    TF1 *fRansacLinearFit;

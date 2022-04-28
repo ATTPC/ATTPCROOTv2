@@ -146,8 +146,6 @@ AtEventDrawTask::AtEventDrawTask()
    fLineNum = 0;
    fTrackNum = 0;
 
-   fDetectorId = kAtTpc;
-
    fRGBAPalette = new TEveRGBAPalette(0, 4096);
 }
 
@@ -166,40 +164,13 @@ InitStatus AtEventDrawTask::Init()
 {
 
    std::cout << " =====  AtEventDrawTask::Init =====" << std::endl;
-   // Selection of pad plane
-   std::cout << cGREEN << " Selected detector/pad plane :" << cNORMAL;
-   DetectorId det = fDetectorId;
-   switch (det) {
-   case kAtTpc:
-      std::cout << cGREEN << " ATTPC\n" << cNORMAL;
-      fDetNumPads = 10240;
-      fDetmap = new AtTpcMap();
-      break;
-
-   case kGADGETII:
-      std::cout << cGREEN << " GADGETII\n" << cNORMAL;
-      fDetNumPads = 1012;
-      fDetmap = new AtGadgetIIMap();
-      break;
-
-   case kSpecMAT:
-      std::cout << cGREEN << " SpecMAT\n" << cNORMAL;
-      fDetNumPads = 3162;
-      fDetmap = new AtSpecMATMap(fDetNumPads);
-      break;
-
-   default:
-      std::cout << cRED << " Pad plane not selected! Exiting...\n" << cNORMAL;
-      exit(0);
-      break;
-   }
 
    gROOT->Reset();
    FairRootManager *ioMan = FairRootManager::Instance();
    fEventManager = AtEventManager::Instance();
 
    fDetmap->SetName("fMap");
-   gROOT->GetListOfSpecials()->Add(fDetmap);
+   gROOT->GetListOfSpecials()->Add(fDetmap.get());
 
    fEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fEventBranchName));
    if (fEventArray)
@@ -1003,16 +974,14 @@ void AtEventDrawTask::Reset()
 
 void AtEventDrawTask::DrawPadPlane()
 {
-   // fAtMapPtr = new AtTpcMap();
-   fAtMapPtr = fDetmap;
    if (fPadPlane) {
       fPadPlane->Reset(nullptr);
       return;
    }
 
-   fAtMapPtr->GeneratePadPlane();
-   // fAtMapPtr->SetGUIMode();// This method does not need to be called since it generates the Canvas we do not want
-   fPadPlane = fAtMapPtr->GetPadPlane();
+   fDetmap->GeneratePadPlane();
+   // fDetmap->SetGUIMode();// This method does not need to be called since it generates the Canvas we do not want
+   fPadPlane = fDetmap->GetPadPlane();
    fCvsPadPlane->cd();
    // fPadPlane -> Draw("COLZ L0"); //0  == bin lines adre not drawn
    fPadPlane->Draw("COL L0");
@@ -1502,17 +1471,10 @@ void AtEventDrawTask::SelectPad(const char *rawevt)
 
          AtMap *tmap = nullptr;
          tmap = dynamic_cast<AtMap *>(gROOT->GetListOfSpecials()->FindObject("fMap"));
-         Int_t tPadNum = 0;
-
-         if (dynamic_cast<AtTpcMap *>(tmap)) {
-            tPadNum = dynamic_cast<AtTpcMap *>(tmap)->BinToPad(bin);
-         } else if (dynamic_cast<AtGadgetIIMap *>(tmap)) {
-            tPadNum = dynamic_cast<AtGadgetIIMap *>(tmap)->BinToPad(bin);
-         } else if (dynamic_cast<AtSpecMATMap *>(tmap)) {
-            tPadNum = dynamic_cast<AtSpecMATMap *>(tmap)->BinToPad(bin);
-         }
+         Int_t tPadNum = tmap->BinToPad(bin);
 
          std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
+         std::cout << " Electronic mapping: " << tmap->GetPadRef(tPadNum) << std::endl;
          AtPad *tPad = tRawEvent->GetPad(tPadNum);
 
          if (tPad == nullptr)
