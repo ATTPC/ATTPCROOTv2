@@ -58,8 +58,15 @@ void AtFilterFFT::Filter(AtPad *pad)
    applyFrequencyCutsAndSetInverseFFT();
    fFFTbackward->Transform();
 
+   double baseline = 0;
+   if (fSubtractBackground) {
+      for (int i = 0; i < 20; ++i)
+         baseline += fFFTbackward->GetPointReal(i);
+      baseline /= 20;
+   }
+
    for (int i = 0; i < pad->GetADC().size(); ++i)
-      pad->SetADC(i, fFFTbackward->GetPointReal(i));
+      pad->SetADC(i, fFFTbackward->GetPointReal(i) - baseline);
 
    if (fSaveTransform) {
       auto inputPad = dynamic_cast<AtPadFFT *>(fTransformedEvent->GetPad(pad->GetPadNum()));

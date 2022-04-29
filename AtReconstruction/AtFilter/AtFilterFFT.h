@@ -49,6 +49,7 @@ protected:
    std::unique_ptr<TVirtualFFT> fFFTbackward{nullptr};
 
    Bool_t fSaveTransform{false};
+   Bool_t fSubtractBackground{true};
 
    AtRawEvent *fTransformedEvent{nullptr};
    AtRawEvent *fFilteredEvent{nullptr};
@@ -60,8 +61,11 @@ public:
 
    bool AddFreqRange(AtFreqRange range); // Range is inclusive
    void SetSaveTransform(bool saveTransform) { fSaveTransform = saveTransform; }
+   void SetSubtractBackground(bool subtractBackground) { fSubtractBackground = subtractBackground; }
 
    bool GetSaveTransform() { return fSaveTransform; }
+   bool GetSubtractBackground() { return fSubtractBackground; }
+
    const FreqRanges &GetFreqRanges() { return fFreqRanges; }
    void DumpFactors();
 

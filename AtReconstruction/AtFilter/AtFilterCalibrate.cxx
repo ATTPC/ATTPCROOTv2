@@ -22,9 +22,10 @@ void AtFilterCalibrate::Filter(AtPad *pad)
    auto adc = pad->GetADC();
    auto intercept = fIntercept.find(padNum);
 
-   if (intercept == fIntercept.end())
-      LOG(ERROR) << "Missing calibration for pad: " << padNum;
-   else
+   if (intercept == fIntercept.end()) {
+      pad->SetValidPad(false);
+      LOG(debug) << "Missing calibration for pad: " << padNum;
+   } else
       for (int tb = 0; tb < 512; tb++)
          adc[tb] = fIntercept[padNum] + adc[tb] * fSlope[padNum];
 }
