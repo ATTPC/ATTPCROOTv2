@@ -19,7 +19,7 @@ void AtFilterCalibrate::Init()
 void AtFilterCalibrate::Filter(AtPad *pad)
 {
    auto padNum = pad->GetPadNum();
-   auto adc = pad->GetADC();
+   auto &adc = pad->GetADC();
    auto intercept = fIntercept.find(padNum);
 
    if (intercept == fIntercept.end()) {
@@ -27,7 +27,7 @@ void AtFilterCalibrate::Filter(AtPad *pad)
       LOG(debug) << "Missing calibration for pad: " << padNum;
    } else
       for (int tb = 0; tb < 512; tb++)
-         adc[tb] = fIntercept[padNum] + adc[tb] * fSlope[padNum];
+         pad->SetADC(tb, fIntercept[padNum] + adc[tb] * fSlope[padNum]);
 }
 
 void AtFilterCalibrate::openFileAndReadContents()
