@@ -22,7 +22,6 @@ Set(DEPENDENCIES
   ROOT::Core
   ROOT::HistPainter
   
-  ATTPCROOT::AtReconstruction
   ATTPCROOT::AtData
   ATTPCROOT::AtMap
   ATTPCROOT::AtS800

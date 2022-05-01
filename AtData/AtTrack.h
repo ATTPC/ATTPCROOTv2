@@ -16,11 +16,11 @@
 // AtTPCROOT
 #include "AtHit.h"
 #include "AtHitCluster.h"
+#include "AtPattern.h"
 
 class TBuffer;
 class TClass;
 class TMemberInspector;
-
 using XYZPoint = ROOT::Math::XYZPoint;
 
 class AtTrack : public TObject {
@@ -29,18 +29,7 @@ protected:
    // Attributes shared by all track finding algorithms
    Int_t fTrackID{-1};
    std::vector<AtHit> fHitArray; // TrackHC, AtGenfit, all ransacs
-
-   // Used by all ransac classes
-   XYZPoint fTrackVertex;         // Mean Vertex of the track
-   Double_t fMinimum{-1};         // Minimizer result (chi2)
-   Int_t fNFree{-1};              // Free paramets (NDF)
-   std::vector<Double_t> fFitPar; // fit parameters
-
-   // Used by AtRansac only
-   Double_t fAngleZAxis{-20};          // Angle of the track w.r.t. the X axis.
-   Double_t fAngleZDet{-20};           // Angle w.r.t. Z axis (beam axis) in the detector system.
-   Double_t fAngleYDet{-20};           //  "         "           Y   "             "
-   std::vector<Double_t> fRANSACCoeff; // Coefficients for radius smoothing using RANSAC: x, y and radius of curvature
+   std::unique_ptr<AtPatterns::AtPattern> fPattern{nullptr};
 
    // Used by AtPRA
    Double_t fGeoThetaAngle{};                // Geometrical scattering angle with respect to the detector FitParameters
@@ -49,69 +38,48 @@ protected:
    std::pair<Double_t, Double_t> fGeoCenter; // Center of the spiral track
    std::vector<AtHitCluster> fHitClusterArray; ///< Clusterized hits container
 
-   // Used by AtTrackFinderHC
-   Bool_t kIsNoise = false;
-
 public:
    AtTrack() = default;
-   AtTrack(const AtTrack &obj) = default;
+   AtTrack(const AtTrack &obj);
+   AtTrack &operator=(const AtTrack &obj) { return *this; };
+   AtTrack(AtTrack &&) = default;
+   AtTrack &operator=(AtTrack &&) = default;
    ~AtTrack() = default;
 
-   // Attributes shared by all track finding algorithms
+   // Getters
+   Int_t GetTrackID() const { return fTrackID; }
+   std::vector<AtHit> &GetHitArray() { return fHitArray; }
+   const std::vector<AtHit> &GetHitArrayConst() const { return fHitArray; }
+   const AtPatterns::AtPattern *GetPattern() const { return fPattern.get(); }
+
+   Double_t GetGeoTheta() const { return fGeoThetaAngle; }
+   Double_t GetGeoPhi() const { return fGeoPhiAngle; }
+   Double_t GetGeoRadius() const { return fGeoRadius; }
+   std::pair<Double_t, Double_t> GetGeoCenter() const { return fGeoCenter; }
+   std::vector<AtHitCluster> *GetHitClusterArray() { return &fHitClusterArray; }
+
+   // Setters
    void SetTrackID(Int_t val) { fTrackID = val; }
    void AddHit(const AtHit &hit) { fHitArray.push_back(hit); }
+   void AddHit(AtHit &&hit) { fHitArray.push_back(hit); }
+   void SetPattern(std::unique_ptr<AtPatterns::AtPattern> pat) { fPattern = std::move(pat); }
 
-   // Atributes used by all ransac classes
-
-   void SetFitPar(const std::vector<Double_t> &par) { fFitPar = par; }
-   void SetMinimum(Double_t min) { fMinimum = min; }
-   void SetNFree(Int_t ndf);
-   void SetTrackVertex(XYZPoint vertex);
-
-   // Attributes used by AtRansac
-   void SetAngleZAxis(Double_t angle);
-   void SetAngleZDet(Double_t angle);
-   void SetAngleYDet(Double_t angle);
-   void SetRANSACCoeff(std::vector<Double_t> par);
-
-   // Attributes used by AtPRAtask
-   void SetGeoTheta(Double_t angle);
-   void SetGeoPhi(Double_t angle);
+   void SetGeoTheta(Double_t angle) { fGeoThetaAngle = angle; }
+   void SetGeoPhi(Double_t angle) { fGeoPhiAngle = angle; }
+   void SetGeoRadius(Double_t radius) { fGeoRadius = radius; }
+   void SetGeoCenter(std::pair<Double_t, Double_t> center) { fGeoCenter = center; }
    void AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster);
-   void SetGeoCenter(std::pair<Double_t, Double_t> center);
-   void SetGeoRadius(Double_t radius);
 
-   // Attributes used by AtTrackFinderHC
-   void SetIsNoise(Bool_t value);
-
-   std::vector<AtHit> &GetHitArray() { return fHitArray; }
-   std::vector<AtHitCluster> *GetHitClusterArray();
+   // Operations
    void ResetHitClusterArray() { fHitClusterArray.clear(); }
-   // void ResetHitArray();
-   std::vector<Double_t> GetFitPar();
-   const std::vector<AtHit> &GetHitArrayConst() const { return fHitArray; }
-   Double_t GetMinimum();
-   Int_t GetNFree();
-   Int_t GetTrackID();
-   Double_t GetAngleZAxis();
-   Double_t GetAngleZDet();
-   Double_t GetAngleYDet();
+
    Double_t GetMeanTime();
    Double_t GetLinearRange();
    Double_t GetLinearRange(XYZPoint vertex);
-   Double_t GetLinearRange(const XYZPoint &vertex, const XYZPoint &maxPos);
-   XYZPoint GetTrackVertex();
-   Int_t GetQuadrant();
-   Double_t GetGeoTheta();
-   Double_t GetGeoPhi();
-   Double_t GetGeoEnergy();
+
    Double_t GetGeoQEnergy();
-   Bool_t GetIsNoise();
-   std::vector<Double_t> &GetRANSACCoeff();
-   std::pair<Double_t, Double_t> GetGeoCenter();
-   Double_t GetGeoRadius();
    XYZPoint GetLastPoint();
-   std::pair<Double_t, Double_t> GetThetaPhi(const XYZPoint &vertex, const XYZPoint &maxPos, int zdir);
+   static Double_t GetLinearRange(const XYZPoint &vertex, const XYZPoint &maxPos);
 
    void SortHitArrayTime();
    void SortClusterHitArrayZ();
@@ -129,12 +97,11 @@ protected:
       std::cout << " Geomterical Scattering Angle : " << track.fGeoThetaAngle * (180.0 / TMath::Pi()) << " deg "
                 << " - Geomterical Azimuthal Angle : " << track.fGeoPhiAngle * (180.0 / TMath::Pi()) << " deg "
                 << std::endl;
-      std::cout << " Angle with respect to Z axis : " << track.fAngleZAxis << std::endl;
 
       return o;
    }
 
-   ClassDef(AtTrack, 2);
+   ClassDef(AtTrack, 3);
 };
 
 #endif

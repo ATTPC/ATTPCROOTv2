@@ -33,7 +33,7 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::GetTrackCand()
    return fTrackCand;
 }
 
-bool AtPATTERN::AtTrackFinderHC::FindTracks(AtEvent &event, AtPatternEvent *patternEvent)
+std::unique_ptr<AtPatternEvent> AtPATTERN::AtTrackFinderHC::FindTracks(AtEvent &event)
 {
 
    int opt_verbose = 0;
@@ -65,7 +65,7 @@ bool AtPATTERN::AtTrackFinderHC::FindTracks(AtEvent &event, AtPatternEvent *patt
    if (cloud_xyz->size() == 0) {
       std::cerr << "Error: empty cloud <<"
                    "\n";
-      return false;
+      return nullptr;
    }
 
    // compute default r if it is not given
@@ -101,9 +101,7 @@ bool AtPATTERN::AtTrackFinderHC::FindTracks(AtEvent &event, AtPatternEvent *patt
    // Adapt clusters to AtTrack
    // fTrackCand = clustersToTrack(cloud_xyzti,cluster,event);
 
-   patternEvent->SetTrackCand(clustersToTrack(cloud_xyzti, cluster, event));
-
-   return true;
+   return clustersToTrack(cloud_xyzti, cluster, event);
 }
 
 Cluster AtPATTERN::AtTrackFinderHC::use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
@@ -140,8 +138,8 @@ void AtPATTERN::AtTrackFinderHC::eventToClusters(AtEvent &event, pcl::PointCloud
    }
 }
 
-std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
-                                                                 Cluster const cluster, AtEvent &event)
+std::unique_ptr<AtPatternEvent> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,
+                                                                            Cluster const cluster, AtEvent &event)
 {
    std::vector<AtTrack> tracks;
 
@@ -187,18 +185,17 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
 
    std::cout << cRED << " Tracks found " << tracks.size() << cNORMAL << "\n";
 
-   // Dump noise into a track
-   AtTrack ntrack;
-   for (auto &point : points) {
-      ntrack.AddHit(event.GetHit(point.intensity));
-   }
-   ntrack.SetIsNoise(kTRUE);
-   tracks.push_back(ntrack);
+   // Dump noise into pattern event
+   auto retEvent = std::make_unique<AtPatternEvent>();
+   for (const auto &point : points)
+      retEvent->AddNoise(event.GetHit(point.intensity));
 
-   for (auto &track : tracks)
+   for (auto &track : tracks) {
       if (track.GetHitArray().size() > 0)
          SetTrackInitialParameters(track);
-
+      retEvent->AddTrack(std::move(track));
+   }
+   return retEvent;
    /*ROOT::EnableThreadSafety();
 
    //Estimaton of track parameters
@@ -228,8 +225,6 @@ std::vector<AtTrack> AtPATTERN::AtTrackFinderHC::clustersToTrack(pcl::PointCloud
        }
 
        }*/
-
-   return tracks;
 }
 
 ClassImp(AtPATTERN::AtTrackFinderHC)

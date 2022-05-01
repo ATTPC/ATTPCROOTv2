@@ -64,13 +64,19 @@ struct Point {
 namespace AtPATTERN {
 
 class AtTrackFinderHC : public AtPRA {
+private:
+   std::vector<AtTrack> fTrackCand; // Candidate tracks
+
+   hc_params inputParams{.s = -1, .k = 19, .n = 3, .m = 8, .r = -1, .a = 0.03, .t = 3.5};
 
 public:
    AtTrackFinderHC();
    ~AtTrackFinderHC() = default;
 
-   bool FindTracks(AtEvent &event, AtPatternEvent *patternEvent);
-   std::vector<AtTrack> GetTrackCand();
+   std::unique_ptr<AtPatternEvent> FindTracks(AtEvent &event) override;
+   // bool FindTracks(AtEvent &event, AtPatternEvent *patternEvent);
+
+   std::vector<AtTrack> GetTrackCand() override;
    void SetScluster(float s) { inputParams.s = s; }
    void SetKtriplet(size_t k) { inputParams.k = k; }
    void SetNtriplet(size_t n) { inputParams.n = n; }
@@ -84,16 +90,12 @@ private:
    Cluster use_hc(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::vector<hc::triplet> triplets, float scale,
                   float cdist, size_t cleanup_min_triplets, int opt_verbose);
 
-   std::vector<AtTrack>
+   std::unique_ptr<AtPatternEvent>
    clustersToTrack(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, Cluster const cluster, AtEvent &event);
 
    void eventToClusters(AtEvent &event, pcl::PointCloud<pcl::PointXYZI>::Ptr cloud);
 
-   std::vector<AtTrack> fTrackCand; // Candidate tracks
-
-   hc_params inputParams{.s = -1, .k = 19, .n = 3, .m = 8, .r = -1, .a = 0.03, .t = 3.5};
-
-   ClassDef(AtTrackFinderHC, 1);
+   ClassDefOverride(AtTrackFinderHC, 1);
 };
 
 } // namespace AtPATTERN

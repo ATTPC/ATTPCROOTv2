@@ -7,7 +7,6 @@ Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 set(INCLUDE_DIRECTORIES
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPulseAnalyzer
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
@@ -53,6 +52,13 @@ set(SRCS
   AtAuxFilterTask.cxx
   AtDataReductionTask.cxx
   AtSpaceChargeCorrectionTask.cxx
+
+  AtPatternRecognition/AtPRA.cxx
+  AtPatternRecognition/AtSampleConsensus.cxx
+  AtPatternRecognition/AtSampleEstimator.cxx
+  AtPatternRecognition/AtEstimatorMethods.cxx
+  AtRansacTask.cxx
+  AtPRAtask.cxx
   )
 
 ### Add additional sources and libraries if we found certain modules ###
@@ -60,21 +66,12 @@ set(SRCS
 # Adding libraries that depend on PCL
 if(PCL_FOUND)
   set(SRCS ${SRCS} 
-    AtRansac/AtRansac.cxx
-    #AtPulseAnalyzer/AtPSAFilter.cxx #This source file breaks clang-tidy. idk why
     AtPatternRecognition/AtTrackFinderHC.cxx
     AtPatternRecognition/smoothenCloud.cxx
     AtPatternRecognition/msd.cxx
     AtPatternRecognition/cluster.cxx
     AtPatternRecognition/hc.cxx
     AtPatternRecognition/fastcluster.cxx
-    AtPatternRecognition/AtPRA.cxx
-    AtPatternRecognition/AtRansacMod.cxx
-    AtPatternRecognition/AtMlesacMod.cxx
-    AtPatternRecognition/AtLmedsMod.cxx
-    AtRansac/AtRansac.cxx
-    AtPRAtask.cxx
-    AtRansacTask.cxx
     )
   set(DEPENDENCIES ${DEPENDENCIES}
     ${PCL_LIBRARIES}

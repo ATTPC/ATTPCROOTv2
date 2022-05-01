@@ -154,14 +154,14 @@ void AtPRAtask::Exec(Option_t *option)
    AtEvent &event = *(dynamic_cast<AtEvent *>(fEventHArray->At(0))); // TODO: Make sure we are not copying
    hitArray = event.GetHitArray();
 
-   std::cout << "  -I- AtTrackFinderHCTask -  Event Number :  " << event.GetEventID() << "\n";
+   std::cout << "  -I- AtPRAtask -  Event Number :  " << event.GetEventID() << "\n";
 
    try {
 
-      auto *patternEvent = (AtPatternEvent *)new (fPatternEventArray[0]) AtPatternEvent();
-
-      if (hitArray.size() > fMinNumHits && hitArray.size() < fMaxNumHits)
-         fPRA->FindTracks(event, patternEvent);
+      if (hitArray.size() > fMinNumHits && hitArray.size() < fMaxNumHits) {
+         auto patternEvent = fPRA->FindTracks(event);
+         new (fPatternEventArray[0]) AtPatternEvent(std::move(*patternEvent));
+      }
 
    } catch (std::runtime_error e) {
       std::cout << "Analyzation failed! Error: " << e.what() << std::endl;

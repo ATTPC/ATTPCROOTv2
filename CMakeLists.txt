@@ -153,9 +153,8 @@ add_subdirectory (AtS800)
 add_subdirectory (AtApollo)
 add_subdirectory (AtAnalysis)
 add_subdirectory (AtTools)
-if (PCL_FOUND)
-  add_subdirectory (AtEventDisplay)
-endif()
+add_subdirectory (AtEventDisplay)
+  
 
 # Generate config file for build
 

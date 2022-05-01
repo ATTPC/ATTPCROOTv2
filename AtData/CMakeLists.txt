@@ -26,10 +26,16 @@ set(SRCS
   AtPatternEvent.cxx
   AtProtoQuadrant.cxx
   AtTrack.cxx
+
+  AtPattern/AtPattern.cxx
+  AtPattern/AtPatternLine.cxx
+  AtPattern/AtPatternCircle2D.cxx
+  AtPattern/AtPatternTypes.cxx
   )
 
 generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   DEPS_PUBLIC ${DEPENDENCIES}
+  INCLUDE_DIR ${CMAKE_SOURCE_DIR}/AtData/AtPattern
   )

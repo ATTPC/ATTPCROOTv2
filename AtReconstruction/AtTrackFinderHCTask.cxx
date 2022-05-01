@@ -81,7 +81,7 @@ void AtTrackFinderHCTask::Exec(Option_t *option)
 
    std::vector<AtHit> hitArray;
    AtEvent &event = *((AtEvent *)fEventHArray->At(0));
-   hitArray = *event.GetHitArray();
+   hitArray = event.GetHitArray();
 
    std::cout << "  -I- AtTrackFinderHCTask -  Event Number :  " << event.GetEventID() << "\n";
 
