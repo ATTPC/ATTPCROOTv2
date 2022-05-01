@@ -20,6 +20,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -54,13 +55,14 @@ public:
    AtRawEvent(const AtRawEvent &object);
    ~AtRawEvent() = default;
 
-   // Copy everything but the data (pads, aux pads, and MCPointMap) to this event
+   /// Copy everything but the data (pads, aux pads, and MCPointMap) to this event
    void CopyAllButData(const AtRawEvent *event);
 
    void Clear(Option_t *opt = nullptr) override;
 
    /**
     * @brief Create a new pad in this event.
+    *
     * Adds a new pad, calling a constructor of AtPad using the passed parameters.
     *
     * @param params Parameters to perfect-forward to the constructor of AtPad
@@ -75,6 +77,7 @@ public:
 
    /**
     * @brief Move a pad into the event
+    *
     * Moves a std::unique_ptr of AtPad, or any type derived from AtPad, into the event.
     *
     * @param params std::unique_ptr of pad to move into the event

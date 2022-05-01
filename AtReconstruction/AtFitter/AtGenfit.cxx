@@ -170,8 +170,7 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    std::cout << cYELLOW << " Track " << track->GetTrackID() << " with " << hitClusterArray->size() << " clusters "
              << cNORMAL << "\n";
 
-   if (hitClusterArray->size() < 3 ||
-       track->GetIsNoise()) //&& patternTrackCand.size()<5) { // TODO Check minimum number of clusters
+   if (hitClusterArray->size() < 3) //&& patternTrackCand.size()<5) { // TODO Check minimum number of clusters
       return nullptr;
 
    if (fVerbosity > 0) {

@@ -1,4 +1,0 @@
----
-Checks:              '-cppcoreguidelines-prefer-member-initializer,-cppcoreguidelines-pro-type-union-access'
-InheritParentConfig: true
-...

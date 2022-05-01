@@ -478,10 +478,7 @@ void AtEventDrawTaskProto::DrawHitPoints()
                   int nHitsMin = trackHits.size();
 
                   fHitSetPR[i] = new TEvePointSet(Form("HitPR_%d", i), nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
-                  if (track.GetIsNoise())
-                     fHitSetPR[i]->SetMarkerColor(kRed);
-                  else
-                     fHitSetPR[i]->SetMarkerColor(GetTrackColor(i) + 1);
+                  fHitSetPR[i]->SetMarkerColor(GetTrackColor(i) + 1);
                   fHitSetPR[i]->SetMarkerSize(fHitSize);
                   fHitSetPR[i]->SetMarkerStyle(fHitStyle);
 

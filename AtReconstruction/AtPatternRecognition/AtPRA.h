@@ -4,7 +4,9 @@
 #include <Rtypes.h>  // for Double_t, Float_t, Int_t, THashConsistencyHolder
 #include <TObject.h> // for TObject
 
+#include <memory>
 #include <vector> // for vector
+
 class AtDigiPar;
 class AtEvent;
 class AtHit;
@@ -32,7 +34,7 @@ protected:
 public:
    virtual ~AtPRA() = default;
    virtual std::vector<AtTrack> GetTrackCand() = 0;
-   virtual bool FindTracks(AtEvent &event, AtPatternEvent *patternEvent) = 0;
+   virtual std::unique_ptr<AtPatternEvent> FindTracks(AtEvent &event) = 0;
 
    void SetTrackInitialParameters(AtTrack &track);
    void PruneTrack(AtTrack &track);

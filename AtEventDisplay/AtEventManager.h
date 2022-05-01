@@ -17,6 +17,49 @@ class TMemberInspector;
 class TGListTreeItem;
 
 class AtEventManager : public TEveEventManager {
+private:
+   FairRootManager *fRootManager;
+   FairRunAna *fRunAna;
+
+   Int_t fEntry;
+   TGListTreeItem *fEvent;
+   TGNumberEntry *fCurrentEvent;
+   TGNumberEntry *f3DThresDisplay;
+   TCanvas *fCvsPadPlane;
+   TCanvas *fPadWave;
+   TCanvas *fPadAll;
+   TCanvas *fCvsQEvent;
+   TCanvas *fCvsHough;
+   TCanvas *fCvsPhi{};
+   TCanvas *fCvsMesh{};
+   TCanvas *fCvs3DHist{};
+   TCanvas *fCvsRad;
+   TCanvas *fCvsTheta{};
+   TCanvas *fCvsThetaxPhi{};
+   TCanvas *fCvsQuadrant1{};
+   TCanvas *fCvsQuadrant2{};
+   TCanvas *fCvsQuadrant3{};
+   TCanvas *fCvsQuadrant4{};
+   TCanvas *fCvsMC_XY{};
+   TCanvas *fCvsMC_Z{};
+   TCanvas *fCvsAux{};
+
+   TGTextButton *drawallpad;
+   TGTextButton *eraseQevent;
+   TGTextButton *drawReconstruction;
+   TGTextButton *saveASCIIevent;
+   TGTextButton *toggleCorr;
+
+   Bool_t kDrawAllOn;
+   Bool_t kEraseQ;
+   Bool_t kDrawReconstruction;
+   Bool_t kDraw3DGeo;
+   Bool_t kDraw3DHist;
+   Bool_t kToggleData;
+   Float_t k3DThreshold;
+
+   static AtEventManager *fInstance;
+
 public:
    static AtEventManager *Instance();
    AtEventManager();
@@ -31,7 +74,7 @@ public:
 
    static void DrawWave();
    void ChangeDrawAllPads();
-   void EnableDrawHoughSpace();
+   void EnableDrawReconstruction();
    void EraseQEvent();
    void Draw3DGeo();
    void Draw3DHist();
@@ -63,7 +106,7 @@ public:
    TCanvas *GetCvsAux() { return fCvsAux; }
 
    Bool_t GetDrawAllPad() { return kDrawAllOn; }
-   Bool_t GetDrawHoughSpace() { return kDrawHoughOn; }
+   Bool_t GetDrawReconstruction() { return kDrawReconstruction; }
    Bool_t GetEraseQEvent()
    {
       Bool_t EraseBuff = kEraseQ;
@@ -76,49 +119,6 @@ public:
    void RunEvent();
 
    void SaveASCIIEvent();
-
-private:
-   FairRootManager *fRootManager;
-   FairRunAna *fRunAna;
-
-   Int_t fEntry;
-   TGListTreeItem *fEvent;
-   TGNumberEntry *fCurrentEvent;
-   TGNumberEntry *f3DThresDisplay;
-   TCanvas *fCvsPadPlane;
-   TCanvas *fPadWave;
-   TCanvas *fPadAll;
-   TCanvas *fCvsQEvent;
-   TCanvas *fCvsHough;
-   TCanvas *fCvsPhi{};
-   TCanvas *fCvsMesh{};
-   TCanvas *fCvs3DHist{};
-   TCanvas *fCvsRad;
-   TCanvas *fCvsTheta{};
-   TCanvas *fCvsThetaxPhi{};
-   TCanvas *fCvsQuadrant1{};
-   TCanvas *fCvsQuadrant2{};
-   TCanvas *fCvsQuadrant3{};
-   TCanvas *fCvsQuadrant4{};
-   TCanvas *fCvsMC_XY{};
-   TCanvas *fCvsMC_Z{};
-   TCanvas *fCvsAux{};
-
-   TGTextButton *drawallpad;
-   TGTextButton *eraseQevent;
-   TGTextButton *drawHoughSpace;
-   TGTextButton *saveASCIIevent;
-   TGTextButton *toggleCorr;
-   // TGCanvas *InfoCvs;
-   Bool_t kDrawAllOn;
-   Bool_t kEraseQ;
-   Bool_t kDrawHoughOn;
-   Bool_t kDraw3DGeo;
-   Bool_t kDraw3DHist;
-   Bool_t kToggleData;
-   Float_t k3DThreshold;
-
-   static AtEventManager *fInstance;
 
    AtEventManager(const AtEventManager &);
    AtEventManager &operator=(const AtEventManager &);

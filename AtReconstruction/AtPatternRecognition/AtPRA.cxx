@@ -2,8 +2,11 @@
 
 #include "AtHit.h"        // for AtHit, XYZPoint
 #include "AtHitCluster.h" // for AtHitCluster
-#include "AtRansac.h"     // for AtRansac
-#include "AtTrack.h"      // for XYZPoint, AtTrack
+#include "AtPatternCircle2D.h"
+#include "AtPatternEvent.h"
+#include "AtPatternLine.h"
+#include "AtSampleConsensus.h"
+#include "AtTrack.h" // for XYZPoint, AtTrack
 
 #include <Math/Point3D.h>   // for PositionVector3D, Cart...
 #include <Math/Vector3D.h>  // for DisplacementVector3D
@@ -13,17 +16,14 @@
 #include <TMatrixTSym.h>    // for TMatrixTSym
 #include <TVector3.h>       // for TVector3
 
-#include <pcl/sample_consensus/model_types.h> // for SACMODEL_CIRCLE2D, SAC...
-
-#include <algorithm>          // for max, for_each, copy_if
-#include <cmath>              // for fabs, acos
-#include <cstddef>            // for size_t
-#include <exception>          // for exception
-#include <ext/alloc_traits.h> // for __alloc_traits<>::valu...
-#include <iostream>           // for operator<<, basic_ostream
-#include <iterator>           // for back_insert_iterator
-#include <memory>             // for shared_ptr, __shared_p...
-#include <utility>            // for make_pair
+#include <algorithm> // for max, for_each, copy_if
+#include <cmath>     // for fabs, acos
+#include <cstddef>   // for size_t
+#include <exception> // for exception
+#include <iostream>  // for operator<<, basic_ostream
+#include <iterator>  // for back_insert_iterator
+#include <memory>    // for shared_ptr, __shared_p...
+#include <utility>   // for make_pair
 
 ClassImp(AtPATTERN::AtPRA);
 
@@ -72,30 +72,25 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
    // std::cout<<" Processing track with "<<track.GetHitArray()->size()<<" points."<<"\n";
    //  Get the radius of curvature from RANSAC
-   AtRANSACN::AtRansac RansacSmoothRadius;
-   RansacSmoothRadius.SetModelType(pcl::SACMODEL_CIRCLE2D);
-   RansacSmoothRadius.SetRANSACPointThreshold(0.1);
+   SampleConsensus::AtSampleConsensus RansacSmoothRadius;
+   RansacSmoothRadius.SetPatternType(AtPatterns::PatternType::kCircle2D);
+   RansacSmoothRadius.SetMinHitsPattern(0.1 * track.GetHitArray().size());
    RansacSmoothRadius.SetDistanceThreshold(6.0);
-   std::vector<AtTrack> *circularTracks =
-      RansacSmoothRadius.RansacPCL(track.GetHitArray()); // Only part of the spiral is used
-                                                         // This function also sets the coefficients
-                                                         // i.e. radius of curvature and center
+   auto circularTracks =
+      RansacSmoothRadius.Solve(track.GetHitArray()).GetTrackCand(); // Only part of the spiral is used
+                                                                    // This function also sets the coefficients
+                                                                    // i.e. radius of curvature and center
 
-   // Local PCL RANSAC
-   // pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
+   if (!circularTracks.empty()) {
 
-   // if(circularTracks[0]->GetHitArray() != nullptr)
+      std::vector<AtHit> hits = circularTracks.at(0).GetHitArray();
 
-   if (!circularTracks->empty()) {
+      auto circle = dynamic_cast<const AtPatterns::AtPatternCircle2D *>(circularTracks.at(0).GetPattern());
+      auto center = circle->GetCenter();
+      auto radius = circle->GetRadius();
 
-      std::vector<AtHit> hits = circularTracks->at(0).GetHitArray();
-
-      std::vector<Double_t> coeff = circularTracks->at(0).GetRANSACCoeff();
-
-      track.SetGeoCenter(std::make_pair(coeff.at(0), coeff.at(1)));
-      track.SetGeoRadius(coeff.at(2));
-      // std::cout<<" RANSAC circle fit -  Center : "<<coeff.at(0)<<" - "<<coeff.at(1)<<" - Radius :
-      // "<<coeff.at(2)<<"\n";
+      track.SetGeoCenter({center.X(), center.Y()});
+      track.SetGeoRadius(radius);
 
       std::vector<double> wpca;
       std::vector<double> whit;
@@ -105,23 +100,18 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
       auto posPCA = hits.at(0).GetPosition();
 
-      // cloud->points.resize (hits->size());
-
       std::vector<AtHit> thetaHits;
 
       for (size_t i = 0; i < hits.size(); ++i) {
 
          auto pos = hits.at(i).GetPosition();
 
-         // std::cerr << inliers->indices[i] << "    " << cloud->points[inliers->indices[i]].x << " "
-         //<< cloud->points[inliers->indices[i]].y << " "
-         //<< cloud->points[inliers->indices[i]].z << std::endl;
+         auto temp = posPCA - center;
+         wpca.push_back(TMath::ATan2(temp.Y(), temp.X()));
+         temp = pos - center;
+         whit.push_back(TMath::ATan2(temp.Y(), temp.X()));
 
-         wpca.push_back(TMath::ATan2(posPCA.Y() - coeff.at(1), posPCA.X() - coeff.at(0)));
-
-         whit.push_back(TMath::ATan2(pos.Y() - coeff.at(1), pos.X() - coeff.at(0)));
-
-         arclength.push_back(fabs(coeff.at(2)) * (wpca.at(i) - whit.at(i)));
+         arclength.push_back(fabs(radius * (wpca.at(i) - whit.at(i))));
 
          arclengthGraph->SetPoint(arclengthGraph->GetN(), arclength.at(i), pos.Z());
 
@@ -157,17 +147,20 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
          if (thetaHits.size() > 0) {
             // std::cout<<" RANSAC Theta "<<"\n";
 
-            AtRANSACN::AtRansac RansacTheta;
-            RansacTheta.SetModelType(pcl::SACMODEL_LINE);
-            RansacTheta.SetRANSACPointThreshold(0.1);
-            RansacTheta.SetDistanceThreshold(6.0);
-            std::vector<AtTrack> *thetaTracks = RansacTheta.RansacPCL(thetaHits);
+            SampleConsensus::AtSampleConsensus RansacTheta;
+            RansacSmoothRadius.SetPatternType(AtPatterns::PatternType::kLine);
+            RansacSmoothRadius.SetMinHitsPattern(0.1 * thetaHits.size());
+            RansacSmoothRadius.SetDistanceThreshold(6.0);
+            auto thetaTracks =
+               RansacSmoothRadius.Solve(track.GetHitArray()).GetTrackCand(); // Only part of the spiral is used
 
-            // RansacTheta.MinimizeTrack(thetaTracks[0]);
-            if (thetaTracks->size() > 0) {
+            if (thetaTracks.size() > 0) {
 
                // NB: Only the most intense line is taken, if any
-               std::vector<Double_t> coeffTheta = thetaTracks->at(0).GetRANSACCoeff();
+               auto line = dynamic_cast<const AtPatterns::AtPatternLine *>(thetaTracks.at(0).GetPattern());
+
+               // std::vector<Double_t> coeffTheta = thetaTracks.at(0).GetRANSACCoeff();
+               auto coeffTheta = line->GetPatternPar();
 
                int sign = 0;
 
@@ -179,7 +172,8 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
                if (coeffTheta.at(3) != 0)
                   angle = acos(sign * fabs(coeffTheta.at(4))) * TMath::RadToDeg();
 
-               phi0 = TMath::ATan2(posPCA.Y() - coeff.at(1), posPCA.X() - coeff.at(0));
+               auto temp2 = posPCA - center;
+               phi0 = TMath::ATan2(temp2.Y(), temp2.X());
 
             } // thetaTracks
 

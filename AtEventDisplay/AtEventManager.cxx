@@ -63,9 +63,9 @@ AtEventManager::AtEventManager()
    : TEveEventManager("AtEventManager", ""), fRootManager(FairRootManager::Instance()), fRunAna(FairRunAna::Instance()),
      fEntry(0), fEvent(nullptr), fCurrentEvent(nullptr), f3DThresDisplay(nullptr), fCvsPadPlane(nullptr),
      fPadWave(nullptr), fPadAll(nullptr), fCvsQEvent(nullptr), fCvsHough(nullptr), fCvsRad(nullptr),
-     drawallpad(nullptr), eraseQevent(nullptr), drawHoughSpace(nullptr), saveASCIIevent(nullptr), toggleCorr(nullptr),
-     kDrawAllOn(false), kEraseQ(false), kDrawHoughOn(false), kDraw3DGeo(false), kDraw3DHist(false), kToggleData(false),
-     k3DThreshold(0)
+     drawallpad(nullptr), eraseQevent(nullptr), drawReconstruction(nullptr), saveASCIIevent(nullptr),
+     toggleCorr(nullptr), kDrawAllOn(false), kEraseQ(false), kDrawReconstruction(false), kDraw3DGeo(false),
+     kDraw3DHist(false), kToggleData(false), k3DThreshold(0)
 
 {
    fInstance = this;
@@ -482,10 +482,10 @@ void AtEventManager::make_gui()
       eraseQevent->Connect("Clicked()", "AtEventManager", fInstance, "EraseQEvent()");
       hf->AddFrame(eraseQevent, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
 
-      drawHoughSpace = new TGTextButton(hf, "&Visualize Reconstruction");
-      drawHoughSpace->SetToolTipText("Press to enable Reconstruction visualization", 400);
-      drawHoughSpace->Connect("Clicked()", "AtEventManager", fInstance, "EnableDrawHoughSpace()");
-      hf->AddFrame(drawHoughSpace, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
+      drawReconstruction = new TGTextButton(hf, "&Visualize Reconstruction");
+      drawReconstruction->SetToolTipText("Press to enable Reconstruction visualization", 400);
+      drawReconstruction->Connect("Clicked()", "AtEventManager", fInstance, "EnableDrawReconstruction()");
+      hf->AddFrame(drawReconstruction, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
 
       saveASCIIevent = new TGTextButton(hf, "&Save event as text file");
       saveASCIIevent->SetToolTipText("Dump the waveform of each hit into a text file", 400);
@@ -586,18 +586,18 @@ void AtEventManager::ChangeDrawAllPads()
    drawallpad->SetState(kButtonUp);
 }
 
-void AtEventManager::EnableDrawHoughSpace()
+void AtEventManager::EnableDrawReconstruction()
 {
 
-   drawHoughSpace->SetState(kButtonDown);
-   if (!kDrawHoughOn) {
-      drawHoughSpace->SetText("&Disable Vis. Recons.");
-      kDrawHoughOn = kTRUE;
+   drawReconstruction->SetState(kButtonDown);
+   if (!kDrawReconstruction) {
+      drawReconstruction->SetText("&Disable Vis. Recons.");
+      kDrawReconstruction = kTRUE;
    } else {
-      drawHoughSpace->SetText("&Visualize Reconstruction");
-      kDrawHoughOn = kFALSE;
+      drawReconstruction->SetText("&Visualize Reconstruction");
+      kDrawReconstruction = kFALSE;
    }
-   drawHoughSpace->SetState(kButtonUp);
+   drawReconstruction->SetState(kButtonUp);
 }
 
 void AtEventManager::EraseQEvent()

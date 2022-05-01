@@ -6,22 +6,19 @@
 
 #include "AtEventDrawTask.h"
 
-#include "AtAuxPad.h"           // for AtAuxPad
-#include "AtEvent.h"            // for AtEvent, hitVector
-#include "AtEventManager.h"     // for AtEventManager
-#include "AtGadgetIIMap.h"      // for AtGadgetIIMap
-#include "AtHit.h"              // for AtHit
-#include "AtHitCluster.h"       // for AtHitCluster
-#include "AtLmedsMod.h"         // for AtLmedsMod
-#include "AtMap.h"              // for AtMap
-#include "AtMlesacMod.h"        // for AtMlesacMod
-#include "AtPad.h"              // for AtPad
-#include "AtPatternEvent.h"     // for AtPatternEvent
-#include "AtRansac.h"           // for AtRansac, operator<<, AtRansac::Pair...
-#include "AtRansacMod.h"        // for AtRansacMod
+#include "AtAuxPad.h"       // for AtAuxPad
+#include "AtEvent.h"        // for AtEvent, hitVector
+#include "AtEventManager.h" // for AtEventManager
+#include "AtHit.h"          // for AtHit
+#include "AtHitCluster.h"   // for AtHitCluster
+#include "AtMap.h"          // for AtMap
+#include "AtPad.h"          // for AtPad
+#include "AtPadReference.h"
+#include "AtPattern.h"
+#include "AtPatternEvent.h" // for AtPatternEvent
+#include "AtPatternLine.h"
+//#include "AtRansac.h"         // for AtRansac, operator<<, AtRansac::Pair...
 #include "AtRawEvent.h"         // for AtRawEvent, AuxPadMap
-#include "AtSpecMATMap.h"       // for AtSpecMATMap
-#include "AtTpcMap.h"           // for AtTpcMap
 #include "AtTrack.h"            // for AtTrack, operator<<
 #include "AtTrackingEventAna.h" // for AtTrackingEventAna
 
@@ -63,7 +60,6 @@
 #include <algorithm> // for max
 #include <array>     // for array
 #include <cstdio>    // for sprintf
-#include <cstdlib>   // for exit
 #include <exception> // for exception
 #include <iostream>  // for cout
 #include <map>       // for operator!=, _Rb_tree_const_iterator
@@ -81,36 +77,21 @@ using namespace std;
 ClassImp(AtEventDrawTask);
 
 AtEventDrawTask::AtEventDrawTask()
-   : fIs2DPlotRange(kFALSE), fUnpackHough(kFALSE), fEventArray(nullptr),
-     // fHitClusterArray(0),
-     // fRiemannTrackArray(0),
-     // fKalmanArray(0),
-     fEventManager(nullptr), fRawevent(nullptr), fDetmap(nullptr), fThreshold(0), fHitSet(nullptr),
-     fCorrectedHitSet(nullptr),
-     // x(0),
-     // hitSphereArray(0),
-     fhitBoxSet(nullptr), fPadPlanePal(nullptr), fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium),
-     // fHitClusterSet(0),
-     // fHitClusterColor(kAzure-5),
-     // fHitClusterColor(kYellow-5),
-     // fHitClusterSize(1),
-     // fHitClusterStyle(kOpenCircle),
-     // fRiemannSetArray(0),
-     // fRiemannColor(kBlue),
-     // fRiemannSize(1.5),
-     // fRiemannStyle(kOpenCircle),
-     fCvsPadPlane(nullptr), fPadPlane(nullptr), fCvsPadWave(nullptr), fPadWave(nullptr), fCvsPadAll(nullptr),
-     fCvsQEvent(nullptr), fQEventHist(nullptr), fQEventHist_H(nullptr), fCvsHoughSpace(nullptr), fHoughSpace(nullptr),
+   : fIs2DPlotRange(kFALSE), fUnpackHough(kFALSE), fEventArray(nullptr), fEventManager(nullptr), fRawevent(nullptr),
+     fDetmap(nullptr), fThreshold(0), fHitSet(nullptr), fCorrectedHitSet(nullptr), fhitBoxSet(nullptr),
+     fPadPlanePal(nullptr), fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium), fCvsPadPlane(nullptr),
+     fPadPlane(nullptr), fCvsPadWave(nullptr), fPadWave(nullptr), fCvsPadAll(nullptr), fCvsQEvent(nullptr),
+     fQEventHist(nullptr), fQEventHist_H(nullptr), fCvsHoughSpace(nullptr), fHoughSpace(nullptr),
      fCvsRhoVariance(nullptr), fRhoVariance(nullptr), fCvsPhi(nullptr), fCvsMesh(nullptr), fMesh(nullptr),
      fCvs3DHist(nullptr), f3DHist(nullptr), fCvsRad(nullptr), fRadVSTb(nullptr), fCvsTheta(nullptr), fTheta(nullptr),
      fAtMapPtr(nullptr), fMinZ(0), fMaxZ(1344), fMinX(432), fMaxX(-432), f3DHitStyle(0), fMultiHit(0),
-     fSaveTextData(false), f3DThreshold(0), fRANSACAlg(0), fDetNumPads(10240), fRawEventBranchName("AtRawEvent"),
+     fSaveTextData(false), f3DThreshold(0), fRansacUnified(false), fRawEventBranchName("AtRawEvent"),
      fEventBranchName("AtEventH")
 {
 
    Char_t padhistname[256];
 
-   for (Int_t i = 0; i < fNumPads; i++) { // TODO: Full-scale must be accomodated
+   for (Int_t i = 0; i < fNumPads; i++) {
       sprintf(padhistname, "pad_%d", i);
       fPadAll[i] = new TH1I(padhistname, padhistname, 512, 0, 511);
    }
@@ -134,31 +115,16 @@ AtEventDrawTask::AtEventDrawTask()
       fPhiDistr[i]->GetYaxis()->SetRangeUser(0., 20.);
    }
 
-   fIsCircularHough = kFALSE;
-   fIsLinearHough = kFALSE;
    fIsRawData = kFALSE;
 
-   fHoughLinearFit =
-      new TF1("HoughLinearFit", " (  (-TMath::Cos([0])/TMath::Sin([0]))*x ) + [1]/TMath::Sin([0])", 0, 500);
-   fRansacLinearFit = new TF1("RansacLinearFit", "x", 0, 500);
    fIniHit = new AtHit();
    fIniHitRansac = new AtHit();
-   fLineNum = 0;
    fTrackNum = 0;
 
    fRGBAPalette = new TEveRGBAPalette(0, 4096);
 }
 
-AtEventDrawTask::~AtEventDrawTask()
-{
-
-   // TODO Destroy pointers
-   // for(Int_t i=0;i<hitSphereArray.size();i++) delete hitSphereArray[i];
-   // delete x;
-   // hitSphereArray.clear();
-   delete fHoughLinearFit;
-   delete fRansacLinearFit;
-}
+AtEventDrawTask::~AtEventDrawTask() = default;
 
 InitStatus AtEventDrawTask::Init()
 {
@@ -187,24 +153,9 @@ InitStatus AtEventDrawTask::Init()
       fIsRawData = kTRUE;
    }
 
-   fRansacArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtRansac"));
-   if (fRansacArray)
-      LOG(INFO) << cGREEN << "RANSAC Array Found." << cNORMAL << std::endl;
-
-   // fTrackFinderHCArray = (TClonesArray*) ioMan->GetObject("AtTrackFinderHC");
-   // if(fTrackFinderHCArray)  LOG(INFO)<<cGREEN<<"Track Finder Hierarchical Clustering Array
-   // Found."<<cNORMAL<<std::endl;
-
    fPatternEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtPatternEvent"));
    if (fPatternEventArray)
       LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL << std::endl;
-
-   fTrackingEventAnaArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtTrackingEventAna"));
-   if (fTrackingEventAnaArray)
-      LOG(INFO) << cGREEN << "Tracking Event Analysis Array Found." << cNORMAL << std::endl;
-
-   // gROOT->GetListOfSpecials()->Add(fRawEventArray);
-   // fRawEventArray->SetName("AtRawEvent");
 
    gStyle->SetPalette(55);
    // fPhiDistr=NULL;
@@ -269,7 +220,6 @@ void AtEventDrawTask::Exec(Option_t *option)
 
    if (fEventArray) {
       DrawHitPoints();
-      DrawMeshSpace();
    }
 
    gEve->Redraw3D(kFALSE);
@@ -282,7 +232,7 @@ void AtEventDrawTask::Exec(Option_t *option)
    UpdateCvsPhi();
    UpdateCvsMesh();
    UpdateCvs3DHist();
-   if (fUnpackHough && fEventManager->GetDrawHoughSpace()) {
+   if (fUnpackHough && fEventManager->GetDrawReconstruction()) {
       UpdateCvsHoughSpace();
       UpdateCvsRad();
       UpdateCvsTheta();
@@ -291,51 +241,10 @@ void AtEventDrawTask::Exec(Option_t *option)
       // UpdateCvsQuadrants();
    }
 }
-
-void AtEventDrawTask::DrawHitPoints()
+void AtEventDrawTask::DrawAuxChannels()
 {
-
-   fMesh->Reset(nullptr);
-
    for (auto &fAuxChannel : fAuxChannels)
       fAuxChannel->Reset(nullptr);
-
-   f3DHist->Reset(nullptr);
-   TRandom r(0);
-
-   std::ofstream dumpEvent;
-   dumpEvent.open("event.dat");
-
-   std::vector<Double_t> fPosXMin;
-   std::vector<Double_t> fPosYMin;
-   std::vector<Double_t> fPosZMin;
-
-   fQEventHist_H->Reset(nullptr);
-   auto *event = dynamic_cast<AtEvent *>(fEventArray->At(0));
-
-   Double_t Qevent = event->GetEventCharge();
-   Double_t RhoVariance = event->GetRhoVariance();
-   auto MeshArray = event->GetMesh();
-   Int_t eventID = event->GetEventID();
-   //  std::ofstream dumpEvent;
-   //  dumpEvent.open ("event.dat");
-   TString TSevt = " Event ID : ";
-   TString TSpad = " Pad ID : ";
-   dumpEvent << TSevt << eventID << std::endl;
-
-   if (fEventManager->GetEraseQEvent()) {
-      fQEventHist->Reset();
-      fRhoVariance->Reset();
-   }
-
-   fQEventHist->Fill(Qevent);
-   fQEventHist_H->Fill(Qevent);
-   fRhoVariance->Fill(RhoVariance);
-
-   for (Int_t i = 0; i < 512; i++) {
-
-      fMesh->SetBinContent(i, MeshArray[i]);
-   }
 
    if (fIsRawData) {
       fRawevent = dynamic_cast<AtRawEvent *>(fRawEventArray->At(0));
@@ -359,254 +268,137 @@ void AtEventDrawTask::DrawHitPoints()
       if (numAux + 1 == 9)
          std::cout << cYELLOW << "Warning: More auxiliary channels than expected (max 9)" << cNORMAL << std::endl;
    }
+}
 
-   // std::cout<<std::endl;
-   // std::cout<<" AtHit Event ID : "<<event->GetEventID()<<std::endl;
-   // std::cout<<" AtRawEvent Event ID : "<<rawevent->GetEventID()<<std::endl;
-   // if(event->GetEventID()!=rawevent->GetEventID()) std::cout<<" = AtEventDrawTask::DrawHitPoints : Warning, EventID
-   // mismatch."<<std::endl;
+void AtEventDrawTask::DrawRecoHits()
+{
+   if (!fPatternEventArray)
+      return;
 
-   // 3D visualization of the Minimized data
-
-   Int_t nHitsMin = 0; // Initialization of the variable to ensure a non-NULL pointer
-   fHitSetMin = new TEvePointSet();
-
-   if (fEventManager->GetDrawHoughSpace()) {
-
-      //  if(fIsLinearHough){
-      // fLineArray.clear();
-      for (auto &i : fLineArray)
-         i = new TEveLine();
-      int n = 100;
-      double t0 = 0;
-      double dt = 2000;
-      std::vector<AtTrack> TrackCand;
-
-      if (fRansacArray) {
-         if (fRANSACAlg == 0) {
-            fRansac = dynamic_cast<AtRANSACN::AtRansac *>(fRansacArray->At(0));
-            TrackCand = fRansac->GetTrackCand();
-            TVector3 Vertex1 = fRansac->GetVertex1();
-            TVector3 Vertex2 = fRansac->GetVertex2();
-            Double_t VertexTime = fRansac->GetVertexTime();
-            std::cout << cGREEN << " Vertex 1 - X : " << Vertex1.X() << " - Y : " << Vertex1.Y()
-                      << "  - Z : " << Vertex1.Z() << std::endl;
-            std::cout << " Vertex 2 - X : " << Vertex2.X() << " - Y : " << Vertex2.Y() << "  - Z : " << Vertex2.Z()
-                      << std::endl;
-            std::cout << " Vertex Time : " << VertexTime << std::endl;
-            std::cout << " Vertex Mean - X : " << (Vertex1.X() + Vertex2.X()) / 2.0
-                      << " - Y : " << (Vertex1.Y() + Vertex2.Y()) / 2.0
-                      << "  - Z : " << (Vertex1.Z() + Vertex2.Z()) / 2.0 << cNORMAL << std::endl;
-
-            std::vector<AtRANSACN::AtRansac::PairedLines> trackCorr = fRansac->GetPairedLinesArray();
-            // std::ostream_iterator<AtRANSACN::AtRansac::PairedLines> pairLine_it (std::cout,"  ");
-            if (trackCorr.size() > 0) {
-               for (auto pl : trackCorr) {
-                  std::cout << pl << std::endl;
-               }
-            }
-         }
-
-         if (fRANSACAlg == 1) {
-            fRansacMod = dynamic_cast<AtRansacMod *>(fRansacArray->At(0));
-            TrackCand = fRansacMod->GetTrackCand();
-            TVector3 Vertex1 = fRansacMod->GetVertex1();
-            TVector3 Vertex2 = fRansacMod->GetVertex2();
-            Double_t VertexTime = fRansacMod->GetVertexTime();
-            std::cout << cGREEN << " Vertex 1 - X : " << Vertex1.X() << " - Y : " << Vertex1.Y()
-                      << "  - Z : " << Vertex1.Z() << std::endl;
-            std::cout << " Vertex 2 - X : " << Vertex2.X() << " - Y : " << Vertex2.Y() << "  - Z : " << Vertex2.Z()
-                      << std::endl;
-            std::cout << " Vertex Time : " << VertexTime << std::endl;
-            std::cout << " Vertex Mean - X : " << (Vertex1.X() + Vertex2.X()) / 2.0
-                      << " - Y : " << (Vertex1.Y() + Vertex2.Y()) / 2.0
-                      << "  - Z : " << (Vertex1.Z() + Vertex2.Z()) / 2.0 << cNORMAL << std::endl;
-         }
-
-         if (fRANSACAlg == 2) {
-            fMlesacMod = dynamic_cast<AtMlesacMod *>(fRansacArray->At(0));
-            TrackCand = fMlesacMod->GetTrackCand();
-            TVector3 Vertex1 = fMlesacMod->GetVertex1();
-            TVector3 Vertex2 = fMlesacMod->GetVertex2();
-            Double_t VertexTime = fMlesacMod->GetVertexTime();
-            std::cout << cGREEN << " Vertex 1 - X : " << Vertex1.X() << " - Y : " << Vertex1.Y()
-                      << "  - Z : " << Vertex1.Z() << std::endl;
-            std::cout << " Vertex 2 - X : " << Vertex2.X() << " - Y : " << Vertex2.Y() << "  - Z : " << Vertex2.Z()
-                      << std::endl;
-            std::cout << " Vertex Time : " << VertexTime << std::endl;
-            std::cout << " Vertex Mean - X : " << (Vertex1.X() + Vertex2.X()) / 2.0
-                      << " - Y : " << (Vertex1.Y() + Vertex2.Y()) / 2.0
-                      << "  - Z : " << (Vertex1.Z() + Vertex2.Z()) / 2.0 << cNORMAL << std::endl;
-         }
-
-         if (fRANSACAlg == 3) {
-            fLmedsMod = dynamic_cast<AtLmedsMod *>(fRansacArray->At(0));
-            TrackCand = fLmedsMod->GetTrackCand();
-            TVector3 Vertex1 = fLmedsMod->GetVertex1();
-            TVector3 Vertex2 = fLmedsMod->GetVertex2();
-            Double_t VertexTime = fLmedsMod->GetVertexTime();
-            std::cout << cGREEN << " Vertex 1 - X : " << Vertex1.X() << " - Y : " << Vertex1.Y()
-                      << "  - Z : " << Vertex1.Z() << std::endl;
-            std::cout << " Vertex 2 - X : " << Vertex2.X() << " - Y : " << Vertex2.Y() << "  - Z : " << Vertex2.Z()
-                      << std::endl;
-            std::cout << " Vertex Time : " << VertexTime << std::endl;
-            std::cout << " Vertex Mean - X : " << (Vertex1.X() + Vertex2.X()) / 2.0
-                      << " - Y : " << (Vertex1.Y() + Vertex2.Y()) / 2.0
-                      << "  - Z : " << (Vertex1.Z() + Vertex2.Z()) / 2.0 << cNORMAL << std::endl;
-         }
-
-      } else if (fPatternEventArray) {
-         auto *patternEvent = dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0));
-         TrackCand = patternEvent->GetTrackCand();
-
-         for (Int_t i = 0; i < 20; i++) {
-            fHitSetTFHC[i] = nullptr;
-            fHitClusterSet[i] = nullptr;
-         }
-
-         if (TrackCand.size() < 20) {
-            for (Int_t i = 0; i < TrackCand.size(); i++) {
-
-               AtTrack track = TrackCand.at(i);
-               std::vector<AtHit> trackHits = track.GetHitArray();
-               std::vector<AtHitCluster> *hitClusters = track.GetHitClusterArray();
-
-               Color_t trackColor = GetTrackColor(i) + 1;
-
-               fHitSetTFHC[i] = new TEvePointSet(Form("HitMC_%d", i), nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
-               if (track.GetIsNoise())
-                  fHitSetTFHC[i]->SetMarkerColor(kRed);
-               else
-                  fHitSetTFHC[i]->SetMarkerColor(trackColor);
-               fHitSetTFHC[i]->SetMarkerSize(fHitSize);
-               fHitSetTFHC[i]->SetMarkerStyle(fHitStyle);
-
-               for (auto &trackHit : trackHits) {
-                  auto position = trackHit.GetPosition();
-                  fHitSetTFHC[i]->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.);
-               }
-
-               fHitClusterSet[i] = new TEveBoxSet(Form("HitCluster_%d", i));
-               fHitClusterSet[i]->Reset(TEveBoxSet::kBT_AABox, kFALSE, 64);
-               // fHitClusterSet[i]->SetPalette(fRGBAPalette);
-               // fHitClusterSet[i]->DigitValue(2000);
-
-               if (hitClusters->size() > 0 && !track.GetIsNoise()) {
-
-                  for (auto hitCluster : *hitClusters) {
-                     auto clusPos = hitCluster.GetPosition();
-                     double boxSize = 0.6;
-
-                     fHitClusterSet[i]->AddBox(clusPos.X() / 10. - boxSize / 2.0, clusPos.Y() / 10. - boxSize / 2.0,
-                                               clusPos.Z() / 10. - boxSize / 2.0, boxSize, boxSize, boxSize);
-                  }
-               }
-
-               fHitClusterSet[i]->UseSingleColor();
-               fHitClusterSet[i]->SetMainColor(trackColor);
-               fHitClusterSet[i]->SetMainTransparency(50);
-
-               fHitClusterSet[i]->RefitPlex();
-               TEveTrans &tHitClusterBoxPos = fHitClusterSet[i]->RefMainTrans();
-               tHitClusterBoxPos.SetPos(0.0, 0.0, 0.0);
-            }
-         }
-      }
-
-      if (fTrackingEventAnaArray) {
-
-         for (auto &i : fHitSetMC)
-            i = nullptr;
-
-         fTrackingEventAna = dynamic_cast<AtTrackingEventAna *>(fTrackingEventAnaArray->At(0));
-         std::vector<AtTrack> anaTracks = fTrackingEventAna->GetTrackArray();
-         std::cout << cRED << "Calling code for MC Minimization which is depricated!!!" << std::endl;
-         std::cout << cYELLOW << "  ====   Tracking analysis ==== " << std::endl;
-         std::cout << " Number of analyzed tracks : " << anaTracks.size() << std::endl;
-         std::cout << " Vertex of reaction : " << fTrackingEventAna->GetVertex() << std::endl;
-
-         fTrackNum = anaTracks.size();
-
-         if (anaTracks.size() < 5) { // Limited to 5 tracks
-            for (Int_t i = 0; i < anaTracks.size(); i++) {
-               AtTrack track = anaTracks.at(i);
-               std::cout << track << std::endl;
-
-               /* MC Minimization stuff
-                    fPosXMin = track.GetPosXMin();
-                    fPosYMin = track.GetPosYMin();
-                    fPosZMin = track.GetPosZMin();
-                    nHitsMin = fPosXMin.size();
-               */
-               fHitSetMC[i] = new TEvePointSet(Form("HitMC_%d", i), nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
-               fHitSetMC[i]->SetOwnIds(kTRUE);
-               fHitSetMC[i]->SetMarkerColor(kGreen);
-               fHitSetMC[i]->SetMarkerSize(fHitSize);
-               fHitSetMC[i]->SetMarkerStyle(fHitStyle);
-
-               for (Int_t iHit = 0; iHit < fPosXMin.size(); iHit++)
-                  fHitSetMC[i]->SetNextPoint(fPosXMin.at(iHit) / 10., fPosYMin.at(iHit) / 10., fPosZMin.at(iHit) / 10.);
-            }
-         }
-      } // If trackingEventAnaArray
-
-      fLineNum = TrackCand.size();
-      std::cout << cRED << " Found " << TrackCand.size() << " track candidates " << cNORMAL << std::endl;
-
-      if (TrackCand.size() > 0 && fRansacArray) {
-
-         for (Int_t j = 0; j < TrackCand.size(); j++) {
-            fLineArray[j] = new TEveLine();
-            AtTrack track = TrackCand.at(j);
-            std::vector<Double_t> parFit = track.GetFitPar();
-            fLineArray[j]->SetMainColor(kRed);
-            if (parFit.size() == 4) {
-               for (int i = 0; i < n; ++i) {
-                  double t = t0 + dt * i / n;
-                  double x, y, z;
-                  SetLine(t, parFit, x, y, z);
-                  fLineArray[j]->SetNextPoint(x, y, z);
-
-                  // fLineArray.push_back(fLine);
-                  // l->SetPoint(i,x,y,z);
-                  // std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
-               }
-            } else if (parFit.size() == 6) {
-               for (int i = -n; i < n; ++i) {
-                  double t = t0 + dt * i / n;
-                  double x, y, z;
-                  SetLine6(t, parFit, x, y, z);
-                  fLineArray[j]->SetNextPoint(x, y, z);
-
-                  // fLineArray.push_back(fLine);
-                  // l->SetPoint(i,x,y,z);
-                  // std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
-               }
-            } else
-               std::cout
-                  << cRED
-                  << " AtEventDrawTask::DrawHitPoints - Warning: wrong number of fit parameters for RANSAC lines!"
-                  << std::endl;
-         }
-         fVertex = new TEvePointSet("Vertex", 1, TEvePointSelectorConsumer::kTVT_XYZ);
-         fVertex->SetOwnIds(kTRUE);
-         fVertex->SetMarkerStyle(34);
-         fVertex->SetMarkerSize(2.0);
-         fVertex->SetMarkerColor(kViolet);
-         if (fRANSACAlg == 0)
-            fVertex->SetNextPoint(fRansac->GetVertexMean().x() * 0.1, fRansac->GetVertexMean().y() * 0.1,
-                                  fRansac->GetVertexMean().z() * 0.1);
-         if (fRANSACAlg == 1)
-            fVertex->SetNextPoint(fRansacMod->GetVertexMean().x() * 0.1, fRansacMod->GetVertexMean().y() * 0.1,
-                                  fRansacMod->GetVertexMean().z() * 0.1);
-         if (fRANSACAlg == 2)
-            fVertex->SetNextPoint(fMlesacMod->GetVertexMean().x() * 0.1, fMlesacMod->GetVertexMean().y() * 0.1,
-                                  fMlesacMod->GetVertexMean().z() * 0.1);
-         if (fRANSACAlg == 3)
-            fVertex->SetNextPoint(fLmedsMod->GetVertexMean().x() * 0.1, fLmedsMod->GetVertexMean().y() * 0.1,
-                                  fLmedsMod->GetVertexMean().z() * 0.1);
-      }
+   auto *patternEvent = dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0));
+   if (!patternEvent) {
+      LOG(info) << "No pattern event";
+      return;
    }
+
+   auto TrackCand = patternEvent->GetTrackCand();
+   fHitLine.clear();
+
+   for (Int_t i = 0; i < TrackCand.size(); i++) {
+
+      Color_t trackColor = GetTrackColor(i) + 1;
+
+      // Get the line to draw
+      AtTrack track = TrackCand.at(i);
+
+      if (track.GetPattern() != nullptr) {
+         fHitLine.push_back(track.GetPattern()->GetEveLine());
+         fHitLine.back()->SetMainColor(trackColor);
+         fHitLine.back()->SetName(Form("line_%i", (int)fHitLine.size() - 1));
+      }
+
+      std::vector<AtHit> trackHits = track.GetHitArray();
+
+      /*      fHitSetTFHC.push_back(
+               std::make_unique<TEvePointSet>(Form("HitMC_%d", i), 0, TEvePointSelectorConsumer::kTVT_XYZ));
+      */
+      fHitSetTFHC.push_back(new TEvePointSet(Form("HitMC_%d", i), 0, TEvePointSelectorConsumer::kTVT_XYZ));
+      fHitSetTFHC[i]->SetMarkerColor(trackColor);
+      fHitSetTFHC[i]->SetMarkerSize(fHitSize);
+      fHitSetTFHC[i]->SetMarkerStyle(fHitStyle);
+
+      for (auto &trackHit : trackHits) {
+         auto position = trackHit.GetPosition();
+         fHitSetTFHC[i]->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.);
+      }
+
+      std::vector<AtHitCluster> *hitClusters = track.GetHitClusterArray();
+      // fHitClusterSet.push_back(std::make_unique<TEveBoxSet>(Form("HitCluster_%d", i)));
+      fHitClusterSet.push_back(new TEveBoxSet(Form("HitCluster_%d", i)));
+      fHitClusterSet[i]->Reset(TEveBoxSet::kBT_AABox, kFALSE, 64);
+      // fHitClusterSet[i]->SetPalette(fRGBAPalette);
+      // fHitClusterSet[i]->DigitValue(2000);
+
+      if (hitClusters->size() > 0) {
+
+         for (auto hitCluster : *hitClusters) {
+            auto clusPos = hitCluster.GetPosition();
+            double boxSize = 0.6;
+
+            fHitClusterSet[i]->AddBox(clusPos.X() / 10. - boxSize / 2.0, clusPos.Y() / 10. - boxSize / 2.0,
+                                      clusPos.Z() / 10. - boxSize / 2.0, boxSize, boxSize, boxSize);
+         }
+      }
+
+      fHitClusterSet[i]->UseSingleColor();
+      fHitClusterSet[i]->SetMainColor(trackColor);
+      fHitClusterSet[i]->SetMainTransparency(50);
+
+      fHitClusterSet[i]->RefitPlex();
+      TEveTrans &tHitClusterBoxPos = fHitClusterSet[i]->RefMainTrans();
+      tHitClusterBoxPos.SetPos(0.0, 0.0, 0.0);
+   } // End loop over tracks
+
+   // Add noise hits
+   // fHitSetTFHC.push_back(std::make_unique<TEvePointSet>("HitsNoise", 0, TEvePointSelectorConsumer::kTVT_XYZ));
+   fHitSetTFHC.push_back(new TEvePointSet("HitsNoise", 0, TEvePointSelectorConsumer::kTVT_XYZ));
+   fHitSetTFHC.back()->SetMainColor(kRed);
+   fHitSetTFHC.back()->SetMarkerSize(fHitSize);
+   fHitSetTFHC.back()->SetMarkerStyle(fHitStyle);
+
+   for (auto &hit : patternEvent->GetNoiseHits()) {
+      auto position = hit.GetPosition();
+      fHitSetTFHC.back()->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.);
+   }
+
+   std::cout << cRED << " Found " << TrackCand.size() << " track candidates " << cNORMAL << std::endl;
+
+   for (auto &elem : fHitSetTFHC)
+      gEve->AddElement(elem);
+   for (auto &elem : fHitClusterSet)
+      gEve->AddElement(elem);
+   for (auto &elem : fHitLine)
+      gEve->AddElement(elem);
+}
+
+void AtEventDrawTask::DrawHitPoints()
+{
+   DrawAuxChannels();
+   fMesh->Reset(nullptr);
+
+   f3DHist->Reset(nullptr);
+   TRandom r(0);
+
+   std::ofstream dumpEvent;
+   dumpEvent.open("event.dat");
+
+   fQEventHist_H->Reset(nullptr);
+   auto *event = dynamic_cast<AtEvent *>(fEventArray->At(0));
+
+   Double_t Qevent = event->GetEventCharge();
+   Double_t RhoVariance = event->GetRhoVariance();
+   auto MeshArray = event->GetMesh();
+   Int_t eventID = event->GetEventID();
+   TString TSevt = " Event ID : ";
+   TString TSpad = " Pad ID : ";
+   dumpEvent << TSevt << eventID << std::endl;
+
+   if (fEventManager->GetEraseQEvent()) {
+      fQEventHist->Reset();
+      fRhoVariance->Reset();
+   }
+
+   fQEventHist->Fill(Qevent);
+   fQEventHist_H->Fill(Qevent);
+   fRhoVariance->Fill(RhoVariance);
+
+   for (Int_t i = 0; i < 512; i++) {
+
+      fMesh->SetBinContent(i, MeshArray[i]);
+   }
+
+   if (fEventManager->GetDrawReconstruction())
+      DrawRecoHits();
 
    //////////////////////////////////////////////
 
@@ -691,17 +483,6 @@ void AtEventDrawTask::DrawHitPoints()
             continue;
          fCorrectedHitSet->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.); // Convert into cm
          fCorrectedHitSet->SetPointId(new TNamed(Form("HitCorr %d", iHit), ""));
-      }
-   }
-
-   //////////////     Minimization from Hough Space   ///////////////
-   std::cout << cGREEN << " Number of simulated points " << fPosXMin.size() << cNORMAL << std::endl;
-   for (Int_t iHit = 0; iHit < fPosXMin.size(); iHit++) {
-      if (fEventManager->GetDrawHoughSpace()) {
-         if (fIsCircularHough) {
-            fHitSetMin->SetNextPoint(fPosXMin.at(iHit) / 10., fPosYMin.at(iHit) / 10.,
-                                     fPosZMin.at(iHit) / 10.); // Convert into ccm
-         }
       }
    }
 
@@ -802,54 +583,16 @@ void AtEventDrawTask::DrawHitPoints()
    }
 
    // Adding raw data points
-   if (!fEventManager->GetDrawHoughSpace()) {
+   if (!fEventManager->GetDrawReconstruction()) {
 
       if (fCorrectedHitSet)
          gEve->AddElement(fCorrectedHitSet);
       gEve->AddElement(fHitSet);
       gEve->AddElement(fhitBoxSet);
-
-      // Adding pattern rec. and tracking algorithm results
-   } else if (fEventManager->GetDrawHoughSpace()) {
-
-      if (fIsCircularHough)
-         gEve->AddElement(fHitSetMin);
-
-      if (fIsLinearHough || fRansacArray) {
-         if (fLineNum > 0)
-            for (Int_t i = 0; i < fLineNum; i++)
-               gEve->AddElement(fLineArray[i]);
-         // Lines plto together with data points
-         if (fCorrectedHitSet)
-            gEve->AddElement(fCorrectedHitSet);
-         gEve->AddElement(fHitSet);
-         gEve->AddElement(fhitBoxSet);
-         if (fVertex)
-            gEve->AddElement(fVertex);
-      }
-
-      if (fPatternEventArray)
-         if (fLineNum > 0)
-            for (Int_t i = 0; i < fLineNum; i++) {
-               gEve->AddElement(fHitSetTFHC[i]);
-               gEve->AddElement(fHitClusterSet[i]);
-            }
-
-      if (fTrackingEventAnaArray)
-         if (fTrackNum > 0 && fTrackNum < 5)
-            for (Int_t i = 0; i < fTrackNum; i++)
-               gEve->AddElement(fHitSetMC[i]);
    }
 
    dumpEvent.close();
-
-   // gEve -> AddElement(fLine);
-   // if(fLineArray.size()>0) gEve -> AddElement(fLineArray.at(0));
 }
-
-void AtEventDrawTask::DrawHSpace() {}
-
-void AtEventDrawTask::DrawMeshSpace() {}
 
 void AtEventDrawTask::Reset()
 {
@@ -868,109 +611,25 @@ void AtEventDrawTask::Reset()
       gEve->RemoveElement(fhitBoxSet, fEventManager);
    }
 
-   if (fEventManager->GetDrawHoughSpace()) {
-
-      if (fIsCircularHough) {
-         if (fHitSetMin) {
-            fHitSetMin->Reset();
-            gEve->RemoveElement(fHitSetMin, fEventManager);
-         }
-      }
-
-      else if (fIsLinearHough || fRansacArray) {
-
-         /*if(fLine){
-          fLine->Reset();
-          gEve -> RemoveElement(fLine,fEventManager);
-          }*/
-         if (fVertex) {
-            // fVertex->Reset();
-            gEve->RemoveElement(fVertex, fEventManager);
-            fVertex = nullptr;
-         }
-
-         if (fLineNum > 0) {
-            for (Int_t i = 0; i < fLineNum; i++) {
-               if (fLineArray[i]) {
-                  gEve->RemoveElement(fLineArray[i], fEventManager);
-               }
-            }
-         }
-      }
+   if (fEventManager->GetDrawReconstruction()) {
 
       if (fPatternEventArray) {
-
-         if (fLineNum > 0) {
-            for (Int_t i = 0; i < fLineNum; i++) {
-               if (fHitSetTFHC[i]) {
-                  fHitSetTFHC[i]->Reset();
-                  gEve->RemoveElement(fHitSetTFHC[i], fEventManager);
-               }
-               if (fHitClusterSet[i]) {
-                  fHitClusterSet[i]->Reset();
-                  gEve->RemoveElement(fHitClusterSet[i], fEventManager);
-               }
-            }
-         }
-      }
-
-      if (fTrackingEventAnaArray) {
-
-         for (Int_t i = 0; i < fTrackNum; i++) {
-            if (fHitSetMC[i]) {
-               fHitSetMC[i]->Reset();
-               gEve->RemoveElement(fHitSetMC[i], fEventManager);
-            }
-         }
+         for (auto elem : fHitClusterSet)
+            gEve->RemoveElement(elem, fEventManager);
+         for (auto elem : fHitSetTFHC)
+            gEve->RemoveElement(elem, fEventManager);
+         for (auto elem : fHitLine)
+            gEve->RemoveElement(elem, fEventManager);
+         fHitClusterSet.clear();
+         fHitSetTFHC.clear();
+         fHitLine.clear();
       }
 
    } // Draw Minimization
 
-   /* TEveGeoShape* hitShape;
-    if(hitSphereArray.size()>0)
-    for(Int_t i=0;i<hitSphereArray.size();i++){
-    hitShape = hitSphereArray[i];
-    gEve->RemoveElement(hitShape,fEventManager);
-    }*/
-
-   // hitSphereArray.clear();
-
-   /*if(fHitClusterSet) {
-    fHitClusterSet->Reset();
-    gEve->RemoveElement(fHitClusterSet, fEventManager);
-    }*/
-
-   /* Int_t nRiemannTracks = fRiemannSetArray.size();
-    TEvePointSet* pointSet;
-    if(nRiemannTracks!=0) {
-    for(Int_t i=0; i<nRiemannTracks; i++){
-    pointSet = fRiemannSetArray[i];
-    gEve->RemoveElement(pointSet, fEventManager);
-    }
-    fRiemannSetArray.clear();
-    }*/
-
    if (fPadPlane != nullptr)
       fPadPlane->Reset(nullptr);
 }
-
-/*void
- AtEventDrawTask::Set2DPlotRange(Int_t uaIdx)
- {
- if(uaIdx%100<0 || uaIdx%100>11 || uaIdx/100<0 || uaIdx/100>3)
- {
- fLogger->Error(MESSAGE_ORIGIN,
- "2DPlotRange should be ABB ( A = [0, 3], BB = [00, 11] )!");
- return;
- }
-
- fMinZ = (uaIdx/100)*12*7*4;
- fMaxZ = (uaIdx/100 + 1)*12*7*4;
- fMinX = (uaIdx%100)*8*9 - 432;
- fMaxX = (uaIdx%100 + 1)*8*9 - 432;
-
- fIs2DPlotRange = kTRUE;
- }*/
 
 void AtEventDrawTask::DrawPadPlane()
 {
@@ -980,7 +639,6 @@ void AtEventDrawTask::DrawPadPlane()
    }
 
    fDetmap->GeneratePadPlane();
-   // fDetmap->SetGUIMode();// This method does not need to be called since it generates the Canvas we do not want
    fPadPlane = fDetmap->GetPadPlane();
    fCvsPadPlane->cd();
    // fPadPlane -> Draw("COLZ L0"); //0  == bin lines adre not drawn
@@ -989,34 +647,10 @@ void AtEventDrawTask::DrawPadPlane()
    gStyle->SetOptStat(0);
    gStyle->SetPalette(103);
    gPad->Update();
-
-   /*  fPadPlanePal
-    = (TPaletteAxis *) fPadPlane->GetListOfFunctions()->FindObject("palette");
-
-
-
-
-    if(fPadPlanePal){
-
-    Int_t cHit = fPadPlanePal->GetValueColor(30.0);
-    TColor *hitBoxColor = gROOT->GetColor(cHit);
-    Float_t xrgb,yrgb,zrgb;
-    std::cout<<" xrgb : "<<xrgb<<std::endl;
-    hitBoxColor->GetRGB(xrgb,yrgb,zrgb);
-
-
-    }*/
 }
 
 void AtEventDrawTask::DrawPadWave()
 {
-
-   /*  if(fPadWave)
-    {
-    fPadWave->Reset(0);
-    return;
-    }
-    **/
    fPadWave = new TH1I("fPadWave", "fPadWave", 512, 0, 511);
    gROOT->GetListOfSpecials()->Add(fPadWave);
    fCvsPadWave->cd();
@@ -1138,8 +772,6 @@ void AtEventDrawTask::DrawThetaxPhi()
    fThetaxPhi->Draw("");
    fThetaxPhi_Ini->Draw("SAMES");
    fThetaxPhi_Ini_RANSAC->Draw("SAMES");
-
-   fHoughLinearFit->Draw("SAMES");
 }
 
 void AtEventDrawTask::DrawMC()
@@ -1581,9 +1213,9 @@ void AtEventDrawTask::SetLine6(double t, std::vector<Double_t> p, double &x, dou
    // a parameteric line is define from 6 parameters but 4 are independent
    // x0,y0,z0,z1,y1,z1 which are the coordinates of two points on the line
    // can choose z0 = 0 if line not parallel to x-y plane and z1 = 1;
-   x = (p[0] + p[1] * t) / 10.0;
-   y = (p[2] + p[3] * t) / 10.0;
-   z = (p[4] + p[5] * t) / 10.0;
+   x = (p[0] + p[3] * t) / 10.0;
+   y = (p[1] + p[4] * t) / 10.0;
+   z = (p[2] + p[5] * t) / 10.0;
 }
 
 EColor AtEventDrawTask::GetTrackColor(int i)

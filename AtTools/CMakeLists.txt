@@ -13,18 +13,30 @@ set(SRCS
   AtKinematics.cxx
 
   AtFormat.cxx
+  AtRandomSample.cxx
+  AtContainerManip.cxx
+  AtHitSampling/AtSample.cxx
+  AtHitSampling/AtSampleMethods.cxx
+  AtHitSampling/AtIndependentSample.cxx
+  AtHitSampling/AtChargeWeighted.cxx
+  AtHitSampling/AtUniform.cxx
+  AtHitSampling/AtSampleFromReference.cxx
+  AtHitSampling/AtGaussian.cxx
+  AtHitSampling/AtWeightedGaussian.cxx
   )
 
 Set(DEPENDENCIES
   ROOT::XMLParser
   ROOT::Core
-
+  
   FairRoot::FairTools
+  ATTPCROOT::AtData
 )
 
 generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   DEPS_PUBLIC ${DEPENDENCIES}
+  INCLUDE_DIR ${CMAKE_SOURCE_DIR}/AtTools/AtHitSampling
   )
 

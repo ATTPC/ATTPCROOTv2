@@ -18,6 +18,7 @@
 
 #include <boost/multi_array.hpp>
 
+#include <functional>
 #include <iosfwd>
 #include <map>
 #include <string>

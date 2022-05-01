@@ -9,15 +9,12 @@
 #include "AtEvent.h"            // for AtEvent, hitVector
 #include "AtEventManagerS800.h" // for AtEventManagerS800
 #include "AtHit.h"              // for AtHit
-#include "AtLmedsMod.h"         // for AtLmedsMod
 #include "AtMap.h"              // for AtMap
-#include "AtMlesacMod.h"        // for AtMlesacMod
 #include "AtPad.h"              // for AtPad
 #include "AtPatternEvent.h"     // for AtPatternEvent
 #include "AtProtoEvent.h"       // for AtProtoEvent
 #include "AtProtoQuadrant.h"    // for AtProtoQuadrant
-#include "AtRansac.h"           // for AtRansac, operator<<, AtRansac::Pair...
-#include "AtRansacMod.h"        // for AtRansacMod
+//#include "AtRansac.h"           // for AtRansac, operator<<, AtRansac::Pair...
 #include "AtRawEvent.h"         // for AtRawEvent
 #include "AtTpcMap.h"           // for AtTpcMap
 #include "AtTpcProtoMap.h"      // for AtTpcProtoMap
@@ -482,74 +479,6 @@ void AtEventDrawTaskS800::DrawHitPoints()
       std::vector<AtTrack> TrackCand;
 
       if (fRansacArray) {
-         if (fRANSACAlg == 0) {
-            fRansac = dynamic_cast<AtRANSACN::AtRansac *>(fRansacArray->At(0));
-            TrackCand = fRansac->GetTrackCand();
-            TVector3 Vertex1 = fRansac->GetVertex1();
-            TVector3 Vertex2 = fRansac->GetVertex2();
-            Double_t VertexTime = fRansac->GetVertexTime();
-            std::cout << cGREEN << " Vertex 1 - X : " << Vertex1.X() << " - Y : " << Vertex1.Y()
-                      << "  - Z : " << Vertex1.Z() << std::endl;
-            std::cout << " Vertex 2 - X : " << Vertex2.X() << " - Y : " << Vertex2.Y() << "  - Z : " << Vertex2.Z()
-                      << std::endl;
-            std::cout << " Vertex Time : " << VertexTime << std::endl;
-            std::cout << " Vertex Mean - X : " << (Vertex1.X() + Vertex2.X()) / 2.0
-                      << " - Y : " << (Vertex1.Y() + Vertex2.Y()) / 2.0
-                      << "  - Z : " << (Vertex1.Z() + Vertex2.Z()) / 2.0 << cNORMAL << std::endl;
-
-            std::vector<AtRANSACN::AtRansac::PairedLines> trackCorr = fRansac->GetPairedLinesArray();
-            // std::ostream_iterator<AtRANSACN::AtRansac::PairedLines> pairLine_it (std::cout,"  ");
-            if (trackCorr.size() > 0) {
-               for (auto pl : trackCorr) {
-                  std::cout << pl << std::endl;
-               }
-            }
-         }
-
-         if (fRANSACAlg == 1) {
-            fRansacMod = dynamic_cast<AtRansacMod *>(fRansacArray->At(0));
-            TrackCand = fRansacMod->GetTrackCand();
-            TVector3 Vertex1 = fRansacMod->GetVertex1();
-            /*TVector3 Vertex1    = fRansacMod->GetVertex1();
-            TVector3 Vertex2    = fRansacMod->GetVertex2();
-            Double_t VertexTime = fRansacMod->GetVertexTime();
-            std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z :
-            "<<Vertex1.Z()<<std::endl; std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z :
-            "<<Vertex2.Z()<<std::endl; std::cout<<" Vertex Time : "<<VertexTime<<std::endl; std::cout<<" Vertex Mean - X
-            : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z :
-            "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
-            */
-         }
-
-         if (fRANSACAlg == 2) {
-            fMlesacMod = dynamic_cast<AtMlesacMod *>(fRansacArray->At(0));
-            TrackCand = fMlesacMod->GetTrackCand();
-            // TVector3 Vertex1    = fRansacMod->GetVertex1();
-            /*TVector3 Vertex1    = fMlesacMod->GetVertex1();
-            TVector3 Vertex2    = fMlesacMod->GetVertex2();
-            Double_t VertexTime = fMlesacMod->GetVertexTime();
-            std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z :
-            "<<Vertex1.Z()<<std::endl; std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z :
-            "<<Vertex2.Z()<<std::endl; std::cout<<" Vertex Time : "<<VertexTime<<std::endl; std::cout<<" Vertex Mean - X
-            : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z :
-            "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
-            */
-         }
-
-         if (fRANSACAlg == 3) {
-            fLmedsMod = dynamic_cast<AtLmedsMod *>(fRansacArray->At(0));
-            TrackCand = fLmedsMod->GetTrackCand();
-            // TVector3 Vertex1    = fRansacMod->GetVertex1();
-            /*TVector3 Vertex1    = fLmedsMod->GetVertex1();
-            TVector3 Vertex2    = fLmedsMod->GetVertex2();
-            Double_t VertexTime = fLmedsMod->GetVertexTime();
-            std::cout<<cGREEN<<" Vertex 1 - X : "<<Vertex1.X()<<" - Y : "<<Vertex1.Y()<<"  - Z :
-            "<<Vertex1.Z()<<std::endl; std::cout<<" Vertex 2 - X : "<<Vertex2.X()<<" - Y : "<<Vertex2.Y()<<"  - Z :
-            "<<Vertex2.Z()<<std::endl; std::cout<<" Vertex Time : "<<VertexTime<<std::endl; std::cout<<" Vertex Mean - X
-            : "<<(Vertex1.X()+Vertex2.X())/2.0<<" - Y : "<<(Vertex1.Y()+Vertex2.Y())/2.0<<"  - Z :
-            "<<(Vertex1.Z()+Vertex2.Z())/2.0<<cNORMAL<<std::endl;
-            */
-         }
 
       } else if (fPatternEventArray) {
          auto *patternEvent = dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0));
@@ -564,10 +493,7 @@ void AtEventDrawTaskS800::DrawHitPoints()
                std::vector<AtHit> trackHits = track.GetHitArray();
 
                fHitSetTFHC[i] = new TEvePointSet(Form("HitMC_%d", i), nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
-               if (track.GetIsNoise())
-                  fHitSetTFHC[i]->SetMarkerColor(kRed);
-               else
-                  fHitSetTFHC[i]->SetMarkerColor(GetTrackColor(i) + 1);
+               fHitSetTFHC[i]->SetMarkerColor(GetTrackColor(i) + 1);
                fHitSetTFHC[i]->SetMarkerSize(fHitSize);
                fHitSetTFHC[i]->SetMarkerStyle(fHitStyle);
 
@@ -617,76 +543,6 @@ void AtEventDrawTaskS800::DrawHitPoints()
 
       fLineNum = TrackCand.size();
       std::cout << cRED << " Found " << TrackCand.size() << " track candidates " << cNORMAL << std::endl;
-
-      if (TrackCand.size() > 0 && fRansacArray) {
-
-         for (Int_t j = 0; j < TrackCand.size(); j++) {
-            fLineArray[j] = new TEveLine();
-            AtTrack track = TrackCand.at(j);
-            std::vector<Double_t> parFit = track.GetFitPar();
-            fLineArray[j]->SetMainColor(kRed);
-            if (parFit.size() == 4) {
-               for (int i = 0; i < n; ++i) {
-                  double t = t0 + dt * i / n;
-                  double x, y, z;
-                  SetLine(t, parFit, x, y, z);
-                  fLineArray[j]->SetNextPoint(x, y, z);
-
-                  // fLineArray.push_back(fLine);
-                  // l->SetPoint(i,x,y,z);
-                  // std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
-               }
-            } else if (parFit.size() == 6) {
-               for (int i = -n; i < n; ++i) {
-                  double t = t0 + dt * i / n;
-                  double x, y, z;
-                  SetLine6(t, parFit, x, y, z);
-                  fLineArray[j]->SetNextPoint(x, y, z);
-
-                  // fLineArray.push_back(fLine);
-                  // l->SetPoint(i,x,y,z);
-                  // std::cout<<" x : "<<x<<" y : "<<y<<"  z : "<<z<<std::endl;
-               }
-            } else
-               std::cout
-                  << cRED
-                  << " AtEventDrawTaskS800::DrawHitPoints - Warning: wrong number of fit parameters for RANSAC lines!"
-                  << std::endl;
-
-            //---------------get info from tracks
-            auto LastPoint = track.GetLastPoint();
-            auto tvertex = track.GetTrackVertex();
-            std::pair<Double_t, Double_t> pThePhi = track.GetThetaPhi(tvertex, LastPoint, 1);
-            Double_t tTheta = pThePhi.first * 180. / 3.1415;
-            auto tLeng = LastPoint - tvertex;
-            Double_t tLength = TMath::Sqrt(tLeng.Mag2());
-            fLvsTheta->Fill(tTheta, tLength);
-            // multiple vertex per event
-            fVertex = new TEvePointSet(TString::Format("Vertex%d", j), 1, TEvePointSelectorConsumer::kTVT_XYZ);
-            fVertex->SetOwnIds(kTRUE);
-            fVertex->SetMarkerStyle(34);
-            fVertex->SetMarkerSize(2.0);
-            fVertex->SetMarkerColor(kViolet);
-            fVertex->SetNextPoint(tvertex.X() * 0.1, tvertex.Y() * 0.1, tvertex.Z() * 0.1);
-            fVVertex.push_back(fVertex);
-            std::cout << cGREEN << " Vertex" << j << " - X : " << tvertex.X() << " - Y : " << tvertex.Y()
-                      << "  - Z : " << tvertex.Z() << cNORMAL << std::endl;
-         }
-         // one vertex per event
-         /*
-    fVertex = new TEvePointSet("Vertex",1, TEvePointSelectorConsumer::kTVT_XYZ);
-    fVertex -> SetOwnIds(kTRUE);
-    fVertex -> SetMarkerStyle(34);
-    fVertex -> SetMarkerSize(2.0);
-         fVertex -> SetMarkerColor(kViolet);
-    if(fRANSACAlg==0) fVertex -> SetNextPoint(fRansac -> GetVertexMean().x()*0.1, fRansac -> GetVertexMean().y()*0.1,
-   fRansac -> GetVertexMean().z()*0.1); if(fRANSACAlg==1) fVertex -> SetNextPoint(fRansacMod -> GetVertexMean().x()*0.1,
-   fRansacMod -> GetVertexMean().y()*0.1, fRansacMod -> GetVertexMean().z()*0.1); if(fRANSACAlg==2) fVertex ->
-   SetNextPoint(fMlesacMod -> GetVertexMean().x()*0.1, fMlesacMod -> GetVertexMean().y()*0.1, fMlesacMod ->
-   GetVertexMean().z()*0.1); if(fRANSACAlg==3) fVertex -> SetNextPoint(fLmedsMod -> GetVertexMean().x()*0.1, fLmedsMod
-   -> GetVertexMean().y()*0.1, fLmedsMod -> GetVertexMean().z()*0.1);
-   */
-      }
    }
 
    //////////////////////////////////////////////

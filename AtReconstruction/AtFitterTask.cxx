@@ -131,9 +131,6 @@ void AtFitterTask::Exec(Option_t *option)
 
       for (auto track : patternTrackCand) {
 
-         if (track.GetIsNoise())
-            continue;
-
          genfit::Track *fitTrack = fFitter->FitTracks(&track);
          if (fitTrack != nullptr)
             fGenfitTrackVector->push_back(*static_cast<genfit::Track *>(fitTrack));
