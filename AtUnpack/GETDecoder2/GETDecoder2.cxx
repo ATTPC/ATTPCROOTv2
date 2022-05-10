@@ -11,6 +11,8 @@
 
 #include "GETDecoder2.h"
 
+#include <FairLogger.h>
+
 #include <Rtypes.h>
 #include <TClonesArray.h>
 #include <TString.h>
@@ -370,26 +372,26 @@ GETBasicFrame *GETDecoder2::GetBasicFrame(Int_t frameID)
          fFrameInfoIdx = fTargetFrameInfoIdx;
 
       fFrameInfo = (GETFrameInfo *)fFrameInfoArray->ConstructedAt(fFrameInfoIdx);
-      while (fFrameInfo->IsFill()) {
+      while (fFrameInfo->IsFill()) { // returns startByte != endByte
 
-#ifdef DEBUG
-         cout << "fFrameInfoIdx: " << fFrameInfoIdx << " fTargetFrameInfoIdx: " << fTargetFrameInfoIdx << endl;
-#endif
+         LOG(debug) << "fFrameInfoIdx: " << fFrameInfoIdx << " fTargetFrameInfoIdx: " << fTargetFrameInfoIdx;
 
          if (fFrameInfoIdx == fTargetFrameInfoIdx) {
             BackupCurrentState();
 
-            if (fFrameInfo->GetDataID() != fCurrentDataID)
+            if (fFrameInfo->GetDataID() != fCurrentDataID) {
+               LOG(info) << "Changing from " << fFrameInfo->GetDataID() << " to " << fCurrentDataID
+                         << " at fFrameInfoIdx: " << fFrameInfoIdx
+                         << " of fTargetFrameInfoIdx: " << fTargetFrameInfoIdx;
                SetData(fFrameInfo->GetDataID());
+            }
 
             fData.seekg(fFrameInfo->GetStartByte());
             fBasicFrame->Read(fData);
 
             RestorePreviousState();
 
-#ifdef DEBUG
-            cout << "Returned event ID: " << fBasicFrame->GetEventID() << endl;
-#endif
+            LOG(debug) << "Returned event ID: " << fBasicFrame->GetEventID();
 
             return fBasicFrame;
          } else
@@ -409,7 +411,7 @@ GETBasicFrame *GETDecoder2::GetBasicFrame(Int_t frameID)
       fFrameInfo->SetEventID(fBasicFrameHeader->GetEventID());
 
       CheckEndOfData();
-   }
+   } // while(true)
 
    //  return GetBasicFrame(fTargetFrameInfoIdx);
 }
@@ -453,9 +455,9 @@ GETCoboFrame *GETDecoder2::GetCoboFrame(Int_t frameID)
                fCoboFrameInfo = (GETFrameInfo *)fCoboFrameInfoArray->ConstructedAt(fCoboFrameInfoIdx);
 
                for (Int_t iFrame = 0; iFrame < fTopologyFrame->GetAsadMask().count(); iFrame++) {
-                  if (fCoboFrameInfo->GetDataID() != fCurrentDataID)
+                  if (fCoboFrameInfo->GetDataID() != fCurrentDataID) {
                      SetData(fCoboFrameInfo->GetDataID());
-
+                  }
                   fData.seekg(fCoboFrameInfo->GetStartByte());
                   fCoboFrame->ReadFrame(fData);
                   fCoboFrameInfo = fCoboFrameInfo->GetNextInfo();
@@ -548,8 +550,9 @@ GETLayeredFrame *GETDecoder2::GetLayeredFrame(Int_t frameID)
          if (fFrameInfoIdx == fTargetFrameInfoIdx) {
             BackupCurrentState();
 
-            if (fFrameInfo->GetDataID() != fCurrentDataID)
+            if (fFrameInfo->GetDataID() != fCurrentDataID) {
                SetData(fFrameInfo->GetDataID());
+            }
 
             fData.seekg(fFrameInfo->GetStartByte());
             fLayeredFrame->Read(fData);

@@ -43,9 +43,17 @@ void AtGRAWUnpacker::Init()
    if (!fIsData)
       LOG(error) << "Problem setting the data pointer to the first file in the list!";
 
+   std::vector<int> iniFrameIDs;
+   LOG(info) << "Initial frame IDs";
+   for (int i = 0; i < fNumFiles; ++i) {
+      GETBasicFrame *basicFrame = fDecoder[i]->GetBasicFrame(-1);
+      iniFrameIDs.push_back(basicFrame->GetEventID());
+      LOG(info) << i << " " << iniFrameIDs.back();
+   }
+
    fTargetFrameID = -1;
-   fDataEventID = 0;
-   fEventID = 0;
+   fDataEventID = *std::max_element(begin(iniFrameIDs), end(iniFrameIDs)) + fEventID;
+   fTargetFrameID = *std::max_element(begin(iniFrameIDs), end(iniFrameIDs)) + fEventID;
 }
 
 void AtGRAWUnpacker::FillRawEvent(AtRawEvent &event)
@@ -108,6 +116,8 @@ void AtGRAWUnpacker::FillRawEvent(AtRawEvent &event)
 
    fEventID++;
    fDataEventID++;
+   if (fTargetFrameID != -1)
+      fTargetFrameID++;
 }
 
 bool AtGRAWUnpacker::IsLastEvent()
@@ -244,10 +254,12 @@ void AtGRAWUnpacker::ProcessBasicFile(Int_t coboIdx)
 
    if (basicFrame == nullptr) {
       fRawEvent->SetIsGood(kFALSE);
-
+      LOG(error) << "Basic frame was null! Skipping event " << fEventID;
       return;
    }
+   LOG(debug) << "Looking for " << fTargetFrameID << " found " << basicFrame->GetEventID();
 
+   fCurrentEventID[coboIdx] = basicFrame->GetEventID();
    Int_t iCobo = basicFrame->GetCoboID();
    Int_t iAsad = basicFrame->GetAsadID();
 
