@@ -43,21 +43,16 @@ constexpr auto cGREEN = "\033[1;32m";
 AtPulseTask::AtPulseTask() : AtPulseTask("AtPulseTask") {}
 AtPulseTask::AtPulseTask(const char *name) : FairTask(name), fRawEventArray(TClonesArray("AtRawEvent", 1)) {}
 
-void AtPulseTask::SetParContainers()
-{
-   FairRunAna *ana = FairRunAna::Instance();
-   FairRuntimeDb *rtdb = ana->GetRuntimeDb();
-   fPar = dynamic_cast<AtDigiPar *>(rtdb->getContainer("AtDigiPar"));
-}
+void AtPulseTask::SetParContainers() {}
 
 void AtPulseTask::setParameters()
 {
+   auto fPar = dynamic_cast<AtDigiPar *>(FairRunAna::Instance()->GetRuntimeDb()->getContainer("AtDigiPar"));
    fGain = fPar->GetGain();
    fGETGain = fPar->GetGETGain();                    // Get the electronics gain in fC
    fGETGain = 1.602e-19 * 4096 / (fGETGain * 1e-15); // Scale to gain and correct for ADC
    fPeakingTime = fPar->GetPeakingTime() / 1000.;
    fTBTime = fPar->GetTBTime() / 1000.; // in us
-   fNumTbs = fPar->GetNumTbs();
 
    fTBEntrance = fPar->GetTBEntrance();
    fTBPadPlane = fTBEntrance - fPar->GetZPadPlane() / 10. / fTBTime / fPar->GetDriftVelocity();
@@ -72,6 +67,7 @@ void AtPulseTask::setParameters()
    std::cout << "  GET Gain: " << fGETGain << std::endl;
    std::cout << "  Electronic peaking time: " << fPeakingTime << " us" << std::endl;
    std::cout << "  Number of pads: " << fMap->GetNumPads() << std::endl;
+   std::cout << "  Number of TBs: " << fNumTbs << std::endl;
    std::cout << "  Window at TB: " << fTBEntrance << std::endl;
    std::cout << "  Pad plane at TB: " << fTBPadPlane << std::endl;
 
@@ -205,16 +201,15 @@ bool AtPulseTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
 
 void AtPulseTask::Exec(Option_t *option)
 {
-   LOG(INFO) << "Exec of AtPulseTask";
+   LOG(debug) << "Exec of AtPulseTask";
    reset();
 
    Int_t nMCPoints = fSimulatedPointArray->GetEntries();
-   std::cout << " AtPulseLineTask: Number of Points " << nMCPoints << std::endl;
+   std::cout << " AtPulseTask: Number of Points " << nMCPoints << std::endl;
 
    // Distributing electron pulses among the pads
    Int_t skippedPoints = 0;
    for (Int_t i = 0; i < nMCPoints; i++) {
-
       auto dElectron = dynamic_cast<AtSimulatedPoint *>(fSimulatedPointArray->At(i));
       if (dElectron == nullptr)
          LOG(fatal) << "The TClonesArray AtSimulatedPoint did not contain type AtSimulatedPoint!";

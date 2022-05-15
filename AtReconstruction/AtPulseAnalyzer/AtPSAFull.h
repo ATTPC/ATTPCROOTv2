@@ -16,6 +16,7 @@ public:
    ~AtPSAFull() = default;
 
    void Analyze(AtRawEvent *rawEvent, AtEvent *event) override;
+   std::unique_ptr<AtPSA> Clone() override { return std::make_unique<AtPSAFull>(*this); }
 
    ClassDefOverride(AtPSAFull, 1)
 };

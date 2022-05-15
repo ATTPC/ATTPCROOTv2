@@ -8,12 +8,11 @@
 #pragma link C++ class AtFilterCalibrate - !;
 
 #pragma link C++ class AtPSA + ;
-#pragma link C++ class AtPSASimple + ;
-#pragma link C++ class AtPSASimple2 + ;
-#pragma link C++ class AtPSAProto + ;
-#pragma link C++ class AtPSAProtoFull + ;
+#pragma link C++ class AtPSASpectrum + ;
+#pragma link C++ class AtPSAHitPerTB + ;
 #pragma link C++ class AtPSAFull + ;
-#pragma link C++ class AtCalibration + ;
+#pragma link C++ class AtPSAMax + ;
+#pragma link C++ class AtPSASimple2 + ;
 
 #pragma link C++ nestedclass;
 #pragma link C++ nestedtypedef;
@@ -32,16 +31,11 @@
 #pragma link C++ namespace AtFITTER;
 #pragma link C++ class AtFitterTask + ;
 
+/* Tasks in AtReconstruction */
 #pragma link C++ class AtPSAtask + ;
-
 #pragma link C++ class AtPRAtask + ;
-
 #pragma link C++ class AtRansacTask + ;
-
 #pragma link C++ class AtDataReductionTask + ;
-
 #pragma link C++ class AtSpaceChargeCorrectionTask + ;
-
-//#pragma link C++ function AtHoughSpaceLine::CalcGenHoughSpace<AtEvent*>(GenHough event);
 
 #endif

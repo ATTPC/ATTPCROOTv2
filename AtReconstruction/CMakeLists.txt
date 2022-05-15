@@ -8,6 +8,7 @@ set(INCLUDE_DIRECTORIES
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPulseAnalyzer
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
+${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/trackfinder
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
@@ -34,10 +35,10 @@ set(SRCS
   # Add all the source files below this line. Those must have cxx for their extension.
 
   AtPulseAnalyzer/AtPSA.cxx
-  AtPulseAnalyzer/AtPSASimple.cxx
   AtPulseAnalyzer/AtPSASimple2.cxx
-  AtPulseAnalyzer/AtPSAProto.cxx
-  AtPulseAnalyzer/AtPSAProtoFull.cxx
+  AtPulseAnalyzer/AtPSASpectrum.cxx
+  AtPulseAnalyzer/AtPSAMax.cxx
+  AtPulseAnalyzer/AtPSAHitPerTB.cxx
   AtPulseAnalyzer/AtPSAFull.cxx
   AtPulseAnalyzer/AtCalibration.cxx
   
@@ -68,11 +69,11 @@ set(SRCS
 if(PCL_FOUND)
   set(SRCS ${SRCS} 
     AtPatternRecognition/AtTrackFinderHC.cxx
-    AtPatternRecognition/smoothenCloud.cxx
-    AtPatternRecognition/msd.cxx
-    AtPatternRecognition/cluster.cxx
-    AtPatternRecognition/hc.cxx
-    AtPatternRecognition/fastcluster.cxx
+    AtPatternRecognition/trackfinder/smoothenCloud.cxx
+    AtPatternRecognition/trackfinder/msd.cxx
+    AtPatternRecognition/trackfinder/cluster.cxx
+    AtPatternRecognition/trackfinder/hc.cxx
+    AtPatternRecognition/trackfinder/fastcluster.cxx
     AtRansac/AtRansac.cxx
     )
   set(DEPENDENCIES ${DEPENDENCIES}

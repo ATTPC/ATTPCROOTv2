@@ -85,6 +85,9 @@ public:
    TClonesArray *GetGenfitTrackArray();
    Int_t GetPDGCode() { return fPDGCode; }
    std::string &GetIonName() { return fIonName; }
+
+protected:
+   inline bool IsForwardTrack(double theta) { return theta < 90.0 * TMath::DegToRad(); }
    ClassDefOverride(AtGenfit, 1);
 };
 

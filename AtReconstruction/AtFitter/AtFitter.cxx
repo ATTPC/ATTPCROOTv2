@@ -253,7 +253,7 @@ void AtFITTER::AtFitter::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Fl
 
                if (checkDistance) {
                   hitCluster->SetCharge(hitQ);
-                  hitCluster->SetPosition(x, y, z);
+                  hitCluster->SetPosition({x, y, z});
                   hitCluster->SetTimeStamp(timeStamp);
                   TMatrixDSym cov(3); // TODO: Setting covariant matrix based on pad size and drift time resolution.
                                       // Using estimations for the moment.
@@ -357,7 +357,7 @@ void AtFITTER::AtFitter::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Fl
 
                   XYZPoint clustPos(x, y, z);
                   hitCluster->SetCharge(hitQ);
-                  hitCluster->SetPosition(x, y, z);
+                  hitCluster->SetPosition({x, y, z});
                   hitCluster->SetTimeStamp(timeStamp);
                   TMatrixDSym cov(3); // TODO: Setting covariant matrix based on pad size and drift time resolution.
                                       // Using estimations for the moment.

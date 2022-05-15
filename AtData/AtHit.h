@@ -20,6 +20,63 @@ using XYZVector = ROOT::Math::XYZVector;
 
 class AtHit : public TObject {
 public:
+   struct MCSimPoint;
+
+protected:
+   Double_t fCharge;            //< Charge of hit
+   Int_t fHitID;                //< Unique ID of hit
+   Int_t fPadNum;               //< Pad that generated hit
+   XYZPoint fPosition;          //< Position of hit
+   XYZVector fPositionVariance; //< Position variance
+
+   Double_t fTraceIntegral = -1;     //< Integrated pulse charge of full trace
+   Int_t fHitMult = 1;               //< Hit multiplicity in the pad where the hit was found
+   Int_t fTimeStamp = 0;             //< TB of hit
+   Double_t fTimeStampCorr = 0;      //< TB of hit
+   Double_t fTimeStampCorrInter = 0; //< TB of hit
+
+   std::vector<AtHit::MCSimPoint> fMCSimPointArray;
+
+public:
+   AtHit(Int_t hitID = -1);                                              //< Default constructor for IO
+   AtHit(Int_t padNum, XYZPoint location, Double_t charge);              //< Primary constructor
+   AtHit(Int_t hitID, Int_t padNum, XYZPoint location, Double_t charge); //< Specify hit ID on creation
+   AtHit(const AtHit &) = default;                                       //< Copy constructor
+   AtHit(AtHit &&) = default;                                            //< Move constructor
+   AtHit &operator=(const AtHit &) = default;                            //< Copy assignment
+   AtHit &operator=(AtHit &&) = default;                                 //< Move assignment
+   virtual ~AtHit() = default;
+
+   void SetCharge(Double_t charge) { fCharge = charge; }
+   void SetHitID(Int_t hitID) { fHitID = hitID; }
+   void SetPadNum(Int_t padNum) { fPadNum = padNum; }
+   void SetPosition(const XYZPoint &pos) { fPosition = pos; }
+   void SetPositionVariance(const XYZPoint &vec) { fPositionVariance = vec; }
+
+   void SetTraceIntegral(Double_t integral) { fTraceIntegral = integral; }
+   void SetHitMult(Int_t HitMult) { fHitMult = HitMult; }
+   void SetTimeStamp(Int_t Time) { fTimeStamp = Time; }
+   void SetTimeStampCorr(Double_t TimeCorr) { fTimeStampCorr = TimeCorr; }
+   void SetTimeStampCorrInter(Double_t TimeCorrInter) { fTimeStampCorrInter = TimeCorrInter; }
+
+   void AddMCSimPoint(const AtHit::MCSimPoint &point) { fMCSimPointArray.push_back(point); }
+
+   Int_t GetHitID() const { return fHitID; }
+   const XYZPoint &GetPosition() const { return fPosition; }
+   const XYZVector &GetPositionVariance() const { return fPositionVariance; }
+   XYZVector GetPositionSigma() const;
+   Double_t GetCharge() const { return fCharge; }
+   Int_t GetPadNum() const { return fPadNum; }
+   Double_t GetTraceIntegral() const { return fTraceIntegral; }
+   Int_t GetHitMult() const { return fHitMult; }
+   Int_t GetTimeStamp() const { return fTimeStamp; }
+   Double_t GetTimeStampCorr() const { return fTimeStampCorr; }
+   Double_t GetTimeStampCorrInter() const { return fTimeStampCorrInter; }
+   std::vector<AtHit::MCSimPoint> &GetMCSimPointArray() { return fMCSimPointArray; }
+
+   static Bool_t SortHit(const AtHit &lhs, const AtHit &rhs) { return lhs.GetPadNum() < rhs.GetPadNum(); }
+   static Bool_t SortHitTime(const AtHit &lhs, const AtHit &rhs) { return lhs.GetTimeStamp() < rhs.GetTimeStamp(); }
+
    struct MCSimPoint {
       int pointID;
       int trackID;
@@ -35,77 +92,7 @@ public:
       }
    };
 
-protected:
-   Double_t fCharge;
-   Int_t fHitID;
-   Int_t fPadNum;
-   XYZPoint fPosition;
-
-   Int_t fTrackID = -1;
-   Double_t fTraceIntegral = -1; //!< Integrated pulse charge of full trace
-   Int_t fHitMult = 1;           //!< Hit multiplicity in the pad where the hit was found
-   Bool_t fIsAux = false;
-   Int_t fTimeStamp = 0;
-   Double_t fTimeStampCorr = 0;
-   Double_t fTimeStampCorrInter = 0;
-   Double_t fBaseCorr = 0;
-   Int_t fSlopeCnt = 0;
-
-   XYZPoint fPositionSigma; //!< Position error
-   XYZPoint fPositionCorr;  // Position corrected by the Lorentz Angle
-   std::vector<AtHit::MCSimPoint> fMCSimPointArray;
-
-public:
-   AtHit(Int_t hitID = -1);                                              //< Default constructor for IO
-   AtHit(Int_t padNum, XYZPoint location, Double_t charge);              //< Primary constructor
-   AtHit(Int_t hitID, Int_t padNum, XYZPoint location, Double_t charge); //< Specify hit ID on creation
-   AtHit(const AtHit &) = default;                                       //< Copy constructor
-   AtHit(AtHit &&) = default;                                            //< Move constructor
-   AtHit &operator=(const AtHit &) = default;                            //< Copy assignment
-   AtHit &operator=(AtHit &&) = default;                                 //< Move assignment
-   virtual ~AtHit() = default;
-
-   void SetTrackID(Int_t trackID) { fTrackID = trackID; }
-   void SetHitID(Int_t hitID) { fHitID = hitID; }
-   void SetPadNum(Int_t padNum) { fPadNum = padNum; }
-   void SetPosition(const XYZPoint &pos) { fPosition = pos; }
-   void SetPosition(Double_t x, Double_t y, Double_t z) { fPosition = XYZPoint(x, y, z); }
-   void SetPositionCorr(const XYZPoint &pos) { fPositionCorr = pos; }
-   void SetPositionCorr(Double_t x, Double_t y, Double_t z) { fPositionCorr = XYZPoint(x, y, z); }
-   void SetPositionSigma(const XYZPoint &vec) { fPositionSigma = vec; }
-   void SetPositionSigma(Double_t dx, Double_t dy, Double_t dz) { fPositionSigma = XYZVector(dx, dy, dz); }
-   void SetCharge(Double_t charge) { fCharge = charge; }
-   void SetIsAux(Bool_t value = true) { fIsAux = value; }
-   void SetTraceIntegral(Double_t integral) { fTraceIntegral = integral; }
-   void SetHitMult(Int_t HitMult) { fHitMult = HitMult; }
-   void SetTimeStamp(Int_t Time) { fTimeStamp = Time; }
-   void SetTimeStampCorr(Double_t TimeCorr) { fTimeStampCorr = TimeCorr; }
-   void SetTimeStampCorrInter(Double_t TimeCorrInter) { fTimeStampCorrInter = TimeCorrInter; }
-   void SetBaseCorr(Double_t BaseCorr) { fBaseCorr = BaseCorr; }
-   void SetSlopeCnt(Int_t cnt) { fSlopeCnt = cnt; }
-   void AddMCSimPoint(const AtHit::MCSimPoint &point) { fMCSimPointArray.push_back(point); }
-
-   Int_t GetTrackID() const { return fTrackID; }
-   Int_t GetHitID() const { return fHitID; }
-   const XYZPoint &GetPosition() const { return fPosition; }
-   const XYZPoint &GetPositionCorr() const { return fPositionCorr; }
-   const XYZPoint &GetPositionSigma() const { return fPositionSigma; }
-   Double_t GetCharge() const { return fCharge; }
-   Int_t GetPadNum() const { return fPadNum; }
-   Double_t GetTraceIntegral() const { return fTraceIntegral; }
-   Int_t GetHitMult() const { return fHitMult; }
-   Int_t GetTimeStamp() const { return fTimeStamp; }
-   Double_t GetTimeStampCorr() const { return fTimeStampCorr; }
-   Double_t GetTimeStampCorrInter() const { return fTimeStampCorrInter; }
-   Double_t GetBaseCorr() const { return fBaseCorr; }
-   Int_t GetSlopeCnt() const { return fSlopeCnt; }
-   std::vector<AtHit::MCSimPoint> &GetMCSimPointArray() { return fMCSimPointArray; }
-   Bool_t IsAux() const { return fIsAux; }
-
-   static Bool_t SortHit(const AtHit &lhs, const AtHit &rhs) { return lhs.GetPadNum() < rhs.GetPadNum(); }
-   static Bool_t SortHitTime(const AtHit &lhs, const AtHit &rhs) { return lhs.GetTimeStamp() < rhs.GetTimeStamp(); }
-
-   ClassDef(AtHit, 4);
+   ClassDef(AtHit, 5);
 };
 
 #endif

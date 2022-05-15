@@ -29,10 +29,12 @@ class AtPatternEvent;
 class TBuffer;
 class TClass;
 class TMemberInspector;
+
 namespace hc {
 struct triplet;
 }
 
+namespace AtPATTERN {
 struct hc_params {
    float s;
    size_t k;
@@ -44,29 +46,8 @@ struct hc_params {
    float _padding;
 };
 
-struct Point {
-   float x;
-   float y;
-   float z;
-   std::vector<int> clIds;
-
-   template <typename T>
-   Point(T point)
-   {
-      x = point.x;
-      y = point.y;
-      z = point.z;
-   }
-
-   bool operator==(const Point &p) const { return (x == p.x && y == p.y && z == p.z); }
-};
-
-namespace AtPATTERN {
-
 class AtTrackFinderHC : public AtPRA {
 private:
-   std::vector<AtTrack> fTrackCand; // Candidate tracks
-
    hc_params inputParams{.s = -1, .k = 19, .n = 3, .m = 8, .r = -1, .a = 0.03, .t = 3.5};
 
 public:
@@ -74,9 +55,7 @@ public:
    ~AtTrackFinderHC() = default;
 
    std::unique_ptr<AtPatternEvent> FindTracks(AtEvent &event) override;
-   // bool FindTracks(AtEvent &event, AtPatternEvent *patternEvent);
 
-   std::vector<AtTrack> GetTrackCand() override;
    void SetScluster(float s) { inputParams.s = s; }
    void SetKtriplet(size_t k) { inputParams.k = k; }
    void SetNtriplet(size_t n) { inputParams.n = n; }

@@ -54,12 +54,11 @@ void run_digi_attpc()
    reduceTask->SetInputBranch("AtRawEvent");
    reduceTask->SetReductionFunction(&reduceFunc);
 
-   AtPSASimple2 *psa = new AtPSASimple2();
+   auto psa = std::make_unique<AtPSAMax>();
    psa->SetThreshold(0);
-   psa->SetMaxFinder();
 
    // Create PSA task
-   AtPSAtask *psaTask = new AtPSAtask(psa);
+   AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
    psaTask->SetPersistence(kTRUE);
 
    AtRansacTask *ransacTask = new AtRansacTask();

@@ -16,12 +16,16 @@ namespace AtPATTERN {
 class AtPRA;
 }
 
+/**
+ * @brief Task for finding patterns in hit clouds.
+ *
+ * Logic is in class AtPRA and derived types.
+ */
 class AtPRAtask : public FairTask {
 private:
    TClonesArray *fEventHArray{};
    TClonesArray fPatternEventArray;
 
-   FairLogger *fLogger;
    AtDigiPar *fPar;
 
    AtPATTERN::AtPRA *fPRA{};

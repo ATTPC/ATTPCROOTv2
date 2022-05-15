@@ -387,20 +387,11 @@ Waveform on pads (TClonesArray of ATRawEvent) -> record of hits, 3D position and
 Output is named: "ATEventH"
 
 This task uses the parameters in the ATTPC .par files. In particular this loads (bolded are used by PSASimple):
-* PadPlaneX (?)
-* PadSizeX (?)
-* PadPlaneZ (?)
-* PadSizeZ (?)
-* PadRows (?)
-* PadLayers (?)
 * **NumTbs (Number of time buckets)**
 * **TBTTime (Sampling rate in ns)**
 * **DriftVelocity (cm/us)**
-* MaxDriftLength (Length of TPC)
 * BField
 * EField
-* TiltAng
-* TB0 (Depricated: time bucket refrence for micromegas)
 * EntTB (position in time buckets for detector entrance)
 
 

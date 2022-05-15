@@ -55,7 +55,7 @@ Double_t AtPattern::FitPattern(const std::vector<XYZPoint> &pointsToFit)
 TEveLine *AtPattern::GetEveLine(double tMin, double tMax, int n) const
 {
    // Setup return vector with the correct number of
-   auto retLine = new TEveLine();
+   auto retLine = new TEveLine(); // NOLINT these will be owned by TEve classes
    for (int i = 0; i < n; ++i) {
       auto t = tMin + i * (tMax - tMin) / n;
       auto pos = GetPointAt(t) / 10.; // TEve is all in units cm

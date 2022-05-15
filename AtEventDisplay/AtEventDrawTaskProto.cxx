@@ -322,7 +322,6 @@ void AtEventDrawTaskProto::DrawHitPoints()
       // if(hit.GetCharge()<fThreshold) continue;
       // if(PadMultHit>fMultiHit) continue;
       auto position = hit.GetPosition();
-      auto positioncorr = hit.GetPositionCorr();
 
       fHitSet->SetMarkerColor(fHitColor);
       fHitSet->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.); // Convert into cm
@@ -345,7 +344,6 @@ void AtEventDrawTaskProto::DrawHitPoints()
 
       AtHit hit = event->GetHitArray().at(iHit);
       auto position = hit.GetPosition();
-      auto positioncorr = hit.GetPositionCorr();
 
       if (f3DHitStyle == 0) {
 
@@ -542,10 +540,9 @@ void AtEventDrawTaskProto::DrawProtoPattern()
 
             AtHit *qhit = quadrant.GetHit(j);
             auto position = qhit->GetPosition();
-            auto positionCorr = qhit->GetPositionCorr();
+
             Double_t radius = TMath::Sqrt(TMath::Power(position.X(), 2) + TMath::Power(position.Y(), 2));
-            // fQHitPattern[iQ]   ->SetPoint(fQHitPattern[iQ]->GetN(),radius,position.Z());//
-            fQHitPattern[iQ]->SetPoint(fQHitPattern[iQ]->GetN(), radius, positionCorr.Z());
+            fQHitPattern[iQ]->SetPoint(fQHitPattern[iQ]->GetN(), radius, position.Z());
             fQELossPattern[iQ]->SetPoint(fQELossPattern[iQ]->GetN(), radius, qhit->GetCharge());
          }
       }

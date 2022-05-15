@@ -28,17 +28,17 @@ class AtTrack : public TObject {
 protected:
    // Attributes shared by all track finding algorithms
    Int_t fTrackID{-1};
-   std::vector<AtHit> fHitArray; // TrackHC, AtGenfit, all ransacs
+   std::vector<AtHit> fHitArray;
    std::unique_ptr<AtPatterns::AtPattern> fPattern{nullptr};
    Bool_t fIsMerged{false};
    Double_t fVertexToZDist{0};
 
    // Used by AtPRA
-   Double_t fGeoThetaAngle{};                // Geometrical scattering angle with respect to the detector FitParameters
-   Double_t fGeoPhiAngle{};                  //  " azimuthal "
-   Double_t fGeoRadius{};                    // Initial radius of curvature
-   std::pair<Double_t, Double_t> fGeoCenter; // Center of the spiral track
-   std::vector<AtHitCluster> fHitClusterArray; ///< Clusterized hits container
+   Double_t fGeoThetaAngle{};                //< Geometrical scattering angle with respect to the detector FitParameters
+   Double_t fGeoPhiAngle{};                  //<  " azimuthal "
+   Double_t fGeoRadius{};                    //< Initial radius of curvature
+   std::pair<Double_t, Double_t> fGeoCenter; //< Center of the spiral track
+   std::vector<AtHitCluster> fHitClusterArray; //< Clusterized hits container
 
 public:
    AtTrack() = default;

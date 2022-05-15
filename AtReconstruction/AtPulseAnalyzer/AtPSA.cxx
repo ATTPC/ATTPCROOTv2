@@ -27,7 +27,6 @@ using std::min_element;
 
 void AtPSA::Init()
 {
-   fCalibration = std::make_unique<AtCalibration>();
 
    FairRun *run = FairRun::Instance();
    if (!run)
@@ -37,35 +36,27 @@ void AtPSA::Init()
    if (!db)
       LOG(FATAL) << "No runtime database!";
 
-   fPar = (AtDigiPar *)db->getContainer("AtDigiPar"); // NOLINT
+   auto fPar = (AtDigiPar *)db->getContainer("AtDigiPar"); // NOLINT
    if (!fPar)
       LOG(FATAL) << "AtDigiPar not found!!";
 
-   fPadPlaneX = fPar->GetPadPlaneX(); // NOLINT
-   fPadSizeX = fPar->GetPadSizeX();
-   fPadSizeZ = fPar->GetPadSizeZ();
-   fPadRows = fPar->GetPadRows();
-   fPadLayers = fPar->GetPadLayers();
-   // fNumTbs = fPar->GetNumTbs();
    fTBTime = fPar->GetTBTime();
    fDriftVelocity = fPar->GetDriftVelocity();
-   fMaxDriftLength = fPar->GetDriftLength();
    fBField = fPar->GetBField();
    fEField = fPar->GetEField();
-   fTiltAng = fPar->GetTiltAngle();
-   fTB0 = fPar->GetTB0();
    fZk = fPar->GetZPadPlane();
    fEntTB = (Int_t)fPar->GetTBEntrance();
 
-   fThetaPad = -103.0 * TMath::Pi() / 180.0;
+   auto timeToPadPlane = fZk / (fDriftVelocity * 1e-2); //[ns]
+   fTB0 = fEntTB - timeToPadPlane / fTBTime;
 
    std::cout << " ==== Parameters for Pulse Shape Analysis Task ==== " << std::endl;
    std::cout << " ==== Magnetic Field : " << fBField << " T " << std::endl;
    std::cout << " ==== Electric Field : " << fEField << " V/cm " << std::endl;
    std::cout << " ==== Sampling Rate : " << fTBTime << " ns " << std::endl;
-   std::cout << " ==== Tilting Angle : " << fTiltAng << " deg " << std::endl;
    std::cout << " ==== Drift Velocity : " << fDriftVelocity << " cm/us " << std::endl;
-   std::cout << " ==== TB0 : " << fTB0 << std::endl;
+   std::cout << " ==== Entrance TB : " << fEntTB << std::endl;
+   std::cout << " ==== Pad plane TB : " << fTB0 << std::endl;
    std::cout << " ==== NumTbs : " << fNumTbs << std::endl;
 }
 
@@ -87,11 +78,6 @@ void AtPSA::SetThresholdLow(Int_t thresholdlow)
    fUsingLowThreshold = kTRUE;
 }
 
-Double_t AtPSA::CalculateX(Double_t row)
-{
-   return (row + 0.5) * fPadSizeX - fPadPlaneX / 2.;
-}
-
 Double_t AtPSA::CalculateZ(Double_t peakIdx)
 {
    // DEPRECAtED
@@ -103,95 +89,6 @@ Double_t AtPSA::CalculateZGeo(Double_t peakIdx)
 
    // This function must be consistent with the re-calibrations done before.
    return fZk - (fEntTB - peakIdx) * fTBTime * fDriftVelocity / 100.;
-}
-
-Double_t AtPSA::CalculateY(Double_t layer)
-{
-   return (layer + 0.5) * fPadSizeZ;
-}
-
-Double_t
-AtPSA::CalculateXCorr(Double_t xvalue,
-                      Int_t Tbx) // TODO: Yes, this can be done with one stupid function but try walking on my shoes...
-{
-
-   Double_t xcorr = xvalue - fLorentzVector.X() * (Tbx - fTB0) * fTBTime * 1E-2; // Convert from ns to us and cm to mm
-   return xcorr;
-}
-
-Double_t AtPSA::CalculateYCorr(Double_t yvalue, Int_t Tby)
-{
-   Double_t ycorr = yvalue + fLorentzVector.Y() * (Tby - fTB0) * fTBTime * 1E-2;
-   return ycorr;
-}
-
-Double_t AtPSA::CalculateZCorr(Double_t zvalue, Int_t Tbz)
-{
-   Double_t zcorr = fLorentzVector.Z() * (Tbz - fTB0) * fTBTime * 1E-2;
-   return zcorr;
-}
-
-void AtPSA::CalcLorentzVector()
-{
-
-   // fDriftVelocity*=-1;// TODO: Check sign of the Vd
-   Double_t ot = (fBField / fEField) * fDriftVelocity * 1E4;
-   Double_t front = fDriftVelocity / (1 + ot * ot);
-   Double_t TiltRad = fTiltAng * TMath::Pi() / 180.0;
-
-   Double_t x = front * ot * TMath::Sin(TiltRad);
-   Double_t y = front * ot * ot * TMath::Cos(TiltRad) * TMath::Sin(TiltRad);
-   Double_t z = front * (1 + ot * ot * TMath::Cos(TiltRad) * TMath::Cos(TiltRad));
-
-   fLorentzVector.SetXYZ(x, y, z);
-
-   //  std::cout<<" Vdx : "<<x<<std::endl;
-   //   std::cout<<" Vdy : "<<y<<std::endl;
-   //  std::cout<<" Vdz : "<<z<<std::endl;
-}
-
-TVector3 AtPSA::RotateDetector(Double_t x, Double_t y, Double_t z, Int_t tb)
-{
-
-   // DEPRECAtED because of timebucket calibration (-271.0)
-   TVector3 posRot;
-   TVector3 posDet;
-
-   posRot.SetX(x * TMath::Cos(fThetaPad) - y * TMath::Sin(fThetaPad));
-   posRot.SetY(x * TMath::Sin(fThetaPad) + y * TMath::Cos(fThetaPad));
-   posRot.SetZ((-271.0 + tb) * fTBTime * fDriftVelocity / 100. + fZk);
-
-   Double_t TiltAng = -fTiltAng * TMath::Pi() / 180.0;
-
-   posDet.SetX(posRot.X());
-   posDet.SetY(-(fZk - posRot.Z()) * TMath::Sin(TiltAng) + posRot.Y() * TMath::Cos(TiltAng));
-   posDet.SetZ(posRot.Z() * TMath::Cos(TiltAng) - posRot.Y() * TMath::Sin(TiltAng));
-
-   return posDet;
-}
-
-void AtPSA::SetGainCalibration(TString gainFile)
-{
-   fCalibration->SetGainFile(gainFile);
-}
-
-void AtPSA::SetJitterCalibration(TString jitterFile)
-{
-   fCalibration->SetJitterFile(jitterFile);
-}
-
-void AtPSA::SetTBLimits(std::pair<Int_t, Int_t> limits)
-{
-   if (limits.first >= limits.second) {
-      std::cout << " Warning AtPSA::SetTBLimits -  Wrong Time Bucket limits. Setting default limits (0,512) ... "
-                << "\n";
-      fIniTB = 0;
-      fEndTB = 512;
-
-   } else {
-      fIniTB = limits.first;
-      fEndTB = limits.second;
-   }
 }
 
 void AtPSA::TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit &hit)
