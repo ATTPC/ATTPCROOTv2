@@ -19,8 +19,7 @@
 #include <stdexcept> // for runtime_error
 #include <vector>    // for allocator, vector
 
-AtPRAtask::AtPRAtask()
-   : FairTask("AtPRAtask"), fLogger(FairLogger::GetLogger()), fPatternEventArray("AtPatternEvent", 1)
+AtPRAtask::AtPRAtask() : FairTask("AtPRAtask"), fPatternEventArray("AtPatternEvent", 1)
 {
 
    LOG(debug) << "Default Constructor of AtPRAtask";

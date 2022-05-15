@@ -18,104 +18,62 @@ class TClass;
 class TMemberInspector;
 
 class AtDigiPar : public FairParGenericSet {
+private:
+   Bool_t fInitialized;
+
+   Double_t fBField{};
+   Double_t fEField{};
+
+   // Detector geometry
+   Int_t fTBEntrance{};
+   Double_t fZPadPlane{};
+
+   // Gas properties
+   Double_t fEIonize{};       //< effective ionization energy [eV]
+   Double_t fFano{};          //< Fano factor of gas
+   Double_t fCoefL{};         //< longitudinal diffusion coefficient [cm^-0.5]
+   Double_t fCoefT{};         //< transversal diffusion coefficient [cm^-0.5]
+   Double_t fGasPressure{};   //< gas pressure [torr]
+   Double_t fDensity{};       //< Gas density [kg/m^3]
+   Double_t fDriftVelocity{}; //< Electron drift velocity [cm/us]
+   Double_t fGain{};          //< gain factor from wire plane
+
+   // Electronic info
+   Int_t fSamplingRate{};
+   Double_t fGETGain{};  //< Gain from get electronics in fC
+   Int_t fPeakingTime{}; //< Peaking time of the electronics in ns
+
 public:
    // Constructors and Destructors
    AtDigiPar(const Char_t *name, const Char_t *title, const Char_t *context);
    ~AtDigiPar() = default;
 
    // Getters
-   Int_t GetPadPlaneX();
-   Int_t GetPadPlaneZ();
-   Int_t GetPadSizeX();
-   Int_t GetPadSizeZ();
-   Int_t GetPadRows();
-   Int_t GetPadLayers();
-   Double_t GetAnodeWirePlaneY();
-   Double_t GetGroundWirePlaneY();
-   Double_t GetGatingWirePlaneY();
-   AtGas *GetGas();
-   Int_t GetNumTbs();
-   Int_t GetTBTime();           ///< returns the time duration of a time bucket in given sampling time in ns.
-   Double_t GetDriftVelocity(); ///< returns the drift velocity in cm/us.
-   Double_t GetDriftLength();   ///< returns the drift length in mm
-   Int_t GetYDivider();         ///< returns the slice divider
+   Double_t GetBField() const { return fBField; }
+   Double_t GetEField() const { return fEField; }
 
-   virtual Bool_t getParams(FairParamList *paramList) override;
+   Int_t GetTBEntrance() const { return fTBEntrance; }
+   Double_t GetZPadPlane() const { return fZPadPlane; }
 
-   TString GetFile(Int_t fileNum);
+   Double_t GetEIonize() const { return fEIonize; }
+   Double_t GetFano() const { return fFano; }
+   Double_t GetCoefDiffusionTrans() const { return fCoefT; }
+   Double_t GetCoefDiffusionLong() const { return fCoefL; }
+   Double_t GetGasPressure() const { return fGasPressure; }
+   Double_t GetDensity() const { return fDensity; }
+   Double_t GetDriftVelocity() const { return fDriftVelocity; }
+   Double_t GetGain() const { return fGain; }
 
-   Double_t GetBField();
-   Double_t GetEField();
-   Double_t GetTiltAngle();
-   Int_t GetTB0();
-   Double_t GetThetaLorentz();
-   Int_t GetTBEntrance();
-   Double_t GetZPadPlane();
-   Double_t GetDensity();
-   Double_t GetThetaPad();
-   Double_t GetThetaRot();
-   Double_t GetGasPressure();
-   Double_t GetMaxRange();
-
-   Double_t GetEIonize();
-   Double_t GetFano();
-   Double_t GetCoefDiffusionTrans();
-   Double_t GetCoefDiffusionLong();
-   Double_t GetGain();
-   Double_t GetGETGain();
-   Int_t GetPeakingTime();
+   Int_t GetTBTime() const;
+   Double_t GetGETGain() const { return fGETGain; };
+   Int_t GetPeakingTime() const { return fPeakingTime; };
 
    // Setters
    virtual void putParams(FairParamList *paramList) override;
-
+   virtual Bool_t getParams(FairParamList *paramList) override;
    // Main methods
 
-private:
-   std::unique_ptr<AtGas> fGas;
-   TString fGasFileName;
-
-   Bool_t fInitialized;
-
-   Int_t fPadPlaneX{};
-   Int_t fPadPlaneZ{};
-   Int_t fPadSizeX{};
-   Int_t fPadSizeZ{};
-   Int_t fPadRows{};
-   Int_t fPadLayers{};
-   Double_t fAnodeWirePlaneY{};
-   Double_t fGroundWirePlaneY{};
-   Double_t fGatingWirePlaneY{};
-   Double_t fEField{};
-   Int_t fNumTbs{};
-   Int_t fSamplingRate{};
-   Double_t fDriftVelocity{};
-   Double_t fDriftLength{};
-   Int_t fYDivider{};
-   Int_t fGasFile{};
-   Int_t fPadPlaneFile{};
-   Int_t fPadShapeFile{};
-
-   Double_t fBField{};
-   Double_t fTiltAng{};
-   Int_t fTB0{};
-   Double_t fThetaLorentz{};
-   Int_t fTBEntrance{};
-   Double_t fZPadPlane{};
-   Double_t fDensity{};
-   Double_t fThetaPad{};
-   Double_t fThetaRot{};
-   Double_t fGasPressure{};
-   Double_t fMaxRange{};
-
-   Double_t fEIonize{};  //!< effective ionization energy [eV]
-   Double_t fFano{};     //!< Fano factor of gas
-   Double_t fCoefL{};    //!< longitudinal diffusion coefficient
-   Double_t fCoefT{};    //!< transversal diffusion coefficient
-   Double_t fGain{};     //!< gain factor from wire plane
-   Double_t fGETGain{};  //!< Gain from get electronics in fC
-   Int_t fPeakingTime{}; //!< Peaking time of the electronics in ns
-
-   ClassDefOverride(AtDigiPar, 3);
+   ClassDefOverride(AtDigiPar, 4);
 };
 
 #endif

@@ -37,27 +37,26 @@ class AtPulseTask : public FairTask {
 protected:
    AtMapPtr fMap; //!< AtTPC map
 
-   AtDigiPar *fPar{};           //!< Base parameter container.
-   Int_t fEventID = 0;          //!< EventID
-   Double_t fGain = 0;          //!< Micromegas gain.
+   Int_t fEventID = 0;          //! EventID
+   Double_t fGain = 0;          //! Micromegas gain.
    Double_t fLowGainFactor = 0; //! If pad is AtMap::kLowGain multiply gain by this factor
-   Double_t fGETGain = 0;       //!< GET Gain.
-   Double_t fPeakingTime = 0;   //!< Electronic peaking time in us
-   Double_t fTBTime = 0;        //!< Time bucket size in us
-   Int_t fNumTbs = 0;           //!< Number of time buckers
+   Double_t fGETGain = 0;       //! GET Gain.
+   Double_t fPeakingTime = 0;   //! Electronic peaking time in us
+   Double_t fTBTime = 0;        //! Time bucket size in us
+   Int_t fNumTbs{512};          //! Number of time buckers
    Int_t fTBEntrance = 0;       //! Window location in timebuckets (from config)
    Int_t fTBPadPlane = 0;       //! Pad plane location in TBs (calculated from DriftVelocity, TBEntrance, ZPadPlane
 
-   Bool_t fIsPersistent = kTRUE;  //!< If true, save container
-   Bool_t fIsSaveMCInfo = kFALSE; //!<< Propagates MC information
-   Bool_t fUseFastGain = kTRUE;
+   Bool_t fIsPersistent = true;  //!< If true, save container
+   Bool_t fIsSaveMCInfo = false; //!<< Propagates MC information
+   Bool_t fUseFastGain = true;
 
    TClonesArray *fSimulatedPointArray{}; //!< drifted electron array (input)
    TClonesArray fRawEventArray;          //!< Raw Event array(only one)
    TClonesArray *fMCPointArray{};        //!< MC Point Array
+   TH2Poly *fPadPlane{};
 
    AtRawEvent *fRawEvent{}; //!< Raw Event Object
-   TH2Poly *fPadPlane{};    //!< pad plane
 
    std::map<Int_t, TH1F *> electronsMap;              //!<
    std::vector<std::unique_ptr<TH1F>> eleAccumulated; //!<

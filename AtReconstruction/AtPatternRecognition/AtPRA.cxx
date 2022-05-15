@@ -34,46 +34,11 @@
 
 ClassImp(AtPATTERN::AtPRA);
 
-void AtPATTERN::AtPRA::SetTrackCurvature(AtTrack &track)
-{
-   std::cout << " new track  "
-             << "\n";
-   std::vector<double> radius_vec;
-   std::vector<AtHit> hitArray = track.GetHitArray();
-   int nstep = 0.60 * hitArray.size(); // 20% of the hits to calculate the radius of curvature with less fluctuations
-
-   for (Int_t iHit = 0; iHit < (hitArray.size() - nstep); iHit++) {
-
-      AtHit hitA = hitArray.at(iHit);
-      AtHit hitB = hitArray.at((int)(iHit + (nstep / 2.0)));
-      AtHit hitC = hitArray.at((int)(iHit + nstep));
-
-      // std::cout<<nstep<<" "<<iHit<<"  "<<(int)(iHit+(nstep/2.0))<<"  "<<(int)(iHit+nstep)<<"\n";
-
-      auto posA = hitA.GetPosition();
-      auto posB = hitB.GetPosition();
-      auto posC = hitC.GetPosition();
-
-      double slopeAB = (posB.Y() - posA.Y()) / (posB.X() - posA.X()); // m1
-      double slopeBC = (posC.Y() - posB.Y()) / (posC.X() - posB.X()); // m2
-
-      double centerX = (slopeAB * slopeBC * (posA.Y() - posC.Y()) + slopeBC * (posB.X() + posA.X()) -
-                        slopeAB * (posB.X() + posC.X())) /
-                       (2.0 * (slopeBC - slopeAB));
-
-      double centerY = (-1 / slopeAB) * (centerX - (posB.X() + posA.X()) / 2.0) + (posB.Y() + posA.Y()) / 2.0;
-
-      // std::cout<<" Center "<<centerX<<" - "<<centerY<<"\n";
-
-      double radiusA = TMath::Sqrt(TMath::Power(posA.X() - centerX, 2) + TMath::Power(posA.Y() - centerY, 2));
-      radius_vec.push_back(radiusA);
-      double radiusB = TMath::Sqrt(TMath::Power(posB.X() - centerX, 2) + TMath::Power(posB.Y() - centerY, 2));
-      radius_vec.push_back(radiusB);
-      double radiusC = TMath::Sqrt(TMath::Power(posC.X() - centerX, 2) + TMath::Power(posC.Y() - centerY, 2));
-      radius_vec.push_back(radiusC);
-   }
-}
-
+/**
+ * @brief Set initial parameters for HC.
+ *
+ * In track, sets GeoTheta, GeoPhi, GeoCenter, GeoRadius.
+ */
 void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 {
 
@@ -365,7 +330,7 @@ void AtPATTERN::AtPRA::Clusterize3D(AtTrack &track, Float_t distance, Float_t ra
 
                if (checkDistance) {
                   hitCluster->SetCharge(hitQ);
-                  hitCluster->SetPosition(x, y, z);
+                  hitCluster->SetPosition({x, y, z});
                   hitCluster->SetTimeStamp(timeStamp);
                   TMatrixDSym cov(3); // TODO: Setting covariant matrix based on pad size and drift time resolution.
                                       // Using estimations for the moment.
@@ -511,7 +476,7 @@ void AtPATTERN::AtPRA::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Floa
 
                if (checkDistance) {
                   hitCluster->SetCharge(hitQ);
-                  hitCluster->SetPosition(x, y, z);
+                  hitCluster->SetPosition({x, y, z});
                   hitCluster->SetTimeStamp(timeStamp);
                   TMatrixDSym cov(3); // TODO: Setting covariant matrix based on pad size and drift time resolution.
                                       // Using estimations for the moment.
@@ -615,7 +580,7 @@ void AtPATTERN::AtPRA::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Floa
 
                   TVector3 clustPos(x, y, z);
                   hitCluster->SetCharge(hitQ);
-                  hitCluster->SetPosition(x, y, z);
+                  hitCluster->SetPosition({x, y, z});
                   hitCluster->SetTimeStamp(timeStamp);
                   TMatrixDSym cov(3); // TODO: Setting covariant matrix based on pad size and drift time resolution.
                                       // Using estimations for the moment.
@@ -715,7 +680,7 @@ void AtPATTERN::AtPRA::Clusterize3D(AtTrack &track)
                z /= hitTBArray.size();
 
                hitCluster->SetCharge(hitQ);
-               hitCluster->SetPosition(x, y, z);
+               hitCluster->SetPosition({x, y, z});
                hitCluster->SetTimeStamp(hitTBArray.at(0).GetTimeStamp());
                TMatrixDSym cov(3); // TODO: Setting covariant matrix based on pad size and drift time resolution. Using
                                    // estimations for the moment.
@@ -791,7 +756,7 @@ void AtPATTERN::AtPRA::Clusterize(AtTrack &track)
          x /= hitQ;
          y /= hitQ;
          hitCluster->SetCharge(hitQ);
-         hitCluster->SetPosition(x, y, hitTBArray.at(0).GetPosition().Z());
+         hitCluster->SetPosition({x, y, hitTBArray.at(0).GetPosition().Z()});
          hitCluster->SetTimeStamp(hitTBArray.at(0).GetTimeStamp());
          TMatrixDSym cov(3); // TODO: Setting covariant matrix based on pad size and drift time resolution. Using
                              // estimations for the moment.
@@ -879,3 +844,45 @@ bool AtPATTERN::AtPRA::kNN(const std::vector<AtHit> &hits, AtHit &hitRef, int k)
 
    return (T < fkNNDist) ? false : true;
 }
+
+/*
+void AtPATTERN::AtPRA::SetTrackCurvature(AtTrack &track)
+{
+   std::cout << " new track  "
+             << "\n";
+   std::vector<double> radius_vec;
+   std::vector<AtHit> hitArray = track.GetHitArray();
+   int nstep = 0.60 * hitArray.size(); // 20% of the hits to calculate the radius of curvature with less fluctuations
+
+   for (Int_t iHit = 0; iHit < (hitArray.size() - nstep); iHit++) {
+
+      AtHit hitA = hitArray.at(iHit);
+      AtHit hitB = hitArray.at((int)(iHit + (nstep / 2.0)));
+      AtHit hitC = hitArray.at((int)(iHit + nstep));
+
+      // std::cout<<nstep<<" "<<iHit<<"  "<<(int)(iHit+(nstep/2.0))<<"  "<<(int)(iHit+nstep)<<"\n";
+
+      auto posA = hitA.GetPosition();
+      auto posB = hitB.GetPosition();
+      auto posC = hitC.GetPosition();
+
+      double slopeAB = (posB.Y() - posA.Y()) / (posB.X() - posA.X()); // m1
+      double slopeBC = (posC.Y() - posB.Y()) / (posC.X() - posB.X()); // m2
+
+      double centerX = (slopeAB * slopeBC * (posA.Y() - posC.Y()) + slopeBC * (posB.X() + posA.X()) -
+                        slopeAB * (posB.X() + posC.X())) /
+                       (2.0 * (slopeBC - slopeAB));
+
+      double centerY = (-1 / slopeAB) * (centerX - (posB.X() + posA.X()) / 2.0) + (posB.Y() + posA.Y()) / 2.0;
+
+      // std::cout<<" Center "<<centerX<<" - "<<centerY<<"\n";
+
+      double radiusA = TMath::Sqrt(TMath::Power(posA.X() - centerX, 2) + TMath::Power(posA.Y() - centerY, 2));
+      radius_vec.push_back(radiusA);
+      double radiusB = TMath::Sqrt(TMath::Power(posB.X() - centerX, 2) + TMath::Power(posB.Y() - centerY, 2));
+      radius_vec.push_back(radiusB);
+      double radiusC = TMath::Sqrt(TMath::Power(posC.X() - centerX, 2) + TMath::Power(posC.Y() - centerY, 2));
+      radius_vec.push_back(radiusC);
+   }
+}
+*/

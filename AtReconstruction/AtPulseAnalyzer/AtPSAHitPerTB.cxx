@@ -1,4 +1,4 @@
-#include "AtPSAProtoFull.h"
+#include "AtPSAHitPerTB.h"
 
 #include <FairLogger.h>
 
@@ -25,7 +25,7 @@
 #endif
 */
 
-void AtPSAProtoFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
+void AtPSAHitPerTB::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 {
    Int_t numPads = rawEvent->GetNumPads();
    Double_t QEventTot = 0.0;
@@ -41,9 +41,6 @@ void AtPSAProtoFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       const AtPad *pad = rawEvent->GetPads().at(iPad).get();
       Int_t PadNum = pad->GetPadNum();
       Int_t PadHitNum = 0;
-      TVector3 HitPos;
-      Bool_t fValidBuff = kTRUE;
-      Bool_t fValidThreshold = kTRUE;
 
       auto pos = pad->GetPadCoord();
       Double_t zPos = 0;
@@ -57,8 +54,6 @@ void AtPSAProtoFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
       auto adc = pad->GetADC();
       Double_t floatADC[512] = {0};
-      Double_t dummy[512] = {0};
-      Int_t zeroPeak = 0;
 
       for (Int_t iTb = 0; iTb < fNumTbs; iTb++) {
          floatADC[iTb] = adc[iTb];
@@ -78,11 +73,6 @@ void AtPSAProtoFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
             if ((pos.X() < -9000 || pos.Y() < -9000) && pad->GetPadNum() != -1)
                std::cout << " AtPSAProtoFull::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum()
                          << std::endl;
-            // std::cout<<"  =============== Next Hit Variance Info  =============== "<<std::endl;
-            // std::cout<<" Hit Num : "<<hitNum<<"  - Hit Pos Rho2 : "<<HitPos.Mag2()<<"  - Hit Pos Rho :
-            // "<<HitPos.Mag()<<std::endl; std::cout<<" Hit Coordinates : "<<pos.X()<<"  -  "<<pos.Y()<<" - "<<zPos<<" -
-            // "<<std::endl; std::cout<<" Is Pad"<<pad->GetPadNum()<<" Valid? "<<pad->GetValidPad()<<std::endl;
-
          } // if Threshold
       }    // For iTb
 
@@ -96,4 +86,18 @@ void AtPSAProtoFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    event->SetEventCharge(QEventTot);
 }
 
-ClassImp(AtPSAProtoFull)
+void AtPSAHitPerTB::SetTBLimits(std::pair<Int_t, Int_t> limits)
+{
+   if (limits.first >= limits.second) {
+      std::cout << " Warning AtPSA::SetTBLimits -  Wrong Time Bucket limits. Setting default limits (0,512) ... "
+                << "\n";
+      fIniTB = 0;
+      fEndTB = 512;
+
+   } else {
+      fIniTB = limits.first;
+      fEndTB = limits.second;
+   }
+}
+
+ClassImp(AtPSAHitPerTB)

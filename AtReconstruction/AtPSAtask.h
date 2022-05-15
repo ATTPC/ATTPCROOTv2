@@ -2,15 +2,15 @@
 #define AtPSAtASK_H
 
 #include <Rtypes.h> // for THashConsistencyHolder, Bool_t, ClassDef, Opti...
-class TBuffer;
-class TClass;
-class TMemberInspector;
+#include <TClonesArray.h>
 
 // FAIRROOT classes
 #include <FairTask.h>
 
-// AtTPCROOT classes
 class AtPSA;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 // ROOT classes
 #include <TString.h>
@@ -18,21 +18,22 @@ class TClonesArray;
 
 class AtPSAtask : public FairTask {
 private:
-   TClonesArray *fRawEventArray{};
-   TClonesArray *fEventHArray;
-   TClonesArray *fMCPointArray{};
-
    TString fInputBranchName;
    TString fOutputBranchName;
    TString fSimulatedPointBranchName;
 
-   AtPSA *fPSA;
+   TClonesArray *fRawEventArray{nullptr};
+   TClonesArray *fMCPointArray{nullptr};
+   TClonesArray fEventArray;
 
-   Bool_t fIsPersistence;
+   std::unique_ptr<AtPSA> fPSA;
+
+   Bool_t fIsPersistence{false};
 
 public:
-   AtPSAtask(AtPSA *psaMethod);
-   ~AtPSAtask();
+   AtPSAtask(std::unique_ptr<AtPSA> psaMethod);
+   [[deprecated("Use AtPSAtask(unique_ptr<AtPSA>) instead")]] AtPSAtask(AtPSA *psaMethod);
+   ~AtPSAtask() = default;
 
    void SetPersistence(Bool_t value);
    void SetInputBranch(TString branchName);

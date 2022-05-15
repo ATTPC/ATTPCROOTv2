@@ -18,8 +18,17 @@ class TMemberInspector;
 
 namespace AtPATTERN {
 
+/**
+ * @brief Find patterns in hit clouds.
+ *
+ * Base class for finding tracks in a hit cloud. Right now, just supports HC.
+ *
+ *
+ */
 class AtPRA : public TObject {
 protected:
+   std::vector<AtTrack> fTrackCand; //< Candidate tracks
+
    AtDigiPar *fPar; ///< parameter container
 
    Int_t fMaxHits{5000};
@@ -36,16 +45,14 @@ protected:
 
 public:
    virtual ~AtPRA() = default;
-   virtual std::vector<AtTrack> GetTrackCand() = 0;
-   virtual std::unique_ptr<AtPatternEvent> FindTracks(AtEvent &event) = 0;
 
-   void SetTrackInitialParameters(AtTrack &track);
-   void PruneTrack(AtTrack &track);
+   // Getters
+   virtual std::vector<AtTrack> GetTrackCand() const { return fTrackCand; }
+
+   // Setters
    void SetMaxHits(Int_t maxHits) { fMaxHits = maxHits; }
    void SetMinHits(Int_t minHits) { fMinHits = minHits; }
    void SetMeanDistance(Float_t meanDistance) { fMeanDistance = meanDistance; }
-   bool kNN(const std::vector<AtHit> &hits, AtHit &hit, int k);
-
    void SetkNN(Double_t knn) { fKNN = knn; }
    void SetStdDevMulkNN(Double_t stdDevMul) { fStdDevMulkNN = stdDevMul; }
    void SetkNNDist(Double_t dist) { fkNNDist = dist; }
@@ -53,9 +60,23 @@ public:
 
    void SetCirclePCL(bool val) { fCirclePCL = val; }
    void SetAnglePCL(bool val) { fAnglePCL = val; }
+   // Public behavior
+   virtual std::unique_ptr<AtPatternEvent> FindTracks(AtEvent &event) = 0;
+
+   void PruneTrack(AtTrack &track);
+   bool kNN(const std::vector<AtHit> &hits, AtHit &hit, int k);
 
 protected:
-   void SetTrackCurvature(AtTrack &track);
+   // Functions that need to be moved to another class. They assume a curved track
+   /*
+    * Takes track and sets fGeo... parameters using SampleConsensus. I think these are then used
+    * as initial guesses for GenFit. Probably, this should be moved into the fitting classes instead of
+    * here. At the very least, it needs to be in a subclass that only deals with curved tracks, it
+    * would make no sense to apply this function to straight tracks.
+    */
+   void SetTrackInitialParameters(AtTrack &track);
+
+   // Clusterization methods
    void Clusterize(AtTrack &track);
    void Clusterize3D(AtTrack &track);
    void Clusterize3D(AtTrack &track, Float_t distance, Float_t radius);

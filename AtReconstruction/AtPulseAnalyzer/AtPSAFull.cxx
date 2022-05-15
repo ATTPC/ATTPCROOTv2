@@ -41,19 +41,10 @@ void AtPSAFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       Int_t PadNum = pad->GetPadNum();
       Int_t PadHitNum = 0;
       TVector3 HitPos;
-      TVector3 HitPosRot;
-      TRotation r;
-      TRotation ry;
-      TRotation rx;
-      r.RotateZ(272.0 * TMath::Pi() / 180.0);
-      ry.RotateY(180.0 * TMath::Pi() / 180.0);
-      rx.RotateX(6.0 * TMath::Pi() / 180.0);
 
       Double_t charge = 0;
       Int_t maxAdcIdx = 0;
       Int_t numPeaks = 0;
-
-      CalcLorentzVector();
 
       if (!(pad->IsPedestalSubtracted())) {
          LOG(ERROR) << "Pedestal should be subtracted to use this class!";
@@ -114,7 +105,7 @@ void AtPSAFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
          if ((pos.X() < -9000 || pos.Y() < -9000) && pad->GetPadNum() != -1)
             std::cout << " AtPSAFull::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum() << std::endl;
 
-         auto hit = event->AddHit(PadNum, XYZPoint(pos.X(), pos.Y(), zPos), charge);
+         auto &hit = event->AddHit(PadNum, XYZPoint(pos.X(), pos.Y(), zPos), charge);
          hit.SetTimeStamp(maxTime);
 
          PadMultiplicity.insert(std::pair<Int_t, Int_t>(PadNum, hit.GetHitID()));
