@@ -6,7 +6,7 @@ SET(ATTPCROOTPATH $ENV{VMCWORKDIR})
 list(APPEND CMAKE_PREFIX_PATH ${ATTPCROOTPATH}/build/install) #Need access to ATTPCROOT
 
 # Will also load all of its dependecies
-find_package(ATTPCROOT 1.0 REQUIRED)
+find_package(ATTPCROOT 0.3 REQUIRED)
 find_package(Curses)
 
 include_directories( INCLUDE_DIRECTORIES

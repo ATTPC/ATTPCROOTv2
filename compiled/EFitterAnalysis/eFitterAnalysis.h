@@ -117,9 +117,9 @@ public:
 
    // Getters
    std::shared_ptr<TTreeReader> GetReader() { return fReader; }
-   AtPatternEvent *GetPatternEve() { (AtPatternEvent *)fPatternEveArray->Get()->At(0); }
-   AtEvent *GetEve() { (AtEvent *)fEveArray->Get()->At(0); }
-   void GetAuxiliaryChannels(std::vector<AtPad> *auxPadArray);
+   AtPatternEvent *GetPatternEve() { return (AtPatternEvent *)fPatternEveArray->Get()->At(0); }
+   AtEvent *GetEve() { return (AtEvent *)fEveArray->Get()->At(0); }
+   void GetAuxiliaryChannels(const std::vector<AtAuxPad> &auxPadArray);
 
    // File management
    void ClearTree();

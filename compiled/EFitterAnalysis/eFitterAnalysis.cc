@@ -213,13 +213,13 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       AtTrack track = tracks.at(iTrack);
 
       std::cout << cYELLOW << " Track " << track.GetTrackID() << " with " << track.GetHitClusterArray()->size()
-                << " clusters and " << track.GetHitArray()->size() << " hits. " << cNORMAL << "\n";
+                << " clusters and " << track.GetHitArray().size() << " hits. " << cNORMAL << "\n";
 
       trackID = track.GetTrackID();
       trackIDVec.push_back(trackID);
 
-      if (track.GetIsNoise() || track.GetHitClusterArray()->size() < 3) {
-         std::cout << cRED << " Track is noise or has less than 3 clusters! " << cNORMAL << "\n";
+      if (track.GetHitClusterArray()->size() < 3) {
+         std::cout << cRED << " Track has less than 3 clusters! " << cNORMAL << "\n";
          continue;
       }
 
@@ -533,7 +533,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                      break;
                   auto dir = (*it).GetPosition() - (*std::next(it, 1)).GetPosition();
                   eloss += (*it).GetCharge();
-                  len = dir.Mag();
+                  len = std::sqrt(dir.Mag2());
                   dedx += (*it).GetCharge() / len;
                   // std::cout<<(*it).GetCharge()<<"\n";
                   it++;
@@ -550,7 +550,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                      break;
                   auto dir =
                      hitClusterArray->at(iHitClus).GetPosition() - hitClusterArray->at(iHitClus - 1).GetPosition();
-                  len = dir.Mag();
+                  len = std::sqrt(dir.Mag2());
                   eloss += hitClusterArray->at(iHitClus).GetCharge();
                   dedx += hitClusterArray->at(iHitClus).GetCharge() / len;
                   // std::cout<<len<<" - "<<eloss<<" - "<<hitClusterArray->at(iHitClus).GetCharge()<<"\n";
@@ -1145,11 +1145,11 @@ Bool_t FitManager::CompareTracks(AtTrack *trA, AtTrack *trB)
             // std::cout<<" Track B End : "<<endB<<"\n";
 
             if (iniA < iniB) {
-               dist = (endClusterA.GetPosition() - iniClusterB.GetPosition()).Mag();
+               dist = std::sqrt((endClusterA.GetPosition() - iniClusterB.GetPosition()).Mag2());
                distR = TMath::Sqrt(TMath::Power(endClusterA.GetPosition().X() - iniClusterB.GetPosition().X(), 2) +
                                    TMath::Power(endClusterA.GetPosition().Y() - iniClusterB.GetPosition().Y(), 2));
             } else {
-               dist = (endClusterB.GetPosition() - iniClusterA.GetPosition()).Mag();
+               dist = std::sqrt((endClusterB.GetPosition() - iniClusterA.GetPosition()).Mag2());
                distR = TMath::Sqrt(TMath::Power(iniClusterA.GetPosition().X() - endClusterB.GetPosition().X(), 2) +
                                    TMath::Power(iniClusterA.GetPosition().Y() - endClusterB.GetPosition().Y(), 2));
             }
@@ -1174,24 +1174,24 @@ Bool_t FitManager::CompareTracks(AtTrack *trA, AtTrack *trB)
 
 Bool_t FitManager::CheckOverlap(AtTrack *trA, AtTrack *trB)
 {
-   auto hitArrayA = trA->GetHitArray();
-   auto hitArrayB = trB->GetHitArray();
+   auto &hitArrayA = trA->GetHitArray();
+   auto &hitArrayB = trB->GetHitArray();
 
    Int_t iTBMatch = 0;
    std::vector<Int_t> iTBMatches;
 
-   for (auto itA = hitArrayA->begin(); itA != hitArrayA->end(); ++itA) {
+   for (auto itA = hitArrayA.begin(); itA != hitArrayA.end(); ++itA) {
 
-      auto itB = hitArrayB->begin();
-      while ((itB = std::find_if(itB, hitArrayB->end(), [&itA](AtHit &hitB) {
+      auto itB = hitArrayB.begin();
+      while ((itB = std::find_if(itB, hitArrayB.end(), [&itA](AtHit &hitB) {
                  return hitB.GetTimeStamp() == itA->GetTimeStamp();
-              })) != hitArrayB->end()) {
-         iTBMatches.push_back(std::distance(hitArrayB->begin(), itB));
+              })) != hitArrayB.end()) {
+         iTBMatches.push_back(std::distance(hitArrayB.begin(), itB));
          itB++;
       }
    }
 
-   Double_t shortStraw = (hitArrayA->size() < hitArrayB->size()) ? hitArrayA->size() : hitArrayB->size();
+   Double_t shortStraw = (hitArrayA.size() < hitArrayB.size()) ? hitArrayA.size() : hitArrayB.size();
    iTBMatch = iTBMatches.size();
    // TODO: % of overlap
    // std::cout<<" Overlap "<<shortStraw<<" "<<iTBMatch<<"\n";
