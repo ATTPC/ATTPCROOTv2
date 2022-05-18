@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"data_t20_10_20_cov01_dp/")
+void plotFit_full(std::string fileFolder = "data/")
 {
 
    // Data histograms
@@ -112,13 +112,13 @@ void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"
 
    TH1I *particleQH = new TH1I("particleQH", "particleQH", 21, -10.5, 10.5);
 
-   TH1I *eventMultH = new TH1I("eventMultH", "eventMultH", 10,0,10);
-   
+   TH1I *eventMultH = new TH1I("eventMultH", "eventMultH", 10, 0, 10);
+
    TH2F *ICEvsTime = new TH2F("ICEvsTime", "ICEvsTime", 1000, 0, 4095, 512, 0, 511);
 
    TH1F *ExZ[10];
 
-   TH2F *ELossvsBrho = new TH2F("ELossvsBrho", "ELossvsBrho", 2000, 0, 2000,1000, 0,10);
+   TH2F *ELossvsBrho = new TH2F("ELossvsBrho", "ELossvsBrho", 2000, 0, 2000, 1000, 0, 10);
 
    for (auto iHist = 0; iHist < 10; ++iHist)
       ExZ[iHist] = new TH1F(Form("ExZ[%i]", iHist), Form("ExZ[%i]", iHist), 1000, -2, 18);
@@ -128,17 +128,17 @@ void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"
 
    TH2F *QvsEvent = new TH2F("QvsEvent", "QvsEvent", 1000, -10, 10, 1000, 0, 1000);
 
-   TH2F *fOrbZvsfOrbLength = new TH2F("fOrbZvsfOrbLength", "fOrbZvsfOrbLength", 500,-250,250, 500, 0, 500);
-   TH2F *fOrbZvsEFit = new TH2F("fOrbZvsEFit", "fOrbZvsEFit", 1000,0,200, 1000, 0, 100);
-   TH2F *fOrbLengthvsEFit = new TH2F("fOrbLengthvsEFit", "fOrbLengthvsEFit", 500,0,500, 1000, 0, 100);
-   TH1F *PhiOrbZH = new TH1F("PhiOrbZH", "PhiOrbZH", 1000,0,100);
-   TH2F *fOrbZvsEx = new TH2F("fOrbZvsEx","fOrbZvsEx",200,0,200,100,-10,10);
-   TH2F *fOrbZvsZ = new TH2F("fOrbZvsZ", "fOrbZvsZ", 1000,-200,200,1000,-200,200);
+   TH2F *fOrbZvsfOrbLength = new TH2F("fOrbZvsfOrbLength", "fOrbZvsfOrbLength", 500, -250, 250, 500, 0, 500);
+   TH2F *fOrbZvsEFit = new TH2F("fOrbZvsEFit", "fOrbZvsEFit", 1000, 0, 200, 1000, 0, 100);
+   TH2F *fOrbLengthvsEFit = new TH2F("fOrbLengthvsEFit", "fOrbLengthvsEFit", 500, 0, 500, 1000, 0, 100);
+   TH1F *PhiOrbZH = new TH1F("PhiOrbZH", "PhiOrbZH", 1000, 0, 100);
+   TH2F *fOrbZvsEx = new TH2F("fOrbZvsEx", "fOrbZvsEx", 200, 0, 200, 100, -10, 10);
+   TH2F *fOrbZvsZ = new TH2F("fOrbZvsZ", "fOrbZvsZ", 1000, -200, 200, 1000, -200, 200);
    TH1F *HQCorrOrbZ = new TH1F("HQCorrOrbZ", "HQCorrOrbZ", 600, -5, 55);
-   TH2F *fOrbZvsAFit = new TH2F("fOrbZvsAFit", "fOrbZvsAFit", 1000,0,200, 720, 0, 180);
-   TH2F *fOrbZvsMomLoss = new TH2F("fOrbZvsMomLoss", "fOrbZvsMomLoss", 1000,0,200, 100, 0, 10);
-   TH2F *fOrbLengthvsMomLoss = new TH2F("fOrbLengthvsMomLoss", "fOrbLengthvsMomLoss", 500,0,500, 100, 0, 10);
-   
+   TH2F *fOrbZvsAFit = new TH2F("fOrbZvsAFit", "fOrbZvsAFit", 1000, 0, 200, 720, 0, 180);
+   TH2F *fOrbZvsMomLoss = new TH2F("fOrbZvsMomLoss", "fOrbZvsMomLoss", 1000, 0, 200, 100, 0, 10);
+   TH2F *fOrbLengthvsMomLoss = new TH2F("fOrbLengthvsMomLoss", "fOrbLengthvsMomLoss", 500, 0, 500, 100, 0, 10);
+
    // Cut for gs 75-76 mm vertex
    TCutG *cutGS = new TCutG("CUTGS", 8);
    cutGS->SetVarX("Ang_Ener_Xtr");
@@ -169,15 +169,15 @@ void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"
    Double_t m_a = 4.00260325415 * 931.49401;
    Double_t m_O16 = 15.99491461956 * 931.49401;
 
-   Double_t Ebeam_buff = 107.0;//90.5; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
+   Double_t Ebeam_buff = 90.5; //(EnergyRecoil + EnergySca + ex_energy[iFile]);
    Double_t m_b;
    Double_t m_B;
 
-   m_b = m_He3;
-   m_B = m_Li9;
+   m_b = m_p;
+   m_B = m_Be11;
 
    // Find every valid file
-   std::system("find ./data_200_400 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
+   std::system("find ./data -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
    // >test.txt"
    // std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
    std::ifstream file;
@@ -215,7 +215,7 @@ void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"
          std::cout << " Opening file : " << dataFile << "\n";
          TTree *outputTree = (TTree *)rootfile.Get("outputTree");
          Float_t EFit, AFit, EPRA, APRA, Ex, PhiFit, PhiPRA, xiniPRA, yiniPRA, ziniPRA, xiniFit, yiniFit, ziniFit, IC;
-         Int_t ICMult,evMult;
+         Int_t ICMult, evMult;
          outputTree->SetBranchAddress("EFit", &EFit);
          outputTree->SetBranchAddress("AFit", &AFit);
          outputTree->SetBranchAddress("PhiFit", &PhiFit);
@@ -231,8 +231,8 @@ void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"
          outputTree->SetBranchAddress("ziniPRA", &ziniPRA);
          outputTree->SetBranchAddress("IC", &IC);
          outputTree->SetBranchAddress("ICMult", &ICMult);
-	 outputTree->SetBranchAddress("evMult", &evMult);
-	 
+         outputTree->SetBranchAddress("evMult", &evMult);
+
          std::vector<Float_t> *EFitVec = 0;
          std::vector<Float_t> *AFitVec = 0;
          std::vector<Float_t> *PhiFitVec = 0;
@@ -264,17 +264,16 @@ void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"
          std::vector<Float_t> *bNdfVec = 0;
          std::vector<Float_t> *ICEVec = 0;
          std::vector<Float_t> *particleQVec = 0;
-	 std::vector<Float_t> *POCAOrbZVec = 0;
-	 std::vector<Float_t> *firstOrbZVec = 0;
-	 std::vector<Float_t> *phiOrbZVec = 0;
-	 std::vector<Float_t> *lengthOrbZVec = 0;
-	 std::vector<Float_t> *eLossOrbZVec = 0;
-	 std::vector<Float_t> *brhoVec = 0;
-	 std::vector<Float_t> *eLossADC = 0;
-	 std::vector<std::string> *pdgVec = 0;
+         std::vector<Float_t> *POCAOrbZVec = 0;
+         std::vector<Float_t> *firstOrbZVec = 0;
+         std::vector<Float_t> *phiOrbZVec = 0;
+         std::vector<Float_t> *lengthOrbZVec = 0;
+         std::vector<Float_t> *eLossOrbZVec = 0;
+         std::vector<Float_t> *brhoVec = 0;
+         std::vector<Float_t> *eLossADC = 0;
+         std::vector<std::string> *pdgVec = 0;
          std::vector<Int_t> *trackPointsVec = 0;
 
-	 
          outputTree->SetBranchAddress("EFitVec", &EFitVec);
          outputTree->SetBranchAddress("AFitVec", &AFitVec);
          outputTree->SetBranchAddress("PhiFitVec", &PhiFitVec);
@@ -306,17 +305,16 @@ void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"
          outputTree->SetBranchAddress("bNdfVec", &bNdfVec);
          outputTree->SetBranchAddress("ICEVec", &ICEVec);
          outputTree->SetBranchAddress("particleQVec", &particleQVec);
-         outputTree->SetBranchAddress("POCAOrbZVec",&POCAOrbZVec);
-         outputTree->SetBranchAddress("firstOrbZVec",&firstOrbZVec);
-         outputTree->SetBranchAddress("phiOrbZVec",&phiOrbZVec);
-         outputTree->SetBranchAddress("lengthOrbZVec",&lengthOrbZVec);
-	 outputTree->SetBranchAddress("eLossOrbZVec",&eLossOrbZVec);
-	 outputTree->SetBranchAddress("brhoVec", &brhoVec);
-	 outputTree->SetBranchAddress("eLossADC", &eLossADC);
-	 outputTree->SetBranchAddress("pdgVec", &pdgVec);
-	 outputTree->SetBranchAddress("trackPointsVec", &trackPointsVec);
+         outputTree->SetBranchAddress("POCAOrbZVec", &POCAOrbZVec);
+         outputTree->SetBranchAddress("firstOrbZVec", &firstOrbZVec);
+         outputTree->SetBranchAddress("phiOrbZVec", &phiOrbZVec);
+         outputTree->SetBranchAddress("lengthOrbZVec", &lengthOrbZVec);
+         outputTree->SetBranchAddress("eLossOrbZVec", &eLossOrbZVec);
+         outputTree->SetBranchAddress("brhoVec", &brhoVec);
+         outputTree->SetBranchAddress("eLossADC", &eLossADC);
+         outputTree->SetBranchAddress("pdgVec", &pdgVec);
+         outputTree->SetBranchAddress("trackPointsVec", &trackPointsVec);
 
-	 
          ++fileCnt;
 
          Int_t nentries = (Int_t)outputTree->GetEntries();
@@ -332,9 +330,9 @@ void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"
             if (ICMult != 1)
                continue;
 
-	    //if(evMult !=2)
-	    //continue;
-	    
+            // if(evMult !=2)
+            // continue;
+
             Int_t ICIndex = 0;
             Int_t iQindex = 0;
             Float_t ICQ = 0;
@@ -384,35 +382,34 @@ void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"
 
             for (auto index = 0; index < EFitVec->size(); ++index) {
 
-	      //if((*lengthOrbZVec)[index]<30)
-		// continue;
+               // if((*lengthOrbZVec)[index]<30)
+               // continue;
 
-	      //if((*brhoVec)[index]>0.8)
-	        // continue;
+               // if((*brhoVec)[index]>0.8)
+               // continue;
 
-	      //if((*eLossADC)[index]>50)
-		//continue;
+               // if((*eLossADC)[index]>50)
+               // continue;
 
-	      // if((*AFitVec)[index]<8 || (*AFitVec)[index]>19)
-	      //continue;
-	      
-	      Double_t rad = TMath::Sqrt((*xiniFitXtrVec)[index] * (*xiniFitXtrVec)[index] +
+               // if((*AFitVec)[index]<8 || (*AFitVec)[index]>19)
+               // continue;
+
+               Double_t rad = TMath::Sqrt((*xiniFitXtrVec)[index] * (*xiniFitXtrVec)[index] +
                                           (*yiniFitXtrVec)[index] * (*yiniFitXtrVec)[index]);
 
                Ang_Ener_PRA->Fill(APRA, EPRA);
 
                PhiPRAH->Fill(PhiPRA);
 
-	       ELossvsBrho->Fill((*eLossADC)[index],(*brhoVec)[index]);
-           
-	       eventMultH->Fill(evMult);
-	       
+               ELossvsBrho->Fill((*eLossADC)[index], (*brhoVec)[index]);
+
+               eventMultH->Fill(evMult);
+
                // if( ((*xiniFitXtrVec)[index]>0.5 || (*xiniFitXtrVec)[index]<-0.5) )
                // continue;
                // if( ((*yiniFitXtrVec)[index]>0.5 || (*yiniFitXtrVec)[index]<-0.5) )
                //		 continue;
 
-	       
                if ((*POCAXtrVec)[index] < 2000.0) {
 
                   if ((*ziniFitXtrVec)[index] > -20.0 && (*ziniFitXtrVec)[index] < 200.0) {
@@ -464,8 +461,7 @@ void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"
 
                                        // 	  	}//IC
 
-
-				        // HIC->Fill(IC);
+                                       // HIC->Fill(IC);
                                        ICMultH->Fill(ICMult);
 
                                        // HQval->Fill(Ex);
@@ -531,11 +527,10 @@ void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"
 
                                        QvsTrackLengthH->Fill(QcorrZ, (*trackLengthVec)[index]);
 
-				       //First Orbit
-                                       //if ((*phiOrbZVec)[index] > 5.5 && (*phiOrbZVec)[index] < 14.8) {
+                                       // First Orbit
+                                       if ((*phiOrbZVec)[index] > 5.0 && (*phiOrbZVec)[index] < 8.0) {
                                           Double_t OrbZ = (*firstOrbZVec)[index];
-                                          //if ((*lengthOrbZVec)[index] > 25 && OrbZ > 0.0 && QcorrZ > -0.3 &&
-					  //  QcorrZ < 2.0) {
+                                          if ((*lengthOrbZVec)[index] > 20) {
                                              fOrbZvsfOrbLength->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index],
                                                                      (*lengthOrbZVec)[index]);
                                              PhiOrbZH->Fill((*phiOrbZVec)[index]);
@@ -550,8 +545,8 @@ void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"
                                              fOrbZvsMomLoss->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index],
                                                                   (*eLossOrbZVec)[index]);
                                              fOrbLengthvsMomLoss->Fill((*lengthOrbZVec)[index], (*eLossOrbZVec)[index]);
-					     //}
-					     //}
+                                          }
+                                       }
 
                                        if ((*ziniFitXtrVec)[index] > 0.0 && (*ziniFitXtrVec)[index] < 100.0) {
                                           Int_t zIndex = (Int_t)floor((*ziniFitXtrVec)[index] / 10);
@@ -835,7 +830,7 @@ void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"
    QvsChi2->Draw("zcol");
    cChi->cd(7);
    particleQH->Draw();
-   //cChi->cd(8);
+   // cChi->cd(8);
 
    TCanvas *cOrb = new TCanvas();
    cOrb->Divide(3, 4);
@@ -860,7 +855,7 @@ void plotFit_full_dp(std::string fileFolder = "data_200_400/") //"dataFull/")//"
    fOrbZvsMomLoss->Draw();
    cOrb->cd(10);
    fOrbLengthvsMomLoss->Draw();
-   
+
    TCanvas *c8 = new TCanvas();
    c8->Divide(2, 2);
    c8->Draw();

@@ -385,8 +385,6 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
       return nullptr;
    }
 
-   // gfTrack->prune("FCW");
-
    genfit::FitStatus *fitStatus;
    try {
       if (fVerbosity > 0) {

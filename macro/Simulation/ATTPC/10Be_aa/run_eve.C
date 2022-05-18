@@ -1,11 +1,12 @@
-void run_eve(TString InputDataFile = "Be10_aa_inelastic_3body_4AMeV.root",
-             TString OutputDataFile = "output.reco_display.root", TString unpackDir = "/Simulation/ATTPC/10Be_aa/")
+void run_eve(TString InputDataFile = "output_digi.root", TString OutputDataFile = "output.reco_display.root",
+             TString unpackDir = "/Simulation/ATTPC/10Be_aa/")
 {
   FairLogger *fLogger = FairLogger::GetLogger();
   fLogger -> SetLogToScreen(kTRUE);
   fLogger->SetLogVerbosityLevel("MEDIUM");
   TString dir = getenv("VMCWORKDIR");
   TString geoFile = "ATTPC_He1bar_v2_geomanager.root";
+
 
   TString InputDataPath = dir + "/macro/"+ unpackDir + InputDataFile;
   TString OutputDataPath = dir + "/macro/"+ unpackDir + OutputDataFile;

@@ -60,7 +60,6 @@ void plotFit(std::string fileFolder = "data/")
    TH1F *hypos_fit_Xtr = new TH1F("hypos_fit_Xtr", "hypos_fit_Xtr", 100, -10, 10);
    TH1F *hzpos_fit_Xtr = new TH1F("hzpos_fit_Xtr", "hzpos_fit_Xtr", 200, -100, 100);
 
-   
    // PRA
    TH2F *Ang_Ener_PRA = new TH2F("Ang_Ener_PRA", "Ang_Ener_PRA", 720, 0, 179, 1000, 0, 100.0);
 
@@ -118,7 +117,7 @@ void plotFit(std::string fileFolder = "data/")
       std::istringstream iss(line);
       if (line.find(fileType) != std::string::npos) {
          std::cout << " Found fit file : " << line << "\n";
-         //files.push_back(fileFolder + line);
+         // files.push_back(fileFolder + line);
          files.push_back(line);
       }
    }
@@ -303,9 +302,9 @@ void plotFit(std::string fileFolder = "data/")
                Ang_Ener_PRA->Fill(APRA, EPRA);
 
                // HQval->Fill(Ex);
-               //hxpos_fit->Fill(xiniFit);
-               //hypos_fit->Fill(yiniFit);
-               //hzpos_fit->Fill(ziniFit);
+               // hxpos_fit->Fill(xiniFit);
+               // hypos_fit->Fill(yiniFit);
+               // hzpos_fit->Fill(ziniFit);
 
                QvsAng->Fill(Ex, AFit);
                QvsZpos->Fill(Ex, ziniFit);
@@ -316,12 +315,12 @@ void plotFit(std::string fileFolder = "data/")
                Ang_Phi->Fill(AFit, PhiFit * TMath::RadToDeg());
                x_Phi->Fill(xiniFit, PhiFit * TMath::RadToDeg());
                y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
-               
+
                QvsXpos->Fill(Ex, xiniFit);
 
                // Excitation energy
                // Double_t ex_energy_exp = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, AFit*TMath::DegToRad(),EFit);
-                //HQval->Fill(Ex);
+               // HQval->Fill(Ex);
             }
          }
       }
@@ -364,7 +363,6 @@ void plotFit(std::string fileFolder = "data/")
       std::cout << " Warning : No Kinematics file found for this reaction!" << std::endl;
 
    TGraph *Kine_AngRec_EnerRec_9AMeV = new TGraph(numKin, ThetaLabRec, EnerLabRec);
-
 
    fileKine = "Be10pp_in_2+1.txt";
    std::ifstream *kineStr2 = new std::ifstream(fileKine.Data());
@@ -423,9 +421,9 @@ void plotFit(std::string fileFolder = "data/")
    Kine_AngRec_EnerRec->Draw("SAME");
    Kine_AngRec_EnerRec_in->SetLineWidth(1);
    Kine_AngRec_EnerRec_in->SetLineColor(kBlue);
-    Kine_AngRec_EnerRec_9AMeV->SetLineWidth(1);
-      Kine_AngRec_EnerRec_9AMeV->SetLineColor(kGreen+10);
-      Kine_AngRec_EnerRec_9AMeV->Draw("SAME");
+   Kine_AngRec_EnerRec_9AMeV->SetLineWidth(1);
+   Kine_AngRec_EnerRec_9AMeV->SetLineColor(kGreen + 10);
+   Kine_AngRec_EnerRec_9AMeV->Draw("SAME");
 
    Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp->SetLineWidth(1);

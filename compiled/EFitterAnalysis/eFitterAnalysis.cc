@@ -3,13 +3,19 @@
 int main(int argc, char *argv[])
 {
 
+   // TODO Hardcoded parameters in fitter constructor
+   // fEnableMerging = 1;
+   // fEnableSingleVertexTrack = 1;
+
    // Work directory
    TString dir = getenv("VMCWORKDIR");
 
    // Geometry file
-   TString geoManFile = dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
+   TString geoManFile =
+      dir + "/geometry/ATTPC_He1bar_v2_geomanager.root"; // dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
    // Ion list file
-   std::string ionList = "/mnt/analysis/e20020/ATTPCROOTv2_develop/resources/ionFitLists/e20009_ionList.xml";
+   std::string ionList =
+      "/mnt/analysis/e20020/ATTPCROOTv2_develop/resources/ionFitLists/e20020_ionList.xml"; //"/mnt/analysis/e20020/ATTPCROOTv2_develop/resources/ionFitLists/e20009_ionList.xml";
 
    // Analysis flow parameters
    std::size_t firstEvt = 0;
@@ -18,11 +24,12 @@ int main(int argc, char *argv[])
    TString inputFileName = "";
    bool fitDirection = 0; // 0: Forward (d,d) - 1: Backwards (d,p)
    bool simulationConv = 0;
-   bool enableMerging = 0;
+   bool enableMerging = 1;
+   bool enableSingleVertexTrack = 0;
 
    // Physics parameters
    Float_t magneticField = 3.0;        // T
-   Float_t gasMediumDensity = 0.13129; // mg/cm3
+   Float_t gasMediumDensity = 0.1533;  //  0.1533 mg/cm3 (a,a) - 0.13129 mg/cm3 (d,p)
 
    //  Arguments
    if (argc == 7) {
@@ -39,6 +46,9 @@ int main(int argc, char *argv[])
       std::cout << " Fit direction : " << fitDirection << "\n";
       std::cout << " Simulation ? " << simulationConv << "\n";
       std::cout << " Interactive mode ? : " << fInteractiveMode << cNORMAL << "\n";
+      std::cout << " Merging ? : " << enableMerging << "\n";
+      std::cout << " Single Vertex Track ? "
+                << "\n";
 
    } else {
       std::cout << " Wrong number of arguments. Expecting 7: first_event last_event interactive_mode_bool "
@@ -53,10 +63,10 @@ int main(int argc, char *argv[])
    TString outputFileName;
 
    if (simulationConv) {
-      filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/";
+      filePath = dir + "/macro/Simulation/ATTPC/16O_aa_v2/"; //"/macro/Simulation/ATTPC/10Be_dp/";
       simFile = "_sim_";
    } else {
-      filePath = dir + "/macro/Unpack_HDF5/e20009/rootFiles/";
+      filePath = dir + "/macro/Unpack_HDF5/e20020/data_t30_dv_0_87_cl1020/"; //"/macro/Unpack_HDF5/e20009/rootFiles/";
       simFile = "";
    }
 
@@ -83,6 +93,8 @@ int main(int argc, char *argv[])
    fitManager->SetOutputFile(outputFileName);
    fitManager->SetFitters(simulationConv);
    fitManager->SetFitDirection(fitDirection);
+   fitManager->EnableMerging(enableMerging);
+   fitManager->EnableSingleVertexTrack(enableSingleVertexTrack);
 
    if (fInteractiveMode)
       fitManager->EnableGenfitDisplay();
@@ -153,6 +165,7 @@ FitManager::FitManager(std::string list)
    fGasDensity = 0.0;
    fEnableMerging = 0;
    fFitDirection = 0;
+   fEnableSingleVertexTrack = 0;
 
    fKinematics = std::make_shared<AtTools::AtKinematics>();
 
@@ -184,16 +197,23 @@ FitManager::~FitManager() {}
 Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
 {
 
+   // TODO
+   Double_t distThres = 150.0;
+
    // Merge tracks and calculate directions
    std::vector<AtTrack> mergedTrackPool;
-   std::vector<AtTrack> junkTrackPool;
-   std::vector<AtTrack> candTrackPool;
+   std::vector<AtTrack *> candTrackPool;
    Int_t eventMultiplicity = 0;
-   
-   for (auto track : tracks) {
+
+   auto sp = std::unique_ptr<AtTrack[]>(new AtTrack[tracks.size()]);
+
+   // for (auto track : tracks) {
+
+   for (auto iTrack = 0; iTrack < tracks.size(); ++iTrack) {
+      AtTrack track = tracks.at(iTrack);
 
       std::cout << cYELLOW << " Track " << track.GetTrackID() << " with " << track.GetHitClusterArray()->size()
-                << " clusters " << cNORMAL << "\n";
+                << " clusters and " << track.GetHitArray()->size() << " hits. " << cNORMAL << "\n";
 
       trackID = track.GetTrackID();
       trackIDVec.push_back(trackID);
@@ -202,8 +222,6 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
          std::cout << cRED << " Track is noise or has less than 3 clusters! " << cNORMAL << "\n";
          continue;
       }
-
-      
 
       // Track merging
       Double_t theta = track.GetGeoTheta();
@@ -262,7 +280,8 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       }
 
       // This is just to select distances
-      std::cout << cBLUE << "   Initial position : " << xiniPRA << " - " << yiniPRA << " - " << ziniPRA << "\n";
+      std::cout << cBLUE << "   Track ID " << track.GetTrackID() << "\n";
+      std::cout << "   Initial position : " << xiniPRA << " - " << yiniPRA << " - " << ziniPRA << "\n";
       std::cout << "   Second position : " << secPos.X() << " - " << secPos.Y() << " - " << secPos.Z() << "\n";
       std::cout << "   End position : " << endPos.X() << " - " << endPos.Y() << " - " << zEndCal << "\n";
       std::cout << "   Theta (convention) : " << thetaConv << " - Phi Clus : " << phiClus * TMath::RadToDeg() << "\n";
@@ -271,54 +290,76 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
 
       // Skip tracks that are far from Z (to be checked against number of iterations for extrapolation)
       Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
-
       std::cout << KRED << "    Distance to Z " << dist << cNORMAL << "\n";
-      if (dist > 100.0) { // mm
-         junkTrackPool.push_back(track);
-      } else {
-         std::cout << KGRN << "    ---- Adding track candidate " << cNORMAL << "\n";
-         candTrackPool.push_back(track);
+      std::cout << KGRN << "    ---- Adding track candidate " << cNORMAL << "\n";
+      track.SetVertexToZDist(dist);
+      if (!fEnableMerging && dist > distThres)
+         continue;
+      else {
+         sp[iTrack] = track;
+         candTrackPool.push_back(std::move(&sp[iTrack]));
       }
 
    } // Tracks
 
-   if (fEnableMerging) {
-      // TODO: Review merging algorithm without fitDirection
-      fFitter->MergeTracks(&candTrackPool, &junkTrackPool, &mergedTrackPool, fFitDirection, fSimulationConv);
+   // Find candidate tracks closer to vertex and discard duplicated
+
+   std::vector<AtTrack *> candToMergePool;
+
+   if (fEnableMerging && !fSimulationConv) { // TODO: Not adapted to simulation yet
+
+      for (auto itA = candTrackPool.begin(); itA != candTrackPool.end(); ++itA) {
+         candToMergePool.clear();
+         AtTrack *trA = *(itA);
+
+         auto itB = std::copy_if(itA + 1, candTrackPool.end(), std::back_inserter(candToMergePool),
+                                 [&trA, this](AtTrack *track) { return CompareTracks(trA, track); });
+
+         if (candToMergePool.size() > 0) { // Merge if matches are found
+            candToMergePool.push_back(trA);
+            Bool_t merged = fFitter->MergeTracks(&candToMergePool, &mergedTrackPool, fEnableSingleVertexTrack);
+
+         } else {
+            if (!trA->GetIsMerged() && trA->GetVertexToZDist() < distThres)
+               mergedTrackPool.push_back(*trA);
+         }
+
+         // std::cout<<" Merged track pool size "<<mergedTrackPool.size()<<" - candidate to merge pool size
+         // "<<candToMergePool.size()<<"\n";
+      }
+
    } else {
-      mergedTrackPool = candTrackPool;
+      for (auto track : candTrackPool)
+         mergedTrackPool.push_back(*track);
    }
 
+   std::cout << "\n";
    std::cout << KGRN << "    Candidate/Merged Tracks Pool Size : " << mergedTrackPool.size() << "\n";
    std::cout << "    Been merged? " << fEnableMerging << "\n";
    std::cout << "    Tracks prepared. Proceeding with fits. " << cNORMAL << "\n";
    std::cout << "\n";
 
-
    eventMultiplicity = mergedTrackPool.size();
-   
+
    // Fitting track candidates
    for (auto track : mergedTrackPool) {
 
-      if (fEnableMerging) {
-         std::cerr << cRED << " Error! Phi calculation after merging not implemented yet! Exiting..."
-                   << "\n";
-         std::exit(0);
-         // Placeholder for future
-         track.ResetHitClusterArray();
-         ClusterizeSmooth3D(track, 10.0, 30.0); // Reclusterizing
-      }
-
-      //Reclusterization
-      track.ResetHitClusterArray();
-      ClusterizeSmooth3D(track, 5.0, 10.0); // Reclusterizing
+      //////////////////////////TODO
+      /*if (fEnableMerging) {
+          std::cerr << cRED << " Error! Phi calculation after merging not implemented yet! Exiting..."
+                    << cNORMAL <<"\n";
+          std::exit(0);
+          // Placeholder for future
+          track.ResetHitClusterArray();
+          ClusterizeSmooth3D(track, 10.0, 30.0); // Reclusterizing
+       }*/
 
       Double_t theta = track.GetGeoTheta();
       Double_t radius = track.GetGeoRadius() / 1000.0; // mm to m
       Double_t phi = track.GetGeoPhi();
       Double_t brho = fMagneticField * radius / TMath::Sin(theta); // Tm
       Double_t points = track.GetHitArray().size();
-      
+
       std::cout << "      Merged track - Theta : " << theta * TMath::RadToDeg() << " Phi : " << phi * TMath::RadToDeg()
                 << "\n";
 
@@ -326,6 +367,10 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       AtHitCluster iniCluster;
       Double_t zIniCal = 0;
       XYZPoint iniPos;
+
+      // for(auto hitCluster : *hitClusterArray)
+      // std::cout<<" Cluster hit "<<hitCluster.GetHitID()<<" - "<<hitCluster.GetPosition().X()<<" -
+      // "<<hitCluster.GetPosition().Y()<<" - "<<1000.0-hitCluster.GetPosition().Z()<<"\n";
 
       // Variable for convention (simulation comes reversed)
       Double_t thetaConv;
@@ -355,8 +400,8 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                 << ziniPRA << cNORMAL << "\n";
 
       // Skip border angles
-      if (theta * TMath::RadToDeg() < 5 || theta * TMath::RadToDeg() > 175)
-         continue;
+      //    if (theta * TMath::RadToDeg() < 5 || theta * TMath::RadToDeg() > 175)
+      // continue;
       // Skip tracks that are far from Z (to be checked against number of iterations for extrapolation)
       Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
 
@@ -371,25 +416,22 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       std::vector<Int_t> pdgCandFit;
       if (thetaConv > 90) {
 
-	//continue;
-         pdgCandFit.push_back(2212);
-      } else if (thetaConv < 90 && thetaConv > 20) { // NB: Excluding heavy recoils
-
-	//continue;
-	 pdgCandFit.push_back(2212);
+         // continue;
+         // pdgCandFit.push_back(2212);
          pdgCandFit.push_back(1000010020);
 
-      }else if(thetaConv>12 && thetaConv < 20){
+      } else if (thetaConv < 90 && thetaConv > 0) { // NB: Excluding heavy recoils
 
-	continue;
-	pdgCandFit.push_back(1000020030);
+         pdgCandFit.push_back(1000020040);
+         // continue;
+         // pdgCandFit.push_back(2212);
+         // pdgCandFit.push_back(1000010020);
 
-      } else if (thetaConv < 12) {
+      } else if (thetaConv < 0) {
 
-	//continue;
-	pdgCandFit.push_back(1000040100);
-	pdgCandFit.push_back(1000040110);
-
+         // continue;
+         // pdgCandFit.push_back(1000040100);
+         // pdgCandFit.push_back(1000040110);
       }
 
       try {
@@ -426,6 +468,8 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                M_Ener = massNumber * 931.49401 / 1000.0;
             }
 
+            // Kinematics from PRA
+
             std::tuple<Double_t, Double_t> mom_ener = fKinematics->GetMomFromBrho(massNumber, atomicNumber, brho);
             EPRA = std::get<1>(mom_ener) * 1000.0;
             APRA = theta * TMath::RadToDeg();
@@ -433,15 +477,12 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
 
             // Extract info from Fit track
 
-            if (fitTrack == nullptr)
-               continue;
+            pdgVec.push_back(std::to_string(pdg));
 
-	    pdgVec.push_back(std::to_string(pdg));
-	    
             TVector3 pos_res;
             TVector3 mom_res;
             TMatrixDSym cov_res;
-            // Double_t pVal = 0;
+
             Double_t bChi2 = 0, fChi2 = 0, bNdf = 0, fNdf = 0;
             Double_t distance = -100;
             Double_t POCA = 1E6;
@@ -458,41 +499,70 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
             Double_t lengthOrbZ = 0.0;
             Double_t eLossOrbZ = 0.0;
 
-	    Double_t len = 0;
-	    Double_t eloss = 0;
+            // Reset variables assigned in fitting
+            pVal = -1;
+            trackLength = 0;
+            xiniFitXtr = -1000.0;
+            yiniFitXtr = -1000.0;
+            ziniFitXtr = -1E4;
+            xiniFit = -1000.0;
+            yiniFit = -1000.0;
+            ziniFit = -1E4;
+            POCAXtr = -1000.0;
+            EFit = -10.0;
+            EFitXtr = -10.0;
+            AFit = 0.0;
+            PhiFit = 0.0;
+            particleQ = -10.0;
 
-	    //Energy loss from ADC
-		     auto hitClusterArray = track.GetHitClusterArray();
+            // PID
+            Double_t len = 0;
+            Double_t eloss = 0;
+            Double_t dedx = 0;
 
-		     if(thetaConv<90){
-		      auto it = hitClusterArray->rbegin();
-		      while (it != hitClusterArray->rend())
-                      {
-			
-			auto dir = (*it).GetPosition() - (*std::next(it,1)).GetPosition();
-			eloss+= (*it).GetCharge();
-			len+= sqrt(dir.Mag2());
-			//std::cout<<(*it).GetCharge()<<"\n";
-		        it++;
-		      }
-		     }else if(thetaConv>90){
-		     
-		     eloss+= hitClusterArray->at(0).GetCharge();
-		     
-		     for(auto iHitClus =1; iHitClus<hitClusterArray->size();++iHitClus)
-		       {
-			 auto dir = hitClusterArray->at(iHitClus).GetPosition() - hitClusterArray->at(iHitClus-1).GetPosition();
-			 len+= sqrt(dir.Mag2());
-			 eloss+= hitClusterArray->at(iHitClus).GetCharge();
-			 //std::cout<<len<<" - "<<eloss<<" - "<<hitClusterArray->at(iHitClus).GetCharge()<<"\n";
-		       }  
+            // Energy loss from ADC
+            auto hitClusterArray = track.GetHitClusterArray();
+            std::size_t cnt = 0;
 
-		     }
+            if (thetaConv < 90) {
 
-		     eloss/=len;
-		     
-		    
-	    
+               auto it = hitClusterArray->rbegin();
+               while (it != hitClusterArray->rend()) {
+
+                  if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.75)
+                     break;
+                  auto dir = (*it).GetPosition() - (*std::next(it, 1)).GetPosition();
+                  eloss += (*it).GetCharge();
+                  len = dir.Mag();
+                  dedx += (*it).GetCharge() / len;
+                  // std::cout<<(*it).GetCharge()<<"\n";
+                  it++;
+                  ++cnt;
+               }
+            } else if (thetaConv > 90) {
+
+               eloss += hitClusterArray->at(0).GetCharge();
+
+               cnt = 1;
+               for (auto iHitClus = 1; iHitClus < hitClusterArray->size(); ++iHitClus) {
+
+                  if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.75)
+                     break;
+                  auto dir =
+                     hitClusterArray->at(iHitClus).GetPosition() - hitClusterArray->at(iHitClus - 1).GetPosition();
+                  len = dir.Mag();
+                  eloss += hitClusterArray->at(iHitClus).GetCharge();
+                  dedx += hitClusterArray->at(iHitClus).GetCharge() / len;
+                  // std::cout<<len<<" - "<<eloss<<" - "<<hitClusterArray->at(iHitClus).GetCharge()<<"\n";
+                  ++cnt;
+               }
+            }
+
+            eloss /= cnt;
+
+            if (fitTrack == nullptr)
+               continue;
+
             try {
 
                if (fitTrack && fitTrack->hasKalmanFitStatus()) {
@@ -598,19 +668,17 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                         thetaA = mom_res.Theta();
                      }
 
-                     Double_t E = TMath::Sqrt(TMath::Power(mom_res.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener;		     
+                     Double_t E = TMath::Sqrt(TMath::Power(mom_res.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener;
                      EFit = E * 1000.0;
-		     EFitXtr =
-                           1000.0 * (TMath::Sqrt(TMath::Power(mom_ext.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener);
-		     std::cout<<" Energy : "<<E*1000.0<<" - Energy Xtr : "<<EFitXtr<<"\n";
+                     EFitXtr =
+                        1000.0 * (TMath::Sqrt(TMath::Power(mom_ext.Mag(), 2) + TMath::Power(M_Ener, 2)) - M_Ener);
+                     std::cout << " Energy : " << E * 1000.0 << " - Energy Xtr : " << EFitXtr << "\n";
                      AFit = thetaA * TMath::RadToDeg();
                      PhiFit = mom_res.Phi();
                      xiniFit = pos_res.X();
                      yiniFit = pos_res.Y();
                      ziniFit = pos_res.Z();
 
-
-		     
                   } // Kalman fit
 
                } // Kalman status
@@ -661,13 +729,14 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
             phiOrbZVec.push_back(phiOrbZ);
             lengthOrbZVec.push_back(lengthOrbZ);
             eLossOrbZVec.push_back(eLossOrbZ);
-	    brhoVec.push_back(brho);
-	    trackPointsVec.push_back(points);
-	    eLossADC.push_back(eloss);
-	    
-	    evMult = eventMultiplicity;
-	    
-	 } // pdg cand
+            brhoVec.push_back(brho);
+            trackPointsVec.push_back(points);
+            dEdxADC.push_back(dedx);
+            eLossADC.push_back(eloss);
+
+            evMult = eventMultiplicity;
+
+         } // pdg cand
 
       } catch (std::exception &e) {
          std::cout << " Exception fitting track !" << e.what() << "\n";
@@ -786,251 +855,6 @@ Double_t FitManager::GetMaximum(double *adc)
    }
 
    return max;
-}
-void FitManager::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius)
-{
-   auto& hitArray = track.GetHitArray();
-   std::vector<AtHit> hitTBArray;
-   int clusterID = 0;
-
-   // std::cout<<" ================================================================= "<<"\n";
-   // std::cout<<" Clusterizing track : "<<track.GetTrackID()<<"\n";
-
-   /*for(auto iHits=0;iHits<hitArray->size();++iHits)
-     {
-       TVector3 pos    = hitArray->at(iHits).GetPosition();
-       double Q = hitArray->at(iHits).GetCharge();
-       int TB          = hitArray->at(iHits).GetTimeStamp();
-       //std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<Q<<"\n";
-       }*/
-
-   // Diffusion coefficients (TODO: Get them from the parameter file)
-   Double_t driftVel = 1.0;       // cm/us
-   Double_t samplingRate = 0.320; // us
-   Double_t d_t = 0.0009;         // cm^2/us
-   Double_t d_l = 0.0009;         // cm^2/us
-   Double_t D_T = TMath::Sqrt((2.0 * d_t) / driftVel);
-   Double_t D_L = TMath::Sqrt((2.0 * d_l) / driftVel);
-
-   if (hitArray.size() > 0) {
-
-      auto refPos = hitArray.at(0).GetPosition(); // First hit
-      // TODO: Create a clustered hit from the very first hit (test)
-
-      for (auto iHit = 0; iHit < hitArray.size(); ++iHit) {
-
-         auto hit = hitArray.at(iHit);
-
-         // Check distance with respect to reference Hit
-         Double_t distRef = TMath::Sqrt((hit.GetPosition() - refPos).Mag2());
-
-         if (distRef < distance && iHit != 0) {
-
-            continue;
-
-         } else {
-
-            // std::cout<<" Clustering "<<iHit<<" of "<<hitArray.size()<<"\n";
-            // std::cout<<" Distance to reference : "<<distRef<<"\n";
-            // std::cout<<" Reference position : "<<refPos.X()<<" - "<<refPos.Y()<<" - "<<refPos.Z()<<" -
-            // "<<refPos.Mag()<<"\n";
-
-            Double_t clusterQ = 0.0;
-            hitTBArray.clear();
-            std::copy_if(
-               hitArray.begin(), hitArray.end(), std::back_inserter(hitTBArray),
-               [&refPos, radius](AtHit &hitIn) { return TMath::Sqrt((hitIn.GetPosition() - refPos).Mag2()) < radius; });
-
-            // std::cout<<" Clustered "<<hitTBArray.size()<<" Hits "<<"\n";
-
-            if (hitTBArray.size() > 0) {
-               double x = 0, y = 0, z = 0;
-               double sigma_x = 0, sigma_y = 0, sigma_z = 0;
-
-               int timeStamp;
-               std::shared_ptr<AtHitCluster> hitCluster = std::make_shared<AtHitCluster>();
-	       hitCluster->SetClusterID(clusterID);
-               Double_t hitQ = 0.0;
-               std::for_each(hitTBArray.begin(), hitTBArray.end(),
-                             [&x, &y, &z, &hitQ, &timeStamp, &sigma_x, &sigma_y, &sigma_z, &D_T, &D_L, &driftVel,
-                              &samplingRate](AtHit &hitInQ) {
-                                auto pos = hitInQ.GetPosition();
-                                x += pos.X() * hitInQ.GetCharge();
-                                y += pos.Y() * hitInQ.GetCharge();
-                                z += pos.Z();
-                                hitQ += hitInQ.GetCharge();
-                                timeStamp += hitInQ.GetTimeStamp();
-
-                                // Calculation of variance (DOI: 10.1051/,00010 (2017)715001EPJ Web of
-                                // Conferences50epjconf/2010010)
-                                sigma_x += hitInQ.GetCharge() *
-                                           TMath::Sqrt(TMath::Power(0.2, 2) +
-                                                       pos.Z() * TMath::Power(D_T, 2)); // 0.2 mm of position resolution
-                                sigma_y += sigma_x;
-                                sigma_z += TMath::Sqrt((1.0 / 6.0) * TMath::Power(driftVel * samplingRate, 2) +
-                                                       pos.Z() * TMath::Power(D_L, 2));
-                             });
-               x /= hitQ;
-               y /= hitQ;
-               z /= hitTBArray.size();
-               timeStamp /= std::round(timeStamp);
-
-               sigma_x /= hitQ;
-               sigma_y /= hitQ;
-               sigma_z /= hitTBArray.size();
-
-               XYZPoint clustPos(x, y, z);
-               Bool_t checkDistance = kTRUE;
-
-               // Check distance with respect to existing clusters
-               for (auto iClusterHit : *track.GetHitClusterArray()) {
-                  if (TMath::Sqrt((iClusterHit.GetPosition() - clustPos).Mag2()) < distance) {
-                     // std::cout<<" Cluster with less than  : "<<distance<<" found "<<"\n";
-                     checkDistance = kFALSE;
-                     continue;
-                  }
-               }
-
-               if (checkDistance) {
-                  hitCluster->SetCharge(hitQ);
-                  hitCluster->SetPosition(x, y, z);
-                  hitCluster->SetTimeStamp(timeStamp);
-                  TMatrixDSym cov(3); // TODO: Setting covariant matrix based on pad size and drift time resolution.
-                                      // Using estimations for the moment.
-                  cov(0, 1) = 0;
-                  cov(1, 2) = 0;
-                  cov(2, 0) = 0;
-                  cov(0, 0) = TMath::Power(sigma_x, 2); // 0.04;
-                  cov(1, 1) = TMath::Power(sigma_y, 2); // 0.04;
-                  cov(2, 2) = TMath::Power(sigma_z, 2); // 0.01;
-                  hitCluster->SetCovMatrix(cov);
-                  ++clusterID;
-                  track.AddClusterHit(hitCluster);
-               }
-            }
-         }
-
-         // Sanity check
-         /*std::cout<<" Hits for cluster "<<iHit<<" centered in "<<refPos.X()<<" - "<<refPos.Y()<<"-"<<refPos.Z()<<"\n";
-    for(auto iHits=0;iHits<hitTBArray.size();++iHits)
-         {
-           TVector3 pos    = hitTBArray.at(iHits).GetPosition();
-           double Q = hitTBArray.at(iHits).GetCharge();
-           int TB          = hitTBArray.at(iHits).GetTimeStamp();
-           std::cout<<" Pos : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<" - TB : "<<TB<<" - Charge : "<<Q<<"\n";
-      std::cout<<" Distance to cluster center "<<TMath::Abs((track.GetHitClusterArray()->back().GetPosition() -
-    pos).Mag())<<"\n";
-    }
-         std::cout<<"=================================================="<<"\n";*/
-
-         if (iHit == 0)
-            continue;
-
-         refPos = hitArray.at(iHit).GetPosition();
-
-         //} // if distance
-
-      } // for
-
-      // Smoothing track
-      std::vector<AtHitCluster> *hitClusterArray = track.GetHitClusterArray();
-      radius /= 2.0;
-      std::vector<std::shared_ptr<AtHitCluster>> hitClusterBuffer;
-
-      // std::cout<<" Hit cluster array size "<<hitClusterArray->size()<<"\n";
-
-      if (hitClusterArray->size() > 2) {
-
-         for (auto iHitCluster = 0; iHitCluster < hitClusterArray->size() - 1;
-              ++iHitCluster) // Calculating distances between pairs of clusters
-         {
-
-            auto clusBack = hitClusterArray->at(iHitCluster).GetPosition();
-            auto clusForw = hitClusterArray->at(iHitCluster + 1).GetPosition();
-            auto clusMidPos = (clusBack - clusForw) * 0.5 + clusForw;
-            std::vector<XYZPoint> renormClus{clusBack, clusMidPos};
-
-            if (iHitCluster == (hitClusterArray->size() - 2))
-               renormClus.push_back(clusForw);
-
-            // Create a new cluster and renormalize the charge of the other with half the radius.
-            for (auto iClus : renormClus) {
-               hitTBArray.clear();
-               std::copy_if(
-                  hitArray.begin(), hitArray.end(), std::back_inserter(hitTBArray),
-                  [&iClus, radius](AtHit &hitIn) { return TMath::Sqrt((hitIn.GetPosition() - iClus).Mag2()) < radius; });
-
-               if (hitTBArray.size() > 0) {
-                  double x = 0, y = 0, z = 0;
-                  double sigma_x = 0, sigma_y = 0, sigma_z = 0;
-
-                  int timeStamp;
-                  std::shared_ptr<AtHitCluster> hitCluster = std::make_shared<AtHitCluster>();
-		  hitCluster->SetClusterID(clusterID);
-                  Double_t hitQ = 0.0;
-                  std::for_each(hitTBArray.begin(), hitTBArray.end(),
-                                [&x, &y, &z, &hitQ, &timeStamp, &sigma_x, &sigma_y, &sigma_z, &D_T, &D_L, &driftVel,
-                                 &samplingRate](AtHit &hitInQ) {
-                                   auto pos = hitInQ.GetPosition();
-                                   x += pos.X() * hitInQ.GetCharge();
-                                   y += pos.Y() * hitInQ.GetCharge();
-                                   z += pos.Z();
-                                   hitQ += hitInQ.GetCharge();
-                                   timeStamp += hitInQ.GetTimeStamp();
-
-                                   // Calculation of variance (DOI: 10.1051/,00010 (2017)715001EPJ Web of
-                                   // Conferences50epjconf/2010010)
-                                   sigma_x +=
-                                      hitInQ.GetCharge() *
-                                      TMath::Sqrt(TMath::Power(0.2, 2) +
-                                                  pos.Z() * TMath::Power(D_T, 2)); // 0.2 mm of position resolution
-                                   sigma_y += sigma_x;
-                                   sigma_z += TMath::Sqrt((1.0 / 6.0) * TMath::Power(driftVel * samplingRate, 2) +
-                                                          pos.Z() * TMath::Power(D_L, 2));
-                                });
-                  x /= hitQ;
-                  y /= hitQ;
-                  z /= hitTBArray.size();
-                  timeStamp /= std::round(timeStamp);
-
-                  sigma_x /= hitQ;
-                  sigma_y /= hitQ;
-                  sigma_z /= hitTBArray.size();
-
-                  TVector3 clustPos(x, y, z);
-                  hitCluster->SetCharge(hitQ);
-                  hitCluster->SetPosition(x, y, z);
-                  hitCluster->SetTimeStamp(timeStamp);
-                  TMatrixDSym cov(3); // TODO: Setting covariant matrix based on pad size and drift time resolution.
-                                      // Using estimations for the moment.
-                  cov(0, 1) = 0;
-                  cov(1, 2) = 0;
-                  cov(2, 0) = 0;
-                  cov(0, 0) = TMath::Power(sigma_x, 2); // 0.04;
-                  cov(1, 1) = TMath::Power(sigma_y, 2); // 0.04;
-                  cov(2, 2) = TMath::Power(sigma_z, 2); // 0.01;
-                  hitCluster->SetCovMatrix(cov);
-                  ++clusterID;
-                  hitClusterBuffer.push_back(hitCluster);
-
-               } // hitTBArray size
-
-            } // for iClus
-
-         } // for HitArray
-
-         // Remove previous clusters
-         track.ResetHitClusterArray();
-
-         // Adding new clusters
-         for (auto iHitClusterRe : hitClusterBuffer) {
-
-            track.AddClusterHit(iHitClusterRe);
-         }
-
-      } // Cluster array size
-
-   } // if array size
 }
 
 firstOrbit FitManager::GetFirstOrbit(genfit::Track *track, genfit::AbsTrackRep *rep, TVector3 vertex)
@@ -1231,6 +1055,7 @@ void FitManager::ConstructTrack(const genfit::StateOnPlane *prevState, const gen
    // std::cout<<" Momentum Loss "<<1000.0*momLoss<<" MeV "<<"\n";
 
    // NB Just for testing (d,p)
+   // TODO
    Double_t mass = 1.007276466812 * 931.49401 / 1000.0;
    Double_t ELoss2 = 1000.0 * (TMath::Sqrt(TMath::Power((mom).Mag(), 2) + TMath::Power(mass, 2)) - mass);
    Double_t ELoss1 = 1000.0 * (TMath::Sqrt(TMath::Power((oldMom).Mag(), 2) + TMath::Power(mass, 2)) - mass);
@@ -1242,6 +1067,138 @@ void FitManager::ConstructTrack(const genfit::StateOnPlane *prevState, const gen
    track.push_back(oldPos);
    track.push_back(intermediate1);
    track.push_back(intermediate2);
+}
+
+Bool_t FitManager::CompareTracks(AtTrack *trA, AtTrack *trB)
+{
+
+   // Matching angle
+   // Matching center
+   // Vertex position
+   // Track overlap
+
+   // TODO
+   Double_t angleSpread = 5.0 * TMath::DegToRad();
+   Double_t distThresh = 1000.0;
+   Double_t distMax = 150.0;
+
+   if (trA->GetIsMerged() || trB->GetIsMerged())
+      return false;
+   if (trA->GetTrackID() == trB->GetTrackID())
+      return false;
+   if (trA->GetGeoTheta() * TMath::RadToDeg() > 90 && trB->GetGeoTheta() * TMath::RadToDeg() < 90)
+      return false;
+   if (trA->GetGeoTheta() * TMath::RadToDeg() < 90 && trB->GetGeoTheta() * TMath::RadToDeg() > 90)
+      return false;
+
+   std::cout << " Comparing track A : " << trA->GetTrackID() << " and track B : " << trB->GetTrackID() << "\n";
+
+   if ((trB->GetGeoTheta() - angleSpread) <= trA->GetGeoTheta() &&
+       trA->GetGeoTheta() <= (trB->GetGeoTheta() + angleSpread)) {
+
+      std::pair<Double_t, Double_t> centerA = trA->GetGeoCenter();
+      std::pair<Double_t, Double_t> centerB = trB->GetGeoCenter();
+      std::cout << " Center A : " << centerA.first << " - " << centerA.second << "\n";
+      std::cout << " Center B : " << centerB.first << " - " << centerB.second << "\n";
+      Double_t centerDistance =
+         TMath::Sqrt(TMath::Power(centerA.first - centerB.first, 2) + TMath::Power(centerA.second - centerB.second, 2));
+      std::cout << " Center Distance : " << centerDistance << "\n";
+      if (centerDistance < distThresh) {
+
+         if (!CheckOverlap(trA, trB)) {
+
+            Double_t iniA = 0.0;
+            Double_t endA = 0.0;
+            Double_t iniB = 0.0;
+            Double_t endB = 0.0;
+            Double_t dist = 0.0;  // 3D distance
+            Double_t distR = 0.0; // Radial distance
+            AtHitCluster iniClusterA;
+            AtHitCluster iniClusterB;
+            AtHitCluster endClusterA;
+            AtHitCluster endClusterB;
+
+            // Find distance between end points of the tracks assuming no overlap
+            if (trA->GetGeoTheta() * TMath::RadToDeg() < 90) {
+               iniClusterA = trA->GetHitClusterArray()->back();
+               iniClusterB = trB->GetHitClusterArray()->back();
+               endClusterA = trA->GetHitClusterArray()->front();
+               endClusterB = trB->GetHitClusterArray()->front();
+               iniA = 1000.0 - iniClusterA.GetPosition().Z();
+               iniB = 1000.0 - iniClusterB.GetPosition().Z();
+               endA = 1000.0 - endClusterA.GetPosition().Z();
+               endB = 1000.0 - endClusterB.GetPosition().Z();
+
+            } else if (trA->GetGeoTheta() * TMath::RadToDeg() > 90) {
+               iniClusterA = trA->GetHitClusterArray()->front();
+               iniClusterB = trB->GetHitClusterArray()->front();
+               endClusterA = trA->GetHitClusterArray()->back();
+               endClusterB = trB->GetHitClusterArray()->back();
+               iniA = iniClusterA.GetPosition().Z();
+               iniB = iniClusterB.GetPosition().Z();
+               endA = endClusterA.GetPosition().Z();
+               endB = endClusterB.GetPosition().Z();
+            }
+            // std::cout<<" Track A Ini : "<<iniA<<"\n";
+            // std::cout<<" Track B Ini : "<<iniB<<"\n";
+            // std::cout<<" Track A End : "<<endA<<"\n";
+            // std::cout<<" Track B End : "<<endB<<"\n";
+
+            if (iniA < iniB) {
+               dist = (endClusterA.GetPosition() - iniClusterB.GetPosition()).Mag();
+               distR = TMath::Sqrt(TMath::Power(endClusterA.GetPosition().X() - iniClusterB.GetPosition().X(), 2) +
+                                   TMath::Power(endClusterA.GetPosition().Y() - iniClusterB.GetPosition().Y(), 2));
+            } else {
+               dist = (endClusterB.GetPosition() - iniClusterA.GetPosition()).Mag();
+               distR = TMath::Sqrt(TMath::Power(iniClusterA.GetPosition().X() - endClusterB.GetPosition().X(), 2) +
+                                   TMath::Power(iniClusterA.GetPosition().Y() - endClusterB.GetPosition().Y(), 2));
+            }
+
+            // std::cout<<" -- Distance between tracks "<<dist<<"\n";
+            // std::cout<<" -- Radial distance between tracks "<<distR<<"\n";
+
+            if (dist < distMax) { // TODO: Check if this is a valid filter. This condition discards valid chunks during
+                                  // the 1 to 1 comparison.
+               std::cout << " --- Tracks valid for merging! - " << trA->GetTrackID() << " - " << trB->GetTrackID()
+                         << "\n";
+               return true;
+            }
+         } else
+            std::cout << " Track Overlap found "
+                      << " - " << trA->GetTrackID() << " - " << trB->GetTrackID() << "\n";
+      }
+
+   } // Conditions
+   return false;
+}
+
+Bool_t FitManager::CheckOverlap(AtTrack *trA, AtTrack *trB)
+{
+   auto hitArrayA = trA->GetHitArray();
+   auto hitArrayB = trB->GetHitArray();
+
+   Int_t iTBMatch = 0;
+   std::vector<Int_t> iTBMatches;
+
+   for (auto itA = hitArrayA->begin(); itA != hitArrayA->end(); ++itA) {
+
+      auto itB = hitArrayB->begin();
+      while ((itB = std::find_if(itB, hitArrayB->end(), [&itA](AtHit &hitB) {
+                 return hitB.GetTimeStamp() == itA->GetTimeStamp();
+              })) != hitArrayB->end()) {
+         iTBMatches.push_back(std::distance(hitArrayB->begin(), itB));
+         itB++;
+      }
+   }
+
+   Double_t shortStraw = (hitArrayA->size() < hitArrayB->size()) ? hitArrayA->size() : hitArrayB->size();
+   iTBMatch = iTBMatches.size();
+   // TODO: % of overlap
+   // std::cout<<" Overlap "<<shortStraw<<" "<<iTBMatch<<"\n";
+   if (iTBMatch > (shortStraw * 0.1))
+      return true;
+   else
+      return false;
 }
 
 Bool_t FitManager::SetOutputFile(TString &file)
@@ -1315,6 +1272,7 @@ Bool_t FitManager::SetOutputFile(TString &file)
    fOutputTree->Branch("eLossOrbZVec", &eLossOrbZVec);
    fOutputTree->Branch("brhoVec", &brhoVec);
    fOutputTree->Branch("eLossADC", &eLossADC);
+   fOutputTree->Branch("dEdxADC", &dEdxADC);
    fOutputTree->Branch("pdgVec", &pdgVec);
    fOutputTree->Branch("trackPointsVec",&trackPointsVec);
    return true;
@@ -1386,6 +1344,7 @@ void FitManager::ClearTree()
    eLossOrbZVec.clear();
    brhoVec.clear();
    eLossADC.clear();
+   dEdxADC.clear();
    pdgVec.clear();
    trackPointsVec.clear();
 }

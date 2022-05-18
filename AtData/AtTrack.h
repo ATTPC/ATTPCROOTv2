@@ -38,6 +38,9 @@ protected:
    std::pair<Double_t, Double_t> fGeoCenter; // Center of the spiral track
    std::vector<AtHitCluster> fHitClusterArray; ///< Clusterized hits container
 
+   Bool_t fIsMerged;
+   Double_t fVertexToZDist;
+
 public:
    AtTrack() = default;
    AtTrack(const AtTrack &obj);
@@ -58,6 +61,9 @@ public:
    std::pair<Double_t, Double_t> GetGeoCenter() const { return fGeoCenter; }
    std::vector<AtHitCluster> *GetHitClusterArray() { return &fHitClusterArray; }
 
+   Bool_t GetIsMerged() const { return fIsMerged; }
+   Double_t GetVertexToZDist() const { return fVertexToZDist; }
+
    // Setters
    void SetTrackID(Int_t val) { fTrackID = val; }
    void AddHit(const AtHit &hit) { fHitArray.push_back(hit); }
@@ -69,6 +75,9 @@ public:
    void SetGeoRadius(Double_t radius) { fGeoRadius = radius; }
    void SetGeoCenter(std::pair<Double_t, Double_t> center) { fGeoCenter = center; }
    void AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster);
+
+   void SetIsMerged(bool val) { fIsMerged = val; }
+   void SetVertexToZDist(Double_t val) { fVertexToZDist = val; }
 
    // Operations
    void ResetHitClusterArray() { fHitClusterArray.clear(); }

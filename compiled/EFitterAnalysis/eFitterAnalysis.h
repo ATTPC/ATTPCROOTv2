@@ -117,9 +117,9 @@ public:
 
    // Getters
    std::shared_ptr<TTreeReader> GetReader() { return fReader; }
-   AtPatternEvent *GetPatternEve() { return dynamic_cast<AtPatternEvent *>(fPatternEveArray->Get()->At(0)); }
-   AtEvent *GetEve() { return dynamic_cast<AtEvent *>(fEveArray->Get()->At(0)); }
-   void GetAuxiliaryChannels(const std::vector<AtAuxPad> &padArray);
+   AtPatternEvent *GetPatternEve() { (AtPatternEvent *)fPatternEveArray->Get()->At(0); }
+   AtEvent *GetEve() { (AtEvent *)fEveArray->Get()->At(0); }
+   void GetAuxiliaryChannels(std::vector<AtPad> *auxPadArray);
 
    // File management
    void ClearTree();
@@ -131,11 +131,11 @@ public:
    // Fit management
    Bool_t FitTracks(std::vector<AtTrack> &tracks);
    void EnableMerging(Bool_t merging) { fEnableMerging = merging; }
+   void EnableSingleVertexTrack(Bool_t singletrack) { fEnableSingleVertexTrack = singletrack; }
 
    // TODO: Move to tools and AtFitter
    Double_t GetNPeaksHRS(std::vector<Int_t> *timeMax, std::vector<Float_t> *adcMax, double *adc_test);
    Double_t GetMaximum(double *adc);
-   void ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius);
 
 private:
    Int_t fVerbosity;
@@ -143,6 +143,7 @@ private:
    Float_t fMagneticField;
    Float_t fGasDensity;
    Bool_t fEnableMerging;
+   Bool_t fEnableSingleVertexTrack;
    Int_t fFitDirection;
    std::vector<AtTools::IonFitInfo> *ionList;
    AtTools::AtParsers fParser;
@@ -163,6 +164,8 @@ private:
    void ConstructTrack(const genfit::StateOnPlane *prevState, const genfit::StateOnPlane *state,
                        const genfit::AbsTrackRep *rep, std::vector<TVector3> &track,
                        std::vector<trackSegment> &segments);
+   Bool_t CompareTracks(AtTrack *trA, AtTrack *trB);
+   Bool_t CheckOverlap(AtTrack *trA, AtTrack *trB);
 
 public:
    // Output tree format (TODO: To be moved to other src file)
@@ -233,6 +236,7 @@ public:
    std::vector<Float_t> eLossOrbZVec;
    std::vector<Float_t> brhoVec;
    std::vector<Float_t> eLossADC;
+   std::vector<Float_t> dEdxADC;
    std::vector<std::string> pdgVec;
    std::vector<Int_t> trackPointsVec;
 };
