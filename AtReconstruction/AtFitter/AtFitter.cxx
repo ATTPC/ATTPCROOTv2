@@ -25,126 +25,122 @@ std::tuple<Double_t, Double_t> AtFITTER::AtFitter::GetMomFromBrho(Double_t M, Do
    return std::make_tuple(p, E);
 }
 
-Bool_t AtFITTER::AtFitter::FindVertexTrack(AtTrack *trA,AtTrack *trB)
+Bool_t AtFITTER::AtFitter::FindVertexTrack(AtTrack *trA, AtTrack *trB)
 {
-  //Determination of first hit distance. NB: Assuming both tracks have the same angle sign
-       Double_t vertexA = 0.0;
-       Double_t vertexB = 0.0;
-       if(trA->GetGeoTheta()*TMath::RadToDeg()<90){
-         auto iniClusterA = trA->GetHitClusterArray()->back();
-         auto iniClusterB = trB->GetHitClusterArray()->back();
-         vertexA = 1000.0-iniClusterA.GetPosition().Z();
-         vertexB = 1000.0-iniClusterB.GetPosition().Z();
-       }else if(trA->GetGeoTheta()*TMath::RadToDeg()>90){
-         auto iniClusterA = trA->GetHitClusterArray()->front();
-         auto iniClusterB = trB->GetHitClusterArray()->front();
-         vertexA = iniClusterA.GetPosition().Z();
-         vertexB = iniClusterB.GetPosition().Z();
-       }
+   // Determination of first hit distance. NB: Assuming both tracks have the same angle sign
+   Double_t vertexA = 0.0;
+   Double_t vertexB = 0.0;
+   if (trA->GetGeoTheta() * TMath::RadToDeg() < 90) {
+      auto iniClusterA = trA->GetHitClusterArray()->back();
+      auto iniClusterB = trB->GetHitClusterArray()->back();
+      vertexA = 1000.0 - iniClusterA.GetPosition().Z();
+      vertexB = 1000.0 - iniClusterB.GetPosition().Z();
+   } else if (trA->GetGeoTheta() * TMath::RadToDeg() > 90) {
+      auto iniClusterA = trA->GetHitClusterArray()->front();
+      auto iniClusterB = trB->GetHitClusterArray()->front();
+      vertexA = iniClusterA.GetPosition().Z();
+      vertexB = iniClusterB.GetPosition().Z();
+   }
 
-       
-       return vertexA < vertexB;
-         
+   return vertexA < vertexB;
+}
 
-}  
-
-Bool_t AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack*> *trackCandSource, std::vector<AtTrack> *trackDest, Bool_t enableSingleVertexTrack)
+Bool_t AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack *> *trackCandSource, std::vector<AtTrack> *trackDest,
+                                       Bool_t enableSingleVertexTrack)
 {
 
-  Bool_t toMerge = kFALSE;
+   Bool_t toMerge = kFALSE;
 
-  Int_t addHitCnt = 0;
-  //Find the track closer to vertex
-  std::sort(trackCandSource->begin(),trackCandSource->end(),[this](AtTrack* trA,AtTrack* trB) { return FindVertexTrack(trA,trB);});
-  
-  //Track stitching from vertex
-  AtTrack* vertexTrack = *trackCandSource->begin();
+   Int_t addHitCnt = 0;
+   // Find the track closer to vertex
+   std::sort(trackCandSource->begin(), trackCandSource->end(),
+             [this](AtTrack *trA, AtTrack *trB) { return FindVertexTrack(trA, trB); });
 
-  //Check if the candidate vertex track was merged
-  if(vertexTrack->GetIsMerged())
-    return kFALSE;
-  else
-    vertexTrack->SetIsMerged(kTRUE); 
+   // Track stitching from vertex
+   AtTrack *vertexTrack = *trackCandSource->begin();
 
-  //If enabled, choose only the track closest to vertex (i.e. first one of the collection of candidates)
-  //TODO: Select by number of points
-  
-  
-  for(auto it = trackCandSource->begin()+1;it!=trackCandSource->end();++it)
-  {
-    //NB: These tracks were previously marked to merge. If merging fails they should be discarded.
-    AtTrack *trackToMerge = *(it);
-    toMerge = kFALSE;     
+   // Check if the candidate vertex track was merged
+   if (vertexTrack->GetIsMerged())
+      return kFALSE;
+   else
+      vertexTrack->SetIsMerged(kTRUE);
 
-    //Skip trackes flagged as merged
-    if(!trackToMerge->GetIsMerged()){
-      trackToMerge->SetIsMerged(kTRUE);
-    }else
-      continue;
+   // If enabled, choose only the track closest to vertex (i.e. first one of the collection of candidates)
+   // TODO: Select by number of points
 
+   for (auto it = trackCandSource->begin() + 1; it != trackCandSource->end(); ++it) {
+      // NB: These tracks were previously marked to merge. If merging fails they should be discarded.
+      AtTrack *trackToMerge = *(it);
+      toMerge = kFALSE;
 
-    Double_t endVertexZ = 0.0;
-    Double_t iniMergeZ = 0.0;
-    std::cout<<" Vertex track "<<vertexTrack->GetTrackID()<<" - Track to Merge "<<trackToMerge->GetTrackID()<<"\n";
-    //Check relative position between end and begin of each track using Hit Clusters
-    std::cout<<" Vertex angle "<<vertexTrack->GetGeoTheta()*TMath::RadToDeg()<<"\n";
-    if(vertexTrack->GetGeoTheta()*TMath::RadToDeg()<90){
+      // Skip trackes flagged as merged
+      if (!trackToMerge->GetIsMerged()) {
+         trackToMerge->SetIsMerged(kTRUE);
+      } else
+         continue;
+
+      Double_t endVertexZ = 0.0;
+      Double_t iniMergeZ = 0.0;
+      std::cout << " Vertex track " << vertexTrack->GetTrackID() << " - Track to Merge " << trackToMerge->GetTrackID()
+                << "\n";
+      // Check relative position between end and begin of each track using Hit Clusters
+      std::cout << " Vertex angle " << vertexTrack->GetGeoTheta() * TMath::RadToDeg() << "\n";
+      if (vertexTrack->GetGeoTheta() * TMath::RadToDeg() < 90) {
          auto endClusterVertex = vertexTrack->GetHitClusterArray()->front();
-         auto iniClusterMerge  = trackToMerge->GetHitClusterArray()->back();
-	 //Check separation and relative distance
-	 endVertexZ = 1000.0-endClusterVertex.GetPosition().Z();
-         iniMergeZ  = 1000.0-iniClusterMerge.GetPosition().Z();
-	 Double_t distance = (iniClusterMerge.GetPosition() - endClusterVertex.GetPosition()).Mag();
-	 std::cout<<" Distance between tracks "<<distance<<"\n";
-	 std::cout<<" Ini Merge "<<iniMergeZ<<" - endVertexZ "<<endVertexZ<<"\n";
-	 if(( (iniMergeZ + 10.0) > endVertexZ) && distance < 200){
-	   toMerge = kTRUE;
-	 }
-	 
-      }else if(vertexTrack->GetGeoTheta()*TMath::RadToDeg()>90){
+         auto iniClusterMerge = trackToMerge->GetHitClusterArray()->back();
+         // Check separation and relative distance
+         endVertexZ = 1000.0 - endClusterVertex.GetPosition().Z();
+         iniMergeZ = 1000.0 - iniClusterMerge.GetPosition().Z();
+         Double_t distance = (iniClusterMerge.GetPosition() - endClusterVertex.GetPosition()).Mag();
+         std::cout << " Distance between tracks " << distance << "\n";
+         std::cout << " Ini Merge " << iniMergeZ << " - endVertexZ " << endVertexZ << "\n";
+         if (((iniMergeZ + 10.0) > endVertexZ) && distance < 200) {
+            toMerge = kTRUE;
+         }
+
+      } else if (vertexTrack->GetGeoTheta() * TMath::RadToDeg() > 90) {
          auto endClusterVertex = vertexTrack->GetHitClusterArray()->back();
-         auto iniClusterMerge  = trackToMerge->GetHitClusterArray()->front();
-	 //Check separation and relative distance
-	 endVertexZ = endClusterVertex.GetPosition().Z();
-         iniMergeZ  = iniClusterMerge.GetPosition().Z();
-	 Double_t distance = (iniClusterMerge.GetPosition() - endClusterVertex.GetPosition()).Mag();
-	 //std::cout<<" Distance between tracks "<<distance<<"\n";
-	 //std::cout<<" Ini Merge "<<iniMergeZ<<" - endVertexZ "<<endVertexZ<<"\n";
-	 if(( (iniMergeZ + 10.0 ) > endVertexZ) && distance < 100){ //NB: Distance between parts of the backward tracks is more critical
-	   toMerge = kTRUE;
-	 }
+         auto iniClusterMerge = trackToMerge->GetHitClusterArray()->front();
+         // Check separation and relative distance
+         endVertexZ = endClusterVertex.GetPosition().Z();
+         iniMergeZ = iniClusterMerge.GetPosition().Z();
+         Double_t distance = (iniClusterMerge.GetPosition() - endClusterVertex.GetPosition()).Mag();
+         // std::cout<<" Distance between tracks "<<distance<<"\n";
+         // std::cout<<" Ini Merge "<<iniMergeZ<<" - endVertexZ "<<endVertexZ<<"\n";
+         if (((iniMergeZ + 10.0) > endVertexZ) &&
+             distance < 100) { // NB: Distance between parts of the backward tracks is more critical
+            toMerge = kTRUE;
+         }
+      }
 
-       }
+      if (toMerge) {
 
-     if(toMerge){
-       
-        std::cout<<" --- Merging Succeeded! Vertex track "<<vertexTrack->GetTrackID()<<" - Track to Merge "<<trackToMerge->GetTrackID()<<"\n";
+         std::cout << " --- Merging Succeeded! Vertex track " << vertexTrack->GetTrackID() << " - Track to Merge "
+                   << trackToMerge->GetTrackID() << "\n";
          for (auto hit : *trackToMerge->GetHitArray()) {
-	
-	         vertexTrack->AddHit(&hit);
-                  ++addHitCnt;
-		  
-               }
 
-	 //Reclusterize after merging
-	 vertexTrack->SortHitArrayTime();
-	 vertexTrack->ResetHitClusterArray();
+            vertexTrack->AddHit(&hit);
+            ++addHitCnt;
+         }
+
+         // Reclusterize after merging
+         vertexTrack->SortHitArrayTime();
+         vertexTrack->ResetHitClusterArray();
          ClusterizeSmooth3D(*vertexTrack, 7.5, 15.0); // TODO Pass parameters
 
-	 //TODO: Check if phi recalculatio is needed
-	 
-     }else{
-       std::cout<<" --- Merging Failed ! Vertex track "<<vertexTrack->GetTrackID()<<" - Track to Merge "<<trackToMerge->GetTrackID()<<"\n";
-     }
-  
-  }
+         // TODO: Check if phi recalculatio is needed
 
-  
-  trackDest->push_back(*vertexTrack);
+      } else {
+         std::cout << " --- Merging Failed ! Vertex track " << vertexTrack->GetTrackID() << " - Track to Merge "
+                   << trackToMerge->GetTrackID() << "\n";
+      }
+   }
 
-  return toMerge;
+   trackDest->push_back(*vertexTrack);
+
+   return toMerge;
 }
-  
+
 void AtFITTER::AtFitter::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius)
 {
    std::vector<AtHit> *hitArray = track.GetHitArray();
@@ -199,7 +195,7 @@ void AtFITTER::AtFitter::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Fl
                hitArray->begin(), hitArray->end(), std::back_inserter(hitTBArray),
                [&refPos, radius](AtHit &hitIn) { return TMath::Abs((hitIn.GetPosition() - refPos).Mag()) < radius; });
 
-	               // std::cout<<" Clustered "<<hitTBArray.size()<<" Hits "<<"\n";
+            // std::cout<<" Clustered "<<hitTBArray.size()<<" Hits "<<"\n";
 
             if (hitTBArray.size() > 0) {
                double x = 0, y = 0, z = 0;
@@ -228,7 +224,7 @@ void AtFITTER::AtFitter::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Fl
                                 sigma_y += sigma_x;
                                 sigma_z += TMath::Sqrt((1.0 / 6.0) * TMath::Power(driftVel * samplingRate, 2) +
                                                        pos.Z() * TMath::Power(D_L, 2));
-                            });
+                             });
                x /= hitQ;
                y /= hitQ;
                z /= hitTBArray.size();
@@ -258,7 +254,7 @@ void AtFITTER::AtFitter::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Fl
                                       // Using estimations for the moment.
                   cov(0, 1) = 0;
                   cov(1, 2) = 0;
-		                    cov(2, 0) = 0;
+                  cov(2, 0) = 0;
                   cov(0, 0) = TMath::Power(sigma_x, 2); // 0.04;
                   cov(1, 1) = TMath::Power(sigma_y, 2); // 0.04;
                   cov(2, 2) = TMath::Power(sigma_z, 2); // 0.01;
@@ -317,7 +313,7 @@ void AtFITTER::AtFitter::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Fl
                std::copy_if(
                   hitArray->begin(), hitArray->end(), std::back_inserter(hitTBArray),
                   [&iClus, radius](AtHit &hitIn) { return TMath::Abs((hitIn.GetPosition() - iClus).Mag()) < radius; });
- if (hitTBArray.size() > 0) {
+               if (hitTBArray.size() > 0) {
                   double x = 0, y = 0, z = 0;
                   double sigma_x = 0, sigma_y = 0, sigma_z = 0;
 
@@ -349,7 +345,7 @@ void AtFITTER::AtFitter::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Fl
                   x /= hitQ;
                   y /= hitQ;
                   z /= hitTBArray.size();
-                 timeStamp /= std::round(timeStamp);
+                  timeStamp /= std::round(timeStamp);
 
                   sigma_x /= hitQ;
                   sigma_y /= hitQ;
@@ -379,7 +375,7 @@ void AtFITTER::AtFitter::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Fl
 
          // Remove previous clusters
          track.ResetHitClusterArray();
-      // Adding new clusters
+         // Adding new clusters
          for (auto iHitClusterRe : hitClusterBuffer) {
 
             track.AddClusterHit(iHitClusterRe);
@@ -390,11 +386,10 @@ void AtFITTER::AtFitter::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Fl
    } // if array size
 }
 
-
 void AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack> *trackCandSource, std::vector<AtTrack> *trackJunkSource,
                                      std::vector<AtTrack> *trackDest, bool fitDirection, bool simulationConv)
 {
-  //DEPRECATED
+   // DEPRECATED
    // Track destination are the merged tracks.
    // Track candidate source are the main tracks identified as candidates.
    // Track junk source are the tracks from which clusters will be extracted. Boundary conditions are applied: Proximity
@@ -403,7 +398,7 @@ void AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack> *trackCandSource, std:
 
    Double_t trackDist = 20.0;  // Distance between clusters in mm
    Double_t angleSpread = 5.0; // Maximum angular spread between clusters
-   Double_t centerSpread = 20.0; //Maximim distance between track centers for merging.
+   Double_t centerSpread = 20.0; // Maximim distance between track centers for merging.
    Int_t minClusters = 3;
    Int_t trackSize = 0;
 
@@ -438,34 +433,33 @@ void AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack> *trackCandSource, std:
 
          if (thetaCand > 90) {
 
-	   /*if ((thetaCand + angleSpread) > thetaJunk && (thetaCand - angleSpread) < thetaJunk) {
-               for (auto hit : *hitArrayJunk) {
+            /*if ((thetaCand + angleSpread) > thetaJunk && (thetaCand - angleSpread) < thetaJunk) {
+                     for (auto hit : *hitArrayJunk) {
 
-                  track.AddHit(&hit);
-                  ++jnkHitCnt;
-               }
-	       }*/
+                        track.AddHit(&hit);
+                        ++jnkHitCnt;
+                     }
+                }*/
 
-         } else if ( thetaCand < 90 && thetaJunk < 90) {
+         } else if (thetaCand < 90 && thetaJunk < 90) {
 
-	   if ((thetaCand + angleSpread) > thetaJunk && (thetaCand - angleSpread) < thetaJunk) { //Check angle
-	      std::cout<<" Center cand : "<<centerCand.first<<" - "<<centerCand.second<<" "<<thetaCand<<"\n";
-	      std::cout<<" Center junk : "<<centerJunk.first<<" - "<<centerJunk.second<<" "<<thetaJunk<<"\n";
-	      Double_t centerDistance = TMath::Sqrt( TMath::Power(centerCand.first-centerJunk.first,2) + TMath::Power(centerCand.second-centerJunk.second,2) );
-	      std::cout<<" Distance "<<centerDistance<<"\n";
-	      if(centerDistance < 50) //Check quadrant
-	      
-	      for (auto hit : *hitArrayJunk) {
+            if ((thetaCand + angleSpread) > thetaJunk && (thetaCand - angleSpread) < thetaJunk) { // Check angle
+               std::cout << " Center cand : " << centerCand.first << " - " << centerCand.second << " " << thetaCand
+                         << "\n";
+               std::cout << " Center junk : " << centerJunk.first << " - " << centerJunk.second << " " << thetaJunk
+                         << "\n";
+               Double_t centerDistance = TMath::Sqrt(TMath::Power(centerCand.first - centerJunk.first, 2) +
+                                                     TMath::Power(centerCand.second - centerJunk.second, 2));
+               std::cout << " Distance " << centerDistance << "\n";
+               if (centerDistance < 50) // Check quadrant
 
-                  track.AddHit(&hit);
-                  ++jnkHitCnt;
-               }
+                  for (auto hit : *hitArrayJunk) {
+
+                     track.AddHit(&hit);
+                     ++jnkHitCnt;
+                  }
             }
-	   
          }
-
-
-	 
 
          ++jnkCnt;
 
@@ -492,5 +486,3 @@ void AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack> *trackCandSource, std:
 
    } // Source track
 }
-
-

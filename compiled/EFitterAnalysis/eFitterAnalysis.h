@@ -137,14 +137,12 @@ public:
   //Fit management
   Bool_t FitTracks(std::vector<AtTrack> &tracks);
   void EnableMerging(Bool_t merging) {fEnableMerging = merging;}
-  void EnableSingleVertexTrack(Bool_t singletrack) {fEnableSingleVertexTrack = singletrack;}
-  
+  void EnableSingleVertexTrack(Bool_t singletrack) { fEnableSingleVertexTrack = singletrack; }
+
   //TODO: Move to tools and AtFitter
   Double_t GetNPeaksHRS(std::vector<Int_t> *timeMax, std::vector<Float_t> *adcMax, double *adc_test);
   Double_t GetMaximum(double *adc);
-  
-  
-  
+
 private:
 
   Int_t fVerbosity;
@@ -174,8 +172,8 @@ private:
                     const genfit::AbsTrackRep *rep, std::vector<TVector3> &track, std::vector<trackSegment> &segments);
   Bool_t CompareTracks(AtTrack *trA, AtTrack *trB);
   Bool_t CheckOverlap(AtTrack *trA, AtTrack *trB);
-  
-public:
+
+  public:
   //Output tree format (TODO: To be moved to other src file)
   // Output file
    Float_t EFit;

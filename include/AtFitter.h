@@ -34,16 +34,17 @@ public:
 
    void MergeTracks(std::vector<AtTrack> *trackCandSource, std::vector<AtTrack> *trackJunkSource,
                     std::vector<AtTrack> *trackDest, bool fitDirection, bool simulationConv);
-   Bool_t MergeTracks(std::vector<AtTrack*> *trackCandSource, std::vector<AtTrack> *trackDest,Bool_t enableSingleVertexTrack);
+   Bool_t MergeTracks(std::vector<AtTrack *> *trackCandSource, std::vector<AtTrack> *trackDest,
+                      Bool_t enableSingleVertexTrack);
    void ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius);
-  
+
 protected:
    FairLogger *fLogger; ///< logger pointer
    AtDigiPar *fPar;     ///< parameter container
    std::tuple<Double_t, Double_t>
    GetMomFromBrho(Double_t A, Double_t Z,
                   Double_t brho); ///< Returns momentum (in GeV) from Brho assuming M (amu) and Z;
-   Bool_t FindVertexTrack(AtTrack *trA,AtTrack *trB); ///<Lambda function to find track closer to vertex
+   Bool_t FindVertexTrack(AtTrack *trA, AtTrack *trB); ///< Lambda function to find track closer to vertex
    ClassDef(AtFitter, 1)
 };
 

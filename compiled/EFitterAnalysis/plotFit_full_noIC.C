@@ -123,8 +123,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    TH2F *dedxvsBrho = new TH2F("dedxvsBrho", "dedxvsBrho", 4000, 0, 100000, 1000, 0, 10);
    TH2F *dedxvsBrhoZoom = new TH2F("dedxvsBrhoZoom", "dedxvsBrhoZoom", 4000, 0, 1000, 1000, 0, 10);
 
-   TH2F *multvsnumpoints = new TH2F("multvsnumpoints","multvsnumpoints",10,0,10,500,0,500);
-   
+   TH2F *multvsnumpoints = new TH2F("multvsnumpoints", "multvsnumpoints", 10, 0, 10, 500, 0, 500);
+
    for (auto iHist = 0; iHist < 10; ++iHist)
       ExZ[iHist] = new TH1F(Form("ExZ[%i]", iHist), Form("ExZ[%i]", iHist), 1000, -2, 18);
 
@@ -144,8 +144,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    TH2F *fOrbZvsMomLoss = new TH2F("fOrbZvsMomLoss", "fOrbZvsMomLoss", 1000, 0, 200, 100, 0, 10);
    TH2F *fOrbLengthvsMomLoss = new TH2F("fOrbLengthvsMomLoss", "fOrbLengthvsMomLoss", 500, 0, 500, 100, 0, 10);
 
-   //Binary
-   TH2F *hARecvsASca = new TH2F("hARecvsASca","hARecvsASca",1000,0,180,1000,0,180);
+   // Binary
+   TH2F *hARecvsASca = new TH2F("hARecvsASca", "hARecvsASca", 1000, 0, 180, 1000, 0, 180);
 
    // Cut for gs 75-76 mm vertex
    TCutG *cutGS = new TCutG("CUTGS", 8);
@@ -153,44 +153,76 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    cutGS->SetVarY("");
    cutGS->SetTitle("Graph");
    cutGS->SetFillStyle(1000);
-   cutGS->SetPoint(0, 42.47056, 58.17587);cutGS->SetPoint(1, 70.22306, 15.78246);cutGS->SetPoint(2, 68.79986, 7.909399);
-   cutGS->SetPoint(3, 61.56523, 13.05717);cutGS->SetPoint(4, 47.80758, 33.04264);cutGS->SetPoint(5, 35.94754, 53.93653);
-   cutGS->SetPoint(6, 38.43815, 57.57025);cutGS->SetPoint(7, 42.47056, 58.17587);
+   cutGS->SetPoint(0, 42.47056, 58.17587);
+   cutGS->SetPoint(1, 70.22306, 15.78246);
+   cutGS->SetPoint(2, 68.79986, 7.909399);
+   cutGS->SetPoint(3, 61.56523, 13.05717);
+   cutGS->SetPoint(4, 47.80758, 33.04264);
+   cutGS->SetPoint(5, 35.94754, 53.93653);
+   cutGS->SetPoint(6, 38.43815, 57.57025);
+   cutGS->SetPoint(7, 42.47056, 58.17587);
 
-   //Cut for alpha in Eloss vs Brho
-   TCutG *cutALPHA = new TCutG("CUTALPHA",23);
+   // Cut for alpha in Eloss vs Brho
+   TCutG *cutALPHA = new TCutG("CUTALPHA", 23);
    cutALPHA->SetVarX("ELossvsBrho");
    cutALPHA->SetVarY("");
    cutALPHA->SetTitle("Graph");
    cutALPHA->SetFillStyle(1000);
-   cutALPHA->SetPoint(0,167.0359,0.5950822);cutALPHA->SetPoint(1,807.8945,0.3181103);cutALPHA->SetPoint(2,1584.528,0.2323383);
-   cutALPHA->SetPoint(3,2410.041,0.1697963);cutALPHA->SetPoint(4,3186.675,0.1412056);cutALPHA->SetPoint(5,3469.087,0.1001066);
-   cutALPHA->SetPoint(6,3458.225,0.06258135);cutALPHA->SetPoint(7,3208.399,0.06258135);cutALPHA->SetPoint(8,2638.143,0.06615518);
-   cutALPHA->SetPoint(9,2149.353,0.07330285);cutALPHA->SetPoint(10,1671.424,0.09474583);cutALPHA->SetPoint(11,1307.547,0.1179757);
-   cutALPHA->SetPoint(12,938.2386,0.1447795);cutALPHA->SetPoint(13,530.9133,0.1894524);cutALPHA->SetPoint(14,313.6731,0.218043);
-   cutALPHA->SetPoint(15,80.13988,0.2537813);cutALPHA->SetPoint(16,80.13988,0.3109626);cutALPHA->SetPoint(17,80.13988,0.4074561);
-   cutALPHA->SetPoint(18,74.70887,0.5039495);cutALPHA->SetPoint(19,52.98485,0.5647046);cutALPHA->SetPoint(20,101.8639,0.5968691);
-   cutALPHA->SetPoint(21,167.0359,0.5968691);cutALPHA->SetPoint(22,167.0359,0.5950822);
+   cutALPHA->SetPoint(0, 167.0359, 0.5950822);
+   cutALPHA->SetPoint(1, 807.8945, 0.3181103);
+   cutALPHA->SetPoint(2, 1584.528, 0.2323383);
+   cutALPHA->SetPoint(3, 2410.041, 0.1697963);
+   cutALPHA->SetPoint(4, 3186.675, 0.1412056);
+   cutALPHA->SetPoint(5, 3469.087, 0.1001066);
+   cutALPHA->SetPoint(6, 3458.225, 0.06258135);
+   cutALPHA->SetPoint(7, 3208.399, 0.06258135);
+   cutALPHA->SetPoint(8, 2638.143, 0.06615518);
+   cutALPHA->SetPoint(9, 2149.353, 0.07330285);
+   cutALPHA->SetPoint(10, 1671.424, 0.09474583);
+   cutALPHA->SetPoint(11, 1307.547, 0.1179757);
+   cutALPHA->SetPoint(12, 938.2386, 0.1447795);
+   cutALPHA->SetPoint(13, 530.9133, 0.1894524);
+   cutALPHA->SetPoint(14, 313.6731, 0.218043);
+   cutALPHA->SetPoint(15, 80.13988, 0.2537813);
+   cutALPHA->SetPoint(16, 80.13988, 0.3109626);
+   cutALPHA->SetPoint(17, 80.13988, 0.4074561);
+   cutALPHA->SetPoint(18, 74.70887, 0.5039495);
+   cutALPHA->SetPoint(19, 52.98485, 0.5647046);
+   cutALPHA->SetPoint(20, 101.8639, 0.5968691);
+   cutALPHA->SetPoint(21, 167.0359, 0.5968691);
+   cutALPHA->SetPoint(22, 167.0359, 0.5950822);
 
-   TCutG *cutT = new TCutG("CUTT",9);
+   TCutG *cutT = new TCutG("CUTT", 9);
    cutT->SetVarX("ELossvsBrhoZoom");
    cutT->SetVarY("");
    cutT->SetTitle("Graph");
    cutT->SetFillStyle(1000);
-   cutT->SetPoint(0,71.5,1.15);cutT->SetPoint(1,71.5,0.0);cutT->SetPoint(2,7000.0,0.0);cutT->SetPoint(3,7000,0.15);
-   cutT->SetPoint(4,2870.0,0.26);cutT->SetPoint(5,1100,0.47);cutT->SetPoint(6,502,0.69);cutT->SetPoint(7,239.0,1.07);
-   cutT->SetPoint(8,71.5,1.15);
+   cutT->SetPoint(0, 71.5, 1.15);
+   cutT->SetPoint(1, 71.5, 0.0);
+   cutT->SetPoint(2, 7000.0, 0.0);
+   cutT->SetPoint(3, 7000, 0.15);
+   cutT->SetPoint(4, 2870.0, 0.26);
+   cutT->SetPoint(5, 1100, 0.47);
+   cutT->SetPoint(6, 502, 0.69);
+   cutT->SetPoint(7, 239.0, 1.07);
+   cutT->SetPoint(8, 71.5, 1.15);
 
-   TCutG *cutDEDX = new TCutG("cutDEDX",10);
+   TCutG *cutDEDX = new TCutG("cutDEDX", 10);
    cutDEDX->SetVarX("dedxvsBrho");
    cutDEDX->SetVarY("");
    cutDEDX->SetTitle("Graph");
    cutDEDX->SetFillStyle(1000);
-   cutDEDX->SetPoint(0,2703.5,1.41);cutDEDX->SetPoint(1,19857.4,0.97);cutDEDX->SetPoint(2,53675,0.61);
-   cutDEDX->SetPoint(3,70013.2,0.46);cutDEDX->SetPoint(4,70176.6,0.37);cutDEDX->SetPoint(5,46884.2,0.35);
-   cutDEDX->SetPoint(6,18387.3,0.38);cutDEDX->SetPoint(7,5317.5,0.56);cutDEDX->SetPoint(8,2703.5,0.99);
-   cutDEDX->SetPoint(9,2703.5,1.41);
-   
+   cutDEDX->SetPoint(0, 2703.5, 1.41);
+   cutDEDX->SetPoint(1, 19857.4, 0.97);
+   cutDEDX->SetPoint(2, 53675, 0.61);
+   cutDEDX->SetPoint(3, 70013.2, 0.46);
+   cutDEDX->SetPoint(4, 70176.6, 0.37);
+   cutDEDX->SetPoint(5, 46884.2, 0.35);
+   cutDEDX->SetPoint(6, 18387.3, 0.38);
+   cutDEDX->SetPoint(7, 5317.5, 0.56);
+   cutDEDX->SetPoint(8, 2703.5, 0.99);
+   cutDEDX->SetPoint(9, 2703.5, 1.41);
+
    // NB: Not used
    // Q-value calculation
    Double_t m_p = 1.007825 * 931.49401;
@@ -206,7 +238,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    Double_t m_a = 4.00260325415 * 931.49401;
    Double_t m_O16 = 15.99491461956 * 931.49401;
 
-   Double_t Ebeam_buff = 150.0;//90.5; 
+   Double_t Ebeam_buff = 150.0; // 90.5;
    Double_t m_b;
    Double_t m_B;
 
@@ -308,7 +340,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
          std::vector<Float_t> *eLossOrbZVec = 0;
          std::vector<Float_t> *brhoVec = 0;
          std::vector<Float_t> *eLossADC = 0;
-	 std::vector<Float_t> *dEdxADC = 0;
+         std::vector<Float_t> *dEdxADC = 0;
          std::vector<std::string> *pdgVec = 0;
          std::vector<Int_t> *trackPointsVec = 0;
 
@@ -350,7 +382,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
          outputTree->SetBranchAddress("eLossOrbZVec", &eLossOrbZVec);
          outputTree->SetBranchAddress("brhoVec", &brhoVec);
          outputTree->SetBranchAddress("eLossADC", &eLossADC);
-	 outputTree->SetBranchAddress("dEdxADC", &dEdxADC);
+         outputTree->SetBranchAddress("dEdxADC", &dEdxADC);
          outputTree->SetBranchAddress("pdgVec", &pdgVec);
          outputTree->SetBranchAddress("trackPointsVec", &trackPointsVec);
 
@@ -366,8 +398,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
 
             ++iEvt;
 
-            //if (ICMult != 1)
-	    // continue;
+            // if (ICMult != 1)
+            // continue;
 
             // if(evMult !=2)
             // continue;
@@ -402,8 +434,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
                //}
 
                //   if(ICA<900)
-	       // if (ICA < 500 || ICA > 900)
-	       // continue;
+               // if (ICA < 500 || ICA > 900)
+               // continue;
 
                for (ICIndex = 0; ICIndex < ICVec->size(); ++ICIndex) {
 
@@ -419,24 +451,22 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
             // From std::vector
             assert(EFitVec->size() == AFitVec->size());
 
-	    /*std::cout<<" Event mult : "<<evMult<<"\n";
-			      std::cout<<" AFit size : "<<AFitVec->size()<<"\n";
-			      for(auto inxaf =0;inxaf<AFitVec->size();++inxaf)
-				std::cout<<" Angle "<<(*AFitVec)[inxaf]<<"  - ";
+            /*std::cout<<" Event mult : "<<evMult<<"\n";
+                    std::cout<<" AFit size : "<<AFitVec->size()<<"\n";
+                    for(auto inxaf =0;inxaf<AFitVec->size();++inxaf)
+                 std::cout<<" Angle "<<(*AFitVec)[inxaf]<<"  - ";
 
-				std::cout<<"\n";*/
+                 std::cout<<"\n";*/
 
             for (auto index = 0; index < EFitVec->size(); ++index) {
 
+               eventMultH->Fill(evMult);
+               multvsnumpoints->Fill(evMult, (*trackPointsVec)[index]);
 
-	      eventMultH->Fill(evMult);
-	      multvsnumpoints->Fill(evMult,(*trackPointsVec)[index]);
+               Ang_Ener_PRA->Fill(APRA, EPRA);
+               PhiPRAH->Fill(PhiPRA);
 
-	      Ang_Ener_PRA->Fill(APRA, EPRA);
-	      PhiPRAH->Fill(PhiPRA);
-
-
-	      // if((*lengthOrbZVec)[index]<30)
+               // if((*lengthOrbZVec)[index]<30)
                // continue;
 
                // if((*brhoVec)[index]>0.8)
@@ -446,214 +476,186 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
                // continue;
 
                // if((*AFitVec)[index]>82 || (*AFitVec)[index]<74)
-	      // continue;
+               // continue;
 
-              
-               
-	       //Particle ID
+               // Particle ID
                ELossvsBrho->Fill((*eLossADC)[index], (*brhoVec)[index]);
-	       ELossvsBrhoZoom->Fill((*eLossADC)[index], (*brhoVec)[index]);
-	       if(!cutT->IsInside((*eLossADC)[index], (*brhoVec)[index])){
-		 dedxvsBrho->Fill((*dEdxADC)[index], (*brhoVec)[index]);
-		 dedxvsBrhoZoom->Fill((*dEdxADC)[index], (*brhoVec)[index]);
-	       }
+               ELossvsBrhoZoom->Fill((*eLossADC)[index], (*brhoVec)[index]);
+               if (!cutT->IsInside((*eLossADC)[index], (*brhoVec)[index])) {
+                  dedxvsBrho->Fill((*dEdxADC)[index], (*brhoVec)[index]);
+                  dedxvsBrhoZoom->Fill((*dEdxADC)[index], (*brhoVec)[index]);
+               }
 
-	       if(cutT->IsInside((*eLossADC)[index], (*brhoVec)[index])) //particleID
-		 continue;
+               if (cutT->IsInside((*eLossADC)[index], (*brhoVec)[index])) // particleID
+                  continue;
 
-	       //if(!cutDEDX->IsInside((*dEdxADC)[index], (*brhoVec)[index]))
-	       //continue;
+               // if(!cutDEDX->IsInside((*dEdxADC)[index], (*brhoVec)[index]))
+               // continue;
 
-	       if((*dEdxADC)[index]<3000) //particleID
-		 continue;
+               if ((*dEdxADC)[index] < 3000) // particleID
+                  continue;
 
-	       if ((*trackLengthVec)[index] < 2.0)
-		 continue;
+               if ((*trackLengthVec)[index] < 2.0)
+                  continue;
 
-	       if(AFitVec->size()!=1)
-		 continue;
-	       
-	       //if((*trackPointsVec)[index]<20)
-		 //continue;
-	       
-               
-	       //if(evMult!=2)
-	       //continue;
-	       
-               
-	       /* if ((*POCAXtrVec)[index] > 2000.0)
-		 continue;
+               if (AFitVec->size() != 1)
+                  continue;
 
-	       if ((*ziniFitXtrVec)[index] < -20.0 && (*ziniFitXtrVec)[index] > 200.0)
-		 continue;
+               // if((*trackPointsVec)[index]<20)
+               // continue;
+
+               // if(evMult!=2)
+               // continue;
+
+               /* if ((*POCAXtrVec)[index] > 2000.0)
+            continue;
+
+               if ((*ziniFitXtrVec)[index] < -20.0 && (*ziniFitXtrVec)[index] > 200.0)
+            continue;
 
 
-	       
-	       if ((*EFitVec)[index] > 100)
-		 continue;
 
-	       if ((*fChi2Vec)[index] / (*fNdfVec)[index] < 0.000)
-		 continue;
+               if ((*EFitVec)[index] > 100)
+            continue;
 
-		if ((*xiniFitVec)[index] < -1000.0)
-		continue;*/
-		
-		
-	                      Double_t angle = (*AFitVec)[index];
-	                      if (dataFile.find("sim") != std::string::npos) {
-                                 angle = (*AFitVec)[index];
-                              }
+               if ((*fChi2Vec)[index] / (*fNdfVec)[index] < 0.000)
+            continue;
 
-			      
-			      if(index==0 && AFitVec->size()>1)
-				{
-				hARecvsASca->Fill((*AFitVec)[0],(*AFitVec)[1]);
-				}
-			      
-			      
-			               //Chi2
-				       fChi2H->Fill((*fChi2Vec)[index]);
-                                       bChi2H->Fill((*bChi2Vec)[index]);
-                                       fNdfH->Fill((*fNdfVec)[index]);
-                                       bNdfH->Fill((*bNdfVec)[index]);                                       
-                                       fChi2NH->Fill((*fChi2Vec)[index]);
+           if ((*xiniFitVec)[index] < -1000.0)
+           continue;*/
 
-				       //Kinematics
-				       Ang_Ener->Fill(angle, (*EFitVec)[index]);
-                                       Ang_Ener_Xtr->Fill((angle), (*EFitXtrVec)[index]);
+               Double_t angle = (*AFitVec)[index];
+               if (dataFile.find("sim") != std::string::npos) {
+                  angle = (*AFitVec)[index];
+               }
 
-				       //Excitation energy
-				       Double_t ex_energy_exp =
-                                          kine_2b(m_O16, m_a, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(),
-                                                  (*EFitVec)[index]);
-				       Double_t ex_energy_exp_xtr =
-                                          kine_2b(m_O16, m_a, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(),
-                                                  (*EFitXtrVec)[index]);
+               if (index == 0 && AFitVec->size() > 1) {
+                  hARecvsASca->Fill((*AFitVec)[0], (*AFitVec)[1]);
+               }
 
-				       
-				       
-				       HQval->Fill(ex_energy_exp);
-				       HQval_Xtr->Fill(ex_energy_exp_xtr);
-                                       HQval_Xtr_recalc->Fill(ex_energy_exp);
+               // Chi2
+               fChi2H->Fill((*fChi2Vec)[index]);
+               bChi2H->Fill((*bChi2Vec)[index]);
+               fNdfH->Fill((*fNdfVec)[index]);
+               bNdfH->Fill((*bNdfVec)[index]);
+               fChi2NH->Fill((*fChi2Vec)[index]);
 
-				       //Excitation energy correction
-                                       Double_t p0 = 1.72831;
-                                       Double_t p1 = -0.00892026; //-0.01095;
+               // Kinematics
+               Ang_Ener->Fill(angle, (*EFitVec)[index]);
+               Ang_Ener_Xtr->Fill((angle), (*EFitXtrVec)[index]);
 
-                                       Double_t mFactor = 1.10;
-                                       Double_t offSet = 0.0;
-                                       Double_t QcorrZ =
-                                          ex_energy_exp -
-                                          mFactor * ((1.39 - 2.1509) / (87.62 - 0.627)) * ((*ziniFitXtrVec)[index]) +
-                                          offSet;
-                                       QcorrZ = ex_energy_exp - mFactor * p1 * ((*ziniFitXtrVec)[index]);
-                                       HQCorr->Fill(QcorrZ);
+               // Excitation energy
+               Double_t ex_energy_exp =
+                  kine_2b(m_O16, m_a, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(), (*EFitVec)[index]);
+               Double_t ex_energy_exp_xtr =
+                  kine_2b(m_O16, m_a, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(), (*EFitXtrVec)[index]);
 
-				       
-                                       /*for (auto iCorr = 0; iCorr < 10; ++iCorr) {
-                                          mFactor = 1.0 + 0.1 * iCorr - 0.5;
-                                          Double_t QcorrZL =
-                                             ex_energy_exp -
-                                             mFactor * ((1.39 - 2.1509) / (87.62 - 0.627)) * ((*ziniFitXtrVec)[index]) +
-                                             offSet;
+               HQval->Fill(ex_energy_exp);
+               HQval_Xtr->Fill(ex_energy_exp_xtr);
+               HQval_Xtr_recalc->Fill(ex_energy_exp);
 
-                                          QcorrZL = ex_energy_exp - mFactor * p1 * ((*ziniFitXtrVec)[index]);
+               // Excitation energy correction
+               Double_t p0 = 1.72831;
+               Double_t p1 = -0.00892026; //-0.01095;
 
-                                          HQCorrArray[iCorr]->Fill(QcorrZL);
-					  }*/
+               Double_t mFactor = 1.10;
+               Double_t offSet = 0.0;
+               Double_t QcorrZ =
+                  ex_energy_exp - mFactor * ((1.39 - 2.1509) / (87.62 - 0.627)) * ((*ziniFitXtrVec)[index]) + offSet;
+               QcorrZ = ex_energy_exp - mFactor * p1 * ((*ziniFitXtrVec)[index]);
+               HQCorr->Fill(QcorrZ);
 
-				       //Excitation energy correlations
-                                       QvsChi2->Fill(ex_energy_exp, (*fChi2Vec)[index] / (*fNdfVec)[index]);
-                                       QvsXpos->Fill(ex_energy_exp, (*xiniFitXtrVec)[index]);
-                                       QvsZpos->Fill(ex_energy_exp, (*ziniFitXtrVec)[index]);
-                                       QcorrvsZpos->Fill(QcorrZ, (*ziniFitXtrVec)[index]);
-                                       QvsTrackLengthH->Fill(QcorrZ, (*trackLengthVec)[index]);
-				       //--------------
+               /*for (auto iCorr = 0; iCorr < 10; ++iCorr) {
+                  mFactor = 1.0 + 0.1 * iCorr - 0.5;
+                  Double_t QcorrZL =
+                     ex_energy_exp -
+                     mFactor * ((1.39 - 2.1509) / (87.62 - 0.627)) * ((*ziniFitXtrVec)[index]) +
+                     offSet;
 
-				       
-				       
-				       //Positions
-				       hxpos_fit->Fill((*xiniFitVec)[index]);
-                                       hypos_fit->Fill((*yiniFitVec)[index]);
-                                       hzpos_fit->Fill((*ziniFitVec)[index]);
-				       x_y_Fit->Fill((*xiniFitVec)[index], (*yiniFitVec)[index]);
-				       hxpos_fit_Xtr->Fill((*xiniFitXtrVec)[index]);
-                                       hypos_fit_Xtr->Fill((*yiniFitXtrVec)[index]);
-                                       hzpos_fit_Xtr->Fill((*ziniFitXtrVec)[index]);
-                                       x_y_Xtr->Fill((*xiniFitXtrVec)[index], (*yiniFitXtrVec)[index]);
+                  QcorrZL = ex_energy_exp - mFactor * p1 * ((*ziniFitXtrVec)[index]);
 
-				       //Particle and track
-				       //QvsAng_Xtr->Fill((*ExXtrVec)[index], AFit);
-                                       POCAXtrH->Fill((*POCAXtrVec)[index]);
-                                       tracklengthH->Fill((*trackLengthVec)[index]);
-                                       
-                                       Double_t rad = TMath::Sqrt((*xiniFitXtrVec)[index] * (*xiniFitXtrVec)[index] +
-                                                                  (*yiniFitXtrVec)[index] * (*yiniFitXtrVec)[index]);
-                                       ZposvsRad->Fill((*ziniFitXtrVec)[index], rad);
-				       particleQH->Fill((*particleQVec)[index]);
+                  HQCorrArray[iCorr]->Fill(QcorrZL);
+}*/
 
-				       
-                                       //Ion Chamber
-                                       ICMultH->Fill(ICMult);
-                                       
-				       //Correlations
-				       QvsAng->Fill(Ex, AFit);
-				       ZposvsAng->Fill(ziniFit, AFit);
-                                       Ang_AngPRA->Fill(AFit, APRA);
-                                       zfit_zPRA->Fill(ziniFit, ziniPRA / 10.0);
-                                       Phi_PhiPRA->Fill((*PhiFitVec)[index] * TMath::RadToDeg(), (*PhiPRAVec)[index]);
-                                       Ang_Phi->Fill(AFit, PhiFit * TMath::RadToDeg());
-                                       x_Phi->Fill(xiniFit, PhiFit * TMath::RadToDeg());
-                                       y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
+               // Excitation energy correlations
+               QvsChi2->Fill(ex_energy_exp, (*fChi2Vec)[index] / (*fNdfVec)[index]);
+               QvsXpos->Fill(ex_energy_exp, (*xiniFitXtrVec)[index]);
+               QvsZpos->Fill(ex_energy_exp, (*ziniFitXtrVec)[index]);
+               QcorrvsZpos->Fill(QcorrZ, (*ziniFitXtrVec)[index]);
+               QvsTrackLengthH->Fill(QcorrZ, (*trackLengthVec)[index]);
+               //--------------
 
-                                       
-                                       
-                                       //QvsEvent->Fill(ex_energy_exp, iEvt);
+               // Positions
+               hxpos_fit->Fill((*xiniFitVec)[index]);
+               hypos_fit->Fill((*yiniFitVec)[index]);
+               hzpos_fit->Fill((*ziniFitVec)[index]);
+               x_y_Fit->Fill((*xiniFitVec)[index], (*yiniFitVec)[index]);
+               hxpos_fit_Xtr->Fill((*xiniFitXtrVec)[index]);
+               hypos_fit_Xtr->Fill((*yiniFitXtrVec)[index]);
+               hzpos_fit_Xtr->Fill((*ziniFitXtrVec)[index]);
+               x_y_Xtr->Fill((*xiniFitXtrVec)[index], (*yiniFitXtrVec)[index]);
 
-				       
-                                       
-                                       // First Orbit
-                                       if ((*phiOrbZVec)[index] > 0.0 && (*phiOrbZVec)[index] < 100.0) {
-                                       Double_t OrbZ = (*firstOrbZVec)[index];
-                                       if ((*lengthOrbZVec)[index] > 0) {
-                                       fOrbZvsfOrbLength->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index],
-                                                               (*lengthOrbZVec)[index]);
-                                       PhiOrbZH->Fill((*phiOrbZVec)[index]);
-                                       fOrbLengthvsEFit->Fill((*lengthOrbZVec)[index], (*EFitVec)[index]);
-                                       fOrbZvsEFit->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index],
-                                                         (*EFitVec)[index]);
-                                       fOrbZvsEx->Fill((*firstOrbZVec)[index], QcorrZ);
-                                       fOrbZvsZ->Fill((*firstOrbZVec)[index], (*ziniFitXtrVec)[index]);
-                                       HQCorrOrbZ->Fill(QcorrZ);
-                                       fOrbZvsAFit->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index],
-                                                         (*AFitVec)[index]);
-                                       fOrbZvsMomLoss->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index],
-                                                            (*eLossOrbZVec)[index]);
-                                       fOrbLengthvsMomLoss->Fill((*lengthOrbZVec)[index], (*eLossOrbZVec)[index]);
-                                       }
-                                       }
+               // Particle and track
+               // QvsAng_Xtr->Fill((*ExXtrVec)[index], AFit);
+               POCAXtrH->Fill((*POCAXtrVec)[index]);
+               tracklengthH->Fill((*trackLengthVec)[index]);
 
-				       //Selection of first orbit
-                                       if ((*ziniFitXtrVec)[index] > 0.0 && (*ziniFitXtrVec)[index] < 100.0) {
-                                          Int_t zIndex = (Int_t)floor((*ziniFitXtrVec)[index] / 10);
-                                          // std::cout<<" zIndex "<<zIndex<<"\n";
-                                          ExZ[zIndex]->Fill(ex_energy_exp);
-                                       }
+               Double_t rad = TMath::Sqrt((*xiniFitXtrVec)[index] * (*xiniFitXtrVec)[index] +
+                                          (*yiniFitXtrVec)[index] * (*yiniFitXtrVec)[index]);
+               ZposvsRad->Fill((*ziniFitXtrVec)[index], rad);
+               particleQH->Fill((*particleQVec)[index]);
 
-                                       if (cutGS->IsInside(angle, (*EFitVec)[index])) {
-                                          HQval_Xtr_recalc_cutgs->Fill(ex_energy_exp);
-                                       }
+               // Ion Chamber
+               ICMultH->Fill(ICMult);
 
-				       //Excitation energy vs Beam energy
-                                       for (auto iEb = 0; iEb < 300; ++iEb) {
-                                          double Qdep = kine_2b(m_O16, m_a, m_b, m_B, iEb, angle * TMath::DegToRad(),
-                                                                (*EFitVec)[index]);
-                                          QvsEb->Fill(Qdep, iEb);
-                                       }
+               // Correlations
+               QvsAng->Fill(Ex, AFit);
+               ZposvsAng->Fill(ziniFit, AFit);
+               Ang_AngPRA->Fill(AFit, APRA);
+               zfit_zPRA->Fill(ziniFit, ziniPRA / 10.0);
+               Phi_PhiPRA->Fill((*PhiFitVec)[index] * TMath::RadToDeg(), (*PhiPRAVec)[index]);
+               Ang_Phi->Fill(AFit, PhiFit * TMath::RadToDeg());
+               x_Phi->Fill(xiniFit, PhiFit * TMath::RadToDeg());
+               y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
 
-                                       // HQval->Fill(Ex);
-                                    }
-			
+               // QvsEvent->Fill(ex_energy_exp, iEvt);
+
+               // First Orbit
+               if ((*phiOrbZVec)[index] > 0.0 && (*phiOrbZVec)[index] < 100.0) {
+                  Double_t OrbZ = (*firstOrbZVec)[index];
+                  if ((*lengthOrbZVec)[index] > 0) {
+                     fOrbZvsfOrbLength->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index], (*lengthOrbZVec)[index]);
+                     PhiOrbZH->Fill((*phiOrbZVec)[index]);
+                     fOrbLengthvsEFit->Fill((*lengthOrbZVec)[index], (*EFitVec)[index]);
+                     fOrbZvsEFit->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index], (*EFitVec)[index]);
+                     fOrbZvsEx->Fill((*firstOrbZVec)[index], QcorrZ);
+                     fOrbZvsZ->Fill((*firstOrbZVec)[index], (*ziniFitXtrVec)[index]);
+                     HQCorrOrbZ->Fill(QcorrZ);
+                     fOrbZvsAFit->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index], (*AFitVec)[index]);
+                     fOrbZvsMomLoss->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index], (*eLossOrbZVec)[index]);
+                     fOrbLengthvsMomLoss->Fill((*lengthOrbZVec)[index], (*eLossOrbZVec)[index]);
+                  }
+               }
+
+               // Selection of first orbit
+               if ((*ziniFitXtrVec)[index] > 0.0 && (*ziniFitXtrVec)[index] < 100.0) {
+                  Int_t zIndex = (Int_t)floor((*ziniFitXtrVec)[index] / 10);
+                  // std::cout<<" zIndex "<<zIndex<<"\n";
+                  ExZ[zIndex]->Fill(ex_energy_exp);
+               }
+
+               if (cutGS->IsInside(angle, (*EFitVec)[index])) {
+                  HQval_Xtr_recalc_cutgs->Fill(ex_energy_exp);
+               }
+
+               // Excitation energy vs Beam energy
+               for (auto iEb = 0; iEb < 300; ++iEb) {
+                  double Qdep = kine_2b(m_O16, m_a, m_b, m_B, iEb, angle * TMath::DegToRad(), (*EFitVec)[index]);
+                  QvsEb->Fill(Qdep, iEb);
+               }
+
+               // HQval->Fill(Ex);
+            }
          }
       }
    }
@@ -774,12 +776,12 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    Ang_Ener_Xtr->SetMarkerStyle(20);
    Ang_Ener_Xtr->SetMarkerSize(0.5);
    Ang_Ener_Xtr->Draw();
-   //Kine_AngRec_EnerRec->Draw("SAME");
-   //Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
-   //Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
-   //Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
-   //Kine_AngRec_EnerRec_9AMeV->Draw("SAME");
-   //cutGS->Draw("l");
+   // Kine_AngRec_EnerRec->Draw("SAME");
+   // Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
+   // Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
+   // Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
+   // Kine_AngRec_EnerRec_9AMeV->Draw("SAME");
+   // cutGS->Draw("l");
    c1->Modified();
    c1->cd(4);
    HQval_Xtr->Draw();
@@ -787,7 +789,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    TCanvas *c2 = new TCanvas();
    c2->Divide(2, 2);
    c2->Draw();
-   c2->cd(1);  
+   c2->cd(1);
    HQCorr->Draw();
    c2->cd(2);
    QvsZpos->Draw();
@@ -828,7 +830,6 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    c4->cd(4);
    particleQH->Draw();
 
-
    TCanvas *c5 = new TCanvas();
    c5->Divide(3, 3);
    c5->Draw();
@@ -854,7 +855,6 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    TCanvas *cCorr = new TCanvas();
    cCorr->Draw();
    hARecvsASca->Draw("zcol");
-   
 
    TCanvas *c6 = new TCanvas();
    c6->Divide(3, 2);
@@ -897,7 +897,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    fOrbLengthvsMomLoss->Draw();
 
    TCanvas *cpid = new TCanvas();
-   cpid->Divide(2,2);
+   cpid->Divide(2, 2);
    cpid->Draw();
    cpid->cd(1);
    ELossvsBrho->Draw();
@@ -909,8 +909,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    cutDEDX->Draw("l");
    cpid->cd(4);
    dedxvsBrhoZoom->Draw();
-  
-   
+
    /*TCanvas *c2 = new TCanvas();
    c2->Divide(2, 3);
    c2->Draw();
@@ -954,7 +953,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    c4->cd(4);
    Ang_Phi->Draw();
 
-   
+
    TCanvas *c6 = new TCanvas();
    c6->Divide(3, 3);
    c6->Draw();
@@ -978,7 +977,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    eventMultH->Draw();
 
     */
-   
+
    /*  TCanvas *c7 = new TCanvas();
    c7->Divide(2, 2);
    c7->Draw();
@@ -1018,7 +1017,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    particleQH->Draw();
    // cChi->cd(8);
 
-   
+
    TCanvas *c8 = new TCanvas();
    c8->Divide(2, 2);
    c8->Draw();

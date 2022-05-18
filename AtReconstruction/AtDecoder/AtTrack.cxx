@@ -21,7 +21,7 @@ ClassImp(AtTrack)
    kIsMCFit = kFALSE;
    kIsNoise = kFALSE;
    kIsMerged = kFALSE;
-   fVertexToZDist = 1E6; 
+   fVertexToZDist = 1E6;
    FitParameters.sThetaMin = 0;
    FitParameters.sThetaMin = 0;
    FitParameters.sEnerMin = 0;
@@ -110,12 +110,12 @@ void AtTrack::SetMCFit(Bool_t value)
 
 void AtTrack::SetIsMerged(Bool_t ismerged)
 {
-  kIsMerged = ismerged;
+   kIsMerged = ismerged;
 }
 
 void AtTrack::SetVertexToZDist(Double_t dist)
-{  
-  fVertexToZDist = dist;
+{
+   fVertexToZDist = dist;
 }
 
 void AtTrack::SetGeoEnergy(Double_t energy)
@@ -205,14 +205,14 @@ Bool_t AtTrack::GetIsNoise()
 }
 
 Bool_t AtTrack::GetIsMerged()
-{  
-  return kIsMerged;
+{
+   return kIsMerged;
 }
 
 Double_t AtTrack::GetVertexToZDist()
 {
-  return fVertexToZDist;
-}  
+   return fVertexToZDist;
+}
 
 std::vector<Double_t> &AtTrack::GetRANSACCoeff()
 {

@@ -7,8 +7,8 @@ int main(int argc, char* argv[])
    gSystem->Load("libATTPCReco.so");
 
    FairRunAna* run = new FairRunAna(); //Forcing a dummy run
-   TString FileName =
-      "/mnt/analysis/e20020/ATTPCROOTv2_develop/macro/Simulation/ATTPC/10Be_aa/Be10_aa_inelastic_3body_4AMeV_highGain.root";
+   TString FileName = "/mnt/analysis/e20020/ATTPCROOTv2_develop/macro/Simulation/ATTPC/10Be_aa/"
+                      "Be10_aa_inelastic_3body_4AMeV_highGain.root";
    std::cout<<" Opening File : "<<FileName.Data()<<std::endl;
    TFile* file = new TFile(FileName.Data(),"READ");
 
