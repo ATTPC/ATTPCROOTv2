@@ -29,6 +29,8 @@ AtTrack::AtTrack(const AtTrack &obj)
    fGeoRadius = obj.fGeoRadius;
    fGeoCenter = obj.fGeoCenter;
    fHitClusterArray = obj.fHitClusterArray;
+   fIsMerged = obj.fIsMerged;
+   fVertexToZDist = obj.fVertexToZDist;
 }
 
 void AtTrack::AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster)
