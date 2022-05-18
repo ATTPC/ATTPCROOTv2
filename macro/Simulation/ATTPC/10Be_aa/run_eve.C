@@ -1,4 +1,4 @@
-void run_eve(TString InputDataFile = "Be10_aa_inelastic_3body_4AMeV.root", TString OutputDataFile = "output.reco_display.root",
+void run_eve(TString InputDataFile = "output_digi.root", TString OutputDataFile = "output.reco_display.root",
              TString unpackDir = "/Simulation/ATTPC/10Be_aa/")
 {
   FairLogger *fLogger = FairLogger::GetLogger();

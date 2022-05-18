@@ -197,7 +197,7 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
          phi =  track->GetGeoPhi();
       } else {
          theta = track->GetGeoTheta();
-         phi = track->GetGeoPhi();//180.0 * TMath::DegToRad() - track->GetGeoPhi();
+         phi = track->GetGeoPhi(); // 180.0 * TMath::DegToRad() - track->GetGeoPhi();
       }
 
       //Needs to be reversed back for multifit
@@ -228,14 +228,13 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    Int_t PDGCode = fPDGCode;
 
    if (fVerbosity > 0) {
-      std::cout <<cYELLOW<< "    ---- AtGenfit : Initial parameters "
+      std::cout << cYELLOW << "    ---- AtGenfit : Initial parameters "
                 << "\n";
       std::cout << "    PDG : " << PDGCode << " - Mass : " << p_mass << " - Atomic number : " << p_Z << "\n";
       std::cout << "    B field : " << fMagneticField / 10.0 << " - Min. Bhro : " << fMinBrho
                 << "    - Max. Brho : " << fMaxBrho << "\n";
       std::cout << "    Theta : " << theta * TMath::RadToDeg() << " - Phi : " << phi * TMath::RadToDeg()
-                << "    - Brho (geo) : " << brho <<cNORMAL<< "\n";
-      
+                << "    - Brho (geo) : " << brho << cNORMAL << "\n";
     }
 
    // hitClusterArray->resize(hitClusterArray->size() * 0.50);
@@ -249,11 +248,13 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
 
       if(iCluster==0)
       {
-	std::cout<<cYELLOW<<"    First cluster : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<cNORMAL<<"\n"; 
+         std::cout << cYELLOW << "    First cluster : " << pos.X() << " - " << pos.Y() << " - " << pos.Z() << cNORMAL
+                   << "\n";
 
       }else if(iCluster==(hitClusterArray->size()-1)){
 
-	std::cout<<cYELLOW<<"    Last cluster : "<<pos.X()<<" - "<<pos.Y()<<" - "<<pos.Z()<<cNORMAL<<"\n";
+         std::cout << cYELLOW << "    Last cluster : " << pos.X() << " - " << pos.Y() << " - " << pos.Z() << cNORMAL
+                   << "\n";
       }
 
       
@@ -285,8 +286,7 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    Double_t xIniCal = 0;
    TVector3 iniPos;
 
-    
-   //Initial track position
+   // Initial track position
    if (thetaConv < 90.0 * TMath::DegToRad()) {
       iniCluster = hitClusterArray->front();
       // iniCluster = hitClusterArray->back();
@@ -348,7 +348,6 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    std::tuple<Double_t, Double_t> mom_ener =
       GetMomFromBrho(p_mass, p_Z, brho); // TODO Change to structured bindings when C++17
 
-   
    // Momentum calculation
    Double_t px = 0, py = 0, pz = 0;
    TVector3 mom_dir(TMath::Sin(theta) * TMath::Cos(phi), TMath::Sin(theta) * TMath::Sin(phi), TMath::Cos(theta));
@@ -357,7 +356,8 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    pz = std::get<0>(mom_ener) * mom_dir.Z();
 
    if (fVerbosity > 0)
-     std::cout <<cYELLOW<< "    Momentum from PRA- px : " << px << " - py : " << py << " - pz : " << pz <<cNORMAL<< "\n";
+      std::cout << cYELLOW << "    Momentum from PRA- px : " << px << " - py : " << py << " - pz : " << pz << cNORMAL
+                << "\n";
 
    Double_t momSeedMag = std::get<0>(mom_ener);
    // TVector3 momSeed(0., 0., momSeedMag); //
@@ -413,8 +413,8 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
             // Fit result
             fitState.getPosMomCov(pos_res, mom_res, cov_res);
             if (fVerbosity > 0)
-               std::cout << cYELLOW << "    Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
-                         << pos_res.Y() << "  " << pos_res.Z() << cNORMAL << "\n";
+               std::cout << cYELLOW << "    Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X()
+                         << "  " << pos_res.Y() << "  " << pos_res.Z() << cNORMAL << "\n";
             // firstPoint = gfTrack->getPointWithMeasurement(0);
             // lastPoint  = gfTrack->getPointWithMeasurement(gfTrack->getNumPoints()-1);
             // firstPoint->Print();

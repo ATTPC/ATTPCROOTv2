@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE e20020_ionList [
+   <!ELEMENT e20020_ionList (ion)+>
+   <!ELEMENT ion (ID,Ion,PDG,Mass,AtomicNumber,MassNumber,ElossFile)>
+   <!ELEMENT ID (#PCDATA)>
+   <!ELEMENT Ion (#PCDATA)>
+   <!ELEMENT PDG (#PCDATA)>
+   <!ELEMENT Mass (#PCDATA)>
+   <!ELEMENT AtomicNumber (#PCDATA)>
+   <!ELEMENT MassNumber (#PCDATA)>
+   <!ELEMENT ElossFile (#PCDATA)>
+]>
+<e20020_ionList>
+<ion>
+<ID>1</ID>
+<Ion>proton</Ion>
+<PDG>2212</PDG>
+<Mass>1.00727646</Mass>
+<AtomicNumber>1</AtomicNumber>
+<MassNumber>1</MassNumber>
+<ElossFile>/resources/energy_loss/proton_He_700torr.txt</ElossFile>
+</ion>
+<ion>
+<ID>2</ID>
+<Ion>deuteron</Ion>
+<PDG>1000010020</PDG>
+<Mass>2.0135532</Mass>
+<AtomicNumber>1</AtomicNumber>
+<MassNumber>2</MassNumber>
+<ElossFile>/resources/energy_loss/deuteron_He_700torr.txt</ElossFile>
+</ion>
+<ion>
+<ID>3</ID>
+<Ion>He-4</Ion>
+<PDG>1000020040</PDG>
+<Mass>4.002603254</Mass>
+<AtomicNumber>2</AtomicNumber>
+<MassNumber>4</MassNumber>
+<ElossFile>/resources/energy_loss/alpha_He_700torr.txt</ElossFile>
+</ion>
+<ion>
+<ID>4</ID>
+<Ion>C-12</Ion>
+<PDG>1000060120</PDG>
+<Mass>12.0</Mass>
+<AtomicNumber>6</AtomicNumber>
+<MassNumber>12</MassNumber>
+<ElossFile>/resources/energy_loss/C12_He_700torr.txt</ElossFile>
+</ion>
+<ion>
+<ID>5</ID>
+<Ion>O-16</Ion>
+<PDG>1000080160</PDG>
+<Mass>15.9949146193</Mass>
+<AtomicNumber>8</AtomicNumber>
+<MassNumber>16</MassNumber>
+<ElossFile>/resources/energy_loss/O16_He_700torr.txt</ElossFile>
+</ion>
+</e20020_ionList>

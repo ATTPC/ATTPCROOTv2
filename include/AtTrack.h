@@ -48,7 +48,9 @@ public:
    void SetRANSACCoeff(std::vector<Double_t> par);
    void SetGeoCenter(std::pair<Double_t, Double_t> center);
    void SetGeoRadius(Double_t radius);
-
+   void SetIsMerged(Bool_t ismerged);
+   void SetVertexToZDist(Double_t dist);
+  
    std::vector<AtHit> *GetHitArray();
    std::vector<AtHitCluster> *GetHitClusterArray();
    void ResetHitClusterArray();
@@ -75,7 +77,9 @@ public:
    Double_t GetGeoRadius();
    Bool_t SortHitArrayTime();
    Bool_t SortClusterHitArrayZ();
-
+   Bool_t GetIsMerged();
+  Double_t GetVertexToZDist();
+  
    // MC result and projections
    std::vector<Double_t> fPosXmin;
    std::vector<Double_t> fPosYmin;
@@ -153,11 +157,13 @@ protected:
    std::vector<Double_t> fRANSACCoeff; // Coefficients for radius smoothing using RANSAC: x, y and radius of curvature
    Double_t fGeoRadius;                // Initial radius of curvature
    std::pair<Double_t, Double_t> fGeoCenter; // Center of the spiral track
+   Double_t fVertexToZDist;                   // Distance of the "vertex" to Z axis
 
    Bool_t kIsMCFit;
    Bool_t kIsNoise;
+   Bool_t kIsMerged;
 
-   static Bool_t SortHitTime(const AtHit &lhs, const AtHit &rhs) { return lhs.fTimeStamp < rhs.fTimeStamp; }
+  static Bool_t SortHitTime(const AtHit &lhs, const AtHit &rhs) { return lhs.fTimeStamp < rhs.fTimeStamp; }
    static Bool_t SortClusterHitZ(const AtHitCluster &lhs, const AtHitCluster &rhs)
    {
       return lhs.GetPosition().Z() < rhs.GetPosition().Z();
