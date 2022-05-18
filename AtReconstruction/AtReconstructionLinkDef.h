@@ -12,15 +12,11 @@
 #pragma link C++ class AtPSASimple2 + ;
 #pragma link C++ class AtPSAProto + ;
 #pragma link C++ class AtPSAProtoFull + ;
-#pragma link C++ class AtPSAFilter + ;
 #pragma link C++ class AtPSAFull + ;
 #pragma link C++ class AtCalibration + ;
 
 #pragma link C++ nestedclass;
 #pragma link C++ nestedtypedef;
-#pragma link C++ namespace AtRANSACN;
-#pragma link C++ class AtRANSACN::AtRansac + ;
-#pragma link C++ struct AtRANSACN::AtRansac::PairedLines + ;
 
 #pragma link C++ class AtPATTERN::AtTrackFinderHC + ;
 #pragma link C++ class AtPATTERN::AtPRA + ;

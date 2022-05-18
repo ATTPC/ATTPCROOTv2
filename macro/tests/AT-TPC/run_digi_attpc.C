@@ -66,9 +66,7 @@ void run_digi_attpc()
    ransacTask->SetPersistence(kTRUE);
    ransacTask->SetVerbose(kFALSE);
    ransacTask->SetDistanceThreshold(20.0);
-   ransacTask->SetTiltAngle(0);
    ransacTask->SetMinHitsLine(10);
-   ransacTask->SetFullMode();
 
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
