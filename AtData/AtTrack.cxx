@@ -17,18 +17,28 @@ constexpr auto cGREEN = "\033[1;32m";
 
 ClassImp(AtTrack);
 
+AtTrack &AtTrack::operator=(const AtTrack &obj)
+{
+   if (this != &obj) {
+
+      fTrackID = obj.fTrackID;
+      fHitArray = obj.fHitArray;
+
+      fPattern = (obj.fPattern != nullptr) ? obj.fPattern->Clone() : nullptr;
+
+      fGeoThetaAngle = obj.fGeoThetaAngle;
+      fGeoPhiAngle = obj.fGeoPhiAngle;
+      fGeoRadius = obj.fGeoRadius;
+      fGeoCenter = obj.fGeoCenter;
+      fHitClusterArray = obj.fHitClusterArray;
+      fIsMerged = obj.fIsMerged;
+      fVertexToZDist = obj.fVertexToZDist;
+   }
+   return *this;
+}
 AtTrack::AtTrack(const AtTrack &obj)
 {
-   fTrackID = obj.fTrackID;
-   fHitArray = obj.fHitArray;
-
-   fPattern = (obj.fPattern != nullptr) ? obj.fPattern->Clone() : nullptr;
-
-   fGeoThetaAngle = obj.fGeoThetaAngle;
-   fGeoPhiAngle = obj.fGeoPhiAngle;
-   fGeoRadius = obj.fGeoRadius;
-   fGeoCenter = obj.fGeoCenter;
-   fHitClusterArray = obj.fHitClusterArray;
+   *this = obj;
 }
 
 void AtTrack::AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster)

@@ -44,7 +44,11 @@ protected:
 public:
    AtTrack() = default;
    AtTrack(const AtTrack &obj);
-   AtTrack &operator=(const AtTrack &obj) { return *this; };
+   AtTrack &operator=(const AtTrack &obj);
+   //{
+   // std::cout << "assign" << std::endl;
+   // return *this;
+   // };
    AtTrack(AtTrack &&) = default;
    AtTrack &operator=(AtTrack &&) = default;
    ~AtTrack() = default;
