@@ -19,7 +19,6 @@ ClassImp(AtTrack);
 
 AtTrack &AtTrack::operator=(const AtTrack &obj)
 {
-   std::cout << "assign" << std::endl;
    if (this != &obj) {
 
       fTrackID = obj.fTrackID;
@@ -39,7 +38,6 @@ AtTrack &AtTrack::operator=(const AtTrack &obj)
 }
 AtTrack::AtTrack(const AtTrack &obj)
 {
-   std::cout << "copy" << std::endl;
    *this = obj;
 }
 
