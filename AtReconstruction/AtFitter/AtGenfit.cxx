@@ -48,7 +48,7 @@ constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
 
 AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile,
-                             Float_t gasMediumDensity,Int_t pdg, Int_t minit, Int_t maxit)
+                             Float_t gasMediumDensity, Int_t pdg, Int_t minit, Int_t maxit)
    : fEnergyLossFile(std::move(eLossFile)),
      fMeasurementProducer(
         new genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement>(fHitClusterArray)),

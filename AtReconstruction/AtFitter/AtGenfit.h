@@ -59,8 +59,8 @@ private:
    std::vector<Int_t> *fPDGCandidateArray{};
 
 public:
-   AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile, Float_t gasMediumDensity, Int_t pdg = 2212,
-            Int_t minit = 5, Int_t maxit = 20);
+   AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile, Float_t gasMediumDensity,
+            Int_t pdg = 2212, Int_t minit = 5, Int_t maxit = 20);
    ~AtGenfit();
 
    genfit::Track *FitTracks(AtTrack *track) override;
