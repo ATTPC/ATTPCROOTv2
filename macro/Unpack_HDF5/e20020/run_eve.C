@@ -21,7 +21,7 @@ void run_eve(TString InputDataFileName = "run_0160")
    fRun->SetSource(source);
    fRun->SetSink(sink);
    fRun->SetGeomFile(GeoDataPath);
-   
+
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
    FairParRootFileIo *parIo1 = new FairParRootFileIo();
    // parIo1->open("param.dummy.root");

@@ -53,6 +53,6 @@ void AtPSASimple::Analyze(AtRawEvent *rawEvent, AtEvent *event)
             continue;
       }
 
-      event->AddHit(pad->GetPadNum(), XYZPoint(pos.X(), pos.Y(), zPos), charge);
+      auto &hit = event->AddHit(pad->GetPadNum(), XYZPoint(pos.X(), pos.Y(), zPos), charge);
    }
 }

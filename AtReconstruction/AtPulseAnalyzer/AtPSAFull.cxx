@@ -141,7 +141,7 @@ void AtPSAFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                for (Int_t iIn = initInterval; iIn < endInterval; iIn++)
                   charge += floatADC[iIn] / divider; // reduced by divider!!!
 
-               auto hit = event->AddHit(PadNum, XYZPoint(pos.X(), pos.Y(), zPos), charge);
+               auto &hit = event->AddHit(PadNum, XYZPoint(pos.X(), pos.Y(), zPos), charge);
                hit.SetTimeStamp(initInterval);
                charge = 0;
 

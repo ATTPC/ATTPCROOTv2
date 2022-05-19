@@ -72,7 +72,7 @@ void AtPSAProtoFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
             zPos = CalculateZGeo(iTb);
             charge = adc[iTb];
 
-            auto hit = event->AddHit(PadNum, XYZPoint(pos.X(), pos.Y(), zPos), charge);
+            auto &hit = event->AddHit(PadNum, XYZPoint(pos.X(), pos.Y(), zPos), charge);
             PadHitNum++;
             hit.SetTimeStamp(iTb);
             if ((pos.X() < -9000 || pos.Y() < -9000) && pad->GetPadNum() != -1)

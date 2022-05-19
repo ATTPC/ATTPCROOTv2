@@ -48,12 +48,12 @@ constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
 
 AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile,
-                             Float_t gasMediumDensity, Int_t minit, Int_t maxit)
+                             Float_t gasMediumDensity,Int_t pdg, Int_t minit, Int_t maxit)
    : fEnergyLossFile(std::move(eLossFile)),
      fMeasurementProducer(
         new genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement>(fHitClusterArray)),
      fMeasurementFactory(new genfit::MeasurementFactory<genfit::AbsMeasurement>()), fMinIterations(minit),
-     fMaxIterations(maxit), fMinBrho(minbrho), fMaxBrho(maxbrho), fMagneticField(10.0 * magfield),
+     fMaxIterations(maxit), fMinBrho(minbrho), fMaxBrho(maxbrho), fMagneticField(10.0 * magfield), fPDGCode(pdg),
      fGenfitTrackArray(new TClonesArray("genfit::Track")), fHitClusterArray(new TClonesArray("AtHitCluster"))
 {
    fKalmanFitter = std::make_shared<genfit::KalmanFitterRefTrack>();

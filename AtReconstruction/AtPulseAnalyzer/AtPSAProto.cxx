@@ -152,7 +152,7 @@ void AtPSAProto::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                // std::cout<<zPos<<"    "<<zPosCorr<<std::endl;
 
                //#pragma omp ordered
-               auto hit = event->AddHit(PadNum, XYZPoint(pos.X(), pos.Y(), zPos), charge);
+               auto &hit = event->AddHit(PadNum, XYZPoint(pos.X(), pos.Y(), zPos), charge);
                PadHitNum++;
                hit.SetTraceIntegral(QHitTot); // TODO: The charge of each hit is the total charge of the spectrum, so
                                               // for double structures this is unrealistic.

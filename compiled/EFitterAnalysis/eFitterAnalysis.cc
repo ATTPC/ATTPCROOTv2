@@ -14,7 +14,8 @@ int main(int argc, char *argv[])
    TString geoManFile =
       dir + "/geometry/ATTPC_He1bar_v2_geomanager.root"; // dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
    // Ion list file
-   std::string ionList = "/mnt/analysis/e20020/ATTPCROOTv2_fairroot_18_6/resources/ionFitLists/e20020_ionList.xml"; //"/mnt/analysis/e20020/ATTPCROOTv2_develop/resources/ionFitLists/e20009_ionList.xml";
+   std::string ionList =
+      "/mnt/analysis/e20020/ATTPCROOTv2_fairroot_18_6/resources/ionFitLists/e20020_ionList.xml"; //"/mnt/analysis/e20020/ATTPCROOTv2_develop/resources/ionFitLists/e20009_ionList.xml";
 
    // Analysis flow parameters
    std::size_t firstEvt = 0;
@@ -44,10 +45,10 @@ int main(int argc, char *argv[])
       std::cout << " Processing events from : " << firstEvt << " to " << lastEvt << "\n";
       std::cout << " Fit direction : " << fitDirection << "\n";
       std::cout << " Simulation ? " << simulationConv << "\n";
-      std::cout << " Interactive mode ? : " << fInteractiveMode << cNORMAL << "\n";
+      std::cout << " Interactive mode ? : " << fInteractiveMode  << "\n";
       std::cout << " Merging ? : " << enableMerging << "\n";
       std::cout << " Single Vertex Track ? "
-                << "\n";
+                << cNORMAL << "\n";
 
    } else {
       std::cout << " Wrong number of arguments. Expecting 7: first_event last_event interactive_mode_bool "
@@ -287,6 +288,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       std::cout << "   Track center - X :  " << center.first << " - Y : " << center.second << "\n";
       std::cout << "   Track phi recalc : " << track.GetGeoPhi() * TMath::RadToDeg() << cNORMAL << "\n";
 
+      
       // Skip tracks that are far from Z (to be checked against number of iterations for extrapolation)
       Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
       std::cout << KRED << "    Distance to Z " << dist << cNORMAL << "\n";
@@ -294,10 +296,9 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       track.SetVertexToZDist(dist);
       if (!fEnableMerging && dist > distThres)
          continue;
-      else {	
-	 sp[iTrack] = track;	 
-	 candTrackPool.push_back(std::move(&sp[iTrack]));
-	 
+      else {
+         sp[iTrack] = track;
+         candTrackPool.push_back(std::move(&sp[iTrack]));
       }
 
    } // Tracks
@@ -305,14 +306,13 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
    // Find candidate tracks closer to vertex and discard duplicated
 
    std::vector<AtTrack *> candToMergePool;
-   
-   
+
    if (fEnableMerging && !fSimulationConv) { // TODO: Not adapted to simulation yet
-    
+
       for (auto itA = candTrackPool.begin(); itA != candTrackPool.end(); ++itA) {
          candToMergePool.clear();
          AtTrack *trA = *(itA);
-	 
+
          auto itB = std::copy_if(itA + 1, candTrackPool.end(), std::back_inserter(candToMergePool),
                                  [&trA, this](AtTrack *track) { return CompareTracks(trA, track); });
 
@@ -756,7 +756,7 @@ Bool_t FitManager::SetFitters(Bool_t simConv)
    for (auto ion : *ionList) {
      //if (ion._ionName.compare("proton") == 0 || ion._ionName.compare("deuteron") == 0 || ion._ionName.compare("Be-10") == 0 || ion._ionName.compare("He-3") == 0) {
        //if (ion._ionName.compare("He-3") == 0) {
-         std::cout << " Creating fitter for : " << ion._ionName << "\n";
+     std::cout << " Creating fitter for : " << ion._ionName <<" - "<<(Int_t)ion._PDG<< "\n";
          std::cout << " Energy loss file : " << fWorkDir.Data() + ion._eLossFile << "\n";
          fFitter = new AtFITTER::AtGenfit(fMagneticField, 0.00001, 1000.0, fWorkDir.Data() + ion._eLossFile,
                                           fGasDensity, (Int_t)ion._PDG);
@@ -1080,7 +1080,7 @@ Bool_t FitManager::CompareTracks(AtTrack *trA, AtTrack *trB)
 
    // TODO
    Double_t angleSpread = 5.0 * TMath::DegToRad();
-   Double_t distThresh = 1000.0;
+   Double_t distThresh = 100.0;
    Double_t distMax = 150.0;
 
    if (trA->GetIsMerged() || trB->GetIsMerged())
@@ -1158,12 +1158,10 @@ Bool_t FitManager::CompareTracks(AtTrack *trA, AtTrack *trB)
             // std::cout<<" -- Distance between tracks "<<dist<<"\n";
             // std::cout<<" -- Radial distance between tracks "<<distR<<"\n";
 
-            if (dist < distMax) { // TODO: Check if this is a valid filter. This condition discards valid chunks during
-                                  // the 1 to 1 comparison.
                std::cout << " --- Tracks valid for merging! - " << trA->GetTrackID() << " - " << trB->GetTrackID()
                          << "\n";
                return true;
-            }
+            
          } else
             std::cout << " Track Overlap found "
                       << " - " << trA->GetTrackID() << " - " << trB->GetTrackID() << "\n";
@@ -1179,21 +1177,22 @@ Bool_t FitManager::CheckOverlap(AtTrack *trA, AtTrack *trB)
    auto &hitArrayB = trB->GetHitArray();
 
    Int_t iTBMatch = 0;
-   std::vector<Int_t> iTBMatches;
-
+   
+   //TODO Using Z for the moment
    for (auto itA = hitArrayA.begin(); itA != hitArrayA.end(); ++itA) {
 
+      std::vector<Int_t> iTBMatches;
       auto itB = hitArrayB.begin();
       while ((itB = std::find_if(itB, hitArrayB.end(), [&itA](AtHit &hitB) {
-                 return hitB.GetTimeStamp() == itA->GetTimeStamp();
+							 return hitB.GetPosition().Z() == itA->GetPosition().Z();
               })) != hitArrayB.end()) {
          iTBMatches.push_back(std::distance(hitArrayB.begin(), itB));
          itB++;
       }
+      iTBMatch+=iTBMatches.size();
    }
 
-   Double_t shortStraw = (hitArrayA.size() < hitArrayB.size()) ? hitArrayA.size() : hitArrayB.size();
-   iTBMatch = iTBMatches.size();
+   Double_t shortStraw = (hitArrayA.size() < hitArrayB.size()) ? hitArrayA.size() : hitArrayB.size();   
    // TODO: % of overlap
    // std::cout<<" Overlap "<<shortStraw<<" "<<iTBMatch<<"\n";
    if (iTBMatch > (shortStraw * 0.1))

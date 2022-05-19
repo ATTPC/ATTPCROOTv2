@@ -3,9 +3,9 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpack_e20020_full(TString fileName="run_0160")
+void unpack_e20020_full(TString fileName = "run_0160")
 {
-  // Load the library for unpacking and reconstruction
+   // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
 
    TStopwatch timer;
@@ -27,7 +27,7 @@ void unpack_e20020_full(TString fileName="run_0160")
    TString digiParFile = dir + "/parameters/" + parameterFile;
    TString geoManFile = dir + "/geometry/ATTPC_He1bar_v2.root";
 
-    // Create a run
+   // Create a run
    FairRunAna *run = new FairRunAna();
    run->SetSink(new FairRootFileSink(outputFile));
    run->SetGeomFile(geoManFile);
@@ -42,7 +42,6 @@ void unpack_e20020_full(TString fileName="run_0160")
    std::cout << "Getting containers..." << std::endl;
    // We must get the container before initializing a run
    rtdb->getContainer("AtDigiPar");
-
 
    auto fAtMapPtr = std::make_shared<AtTpcMap>();
    fAtMapPtr->ParseXMLMap(mapDir.Data());
@@ -99,5 +98,4 @@ void unpack_e20020_full(TString fileName="run_0160")
    // ------------------------------------------------------------------------
 
    return 0;
-
 }
