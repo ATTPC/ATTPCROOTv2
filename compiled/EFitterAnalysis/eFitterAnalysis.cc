@@ -14,8 +14,7 @@ int main(int argc, char *argv[])
    TString geoManFile =
       dir + "/geometry/ATTPC_He1bar_v2_geomanager.root"; // dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
    // Ion list file
-   std::string ionList =
-      "/mnt/analysis/e20020/ATTPCROOTv2_develop/resources/ionFitLists/e20020_ionList.xml"; //"/mnt/analysis/e20020/ATTPCROOTv2_develop/resources/ionFitLists/e20009_ionList.xml";
+   std::string ionList = "/mnt/analysis/e20020/ATTPCROOTv2_fairroot_18_6/resources/ionFitLists/e20020_ionList.xml"; //"/mnt/analysis/e20020/ATTPCROOTv2_develop/resources/ionFitLists/e20009_ionList.xml";
 
    // Analysis flow parameters
    std::size_t firstEvt = 0;
@@ -66,7 +65,7 @@ int main(int argc, char *argv[])
       filePath = dir + "/macro/Simulation/ATTPC/16O_aa_v2/"; //"/macro/Simulation/ATTPC/10Be_dp/";
       simFile = "_sim_";
    } else {
-      filePath = dir + "/macro/Unpack_HDF5/e20020/data_t30_dv_0_87_cl1020/"; //"/macro/Unpack_HDF5/e20009/rootFiles/";
+      filePath = dir + "/macro/Unpack_HDF5/e20020/"; //"/macro/Unpack_HDF5/e20009/rootFiles/";
       simFile = "";
    }
 
@@ -295,9 +294,10 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       track.SetVertexToZDist(dist);
       if (!fEnableMerging && dist > distThres)
          continue;
-      else {
-         sp[iTrack] = track;
-         candTrackPool.push_back(std::move(&sp[iTrack]));
+      else {	
+	 sp[iTrack] = track;	 
+	 candTrackPool.push_back(std::move(&sp[iTrack]));
+	 
       }
 
    } // Tracks
@@ -305,13 +305,14 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
    // Find candidate tracks closer to vertex and discard duplicated
 
    std::vector<AtTrack *> candToMergePool;
-
+   
+   
    if (fEnableMerging && !fSimulationConv) { // TODO: Not adapted to simulation yet
-
+    
       for (auto itA = candTrackPool.begin(); itA != candTrackPool.end(); ++itA) {
          candToMergePool.clear();
          AtTrack *trA = *(itA);
-
+	 
          auto itB = std::copy_if(itA + 1, candTrackPool.end(), std::back_inserter(candToMergePool),
                                  [&trA, this](AtTrack *track) { return CompareTracks(trA, track); });
 
