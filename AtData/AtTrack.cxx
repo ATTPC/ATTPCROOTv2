@@ -17,28 +17,51 @@ constexpr auto cGREEN = "\033[1;32m";
 
 ClassImp(AtTrack);
 
-AtTrack &AtTrack::operator=(const AtTrack &obj)
+/**
+ * @brief ADL-findable swap for AtTrack.
+ *
+ * Implemented as a friend free function to enable ADL of swap.
+ * (https://en.cppreference.com/w/cpp/language/adl)
+ */
+void swap(AtTrack &a, AtTrack &b) noexcept
 {
-   if (this != &obj) {
+   using std::swap; // Enable ADL
 
-      fTrackID = obj.fTrackID;
-      fHitArray = obj.fHitArray;
+   swap(a.fTrackID, b.fTrackID);
+   swap(a.fHitArray, b.fHitArray);
+   swap(a.fHitClusterArray, b.fHitClusterArray);
+   swap(a.fPattern, b.fPattern);
+   swap(a.fIsMerged, b.fIsMerged);
+   swap(a.fVertexToZDist, b.fVertexToZDist);
 
-      fPattern = (obj.fPattern != nullptr) ? obj.fPattern->Clone() : nullptr;
+   swap(a.fGeoThetaAngle, b.fGeoThetaAngle);
+   swap(a.fGeoPhiAngle, b.fGeoPhiAngle);
+   swap(a.fGeoRadius, b.fGeoRadius);
+   swap(a.fGeoCenter, b.fGeoCenter);
+}
 
-      fGeoThetaAngle = obj.fGeoThetaAngle;
-      fGeoPhiAngle = obj.fGeoPhiAngle;
-      fGeoRadius = obj.fGeoRadius;
-      fGeoCenter = obj.fGeoCenter;
-      fHitClusterArray = obj.fHitClusterArray;
-      fIsMerged = obj.fIsMerged;
-      fVertexToZDist = obj.fVertexToZDist;
-   }
+/**
+ * @brief Copy assignment using copy-swap idiom.
+ *
+ */
+AtTrack &AtTrack::operator=(AtTrack obj)
+{
+   swap(*this, obj);
    return *this;
 }
 AtTrack::AtTrack(const AtTrack &obj)
 {
-   *this = obj;
+   fTrackID = obj.fTrackID;
+   fHitArray = obj.fHitArray;
+   fHitClusterArray = obj.fHitClusterArray;
+   fPattern = (obj.fPattern != nullptr) ? obj.fPattern->Clone() : nullptr;
+   fIsMerged = obj.fIsMerged;
+   fVertexToZDist = obj.fVertexToZDist;
+
+   fGeoThetaAngle = obj.fGeoThetaAngle;
+   fGeoPhiAngle = obj.fGeoPhiAngle;
+   fGeoRadius = obj.fGeoRadius;
+   fGeoCenter = obj.fGeoCenter;
 }
 
 void AtTrack::AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster)
@@ -49,11 +72,11 @@ void AtTrack::AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster)
 XYZPoint AtTrack::GetLastPoint()
 {
    Double_t maxR = 0.;
-   XYZPoint maxPos, temp;
+   XYZPoint maxPos;
    for (auto &nHit : fHitArray) {
-      temp = nHit.GetPosition();
-      if (sqrt(pow(temp.X(), 2) + pow(temp.Y(), 2)) > maxR) {
-         maxR = sqrt(pow(temp.X(), 2) + pow(temp.Y(), 2));
+      auto temp = nHit.GetPosition();
+      if (temp.Rho() > maxR) {
+         maxR = temp.Rho();
          maxPos = temp;
       }
    }
@@ -77,32 +100,23 @@ Double_t AtTrack::GetLinearRange()
    if (fHitArray.size() > 0) {
       AtHit fhit = fHitArray.front(); // Last hit of the track (Low TB)
       AtHit lhit = fHitArray.back();  // First hit of the track (High TB)
-      auto fhitPos = fhit.GetPosition();
-      auto lhitPos = lhit.GetPosition();
-
-      return TMath::Sqrt(TMath::Power((fhitPos.X() - lhitPos.X()), 2) + TMath::Power((fhitPos.Y() - lhitPos.Y()), 2) +
-                         TMath::Power((fhitPos.Z() - lhitPos.Z()), 2));
+      return GetLinearRange(fhit.GetPosition(), lhit.GetPosition());
    } else
       return 0;
 }
 
 Double_t AtTrack::GetLinearRange(XYZPoint vertex)
 {
-
    if (fHitArray.size() > 0) {
       AtHit fhit = fHitArray.front();
-      auto fhitPos = fhit.GetPosition();
-
-      return TMath::Sqrt(TMath::Power((fhitPos.X() - vertex.X()), 2) + TMath::Power((fhitPos.Y() - vertex.Y()), 2) +
-                         TMath::Power((fhitPos.Z() - vertex.Z()), 2));
+      return GetLinearRange(fhit.GetPosition(), vertex);
    } else
       return 0;
 }
 
 Double_t AtTrack::GetLinearRange(const XYZPoint &vertex, const XYZPoint &maxPos)
 {
-   return TMath::Sqrt(TMath::Power((maxPos.X() - vertex.X()), 2) + TMath::Power((maxPos.Y() - vertex.Y()), 2) +
-                      TMath::Power((maxPos.Z() - vertex.Z()), 2));
+   return (vertex - maxPos).R();
 }
 
 Double_t AtTrack::GetGeoQEnergy()

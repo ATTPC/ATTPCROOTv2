@@ -30,6 +30,8 @@ protected:
    Int_t fTrackID{-1};
    std::vector<AtHit> fHitArray; // TrackHC, AtGenfit, all ransacs
    std::unique_ptr<AtPatterns::AtPattern> fPattern{nullptr};
+   Bool_t fIsMerged;
+   Double_t fVertexToZDist;
 
    // Used by AtPRA
    Double_t fGeoThetaAngle{};                // Geometrical scattering angle with respect to the detector FitParameters
@@ -38,20 +40,14 @@ protected:
    std::pair<Double_t, Double_t> fGeoCenter; // Center of the spiral track
    std::vector<AtHitCluster> fHitClusterArray; ///< Clusterized hits container
 
-   Bool_t fIsMerged;
-   Double_t fVertexToZDist;
-
 public:
    AtTrack() = default;
    AtTrack(const AtTrack &obj);
-   AtTrack &operator=(const AtTrack &obj);
-   //{
-   // std::cout << "assign" << std::endl;
-   // return *this;
-   // };
+   AtTrack &operator=(AtTrack obj);
    AtTrack(AtTrack &&) = default;
    AtTrack &operator=(AtTrack &&) = default;
    ~AtTrack() = default;
+   friend void swap(AtTrack &a, AtTrack &b) noexcept;
 
    // Getters
    Int_t GetTrackID() const { return fTrackID; }
