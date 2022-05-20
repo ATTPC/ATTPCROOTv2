@@ -10,6 +10,7 @@ ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPulseAnalyzer
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
+${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
 )
 
 Set(DEPENDENCIES
@@ -72,6 +73,7 @@ if(PCL_FOUND)
     AtPatternRecognition/cluster.cxx
     AtPatternRecognition/hc.cxx
     AtPatternRecognition/fastcluster.cxx
+    AtRansac/AtRansac.cxx
     )
   set(DEPENDENCIES ${DEPENDENCIES}
     ${PCL_LIBRARIES}
