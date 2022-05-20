@@ -226,6 +226,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       Double_t theta = track.GetGeoTheta();
       std::pair<Double_t, Double_t> center = track.GetGeoCenter();
       Double_t thetaConv;
+
       if (fSimulationConv)
          thetaConv = 180.0 - theta * TMath::RadToDeg();
       else
@@ -280,9 +281,12 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
 
       // This is just to select distances
       std::cout << cBLUE << "   Track ID " << track.GetTrackID() << "\n";
-      std::cout << "   Initial position : " << xiniPRA << " - " << yiniPRA << " - " << ziniPRA << "\n";
-      std::cout << "   Second position : " << secPos.X() << " - " << secPos.Y() << " - " << secPos.Z() << "\n";
-      std::cout << "   End position : " << endPos.X() << " - " << endPos.Y() << " - " << zEndCal << "\n";
+      std::cout << "   Initial position : " << xiniPRA << " - " << yiniPRA << " - " << ziniPRA << " "
+                << iniCluster.GetTimeStamp() << "\n";
+      std::cout << "   Second position : " << secPos.X() << " - " << secPos.Y() << " - " << secPos.Z() << " "
+                << secCluster.GetTimeStamp() << "\n";
+      std::cout << "   End position : " << endPos.X() << " - " << endPos.Y() << " - " << zEndCal << " "
+                << endCluster.GetTimeStamp() << "\n";
       std::cout << "   Theta (convention) : " << thetaConv << " - Phi Clus : " << phiClus * TMath::RadToDeg() << "\n";
       std::cout << "   Track center - X :  " << center.first << " - Y : " << center.second << "\n";
       std::cout << "   Track phi recalc : " << track.GetGeoPhi() * TMath::RadToDeg() << cNORMAL << "\n";
@@ -308,6 +312,8 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
    if (fEnableMerging && !fSimulationConv) { // TODO: Not adapted to simulation yet
 
       for (auto itA = candTrackPool.begin(); itA != candTrackPool.end(); ++itA) {
+         std::cout << "Merging track: " << (*itA)->GetTrackID() << std::endl;
+
          candToMergePool.clear();
          AtTrack *trA = *(itA);
 
@@ -1081,14 +1087,22 @@ Bool_t FitManager::CompareTracks(AtTrack *trA, AtTrack *trB)
    Double_t distThresh = 100.0;
    Double_t distMax = 150.0;
 
-   if (trA->GetIsMerged() || trB->GetIsMerged())
+   if (trA->GetIsMerged() || trB->GetIsMerged()) {
+      // std::cout << "    Skipped : merged " << std::endl;
       return false;
-   if (trA->GetTrackID() == trB->GetTrackID())
+   }
+   if (trA->GetTrackID() == trB->GetTrackID()) {
+      // std::cout << "    Skipped : Same track " << std::endl;
       return false;
-   if (trA->GetGeoTheta() * TMath::RadToDeg() > 90 && trB->GetGeoTheta() * TMath::RadToDeg() < 90)
+   }
+   if (trA->GetGeoTheta() * TMath::RadToDeg() > 90 && trB->GetGeoTheta() * TMath::RadToDeg() < 90) {
+      // std::cout << "    Skipped : Diff directions " << std::endl;
       return false;
-   if (trA->GetGeoTheta() * TMath::RadToDeg() < 90 && trB->GetGeoTheta() * TMath::RadToDeg() > 90)
+   }
+   if (trA->GetGeoTheta() * TMath::RadToDeg() < 90 && trB->GetGeoTheta() * TMath::RadToDeg() > 90) {
+      // std::cout << "    Skipped : Diff directions " << std::endl;
       return false;
+   }
 
    std::cout << " Comparing track A : " << trA->GetTrackID() << " and track B : " << trB->GetTrackID() << "\n";
 
@@ -1156,9 +1170,8 @@ Bool_t FitManager::CompareTracks(AtTrack *trA, AtTrack *trB)
             // std::cout<<" -- Distance between tracks "<<dist<<"\n";
             // std::cout<<" -- Radial distance between tracks "<<distR<<"\n";
 
-               std::cout << " --- Tracks valid for merging! - " << trA->GetTrackID() << " - " << trB->GetTrackID()
-                         << "\n";
-               return true;
+            std::cout << " --- Tracks valid for merging! - " << trA->GetTrackID() << " - " << trB->GetTrackID() << "\n";
+            return true;
 
          } else
             std::cout << " Track Overlap found "

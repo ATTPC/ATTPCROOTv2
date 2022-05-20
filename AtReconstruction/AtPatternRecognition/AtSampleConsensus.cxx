@@ -67,7 +67,14 @@ AtPatternEvent AtSampleConsensus::Solve(const std::vector<AtHit> &hitArray)
 {
    if (hitArray.size() < fMinPatternPoints) {
       LOG(error) << "Not enough points to solve. Requires" << fMinPatternPoints;
+      return {};
    }
+   /*   if (fMinPatternPoints < AtPatterns::CreatePattern(fPatternType)->GetNumPoints()) {
+         LOG(debug)
+            << "Min number of points to be considered a pattern is less than the number of points to define a model "
+            << fMinPatternPoints;
+         return {};
+         }*/
 
    auto comp = [](const PatternPtr &a, const PatternPtr &b) { return a->GetChi2() < b->GetChi2(); };
    auto sortedPatterns = std::set<PatternPtr, decltype(comp)>(comp);
@@ -111,7 +118,8 @@ AtTrack AtSampleConsensus::CreateTrack(AtPattern *pattern, std::vector<AtHit> &i
    for (auto &hit : inliers)
       track.AddHit(std::move(hit));
 
-   pattern->FitPattern(inliers, fChargeThres);
+   if (fFitPattern)
+      pattern->FitPattern(inliers, fChargeThres);
 
    track.SetPattern(pattern->Clone());
    return track;

@@ -30,8 +30,8 @@ protected:
    Int_t fTrackID{-1};
    std::vector<AtHit> fHitArray; // TrackHC, AtGenfit, all ransacs
    std::unique_ptr<AtPatterns::AtPattern> fPattern{nullptr};
-   Bool_t fIsMerged;
-   Double_t fVertexToZDist;
+   Bool_t fIsMerged{false};
+   Double_t fVertexToZDist{0};
 
    // Used by AtPRA
    Double_t fGeoThetaAngle{};                // Geometrical scattering angle with respect to the detector FitParameters
@@ -45,7 +45,6 @@ public:
    AtTrack(const AtTrack &obj);
    AtTrack &operator=(AtTrack obj);
    AtTrack(AtTrack &&) = default;
-   AtTrack &operator=(AtTrack &&) = default;
    ~AtTrack() = default;
    friend void swap(AtTrack &a, AtTrack &b) noexcept;
 

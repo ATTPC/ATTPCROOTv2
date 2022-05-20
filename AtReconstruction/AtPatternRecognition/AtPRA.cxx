@@ -8,6 +8,8 @@
 #include "AtSampleConsensus.h"
 #include "AtTrack.h" // for XYZPoint, AtTrack
 
+#include <FairLogger.h>
+
 #include <Math/Point3D.h>   // for PositionVector3D, Cart...
 #include <Math/Vector3D.h>  // for DisplacementVector3D
 #include <TGraph.h>         // for TGraph
@@ -70,7 +72,14 @@ void AtPATTERN::AtPRA::SetTrackCurvature(AtTrack &track)
 void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 {
 
-   // std::cout<<" Processing track with "<<track.GetHitArray()->size()<<" points."<<"\n";
+   /*
+std::cout << " Processing track with " << track.GetHitArray().size() << " points."
+             << "\n";
+   for (auto &hit : track.GetHitArray())
+      std::cout << hit.GetTimeStamp() << " ";
+   std::cout << std::endl;
+   */
+
    //  Get the radius of curvature from RANSAC
    SampleConsensus::AtSampleConsensus RansacSmoothRadius;
    RansacSmoothRadius.SetPatternType(AtPatterns::PatternType::kCircle2D);
@@ -83,14 +92,19 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
 
    if (!circularTracks.empty()) {
 
+      std::sort(begin(circularTracks), end(circularTracks), [](const AtTrack &a, const AtTrack &b) {
+         return a.GetHitArrayConst().size() > b.GetHitArrayConst().size();
+      });
       std::vector<AtHit> hits = circularTracks.at(0).GetHitArray();
 
       auto circle = dynamic_cast<const AtPatterns::AtPatternCircle2D *>(circularTracks.at(0).GetPattern());
+
       auto center = circle->GetCenter();
       auto radius = circle->GetRadius();
 
       track.SetGeoCenter({center.X(), center.Y()});
       track.SetGeoRadius(radius);
+      track.SetPattern(circle->Clone());
 
       std::vector<double> wpca;
       std::vector<double> whit;
@@ -148,39 +162,48 @@ void AtPATTERN::AtPRA::SetTrackInitialParameters(AtTrack &track)
             // std::cout<<" RANSAC Theta "<<"\n";
 
             SampleConsensus::AtSampleConsensus RansacTheta;
-            RansacSmoothRadius.SetPatternType(AtPatterns::PatternType::kLine);
-            RansacSmoothRadius.SetMinHitsPattern(0.1 * thetaHits.size());
-            RansacSmoothRadius.SetDistanceThreshold(6.0);
-            auto thetaTracks =
-               RansacSmoothRadius.Solve(track.GetHitArray()).GetTrackCand(); // Only part of the spiral is used
+            RansacTheta.SetPatternType(AtPatterns::PatternType::kLine);
+            RansacTheta.SetMinHitsPattern(0.1 * thetaHits.size());
+            RansacTheta.SetDistanceThreshold(6.0);
+            RansacTheta.SetFitPattern(false);
+            auto thetaTracks = RansacTheta.Solve(thetaHits).GetTrackCand(); // Only part of the spiral is used
 
             if (thetaTracks.size() > 0) {
 
+               std::sort(begin(thetaTracks), end(thetaTracks), [](const AtTrack &a, const AtTrack &b) {
+                  return a.GetHitArrayConst().size() > b.GetHitArrayConst().size();
+               });
+
                // NB: Only the most intense line is taken, if any
                auto line = dynamic_cast<const AtPatterns::AtPatternLine *>(thetaTracks.at(0).GetPattern());
+               LOG(debug) << "Track ID: " << track.GetTrackID() << " with " << track.GetHitArray().size()
+                          << " hits. Fit " << thetaTracks[0].GetHitArray().size() << "/" << thetaHits.size()
+                          << " hits in " << thetaTracks.size() << " tracks";
 
-               // std::vector<Double_t> coeffTheta = thetaTracks.at(0).GetRANSACCoeff();
-               auto coeffTheta = line->GetPatternPar();
-
+               auto dirTheta = line->GetDirection().Unit();
                int sign = 0;
 
-               if (coeffTheta.at(3) * coeffTheta.at(4) < 0)
+               if (dirTheta.X() * dirTheta.Y() < 0)
                   sign = -1;
                else
                   sign = 1;
 
-               if (coeffTheta.at(3) != 0)
-                  angle = acos(sign * fabs(coeffTheta.at(4))) * TMath::RadToDeg();
+               if (dirTheta.X() != 0) {
+                  angle = acos(sign * fabs(dirTheta.Y())) * TMath::RadToDeg();
+               }
 
                auto temp2 = posPCA - center;
                phi0 = TMath::ATan2(temp2.Y(), temp2.X());
 
             } // thetaTracks
-
             track.SetGeoTheta(angle * TMath::Pi() / 180.0);
             track.SetGeoPhi(phi0);
 
          } // if
+         else {
+            LOG(info) << "Track ID: " << track.GetTrackID() << " with " << track.GetHitArray().size()
+                      << " hits does not have enough theta hits to get angle";
+         }
 
       } catch (std::exception &e) {
 
@@ -283,7 +306,7 @@ void AtPATTERN::AtPRA::Clusterize3D(AtTrack &track, Float_t distance, Float_t ra
                x /= hitQ;
                y /= hitQ;
                z /= hitTBArray.size();
-               timeStamp /= std::round(timeStamp);
+               timeStamp /= hitTBArray.size();
 
                sigma_x /= hitQ;
                sigma_y /= hitQ;
@@ -429,7 +452,7 @@ void AtPATTERN::AtPRA::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Floa
                x /= hitQ;
                y /= hitQ;
                z /= hitTBArray.size();
-               timeStamp /= std::round(timeStamp);
+               timeStamp /= hitTBArray.size();
 
                sigma_x /= hitQ;
                sigma_y /= hitQ;
@@ -545,7 +568,7 @@ void AtPATTERN::AtPRA::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Floa
                   x /= hitQ;
                   y /= hitQ;
                   z /= hitTBArray.size();
-                  timeStamp /= std::round(timeStamp);
+                  timeStamp /= hitTBArray.size();
 
                   sigma_x /= hitQ;
                   sigma_y /= hitQ;

@@ -58,7 +58,7 @@ private:
    float fIterations{500};       //< Number of interations of sample consensus
    float fMinPatternPoints{30};  //< Required number of points to form a pattern
    float fDistanceThreshold{15}; //< Distance a point must be from pattern to be an inlier
-
+   bool fFitPattern{true};
    /**
     * @brief Min charge for charge weighted fit.
     *
@@ -82,6 +82,7 @@ public:
    void SetMinHitsPattern(Int_t nhits) { fMinPatternPoints = nhits; };
    void SetDistanceThreshold(Float_t threshold) { fDistanceThreshold = threshold; };
    void SetChargeThreshold(double value) { fChargeThres = value; };
+   void SetFitPattern(bool val) { fFitPattern = val; }
 
 private:
    PatternPtr GeneratePatternFromHits(const std::vector<AtHit> &hitArray);

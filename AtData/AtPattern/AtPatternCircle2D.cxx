@@ -18,7 +18,7 @@ using namespace AtPatterns;
 AtPatternCircle2D::AtPatternCircle2D() : AtPattern(3) {}
 TEveLine *AtPatternCircle2D::GetEveLine() const
 {
-   return AtPattern::GetEveLine(0, M_2_PI, 100);
+   return AtPattern::GetEveLine(0, 2 * M_PI, 1000);
 }
 
 void AtPatternCircle2D::DefinePattern(const std::vector<XYZPoint> &points)

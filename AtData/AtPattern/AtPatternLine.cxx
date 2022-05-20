@@ -54,12 +54,14 @@ void AtPatternLine::DefinePattern(const std::vector<XYZPoint> &points)
 
    auto fPoint = points[0];
    auto fDirection = points[1] - points[0];
-   auto tZ = -fPoint.Z() / fDirection.Z();
-   fPoint += fDirection * tZ;
 
    // If not perpendicular to z-axis rescale direction
-   if (fDirection.Z() != 0)
+   /*if (fDirection.Z() != 0) {
+      auto tZ = -fPoint.Z() / fDirection.Z();
+      fPoint += fDirection * tZ;
+
       fDirection /= fDirection.Z();
+      }*/
    fPatternPar = {fPoint.X(), fPoint.Y(), fPoint.Z(), fDirection.X(), fDirection.Y(), fDirection.Z()};
 }
 

@@ -233,7 +233,7 @@ void AtFITTER::AtFitter::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Fl
                x /= hitQ;
                y /= hitQ;
                z /= hitTBArray.size();
-               timeStamp /= std::round(timeStamp);
+               timeStamp /= hitTBArray.size();
 
                sigma_x /= hitQ;
                sigma_y /= hitQ;
@@ -349,7 +349,7 @@ void AtFITTER::AtFitter::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Fl
                   x /= hitQ;
                   y /= hitQ;
                   z /= hitTBArray.size();
-                  timeStamp /= std::round(timeStamp);
+                  timeStamp /= hitTBArray.size();
 
                   sigma_x /= hitQ;
                   sigma_y /= hitQ;
