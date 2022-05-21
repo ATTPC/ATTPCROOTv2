@@ -110,7 +110,7 @@ InitStatus AtPRAtask::Init()
       LOG(info) << "Using Hough transform algorithm";
       // fPSA = new AtPSAProto();
    }
-
+   fPRA->SetAnglePCL(fAnglePCL);
    // Prunning options
    std::cout << " Track prunning : " << kSetPrunning << "\n";
    if (kSetPrunning) {

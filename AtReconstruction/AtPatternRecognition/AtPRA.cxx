@@ -11,9 +11,10 @@
 
 #include <FairLogger.h>
 
-#include <Math/Point3D.h>   // for PositionVector3D, Cart...
-#include <Math/Vector2D.h>  // for PositionVector3D, Cart...
-#include <Math/Vector3D.h>  // for DisplacementVector3D
+#include <Math/Point3D.h>  // for PositionVector3D, Cart...
+#include <Math/Vector2D.h> // for PositionVector3D, Cart...
+#include <Math/Vector3D.h> // for DisplacementVector3D
+#include <TF1.h>
 #include <TGraph.h>         // for TGraph
 #include <TMath.h>          // for Power, Sqrt, ATan2, Pi
 #include <TMatrixDSymfwd.h> // for TMatrixDSym
@@ -83,24 +84,25 @@ std::cout << " Processing track with " << track.GetHitArray().size() << " points
       std::cout << hit.GetTimeStamp() << " ";
    std::cout << std::endl;
    */
+   std::vector<AtTrack> circularTracks;
+   if (fCirclePCL) {
+      AtRANSACN::AtRansac RansacSmoothRadius;
+      RansacSmoothRadius.SetModelType(pcl::SACMODEL_CIRCLE2D);
+      RansacSmoothRadius.SetRANSACPointThreshold(0.1);
+      RansacSmoothRadius.SetDistanceThreshold(6.0);
+      circularTracks = *RansacSmoothRadius.RansacPCL(track.GetHitArray());
+   } else {
+      SampleConsensus::AtSampleConsensus RansacSmoothRadius;
+      RansacSmoothRadius.SetPatternType(AtPatterns::PatternType::kCircle2D);
+      RansacSmoothRadius.SetMinHitsPattern(0.1 * track.GetHitArray().size());
+      RansacSmoothRadius.SetDistanceThreshold(6.0);
+      RansacSmoothRadius.SetNumIterations(1000);
+      circularTracks =
+         RansacSmoothRadius.Solve(track.GetHitArray()).GetTrackCand(); // Only part of the spiral is used
+                                                                       // This function also sets the coefficients
+                                                                       // i.e. radius of curvature and center
+   }
 
-   SampleConsensus::AtSampleConsensus RansacSmoothRadius;
-   RansacSmoothRadius.SetPatternType(AtPatterns::PatternType::kCircle2D);
-   RansacSmoothRadius.SetMinHitsPattern(0.1 * track.GetHitArray().size());
-   RansacSmoothRadius.SetDistanceThreshold(6.0);
-   RansacSmoothRadius.SetNumIterations(1000);
-   auto circularTracks =
-      RansacSmoothRadius.Solve(track.GetHitArray()).GetTrackCand(); // Only part of the spiral is used
-                                                                    // This function also sets the coefficients
-                                                                    // i.e. radius of curvature and center
-
-   /*
-AtRANSACN::AtRansac RansacSmoothRadius;
-RansacSmoothRadius.SetModelType(pcl::SACMODEL_CIRCLE2D);
-RansacSmoothRadius.SetRANSACPointThreshold(0.1);
-RansacSmoothRadius.SetDistanceThreshold(6.0);
-std::vector<AtTrack> circularTracks = *RansacSmoothRadius.RansacPCL(track.GetHitArray());
-*/
    if (!circularTracks.empty()) {
 
       std::vector<AtHit> hits = circularTracks.at(0).GetHitArray();
@@ -114,40 +116,58 @@ std::vector<AtTrack> circularTracks = *RansacSmoothRadius.RansacPCL(track.GetHit
       track.SetGeoRadius(radius);
       track.SetPattern(circle->Clone());
 
-      std::vector<double> wpca;
+      // std::vector<double> wpca;
       std::vector<double> whit;
       std::vector<double> arclength;
 
       auto arclengthGraph = std::make_unique<TGraph>();
 
       auto posPCA = hits.at(0).GetPosition();
+      auto refPosOnCircle = posPCA - center;
+      auto refAng = refPosOnCircle.Phi(); // Bounded between (-Pi,Pi]
 
       std::vector<AtHit> thetaHits;
+
+      bool iniYSign = !signbit(refPosOnCircle.Y());
+      int numYCross = 0;
 
       for (size_t i = 0; i < hits.size(); ++i) {
 
          auto pos = hits.at(i).GetPosition();
+         auto posOnCircle = pos - center;
+         auto angleHit = posOnCircle.Phi();
 
-         auto temp = posPCA - center;
-         wpca.push_back(TMath::ATan2(temp.Y(), temp.X()));
-         temp = pos - center;
-         whit.push_back(TMath::ATan2(temp.Y(), temp.X()));
+         // Check for a move over -Y axis
+         bool currYSign = !signbit(posOnCircle.Y());
+         if (posOnCircle.X() < 0) {
+            if (iniYSign != currYSign) { // We have moved across the y axis
+               numYCross++;
+            }
+         }
+         iniYSign = currYSign;
 
-         arclength.push_back(fabs(radius * (wpca.at(i) - whit.at(i))));
+         // Get if we should add or subtract the 2pi correction
+         if (i > 0) {
+            if (refAng - whit.back() > 0)
+               angleHit -= 2 * M_PI * numYCross;
+            else
+               angleHit += 2 * M_PI * numYCross;
+         }
+
+         whit.push_back(angleHit);
+
+         arclength.push_back(fabs(radius * (refAng - whit.at(i))));
 
          arclengthGraph->SetPoint(arclengthGraph->GetN(), arclength.at(i), pos.Z());
 
-         // std::cout<<pos.X()<<"  "<<pos.Y()<<" "<<pos.Z()<<" "<<hits->at(i).GetTimeStamp()<<"
-         // "<<hits->at(i).GetCharge()<<"\n";
+         if (track.GetTrackID() > -1)
+            LOG(debug2) << posOnCircle.X() << "  " << posOnCircle.Y() << " " << pos.Z() << " "
+                        << hits.at(i).GetTimeStamp() << " " << arclength.back() << "\n";
 
          // Add a hit in the Arc legnth - Z plane
          Double_t xPos = arclength.at(i);
          Double_t yPos = pos.Z();
          Double_t zPos = i * 1E-19;
-
-         // cloud->points[i].x = arclength.at(i);
-         // cloud->points[i].y = pos.Z();
-         // cloud->points[i].z = i*1E-19;
 
          thetaHits.emplace_back(i, hits.at(i).GetPadNum(), XYZPoint(xPos, yPos, zPos), hits.at(i).GetCharge());
       }
@@ -155,12 +175,11 @@ std::vector<AtTrack> circularTracks = *RansacSmoothRadius.RansacPCL(track.GetHit
       // TF1 *f1 = new TF1("f1", "pol1", -500, 500);
       // TF1 * f1 = new TF1("f1",[](double *x, double *p) { return (p[0]+p[1]*x[0]); },-500,500,2);
       // TF1 * f1 = new TF1("f1","[0]+[1]*x",-500,500);
-      // TF1 * f1 = new TF1("f1",fitf,-500,500,2);
-      // arclengthGraph->Fit(f1,"R");
-      // Double_t slope = f1->GetParameter(1);
-      // std::cout<<" Slope "<<slope<<"\n";
+      // TF1 *f1 = new TF1("f1", fitf, -500, 500, 2);
+      // arclengthGraph->Fit(f1, "R");
+      // auto slope = ROOT::Math::XYVector(1, f1->GetParameter(1)).Unit();
+      // std::cout << " Slope " << slope << "\n";
 
-      Double_t slope = 0;
       Double_t angle = 0.0;
       Double_t phi0 = 0.0;
 
@@ -168,27 +187,30 @@ std::vector<AtTrack> circularTracks = *RansacSmoothRadius.RansacPCL(track.GetHit
 
          if (thetaHits.size() > 0) {
             // std::cout<<" RANSAC Theta "<<"\n";
+            std::vector<AtTrack> thetaTracks;
 
-            SampleConsensus::AtSampleConsensus RansacTheta;
-            RansacTheta.SetPatternType(AtPatterns::PatternType::kLine);
-            RansacTheta.SetMinHitsPattern(0.1 * thetaHits.size());
-            RansacTheta.SetDistanceThreshold(6.0);
-            RansacTheta.SetFitPattern(false);
-            auto thetaTracks = RansacTheta.Solve(thetaHits).GetTrackCand(); // Only part of the spiral is used
-                                                                            /*
-                                                                                 AtRANSACN::AtRansac RansacTheta;
-                                                                                 RansacTheta.SetModelType(pcl::SACMODEL_LINE);
-                                                                                 RansacTheta.SetRANSACPointThreshold(0.1);
-                                                                                 RansacTheta.SetDistanceThreshold(6.0);
-                                                                                 std::vector<AtTrack> thetaTracks = *RansacTheta.RansacPCL(thetaHits);
-                                                                            */
+            if (fAnglePCL) {
+               AtRANSACN::AtRansac RansacTheta;
+               RansacTheta.SetModelType(pcl::SACMODEL_LINE);
+               RansacTheta.SetRANSACPointThreshold(0.1);
+               RansacTheta.SetDistanceThreshold(6.0);
+               thetaTracks = *RansacTheta.RansacPCL(thetaHits);
+            } else {
+               SampleConsensus::AtSampleConsensus RansacTheta;
+               RansacTheta.SetPatternType(AtPatterns::PatternType::kLine);
+               RansacTheta.SetMinHitsPattern(0.1 * thetaHits.size());
+               RansacTheta.SetDistanceThreshold(6.0);
+               RansacTheta.SetFitPattern(true);
+               thetaTracks = RansacTheta.Solve(thetaHits).GetTrackCand();
+            }
+
             if (thetaTracks.size() > 0) {
 
                // NB: Only the most intense line is taken, if any
                auto line = dynamic_cast<const AtPatterns::AtPatternLine *>(thetaTracks.at(0).GetPattern());
                LOG(info) << "Track ID: " << track.GetTrackID() << " with " << track.GetHitArray().size()
                          << " hits. Fit " << thetaTracks[0].GetHitArray().size() << "/" << thetaHits.size()
-                         << " hits in " << thetaTracks.size() << " tracks";
+                         << " hits in first of " << thetaTracks.size() << " tracks";
 
                auto dirTheta = line->GetDirection();
                auto dir2D = ROOT::Math::XYVector(dirTheta.X(), dirTheta.Y()).Unit();
@@ -205,6 +227,12 @@ std::vector<AtTrack> circularTracks = *RansacSmoothRadius.RansacPCL(track.GetHit
                }
 
                LOG(info) << "Setting theta geo to: " << angle << " with ransac direction: " << dir2D;
+               for (int i = 1; i < thetaTracks.size(); ++i) {
+                  auto ranLine = dynamic_cast<const AtPatterns::AtPatternLine *>(thetaTracks.at(i).GetPattern());
+                  auto ranDir = ROOT::Math::XYVector(ranLine->GetDirection().X(), ranLine->GetDirection().Y()).Unit();
+                  LOG(info) << "RANSAC direction " << i << " with " << thetaTracks[i].GetHitArray().size() << "/"
+                            << thetaHits.size() << ": " << ranDir;
+               }
 
                auto temp2 = posPCA - center;
                phi0 = TMath::ATan2(temp2.Y(), temp2.X());

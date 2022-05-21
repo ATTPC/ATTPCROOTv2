@@ -31,6 +31,9 @@ protected:
 
    Bool_t kSetPrunning{false}; //<<! Enable prunning of tracks
 
+   Bool_t fCirclePCL{false};
+   Bool_t fAnglePCL{false};
+
 public:
    virtual ~AtPRA() = default;
    virtual std::vector<AtTrack> GetTrackCand() = 0;
@@ -47,6 +50,9 @@ public:
    void SetStdDevMulkNN(Double_t stdDevMul) { fStdDevMulkNN = stdDevMul; }
    void SetkNNDist(Double_t dist) { fkNNDist = dist; }
    void SetPrunning() { kSetPrunning = kTRUE; }
+
+   void SetCirclePCL(bool val) { fCirclePCL = val; }
+   void SetAnglePCL(bool val) { fAnglePCL = val; }
 
 protected:
    void SetTrackCurvature(AtTrack &track);
