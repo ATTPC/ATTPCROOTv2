@@ -128,8 +128,11 @@ std::cout << " Processing track with " << track.GetHitArray().size() << " points
 
       std::vector<AtHit> thetaHits;
 
-      bool iniYSign = !signbit(refPosOnCircle.Y());
+      // The number of times we have crossed the -Y axis.
+      // Increase by 1 when moving from +y to -y
+      // Decrease by 1 when moving from -y to +y
       int numYCross = 0;
+      int lastYSign = GetSign(refPosOnCircle.Y());
 
       for (size_t i = 0; i < hits.size(); ++i) {
 
@@ -138,24 +141,18 @@ std::cout << " Processing track with " << track.GetHitArray().size() << " points
          auto angleHit = posOnCircle.Phi();
 
          // Check for a move over -Y axis
-         bool currYSign = !signbit(posOnCircle.Y());
-         if (posOnCircle.X() < 0) {
-            if (iniYSign != currYSign) { // We have moved across the y axis
-               numYCross++;
-            }
-         }
-         iniYSign = currYSign;
+         int currYSign = GetSign(posOnCircle.Y());
 
-         // Get if we should add or subtract the 2pi correction
-         if (i > 0) {
-            if (refAng - whit.back() > 0)
-               angleHit -= 2 * M_PI * numYCross;
-            else
-               angleHit += 2 * M_PI * numYCross;
+         // If we have moved over the Y axis in some direction
+         // last = (0 or -1) and current = 1 -> numCross--
+         // last = (0 or 1) and current = -1 -> numCross++
+         if (posOnCircle.X() < 0 && lastYSign != currYSign) {
+            numYCross -= currYSign;
          }
+         lastYSign = currYSign;
+         angleHit += 2 * M_PI * numYCross;
 
          whit.push_back(angleHit);
-
          arclength.push_back(fabs(radius * (refAng - whit.at(i))));
 
          arclengthGraph->SetPoint(arclengthGraph->GetN(), arclength.at(i), pos.Z());

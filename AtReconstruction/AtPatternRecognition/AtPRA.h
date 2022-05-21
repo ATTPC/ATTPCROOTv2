@@ -61,6 +61,22 @@ protected:
    void Clusterize3D(AtTrack &track, Float_t distance, Float_t radius);
    void ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius);
 
+   template <typename T>
+   inline constexpr int GetSign(T num, std::true_type is_signed)
+   {
+      return (T(0) < num) - (num < T(0));
+   }
+   template <typename T>
+   inline constexpr int GetSign(T num, std::false_type is_signed)
+   {
+      return (T(0) < num);
+   }
+   template <typename T>
+   inline constexpr int GetSign(T num)
+   {
+      return GetSign(num, std::is_signed<T>());
+   }
+
    ClassDef(AtPRA, 1)
 };
 
