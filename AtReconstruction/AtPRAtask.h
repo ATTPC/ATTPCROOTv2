@@ -48,6 +48,7 @@ private:
    Int_t fKNN;             //<! Number of nearest neighbors kNN
    Double_t fStdDevMulkNN; //<! Std dev multiplier for kNN
    Double_t fkNNDist;      //<! Distance threshold for outlier rejection in kNN
+   bool fAnglePCL{false};
 
 public:
    AtPRAtask();
@@ -77,7 +78,7 @@ public:
    void SetkNN(Double_t knn) { fKNN = knn; }
    void SetStdDevMulkNN(Double_t stdDevMul) { fStdDevMulkNN = stdDevMul; }
    void SetkNNDist(Double_t dist) { fkNNDist = dist; }
-
+   void SetAnglePCL(bool val) { fAnglePCL = val; }
    ClassDef(AtPRAtask, 1);
 };
 
