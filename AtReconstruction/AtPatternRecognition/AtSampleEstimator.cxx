@@ -23,6 +23,7 @@ int AtEstimator::EvaluateModel(AtPatterns::AtPattern *model, const std::vector<A
    case (Estimators::kRANSAC): return EvaluateRansac(model, hits, distThresh);
    case (Estimators::kLMedS): return EvaluateLmeds(model, hits, distThresh);
    case (Estimators::kMLESAC): return EvaluateMlesac(model, hits, distThresh);
+   case (Estimators::kWRANSAC): return EvaluateWeightedRansac(model, hits, distThresh);
    case (Estimators::kChi2): return EvaluateChi2(model, hits, distThresh);
    default: return 0;
    }

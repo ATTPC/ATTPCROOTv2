@@ -23,5 +23,6 @@
 #pragma link C++ class AtPatterns::AtPattern + ;
 #pragma link C++ class AtPatterns::AtPatternLine + ;
 #pragma link C++ class AtPatterns::AtPatternCircle2D + ;
+#pragma link C++ class AtPatterns::AtPatternY + ;
 #pragma link C++ enum AtPatterns::PatternType;
 #endif

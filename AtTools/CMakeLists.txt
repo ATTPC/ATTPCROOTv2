@@ -23,6 +23,7 @@ set(SRCS
   AtHitSampling/AtSampleFromReference.cxx
   AtHitSampling/AtGaussian.cxx
   AtHitSampling/AtWeightedGaussian.cxx
+  AtHitSampling/AtWeightedY.cxx
   )
 
 Set(DEPENDENCIES

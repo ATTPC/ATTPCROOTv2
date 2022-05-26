@@ -6,6 +6,7 @@
 #include "AtSample.h"           // IWYU pragma: keep
 #include "AtUniform.h"          // IWYU pragma: keep
 #include "AtWeightedGaussian.h" // IWYU pragma: keep
+#include "AtWeightedY.h"        // IWYU pragma: keep
 
 #include <memory>
 #include <utility>
@@ -16,7 +17,7 @@ namespace RandomSample {
  * All methods implemented that can be constructed by the factory method CreateSampler(SampleMethod).
  * @ingroup AtHitSampling
  */
-enum class SampleMethod { kUniform = 0, kChargeWeighted = 1, kGaussian = 2, kWeightedGaussian = 3 };
+enum class SampleMethod { kUniform = 0, kChargeWeighted = 1, kGaussian = 2, kWeightedGaussian = 3, kWeightedY = 4 };
 
 /**
  * @brief. Create a hit sampler
@@ -34,6 +35,7 @@ std::unique_ptr<AtSample> CreateSampler(SampleMethod method, Ts &&...params)
    case SampleMethod::kChargeWeighted: return std::make_unique<AtChargeWeighted>();
    case SampleMethod::kGaussian: return std::make_unique<AtGaussian>(std::forward<Ts>(params)...);
    case SampleMethod::kWeightedGaussian: return std::make_unique<AtWeightedGaussian>(std::forward<Ts>(params)...);
+   case SampleMethod::kWeightedY: return std::make_unique<AtWeightedY>(std::forward<Ts>(params)...);
    default: return nullptr;
    };
 }

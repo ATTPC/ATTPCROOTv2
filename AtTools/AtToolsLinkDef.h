@@ -25,5 +25,6 @@
 #pragma link C++ class RandomSample::AtChargeWeighted - !;
 #pragma link C++ class RandomSample::AtGaussian - !;
 #pragma link C++ class RandomSample::AtWeightedGaussian - !;
+#pragma link C++ class RandomSample::AtWeightedY - !;
 
 #endif

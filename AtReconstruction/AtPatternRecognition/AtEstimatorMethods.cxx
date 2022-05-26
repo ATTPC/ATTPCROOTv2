@@ -115,3 +115,24 @@ int SampleConsensus::EvaluateLmeds(AtPatterns::AtPattern *model, const std::vect
    model->SetChi2(AtTools::GetMedian(errorsVec) / errorsVec.size());
    return errorsVec.size();
 }
+
+int SampleConsensus::EvaluateWeightedRansac(AtPatterns::AtPattern *model, const std::vector<AtHit> &hitArray,
+                                            double distanceThreshold)
+{
+   int nbInliers = 0;
+   double totalCharge = 0;
+   double weight = 0;
+
+   for (const auto &hit : hitArray) {
+      auto &pos = hit.GetPosition();
+      double error = model->DistanceToPattern(pos);
+      error = error * error;
+      if (error < (distanceThreshold * distanceThreshold)) {
+         nbInliers++;
+         totalCharge += hit.GetCharge();
+         weight += error * hit.GetCharge();
+      }
+   }
+   model->SetChi2(weight / totalCharge);
+   return nbInliers;
+}

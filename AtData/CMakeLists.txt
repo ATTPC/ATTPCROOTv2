@@ -30,6 +30,7 @@ set(SRCS
   AtPattern/AtPattern.cxx
   AtPattern/AtPatternLine.cxx
   AtPattern/AtPatternCircle2D.cxx
+  AtPattern/AtPatternY.cxx
   AtPattern/AtPatternTypes.cxx
   )
 
