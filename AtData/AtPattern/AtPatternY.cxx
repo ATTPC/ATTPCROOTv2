@@ -20,7 +20,7 @@ TEveLine *AtPatternY::GetEveLine() const
    return nullptr;
 }
 
-XYZVector AtPatternY::GetDirection(int line) const
+AtPatternY::XYZVector AtPatternY::GetDirection(int line) const
 {
    if (line < 3) {
       return {fPatternPar[3 + 3 * line], fPatternPar[4 + 3 * line], fPatternPar[5 + 3 * line]};
@@ -30,7 +30,7 @@ XYZVector AtPatternY::GetDirection(int line) const
    }
 }
 
-XYZPoint AtPatternY::ClosestPointOnPattern(const XYZPoint &point) const
+AtPatternY::XYZPoint AtPatternY::ClosestPointOnPattern(const XYZPoint &point) const
 {
    auto p = GetVertex();
    auto d = GetDirection(0);
@@ -120,7 +120,7 @@ void AtPatternY::DefinePattern(const std::vector<XYZPoint> &points)
  *
  * @param[in] z Location of point at z [mm]
  */
-XYZPoint AtPatternY::GetPointAt(double z) const
+AtPatternY::XYZPoint AtPatternY::GetPointAt(double z) const
 {
    return GetVertex() + z * GetDirection(0);
 }

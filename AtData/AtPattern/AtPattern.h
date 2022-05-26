@@ -45,6 +45,10 @@ protected:
 
 public:
    AtPattern(Int_t numPoints = 0);
+   AtPattern(const AtPattern &) = default;
+   AtPattern(AtPattern &&) = default;
+   virtual ~AtPattern() = default;
+
    Double_t FitPattern(const std::vector<AtHit> &pointsToFit, Double_t qThreshold = -1);
    Double_t FitPattern(const std::vector<XYZPoint> &pointsToFit);
 
