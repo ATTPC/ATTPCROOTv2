@@ -31,7 +31,7 @@ double AtPatternLine::parameterAtPoint(const XYZPoint &compPoint) const
    return (compPoint - GetPoint()).Dot(GetDirection()) / GetDirection().Mag2();
 }
 
-XYZPoint AtPatternLine::ClosestPointOnPattern(const XYZPoint &point) const
+AtPatternLine::XYZPoint AtPatternLine::ClosestPointOnPattern(const XYZPoint &point) const
 {
    auto t = parameterAtPoint(point);
    return GetPoint() + t * GetDirection();
@@ -73,7 +73,7 @@ void AtPatternLine::DefinePattern(const std::vector<XYZPoint> &points)
  *
  * @param[in] z Location of point at z [mm]
  */
-XYZPoint AtPatternLine::GetPointAt(double z) const
+AtPatternLine::XYZPoint AtPatternLine::GetPointAt(double z) const
 {
    return GetPoint() + z * GetDirection();
 }

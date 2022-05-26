@@ -27,7 +27,7 @@
 //#ifdef _OPENMP
 //#include <omp.h>
 //#endif
-
+using XYZPoint = ROOT::Math::XYZPoint;
 ClassImp(AtPSASimple2);
 
 void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
