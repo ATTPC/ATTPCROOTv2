@@ -11,6 +11,7 @@
 #pragma link C++ class AtPSASpectrum + ;
 #pragma link C++ class AtPSAHitPerTB + ;
 #pragma link C++ class AtPSAFull + ;
+#pragma link C++ class AtPSATBAvg + ;
 #pragma link C++ class AtPSAMax + ;
 #pragma link C++ class AtPSASimple2 + ;
 

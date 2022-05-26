@@ -15,25 +15,25 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-using XYZPoint = ROOT::Math::XYZPoint;
-using XYZVector = ROOT::Math::XYZVector;
-
 class AtHit : public TObject {
 public:
+   using XYZPoint = ROOT::Math::XYZPoint;
+   using XYZVector = ROOT::Math::XYZVector;
    struct MCSimPoint;
 
 protected:
-   Double_t fCharge;            //< Charge of hit
-   Int_t fHitID;                //< Unique ID of hit
-   Int_t fPadNum;               //< Pad that generated hit
-   XYZPoint fPosition;          //< Position of hit
-   XYZVector fPositionVariance; //< Position variance
+   Double_t fCharge;              //< Charge of hit
+   Double_t fChargeVariance{0};   //< Charge variance
+   XYZPoint fPosition;            //< Position of hit
+   XYZVector fPositionVariance{}; //< Position variance
+   Int_t fHitID;                  //< Unique ID of hit
+   Int_t fPadNum;                 //< Pad that generated hit
 
-   Double_t fTraceIntegral = -1;     //< Integrated pulse charge of full trace
-   Int_t fHitMult = 1;               //< Hit multiplicity in the pad where the hit was found
-   Int_t fTimeStamp = 0;             //< TB of hit
-   Double_t fTimeStampCorr = 0;      //< TB of hit
-   Double_t fTimeStampCorrInter = 0; //< TB of hit
+   Double_t fTraceIntegral{-1};     //< Integrated pulse charge of full trace
+   Int_t fHitMult{1};               //< Hit multiplicity in the pad where the hit was found
+   Int_t fTimeStamp{0};             //< TB of hit
+   Double_t fTimeStampCorr{0};      //< TB of hit using center of gravity
+   Double_t fTimeStampCorrInter{0}; //< Interpolated TB of hit
 
    std::vector<AtHit::MCSimPoint> fMCSimPointArray;
 
@@ -48,10 +48,11 @@ public:
    virtual ~AtHit() = default;
 
    void SetCharge(Double_t charge) { fCharge = charge; }
-   void SetHitID(Int_t hitID) { fHitID = hitID; }
-   void SetPadNum(Int_t padNum) { fPadNum = padNum; }
+   void SetChargeVariance(Double_t chargeVar) { fChargeVariance = chargeVar; }
    void SetPosition(const XYZPoint &pos) { fPosition = pos; }
    void SetPositionVariance(const XYZPoint &vec) { fPositionVariance = vec; }
+   void SetHitID(Int_t hitID) { fHitID = hitID; }
+   void SetPadNum(Int_t padNum) { fPadNum = padNum; }
 
    void SetTraceIntegral(Double_t integral) { fTraceIntegral = integral; }
    void SetHitMult(Int_t HitMult) { fHitMult = HitMult; }

@@ -28,7 +28,7 @@
 #include <omp.h>
 #endif
 */
-
+using XYZPoint = ROOT::Math::XYZPoint;
 void AtPSAFull::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 {
    Int_t numPads = rawEvent->GetNumPads();

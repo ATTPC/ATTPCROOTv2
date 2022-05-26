@@ -14,8 +14,6 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-using XYZPoint = ROOT::Math::XYZPoint;
-
 namespace AtPatterns {
 
 /**
@@ -25,6 +23,8 @@ namespace AtPatterns {
  */
 class AtPatternLine : public AtPattern {
 public:
+   using XYZPoint = ROOT::Math::XYZPoint;
+   using XYZVector = ROOT::Math::XYZVector;
    AtPatternLine();
 
    XYZPoint GetPoint() const { return {fPatternPar[0], fPatternPar[1], fPatternPar[2]}; }

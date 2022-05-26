@@ -25,6 +25,7 @@
 //#ifdef _OPENMP
 //#include <omp.h>
 //#endif
+using XYZPoint = ROOT::Math::XYZPoint;
 
 ClassImp(AtPSAMax);
 Double_t AtPSAMax::getThreshold(int padSize)

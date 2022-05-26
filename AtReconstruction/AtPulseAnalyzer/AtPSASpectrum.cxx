@@ -27,7 +27,7 @@
 //#ifdef _OPENMP
 //#include <omp.h>
 //#endif
-
+using XYZPoint = ROOT::Math::XYZPoint;
 ClassImp(AtPSASpectrum);
 
 void AtPSASpectrum::Analyze(AtRawEvent *rawEvent, AtEvent *event)

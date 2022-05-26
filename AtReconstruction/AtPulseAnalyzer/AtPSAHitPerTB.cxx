@@ -24,6 +24,7 @@
 #include <omp.h>
 #endif
 */
+using XYZPoint = ROOT::Math::XYZPoint;
 
 void AtPSAHitPerTB::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 {

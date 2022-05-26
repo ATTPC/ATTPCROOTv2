@@ -40,6 +40,7 @@ set(SRCS
   AtPulseAnalyzer/AtPSAMax.cxx
   AtPulseAnalyzer/AtPSAHitPerTB.cxx
   AtPulseAnalyzer/AtPSAFull.cxx
+  AtPulseAnalyzer/AtPSATBAvg.cxx
   AtPulseAnalyzer/AtCalibration.cxx
   
   AtFilter/AtFilter.cxx

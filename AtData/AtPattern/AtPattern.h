@@ -3,6 +3,7 @@
 
 #include "AtHit.h"
 
+#include <Math/Point3D.h>
 #include <Rtypes.h> // for Double_t, Int_t, THashConsistencyHolder, ClassDef
 #include <TObject.h>
 
@@ -35,6 +36,9 @@ namespace AtPatterns {
  * @ingroup AtPattern
  */
 class AtPattern : public TObject {
+public:
+   using XYZPoint = ROOT::Math::XYZPoint;
+
 protected:
    std::vector<Double_t> fPatternPar; //< Description of pattern
    Double_t fChi2{NAN};               //< How good the pattern is at describing the data
@@ -104,6 +108,7 @@ public:
    virtual TEveLine *GetEveLine() const = 0;
 
    virtual std::unique_ptr<AtPattern> Clone() const = 0;
+
    /**
     * @brief Number of points to define the pattern.
     *
