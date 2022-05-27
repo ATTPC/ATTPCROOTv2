@@ -7,7 +7,6 @@
 #include "AtPatternEvent.h"
 #include "AtPatternLine.h"
 #include "AtPatternTypes.h" // for PatternType, PatternTy...
-#include "AtRansac.h"
 #include "AtSampleConsensus.h"
 #include "AtTrack.h" // for XYZPoint, AtTrack
 
@@ -52,23 +51,15 @@ std::cout << " Processing track with " << track.GetHitArray().size() << " points
    std::cout << std::endl;
    */
    std::vector<AtTrack> circularTracks;
-   if (fCirclePCL) {
-      AtRANSACN::AtRansac RansacSmoothRadius;
-      RansacSmoothRadius.SetModelType(pcl::SACMODEL_CIRCLE2D);
-      RansacSmoothRadius.SetRANSACPointThreshold(0.1);
-      RansacSmoothRadius.SetDistanceThreshold(6.0);
-      circularTracks = *RansacSmoothRadius.RansacPCL(track.GetHitArray());
-   } else {
-      SampleConsensus::AtSampleConsensus RansacSmoothRadius;
-      RansacSmoothRadius.SetPatternType(AtPatterns::PatternType::kCircle2D);
-      RansacSmoothRadius.SetMinHitsPattern(0.1 * track.GetHitArray().size());
-      RansacSmoothRadius.SetDistanceThreshold(6.0);
-      RansacSmoothRadius.SetNumIterations(1000);
-      circularTracks =
-         RansacSmoothRadius.Solve(track.GetHitArray()).GetTrackCand(); // Only part of the spiral is used
-                                                                       // This function also sets the coefficients
-                                                                       // i.e. radius of curvature and center
-   }
+   SampleConsensus::AtSampleConsensus RansacSmoothRadius;
+   RansacSmoothRadius.SetPatternType(AtPatterns::PatternType::kCircle2D);
+   RansacSmoothRadius.SetMinHitsPattern(0.1 * track.GetHitArray().size());
+   RansacSmoothRadius.SetDistanceThreshold(6.0);
+   RansacSmoothRadius.SetNumIterations(1000);
+   circularTracks =
+      RansacSmoothRadius.Solve(track.GetHitArray()).GetTrackCand(); // Only part of the spiral is used
+                                                                    // This function also sets the coefficients
+                                                                    // i.e. radius of curvature and center
 
    if (!circularTracks.empty()) {
 
@@ -153,20 +144,12 @@ std::cout << " Processing track with " << track.GetHitArray().size() << " points
             // std::cout<<" RANSAC Theta "<<"\n";
             std::vector<AtTrack> thetaTracks;
 
-            if (fAnglePCL) {
-               AtRANSACN::AtRansac RansacTheta;
-               RansacTheta.SetModelType(pcl::SACMODEL_LINE);
-               RansacTheta.SetRANSACPointThreshold(0.1);
-               RansacTheta.SetDistanceThreshold(6.0);
-               thetaTracks = *RansacTheta.RansacPCL(thetaHits);
-            } else {
-               SampleConsensus::AtSampleConsensus RansacTheta;
-               RansacTheta.SetPatternType(AtPatterns::PatternType::kLine);
-               RansacTheta.SetMinHitsPattern(0.1 * thetaHits.size());
-               RansacTheta.SetDistanceThreshold(6.0);
-               RansacTheta.SetFitPattern(true);
-               thetaTracks = RansacTheta.Solve(thetaHits).GetTrackCand();
-            }
+            SampleConsensus::AtSampleConsensus RansacTheta;
+            RansacTheta.SetPatternType(AtPatterns::PatternType::kLine);
+            RansacTheta.SetMinHitsPattern(0.1 * thetaHits.size());
+            RansacTheta.SetDistanceThreshold(6.0);
+            RansacTheta.SetFitPattern(true);
+            thetaTracks = RansacTheta.Solve(thetaHits).GetTrackCand();
 
             if (thetaTracks.size() > 0) {
 

@@ -43,9 +43,6 @@ protected:
 
    Bool_t kSetPrunning{false}; //<<! Enable prunning of tracks
 
-   Bool_t fCirclePCL{false};
-   Bool_t fAnglePCL{false};
-
 public:
    virtual ~AtPRA() = default;
 
@@ -61,9 +58,6 @@ public:
    void SetkNNDist(Double_t dist) { fkNNDist = dist; }
    void SetPrunning() { kSetPrunning = kTRUE; }
 
-   void SetCirclePCL(bool val) { fCirclePCL = val; }
-   void SetAnglePCL(bool val) { fAnglePCL = val; }
-   // Public behavior
    virtual std::unique_ptr<AtPatternEvent> FindTracks(AtEvent &event) = 0;
 
    void PruneTrack(AtTrack &track);
