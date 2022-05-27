@@ -1,17 +1,15 @@
 #include "AtPSAHitPerTB.h"
 
-#include <FairLogger.h>
-
-// AtTPCROOT classes
 #include "AtEvent.h"
 #include "AtHit.h"
+#include "AtPad.h" // for AtPad
 #include "AtRawEvent.h"
 
-// STL
-#include "AtPad.h" // for AtPad
+#include <FairLogger.h>
 
-#include <Math/Point2D.h> // for PositionVector2D
-#include <TVector3.h>     // for TVector3
+#include <Math/Point2D.h>    // for PositionVector2D
+#include <Math/Point3D.h>    // for PositionVector3D
+#include <Math/Point3Dfwd.h> // for XYZPoint
 
 #include <array>    // for array
 #include <iostream> // for basic_ostream::operator<<, operator<<

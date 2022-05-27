@@ -75,7 +75,7 @@ if(PCL_FOUND)
     AtPatternRecognition/trackfinder/cluster.cxx
     AtPatternRecognition/trackfinder/hc.cxx
     AtPatternRecognition/trackfinder/fastcluster.cxx
-    AtRansac/AtRansac.cxx
+    #AtRansac/AtRansac.cxx
     )
   set(DEPENDENCIES ${DEPENDENCIES}
     ${PCL_LIBRARIES}

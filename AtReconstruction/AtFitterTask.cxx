@@ -1,26 +1,24 @@
 #include "AtFitterTask.h"
 
+#include "AtDigiPar.h"
+#include "AtFitter.h"
+#include "AtGenfit.h"
+#include "AtPatternEvent.h"
+
 #include <FairLogger.h>
+#include <FairRootManager.h>
+#include <FairRun.h>
+#include <FairRuntimeDb.h>
 #include <FairTask.h>
 
 #include <TClonesArray.h>
 #include <TObject.h>
-// STL
-#include "AtPatternEvent.h"
-#include "AtTrack.h"
+#include <Track.h>
 
 #include <algorithm>
 #include <iostream>
-// FAIRROOT classes
-#include <FairRootManager.h>
-#include <FairRun.h>
-#include <FairRuntimeDb.h>
-// GENFIT2 classes
-#include "AtDigiPar.h"
-#include "AtFitter.h"
-#include "AtGenfit.h"
 
-#include <Track.h>
+class AtTrack;
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

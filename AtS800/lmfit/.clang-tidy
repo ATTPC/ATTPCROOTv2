@@ -1,0 +1,4 @@
+---
+Checks:              '-cppcoreguidelines-*'
+InheritParentConfig: true
+...

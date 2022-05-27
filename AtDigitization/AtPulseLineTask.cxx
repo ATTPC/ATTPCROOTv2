@@ -80,7 +80,7 @@ bool AtPulseLineTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
 
    // Now loop through all pads in the integration map, and add electrons
    for (const auto &pad : fXYintegrationMap) {
-      if (fMap->IsInhibited(pad.first) == AtMap::kTotal)
+      if (fMap->IsInhibited(pad.first) == AtMap::InhibitType::kTotal)
          continue;
 
       for (int i = 0; i < zIntegration.size(); ++i) {

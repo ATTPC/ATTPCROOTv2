@@ -20,7 +20,6 @@
  */
 
 #include <cstddef>
-#include <iostream>
 #include <sstream> // IWYU pragma: keep
 #include <string>
 #include <vector>

@@ -8,7 +8,6 @@
 
 #include <stddef.h> // for size_t
 class AtDigiPar;
-class FairLogger;
 class TBuffer;
 class TClass;
 class TMemberInspector;

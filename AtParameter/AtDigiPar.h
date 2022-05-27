@@ -2,15 +2,9 @@
 #ifndef AtDIGIPAR_H
 #define AtDIGIPAR_H
 
-// FAIRROOT classes
 #include <FairParGenericSet.h>
-// ROOT classes
-#include "AtGas.h"
 
 #include <Rtypes.h>
-#include <TString.h>
-
-#include <memory>
 
 class FairParamList;
 class TBuffer;

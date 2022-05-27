@@ -3,11 +3,11 @@
 #include <FairLogger.h>
 
 #include <Math/Vector3D.h> // for DisplacementVector3D, operator*
-#include <TEveLine.h>
-#include <TMath.h>
 
-#include <algorithm> // for min
-#include <cmath>     // for cos, sin, pow, sqrt, acos, atan, fabs
+#include <cmath>   // for cos, sin, pow, sqrt, acos, atan, fabs
+#include <utility> // for swap
+
+class TEveLine;
 
 using namespace AtPatterns;
 
@@ -33,7 +33,6 @@ AtPatternY::XYZVector AtPatternY::GetDirection(int line) const
 AtPatternY::XYZPoint AtPatternY::ClosestPointOnPattern(const XYZPoint &point) const
 {
    auto p = GetVertex();
-   auto d = GetDirection(0);
 
    return p;
 }

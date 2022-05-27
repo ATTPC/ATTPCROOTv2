@@ -1,10 +1,14 @@
 #include "msd.h"
 
+#include <boost/smart_ptr/shared_ptr.hpp> // for shared_ptr
 #include <pcl/kdtree/kdtree_flann.h>
 
 #include <algorithm>
+#include <cstddef> // for size_t
 #include <numeric>
+#include <string> // for string
 #include <vector>
+
 namespace msd {
 /*
 @brief Compute mean squared distance.

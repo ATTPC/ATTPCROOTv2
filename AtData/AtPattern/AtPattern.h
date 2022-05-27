@@ -1,21 +1,22 @@
 #ifndef ATPATTERN_H
 #define ATPATTERN_H
 
-#include "AtHit.h"
-
 #include <Math/Point3D.h>
-#include <Rtypes.h> // for Double_t, Int_t, THashConsistencyHolder, ClassDef
+#include <Math/Point3Dfwd.h> // for XYZPoint
+#include <Rtypes.h>          // for Double_t, Int_t, THashConsistencyHolder, ClassDef
 #include <TObject.h>
 
 #include <algorithm> // for max
 #include <cmath>     // for NAN
 #include <memory>
-#include <vector> // for vector
+#include <utility> // for move
+#include <vector>  // for vector
 
 class TBuffer;
 class TClass;
 class TMemberInspector;
 class TEveLine;
+class AtHit;
 
 /**
  * @defgroup AtPattern Track Patterns

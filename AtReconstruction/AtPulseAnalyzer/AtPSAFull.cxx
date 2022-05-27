@@ -1,21 +1,16 @@
 #include "AtPSAFull.h"
 
-// AtTPCROOT classes
 #include "AtEvent.h"
 #include "AtHit.h"
-#include "AtRawEvent.h"
-
-// ROOT classes
-#include <TRotation.h>
-
-// STL
 #include "AtPad.h" // for AtPad
+#include "AtRawEvent.h"
 
 #include <FairLogger.h> // for LOG
 
-#include <Math/Point2D.h> // for PositionVector2D
-#include <TMath.h>        // for Pi
-#include <TVector3.h>     // for TVector3
+#include <Math/Point2D.h>    // for PositionVector2D
+#include <Math/Point3D.h>    // for PositionVector3D
+#include <Math/Point3Dfwd.h> // for XYZPoint
+#include <TVector3.h>        // for TVector3
 
 #include <array>    // for array
 #include <iostream> // for basic_ostream::operator<<, operator<<

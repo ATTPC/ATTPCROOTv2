@@ -4,12 +4,15 @@
 #include "AtPSA.h"
 
 #include <Rtypes.h> // for Bool_t, THashConsistencyHolder, ClassDefOverride
+
+#include <array>  // for array
+#include <memory> // for make_unique, unique_ptr
+
 class AtEvent;
 class AtRawEvent;
 class TBuffer;
 class TClass;
 class TMemberInspector;
-class AtPad;
 
 /**
  * @brief Simple max finding PSA method.

@@ -1,7 +1,16 @@
 #include "smoothenCloud.h"
 
+#include <boost/core/checked_delete.hpp>  // for checked_delete
+#include <boost/smart_ptr/shared_ptr.hpp> // for shared_ptr
 #include <pcl/common/centroid.h>
+#include <pcl/common/impl/centroid.hpp> // for CentroidPoint::add, Centro...
+#include <pcl/common/io.h>              // for copyPointCloud
 #include <pcl/kdtree/kdtree_flann.h>
+
+#include <stddef.h> // for size_t
+
+#include <algorithm> // for nth_element
+#include <vector>    // for vector
 
 pcl::PointCloud<pcl::PointXYZI>::Ptr smoothenCloud(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, double r, bool useMedian)
 {

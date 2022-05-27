@@ -190,7 +190,7 @@ bool AtPulseTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
    if (fIsSaveMCInfo)
       saveMCInfo(point->GetMCPointID(), padNumber, trackID);
 
-   auto totalyInhibited = fMap->IsInhibited(padNumber) == AtMap::kTotal;
+   auto totalyInhibited = fMap->IsInhibited(padNumber) == AtMap::InhibitType::kTotal;
    if (!totalyInhibited) {
       eleAccumulated[padNumber]->Fill(eTime, charge);
       electronsMap[padNumber] = eleAccumulated[padNumber].get();
@@ -254,7 +254,7 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
       pad->SetPedestalSubtracted(kTRUE);
 
       auto gAvg = getAvgGETgain(eleAccumulated[thePadNumber]->GetEntries());
-      auto lowGain = fMap->IsInhibited(thePadNumber) == AtMap::kLowGain ? fLowGainFactor : 1;
+      auto lowGain = fMap->IsInhibited(thePadNumber) == AtMap::InhibitType::kLowGain ? fLowGainFactor : 1;
 
       for (Int_t bin = 0; bin < fNumTbs; bin++) {
          pad->SetADC(bin, signal[bin] * gAvg * fGETGain * lowGain); // NOLINT

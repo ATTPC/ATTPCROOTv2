@@ -1,13 +1,21 @@
 #include "AtFitter.h"
 
-#include <TMath.h>
-// STL
 #include "AtHit.h"
+#include "AtHitCluster.h" // for AtHitCluster
 #include "AtTrack.h"
 
-#include <TMatrixDSym.h>
+#include <Math/Point3D.h>  // for Cartesian3D, operator-, PositionVector3D
+#include <Math/Vector3D.h> // for DisplacementVector3D
+#include <TMath.h>
+#include <TMatrixDSymfwd.h> // for TMatrixDSym
+#include <TMatrixTSym.h>    // for TMatrixTSym
 
 #include <algorithm>
+#include <cmath>    // for sqrt
+#include <iostream> // for operator<<, basic_ostream::operator<<
+#include <iterator> // for back_insert_iterator, back_inserter
+#include <memory>   // for shared_ptr, __shared_ptr_access, __sha...
+#include <utility>  // for pair
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

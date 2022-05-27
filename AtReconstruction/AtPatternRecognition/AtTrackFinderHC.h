@@ -10,9 +10,7 @@
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-
-#include "AtPRA.h"   // for AtPRA
-#include "AtTrack.h" // for AtTrack
+#include "AtPRA.h" // for AtPRA
 
 #include <Rtypes.h> // for THashConsistencyHolder, ClassDef
 
@@ -22,6 +20,7 @@
 #include "cluster.h" // for Cluster
 #include <stdio.h>   // for size_t
 
+#include <memory> // for unique_ptr
 #include <vector> // for vector
 
 class AtEvent;

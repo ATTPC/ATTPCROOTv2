@@ -3,6 +3,10 @@
 #include "AtHit.h"
 #include "AtSample.h" // for RandomSample
 
+#include <algorithm> // for max
+#include <cmath>     // for pow, sqrt
+#include <memory>    // for allocator_traits<>::value_type
+
 using namespace RandomSample;
 
 std::vector<AtHit> AtWeightedY::SampleHits(int N)

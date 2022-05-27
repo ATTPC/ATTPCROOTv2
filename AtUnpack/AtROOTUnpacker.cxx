@@ -183,7 +183,7 @@ void AtROOTUnpacker::ProcessROOTFILE(AtRawEvent &eventToFill)
          // PadRef.asad << "   Aget: "  << PadRef.aget << "   Ch: "  << PadRef.ch <<
          // std::endl;
          auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
-         Bool_t IsInhibited = fMap->IsInhibited(PadRefNum);
+         Bool_t IsInhibited = fMap->IsInhibited(PadRefNum) != AtMap::InhibitType::kNone;
 
          if (PadRefNum != -1 && !IsInhibited) {
             // AtPad *pad = new ((*fPadArray)[PadRefNum]) AtPad(PadRefNum);

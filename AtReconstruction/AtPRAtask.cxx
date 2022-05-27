@@ -16,7 +16,9 @@
 
 #include <algorithm> // for max
 #include <iostream>  // for operator<<, basic_ostream, cout, ostream
+#include <memory>    // for unique_ptr<>::element_type, unique_ptr
 #include <stdexcept> // for runtime_error
+#include <utility>   // for move
 #include <vector>    // for allocator, vector
 
 AtPRAtask::AtPRAtask() : FairTask("AtPRAtask"), fPatternEventArray("AtPatternEvent", 1)

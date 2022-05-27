@@ -1,21 +1,16 @@
 #include "AtPSAtask.h"
 
-// FairRoot Classes
-#include <FairLogger.h>
-
-// Root Classes
 #include "AtEvent.h"
 #include "AtPSA.h"
 #include "AtRawEvent.h"
 
+#include <FairLogger.h>
 #include <FairRootManager.h> // for FairRootManager
 
+#include <TClonesArray.h>
 #include <TObject.h> // for TObject
 
-#include <map> // for allocator, operator!=, _Rb_tree_const_i...
-
-// AtTPCRoot Classes
-#include <TClonesArray.h>
+#include <utility> // for move
 
 /*
 #ifdef _OPENMP
@@ -33,7 +28,7 @@ ClassImp(AtPSAtask);
 AtPSAtask::AtPSAtask(AtPSA *psa) : AtPSAtask(psa->Clone()) {}
 AtPSAtask::AtPSAtask(std::unique_ptr<AtPSA> psa)
    : fInputBranchName("AtRawEvent"), fOutputBranchName("AtEventH"), fSimulatedPointBranchName("AtTpcPoint"),
-     fEventArray(TClonesArray("AtEvent", 1)), fPSA(std::move(psa)), fIsPersistence(false)
+     fEventArray(TClonesArray("AtEvent", 1)), fPSA(std::move(psa))
 {
 }
 

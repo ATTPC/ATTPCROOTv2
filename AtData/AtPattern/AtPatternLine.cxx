@@ -3,11 +3,11 @@
 #include <FairLogger.h>
 
 #include <Math/Vector3D.h> // for DisplacementVector3D, operator*
-#include <TEveLine.h>
 #include <TMath.h>
 
 #include <algorithm> // for min
 #include <cmath>     // for cos, sin, pow, sqrt, acos, atan, fabs
+class TEveLine;
 
 using namespace AtPatterns;
 

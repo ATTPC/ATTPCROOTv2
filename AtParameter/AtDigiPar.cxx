@@ -4,12 +4,7 @@
 #include <FairParGenericSet.h>
 #include <FairParamList.h>
 
-#include <TString.h>
-#include <TSystem.h>
-
-#include <iostream>
 #include <memory>
-#include <string>
 
 ClassImp(AtDigiPar);
 

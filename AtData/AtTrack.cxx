@@ -2,11 +2,9 @@
 
 #include "AtPattern.h"
 
+#include <Math/Vector3D.h> // for DisplacementVector3D
 #include <Rtypes.h>
-#include <TMath.h>
-#include <TMathBase.h>
 
-#include <cmath>
 #include <iterator>
 #include <numeric>
 
@@ -49,19 +47,13 @@ AtTrack &AtTrack::operator=(AtTrack obj)
    swap(*this, obj);
    return *this;
 }
-AtTrack::AtTrack(const AtTrack &obj)
-{
-   fTrackID = obj.fTrackID;
-   fHitArray = obj.fHitArray;
-   fHitClusterArray = obj.fHitClusterArray;
-   fPattern = (obj.fPattern != nullptr) ? obj.fPattern->Clone() : nullptr;
-   fIsMerged = obj.fIsMerged;
-   fVertexToZDist = obj.fVertexToZDist;
 
-   fGeoThetaAngle = obj.fGeoThetaAngle;
-   fGeoPhiAngle = obj.fGeoPhiAngle;
-   fGeoRadius = obj.fGeoRadius;
-   fGeoCenter = obj.fGeoCenter;
+AtTrack::AtTrack(const AtTrack &o)
+   : fTrackID(o.fTrackID), fHitArray(o.fHitArray), fIsMerged(o.fIsMerged), fVertexToZDist(o.fVertexToZDist),
+     fGeoThetaAngle(o.fGeoThetaAngle), fGeoPhiAngle(o.fGeoPhiAngle), fGeoRadius(o.fGeoRadius), fGeoCenter(o.fGeoCenter),
+     fHitClusterArray(o.fHitClusterArray)
+{
+   fPattern = (o.fPattern != nullptr) ? o.fPattern->Clone() : nullptr;
 }
 
 void AtTrack::AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster)
