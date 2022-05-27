@@ -11,7 +11,6 @@ ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/trackfinder
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtRansac
 )
 
 Set(DEPENDENCIES
@@ -75,7 +74,6 @@ if(PCL_FOUND)
     AtPatternRecognition/trackfinder/cluster.cxx
     AtPatternRecognition/trackfinder/hc.cxx
     AtPatternRecognition/trackfinder/fastcluster.cxx
-    #AtRansac/AtRansac.cxx
     )
   set(DEPENDENCIES ${DEPENDENCIES}
     ${PCL_LIBRARIES}
