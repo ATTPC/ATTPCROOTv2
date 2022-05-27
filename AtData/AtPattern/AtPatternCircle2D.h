@@ -7,7 +7,10 @@
 #include <Math/Point3Dfwd.h> // for XYZPoint
 #include <Rtypes.h>          // for THashConsistencyHolder, ClassDefOverride
 
+#include <memory> // for make_unique, unique_ptr
 #include <vector> // for vector
+
+class TEveLine;
 class TBuffer;
 class TClass;
 class TMemberInspector;

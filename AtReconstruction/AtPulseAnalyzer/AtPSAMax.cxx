@@ -1,27 +1,25 @@
 #include "AtPSAMax.h"
 
-#include <FairLogger.h>
-
-// AtTPCROOT classes
-#include "AtCalibration.h"
 #include "AtEvent.h"
 #include "AtHit.h"
 #include "AtPad.h"
 #include "AtRawEvent.h"
 
-// ROOT classes
-#include <Math/Point2D.h>
+#include <FairLogger.h>
 
-// STL
+#include <Math/Point3D.h>    // for PositionVector3D
+#include <Math/Point3Dfwd.h> // for XYZPoint
+
 #include <algorithm>
 #include <array> // for array
 #include <cmath>
-#include <iostream> // for basic_ostream::operator<<
+#include <iterator> // for distance
 #include <map>
 #include <memory> // for unique_ptr, make_unique
 #include <numeric>
 #include <utility> // for pair
 #include <vector>  // for vector
+
 //#ifdef _OPENMP
 //#include <omp.h>
 //#endif

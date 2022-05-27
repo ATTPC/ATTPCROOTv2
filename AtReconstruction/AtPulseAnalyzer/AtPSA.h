@@ -1,17 +1,11 @@
 #ifndef AtPSA_H
 #define AtPSA_H
 
-#include "AtCalibration.h"
-
 #include <Rtypes.h>
-#include <TString.h>
-#include <TVector3.h>
 
-// STL
 #include <cstddef>
 #include <map>
 #include <memory>
-#include <utility>
 
 class TClonesArray;
 class AtRawEvent;

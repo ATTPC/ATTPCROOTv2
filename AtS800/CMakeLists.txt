@@ -20,13 +20,13 @@ S800.cxx
 TInverseMap.cxx
 AtS800Task.cxx
 S800Calibration.cxx
-lmmin.cxx
-lmcurve.cxx
-lmfit.cxx
 S800Settings.cxx
 S800TSettings.cxx
 AtMergeTask.cxx
 
+lmfit/lmmin.cxx
+lmfit/lmcurve.cxx
+lmfit/lmfit.cxx
 )
 
 Set(DEPENDENCIES
@@ -41,4 +41,5 @@ generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   DEPS_PUBLIC ${DEPENDENCIES}
+  INCLUDE_DIR ${CMAKE_SOURCE_DIR}/AtS800/lmfit
   )

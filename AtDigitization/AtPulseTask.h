@@ -21,7 +21,6 @@
 #include <memory>
 #include <vector>
 
-class AtDigiPar;
 class AtMap;
 class AtRawEvent;
 class TH2Poly;

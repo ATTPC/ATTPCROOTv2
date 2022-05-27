@@ -1,25 +1,21 @@
 #include "AtPSA.h"
 
-#include <FairLogger.h>
-
-#include <algorithm>
-#include <iostream>
-#include <iterator>
-
-// FairRoot classes
-#include <FairRun.h>
-#include <FairRuntimeDb.h>
-// ROOT classes
-#include "AtCalibration.h"
 #include "AtDigiPar.h"
 #include "AtHit.h"
 #include "AtMCPoint.h"
 
+#include <FairLogger.h>
+#include <FairRun.h>
+#include <FairRuntimeDb.h>
+
 #include <Rtypes.h>
 #include <TClonesArray.h>
-#include <TMath.h>
 #include <TObject.h> // for TObject
-#include <TVector3.h>
+
+#include <algorithm>
+#include <iostream>
+#include <iterator>
+#include <utility> // for pair
 
 using std::distance;
 using std::max_element;
@@ -37,8 +33,10 @@ void AtPSA::Init()
       LOG(FATAL) << "No runtime database!";
 
    auto fPar = (AtDigiPar *)db->getContainer("AtDigiPar"); // NOLINT
-   if (!fPar)
+   if (!fPar) {
       LOG(FATAL) << "AtDigiPar not found!!";
+      return;
+   }
 
    fTBTime = fPar->GetTBTime();
    fDriftVelocity = fPar->GetDriftVelocity();

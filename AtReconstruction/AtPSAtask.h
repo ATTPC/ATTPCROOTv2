@@ -1,20 +1,18 @@
 #ifndef AtPSAtASK_H
 #define AtPSAtASK_H
 
-#include <Rtypes.h> // for THashConsistencyHolder, Bool_t, ClassDef, Opti...
-#include <TClonesArray.h>
+#include "AtPSA.h"
 
-// FAIRROOT classes
 #include <FairTask.h>
 
-class AtPSA;
+#include <Rtypes.h> // for THashConsistencyHolder, Bool_t, ClassDef, Opti...
+#include <TClonesArray.h>
+#include <TString.h>
+
+#include <memory>
 class TBuffer;
 class TClass;
 class TMemberInspector;
-
-// ROOT classes
-#include <TString.h>
-class TClonesArray;
 
 class AtPSAtask : public FairTask {
 private:

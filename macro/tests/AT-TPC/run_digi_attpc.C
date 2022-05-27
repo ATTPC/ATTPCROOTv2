@@ -38,7 +38,7 @@ void run_digi_attpc()
    auto mapping = std::make_shared<AtTpcMap>();
    mapping->ParseXMLMap(mapParFile.Data());
    mapping->GeneratePadPlane();
-   mapping->ParseInhibitMap("./data/inhibit.txt", AtMap::kTotal);
+   mapping->ParseInhibitMap("./data/inhibit.txt", AtMap::InhibitType::kTotal);
 
    // __ AT digi tasks___________________________________
    AtClusterizeLineTask *clusterizer = new AtClusterizeLineTask();

@@ -1,8 +1,9 @@
 #ifndef CLUSTER_H
 #define CLUSTER_H
 
-#include <pcl/io/io.h>
+#include <pcl/PointIndices.h> // for PointIndicesPtr
 
+#include <cstddef> // for size_t
 #include <vector>
 
 class Cluster {

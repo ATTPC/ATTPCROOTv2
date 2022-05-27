@@ -14,7 +14,6 @@
 #include "AtPatternEvent.h"     // for AtPatternEvent
 #include "AtProtoEvent.h"       // for AtProtoEvent
 #include "AtProtoQuadrant.h"    // for AtProtoQuadrant
-//#include "AtRansac.h"           // for AtRansac, operator<<, AtRansac::Pair...
 #include "AtRawEvent.h"         // for AtRawEvent
 #include "AtTpcMap.h"           // for AtTpcMap
 #include "AtTpcProtoMap.h"      // for AtTpcProtoMap
@@ -25,7 +24,6 @@
 #include <FairRootManager.h> // for FairRootManager
 
 #include <Math/Point3D.h>   // for PositionVector3D, Cartesian3D, opera...
-#include <Math/Vector3D.h>  // for DisplacementVector3D
 #include <TAttMarker.h>     // for kFullDotMedium
 #include <TAxis.h>          // for TAxis
 #include <TCanvas.h>        // for TCanvas
@@ -44,7 +42,6 @@
 #include <TH2Poly.h>        // for TH2Poly
 #include <TH3.h>            // for TH3F
 #include <TList.h>          // for TList
-#include <TMath.h>          // for Sqrt
 #include <TNamed.h>         // for TNamed
 #include <TObject.h>        // for TObject
 #include <TPaletteAxis.h>   // for TPaletteAxis
@@ -53,7 +50,6 @@
 #include <TSeqCollection.h> // for TSeqCollection
 #include <TString.h>        // for TString, Form, operator==, operator<<
 #include <TStyle.h>         // for TStyle, gStyle
-#include <TVector3.h>       // for TVector3
 #include <TVirtualPad.h>    // for TVirtualPad, gPad
 #include <TVirtualX.h>      // for TVirtualX
 
@@ -65,7 +61,6 @@
 #include <cstdio>    // for sprintf
 #include <iostream>  // for cout
 #include <memory>    // for allocator_traits<>::value_type
-#include <utility>   // for pair
 #include <vector>    // for vector, allocator
 
 constexpr auto cRED = "\033[1;31m";

@@ -1,9 +1,14 @@
 #ifndef AtPSASIMPLE2_H
 #define AtPSASIMPLE2_H
 
+#include "AtCalibration.h" // for AtCalibration
 #include "AtPSA.h"
 
-#include <Rtypes.h> // for Bool_t, THashConsistencyHolder, ClassDefOverride
+#include <Rtypes.h>  // for Bool_t, THashConsistencyHolder, ClassDefOverride
+#include <TString.h> // for TString
+
+#include <memory> // for make_unique, unique_ptr
+
 class AtEvent;
 class AtRawEvent;
 class TBuffer;

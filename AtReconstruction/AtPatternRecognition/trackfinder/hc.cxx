@@ -1,19 +1,21 @@
 #include "hc.h"
 
+#include <boost/core/checked_delete.hpp>  // for checked_delete
+#include <boost/smart_ptr/shared_ptr.hpp> // for shared_ptr
+#include <pcl/PointIndices.h>             // for PointIndicesPtr, PointIndices
+
 #include "fastcluster.h"
 
-#pragma warning(push, 0)
-#include <pcl/kdtree/kdtree_flann.h>
-
-#include <algorithm>
-#include <fstream>
-#pragma warning(pop)
+#include <iostream> // for operator<<, ofstream, basi...
+#include <iterator> // for distance
+#include <memory>   // for allocator_traits<>::value_...
+#include <string>   // for char_traits, string
 
 #pragma warning(push, 0)
 #include <pcl/kdtree/kdtree_flann.h>
 
 #include <algorithm>
-#include <fstream>
+#include <fstream> // IWUYU pragma: keep
 #pragma warning(pop)
 
 namespace hc {

@@ -1,14 +1,17 @@
 #ifndef ATPATTERNY_H
 #define ATPATTERNY_H
 
-#include "AtHit.h" // for XYZVector
 #include "AtPattern.h"
 
 #include <Math/Point3D.h>
-#include <Math/Point3Dfwd.h> // for XYZPoint
-#include <Rtypes.h>          // for THashConsistencyHolder, ClassDefOverride
+#include <Math/Point3Dfwd.h>  // for XYZPoint
+#include <Math/Vector3D.h>    // for DisplacementVector3D
+#include <Math/Vector3Dfwd.h> // for XYZVector
+#include <Rtypes.h>           // for THashConsistencyHolder, ClassDefOverride
 
+#include <memory> // for make_unique, unique_ptr
 #include <vector> // for vector
+class TEveLine;
 
 class TBuffer;
 class TClass;

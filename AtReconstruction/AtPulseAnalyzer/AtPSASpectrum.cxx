@@ -1,21 +1,17 @@
 #include "AtPSASpectrum.h"
 
-#include <FairLogger.h>
-
-// AtTPCROOT classes
-#include "AtCalibration.h"
 #include "AtEvent.h"
 #include "AtHit.h"
 #include "AtPad.h"
 #include "AtRawEvent.h"
 
-// ROOT classes
+#include <FairLogger.h>
+
 #include <Math/Point2D.h>
-#include <Math/Rotation3D.h>
+#include <Math/Point3D.h>    // for PositionVector3D
+#include <Math/Point3Dfwd.h> // for XYZPoint
 #include <TSpectrum.h>
-#include <TVector3.h>
-// STL
-#include <algorithm>
+
 #include <array> // for array
 #include <cmath>
 #include <iostream> // for basic_ostream::operator<<

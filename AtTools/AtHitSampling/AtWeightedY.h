@@ -2,9 +2,9 @@
 #define ATWEIGHTEDY_H
 
 #include "AtChargeWeighted.h"
-#include "AtHit.h" // for AtHit
 
 #include <vector> // for vector
+class AtHit;
 
 namespace RandomSample {
 

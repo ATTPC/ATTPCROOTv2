@@ -6,11 +6,11 @@
 #include <Math/Vector2D.h>    // for DisplacementVector2D
 #include <Math/Vector3D.h>    // for DisplacementVector3D
 #include <Math/Vector3Dfwd.h> // for RhoZPhiVector
-#include <TEveLine.h>
 
 #include <algorithm> // for max
 #include <cmath>     // for fabs, isfinite, sqrt
 #include <memory>    // for allocator_traits<>::value_type
+class TEveLine;
 
 using XYPoint = ROOT::Math::XYPoint;
 using namespace AtPatterns;

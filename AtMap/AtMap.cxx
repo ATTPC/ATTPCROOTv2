@@ -25,13 +25,14 @@ constexpr auto cYELLOW = "\033[1;33m";
 constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
 
+using InhibitType = AtMap::InhibitType;
 std::ostream &operator<<(std::ostream &os, const AtMap::InhibitType &t)
 {
    switch (t) {
-   case AtMap::kNone: os << "kNone"; break;
-   case AtMap::kTotal: os << "kTotal"; break;
-   case AtMap::kLowGain: os << "kLowGain"; break;
-   case AtMap::kXTalk: os << "kXTalk"; break;
+   case InhibitType::kNone: os << "kNone"; break;
+   case InhibitType::kTotal: os << "kTotal"; break;
+   case InhibitType::kLowGain: os << "kLowGain"; break;
+   case InhibitType::kXTalk: os << "kXTalk"; break;
    }
    return os;
 }
@@ -95,7 +96,7 @@ AtMap::InhibitType AtMap::IsInhibited(Int_t PadNum)
 {
    auto pad = fIniPads.find(PadNum);
    if (pad == fIniPads.end())
-      return kNone;
+      return InhibitType::kNone;
    else
       return pad->second;
 }

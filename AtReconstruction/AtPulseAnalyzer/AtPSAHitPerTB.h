@@ -4,6 +4,10 @@
 #include "AtPSA.h"
 
 #include <Rtypes.h> // for THashConsistencyHolder, ClassDefOverride
+
+#include <memory>  // for make_unique, unique_ptr
+#include <utility> // for pair
+
 class AtEvent;
 class AtRawEvent;
 class TBuffer;

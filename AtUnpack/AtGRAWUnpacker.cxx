@@ -18,6 +18,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <iterator> // for begin, end
 #include <thread>
 #include <utility>
 
@@ -214,7 +215,7 @@ void AtGRAWUnpacker::ProcessFile(Int_t coboIdx)
             Int_t PadRefNum = fMap->GetPadNum(PadRef);
             auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
 
-            if (PadRefNum != -1 && !fMap->IsInhibited(PadRefNum)) {
+            if (PadRefNum != -1 && fMap->IsInhibited(PadRefNum) == AtMap::InhibitType::kNone) {
                AtPad *pad = nullptr;
                {
                   std::lock_guard<std::mutex> lk(fRawEventMutex);
@@ -270,7 +271,7 @@ void AtGRAWUnpacker::ProcessBasicFile(Int_t coboIdx)
          auto PadRefNum = fMap->GetPadNum(PadRef);
          auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
 
-         if (PadRefNum != -1 && !fMap->IsInhibited(PadRefNum)) {
+         if (PadRefNum != -1 && fMap->IsInhibited(PadRefNum) == AtMap::InhibitType::kNone) {
             AtPad *pad = nullptr;
             {
                // Ensure the threads aren't both trying to create pads at the same time

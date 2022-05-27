@@ -1,5 +1,7 @@
 #include "AtPattern.h"
 
+#include "AtHit.h" // for AtHit
+
 #include <Math/Point3D.h> // for PositionVector3D
 #include <TEveLine.h>
 using namespace AtPatterns;

@@ -4,6 +4,7 @@
 #include "AtFitter.h"
 
 #include <Rtypes.h>
+#include <TMath.h> // for DegToRad
 #include <Track.h>
 
 #include <memory>

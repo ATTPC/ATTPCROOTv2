@@ -1,17 +1,20 @@
 #ifndef AtPRA_H
 #define AtPRA_H
 
+#include "AtTrack.h" // for AtTrack
+
 #include <Rtypes.h>  // for Double_t, Float_t, Int_t, THashConsistencyHolder
 #include <TObject.h> // for TObject
 
+#include <algorithm> // for max
 #include <memory>
-#include <vector> // for vector
+#include <type_traits> // for false_type, is_signed, true_type
+#include <vector>      // for vector
 
 class AtDigiPar;
 class AtEvent;
 class AtHit;
 class AtPatternEvent;
-class AtTrack;
 class TBuffer;
 class TClass;
 class TMemberInspector;

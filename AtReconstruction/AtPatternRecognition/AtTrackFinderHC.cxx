@@ -3,6 +3,7 @@
 #include "AtEvent.h"        // for AtEvent
 #include "AtHit.h"          // for AtHit
 #include "AtPatternEvent.h" // for AtPatternEvent
+#include "AtTrack.h"        // for AtTrack
 
 #include <Math/Point3D.h> // for PositionVector3D
 
@@ -20,6 +21,7 @@
 #include <cmath>    // for sqrt
 #include <iostream> // for cout, cerr
 #include <memory>   // for allocator_traits<>::value_...
+#include <utility>  // for move
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

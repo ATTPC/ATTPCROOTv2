@@ -1,10 +1,13 @@
 #ifndef HC_H
 #define HC_H
 
-#include <pcl/io/io.h>
+#include <Eigen/Core>        // for MatrixXf, Vector3f, DenseCoeffsBase
+#include <pcl/point_cloud.h> // for PointCloud, PointCloud<>::ConstPtr
+#include <pcl/point_types.h> // for PointXYZI
 
 #include "cluster.h"
 
+#include <cstddef> // for size_t
 #include <limits>
 #include <vector>
 

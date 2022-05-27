@@ -26,7 +26,6 @@ class TEveBoxSet;      // lines 33-33
 class TEveLine;        // lines 34-34
 class TEvePointSet;    // lines 32-32
 class TEveRGBAPalette; // lines 44-44
-class TF1;             // lines 39-39
 class TGraph;          // lines 35-35
 class TH1D;            // lines 37-37
 class TH1F;            // lines 38-38

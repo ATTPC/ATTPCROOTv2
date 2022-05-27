@@ -16,11 +16,8 @@
 #include "AtPadReference.h"
 #include "AtPattern.h"
 #include "AtPatternEvent.h" // for AtPatternEvent
-#include "AtPatternLine.h"
-//#include "AtRansac.h"         // for AtRansac, operator<<, AtRansac::Pair...
-#include "AtRawEvent.h"         // for AtRawEvent, AuxPadMap
-#include "AtTrack.h"            // for AtTrack, operator<<
-#include "AtTrackingEventAna.h" // for AtTrackingEventAna
+#include "AtRawEvent.h"     // for AtRawEvent, AuxPadMap
+#include "AtTrack.h"        // for AtTrack, operator<<
 
 #include <FairLogger.h>      // for Logger, LOG
 #include <FairRootManager.h> // for FairRootManager
@@ -38,7 +35,6 @@
 #include <TEveRGBAPalette.h> // for TEveRGBAPalette
 #include <TEveTrans.h>       // for TEveTrans
 #include <TEveTreeTools.h>   // for TEvePointSelectorConsumer, TEvePoint...
-#include <TF1.h>             // for TF1
 #include <TGraph.h>          // for TGraph
 #include <TH1.h>             // for TH1D, TH1I, TH1F
 #include <TH2.h>             // for TH2F
@@ -53,7 +49,6 @@
 #include <TRandom.h>         // for TRandom
 #include <TSeqCollection.h>  // for TSeqCollection
 #include <TStyle.h>          // for TStyle, gStyle
-#include <TVector3.h>        // for TVector3
 #include <TVirtualPad.h>     // for TVirtualPad, gPad
 #include <TVirtualX.h>       // for TVirtualX
 
