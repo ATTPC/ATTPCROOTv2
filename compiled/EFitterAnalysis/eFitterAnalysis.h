@@ -198,7 +198,7 @@ public:
    Int_t particleQ;
    Int_t evMult;
    Int_t praMult;
-  
+
    std::vector<Float_t> EFitVec;
    std::vector<Float_t> AFitVec;
    std::vector<Float_t> PhiFitVec;
@@ -241,5 +241,4 @@ public:
    std::vector<std::string> pdgVec;
    std::vector<Int_t> trackPointsVec;
    std::vector<Bool_t> fitConvergedVec;
-  
 };

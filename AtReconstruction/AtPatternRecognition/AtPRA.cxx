@@ -22,7 +22,6 @@
 #include <TMatrixTSym.h>      // for TMatrixTSym
 #include <TVector3.h>         // for TVector3
 
-#include <pcl/sample_consensus/model_types.h>
 
 #include <algorithm>          // for max, for_each, copy_if
 #include <cmath>              // for fabs, acos

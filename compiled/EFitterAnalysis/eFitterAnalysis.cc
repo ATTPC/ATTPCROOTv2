@@ -204,9 +204,9 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
    std::vector<AtTrack *> candTrackPool;
    Int_t eventMultiplicity = 0;
    Int_t praMultiplicity = 0;
-   
+
    auto sp = std::unique_ptr<AtTrack[]>(new AtTrack[tracks.size()]);
-   
+
    for (auto iTrack = 0; iTrack < tracks.size(); ++iTrack) {
       AtTrack track = tracks.at(iTrack);
 
@@ -215,18 +215,16 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
 
       trackID = track.GetTrackID();
       trackIDVec.push_back(trackID);
-      
 
-      if (track.GetHitClusterArray()->size() < 3 ) {
+      if (track.GetHitClusterArray()->size() < 3) {
          std::cout << cRED << " Track has less than 3 clusters! " << cNORMAL << "\n";
          continue;
       }
 
-      if(track.GetTrackID()==-1)
-	{
-	  std::cout << cRED << " Track is noise! " << cNORMAL << "\n";
+      if (track.GetTrackID() == -1) {
+         std::cout << cRED << " Track is noise! " << cNORMAL << "\n";
          continue;
-	} 
+      }
 
       ++praMultiplicity;
 
@@ -304,13 +302,13 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       std::cout << KRED << "    Distance to Z " << dist << cNORMAL << "\n";
       std::cout << KGRN << "    ---- Adding track candidate " << cNORMAL << "\n";
       track.SetVertexToZDist(dist);
-      if (fEnableMerging){
+      if (fEnableMerging) {
          sp[iTrack] = track;
          candTrackPool.push_back(std::move(&sp[iTrack]));
-     
-   }else {
-	continue;
-          }
+
+      } else {
+         continue;
+      }
 
    } // Tracks
 
@@ -321,12 +319,11 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
    if (fEnableMerging && !fSimulationConv) { // TODO: Not adapted to simulation yet
 
       for (auto itA = candTrackPool.begin(); itA != candTrackPool.end(); ++itA) {
-	
 
          candToMergePool.clear();
          AtTrack *trA = *(itA);
-	 std::cout<<" Processing track : "<<trA->GetTrackID()<<"\n";
-	 
+         std::cout << " Processing track : " << trA->GetTrackID() << "\n";
+
          auto itB = std::copy_if(itA + 1, candTrackPool.end(), std::back_inserter(candToMergePool),
                                  [&trA, this](AtTrack *track) { return CompareTracks(trA, track); });
 
@@ -514,10 +511,10 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
             Double_t lengthOrbZ = 0.0;
             Double_t eLossOrbZ = 0.0;
 
-	    //Fit convergence
-	    Int_t fitConverged = 0;
+            // Fit convergence
+            Int_t fitConverged = 0;
 
-	    // Reset variables assigned in fitting
+            // Reset variables assigned in fitting
             pVal = -1;
             trackLength = 0;
             xiniFitXtr = -1000.0;
@@ -587,8 +584,8 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
 
                   auto KalmanFitStatus = fitTrack->getKalmanFitStatus();
                   auto trackRep = fitTrack->getTrackRep(0); // Only one representation is sved for the moment.
-		  fitConverged = KalmanFitStatus->isFitConverged(false);
-		  
+                  fitConverged = KalmanFitStatus->isFitConverged(false);
+
                   if (KalmanFitStatus->isFitConverged(false)) {
                      // KalmanFitStatus->Print();
                      genfit::MeasuredStateOnPlane fitState = fitTrack->getFittedState();
@@ -610,10 +607,9 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
 
                      TVector3 pos_ini_buff = pos_res;
                      Double_t length = 0.0;
-		     mom_ext = fitState.getMom();
+                     mom_ext = fitState.getMom();
                      pos_ext = fitState.getPos();
 
-		     
                      // Backward extrapolation
                      try {
 
@@ -631,7 +627,8 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                            // if (fVerbosityLevel > 2){
                            /*std::cout << cYELLOW << " Extrapolation: Total Momentum : " << mom_ext_buff.Mag()
                                      << " - Position : " << pos_ext_buff.X() << "  " << pos_ext_buff.Y() << "  "
-                                     << pos_ext_buff.Z() << " - distance of approach : " << distance <<" - length : "<<length<< cNORMAL << "\n";*/
+                                     << pos_ext_buff.Z() << " - distance of approach : " << distance <<" - length :
+                              "<<length<< cNORMAL << "\n";*/
                            //}
 
                            // if(pos_ext_buff.Z()<0)
@@ -646,11 +643,11 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                               ++minCnt;
                               minCntExt = 0;
                               nSteps = iStep;
-                           }else{
-			     
-			     break;
-			   }
-			       
+                           } else {
+
+                              break;
+                           }
+
                            ++minCntExt;
                         } // Extrapolation loop
 
@@ -752,13 +749,13 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
             eLossOrbZVec.push_back(eLossOrbZ);
             brhoVec.push_back(brho);
             trackPointsVec.push_back(points);
-	    fitConvergedVec.push_back(fitConverged);
-	    
+            fitConvergedVec.push_back(fitConverged);
+
             dEdxADC.push_back(dedx);
             eLossADC.push_back(eloss);
 
             evMult = eventMultiplicity;
-	    praMult = praMultiplicity;
+            praMult = praMultiplicity;
 
          } // pdg cand
 
@@ -789,7 +786,6 @@ Bool_t FitManager::SetFitters(Bool_t simConv)
      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetVerbosityLevel(1);
      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetSimulationConvention(fSimulationConv);
      fFitters.push_back(fFitter);
-     
    }
    return true;
 }
@@ -1193,7 +1189,7 @@ Bool_t FitManager::CompareTracks(AtTrack *trA, AtTrack *trB)
          } else
             std::cout << " Track Overlap found "
                       << " - " << trA->GetTrackID() << " - " << trB->GetTrackID() << "\n";
-	    return false;
+         return false;
       }
 
    } // Conditions
@@ -1212,28 +1208,25 @@ Bool_t FitManager::CheckOverlap(AtTrack *trA, AtTrack *trB)
       std::vector<Int_t> iTBMatches;
       auto itB = hitArrayB.begin();
       while ((itB = std::find_if(itB, hitArrayB.end(), [&itA](AtHit &hitB) {
-							 return hitB.GetTimeStamp() == itA->GetTimeStamp();
+                 return hitB.GetTimeStamp() == itA->GetTimeStamp();
               })) != hitArrayB.end()) {
          iTBMatches.push_back(std::distance(hitArrayB.begin(), itB));
          itB++;
-	 
       }
 
       /*if(iTBMatches.size()>0){
-      std::cout<<" TB Matches found for track A TB: "<<itA->GetTimeStamp()<<" at position "<<std::distance(hitArrayA.begin(), itA)<<"\n";
+      std::cout<<" TB Matches found for track A TB: "<<itA->GetTimeStamp()<<" at position
+     "<<std::distance(hitArrayA.begin(), itA)<<"\n";
 
-      	for(auto itb =0;itb<iTBMatches.size();++itb)
-	  {
-	    std::cout<<" Index : "<<itb<<" - TB : "<<hitArrayB.at(itb).GetTimeStamp()<<"\n";
-	  }
-	  }*/
-	
+         for(auto itb =0;itb<iTBMatches.size();++itb)
+     {
+       std::cout<<" Index : "<<itb<<" - TB : "<<hitArrayB.at(itb).GetTimeStamp()<<"\n";
+     }
+     }*/
+
       iTBMatch += iTBMatches.size();
    }
 
-   
-	
-   
    Double_t shortStraw = (hitArrayA.size() < hitArrayB.size()) ? hitArrayA.size() : hitArrayB.size();
    // TODO: % of overlap
    // std::cout<<" Overlap "<<shortStraw<<" "<<iTBMatch<<"\n";
@@ -1318,7 +1311,7 @@ Bool_t FitManager::SetOutputFile(TString &file)
    fOutputTree->Branch("dEdxADC", &dEdxADC);
    fOutputTree->Branch("pdgVec", &pdgVec);
    fOutputTree->Branch("trackPointsVec",&trackPointsVec);
-   fOutputTree->Branch("fitConvergedVec",&fitConvergedVec);
+   fOutputTree->Branch("fitConvergedVec", &fitConvergedVec);
    return true;
 }
 
@@ -1350,7 +1343,7 @@ void FitManager::ClearTree()
    particleQ = -10;
    evMult = 0;
    praMult = 0;
-   
+
    EFitVec.clear();
    AFitVec.clear();
    PhiFitVec.clear();
