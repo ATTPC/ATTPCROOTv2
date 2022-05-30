@@ -68,10 +68,16 @@ Bool_t AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack *> *trackCandSource, 
    // Find the track closer to vertex
    std::sort(trackCandSource->begin(), trackCandSource->end(),
              [this](AtTrack *trA, AtTrack *trB) { return FindVertexTrack(trA, trB); });
-
+   
    // Track stitching from vertex
    AtTrack *vertexTrack = *trackCandSource->begin();
 
+   if(enableSingleVertexTrack){
+     trackDest->push_back(*vertexTrack);
+     return true;
+   }
+
+   
    // Check if the candidate vertex track was merged
    if (vertexTrack->GetIsMerged())
       return kFALSE;
@@ -94,6 +100,7 @@ Bool_t AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack *> *trackCandSource, 
 
       Double_t endVertexZ = 0.0;
       Double_t iniMergeZ = 0.0;
+      std::cout<<" Trying to merge ... "<<"\n";
       std::cout << " Vertex track " << vertexTrack->GetTrackID() << " - Track to Merge " << trackToMerge->GetTrackID()
                 << "\n";
       // Check relative position between end and begin of each track using Hit Clusters
@@ -106,8 +113,8 @@ Bool_t AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack *> *trackCandSource, 
          iniMergeZ = 1000.0 - iniClusterMerge.GetPosition().Z();
 
          Double_t distance = std::sqrt((iniClusterMerge.GetPosition() - endClusterVertex.GetPosition()).Mag2());
-         std::cout << " Distance between tracks " << distance << "\n";
-         std::cout << " Ini Merge " << iniMergeZ << " - endVertexZ " << endVertexZ << "\n";
+         //std::cout << " Distance between tracks " << distance << "\n";
+         //std::cout << " Ini Merge " << iniMergeZ << " - endVertexZ " << endVertexZ << "\n";
          if (((iniMergeZ + 10.0) > endVertexZ) && distance < 200) {
             toMerge = kTRUE;
          }
@@ -129,8 +136,8 @@ Bool_t AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack *> *trackCandSource, 
 
       if (toMerge) {
 
-         std::cout << " --- Merging Succeeded! Vertex track " << vertexTrack->GetTrackID() << " - Track to Merge "
-                   << trackToMerge->GetTrackID() << "\n";
+	std::cout << " --- Merging Succeeded! Vertex track " << vertexTrack->GetTrackID() << " - Track to Merge "
+	         << trackToMerge->GetTrackID() << "\n";
          for (const auto &hit : trackToMerge->GetHitArray()) {
 
             vertexTrack->AddHit(hit);
@@ -145,8 +152,8 @@ Bool_t AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack *> *trackCandSource, 
          // TODO: Check if phi recalculatio is needed
 
       } else {
-         std::cout << " --- Merging Failed ! Vertex track " << vertexTrack->GetTrackID() << " - Track to Merge "
-                   << trackToMerge->GetTrackID() << "\n";
+	std::cout << " --- Merging Failed ! Vertex track " << vertexTrack->GetTrackID() << " - Track to Merge "
+	         << trackToMerge->GetTrackID() << "\n";
       }
    }
 

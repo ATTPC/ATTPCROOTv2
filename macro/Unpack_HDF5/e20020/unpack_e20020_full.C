@@ -13,7 +13,7 @@ void unpack_e20020_full(TString fileName = "run_0160")
 
    TString parameterFile = "ATTPC.e20020.par";
    TString mappath = "";
-   TString filepath = "/mnt/analysis/attpc/";
+   TString filepath = "/mnt/rawdata/e20020/h5/";
    TString fileExt = ".h5";
    TString inputFile = filepath + fileName + fileExt;
    TString scriptfile = "e12014_pad_mapping.xml";

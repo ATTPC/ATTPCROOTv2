@@ -34,9 +34,11 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
+void plotFit_full_noIC(std::string fileFolder = "data_150_170/")
 {
 
+    std::ofstream outputFileEvents("list_of_events.txt");
+  
    // Data histograms
    TH2F *Ang_Ener = new TH2F("Ang_Ener", "Ang_Ener", 720, 0, 179, 1000, 0, 100.0);
    TH1F *HQval = new TH1F("HQval", "HQval", 600, -5, 55);
@@ -246,9 +248,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    m_B = m_O16;
 
    // Find every valid file
-   std::system("find ./data_151_170 -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l
-   // >test.txt"
-   // std::system("find ./ -maxdepth 1 -printf \"%f\n\" >test.txt"); // execute the UNIX command "ls -l >test.txt"
+   std::string command = "find ./"+fileFolder+" -maxdepth 1 -printf \"%f\n\" >test.txt";
+   std::system(command.c_str()); // execute the UNIX command "ls -l
    std::ifstream file;
    file.open("test.txt");
    std::string line;
@@ -284,7 +285,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
          std::cout << " Opening file : " << dataFile << "\n";
          TTree *outputTree = (TTree *)rootfile.Get("outputTree");
          Float_t EFit, AFit, EPRA, APRA, Ex, PhiFit, PhiPRA, xiniPRA, yiniPRA, ziniPRA, xiniFit, yiniFit, ziniFit, IC;
-         Int_t ICMult, evMult;
+         Int_t ICMult, evMult,praMult;
          outputTree->SetBranchAddress("EFit", &EFit);
          outputTree->SetBranchAddress("AFit", &AFit);
          outputTree->SetBranchAddress("PhiFit", &PhiFit);
@@ -301,6 +302,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
          outputTree->SetBranchAddress("IC", &IC);
          outputTree->SetBranchAddress("ICMult", &ICMult);
          outputTree->SetBranchAddress("evMult", &evMult);
+	 outputTree->SetBranchAddress("praMult", &praMult);
 
          std::vector<Float_t> *EFitVec = 0;
          std::vector<Float_t> *AFitVec = 0;
@@ -343,6 +345,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
          std::vector<Float_t> *dEdxADC = 0;
          std::vector<std::string> *pdgVec = 0;
          std::vector<Int_t> *trackPointsVec = 0;
+	 std::vector<Bool_t> *fitConvergedVec = 0;
 
          outputTree->SetBranchAddress("EFitVec", &EFitVec);
          outputTree->SetBranchAddress("AFitVec", &AFitVec);
@@ -385,6 +388,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
          outputTree->SetBranchAddress("dEdxADC", &dEdxADC);
          outputTree->SetBranchAddress("pdgVec", &pdgVec);
          outputTree->SetBranchAddress("trackPointsVec", &trackPointsVec);
+	 outputTree->SetBranchAddress("fitConvergedVec", &fitConvergedVec);
 
          ++fileCnt;
 
@@ -458,8 +462,16 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
 
                  std::cout<<"\n";*/
 
-            for (auto index = 0; index < EFitVec->size(); ++index) {
+	    
+	    auto itMax = std::max_element(APRAVec->begin(),APRAVec->end(),[](const auto &a, const auto &b) {return b > a;});
+	    Int_t maxAIndex = std::distance(APRAVec->begin(), itMax);;
 
+	    for (auto index = 0; index < EFitVec->size(); ++index) {
+
+	      if(index!=maxAIndex)
+	        continue;
+	      
+	      
                eventMultH->Fill(evMult);
                multvsnumpoints->Fill(evMult, (*trackPointsVec)[index]);
 
@@ -487,35 +499,35 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
                }
 
                if (cutT->IsInside((*eLossADC)[index], (*brhoVec)[index])) // particleID
-                  continue;
+	       continue;
 
                // if(!cutDEDX->IsInside((*dEdxADC)[index], (*brhoVec)[index]))
                // continue;
 
-               if ((*dEdxADC)[index] < 3000) // particleID
-                  continue;
+	       if ((*dEdxADC)[index] < 3000) // particleID
+	        continue;
 
-               if ((*trackLengthVec)[index] < 2.0)
-                  continue;
+	       //if ((*trackLengthVec)[index] < 0.0 || (*trackLengthVec)[index] > 25.0)
+	       // continue;
 
-               if (AFitVec->size() != 1)
-                  continue;
-
+		if((*fitConvergedVec)[index]==0)
+		  continue;
+		
                // if((*trackPointsVec)[index]<20)
                // continue;
 
-               // if(evMult!=2)
-               // continue;
+                if(evMult>2)
+                  continue;
 
-               /* if ((*POCAXtrVec)[index] > 2000.0)
-            continue;
+                //if ((*POCAXtrVec)[index] > 2000.0)
+		//continue;
 
-               if ((*ziniFitXtrVec)[index] < -20.0 && (*ziniFitXtrVec)[index] > 200.0)
-            continue;
+		if ((*ziniFitVec)[index] < 10.0 || (*ziniFitVec)[index] > 60.0)
+		  continue;
 
 
 
-               if ((*EFitVec)[index] > 100)
+		/*if ((*EFitVec)[index] > 100)
             continue;
 
                if ((*fChi2Vec)[index] / (*fNdfVec)[index] < 0.000)
@@ -533,6 +545,9 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
                   hARecvsASca->Fill((*AFitVec)[0], (*AFitVec)[1]);
                }
 
+	       //List of events
+	       outputFileEvents << dataFile <<" - Event : "<<i<<" - PRA Multiplicity : "<<praMult<<" - Max angle PRA : "<<(*APRAVec)[index]<<" - Max Angle Fit : "<<(*AFitVec)[index]<<" - Track points : "<<(*trackPointsVec)[index]<<"\n";
+	       
                // Chi2
                fChi2H->Fill((*fChi2Vec)[index]);
                bChi2H->Fill((*bChi2Vec)[index]);
@@ -555,14 +570,12 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
                HQval_Xtr_recalc->Fill(ex_energy_exp);
 
                // Excitation energy correction
-               Double_t p0 = 1.72831;
-               Double_t p1 = -0.00892026; //-0.01095;
-
-               Double_t mFactor = 1.10;
+               Double_t p0 = -3.048;
+               Double_t p1 = 0.0513295; 
+               Double_t mFactor = 1.00;
                Double_t offSet = 0.0;
-               Double_t QcorrZ =
-                  ex_energy_exp - mFactor * ((1.39 - 2.1509) / (87.62 - 0.627)) * ((*ziniFitXtrVec)[index]) + offSet;
-               QcorrZ = ex_energy_exp - mFactor * p1 * ((*ziniFitXtrVec)[index]);
+               Double_t QcorrZ = 0.0;
+	       QcorrZ = ex_energy_exp - mFactor * p1 * ((*ziniFitXtrVec)[index]) - p0;
                HQCorr->Fill(QcorrZ);
 
                /*for (auto iCorr = 0; iCorr < 10; ++iCorr) {
@@ -910,6 +923,21 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    cpid->cd(4);
    dedxvsBrhoZoom->Draw();
 
+   TCanvas *c7 = new TCanvas();
+   c7->Divide(1, 2);
+   c7->Draw();
+   c7->cd(1);
+   Ang_Ener_PRA->SetMarkerStyle(20);
+   Ang_Ener_PRA->SetMarkerSize(0.5);
+   Ang_Ener_PRA->Draw("COlZ");
+   //Kine_AngRec_EnerRec->Draw("SAME");
+   //Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
+   //Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
+   //Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
+   c7->cd(2);
+   PhiPRAH->Draw();
+
+   
    /*TCanvas *c2 = new TCanvas();
    c2->Divide(2, 3);
    c2->Draw();
@@ -927,20 +955,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_151_170/")
    c2->cd(6);
    QvsXpos->Draw();
 
-   TCanvas *c3 = new TCanvas();
-   c3->Divide(1, 2);
-   c3->Draw();
-   c3->cd(1);
-   Ang_Ener_PRA->SetMarkerStyle(20);
-   Ang_Ener_PRA->SetMarkerSize(0.5);
-   Ang_Ener_PRA->Draw("COlZ");
-   //Kine_AngRec_EnerRec->Draw("SAME");
-   //Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
-   //Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
-   //Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
-   c3->cd(2);
-   PhiPRAH->Draw();
-
+   
    TCanvas *c4 = new TCanvas();
    c4->Divide(2, 2);
    c4->Draw();
