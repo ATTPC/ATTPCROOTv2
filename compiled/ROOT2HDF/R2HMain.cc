@@ -1,26 +1,25 @@
 #include "R2HMain.hh"
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 
- 
    gSystem->Load("libATTPCReco.so");
 
-   FairRunAna* run = new FairRunAna(); //Forcing a dummy run
+   FairRunAna *run = new FairRunAna(); // Forcing a dummy run
    TString FileName =
       "/mnt/analysis/e20020/ATTPCROOTv2_develop/macro/Simulation/ATTPC/10Be_aa/Be10_aa_inelastic_3body_10AMeV.root";
 
-   std::cout<<" Opening File : "<<FileName.Data()<<std::endl;
-   TFile* file = new TFile(FileName.Data(),"READ");
+   std::cout << " Opening File : " << FileName.Data() << std::endl;
+   TFile *file = new TFile(FileName.Data(), "READ");
 
-   TTree* tree = (TTree*) file -> Get("cbmsim");
-   Int_t nEvents = tree -> GetEntries();
-   std::cout<<" Number of events : "<<nEvents<<std::endl;
+   TTree *tree = (TTree *)file->Get("cbmsim");
+   Int_t nEvents = tree->GetEntries();
+   std::cout << " Number of events : " << nEvents << std::endl;
 
    TTreeReader Reader1("cbmsim", file);
    TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtEventH");
 
-   const int   RANK = 1;
+   const int RANK = 1;
    const H5std_string FILE_NAME("output.h5");
 
    H5File *HDFfile = new H5File(FILE_NAME, H5F_ACC_TRUNC);
@@ -41,15 +40,15 @@ int main(int argc, char* argv[])
       ATHit_t hits[nHits];
 
       for (Int_t iHit = 0; iHit < nHits; iHit++) {
-         AtHit *hit = event->GetHit(iHit);
-         TVector3 hitPos = hit->GetPosition();
-         std::vector<AtHit::MCSimPoint> MCPoints = hit->GetMCSimPointArray();
+         auto &hit = event->GetHit(iHit);
+         auto hitPos = hit.GetPosition();
+         std::vector<AtHit::MCSimPoint> MCPoints = hit.GetMCSimPointArray();
 
          hits[iHit].x = hitPos.X();
          hits[iHit].y = hitPos.Y();
          hits[iHit].z = hitPos.Z();
-         hits[iHit].t = hit->GetTimeStamp();
-         hits[iHit].A = hit->GetCharge();
+         hits[iHit].t = hit.GetTimeStamp();
+         hits[iHit].A = hit.GetCharge();
 
          if (MCPoints.size() > 0) { // N.B. Only one MC hit information is saved.
             hits[iHit].trackID = MCPoints.at(0).trackID;
@@ -88,8 +87,5 @@ int main(int argc, char* argv[])
 
    delete HDFfile;
 
-
-
    return 0;
-
 }

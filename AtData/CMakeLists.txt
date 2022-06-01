@@ -8,6 +8,7 @@ Set(DEPENDENCIES
   ROOT::XMLParser
   ROOT::GenVector
   ROOT::Physics #For TVector3
+  ROOT::Eve
   )
 
 set(SRCS

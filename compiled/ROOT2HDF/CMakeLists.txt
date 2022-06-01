@@ -14,11 +14,12 @@ target_link_libraries(R2H ${ROOT_LIBRARIES}
   ATTPCROOT::AtData
   ATTPCROOT::AtTools
   ATTPCROOT::AtSimulationData
+
   ROOT::Core
   ROOT::Tree
   ROOT::TreePlayer
   
-  hdf5::hdf5-shared
+  hdf5::hdf5_cpp-shared
   )
 
 

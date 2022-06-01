@@ -73,7 +73,7 @@ public:
    Int_t GetTimeStamp() const { return fTimeStamp; }
    Double_t GetTimeStampCorr() const { return fTimeStampCorr; }
    Double_t GetTimeStampCorrInter() const { return fTimeStampCorrInter; }
-   std::vector<AtHit::MCSimPoint> &GetMCSimPointArray() { return fMCSimPointArray; }
+   const std::vector<AtHit::MCSimPoint> &GetMCSimPointArray() const { return fMCSimPointArray; }
 
    static Bool_t SortHit(const AtHit &lhs, const AtHit &rhs) { return lhs.GetPadNum() < rhs.GetPadNum(); }
    static Bool_t SortHitTime(const AtHit &lhs, const AtHit &rhs) { return lhs.GetTimeStamp() < rhs.GetTimeStamp(); }

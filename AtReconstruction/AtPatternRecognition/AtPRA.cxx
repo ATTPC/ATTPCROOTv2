@@ -22,7 +22,6 @@
 #include <TMatrixTSym.h>      // for TMatrixTSym
 #include <TVector3.h>         // for TVector3
 
-
 #include <algorithm>          // for max, for_each, copy_if
 #include <cmath>              // for fabs, acos
 #include <cstddef>            // for size_t
