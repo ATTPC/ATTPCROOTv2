@@ -4,82 +4,78 @@ void rundigi_sim(
       "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
    TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
 {
-  // -----   Timer   --------------------------------------------------------
- TStopwatch timer;
- timer.Start();
+   // -----   Timer   --------------------------------------------------------
+   TStopwatch timer;
+   timer.Start();
 
+   TString scriptfile = "LookupGADGET08232021.xml";
+   TString dir = getenv("VMCWORKDIR");
+   TString scriptdir = dir + "/scripts/" + scriptfile;
+   TString dataDir = dir + "/macro/data/";
+   TString geomDir = dir + "/geometry/";
+   gSystem->Setenv("GEOMPATH", geomDir.Data());
 
-  TString scriptfile = "Lookup20150611.xml";
-  TString dir = getenv("VMCWORKDIR");
-  TString scriptdir = dir + "/scripts/"+ scriptfile;
-  TString dataDir = dir + "/macro/data/";
-  TString geomDir = dir + "/geometry/";
-  gSystem -> Setenv("GEOMPATH", geomDir.Data());
+   // ------------------------------------------------------------------------
+   // __ Run ____________________________________________
+   FairRunAna *fRun = new FairRunAna();
+   FairFileSource *source = new FairFileSource(mcFile);
+   fRun->SetSource(source);
+   fRun->SetOutputFile("output_digi.root");
 
- // ------------------------------------------------------------------------
-  // __ Run ____________________________________________
-  FairRunAna* fRun = new FairRunAna();
-              fRun -> SetInputFile(mcFile);
-              fRun->SetOutputFile("output_digi.root");
+   TString parameterFile = "GADGET.sim.par";
+   TString digiParFile = dir + "/parameters/" + parameterFile;
 
-              TString parameterFile = "GADGET.sim.par";
-              TString digiParFile = dir + "/parameters/" + parameterFile;
+   FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
+   FairParAsciiFileIo *parIo1 = new FairParAsciiFileIo();
+   parIo1->open(digiParFile.Data(), "in");
+   rtdb->setFirstInput(parIo1);
 
-              FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
-              FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo();
-              parIo1 -> open(digiParFile.Data(), "in");
-              rtdb -> setFirstInput(parIo1);
-              
-              
+   auto mapping = std::make_shared<AtGadgetIIMap>();
+   mapping->ParseXMLMap(mapParFile.Data());
+   mapping->GeneratePadPlane();
 
-  // __ AT digi tasks___________________________________
+   // __ AT digi tasks___________________________________
 
-      AtClusterizeTask* clusterizer = new AtClusterizeTask();
-      clusterizer -> SetPersistence(kFALSE);
+   AtClusterizeTask *clusterizer = new AtClusterizeTask();
+   clusterizer->SetPersistence(kFALSE);
 
-      AtPulseTask* pulse = new AtPulseTask();
-      pulse -> SetPersistence(kTRUE);
-      pulse -> SetSaveMCInfo();
-      pulse -> SelectDetectorId(kGADGETII);
+   AtPulseTask *pulse = new AtPulseTask();
+   pulse->SetPersistence(kTRUE);
+   pulse->SetSaveMCInfo();
+   pulse->SetMap(mapping);
 
+   auto psa = std::make_unique<AtPSAMax>();
+   psa->SetThreshold(5);
 
-      AtPSASimple2 *psa = new AtPSASimple2();
-       //psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
-      //psa -> SetBaseCorrection(kFALSE); 
-      //psa -> SetTimeCorrection(kFALSE); 
-      
-      AtPSAtask *psaTask = new AtPSAtask(psa);
-      psaTask -> SetPersistence(kTRUE);
-      psa->SetThreshold(5);
-      psa -> SetMaxFinder();
-      
-      AtPRAtask *praTask = new AtPRAtask();
-      praTask->SetPersistence(kTRUE);
+   AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
+   psaTask->SetPersistence(kTRUE);
 
-      /*ATTriggerTask *trigTask = new ATTriggerTask();
-      trigTask  ->  SetAtMap(mapParFile);
-      trigTask  ->  SetPersistence(kTRUE);*/   
+   AtPRAtask *praTask = new AtPRAtask();
+   praTask->SetPersistence(kTRUE);
 
+   /*ATTriggerTask *trigTask = new ATTriggerTask();
+     trigTask  ->  SetAtMap(mapParFile);
+     trigTask  ->  SetPersistence(kTRUE);*/
 
-  fRun -> AddTask(clusterizer);
-  fRun -> AddTask(pulse);
-  fRun->AddTask(psaTask);
-  // fRun -> AddTask(praTask);
-  // fRun -> AddTask(trigTask);
+   fRun->AddTask(clusterizer);
+   fRun->AddTask(pulse);
+   fRun->AddTask(psaTask);
+   // fRun -> AddTask(praTask);
+   // fRun -> AddTask(trigTask);
 
-  // __ Init and run ___________________________________
+   // __ Init and run ___________________________________
 
-  fRun -> Init();
-  fRun->Run(0, 10);
+   fRun->Init();
+   fRun->Run(0, 10);
 
-  std::cout << std::endl << std::endl;
-  std::cout << "Macro finished succesfully."  << std::endl << std::endl;
-  // -----   Finish   -------------------------------------------------------
-  timer.Stop();
-  Double_t rtime = timer.RealTime();
-  Double_t ctime = timer.CpuTime();
-  cout << endl;
-  cout << "Real time " << rtime << " s, CPU time " << ctime << " s" << endl;
-  cout << endl;
-  // ------------------------------------------------------------------------
+   std::cout << std::endl << std::endl;
+   std::cout << "Macro finished succesfully." << std::endl << std::endl;
+   // -----   Finish   -------------------------------------------------------
+   timer.Stop();
+   Double_t rtime = timer.RealTime();
+   Double_t ctime = timer.CpuTime();
+   cout << endl;
+   cout << "Real time " << rtime << " s, CPU time " << ctime << " s" << endl;
+   cout << endl;
+   // ------------------------------------------------------------------------
 }
