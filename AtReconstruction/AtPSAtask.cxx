@@ -83,15 +83,14 @@ InitStatus AtPSAtask::Init()
 
 void AtPSAtask::Exec(Option_t *opt)
 {
-   fEventArray.Clear();
-
    if (fRawEventArray->GetEntriesFast() == 0) {
       LOG(debug) << "Skipping PSA because raw event array is empty";
       return;
    }
 
    auto *rawEvent = dynamic_cast<AtRawEvent *>(fRawEventArray->At(0));
-   auto *event = dynamic_cast<AtEvent *>(new (fEventArray[0]) AtEvent(*rawEvent));
+   auto *event = dynamic_cast<AtEvent *>(fEventArray.ConstructedAt(0, "C")); // Get and clear old event
+   event->CopyFrom(*rawEvent);
 
    if (!rawEvent->IsGood()) {
       LOG(debug) << "Event " << rawEvent->GetEventID() << " is not good, skipping PSA";
