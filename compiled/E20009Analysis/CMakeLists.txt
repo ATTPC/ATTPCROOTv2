@@ -7,7 +7,7 @@ SET(ATTPCROOTPATH $ENV{VMCWORKDIR})
 list(APPEND CMAKE_PREFIX_PATH ${ATTPCROOTPATH}/build/install) #Need access to ATTPCROOT
 
 # Will also load all of its dependecies
-find_package(ATTPCROOT 1.0 REQUIRED)
+find_package(ATTPCROOT 0.3 REQUIRED)
 
 add_library(e20009Ana SHARED e20009Ana.cc)
 target_link_libraries(e20009Ana

@@ -8,9 +8,12 @@ set(INCLUDE_DIRECTORIES
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPulseAnalyzer
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/trackfinder
+#${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/trackfinder
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
+${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/triplclust/src
+${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/triplclust/src/hclust
+${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/triplclust/src/kdtree
 )
 
 Set(DEPENDENCIES
@@ -61,6 +64,20 @@ set(SRCS
   AtPatternRecognition/AtEstimatorMethods.cxx
   AtRansacTask.cxx
   AtPRAtask.cxx
+
+  AtPatternRecognition/triplclust/src/cluster.cxx 
+  AtPatternRecognition/triplclust/src/triplet.cxx 
+  AtPatternRecognition/triplclust/src/main.cxx 
+  AtPatternRecognition/triplclust/src/dnn.cxx
+  AtPatternRecognition/triplclust/src/hclust/fastcluster.cxx 
+  AtPatternRecognition/triplclust/src/kdtree/kdtree.cxx 
+  AtPatternRecognition/triplclust/src/pointcloud.cxx 
+  AtPatternRecognition/triplclust/src/output.cxx 
+  AtPatternRecognition/triplclust/src/option.cxx 
+  AtPatternRecognition/triplclust/src/util.cxx 
+  AtPatternRecognition/triplclust/src/graph.cxx
+  AtPatternRecognition/AtTrackFinderTC.cxx
+  
   )
 
 ### Add additional sources and libraries if we found certain modules ###
@@ -68,12 +85,12 @@ set(SRCS
 # Adding libraries that depend on PCL
 if(PCL_FOUND)
   set(SRCS ${SRCS} 
-    AtPatternRecognition/AtTrackFinderHC.cxx
-    AtPatternRecognition/trackfinder/smoothenCloud.cxx
-    AtPatternRecognition/trackfinder/msd.cxx
-    AtPatternRecognition/trackfinder/cluster.cxx
-    AtPatternRecognition/trackfinder/hc.cxx
-    AtPatternRecognition/trackfinder/fastcluster.cxx
+    #AtPatternRecognition/AtTrackFinderHC.cxx
+    #AtPatternRecognition/trackfinder/smoothenCloud.cxx
+    #AtPatternRecognition/trackfinder/msd.cxx
+    #AtPatternRecognition/trackfinder/cluster.cxx
+    #AtPatternRecognition/trackfinder/hc.cxx
+    #AtPatternRecognition/trackfinder/fastcluster.cxx
     )
   set(DEPENDENCIES ${DEPENDENCIES}
     ${PCL_LIBRARIES}

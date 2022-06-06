@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_full_noIC(std::string fileFolder = "data_150_170/")
+void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
 {
 
    std::ofstream outputFileEvents("list_of_events.txt");

@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
    TString FileName =
-      "/mnt/analysis/e20020/ATTPCROOTv2_develop/macro/Simulation/ATTPC/10Be_aa/Be10_aa_inelastic_3body_10AMeV.root";
+      "/mnt/analysis/e20020/ATTPCROOTv2_fairroot_18_6/macro/Unpack_HDF5/e20020/run_0160.root";
 
    std::cout << " Opening File : " << FileName.Data() << std::endl;
    TFile *file = new TFile(FileName.Data(), "READ");
@@ -44,13 +44,14 @@ int main(int argc, char *argv[])
          auto hitPos = hit.GetPosition();
          std::vector<AtHit::MCSimPoint> MCPoints = hit.GetMCSimPointArray();
 
+
          hits[iHit].x = hitPos.X();
          hits[iHit].y = hitPos.Y();
          hits[iHit].z = hitPos.Z();
          hits[iHit].t = hit.GetTimeStamp();
          hits[iHit].A = hit.GetCharge();
 
-         if (MCPoints.size() > 0) { // N.B. Only one MC hit information is saved.
+         /*if (MCPoints.size() > 0) { // N.B. Only one MC hit information is saved.
             hits[iHit].trackID = MCPoints.at(0).trackID;
             hits[iHit].pointIDMC = MCPoints.at(0).pointID;
             hits[iHit].energyMC = MCPoints.at(0).energy;
@@ -58,7 +59,7 @@ int main(int argc, char *argv[])
             hits[iHit].angleMC = MCPoints.at(0).angle;
             hits[iHit].AMC = MCPoints.at(0).A;
             hits[iHit].ZMC = MCPoints.at(0).Z;
-         }
+	    }*/
          // std::cout<<hits[iHit].x<<"\n";
          // std::cout<<" MC points size "<<MCPoints.size()<<"\n";
       }

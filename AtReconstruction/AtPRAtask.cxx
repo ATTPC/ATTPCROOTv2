@@ -5,7 +5,7 @@
 #include "AtHit.h"           // for AtHit
 #include "AtPRA.h"           // for AtPRA
 #include "AtPatternEvent.h"  // for AtPatternEvent
-#include "AtTrackFinderHC.h" // for AtTrackFinderHC
+#include "AtTrackFinderTC.h" // for AtTrackFinderHC
 
 #include <FairLogger.h>      // for LOG, FairLogger
 #include <FairRootManager.h> // for FairRootManager
@@ -31,13 +31,13 @@ AtPRAtask::AtPRAtask() : FairTask("AtPRAtask"), fPatternEventArray("AtPatternEve
    fMinNumHits = 10;
    fMaxNumHits = 5000;
 
-   fHCs = -1.0;
+   fHCs = 0.3;
    fHCk = 19;
-   fHCn = 3;
-   fHCm = 8;
-   fHCr = -1.0;
+   fHCn = 2;
+   fHCm = 15;
+   fHCr = 2.0;
    fHCa = 0.03;
-   fHCt = 3.5;
+   fHCt = 4.0;
    fHCpadding = 0.0;
 
    kSetPrunning = kFALSE;
@@ -82,19 +82,19 @@ InitStatus AtPRAtask::Init()
    LOG(debug) << "Initilization of AtPRAtask";
 
    if (fPRAlgorithm == 0) {
-      LOG(info) << "Using Track Finder Hierarchical Clustering algorithm";
+      LOG(info) << "Using Track Finder TriplClust algorithm";
 
-      fPRA = new AtPATTERN::AtTrackFinderHC();
-      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetTcluster(fHCt);
-      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetScluster(fHCs);
-      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetKtriplet(fHCk);
-      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetNtriplet(fHCn);
-      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetMcluster(fHCm);
-      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetRsmooth(fHCr);
-      dynamic_cast<AtPATTERN::AtTrackFinderHC *>(fPRA)->SetAtriplet(fHCa);
-      // dynamic_cast<AtPATTERN::AtTrackFinderHC*>fPRA->SetPadding(fHCpadding);
+      fPRA = new AtPATTERN::AtTrackFinderTC();
+      dynamic_cast<AtPATTERN::AtTrackFinderTC *>(fPRA)->SetTcluster(fHCt);
+      dynamic_cast<AtPATTERN::AtTrackFinderTC *>(fPRA)->SetScluster(fHCs);
+      dynamic_cast<AtPATTERN::AtTrackFinderTC *>(fPRA)->SetKtriplet(fHCk);
+      dynamic_cast<AtPATTERN::AtTrackFinderTC *>(fPRA)->SetNtriplet(fHCn);
+      dynamic_cast<AtPATTERN::AtTrackFinderTC *>(fPRA)->SetMcluster(fHCm);
+      dynamic_cast<AtPATTERN::AtTrackFinderTC *>(fPRA)->SetRsmooth(fHCr);
+      dynamic_cast<AtPATTERN::AtTrackFinderTC *>(fPRA)->SetAtriplet(fHCa);
+      dynamic_cast<AtPATTERN::AtTrackFinderTC *>(fPRA)->SetPadding(fHCpadding);
 
-      std::cout << " Track Finder HC parameters (see Dalitz et al.) "
+      std::cout << " Track Finder TriplClust parameters (see Dalitz et al.) "
                 << "\n";
       std::cout << " T Cluster : " << fHCt << "\n";
       std::cout << " S Cluster : " << fHCs << "\n";

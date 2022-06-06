@@ -66,8 +66,7 @@ void unpack_e20020_full(TString fileName = "run_0160")
    psaTask->SetPersistence(kTRUE);
 
    AtPRAtask *praTask = new AtPRAtask();
-   praTask->SetPersistence(kTRUE);
-   praTask->SetTcluster(5.0);
+   praTask->SetPersistence(kTRUE);   
    praTask->SetMaxNumHits(3000);
    praTask->SetMinNumHits(200);
 
