@@ -27,7 +27,6 @@ void run_unpack_GADGET(TString dataFile = "./data/GADGET-alpha-source-data2.txt"
    TString lowgmap = mappath + "lowgain.txt";
    TString xtalkmap = mappath + "beampads_e15503b.txt";
 
-      
    FairRunAna *run = new FairRunAna();
    run->SetOutputFile(outputFile);
    run->SetGeomFile(geoManFile);
@@ -51,11 +50,10 @@ void run_unpack_GADGET(TString dataFile = "./data/GADGET-alpha-source-data2.txt"
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetPersistence(true);
 
-   AtPSASimple2 *psa = new AtPSASimple2();
-   AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetPersistence(kTRUE);
+   auto psa = std::make_unique<AtPSAMax>();
    psa->SetThreshold(5);
-   psa->SetMaxFinder();
+   AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
+   psaTask->SetPersistence(kTRUE);
 
    run->AddTask(unpackTask);
    run->AddTask(psaTask);

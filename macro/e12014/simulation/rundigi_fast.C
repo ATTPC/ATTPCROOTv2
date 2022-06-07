@@ -10,7 +10,7 @@ void rundigi_fast()
    // fair::Logger::SetVerbosity("user1");
    // fair::Logger::SetConsoleSeverity("debug");
 
-   //TString outputFile = "data/output_digiFast.root";
+   // TString outputFile = "data/output_digiFast.root";
    TString inOutDir = "./eventGenerator/sym/";
    TString outputFile = inOutDir + "output_digi.root";
    TString scriptfile = "e12014_pad_mapping.xml";
@@ -18,7 +18,7 @@ void rundigi_fast()
 
    TString dir = getenv("VMCWORKDIR");
 
-   //TString mcFile = "./data/sim_attpc.root";
+   // TString mcFile = "./data/sim_attpc.root";
    TString mcFile = inOutDir + "sim_attpc.root";
 
    // Create the full parameter file paths
@@ -45,15 +45,15 @@ void rundigi_fast()
    auto mapping = std::make_shared<AtTpcMap>();
    mapping->ParseXMLMap(mapParFile.Data());
    mapping->GeneratePadPlane();
-   mapping->ParseInhibitMap("inhibit.txt", AtMap::kTotal);
-   
+   mapping->ParseInhibitMap("inhibit.txt", AtMap::InhibitType::kTotal);
+
    // __ AT digi tasks___________________________________
    // AtClusterizeFastTask *clusterizer = new AtClusterizeFastTask();
-   //AtClusterizeTask *clusterizer = new AtClusterizeTask();
+   // AtClusterizeTask *clusterizer = new AtClusterizeTask();
    AtClusterizeLineTask *clusterizer = new AtClusterizeLineTask();
    clusterizer->SetPersistence(kFALSE);
 
-   //AtPulseTask *pulse = new AtPulseTask();
+   // AtPulseTask *pulse = new AtPulseTask();
    AtPulseLineTask *pulse = new AtPulseLineTask();
    pulse->SetPersistence(kTRUE);
    pulse->SetMap(mapping);
@@ -71,25 +71,16 @@ void rundigi_fast()
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);
 
-   AtRansacTask *ransacTask = new AtRansacTask();
-   ransacTask->SetPersistence(kTRUE);
-   ransacTask->SetVerbose(kFALSE);
-   ransacTask->SetDistanceThreshold(20.0);
-   ransacTask->SetTiltAngle(0);
-   ransacTask->SetMinHitsLine(10);
-   ransacTask->SetFullMode();
-
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
    fRun->AddTask(reduceTask);
    fRun->AddTask(psaTask);
-   fRun->AddTask(ransacTask);
    //  __ Init and run ___________________________________
    fRun->Init();
 
    timer.Start();
-   // fRun->Run(0, 20001);
-   fRun->Run(0, 50);
+   fRun->Run(0, 20001);
+   // fRun->Run(0, 50);
    timer.Stop();
 
    std::cout << std::endl << std::endl;

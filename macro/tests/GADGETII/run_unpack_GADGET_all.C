@@ -47,15 +47,14 @@ void run_unpack_GADGET_all(TString dataFile = "./data/GADGET-multiple-files.txt"
 
    auto unpacker = std::make_unique<AtGRAWUnpacker>(fMapPtr, 4);
    unpacker->SetInputFileName(dataFile.Data(), "AsAd%i");
-   unpacker->SetInitialEventID(13000);
+   unpacker->SetInitialEventID(0);
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetPersistence(true);
 
-   AtPSASimple2 *psa = new AtPSASimple2();
-   AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetPersistence(kTRUE);
+   auto psa = std::make_unique<AtPSAMax>();
    psa->SetThreshold(10);
-   psa->SetMaxFinder();
+   AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
+   psaTask->SetPersistence(kTRUE);
 
    run->AddTask(unpackTask);
    run->AddTask(psaTask);
@@ -63,7 +62,7 @@ void run_unpack_GADGET_all(TString dataFile = "./data/GADGET-multiple-files.txt"
    run->Init();
 
    // run -> RunOnTBData();
-   run->Run(0, 4000);
+   run->Run(0, 100);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;

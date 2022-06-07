@@ -2,18 +2,15 @@
 
 int main(int argc, char *argv[])
 {
-
-   gSystem->Load("libATTPCReco.so");
-
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
-   TString FileName =
-      "/mnt/analysis/e20020/ATTPCROOTv2_fairroot_18_6/macro/Unpack_HDF5/e20020/run_0160.root";
+   TString FileName = "~/attpcroot/macro/e12014/simulation/eventGenerator/sym/output_digi.root";
 
    std::cout << " Opening File : " << FileName.Data() << std::endl;
    TFile *file = new TFile(FileName.Data(), "READ");
 
    TTree *tree = (TTree *)file->Get("cbmsim");
    Int_t nEvents = tree->GetEntries();
+   // nEvents = 1000;
    std::cout << " Number of events : " << nEvents << std::endl;
 
    TTreeReader Reader1("cbmsim", file);

@@ -10,7 +10,7 @@ void runMC_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
    TString parFileName = dir + inOutDir + "par_attpc.root";
    TString simFileName = dir + inOutDir + "sim_attpc.root";
 
-   //Input file names
+   // Input file names
    TString geoFileName = "ATTPC_He1bar.root";
    TString paramFileName = "ATTPC.e12014.par";
    paramFileName = dir + "/parameters/" + paramFileName;
@@ -22,12 +22,9 @@ void runMC_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
    TStopwatch timer;
    timer.Start();
    cout << "TIME IS " << timer.RealTime() << endl;
-   AtVertexPropagator *vertex_prop = new AtVertexPropagator();
-
-   cout << "TIME IS " << timer.RealTime() << endl;
 
    FairRunSim *run = new FairRunSim();
-   run->SetName(mcEngine);      // Transport engine
+   run->SetName(mcEngine);                          // Transport engine
    run->SetSink(new FairRootFileSink(simFileName)); // Output file
    FairRuntimeDb *rtdb = run->GetRuntimeDb();
    cout << "TIME IS " << timer.RealTime() << endl;
