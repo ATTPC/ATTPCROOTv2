@@ -13,6 +13,6 @@
 enum Linkage { SINGLE, COMPLETE, AVERAGE };
 
 // converts *str* to double.
-double stod(const char* str);
+double stod(const char *str);
 
 #endif

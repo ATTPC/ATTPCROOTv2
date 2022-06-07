@@ -26,7 +26,6 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-
 namespace AtPATTERN {
 struct hc_params {
    float s;
@@ -41,8 +40,8 @@ struct hc_params {
 
 class AtTrackFinderTC : public AtPRA {
 private:
-   hc_params inputParams{.s = 0.3, .k = 19, .n = 2, .m = 15, .r = 2, .a = 0.03, .t = 4.0};    
-  
+   hc_params inputParams{.s = 0.3, .k = 19, .n = 2, .m = 15, .r = 2, .a = 0.03, .t = 4.0};
+
 public:
    AtTrackFinderTC();
    ~AtTrackFinderTC() = default;
@@ -59,12 +58,11 @@ public:
    void SetPadding(size_t padding) { inputParams._padding = padding; }
 
 private:
-      
-   void eventToClusters(AtEvent &event, PointCloud& cloud);  
-   std::unique_ptr<AtPatternEvent> clustersToTrack(PointCloud& cloud, const std::vector<cluster_t> &clusters, AtEvent &event);
-  
+   void eventToClusters(AtEvent &event, PointCloud &cloud);
+   std::unique_ptr<AtPatternEvent>
+   clustersToTrack(PointCloud &cloud, const std::vector<cluster_t> &clusters, AtEvent &event);
 
-  ClassDefOverride(AtTrackFinderTC, 1);
+   ClassDefOverride(AtTrackFinderTC, 1);
 };
 
 } // namespace AtPATTERN

@@ -8,6 +8,7 @@
 //
 
 #include "util.h"
+
 #include <sstream>
 #include <stdexcept>
 
@@ -15,20 +16,21 @@
 // converts *str* to double.
 // If str is not a number a invalid_argument exception is thrown.
 //-------------------------------------------------------------------
-double stod(const char* s) {
-  double result;
+double stod(const char *s)
+{
+   double result;
 
-  // remove leading and trailing white space
-  std::string str(s);
-  str.erase(0, str.find_first_not_of("\t\r\n "));
-  str.erase(str.find_last_not_of("\t\r\n ") + 1);
+   // remove leading and trailing white space
+   std::string str(s);
+   str.erase(0, str.find_first_not_of("\t\r\n "));
+   str.erase(str.find_last_not_of("\t\r\n ") + 1);
 
-  // use istream for conversion
-  std::istringstream iss(str);
+   // use istream for conversion
+   std::istringstream iss(str);
 
-  iss >> std::ws >> result;
-  if (iss.fail() || !iss.eof()) {
-    throw std::invalid_argument("not a number");
-  }
-  return result;
+   iss >> std::ws >> result;
+   if (iss.fail() || !iss.eof()) {
+      throw std::invalid_argument("not a number");
+   }
+   return result;
 }

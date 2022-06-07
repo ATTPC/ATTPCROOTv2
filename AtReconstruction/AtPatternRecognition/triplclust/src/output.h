@@ -13,14 +13,12 @@
 #include "pointcloud.h"
 
 // saves a PointCloud *cloud* as csv file.
-bool cloud_to_csv(const PointCloud &cloud,
-                  const char *fname = "debug_smoothed.csv");
+bool cloud_to_csv(const PointCloud &cloud, const char *fname = "debug_smoothed.csv");
 // saves smoothen cloud as gnuplot script.
 bool debug_gnuplot(const PointCloud &cloud, const PointCloud &cloud_smooth,
                    const char *fname = "debug_smoothed.gnuplot");
 // prints gnuplot script to stdout.
-void clusters_to_gnuplot(const PointCloud &cloud,
-                         const std::vector<cluster_t> &clusters);
+void clusters_to_gnuplot(const PointCloud &cloud, const std::vector<cluster_t> &clusters);
 // saves the PointCloud *cloud* with clusters *cluster* as csv file.
 void clusters_to_csv(const PointCloud &cloud);
 

@@ -21,7 +21,7 @@
 // Output arguments:
 //   labels = allocated integer array of size n for result
 //
-void cutree_k(int n, const int* merge, int nclust, int* labels);
+void cutree_k(int n, const int *merge, int nclust, int *labels);
 
 //
 // Assigns cluster labels (0, ..., nclust-1) to the n points such
@@ -35,7 +35,7 @@ void cutree_k(int n, const int* merge, int nclust, int* labels);
 // Output arguments:
 //   labels = allocated integer array of size n for result
 //
-void cutree_cdist(int n, const int* merge, double* height, double cdist, int* labels);
+void cutree_cdist(int n, const int *merge, double *height, double cdist, int *labels);
 
 //
 // Hierarchical clustering with one of Daniel Muellner's fast algorithms
@@ -61,13 +61,12 @@ void cutree_cdist(int n, const int* merge, double* height, double cdist, int* la
 //   0 = ok
 //   1 = invalid method
 //
-int hclust_fast(int n, double* distmat, int method, int* merge, double* height);
+int hclust_fast(int n, double *distmat, int method, int *merge, double *height);
 enum hclust_fast_methods {
-  HCLUST_METHOD_SINGLE = 0,
-  HCLUST_METHOD_COMPLETE = 1,
-  HCLUST_METHOD_AVERAGE = 2,
-  HCLUST_METHOD_MEDIAN = 3
+   HCLUST_METHOD_SINGLE = 0,
+   HCLUST_METHOD_COMPLETE = 1,
+   HCLUST_METHOD_AVERAGE = 2,
+   HCLUST_METHOD_MEDIAN = 3
 };
-  
 
 #endif
