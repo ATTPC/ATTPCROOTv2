@@ -161,11 +161,19 @@ TGeoVolume *create_detector()
    TGeoMedium *segamatter = gGeoMan->GetMedium(SegaMatter);
    TGeoMedium *segacryomatter = gGeoMan->GetMedium(SegaCryoMatter);
    TGeoMedium *mediumvacuum4 = gGeoMan->GetMedium(MediumVacuum);
-   // dummy// need this to work for some reason
+  // dummy// need this to work for some reason
 
    TGeoVolume *dummy = gGeoManager->MakeTube("dummy", mediumvacuum4, 0, 0, 0);
    gGeoMan->GetVolume(geoVersion)->AddNode(dummy, 1, new TGeoCombiTrans(0.0, 0, 0, new TGeoRotation("dummy", 0, 0, 0)));
-   dummy->SetTransparency(0);
+   dummy->SetTransparency(100);
+
+   TGeoVolume **Cry_vol;
+   Cry_vol = new TGeoVolume *[17];
+
+   
+   TString CrystalName = "Crystal_";
+   TString name_cry[17] = {"01", "02", "03", "04", "05", "06", "07", "08", "09" ,"10" , "11" , "12" , "13" , "14" , "15" , "16" ,"17"};
+
 
    // upstream ring
    Float_t radian_arraycos[8] = {1, 0.707106781187, 0, -0.707106781187, -1, -0.707106781187,
@@ -189,7 +197,7 @@ TGeoVolume *create_detector()
          ->AddNode(cencon, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("cencon", phirot[nora], updown * thetarot[nora], 0.0)));
-      cencon->SetTransparency(0);
+      cencon->SetTransparency(80);
 
       // GADGET SeGA inner dead layer
       TGeoVolume *indeadL = gGeoManager->MakeTube("indeadL", segamatter, sega_central_contact_rad_out,
@@ -199,7 +207,7 @@ TGeoVolume *create_detector()
          ->AddNode(indeadL, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("indeadL", phirot[nora], updown * thetarot[nora], 0.0)));
-      indeadL->SetTransparency(0);
+      indeadL->SetTransparency(80);
       // GADGET SeGA active layer
       TGeoVolume *activeL = gGeoManager->MakeTube("activeL", segamatter, sega_inner_dead_layer_rad_out,
                                                   sega_active_rad_out, sega_active_length / 2);
@@ -208,17 +216,15 @@ TGeoVolume *create_detector()
          ->AddNode(activeL, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("activeL", phirot[nora], updown * thetarot[nora], 0)));
-      activeL->SetTransparency(0);
+      activeL->SetTransparency(80);
 
       // GADGET SeGA germanium crystal
-      TGeoVolume *GeCrystal = gGeoManager->MakeTube("GeCrystal", segamatter, sega_active_rad_out,
-                                                    sega_Ge_crystal_rad_out, sega_Ge_crystal_length / 2);
-      GeCrystal->SetLineColor(kCyan);
+      
+      Cry_vol[nora]= gGeoManager->MakeTube(CrystalName + name_cry[nora], segamatter, sega_active_rad_out,  sega_Ge_crystal_rad_out, sega_Ge_crystal_length/2 );
+      Cry_vol[nora]->SetLineColor(kCyan);
       gGeoMan->GetVolume(geoVersion)
-         ->AddNode(GeCrystal, nora + 1,
-                   new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
-                                      new TGeoRotation("GeCrystal", phirot[nora], updown * thetarot[nora], 0)));
-      GeCrystal->SetTransparency(0);
+         ->AddNode(Cry_vol[nora],nora+ 1, new TGeoCombiTrans(x_posSega, y_posSega , z_posSega,  new TGeoRotation("GeCrystal", phirot[nora], updown*thetarot[nora], 0)));
+   Cry_vol[nora]->SetTransparency(80); 
       // GADGET SeGA vacuum 1
       TGeoVolume *vac1 =
          gGeoManager->MakeTube("vac1", mediumvacuum4, sega_Ge_crystal_rad_out, sega_vac1_rad_out, sega_vac1_length / 2);
@@ -227,7 +233,7 @@ TGeoVolume *create_detector()
          ->AddNode(vac1, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("vac1", phirot[nora], updown * thetarot[nora], 0)));
-      vac1->SetTransparency(0);
+      vac1->SetTransparency(80);
       // GADGET SeGA detector cup
       TGeoVolume *segadetcup = gGeoManager->MakeTube("segadetcup", segacryomatter, sega_vac1_rad_out,
                                                      sega_det_cup_rad_out, sega_det_cup_length / 2);
@@ -236,7 +242,7 @@ TGeoVolume *create_detector()
          ->AddNode(segadetcup, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("segadetcup", phirot[nora], updown * thetarot[nora], 0)));
-      segadetcup->SetTransparency(0);
+      segadetcup->SetTransparency(80);
 
       // GADGET SeGA vacuum 2
       TGeoVolume *vac2 =
@@ -246,7 +252,7 @@ TGeoVolume *create_detector()
          ->AddNode(vac2, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("vac2", phirot[nora], updown * thetarot[nora], 0)));
-      vac2->SetTransparency(0);
+      vac2->SetTransparency(80);
 
       // GADGET SeGA Cryostat
       TGeoVolume *cryostat =
@@ -256,7 +262,7 @@ TGeoVolume *create_detector()
          ->AddNode(cryostat, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("cryostat", phirot[nora], updown * thetarot[nora], 0)));
-      cryostat->SetTransparency(0);
+      cryostat->SetTransparency(80);
    };
    // radius = (tpc_diameter_in /2+sega_cryo_rad_out+2)
    // downstream ring
@@ -276,7 +282,7 @@ TGeoVolume *create_detector()
          ->AddNode(cencon, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("cencon", phirot[nora], updown * thetarot[nora], 0.0)));
-      cencon->SetTransparency(0);
+      cencon->SetTransparency(80);
       cout << "sega_Ge_crystal_rad_out" << sega_Ge_crystal_rad_out << endl;
       // GADGET SeGA inner dead layer
       TGeoVolume *indeadL = gGeoManager->MakeTube("indeadL", segamatter, sega_central_contact_rad_out,
@@ -286,7 +292,7 @@ TGeoVolume *create_detector()
          ->AddNode(indeadL, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("indeadL", phirot[nora], updown * thetarot[nora], 0.0)));
-      indeadL->SetTransparency(0);
+      indeadL->SetTransparency(80);
       // GADGET SeGA active layer
       TGeoVolume *activeL = gGeoManager->MakeTube("activeL", segamatter, sega_inner_dead_layer_rad_out,
                                                   sega_active_rad_out, sega_active_length / 2);
@@ -295,17 +301,15 @@ TGeoVolume *create_detector()
          ->AddNode(activeL, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("activeL", phirot[nora], updown * thetarot[nora], 0)));
-      activeL->SetTransparency(0);
+      activeL->SetTransparency(80);
 
       // GADGET SeGA germanium crystal
-      TGeoVolume *GeCrystal = gGeoManager->MakeTube("GeCrystal", segamatter, sega_active_rad_out,
-                                                    sega_Ge_crystal_rad_out, sega_Ge_crystal_length / 2);
-      GeCrystal->SetLineColor(kCyan);
+
+      Cry_vol[nora+8]= gGeoManager->MakeTube(CrystalName + name_cry[nora+8], segamatter, sega_active_rad_out,  sega_Ge_crystal_rad_out, sega_Ge_crystal_length/2 );
+      Cry_vol[nora+8]->SetLineColor(kCyan);
       gGeoMan->GetVolume(geoVersion)
-         ->AddNode(GeCrystal, nora + 1,
-                   new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
-                                      new TGeoRotation("GeCrystal", phirot[nora], updown * thetarot[nora], 0)));
-      GeCrystal->SetTransparency(0);
+         ->AddNode(Cry_vol[nora+8],nora+ 9, new TGeoCombiTrans(x_posSega, y_posSega , z_posSega,  new TGeoRotation("GeCrystal", phirot[nora], updown*thetarot[nora], 0)));
+   Cry_vol[nora+8]->SetTransparency(80); 
       // GADGET SeGA vacuum 1
       TGeoVolume *vac1 =
          gGeoManager->MakeTube("vac1", mediumvacuum4, sega_Ge_crystal_rad_out, sega_vac1_rad_out, sega_vac1_length / 2);
@@ -314,7 +318,7 @@ TGeoVolume *create_detector()
          ->AddNode(vac1, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("vac1", phirot[nora], updown * thetarot[nora], 0)));
-      vac1->SetTransparency(0);
+      vac1->SetTransparency(80);
       // GADGET SeGA detector cup
       TGeoVolume *segadetcup = gGeoManager->MakeTube("segadetcup", segacryomatter, sega_vac1_rad_out,
                                                      sega_det_cup_rad_out, sega_det_cup_length / 2);
@@ -323,7 +327,7 @@ TGeoVolume *create_detector()
          ->AddNode(segadetcup, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("segadetcup", phirot[nora], updown * thetarot[nora], 0)));
-      segadetcup->SetTransparency(0);
+      segadetcup->SetTransparency(80);
 
       // GADGET SeGA vacuum 2
       TGeoVolume *vac2 =
@@ -333,7 +337,7 @@ TGeoVolume *create_detector()
          ->AddNode(vac2, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("vac2", phirot[nora], updown * thetarot[nora], 0)));
-      vac2->SetTransparency(0);
+      vac2->SetTransparency(80);
 
       // GADGET SeGA Cryostat
       TGeoVolume *cryostat =
@@ -343,8 +347,18 @@ TGeoVolume *create_detector()
          ->AddNode(cryostat, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("cryostat", phirot[nora], updown * thetarot[nora], 0)));
-      cryostat->SetTransparency(0);
+      cryostat->SetTransparency(80);
    };
+
+//BALL
+ /*
+
+     
+      Cry_vol[16]= gGeoManager->MakeSphere(CrystalName + name_cry[16], segamatter, 0,  25 );
+      Cry_vol[16]->SetLineColor(kMagenta);
+      gGeoMan->GetVolume(geoVersion)
+         ->AddNode(Cry_vol[16],17, new TGeoCombiTrans(0.0, 0.0 , 20 - 8.56 / 2 - 1.3746,  new TGeoRotation("GeCrystal", 0 ,0, 0)));
+   Cry_vol[16]->SetTransparency(80); */
 
    return dummy;
 }
