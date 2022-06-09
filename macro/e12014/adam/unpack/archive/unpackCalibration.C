@@ -1,7 +1,7 @@
 // Unpacks tpc files from /mnt/rawdata/ to /mnt/analysis/e12014/TPC/unpacked
 
 // Requires the TPC run number
-void unpackCalibration(int runNumber)
+void unpackCalibrated(int runNumber)
 {
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
@@ -17,7 +17,7 @@ void unpackCalibration(int runNumber)
 
    // Set the in/out files
    TString inputFile = inputDir + TString::Format("/run_%04d.h5", runNumber);
-   TString outputFile = outDir + TString::Format("/run_%04dCal.root", runNumber);
+   TString outputFile = outDir + TString::Format("/run_%04d.root", runNumber);
 
    std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
    std::cout << "Saving in: " << outputFile << std::endl;

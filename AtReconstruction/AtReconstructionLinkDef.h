@@ -4,8 +4,10 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
+#pragma link C++ class AtFilter - !;
 #pragma link C++ class AtFilterFFT - !; // Don't generate any IO
 #pragma link C++ class AtFilterCalibrate - !;
+#pragma link C++ class AtFilterSubtraction - !;
 
 #pragma link C++ class AtPSA + ;
 #pragma link C++ class AtPSASpectrum + ;
@@ -39,5 +41,6 @@
 #pragma link C++ class AtRansacTask + ;
 #pragma link C++ class AtDataReductionTask + ;
 #pragma link C++ class AtSpaceChargeCorrectionTask + ;
+#pragma link C++ class AtFilterTask + ;
 
 #endif
