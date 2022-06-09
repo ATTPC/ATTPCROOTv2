@@ -95,7 +95,7 @@ void AtPulseTask::getPadPlaneAndCreatePadHist()
    fPadPlane = fMap->GetPadPlane();
 
    char buff[100];
-   eleAccumulated.reserve(fMap->GetNumPads() + 1);
+   eleAccumulated.reserve(fMap->GetNumPads());
    for (Int_t padS = 0; padS < fMap->GetNumPads(); padS++) {
       sprintf(buff, "%d", padS);
       auto maxTime = fTBTime * fNumTbs; // maxTime in ns
@@ -182,7 +182,7 @@ bool AtPulseTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
    auto mcPoint = dynamic_cast<AtMCPoint *>(fMCPointArray->At(point->GetMCPointID()));
    auto trackID = mcPoint->GetTrackID();
 
-   if (padNumber < 0 || padNumber > fMap->GetNumPads()) {
+   if (padNumber < 0 || padNumber >= fMap->GetNumPads()) {
       LOG(debug) << "Skipping electron...";
       return false;
    }
