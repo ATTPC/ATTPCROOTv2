@@ -9,6 +9,7 @@ set(SRCS
   AtEulerTransformation.cxx
   AtSpaceChargeModel.cxx
   AtLineChargeModel.cxx
+  AtRadialChargeModel.cxx
   AtVirtualTerminal.cxx
   AtKinematics.cxx
 
@@ -31,6 +32,7 @@ Set(DEPENDENCIES
   
   FairRoot::FairTools
   ATTPCROOT::AtData
+  ATTPCROOT::AtParameter
 )
 
 generate_target_and_root_library(${LIBRARY_NAME}

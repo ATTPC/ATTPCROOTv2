@@ -6,6 +6,8 @@
 
 #include <FairLogger.h>
 #include <FairRootManager.h>
+#include <FairRun.h>
+#include <FairRuntimeDb.h>
 #include <FairTask.h>
 
 #include <Math/Point3D.h>
@@ -40,6 +42,16 @@ InitStatus AtSpaceChargeCorrectionTask::Init()
 
    FairRootManager::Instance()->Register(fOuputBranchName.data(), "AtTpc", &fOutputEventArray, fIsPersistent);
 
+   FairRun *run = FairRun::Instance();
+   if (!run)
+      LOG(FATAL) << "No analysis run!";
+
+   FairRuntimeDb *db = run->GetRuntimeDb(); // NOLINT
+   if (!db)
+      LOG(FATAL) << "No runtime database!";
+
+   auto fPar = (AtDigiPar *)db->getContainer("AtDigiPar"); // NOLINT
+   fSCModel->LoadParameters(fPar);
    return kSUCCESS;
 }
 
