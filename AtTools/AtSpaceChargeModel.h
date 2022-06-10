@@ -10,19 +10,40 @@
 class TBuffer;
 class TClass;
 class TMemberInspector;
-
-using XYZPoint = ROOT::Math::XYZPoint;
+class AtDigiPar;
 
 class AtSpaceChargeModel : public TObject {
+protected:
+   using XYZPoint = ROOT::Math::XYZPoint;
 
 public:
-   AtSpaceChargeModel();
-   ~AtSpaceChargeModel() = default;
+   /**
+    * @brief Using model correct for space charge.
+    *
+    * Used correct for space charge in data.
+    * @param[in] pos Position charge hits the pad plane [mm].
+    * @return Position charge was deposited in the detector [mm].
+    */
+   virtual XYZPoint CorrectSpaceCharge(const XYZPoint &position) = 0;
 
-   virtual XYZPoint CorrectSpaceCharge(const XYZPoint &directInputPosition) = 0;
-   virtual XYZPoint ApplySpaceCharge(const XYZPoint &reverseInputPosition) = 0;
+   /**
+    * @brief Using model add space charge effect.
+    *
+    * Used to simulate the effect of this space charge model.
+    * @param[in] pos Position charge was deposited in detector [mm].
+    * @return Position charge hits the pad plane [mm].
+    */
+   virtual XYZPoint ApplySpaceCharge(const XYZPoint &position) = 0;
 
-   ClassDef(AtSpaceChargeModel, 1);
+   /**
+    * @brief Load common parameters from AtDigiPar.
+    *
+    * Will load any parameters used by the model from the parameter file attached
+    * to the run.
+    */
+   virtual void LoadParameters(AtDigiPar *par) = 0;
+
+   ClassDef(AtSpaceChargeModel, 2);
 };
 
 #endif //#ifndef ATSPACECHARGEMODEL_H
