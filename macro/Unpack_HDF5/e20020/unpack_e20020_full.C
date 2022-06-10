@@ -55,22 +55,33 @@ void unpack_e20020_full(TString fileName = "run_0160")
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetPersistence(false);
 
+   AtFilterSubtraction *filter = new AtFilterSubtraction(fAtMapPtr);
+   filter->SetThreshold(50);
+   filter->SetIsGood(false);
+
+   AtFilterTask *filterTask = new AtFilterTask(filter);
+   filterTask->SetPersistence(false);
+   filterTask->SetFilterAux(false);
+
    auto threshold = 20;
 
-   AtPSASimple2 *psa = new AtPSASimple2();
+   // auto psa = new AtPSASimple2();
+   auto psa = new AtPSAMax();
    psa->SetThreshold(threshold);
-   psa->SetMaxFinder();
+   // psa->SetMaxFinder();
 
    // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);
+   psaTask->SetInputBranch("AtRawEventFiltered");
 
    AtPRAtask *praTask = new AtPRAtask();
-   praTask->SetPersistence(kTRUE);   
+   praTask->SetPersistence(kTRUE);
    praTask->SetMaxNumHits(3000);
    praTask->SetMinNumHits(200);
 
    run->AddTask(unpackTask);
+   run->AddTask(filterTask);
    run->AddTask(psaTask);
    run->AddTask(praTask);
 
