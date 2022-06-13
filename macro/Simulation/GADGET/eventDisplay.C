@@ -7,8 +7,8 @@ void eventDisplay()
 
    // -----   Reconstruction run   -------------------------------------------
    FairRunAna *fRun = new FairRunAna();
-   fRun->SetInputFile(InputFile.Data());
-   fRun->SetOutputFile(OutFile.Data());
+   fRun->SetSource(new FairFileSource(InputFile));
+   fRun->SetSink(new FairRootFileSink(OutFile));
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
    FairParRootFileIo *parInput1 = new FairParRootFileIo();
@@ -18,10 +18,10 @@ void eventDisplay()
    FairEventManager *fMan = new FairEventManager();
 
    //----------------------Traks and points -------------------------------------
-   FairMCTracks *Track = new FairMCTracks("Monte-Carlo Tracks");
+   // FairMCTracks *Track = new FairMCTracks("Monte-Carlo Tracks");
    FairMCPointDraw *AtTpcPoints = new FairMCPointDraw("AtTpcPoint", kBlue, kFullSquare);
 
-   fMan->AddTask(Track);
+   // fMan->AddTask(Track);
    fMan->AddTask(AtTpcPoints);
 
    fMan->Init();

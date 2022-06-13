@@ -1,4 +1,4 @@
-void Mg20_test_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
+void Mg20_test_sim(Int_t nEvents = 500, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
@@ -45,13 +45,25 @@ void Mg20_test_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
    // ------------------------------------------------------------------------
 
    // -----   Create PrimaryGenerator   --------------------------------------
-   FairPrimaryGenerator *primGen = new FairPrimaryGenerator();
+   
+    FairPrimaryGenerator* primGen = new FairPrimaryGenerator();
 
-   AtTPC20MgDecay *decay = new AtTPC20MgDecay();
-   decay->SetBoxXYZ(0.0, 0.0, 10.0, 0.0, 0.0, 20.0);
-   primGen->AddGenerator(decay);
+  AtTPC20MgDecay* decay = new AtTPC20MgDecay();
+  decay->SetNuclearDecayChain();
+  //decay->SetDecayChainPoint(1000040020,0.005485,0.853);
+//decay->SetDecayChainPoint(0.005443,0.146);
+//decay->SetDecayChainPoint(22,0.000059,0.37);
+//decay->SetDecayChainPoint(0.007443,1);
+//decay->SetDecayChainPoint(0.001210,1);
+//decay->SetDecayChainPoint(0.000506,1);//alpha
+decay->SetDecayChainPoint(0.00628,1);
 
-   run->SetGenerator(primGen);
+ decay->SetBoxXYZ(-4.0,-4.0,0.0,4.0,4.0,40);
+ // decay->SetBoxXYZ(-0.15875,-0.15875,0.1500,0.15875,0.15875,0.1596);
+  primGen->AddGenerator(decay);
+
+  run->SetGenerator(primGen);
+
 
    // ------------------------------------------------------------------------
 
