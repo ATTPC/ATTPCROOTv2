@@ -90,7 +90,7 @@ private:
    Double_t GetScaledInterval(ULong64_t intervalEvt, ULong64_t intervalTpc);
 
    void DoFirstEvent();
-   void UpdateTimestamps();
+   bool UpdateTimestamps();
    void ResetFlags();
    void Fill();
    Int_t CheckMatch();

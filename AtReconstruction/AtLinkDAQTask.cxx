@@ -107,15 +107,21 @@ void AtLinkDAQTask::DoFirstEvent()
    }
 }
 
-void AtLinkDAQTask::UpdateTimestamps()
+bool AtLinkDAQTask::UpdateTimestamps()
 {
-   evtTree->GetEntry(fEvtTreeIndex);
+   if (evtTree->GetEntry(fEvtTreeIndex) <= 0)
+      return false;
+
    fEvtTreeIndex++;
    fTpcTreeIndex++;
    fOldEvtTimestamp = fEvtTimestamp;
    fOldTpcTimestamp = fTpcTimestamp;
    fEvtTimestamp = fEvtTS->GetTimestamp();
    fTpcTimestamp = fRawEvent->GetTimestamps();
+   if (fTpcTimestamp.size() < fTpcTimestampIndex)
+      return false;
+
+   return true;
 }
 
 void AtLinkDAQTask::ResetFlags()
@@ -182,7 +188,13 @@ void AtLinkDAQTask::Exec(Option_t *opt)
    }
 
    // Grab both timestamps for this event, set old timestamp and update counter
-   UpdateTimestamps();
+   if (!UpdateTimestamps()) {
+      LOG(warn) << "Failed to update timestamps. Skipping event";
+      AtRunAna::Instance()->MarkFill(false);
+      kFillEvt = false;
+
+      return;
+   }
 
    // Check for corrupted timestamp data (All FFFFs in a word)
    ULong64_t upperInt = fTpcTimestamp.at(fTpcTimestampIndex) & 0xFFFFFFFF00000000;
