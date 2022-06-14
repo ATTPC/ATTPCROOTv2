@@ -4,6 +4,7 @@
 #include "AtRunAna.h"
 
 #include <FairLogger.h>
+#include <FairRootFileSink.h>
 #include <FairRootManager.h>
 #include <FairRunAna.h>
 #include <FairTask.h>
@@ -279,8 +280,11 @@ void AtLinkDAQTask::Fill()
    double evtInterval = fEvtTimestamp - fOldEvtTimestamp;
    for (int i = 0; i < fGrDataRatio.size(); ++i) {
       // Get signed scaled interval for this timestamp
+      double intDiff = evtInterval;
 
-      double intDiff = evtInterval - static_cast<double>(fTpcTimestamp.at(i) - fOldTpcTimestamp.at(i));
+      if (i < fTpcTimestamp.size() && i < fOldTpcTimestamp.size())
+         intDiff -= static_cast<double>(fTpcTimestamp.at(i) - fOldTpcTimestamp.at(i));
+
       fGrDataAbs.at(i).push_back(intDiff);
 
       intDiff /= evtInterval;
@@ -291,10 +295,17 @@ void AtLinkDAQTask::Fill()
 
 void AtLinkDAQTask::Finish()
 {
+   auto run = dynamic_cast<AtRunAna *>(FairRunAna::Instance());
+   auto outFile = dynamic_cast<FairRootFileSink *>(run->GetSink());
+   if (outFile) {
+      LOG(info) << "Adding TTree " << fEvtOutputTree->GetName() << " as friend to output tree "
+                << outFile->GetOutTree()->GetName();
+      outFile->GetOutTree()->AddFriend(fEvtOutputTree);
+   }
+
    LOG(info) << "Writing graph and tree";
 
    // Create Graphs and fill
-
    for (int index = 0; index < fGrDataRatio.size(); ++index) {
       fEvtOutputFile->cd();
       auto gr = std::make_unique<TGraph>(fGrDataRatio[index].size());
@@ -309,6 +320,7 @@ void AtLinkDAQTask::Finish()
       gr->Write(TString::Format("Ratio_%d", index));
       gr2->Write(TString::Format("Abs_%d", index));
    }
+
    fEvtOutputFile->cd();
    fEvtOutputTree->Write();
    fEvtOutputFile->Close();
