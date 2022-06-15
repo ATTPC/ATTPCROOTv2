@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
    // TODO Hardcoded parameters in fitter constructor
    // fEnableMerging = 1;
    // fEnableSingleVertexTrack = 1;
-
+  
    // Work directory
    TString dir = getenv("VMCWORKDIR");
 
@@ -26,7 +26,10 @@ int main(int argc, char *argv[])
    bool simulationConv = 0;
    bool enableMerging = 1;
    bool enableSingleVertexTrack = 0;
-
+   bool enableReclustering = 0;//For benchmarking purposes
+   Double_t clusterRadius = 7.5;//mm
+   Double_t clusterSize   = 10.0;//mm
+   
    // Physics parameters
    Float_t magneticField = 3.0;        // T
    Float_t gasMediumDensity = 0.1533;  //  0.1533 mg/cm3 (a,a) - 0.13129 mg/cm3 (d,p)
@@ -94,7 +97,8 @@ int main(int argc, char *argv[])
    fitManager->SetFitDirection(fitDirection);
    fitManager->EnableMerging(enableMerging);
    fitManager->EnableSingleVertexTrack(enableSingleVertexTrack);
-
+   fitManager->EnableReclustering(enableReclustering,clusterRadius,clusterSize);
+   
    if (fInteractiveMode)
       fitManager->EnableGenfitDisplay();
 
@@ -167,6 +171,7 @@ FitManager::FitManager(std::string list)
    fEnableSingleVertexTrack = 0;
 
    fKinematics = std::make_shared<AtTools::AtKinematics>();
+   fTrackTransformer = std::make_unique<AtTools::AtTrackTransformer>();
 
    // Parse list of ions to fit
    fParser.ParseIonFitXML(list);
@@ -293,7 +298,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                 << secCluster.GetTimeStamp() << "\n";
       std::cout << "   End position : " << endPos.X() << " - " << endPos.Y() << " - " << zEndCal << " "
                 << endCluster.GetTimeStamp() << "\n";
-      std::cout << "   Theta (convention) : " << thetaConv << " - Phi Clus : " << phiClus * TMath::RadToDeg() << "\n";
+      std::cout << "   Theta (PRA) " <<track.GetGeoTheta() * TMath::RadToDeg()<<"   Theta (convention) : " << thetaConv << " - Phi Clus : " << phiClus * TMath::RadToDeg() << "\n";
       std::cout << "   Track center - X :  " << center.first << " - Y : " << center.second << "\n";
       std::cout << "   Track phi recalc : " << track.GetGeoPhi() * TMath::RadToDeg() << cNORMAL << "\n";
 
@@ -329,7 +334,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
 
          if (candToMergePool.size() > 0) { // Merge if matches are found
             candToMergePool.push_back(trA);
-            Bool_t merged = fFitter->MergeTracks(&candToMergePool, &mergedTrackPool, fEnableSingleVertexTrack);
+            Bool_t merged = fFitter->MergeTracks(&candToMergePool, &mergedTrackPool, fEnableSingleVertexTrack,fClusterRadius,fClusterSize);//NB: Reclustering is also performed here
 
          } else {
             if (!trA->GetIsMerged() && trA->GetVertexToZDist() < distThres)
@@ -356,15 +361,11 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
    // Fitting track candidates
    for (auto track : mergedTrackPool) {
 
-      //////////////////////////TODO
-      /*if (fEnableMerging) {
-          std::cerr << cRED << " Error! Phi calculation after merging not implemented yet! Exiting..."
-                    << cNORMAL <<"\n";
-          std::exit(0);
-          // Placeholder for future
-          track.ResetHitClusterArray();
-          ClusterizeSmooth3D(track, 10.0, 30.0); // Reclusterizing
-       }*/
+      
+      if (fEnableReclustering) {
+           track.ResetHitClusterArray();
+           fTrackTransformer->ClusterizeSmooth3D(track,fClusterRadius,fClusterSize); //NB: Just for analysis benchmarking
+       }
 
       Double_t theta = track.GetGeoTheta();
       Double_t radius = track.GetGeoRadius() / 1000.0; // mm to m

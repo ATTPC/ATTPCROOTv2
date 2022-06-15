@@ -2,6 +2,7 @@
 #define AtPRA_H
 
 #include "AtTrack.h" // for AtTrack
+#include "AtTrackTransformer.h"
 
 #include <Rtypes.h>  // for Double_t, Float_t, Int_t, THashConsistencyHolder
 #include <TObject.h> // for TObject
@@ -19,6 +20,8 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
+  
+
 namespace AtPATTERN {
 
 /**
@@ -32,8 +35,8 @@ class AtPRA : public TObject {
 protected:
    std::vector<AtTrack> fTrackCand; //< Candidate tracks
 
-   AtDigiPar *fPar; ///< parameter container
-
+   AtDigiPar *fPar; ///< parameter container   
+  
    Int_t fMaxHits{5000};
    Int_t fMinHits{0};
    Float_t fMeanDistance{1e9};
@@ -43,6 +46,10 @@ protected:
 
    Bool_t kSetPrunning{false}; //<<! Enable prunning of tracks
 
+   std::unique_ptr<AtTools::AtTrackTransformer> fTrackTransformer{std::make_unique<AtTools::AtTrackTransformer>()};
+   Double_t fClusterRadius{0}; //<! Radius of hit clusters
+   Double_t fClusterDistance{0};//<! Distance between hit clusters
+  
 public:
    virtual ~AtPRA() = default;
 
@@ -57,7 +64,9 @@ public:
    void SetStdDevMulkNN(Double_t stdDevMul) { fStdDevMulkNN = stdDevMul; }
    void SetkNNDist(Double_t dist) { fkNNDist = dist; }
    void SetPrunning() { kSetPrunning = kTRUE; }
-
+   void SetClusterRadius(Double_t clusterRadius) { fClusterRadius = clusterRadius ;}
+   void SetClusterDistance(Double_t clusterDistance) {fClusterDistance = clusterDistance;}
+  
    virtual std::unique_ptr<AtPatternEvent> FindTracks(AtEvent &event) = 0;
 
    void PruneTrack(AtTrack &track);
@@ -72,13 +81,7 @@ protected:
     * would make no sense to apply this function to straight tracks.
     */
    void SetTrackInitialParameters(AtTrack &track);
-
-   // Clusterization methods
-   void Clusterize(AtTrack &track);
-   void Clusterize3D(AtTrack &track);
-   void Clusterize3D(AtTrack &track, Float_t distance, Float_t radius);
-   void ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius);
-
+   
    template <typename T>
    inline constexpr int GetSign(T num, std::true_type is_signed)
    {

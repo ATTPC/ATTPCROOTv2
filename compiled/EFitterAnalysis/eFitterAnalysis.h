@@ -9,6 +9,7 @@
 #include "AtParsers.h"
 #include "AtPatternEvent.h"
 #include "AtTrack.h"
+#include "AtTrackTransformer.h"
 #include "AtVirtualTerminal.h"
 
 #include <boost/filesystem.hpp>
@@ -132,7 +133,8 @@ public:
    Bool_t FitTracks(std::vector<AtTrack> &tracks);
    void EnableMerging(Bool_t merging) { fEnableMerging = merging; }
    void EnableSingleVertexTrack(Bool_t singletrack) { fEnableSingleVertexTrack = singletrack; }
-
+  void EnableReclustering(Bool_t reclustering, Double_t clusterRadius,Double_t clusterSize) {fEnableReclustering = reclustering;fClusterRadius=clusterRadius;fClusterSize=clusterSize;}
+  
    // TODO: Move to tools and AtFitter
    Double_t GetNPeaksHRS(std::vector<Int_t> *timeMax, std::vector<Float_t> *adcMax, double *adc_test);
    Double_t GetMaximum(double *adc);
@@ -144,9 +146,13 @@ private:
    Float_t fGasDensity;
    Bool_t fEnableMerging;
    Bool_t fEnableSingleVertexTrack;
+   Bool_t fEnableReclustering;
+   Double_t fClusterSize{0};
+   Double_t fClusterRadius{0};
    Int_t fFitDirection;
    std::vector<AtTools::IonFitInfo> *ionList;
    AtTools::AtParsers fParser;
+   std::unique_ptr<AtTools::AtTrackTransformer> fTrackTransformer;
 
    genfit::EventDisplay *display;
 

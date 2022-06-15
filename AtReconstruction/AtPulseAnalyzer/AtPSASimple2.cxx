@@ -233,13 +233,13 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
                             << std::endl;
 
                // Tracking MC points
-               if (mcPointsMap.size() > 0)
-                  TrackMCPoints(mcPointsMap, hit);
+               //if (mcPointsMap.size() > 0)
+	       //TrackMCPoints(mcPointsMap, hit);
 
                for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
                   mesh[iTb] += floatADC[iTb];
 
-            } // Valid Threshold
+		  } // Valid Threshold 
          }    // Peak Loop
 
          //    #pragma omp ordered

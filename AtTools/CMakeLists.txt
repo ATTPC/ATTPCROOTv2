@@ -4,14 +4,15 @@ Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 set(SRCS
   AtParsers.cxx
   AtELossManager.cxx
-
+  AtTrackTransformer.cxx
+  
   AtCSVReader.cxx
   AtEulerTransformation.cxx
   AtSpaceChargeModel.cxx
   AtLineChargeModel.cxx
   AtVirtualTerminal.cxx
   AtKinematics.cxx
-
+  
   AtFormat.cxx
   AtContainerManip.cxx
   AtHitSampling/AtSample.cxx

@@ -6,7 +6,11 @@
 
 #include <tuple>
 #include <vector>
+#include <memory>
 
+#include "AtTrackTransformer.h"
+
+class AtTrackTransformer;
 class AtDigiPar;
 class AtTrack;
 class FairLogger;
@@ -32,12 +36,13 @@ public:
    void MergeTracks(std::vector<AtTrack> *trackCandSource, std::vector<AtTrack> *trackJunkSource,
                     std::vector<AtTrack> *trackDest, bool fitDirection, bool simulationConv);
    Bool_t MergeTracks(std::vector<AtTrack *> *trackCandSource, std::vector<AtTrack> *trackDest,
-                      Bool_t enableSingleVertexTrack);
-   void ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius);
+                      Bool_t enableSingleVertexTrack, Double_t clusterRadius, Double_t clusterDistance);  
+
 
 protected:
    FairLogger *fLogger{}; ///< logger pointer
    AtDigiPar *fPar{};     ///< parameter container
+   std::unique_ptr<AtTools::AtTrackTransformer> fTrackTransformer{std::make_unique<AtTools::AtTrackTransformer>()};
    std::tuple<Double_t, Double_t>
    GetMomFromBrho(Double_t A, Double_t Z,
                   Double_t brho);                      ///< Returns momentum (in GeV) from Brho assuming M (amu) and Z;
