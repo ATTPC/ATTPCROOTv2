@@ -140,7 +140,7 @@ void AtClusterizeTask::Exec(Option_t *option)
 // Takes drift time in us
 Double_t AtClusterizeTask::getLongitudinalDiffusion(Double_t driftTime)
 {
-   auto sigInMM = TMath::Sqrt(10. * fCoefL * 2 * driftTime);
+   auto sigInMM = TMath::Sqrt(100. * fCoefL * 2 * driftTime);
    auto sigInUs = sigInMM / fVelDrift;
    return sigInUs;
 }
@@ -148,7 +148,7 @@ Double_t AtClusterizeTask::getLongitudinalDiffusion(Double_t driftTime)
 // Takes drift time in us
 Double_t AtClusterizeTask::getTransverseDiffusion(Double_t driftTime)
 {
-   return TMath::Sqrt(10. * fCoefT * 2 * driftTime);
+   return TMath::Sqrt(100. * fCoefT * 2 * driftTime);
 }
 
 UInt_t AtClusterizeTask::getNumberOfElectronsGenerated()

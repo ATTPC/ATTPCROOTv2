@@ -95,4 +95,4 @@ const H5std_string MEMBER12( "ZMC" );
 
 using namespace H5;
 
-
+void usage();

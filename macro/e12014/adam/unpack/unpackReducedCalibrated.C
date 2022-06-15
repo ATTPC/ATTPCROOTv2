@@ -1,9 +1,11 @@
 // Unpacks tpc files from /mnt/rawdata/ to /mnt/analysis/e12014/TPC/unpacked
-
-bool reduceFunc(AtRawEvent *evt);
+bool reduceFunc(AtRawEvent *evt)
+{
+   return (evt->GetNumPads() > 300) && evt->IsGood();
+}
 
 // Requires the TPC run number
-void unpackReducedFiltered(int runNumber)
+void unpackReducedCalibrated(int runNumber)
 {
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
@@ -13,13 +15,13 @@ void unpackReducedFiltered(int runNumber)
 
    // Set the input/output directories
    TString inputDir = "/mnt/rawdata/e12014_attpc/h5";
-   TString outDir = "/mnt/analysis/e12014/TPC/unpackedReducedFiltered";
+   TString outDir = "/mnt/analysis/e12014/TPC/unpackedCalibrated";
 
    /**** Should not have to change code between this line and the next star comment ****/
 
    // Set the in/out files
    TString inputFile = inputDir + TString::Format("/run_%04d.h5", runNumber);
-   TString outputFile = outDir + TString::Format("/run_%04d.root", runNumber);
+   TString outputFile = outDir + TString::Format("/run_%04dReduced.root", runNumber);
 
    std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
    std::cout << "Saving in: " << outputFile << std::endl;
@@ -47,7 +49,7 @@ void unpackReducedFiltered(int runNumber)
 
    std::cout << "Setting par file: " << digiParFile << std::endl;
    parIo1->open(digiParFile.Data(), "in");
-   rtdb->setSecondInput(parIo1);
+   rtdb->setFirstInput(parIo1);
    rtdb->getContainer("AtDigiPar");
 
    // Create the detector map
@@ -68,37 +70,42 @@ void unpackReducedFiltered(int runNumber)
    unpacker->SetBaseLineSubtraction(true);
 
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
-   unpackTask->SetPersistence(true);
+   unpackTask->SetPersistence(false);
 
-   // Create data reduction task
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
    reduceTask->SetInputBranch("AtRawEvent");
    reduceTask->SetReductionFunction(&reduceFunc);
 
    auto threshold = 45;
 
-   AtFilterSubtraction *filter = new AtFilterSubtraction(mapping);
-   filter->SetThreshold(threshold);
-   filter->SetIsGood(false);
-   AtFilterTask *filterTask = new AtFilterTask(filter);
-   filterTask->SetPersistence(true);
-   filterTask->SetFilterAux(true);
+   auto filterSub = new AtFilterSubtraction(mapping);
+   filterSub->SetThreshold(threshold);
+   AtFilterTask *subTask = new AtFilterTask(filterSub);
+   subTask->SetPersistence(false);
+   subTask->SetFilterAux(true);
+   subTask->SetOutputBranch("AtRawEventSub");
 
-   // auto psa = new AtPSASimple2();
+   AtFilterCalibrate *filterCal = new AtFilterCalibrate();
+   filterCal->SetCalibrationFile("calibrationFormated.txt");
+   AtFilterTask *calTask = new AtFilterTask(filterCal);
+   calTask->SetPersistence(true);
+   calTask->SetFilterAux(false);
+   calTask->SetInputBranch("AtRawEventSub");
+   calTask->SetOutputBranch("AtRawEventCal");
+
    auto psa = std::make_unique<AtPSAMax>();
    psa->SetThreshold(threshold);
-   // psa->SetMaxFinder();
 
    AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
-   // AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetInputBranch("AtRawEventFiltered");
-   psaTask->SetOutputBranch("AtEventFiltered");
+   psaTask->SetInputBranch("AtRawEventCal");
+   psaTask->SetOutputBranch("AtEventH");
    psaTask->SetPersistence(true);
 
    // Add unpacker to the run
    run->AddTask(unpackTask);
-   // run->AddTask(reduceTask);
-   run->AddTask(filterTask);
+   run->AddTask(reduceTask);
+   run->AddTask(subTask);
+   run->AddTask(calTask);
    run->AddTask(psaTask);
 
    run->Init();
@@ -107,7 +114,7 @@ void unpackReducedFiltered(int runNumber)
    auto numEvents = unpackTask->GetNumEvents();
 
    // numEvents = 1700;//217;
-   numEvents = 10000;
+   // numEvents = 20;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
@@ -127,10 +134,4 @@ void unpackReducedFiltered(int runNumber)
    // ------------------------------------------------------------------------
 
    return 0;
-}
-
-bool reduceFunc(AtRawEvent *evt)
-{
-   // return (evt->GetNumPads() > 0);
-   return (evt->GetNumPads() > 250) && evt->IsGood();
 }

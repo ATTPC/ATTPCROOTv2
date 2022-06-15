@@ -2,8 +2,14 @@
 
 int main(int argc, char *argv[])
 {
+   if (argc != 2) {
+      std::cerr << "Requires file to unpack!" << std::endl;
+      usage();
+      return -1;
+   }
+
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
-   TString FileName = "~/attpcroot/macro/e12014/simulation/eventGenerator/sym/output_digi.root";
+   TString FileName = argv[1];
 
    std::cout << " Opening File : " << FileName.Data() << std::endl;
    TFile *file = new TFile(FileName.Data(), "READ");
@@ -41,7 +47,6 @@ int main(int argc, char *argv[])
          auto hitPos = hit.GetPosition();
          std::vector<AtHit::MCSimPoint> MCPoints = hit.GetMCSimPointArray();
 
-
          hits[iHit].x = hitPos.X();
          hits[iHit].y = hitPos.Y();
          hits[iHit].z = hitPos.Z();
@@ -56,7 +61,7 @@ int main(int argc, char *argv[])
             hits[iHit].angleMC = MCPoints.at(0).angle;
             hits[iHit].AMC = MCPoints.at(0).A;
             hits[iHit].ZMC = MCPoints.at(0).Z;
-	    }*/
+       }*/
          // std::cout<<hits[iHit].x<<"\n";
          // std::cout<<" MC points size "<<MCPoints.size()<<"\n";
       }
@@ -86,4 +91,9 @@ int main(int argc, char *argv[])
    delete HDFfile;
 
    return 0;
+}
+
+void usage()
+{
+   std::cout << "Usage: ./R2HExe fileToConvert" << std::endl;
 }

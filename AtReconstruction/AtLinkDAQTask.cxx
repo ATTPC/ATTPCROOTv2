@@ -4,6 +4,7 @@
 #include "AtRunAna.h"
 
 #include <FairLogger.h>
+#include <FairRootFileSink.h>
 #include <FairRootManager.h>
 #include <FairRunAna.h>
 #include <FairTask.h>
@@ -106,15 +107,21 @@ void AtLinkDAQTask::DoFirstEvent()
    }
 }
 
-void AtLinkDAQTask::UpdateTimestamps()
+bool AtLinkDAQTask::UpdateTimestamps()
 {
-   evtTree->GetEntry(fEvtTreeIndex);
+   if (evtTree->GetEntry(fEvtTreeIndex) <= 0)
+      return false;
+
    fEvtTreeIndex++;
    fTpcTreeIndex++;
    fOldEvtTimestamp = fEvtTimestamp;
    fOldTpcTimestamp = fTpcTimestamp;
    fEvtTimestamp = fEvtTS->GetTimestamp();
    fTpcTimestamp = fRawEvent->GetTimestamps();
+   if (fTpcTimestamp.size() < fTpcTimestampIndex)
+      return false;
+
+   return true;
 }
 
 void AtLinkDAQTask::ResetFlags()
@@ -181,7 +188,13 @@ void AtLinkDAQTask::Exec(Option_t *opt)
    }
 
    // Grab both timestamps for this event, set old timestamp and update counter
-   UpdateTimestamps();
+   if (!UpdateTimestamps()) {
+      LOG(warn) << "Failed to update timestamps. Skipping event";
+      AtRunAna::Instance()->MarkFill(false);
+      kFillEvt = false;
+
+      return;
+   }
 
    // Check for corrupted timestamp data (All FFFFs in a word)
    ULong64_t upperInt = fTpcTimestamp.at(fTpcTimestampIndex) & 0xFFFFFFFF00000000;
@@ -279,8 +292,11 @@ void AtLinkDAQTask::Fill()
    double evtInterval = fEvtTimestamp - fOldEvtTimestamp;
    for (int i = 0; i < fGrDataRatio.size(); ++i) {
       // Get signed scaled interval for this timestamp
+      double intDiff = evtInterval;
 
-      double intDiff = evtInterval - static_cast<double>(fTpcTimestamp.at(i) - fOldTpcTimestamp.at(i));
+      if (i < fTpcTimestamp.size() && i < fOldTpcTimestamp.size())
+         intDiff -= static_cast<double>(fTpcTimestamp.at(i) - fOldTpcTimestamp.at(i));
+
       fGrDataAbs.at(i).push_back(intDiff);
 
       intDiff /= evtInterval;
@@ -291,10 +307,17 @@ void AtLinkDAQTask::Fill()
 
 void AtLinkDAQTask::Finish()
 {
+   auto run = dynamic_cast<AtRunAna *>(FairRunAna::Instance());
+   auto outFile = dynamic_cast<FairRootFileSink *>(run->GetSink());
+   if (outFile) {
+      LOG(info) << "Adding TTree " << fEvtOutputTree->GetName() << " as friend to output tree "
+                << outFile->GetOutTree()->GetName();
+      outFile->GetOutTree()->AddFriend(fEvtOutputTree);
+   }
+
    LOG(info) << "Writing graph and tree";
 
    // Create Graphs and fill
-
    for (int index = 0; index < fGrDataRatio.size(); ++index) {
       fEvtOutputFile->cd();
       auto gr = std::make_unique<TGraph>(fGrDataRatio[index].size());
@@ -309,6 +332,7 @@ void AtLinkDAQTask::Finish()
       gr->Write(TString::Format("Ratio_%d", index));
       gr2->Write(TString::Format("Abs_%d", index));
    }
+
    fEvtOutputFile->cd();
    fEvtOutputTree->Write();
    fEvtOutputFile->Close();

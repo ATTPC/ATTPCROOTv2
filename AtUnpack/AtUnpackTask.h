@@ -31,6 +31,7 @@ private:
    std::string fInputFileName;
    std::string fOuputBranchName = "AtRawEvent";
    Bool_t fIsPersistent = true;
+   Bool_t fFinishedUnpacking = false;
 
    TClonesArray fOutputEventArray;
    AtRawEvent *fRawEvent;
@@ -43,8 +44,6 @@ public:
    void SetInputFileName(std::string filename) { fInputFileName = filename; }
    void SetOuputBranchName(std::string branchName) { fOuputBranchName = branchName; }
    void SetPersistence(Bool_t value) { fIsPersistent = value; }
-   // void SetMap(mapPtr map) { fAtMapPtr = map; }
-   // void SetInitialEvent(std::size_t inievent) { fIniEventID = inievent; }
 
    Long64_t GetNumEvents() { return fUnpacker->GetNumEvents(); }
 

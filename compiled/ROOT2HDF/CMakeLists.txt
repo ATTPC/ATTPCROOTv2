@@ -8,8 +8,8 @@ list(APPEND CMAKE_PREFIX_PATH ${ATTPCROOTPATH}/build/install) #Need access to AT
 # Will also load all of its dependecies
 find_package(ATTPCROOT 0.3 REQUIRED)
 
-add_library(R2H SHARED R2HMain.cc)
-target_link_libraries(R2H ${ROOT_LIBRARIES}
+add_executable(R2HExe R2HMain.cc)
+target_link_libraries (R2HExe
 
   ATTPCROOT::AtData
   ATTPCROOT::AtTools
@@ -20,10 +20,5 @@ target_link_libraries(R2H ${ROOT_LIBRARIES}
   ROOT::TreePlayer
   
   hdf5::hdf5_cpp-shared
-  )
-
-
-add_executable(R2HExe R2HMain.cc)
-target_link_libraries (R2HExe R2H
 )
 

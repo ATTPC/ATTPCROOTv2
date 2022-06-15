@@ -1,13 +1,22 @@
-void run_eve(TString InputDataFileName = "run_0160")
+/*#include "TString.h"
+#include "AtEventDrawTask.h"
+#include "AtEventManager.h"
+
+#include "FairLogger.h"
+#include "FairParRootFileIo.h"
+#include "FairRunAna.h"
+*/
+
+
+//Event viewer to look at space-charge corrected Hits
+
+void run_eve(int runNum = 206, TString OutputDataFile = "output.reco_display.root")
 {
-
-   TString InputDataFile = InputDataFileName + ".root";
-
-   TString OutputDataFile = InputDataFileName + ".reco_display.root";
-   TString unpackDir = "/Unpack_HDF5/e20020/";
+   TString InputDataFile = TString::Format("./run_%04d.root", runNum);
+   std::cout << "Opening: " << InputDataFile << std::endl;
 
    TString dir = getenv("VMCWORKDIR");
-   TString geoFile = "ATTPC_He1bar_v2_geomanager.root";
+   TString geoFile = "ATTPC_v1.1_geomanager.root";
    TString mapFile = "e12014_pad_mapping.xml";
 
    TString InputDataPath = InputDataFile;
@@ -34,8 +43,11 @@ void run_eve(TString InputDataFileName = "run_0160")
    eve->SetMap(fMap);
    eve->Set3DHitStyleBox();
    eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
-   eve->SetSaveTextData();
-
+   eve->SetRawEventBranch("AtRawEventFiltered");
+   eve->SetEventBranch("AtEventFiltered");
+   eve->SetCorrectedEventBranch("AtEventCorrected");
    eveMan->AddTask(eve);
    eveMan->Init();
+
+   std::cout << "Finished init" << std::endl;
 }
