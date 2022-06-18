@@ -222,6 +222,11 @@ void AtPulseTask::Exec(Option_t *option)
 
    generateTracesFromGatheredElectrons();
 }
+double AtPulseTask::nominalResponseFunction(double reducedTime)
+{
+   double responce = pow(2.718, -3 * reducedTime) * sin(reducedTime) * pow(reducedTime, 3);
+   return responce;
+}
 
 void AtPulseTask::generateTracesFromGatheredElectrons()
 {
@@ -239,8 +244,7 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
             for (Int_t nn = kk; nn < fNumTbs; nn++) {
                Double_t binCenter = axis->GetBinCenter(kk);
                Double_t factor = (((((Double_t)nn) + 0.5) * binWidth) - binCenter) / fPeakingTime;
-               signal[nn] += eleAccumulated[thePadNumber]->GetBinContent(kk) * pow(2.718, -3 * factor) * sin(factor) *
-                             pow(factor, 3);
+               signal[nn] += eleAccumulated[thePadNumber]->GetBinContent(kk) * fResponseFunction(factor);
             }
          }
       }
