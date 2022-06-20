@@ -7,6 +7,8 @@
 using std::cout;
 using std::endl;
 
+AtSiPoint::AtSiPoint() : AtMCPoint() {}
+
 AtSiPoint::AtSiPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length,
                      Double_t eLoss)
    : AtMCPoint(trackID, detID, pos, mom, tof, length, eLoss)
