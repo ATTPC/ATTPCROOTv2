@@ -1,7 +1,7 @@
 #ifndef ATTRACKTRANSFORMER_H
 #define ATTRACKTRANSFORMER_H
 
-#include "AtTrack.h" 
+#include "AtTrack.h"
 
 #include <Rtypes.h>
 #include <TObject.h>
@@ -18,18 +18,15 @@ class TMemberInspector;
 
 namespace AtTools {
 
-
-  class AtTrackTransformer{
+class AtTrackTransformer {
 
 public:
    AtTrackTransformer();
    ~AtTrackTransformer();
 
    void ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius);
-   
+
 private:
-   
-  
 };
 
 } // namespace AtTools

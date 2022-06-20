@@ -59,7 +59,7 @@ Bool_t AtFITTER::AtFitter::FindVertexTrack(AtTrack *trA, AtTrack *trB)
 }
 
 Bool_t AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack *> *trackCandSource, std::vector<AtTrack> *trackDest,
-                                       Bool_t enableSingleVertexTrack,Double_t clusterRadius, Double_t clusterDistance)
+                                       Bool_t enableSingleVertexTrack, Double_t clusterRadius, Double_t clusterDistance)
 {
 
    Bool_t toMerge = kFALSE;
@@ -74,13 +74,12 @@ Bool_t AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack *> *trackCandSource, 
 
    if (enableSingleVertexTrack) {
 
-     //Mark all tracks as merged
-     for(auto track : *trackCandSource)
-       track->SetIsMerged(kTRUE);
-     
+      // Mark all tracks as merged
+      for (auto track : *trackCandSource)
+         track->SetIsMerged(kTRUE);
+
       trackDest->push_back(*vertexTrack);
       return true;
-
    }
 
    // Check if the candidate vertex track was merged
@@ -153,7 +152,9 @@ Bool_t AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack *> *trackCandSource, 
          // Reclusterize after merging
          vertexTrack->SortHitArrayTime();
          vertexTrack->ResetHitClusterArray();
-         fTrackTransformer->ClusterizeSmooth3D(*vertexTrack, clusterRadius, clusterDistance); //NB: It can be removed if we force reclusterization for any track in the mina program
+         fTrackTransformer->ClusterizeSmooth3D(
+            *vertexTrack, clusterRadius,
+            clusterDistance); // NB: It can be removed if we force reclusterization for any track in the mina program
 
          // TODO: Check if phi recalculatio is needed
 
@@ -167,9 +168,9 @@ Bool_t AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack *> *trackCandSource, 
 
    return toMerge;
 }
-[[deprecated]]
-void AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack> *trackCandSource, std::vector<AtTrack> *trackJunkSource,
-                                     std::vector<AtTrack> *trackDest, bool fitDirection, bool simulationConv)
+[[deprecated]] void
+AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack> *trackCandSource, std::vector<AtTrack> *trackJunkSource,
+                                std::vector<AtTrack> *trackDest, bool fitDirection, bool simulationConv)
 {
    // DEPRECATED
    // Track destination are the merged tracks.

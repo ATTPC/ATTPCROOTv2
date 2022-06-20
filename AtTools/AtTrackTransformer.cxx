@@ -19,13 +19,11 @@
 #include <iterator>           // for back_insert_iterator
 #include <memory>             // for shared_ptr, __shared_p...
 
-
-
 AtTools::AtTrackTransformer::AtTrackTransformer() = default;
 AtTools::AtTrackTransformer::~AtTrackTransformer() = default;
 
-
-void AtTools::AtTrackTransformer::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius){
+void AtTools::AtTrackTransformer::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius)
+{
    std::vector<AtHit> hitArray = track.GetHitArray();
    std::vector<AtHit> hitTBArray;
    int clusterID = 0;

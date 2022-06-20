@@ -16,12 +16,12 @@
 #include <Math/Vector2D.h>    // for PositionVector3D, Cart...
 #include <Math/Vector2Dfwd.h> // for XYVector
 #include <Math/Vector3D.h>    // for DisplacementVector3D
+#include <TF1.h>              // for TF1
 #include <TGraph.h>           // for TGraph
 #include <TMath.h>            // for Power, Sqrt, ATan2, Pi
 #include <TMatrixDSymfwd.h>   // for TMatrixDSym
 #include <TMatrixTSym.h>      // for TMatrixTSym
 #include <TVector3.h>         // for TVector3
-#include <TF1.h>              // for TF1
 
 #include <algorithm>          // for max, for_each, copy_if
 #include <cmath>              // for fabs, acos
@@ -126,13 +126,13 @@ std::cout << " Processing track with " << track.GetHitArray().size() << " points
          thetaHits.emplace_back(i, hits.at(i).GetPadNum(), XYZPoint(xPos, yPos, zPos), hits.at(i).GetCharge());
       }
 
-      //TF1 *f1 = new TF1("f1", "pol1", -500, 500);
-       //TF1 * f1 = new TF1("f1",[](double *x, double *p) { return (p[0]+p[1]*x[0]); },-500,500,2);
-       //TF1 * f1 = new TF1("f1","[0]+[1]*x",-500,500);
-       //TF1 *f1 = new TF1("f1", fitf, -500, 500, 2);
-       //arclengthGraph->Fit(f1, "R");
-       //auto slope = ROOT::Math::XYVector(1, f1->GetParameter(1)).Unit();
-       //std::cout << " Slope " << slope << "\n";
+      // TF1 *f1 = new TF1("f1", "pol1", -500, 500);
+      // TF1 * f1 = new TF1("f1",[](double *x, double *p) { return (p[0]+p[1]*x[0]); },-500,500,2);
+      // TF1 * f1 = new TF1("f1","[0]+[1]*x",-500,500);
+      // TF1 *f1 = new TF1("f1", fitf, -500, 500, 2);
+      // arclengthGraph->Fit(f1, "R");
+      // auto slope = ROOT::Math::XYVector(1, f1->GetParameter(1)).Unit();
+      // std::cout << " Slope " << slope << "\n";
 
       Double_t angle = 0.0;
       Double_t phi0 = 0.0;
@@ -206,7 +206,6 @@ Double_t fitf(Double_t *x, Double_t *par)
 
    return par[0] + par[1] * x[0];
 }
-
 
 void AtPATTERN::AtPRA::PruneTrack(AtTrack &track)
 {

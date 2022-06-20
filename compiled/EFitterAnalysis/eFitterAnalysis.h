@@ -133,8 +133,13 @@ public:
    Bool_t FitTracks(std::vector<AtTrack> &tracks);
    void EnableMerging(Bool_t merging) { fEnableMerging = merging; }
    void EnableSingleVertexTrack(Bool_t singletrack) { fEnableSingleVertexTrack = singletrack; }
-  void EnableReclustering(Bool_t reclustering, Double_t clusterRadius,Double_t clusterSize) {fEnableReclustering = reclustering;fClusterRadius=clusterRadius;fClusterSize=clusterSize;}
-  
+   void EnableReclustering(Bool_t reclustering, Double_t clusterRadius, Double_t clusterSize)
+   {
+      fEnableReclustering = reclustering;
+      fClusterRadius = clusterRadius;
+      fClusterSize = clusterSize;
+   }
+
    // TODO: Move to tools and AtFitter
    Double_t GetNPeaksHRS(std::vector<Int_t> *timeMax, std::vector<Float_t> *adcMax, double *adc_test);
    Double_t GetMaximum(double *adc);

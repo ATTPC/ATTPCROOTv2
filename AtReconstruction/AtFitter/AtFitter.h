@@ -1,14 +1,14 @@
 #ifndef AtFITTER_H
 #define AtFITTER_H
 
+#include "AtTrackTransformer.h"
+
 #include <Rtypes.h>
 #include <TObject.h>
 
+#include <memory>
 #include <tuple>
 #include <vector>
-#include <memory>
-
-#include "AtTrackTransformer.h"
 
 class AtTrackTransformer;
 class AtDigiPar;
@@ -36,8 +36,7 @@ public:
    void MergeTracks(std::vector<AtTrack> *trackCandSource, std::vector<AtTrack> *trackJunkSource,
                     std::vector<AtTrack> *trackDest, bool fitDirection, bool simulationConv);
    Bool_t MergeTracks(std::vector<AtTrack *> *trackCandSource, std::vector<AtTrack> *trackDest,
-                      Bool_t enableSingleVertexTrack, Double_t clusterRadius, Double_t clusterDistance);  
-
+                      Bool_t enableSingleVertexTrack, Double_t clusterRadius, Double_t clusterDistance);
 
 protected:
    FairLogger *fLogger{}; ///< logger pointer
