@@ -27,7 +27,7 @@ constexpr auto cYELLOW = "\033[1;33m";
 constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
 
-AtPATTERN::AtTrackFinderTC::AtTrackFinderTC() : AtPATTERN::AtPRA(){}
+AtPATTERN::AtTrackFinderTC::AtTrackFinderTC() : AtPATTERN::AtPRA() {}
 
 std::unique_ptr<AtPatternEvent> AtPATTERN::AtTrackFinderTC::FindTracks(AtEvent &event)
 {
@@ -44,7 +44,6 @@ std::unique_ptr<AtPatternEvent> AtPATTERN::AtTrackFinderTC::FindTracks(AtEvent &
       std::cerr << "[Error] empty cloud " << std::endl;
 
       return NULL;
-
    }
 
    if (opt_params.needs_dnn()) {
@@ -85,15 +84,12 @@ std::unique_ptr<AtPatternEvent> AtPATTERN::AtTrackFinderTC::FindTracks(AtEvent &
       cl_group = cleaned_up_cluster_group;
    }
 
-   
-
    // store cluster labels in points
    add_clusters(cloud_xyz, cl_group, opt_params.is_gnuplot());
 
    // Adapt clusters to AtTrack
    return clustersToTrack(cloud_xyz, cl_group, event);
 }
-
 
 void AtPATTERN::AtTrackFinderTC::eventToClusters(AtEvent &event, PointCloud &cloud)
 {
@@ -146,7 +142,7 @@ AtPATTERN::AtTrackFinderTC::clustersToTrack(PointCloud &cloud, const std::vector
       track.SetTrackID(cluster_index);
 
       fTrackTransformer->ClusterizeSmooth3D(track, fClusterRadius, fClusterDistance);
-      
+
       if (kSetPrunning)
          PruneTrack(track);
 

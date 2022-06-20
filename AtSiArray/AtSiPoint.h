@@ -37,7 +37,7 @@ public:
              Int_t Z);
 
    /** Destructor **/
-   virtual ~AtSiPoint();
+   virtual ~AtSiPoint() = default;
 
    /** Accessors **/
    Double_t GetXIn() const { return fX; }

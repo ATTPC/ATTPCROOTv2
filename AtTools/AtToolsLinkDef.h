@@ -14,7 +14,6 @@
 #pragma link C++ class AtEulerTransformation + ;
 #pragma link C++ class AtTools::AtTrackTransformer - !;
 
-
 #pragma link C++ class AtSpaceChargeModel + ;
 #pragma link C++ class AtLineChargeModel + ;
 #pragma link C++ class AtRadialChargeModel - !;

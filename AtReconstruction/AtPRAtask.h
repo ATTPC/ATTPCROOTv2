@@ -52,7 +52,7 @@ private:
    Double_t fStdDevMulkNN; //<! Std dev multiplier for kNN
    Double_t fkNNDist;      //<! Distance threshold for outlier rejection in kNN
 
-   //Clustering parameters
+   // Clustering parameters
    Double_t fClusterRadius{5.5};
    Double_t fClusterDistance{10.0};
 
@@ -84,11 +84,11 @@ public:
    void SetkNN(Double_t knn) { fKNN = knn; }
    void SetStdDevMulkNN(Double_t stdDevMul) { fStdDevMulkNN = stdDevMul; }
    void SetkNNDist(Double_t dist) { fkNNDist = dist; }
-  
-   void SetClusterRadius(Double_t clusterRadius) { fClusterRadius = clusterRadius ;}
-   void SetClusterDistance(Double_t clusterDistance) {fClusterDistance = clusterDistance;}
 
-  ClassDef(AtPRAtask, 1);
+   void SetClusterRadius(Double_t clusterRadius) { fClusterRadius = clusterRadius; }
+   void SetClusterDistance(Double_t clusterDistance) { fClusterDistance = clusterDistance; }
+
+   ClassDef(AtPRAtask, 1);
 };
 
 #endif

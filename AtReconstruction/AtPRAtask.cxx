@@ -94,8 +94,6 @@ InitStatus AtPRAtask::Init()
       dynamic_cast<AtPATTERN::AtTrackFinderTC *>(fPRA)->SetAtriplet(fHCa);
       dynamic_cast<AtPATTERN::AtTrackFinderTC *>(fPRA)->SetPadding(fHCpadding);
 
-      
-      
       std::cout << " Track Finder TriplClust parameters (see Dalitz et al.) "
                 << "\n";
       std::cout << " T Cluster : " << fHCt << "\n";
@@ -109,10 +107,10 @@ InitStatus AtPRAtask::Init()
       dynamic_cast<AtPATTERN::AtTrackFinderTC *>(fPRA)->SetClusterRadius(fClusterRadius);
       dynamic_cast<AtPATTERN::AtTrackFinderTC *>(fPRA)->SetClusterDistance(fClusterDistance);
 
-      std::cout<< " Track finder - Parameters for clusterization "<<"\n";
-      std::cout<< " Cluster radius "<<fClusterRadius<<"\n";
-      std::cout<< " Cluster distance "<<fClusterDistance<<"\n";
-      
+      std::cout << " Track finder - Parameters for clusterization "
+                << "\n";
+      std::cout << " Cluster radius " << fClusterRadius << "\n";
+      std::cout << " Cluster distance " << fClusterDistance << "\n";
 
    } else if (fPRAlgorithm == 1) {
       LOG(info) << "Using RANSAC algorithm";
