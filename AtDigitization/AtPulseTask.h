@@ -29,11 +29,12 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-using AtMapPtr = std::shared_ptr<AtMap>;
-
 class AtPulseTask : public FairTask {
 
 protected:
+   using AtMapPtr = std::shared_ptr<AtMap>;
+   using ResponseFunctionType = std::add_pointer_t<double(double)>;
+
    AtMapPtr fMap; //!< AtTPC map
 
    Int_t fEventID = 0;          //! EventID
@@ -45,6 +46,7 @@ protected:
    Int_t fNumTbs{512};          //! Number of time buckers
    Int_t fTBEntrance = 0;       //! Window location in timebuckets (from config)
    Int_t fTBPadPlane = 0;       //! Pad plane location in TBs (calculated from DriftVelocity, TBEntrance, ZPadPlane
+   ResponseFunctionType fResponseFunction{&(AtPulseTask::nominalResponseFunction)};
 
    Bool_t fIsPersistent = true;  //!< If true, save container
    Bool_t fIsSaveMCInfo = false; //!<< Propagates MC information
@@ -64,17 +66,6 @@ protected:
    std::unique_ptr<TF1> gain; //!<
    Double_t avgGainDeviation{};
 
-   void saveMCInfo(int mcPointID, int padNumber, int trackID);
-   void setParameters();
-   void getPadPlaneAndCreatePadHist();
-   void reset();
-   void generateTracesFromGatheredElectrons();
-   double getAvgGETgain(Int_t numElectrons);
-
-   // Add all electrons for AtSimulatedPoint to the electronMap
-   // Returns if any electrons were added
-   virtual bool gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point);
-
 public:
    AtPulseTask();
    AtPulseTask(const char *name);
@@ -86,9 +77,30 @@ public:
    void SetMap(AtMapPtr map) { fMap = map; };
    void UseFastGain(Bool_t val) { fUseFastGain = val; }
 
+   /**
+    * @brief: Set the response funtion of the electronics for a single electron.
+    *
+    * @param[in] responseFunction Function pointer of the type `double responseFunction(double reducedTime)` where
+    * reducedTime is the time since the arrival of the electron divided by the electronics peaking time.
+    */
+   void SetResponseFunction(ResponseFunctionType responseFunction) { fResponseFunction = responseFunction; }
+
    virtual InitStatus Init() override;        //!< Initiliazation of task at the beginning of a run.
    virtual void Exec(Option_t *opt) override; //!< Executed for each event.
    virtual void SetParContainers() override;  //!< Load the parameter container from the runtime database.
+
+protected:
+   void saveMCInfo(int mcPointID, int padNumber, int trackID);
+   void setParameters();
+   void getPadPlaneAndCreatePadHist();
+   void reset();
+   void generateTracesFromGatheredElectrons();
+   double getAvgGETgain(Int_t numElectrons);
+   static double nominalResponseFunction(double reducedTime);
+
+   // Add all electrons for AtSimulatedPoint to the electronMap
+   // Returns if any electrons were added
+   virtual bool gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point);
 
    ClassDefOverride(AtPulseTask, 4);
 };

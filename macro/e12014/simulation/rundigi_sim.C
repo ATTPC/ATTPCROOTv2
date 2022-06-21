@@ -9,8 +9,8 @@ void rundigi_sim()
    TString dir = getenv("VMCWORKDIR");
    TString outputDirectory = "/macro/e12014/simulation/eventGenerator/sym90/";
 
-   TString mcFile = dir + outputDirectory + "simNew_attpc.root";
-   TString outputFile = dir + outputDirectory + "outputNew_digi.root";
+   TString mcFile = dir + outputDirectory + "sim_attpc.root";
+   TString outputFile = dir + outputDirectory + "output_digi.root";
 
    // Create the full parameter file paths
    TString digiParFile = dir + "/parameters/" + paramFile;

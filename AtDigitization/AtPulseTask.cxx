@@ -1,12 +1,5 @@
 #include "AtPulseTask.h"
 
-#include <FairLogger.h>
-#include <FairTask.h>
-
-#include <Math/Vector3D.h>
-#include <TAxis.h>
-#include <TObject.h>
-// STL class headers
 #include "AtDigiPar.h"
 #include "AtMCPoint.h"
 #include "AtMap.h"
@@ -14,26 +7,28 @@
 #include "AtRawEvent.h"
 #include "AtSimulatedPoint.h"
 
-#include <algorithm> // for max
-#include <cmath>
-#include <cstdio>
-#include <iostream>
-#include <utility>
-
-// Fair class header
+#include <FairLogger.h>
+#include <FairParSet.h> // for FairParSet
 #include <FairRootManager.h>
 #include <FairRunAna.h>
 #include <FairRuntimeDb.h>
+#include <FairTask.h>
 
-// ROOT headers
-#include <FairParSet.h> // for FairParSet
-
+#include <Math/Vector3D.h>
+#include <TAxis.h>
 #include <TClonesArray.h>
 #include <TF1.h>
 #include <TH1.h>
 #include <TH2Poly.h>
 #include <TMath.h>
+#include <TObject.h>
 #include <TRandom.h>
+
+#include <algorithm> // for max
+#include <cmath>
+#include <cstdio>
+#include <iostream>
+#include <utility>
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -192,7 +187,8 @@ bool AtPulseTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
 
    auto totalyInhibited = fMap->IsInhibited(padNumber) == AtMap::InhibitType::kTotal;
    if (!totalyInhibited) {
-      eleAccumulated[padNumber]->Fill(eTime, charge);
+      auto gAvg = getAvgGETgain(charge);
+      eleAccumulated[padNumber]->Fill(eTime, charge * gAvg);
       electronsMap[padNumber] = eleAccumulated[padNumber].get();
    }
 
@@ -222,6 +218,11 @@ void AtPulseTask::Exec(Option_t *option)
 
    generateTracesFromGatheredElectrons();
 }
+double AtPulseTask::nominalResponseFunction(double reducedTime)
+{
+   double responce = pow(2.718, -3 * reducedTime) * sin(reducedTime) * pow(reducedTime, 3);
+   return responce;
+}
 
 void AtPulseTask::generateTracesFromGatheredElectrons()
 {
@@ -239,8 +240,7 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
             for (Int_t nn = kk; nn < fNumTbs; nn++) {
                Double_t binCenter = axis->GetBinCenter(kk);
                Double_t factor = (((((Double_t)nn) + 0.5) * binWidth) - binCenter) / fPeakingTime;
-               signal[nn] += eleAccumulated[thePadNumber]->GetBinContent(kk) * pow(2.718, -3 * factor) * sin(factor) *
-                             pow(factor, 3);
+               signal[nn] += eleAccumulated[thePadNumber]->GetBinContent(kk) * fResponseFunction(factor);
             }
          }
       }
@@ -253,11 +253,10 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
       pad->SetPadCoord(PadCenterCoord);
       pad->SetPedestalSubtracted(kTRUE);
 
-      auto gAvg = getAvgGETgain(eleAccumulated[thePadNumber]->GetEntries());
       auto lowGain = fMap->IsInhibited(thePadNumber) == AtMap::InhibitType::kLowGain ? fLowGainFactor : 1;
 
       for (Int_t bin = 0; bin < fNumTbs; bin++) {
-         pad->SetADC(bin, signal[bin] * gAvg * fGETGain * lowGain); // NOLINT
+         pad->SetADC(bin, signal[bin] * fGETGain * lowGain); // NOLINT
       }
    }
 
@@ -272,14 +271,16 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
 
 double AtPulseTask::getAvgGETgain(Int_t numElectrons)
 {
+   if (numElectrons <= 0)
+      return 0;
+
    Double_t gAvg = 0;
    if (fUseFastGain && numElectrons > 10)
       gAvg = gRandom->Gaus(fGain, avgGainDeviation / TMath::Sqrt(numElectrons));
    else {
       for (Int_t i = 0; i < numElectrons; i++)
          gAvg += gain->GetRandom();
-      if (numElectrons > 0)
-         gAvg = gAvg / numElectrons;
+      gAvg = gAvg / numElectrons;
    }
    return gAvg;
 }

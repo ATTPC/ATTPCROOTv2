@@ -86,7 +86,8 @@ bool AtPulseLineTask::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
       for (int i = 0; i < zIntegration.size(); ++i) {
          auto zLoc = eleAccumulated[0]->GetXaxis()->GetBinCenter(i + binMin);
          auto charge = line->GetCharge() * zIntegration[i] * pad.second;
-         eleAccumulated[pad.first]->Fill(zLoc, charge);
+         auto gAvg = getAvgGETgain(charge);
+         eleAccumulated[pad.first]->Fill(zLoc, gAvg * charge);
          electronsMap[pad.first] = eleAccumulated[pad.first].get();
       }
 

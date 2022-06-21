@@ -11,7 +11,7 @@ void rundigi_fast()
    // fair::Logger::SetConsoleSeverity("debug");
 
    // TString outputFile = "data/output_digiFast.root";
-   TString inOutDir = "./eventGenerator/sym/";
+   TString inOutDir = "./eventGenerator/sym90/";
    TString outputFile = inOutDir + "output_digi.root";
    TString scriptfile = "e12014_pad_mapping.xml";
    TString paramFile = "ATTPC.e12014.par";
@@ -63,12 +63,11 @@ void rundigi_fast()
    reduceTask->SetInputBranch("AtRawEvent");
    reduceTask->SetReductionFunction(&reduceFunc);
 
-   AtPSASimple2 *psa = new AtPSASimple2();
-   psa->SetThreshold(0);
-   psa->SetMaxFinder();
+   auto psa = std::make_unique<AtPSAMax>();
+   psa->SetThreshold(25);
 
    // Create PSA task
-   AtPSAtask *psaTask = new AtPSAtask(psa);
+   AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
    psaTask->SetPersistence(kTRUE);
 
    fRun->AddTask(clusterizer);
@@ -79,7 +78,7 @@ void rundigi_fast()
    fRun->Init();
 
    timer.Start();
-   fRun->Run(0, 20001);
+   fRun->Run(0, 20);
    // fRun->Run(0, 50);
    timer.Stop();
 

@@ -1,12 +1,12 @@
 // Code to simulate fission event from a file
 #include "FairLogger.h"
 
-void runMC_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
+void runMC_sim(Int_t nEvents = 200, TString mcEngine = "TGeant4")
 {
    // fair::Logger::SetConsoleSeverity("debug");
    // Output file name
    TString dir = getenv("VMCWORKDIR");
-   TString inOutDir = "/macro/e12014/simulation/eventGenerator/symFull/";
+   TString inOutDir = "/macro/e12014/simulation/eventGenerator/sym90/";
    TString parFileName = dir + inOutDir + "par_attpc.root";
    TString simFileName = dir + inOutDir + "sim_attpc.root";
 
