@@ -78,12 +78,12 @@ public:
    void UseFastGain(Bool_t val) { fUseFastGain = val; }
 
    /**
-    * @brief: Set the responce funtion of the electronics for a single electron.
+    * @brief: Set the response funtion of the electronics for a single electron.
     *
     * @param[in] responseFunction Function pointer of the type `double responseFunction(double reducedTime)` where
     * reducedTime is the time since the arrival of the electron divided by the electronics peaking time.
     */
-   void SetResponceFunction(ResponseFunctionType responceFunction) { fResponseFunction = responceFunction; }
+   void SetResponseFunction(ResponseFunctionType responseFunction) { fResponseFunction = responseFunction; }
 
    virtual InitStatus Init() override;        //!< Initiliazation of task at the beginning of a run.
    virtual void Exec(Option_t *opt) override; //!< Executed for each event.

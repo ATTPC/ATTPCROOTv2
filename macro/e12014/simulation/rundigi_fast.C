@@ -78,7 +78,7 @@ void rundigi_fast()
    fRun->Init();
 
    timer.Start();
-   fRun->Run(0, 20001);
+   fRun->Run(0, 20);
    // fRun->Run(0, 50);
    timer.Stop();
 
