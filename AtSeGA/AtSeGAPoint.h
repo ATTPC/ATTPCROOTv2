@@ -30,18 +30,18 @@ public:
     *@param eLoss     Energy deposit [GeV]
     **/
    AtSeGAPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Int_t crystalID, Double_t tof, Double_t length,
-                 Double_t eLoss, TString VolName);
+                 Double_t eLoss);
 
    /** Destructor **/
    virtual ~AtSeGAPoint();
 
    /** Accessors **/
    Int_t GetCrystalID() const { return fCrystalID; }
-   TString GetVolName() const { return fVolName; }
+   
 
    /** Modifiers **/
    void SetCrystalID(Int_t id) { fCrystalID = id; }; // added by Marc
-   void SetVolName(Int_t Vlna) { fVolName = Vlna; };
+   
 
    /** Output to screen **/
    virtual void Print(const Option_t *opt) const;
@@ -53,7 +53,7 @@ private:
 
 protected:
    Int_t fCrystalID;
-   TString fVolName
+   
 
    ClassDef(AtSeGAPoint, 1)
 };

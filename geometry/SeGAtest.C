@@ -26,7 +26,7 @@
 #include <iostream>
 
 // Name of geometry version and output file
-const TString geoVersion = "SeGA";
+const TString geoVersion = "SeGAtest";
 const TString FileName = geoVersion + ".root";
 const TString FileName1 = geoVersion + "_geomanager.root";
 
@@ -80,7 +80,7 @@ TGeoVolume *create_detector();
 void position_detector();
 void add_alignable_volumes();
 
-void SeGA()
+void SeGAtest()
 {
    // Load the necessary FairRoot libraries
    gSystem->Load("libGeoBase");
@@ -351,12 +351,12 @@ TGeoVolume *create_detector()
    };
 
 //BALL
- /*    
+    
       Cry_vol[16]= gGeoManager->MakeSphere(CrystalName + name_cry[16], segamatter, 0,  25 );
       Cry_vol[16]->SetLineColor(kMagenta);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(Cry_vol[16],17, new TGeoCombiTrans(0.0, 0.0 , 20 - 8.56 / 2 - 1.3746,  new TGeoRotation("GeCrystal", 0 ,0, 0)));
    Cry_vol[16]->SetTransparency(80); 
-*/
+
    return dummy;
 }

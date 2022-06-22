@@ -17,11 +17,11 @@ AtSeGAPoint::AtSeGAPoint() : FairMCPoint() {}
 
 // -----   Standard constructor   ------------------------------------------
 AtSeGAPoint::AtSeGAPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Int_t crystalID, Double_t tof,
-                             Double_t length, Double_t eLoss, TString VolName)
+                             Double_t length, Double_t eLoss)
    : FairMCPoint(trackID, detID, pos, mom, tof, length, eLoss)
 {
    fCrystalID = crystalID;
-   fVolName = VolName;
+
 }
 
 // -------------------------------------------------------------------------

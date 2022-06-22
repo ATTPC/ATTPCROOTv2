@@ -97,7 +97,7 @@ private:
     *       of type AtSeGAPoint to the clones array
     */
    AtSeGAPoint *AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Int_t crystalID, Double_t time,
-                           Double_t length, Double_t eLoss, TString fVolName);
+                           Double_t length, Double_t eLoss);
 
    AtSeGA(const AtSeGA &);
    AtSeGA &operator=(const AtSeGA &);
