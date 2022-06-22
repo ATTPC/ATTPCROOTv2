@@ -27,6 +27,8 @@
 
 #pragma link C++ namespace SampleConsensus;
 #pragma link C++ class SampleConsensus::AtSampleConsensus - !;
+#pragma link C++ class SampleConsensus::AtEstimator - !;
+#pragma link C++ enum SampleConsensus::Estimators;
 
 /* Classes that depend on Genfit2 */
 #pragma link C++ class genfit::AtSpacepointMeasurement + ;
