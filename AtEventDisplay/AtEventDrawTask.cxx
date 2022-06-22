@@ -130,6 +130,11 @@ InitStatus AtEventDrawTask::Init()
    FairRootManager *ioMan = FairRootManager::Instance();
    fEventManager = AtEventManager::Instance();
 
+   if (fDetmap == nullptr) {
+      LOG(fatal) << "Map was never set using the function SetMap() in AtEventDrawTask!";
+      return kFATAL;
+   }
+
    fDetmap->SetName("fMap");
    gROOT->GetListOfSpecials()->Add(fDetmap.get());
 
