@@ -13,7 +13,7 @@
 
 class FairVolume;
 class TClonesArray;
-class AtSeGAPoint;
+class AtMCPoint;
 
 class AtSeGA : public FairDetector {
 public:
@@ -94,11 +94,10 @@ private:
    TClonesArray *fAtSeGAPointCollection; //!
 
    /**      This method is an example of how to add your own point
-    *       of type AtSeGAPoint to the clones array
+    *       of type AtMCPoint to the clones array
     */
-   AtSeGAPoint *AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Int_t crystalID, Double_t time,
-                           Double_t length, Double_t eLoss);
-
+   AtMCPoint *AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length, Double_t eLoss,
+             TString VolName, Int_t detCopyID, Double_t EIni, Double_t AIni, Int_t A, Int_t Z);
    AtSeGA(const AtSeGA &);
    AtSeGA &operator=(const AtSeGA &);
 
