@@ -27,7 +27,7 @@ TString InputDataPath = dir + "/macro/" + unpackDir + InputFile;
 
    //----------------------Traks and points -------------------------------------
    //FairMCTracks *Track = new FairMCTracks("Monte-Carlo Tracks");
-   FairMCPointDraw *AtSeGAPoints = new FairMCPointDraw("AtSeGAPoint", kRed, kFullSquare);
+   FairMCPointDraw *AtSeGAPoints = new FairMCPointDraw("AtMCPoint", kRed, kFullSquare);
 
    //fMan->AddTask(Track);
    fMan->AddTask(AtSeGAPoints);
