@@ -10,7 +10,7 @@
 #include "FairRootManager.h"
 #include "AtSeGA.h"
 #include "AtSeGACrystalCalData.h"
-#include "AtSeGAPoint.h"
+#include "AtMCPoint.h"
 #include "TArrayD.h"
 #include "TClonesArray.h"
 #include "TMath.h"
@@ -24,7 +24,7 @@ using std::cout;
 using std::endl;
 
 AtSeGADigitizer::AtSeGADigitizer()
-   : FairTask("ATTPC SEGA Digitizer"), fSeGAPointDataCA(NULL), fSeGACryCalDataCA(NULL), fNonUniformity(0)
+   : FairTask("ATTPC SEGA Digitizer"), fMCPointDataCA(NULL), fSeGACryCalDataCA(NULL), fNonUniformity(0)
 {
    fNonUniformity = 0.;  // perfect crystals
    
@@ -36,9 +36,9 @@ AtSeGADigitizer::~AtSeGADigitizer()
 {
    LOG(INFO) << "AtSeGADigitizer: Delete instance";
 
-   if (fSeGAPointDataCA) {
-      fSeGAPointDataCA->Delete();
-      delete fSeGAPointDataCA;
+   if (fMCPointDataCA) {
+      fMCPointDataCA->Delete();
+      delete fMCPointDataCA;
    }
    if (fSeGACryCalDataCA) {
       fSeGACryCalDataCA->Delete();
@@ -65,9 +65,9 @@ InitStatus AtSeGADigitizer::Init()
    if (!rootManager)
       LOG(fatal) << "Init: No FairRootManager";
 
-   fSeGAPointDataCA = (TClonesArray *)rootManager->GetObject("AtSeGAPoint");
-   if (!fSeGAPointDataCA) {
-      LOG(fatal) << "Init: No AtSeGAPoint CA";
+   fMCPointDataCA = (TClonesArray *)rootManager->GetObject("AtMCPoint");
+   if (!fMCPointDataCA) {
+      LOG(fatal) << "Init: No AtMCPoint CA";
       return kFATAL;
    }
 
@@ -84,31 +84,31 @@ void AtSeGADigitizer::Exec(Option_t *option)
    Reset();
 
    // Reading the Input -- Point data --
-   Int_t nHits = fSeGAPointDataCA->GetEntries();
+   Int_t nHits = fMCPointDataCA->GetEntries();
    if (!nHits)
       return;
 
-   AtSeGAPoint **pointData = NULL;
-   pointData = new AtSeGAPoint *[nHits];
+   AtMCPoint **pointData = NULL;
+   pointData = new AtMCPoint *[nHits];
    for (Int_t i = 0; i < nHits; i++)
-      pointData[i] = (AtSeGAPoint *)(fSeGAPointDataCA->At(i));
+      pointData[i] = (AtMCPoint *)(fMCPointDataCA->At(i));
 
-   Int_t crystalId;
+   Int_t fDetCopyID;
    Double_t time;
    Double_t energy;
 
    for (Int_t i = 0; i < nHits; i++) {
-      crystalId = pointData[i]->GetCrystalID();
+      fDetCopyID = pointData[i]->GetDetCopyID();
       time = pointData[i]->GetTime();
       energy = pointData[i]->GetEnergyLoss();
 
       Int_t nCrystalCals = fSeGACryCalDataCA->GetEntriesFast();
       Bool_t existHit = 0;
       if (nCrystalCals == 0)
-         AddCrystalCal(crystalId, NUSmearing(energy), time);
+         AddCrystalCal(fDetCopyID, NUSmearing(energy), time);
       else {
          for (Int_t j = 0; j < nCrystalCals; j++) {
-            if (((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(j)))->GetCrystalId() == crystalId) {
+            if (((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(j)))->GetDetCopyID() == fDetCopyID) {
                ((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(j)))->AddMoreEnergy(NUSmearing(energy));
                if (((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(j)))->GetTime() > time) {
                   ((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(j)))->SetTime(time);
@@ -119,7 +119,7 @@ void AtSeGADigitizer::Exec(Option_t *option)
             }
          }
          if (!existHit)
-            AddCrystalCal(crystalId, NUSmearing(energy), time);
+            AddCrystalCal(fDetCopyID, NUSmearing(energy), time);
       }
       existHit = 0;
    }
@@ -139,7 +139,7 @@ void AtSeGADigitizer::Exec(Option_t *option)
 
    for (Int_t i = 0; i < nCrystalCals; i++) {
 
-      tempCryID = ((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(i)))->GetCrystalId();
+      tempCryID = ((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(i)))->GetDetCopyID();
 
       temp = ((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(i)))->GetEnergy();
       if (temp < fThreshold) {
@@ -159,7 +159,7 @@ void AtSeGADigitizer::Exec(Option_t *option)
 // -----   Public method EndOfEvent   -----------------------------------------
 void AtSeGADigitizer::EndOfEvent()
 {
-   // fSeGAPointDataCA->Clear();
+   // fMCPointDataCA->Clear();
    // fSeGACryCalDataCA->Clear();
    ResetParameters();
 }
@@ -247,7 +247,7 @@ Double_t AtSeGADigitizer::ExpResSmearingGe(Double_t inputEnergy)
 
 Bool_t AtSeGADigitizer::isGe(Int_t id)
 {
-   if (id > 0 && id < 8)
+   if (id > 0 && id < 16)
       return kTRUE;
    else
       return kFALSE;

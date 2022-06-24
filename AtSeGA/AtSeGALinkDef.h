@@ -14,7 +14,7 @@
 #pragma link C++ class AtSeGAContFact;
 #pragma link C++ class AtSeGA;
 #pragma link C++ class AtSeGADigitizer;
-#pragma link C++ class AtSeGAPoint + ;
+
 #pragma link C++ class AtSeGACrystalCalData + ;
 
 #endif

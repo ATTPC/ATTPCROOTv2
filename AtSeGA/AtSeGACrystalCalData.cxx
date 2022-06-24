@@ -14,21 +14,21 @@ using std::cout;
 using std::endl;
 using std::flush;
 
-AtSeGACrystalCalData::AtSeGACrystalCalData() : FairMultiLinkedData(), fEnergy(-1.), fTime(0), fCrystalId(-1) {}
+AtSeGACrystalCalData::AtSeGACrystalCalData() : FairMultiLinkedData(), fEnergy(-1.), fTime(0), fDetCopyID(-1) {}
 
 AtSeGACrystalCalData::AtSeGACrystalCalData(Int_t ident, Double_t energy, ULong64_t time)
-   : FairMultiLinkedData(), fEnergy(energy), fTime(time), fCrystalId(ident)
+   : FairMultiLinkedData(), fEnergy(energy), fTime(time), fDetCopyID(ident)
 {
 }
 
 AtSeGACrystalCalData::AtSeGACrystalCalData(const AtSeGACrystalCalData &right)
-   : FairMultiLinkedData(right), fEnergy(right.fEnergy), fTime(right.fTime), fCrystalId(right.fCrystalId)
+   : FairMultiLinkedData(right), fEnergy(right.fEnergy), fTime(right.fTime), fDetCopyID(right.fDetCopyID)
 {
 }
 
 void AtSeGACrystalCalData::Print(const Option_t *opt) const
 {
-   cout << "-I- AtSeGACrystalCalData: a crystalCalData level hit in crystal identifier " << fCrystalId << endl;
+   cout << "-I- AtSeGACrystalCalData: a crystalCalData level hit in crystal identifier " << fDetCopyID << endl;
    cout << "    Energy = " << fEnergy << " (GeV in sim)" << endl;
    cout << "    Time =" << fTime << " ns  " << endl;
 }

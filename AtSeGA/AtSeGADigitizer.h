@@ -12,7 +12,7 @@
 #include "FairTask.h"
 #include "AtSeGA.h"
 #include "AtSeGACrystalCalData.h"
-#include "AtSeGAPoint.h"
+#include "MCPoint.h"
 #include "TClonesArray.h"
 #include "string"
 

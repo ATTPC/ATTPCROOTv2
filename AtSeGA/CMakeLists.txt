@@ -24,7 +24,6 @@ set(SRCS
 #Put here your sourcefiles
 AtSeGA.cxx
 AtSeGAContFact.cxx
-AtSeGAPoint.cxx
 AtSeGACrystalCalData.cxx
 AtSeGADigitizer.cxx
 )
