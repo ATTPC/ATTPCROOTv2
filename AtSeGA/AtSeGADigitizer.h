@@ -12,7 +12,7 @@
 #include "FairTask.h"
 #include "AtSeGA.h"
 #include "AtSeGACrystalCalData.h"
-#include "MCPoint.h"
+#include "AtMCPoint.h"
 #include "TClonesArray.h"
 #include "string"
 
@@ -86,7 +86,7 @@ public:
 private:
    void SetParameter();
 
-   TClonesArray *fSeGAPointDataCA;  //!  The crystal hit collection
+   TClonesArray *fMCPointDataCA;  //!  The crystal hit collection
    TClonesArray *fSeGACryCalDataCA; /**< Array with CALIFA Cal- output data. >*/
 
    Double_t fNonUniformity;  // Experimental non-uniformity parameter

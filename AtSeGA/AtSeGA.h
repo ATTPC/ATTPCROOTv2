@@ -96,8 +96,7 @@ private:
    /**      This method is an example of how to add your own point
     *       of type AtMCPoint to the clones array
     */
-   AtMCPoint *AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length, Double_t eLoss,
-             TString VolName, Int_t detCopyID, Double_t EIni, Double_t AIni, Int_t A, Int_t Z);
+   AtMCPoint *AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length, Double_t eLoss);
    AtSeGA(const AtSeGA &);
    AtSeGA &operator=(const AtSeGA &);
 
