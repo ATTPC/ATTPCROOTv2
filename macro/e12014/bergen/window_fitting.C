@@ -6,6 +6,17 @@
  *Using equation [p1]/(exp((x-[p0])/[p3])+1)-[p2]
  *Load using root -l window_fitting.C
  */
+
+//functions declarations
+void window_fitting();
+void loadData(ULong64_t eventNumber, int padNumber);
+double fitEquation(double *x, double *par);
+void runFit(int left_bound, int right_bound, int xloc, int jump_height, int init_height);
+
+//variable declarations
+TH1F *padHist;
+
+
 void window_fitting()
 {
    //runs automatically to load in run. For right now, we always use this run
@@ -17,9 +28,10 @@ void loadData(ULong64_t eventNumber, int padNumber)
 {
    //uses functions from mira.C to load in histogram for given event and padnumber
    loadEvent(eventNumber);
-   TH1F *padHist = loadPad(padNumber);
+   //TH1F *padHist = loadPad(padNumber);
+   padHist = loadPad(padNumber);
    if (padHist != nullptr)
-      padHist->Draw("hist");
+      padHist->Draw("");
 }
 
 double fitEquation(double *x, double *par)
@@ -37,7 +49,9 @@ void runFit(int left_bound, int right_bound, int xloc, int jump_height, int init
    func->SetParameters(xloc, jump_height, init_height, 1);
    func->SetParNames("xloc", "jump_height", "init_height", "temp");
 
-   func->Fit("fitEquaion")
+   cout << padHist;
+
+   padHist->Fit("func");
 }
 
 /* I think these need to be in a function to compile properly.
