@@ -25,8 +25,8 @@ void sim_analysis(Int_t num_ev=10000)
     if(nEvents>num_ev) nEvents=num_ev;
 
     //Histograms
-    TH1D *Eloss1_vs_events= new TH1D("Eloss1_vs_events","ELoss1_vs_events",1000,0,100);
-    TH1D *Eloss0_vs_events= new TH1D("Eloss0_vs_events","ELoss0_vs_events",1000,0,100);
+    TH1D *Eloss1_vs_events= new TH1D("Eloss1_vs_events","ELoss1_vs_events",1000,0,1);
+    TH1D *Eloss0_vs_events= new TH1D("Eloss0_vs_events","ELoss0_vs_events",1000,0,1);
 
       TCanvas *c1 = new TCanvas();
     c1->Divide(2,1);

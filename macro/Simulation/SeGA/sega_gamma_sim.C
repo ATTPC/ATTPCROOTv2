@@ -1,4 +1,4 @@
-void sega_gamma_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
+void sega_gamma_sim(Int_t nEvents = 50, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
@@ -38,7 +38,7 @@ void sega_gamma_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
    run->AddModule(pipe);*/
 
    FairDetector *SeGA = new AtSeGA("AtSeGA", kTRUE);
-   SeGA->SetGeometryFileName("SeGAtest.root");
+   SeGA->SetGeometryFileName("SeGA.root");
    // ATTPC->SetModifyGeometry(kTRUE);
    run->AddModule(SeGA);
 
@@ -62,7 +62,7 @@ void sega_gamma_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
      //gammasGen->SetDecayChainPoint(0.002002,0.1);
      //gammasGen->SetDecayChainPoint(0.003750,0.2);
      gammasGen->SetPhiRange(0., 360.); //(2.5,4)
-    gammasGen->SetBoxXYZ(-14.0, -14.0, 10.0, 14.0, 14.0, 30.0);
+    gammasGen->SetBoxXYZ(-15.0, -15.0, 10.0, 15.0, 15.0, 30.0);
      gammasGen->SetLorentzBoost(0.0); // for instance beta=0.8197505718204776 for 700 A MeV
      // add the gamma generator
      primGen->AddGenerator(gammasGen);
