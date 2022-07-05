@@ -1,6 +1,7 @@
 #ifndef MANUAL_C
 #define MANUAL_C
 #include "mira.C"
+#include <cmath>
 
 /*For fitting pad traces near window or plane
  *Using equation [p1]/(exp((x-[p0])/[p3])+1)-[p2] for window
@@ -13,11 +14,13 @@ void manual_fitting();
 void loadData(ULong64_t eventNumber, int padNumber);
 double WindowEquation(double *x, double *par);
 double PlaneEquation(double *x, double *par);
-void window_run_fit(int left_bound, int right_bound, int xloc, int jump_height, int init_height);
+//void window_run_fit(int left_bound, int right_bound, int xloc, int jump_height, int init_height); old equation with user defined initial values
+void window_run_fit();
 void plane_run_fit(int left_bound, int right_bound);
 
 //variable declarations
 TH1F *padHist;
+int padNum;
 
 
 void manual_fitting()
@@ -35,6 +38,7 @@ void loadData(ULong64_t eventNumber, int padNumber)
    padHist = loadPad(padNumber);
    if (padHist != nullptr)
       padHist->Draw("");
+   padNum = padNumber;
 }
 
 double WindowEquation(double *x, double *par)
@@ -47,14 +51,28 @@ double WindowEquation(double *x, double *par)
 double PlaneEquation(double *x, double *par)
 {
    //sets up equation used for the fitting
-   double fitval = par[2]*TMath::Exp(-3*(x[0]-par[0])/par[1])*TMath::Sin((x[0]-par[0])/par[1])*TMath::Power((x[0]-par[0])/par[1], 3)
+   double fitval = (x[0]>par[0])*par[2]*TMath::Exp(-3*(x[0]-par[0])/par[1])*TMath::Sin((x[0]-par[0])/par[1])*TMath::Power((x[0]-par[0])/par[1], 3) + (x[0]<par[0])*0;
    return fitval;
 }
 
 
-void window_run_fit(int left_bound, int right_bound, int xloc, int jump_height, int init_height)
+//void window_run_fit(int left_bound, int right_bound, int xloc, int jump_height, int init_height) user defined initial parameters
+//5 integer inputs. First 2 are the time-bucket bounds. 3rd is x-location of jump, 4th is jump height, and 5th is height before the jump (all approximated)
+void window_run_fit()
 {
-   //5 integer inputs. First 2 are the time-bucket bounds. 3rd is x-location of jump, 4th is jump height, and 5th is height before the jump (all approximated)
+   double left_bound = 440;
+   double right_bound = 475;
+   double xloc = 457.5;
+   
+   auto trace = rawEventPtr->GetPad(padNum)->GetADC();
+
+   double max = *std::max_element(begin(trace), end(trace));
+   double min = *std::min_element(begin(trace), end(trace));
+
+   double jump_height = max-min;
+   double init_height = std::abs(min);
+   double temp = 1;
+
    TF1 *func = new TF1("func", WindowEquation, left_bound, right_bound, 4);
 
    func->SetParameters(xloc, jump_height, init_height, 1);
@@ -67,8 +85,8 @@ void plane_run_fit(int left_bound, int right_bound)
 {
    TF1 *func = new TF1("func", PlaneEquation, left_bound, right_bound, 3);
 
-   func->SetParameters(100, 2.25, 25000);
-   func->SetParLimits(0,left_bound,1.e6);
+   func->SetParameters(85, 2.25, 25000);
+   //func->SetParLimits(0,left_bound,1.e6);
    func->SetParLimits(2,0,1.e6);
    func->SetParNames("par0", "drift_time", "par2");
 
