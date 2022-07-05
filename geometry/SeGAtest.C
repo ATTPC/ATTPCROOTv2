@@ -352,10 +352,10 @@ TGeoVolume *create_detector()
 
 //BALL
     
-      Cry_vol[16]= gGeoManager->MakeSphere(CrystalName + name_cry[16], segamatter, 0,  25 );
+      Cry_vol[16]= gGeoManager->MakeSphere(CrystalName + name_cry[16], segamatter, 17,  27 );
       Cry_vol[16]->SetLineColor(kMagenta);
       gGeoMan->GetVolume(geoVersion)
-         ->AddNode(Cry_vol[16],17, new TGeoCombiTrans(0.0, 0.0 , 20 - 8.56 / 2 - 1.3746,  new TGeoRotation("GeCrystal", 0 ,0, 0)));
+         ->AddNode(Cry_vol[16],17, new TGeoCombiTrans(0.0, 0.0 , 20 ,  new TGeoRotation("GeCrystal", 0 ,0, 0)));
    Cry_vol[16]->SetTransparency(80); 
 
    return dummy;

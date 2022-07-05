@@ -209,22 +209,22 @@ TGeoVolume *create_detector()
                                       new TGeoRotation("indeadL", phirot[nora], updown * thetarot[nora], 0.0)));
       indeadL->SetTransparency(80);
       // GADGET SeGA active layer
-      TGeoVolume *activeL = gGeoManager->MakeTube("activeL", segamatter, sega_inner_dead_layer_rad_out,
+      Cry_vol[nora]= gGeoManager->MakeTube(CrystalName + name_cry[nora], segamatter, sega_inner_dead_layer_rad_out,
                                                   sega_active_rad_out, sega_active_length / 2);
-      activeL->SetLineColor(kBlue);
+      Cry_vol[nora]->SetLineColor(kBlue);
       gGeoMan->GetVolume(geoVersion)
-         ->AddNode(activeL, nora + 1,
+         ->AddNode(Cry_vol[nora], nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("activeL", phirot[nora], updown * thetarot[nora], 0)));
-      activeL->SetTransparency(80);
+      Cry_vol[nora]->SetTransparency(80);
 
       // GADGET SeGA germanium crystal
       
-      Cry_vol[nora]= gGeoManager->MakeTube(CrystalName + name_cry[nora], segamatter, sega_active_rad_out,  sega_Ge_crystal_rad_out, sega_Ge_crystal_length/2 );
-      Cry_vol[nora]->SetLineColor(kCyan);
+      TGeoVolume *GeCrystal= gGeoManager->MakeTube("GeCrystal", segamatter, sega_active_rad_out,  sega_Ge_crystal_rad_out, sega_Ge_crystal_length/2 );
+      GeCrystal->SetLineColor(kCyan);
       gGeoMan->GetVolume(geoVersion)
-         ->AddNode(Cry_vol[nora],nora+ 1, new TGeoCombiTrans(x_posSega, y_posSega , z_posSega,  new TGeoRotation("GeCrystal", phirot[nora], updown*thetarot[nora], 0)));
-   Cry_vol[nora]->SetTransparency(80); 
+         ->AddNode(GeCrystal,nora+ 1, new TGeoCombiTrans(x_posSega, y_posSega , z_posSega,  new TGeoRotation("GeCrystal", phirot[nora], updown*thetarot[nora], 0)));
+   GeCrystal->SetTransparency(80); 
       // GADGET SeGA vacuum 1
       TGeoVolume *vac1 =
          gGeoManager->MakeTube("vac1", mediumvacuum4, sega_Ge_crystal_rad_out, sega_vac1_rad_out, sega_vac1_length / 2);
@@ -294,22 +294,22 @@ TGeoVolume *create_detector()
                                       new TGeoRotation("indeadL", phirot[nora], updown * thetarot[nora], 0.0)));
       indeadL->SetTransparency(80);
       // GADGET SeGA active layer
-      TGeoVolume *activeL = gGeoManager->MakeTube("activeL", segamatter, sega_inner_dead_layer_rad_out,
+      Cry_vol[nora+8]= gGeoManager->MakeTube(CrystalName + name_cry[nora+8], segamatter, sega_inner_dead_layer_rad_out,
                                                   sega_active_rad_out, sega_active_length / 2);
-      activeL->SetLineColor(kBlue);
+      Cry_vol[nora]->SetLineColor(kBlue);
       gGeoMan->GetVolume(geoVersion)
-         ->AddNode(activeL, nora + 1,
+         ->AddNode(Cry_vol[nora+8], nora + 9,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("activeL", phirot[nora], updown * thetarot[nora], 0)));
-      activeL->SetTransparency(80);
+      Cry_vol[nora]->SetTransparency(80);
 
       // GADGET SeGA germanium crystal
-
-      Cry_vol[nora+8]= gGeoManager->MakeTube(CrystalName + name_cry[nora+8], segamatter, sega_active_rad_out,  sega_Ge_crystal_rad_out, sega_Ge_crystal_length/2 );
-      Cry_vol[nora+8]->SetLineColor(kCyan);
+      
+      TGeoVolume *GeCrystal= gGeoManager->MakeTube("GeCrystal", segamatter, sega_active_rad_out,  sega_Ge_crystal_rad_out, sega_Ge_crystal_length/2 );
+      GeCrystal->SetLineColor(kCyan);
       gGeoMan->GetVolume(geoVersion)
-         ->AddNode(Cry_vol[nora+8],nora+ 9, new TGeoCombiTrans(x_posSega, y_posSega , z_posSega,  new TGeoRotation("GeCrystal", phirot[nora], updown*thetarot[nora], 0)));
-   Cry_vol[nora+8]->SetTransparency(80); 
+         ->AddNode(GeCrystal,nora+ 1, new TGeoCombiTrans(x_posSega, y_posSega , z_posSega,  new TGeoRotation("GeCrystal", phirot[nora], updown*thetarot[nora], 0)));
+   GeCrystal->SetTransparency(80);  
       // GADGET SeGA vacuum 1
       TGeoVolume *vac1 =
          gGeoManager->MakeTube("vac1", mediumvacuum4, sega_Ge_crystal_rad_out, sega_vac1_rad_out, sega_vac1_length / 2);
