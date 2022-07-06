@@ -16,7 +16,8 @@ double WindowEquation(double *x, double *par);
 double PlaneEquation(double *x, double *par);
 //void window_run_fit(int left_bound, int right_bound, int xloc, int jump_height, int init_height); old equation with user defined initial values
 void window_run_fit();
-void plane_run_fit(int left_bound, int right_bound);
+//void plane_run_fit(int left_bound, int right_bound);
+void plane_run_fit();
 
 //variable declarations
 TH1F *padHist;
@@ -51,7 +52,7 @@ double WindowEquation(double *x, double *par)
 double PlaneEquation(double *x, double *par)
 {
    //sets up equation used for the fitting
-   double fitval = (x[0]>par[0])*par[2]*TMath::Exp(-3*(x[0]-par[0])/par[1])*TMath::Sin((x[0]-par[0])/par[1])*TMath::Power((x[0]-par[0])/par[1], 3) + (x[0]<par[0])*0;
+   double fitval = (x[0]>par[0])*(par[2]*TMath::Exp(-3*(x[0]-par[0])/par[1])*TMath::Sin((x[0]-par[0])/par[1])*TMath::Power((x[0]-par[0])/par[1], 3)>0)*par[2]*TMath::Exp(-3*(x[0]-par[0])/par[1])*TMath::Sin((x[0]-par[0])/par[1])*TMath::Power((x[0]-par[0])/par[1], 3);
    return fitval;
 }
 
@@ -81,11 +82,14 @@ void window_run_fit()
    padHist->Fit("func","R");
 }
 
-void plane_run_fit(int left_bound, int right_bound)
+//void plane_run_fit(int left_bound, int right_bound)
+void plane_run_fit()
 {
+   double left_bound = 70;
+   double right_bound = 100;
    TF1 *func = new TF1("func", PlaneEquation, left_bound, right_bound, 3);
 
-   func->SetParameters(85, 2.25, 25000);
+   func->SetParameters(78, 2.25, 25000);
    //func->SetParLimits(0,left_bound,1.e6);
    func->SetParLimits(2,0,1.e6);
    func->SetParNames("par0", "drift_time", "par2");
