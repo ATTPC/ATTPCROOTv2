@@ -61,6 +61,9 @@ protected:
 
    std::vector<int> sampleIndicesFromCDF(int N, std::vector<int> vetoed = {});
    int getIndexFromCDF(double r, double rmCFD, std::vector<int> vetoed);
+
+   double getPDFfromCDF(int index);
+
    template <typename T>
    static inline bool isInVector(T val, std::vector<T> vec)
    {
