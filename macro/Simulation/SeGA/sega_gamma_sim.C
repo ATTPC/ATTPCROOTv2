@@ -1,4 +1,4 @@
-void sega_gamma_sim(Int_t nEvents = 50, TString mcEngine = "TGeant4")
+void sega_gamma_sim(Int_t nEvents = 100000, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
@@ -48,9 +48,9 @@ void sega_gamma_sim(Int_t nEvents = 50, TString mcEngine = "TGeant4")
    FairPrimaryGenerator *primGen = new FairPrimaryGenerator();
 
    Double_t pdgId = 22;       // 22 for gamma emission, 2212 for proton emission
-     Double_t theta1 = 45;      // polar angle distribution: lower edge (50)
-     Double_t theta2 = 135.;    // polar angle distribution: upper edge (51)
-     Double_t momentum = 0.001; // GeV/c
+     Double_t theta1 = 0;      // polar angle distribution: lower edge (50)
+     Double_t theta2 = 180.;    // polar angle distribution: upper edge (51)
+     Double_t momentum = 0.005; // GeV/c
      Int_t multiplicity = 1;
      AtTPCGammaDummyGenerator* gammasGen = new AtTPCGammaDummyGenerator(pdgId, multiplicity);
      gammasGen->SetThetaRange(theta1, theta2);
@@ -62,7 +62,7 @@ void sega_gamma_sim(Int_t nEvents = 50, TString mcEngine = "TGeant4")
      //gammasGen->SetDecayChainPoint(0.002002,0.1);
      //gammasGen->SetDecayChainPoint(0.003750,0.2);
      gammasGen->SetPhiRange(0., 360.); //(2.5,4)
-    gammasGen->SetBoxXYZ(-15.0, -15.0, 10.0, 15.0, 15.0, 30.0);
+    gammasGen->SetXYZ(0.0,0,0);
      gammasGen->SetLorentzBoost(0.0); // for instance beta=0.8197505718204776 for 700 A MeV
      // add the gamma generator
      primGen->AddGenerator(gammasGen);
