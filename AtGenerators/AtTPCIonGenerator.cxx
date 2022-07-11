@@ -172,19 +172,18 @@ void AtTPCIonGenerator::SetEmittance()
 // -----   Private method SetBeamOrigin   ---------------------------------
 void AtTPCIonGenerator::SetBeamOrigin()
 {
-    double pi = 2 * asin(1.0);
+   double pi = 2 * asin(1.0);
 
-    Double_t radius = std::clamp(gRandom->Gaus(0, fR / 3), 0.0, fR);
-    Double_t phi_R = gRandom->Uniform(0, 2 * pi); 
-    fVx = radius * cos(phi_R);
-    fVy = radius * sin(phi_R);
+   Double_t radius = std::clamp(gRandom->Gaus(0, fR / 3), 0.0, fR);
+   Double_t phi_R = gRandom->Uniform(0, 2 * pi);
+   fVx = radius * cos(phi_R);
+   fVy = radius * sin(phi_R);
 
-    Double_t theta = gRandom->Uniform(0, fTheta);
-    Double_t pr = fPz * sin(theta); 
-    fPz *= cos(theta);
-    fPx = pr * cos(phi_R);
-    fPy = pr * sin(phi_R);
-
+   Double_t theta = gRandom->Uniform(0, fTheta);
+   Double_t pr = fPz * sin(theta);
+   fPz *= cos(theta);
+   fPx = pr * cos(phi_R);
+   fPy = pr * sin(phi_R);
 }
 //_________________________________________________________________________
 
@@ -219,9 +218,7 @@ Bool_t AtTPCIonGenerator::ReadEvent(FairPrimaryGenerator *primGen)
       SetEmittance(); // parameters: fWhmFocus, fDiv, fZFocus, fRHole, fPx, fPy, fPz
       // changes: fVx, fVy, fVz, fPx, fPy, fPz, d2HeVtx
       break;
-   case 3:
-      SetBeamOrigin();
-      break;
+   case 3: SetBeamOrigin(); break;
    default:
       fVx = 0.0;
       fVy = 0.0;
@@ -238,11 +235,11 @@ Bool_t AtTPCIonGenerator::ReadEvent(FairPrimaryGenerator *primGen)
 
    if (AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 != 0) {
       if (fDoReact) {
-          Double_t Er = gRandom->Uniform(0., fMaxEnLoss);
-          AtVertexPropagator::Instance()->SetRndELoss(Er);
-        // std::cout << cGREEN << " Random Energy AtTPCIonGenerator : " << Er << cNORMAL << std::endl;
-      }
-      else AtVertexPropagator::Instance()->SetRndELoss(std::numeric_limits<double>::max());
+         Double_t Er = gRandom->Uniform(0., fMaxEnLoss);
+         AtVertexPropagator::Instance()->SetRndELoss(Er);
+         // std::cout << cGREEN << " Random Energy AtTPCIonGenerator : " << Er << cNORMAL << std::endl;
+      } else
+         AtVertexPropagator::Instance()->SetRndELoss(std::numeric_limits<double>::max());
    }
 
    for (Int_t i = 0; i < fMult; i++)

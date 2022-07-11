@@ -25,3 +25,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 if [ -f $SCRIPT_DIR/build/config.sh ]; then
     source $SCRIPT_DIR/build/config.sh
 fi
+
+if [[ $LD_LIBRARY_PATH != *"HiRAEVT"* ]]; then
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mnt/simulations/attpcroot/fair_install_18.6/HiRAEVT/lib/
+fi

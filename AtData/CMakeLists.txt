@@ -17,6 +17,7 @@ set(SRCS
   AtPad.cxx
   AtAuxPad.cxx
   AtPadFFT.cxx
+  AtPadCharge.cxx
   AtRawEvent.cxx
   AtHit.cxx
   AtHitCluster.cxx
