@@ -12,6 +12,14 @@ using namespace RandomSample;
 std::vector<AtHit> AtWeightedY::SampleHits(int N)
 {
    std::vector<AtHit> ret;
+
+   // If every hit is outside of the beam region, then skip the vetoed beam region
+   if (fVetoIn.size() == fHits->size() || fVetoIn.size() == 0) {
+      for (auto ind : sampleIndicesFromCDF(N))
+         ret.push_back(fHits->at(ind));
+      return ret;
+   }
+
    for (auto ind : sampleIndicesFromCDF(2, fVetoIn))
       ret.push_back(fHits->at(ind));
    for (auto ind : sampleIndicesFromCDF(N - 2, fVetoOut))
