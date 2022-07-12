@@ -16,6 +16,18 @@ void loadEvent(ULong64_t eventNumber);
 TH1F *loadPad(int padNum);
 TH1F *loadMesh();
 
+/**
+ * Returns a vector of pads in the beam region, most of which will contain the window edge.
+ * The beam region is defined as all pads within radius of the center of the pad plane.
+ */
+std::vector<AtPad *> GetLikelyWindow(double radius = 20);
+/**
+ * Returns a vector of pads that likely contain the pad plane. It does this by selecting each
+ * pad associated with a hit that occurs within zMin from the Pad Plane location (z = 0 mm) outside
+ * the beam region (defined by radius).
+ */
+std::vector<AtPad *> GetLikelyPadPlane(double zMin = 30, double radius = 20);
+
 TChain *tpcTree;
 TTreeReader *reader;
 TTreeReaderValue<TClonesArray> *rawEventReader;
@@ -69,4 +81,38 @@ TH1F *loadPad(int padNum)
    return hTrace;
 }
 
+std::vector<AtPad *> GetLikelyWindow(double radius)
+{
+   // get all the hits.
+   std::vector<AtPad *> ret;
+   for (const auto &hit : eventPtr->GetHitArray()) {
+      if (hit.GetPosition().Rho() >= radius)
+         continue;
+
+      std::cout << " Good pad " << hit.GetPadNum() << " at " << hit.GetPosition() << std::endl;
+      ret.push_back(rawEventPtr->GetPad(hit.GetPadNum()));
+   }
+   return ret;
+}
+
+std::vector<AtPad *> GetLikelyPadPlane(double zMin, double radius)
+{
+
+   std::vector<AtPad *> ret;
+   // get all the hits sorted by time
+   auto hitArray = eventPtr->GetHitArray();
+   std::sort(hitArray.begin(), hitArray.end(),
+             [](const AtHit &a, const AtHit &b) { return a.GetPosition().Z() < b.GetPosition().Z(); });
+
+   for (const auto &hit : hitArray) {
+      if (hit.GetPosition().Rho() < radius)
+         continue;
+      if (hit.GetPosition().Z() > zMin)
+         continue;
+
+      std::cout << " Good pad " << hit.GetPadNum() << " at " << hit.GetPosition() << std::endl;
+      ret.push_back(rawEventPtr->GetPad(hit.GetPadNum()));
+   }
+   return ret;
+}
 #endif // ifndef MIRA_C
