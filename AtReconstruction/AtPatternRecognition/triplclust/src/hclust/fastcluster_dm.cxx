@@ -362,7 +362,7 @@ public:
 
    t_index Find(t_index idx) const
    {
-      if (parent[idx] != 0) { // a → b
+      if (parent[idx] != 0) { // NOLINT a → b
          t_index p = idx;
          idx = parent[idx];
          if (parent[idx] != 0) { // a → b → c

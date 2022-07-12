@@ -1,13 +1,26 @@
 #include "AtPatternY.h"
 
+#include "AtPatternLine.h" // for AtPatternLine::XYZPoint, AtPatter...
+
 #include <FairLogger.h>
 
+#include <Math/Functor.h>
+#include <Math/Point3D.h>  // for DisplacementVector3D, operator*
 #include <Math/Vector3D.h> // for DisplacementVector3D, operator*
+#include <TEveCompound.h>
+#include <TEveElement.h>
+#include <TEveLine.h>
+#include <TEvePointSet.h>
+#include <TString.h> // for Form
 
-#include <cmath>   // for cos, sin, pow, sqrt, acos, atan, fabs
-#include <utility> // for swap
-
-class TEveLine;
+#include <Fit/FitConfig.h> // for FitConfig
+#include <Fit/FitResult.h> // for FitResult
+#include <Fit/Fitter.h>
+#include <Fit/ParameterSettings.h> // for ParameterSettings
+#include <algorithm>               // for max, min_element, sort
+#include <cmath>                   // for cos, sin, pow, sqrt, acos, atan, fabs
+#include <set>                     // for set, _Rb_tree_const_iterator
+#include <utility>                 // for swap
 
 using namespace AtPatterns;
 
@@ -15,131 +28,200 @@ ClassImp(AtPatternY);
 
 AtPatternY::AtPatternY() : AtPattern(4) {}
 
-TEveLine *AtPatternY::GetEveLine() const
+TEveElement *AtPatternY::GetEveElement() const
 {
-   return nullptr;
-}
+   auto shape = new TEveCompound(); // NOLINT
 
-AtPatternY::XYZVector AtPatternY::GetDirection(int line) const
-{
-   if (line < 3) {
-      return {fPatternPar[3 + 3 * line], fPatternPar[4 + 3 * line], fPatternPar[5 + 3 * line]};
-   } else {
-      LOG(error) << "Line number, " << line << ", is greater than the number of actual lines, 3.";
-      return {0, 0, 0};
+   // Any element added with this color will be changed when the color of shape is changed later
+   shape->SetMainColor(kGreen);
+   shape->CSCApplyMainColorToMatchingChildren();
+   shape->OpenCompound();
+
+   // Add lines to shape
+   auto beam = fBeam.GetEveElement();
+   dynamic_cast<TEveLine *>(beam)->SetName("beam");
+   beam->SetMainColor(kRed);
+   shape->AddElement(beam);
+
+   for (int i = 0; i < 2; ++i) {
+      auto elem = fFragments[i].GetEveElement();
+      dynamic_cast<TEveLine *>(elem)->SetName(Form("frag_%d", i));
+      elem->SetMainColor(kGreen);
+      shape->AddElement(elem);
    }
+
+   // Add vertex to shape
+   auto vertex = new TEvePointSet("vertex", 1); // NOLINT
+   vertex->SetOwnIds(true);
+   vertex->SetMarkerSize(2);
+   vertex->SetMainColor(kGreen);
+   vertex->SetNextPoint(fBeam.GetPoint().X() / 10, fBeam.GetPoint().Y() / 10, fBeam.GetPoint().Z() / 10);
+   shape->AddElement(vertex);
+
+   shape->CloseCompound();
+   return shape;
 }
 
 AtPatternY::XYZPoint AtPatternY::ClosestPointOnPattern(const XYZPoint &point) const
 {
-   auto p = GetVertex();
+   // create a set of pairs with points and distance to pattern sorted by distance
+   auto comp = [](const std::pair<XYZPoint, double> &a, const std::pair<XYZPoint, double> &b) {
+      return a.second < b.second;
+   };
+   auto points = std::set<std::pair<XYZPoint, double>, decltype(comp)>(comp);
 
-   return p;
+   points.insert({fBeam.ClosestPointOnPattern(point), fBeam.DistanceToPattern(point)});
+   for (const auto &ray : fFragments)
+      points.insert({ray.ClosestPointOnPattern(point), ray.DistanceToPattern(point)});
+
+   // Get the closest point to the pattern
+   return points.begin()->first;
 }
 
 Double_t AtPatternY::DistanceToPattern(const XYZPoint &point) const
 {
-   auto vec = GetVertex() - point;
-   double minDist = 1000;
-   for (int i = 0; i < 3; i++) {
-      double dist2;
-      if ((i == 0 && point.Z() > GetVertex().Z()) || (i > 0 && point.Z() < GetVertex().Z())) {
-         auto nD = GetDirection(i).Cross(vec);
-         dist2 = nD.Mag2() / GetDirection(i).Mag2();
-      } else {
-         dist2 = vec.Mag2();
-      }
-      if (dist2 < minDist) {
-         minDist = dist2;
-      }
+   std::vector<double> distances;
+   distances.push_back(fBeam.DistanceToPattern(point));
+   for (const auto &ray : fFragments)
+      distances.push_back(ray.DistanceToPattern(point));
+   return *std::min_element(distances.begin(), distances.end());
+}
+
+std::vector<double> AtPatternY::GetPatternPar() const
+{
+   std::vector<double> ret;
+   ret.resize(12);
+   ret[0] = GetVertex().X();
+   ret[1] = GetVertex().Y();
+   ret[2] = GetVertex().Z();
+   ret[3] = GetBeamDirection().X();
+   ret[4] = GetBeamDirection().Y();
+   ret[5] = GetBeamDirection().Z();
+   for (int i = 0; i < 2; ++i) {
+      ret[6 + 3 * i] = GetFragmentDirection(i).X();
+      ret[7 + 3 * i] = GetFragmentDirection(i).Y();
+      ret[8 + 3 * i] = GetFragmentDirection(i).Z();
+   }
+   return ret;
+}
+
+/**
+ * Defines the pattern using the following parameters
+ * vertex = (par[0], par[1], par[2])
+ * beamDir = (par[3], par[4], par[5])
+ * fragDir[0] = (par[6], par[7], par[8])
+ * fragDir[1] = (par[9], par[10], par[11])
+ */
+void AtPatternY::DefinePattern(std::vector<double> par)
+{
+   if (par.size() != 12) {
+      LOG(error) << "Defining a Y pattern requires 12 parameters!";
+      return;
    }
 
-   return std::sqrt(minDist);
+   XYZPoint vertex(par[0], par[1], par[2]);
+   XYZVector beamDir(par[3], par[4], par[5]);
+   std::array<XYZVector, 2> fragDir;
+   for (int i = 0; i < 2; ++i)
+      fragDir[i] = {par[6 + i * 3], par[7 + i * 3], par[8 + i * 3]};
+   DefinePattern(vertex, beamDir, fragDir);
+}
+
+void AtPatternY::DefinePattern(const XYZPoint &vertex, const XYZVector &beamDir,
+                               const std::array<XYZVector, 2> &fragDir)
+{
+   fBeam.DefinePattern(vertex, beamDir);
+   for (int i = 0; i < 2; ++i)
+      fFragments[i].DefinePattern(vertex, fragDir[i]);
 }
 
 void AtPatternY::DefinePattern(const std::vector<XYZPoint> &points)
 {
-   // std::cout << "making pattern" << std::endl;
    if (points.size() != fNumPoints)
-      LOG(error) << "Trying to create model with wrong number of points " << points.size();
+      LOG(fatal) << "Trying to create model with wrong number of points " << points.size();
 
-   int zPosIndx[4] = {};
-   double zPos[4] = {};
+   // Sort points by z location in decreasing order
+   auto sortedPoints = points;
+   std::sort(sortedPoints.begin(), sortedPoints.end(),
+             [](const ROOT::Math::XYZPoint &a, const ROOT::Math::XYZPoint &b) { return a.Z() > b.Z(); });
 
-   for (int i = 0; i < 4; i++) {
-      zPosIndx[i] = i;
-      zPos[i] = points[i].Z();
-      // std::cout << "1 " << i << std::endl;
-   }
-   for (int i = 0; i < 3; i++) {
-      // std::cout << "2 " << i << std::endl;
-      for (int r = 0; r < 3; r++) {
-         // std::cout << "2 " << i << std::endl;
-         // std::cout << 4 - i << std::endl;
-         // std::cout << "3 " << r << std::endl;
-         if (zPos[r] > zPos[r + 1]) {
-            std::swap(zPos[r], zPos[r + 1]);
-            std::swap(zPosIndx[r], zPosIndx[r + 1]);
-         }
-      }
-   }
-   for (int i = 0; i < 4; i++) {
-      // std::cout << zPos[i] << "  ";
-   }
-   // std::cout << std::endl;
-   for (int i = 0; i < 4; i++) {
-      // std::cout << zPosIndx[i] << "  ";
-   }
-   // std::cout << std::endl;
-   auto fVertex = points[zPosIndx[2]];
-   XYZPoint fDirection[3];
-   int j = 0;
-   for (int i = 3; i >= 0; i--) {
-      // std::cout << "4 " << i << std::endl;
-      if (i != 2) {
-         fDirection[j] = points[zPosIndx[i]] - fVertex;
-         // If not perpendicular to z-axis rescale direction
-         if (fDirection[j].Z() != 0) {
-            fDirection[j] /= fDirection[j].Z();
-         }
-         j++;
-      }
-   }
+   // Vertex point is defined to be the one at second largest z
+   auto fVertex = points[1];
+   // Get the vector pointing from the vertex to the next other beam point
+   auto dir = points[0] - fVertex;
+   if (dir.Z() < 0)
+      dir.SetZ(-dir.Z());
+   fBeam.DefinePattern(fVertex, dir);
 
-   fPatternPar = {fVertex.X(),       fVertex.Y(),       fVertex.Z(),       fDirection[0].X(),
-                  fDirection[0].Y(), fDirection[0].Z(), fDirection[1].X(), fDirection[1].Y(),
-                  fDirection[1].Z(), fDirection[2].X(), fDirection[2].Y(), fDirection[2].Z()};
+   for (int i = 0; i < 2; ++i) {
+      fFragments[i].DefinePattern({fVertex, points[i + 2]});
+   }
 }
 
 /**
- * @brief Get point on line at z
+ * @brief Get point along the beam axis at z
  *
- * Get point on line at z. If the line is parallel to Z, then return then the parameter passed
- * has not defined physical interpretation
+ * The parameter passed has no defined physical interpretation.
  *
- * @param[in] z Location of point at z [mm]
+ * @param[in] z Location of point at parameter.
  */
 AtPatternY::XYZPoint AtPatternY::GetPointAt(double z) const
 {
-   return GetVertex() + z * GetDirection(0);
+   return dynamic_cast<const AtPatternLine *>(&fBeam)->GetPointAt(z);
 }
 
+// charge may be empty, if so do not do a charge weighted fit.
 void AtPatternY::FitPattern(const std::vector<XYZPoint> &points, const std::vector<double> &charge)
 {
-   //------3D Line Regression
-   //----- adapted from: http://fr.scribd.com/doc/31477970/Regressions-et-trajectoires-3D
-   double Q = 0.;
-   double dm2 = 0.;
+   // Based on the example from ROOT documentation https://root.cern.ch/doc/master/line3Dfit_8C_source.html
 
-   double total_charge = 0;
-   bool doChargeWeight = points.size() == charge.size();
+   bool weighted = points.size() == charge.size();
+   LOG(debug) << "Fitting with" << (weighted ? " " : "out ") << "charge weighting";
 
-   for (int i = 0; i < points.size(); ++i) {
-      const auto hitQ = doChargeWeight ? charge[i] : 1;
-      Q += hitQ / 10.;
-      dm2 += pow(DistanceToPattern(points[i]), 2) / hitQ / 10.;
+   // This functor is what we are minimizing. It takes in the model parameters and defines an example
+   // of this pattern based on the model parameters. It then loops through every hit associated with
+   // pattern and calculates the chi2.
+   auto func = [&points, &charge, weighted](const double *par) {
+      AtPatternY pat;
+      pat.DefinePattern(std::vector<double>(par, par + 12));
+      double chi2 = 0;
+      double qTot = 0;
+      for (int i = 0; i < points.size(); ++i) {
+         auto q = weighted ? charge[i] : 1;
+         chi2 += pat.DistanceToPattern(points[i]) * pat.DistanceToPattern(points[i]) * q;
+         qTot += q;
+      }
+
+      return fabs(chi2 / qTot);
+   };
+
+   auto functor = ROOT::Math::Functor(func, 12);
+
+   ROOT::Fit::Fitter fitter;
+   auto iniPar = GetPatternPar();
+
+   LOG(debug) << "Initial parameters";
+   for (int i = 0; i < iniPar.size(); ++i)
+      LOG(debug) << Form("Par_%d", i) << "\t = " << iniPar[i];
+
+   fitter.SetFCN(functor, iniPar.data());
+
+   // Constrain the Z direction to be the same
+   for (int i = 0; i < 3; ++i)
+      fitter.Config().ParSettings(5 + i * 3).Fix();
+
+   for (int i = 0; i < 12; ++i)
+      fitter.Config().ParSettings(i).SetStepSize(.01);
+
+   bool ok = fitter.FitFCN();
+   if (!ok) {
+      LOG(error) << "Failed to fit the pattern, using result of SAC";
+      DefinePattern(iniPar);
+      return;
    }
 
-   fChi2 = (fabs(dm2 / Q));
-   fNFree = points.size() - 6;
+   auto &result = fitter.Result();
+   DefinePattern(result.Parameters());
+   fChi2 = result.MinFcnValue();
+   fNFree = points.size() - result.NPar();
 }

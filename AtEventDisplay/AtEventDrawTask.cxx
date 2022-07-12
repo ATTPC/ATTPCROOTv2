@@ -29,6 +29,7 @@
 #include <TClonesArray.h>    // for TClonesArray
 #include <TColor.h>          // for TColor
 #include <TEveBoxSet.h>      // for TEveBoxSet, TEveBoxSet::kBT_AABox
+#include <TEveElement.h>     // for TEveElement
 #include <TEveLine.h>        // for TEveLine
 #include <TEveManager.h>     // for TEveManager, gEve
 #include <TEvePointSet.h>    // for TEvePointSet
@@ -80,8 +81,8 @@ AtEventDrawTask::AtEventDrawTask()
      fCvsRhoVariance(nullptr), fRhoVariance(nullptr), fCvsPhi(nullptr), fCvsMesh(nullptr), fMesh(nullptr),
      fCvs3DHist(nullptr), f3DHist(nullptr), fCvsRad(nullptr), fRadVSTb(nullptr), fCvsTheta(nullptr), fTheta(nullptr),
      fAtMapPtr(nullptr), fMinZ(0), fMaxZ(1344), fMinX(432), fMaxX(-432), f3DHitStyle(0), fMultiHit(0),
-     fSaveTextData(false), f3DThreshold(0), fRansacUnified(false), fRawEventBranchName("AtRawEvent"),
-     fEventBranchName("AtEventH")
+     fSaveTextData(false), f3DThreshold(0), fRawEventBranchName("AtRawEvent"), fEventBranchName("AtEventH"),
+     fPatternEventBranchName("AtPatternEvent")
 {
 
    Char_t padhistname[256];
@@ -153,14 +154,12 @@ InitStatus AtEventDrawTask::Init()
       fIsRawData = kTRUE;
    }
 
-   fPatternEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtPatternEvent"));
+   fPatternEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fPatternEventBranchName));
    if (fPatternEventArray)
-      LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL << std::endl;
+      LOG(INFO) << cGREEN << "Pattern Event Array Found in branch " << fPatternEventBranchName << "." << cNORMAL
+                << std::endl;
 
    gStyle->SetPalette(55);
-   // fPhiDistr=NULL;
-
-   // Get all of the pads from the display manager
 
    fCvsPadWave = fEventManager->GetCvsPadWave();
    fCvsPadWave->SetName("fCvsPadWave");
@@ -172,7 +171,6 @@ InitStatus AtEventDrawTask::Init()
    DrawPadPlane();
    fCvsPadAll = fEventManager->GetCvsPadAll();
    DrawPadAll();
-   // fCvs3DHist = new TCanvas("glcvs3dhist");
    fCvs3DHist = fEventManager->GetCvs3DHist();
    Draw3DHist();
    fCvsQEvent = new TCanvas("fCvsQEvent", "fCvsQEvent");
@@ -291,10 +289,10 @@ void AtEventDrawTask::DrawRecoHits()
       // Get the line to draw
       AtTrack track = TrackCand.at(i);
 
-      if (track.GetPattern() != nullptr) {
-         fHitLine.push_back(track.GetPattern()->GetEveLine());
+      if (track.GetPattern() != nullptr && track.GetPattern()->GetEveElement() != nullptr) {
+         fHitLine.push_back(track.GetPattern()->GetEveElement());
          fHitLine.back()->SetMainColor(trackColor);
-         fHitLine.back()->SetName(Form("line_%i", (int)fHitLine.size() - 1));
+         fHitLine.back()->SetElementName(Form("line_%i", (int)fHitLine.size() - 1));
       }
 
       std::vector<AtHit> trackHits = track.GetHitArray();
@@ -1176,26 +1174,6 @@ void AtEventDrawTask::SetMultiHit(Int_t hitMax)
 void AtEventDrawTask::SetSaveTextData()
 {
    fSaveTextData = kTRUE;
-}
-
-void AtEventDrawTask::SetLine(double t, std::vector<Double_t> p, double &x, double &y, double &z)
-{
-   // a parameteric line is define from 6 parameters but 4 are independent
-   // x0,y0,z0,z1,y1,z1 which are the coordinates of two points on the line
-   // can choose z0 = 0 if line not parallel to x-y plane and z1 = 1;
-   x = (p[0] + p[1] * t) / 10.0;
-   y = (p[2] + p[3] * t) / 10.0;
-   z = t / 10.0;
-}
-
-void AtEventDrawTask::SetLine6(double t, std::vector<Double_t> p, double &x, double &y, double &z)
-{
-   // a parameteric line is define from 6 parameters but 4 are independent
-   // x0,y0,z0,z1,y1,z1 which are the coordinates of two points on the line
-   // can choose z0 = 0 if line not parallel to x-y plane and z1 = 1;
-   x = (p[0] + p[3] * t) / 10.0;
-   y = (p[1] + p[4] * t) / 10.0;
-   z = (p[2] + p[5] * t) / 10.0;
 }
 
 EColor AtEventDrawTask::GetTrackColor(int i)

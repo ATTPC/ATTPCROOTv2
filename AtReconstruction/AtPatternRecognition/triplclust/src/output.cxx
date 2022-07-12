@@ -9,12 +9,15 @@
 
 #include "output.h"
 
+#include "pointcloud.h" // for Point, PointCloud
 #include <stdint.h>
 
 #include <cstdlib>
-#include <iomanip>
+#include <iostream> // for operator<<, basic_ostream, basic_ostream<>::...
+#include <memory>   // for allocator_traits<>::value_type
 #include <set>
-#include <sstream>
+#include <sstream> // IWYU pragma: keep
+#include <string>  // for char_traits, operator<<, string
 #include <vector>
 
 //-------------------------------------------------------------------

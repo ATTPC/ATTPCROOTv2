@@ -10,7 +10,9 @@
 #ifndef OUTPUT_H
 #define OUTPUT_H
 #include "cluster.h"
-#include "pointcloud.h"
+
+#include <vector>
+class PointCloud;
 
 // saves a PointCloud *cloud* as csv file.
 bool cloud_to_csv(const PointCloud &cloud, const char *fname = "debug_smoothed.csv");

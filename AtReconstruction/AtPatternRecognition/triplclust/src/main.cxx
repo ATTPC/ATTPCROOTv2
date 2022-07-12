@@ -13,11 +13,14 @@
 #include "option.h"
 #include "output.h"
 #include "pointcloud.h"
+#include "triplet.h" // for triplet, generate_triplets
 
 #include <cmath>
+#include <exception> // for exception
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include <string> // for operator+, basic_string, string
 #include <vector>
 
 // usage message

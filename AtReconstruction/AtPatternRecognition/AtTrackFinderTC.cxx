@@ -1,20 +1,18 @@
 #include "AtTrackFinderTC.h"
 
-#include "AtEvent.h"        // for AtEvent
-#include "AtHit.h"          // for AtHit
-#include "AtPatternEvent.h" // for AtPatternEvent
-#include "AtTrack.h"        // for AtTrack
+#include "AtEvent.h"            // for AtEvent
+#include "AtHit.h"              // for AtHit
+#include "AtPatternEvent.h"     // for AtPatternEvent
+#include "AtTrack.h"            // for AtTrack
+#include "AtTrackTransformer.h" // for AtTrackTransformer
 
 #include <Math/Point3D.h> // for PositionVector3D
-
-#include <boost/core/checked_delete.hpp>  // for checked_delete
-#include <boost/smart_ptr/shared_ptr.hpp> // for shared_ptr
 
 #include "dnn.h"
 #include "graph.h"
 #include "option.h"
-#include "output.h"
 #include "pointcloud.h"
+#include "triplet.h" // for triplet, generate_triplets
 
 #include <algorithm>
 #include <cmath>    // for sqrt
@@ -43,7 +41,7 @@ std::unique_ptr<AtPatternEvent> AtPATTERN::AtTrackFinderTC::FindTracks(AtEvent &
    if (cloud_xyz.size() == 0) {
       std::cerr << "[Error] empty cloud " << std::endl;
 
-      return NULL;
+      return nullptr;
    }
 
    if (opt_params.needs_dnn()) {
@@ -55,7 +53,7 @@ std::unique_ptr<AtPatternEvent> AtPATTERN::AtTrackFinderTC::FindTracks(AtEvent &
       if (dnn == 0.0) {
          std::cerr << "AtPATTERN::AtTrackFinderTC - [Error] dnn computed as zero. "
                    << "Suggestion: remove doublets, e.g. with 'sort -u'" << std::endl;
-         return NULL;
+         return nullptr;
       }
    }
 
@@ -78,8 +76,8 @@ std::unique_ptr<AtPatternEvent> AtPATTERN::AtTrackFinderTC::FindTracks(AtEvent &
    // .. and (optionally) by splitting up clusters at gaps > dmax
    if (opt_params.is_dmax()) {
       cluster_group cleaned_up_cluster_group;
-      for (cluster_group::iterator cl = cl_group.begin(); cl != cl_group.end(); ++cl) {
-         max_step(cleaned_up_cluster_group, *cl, cloud_xyz, opt_params.get_dmax(), opt_params.get_m() + 2);
+      for (auto &cl : cl_group) {
+         max_step(cleaned_up_cluster_group, cl, cloud_xyz, opt_params.get_dmax(), opt_params.get_m() + 2);
       }
       cl_group = cleaned_up_cluster_group;
    }
@@ -112,7 +110,8 @@ AtPATTERN::AtTrackFinderTC::clustersToTrack(PointCloud &cloud, const std::vector
 {
 
    std::vector<AtTrack> tracks;
-   std::vector<Point> points = cloud;
+   // std::vector<Point> points = cloud;
+   auto points = cloud;
 
    for (size_t cluster_index = 0; cluster_index < clusters.size(); ++cluster_index) {
 
@@ -123,14 +122,14 @@ AtPATTERN::AtTrackFinderTC::clustersToTrack(PointCloud &cloud, const std::vector
          continue;
 
       // add points
-      for (std::vector<size_t>::const_iterator it = point_indices.begin(); it != point_indices.end(); ++it) {
+      for (auto ind : point_indices) {
 
-         const Point &point = cloud[*it];
+         const Point &point = cloud[ind];
 
          track.AddHit(event.GetHit(point.GetID()));
 
          // remove current point from vector points
-         for (std::vector<Point>::iterator p = points.begin(); p != points.end(); p++) {
+         for (auto p = points.begin(); p != points.end(); p++) {
             if (*p == point) {
                points.erase(p);
                break;

@@ -3,8 +3,12 @@
 
 #include "AtSpaceChargeModel.h"
 
-#include <Math/Point2Dfwd.h>
-#include <Math/Vector2Dfwd.h>
+#include <Rtypes.h> // for Double_t
+
+#include <type_traits> // for add_pointer_t
+
+class AtDigiPar;
+
 /**
  * @brief Space charge model from arbitrary radial E-field,
  *

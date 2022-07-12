@@ -19,6 +19,7 @@
 #include <iterator>
 #include <map>
 #include <memory>
+#include <type_traits> // for add_pointer_t
 #include <vector>
 
 class AtMap;

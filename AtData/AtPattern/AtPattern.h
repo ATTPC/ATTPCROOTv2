@@ -16,6 +16,7 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 class TEveLine;
+class TEveElement;
 class AtHit;
 
 /**
@@ -68,9 +69,18 @@ public:
    virtual void DefinePattern(const std::vector<XYZPoint> &points) = 0;
 
    /**
+    * @brief Define based on parameters.
+    *
+    * Sets up the pattern according to the passed parameters. The internal implementation of
+    * what these parameters mean may change. It is the inverse operation of GetPatternPar()
+    */
+   virtual void DefinePattern(std::vector<double> par) { fPatternPar = std::move(par); }
+
+   /**
     * @brief Closest distance to pattern.
     *
     * @param[in] point Point to get the distance from.
+    * @return distance from point to pattern in mm.
     */
    virtual Double_t DistanceToPattern(const XYZPoint &point) const = 0;
    /**
@@ -106,7 +116,7 @@ public:
     *
     * Calls GetEveLine(double tMin, double tMax, int n) with reasonable defaults for the shape
     */
-   virtual TEveLine *GetEveLine() const = 0;
+   virtual TEveElement *GetEveElement() const = 0;
 
    virtual std::unique_ptr<AtPattern> Clone() const = 0;
 
@@ -118,8 +128,14 @@ public:
    Int_t GetNumPoints() const { return fNumPoints; }
    Double_t GetChi2() const { return fChi2; }
    Int_t GetNFree() const { return fNFree; }
-   std::vector<double> GetPatternPar() const { return fPatternPar; }
-   void SetPatternPar(std::vector<double> par) { fPatternPar = std::move(par); }
+
+   /**
+    * @brief Get list or parameters that describe the pattern.
+    *
+    * It is the inverse operation of DefinePattern(std::vector<double>)
+    */
+   virtual std::vector<double> GetPatternPar() const { return fPatternPar; }
+
    void SetChi2(double chi2) { fChi2 = chi2; }
 
 protected:

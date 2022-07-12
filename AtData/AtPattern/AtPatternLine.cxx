@@ -3,11 +3,13 @@
 #include <FairLogger.h>
 
 #include <Math/Vector3D.h> // for DisplacementVector3D, operator*
+#include <TEveLine.h>
 #include <TMath.h>
 
 #include <algorithm> // for min
 #include <cmath>     // for cos, sin, pow, sqrt, acos, atan, fabs
-class TEveLine;
+
+class TEveElement;
 
 using namespace AtPatterns;
 
@@ -15,7 +17,7 @@ ClassImp(AtPatternLine);
 
 AtPatternLine::AtPatternLine() : AtPattern(2) {}
 
-TEveLine *AtPatternLine::GetEveLine() const
+TEveElement *AtPatternLine::GetEveElement() const
 {
    return AtPattern::GetEveLine(0, 1000, 100);
 }
@@ -54,14 +56,9 @@ void AtPatternLine::DefinePattern(const std::vector<XYZPoint> &points)
 
    auto fPoint = points[0];
    auto fDirection = points[1] - points[0];
+   if (fDirection.Z() != 0)
+      fDirection /= fabs(fDirection.Z());
 
-   // If not perpendicular to z-axis rescale direction
-   /*if (fDirection.Z() != 0) {
-      auto tZ = -fPoint.Z() / fDirection.Z();
-      fPoint += fDirection * tZ;
-
-      fDirection /= fDirection.Z();
-      }*/
    fPatternPar = {fPoint.X(), fPoint.Y(), fPoint.Z(), fDirection.X(), fDirection.Y(), fDirection.Z()};
 }
 
@@ -167,7 +164,6 @@ void AtPatternLine::FitPattern(const std::vector<XYZPoint> &points, const std::v
    // First 3 are point1. Second 3 are point 2
    XYZPoint p1 = {Xm, Ym, Zm};
    XYZPoint p2 = {Xh, Yh, Zh};
-
    DefinePattern({p1, p2});
    fChi2 = (fabs(dm2 / Q));
    fNFree = points.size() - 6;

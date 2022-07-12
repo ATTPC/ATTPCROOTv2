@@ -63,6 +63,7 @@ set(SRCS
   AtPatternRecognition/AtSampleEstimator.cxx
   AtPatternRecognition/AtEstimatorMethods.cxx
   AtRansacTask.cxx
+  AtSampleConsensusTask.cxx
   AtPRAtask.cxx
 
   AtPatternRecognition/triplclust/src/cluster.cxx 
