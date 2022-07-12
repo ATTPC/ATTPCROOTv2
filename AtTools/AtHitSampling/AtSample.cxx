@@ -52,13 +52,15 @@ std::vector<ROOT::Math::XYZPoint> AtSample::SamplePoints(int N)
  */
 int AtSample::getIndexFromCDF(double r, double rmCFD, std::vector<int> vetoed)
 {
+   double probRemoved = 0; // Probability removed up to this point in the CFD
    for (int i = 0; i < fCDF.size(); ++i) {
 
       if (isInVector(i, vetoed)) {
+         probRemoved += getPDFfromCDF(i);
          continue;
       }
 
-      if (fCDF[i] / (1.0 - rmCFD) >= r)
+      if ((fCDF[i] - probRemoved) / (1.0 - rmCFD) >= r)
          return i;
    }
    return fCDF.size() - 1;
@@ -73,7 +75,10 @@ int AtSample::getIndexFromCDF(double r, double rmCFD, std::vector<int> vetoed)
  */
 std::vector<int> AtSample::sampleIndicesFromCDF(int N, std::vector<int> vetoed)
 {
-   double rmProb = 0;
+   // Get the total probablility from the CDF that accounts for the vetoed pads
+   auto probSum = [this](double accum, int ind) { return accum + getPDFfromCDF(ind); };
+   double rmProb = std::accumulate(vetoed.begin(), vetoed.end(), 0.0, probSum);
+
    std::vector<int> sampledInd;
    while (sampledInd.size() < N) {
       auto r = gRandom->Uniform();
@@ -82,10 +87,7 @@ std::vector<int> AtSample::sampleIndicesFromCDF(int N, std::vector<int> vetoed)
       int hitInd = getIndexFromCDF(r, rmProb, vetoed);
 
       if (!fWithReplacement) {
-         if (hitInd == 0)
-            rmProb += fCDF[0];
-         else
-            rmProb += (fCDF[hitInd] - fCDF[hitInd - 1]);
+         rmProb += getPDFfromCDF(hitInd);
          vetoed.push_back(hitInd);
       }
 
@@ -98,6 +100,10 @@ std::vector<int> AtSample::sampleIndicesFromCDF(int N, std::vector<int> vetoed)
    return sampledInd;
 }
 
+double AtSample::getPDFfromCDF(int index)
+{
+   return index == 0 ? fCDF[0] : fCDF[index] - fCDF[index - 1];
+}
 /**
  * Fill the cumulitive distribution function to sample using the marginal PDFs returned by the
  * function PDF(const AtHit &hit) from every entry in the vector fHits.
