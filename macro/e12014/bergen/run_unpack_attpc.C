@@ -1,6 +1,6 @@
 bool reduceFunc(AtRawEvent *evt)
 {
-   return (evt->GetNumPads() > 0) && evt->IsGood();
+   return (evt->GetNumPads() > 300) && evt->IsGood();
 }
 
 // Requires the TPC run number
@@ -107,7 +107,7 @@ void run_unpack_attpc(int runNumber = 210)
    auto numEvents = unpackTask->GetNumEvents();
 
    // numEvents = 1700;//217;
-   numEvents = 100;
+   numEvents = 200;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
