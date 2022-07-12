@@ -16,6 +16,7 @@
 #pragma link C++ class AtPSATBAvg + ;
 #pragma link C++ class AtPSAMax + ;
 #pragma link C++ class AtPSASimple2 + ;
+#pragma link C++ class AtPSAComposite - !;
 
 #pragma link C++ nestedclass;
 #pragma link C++ nestedtypedef;
@@ -41,6 +42,7 @@
 #pragma link C++ class AtPSAtask + ;
 #pragma link C++ class AtPRAtask + ;
 #pragma link C++ class AtRansacTask + ;
+#pragma link C++ class AtSampleConsensusTask + ;
 #pragma link C++ class AtDataReductionTask + ;
 #pragma link C++ class AtSpaceChargeCorrectionTask + ;
 #pragma link C++ class AtFilterTask + ;

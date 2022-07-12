@@ -20,8 +20,10 @@
 #include <TRandom.h>
 #include <TString.h>
 
+#include <algorithm> // for clamp
 #include <cmath>
 #include <iostream>
+#include <limits> // for numeric_limits
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

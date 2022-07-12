@@ -8,9 +8,9 @@
 #ifndef ATFITTERTASK
 #define ATFITTERTASK
 
-#include <Rtypes.h>
-// FAIRROOT classes
 #include <FairTask.h>
+
+#include <Rtypes.h>
 
 #include <cstddef>
 #include <string>

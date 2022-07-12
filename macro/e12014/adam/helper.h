@@ -18,7 +18,7 @@
 #include "../build/include/AtAuxPad.h"
 #include "../build/include/AtEvent.h"
 #include "../build/include/AtPad.h"
-#include "../build/include/AtRansac.h"
+#include "../build/include/AtPatternEvent.h"
 #include "../build/include/AtRawEvent.h"
 #include "../build/include/AtTpcMap.h"
 #endif
@@ -26,7 +26,7 @@
 // "public functions"
 void loadRun(TString filePath, TString rawEventBranchName = "AtRawEvent",
              TString rawEventFilteredBranchName = "AtRawEventFiltered", TString eventBranchName = "AtEventFiltered",
-             TString ransacBranchName = "AtRansac");
+             TString patternBranchName = "AtPatternEvent");
 bool loadEvent(ULong64_t eventNumber);
 bool loadPad(int padNum);
 bool nextEvent();
@@ -35,7 +35,7 @@ bool nextEvent();
 AtRawEvent *rawEventPtr;
 AtRawEvent *rawEventFilteredPtr;
 AtEvent *eventPtr;
-AtRANSACN::AtRansac *ransacPtr;
+AtPatternEvent *patternEventPtr;
 AtTpcMap *tpcMap = nullptr;
 
 /***** "Private" variables *******/
@@ -44,12 +44,12 @@ TTreeReader *reader = nullptr;
 TTreeReaderValue<TClonesArray> *rawEventReader = nullptr;
 TTreeReaderValue<TClonesArray> *eventFilteredReader = nullptr;
 TTreeReaderValue<TClonesArray> *eventReader = nullptr;
-TTreeReaderValue<TClonesArray> *ransacReader = nullptr;
+TTreeReaderValue<TClonesArray> *patternEventReader = nullptr;
 
 TH1F *hTrace = new TH1F("trace", "Trace", 512, 0, 511);
 
 void loadRun(TString filePath, TString rawEventBranchName, TString rawEventFilteredBranchName, TString eventBranchName,
-             TString ransacBranchName)
+             TString patternEventBranchName)
 {
    if (tpcMap == nullptr) {
       tpcMap = new AtTpcMap();
@@ -85,12 +85,12 @@ void loadRun(TString filePath, TString rawEventBranchName, TString rawEventFilte
    else
       LOG(error) << "Could not find filtered raw event branch " << rawEventFilteredBranchName;
 
-   if (ransacReader != nullptr)
-      delete ransacReader;
-   if (tpcTree->GetBranch(ransacBranchName) != nullptr)
-      ransacReader = new TTreeReaderValue<TClonesArray>(*reader, ransacBranchName);
+   if (patternEventReader != nullptr)
+      delete patternEventReader;
+   if (tpcTree->GetBranch(patternEventBranchName) != nullptr)
+      patternEventReader = new TTreeReaderValue<TClonesArray>(*reader, patternEventBranchName);
    else
-      LOG(error) << "Could not find RANSAC branch " << ransacBranchName;
+      LOG(error) << "Could not find PATTERNEVENT branch " << patternEventBranchName;
    // loadEvent(0);
 }
 
@@ -106,8 +106,8 @@ bool loadEvent(ULong64_t eventNumber)
    eventPtr = dynamic_cast<AtEvent *>((*eventReader)->At(0));
    if (eventFilteredReader != nullptr)
       rawEventFilteredPtr = dynamic_cast<AtRawEvent *>((*eventFilteredReader)->At(0));
-   if (ransacReader != nullptr)
-      ransacPtr = dynamic_cast<AtRANSACN::AtRansac *>((*ransacReader)->At(0));
+   if (patternEventReader != nullptr)
+      patternEventPtr = dynamic_cast<AtPatternEvent *>((*patternEventReader)->At(0));
 
    return true;
 }
@@ -132,8 +132,8 @@ bool nextEvent()
    eventPtr = dynamic_cast<AtEvent *>((*eventReader)->At(0));
    if (eventFilteredReader != nullptr)
       rawEventFilteredPtr = dynamic_cast<AtRawEvent *>((*eventFilteredReader)->At(0));
-   if (ransacReader != nullptr)
-      ransacPtr = dynamic_cast<AtRANSACN::AtRansac *>((*ransacReader)->At(0));
+   if (patternEventReader != nullptr)
+      patternEventPtr = dynamic_cast<AtPatternEvent *>((*patternEventReader)->At(0));
 
    return ret;
 }

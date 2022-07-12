@@ -107,7 +107,7 @@ private:
    Double_t fPx, fPy, fPz;     // Momentum components [GeV] per nucleon
    Double32_t fR, fz, fOffset; // beam Spot radius [cm], z source, y source
    Double_t fVx, fVy, fVz;     // Vertex coordinates [cm]
-   Double_t fTheta;            // Maximum angle [rad]
+   Double_t fTheta{0};         // Maximum angle [rad]
    FairIon *fIon;              // Pointer to the FairIon to be generated
    Int_t fQ;                   // Electric charge [e]
    Int_t fNomEner{};

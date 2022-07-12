@@ -9,7 +9,7 @@
 
 #ifndef DNN_H
 #define DNN_H
-#include "pointcloud.h"
+class PointCloud;
 
 // compute first quartile of the mean squared distance from the points
 double first_quartile(const PointCloud &cloud);

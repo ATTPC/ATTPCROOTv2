@@ -9,7 +9,11 @@
 
 #include "dnn.h"
 
+#include "pointcloud.h" // for PointCloud
+
 #include <algorithm>
+#include <cstddef> // for size_t
+#include <memory>  // for allocator_traits<>::value_type
 #include <numeric>
 #include <vector>
 

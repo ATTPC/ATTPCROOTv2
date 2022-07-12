@@ -11,6 +11,7 @@
 
 #include <sstream>
 #include <stdexcept>
+#include <string>
 
 //-------------------------------------------------------------------
 // converts *str* to double.

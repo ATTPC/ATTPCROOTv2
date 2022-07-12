@@ -7,13 +7,10 @@
 #include <Math/Point3D.h>  // for Cartesian3D, operator-, PositionVector3D
 #include <Math/Vector3D.h> // for DisplacementVector3D
 #include <TMath.h>
-#include <TMatrixDSymfwd.h> // for TMatrixDSym
-#include <TMatrixTSym.h>    // for TMatrixTSym
 
 #include <algorithm>
 #include <cmath>    // for sqrt
 #include <iostream> // for operator<<, basic_ostream::operator<<
-#include <iterator> // for back_insert_iterator, back_inserter
 #include <memory>   // for shared_ptr, __shared_ptr_access, __sha...
 #include <utility>  // for pair
 

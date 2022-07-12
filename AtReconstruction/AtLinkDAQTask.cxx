@@ -7,6 +7,7 @@
 #include <FairRootFileSink.h>
 #include <FairRootManager.h>
 #include <FairRunAna.h>
+#include <FairSink.h> // for FairSink
 #include <FairTask.h>
 
 #include <TChain.h>

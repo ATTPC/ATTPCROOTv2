@@ -9,13 +9,11 @@
 
 #ifndef POINTCLOUD_H
 #define POINTCLOUD_H
+#include <algorithm>
 #include <cstddef>
 #include <fstream>
-#include <iostream>
-#include <ostream>
 #include <set>
 #include <vector>
-
 // 3D point class.
 class Point {
 public:

@@ -13,7 +13,7 @@
 
 #include "pointcloud.h"
 
-#include <limits>
+#include <cstddef>
 #include <vector>
 
 // triplet of three points

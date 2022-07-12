@@ -18,6 +18,7 @@
 #include <utility>
 #include <vector>
 
+class AtDigiPar;
 using XYZPoint = ROOT::Math::XYZPoint;
 
 ClassImp(AtSpaceChargeCorrectionTask);

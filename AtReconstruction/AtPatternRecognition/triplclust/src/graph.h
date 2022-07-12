@@ -10,7 +10,7 @@
 
 #ifndef MSD_H
 #define MSD_H
-#include "pointcloud.h"
+class PointCloud;
 
 #include <cstddef>
 #include <vector>

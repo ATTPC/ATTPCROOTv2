@@ -35,6 +35,7 @@ class TH2Poly;         // lines 41-41
 class TH3F;            // lines 42-42
 class TMemberInspector;
 class TPaletteAxis; // lines 43-43
+class TEveElement;
 
 class AtEventDrawTask : public FairTask {
 protected:
@@ -45,6 +46,7 @@ protected:
    TString fRawEventBranchName;
    TString fEventBranchName;
    TString fCorrectedEventBranchName;
+   TString fPatternEventBranchName;
 
    TClonesArray *fEventArray;
    TClonesArray *fCorrectedEventArray{};
@@ -133,7 +135,6 @@ protected:
    Float_t f3DThreshold;
 
    Bool_t fIsRawData;
-   Bool_t fRansacUnified;
    AtHit const *fIniHit;
    AtHit const *fIniHitRansac;
 
@@ -148,7 +149,7 @@ protected:
    */
    std::vector<TEvePointSet *> fHitSetTFHC;  // for TrackFinderHC
    std::vector<TEveBoxSet *> fHitClusterSet; // Track clusterization
-   std::vector<TEveLine *> fHitLine;         // Track line
+   std::vector<TEveElement *> fHitLine;      // Track line
 
    TEveRGBAPalette *fRGBAPalette;
 
@@ -170,16 +171,13 @@ public:
    void Set3DHitStyleBar();
    void Set3DHitStyleBox();
    void SetSaveTextData();
-   void SetLine(double t, std::vector<Double_t> p, double &x, double &y, double &z);
-   void SetLine6(double t, std::vector<Double_t> p, double &x, double &y, double &z);
    void SetRawEventBranch(TString branchName);
    void SetEventBranch(TString branchName);
    void SetCorrectedEventBranch(TString branchName) { fCorrectedEventBranchName = branchName; }
-
+   void SetPatternEventBranch(TString branchName) { fPatternEventBranchName = branchName; }
    static void SelectPad(const char *rawevt);
    void DrawWave(Int_t PadNum);
    void SetMultiHit(Int_t hitMax);
-   void SetUnifiedRansac(Bool_t val) { fRansacUnified = val; };
 
 private:
    void DrawPadPlane();

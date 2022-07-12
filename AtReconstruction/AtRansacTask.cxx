@@ -115,7 +115,7 @@ void AtRansacTask::Exec(Option_t *opt)
 
    auto sampleMethod = static_cast<RandomSample::SampleMethod>(fRandSamplMode);
    auto patternType = AtPatterns::PatternType::kLine;
-   auto estimator = SampleConsensus::Estimators::kRANSAC;
+   auto estimator = SampleConsensus::Estimators::kWRANSAC;
    if (fRANSACAlg == 2)
       estimator = SampleConsensus::Estimators::kMLESAC;
    if (fRANSACAlg == 3)
