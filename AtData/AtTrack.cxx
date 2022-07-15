@@ -52,6 +52,20 @@ XYZPoint AtTrack::GetLastPoint()
    return maxPos;
 }
 
+XYZPoint AtTrack::GetFirstPoint()
+{
+   Double_t minR = 999.;
+   XYZPoint minPos;
+   for (auto &nHit : fHitArray) {
+      auto temp = nHit.GetPosition();
+      if (temp.Rho() < minR) {
+         minR = temp.Rho();
+         minPos = temp;
+      }
+   }
+   return minPos;
+}
+
 Double_t AtTrack::GetMeanTime()
 {
    Double_t meanTime = 0.0;

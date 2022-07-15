@@ -109,6 +109,7 @@ public:
 
    Double_t GetGeoQEnergy();
    XYZPoint GetLastPoint();
+   XYZPoint GetFirstPoint();
    static Double_t GetLinearRange(const XYZPoint &vertex, const XYZPoint &maxPos);
 
    void SortHitArrayTime();

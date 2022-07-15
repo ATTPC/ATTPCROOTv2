@@ -21,6 +21,7 @@ TEveElement *AtPatternLine::GetEveElement() const
 {
    return AtPattern::GetEveLine(0, 1000, 100);
 }
+
 /**
  * @brief Get the parameter closes to compPoint.
  *
@@ -167,4 +168,5 @@ void AtPatternLine::FitPattern(const std::vector<XYZPoint> &points, const std::v
    DefinePattern({p1, p2});
    fChi2 = (fabs(dm2 / Q));
    fNFree = points.size() - 6;
+   fTotCharge = Q*10.;
 }

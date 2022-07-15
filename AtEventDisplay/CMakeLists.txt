@@ -21,12 +21,13 @@ Set(DEPENDENCIES
   ROOT::Eve
   ROOT::Core
   ROOT::HistPainter
-  
+
   ATTPCROOT::AtData
   ATTPCROOT::AtMap
   ATTPCROOT::AtS800
+  ATTPCROOT::AtAnalysis
   )
-  
+
 generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}

@@ -18,6 +18,7 @@
 #include "AtPatternEvent.h" // for AtPatternEvent
 #include "AtRawEvent.h"     // for AtRawEvent, AuxPadMap
 #include "AtTrack.h"        // for AtTrack, operator<<
+#include "AtFindVertex.h"   //for vertex
 
 #include <FairLogger.h>      // for Logger, LOG
 #include <FairRootManager.h> // for FairRootManager
@@ -82,7 +83,7 @@ AtEventDrawTask::AtEventDrawTask()
      fCvs3DHist(nullptr), f3DHist(nullptr), fCvsRad(nullptr), fRadVSTb(nullptr), fCvsTheta(nullptr), fTheta(nullptr),
      fAtMapPtr(nullptr), fMinZ(0), fMaxZ(1344), fMinX(432), fMaxX(-432), f3DHitStyle(0), fMultiHit(0),
      fSaveTextData(false), f3DThreshold(0), fRawEventBranchName("AtRawEvent"), fEventBranchName("AtEventH"),
-     fPatternEventBranchName("AtPatternEvent")
+     fPatternEventBranchName("AtPatternEvent"), fVertexSize(1.5), fVertexStyle(kFullCircle)
 {
 
    Char_t padhistname[256];
@@ -116,6 +117,8 @@ AtEventDrawTask::AtEventDrawTask()
    fIniHit = new AtHit();
    fIniHitRansac = new AtHit();
    fTrackNum = 0;
+
+   fMinTracksPerVertex = 1;
 
    fRGBAPalette = new TEveRGBAPalette(0, 4096);
 }
@@ -281,6 +284,21 @@ void AtEventDrawTask::DrawRecoHits()
 
    auto TrackCand = patternEvent->GetTrackCand();
    fHitLine.clear();
+   fVertex.clear();
+
+   AtFindVertex findVtx(12);
+   // findVtx.FindVertexMultipleLines(TrackCand, 2);
+   findVtx.FindVertex(TrackCand,fMinTracksPerVertex);
+   std::vector<tracksFromVertex> tv;
+   tv = findVtx.GetTracksVertex();
+
+   for (size_t i = 0; i < tv.size(); i++) {
+      fVertex.push_back(new TEvePointSet(Form("Vertex_%d", i), 0, TEvePointSelectorConsumer::kTVT_XYZ));
+      fVertex[i]->SetMarkerColor(kViolet);
+      fVertex[i]->SetMarkerSize(fVertexSize);
+      fVertex[i]->SetMarkerStyle(fVertexStyle);
+      fVertex[i]->SetNextPoint(tv.at(i).vertex.X()/10.,tv.at(i).vertex.Y()/10.,tv.at(i).vertex.Z()/10.);
+   }
 
    for (Int_t i = 0; i < TrackCand.size(); i++) {
 
@@ -356,6 +374,8 @@ void AtEventDrawTask::DrawRecoHits()
    for (auto &elem : fHitClusterSet)
       gEve->AddElement(elem);
    for (auto &elem : fHitLine)
+      gEve->AddElement(elem);
+   for (auto &elem : fVertex)
       gEve->AddElement(elem);
 }
 
@@ -598,9 +618,12 @@ void AtEventDrawTask::Reset()
             gEve->RemoveElement(elem, fEventManager);
          for (auto elem : fHitLine)
             gEve->RemoveElement(elem, fEventManager);
+         for (auto elem : fVertex)
+            gEve->RemoveElement(elem, fEventManager);
          fHitClusterSet.clear();
          fHitSetTFHC.clear();
          fHitLine.clear();
+         fVertex.clear();
       }
 
    } // Draw Minimization

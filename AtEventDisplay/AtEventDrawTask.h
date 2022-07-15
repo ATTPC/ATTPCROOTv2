@@ -71,6 +71,8 @@ protected:
    Color_t fHitColor;
    Size_t fHitSize;
    Style_t fHitStyle;
+   Size_t fVertexSize;
+   Size_t fVertexStyle;
 
    TCanvas *fCvsPadPlane;
    TH2Poly *fPadPlane;
@@ -142,6 +144,8 @@ protected:
    std::vector<std::unique_ptr<TEveLine>> fPatternLines;
 
    Int_t fTrackNum;
+
+   Int_t fMinTracksPerVertex;
    /*
       std::vector<std::unique_ptr<TEvePointSet>> fHitSetTFHC;  // for TrackFinderHC
       std::vector<std::unique_ptr<TEveBoxSet>> fHitClusterSet; // Track clusterization
@@ -149,7 +153,8 @@ protected:
    */
    std::vector<TEvePointSet *> fHitSetTFHC;  // for TrackFinderHC
    std::vector<TEveBoxSet *> fHitClusterSet; // Track clusterization
-   std::vector<TEveElement *> fHitLine;      // Track line
+   std::vector<TEveLine *> fHitLine;         // Track line
+   std::vector<TEvePointSet *> fVertex;     // Vertex line
 
    TEveRGBAPalette *fRGBAPalette;
 
@@ -174,7 +179,12 @@ public:
    void SetRawEventBranch(TString branchName);
    void SetEventBranch(TString branchName);
    void SetCorrectedEventBranch(TString branchName) { fCorrectedEventBranchName = branchName; }
+<<<<<<< HEAD
    void SetPatternEventBranch(TString branchName) { fPatternEventBranchName = branchName; }
+=======
+   void SetMinTracksPerVertex(Int_t val) { fMinTracksPerVertex = val; } //fVertexMod=0 one track vertex , fVertexMod=1 multi trakcs vertex
+
+>>>>>>> modif to run the d,2He simu, digi and analysis
    static void SelectPad(const char *rawevt);
    void DrawWave(Int_t PadNum);
    void SetMultiHit(Int_t hitMax);

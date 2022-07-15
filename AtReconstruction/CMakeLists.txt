@@ -26,7 +26,7 @@ Set(DEPENDENCIES
   ATTPCROOT::AtSimulationData
   ATTPCROOT::AtData
   ATTPCROOT::AtTools
-  
+
   ROOT::Spectrum
   ROOT::Core
 
@@ -46,7 +46,6 @@ set(SRCS
   AtPulseAnalyzer/AtPSATBAvg.cxx
   AtPulseAnalyzer/AtCalibration.cxx
   AtPulseAnalyzer/AtPSADeconv.cxx
-  
   AtFilter/AtFilter.cxx
   AtFilter/AtFilterSubtraction.cxx
   AtFilter/AtFilterDivide.cxx
@@ -57,7 +56,6 @@ set(SRCS
   AtFilter/AtRemovePulser.cxx
   AtFilter/AtFilterFPN.cxx
   AtFilter/AtSCACorrect.cxx
-  
   AtPSAtask.cxx
   AtFilterTask.cxx
   AtAuxFilterTask.cxx
@@ -65,7 +63,7 @@ set(SRCS
   AtSpaceChargeCorrectionTask.cxx
   AtHDF5ReadTask.cxx
   AtHDF5WriteTask.cxx
-  
+
   AtPatternRecognition/AtPRA.cxx
   AtPatternRecognition/AtSampleConsensus.cxx
   AtPatternRecognition/AtSampleEstimator.cxx
@@ -74,26 +72,26 @@ set(SRCS
   AtSampleConsensusTask.cxx
   AtPRAtask.cxx
 
-  AtPatternRecognition/triplclust/src/cluster.cxx 
-  AtPatternRecognition/triplclust/src/triplet.cxx 
-  AtPatternRecognition/triplclust/src/main.cxx 
+  AtPatternRecognition/triplclust/src/cluster.cxx
+  AtPatternRecognition/triplclust/src/triplet.cxx
+  AtPatternRecognition/triplclust/src/main.cxx
   AtPatternRecognition/triplclust/src/dnn.cxx
-  AtPatternRecognition/triplclust/src/hclust/fastcluster.cxx 
-  AtPatternRecognition/triplclust/src/kdtree/kdtree.cxx 
-  AtPatternRecognition/triplclust/src/pointcloud.cxx 
-  AtPatternRecognition/triplclust/src/output.cxx 
-  AtPatternRecognition/triplclust/src/option.cxx 
-  AtPatternRecognition/triplclust/src/util.cxx 
+  AtPatternRecognition/triplclust/src/hclust/fastcluster.cxx
+  AtPatternRecognition/triplclust/src/kdtree/kdtree.cxx
+  AtPatternRecognition/triplclust/src/pointcloud.cxx
+  AtPatternRecognition/triplclust/src/output.cxx
+  AtPatternRecognition/triplclust/src/option.cxx
+  AtPatternRecognition/triplclust/src/util.cxx
   AtPatternRecognition/triplclust/src/graph.cxx
   AtPatternRecognition/AtTrackFinderTC.cxx
-  
+
   )
 
 ### Add additional sources and libraries if we found certain modules ###
 
 # Adding libraries that depend on PCL
 if(PCL_FOUND)
-  set(SRCS ${SRCS} 
+  set(SRCS ${SRCS}
     #AtPatternRecognition/AtTrackFinderHC.cxx
     #AtPatternRecognition/trackfinder/smoothenCloud.cxx
     #AtPatternRecognition/trackfinder/msd.cxx
@@ -104,7 +102,7 @@ if(PCL_FOUND)
   set(DEPENDENCIES ${DEPENDENCIES}
     ${PCL_LIBRARIES}
     )
-  
+
   # Add include directory and link directory if no targets
   if(NOT TARGET pcl_common)
     message("No set targets for PCL!")
@@ -114,7 +112,7 @@ if(PCL_FOUND)
     set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES}
       ${PCL_INCLUDE_DIRS}
       )
-    
+
   endif()
 endif()
 

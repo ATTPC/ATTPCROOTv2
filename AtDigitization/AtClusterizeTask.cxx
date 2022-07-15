@@ -79,6 +79,7 @@ InitStatus AtClusterizeTask::Init()
 
    fSimulatedPointArray = std::make_unique<TClonesArray>("AtSimulatedPoint");
    ioman->Register("AtSimulatedPoint", "cbmsim", fSimulatedPointArray.get(), fIsPersistent);
+   ioman->Register("AtTpcPoint", "cbmsim",fMCPointArray, kTRUE); //dirty way to get sim data points
 
    getParameters();
 

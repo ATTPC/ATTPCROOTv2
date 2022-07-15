@@ -1,13 +1,21 @@
-void runsim_d2He(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
+#include <stdio.h>      /* printf, NULL */
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
+
+void runsim_d2He(Int_t runNumber=0, Double_t ExEje=0, Int_t nEvents = 10, TString mcEngine = "TGeant4")
 {
+
+  srand( (unsigned)time( NULL ) );
+  UInt_t seed=(float) rand()/RAND_MAX * 100000;
+  gRandom->SetSeed(seed);
 
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile ="outputFiles/attpcsim_d2He.root";
+  TString outFile = Form("/mnt/analysis/e18008/rootAna/giraud/simulation/g4/attpcsim_d2He_run%d_Ex%d_testUpdates.root",runNumber,(Int_t)ExEje);
 
   // Parameter file name
-  TString parFile="outputFiles/attpcpar_d2He.root";
+  TString parFile = Form("/mnt/analysis/e18008/rootAna/giraud/simulation/g4/attpcpar_d2He_run%d_Ex%d_testUpdates.root",runNumber,(Int_t)ExEje);
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -16,8 +24,7 @@ void runsim_d2He(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 
   //gSystem->Load("libAtGen.so");
 
-  ATVertexPropagator* vertex_prop = new ATVertexPropagator();
-
+  // AtVertexPropagator* vertex_prop = new AtVertexPropagator();
 
   // -----   Create simulation run   ----------------------------------------
   FairRunSim* run = new FairRunSim();
@@ -44,7 +51,7 @@ void runsim_d2He(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   run->AddModule(pipe);*/
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("ATTPC_d2He_07atm.root");
+  ATTPC->SetGeometryFileName("ATTPC_v1.1.root");
   //ATTPC->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
 
@@ -73,10 +80,11 @@ void runsim_d2He(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   Int_t a = 14; // Mass number
   Int_t q = 0;   // Charge State
   Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
-  Double_t kBeam = 115.;
+  Double_t kBeam = 105.16;
   Double_t BExcEner = 0.0;
   Double_t Bmass = 14.008596359*931.494/1000.0; //Mass in GeV
   Double_t NomEnergy = 0.0858025; //Nominal Energy of the beam: Only used for cross section calculation (Tracking energy is determined with momentum). TODO: Change this to the energy after the IC
+//Double_t NomEnergy = 100.;
   //Double_t kBeam = 1000.*(sqrt(Bmass*Bmass+pow(pz*a,2))-Bmass)/a;
 
   Double_t px = 0.000/a;
@@ -85,24 +93,27 @@ void runsim_d2He(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   Double_t pz = sqrt( pow(kBeam * a / 1000.0 + Bmass,2) - pow(Bmass,2) )/a;  // Z-Momentum / per nucleon!!!!!!
 
 //set the following three variables to zero if do not want beam spot
-  Double_t fwhmFocus = 0.5;//cm, FWHM of the gaussian distribution at beam spot
-  Double_t angularDiv= 10.E-3;//rad, angular divergence of the beam
+  Double_t fwhmFocus = 0.5;//0.5//cm, FWHM of the gaussian distribution at beam spot
+  Double_t angularDiv= 17.E-3;//ex:1.E-3 (rad), angular divergence of the beam
   Double_t zFocus=50.;//cm, z position (beam direction) of the beam spot
-  Double_t rHole=2.;//cm, hole radius in the pad plane
+  Double_t rHole=1.5;//cm, hole radius in the pad plane (entrance)
+  Double_t momAcc=0.0025;//percentage, beam momentum acceptance
+  Double_t beamAx=-0.00915252*TMath::RadToDeg();//deg, beam angle x direction
+  Double_t beamAy=-0.00221027*TMath::RadToDeg();//deg, beam angle y direction
+  Double_t beamOx=-2.24859e-1;//cm, beam offset at entrance window x direction
+  Double_t beamOy=+0.988841e-1;//cm, beam offset at entrance window y direction
 
-  //ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,kBeam);
-  //kBeam was set to -1 because the random energy loss is not working for fast beams. In our case this eloss is negligible
-  ATTPCIonGenerator* ionGen = new ATTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,-1);
-  ionGen->SetBeamEmittance(fwhmFocus,angularDiv,zFocus,rHole);
-  //ionGen->SetSpotRadius(0,-100,0);
+  TString sAta = "ataBeam.root";
+  TString sBta = "btaBeam.root";
+  // AtTPCIonGenerator* ionGen = new AtTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,-1);
+  AtTPCIonGenerator* ionGen = new AtTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,-1,sAta,sBta);
+  // AtTPCIonGenerator* ionGen = new AtTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,-1);
+  ionGen->SetBeamEmittance(fwhmFocus,angularDiv,zFocus,rHole,momAcc,beamAx,beamAy,beamOx,beamOy);//,sAta,sBta
+  // ionGen->SetBeamEmittance(fwhmFocus,angularDiv,zFocus,rHole,momAcc,beamAx,beamAy,beamOx,beamOy,sAta,sBta);
+  // ionGen->SetBeamEmittance(fwhmFocus,angularDiv,zFocus,rHole);
+
   // add the ion generator
-
   primGen->AddGenerator(ionGen);
-
-  //primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track added to the Primary Generator
-  // primGen->SetTarget(30,0);
-
-
 
 
   // Variables for 2-Body kinematics reaction
@@ -135,7 +146,7 @@ void runsim_d2He(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   ExE.push_back(0);
 
   // ---- Target ----
-  Zp.push_back(1); // p
+  Zp.push_back(1); //
   Ap.push_back(2); //
   Qp.push_back(0); //
   Pxp.push_back(0.0);
@@ -152,7 +163,7 @@ void runsim_d2He(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   Pyp.push_back(0.0);
   Pzp.push_back(0.0);
   Mass.push_back(14.00307400443);//
-  ExE.push_back(0.0);
+  ExE.push_back(ExEje);
 
 
   // ---- Recoil -----
@@ -187,12 +198,12 @@ void runsim_d2He(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 
   Double_t ThetaMinCMS = 0.0;
   Double_t ThetaMaxCMS = 180.0;
-  Int_t N_cross = 1760;//1760 6560
+  Int_t N_cross = 630;//wrapAll
   std::vector<Double_t> Arr1(N_cross), Arr2(N_cross), Arr3(N_cross);
   Double_t col1, col2, col3;
 
   //lee la seccion eficaz desde una tabla
-  string filename= "0to5_14O.dat"; //all2_14O.dat//0to5_14O.dat
+  string filename= Form("cs_accba/dl0_dj1/wrapAll2_dl0dj1_%dMeV.dat",(Int_t)ExEje);
   ifstream  inputfile;
   inputfile. open(filename.c_str());
   if(inputfile.fail() ){
@@ -209,8 +220,7 @@ void runsim_d2He(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   inputfile.close();
 
 
-
-  ATTPC_d2He* d2He = new ATTPC_d2He("d_2He",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE, &Arr1, &Arr2, &Arr3, N_cross);
+  AtTPC_d2He* d2He = new AtTPC_d2He("d_2He",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE, &Arr1, &Arr2, &Arr3, N_cross);
   primGen->AddGenerator(d2He);
 
 
@@ -227,7 +237,7 @@ void runsim_d2He(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   Double_t massDecayB;
   std::vector<Double_t> SepEne;
 
-  Int_t TotDecayCases=4;//the number of decay channel (case) to be considered
+  Int_t TotDecayCases=1;//the number of decay channel (case) to be considered
 
   zDecay.resize(TotDecayCases);
   aDecay.resize(TotDecayCases);
@@ -243,6 +253,7 @@ void runsim_d2He(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   // ---- Products ----
   //as many first indexes (zDecay.at(0)...) as the value TotDecayCases
   //Case 1
+
   SepEne.push_back(7.55056);
   zDecay.at(0).push_back(6); // 13C
   aDecay.at(0).push_back(13);
@@ -254,57 +265,142 @@ void runsim_d2He(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   qDecay.at(0).push_back(0);
   massDecay.at(0).push_back(1.0078250322);
 
+/*
   //Case 2
   SepEne.push_back(10.55338);
-  zDecay.at(1).push_back(7); // 13N
-  aDecay.at(1).push_back(13);
-  qDecay.at(1).push_back(0);
-  massDecay.at(1).push_back(13.005738609);
+  zDecay.at(0).push_back(7); // 13N
+  aDecay.at(0).push_back(13);
+  qDecay.at(0).push_back(0);
+  massDecay.at(0).push_back(13.005738609);
 
-  zDecay.at(1).push_back(0); //neutron
-  aDecay.at(1).push_back(1);
-  qDecay.at(1).push_back(0);
-  massDecay.at(1).push_back(1.0086649158);
+  zDecay.at(0).push_back(0); //neutron
+  aDecay.at(0).push_back(1);
+  qDecay.at(0).push_back(0);
+  massDecay.at(0).push_back(1.0086649158);
+*/
 
+/*
   //Case 3
   SepEne.push_back(10.262305);//obtained by mass excess difference
-  zDecay.at(2).push_back(6); // 12C
-  aDecay.at(2).push_back(12);
-  qDecay.at(2).push_back(0);
-  massDecay.at(2).push_back(12.0);
+  zDecay.at(0).push_back(6); // 12C
+  aDecay.at(0).push_back(12);
+  qDecay.at(0).push_back(0);
+  massDecay.at(0).push_back(12.0);
 
-  zDecay.at(2).push_back(1); //d
-  aDecay.at(2).push_back(2);
-  qDecay.at(2).push_back(0);
-  massDecay.at(2).push_back(2.01410177812);
+  zDecay.at(0).push_back(1); //d
+  aDecay.at(0).push_back(2);
+  qDecay.at(0).push_back(0);
+  massDecay.at(0).push_back(2.01410177812);
+*/
 
+/*
   //Case 4
   SepEne.push_back(12.496871);//obtained by mass excess difference
-  zDecay.at(3).push_back(6); // 12C
-  aDecay.at(3).push_back(12);
-  qDecay.at(3).push_back(0);
-  massDecay.at(3).push_back(12.0);
+  zDecay.at(0).push_back(6); // 12C
+  aDecay.at(0).push_back(12);
+  qDecay.at(0).push_back(0);
+  massDecay.at(0).push_back(12.0);
 
-  zDecay.at(3).push_back(1); //proton
-  aDecay.at(3).push_back(1);
-  qDecay.at(3).push_back(0);
-  massDecay.at(3).push_back(1.0078250322);
+  zDecay.at(0).push_back(1); //proton
+  aDecay.at(0).push_back(1);
+  qDecay.at(0).push_back(0);
+  massDecay.at(0).push_back(1.0078250322);
 
-  zDecay.at(3).push_back(0); //neutron
-  aDecay.at(3).push_back(1);
-  qDecay.at(3).push_back(0);
-  massDecay.at(3).push_back(1.0086649158);
+  zDecay.at(0).push_back(0); //neutron
+  aDecay.at(0).push_back(1);
+  qDecay.at(0).push_back(0);
+  massDecay.at(0).push_back(1.0086649158);
+*/
 
-  ATTPCIonDecay* decay_14N = new ATTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay,
-    zB, aB, massDecayB, &SepEne);
 
-    //primGen->AddGenerator(decay_14N);
+  //Case 5
+/*  SepEne.push_back(11.6121);//obtained by mass excess difference
+  zDecay.at(0).push_back(5); // 10B
+  aDecay.at(0).push_back(10);
+  qDecay.at(0).push_back(0);
+  massDecay.at(0).push_back(10.012936862);
 
-    // ------------------------------------------------------------------------
+  zDecay.at(0).push_back(2); //alpha
+  aDecay.at(0).push_back(4);
+  qDecay.at(0).push_back(0);
+  massDecay.at(0).push_back(4.00260325413);
+*/
+
+  // ATTPCIonDecay* decay_14N = new ATTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay,
+  //   zB, aB, massDecayB, &SepEne);
+
+//    primGen->AddGenerator(decay_14N);
+
+//-----------------------------------------------------------------------------
+//custom track generator
+/*
+  std::vector<Int_t> Zrandp;
+  std::vector<Int_t> Arandp;
+  std::vector<Int_t> Qrandp;
+  std::vector<Double_t> Mrandp;
+  std::vector<Double_t> Ep;
+  std::vector<Double_t> theta;
+  std::vector<Double_t> phi;
+  std::vector<TVector3> posVtx;
+  std::vector<TVector3> posOffset;
+
+gRandom->SetSeed (0);
+//TVector3 posip(-0.5+gRandom->Uniform(),-0.5+gRandom->Uniform(),10.);//cm
+//TVector3 posOf(-0.5+gRandom->Uniform(),-0.5+gRandom->Uniform(),gRandom->Uniform(-2,2));//cm
+//Double_t itheta = TMath::DegToRad()*90.;
+//Double_t iphi = TMath::DegToRad()*45.;
+Double_t eneip=900;
+int nTracks = 2;
+
+
+for(int ip=1; ip<nTracks+1; ip++){
+  Zrandp.push_back(1);
+  //Zrandp.push_back(2);
+  Arandp.push_back(2);
+  //Arandp.push_back(4);
+  Qrandp.push_back(0);
+  //Mrandp.push_back(4.00260325413*931.494/1000.0);//alpha
+  Mrandp.push_back(2.01410177812*931.494);
+  //Double_t ir=gRandom->Uniform(700,1300);
+  Ep.push_back(eneip/1e6);//GeV
+//Ep.push_back(ir/1e6);//GeV
+
+  //if(ip%2!=0) {
+	//posip= {0,0,ip*10.};//cm
+	//posip= {0,0,50.};//cm
+  	//iphi=-TMath::DegToRad()*45.;
+  //}
+  //posVtx.push_back(posip);
+  //posOffset.push_back(posOf);
+  //theta.push_back(itheta);
+  //phi.push_back(iphi);
+
+}
+
+Double_t lambda = 1e5*40.e-6;
+
+// ATTPC_cusTrack* rand2p = new ATTPC_cusTrack(&Zrandp,&Arandp,&Qrandp,&Mrandp,&Ep);
+ATTPC_cusTrack* rand2p = new ATTPC_cusTrack(&Zrandp,&Arandp,&Qrandp,&Mrandp);
+  rand2p->SetPoisson(lambda,Arandp.at(0),Zrandp.at(0),Qrandp.at(0),Mrandp.at(0));
+
+  //if following Set functions not called the angles and vtx positions are random
+  // rand2p->SetVtxPosition(&posVtx);
+  // rand2p->SetVtxPosition(nTracks,1.);//number of tracks originating from the same vtxZ, maxDistZ (cm) btw tracks
+  //rand2p->SetVtxPosition(nTracks,0.,3.5);//number of tracks originating from the same vtxZ, maxDistZ (cm) btw tracks
+
+  //rand2p->SetAngles(&theta,&phi);
+  rand2p->SetElastic(14.008596359*931.494/1000., 2.01410177812*931.494/1000.);//Mproj,Mtarget,MheavyRecoil//use the beam (E,mom) from ATVP, doesnt update the beam (E,m) after scat or d,2He..
+  //rand2p->SetAngles(75,95,0,360);
+  //rand2p->SetEnergy(0.2,2.);
+
+  //primGen->AddGenerator(rand2p);
+*/
+  // ---------------------------------------------------------------------------
+
 
     run->SetGenerator(primGen);
 
-    // ------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
 
     //---Store the visualiztion info of the tracks, this make the output file very large!!
     //--- Use it only to display but not for production!
