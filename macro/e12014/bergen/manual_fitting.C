@@ -137,7 +137,7 @@ void automater_plane()
 void automater_window()
 {
    int event_ctr = 0;
-   TH1 *h1 = new TH1D("h1", "h1", 100, 200.0, 600.0);
+   TH1 *h1 = new TH1D("h1", "h1", 100, 400.0, 500.0);
 
    while(loadEvent(event_ctr)){
       cout << endl << "event number: " << event_ctr << endl << endl;
