@@ -257,6 +257,8 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
       if (s > pow(M_tot, 2)) {
          // if(ExEject*1000.0>fSepEne){
          fIsDecay = kTRUE;
+         event1.SetDecay(fEnergyImpulsionLab_Total, fMult.at(Case), mass_1);
+         Double_t weight1 = event1.Generate();//to generate the random final state
          std::vector<Double_t> KineticEnergy;
          std::vector<Double_t> ThetaLab;
 
@@ -270,8 +272,9 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
             KineticEnergy.push_back((p_vector.at(i)->E() - mass_1[i]) * 1000.0);
             ThetaLab.push_back(p_vector.at(i)->Theta() * 180. / TMath::Pi());
             LOG(INFO) << " Particle " << i << " - TKE (MeV) : " << KineticEnergy.at(i)
-                      << " - Lab Angle (deg) : " << ThetaLab.at(i) << cNORMAL << "\n";
+                      << " - Lab Angle (deg) : " << ThetaLab.at(i) << "\n";
          }
+         LOG(INFO) << cNORMAL;
 
       } else { // if kinematics condition
 
@@ -320,10 +323,10 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
          }
 
          // std::cout << "-I- FairIonGenerator: Generating " <<" with mass "<<thisPart->Mass()<<" ions of type "<<
-         // fIon.at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl; std::cout << "    Momentum (" <<
+         // fIon.at(Case).at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl; std::cout << "    Momentum (" <<
          // fPx.at(i) << ", " << fPy.at(i) << ", " << fPz.at(i)
-         //<< ") Gev from vertex (" << fVx << ", " << fVy
-         //<< ", " << fVz << ") cm" << std::endl;
+         // << ") Gev from vertex (" << fVx << ", " << fVy
+         // << ", " << fVz << ") cm" << std::endl;
 
          if (fIsDecay) {
             primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);

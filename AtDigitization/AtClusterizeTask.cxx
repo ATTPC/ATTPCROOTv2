@@ -26,6 +26,12 @@
 
 using XYZVector = ROOT::Math::XYZVector;
 
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
+constexpr auto cBLUE = "\033[1;34m";
+
 AtClusterizeTask::AtClusterizeTask() : AtClusterizeTask("AtClusterizeTask") {}
 
 AtClusterizeTask::AtClusterizeTask(const char *name) : FairTask(name) {}
@@ -67,7 +73,7 @@ void AtClusterizeTask::getParameters()
 
 InitStatus AtClusterizeTask::Init()
 {
-   LOG(debug) << "Initilization of AtClusterizeTask";
+   LOG(INFO) << "Initilization of AtClusterizeTask";
 
    FairRootManager *ioman = FairRootManager::Instance();
 
@@ -79,7 +85,6 @@ InitStatus AtClusterizeTask::Init()
 
    fSimulatedPointArray = std::make_unique<TClonesArray>("AtSimulatedPoint");
    ioman->Register("AtSimulatedPoint", "cbmsim", fSimulatedPointArray.get(), fIsPersistent);
-   ioman->Register("AtTpcPoint", "cbmsim",fMCPointArray, kTRUE); //dirty way to get sim data points
 
    getParameters();
 
@@ -100,7 +105,6 @@ void AtClusterizeTask::processPoint(Int_t mcPointID)
    // record its location and the new track ID
    if (fMCPoint->GetEnergyLoss() == 0 || fCurrTrackID != trackID) {
       setNewTrack();
-      std::cout << "Point is new track" << std::endl;
       return;
    }
 

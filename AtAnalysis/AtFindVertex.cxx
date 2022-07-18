@@ -119,7 +119,7 @@ void AtFindVertex::FindVertexMultipleLines(std::vector<AtTrack> tracks, Int_t nb
     for (Int_t i = 0; i < vtxCand.size(); i++) {
       if(cogVtx.at(i).X()!=cogVtx.at(i).X() || cogVtx.at(i).Y()!=cogVtx.at(i).Y() || cogVtx.at(i).Z()!=cogVtx.at(i).Z()) continue;
       if(cogVtx.at(i).Z()<0 || cogVtx.at(i).Z()>1000 || sqrt(cogVtx.at(i).Perp2())>30) continue;
-      if(vtxCand.at(i).size()>2) std::cout<<cYELLOW<<" vtx with more than 2 tracks, nb: "<<vtxCand.at(i).size()<<cNORMAL<<std::endl;
+      if(vtxCand.at(i).size()>2) std::cout<<cYELLOW<<" vtx with more than 2 tracks("<<vtxCand.at(i).size()<<")"<<cNORMAL<<std::endl;
       std::vector<AtTrack> tracksVtx;
       for (size_t j = 0; j < vtxCand.at(i).size(); j++) {
         tracksVtx.push_back(tracks.at(vtxCand.at(i).at(j)));
@@ -174,7 +174,6 @@ std::vector<std::vector<Int_t>> AtFindVertex::SortTrackSameVtx(std::vector<std::
                       }
                       if(!paired[i][j] || !paired[j][i]) {
                         trackIDOneVtx.push_back(j);
-                        paired[i][j] = kTRUE; paired[j][i] = kTRUE;
                       }
                     }
                   }
@@ -185,14 +184,18 @@ std::vector<std::vector<Int_t>> AtFindVertex::SortTrackSameVtx(std::vector<std::
                     if(sdist < fLineDistThreshold/2){
                       if(!paired[i][j] || !paired[j][i]) {
                         trackIDOneVtx.push_back(j);
-                        paired[i][j] = kTRUE; paired[j][i] = kTRUE;
                       }
                     }
                   }
-                //std::cout<<i<<" "<<j<<" "<<trackIDOneVtx.at(i)<<" "<<trackIDOneVtx.at(j)<<std::endl;
                 }//j loop lines
                 result.push_back(trackIDOneVtx);
-                //std::cout<<i<<" in loop i "<<trackIDOneVtx.size()<<" "<<result.size()<<std::endl;
+                for(int ii=0; ii<trackIDOneVtx.size()-1;ii++){
+                  for(int jj=ii+1; jj<trackIDOneVtx.size();jj++){
+                    paired[trackIDOneVtx.at(ii)][trackIDOneVtx.at(jj)] = kTRUE;
+                    paired[trackIDOneVtx.at(jj)][trackIDOneVtx.at(ii)] = kTRUE;
+                    // std::cout<<" ii "<<ii<<" jj "<<jj<<" "<<paired[trackIDOneVtx.at(ii)][trackIDOneVtx.at(jj)]<<" "<<paired[trackIDOneVtx.at(jj)][trackIDOneVtx.at(ii)]<<std::endl;
+                  }
+                }
 
   }//i loop lines
   //std::cout<<" end loop i "<<result.size()<<std::endl;
@@ -276,8 +279,8 @@ std::vector<XYZVector> AtFindVertex::CoGVtx(std::vector<std::vector<Int_t>> vtxC
                               std::vector<XYZVector> projVtxOnLines = ClosestPointProjOnLines(d1, p1, d2, p2);
                               sumVtx.at(i) += projVtxOnLines.at(0);
                               sumVtx.at(j) += projVtxOnLines.at(1);
-                              std::cout<<projVtxOnLines.at(0).X()<<" "<<projVtxOnLines.at(0).Y()<<" "<<projVtxOnLines.at(0).Z()<<" "<<std::endl;
-                              std::cout<<projVtxOnLines.at(1).X()<<" "<<projVtxOnLines.at(1).Y()<<" "<<projVtxOnLines.at(1).Z()<<" "<<std::endl;
+                              // std::cout<<"projVtxOnLines (i) "<<projVtxOnLines.at(0).X()<<" "<<projVtxOnLines.at(0).Y()<<" "<<projVtxOnLines.at(0).Z()<<" "<<std::endl;
+                              // std::cout<<"projVtxOnLines (j) "<<projVtxOnLines.at(1).X()<<" "<<projVtxOnLines.at(1).Y()<<" "<<projVtxOnLines.at(1).Z()<<" "<<std::endl;
                             }
                           }
                  }// End of track_f (for loop j)
@@ -285,11 +288,12 @@ std::vector<XYZVector> AtFindVertex::CoGVtx(std::vector<std::vector<Int_t>> vtxC
 
    Double_t sumW=0; //sum of the weights
    for(Int_t i=0;i<vtxCand.at(iv).size();i++){
-     std::cout<<"sumvtx "<<sumVtx.at(i).X()<<" "<<sumVtx.at(i).Y()<<" "<<sumVtx.at(i).Z()<<" chi2 "<<wlines.at(vtxCand.at(iv).at(i))<<std::endl;
+     // std::cout<<"sumvtx "<<sumVtx.at(i).X()<<" "<<sumVtx.at(i).Y()<<" "<<sumVtx.at(i).Z()<<" chi2 "<<wlines.at(vtxCand.at(iv).at(i))<<std::endl;
       CoG += sumVtx.at(i)*(1./(vtxCand.at(iv).size()-1))*(1./wlines.at(vtxCand.at(iv).at(i)));
       sumW += (Double_t)(1./wlines.at(vtxCand.at(iv).at(i)));
    }
    CoG = CoG*(1./sumW);
+   std::cout<<" vertex "<<CoG.X()<<" "<<CoG.Y()<<" "<<CoG.Z()<<std::endl;
    result.push_back(CoG);
 
    }//for iv vertex candidates

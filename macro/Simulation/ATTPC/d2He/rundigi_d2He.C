@@ -49,6 +49,7 @@ void rundigi_d2He (Int_t runNumber=0, Double_t ExEje=0)
 
   AtPulseTask* pulse = new AtPulseTask();
   pulse->SetPersistence(kTRUE);
+  pulse->SetPersistenceAtTpcPoint(kTRUE);
   pulse->SetMap(mapping);
   pulse->SetSaveMCInfo();
 

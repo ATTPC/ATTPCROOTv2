@@ -7,6 +7,9 @@
 #include <cmath>
 #include <utility>
 
+#include <iostream>
+
+
 // Allow us use std::make_unique using a protected constructor this struct
 // is only defined in this translation unit (.cpp file)
 namespace {

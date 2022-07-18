@@ -8,7 +8,7 @@ void run_eve(TString  InputDataPath = "/mnt/analysis/e18008/rootAna/giraud/simul
   TString mapFile = "Lookup20150611.xml";
 
 
-  TString InputDataFile = InputDataPath+"attpcdigi_d2He_1000_run0_Ex10_testUpdates.root";
+  TString InputDataFile = InputDataPath+"attpcdigi_d2He_10_run0_Ex10_testUpdates.root";
   TString OutputDataFile = OutputDataPath;
   TString GeoDataPath = dir + "/geometry/" + geoFile;
   TString mapDir = dir + "/scripts/" + mapFile;

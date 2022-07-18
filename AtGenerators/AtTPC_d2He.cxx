@@ -20,6 +20,12 @@
 #include <cstdio>
 #include <iostream>
 
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
+constexpr auto cBLUE = "\033[1;34m";
+
 constexpr float amu = 931.494;
 
 Int_t AtTPC_d2He::fgNIon = 0;
@@ -530,7 +536,8 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
    fVx = d2HeVtx.X();
    fVy = d2HeVtx.Y();
    fVz = d2HeVtx.Z();
-   // std::cout<<fVx<<" "<<fVy<<" "<<std::endl;
+   // std::cout<<cYELLOW<<"vertex in AtTPC_d2He "<<fVx<<" "<< fVy<<" "<< fVz<<cNORMAL<<std::endl;
+
 
    for (Int_t i = 0; i < fMult; i++) {
       TParticlePDG *thisPart;

@@ -1,4 +1,17 @@
 
+static Double_t proton_mass = 1.0078250322 * 931.494 - 0.511;
+static Double_t proj_mass = 14.008596359 * 931.494 - 0.511*8.;
+static Double_t target_mass = 2.01410177812 * 931.494;
+static Double_t recoil_mass = 14.00307400443 * 931.494 - 0.511*7.;
+static Double_t he2_mass = 2.0 * proton_mass;
+static Double_t Ekin_proj = 105.16 * 14.008596359;//100.0
+// static Double_t decay_frag_mass = 14.00307400443*931.494/1000;//GeV/c^2
+//static Double_t decay_frag_mass = 12.*931.494/1000;//GeV/c^2
+static Double_t decay_frag_mass = 13.0033548352*931.494/1000;//GeV/c^2 13C
+//static Double_t decay_frag_mass = 13.005738609*931.494/1000;//GeV/c^2 13N
+//static Double_t decay_frag_mass = 10.012936862*931.494/1000;//GeV/c^2
+
+
 TSpline3 *splineEloss;
 using XYZVector = ROOT::Math::XYZVector;
 
@@ -55,15 +68,15 @@ void ana_d2He()
   FairRunAna* run = new FairRunAna(); //Forcing a dummy run
   //ATd2HeAnalysis *d2heana = new ATd2HeAnalysis ();
 
-  TString digiFileName = "/mnt/analysis/e18008/rootAna/giraud/simulation/digi/attpcdigi_d2He_1000_run0_Ex10_testUpdates.root";
+  TString digiFileName = "/mnt/analysis/e18008/rootAna/giraud/simulation/digi/attpcdigi_d2He_50_run0_Ex10_testUpdates.root";
   TFile* file = new TFile(digiFileName,"READ");
-
   TTree* tree = (TTree*) file -> Get("cbmsim");
   Int_t nEvents = tree -> GetEntries();
   std::cout << " Number of events : " << nEvents << std::endl;
 
   TTreeReader reader("cbmsim", file);
   TTreeReaderValue<TClonesArray> eventArray(reader, "AtPatternEvent");
+  TTreeReaderValue<TClonesArray> SimPointArray(reader, "AtTpcPoint");
 
   TFile* outfile;
   TString  outFileNameHead = "ana_d2He_test.root";
@@ -83,8 +96,32 @@ void ana_d2He()
   Float_t lastX1=0.,lastX2=0.,lastY1=0.,lastY2=0.,lastZ1=0.,lastZ2=0., vertexX=0., vertexY=0., vertexZ=0.;
   Float_t MaxR1, MaxR2, MaxZ1, MaxZ2;
   Double_t theta_lab=0;
+  Double_t Eje_ata=-999, Eje_bta=-999, Eje_dta=-999;
+  Double_t brho = -999;
+  Double_t holeAcc=0,dtaAcc=0;
 
   XYZVector mom_proton1_reco, mom_proton2_reco,mom_He2_reco;
+
+
+  XYZVector beamDir(-0.00915252,-0.00221017,0.9999557);
+
+
+
+  vector<TString> fcutPID1File;
+  vector<TCutG *> fcutPID1;
+
+  fcutPID1File.push_back("/projects/ceclub/giraud/git/ATTPCROOTv2/macro/Unpack_HDF5/e18008_S800/rootPID/cutAcc.root");
+
+  for(Int_t w=0; w<fcutPID1File.size();w++){
+  TFile f(fcutPID1File[w]);
+  TIter next(f.GetListOfKeys());
+  TKey *key;
+    while ((key=(TKey*)next())) {
+        cout<<"PID1 Loading Cut file:  "<<key->GetName()<<endl;
+        fcutPID1.push_back( (TCutG*)f.Get(key->GetName()) );
+    }
+  }
+
 
   TTree *anatree = new TTree("anatree","new TTree");
 
@@ -117,14 +154,14 @@ void ana_d2He()
   anatree->Branch("epsilon_pp",&epsilon_pp);
   anatree->Branch("mom1_norm_reco",&mom1_norm_reco);
   anatree->Branch("mom2_norm_reco",&mom2_norm_reco);
+  anatree->Branch("Eje_ata",&Eje_ata);
+  anatree->Branch("Eje_bta",&Eje_bta);
+  anatree->Branch("Eje_dta",&Eje_dta);
+  anatree->Branch("brho",&brho);
+  anatree->Branch("holeAcc",&holeAcc);
+  anatree->Branch("dtaAcc",&dtaAcc);
 
-  Float_t proton_mass = 1.0078250322 * 931.494 - 0.511;
-  Float_t proj_mass = 14.008596359 * 931.494 - 0.511*8.;
-  Float_t target_mass = 2.01410177812 * 931.494;
-  Float_t recoil_mass = 14.00307400443 * 931.494 - 0.511*7.;
-  Float_t he2_mass = 2.0 * proton_mass;
-  Float_t Ekin_proj = 105.16 * 14.008596359;//100.0
-  XYZVector beamDir(-0.00915252,-0.00221017,0.9999557);
+
 
 
   /// --------------------- Event loop -------------------------------------------
@@ -135,6 +172,121 @@ void ana_d2He()
 
     reader.Next();
     if(i%2!=0) continue;
+
+
+
+
+
+
+
+
+//reaction products quantities from GEANT4--------------------------------------
+
+    TVector3 Pejec;
+    TVector3 pfirst;
+    TVector3 plast;
+    TVector3 Pproj(0,0,1);
+    Double_t Anejec;
+    Double_t Anp1;
+    Double_t Anp2;
+    Double_t Eeje=0;
+    Double_t Peje=0;
+    Double_t Ep1=0;
+    Double_t Ep2=0;
+    Eje_ata = -999;
+    Eje_bta = -999;
+    Eje_dta = -999;
+    Bool_t fl1 = kTRUE;
+    Bool_t fl2 = kTRUE;
+    TVector3 momEje;
+    Int_t Npoints = SimPointArray -> GetEntries();
+    // get information from geant4
+    	for(Int_t ipoint=0; ipoint<Npoints; ipoint++) {
+        auto point = dynamic_cast<AtMCPoint *>(SimPointArray->At(ipoint));
+    		TString VolName=point->GetVolName();
+    		Int_t trackID = point -> GetTrackID();
+
+        // std::cout<<"trackID "<<trackID<<" "<<point ->GetMassNum()<<" "<<point ->GetAtomicNum()<<" X "<<point->GetX()<<" Y "<<point->GetY()<<" Z "<<point->GetZ()<<std::endl;
+
+    		 if(trackID==4 && VolName=="drift_volume"){  //beam-like 1; decay like 4
+    			 // Anejec = point->GetAIni();
+    			 //Eeje = point->GetEIni();
+
+    			 if(point->GetZ()>=100){
+    				 Peje = sqrt(pow(point->GetPx(),2)+pow(point->GetPy(),2)+pow(point->GetPz(),2));//GeV/c
+    				 Eeje = (sqrt(Peje*Peje + decay_frag_mass*decay_frag_mass) - decay_frag_mass)*1000;//MeV
+    				// Eje_dta = (Eeje-2.18)/1493.7515- 1.0;//1493.75 MeV is the TKE of central 14N at rigidity=3.05824 Tm//2.18 for matching data (eloss in windows, obj scint )
+    					//Eje_dta = (Eeje-2.18)/1280.6107- 1.0;//12C
+    				  Eje_dta = (Eeje-2.18)/1359.27- 1.0;//13C
+    				 //Eje_dta = (Eeje-2.18)/1385.54- 1.0;//13N
+    				 //Eje_dta = (Eeje-2.18)/1065.94- 1.0;//10B
+    				 momEje.SetXYZ(point->GetPx(),point->GetPy(),point->GetPz());
+    				 Eje_ata = atan(momEje.X()/momEje.Z())-2*0.0019;//offset between angle of the beam in tpc frame and S800 frame
+    				 Eje_bta = atan(momEje.Y()/momEje.Z());
+    				 Double_t xBell= point->GetX() + 40.*tan(Eje_ata);
+    				 Double_t yBell= point->GetY() + 40.*tan(Eje_bta);
+    				 if( sqrt(pow(xBell,2) + pow(yBell,2)) <2.5) holeAcc = 1;//2. cm radius exit hole at 100cm but bellows of 2.5cm radius at 140cm so 1.786cm effective radius at 100cm
+    				 //if( sqrt(pow(point->GetXIn(),2) + pow(point->GetYIn(),2)) <1.786) holeAcc = 1;//2. cm radius exit hole at 100cm but bellows of 2.5cm radius at 140cm so 1.786cm effective radius at 100cm
+    				 }
+    			 if(fl1){
+    				 fl1=kFALSE;
+    				 pfirst.SetXYZ(point->GetX(),point->GetY(),point->GetZ());
+    				 //Peje = sqrt(pow(point->GetPxOut(),2)+pow(point->GetPyOut(),2)+pow(point->GetPzOut(),2));
+    				// std::cout<<i<<" fl1  "<<trackID<<"  "<<ipoint<<"   "<<point->GetZIn()<<"  "<<point->GetZOut()<<"  "<<point->GetPzOut()<<std::endl;
+    //std::cout<<" Elast first "<<Eeje<<" "<<point->GetPzOut()<<" "<<point->GetZIn()<<" "<<Anejec<<std::endl;
+    			 }
+    			 if(fl2 && point->GetZ()>99){
+    				 fl2=kFALSE;
+    				 plast.SetXYZ(point->GetX(),point->GetY(),point->GetZ());
+    				 //Pejec.SetXYZ(point->GetPxOut(),point->GetPyOut(),point->GetPzOut());
+    				 //std::cout<<i<<" fl2 "<<trackID<<"  "<<ipoint<<"   "<<point->GetZIn()<<"  "<<point->GetZOut()<<"  "<<point->GetPzOut()<<std::endl;
+    			 }
+
+    			}
+    		if(trackID==2 && VolName=="drift_volume"){  //p1
+    				Anp1 = point->GetAIni();
+    				Ep1 = point->GetEIni();
+    				}
+    		if(trackID==3 && VolName=="drift_volume"){  //p2
+    				Anp2 = point->GetAIni();
+    				Ep2 = point->GetEIni();
+    				}
+    	}//simulated points
+
+
+    	for(Int_t w=0; w<fcutPID1.size();w++) if(fcutPID1[w]->IsInside(Eje_dta,Eje_ata)) dtaAcc +=1;
+    	// std::cout<<" Elast1 "<<Anejec<<" "<<Eeje<<" "<<Peje<<" "<<atan(momEje.X()/momEje.Z())<<" "<<atan(momEje.Y()/momEje.Z())<<" "<<Eje_dta<<std::endl;
+
+    	TLorentzVector ejec4v;
+    	ejec4v.SetXYZM(momEje.X(),momEje.Y(),momEje.Z(),decay_frag_mass);
+    	Double_t gamma = ejec4v.Gamma();
+    	Double_t beta = ejec4v.Beta();
+    //--check eq., same results with root functions---------------------------------
+    //	Double_t gamma_bis = 1.+Eeje/(decay_frag_mass*1e3);
+    //	Double_t beta_bis = sqrt(gamma_bis*gamma_bis-1.)/gamma_bis;
+    //	Double_t brho_bis = 3.1*beta_bis*gamma_bis*12./6.;
+    //------------------------------------------------------------------------------
+    	brho = 3.1*beta*gamma*13./6.;
+    	std::cout<<" brho "<<beta<<" "<<brho<<std::endl;
+    	//std::cout<<"check analysis ata, bta "<<Eje_ata<<" "<<Eje_bta<<std::endl;
+      //std::cout<<"check analysis fPx, fPy, fPz "<<momEje.X()<<" "<<fPy<<" "<<fPz<<std::endl;
+
+    //	std::cout<<" bis beta "<<beta<<" "<<beta_bis<<" gamma "<<gamma<<" "<<gamma_bis<<" brho "<<brho<<" "<<brho_bis<<std::endl;
+
+
+    //------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
 
     AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
 
@@ -287,6 +439,7 @@ void ana_d2He()
 
 
 /// --------------------- End event loop ---------------------------------------
+outfile->cd();
 anatree->Write();
 
 //	tracks_z_r->Write ();

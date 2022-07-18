@@ -50,7 +50,6 @@ void AtClusterizeLineTask::processPoint(Int_t mcPointID)
    // record its location and the new track ID
    if (fMCPoint->GetEnergyLoss() == 0 || fCurrTrackID != trackID) {
       setNewTrack();
-      std::cout << "Point is new track" << std::endl;
       return;
    }
 
