@@ -12,7 +12,7 @@
 
 // "public functions"
 void loadRun(TString filePath);
-void loadEvent(ULong64_t eventNumber);
+bool loadEvent(ULong64_t eventNumber);
 TH1F *loadPad(int padNum);
 TH1F *loadMesh();
 
@@ -49,16 +49,17 @@ void loadRun(TString filePath)
    eventReader = new TTreeReaderValue<TClonesArray>(*reader, "AtEventFiltered");
 }
 
-void loadEvent(ULong64_t eventNumber)
+bool loadEvent(ULong64_t eventNumber)
 {
    auto eventStatus = reader->SetEntry(eventNumber);
    if (eventStatus != TTreeReader::EEntryStatus::kEntryValid) {
       std::cout << "Failed to load entry: " << eventNumber << " with status " << eventStatus << std::endl;
-      return;
+      return false;
    }
 
    rawEventPtr = dynamic_cast<AtRawEvent *>((*rawEventReader)->At(0));
    eventPtr = dynamic_cast<AtEvent *>((*eventReader)->At(0));
+   return true;
 }
 
 TH1F *loadMesh()

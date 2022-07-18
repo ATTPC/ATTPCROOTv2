@@ -1,6 +1,6 @@
 bool reduceFunc(AtRawEvent *evt)
 {
-   return (evt->GetNumPads() > 300) && evt->IsGood();
+   return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
 // Requires the TPC run number
