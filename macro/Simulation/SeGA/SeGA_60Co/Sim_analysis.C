@@ -4,10 +4,10 @@
 void Sim_analysis(Int_t num_ev=100000)
 {
 
-    TString mcFileNameHead = "./data/SeGA";
+    TString mcFileNameHead = "./SeGA";
     TString mcFileNameTail = ".root";
     TString mcFileName     = mcFileNameHead + mcFileNameTail;
-    TString outFileNameHead = "./data/SeGAana";
+    TString outFileNameHead = "./SeGAana";
     TString outFileNameTail = ".root";
     TString outFileName     = outFileNameHead + outFileNameTail;
 

@@ -4,10 +4,10 @@ void SeGA_Co60(Int_t nEvents = 100000, TString mcEngine = "TGeant4")
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name
-   TString outFile = "./data/SeGA.root";
+   TString outFile = "./SeGA.root";
 
    // Parameter file name
-   TString parFile = "./data/SeGApar.root";
+   TString parFile = "./SeGApar.root";
 
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
@@ -57,10 +57,10 @@ void SeGA_Co60(Int_t nEvents = 100000, TString mcEngine = "TGeant4")
      gammasGen->SetCosTheta();
      gammasGen->SetPRange(momentum, momentum);
 	gammasGen->SetNuclearDecayChain();
-     gammasGen->SetDecayChainPoint(0.001173240,0.9985);
+     gammasGen->SetDecayChainPoint(0.001173240,0.499337);
      /*gammasGen->SetDecayChainPoint(0.0008261,0.000076);
     gammasGen->SetDecayChainPoint(0.00034714,0.000075);*/
-     gammasGen->SetDecayChainPoint(0.001332508,0.999826);
+     gammasGen->SetDecayChainPoint(0.001332508,0.500663);
     /* gammasGen->SetDecayChainPoint(0.00215861,0.000012);
      gammasGen->SetDecayChainPoint(0.002505748,0.00000002);*/
      gammasGen->SetPhiRange(0., 360.); //(2.5,4)
@@ -96,7 +96,7 @@ void SeGA_Co60(Int_t nEvents = 100000, TString mcEngine = "TGeant4")
    run->Run(nEvents);
 
    // You can export your ROOT geometry ot a separate file
-   run->CreateGeometryFile("./data/geofile_gamma_full.root");
+   run->CreateGeometryFile("./geofile_gamma_full.root");
    // ------------------------------------------------------------------------
 
    // -----   Finish   -------------------------------------------------------
