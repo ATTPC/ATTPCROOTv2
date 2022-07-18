@@ -8,15 +8,35 @@
 
 #ifndef ATSEGADIGITIZER_H
 #define ATSEGADIGITIZER_H
-
-#include "FairTask.h"
+/*
+#include "AtMCPoint.h"
 #include "AtSeGA.h"
 #include "AtSeGACrystalCalData.h"
-#include "AtMCPoint.h"
-#include "TClonesArray.h"
-#include "string"
 
+#include <TClonesArray.h>
+
+#include "string"
+*/
+
+#include <FairTask.h>
+
+#include <Rtypes.h> // for Double_t, THashConsistencyHolder, Bool_t, Int_t
+
+class AtSeGACrystalCalData;
+class TBuffer;
+class TClass;
+class TClonesArray;
+class TMemberInspector;
 class AtSeGADigitizer : public FairTask {
+private:
+   void SetParameter();
+
+   TClonesArray *fMCPointDataCA;    //!  The crystal hit collection
+   TClonesArray *fSeGACryCalDataCA; /**< Array with CALIFA Cal- output data. >*/
+
+   Double_t fNonUniformity{0}; // Experimental non-uniformity parameter
+   Double_t fResolutionGe{0};  // Experimental resolution @ 1 MeV for Ge
+   Double_t fThreshold{0};     // Minimum energy requested to create a Cal
 
 public:
    /** Default constructor **/
@@ -84,15 +104,6 @@ public:
    AtSeGACrystalCalData *AddCrystalCal(Int_t ident, Double_t energy, ULong64_t time);
 
 private:
-   void SetParameter();
-
-   TClonesArray *fMCPointDataCA;  //!  The crystal hit collection
-   TClonesArray *fSeGACryCalDataCA; /**< Array with CALIFA Cal- output data. >*/
-
-   Double_t fNonUniformity;  // Experimental non-uniformity parameter
-   Double_t fResolutionGe;   // Experimental resolution @ 1 MeV for Ge
-   Double_t fThreshold;      // Minimum energy requested to create a Cal
-
    /** Private method NUSmearing
     **
     ** Smears the energy according to some non-uniformity distribution
@@ -112,9 +123,7 @@ private:
    /** Private method ExpResSmearingGe
     **/
    Double_t ExpResSmearingGe(Double_t inputEnergy);
-   
 
-  
    Bool_t isGe(Int_t id);
 
    ClassDef(AtSeGADigitizer, 1);

@@ -7,29 +7,38 @@
  ********************************************************************************/
 
 #include "AtSeGADigitizer.h"
-#include "FairRootManager.h"
+
+/*
 #include "AtSeGA.h"
-#include "AtSeGACrystalCalData.h"
-#include "AtMCPoint.h"
-#include "TArrayD.h"
-#include "TClonesArray.h"
-#include "TMath.h"
-#include "TRandom.h"
-#include "TVector3.h"
-#include <iostream>
-#include <stdlib.h>
+
+#include <TArrayD.h>
+#include <TMath.h>
+#include <TVector3.h>
+*/
+#include "AtMCPoint.h"            // for AtMCPoint
+#include "AtSeGACrystalCalData.h" // for AtSeGACrystalCalData
+#include "AtSeGADigitizer.h"
+
+#include <FairLogger.h>    // for Logger, LOG
+#include <FairRuntimeDb.h> // for FairRuntimeDb
+#include <FairTask.h>      // for FairTask, InitStatus, kFATAL, kSUC...
+
+#include "FairRootManager.h" // for FairRootManager
+#include "TClonesArray.h"    // for TClonesArray
+#include "TRandom.h"         // for TRandom, gRandom
+
+#include <cmath>    // for sqrt
+#include <cstdlib>  // for NULL
+#include <iostream> // for cerr, cout, endl
+#include <memory>   // for allocator
 
 using std::cerr;
 using std::cout;
 using std::endl;
-
+ClassImp(AtSeGACrystalCalData);
 AtSeGADigitizer::AtSeGADigitizer()
-   : FairTask("ATTPC SEGA Digitizer"), fMCPointDataCA(NULL), fSeGACryCalDataCA(NULL), fNonUniformity(0)
+   : FairTask("ATTPC SEGA Digitizer"), fMCPointDataCA(nullptr), fSeGACryCalDataCA(nullptr), fNonUniformity(0)
 {
-   fNonUniformity = 0.;  // perfect crystals
-   
-   fResolutionGe = 0.;   // perfect crystals
-   fThreshold = 0.;      // no threshold
 }
 
 AtSeGADigitizer::~AtSeGADigitizer()
@@ -65,7 +74,7 @@ InitStatus AtSeGADigitizer::Init()
    if (!rootManager)
       LOG(fatal) << "Init: No FairRootManager";
 
-   fMCPointDataCA = (TClonesArray *)rootManager->GetObject("AtMCPoint");
+   fMCPointDataCA = dynamic_cast<TClonesArray *>(rootManager->GetObject("AtMCPoint"));
    if (!fMCPointDataCA) {
       LOG(fatal) << "Init: No AtMCPoint CA";
       return kFATAL;
@@ -88,10 +97,10 @@ void AtSeGADigitizer::Exec(Option_t *option)
    if (!nHits)
       return;
 
-   AtMCPoint **pointData = NULL;
+   AtMCPoint **pointData = nullptr;
    pointData = new AtMCPoint *[nHits];
    for (Int_t i = 0; i < nHits; i++)
-      pointData[i] = (AtMCPoint *)(fMCPointDataCA->At(i));
+      pointData[i] = dynamic_cast<AtMCPoint *>(fMCPointDataCA->At(i));
 
    Int_t fDetCopyID;
    Double_t time;
@@ -103,17 +112,17 @@ void AtSeGADigitizer::Exec(Option_t *option)
       energy = pointData[i]->GetEnergyLoss();
 
       Int_t nCrystalCals = fSeGACryCalDataCA->GetEntriesFast();
-      Bool_t existHit = 0;
+      Bool_t existHit = false;
       if (nCrystalCals == 0)
          AddCrystalCal(fDetCopyID, NUSmearing(energy), time);
       else {
          for (Int_t j = 0; j < nCrystalCals; j++) {
-            if (((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(j)))->GetDetCopyID() == fDetCopyID) {
-               ((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(j)))->AddMoreEnergy(NUSmearing(energy));
-               if (((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(j)))->GetTime() > time) {
-                  ((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(j)))->SetTime(time);
+            if ((dynamic_cast<AtSeGACrystalCalData *>(fSeGACryCalDataCA->At(j)))->GetDetCopyID() == fDetCopyID) {
+               (dynamic_cast<AtSeGACrystalCalData *>(fSeGACryCalDataCA->At(j)))->AddMoreEnergy(NUSmearing(energy));
+               if ((dynamic_cast<AtSeGACrystalCalData *>(fSeGACryCalDataCA->At(j)))->GetTime() > time) {
+                  (dynamic_cast<AtSeGACrystalCalData *>(fSeGACryCalDataCA->At(j)))->SetTime(time);
                }
-               existHit = 1; // to avoid the creation of a new CrystalHit
+               existHit = true; // to avoid the creation of a new CrystalHit
 
                break;
             }
@@ -121,7 +130,7 @@ void AtSeGADigitizer::Exec(Option_t *option)
          if (!existHit)
             AddCrystalCal(fDetCopyID, NUSmearing(energy), time);
       }
-      existHit = 0;
+      existHit = false;
    }
 
    if (pointData)
@@ -139,9 +148,9 @@ void AtSeGADigitizer::Exec(Option_t *option)
 
    for (Int_t i = 0; i < nCrystalCals; i++) {
 
-      tempCryID = ((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(i)))->GetDetCopyID();
+      tempCryID = (dynamic_cast<AtSeGACrystalCalData *>(fSeGACryCalDataCA->At(i)))->GetDetCopyID();
 
-      temp = ((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(i)))->GetEnergy();
+      temp = (dynamic_cast<AtSeGACrystalCalData *>(fSeGACryCalDataCA->At(i)))->GetEnergy();
       if (temp < fThreshold) {
          fSeGACryCalDataCA->RemoveAt(i);
          fSeGACryCalDataCA->Compress();
@@ -150,9 +159,8 @@ void AtSeGADigitizer::Exec(Option_t *option)
          continue;
       }
 
-     
       if (isGe(tempCryID) && fResolutionGe > 0)
-         ((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(i)))->SetEnergy(ExpResSmearingGe(temp));
+         (dynamic_cast<AtSeGACrystalCalData *>(fSeGACryCalDataCA->At(i)))->SetEnergy(ExpResSmearingGe(temp));
    }
 }
 
@@ -202,8 +210,8 @@ AtSeGACrystalCalData *AtSeGADigitizer::AddCrystalCal(Int_t ident, Double_t energ
 void AtSeGADigitizer::SetExpEnergyRes(Double_t crystalResGe)
 {
    fResolutionGe = crystalResGe;
-   
-   LOG(INFO) << "AtSeGADigitizer::SetExpEnergyRes to " << fResolutionGe << "% @ 1 MeV for Ge" ;
+
+   LOG(INFO) << "AtSeGADigitizer::SetExpEnergyRes to " << fResolutionGe << "% @ 1 MeV for Ge";
 }
 
 Double_t AtSeGADigitizer::NUSmearing(Double_t inputEnergy)
@@ -242,9 +250,6 @@ Double_t AtSeGADigitizer::ExpResSmearingGe(Double_t inputEnergy)
    }
 }
 
-   
-
-
 Bool_t AtSeGADigitizer::isGe(Int_t id)
 {
    if (id > 0 && id < 16)
@@ -252,5 +257,3 @@ Bool_t AtSeGADigitizer::isGe(Int_t id)
    else
       return kFALSE;
 }
-
-

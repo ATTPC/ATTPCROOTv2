@@ -8,9 +8,13 @@
 #ifndef SEGACONTFACT_H
 #define SEGACONTFACT_H
 
-#include "FairContFact.h"
+#include <FairContFact.h>
 
-class FairContainer;
+#include <Rtypes.h> // for THashConsistencyHolder, ClassDef
+class FairParSet;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtSeGAContFact : public FairContFact {
 private:

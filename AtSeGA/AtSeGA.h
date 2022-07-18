@@ -8,14 +8,44 @@
 #ifndef SEGA_H
 #define SEGA_H
 
-#include "FairDetector.h"
-#include "TVector3.h"
+#include <FairDetector.h>
 
+#include <Rtypes.h>  // for Int_t, Bool_t, Double32_t, Double_t, THash...
+#include <TString.h> // for TString
+#include <TVector3.h>
+
+#include <string> // for string
+class TBuffer;
+class TClass;
+class TList;
+class TMemberInspector;
 class FairVolume;
 class TClonesArray;
 class AtMCPoint;
 
 class AtSeGA : public FairDetector {
+private:
+   /** Track information to be stored until the track leaves the
+   active volume.
+   */
+
+   Int_t fTrackID;       //!  track index
+   Int_t fVolumeID;      //!  volume id
+   TString fVolName;     //!  volume name
+   Int_t fDetCopyID;     //!  Det volume id
+   Double32_t fTime;     //!  time
+   Double32_t fLength;   //!  length
+   Double32_t fELoss;    //!  energy loss
+   Double32_t fELossAcc; //!  accumulated energy loss
+
+   TClonesArray *fTraCollection; //!  The hit collection
+
+   Bool_t kGeoSaved; //!
+   TList *flGeoPar;  //!
+
+   /** container for data points */
+   TClonesArray *fAtSeGAPointCollection; //!
+
 public:
    /**      Name :  Detector Name
     *       Active: kTRUE for active detectors (ProcessHits() will be called)
@@ -72,31 +102,11 @@ public:
    virtual void BeginEvent() { ; }
 
 private:
-   /** Track information to be stored until the track leaves the
-   active volume.
-   */
-
-   Int_t fTrackID;       //!  track index
-   Int_t fVolumeID;      //!  volume id
-   TString fVolName;     //!  volume name
-   Int_t fDetCopyID;     //!  Det volume id
-   Double32_t fTime;     //!  time
-   Double32_t fLength;   //!  length
-   Double32_t fELoss;    //!  energy loss
-   Double32_t fELossAcc; //!  accumulated energy loss
-
-   TClonesArray *fTraCollection; //!  The hit collection
-
-   Bool_t kGeoSaved; //!
-   TList *flGeoPar;  //!
-
-   /** container for data points */
-   TClonesArray *fAtSeGAPointCollection; //!
-
    /**      This method is an example of how to add your own point
     *       of type AtMCPoint to the clones array
     */
-   AtMCPoint *AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length, Double_t eLoss);
+   AtMCPoint *
+   AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length, Double_t eLoss);
    AtSeGA(const AtSeGA &);
    AtSeGA &operator=(const AtSeGA &);
 

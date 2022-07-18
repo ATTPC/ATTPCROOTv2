@@ -13,6 +13,7 @@
 using std::cout;
 using std::endl;
 using std::flush;
+ClassImp(AtSeGACrystalCalData);
 
 AtSeGACrystalCalData::AtSeGACrystalCalData() : FairMultiLinkedData(), fEnergy(-1.), fTime(0), fDetCopyID(-1) {}
 

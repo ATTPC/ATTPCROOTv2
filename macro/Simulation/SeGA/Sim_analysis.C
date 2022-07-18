@@ -25,7 +25,7 @@ void Sim_analysis(Int_t num_ev=100000)
     if(nEvents>num_ev) nEvents=num_ev;
 
     //Histograms
-    TH1D *Energy_loss= new TH1D("Energy_loss","Energy_loss",1000,0,10);
+    TH1D *Energy_loss= new TH1D("Energy_loss","Energy_loss",55000,0,55);
     
 
       TCanvas *c1 = new TCanvas();
@@ -49,7 +49,8 @@ Double_t Count =0.0;
             auto VolName=point->GetVolName();
 
             auto trackID = point -> GetTrackID();
-           // std::cout<<" Volume Name : "<<VolName<<std::endl;
+	if(VolName.Contains("Crystal_")){
+           std::cout<<" Volume Name : "<<VolName<<std::endl;
             //std::cout<<" Track ID : "<<trackID<<std::endl;
 
             
@@ -58,7 +59,7 @@ Double_t Count =0.0;
                std::cout<<" Point number : "<<i<<std::endl;*/
 	       energyLoss+=( point -> GetEnergyLoss() )*1000;//MeV
 		Count+=1;
-
+}
 	
 
 	       

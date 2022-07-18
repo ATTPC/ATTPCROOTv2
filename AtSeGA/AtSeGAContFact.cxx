@@ -6,10 +6,12 @@
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
 #include "AtSeGAContFact.h"
-#include "FairRuntimeDb.h"
+
+#include <FairRuntimeDb.h>
+
+#include <TString.h> // for TString
 
 #include <iostream>
-
 ClassImp(AtSeGAContFact)
 
    static AtSeGAContFact gAtSeGAContFact;
@@ -46,7 +48,7 @@ FairParSet *AtSeGAContFact::createContainer(FairContainer *c)
        of this container, the name is concatinated with the context.
    */
    const char *name = c->GetName();
-   FairParSet *p = NULL;
+   FairParSet *p = nullptr;
    // if (strcmp(name,"AtSeGAGeoPar")==0) {
    //   p=new AtSeGAGeoPar(c->getConcatName().Data(),
    //                           c->GetTitle(),c->getContext());

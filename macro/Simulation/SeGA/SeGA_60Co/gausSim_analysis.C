@@ -1,7 +1,7 @@
 // Generic analysis for HELIOS MC simulation
 // Y. Ayyad ayyadlim@frib.msu.edu 12/30/2020
 
-void Sim_analysis(Int_t num_ev=100000)
+void gausSim_analysis(Int_t num_ev=100000)
 {
 
     TString mcFileNameHead = "./SeGA";
@@ -25,7 +25,7 @@ void Sim_analysis(Int_t num_ev=100000)
     if(nEvents>num_ev) nEvents=num_ev;
 
     //Histograms
-    TH1D *Energy_loss= new TH1D("Energy_loss","Energy_loss",1500,0,10);
+    TH1D *Energy_loss= new TH1D("Energy_loss","Energy_loss",10000,0,10);
     
 
       TCanvas *c1 = new TCanvas();
@@ -49,6 +49,8 @@ Double_t Count =0.0;
             auto VolName=point->GetVolName();
 
             auto trackID = point -> GetTrackID();
+if(VolName.Contains("Crystal_")){
+           std::cout<<" Volume Name : "<<VolName<<std::endl;
            // std::cout<<" Volume Name : "<<VolName<<std::endl;
             //std::cout<<" Track ID : "<<trackID<<std::endl;
 
@@ -56,11 +58,13 @@ Double_t Count =0.0;
 	       /*std::cout<<" Volume Name : "<<VolName<<std::endl;
                std::cout<<" Track ID : "<<trackID<<std::endl;
                std::cout<<" Point number : "<<i<<std::endl;*/
-
-	       energyLoss+=( point -> GetEnergyLoss() )*1000;//MeV
+Float_t fResolutionGe = .30;
+Double_t inputEnergy = point -> GetEnergyLoss() ;
+Double_t randomIs = gRandom->Gaus(0, inputEnergy * fResolutionGe * 1000 / (235 * sqrt(inputEnergy * 1000)));
+	       energyLoss+=( inputEnergy + randomIs / 1000)*1000;//MeV
 		Count+=1;
 
-	
+	}
 
 	       
 	     }

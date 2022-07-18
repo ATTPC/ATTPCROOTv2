@@ -9,6 +9,8 @@
 #ifndef ATSEGACRYSTALCALDATA_H
 #define ATSEGACRYSTALCALDATA_H
 
+#include <TClonesArray.h>
+
 #include "FairMultiLinkedData.h"
 #include "TObject.h"
 
