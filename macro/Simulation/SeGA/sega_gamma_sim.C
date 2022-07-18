@@ -50,7 +50,7 @@ void sega_gamma_sim(Int_t nEvents = 100000, TString mcEngine = "TGeant4")
    Double_t pdgId = 22;       // 22 for gamma emission, 2212 for proton emission
      Double_t theta1 = 0;      // polar angle distribution: lower edge (50)
      Double_t theta2 = 180.;    // polar angle distribution: upper edge (51)
-     Double_t momentum = 0.005; // GeV/c
+     Double_t momentum = 0.01; // GeV/c
      Int_t multiplicity = 1;
      AtTPCGammaDummyGenerator* gammasGen = new AtTPCGammaDummyGenerator(pdgId, multiplicity);
      gammasGen->SetThetaRange(theta1, theta2);
