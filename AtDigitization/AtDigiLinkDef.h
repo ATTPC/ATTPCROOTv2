@@ -13,5 +13,6 @@
 #pragma link C++ class AtSimulatedLine + ;
 #pragma link C++ class AtTrigger + ;
 #pragma link C++ class AtTriggerTask + ;
+#pragma link C++ class AtVectorResponse - ;
 
 #endif
