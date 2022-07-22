@@ -15,5 +15,4 @@ Double_t AtPadCharge::GetElectrons(Int_t idx) const
    return GetElectrons()[idx];
 }
 
-
 ClassImp(AtPadCharge);

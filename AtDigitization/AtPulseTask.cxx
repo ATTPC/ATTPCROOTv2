@@ -248,9 +248,11 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
 
       // Create pad
       AtPad *pad = nullptr;
-      if(fUseChargeSave) pad = fRawEvent->AddPad(std::make_unique<AtPadCharge>(thePadNumber));
-      else pad = fRawEvent->AddPad(thePadNumber);
-      //pad->SetElectrons(eleAccumulated[thePadNumber]);
+      if (fUseChargeSave)
+         pad = fRawEvent->AddPad(std::make_unique<AtPadCharge>(thePadNumber));
+      else
+         pad = fRawEvent->AddPad(thePadNumber);
+      // pad->SetElectrons(eleAccumulated[thePadNumber]);
 
       auto PadCenterCoord = fMap->CalcPadCenter(thePadNumber);
       pad->SetValidPad(kTRUE);
@@ -261,8 +263,8 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
 
       for (Int_t bin = 0; bin < fNumTbs; bin++) {
          pad->SetADC(bin, signal[bin] * fGETGain * lowGain); // NOLINT
-         if(fUseChargeSave)
-            dynamic_cast<AtPadCharge*>(pad)->SetElectrons(bin, eleAccumulated[thePadNumber]->GetBinContent(bin + 1));
+         if (fUseChargeSave)
+            dynamic_cast<AtPadCharge *>(pad)->SetElectrons(bin, eleAccumulated[thePadNumber]->GetBinContent(bin + 1));
       }
    }
 

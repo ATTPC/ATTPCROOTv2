@@ -28,7 +28,6 @@ public:
    virtual ~AtPadCharge() = default;
    virtual std::unique_ptr<AtPad> Clone() override;
 
-
    void SetElectrons(const traceElec &val) { fElectrons = val; }
    void SetElectrons(Int_t idx, Double_t val) { fElectrons[idx] = val; }
 
