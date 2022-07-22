@@ -4,9 +4,6 @@
 #include <Rtypes.h>
 #include <TString.h>
 
-#include <cmath>
-#include <cstdio>
-#include <iostream>
 #include <vector>
 
 class AtVectorResponse {
