@@ -1,15 +1,6 @@
 #ifndef ATVECTORRESPONSE_H
 #define ATVECTORRESPONSE_H
 
-#include "AtDigiPar.h"
-
-#include <FairRunAna.h>
-#include <FairRuntimeDb.h>
-#include <FairTask.h>
-
-#include <Rtypes.h>
-#include <TString.h>
-
 #include <cmath>
 #include <cstdio>
 #include <iostream>
