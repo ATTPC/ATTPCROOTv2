@@ -1,6 +1,9 @@
 #ifndef ATVECTORRESPONSE_H
 #define ATVECTORRESPONSE_H
 
+#include <Rtypes.h>
+#include <TString.h>
+
 #include <cmath>
 #include <cstdio>
 #include <iostream>

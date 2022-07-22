@@ -6,9 +6,6 @@
 #include <FairRuntimeDb.h>
 #include <FairTask.h>
 
-#include <Rtypes.h>
-#include <TString.h>
-
 Double_t AtVectorResponse::fPeakingTime = 0;
 Double_t AtVectorResponse::fTBTime = 0;
 std::vector<Double_t> AtVectorResponse::fWaveSample = {};
