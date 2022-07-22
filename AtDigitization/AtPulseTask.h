@@ -52,6 +52,7 @@ protected:
    Bool_t fIsPersistent = true;  //!< If true, save container
    Bool_t fIsSaveMCInfo = false; //!<< Propagates MC information
    Bool_t fUseFastGain = true;
+   Bool_t fUseChargeSave = false;
 
    TClonesArray *fSimulatedPointArray{}; //!< drifted electron array (input)
    TClonesArray fRawEventArray;          //!< Raw Event array(only one)
@@ -77,6 +78,7 @@ public:
    void SetSaveMCInfo() { fIsSaveMCInfo = kTRUE; }
    void SetMap(AtMapPtr map) { fMap = map; };
    void UseFastGain(Bool_t val) { fUseFastGain = val; }
+   void UseChargeSave(Bool_t val) { fUseChargeSave = val; }
 
    /**
     * @brief: Set the response funtion of the electronics for a single electron.
