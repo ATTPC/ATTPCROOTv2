@@ -10,7 +10,6 @@
 #include <tuple>
 #include <vector>
 
-class AtTrackTransformer;
 class AtDigiPar;
 class AtTrack;
 class FairLogger;

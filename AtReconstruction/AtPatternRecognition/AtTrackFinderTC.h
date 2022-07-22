@@ -20,6 +20,7 @@
 #include <memory> // for unique_ptr
 #include <vector> // for vector
 
+class PointCloud;
 class AtEvent;
 class AtPatternEvent;
 class TBuffer;

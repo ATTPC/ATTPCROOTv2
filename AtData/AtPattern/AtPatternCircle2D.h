@@ -10,7 +10,7 @@
 #include <memory> // for make_unique, unique_ptr
 #include <vector> // for vector
 
-class TEveLine;
+class TEveElement;
 class TBuffer;
 class TClass;
 class TMemberInspector;
@@ -34,7 +34,7 @@ public:
    virtual Double_t DistanceToPattern(const XYZPoint &point) const override;
    virtual XYZPoint ClosestPointOnPattern(const XYZPoint &point) const override;
    virtual XYZPoint GetPointAt(double theta) const override;
-   virtual TEveLine *GetEveLine() const override;
+   virtual TEveElement *GetEveElement() const override;
    virtual std::unique_ptr<AtPattern> Clone() const override { return std::make_unique<AtPatternCircle2D>(*this); }
 
 protected:

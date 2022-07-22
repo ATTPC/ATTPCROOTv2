@@ -10,9 +10,10 @@
 
 #include "graph.h"
 
-#include <time.h>
+#include "pointcloud.h" // for Point, PointCloud
 
 #include <algorithm>
+#include <memory> // for allocator_traits<>::value_type
 #include <stack>
 
 struct Edge {

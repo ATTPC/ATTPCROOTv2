@@ -11,11 +11,14 @@
 #ifndef CLUSTER_H
 #define CLUSTER_H
 
-#include "triplet.h"
 #include "util.h"
 
+#include <algorithm>
 #include <cstddef>
 #include <vector>
+
+class PointCloud;
+struct triplet;
 
 typedef std::vector<size_t> cluster_t;
 

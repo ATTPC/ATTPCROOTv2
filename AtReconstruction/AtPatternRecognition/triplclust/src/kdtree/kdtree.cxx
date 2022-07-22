@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <limits>
+#include <memory>
 #include <stdexcept>
 
 namespace Kdtree {
@@ -200,7 +201,7 @@ KdTree::~KdTree()
    delete distance;
 }
 // distance_type can be 0 (Maximum), 1 (Manhatten), or 2 (Euklidean)
-KdTree::KdTree(const KdNodeVector *nodes, int distance_type /*=2*/)
+KdTree::KdTree(const KdNodeVector *nodes, int distance_type_ /*=2*/)
 {
    size_t i, j;
    double val;
@@ -210,7 +211,7 @@ KdTree::KdTree(const KdNodeVector *nodes, int distance_type /*=2*/)
    // initialize distance values
    distance = NULL;
    this->distance_type = -1;
-   set_distance(distance_type);
+   set_distance(distance_type_);
    // compute global bounding box
    lobound = nodes->begin()->point;
    upbound = nodes->begin()->point;
@@ -228,14 +229,14 @@ KdTree::KdTree(const KdNodeVector *nodes, int distance_type /*=2*/)
 }
 
 // distance_type can be 0 (Maximum), 1 (Manhatten), or 2 (Euklidean)
-void KdTree::set_distance(int distance_type, const DoubleVector *weights /*=NULL*/)
+void KdTree::set_distance(int distance_type_, const DoubleVector *weights /*=NULL*/)
 {
    if (distance)
       delete distance;
-   this->distance_type = distance_type;
-   if (distance_type == 0) {
+   this->distance_type = distance_type_;
+   if (distance_type_ == 0) {
       distance = (DistanceMeasure *)new DistanceL0(weights);
-   } else if (distance_type == 1) {
+   } else if (distance_type_ == 1) {
       distance = (DistanceMeasure *)new DistanceL1(weights);
    } else {
       distance = (DistanceMeasure *)new DistanceL2(weights);
@@ -254,7 +255,7 @@ kdtree_node *KdTree::build_tree(size_t depth, size_t a, size_t b)
    kdtree_node *node = new kdtree_node();
    node->lobound = lobound;
    node->upbound = upbound;
-   node->cutdim = depth % dimension;
+   node->cutdim = depth % dimension; // NOLINT
    if (b - a <= 1) {
       node->dataindex = a;
       node->point = allnodes[a].point;
@@ -349,7 +350,6 @@ void KdTree::k_nearest_neighbors(const CoordPoint &point, size_t k, KdNodeVector
 //--------------------------------------------------------------
 void KdTree::range_nearest_neighbors(const CoordPoint &point, double r, KdNodeVector *result)
 {
-   size_t i, k;
    KdNode temp;
 
    result->clear();

@@ -15,7 +15,7 @@
 class TBuffer;
 class TClass;
 class TMemberInspector;
-class TEveLine;
+class TEveElement;
 
 namespace AtPatterns {
 
@@ -37,7 +37,7 @@ public:
    virtual Double_t DistanceToPattern(const XYZPoint &point) const override;
    virtual XYZPoint ClosestPointOnPattern(const XYZPoint &point) const override;
    virtual XYZPoint GetPointAt(double z) const override;
-   virtual TEveLine *GetEveLine() const override;
+   virtual TEveElement *GetEveElement() const override;
    virtual std::unique_ptr<AtPattern> Clone() const override { return std::make_unique<AtPatternLine>(*this); }
 
 protected:

@@ -5,10 +5,16 @@
 #include <FairLogger.h>
 
 #include <Math/Point2D.h>
+#include <Math/Point2Dfwd.h> // for XYPoint
+#include <Math/Point3D.h>    // for PositionVector3D
+#include <Math/Point3Dfwd.h> // for RhoZPhiPoint, XYZPoint
 #include <Math/Vector2D.h>
+#include <Math/Vector2Dfwd.h> // for XYVector
 #include <Math/Vector3D.h>
+#include <Math/Vector3Dfwd.h> // for XYZVector
 
 #include <cmath>
+#include <memory> // for allocator
 
 constexpr auto c = 29979.2;  //< c in cm/us
 constexpr auto c2 = c * c;   //< c^2

@@ -36,20 +36,20 @@ std::unique_ptr<AtPatterns::AtPattern> AtSampleConsensus::GeneratePatternFromHit
    if (hitArray.size() < fMinPatternPoints) {
       return nullptr;
    }
-
+   LOG(debug) << "Creating pattern";
    auto pattern = AtPatterns::CreatePattern(fPatternType);
-
+   LOG(debug) << "Sampling points";
    auto points = fRandSampler->SamplePoints(pattern->GetNumPoints());
-
+   LOG(debug) << "Defining pattern";
    pattern->DefinePattern(points);
 
-   LOG(debug) << "Testing pattern" << std::endl;
+   LOG(debug) << "Testing pattern";
    auto nInliers = SampleConsensus::AtEstimator::EvaluateModel(pattern.get(), hitArray, fDistanceThreshold, fEstimator);
-   LOG(debug) << "Found " << nInliers << " inliers";
+   LOG(debug) << "Found " << nInliers << " inliers" << std::endl;
 
    // If the pattern is consistent with enough points, save it
    if (nInliers > fMinPatternPoints) {
-      LOG(debug) << "Adding pattern with nInliers: " << nInliers;
+      LOG(debug) << "Adding pattern with nInliers: " << nInliers << std::endl;
       return pattern;
    }
 
@@ -69,12 +69,7 @@ AtPatternEvent AtSampleConsensus::Solve(const std::vector<AtHit> &hitArray)
       LOG(error) << "Not enough points to solve. Requires" << fMinPatternPoints;
       return {};
    }
-   /*   if (fMinPatternPoints < AtPatterns::CreatePattern(fPatternType)->GetNumPoints()) {
-         LOG(debug)
-            << "Min number of points to be considered a pattern is less than the number of points to define a model "
-            << fMinPatternPoints;
-         return {};
-         }*/
+   LOG(info) << "Solving with " << hitArray.size() << " points";
 
    auto comp = [](const PatternPtr &a, const PatternPtr &b) { return a->GetChi2() < b->GetChi2(); };
    auto sortedPatterns = std::set<PatternPtr, decltype(comp)>(comp);
@@ -82,6 +77,9 @@ AtPatternEvent AtSampleConsensus::Solve(const std::vector<AtHit> &hitArray)
    LOG(debug2) << "Generating " << fIterations << " patterns";
    fRandSampler->SetHitsToSample(&hitArray);
    for (int i = 0; i < fIterations; i++) {
+      if (i % 1000 == 0)
+         LOG(debug) << "Iteration: " << i << "/" << fIterations;
+
       auto pattern = GeneratePatternFromHits(hitArray);
       if (pattern != nullptr)
          sortedPatterns.insert(std::move(pattern));

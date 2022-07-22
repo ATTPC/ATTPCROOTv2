@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
 
 // initialize default values
 Opt::Opt()
@@ -180,13 +181,13 @@ int Opt::parse_args(int argc, char **argv)
          } else if (0 == strcmp(argv[i], "-skip")) {
             ++i;
             if (i < argc) {
-               int tmp = atoi(argv[i]);
-               if (tmp < 0) {
+               int tmp2 = atoi(argv[i]);
+               if (tmp2 < 0) {
                   std::cerr << "[Error] skip takes only positive integers. parameter "
                                "is ignored!"
                             << std::endl;
                } else {
-                  this->skip = (size_t)tmp;
+                  this->skip = (size_t)tmp2;
                }
             } else {
                return 1;

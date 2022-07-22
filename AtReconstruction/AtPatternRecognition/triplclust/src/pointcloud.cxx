@@ -13,8 +13,10 @@
 
 #include <algorithm>
 #include <cmath>
+#include <exception> // for exception
+#include <memory>    // for allocator_traits<>::value_type
 #include <numeric>
-#include <sstream>
+#include <sstream> // IWYU pragma: keep
 #include <stdexcept>
 #include <string>
 

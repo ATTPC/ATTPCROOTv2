@@ -10,9 +10,15 @@
 
 #include "cluster.h"
 
+#include "pointcloud.h" // for PointCloud, Point
+#include "triplet.h"    // for triplet, ScaleTripletMetric
+
 #include <algorithm>
 #include <cmath>
-#include <fstream>
+#include <iostream> // for operator<<, basic_ostream, endl, ofs...
+#include <iterator> // for distance
+#include <memory>   // for allocator_traits<>::value_type
+#include <set>      // for set, operator!=, operator==, set<>::...
 
 #include "hclust/fastcluster.h"
 
