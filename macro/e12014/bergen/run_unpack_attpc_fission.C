@@ -116,8 +116,8 @@ void run_unpack_attpc_fission(int runNumber = 210)
    // Get the number of events and unpack the whole run
    auto numEvents = unpackTask->GetNumEvents();
 
-   // numEvents = 1700;//217;
-   numEvents = 10000;
+   // numEvents = 1700;//217;78594
+   numEvents = 78594;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
