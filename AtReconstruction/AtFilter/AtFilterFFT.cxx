@@ -45,6 +45,13 @@ void AtFilterFFT::InitEvent(AtRawEvent *inputEvent)
    }
 }
 
+/**
+ * If save transform is set, will replace the pad in the input AtRawEvent with an AtPadFFT that stores the
+ * result of the FFT before any filtering. The output event will also contain AtPadFFTs with the transformed
+ * waveforms after the filter on magnitude has been applied. Will multiply each complex fourier component by
+ * a number defined in the frequency ranges, and store the resultant waveform in the filtered raw event.
+ *
+ */
 void AtFilterFFT::Filter(AtPad *pad)
 {
    // Get data and transform
@@ -56,6 +63,9 @@ void AtFilterFFT::Filter(AtPad *pad)
    fFFT->SetPoints(pad->GetADC().data());
    fFFT->Transform();
    applyFrequencyCutsAndSetInverseFFT();
+   if (fSaveTransform)
+      dynamic_cast<AtPadFFT *>(pad)->GetDataFromFFT(fFFTbackward.get());
+
    fFFTbackward->Transform();
 
    double baseline = 0;
@@ -71,8 +81,6 @@ void AtFilterFFT::Filter(AtPad *pad)
    if (fSaveTransform) {
       auto inputPad = dynamic_cast<AtPadFFT *>(fTransformedEvent->GetPad(pad->GetPadNum()));
       inputPad->GetDataFromFFT(fFFT.get());
-      auto outputPad = dynamic_cast<AtPadFFT *>(pad);
-      outputPad->GetDataFromFFT(fFFTbackward.get());
    }
 }
 
