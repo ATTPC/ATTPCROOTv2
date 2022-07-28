@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
+void plotFit_e20009(std::string fileFolder = "data_250_250/")
 {
 
    std::ofstream outputFileEvents("list_of_events.txt");
@@ -120,11 +120,11 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
 
    TH1F *ExZ[10];
 
-   TH2F *ELossvsBrho = new TH2F("ELossvsBrho", "ELossvsBrho", 4000, 0, 4000, 1000, 0, 10);
-   TH2F *ELossvsBrhoZoom = new TH2F("ELossvsBrhoZoom", "ELossvsBrhoZoom", 4000, 0, 20000, 1000, 0, 10);
-   TH2F *dedxvsBrho = new TH2F("dedxvsBrho", "dedxvsBrho", 4000, 0, 100000, 1000, 0, 10);
-   TH2F *dedxvsBrhoCond = new TH2F("dedxvsBrhoCond", "dedxvsBrhoCond", 4000, 0, 100000, 1000, 0, 10);
-   TH2F *dedxvsBrhoZoom = new TH2F("dedxvsBrhoZoom", "dedxvsBrhoZoom", 4000, 0, 1000, 1000, 0, 10);
+   TH2F *ELossvsBrho = new TH2F("ELossvsBrho", "ELossvsBrho", 4000, 0, 4000, 1000, 0, 3);
+   TH2F *ELossvsBrhoZoom = new TH2F("ELossvsBrhoZoom", "ELossvsBrhoZoom", 4000, 0, 20000, 1000, 0, 3);
+   TH2F *dedxvsBrho = new TH2F("dedxvsBrho", "dedxvsBrho", 4000, 0, 10000, 1000, 0, 3);
+   TH2F *dedxvsBrhoCond = new TH2F("dedxvsBrhoCond", "dedxvsBrhoCond", 4000, 0, 10000, 1000, 0, 3);
+   TH2F *dedxvsBrhoZoom = new TH2F("dedxvsBrhoZoom", "dedxvsBrhoZoom", 4000, 0, 1000, 1000, 0, 3);
 
    TH2F *multvsnumpoints = new TH2F("multvsnumpoints", "multvsnumpoints", 10, 0, 10, 500, 0, 500);
 
@@ -241,12 +241,12 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
    Double_t m_a = 4.00260325415 * 931.49401;
    Double_t m_O16 = 15.99491461956 * 931.49401;
 
-   Double_t Ebeam_buff = 150.0; // 90.5;
+   Double_t Ebeam_buff = 90.5; // 90.5;
    Double_t m_b;
    Double_t m_B;
 
-   m_b = m_a;
-   m_B = m_O16;
+   m_b = m_d;
+   m_B = m_Be10;
 
    // Find every valid file
    std::string command = "find ./" + fileFolder + " -maxdepth 1 -printf \"%f\n\" >test.txt";
@@ -403,11 +403,11 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
 
             ++iEvt;
 
-            // if (ICMult != 1)
-            // continue;
+	    if (ICMult != 1)
+	       continue;
 
-            // if(evMult !=2)
-            // continue;
+            //if(evMult !=2)
+	      //   continue;
 
             Int_t ICIndex = 0;
             Int_t iQindex = 0;
@@ -438,9 +438,9 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
                }
                //}
 
-               //   if(ICA<900)
-               // if (ICA < 500 || ICA > 900)
-               // continue;
+               
+	           if (ICA < 500 || ICA > 900)
+	            continue;
 
                for (ICIndex = 0; ICIndex < ICVec->size(); ++ICIndex) {
 
@@ -482,8 +482,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
 
             for (auto index = 0; index < EFitVec->size(); ++index) {
 
-               if (index != maxAIndex)
-                  continue;
+	      if (index != maxAIndex)
+	       continue;
 
                eventMultH->Fill(evMult);
                multvsnumpoints->Fill(evMult, (*trackPointsVec)[index]);
@@ -504,8 +504,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
                // if((*eLossADC)[index]>50)
                // continue;
 
-               // if((*AFitVec)[index]>82 || (*AFitVec)[index]<70)
-		  // continue;
+	       if((*AFitVec)[index]<10 || (*AFitVec)[index]>170 )
+	         continue;
 
                // Particle ID
                ELossvsBrho->Fill((*eLossADC)[index], (*brhoVec)[index]);
@@ -515,20 +515,21 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
                   dedxvsBrhoZoom->Fill((*dEdxADC)[index], (*brhoVec)[index]);
                }
 
-               if (cutT->IsInside((*eLossADC)[index], (*brhoVec)[index])) // particleID
-                  continue;
+               //if (cutT->IsInside((*eLossADC)[index], (*brhoVec)[index])) // particleID
+	       //continue;
 
+	       
                // if(!cutDEDX->IsInside((*dEdxADC)[index], (*brhoVec)[index]))
                // continue;
 
                //if ((*dEdxADC)[index] < 3000) // particleID
 		 //continue;
 
-	       //if ((*trackLengthVec)[index] < 14.0 || (*trackLengthVec)[index] > 28.0)
+	       //if ((*trackLengthVec)[index] > 25.0)
 	       //continue;
 
-               if ((*fitConvergedVec)[index] == 0)
-                  continue;
+               //if ((*fitConvergedVec)[index] == 0)
+                 // continue;
 
                // if((*trackPointsVec)[index]<20)
                // continue;
@@ -539,8 +540,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
                // if ((*POCAXtrVec)[index] > 2000.0)
                // continue;
 
-               if ((*ziniFitVec)[index] < 10.0 || (*ziniFitVec)[index] > 60.0)
-		    continue;
+               //if ((*ziniFitVec)[index] < 10.0 || (*ziniFitVec)[index] > 60.0)
+	       //   continue;
 
                /*if ((*EFitVec)[index] > 100)
                      continue;
@@ -576,15 +577,16 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
 
                // Excitation energy
                Double_t ex_energy_exp =
-                  kine_2b(m_O16, m_a, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(), (*EFitVec)[index]);
+                  kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(), (*EFitVec)[index]);
                Double_t ex_energy_exp_xtr =
-                  kine_2b(m_O16, m_a, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(), (*EFitXtrVec)[index]);
+                  kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(), (*EFitXtrVec)[index]);
 
 	       // List of events
-               outputFileEvents << dataFile << " - Event : " << i << " - PRA Multiplicity : " << praMult
-                                << " - Max angle PRA : " << (*APRAVec)[index]
-                                << " - Max Angle Fit : " << (*AFitVec)[index]
-				<< " - Q value       : " << ex_energy_exp
+               outputFileEvents << dataFile << " - Ev. : " << i << " - PRA.Mult : " << praMult
+		                << " - Ev.Mult : " << evMult
+                                << " - Max.PRA : " << (*APRAVec)[index]
+                                << " - Max.Fit : " << (*AFitVec)[index]
+				<< " - Q.val : " << ex_energy_exp
                                 << " - Track points : " << (*trackPointsVec)[index] << "\n";
 	       
 	       
@@ -593,8 +595,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
                HQval_Xtr_recalc->Fill(ex_energy_exp);
 
                // Excitation energy correction
-               Double_t p0 = -3.048;
-               Double_t p1 = 0.0513295;
+               Double_t p0 = 0.0;//-3.048;
+               Double_t p1 = 0.0;//0.0513295;
                Double_t mFactor = 1.00;
                Double_t offSet = 0.0;
                Double_t QcorrZ = 0.0;
@@ -857,7 +859,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
    x_y_Xtr->Draw("zcol");
 
    TCanvas *c4 = new TCanvas();
-   c4->Divide(2, 2);
+   c4->Divide(2, 3);
    c4->Draw();
    c4->cd(1);
    POCAXtrH->Draw();
@@ -867,6 +869,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
    ZposvsRad->Draw();
    c4->cd(4);
    particleQH->Draw();
+   c4->cd(5);
+   eventMultH->Draw();
 
    TCanvas *c5 = new TCanvas();
    c5->Divide(3, 3);

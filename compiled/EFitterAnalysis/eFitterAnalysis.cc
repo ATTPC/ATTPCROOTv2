@@ -6,16 +6,20 @@ int main(int argc, char *argv[])
    // TODO Hardcoded parameters in fitter constructor
    // fEnableMerging = 1;
    // fEnableSingleVertexTrack = 1;
+   // fExpNum = e20020;
+  
+   
+  
   
    // Work directory
    TString dir = getenv("VMCWORKDIR");
 
    // Geometry file
    TString geoManFile =
-      dir + "/geometry/ATTPC_He1bar_v2_geomanager.root"; // dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
+      dir + "/geometry/ATTPC_He1bar_v2_geomanager.root"; 
    // Ion list file
    std::string ionList =
-      "/mnt/analysis/e20020/ATTPCROOTv2_fairroot_18_6/resources/ionFitLists/e20020_ionList.xml"; //"/mnt/analysis/e20020/ATTPCROOTv2_develop/resources/ionFitLists/e20009_ionList.xml";
+      "/mnt/analysis/e20020/ATTPCROOTv2_fairroot_18_6/resources/ionFitLists/e20020_ionList.xml"; 
 
    // Analysis flow parameters
    std::size_t firstEvt = 0;
@@ -25,15 +29,19 @@ int main(int argc, char *argv[])
    bool fitDirection = 0; // 0: Forward (d,d) - 1: Backwards (d,p)
    bool simulationConv = 0;
    bool enableMerging = 1;
-   bool enableSingleVertexTrack = 0;
-   bool enableReclustering = 0;//For benchmarking purposes
+   bool enableSingleVertexTrack = 1;
+   bool enableReclustering = 1;//For benchmarking purposes
    Double_t clusterRadius = 7.5;//mm
-   Double_t clusterSize   = 10.0;//mm
+   Double_t clusterDistance   = 15.0;//mm
+   Exp exp = e20009;
    
+
    // Physics parameters
    Float_t magneticField = 3.0;        // T
    Float_t gasMediumDensity = 0.1533;  //  0.1533 mg/cm3 (a,a) - 0.13129 mg/cm3 (d,p)
-
+  
+   
+   
    //  Arguments
    if (argc == 7) {
       firstEvt = std::atoi(argv[1]);
@@ -58,25 +66,70 @@ int main(int argc, char *argv[])
                 << "\n";
       return 0;
    }
-
+     
    // File paths
    TString filePath;
    TString simFile;
    TString outputFileName;
 
-   if (simulationConv) {
-      filePath = dir + "/macro/Simulation/ATTPC/16O_aa_v2/"; //"/macro/Simulation/ATTPC/10Be_dp/";
-      simFile = "_sim_";
-   } else {
-      filePath = dir + "/macro/Unpack_HDF5/e20020/"; //"/macro/Unpack_HDF5/e20009/rootFiles/";
-      simFile = "";
-   }
+   switch(exp)
+      {
+       case e20009:
+	gasMediumDensity = 0.13129;
+	
+	if (simulationConv) {
+         filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/";
+         simFile = "_sim_";
+        } else {
+         filePath = dir + "/macro/Unpack_HDF5/e20009/";
+         simFile = "";
+        }
+	
+        geoManFile = dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
+        ionList = "/mnt/analysis/e20020/ATTPCROOTv2_fairroot_18_6/resources/ionFitLists/e20009_ionList.xml";
+
+	std::cout<<" Analysis of experiment e20009. Gas density : "<<gasMediumDensity<<" mg/cm3"<<"\n";
+	std::cout<<" File path : "<<filePath<<"\n";
+	std::cout<<" Geomtry file : "<<geoManFile<<"\n";
+	std::cout<<" Ion list file : "<<ionList<<"\n";
+	
+	break;
+
+       case e20020:
+	gasMediumDensity = 0.1533;
+
+	if (simulationConv) {
+         filePath = dir + "/macro/Simulation/ATTPC/16O_aa_v2/"; 
+         simFile = "_sim_";
+        } else {
+         filePath = dir + "/macro/Unpack_HDF5/e20020/"; 
+         simFile = "";
+        }
+
+	
+        geoManFile = dir + "/geometry/ATTPC_He1bar_v2_geomanager.root"; 
+	ionList = "/mnt/analysis/e20020/ATTPCROOTv2_fairroot_18_6/resources/ionFitLists/e20020_ionList.xml"; 
+
+	
+	std::cout<<" Analysis of experiment e20020. Gas density : "<<gasMediumDensity<<" mg/cm3"<<"\n";
+	std::cout<<" File path : "<<filePath<<"\n";
+	std::cout<<" Geomtry file : "<<geoManFile<<"\n";
+	std::cout<<" Ion list file : "<<ionList<<"\n";
+	break;
+     }
+   
+
+
+
+   
 
    outputFileName = "fit_analysis_" + simFile + inputFileName;
    outputFileName += "_" + std::to_string(firstEvt) + "_" + std::to_string(lastEvt) + ".root";
 
    inputFileName = filePath + inputFileName + ".root";
 
+   std::cout<<" Input file name : "<<inputFileName<<"\n";
+   
    ////FitManager becomes owner
 
    std::shared_ptr<FitManager> fitManager;
@@ -97,7 +150,8 @@ int main(int argc, char *argv[])
    fitManager->SetFitDirection(fitDirection);
    fitManager->EnableMerging(enableMerging);
    fitManager->EnableSingleVertexTrack(enableSingleVertexTrack);
-   fitManager->EnableReclustering(enableReclustering,clusterRadius,clusterSize);
+   fitManager->EnableReclustering(enableReclustering,clusterRadius,clusterDistance);
+   fitManager->SetExpNum(exp);
    
    if (fInteractiveMode)
       fitManager->EnableGenfitDisplay();
@@ -407,7 +461,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       xiniPRA = iniPos.X();
       yiniPRA = iniPos.Y();
       ziniPRA = zIniCal;
-
+      
       // This is just to select distances
       std::cout << cGREEN << "      Merged track - Initial position : " << xiniPRA << " - " << yiniPRA << " - "
                 << ziniPRA << cNORMAL << "\n";
@@ -419,27 +473,37 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
 
       std::cout << KRED << "       Merged track - Distance to Z (Candidate Track Pool) " << dist << cNORMAL << "\n";
-
+      
+      
       // Fitters
       for (auto fitter : fFitters)
          fitter->Init();
 
       // Kinematic filters and fit selection
-      // This selection depends on the experiment. For the moment it is adapted to 10Be+d at 10A MeV
+      
       std::vector<Int_t> pdgCandFit;
       if (thetaConv > 90) {
 
-         // continue;
-         // pdgCandFit.push_back(2212);
-         pdgCandFit.push_back(1000010020);
+        switch(fExpNum){
+	 case e20020:
+	   pdgCandFit.push_back(1000010020);
+	   break;
+	 case e20009:
+	   pdgCandFit.push_back(2212);
+	   break;
+	}
+	
+      } else if (thetaConv < 90 && thetaConv > 0) { 
 
-      } else if (thetaConv < 90 && thetaConv > 0) { // NB: Excluding heavy recoils
-
-         pdgCandFit.push_back(1000020040);
-         // continue;
-         // pdgCandFit.push_back(2212);
-         // pdgCandFit.push_back(1000010020);
-
+       switch(fExpNum){
+	 case e20020:
+	   pdgCandFit.push_back(1000020040);
+	   break;
+	 case e20009:
+	   pdgCandFit.push_back(1000010020);
+	   break;
+	}
+	
       } else if (thetaConv < 0) {
 
          // continue;
@@ -545,12 +609,12 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                auto it = hitClusterArray->rbegin();
                while (it != hitClusterArray->rend()) {
 
-                  if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.75)
+                  if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.25)
                      break;
                   auto dir = (*it).GetPosition() - (*std::next(it, 1)).GetPosition();
                   eloss += (*it).GetCharge();
                   len = std::sqrt(dir.Mag2());
-                  dedx += (*it).GetCharge() / len;
+		  dedx += (*it).GetCharge() / len;
                   // std::cout<<(*it).GetCharge()<<"\n";
                   it++;
                   ++cnt;
@@ -562,7 +626,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                cnt = 1;
                for (auto iHitClus = 1; iHitClus < hitClusterArray->size(); ++iHitClus) {
 
-                  if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.75)
+                  if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.25)
                      break;
                   auto dir =
                      hitClusterArray->at(iHitClus).GetPosition() - hitClusterArray->at(iHitClus - 1).GetPosition();
@@ -575,6 +639,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
             }
 
             eloss /= cnt;
+	    dedx /= cnt;
 
             if (fitTrack == nullptr)
                continue;
@@ -1039,6 +1104,28 @@ void FitManager::ConstructTrack(const genfit::StateOnPlane *prevState, const gen
       return;
    }
 
+   int pdg = rep->getPDG();
+
+   double massAMU = 1.007276466812;
+
+   //TODO Temporary solution
+   if(pdg == 1000020040)
+     massAMU = 4.0026;
+   else if(pdg == 2212)
+     massAMU = 1.00728;
+   else if(pdg == 1000010020)
+     massAMU = 2.01355;
+   else if(pdg == 1000060120)
+     massAMU = 12;
+   else if(pdg == 1000080160)
+     massAMU = 15.9949;
+   else
+     {
+       std::cerr<<" FitManager::ConstructTrack - Error! PDG code not found. Exiting..."<<"\n";
+       std::exit(0);
+     }
+     
+   
    TVector3 pos, dir, oldPos, oldDir;
    TVector3 mom, mdir, oldMom, oldmDir;
    rep->getPosDir(*state, pos, dir);
@@ -1075,7 +1162,7 @@ void FitManager::ConstructTrack(const genfit::StateOnPlane *prevState, const gen
 
    // NB Just for testing (d,p)
    // TODO
-   Double_t mass = 1.007276466812 * 931.49401 / 1000.0;
+   Double_t mass = massAMU * 931.49401 / 1000.0;
    Double_t ELoss2 = 1000.0 * (TMath::Sqrt(TMath::Power((mom).Mag(), 2) + TMath::Power(mass, 2)) - mass);
    Double_t ELoss1 = 1000.0 * (TMath::Sqrt(TMath::Power((oldMom).Mag(), 2) + TMath::Power(mass, 2)) - mass);
    Double_t ELoss = ELoss1 - ELoss2;

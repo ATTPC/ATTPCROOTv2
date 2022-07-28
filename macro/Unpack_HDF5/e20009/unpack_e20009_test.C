@@ -3,129 +3,117 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
-struct auxchannel {
-   std::string name;
-   uint8_t cobo;
-   uint8_t asad;
-   uint8_t aget;
-   uint8_t channel;
-};
+bool reduceFunc(AtRawEvent *evt)
+{
+   return (evt->GetNumPads() > 0) && evt->IsGood();
+}
 
-void unpack_e20009_test(TString fileName)
+
+void unpack_e20009_test(TString fileName = "run_0260")
 {
 
-   // -----   Timer   --------------------------------------------------------
+   // Load the library for unpacking and reconstruction
+   gSystem->Load("libAtReconstruction.so");
+
    TStopwatch timer;
    timer.Start();
-   // ------------------------------------------------------------------------
-
-   gSystem->Load("libXMLParser.so");
-   // -----------------------------------------------------------------
-   // Set file names
-
+  
+  
    TString parameterFile = "ATTPC.e20009.par";
    TString mappath = "";
    TString filepath = "/mnt/daqtesting/e20009_attpc_transfer/h5/";
    TString fileExt = ".h5";
-   TString dataFile = filepath + fileName + fileExt;
+   TString inputFile = filepath + fileName + fileExt;
    TString scriptfile = "e12014_pad_mapping.xml";
    TString dir = getenv("VMCWORKDIR");
+   TString mapDir = dir + "/scripts/" + scriptfile;
    TString scriptdir = dir + "/scripts/" + scriptfile;
    TString dataDir = dir + "/macro/data/";
    TString geomDir = dir + "/geometry/";
    gSystem->Setenv("GEOMPATH", geomDir.Data());
-
-   // TString inputFile   = dataDir + name + ".digi.root";
-   // TString outputFile  = dataDir + "output.root";
-   TString outputFile =  fileName + ".root";
-   // TString mcParFile   = dataDir + name + ".params.root";
+   TString outputFile =  fileName + ".root"; 
    TString loggerFile = dataDir + "ATTPCLog.log";
    TString digiParFile = dir + "/parameters/" + parameterFile;
    TString geoManFile = dir + "/geometry/ATTPC_He1bar_v2.root";
-
-   TString inimap = mappath + "inhib.txt";
-   TString lowgmap = mappath + "lowgain.txt";
-   TString xtalkmap = mappath + "beampads_e15503b.txt";
-
-   // -----------------------------------------------------------------
-   // Logger
-   FairLogger *fLogger = FairLogger::GetLogger();
-   /*fLogger -> SetLogFileName(loggerFile);
-   fLogger -> SetLogToScreen(kTRUE);
-   fLogger -> SetLogToFile(kTRUE);
-   fLogger -> SetLogVerbosityLevel("LOW");*/
-
+   
    FairRunAna *run = new FairRunAna();
    run->SetOutputFile(outputFile);
    run->SetGeomFile(geoManFile);
 
+   // Set the parameter file
    FairRuntimeDb *rtdb = run->GetRuntimeDb();
    FairParAsciiFileIo *parIo1 = new FairParAsciiFileIo();
+
+   std::cout << "Setting par file: " << digiParFile << std::endl;
    parIo1->open(digiParFile.Data(), "in");
-   // FairParRootFileIo* parIo2 = new FairParRootFileIo();
-   // parIo2 -> open("param.dummy_proto.root");
-   // rtdb -> setFirstInput(parIo2);
-   rtdb->setSecondInput(parIo1);
+   rtdb->setFirstInput(parIo1);
+   std::cout << "Getting containers..." << std::endl;
+   // We must get the container before initializing a run
+   rtdb->getContainer("AtDigiPar");
 
-   AtHDFParserTask *HDFParserTask = new AtHDFParserTask();
-   HDFParserTask->SetPersistence(kFALSE);
-   HDFParserTask->SetAtTPCMap(scriptdir.Data());
-   HDFParserTask->SetFileName(dataFile.Data());
-   HDFParserTask->SetBaseLineSubtraction(kTRUE);
+   auto fAtMapPtr = std::make_shared<AtTpcMap>();
+   fAtMapPtr->ParseXMLMap(mapDir.Data());
+   fAtMapPtr->GeneratePadPlane();
 
-   //--------Auxiliary channels
+   fAtMapPtr->AddAuxPad({10,0,0,34},"trigger_live");
+   fAtMapPtr->AddAuxPad({10,0,0,0},"mesh");
+   fAtMapPtr->AddAuxPad({10,0,1,34},"mesh_MCA");
+   fAtMapPtr->AddAuxPad({10,0,1,0},"IC");
+   fAtMapPtr->AddAuxPad({10,0,2,34},"IC_sca");
+   fAtMapPtr->AddAuxPad({10,0,2,0},"trigger_free");
+   fAtMapPtr->AddAuxPad({10,0,3,34},"DB_beam");
+   fAtMapPtr->AddAuxPad({10,0,3,0},"unassigned");
+   
+   auto unpacker = std::make_unique<AtHDFUnpacker>(fAtMapPtr);
+   unpacker->SetInputFileName(inputFile.Data());
+   unpacker->SetNumberTimestamps(2);
+   unpacker->SetBaseLineSubtraction(true);
 
-   // Hash table: cobo, asad, aget, channel
-   std::vector<auxchannel> aux_channels;
-   auxchannel ch_1{"trigger_live", 10, 0, 0, 34};
-   aux_channels.push_back(ch_1);
-   auxchannel ch_2{"mesh", 10, 0, 0, 0};
-   aux_channels.push_back(ch_2);
-   auxchannel ch_3{"mesh_MCA", 10, 0, 1, 34};
-   aux_channels.push_back(ch_3);
-   auxchannel ch_4{"IC", 10, 0, 1, 0};
-   aux_channels.push_back(ch_4);
-   auxchannel ch_5{"IC_sca", 10, 0, 2, 34};
-   aux_channels.push_back(ch_5);
-   auxchannel ch_6{"trigger_free", 10, 0, 2, 0};
-   aux_channels.push_back(ch_6);
-   auxchannel ch_7{"DB_beam", 10, 0, 3, 34};
-   aux_channels.push_back(ch_7);
-   auxchannel ch_8{"unassigned", 10, 0, 3, 0};
-   aux_channels.push_back(ch_8);
-   //---------End of auxiliary channel setup
+   auto unpackTask = new AtUnpackTask(std::move(unpacker));
+   unpackTask->SetPersistence(false);
+   
+   AtFilterSubtraction *filter = new AtFilterSubtraction(fAtMapPtr);
+   filter->SetThreshold(50);
+   filter->SetIsGood(false);
 
-   for (auto iaux : aux_channels) {
-      auto hash = HDFParserTask->CalculateHash(iaux.cobo, iaux.asad, iaux.aget, iaux.channel);
-      auto isaux = HDFParserTask->SetAuxChannel(hash, iaux.name);
-   }
+   AtFilterTask *filterTask = new AtFilterTask(filter);
+   filterTask->SetPersistence(false);
+   filterTask->SetFilterAux(false);
 
-   AtPSASimple2 *psa = new AtPSASimple2();
-   // psa -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
-   // psa -> SetBaseCorrection(kFALSE);
-   // psa -> SetTimeCorrection(kFALSE);
+   auto threshold = 20;
 
+   // auto psa = new AtPSASimple2();
+   auto psa = new AtPSAMax();
+   psa->SetThreshold(threshold);
+   // psa->SetMaxFinder();
+
+   // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);
-   psa->SetThreshold(20);
-   psa->SetMaxFinder();
+   psaTask->SetInputBranch("AtRawEventFiltered");
 
    AtPRAtask *praTask = new AtPRAtask();
    praTask->SetPersistence(kTRUE);
+   praTask->SetMaxNumHits(3000);
+   praTask->SetMinNumHits(100);
 
-   run->AddTask(HDFParserTask);
+   run->AddTask(unpackTask);
+   run->AddTask(filterTask);
    run->AddTask(psaTask);
    run->AddTask(praTask);
-
+   
+   std::cout << "***** Starting Init ******" << std::endl;
    run->Init();
+   std::cout << "***** Ending Init ******" << std::endl;
 
-   auto numEvents = HDFParserTask->GetNumEvents() / 2;
+   // Get the number of events and unpack the whole run
+   auto numEvents = unpackTask->GetNumEvents();
+   std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
-   // run->Run(0, 20);
-   run->Run(0, numEvents);
+   run->Run(0,numEvents);
 
    std::cout << std::endl << std::endl;
-   std::cout << "Macro finished succesfully." << std::endl << std::endl;
+   std::cout << "Done unpacking events" << std::endl << std::endl;
    std::cout << "- Output file : " << outputFile << std::endl << std::endl;
    // -----   Finish   -------------------------------------------------------
    timer.Stop();
@@ -135,6 +123,4 @@ void unpack_e20009_test(TString fileName)
    cout << "Real time " << rtime << " s, CPU time " << ctime << " s" << endl;
    cout << endl;
    // ------------------------------------------------------------------------
-
-   gApplication->Terminate();
 }

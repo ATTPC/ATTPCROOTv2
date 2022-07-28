@@ -14,7 +14,7 @@ Set(DEPENDENCIES
   FairRoot::Base
   ROOT::Core
   ATTPCROOT::AtSimulationData
-)
+ )
 
 generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}

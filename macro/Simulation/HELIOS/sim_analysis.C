@@ -11,7 +11,7 @@ void sim_analysis(Int_t num_ev=10000)
     TString outFileNameTail = ".root";
     TString outFileName     = outFileNameHead + outFileNameTail;
 
-    AtSiArrayPoint* point = new AtSiArrayPoint();
+    AtSiPoint* point = new AtSiPoint();
     TClonesArray *pointArray=0;
 
     TFile* file = new TFile(mcFileName.Data(),"READ");
@@ -19,7 +19,7 @@ void sim_analysis(Int_t num_ev=10000)
 
 
     tree = (TTree*) file -> Get("cbmsim");
-    tree -> SetBranchAddress("AtSiArrayPoint", &pointArray);
+    tree -> SetBranchAddress("AtSiPoint", &pointArray);
     Int_t nEvents = tree -> GetEntriesFast();
 
     if(nEvents>num_ev) nEvents=num_ev;
