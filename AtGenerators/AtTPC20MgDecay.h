@@ -1,14 +1,16 @@
+
 #ifndef AtTPC20MGDECAY_H
 #define AtTPC20MGDECAY_H
 
-#include <FairGenerator.h>
+#include "FairGenerator.h"
+#include "FairIon.h"
+#include "FairParticle.h"
 
-#include <Rtypes.h>
+#include <iostream>
+#include <map>
 
 class FairPrimaryGenerator;
-class TBuffer;
-class TClass;
-class TMemberInspector;
+class AtTPCIonGenerator;
 
 class AtTPC20MgDecay : public FairGenerator {
 
@@ -44,6 +46,8 @@ public:
    virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
 
    void ShowOnlyAlphaProtonBranch() { fOnlyAPBranch = kTRUE; };
+   void SetNuclearDecayChain() { fNuclearDecayChainIsSet = kTRUE; };
+   void SetDecayChainPoint(Double32_t ParticleEnergy = 0, Double32_t ParticleBranchingRatio = 0);
 
 private:
    Bool_t fOnlyAPBranch; // True if only the beta-alpha-proton branch is visible
@@ -51,7 +55,10 @@ private:
 
    Double32_t fX, fY, fZ;                   // Point vertex coordinates [cm]
    Double32_t fX1, fY1, fZ1, fX2, fY2, fZ2; // Box vertex coords (x1,y1,z1)->(x2,y2,z2)
-
+   Bool_t fNuclearDecayChainIsSet;
+   Int_t fParticlesDefinedInNuclearDecay;
+   Double32_t fParticleEnergies[50];
+   Double32_t fParticleBranchingRatios[50];
    ClassDef(AtTPC20MgDecay, 1)
 };
 
