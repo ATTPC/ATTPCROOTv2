@@ -67,11 +67,22 @@ void AtTpcProtoMap::GeneratePadPlane()
    TIter nextkey(gDirectory->GetListOfKeys());
    while ((key = dynamic_cast<TKey *>(nextkey()))) {
       auto *obj = dynamic_cast<TMultiGraph *>(key->ReadObj());
+      if (obj != nullptr)
+         fPadPlane->AddBin(obj);
+      auto padPlane = dynamic_cast<TH2Poly *>(key->ReadObj());
+      if (padPlane != nullptr) {
+         if (fPadPlane != nullptr)
+            delete fPadPlane;
+         fPadPlane = dynamic_cast<TH2Poly *>(padPlane->Clone());
+         break;
+      }
+      /*std::cout << "Using key: " << key << " " << obj << std::endl;
       if (obj->InheritsFrom("TMultiGraph")) {
          mg = (TMultiGraph *)obj;
          bin = fPadPlane->AddBin(mg);
          // std::cout<<bin<<std::endl;
       }
+      */
    }
 
    kIsGenerated = kTRUE;
