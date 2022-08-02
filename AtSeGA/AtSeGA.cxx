@@ -7,17 +7,18 @@
  ********************************************************************************/
 #include "AtSeGA.h"
 
+#include "AtDetectorList.h"
 #include "AtMCPoint.h"
-#include "FairVolume.h"
+#include "AtStack.h"
+
 #include "FairRootManager.h"
 #include "FairRun.h"
 #include "FairRuntimeDb.h"
-#include "AtDetectorList.h"
-#include "AtStack.h"
-#include "TVirtualMC.h"
+#include "FairVolume.h"
 #include "TClonesArray.h"
 #include "TGeoManager.h"
 #include "TLorentzVector.h"
+#include "TVirtualMC.h"
 
 #include <iostream>
 using std::cout;
@@ -83,7 +84,7 @@ Bool_t AtSeGA::ProcessHits(FairVolume *vol)
       if (fELossAcc == 0.)
          return kFALSE;
 
-      AddPoint(fTrackID, fVolumeID, TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z() ),
+      AddPoint(fTrackID, fVolumeID, TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
                TVector3(fMomIn.X(), fMomIn.Y(), fMomIn.Z()), fTime, fLength, fELossAcc);
 
       stack->AddPoint(kAtSeGA);
@@ -126,17 +127,17 @@ void AtSeGA::Reset()
 void AtSeGA::Print(Option_t *option) const
 {
    Int_t nHits = fAtSeGAPointCollection->GetEntriesFast();
-   LOG(INFO) << "SEGA: " << nHits << " points registered in this event" ;
+   LOG(INFO) << "SEGA: " << nHits << " points registered in this event";
 }
 
 void AtSeGA::ConstructGeometry()
 {
    TString fileName = GetGeometryFileName();
    if (fileName.EndsWith(".geo")) {
-      LOG(INFO) << "Constructing SEGA geometry from ASCII file " << fileName ;
+      LOG(INFO) << "Constructing SEGA geometry from ASCII file " << fileName;
       // ConstructASCIIGeometry();
    } else if (fileName.EndsWith(".root")) {
-      LOG(INFO) << "Constructing SEGA geometry from ROOT file " << fileName ;
+      LOG(INFO) << "Constructing SEGA geometry from ROOT file " << fileName;
       ConstructRootGeometry();
    } else {
       std::cout << "Geometry format not supported." << std::endl;
@@ -147,26 +148,26 @@ Bool_t AtSeGA::CheckIfSensitive(std::string name)
 {
    TString tsname = name;
    if (tsname.Contains("Crystal_")) {
-      LOG(INFO) << " SeGA geometry: Sensitive volume found: " << tsname ;
+      LOG(INFO) << " SeGA geometry: Sensitive volume found: " << tsname;
       return kTRUE;
    }
    return kFALSE;
 }
 
 // -----   Private method AddPoint   --------------------------------------------
-AtMCPoint *AtSeGA::AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom,
-                                  Double_t time, Double_t length, Double_t eLoss)
+AtMCPoint *
+AtSeGA::AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t time, Double_t length, Double_t eLoss)
 {
    TClonesArray &clref = *fAtSeGAPointCollection;
    Int_t size = clref.GetEntriesFast();
    if (fVerboseLevel > 1)
       LOG(INFO) << "SEGA: Adding Point in detector " << detID << ", track " << trackID << ", energy loss "
-                << eLoss * 1e06 << " keV" ;
+                << eLoss * 1e06 << " keV";
 
    auto point = new (clref[size]) AtMCPoint(trackID, detID, pos, mom, time, length, eLoss);
-point->SetVolName(fVolName);
-point->SetDetCopyID(fDetCopyID);
-return point;
+   point->SetVolName(fVolName);
+   point->SetDetCopyID(fDetCopyID);
+   return point;
 }
 
 ClassImp(AtSeGA)

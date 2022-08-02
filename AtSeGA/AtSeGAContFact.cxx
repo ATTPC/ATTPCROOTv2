@@ -6,6 +6,7 @@
  *                  copied verbatim in the file "LICENSE"                       *
  ********************************************************************************/
 #include "AtSeGAContFact.h"
+
 #include "FairRuntimeDb.h"
 
 #include <iostream>

@@ -7,17 +7,20 @@
  ********************************************************************************/
 
 #include "AtSeGADigitizer.h"
-#include "FairRootManager.h"
+
+#include "AtMCPoint.h"
 #include "AtSeGA.h"
 #include "AtSeGACrystalCalData.h"
-#include "AtMCPoint.h"
+
+#include "FairRootManager.h"
 #include "TArrayD.h"
 #include "TClonesArray.h"
 #include "TMath.h"
 #include "TRandom.h"
 #include "TVector3.h"
-#include <iostream>
 #include <stdlib.h>
+
+#include <iostream>
 
 using std::cerr;
 using std::cout;
@@ -26,10 +29,10 @@ using std::endl;
 AtSeGADigitizer::AtSeGADigitizer()
    : FairTask("ATTPC SEGA Digitizer"), fMCPointDataCA(NULL), fSeGACryCalDataCA(NULL), fNonUniformity(0)
 {
-   fNonUniformity = 0.;  // perfect crystals
-   
-   fResolutionGe = 0.;   // perfect crystals
-   fThreshold = 0.;      // no threshold
+   fNonUniformity = 0.; // perfect crystals
+
+   fResolutionGe = 0.; // perfect crystals
+   fThreshold = 0.;    // no threshold
 }
 
 AtSeGADigitizer::~AtSeGADigitizer()
@@ -150,7 +153,6 @@ void AtSeGADigitizer::Exec(Option_t *option)
          continue;
       }
 
-     
       if (isGe(tempCryID) && fResolutionGe > 0)
          ((AtSeGACrystalCalData *)(fSeGACryCalDataCA->At(i)))->SetEnergy(ExpResSmearingGe(temp));
    }
@@ -202,8 +204,8 @@ AtSeGACrystalCalData *AtSeGADigitizer::AddCrystalCal(Int_t ident, Double_t energ
 void AtSeGADigitizer::SetExpEnergyRes(Double_t crystalResGe)
 {
    fResolutionGe = crystalResGe;
-   
-   LOG(INFO) << "AtSeGADigitizer::SetExpEnergyRes to " << fResolutionGe << "% @ 1 MeV for Ge" ;
+
+   LOG(INFO) << "AtSeGADigitizer::SetExpEnergyRes to " << fResolutionGe << "% @ 1 MeV for Ge";
 }
 
 Double_t AtSeGADigitizer::NUSmearing(Double_t inputEnergy)
@@ -242,9 +244,6 @@ Double_t AtSeGADigitizer::ExpResSmearingGe(Double_t inputEnergy)
    }
 }
 
-   
-
-
 Bool_t AtSeGADigitizer::isGe(Int_t id)
 {
    if (id > 0 && id < 16)
@@ -252,5 +251,3 @@ Bool_t AtSeGADigitizer::isGe(Int_t id)
    else
       return kFALSE;
 }
-
-

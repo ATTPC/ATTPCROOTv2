@@ -9,11 +9,13 @@
 #ifndef ATSEGADIGITIZER_H
 #define ATSEGADIGITIZER_H
 
-#include "FairTask.h"
+#include "AtMCPoint.h"
 #include "AtSeGA.h"
 #include "AtSeGACrystalCalData.h"
-#include "AtMCPoint.h"
+
+#include "FairTask.h"
 #include "TClonesArray.h"
+
 #include "string"
 
 class AtSeGADigitizer : public FairTask {
@@ -86,12 +88,12 @@ public:
 private:
    void SetParameter();
 
-   TClonesArray *fMCPointDataCA;  //!  The crystal hit collection
+   TClonesArray *fMCPointDataCA;    //!  The crystal hit collection
    TClonesArray *fSeGACryCalDataCA; /**< Array with CALIFA Cal- output data. >*/
 
-   Double_t fNonUniformity;  // Experimental non-uniformity parameter
-   Double_t fResolutionGe;   // Experimental resolution @ 1 MeV for Ge
-   Double_t fThreshold;      // Minimum energy requested to create a Cal
+   Double_t fNonUniformity; // Experimental non-uniformity parameter
+   Double_t fResolutionGe;  // Experimental resolution @ 1 MeV for Ge
+   Double_t fThreshold;     // Minimum energy requested to create a Cal
 
    /** Private method NUSmearing
     **
@@ -112,9 +114,7 @@ private:
    /** Private method ExpResSmearingGe
     **/
    Double_t ExpResSmearingGe(Double_t inputEnergy);
-   
 
-  
    Bool_t isGe(Int_t id);
 
    ClassDef(AtSeGADigitizer, 1);
