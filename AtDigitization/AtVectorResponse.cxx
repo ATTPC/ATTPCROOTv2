@@ -17,7 +17,7 @@ AtVectorResponse::AtVectorResponse() {}
 
 double AtVectorResponse::ResponseFunction(double reducedTime)
 {
-   double response = fWaveSample[std::floor(reducedTime * fPeakingTime / fTBTime)];
+   double response = fWaveSample[std::floor(reducedTime * fPeakingTime / fTBTime + .5)];
    // std::cout << "response: " << response << std::endl;
    return response;
 }
@@ -36,6 +36,9 @@ void AtVectorResponse::SetFile(TString filename)
       }
    }
    input.close();
+   for (int i = fWaveSample.size(); i < 512; i++) {
+      fWaveSample.push_back(0);
+   }
    std::cout << "fWaveSample size: " << fWaveSample.size() << std::endl;
    for (int i = 0; i < fWaveSample.size(); i++) {
       std::cout << "fWaveSample[" << i << "]: " << fWaveSample[i] << std::endl;
