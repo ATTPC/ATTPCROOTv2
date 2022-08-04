@@ -17,7 +17,7 @@ void hitClustering()
    hit[1].SetPositionVariance({5 * 5, 1, 1});
    hit[2].SetPositionVariance({2 * 2, 16, 1});
 
-   AtHitCluster cluster;
+   AtHitClusterFull cluster;
    cluster.AddHit(hit[0]);
    cluster.GetCovNumerator().Print();
    cluster.GetCovMatrix().Print();

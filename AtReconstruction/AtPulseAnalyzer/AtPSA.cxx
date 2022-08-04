@@ -11,11 +11,14 @@
 #include <FairRun.h>
 #include <FairRuntimeDb.h>
 
+#include <Math/Point3D.h> // for PositionVector3D
 #include <Rtypes.h>
 #include <TClonesArray.h>
 #include <TObject.h> // for TObject
 
 #include <algorithm>
+#include <array> // for array
+#include <cmath> // for pow
 #include <iostream>
 #include <iterator>
 #include <utility> // for pair

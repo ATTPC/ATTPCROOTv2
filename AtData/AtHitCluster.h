@@ -4,44 +4,40 @@
 #include "AtHit.h"
 
 #include <Rtypes.h>
-#include <TMatrixDSym.h>
-#include <TMatrixDfwd.h>
-#include <TMatrixT.h>
+#include <TMatrixDSymfwd.h> // for TMatrixDSym
+#include <TMatrixTSym.h>    // for TMatrixTSym
+
+#include <memory>  // for unique_ptr
+#include <utility> // for move
 
 class TBuffer;
 class TClass;
 class TMemberInspector;
 
 /**
- * Class representing a cluster of hits that arrise from the same deposition of charge in space.
+ * @brief: Class representing a cluster of hits that arise from the same deposition of charge in space.
  * Or at least, that is the assumtion that underlies the math in the class.
  *
  * Will update the position, charge, variance, and covariance as additional hits are added to the
  * cluster. The variance is calcualted using both frequency weights (the charge) and reliability
- * weights (the inverse of the position variance of the hit). The covariance is calcualted just using
+ * weights (the inverse of the position variance of the hit). The covariance is calculated just using
  * the frequency weights (charge) w.r.t. the charge-weighted estimator for the true mean (not the
- * frequency and reliability estimator of the mean).
+ * frequency and reliability estimator of the mean). Eventually, I will sit down and work out a
+ * recursive expression for the covariance using the best estimate of the mean instead of just their
+ * charge weighted.
+ *
+ * The covariance and matrix can also be manually set like the old version of the class.
  *
  * Three positions are stored in the cluster:
  * fPositionFull is the position using the full information(charge and hit position variance).
  * fPositionCharge is the position from just charge weighting.
  * fPosition is the position without any weighting applied.
  *
- * There are two covariances accessable:
- * GetCovMatrix() returns the best online covariance matrix described above.
- * GetCovMatrixFull() returns the covariance matrix using fPositionFull and charge
- * weighting. Is a two pass algorithm, no special treatment of the variance.
- * GetCovMatrixCharge() returns a simple charge weighted covariance matrix using fPositionCharge.
- * GetCovMatrixNoWeight() returns a covariance matrix using fPosition and no weighting.
- *
- * Equation numbers in the comments, refer to the document "Hit Clustering" that I need to find
- * somewhere to put it so it is accessable, but it works through the math and assumptions that
- * guide this class.
- *
- * Of course, the covariance matrix can be set
  */
 class AtHitCluster : public AtHit {
 protected:
+   Int_t fClusterID{-1};
+
    // Off diagonal elements are calcualed using eqn 18. Diagonal from eqn 24
    TMatrixDSym fCovMatrix{3}; //< Cluster covariance matrix
 
@@ -51,20 +47,14 @@ protected:
    // The reliability weight for each coordinate is 1/variance.
    XYZVector fTotalWeight{0, 0, 0};  //< Sum of 1/Var*q (Eqn 10)
    XYZVector fTotalWeight2{0, 0, 0}; //< Sum of 1/Var^2*q (Eqn 11)
-   XYZVector fPositionOld{0, 0, 0};  //< The last position (used during update)
    XYZVector fWeight{0, 0, 0};       //< The weight of the point being added (used during update)
 
-   XYZPoint fPositionUnweighted{0, 0, 0};
-   XYZPoint fPositionUnweightedOld{0, 0, 0};
-
-   XYZPoint fPositionCharge{0, 0, 0};
-   XYZPoint fPositionChargeOld{0, 0, 0};
+   XYZPoint fPositionCharge{0, 0, 0};    //< Charge weighted mean of position
+   XYZPoint fPositionChargeOld{0, 0, 0}; //< The last charge weighted position
+   XYZVector fPositionOld{0, 0, 0};      //< The last position (used during update)
 
    Double_t fLength{-999};
-   Int_t fClusterID{-1};
    Int_t fClusterSize{0}; //< Number of hits in the cluster
-
-   std::vector<AtHit> fHits;
 
 public:
    AtHitCluster();
@@ -77,18 +67,14 @@ public:
    virtual void SetPositionVariance(const XYZPoint &vec) override;
    void SetLength(Double_t length) { fLength = length; }
    void SetClusterID(Int_t id) { fClusterID = id; }
-   void AddHit(const AtHit &hit);
+   virtual void AddHit(const AtHit &hit);
 
    Double_t GetLength() const { return fLength; }
    XYZPoint GetPositionCharge() const { return fPositionCharge; }
-   XYZPoint GetPositionUnWeighted() const { return fPositionUnweighted; }
 
    const TMatrixDSym &GetCovMatrix() const { return fCovMatrix; }
-   TMatrixDSym GetCovMatrixFull() const;
-   TMatrixDSym GetCovMatrixCharge() const;
-   TMatrixDSym GetCovMatrixNoWeight() const;
-
    const TMatrixDSym &GetCovNumerator() const { return fCovNumerator; }
+
    Int_t GetClusterID() const { return fClusterID; }
    Int_t GetClusterSize() const { return fClusterSize; }
 

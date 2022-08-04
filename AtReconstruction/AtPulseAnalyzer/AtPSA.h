@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <map>
 #include <memory>
+#include <vector>
 
 class TClonesArray;
 class AtRawEvent;

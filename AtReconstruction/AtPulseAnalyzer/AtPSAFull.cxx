@@ -1,9 +1,7 @@
 #include "AtPSAFull.h"
 
-#include "AtEvent.h"
 #include "AtHit.h"
 #include "AtPad.h" // for AtPad
-#include "AtRawEvent.h"
 
 #include <FairLogger.h> // for LOG
 

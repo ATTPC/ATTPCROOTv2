@@ -112,7 +112,7 @@ int SampleConsensus::EvaluateLmeds(AtPatterns::AtPattern *model, const std::vect
       if (error < (distanceThreshold * distanceThreshold))
          errorsVec.push_back(error);
    }
-   model->SetChi2(AtTools::GetMedian(errorsVec) / errorsVec.size());
+   model->SetChi2(ContainerManip::GetMedian(errorsVec) / errorsVec.size());
    return errorsVec.size();
 }
 

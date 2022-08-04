@@ -8,8 +8,8 @@
 #include <array>  // for array
 #include <memory> // for make_unique, unique_ptr
 
-class AtEvent;
-class AtRawEvent;
+class AtHit;
+class AtPad;
 class TBuffer;
 class TClass;
 class TMemberInspector;

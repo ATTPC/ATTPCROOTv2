@@ -10,6 +10,7 @@
 #include <memory> // for make_unique, unique_ptr
 
 class AtEvent;
+class AtPad;
 class AtRawEvent;
 class TBuffer;
 class TClass;

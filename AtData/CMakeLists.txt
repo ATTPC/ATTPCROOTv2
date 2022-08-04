@@ -21,6 +21,7 @@ set(SRCS
   AtRawEvent.cxx
   AtHit.cxx
   AtHitCluster.cxx
+  AtHitClusterFull.cxx
   AtEvent.cxx
   AtProtoEvent.cxx
   AtProtoEventAna.cxx

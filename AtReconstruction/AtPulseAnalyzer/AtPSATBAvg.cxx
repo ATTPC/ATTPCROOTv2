@@ -1,9 +1,7 @@
 #include "AtPSATBAvg.h"
 
-#include "AtEvent.h"
 #include "AtHit.h"
 #include "AtPad.h"
-#include "AtRawEvent.h"
 
 #include <FairLogger.h>
 
@@ -11,13 +9,10 @@
 #include <Math/Point3Dfwd.h> // for XYZPoint
 
 #include <algorithm>
-#include <array> // for array
-#include <cmath>
-#include <map>
+#include <array>  // for array
 #include <memory> // for unique_ptr, make_unique
 #include <numeric>
 #include <utility> // for pair
-#include <vector>  // for vector
 
 //#ifdef _OPENMP
 //#include <omp.h>

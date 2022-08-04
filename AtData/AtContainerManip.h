@@ -4,9 +4,12 @@
 #include <FairLogger.h>
 
 #include <algorithm> // IWYU pragma: keep
+#include <iterator>  // for make_move_iterator
 #include <memory>
+#include <type_traits> // for remove_const_t
 #include <vector>
-namespace AtTools {
+
+namespace ContainerManip {
 
 template <typename T>
 T GetMedian(std::vector<T> &vec)
@@ -42,7 +45,7 @@ std::vector<const T *> GetConstPointerVector(const std::vector<T> &vec)
    LOG(info) << "Transforming object -> pointer.";
    std::vector<const T *> ret;
    ret.resize(vec.size());
-   std::transform(vec.begin(), vec.end(), ret.begin(), [](const T &a) { return AtTools::GetPointer(a); });
+   std::transform(vec.begin(), vec.end(), ret.begin(), [](const T &a) { return GetPointer(a); });
    return ret;
 }
 
@@ -62,7 +65,7 @@ std::vector<T *> GetPointerVector(const std::vector<T> &vec)
    LOG(info) << "Transforming object -> pointer.";
    std::vector<T *> ret;
    ret.resize(vec.size());
-   std::transform(vec.begin(), vec.end(), ret.begin(), [](const T &a) { return AtTools::GetPointer(a); });
+   std::transform(vec.begin(), vec.end(), ret.begin(), [](const T &a) { return GetPointer(a); });
    return ret;
 }
 
@@ -73,6 +76,16 @@ std::vector<T *> GetPointerVector(const std::vector<std::unique_ptr<T>> &vec)
    std::vector<T *> ret;
    ret.resize(vec.size());
    std::transform(vec.begin(), vec.end(), ret.begin(), [](const std::unique_ptr<T> &a) { return a.get(); });
+   return ret;
+}
+
+template <typename T>
+std::vector<T> GetObjectVector(const std::vector<std::unique_ptr<T>> &vec)
+{
+   LOG(info) << "Transforming unique pointer -> object.";
+   std::vector<T> ret;
+   ret.resize(vec.size());
+   std::transform(vec.begin(), vec.end(), ret.begin(), [](const std::unique_ptr<T> &a) { return *a; });
    return ret;
 }
 
@@ -118,5 +131,5 @@ std::vector<T> MoveFromVector(std::vector<T> &vec, Operator op)
    return retVec;
 }
 
-} // namespace AtTools
+} // namespace ContainerManip
 #endif //#ifndef ATCONTAINERMANIP_H

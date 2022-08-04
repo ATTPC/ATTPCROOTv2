@@ -9,6 +9,7 @@
 #include <TObject.h>
 
 #include <algorithm>
+#include <memory>
 #include <vector>
 
 class TBuffer;
@@ -71,7 +72,7 @@ public:
 
    Int_t GetHitID() const { return fHitID; }
    const XYZPoint &GetPosition() const { return fPosition; }
-   virtual const XYZVector &GetPositionVariance() const { return fPositionVariance; }
+   const XYZVector &GetPositionVariance() const { return fPositionVariance; }
    XYZVector GetPositionSigma() const;
    Double_t GetCharge() const { return fCharge; }
    Int_t GetPadNum() const { return fPadNum; }

@@ -23,7 +23,7 @@ AtPattern::AtPattern(Int_t numPoints) : fNumPoints(numPoints) {}
  */
 Double_t AtPattern::FitPattern(const std::vector<AtHit> &pointsToFit, Double_t qThreshold)
 {
-   FitPattern(AtTools::GetConstPointerVector(pointsToFit), qThreshold);
+   FitPattern(ContainerManip::GetConstPointerVector(pointsToFit), qThreshold);
    return fChi2;
 }
 

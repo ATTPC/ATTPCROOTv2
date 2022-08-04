@@ -13,6 +13,7 @@
 #include <array>
 #include <map>
 #include <memory>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -108,12 +109,9 @@ public:
    void SetIsInGate(Bool_t value) { fIsInGate = value; }
 
    void SetMultiplicityMap(std::map<Int_t, Int_t> MultiMap) { fMultiplicityMap = std::move(MultiMap); }
-   void SetMeshSignal(const TraceArray &mesharray);
+   void SetMeshSignal(TraceArray mesharray) { fMeshSig = std::move(mesharray); }
    void SetMeshSignal(Int_t idx, Float_t val);
 
-   const AtHit &GetHit(Int_t hitNo) const { return *fHitArray.at(hitNo); }
-   const HitVector &GetHitArray() const { return fHitArray; }
-   const AuxPadVector &GetAuxPadArray() const { return fAuxPadArray; }
    Int_t GetEventID() const { return fEventID; }
    Long_t GetTimestamp() const { return fTimestamp; }
    Int_t GetNumHits() const { return fHitArray.size(); }
@@ -121,6 +119,11 @@ public:
    Double_t GetRhoVariance() const { return fRhoVariance; }
    const TraceArray &GetMesh() const { return fMeshSig; }
    Int_t GetHitPadMult(Int_t PadNum); // Returns the multiplicity of the pad where this hit belongs to
+
+   const AtHit &GetHit(Int_t hitNo) const { return *fHitArray.at(hitNo); }
+   [[deprecated("Use GetHits()")]] std::vector<AtHit> GetHitArray() const;
+   const HitVector &GetHits() const { return fHitArray; }
+   const AuxPadVector &GetAuxPads() const { return fAuxPadArray; }
    const std::map<Int_t, Int_t> &GetMultiMap() { return fMultiplicityMap; }
 
    Bool_t IsGood() const { return fIsGood; }

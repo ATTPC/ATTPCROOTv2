@@ -2,9 +2,16 @@
 
 #include <FairLogger.h>
 
+#include <Math/Point3D.h>  // for Cartesian3D, operator<<, operator-
+#include <Math/Vector3D.h> // for DisplacementVector3D, operator<<, operator*
 #include <Rtypes.h>
+#include <TError.h>        // for Error
+#include <TMatrixTUtils.h> // for TMatrixTRow
+
+#include <array> // for array
 
 ClassImp(AtHitCluster);
+
 constexpr auto scale = 1;
 
 std::unique_ptr<AtHit> AtHitCluster::Clone()
@@ -48,8 +55,6 @@ void AtHitCluster::AddHit(const AtHit &hit)
    updateWeightsAndCharge(hit);
    updatePosition(hit);
    updateCovariance(hit);
-
-   fHits.push_back(hit);
 }
 
 /**
@@ -61,7 +66,7 @@ void AtHitCluster::AddHit(const AtHit &hit)
 void AtHitCluster::updateCovariance(const AtHit &hit)
 {
    // Get array representations of the positions
-   std::array<double, 3> hitPos, oldPos, pos;
+   std::array<double, 3> hitPos, oldPos, pos = {};
    hit.GetPosition().GetCoordinates(hitPos.begin());
    fPositionChargeOld.GetCoordinates(oldPos.begin());
    fPositionCharge.GetCoordinates(pos.begin());
@@ -79,7 +84,7 @@ void AtHitCluster::updateCovariance(const AtHit &hit)
          fCovMatrix[j][i] = fCovMatrix[i][j];
       }
 
-   std::array<double, 3> weight, totalWeight, totalWeight2;
+   std::array<double, 3> weight, totalWeight, totalWeight2 = {};
    fPositionOld.GetCoordinates(oldPos.begin());
    fPosition.GetCoordinates(pos.begin());
    fWeight.GetCoordinates(weight.begin());
@@ -106,11 +111,6 @@ void AtHitCluster::updateCovariance(const AtHit &hit)
  */
 void AtHitCluster::updatePosition(const AtHit &hit)
 {
-
-   fPositionUnweightedOld = fPositionUnweighted;
-   fPositionUnweighted += 1.0 / (double)fClusterSize * (hit.GetPosition() - fPositionUnweighted);
-   LOG(debug) << "Position Unweighted: " << fPositionUnweighted;
-
    fPositionOld = fPosition;
    auto wRatio = ElementDiv(fWeight, fTotalWeight); // Ratio between this weight and the total weight
    fPosition += ElementMult(wRatio, hit.GetPosition() - fPosition);
@@ -151,58 +151,4 @@ void AtHitCluster::SetPositionVariance(const XYZPoint &vec)
    SetCovMatrix(1, 1, vec.Y());
    SetCovMatrix(2, 2, vec.Z());
    AtHit::SetPositionVariance(vec);
-}
-
-TMatrixDSym AtHitCluster::GetCovMatrixNoWeight() const
-{
-   TMatrixDSym cov{3};
-   cov.Zero();
-
-   std::array<double, 3> pos, hitPos;
-   fPositionUnweighted.GetCoordinates(pos.begin());
-   for (const auto &hit : fHits) {
-      hit.GetPosition().GetCoordinates(hitPos.begin());
-
-      for (int i = 0; i < 3; ++i)
-         for (int j = 0; j < 3; ++j)
-            cov[i][j] += (hitPos[i] - pos[i]) * (hitPos[j] - pos[j]) / (fClusterSize - 1);
-   }
-
-   return cov;
-}
-
-TMatrixDSym AtHitCluster::GetCovMatrixCharge() const
-{
-   TMatrixDSym cov{3};
-   cov.Zero();
-
-   std::array<double, 3> pos, hitPos;
-   fPositionCharge.GetCoordinates(pos.begin());
-   for (const auto &hit : fHits) {
-      hit.GetPosition().GetCoordinates(hitPos.begin());
-
-      for (int i = 0; i < 3; ++i)
-         for (int j = 0; j < 3; ++j)
-            cov[i][j] += hit.GetCharge() * (hitPos[i] - pos[i]) * (hitPos[j] - pos[j]) / (fCharge - 1);
-   }
-
-   return cov;
-}
-
-TMatrixDSym AtHitCluster::GetCovMatrixFull() const
-{
-   TMatrixDSym cov{3};
-   cov.Zero();
-
-   std::array<double, 3> pos, hitPos;
-   fPosition.GetCoordinates(pos.begin());
-   for (const auto &hit : fHits) {
-      hit.GetPosition().GetCoordinates(hitPos.begin());
-
-      for (int i = 0; i < 3; ++i)
-         for (int j = 0; j < 3; ++j)
-            cov[i][j] += hit.GetCharge() * (hitPos[i] - pos[i]) * (hitPos[j] - pos[j]) / (fCharge - 1);
-   }
-
-   return cov;
 }

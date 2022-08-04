@@ -12,11 +12,9 @@
 
 #include <FairLogger.h> // for Logger, LOG
 
-#include <algorithm> // for max
-#include <fstream>   // for std
-#include <iterator>  // for insert_iterator, inserter
-#include <memory>    // for allocator_traits<>::value_type
-#include <set>       // for set, operator!=, _Rb_tree_const_iterator
+#include <fstream> // for std
+#include <memory>  // for allocator_traits<>::value_type
+#include <set>     // for set, operator!=, _Rb_tree_const_iterator
 
 using namespace SampleConsensus;
 
@@ -61,7 +59,7 @@ AtSampleConsensus::GeneratePatternFromHits(const std::vector<const AtHit *> &hit
 AtPatternEvent AtSampleConsensus::Solve(AtEvent *event)
 {
    if (event->IsGood()) {
-      auto hitVec = AtTools::GetConstPointerVector(event->GetHitArray());
+      auto hitVec = ContainerManip::GetConstPointerVector(event->GetHits());
       return Solve(hitVec);
    }
 
@@ -70,7 +68,7 @@ AtPatternEvent AtSampleConsensus::Solve(AtEvent *event)
 
 AtPatternEvent AtSampleConsensus::Solve(const std::vector<AtHit> &hitArray)
 {
-   auto hitVec = AtTools::GetConstPointerVector(hitArray);
+   auto hitVec = ContainerManip::GetConstPointerVector(hitArray);
    return Solve(hitVec);
 };
 
@@ -141,44 +139,6 @@ AtTrack AtSampleConsensus::CreateTrack(AtPattern *pattern, std::vector<const AtH
  * @return vector containing the AtHits consistent with the pattern
  *
  */
-std::vector<AtHit> AtSampleConsensus::movePointsInPattern(AtPattern *pattern, std::vector<AtHit> &hits)
-{
-
-   std::vector<AtHit> retVec;
-   auto itStartEqualRange = hits.end();
-
-   for (auto it = hits.begin(); it != hits.end(); ++it) {
-
-      double error = pattern->DistanceToPattern(it->GetPosition());
-      auto isInPattern = (error * error) < (fDistanceThreshold * fDistanceThreshold);
-
-      // Start of sub-vector with hits in pattern
-      if (isInPattern && itStartEqualRange == hits.end()) {
-         itStartEqualRange = it;
-         continue;
-      }
-
-      // End of sub-vector with hits in pattern.
-      // Move hits in this range to retVec then delete the empty entries
-      if (itStartEqualRange != hits.end() && !isInPattern) {
-         retVec.insert(retVec.end(), std::make_move_iterator(itStartEqualRange), std::make_move_iterator(it));
-         hits.erase(itStartEqualRange, it);
-         it = itStartEqualRange;
-         itStartEqualRange = hits.end();
-         continue;
-      }
-   }
-
-   // If the last chunk of the array was in the pattern, move it and delete empty entries
-   if (itStartEqualRange != hits.end()) {
-      auto it = hits.end();
-      retVec.insert(retVec.end(), std::make_move_iterator(itStartEqualRange), std::make_move_iterator(it));
-      hits.erase(itStartEqualRange, it);
-   }
-   return retVec;
-}
-
-/// TODO: Check the logic in this class. Is the right memory being moved in to the returned hit vector?
 std::vector<const AtHit *> AtSampleConsensus::movePointsInPattern(AtPattern *pattern, std::vector<const AtHit *> &hits)
 {
 
@@ -187,5 +147,5 @@ std::vector<const AtHit *> AtSampleConsensus::movePointsInPattern(AtPattern *pat
       return (error * error) < (fDistanceThreshold * fDistanceThreshold);
    };
 
-   return AtTools::MoveFromVector(hits, isInPattern);
+   return ContainerManip::MoveFromVector(hits, isInPattern);
 }

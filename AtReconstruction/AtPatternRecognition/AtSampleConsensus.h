@@ -89,7 +89,6 @@ public:
 
 private:
    PatternPtr GeneratePatternFromHits(const std::vector<const AtHit *> &hitArray);
-   std::vector<AtHit> movePointsInPattern(AtPattern *pattern, std::vector<AtHit> &indexes);
    std::vector<const AtHit *> movePointsInPattern(AtPattern *pattern, std::vector<const AtHit *> &indexes);
    // void SaveTrack(AtPattern *pattern, std::vector<AtHit> &indexes, AtPatternEvent *event);
    AtTrack CreateTrack(AtPattern *pattern, std::vector<const AtHit *> &indexes);

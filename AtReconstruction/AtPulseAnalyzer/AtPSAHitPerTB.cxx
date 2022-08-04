@@ -1,9 +1,7 @@
 #include "AtPSAHitPerTB.h"
 
-#include "AtEvent.h"
 #include "AtHit.h"
 #include "AtPad.h" // for AtPad
-#include "AtRawEvent.h"
 
 #include <FairLogger.h>
 
@@ -13,10 +11,9 @@
 
 #include <array>    // for array
 #include <iostream> // for basic_ostream::operator<<, operator<<
-#include <map>
-#include <memory>  // for allocator_traits<>::value_type
-#include <utility> // for pair
-
+#include <memory>   // for allocator_traits<>::value_type
+#include <utility>  // for pair
+#include <vector>
 /*
 #ifdef _OPENMP
 #include <omp.h>

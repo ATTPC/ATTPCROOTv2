@@ -13,7 +13,7 @@ protected:
    static std::vector<Double_t> fWaveSample;
 
 public:
-   AtVectorResponse();
+   AtVectorResponse() = default;
    static double ResponseFunction(double reducedTime);
    static void SetFile(TString filename);
 

@@ -4,7 +4,6 @@
 #include "AtEstimatorMethods.h"
 #include "AtHit.h"
 
-#include <algorithm>
 using namespace SampleConsensus;
 
 /**
@@ -36,5 +35,5 @@ int AtEstimator::EvaluateModel(AtPatterns::AtPattern *model, const std::vector<c
 int AtEstimator::EvaluateModel(AtPatterns::AtPattern *model, const std::vector<AtHit> &hits, double distThresh,
                                Estimators estimator = Estimators::kRANSAC)
 {
-   return EvaluateModel(model, AtTools::GetConstPointerVector(hits), distThresh, estimator);
+   return EvaluateModel(model, ContainerManip::GetConstPointerVector(hits), distThresh, estimator);
 }

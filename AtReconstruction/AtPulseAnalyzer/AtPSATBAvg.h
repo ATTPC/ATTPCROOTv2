@@ -8,8 +8,7 @@
 #include <limits>
 #include <memory> // for make_unique, unique_ptr
 
-class AtEvent;
-class AtRawEvent;
+class AtPad;
 class TBuffer;
 class TClass;
 class TMemberInspector;

@@ -46,8 +46,8 @@ public:
    std::vector<ROOT::Math::XYZPoint> SamplePoints(int N);
 
    virtual void SetHitsToSample(const std::vector<const AtHit *> &hits) = 0;
-   virtual void SetHitsToSample(const std::vector<HitPtr> &hits);
-   virtual void SetHitsToSample(const std::vector<AtHit> &hits);
+   [[deprecated]] void SetHitsToSample(const std::vector<HitPtr> &hits);
+   [[deprecated]] void SetHitsToSample(const std::vector<AtHit> &hits);
 
    void SetSampleWithReplacement(bool val) { fWithReplacement = val; }
 

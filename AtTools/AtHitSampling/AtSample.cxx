@@ -145,11 +145,11 @@ void AtSample::FillCDF()
 
 void AtSample::SetHitsToSample(const std::vector<HitPtr> &hits)
 {
-   SetHitsToSample(AtTools::GetConstPointerVector(hits));
+   SetHitsToSample(ContainerManip::GetConstPointerVector(hits));
 }
 
 void AtSample::SetHitsToSample(const std::vector<AtHit> &hits)
 {
    // Cast away const, for container manip but it is restored when SetHitsToSample is called
-   SetHitsToSample(AtTools::GetConstPointerVector(hits));
+   SetHitsToSample(ContainerManip::GetConstPointerVector(hits));
 }
