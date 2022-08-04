@@ -11,6 +11,7 @@ class TClonesArray;
 class AtRawEvent;
 class AtEvent;
 class AtHit;
+class AtPad;
 class TBuffer;
 class TClass;
 class TMemberInspector;
@@ -35,6 +36,8 @@ protected:
    Double_t fDriftVelocity{}; //< drift velocity of electron in cm/us
    Double_t fZk{};            //< Relative position of micromegas-cathode
 
+   using HitVector = std::vector<std::unique_ptr<AtHit>>;
+
 public:
    AtPSA() = default;
    virtual ~AtPSA() = default;
@@ -46,7 +49,8 @@ public:
 
    void SetSimulatedEvent(TClonesArray *MCSimPointArray);
 
-   virtual void Analyze(AtRawEvent *rawEvent, AtEvent *event) = 0;
+   virtual void Analyze(AtRawEvent *rawEvent, AtEvent *event);
+   virtual HitVector AnalyzePad(AtPad *pad) = 0;
    virtual std::unique_ptr<AtPSA> Clone() = 0;
 
 protected:

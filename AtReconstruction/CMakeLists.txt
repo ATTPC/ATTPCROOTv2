@@ -37,12 +37,12 @@ set(SRCS
   # Add all the source files below this line. Those must have cxx for their extension.
 
   AtPulseAnalyzer/AtPSA.cxx
-  AtPulseAnalyzer/AtPSASimple2.cxx
-  AtPulseAnalyzer/AtPSASpectrum.cxx
+  #AtPulseAnalyzer/AtPSASimple2.cxx
+  #AtPulseAnalyzer/AtPSASpectrum.cxx
   AtPulseAnalyzer/AtPSAMax.cxx
-  AtPulseAnalyzer/AtPSAHitPerTB.cxx
-  AtPulseAnalyzer/AtPSAFull.cxx
-  AtPulseAnalyzer/AtPSATBAvg.cxx
+  #AtPulseAnalyzer/AtPSAHitPerTB.cxx
+  #AtPulseAnalyzer/AtPSAFull.cxx
+  #AtPulseAnalyzer/AtPSATBAvg.cxx
   AtPulseAnalyzer/AtCalibration.cxx
   
   AtFilter/AtFilter.cxx

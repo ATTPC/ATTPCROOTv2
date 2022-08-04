@@ -26,8 +26,15 @@ void hitClustering()
    cluster.GetCovMatrix().Print();
    cluster.AddHit(hit[2]);
 
+   std::cout << "Online estimate" << std::endl;
    cluster.GetCovMatrix().Print();
+
+   std::cout << "No Weighting" << std::endl;
    cluster.GetCovMatrixNoWeight().Print();
+
+   std::cout << "Charge Weighting" << std::endl;
    cluster.GetCovMatrixCharge().Print();
+
+   std::cout << "Charge Weighting with best postion" << std::endl;
    cluster.GetCovMatrixFull().Print();
 }

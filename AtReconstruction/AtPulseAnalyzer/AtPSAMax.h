@@ -26,7 +26,7 @@ private:
    Bool_t fIsTimeCorr{false};
 
 public:
-   void Analyze(AtRawEvent *rawEvent, AtEvent *event) override;
+   virtual HitVector AnalyzePad(AtPad *pad) override;
    std::unique_ptr<AtPSA> Clone() override { return std::make_unique<AtPSAMax>(*this); }
 
    void SetTimeCorrection(Bool_t value) { fIsTimeCorr = value; }
