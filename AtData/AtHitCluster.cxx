@@ -7,6 +7,11 @@
 ClassImp(AtHitCluster);
 constexpr auto scale = 1;
 
+std::unique_ptr<AtHit> AtHitCluster::Clone()
+{
+   return std::make_unique<AtHitCluster>(*this);
+}
+
 AtHitCluster::AtHitCluster() : AtHit(-1, -1, {0, 0, 0}, 0)
 {
    fCovMatrix.Zero();

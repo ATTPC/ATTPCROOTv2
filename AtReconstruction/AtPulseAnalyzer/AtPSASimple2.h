@@ -29,6 +29,7 @@ private:
 
 public:
    void Analyze(AtRawEvent * rawEvent, AtEvent * event) override;
+   HitVector AnalyzePad(AtPad * pad) override { return {}; };
    std::unique_ptr<AtPSA> Clone() override { return std::make_unique<AtPSASimple2>(*this); }
 
    void SetGainCalibration(TString gainFile) { fCalibration.SetGainFile(gainFile); }

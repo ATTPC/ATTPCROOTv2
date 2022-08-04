@@ -52,6 +52,7 @@ public:
    AtHit &operator=(const AtHit &) = default;                            //< Copy assignment
    AtHit &operator=(AtHit &&) = default;                                 //< Move assignment
    virtual ~AtHit() = default;
+   virtual std::unique_ptr<AtHit> Clone(); //< Create a copy of sub-type
 
    void SetCharge(Double_t charge) { fCharge = charge; }
    void SetChargeVariance(Double_t chargeVar) { fChargeVariance = chargeVar; }

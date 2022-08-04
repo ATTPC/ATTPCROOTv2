@@ -159,9 +159,8 @@ void AtPRAtask::Exec(Option_t *option)
    if (fEventHArray->GetEntriesFast() == 0)
       return;
 
-   std::vector<AtHit> hitArray;
    AtEvent &event = *(dynamic_cast<AtEvent *>(fEventHArray->At(0))); // TODO: Make sure we are not copying
-   hitArray = event.GetHitArray();
+   auto &hitArray = event.GetHitArray();
 
    std::cout << "  -I- AtPRAtask -  Event Number :  " << event.GetEventID() << "\n";
 

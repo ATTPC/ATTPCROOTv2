@@ -20,7 +20,7 @@ protected:
    Int_t fEndTB{512}; //< Last TB for charge integration
 
 public:
-   void Analyze(AtRawEvent *rawEvent, AtEvent *event) override;
+   virtual HitVector AnalyzePad(AtPad *pad) override;
    std::unique_ptr<AtPSA> Clone() override { return std::make_unique<AtPSAHitPerTB>(*this); }
    void SetTBLimits(std::pair<Int_t, Int_t> limits);
 

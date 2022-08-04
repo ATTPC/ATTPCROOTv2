@@ -1,5 +1,6 @@
 #include "AtSampleConsensus.h"
 
+#include "AtContainerManip.h"
 #include "AtEvent.h" // for AtEvent
 #include "AtHit.h"   // for AtHit
 #include "AtPattern.h"
@@ -30,7 +31,8 @@ AtSampleConsensus::AtSampleConsensus(Estimators estimator, PatternType patternTy
 {
 }
 
-std::unique_ptr<AtPatterns::AtPattern> AtSampleConsensus::GeneratePatternFromHits(const std::vector<AtHit> &hitArray)
+std::unique_ptr<AtPatterns::AtPattern>
+AtSampleConsensus::GeneratePatternFromHits(const std::vector<const AtHit *> &hitArray)
 {
 
    if (hitArray.size() < fMinPatternPoints) {
@@ -58,12 +60,21 @@ std::unique_ptr<AtPatterns::AtPattern> AtSampleConsensus::GeneratePatternFromHit
 
 AtPatternEvent AtSampleConsensus::Solve(AtEvent *event)
 {
-   if (event->IsGood())
-      return Solve(event->GetHitArray());
+   if (event->IsGood()) {
+      auto hitVec = AtTools::GetConstPointerVector(event->GetHitArray());
+      return Solve(hitVec);
+   }
+
    return {};
 }
 
 AtPatternEvent AtSampleConsensus::Solve(const std::vector<AtHit> &hitArray)
+{
+   auto hitVec = AtTools::GetConstPointerVector(hitArray);
+   return Solve(hitVec);
+};
+
+AtPatternEvent AtSampleConsensus::Solve(const std::vector<const AtHit *> &hitArray)
 {
    if (hitArray.size() < fMinPatternPoints) {
       LOG(error) << "Not enough points to solve. Requires" << fMinPatternPoints;
@@ -75,7 +86,7 @@ AtPatternEvent AtSampleConsensus::Solve(const std::vector<AtHit> &hitArray)
    auto sortedPatterns = std::set<PatternPtr, decltype(comp)>(comp);
 
    LOG(debug2) << "Generating " << fIterations << " patterns";
-   fRandSampler->SetHitsToSample(&hitArray);
+   fRandSampler->SetHitsToSample(hitArray);
    for (int i = 0; i < fIterations; i++) {
       if (i % 1000 == 0)
          LOG(debug) << "Iteration: " << i << "/" << fIterations;
@@ -103,18 +114,18 @@ AtPatternEvent AtSampleConsensus::Solve(const std::vector<AtHit> &hitArray)
 
    // Add the remaining hits as noise
    for (auto &hit : remainHits)
-      retEvent.AddNoise(std::move(hit));
+      retEvent.AddNoise(std::move(*hit));
 
    return retEvent;
 }
 
-AtTrack AtSampleConsensus::CreateTrack(AtPattern *pattern, std::vector<AtHit> &inliers)
+AtTrack AtSampleConsensus::CreateTrack(AtPattern *pattern, std::vector<const AtHit *> &inliers)
 {
    AtTrack track;
 
    // Add inliers to our ouput track
-   for (auto &hit : inliers)
-      track.AddHit(std::move(hit));
+   for (auto hit : inliers)
+      track.AddHit(std::move(*hit));
 
    if (fFitPattern)
       pattern->FitPattern(inliers, fChargeThres);
@@ -165,4 +176,16 @@ std::vector<AtHit> AtSampleConsensus::movePointsInPattern(AtPattern *pattern, st
       hits.erase(itStartEqualRange, it);
    }
    return retVec;
+}
+
+/// TODO: Check the logic in this class. Is the right memory being moved in to the returned hit vector?
+std::vector<const AtHit *> AtSampleConsensus::movePointsInPattern(AtPattern *pattern, std::vector<const AtHit *> &hits)
+{
+
+   auto isInPattern = [pattern, this](const AtHit *hit) {
+      double error = pattern->DistanceToPattern(hit->GetPosition());
+      return (error * error) < (fDistanceThreshold * fDistanceThreshold);
+   };
+
+   return AtTools::MoveFromVector(hits, isInPattern);
 }

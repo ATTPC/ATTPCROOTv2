@@ -16,7 +16,7 @@ std::vector<AtHit> AtUniform::SampleHits(int N)
       int i = gRandom->Uniform() * fHits->size();
       if (fWithReplacement || !isInVector(i, ind)) {
          ind.push_back(i);
-         retVec.push_back(fHits->at(i));
+         retVec.push_back(*fHits->at(i));
       }
    }
    return retVec;

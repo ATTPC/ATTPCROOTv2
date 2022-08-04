@@ -25,14 +25,6 @@
 //#endif
 using XYZPoint = ROOT::Math::XYZPoint;
 
-Double_t AtPSAMax::getThreshold(int padSize)
-{
-   if (padSize == 0)
-      return fThresholdlow; // threshold for central pads
-   else
-      return fThreshold; // threshold for big pads (or all other not small)
-}
-
 AtPSAMax::HitVector AtPSAMax::AnalyzePad(AtPad *pad)
 {
    XYZPoint pos(pad->GetPadCoord().X(), pad->GetPadCoord().Y(), 0);

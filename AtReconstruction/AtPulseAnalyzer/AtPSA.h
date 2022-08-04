@@ -17,11 +17,14 @@ class TClass;
 class TMemberInspector;
 
 class AtPSA {
+private:
+   // Access in PSA methods through getThreshold()
+   Int_t fThreshold{-1};    ///< threshold of ADC value
+   Int_t fThresholdlow{-1}; ///< threshold for Central pads
+
 protected:
    TClonesArray *fMCSimPointArray{};
 
-   Int_t fThreshold{-1};    ///< threshold of ADC value
-   Int_t fThresholdlow{-1}; ///< threshold for Central pads
    Bool_t fUsingLowThreshold{false};
 
    // Variables from parameter file
@@ -60,6 +63,7 @@ protected:
    [[deprecated]] Double_t CalculateZ(Double_t peakIdx); ///< Calculate z position in mm using the peak index.
 
    Double_t CalculateZGeo(Double_t peakIdx);
+   Double_t getThreshold(int padSize = -1);
 
    ClassDef(AtPSA, 5)
 };

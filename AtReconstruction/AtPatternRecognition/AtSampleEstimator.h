@@ -19,6 +19,8 @@ class AtEstimator {
 public:
    static int
    EvaluateModel(AtPatterns::AtPattern *model, const std::vector<AtHit> &hits, double distThresh, Estimators estimator);
+   static int EvaluateModel(AtPatterns::AtPattern *model, const std::vector<const AtHit *> &hits, double distThresh,
+                            Estimators estimator);
 };
 } // namespace SampleConsensus
 

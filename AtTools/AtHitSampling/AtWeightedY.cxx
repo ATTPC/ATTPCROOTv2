@@ -20,25 +20,25 @@ std::vector<AtHit> AtWeightedY::SampleHits(int N)
    if (fVetoIn.size() == fHits->size() || fVetoIn.size() == 0) {
       LOG(error) << "Defaulting to normal sampling (fVetoIn is size: " << fVetoIn.size() << ")";
       for (auto ind : sampleIndicesFromCDF(N))
-         ret.push_back(fHits->at(ind));
+         ret.push_back(*fHits->at(ind));
       return ret;
    }
 
    for (auto ind : sampleIndicesFromCDF(2, fVetoIn))
-      ret.push_back(fHits->at(ind));
+      ret.push_back(*fHits->at(ind));
    for (auto ind : sampleIndicesFromCDF(N - 2, fVetoOut))
-      ret.push_back(fHits->at(ind));
+      ret.push_back(*fHits->at(ind));
    return ret;
 }
 
-void AtWeightedY::SetHitsToSample(const std::vector<AtHit> *hits)
+void AtWeightedY::SetHitsToSample(const std::vector<const AtHit *> &hits)
 {
-   fHits = hits;
+   fHits = &hits;
    fVetoOut.clear();
    fVetoIn.clear();
    FillCDF();
    for (int i = 0; i < fHits->size(); i++) {
-      if (sqrt(pow(fHits->at(i).GetPosition().X(), 2) + pow(fHits->at(i).GetPosition().Y(), 2)) < 20) {
+      if (sqrt(pow(fHits->at(i)->GetPosition().X(), 2) + pow(fHits->at(i)->GetPosition().Y(), 2)) < 20) {
          fVetoOut.push_back(i);
       } else {
          fVetoIn.push_back(i);

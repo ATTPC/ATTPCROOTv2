@@ -71,9 +71,9 @@ void AtSpaceChargeCorrectionTask::Exec(Option_t *opt)
 
    for (auto &inHit : inputEvent->GetHitArray()) {
       XYZPoint newPosition;
-      newPosition = fSCModel->CorrectSpaceCharge(inHit.GetPosition());
-      auto &newHit = outputEvent->AddHit(inHit);
+      newPosition = fSCModel->CorrectSpaceCharge(inHit->GetPosition());
+      auto &newHit = outputEvent->AddHit(inHit->Clone());
       newHit.SetPosition(newPosition);
-      LOG(debug) << inHit.GetPosition() << " " << outputEvent->GetHitArray().back().GetPosition();
+      LOG(debug) << inHit->GetPosition() << " " << outputEvent->GetHitArray().back()->GetPosition();
    }
 }

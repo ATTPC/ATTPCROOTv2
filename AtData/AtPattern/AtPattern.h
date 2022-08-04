@@ -56,6 +56,7 @@ public:
    virtual ~AtPattern() = default;
 
    Double_t FitPattern(const std::vector<AtHit> &pointsToFit, Double_t qThreshold = -1);
+   Double_t FitPattern(const std::vector<const AtHit *> &pointsToFit, Double_t qThreshold = -1);
    Double_t FitPattern(const std::vector<XYZPoint> &pointsToFit);
 
    /**

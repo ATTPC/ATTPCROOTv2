@@ -11,7 +11,7 @@
 #include <utility> // for move
 
 using namespace RandomSample;
-void AtWeightedGaussian::SetHitsToSample(const std::vector<AtHit> *hits)
+void AtWeightedGaussian::SetHitsToSample(const std::vector<const AtHit *> &hits)
 {
    AtSampleFromReference::SetHitsToSample(hits);
    fChargeSample.SetHitsToSample(hits);
@@ -27,6 +27,6 @@ std::vector<double> AtWeightedGaussian::PDF(const AtHit &hit)
 void AtWeightedGaussian::SampleReferenceHit()
 {
    AtChargeWeighted charge;
-   charge.SetHitsToSample(fHits);
+   charge.SetHitsToSample(*fHits);
    SetReferenceHit(std::move(charge.SampleHits(1)[0]));
 }

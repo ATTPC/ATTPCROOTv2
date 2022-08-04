@@ -32,7 +32,6 @@ public:
    void SetTimeCorrection(Bool_t value) { fIsTimeCorr = value; }
 
 private:
-   Double_t getThreshold(int padSize);
    bool shouldSaveHit(double charge, double threshold, int tb);
    Double_t getTBCorr(std::array<Double_t, 512> &trace, int maxAdcIdx);
 

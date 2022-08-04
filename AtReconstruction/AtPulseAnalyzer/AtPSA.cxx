@@ -131,6 +131,13 @@ void AtPSA::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
       auto hits = AnalyzePad(pad.get());
 
+      PadMultiplicity.insert(std::pair<Int_t, Int_t>(pad->GetPadNum(), hits.size()));
+
+      // If we got any hits update the mesh signal
+      if (hits.size() != 0)
+         for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
+            mesh[iTb] += pad->GetADC(iTb);
+
       // Update AtEvent with hits
       for (auto &&hit : hits) {
          auto pos = hit->GetPosition();
@@ -144,15 +151,8 @@ void AtPSA::Analyze(AtRawEvent *rawEvent, AtEvent *event)
             TrackMCPoints(mcPointsMap, *(hit.get()));
          }
 
-         // event->AddHit(hit);
+         event->AddHit(std::move(hit));
       }
-
-      // If we got any hits update the mesh signal
-      if (hits.size() != 0)
-         for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
-            mesh[iTb] += pad->GetADC(iTb);
-
-      PadMultiplicity.insert(std::pair<Int_t, Int_t>(pad->GetPadNum(), 1));
    }
 
    // RhoVariance = Rho2 - (pow(RhoMean, 2) / (event->GetNumHits()));
@@ -164,6 +164,13 @@ void AtPSA::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    event->SetMultiplicityMap(PadMultiplicity);
    event->SetRhoVariance(RhoVariance);
    event->SetEventCharge(QEventTot);
+}
+
+Double_t AtPSA::getThreshold(int padSize)
+{
+   if (padSize == 0)
+      return fThresholdlow; // threshold for central pads
+   return fThreshold;       // threshold for big pads (or all other not small)
 }
 
 ClassImp(AtPSA)

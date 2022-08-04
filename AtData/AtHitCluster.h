@@ -70,6 +70,7 @@ public:
    AtHitCluster();
    AtHitCluster(const AtHitCluster &cluster) = default;
    virtual ~AtHitCluster() = default;
+   virtual std::unique_ptr<AtHit> Clone() override; //< Create a copy of sub-type
 
    void SetCovMatrix(TMatrixDSym matrix) { fCovMatrix = std::move(matrix); }
    void SetCovMatrix(int i, int j, double val);
