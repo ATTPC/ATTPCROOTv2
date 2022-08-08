@@ -1,5 +1,6 @@
 #include "AtPattern.h"
 
+#include "AtContainerManip.h"
 #include "AtHit.h" // for AtHit
 
 #include <Math/Point3D.h> // for PositionVector3D
@@ -22,12 +23,18 @@ AtPattern::AtPattern(Int_t numPoints) : fNumPoints(numPoints) {}
  */
 Double_t AtPattern::FitPattern(const std::vector<AtHit> &pointsToFit, Double_t qThreshold)
 {
+   FitPattern(ContainerManip::GetConstPointerVector(pointsToFit), qThreshold);
+   return fChi2;
+}
+
+Double_t AtPattern::FitPattern(const std::vector<const AtHit *> &pointsToFit, Double_t qThreshold)
+{
    std::vector<XYZPoint> points;
    std::vector<double> charge;
-   for (const auto &hit : pointsToFit) {
-      if (hit.GetCharge() > qThreshold) {
-         points.push_back(hit.GetPosition());
-         charge.push_back(hit.GetCharge());
+   for (auto hit : pointsToFit) {
+      if (hit->GetCharge() > qThreshold) {
+         points.push_back(hit->GetPosition());
+         charge.push_back(hit->GetCharge());
       }
    }
 
@@ -35,7 +42,6 @@ Double_t AtPattern::FitPattern(const std::vector<AtHit> &pointsToFit, Double_t q
       FitPattern(points);
    else
       FitPattern(points, charge);
-
    return fChi2;
 }
 /**

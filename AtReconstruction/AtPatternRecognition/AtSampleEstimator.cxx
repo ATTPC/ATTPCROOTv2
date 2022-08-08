@@ -1,8 +1,11 @@
 #include "AtSampleEstimator.h"
 
+#include "AtContainerManip.h"
 #include "AtEstimatorMethods.h"
+#include "AtHit.h"
 
 using namespace SampleConsensus;
+
 /**
  * @brief Evaluate how well model describes hits
  *
@@ -16,7 +19,7 @@ using namespace SampleConsensus;
  * @param[in] distThresh How close a point must be to be consistent with the model
  * @return Number of points consistent with model in hits
  */
-int AtEstimator::EvaluateModel(AtPatterns::AtPattern *model, const std::vector<AtHit> &hits, double distThresh,
+int AtEstimator::EvaluateModel(AtPatterns::AtPattern *model, const std::vector<const AtHit *> &hits, double distThresh,
                                Estimators estimator = Estimators::kRANSAC)
 {
    switch (estimator) {
@@ -27,4 +30,10 @@ int AtEstimator::EvaluateModel(AtPatterns::AtPattern *model, const std::vector<A
    case (Estimators::kChi2): return EvaluateChi2(model, hits, distThresh);
    default: return 0;
    }
+}
+
+int AtEstimator::EvaluateModel(AtPatterns::AtPattern *model, const std::vector<AtHit> &hits, double distThresh,
+                               Estimators estimator = Estimators::kRANSAC)
+{
+   return EvaluateModel(model, ContainerManip::GetConstPointerVector(hits), distThresh, estimator);
 }

@@ -49,12 +49,7 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
 
       LOG(debug) << "Running PSA on pad " << pad->GetPadNum();
       Int_t PadNum = pad->GetPadNum();
-      Int_t pSizeID = pad->GetSizeID();
-      Double_t gthreshold = -1;
-      if (pSizeID == 0)
-         gthreshold = fThresholdlow; // threshold for central pads
-      else
-         gthreshold = fThreshold; // threshold for big pads (or all other not small)
+      Double_t gthreshold = getThreshold(pad->GetSizeID());
 
       Double_t QHitTot = 0.0;
       XYZPoint HitPos;

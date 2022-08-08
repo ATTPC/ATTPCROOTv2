@@ -55,7 +55,7 @@ void run_digi_attpc()
    reduceTask->SetReductionFunction(&reduceFunc);
 
    auto psa = std::make_unique<AtPSAMax>();
-   psa->SetThreshold(0);
+   psa->SetThreshold(1);
 
    // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
@@ -78,7 +78,7 @@ void run_digi_attpc()
 
    timer.Start();
    // fRun->Run(0, 20001);
-   fRun->Run(0, 50);
+   fRun->Run(0, 10);
    timer.Stop();
 
    std::cout << std::endl << std::endl;

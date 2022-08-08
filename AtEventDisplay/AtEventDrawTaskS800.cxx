@@ -547,7 +547,7 @@ void AtEventDrawTaskS800::DrawHitPoints()
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
-      AtHit hit = event->GetHitArray().at(iHit);
+      AtHit hit = *event->GetHits().at(iHit);
       Int_t PadNumHit = hit.GetPadNum();
       Int_t PadMultHit = event->GetHitPadMult(PadNumHit);
 
@@ -646,7 +646,7 @@ void AtEventDrawTaskS800::DrawHitPoints()
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
-      AtHit hit = event->GetHitArray().at(iHit);
+      AtHit hit = *event->GetHits().at(iHit);
       auto position = hit.GetPosition();
 
       if (f3DHitStyle == 0) {

@@ -20,26 +20,27 @@ enum class Estimators { kRANSAC, kLMedS, kMLESAC, kWRANSAC, kChi2 };
  *
  * Maximizes the number of inliers.
  */
-int EvaluateRansac(AtPatterns::AtPattern *model, const std::vector<AtHit> &hitArray, double distanceThreshold);
+int EvaluateRansac(AtPatterns::AtPattern *model, const std::vector<const AtHit *> &hitArray, double distanceThreshold);
 /**
  * @brief Implementation of estimator that minimizes chi2.
  *
  * Used to minimize avg(error^2) for all inliers.
  */
-int EvaluateChi2(AtPatterns::AtPattern *model, const std::vector<AtHit> &hitArray, double distanceThreshold);
+int EvaluateChi2(AtPatterns::AtPattern *model, const std::vector<const AtHit *> &hitArray, double distanceThreshold);
 
 /**
  * @brief Implementation of MLESAC estimator
  */
-int EvaluateMlesac(AtPatterns::AtPattern *model, const std::vector<AtHit> &hitArray, double distanceThreshold);
+int EvaluateMlesac(AtPatterns::AtPattern *model, const std::vector<const AtHit *> &hitArray, double distanceThreshold);
 /**
  * @brief Implementation of LMedS estimator
  */
-int EvaluateLmeds(AtPatterns::AtPattern *model, const std::vector<AtHit> &hitArray, double distanceThreshold);
+int EvaluateLmeds(AtPatterns::AtPattern *model, const std::vector<const AtHit *> &hitArray, double distanceThreshold);
 /**
  * @brief Implementation of RANSAC estimator using charge weighting
  */
-int EvaluateWeightedRansac(AtPatterns::AtPattern *model, const std::vector<AtHit> &hitArray, double distanceThreshold);
+int EvaluateWeightedRansac(AtPatterns::AtPattern *model, const std::vector<const AtHit *> &hitArray,
+                           double distanceThreshold);
 
 } // namespace SampleConsensus
 #endif //#ifndef ATESTIMATORMETHODS_H

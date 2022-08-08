@@ -276,11 +276,11 @@ InitStatus AtMergeTask::Init()
    vector<Double_t> S800_ts(fS800Ts.begin(), fS800Ts.end());
    // auto c1 = new TCanvas("c1", "c1", 800, 800);
    // gROOT->SetBatch(kTRUE);//kTRUE not display the plots
-   fS800TsGraph =
+   fS800TsGraph =                                            // NOLINT
       new TGraph(fTsEvtS800Size, &S800_ts[0], &fS800Evt[0]); // fTsEvtS800Size instead of 80 (just for the test file)
    // make a function of S800Evt vs S800TS, used then to search the S800 matching TS only among few S800 events, faster
    // than looping on all the events.
-   fS800TsFunc = new TF1(
+   fS800TsFunc = new TF1( // NOLINT
       "fS800TsFunc", [&](double *x, double *) { return fS800TsGraph->Eval(x[0]); }, 0, S800_ts.back(), 0);
    // c1->cd();
    // fS800TsGraph->Draw("AL");
@@ -403,7 +403,7 @@ void AtMergeTask::Exec(Option_t *opt)
    if (S800EvtMatch > 0) {
       TTreeReader reader2("caltree", fS800file);
       TTreeReaderValue<S800Calc> *readerValueS800Calc = nullptr;
-      readerValueS800Calc = new TTreeReaderValue<S800Calc>(reader2, "s800calc");
+      readerValueS800Calc = new TTreeReaderValue<S800Calc>(reader2, "s800calc"); // NOLINT
 
       reader2.SetEntry(S800EvtMatch);
 

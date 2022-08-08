@@ -8,8 +8,8 @@
 #include <array>  // for array
 #include <memory> // for make_unique, unique_ptr
 
-class AtEvent;
-class AtRawEvent;
+class AtHit;
+class AtPad;
 class TBuffer;
 class TClass;
 class TMemberInspector;
@@ -27,7 +27,7 @@ private:
    Bool_t fIsTimeCorr{false};
 
 public:
-   void Analyze(AtRawEvent *rawEvent, AtEvent *event) override;
+   HitVector AnalyzePad(AtPad *pad) override;
    std::unique_ptr<AtPSA> Clone() override { return std::make_unique<AtPSASpectrum>(*this); }
 
    void SetBackGroundSuppression() { fBackGroundSuppression = true; }
@@ -37,6 +37,8 @@ public:
 protected:
    void subtractBackground(std::array<Double_t, 512> &adc);
    double calcTbCorrection(const std::array<Double_t, 512> &adc, int idxPeak);
+   std::unique_ptr<AtHit> getHit(int idx);
+
    ClassDefOverride(AtPSASpectrum, 1)
 };
 

@@ -1,18 +1,18 @@
 #include "AtTPC20MgDecay.h"
 
-#include "FairLogger.h"
-#include "FairMCEventHeader.h"
+#include <FairLogger.h> // for Logger, LOG
+
 #include "FairPrimaryGenerator.h"
-#include "FairRootManager.h"
-#include "FairRunAna.h"
-#include "FairRunSim.h"
 #include "TDatabasePDG.h"
 #include "TF1.h"
-#include "TGraph.h"
 #include "TH1.h"
 #include "TMath.h"
 #include "TParticlePDG.h"
 #include "TRandom.h"
+#include <math.h> // for acos
+
+#include <iostream> // for operator<<, endl, basic_ostream, cout
+#include <map>      // for allocator
 // -----   Default constructor   ------------------------------------------
 AtTPC20MgDecay::AtTPC20MgDecay()
    : fOnlyAPBranch(0), fBoxVtxIsSet(0), fNuclearDecayChainIsSet(0), fParticlesDefinedInNuclearDecay(0), fX(0), fY(0),

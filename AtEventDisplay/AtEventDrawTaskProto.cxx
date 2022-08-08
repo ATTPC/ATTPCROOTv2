@@ -317,7 +317,7 @@ void AtEventDrawTaskProto::DrawHitPoints()
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
-      AtHit hit = event->GetHitArray().at(iHit);
+      AtHit hit = *event->GetHits().at(iHit);
 
       // if(hit.GetCharge()<fThreshold) continue;
       // if(PadMultHit>fMultiHit) continue;
@@ -342,7 +342,7 @@ void AtEventDrawTaskProto::DrawHitPoints()
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
-      AtHit hit = event->GetHitArray().at(iHit);
+      AtHit hit = *event->GetHits().at(iHit);
       auto position = hit.GetPosition();
 
       if (f3DHitStyle == 0) {

@@ -78,7 +78,7 @@ AtPad *AtRawEvent::GetPad(Int_t padNum)
    return nullptr;
 }
 
-AtPad *AtRawEvent::GetAuxPad(std::string auxName)
+AtAuxPad *AtRawEvent::GetAuxPad(std::string auxName)
 {
    auto padIt = fAuxPadMap.find(auxName);
    if (padIt == fAuxPadMap.end())

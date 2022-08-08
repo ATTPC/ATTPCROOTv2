@@ -2,15 +2,14 @@
 #ifndef AtTPC20MGDECAY_H
 #define AtTPC20MGDECAY_H
 
+#include <Rtypes.h> // for Double32_t, Bool_t, THashConsistencyHolder
+
 #include "FairGenerator.h"
-#include "FairIon.h"
-#include "FairParticle.h"
 
-#include <iostream>
-#include <map>
-
+class TBuffer;
+class TClass;
+class TMemberInspector;
 class FairPrimaryGenerator;
-class AtTPCIonGenerator;
 
 class AtTPC20MgDecay : public FairGenerator {
 

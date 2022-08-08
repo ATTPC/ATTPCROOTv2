@@ -4,6 +4,7 @@
 #include <Math/Point3Dfwd.h> // for XYZPoint
 
 #include <algorithm>
+#include <memory>
 #include <vector>
 
 class AtHit;
@@ -33,9 +34,10 @@ enum class SampleMethod;
  */
 class AtSample {
 protected:
-   const std::vector<AtHit> *fHits; //< Hits to sample from
-   std::vector<double> fCDF;        //< Cummulative distribution function for hits
-   bool fWithReplacement{false};    //< If we should sample with replacement
+   using HitPtr = std::unique_ptr<AtHit>;
+   const std::vector<const AtHit *> *fHits; //< Hits to sample from
+   std::vector<double> fCDF;                //< Cummulative distribution function for hits
+   bool fWithReplacement{false};            //< If we should sample with replacement
 
 public:
    virtual ~AtSample() = default;
@@ -43,7 +45,9 @@ public:
    virtual std::vector<AtHit> SampleHits(int N);
    std::vector<ROOT::Math::XYZPoint> SamplePoints(int N);
 
-   virtual void SetHitsToSample(const std::vector<AtHit> *hits) = 0;
+   virtual void SetHitsToSample(const std::vector<const AtHit *> &hits) = 0;
+   [[deprecated]] void SetHitsToSample(const std::vector<HitPtr> &hits);
+   [[deprecated]] void SetHitsToSample(const std::vector<AtHit> &hits);
 
    void SetSampleWithReplacement(bool val) { fWithReplacement = val; }
 

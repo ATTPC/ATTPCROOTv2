@@ -8,8 +8,7 @@
 #include <array>  // for array
 #include <memory> // for make_unique, unique_ptr
 
-class AtEvent;
-class AtRawEvent;
+class AtPad;
 class TBuffer;
 class TClass;
 class TMemberInspector;
@@ -26,13 +25,12 @@ private:
    Bool_t fIsTimeCorr{false};
 
 public:
-   void Analyze(AtRawEvent *rawEvent, AtEvent *event) override;
+   virtual HitVector AnalyzePad(AtPad *pad) override;
    std::unique_ptr<AtPSA> Clone() override { return std::make_unique<AtPSAMax>(*this); }
 
    void SetTimeCorrection(Bool_t value) { fIsTimeCorr = value; }
 
 private:
-   Double_t getThreshold(int padSize);
    bool shouldSaveHit(double charge, double threshold, int tb);
    Double_t getTBCorr(std::array<Double_t, 512> &trace, int maxAdcIdx);
 

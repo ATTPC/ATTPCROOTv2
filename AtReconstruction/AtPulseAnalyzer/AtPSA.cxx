@@ -1,18 +1,24 @@
 #include "AtPSA.h"
 
 #include "AtDigiPar.h"
+#include "AtEvent.h"
 #include "AtHit.h"
 #include "AtMCPoint.h"
+#include "AtPad.h"
+#include "AtRawEvent.h"
 
 #include <FairLogger.h>
 #include <FairRun.h>
 #include <FairRuntimeDb.h>
 
+#include <Math/Point3D.h> // for PositionVector3D
 #include <Rtypes.h>
 #include <TClonesArray.h>
 #include <TObject.h> // for TObject
 
 #include <algorithm>
+#include <array> // for array
+#include <cmath> // for pow
 #include <iostream>
 #include <iterator>
 #include <utility> // for pair
@@ -78,14 +84,11 @@ void AtPSA::SetThresholdLow(Int_t thresholdlow)
 
 Double_t AtPSA::CalculateZ(Double_t peakIdx)
 {
-   // DEPRECAtED
    return (fNumTbs - peakIdx) * fTBTime * fDriftVelocity / 100.;
 }
 
 Double_t AtPSA::CalculateZGeo(Double_t peakIdx)
 {
-
-   // This function must be consistent with the re-calibrations done before.
    return fZk - (fEntTB - peakIdx) * fTBTime * fDriftVelocity / 100.;
 }
 
@@ -108,6 +111,69 @@ void AtPSA::TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit &hit)
       }
       //  }
    }
+}
+
+/**
+ * Analyzes every pad in event, and add the hits to AtEvent.
+ *
+ */
+void AtPSA::Analyze(AtRawEvent *rawEvent, AtEvent *event)
+{
+   Double_t QEventTot = 0.0;
+   Double_t RhoVariance = 0.0;
+   Double_t RhoMean = 0.0;
+   Double_t Rho2 = 0.0;
+
+   std::map<Int_t, Int_t> PadMultiplicity;
+   std::array<Float_t, 512> mesh{};
+   mesh.fill(0);
+
+   for (const auto &pad : rawEvent->GetPads()) {
+
+      LOG(debug) << "Running PSA on pad " << pad->GetPadNum();
+
+      auto hits = AnalyzePad(pad.get());
+
+      PadMultiplicity.insert(std::pair<Int_t, Int_t>(pad->GetPadNum(), hits.size()));
+
+      // If we got any hits update the mesh signal
+      if (hits.size() != 0)
+         for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
+            mesh[iTb] += pad->GetADC(iTb);
+
+      // Update AtEvent with hits
+      for (auto &&hit : hits) {
+         auto pos = hit->GetPosition();
+         QEventTot += hit->GetTraceIntegral();
+         Rho2 += pos.Mag2();
+         RhoMean += pos.Rho();
+
+         auto mcPointsMap = rawEvent->GetSimMCPointMap();
+         if (mcPointsMap.size() > 0) {
+            LOG(debug) << "MC Simulated points Map size " << mcPointsMap.size();
+            TrackMCPoints(mcPointsMap, *(hit.get()));
+         }
+
+         event->AddHit(std::move(hit));
+      }
+   }
+
+   // RhoVariance = Rho2 - (pow(RhoMean, 2) / (event->GetNumHits()));
+   RhoVariance = Rho2 - (event->GetNumHits() * pow((RhoMean / event->GetNumHits()), 2));
+
+   for (Int_t iTb = 0; iTb < fNumTbs; iTb++)
+      event->SetMeshSignal(iTb, mesh[iTb]);
+   event->SortHitArrayTime();
+   event->SetMultiplicityMap(PadMultiplicity);
+   event->SetRhoVariance(RhoVariance);
+   event->SetEventCharge(QEventTot);
+}
+
+Double_t AtPSA::getThreshold(int padSize)
+{
+   if (padSize == 0)
+      return fThresholdlow; // threshold for central pads
+   return fThreshold;       // threshold for big pads (or all other not small)
 }
 
 ClassImp(AtPSA)

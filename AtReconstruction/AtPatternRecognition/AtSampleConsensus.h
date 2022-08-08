@@ -71,8 +71,11 @@ public:
    AtSampleConsensus();
    AtSampleConsensus(Estimators estimator, PatternType patternType, SampleMethod sampleMethod);
 
+   /// See Solve(const std::vector<const AtHit *> &hitArray)
    AtPatternEvent Solve(AtEvent *event);
+   /// See Solve(const std::vector<const AtHit *> &hitArray)
    AtPatternEvent Solve(const std::vector<AtHit> &hitArray);
+   AtPatternEvent Solve(const std::vector<const AtHit *> &hitArray);
 
    void SetRandomSample(AtSamplePtr mode) { fRandSampler = std::move(mode); };
    void SetPatternType(PatternType type) { fPatternType = type; }
@@ -85,10 +88,10 @@ public:
    void SetFitPattern(bool val) { fFitPattern = val; }
 
 private:
-   PatternPtr GeneratePatternFromHits(const std::vector<AtHit> &hitArray);
-   std::vector<AtHit> movePointsInPattern(AtPattern *pattern, std::vector<AtHit> &indexes);
+   PatternPtr GeneratePatternFromHits(const std::vector<const AtHit *> &hitArray);
+   std::vector<const AtHit *> movePointsInPattern(AtPattern *pattern, std::vector<const AtHit *> &indexes);
    // void SaveTrack(AtPattern *pattern, std::vector<AtHit> &indexes, AtPatternEvent *event);
-   AtTrack CreateTrack(AtPattern *pattern, std::vector<AtHit> &indexes);
+   AtTrack CreateTrack(AtPattern *pattern, std::vector<const AtHit *> &indexes);
 };
 } // namespace SampleConsensus
 #endif

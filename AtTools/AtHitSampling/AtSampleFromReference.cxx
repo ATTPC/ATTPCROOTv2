@@ -23,12 +23,7 @@ std::vector<AtHit> AtSampleFromReference::SampleHits(int N)
 void AtSampleFromReference::SampleReferenceHit()
 {
    int refIndex = gRandom->Uniform() * fHits->size();
-   SetReferenceHit(fHits->at(refIndex));
-}
-
-void AtSampleFromReference::SetHitsToSample(const std::vector<AtHit> *hits)
-{
-   fHits = hits;
+   SetReferenceHit(*fHits->at(refIndex));
 }
 
 void AtSampleFromReference::SetReferenceHit(AtHit hit)

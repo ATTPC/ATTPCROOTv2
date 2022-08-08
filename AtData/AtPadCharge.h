@@ -8,7 +8,6 @@
 
 #include <array>  // for array
 #include <memory> // for unique_ptr
-#include <utility>
 
 class TBuffer;
 class TClass;

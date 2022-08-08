@@ -15,7 +15,6 @@ set(SRCS
   AtKinematics.cxx
   
   AtFormat.cxx
-  AtContainerManip.cxx
   AtHitSampling/AtSample.cxx
   AtHitSampling/AtSampleMethods.cxx
   AtHitSampling/AtIndependentSample.cxx

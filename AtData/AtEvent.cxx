@@ -1,5 +1,6 @@
 #include "AtEvent.h"
 
+#include "AtContainerManip.h"
 #include "AtRawEvent.h"
 
 #include <Rtypes.h>
@@ -16,6 +17,16 @@ AtEvent::AtEvent(Int_t eventID, Bool_t isGood, Bool_t isInGate, ULong_t timestam
      fTimestamp(timestamp)
 {
 }
+
+AtEvent::AtEvent(const AtEvent &copy)
+   : fEventID(copy.fEventID), fIsGood(copy.fIsGood), fIsInGate(copy.fIsInGate), fTimestamp(copy.fTimestamp),
+     fEventCharge(copy.fEventCharge), fRhoVariance(copy.fRhoVariance), fAuxPadArray(copy.fAuxPadArray),
+     fMultiplicityMap(copy.fMultiplicityMap), fMeshSig(copy.fMeshSig)
+{
+   for (const auto &hit : copy.fHitArray)
+      fHitArray.push_back(hit->Clone());
+}
+
 AtEvent::AtEvent(const AtRawEvent &copy)
    : AtEvent(copy.GetEventID(), copy.IsGood(), copy.GetIsExtGate(), copy.GetTimestamp())
 {
@@ -48,10 +59,7 @@ void AtEvent::CopyFrom(const AtEvent &inputEvent)
    this->fMultiplicityMap = inputEvent.fMultiplicityMap;
    this->fMeshSig = inputEvent.fMeshSig;
 }
-void AtEvent::SetMeshSignal(const traceArray &mesharray)
-{
-   fMeshSig = mesharray;
-}
+
 void AtEvent::SetMeshSignal(Int_t idx, Float_t val)
 {
    fMeshSig[idx] = val;
@@ -72,10 +80,17 @@ Int_t AtEvent::GetHitPadMult(Int_t PadNum)
 
 void AtEvent::SortHitArray()
 {
-   std::sort(fHitArray.begin(), fHitArray.end(), AtHit::SortHit);
+   std::sort(fHitArray.begin(), fHitArray.end(),
+             [](const HitPtr &a, const HitPtr &b) { return AtHit::SortHit(*a, *b); });
 }
 
 void AtEvent::SortHitArrayTime()
 {
-   std::sort(fHitArray.begin(), fHitArray.end(), AtHit::SortHitTime);
+   std::sort(fHitArray.begin(), fHitArray.end(),
+             [](const HitPtr &a, const HitPtr &b) { return AtHit::SortHitTime(*a, *b); });
+}
+
+std::vector<AtHit> AtEvent::GetHitArray() const
+{
+   return ContainerManip::GetObjectVector(fHitArray);
 }

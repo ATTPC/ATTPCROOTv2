@@ -33,3 +33,6 @@ generate_target_and_root_library(${LIBRARY_NAME}
   DEPS_PUBLIC ${DEPENDENCIES}
   )
 
+set_source_files_properties(AtEventDrawTask.cxx PROPERTIES COMPILE_FLAGS -Wno-shadow)
+set_source_files_properties(AtEventDrawTaskProto.cxx PROPERTIES COMPILE_FLAGS -Wno-shadow)
+set_source_files_properties(AtEventDrawTaskS800.cxx PROPERTIES COMPILE_FLAGS -Wno-shadow)

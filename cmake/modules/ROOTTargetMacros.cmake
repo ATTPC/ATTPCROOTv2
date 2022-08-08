@@ -263,9 +263,10 @@ function(make_target_root_dictionary target)
     DEPENDS ${headers})
   # cmake-format: on
 
-  # add dictionary source to the target sources
+  # add dictionary source to the target sources and suppress warnings
   target_sources(${target} PRIVATE ${dictionaryFile})
-
+  set_source_files_properties(${dictionaryFile} PROPERTIES COMPILE_FLAGS -Wno-deprecated-declarations)
+  
   get_property(libs TARGET ${target} PROPERTY INTERFACE_LINK_LIBRARIES)
   #if(NOT RIO IN_LIST libs)
   if(NOT ROOT::RIO IN_LIST libs)

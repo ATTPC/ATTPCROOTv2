@@ -129,7 +129,7 @@ bool TInverseMap::ReadMultiMapFile(std::vector<std::string> &mapfile_v)
             coeff_v.push_back(buff_v);
             char fname[20];
             sprintf(fname, "f_%d", icoeff);
-            spline[icoeff] = new TSpline3(fname, &fMapDist_v[0], &buff_v[0], fMap_v.size());
+            spline[icoeff] = new TSpline3(fname, &fMapDist_v[0], &buff_v[0], fMap_v.size()); // NOLINT
             // graph[icoeff] = new TGraph(fMap_v.size(),&mapdist_v[0], &buff_v[0]);
             // std::cout<<"debug  : "<<j<<" "<<k<<" "<<fMap_v.size()<<" "<<fMapDist_v.back()<<"
             // "<<spline[icoeff]->Eval(0.35)<<std::endl;

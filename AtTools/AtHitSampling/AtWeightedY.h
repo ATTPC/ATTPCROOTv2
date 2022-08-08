@@ -21,7 +21,7 @@ protected:
 
 public:
    virtual std::vector<AtHit> SampleHits(int N) override;
-   virtual void SetHitsToSample(const std::vector<AtHit> *hits) override;
+   virtual void SetHitsToSample(const std::vector<const AtHit *> &hits) override;
 };
 } // namespace RandomSample
 #endif // AWEIGHTEDY

@@ -96,8 +96,6 @@ public:
     * bool returned is true if insert occurred.
     */
    std::pair<AtAuxPad *, bool> AddAuxPad(std::string auxName);
-   AtPad *GetPad(Int_t padNum);
-   AtPad *GetAuxPad(std::string auxPad);
 
    void RemovePad(Int_t padNum);
    void SetSimMCPointMap(std::multimap<Int_t, std::size_t> map) { fSimMCPointMap = std::move(map); }
@@ -118,6 +116,8 @@ public:
    Bool_t IsGood() const { return fIsGood; }
    Bool_t GetIsExtGate() const { return fIsInGate; }
 
+   AtPad *GetPad(Int_t padNum);
+   AtAuxPad *GetAuxPad(std::string auxPad);
    const PadVector &GetPads() const { return fPadList; }
    const AuxPadMap &GetAuxPads() const { return fAuxPadMap; }
    std::multimap<Int_t, std::size_t> &GetSimMCPointMap() { return fSimMCPointMap; }

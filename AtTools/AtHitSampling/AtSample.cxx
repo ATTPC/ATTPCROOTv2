@@ -1,5 +1,6 @@
 #include "AtSample.h"
 
+#include "AtContainerManip.h"
 #include "AtHit.h"
 
 #include <Math/Point3D.h> // for PositionVector3D
@@ -21,7 +22,7 @@ std::vector<AtHit> AtSample::SampleHits(int N)
    // Using the sampled indices, return a vector of positions
    std::vector<AtHit> ret;
    for (auto ind : sampleIndicesFromCDF(N))
-      ret.push_back(fHits->at(ind));
+      ret.push_back(*fHits->at(ind));
    return ret;
 }
 
@@ -118,7 +119,7 @@ void AtSample::FillCDF()
    for (const auto &hit : *fHits) {
 
       // Get the unnormalized marginal and joint PDFs
-      auto pdfMarginal = PDF(hit);
+      auto pdfMarginal = PDF(*hit);
       auto pdfJoint = std::accumulate(pdfMarginal.begin(), pdfMarginal.end(), 1.0,
                                       std::multiplies<>()); // Has to be 1.0 not 1 or return type is deduced as int
 
@@ -140,4 +141,15 @@ void AtSample::FillCDF()
    for (auto &elem : fCDF) {
       elem /= norm;
    }
+}
+
+void AtSample::SetHitsToSample(const std::vector<HitPtr> &hits)
+{
+   SetHitsToSample(ContainerManip::GetConstPointerVector(hits));
+}
+
+void AtSample::SetHitsToSample(const std::vector<AtHit> &hits)
+{
+   // Cast away const, for container manip but it is restored when SetHitsToSample is called
+   SetHitsToSample(ContainerManip::GetConstPointerVector(hits));
 }

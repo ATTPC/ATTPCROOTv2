@@ -9,12 +9,19 @@
 #include <TObject.h>
 
 #include <algorithm>
+#include <memory>
 #include <vector>
 
 class TBuffer;
 class TClass;
 class TMemberInspector;
 
+/**
+ * @brief Point in space with charge.
+ *
+ * A hit describes a point in the detector where charge was deposited, It is the output
+ * of a PSA method.
+ */
 class AtHit : public TObject {
 public:
    using XYZPoint = ROOT::Math::XYZPoint;
@@ -25,7 +32,7 @@ protected:
    Double_t fCharge;              //< Charge of hit
    Double_t fChargeVariance{0};   //< Charge variance
    XYZPoint fPosition;            //< Position of hit
-   XYZVector fPositionVariance{}; //< Position variance
+   XYZVector fPositionVariance{}; //< Position variance (unused by AtHitCluster)
    Int_t fHitID;                  //< Unique ID of hit
    Int_t fPadNum;                 //< Pad that generated hit
 
@@ -46,11 +53,12 @@ public:
    AtHit &operator=(const AtHit &) = default;                            //< Copy assignment
    AtHit &operator=(AtHit &&) = default;                                 //< Move assignment
    virtual ~AtHit() = default;
+   virtual std::unique_ptr<AtHit> Clone(); //< Create a copy of sub-type
 
    void SetCharge(Double_t charge) { fCharge = charge; }
    void SetChargeVariance(Double_t chargeVar) { fChargeVariance = chargeVar; }
    void SetPosition(const XYZPoint &pos) { fPosition = pos; }
-   void SetPositionVariance(const XYZPoint &vec) { fPositionVariance = vec; }
+   virtual void SetPositionVariance(const XYZPoint &vec) { fPositionVariance = vec; }
    void SetHitID(Int_t hitID) { fHitID = hitID; }
    void SetPadNum(Int_t padNum) { fPadNum = padNum; }
 

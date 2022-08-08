@@ -2,18 +2,17 @@
 
 #include "AtDigiPar.h"
 
+#include <FairParSet.h> // for FairParSet
 #include <FairRunAna.h>
 #include <FairRuntimeDb.h>
 
+#include <algorithm> // for max
 #include <cmath>
-#include <cstdio>
 #include <iostream>
 
 Double_t AtVectorResponse::fPeakingTime = 0;
 Double_t AtVectorResponse::fTBTime = 0;
 std::vector<Double_t> AtVectorResponse::fWaveSample = {};
-
-AtVectorResponse::AtVectorResponse() {}
 
 double AtVectorResponse::ResponseFunction(double reducedTime)
 {

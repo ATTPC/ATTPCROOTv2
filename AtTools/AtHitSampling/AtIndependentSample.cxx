@@ -2,8 +2,8 @@
 
 using namespace RandomSample;
 
-void AtIndependentSample::SetHitsToSample(const std::vector<AtHit> *hits)
+void AtIndependentSample::SetHitsToSample(const std::vector<const AtHit *> &hits)
 {
-   fHits = hits;
+   fHits = &hits;
    FillCDF();
 }

@@ -8,8 +8,7 @@
 #include <memory>  // for make_unique, unique_ptr
 #include <utility> // for pair
 
-class AtEvent;
-class AtRawEvent;
+class AtPad;
 class TBuffer;
 class TClass;
 class TMemberInspector;
@@ -20,7 +19,7 @@ protected:
    Int_t fEndTB{512}; //< Last TB for charge integration
 
 public:
-   void Analyze(AtRawEvent *rawEvent, AtEvent *event) override;
+   virtual HitVector AnalyzePad(AtPad *pad) override;
    std::unique_ptr<AtPSA> Clone() override { return std::make_unique<AtPSAHitPerTB>(*this); }
    void SetTBLimits(std::pair<Int_t, Int_t> limits);
 

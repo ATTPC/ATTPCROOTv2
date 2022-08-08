@@ -2,7 +2,6 @@
 
 #include "AtDigiPar.h"       // for AtDigiPar
 #include "AtEvent.h"         // for AtEvent
-#include "AtHit.h"           // for AtHit
 #include "AtPRA.h"           // for AtPRA
 #include "AtPatternEvent.h"  // for AtPatternEvent
 #include "AtTrackFinderTC.h" // for AtTrackFinderHC
@@ -14,7 +13,6 @@
 
 #include <TObject.h> // for TObject
 
-#include <algorithm> // for max
 #include <iostream>  // for operator<<, basic_ostream, cout, ostream
 #include <memory>    // for unique_ptr<>::element_type, unique_ptr
 #include <stdexcept> // for runtime_error
@@ -159,9 +157,8 @@ void AtPRAtask::Exec(Option_t *option)
    if (fEventHArray->GetEntriesFast() == 0)
       return;
 
-   std::vector<AtHit> hitArray;
    AtEvent &event = *(dynamic_cast<AtEvent *>(fEventHArray->At(0))); // TODO: Make sure we are not copying
-   hitArray = event.GetHitArray();
+   auto &hitArray = event.GetHits();
 
    std::cout << "  -I- AtPRAtask -  Event Number :  " << event.GetEventID() << "\n";
 

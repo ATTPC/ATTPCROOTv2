@@ -24,7 +24,7 @@ protected:
 
 public:
    AtWeightedGaussian(double sigma = 30) : fSigma(sigma) {}
-   virtual void SetHitsToSample(const std::vector<AtHit> *hits) override;
+   virtual void SetHitsToSample(const std::vector<const AtHit *> &hits) override;
 
 protected:
    virtual std::vector<double> PDF(const AtHit &hit) override;
