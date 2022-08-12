@@ -24,7 +24,7 @@ AtRawEvent::AtRawEvent(const AtRawEvent &obj)
      fIsGood(obj.fIsGood)
 {
    for (const auto &pad : obj.fPadList)
-      fPadList.push_back(pad->Clone());
+      fPadList.push_back(pad->ClonePad());
 }
 
 void AtRawEvent::CopyAllButData(const AtRawEvent *event)

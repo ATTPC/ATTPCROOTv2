@@ -64,7 +64,7 @@ public:
 
    void SetCovMatrix(TMatrixDSym matrix) { fCovMatrix = std::move(matrix); }
    void SetCovMatrix(int i, int j, double val);
-   virtual void SetPositionVariance(const XYZPoint &vec) override;
+   virtual void SetPositionVariance(const XYZVector &vec) override;
    void SetLength(Double_t length) { fLength = length; }
    void SetClusterID(Int_t id) { fClusterID = id; }
    virtual void AddHit(const AtHit &hit);

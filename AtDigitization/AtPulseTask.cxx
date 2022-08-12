@@ -4,7 +4,7 @@
 #include "AtMCPoint.h"
 #include "AtMap.h"
 #include "AtPad.h"
-#include "AtPadCharge.h"
+#include "AtPadArray.h"
 #include "AtRawEvent.h"
 #include "AtSimulatedPoint.h"
 
@@ -247,12 +247,7 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
       }
 
       // Create pad
-      AtPad *pad = nullptr;
-      if (fUseChargeSave)
-         pad = fRawEvent->AddPad(std::make_unique<AtPadCharge>(thePadNumber));
-      else
-         pad = fRawEvent->AddPad(thePadNumber);
-      // pad->SetElectrons(eleAccumulated[thePadNumber]);
+      AtPad *pad = fRawEvent->AddPad(thePadNumber);
 
       auto PadCenterCoord = fMap->CalcPadCenter(thePadNumber);
       pad->SetValidPad(kTRUE);
@@ -261,11 +256,19 @@ void AtPulseTask::generateTracesFromGatheredElectrons()
 
       auto lowGain = fMap->IsInhibited(thePadNumber) == AtMap::InhibitType::kLowGain ? fLowGainFactor : 1;
 
+      auto charge = std::make_unique<AtPadArray>();
+
       for (Int_t bin = 0; bin < fNumTbs; bin++) {
-         pad->SetADC(bin, signal[bin] * fGETGain * lowGain); // NOLINT
+         auto adc = signal[bin] * fGETGain * lowGain;
+         if (fNoiseSigma != 0)
+            adc += gRandom->Gaus(0, fNoiseSigma);
+         pad->SetADC(bin, adc); // NOLINT
          if (fUseChargeSave)
-            dynamic_cast<AtPadCharge *>(pad)->SetElectrons(bin, eleAccumulated[thePadNumber]->GetBinContent(bin + 1));
+            charge->SetArray(bin, eleAccumulated[thePadNumber]->GetBinContent(bin + 1));
       }
+
+      if (fUseChargeSave)
+         pad->AddAugment("Q", std::move(charge));
    }
 
    // if electronsMap.size==0, fEventID still needs to be set

@@ -106,7 +106,7 @@ void unpackReducedFiltered(int runNumber)
    // Get the number of events and unpack the whole run
    auto numEvents = unpackTask->GetNumEvents();
 
-   // numEvents = 1700;//217;
+   // numEven = 1700;//217;
    numEvents = 10000;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;

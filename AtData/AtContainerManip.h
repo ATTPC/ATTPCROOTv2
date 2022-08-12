@@ -3,6 +3,8 @@
 
 #include <FairLogger.h>
 
+#include <TH1F.h>
+
 #include <algorithm> // IWYU pragma: keep
 #include <iterator>  // for make_move_iterator
 #include <memory>
@@ -10,6 +12,43 @@
 #include <vector>
 
 namespace ContainerManip {
+
+/**
+ * @brief Use contents of data to set the bin contents of hist.
+ *
+ * Will resize the historgram to contain data.size() bins, setting the axis
+ * according to xMin and xMax. If both are 0, then sets the axis to [0,data.size()]
+ */
+template <typename T>
+void SetHistFromData(TH1 &hist, const T &data, double xMin = 0, double xMax = 0)
+{
+   if (xMin == 0 && xMax == 0)
+      xMax = data.size();
+   hist.Reset();
+   hist.SetBins(data.size(), xMin, xMax);
+   for (int i = 0; i < hist.GetNbinsX(); ++i)
+      hist.SetBinContent(i + 1, data.at(i));
+}
+
+/**
+ * @brief Use contents of data to create a histogram with the given name
+ *
+ * Will resize the historgram to contain data.size() bins, setting the axis
+ * according to xMin and xMax. If both are 0, then sets the axis to [0,data.size()].
+ * The returned unique_ptr owns the memory and it will not be cleaned up by root.
+ */
+template <typename T>
+std::unique_ptr<TH1D> CreateHistFromData(const std::string &name, const T &data, double xMin = 0, double xMax = 0)
+{
+   if (xMin == 0 && xMax == 0)
+      xMax = data.size();
+
+   auto ret = std::make_unique<TH1D>(name.data(), name.data(), data.size(), 0, data.size());
+   for (int i = 0; i < ret->GetNbinsX(); ++i)
+      ret->SetBinContent(i + 1, data.at(i));
+   ret->SetDirectory(nullptr); // Pass ownership to the pointer instead of current ROOT directory
+   return ret;
+}
 
 template <typename T>
 T GetMedian(std::vector<T> &vec)
@@ -132,4 +171,5 @@ std::vector<T> MoveFromVector(std::vector<T> &vec, Operator op)
 }
 
 } // namespace ContainerManip
+
 #endif //#ifndef ATCONTAINERMANIP_H

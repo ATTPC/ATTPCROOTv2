@@ -145,7 +145,7 @@ void AtHitCluster::updateWeightsAndCharge(const AtHit &hit)
    LOG(debug) << "Denom: " << fTotalWeight - ElementDiv(fTotalWeight2, fTotalWeight);
 }
 
-void AtHitCluster::SetPositionVariance(const XYZPoint &vec)
+void AtHitCluster::SetPositionVariance(const XYZVector &vec)
 {
    SetCovMatrix(0, 0, vec.X());
    SetCovMatrix(1, 1, vec.Y());
