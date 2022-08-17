@@ -14,6 +14,7 @@ set_property(GLOBAL APPEND PROPERTY ROOT_CONFIG_LIBRARY_TARGETS_Pythia6 Pythia6)
 set_property(GLOBAL APPEND PROPERTY ROOT_CONFIG_LIBRARY_TARGETS_Pythia8 Pythia8)
 set_property(GLOBAL APPEND PROPERTY ROOT_CONFIG_LIBRARY_TARGETS_VGM VGM::BaseVGM)
 set_property(GLOBAL APPEND PROPERTY ROOT_CONFIG_LIBRARY_TARGETS_FairRoot FairRoot::Base)
+set_property(GLOBAL APPEND PROPERTY ROOT_CONFIG_LIBRARY_TARGETS_HiRAEVT HTDetectors)
 
 macro(fairroot_remove_system_paths path_var)
   set(__excluded_system_prefixes)
