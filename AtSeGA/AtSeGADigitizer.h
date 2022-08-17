@@ -8,31 +8,21 @@
 
 #ifndef ATSEGADIGITIZER_H
 #define ATSEGADIGITIZER_H
-/*
-#include "AtMCPoint.h"
-#include "AtSeGA.h"
-#include "AtSeGACrystalCalData.h"
-
-#include <TClonesArray.h>
-
-#include "string"
-*/
 
 #include <FairTask.h>
 
 #include <Rtypes.h> // for Double_t, THashConsistencyHolder, Bool_t, Int_t
+#include <TClonesArray.h>
 
 class AtSeGACrystalCalData;
 class TBuffer;
 class TClass;
-class TClonesArray;
 class TMemberInspector;
+
 class AtSeGADigitizer : public FairTask {
 private:
-   void SetParameter();
-
-   TClonesArray *fMCPointDataCA;    //!  The crystal hit collection
-   TClonesArray *fSeGACryCalDataCA; /**< Array with CALIFA Cal- output data. >*/
+   TClonesArray *fMCPointDataCA;   //!  The crystal hit collection (we do not own)
+   TClonesArray fSeGACryCalDataCA; /**< Array with CALIFA Cal- output data. >*/
 
    Double_t fNonUniformity{0}; // Experimental non-uniformity parameter
    Double_t fResolutionGe{0};  // Experimental resolution @ 1 MeV for Ge
@@ -104,6 +94,7 @@ public:
    AtSeGACrystalCalData *AddCrystalCal(Int_t ident, Double_t energy, ULong64_t time);
 
 private:
+   void SetParameter();
    /** Private method NUSmearing
     **
     ** Smears the energy according to some non-uniformity distribution

@@ -9,12 +9,20 @@
 #ifndef ATSEGACRYSTALCALDATA_H
 #define ATSEGACRYSTALCALDATA_H
 
-#include <TClonesArray.h>
+#include <FairMultiLinkedData.h>
 
-#include "FairMultiLinkedData.h"
-#include "TObject.h"
+#include <Rtypes.h> // for Int_t, ULong64_t, Double32_t, THash...
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtSeGACrystalCalData : public FairMultiLinkedData {
+protected:
+   Double32_t fEnergy; // total energy in the crystal
+   ULong64_t fTime;    // time of the interaction
+   Int_t fDetCopyID;   // crystal unique identifier
+
 public:
    /** Default constructor **/
    AtSeGACrystalCalData();
@@ -27,7 +35,7 @@ public:
    AtSeGACrystalCalData(Int_t ident, Double_t energy, ULong64_t time);
 
    /** Copy constructor **/
-   AtSeGACrystalCalData(const AtSeGACrystalCalData &);
+   AtSeGACrystalCalData(const AtSeGACrystalCalData &) = default;
 
    AtSeGACrystalCalData &operator=(const AtSeGACrystalCalData &) { return *this; }
 
@@ -47,12 +55,6 @@ public:
    /** Output to screen **/
    virtual void Print(const Option_t *opt) const;
 
-protected:
-   Double32_t fEnergy; // total energy in the crystal
-   ULong64_t fTime;    // time of the interaction
-   Int_t fDetCopyID;   // crystal unique identifier
-
-public:
    ClassDef(AtSeGACrystalCalData, 1)
 };
 

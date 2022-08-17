@@ -11,10 +11,9 @@
 
 #include <TString.h> // for TString
 
-#include <iostream>
-ClassImp(AtSeGAContFact)
+ClassImp(AtSeGAContFact);
 
-   static AtSeGAContFact gAtSeGAContFact;
+static AtSeGAContFact gAtSeGAContFact;
 
 AtSeGAContFact::AtSeGAContFact() : FairContFact()
 {
@@ -42,16 +41,5 @@ void AtSeGAContFact::setAllContainers()
 
 FairParSet *AtSeGAContFact::createContainer(FairContainer *c)
 {
-   /** Calls the constructor of the corresponding parameter container.
-       For an actual context, which is not an empty string and not
-       the default context
-       of this container, the name is concatinated with the context.
-   */
-   const char *name = c->GetName();
-   FairParSet *p = nullptr;
-   // if (strcmp(name,"AtSeGAGeoPar")==0) {
-   //   p=new AtSeGAGeoPar(c->getConcatName().Data(),
-   //                           c->GetTitle(),c->getContext());
-   // }
-   return p;
+   return nullptr;
 }

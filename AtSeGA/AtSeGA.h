@@ -17,7 +17,6 @@
 #include <string> // for string
 class TBuffer;
 class TClass;
-class TList;
 class TMemberInspector;
 class FairVolume;
 class TClonesArray;
@@ -37,11 +36,6 @@ private:
    Double32_t fLength;   //!  length
    Double32_t fELoss;    //!  energy loss
    Double32_t fELossAcc; //!  accumulated energy loss
-
-   TClonesArray *fTraCollection; //!  The hit collection
-
-   Bool_t kGeoSaved; //!
-   TList *flGeoPar;  //!
 
    /** container for data points */
    TClonesArray *fAtSeGAPointCollection; //!

@@ -23,8 +23,8 @@ private:
 public:
    AtSeGAContFact();
    ~AtSeGAContFact() {}
-   FairParSet *createContainer(FairContainer *);
-   ClassDef(AtSeGAContFact, 0) // Factory for all AtSeGA parameter containers
+   FairParSet *createContainer(FairContainer *) override;
+   ClassDefOverride(AtSeGAContFact, 1) // Factory for all AtSeGA parameter containers
 };
 
 #endif
