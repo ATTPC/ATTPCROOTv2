@@ -155,6 +155,8 @@ void AtMap::ParseMapList(TXMLNode *node)
              strcmp(node->GetNodeName(), "LookupGADGET08232021") == 0 ||
              strcmp(node->GetNodeName(), "Lookup20141208") == 0 ||
              strcmp(node->GetNodeName(), "LookupSpecMATnoScint") == 0 ||
+             strcmp(node->GetNodeName(), "LookupSpecMATnoScintHisto") == 0 ||
+             strcmp(node->GetNodeName(), "LookupSpecMATnoScint3seg") == 0 ||
              strcmp(node->GetNodeName(), "LookupProtoND") == 0) { // TODO Implement this as function parameter
 
             ParseAtTPCMap(node->GetChildren());
