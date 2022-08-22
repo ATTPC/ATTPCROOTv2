@@ -4,11 +4,11 @@
 #define cGREEN "\033[1;32m"
 
 #include <sys/stat.h>
-#include "FairLogger.h"
+//#include "FairLogger.h"
 
 bool check_file(const std::string &name);
 
-void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root")
+void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9901.root")
 {
 
    if (!check_file(dataFile.Data())) {
@@ -24,17 +24,19 @@ void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root")
    gSystem->Load("libXMLParser.so");
    // -----------------------------------------------------------------
    // Set file names
-   TString scriptfile = "LookupSpecMATnoScint.xml";
+   TString scriptfile = "LookupSpecMATnoScint3seg.xml";
    TString dir = getenv("VMCWORKDIR");
    TString scriptdir = dir + "/scripts/" + scriptfile;
    TString geomDir = dir + "/geometry/";
    gSystem->Setenv("GEOMPATH", geomDir.Data());
 
-   TString outputFile = "./data/run_9993.root";
+   // Parameter file name
+
+   TString outputFile = "./data/run_9901.root";
    // TString mcParFile   = dataDir + name + ".params.root";
    TString loggerFile = "./data/SpecMATLog.log";
 
-   TString parameterFile = "SpecMAT.run_9993.par";
+   TString parameterFile = "SpecMAT.run_9901.par";
    TString triggerFile = "SpecMAT.trigger.par";
    TString trigParFile = "./data/" + triggerFile;
    TString digiParFile = "./data/" + parameterFile;
@@ -75,7 +77,7 @@ void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root")
    fMapPtr->GeneratePadPlane();
 
    // Set arrays required of unpacker
-   std::vector<bool> isCoboPadPlane = {true, false, true, true};
+   std::vector<bool> isCoboPadPlane = {true, true, true, true};
    std::vector<bool> isCoboNegativePolarity;
    // Positive polarity for padplane, negative for scintillators
    for (auto elem : isCoboPadPlane)
@@ -108,15 +110,19 @@ void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root")
     HoughTask ->SetEnableMap(); //Enables an instance of the ATTPC map:  This
     enables the MC with Q instead of position HoughTask
     ->SetMap(scriptdir.Data()); run -> AddTask(HoughTask);
+    */
 
     AtPRAtask *praTask = new AtPRAtask();
-     praTask->SetPersistence(kTRUE);
-     run->AddTask(praTask);
+    praTask->SetPersistence(kTRUE);
+    run->AddTask(praTask);
 
+
+      /*
      AtClusterizeTask *clusterizer = new AtClusterizeTask();
      clusterizer->SetPersistence(kFALSE);
      run->AddTask(clusterizer);
      */
+     
 
    std::cout << std::endl << "**** Begining Init ****" << std::endl;
    run->Init();
@@ -124,6 +130,14 @@ void run_unpack_SpecMAT(TString dataFile = "./data/TTreesGETrun_9993.root")
 
    // run -> RunOnTBData();
    run->Run(0, 30);
+
+   auto numEvents = unpackTask->GetNumEvents();
+
+   // numEvents = 1700;//217;
+   // numEvents = 5;
+
+   std::cout << "Unpacking 30 out of " << numEvents << " events. " << std::endl;
+
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;
