@@ -283,7 +283,8 @@ XYPoint AtSpecMATMap::CalcPadCenter(Int_t PadRef)
       return {-9999, -9999};
    }
 
-   double x, y;
+   double x = -9999;
+   double y = -9999;
 
    if (PadRef < 529) {
       x = AtPadCoord[PadRef][3][0];
