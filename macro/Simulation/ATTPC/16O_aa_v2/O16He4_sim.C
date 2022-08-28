@@ -14,9 +14,9 @@ void O16He4_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
    timer.Start();
    // ------------------------------------------------------------------------
 
-   // gSystem->Load("libAtGen.so");
+   
 
-   AtVertexPropagator *vertex_prop = new AtVertexPropagator();
+   
 
    // -----   Create simulation run   ----------------------------------------
    FairRunSim *run = new FairRunSim();

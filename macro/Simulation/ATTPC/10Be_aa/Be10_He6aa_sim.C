@@ -1,4 +1,4 @@
-void Be10_He6aa_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
+void Be10_He6aa_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
@@ -14,7 +14,7 @@ void Be10_He6aa_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    timer.Start();
    // ------------------------------------------------------------------------
 
-   AtVertexPropagator *vertex_prop = new AtVertexPropagator();
+   
 
    // -----   Create simulation run   ----------------------------------------
    FairRunSim *run = new FairRunSim();

@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
 
       if (patternEvent) {
 
-         auto& auxPadArray = event->GetAuxPadArray();
+         auto& auxPadArray = event->GetAuxPads();
          std::cout << cGREEN << "   >>>> Number of auxiliary pads : " << auxPadArray.size() << cNORMAL << "\n";
 
          std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
@@ -609,12 +609,12 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                auto it = hitClusterArray->rbegin();
                while (it != hitClusterArray->rend()) {
 
-                  if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.25)
+                  if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.5)
                      break;
                   auto dir = (*it).GetPosition() - (*std::next(it, 1)).GetPosition();
                   eloss += (*it).GetCharge();
-                  len = std::sqrt(dir.Mag2());
-		  dedx += (*it).GetCharge() / len;
+                  len += std::sqrt(dir.Mag2());
+		  dedx += (*it).GetCharge();
                   // std::cout<<(*it).GetCharge()<<"\n";
                   it++;
                   ++cnt;
@@ -626,20 +626,20 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                cnt = 1;
                for (auto iHitClus = 1; iHitClus < hitClusterArray->size(); ++iHitClus) {
 
-                  if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.25)
+                  if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.5)
                      break;
                   auto dir =
                      hitClusterArray->at(iHitClus).GetPosition() - hitClusterArray->at(iHitClus - 1).GetPosition();
-                  len = std::sqrt(dir.Mag2());
+                  len += std::sqrt(dir.Mag2());
                   eloss += hitClusterArray->at(iHitClus).GetCharge();
-                  dedx += hitClusterArray->at(iHitClus).GetCharge() / len;
+                  dedx += hitClusterArray->at(iHitClus).GetCharge();
                   // std::cout<<len<<" - "<<eloss<<" - "<<hitClusterArray->at(iHitClus).GetCharge()<<"\n";
                   ++cnt;
                }
             }
 
             eloss /= cnt;
-	    dedx /= cnt;
+	    dedx /= len;
 
             if (fitTrack == nullptr)
                continue;
