@@ -13,11 +13,12 @@ Set(DEPENDENCIES
 
 set(SRCS
   # Add all the source files below this line. Those must have cxx for their extension.
-
+  AtPadBase.cxx
   AtPad.cxx
   AtAuxPad.cxx
   AtPadFFT.cxx
-  AtPadCharge.cxx
+  AtPadArray.cxx
+
   AtRawEvent.cxx
   AtHit.cxx
   AtHitCluster.cxx

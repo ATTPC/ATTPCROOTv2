@@ -11,7 +11,8 @@
 #include <FairRun.h>
 #include <FairRuntimeDb.h>
 
-#include <Math/Point3D.h> // for PositionVector3D
+#include <Math/Point3D.h>  // for PositionVector3D
+#include <Math/Vector3D.h> // for PositionVector3D
 #include <Rtypes.h>
 #include <TClonesArray.h>
 #include <TObject.h> // for TObject
@@ -114,7 +115,7 @@ void AtPSA::TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit &hit)
 }
 
 /**
- * Analyzes every pad in event, and add the hits to AtEvent.
+ * Analyzes every pad in event, and add the hits to AtEvent. Called by AtPSATask.
  *
  */
 void AtPSA::Analyze(AtRawEvent *rawEvent, AtEvent *event)
@@ -174,6 +175,25 @@ Double_t AtPSA::getThreshold(int padSize)
    if (padSize == 0)
       return fThresholdlow; // threshold for central pads
    return fThreshold;       // threshold for big pads (or all other not small)
+}
+
+/**
+ * Returns a vector populated with the variance of the hit according the the diffusion
+ * coefficients in the parameter file.
+ *
+ * @param[in] zLoc Location of hit in TB
+ * @param[in] zLocVar Variance of hit in TB^2
+ * @return variance of hit location in mm^2
+ * @todo Implement the function so it doesn't return all zeros...
+ */
+double AtPSA::getZhitVariance(double zLoc, double zLocVar) const
+{
+   return 0;
+}
+
+std::pair<double, double> AtPSA::getXYhitVariance() const
+{
+   return {0, 0};
 }
 
 ClassImp(AtPSA)

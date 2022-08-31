@@ -58,7 +58,7 @@ public:
    void SetCharge(Double_t charge) { fCharge = charge; }
    void SetChargeVariance(Double_t chargeVar) { fChargeVariance = chargeVar; }
    void SetPosition(const XYZPoint &pos) { fPosition = pos; }
-   virtual void SetPositionVariance(const XYZPoint &vec) { fPositionVariance = vec; }
+   virtual void SetPositionVariance(const XYZVector &vec) { fPositionVariance = vec; }
    void SetHitID(Int_t hitID) { fHitID = hitID; }
    void SetPadNum(Int_t padNum) { fPadNum = padNum; }
 

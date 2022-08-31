@@ -25,6 +25,7 @@
 #include <vector>
 
 class AtPad;
+class AtPadFFT;
 class AtRawEvent;
 
 class AtFilterFFT : public AtFilter {
@@ -51,8 +52,8 @@ protected:
    Bool_t fSaveTransform{false};
    Bool_t fSubtractBackground{true};
 
-   AtRawEvent *fTransformedEvent{nullptr};
-   AtRawEvent *fFilteredEvent{nullptr};
+   AtRawEvent *fInputEvent{nullptr};
+   // AtRawEvent *fFilteredEvent{nullptr};
    static constexpr Int_t fTransformSize = 512;
 
 public:
@@ -75,12 +76,11 @@ public:
    bool IsGoodEvent() override { return true; }
 
 protected:
-   virtual void applyFrequencyCutsAndSetInverseFFT();
+   virtual std::unique_ptr<AtPadFFT> applyFrequencyCutsAndSetInverseFFT();
 
 private:
    bool isValidFreqRange(const AtFreqRange &range);
    bool doesFreqRangeOverlap(const AtFreqRange &range);
-   void replacePadWithPadFFT(AtRawEvent *event);
 };
 
 #endif //#ifndef ATFFTFILTER_H

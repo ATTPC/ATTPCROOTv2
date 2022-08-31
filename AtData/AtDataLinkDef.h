@@ -5,10 +5,12 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
+#pragma link C++ class AtPadBase + ;
 #pragma link C++ class AtPad + ;
 #pragma link C++ class AtAuxPad + ;
 #pragma link C++ class AtPadFFT + ;
-#pragma link C++ class AtPadCharge + ;
+#pragma link C++ class AtPadArray + ;
+
 #pragma link C++ class AtRawEvent + ;
 #pragma link C++ class AtHit + ;
 #pragma link C++ class AtHitCluster + ;

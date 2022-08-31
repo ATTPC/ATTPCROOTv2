@@ -7,6 +7,7 @@
 #include <FairLogger.h>
 
 #include <Rtypes.h>
+#include <TComplex.h>
 #include <TVirtualFFT.h>
 
 #include <iostream>
@@ -39,10 +40,7 @@ void AtFilterFFT::Init()
 
 void AtFilterFFT::InitEvent(AtRawEvent *inputEvent)
 {
-   if (fSaveTransform) {
-      replacePadWithPadFFT(inputEvent);
-      fTransformedEvent = inputEvent;
-   }
+   fInputEvent = inputEvent;
 }
 
 /**
@@ -62,9 +60,19 @@ void AtFilterFFT::Filter(AtPad *pad)
 
    fFFT->SetPoints(pad->GetADC().data());
    fFFT->Transform();
-   applyFrequencyCutsAndSetInverseFFT();
-   if (fSaveTransform)
-      dynamic_cast<AtPadFFT *>(pad)->GetDataFromFFT(fFFTbackward.get());
+
+   auto fft = applyFrequencyCutsAndSetInverseFFT();
+
+   // If we are saving the transform add
+   if (fSaveTransform) {
+      // Add the frequency information to the output pad
+      pad->AddAugment("fft", std::move(fft));
+
+      // Add the freq information to the input pad
+      auto inputFFT = std::make_unique<AtPadFFT>();
+      inputFFT->GetDataFromFFT(fFFT.get());
+      fInputEvent->GetPad(pad->GetPadNum())->AddAugment("fft", std::move(inputFFT));
+   }
 
    fFFTbackward->Transform();
 
@@ -78,10 +86,7 @@ void AtFilterFFT::Filter(AtPad *pad)
    for (int i = 0; i < pad->GetADC().size(); ++i)
       pad->SetADC(i, fFFTbackward->GetPointReal(i) - baseline);
 
-   if (fSaveTransform) {
-      auto inputPad = dynamic_cast<AtPadFFT *>(fTransformedEvent->GetPad(pad->GetPadNum()));
-      inputPad->GetDataFromFFT(fFFT.get());
-   }
+   // If we are saving the transform, add the
 }
 
 bool AtFilterFFT::isValidFreqRange(const AtFreqRange &range)
@@ -117,8 +122,13 @@ bool AtFilterFFT::doesFreqRangeOverlap(const AtFreqRange &newRange)
    return false;
 }
 
-void AtFilterFFT::applyFrequencyCutsAndSetInverseFFT()
+/**
+ * Sets the C2R (inverse) FFT after applying the frequency cuts and returns a AtPadFFT object
+ * that contains the frequency information used to set the C2R fft.
+ */
+std::unique_ptr<AtPadFFT> AtFilterFFT::applyFrequencyCutsAndSetInverseFFT()
 {
+   auto ret = std::make_unique<AtPadFFT>();
    for (int i = 0; i < fFFT->GetN()[0]; ++i) {
       Double_t re, im;
       fFFT->GetPointComplex(i, re, im);
@@ -126,8 +136,10 @@ void AtFilterFFT::applyFrequencyCutsAndSetInverseFFT()
          re *= fFactors[i];
          im *= fFactors[i];
       }
+      ret->SetPoint(i, {re, im});
       fFFTbackward->SetPoint(i, re / fFFT->GetN()[0], im / fFFT->GetN()[0]);
    }
+   return ret;
 }
 
 bool operator<(const AtFilterFFT::AtFreqRange &lhs, const AtFilterFFT::AtFreqRange &rhs)
@@ -139,10 +151,4 @@ void AtFilterFFT::DumpFactors()
 {
    for (const auto &pair : fFactors)
       std::cout << pair.first << " " << pair.second << std::endl;
-}
-
-void AtFilterFFT::replacePadWithPadFFT(AtRawEvent *event)
-{
-   for (auto &pad : event->fPadList)
-      pad = std::make_unique<AtPadFFT>(*pad);
 }
