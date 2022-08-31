@@ -17,6 +17,7 @@
 #pragma link C++ class AtPSAMax + ;
 #pragma link C++ class AtPSASimple2 + ;
 #pragma link C++ class AtPSAComposite - !;
+#pragma link C++ class AtPSADeconv - !;
 
 #pragma link C++ nestedclass;
 #pragma link C++ nestedtypedef;

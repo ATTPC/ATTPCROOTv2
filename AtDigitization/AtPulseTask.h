@@ -47,7 +47,9 @@ protected:
    Int_t fNumTbs{512};          //! Number of time buckers
    Int_t fTBEntrance = 0;       //! Window location in timebuckets (from config)
    Int_t fTBPadPlane = 0;       //! Pad plane location in TBs (calculated from DriftVelocity, TBEntrance, ZPadPlane
-   ResponseFunctionType fResponseFunction{&(AtPulseTask::nominalResponseFunction)};
+   ResponseFunctionType fResponseFunction{
+      &(AtPulseTask::nominalResponseFunction)}; //! Response function of the electronics
+   Double_t fNoiseSigma = 0;                    //! Sigma of random gaussian noise to apply to trace
 
    Bool_t fIsPersistent = true;  //!< If true, save container
    Bool_t fIsSaveMCInfo = false; //!<< Propagates MC information
@@ -79,7 +81,7 @@ public:
    void SetMap(AtMapPtr map) { fMap = map; };
    void UseFastGain(Bool_t val) { fUseFastGain = val; }
    void UseChargeSave(Bool_t val) { fUseChargeSave = val; }
-
+   void SetNoiseSigma(double val) { fNoiseSigma = val; }
    /**
     * @brief: Set the response funtion of the electronics for a single electron.
     *

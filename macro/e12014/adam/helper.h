@@ -25,7 +25,7 @@
 
 // "public functions"
 void loadRun(TString filePath, TString rawEventBranchName = "AtRawEvent",
-             TString rawEventFilteredBranchName = "AtRawEventFiltered", TString eventBranchName = "AtEventFiltered",
+             TString rawEventFilteredBranchName = "AtRawEventFiltered", TString eventBranchName = "AtEventH",
              TString patternBranchName = "AtPatternEvent");
 bool loadEvent(ULong64_t eventNumber);
 bool loadPad(int padNum);

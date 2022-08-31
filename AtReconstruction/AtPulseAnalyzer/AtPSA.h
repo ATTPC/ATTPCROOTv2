@@ -1,6 +1,7 @@
 #ifndef AtPSA_H
 #define AtPSA_H
 
+#include <Math/Vector3Dfwd.h>
 #include <Rtypes.h>
 
 #include <cstddef>
@@ -17,6 +18,11 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
+/**
+ * @brief Abstract base class for processing AtPads (traces) into AtHits.
+ *
+ * @defgroup PSA
+ */
 class AtPSA {
 private:
    // Access in PSA methods through getThreshold()
@@ -46,7 +52,7 @@ public:
    AtPSA() = default;
    virtual ~AtPSA() = default;
 
-   void Init();
+   virtual void Init();
 
    void SetThreshold(Int_t threshold);
    void SetThresholdLow(Int_t thresholdlow);
@@ -55,6 +61,8 @@ public:
 
    virtual void Analyze(AtRawEvent *rawEvent, AtEvent *event);
    virtual HitVector AnalyzePad(AtPad *pad) = 0;
+
+   // virtual HitVector AnalyzeTrace(const std::vector<double> &trace) = 0;
    virtual std::unique_ptr<AtPSA> Clone() = 0;
 
 protected:
@@ -66,6 +74,8 @@ protected:
    Double_t CalculateZGeo(Double_t peakIdx);
    Double_t getThreshold(int padSize = -1);
 
+   virtual double getZhitVariance(double zLoc, double zLocVar) const;
+   virtual std::pair<double, double> getXYhitVariance() const;
    ClassDef(AtPSA, 5)
 };
 
