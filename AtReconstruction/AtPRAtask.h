@@ -22,6 +22,9 @@ class AtPRA;
  */
 class AtPRAtask : public FairTask {
 private:
+   TString fInputBranchName;
+   TString fOutputBranchName;
+
    TClonesArray *fEventHArray{};
    TClonesArray fPatternEventArray;
 
@@ -64,6 +67,9 @@ public:
    virtual void Exec(Option_t *option);
    virtual void SetParContainers();
    virtual void Finish();
+
+   void SetInputBranch(TString branchName) { fInputBranchName = branchName; }
+   void SetOutputBranch(TString branchName) { fOutputBranchName = branchName; }
 
    void SetPersistence(Bool_t value = kTRUE);
    void SetPRAlgorithm(Int_t value = 0);

@@ -12,15 +12,14 @@ void run_eve(TString InputFile = "output_digi.root", TString OutputFile = "outpu
    TString OutputDataFile = dir + "/macro/" + unpackDir + OutputFile;
    TString GeoDataPath = dir + "/geometry/" + geoFile;
    TString mapDir = dir + "/scripts/" + mapFile;
-   
+
    FairRunAna *fRun = new FairRunAna();
    FairRootFileSink *sink = new FairRootFileSink(OutputDataFile);
    FairFileSource *source = new FairFileSource(InputDataFile);
    fRun->SetSource(source);
    fRun->SetSink(sink);
    fRun->SetGeomFile(GeoDataPath);
-   
-   
+
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
    FairParRootFileIo *parIo1 = new FairParRootFileIo();
    // parIo1->open("param.dummy.root");
@@ -28,7 +27,7 @@ void run_eve(TString InputFile = "output_digi.root", TString OutputFile = "outpu
 
    FairRootManager *ioman = FairRootManager::Instance();
 
-    AtEventManager *eveMan = new AtEventManager();
+   AtEventManager *eveMan = new AtEventManager();
    AtEventDrawTask *eve = new AtEventDrawTask();
    auto fMap = std::make_shared<AtTpcMap>();
    fMap->ParseXMLMap(mapDir.Data());

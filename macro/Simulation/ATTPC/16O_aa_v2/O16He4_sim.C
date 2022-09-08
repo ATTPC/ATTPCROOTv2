@@ -14,10 +14,6 @@ void O16He4_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
    timer.Start();
    // ------------------------------------------------------------------------
 
-   
-
-   
-
    // -----   Create simulation run   ----------------------------------------
    FairRunSim *run = new FairRunSim();
    run->SetName(mcEngine);      // Transport engine

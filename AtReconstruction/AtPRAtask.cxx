@@ -19,7 +19,9 @@
 #include <utility>   // for move
 #include <vector>    // for allocator, vector
 
-AtPRAtask::AtPRAtask() : FairTask("AtPRAtask"), fPatternEventArray("AtPatternEvent", 1)
+AtPRAtask::AtPRAtask()
+   : fInputBranchName("AtEventH"), fOutputBranchName("AtPatternEvent"), FairTask("AtPRAtask"),
+     fPatternEventArray("AtPatternEvent", 1)
 {
 
    LOG(debug) << "Default Constructor of AtPRAtask";
@@ -137,13 +139,13 @@ InitStatus AtPRAtask::Init()
       return kERROR;
    }
 
-   fEventHArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtEventH"));
+   fEventHArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fInputBranchName));
    if (fEventHArray == nullptr) {
       LOG(error) << "Cannot find AtEvent array!";
       return kERROR;
    }
 
-   ioMan->Register("AtPatternEvent", "AtTPC", &fPatternEventArray, kIsPersistence);
+   ioMan->Register(fOutputBranchName, "AtTPC", &fPatternEventArray, kIsPersistence);
 
    return kSUCCESS;
 }

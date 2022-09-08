@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
 
       if (patternEvent) {
 
-         auto& auxPadArray = event->GetAuxPads();
+         auto &auxPadArray = event->GetAuxPads();
          std::cout << cGREEN << "   >>>> Number of auxiliary pads : " << auxPadArray.size() << cNORMAL << "\n";
 
          std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
@@ -614,7 +614,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                   auto dir = (*it).GetPosition() - (*std::next(it, 1)).GetPosition();
                   eloss += (*it).GetCharge();
                   len += std::sqrt(dir.Mag2());
-		  dedx += (*it).GetCharge();
+                  dedx += (*it).GetCharge();
                   // std::cout<<(*it).GetCharge()<<"\n";
                   it++;
                   ++cnt;
@@ -639,7 +639,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
             }
 
             eloss /= cnt;
-	    dedx /= len;
+            dedx /= len;
 
             if (fitTrack == nullptr)
                continue;

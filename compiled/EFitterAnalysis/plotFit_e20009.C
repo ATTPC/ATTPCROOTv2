@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_e20009(std::string fileFolder = "data_344_367/")
+void plotFit_e20009(std::string fileFolder = "data_353_353/")
 {
 
    std::ofstream outputFileEvents("list_of_events.txt");
@@ -195,7 +195,7 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
    cutALPHA->SetPoint(21, 167.0359, 0.5968691);
    cutALPHA->SetPoint(22, 167.0359, 0.5950822);
 
-   //Protons gate
+   // Protons gate
    TCutG *cutT = new TCutG("CUTT", 9);
    cutT->SetVarX("ELossvsBrhoZoom");
    cutT->SetVarY("");
@@ -211,7 +211,7 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
    cutT->SetPoint(7, 239.0, 1.07);
    cutT->SetPoint(8, 71.5, 1.15);
 
-   //Deuteron gate
+   // Deuteron gate
    TCutG *cutD = new TCutG("CUTD", 13);
    cutD->SetVarX("ELossvsBrhoZoom");
    cutD->SetVarY("");
@@ -230,7 +230,7 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
    cutD->SetPoint(10, 800, 0.622);
    cutD->SetPoint(11, 200, 1.2);
    cutD->SetPoint(12, 200, 1.78);
-   
+
    TCutG *cutDEDX = new TCutG("cutDEDX", 10);
    cutDEDX->SetVarX("dedxvsBrho");
    cutDEDX->SetVarY("");
@@ -424,8 +424,8 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
 
             ++iEvt;
 
-	    if (ICMult > 3)
-	       continue;
+            if (ICMult > 3)
+               continue;
 
             //if(evMult !=2)
 	      //   continue;
@@ -512,45 +512,40 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
                Ang_Ener_PRA->Fill(APRA, EPRA);
                PhiPRAH->Fill(PhiPRA);
 
-
-	       
-	       
-
-	       //if((*lengthOrbZVec)[index]<30)
-	       // continue;
+               // if((*lengthOrbZVec)[index]<30)
+               // continue;
 
                // if((*brhoVec)[index]>0.8)
                // continue;
 
                // if((*eLossADC)[index]<1000)
-	       //continue;
+               // continue;
 
-	       if((*AFitVec)[index]<10 || (*AFitVec)[index]>170 )
-	         continue;
+               if ((*AFitVec)[index] < 10 || (*AFitVec)[index] > 170)
+                  continue;
 
                // Particle ID
                ELossvsBrho->Fill((*eLossADC)[index], (*brhoVec)[index]);
                ELossvsBrhoZoom->Fill((*eLossADC)[index], (*brhoVec)[index]);
-               //if (!cutT->IsInside((*eLossADC)[index], (*brhoVec)[index]) && !cutD->IsInside((*eLossADC)[index], (*brhoVec)[index])) {
-                  dedxvsBrho->Fill((*dEdxADC)[index], (*brhoVec)[index]);
-                  dedxvsBrhoZoom->Fill((*dEdxADC)[index], (*brhoVec)[index]);
-		  //}
+               // if (!cutT->IsInside((*eLossADC)[index], (*brhoVec)[index]) && !cutD->IsInside((*eLossADC)[index],
+               // (*brhoVec)[index])) {
+               dedxvsBrho->Fill((*dEdxADC)[index], (*brhoVec)[index]);
+               dedxvsBrhoZoom->Fill((*dEdxADC)[index], (*brhoVec)[index]);
+               //}
 
-	        if (cutT->IsInside((*eLossADC)[index], (*brhoVec)[index])) // particleID
-	          continue;
-		if (!cutD->IsInside((*eLossADC)[index], (*brhoVec)[index])) // particleID
-		  continue;
+               if (cutT->IsInside((*eLossADC)[index], (*brhoVec)[index])) // particleID
+                  continue;
+               if (!cutD->IsInside((*eLossADC)[index], (*brhoVec)[index])) // particleID
+                  continue;
 
-	       
-	       
                // if(!cutDEDX->IsInside((*dEdxADC)[index], (*brhoVec)[index]))
                // continue;
 
                //if ((*dEdxADC)[index] < 3000) // particleID
 		 //continue;
 
-		if ((*trackLengthVec)[index] < 25.0)
-		 continue;
+               if ((*trackLengthVec)[index] < 25.0)
+                  continue;
 
                //if ((*fitConvergedVec)[index] == 0)
                  // continue;
@@ -567,21 +562,21 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
                //if ((*ziniFitVec)[index] < 10.0 || (*ziniFitVec)[index] > 60.0)
 	       //   continue;
 
-		//if((*AFitVec)[index]<50 || (*AFitVec)[index]>70)
-		// continue;
+               // if((*AFitVec)[index]<50 || (*AFitVec)[index]>70)
+               // continue;
 
-		if ((*EFitVec)[index] > 6)
-		  continue;
+               if ((*EFitVec)[index] > 6)
+                  continue;
 
-	       /*     if ((*fChi2Vec)[index] / (*fNdfVec)[index] < 0.000)
-			        continue;
+               /*     if ((*fChi2Vec)[index] / (*fNdfVec)[index] < 0.000)
+                      continue;
 
-                    if ((*xiniFitVec)[index] < -1000.0)
-                    continue;*/
+                         if ((*xiniFitVec)[index] < -1000.0)
+                         continue;*/
 
-	       dedxvsBrhoCond->Fill((*dEdxADC)[index], (*brhoVec)[index]);
-	       
-	       Double_t angle = (*AFitVec)[index];
+               dedxvsBrhoCond->Fill((*dEdxADC)[index], (*brhoVec)[index]);
+
+               Double_t angle = (*AFitVec)[index];
                if (dataFile.find("sim") != std::string::npos) {
                   angle = (*AFitVec)[index];
                }

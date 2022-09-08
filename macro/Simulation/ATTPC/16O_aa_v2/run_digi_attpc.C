@@ -38,14 +38,14 @@ void run_digi_attpc()
    mapping->GeneratePadPlane();
    mapping->ParseInhibitMap("./data/inhibit.txt", AtMap::InhibitType::kTotal);
 
-   AtClusterizeTask* clusterizer = new AtClusterizeTask();
-   clusterizer -> SetPersistence(kFALSE);
+   AtClusterizeTask *clusterizer = new AtClusterizeTask();
+   clusterizer->SetPersistence(kFALSE);
 
-   AtPulseTask* pulse = new AtPulseTask();
-   pulse -> SetPersistence(kTRUE);
-   pulse -> SetSaveMCInfo();
-   pulse -> SetMap(mapping);
-   
+   AtPulseTask *pulse = new AtPulseTask();
+   pulse->SetPersistence(kTRUE);
+   pulse->SetSaveMCInfo();
+   pulse->SetMap(mapping);
+
    auto psa = std::make_unique<AtPSAMax>();
    psa->SetThreshold(0);
 
@@ -53,18 +53,16 @@ void run_digi_attpc()
    AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
    psaTask->SetPersistence(kTRUE);
 
-   
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
    fRun->AddTask(psaTask);
-   
 
    //  __ Init and run ___________________________________
    fRun->Init();
 
    timer.Start();
    // fRun->Run(0, 20001);
-   fRun->Run(0,1000);
+   fRun->Run(0, 1000);
    timer.Stop();
 
    std::cout << std::endl << std::endl;
