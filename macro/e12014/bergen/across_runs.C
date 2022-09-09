@@ -1,5 +1,5 @@
-#ifndef MANUAL_C
-#define MANUAL_C
+#ifndef ACROSS_C
+#define ACROSS_C
 #include "mira.C"
 #include <cmath>
 
@@ -10,17 +10,14 @@
  */
 
 //functions declarations
-void manual_fitting();
-void loadData(ULong64_t eventNumber, int padNumber);
+void across_runs();
 double WindowEquation(double *x, double *par);
 double PlaneEquation(double *x, double *par);
-double GaussianEquation(double *x, double *par);
-//void window_run_fit(int left_bound, int right_bound, int xloc, int jump_height, int init_height); old equation with user defined initial values
 double window_run_fit(double *chis);
 void plane_run_fit(double *pa0, double *pa1, double *pa2, double *pa3, double *chis, double *maxloc);
-void automater_plane();
-void automater_window();
-void automater_both();
+void process_run(int run_number);
+void save_data();
+void plotting_across_runs();
 
 
 //variable declarations
@@ -28,31 +25,15 @@ TH1F *padHist;
 int padNum;
 double holder = 0.0;
 
-
-void manual_fitting()
+void across_runs()
 {
-   //runs automatically to load in run. For right now, we always use this run
-   loadRun("/mnt/analysis/e12014/TPC/unpackedReducedFiltered/run_0210.root");
-
-}
-
-
-void loadData(ULong64_t eventNumber, int padNumber)
-{
-   //uses functions from mira.C to load in histogram for given event and padnumber
-   //has been fazed out for automatic pad choices.
-   loadEvent(eventNumber);
-   //TH1F *padHist = loadPad(padNumber);
-   padHist = loadPad(padNumber);
-   if (padHist != nullptr)
-      padHist->Draw("");
-   padNum = padNumber;
+   cout << "script loaded" << endl;
+   //loadRun("/mnt/analysis/e12014/TPC/unpackedReducedFiltered/run_0210.root");
 }
 
 
 double WindowEquation(double *x, double *par)
 {
-   //sets up equation used for the fitting
    double fitval = par[1] / (TMath::Exp((x[0] - par[0]) / par[3]) + 1) - par[2];
    return fitval;
 }
@@ -60,23 +41,11 @@ double WindowEquation(double *x, double *par)
 
 double PlaneEquation(double *x, double *par)
 {
-   //sets up equation used for the fitting
-   //double fitval = (x[0]>par[0])*(par[2]*TMath::Exp(-3*(x[0]-par[0])/par[1])*TMath::Sin((x[0]-par[0])/par[1])*TMath::Power((x[0]-par[0])/par[1], 3)>0)*par[2]*TMath::Exp(-3*(x[0]-par[0])/par[1])*TMath::Sin((x[0]-par[0])/par[1])*TMath::Power((x[0]-par[0])/par[1], 3);
    double fitval = (x[0]>par[0])*par[2]*TMath::Exp(-par[3]*(x[0]-par[0])/par[1])*TMath::Sin((x[0]-par[0])/par[1])*TMath::Power((x[0]-par[0])/par[1], 3);
    return fitval;
 }
 
 
-double GaussianEquation(double *x, double *par)
-{
-   //sets up equation used for the fitting
-   double fitval = par[0] * TMath::Exp(-1*TMath::Power(x[0]-par[1], 2)/(2*TMath::Power(par[2],2)));
-   return fitval;
-}
-
-
-//void window_run_fit(int left_bound, int right_bound, int xloc, int jump_height, int init_height) user defined initial parameters
-//5 integer inputs. First 2 are the time-bucket bounds. 3rd is x-location of jump, 4th is jump height, and 5th is height before the jump (all approximated)
 double window_run_fit(double *chis = &holder)
 {
    double left_bound = 440;
@@ -126,90 +95,10 @@ void plane_run_fit(double *pa0 = &holder, double *pa1 = &holder, double *pa2 = &
 }
 
 
-void automater_plane()
-{
-   int event_ctr = 0;
-   double p0, p1, p2, p3, chisq, max_loc;
-   double parrarr [4];
-   double valarr [1];
-   double max_height;
-   //TH1 *h1 = new TH1D("h1", "p0_histogram",100, 70.0, 85.0);
-   //TH1 *h1 = new TH1D("h1", "peak_histogram", 100, 70.0, 93.0);
-   TH1 *h1 = new TH1D("h1", "p3_histogram",100, 2.0, 20.0);
-   //TH1 *h1 = new TH1D("h1", "plane_chisquare_peak_above_3000", 100, 0.0, 250.0);
-
-   while(loadEvent(event_ctr)){
-      cout << endl << "event number: " << event_ctr << endl << endl;
-
-      std::vector<AtPad *> pad_vec = GetLikelyPadPlane();
-
-      for(auto & pad : pad_vec){
-         padNum = pad -> GetPadNum();
-         padHist = loadPad(padNum);
-         //if (padHist != nullptr)
-         //   padHist->Draw("");
-         cout << "pad number: " << padNum;
-         plane_run_fit(&p0, &p1, &p2, &p3, &chisq, &max_loc);
-	 parrarr[0] = p0;
-	 parrarr[1] = p1;
-	 parrarr[2] = p2;
-	 parrarr[3] = p3;
-	 valarr[0] = max_loc;
-         max_height = PlaneEquation(valarr, parrarr);
-	 if(p0 >= 74 && p0 <= 77 && max_loc >= 72 && max_height > 3000){
-	    cout << "event " << event_ctr << " pad " << padNum << " has max at " << max_loc;
-            //h1->Fill(max_loc);
-	    //h1->Fill(chisq);
-	 }
-	 h1->Fill(p3);
-
-      }
-      event_ctr++;
-   }
-   h1->Draw();
-   h1->Fit("gaus","","",2.6,3.9);
-}
-
-
-void automater_window()
-{
-   int event_ctr = 0;
-   double chisq;
-   //TH1 *h1 = new TH1D("h1", "p0_hist", 100, 400.0, 500.0);
-   TH1 *h1 = new TH1D("h1", "window_chisquare_post_filtering", 100, 0.0, 250.0);
-
-   while(loadEvent(event_ctr)){
-      cout << endl << "event number: " << event_ctr << endl << endl;
-
-      std::vector<AtPad *> pad_vec = GetLikelyWindow();
-
-      for(auto & pad : pad_vec){
-         //loops through and fits all pads in the vector
-         padNum = pad -> GetPadNum();
-         padHist = loadPad(padNum);
-         //if (padHist != nullptr)
-         //   padHist->Draw("");
-         cout << "pad number: " << padNum;
-         double temp = window_run_fit(&chisq);
-	 if (temp >= 446)
-	 {
-            //h1->Fill(temp);
-	    h1->Fill(chisq);
-	 }
-      }
-      event_ctr++;
-   }
-   h1->Draw();
-}
-
-
-void automater_both()
+void process_run(int run_number)
 {
    //begin section for linear
    /*int num_events = 0;
-   while(loadEvent(num_events)){
-      num_events++;
-   }
    double xarr [num_events];
    double yarr [num_events];*/
    //end section for linear
@@ -217,7 +106,9 @@ void automater_both()
    int event_ctr = 0;
    double p0, p1, p2, p3, chisq, max_loc, wind_temp;
    double plane_ctr, plane_sum, plane_mean, window_ctr, window_sum, window_mean, diff;
-   TH1 *h1 = new TH1D("h1", "difference_hist_using_p0", 100, 315.0, 430.0); //for histogram
+   std::string title_str = "h" + to_string(run_number);
+   const char *title = title_str.c_str();
+   TH1 *h1 = new TH1D(title, "difference_hist_using_p0", 100, 315.0, 430.0); //for histogram
 
    while(loadEvent(event_ctr)){
       cout << endl << "event number: " << event_ctr << endl << endl;
@@ -257,7 +148,8 @@ void automater_both()
       event_ctr++;
    }
    
-   h1->Draw(); //for histogram
+   //h1->Draw(); //for histogram
+   h1->Write();
    //double max_tbhist = h1->GetMaximumBin(); //for histogram
    //h1->Fit("gaus","","",381,386); //373 to 380 //for histogram
 
@@ -266,5 +158,44 @@ void automater_both()
    //g->GetYaxis()->SetRangeUser(300,450); //for linear
 }
 
+void save_data()
+{
+   TFile f("runhistos.root", "new");
+   //int run_nums [53] = {200, 201, 202, 203, 204, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 219, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 250, 251, 252, 253, 254, 255, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271};
 
-#endif //ifndef MANUAL_C
+   int run_nums [3] = {200, 201, 202};
+   
+   for (int cur_run : run_nums){
+      loadRun("/mnt/analysis/e12014/TPC/unpackedReducedFiltered/run_0" + to_string(cur_run) + ".root");
+      process_run(cur_run);
+   }
+   f.Close();
+}
+
+
+void plotting_across_runs()
+{
+   TFile f("runhistos.root");
+   string title_str;
+   const char *title;
+
+   int run_nums [3] = {200, 201, 202};
+   double run_nums_dbl [3] = {200, 201, 202};
+   double yarr [3];
+   int ctr = 0;
+
+   for (int cur_run : run_nums){
+      title_str = "h" + to_string(cur_run);
+      title = title_str.c_str();
+      TH1D *h1 = (TH1D*)f.Get(title);
+      double binmax = h1->GetMaximumBin();
+      double max_val = h1->GetXaxis()->GetBinCenter(binmax);
+      yarr[ctr] = max_val;
+      ctr++;
+   }
+   TGraph *g = new TGraph(3, run_nums_dbl, yarr);
+   g->Draw("ap*");
+}
+
+
+#endif //ifndef ACROSS_C

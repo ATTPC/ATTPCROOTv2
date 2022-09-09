@@ -4,7 +4,7 @@ bool reduceFunc(AtRawEvent *evt)
 }
 
 // Requires the TPC run number
-void run_unpack_attpc_fission(int runNumber = 210)
+void run_unpack_attpc_fission(int runNumber = 162)
 {
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
@@ -117,7 +117,7 @@ void run_unpack_attpc_fission(int runNumber = 210)
    auto numEvents = unpackTask->GetNumEvents();
 
    // numEvents = 1700;//217;78594
-   numEvents = 78594;
+   //numEvents = 78594;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
