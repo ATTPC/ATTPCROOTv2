@@ -25,6 +25,9 @@ set(SRCS
   AtHitSampling/AtGaussian.cxx
   AtHitSampling/AtWeightedGaussian.cxx
   AtHitSampling/AtWeightedY.cxx
+
+  ElectronicResponse/AtElectronicResponse.cxx
+  ElectronicResponse/AtROOTresponse.cxx
   )
 
 Set(DEPENDENCIES
@@ -36,10 +39,15 @@ Set(DEPENDENCIES
   ATTPCROOT::AtParameter
 )
 
+Set(INCLUDE_DIR
+  ${CMAKE_SOURCE_DIR}/AtTools/AtHitSampling
+  ${CMAKE_SOURCE_DIR}/AtTools/ElectronicResponse
+  )
+
 generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   DEPS_PUBLIC ${DEPENDENCIES}
-  INCLUDE_DIR ${CMAKE_SOURCE_DIR}/AtTools/AtHitSampling
+  INCLUDE_DIR ${INCLUDE_DIR}
   )
 

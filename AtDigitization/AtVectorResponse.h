@@ -1,16 +1,20 @@
 #ifndef ATVECTORRESPONSE_H
 #define ATVECTORRESPONSE_H
 
-#include <Rtypes.h>
 #include <TString.h>
 
-#include <vector>
+#include <memory> // for unique_ptr
 
-class AtVectorResponse {
+namespace ElectronicResponse {
+class AtFileResponse;
+}
+
+class [[deprecated("Use ElectronicResponse::AtFileResponse instead")]] AtVectorResponse
+{
 protected:
-   static Double_t fPeakingTime; //! Electronic peaking time in us
-   static Double_t fTBTime;      //! Time bucket size in us
-   static std::vector<Double_t> fWaveSample;
+   static double fPeakingTime; //! Electronic peaking time in us
+   static double fTBTime;      //! Time bucket size in us
+   static std::unique_ptr<ElectronicResponse::AtFileResponse> fResponse;
 
 public:
    AtVectorResponse() = default;

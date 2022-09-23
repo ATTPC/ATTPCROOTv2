@@ -51,7 +51,6 @@ private:
 public:
    AtRawEvent();
    AtRawEvent(AtRawEvent &&obj) = default;
-   AtRawEvent &operator=(AtRawEvent &&obj) = default;
    AtRawEvent(const AtRawEvent &object);
    AtRawEvent &operator=(AtRawEvent object);
    ~AtRawEvent() = default;
@@ -138,6 +137,8 @@ public:
    }
    const AtAuxPad *GetAuxPad(std::string auxPad) const;
    const PadVector &GetPads() const { return fPadList; }
+   PadVector &GetPads() { return const_cast<PadVector &>(const_cast<const AtRawEvent *>(this)->GetPads()); }
+
    const AuxPadMap &GetAuxPads() const { return fAuxPadMap; }
    std::multimap<Int_t, std::size_t> &GetSimMCPointMap() { return fSimMCPointMap; }
 
