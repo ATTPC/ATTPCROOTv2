@@ -13,6 +13,7 @@ Set(DEPENDENCIES
   ATTPCROOT::AtParameter
   ATTPCROOT::AtData
   ATTPCROOT::AtMap
+  ATTPCROOT::AtTools
 )
 
 set(SRCS

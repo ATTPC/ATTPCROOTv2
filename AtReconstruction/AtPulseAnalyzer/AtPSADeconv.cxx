@@ -1,5 +1,6 @@
 #include "AtPSADeconv.h"
 
+#include "AtDigiPar.h"
 #include "AtHit.h"
 #include "AtPad.h"
 #include "AtPadArray.h"
@@ -7,6 +8,9 @@
 #include "AtPadFFT.h"
 
 #include <FairLogger.h>
+#include <FairParSet.h> // for FairParSet
+#include <FairRun.h>
+#include <FairRuntimeDb.h>
 
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h> // for XYZPoint
@@ -21,10 +25,6 @@
 
 using XYZPoint = ROOT::Math::XYZPoint;
 
-const AtPadFFT *AtPSADeconv::GetResponseFFT()
-{
-   return dynamic_cast<AtPadFFT *>(fResponse.GetAugment("fft"));
-}
 AtPSADeconv::AtPSADeconv() : AtPSA()
 {
    initFFTs();
@@ -68,13 +68,87 @@ void AtPSADeconv::initFFTs()
 }
 
 /**
- * Set the response function and calculate and save its transform.
+ * @brief Get the AtPad describing the response of the electronics.
+ *
+ * If the pad is not in fEventResponse it will be added.
  */
-void AtPSADeconv::SetResponse(AtPad response)
+AtPad &AtPSADeconv::GetResponse(int padNum)
 {
-   fResponse = std::move(response);
-   initFilter();
+   auto pad = fEventResponse.GetPad(padNum);
+   if (pad == nullptr)
+      pad = createResponsePad(padNum);
+
+   return *pad;
 }
+
+/**
+ * @brief Get the fourier transform describing the response of the electronics.
+ *
+ * If the pad is not in fEventResponse it will be added, and if needed the fft will be calcualted and
+ * added as an augment with the name "fft".
+ */
+const AtPadFFT &AtPSADeconv::GetResponseFFT(int padNum)
+{
+   auto &pad = GetResponse(padNum);
+   auto fft = dynamic_cast<AtPadFFT *>(pad.GetAugment("fft"));
+
+   if (fft == nullptr) {
+      LOG(info) << "Adding FFT to pad " << padNum;
+      fFFT->SetPoints(pad.GetADC().data());
+      fFFT->Transform();
+      auto fftNew = std::make_unique<AtPadFFT>();
+      fftNew->GetDataFromFFT(fFFT.get());
+      fft = dynamic_cast<AtPadFFT *>(pad.AddAugment("fft", std::move(fftNew)));
+   }
+
+   return *fft;
+}
+
+/**
+ * @brief Get the filter in fourier space describing the response of the electronics.
+ *
+ * If the pad is not in fEventResponse it will be added, and if needed the fft and filter will be
+ * calculated and added as augments with the names "fft" and "filter", respectivley.
+ */
+const AtPadFFT &AtPSADeconv::GetResponseFilter(int padNum)
+{
+   auto &pad = GetResponse(padNum);
+   auto &fft = GetResponseFFT(padNum);
+   auto filter = dynamic_cast<AtPadFFT *>(pad.GetAugment("filter"));
+
+   if (filter == nullptr) {
+      LOG(info) << "Adding filter to pad " << padNum;
+      filter = dynamic_cast<AtPadFFT *>(pad.AddAugment("filter", std::make_unique<AtPadFFT>()));
+      updateFilter(fft, filter);
+   }
+   return *filter;
+}
+void AtPSADeconv::updateFilter(const AtPadFFT &fft, AtPadFFT *filter)
+{
+   LOG(info) << "Updating filter ";
+   for (int i = 0; i < 512 / 2 + 1; ++i) {
+      auto R = fft.GetPointComplex(i);
+      auto filterVal = getFilterKernel(i) / R;
+
+      LOG(debug) << i << " " << TComplex::Abs(R) << " " << getFilterKernel(i) << " " << filterVal;
+      filter->SetPointRe(i, filterVal.Re());
+      filter->SetPointIm(i, filterVal.Im());
+   }
+}
+
+AtPad *AtPSADeconv::createResponsePad(int padNum)
+{
+   auto fPar = dynamic_cast<AtDigiPar *>(FairRun::Instance()->GetRuntimeDb()->getContainer("AtDigiPar"));
+   auto tbTime = fPar->GetTBTime() / 1000.;
+
+   auto pad = fEventResponse.AddPad(padNum);
+   for (int i = 0; i < 512; ++i) {
+      auto time = (i + 0.5) * tbTime;
+      pad->SetADC(i, fResponse(padNum, time));
+   }
+   return pad;
+}
+
 /**
  * @param[in] freq The frequency compnent
  * @return The kernel of the low pass filter as set at that frequency
@@ -87,42 +161,34 @@ double AtPSADeconv::getFilterKernel(int freq)
    return 1.0 / (1.0 + std::pow(freq * freq / fCutoffFreq, fFilterOrder));
 }
 
+/**
+ * @brief Update all "filter" augments in fEventResponse with the new parameters
+ */
 void AtPSADeconv::initFilter()
 {
-   fFFT->SetPoints(fResponse.GetADC().data());
-   fFFT->Transform();
-   auto fft = std::make_unique<AtPadFFT>();
-   fft->GetDataFromFFT(fFFT.get());
-   fResponse.AddAugment("fft", std::move(fft));
-   auto responseFreq = dynamic_cast<AtPadFFT *>(fResponse.GetAugment("fft"));
-
-   // fResponse is now filled with just the plain FFT of the response
-   // filter should be lowpass[k]/R[k]
-   for (int i = 0; i < fResponse.GetADC().size() / 2 + 1; ++i) {
-
-      auto R = TComplex(responseFreq->GetPointRe(i), responseFreq->GetPointIm(i));
-      auto filter = getFilterKernel(i) / R;
-
-      LOG(debug) << i << " " << R << " " << getFilterKernel(i) << " " << filter;
-      responseFreq->SetPointRe(i, filter.Re());
-      responseFreq->SetPointIm(i, filter.Im());
+   // Loop through every existing filter and update it
+   for (auto &pad : fEventResponse.GetPads()) {
+      auto filter = dynamic_cast<AtPadFFT *>(pad->GetAugment("filter"));
+      if (filter != nullptr)
+         updateFilter(GetResponseFFT(pad->GetPadNum()), filter);
    }
 }
+
 // Assumes the passed pad already has its FFT calculated
-AtPSADeconv::HitVector AtPSADeconv::AnalyzeFFTpad(AtPad *pad)
+AtPSADeconv::HitVector AtPSADeconv::AnalyzeFFTpad(AtPad &pad)
 {
+   LOG(info) << "Analyzing pad " << pad.GetPadNum();
+   auto padFFT = dynamic_cast<AtPadFFT *>(pad.GetAugment("fft"));
+   auto recoFFT = dynamic_cast<AtPadFFT *>(pad.AddAugment("Qreco-fft", std::make_unique<AtPadFFT>()));
+   const auto &respFFT = GetResponseFilter(pad.GetPadNum());
 
-   auto padFFT = dynamic_cast<AtPadFFT *>(pad->GetAugment("fft"));
-   auto recoFFT = dynamic_cast<AtPadFFT *>(pad->AddAugment("Qreco-fft", std::make_unique<AtPadFFT>()));
-   auto respFFT = dynamic_cast<AtPadFFT *>(fResponse.GetAugment("fft"));
-
-   if (padFFT == nullptr || respFFT == nullptr)
-      throw std::runtime_error("Missing FFT information in response or pad");
+   if (padFFT == nullptr)
+      throw std::runtime_error("Missing FFT information in pad");
 
    // Fill the inverse FFT with the input charge
    for (int i = 0; i < 512 / 2 + 1; ++i) {
-      auto a = TComplex(padFFT->GetPointRe(i), padFFT->GetPointIm(i));
-      auto b = TComplex(respFFT->GetPointRe(i), respFFT->GetPointIm(i));
+      auto a = padFFT->GetPointComplex(i);
+      auto b = respFFT.GetPointComplex(i);
       LOG(debug) << i << " " << a << " " << b << " " << a * b;
       auto z = a * b;
 
@@ -142,7 +208,7 @@ AtPSADeconv::HitVector AtPSADeconv::AnalyzeFFTpad(AtPad *pad)
    for (int i = 0; i < 512; ++i)
       charge->SetArray(i, fFFTbackward->GetPointReal(i) - baseline);
 
-   pad->AddAugment("Qreco", std::move(charge));
+   pad.AddAugment("Qreco", std::move(charge));
 
    return chargeToHits(pad);
 }
@@ -151,7 +217,7 @@ AtPSADeconv::HitVector AtPSADeconv::AnalyzePad(AtPad *pad)
 {
    // If this pad already contains FFT information, then just use it as is.
    if (dynamic_cast<AtPadFFT *>(pad->GetAugment("fft")) != nullptr)
-      return AnalyzeFFTpad(pad);
+      return AnalyzeFFTpad(*pad);
 
    // Add FFT data to this pad
    fFFT->SetPoints(pad->GetADC().data());
@@ -159,22 +225,22 @@ AtPSADeconv::HitVector AtPSADeconv::AnalyzePad(AtPad *pad)
    pad->AddAugment("fft", AtPadFFT::CreateFromFFT(fFFT.get()));
 
    // Now process the pad with its fourier transform
-   return AnalyzeFFTpad(pad);
+   return AnalyzeFFTpad(*pad);
 }
 
-AtPSADeconv::HitVector AtPSADeconv::chargeToHits(AtPad *pad)
+AtPSADeconv::HitVector AtPSADeconv::chargeToHits(AtPad &pad)
 {
    HitVector ret;
-   auto charge = dynamic_cast<AtPadArray *>(pad->GetAugment("Qreco"));
+   auto charge = dynamic_cast<AtPadArray *>(pad.GetAugment("Qreco"));
    for (auto &ZandQ : getZandQ(charge->GetArray())) {
-      XYZPoint pos(pad->GetPadCoord().X(), pad->GetPadCoord().Y(), CalculateZGeo(ZandQ[0]));
+      XYZPoint pos(pad.GetPadCoord().X(), pad.GetPadCoord().Y(), CalculateZGeo(ZandQ[0]));
 
       auto posVarXY = getXYhitVariance();
       auto posVarZ = getZhitVariance(0, ZandQ[1]);
       LOG(debug) << "Z(tb): " << ZandQ[0] << " +- " << std::sqrt(ZandQ[1]);
       LOG(debug) << "Z(mm): " << pos.Z() << " +- " << std::sqrt(posVarZ);
 
-      auto hit = std::make_unique<AtHit>(pad->GetPadNum(), pos, ZandQ[2]);
+      auto hit = std::make_unique<AtHit>(pad.GetPadNum(), pos, ZandQ[2]);
       hit->SetPositionVariance({posVarXY.first, posVarXY.second, posVarZ});
       hit->SetChargeVariance(ZandQ[3]);
 

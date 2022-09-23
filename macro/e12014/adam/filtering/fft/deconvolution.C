@@ -121,7 +121,7 @@ AtPad GetNominalResponse(double par = 3)
    double scale = responseFunc.GetMaximum();
 
    for (int i = 0; i < wave.size(); ++i)
-      wave[i] = responseFunc(i) / scale;
+      wave[i] = responseFunc(i + 0.5) / scale;
 
    AtPad response;
    response.SetADC(wave);
@@ -252,7 +252,6 @@ std::unique_ptr<AtPad> Divide(AtPad &signal, const AtPad &response, int order = 
       auto filt = LowPassFilter(order, freq, TComplex(0, i));
 
       // std::cout << i << " " << bComp << " " << filt << " " << filt / bComp << std::endl;
-
       z *= LowPassFilter(order, freq, TComplex(0, i));
       qfft->SetPointIm(i, z.Im());
       qfft->SetPointRe(i, z.Re());
@@ -280,7 +279,7 @@ std::unique_ptr<AtPad> Divide(AtPad &signal, const AtPad &response, int order = 
 void deconvolutionSingle(double noise = 0, int order = 4, double cutoff = 25, double width = 10)
 {
    // Create the response pad
-   AtPad response = GetTriangleResponse(8);
+   AtPad response = GetNominalResponse();
    // AtPadFFT response = GetFileResponse();
    //   AtPadFFT input = GetInputStep(10, 50);
    AtPad input = GetInputGaus(250, width);
@@ -315,17 +314,22 @@ void deconvolutionSingleNew(double noise = 0, int order = 4, double cutoff = 25,
 {
    // Create the response pad
    // AtPadFFT response = GetFileResponse();
-   AtPad response = GetNominalResponse(par);
-   AtPad input = GetInputGaus(250, width);
-   AtPad signal = GetSignal(input, response, noise * 3 / 2.355);
 
    auto fPar = dynamic_cast<AtDigiPar *>(run->GetRuntimeDb()->getContainer("AtDigiPar"));
    auto psa = std::make_unique<AtPSADeconv>();
-   psa->SetResponse(GetNominalResponse());
+   psa->SetResponse(ElectronicResponse::AtNominalResponse(fPar->GetPeakingTime() / 1000.));
    psa->SetFilterOrder(order);
    psa->SetCutoffFreq(cutoff);
    psa->Init();
 
+   std::cout << "Init finished" << std::endl;
+
+   const AtPad &response = psa->GetResponse(1);
+   AtPad input = GetInputGaus(250, width);
+   AtPad signal = GetSignal(input, response, noise * 3 / 2.355);
+   signal.SetPadNum(1);
+
+   std::cout << "Created input/output pads " << std::endl;
    auto hits = psa->AnalyzePad(&signal);
    for (auto &hit : hits) {
       std::cout << "Hit: " << hit->GetHitID();
@@ -345,10 +349,11 @@ void deconvolutionSingleNew(double noise = 0, int order = 4, double cutoff = 25,
       hTime[3]->SetBinContent(i + 1, charge[i]);
       if (i < 512 / 2 + 1) {
          hFreq[0]->SetBinContent(i + 1, dynamic_cast<AtPadFFT *>(input.GetAugment("fft"))->GetPointMag(i));
-         hFreq[1]->SetBinContent(i + 1, dynamic_cast<AtPadFFT *>(response.GetAugment("fft"))->GetPointMag(i));
+         hFreq[1]->SetBinContent(i + 1, dynamic_cast<const AtPadFFT *>(response.GetAugment("fft"))->GetPointMag(i));
          hFreq[2]->SetBinContent(i + 1, dynamic_cast<AtPadFFT *>(signal.GetAugment("fft"))->GetPointMag(i));
          hFreq[3]->SetBinContent(i + 1, dynamic_cast<AtPadFFT *>(signal.GetAugment("Qreco-fft"))->GetPointMag(i));
       }
+      hDiff->SetBinContent(i + 1, charge[i] - input.GetADC(i));
    }
 
    canvas();

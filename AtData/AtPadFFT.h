@@ -5,6 +5,7 @@
 #include "AtPadBase.h"
 
 #include <Rtypes.h> // for Double_t, THashConsistencyHolder, ClassDefOverride
+#include <TComplex.h>
 
 #include <array>  // for array
 #include <memory> // for unique_ptr
@@ -14,7 +15,6 @@ class TVirtualFFT;
 class TBuffer;
 class TClass;
 class TMemberInspector;
-class TComplex;
 
 class AtPadFFT : public AtPadBase {
 public:
@@ -32,6 +32,7 @@ public:
    Double_t GetPointIm(int i) const;
    Double_t GetPointMag(int i) const;
    Double_t GetPointPhase(int i) const;
+   TComplex GetPointComplex(int i) const { return {GetPointRe(i), GetPointIm(i)}; }
    std::pair<Double_t, Double_t> GetPoint(int i) const { return {GetPointRe(i), GetPointIm(i)}; }
 
    void SetPointRe(int i, Double_t val);

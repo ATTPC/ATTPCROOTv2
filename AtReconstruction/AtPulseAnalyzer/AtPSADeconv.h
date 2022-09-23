@@ -3,11 +3,14 @@
 
 #include "AtPSA.h"
 #include "AtPad.h"
+#include "AtRawEvent.h"
 
 #include <TVirtualFFT.h> // for TVirtualFFT
 
-#include <array>  // for array
+#include <array> // for array
+#include <functional>
 #include <memory> // for unique_ptr, make_unique
+#include <utility>
 #include <vector>
 
 class AtPadFFT;
@@ -34,7 +37,23 @@ class AtPadFFT;
 class AtPSADeconv : public virtual AtPSA {
 
 protected:
-   AtPad fResponse;
+   using ResponseFunc = std::function<double(int, double)>;
+
+   /**
+    * AtRawEvent holding the response function and filter for every pad. If there is only a single
+    * response being used for the entire detector, than always use pad 0.
+    *
+    * Each pad in this event must have two augments. An AtPadFFT of the name "fft" which holds the
+    * FFT of the response, and an AtPadFFT with the name "filter" which holds the FFT of the response
+    * multiplied by the low pass filter in use. When a pad is accessed, it will check for the existance
+    * of these two augments and add them if necessary.
+    */
+   AtRawEvent fEventResponse;
+   /**
+    * Callable object representing the response function of the detecotor. Will be used to fill
+    * fEventResponse if the pad does not already exist within that event.
+    */
+   ResponseFunc fResponse{nullptr};
 
    std::unique_ptr<TVirtualFFT> fFFT{nullptr};
    std::unique_ptr<TVirtualFFT> fFFTbackward{nullptr};
@@ -56,19 +75,32 @@ public:
    void SetFilterOrder(int order);
    void SetCutoffFreq(int freq);
 
-   void SetResponse(AtPad response);
+   /**
+    * Copy an AtRawEvent to use as the response function. If the pad number requested does
+    * not exist in the AtRawEvent it will use the callable object stored in fResponse.
+    */
+   void SetResponse(AtRawEvent response) { fEventResponse = std::move(response); }
+   /**
+    * Response function to use if the AtRawEvent representation of the response function does not
+    * contain the pad we are looking for. When this is used to get the response function, it is cached
+    * in the internal fEventResponse.
+    */
+   void SetResponse(ResponseFunc response) { fResponse = response; }
 
-   const AtPad &GetResponse() { return fResponse; }
-   const AtPadFFT *GetResponseFFT();
+   AtPad &GetResponse(int padNum);
+   const AtPadFFT &GetResponseFFT(int padNum);
+   const AtPadFFT &GetResponseFilter(int padNum);
 
 protected:
    /// Data structure for Z loc (TB), Z sigma (TB), Charge (arb), Charge sigma (arb)
    using HitData = std::vector<std::array<double, 4>>;
 
+   AtPad *createResponsePad(int padNum);
+
    /**
     * Takes a pad with charge information and returns a list of hits to add to the event.
     */
-   virtual HitVector chargeToHits(AtPad *charge);
+   virtual HitVector chargeToHits(AtPad &charge);
 
    /**
     * Returns the salient data from the charge distribution:
@@ -80,10 +112,11 @@ protected:
 
    void initFFTs();
    void initFilter();
+   void updateFilter(const AtPadFFT &fft, AtPadFFT *filter);
    double getFilterKernel(int freq);
 
    /// Assumes that the pad has it's fourier transform information filled.
-   HitVector AnalyzeFFTpad(AtPad *pad);
+   HitVector AnalyzeFFTpad(AtPad &pad);
 };
 
 #endif //#ifndef ATPSADECONV_H
