@@ -53,7 +53,21 @@ public:
    AtRawEvent(AtRawEvent &&obj) = default;
    AtRawEvent &operator=(AtRawEvent &&obj) = default;
    AtRawEvent(const AtRawEvent &object);
+   AtRawEvent &operator=(AtRawEvent object);
    ~AtRawEvent() = default;
+
+   friend void swap(AtRawEvent &first, AtRawEvent &second)
+   {
+      using std::swap;
+
+      swap(first.fEventID, second.fEventID);
+      swap(first.fPadList, second.fPadList);
+      swap(first.fAuxPadMap, second.fAuxPadMap);
+      swap(first.fTimestamp, second.fTimestamp);
+      swap(first.fIsGood, second.fIsGood);
+      swap(first.fIsInGate, second.fIsInGate);
+      swap(first.fSimMCPointMap, second.fSimMCPointMap);
+   };
 
    /// Copy everything but the data (pads, aux pads, and MCPointMap) to this event
    void CopyAllButData(const AtRawEvent *event);
@@ -116,8 +130,13 @@ public:
    Bool_t IsGood() const { return fIsGood; }
    Bool_t GetIsExtGate() const { return fIsInGate; }
 
-   AtPad *GetPad(Int_t padNum);
-   AtAuxPad *GetAuxPad(std::string auxPad);
+   AtPad *GetPad(Int_t padNum) { return const_cast<AtPad *>(const_cast<const AtRawEvent *>(this)->GetPad(padNum)); }
+   const AtPad *GetPad(Int_t padNum) const;
+   AtAuxPad *GetAuxPad(std::string auxPad)
+   {
+      return const_cast<AtAuxPad *>(const_cast<const AtRawEvent *>(this)->GetAuxPad(std::move(auxPad)));
+   }
+   const AtAuxPad *GetAuxPad(std::string auxPad) const;
    const PadVector &GetPads() const { return fPadList; }
    const AuxPadMap &GetAuxPads() const { return fAuxPadMap; }
    std::multimap<Int_t, std::size_t> &GetSimMCPointMap() { return fSimMCPointMap; }

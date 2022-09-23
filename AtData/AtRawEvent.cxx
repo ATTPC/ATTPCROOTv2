@@ -27,6 +27,12 @@ AtRawEvent::AtRawEvent(const AtRawEvent &obj)
       fPadList.push_back(pad->ClonePad());
 }
 
+AtRawEvent &AtRawEvent::operator=(AtRawEvent object)
+{
+   swap(*this, object);
+   return *this;
+}
+
 void AtRawEvent::CopyAllButData(const AtRawEvent *event)
 {
    fEventID = event->fEventID;
@@ -70,7 +76,7 @@ void AtRawEvent::RemovePad(Int_t padNum)
          fPadList.erase(it);
 }
 
-AtPad *AtRawEvent::GetPad(Int_t padNum)
+const AtPad *AtRawEvent::GetPad(Int_t padNum) const
 {
    for (auto &pad : fPadList)
       if (pad->GetPadNum() == padNum)
@@ -78,7 +84,7 @@ AtPad *AtRawEvent::GetPad(Int_t padNum)
    return nullptr;
 }
 
-AtAuxPad *AtRawEvent::GetAuxPad(std::string auxName)
+const AtAuxPad *AtRawEvent::GetAuxPad(std::string auxName) const
 {
    auto padIt = fAuxPadMap.find(auxName);
    if (padIt == fAuxPadMap.end())
