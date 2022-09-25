@@ -1,6 +1,0 @@
-root -b -q -l "unpack_e20009.C(\"run_0299\")"
-root -b -q -l "unpack_e20009.C(\"run_0296\")"
-root -b -q -l "unpack_e20009.C(\"run_0297\")"
-root -b -q -l "unpack_e20009.C(\"run_0293\")"
-root -b -q -l "unpack_e20009.C(\"run_0294\")"
-root -b -q -l "unpack_e20009.C(\"run_0291\")"

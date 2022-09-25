@@ -1,4 +1,4 @@
-void O16He4_sim_el(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
+void O16He4_sim_el(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 {
 
    srand((unsigned)time(NULL));
@@ -20,7 +20,7 @@ void O16He4_sim_el(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 
    // gSystem->Load("libAtGen.so");
 
-   AtVertexPropagator *vertex_prop = new AtVertexPropagator();
+   
 
    // -----   Create simulation run   ----------------------------------------
    FairRunSim *run = new FairRunSim();
