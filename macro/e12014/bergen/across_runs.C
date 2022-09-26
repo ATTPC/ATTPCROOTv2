@@ -97,18 +97,12 @@ void plane_run_fit(double *pa0 = &holder, double *pa1 = &holder, double *pa2 = &
 
 void process_run(int run_number)
 {
-   //begin section for linear
-   /*int num_events = 0;
-   double xarr [num_events];
-   double yarr [num_events];*/
-   //end section for linear
-
    int event_ctr = 0;
    double p0, p1, p2, p3, chisq, max_loc, wind_temp;
    double plane_ctr, plane_sum, plane_mean, window_ctr, window_sum, window_mean, diff;
    std::string title_str = "h" + to_string(run_number);
    const char *title = title_str.c_str();
-   TH1 *h1 = new TH1D(title, "difference_hist_using_p0", 100, 315.0, 430.0); //for histogram
+   TH1 *h1 = new TH1D(title, "difference_hist_using_p0", 250, 315.0, 430.0);
 
    while(loadEvent(event_ctr)){
       cout << endl << "event number: " << event_ctr << endl << endl;
@@ -150,7 +144,6 @@ void process_run(int run_number)
    
    //h1->Draw(); //for histogram
    h1->Write();
-   //double max_tbhist = h1->GetMaximumBin(); //for histogram
    //h1->Fit("gaus","","",381,386); //373 to 380 //for histogram
 
    //TGraph *g = new TGraph(num_events, xarr, yarr); //for linear
@@ -161,9 +154,9 @@ void process_run(int run_number)
 void save_data()
 {
    TFile f("runhistos.root", "new");
-   //int run_nums [53] = {200, 201, 202, 203, 204, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 219, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 250, 251, 252, 253, 254, 255, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271};
+   int run_nums [53] = {200, 201, 202, 203, 204, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 219, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 250, 251, 252, 253, 254, 255, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271};
 
-   int run_nums [3] = {200, 201, 202};
+   //int run_nums [3] = {200, 201, 202};
    
    for (int cur_run : run_nums){
       loadRun("/mnt/analysis/e12014/TPC/unpackedReducedFiltered/run_0" + to_string(cur_run) + ".root");
@@ -178,23 +171,48 @@ void plotting_across_runs()
    TFile f("runhistos.root");
    string title_str;
    const char *title;
+   int run_nums [53] = {200, 201, 202, 203, 204, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 219, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 250, 251, 252, 253, 254, 255, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271};
 
-   int run_nums [3] = {200, 201, 202};
-   double run_nums_dbl [3] = {200, 201, 202};
-   double yarr [3];
+   double run_nums_dbl [53] = {200, 201, 202, 203, 204, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 219, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 250, 251, 252, 253, 254, 255, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271};
+
+   double run_times [53] = {0, 0.2166, 0.3833, 1.0416, 1.4166, 2.3416, 3.3166, 4.2666, 4.8583, 5.2916, 6.8166, 7.5083, 7.6500, 8.0833, 10.4083, 11.4000, 15.7833, 17.3333, 17.4333, 17.5333, 
+17.5916, 18.1583, 18.6083, 22.8666, 24.1416, 24.3750, 24.7166, 24.9416, 25.1666, 25.2333, 25.5333, 26.0750, 26.7750, 27.4416, 28.0083, 31.4500, 34.4583, 36.1166, 37.0166, 38.2666, 38.9416, 
+39.1583, 46.1750, 46.7083, 47.0333, 47.3083, 47.5583, 47.7583, 48.0166, 48.3333, 48.5500, 48.6333, 48.8000};
+
+
+
+   double yarr [53];
+   double x_unc [53];
+   double y_unc [53];
    int ctr = 0;
 
    for (int cur_run : run_nums){
       title_str = "h" + to_string(cur_run);
       title = title_str.c_str();
       TH1D *h1 = (TH1D*)f.Get(title);
+
       double binmax = h1->GetMaximumBin();
-      double max_val = h1->GetXaxis()->GetBinCenter(binmax);
+      double lower_val = h1->GetXaxis()->GetBinCenter(binmax-3);
+      //double max_val = h1->GetXaxis()->GetBinCenter(binmax);
+      double upper_val = h1->GetXaxis()->GetBinCenter(binmax+3);
+
+      h1->Fit("gaus","","",lower_val,upper_val);
+      TF1 *fit = h1->GetFunction("gaus");
+      double max_val = fit->GetParameter(1);
+      double y_err = fit->GetParameter(2);
+
       yarr[ctr] = max_val;
+      x_unc[ctr] = 0;
+      y_unc[ctr] = y_err;
       ctr++;
    }
-   TGraph *g = new TGraph(3, run_nums_dbl, yarr);
+   //TGraph *g = new TGraph(53, run_times, yarr);
+   auto g = new TGraphErrors(53, run_times, yarr, x_unc, y_unc);
+   g->SetTitle("drift_time_from_gaus; hours after start; drift time in time buckets");
+   g->GetXaxis()->CenterTitle(true);
+   g->GetYaxis()->CenterTitle(true);
    g->Draw("ap*");
+   f.Close();
 }
 
 
