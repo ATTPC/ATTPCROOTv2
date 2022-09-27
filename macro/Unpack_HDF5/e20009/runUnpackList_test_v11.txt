@@ -1,7 +1,0 @@
-root -b -q -l "unpack_e20009_test.C(\"run_0181\")"
-root -b -q -l "unpack_e20009_test.C(\"run_0182\")"
-root -b -q -l "unpack_e20009_test.C(\"run_0183\")"
-root -b -q -l "unpack_e20009_test.C(\"run_0184\")"
-root -b -q -l "unpack_e20009_test.C(\"run_0207\")"
-root -b -q -l "unpack_e20009_test.C(\"run_0208\")"
-root -b -q -l "unpack_e20009_test.C(\"run_0209\")"

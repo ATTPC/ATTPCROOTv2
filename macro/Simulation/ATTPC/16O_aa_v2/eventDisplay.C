@@ -1,14 +1,18 @@
 void eventDisplay()
 {
    //-----User Settings:-----------------------------------------------
-   TString InputFile = "./data/attpcsim.root";
-   TString ParFile = "./data/attpcpar.root";
-   TString OutFile = "./data/attpctest.root";
+   TString InputDataFile = "./data/attpcsim_in.root";
+   TString ParFile = "./data/attpcpar_in.root";
+   TString OutputDataFile = "./data/attpctest_in.root";
 
    // -----   Reconstruction run   -------------------------------------------
+
    FairRunAna *fRun = new FairRunAna();
-   fRun->SetInputFile(InputFile.Data());
-   fRun->SetOutputFile(OutFile.Data());
+   FairRootFileSink *sink = new FairRootFileSink(OutputDataFile);
+   FairFileSource *source = new FairFileSource(InputDataFile);
+   fRun->SetSource(source);
+   fRun->SetSink(sink);
+   // fRun->SetGeomFile(GeoDataPath);
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
    FairParRootFileIo *parInput1 = new FairParRootFileIo();
@@ -18,10 +22,10 @@ void eventDisplay()
    FairEventManager *fMan = new FairEventManager();
 
    //----------------------Traks and points -------------------------------------
-   FairMCTracks *Track = new FairMCTracks("Monte-Carlo Tracks");
+   // FairMCTracks *Track = new FairMCTracks("Monte-Carlo Tracks");
    FairMCPointDraw *AtTpcPoints = new FairMCPointDraw("AtTpcPoint", kBlue, kFullSquare);
 
-   fMan->AddTask(Track);
+   // fMan->AddTask(Track);
    fMan->AddTask(AtTpcPoints);
 
    fMan->Init();

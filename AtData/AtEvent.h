@@ -132,7 +132,7 @@ public:
    void SortHitArray();
    void SortHitArrayTime();
 
-   ClassDefOverride(AtEvent, 4);
+   ClassDefOverride(AtEvent, 5);
 };
 
 #endif

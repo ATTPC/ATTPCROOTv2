@@ -5,6 +5,7 @@
 
 #include <Rtypes.h>       // for Int_t, Double_t, Bool_t, THashConsistencyH...
 #include <TClonesArray.h> // for TClonesArray
+#include <TString.h>
 
 #include <stddef.h> // for size_t
 class AtDigiPar;
@@ -22,6 +23,9 @@ class AtPRA;
  */
 class AtPRAtask : public FairTask {
 private:
+   TString fInputBranchName;
+   TString fOutputBranchName;
+
    TClonesArray *fEventHArray{};
    TClonesArray fPatternEventArray;
 
@@ -64,6 +68,9 @@ public:
    virtual void Exec(Option_t *option);
    virtual void SetParContainers();
    virtual void Finish();
+
+  void SetInputBranch(TString branchName) { fInputBranchName = std::move(branchName); }
+  void SetOutputBranch(TString branchName) { fOutputBranchName = std::move(branchName); }
 
    void SetPersistence(Bool_t value = kTRUE);
    void SetPRAlgorithm(Int_t value = 0);

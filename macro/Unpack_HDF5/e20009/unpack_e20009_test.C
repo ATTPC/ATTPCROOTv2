@@ -9,7 +9,7 @@ bool reduceFunc(AtRawEvent *evt)
 }
 
 
-void unpack_e20009_test(TString fileName = "run_0260")
+void unpack_e20009_test(TString fileName = "run_0350")
 {
 
    // Load the library for unpacking and reconstruction
@@ -35,6 +35,11 @@ void unpack_e20009_test(TString fileName = "run_0260")
    TString loggerFile = dataDir + "ATTPCLog.log";
    TString digiParFile = dir + "/parameters/" + parameterFile;
    TString geoManFile = dir + "/geometry/ATTPC_He1bar_v2.root";
+
+   // Specific paths for three LUT for electric field correction
+   TString zlutFile = dir + "/resources/corrections/e20009/zLUT.txt";
+   TString radlutFile = dir + "/resources/corrections/e20009/radLUT.txt";
+   TString tralutFile = dir + "/resources/corrections/e20009/traLUT.txt";
    
    FairRunAna *run = new FairRunAna();
    run->SetOutputFile(outputFile);
@@ -91,8 +96,17 @@ void unpack_e20009_test(TString fileName = "run_0260")
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);
    psaTask->SetInputBranch("AtRawEventFiltered");
+   psaTask->SetOutputBranch("AtEventH");
 
+   /*auto SCModel = std::make_unique<AtEDistortionModel>();
+   SCModel->SetCorrectionMaps(zlutFile.Data(), radlutFile.Data(), tralutFile.Data());
+   auto SCTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
+   SCTask->SetInputBranchName("AtEventH");*/
+   
    AtPRAtask *praTask = new AtPRAtask();
+   //praTask->SetInputBranch("AtEventCorrected");
+   praTask->SetInputBranch("AtEventH");
+   praTask->SetOutputBranch("AtPatternEvent");
    praTask->SetPersistence(kTRUE);
    praTask->SetMaxNumHits(3000);
    praTask->SetMinNumHits(100);
@@ -100,6 +114,7 @@ void unpack_e20009_test(TString fileName = "run_0260")
    run->AddTask(unpackTask);
    run->AddTask(filterTask);
    run->AddTask(psaTask);
+   //run->AddTask(SCTask);
    run->AddTask(praTask);
    
    std::cout << "***** Starting Init ******" << std::endl;

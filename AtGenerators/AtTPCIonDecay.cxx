@@ -256,9 +256,8 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
       if (s > pow(M_tot, 2)) {
          // if(ExEject*1000.0>fSepEne){
          fIsDecay = kTRUE;
-         event1.SetDecay(fEnergyImpulsionLab_Total, fMult.at(Case), mass_1);
-         // Double_t weight1 = event1.Generate();
-
+         Bool_t decay = event1.SetDecay(fEnergyImpulsionLab_Total, fMult.at(Case), mass_1);
+         Double_t weight1 = event1.Generate();
          std::vector<Double_t> KineticEnergy;
          std::vector<Double_t> ThetaLab;
 
