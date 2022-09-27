@@ -1,12 +1,12 @@
 #ifndef AtPSA_H
 #define AtPSA_H
 
-#include <Math/Vector3Dfwd.h>
 #include <Rtypes.h>
 
 #include <cstddef>
 #include <map>
 #include <memory>
+#include <utility>
 #include <vector>
 
 class TClonesArray;

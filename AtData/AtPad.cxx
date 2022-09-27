@@ -14,7 +14,7 @@
 
 #include <memory>
 #include <string>
-
+#include <utility>
 ClassImp(AtPad);
 
 AtPad::AtPad(Int_t PadNum) : fPadNum(PadNum) {}
@@ -81,7 +81,7 @@ AtPadBase *AtPad::ReplaceAugment(std::string name, std::unique_ptr<AtPadBase> au
  */
 AtPadBase *AtPad::GetAugment(std::string name)
 {
-   return const_cast<AtPadBase *>(const_cast<const AtPad *>(this)->GetAugment(name));
+   return const_cast<AtPadBase *>(const_cast<const AtPad *>(this)->GetAugment(name)); // NOLINT
 }
 /**
  * Get augment to pad of given name (nullptr if pad doesn't contain the augment).

@@ -2,7 +2,7 @@
 #ifndef ATPADFFT_H
 #define ATPADFFT_H
 
-#include "AtPad.h"
+#include "AtPadBase.h"
 
 #include <Rtypes.h> // for Double_t, THashConsistencyHolder, ClassDefOverride
 

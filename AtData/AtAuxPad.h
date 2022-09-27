@@ -20,6 +20,7 @@
 class TBuffer;
 class TClass;
 class TMemberInspector;
+class AtPadBase;
 
 class AtAuxPad : public AtPad {
 protected:

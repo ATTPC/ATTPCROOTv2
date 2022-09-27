@@ -5,7 +5,6 @@
 
 #include <cassert>
 #include <cmath>
-#include <vector>
 
 std::unique_ptr<AtPadBase> AtPadFFT::Clone() const
 {

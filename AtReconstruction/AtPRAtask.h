@@ -7,7 +7,9 @@
 #include <TClonesArray.h> // for TClonesArray
 #include <TString.h>
 
-#include <stddef.h> // for size_t
+#include <cstddef> // for size_t
+#include <utility>
+
 class AtDigiPar;
 class TBuffer;
 class TClass;
@@ -69,8 +71,8 @@ public:
    virtual void SetParContainers();
    virtual void Finish();
 
-  void SetInputBranch(TString branchName) { fInputBranchName = std::move(branchName); }
-  void SetOutputBranch(TString branchName) { fOutputBranchName = std::move(branchName); }
+   void SetInputBranch(TString branchName) { fInputBranchName = std::move(branchName); }
+   void SetOutputBranch(TString branchName) { fOutputBranchName = std::move(branchName); }
 
    void SetPersistence(Bool_t value = kTRUE);
    void SetPRAlgorithm(Int_t value = 0);

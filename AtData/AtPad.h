@@ -13,11 +13,11 @@
 #include <Math/Point2D.h>
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
-#include <TObject.h>
 
 #include <array>
 #include <map>
 #include <memory>
+#include <string>
 
 class TBuffer;
 class TClass;

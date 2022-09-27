@@ -11,8 +11,7 @@
 #include <FairRun.h>
 #include <FairRuntimeDb.h>
 
-#include <Math/Point3D.h>  // for PositionVector3D
-#include <Math/Vector3D.h> // for PositionVector3D
+#include <Math/Point3D.h> // for PositionVector3D
 #include <Rtypes.h>
 #include <TClonesArray.h>
 #include <TObject.h> // for TObject

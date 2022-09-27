@@ -2,15 +2,15 @@
 #define ATPSADECONV_H
 
 #include "AtPSA.h"
-#include "AtPadFFT.h"
+#include "AtPad.h"
 
-#include <TClonesArray.h>
+#include <TVirtualFFT.h> // for TVirtualFFT
 
+#include <array>  // for array
+#include <memory> // for unique_ptr, make_unique
 #include <vector>
 
-class TVirtualFFT;
-class AtPadCharge;
-class AtRawEvent;
+class AtPadFFT;
 
 /**
  * @brief Abstract base class for getting current through deconvolution.

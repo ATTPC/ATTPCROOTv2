@@ -1,13 +1,14 @@
 #include "AtFilterFFT.h"
 
 #include "AtPad.h"
+#include "AtPadBase.h"
 #include "AtPadFFT.h"
 #include "AtRawEvent.h"
 
 #include <FairLogger.h>
 
 #include <Rtypes.h>
-#include <TComplex.h>
+#include <TComplex.h> // IWYU pragma: keep
 #include <TVirtualFFT.h>
 
 #include <iostream>

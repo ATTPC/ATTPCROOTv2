@@ -5,6 +5,7 @@
 #include "AtMap.h"
 #include "AtPad.h"
 #include "AtPadArray.h"
+#include "AtPadBase.h"
 #include "AtRawEvent.h"
 #include "AtSimulatedPoint.h"
 

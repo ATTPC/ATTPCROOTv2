@@ -9,6 +9,8 @@ class AtPad;
 class AtFilter {
 
 public:
+   virtual ~AtFilter() = default;
+
    // Called at the init stage of the AtFilterTask
    virtual void Init() = 0;
 

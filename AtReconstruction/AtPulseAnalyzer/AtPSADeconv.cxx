@@ -3,19 +3,21 @@
 #include "AtHit.h"
 #include "AtPad.h"
 #include "AtPadArray.h"
+#include "AtPadBase.h" // for AtPadBase
 #include "AtPadFFT.h"
-#include "AtRawEvent.h"
 
 #include <FairLogger.h>
-#include <FairRun.h>
-#include <FairRuntimeDb.h>
 
 #include <Math/Point3D.h>
+#include <Math/Point3Dfwd.h> // for XYZPoint
+#include <Rtypes.h>          // for Int_t, Double_t
 #include <TComplex.h>
 #include <TVirtualFFT.h>
 
-#include <iterator>
+#include <cmath> // for sqrt
 #include <numeric>
+#include <stdexcept> // for runtime_error
+#include <utility>   // for move, pair
 
 using XYZPoint = ROOT::Math::XYZPoint;
 
@@ -52,8 +54,6 @@ void AtPSADeconv::SetCutoffFreq(int freq)
 void AtPSADeconv::Init()
 {
    AtPSA::Init();
-
-   FairRootManager *ioMan = FairRootManager::Instance();
 }
 
 void AtPSADeconv::initFFTs()
@@ -185,7 +185,7 @@ AtPSADeconv::HitVector AtPSADeconv::chargeToHits(AtPad *pad)
 
 AtPSADeconv::HitData AtPSADeconv::getZandQ(const AtPad::trace &charge)
 {
-   std::array<double, 4> hit;
+   std::array<double, 4> hit{};
 
    // Get the mean time and total charge
    hit[2] = std::accumulate(charge.begin(), charge.end(), 0.0);
