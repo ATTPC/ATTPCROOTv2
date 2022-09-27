@@ -64,7 +64,7 @@
 #include <thread>
 #include <vector>
 
-enum Exp {e20020,e20009};
+enum Exp { e20020, e20009 };
 
 struct trackSegment {
    Double_t eLoss;
@@ -117,15 +117,15 @@ public:
    Bool_t SetInputFile(TString &file, std::size_t firstEve, std::size_t lastEve);
    Bool_t SetOutputFile(TString &file);
    void SetFitDirection(Int_t direction) { fFitDirection = direction; }
-   void SetExpNum(Exp exp) {fExpNum = exp;}
-  
+   void SetExpNum(Exp exp) { fExpNum = exp; }
+
    // Getters
    std::shared_ptr<TTreeReader> GetReader() { return fReader; }
    AtPatternEvent *GetPatternEve() { return (AtPatternEvent *)fPatternEveArray->Get()->At(0); }
    AtEvent *GetEve() { return (AtEvent *)fEveArray->Get()->At(0); }
    void GetAuxiliaryChannels(const std::vector<AtAuxPad> &auxPadArray);
-   Exp GetExpNum() {return fExpNum;}
-  
+   Exp GetExpNum() { return fExpNum; }
+
    // File management
    void ClearTree();
    void FillTree() { fOutputTree->Fill(); }
@@ -162,8 +162,8 @@ private:
    std::vector<AtTools::IonFitInfo> *ionList;
    AtTools::AtParsers fParser;
    std::unique_ptr<AtTools::AtTrackTransformer> fTrackTransformer;
-   Exp fExpNum; 
-  
+   Exp fExpNum;
+
    genfit::EventDisplay *display;
 
    TString fWorkDir;

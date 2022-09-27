@@ -66,7 +66,8 @@ void AtHitCluster::AddHit(const AtHit &hit)
 void AtHitCluster::updateCovariance(const AtHit &hit)
 {
    // Get array representations of the positions
-   std::array<double, 3> hitPos, oldPos, pos = {};
+   std::array<double, 3> hitPos{}, oldPos{}, pos{};
+
    hit.GetPosition().GetCoordinates(hitPos.begin());
    fPositionChargeOld.GetCoordinates(oldPos.begin());
    fPositionCharge.GetCoordinates(pos.begin());
@@ -84,7 +85,7 @@ void AtHitCluster::updateCovariance(const AtHit &hit)
          fCovMatrix[j][i] = fCovMatrix[i][j];
       }
 
-   std::array<double, 3> weight, totalWeight, totalWeight2 = {};
+   std::array<double, 3> weight{}, totalWeight{}, totalWeight2{};
    fPositionOld.GetCoordinates(oldPos.begin());
    fPosition.GetCoordinates(pos.begin());
    fWeight.GetCoordinates(weight.begin());

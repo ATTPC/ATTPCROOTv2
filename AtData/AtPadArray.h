@@ -1,12 +1,13 @@
 #ifndef ATPADARRAY_H
 #define ATPADARRAY_H
 
-#include "AtPad.h"
+#include "AtPadBase.h" // for AtPadBase
 
 #include <Rtypes.h> // for Double_t, ClassDefOverride
 
-#include <array>  // for array
-#include <memory> // for unique_ptr
+#include <array>   // for array
+#include <memory>  // for unique_ptr
+#include <utility> // for move
 
 class TBuffer;
 class TClass;

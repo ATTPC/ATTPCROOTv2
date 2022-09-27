@@ -3,11 +3,12 @@
 
 #include <FairLogger.h>
 
-#include <TH1F.h>
+#include <TH1.h> // for TH1, TH1D (ptr only)
 
 #include <algorithm> // IWYU pragma: keep
 #include <iterator>  // for make_move_iterator
 #include <memory>
+#include <string>      // for string
 #include <type_traits> // for remove_const_t
 #include <vector>
 

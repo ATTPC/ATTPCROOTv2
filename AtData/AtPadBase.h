@@ -6,6 +6,10 @@
 
 #include <memory>
 
+class TBuffer;
+class TClass;
+class TMemberInspector;
+
 /**
  @defgroup Pads Pads
  *
