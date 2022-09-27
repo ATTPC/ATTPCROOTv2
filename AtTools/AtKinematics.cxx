@@ -1,8 +1,7 @@
 #include "AtKinematics.h"
 
-#include <TMath.h> // for Power, Sqrt
-
-#include "Rtypes.h" // for TGenericClassInfo
+#include <Rtypes.h> // for TGenericClassInfo
+#include <TMath.h>  // for Power, Sqrt
 
 #include <cmath>    // for pow, sqrt, cos
 #include <iostream> // for operator<<, basic_ostream, basic_ostream<>::__os...

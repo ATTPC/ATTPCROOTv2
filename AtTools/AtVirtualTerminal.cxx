@@ -1,6 +1,6 @@
 #include "AtVirtualTerminal.h"
 
-#include "Rtypes.h" // for TGenericClassInfo
+#include <Rtypes.h> // for TGenericClassInfo
 
 #include <cstdlib> // for system
 #include <sstream> // IWYU pragma: keep

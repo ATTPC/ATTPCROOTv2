@@ -12,13 +12,23 @@ class TMemberInspector;
 class FairPrimaryGenerator;
 
 class AtTPC20MgDecay : public FairGenerator {
+private:
+   Bool_t fOnlyAPBranch{false}; // True if only the beta-alpha-proton branch is visible
+   Bool_t fBoxVtxIsSet{false};  // True if box vertex is set
+
+   Double32_t fX{0}, fY{0}, fZ{0};                            // Point vertex coordinates [cm]
+   Double32_t fX1{0}, fY1{0}, fZ1{0}, fX2{0}, fY2{0}, fZ2{0}; // Box vertex coords (x1,y1,z1)->(x2,y2,z2)
+   Bool_t fNuclearDecayChainIsSet{false};
+   Int_t fParticlesDefinedInNuclearDecay{0};
+   Double32_t fParticleEnergies[50];
+   Double32_t fParticleBranchingRatios[50];
 
 public:
    /** Default constructor **/
-   AtTPC20MgDecay();
+   AtTPC20MgDecay() = default;
 
    /** Destructor **/
-   virtual ~AtTPC20MgDecay();
+   virtual ~AtTPC20MgDecay() = default;
 
    /** Initializer **/
    virtual Bool_t Init();
@@ -48,16 +58,6 @@ public:
    void SetNuclearDecayChain() { fNuclearDecayChainIsSet = kTRUE; };
    void SetDecayChainPoint(Double32_t ParticleEnergy = 0, Double32_t ParticleBranchingRatio = 0);
 
-private:
-   Bool_t fOnlyAPBranch; // True if only the beta-alpha-proton branch is visible
-   Bool_t fBoxVtxIsSet;  // True if box vertex is set
-
-   Double32_t fX, fY, fZ;                   // Point vertex coordinates [cm]
-   Double32_t fX1, fY1, fZ1, fX2, fY2, fZ2; // Box vertex coords (x1,y1,z1)->(x2,y2,z2)
-   Bool_t fNuclearDecayChainIsSet;
-   Int_t fParticlesDefinedInNuclearDecay;
-   Double32_t fParticleEnergies[50];
-   Double32_t fParticleBranchingRatios[50];
    ClassDef(AtTPC20MgDecay, 1)
 };
 
