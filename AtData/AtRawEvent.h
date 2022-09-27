@@ -151,6 +151,7 @@ public:
    PadVector &GetPads() { return const_cast<PadVector &>(const_cast<const AtRawEvent *>(this)->GetPads()); }
 
    const AuxPadMap &GetAuxPads() const { return fAuxPadMap; }
+   const FpnMap &GetFpnPads() const { return fFpnMap; }
    std::multimap<Int_t, std::size_t> &GetSimMCPointMap() { return fSimMCPointMap; }
 
    ClassDefOverride(AtRawEvent, 6);

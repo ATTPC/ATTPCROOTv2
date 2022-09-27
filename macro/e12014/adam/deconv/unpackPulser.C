@@ -15,7 +15,7 @@ void unpackPulser(int runNumber)
 
    // Set the in/out files
    TString inputFile = inputDir + TString::Format("/run_%04d.h5", runNumber);
-   TString outputFile = outDir + TString::Format("/run_%04d.root", runNumber);
+   TString outputFile = outDir + TString::Format("/run_%04dSub.root", runNumber);
 
    std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
    std::cout << "Saving in: " << outputFile << std::endl;
@@ -61,6 +61,27 @@ void unpackPulser(int runNumber)
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetPersistence(true);
 
+   // Attempt to restore the data
+   auto filterTask = new AtFilterTask(new AtFilterZero());
+   filterTask->SetFilterFPN(true);
+   filterTask->SetPersistence(true);
+   filterTask->SetOutputBranch("FilledData");
+
+   auto filterTask2 = new AtFilterTask(new AtRemovePulser(1000, 15));
+   filterTask2->SetFilterFPN(true);
+   filterTask2->SetFilterPads(false);
+   filterTask2->SetPersistence(true);
+   filterTask2->SetInputBranch("FilledData");
+   filterTask2->SetOutputBranch("NoPulserData");
+
+   auto fpnFilter = new AtFilterFPN(fAtMapPtr, true);
+   fpnFilter->SetThreshold(20);
+   auto subtractionTask = new AtFilterTask(fpnFilter);
+   subtractionTask->SetFilterFPN(true);
+   subtractionTask->SetFilterPads(true);
+   subtractionTask->SetPersistence(true);
+   subtractionTask->SetInputBranch("NoPulserData");
+
    auto psa = std::make_unique<AtPSAMax>();
    psa->SetThreshold(-1);
 
@@ -70,6 +91,9 @@ void unpackPulser(int runNumber)
 
    // Add unpacker to the run
    run->AddTask(unpackTask);
+   run->AddTask(filterTask);
+   run->AddTask(filterTask2);
+   run->AddTask(subtractionTask);
    run->AddTask(psaTask);
 
    run->Init();
@@ -78,7 +102,7 @@ void unpackPulser(int runNumber)
    auto numEvents = unpackTask->GetNumEvents();
 
    // numEvents = 1700;//217;
-   numEvents = 10;
+   // numEvents = 1;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 

@@ -68,9 +68,15 @@ void AtFilterTask::Exec(Option_t *opt)
          fFilter->Filter(pad);
       }
 
-   // This is destroying data in next pad in the array
-   for (auto &pad : filteredEvent->fPadList)
-      fFilter->Filter(pad.get());
+   if (fFilterFPN)
+      for (auto &[ref, pad] : filteredEvent->fFpnMap) {
+         LOG(debug) << "Filtering " << ref;
+         fFilter->Filter(&pad);
+      }
+
+   if (fFilterPads)
+      for (auto &pad : filteredEvent->fPadList)
+         fFilter->Filter(pad.get());
 
    auto isGood = filteredEvent->IsGood() && fFilter->IsGoodEvent();
    filteredEvent->SetIsGood(isGood);

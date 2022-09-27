@@ -1,4 +1,3 @@
-
 /*********************************************************************
  *   Base class for Active Targets AtMap.h			     *
  *   Author: Y. Ayyad ayyadlim@frib.msu.edu            	             *
@@ -83,7 +82,7 @@ public:
    bool IsFPNchannel(const AtPadReference &ref) const;
    AtPadReference GetNearestFPN(int padNum) const;
    AtPadReference GetNearestFPN(const AtPadReference &ref) const;
-   
+
    std::string GetAuxName(const AtPadReference &ref) const;
 
    inline void SetGUIMode() { kGUIMode = 1; }

@@ -13,6 +13,7 @@
 #pragma link C++ class AtAuxPad + ;
 #pragma link C++ class AtPadFFT + ;
 #pragma link C++ class AtPadArray + ;
+#pragma link C++ class AtPulserInfo + ;
 
 #pragma link C++ class AtRawEvent + ;
 #pragma link C++ class AtHit + ;

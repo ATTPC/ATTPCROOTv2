@@ -18,7 +18,7 @@ set(SRCS
   AtAuxPad.cxx
   AtPadFFT.cxx
   AtPadArray.cxx
-
+  AtPulserInfo.cxx
   AtPadReference.cxx
   
   AtRawEvent.cxx
