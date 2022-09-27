@@ -19,6 +19,8 @@ set(SRCS
   AtPadFFT.cxx
   AtPadArray.cxx
 
+  AtPadReference.cxx
+  
   AtRawEvent.cxx
   AtHit.cxx
   AtHitCluster.cxx

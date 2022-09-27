@@ -80,6 +80,10 @@ public:
    AtPadReference GetPadRef(int padNum) const;
    bool AddAuxPad(const AtPadReference &ref, std::string auxName);
    bool IsAuxPad(const AtPadReference &ref) const;
+   bool IsFPNchannel(const AtPadReference &ref) const;
+   AtPadReference GetNearestFPN(int padNum) const;
+   AtPadReference GetNearestFPN(const AtPadReference &ref) const;
+   
    std::string GetAuxName(const AtPadReference &ref) const;
 
    inline void SetGUIMode() { kGUIMode = 1; }

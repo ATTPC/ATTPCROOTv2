@@ -17,3 +17,5 @@ bool operator==(const AtPadReference &l, const AtPadReference &r)
 {
    return l.cobo == r.cobo && l.asad == r.asad && l.aget == r.aget && l.ch == r.ch;
 }
+
+ClassImp(AtElectronicReference);

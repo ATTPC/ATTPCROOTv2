@@ -84,6 +84,15 @@ const AtPad *AtRawEvent::GetPad(Int_t padNum) const
    return nullptr;
 }
 
+const AtPad *AtRawEvent::GetFpn(const AtPadReference &ref) const
+{
+   auto padIt = fFpnMap.find(ref);
+   if (padIt == fFpnMap.end())
+      return nullptr;
+   else
+      return &(padIt->second);
+}
+
 const AtAuxPad *AtRawEvent::GetAuxPad(std::string auxName) const
 {
    auto padIt = fAuxPadMap.find(auxName);
@@ -91,4 +100,14 @@ const AtAuxPad *AtRawEvent::GetAuxPad(std::string auxName) const
       return nullptr;
    else
       return &(padIt->second);
+}
+
+/**
+ * @brief Create a new FPN channel.
+ * @return Pointer to newly created pad
+ */
+AtPad *AtRawEvent::AddFPN(const AtPadReference &ref)
+{
+   auto [it, added] = fFpnMap.emplace(ref, AtPad());
+   return &(it->second);
 }

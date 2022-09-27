@@ -96,13 +96,16 @@ void AtHDFUnpacker::processPad(std::size_t ipad)
 }
 AtPad *AtHDFUnpacker::createPadAndSetIsAux(const AtPadReference &padRef)
 {
+   if (fSaveFPN && fMap->IsFPNchannel(padRef))
+      return fRawEvent->AddFPN(padRef);
+
    if (fMap->IsAuxPad(padRef)) {
       auto padName = fMap->GetAuxName(padRef);
       return fRawEvent->AddAuxPad(padName).first;
-   } else {
-      auto padNumber = fMap->GetPadNum(padRef);
-      return fRawEvent->AddPad(padNumber);
    }
+
+   auto padNumber = fMap->GetPadNum(padRef);
+   return fRawEvent->AddPad(padNumber);
 }
 void AtHDFUnpacker::setAdc(AtPad *pad, const std::vector<int16_t> &data)
 {

@@ -39,6 +39,31 @@ std::ostream &operator<<(std::ostream &os, const AtMap::InhibitType &t)
 
 AtMap::AtMap() : AtPadCoord(boost::extents[10240][3][2]), fPadPlane(new TH2Poly()) {}
 
+AtPadReference AtMap::GetNearestFPN(int padNum) const
+{
+   return GetNearestFPN(GetPadRef(padNum));
+}
+
+AtPadReference AtMap::GetNearestFPN(const AtPadReference &ref) const
+{
+   auto fpn = ref;
+   if (ref.ch < 17)
+      fpn.ch = 11;
+   else if (ref.ch < 34)
+      fpn.ch = 22;
+   else if (ref.ch < 51)
+      fpn.ch = 45;
+   else
+      fpn.ch = 56;
+
+   return fpn;
+}
+
+bool AtMap::IsFPNchannel(const AtPadReference &ref) const
+{
+   return ref.ch == 11 || ref.ch == 22 || ref.ch == 45 || ref.ch == 56;
+}
+
 Int_t AtMap::GetPadNum(const AtPadReference &PadRef) const
 {
 

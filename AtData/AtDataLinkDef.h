@@ -5,6 +5,9 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
+#pragma link C++ struct AtPadReference + ;
+#pragma link C++ struct AtElectronicReference + ;
+
 #pragma link C++ class AtPadBase + ;
 #pragma link C++ class AtPad + ;
 #pragma link C++ class AtAuxPad + ;

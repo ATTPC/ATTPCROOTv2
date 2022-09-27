@@ -11,6 +11,7 @@
 #define AtRAWEVENT_H
 
 #include "AtAuxPad.h"
+#include "AtPadReference.h"
 
 #include <Rtypes.h>
 #include <TNamed.h>
@@ -29,15 +30,18 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-using AuxPadMap = std::map<std::string, AtAuxPad>;
-using AtPadPtr = std::unique_ptr<AtPad>;
-using PadVector = std::vector<AtPadPtr>;
-
 class AtRawEvent : public TNamed {
 private:
+   using AuxPadMap = std::map<std::string, AtAuxPad>;
+   using FpnMap = std::unordered_map<AtPadReference, AtPad>;
+   using AtPadPtr = std::unique_ptr<AtPad>;
+   using PadVector = std::vector<AtPadPtr>;
+
    ULong_t fEventID = -1;
    PadVector fPadList;
    AuxPadMap fAuxPadMap;
+   FpnMap fFpnMap;
+
    std::vector<ULong64_t> fTimestamp;
 
    Bool_t fIsGood = true;
@@ -110,6 +114,8 @@ public:
     */
    std::pair<AtAuxPad *, bool> AddAuxPad(std::string auxName);
 
+   AtPad *AddFPN(const AtPadReference &ref);
+
    void RemovePad(Int_t padNum);
    void SetSimMCPointMap(std::multimap<Int_t, std::size_t> map) { fSimMCPointMap = std::move(map); }
 
@@ -131,6 +137,11 @@ public:
 
    AtPad *GetPad(Int_t padNum) { return const_cast<AtPad *>(const_cast<const AtRawEvent *>(this)->GetPad(padNum)); }
    const AtPad *GetPad(Int_t padNum) const;
+   AtPad *GetFpn(const AtPadReference &ref)
+   {
+      return const_cast<AtPad *>(const_cast<const AtRawEvent *>(this)->GetFpn(ref));
+   }
+   const AtPad *GetFpn(const AtPadReference &ref) const;
    AtAuxPad *GetAuxPad(std::string auxPad)
    {
       return const_cast<AtAuxPad *>(const_cast<const AtRawEvent *>(this)->GetAuxPad(std::move(auxPad)));
@@ -142,7 +153,7 @@ public:
    const AuxPadMap &GetAuxPads() const { return fAuxPadMap; }
    std::multimap<Int_t, std::size_t> &GetSimMCPointMap() { return fSimMCPointMap; }
 
-   ClassDefOverride(AtRawEvent, 5);
+   ClassDefOverride(AtRawEvent, 6);
 };
 
 #endif
