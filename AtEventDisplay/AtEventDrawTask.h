@@ -7,6 +7,9 @@
 #ifndef ATEVENTDRAWTASK_H
 #define ATEVENTDRAWTASK_H
 
+#include "S800Calc.h"
+#include "S800Ana.h"
+
 #include <FairTask.h> // for FairTask, InitStatus
 
 #include <Rtypes.h>  // for Int_t, Bool_t, THashConsistencyHolder, Color_t
@@ -158,6 +161,12 @@ protected:
 
    TEveRGBAPalette *fRGBAPalette;
 
+   TCanvas* fCvsPID;
+   TH2F* fPID;
+   TCanvas* fCvsPID2;
+   TH2F* fPID2;
+   S800Calc *fS800Calc;
+
 public:
    AtEventDrawTask();
    AtEventDrawTask(TString modes);
@@ -190,6 +199,12 @@ public:
    void SetMultiHit(Int_t hitMax);
 
 private:
+
+   // S800Ana fS800Ana;
+   std::vector<Double_t> fTofObjCorr;
+   std::vector<Double_t> fMTDCObjRange;
+   std::vector<Double_t> fMTDCXfRange;
+
    void DrawPadPlane();
    void DrawPadWave();
    void DrawPadAll();
@@ -204,6 +219,9 @@ private:
    void DrawThetaxPhi();
    void DrawMC();
    void DrawAux();
+   void DrawPID();
+   void DrawPID2();
+   void DrawS800();
 
    AtMap *fAtMapPtr;
    void UpdateCvsPadPlane();
@@ -221,6 +239,8 @@ private:
    void UpdateCvsQuadrants();
    void UpdateCvsMC();
    void UpdateCvsAux();
+   void UpdateCvsPID();
+   void UpdateCvsPID2();
 
    void ResetPadAll();
    void ResetPhiDistr();

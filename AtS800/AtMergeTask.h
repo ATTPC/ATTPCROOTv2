@@ -1,6 +1,8 @@
 #ifndef AtMergeTask_H
 #define AtMergeTask_H
 
+#include "S800Ana.h"
+
 #include <Rtypes.h>
 #include <TString.h>
 // FAIRROOT classes
@@ -39,13 +41,11 @@ public:
    void SetTofObjCorr(std::vector<Double_t> vec);
    void SetMTDCObjRange(std::vector<Double_t> vec);
    void SetMTDCXfRange(std::vector<Double_t> vec);
+   void SetATTPCClock(Bool_t value = kTRUE);
+   void SetATTPCClockFreq(Double_t value);
 
    Int_t GetS800TsSize();
    Int_t GetMergedTsSize();
-   std::vector<Double_t> GetParameters();
-   std::vector<Double_t> GetTofObjCorr();
-   std::vector<Double_t> GetMTDCObjRange();
-   std::vector<Double_t> GetMTDCXfRange();
 
    Bool_t isInGlom(Long64_t ts1, Long64_t ts2);
    Bool_t isInPID(S800Calc *s800calc);
@@ -63,6 +63,7 @@ private:
 
    Int_t fTsEvtS800Size{}, fEvtMerged{}, fEvtDelta{5}, fTsDelta{1272};
    TString fS800File;
+   Long64_t fATTPCTs0{}, fATTPCTsPrev{};
    std::vector<Long64_t> fS800Ts;
    std::vector<Double_t> fS800Evt;
    std::vector<Double_t> fParameters;
@@ -71,20 +72,17 @@ private:
    std::vector<Double_t> fMTDCXfRange;
 
    TF1 *fS800TsFunc{};
-   // TF1 *fOptiFit;
    Double_t fGlom{2};
+   Double_t fATTPCClockFreq{};
 
-   std::vector<TCutG *> fcutPID1;
-   std::vector<TCutG *> fcutPID2;
-   std::vector<TCutG *> fcutPID3;
    std::vector<TString> fcutPID1File;
    std::vector<TString> fcutPID2File;
    std::vector<TString> fcutPID3File;
 
    Bool_t fIsPersistence{false};
-   Bool_t fSetCut1{false};
-   Bool_t fSetCut2{false};
-   Bool_t fSetCut3{false};
+   Bool_t fUseATTPCClock{false};
+
+   S800Ana fS800Ana;
 
    TGraph *fS800TsGraph{};
 

@@ -41,7 +41,7 @@ public:
    std::vector<XYZVector> ClosestPointProjOnLines(XYZVector d1, XYZVector pt1, XYZVector d2, XYZVector pt2);
    std::vector<std::vector<Int_t>> SortTrackSameVtx(std::vector<std::vector<Double_t>> lines);
    std::vector<XYZVector> CoGVtx(std::vector<std::vector<Int_t>> vtxCand, std::vector<std::vector<Double_t>> lines, std::vector<Double_t> wlines);
-   std::vector<std::pair<Int_t, XYZVector>> CoGVtxSingleTrack(std::vector<std::vector<Double_t>> lines, std::vector<Double_t> wlines);
+   std::vector<std::pair<Int_t, XYZVector>> CoGVtxSingleTrack(std::vector<std::vector<Double_t>> lines, std::vector<Double_t> wlines, std::vector<Int_t> itracks);
    XYZVector ptOnLine(std::vector<Double_t> line, XYZVector pointToProj);
    Double_t distPtLine(XYZVector dir, XYZVector ptLine, XYZVector pt);
 

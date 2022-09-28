@@ -45,6 +45,7 @@ void rundigi_d2He (Int_t runNumber=0, Double_t ExEje=0)
 
   // __ AT digi tasks___________________________________
   AtClusterizeLineTask *clusterizer = new AtClusterizeLineTask();
+  // AtClusterizeTask *clusterizer = new AtClusterizeTask();
   clusterizer->SetPersistence(kFALSE);
 
   AtPulseTask* pulse = new AtPulseTask();

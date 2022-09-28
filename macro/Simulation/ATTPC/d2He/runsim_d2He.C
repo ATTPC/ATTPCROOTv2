@@ -329,7 +329,7 @@ void runsim_d2He(Int_t runNumber=0, Double_t ExEje=0, Int_t nEvents = 10, TStrin
   AtTPCIonDecay* decay_14N = new AtTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay,
     zB, aB, massDecayB, 0, 0, &SepEne); //0, 0 are TMass, ExEnergy in AtTPCIonDecay
    decay_14N->SetSequentialDecay(kTRUE);
-   primGen->AddGenerator(decay_14N);
+  // primGen->AddGenerator(decay_14N);
 
 //-----------------------------------------------------------------------------
 //custom track generator

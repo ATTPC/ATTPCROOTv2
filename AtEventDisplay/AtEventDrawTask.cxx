@@ -19,6 +19,8 @@
 #include "AtRawEvent.h"     // for AtRawEvent, AuxPadMap
 #include "AtTrack.h"        // for AtTrack, operator<<
 #include "AtFindVertex.h"   //for vertex
+#include "S800Calc.h" // for S800Calc, CRDC, MultiHitTOF, IC
+#include "S800Ana.h"
 
 #include <FairLogger.h>      // for Logger, LOG
 #include <FairRootManager.h> // for FairRootManager
@@ -83,7 +85,7 @@ AtEventDrawTask::AtEventDrawTask()
      fCvs3DHist(nullptr), f3DHist(nullptr), fCvsRad(nullptr), fRadVSTb(nullptr), fCvsTheta(nullptr), fTheta(nullptr),
      fAtMapPtr(nullptr), fMinZ(0), fMaxZ(1344), fMinX(432), fMaxX(-432), f3DHitStyle(0), fMultiHit(0),
      fSaveTextData(false), f3DThreshold(0), fRawEventBranchName("AtRawEvent"), fEventBranchName("AtEventH"),
-     fPatternEventBranchName("AtPatternEvent"), fVertexSize(1.5), fVertexStyle(kFullCircle)
+     fPatternEventBranchName("AtPatternEvent"), fVertexSize(1.5), fVertexStyle(kFullCircle), fCvsPID(0), fPID(0), fCvsPID2(0)
 {
 
    Char_t padhistname[256];
@@ -162,6 +164,10 @@ InitStatus AtEventDrawTask::Init()
       LOG(INFO) << cGREEN << "Pattern Event Array Found in branch " << fPatternEventBranchName << "." << cNORMAL
                 << std::endl;
 
+   fS800Calc = dynamic_cast<S800Calc *>(ioMan->GetObject("s800cal"));
+   if (fS800Calc)
+      LOG(INFO) << cGREEN << "S800Calc Found." << cNORMAL;
+
    gStyle->SetPalette(55);
 
    fCvsPadWave = fEventManager->GetCvsPadWave();
@@ -201,6 +207,17 @@ InitStatus AtEventDrawTask::Init()
    fCvsAux = fEventManager->GetCvsAux();
    DrawAux();
 
+   fCvsPID = fEventManager->GetCvsPID();
+   DrawPID();
+   fCvsPID2 = fEventManager->GetCvsPID2();
+   DrawPID2();
+
+   S800Ana s800Ana;
+   s800Ana = fEventManager->GetS800Ana();//MTDCRanges must be set before calling AtEventDrawTask::Intit()
+   fMTDCXfRange = s800Ana.GetMTDCXfRange();
+   fMTDCObjRange = s800Ana.GetMTDCObjRange();
+   fTofObjCorr = s800Ana.GetTofObjCorr();
+
    //******* NO CALLS TO TCANVAS BELOW THIS ONE
    fCvsHoughSpace = fEventManager->GetCvsHoughSpace();
    DrawHoughSpace();
@@ -222,6 +239,9 @@ void AtEventDrawTask::Exec(Option_t *option)
    if (fEventArray) {
       DrawHitPoints();
    }
+   if(fS800Calc) {
+      DrawS800();
+   }
 
    gEve->Redraw3D(kFALSE);
 
@@ -233,6 +253,8 @@ void AtEventDrawTask::Exec(Option_t *option)
    UpdateCvsPhi();
    UpdateCvsMesh();
    UpdateCvs3DHist();
+   //UpdateCvsPID();
+   //UpdateCvsPID2();
    if (fUnpackHough && fEventManager->GetDrawReconstruction()) {
       UpdateCvsHoughSpace();
       UpdateCvsRad();
@@ -592,6 +614,27 @@ void AtEventDrawTask::DrawHitPoints()
    dumpEvent.close();
 }
 
+void
+AtEventDrawTask::DrawS800()
+{
+  //fS800Calc = dynamic_cast<S800Calc*> (fS800CalcArray->At(0));
+
+  if(fS800Calc->GetIsInCut()){
+    S800Ana s800Ana;
+    s800Ana.SetMTDCXfRange(fMTDCXfRange);
+    s800Ana.SetMTDCObjRange(fMTDCObjRange);
+    s800Ana.SetTofObjCorr(fTofObjCorr);
+
+     s800Ana.Calc(fS800Calc);
+
+	   if(s800Ana.GetObjCorr_ToF() != -999)
+      fPID->Fill(s800Ana.GetObjCorr_ToF(),s800Ana.GetXfObj_ToF());
+	   if(s800Ana.GetObjCorr_ToF() != -999)
+      fPID2->Fill(s800Ana.GetObjCorr_ToF(),s800Ana.GetICSum_E());
+  }
+
+}
+
 void AtEventDrawTask::Reset()
 {
    if (fHitSet) {
@@ -860,6 +903,36 @@ void AtEventDrawTask::DrawAux()
       fCvsAux->cd(i + 1);
       fAuxChannels[i]->Draw();
    }
+}
+
+void AtEventDrawTask::DrawPID()
+{
+
+   fCvsPID->cd();
+   // fPID = new TH2F("PID","PID",3000,-250,500,2000,0,500);
+   fPID = new TH2F("PID", "PID", 200, -150, 50, 300, 150, 450);
+   fPID->Draw("colz");
+}
+
+void AtEventDrawTask::DrawPID2()
+{
+
+   fCvsPID2->cd();
+   // fPID2 = new TH2F("PID2","PID2",3000,-250,500,2000,0,500);
+   fPID2 = new TH2F("PID2", "PID2", 200, -150, 50, 300, 150, 450);
+   fPID2->Draw("colz");
+}
+
+void AtEventDrawTask::UpdateCvsPID()
+{
+   fCvsPID->Modified();
+   fCvsPID->Update();
+}
+
+void AtEventDrawTask::UpdateCvsPID2()
+{
+   fCvsPID2->Modified();
+   fCvsPID2->Update();
 }
 
 void AtEventDrawTask::UpdateCvsAux()

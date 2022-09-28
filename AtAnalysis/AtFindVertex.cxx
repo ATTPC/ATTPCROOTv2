@@ -63,7 +63,10 @@ void AtFindVertex::FindVertexSingleLine(std::vector<AtTrack> tracks)
 {
   std::vector<std::vector<Double_t>> lines;
   std::vector<Double_t> wlines;//weights for CoG (ex: Chi2, chargeTot, nbInliners...)
+  std::vector<Int_t> itracks;
+  Int_t it=-1;
   for (auto track : tracks) {
+    it++;
     auto ransacLine = dynamic_cast<const AtPatterns::AtPatternLine *>(track.GetPattern());
     std::vector<Double_t> patternPar;
     patternPar = ransacLine->GetPatternPar();
@@ -74,9 +77,10 @@ void AtFindVertex::FindVertexSingleLine(std::vector<AtTrack> tracks)
     if (nanPattern) continue;
     lines.push_back(patternPar);
     wlines.push_back(ransacLine->GetNumPoints());
+    itracks.push_back(it);
   }
     std::vector<std::pair<Int_t, XYZVector>> cogVtx;
-    cogVtx = CoGVtxSingleTrack(lines, wlines);
+    cogVtx = CoGVtxSingleTrack(lines, wlines,itracks);
     for(Int_t i =0; i<cogVtx.size(); i++)std::cout<<cogVtx.size()<<" check cogVtx size "<<cogVtx.at(i).second.X()<<" "<<cogVtx.at(i).second.Y()<<" "<<cogVtx.at(i).second.Z()<<std::endl;
 
     for (Int_t i = 0; i < cogVtx.size(); i++) {
@@ -101,6 +105,11 @@ void AtFindVertex::FindVertexMultipleLines(std::vector<AtTrack> tracks, Int_t nb
     auto ransacLine = dynamic_cast<const AtPatterns::AtPatternLine *>(track.GetPattern());
     std::vector<Double_t> patternPar;
     patternPar = ransacLine->GetPatternPar();
+    if(patternPar.size()==0) continue;
+    Bool_t nanPattern=kFALSE;
+    for (Int_t i = 0; i < patternPar.size(); i++)
+      if (patternPar.at(i)!=patternPar.at(i)) nanPattern=kTRUE;
+    if (nanPattern) continue;
     lines.push_back(patternPar);
     wlines.push_back(ransacLine->GetChi2());
   }
@@ -204,7 +213,7 @@ std::vector<std::vector<Int_t>> AtFindVertex::SortTrackSameVtx(std::vector<std::
 }
 
 
-std::vector<std::pair<Int_t, XYZVector>> AtFindVertex::CoGVtxSingleTrack(std::vector<std::vector<Double_t>> lines, std::vector<Double_t> wlines)
+std::vector<std::pair<Int_t, XYZVector>> AtFindVertex::CoGVtxSingleTrack(std::vector<std::vector<Double_t>> lines, std::vector<Double_t> wlines, std::vector<Int_t> itracks)
 {
   std::vector<std::pair<Int_t, XYZVector>> result;
 
@@ -228,7 +237,7 @@ std::vector<std::pair<Int_t, XYZVector>> AtFindVertex::CoGVtxSingleTrack(std::ve
           // CoG += projVtxOnLines1.at(1)*(pow(10,2));//if a track has nbHits>10 the vertex will be closer to the line than to the beam
           // CoG = CoG*(1./(pow(wlines.at(i),2)+pow(10,2)));
           CoG = projVtxOnLines1.at(0);//this way the track angle is better than taking the CoG, only the range has uncertainty
-          auto p = std::make_pair(i, CoG);
+          auto p = std::make_pair(itracks.at(i), CoG);
           result.push_back(p);
       }
    }// Loop over the lines (for loop i)

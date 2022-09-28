@@ -1,3 +1,4 @@
+// void run_eve(TString  InputDataPath = "/mnt/analysis/e18008/rootMerg/giraud/", TString  OutputDataPath = "output.reco_display.root")
 void run_eve(TString  InputDataPath = "/mnt/analysis/e18008/rootAna/giraud/simulation/digi/", TString  OutputDataPath = "output.reco_display.root")
 {
   FairLogger *fLogger = FairLogger::GetLogger();
@@ -8,7 +9,8 @@ void run_eve(TString  InputDataPath = "/mnt/analysis/e18008/rootAna/giraud/simul
   TString mapFile = "Lookup20150611.xml";
 
 
-  TString InputDataFile = InputDataPath+"attpcdigi_d2He_10_run0_Ex10_testUpdates.root";
+  TString InputDataFile = InputDataPath+"attpcdigi_d2He_100_run0_Ex10_testUpdates.root";//  /mnt/analysis/e18008/rootMerg/giraud/run_%04d_%04d_test.root
+  // TString InputDataFile = InputDataPath+"run_2063_0063_test.root";
   TString OutputDataFile = OutputDataPath;
   TString GeoDataPath = dir + "/geometry/" + geoFile;
   TString mapDir = dir + "/scripts/" + mapFile;

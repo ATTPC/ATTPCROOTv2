@@ -1,6 +1,10 @@
 #ifndef AtEVENTMANAGER_H
 #define AtEVENTMANAGER_H
 
+#include "AtEvent.h"
+#include "S800Calc.h"
+#include "S800Ana.h"
+
 #include <FairRunAna.h>
 
 #include <Rtypes.h>
@@ -10,6 +14,7 @@ class FairRootManager;
 class FairTask;
 class TBuffer;
 class TCanvas;
+class TH2F;
 class TClass;
 class TGNumberEntry;
 class TGTextButton;
@@ -20,6 +25,10 @@ class AtEventManager : public TEveEventManager {
 private:
    FairRootManager *fRootManager;
    FairRunAna *fRunAna;
+   TClonesArray* cArray;
+   TClonesArray* cS800Array;
+   AtEvent* cevent;
+   S800Calc*  cS800Calc;
 
    Int_t fEntry;
    TGListTreeItem *fEvent;
@@ -43,6 +52,12 @@ private:
    TCanvas *fCvsMC_XY{};
    TCanvas *fCvsMC_Z{};
    TCanvas *fCvsAux{};
+   TCanvas* fCvsPIDFull;
+   TCanvas* fCvsPID;
+   TCanvas* fCvsPID2;
+   TH2F* fPIDFull;
+   TCanvas* fCvsPID2Full;
+   TH2F* fPID2Full;
 
    TGTextButton *drawallpad;
    TGTextButton *eraseQevent;
@@ -57,6 +72,8 @@ private:
    Bool_t kDraw3DHist;
    Bool_t kToggleData;
    Float_t k3DThreshold;
+
+   Int_t fEntries;
 
    static AtEventManager *fInstance;
 
@@ -79,6 +96,10 @@ public:
    void Draw3DGeo();
    void Draw3DHist();
    void ToggleCorrData();
+
+   void DrawPIDFull();
+   void FillPIDFull();
+   void DrawPID2Full();
 
    void AddTask(FairTask *task) { fRunAna->AddTask(task); }
    // virtual void InitRiemann(Int_t option=1, Int_t level=3, Int_t nNodes=10000);
@@ -104,6 +125,19 @@ public:
    TCanvas *GetCvsMC_XY() { return fCvsMC_XY; }
    TCanvas *GetCvsMC_Z() { return fCvsMC_Z; }
    TCanvas *GetCvsAux() { return fCvsAux; }
+   TCanvas* GetCvsPID() { return fCvsPID; }
+   TCanvas* GetCvsPID2() { return fCvsPID2; }
+
+   S800Ana GetS800Ana() { return fS800Ana; }
+
+   void SetTofObjCorr(std::vector<Double_t> vec) { fTofObjCorr = vec; }
+   void SetMTDCObjRange(std::vector<Double_t> vec) { fMTDCObjRange = vec; }
+   void SetMTDCXfRange(std::vector<Double_t> vec) { fMTDCXfRange = vec; }
+
+   S800Ana fS800Ana;
+   std::vector<Double_t> fTofObjCorr;
+   std::vector<Double_t> fMTDCObjRange;
+   std::vector<Double_t> fMTDCXfRange;
 
    Bool_t GetDrawAllPad() { return kDrawAllOn; }
    Bool_t GetDrawReconstruction() { return kDrawReconstruction; }

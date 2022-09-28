@@ -30,6 +30,7 @@
 #pragma link C++ class RandomSample::AtGaussian - !;
 #pragma link C++ class RandomSample::AtWeightedGaussian - !;
 #pragma link C++ class RandomSample::AtWeightedY - !;
+#pragma link C++ class RandomSample::AtWeightedGaussianTrunc - !;
 
 #pragma link C++ enum RandomSample::SampleMethod;
 #pragma link C++ function RandomSample::CreateSampler;

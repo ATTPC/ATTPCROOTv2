@@ -68,7 +68,7 @@ void ana_d2He()
   FairRunAna* run = new FairRunAna(); //Forcing a dummy run
   //ATd2HeAnalysis *d2heana = new ATd2HeAnalysis ();
 
-  TString digiFileName = "/mnt/analysis/e18008/rootAna/giraud/simulation/digi/attpcdigi_d2He_50_run0_Ex10_testUpdates.root";
+  TString digiFileName = "/mnt/analysis/e18008/rootAna/giraud/simulation/digi/attpcdigi_d2He_1000_run0_Ex10_testUpdates.root";
   TFile* file = new TFile(digiFileName,"READ");
   TTree* tree = (TTree*) file -> Get("cbmsim");
   Int_t nEvents = tree -> GetEntries();
