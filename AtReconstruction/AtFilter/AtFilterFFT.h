@@ -74,6 +74,7 @@ public:
    void InitEvent(AtRawEvent *event = nullptr) override;
    void Filter(AtPad *pad) override;
    bool IsGoodEvent() override { return true; }
+   void SetLowPass(int order, int cuttoff);
 
 protected:
    virtual std::unique_ptr<AtPadFFT> applyFrequencyCutsAndSetInverseFFT();
@@ -81,6 +82,7 @@ protected:
 private:
    bool isValidFreqRange(const AtFreqRange &range);
    bool doesFreqRangeOverlap(const AtFreqRange &range);
+   double getFilterKernel(int freq, int fFilterOrder, int fCutoffFreq);
 };
 
 #endif //#ifndef ATFFTFILTER_H
