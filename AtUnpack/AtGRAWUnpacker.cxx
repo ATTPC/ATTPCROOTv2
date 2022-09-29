@@ -233,15 +233,22 @@ void AtGRAWUnpacker::ProcessFile(Int_t coboIdx)
                for (Int_t iTb = 0; iTb < 512; iTb++)
                   pad->SetRawADC(iTb, rawadc[iTb]);
 
-               Int_t fpnCh = GetFPNChannel(iCh);
-               Double_t adc[512] = {0};
-               fPedestal[coboIdx]->SubtractPedestal(512, frame->GetSample(iAget, fpnCh), rawadc, adc,
-                                                    fFPNSigmaThreshold);
+               if (fIsSubtractFPN) {
+                  Int_t fpnCh = GetFPNChannel(iCh);
+                  Double_t adc[512] = {0};
+                  fPedestal[coboIdx]->SubtractPedestal(512, frame->GetSample(iAget, fpnCh), rawadc, adc,
+                                                       fFPNSigmaThreshold);
 
-               for (Int_t iTb = 0; iTb < 512; iTb++)
-                  pad->SetADC(iTb, adc[iTb]);
+                  for (Int_t iTb = 0; iTb < 512; iTb++)
+                     pad->SetADC(iTb, adc[iTb]);
 
-               pad->SetPedestalSubtracted(kTRUE);
+                  pad->SetPedestalSubtracted(kTRUE);
+               }
+
+               if (fIsSaveLastCell) {
+                  
+
+               }
             }
          }
       }

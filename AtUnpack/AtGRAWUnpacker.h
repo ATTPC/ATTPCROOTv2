@@ -48,6 +48,8 @@ protected:
    Bool_t fIsData = false;
    Bool_t fIsNegativePolarity = true;
    Bool_t fIsSeparatedData;
+   Bool_t fIsSaveLastCell = false;
+   Bool_t fIsSubtractFPN = true;
 
    // String to identify which file in fInputFileName map to which fDecoder
    std::string fFileIDString;
