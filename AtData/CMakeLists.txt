@@ -9,6 +9,7 @@ Set(DEPENDENCIES
   ROOT::GenVector
   ROOT::Physics #For TVector3
   ROOT::Eve
+  hdf5::hdf5-shared
   )
 
 set(SRCS
