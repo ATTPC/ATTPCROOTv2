@@ -31,6 +31,7 @@ Set(DEPENDENCIES
   ROOT::Core
 
   Boost::headers #multi_array
+  hdf5::hdf5-shared
   )
 
 set(SRCS
@@ -61,7 +62,9 @@ set(SRCS
   AtAuxFilterTask.cxx
   AtDataReductionTask.cxx
   AtSpaceChargeCorrectionTask.cxx
-
+  AtHDF5ReadTask.cxx
+  AtHDF5WriteTask.cxx
+  
   AtPatternRecognition/AtPRA.cxx
   AtPatternRecognition/AtSampleConsensus.cxx
   AtPatternRecognition/AtSampleEstimator.cxx
