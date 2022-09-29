@@ -18,7 +18,6 @@ AtTpcMap.cxx
 AtTpcProtoMap.cxx
 AtGadgetIIMap.cxx
 AtSpecMATMap.cxx
-AtPadReference.cxx
 )
 
 Set(DEPENDENCIES
@@ -27,6 +26,8 @@ Set(DEPENDENCIES
   ROOT::Core
 
   Boost::headers
+
+  ATTPCROOT::AtData
   )
 
 generate_target_and_root_library(${LIBRARY_NAME}

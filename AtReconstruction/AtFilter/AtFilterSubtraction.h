@@ -19,14 +19,15 @@
 class AtMap;
 class AtPad;
 class AtRawEvent;
+class AtPadReference;
 
-using vecDoubleCoBo = std::vector<std::array<std::array<Double_t, 512>, 4>>;
-using vecIntCoBo = std::vector<std::array<std::array<Int_t, 512>, 4>>;
-using vecAgetCount = std::vector<std::array<int, 4>>;
+using vecDoubleCoBo = std::vector<std::vector<std::array<Double_t, 512>>>;
+using vecIntCoBo = std::vector<std::vector<std::array<Int_t, 512>>>;
+using vecAgetCount = std::vector<std::vector<Int_t>>;
 using AtMapPtr = std::shared_ptr<AtMap>;
 
 class AtFilterSubtraction : public AtFilter {
-private:
+protected:
    const Int_t fNumberCoBo;
    Int_t fEventNumber{-1};
    Double_t fThreshold = 0;
@@ -42,12 +43,15 @@ private:
    vecAgetCount fAgetCount;
 
    void Clear();
-   void AddChToBaseline(const AtPad &pad);
+   void AddChToBaseline(const AtPadReference &ref, const AtPad &pad);
    void AverageBaseline();
-   void processPad(const AtPad &pad);
+   void processPad(const AtPadReference &ref, const AtPad &pad);
+
+   virtual bool isValidPad(const AtPad &pad);
+   virtual int getAsad(const AtPadReference &ref);
 
 public:
-   AtFilterSubtraction(AtMapPtr map, Int_t numCoBos = 10);
+   AtFilterSubtraction(AtMapPtr map, Int_t numCoBos = 10, Int_t numAget = 4);
 
    void SetThreshold(Double_t thresh) { fThreshold = thresh; }
    void SetIsGood(Bool_t val) { fSetIsGood = val; }

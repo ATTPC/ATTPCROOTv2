@@ -34,6 +34,7 @@ class AtHDFUnpacker : public AtUnpacker {
 private:
    Int_t fNumberTimestamps{};
    Bool_t fIsBaseLineSubtraction{};
+   Bool_t fSaveFPN{false};
 
    hid_t _file{};
    hid_t _group{};
@@ -49,6 +50,7 @@ public:
 
    void SetBaseLineSubtraction(Bool_t value) { fIsBaseLineSubtraction = value; }
    void SetNumberTimestamps(int numTimestamps) { fNumberTimestamps = numTimestamps; };
+   void SetSaveFPN(bool val = true) { fSaveFPN = val; }
 
    void Init() override;
    void FillRawEvent(AtRawEvent &event) override;

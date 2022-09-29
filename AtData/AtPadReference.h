@@ -1,11 +1,18 @@
 #ifndef _ATPADREFERENCE_H
 #define _ATPADREFERENCE_H
 
+#include "AtPadBase.h"
+
 #include <Rtypes.h>
 
 #include <cstddef>
 #include <functional> // IWYU pragma: keep
 #include <iosfwd>
+#include <memory>
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 // The definition of this struct, and the operator overloads have to
 // be before AtMap where an unordered_map using this as a key is
@@ -30,4 +37,14 @@ struct hash<AtPadReference> {
 };
 } // namespace std
 
+class AtElectronicReference : public AtPadBase {
+private:
+   AtPadReference fRef;
+
+public:
+   AtElectronicReference(AtPadReference ref = {}) : fRef(ref) {}
+   virtual std::unique_ptr<AtPadBase> Clone() const override { return std::make_unique<AtElectronicReference>(*this); }
+   AtPadReference GetReference() { return fRef; }
+   ClassDefOverride(AtElectronicReference, 1);
+};
 #endif //#ifndef _PADREFERENCE_H

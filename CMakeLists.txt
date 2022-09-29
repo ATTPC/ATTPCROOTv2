@@ -67,7 +67,7 @@ endif()
 # Look for HDF5 and if it didn't import the target becuase is couldn't
 # find a config file, generate the target by hand using the output
 # of FindHDF5.cmake
-#set(HDF5_FIND_DEBUG TRUE)
+set(HDF5_FIND_DEBUG TRUE)
 find_package2(PUBLIC HDF5 REQUIRED)
 if(TARGET hdf5-shared AND NOT TARGET hdf5::hdf5-shared)
   # Until 3.18 we can only alias global targets

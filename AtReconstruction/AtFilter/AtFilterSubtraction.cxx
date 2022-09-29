@@ -9,11 +9,18 @@
 
 #include <utility>
 
-AtFilterSubtraction::AtFilterSubtraction(AtMapPtr map, Int_t numCoBos) : fNumberCoBo(numCoBos), fMapping(std::move(map))
+AtFilterSubtraction::AtFilterSubtraction(AtMapPtr map, Int_t numCoBos, Int_t numAget)
+   : fNumberCoBo(numCoBos), fMapping(std::move(map))
 {
    fBaseline.resize(fNumberCoBo);
+   for (auto &cobo : fBaseline)
+      cobo.resize(numAget);
    fRawBaseline.resize(fNumberCoBo);
+   for (auto &cobo : fRawBaseline)
+      cobo.resize(numAget);
    fAgetCount.resize(fNumberCoBo);
+   for (auto &cobo : fAgetCount)
+      cobo.resize(numAget);
 }
 
 void AtFilterSubtraction::Clear()
@@ -36,31 +43,42 @@ void AtFilterSubtraction::InitEvent(AtRawEvent *event)
    Clear();
 
    for (const auto &pad : event->GetPads())
-      processPad(*pad);
+      processPad(fMapping->GetPadRef(pad->GetPadNum()), *pad);
    AverageBaseline();
    fEventNumber = event->GetEventID();
 }
-
-void AtFilterSubtraction::processPad(const AtPad &pad)
+/**
+ * Should this pad be added to the average to subtract
+ */
+bool AtFilterSubtraction::isValidPad(const AtPad &pad)
 {
    auto padRef = fMapping->GetPadRef(pad.GetPadNum());
    if (padRef.ch != 0)
-      return;
+      return false;
 
    for (int tb = 0; tb < 512; ++tb)
       if (pad.GetADC(tb) > fThreshold)
-         return;
+         return false;
 
-   AddChToBaseline(pad);
+   return true;
+}
+int AtFilterSubtraction::getAsad(const AtPadReference &ref)
+{
+   return ref.asad;
+}
+void AtFilterSubtraction::processPad(const AtPadReference &ref, const AtPad &pad)
+{
+   if (isValidPad(pad))
+      AddChToBaseline(ref, pad);
 }
 
-void AtFilterSubtraction::AddChToBaseline(const AtPad &pad)
+void AtFilterSubtraction::AddChToBaseline(const AtPadReference &padRef, const AtPad &pad)
 {
-   auto padRef = fMapping->GetPadRef(pad.GetPadNum());
-   fAgetCount[padRef.cobo][padRef.asad]++;
+   int asad = getAsad(padRef);
+   fAgetCount[padRef.cobo][asad]++;
    for (int tb = 0; tb < 512; ++tb) {
-      fBaseline[padRef.cobo][padRef.asad][tb] += pad.GetADC(tb);
-      fRawBaseline[padRef.cobo][padRef.asad][tb] += pad.GetRawADC(tb);
+      fBaseline[padRef.cobo][asad][tb] += pad.GetADC(tb);
+      fRawBaseline[padRef.cobo][asad][tb] += pad.GetRawADC(tb);
    }
 }
 
@@ -84,7 +102,7 @@ void AtFilterSubtraction::Filter(AtPad *pad)
    // Get the pad reference
    auto padRef = fMapping->GetPadRef(pad->GetPadNum());
    auto cobo = padRef.cobo;
-   auto asad = padRef.asad;
+   auto asad = getAsad(padRef);
 
    auto &adc = pad->GetADC();
    auto &adcRaw = pad->GetRawADC();

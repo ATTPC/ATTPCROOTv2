@@ -7,7 +7,10 @@
 #pragma link C++ class AtFilter - !;
 #pragma link C++ class AtFilterFFT - !; // Don't generate any IO
 #pragma link C++ class AtFilterCalibrate - !;
+#pragma link C++ class AtFilterZero - !;
 #pragma link C++ class AtFilterSubtraction - !;
+#pragma link C++ class AtRemovePulser - !;
+#pragma link C++ class AtFilterFPN - !;
 
 #pragma link C++ class AtPSA + ;
 #pragma link C++ class AtPSASpectrum + ;

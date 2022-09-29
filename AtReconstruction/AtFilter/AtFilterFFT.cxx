@@ -14,11 +14,38 @@
 #include <iostream>
 #include <utility>
 
+void AtFilterFFT::SetLowPass(int order, int cutoff)
+{
+   fFreqRanges.clear();
+   for (int i = 0; i < 512 / 2 + 1; ++i)
+      AddFreqRange({i, getFilterKernel(i, order, cutoff), i, getFilterKernel(i, order, cutoff)});
+}
+
+/**
+ * @param[in] freq The frequency compnent
+ * @return The kernel of the low pass filter as set at that frequency
+ * @todo: Precompute once and save with the transformed response function
+ */
+double AtFilterFFT::getFilterKernel(int freq, int fFilterOrder, int fCutoffFreq)
+{
+   double val = -1;
+   if (fFilterOrder == 0)
+      val = 1;
+
+   val = 1.0 / (1.0 + std::pow(freq * freq / fCutoffFreq, fFilterOrder));
+   return val;
+}
+
 bool AtFilterFFT::AddFreqRange(AtFreqRange range)
 {
    auto canAdd = isValidFreqRange(range);
    if (canAdd) {
       fFreqRanges.push_back(std::move(range));
+
+      if (range.fEndFreq == range.fBeginFreq) {
+         fFactors[range.fBeginFreq] = range.fBeginFact;
+         return true;
+      }
       auto dFact = (range.fEndFact - range.fBeginFact) / (range.fEndFreq - range.fBeginFreq);
       for (int i = range.fBeginFreq; i <= range.fEndFreq; ++i)
          fFactors[i] = range.fBeginFact + dFact * (i - range.fBeginFreq);
@@ -130,7 +157,8 @@ bool AtFilterFFT::doesFreqRangeOverlap(const AtFreqRange &newRange)
 std::unique_ptr<AtPadFFT> AtFilterFFT::applyFrequencyCutsAndSetInverseFFT()
 {
    auto ret = std::make_unique<AtPadFFT>();
-   for (int i = 0; i < fFFT->GetN()[0]; ++i) {
+   for (int i = 0; i < 512 / 2 + 1; ++i) {
+
       Double_t re, im;
       fFFT->GetPointComplex(i, re, im);
       if (fFactors.find(i) != fFactors.end()) {

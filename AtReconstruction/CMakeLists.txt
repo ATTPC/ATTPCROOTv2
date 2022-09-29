@@ -52,6 +52,9 @@ set(SRCS
   AtFilter/AtTrapezoidFilter.cxx
   AtFilter/AtFilterCalibrate.cxx
   AtFilter/AtFilterFFT.cxx
+  AtFilter/AtFilterZero.cxx
+  AtFilter/AtRemovePulser.cxx
+  AtFilter/AtFilterFPN.cxx
   
   AtPSAtask.cxx
   AtFilterTask.cxx
