@@ -3,6 +3,7 @@
 #include "AtMap.h"
 #include "AtPad.h"
 #include "AtPadReference.h"
+#include "AtPadValue.h"
 #include "AtPedestal.h"
 #include "AtRawEvent.h"
 #include "AtTpcMap.h"
@@ -246,8 +247,21 @@ void AtGRAWUnpacker::ProcessFile(Int_t coboIdx)
                }
 
                if (fIsSaveLastCell) {
-                  
-
+                  auto lastCellPad =
+                     dynamic_cast<AtPadValue *>(pad->AddAugment("lastCell", std::make_unique<AtPadValue>()));
+                  lastCellPad->SetValue(frame->GetLastCell(iAget));
+               }
+            }
+            if (fSaveFPN) {
+               Int_t fpnMap[4] = {11, 22, 45, 56};
+               for (Int_t fpn = 0; fpn < 4; fpn++) {
+                  Int_t iCh = fpnMap[fpn];
+                  AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
+                  AtPad *pad = nullptr;
+                  pad = fRawEvent->AddFPN(PadRef);
+                  Int_t *rawadc = frame->GetSample(iAget, iCh);
+                  for (Int_t iTb = 0; iTb < 512; iTb++)
+                     pad->SetRawADC(iTb, rawadc[iTb]);
                }
             }
          }
@@ -296,15 +310,45 @@ void AtGRAWUnpacker::ProcessBasicFile(Int_t coboIdx)
                // std::cout<<iTb<<" "<<rawadc[iTb]<<"\n";
             }
 
-            Int_t fpnCh = GetFPNChannel(iCh);
-            Double_t adc[512] = {0};
-            fPedestal[coboIdx]->SubtractPedestal(512, basicFrame->GetSample(iAget, fpnCh), rawadc, adc,
-                                                 fFPNSigmaThreshold);
+            if (fIsSubtractFPN) {
+               Int_t fpnCh = GetFPNChannel(iCh);
+               Double_t adc[512] = {0};
+               fPedestal[coboIdx]->SubtractPedestal(512, basicFrame->GetSample(iAget, fpnCh), rawadc, adc,
+                                                    fFPNSigmaThreshold);
 
+               for (Int_t iTb = 0; iTb < 512; iTb++)
+                  pad->SetADC(iTb, adc[iTb]);
+
+               pad->SetPedestalSubtracted(kTRUE);
+            } else if (fIsBaseLineSubtraction) {
+               Double_t baseline = 0;
+               for (Int_t iTb = 5; iTb < 25; iTb++) {
+                  baseline += rawadc[iTb];
+               }
+               baseline /= 20;
+               for (Int_t iTb = 0; iTb < 512; iTb++) {
+                  pad->SetADC(iTb, rawadc[iTb] - baseline);
+               }
+               pad->SetPedestalSubtracted(kTRUE);
+            }
+
+            if (fIsSaveLastCell) {
+               auto lastCellPad =
+                  dynamic_cast<AtPadValue *>(pad->AddAugment("lastCell", std::make_unique<AtPadValue>()));
+               lastCellPad->SetValue(basicFrame->GetLastCell(iAget));
+            }
+         }
+      }
+      if (fSaveFPN) {
+         Int_t fpnMap[4] = {11, 22, 45, 56};
+         for (Int_t fpn = 0; fpn < 4; fpn++) {
+            Int_t iCh = fpnMap[fpn];
+            AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
+            AtPad *pad = nullptr;
+            pad = fRawEvent->AddFPN(PadRef);
+            Int_t *rawadc = basicFrame->GetSample(iAget, iCh);
             for (Int_t iTb = 0; iTb < 512; iTb++)
-               pad->SetADC(iTb, adc[iTb]);
-
-            pad->SetPedestalSubtracted(kTRUE);
+               pad->SetRawADC(iTb, rawadc[iTb]);
          }
       }
    }

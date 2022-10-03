@@ -64,7 +64,7 @@ public:
    virtual void InitEvent(AtRawEvent *event) override;
 
    // Called on each pad
-   virtual void Filter(AtPad *pad) override;
+   virtual void Filter(AtPad *pad, AtPadReference *padReference) override;
 
    virtual bool IsGoodEvent() override;
 };

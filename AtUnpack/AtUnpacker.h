@@ -24,6 +24,8 @@ protected:
    Long64_t fDataEventID = 0; // Event ID as tracked whatever produced the data being unpacked
    AtRawEvent *fRawEvent{};
 
+   Bool_t fSaveFPN{false};
+
 public:
    AtUnpacker(mapPtr map);
    ~AtUnpacker() = default;
@@ -31,6 +33,7 @@ public:
    virtual void SetInputFileName(std::string fileName) { fInputFileName = std::move(fileName); }
    void SetMap(mapPtr map) { fMap = map; }
    void SetInitialEventID(Long64_t evtID) { fEventID = evtID; }
+   virtual void SetSaveFPN(bool val = true) { fSaveFPN = val; }
    Long64_t GetNextEventID() { return fEventID; }
 
    virtual void Init() = 0;

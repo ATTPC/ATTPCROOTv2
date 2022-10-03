@@ -1,8 +1,9 @@
 #include "AtFilterZero.h"
 
 #include "AtPad.h"
+#include "AtPadReference.h"
 
-void AtFilterZero::Filter(AtPad *pad)
+void AtFilterZero::Filter(AtPad *pad, AtPadReference *padReference)
 {
    bool inZeroRange = false;
    int zeroStart = -1;

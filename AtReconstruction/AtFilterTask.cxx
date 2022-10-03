@@ -73,7 +73,8 @@ void AtFilterTask::Exec(Option_t *opt)
    if (fFilterFPN)
       for (auto &[ref, pad] : filteredEvent->fFpnMap) {
          LOG(debug) << "Filtering " << ref;
-         fFilter->Filter(&pad);
+         AtPadReference padRef = ref;
+         fFilter->Filter(&pad, &padRef);
       }
 
    if (fFilterPads)

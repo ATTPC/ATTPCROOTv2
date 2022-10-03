@@ -47,9 +47,10 @@ protected:
    Double_t fFPNSigmaThreshold = 5;
    Bool_t fIsData = false;
    Bool_t fIsNegativePolarity = true;
-   Bool_t fIsSeparatedData;
    Bool_t fIsSaveLastCell = false;
+   Bool_t fIsSeparatedData;
    Bool_t fIsSubtractFPN = true;
+   Bool_t fIsBaseLineSubtraction{};
 
    // String to identify which file in fInputFileName map to which fDecoder
    std::string fFileIDString;
@@ -70,6 +71,9 @@ public:
    void SetFPNSigmaThreshold(Double_t val) { fFPNSigmaThreshold = val; }
    void SetIsPositivePolarity(Bool_t val) { fIsNegativePolarity = !val; }
    void SetPseudoTopologyFrame(Int_t asadMask, Bool_t check);
+   void SetSaveLastCell(Bool_t val) { fIsSaveLastCell = val; }
+   void SetSubtractFPN(Bool_t val) { fIsSubtractFPN = val; }
+   void SetBaseLineSubtraction(Bool_t value) { fIsBaseLineSubtraction = value; }
 
    // AtUnpacker interface
    virtual void Init() override;

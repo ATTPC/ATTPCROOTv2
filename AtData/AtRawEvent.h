@@ -66,6 +66,7 @@ public:
       swap(first.fEventID, second.fEventID);
       swap(first.fPadList, second.fPadList);
       swap(first.fAuxPadMap, second.fAuxPadMap);
+      swap(first.fFpnMap, second.fFpnMap);
       swap(first.fTimestamp, second.fTimestamp);
       swap(first.fIsGood, second.fIsGood);
       swap(first.fIsInGate, second.fIsInGate);

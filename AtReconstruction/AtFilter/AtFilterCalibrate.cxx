@@ -1,6 +1,7 @@
 #include "AtFilterCalibrate.h"
 
 #include "AtPad.h"
+#include "AtPadReference.h"
 
 #include <FairLogger.h>
 
@@ -16,7 +17,7 @@ void AtFilterCalibrate::Init()
    openFileAndReadContents();
 }
 
-void AtFilterCalibrate::Filter(AtPad *pad)
+void AtFilterCalibrate::Filter(AtPad *pad, AtPadReference *padReference)
 {
    auto padNum = pad->GetPadNum();
    auto &adc = pad->GetADC();

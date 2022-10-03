@@ -72,7 +72,7 @@ public:
 
    void Init() override;
    void InitEvent(AtRawEvent *event = nullptr) override;
-   void Filter(AtPad *pad) override;
+   void Filter(AtPad *pad, AtPadReference *padReference) override;
    bool IsGoodEvent() override { return true; }
    void SetLowPass(int order, int cuttoff);
 

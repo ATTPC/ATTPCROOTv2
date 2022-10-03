@@ -1,10 +1,11 @@
 #include "AtTrapezoidFilter.h"
 
 #include "AtPad.h"
+#include "AtPadReference.h"
 
 #include <algorithm>
 
-void AtTrapezoidFilter::Filter(AtPad *pad)
+void AtTrapezoidFilter::Filter(AtPad *pad, AtPadReference *padReference)
 {
    setSignalStart(pad);
    zeroSignalBeforeStart(pad);

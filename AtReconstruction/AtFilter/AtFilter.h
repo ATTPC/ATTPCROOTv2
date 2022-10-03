@@ -5,6 +5,7 @@
 class TClonesArray;
 class AtRawEvent;
 class AtPad;
+class AtPadReference;
 
 class AtFilter {
 
@@ -23,7 +24,7 @@ public:
    virtual void InitEvent(AtRawEvent *inputEvent) = 0;
 
    // Called on each pad
-   virtual void Filter(AtPad *pad) = 0;
+   virtual void Filter(AtPad *pad, AtPadReference *padReference = nullptr) = 0;
 
    // Called at the end of an event. Returns if filtering was successful.
    virtual bool IsGoodEvent() = 0;

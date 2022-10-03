@@ -2,6 +2,7 @@
 #include "AtFilterDivide.h"
 
 #include "AtPad.h"
+#include "AtPadReference.h"
 
 class AtRawEvent;
 
@@ -14,7 +15,7 @@ void AtFilterDivide::Init() {}
 
 void AtFilterDivide::InitEvent(AtRawEvent *event) {}
 
-void AtFilterDivide::Filter(AtPad *pad)
+void AtFilterDivide::Filter(AtPad *pad, AtPadReference *padReference)
 {
    for (int i = 0; i < 512; ++i) {
       pad->SetRawADC(i, pad->GetRawADC(i) / fDivisor);

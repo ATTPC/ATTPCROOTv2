@@ -19,7 +19,7 @@ public:
 
    virtual void Init() override;
    virtual void InitEvent(AtRawEvent *event) override;
-   virtual void Filter(AtPad *pad) override;
+   virtual void Filter(AtPad *pad, AtPadReference *padReference) override;
    virtual bool IsGoodEvent() override;
 };
 
