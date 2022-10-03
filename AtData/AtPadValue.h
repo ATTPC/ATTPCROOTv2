@@ -20,7 +20,6 @@ class TMemberInspector;
  */
 class AtPadValue : public AtPadBase {
 public:
-
 protected:
    Double_t fValue;
 
