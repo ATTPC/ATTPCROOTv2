@@ -2,6 +2,7 @@
 
 #include "AtAuxPad.h"
 #include "AtFilter.h"
+#include "AtPadReference.h" // for operator<<
 #include "AtRawEvent.h"
 
 #include <FairLogger.h>
@@ -14,6 +15,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <unordered_map> // for _Node_iterator, operator!=, unordered_map
 #include <utility>
 #include <vector>
 

@@ -1,5 +1,5 @@
 #include "AtTrackTransformer.h"
-
+// IWYU pragma: no_include <ext/alloc_traits.h>
 #include "AtHit.h"        // for AtHit, AtHit::XYZPoint
 #include "AtHitCluster.h" // for AtHitCluster
 #include "AtTrack.h"      // for XYZPoint, AtTrack

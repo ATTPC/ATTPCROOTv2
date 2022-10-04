@@ -49,9 +49,9 @@ AtTPC2Body::AtTPC2Body(const char *name, std::vector<Int_t> *z, std::vector<Int_
    fIon.reserve(fMult);
 
    char buffer[30];
-   auto *kProton = new TParticle();
+   auto *kProton = new TParticle(); // NOLINT but probably a problem
    kProton->SetPdgCode(2212);
-   auto *kNeutron = new TParticle();
+   auto *kNeutron = new TParticle(); // NOLINT but probably a problem
    kNeutron->SetPdgCode(2112);
 
    for (Int_t i = 0; i < fMult; i++) {
@@ -68,21 +68,21 @@ AtTPC2Body::AtTPC2Body(const char *name, std::vector<Int_t> *z, std::vector<Int_
 
       if (a->at(i) != 1) {
 
-         IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i));
-         ParticleBuff = new FairParticle("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);
+         IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i)); // NOLINT but probably a problem
+         ParticleBuff = new FairParticle("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);          // NOLINT but probably a problem
          fPType.emplace_back("Ion");
          std::cout << " Adding : " << buffer << std::endl;
 
       } else if (a->at(i) == 1 && z->at(i) == 1) {
 
-         IonBuff = new FairIon("dummyIon", 50, 50, 0, 0.0, 100); // We fill the std::vector with a dummy ion
-         ParticleBuff = new FairParticle(2212, kProton);
+         IonBuff = new FairIon("dummyIon", 50, 50, 0, 0.0, 100); // NOLINT but probably a problem
+         ParticleBuff = new FairParticle(2212, kProton);         // NOLINT but probably a problem
          fPType.emplace_back("Proton");
 
       } else if (a->at(i) == 1 && z->at(i) == 0) {
 
-         IonBuff = new FairIon("dummyIon", 50, 50, 0, 0.0, 100); // We fill the std::vector with a dummy ion
-         ParticleBuff = new FairParticle(2112, kNeutron);
+         IonBuff = new FairIon("dummyIon", 50, 50, 0, 0.0, 100); // NOLINT but probably a problem
+         ParticleBuff = new FairParticle(2112, kNeutron);        // NOLINT but probably a problem
          fPType.emplace_back("Neutron");
       }
 

@@ -1,5 +1,7 @@
 #include "AtTrigger.h"
 
+// IWYU pragma: no_include <ext/alloc_traits.h>
+
 #include "AtEvent.h"
 #include "AtPad.h"
 #include "AtRawEvent.h"

@@ -74,7 +74,7 @@ AtTPCXSReader::AtTPCXSReader(const char *name, std::vector<Int_t> *z, std::vecto
       // std::cout << std::endl;
    }
 
-   fh_pdf = new TH2F("pdf", "pdf", 31, 0, 31, 18, 0, 180);
+   fh_pdf = new TH2F("pdf", "pdf", 31, 0, 31, 18, 0, 180); // NOLINT (ROOT will cleanup)
    for (Int_t energies = 0; energies < 31; energies++) {
       for (Int_t xsvalues = 0; xsvalues < 18; xsvalues++) {
          fh_pdf->SetBinContent(energies + 1, xsvalues + 1, xs[energies][xsvalues]);
@@ -82,10 +82,10 @@ AtTPCXSReader::AtTPCXSReader(const char *name, std::vector<Int_t> *z, std::vecto
    }
    // fh_pdf->Write();
 
-   auto *kProton = new TParticle();
+   auto *kProton = new TParticle(); // NOLINT Probably actually a problem though
    kProton->SetPdgCode(2212);
 
-   auto *kNeutron = new TParticle();
+   auto *kNeutron = new TParticle(); // NOLINT Probably actually a problem though
    kNeutron->SetPdgCode(2112);
 
    char buffer[30];
@@ -100,17 +100,19 @@ AtTPCXSReader::AtTPCXSReader(const char *name, std::vector<Int_t> *z, std::vecto
       sprintf(buffer, "Product_Ion%d", i);
 
       if (a->at(i) != 1) {
-         IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i));
-         ParticleBuff = new FairParticle("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);
+         IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, // NOLINT Probably actually a problem though
+                               mass->at(i));
+         ParticleBuff = // NOLINT Probably actually a problem though
+            new FairParticle("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);
          fPType.emplace_back("Ion");
          std::cout << " Adding : " << buffer << std::endl;
       } else if (a->at(i) == 1 && z->at(i) == 1) {
-         IonBuff = new FairIon("dummyIon", 50, 50, 0, 0.0, 100); // We fill the std::vector with a dummy ion
-         ParticleBuff = new FairParticle(2212, kProton);
+         IonBuff = new FairIon("dummyIon", 50, 50, 0, 0.0, 100); // NOLINT Probably actually a problem though
+         ParticleBuff = new FairParticle(2212, kProton);         // NOLINT Probably actually a problem though
          fPType.emplace_back("Proton");
       } else if (a->at(i) == 1 && z->at(i) == 0) {
-         IonBuff = new FairIon("dummyIon", 50, 50, 0, 0.0, 100); // We fill the std::vector with a dummy ion
-         ParticleBuff = new FairParticle(2112, kNeutron);
+         IonBuff = new FairIon("dummyIon", 50, 50, 0, 0.0, 100); // NOLINT Probably actually a problem though
+         ParticleBuff = new FairParticle(2112, kNeutron);        // NOLINT Probably actually a problem though
          fPType.emplace_back("Neutron");
       }
 

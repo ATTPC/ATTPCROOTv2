@@ -1,5 +1,5 @@
 #include "AtPatternLine.h"
-
+// IWYU pragma: no_include <ext/alloc_traits.h>
 #include <FairLogger.h>
 
 #include <Math/Vector3D.h> // for DisplacementVector3D, operator*

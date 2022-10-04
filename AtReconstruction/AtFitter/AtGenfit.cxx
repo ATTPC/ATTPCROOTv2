@@ -62,12 +62,12 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,
    // fKalmanFitter->setDebugLvl();
    fMeasurementFactory->addProducer(fTPCDetID, fMeasurementProducer);
 
-   genfit::FieldManager::getInstance()->init(new genfit::ConstField(0., 0., fMagneticField)); // TODO kGauss
+   genfit::FieldManager::getInstance()->init(new genfit::ConstField(0., 0., fMagneticField)); // NOLINT TODO kGauss
    genfit::MaterialEffects *materialEffects = genfit::MaterialEffects::getInstance();
    materialEffects->setEnergyLossBrems(false);
    materialEffects->setNoiseBrems(false);
    materialEffects->useEnergyLossParam();
-   materialEffects->init(new genfit::TGeoMaterialInterface());
+   materialEffects->init(new genfit::TGeoMaterialInterface()); // NOLINT
    // Parameteres set after initialization
    materialEffects->setGasMediumDensity(gasMediumDensity);
    materialEffects->setEnergyLossFile(fEnergyLossFile, fPDGCode);
@@ -371,9 +371,9 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    if (brho > fMaxBrho && brho < fMinBrho)
       return nullptr;
 
-   auto *gfTrack =
-      new ((*fGenfitTrackArray)[fGenfitTrackArray->GetEntriesFast()]) genfit::Track(trackCand, *fMeasurementFactory);
-   gfTrack->addTrackRep(new genfit::RKTrackRep(fPDGCode));
+   auto *gfTrack = new ((*fGenfitTrackArray)[fGenfitTrackArray->GetEntriesFast()]) // NOLINT
+      genfit::Track(trackCand, *fMeasurementFactory);
+   gfTrack->addTrackRep(new genfit::RKTrackRep(fPDGCode)); // NOLINT
 
    auto *trackRep = dynamic_cast<genfit::RKTrackRep *>(gfTrack->getTrackRep(0));
    // trackRep->setPropDir(-1);

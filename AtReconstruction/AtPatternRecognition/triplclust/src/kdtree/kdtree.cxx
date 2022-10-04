@@ -8,7 +8,7 @@
 //
 
 #include "kdtree.hpp"
-
+// IWYU pragma: no_include <ext/alloc_traits.h>
 #include <math.h>
 
 #include <algorithm>

@@ -28,6 +28,7 @@
 #include <iostream>
 #include <iterator>
 #include <memory>
+#include <utility>
 
 constexpr float amu = 931.494;
 
@@ -57,10 +58,6 @@ AtTPCIonDecay::AtTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
      fPType(0), fSepEne(0), fMasses(0), fQ(0), fPxBeam(0.), fPyBeam(0.), fPzBeam(0.)
 {
 
-   auto *kProton = new TParticle(); // TODO: Memory leak, only cleaned if passed to FairParticle
-   kProton->SetPdgCode(2212);
-   auto *kNeutron = new TParticle(); // TODO: Memory leak, only cleaned if passed to FairParticle
-   kNeutron->SetPdgCode(2112);
    char buffer[40];
 
    fgNIon++;
@@ -90,30 +87,34 @@ AtTPCIonDecay::AtTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
    for (Int_t k = 0; k < fNbCases; k++) {
       for (Int_t i = 0; i < fMult.at(k); i++) {
 
-         FairIon *IonBuff = nullptr;
-         FairParticle *ParticleBuff = nullptr;
+         std::unique_ptr<FairIon> IonBuff = nullptr;
+         std::unique_ptr<FairParticle> ParticleBuff = nullptr;
          sprintf(buffer, "Product_Ion_dec%d_%d", k, i);
          if (a->at(k).at(i) != 1) {
-            IonBuff = new FairIon(buffer, z->at(k).at(i), a->at(k).at(i), q->at(k).at(i), 0.0,
-                                  mass->at(k).at(i) * amu / 1000.0);
-            ParticleBuff = new FairParticle("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);
+            IonBuff = std::make_unique<FairIon>(buffer, z->at(k).at(i), a->at(k).at(i), q->at(k).at(i), 0.0,
+                                                mass->at(k).at(i) * amu / 1000.0);
+            ParticleBuff = std::make_unique<FairParticle>("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);
             fPType.at(k).push_back("Ion");
-            run->AddNewIon(IonBuff);
+            run->AddNewIon(IonBuff.get());
 
          } else if (a->at(k).at(i) == 1 && z->at(k).at(i) == 1) {
-            IonBuff = new FairIon(buffer, z->at(k).at(i), a->at(k).at(i), q->at(k).at(i), 0.0,
-                                  mass->at(k).at(i) * amu / 1000.0);
-            ParticleBuff = new FairParticle(2212, kProton);
+            IonBuff = std::make_unique<FairIon>(buffer, z->at(k).at(i), a->at(k).at(i), q->at(k).at(i), 0.0,
+                                                mass->at(k).at(i) * amu / 1000.0);
+            auto *kProton = new TParticle(); // NOLINT
+            kProton->SetPdgCode(2212);
+            ParticleBuff = std::make_unique<FairParticle>(2212, kProton);
             fPType.at(k).push_back("Proton");
 
          } else if (a->at(k).at(i) == 1 && z->at(k).at(i) == 0) {
-            IonBuff = new FairIon(buffer, z->at(k).at(i), a->at(k).at(i), q->at(k).at(i), 0.0,
-                                  mass->at(k).at(i) * amu / 1000.0);
-            ParticleBuff = new FairParticle(2112, kNeutron);
+            IonBuff = std::make_unique<FairIon>(buffer, z->at(k).at(i), a->at(k).at(i), q->at(k).at(i), 0.0,
+                                                mass->at(k).at(i) * amu / 1000.0);
+            auto *kNeutron = new TParticle(); // NOLINT
+            kNeutron->SetPdgCode(2112);
+            ParticleBuff = std::make_unique<FairParticle>(2112, kNeutron);
             fPType.at(k).push_back("Neutron");
          }
-         fIon.at(k).push_back(IonBuff);
-         fParticle.at(k).push_back(ParticleBuff);
+         fIon.at(k).push_back(std::move(IonBuff));
+         fParticle.at(k).push_back(std::move(ParticleBuff));
       } // for mult
    }    // for case
 }
@@ -256,8 +257,6 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
       if (s > pow(M_tot, 2)) {
          // if(ExEject*1000.0>fSepEne){
          fIsDecay = kTRUE;
-         Bool_t decay = event1.SetDecay(fEnergyImpulsionLab_Total, fMult.at(Case), mass_1);
-         Double_t weight1 = event1.Generate();
          std::vector<Double_t> KineticEnergy;
          std::vector<Double_t> ThetaLab;
 

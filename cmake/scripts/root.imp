@@ -42,6 +42,12 @@
     { include: ["<pcl/impl/point_types.hpp>", "private", "<pcl/point_types.h>", "public"]},
     { include: ["<pcl/common/impl/io.hpp>", "private", "<pcl/common/io.h>", "public"]},
 
+    # Mappings for HDF5
+    { include: ["<H5CompType.h>", "private", "<H5Cpp.h>", "public"]},
+    { include: ["<H5PredType.h>", "private", "<H5Cpp.h>", "public"]},
+    { include: ["<H5File.h>", "private", "<H5Cpp.h>", "public"]},
+    { include: ["<H5Group.h>", "private", "<H5Cpp.h>", "public"]},
+
     # Mappings for STL
     { include: ["<pstl/glue_algorithm_defs.h>", "private", "<algorithm>", "public"]},
     # Fix iwyu trying to include <string_view> for std::hash instead of <functional> where it is

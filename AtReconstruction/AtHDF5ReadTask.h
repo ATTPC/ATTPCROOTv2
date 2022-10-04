@@ -10,7 +10,10 @@
 #include <H5Cpp.h>
 
 #include <memory> // for unique_ptr
-// class H5File;
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtHDF5ReadTask : public FairTask {
 

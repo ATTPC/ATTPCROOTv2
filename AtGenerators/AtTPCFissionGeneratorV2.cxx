@@ -72,7 +72,7 @@ AtTPCFissionGeneratorV2::AtTPCFissionGeneratorV2(const char *name, TString simfi
       sprintf(buffer, "Ion_%d_%d", A, Z);
       TString ionName(buffer);
 
-      auto *ion = new FairIon(ionName, Z, A, qq);
+      auto *ion = new FairIon(ionName, Z, A, qq); // NOLINT (I think the run takes ownership of this memory?)
       fIonMap[ionName] = ion;
       nIons++;
 

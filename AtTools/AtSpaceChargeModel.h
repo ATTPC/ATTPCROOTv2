@@ -4,19 +4,14 @@
 
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h>
-#include <Rtypes.h>
-#include <TObject.h>
-
-class TBuffer;
-class TClass;
-class TMemberInspector;
 class AtDigiPar;
 
-class AtSpaceChargeModel : public TObject {
+class AtSpaceChargeModel {
 protected:
    using XYZPoint = ROOT::Math::XYZPoint;
 
 public:
+   virtual ~AtSpaceChargeModel() = default;
    /**
     * @brief Using model correct for space charge.
     *
@@ -42,8 +37,6 @@ public:
     * to the run.
     */
    virtual void LoadParameters(AtDigiPar *par) = 0;
-
-   ClassDef(AtSpaceChargeModel, 2);
 };
 
 #endif //#ifndef ATSPACECHARGEMODEL_H
