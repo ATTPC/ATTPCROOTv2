@@ -3,7 +3,14 @@
 #include "AtEvent.h"
 #include "AtHit.h"
 
+#include <FairLogger.h>      // for LOG
+#include <FairRootManager.h> // for FairRootManager
+
+#include <TObject.h> // for TObject
+
 #include <H5Cpp.h>
+
+#include <utility> // for move
 
 AtHDF5ReadTask::AtHDF5ReadTask(TString fileName, TString outputBranchName)
    : fInputFileName(std::move(fileName)), fOutputBranchName(std::move(outputBranchName)), fEventArray("AtEvent", 1)
@@ -40,7 +47,7 @@ void AtHDF5ReadTask::Exec(Option_t *opt)
 
    // Then we will look for the hits in the event group and add them to the event. This will involve
    // iterating through the dataset. The code in the loop will look something like.
-   AtHit_t hitFromFile;
+   AtHit_t hitFromFile{};
    event->AddHit(-1, AtHit::XYZPoint(hitFromFile.x, hitFromFile.y, hitFromFile.z), hitFromFile.A);
 
    // After this loop filling the event, I don't think there is anything else to do

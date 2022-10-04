@@ -1,5 +1,6 @@
 #ifndef AtEVENT_H
 #define AtEVENT_H
+// IWYU pragma: no_include <ext/alloc_traits.h>
 
 #include "AtAuxPad.h"
 #include "AtHit.h"

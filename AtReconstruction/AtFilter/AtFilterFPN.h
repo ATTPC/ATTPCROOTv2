@@ -1,6 +1,12 @@
 #ifndef ATFILTERFPN_H
 #define ATFILTERFPN_H
 #include "AtFilterSubtraction.h"
+#include "AtPad.h" // for AtPad
+
+#include <Rtypes.h> // for Int_t
+class AtRawEvent;
+struct AtPadReference;
+
 class AtFilterFPN : public AtFilterSubtraction {
 protected:
    bool fAverageAgets{false};

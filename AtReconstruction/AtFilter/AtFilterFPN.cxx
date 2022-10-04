@@ -1,9 +1,13 @@
 #include "AtFilterFPN.h"
 
-#include "AtMap.h"
+#include "AtPadReference.h" // for AtPadReference
 #include "AtRawEvent.h"
 
 #include <FairLogger.h>
+
+#include <memory>        // for allocator
+#include <unordered_map> // for _Node_const_iterator, operator!=, unorde...
+
 AtFilterFPN::AtFilterFPN(AtMapPtr map, bool avgAgets, Int_t num)
    : AtFilterSubtraction(map, num, avgAgets ? 4 : 16), fAverageAgets(avgAgets)
 {

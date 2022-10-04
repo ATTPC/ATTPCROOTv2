@@ -11,20 +11,20 @@
 #define AtRAWEVENT_H
 
 #include "AtAuxPad.h"
-#include "AtPadReference.h"
+#include "AtPadReference.h" // IWYU pragma: keep
 
 #include <Rtypes.h>
 #include <TNamed.h>
 
-#include <algorithm>
 #include <cstddef>
+#include <functional> // for hash
 #include <map>
 #include <memory>
 #include <string>
 #include <type_traits>
+#include <unordered_map> // for unordered_map
 #include <utility>
 #include <vector>
-
 class AtPad;
 class TBuffer;
 class TClass;

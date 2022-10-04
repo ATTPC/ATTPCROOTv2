@@ -30,19 +30,19 @@ AtHit::XYZVector AtHit::GetPositionSigma() const
 H5::CompType GetHDF5Type()
 {
    H5::CompType type(sizeof(AtHit_t));
-   // NOLINTBEGIN
-   type.insertMember("x", HOFFSET(AtHit_t, x), H5::PredType::NATIVE_DOUBLE);
-   type.insertMember("y", HOFFSET(AtHit_t, y), H5::PredType::NATIVE_DOUBLE);
-   type.insertMember("z", HOFFSET(AtHit_t, z), H5::PredType::NATIVE_DOUBLE);
-   type.insertMember("t", HOFFSET(AtHit_t, t), H5::PredType::NATIVE_INT);
-   type.insertMember("A", HOFFSET(AtHit_t, A), H5::PredType::NATIVE_DOUBLE);
-   type.insertMember("trackID", HOFFSET(AtHit_t, trackID), H5::PredType::NATIVE_INT);
-   type.insertMember("pointIDMC", HOFFSET(AtHit_t, pointIDMC), H5::PredType::NATIVE_INT);
-   type.insertMember("energyMC", HOFFSET(AtHit_t, energyMC), H5::PredType::NATIVE_DOUBLE);
-   type.insertMember("elossMC", HOFFSET(AtHit_t, elossMC), H5::PredType::NATIVE_DOUBLE);
-   type.insertMember("angleMC", HOFFSET(AtHit_t, angleMC), H5::PredType::NATIVE_DOUBLE);
-   type.insertMember("AMC", HOFFSET(AtHit_t, AMC), H5::PredType::NATIVE_INT);
-   type.insertMember("ZMC", HOFFSET(AtHit_t, ZMC), H5::PredType::NATIVE_INT);
-   // NOLINTEND
+
+   type.insertMember("x", HOFFSET(AtHit_t, x), H5::PredType::NATIVE_DOUBLE);               // NOLINT
+   type.insertMember("y", HOFFSET(AtHit_t, y), H5::PredType::NATIVE_DOUBLE);               // NOLINT
+   type.insertMember("z", HOFFSET(AtHit_t, z), H5::PredType::NATIVE_DOUBLE);               // NOLINT
+   type.insertMember("t", HOFFSET(AtHit_t, t), H5::PredType::NATIVE_INT);                  // NOLINT
+   type.insertMember("A", HOFFSET(AtHit_t, A), H5::PredType::NATIVE_DOUBLE);               // NOLINT
+   type.insertMember("trackID", HOFFSET(AtHit_t, trackID), H5::PredType::NATIVE_INT);      // NOLINT
+   type.insertMember("pointIDMC", HOFFSET(AtHit_t, pointIDMC), H5::PredType::NATIVE_INT);  // NOLINT
+   type.insertMember("energyMC", HOFFSET(AtHit_t, energyMC), H5::PredType::NATIVE_DOUBLE); // NOLINT
+   type.insertMember("elossMC", HOFFSET(AtHit_t, elossMC), H5::PredType::NATIVE_DOUBLE);   // NOLINT
+   type.insertMember("angleMC", HOFFSET(AtHit_t, angleMC), H5::PredType::NATIVE_DOUBLE);   // NOLINT
+   type.insertMember("AMC", HOFFSET(AtHit_t, AMC), H5::PredType::NATIVE_INT);              // NOLINT
+   type.insertMember("ZMC", HOFFSET(AtHit_t, ZMC), H5::PredType::NATIVE_INT);              // NOLINT
+
    return type;
 }

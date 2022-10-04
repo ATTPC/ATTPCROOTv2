@@ -1,12 +1,16 @@
 #include "AtHDF5WriteTask.h"
 
 #include "AtEvent.h"
-#include "AtHit.h"
 
-#include <Math/Point3D.h>
+#include <FairLogger.h>      // for LOG
+#include <FairRootManager.h> // for FairRootManager
+
 #include <TClonesArray.h>
+#include <TObject.h> // for TObject
 
 #include <H5Cpp.h>
+
+#include <utility> // for move
 
 AtHDF5WriteTask::AtHDF5WriteTask(TString fileName, TString branchName)
    : fOutputFileName(std::move(fileName)), fInputBranchName(std::move(branchName))

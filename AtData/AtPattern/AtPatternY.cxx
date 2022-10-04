@@ -1,5 +1,5 @@
 #include "AtPatternY.h"
-
+// IWYU pragma: no_include <ext/alloc_traits.h>
 #include "AtPatternLine.h" // for AtPatternLine::XYZPoint, AtPatter...
 
 #include <FairLogger.h>

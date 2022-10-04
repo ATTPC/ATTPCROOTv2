@@ -15,6 +15,7 @@
 #include <cmath>
 #include <cstdio>
 #include <iostream>
+#include <utility> // for move
 
 constexpr float amu = 931.494;
 
@@ -39,8 +40,6 @@ AtTPC_Background::AtTPC_Background(const char *name, std::vector<Int_t> *z, std:
    fIon.reserve(fMult);
 
    char buffer[30];
-   auto *kProton = new TParticle();
-   kProton->SetPdgCode(2212);
 
    for (Int_t i = 0; i < fMult; i++) {
 
@@ -51,26 +50,28 @@ AtTPC_Background::AtTPC_Background(const char *name, std::vector<Int_t> *z, std:
       fExEnergy.push_back(Ex->at(i));
       // fWm.push_back( mass->at(i));
 
-      FairIon *IonBuff;
-      FairParticle *ParticleBuff;
+      std::unique_ptr<FairIon> IonBuff = nullptr;
+      std::unique_ptr<FairParticle> ParticleBuff = nullptr;
       sprintf(buffer, "Product_Ion%d", i);
       if (a->at(i) != 1) {
-         IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i) * amu / 1000.0);
-         ParticleBuff = new FairParticle("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);
+         IonBuff = std::make_unique<FairIon>(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i) * amu / 1000.0);
+         ParticleBuff = std::make_unique<FairParticle>("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);
          fPType.emplace_back("Ion");
          std::cout << " Adding : " << buffer << std::endl;
 
       } else if (a->at(i) == 1 && z->at(i) == 1) {
 
-         IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i) * amu / 1000.0);
-         ParticleBuff = new FairParticle(2212, kProton);
+         IonBuff = std::make_unique<FairIon>(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i) * amu / 1000.0);
+         auto *kProton = new TParticle(); // NOLINT
+         kProton->SetPdgCode(2212);
+         ParticleBuff = std::make_unique<FairParticle>(2212, kProton);
          fPType.emplace_back("Proton");
       }
 
       std::cout << " Z " << z->at(i) << " A " << a->at(i) << std::endl;
       // std::cout<<buffer<<std::endl;
-      fIon.push_back(IonBuff);
-      fParticle.push_back(ParticleBuff);
+      fIon.push_back(std::move(IonBuff));
+      fParticle.push_back(std::move(ParticleBuff));
    }
 
    FairRunSim *run = FairRunSim::Instance();
@@ -83,13 +84,13 @@ AtTPC_Background::AtTPC_Background(const char *name, std::vector<Int_t> *z, std:
 
       if (fPType.at(i) == "Ion") {
          std::cout << " In position " << i << " adding an : " << fPType.at(i) << std::endl;
-         run->AddNewIon(fIon.at(i)); // NOLINT
+         run->AddNewIon(fIon.at(i).get()); // NOLINT
          std::cout << " fIon name :" << fIon.at(i)->GetName() << std::endl;
          std::cout << " fParticle name :" << fParticle.at(i)->GetName() << std::endl;
 
       } else if (fPType.at(i) == "Proton") {
          std::cout << " In position " << i << " adding an : " << fPType.at(i) << std::endl;
-         run->AddNewParticle(fParticle.at(i)); // NOLINT
+         run->AddNewParticle(fParticle.at(i).get()); // NOLINT
          std::cout << " fIon name :" << fIon.at(i)->GetName() << std::endl;
          std::cout << " fParticle name :" << fParticle.at(i)->GetName() << std::endl;
          std::cout << fParticle.at(i)->GetName() << std::endl;

@@ -3,8 +3,9 @@
 
 #include "AtFilter.h"
 
-#include <cmath>
+#include <cstdlib> // IWYU pragma: keep
 class AtRawEvent;
+class AtPad;
 
 /**
  * Class to look through traces and attempt to fill in any missing data by taking the average of the two

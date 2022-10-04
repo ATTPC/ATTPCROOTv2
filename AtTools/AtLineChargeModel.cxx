@@ -13,8 +13,7 @@
 using XYZPoint = ROOT::Math::XYZPoint;
 using RZPPoint = ROOT::Math::RhoZPhiPoint;
 
-AtLineChargeModel::AtLineChargeModel(Double_t inputLambda, Double_t inputField)
-   : fLambda(inputLambda), fField(inputField)
+AtLineChargeModel::AtLineChargeModel(double inputLambda, double inputField) : fLambda(inputLambda), fField(inputField)
 {
 }
 

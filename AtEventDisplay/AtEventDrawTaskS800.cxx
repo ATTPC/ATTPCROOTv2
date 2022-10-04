@@ -5,7 +5,7 @@
  */
 
 #include "AtEventDrawTaskS800.h"
-
+// IWYU pragma: no_include <ext/alloc_traits.h>
 #include "AtEvent.h"            // for AtEvent, hitVector
 #include "AtEventManagerS800.h" // for AtEventManagerS800
 #include "AtHit.h"              // for AtHit
