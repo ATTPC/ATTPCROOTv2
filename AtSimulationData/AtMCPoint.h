@@ -60,7 +60,8 @@ public:
    Int_t GetMassNum() const { return fAiso; }
    Int_t GetAtomicNum() const { return fZiso; }
 
-   void SetDetCopyID(Int_t id) { fDetCopyID = id; }; // added by Marc
+   void SetDetCopyID(Int_t id) { fDetCopyID = id; };         // added by Marc
+   void SetVolName(TString VolName) { fVolName = VolName; }; // added by Ari
 
    /** Output to screen **/
    virtual void Print(const Option_t *opt) const override;
