@@ -20,6 +20,25 @@ class TClass;
 class TMemberInspector;
 
 class AtTPCIonGenerator : public FairGenerator {
+private:
+   void SetEmittance();
+   void SetBeamOrigin();
+
+   static Int_t fgNIon;        //! Number of the instance of this class
+   Int_t fMult;                //< Multiplicity per event
+   Double_t fPx, fPy, fPz;     //< Momentum components [GeV] per nucleon
+   Double32_t fR, fz, fOffset; //< beam Spot radius [cm], z source, y source
+   Double_t fVx, fVy, fVz;     //< Vertex coordinates [cm]
+   Double_t fTheta{0};         //< Maximum angle [rad]
+   FairIon *fIon;              //< Pointer to the FairIon to be generated
+   Int_t fQ;                   //< Electric charge [e]
+   Int_t fNomEner{};
+   Double_t fMaxEnLoss{}; //< Max energy loss before reation happens
+   Double32_t fWhmFocus, fDiv, fZFocus,
+      fRHole; //< Beam whm at focus, beam divergence, z focus, radius of the pad plan hole
+
+   Int_t fBeamOpt;
+   Bool_t fDoReact{true};
 
 public:
    /** Default constructor **/
@@ -54,8 +73,6 @@ public:
                      Double_t Ex, Double_t m, Double_t ener, Double_t eLoss = -1);
 
    AtTPCIonGenerator(const AtTPCIonGenerator &);
-
-   AtTPCIonGenerator &operator=(const AtTPCIonGenerator &) { return *this; }
 
    /** Destructor **/
    virtual ~AtTPCIonGenerator() = default;
@@ -97,26 +114,6 @@ public:
    ** FairPrimaryGenerator.
    **/
    virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
-
-private:
-   void SetEmittance();
-   void SetBeamOrigin();
-
-   static Int_t fgNIon;        //! Number of the instance of this class
-   Int_t fMult;                // Multiplicity per event
-   Double_t fPx, fPy, fPz;     // Momentum components [GeV] per nucleon
-   Double32_t fR, fz, fOffset; // beam Spot radius [cm], z source, y source
-   Double_t fVx, fVy, fVz;     // Vertex coordinates [cm]
-   Double_t fTheta{0};         // Maximum angle [rad]
-   FairIon *fIon;              // Pointer to the FairIon to be generated
-   Int_t fQ;                   // Electric charge [e]
-   Int_t fNomEner{};
-   Double_t fMaxEnLoss{}; // Max energy loss before reation happens
-   Double32_t fWhmFocus, fDiv, fZFocus,
-      fRHole; // Beam whm at focus, beam divergence, z focus, radius of the pad plan hole
-
-   Int_t fBeamOpt;
-   Bool_t fDoReact{true};
 
    ClassDef(AtTPCIonGenerator, 1)
 };
