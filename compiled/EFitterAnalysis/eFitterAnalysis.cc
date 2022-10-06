@@ -13,13 +13,14 @@ int main(int argc, char *argv[])
   
    // Work directory
    TString dir = getenv("VMCWORKDIR");
-
+   std::string dirCstr = dir.Data();
+   
    // Geometry file
    TString geoManFile =
       dir + "/geometry/ATTPC_He1bar_v2_geomanager.root"; 
    // Ion list file
    std::string ionList =
-      "/mnt/analysis/e20020/ATTPCROOTv2_fairroot_18_6/resources/ionFitLists/e20020_ionList.xml"; 
+      dirCstr+"/resources/ionFitLists/e20020_ionList.xml"; 
 
    // Analysis flow parameters
    std::size_t firstEvt = 0;
@@ -86,7 +87,7 @@ int main(int argc, char *argv[])
         }
 	
         geoManFile = dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
-        ionList = "/mnt/analysis/e20020/ATTPCROOTv2_fairroot_18_6/resources/ionFitLists/e20009_ionList.xml";
+        ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
 
 	std::cout<<" Analysis of experiment e20009. Gas density : "<<gasMediumDensity<<" mg/cm3"<<"\n";
 	std::cout<<" File path : "<<filePath<<"\n";
@@ -108,7 +109,7 @@ int main(int argc, char *argv[])
 
 	
         geoManFile = dir + "/geometry/ATTPC_He1bar_v2_geomanager.root"; 
-	ionList = "/mnt/analysis/e20020/ATTPCROOTv2_fairroot_18_6/resources/ionFitLists/e20020_ionList.xml"; 
+	ionList = dirCstr + "/resources/ionFitLists/e20020_ionList.xml"; 
 
 	
 	std::cout<<" Analysis of experiment e20020. Gas density : "<<gasMediumDensity<<" mg/cm3"<<"\n";
