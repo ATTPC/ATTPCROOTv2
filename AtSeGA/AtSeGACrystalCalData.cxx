@@ -8,6 +8,10 @@
 
 #include "AtSeGACrystalCalData.h"
 
+#include <FairMultiLinkedData.h> // for FairMultiLinkedData
+
+#include <Rtypes.h> // for TGenericClassInfo
+
 #include <iostream>
 
 using std::cout;
@@ -19,11 +23,6 @@ AtSeGACrystalCalData::AtSeGACrystalCalData() : FairMultiLinkedData(), fEnergy(-1
 
 AtSeGACrystalCalData::AtSeGACrystalCalData(Int_t ident, Double_t energy, ULong64_t time)
    : FairMultiLinkedData(), fEnergy(energy), fTime(time), fDetCopyID(ident)
-{
-}
-
-AtSeGACrystalCalData::AtSeGACrystalCalData(const AtSeGACrystalCalData &right)
-   : FairMultiLinkedData(right), fEnergy(right.fEnergy), fTime(right.fTime), fDetCopyID(right.fDetCopyID)
 {
 }
 

@@ -13,7 +13,6 @@
 
 #include <FairLogger.h> // for Logger, LOG
 #include <FairRootManager.h>
-#include <FairRun.h>
 #include <FairVolume.h>
 
 #include <TClonesArray.h>
@@ -24,7 +23,7 @@
 #include <iostream>
 using std::cout;
 using std::endl;
-class FairRuntimeDb;
+
 AtSeGA::AtSeGA()
    : FairDetector("AtSeGA", kTRUE, kAtSeGA), fTrackID(-1), fVolumeID(-1), fDetCopyID(-1), fTime(-1.), fLength(-1.),
      fELoss(-1), fAtSeGAPointCollection(new TClonesArray("AtMCPoint")), fELossAcc(-1)
@@ -48,7 +47,6 @@ AtSeGA::~AtSeGA()
 void AtSeGA::Initialize()
 {
    FairDetector::Initialize();
-   FairRuntimeDb *rtdb = FairRun::Instance()->GetRuntimeDb();
    // AtSeGAGeoPar* par=(AtSeGAGeoPar*)(rtdb->getContainer("AtSeGAGeoPar"));
    LOG(INFO) << "AtSeGA: initialisation";
 }
