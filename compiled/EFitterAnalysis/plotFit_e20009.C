@@ -1,7 +1,3 @@
-
-
-
-
 Double_t omega(Double_t x, Double_t y, Double_t z)
 {
    return sqrt(x * x + y * y + z * z - 2 * x * y - 2 * y * z - 2 * x * z);
@@ -38,7 +34,7 @@ std::tuple<double,double> kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_
    return std::make_tuple(Ex,theta_cm);
 }
 
-void plotFit_e20009(std::string fileFolder = "data_355_367/")
+void plotFit_e20009(std::string fileFolder = "data_344_367/")
 {
 
    std::ofstream outputFileEvents("list_of_events.txt");
@@ -182,6 +178,7 @@ void plotFit_e20009(std::string fileFolder = "data_355_367/")
       HQCorrArray[iHist] = new TH1F(Form("HQCorrArray[%i]", iHist), Form("HQCorrArray[%i]", iHist), 600, -5, 55);
 
    TH2F *QvsEvent = new TH2F("QvsEvent", "QvsEvent", 1000, -10, 10, 1000, 0, 1000);
+   TH2F *QvsMult = new TH2F("QvsMult", "QvsMult", 1000, -10, 10, 10, 0, 10);
 
    TH2F *fOrbZvsfOrbLength = new TH2F("fOrbZvsfOrbLength", "fOrbZvsfOrbLength", 500, -250, 250, 500, 0, 500);
    TH2F *fOrbZvsEFit = new TH2F("fOrbZvsEFit", "fOrbZvsEFit", 1000, 0, 200, 1000, 0, 100);
@@ -656,7 +653,7 @@ void plotFit_e20009(std::string fileFolder = "data_355_367/")
                // continue;
 
                if ((*ziniFitVec)[index] < 0.0 || (*ziniFitVec)[index] > 80.0)
-	           continue;
+                  continue;
 
                // if((*AFitVec)[index]<50 || (*AFitVec)[index]>70)
                // continue;
@@ -666,6 +663,7 @@ void plotFit_e20009(std::string fileFolder = "data_355_367/")
 
                /*     if ((*fChi2Vec)[index] / (*fNdfVec)[index] < 0.000)
                       continue;
+
 
                          if ((*xiniFitVec)[index] < -1000.0)
                          continue;*/
@@ -819,27 +817,27 @@ void plotFit_e20009(std::string fileFolder = "data_355_367/")
 		 ++sigmaLab3[index];
 		 Int_t indexCM = theta_cm;
 	         ++sigmaCM3[indexCM];
+          }
 
-		}	   
-	       
-	       
-               // QvsEvent->Fill(ex_energy_exp, iEvt);
+          QvsMult->Fill(QcorrZ, evMult);
 
-               // First Orbit
-               if ((*phiOrbZVec)[index] > 0.0 && (*phiOrbZVec)[index] < 100.0) {
-                  Double_t OrbZ = (*firstOrbZVec)[index];
-                  if ((*lengthOrbZVec)[index] > 0) {
-                     fOrbZvsfOrbLength->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index], (*lengthOrbZVec)[index]);
-                     PhiOrbZH->Fill((*phiOrbZVec)[index]);
-                     fOrbLengthvsEFit->Fill((*lengthOrbZVec)[index], (*EFitVec)[index]);
-                     fOrbZvsEFit->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index], (*EFitVec)[index]);
-                     fOrbZvsEx->Fill((*firstOrbZVec)[index], QcorrZ);
-                     fOrbZvsZ->Fill((*firstOrbZVec)[index], (*ziniFitXtrVec)[index]);
-                     HQCorrOrbZ->Fill(QcorrZ);
-                     fOrbZvsAFit->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index], (*AFitVec)[index]);
-                     fOrbZvsMomLoss->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index], (*eLossOrbZVec)[index]);
-                     fOrbLengthvsMomLoss->Fill((*lengthOrbZVec)[index], (*eLossOrbZVec)[index]);
-                  }
+          // QvsEvent->Fill(ex_energy_exp, iEvt);
+
+          // First Orbit
+          if ((*phiOrbZVec)[index] > 0.0 && (*phiOrbZVec)[index] < 100.0) {
+             Double_t OrbZ = (*firstOrbZVec)[index];
+             if ((*lengthOrbZVec)[index] > 0) {
+                fOrbZvsfOrbLength->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index], (*lengthOrbZVec)[index]);
+                PhiOrbZH->Fill((*phiOrbZVec)[index]);
+                fOrbLengthvsEFit->Fill((*lengthOrbZVec)[index], (*EFitVec)[index]);
+                fOrbZvsEFit->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index], (*EFitVec)[index]);
+                fOrbZvsEx->Fill((*firstOrbZVec)[index], QcorrZ);
+                fOrbZvsZ->Fill((*firstOrbZVec)[index], (*ziniFitXtrVec)[index]);
+                HQCorrOrbZ->Fill(QcorrZ);
+                fOrbZvsAFit->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index], (*AFitVec)[index]);
+                fOrbZvsMomLoss->Fill((*firstOrbZVec)[index] - (*ziniFitXtrVec)[index], (*eLossOrbZVec)[index]);
+                fOrbLengthvsMomLoss->Fill((*lengthOrbZVec)[index], (*eLossOrbZVec)[index]);
+             }
                }
 
                // Selection of first orbit
@@ -870,32 +868,33 @@ void plotFit_e20009(std::string fileFolder = "data_355_367/")
    //Diff xs graph
    Double_t scale0 = 0.1;
    Double_t scale1 = 0.1;
-   Double_t scale3 = 0.2;
-   
-   for(auto ig = 0;ig<360;++ig)
-     {
+   Double_t scale2 = 0.2;
+   Double_t scale3 = 0.1;
 
-       gsigmaLab0->SetPoint(ig,ig,sigmaLab0[ig]);
-       gsigmaLab0->SetPointError(ig,0,TMath::Sqrt(sigmaLab0[ig]));
-       gsigmaCM0->SetPoint(ig,ig,sigmaCM0[ig]*scale0);
-       gsigmaCM0->SetPointError(ig,0,TMath::Sqrt(sigmaCM0[ig])*scale0);
+   for (auto ig = 1; ig < 360; ++ig)
 
-       gsigmaLab1->SetPoint(ig,ig,sigmaLab1[ig]);
-       gsigmaLab1->SetPointError(ig,0,TMath::Sqrt(sigmaLab1[ig]));
-       gsigmaCM1->SetPoint(ig,ig,sigmaCM1[ig]*scale1);
-       gsigmaCM1->SetPointError(ig,0,TMath::Sqrt(sigmaCM1[ig])*scale1);
+   {
 
-       gsigmaLab2->SetPoint(ig,ig,sigmaLab2[ig]);
-       gsigmaLab2->SetPointError(ig,0,TMath::Sqrt(sigmaLab2[ig]));
-       gsigmaCM2->SetPoint(ig,ig,sigmaCM2[ig]);
-       gsigmaCM2->SetPointError(ig,0,TMath::Sqrt(sigmaCM2[ig]));
+      gsigmaLab0->SetPoint(ig, ig, sigmaLab0[ig]);
+      gsigmaLab0->SetPointError(ig, 0, TMath::Sqrt(sigmaLab0[ig]));
+      gsigmaCM0->SetPoint(ig, ig, sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig));
+      gsigmaCM0->SetPointError(ig, 0, TMath::Sqrt(sigmaCM0[ig]) * scale0 / TMath::Sin(TMath::DegToRad() * ig));
 
-       gsigmaLab3->SetPoint(ig,ig,sigmaLab3[ig]);
-       gsigmaLab3->SetPointError(ig,0,TMath::Sqrt(sigmaLab3[ig]));
-       gsigmaCM3->SetPoint(ig,ig,sigmaCM3[ig]*scale3);
-       gsigmaCM3->SetPointError(ig,0,TMath::Sqrt(sigmaCM3[ig])*scale3);
-       
-     }  
+      gsigmaLab1->SetPoint(ig, ig, sigmaLab1[ig]);
+      gsigmaLab1->SetPointError(ig, 0, TMath::Sqrt(sigmaLab1[ig]));
+      gsigmaCM1->SetPoint(ig, ig, sigmaCM1[ig] * scale1 / TMath::Sin(TMath::DegToRad() * ig));
+      gsigmaCM1->SetPointError(ig, 0, TMath::Sqrt(sigmaCM1[ig]) * scale1 / TMath::Sin(TMath::DegToRad() * ig));
+
+      gsigmaLab2->SetPoint(ig, ig, sigmaLab2[ig]);
+      gsigmaLab2->SetPointError(ig, 0, TMath::Sqrt(sigmaLab2[ig]));
+      gsigmaCM2->SetPoint(ig, ig, sigmaCM2[ig] * scale2 / TMath::Sin(TMath::DegToRad() * ig));
+      gsigmaCM2->SetPointError(ig, 0, TMath::Sqrt(sigmaCM2[ig]) * scale2 / TMath::Sin(TMath::DegToRad() * ig));
+
+      gsigmaLab3->SetPoint(ig, ig, sigmaLab3[ig]);
+      gsigmaLab3->SetPointError(ig, 0, TMath::Sqrt(sigmaLab3[ig]));
+      gsigmaCM3->SetPoint(ig, ig, sigmaCM3[ig] * scale3 / TMath::Sin(TMath::DegToRad() * ig));
+      gsigmaCM3->SetPointError(ig, 0, TMath::Sqrt(sigmaCM3[ig]) * scale3 / TMath::Sin(TMath::DegToRad() * ig));
+   }
 
    // Merging
    if (kIsMerging)
@@ -1168,7 +1167,7 @@ void plotFit_e20009(std::string fileFolder = "data_355_367/")
 
    TCanvas *c8 = new TCanvas();
    QvsEb->Draw("zcol");
-
+   QvsMult->Draw("zcol");
 
    auto leg = new TLegend(0.1,0.1,0.2,0.2);
    leg->AddEntry(gsigmaCM0, "O_1+","lp");
@@ -1184,13 +1183,22 @@ void plotFit_e20009(std::string fileFolder = "data_355_367/")
 
    TCanvas *cgs = new TCanvas();
    gsigmaCM0->Draw("ALP");
-   gDWBA0->Draw("L");    
+   gDWBA0->Draw("L");
 
-   TCanvas *cg2 = new TCanvas();
+   TCanvas *ce1 = new TCanvas();
+   gsigmaCM1->Draw("ALP");
+   gDWBA1->Draw("L");
+   gDWBA2->Draw("L");
+
+   TCanvas *ce2 = new TCanvas();
+   gsigmaCM2->Draw("ALP");
+   gDWBA1->Draw("L");
+   gDWBA2->Draw("L");
+
+   TCanvas *ce3 = new TCanvas();
    gsigmaCM3->Draw("ALP");
    gDWBA1->Draw("L");
    gDWBA2->Draw("L");
-   
 
    /*TCanvas *c2 = new TCanvas();
    c2->Divide(2, 3);

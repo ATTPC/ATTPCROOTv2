@@ -98,14 +98,14 @@ void unpack_e20009_test(TString fileName = "run_0350")
    psaTask->SetInputBranch("AtRawEventFiltered");
    psaTask->SetOutputBranch("AtEventH");
 
-   /*auto SCModel = std::make_unique<AtEDistortionModel>();
+   auto SCModel = std::make_unique<AtEDistortionModel>();
    SCModel->SetCorrectionMaps(zlutFile.Data(), radlutFile.Data(), tralutFile.Data());
    auto SCTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
-   SCTask->SetInputBranchName("AtEventH");*/
-   
+   SCTask->SetInputBranchName("AtEventH");
+
    AtPRAtask *praTask = new AtPRAtask();
-   //praTask->SetInputBranch("AtEventCorrected");
-   praTask->SetInputBranch("AtEventH");
+   praTask->SetInputBranch("AtEventCorrected");
+   // praTask->SetInputBranch("AtEventH");
    praTask->SetOutputBranch("AtPatternEvent");
    praTask->SetPersistence(kTRUE);
    praTask->SetMaxNumHits(3000);
@@ -114,7 +114,7 @@ void unpack_e20009_test(TString fileName = "run_0350")
    run->AddTask(unpackTask);
    run->AddTask(filterTask);
    run->AddTask(psaTask);
-   //run->AddTask(SCTask);
+   run->AddTask(SCTask);
    run->AddTask(praTask);
    
    std::cout << "***** Starting Init ******" << std::endl;
