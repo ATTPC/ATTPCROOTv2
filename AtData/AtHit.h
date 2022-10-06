@@ -11,10 +11,12 @@
 #include <algorithm>
 #include <memory>
 #include <vector>
-
 class TBuffer;
 class TClass;
 class TMemberInspector;
+namespace H5 {
+class CompType;
+}
 
 /**
  * @brief Point in space with charge.
@@ -54,6 +56,9 @@ public:
    AtHit &operator=(AtHit &&) = default;                                 //< Move assignment
    virtual ~AtHit() = default;
    virtual std::unique_ptr<AtHit> Clone(); //< Create a copy of sub-type
+
+   /// Returns the type specification of a hit
+   H5::CompType GetHDF5Type();
 
    void SetCharge(Double_t charge) { fCharge = charge; }
    void SetChargeVariance(Double_t chargeVar) { fChargeVariance = chargeVar; }
@@ -102,6 +107,25 @@ public:
    };
 
    ClassDef(AtHit, 5);
+};
+
+/**
+ * Data structure representing a hit in an HDF5 file
+ */
+struct AtHit_t {
+   double x;
+   double y;
+   double z;
+   int t;
+   double A;
+   int trackID;
+   int pointIDMC;
+   int trackIDMC;
+   double energyMC;
+   double elossMC;
+   double angleMC;
+   int AMC;
+   int ZMC;
 };
 
 #endif

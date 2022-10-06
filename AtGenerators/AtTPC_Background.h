@@ -8,15 +8,16 @@
 #define AtTPC_Background_H
 
 #include <FairGenerator.h>
+#include <FairIon.h>      // for FairIon
+#include <FairParticle.h> // for FairParticle
 
 #include <Rtypes.h>
 #include <TString.h>
 
+#include <memory> // for unique_ptr
 #include <vector>
 
 class FairPrimaryGenerator;
-class FairIon;
-class FairParticle;
 class TBuffer;
 class TClass;
 class TMemberInspector;
@@ -53,10 +54,10 @@ private:
    static Int_t fgNIon; //! Number of the instance of this class
    Int_t fMult;         // Multiplicity per event
    Bool_t fIsDecay{};
-   Double_t fVx, fVy, fVz;      // Vertex coordinates [cm]
-   std::vector<FairIon *> fIon; // Pointer to the FairIon to be generated
+   Double_t fVx, fVy, fVz;                     // Vertex coordinates [cm]
+   std::vector<std::unique_ptr<FairIon>> fIon; // Pointer to the FairIon to be generated
    std::vector<TString> fPType;
-   std::vector<FairParticle *> fParticle;
+   std::vector<std::unique_ptr<FairParticle>> fParticle;
    std::vector<Double_t> fPx, fPy, fPz; // Momentum components [MeV] per nucleon
    std::vector<Double_t> Masses;        // Masses of the N products
    std::vector<Double_t> fExEnergy;     // Excitation energies of the products

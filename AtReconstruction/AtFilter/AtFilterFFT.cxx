@@ -28,12 +28,11 @@ void AtFilterFFT::SetLowPass(int order, int cutoff)
  */
 double AtFilterFFT::getFilterKernel(int freq, int fFilterOrder, int fCutoffFreq)
 {
-   double val = -1;
-   if (fFilterOrder == 0)
-      val = 1;
 
-   val = 1.0 / (1.0 + std::pow(freq * freq / fCutoffFreq, fFilterOrder));
-   return val;
+   if (fFilterOrder == 0)
+      return 1;
+
+   return 1.0 / (1.0 + std::pow(freq * freq / fCutoffFreq, fFilterOrder));
 }
 
 bool AtFilterFFT::AddFreqRange(AtFreqRange range)

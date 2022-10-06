@@ -1,6 +1,16 @@
 #ifndef ATPULSERINFO_H
 #define ATPULSERINFO_H
 #include "AtPadBase.h"
+
+#include <Rtypes.h> // for Int_t, THashConsistencyHolder, Double_t, Clas...
+
+#include <array>  // for array
+#include <memory> // for make_unique, unique_ptr
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
+
 class AtPulserInfo : public AtPadBase {
 private:
    using IntArray = std::array<Int_t, 2>;

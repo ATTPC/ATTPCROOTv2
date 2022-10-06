@@ -2,15 +2,16 @@
 #define AtTPCIonDecay_H
 
 #include <FairGenerator.h>
+#include <FairIon.h>
+#include <FairParticle.h>
 
 #include <Rtypes.h>
 #include <TString.h>
 
+#include <memory>
 #include <vector>
 
 class FairPrimaryGenerator;
-class FairIon;
-class FairParticle;
 class TBuffer;
 class TClass;
 class TMemberInspector;
@@ -53,14 +54,14 @@ public:
    virtual ~AtTPCIonDecay() = default;
 
 private:
-   static Int_t fgNIon;                        //! Number of the instance of this class
-   std::vector<Int_t> fMult;                   // Multiplicity per decay channel
-   Int_t fNbCases;                             // Number of decay channel
-   std::vector<Double_t> fPx, fPy, fPz;        // Momentum components [GeV] per nucleon
-   std::vector<std::vector<Double_t>> fMasses; // Masses of the N products
-   Double_t fVx, fVy, fVz;                     // Vertex coordinates [cm]
-   std::vector<std::vector<FairIon *>> fIon;   // Pointer to the FairIon to be generated
-   std::vector<std::vector<FairParticle *>> fParticle;
+   static Int_t fgNIon;                                     //! Number of the instance of this class
+   std::vector<Int_t> fMult;                                // Multiplicity per decay channel
+   Int_t fNbCases;                                          // Number of decay channel
+   std::vector<Double_t> fPx, fPy, fPz;                     // Momentum components [GeV] per nucleon
+   std::vector<std::vector<Double_t>> fMasses;              // Masses of the N products
+   Double_t fVx, fVy, fVz;                                  // Vertex coordinates [cm]
+   std::vector<std::vector<std::unique_ptr<FairIon>>> fIon; // Pointer to the FairIon to be generated
+   std::vector<std::vector<std::unique_ptr<FairParticle>>> fParticle;
    std::vector<std::vector<TString>> fPType;
    std::vector<Int_t> fQ; // Electric charge [e]
    // std::vector<Int_t> fA;

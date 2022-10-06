@@ -244,8 +244,11 @@ Bool_t AtTPCIonGenerator::ReadEvent(FairPrimaryGenerator *primGen)
          AtVertexPropagator::Instance()->SetRndELoss(std::numeric_limits<double>::max());
    }
 
-   for (Int_t i = 0; i < fMult; i++)
-      primGen->AddTrack(pdgType, fPx, fPy, fPz, fVx, fVy, fVz);
+   // We only want to add a beam track if it is a beam event or it is a reaction event and we are not doing a reaction
+   if (AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 != 0 ||
+       (AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 == 0 && !fDoReact))
+      for (Int_t i = 0; i < fMult; i++)
+         primGen->AddTrack(pdgType, fPx, fPy, fPz, fVx, fVy, fVz);
 
    return kTRUE;
 }

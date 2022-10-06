@@ -9,6 +9,7 @@
 #include "AtRawEvent.h"
 
 #include "AtPad.h"
+#include "AtPadReference.h" // for AtPadReference (ptr only), operator==
 
 #include <FairLogger.h>
 

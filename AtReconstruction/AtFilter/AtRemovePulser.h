@@ -3,6 +3,8 @@
 #include "AtFilter.h"
 
 #include <tuple>
+class AtPad;
+class AtRawEvent;
 
 class AtRemovePulser : public AtFilter {
 private:

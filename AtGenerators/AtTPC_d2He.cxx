@@ -50,10 +50,10 @@ AtTPC_d2He::AtTPC_d2He(const char *name, std::vector<Int_t> *z, std::vector<Int_
    fIon.reserve(fMult);
 
    char buffer[30];
-   auto *kProton = new TParticle();
+   auto *kProton = new TParticle(); // NOLINT but probably a problem
    kProton->SetPdgCode(2212);
 
-   auto *kNeutron = new TParticle();
+   auto *kNeutron = new TParticle(); // NOLINT but probably a problem
    kNeutron->SetPdgCode(2112);
 
    // Read the cross section table
@@ -82,21 +82,24 @@ AtTPC_d2He::AtTPC_d2He(const char *name, std::vector<Int_t> *z, std::vector<Int_
       FairParticle *ParticleBuff;
       sprintf(buffer, "Product_Ion%d", i);
       if (a->at(i) != 1) {
-         IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i) * amu / 1000.0);
-         ParticleBuff = new FairParticle("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0);
+         IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, // NOLINT but probably a problem
+                               mass->at(i) * amu / 1000.0);
+         ParticleBuff = new FairParticle("dummyPart", 1, 1, 1.0, 0, 0.0, 0.0); // NOLINT but probably a problem
          fPType.emplace_back("Ion");
          //          std::cout<<" Adding : "<<buffer<<std::endl;
 
       } else if (a->at(i) == 1 && z->at(i) == 1) {
 
-         IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i) * amu / 1000.0);
-         ParticleBuff = new FairParticle(2212, kProton);
+         IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, // NOLINT but probably a problem
+                               mass->at(i) * amu / 1000.0);
+         ParticleBuff = new FairParticle(2212, kProton); // NOLINT but probably a problem
          fPType.emplace_back("Proton");
 
       } else if (a->at(i) == 1 && z->at(i) == 0) {
 
-         IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, mass->at(i) * amu / 1000.0);
-         ParticleBuff = new FairParticle(2112, kNeutron);
+         IonBuff = new FairIon(buffer, z->at(i), a->at(i), q->at(i), 0.0, // NOLINT but probably a problem
+                               mass->at(i) * amu / 1000.0);
+         ParticleBuff = new FairParticle(2112, kNeutron); // NOLINT but probably a problem
          fPType.emplace_back("Neutron");
       }
 

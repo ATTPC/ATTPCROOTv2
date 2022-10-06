@@ -1,5 +1,5 @@
 #include "AtEventDrawTaskProto.h"
-
+// IWYU pragma: no_include <ext/alloc_traits.h>
 #include "AtAuxPad.h"            // for AtAuxPad
 #include "AtEvent.h"             // for AtEvent, hitVector
 #include "AtEventManagerProto.h" // for AtEventManagerProto

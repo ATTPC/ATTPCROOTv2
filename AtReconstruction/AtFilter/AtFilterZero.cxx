@@ -58,8 +58,6 @@ void AtFilterZero::fillMissingDataLine(AtPad *pad, int start, int stop)
    double slope = pad->GetADC(stop) - pad->GetADC(start - 1);
    slope /= (stop - start + 1);
 
-   double transition = std::abs(pad->GetRawADC(start - 1) - pad->GetRawADC(stop));
-
    auto startVal = pad->GetADC(start - 1);
    // Now we need to fill the missing data
    for (int i = start; i < stop; ++i) {
