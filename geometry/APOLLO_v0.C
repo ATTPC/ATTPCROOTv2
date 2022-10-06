@@ -172,13 +172,9 @@ TGeoVolume *create_detector()
       geoRot_1 = new TGeoRotation("geoRot_1", i * 72, 30, 0);
       tran_1[i] = rot_1[i] * tran_1[i];
       // std::cout << tran_2[i].X() <<" "<< tran_2[i].Y() <<" "<< tran_2[i].Z() << std::endl;
-<<<<<<< HEAD
       string str = to_string(i);
       hole1[i] = new TGeoCombiTrans(hole1Name + str.c_str(), tran_1[i].X(), tran_1[i].Y(), tran_1[i].Z(), geoRot_1);
-=======
-      TString str = to_string(i);
-      hole1[i] = new TGeoCombiTrans(hole1Name + str, tran_1[i].X(), tran_1[i].Y(), tran_1[i].Z(), geoRot_1);
->>>>>>> removed getVol attribute
+
       hole1[i]->RegisterYourself();
    }
 
@@ -195,13 +191,9 @@ TGeoVolume *create_detector()
       rot_2[i].SetXEulerAngles(0, TMath::Pi() / 3, TMath::Pi() / 10 + i * TMath::Pi() / 5);
       geoRot_2 = new TGeoRotation("geoRot_2", 18 + i * 36, 60, 0);
       tran_2[i] = rot_2[i] * tran_2[i];
-<<<<<<< HEAD
+
       string str = to_string(i);
       hole2[i] = new TGeoCombiTrans(hole2Name + str.c_str(), tran_2[i].X(), tran_2[i].Y(), tran_2[i].Z(), geoRot_2);
-=======
-      TString str = to_string(i);
-      hole2[i] = new TGeoCombiTrans(hole2Name + str, tran_2[i].X(), tran_2[i].Y(), tran_2[i].Z(), geoRot_2);
->>>>>>> removed getVol attribute
       hole2[i]->RegisterYourself();
    }
 
@@ -218,13 +210,10 @@ TGeoVolume *create_detector()
       rot_3[i].SetXEulerAngles(0, TMath::Pi() / 2, i * TMath::Pi() / 5);
       geoRot_3 = new TGeoRotation("geoRot_3", i * 36, 90, 0);
       tran_3[i] = rot_3[i] * tran_3[i];
-<<<<<<< HEAD
+
       string str = to_string(i);
       hole3[i] = new TGeoCombiTrans(hole3Name + str.c_str(), tran_3[i].X(), tran_3[i].Y(), tran_3[i].Z(), geoRot_3);
-=======
-      TString str = to_string(i);
-      hole3[i] = new TGeoCombiTrans(hole3Name + str, tran_3[i].X(), tran_3[i].Y(), tran_3[i].Z(), geoRot_3);
->>>>>>> removed getVol attribute
+
       hole3[i]->RegisterYourself();
    }
 
