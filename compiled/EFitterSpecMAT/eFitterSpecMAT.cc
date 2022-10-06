@@ -7,37 +7,35 @@ int main(int argc, char *argv[])
    // fEnableMerging = 1;
    // fEnableSingleVertexTrack = 1;
    // fExpNum = e20020;
-  
-  
+
    // Work directory
    TString dir = getenv("VMCWORKDIR");
    std::string dirCstr = getenv("VMCWORKDIR");
-   
+
    // Geometry file
-   TString geoManFile =
-      dir + "/geometry/SpecMAT_Ar90CF4_250mbar_noscint_geomanager.root"; 
+   TString geoManFile = dir + "/geometry/SpecMAT_Ar90CF4_250mbar_noscint_geomanager.root";
    // Ion list file
-   std::string ionList = dirCstr + "/resources/ionFitLists/e20020_ionList.xml"; 
+   std::string ionList = dirCstr + "/resources/ionFitLists/e20020_ionList.xml";
 
    // Analysis flow parameters
    std::size_t firstEvt = 0;
    std::size_t lastEvt = 0;
    bool fInteractiveMode = 1;
    TString inputFileName = "";
-   bool fitDirection = 0; 
+   bool fitDirection = 0;
    bool simulationConv = 0;
    bool enableMerging = 1;
    bool enableSingleVertexTrack = 1;
-   bool enableReclustering = 1;//For benchmarking purposes
-   Double_t clusterRadius = 7.5;//mm
-   Double_t clusterDistance   = 15.0;//mm
+   bool enableReclustering = 1;     // For benchmarking purposes
+   Double_t clusterRadius = 7.5;    // mm
+   Double_t clusterDistance = 15.0; // mm
    Exp exp = SpecMAT;
 
-    // Physics parameters
-   Float_t magneticField = 2.5;        // T
-   Float_t gasMediumDensity = 0.4578;  //  mg/cm3
+   // Physics parameters
+   Float_t magneticField = 2.5;       // T
+   Float_t gasMediumDensity = 0.4578; //  mg/cm3
 
-    //  Arguments
+   //  Arguments
    if (argc == 7) {
       firstEvt = std::atoi(argv[1]);
       lastEvt = std::atoi(argv[2]);
@@ -61,46 +59,44 @@ int main(int argc, char *argv[])
                 << "\n";
       return 0;
    }
-     
+
    // File paths
    TString filePath;
    TString simFile;
    TString outputFileName;
 
-   switch(exp)
-      {
-       case SpecMAT:
-	gasMediumDensity = 0.4578;
-	
-	if (simulationConv) {
+   switch (exp) {
+   case SpecMAT:
+      gasMediumDensity = 0.4578;
+
+      if (simulationConv) {
          filePath = dir + "/macro/Simulation/SpecMAT/";
          simFile = "_sim_";
-        } else {
+      } else {
          filePath = dir + "/macro/Unpack_ROOT/data/";
          simFile = "";
-        }
-	
-        geoManFile = dir + "/geometry/SpecMAT_Ar90CF4_250mbar_noscint_geomanager.root";
-        ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
-
-	std::cout<<" Analysis of experiment SpecMAT. Gas density : "<<gasMediumDensity<<" mg/cm3"<<"\n";
-	std::cout<<" File path : "<<filePath<<"\n";
-	std::cout<<" Geomtry file : "<<geoManFile<<"\n";
-	std::cout<<" Ion list file : "<<ionList<<"\n";
-	
-	break;
       }
 
+      geoManFile = dir + "/geometry/SpecMAT_Ar90CF4_250mbar_noscint_geomanager.root";
+      ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
+
+      std::cout << " Analysis of experiment SpecMAT. Gas density : " << gasMediumDensity << " mg/cm3"
+                << "\n";
+      std::cout << " File path : " << filePath << "\n";
+      std::cout << " Geomtry file : " << geoManFile << "\n";
+      std::cout << " Ion list file : " << ionList << "\n";
+
+      break;
+   }
 
    outputFileName = "fit_analysis_" + simFile + inputFileName;
    outputFileName += "_" + std::to_string(firstEvt) + "_" + std::to_string(lastEvt) + ".root";
 
    inputFileName = filePath + inputFileName + ".root";
 
-   std::cout<<" Input file name : "<<inputFileName<<"\n";
+   std::cout << " Input file name : " << inputFileName << "\n";
 
-
-    ////FitManager becomes owner
+   ////FitManager becomes owner
 
    std::shared_ptr<FitManager> fitManager;
 
@@ -112,7 +108,6 @@ int main(int argc, char *argv[])
       std::cout << "Exception in FitManager constructor " << ex.what() << "!\n";
       std::exit(EXIT_FAILURE);
    }
-   
 
    fitManager->SetGeometry(geoManFile, magneticField, gasMediumDensity);
    fitManager->SetInputFile(inputFileName, firstEvt, lastEvt);
@@ -121,9 +116,9 @@ int main(int argc, char *argv[])
    fitManager->SetFitDirection(fitDirection);
    fitManager->EnableMerging(enableMerging);
    fitManager->EnableSingleVertexTrack(enableSingleVertexTrack);
-   fitManager->EnableReclustering(enableReclustering,clusterRadius,clusterDistance);
+   fitManager->EnableReclustering(enableReclustering, clusterRadius, clusterDistance);
    fitManager->SetExpNum(exp);
-   
+
    if (fInteractiveMode)
       fitManager->EnableGenfitDisplay();
 
@@ -136,7 +131,7 @@ int main(int argc, char *argv[])
 
    auto reader = fitManager->GetReader();
 
-    // Event loop
+   // Event loop
    for (auto i = firstEvt; i < lastEvt; i++) {
 
       std::cout << cGREEN << "  >>  Event Number : " << i << cNORMAL << "\n";
@@ -149,7 +144,6 @@ int main(int argc, char *argv[])
 
       if (patternEvent) {
 
-         
          std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
          std::cout << cGREEN << "   >>>> Number of pattern tracks " << patternTrackCand.size() << cNORMAL << "\n";
 
@@ -177,7 +171,6 @@ int main(int argc, char *argv[])
              << "\n";
 
    return 0;
-
 }
 
 FitManager::FitManager() {}
@@ -320,7 +313,8 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                 << secCluster.GetTimeStamp() << "\n";
       std::cout << "   End position : " << endPos.X() << " - " << endPos.Y() << " - " << zEndCal << " "
                 << endCluster.GetTimeStamp() << "\n";
-      std::cout << "   Theta (PRA) " <<track.GetGeoTheta() * TMath::RadToDeg()<<"   Theta (convention) : " << thetaConv << " - Phi Clus : " << phiClus * TMath::RadToDeg() << "\n";
+      std::cout << "   Theta (PRA) " << track.GetGeoTheta() * TMath::RadToDeg()
+                << "   Theta (convention) : " << thetaConv << " - Phi Clus : " << phiClus * TMath::RadToDeg() << "\n";
       std::cout << "   Track center - X :  " << center.first << " - Y : " << center.second << "\n";
       std::cout << "   Track phi recalc : " << track.GetGeoPhi() * TMath::RadToDeg() << cNORMAL << "\n";
 
@@ -356,7 +350,9 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
 
          if (candToMergePool.size() > 0) { // Merge if matches are found
             candToMergePool.push_back(trA);
-            Bool_t merged = fFitter->MergeTracks(&candToMergePool, &mergedTrackPool, fEnableSingleVertexTrack,fClusterRadius,fClusterSize);//NB: Reclustering is also performed here
+            Bool_t merged =
+               fFitter->MergeTracks(&candToMergePool, &mergedTrackPool, fEnableSingleVertexTrack, fClusterRadius,
+                                    fClusterSize); // NB: Reclustering is also performed here
 
          } else {
             if (!trA->GetIsMerged() && trA->GetVertexToZDist() < distThres)
@@ -383,11 +379,11 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
    // Fitting track candidates
    for (auto track : mergedTrackPool) {
 
-      
       if (fEnableReclustering) {
-           track.ResetHitClusterArray();
-           fTrackTransformer->ClusterizeSmooth3D(track,fClusterRadius,fClusterSize); //NB: Just for analysis benchmarking
-       }
+         track.ResetHitClusterArray();
+         fTrackTransformer->ClusterizeSmooth3D(track, fClusterRadius,
+                                               fClusterSize); // NB: Just for analysis benchmarking
+      }
 
       Double_t theta = track.GetGeoTheta();
       Double_t radius = track.GetGeoRadius() / 1000.0; // mm to m
@@ -429,7 +425,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       xiniPRA = iniPos.X();
       yiniPRA = iniPos.Y();
       ziniPRA = zIniCal;
-      
+
       // This is just to select distances
       std::cout << cGREEN << "      Merged track - Initial position : " << xiniPRA << " - " << yiniPRA << " - "
                 << ziniPRA << cNORMAL << "\n";
@@ -441,31 +437,26 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
 
       std::cout << KRED << "       Merged track - Distance to Z (Candidate Track Pool) " << dist << cNORMAL << "\n";
-      
-      
+
       // Fitters
       for (auto fitter : fFitters)
          fitter->Init();
 
       // Kinematic filters and fit selection
-      
+
       std::vector<Int_t> pdgCandFit;
       if (thetaConv > 90) {
 
-        switch(fExpNum){
-	 case SpecMAT:
-	   pdgCandFit.push_back(1000020040);
-	   break;
-      	}
-	
-      } else if (thetaConv < 90 && thetaConv > 0) { 
+         switch (fExpNum) {
+         case SpecMAT: pdgCandFit.push_back(1000020040); break;
+         }
 
-       switch(fExpNum){
-	 case SpecMAT:
-	   pdgCandFit.push_back(1000020040);
-	   break;
-       }
-	
+      } else if (thetaConv < 90 && thetaConv > 0) {
+
+         switch (fExpNum) {
+         case SpecMAT: pdgCandFit.push_back(1000020040); break;
+         }
+
       } else if (thetaConv < 0) {
 
          // continue;
@@ -679,8 +670,6 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                            ++minCntExt;
                         } // Extrapolation loop
 
-			
-			
                      } catch (genfit::Exception &e) {
                         mom_ext.SetXYZ(0, 0, 0);
                         pos_ext.SetXYZ(0, 0, 0);
@@ -796,18 +785,18 @@ Bool_t FitManager::SetFitters(Bool_t simConv)
    fSimulationConv = simConv;
 
    for (auto ion : *ionList) {
-     std::cout << " Creating fitter for : " << ion._ionName << " - " << (Int_t)ion._PDG << "\n";
-     std::cout << " Energy loss file : " << fWorkDir.Data() + ion._eLossFile << "\n";
-     fFitter = new AtFITTER::AtGenfit(fMagneticField, 0.00001, 1000.0, fWorkDir.Data() + ion._eLossFile, fGasDensity,
-                                      (Int_t)ion._PDG);
-     // dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetPDGCode((Int_t)ion._PDG);
-     dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetIonName(ion._ionName);
-     dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetMass((Double_t)ion._mass);
-     dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetAtomicNumber((Int_t)ion._atomicNumber);
-     dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetNumFitPoints(1.0);
-     dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetVerbosityLevel(1);
-     dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetSimulationConvention(fSimulationConv);
-     fFitters.push_back(fFitter);
+      std::cout << " Creating fitter for : " << ion._ionName << " - " << (Int_t)ion._PDG << "\n";
+      std::cout << " Energy loss file : " << fWorkDir.Data() + ion._eLossFile << "\n";
+      fFitter = new AtFITTER::AtGenfit(fMagneticField, 0.00001, 1000.0, fWorkDir.Data() + ion._eLossFile, fGasDensity,
+                                       (Int_t)ion._PDG);
+      // dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetPDGCode((Int_t)ion._PDG);
+      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetIonName(ion._ionName);
+      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetMass((Double_t)ion._mass);
+      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetAtomicNumber((Int_t)ion._atomicNumber);
+      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetNumFitPoints(1.0);
+      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetVerbosityLevel(1);
+      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetSimulationConvention(fSimulationConv);
+      fFitters.push_back(fFitter);
    }
    return true;
 }
@@ -1068,7 +1057,7 @@ Bool_t FitManager::SetOutputFile(TString &file)
    fOutputTree->Branch("eLossADC", &eLossADC);
    fOutputTree->Branch("dEdxADC", &dEdxADC);
    fOutputTree->Branch("pdgVec", &pdgVec);
-   fOutputTree->Branch("trackPointsVec",&trackPointsVec);
+   fOutputTree->Branch("trackPointsVec", &trackPointsVec);
    fOutputTree->Branch("fitConvergedVec", &fitConvergedVec);
    return true;
 }

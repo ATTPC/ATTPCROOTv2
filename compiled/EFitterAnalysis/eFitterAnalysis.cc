@@ -14,13 +14,12 @@ int main(int argc, char *argv[])
    // Work directory
    TString dir = getenv("VMCWORKDIR");
    std::string dirCstr = dir.Data();
-   
+
    // Geometry file
    TString geoManFile =
       dir + "/geometry/ATTPC_He1bar_v2_geomanager.root"; 
    // Ion list file
-   std::string ionList =
-      dirCstr+"/resources/ionFitLists/e20020_ionList.xml"; 
+   std::string ionList = dirCstr + "/resources/ionFitLists/e20020_ionList.xml";
 
    // Analysis flow parameters
    std::size_t firstEvt = 0;
@@ -89,12 +88,13 @@ int main(int argc, char *argv[])
         geoManFile = dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
         ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
 
-	std::cout<<" Analysis of experiment e20009. Gas density : "<<gasMediumDensity<<" mg/cm3"<<"\n";
-	std::cout<<" File path : "<<filePath<<"\n";
-	std::cout<<" Geomtry file : "<<geoManFile<<"\n";
-	std::cout<<" Ion list file : "<<ionList<<"\n";
-	
-	break;
+        std::cout << " Analysis of experiment e20009. Gas density : " << gasMediumDensity << " mg/cm3"
+                  << "\n";
+        std::cout << " File path : " << filePath << "\n";
+        std::cout << " Geomtry file : " << geoManFile << "\n";
+        std::cout << " Ion list file : " << ionList << "\n";
+
+        break;
 
        case e20020:
 	gasMediumDensity = 0.1533;
@@ -108,15 +108,15 @@ int main(int argc, char *argv[])
         }
 
 	
-        geoManFile = dir + "/geometry/ATTPC_He1bar_v2_geomanager.root"; 
-	ionList = dirCstr + "/resources/ionFitLists/e20020_ionList.xml"; 
+        geoManFile = dir + "/geometry/ATTPC_He1bar_v2_geomanager.root";
+        ionList = dirCstr + "/resources/ionFitLists/e20020_ionList.xml";
 
-	
-	std::cout<<" Analysis of experiment e20020. Gas density : "<<gasMediumDensity<<" mg/cm3"<<"\n";
-	std::cout<<" File path : "<<filePath<<"\n";
-	std::cout<<" Geomtry file : "<<geoManFile<<"\n";
-	std::cout<<" Ion list file : "<<ionList<<"\n";
-	break;
+        std::cout << " Analysis of experiment e20020. Gas density : " << gasMediumDensity << " mg/cm3"
+                  << "\n";
+        std::cout << " File path : " << filePath << "\n";
+        std::cout << " Geomtry file : " << geoManFile << "\n";
+        std::cout << " Ion list file : " << ionList << "\n";
+        break;
      }
    
 

@@ -66,7 +66,6 @@
 
 enum Exp { SpecMAT };
 
-
 class FitManager {
 
 private:
@@ -120,7 +119,7 @@ public:
    // Getters
    std::shared_ptr<TTreeReader> GetReader() { return fReader; }
    AtPatternEvent *GetPatternEve() { return (AtPatternEvent *)fPatternEveArray->Get()->At(0); }
-   AtEvent *GetEve() { return (AtEvent *)fEveArray->Get()->At(0); }   
+   AtEvent *GetEve() { return (AtEvent *)fEveArray->Get()->At(0); }
    Exp GetExpNum() { return fExpNum; }
 
    // File management
@@ -141,8 +140,8 @@ public:
       fClusterSize = clusterSize;
    }
 
-  //Data format
-  Float_t EFit;
+   // Data format
+   Float_t EFit;
    Float_t AFit;
    Float_t PhiFit;
    Float_t EPRA;
