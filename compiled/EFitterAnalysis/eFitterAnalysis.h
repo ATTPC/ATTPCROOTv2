@@ -182,6 +182,9 @@ private:
                        std::vector<trackSegment> &segments);
    Bool_t CompareTracks(AtTrack *trA, AtTrack *trB);
    Bool_t CheckOverlap(AtTrack *trA, AtTrack *trB);
+   Bool_t CheckAngles(AtTrack *trA, AtTrack *trB);
+   Double_t CenterDistance(AtTrack *trA, AtTrack *trB);
+   std::vector<AtTrack *> FindSingleTracks(std::vector<AtTrack *> &tracks);
 
 public:
    // Output tree format (TODO: To be moved to other src file)

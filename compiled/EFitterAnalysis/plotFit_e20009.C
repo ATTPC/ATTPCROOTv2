@@ -41,7 +41,7 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
 
    gStyle->SetNumberContours(256);
    gStyle->SetPalette(112);
-   
+
    //DWBA calculations
    Double_t sigmaDWBA0=0;
    Double_t sigmaDWBA1=0;
@@ -647,8 +647,8 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
                // if((*trackPointsVec)[index]<20)
                // continue;
 
-               //if (evMult != 3)
-	       //continue;
+               if (evMult != 3)
+                  continue;
 
                // if ((*POCAXtrVec)[index] > 2000.0)
                // continue;
@@ -697,10 +697,12 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
                QcorrZ = ex_energy_exp - mFactor * p1 * ((*ziniFitXtrVec)[index]) - p0;
                HQCorr->Fill(QcorrZ);
 
-	       //if(QcorrZ<7.0 || QcorrZ>8.5)
-	       //continue;
-	       
-	       
+               // if(QcorrZ<7.0 || QcorrZ>8.0)
+               // continue;
+
+               if (QcorrZ < 5.5 || QcorrZ > 6.8)
+                  continue;
+
                // Chi2
                fChi2H->Fill((*fChi2Vec)[index]);
                bChi2H->Fill((*bChi2Vec)[index]);
@@ -997,7 +999,7 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
    Kine_AngRec_EnerRec->SetLineColor(kRed);
    Kine_AngRec_EnerRec->Draw("SAME");
    Kine_AngRec_EnerRec_in->SetLineWidth(2);
-   Kine_AngRec_EnerRec_in->SetLineColor(kBlue+3);
+   Kine_AngRec_EnerRec_in->SetLineColor(kBlue + 3);
    Kine_AngRec_EnerRec_9AMeV->SetLineWidth(2);
    Kine_AngRec_EnerRec_9AMeV->SetLineColor(kRed + 3);
    Kine_AngRec_EnerRec_9AMeV->Draw("SAME");
@@ -1008,9 +1010,6 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
    Kine_AngRec_EnerRec_dp_first->SetLineWidth(2);
    Kine_AngRec_EnerRec_dp_first->SetLineColor(kViolet);
    Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
-
-   
-
 
    c1->cd(2);
    HQval->Draw();
@@ -1206,18 +1205,16 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
    gDWBA1->Draw("L");
    gDWBA2->Draw("L");
 
-   TCanvas *cKinematics = new TCanvas("cKinematics","cKinematics",700,700);
+   TCanvas *cKinematics = new TCanvas("cKinematics", "cKinematics", 700, 700);
    Ang_Ener_Xtr->Draw("col");
-   Ang_Ener_Xtr->GetYaxis()->SetRangeUser(0,20);
-   Ang_Ener_Xtr->GetXaxis()->SetRangeUser(10,90);
+   Ang_Ener_Xtr->GetYaxis()->SetRangeUser(0, 20);
+   Ang_Ener_Xtr->GetXaxis()->SetRangeUser(10, 90);
    Kine_AngRec_EnerRec->Draw("SAME");
    Kine_AngRec_EnerRec_9AMeV->Draw("SAME");
    Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
 
-   
-   
    /*TCanvas *c2 = new TCanvas();
    c2->Divide(2, 3);
    c2->Draw();

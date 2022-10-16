@@ -27,7 +27,7 @@ AtHit::XYZVector AtHit::GetPositionSigma() const
    return {std::sqrt(fPositionVariance.X()), std::sqrt(fPositionVariance.Y()), std::sqrt(fPositionVariance.Z())};
 }
 
-H5::CompType GetHDF5Type()
+H5::CompType AtHit::GetHDF5Type()
 {
    H5::CompType type(sizeof(AtHit_t));
 
