@@ -180,7 +180,7 @@ void unpack_new(int runNumberS800=2272, int runNumberATTPC=272)
 
     MergeEvt->SetATTPCClock(kTRUE);//if kTRUE for HDFParser SetTimestampIndex(1) (use internal timestamp)
     MergeEvt->SetATTPCClockFreq(9.9994345);//empirical frequency factor between ATTPC internal clock and S800 clock// fluctuates that is why a glom of 1500 is defined
-    //for run 278 : MergeEvt->SetATTPCClockFreq(9.9994351);//empirical frequency factor  between ATTPC internal clock and S800 clock// fluctuates that is why a glom of 1500 is defined
+    //MergeEvt->SetATTPCClockFreq(9.9994351);//for run 278
     //MergeEvt->SetATTPCClockFreq(9.9994333);//for run 257-261 //9.9994335
     //MergeEvt->SetATTPCClockFreq(9.9994339);//for run 160,161//9.9994335
     //MergeEvt->SetATTPCClockFreq(9.9994349);//for run 155 159 166 168 149
@@ -206,8 +206,8 @@ run->AddTask(ransacTask);
   std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
   //return;
- run->Run(0,numEvents);
- //run->Run(0,10);
+  run->Run(0,numEvents);
+ //run->Run(0,3000);
 
 
   // -----   Finish   -------------------------------------------------------

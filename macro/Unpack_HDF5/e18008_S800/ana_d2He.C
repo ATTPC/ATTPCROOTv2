@@ -14,11 +14,15 @@ static Double_t decay_frag_mass = 13.0033548352*931.494/1000;//GeV/c^2 13C
 //static Double_t decay_frag_mass = 13.005738609*931.494/1000;//GeV/c^2 13N
 //static Double_t decay_frag_mass = 10.012936862*931.494/1000;//GeV/c^2
 
+static Int_t nbTracksPerVtx=2;
+
 
 TSpline3 *splineEloss;
 using XYZVector = ROOT::Math::XYZVector;
+using XYZPoint = ROOT::Math::XYZPoint;
+Double_t aDVel[300];
 
-std::pair<Double_t,Double_t> GetThetaPhi(AtTrack track, ROOT::Math::XYZPoint vertex, ROOT::Math::XYZPoint maxPos, Int_t zdir)
+std::pair<Double_t,Double_t> GetThetaPhi(AtTrack track, XYZVector vertex, XYZVector maxPos, Int_t zdir)
 {
 	std::pair<Double_t,Double_t> thetaPhi;
   std::vector<Double_t> par;
@@ -29,10 +33,48 @@ std::pair<Double_t,Double_t> GetThetaPhi(AtTrack track, ROOT::Math::XYZPoint ver
 	return thetaPhi;
 }
 
+std::pair<Double_t,Double_t> GetThetaPhi(XYZVector vertex, XYZVector maxPos)
+{
+	std::pair<Double_t,Double_t> thetaPhi;
+  XYZVector vp=maxPos-vertex;
+	thetaPhi.first = vp.Theta();
+	thetaPhi.second = vp.Phi();
+	return thetaPhi;
+}
+
 Double_t FindAngleBetweenTracks(XYZVector vec1, XYZVector vec2)
 {
   Double_t ang = acos(vec1.Dot(vec2)/(sqrt(vec1.Mag2())*sqrt(vec2.Mag2())));
   return ang;
+}
+
+//returns the projection of a point on a parametric line
+//dir is the direction of the parametric line, posOn is a point of the line, posOut is the point that will be projected
+XYZVector ptOnLine(std::vector<Double_t> par, XYZVector posOut)
+{
+        XYZVector result(-999,-999,-999);
+				XYZVector posOn(par[0],par[1],par[2]);
+				XYZVector dir(par[3],par[4],par[5]);
+        XYZVector vop1 = ((dir.Cross(posOut-posOn)).Cross(dir)).Unit();
+        Double_t paraVar1 = posOut.Dot(dir.Unit())-posOn.Dot(dir.Unit());
+        Double_t paraVar2 = posOn.Dot(vop1)-posOut.Dot(vop1);
+        XYZVector vInter1 = posOn + dir.Unit()*paraVar1;
+        XYZVector vInter2 = posOut + vop1*paraVar2;
+        if((vInter1-vInter2).Mag2()<1e-10) result=vInter1;
+        return result;
+}
+
+void SetDVelArray(){
+	TString fileName = "utils/drift_vel_cal_vtxZ_FermiFit.txt";
+	ifstream fDVel(fileName);
+	Int_t l1=0;
+	Double_t l2=0;
+	for (string line; getline(fDVel, line);) {
+	  stringstream parse_die(line);
+	  parse_die >> l1 >> l2;
+	  aDVel[l1] = l2;
+	}
+	fDVel.close();
 }
 
 
@@ -62,11 +104,34 @@ void SetERtable(){//fit of the GEANT4 E vs R obtained from the simulation with t
 		splineEloss = new TSpline3("ElossRange", Y, X, v_size);
 }
 
+XYZVector ClosestPoint2Lines(std::vector<Double_t> par1, std::vector<Double_t> par2, Int_t nHits1, Int_t nHits2)
+{
+	XYZVector p1(par1[0], par1[1], par1[2] );//p1
+	XYZVector e1(par1[3], par1[4], par1[5] );//d1
+	XYZVector p2(par2[0], par2[1], par2[2] );//p2
+	XYZVector e2(par2[3], par2[4], par2[5] );//d2
+  XYZVector n1 = e1.Cross(e2.Cross(e1));
+  XYZVector n2 = e2.Cross(e1.Cross(e2));
+  double t1 = (p2-p1).Dot(n2)/(e1.Dot(n2));
+  double t2 = (p1-p2).Dot(n1)/(e2.Dot(n1));
+  XYZVector c1 = p1 + t1*e1;
+  XYZVector c2 = p2 + t2*e2;
+	Double_t w1 = (Double_t)nHits1/(nHits1+nHits2);
+	Double_t w2 = (Double_t)nHits2/(nHits1+nHits2);
+  XYZVector meanpoint;
+	XYZVector meanpoint1 = w1*c1+w2*c2;
+	XYZVector meanpoint2 = 0.5*(c1+c2);
+	if((nHits1>8 && nHits2>8) && (nHits1<50 || nHits2<50)) meanpoint = meanpoint1;//if sufficient number of hits use the not weighted average
+	else meanpoint = meanpoint2;
+  return meanpoint;
+
+}
 
 void ana_d2He(Int_t runNumber)
 {
 
   SetERtable();
+	SetDVelArray();
 
   FairRunAna* run = new FairRunAna(); //Forcing a dummy run
   //ATd2HeAnalysis *d2heana = new ATd2HeAnalysis ();
@@ -88,15 +153,15 @@ void ana_d2He(Int_t runNumber)
 
   TFile* outfile;
   //TString  outFileNameHead = "ana_d2He_test_271.root";
-	TString  outFileNameHead = TString::Format("ana_d2He_test_%04d.root",runNumber);
+	TString  outFileNameHead = TString::Format("ana_d2He_test_%04d_14N_nbptsW.root",runNumber);
   outfile   = TFile::Open(outFileNameHead,"recreate");
 
 	S800Ana s800Ana;
 
 
   //-----
-  Int_t ivt = 0, iTracksEvt=0, iTracksVtx=0;
-  Float_t range_p1 = 0.,range_p2 =0.;
+  Int_t ivt = 0, irun=runNumber, NVtxEvt=0, NTracksVtx=0;
+  Float_t range_p1 = 0.,range_p2 =0., charge1=0.,charge2=0.;
   Float_t eLoss_p1_reco = 0.0, eLoss_p2_reco = 0.0;
   Float_t epsilon_pp = -999;
   Float_t theta1=0., theta2=0., phi1=0., phi2=0., angle12=0.;
@@ -157,10 +222,13 @@ void ana_d2He(Int_t runNumber)
   TTree *anatree = new TTree("anatree","new TTree");
 
 	anatree->Branch("ivt",&ivt);
-	anatree->Branch("iTracksEvt",&iTracksEvt);
-	anatree->Branch("iTracksVtx",&iTracksVtx);
+	anatree->Branch("irun",&irun);
+	anatree->Branch("NVtxEvt",&NVtxEvt);
+	anatree->Branch("NTracksVtx",&NTracksVtx);
   anatree->Branch("range_p1",&range_p1);
   anatree->Branch("range_p2",&range_p2);
+	anatree->Branch("charge1",&charge1);
+	anatree->Branch("charge2",&charge2);
   anatree->Branch("theta1",&theta1);
   anatree->Branch("theta2",&theta2);
   anatree->Branch("phi1",&phi1);
@@ -200,7 +268,7 @@ void ana_d2He(Int_t runNumber)
 
 
 ///============================= Event loop ====================================
-
+    std::cout << " nEvents : " << nEvents << "\n";
   for(Int_t i=0;i<nEvents;i++){
 		s800cal->Clear();
 		bS800cal->GetEntry(i);
@@ -242,29 +310,32 @@ void ana_d2He(Int_t runNumber)
 			 */
 
        AtFindVertex findVtx(9);
-       findVtx.FindVertex(patternTrackCand,2);
+       findVtx.FindVertex(patternTrackCand,nbTracksPerVtx);
        std::vector<tracksFromVertex> tv;
        tv = findVtx.GetTracksVertex();
-			 iTracksEvt = tv.size();
-			 iTracksVtx = 0;
-       for (size_t itv = 0; itv < iTracksEvt; itv++) {
-         std::cout<<"itv "<<itv<<" "<<tv.at(itv).vertex.X()<<" "<<tv.at(itv).vertex.Y()<<" "<<tv.at(itv).vertex.Z()<<" "<<tv.at(itv).tracks.at(0).GetGeoQEnergy()<<" "<<tv.at(itv).tracks.at(1).GetGeoQEnergy()<<std::endl;
+			 NVtxEvt = tv.size();//number of clusters of tracks forming a vertex (could have ex: 2 vertexes with 2 tracks each)
+			 NTracksVtx = 0;//number of tracks for each vertex
 
-				 iTracksVtx = tv.at(itv).tracks.size();
-    theta1=0.; theta2=0.; phi1=0.; phi2=0.; range_p1=0.; range_p2=0.; eLoss_p1_reco=0.; eLoss_p2_reco=0.; mom1_norm_reco=0.; mom2_norm_reco=0.; //reset variables
+       for (size_t ive = 0; ive < NVtxEvt; ive++) {
+         std::cout<<"ive "<<ive<<" "<<tv.at(ive).vertex.X()<<" "<<tv.at(ive).vertex.Y()<<" "<<tv.at(ive).vertex.Z()<<" "<<tv.at(ive).tracks.at(0).GetGeoQEnergy()<<" "<<tv.at(ive).tracks.at(1).GetGeoQEnergy()<<std::endl;
+
+				 NTracksVtx = tv.at(ive).tracks.size();
+				 if(NTracksVtx!=2) continue; //don't analyze event with other than 2 tracks per vertex
+
+		theta1=0.; theta2=0.; phi1=0.; phi2=0.; range_p1=0.; range_p2=0.; eLoss_p1_reco=0.; eLoss_p2_reco=0.; mom1_norm_reco=0.; mom2_norm_reco=0.; //reset variables
     E_tot_he2=0.; he2_mass_ex=0.; kin_He2=0.; theta_He2=0.; phi_He2=0.;theta_cm=0.; Ex4=0.;
-    MaxR1=0.; MaxR2=0.; MaxZ1=0.; MaxZ2=0.;theta_lab=0;
+    MaxR1=0.; MaxR2=0.; MaxZ1=0.; MaxZ2=0.;theta_lab=0; charge1=0; charge2=0;
 
-    XYZPoint vertexMean = (XYZPoint)tv.at(itv).vertex;
-    XYZPoint lastPoint1 = tv.at(itv).tracks.at(0).GetLastPoint();
-    XYZPoint lastPoint2 = tv.at(itv).tracks.at(1).GetLastPoint();
+    XYZVector vertexMean = tv.at(ive).vertex;
+    XYZVector lastPoint1 = (XYZVector)tv.at(ive).tracks.at(0).GetLastPoint();
+    XYZVector lastPoint2 = (XYZVector)tv.at(ive).tracks.at(1).GetLastPoint();
     MaxR1=lastPoint1.Rho();
     MaxR2=lastPoint2.Rho();
     MaxZ1=lastPoint1.Z();
     MaxZ2=lastPoint2.Z();
 
-		Double_t charge1 = tv.at(itv).tracks.at(0).GetGeoQEnergy();
-		Double_t charge2 = tv.at(itv).tracks.at(1).GetGeoQEnergy();
+		charge1 = tv.at(ive).tracks.at(0).GetGeoQEnergy();
+		charge2 = tv.at(ive).tracks.at(1).GetGeoQEnergy();
 
 		//std::cout<<charge1<<" "<<charge2<<std::endl;
 
@@ -272,84 +343,102 @@ void ana_d2He(Int_t runNumber)
     if(charge1<5e3 || charge2<5e3 || MaxR1>245. || MaxR2>245. || MaxR1<35. || MaxR2<35. || MaxZ1>975. || MaxZ2>975. || MaxZ1<25. || MaxZ2<25. || vertexMean.Z()<25. || vertexMean.Z()>975.) continue;
 
 //------------------------------------------------------------------------------
-//refit part of tracks
-//1- select hits :vector <AtHit>, add hits to AtTracks
-//2- call FitPattern sur un nouveau  AtPattern object
-//3- set pattern to AtTracks
-AtTrack trackToReFit1,trackToReFit2;
+//refit only the last part of the tracks and do small adjustement for the drift vel.
 std::vector<AtTrack> patternTrackCandReFit;
-std::vector<AtHit> hitToReFit;
-std::vector<AtHit> hitArray1 = tv.at(itv).tracks.at(0).GetHitArray();
-std::vector<AtHit> hitArray2 = tv.at(itv).tracks.at(1).GetHitArray();
-for(Int_t iHit=0; iHit<hitArray1.size(); iHit++){
-	AtHit hit = hitArray1.at(iHit);
-	XYZPoint position = hit.GetPosition();
-	if(sqrt(pow(position.X(),2)+pow(position.Y(),2))>35.) {
-			trackToReFit1.AddHit(hit);
-			hitToReFit.push_back(hit);
+for (size_t itv = 0; itv < NTracksVtx; itv++) {
+	AtTrack trackToReFit;
+	std::vector<AtHit> hitArray = tv.at(ive).tracks.at(itv).GetHitArray();
+	for(Int_t iHit=0; iHit<hitArray.size(); iHit++){
+		AtHit hit = hitArray.at(iHit);
+		XYZPoint position = hit.GetPosition();
+		position = position.SetXYZ(position.X(),position.Y(),(1000./aDVel[irun])*(position.Z()));
+		hit.SetPosition(position);
+		if(sqrt(pow(position.X(),2)+pow(position.Y(),2))>35.) {
+				trackToReFit.AddHit(hit);
+		}
 	}
-}
-for(Int_t iHit=0; iHit<hitArray2.size(); iHit++){
-	AtHit hit = hitArray2.at(iHit);
-	XYZPoint position = hit.GetPosition();
-	if(sqrt(pow(position.X(),2)+pow(position.Y(),2))>35.) {
-			trackToReFit2.AddHit(hit);
-			hitToReFit.push_back(hit);
-	}
-}
-//AtPatterns::AtPatternLine patternReFit;
-//AtPatterns::AtPattern patternReFit;
-//patternReFit.FitPattern(hitToReFit,100);
-auto patternType = AtPatterns::PatternType::kLine;
-auto pattern1 = AtPatterns::CreatePattern(patternType);
-auto pattern2 = AtPatterns::CreatePattern(patternType);
-//auto points = fRandSampler->SamplePoints(pattern->GetNumPoints());
-//pattern->DefinePattern(points);
-pattern1->FitPattern(trackToReFit1.GetHitArray(),100);//100 is qThreshold defined in unpack as well
-pattern2->FitPattern(trackToReFit2.GetHitArray(),100);//100 is qThreshold defined in unpack as well
-trackToReFit1.SetPattern(pattern1->Clone());
-trackToReFit2.SetPattern(pattern2->Clone());
-patternTrackCandReFit.push_back(trackToReFit1);
-patternTrackCandReFit.push_back(trackToReFit2);
 
-AtFindVertex findVtxReFit(9);
-findVtxReFit.FindVertex(patternTrackCandReFit,2);
+	auto patternType = AtPatterns::PatternType::kLine;
+	auto pattern = AtPatterns::CreatePattern(patternType);
+	pattern->FitPattern(trackToReFit.GetHitArray(),100);//100 is qThreshold, defined in the unpack macro as well
+	trackToReFit.SetPattern(pattern->Clone());
+	patternTrackCandReFit.push_back(trackToReFit);
+}
+
+//find new vertex
 std::vector<tracksFromVertex> tvReFit;
-tvReFit = findVtxReFit.GetTracksVertex();
+if (patternTrackCandReFit.size()>=nbTracksPerVtx) {
+	AtFindVertex findVtxReFit(9);
+	findVtxReFit.FindVertex(patternTrackCandReFit,nbTracksPerVtx);
+	tvReFit = findVtxReFit.GetTracksVertex();
+}
+std::cout<<"tvReFit.size() "<<" "<<tvReFit.size()<<" "<<nbTracksPerVtx<<" "<<patternTrackCandReFit.size()<<std::endl;
+if(tvReFit.size()<1)continue;//tvReFit size should be 1
+
+vertexMean = (XYZPoint)tvReFit.at(0).vertex;
+//test ----
+auto ransacLine1 = dynamic_cast<const AtPatterns::AtPatternLine *>(tvReFit.at(0).tracks.at(0).GetPattern());
+auto ransacLine2 = dynamic_cast<const AtPatterns::AtPatternLine *>(tvReFit.at(0).tracks.at(1).GetPattern());
+// XYZVector newVertexMean = ClosestPoint2Lines(ransacLine1->GetPatternPar(),ransacLine2->GetPatternPar(),tvReFit.at(0).tracks.at(0).GetHitArray().size(),tvReFit.at(0).tracks.at(1).GetHitArray().size());//weighted vertex
+// vertexMean = newVertexMean;
+//--- test
+lastPoint1 = tvReFit.at(0).tracks.at(0).GetLastPoint();
+lastPoint2 = tvReFit.at(0).tracks.at(1).GetLastPoint();
+XYZVector lastPoint1proj=ptOnLine(ransacLine1->GetPatternPar(),lastPoint1);//projection of the last point of the track on the parametric line
+XYZVector lastPoint2proj=ptOnLine(ransacLine2->GetPatternPar(),lastPoint2);
+MaxR1=lastPoint1proj.Rho();
+MaxR2=lastPoint2proj.Rho();
+MaxZ1=lastPoint1proj.Z();
+MaxZ2=lastPoint2proj.Z();
+
+// charge1 = tvReFit.at(0).tracks.at(0).GetGeoQEnergy();
+// charge2 = tvReFit.at(0).tracks.at(1).GetGeoQEnergy();
 
 //for (size_t itvReFit = 0; itvReFit < tvReFit.size(); itvReFit++)
 	//std::cout<<"itvReFit "<<itvReFit<<" "<<tvReFit.at(itvReFit).vertex.X()<<" "<<tvReFit.at(itvReFit).vertex.Y()<<" "<<tvReFit.at(itvReFit).vertex.Z()<<" "<<std::endl;
-	XYZPoint vertexMeanReFit = (XYZPoint)tvReFit.at(0).vertex;
+//	XYZPoint vertexMeanReFit = (XYZPoint)tvReFit.at(0).vertex;
+
+std::cout<<"itvReFit "<<" "<<vertexMean.X()<<" "<<vertexMean.Y()<<" "<<vertexMean.Z()<<" "<<MaxZ1<<" "<<MaxZ2<<" "<<std::endl;
 
 //------------------------------------------------------------------------------
 
-    lastX1 = lastPoint1.X();
-    lastY1 = lastPoint1.Y();
-    lastZ1 = lastPoint1.Z();
-    lastX2 = lastPoint2.X();
-    lastY2 = lastPoint2.Y();
-    lastZ2 = lastPoint2.Z();
+
+    lastX1 = lastPoint1proj.X();
+    lastY1 = lastPoint1proj.Y();
+    lastZ1 = lastPoint1proj.Z();
+    lastX2 = lastPoint2proj.X();
+    lastY2 = lastPoint2proj.Y();
+    lastZ2 = lastPoint2proj.Z();
     vertexX = vertexMean.X();
     vertexY = vertexMean.Y();
     vertexZ = vertexMean.Z();
 
-    theta1 = GetThetaPhi(tv.at(itv).tracks.at(0), vertexMean, lastPoint1,1).first;//GetThetaPhi(..,..,-1) for simu;
-    theta2 = GetThetaPhi(tv.at(itv).tracks.at(1), vertexMean, lastPoint2,1).first;
-    phi1 = GetThetaPhi(tv.at(itv).tracks.at(0), vertexMean, lastPoint1,1).second;
-    phi2 = GetThetaPhi(tv.at(itv).tracks.at(1), vertexMean, lastPoint2,1).second;
+		// theta1 = GetThetaPhi(tvReFit.at(0).tracks.at(0), vertexMean, lastPoint1,1).first;//GetThetaPhi(..,..,-1) for simu;
+    // theta2 = GetThetaPhi(tvReFit.at(0).tracks.at(1), vertexMean, lastPoint2,1).first;
+    // phi1 = GetThetaPhi(tvReFit.at(0).tracks.at(0), vertexMean, lastPoint1,1).second;
+    // phi2 = GetThetaPhi(tvReFit.at(0).tracks.at(1), vertexMean, lastPoint2,1).second;
+		theta1 = GetThetaPhi(vertexMean, lastPoint1proj).first;//GetThetaPhi(..,..,-1) for simu;
+    theta2 = GetThetaPhi(vertexMean, lastPoint2proj).first;
+    phi1 = GetThetaPhi(vertexMean, lastPoint1proj).second;
+    phi2 = GetThetaPhi(vertexMean, lastPoint2proj).second;
 
-    std::vector<Double_t> fitPar1 = tv.at(itv).tracks.at(0).GetPattern()->GetPatternPar();
-    std::vector<Double_t> fitPar2 = tv.at(itv).tracks.at(1).GetPattern()->GetPatternPar();
+    // std::vector<Double_t> fitPar1 = tvReFit.at(0).tracks.at(0).GetPattern()->GetPatternPar();
+    // std::vector<Double_t> fitPar2 = tvReFit.at(0).tracks.at(1).GetPattern()->GetPatternPar();
 
-    XYZVector vp1(TMath::Sign(1,lastX1)*fabs(fitPar1[3]),TMath::Sign(1,lastY1)*fabs(fitPar1[4]),TMath::Sign(1,(lastZ1-vertexZ))*fabs(fitPar1[5]));
-    XYZVector vp2(TMath::Sign(1,lastX2)*fabs(fitPar2[3]),TMath::Sign(1,lastY2)*fabs(fitPar2[4]),TMath::Sign(1,(lastZ2-vertexZ))*fabs(fitPar2[5]));
+		// XYZVector vp1(TMath::Sign(1,lastX1)*fabs(fitPar1[3]),TMath::Sign(1,lastY1)*fabs(fitPar1[4]),TMath::Sign(1,(lastZ1-vertexZ))*fabs(fitPar1[5]));
+    // XYZVector vp2(TMath::Sign(1,lastX2)*fabs(fitPar2[3]),TMath::Sign(1,lastY2)*fabs(fitPar2[4]),TMath::Sign(1,(lastZ2-vertexZ))*fabs(fitPar2[5]));
+		XYZVector vp1 = lastPoint1proj - vertexMean;
+    XYZVector vp2 = lastPoint2proj - vertexMean;
     angle12=FindAngleBetweenTracks(vp1,vp2);
 
     //std::cout<<i<<" "<<" protons 1 2 theta : "<<theta1*TMath::RadToDeg()<<" "<<theta2*TMath::RadToDeg()<<"\n";
     //std::cout<<i<<" protons 1 2 phi : "<<phi1*TMath::RadToDeg()<<" "<<phi2*TMath::RadToDeg()<<"\n";
 
-    range_p1 = tv.at(itv).tracks.at(0).GetLinearRange(vertexMean,lastPoint1);
-    range_p2 = tv.at(itv).tracks.at(0).GetLinearRange(vertexMean,lastPoint2);
+    range_p1 = tvReFit.at(0).tracks.at(0).GetLinearRange((XYZPoint)vertexMean,(XYZPoint)lastPoint1proj);
+    range_p2 = tvReFit.at(0).tracks.at(1).GetLinearRange((XYZPoint)vertexMean,(XYZPoint)lastPoint2proj);
+
+		if(charge1<5e3 || charge2<5e3 || MaxR1>245. || MaxR2>245. || MaxR1<35. || MaxR2<35. || MaxZ1>975. || MaxZ2>975. || MaxZ1<25. || MaxZ2<25. || vertexMean.Z()<25. || vertexMean.Z()>975.) continue;
+
 
     //==============================================================================
     // methods to get the proton eloss
@@ -383,15 +472,6 @@ tvReFit = findVtxReFit.GetTracksVertex();
 
     mom_He2_reco = mom_proton1_reco + mom_proton2_reco;
 
-    //------- rotation of track vectors so that Theta and Phi are in the beam frame
-    TVector3 momBuff;// dirty trick to use Rotate functions (not available with XYZvector)
-    momBuff.SetXYZ(mom_He2_reco.X(),mom_He2_reco.Y(),mom_He2_reco.Z());
-    Double_t aRX = TMath::ATan2(beamDir.Y(),beamDir.Z());
-    Double_t aRY = TMath::ATan2(-beamDir.X(),beamDir.Z());
-    momBuff.RotateX(aRX);//rotate in trigo sens, y to z
-    momBuff.RotateY(aRY);//rotate in trigo sens, z to x
-    mom_He2_reco.SetXYZ(momBuff.X(),momBuff.Y(),momBuff.Z());
-
     E_tot_he2 = (proton_mass + eLoss_p1_reco) + (proton_mass + eLoss_p2_reco);
     he2_mass_ex = TMath::Sqrt (E_tot_he2 * E_tot_he2 - mom_He2_reco.Mag2 ());
     // ex_he2_reco->Fill (he2_mass_ex - he2_mass);
@@ -414,7 +494,17 @@ tvReFit = findVtxReFit.GetTracksVertex();
 
     Double_t sInv = pow(target_mass+proj_mass,2) + 2.*target_mass*Ekin_proj;
     Double_t momCMScat = sqrt( ( pow(sInv-pow(he2_mass+epsilon_pp,2)-pow(Ex4+recoil_mass,2),2) - 4.*pow(he2_mass+epsilon_pp,2)*pow(Ex4+recoil_mass,2)) / (4.*sInv) );
-    theta_He2 = mom_He2_reco.Theta ()* TMath::RadToDeg();
+
+		// //------- rotation of track vectors so that Theta and Phi are in the beam frame
+		TVector3 momBuff;// dirty trick to use Rotate functions (not available with XYZvector)
+		momBuff.SetXYZ(mom_He2_reco.X(),mom_He2_reco.Y(),mom_He2_reco.Z());
+		Double_t aRX = TMath::ATan2(beamDir.Y(),beamDir.Z());
+		Double_t aRY = TMath::ATan2(-beamDir.X(),beamDir.Z());
+		momBuff.RotateX(aRX);//rotate in trigo sens, y to z
+		momBuff.RotateY(aRY);//rotate in trigo sens, z to x
+		mom_He2_reco.SetXYZ(momBuff.X(),momBuff.Y(),momBuff.Z());
+
+		theta_He2 = mom_He2_reco.Theta ()* TMath::RadToDeg();
     Double_t thetaCMScat = asin(sqrt(mom_He2_reco.Mag2())/momCMScat*sin(theta_He2*TMath::DegToRad()));
     theta_lab = atan( sin(theta_cm*TMath::DegToRad())/(cos(theta_cm*TMath::DegToRad()) + recoil_mass/target_mass));
     theta_cm = thetaCMScat*TMath::RadToDeg();
@@ -429,7 +519,7 @@ tvReFit = findVtxReFit.GetTracksVertex();
 
     ivt=i;
     anatree->Fill();
-  } //for tv size (itv)
+  } //for tv size (ive)
 }//RANSAC null pointer
 }// Event loop
 
