@@ -141,7 +141,7 @@ private:
    Int_t fNomEner{};
    Double_t fMaxEnLoss{}; // Max energy loss before reation happens
    Double32_t fWhmFocus, fDiv, fZFocus,
-      fRHole; // Beam whm at focus, beam divergence, z focus, radius of the pad plan hole
+      fRHole;                 // Beam whm at focus, beam divergence, z focus, radius of the pad plan hole
    Double_t fmomAcc;          // beam momentum acceptance in percentage
    Double_t fBeamAx, fBeamAy; // beam angle [deg]
    Double_t fBeamOx, fBeamOy; // beam offset [cm]

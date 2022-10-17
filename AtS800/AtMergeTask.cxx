@@ -197,7 +197,6 @@ InitStatus AtMergeTask::Init()
    return kSUCCESS;
 }
 
-
 void AtMergeTask::Exec(Option_t *opt)
 {
    fS800CalcBr->Clear();
