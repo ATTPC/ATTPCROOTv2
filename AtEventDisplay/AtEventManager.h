@@ -2,13 +2,14 @@
 #define AtEVENTMANAGER_H
 
 #include "AtEvent.h"
-#include "S800Calc.h"
-#include "S800Ana.h"
 
 #include <FairRunAna.h>
 
 #include <Rtypes.h>
 #include <TEveEventManager.h>
+
+#include "S800Ana.h"
+#include "S800Calc.h"
 
 class FairRootManager;
 class FairTask;
@@ -25,10 +26,10 @@ class AtEventManager : public TEveEventManager {
 private:
    FairRootManager *fRootManager;
    FairRunAna *fRunAna;
-   TClonesArray* cArray;
-   TClonesArray* cS800Array;
-   AtEvent* cevent;
-   S800Calc*  cS800Calc;
+   TClonesArray *cArray;
+   TClonesArray *cS800Array;
+   AtEvent *cevent;
+   S800Calc *cS800Calc;
 
    Int_t fEntry;
    TGListTreeItem *fEvent;
@@ -52,12 +53,12 @@ private:
    TCanvas *fCvsMC_XY{};
    TCanvas *fCvsMC_Z{};
    TCanvas *fCvsAux{};
-   TCanvas* fCvsPIDFull;
-   TCanvas* fCvsPID;
-   TCanvas* fCvsPID2;
-   TH2F* fPIDFull;
-   TCanvas* fCvsPID2Full;
-   TH2F* fPID2Full;
+   TCanvas *fCvsPIDFull;
+   TCanvas *fCvsPID;
+   TCanvas *fCvsPID2;
+   TH2F *fPIDFull;
+   TCanvas *fCvsPID2Full;
+   TH2F *fPID2Full;
 
    TGTextButton *drawallpad;
    TGTextButton *eraseQevent;
@@ -125,8 +126,8 @@ public:
    TCanvas *GetCvsMC_XY() { return fCvsMC_XY; }
    TCanvas *GetCvsMC_Z() { return fCvsMC_Z; }
    TCanvas *GetCvsAux() { return fCvsAux; }
-   TCanvas* GetCvsPID() { return fCvsPID; }
-   TCanvas* GetCvsPID2() { return fCvsPID2; }
+   TCanvas *GetCvsPID() { return fCvsPID; }
+   TCanvas *GetCvsPID2() { return fCvsPID2; }
 
    S800Ana GetS800Ana() { return fS800Ana; }
 

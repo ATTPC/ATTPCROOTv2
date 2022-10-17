@@ -143,7 +143,7 @@ InitStatus AtPulseTask::Init()
       return kERROR;
    }
 
-   ioman->Register("AtTpcPoint", "cbmsim",fMCPointArray, fIsPersistentAtTpcPoint);
+   ioman->Register("AtTpcPoint", "cbmsim", fMCPointArray, fIsPersistentAtTpcPoint);
 
    LOG(info) << " AtPulseTask : Initialization of parameters complete!";
    return kSUCCESS;

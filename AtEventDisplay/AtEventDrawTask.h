@@ -7,13 +7,13 @@
 #ifndef ATEVENTDRAWTASK_H
 #define ATEVENTDRAWTASK_H
 
-#include "S800Calc.h"
-#include "S800Ana.h"
-
 #include <FairTask.h> // for FairTask, InitStatus
 
 #include <Rtypes.h>  // for Int_t, Bool_t, THashConsistencyHolder, Color_t
 #include <TString.h> // for TString
+
+#include "S800Ana.h"
+#include "S800Calc.h"
 
 #include <memory>
 #include <vector>     // for vector
@@ -157,14 +157,14 @@ protected:
    std::vector<TEvePointSet *> fHitSetTFHC;  // for TrackFinderHC
    std::vector<TEveBoxSet *> fHitClusterSet; // Track clusterization
    std::vector<TEveLine *> fHitLine;         // Track line
-   std::vector<TEvePointSet *> fVertex;     // Vertex line
+   std::vector<TEvePointSet *> fVertex;      // Vertex line
 
    TEveRGBAPalette *fRGBAPalette;
 
-   TCanvas* fCvsPID;
-   TH2F* fPID;
-   TCanvas* fCvsPID2;
-   TH2F* fPID2;
+   TCanvas *fCvsPID;
+   TH2F *fPID;
+   TCanvas *fCvsPID2;
+   TH2F *fPID2;
    S800Calc *fS800Calc;
 
 public:
@@ -188,18 +188,13 @@ public:
    void SetRawEventBranch(TString branchName);
    void SetEventBranch(TString branchName);
    void SetCorrectedEventBranch(TString branchName) { fCorrectedEventBranchName = branchName; }
-<<<<<<< HEAD
    void SetPatternEventBranch(TString branchName) { fPatternEventBranchName = branchName; }
-=======
    void SetMinTracksPerVertex(Int_t val) { fMinTracksPerVertex = val; } //fVertexMod=0 one track vertex , fVertexMod=1 multi trakcs vertex
-
->>>>>>> modif to run the d,2He simu, digi and analysis
    static void SelectPad(const char *rawevt);
    void DrawWave(Int_t PadNum);
    void SetMultiHit(Int_t hitMax);
 
 private:
-
    // S800Ana fS800Ana;
    std::vector<Double_t> fTofObjCorr;
    std::vector<Double_t> fMTDCObjRange;

@@ -232,10 +232,11 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
       fEnergyImpulsionLab_target = TLorentzVector(TVector3(0, 0, 0), fTargetMass);
 
       if (fTargetMass > 0 && fIsSequentialDecay) {
-         LOG(INFO) << cBLINKINGRED
-                   << " AtTPCIonDecay - Warning, Inconsistent variables: Target Impulsion included in sequential decay. "
-                      "Continue at your own risk!"
-                   << cNORMAL << "\n";
+         LOG(INFO)
+            << cBLINKINGRED
+            << " AtTPCIonDecay - Warning, Inconsistent variables: Target Impulsion included in sequential decay. "
+               "Continue at your own risk!"
+            << cNORMAL << "\n";
       }
 
       fEnergyImpulsionLab_Total = fEnergyImpulsionLab_beam + fEnergyImpulsionLab_target;
@@ -258,7 +259,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
          // if(ExEject*1000.0>fSepEne){
          fIsDecay = kTRUE;
          event1.SetDecay(fEnergyImpulsionLab_Total, fMult.at(Case), mass_1);
-         Double_t weight1 = event1.Generate();//to generate the random final state
+         Double_t weight1 = event1.Generate(); // to generate the random final state
          std::vector<Double_t> KineticEnergy;
          std::vector<Double_t> ThetaLab;
 
@@ -310,21 +311,20 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
 
          int pdgType = thisPart->PdgCode();
 
-         if(AtVertexPropagator::Instance()->Getd2HeEvt()) {
+         if (AtVertexPropagator::Instance()->Getd2HeEvt()) {
             TVector3 d2HeVtx = AtVertexPropagator::Instance()->Getd2HeVtx();
             fVx = d2HeVtx.X();
             fVy = d2HeVtx.Y();
             fVz = d2HeVtx.Z();
-         }
-         else {
+         } else {
             fVx = AtVertexPropagator::Instance()->GetVx();
             fVy = AtVertexPropagator::Instance()->GetVy();
             fVz = AtVertexPropagator::Instance()->GetVz();
          }
 
          // std::cout << "-I- FairIonGenerator: Generating " <<" with mass "<<thisPart->Mass()<<" ions of type "<<
-         // fIon.at(Case).at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl; std::cout << "    Momentum (" <<
-         // fPx.at(i) << ", " << fPy.at(i) << ", " << fPz.at(i)
+         // fIon.at(Case).at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl; std::cout << "    Momentum
+         // (" << fPx.at(i) << ", " << fPy.at(i) << ", " << fPz.at(i)
          // << ") Gev from vertex (" << fVx << ", " << fVy
          // << ", " << fVz << ") cm" << std::endl;
 

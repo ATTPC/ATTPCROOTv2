@@ -5,6 +5,7 @@
 #include <TString.h>
 // FAIRROOT classes
 #include <FairTask.h>
+
 #include <TObject.h>
 
 #include <vector>
@@ -28,8 +29,6 @@ public:
    S800Ana();
    ~S800Ana();
 
-
-
    void SetPID1cut(std::vector<TString> file);
    void SetPID2cut(std::vector<TString> file);
    void SetPID3cut(std::vector<TString> file);
@@ -50,8 +49,8 @@ public:
    Bool_t isInPID(S800Calc *s800calc);
    void Calc(S800Calc *s800calc);
 
-   //void InitStatus Init();
-   //virtual void Exec(Option_t *opt);
+   // void InitStatus Init();
+   // virtual void Exec(Option_t *opt);
 
 private:
    FairLogger *fLogger;
@@ -60,7 +59,6 @@ private:
    std::vector<Double_t> fTofObjCorr;
    std::vector<Double_t> fMTDCObjRange;
    std::vector<Double_t> fMTDCXfRange;
-
 
    std::vector<TCutG *> fcutPID1;
    std::vector<TCutG *> fcutPID2;

@@ -12,6 +12,7 @@
 #include <FairRunSim.h>
 
 #include <TDatabasePDG.h>
+#include <TFile.h>
 #include <TMath.h>
 #include <TObjArray.h>
 #include <TObject.h> // for TObject
@@ -19,7 +20,6 @@
 #include <TParticlePDG.h>
 #include <TRandom.h>
 #include <TString.h>
-#include <TFile.h>
 
 #include <algorithm> // for clamp
 #include <cmath>
@@ -87,9 +87,9 @@ AtTPCIonGenerator::AtTPCIonGenerator(const Char_t *ionName, Int_t mult, Double_t
          // fVz   = vz;
       }
    }
-   fPx0   = fPx;
-   fPy0   = fPy;
-   fPz0   = fPz;
+   fPx0 = fPx;
+   fPy0 = fPy;
+   fPz0 = fPz;
    if (fIon == nullptr && part == nullptr) {
       cout << "-E- AtTPCIonGenerator: Ion or Particle is not defined !" << endl;
       Fatal("AtTPCIonGenerator", "No FairRun instantised!");
@@ -99,11 +99,12 @@ AtTPCIonGenerator::AtTPCIonGenerator(const Char_t *ionName, Int_t mult, Double_t
 
 // -----   Default constructor   ------------------------------------------
 AtTPCIonGenerator::AtTPCIonGenerator(const char *name, Int_t z, Int_t a, Int_t q, Int_t mult, Double_t px, Double_t py,
-                                     Double_t pz, Double_t Ex, Double_t m, Double_t ener, Double_t eLoss, TString sata, TString sbta)
-   : fMult(mult), fPx(Double_t(a) * px), fPy(Double_t(a) * py), fPz(Double_t(a) * pz), fPx0(Double_t(a) * px), fPy0(Double_t(a) * py),
-     fPz0(Double_t(a) * pz), fR(0.), fz(0.), fOffset(0.), fVx(0.), fVy(0.), fVz(0.), fIon(nullptr), fQ(0), fBeamOpt(0), fNomEner(ener),
-     fMaxEnLoss(eLoss < 0 ? ener : eLoss), fWhmFocus(0.), fDiv(0.), fZFocus(0.), fRHole(0.), fmomAcc(0.), fBeamAx(0.), fBeamAy(0.),
-     fBeamOx(0.), fBeamOy(0.), hAta(NULL), hBta(NULL)
+                                     Double_t pz, Double_t Ex, Double_t m, Double_t ener, Double_t eLoss, TString sata,
+                                     TString sbta)
+   : fMult(mult), fPx(Double_t(a) * px), fPy(Double_t(a) * py), fPz(Double_t(a) * pz), fPx0(Double_t(a) * px),
+     fPy0(Double_t(a) * py), fPz0(Double_t(a) * pz), fR(0.), fz(0.), fOffset(0.), fVx(0.), fVy(0.), fVz(0.),
+     fIon(nullptr), fQ(0), fBeamOpt(0), fNomEner(ener), fMaxEnLoss(eLoss < 0 ? ener : eLoss), fWhmFocus(0.), fDiv(0.),
+     fZFocus(0.), fRHole(0.), fmomAcc(0.), fBeamAx(0.), fBeamAy(0.), fBeamOx(0.), fBeamOy(0.), hAta(NULL), hBta(NULL)
 {
    fgNIon++;
 
@@ -119,15 +120,13 @@ AtTPCIonGenerator::AtTPCIonGenerator(const char *name, Int_t z, Int_t a, Int_t q
    }
    run->AddNewIon(fIon);
 
-
    TFile *fAta = new TFile(sata, "READ");
    TFile *fBta = new TFile(sbta, "READ");
-   if(fAta->IsZombie() || fBta->IsZombie())
+   if (fAta->IsZombie() || fBta->IsZombie())
       LOG(INFO) << cYELLOW << "AtTPCIonGenerator - ata and bta distribution files (S800) not found" << cNORMAL << endl;
-   else
-   {
-      hAta= new TH1F();
-      hBta= new TH1F();
+   else {
+      hAta = new TH1F();
+      hBta = new TH1F();
       hAta = dynamic_cast<TH1F *>(fAta->Get("h"));
       hBta = dynamic_cast<TH1F *>(fBta->Get("h1"));
    }
@@ -135,11 +134,11 @@ AtTPCIonGenerator::AtTPCIonGenerator(const char *name, Int_t z, Int_t a, Int_t q
 //_________________________________________________________________________
 
 AtTPCIonGenerator::AtTPCIonGenerator(const AtTPCIonGenerator &right)
-   : fMult(right.fMult), fPx(right.fPx), fPy(right.fPy), fPz(right.fPz), fPx0(right.fPx), fPy0(right.fPy), fPz0(right.fPz),
-     fR(right.fR), fz(right.fz), fOffset(right.fOffset), fVx(right.fVx), fVy(right.fVy), fVz(right.fVz), fIon(right.fIon), fQ(right.fQ),
-     fBeamOpt(right.fBeamOpt), fWhmFocus(right.fWhmFocus), fDiv(right.fDiv), fZFocus(right.fZFocus), fRHole(right.fRHole),
-     fmomAcc(right.fmomAcc), fBeamAx(right.fBeamAx), fBeamAy(right.fBeamAy), fBeamOx(right.fBeamOx) , fBeamOy(right.fBeamOy),
-     hAta(right.hAta),  hBta(right.hBta)
+   : fMult(right.fMult), fPx(right.fPx), fPy(right.fPy), fPz(right.fPz), fPx0(right.fPx), fPy0(right.fPy),
+     fPz0(right.fPz), fR(right.fR), fz(right.fz), fOffset(right.fOffset), fVx(right.fVx), fVy(right.fVy),
+     fVz(right.fVz), fIon(right.fIon), fQ(right.fQ), fBeamOpt(right.fBeamOpt), fWhmFocus(right.fWhmFocus),
+     fDiv(right.fDiv), fZFocus(right.fZFocus), fRHole(right.fRHole), fmomAcc(right.fmomAcc), fBeamAx(right.fBeamAx),
+     fBeamAy(right.fBeamAy), fBeamOx(right.fBeamOx), fBeamOy(right.fBeamOy), hAta(right.hAta), hBta(right.hBta)
 {
 }
 
@@ -160,58 +159,55 @@ void AtTPCIonGenerator::SetMass(Double_t mass)
 void AtTPCIonGenerator::SetEmittance()
 {
    gRandom->SetSeed(0);
-   Double_t x=0., y=0., xFocus=0., yFocus=0., Ax=0., Ay=0., BeamAx=0., BeamAy=0.,
-       BeamOx=0., BeamOy=0.;
-   Double_t ptot=sqrt(pow(fPx0,2) + pow(fPy0,2) + pow(fPz0,2));
-   //ptot=gRandom->Uniform(ptot*(1.-fmomAcc),ptot*(1.+fmomAcc));
-   //following "do wile" for gaussian beam momentum distribution with boundaries
-   do{
-     ptot=gRandom->Gaus(ptot,ptot*fmomAcc/ 2.355);
-   }
-   while(ptot<ptot*(1.-2.*fmomAcc) || ptot>ptot*(1.+2.*fmomAcc));
-   BeamAx=fBeamAx*TMath::DegToRad();
-   BeamAy=fBeamAy*TMath::DegToRad();
+   Double_t x = 0., y = 0., xFocus = 0., yFocus = 0., Ax = 0., Ay = 0., BeamAx = 0., BeamAy = 0., BeamOx = 0.,
+            BeamOy = 0.;
+   Double_t ptot = sqrt(pow(fPx0, 2) + pow(fPy0, 2) + pow(fPz0, 2));
+   // ptot=gRandom->Uniform(ptot*(1.-fmomAcc),ptot*(1.+fmomAcc));
+   // following "do wile" for gaussian beam momentum distribution with boundaries
+   do {
+      ptot = gRandom->Gaus(ptot, ptot * fmomAcc / 2.355);
+   } while (ptot < ptot * (1. - 2. * fmomAcc) || ptot > ptot * (1. + 2. * fmomAcc));
+   BeamAx = fBeamAx * TMath::DegToRad();
+   BeamAy = fBeamAy * TMath::DegToRad();
 
-   //x is a coordinate of beam particle at ATTPC entrance, xFocus is a coordinate at focus.
-   do{
-     xFocus = gRandom->Gaus(fBeamOx,fWhmFocus / 2.355)+fZFocus*tan(BeamAx);
-     yFocus = gRandom->Gaus(fBeamOy,fWhmFocus / 2.355)+fZFocus*tan(BeamAy);
-   }//beam spot smaller than the entrance hole
-   while(sqrt(pow((xFocus-fZFocus*tan(BeamAx)),2)+pow((yFocus-fZFocus*tan(BeamAy)),2))>fRHole);
+   // x is a coordinate of beam particle at ATTPC entrance, xFocus is a coordinate at focus.
+   do {
+      xFocus = gRandom->Gaus(fBeamOx, fWhmFocus / 2.355) + fZFocus * tan(BeamAx);
+      yFocus = gRandom->Gaus(fBeamOy, fWhmFocus / 2.355) + fZFocus * tan(BeamAy);
+   } // beam spot smaller than the entrance hole
+   while (sqrt(pow((xFocus - fZFocus * tan(BeamAx)), 2) + pow((yFocus - fZFocus * tan(BeamAy)), 2)) > fRHole);
 
-   if(!hAta==NULL && !hBta==NULL)
-   {//with ata and bta distributions from S800 data
-     do{
-       Ax = hAta->GetRandom()+0.0019;//offset between angle of the beam in tpc frame and S800 frame,
-       //(+) because angle more negative in S800 frame than in TPC frame. Needs to correct back this offset in this analysis
-       Ay = hBta->GetRandom();
-       x = xFocus - fZFocus*tan(Ax);
-       y = yFocus - fZFocus*tan(Ay);
-     }//beam at entrance smaller than the hole
-     while(sqrt(pow(x,2)+pow(y,2))>fRHole);
-   }
-   else
-   {
-     do{
-       x = gRandom->Gaus(fBeamOx,fWhmFocus/2.355 + fZFocus*tan(fDiv));
-       y = gRandom->Gaus(fBeamOy,fWhmFocus/2.355 + fZFocus*tan(fDiv));
-       Ax = atan((xFocus-x)/fZFocus);
-       Ay = atan((yFocus-y)/fZFocus);
-     }
-     while(sqrt(pow(x,2)+pow(y,2))>fRHole || sqrt(pow(tan(Ax-BeamAx),2)+pow(tan(Ay-BeamAy),2))>fabs(tan(fDiv)));
+   if (!hAta == NULL && !hBta == NULL) { // with ata and bta distributions from S800 data
+      do {
+         Ax = hAta->GetRandom() + 0.0019; // offset between angle of the beam in tpc frame and S800 frame,
+         //(+) because angle more negative in S800 frame than in TPC frame. Needs to correct back this offset in this
+         // analysis
+         Ay = hBta->GetRandom();
+         x = xFocus - fZFocus * tan(Ax);
+         y = yFocus - fZFocus * tan(Ay);
+      } // beam at entrance smaller than the hole
+      while (sqrt(pow(x, 2) + pow(y, 2)) > fRHole);
+   } else {
+      do {
+         x = gRandom->Gaus(fBeamOx, fWhmFocus / 2.355 + fZFocus * tan(fDiv));
+         y = gRandom->Gaus(fBeamOy, fWhmFocus / 2.355 + fZFocus * tan(fDiv));
+         Ax = atan((xFocus - x) / fZFocus);
+         Ay = atan((yFocus - y) / fZFocus);
+      } while (sqrt(pow(x, 2) + pow(y, 2)) > fRHole ||
+               sqrt(pow(tan(Ax - BeamAx), 2) + pow(tan(Ay - BeamAy), 2)) > fabs(tan(fDiv)));
    }
 
-   fVx   =x ;
-   fVy   =y ;
-   fVz   =0. ;
+   fVx = x;
+   fVy = y;
+   fVz = 0.;
 
    // std::cout<<"ATTPCIonGenerator beam X,Y at entrance "<<x<<" "<<y<<" at focus "<<xFocus<<" "<<yFocus<<std::endl;
 
-   fPz=ptot/sqrt(1.+pow(tan(Ax),2)+pow(tan(Ay),2));
-   fPx=fPz*tan(Ax);
-   fPy=fPz*tan(Ay);
+   fPz = ptot / sqrt(1. + pow(tan(Ax), 2) + pow(tan(Ay), 2));
+   fPx = fPz * tan(Ax);
+   fPy = fPz * tan(Ay);
 
-   AtVertexPropagator::Instance()->Setd2HeVtx(fVx,fVy,Ax,Ay);
+   AtVertexPropagator::Instance()->Setd2HeVtx(fVx, fVy, Ax, Ay);
 }
 //_________________________________________________________________________
 

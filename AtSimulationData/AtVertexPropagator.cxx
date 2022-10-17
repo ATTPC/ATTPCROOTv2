@@ -5,10 +5,8 @@
 #include <TVector3.h>
 
 #include <cmath>
-#include <utility>
-
 #include <iostream>
-
+#include <utility>
 
 // Allow us use std::make_unique using a protected constructor this struct
 // is only defined in this translation unit (.cpp file)
@@ -177,10 +175,10 @@ void AtVertexPropagator::Setd2HeVtx(TVector3 avec)
 void AtVertexPropagator::Setd2HeVtx(Double_t x0, Double_t y0, Double_t Ax, Double_t Ay)
 {
    Double_t vx, vy, vz;
-   vz = 100.0*(gRandom->Uniform()); //cm
-   vx = x0+vz*tan(Ax);
-   vy = y0+sqrt(pow(vz,2)+pow(vx-x0,2))*tan(Ay);
-   fd2HeVtx.SetXYZ(vx,vy,vz);
+   vz = 100.0 * (gRandom->Uniform()); // cm
+   vx = x0 + vz * tan(Ax);
+   vy = y0 + sqrt(pow(vz, 2) + pow(vx - x0, 2)) * tan(Ay);
+   fd2HeVtx.SetXYZ(vx, vy, vz);
    fIsd2HeEvt = kTRUE;
 }
 

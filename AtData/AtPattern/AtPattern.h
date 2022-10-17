@@ -115,7 +115,6 @@ public:
    TEveLine *GetEveLine(Double_t deltaR, XYZPoint firstPt, XYZPoint lastPt) const;
    std::vector<Double_t> lineIntersecR(Double_t rMax, Double_t tMin, Double_t tMax) const;
 
-
    /**
     *  @brief Get visual representation of pattern
     *
@@ -144,7 +143,6 @@ public:
    Double_t GetTotCharge() const { return fTotCharge; }
    void SetPatternPar(std::vector<double> par) { fPatternPar = std::move(par); }
    void SetChi2(double chi2) { fChi2 = chi2; }
-
 
 protected:
    /**

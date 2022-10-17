@@ -218,7 +218,6 @@ void AtTpc::startReactionEvent()
 
    AtVertexPropagator::Instance()->SetVertex(StopPos.X(), StopPos.Y(), StopPos.Z(), InPos.X(), InPos.Y(), InPos.Z(),
                                              StopMom.Px(), StopMom.Py(), StopMom.Pz(), StopEnergy);
-
 }
 
 void AtTpc::addHit()

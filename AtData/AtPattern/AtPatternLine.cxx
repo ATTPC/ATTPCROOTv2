@@ -123,7 +123,7 @@ void AtPatternLine::FitPattern(const std::vector<XYZPoint> &points, const std::v
       Syz += pos.Y() * pos.Z() * 1. / 10.;
    }
 
-   std::cout<<"do charge weight ransacline "<<Q<<std::endl;
+   std::cout << "do charge weight ransacline " << Q << std::endl;
 
    Xm /= Q;
    Ym /= Q;

@@ -135,7 +135,6 @@ public:
    Bool_t GetValidKine();
    Bool_t Getd2HeEvt();
 
-
    ClassDef(AtVertexPropagator, 2)
 };
 

@@ -57,7 +57,7 @@ protected:
    Double_t fNoiseSigma = 0; //! Sigma of random gaussian noise to apply to trace
 
    Bool_t fIsPersistent = true;  //!< If true, save container
-   Bool_t fIsPersistentAtTpcPoint = false;  //!< If true, save container
+   Bool_t fIsPersistentAtTpcPoint = false; //!< If true, save container
    Bool_t fIsSaveMCInfo = false; //!<< Propagates MC information
    Bool_t fUseFastGain = true;
    Bool_t fUseChargeSave = false;

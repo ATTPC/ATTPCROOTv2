@@ -258,23 +258,25 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
 
    else {
       // MC to distribute the events with the cross section
-      //fN==1 used for the efficiency map (1 simu per theta-epp bin)
-      if(fN==1){//Depp=0.25 and Dtheta_cm=0.5 in ACCBA file
-        if(inp2.at(0)==0) theta_cm =  (inp2.at(0) + 0.25*gRandom->Uniform())*TMath::DegToRad();//carefull in the analysis, these bins have 2 times more stat
-        else theta_cm =  (inp2.at(0)-0.25 + 0.5*gRandom->Uniform())*TMath::DegToRad();
-        phi_cm = 2*TMath::Pi()*( gRandom->Uniform() ) ;
-        epsilon = inp1.at(0) -0.125 + 0.25*gRandom->Uniform();
-      }
-      else {
-        do {
-           ran_theta = fN*gRandom->Uniform();
-           ranX = fCStot*gRandom->Uniform();
-        } while (ranX > inp3.at(ran_theta));
+      // fN==1 used for the efficiency map (1 simu per theta-epp bin)
+      if (fN == 1) { // Depp=0.25 and Dtheta_cm=0.5 in ACCBA file
+         if (inp2.at(0) == 0)
+            theta_cm = (inp2.at(0) + 0.25 * gRandom->Uniform()) *
+                       TMath::DegToRad(); // carefull in the analysis, these bins have 2 times more stat
+         else
+            theta_cm = (inp2.at(0) - 0.25 + 0.5 * gRandom->Uniform()) * TMath::DegToRad();
+         phi_cm = 2 * TMath::Pi() * (gRandom->Uniform());
+         epsilon = inp1.at(0) - 0.125 + 0.25 * gRandom->Uniform();
+      } else {
+         do {
+            ran_theta = fN * gRandom->Uniform();
+            ranX = fCStot * gRandom->Uniform();
+         } while (ranX > inp3.at(ran_theta));
 
-        //Depp=0.25 and Dtheta_cm=0.5 in ACCBA file, here Depp=0.5 and Dtheta_cm=1 introduce smearing
-        theta_cm = TMath::Abs(inp2.at(ran_theta) - 0.5 + gRandom->Uniform()) * TMath::DegToRad();
-        phi_cm = 2 * TMath::Pi() * (gRandom->Uniform());
-        epsilon = TMath::Abs(inp1.at(ran_theta) - 0.25 + 0.5 * gRandom->Uniform());
+         // Depp=0.25 and Dtheta_cm=0.5 in ACCBA file, here Depp=0.5 and Dtheta_cm=1 introduce smearing
+         theta_cm = TMath::Abs(inp2.at(ran_theta) - 0.5 + gRandom->Uniform()) * TMath::DegToRad();
+         phi_cm = 2 * TMath::Pi() * (gRandom->Uniform());
+         epsilon = TMath::Abs(inp1.at(ran_theta) - 0.25 + 0.5 * gRandom->Uniform());
       }
       /* std::cout<<"===================================================================="<<std::endl;
       std::cout<<theta_cm*TMath::RadToDeg()<<"  "<<phi_cm<<"  "<<epsilon<<std::endl;
@@ -538,7 +540,6 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
    fVz = d2HeVtx.Z();
    // std::cout<<cYELLOW<<"vertex in AtTPC_d2He "<<fVx<<" "<< fVy<<" "<< fVz<<cNORMAL<<std::endl;
 
-
    for (Int_t i = 0; i < fMult; i++) {
       TParticlePDG *thisPart;
 
@@ -620,8 +621,7 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
 
    AtVertexPropagator::Instance()
       ->IncDecayEvtCnt(); // TODO: Okay someone should put a more suitable name but we are on a hurry...
-  AtVertexPropagator::Instance()
-      ->Getd2HeEvt();
+   AtVertexPropagator::Instance()->Getd2HeEvt();
 
    return kTRUE;
 }

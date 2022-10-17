@@ -1,25 +1,26 @@
 #include "AtMergeTask.h"
 
 #include "AtRawEvent.h"
-#include "S800Calc.h"
-#include "S800Ana.h"
 
 #include <FairLogger.h>
-#include <FairTask.h>
 #include <FairRootManager.h>
+#include <FairTask.h>
 
 #include <Math/ParamFunctor.h>
 #include <TClonesArray.h>
 #include <TCollection.h>
-#include <TFile.h>
-#include <TList.h>
-#include <TObject.h>
 #include <TCutG.h>
 #include <TF1.h>
+#include <TFile.h>
 #include <TGraph.h>
 #include <TKey.h>
+#include <TList.h>
+#include <TObject.h>
 #include <TTreeReader.h>
 #include <TTreeReaderValue.h>
+
+#include "S800Ana.h"
+#include "S800Calc.h"
 
 #include <algorithm>
 #include <cmath>
@@ -111,7 +112,6 @@ void AtMergeTask::SetATTPCClockFreq(Double_t value)
    fATTPCClockFreq = value;
 }
 
-
 Int_t AtMergeTask::GetS800TsSize()
 {
    return fTsEvtS800Size;
@@ -147,26 +147,29 @@ InitStatus AtMergeTask::Init()
 
    fTsEvtS800Size = 0;
    fEvtMerged = 0;
-   fATTPCTs0=-1;
-   Long64_t S800Ts0=0;//special for use of internal AT-TPC TS
-   fATTPCTsPrev=0;
+   fATTPCTs0 = -1;
+   Long64_t S800Ts0 = 0; // special for use of internal AT-TPC TS
+   fATTPCTsPrev = 0;
 
    fS800file = new TFile(fS800File); // NOLINT belongs to ROOT
    TTreeReader reader1("caltree", fS800file);
    TTreeReaderValue<Long64_t> ts(reader1, "fts");
 
-   LOG(INFO)<<cBLUE<<"Loading S800 timestamps..."<<cNORMAL;
+   LOG(INFO) << cBLUE << "Loading S800 timestamps..." << cNORMAL;
    while (reader1.Next()) {
       fS800Ts.push_back((Long64_t)*ts);
       // fS800Ts.push_back((Long64_t) *ts - fTsDelta);//special for run180 e18027
       fS800Evt.push_back((Double_t)fTsEvtS800Size);
-//------- Special for using internal AT-TPC TS (ex: runs 144 to 168), comment if run149 (but keep the second special part uncommented)
-      if(fUseATTPCClock){
-      	if(fTsEvtS800Size==0) S800Ts0=fS800Ts.at(0);
-      	fS800Ts.at(fTsEvtS800Size)-=S800Ts0;
-        if(fTsEvtS800Size<10) std::cout<<"Ts S800 "<<fS800Ts.at(fTsEvtS800Size)<<" S800Ts0 "<<S800Ts0<<std::endl;
+      //------- Special for using internal AT-TPC TS (ex: runs 144 to 168), comment if run149 (but keep the second
+      // special part uncommented)
+      if (fUseATTPCClock) {
+         if (fTsEvtS800Size == 0)
+            S800Ts0 = fS800Ts.at(0);
+         fS800Ts.at(fTsEvtS800Size) -= S800Ts0;
+         if (fTsEvtS800Size < 10)
+            std::cout << "Ts S800 " << fS800Ts.at(fTsEvtS800Size) << " S800Ts0 " << S800Ts0 << std::endl;
       }
-//--------
+      //--------
       fTsEvtS800Size++;
    }
    ioMan->Register("s800cal", "S800", fS800CalcBr, fIsPersistence);
@@ -184,13 +187,12 @@ InitStatus AtMergeTask::Init()
    // fS800TsGraph->Draw("AL");
    // fS800TsFunc->Draw("same");
 
-
-  fS800Ana.SetPID1cut(fcutPID1File);
-  fS800Ana.SetPID2cut(fcutPID2File);
-  fS800Ana.SetPID3cut(fcutPID3File);
-  fS800Ana.SetMTDCXfRange(fMTDCXfRange);
-  fS800Ana.SetMTDCObjRange(fMTDCObjRange);
-  fS800Ana.SetTofObjCorr(fTofObjCorr);
+   fS800Ana.SetPID1cut(fcutPID1File);
+   fS800Ana.SetPID2cut(fcutPID2File);
+   fS800Ana.SetPID3cut(fcutPID3File);
+   fS800Ana.SetMTDCXfRange(fMTDCXfRange);
+   fS800Ana.SetMTDCObjRange(fMTDCObjRange);
+   fS800Ana.SetTofObjCorr(fTofObjCorr);
 
    return kSUCCESS;
 }
@@ -205,26 +207,30 @@ void AtMergeTask::Exec(Option_t *opt)
 
    auto *rawEvent = dynamic_cast<AtRawEvent *>(fRawEventArray->At(0));
    Long64_t AtTPCTs = -1;
-   if(!fUseATTPCClock)
-   {
-     if(rawEvent->GetTimestamps().size()==1)
-     {
-      LOG(WARNING)<<cYELLOW<<" AtMergeTask : only TS based on internal AT-TPC clock available, check fUseATTPCClock unpacking macro"<<cNORMAL<<std::endl;
-      return;
-     }
-     else
-      AtTPCTs = rawEvent->GetTimestamp(1);
+   if (!fUseATTPCClock) {
+      if (rawEvent->GetTimestamps().size() == 1) {
+         LOG(WARNING)
+            << cYELLOW
+            << " AtMergeTask : only TS based on internal AT-TPC clock available, check fUseATTPCClock unpacking macro"
+            << cNORMAL << std::endl;
+         return;
+      } else
+         AtTPCTs = rawEvent->GetTimestamp(1);
    }
-   if(fUseATTPCClock)
-   {
-     AtTPCTs = rawEvent->GetTimestamp(0);
-     if(fATTPCTs0==-1) fATTPCTs0=AtTPCTs;//special run 275, comment this line and uncomment the following line
-  	 // if(fATTPCTs0==-1) fATTPCTs0=902487436452;// special run 275 the first event is not in s800 data so substract the TS of the second evt
-  	 AtTPCTs=(AtTPCTs-fATTPCTs0)/fATTPCClockFreq;//9.9994347//run146 164 9.9994345 run155 9.999435 run160 9.999434
-  	 //std::cout<<"debug "<<fCounter<<" "<<AtTPCTs<<" "<<fATTPCTsPrev<<" "<<AtTPCTs-fATTPCTsPrev<<std::endl;
-  	 if((AtTPCTs-fATTPCTsPrev)>1e+8) AtTPCTs-=429521035;//sometimes the ATTPC TS jump (?)
-  	 if((AtTPCTs-fATTPCTsPrev)<-1e+8) AtTPCTs+=429521035;
-  	 fATTPCTsPrev = AtTPCTs;
+   if (fUseATTPCClock) {
+      AtTPCTs = rawEvent->GetTimestamp(0);
+      if (fATTPCTs0 == -1)
+         fATTPCTs0 = AtTPCTs; // special run 275, comment this line and uncomment the following line
+      // if(fATTPCTs0==-1) fATTPCTs0=902487436452;// special run 275 the first event is not in s800 data so substract
+      // the TS of the second evt
+      AtTPCTs =
+         (AtTPCTs - fATTPCTs0) / fATTPCClockFreq; // 9.9994347//run146 164 9.9994345 run155 9.999435 run160 9.999434
+      // std::cout<<"debug "<<fCounter<<" "<<AtTPCTs<<" "<<fATTPCTsPrev<<" "<<AtTPCTs-fATTPCTsPrev<<std::endl;
+      if ((AtTPCTs - fATTPCTsPrev) > 1e+8)
+         AtTPCTs -= 429521035; // sometimes the ATTPC TS jump (?)
+      if ((AtTPCTs - fATTPCTsPrev) < -1e+8)
+         AtTPCTs += 429521035;
+      fATTPCTsPrev = AtTPCTs;
    }
    int minj = 0, maxj = 0;
    Double_t S800EvtMatch = -1;
@@ -264,7 +270,7 @@ void AtMergeTask::Exec(Option_t *opt)
    }
 
    if (S800EvtMatch < 0)
-      LOG(WARNING) <<cRED<< "NO TS MATCHING !" <<cNORMAL;
+      LOG(WARNING) << cRED << "NO TS MATCHING !" << cNORMAL;
 
    if (S800EvtMatch > 0) {
       TTreeReader reader2("caltree", fS800file);

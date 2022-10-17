@@ -9,6 +9,7 @@
 #include "AtAuxPad.h"       // for AtAuxPad
 #include "AtEvent.h"        // for AtEvent, hitVector
 #include "AtEventManager.h" // for AtEventManager
+#include "AtFindVertex.h"   //for vertex
 #include "AtHit.h"          // for AtHit
 #include "AtHitCluster.h"   // for AtHitCluster
 #include "AtMap.h"          // for AtMap
@@ -18,9 +19,6 @@
 #include "AtPatternEvent.h" // for AtPatternEvent
 #include "AtRawEvent.h"     // for AtRawEvent, AuxPadMap
 #include "AtTrack.h"        // for AtTrack, operator<<
-#include "AtFindVertex.h"   //for vertex
-#include "S800Calc.h" // for S800Calc, CRDC, MultiHitTOF, IC
-#include "S800Ana.h"
 
 #include <FairLogger.h>      // for Logger, LOG
 #include <FairRootManager.h> // for FairRootManager
@@ -55,6 +53,9 @@
 #include <TStyle.h>          // for TStyle, gStyle
 #include <TVirtualPad.h>     // for TVirtualPad, gPad
 #include <TVirtualX.h>       // for TVirtualX
+
+#include "S800Ana.h"
+#include "S800Calc.h" // for S800Calc, CRDC, MultiHitTOF, IC
 
 #include <algorithm> // for max
 #include <array>     // for array
@@ -213,7 +214,7 @@ InitStatus AtEventDrawTask::Init()
    DrawPID2();
 
    S800Ana s800Ana;
-   s800Ana = fEventManager->GetS800Ana();//MTDCRanges must be set before calling AtEventDrawTask::Intit()
+   s800Ana = fEventManager->GetS800Ana(); // MTDCRanges must be set before calling AtEventDrawTask::Intit()
    fMTDCXfRange = s800Ana.GetMTDCXfRange();
    fMTDCObjRange = s800Ana.GetMTDCObjRange();
    fTofObjCorr = s800Ana.GetTofObjCorr();
@@ -239,7 +240,7 @@ void AtEventDrawTask::Exec(Option_t *option)
    if (fEventArray) {
       DrawHitPoints();
    }
-   if(fS800Calc) {
+   if (fS800Calc) {
       DrawS800();
    }
 
@@ -253,8 +254,8 @@ void AtEventDrawTask::Exec(Option_t *option)
    UpdateCvsPhi();
    UpdateCvsMesh();
    UpdateCvs3DHist();
-   //UpdateCvsPID();
-   //UpdateCvsPID2();
+   // UpdateCvsPID();
+   // UpdateCvsPID2();
    if (fUnpackHough && fEventManager->GetDrawReconstruction()) {
       UpdateCvsHoughSpace();
       UpdateCvsRad();
@@ -310,7 +311,7 @@ void AtEventDrawTask::DrawRecoHits()
 
    AtFindVertex findVtx(12);
    // findVtx.FindVertexMultipleLines(TrackCand, 2);
-   findVtx.FindVertex(TrackCand,fMinTracksPerVertex);
+   findVtx.FindVertex(TrackCand, fMinTracksPerVertex);
    std::vector<tracksFromVertex> tv;
    tv = findVtx.GetTracksVertex();
 
@@ -319,7 +320,7 @@ void AtEventDrawTask::DrawRecoHits()
       fVertex[i]->SetMarkerColor(kViolet);
       fVertex[i]->SetMarkerSize(fVertexSize);
       fVertex[i]->SetMarkerStyle(fVertexStyle);
-      fVertex[i]->SetNextPoint(tv.at(i).vertex.X()/10.,tv.at(i).vertex.Y()/10.,tv.at(i).vertex.Z()/10.);
+      fVertex[i]->SetNextPoint(tv.at(i).vertex.X() / 10., tv.at(i).vertex.Y() / 10., tv.at(i).vertex.Z() / 10.);
    }
 
    for (Int_t i = 0; i < TrackCand.size(); i++) {
@@ -614,25 +615,23 @@ void AtEventDrawTask::DrawHitPoints()
    dumpEvent.close();
 }
 
-void
-AtEventDrawTask::DrawS800()
+void AtEventDrawTask::DrawS800()
 {
-  //fS800Calc = dynamic_cast<S800Calc*> (fS800CalcArray->At(0));
+   // fS800Calc = dynamic_cast<S800Calc*> (fS800CalcArray->At(0));
 
-  if(fS800Calc->GetIsInCut()){
-    S800Ana s800Ana;
-    s800Ana.SetMTDCXfRange(fMTDCXfRange);
-    s800Ana.SetMTDCObjRange(fMTDCObjRange);
-    s800Ana.SetTofObjCorr(fTofObjCorr);
+   if (fS800Calc->GetIsInCut()) {
+      S800Ana s800Ana;
+      s800Ana.SetMTDCXfRange(fMTDCXfRange);
+      s800Ana.SetMTDCObjRange(fMTDCObjRange);
+      s800Ana.SetTofObjCorr(fTofObjCorr);
 
-     s800Ana.Calc(fS800Calc);
+      s800Ana.Calc(fS800Calc);
 
-	   if(s800Ana.GetObjCorr_ToF() != -999)
-      fPID->Fill(s800Ana.GetObjCorr_ToF(),s800Ana.GetXfObj_ToF());
-	   if(s800Ana.GetObjCorr_ToF() != -999)
-      fPID2->Fill(s800Ana.GetObjCorr_ToF(),s800Ana.GetICSum_E());
-  }
-
+      if (s800Ana.GetObjCorr_ToF() != -999)
+         fPID->Fill(s800Ana.GetObjCorr_ToF(), s800Ana.GetXfObj_ToF());
+      if (s800Ana.GetObjCorr_ToF() != -999)
+         fPID2->Fill(s800Ana.GetObjCorr_ToF(), s800Ana.GetICSum_E());
+   }
 }
 
 void AtEventDrawTask::Reset()

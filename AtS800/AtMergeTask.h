@@ -1,10 +1,10 @@
 #ifndef AtMergeTask_H
 #define AtMergeTask_H
 
-#include "S800Ana.h"
-
 #include <Rtypes.h>
 #include <TString.h>
+
+#include "S800Ana.h"
 // FAIRROOT classes
 #include <FairTask.h>
 
