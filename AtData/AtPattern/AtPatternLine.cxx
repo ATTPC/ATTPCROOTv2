@@ -100,17 +100,30 @@ void AtPatternLine::FitPattern(const std::vector<XYZPoint> &points, const std::v
    for (int i = 0; i < points.size(); ++i) {
       const auto hitQ = doChargeWeight ? charge[i] : 1;
       const auto &pos = points[i];
-      Q += hitQ / 10.;
-      Xm += pos.X() * hitQ / 10.;
-      Ym += pos.Y() * hitQ / 10.;
-      Zm += pos.Z() * hitQ / 10.;
-      Sxx += pos.X() * pos.X() * hitQ / 10.;
-      Syy += pos.Y() * pos.Y() * hitQ / 10.;
-      Szz += pos.Z() * pos.Z() * hitQ / 10.;
-      Sxy += pos.X() * pos.Y() * hitQ / 10.;
-      Sxz += pos.X() * pos.Z() * hitQ / 10.;
-      Syz += pos.Y() * pos.Z() * hitQ / 10.;
+      fTotCharge += hitQ;
+      // Q += hitQ / 10.;
+      // Xm += pos.X() * hitQ / 10.;
+      // Ym += pos.Y() * hitQ / 10.;
+      // Zm += pos.Z() * hitQ / 10.;
+      // Sxx += pos.X() * pos.X() * hitQ / 10.;
+      // Syy += pos.Y() * pos.Y() * hitQ / 10.;
+      // Szz += pos.Z() * pos.Z() * hitQ / 10.;
+      // Sxy += pos.X() * pos.Y() * hitQ / 10.;
+      // Sxz += pos.X() * pos.Z() * hitQ / 10.;
+      // Syz += pos.Y() * pos.Z() * hitQ / 10.;
+      Q += 1. / 10.;
+      Xm += pos.X() * 1. / 10.;
+      Ym += pos.Y() * 1. / 10.;
+      Zm += pos.Z() * 1. / 10.;
+      Sxx += pos.X() * pos.X() * 1. / 10.;
+      Syy += pos.Y() * pos.Y() * 1. / 10.;
+      Szz += pos.Z() * pos.Z() * 1. / 10.;
+      Sxy += pos.X() * pos.Y() * 1. / 10.;
+      Sxz += pos.X() * pos.Z() * 1. / 10.;
+      Syz += pos.Y() * pos.Z() * 1. / 10.;
    }
+
+   std::cout<<"do charge weight ransacline "<<Q<<std::endl;
 
    Xm /= Q;
    Ym /= Q;
@@ -168,5 +181,5 @@ void AtPatternLine::FitPattern(const std::vector<XYZPoint> &points, const std::v
    DefinePattern({p1, p2});
    fChi2 = (fabs(dm2 / Q));
    fNFree = points.size() - 6;
-   fTotCharge = Q*10.;
+   // fTotCharge = Q*10.;
 }
