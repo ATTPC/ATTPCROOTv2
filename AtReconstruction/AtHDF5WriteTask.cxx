@@ -6,11 +6,13 @@
 #include <FairLogger.h>      // for LOG
 #include <FairRootManager.h> // for FairRootManager
 
+#include <Math/Point3D.h> // for PositionVector3D
 #include <TClonesArray.h>
 #include <TObject.h> // for TObject
 
 #include <H5Cpp.h>
 
+#include <array>   // for array
 #include <utility> // for move
 
 AtHDF5WriteTask::AtHDF5WriteTask(TString fileName, TString branchName)
@@ -88,7 +90,7 @@ void AtHDF5WriteTask::Exec(Option_t *opt)
    }
 
    H5::DataSet *traceset;
-   traceset = new H5::DataSet(fFile->createDataSet(TString::Format("/Event_[%d]/Trace_[%d]", fEventNum),
+   traceset = new H5::DataSet(fFile->createDataSet(TString::Format("/Event_[%d]/Trace_[%d]", fEventNum, fEventNum),
                                                    H5::PredType::NATIVE_DOUBLE, traceSpace));
    traceset->write(trace, H5::PredType::NATIVE_DOUBLE);
    delete traceset;
