@@ -5,7 +5,7 @@
 class TClonesArray;
 class AtRawEvent;
 class AtPad;
-class AtPadReference;
+struct AtPadReference;
 
 class AtFilter {
 
@@ -24,6 +24,7 @@ public:
    virtual void InitEvent(AtRawEvent *inputEvent) = 0;
 
    // Called on each pad
+   // The PadReference needs to be supplied when filtering FPN channels, such as for AtSCACorrect
    virtual void Filter(AtPad *pad, AtPadReference *padReference = nullptr) = 0;
 
    // Called at the end of an event. Returns if filtering was successful.

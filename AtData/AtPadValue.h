@@ -5,8 +5,7 @@
 
 #include <Rtypes.h> // for Double_t, ClassDefOverride
 
-#include <memory>  // for unique_ptr
-#include <utility> // for move
+#include <memory> // for unique_ptr
 
 class TBuffer;
 class TClass;

@@ -2,11 +2,10 @@
 
 #include "AtMap.h"
 #include "AtPad.h"
+#include "AtPadBase.h"
 #include "AtPadReference.h"
 #include "AtPadValue.h"
 #include "AtRawEvent.h"
-
-#include <FairLogger.h>
 
 #include <numeric>
 void AtSCACorrect::Filter(AtPad *pad, AtPadReference *padReference)
@@ -18,7 +17,7 @@ void AtSCACorrect::Filter(AtPad *pad, AtPadReference *padReference)
 void AtSCACorrect::removeBaseline(AtPad *pad, AtPadReference *padReference)
 {
 
-   AtPad *baselinePad;
+   AtPad *baselinePad = nullptr;
    if (padReference != nullptr) {
       if (fMap->IsFPNchannel(*padReference)) {
          baselinePad = fBaseline->GetFpn(*padReference);
@@ -29,16 +28,20 @@ void AtSCACorrect::removeBaseline(AtPad *pad, AtPadReference *padReference)
       baselinePad = fBaseline->GetPad(pad->GetPadNum());
    }
 
-   for (int i = 0; i < 512; ++i) {
-      pad->SetADC(i, pad->GetRawADC(i) - baselinePad->GetADC(i));
+   if (baselinePad != nullptr) {
+      for (int i = 0; i < 512; ++i) {
+         pad->SetADC(i, pad->GetRawADC(i) - baselinePad->GetADC(i));
+      }
+      pad->SetPedestalSubtracted(kTRUE);
+   } else {
+      std::cout << "Baseline is null!" << std::endl;
    }
-   pad->SetPedestalSubtracted(kTRUE);
 }
 
 void AtSCACorrect::removePhase(AtPad *pad, AtPadReference *padReference)
 {
 
-   AtPad *phasePad;
+   AtPad *phasePad = nullptr;
    if (padReference != nullptr) {
       if (fMap->IsFPNchannel(*padReference)) {
          phasePad = fPhase->GetFpn(*padReference);
@@ -49,12 +52,16 @@ void AtSCACorrect::removePhase(AtPad *pad, AtPadReference *padReference)
       phasePad = fPhase->GetPad(pad->GetPadNum());
    }
 
-   int lastCell = (dynamic_cast<AtPadValue *>(pad->GetAugment("lastCell")))->GetValue();
-   for (int i = 0; i < 512; i++) {
-      int phaseShift = i + lastCell;
-      if (phaseShift > 511) {
-         phaseShift = phaseShift - 512;
+   if (phasePad != nullptr) {
+      int lastCell = (dynamic_cast<AtPadValue *>(pad->GetAugment("lastCell")))->GetValue();
+      for (int i = 0; i < 512; i++) {
+         int phaseShift = i + lastCell;
+         if (phaseShift > 511) {
+            phaseShift = phaseShift - 512;
+         }
+         pad->SetADC(i, pad->GetADC(i) - phasePad->GetADC(phaseShift));
       }
-      pad->SetADC(i, pad->GetADC(i) - phasePad->GetADC(phaseShift));
+   } else {
+      std::cout << "Phase is null!" << std::endl;
    }
 }

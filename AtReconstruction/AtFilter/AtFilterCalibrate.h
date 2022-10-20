@@ -11,6 +11,7 @@
 
 class AtPad;
 class AtRawEvent;
+struct AtPadReference;
 
 using calibrationMap = std::unordered_map<int, float>;
 using filePtr = std::unique_ptr<std::ifstream>;
