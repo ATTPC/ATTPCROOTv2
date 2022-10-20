@@ -1,3 +1,4 @@
+
 void run_writeHDF(TString dataFile = "./data/GADGET-multiple-files.txt", TString parameterFile = "GADGET.sim.par",
                   TString mappath = "")
 
@@ -55,7 +56,7 @@ void run_writeHDF(TString dataFile = "./data/GADGET-multiple-files.txt", TString
    AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
    psaTask->SetPersistence(kTRUE);
 
-   auto *wHDF = new AtHDF5WriteTask("output_hdf", "AtEventH");
+   auto *wHDF = new AtHDF5WriteTask("data/output.h5", "AtEventH");
 
    run->AddTask(unpackTask);
    run->AddTask(psaTask);
