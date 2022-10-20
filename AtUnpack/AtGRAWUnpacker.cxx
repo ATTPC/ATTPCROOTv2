@@ -18,9 +18,9 @@
 #include "GETDecoder2.h"
 
 #include <algorithm>
+#include <future>
 #include <iostream>
 #include <iterator> // for begin, end
-#include <future>
 #include <thread>
 #include <utility>
 
@@ -49,18 +49,16 @@ void AtGRAWUnpacker::Init()
    std::vector<int> eventCoboIDs;
    std::vector<int> lastEvents;
    std::vector<std::thread> file;
-   std::vector<std::future<CoboAndEvent> > futureValues;
+   std::vector<std::future<CoboAndEvent>> futureValues;
    LOG(info) << "Initial frame IDs";
    for (int i = 0; i < fNumFiles; ++i) {
       GETBasicFrame *basicFrame = fDecoder[i]->GetBasicFrame(-1);
       iniFrameIDs.push_back(basicFrame->GetEventID());
       LOG(info) << i << " " << iniFrameIDs.back();
-
    }
    if (fIsMutantOneRun) {
       fNumEvents = GetLastEvent(0).second;
-   }
-   else {
+   } else {
       for (int i = 0; i < fNumFiles; ++i) {
          std::promise<CoboAndEvent> p;
          futureValues.push_back(p.get_future());
@@ -332,7 +330,8 @@ void AtGRAWUnpacker::ProcessBasicFile(Int_t fileIdx)
          auto PadRefNum = fMap->GetPadNum(PadRef);
          auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
 
-         if (PadRefNum != -1 && fMap->IsInhibited(PadRefNum) == AtMap::InhibitType::kNone && !fMap->IsFPNchannel(PadRef)) {
+         if (PadRefNum != -1 && fMap->IsInhibited(PadRefNum) == AtMap::InhibitType::kNone &&
+             !fMap->IsFPNchannel(PadRef)) {
             AtPad *pad = nullptr;
             {
                // Ensure the threads aren't both trying to create pads at the same time
@@ -394,11 +393,12 @@ void AtGRAWUnpacker::ProcessBasicFile(Int_t fileIdx)
             for (Int_t iTb = 0; iTb < 512; iTb++)
                pad->SetRawADC(iTb, rawadc[iTb]);
             if (fIsSaveLastCell) {
-               //std::cout << "saving last cell FPN " << iCobo << " " << iAsad << " " << iAget << " " << iCh << std::endl;
+               // std::cout << "saving last cell FPN " << iCobo << " " << iAsad << " " << iAget << " " << iCh <<
+               // std::endl;
                auto lastCellPad =
                   dynamic_cast<AtPadValue *>(pad->AddAugment("lastCell", std::make_unique<AtPadValue>()));
                lastCellPad->SetValue(basicFrame->GetLastCell(iAget));
-               //std::cout << "last cell FPN saved" << std::endl;
+               // std::cout << "last cell FPN saved" << std::endl;
             }
          }
       }
@@ -444,8 +444,9 @@ CoboAndEvent AtGRAWUnpacker::GetLastEvent(Int_t fileIdx)
       if (basicFrame != nullptr) {
          coboInfo.second = basicFrame->GetEventID();
       } else {
-         //std::cout << "End of file reached!" << std::endl;
-         //std::cout << "cobo " << coboInfo.first << " asad " << asad << " final event " << coboInfo.second << std::endl;
+         // std::cout << "End of file reached!" << std::endl;
+         // std::cout << "cobo " << coboInfo.first << " asad " << asad << " final event " << coboInfo.second <<
+         // std::endl;
          atEnd = true;
       }
    }

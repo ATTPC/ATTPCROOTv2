@@ -32,7 +32,7 @@ class TMemberInspector;
 
 using GETDecoder2Ptr = std::unique_ptr<GETDecoder2>;
 using AtPedestalPtr = std::unique_ptr<AtPedestal>;
-using CoboAndEvent =  std::pair<int, int>;
+using CoboAndEvent = std::pair<int, int>;
 
 class AtGRAWUnpacker : public AtUnpacker {
 protected:
@@ -53,7 +53,9 @@ protected:
    Bool_t fIsSeparatedData;
    Bool_t fIsSubtractFPN = true;
    Bool_t fIsBaseLineSubtraction{};
-   Bool_t fIsMutantOneRun = false;
+   Bool_t fIsMutantOneRun =
+      false; // Checks for the number of events from only the first decoder. Only set true if all files have the same
+             // number of events (such as with Mutant trigger or only one CoBo).
 
    // String to identify which file in fInputFileName map to which fDecoder
    std::string fFileIDString;
@@ -77,7 +79,7 @@ public:
    void SetSaveLastCell(Bool_t val) { fIsSaveLastCell = val; }
    void SetSubtractFPN(Bool_t val) { fIsSubtractFPN = val; }
    void SetBaseLineSubtraction(Bool_t val) { fIsBaseLineSubtraction = val; }
-   void SetMutantOneRun(Bool_t val) { fIsMutantOneRun = val; } // Checks for the number of events from only the first decoder. Only set true if all files have the same number of events (such as with Mutant trigger or only one CoBo).
+   void SetMutantOneRun(Bool_t val) { fIsMutantOneRun = val; }
 
    // AtUnpacker interface
    virtual void Init() override;
@@ -100,7 +102,7 @@ private:
    void ProcessLayeredFrame(GETLayeredFrame *layeredFrame);
    void ProcessBasicFrame(GETBasicFrame *basicFrame);
 
-   CoboAndEvent GetLastEvent(Int_t fileIdx); 
+   CoboAndEvent GetLastEvent(Int_t fileIdx);
 
    ClassDefOverride(AtGRAWUnpacker, 1)
 };
