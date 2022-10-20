@@ -372,6 +372,8 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
 
    } // Tracks
 
+   FindSingleTracks(candTrackPool);
+
    // Find candidate tracks closer to vertex and discard duplicated
 
    std::vector<AtTrack *> candToMergePool;
@@ -1211,13 +1213,8 @@ Bool_t FitManager::CompareTracks(AtTrack *trA, AtTrack *trB)
    if ((trB->GetGeoTheta() - angleSpread) <= trA->GetGeoTheta() &&
        trA->GetGeoTheta() <= (trB->GetGeoTheta() + angleSpread)) {
 
-      std::pair<Double_t, Double_t> centerA = trA->GetGeoCenter();
-      std::pair<Double_t, Double_t> centerB = trB->GetGeoCenter();
-      std::cout << " Center A : " << centerA.first << " - " << centerA.second << "\n";
-      std::cout << " Center B : " << centerB.first << " - " << centerB.second << "\n";
-      Double_t centerDistance =
-         TMath::Sqrt(TMath::Power(centerA.first - centerB.first, 2) + TMath::Power(centerA.second - centerB.second, 2));
-      std::cout << " Center Distance : " << centerDistance << "\n";
+      Double_t centerDistance = CenterDistance(trA, trB);
+
       if (centerDistance < distThresh) {
 
          if (!CheckOverlap(trA, trB)) {
@@ -1285,6 +1282,17 @@ Bool_t FitManager::CompareTracks(AtTrack *trA, AtTrack *trB)
    return false;
 }
 
+Double_t FitManager::CenterDistance(AtTrack *trA, AtTrack *trB)
+{
+   std::pair<Double_t, Double_t> centerA = trA->GetGeoCenter();
+   std::pair<Double_t, Double_t> centerB = trB->GetGeoCenter();
+   std::cout << " Center A : " << centerA.first << " - " << centerA.second << "\n";
+   std::cout << " Center B : " << centerB.first << " - " << centerB.second << "\n";
+   Double_t centerDistance =
+      TMath::Sqrt(TMath::Power(centerA.first - centerB.first, 2) + TMath::Power(centerA.second - centerB.second, 2));
+   std::cout << " Center Distance : " << centerDistance << "\n";
+   return centerDistance;
+}
 Bool_t FitManager::CheckOverlap(AtTrack *trA, AtTrack *trB)
 {
    auto &hitArrayA = trA->GetHitArray();
@@ -1317,12 +1325,55 @@ Bool_t FitManager::CheckOverlap(AtTrack *trA, AtTrack *trB)
    }
 
    Double_t shortStraw = (hitArrayA.size() < hitArrayB.size()) ? hitArrayA.size() : hitArrayB.size();
-   // TODO: % of overlap
+   // TODO: % of overlap. Counted twice!
    // std::cout<<" Overlap "<<shortStraw<<" "<<iTBMatch<<"\n";
    if (iTBMatch > (shortStraw * 0.1))
       return true;
    else
       return false;
+}
+
+Bool_t FitManager::CheckAngles(AtTrack *trA, AtTrack *trB)
+{
+   // TODO
+   Double_t angleSpread = 5.0 * TMath::DegToRad();
+
+   if ((trB->GetGeoTheta() - angleSpread) <= trA->GetGeoTheta() &&
+       trA->GetGeoTheta() <= (trB->GetGeoTheta() + angleSpread))
+      return true;
+   else
+      return false;
+}
+
+std::vector<AtTrack *> FitManager::FindSingleTracks(std::vector<AtTrack *> &tracks)
+{
+
+   // TODO
+   Double_t angleSpread = 5.0 * TMath::DegToRad();
+   Double_t distThresh = 100.0;
+   Double_t distMax = 100.0;
+   std::vector<AtTrack *> singleTracks;
+   std::vector<AtTrack *> fragmentedTracks;
+
+   for (auto itA = tracks.begin(); itA != tracks.end(); ++itA) {
+      AtTrack *trA = *(itA);
+      std::cout << " Checking if track " << trA->GetTrackID() << " is single."
+                << "\n";
+      Bool_t isSingle = false;
+      // Length - center - overlap
+      for (auto itB = itA + 1; itB != tracks.end(); ++itB) {
+         AtTrack *trB = *(itB);
+         std::cout << " Track A : " << trA->GetTrackID() << " - Track B : " << trB->GetTrackID() << "\n";
+         std::cout << " Track A Theta : " << trA->GetGeoTheta() * TMath::RadToDeg()
+                   << " - Track B : " << trB->GetGeoTheta() * TMath::RadToDeg() << "\n";
+         std::cout << " Track A Phi : " << trA->GetGeoPhi() * TMath::RadToDeg()
+                   << " - Track B : " << trB->GetGeoPhi() * TMath::RadToDeg() << "\n";
+
+         Double_t centerDistance = CenterDistance(trA, trB);
+      }
+   }
+
+   return singleTracks;
 }
 
 Bool_t FitManager::SetOutputFile(TString &file)

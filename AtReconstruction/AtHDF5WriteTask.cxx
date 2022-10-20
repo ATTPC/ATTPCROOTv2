@@ -1,15 +1,18 @@
 #include "AtHDF5WriteTask.h"
 
 #include "AtEvent.h"
+#include "AtHit.h"
 
 #include <FairLogger.h>      // for LOG
 #include <FairRootManager.h> // for FairRootManager
 
+#include <Math/Point3D.h> // for PositionVector3D
 #include <TClonesArray.h>
 #include <TObject.h> // for TObject
 
 #include <H5Cpp.h>
 
+#include <array>   // for array
 #include <utility> // for move
 
 AtHDF5WriteTask::AtHDF5WriteTask(TString fileName, TString branchName)
@@ -28,32 +31,50 @@ InitStatus AtHDF5WriteTask::Init()
 
    fEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fInputBranchName));
 
-   // TODO: Here is where we will need to open the HDF5 file (fFile)
+   fFile = std::make_unique<H5::H5File>(fOutputFileName, H5F_ACC_TRUNC);
 
    return kSUCCESS;
 }
 
 void AtHDF5WriteTask::Exec(Option_t *opt)
 {
-   // You will want to do something like this I think:
-   // http://davis.lbl.gov/Manuals/HDF5-1.6.5/cpplus_RM/h5group_8cpp-example.html starting from the
-   // comment "Create a group in the file"
+   auto eventGroup = std::make_unique<H5::Group>(fFile->createGroup(TString::Format("/Event_[%d]", fEventNum)));
 
-   // Because events are indexted by their event number the opening line will be something like
-   auto eventGroup = std::make_unique<H5::Group>(fFile->createGroup(TString::Format("Event_[%d]", fEventNum++)));
-
-   // Then we get the event we want to write
    auto *event = dynamic_cast<AtEvent *>(fEventArray->At(0));
+   Int_t nHits = event->GetNumHits();
+   const auto &traceEv = event->GetMesh();
 
-   // Then we will look for the hits in the event and add them to the event group. This is basically
-   // the code from R2HMain.cc starting at the line:
-   // "hsize_t dim[] = {(hsize_t)nHits}; /* Dataspace dimensions */"
+   hsize_t hitdim[] = {(hsize_t)nHits};
+   hsize_t tracedim[] = {(hsize_t)traceEv.size()};
+   H5::DataSpace hitSpace(1, hitdim);
+   H5::DataSpace traceSpace(1, tracedim);
 
-   // Then we need to write the dataset of the hits. Rather than creating the type specification here
-   // You can call AtHit::GetHDF5Type() and that will return the composite type needed to write the
-   // AtHit_t struct
+   /**
+      @TODO At some point we may have to think about how to generalize this so it can also write
+      derived types of AtHit.
+   **/
+   AtHit_t hits[nHits];
+   auto hdf5Type = AtHit().GetHDF5Type();
 
-   // Then we need to create the dataset with the trace and write it
+   for (Int_t iHit = 0; iHit < nHits; iHit++) {
+      const AtHit &hit = event->GetHit(iHit);
+
+      auto hitPos = hit.GetPosition();
+      hits[iHit].x = hitPos.X();
+      hits[iHit].y = hitPos.Y();
+      hits[iHit].z = hitPos.Z();
+      hits[iHit].t = hit.GetTimeStamp();
+      hits[iHit].A = hit.GetCharge();
+   }
+
+   H5::DataSet hitset = fFile->createDataSet(TString::Format("/Event_[%d]/HitArray", fEventNum), hdf5Type, hitSpace);
+   hitset.write(hits, hdf5Type);
+
+   H5::DataSet traceset =
+      fFile->createDataSet(TString::Format("/Event_[%d]/Trace", fEventNum), H5::PredType::NATIVE_FLOAT, traceSpace);
+   traceset.write(traceEv.data(), H5::PredType::NATIVE_FLOAT);
+
+   ++fEventNum;
 }
 
 ClassImp(AtHDF5WriteTask);

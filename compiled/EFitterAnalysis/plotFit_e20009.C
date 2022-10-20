@@ -39,8 +39,9 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
 
    std::ofstream outputFileEvents("list_of_events.txt");
 
+   gStyle->SetNumberContours(256);
+   gStyle->SetPalette(112);
 
-   
    //DWBA calculations
    Double_t sigmaDWBA0=0;
    Double_t sigmaDWBA1=0;
@@ -646,13 +647,13 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
                // if((*trackPointsVec)[index]<20)
                // continue;
 
-               //if (evMult != 3)
-	       //continue;
+               if (evMult != 3)
+                  continue;
 
                // if ((*POCAXtrVec)[index] > 2000.0)
                // continue;
 
-               if ((*ziniFitVec)[index] < 0.0 || (*ziniFitVec)[index] > 80.0)
+               if ((*ziniFitVec)[index] < 0.0 || (*ziniFitVec)[index] > 40.0)
                   continue;
 
                // if((*AFitVec)[index]<50 || (*AFitVec)[index]>70)
@@ -696,10 +697,12 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
                QcorrZ = ex_energy_exp - mFactor * p1 * ((*ziniFitXtrVec)[index]) - p0;
                HQCorr->Fill(QcorrZ);
 
-	       //if(QcorrZ<7.0 || QcorrZ>8.5)
-	       //continue;
-	       
-	       
+               // if(QcorrZ<7.0 || QcorrZ>8.0)
+               // continue;
+
+               if (QcorrZ < 5.5 || QcorrZ > 6.8)
+                  continue;
+
                // Chi2
                fChi2H->Fill((*fChi2Vec)[index]);
                bChi2H->Fill((*bChi2Vec)[index]);
@@ -938,7 +941,7 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
 
    TGraph *Kine_AngRec_EnerRec_9AMeV = new TGraph(numKin, ThetaLabRec, EnerLabRec);
 
-   fileKine = "Be10pp_in_2+1.txt";
+   fileKine = "./kinematics_e20009/Be10dd_9.05_6.1.txt";
    std::ifstream *kineStr2 = new std::ifstream(fileKine.Data());
    numKin = 0;
 
@@ -953,7 +956,7 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
 
    TGraph *Kine_AngRec_EnerRec_in = new TGraph(numKin, ThetaLabRec, EnerLabRec);
 
-   fileKine = "O16_aa_gs_11.txt";
+   fileKine = "./kinematics_e20009/Be10dd_9.05_7.371.txt";
    std::ifstream *kineStr3 = new std::ifstream(fileKine.Data());
    numKin = 0;
 
@@ -968,7 +971,7 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
 
    TGraph *Kine_AngRec_EnerRec_dp = new TGraph(numKin, ThetaLabRec, EnerLabRec);
 
-   fileKine = "Be10dp_first.txt";
+   fileKine = "./kinematics_e20009/Be10dd_9.05_7.542.txt";
    std::ifstream *kineStr4 = new std::ifstream(fileKine.Data());
    numKin = 0;
 
@@ -989,29 +992,31 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
    c1->cd(1);
    Ang_Ener->SetMarkerStyle(20);
    Ang_Ener->SetMarkerSize(0.5);
-   Ang_Ener->Draw();
-   Kine_AngRec_EnerRec->SetLineWidth(1);
+   Ang_Ener->Draw("col");
+   Ang_Ener->GetXaxis()->SetTitle("Angle (deg)");
+   Ang_Ener->GetYaxis()->SetTitle("Energy (MeV)");
+   Kine_AngRec_EnerRec->SetLineWidth(2);
    Kine_AngRec_EnerRec->SetLineColor(kRed);
    Kine_AngRec_EnerRec->Draw("SAME");
-   Kine_AngRec_EnerRec_in->SetLineWidth(1);
-   Kine_AngRec_EnerRec_in->SetLineColor(kBlue);
-   Kine_AngRec_EnerRec_9AMeV->SetLineWidth(1);
-   Kine_AngRec_EnerRec_9AMeV->SetLineColor(kGreen + 10);
+   Kine_AngRec_EnerRec_in->SetLineWidth(2);
+   Kine_AngRec_EnerRec_in->SetLineColor(kBlue + 3);
+   Kine_AngRec_EnerRec_9AMeV->SetLineWidth(2);
+   Kine_AngRec_EnerRec_9AMeV->SetLineColor(kRed + 3);
    Kine_AngRec_EnerRec_9AMeV->Draw("SAME");
-
    Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
-   Kine_AngRec_EnerRec_dp->SetLineWidth(1);
+   Kine_AngRec_EnerRec_dp->SetLineWidth(2);
    Kine_AngRec_EnerRec_dp->SetLineColor(kGreen);
    Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
-   Kine_AngRec_EnerRec_dp_first->SetLineWidth(1);
+   Kine_AngRec_EnerRec_dp_first->SetLineWidth(2);
    Kine_AngRec_EnerRec_dp_first->SetLineColor(kViolet);
    Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
+
    c1->cd(2);
    HQval->Draw();
    c1->cd(3);
    Ang_Ener_Xtr->SetMarkerStyle(20);
    Ang_Ener_Xtr->SetMarkerSize(0.5);
-   Ang_Ener_Xtr->Draw();
+   Ang_Ener_Xtr->Draw("col");
    // Kine_AngRec_EnerRec->Draw("SAME");
    // Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
    // Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
@@ -1200,6 +1205,16 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
    gDWBA1->Draw("L");
    gDWBA2->Draw("L");
 
+   TCanvas *cKinematics = new TCanvas("cKinematics", "cKinematics", 700, 700);
+   Ang_Ener_Xtr->Draw("col");
+   Ang_Ener_Xtr->GetYaxis()->SetRangeUser(0, 20);
+   Ang_Ener_Xtr->GetXaxis()->SetRangeUser(10, 90);
+   Kine_AngRec_EnerRec->Draw("SAME");
+   Kine_AngRec_EnerRec_9AMeV->Draw("SAME");
+   Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
+   Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
+   Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
+
    /*TCanvas *c2 = new TCanvas();
    c2->Divide(2, 3);
    c2->Draw();
@@ -1223,6 +1238,7 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
    c4->Draw();
    c4->cd(1);
    Ang_AngPRA->Draw();
+
    c4->cd(2);
    zfit_zPRA->Draw();
    c4->cd(3);
