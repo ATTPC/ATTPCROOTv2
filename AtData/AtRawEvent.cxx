@@ -47,6 +47,7 @@ void AtRawEvent::Clear(Option_t *opt)
    fEventID = -1;
    fPadList.clear();
    fAuxPadMap.clear();
+   fFpnMap.clear();
    fTimestamp.clear();
    fSimMCPointMap.clear();
 

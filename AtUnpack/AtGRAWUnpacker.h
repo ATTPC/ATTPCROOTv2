@@ -32,6 +32,7 @@ class TMemberInspector;
 
 using GETDecoder2Ptr = std::unique_ptr<GETDecoder2>;
 using AtPedestalPtr = std::unique_ptr<AtPedestal>;
+using CoboAndEvent =  std::pair<int, int>;
 
 class AtGRAWUnpacker : public AtUnpacker {
 protected:
@@ -39,6 +40,7 @@ protected:
    // Each has its own GETDecoder2, and AtPedestal instance and we will spawn fNumFiles
    // threads to unpack them in parallel
    Int_t fNumFiles;
+   Int_t fNumEvents;
 
    std::vector<GETDecoder2Ptr> fDecoder;
    std::vector<AtPedestalPtr> fPedestal;
@@ -51,6 +53,7 @@ protected:
    Bool_t fIsSeparatedData;
    Bool_t fIsSubtractFPN = true;
    Bool_t fIsBaseLineSubtraction{};
+   Bool_t fIsMutantOneRun = false;
 
    // String to identify which file in fInputFileName map to which fDecoder
    std::string fFileIDString;
@@ -73,7 +76,8 @@ public:
    void SetPseudoTopologyFrame(Int_t asadMask, Bool_t check);
    void SetSaveLastCell(Bool_t val) { fIsSaveLastCell = val; }
    void SetSubtractFPN(Bool_t val) { fIsSubtractFPN = val; }
-   void SetBaseLineSubtraction(Bool_t value) { fIsBaseLineSubtraction = value; }
+   void SetBaseLineSubtraction(Bool_t val) { fIsBaseLineSubtraction = val; }
+   void SetMutantOneRun(Bool_t val) { fIsMutantOneRun = val; } // Checks for the number of events from only the first decoder. Only set true if all files have the same number of events (such as with Mutant trigger or only one CoBo).
 
    // AtUnpacker interface
    virtual void Init() override;
@@ -82,8 +86,9 @@ public:
    virtual void SetInputFileName(std::string fileName) override;
    void SetInputFileName(std::string fileName, std::string fileIDString);
 
+   virtual Long64_t GetNumEvents() override;
+
 private:
-   virtual Long64_t GetNumEvents() override { return -1; }
    Int_t GetFPNChannel(Int_t chIdx);
 
    void processInputFile();
@@ -94,6 +99,8 @@ private:
    void ProcessBasicFile(Int_t fileIdx);
    void ProcessLayeredFrame(GETLayeredFrame *layeredFrame);
    void ProcessBasicFrame(GETBasicFrame *basicFrame);
+
+   CoboAndEvent GetLastEvent(Int_t fileIdx); 
 
    ClassDefOverride(AtGRAWUnpacker, 1)
 };

@@ -41,7 +41,7 @@ void AtSCACorrect::removePhase(AtPad *pad, AtPadReference *padReference)
    AtPad *phasePad;
    if (padReference != nullptr) {
       if (fMap->IsFPNchannel(*padReference)) {
-         phasePad = fBaseline->GetFpn(*padReference);
+         phasePad = fPhase->GetFpn(*padReference);
       } else if (!fMap->IsAuxPad(*padReference)) {
          phasePad = fPhase->GetPad(pad->GetPadNum());
       }

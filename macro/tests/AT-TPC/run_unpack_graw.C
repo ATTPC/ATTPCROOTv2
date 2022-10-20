@@ -1,8 +1,16 @@
+#include <FairLogger.h>
+
 // Unpacks tpc files from /mnt/rawdata/ to /mnt/analysis/e12014/TPC/unpacked
+
 
 // Requires the TPC run number
 void run_unpack_graw(TString dataFile = "./pulser-files.txt", int runNumber = 36)
 {
+   /*auto verbSpec =
+      fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
+   fair::Logger::DefineVerbosity("user1", verbSpec);
+   fair::Logger::SetVerbosity("user1");
+   fair::Logger::SetConsoleSeverity("debug");*/
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
 
@@ -15,7 +23,7 @@ void run_unpack_graw(TString dataFile = "./pulser-files.txt", int runNumber = 36
    // Set the in/out files
    TString outputFile = outDir + TString::Format("/run_%04dSub.root", runNumber);
 
-   // std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
+   //std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
    std::cout << "Saving in: " << outputFile << std::endl;
 
    // Set the mapping for the TPC
@@ -52,7 +60,7 @@ void run_unpack_graw(TString dataFile = "./pulser-files.txt", int runNumber = 36
 
    // Create the unpacker task
    auto unpacker = std::make_unique<AtGRAWUnpacker>(fAtMapPtr, 36);
-   unpacker->SetInputFileName(dataFile.Data(), "file%i");
+   unpacker->SetInputFileName(dataFile.Data(), "file%i_");
    unpacker->SetInitialEventID(0);
    unpacker->SetSaveFPN();
    unpacker->SetSaveLastCell(true);
@@ -61,20 +69,28 @@ void run_unpack_graw(TString dataFile = "./pulser-files.txt", int runNumber = 36
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetPersistence(true);
 
-   auto filterTask = new AtFilterTask(new AtSCACorrect(
-      fAtMapPtr, "/mnt/analysis/e12014/huntc/newFork/ATTPCROOTv2/code/unpacking/background.root", "background",
-      "/mnt/analysis/e12014/huntc/newFork/ATTPCROOTv2/code/unpacking/phase.root", "phase"));
+   auto filterTask = new AtFilterTask(new AtSCACorrect(fAtMapPtr, "background.root", "background", "phase.root", "phase"));
+   filterTask->SetFilterFPN(true);
    filterTask->SetPersistence(true);
    filterTask->SetOutputBranch("CorrectedData");
+
+   // Attempt to restore the data
+   auto filterTask2 = new AtFilterTask(new AtFilterZero());
+   filterTask2->SetFilterFPN(true);
+   filterTask2->SetPersistence(true);
+   filterTask2->SetInputBranch("CorrectedData");
+   filterTask2->SetOutputBranch("FilledData");
 
    // Add unpacker to the run
    run->AddTask(unpackTask);
    run->AddTask(filterTask);
+   run->AddTask(filterTask2);
 
    run->Init();
 
    // Get the number of events and unpack the whole run
    auto numEvents = unpackTask->GetNumEvents();
+   //int numEvents = 1100;
 
    // numEvents = 1700;//217;
    // numEvents = 1;
@@ -82,8 +98,8 @@ void run_unpack_graw(TString dataFile = "./pulser-files.txt", int runNumber = 36
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
    // return;
-   // run->Run(0, numEvents);
-   run->Run(0, 2);
+   run->Run(0, numEvents);
+   //run->Run(0, 2000);
 
    std::cout << std::endl << std::endl;
    std::cout << "Done unpacking events" << std::endl << std::endl;

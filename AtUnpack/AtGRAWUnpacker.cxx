@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <iostream>
 #include <iterator> // for begin, end
+#include <future>
 #include <thread>
 #include <utility>
 
@@ -44,13 +45,52 @@ void AtGRAWUnpacker::Init()
 
    if (!fIsData)
       LOG(error) << "Problem setting the data pointer to the first file in the list!";
-
    std::vector<int> iniFrameIDs;
+   std::vector<int> eventCoboIDs;
+   std::vector<int> lastEvents;
+   std::vector<std::thread> file;
+   std::vector<std::future<CoboAndEvent> > futureValues;
    LOG(info) << "Initial frame IDs";
    for (int i = 0; i < fNumFiles; ++i) {
       GETBasicFrame *basicFrame = fDecoder[i]->GetBasicFrame(-1);
       iniFrameIDs.push_back(basicFrame->GetEventID());
       LOG(info) << i << " " << iniFrameIDs.back();
+
+   }
+   if (fIsMutantOneRun) {
+      fNumEvents = GetLastEvent(0).second;
+   }
+   else {
+      for (int i = 0; i < fNumFiles; ++i) {
+         std::promise<CoboAndEvent> p;
+         futureValues.push_back(p.get_future());
+         file.emplace_back(
+            [this](Int_t fileIdx, std::promise<CoboAndEvent> &&p) { p.set_value(this->GetLastEvent(fileIdx)); }, i,
+            std::move(p));
+      }
+
+      for (auto &fileThread : file)
+         fileThread.join();
+
+      for (auto &future : futureValues) {
+         CoboAndEvent value = future.get();
+         int coboNum = value.first;
+         int lastEvent = value.second;
+         if (std::find(begin(eventCoboIDs), end(eventCoboIDs), coboNum) != eventCoboIDs.end()) {
+            for (int r = 0; r < eventCoboIDs.size(); r++) {
+               if (eventCoboIDs[r] == coboNum) {
+                  if (lastEvents[r] < lastEvent) {
+                     lastEvents[r] = lastEvent;
+                  }
+               }
+            }
+         } else {
+            eventCoboIDs.push_back(coboNum);
+            lastEvents.push_back(lastEvent);
+         }
+      }
+
+      fNumEvents = *std::min_element(begin(lastEvents), end(lastEvents));
    }
 
    fTargetFrameID = -1;
@@ -189,18 +229,18 @@ Bool_t AtGRAWUnpacker::AddData(TString filename, Int_t fileIdx)
    return fDecoder[fileIdx]->AddData(filename);
 }
 
-void AtGRAWUnpacker::ProcessFile(Int_t coboIdx)
+void AtGRAWUnpacker::ProcessFile(Int_t fileIdx)
 {
 
-   GETCoboFrame *coboFrame = fDecoder[coboIdx]->GetCoboFrame(fTargetFrameID);
+   GETCoboFrame *coboFrame = fDecoder[fileIdx]->GetCoboFrame(fTargetFrameID);
 
    if (coboFrame == nullptr) {
       fRawEvent->SetIsGood(kFALSE);
-      std::cout << " Null frame! CoboIdx " << coboIdx << "\n";
+      std::cout << " Null frame! CoboIdx " << fileIdx << "\n";
       return;
    }
 
-   fCurrentEventID[coboIdx] = coboFrame->GetEventID();
+   fCurrentEventID[fileIdx] = coboFrame->GetEventID();
    Int_t numFrames = coboFrame->GetNumFrames();
 
    for (Int_t iFrame = 0; iFrame < numFrames; iFrame++) {
@@ -237,7 +277,7 @@ void AtGRAWUnpacker::ProcessFile(Int_t coboIdx)
                if (fIsSubtractFPN) {
                   Int_t fpnCh = GetFPNChannel(iCh);
                   Double_t adc[512] = {0};
-                  fPedestal[coboIdx]->SubtractPedestal(512, frame->GetSample(iAget, fpnCh), rawadc, adc,
+                  fPedestal[fileIdx]->SubtractPedestal(512, frame->GetSample(iAget, fpnCh), rawadc, adc,
                                                        fFPNSigmaThreshold);
 
                   for (Int_t iTb = 0; iTb < 512; iTb++)
@@ -252,27 +292,27 @@ void AtGRAWUnpacker::ProcessFile(Int_t coboIdx)
                   lastCellPad->SetValue(frame->GetLastCell(iAget));
                }
             }
-            if (fSaveFPN) {
-               Int_t fpnMap[4] = {11, 22, 45, 56};
-               for (Int_t fpn = 0; fpn < 4; fpn++) {
-                  Int_t iCh = fpnMap[fpn];
-                  AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
-                  AtPad *pad = nullptr;
-                  pad = fRawEvent->AddFPN(PadRef);
-                  Int_t *rawadc = frame->GetSample(iAget, iCh);
-                  for (Int_t iTb = 0; iTb < 512; iTb++)
-                     pad->SetRawADC(iTb, rawadc[iTb]);
-               }
+         }
+         if (fSaveFPN) {
+            Int_t fpnMap[4] = {11, 22, 45, 56};
+            for (Int_t fpn = 0; fpn < 4; fpn++) {
+               Int_t iCh = fpnMap[fpn];
+               AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
+               AtPad *pad = nullptr;
+               pad = fRawEvent->AddFPN(PadRef);
+               Int_t *rawadc = frame->GetSample(iAget, iCh);
+               for (Int_t iTb = 0; iTb < 512; iTb++)
+                  pad->SetRawADC(iTb, rawadc[iTb]);
             }
          }
       }
    }
 }
 
-void AtGRAWUnpacker::ProcessBasicFile(Int_t coboIdx)
+void AtGRAWUnpacker::ProcessBasicFile(Int_t fileIdx)
 {
 
-   GETBasicFrame *basicFrame = fDecoder[coboIdx]->GetBasicFrame(fTargetFrameID);
+   GETBasicFrame *basicFrame = fDecoder[fileIdx]->GetBasicFrame(fTargetFrameID);
 
    if (basicFrame == nullptr) {
       fRawEvent->SetIsGood(kFALSE);
@@ -281,7 +321,7 @@ void AtGRAWUnpacker::ProcessBasicFile(Int_t coboIdx)
    }
    LOG(debug) << "Looking for " << fTargetFrameID << " found " << basicFrame->GetEventID();
 
-   fCurrentEventID[coboIdx] = basicFrame->GetEventID();
+   fCurrentEventID[fileIdx] = basicFrame->GetEventID();
    Int_t iCobo = basicFrame->GetCoboID();
    Int_t iAsad = basicFrame->GetAsadID();
 
@@ -292,7 +332,7 @@ void AtGRAWUnpacker::ProcessBasicFile(Int_t coboIdx)
          auto PadRefNum = fMap->GetPadNum(PadRef);
          auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
 
-         if (PadRefNum != -1 && fMap->IsInhibited(PadRefNum) == AtMap::InhibitType::kNone) {
+         if (PadRefNum != -1 && fMap->IsInhibited(PadRefNum) == AtMap::InhibitType::kNone && !fMap->IsFPNchannel(PadRef)) {
             AtPad *pad = nullptr;
             {
                // Ensure the threads aren't both trying to create pads at the same time
@@ -313,7 +353,7 @@ void AtGRAWUnpacker::ProcessBasicFile(Int_t coboIdx)
             if (fIsSubtractFPN) {
                Int_t fpnCh = GetFPNChannel(iCh);
                Double_t adc[512] = {0};
-               fPedestal[coboIdx]->SubtractPedestal(512, basicFrame->GetSample(iAget, fpnCh), rawadc, adc,
+               fPedestal[fileIdx]->SubtractPedestal(512, basicFrame->GetSample(iAget, fpnCh), rawadc, adc,
                                                     fFPNSigmaThreshold);
 
                for (Int_t iTb = 0; iTb < 512; iTb++)
@@ -345,10 +385,21 @@ void AtGRAWUnpacker::ProcessBasicFile(Int_t coboIdx)
             Int_t iCh = fpnMap[fpn];
             AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
             AtPad *pad = nullptr;
-            pad = fRawEvent->AddFPN(PadRef);
+            {
+               std::lock_guard<std::mutex> lk(fRawEventMutex);
+               pad = fRawEvent->AddFPN(PadRef);
+            }
+            pad->SetValidPad(kTRUE);
             Int_t *rawadc = basicFrame->GetSample(iAget, iCh);
             for (Int_t iTb = 0; iTb < 512; iTb++)
                pad->SetRawADC(iTb, rawadc[iTb]);
+            if (fIsSaveLastCell) {
+               //std::cout << "saving last cell FPN " << iCobo << " " << iAsad << " " << iAget << " " << iCh << std::endl;
+               auto lastCellPad =
+                  dynamic_cast<AtPadValue *>(pad->AddAugment("lastCell", std::make_unique<AtPadValue>()));
+               lastCellPad->SetValue(basicFrame->GetLastCell(iAget));
+               //std::cout << "last cell FPN saved" << std::endl;
+            }
          }
       }
    }
@@ -373,6 +424,32 @@ void AtGRAWUnpacker::SetPseudoTopologyFrame(Int_t asadMask, Bool_t check)
 {
    for (auto &decoder : fDecoder)
       decoder->SetPseudoTopologyFrame(asadMask, check);
+}
+
+Long64_t AtGRAWUnpacker::GetNumEvents()
+{
+   return fNumEvents;
+}
+
+CoboAndEvent AtGRAWUnpacker::GetLastEvent(Int_t fileIdx)
+{
+   GETBasicFrame *basicFrame = fDecoder[fileIdx]->GetBasicFrame(-1);
+   bool atEnd = false;
+   CoboAndEvent coboInfo;
+   coboInfo.first = basicFrame->GetCoboID();
+   coboInfo.second = basicFrame->GetEventID();
+   int asad = basicFrame->GetAsadID();
+   while (!atEnd) {
+      basicFrame = fDecoder[fileIdx]->GetBasicFrame(-1);
+      if (basicFrame != nullptr) {
+         coboInfo.second = basicFrame->GetEventID();
+      } else {
+         //std::cout << "End of file reached!" << std::endl;
+         //std::cout << "cobo " << coboInfo.first << " asad " << asad << " final event " << coboInfo.second << std::endl;
+         atEnd = true;
+      }
+   }
+   return coboInfo;
 }
 
 ClassImp(AtGRAWUnpacker);
