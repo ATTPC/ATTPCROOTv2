@@ -9,6 +9,7 @@
 
 class AtPad;
 class AtRawEvent;
+struct AtPadReference;
 
 class AtTrapezoidFilter : public AtFilter {
 

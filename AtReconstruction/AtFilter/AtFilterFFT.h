@@ -27,6 +27,7 @@
 class AtPad;
 class AtPadFFT;
 class AtRawEvent;
+struct AtPadReference;
 
 class AtFilterFFT : public AtFilter {
 

@@ -1,7 +1,8 @@
 #include "AtFilterZero.h"
 
 #include "AtPad.h"
-#include "AtPadReference.h"
+
+struct AtPadReference;
 
 void AtFilterZero::Filter(AtPad *pad, AtPadReference *padReference)
 {

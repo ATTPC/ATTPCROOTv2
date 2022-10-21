@@ -2,6 +2,7 @@
 
 #include "AtMap.h"
 #include "AtPad.h"
+#include "AtPadBase.h" // for AtPadBase
 #include "AtPadReference.h"
 #include "AtPadValue.h"
 #include "AtPedestal.h"
@@ -45,6 +46,7 @@ void AtGRAWUnpacker::Init()
 
    if (!fIsData)
       LOG(error) << "Problem setting the data pointer to the first file in the list!";
+
    std::vector<int> iniFrameIDs;
    std::vector<int> eventCoboIDs;
    std::vector<int> lastEvents;
@@ -63,8 +65,10 @@ void AtGRAWUnpacker::Init()
          std::promise<CoboAndEvent> p;
          futureValues.push_back(p.get_future());
          file.emplace_back(
-            [this](Int_t fileIdx, std::promise<CoboAndEvent> &&p) { p.set_value(this->GetLastEvent(fileIdx)); }, i,
-            std::move(p));
+            [this](Int_t fileIdx, std::promise<CoboAndEvent> &&promise) {
+               promise.set_value(this->GetLastEvent(fileIdx));
+            },
+            i, std::move(p));
       }
 
       for (auto &fileThread : file)
@@ -293,8 +297,8 @@ void AtGRAWUnpacker::ProcessFile(Int_t fileIdx)
          }
          if (fSaveFPN) {
             Int_t fpnMap[4] = {11, 22, 45, 56};
-            for (Int_t fpn = 0; fpn < 4; fpn++) {
-               Int_t iCh = fpnMap[fpn];
+            for (Int_t iCh : fpnMap) {
+
                AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
                AtPad *pad = nullptr;
                pad = fRawEvent->AddFPN(PadRef);
@@ -380,8 +384,7 @@ void AtGRAWUnpacker::ProcessBasicFile(Int_t fileIdx)
       }
       if (fSaveFPN) {
          Int_t fpnMap[4] = {11, 22, 45, 56};
-         for (Int_t fpn = 0; fpn < 4; fpn++) {
-            Int_t iCh = fpnMap[fpn];
+         for (Int_t iCh : fpnMap) {
             AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
             AtPad *pad = nullptr;
             {
@@ -438,7 +441,6 @@ CoboAndEvent AtGRAWUnpacker::GetLastEvent(Int_t fileIdx)
    CoboAndEvent coboInfo;
    coboInfo.first = basicFrame->GetCoboID();
    coboInfo.second = basicFrame->GetEventID();
-   int asad = basicFrame->GetAsadID();
    while (!atEnd) {
       basicFrame = fDecoder[fileIdx]->GetBasicFrame(-1);
       if (basicFrame != nullptr) {

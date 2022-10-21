@@ -7,6 +7,7 @@
 
 class AtPad;
 class AtRawEvent;
+struct AtPadReference;
 
 class AtFilterDivide : public AtFilter {
 

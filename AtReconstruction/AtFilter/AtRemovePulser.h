@@ -5,6 +5,7 @@
 #include <tuple>
 class AtPad;
 class AtRawEvent;
+struct AtPadReference;
 
 class AtRemovePulser : public AtFilter {
 private:

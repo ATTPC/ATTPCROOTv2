@@ -8,18 +8,21 @@
  */
 
 #include "AtFilter.h"
+#include "AtRawEvent.h" // for AtRawEvent
 
-#include "TFile.h"
-#include "TString.h"
+#include <TFile.h>
+#include <TString.h>
 
 #include <iostream>
+#include <memory> // for shared_ptr
 
+class AtPad;
+struct AtPadReference;
 class AtMap;
-
-using AtMapPtr = std::shared_ptr<AtMap>;
 
 class AtSCACorrect : public AtFilter {
 private:
+   using AtMapPtr = std::shared_ptr<AtMap>;
    AtMapPtr fMap;
 
    AtRawEvent *fBaseline;

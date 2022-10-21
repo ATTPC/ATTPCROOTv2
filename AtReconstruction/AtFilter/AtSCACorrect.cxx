@@ -3,11 +3,11 @@
 #include "AtMap.h"
 #include "AtPad.h"
 #include "AtPadBase.h"
-#include "AtPadReference.h"
 #include "AtPadValue.h"
 #include "AtRawEvent.h"
 
-#include <numeric>
+struct AtPadReference;
+
 void AtSCACorrect::Filter(AtPad *pad, AtPadReference *padReference)
 {
    removeBaseline(pad, padReference);
@@ -32,7 +32,7 @@ void AtSCACorrect::removeBaseline(AtPad *pad, AtPadReference *padReference)
       for (int i = 0; i < 512; ++i) {
          pad->SetADC(i, pad->GetRawADC(i) - baselinePad->GetADC(i));
       }
-      pad->SetPedestalSubtracted(kTRUE);
+      pad->SetPedestalSubtracted(true);
    } else {
       std::cout << "Baseline is null!" << std::endl;
    }

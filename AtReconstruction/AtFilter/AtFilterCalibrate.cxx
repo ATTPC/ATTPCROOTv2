@@ -1,7 +1,6 @@
 #include "AtFilterCalibrate.h"
 
 #include "AtPad.h"
-#include "AtPadReference.h"
 
 #include <FairLogger.h>
 
@@ -9,6 +8,8 @@
 
 #include <array>
 #include <fstream>
+
+struct AtPadReferece;
 
 AtFilterCalibrate::AtFilterCalibrate() = default;
 

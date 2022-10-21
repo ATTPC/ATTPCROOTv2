@@ -2,9 +2,9 @@
 #include "AtFilterDivide.h"
 
 #include "AtPad.h"
-#include "AtPadReference.h"
 
 class AtRawEvent;
+struct AtPadReference;
 
 void AtFilterDivide::SetDivisor(Double_t div)
 {

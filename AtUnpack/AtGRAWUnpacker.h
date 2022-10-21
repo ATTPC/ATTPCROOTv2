@@ -19,6 +19,7 @@
 #include <memory>
 #include <mutex>
 #include <string>
+#include <utility> // for pair
 #include <vector>
 
 class GETLayeredFrame;
@@ -40,7 +41,7 @@ protected:
    // Each has its own GETDecoder2, and AtPedestal instance and we will spawn fNumFiles
    // threads to unpack them in parallel
    Int_t fNumFiles;
-   Int_t fNumEvents;
+   Int_t fNumEvents{0};
 
    std::vector<GETDecoder2Ptr> fDecoder;
    std::vector<AtPedestalPtr> fPedestal;

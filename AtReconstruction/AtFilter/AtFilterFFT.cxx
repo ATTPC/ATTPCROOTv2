@@ -3,7 +3,6 @@
 #include "AtPad.h"
 #include "AtPadBase.h"
 #include "AtPadFFT.h"
-#include "AtPadReference.h"
 #include "AtRawEvent.h"
 
 #include <FairLogger.h>
@@ -14,6 +13,7 @@
 
 #include <iostream>
 #include <utility>
+struct AtPadReference;
 
 void AtFilterFFT::SetLowPass(int order, int cutoff)
 {

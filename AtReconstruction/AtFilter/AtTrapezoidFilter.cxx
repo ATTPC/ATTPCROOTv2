@@ -1,9 +1,8 @@
 #include "AtTrapezoidFilter.h"
 
 #include "AtPad.h"
-#include "AtPadReference.h"
 
-#include <algorithm>
+struct AtPadReference;
 
 void AtTrapezoidFilter::Filter(AtPad *pad, AtPadReference *padReference)
 {

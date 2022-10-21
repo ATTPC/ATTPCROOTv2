@@ -12,6 +12,7 @@
 #include <Rtypes.h>
 
 #include <memory>
+#include <stdexcept> // for runtime_error
 #include <vector>
 
 class AtPedestal;
