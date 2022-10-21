@@ -7,6 +7,9 @@
 class AtRawEvent;
 struct AtPadReference;
 
+/**
+ * @ingroup RawFilters
+ */
 class AtFilterFPN : public AtFilterSubtraction {
 protected:
    bool fAverageAgets{false};

@@ -1,4 +1,4 @@
-/*
+/**
  *  Filter for applying a FFT to data, and multiplying the transformed data by some factor. The factor
  *  is determined by a series of FreqRanges that define a start and stop frequency and associated
  *  factor at the start/stop. It then linearly interpelates the factor between the two frequencies.
@@ -11,6 +11,7 @@
  *  fSaveTransform and the input branch will be modified to contain AtPadFFTs.
  *
  *  Adam Anthony 4/20/22
+ * @ingroup RawFilters
  */
 #ifndef ATFFTFILTER_H
 #define ATFFTFILTER_H
@@ -29,6 +30,21 @@ class AtPadFFT;
 class AtRawEvent;
 struct AtPadReference;
 
+/**
+ *  Filter for applying a FFT to data, and multiplying the transformed data by some factor. The factor
+ *  is determined by a series of FreqRanges that define a start and stop frequency and associated
+ *  factor at the start/stop. It then linearly interpelates the factor between the two frequencies.
+ *  By default the factor is 1 (i.e. no adjustment to the transformed data). For alternative behavior,
+ *  extend the class and override the protected function applyFreqCuts().
+ *
+ *  The output of this filter is an AtRawEvent where the fPadList is filled with pads of the type
+ *  AtPadFFT so the fourier-space representation of the filtered data is saved.
+ *  If you wish to save the unfiltered data with the fourier-space represetation, the set the flag
+ *  fSaveTransform and the input branch will be modified to contain AtPadFFTs.
+ *
+ *  Adam Anthony 4/20/22
+ * @ingroup RawFilters
+ */
 class AtFilterFFT : public AtFilter {
 
    // Forward declares and alias declerations

@@ -16,6 +16,10 @@ struct AtPadReference;
 using calibrationMap = std::unordered_map<int, float>;
 using filePtr = std::unique_ptr<std::ifstream>;
 
+/**
+ * Filter for calibrating raw data.
+ * @ingroup RawFilters
+ */
 class AtFilterCalibrate : public AtFilter {
 private:
    calibrationMap fIntercept;
