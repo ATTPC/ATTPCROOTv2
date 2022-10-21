@@ -23,10 +23,12 @@ protected:
    Double_t fValue;
 
 public:
+   AtPadValue(Double_t val = 0);
+   virtual ~AtPadValue() = default;
+
    virtual std::unique_ptr<AtPadBase> Clone() const override;
 
    void SetValue(Double_t val) { fValue = val; }
-
    Double_t GetValue() const { return fValue; }
 
    ClassDefOverride(AtPadValue, 1);
