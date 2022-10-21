@@ -1,12 +1,6 @@
 #ifndef ATSCACORRECT_H
 #define ATSCACORRECT_H
 
-/**
- * A filter to perform baseline subtraction using the average baseline and average phase effect stored as
- * AtRawEvent objects in a separate file or files.
- *
- */
-
 #include "AtFilter.h"
 #include "AtRawEvent.h" // for AtRawEvent
 
@@ -17,35 +11,27 @@
 #include <memory> // for shared_ptr
 
 class AtPad;
-struct AtPadReference;
 class AtMap;
+struct AtPadReference;
 
+/**
+ * A filter to perform baseline subtraction using the average baseline and average phase effect stored as
+ * AtRawEvent objects in a separate file or files.
+ * @ingroup RawFilters
+ */
 class AtSCACorrect : public AtFilter {
 private:
    using AtMapPtr = std::shared_ptr<AtMap>;
+   using RawEventPtr = std::unique_ptr<AtRawEvent>;
    AtMapPtr fMap;
 
-   AtRawEvent *fBaseline;
-   AtRawEvent *fPhase;
+   RawEventPtr fBaseline;
+   RawEventPtr fPhase;
 
 public:
    AtSCACorrect(AtMapPtr map, TString baselineFilename, TString baselineEventName, TString phaseFilename,
-                TString phaseEventName)
-      : AtFilter(), fMap(map)
-   {
-      TFile *f1 = new TFile(baselineFilename.Data());
-      f1->GetObject(baselineEventName.Data(), fBaseline);
-      f1->Close();
-      if (fBaseline != nullptr) {
-         std::cout << "baseline opened" << std::endl;
-      }
-      TFile *f2 = new TFile(phaseFilename.Data());
-      f2->GetObject(phaseEventName.Data(), fPhase);
-      f2->Close();
-      if (fPhase != nullptr) {
-         std::cout << "phase opened" << std::endl;
-      }
-   }
+                TString phaseEventName);
+   AtSCACorrect(AtMapPtr map, RawEventPtr baseline, RawEventPtr phase);
 
    virtual void Init() override {}
    virtual void InitEvent(AtRawEvent *) override {}
@@ -56,6 +42,7 @@ public:
 private:
    void removeBaseline(AtPad *pad, AtPadReference *padReference);
    void removePhase(AtPad *pad, AtPadReference *padReference);
+   AtPad *getMatchingPad(AtPad *pad, AtPadReference *ref, AtRawEvent *event);
 };
 
 #endif //#ifndef ATSCACORRECT_H

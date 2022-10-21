@@ -6,7 +6,34 @@
 #include "AtPadValue.h"
 #include "AtRawEvent.h"
 
+#include <FairLogger.h>
+
 struct AtPadReference;
+
+AtSCACorrect::AtSCACorrect(AtMapPtr map, TString baselineFilename, TString baselineEventName, TString phaseFilename,
+                           TString phaseEventName)
+   : AtFilter(), fMap(map)
+{
+   TFile f1(baselineFilename.Data());
+   AtRawEvent *unownedEvent = nullptr;
+   f1.GetObject(baselineEventName.Data(), unownedEvent);
+   fBaseline = RawEventPtr(unownedEvent);
+   if (fBaseline != nullptr) {
+      LOG(info) << "baseline opened";
+   }
+
+   TFile f2(phaseFilename.Data());
+   f2.GetObject(phaseEventName.Data(), unownedEvent);
+   fPhase = RawEventPtr(unownedEvent);
+   if (fPhase != nullptr) {
+      LOG(info) << "phase opened";
+   }
+}
+
+AtSCACorrect::AtSCACorrect(AtMapPtr map, RawEventPtr baseline, RawEventPtr phase)
+   : AtFilter(), fMap(map), fBaseline(std::move(baseline)), fPhase(std::move(phase))
+{
+}
 
 void AtSCACorrect::Filter(AtPad *pad, AtPadReference *padReference)
 {
@@ -14,19 +41,23 @@ void AtSCACorrect::Filter(AtPad *pad, AtPadReference *padReference)
    removePhase(pad, padReference);
 }
 
+AtPad *AtSCACorrect::getMatchingPad(AtPad *pad, AtPadReference *padReference, AtRawEvent *event)
+{
+
+   if (padReference != nullptr) {
+      if (fMap->IsFPNchannel(*padReference))
+         return event->GetFpn(*padReference);
+      if (!fMap->IsAuxPad(*padReference))
+         return event->GetPad(pad->GetPadNum());
+      return nullptr;
+   }
+   return event->GetPad(pad->GetPadNum());
+}
+
 void AtSCACorrect::removeBaseline(AtPad *pad, AtPadReference *padReference)
 {
 
-   AtPad *baselinePad = nullptr;
-   if (padReference != nullptr) {
-      if (fMap->IsFPNchannel(*padReference)) {
-         baselinePad = fBaseline->GetFpn(*padReference);
-      } else if (!fMap->IsAuxPad(*padReference)) {
-         baselinePad = fBaseline->GetPad(pad->GetPadNum());
-      }
-   } else {
-      baselinePad = fBaseline->GetPad(pad->GetPadNum());
-   }
+   AtPad *baselinePad = getMatchingPad(pad, padReference, fBaseline.get());
 
    if (baselinePad != nullptr) {
       for (int i = 0; i < 512; ++i) {
@@ -34,23 +65,14 @@ void AtSCACorrect::removeBaseline(AtPad *pad, AtPadReference *padReference)
       }
       pad->SetPedestalSubtracted(true);
    } else {
-      std::cout << "Baseline is null!" << std::endl;
+      LOG(error) << "Baseline is null!";
    }
 }
 
 void AtSCACorrect::removePhase(AtPad *pad, AtPadReference *padReference)
 {
 
-   AtPad *phasePad = nullptr;
-   if (padReference != nullptr) {
-      if (fMap->IsFPNchannel(*padReference)) {
-         phasePad = fPhase->GetFpn(*padReference);
-      } else if (!fMap->IsAuxPad(*padReference)) {
-         phasePad = fPhase->GetPad(pad->GetPadNum());
-      }
-   } else {
-      phasePad = fPhase->GetPad(pad->GetPadNum());
-   }
+   AtPad *phasePad = getMatchingPad(pad, padReference, fBaseline.get());
 
    if (phasePad != nullptr) {
       int lastCell = (dynamic_cast<AtPadValue *>(pad->GetAugment("lastCell")))->GetValue();
@@ -62,6 +84,6 @@ void AtSCACorrect::removePhase(AtPad *pad, AtPadReference *padReference)
          pad->SetADC(i, pad->GetADC(i) - phasePad->GetADC(phaseShift));
       }
    } else {
-      std::cout << "Phase is null!" << std::endl;
+      LOG(error) << "Phase is null!";
    }
 }

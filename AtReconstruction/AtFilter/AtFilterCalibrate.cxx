@@ -9,8 +9,6 @@
 #include <array>
 #include <fstream>
 
-struct AtPadReferece;
-
 AtFilterCalibrate::AtFilterCalibrate() = default;
 
 void AtFilterCalibrate::Init()
