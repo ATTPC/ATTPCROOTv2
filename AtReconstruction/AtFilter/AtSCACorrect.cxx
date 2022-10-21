@@ -8,11 +8,15 @@
 
 #include <FairLogger.h>
 
+#include <TFile.h> // for TFile
+
+#include <utility> // for move
+
 struct AtPadReference;
 
 AtSCACorrect::AtSCACorrect(AtMapPtr map, TString baselineFilename, TString baselineEventName, TString phaseFilename,
                            TString phaseEventName)
-   : AtFilter(), fMap(map)
+   : AtFilter(), fMap(std::move(map))
 {
    TFile f1(baselineFilename.Data());
    AtRawEvent *unownedEvent = nullptr;
@@ -31,7 +35,7 @@ AtSCACorrect::AtSCACorrect(AtMapPtr map, TString baselineFilename, TString basel
 }
 
 AtSCACorrect::AtSCACorrect(AtMapPtr map, RawEventPtr baseline, RawEventPtr phase)
-   : AtFilter(), fMap(map), fBaseline(std::move(baseline)), fPhase(std::move(phase))
+   : AtFilter(), fMap(std::move(map)), fBaseline(std::move(baseline)), fPhase(std::move(phase))
 {
 }
 

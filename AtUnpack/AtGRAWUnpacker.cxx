@@ -19,9 +19,11 @@
 #include "GETDecoder2.h"
 
 #include <algorithm>
+#include <array> // for array
 #include <future>
 #include <iostream>
 #include <iterator> // for begin, end
+#include <numeric>  // for accumulate
 #include <thread>
 #include <utility>
 

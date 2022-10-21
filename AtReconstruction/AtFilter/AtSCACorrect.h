@@ -2,16 +2,14 @@
 #define ATSCACORRECT_H
 
 #include "AtFilter.h"
-#include "AtRawEvent.h" // for AtRawEvent
 
-#include <TFile.h>
 #include <TString.h>
 
-#include <iostream>
 #include <memory> // for shared_ptr
 
 class AtPad;
 class AtMap;
+class AtRawEvent;
 struct AtPadReference;
 
 /**
