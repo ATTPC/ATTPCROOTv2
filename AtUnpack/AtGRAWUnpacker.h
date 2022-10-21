@@ -30,18 +30,20 @@ class GETDecoder2;
 class TBuffer;
 class TClass;
 class TMemberInspector;
-
-using GETDecoder2Ptr = std::unique_ptr<GETDecoder2>;
-using AtPedestalPtr = std::unique_ptr<AtPedestal>;
-using CoboAndEvent = std::pair<int, int>;
+class AtPad;
+struct AtPadReference;
 
 class AtGRAWUnpacker : public AtUnpacker {
 protected:
+   using GETDecoder2Ptr = std::unique_ptr<GETDecoder2>;
+   using AtPedestalPtr = std::unique_ptr<AtPedestal>;
+   using CoboAndEvent = std::pair<int, int>;
+
    // Number of unique graw files (cobo or asad) to unpack.
    // Each has its own GETDecoder2, and AtPedestal instance and we will spawn fNumFiles
    // threads to unpack them in parallel
    Int_t fNumFiles;
-   Int_t fNumEvents{0};
+   Int_t fNumEvents{-1};
 
    std::vector<GETDecoder2Ptr> fDecoder;
    std::vector<AtPedestalPtr> fPedestal;
@@ -54,9 +56,10 @@ protected:
    Bool_t fIsSeparatedData;
    Bool_t fIsSubtractFPN = true;
    Bool_t fIsBaseLineSubtraction{};
-   Bool_t fIsMutantOneRun =
-      false; // Checks for the number of events from only the first decoder. Only set true if all files have the same
-             // number of events (such as with Mutant trigger or only one CoBo).
+   /** Checks for the number of events from only the first decoder. Set to true if all
+    * files have the same number of events (MuTANT trigger or one cobo).
+    */
+   Bool_t fIsMutantOneRun{false};
 
    // String to identify which file in fInputFileName map to which fDecoder
    std::string fFileIDString;
@@ -92,8 +95,6 @@ public:
    virtual Long64_t GetNumEvents() override;
 
 private:
-   Int_t GetFPNChannel(Int_t chIdx);
-
    void processInputFile();
 
    Bool_t AddData(TString filename, Int_t fileIdx);
@@ -104,6 +105,14 @@ private:
    void ProcessBasicFrame(GETBasicFrame *basicFrame);
 
    CoboAndEvent GetLastEvent(Int_t fileIdx);
+
+   void doFPNSubtraction(GETBasicFrame &basicFrame, AtPedestal &pedestal, AtPad &pad, AtPadReference padRef);
+   void doBaselineSubtraction(AtPad &pad);
+   void saveFPN(GETBasicFrame &frame, AtPadReference PadRef, AtRawEvent *event);
+   void savePad(GETBasicFrame &frame, AtPadReference PadRef, AtRawEvent *event, Int_t fileIdx);
+   void fillPadAdc(GETBasicFrame &frame, AtPadReference PadRef, AtPad *pad);
+   void saveLastCell(AtPad &pad, Double_t lastCell);
+   void FindAndSetNumEvents();
 
    ClassDefOverride(AtGRAWUnpacker, 1)
 };

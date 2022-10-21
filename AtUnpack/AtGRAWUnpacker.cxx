@@ -43,21 +43,26 @@ void AtGRAWUnpacker::Init()
    fIsData = true;
    for (auto &decoder : fDecoder)
       fIsData &= decoder->SetData(0);
-
    if (!fIsData)
       LOG(error) << "Problem setting the data pointer to the first file in the list!";
 
    std::vector<int> iniFrameIDs;
-   std::vector<int> eventCoboIDs;
-   std::vector<int> lastEvents;
-   std::vector<std::thread> file;
-   std::vector<std::future<CoboAndEvent>> futureValues;
    LOG(info) << "Initial frame IDs";
    for (int i = 0; i < fNumFiles; ++i) {
       GETBasicFrame *basicFrame = fDecoder[i]->GetBasicFrame(-1);
       iniFrameIDs.push_back(basicFrame->GetEventID());
       LOG(info) << i << " " << iniFrameIDs.back();
    }
+   fTargetFrameID = -1;
+   fDataEventID = *std::max_element(begin(iniFrameIDs), end(iniFrameIDs)) + fEventID;
+   fTargetFrameID = *std::max_element(begin(iniFrameIDs), end(iniFrameIDs)) + fEventID;
+}
+void AtGRAWUnpacker::FindAndSetNumEvents()
+{
+   std::vector<int> eventCoboIDs;
+   std::vector<int> lastEvents;
+   std::vector<std::thread> file;
+   std::vector<std::future<CoboAndEvent>> futureValues;
    if (fIsMutantOneRun) {
       fNumEvents = GetLastEvent(0).second;
    } else {
@@ -94,10 +99,6 @@ void AtGRAWUnpacker::Init()
 
       fNumEvents = *std::min_element(begin(lastEvents), end(lastEvents));
    }
-
-   fTargetFrameID = -1;
-   fDataEventID = *std::max_element(begin(iniFrameIDs), end(iniFrameIDs)) + fEventID;
-   fTargetFrameID = *std::max_element(begin(iniFrameIDs), end(iniFrameIDs)) + fEventID;
 }
 
 void AtGRAWUnpacker::FillRawEvent(AtRawEvent &event)
@@ -202,7 +203,7 @@ void AtGRAWUnpacker::processInputFile()
             fDecoder[i]->AddData(dataFileWithPath);
             LOG(info) << " Added file : " << dataFileWithPath << " - " << fFileIDString << " : " << i;
          } else
-            LOG(error) << "Skipping file: " << dataFileWithPath << " did not match the string " << fFileIDString;
+            LOG(debug) << "Skipping file: " << dataFileWithPath << " did not match the string " << fFileIDString;
       }
    }
 }
@@ -255,62 +256,21 @@ void AtGRAWUnpacker::ProcessFile(Int_t fileIdx)
          for (Int_t iCh = 0; iCh < 68; iCh++) {
 
             AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
-            Int_t PadRefNum = fMap->GetPadNum(PadRef);
-            auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
+            auto PadRefNum = fMap->GetPadNum(PadRef);
 
-            if (PadRefNum != -1 && fMap->IsInhibited(PadRefNum) == AtMap::InhibitType::kNone) {
-               AtPad *pad = nullptr;
-               {
-                  std::lock_guard<std::mutex> lk(fRawEventMutex);
-                  // pad = new ((*fPadArray)[PadRefNum]) AtPad(PadRefNum);
-                  pad = fRawEvent->AddPad(PadRefNum);
-               }
+            // If this is an FPN channel and we should save it
+            if (fMap->IsFPNchannel(PadRef)) {
+               if (fSaveFPN)
+                  saveFPN(*frame, PadRef, fRawEvent);
 
-               pad->SetPadCoord(PadCenterCoord);
-               if (PadRefNum == -1)
-                  pad->SetValidPad(kFALSE);
-               else
-                  pad->SetValidPad(kTRUE);
-
-               Int_t *rawadc = frame->GetSample(iAget, iCh);
-               for (Int_t iTb = 0; iTb < 512; iTb++)
-                  pad->SetRawADC(iTb, rawadc[iTb]);
-
-               if (fIsSubtractFPN) {
-                  Int_t fpnCh = GetFPNChannel(iCh);
-                  Double_t adc[512] = {0};
-                  fPedestal[fileIdx]->SubtractPedestal(512, frame->GetSample(iAget, fpnCh), rawadc, adc,
-                                                       fFPNSigmaThreshold);
-
-                  for (Int_t iTb = 0; iTb < 512; iTb++)
-                     pad->SetADC(iTb, adc[iTb]);
-
-                  pad->SetPedestalSubtracted(kTRUE);
-               }
-
-               if (fIsSaveLastCell) {
-                  auto lastCellPad =
-                     dynamic_cast<AtPadValue *>(pad->AddAugment("lastCell", std::make_unique<AtPadValue>()));
-                  lastCellPad->SetValue(frame->GetLastCell(iAget));
-               }
-            }
-         }
-         if (fSaveFPN) {
-            Int_t fpnMap[4] = {11, 22, 45, 56};
-            for (Int_t iCh : fpnMap) {
-
-               AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
-               AtPad *pad = nullptr;
-               pad = fRawEvent->AddFPN(PadRef);
-               Int_t *rawadc = frame->GetSample(iAget, iCh);
-               for (Int_t iTb = 0; iTb < 512; iTb++)
-                  pad->SetRawADC(iTb, rawadc[iTb]);
-            }
-         }
-      }
-   }
+               // If this is not an FPN channel add it to the event
+            } else if (PadRefNum != -1 && fMap->IsInhibited(PadRefNum) == AtMap::InhibitType::kNone) {
+               savePad(*frame, PadRef, fRawEvent, fileIdx);
+            } // End check this is a pad to unpack (not FPN)
+         }    // End loop over channel
+      }       // End loop over aget
+   }          // End loop over frame
 }
-
 void AtGRAWUnpacker::ProcessBasicFile(Int_t fileIdx)
 {
 
@@ -329,100 +289,94 @@ void AtGRAWUnpacker::ProcessBasicFile(Int_t fileIdx)
 
    for (Int_t iAget = 0; iAget < 4; iAget++) {
       for (Int_t iCh = 0; iCh < 68; iCh++) {
-
          AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
-         auto PadRefNum = fMap->GetPadNum(PadRef);
-         auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
 
-         if (PadRefNum != -1 && fMap->IsInhibited(PadRefNum) == AtMap::InhibitType::kNone &&
-             !fMap->IsFPNchannel(PadRef)) {
-            AtPad *pad = nullptr;
-            {
-               // Ensure the threads aren't both trying to create pads at the same time
-               std::lock_guard<std::mutex> lk(fRawEventMutex);
-               pad = fRawEvent->AddPad(PadRefNum);
-            }
-
-            pad->SetPadCoord(PadCenterCoord);
-            pad->SetValidPad(kTRUE);
-
-            Int_t *rawadc = basicFrame->GetSample(iAget, iCh);
-
-            for (Int_t iTb = 0; iTb < 512; iTb++) {
-               pad->SetRawADC(iTb, rawadc[iTb]);
-               // std::cout<<iTb<<" "<<rawadc[iTb]<<"\n";
-            }
-
-            if (fIsSubtractFPN) {
-               Int_t fpnCh = GetFPNChannel(iCh);
-               Double_t adc[512] = {0};
-               fPedestal[fileIdx]->SubtractPedestal(512, basicFrame->GetSample(iAget, fpnCh), rawadc, adc,
-                                                    fFPNSigmaThreshold);
-
-               for (Int_t iTb = 0; iTb < 512; iTb++)
-                  pad->SetADC(iTb, adc[iTb]);
-
-               pad->SetPedestalSubtracted(kTRUE);
-            } else if (fIsBaseLineSubtraction) {
-               Double_t baseline = 0;
-               for (Int_t iTb = 5; iTb < 25; iTb++) {
-                  baseline += rawadc[iTb];
-               }
-               baseline /= 20;
-               for (Int_t iTb = 0; iTb < 512; iTb++) {
-                  pad->SetADC(iTb, rawadc[iTb] - baseline);
-               }
-               pad->SetPedestalSubtracted(kTRUE);
-            }
-
-            if (fIsSaveLastCell) {
-               auto lastCellPad =
-                  dynamic_cast<AtPadValue *>(pad->AddAugment("lastCell", std::make_unique<AtPadValue>()));
-               lastCellPad->SetValue(basicFrame->GetLastCell(iAget));
-            }
+         // If this is an FPN channel and we should save it
+         if (fMap->IsFPNchannel(PadRef)) {
+            if (fSaveFPN)
+               saveFPN(*basicFrame, PadRef, fRawEvent);
+            continue;
          }
-      }
-      if (fSaveFPN) {
-         Int_t fpnMap[4] = {11, 22, 45, 56};
-         for (Int_t iCh : fpnMap) {
-            AtPadReference PadRef = {iCobo, iAsad, iAget, iCh};
-            AtPad *pad = nullptr;
-            {
-               std::lock_guard<std::mutex> lk(fRawEventMutex);
-               pad = fRawEvent->AddFPN(PadRef);
-            }
-            pad->SetValidPad(kTRUE);
-            Int_t *rawadc = basicFrame->GetSample(iAget, iCh);
-            for (Int_t iTb = 0; iTb < 512; iTb++)
-               pad->SetRawADC(iTb, rawadc[iTb]);
-            if (fIsSaveLastCell) {
-               // std::cout << "saving last cell FPN " << iCobo << " " << iAsad << " " << iAget << " " << iCh <<
-               // std::endl;
-               auto lastCellPad =
-                  dynamic_cast<AtPadValue *>(pad->AddAugment("lastCell", std::make_unique<AtPadValue>()));
-               lastCellPad->SetValue(basicFrame->GetLastCell(iAget));
-               // std::cout << "last cell FPN saved" << std::endl;
-            }
-         }
-      }
+
+         auto PadNum = fMap->GetPadNum(PadRef);
+         if (PadNum != -1 && fMap->IsInhibited(PadNum) == AtMap::InhibitType::kNone)
+            savePad(*basicFrame, PadRef, fRawEvent, fileIdx);
+
+      } // End loop over channel
+   }    // End loop over aget
+}
+
+void AtGRAWUnpacker::savePad(GETBasicFrame &frame, AtPadReference PadRef, AtRawEvent *event, Int_t fileIdx)
+{
+   auto PadRefNum = fMap->GetPadNum(PadRef);
+   auto PadCenterCoord = fMap->CalcPadCenter(PadRefNum);
+
+   AtPad *pad = nullptr;
+   {
+      // Ensure the threads aren't both trying to create pads at the same time
+      std::lock_guard<std::mutex> lk(fRawEventMutex);
+      pad = fRawEvent->AddPad(PadRefNum);
+   }
+
+   pad->SetPadCoord(PadCenterCoord);
+   pad->SetValidPad(true);
+   fillPadAdc(frame, PadRef, pad);
+
+   if (fIsSubtractFPN)
+      doFPNSubtraction(frame, *fPedestal[fileIdx], *pad, fMap->GetNearestFPN(PadRef));
+   else if (fIsBaseLineSubtraction)
+      doBaselineSubtraction(*pad);
+
+   if (fIsSaveLastCell) {
+      saveLastCell(*pad, frame.GetLastCell(PadRef.aget));
    }
 }
 
-Int_t AtGRAWUnpacker::GetFPNChannel(Int_t chIdx)
+void AtGRAWUnpacker::fillPadAdc(GETBasicFrame &frame, AtPadReference PadRef, AtPad *pad)
 {
-   Int_t fpn = -1;
-
-   if (chIdx < 17)
-      fpn = 11;
-   else if (chIdx < 34)
-      fpn = 22;
-   else if (chIdx < 51)
-      fpn = 45;
-   else
-      fpn = 56;
-
-   return fpn;
+   Int_t *rawadc = frame.GetSample(PadRef.aget, PadRef.ch);
+   for (Int_t iTb = 0; iTb < 512; iTb++)
+      pad->SetRawADC(iTb, rawadc[iTb]);
 }
+
+void AtGRAWUnpacker::saveFPN(GETBasicFrame &frame, AtPadReference PadRef, AtRawEvent *event)
+{
+   AtPad *pad = nullptr;
+   {
+      std::lock_guard<std::mutex> lk(fRawEventMutex);
+      pad = fRawEvent->AddFPN(PadRef);
+   }
+
+   pad->SetValidPad(kTRUE);
+   fillPadAdc(frame, PadRef, pad);
+
+   if (fIsSaveLastCell)
+      saveLastCell(*pad, frame.GetLastCell(PadRef.aget));
+}
+
+void AtGRAWUnpacker::saveLastCell(AtPad &pad, Double_t lastCell)
+{
+   auto lastCellPad = dynamic_cast<AtPadValue *>(pad.AddAugment("lastCell", std::make_unique<AtPadValue>()));
+   lastCellPad->SetValue(lastCell);
+}
+void AtGRAWUnpacker::doFPNSubtraction(GETBasicFrame &basicFrame, AtPedestal &pedestal, AtPad &pad,
+                                      AtPadReference fpnRef)
+{
+   pedestal.SubtractPedestal(512, basicFrame.GetSample(fpnRef.aget, fpnRef.ch), pad.fRawAdc.data(), pad.fAdc.data(),
+                             fFPNSigmaThreshold);
+   pad.SetPedestalSubtracted(true);
+}
+
+void AtGRAWUnpacker::doBaselineSubtraction(AtPad &pad)
+{
+   auto &rawadc = pad.GetRawADC();
+   Double_t baseline = std::accumulate(rawadc.begin() + 5, rawadc.begin() + 25, 0.0) / 20.;
+   for (Int_t iTb = 0; iTb < 512; iTb++) {
+      pad.SetADC(iTb, rawadc[iTb] - baseline);
+   }
+   pad.SetPedestalSubtracted(true);
+}
+
 void AtGRAWUnpacker::SetPseudoTopologyFrame(Int_t asadMask, Bool_t check)
 {
    for (auto &decoder : fDecoder)
@@ -431,10 +385,12 @@ void AtGRAWUnpacker::SetPseudoTopologyFrame(Int_t asadMask, Bool_t check)
 
 Long64_t AtGRAWUnpacker::GetNumEvents()
 {
+   if (fNumEvents == -1)
+      FindAndSetNumEvents();
    return fNumEvents;
 }
 
-CoboAndEvent AtGRAWUnpacker::GetLastEvent(Int_t fileIdx)
+AtGRAWUnpacker::CoboAndEvent AtGRAWUnpacker::GetLastEvent(Int_t fileIdx)
 {
    GETBasicFrame *basicFrame = fDecoder[fileIdx]->GetBasicFrame(-1);
    bool atEnd = false;
