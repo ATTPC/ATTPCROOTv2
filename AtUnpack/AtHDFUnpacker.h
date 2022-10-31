@@ -9,12 +9,12 @@
 
 #include <Rtypes.h>
 
+#include <H5Cpp.h>
 #include <H5Dpublic.h>
 #include <H5Ipublic.h>
 #include <H5Lpublic.h>
 #include <H5Ppublic.h>
 #include <H5Spublic.h>
-#include <H5public.h>
 #include <stdint.h>
 
 #include <cstddef>
@@ -98,7 +98,7 @@ private:
    void end_raw_event();
    void close();
    std::string get_event_name(std::size_t idx);
-
+   void setFirstAndLastEventNum();
    ClassDefOverride(AtHDFUnpacker, 1);
 };
 
