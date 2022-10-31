@@ -18,9 +18,15 @@
 #include <H5Gpublic.h>
 #include <H5Ppublic.h>
 
+#include <algorithm> // for max_element, min_element
 #include <cstdint>
+#include <exception> // for exception
 #include <iostream>
 #include <memory>
+#include <regex>
+#include <sstream>   // for basic_stringbuf<>::int_type, basic_strin...
+#include <stdexcept> // for out_of_range
+#include <string>
 #include <type_traits>
 #include <utility>
 
@@ -65,14 +71,21 @@ bool AtHDFUnpacker::IsLastEvent()
 
 void AtHDFUnpacker::setEventIDAndTimestamps()
 {
-   TString header_name = TString::Format("evt%lld_header", fDataEventID);
-   auto header = get_header(header_name.Data());
-
    fRawEvent->SetEventID(fEventID);
 
-   fRawEvent->SetNumberOfTimestamps(fNumberTimestamps);
-   for (int i = 0; i < fNumberTimestamps; ++i)
-      fRawEvent->SetTimestamp(header.at(i + 1), i);
+   try {
+      TString header_name = TString::Format("evt%lld_header", fDataEventID);
+      auto header = get_header(header_name.Data());
+
+      fRawEvent->SetNumberOfTimestamps(fNumberTimestamps);
+      for (int i = 0; i < fNumberTimestamps; ++i)
+         fRawEvent->SetTimestamp(header.at(i + 1), i);
+   } catch (const std::out_of_range &e) {
+      LOG(error) << "Expected " << fNumberTimestamps << " but the header is not long enough!";
+   } catch (const std::exception &e) {
+      LOG(debug) << "Failed to load the header, not setting timestamps.";
+      fRawEvent->SetNumberOfTimestamps(0);
+   }
 }
 void AtHDFUnpacker::processData()
 {
@@ -208,13 +221,8 @@ void AtHDFUnpacker::close_dataset(hid_t datasetId)
       std::cerr << "> AtHDFUnpacker::close_dataset:ERROR, cannot close dataset with ID: " << datasetId << '\n';
 }
 
-std::size_t AtHDFUnpacker::open(char const *file)
+void AtHDFUnpacker::setFirstAndLastEventNum()
 {
-   auto f = open_file(file, AtHDFUnpacker::IO_MODE::READ);
-   if (f == 0)
-      return 0;
-   _file = f;
-
    // Look for the meta group and from it pull the minimum and maximum event numbers
    auto meta_size = open_group(_file, "meta");
    auto metaID = std::get<0>(meta_size);
@@ -226,19 +234,42 @@ std::size_t AtHDFUnpacker::open(char const *file)
 
       auto *data = new int64_t[len]; // NOLINT
       H5Dread(datasetId, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
-      std::cout << "Events: " << data[0] << " to " << data[2] << std::endl;
 
       fFirstEvent = data[0];
       fLastEvent = data[2];
 
       delete[] data; // NOLINT
+   } else {
+
+      // If there is not the meta data then we need to look through every event in the
+      // file and pull out the first and last event numbers
+      auto addToVector = [](hid_t group, const char *name, void *op_data) -> herr_t {
+         auto num = std::stoi(std::regex_replace(std::string(name), std::regex("[^0-9]"), ""));
+         auto data = (std::vector<long> *)op_data; // NOLINT
+         data->push_back(num);
+         LOG(debug) << name << " to " << num << " " << data->size();
+         return 0;
+      };
+      int idx = 0;
+      std::vector<long> eventIDs;
+      H5Giterate(_file, "get", &idx, addToVector, &eventIDs);
+      fLastEvent = *std::max_element(eventIDs.begin(), eventIDs.end());
+      fFirstEvent = *std::min_element(eventIDs.begin(), eventIDs.end());
    }
+   LOG(info) << "Events: " << fFirstEvent << " to " << fLastEvent;
+}
+std::size_t AtHDFUnpacker::open(char const *file)
+{
+   auto f = open_file(file, AtHDFUnpacker::IO_MODE::READ);
+   if (f == 0)
+      return 0;
+   _file = f;
 
    auto group_n_entries = open_group(f, "get");
    if (std::get<0>(group_n_entries) == -1)
       return 0;
    _group = std::get<0>(group_n_entries);
-
+   setFirstAndLastEventNum();
    return std::get<1>(group_n_entries);
 }
 
