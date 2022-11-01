@@ -5,7 +5,7 @@ void run_eve(TString InputDataFile = "./data/run_9901.root",
    fLogger->SetLogToScreen(kTRUE);
    fLogger->SetLogVerbosityLevel("MEDIUM");
    TString dir = getenv("VMCWORKDIR");
-   TString geoFile = "SpecMAT_Ar90CF4_250mbar_noscint_geomanager.root";
+   TString geoFile = "SpecMAT_Ar90CF4_250mbar_v2_geomanager.root";
    TString mapFile = "LookupSpecMATnoScint3seg.xml";
 
    TString InputDataPath = dir + "/macro/" + unpackDir + InputDataFile;

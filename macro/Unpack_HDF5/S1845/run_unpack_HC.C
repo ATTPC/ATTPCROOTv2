@@ -13,7 +13,7 @@ struct auxchannel
 };
 
 
-void run_unpack_HC(std::string dataFile = "/home/ayyadlim/Desktop/get/files/run_0168.h5",TString parameterFile = "pATTPC.S1845.par",TString mappath="")
+void run_unpack_HC(TString inputFile = "/home/yassid/fair_install/data/S1845/run_0103.h5",TString parameterFile = "ATTPC.e20009.par",TString mappath="")
 {
 
   // -----   Timer   --------------------------------------------------------
@@ -24,110 +24,81 @@ void run_unpack_HC(std::string dataFile = "/home/ayyadlim/Desktop/get/files/run_
   gSystem->Load("libXMLParser.so");
   // -----------------------------------------------------------------
   // Set file names
-  TString scriptfile = "LookupProto20181201v2.xml";
+  TString mapfile = "LookupProto20181201v2.xml";
   TString protomapfile = "proto20181201.map";
   TString dir = getenv("VMCWORKDIR");
-  TString scriptdir = dir + "/scripts/"+ scriptfile;
+  TString mapdir = dir + "/scripts/"+ mapfile;
   TString dataDir = dir + "/macro/data/";
   TString geomDir = dir + "/geometry/";
   TString protomapdir = dir + "/scripts/"+ protomapfile;
   TString geo = "proto20181201_geo_hires.root";
   gSystem -> Setenv("GEOMPATH", geomDir.Data());
 
-  //TString inputFile   = dataDir + name + ".digi.root";
-  //TString outputFile  = dataDir + "output.root";
-  TString outputFile  = "output_proto.root";
-  //TString mcParFile   = dataDir + name + ".params.root";
+   TString outputFile  = "output_proto.root";
   TString loggerFile  = dataDir + "ATTPCLog.log";
   TString digiParFile = dir + "/parameters/" + parameterFile;
   TString geoManFile  = dir + "/geometry/ATTPC_Proto_v1.0.root";
 
 
+   FairRunAna *run = new FairRunAna();
+   run->SetOutputFile(outputFile);
+   run->SetGeomFile(geoManFile);
+
+   // Set the parameter file
+   FairRuntimeDb *rtdb = run->GetRuntimeDb();
+   FairParAsciiFileIo *parIo1 = new FairParAsciiFileIo();
+
+   std::cout << "Setting par file: " << digiParFile << std::endl;
+   parIo1->open(digiParFile.Data(), "in");
+   rtdb->setFirstInput(parIo1);
+   std::cout << "Getting containers..." << std::endl;
+   // We must get the container before initializing a run
+   rtdb->getContainer("AtDigiPar");
+
+   auto fAtMapPtr = std::make_shared<AtTpcMap>();
+   fAtMapPtr->ParseXMLMap(mapdir.Data());
+   
   // -----------------------------------------------------------------
-  // Logger
-  FairLogger *fLogger = FairLogger::GetLogger();
-  /*fLogger -> SetLogFileName(loggerFile);
-  fLogger -> SetLogToScreen(kTRUE);
-  fLogger -> SetLogToFile(kTRUE);
-  fLogger -> SetLogVerbosityLevel("LOW");*/
-
-  FairRunAna* run = new FairRunAna();
-  run -> SetOutputFile(outputFile);
-  //run -> SetGeomFile("../geometry/ATTPC_Proto_v1.0.root");
-  run -> SetGeomFile(geoManFile);
-
-  FairRuntimeDb* rtdb = run->GetRuntimeDb();
-  FairParAsciiFileIo* parIo1 = new FairParAsciiFileIo();
-  parIo1 -> open(digiParFile.Data(), "in");
-  //FairParRootFileIo* parIo2 = new FairParRootFileIo();
-  //parIo2 -> open("param.dummy_proto.root");
- // rtdb -> setFirstInput(parIo2);
-  rtdb -> setSecondInput(parIo1);
-
-  //Auxiliary channels
-  //Hash table: cobo, asad, aget, channel
-  std::vector<auxchannel> aux_channels;
-
-  auxchannel ch_1{"mutant",5,0,0,65};
-  aux_channels.push_back(ch_1);
-  auxchannel ch_2{"mesh",5,0,0,66};
-  aux_channels.push_back(ch_2);
-  auxchannel ch_3{"protons",5,0,0,67};
-  aux_channels.push_back(ch_3);
-  auxchannel ch_4{"begin_DAQ",5,0,0,61};
-  aux_channels.push_back(ch_4);
-  auxchannel ch_5{"unknown",5,0,0,64};
-  aux_channels.push_back(ch_5);
-  auxchannel ch_6{"downscaled_alpha",5,0,0,59};
-  aux_channels.push_back(ch_6);
-
-   //End of auxiliary channel setup 
-
-
-
-  ATHDFParserTask* HDFParserTask = new ATHDFParserTask(1);
-  HDFParserTask->SetPersistence(kTRUE);
-  HDFParserTask->SetATTPCMap(scriptdir.Data());
-  HDFParserTask->SetProtoGeoFile(geo.Data());
-  HDFParserTask->SetProtoMapFile(protomapdir.Data());
-  HDFParserTask->SetFileName(dataFile);
-
-   for(auto iaux : aux_channels)
-   {
-    auto hash  = HDFParserTask->CalculateHash(iaux.cobo,iaux.asad,iaux.aget,iaux.channel);  
-    auto isaux = HDFParserTask->SetAuxChannel(hash,iaux.name);  
-   }
-
-
-  ATPSATask *psaTask = new ATPSATask();
-  psaTask -> SetPersistence(kTRUE);
-  psaTask -> SetThreshold(20);
-  psaTask -> SetPSAMode(2); //NB: 1 is ATTPC - 2 is pATTPC - 3 Filter for ATTPC - 4: Full Time Buckets - 5: Proto Full
-
-  psaTask -> SetTBLimits(std::make_pair<Int_t,Int_t>(160,270)); 
-  // Set the limits of integration for the total charge Q (only implemented in PSA modes 2 and 5)
-  // For example (160,270) is used for the proton run
-  //psaTask -> SetPeakFinder(); //NB: Use either peak finder of maximum finder but not both at the same time
-  psaTask -> SetMaxFinder();
-  //psaTask -> SetBaseCorrection(kTRUE); //Directly apply the base line correction to the pulse amplitude to correct for the mesh induction. If false the correction is just saved
-  //psaTask -> SetTimeCorrection(kFALSE); //Interpolation around the maximum of the signal peak
-
-  ATPRATask *praTask = new ATPRATask();
-  praTask -> SetPersistence(kTRUE);
   
+  fAtMapPtr->AddAuxPad({5,0,0,65},"mutant");
+   fAtMapPtr->AddAuxPad({5,0,0,66},"mesh");
+   fAtMapPtr->AddAuxPad({5,0,0,67},"protons");
+   fAtMapPtr->AddAuxPad({5,0,0,61},"begin_DAQ");
+   fAtMapPtr->AddAuxPad({5,0,0,64},"unknown");
+   fAtMapPtr->AddAuxPad({5,0,0,59},"downscaled_alpha");
+    
+
+   auto unpacker = std::make_unique<AtHDFUnpacker>(fAtMapPtr);
+   unpacker->SetInputFileName(inputFile.Data());
+   //unpacker->SetNumberTimestamps(2);
+   unpacker->SetBaseLineSubtraction(true);
+
+   auto unpackTask = new AtUnpackTask(std::move(unpacker));
+   unpackTask->SetPersistence(false);
+
+   auto threshold = 20;
+
+   
+   auto psa = std::make_unique<AtPSAMax>();
+   psa->SetThreshold(threshold);
+   
+   // Create PSA task
+   AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
+   psaTask->SetPersistence(kTRUE);
   
-  
-  run -> AddTask(HDFParserTask);
-  run -> AddTask(psaTask);
-  //run -> AddTask(praTask);
+   run->AddTask(unpackTask);
+   run->AddTask(psaTask);
 
-  run -> Init();
+   std::cout << "***** Starting Init ******" << std::endl;
+   run->Init();
+   std::cout << "***** Ending Init ******" << std::endl;
 
-  run->Run(0,20000);
-  //run->Run(0,309412);
-  //run -> RunOnTBData();
+   // Get the number of events and unpack the whole run
+   auto numEvents = unpackTask->GetNumEvents();
+   std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
-
+   run->Run(0,numEvents);
+   
   std::cout << std::endl << std::endl;
   std::cout << "Macro finished succesfully."  << std::endl << std::endl;
   std::cout << "- Output file : " << outputFile << std::endl << std::endl;
