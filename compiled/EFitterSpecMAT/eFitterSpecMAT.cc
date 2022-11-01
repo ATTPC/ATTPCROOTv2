@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
    std::string dirCstr = getenv("VMCWORKDIR");
 
    // Geometry file
-   TString geoManFile = dir + "/geometry/SpecMAT_Ar90CF4_250mbar_noscint_geomanager.root";
+   TString geoManFile = dir + "/geometry/SpecMAT_Ar90CF4_250mbar_v2_geomanager.root";
    // Ion list file
    std::string ionList = dirCstr + "/resources/ionFitLists/e20020_ionList.xml";
 
@@ -27,8 +27,8 @@ int main(int argc, char *argv[])
    bool enableMerging = 1;
    bool enableSingleVertexTrack = 1;
    bool enableReclustering = 1;     // For benchmarking purposes
-   Double_t clusterRadius = 7.5;    // mm
-   Double_t clusterDistance = 15.0; // mm
+   Double_t clusterRadius = 0.5;    // mm
+   Double_t clusterDistance = 1.0; // mm
    Exp exp = SpecMAT;
 
    // Physics parameters
@@ -73,11 +73,11 @@ int main(int argc, char *argv[])
          filePath = dir + "/macro/Simulation/SpecMAT/";
          simFile = "_sim_";
       } else {
-         filePath = dir + "/macro/Unpack_ROOT/data/";
+         filePath = dir + "/macro/Unpack_ROOT/SpecMAT/data/";
          simFile = "";
       }
 
-      geoManFile = dir + "/geometry/SpecMAT_Ar90CF4_250mbar_noscint_geomanager.root";
+      geoManFile = dir + "/geometry/SpecMAT_Ar90CF4_250mbar_v2_geomanager.root";
       ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
 
       std::cout << " Analysis of experiment SpecMAT. Gas density : " << gasMediumDensity << " mg/cm3"
