@@ -98,7 +98,6 @@ void run_unpack_graw(TString dataFile = "./data/pulser-files.txt", int runNumber
    // numEvents = 1700;//217;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
-   
 
    // return;
    run->Run(0, numEvents);
