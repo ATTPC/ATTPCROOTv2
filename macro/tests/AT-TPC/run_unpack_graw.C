@@ -69,7 +69,7 @@ void run_unpack_graw(TString dataFile = "./data/pulser-files.txt", int runNumber
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetPersistence(true);
 
-   auto filterTask = new AtFilterTask(new AtSCACorrect(fAtMapPtr, "baseline.root", "baseline", "phase.root", "phase"));
+   auto filterTask = new AtFilterTask(new AtSCACorrect(fAtMapPtr, "data/baseline.root", "baseline", "data/phase.root", "phase"));
    filterTask->SetFilterFPN(true);
    filterTask->SetPersistence(true);
    filterTask->SetOutputBranch("CorrectedData");
