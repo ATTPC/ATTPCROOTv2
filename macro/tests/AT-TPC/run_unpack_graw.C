@@ -4,7 +4,7 @@
 
 
 // Requires the TPC run number
-void run_unpack_graw(TString dataFile = "./pulser-files.txt", int runNumber = 36)
+void run_unpack_graw(TString dataFile = "./data/pulser-files.txt", int runNumber = 36)
 {
    /*auto verbSpec =
       fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
@@ -69,7 +69,7 @@ void run_unpack_graw(TString dataFile = "./pulser-files.txt", int runNumber = 36
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetPersistence(true);
 
-   auto filterTask = new AtFilterTask(new AtSCACorrect(fAtMapPtr, "background.root", "background", "phase.root", "phase"));
+   auto filterTask = new AtFilterTask(new AtSCACorrect(fAtMapPtr, "baseline.root", "baseline", "phase.root", "phase"));
    filterTask->SetFilterFPN(true);
    filterTask->SetPersistence(true);
    filterTask->SetOutputBranch("CorrectedData");
@@ -90,12 +90,15 @@ void run_unpack_graw(TString dataFile = "./pulser-files.txt", int runNumber = 36
 
    // Get the number of events and unpack the whole run
    auto numEvents = unpackTask->GetNumEvents();
+   std::cout << "Found " << numEvents << " events. " << std::endl;
    //int numEvents = 1100;
 
+   numEvents = 10;
+
    // numEvents = 1700;//217;
-   // numEvents = 1;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
+   
 
    // return;
    run->Run(0, numEvents);

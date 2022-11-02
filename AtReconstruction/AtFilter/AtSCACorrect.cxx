@@ -76,7 +76,7 @@ void AtSCACorrect::removeBaseline(AtPad *pad, AtPadReference *padReference)
 void AtSCACorrect::removePhase(AtPad *pad, AtPadReference *padReference)
 {
 
-   AtPad *phasePad = getMatchingPad(pad, padReference, fBaseline.get());
+   AtPad *phasePad = getMatchingPad(pad, padReference, fPhase.get());
 
    if (phasePad != nullptr) {
       int lastCell = (dynamic_cast<AtPadValue *>(pad->GetAugment("lastCell")))->GetValue();
