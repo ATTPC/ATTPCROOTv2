@@ -56,6 +56,7 @@ set(SRCS
   AtFilter/AtFilterZero.cxx
   AtFilter/AtRemovePulser.cxx
   AtFilter/AtFilterFPN.cxx
+  AtFilter/AtSCACorrect.cxx
   
   AtPSAtask.cxx
   AtFilterTask.cxx

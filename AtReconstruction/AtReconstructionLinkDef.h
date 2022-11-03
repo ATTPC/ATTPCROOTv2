@@ -11,6 +11,7 @@
 #pragma link C++ class AtFilterSubtraction - !;
 #pragma link C++ class AtRemovePulser - !;
 #pragma link C++ class AtFilterFPN - !;
+#pragma link C++ class AtSCACorrect - !;
 
 #pragma link C++ class AtPSA + ;
 #pragma link C++ class AtPSASpectrum + ;

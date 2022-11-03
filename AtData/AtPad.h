@@ -94,6 +94,7 @@ public:
 
    XYPoint GetPadCoord() const { return fPadCoord; }
 
+   friend class AtGRAWUnpacker;
    ClassDefOverride(AtPad, 3);
 };
 

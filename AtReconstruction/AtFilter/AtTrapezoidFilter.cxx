@@ -2,9 +2,9 @@
 
 #include "AtPad.h"
 
-#include <algorithm>
+struct AtPadReference;
 
-void AtTrapezoidFilter::Filter(AtPad *pad)
+void AtTrapezoidFilter::Filter(AtPad *pad, AtPadReference *padReference)
 {
    setSignalStart(pad);
    zeroSignalBeforeStart(pad);

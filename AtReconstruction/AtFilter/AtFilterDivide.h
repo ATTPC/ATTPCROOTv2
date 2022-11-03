@@ -1,13 +1,17 @@
 #ifndef ATFILTERDIVIDE_H
 #define ATFILTERDIVIDE_H
-#include <Rtypes.h>
-
-// Example filter to divide the signal by some amount specified at run time
 #include "AtFilter.h"
+
+#include <Rtypes.h>
 
 class AtPad;
 class AtRawEvent;
+struct AtPadReference;
 
+/**
+ * Example filter to divide the signal by some amount specified at run time
+ * @ingroup RawFilters
+ */
 class AtFilterDivide : public AtFilter {
 
 private:
@@ -19,7 +23,7 @@ public:
 
    virtual void Init() override;
    virtual void InitEvent(AtRawEvent *event) override;
-   virtual void Filter(AtPad *pad) override;
+   virtual void Filter(AtPad *pad, AtPadReference *padReference) override;
    virtual bool IsGoodEvent() override;
 };
 

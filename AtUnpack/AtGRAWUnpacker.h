@@ -19,6 +19,7 @@
 #include <memory>
 #include <mutex>
 #include <string>
+#include <utility> // for pair
 #include <vector>
 
 class GETLayeredFrame;
@@ -29,16 +30,20 @@ class GETDecoder2;
 class TBuffer;
 class TClass;
 class TMemberInspector;
-
-using GETDecoder2Ptr = std::unique_ptr<GETDecoder2>;
-using AtPedestalPtr = std::unique_ptr<AtPedestal>;
+class AtPad;
+struct AtPadReference;
 
 class AtGRAWUnpacker : public AtUnpacker {
 protected:
+   using GETDecoder2Ptr = std::unique_ptr<GETDecoder2>;
+   using AtPedestalPtr = std::unique_ptr<AtPedestal>;
+   using CoboAndEvent = std::pair<int, int>;
+
    // Number of unique graw files (cobo or asad) to unpack.
    // Each has its own GETDecoder2, and AtPedestal instance and we will spawn fNumFiles
    // threads to unpack them in parallel
    Int_t fNumFiles;
+   Int_t fNumEvents{-1};
 
    std::vector<GETDecoder2Ptr> fDecoder;
    std::vector<AtPedestalPtr> fPedestal;
@@ -47,7 +52,14 @@ protected:
    Double_t fFPNSigmaThreshold = 5;
    Bool_t fIsData = false;
    Bool_t fIsNegativePolarity = true;
+   Bool_t fIsSaveLastCell = false;
    Bool_t fIsSeparatedData;
+   Bool_t fIsSubtractFPN = true;
+   Bool_t fIsBaseLineSubtraction{};
+   /** Checks for the number of events from only the first decoder. Set to true if all
+    * files have the same number of events (MuTANT trigger or one cobo).
+    */
+   Bool_t fIsMutantOneRun{false};
 
    // String to identify which file in fInputFileName map to which fDecoder
    std::string fFileIDString;
@@ -68,6 +80,10 @@ public:
    void SetFPNSigmaThreshold(Double_t val) { fFPNSigmaThreshold = val; }
    void SetIsPositivePolarity(Bool_t val) { fIsNegativePolarity = !val; }
    void SetPseudoTopologyFrame(Int_t asadMask, Bool_t check);
+   void SetSaveLastCell(Bool_t val) { fIsSaveLastCell = val; }
+   void SetSubtractFPN(Bool_t val) { fIsSubtractFPN = val; }
+   void SetBaseLineSubtraction(Bool_t val) { fIsBaseLineSubtraction = val; }
+   void SetMutantOneRun(Bool_t val) { fIsMutantOneRun = val; }
 
    // AtUnpacker interface
    virtual void Init() override;
@@ -76,10 +92,9 @@ public:
    virtual void SetInputFileName(std::string fileName) override;
    void SetInputFileName(std::string fileName, std::string fileIDString);
 
-private:
-   virtual Long64_t GetNumEvents() override { return -1; }
-   Int_t GetFPNChannel(Int_t chIdx);
+   virtual Long64_t GetNumEvents() override;
 
+private:
    void processInputFile();
 
    Bool_t AddData(TString filename, Int_t fileIdx);
@@ -88,6 +103,16 @@ private:
    void ProcessBasicFile(Int_t fileIdx);
    void ProcessLayeredFrame(GETLayeredFrame *layeredFrame);
    void ProcessBasicFrame(GETBasicFrame *basicFrame);
+
+   CoboAndEvent GetLastEvent(Int_t fileIdx);
+
+   void doFPNSubtraction(GETBasicFrame &basicFrame, AtPedestal &pedestal, AtPad &pad, AtPadReference padRef);
+   void doBaselineSubtraction(AtPad &pad);
+   void saveFPN(GETBasicFrame &frame, AtPadReference PadRef, AtRawEvent *event);
+   void savePad(GETBasicFrame &frame, AtPadReference PadRef, AtRawEvent *event, Int_t fileIdx);
+   void fillPadAdc(GETBasicFrame &frame, AtPadReference PadRef, AtPad *pad);
+   void saveLastCell(AtPad &pad, Double_t lastCell);
+   void FindAndSetNumEvents();
 
    ClassDefOverride(AtGRAWUnpacker, 1)
 };

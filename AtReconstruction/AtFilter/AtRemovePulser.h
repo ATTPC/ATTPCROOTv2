@@ -5,6 +5,7 @@
 #include <tuple>
 class AtPad;
 class AtRawEvent;
+struct AtPadReference;
 
 class AtRemovePulser : public AtFilter {
 private:
@@ -21,7 +22,7 @@ public:
    virtual void InitEvent(AtRawEvent *) override {}
    virtual bool IsGoodEvent() override { return true; }
 
-   virtual void Filter(AtPad *pad) override;
+   virtual void Filter(AtPad *pad, AtPadReference *padReference) override;
 
 private:
    std::tuple<double, double, double> getTransitionAround(AtPad *pad, int idx);

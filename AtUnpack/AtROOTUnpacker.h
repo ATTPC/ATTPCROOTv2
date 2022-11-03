@@ -12,6 +12,7 @@
 #include <Rtypes.h>
 
 #include <memory>
+#include <stdexcept> // for runtime_error
 #include <vector>
 
 class AtPedestal;
@@ -51,6 +52,10 @@ public:
    void SetIsPadPlaneCobo(vecBool vec);
    void SetIsNegativePolarity(vecBool vec);
    void SetFPNPedestalRMS(double sigma) { fFPNSigmaThreshold = sigma; }
+   void SetSaveFPN(bool val = true) override
+   {
+      throw std::runtime_error("SaveFPN is not implemented in AtROOTUnpacker");
+   }
 
    ClassDefOverride(AtROOTUnpacker, 1);
 

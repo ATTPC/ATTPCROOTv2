@@ -2,7 +2,9 @@
 
 #include "AtPad.h"
 
-void AtFilterZero::Filter(AtPad *pad)
+struct AtPadReference;
+
+void AtFilterZero::Filter(AtPad *pad, AtPadReference *padReference)
 {
    bool inZeroRange = false;
    int zeroStart = -1;

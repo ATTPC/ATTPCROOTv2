@@ -97,7 +97,7 @@ void AtFilterSubtraction::AverageBaseline()
          }
 }
 
-void AtFilterSubtraction::Filter(AtPad *pad)
+void AtFilterSubtraction::Filter(AtPad *pad, AtPadReference *padReference)
 {
    // Get the pad reference
    auto padRef = fMapping->GetPadRef(pad->GetPadNum());

@@ -16,7 +16,7 @@ void AtFilterCalibrate::Init()
    openFileAndReadContents();
 }
 
-void AtFilterCalibrate::Filter(AtPad *pad)
+void AtFilterCalibrate::Filter(AtPad *pad, AtPadReference *padReference)
 {
    auto padNum = pad->GetPadNum();
    auto &adc = pad->GetADC();

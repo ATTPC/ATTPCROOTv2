@@ -1,7 +1,7 @@
 #include "AtRemovePulser.h"
 
 #include "AtPad.h"
-#include "AtPadBase.h" // for AtPadBase
+#include "AtPadBase.h"
 #include "AtPulserInfo.h"
 
 #include <FairLogger.h>
@@ -10,7 +10,9 @@
 #include <memory> // for allocator, make_unique
 #include <numeric>
 
-void AtRemovePulser::Filter(AtPad *pad)
+struct AtPadReference;
+
+void AtRemovePulser::Filter(AtPad *pad, AtPadReference *padReference)
 {
    addPulserInfo(pad);
    removePulser(pad);

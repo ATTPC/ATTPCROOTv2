@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <utility>
+struct AtPadReference;
 
 void AtFilterFFT::SetLowPass(int order, int cutoff)
 {
@@ -77,7 +78,7 @@ void AtFilterFFT::InitEvent(AtRawEvent *inputEvent)
  * a number defined in the frequency ranges, and store the resultant waveform in the filtered raw event.
  *
  */
-void AtFilterFFT::Filter(AtPad *pad)
+void AtFilterFFT::Filter(AtPad *pad, AtPadReference *padReference)
 {
    // Get data and transform
    if (!pad->IsPedestalSubtracted()) {

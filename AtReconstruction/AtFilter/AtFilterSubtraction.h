@@ -1,12 +1,6 @@
 #ifndef ATFILTERSUBTRACTION_H
 #define ATFILTERSUBTRACTION_H
 
-/* Filter that will subtract the average of every ch0 aget in a AsAd from all
-   channels in an AsAd.
-
-   Adam Anthony 7/16/21
-*/
-
 #include "AtFilter.h"
 
 #include <Rtypes.h>
@@ -26,6 +20,12 @@ using vecIntCoBo = std::vector<std::vector<std::array<Int_t, 512>>>;
 using vecAgetCount = std::vector<std::vector<Int_t>>;
 using AtMapPtr = std::shared_ptr<AtMap>;
 
+/**
+ * Filter that will subtract the average of every ch0 aget in a AsAd from all
+ * channels in an AsAd.
+ * Adam Anthony 7/16/21
+ * @ingroup RawFilters
+ */
 class AtFilterSubtraction : public AtFilter {
 protected:
    const Int_t fNumberCoBo;
@@ -64,7 +64,7 @@ public:
    virtual void InitEvent(AtRawEvent *event) override;
 
    // Called on each pad
-   virtual void Filter(AtPad *pad) override;
+   virtual void Filter(AtPad *pad, AtPadReference *padReference) override;
 
    virtual bool IsGoodEvent() override;
 };

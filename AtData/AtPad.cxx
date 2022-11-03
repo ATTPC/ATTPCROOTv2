@@ -41,7 +41,7 @@ AtPad::AtPad(const AtPad &o)
    : fPadNum(o.fPadNum), fSizeID(o.fSizeID), fPadCoord(o.fPadCoord), fIsValid(o.fIsValid),
      fIsPedestalSubtracted(o.fIsPedestalSubtracted), fRawAdc(o.fRawAdc), fAdc(o.fAdc)
 {
-   for (const auto &pair : fPadAugments)
+   for (const auto &pair : o.fPadAugments)
       fPadAugments[pair.first] = pair.second->Clone();
 }
 std::unique_ptr<AtPadBase> AtPad::Clone() const
