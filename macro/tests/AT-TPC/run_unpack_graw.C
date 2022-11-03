@@ -18,12 +18,12 @@ void run_unpack_graw(TString dataFile = "./data/pulser-files.txt", int runNumber
    timer.Start();
 
    // Set the input/output directories
-   TString outDir = "./data/pulser";
+   TString outDir = "./data/";
 
    // Set the in/out files
    TString outputFile = outDir + TString::Format("/run_%04dSub.root", runNumber);
 
-   //std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
+   // std::cout << "Unpacking run " << runNumber << " from: " << inputFile << std::endl;
    std::cout << "Saving in: " << outputFile << std::endl;
 
    // Set the mapping for the TPC
@@ -69,7 +69,9 @@ void run_unpack_graw(TString dataFile = "./data/pulser-files.txt", int runNumber
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetPersistence(true);
 
-   auto filterTask = new AtFilterTask(new AtSCACorrect(fAtMapPtr, "data/baseline.root", "baseline", "data/phase.root", "phase"));
+   /*
+   auto filterTask =
+      new AtFilterTask(new AtSCACorrect(fAtMapPtr, "data/baseline.root", "baseline", "data/phase.root", "phase"));
    filterTask->SetFilterFPN(true);
    filterTask->SetPersistence(true);
    filterTask->SetOutputBranch("CorrectedData");
@@ -80,18 +82,19 @@ void run_unpack_graw(TString dataFile = "./data/pulser-files.txt", int runNumber
    filterTask2->SetPersistence(true);
    filterTask2->SetInputBranch("CorrectedData");
    filterTask2->SetOutputBranch("FilledData");
+   */
 
    // Add unpacker to the run
    run->AddTask(unpackTask);
-   run->AddTask(filterTask);
-   run->AddTask(filterTask2);
+   // run->AddTask(filterTask);
+   // run->AddTask(filterTask2);
 
    run->Init();
 
    // Get the number of events and unpack the whole run
    auto numEvents = unpackTask->GetNumEvents();
    std::cout << "Found " << numEvents << " events. " << std::endl;
-   //int numEvents = 1100;
+   // int numEvents = 1100;
 
    numEvents = 10;
 
@@ -101,7 +104,7 @@ void run_unpack_graw(TString dataFile = "./data/pulser-files.txt", int runNumber
 
    // return;
    run->Run(0, numEvents);
-   //run->Run(0, 2000);
+   // run->Run(0, 2000);
 
    std::cout << std::endl << std::endl;
    std::cout << "Done unpacking events" << std::endl << std::endl;
