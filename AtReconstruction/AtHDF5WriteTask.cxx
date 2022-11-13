@@ -38,9 +38,11 @@ InitStatus AtHDF5WriteTask::Init()
 
 void AtHDF5WriteTask::Exec(Option_t *opt)
 {
-   auto eventGroup = std::make_unique<H5::Group>(fFile->createGroup(TString::Format("/Event_[%d]", fEventNum)));
 
    auto *event = dynamic_cast<AtEvent *>(fEventArray->At(0));
+   if (!event->IsGood())
+      return;
+
    Int_t nHits = event->GetNumHits();
    const auto &traceEv = event->GetMesh();
 
@@ -67,11 +69,14 @@ void AtHDF5WriteTask::Exec(Option_t *opt)
       hits[iHit].A = hit.GetCharge();
    }
 
-   H5::DataSet hitset = fFile->createDataSet(TString::Format("/Event_[%d]/HitArray", fEventNum), hdf5Type, hitSpace);
+   int eventNum = fUseEventNum ? event->GetEventID() : fEventNum;
+
+   auto eventGroup = std::make_unique<H5::Group>(fFile->createGroup(TString::Format("/Event_[%d]", eventNum)));
+   H5::DataSet hitset = fFile->createDataSet(TString::Format("/Event_[%d]/HitArray", eventNum), hdf5Type, hitSpace);
    hitset.write(hits, hdf5Type);
 
    H5::DataSet traceset =
-      fFile->createDataSet(TString::Format("/Event_[%d]/Trace", fEventNum), H5::PredType::NATIVE_FLOAT, traceSpace);
+      fFile->createDataSet(TString::Format("/Event_[%d]/Trace", eventNum), H5::PredType::NATIVE_FLOAT, traceSpace);
    traceset.write(traceEv.data(), H5::PredType::NATIVE_FLOAT);
 
    ++fEventNum;
