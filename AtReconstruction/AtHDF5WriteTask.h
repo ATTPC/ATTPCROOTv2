@@ -25,13 +25,16 @@ protected:
    TClonesArray *fEventArray{nullptr};
 
    Bool_t fIsPersistence{false};
+   /// If true events are indexed by ATTPCROOT event number. If false then use internal index [0-NumEventsInFile).
+   Bool_t fUseEventNum{false};
+
    Int_t fEventNum{0};
 
 public:
    AtHDF5WriteTask(TString fileName, TString branchName = "AtEventH");
 
    void SetPersistence(bool val) { fIsPersistence = val; }
-
+   void SetUseEventNum(bool val) { fUseEventNum = val; }
    virtual InitStatus Init() override;
    virtual void Exec(Option_t *opt) override;
 

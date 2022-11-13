@@ -12,7 +12,7 @@
 
 #include <memory>
 
-AtDataReductionTask::AtDataReductionTask() : reduceFunc(nullptr), fInputBranchName("AtRawEvent") {}
+AtDataReductionTask::AtDataReductionTask() : fReductionFunction(nullptr), fInputBranchName("AtRawEvent") {}
 
 AtDataReductionTask::~AtDataReductionTask() = default;
 
@@ -41,7 +41,8 @@ void AtDataReductionTask::Exec(Option_t *opt)
    fRawEvent = dynamic_cast<AtRawEvent *>(fInputEventArray->At(0));
 
    // If we should skip this event
-   if ((*reduceFunc)(fRawEvent))
+   // if ((*reduceFunc)(fRawEvent))
+   if (fReductionFunction(fRawEvent))
       LOG(info) << "Keeping event " << fRawEvent->GetEventID() << " with " << fRawEvent->GetNumPads() << " pads";
    else {
       fRawEvent->SetIsGood(false);

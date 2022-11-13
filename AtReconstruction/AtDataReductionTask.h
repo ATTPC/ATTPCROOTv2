@@ -15,17 +15,17 @@
 #include <Rtypes.h>
 #include <TString.h>
 
-#include <type_traits>
+#include <functional> // for function
+#include <utility>    // for move
 
 class AtRawEvent;
 class TClonesArray;
 
 class AtDataReductionTask : public FairTask {
-   // using funcType = bool (*)(AtRawEvent*);
-   using funcType = std::add_pointer<bool(AtRawEvent *)>::type;
+   using ReductionFunction = std::function<bool(AtRawEvent *)>;
 
 private:
-   funcType reduceFunc;
+   ReductionFunction fReductionFunction;
 
    TClonesArray *fInputEventArray{}; // AtRawEvent
    TString fInputBranchName;         // Name if AtRawEvent branch
@@ -35,7 +35,7 @@ public:
    AtDataReductionTask();
    ~AtDataReductionTask();
 
-   void SetReductionFunction(funcType func) { reduceFunc = func; }
+   void SetReductionFunction(ReductionFunction func) { fReductionFunction = std::move(func); }
    void SetInputBranch(TString inputBranch) { fInputBranchName = inputBranch; }
 
    virtual InitStatus Init() override;
