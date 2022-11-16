@@ -8,8 +8,13 @@
 #ifndef ATKINEMATICS_H
 #define ATKINEMATICS_H
 
+#include <Math/Functor.h>
+#include <Math/Minimizer.h>
+#include <Math/Vector3D.h>
 #include <Rtypes.h> // for Double_t, THashConsistencyHolder, Int_t, ClassDef
 
+#include "TMath.h"
+#include "TMatrixD.h"
 #include "TObject.h" // for TObject
 
 #include <tuple> // for tuple
@@ -34,8 +39,16 @@ public:
    TwoBodyEx(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t thetalab, Double_t K_eject);
    Double_t omega(Double_t x, Double_t y, Double_t z);
 
+   std::vector<double> KinematicalFit(std::vector<double> &parameters);
+
 private:
    Int_t fVerbosity;
+
+   Int_t fNumParticles{3}; //
+
+   std::vector<std::unique_ptr<TMatrixD>> fAlphaP; //! alpha row for n particles;
+   void ResetMatrices();
+   void PrintMatrices();
 
    ClassDef(AtKinematics, 1);
 };

@@ -133,7 +133,7 @@ void O16He4_sim_el(Int_t nEvents = 100, TString mcEngine = "TGeant4")
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
    Mass.push_back(15.99491461956); // uma
-   ExE.push_back(6.0494);
+   ExE.push_back(0.0);
 
    // ---- Recoil -----
    Zp.push_back(2); //

@@ -34,7 +34,7 @@ std::tuple<double,double> kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_
    return std::make_tuple(Ex,theta_cm);
 }
 
-void plotFit_e20009(std::string fileFolder = "data_344_367/")
+void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
 {
 
    std::ofstream outputFileEvents("list_of_events.txt");

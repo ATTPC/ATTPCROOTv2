@@ -34,7 +34,7 @@ if(NOT TARGET ROOT::VMC)
   set_target_properties(VMCLibrary PROPERTIES IMPORTED_GLOBAL TRUE)
   add_library(ROOT::VMC ALIAS VMCLibrary)
 endif()
- 
+
 find_package2(PUBLIC FairLogger  VERSION 1.2.0 REQUIRED)
 foreach(dep IN LISTS FairLogger_PACKAGE_DEPENDENCIES)
   if(NOT dep STREQUAL "Boost")
@@ -58,7 +58,7 @@ find_package2(PUBLIC Boost 1.67
   REQUIRED headers
   ADD_REQUIREMENTS_OF FairRoot FairMQ FairLogger
   )
-  
+
 if(CMAKE_VERSION VERSION_LESS 3.15)
   set(Boost_VERSION "${Boost_MAJOR_VERSION}.${Boost_MINOR_VERSION}.${Boost_SUBMINOR_VERSION}")
 endif()
@@ -104,6 +104,13 @@ if(NOT TARGET hdf5::hdf5-shared)
   message(STATUS "hdf5 library in use: ${hdf_libdir}")
   message(STATUS "hdf5 include directory: ${hdf_inc}")
 endif()
+if(TARGET hdf5_cpp-shared AND NOT TARGET hdf5::hdf5_cpp-shared)
+  # Until 3.18 we can only alias global targets
+  if(CMAKE_VERSION VERSION_LESS 3.18)
+    set_target_properties(hdf5_cpp-shared PROPERTIES IMPORTED_GLOBAL TRUE)
+  endif()
+  add_library(hdf5::hdf5_cpp-shared ALIAS hdf5_cpp-shared)
+endif()
 
 # Include PCL and hide some of their warnings
 # see here: https://github.com/PointCloudLibrary/pcl/issues/3680
@@ -129,7 +136,7 @@ if (OPENMP_CXX_FOUND)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
   # set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS_DEBUG} ${OpenMP_C_FLAGS}")
   # set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_DEBUG} ${OpenMP_CXX_FLAGS}")
-  
+
 endif()
 
 #set(LD_LIBRARY_PATH  ${CMAKE_BINARY_DIR}/lib ${LD_LIBRARY_PATH})
@@ -156,7 +163,7 @@ add_subdirectory (AtSeGA)
 add_subdirectory (AtAnalysis)
 add_subdirectory (AtTools)
 add_subdirectory (AtEventDisplay)
-  
+
 
 # Generate config file for build
 
