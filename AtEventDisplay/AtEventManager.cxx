@@ -71,7 +71,9 @@ AtEventManager::AtEventManager()
      fPadWave(nullptr), fPadAll(nullptr), fCvsQEvent(nullptr), fCvsHough(nullptr), fCvsRad(nullptr),
      drawallpad(nullptr), eraseQevent(nullptr), drawReconstruction(nullptr), saveASCIIevent(nullptr),
      toggleCorr(nullptr), kDrawAllOn(false), kEraseQ(false), kDrawReconstruction(false), kDraw3DGeo(false),
-     kDraw3DHist(false), kToggleData(false), k3DThreshold(0), fTofObjCorr(0), fMTDCObjRange(0), fMTDCXfRange(0)
+     kDraw3DHist(false), kToggleData(false), k3DThreshold(0), fTofObjCorr(0), fMTDCObjRange(0), fMTDCXfRange(0),
+     cArray(nullptr), cS800Array(nullptr), cevent(nullptr), cS800Calc(nullptr), fCvsPIDFull(nullptr), fCvsPID(nullptr),
+     fCvsPID2(nullptr), fPIDFull(nullptr), fCvsPID2Full(nullptr), fPID2Full(nullptr), fEntries(0)
 
 {
    fInstance = this;
@@ -336,13 +338,13 @@ void AtEventManager::Init(Int_t option, Int_t level, Int_t nNodes)
    packPID->SetHorizontal();
 
    slotS800 = packPID->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsS800tof1 = new TRootEmbeddedCanvas();
+   auto ecvsS800tof1 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameS800tof1 = slotS800->MakeFrame(ecvsS800tof1);
    frameS800tof1->SetElementName("T[Xf_Obj]-TObj (gated)");
    fCvsPID = ecvsS800tof1->GetCanvas();
 
    slotS800 = packPID->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsS800tof2 = new TRootEmbeddedCanvas();
+   auto ecvsS800tof2 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameS800tof2 = slotS800->MakeFrame(ecvsS800tof2);
    frameS800tof2->SetElementName("T[Xf_Obj]-TObj (full)");
    fCvsPIDFull = ecvsS800tof2->GetCanvas();
@@ -354,13 +356,13 @@ void AtEventManager::Init(Int_t option, Int_t level, Int_t nNodes)
    // packPID2->SetElementName("S800 PIDs");
 
    slotS800 = packPID->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsS800dE1 = new TRootEmbeddedCanvas();
+   auto ecvsS800dE1 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameS800dE1 = slotS800->MakeFrame(ecvsS800dE1);
    frameS800dE1->SetElementName("ICSumE-ToF (gated)");
    fCvsPID2 = ecvsS800dE1->GetCanvas();
 
    slotS800 = packPID->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas *ecvsS800dE2 = new TRootEmbeddedCanvas();
+   auto ecvsS800dE2 = new TRootEmbeddedCanvas();
    TEveWindowFrame *frameS800dE2 = slotS800->MakeFrame(ecvsS800dE2);
    frameS800dE2->SetElementName("ICSumE-ToF (full)");
    fCvsPID2Full = ecvsS800dE2->GetCanvas();

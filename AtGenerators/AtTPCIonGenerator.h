@@ -12,7 +12,10 @@
 #include <FairGenerator.h>
 
 #include <Rtypes.h>
-#include <TH1F.h>
+#include <TH1.h>     // for TH1F
+#include <TString.h> // for TString
+
+#include <memory> // for unique_ptr
 
 class FairPrimaryGenerator;
 class FairIon;
@@ -28,6 +31,7 @@ private:
    static Int_t fgNIon;        //! Number of the instance of this class
    Int_t fMult;                //< Multiplicity per event
    Double_t fPx, fPy, fPz;     //< Momentum components [GeV] per nucleon
+   Double_t fPx0, fPy0, fPz0;  //< initial Momentum components [GeV] per nucleon, used for momentum acceptance
    Double32_t fR, fz, fOffset; //< beam Spot radius [cm], z source, y source
    Double_t fVx, fVy, fVz;     //< Vertex coordinates [cm]
    Double_t fTheta{0};         //< Maximum angle [rad]
@@ -37,6 +41,12 @@ private:
    Double_t fMaxEnLoss{}; //< Max energy loss before reation happens
    Double32_t fWhmFocus, fDiv, fZFocus,
       fRHole; //< Beam whm at focus, beam divergence, z focus, radius of the pad plan hole
+
+   Double_t fmomAcc;          // beam momentum acceptance in percentage
+   Double_t fBeamAx, fBeamAy; // beam angle [deg]
+   Double_t fBeamOx, fBeamOy; // beam offset [cm]
+   /// beam angles distributions in dispersive and non dispersive direction(respectively to S800)[rad]
+   std::unique_ptr<TH1F> fAta, fBta;
 
    Int_t fBeamOpt;
    Bool_t fDoReact{true};
@@ -125,31 +135,6 @@ public:
    **/
    virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
 
-<<<<<<< HEAD
-=======
-private:
-   void SetEmittance();
-
-   static Int_t fgNIon;        //! Number of the instance of this class
-   Int_t fMult;                // Multiplicity per event
-   Double_t fPx, fPy, fPz;     // Momentum components [GeV] per nucleon
-   Double_t fPx0, fPy0, fPz0;  // initial Momentum components [GeV] per nucleon, used for momentum acceptance
-   Double32_t fR, fz, fOffset; // beam Spot radius [cm], z source, y source
-   Double_t fVx, fVy, fVz;     // Vertex coordinates [cm]
-   FairIon *fIon;              // Pointer to the FairIon to be generated
-   Int_t fQ;                   // Electric charge [e]
-   Int_t fNomEner{};
-   Double_t fMaxEnLoss{}; // Max energy loss before reation happens
-   Double32_t fWhmFocus, fDiv, fZFocus,
-      fRHole;                 // Beam whm at focus, beam divergence, z focus, radius of the pad plan hole
-   Double_t fmomAcc;          // beam momentum acceptance in percentage
-   Double_t fBeamAx, fBeamAy; // beam angle [deg]
-   Double_t fBeamOx, fBeamOy; // beam offset [cm]
-   TH1F *hAta,
-      *hBta; // beam angles distributions in dispersive and non dispersive direction (respectively to S800) [rad]
-   Int_t fBeamOpt;
-
->>>>>>> modif to run the d,2He simu, digi and analysis
    ClassDef(AtTPCIonGenerator, 1)
 };
 

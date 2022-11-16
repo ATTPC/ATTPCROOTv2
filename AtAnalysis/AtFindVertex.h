@@ -1,23 +1,20 @@
 #ifndef ATFINDVERTEX_H
 #define ATFINDVERTEX_H
 
-#include "AtPattern.h" // for AtPattern
-#include "AtPatternEvent.h"
-#include "AtPatternLine.h"
-#include "AtPatternTypes.h" // for PatternType, PatternTy...
 #include "AtTrack.h"
 
-#include <Math/Point3D.h>
-#include <Math/Point3Dfwd.h>  // for XYZPoint
 #include <Math/Vector3D.h>    // for DisplacemenXYZVectorD
 #include <Math/Vector3Dfwd.h> // for XYZVector
 #include <Rtypes.h>
 #include <TObject.h>
 
+#include <algorithm> // for max
+#include <utility>   // for pair
+#include <vector>    // for vector
+
 class TBuffer;
 class TClass;
 class TMemberInspector;
-class AtTrack;
 
 using XYZVector = ROOT::Math::XYZVector;
 
@@ -29,7 +26,7 @@ struct tracksFromVertex {
 class AtFindVertex : public TObject {
 
 public:
-   AtFindVertex(Double_t lineDistThreshold);
+   AtFindVertex(Double_t lineDistThreshold = 15);
    virtual ~AtFindVertex();
 
    void FindVertex(std::vector<AtTrack> tracks, Int_t nbTracksPerVtx);

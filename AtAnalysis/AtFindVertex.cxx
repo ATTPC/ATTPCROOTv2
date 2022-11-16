@@ -4,17 +4,12 @@ Move this to Fitter folder, the vertex determination will go with the fitter
 #include "AtFindVertex.h"
 
 #include "AtPattern.h" // for AtPattern
-#include "AtPatternEvent.h"
 #include "AtPatternLine.h"
-#include "AtPatternTypes.h" // for PatternType, PatternTy...
 #include "AtTrack.h"
 
 #include <FairLogger.h>
 
-#include <Math/Point3D.h>
-#include <Math/Point3Dfwd.h>  // for XYZPoint
-#include <Math/Vector3D.h>    // for DisplacemenXYZVectorD
-#include <Math/Vector3Dfwd.h> // for XYZVector
+#include <Math/Vector3D.h> // for DisplacemenXYZVectorD
 
 #include <algorithm>
 #include <cmath>    // for sqrt
@@ -30,8 +25,7 @@ constexpr auto cGREEN = "\033[1;32m";
 
 ClassImp(AtFindVertex);
 
-AtFindVertex::AtFindVertex(Double_t lineDistThreshold = 15)
-   : fLineDistThreshold(lineDistThreshold), fTracksFromVertex(0)
+AtFindVertex::AtFindVertex(Double_t lineDistThreshold) : fLineDistThreshold(lineDistThreshold), fTracksFromVertex(0)
 {
    fBeamPoint.SetXYZ(0, 0, 500);
    fBeamDir.SetXYZ(0, 0, 1);
@@ -66,11 +60,7 @@ void AtFindVertex::FindVertexSingleLine(std::vector<AtTrack> tracks)
       auto ransacLine = dynamic_cast<const AtPatterns::AtPatternLine *>(track.GetPattern());
       std::vector<Double_t> patternPar;
       patternPar = ransacLine->GetPatternPar();
-      Bool_t nanPattern = kFALSE;
-      for (Int_t i = 0; i < patternPar.size(); i++)
-         if (patternPar.at(i) != patternPar.at(i))
-            nanPattern = kTRUE;
-      if (patternPar.size() == 0 || nanPattern)
+      if (patternPar.size() == 0)
          continue;
       lines.push_back(patternPar);
       itracks.push_back(it);
@@ -80,16 +70,13 @@ void AtFindVertex::FindVertexSingleLine(std::vector<AtTrack> tracks)
    // for(Int_t i =0; i<cogVtx.size(); i++)std::cout<<cogVtx.size()<<" check cogVtx size "<<cogVtx.at(i).second.X()<<"
    // "<<cogVtx.at(i).second.Y()<<" "<<cogVtx.at(i).second.Z()<<std::endl;
 
-   for (Int_t i = 0; i < cogVtx.size(); i++) {
-      if (cogVtx.at(i).second.X() != cogVtx.at(i).second.X() || cogVtx.at(i).second.Y() != cogVtx.at(i).second.Y() ||
-          cogVtx.at(i).second.Z() != cogVtx.at(i).second.Z())
-         continue;
-      if (cogVtx.at(i).second.Z() <= 0 || cogVtx.at(i).second.Z() >= 1000 || sqrt(cogVtx.at(i).second.Perp2()) > 30)
+   for (auto &[num, pos] : cogVtx) {
+      if (pos.Z() <= 0 || pos.Z() >= 1000 || sqrt(pos.Perp2()) > 30)
          continue;
       std::vector<AtTrack> tracksVtx;
-      tracksVtx.push_back(tracks.at(cogVtx.at(i).first));
+      tracksVtx.push_back(tracks.at(num));
       tracksFromVertex tv;
-      tv.vertex = cogVtx.at(i).second;
+      tv.vertex = pos;
       tv.tracks = tracksVtx;
       SetTracksVertex(tv);
    }
@@ -103,11 +90,7 @@ void AtFindVertex::FindVertexMultipleLines(std::vector<AtTrack> tracks, Int_t nb
       auto ransacLine = dynamic_cast<const AtPatterns::AtPatternLine *>(track.GetPattern());
       std::vector<Double_t> patternPar;
       patternPar = ransacLine->GetPatternPar();
-      Bool_t nanPattern = kFALSE;
-      for (Int_t i = 0; i < patternPar.size(); i++)
-         if (patternPar.at(i) != patternPar.at(i))
-            nanPattern = kTRUE;
-      if (patternPar.size() == 0 || nanPattern)
+      if (patternPar.size() == 0)
          continue;
       lines.push_back(patternPar);
       wlines.push_back(ransacLine->GetChi2());
@@ -139,8 +122,8 @@ void AtFindVertex::FindVertexMultipleLines(std::vector<AtTrack> tracks, Int_t nb
          std::cout << cYELLOW << " vtx with more than " << nbTracksPerVtx << " tracks(" << vtxCand.at(i).size() << ")"
                    << cNORMAL << std::endl;
       std::vector<AtTrack> tracksVtx;
-      for (size_t j = 0; j < vtxCand.at(i).size(); j++) {
-         tracksVtx.push_back(tracks.at(vtxCand.at(i).at(j)));
+      for (auto vtxInd : vtxCand.at(i)) {
+         tracksVtx.push_back(tracks.at(vtxInd));
       }
       tracksFromVertex tv;
       tv.vertex = cogVtx.at(i);
@@ -223,7 +206,7 @@ AtFindVertex::CoGVtxSingleTrack(std::vector<std::vector<Double_t>> lines, std::v
       XYZVector vtx(0, 0, 0);
       // std::cout<<lines.size()<<" check lines size "<<std::endl;
       std::vector<Double_t> line = lines.at(i);
-      Double_t angle = angLines(line, fBeamLine);
+      // Double_t angle = angLines(line, fBeamLine);
       Double_t dist = distLines(line, fBeamLine);
       if (dist < fLineDistThreshold) {
          std::vector<XYZVector> projVtxOnLines1 = ClosestPointProjOnLines(line, fBeamLine);
@@ -243,21 +226,21 @@ std::vector<XYZVector> AtFindVertex::CoGVtx(std::vector<std::vector<Int_t>> vtxC
    std::vector<XYZVector> result;
 
    // loop on vtx Candidates
-   for (size_t iv = 0; iv < vtxCand.size(); iv++) {
+   for (auto iv : vtxCand) {
 
       XYZVector CoG(0, 0, 0);
 
       std::vector<XYZVector> sumVtx; // sum of points corresponding to where are the closest distances between each
                                      // lines
       XYZVector buffVec1(0, 0, 0);
-      sumVtx.resize(vtxCand.at(iv).size(), buffVec1);
+      sumVtx.resize(iv.size(), buffVec1);
 
-      for (Int_t i = 0; i < vtxCand.at(iv).size() - 1; i++) {
-         Int_t ii = vtxCand.at(iv).at(i);
+      for (Int_t i = 0; i < iv.size() - 1; i++) {
+         Int_t ii = iv.at(i);
          std::vector<Double_t> line = lines.at(ii);
 
-         for (Int_t j = i + 1; j < vtxCand.at(iv).size(); j++) {
-            Int_t jj = vtxCand.at(iv).at(j);
+         for (Int_t j = i + 1; j < iv.size(); j++) {
+            Int_t jj = iv.at(j);
             std::vector<Double_t> line_f = lines.at(jj);
 
             Double_t angle = angLines(line, line_f);
@@ -280,13 +263,13 @@ std::vector<XYZVector> AtFindVertex::CoGVtx(std::vector<std::vector<Int_t>> vtxC
       }    // Loop over the lines (for loop i)
 
       Double_t sumW = 0; // sum of the weights
-      for (Int_t i = 0; i < vtxCand.at(iv).size(); i++) {
+      for (Int_t i = 0; i < iv.size(); i++) {
          // std::cout<<"sumvtx "<<sumVtx.at(i).X()<<" "<<sumVtx.at(i).Y()<<" "<<sumVtx.at(i).Z()<<" chi2
-         // "<<wlines.at(vtxCand.at(iv).at(i))<<std::endl;
-         CoG += sumVtx.at(i) * (1. / wlines.at(vtxCand.at(iv).at(i)));
-         sumW += (Double_t)(1. / wlines.at(vtxCand.at(iv).at(i)));
+         // "<<wlines.at(iv.at(i))<<std::endl;
+         CoG += sumVtx.at(i) * (1. / wlines.at(iv.at(i)));
+         sumW += (Double_t)(1. / wlines.at(iv.at(i)));
       }
-      CoG = CoG * (1. / (vtxCand.at(iv).size() - 1)) * (1. / sumW);
+      CoG = CoG * (1. / (iv.size() - 1)) * (1. / sumW);
       std::cout << " vertex " << CoG.X() << " " << CoG.Y() << " " << CoG.Z() << std::endl;
       result.push_back(CoG);
 

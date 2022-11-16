@@ -12,9 +12,6 @@
 #include <Rtypes.h>  // for Int_t, Bool_t, THashConsistencyHolder, Color_t
 #include <TString.h> // for TString
 
-#include "S800Ana.h"
-#include "S800Calc.h"
-
 #include <memory>
 #include <vector>     // for vector
 class AtEventManager; // lines 17-17
@@ -39,6 +36,7 @@ class TH3F;            // lines 42-42
 class TMemberInspector;
 class TPaletteAxis; // lines 43-43
 class TEveElement;
+class S800Calc;
 
 class AtEventDrawTask : public FairTask {
 protected:
@@ -156,7 +154,7 @@ protected:
    */
    std::vector<TEvePointSet *> fHitSetTFHC;  // for TrackFinderHC
    std::vector<TEveBoxSet *> fHitClusterSet; // Track clusterization
-   std::vector<TEveLine *> fHitLine;         // Track line
+   std::vector<TEveElement *> fHitLine;      // Track line
    std::vector<TEvePointSet *> fVertex;      // Vertex line
 
    TEveRGBAPalette *fRGBAPalette;
@@ -189,7 +187,10 @@ public:
    void SetEventBranch(TString branchName);
    void SetCorrectedEventBranch(TString branchName) { fCorrectedEventBranchName = branchName; }
    void SetPatternEventBranch(TString branchName) { fPatternEventBranchName = branchName; }
-   void SetMinTracksPerVertex(Int_t val) { fMinTracksPerVertex = val; } //fVertexMod=0 one track vertex , fVertexMod=1 multi trakcs vertex
+   void SetMinTracksPerVertex(Int_t val)
+   {
+      fMinTracksPerVertex = val;
+   } // fVertexMod=0 one track vertex , fVertexMod=1 multi trakcs vertex
    static void SelectPad(const char *rawevt);
    void DrawWave(Int_t PadNum);
    void SetMultiHit(Int_t hitMax);

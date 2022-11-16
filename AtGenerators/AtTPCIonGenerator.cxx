@@ -7,12 +7,14 @@
 #include "AtVertexPropagator.h"
 
 #include <FairIon.h>
+#include <FairLogger.h> // for Logger, LOG
 #include <FairParticle.h>
 #include <FairPrimaryGenerator.h>
 #include <FairRunSim.h>
 
 #include <TDatabasePDG.h>
 #include <TFile.h>
+#include <TH1.h> // for TH1F
 #include <TMath.h>
 #include <TObjArray.h>
 #include <TObject.h> // for TObject
@@ -25,6 +27,7 @@
 #include <cmath>
 #include <iostream>
 #include <limits> // for numeric_limits
+#include <memory> // for allocator
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -43,7 +46,7 @@ Int_t AtTPCIonGenerator::fgNIon = 0;
 AtTPCIonGenerator::AtTPCIonGenerator()
    : fMult(0), fPx(0.), fPy(0.), fPz(0.), fPx0(0.), fPy0(0.), fPz0(0.), fR(0.), fz(0.), fOffset(0.), fVx(0.), fVy(0.),
      fVz(0.), fIon(nullptr), fQ(0), fBeamOpt(0), fWhmFocus(0.), fDiv(0.), fZFocus(0.), fRHole(0.), fmomAcc(0.),
-     fBeamAx(0.), fBeamAy(0.), fBeamOx(0.), fBeamOy(0.), hAta(NULL), hBta(NULL)
+     fBeamAx(0.), fBeamAy(0.), fBeamOx(0.), fBeamOy(0.), fAta(nullptr), fBta(nullptr)
 {
    //  cout << "-W- AtTPCIonGenerator: "
    //      << " Please do not use the default constructor! " << endl;
@@ -53,7 +56,7 @@ AtTPCIonGenerator::AtTPCIonGenerator()
 AtTPCIonGenerator::AtTPCIonGenerator(const Char_t *ionName, Int_t mult, Double_t px, Double_t py, Double_t pz)
    : fMult(0), fPx(0.), fPy(0.), fPz(0.), fPx0(0.), fPy0(0.), fPz0(0.), fR(0.), fz(0.), fOffset(0.), fVx(0.), fVy(0.),
      fVz(0.), fIon(nullptr), fQ(0), fBeamOpt(0), fWhmFocus(0.), fDiv(0.), fZFocus(0.), fRHole(0.), fmomAcc(0.),
-     fBeamAx(0.), fBeamAy(0.), fBeamOx(0.), fBeamOy(0.), hAta(NULL), hBta(NULL)
+     fBeamAx(0.), fBeamAy(0.), fBeamOx(0.), fBeamOy(0.), fAta(nullptr), fBta(nullptr)
 {
 
    FairRunSim *fRun = FairRunSim::Instance();
@@ -104,7 +107,8 @@ AtTPCIonGenerator::AtTPCIonGenerator(const char *name, Int_t z, Int_t a, Int_t q
    : fMult(mult), fPx(Double_t(a) * px), fPy(Double_t(a) * py), fPz(Double_t(a) * pz), fPx0(Double_t(a) * px),
      fPy0(Double_t(a) * py), fPz0(Double_t(a) * pz), fR(0.), fz(0.), fOffset(0.), fVx(0.), fVy(0.), fVz(0.),
      fIon(nullptr), fQ(0), fBeamOpt(0), fNomEner(ener), fMaxEnLoss(eLoss < 0 ? ener : eLoss), fWhmFocus(0.), fDiv(0.),
-     fZFocus(0.), fRHole(0.), fmomAcc(0.), fBeamAx(0.), fBeamAy(0.), fBeamOx(0.), fBeamOy(0.), hAta(NULL), hBta(NULL)
+     fZFocus(0.), fRHole(0.), fmomAcc(0.), fBeamAx(0.), fBeamAy(0.), fBeamOx(0.), fBeamOy(0.), fAta(nullptr),
+     fBta(nullptr)
 {
    fgNIon++;
 
@@ -120,15 +124,13 @@ AtTPCIonGenerator::AtTPCIonGenerator(const char *name, Int_t z, Int_t a, Int_t q
    }
    run->AddNewIon(fIon);
 
-   TFile *fAta = new TFile(sata, "READ");
-   TFile *fBta = new TFile(sbta, "READ");
-   if (fAta->IsZombie() || fBta->IsZombie())
+   TFile fileAta(sata, "READ");
+   TFile fileBta(sbta, "READ");
+   if (fileAta.IsZombie() || fileBta.IsZombie())
       LOG(INFO) << cYELLOW << "AtTPCIonGenerator - ata and bta distribution files (S800) not found" << cNORMAL << endl;
    else {
-      hAta = new TH1F();
-      hBta = new TH1F();
-      hAta = dynamic_cast<TH1F *>(fAta->Get("h"));
-      hBta = dynamic_cast<TH1F *>(fBta->Get("h1"));
+      fAta = std::unique_ptr<TH1F>(dynamic_cast<TH1F *>(fileAta.Get("h")));
+      fBta = std::unique_ptr<TH1F>(dynamic_cast<TH1F *>(fileBta.Get("h1")));
    }
 }
 //_________________________________________________________________________
@@ -138,8 +140,10 @@ AtTPCIonGenerator::AtTPCIonGenerator(const AtTPCIonGenerator &right)
      fPz0(right.fPz), fR(right.fR), fz(right.fz), fOffset(right.fOffset), fVx(right.fVx), fVy(right.fVy),
      fVz(right.fVz), fIon(right.fIon), fQ(right.fQ), fBeamOpt(right.fBeamOpt), fWhmFocus(right.fWhmFocus),
      fDiv(right.fDiv), fZFocus(right.fZFocus), fRHole(right.fRHole), fmomAcc(right.fmomAcc), fBeamAx(right.fBeamAx),
-     fBeamAy(right.fBeamAy), fBeamOx(right.fBeamOx), fBeamOy(right.fBeamOy), hAta(right.hAta), hBta(right.hBta)
+     fBeamAy(right.fBeamAy), fBeamOx(right.fBeamOx), fBeamOy(right.fBeamOy)
 {
+   fAta = std::make_unique<TH1F>(*right.fAta);
+   fBta = std::make_unique<TH1F>(*right.fBta);
 }
 
 // -----   Public method SetExcitationEnergy   ----------------------------
@@ -177,12 +181,12 @@ void AtTPCIonGenerator::SetEmittance()
    } // beam spot smaller than the entrance hole
    while (sqrt(pow((xFocus - fZFocus * tan(BeamAx)), 2) + pow((yFocus - fZFocus * tan(BeamAy)), 2)) > fRHole);
 
-   if (!hAta == NULL && !hBta == NULL) { // with ata and bta distributions from S800 data
+   if (fAta != nullptr && fBta != nullptr) { // with ata and bta distributions from S800 data
       do {
-         Ax = hAta->GetRandom() + 0.0019; // offset between angle of the beam in tpc frame and S800 frame,
+         Ax = fAta->GetRandom() + 0.0019; // offset between angle of the beam in tpc frame and S800 frame,
          //(+) because angle more negative in S800 frame than in TPC frame. Needs to correct back this offset in this
          // analysis
-         Ay = hBta->GetRandom();
+         Ay = fBta->GetRandom();
          x = xFocus - fZFocus * tan(Ax);
          y = yFocus - fZFocus * tan(Ay);
       } // beam at entrance smaller than the hole

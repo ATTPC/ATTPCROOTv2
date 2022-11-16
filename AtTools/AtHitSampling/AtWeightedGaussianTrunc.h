@@ -16,7 +16,7 @@ namespace RandomSample {
 class AtWeightedGaussianTrunc : public AtSample {
 public:
    virtual std::vector<AtHit> SampleHits(int N) override;
-   virtual void SetHitsToSample(const std::vector<AtHit> *hits) override { fHits = hits; }
+   virtual void SetHitsToSample(const std::vector<const AtHit *> &hits) override { fHits = &hits; }
 
 protected:
    virtual std::vector<double> PDF(const AtHit &hit) override;

@@ -1,15 +1,14 @@
 #ifndef AtEVENTMANAGER_H
 #define AtEVENTMANAGER_H
 
-#include "AtEvent.h"
-
 #include <FairRunAna.h>
 
 #include <Rtypes.h>
 #include <TEveEventManager.h>
 
 #include "S800Ana.h"
-#include "S800Calc.h"
+
+#include <vector>
 
 class FairRootManager;
 class FairTask;
@@ -21,6 +20,9 @@ class TGNumberEntry;
 class TGTextButton;
 class TMemberInspector;
 class TGListTreeItem;
+class AtEvent;
+class S800Calc;
+class TClonesArray;
 
 class AtEventManager : public TEveEventManager {
 private:

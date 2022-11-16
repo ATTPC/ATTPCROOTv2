@@ -27,27 +27,27 @@ std::vector<AtHit> AtWeightedGaussianTrunc::SampleHits(int N)
    std::vector<AtHit> retVec;
 
    for (int i = 0; i < pclouds; i++)
-      Tcharge += fHits->at(i).GetCharge();
+      Tcharge += fHits->at(i)->GetCharge();
 
    if (Tcharge > 0)
       for (int i = 0; i < pclouds; i++)
-         Proba.push_back(fHits->at(i).GetCharge());
+         Proba.push_back(fHits->at(i)->GetCharge());
 
    avgCharge = Tcharge / (double)pclouds;
    p1 = gRandom->Uniform() * pclouds;
-   retVec.push_back(fHits->at(p1));
+   retVec.push_back(*fHits->at(p1));
 
    do {
       counter++;
       p2 = gRandom->Uniform() * pclouds;
       if (p2 == p1)
          continue;
-      dist = std::sqrt((fHits->at(p1).GetPosition() - fHits->at(p2).GetPosition()).Mag2());
+      dist = std::sqrt((fHits->at(p1)->GetPosition() - fHits->at(p2)->GetPosition()).Mag2());
       gauss = 1.0 * exp(-1.0 * pow(dist / sigma, 2));
       y = gRandom->Uniform();
       w = gRandom->Uniform() * 4. * avgCharge;
-      if (fHits->at(p2).GetCharge() > w || y < gauss) {
-         retVec.push_back(fHits->at(p2));
+      if (fHits->at(p2)->GetCharge() > w || y < gauss) {
+         retVec.push_back(*fHits->at(p2));
       }
    } while (retVec.size() < N && counter < pclouds && counter < 50);
 

@@ -5,7 +5,6 @@
 #include <TVector3.h>
 
 #include <cmath>
-#include <iostream>
 #include <utility>
 
 // Allow us use std::make_unique using a protected constructor this struct

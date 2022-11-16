@@ -86,7 +86,8 @@ AtEventDrawTask::AtEventDrawTask()
      fCvs3DHist(nullptr), f3DHist(nullptr), fCvsRad(nullptr), fRadVSTb(nullptr), fCvsTheta(nullptr), fTheta(nullptr),
      fAtMapPtr(nullptr), fMinZ(0), fMaxZ(1344), fMinX(432), fMaxX(-432), f3DHitStyle(0), fMultiHit(0),
      fSaveTextData(false), f3DThreshold(0), fRawEventBranchName("AtRawEvent"), fEventBranchName("AtEventH"),
-     fPatternEventBranchName("AtPatternEvent"), fVertexSize(1.5), fVertexStyle(kFullCircle), fCvsPID(0), fPID(0), fCvsPID2(0)
+     fPatternEventBranchName("AtPatternEvent"), fVertexSize(1.5), fVertexStyle(kFullCircle), fCvsPID(nullptr),
+     fPID(nullptr), fCvsPID2(nullptr), fPID2(nullptr), fS800Calc(nullptr)
 {
 
    Char_t padhistname[256];
@@ -316,7 +317,7 @@ void AtEventDrawTask::DrawRecoHits()
    tv = findVtx.GetTracksVertex();
 
    for (size_t i = 0; i < tv.size(); i++) {
-      fVertex.push_back(new TEvePointSet(Form("Vertex_%d", i), 0, TEvePointSelectorConsumer::kTVT_XYZ));
+      fVertex.push_back(new TEvePointSet(Form("Vertex_%zu", i), 0, TEvePointSelectorConsumer::kTVT_XYZ));
       fVertex[i]->SetMarkerColor(kViolet);
       fVertex[i]->SetMarkerSize(fVertexSize);
       fVertex[i]->SetMarkerStyle(fVertexStyle);
