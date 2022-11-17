@@ -1,4 +1,4 @@
 merged_Be10dd_corr/
-fit_analysis_301_336.root
-fit_analysis_181_300.root
+analysis_301_336.root
+analysis_181_300.root
 fit_analysis_344_367.root

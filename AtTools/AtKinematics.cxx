@@ -78,6 +78,8 @@ std::vector<double> AtTools::AtKinematics::KinematicalFit(std::vector<double> &p
    // Input vector is composed by 4 four-momentum vectors of (projectile,ejectile,proton1,proton2)
    // Output vector contains the fitted coordinates in the same order
 
+   std::vector<Double_t> parOut;
+
    Int_t rowDim = fAlphaP[0]->GetNrows();
    std::cout << " Row dimension " << rowDim << "\n";
    if (rowDim != fNumParticles * 4 || rowDim != parameters.size()) {
@@ -96,7 +98,122 @@ std::vector<double> AtTools::AtKinematics::KinematicalFit(std::vector<double> &p
       (*fAlphaP.at(0)).SetSub(i, 0, (*fAlphaP.at(i + 1)));
    }
 
-   return {};
+   TMatrixD *alpha;
+   TMatrixD dalpha(4 * fNumParticles, 1); // delta alpha
+   dalpha.Zero();
+   alpha = fAlphaP.at(0).get();
+
+   TMatrixD chi2(1, 1);
+   chi2.Zero();
+
+   TMatrixD Cov = CalculateCovariance();
+
+   double weighting = 0.05;
+
+   for (auto i = 0; i < fNumIterations; i++) {
+
+      TMatrixD D = CalculateD(alpha);
+      TMatrixD Dt = D;
+      TMatrixD Vd = D * Cov * Dt.T();
+      Vd.Invert();
+      Cov = Cov - Cov * Dt * Vd * D * Cov * weighting;
+
+      // calculate labmda
+      TMatrixD d = Calculated(alpha);
+      TMatrixD temp1 = (d + D * dalpha);
+      TMatrixD lambda = Vd * temp1;
+
+      // calculate chi2
+      TMatrixD lambdaT = lambda;
+      chi2 = lambdaT.T() * temp1;
+
+      // calculate alpha
+      *alpha = *fAlphaP.at(0).get() - weighting * Cov * Dt * lambda;
+      dalpha = *alpha - *fAlphaP.at(0).get();
+      *fAlphaP.at(0).get() = *alpha;
+
+      if (fabs(chi2[0][0]) < 1.0)
+         break;
+   }
+
+   for (auto i = 0; i < 4 * fNumParticles; ++i)
+      parOut.push_back((*alpha)[i][0]);
+
+   return parOut;
+}
+
+TMatrixD AtTools::AtKinematics::Calculated(TMatrixD *alpha)
+{
+   TMatrixD dval(4, 1);
+   dval.Zero();
+   double mt = fTargetMass * 931.494; // target mass
+
+   double mout1 = 0.0;
+   double mout2 = 0.0;
+   double mout3 = 0.0;
+   double mout4 = 0.0;
+
+   // Exit channel momentum
+   for (auto i = 1; i < fNumParticles; ++i) {
+      mout1 += (*alpha)[4 * i][0];
+      mout2 += (*alpha)[4 * i + 1][0];
+      mout3 += (*alpha)[4 * i + 2][0];
+      mout4 += (*alpha)[4 * i + 3][0];
+   }
+
+   double h1 = (*alpha)[0][0] - mout1; // momentum conservation X
+   double h2 = (*alpha)[1][0] - mout2; // momentum conservation Y
+   double h3 = (*alpha)[2][0] - mout3; // momentum conservation Z
+   double h4 = (*alpha)[3][0] + mout4; // Total Energy conservation
+
+   dval[0][0] = h1;
+   dval[1][0] = h2;
+   dval[2][0] = h3;
+   dval[3][0] = h4;
+
+   return dval;
+}
+
+TMatrixD AtTools::AtKinematics::CalculateD(TMatrixD *alpha)
+{
+
+   TMatrixD Dval(4, 4 * fNumParticles);
+   Dval.Zero();
+
+   for (auto i = 0; i < fNumParticles; ++i) {
+      TMatrixD Dsub(4, 4);
+      Dsub.Zero();
+
+      Dsub[0][0] = 1;
+      for (int j = 1; j < 4; j++)
+         Dsub[j][j] = -1;
+
+      Dval.SetSub(0, i * 4, Dsub);
+   }
+
+   // Dval.Print();
+
+   return Dval;
+}
+
+TMatrixD AtTools::AtKinematics::CalculateCovariance()
+{
+   TMatrixD Vval(4 * fNumParticles, 4 * fNumParticles);
+   Vval.Zero();
+
+   for (auto i = 0; i < fNumParticles; ++i) {
+      TMatrixD Vsub(4, 4);
+      Vsub.Zero();
+
+      for (int j = 0; j < 4; j++)
+         Vsub[j][j] = 0.1;
+
+      Vval.SetSub(i * 4, i * 4, Vsub);
+   }
+
+   // Vval.Print();
+
+   return Vval;
 }
 
 void AtTools::AtKinematics::ResetMatrices()

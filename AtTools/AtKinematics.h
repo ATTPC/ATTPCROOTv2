@@ -26,6 +26,23 @@ namespace AtTools {
 
 class AtKinematics : public TObject {
 
+private:
+   Int_t fVerbosity;
+
+   Int_t fNumParticles{3};              //
+   Int_t fNumIterations{100};           //! Number of iterations for the minimizer
+   Double_t fWeigth{0.05};              //! Minimization weighting
+   Double_t fTargetMass{2.01410177812}; //! Mass of target for Kinematical fitting
+
+   std::vector<std::unique_ptr<TMatrixD>> fAlphaP; //! alpha row for n particles;
+   void ResetMatrices();
+   void PrintMatrices();
+   TMatrixD CalculateCovariance();
+   TMatrixD CalculateD(TMatrixD *alpha);
+   TMatrixD Calculated(TMatrixD *alpha);
+
+   ClassDef(AtKinematics, 1);
+
 public:
    AtKinematics();
    ~AtKinematics() = default;
@@ -40,17 +57,9 @@ public:
    Double_t omega(Double_t x, Double_t y, Double_t z);
 
    std::vector<double> KinematicalFit(std::vector<double> &parameters);
-
-private:
-   Int_t fVerbosity;
-
-   Int_t fNumParticles{3}; //
-
-   std::vector<std::unique_ptr<TMatrixD>> fAlphaP; //! alpha row for n particles;
-   void ResetMatrices();
-   void PrintMatrices();
-
-   ClassDef(AtKinematics, 1);
+   inline void SetKFIterations(Int_t iter) { fNumIterations = iter; }
+   inline void SetKFWeighting(Double_t weight) { fWeigth = weight; }
+   inline void SetKFTargetMass(Double_t mass) { fTargetMass = mass; }
 };
 
 } // namespace AtTools
