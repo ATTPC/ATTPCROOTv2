@@ -19,6 +19,8 @@
 //#pragma link C++ class  Pythia8Generator+;
 #pragma link C++ class AtTPCIonDecay + ;
 #pragma link C++ class AtTPCIonGenerator + ;
+#pragma link C++ class AtTPCIonGeneratorS800 + ;
+#pragma link C++ class AtTPCIonGeneratorGaussian + ;
 #pragma link C++ class AtTPCIonPhaseSpace + ;
 #pragma link C++ class AtTPC2Body + ;
 #pragma link C++ class AtTPC_d2He + ;

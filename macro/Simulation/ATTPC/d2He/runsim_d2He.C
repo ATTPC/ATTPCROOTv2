@@ -104,8 +104,7 @@ void runsim_d2He(Int_t runNumber = 0, Double_t ExEje = 0, Int_t nEvents = 10, TS
    TString sAta = "ataBeam.root";
    TString sBta = "btaBeam.root";
    // AtTPCIonGenerator* ionGen = new AtTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,-1);
-   AtTPCIonGenerator *ionGen =
-      new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy, -1, sAta, sBta);
+   auto ionGen = new AtTPCIonGeneratorS800("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy, -1, sAta, sBta);
    // AtTPCIonGenerator* ionGen = new AtTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,-1);
    ionGen->SetBeamEmittance(fwhmFocus, angularDiv, zFocus, rHole, momAcc, beamAx, beamAy, beamOx, beamOy); //,sAta,sBta
    // ionGen->SetBeamEmittance(fwhmFocus,angularDiv,zFocus,rHole,momAcc,beamAx,beamAy,beamOx,beamOy,sAta,sBta);
