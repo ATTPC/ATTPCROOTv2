@@ -138,6 +138,8 @@ protected:
    Float_t f3DThreshold;
 
    Bool_t fIsRawData;
+   Bool_t fDrawVertexFromLines{false};
+
    AtHit const *fIniHit;
    AtHit const *fIniHitRansac;
 
@@ -194,6 +196,7 @@ public:
    static void SelectPad(const char *rawevt);
    void DrawWave(Int_t PadNum);
    void SetMultiHit(Int_t hitMax);
+   void SetDrawVertexFromLines(bool val = true) { fDrawVertexFromLines = val; }
 
 private:
    // S800Ana fS800Ana;

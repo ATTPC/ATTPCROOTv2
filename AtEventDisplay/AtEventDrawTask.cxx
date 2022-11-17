@@ -310,20 +310,21 @@ void AtEventDrawTask::DrawRecoHits()
    fHitLine.clear();
    fVertex.clear();
 
-   AtFindVertex findVtx(12);
-   // findVtx.FindVertexMultipleLines(TrackCand, 2);
-   findVtx.FindVertex(TrackCand, fMinTracksPerVertex);
-   std::vector<tracksFromVertex> tv;
-   tv = findVtx.GetTracksVertex();
+   if (fDrawVertexFromLines) {
+      AtFindVertex findVtx(12);
+      // findVtx.FindVertexMultipleLines(TrackCand, 2);
+      findVtx.FindVertex(TrackCand, fMinTracksPerVertex);
+      std::vector<tracksFromVertex> tv;
+      tv = findVtx.GetTracksVertex();
 
-   for (size_t i = 0; i < tv.size(); i++) {
-      fVertex.push_back(new TEvePointSet(Form("Vertex_%zu", i), 0, TEvePointSelectorConsumer::kTVT_XYZ));
-      fVertex[i]->SetMarkerColor(kViolet);
-      fVertex[i]->SetMarkerSize(fVertexSize);
-      fVertex[i]->SetMarkerStyle(fVertexStyle);
-      fVertex[i]->SetNextPoint(tv.at(i).vertex.X() / 10., tv.at(i).vertex.Y() / 10., tv.at(i).vertex.Z() / 10.);
+      for (size_t i = 0; i < tv.size(); i++) {
+         fVertex.push_back(new TEvePointSet(Form("Vertex_%zu", i), 0, TEvePointSelectorConsumer::kTVT_XYZ));
+         fVertex[i]->SetMarkerColor(kViolet);
+         fVertex[i]->SetMarkerSize(fVertexSize);
+         fVertex[i]->SetMarkerStyle(fVertexStyle);
+         fVertex[i]->SetNextPoint(tv.at(i).vertex.X() / 10., tv.at(i).vertex.Y() / 10., tv.at(i).vertex.Z() / 10.);
+      }
    }
-
    for (Int_t i = 0; i < TrackCand.size(); i++) {
 
       Color_t trackColor = GetTrackColor(i) + 1;

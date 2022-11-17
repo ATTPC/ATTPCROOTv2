@@ -101,29 +101,17 @@ void AtPatternLine::FitPattern(const std::vector<XYZPoint> &points, const std::v
       const auto hitQ = doChargeWeight ? charge[i] : 1;
       const auto &pos = points[i];
       fTotCharge += hitQ;
-      // Q += hitQ / 10.;
-      // Xm += pos.X() * hitQ / 10.;
-      // Ym += pos.Y() * hitQ / 10.;
-      // Zm += pos.Z() * hitQ / 10.;
-      // Sxx += pos.X() * pos.X() * hitQ / 10.;
-      // Syy += pos.Y() * pos.Y() * hitQ / 10.;
-      // Szz += pos.Z() * pos.Z() * hitQ / 10.;
-      // Sxy += pos.X() * pos.Y() * hitQ / 10.;
-      // Sxz += pos.X() * pos.Z() * hitQ / 10.;
-      // Syz += pos.Y() * pos.Z() * hitQ / 10.;
-      Q += 1. / 10.;
-      Xm += pos.X() * 1. / 10.;
-      Ym += pos.Y() * 1. / 10.;
-      Zm += pos.Z() * 1. / 10.;
-      Sxx += pos.X() * pos.X() * 1. / 10.;
-      Syy += pos.Y() * pos.Y() * 1. / 10.;
-      Szz += pos.Z() * pos.Z() * 1. / 10.;
-      Sxy += pos.X() * pos.Y() * 1. / 10.;
-      Sxz += pos.X() * pos.Z() * 1. / 10.;
-      Syz += pos.Y() * pos.Z() * 1. / 10.;
+      Q += hitQ / 10.;
+      Xm += pos.X() * hitQ / 10.;
+      Ym += pos.Y() * hitQ / 10.;
+      Zm += pos.Z() * hitQ / 10.;
+      Sxx += pos.X() * pos.X() * hitQ / 10.;
+      Syy += pos.Y() * pos.Y() * hitQ / 10.;
+      Szz += pos.Z() * pos.Z() * hitQ / 10.;
+      Sxy += pos.X() * pos.Y() * hitQ / 10.;
+      Sxz += pos.X() * pos.Z() * hitQ / 10.;
+      Syz += pos.Y() * pos.Z() * hitQ / 10.;
    }
-
-   std::cout << "do charge weight ransacline " << Q << std::endl;
 
    Xm /= Q;
    Ym /= Q;
@@ -181,5 +169,51 @@ void AtPatternLine::FitPattern(const std::vector<XYZPoint> &points, const std::v
    DefinePattern({p1, p2});
    fChi2 = (fabs(dm2 / Q));
    fNFree = points.size() - 6;
-   // fTotCharge = Q*10.;
+   fTotCharge = Q * 10.;
+}
+
+TEveLine *AtPatternLine::GetEveLine(Double_t deltaR, XYZPoint firstPt, XYZPoint lastPt, Double_t rMax) const
+{
+   // Setup return vector with the correct number of
+   auto retLine = new TEveLine(); // NOLINT these will be owned by TEve classes
+   Double_t tMin = 0, tMax = 0, deltaPar = 0.01;
+
+   deltaPar = deltaR / sqrt(pow(fPatternPar[3], 2) + pow(fPatternPar[4], 2) + pow(fPatternPar[5], 2));
+   tMin = (firstPt.X() - fPatternPar[0]) / fPatternPar[3];
+   tMax = (lastPt.X() - fPatternPar[0]) / fPatternPar[3];
+   tMin -= 10;
+   tMax += 10;
+   std::vector<Double_t> tminmax;
+   tminmax = lineIntersecR(rMax, tMin, tMax); // 250 is the max. radius where the lines are stopped
+   if (tminmax.size() == 2) {
+      tMin = tminmax.at(0);
+      tMax = tminmax.at(1);
+   }
+   if (tMin > tMax) {
+      Double_t tBuff = tMax;
+      tMax = tMin;
+      tMin = tBuff;
+   }
+   for (int i = 0; i <= (Int_t)((tMax - tMin) / deltaPar); i++) {
+      auto t = tMin + i * deltaPar;
+      auto pos = GetPointAt(t) / 10.; // TEve is all in units cm
+      retLine->SetNextPoint(pos.X(), pos.Y(), pos.Z());
+   }
+   return retLine;
+}
+
+std::vector<Double_t> AtPatternLine::lineIntersecR(Double_t rMax, Double_t tMin, Double_t tMax) const
+{
+   std::vector<Double_t> result;
+   Double_t a = 0, b = 0, c = 0, sol1 = 0, sol2 = 0;
+   a = pow(fPatternPar[3], 2) + pow(fPatternPar[4], 2);
+   b = 2 * (fPatternPar[0] * fPatternPar[3] + fPatternPar[1] * fPatternPar[4]);
+   c = pow(fPatternPar[0], 2) + pow(fPatternPar[1], 2) - pow(rMax, 2);
+   if (b * b - 4 * a * c >= 0) {
+      sol1 = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
+      sol2 = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
+      result.push_back(sol1);
+      result.push_back(sol2);
+   }
+   return result;
 }

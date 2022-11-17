@@ -112,8 +112,6 @@ public:
     * @return Representation of line
     */
    TEveLine *GetEveLine(double tMin, double tMax, int n) const;
-   TEveLine *GetEveLine(Double_t deltaR, XYZPoint firstPt, XYZPoint lastPt) const;
-   std::vector<Double_t> lineIntersecR(Double_t rMax, Double_t tMin, Double_t tMax) const;
 
    /**
     *  @brief Get visual representation of pattern
