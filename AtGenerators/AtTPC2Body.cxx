@@ -294,11 +294,11 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
          }
 
          // AtVertexPropagator::Instance()->SetRecoilE(Ene.at(1));
-         AtVertexPropagator::Instance()->SetTrackEnergy(2, Ene.at(1));
-         AtVertexPropagator::Instance()->SetTrackAngle(2, Ang.at(1) * 180.0 / TMath::Pi());
+         AtVertexPropagator::Instance()->SetTrackEnergy(1, Ene.at(1));
+         AtVertexPropagator::Instance()->SetTrackAngle(1, Ang.at(1) * 180.0 / TMath::Pi());
 
-         AtVertexPropagator::Instance()->SetTrackEnergy(1, Ene.at(0));
-         AtVertexPropagator::Instance()->SetTrackAngle(1, Ang.at(0) * 180.0 / TMath::Pi());
+         AtVertexPropagator::Instance()->SetTrackEnergy(0, Ene.at(0));
+         AtVertexPropagator::Instance()->SetTrackAngle(0, Ang.at(0) * 180.0 / TMath::Pi());
 
          fPx.at(0) = 0.0;
          fPy.at(0) = 0.0;

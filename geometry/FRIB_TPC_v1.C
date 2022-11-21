@@ -29,7 +29,7 @@ const TString FileName1 = geoVersion + "_geomanager.root";
 
 // Names of the different used materials which are used to build the modules
 // The materials are defined in the global media.geo file
-const TString MediumGas = "He_1bar";
+const TString MediumGas = "Ar80N20_2bar";
 const TString MediumVacuum = "vacuum4";
 const TString MediumWindow = "kapton";
 const TString CylinderVolumeMedium = "steel";
@@ -144,31 +144,32 @@ TGeoVolume *create_detector()
    TGeoMedium *tubewindowmat = gGeoMan->GetMedium(TubeWindowMedium);
 
    // FRIB-TPC gas volume
+   // NB: If overlap, first volume that it is introduced is kept.
 
    double tpc_rot = 0;
+
+   TGeoVolume *target_window =
+      gGeoManager->MakeBox("target_window", tubewindowmat, 0.00060 / 2.0, 1.40 / 2.0, 30.0 / 2.0);
+   target_window->SetLineColor(kRed);
+   gGeoMan->GetVolume(geoVersion)
+      ->AddNode(target_window, 3, new TGeoCombiTrans(8.6, 0.45, 0.0, new TGeoRotation("target_window", 0, 0, 0)));
+   target_window->SetTransparency(60);
+
+   TGeoVolume *target_volume = gGeoManager->MakeBox("target_drift_volume", tgas, 1.4 / 2.0, 1.40 / 2.0, 30.0 / 2.0);
+   target_volume->SetLineColor(kBlue);
+   gGeoMan->GetVolume(geoVersion)
+      ->AddNode(target_volume, 2, new TGeoCombiTrans(9.3, 0.45, 0.0, new TGeoRotation("target_drift_volume", 0, 0, 0)));
+   target_volume->SetTransparency(30);
 
    TGeoVolume *drift_volume = gGeoManager->MakeBox("drift_volume", gas, 20.0 / 2., 20.0 / 2., 30.0 / 2.);
    gGeoMan->GetVolume(geoVersion)
       ->AddNode(drift_volume, 1, new TGeoCombiTrans(0.0, 0.0, 0.0, new TGeoRotation("drift_volume", 0, 0, 0)));
    drift_volume->SetTransparency(90);
 
-   TGeoVolume *target_volume = gGeoManager->MakeBox("target_drift_volume", tgas, 1.4 / 2.0, 1.40 / 2.0, 80.0 / 2.0);
-   target_volume->SetLineColor(kBlue);
-   gGeoMan->GetVolume(geoVersion)
-      ->AddNode(target_volume, 2, new TGeoCombiTrans(9.3, 0.45, 0.0, new TGeoRotation("target_volume", 0, 0, 0)));
-   target_volume->SetTransparency(30);
-
-   TGeoVolume *target_window =
-      gGeoManager->MakeBox("target_window", tubewindowmat, 0.00060 / 2.0, 1.40 / 2.0, 80.0 / 2.0);
-   target_window->SetLineColor(kRed);
-   gGeoMan->GetVolume(geoVersion)
-      ->AddNode(target_window, 2, new TGeoCombiTrans(8.6, 0.45, 0.0, new TGeoRotation("target_volume", 0, 0, 0)));
-   target_window->SetTransparency(60);
-
    TGeoVolume *tpc_window = gGeoManager->MakeTube("tpc_window", windowmat, 0, 1.40 / 2.0, 0.00100 / 2.0);
    tpc_window->SetLineColor(kOrange);
    gGeoMan->GetVolume(geoVersion)
-      ->AddNode(tpc_window, 3, new TGeoCombiTrans(9.3, 0.45, -80.0 / 2.0, new TGeoRotation("tpc_window", 0, 0, 0)));
+      ->AddNode(tpc_window, 4, new TGeoCombiTrans(9.3, 0.45, -80.0 / 2.0, new TGeoRotation("tpc_window", 0, 0, 0)));
    tpc_window->SetTransparency(50);
 
    TGeoBBox *fcplate_in = new TGeoBBox("fcplate_in", 20.0 / 2.0, 0.2 / 2., 30.0 / 2.);

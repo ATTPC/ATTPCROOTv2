@@ -123,7 +123,7 @@ void AtTpc::getTrackParametersWhileExiting()
    // Correct fPosOut
    if (gMC->IsTrackExiting()) {
       correctPosOut();
-      if ((fVolName == "drift_volume" || fVolName == "cell") &&
+      if ((fVolName.Contains("drift_volume") || fVolName.Contains("cell")) &&
           AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0)
          resetVertex();
    }
@@ -168,7 +168,7 @@ bool AtTpc::reactionOccursHere()
 {
    bool atEnergyLoss = fELossAcc * 1000 > AtVertexPropagator::Instance()->GetRndELoss();
    bool isPrimaryBeam = AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0;
-   bool isInRightVolume = fVolName == "drift_volume" || fVolName == "cell";
+   bool isInRightVolume = fVolName.Contains("drift_volume") || fVolName.Contains("cell");
    return atEnergyLoss && isPrimaryBeam && isInRightVolume;
 }
 Bool_t AtTpc::ProcessHits(FairVolume *vol)

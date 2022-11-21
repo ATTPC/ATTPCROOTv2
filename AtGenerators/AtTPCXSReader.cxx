@@ -207,8 +207,8 @@ Bool_t AtTPCXSReader::ReadEvent(FairPrimaryGenerator *primGen)
       Ang.push_back(theta_scatter); // set angle ION   DUMMY FOR THE MOMENT!!!!!!!!!!!!!!! CHECK AND SOLVE
       Ene.push_back(t_scatter);     // set energy ION
 
-      AtVertexPropagator::Instance()->SetTrackEnergy(2, Ene.at(0));
-      AtVertexPropagator::Instance()->SetTrackAngle(2, Ang.at(0) * 180.0 / TMath::Pi());
+      AtVertexPropagator::Instance()->SetTrackEnergy(0, Ene.at(0));
+      AtVertexPropagator::Instance()->SetTrackAngle(0, Ang.at(0) * 180.0 / TMath::Pi());
 
       AtVertexPropagator::Instance()->SetTrackEnergy(1, Ene.at(1));
       AtVertexPropagator::Instance()->SetTrackAngle(1, Ang.at(1) * 180.0 / TMath::Pi());
