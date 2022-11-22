@@ -15,33 +15,24 @@
 
 ClassImp(AtTPCIonGeneratorS800);
 
-AtTPCIonGeneratorS800::AtTPCIonGeneratorS800()
-   : AtTPCIonGenerator(), fAta(nullptr), fBta(nullptr), fileAta(nullptr), fileBta(nullptr)
-{
-}
+AtTPCIonGeneratorS800::AtTPCIonGeneratorS800() : AtTPCIonGenerator(), fAta(nullptr), fBta(nullptr) {}
 
 AtTPCIonGeneratorS800::AtTPCIonGeneratorS800(const char *name, Int_t z, Int_t a, Int_t q, Int_t mult, Double_t px,
                                              Double_t py, Double_t pz, Double_t Ex, Double_t m, Double_t ener,
                                              Double_t eLoss, TString sata, TString sbta)
-   : AtTPCIonGenerator(name, z, a, q, mult, px, py, pz, Ex, m, eLoss), fAta(nullptr), fBta(nullptr), fileAta(nullptr),
-     fileBta(nullptr)
+   : AtTPCIonGenerator(name, z, a, q, mult, px, py, pz, Ex, m, eLoss), fAta(nullptr), fBta(nullptr)
 
 {
 
-   // variable or smart ptr declarations of fileAta/Bta make the code 10x slower,
-   // suspect that when GetRandom is called on fAta/fBta it needs to "openned" the  TFiles so if one deletes
-   // fileAta/fileBta before they will be "reopenned" at each event. TFiles *fileAta/Bta are deleted with the
-   // destructor.
-   //  std::unique_ptr<TFile> fileAta(new TFile(sata, "READ")), fileBta(new TFile(sbta, "READ"));
-   // TFile fileAta(sata, "READ");
-   // TFile fileBta(sbta, "READ");
-   fileAta = new TFile(sata, "READ");
-   fileBta = new TFile(sbta, "READ");
-   if (fileAta->IsZombie() || fileBta->IsZombie())
+   TFile fileAta(sata, "READ");
+   TFile fileBta(sbta, "READ");
+   if (fileAta.IsZombie() || fileBta.IsZombie())
       LOG(error) << "AtTPCIonGenerator - ata and bta distribution files (S800) not found";
    else {
-      fAta = std::unique_ptr<TH1F>(dynamic_cast<TH1F *>(fileAta->Get("h")));
-      fBta = std::unique_ptr<TH1F>(dynamic_cast<TH1F *>(fileBta->Get("h1")));
+      fAta = std::unique_ptr<TH1F>(dynamic_cast<TH1F *>(fileAta.Get("h")));
+      fBta = std::unique_ptr<TH1F>(dynamic_cast<TH1F *>(fileBta.Get("h1")));
+      fAta->SetDirectory(0);
+      fBta->SetDirectory(0);
    }
 
    fPx0 = a * px;
