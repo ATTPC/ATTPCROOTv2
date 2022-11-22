@@ -32,7 +32,8 @@ void runsim_d2He(Int_t runNumber = 0, Double_t ExEje = 0, Int_t nEvents = 10, TS
    // -----   Create simulation run   ----------------------------------------
    FairRunSim *run = new FairRunSim();
    run->SetName(mcEngine);      // Transport engine
-   run->SetOutputFile(outFile); // Output file
+   run->SetSink(new FairRootFileSink(outFile)); // Output file
+  // run->SetOutputFile(outFile); // Output file
    FairRuntimeDb *rtdb = run->GetRuntimeDb();
    // ------------------------------------------------------------------------
 
@@ -80,7 +81,7 @@ void runsim_d2He(Int_t runNumber = 0, Double_t ExEje = 0, Int_t nEvents = 10, TS
    Double_t kBeam = 105.16;
    Double_t BExcEner = 0.0;
    Double_t Bmass = 14.008596359 * 931.494 / 1000.0; // Mass in GeV
-   Double_t NomEnergy = 0.0858025; // Nominal Energy of the beam: Only used for cross section calculation (Tracking
+   Double_t NomEnergy = 0.08; // Nominal Energy of the beam: Only used for cross section calculation (Tracking
                                    // energy is determined with momentum). TODO: Change this to the energy after the IC
    // Double_t NomEnergy = 100.;
    // Double_t kBeam = 1000.*(sqrt(Bmass*Bmass+pow(pz*a,2))-Bmass)/a;
@@ -101,13 +102,15 @@ void runsim_d2He(Int_t runNumber = 0, Double_t ExEje = 0, Int_t nEvents = 10, TS
    Double_t beamOx = -2.24859e-1;                     // cm, beam offset at entrance window x direction
    Double_t beamOy = +0.988841e-1;                    // cm, beam offset at entrance window y direction
 
+   // TString sAta = "";
+   // TString sBta = "";
    TString sAta = "ataBeam.root";
    TString sBta = "btaBeam.root";
+
    // AtTPCIonGenerator* ionGen = new AtTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,-1);
    auto ionGen = new AtTPCIonGeneratorS800("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy, -1, sAta, sBta);
    // AtTPCIonGenerator* ionGen = new AtTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy,-1);
    ionGen->SetBeamEmittance(fwhmFocus, angularDiv, zFocus, rHole, momAcc, beamAx, beamAy, beamOx, beamOy); //,sAta,sBta
-   // ionGen->SetBeamEmittance(fwhmFocus,angularDiv,zFocus,rHole,momAcc,beamAx,beamAy,beamOx,beamOy,sAta,sBta);
    // ionGen->SetBeamEmittance(fwhmFocus,angularDiv,zFocus,rHole);
 
    // add the ion generator
@@ -399,24 +402,28 @@ void runsim_d2He(Int_t runNumber = 0, Double_t ExEje = 0, Int_t nEvents = 10, TS
    //---Store the visualiztion info of the tracks, this make the output file very large!!
    //--- Use it only to display but not for production!
    // run->SetStoreTraj(kTRUE);
-
    // -----   Initialize simulation run   ------------------------------------
+   Bool_t kParameterMerged = kTRUE;
+   FairParRootFileIo *parOut = new FairParRootFileIo(kParameterMerged);
+   parOut->open(parFile);
+   rtdb->setOutput(parOut);
+
+
+
    run->Init();
    // ------------------------------------------------------------------------
 
    // -----   Runtime database   ---------------------------------------------
 
-   Bool_t kParameterMerged = kTRUE;
-   FairParRootFileIo *parOut = new FairParRootFileIo(kParameterMerged);
-   parOut->open(parFile.Data());
-   rtdb->setOutput(parOut);
-   rtdb->saveOutput();
-   rtdb->print();
+
+
    // ------------------------------------------------------------------------
 
    // -----   Start run   ----------------------------------------------------
    run->Run(nEvents);
-
+  // rtdb->saveOutput();
+//   rtdb->Print();
+   parOut->close();
    // You can export your ROOT geometry to a separate file
    // run->CreateGeometryFile("./data/geofile_d2He_full.root");
    // ------------------------------------------------------------------------

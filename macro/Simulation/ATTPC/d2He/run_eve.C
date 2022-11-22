@@ -39,6 +39,7 @@ void run_eve(TString InputDataPath = "/mnt/analysis/e18008/rootAna/giraud/simula
    eve->Set3DHitStyleBox();
    eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
    // eve->SetSaveTextData();
+   eve->SetDrawVertexFromLines();
    eve->SetRawEventBranch("AtRawEvent");
    eve->SetEventBranch("AtEventH");
    eve->SetMinTracksPerVertex(2);

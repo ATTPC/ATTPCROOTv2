@@ -1,8 +1,9 @@
 
-static Double_t proton_mass = 1.0078250322 * 931.494 - 0.511;
-static Double_t proj_mass = 14.008596359 * 931.494 - 0.511 * 8.;
+
+static Double_t proton_mass = 1.0078250322 * 931.494;
+static Double_t proj_mass = 14.008596359 * 931.494;
 static Double_t target_mass = 2.01410177812 * 931.494;
-static Double_t recoil_mass = 14.00307400443 * 931.494 - 0.511 * 7.;
+static Double_t recoil_mass = 14.00307400443 * 931.494;
 static Double_t he2_mass = 2.0 * proton_mass;
 static Double_t Ekin_proj = 105.16 * 14.008596359; // 100.0
 // static Double_t decay_frag_mass = 14.00307400443*931.494/1000;//GeV/c^2
@@ -103,6 +104,7 @@ void ana_d2He()
    XYZVector mom_proton1_reco, mom_proton2_reco, mom_He2_reco;
 
    XYZVector beamDir(-0.00915252, -0.00221017, 0.9999557);
+   // XYZVector beamDir(0, 0, 1);
 
    vector<TString> fcutPID1File;
    vector<TCutG *> fcutPID1;
@@ -416,7 +418,7 @@ void ana_d2He()
             Double_t mom_beam = sqrt(pow(Ekin_proj + proj_mass, 2) - pow(proj_mass, 2));
             Double_t missing_mom;
             missing_mom = sqrt((mom_beam * beamDir - mom_He2_reco).Mag2());
-            Double_t missing_energy = (Ekin_proj + proj_mass + target_mass - (kin_He2 + epsilon_pp + he2_mass + 0.511));
+            Double_t missing_energy = (Ekin_proj + proj_mass + target_mass - (kin_He2 + epsilon_pp + he2_mass));
             Double_t missing_mass = sqrt(pow(missing_energy, 2) - pow(missing_mom, 2));
 
             phi_He2 = mom_He2_reco.Phi() * TMath::RadToDeg();

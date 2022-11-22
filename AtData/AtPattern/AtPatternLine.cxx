@@ -19,7 +19,7 @@ AtPatternLine::AtPatternLine() : AtPattern(2) {}
 
 TEveElement *AtPatternLine::GetEveElement() const
 {
-   return AtPattern::GetEveLine(0, 1000, 100);
+  return AtPatternLine::GetEveLine(250);
 }
 
 /**
@@ -172,19 +172,12 @@ void AtPatternLine::FitPattern(const std::vector<XYZPoint> &points, const std::v
    fTotCharge = Q * 10.;
 }
 
-TEveLine *AtPatternLine::GetEveLine(Double_t deltaR, XYZPoint firstPt, XYZPoint lastPt, Double_t rMax) const
+TEveLine *AtPatternLine::GetEveLine(Double_t rMax) const
 {
-   // Setup return vector with the correct number of
    auto retLine = new TEveLine(); // NOLINT these will be owned by TEve classes
-   Double_t tMin = 0, tMax = 0, deltaPar = 0.01;
-
-   deltaPar = deltaR / sqrt(pow(fPatternPar[3], 2) + pow(fPatternPar[4], 2) + pow(fPatternPar[5], 2));
-   tMin = (firstPt.X() - fPatternPar[0]) / fPatternPar[3];
-   tMax = (lastPt.X() - fPatternPar[0]) / fPatternPar[3];
-   tMin -= 10;
-   tMax += 10;
+   Double_t tMin = -10, tMax = 10, deltaPar = 0.05;
    std::vector<Double_t> tminmax;
-   tminmax = lineIntersecR(rMax, tMin, tMax); // 250 is the max. radius where the lines are stopped
+   tminmax = lineIntersecR(rMax, tMin, tMax); // ex: rMax=250 is the max. radius where the lines are stopped
    if (tminmax.size() == 2) {
       tMin = tminmax.at(0);
       tMax = tminmax.at(1);

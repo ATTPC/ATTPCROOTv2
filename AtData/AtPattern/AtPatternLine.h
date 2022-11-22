@@ -41,7 +41,7 @@ public:
    virtual TEveElement *GetEveElement() const override;
    virtual std::unique_ptr<AtPattern> Clone() const override { return std::make_unique<AtPatternLine>(*this); }
 
-   TEveLine *GetEveLine(Double_t deltaR, XYZPoint firstPt, XYZPoint lastPt, Double_t rMax = 250) const;
+   TEveLine *GetEveLine(Double_t rMax = 250) const;
 
 protected:
    std::vector<Double_t> lineIntersecR(Double_t rMax, Double_t tMin, Double_t tMax) const;

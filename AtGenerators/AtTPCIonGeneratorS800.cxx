@@ -8,28 +8,41 @@
 #include <TMath.h>
 #include <TObject.h> // for TObject
 #include <TRandom.h>
+#include <iostream>
+#include <TStopwatch.h>
 
 #include <cmath> // for tan, sqrt, pow, atan, fabs
 
 ClassImp(AtTPCIonGeneratorS800);
 
-AtTPCIonGeneratorS800::AtTPCIonGeneratorS800() : AtTPCIonGenerator(), fAta(nullptr), fBta(nullptr) {}
+AtTPCIonGeneratorS800::AtTPCIonGeneratorS800() : AtTPCIonGenerator(), fAta(nullptr), fBta(nullptr), fileAta(nullptr), fileBta(nullptr) {}
 
 AtTPCIonGeneratorS800::AtTPCIonGeneratorS800(const char *name, Int_t z, Int_t a, Int_t q, Int_t mult, Double_t px,
                                              Double_t py, Double_t pz, Double_t Ex, Double_t m, Double_t ener,
                                              Double_t eLoss, TString sata, TString sbta)
-   : AtTPCIonGenerator(name, z, a, q, mult, px, py, pz, Ex, m, eLoss), fAta(nullptr), fBta(nullptr)
+   : AtTPCIonGenerator(name, z, a, q, mult, px, py, pz, Ex, m, eLoss), fAta(nullptr), fBta(nullptr), fileAta(nullptr), fileBta(nullptr)
 
 {
 
-   TFile fileAta(sata, "READ");
-   TFile fileBta(sbta, "READ");
-   if (fileAta.IsZombie() || fileBta.IsZombie())
+  //variable or smart ptr declarations of fileAta/Bta make the code 10x slower,
+  //suspect that when GetRandom is called on fAta/fBta it needs to "openned" the  TFiles so if one deletes fileAta/fileBta before
+  //they will be "reopenned" at each event. TFiles *fileAta/Bta are deleted with the destructor.
+  // std::unique_ptr<TFile> fileAta(new TFile(sata, "READ")), fileBta(new TFile(sbta, "READ"));
+  //TFile fileAta(sata, "READ");
+  //TFile fileBta(sbta, "READ");
+   fileAta = new TFile(sata, "READ");
+   fileBta = new TFile(sbta, "READ");
+   if (fileAta->IsZombie() || fileBta->IsZombie())
       LOG(error) << "AtTPCIonGenerator - ata and bta distribution files (S800) not found";
    else {
-      fAta = std::unique_ptr<TH1F>(dynamic_cast<TH1F *>(fileAta.Get("h")));
-      fBta = std::unique_ptr<TH1F>(dynamic_cast<TH1F *>(fileBta.Get("h1")));
+      fAta = std::unique_ptr<TH1F>(dynamic_cast<TH1F *>(fileAta->Get("h")));
+      fBta = std::unique_ptr<TH1F>(dynamic_cast<TH1F *>(fileBta->Get("h1")));
    }
+
+   fPx0 = a*px;
+   fPy0 = a*py;
+   fPz0 = a*pz;
+
 }
 
 void AtTPCIonGeneratorS800::SetBeamEmittance(Double32_t val1, Double32_t val2, Double32_t val3, Double32_t val4,
@@ -48,6 +61,8 @@ void AtTPCIonGeneratorS800::SetBeamEmittance(Double32_t val1, Double32_t val2, D
 
 void AtTPCIonGeneratorS800::SetVertexCoordinates()
 {
+   //TStopwatch timer;
+   //timer.Start();
    gRandom->SetSeed(0);
    Double_t x = 0., y = 0., xFocus = 0., yFocus = 0., Ax = 0., Ay = 0., BeamAx = 0., BeamAy = 0., BeamOx = 0.,
             BeamOy = 0.;
@@ -70,9 +85,11 @@ void AtTPCIonGeneratorS800::SetVertexCoordinates()
    if (fAta != nullptr && fBta != nullptr) { // with ata and bta distributions from S800 data
       do {
          Ax = fAta->GetRandom() + 0.0019; // offset between angle of the beam in tpc frame and S800 frame,
+         // Ax = fAta.GetRandom() + 0.0019; // offset between angle of the beam in tpc frame and S800 frame,
          //(+) because angle more negative in S800 frame than in TPC frame. Needs to correct back this offset in this
          // analysis
          Ay = fBta->GetRandom();
+         // Ay = fBta.GetRandom();
          x = xFocus - fZFocus * tan(Ax);
          y = yFocus - fZFocus * tan(Ay);
       } // beam at entrance smaller than the hole
@@ -98,4 +115,11 @@ void AtTPCIonGeneratorS800::SetVertexCoordinates()
    fPy = fPz * tan(Ay);
 
    AtVertexPropagator::Instance()->Setd2HeVtx(fVx, fVy, Ax, Ay);
+
+   //timer.Stop();
+   //Double_t rtime = timer.RealTime();
+   //Double_t ctime = timer.CpuTime();
+
+  // std::cout << "Real time " << rtime << " s, CPU time " << ctime << "s" <<std::endl;
+
 }

@@ -6,6 +6,7 @@
 #include <Rtypes.h>  // for Double_t, Double32_t, Int_t, THashCon...
 #include <TH1.h>     // for TH1F
 #include <TString.h> // for TString
+#include <TFile.h> // for TString
 
 #include <memory> // for unique_ptr
 
@@ -24,6 +25,7 @@ protected:
    Double_t fBeamOx{0}, fBeamOy{0}; //< beam offset [cm]
    /// beam angles distributions in dispersive and non dispersive direction(respectively to S800)[rad]
    std::unique_ptr<TH1F> fAta, fBta;
+   TFile *fileAta, *fileBta;
    /// Beam whm at focus, beam divergence, z focus, radius of the pad plan hole
    Double32_t fWhmFocus{0}, fDiv{0}, fZFocus{0}, fRHole{0};
 
@@ -32,6 +34,11 @@ public:
    AtTPCIonGeneratorS800(const char *name, Int_t z, Int_t a, Int_t q, Int_t mult, Double_t px, Double_t py, Double_t pz,
                          Double_t Ex, Double_t m, Double_t ener, Double_t eLoss = -1, TString sata = "",
                          TString sbta = "");
+
+   virtual ~AtTPCIonGeneratorS800() {
+     delete fileAta;
+     delete fileBta;
+   }
 
    void SetBeamEmittance(Double32_t val1 = 0, Double32_t val2 = 0, Double32_t val3 = 0, Double32_t val4 = 0,
                          Double_t val5 = 0, Double_t val6 = 0, Double_t val7 = 0, Double_t val8 = 0, Double_t val9 = 0);

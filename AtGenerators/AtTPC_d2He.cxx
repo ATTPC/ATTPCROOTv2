@@ -278,10 +278,11 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
          phi_cm = 2 * TMath::Pi() * (gRandom->Uniform());
          epsilon = TMath::Abs(inp1.at(ran_theta) - 0.25 + 0.5 * gRandom->Uniform());
       }
-      /* std::cout<<"===================================================================="<<std::endl;
-      std::cout<<theta_cm*TMath::RadToDeg()<<"  "<<phi_cm<<"  "<<epsilon<<std::endl;
-      //std::cout<<fPxBeam<<"  "<<fPyBeam<<"  "<<fPzBeam<<std::endl;
-      std::cout<<"===================================================================="<<std::endl; */
+      // std::cout<<"===================================================================="<<std::endl;
+      // std::cout<<theta_cm*TMath::RadToDeg()<<"  "<<phi_cm<<"  "<<epsilon<<std::endl;
+      // std::cout<<fCStot<<std::endl;
+      // //std::cout<<fPxBeam<<"  "<<fPyBeam<<"  "<<fPzBeam<<std::endl;
+      // std::cout<<"===================================================================="<<std::endl;
 
       // dirty way to include more than one excited state
       /*test_var = gRandom->Uniform();
@@ -291,8 +292,6 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
       if(test_var>= 0.75 && test_var<1.0) Ex_ejectile = 20.0;
       */
       Ex_ejectile = fExEnergy.at(2);
-
-      // Ex_ejectile = fExEnergy.at(2); // excitation energy of ejectile
 
       m1 = Masses.at(0) * amu + fExEnergy.at(0);
       m2 = Masses.at(1) * amu + fExEnergy.at(1);
@@ -502,17 +501,17 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
       if (phi8 < 0)
          phi8 = (phi8 + 360.0);
    */
-   /*std::cout << " -I- ===== AtTPC_d2He - Kinematics ====== "<<Ex_ejectile<<std::endl;
-   std::cout << " Scattered energy:" << Ene.at(0)  << " MeV" << std::endl;
-   std::cout << " Scattered  angle:"  << Ang.at(0) << " deg" << std::endl;
-   std::cout << " proton1 energy:" << Ene.at(2) << " MeV" << std::endl;
-   std::cout << " proton1 angle:"  << Ang.at(2) << " deg" << std::endl;
-   std::cout << " proton1 angle phi:"  << phi7 << " deg" << std::endl;
-   std::cout << " proton2 energy:" << Ene.at(3) << " MeV" << std::endl;
-   std::cout << " proton2 angle:"  << Ang.at(3) << " deg" << std::endl;
-   std::cout << " proton2 angle phi:"  << phi8 << " deg" << std::endl;
-   std::cout << " 2He kinetic energy:"  <<  Ene.at(1) << " MeV" << std::endl;
-   std::cout << " 2He lab angle:"  <<  Ang.at(1) << " deg" << std::endl;*/
+   // std::cout << " -I- ===== AtTPC_d2He - Kinematics ====== "<<Ex_ejectile<<std::endl;
+   // std::cout << " Scattered energy:" << Ene.at(0)  << " MeV" << std::endl;
+   // std::cout << " Scattered  angle:"  << Ang.at(0) << " deg" << std::endl;
+   // std::cout << " proton1 energy:" << Ene.at(2) << " MeV" << std::endl;
+   // std::cout << " proton1 angle:"  << Ang.at(2) << " deg" << std::endl;
+   // std::cout << " proton1 angle phi:"  << phi78 << " deg" << std::endl;
+   // std::cout << " proton2 energy:" << Ene.at(3) << " MeV" << std::endl;
+   // std::cout << " proton2 angle:"  << Ang.at(3) << " deg" << std::endl;
+   // // std::cout << " proton2 angle phi:"  << phi78 << " deg" << std::endl;
+   // std::cout << " 2He kinetic energy:"  <<  Ene.at(1) << " MeV" << std::endl;
+   // std::cout << " 2He lab angle:"  <<  Ang.at(1) << " deg" << std::endl;
 
    AtVertexPropagator::Instance()->SetTrackEnergy(1, Ene.at(0));
    AtVertexPropagator::Instance()->SetTrackAngle(1, Ang.at(0));
@@ -538,7 +537,7 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
    fVx = d2HeVtx.X();
    fVy = d2HeVtx.Y();
    fVz = d2HeVtx.Z();
-   // std::cout<<cYELLOW<<"vertex in AtTPC_d2He "<<fVx<<" "<< fVy<<" "<< fVz<<cNORMAL<<std::endl;
+   std::cout<<cYELLOW<<"vertex in AtTPC_d2He "<<fVx<<" "<< fVy<<" "<< fVz<<cNORMAL<<std::endl;
 
    for (Int_t i = 0; i < fMult; i++) {
       TParticlePDG *thisPart;
