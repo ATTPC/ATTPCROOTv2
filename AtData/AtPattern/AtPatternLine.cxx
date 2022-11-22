@@ -19,7 +19,7 @@ AtPatternLine::AtPatternLine() : AtPattern(2) {}
 
 TEveElement *AtPatternLine::GetEveElement() const
 {
-  return AtPatternLine::GetEveLine(250);
+   return AtPatternLine::GetEveLine(250);
 }
 
 /**

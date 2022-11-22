@@ -4,9 +4,9 @@
 #include "AtTPCIonGenerator.h"
 
 #include <Rtypes.h>  // for Double_t, Double32_t, Int_t, THashCon...
+#include <TFile.h>   // for TString
 #include <TH1.h>     // for TH1F
 #include <TString.h> // for TString
-#include <TFile.h> // for TString
 
 #include <memory> // for unique_ptr
 
@@ -35,9 +35,10 @@ public:
                          Double_t Ex, Double_t m, Double_t ener, Double_t eLoss = -1, TString sata = "",
                          TString sbta = "");
 
-   virtual ~AtTPCIonGeneratorS800() {
-     delete fileAta;
-     delete fileBta;
+   virtual ~AtTPCIonGeneratorS800()
+   {
+      delete fileAta;
+      delete fileBta;
    }
 
    void SetBeamEmittance(Double32_t val1 = 0, Double32_t val2 = 0, Double32_t val3 = 0, Double32_t val4 = 0,

@@ -33,7 +33,7 @@ void runsim_d2He(Int_t runNumber = 0, Double_t ExEje = 0, Int_t nEvents = 10, TS
    FairRunSim *run = new FairRunSim();
    run->SetName(mcEngine);      // Transport engine
    run->SetSink(new FairRootFileSink(outFile)); // Output file
-  // run->SetOutputFile(outFile); // Output file
+                                                // run->SetOutputFile(outFile); // Output file
    FairRuntimeDb *rtdb = run->GetRuntimeDb();
    // ------------------------------------------------------------------------
 
@@ -82,7 +82,7 @@ void runsim_d2He(Int_t runNumber = 0, Double_t ExEje = 0, Int_t nEvents = 10, TS
    Double_t BExcEner = 0.0;
    Double_t Bmass = 14.008596359 * 931.494 / 1000.0; // Mass in GeV
    Double_t NomEnergy = 0.08; // Nominal Energy of the beam: Only used for cross section calculation (Tracking
-                                   // energy is determined with momentum). TODO: Change this to the energy after the IC
+                              // energy is determined with momentum). TODO: Change this to the energy after the IC
    // Double_t NomEnergy = 100.;
    // Double_t kBeam = 1000.*(sqrt(Bmass*Bmass+pow(pz*a,2))-Bmass)/a;
 
@@ -408,21 +408,17 @@ void runsim_d2He(Int_t runNumber = 0, Double_t ExEje = 0, Int_t nEvents = 10, TS
    parOut->open(parFile);
    rtdb->setOutput(parOut);
 
-
-
    run->Init();
    // ------------------------------------------------------------------------
 
    // -----   Runtime database   ---------------------------------------------
 
-
-
    // ------------------------------------------------------------------------
 
    // -----   Start run   ----------------------------------------------------
    run->Run(nEvents);
-  // rtdb->saveOutput();
-//   rtdb->Print();
+   // rtdb->saveOutput();
+   //   rtdb->Print();
    parOut->close();
    // You can export your ROOT geometry to a separate file
    // run->CreateGeometryFile("./data/geofile_d2He_full.root");

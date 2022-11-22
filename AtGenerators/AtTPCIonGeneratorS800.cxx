@@ -8,28 +8,33 @@
 #include <TMath.h>
 #include <TObject.h> // for TObject
 #include <TRandom.h>
-#include <iostream>
 #include <TStopwatch.h>
 
 #include <cmath> // for tan, sqrt, pow, atan, fabs
+#include <iostream>
 
 ClassImp(AtTPCIonGeneratorS800);
 
-AtTPCIonGeneratorS800::AtTPCIonGeneratorS800() : AtTPCIonGenerator(), fAta(nullptr), fBta(nullptr), fileAta(nullptr), fileBta(nullptr) {}
+AtTPCIonGeneratorS800::AtTPCIonGeneratorS800()
+   : AtTPCIonGenerator(), fAta(nullptr), fBta(nullptr), fileAta(nullptr), fileBta(nullptr)
+{
+}
 
 AtTPCIonGeneratorS800::AtTPCIonGeneratorS800(const char *name, Int_t z, Int_t a, Int_t q, Int_t mult, Double_t px,
                                              Double_t py, Double_t pz, Double_t Ex, Double_t m, Double_t ener,
                                              Double_t eLoss, TString sata, TString sbta)
-   : AtTPCIonGenerator(name, z, a, q, mult, px, py, pz, Ex, m, eLoss), fAta(nullptr), fBta(nullptr), fileAta(nullptr), fileBta(nullptr)
+   : AtTPCIonGenerator(name, z, a, q, mult, px, py, pz, Ex, m, eLoss), fAta(nullptr), fBta(nullptr), fileAta(nullptr),
+     fileBta(nullptr)
 
 {
 
-  //variable or smart ptr declarations of fileAta/Bta make the code 10x slower,
-  //suspect that when GetRandom is called on fAta/fBta it needs to "openned" the  TFiles so if one deletes fileAta/fileBta before
-  //they will be "reopenned" at each event. TFiles *fileAta/Bta are deleted with the destructor.
-  // std::unique_ptr<TFile> fileAta(new TFile(sata, "READ")), fileBta(new TFile(sbta, "READ"));
-  //TFile fileAta(sata, "READ");
-  //TFile fileBta(sbta, "READ");
+   // variable or smart ptr declarations of fileAta/Bta make the code 10x slower,
+   // suspect that when GetRandom is called on fAta/fBta it needs to "openned" the  TFiles so if one deletes
+   // fileAta/fileBta before they will be "reopenned" at each event. TFiles *fileAta/Bta are deleted with the
+   // destructor.
+   //  std::unique_ptr<TFile> fileAta(new TFile(sata, "READ")), fileBta(new TFile(sbta, "READ"));
+   // TFile fileAta(sata, "READ");
+   // TFile fileBta(sbta, "READ");
    fileAta = new TFile(sata, "READ");
    fileBta = new TFile(sbta, "READ");
    if (fileAta->IsZombie() || fileBta->IsZombie())
@@ -39,10 +44,9 @@ AtTPCIonGeneratorS800::AtTPCIonGeneratorS800(const char *name, Int_t z, Int_t a,
       fBta = std::unique_ptr<TH1F>(dynamic_cast<TH1F *>(fileBta->Get("h1")));
    }
 
-   fPx0 = a*px;
-   fPy0 = a*py;
-   fPz0 = a*pz;
-
+   fPx0 = a * px;
+   fPy0 = a * py;
+   fPz0 = a * pz;
 }
 
 void AtTPCIonGeneratorS800::SetBeamEmittance(Double32_t val1, Double32_t val2, Double32_t val3, Double32_t val4,
@@ -61,8 +65,8 @@ void AtTPCIonGeneratorS800::SetBeamEmittance(Double32_t val1, Double32_t val2, D
 
 void AtTPCIonGeneratorS800::SetVertexCoordinates()
 {
-   //TStopwatch timer;
-   //timer.Start();
+   // TStopwatch timer;
+   // timer.Start();
    gRandom->SetSeed(0);
    Double_t x = 0., y = 0., xFocus = 0., yFocus = 0., Ax = 0., Ay = 0., BeamAx = 0., BeamAy = 0., BeamOx = 0.,
             BeamOy = 0.;
@@ -116,10 +120,9 @@ void AtTPCIonGeneratorS800::SetVertexCoordinates()
 
    AtVertexPropagator::Instance()->Setd2HeVtx(fVx, fVy, Ax, Ay);
 
-   //timer.Stop();
-   //Double_t rtime = timer.RealTime();
-   //Double_t ctime = timer.CpuTime();
+   // timer.Stop();
+   // Double_t rtime = timer.RealTime();
+   // Double_t ctime = timer.CpuTime();
 
-  // std::cout << "Real time " << rtime << " s, CPU time " << ctime << "s" <<std::endl;
-
+   // std::cout << "Real time " << rtime << " s, CPU time " << ctime << "s" <<std::endl;
 }

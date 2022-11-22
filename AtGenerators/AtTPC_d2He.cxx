@@ -537,7 +537,7 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
    fVx = d2HeVtx.X();
    fVy = d2HeVtx.Y();
    fVz = d2HeVtx.Z();
-   std::cout<<cYELLOW<<"vertex in AtTPC_d2He "<<fVx<<" "<< fVy<<" "<< fVz<<cNORMAL<<std::endl;
+   std::cout << cYELLOW << "vertex in AtTPC_d2He " << fVx << " " << fVy << " " << fVz << cNORMAL << std::endl;
 
    for (Int_t i = 0; i < fMult; i++) {
       TParticlePDG *thisPart;
