@@ -115,11 +115,13 @@ void AtRansacTask::Exec(Option_t *opt)
 
    auto sampleMethod = static_cast<RandomSample::SampleMethod>(fRandSamplMode);
    auto patternType = AtPatterns::PatternType::kLine;
-   auto estimator = SampleConsensus::Estimators::kWRANSAC;
+   auto estimator = SampleConsensus::Estimators::kChi2;
    if (fRANSACAlg == 2)
       estimator = SampleConsensus::Estimators::kMLESAC;
    if (fRANSACAlg == 3)
       estimator = SampleConsensus::Estimators::kLMedS;
+   if (fRANSACAlg == 4)
+      estimator = SampleConsensus::Estimators::kWRANSAC;
    SampleConsensus::AtSampleConsensus ransac(estimator, patternType, sampleMethod);
 
    ransac.SetDistanceThreshold(fRANSACThreshold);

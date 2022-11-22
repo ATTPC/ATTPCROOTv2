@@ -5,7 +5,7 @@ set(SRCS
   AtParsers.cxx
   AtELossManager.cxx
   AtTrackTransformer.cxx
-  
+
   AtCSVReader.cxx
   AtEulerTransformation.cxx
   AtSpaceChargeModel.cxx
@@ -14,7 +14,7 @@ set(SRCS
   AtEDistortionModel.cxx
   AtVirtualTerminal.cxx
   AtKinematics.cxx
-  
+
   AtFormat.cxx
   AtHitSampling/AtSample.cxx
   AtHitSampling/AtSampleMethods.cxx
@@ -25,15 +25,15 @@ set(SRCS
   AtHitSampling/AtGaussian.cxx
   AtHitSampling/AtWeightedGaussian.cxx
   AtHitSampling/AtWeightedY.cxx
-
   ElectronicResponse/AtElectronicResponse.cxx
   ElectronicResponse/AtROOTresponse.cxx
+  AtHitSampling/AtWeightedGaussianTrunc.cxx
   )
 
 Set(DEPENDENCIES
   ROOT::XMLParser
   ROOT::Core
-  
+
   FairRoot::FairTools
   ATTPCROOT::AtData
   ATTPCROOT::AtParameter
@@ -50,4 +50,3 @@ generate_target_and_root_library(${LIBRARY_NAME}
   DEPS_PUBLIC ${DEPENDENCIES}
   INCLUDE_DIR ${INCLUDE_DIR}
   )
-

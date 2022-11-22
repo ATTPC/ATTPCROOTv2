@@ -5,5 +5,6 @@
 #pragma link off all functions;
 
 #pragma link C++ class AtRunAna + ;
+#pragma link C++ class AtFindVertex + ;
 
 #endif

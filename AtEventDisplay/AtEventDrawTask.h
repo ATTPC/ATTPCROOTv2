@@ -36,6 +36,7 @@ class TH3F;            // lines 42-42
 class TMemberInspector;
 class TPaletteAxis; // lines 43-43
 class TEveElement;
+class S800Calc;
 
 class AtEventDrawTask : public FairTask {
 protected:
@@ -71,6 +72,8 @@ protected:
    Color_t fHitColor;
    Size_t fHitSize;
    Style_t fHitStyle;
+   Size_t fVertexSize;
+   Size_t fVertexStyle;
 
    TCanvas *fCvsPadPlane;
    TH2Poly *fPadPlane;
@@ -135,6 +138,8 @@ protected:
    Float_t f3DThreshold;
 
    Bool_t fIsRawData;
+   Bool_t fDrawVertexFromLines{false};
+
    AtHit const *fIniHit;
    AtHit const *fIniHitRansac;
 
@@ -142,6 +147,8 @@ protected:
    std::vector<std::unique_ptr<TEveLine>> fPatternLines;
 
    Int_t fTrackNum;
+
+   Int_t fMinTracksPerVertex;
    /*
       std::vector<std::unique_ptr<TEvePointSet>> fHitSetTFHC;  // for TrackFinderHC
       std::vector<std::unique_ptr<TEveBoxSet>> fHitClusterSet; // Track clusterization
@@ -150,8 +157,15 @@ protected:
    std::vector<TEvePointSet *> fHitSetTFHC;  // for TrackFinderHC
    std::vector<TEveBoxSet *> fHitClusterSet; // Track clusterization
    std::vector<TEveElement *> fHitLine;      // Track line
+   std::vector<TEvePointSet *> fVertex;      // Vertex line
 
    TEveRGBAPalette *fRGBAPalette;
+
+   TCanvas *fCvsPID;
+   TH2F *fPID;
+   TCanvas *fCvsPID2;
+   TH2F *fPID2;
+   S800Calc *fS800Calc;
 
 public:
    AtEventDrawTask();
@@ -175,11 +189,21 @@ public:
    void SetEventBranch(TString branchName);
    void SetCorrectedEventBranch(TString branchName) { fCorrectedEventBranchName = branchName; }
    void SetPatternEventBranch(TString branchName) { fPatternEventBranchName = branchName; }
+   void SetMinTracksPerVertex(Int_t val)
+   {
+      fMinTracksPerVertex = val;
+   } // fVertexMod=0 one track vertex , fVertexMod=1 multi trakcs vertex
    static void SelectPad(const char *rawevt);
    void DrawWave(Int_t PadNum);
    void SetMultiHit(Int_t hitMax);
+   void SetDrawVertexFromLines(bool val = true) { fDrawVertexFromLines = val; }
 
 private:
+   // S800Ana fS800Ana;
+   std::vector<Double_t> fTofObjCorr;
+   std::vector<Double_t> fMTDCObjRange;
+   std::vector<Double_t> fMTDCXfRange;
+
    void DrawPadPlane();
    void DrawPadWave();
    void DrawPadAll();
@@ -194,6 +218,9 @@ private:
    void DrawThetaxPhi();
    void DrawMC();
    void DrawAux();
+   void DrawPID();
+   void DrawPID2();
+   void DrawS800();
 
    AtMap *fAtMapPtr;
    void UpdateCvsPadPlane();
@@ -211,6 +238,8 @@ private:
    void UpdateCvsQuadrants();
    void UpdateCvsMC();
    void UpdateCvsAux();
+   void UpdateCvsPID();
+   void UpdateCvsPID2();
 
    void ResetPadAll();
    void ResetPhiDistr();

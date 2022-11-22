@@ -16,6 +16,7 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 class TEveElement;
+class TEveLine;
 
 namespace AtPatterns {
 
@@ -40,7 +41,11 @@ public:
    virtual TEveElement *GetEveElement() const override;
    virtual std::unique_ptr<AtPattern> Clone() const override { return std::make_unique<AtPatternLine>(*this); }
 
+   TEveLine *GetEveLine(Double_t rMax = 250) const;
+
 protected:
+   std::vector<Double_t> lineIntersecR(Double_t rMax, Double_t tMin, Double_t tMax) const;
+
    virtual void FitPattern(const std::vector<XYZPoint> &points, const std::vector<double> &charge) override;
    double parameterAtPoint(const XYZPoint &point) const;
    ClassDefOverride(AtPatternLine, 1)

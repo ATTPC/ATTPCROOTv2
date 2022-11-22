@@ -48,6 +48,7 @@ private:
    Double_t fBURes2A;
 
    Bool_t fIsValidKine;
+   Bool_t fIsd2HeEvt;
    Int_t fAiso;
    Int_t fZiso;
    TVector3 fScatP;
@@ -132,6 +133,7 @@ public:
 
    void SetValidKine(Bool_t val);
    Bool_t GetValidKine();
+   Bool_t Getd2HeEvt();
 
    ClassDef(AtVertexPropagator, 2)
 };

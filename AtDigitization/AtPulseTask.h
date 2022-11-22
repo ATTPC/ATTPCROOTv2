@@ -56,8 +56,9 @@ protected:
 
    Double_t fNoiseSigma = 0; //! Sigma of random gaussian noise to apply to trace
 
-   Bool_t fIsPersistent = true;  //!< If true, save container
-   Bool_t fIsSaveMCInfo = false; //!<< Propagates MC information
+   Bool_t fIsPersistent = true;            //!< If true, save container
+   Bool_t fIsPersistentAtTpcPoint = false; //!< If true, save container
+   Bool_t fIsSaveMCInfo = false;           //!<< Propagates MC information
    Bool_t fUseFastGain = true;
    Bool_t fUseChargeSave = false;
 
@@ -82,6 +83,7 @@ public:
 
    void SetLowGainFactor(Double_t factor) { fLowGainFactor = factor; }
    void SetPersistence(Bool_t val) { fIsPersistent = val; }
+   void SetPersistenceAtTpcPoint(Bool_t val) { fIsPersistentAtTpcPoint = val; }
    void SetSaveMCInfo() { fIsSaveMCInfo = kTRUE; }
    void SetMap(AtMapPtr map) { fMap = map; };
    void UseFastGain(Bool_t val) { fUseFastGain = val; }

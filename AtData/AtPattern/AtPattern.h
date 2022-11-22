@@ -46,6 +46,7 @@ protected:
    Double_t fChi2{NAN};               //< How good the pattern is at describing the data
    Int_t fNFree{0};                   //< Degrees of freedom in the fit to the pattern
    const Int_t fNumPoints;            //< Number of 3D points that define the pattern (i.e. size of fIndices)
+   Double_t fTotCharge{0};            //< Total charge of the pattern
 
    using TEveLineVec = std::vector<std::unique_ptr<TEveLine>>;
 
@@ -137,6 +138,8 @@ public:
     */
    virtual std::vector<double> GetPatternPar() const { return fPatternPar; }
 
+   Double_t GetTotCharge() const { return fTotCharge; }
+   void SetPatternPar(std::vector<double> par) { fPatternPar = std::move(par); }
    void SetChi2(double chi2) { fChi2 = chi2; }
 
 protected:

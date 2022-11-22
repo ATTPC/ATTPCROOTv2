@@ -59,6 +59,7 @@ private:
    std::vector<Double_t> fExEnergy;     // Excitation energies of the products
    std::vector<Double_t> fWm;           // Total mass
    Int_t fN{};
+   Double_t fCStot{};
 
    Double_t K1{};
    Double_t m1{}, m2{}, m3{}, m4{}, m7{}, m8{};

@@ -19,8 +19,9 @@ AtPatternLine::AtPatternLine() : AtPattern(2) {}
 
 TEveElement *AtPatternLine::GetEveElement() const
 {
-   return AtPattern::GetEveLine(0, 1000, 100);
+   return AtPatternLine::GetEveLine(250);
 }
+
 /**
  * @brief Get the parameter closes to compPoint.
  *
@@ -99,6 +100,7 @@ void AtPatternLine::FitPattern(const std::vector<XYZPoint> &points, const std::v
    for (int i = 0; i < points.size(); ++i) {
       const auto hitQ = doChargeWeight ? charge[i] : 1;
       const auto &pos = points[i];
+      fTotCharge += hitQ;
       Q += hitQ / 10.;
       Xm += pos.X() * hitQ / 10.;
       Ym += pos.Y() * hitQ / 10.;
@@ -167,4 +169,44 @@ void AtPatternLine::FitPattern(const std::vector<XYZPoint> &points, const std::v
    DefinePattern({p1, p2});
    fChi2 = (fabs(dm2 / Q));
    fNFree = points.size() - 6;
+   fTotCharge = Q * 10.;
+}
+
+TEveLine *AtPatternLine::GetEveLine(Double_t rMax) const
+{
+   auto retLine = new TEveLine(); // NOLINT these will be owned by TEve classes
+   Double_t tMin = -10, tMax = 10, deltaPar = 0.05;
+   std::vector<Double_t> tminmax;
+   tminmax = lineIntersecR(rMax, tMin, tMax); // ex: rMax=250 is the max. radius where the lines are stopped
+   if (tminmax.size() == 2) {
+      tMin = tminmax.at(0);
+      tMax = tminmax.at(1);
+   }
+   if (tMin > tMax) {
+      Double_t tBuff = tMax;
+      tMax = tMin;
+      tMin = tBuff;
+   }
+   for (int i = 0; i <= (Int_t)((tMax - tMin) / deltaPar); i++) {
+      auto t = tMin + i * deltaPar;
+      auto pos = GetPointAt(t) / 10.; // TEve is all in units cm
+      retLine->SetNextPoint(pos.X(), pos.Y(), pos.Z());
+   }
+   return retLine;
+}
+
+std::vector<Double_t> AtPatternLine::lineIntersecR(Double_t rMax, Double_t tMin, Double_t tMax) const
+{
+   std::vector<Double_t> result;
+   Double_t a = 0, b = 0, c = 0, sol1 = 0, sol2 = 0;
+   a = pow(fPatternPar[3], 2) + pow(fPatternPar[4], 2);
+   b = 2 * (fPatternPar[0] * fPatternPar[3] + fPatternPar[1] * fPatternPar[4]);
+   c = pow(fPatternPar[0], 2) + pow(fPatternPar[1], 2) - pow(rMax, 2);
+   if (b * b - 4 * a * c >= 0) {
+      sol1 = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
+      sol2 = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
+      result.push_back(sol1);
+      result.push_back(sol2);
+   }
+   return result;
 }

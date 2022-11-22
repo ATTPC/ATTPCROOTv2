@@ -20,11 +20,17 @@
 #include <cstdio>
 #include <iostream>
 
+constexpr auto cRED = "\033[1;31m";
+constexpr auto cYELLOW = "\033[1;33m";
+constexpr auto cNORMAL = "\033[0m";
+constexpr auto cGREEN = "\033[1;32m";
+constexpr auto cBLUE = "\033[1;34m";
+
 constexpr float amu = 931.494;
 
 Int_t AtTPC_d2He::fgNIon = 0;
 
-AtTPC_d2He::AtTPC_d2He() : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0)
+AtTPC_d2He::AtTPC_d2He() : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0), fCStot(0.)
 {
    //  cout << "-W- AtTPCIonGenerator: "
    //      << " Please do not use the default constructor! " << endl;
@@ -42,7 +48,7 @@ AtTPC_d2He::AtTPC_d2He(const char *name, std::vector<Int_t> *z, std::vector<Int_
                        Int_t mult, std::vector<Double_t> *px, std::vector<Double_t> *py, std::vector<Double_t> *pz,
                        std::vector<Double_t> *mass, std::vector<Double_t> *Ex, std::vector<Double_t> *cross1,
                        std::vector<Double_t> *cross2, std::vector<Double_t> *cross3, Int_t N_data)
-   : fPx(0.), fPy(0.), fPz(0.), fMult(mult), fVx(0.), fVy(0.), fVz(0.), fIon(0)
+   : fPx(0.), fPy(0.), fPz(0.), fMult(mult), fVx(0.), fVy(0.), fVz(0.), fIon(0), fCStot(0.)
 {
 
    fgNIon++;
@@ -61,7 +67,7 @@ AtTPC_d2He::AtTPC_d2He(const char *name, std::vector<Int_t> *z, std::vector<Int_
       inp1.push_back(cross1->at(i));
       inp2.push_back(cross2->at(i));
       inp3.push_back(cross3->at(i));
-
+      fCStot += inp3.at(i);
       // std::cout<<"===================================================================="<<std::endl;
       // std::cout<<inp1.at(i)<<"  "<<inp2.at(i)<<"  "<<inp3.at(i)<<std::endl;
       // std::cout<<"===================================================================="<<std::endl;
@@ -252,20 +258,31 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
 
    else {
       // MC to distribute the events with the cross section
-      do {
-         ran_theta = fN * gRandom->Uniform();
-         ranX = 0.01 * gRandom->Uniform();
+      // fN==1 used for the efficiency map (1 simu per theta-epp bin)
+      if (fN == 1) { // Depp=0.25 and Dtheta_cm=0.5 in ACCBA file
+         if (inp2.at(0) == 0)
+            theta_cm = (inp2.at(0) + 0.25 * gRandom->Uniform()) *
+                       TMath::DegToRad(); // carefull in the analysis, these bins have 2 times more stat
+         else
+            theta_cm = (inp2.at(0) - 0.25 + 0.5 * gRandom->Uniform()) * TMath::DegToRad();
+         phi_cm = 2 * TMath::Pi() * (gRandom->Uniform());
+         epsilon = inp1.at(0) - 0.125 + 0.25 * gRandom->Uniform();
+      } else {
+         do {
+            ran_theta = fN * gRandom->Uniform();
+            ranX = fCStot * gRandom->Uniform();
+         } while (ranX > inp3.at(ran_theta));
 
-      } while (ranX > inp3.at(ran_theta));
-
-      theta_cm = TMath::Abs(inp2.at(ran_theta) - 0.5 + gRandom->Uniform()) * TMath::DegToRad();
-      phi_cm = 2 * TMath::Pi() * (gRandom->Uniform());
-      epsilon = TMath::Abs(inp1.at(ran_theta) - 0.25 + 0.5 * gRandom->Uniform());
-
-      /* std::cout<<"===================================================================="<<std::endl;
-      std::cout<<theta_cm*TMath::RadToDeg()<<"  "<<phi_cm<<"  "<<epsilon<<std::endl;
-      //std::cout<<fPxBeam<<"  "<<fPyBeam<<"  "<<fPzBeam<<std::endl;
-      std::cout<<"===================================================================="<<std::endl; */
+         // Depp=0.25 and Dtheta_cm=0.5 in ACCBA file, here Depp=0.5 and Dtheta_cm=1 introduce smearing
+         theta_cm = TMath::Abs(inp2.at(ran_theta) - 0.5 + gRandom->Uniform()) * TMath::DegToRad();
+         phi_cm = 2 * TMath::Pi() * (gRandom->Uniform());
+         epsilon = TMath::Abs(inp1.at(ran_theta) - 0.25 + 0.5 * gRandom->Uniform());
+      }
+      // std::cout<<"===================================================================="<<std::endl;
+      // std::cout<<theta_cm*TMath::RadToDeg()<<"  "<<phi_cm<<"  "<<epsilon<<std::endl;
+      // std::cout<<fCStot<<std::endl;
+      // //std::cout<<fPxBeam<<"  "<<fPyBeam<<"  "<<fPzBeam<<std::endl;
+      // std::cout<<"===================================================================="<<std::endl;
 
       // dirty way to include more than one excited state
       /*test_var = gRandom->Uniform();
@@ -274,9 +291,7 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
       if(test_var>= 0.50 && test_var<0.75) Ex_ejectile = 10.0;
       if(test_var>= 0.75 && test_var<1.0) Ex_ejectile = 20.0;
       */
-      Ex_ejectile = 3.948;
-
-      // Ex_ejectile = fExEnergy.at(2); // excitation energy of ejectile
+      Ex_ejectile = fExEnergy.at(2);
 
       m1 = Masses.at(0) * amu + fExEnergy.at(0);
       m2 = Masses.at(1) * amu + fExEnergy.at(1);
@@ -486,17 +501,17 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
       if (phi8 < 0)
          phi8 = (phi8 + 360.0);
    */
-   /*std::cout << " -I- ===== AtTPC_d2He - Kinematics ====== "<<Ex_ejectile<<std::endl;
-   std::cout << " Scattered energy:" << Ene.at(0)  << " MeV" << std::endl;
-   std::cout << " Scattered  angle:"  << Ang.at(0) << " deg" << std::endl;
-   std::cout << " proton1 energy:" << Ene.at(2) << " MeV" << std::endl;
-   std::cout << " proton1 angle:"  << Ang.at(2) << " deg" << std::endl;
-   std::cout << " proton1 angle phi:"  << phi7 << " deg" << std::endl;
-   std::cout << " proton2 energy:" << Ene.at(3) << " MeV" << std::endl;
-   std::cout << " proton2 angle:"  << Ang.at(3) << " deg" << std::endl;
-   std::cout << " proton2 angle phi:"  << phi8 << " deg" << std::endl;
-   std::cout << " 2He kinetic energy:"  <<  Ene.at(1) << " MeV" << std::endl;
-   std::cout << " 2He lab angle:"  <<  Ang.at(1) << " deg" << std::endl;*/
+   // std::cout << " -I- ===== AtTPC_d2He - Kinematics ====== "<<Ex_ejectile<<std::endl;
+   // std::cout << " Scattered energy:" << Ene.at(0)  << " MeV" << std::endl;
+   // std::cout << " Scattered  angle:"  << Ang.at(0) << " deg" << std::endl;
+   // std::cout << " proton1 energy:" << Ene.at(2) << " MeV" << std::endl;
+   // std::cout << " proton1 angle:"  << Ang.at(2) << " deg" << std::endl;
+   // std::cout << " proton1 angle phi:"  << phi78 << " deg" << std::endl;
+   // std::cout << " proton2 energy:" << Ene.at(3) << " MeV" << std::endl;
+   // std::cout << " proton2 angle:"  << Ang.at(3) << " deg" << std::endl;
+   // // std::cout << " proton2 angle phi:"  << phi78 << " deg" << std::endl;
+   // std::cout << " 2He kinetic energy:"  <<  Ene.at(1) << " MeV" << std::endl;
+   // std::cout << " 2He lab angle:"  <<  Ang.at(1) << " deg" << std::endl;
 
    AtVertexPropagator::Instance()->SetTrackEnergy(1, Ene.at(0));
    AtVertexPropagator::Instance()->SetTrackAngle(1, Ang.at(0));
@@ -522,7 +537,7 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
    fVx = d2HeVtx.X();
    fVy = d2HeVtx.Y();
    fVz = d2HeVtx.Z();
-   // std::cout<<fVx<<" "<<fVy<<" "<<std::endl;
+   std::cout << cYELLOW << "vertex in AtTPC_d2He " << fVx << " " << fVy << " " << fVz << cNORMAL << std::endl;
 
    for (Int_t i = 0; i < fMult; i++) {
       TParticlePDG *thisPart;
@@ -564,7 +579,7 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
       // "<<AtVertexPropagator::Instance()->GetVz();<<" "<<endl;
 
       // TVector3 d2HeVtx(fVx,fVy,fVz);
-      AtVertexPropagator::Instance()->Setd2HeVtx(d2HeVtx);
+      // AtVertexPropagator::Instance()->Setd2HeVtx(d2HeVtx);
 
       if (i > 1 && i != 3 && AtVertexPropagator::Instance()->GetDecayEvtCnt() && pdgType != 1000500500 &&
           fPType.at(i) == "Ion") {
@@ -605,6 +620,7 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
 
    AtVertexPropagator::Instance()
       ->IncDecayEvtCnt(); // TODO: Okay someone should put a more suitable name but we are on a hurry...
+   AtVertexPropagator::Instance()->Getd2HeEvt();
 
    return kTRUE;
 }

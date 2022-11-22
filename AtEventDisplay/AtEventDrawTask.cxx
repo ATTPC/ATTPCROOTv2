@@ -9,6 +9,7 @@
 #include "AtAuxPad.h"       // for AtAuxPad
 #include "AtEvent.h"        // for AtEvent, hitVector
 #include "AtEventManager.h" // for AtEventManager
+#include "AtFindVertex.h"   //for vertex
 #include "AtHit.h"          // for AtHit
 #include "AtHitCluster.h"   // for AtHitCluster
 #include "AtMap.h"          // for AtMap
@@ -53,6 +54,9 @@
 #include <TVirtualPad.h>     // for TVirtualPad, gPad
 #include <TVirtualX.h>       // for TVirtualX
 
+#include "S800Ana.h"
+#include "S800Calc.h" // for S800Calc, CRDC, MultiHitTOF, IC
+
 #include <algorithm> // for max
 #include <array>     // for array
 #include <cstdio>    // for sprintf
@@ -82,7 +86,8 @@ AtEventDrawTask::AtEventDrawTask()
      fCvs3DHist(nullptr), f3DHist(nullptr), fCvsRad(nullptr), fRadVSTb(nullptr), fCvsTheta(nullptr), fTheta(nullptr),
      fAtMapPtr(nullptr), fMinZ(0), fMaxZ(1344), fMinX(432), fMaxX(-432), f3DHitStyle(0), fMultiHit(0),
      fSaveTextData(false), f3DThreshold(0), fRawEventBranchName("AtRawEvent"), fEventBranchName("AtEventH"),
-     fPatternEventBranchName("AtPatternEvent")
+     fPatternEventBranchName("AtPatternEvent"), fVertexSize(1.5), fVertexStyle(kFullCircle), fCvsPID(nullptr),
+     fPID(nullptr), fCvsPID2(nullptr), fPID2(nullptr), fS800Calc(nullptr)
 {
 
    Char_t padhistname[256];
@@ -116,6 +121,8 @@ AtEventDrawTask::AtEventDrawTask()
    fIniHit = new AtHit();
    fIniHitRansac = new AtHit();
    fTrackNum = 0;
+
+   fMinTracksPerVertex = 1;
 
    fRGBAPalette = new TEveRGBAPalette(0, 4096);
 }
@@ -159,6 +166,10 @@ InitStatus AtEventDrawTask::Init()
       LOG(INFO) << cGREEN << "Pattern Event Array Found in branch " << fPatternEventBranchName << "." << cNORMAL
                 << std::endl;
 
+   fS800Calc = dynamic_cast<S800Calc *>(ioMan->GetObject("s800cal"));
+   if (fS800Calc)
+      LOG(INFO) << cGREEN << "S800Calc Found." << cNORMAL;
+
    gStyle->SetPalette(55);
 
    fCvsPadWave = fEventManager->GetCvsPadWave();
@@ -198,6 +209,17 @@ InitStatus AtEventDrawTask::Init()
    fCvsAux = fEventManager->GetCvsAux();
    DrawAux();
 
+   fCvsPID = fEventManager->GetCvsPID();
+   DrawPID();
+   fCvsPID2 = fEventManager->GetCvsPID2();
+   DrawPID2();
+
+   S800Ana s800Ana;
+   s800Ana = fEventManager->GetS800Ana(); // MTDCRanges must be set before calling AtEventDrawTask::Intit()
+   fMTDCXfRange = s800Ana.GetMTDCXfRange();
+   fMTDCObjRange = s800Ana.GetMTDCObjRange();
+   fTofObjCorr = s800Ana.GetTofObjCorr();
+
    //******* NO CALLS TO TCANVAS BELOW THIS ONE
    fCvsHoughSpace = fEventManager->GetCvsHoughSpace();
    DrawHoughSpace();
@@ -219,6 +241,9 @@ void AtEventDrawTask::Exec(Option_t *option)
    if (fEventArray) {
       DrawHitPoints();
    }
+   if (fS800Calc) {
+      DrawS800();
+   }
 
    gEve->Redraw3D(kFALSE);
 
@@ -230,6 +255,8 @@ void AtEventDrawTask::Exec(Option_t *option)
    UpdateCvsPhi();
    UpdateCvsMesh();
    UpdateCvs3DHist();
+   // UpdateCvsPID();
+   // UpdateCvsPID2();
    if (fUnpackHough && fEventManager->GetDrawReconstruction()) {
       UpdateCvsHoughSpace();
       UpdateCvsRad();
@@ -281,7 +308,23 @@ void AtEventDrawTask::DrawRecoHits()
 
    auto TrackCand = patternEvent->GetTrackCand();
    fHitLine.clear();
+   fVertex.clear();
 
+   if (fDrawVertexFromLines) {
+      AtFindVertex findVtx(12);
+      // findVtx.FindVertexMultipleLines(TrackCand, 2);
+      findVtx.FindVertex(TrackCand, fMinTracksPerVertex);
+      std::vector<tracksFromVertex> tv;
+      tv = findVtx.GetTracksVertex();
+
+      for (size_t i = 0; i < tv.size(); i++) {
+         fVertex.push_back(new TEvePointSet(Form("Vertex_%zu", i), 0, TEvePointSelectorConsumer::kTVT_XYZ));
+         fVertex[i]->SetMarkerColor(kViolet);
+         fVertex[i]->SetMarkerSize(fVertexSize);
+         fVertex[i]->SetMarkerStyle(fVertexStyle);
+         fVertex[i]->SetNextPoint(tv.at(i).vertex.X() / 10., tv.at(i).vertex.Y() / 10., tv.at(i).vertex.Z() / 10.);
+      }
+   }
    for (Int_t i = 0; i < TrackCand.size(); i++) {
 
       Color_t trackColor = GetTrackColor(i) + 1;
@@ -356,6 +399,8 @@ void AtEventDrawTask::DrawRecoHits()
    for (auto &elem : fHitClusterSet)
       gEve->AddElement(elem);
    for (auto &elem : fHitLine)
+      gEve->AddElement(elem);
+   for (auto &elem : fVertex)
       gEve->AddElement(elem);
 }
 
@@ -572,6 +617,25 @@ void AtEventDrawTask::DrawHitPoints()
    dumpEvent.close();
 }
 
+void AtEventDrawTask::DrawS800()
+{
+   // fS800Calc = dynamic_cast<S800Calc*> (fS800CalcArray->At(0));
+
+   if (fS800Calc->GetIsInCut()) {
+      S800Ana s800Ana;
+      s800Ana.SetMTDCXfRange(fMTDCXfRange);
+      s800Ana.SetMTDCObjRange(fMTDCObjRange);
+      s800Ana.SetTofObjCorr(fTofObjCorr);
+
+      s800Ana.Calc(fS800Calc);
+
+      if (s800Ana.GetObjCorr_ToF() != -999)
+         fPID->Fill(s800Ana.GetObjCorr_ToF(), s800Ana.GetXfObj_ToF());
+      if (s800Ana.GetObjCorr_ToF() != -999)
+         fPID2->Fill(s800Ana.GetObjCorr_ToF(), s800Ana.GetICSum_E());
+   }
+}
+
 void AtEventDrawTask::Reset()
 {
    if (fHitSet) {
@@ -598,9 +662,12 @@ void AtEventDrawTask::Reset()
             gEve->RemoveElement(elem, fEventManager);
          for (auto elem : fHitLine)
             gEve->RemoveElement(elem, fEventManager);
+         for (auto elem : fVertex)
+            gEve->RemoveElement(elem, fEventManager);
          fHitClusterSet.clear();
          fHitSetTFHC.clear();
          fHitLine.clear();
+         fVertex.clear();
       }
 
    } // Draw Minimization
@@ -837,6 +904,36 @@ void AtEventDrawTask::DrawAux()
       fCvsAux->cd(i + 1);
       fAuxChannels[i]->Draw();
    }
+}
+
+void AtEventDrawTask::DrawPID()
+{
+
+   fCvsPID->cd();
+   // fPID = new TH2F("PID","PID",3000,-250,500,2000,0,500);
+   fPID = new TH2F("PID", "PID", 200, -150, 50, 300, 150, 450);
+   fPID->Draw("colz");
+}
+
+void AtEventDrawTask::DrawPID2()
+{
+
+   fCvsPID2->cd();
+   // fPID2 = new TH2F("PID2","PID2",3000,-250,500,2000,0,500);
+   fPID2 = new TH2F("PID2", "PID2", 200, -150, 50, 300, 150, 450);
+   fPID2->Draw("colz");
+}
+
+void AtEventDrawTask::UpdateCvsPID()
+{
+   fCvsPID->Modified();
+   fCvsPID->Update();
+}
+
+void AtEventDrawTask::UpdateCvsPID2()
+{
+   fCvsPID2->Modified();
+   fCvsPID2->Update();
 }
 
 void AtEventDrawTask::UpdateCvsAux()

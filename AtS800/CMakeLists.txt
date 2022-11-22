@@ -14,6 +14,7 @@ Set(LIBRARY_NAME AtS800)
 
 set(SRCS
 #Put here your sourcefiles
+S800Ana.cxx
 S800Calc.cxx
 S800Event.cxx
 S800.cxx
@@ -33,7 +34,7 @@ Set(DEPENDENCIES
     FairRoot::Base
     FairRoot::FairTools
     ROOT::Core
-    
+
     ATTPCROOT::AtData
 )
 

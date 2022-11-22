@@ -26,12 +26,15 @@ AtVertexPropagator::AtVertexPropagator()
    : fGlobalEvtCnt(0), fBeamEvtCnt(0), fDecayEvtCnt(0), fVx(0.), fVy(0.), fVz(0.), fPx(0.), fPy(0.), fPz(0.), fE(0.),
      fBeamMass(0), fRndELoss(0), fBeamNomE(0), fInVx(0), fInVy(0), fInVz(0), fRecoilE(0), fRecoilA(0), fScatterE(0),
      fScatterA(0), fBURes1E(0), fBURes1A(0), fBURes2E(0), fBURes2A(0), fIsValidKine(false), fAiso(0), fZiso(0),
-     fExEjectile(0)
+     fExEjectile(0), fIsd2HeEvt(false)
 {
 
    fScatP(0) = 0.0;
    fScatP(1) = 0.0;
    fScatP(2) = 0.0;
+   fd2HeVtx(0) = 0.0;
+   fd2HeVtx(1) = 0.0;
+   fd2HeVtx(2) = 0.0;
 }
 
 void AtVertexPropagator::SetVertex(Double_t vx, Double_t vy, Double_t vz, Double_t invx, Double_t invy, Double_t invz,
@@ -166,15 +169,16 @@ void AtVertexPropagator::SetScatterEx(Double_t val)
 void AtVertexPropagator::Setd2HeVtx(TVector3 avec)
 {
    fd2HeVtx = avec;
+   fIsd2HeEvt = kTRUE;
 }
-void AtVertexPropagator::Setd2HeVtx(Double_t x0, Double_t y0, Double_t theta, Double_t phi)
+void AtVertexPropagator::Setd2HeVtx(Double_t x0, Double_t y0, Double_t Ax, Double_t Ay)
 {
    Double_t vx, vy, vz;
    vz = 100.0 * (gRandom->Uniform()); // cm
-   // vz=50.;
-   vx = x0 + vz * tan(phi);
-   vy = y0 + sqrt(pow(vz, 2) + pow(vx - x0, 2)) * tan(theta);
+   vx = x0 + vz * tan(Ax);
+   vy = y0 + sqrt(pow(vz, 2) + pow(vx - x0, 2)) * tan(Ay);
    fd2HeVtx.SetXYZ(vx, vy, vz);
+   fIsd2HeEvt = kTRUE;
 }
 
 Int_t AtVertexPropagator::GetGlobalEvtCnt()
@@ -277,6 +281,10 @@ Double_t AtVertexPropagator::GetBURes2A()
 }
 */
 
+Bool_t AtVertexPropagator::Getd2HeEvt()
+{
+   return fIsd2HeEvt;
+}
 Bool_t AtVertexPropagator::GetValidKine()
 {
    return fIsValidKine;

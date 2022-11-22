@@ -1,12 +1,15 @@
 
 #include "AtEventManager.h"
 
+#include "AtEvent.h" // for AtEvent
+
 #include <FairRootManager.h>
 #include <FairRunAna.h>
 
 #include <Rtypes.h>
 #include <TCanvas.h>
 #include <TChain.h>
+#include <TClonesArray.h> // for TClonesArray
 #include <TEveBrowser.h>
 #include <TEveEventManager.h>
 #include <TEveGeoNode.h>
@@ -37,6 +40,9 @@
 #include <TVirtualPad.h>
 #include <TVirtualX.h>
 
+#include "S800Ana.h"
+#include "S800Calc.h"
+
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
 constexpr auto cNORMAL = "\033[0m";
@@ -65,7 +71,9 @@ AtEventManager::AtEventManager()
      fPadWave(nullptr), fPadAll(nullptr), fCvsQEvent(nullptr), fCvsHough(nullptr), fCvsRad(nullptr),
      drawallpad(nullptr), eraseQevent(nullptr), drawReconstruction(nullptr), saveASCIIevent(nullptr),
      toggleCorr(nullptr), kDrawAllOn(false), kEraseQ(false), kDrawReconstruction(false), kDraw3DGeo(false),
-     kDraw3DHist(false), kToggleData(false), k3DThreshold(0)
+     kDraw3DHist(false), kToggleData(false), k3DThreshold(0), fTofObjCorr(0), fMTDCObjRange(0), fMTDCXfRange(0),
+     cArray(nullptr), cS800Array(nullptr), cevent(nullptr), cS800Calc(nullptr), fCvsPIDFull(nullptr), fCvsPID(nullptr),
+     fCvsPID2(nullptr), fPIDFull(nullptr), fCvsPID2Full(nullptr), fPID2Full(nullptr), fEntries(0)
 
 {
    fInstance = this;
@@ -322,9 +330,52 @@ void AtEventManager::Init(Int_t option, Int_t level, Int_t nNodes)
    frameAux1->SetElementName("Auxiliary GET Channels");
    fCvsAux = ecvsAux1->GetCanvas();
 
+   // Seventh tab
+   TEveWindowSlot *slotS800 = TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
+   TEveWindowPack *packPID = slotS800->MakePack();
+   packPID->SetShowTitleBar(kFALSE);
+   packPID->SetElementName("S800 PIDs");
+   packPID->SetHorizontal();
+
+   slotS800 = packPID->NewSlotWithWeight(1.5);
+   auto ecvsS800tof1 = new TRootEmbeddedCanvas();
+   TEveWindowFrame *frameS800tof1 = slotS800->MakeFrame(ecvsS800tof1);
+   frameS800tof1->SetElementName("T[Xf_Obj]-TObj (gated)");
+   fCvsPID = ecvsS800tof1->GetCanvas();
+
+   slotS800 = packPID->NewSlotWithWeight(1.5);
+   auto ecvsS800tof2 = new TRootEmbeddedCanvas();
+   TEveWindowFrame *frameS800tof2 = slotS800->MakeFrame(ecvsS800tof2);
+   frameS800tof2->SetElementName("T[Xf_Obj]-TObj (full)");
+   fCvsPIDFull = ecvsS800tof2->GetCanvas();
+   DrawPIDFull();
+   // Eighth tab
+   // TEveWindowSlot *slotS8002 = TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
+   // TEveWindowPack *packPID2 = slotS8002->MakePack();
+   // packPID2->SetShowTitleBar(kFALSE);
+   // packPID2->SetElementName("S800 PIDs");
+
+   slotS800 = packPID->NewSlotWithWeight(1.5);
+   auto ecvsS800dE1 = new TRootEmbeddedCanvas();
+   TEveWindowFrame *frameS800dE1 = slotS800->MakeFrame(ecvsS800dE1);
+   frameS800dE1->SetElementName("ICSumE-ToF (gated)");
+   fCvsPID2 = ecvsS800dE1->GetCanvas();
+
+   slotS800 = packPID->NewSlotWithWeight(1.5);
+   auto ecvsS800dE2 = new TRootEmbeddedCanvas();
+   TEveWindowFrame *frameS800dE2 = slotS800->MakeFrame(ecvsS800dE2);
+   frameS800dE2->SetElementName("ICSumE-ToF (full)");
+   fCvsPID2Full = ecvsS800dE2->GetCanvas();
+   DrawPID2Full();
    /**************************************************************************/
 
+   fS800Ana.SetMTDCXfRange(fMTDCXfRange); // these 3 Setter must be before Init()
+   fS800Ana.SetMTDCObjRange(fMTDCObjRange);
+   fS800Ana.SetTofObjCorr(fTofObjCorr);
+
    fRunAna->Init();
+
+   FillPIDFull(); // plot the Full PID at the beginning of the visualiztion
 
    if (gGeoManager) {
       TGeoNode *geoNode = gGeoManager->GetTopNode();
@@ -384,6 +435,95 @@ void AtEventManager::GotoEvent(Int_t event)
 
 void AtEventManager::NextEvent()
 {
+
+   Bool_t gated = kFALSE;
+   while (gated == kFALSE) {
+      fEntry += 1;
+      cArray = nullptr;
+      cevent = nullptr;
+      if (fEntry < 1 || fEntry > fEntries) {
+         fEntry = fEntries;
+         std::cout << " No gated events found! " << std::endl;
+         break;
+      }
+      fRootManager->ReadEvent(fEntry);
+      cArray = dynamic_cast<TClonesArray *>(fRootManager->GetObject("AtEventH"));
+      // cArray = dynamic_cast<TObject *>(fRootManager->GetObject("AtEventH"));
+      cevent = dynamic_cast<AtEvent *>(cArray->At(0));
+      gated = cevent->IsInGate();
+   }
+
+   std::cout << " Event number : " << fEntry << std::endl;
+   fRunAna->Run((Long64_t)fEntry);
+}
+
+void AtEventManager::PrevEvent()
+{
+
+   Bool_t gated = kFALSE;
+   while (gated == kFALSE) {
+      fEntry -= 1;
+      cArray = nullptr;
+      cevent = nullptr;
+      if (fEntry < 1 || fEntry > fEntries) {
+         fEntry = 1;
+         std::cout << " No gated events found! " << std::endl;
+         break;
+      }
+      fRootManager->ReadEvent(fEntry);
+      cArray = dynamic_cast<TClonesArray *>(fRootManager->GetObject("AtEventH"));
+      // cArray = dynamic_cast<TObject *>(fRootManager->GetObject("AtEventH"));
+      cevent = dynamic_cast<AtEvent *>(cArray->At(0));
+      gated = cevent->IsInGate();
+   }
+
+   std::cout << " Event number : " << fEntry << std::endl;
+   fRunAna->Run((Long64_t)fEntry);
+}
+
+void AtEventManager::DrawPIDFull()
+{
+
+   fPIDFull = new TH2F("PIDFull", "PIDFull", 200, -150, 50, 300, 150, 450);
+   // fLvsTheta->SetMarkerStyle(22);
+   // fLvsTheta->SetMarkerColor(kRed);
+
+   fPIDFull->Draw("colz");
+}
+
+void AtEventManager::DrawPID2Full()
+{
+
+   fPID2Full = new TH2F("PID2Full", "PID2Full", 200, -150, 50, 300, 150, 450);
+   // fLvsTheta->SetMarkerStyle(22);
+   // fLvsTheta->SetMarkerColor(kRed);
+
+   fPID2Full->Draw("colz");
+}
+
+void AtEventManager::FillPIDFull()
+{
+
+   TChain *chain = FairRootManager::Instance()->GetInChain();
+   fEntries = chain->GetEntriesFast();
+
+   for (int neve = 1; neve < fEntries; neve++) {
+      fRootManager->ReadEvent(neve);
+      cS800Calc = dynamic_cast<S800Calc *>(fRootManager->GetObject("s800cal"));
+      if (cS800Calc == nullptr)
+         break;
+      // cS800Calc = (S800Calc*) cS800Array->At(0);
+
+      fS800Ana.Calc(cS800Calc);
+      if (fS800Ana.GetObjCorr_ToF() != -999)
+         fPIDFull->Fill(fS800Ana.GetObjCorr_ToF(), fS800Ana.GetXfObj_ToF());
+      if (fS800Ana.GetObjCorr_ToF() != -999)
+         fPID2Full->Fill(fS800Ana.GetObjCorr_ToF(), fS800Ana.GetICSum_E());
+   }
+}
+
+/*void AtEventManager::NextEvent()
+{
    fEntry += 1;
    std::cout << " Event number : " << fEntry << std::endl;
    fRunAna->Run((Long64_t)fEntry);
@@ -394,7 +534,7 @@ void AtEventManager::PrevEvent()
    fEntry -= 1;
    std::cout << " Event number : " << fEntry << std::endl;
    fRunAna->Run((Long64_t)fEntry);
-}
+}*/
 
 void AtEventManager::DrawWave()
 {

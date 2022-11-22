@@ -139,21 +139,21 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
 
    if (ExEject > 0.0 && !fIsSequentialDecay) {
       LOG(INFO) << cBLINKINGRED
-                << " AtTPCIonDecay - Warning, Incosistent variables: Recoil excitation energy from Vertex propagator "
+                << " AtTPCIonDecay - Warning, Inconsistent variables: Recoil excitation energy from Vertex propagator "
                    "greater than 0 but sequential decay not enabled! Continue at your own risk!"
                 << cNORMAL << "\n";
 
    } else if (fIsSequentialDecay && fExEnergy > 0.0) {
 
       LOG(INFO) << cBLINKINGRED
-                << " AtTPCIonDecay - Warning, Incosistent variables: Sequential decay should take the Ex energy from "
+                << " AtTPCIonDecay - Warning, Inconsistent variables: Sequential decay should take the Ex energy from "
                    "the reaction generator! Continue at your own risk!"
                 << cNORMAL << "\n";
 
    } else if (ExEject > 0.0 && fExEnergy > 0.0) {
       LOG(INFO)
          << cBLINKINGRED
-         << " AtTPCIonDecay - Warning, Incosistent variables: Both, excitation energy from Vertex propagator and "
+         << " AtTPCIonDecay - Warning, Inconsistent variables: Both, excitation energy from Vertex propagator and "
             "excitation energy from task (introduced through the macro) are positive! Continue at your own risk!"
          << cNORMAL << "\n";
    }
@@ -232,10 +232,11 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
       fEnergyImpulsionLab_target = TLorentzVector(TVector3(0, 0, 0), fTargetMass);
 
       if (fTargetMass > 0 && fIsSequentialDecay) {
-         LOG(INFO) << cBLINKINGRED
-                   << " AtTPCIonDecay - Warning, Incosistent variables: Target Impulsion included in sequential decay. "
-                      "Continue at your own risk!"
-                   << cNORMAL << "\n";
+         LOG(INFO)
+            << cBLINKINGRED
+            << " AtTPCIonDecay - Warning, Inconsistent variables: Target Impulsion included in sequential decay. "
+               "Continue at your own risk!"
+            << cNORMAL << "\n";
       }
 
       fEnergyImpulsionLab_Total = fEnergyImpulsionLab_beam + fEnergyImpulsionLab_target;
@@ -257,6 +258,8 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
       if (s > pow(M_tot, 2)) {
          // if(ExEject*1000.0>fSepEne){
          fIsDecay = kTRUE;
+         event1.SetDecay(fEnergyImpulsionLab_Total, fMult.at(Case), mass_1);
+         Double_t weight1 = event1.Generate(); // to generate the random final state
          std::vector<Double_t> KineticEnergy;
          std::vector<Double_t> ThetaLab;
 
@@ -270,8 +273,9 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
             KineticEnergy.push_back((p_vector.at(i)->E() - mass_1[i]) * 1000.0);
             ThetaLab.push_back(p_vector.at(i)->Theta() * 180. / TMath::Pi());
             LOG(INFO) << " Particle " << i << " - TKE (MeV) : " << KineticEnergy.at(i)
-                      << " - Lab Angle (deg) : " << ThetaLab.at(i) << cNORMAL << "\n";
+                      << " - Lab Angle (deg) : " << ThetaLab.at(i) << "\n";
          }
+         LOG(INFO) << cNORMAL;
 
       } else { // if kinematics condition
 
@@ -307,21 +311,22 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
 
          int pdgType = thisPart->PdgCode();
 
-         // To do: Add a member function to enable vertex from d2He generator
-         // TVector3 d2HeVtx = AtVertexPropagator::Instance()->Getd2HeVtx();
-         // fVx = d2HeVtx.X();
-         // fVy = d2HeVtx.Y();
-         // fVz = d2HeVtx.Z();
-
-         fVx = AtVertexPropagator::Instance()->GetVx();
-         fVy = AtVertexPropagator::Instance()->GetVy();
-         fVz = AtVertexPropagator::Instance()->GetVz();
+         if (AtVertexPropagator::Instance()->Getd2HeEvt()) {
+            TVector3 d2HeVtx = AtVertexPropagator::Instance()->Getd2HeVtx();
+            fVx = d2HeVtx.X();
+            fVy = d2HeVtx.Y();
+            fVz = d2HeVtx.Z();
+         } else {
+            fVx = AtVertexPropagator::Instance()->GetVx();
+            fVy = AtVertexPropagator::Instance()->GetVy();
+            fVz = AtVertexPropagator::Instance()->GetVz();
+         }
 
          // std::cout << "-I- FairIonGenerator: Generating " <<" with mass "<<thisPart->Mass()<<" ions of type "<<
-         // fIon.at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl; std::cout << "    Momentum (" <<
-         // fPx.at(i) << ", " << fPy.at(i) << ", " << fPz.at(i)
-         //<< ") Gev from vertex (" << fVx << ", " << fVy
-         //<< ", " << fVz << ") cm" << std::endl;
+         // fIon.at(Case).at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl; std::cout << "    Momentum
+         // (" << fPx.at(i) << ", " << fPy.at(i) << ", " << fPz.at(i)
+         // << ") Gev from vertex (" << fVx << ", " << fVy
+         // << ", " << fVz << ") cm" << std::endl;
 
          if (fIsDecay) {
             primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
