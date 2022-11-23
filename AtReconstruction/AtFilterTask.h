@@ -8,6 +8,9 @@
 
 class AtFilter;
 class TClonesArray;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtFilterTask : public FairTask {
 
@@ -36,5 +39,7 @@ public:
    void SetOutputBranch(TString name) { fOutputBranchName = name; }
    virtual InitStatus Init() override;
    virtual void Exec(Option_t *opt) override;
+
+   ClassDefOverride(AtFilterTask, 1)
 };
 #endif //#ifndef ATFILTERTASK_H

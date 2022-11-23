@@ -30,7 +30,7 @@ constexpr float amu = 931.494;
 
 Int_t AtTPC_d2He::fgNIon = 0;
 
-AtTPC_d2He::AtTPC_d2He() : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0), fCStot(0.)
+AtTPC_d2He::AtTPC_d2He() : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0)
 {
    //  cout << "-W- AtTPCIonGenerator: "
    //      << " Please do not use the default constructor! " << endl;
@@ -48,7 +48,7 @@ AtTPC_d2He::AtTPC_d2He(const char *name, std::vector<Int_t> *z, std::vector<Int_
                        Int_t mult, std::vector<Double_t> *px, std::vector<Double_t> *py, std::vector<Double_t> *pz,
                        std::vector<Double_t> *mass, std::vector<Double_t> *Ex, std::vector<Double_t> *cross1,
                        std::vector<Double_t> *cross2, std::vector<Double_t> *cross3, Int_t N_data)
-   : fPx(0.), fPy(0.), fPz(0.), fMult(mult), fVx(0.), fVy(0.), fVz(0.), fIon(0), fCStot(0.)
+   : fPx(0.), fPy(0.), fPz(0.), fMult(mult), fVx(0.), fVy(0.), fVz(0.), fIon(0)
 {
 
    fgNIon++;

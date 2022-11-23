@@ -20,6 +20,9 @@
 
 class AtRawEvent;
 class TClonesArray;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtDataReductionTask : public FairTask {
    using ReductionFunction = std::function<bool(AtRawEvent *)>;
@@ -40,6 +43,8 @@ public:
 
    virtual InitStatus Init() override;
    virtual void Exec(Option_t *opt) override;
+
+   ClassDefOverride(AtDataReductionTask, 1)
 };
 
 #endif //#ifndef ATDATAREDUCTIONTSAK_H

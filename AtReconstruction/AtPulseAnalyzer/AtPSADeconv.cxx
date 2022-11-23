@@ -210,7 +210,7 @@ AtPSADeconv::HitVector AtPSADeconv::AnalyzeFFTpad(AtPad &pad)
 
    pad.AddAugment("Qreco", std::move(charge));
 
-   return chargeToHits(pad);
+   return chargeToHits(pad, "Qreco");
 }
 
 AtPSADeconv::HitVector AtPSADeconv::AnalyzePad(AtPad *pad)
@@ -228,10 +228,10 @@ AtPSADeconv::HitVector AtPSADeconv::AnalyzePad(AtPad *pad)
    return AnalyzeFFTpad(*pad);
 }
 
-AtPSADeconv::HitVector AtPSADeconv::chargeToHits(AtPad &pad)
+AtPSADeconv::HitVector AtPSADeconv::chargeToHits(AtPad &pad, std::string qName)
 {
    HitVector ret;
-   auto charge = dynamic_cast<AtPadArray *>(pad.GetAugment("Qreco"));
+   auto charge = dynamic_cast<AtPadArray *>(pad.GetAugment(qName));
    for (auto &ZandQ : getZandQ(charge->GetArray())) {
       XYZPoint pos(pad.GetPadCoord().X(), pad.GetPadCoord().Y(), CalculateZGeo(ZandQ[0]));
 

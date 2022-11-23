@@ -2,10 +2,6 @@
 #define S800Ana_H
 
 #include <Rtypes.h>
-#include <TString.h>
-// FAIRROOT classes
-#include <FairTask.h>
-
 #include <TObject.h>
 
 #include <vector>
@@ -16,18 +12,36 @@ class FairLogger;
 class S800Calc;
 class TBuffer;
 class TClass;
-class TClonesArray;
 class TCutG;
-class TF1;
-class TFile;
-class TGraph;
 class TMemberInspector;
+class TString;
 
 class S800Ana : public TObject {
+private:
+   FairLogger *fLogger;
+
+   std::vector<Double_t> fParameters;
+   std::vector<Double_t> fTofObjCorr;
+   std::vector<Double_t> fMTDCObjRange;
+   std::vector<Double_t> fMTDCXfRange;
+
+   std::vector<TCutG *> fcutPID1;
+   std::vector<TCutG *> fcutPID2;
+   std::vector<TCutG *> fcutPID3;
+
+   Double_t fXfObj_ToF;
+   Double_t fObjCorr_ToF;
+   Double_t fICSum_E;
+   Double_t fX0;
+   Double_t fX1;
+   Double_t fY0{0};
+   Double_t fY1{0};
+   Double_t fAfp;
+   Double_t fBfp{0};
 
 public:
    S800Ana();
-   ~S800Ana();
+   ~S800Ana() = default;
 
    void SetPID1cut(std::vector<TString> file);
    void SetPID2cut(std::vector<TString> file);
@@ -53,27 +67,6 @@ public:
    // virtual void Exec(Option_t *opt);
 
 private:
-   FairLogger *fLogger;
-
-   std::vector<Double_t> fParameters;
-   std::vector<Double_t> fTofObjCorr;
-   std::vector<Double_t> fMTDCObjRange;
-   std::vector<Double_t> fMTDCXfRange;
-
-   std::vector<TCutG *> fcutPID1;
-   std::vector<TCutG *> fcutPID2;
-   std::vector<TCutG *> fcutPID3;
-
-   Double_t fXfObj_ToF;
-   Double_t fObjCorr_ToF;
-   Double_t fICSum_E;
-   Double_t fX0;
-   Double_t fX1;
-   Double_t fY0;
-   Double_t fY1;
-   Double_t fAfp;
-   Double_t fBfp;
-
    void Reset();
 
    ClassDef(S800Ana, 1);

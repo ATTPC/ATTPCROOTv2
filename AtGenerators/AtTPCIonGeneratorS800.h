@@ -4,7 +4,6 @@
 #include "AtTPCIonGenerator.h"
 
 #include <Rtypes.h>  // for Double_t, Double32_t, Int_t, THashCon...
-#include <TFile.h>   // for TString
 #include <TH1.h>     // for TH1F
 #include <TString.h> // for TString
 

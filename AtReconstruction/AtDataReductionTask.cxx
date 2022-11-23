@@ -12,6 +12,8 @@
 
 #include <memory>
 
+ClassImp(AtDataReductionTask);
+
 AtDataReductionTask::AtDataReductionTask() : fReductionFunction(nullptr), fInputBranchName("AtRawEvent") {}
 
 AtDataReductionTask::~AtDataReductionTask() = default;

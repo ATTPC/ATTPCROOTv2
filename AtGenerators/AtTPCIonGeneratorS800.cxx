@@ -8,10 +8,8 @@
 #include <TMath.h>
 #include <TObject.h> // for TObject
 #include <TRandom.h>
-#include <TStopwatch.h>
 
 #include <cmath> // for tan, sqrt, pow, atan, fabs
-#include <iostream>
 
 ClassImp(AtTPCIonGeneratorS800);
 
@@ -31,8 +29,8 @@ AtTPCIonGeneratorS800::AtTPCIonGeneratorS800(const char *name, Int_t z, Int_t a,
    else {
       fAta = std::unique_ptr<TH1F>(dynamic_cast<TH1F *>(fileAta.Get("h")));
       fBta = std::unique_ptr<TH1F>(dynamic_cast<TH1F *>(fileBta.Get("h1")));
-      fAta->SetDirectory(0);
-      fBta->SetDirectory(0);
+      fAta->SetDirectory(nullptr);
+      fBta->SetDirectory(nullptr);
    }
 
    fPx0 = a * px;

@@ -1,6 +1,8 @@
 #ifndef AtPSA_H
 #define AtPSA_H
 
+#include "AtHit.h" // IWYU pramga: keep
+
 #include <Rtypes.h>
 
 #include <cstddef>
@@ -12,7 +14,6 @@
 class TClonesArray;
 class AtRawEvent;
 class AtEvent;
-class AtHit;
 class AtPad;
 class TBuffer;
 class TClass;

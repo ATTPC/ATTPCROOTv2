@@ -1,10 +1,15 @@
 #include "AtKinematics.h"
 
-#include <Rtypes.h> // for TGenericClassInfo
-#include <TMath.h>  // for Power, Sqrt
+#include <Rtypes.h>        // for TGenericClassInfo
+#include <TError.h>        // for Error
+#include <TMath.h>         // for Power, Sqrt
+#include <TMatrixTUtils.h> // for TMatrixTRow
 
-#include <cmath>    // for pow, sqrt, cos
-#include <iostream> // for operator<<, basic_ostream, basic_ostream<>::__os...
+#include <algorithm> // for max
+#include <cmath>     // for pow, sqrt, cos
+#include <cstdlib>   // for exit
+#include <iostream>  // for operator<<, basic_ostream, basic_ostream<>::__os...
+#include <utility>   // for move
 
 ClassImp(AtTools::AtKinematics);
 
@@ -146,7 +151,7 @@ TMatrixD AtTools::AtKinematics::Calculated(TMatrixD *alpha)
 {
    TMatrixD dval(4, 1);
    dval.Zero();
-   double mt = fTargetMass * 931.494; // target mass
+   // double mt = fTargetMass * 931.494; // target mass
 
    double mout1 = 0.0;
    double mout2 = 0.0;

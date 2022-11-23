@@ -259,7 +259,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
          // if(ExEject*1000.0>fSepEne){
          fIsDecay = kTRUE;
          event1.SetDecay(fEnergyImpulsionLab_Total, fMult.at(Case), mass_1);
-         Double_t weight1 = event1.Generate(); // to generate the random final state
+         event1.Generate(); // to generate the random final state
          std::vector<Double_t> KineticEnergy;
          std::vector<Double_t> ThetaLab;
 

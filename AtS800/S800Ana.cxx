@@ -1,23 +1,14 @@
 #include "S800Ana.h"
 
-#include "AtRawEvent.h"
-
 #include <FairLogger.h>
-#include <FairRootManager.h>
-#include <FairTask.h>
 
-#include <Math/ParamFunctor.h>
-#include <TClonesArray.h>
 #include <TCollection.h>
 #include <TCutG.h>
-#include <TF1.h>
 #include <TFile.h>
-#include <TGraph.h>
 #include <TKey.h>
 #include <TList.h>
 #include <TObject.h>
-#include <TTreeReader.h>
-#include <TTreeReaderValue.h>
+#include <TString.h>
 
 #include "S800Calc.h"
 
@@ -46,8 +37,6 @@ S800Ana::S800Ana()
    fMTDCObjRange.clear();
    fMTDCXfRange.clear();
 }
-
-S800Ana::~S800Ana() {}
 
 void S800Ana::Reset()
 {

@@ -10,6 +10,7 @@
 #include <array> // for array
 #include <functional>
 #include <memory> // for unique_ptr, make_unique
+#include <string> // for string
 #include <utility>
 #include <vector>
 
@@ -100,7 +101,7 @@ protected:
    /**
     * Takes a pad with charge information and returns a list of hits to add to the event.
     */
-   virtual HitVector chargeToHits(AtPad &charge);
+   virtual HitVector chargeToHits(AtPad &charge, std::string qName);
 
    /**
     * Returns the salient data from the charge distribution:

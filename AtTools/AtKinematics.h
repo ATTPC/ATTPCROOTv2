@@ -7,17 +7,14 @@
 
 #ifndef ATKINEMATICS_H
 #define ATKINEMATICS_H
+#include <Rtypes.h>      // for Double_t, THashConsistencyHolder, Int_t, ClassDef
+#include <TMatrixDfwd.h> // for TMatrixD
+#include <TMatrixT.h>    // for TMatrixT
+#include <TObject.h>     // for TObject
 
-#include <Math/Functor.h>
-#include <Math/Minimizer.h>
-#include <Math/Vector3D.h>
-#include <Rtypes.h> // for Double_t, THashConsistencyHolder, Int_t, ClassDef
-
-#include "TMath.h"
-#include "TMatrixD.h"
-#include "TObject.h" // for TObject
-
-#include <tuple> // for tuple
+#include <memory> // for unique_ptr
+#include <tuple>  // for tuple
+#include <vector> // for vector
 class TBuffer;
 class TClass;
 class TMemberInspector;
