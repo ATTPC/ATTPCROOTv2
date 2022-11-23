@@ -7,6 +7,7 @@
 
 #include <limits>
 #include <memory> // for make_unique, unique_ptr
+#include <string>
 
 class AtPad;
 class TBuffer;
@@ -21,6 +22,8 @@ class AtPSATBAvg : public AtPSA {
 private:
    Int_t fTBtoAvg{5};
    Double_t fMaxThreshold{std::numeric_limits<Double_t>::max()};
+   std::string fAugName;
+   Bool_t fUseAug{false};
 
 public:
    HitVector AnalyzePad(AtPad *pad) override;
@@ -28,6 +31,11 @@ public:
 
    void SetNumTBToAvg(Int_t num) { fTBtoAvg = num; }
    void SetMaxThreshold(Double_t max) { fMaxThreshold = max; }
+   void UseArrayAugment(std::string name)
+   {
+      fUseAug = true;
+      fAugName = name;
+   }
 
    ClassDefOverride(AtPSATBAvg, 1)
 };

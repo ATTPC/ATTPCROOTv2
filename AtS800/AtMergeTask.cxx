@@ -8,13 +8,9 @@
 
 #include <Math/ParamFunctor.h>
 #include <TClonesArray.h>
-#include <TCollection.h>
-#include <TCutG.h>
 #include <TF1.h>
 #include <TFile.h>
 #include <TGraph.h>
-#include <TKey.h>
-#include <TList.h>
 #include <TObject.h>
 #include <TTreeReader.h>
 #include <TTreeReaderValue.h>

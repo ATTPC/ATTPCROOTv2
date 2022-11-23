@@ -39,7 +39,8 @@ Int_t AtTPCIonGenerator::fgNIon = 0;
 
 // -----   Default constructor   ------------------------------------------
 AtTPCIonGenerator::AtTPCIonGenerator()
-   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fR(0.), fz(0.), fOffsetX(0.), fOffsetY(0.),fVx(0.), fVy(0.), fVz(0.), fIon(nullptr), fQ(0)
+   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fR(0.), fz(0.), fOffsetX(0.), fOffsetY(0.), fVx(0.), fVy(0.), fVz(0.),
+     fIon(nullptr), fQ(0)
 
 {
    //  cout << "-W- AtTPCIonGenerator: "
@@ -48,7 +49,8 @@ AtTPCIonGenerator::AtTPCIonGenerator()
 // ------------------------------------------------------------------------
 
 AtTPCIonGenerator::AtTPCIonGenerator(const Char_t *ionName, Int_t mult, Double_t px, Double_t py, Double_t pz)
-   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fR(0.), fz(0.), fOffsetX(0.), fOffsetY(0.), fVx(0.), fVy(0.), fVz(0.), fIon(nullptr), fQ(0)
+   : fMult(0), fPx(0.), fPy(0.), fPz(0.), fR(0.), fz(0.), fOffsetX(0.), fOffsetY(0.), fVx(0.), fVy(0.), fVz(0.),
+     fIon(nullptr), fQ(0)
 {
 
    FairRunSim *fRun = FairRunSim::Instance();
@@ -90,8 +92,8 @@ AtTPCIonGenerator::AtTPCIonGenerator(const Char_t *ionName, Int_t mult, Double_t
 
 AtTPCIonGenerator::AtTPCIonGenerator(const char *name, Int_t z, Int_t a, Int_t q, Int_t mult, Double_t px, Double_t py,
                                      Double_t pz, Double_t Ex, Double_t m, Double_t ener, Double_t eLoss)
-   : fMult(mult), fPx(Double_t(a) * px), fPy(Double_t(a) * py), fPz(Double_t(a) * pz), fR(0.), fz(0.), fOffsetX(0.),fOffsetY(0.),
-     fVx(0.), fVy(0.), fVz(0.), fIon(nullptr), fQ(0), fNomEner(ener), fMaxEnLoss(eLoss < 0 ? ener : eLoss)
+   : fMult(mult), fPx(Double_t(a) * px), fPy(Double_t(a) * py), fPz(Double_t(a) * pz), fR(0.), fz(0.), fOffsetX(0.),
+     fOffsetY(0.), fVx(0.), fVy(0.), fVz(0.), fIon(nullptr), fQ(0), fNomEner(ener), fMaxEnLoss(eLoss < 0 ? ener : eLoss)
 {
    fgNIon++;
 

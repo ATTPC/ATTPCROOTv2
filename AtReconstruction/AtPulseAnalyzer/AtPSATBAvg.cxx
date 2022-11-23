@@ -2,6 +2,8 @@
 
 #include "AtHit.h"
 #include "AtPad.h"
+#include "AtPadArray.h"
+#include "AtPadBase.h"
 
 #include <FairLogger.h>
 
@@ -37,7 +39,12 @@ AtPSATBAvg::HitVector AtPSATBAvg::AnalyzePad(AtPad *pad)
       LOG(ERROR) << "Pedestal should be subtracted to use this class!";
    }
 
-   std::array<Double_t, 512> floatADC = pad->GetADC();
+   std::array<Double_t, 512> floatADC{};
+   if (fUseAug) {
+      floatADC = dynamic_cast<AtPadArray *>(pad->GetAugment(fAugName))->GetArray();
+   } else {
+      floatADC = pad->GetADC();
+   }
 
    // Skip pad if we think it is saturated
    if (*std::max_element(floatADC.begin(), floatADC.end()) > fMaxThreshold)

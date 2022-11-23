@@ -21,6 +21,8 @@
 
 class AtPad;
 
+ClassImp(AtFilterTask);
+
 AtFilterTask::AtFilterTask(AtFilter *filter, const char *name)
    : FairTask(name), fOutputEventArray(new TClonesArray("AtRawEvent")), fFilter(filter)
 {

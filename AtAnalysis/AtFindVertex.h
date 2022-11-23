@@ -1,5 +1,6 @@
 #ifndef ATFINDVERTEX_H
 #define ATFINDVERTEX_H
+// IWYU pragma: no_include <ext/alloc_traits.h>
 
 #include "AtTrack.h"
 

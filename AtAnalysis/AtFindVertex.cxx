@@ -2,6 +2,7 @@
 Move this to Fitter folder, the vertex determination will go with the fitter
 */
 #include "AtFindVertex.h"
+// IWYU pragma: no_include <ext/alloc_traits.h>
 
 #include "AtPattern.h" // for AtPattern
 #include "AtPatternLine.h"

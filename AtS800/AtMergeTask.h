@@ -1,23 +1,20 @@
 #ifndef AtMergeTask_H
 #define AtMergeTask_H
 
+#include <FairTask.h>
+
 #include <Rtypes.h>
 #include <TString.h>
 
 #include "S800Ana.h"
-// FAIRROOT classes
-#include <FairTask.h>
 
 #include <vector>
-
-// AtTPCROOT classes
 
 class FairLogger;
 class S800Calc;
 class TBuffer;
 class TClass;
 class TClonesArray;
-class TCutG;
 class TF1;
 class TFile;
 class TGraph;
