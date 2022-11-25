@@ -38,7 +38,7 @@ void O16He4_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
    run->AddModule(pipe);*/
 
    FairDetector *ATTPC = new AtTpc("ATTPC", kTRUE);
-   ATTPC->SetGeometryFileName("ATTPC_He1bar_v2.root");
+   ATTPC->SetGeometryFileName("ATTPC_He600torr_v2.root");
    // ATTPC->SetModifyGeometry(kTRUE);
    run->AddModule(ATTPC);
 
@@ -67,7 +67,7 @@ void O16He4_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
    Double_t pz = 2.189 / a; // Z-Momentum / per nucleon!!!!!!
    Double_t BExcEner = 0.0;
    Double_t Bmass = 15.99491461956;
-   Double_t NomEnergy = 5.0;
+   Double_t NomEnergy = 40.0;
 
    AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
    ionGen->SetSpotRadius(0, -100, 0);

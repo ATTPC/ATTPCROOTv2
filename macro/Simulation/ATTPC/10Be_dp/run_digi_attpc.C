@@ -5,12 +5,12 @@ void run_digi_attpc()
    TString inOutDir = "./data/";
    TString outputFile = inOutDir + "output_digi.root";
    TString scriptfile = "Lookup20150611.xml";
-   TString paramFile = "ATTPC.e20020_sim.par";
+   TString paramFile = "ATTPC.e20009_sim.par";
 
    TString dir = getenv("VMCWORKDIR");
 
    // TString mcFile = "./data/sim_attpc.root";
-   TString mcFile = inOutDir + "attpcsim_in.root";
+   TString mcFile = inOutDir + "attpcsim.root";
 
    // Create the full parameter file paths
    TString digiParFile = dir + "/parameters/" + paramFile;
@@ -53,15 +53,18 @@ void run_digi_attpc()
    AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
    psaTask->SetPersistence(kTRUE);
 
+   AtPRAtask *praTask = new AtPRAtask();
+   praTask->SetPersistence(kTRUE);
+
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
    fRun->AddTask(psaTask);
+   fRun->AddTask(praTask);
 
    //  __ Init and run ___________________________________
    fRun->Init();
 
    timer.Start();
-   // fRun->Run(0, 20001);
    fRun->Run(0, 20000);
    timer.Stop();
 

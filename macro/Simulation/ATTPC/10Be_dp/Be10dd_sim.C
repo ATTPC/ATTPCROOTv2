@@ -1,4 +1,4 @@
-void Be10dp_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
+void Be10dd_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
@@ -40,7 +40,7 @@ void Be10dp_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
    run->AddModule(pipe);*/
 
    FairDetector *ATTPC = new AtTpc("ATTPC", kTRUE);
-   ATTPC->SetGeometryFileName("ATTPC_D1bar_v2.root");
+   ATTPC->SetGeometryFileName("ATTPC_D600torr_v2.root");
    // ATTPC->SetModifyGeometry(kTRUE);
    run->AddModule(ATTPC);
 
@@ -121,26 +121,26 @@ void Be10dp_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
 
    //--- Scattered -----
    Zp.push_back(4);  // 12Be TRACKID=1
-   Ap.push_back(11); //
+   Ap.push_back(10); //
    Qp.push_back(0);
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
-   Mass.push_back(11.021657749); // uma
-   ExE.push_back(0.0);
+   Mass.push_back(10.013533818); // uma
+   ExE.push_back(7.5);           // 3.368
 
    // ---- Recoil -----
    Zp.push_back(1); // p  TRACKID=2
-   Ap.push_back(1); //
+   Ap.push_back(2); //
    Qp.push_back(0); //
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
-   Mass.push_back(1.00727646); // uma
-   ExE.push_back(0.0);         // In MeV
+   Mass.push_back(2.01410177785); // uma
+   ExE.push_back(0.0);            // In MeV
 
    Double_t ThetaMinCMS = 20.0;
-   Double_t ThetaMaxCMS = 40.0;
+   Double_t ThetaMaxCMS = 80.0;
 
    AtTPC2Body *TwoBody =
       new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);
