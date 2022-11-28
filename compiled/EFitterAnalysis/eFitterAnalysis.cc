@@ -7,17 +7,13 @@ int main(int argc, char *argv[])
    // fEnableMerging = 1;
    // fEnableSingleVertexTrack = 1;
    // fExpNum = e20020;
-  
-   
-  
-  
+
    // Work directory
    TString dir = getenv("VMCWORKDIR");
    std::string dirCstr = dir.Data();
 
    // Geometry file
-   TString geoManFile =
-      dir + "/geometry/ATTPC_He1bar_v2_geomanager.root"; 
+   TString geoManFile = dir + "/geometry/ATTPC_He1bar_v2_geomanager.root";
    // Ion list file
    std::string ionList = dirCstr + "/resources/ionFitLists/e20020_ionList.xml";
 
@@ -34,14 +30,11 @@ int main(int argc, char *argv[])
    Double_t clusterRadius = 7.5;//mm
    Double_t clusterDistance   = 15.0;//mm
    Exp exp = e20009;
-   
 
    // Physics parameters
    Float_t magneticField = 3.0;        // T
    Float_t gasMediumDensity = 0.1533;  //  0.1533 mg/cm3 (a,a) - 0.13129 mg/cm3 (d,p)
-  
-   
-   
+
    //  Arguments
    if (argc == 7) {
       firstEvt = std::atoi(argv[1]);
@@ -66,7 +59,7 @@ int main(int argc, char *argv[])
                 << "\n";
       return 0;
    }
-     
+
    // File paths
    TString filePath;
    TString simFile;
@@ -76,15 +69,15 @@ int main(int argc, char *argv[])
       {
        case e20009:
 	gasMediumDensity = 0.13129;
-	
-	if (simulationConv) {
-         filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/";
-         simFile = "_sim_";
+
+   if (simulationConv) {
+      filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/data/";
+      simFile = "_sim_";
         } else {
          filePath = dir + "/macro/Unpack_HDF5/e20009/";
          simFile = "";
         }
-	
+
         geoManFile = dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
         ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
 
@@ -100,14 +93,13 @@ int main(int argc, char *argv[])
 	gasMediumDensity = 0.1533;
 
 	if (simulationConv) {
-         filePath = dir + "/macro/Simulation/ATTPC/16O_aa_v2/"; 
-         simFile = "_sim_";
+      filePath = dir + "/macro/Simulation/ATTPC/16O_aa_v2/";
+      simFile = "_sim_";
         } else {
-         filePath = dir + "/macro/Unpack_HDF5/e20020/"; 
-         simFile = "";
+           filePath = dir + "/macro/Unpack_HDF5/e20020/";
+           simFile = "";
         }
 
-	
         geoManFile = dir + "/geometry/ATTPC_He1bar_v2_geomanager.root";
         ionList = dirCstr + "/resources/ionFitLists/e20020_ionList.xml";
 
@@ -118,11 +110,6 @@ int main(int argc, char *argv[])
         std::cout << " Ion list file : " << ionList << "\n";
         break;
      }
-   
-
-
-
-   
 
    outputFileName = "fit_analysis_" + simFile + inputFileName;
    outputFileName += "_" + std::to_string(firstEvt) + "_" + std::to_string(lastEvt) + ".root";
@@ -130,7 +117,7 @@ int main(int argc, char *argv[])
    inputFileName = filePath + inputFileName + ".root";
 
    std::cout<<" Input file name : "<<inputFileName<<"\n";
-   
+
    ////FitManager becomes owner
 
    std::shared_ptr<FitManager> fitManager;
@@ -153,7 +140,7 @@ int main(int argc, char *argv[])
    fitManager->EnableSingleVertexTrack(enableSingleVertexTrack);
    fitManager->EnableReclustering(enableReclustering,clusterRadius,clusterDistance);
    fitManager->SetExpNum(exp);
-   
+
    if (fInteractiveMode)
       fitManager->EnableGenfitDisplay();
 
@@ -339,9 +326,13 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
 
       if (thetaConv > 90) {
          phiClus = TMath::ATan2(secPos.Y() - iniPos.Y(), -secPos.X() + iniPos.X());
+         if (fSimulationConv)
+            phiClus = TMath::ATan2(secPos.Y() - iniPos.Y(), secPos.X() - iniPos.X());
          track.SetGeoPhi(-phiClus);
       } else if (thetaConv < 90) {
          phiClus = TMath::ATan2(secPos.Y() - iniPos.Y(), -secPos.X() + iniPos.X());
+         if (fSimulationConv)
+            phiClus = TMath::ATan2(secPos.Y() - iniPos.Y(), secPos.X() - iniPos.X());
          track.SetGeoPhi(phiClus);
       }
 
@@ -418,7 +409,6 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
    // Fitting track candidates
    for (auto track : mergedTrackPool) {
 
-      
       if (fEnableReclustering) {
            track.ResetHitClusterArray();
            fTrackTransformer->ClusterizeSmooth3D(track,fClusterRadius,fClusterSize); //NB: Just for analysis benchmarking
@@ -464,7 +454,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       xiniPRA = iniPos.X();
       yiniPRA = iniPos.Y();
       ziniPRA = zIniCal;
-      
+
       // This is just to select distances
       std::cout << cGREEN << "      Merged track - Initial position : " << xiniPRA << " - " << yiniPRA << " - "
                 << ziniPRA << cNORMAL << "\n";
@@ -476,14 +466,13 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
 
       std::cout << KRED << "       Merged track - Distance to Z (Candidate Track Pool) " << dist << cNORMAL << "\n";
-      
-      
+
       // Fitters
       for (auto fitter : fFitters)
          fitter->Init();
 
       // Kinematic filters and fit selection
-      
+
       std::vector<Int_t> pdgCandFit;
       if (thetaConv > 90) {
 
@@ -495,18 +484,14 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
 	   pdgCandFit.push_back(2212);
 	   break;
 	}
-	
-      } else if (thetaConv < 90 && thetaConv > 0) { 
 
-       switch(fExpNum){
-	 case e20020:
-	   pdgCandFit.push_back(1000020040);
-	   break;
-	 case e20009:
-	   pdgCandFit.push_back(1000010020);
-	   break;
-	}
-	
+      } else if (thetaConv < 90 && thetaConv > 0) {
+
+         switch (fExpNum) {
+         case e20020: pdgCandFit.push_back(1000020040); break;
+         case e20009: pdgCandFit.push_back(1000010020); break;
+         }
+
       } else if (thetaConv < 0) {
 
          // continue;
@@ -1127,8 +1112,7 @@ void FitManager::ConstructTrack(const genfit::StateOnPlane *prevState, const gen
        std::cerr<<" FitManager::ConstructTrack - Error! PDG code not found. Exiting..."<<"\n";
        std::exit(0);
      }
-     
-   
+
    TVector3 pos, dir, oldPos, oldDir;
    TVector3 mom, mdir, oldMom, oldmDir;
    rep->getPosDir(*state, pos, dir);

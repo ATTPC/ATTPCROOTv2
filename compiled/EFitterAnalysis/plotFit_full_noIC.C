@@ -34,7 +34,7 @@ double kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_pr
    return Ex;
 }
 
-void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
+void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 {
 
    std::ofstream outputFileEvents("list_of_events.txt");
@@ -463,8 +463,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
 
                  std::cout<<"\n";*/
 
-	    //Get the track with maximum angle 
-	    auto itMax =
+            // Get the track with maximum angle
+            auto itMax =
                std::max_element(APRAVec->begin(), APRAVec->end(), [](const auto &a, const auto &b) { return b > a; });
             Int_t maxAIndex = std::distance(APRAVec->begin(), itMax);
             ;
@@ -482,7 +482,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
 
             for (auto index = 0; index < EFitVec->size(); ++index) {
 
-               if (index != maxAIndex)
+               if (index == maxAIndex)
                   continue;
 
                eventMultH->Fill(evMult);
@@ -491,11 +491,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
                Ang_Ener_PRA->Fill(APRA, EPRA);
                PhiPRAH->Fill(PhiPRA);
 
-
-	       
-	       
-
-	       // if((*lengthOrbZVec)[index]<30)
+          // if((*lengthOrbZVec)[index]<30)
                // continue;
 
                // if((*brhoVec)[index]>0.8)
@@ -515,8 +511,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
                   dedxvsBrhoZoom->Fill((*dEdxADC)[index], (*brhoVec)[index]);
                }
 
-               if (cutT->IsInside((*eLossADC)[index], (*brhoVec)[index])) // particleID
-                  continue;
+               // if (cutT->IsInside((*eLossADC)[index], (*brhoVec)[index])) // particleID
+               // continue;
 
                // if(!cutDEDX->IsInside((*dEdxADC)[index], (*brhoVec)[index]))
                // continue;
@@ -527,8 +523,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
 	       //if ((*trackLengthVec)[index] < 14.0 || (*trackLengthVec)[index] > 28.0)
 	       //continue;
 
-               if ((*fitConvergedVec)[index] == 0)
-                  continue;
+               // if ((*fitConvergedVec)[index] == 0)
+               //  continue;
 
                // if((*trackPointsVec)[index]<20)
                // continue;
@@ -539,8 +535,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
                // if ((*POCAXtrVec)[index] > 2000.0)
                // continue;
 
-               if ((*ziniFitVec)[index] < 10.0 || (*ziniFitVec)[index] > 60.0)
-		    continue;
+               // if ((*ziniFitVec)[index] < 10.0 || (*ziniFitVec)[index] > 60.0)
+               // continue;
 
                /*if ((*EFitVec)[index] > 100)
                      continue;
@@ -552,8 +548,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
                     continue;*/
 
 	       dedxvsBrhoCond->Fill((*dEdxADC)[index], (*brhoVec)[index]);
-	       
-	       Double_t angle = (*AFitVec)[index];
+
+          Double_t angle = (*AFitVec)[index];
                if (dataFile.find("sim") != std::string::npos) {
                   angle = (*AFitVec)[index];
                }
@@ -562,7 +558,6 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
                   hARecvsASca->Fill((*AFitVec)[0], (*AFitVec)[1]);
                }
 
-               
                // Chi2
                fChi2H->Fill((*fChi2Vec)[index]);
                bChi2H->Fill((*bChi2Vec)[index]);
@@ -586,9 +581,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
                                 << " - Max Angle Fit : " << (*AFitVec)[index]
 				<< " - Q value       : " << ex_energy_exp
                                 << " - Track points : " << (*trackPointsVec)[index] << "\n";
-	       
-	       
-	       HQval->Fill(ex_energy_exp);
+
+          HQval->Fill(ex_energy_exp);
                HQval_Xtr->Fill(ex_energy_exp_xtr);
                HQval_Xtr_recalc->Fill(ex_energy_exp);
 
@@ -689,8 +683,6 @@ void plotFit_full_noIC(std::string fileFolder = "data_160_160/")
                   double Qdep = kine_2b(m_O16, m_a, m_b, m_B, iEb, angle * TMath::DegToRad(), (*EFitVec)[index]);
                   QvsEb->Fill(Qdep, iEb);
                }
-
-	       
 
                // HQval->Fill(Ex);
             }
