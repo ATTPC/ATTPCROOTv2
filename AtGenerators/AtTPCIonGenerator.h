@@ -25,7 +25,7 @@ protected:
    Int_t fMult;            //< Multiplicity per event
    Double_t fPx, fPy, fPz; //< Momentum components [GeV] per nucleon
 
-   Double32_t fR, fz, fOffset; //< beam Spot radius [cm], z source, y source
+   Double32_t fR, fz, fOffsetX, fOffsetY; //< beam Spot radius [cm], z source, y source, x source
    Double_t fVx, fVy, fVz;     //< Vertex coordinates [cm]
 
    FairIon *fIon; //< Pointer to the FairIon to be generated
@@ -78,7 +78,7 @@ public:
    void SetExcitationEnergy(Double_t eExc);
    void SetMass(Double_t mass);
 
-   void SetSpotRadius(Double32_t r = 0, Double32_t z = 0, Double32_t off = 0);
+   void SetSpotRadius(Double32_t r = 0, Double32_t z = 0, Double32_t offx = 0,  Double32_t offy = 0);
 
    void SetDoReaction(Bool_t doReact) { fDoReact = doReact; }
 

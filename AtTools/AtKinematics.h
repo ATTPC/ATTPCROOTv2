@@ -8,8 +8,13 @@
 #ifndef ATKINEMATICS_H
 #define ATKINEMATICS_H
 
+#include <Math/Functor.h>
+#include <Math/Minimizer.h>
+#include <Math/Vector3D.h>
 #include <Rtypes.h> // for Double_t, THashConsistencyHolder, Int_t, ClassDef
 
+#include "TMath.h"
+#include "TMatrixD.h"
 #include "TObject.h" // for TObject
 
 #include <tuple> // for tuple
@@ -20,6 +25,23 @@ class TMemberInspector;
 namespace AtTools {
 
 class AtKinematics : public TObject {
+
+private:
+   Int_t fVerbosity;
+
+   Int_t fNumParticles{3};              //
+   Int_t fNumIterations{100};           //! Number of iterations for the minimizer
+   Double_t fWeigth{0.05};              //! Minimization weighting
+   Double_t fTargetMass{2.01410177812}; //! Mass of target for Kinematical fitting
+
+   std::vector<std::unique_ptr<TMatrixD>> fAlphaP; //! alpha row for n particles;
+   void ResetMatrices();
+   void PrintMatrices();
+   TMatrixD CalculateCovariance();
+   TMatrixD CalculateD(TMatrixD *alpha);
+   TMatrixD Calculated(TMatrixD *alpha);
+
+   ClassDef(AtKinematics, 1);
 
 public:
    AtKinematics();
@@ -34,10 +56,10 @@ public:
    TwoBodyEx(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t thetalab, Double_t K_eject);
    Double_t omega(Double_t x, Double_t y, Double_t z);
 
-private:
-   Int_t fVerbosity;
-
-   ClassDef(AtKinematics, 1);
+   std::vector<double> KinematicalFit(std::vector<double> &parameters);
+   inline void SetKFIterations(Int_t iter) { fNumIterations = iter; }
+   inline void SetKFWeighting(Double_t weight) { fWeigth = weight; }
+   inline void SetKFTargetMass(Double_t mass) { fTargetMass = mass; }
 };
 
 } // namespace AtTools

@@ -34,7 +34,7 @@ std::tuple<double,double> kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_
    return std::make_tuple(Ex,theta_cm);
 }
 
-void plotFit_e20009(std::string fileFolder = "data_344_367/")
+void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
 {
 
    std::ofstream outputFileEvents("list_of_events.txt");
@@ -60,8 +60,6 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
    gDWBA2->SetMarkerSize(1.5);
    gDWBA2->SetLineWidth(3);
    gDWBA2->SetLineColor(kRed);
-  
-   
 
    std::ifstream dwbaFile("kinematics_e20009/DWBA.Xsec.txt");
 
@@ -69,20 +67,19 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
    //Read header and zero degree
    for(auto i=0;i<5;++i)
      std::getline(dwbaFile, linebuff);
-   
-   while (!dwbaFile.eof()) {       
-         std::getline(dwbaFile, linebuff);
-	 std::istringstream iss(linebuff);
-	 iss >> angle >> sigmaDWBA0 >> sigmaDWBA1 >> sigmaDWBA2;
-	 gDWBA0->SetPoint(gDWBA0->GetN(),angle,sigmaDWBA0);
 
-	 gDWBA1->SetPoint(gDWBA1->GetN(),angle,sigmaDWBA1);
-	 gDWBA2->SetPoint(gDWBA2->GetN(),angle,sigmaDWBA2);
-	 
+   while (!dwbaFile.eof()) {
+      std::getline(dwbaFile, linebuff);
+      std::istringstream iss(linebuff);
+      iss >> angle >> sigmaDWBA0 >> sigmaDWBA1 >> sigmaDWBA2;
+      gDWBA0->SetPoint(gDWBA0->GetN(), angle, sigmaDWBA0);
+
+      gDWBA1->SetPoint(gDWBA1->GetN(), angle, sigmaDWBA1);
+      gDWBA2->SetPoint(gDWBA2->GetN(), angle, sigmaDWBA2);
    }
-	 
+
    dwbaFile.close();
-   
+
    // Data histograms
    TH2F *Ang_Ener = new TH2F("Ang_Ener", "Ang_Ener", 720, 0, 179, 1000, 0, 100.0);
    TH1F *HQval = new TH1F("HQval", "HQval", 600, -5, 55);
@@ -359,9 +356,6 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
    gsigmaCM3->SetMarkerSize(1.5);
    gsigmaCM3->SetMarkerColor(kGreen);
 
-
-  
-
    // Find every valid file
    std::string command = "find ./" + fileFolder + " -maxdepth 1 -printf \"%f\n\" >test.txt";
    std::system(command.c_str()); // execute the UNIX command "ls -l
@@ -506,8 +500,7 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
          outputTree->SetBranchAddress("fitConvergedVec", &fitConvergedVec);
 
          ++fileCnt;
-	 
-	 
+
          Int_t nentries = (Int_t)outputTree->GetEntries();
          for (Int_t i = 0; i < nentries; i++) {
 
@@ -553,8 +546,7 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
                }
                //}
 
-               
-	           if (ICA < 500 || ICA > 900)
+              if (ICA < 500 || ICA > 900)
 	            continue;
 
                for (ICIndex = 0; ICIndex < ICVec->size(); ++ICIndex) {
@@ -578,8 +570,8 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
 
                  std::cout<<"\n";*/
 
-	    //Get the track with maximum angle 
-	    auto itMax =
+            // Get the track with maximum angle
+            auto itMax =
                std::max_element(APRAVec->begin(), APRAVec->end(), [](const auto &a, const auto &b) { return b > a; });
             Int_t maxAIndex = std::distance(APRAVec->begin(), itMax);
             ;
@@ -647,13 +639,13 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
                // if((*trackPointsVec)[index]<20)
                // continue;
 
-               if (evMult != 3)
-                  continue;
+               // if (evMult != 3)
+               //  continue;
 
                // if ((*POCAXtrVec)[index] > 2000.0)
                // continue;
 
-               if ((*ziniFitVec)[index] < 0.0 || (*ziniFitVec)[index] > 40.0)
+               if ((*ziniFitVec)[index] < 0.0 || (*ziniFitVec)[index] > 80.0)
                   continue;
 
                // if((*AFitVec)[index]<50 || (*AFitVec)[index]>70)
@@ -700,8 +692,8 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
                // if(QcorrZ<7.0 || QcorrZ>8.0)
                // continue;
 
-               if (QcorrZ < 5.5 || QcorrZ > 6.8)
-                  continue;
+               // if (QcorrZ < 5.5 || QcorrZ > 6.8)
+               // continue;
 
                // Chi2
                fChi2H->Fill((*fChi2Vec)[index]);
@@ -714,23 +706,18 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
                Ang_Ener->Fill(angle, (*EFitVec)[index]);
                Ang_Ener_Xtr->Fill((angle), (*EFitXtrVec)[index]);
 
-               
-	       // List of events
+          // List of events
                outputFileEvents << dataFile << " - Ev. : " << i << " - PRA.Mult : " << praMult
 		                << " - Ev.Mult : " << evMult
                                 << " - Max.PRA : " << (*APRAVec)[index]
                                 << " - Max.Fit : " << (*AFitVec)[index]
 				<< " - Q.val : " << ex_energy_exp
                                 << " - Track points : " << (*trackPointsVec)[index] << "\n";
-	       
-	       
-	       HQval->Fill(ex_energy_exp);
+
+          HQval->Fill(ex_energy_exp);
                HQval_Xtr->Fill(ex_energy_exp_xtr);
                HQval_Xtr_recalc->Fill(ex_energy_exp);
 
-               
-
-	       
                /*for (auto iCorr = 0; iCorr < 10; ++iCorr) {
                   mFactor = 1.0 + 0.1 * iCorr - 0.5;
                   Double_t QcorrZL =
@@ -792,29 +779,25 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
 		 ++sigmaLab0[index];
 		 Int_t indexCM = theta_cm;
 	         ++sigmaCM0[indexCM];
+          }
 
-		}	   
-
-
-	       if(QcorrZ>2.5 && QcorrZ<5.0){
+          if(QcorrZ>2.5 && QcorrZ<5.0){
 
 		 Int_t index = angle;
 		 ++sigmaLab1[index];
 		 Int_t indexCM = theta_cm;
 	         ++sigmaCM1[indexCM];
+          }
 
-		}	   
-
-	       if(QcorrZ>5.5 && QcorrZ<7.0){
+          if(QcorrZ>5.5 && QcorrZ<7.0){
 
 		 Int_t index = angle;
 		 ++sigmaLab2[index];
 		 Int_t indexCM = theta_cm;
 	         ++sigmaCM2[indexCM];
+          }
 
-		}	   
-
-	       if(QcorrZ>7.0 && QcorrZ<8.5){
+          if(QcorrZ>7.0 && QcorrZ<8.5){
 
 		 Int_t index = angle;
 		 ++sigmaLab3[index];
@@ -860,13 +843,25 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
                   QvsEb->Fill(Qdep, iEb);
                }
 
-	       
-
                // HQval->Fill(Ex);
             }
          }
       }
    }
+
+   // Output file for cross sections
+   std::ofstream outputXSFile("diff_xs.txt");
+
+   outputXSFile << " Theta CM "
+                << " - "
+                << " gs "
+                << " - "
+                << " first "
+                << " - "
+                << " second "
+                << " - "
+                << " third "
+                << "\n";
 
    //Diff xs graph
    Double_t scale0 = 0.1;
@@ -897,6 +892,9 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
       gsigmaLab3->SetPointError(ig, 0, TMath::Sqrt(sigmaLab3[ig]));
       gsigmaCM3->SetPoint(ig, ig, sigmaCM3[ig] * scale3 / TMath::Sin(TMath::DegToRad() * ig));
       gsigmaCM3->SetPointError(ig, 0, TMath::Sqrt(sigmaCM3[ig]) * scale3 / TMath::Sin(TMath::DegToRad() * ig));
+
+      outputXSFile << ig << " " << sigmaCM0[ig] << " " << sigmaCM1[ig] << "  " << sigmaCM2[ig] << " " << sigmaCM3[ig]
+                   << "\n";
    }
 
    // Merging

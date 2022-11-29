@@ -10,7 +10,7 @@ void run_digi_attpc()
    TString dir = getenv("VMCWORKDIR");
 
    // TString mcFile = "./data/sim_attpc.root";
-   TString mcFile = inOutDir + "attpcsim.root";
+   TString mcFile = inOutDir + "attpcsim_in.root";
 
    // Create the full parameter file paths
    TString digiParFile = dir + "/parameters/" + paramFile;
@@ -62,7 +62,7 @@ void run_digi_attpc()
 
    timer.Start();
    // fRun->Run(0, 20001);
-   fRun->Run(0, 1000);
+   fRun->Run(0, 100);
    timer.Stop();
 
    std::cout << std::endl << std::endl;
