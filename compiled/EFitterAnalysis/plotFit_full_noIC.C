@@ -241,12 +241,12 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
    Double_t m_a = 4.00260325415 * 931.49401;
    Double_t m_O16 = 15.99491461956 * 931.49401;
 
-   Double_t Ebeam_buff = 150.0; // 90.5;
+   Double_t Ebeam_buff = 99.0; // 90.5;
    Double_t m_b;
    Double_t m_B;
 
-   m_b = m_a;
-   m_B = m_O16;
+   m_b = m_d;
+   m_B = m_Be10;
 
    // Find every valid file
    std::string command = "find ./" + fileFolder + " -maxdepth 1 -printf \"%f\n\" >test.txt";
@@ -556,6 +556,11 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 
                if (index == 0 && AFitVec->size() > 1) {
                   hARecvsASca->Fill((*AFitVec)[0], (*AFitVec)[1]);
+
+                  // for(auto ia=0;ia<AFitVec->size();++ia){
+                  // std::cout<<" Angles "<<(*AFitVec)[ia]<<" - ";
+               }
+               //  std::cout<<"\n";
                }
 
                // Chi2
@@ -571,11 +576,11 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 
                // Excitation energy
                Double_t ex_energy_exp =
-                  kine_2b(m_O16, m_a, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(), (*EFitVec)[index]);
+                  kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(), (*EFitVec)[index]);
                Double_t ex_energy_exp_xtr =
-                  kine_2b(m_O16, m_a, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(), (*EFitXtrVec)[index]);
+                  kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(), (*EFitXtrVec)[index]);
 
-	       // List of events
+               // List of events
                outputFileEvents << dataFile << " - Event : " << i << " - PRA Multiplicity : " << praMult
                                 << " - Max angle PRA : " << (*APRAVec)[index]
                                 << " - Max Angle Fit : " << (*AFitVec)[index]
@@ -680,7 +685,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 
                // Excitation energy vs Beam energy
                for (auto iEb = 0; iEb < 300; ++iEb) {
-                  double Qdep = kine_2b(m_O16, m_a, m_b, m_B, iEb, angle * TMath::DegToRad(), (*EFitVec)[index]);
+                  double Qdep = kine_2b(m_Be10, m_d, m_b, m_B, iEb, angle * TMath::DegToRad(), (*EFitVec)[index]);
                   QvsEb->Fill(Qdep, iEb);
                }
 
