@@ -485,18 +485,19 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
 	   break;
 	}
 
-      } else if (thetaConv < 90 && thetaConv > 0) {
+} else if (thetaConv < 90 && thetaConv > 10) {
 
          switch (fExpNum) {
          case e20020: pdgCandFit.push_back(1000020040); break;
          case e20009: pdgCandFit.push_back(1000010020); break;
          }
 
-      } else if (thetaConv < 0) {
+      } else if (thetaConv < 10) {
 
-         // continue;
-         // pdgCandFit.push_back(1000040100);
+          switch (fExpNum) {
+           case e20009: pdgCandFit.push_back(1000040100);
          // pdgCandFit.push_back(1000040110);
+          }
       }
 
       try {
@@ -519,7 +520,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
             }
 
             Int_t atomicNumber = 0;
-            Int_t massNumber = 0;
+            Double_t mass = 0;
             Double_t M_Ener = 0.0;
 
             auto fIl = std::find_if(ionList->begin(), ionList->end(),
@@ -529,13 +530,13 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                int index = std::distance(ionList->begin(), fIl);
                std::cout << cBLUE << "  -  Ion info for : " << pdg << " found in " << index << cNORMAL << "\n";
                atomicNumber = ionList->at(index)._atomicNumber;
-               massNumber = ionList->at(index)._MassNumber;
-               M_Ener = massNumber * 931.49401 / 1000.0;
+               mass = ionList->at(index)._mass;
+               M_Ener = mass * 931.49401 / 1000.0;
             }
 
             // Kinematics from PRA
 
-            std::tuple<Double_t, Double_t> mom_ener = fKinematics->GetMomFromBrho(massNumber, atomicNumber, brho);
+            std::tuple<Double_t, Double_t> mom_ener = fKinematics->GetMomFromBrho(mass, atomicNumber, brho);
             EPRA = std::get<1>(mom_ener) * 1000.0;
             APRA = theta * TMath::RadToDeg();
             PhiPRA = phi * TMath::RadToDeg();
@@ -723,6 +724,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                      xiniFitXtr = pos_ext.X();
                      yiniFitXtr = pos_ext.Y();
                      ziniFitXtr = pos_ext.Z();
+
 
                      std::cout << cYELLOW << " Extrapolation: Total Momentum : " << mom_ext.Mag()
                                << " - Position : " << pos_ext.X() << "  " << pos_ext.Y() << "  " << pos_ext.Z()
@@ -1107,6 +1109,8 @@ void FitManager::ConstructTrack(const genfit::StateOnPlane *prevState, const gen
      massAMU = 12;
    else if(pdg == 1000080160)
      massAMU = 15.9949;
+   else if(pdg == 1000040100)
+     massAMU ==  10.0135347;
    else
      {
        std::cerr<<" FitManager::ConstructTrack - Error! PDG code not found. Exiting..."<<"\n";

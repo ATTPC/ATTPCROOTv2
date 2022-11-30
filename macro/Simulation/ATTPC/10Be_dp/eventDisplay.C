@@ -1,9 +1,9 @@
 void eventDisplay()
 {
    //-----User Settings:-----------------------------------------------
-   TString InputDataFile = "./data/attpcsim.root";
-   TString ParFile = "./data/attpcpar.root";
-   TString OutputDataFile = "./data/attpctest.root";
+   TString InputDataFile = "./data/run_sim_0_0/attpcsim.root";
+   TString ParFile = "./data/run_sim_0_0/attpcpar.root";
+   TString OutputDataFile = "./data/run_sim_0_0/attpctest.root";
 
    // -----   Reconstruction run   -------------------------------------------
 
