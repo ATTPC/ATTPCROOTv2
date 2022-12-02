@@ -484,7 +484,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
             }
 
             Int_t atomicNumber = 0;
-            Int_t massNumber = 0;
+            Double_t mass = 0;
             Double_t M_Ener = 0.0;
 
             auto fIl = std::find_if(ionList->begin(), ionList->end(),
@@ -494,13 +494,13 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
                int index = std::distance(ionList->begin(), fIl);
                std::cout << cBLUE << "  -  Ion info for : " << pdg << " found in " << index << cNORMAL << "\n";
                atomicNumber = ionList->at(index)._atomicNumber;
-               massNumber = ionList->at(index)._MassNumber;
-               M_Ener = massNumber * 931.49401 / 1000.0;
+               mass = ionList->at(index)._mass;
+               M_Ener = mass * 931.49401 / 1000.0;
             }
 
             // Kinematics from PRA
 
-            std::tuple<Double_t, Double_t> mom_ener = fKinematics->GetMomFromBrho(massNumber, atomicNumber, brho);
+            std::tuple<Double_t, Double_t> mom_ener = fKinematics->GetMomFromBrho(mass, atomicNumber, brho);
             EPRA = std::get<1>(mom_ener) * 1000.0;
             APRA = theta * TMath::RadToDeg();
             PhiPRA = phi * TMath::RadToDeg();

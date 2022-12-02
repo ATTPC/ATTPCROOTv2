@@ -47,10 +47,15 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 
    TH1F *AngCM = new TH1F("AngCM", "AngCM", 180, 0, 180);
 
+   TH1F *AngLabSim = new TH1F("AngLabSim", "AngLabSim", 180, 0, 180);
+   TH1F *AngCMSim = new TH1F("AngCMSim", "AngCMSim", 180, 0, 180);
+
    TH2F *Ang_Ener_Xtr = new TH2F("Ang_Ener_Xtr", "Ang_Ener_Xtr", 720, 0, 179, 1000, 0, 100.0);
    TH1F *HQval_Xtr = new TH1F("HQval_Xtr", "HQval_Xtr", 600, -5, 55);
    TH1F *HQCorr = new TH1F("HQCorr", "HQCorr", 600, -5, 55);
    TH1F *HQCorrArray[10];
+
+   TH2F *Ang_Ener_KF = new TH2F("Ang_Ener_KF", "Ang_Ener_KF", 720, 0, 179, 1000, 0, 100.0);
 
    TH1F *HQval_Xtr_recalc = new TH1F("HQval_Xtr_recalc", "HQval_Xtr_recalc", 1200, -5, 55);
    TH1F *HQval_Xtr_recalc_cutgs = new TH1F("HQval_Xtr_recalc_cutgs", "HQval_Xtr_recalc_cutgs", 1200, -5, 55);
@@ -492,7 +497,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 	      }
 	    meanDist/=xiniPRAVec->size();
 
-      std::cout<<" ----- Processing event "<<"\n";
+      //std::cout<<" ----- Processing event "<<"\n";
 
             for (auto index = 0; index < EFitVec->size(); ++index) {
 
@@ -570,9 +575,9 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
           ROOT::Math::XYZVector beamMom(0,0,TMath::Sqrt(evertex * evertex + 2.0 * evertex * m_B));
           Double_t beamEtot = evertex + m_B;
 
-          std::cout<<" Index "<<index<<"\n";
-          std::cout<<" Energy at vertex "<<evertex<<" - Momentum "<<beamMom.Z()<<"\n";
-          std::cout<<" Angle scatter "<<(*AFitVec)[index]<<"\n";
+          //std::cout<<" Index "<<index<<"\n";
+          //std::cout<<" Energy at vertex "<<evertex<<" - Momentum "<<beamMom.Z()<<"\n";
+          //std::cout<<" Angle scatter "<<(*AFitVec)[index]<<"\n";
 
                if (dataFile.find("sim") != std::string::npos) {
                   angle = (*AFitVec)[index];
@@ -619,6 +624,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
                   AtTools::AtKinematics kinematics;
                   auto fitParameters = kinematics.KinematicalFit(parameters);
 
+                  Ang_Ener_KF->Fill((*AFitVec)[scaIndex],fitParameters[7]-m_d);
+
                   for(auto fpar : fitParameters)
                     std::cout<<fpar<<" - ";
 
@@ -652,7 +659,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 				<< " - Q value       : " << ex_energy_exp
                                 << " - Track points : " << (*trackPointsVec)[index] << "\n";
 
-          HQval->Fill(ex_energy_exp);
+               HQval->Fill(ex_energy_exp);
                HQval_Xtr->Fill(ex_energy_exp_xtr);
                HQval_Xtr_recalc->Fill(ex_energy_exp);
 
@@ -759,6 +766,60 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
          }
       }
    }
+
+   //Check simulation acceptance
+   TClonesArray *pointArray = 0;
+   TString dir = getenv("VMCWORKDIR");
+   TString filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/data/run_sim_0_0/";
+   TString inputFileName = "attpcsim";
+   inputFileName = filePath + inputFileName + ".root";
+
+   std::cout<<" Simulation file name "<<inputFileName<<"\n";
+
+   TFile *filesim = new TFile(inputFileName, "READ");
+   TTree *tree = (TTree *)filesim->Get("cbmsim");
+   tree->SetBranchAddress("AtTpcPoint", &pointArray);
+   Int_t nEvents = tree->GetEntriesFast();
+
+  std::cout << " Number of events " << nEvents << "\n";
+
+  for (Int_t iEvent = 0; iEvent < nEvents; iEvent++) {
+     TString VolName;
+     tree->GetEvent(iEvent);
+     Int_t n = pointArray->GetEntries();
+     //std::cout << " Event Number : " << iEvent << " with " << n << " points." << std::endl;
+
+     Double_t beamVertex = 0.0;
+     Double_t beamEloss = 0.0;
+     Double_t scatterRange = 0.0;
+     Double_t scatterEloss = 0.0;
+     Double_t scatterAngle = 0.0;
+     Double_t scatterEnergy = 0.0;
+
+     for (Int_t i = 0; i < n; i++) {
+
+         auto point = (AtMCPoint *)pointArray->At(i);
+         auto VolName = point->GetVolName();
+         auto trackID = point->GetTrackID();
+         auto angle = point->GetAIni();
+         auto energy = point->GetEIni();
+         auto z = point->GetAtomicNum();
+         auto vertex = point->GetZ();
+
+         if (VolName == "drift_volume" && trackID==1)
+         {
+           //std::cout << " Volume Name : " << VolName << " - Track ID : " << trackID << " - Energy : " << energy << " - Angle : " << angle << " - Atomic Number : " << z << std::endl;
+           //std::cout << " Vertex "<<vertex<<"\n";
+           AngLabSim->Fill(angle);
+           auto [Qdep,thetacm] = kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(),energy);
+           //std::cout<<" Theta CM "<<thetacm<<"\n";
+           AngCMSim->Fill(thetacm);
+           break;
+         }
+
+     }
+
+  }
 
    // Merging
    if (kIsMerging)
@@ -1033,6 +1094,18 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 
    TCanvas *c8 = new TCanvas();
    QvsEb->Draw("zcol");
+
+   TCanvas *c9 = new TCanvas();
+   c9->Divide(2,2);
+   c9->Draw();
+   c9->cd(1);
+   AngLabSim->Draw();
+   c9->cd(2);
+   AngCMSim->Draw();
+   AngCM->SetLineColor(kRed);
+   AngCM->Draw("SAME");
+   c9->cd(3);
+   Ang_Ener_KF->Draw("zcol");
 
    /*TCanvas *c2 = new TCanvas();
    c2->Divide(2, 3);
