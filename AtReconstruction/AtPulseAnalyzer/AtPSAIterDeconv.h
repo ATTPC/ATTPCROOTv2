@@ -8,11 +8,9 @@
 
 #include <limits>
 #include <memory> // for make_unique, unique_ptr
+#include <string>
 
 class AtPad;
-class TBuffer;
-class TClass;
-class TMemberInspector;
 
 /**
  * @brief Modifies AtPSADeconv to make iterative corrections to the output current.
@@ -21,13 +19,13 @@ class TMemberInspector;
 class AtPSAIterDeconv : public AtPSADeconv {
 private:
    int fIterations{0}; //< Number of iterations
+   std::string fQName{"Qreco"}; //< Name of the augment for the charge from iterations
 
 public:
-   AtPSAIterDeconv();
    virtual HitVector AnalyzePad(AtPad *pad) override;
+   void RunPad(AtPad *pad);
    void SetIterations(int iterations) { fIterations = iterations; }
-
-   ClassDefOverride(AtPSAIterDeconv, 1)
+   void SetIterQName(std::string name) { fQName = name; }
 };
 
 #endif
