@@ -18,7 +18,7 @@ class AtPad;
  */
 class AtPSAIterDeconv : public AtPSADeconv {
 private:
-   int fIterations{0}; //< Number of iterations
+   int fIterations{0};          //< Number of iterations
    std::string fQName{"Qreco"}; //< Name of the augment for the charge from iterations
 
 public:
