@@ -6,8 +6,10 @@ Set(LIBRARY_NAME AtEventDisplay) # Change the library name and delete this comme
 set(SRCS
 # Add all the source files below this line. Those must have cc for their extension.
 AtEventManager.cxx
+AtEventManagerNew.cxx
 AtEventManagerProto.cxx
 AtEventDrawTask.cxx
+AtEventDrawTaskNew.cxx
 AtEventDrawTaskProto.cxx
 AtEventManagerS800.cxx
 AtEventDrawTaskS800.cxx
@@ -35,5 +37,6 @@ generate_target_and_root_library(${LIBRARY_NAME}
   )
 
 set_source_files_properties(AtEventDrawTask.cxx PROPERTIES COMPILE_FLAGS -Wno-shadow)
+set_source_files_properties(AtEventDrawTaskNew.cxx PROPERTIES COMPILE_FLAGS -Wno-shadow)
 set_source_files_properties(AtEventDrawTaskProto.cxx PROPERTIES COMPILE_FLAGS -Wno-shadow)
 set_source_files_properties(AtEventDrawTaskS800.cxx PROPERTIES COMPILE_FLAGS -Wno-shadow)
