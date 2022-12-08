@@ -6,14 +6,14 @@
 
 #include "AtEventDrawTaskNew.h"
 // IWYU pragma: no_include <ext/alloc_traits.h>
-#include "AtAuxPad.h"       // for AtAuxPad
-#include "AtEvent.h"        // for AtEvent, hitVector
+#include "AtAuxPad.h"          // for AtAuxPad
+#include "AtEvent.h"           // for AtEvent, hitVector
 #include "AtEventManagerNew.h" // for AtEventManager
-#include "AtFindVertex.h"   //for vertex
-#include "AtHit.h"          // for AtHit
-#include "AtHitCluster.h"   // for AtHitCluster
-#include "AtMap.h"          // for AtMap
-#include "AtPad.h"          // for AtPad
+#include "AtFindVertex.h"      //for vertex
+#include "AtHit.h"             // for AtHit
+#include "AtHitCluster.h"      // for AtHitCluster
+#include "AtMap.h"             // for AtMap
+#include "AtPad.h"             // for AtPad
 #include "AtPadReference.h"
 #include "AtPattern.h"
 #include "AtPatternEvent.h" // for AtPatternEvent
@@ -77,23 +77,13 @@ using namespace std;
 ClassImp(AtEventDrawTaskNew);
 
 AtEventDrawTaskNew::AtEventDrawTaskNew()
-   : fIs2DPlotRange(kFALSE), fUnpackHough(kFALSE), fEventArray(nullptr), fEventManager(nullptr), fRawevent(nullptr),
-     fDetmap(nullptr), fThreshold(0), fHitSet(nullptr),
-     fPadPlanePal(nullptr), fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium), fCvsPadPlane(nullptr),
-     fPadPlane(nullptr), fCvsPadWave(nullptr), fPadWave(nullptr),
-     fAtMapPtr(nullptr), fMinZ(0), fMaxZ(1344), fMinX(432), fMaxX(-432), fMultiHit(0),
-     fSaveTextData(false), fRawEventBranchName("AtRawEvent"), fEventBranchName("AtEventH"),
-     fCvsPID(nullptr),
-     fPID(nullptr), fCvsPID2(nullptr), fPID2(nullptr)
+   : fEventArray(nullptr), fEventManager(nullptr), fRawevent(nullptr), fDetmap(nullptr), fThreshold(0),
+     fHitSet(nullptr), fPadPlanePal(nullptr), fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium),
+     fCvsPadPlane(nullptr), fPadPlane(nullptr), fCvsPadWave(nullptr), fPadWave(nullptr), fAtMapPtr(nullptr),
+     fMultiHit(0), fRawEventBranchName("AtRawEvent"), fEventBranchName("AtEventH")
 {
 
    fIsRawData = kFALSE;
-
-   fIniHit = new AtHit();
-   fIniHitRansac = new AtHit();
-   fTrackNum = 0;
-
-   fMinTracksPerVertex = 1;
 
    fRGBAPalette = new TEveRGBAPalette(0, 4096);
 }
@@ -209,18 +199,17 @@ void AtEventDrawTaskNew::DrawHitPoints()
          continue;
       auto position = hit.GetPosition();
 
-         fHitSet->SetMarkerColor(fHitColor);
-         fHitSet->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.); // Convert into cm
-         fHitSet->SetPointId(new TNamed(Form("Hit %d", iHit), ""));
-         fPadPlane->Fill(position.X(), position.Y(), hit.GetCharge());
+      fHitSet->SetMarkerColor(fHitColor);
+      fHitSet->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.); // Convert into cm
+      fHitSet->SetPointId(new TNamed(Form("Hit %d", iHit), ""));
+      fPadPlane->Fill(position.X(), position.Y(), hit.GetCharge());
    }
 
    // Adding raw data points
-      gEve->AddElement(fHitSet);
+   gEve->AddElement(fHitSet);
 
    dumpEvent.close();
 }
-
 
 void AtEventDrawTaskNew::Reset()
 {
@@ -312,8 +301,9 @@ void AtEventDrawTaskNew::SelectPad(const char *rawevt)
          AtRawEvent *tRawEvent = nullptr;
          tRawEvent = dynamic_cast<AtRawEvent *>(gROOT->GetListOfSpecials()->FindObject(rawevt));
          if (tRawEvent == nullptr) {
-            std::cout << " = AtEventDrawTaskNew::SelectPad NULL pointer for the AtRawEvent! Please select an event first "
-                      << std::endl;
+            std::cout
+               << " = AtEventDrawTaskNew::SelectPad NULL pointer for the AtRawEvent! Please select an event first "
+               << std::endl;
             return;
          }
 

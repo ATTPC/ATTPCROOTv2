@@ -6,8 +6,6 @@
 #include <Rtypes.h>
 #include <TEveEventManager.h>
 
-#include "S800Ana.h"
-
 #include <vector>
 
 class FairRootManager;
@@ -64,14 +62,6 @@ public:
 
    TCanvas *GetCvsPadPlane() { return fCvsPadPlane; }
    TCanvas *GetCvsPadWave() { return fPadWave; }
-
-   void SetTofObjCorr(std::vector<Double_t> vec) { fTofObjCorr = vec; }
-   void SetMTDCObjRange(std::vector<Double_t> vec) { fMTDCObjRange = vec; }
-   void SetMTDCXfRange(std::vector<Double_t> vec) { fMTDCXfRange = vec; }
-
-   std::vector<Double_t> fTofObjCorr;
-   std::vector<Double_t> fMTDCObjRange;
-   std::vector<Double_t> fMTDCXfRange;
 
    void RunEvent();
 

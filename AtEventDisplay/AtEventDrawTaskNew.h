@@ -13,11 +13,11 @@
 #include <TString.h> // for TString
 
 #include <memory>
-#include <vector>     // for vector
+#include <vector>        // for vector
 class AtEventManagerNew; // lines 17-17
-class AtHit;          // lines 18-18
-class AtMap;          // lines 24-24
-class AtRawEvent;     // lines 22-22
+class AtHit;             // lines 18-18
+class AtMap;             // lines 24-24
+class AtRawEvent;        // lines 22-22
 class TBuffer;
 class TCanvas; // lines 30-30
 class TClass;
@@ -36,14 +36,9 @@ class TH3F;            // lines 42-42
 class TMemberInspector;
 class TPaletteAxis; // lines 43-43
 class TEveElement;
-class S800Calc;
 
 class AtEventDrawTaskNew : public FairTask {
 protected:
-   Bool_t fIs2DPlotRange;
-   Bool_t fUnpackHough;
-   static const Int_t fNumPads = 1000; // Maximum number of pads to draw for DrawAllPads option
-
    TString fRawEventBranchName;
    TString fEventBranchName;
 
@@ -71,55 +66,13 @@ protected:
    TCanvas *fCvsPadWave;
    TH1I *fPadWave;
 
-   TCanvas *fCvsMC_XY{};
-   TGraph *fMC_XY{};
-   TGraph *fMC_XY_exp{};
-   TGraph *fMC_XY_int{};
-   TGraph *fMC_XY_back{};
-   TCanvas *fCvsMC_Z{};
-   TGraph *fMC_ZX{};
-   TGraph *fMC_ZX_int{};
-   TGraph *fMC_ZX_back{};
-   TGraph *fMC_ZY{};
-   TGraph *fMC_ZY_int{};
-   TGraph *fMC_ZY_back{};
-
-   Int_t fMinZ;
-   Int_t fMaxZ;
-   Int_t fMinX;
-   Int_t fMaxX;
-
    Int_t fMultiHit{10};
-   Bool_t fSaveTextData;
-
    Bool_t fIsRawData;
-   Bool_t fDrawVertexFromLines{false};
-
-   AtHit const *fIniHit;
-   AtHit const *fIniHitRansac;
 
    // std::vector<TEveLine*> fLineArray;
    std::vector<std::unique_ptr<TEveLine>> fPatternLines;
 
-   Int_t fTrackNum;
-
-   Int_t fMinTracksPerVertex;
-   /*
-      std::vector<std::unique_ptr<TEvePointSet>> fHitSetTFHC;  // for TrackFinderHC
-      std::vector<std::unique_ptr<TEveBoxSet>> fHitClusterSet; // Track clusterization
-      std::vector<std::unique_ptr<TEveLine>> fHitLine;         // Track line
-   */
-   std::vector<TEvePointSet *> fHitSetTFHC;  // for TrackFinderHC
-   std::vector<TEveBoxSet *> fHitClusterSet; // Track clusterization
-   std::vector<TEveElement *> fHitLine;      // Track line
-   std::vector<TEvePointSet *> fVertex;      // Vertex line
-
    TEveRGBAPalette *fRGBAPalette;
-
-   TCanvas *fCvsPID;
-   TH2F *fPID;
-   TCanvas *fCvsPID2;
-   TH2F *fPID2;
 
 public:
    AtEventDrawTaskNew();
@@ -137,20 +90,11 @@ public:
    void SetHitAttributes(Color_t, Size_t, Style_t);
    void SetRawEventBranch(TString branchName);
    void SetEventBranch(TString branchName);
-   void SetMinTracksPerVertex(Int_t val)
-   {
-      fMinTracksPerVertex = val;
-   } // fVertexMod=0 one track vertex , fVertexMod=1 multi trakcs vertex
    static void SelectPad(const char *rawevt);
    void DrawWave(Int_t PadNum);
    void SetMultiHit(Int_t hitMax);
 
 private:
-   // S800Ana fS800Ana;
-   std::vector<Double_t> fTofObjCorr;
-   std::vector<Double_t> fMTDCObjRange;
-   std::vector<Double_t> fMTDCXfRange;
-
    void DrawPadPlane();
    void DrawPadWave();
 

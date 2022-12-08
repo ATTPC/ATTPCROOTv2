@@ -40,9 +40,6 @@
 #include <TVirtualPad.h>
 #include <TVirtualX.h>
 
-#include "S800Ana.h"
-#include "S800Calc.h"
-
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
 constexpr auto cNORMAL = "\033[0m";
@@ -68,9 +65,7 @@ AtEventManagerNew *AtEventManagerNew::Instance()
 AtEventManagerNew::AtEventManagerNew()
    : TEveEventManager("AtEventManager", ""), fRootManager(FairRootManager::Instance()), fRunAna(FairRunAna::Instance()),
      fEntry(0), fEvent(nullptr), fCurrentEvent(nullptr), f3DThresDisplay(nullptr), fCvsPadPlane(nullptr),
-     fPadWave(nullptr),
-     kToggleData(false), fTofObjCorr(0), fMTDCObjRange(0), fMTDCXfRange(0),
-     cArray(nullptr), fEntries(0)
+     fPadWave(nullptr), kToggleData(false), cArray(nullptr), fEntries(0)
 
 {
    fInstance = this;
@@ -321,7 +316,6 @@ void AtEventManagerNew::make_gui()
 
    auto *hf = new TGVerticalFrame(frmMain);
    {
-
    }
 
    auto *hf_2 = new TGHorizontalFrame(frmMain);
