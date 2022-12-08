@@ -69,9 +69,7 @@ AtEventManagerNew::AtEventManagerNew()
    : TEveEventManager("AtEventManager", ""), fRootManager(FairRootManager::Instance()), fRunAna(FairRunAna::Instance()),
      fEntry(0), fEvent(nullptr), fCurrentEvent(nullptr), f3DThresDisplay(nullptr), fCvsPadPlane(nullptr),
      fPadWave(nullptr),
-     drawallpad(nullptr), eraseQevent(nullptr), drawReconstruction(nullptr), saveASCIIevent(nullptr),
-     toggleCorr(nullptr), kDrawAllOn(false), kEraseQ(false), kDrawReconstruction(false), kDraw3DGeo(false),
-     kDraw3DHist(false), kToggleData(false), k3DThreshold(0), fTofObjCorr(0), fMTDCObjRange(0), fMTDCXfRange(0),
+     kToggleData(false), fTofObjCorr(0), fMTDCObjRange(0), fMTDCXfRange(0),
      cArray(nullptr), fEntries(0)
 
 {
@@ -90,7 +88,6 @@ AtEventManagerNew::InitRiemann(Int_t option, Int_t level, Int_t nNodes)
 
 void AtEventManagerNew::Init(Int_t option, Int_t level, Int_t nNodes)
 {
-
    gStyle->SetOptTitle(0);
    // gStyle->SetCanvasPreferGL(kTRUE);
    gStyle->SetPalette(55);
@@ -125,7 +122,6 @@ void AtEventManagerNew::Init(Int_t option, Int_t level, Int_t nNodes)
    pack->SetShowTitleBar(kFALSE);
 
    pack->NewSlot()->MakeCurrent();
-   // if(kDraw3DGeo){
    TEveViewer *view3D = gEve->SpawnNewViewer("3D View", "");
    view3D->AddScene(gEve->GetGlobalScene());
    view3D->AddScene(gEve->GetEventScene());
@@ -157,8 +153,8 @@ void AtEventManagerNew::Init(Int_t option, Int_t level, Int_t nNodes)
    fPadAll = ecvs2->GetCanvas();*/
 
    fRunAna->Init();
-
-   //FillPIDFull(); // plot the Full PID at the beginning of the visualiztion
+   TChain *chain = FairRootManager::Instance()->GetInChain();
+   fEntries = chain->GetEntriesFast();
 
    if (gGeoManager) {
       TGeoNode *geoNode = gGeoManager->GetTopNode();
@@ -230,10 +226,7 @@ void AtEventManagerNew::NextEvent()
          break;
       }
       fRootManager->ReadEvent(fEntry);
-      cArray = dynamic_cast<TClonesArray *>(fRootManager->GetObject("AtEventH"));
-      // cArray = dynamic_cast<TObject *>(fRootManager->GetObject("AtEventH"));
-      cevent = dynamic_cast<AtEvent *>(cArray->At(0));
-      gated = cevent->IsInGate();
+      gated = kTRUE;
    }
 
    std::cout << " Event number : " << fEntry << std::endl;
@@ -254,10 +247,7 @@ void AtEventManagerNew::PrevEvent()
          break;
       }
       fRootManager->ReadEvent(fEntry);
-      cArray = dynamic_cast<TClonesArray *>(fRootManager->GetObject("AtEventH"));
-      // cArray = dynamic_cast<TObject *>(fRootManager->GetObject("AtEventH"));
-      cevent = dynamic_cast<AtEvent *>(cArray->At(0));
-      gated = cevent->IsInGate();
+      gated = kTRUE;
    }
 
    std::cout << " Event number : " << fEntry << std::endl;
@@ -319,7 +309,6 @@ void AtEventManagerNew::RunEvent()
 void AtEventManagerNew::make_gui()
 {
    // Create minimal GUI for event navigation.
-
    TChain *chain = FairRootManager::Instance()->GetInChain();
    Int_t Entries = chain->GetEntriesFast();
 
@@ -333,49 +322,6 @@ void AtEventManagerNew::make_gui()
    auto *hf = new TGVerticalFrame(frmMain);
    {
 
-      // TString icondir( Form("%s/icons/", gSystem->Getenv("VMCWORKDIR")) );
-      //  TGPictureButton* b = 0;
-
-      // EvNavHandler    *fh = new EvNavHandler;
-      // AtEventManagerNew *fh = new AtEventManagerNew; //Wrong!! Another instance produces different events
-
-      drawallpad = new TGTextButton(hf, "&Enable Draw All Pads");
-      drawallpad->SetToolTipText(
-         "Press to Enable/Disble drawing of all pads signal\n (Display on AtTPC Pad Plane Raw Signals tab) ", 400);
-      drawallpad->Connect("Clicked()", "AtEventManagerNew", fInstance, "ChangeDrawAllPads()");
-      hf->AddFrame(drawallpad, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
-
-      eraseQevent = new TGTextButton(hf, "&Erase Q Event Pad");
-      eraseQevent->SetToolTipText("Press to erase Event Q histogram upon calling the next event", 400);
-      eraseQevent->Connect("Clicked()", "AtEventManagerNew", fInstance, "EraseQEvent()");
-      hf->AddFrame(eraseQevent, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
-
-      drawReconstruction = new TGTextButton(hf, "&Visualize Reconstruction");
-      drawReconstruction->SetToolTipText("Press to enable Reconstruction visualization", 400);
-      drawReconstruction->Connect("Clicked()", "AtEventManagerNew", fInstance, "EnableDrawReconstruction()");
-      hf->AddFrame(drawReconstruction, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
-
-      saveASCIIevent = new TGTextButton(hf, "&Save event as text file");
-      saveASCIIevent->SetToolTipText("Dump the waveform of each hit into a text file", 400);
-      saveASCIIevent->Connect("Clicked()", "AtEventManagerNew", fInstance, "SaveASCIIEvent()");
-      hf->AddFrame(saveASCIIevent, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
-
-      toggleCorr = new TGTextButton(hf, "&Toggle Corrected Data");
-      toggleCorr->SetToolTipText("Press to toggle between data corrected by Lorentz Angle ", 400);
-      toggleCorr->Connect("Clicked()", "AtEventManagerNew", fInstance, "ToggleCorrData()");
-      hf->AddFrame(toggleCorr, new TGLayoutHints(kLHintsCenterX, 5, 5, 3, 4));
-
-      /*  b = new TGPictureButton(hf, gClient->GetPicture(icondir+"arrow_left.gif"));
-        hf->AddFrame(b);
-        b->Connect("Clicked()", "AtEventManagerNew", fInstance, "PrevEvent()");
-
-        b = new TGPictureButton(hf, gClient->GetPicture(icondir+"arrow_right.gif"));
-        hf->AddFrame(b);
-        b->Connect("Clicked()", "AtEventManagerNew", fInstance, "NextEvent()");*/
-
-      // b = new TGPictureButton(hf, gClient->GetPicture(icondir+"goto.gif"));
-      // hf->AddFrame(b);
-      // b->Connect("Clicked()", "AtEventManagerNew", fInstance, "GotoEvent(Int_t)");
    }
 
    auto *hf_2 = new TGHorizontalFrame(frmMain);
@@ -397,7 +343,6 @@ void AtEventManagerNew::make_gui()
    frmMain->AddFrame(hf_2);
 
    TString Infile = "Input file : ";
-   //  TFile* file =FairRunAna::Instance()->GetInputFile();
    TFile *file = FairRootManager::Instance()->GetInChain()->GetFile();
    Infile += file->GetName();
    auto *TFName = new TGLabel(frmMain, Infile.Data());
@@ -424,92 +369,10 @@ void AtEventManagerNew::make_gui()
    fCurrentEvent->Connect("ValueSet(Long_t)", "AtEventManagerNew", fInstance, "SelectEvent()");
    frmMain->AddFrame(f);
 
-   auto *fThres = new TGHorizontalFrame(frmMain);
-   auto *lThres = new TGLabel(fThres, "3D threshold:");
-   fThres->AddFrame(lThres, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
-   f3DThresDisplay = new TGNumberEntry(fThres, 0., 6, -1, TGNumberFormat::kNESInteger, TGNumberFormat::kNEANonNegative,
-                                       TGNumberFormat::kNELLimitMinMax, 0, Entries);
-   fThres->AddFrame(f3DThresDisplay, new TGLayoutHints(kLHintsLeft, 1, 1, 1, 1));
-   f3DThresDisplay->Connect("ValueSet(Long_t)", "AtEventManagerNew", fInstance, "Select3DThres()");
-   frmMain->AddFrame(fThres);
-
    frmMain->MapSubwindows();
    frmMain->Resize();
    frmMain->MapWindow();
 
    browser->StopEmbedding();
    browser->SetTabTitle("AtTPC Event Control", 0);
-}
-
-void AtEventManagerNew::ChangeDrawAllPads()
-{
-   drawallpad->SetState(kButtonDown);
-   if (!kDrawAllOn) {
-      drawallpad->SetText("&Disable Draw All Pads");
-      kDrawAllOn = kTRUE;
-   } else {
-      drawallpad->SetText("&Enable Draw All Pads");
-      kDrawAllOn = kFALSE;
-   }
-   drawallpad->SetState(kButtonUp);
-}
-
-void AtEventManagerNew::EnableDrawReconstruction()
-{
-
-   drawReconstruction->SetState(kButtonDown);
-   if (!kDrawReconstruction) {
-      drawReconstruction->SetText("&Disable Vis. Recons.");
-      kDrawReconstruction = kTRUE;
-   } else {
-      drawReconstruction->SetText("&Visualize Reconstruction");
-      kDrawReconstruction = kFALSE;
-   }
-   drawReconstruction->SetState(kButtonUp);
-}
-
-void AtEventManagerNew::EraseQEvent()
-{
-
-   kEraseQ = kTRUE;
-}
-
-void AtEventManagerNew::Draw3DGeo()
-{
-   kDraw3DGeo = kTRUE;
-}
-
-void AtEventManagerNew::Draw3DHist()
-{
-   kDraw3DHist = kTRUE;
-}
-
-void AtEventManagerNew::Select3DThres()
-{
-
-   k3DThreshold = f3DThresDisplay->GetIntNumber();
-}
-
-void AtEventManagerNew::SaveASCIIEvent()
-{
-
-   Int_t event = fEntry;
-   TFile *file = FairRootManager::Instance()->GetInChain()->GetFile();
-   std::string file_name = file->GetName();
-   std::string cmd = "mv event.dat event_" + std::to_string(event) + ".dat";
-   gSystem->Exec(cmd.c_str());
-}
-
-void AtEventManagerNew::ToggleCorrData()
-{
-
-   toggleCorr->SetState(kButtonDown);
-   if (!kToggleData) {
-      toggleCorr->SetText("&Toggle Raw Data");
-      kToggleData = kTRUE;
-   } else {
-      toggleCorr->SetText("&Toggle Corrected Data");
-      kToggleData = kFALSE;
-   }
-   toggleCorr->SetState(kButtonUp);
 }

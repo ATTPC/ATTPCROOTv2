@@ -37,19 +37,7 @@ private:
    TCanvas *fCvsPadPlane;
    TCanvas *fPadWave;
 
-   TGTextButton *drawallpad;
-   TGTextButton *eraseQevent;
-   TGTextButton *drawReconstruction;
-   TGTextButton *saveASCIIevent;
-   TGTextButton *toggleCorr;
-
-   Bool_t kDrawAllOn;
-   Bool_t kEraseQ;
-   Bool_t kDrawReconstruction;
-   Bool_t kDraw3DGeo;
-   Bool_t kDraw3DHist;
    Bool_t kToggleData;
-   Float_t k3DThreshold;
 
    Int_t fEntries;
 
@@ -65,15 +53,8 @@ public:
    virtual void PrevEvent();            ///< *MENU*
    virtual void make_gui();
    virtual void SelectEvent();
-   virtual void Select3DThres();
 
    static void DrawWave();
-   void ChangeDrawAllPads();
-   void EnableDrawReconstruction();
-   void EraseQEvent();
-   void Draw3DGeo();
-   void Draw3DHist();
-   void ToggleCorrData();
 
    void AddTask(FairTask *task) { fRunAna->AddTask(task); }
    // virtual void InitRiemann(Int_t option=1, Int_t level=3, Int_t nNodes=10000);
@@ -88,25 +69,11 @@ public:
    void SetMTDCObjRange(std::vector<Double_t> vec) { fMTDCObjRange = vec; }
    void SetMTDCXfRange(std::vector<Double_t> vec) { fMTDCXfRange = vec; }
 
-   S800Ana fS800Ana;
    std::vector<Double_t> fTofObjCorr;
    std::vector<Double_t> fMTDCObjRange;
    std::vector<Double_t> fMTDCXfRange;
 
-   Bool_t GetDrawAllPad() { return kDrawAllOn; }
-   Bool_t GetDrawReconstruction() { return kDrawReconstruction; }
-   Bool_t GetEraseQEvent()
-   {
-      Bool_t EraseBuff = kEraseQ;
-      kEraseQ = kFALSE;
-      return EraseBuff;
-   }
-   Float_t Get3DThreshold() { return k3DThreshold; }
-   Bool_t GetToggleCorrData() { return kToggleData; }
-
    void RunEvent();
-
-   void SaveASCIIEvent();
 
    AtEventManagerNew(const AtEventManagerNew &);
    AtEventManagerNew &operator=(const AtEventManagerNew &);

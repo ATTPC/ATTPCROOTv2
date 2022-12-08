@@ -46,13 +46,9 @@ protected:
 
    TString fRawEventBranchName;
    TString fEventBranchName;
-   TString fCorrectedEventBranchName;
-   TString fPatternEventBranchName;
 
    TClonesArray *fEventArray;
-   TClonesArray *fCorrectedEventArray{};
    TClonesArray *fRawEventArray{};
-   TClonesArray *fPatternEventArray{};
 
    AtEventManagerNew *fEventManager;
    AtRawEvent *fRawevent;
@@ -63,17 +59,12 @@ protected:
    TString fMap;
 
    TEvePointSet *fHitSet;
-   TEvePointSet *fCorrectedHitSet;
-
-   TEveBoxSet *fhitBoxSet;
 
    TPaletteAxis *fPadPlanePal;
 
    Color_t fHitColor;
    Size_t fHitSize;
    Style_t fHitStyle;
-   Size_t fVertexSize;
-   Size_t fVertexStyle;
 
    TCanvas *fCvsPadPlane;
    TH2Poly *fPadPlane;
@@ -98,10 +89,8 @@ protected:
    Int_t fMinX;
    Int_t fMaxX;
 
-   Int_t f3DHitStyle;
    Int_t fMultiHit{10};
    Bool_t fSaveTextData;
-   Float_t f3DThreshold;
 
    Bool_t fIsRawData;
    Bool_t fDrawVertexFromLines{false};
@@ -145,15 +134,9 @@ public:
    // void Set2DPlotRange(Int_t uaIdx);
    void SetMap(std::shared_ptr<AtMap> map) { fDetmap = map; }
    void SetThreshold(Int_t val) { fThreshold = val; }
-   void UnpackHoughSpace() { fUnpackHough = kTRUE; }
    void SetHitAttributes(Color_t, Size_t, Style_t);
-   void Set3DHitStyleBar();
-   void Set3DHitStyleBox();
-   void SetSaveTextData();
    void SetRawEventBranch(TString branchName);
    void SetEventBranch(TString branchName);
-   void SetCorrectedEventBranch(TString branchName) { fCorrectedEventBranchName = branchName; }
-   void SetPatternEventBranch(TString branchName) { fPatternEventBranchName = branchName; }
    void SetMinTracksPerVertex(Int_t val)
    {
       fMinTracksPerVertex = val;
@@ -161,7 +144,6 @@ public:
    static void SelectPad(const char *rawevt);
    void DrawWave(Int_t PadNum);
    void SetMultiHit(Int_t hitMax);
-   void SetDrawVertexFromLines(bool val = true) { fDrawVertexFromLines = val; }
 
 private:
    // S800Ana fS800Ana;
@@ -179,7 +161,6 @@ private:
    // Functions for drawing hits
    void DrawHitPoints();
    void DrawRawHits();
-   void DrawRecoHits();
 
    EColor GetTrackColor(int i);
 
