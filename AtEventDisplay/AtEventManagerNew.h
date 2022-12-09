@@ -38,8 +38,11 @@ private:
    Bool_t kToggleData;
 
    Int_t fEntries;
+   Int_t fDrawTaskNum;
 
    static AtEventManagerNew *fInstance;
+
+   void MakeMainTab();
 
 public:
    static AtEventManagerNew *Instance();
@@ -52,9 +55,12 @@ public:
    virtual void make_gui();
    virtual void SelectEvent();
 
-   static void DrawWave();
+   static void SelectPad();
+   //static void SelectPad(Int_t drawNums);
+   static void DrawUpdates(Int_t drawNums, Int_t padNum);
 
    void AddTask(FairTask *task) { fRunAna->AddTask(task); }
+   void AddDrawTask(FairTask *task);
    // virtual void InitRiemann(Int_t option=1, Int_t level=3, Int_t nNodes=10000);
    virtual void Init(Int_t option = 1, Int_t level = 3, Int_t nNodes = 10000);
 

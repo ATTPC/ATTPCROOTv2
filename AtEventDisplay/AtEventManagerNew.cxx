@@ -2,9 +2,12 @@
 #include "AtEventManagerNew.h"
 
 #include "AtEvent.h" // for AtEvent
+#include "AtEventDrawTaskNew.h"
+#include "AtMap.h"
 
 #include <FairRootManager.h>
 #include <FairRunAna.h>
+#include <FairTask.h>
 
 #include <Rtypes.h>
 #include <TCanvas.h>
@@ -32,6 +35,7 @@
 #include <TH2.h>
 #include <TH2Poly.h>
 #include <TObject.h>
+#include <TROOT.h>           // for TROOT, gROOT
 #include <TRootBrowser.h>
 #include <TRootEmbeddedCanvas.h>
 #include <TString.h>
@@ -65,7 +69,7 @@ AtEventManagerNew *AtEventManagerNew::Instance()
 AtEventManagerNew::AtEventManagerNew()
    : TEveEventManager("AtEventManager", ""), fRootManager(FairRootManager::Instance()), fRunAna(FairRunAna::Instance()),
      fEntry(0), fEvent(nullptr), fCurrentEvent(nullptr), f3DThresDisplay(nullptr), fCvsPadPlane(nullptr),
-     fPadWave(nullptr), kToggleData(false), cArray(nullptr), fEntries(0)
+     fPadWave(nullptr), kToggleData(false), cArray(nullptr), fEntries(0), fDrawTaskNum(0)
 
 {
    fInstance = this;
@@ -80,6 +84,15 @@ AtEventManagerNew::InitRiemann(Int_t option, Int_t level, Int_t nNodes)
   fRunAna->Init();
   fEvent= gEve->AddEvent(this);
 }*/
+
+void AtEventManagerNew::AddDrawTask(FairTask *task) {
+   AddTask(task);
+   char name[20];
+   sprintf(name, "fDrawTask_%i", fDrawTaskNum);
+   task->SetName(name);
+   gROOT->GetListOfSpecials()->Add(task);
+   fDrawTaskNum++;
+}
 
 void AtEventManagerNew::Init(Int_t option, Int_t level, Int_t nNodes)
 {
@@ -105,47 +118,7 @@ void AtEventManagerNew::Init(Int_t option, Int_t level, Int_t nNodes)
 
    /**************************************************************************/
 
-   TEveWindowSlot *slot = nullptr;
-   TEveWindowPack *pack = nullptr;
-
-   // 3D
-   slot = TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
-   pack = slot->MakePack();
-   pack->SetElementName("AtTPC 3D/Pad plane views");
-   pack->SetHorizontal();
-   // pack->SetVertical();
-   pack->SetShowTitleBar(kFALSE);
-
-   pack->NewSlot()->MakeCurrent();
-   TEveViewer *view3D = gEve->SpawnNewViewer("3D View", "");
-   view3D->AddScene(gEve->GetGlobalScene());
-   view3D->AddScene(gEve->GetEventScene());
-   // }
-
-   slot = pack->NewSlot();
-   TEveWindowPack *pack2 = slot->MakePack();
-   pack2->SetShowTitleBar(kFALSE);
-   pack2->SetVertical();
-   slot = pack2->NewSlot();
-   slot->StartEmbedding();
-   fPadWave = new TCanvas("AtPad Canvas");
-   fPadWave->ToggleEditor();
-   slot->StopEmbedding();
-
-   // Pad Plane
-   slot = pack2->NewSlotWithWeight(1.5);
-   auto *ecvs = new TRootEmbeddedCanvas();
-   TEveWindowFrame *frame = slot->MakeFrame(ecvs);
-   frame->SetElementName("AtTPC Pad Plane");
-   pack->GetEveFrame()->SetShowTitleBar(kFALSE);
-   fCvsPadPlane = ecvs->GetCanvas();
-
-   // A test
-   /*slot = pack2->NewSlotWithWeight(1.5);
-   TRootEmbeddedCanvas* ecvs2 = new TRootEmbeddedCanvas();
-   TEveWindowFrame* frame2 = slot->MakeFrame(ecvs2);
-   frame2->SetElementName("AtTPC Pad Plane All");
-   fPadAll = ecvs2->GetCanvas();*/
+   MakeMainTab();
 
    fRunAna->Init();
    TChain *chain = FairRootManager::Instance()->GetInChain();
@@ -249,7 +222,8 @@ void AtEventManagerNew::PrevEvent()
    fRunAna->Run((Long64_t)fEntry);
 }
 
-void AtEventManagerNew::DrawWave()
+//void AtEventManagerNew::SelectPad(Int_t drawNums)
+void AtEventManagerNew::SelectPad()
 {
    int event = gPad->GetEvent();
    if (event != 11)
@@ -279,21 +253,29 @@ void AtEventManagerNew::DrawWave()
       Double_t y = gPad->PadtoY(upy);
       Int_t bin = h->FindBin(x, y);
       const char *bin_name = h->GetBinName(bin);
-      // std::cout<<" X : "<<x<<"  Y: "<<y<<std::endl;
-      // std::cout<<bin_name<<std::endl;
+      std::cout << " ==========================" << std::endl;
       std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
+
+      AtMap *tmap = nullptr;
+      tmap = dynamic_cast<AtMap *>(gROOT->GetListOfSpecials()->FindObject("fMap"));
+      Int_t tPadNum = tmap->BinToPad(bin);
+      std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
+      std::cout << " Electronic mapping: " << tmap->GetPadRef(tPadNum) << std::endl;
+      //std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
+      std::cout << " Raw Event Pad Num " << tPadNum << std::endl;
+      //DrawUpdates(drawNums, tPadNum);
+      DrawUpdates(1, tPadNum);
    }
 
-   /*int event = gPad->GetEvent();
-   if (event != 11) return; //may be comment this line
-   TObject *select = gPad->GetSelected();
-   if (!select) return;
-   if (select->InheritsFrom("TObject")) {
-       TH2PolyBin *h = (TH2PolyBin*)select;
-       gPad->GetCanvas()->FeedbackMode(kTRUE);
-       Int_t bin = h->GetBinNumber();
-       std::cout<<" Clicked on bin : "<<bin<<std::endl;
-   }*/
+}
+
+void AtEventManagerNew::DrawUpdates(Int_t drawNums, Int_t padNum) {
+   char name[20];
+   for(int i = 0; i < drawNums; i++) {
+      sprintf(name, "fDrawTask_%i", i);
+      AtEventDrawTaskNew *drawer = dynamic_cast<AtEventDrawTaskNew *>(gROOT->GetListOfSpecials()->FindObject(name));
+      drawer->DrawPad(i, padNum);
+   }
 }
 
 void AtEventManagerNew::RunEvent()
@@ -369,4 +351,45 @@ void AtEventManagerNew::make_gui()
 
    browser->StopEmbedding();
    browser->SetTabTitle("AtTPC Event Control", 0);
+}
+
+void AtEventManagerNew::MakeMainTab() {
+   TEveWindowSlot *slot = nullptr;
+   TEveWindowPack *pack = nullptr;
+
+   // 3D
+   slot = TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
+   pack = slot->MakePack();
+   pack->SetElementName("AtTPC 3D/Pad plane views");
+   pack->SetHorizontal();
+   // pack->SetVertical();
+   pack->SetShowTitleBar(kFALSE);
+
+   pack->NewSlot()->MakeCurrent();
+   TEveViewer *view3D = gEve->SpawnNewViewer("3D View", "");
+   view3D->AddScene(gEve->GetGlobalScene());
+   view3D->AddScene(gEve->GetEventScene());
+   // }
+
+   slot = pack->NewSlot();
+   TEveWindowPack *pack2 = slot->MakePack();
+   pack2->SetShowTitleBar(kFALSE);
+   pack2->SetVertical();
+   slot = pack2->NewSlot();
+   slot->StartEmbedding();
+   fPadWave = new TCanvas("AtPad Canvas");
+   fPadWave->ToggleEditor();
+   slot->StopEmbedding();
+
+   // Pad Plane
+   slot = pack2->NewSlotWithWeight(1.5);
+   auto *ecvs = new TRootEmbeddedCanvas();
+   TEveWindowFrame *frame = slot->MakeFrame(ecvs);
+   frame->SetElementName("AtTPC Pad Plane");
+   pack->GetEveFrame()->SetShowTitleBar(kFALSE);
+   fCvsPadPlane = ecvs->GetCanvas();
+   fCvsPadPlane->AddExec("ex", "AtEventManagerNew::SelectPad()");
+   //fCvsPadPlane->AddExec("ex", "AtEventManagerNew::SelectPad(fDrawTaskNum)");
+
+
 }

@@ -67,6 +67,7 @@ protected:
    TH1I *fPadWave;
 
    Int_t fMultiHit{10};
+   Int_t fTaskNumber;
    Bool_t fIsRawData;
 
    // std::vector<TEveLine*> fLineArray;
@@ -91,8 +92,9 @@ public:
    void SetRawEventBranch(TString branchName);
    void SetEventBranch(TString branchName);
    static void SelectPad(const char *rawevt);
-   void DrawWave(Int_t PadNum);
+   void DrawPad(Int_t TaskNum, Int_t PadNum);
    void SetMultiHit(Int_t hitMax);
+   void SetTaskNumber(Int_t taskNum) { fTaskNumber = taskNum; }
 
 private:
    void DrawPadPlane();
