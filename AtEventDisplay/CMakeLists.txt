@@ -3,18 +3,28 @@
 Set(LINKDEF AtEventDisplayLinkDef.h) # Change the linkdef name and delete this comment
 Set(LIBRARY_NAME AtEventDisplay) # Change the library name and delete this comment
 
+set(INCLUDE_DIRECTORIES
+# Add all the folders having header files you used in the code.
+${CMAKE_SOURCE_DIR}/AtEventDisplay/AtEventTab
+  )
+
 set(SRCS
 # Add all the source files below this line. Those must have cc for their extension.
+
+AtEventTab/AtEventTab.cxx
+AtEventTab/AtEventTabMain.cxx
+
 AtEventManager.cxx
 AtEventManagerNew.cxx
 AtEventManagerProto.cxx
 AtEventDrawTask.cxx
 AtEventDrawTaskNew.cxx
+AtEventTabTask.cxx
 AtEventDrawTaskProto.cxx
 AtEventManagerS800.cxx
 AtEventDrawTaskS800.cxx
 
-)
+  )
 
 Set(DEPENDENCIES
   FairRoot::Base
@@ -33,6 +43,7 @@ Set(DEPENDENCIES
 generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
+  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
   DEPS_PUBLIC ${DEPENDENCIES}
   )
 

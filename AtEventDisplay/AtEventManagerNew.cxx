@@ -1,8 +1,8 @@
-
 #include "AtEventManagerNew.h"
 
 #include "AtEvent.h" // for AtEvent
 #include "AtEventDrawTaskNew.h"
+#include "AtEventTabTask.h"
 #include "AtMap.h"
 
 #include <FairRootManager.h>
@@ -16,7 +16,6 @@
 #include <TEveBrowser.h>
 #include <TEveEventManager.h>
 #include <TEveGeoNode.h>
-#include <TEveManager.h>
 #include <TEveViewer.h>
 #include <TEveWindow.h>
 #include <TFile.h>
@@ -34,6 +33,7 @@
 #include <TGeoVolume.h>
 #include <TH2.h>
 #include <TH2Poly.h>
+#include <TList.h>
 #include <TObject.h>
 #include <TROOT.h>           // for TROOT, gROOT
 #include <TRootBrowser.h>
@@ -69,10 +69,11 @@ AtEventManagerNew *AtEventManagerNew::Instance()
 AtEventManagerNew::AtEventManagerNew()
    : TEveEventManager("AtEventManager", ""), fRootManager(FairRootManager::Instance()), fRunAna(FairRunAna::Instance()),
      fEntry(0), fEvent(nullptr), fCurrentEvent(nullptr), f3DThresDisplay(nullptr), fCvsPadPlane(nullptr),
-     fPadWave(nullptr), kToggleData(false), cArray(nullptr), fEntries(0), fDrawTaskNum(0)
+     fPadWave(nullptr), kToggleData(false), cArray(nullptr), fEntries(0), fTabTaskNum(0)
 
 {
    fInstance = this;
+   fTabList = new TList();
 }
 
 AtEventManagerNew::~AtEventManagerNew() = default;
@@ -85,13 +86,10 @@ AtEventManagerNew::InitRiemann(Int_t option, Int_t level, Int_t nNodes)
   fEvent= gEve->AddEvent(this);
 }*/
 
-void AtEventManagerNew::AddDrawTask(FairTask *task) {
+void AtEventManagerNew::AddTabTask(FairTask *task) {
    AddTask(task);
-   char name[20];
-   sprintf(name, "fDrawTask_%i", fDrawTaskNum);
-   task->SetName(name);
-   gROOT->GetListOfSpecials()->Add(task);
-   fDrawTaskNum++;
+   fTabList->Add(task);
+   fTabTaskNum++;
 }
 
 void AtEventManagerNew::Init(Int_t option, Int_t level, Int_t nNodes)
@@ -118,13 +116,15 @@ void AtEventManagerNew::Init(Int_t option, Int_t level, Int_t nNodes)
 
    /**************************************************************************/
 
-   MakeMainTab();
+   MakeTabs();
+
+   //MakeMainTab();
 
    fRunAna->Init();
    TChain *chain = FairRootManager::Instance()->GetInChain();
    fEntries = chain->GetEntriesFast();
 
-   if (gGeoManager) {
+   /*if (gGeoManager) {
       TGeoNode *geoNode = gGeoManager->GetTopNode();
       auto *topNode = new TEveGeoTopNode(gGeoManager, geoNode, option, level, nNodes);
       gEve->AddGlobalElement(topNode);
@@ -149,18 +149,18 @@ void AtEventManagerNew::Init(Int_t option, Int_t level, Int_t nNodes)
 
       gEve->FullRedraw3D(kTRUE);
       fEvent = gEve->AddEvent(this);
-   }
+   }*/
 
    /**************************************************************************/
 
-   gEve->GetBrowser()->GetTabRight()->SetTab(1);
+ //  gEve->GetBrowser()->GetTabRight()->SetTab(1);
    make_gui();
 
-   gEve->Redraw3D(kTRUE, kTRUE);
+//   gEve->Redraw3D(kTRUE, kTRUE);
 
-   TGLViewer *dfViewer = gEve->GetDefaultGLViewer(); // Is this doing anything?
-   dfViewer->CurrentCamera().RotateRad(-.7, 0.5);
-   dfViewer->DoDraw();
+//   TGLViewer *dfViewer = gEve->GetDefaultGLViewer(); // Is this doing anything?
+//   dfViewer->CurrentCamera().RotateRad(-.7, 0.5);
+//   dfViewer->DoDraw();
 
    // RunEvent();
    std::cout << "End of AtEventManagerNew" << std::endl;
@@ -258,24 +258,25 @@ void AtEventManagerNew::SelectPad()
 
       AtMap *tmap = nullptr;
       tmap = dynamic_cast<AtMap *>(gROOT->GetListOfSpecials()->FindObject("fMap"));
+      if(tmap == nullptr) {
+         std::cout << "AtMap not set! Is an AtEventTabTask with AtEventTabMain included?" << std::endl;
+      }
+      else {
       Int_t tPadNum = tmap->BinToPad(bin);
       std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
       std::cout << " Electronic mapping: " << tmap->GetPadRef(tPadNum) << std::endl;
       //std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
       std::cout << " Raw Event Pad Num " << tPadNum << std::endl;
       //DrawUpdates(drawNums, tPadNum);
-      DrawUpdates(1, tPadNum);
+      DrawUpdates(tPadNum);
+      }
    }
 
 }
 
-void AtEventManagerNew::DrawUpdates(Int_t drawNums, Int_t padNum) {
-   char name[20];
-   for(int i = 0; i < drawNums; i++) {
-      sprintf(name, "fDrawTask_%i", i);
-      AtEventDrawTaskNew *drawer = dynamic_cast<AtEventDrawTaskNew *>(gROOT->GetListOfSpecials()->FindObject(name));
-      drawer->DrawPad(i, padNum);
-   }
+void AtEventManagerNew::DrawUpdates(Int_t padNum) {
+   for(const auto&& tabTask: *(AtEventManagerNew::Instance()->GetTabList()))
+      dynamic_cast<AtEventTabTask *>(tabTask)->DrawPad(padNum);
 }
 
 void AtEventManagerNew::RunEvent()
@@ -297,8 +298,6 @@ void AtEventManagerNew::make_gui()
    frmMain->SetCleanup(kDeepCleanup);
 
    auto *hf = new TGVerticalFrame(frmMain);
-   {
-   }
 
    auto *hf_2 = new TGHorizontalFrame(frmMain);
    {
@@ -392,4 +391,18 @@ void AtEventManagerNew::MakeMainTab() {
    //fCvsPadPlane->AddExec("ex", "AtEventManagerNew::SelectPad(fDrawTaskNum)");
 
 
+}
+
+void AtEventManagerNew::MakeTabs() {
+   char name[20];
+   for(int i = 0; i < fTabTaskNum; i++) {
+      sprintf(name, "fTabTask_%i", fTabTaskNum);
+      auto *tabTask = dynamic_cast<AtEventTabTask *>(gROOT->GetListOfSpecials()->FindObject(name));
+      if(tabTask == nullptr) {
+         std::cout << "tabTask " << i << " is nullptr!" << std::endl;
+      }
+      else {
+         tabTask->MakeTab();
+      }
+   }
 }
