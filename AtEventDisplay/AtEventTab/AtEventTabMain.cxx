@@ -115,25 +115,8 @@ void AtEventTabMain::MakeTab()
       gEve->AddGlobalElement(topNode);
 
       Int_t transparency = 80;
-
-      // gGeoManager -> DefaultColors();
-      // gGeoManager -> GetVolume("field_cage_in")     -> SetVisibility(kFALSE); //active
       gGeoManager->GetVolume("drift_volume")->SetTransparency(transparency);
-      // gGeoManager -> GetVolume("cageSide")          -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("cageCorner")        -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("frontWindow")       -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("frontWindowFrame")  -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("frontWindowCradle") -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("bottomPlate")       -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("backWindowFrame")   -> SetTransparency(transparency);
-      ////gGeoManager -> GetVolume("backWindow")        -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("topFrame")          -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("ribmain")           -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("wirePlane")         -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("padPlane")          -> SetTransparency(transparency);
-
       gEve->FullRedraw3D(kTRUE);
-      fEventManager->SetfEvent();
    }
 
    gEve->GetBrowser()->GetTabRight()->SetTab(1);
@@ -262,11 +245,11 @@ void AtEventTabMain::DrawHitPoints()
 
 void AtEventTabMain::DrawWave(Int_t PadNum)
 {
-   std::cout << "checking fRawEvent" << std::endl;
+   //std::cout << "checking fRawEvent" << std::endl;
    if (fRawEvent == nullptr) {
       std::cout << "fRawEvent is NULL!" << std::endl;
    } else {
-      std::cout << "fRawEvent is not nullptr" << std::endl;
+      //std::cout << "fRawEvent is not nullptr" << std::endl;
       AtPad *fPad = fRawEvent->GetPad(PadNum);
       if (fPad == nullptr)
          return;

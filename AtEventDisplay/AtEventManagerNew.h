@@ -46,9 +46,6 @@ private:
 
    static AtEventManagerNew *fInstance;
 
-   void MakeTabs();
-   void MakeMainTab();
-
 public:
    static AtEventManagerNew *Instance();
    AtEventManagerNew();
@@ -60,21 +57,14 @@ public:
    virtual void make_gui();
    virtual void SelectEvent();
 
-   void SetfEvent() { fEvent = gEve->AddEvent(this); }
-
    static void SelectPad();
-   // static void SelectPad(Int_t drawNums);
    static void DrawUpdates(Int_t padNum);
 
    void AddTask(FairTask *task) { fRunAna->AddTask(task); }
    void AddTabTask(FairTask *task);
-   // virtual void InitRiemann(Int_t option=1, Int_t level=3, Int_t nNodes=10000);
-   virtual void Init(Int_t option = 1, Int_t level = 3, Int_t nNodes = 10000);
+   virtual void Init();
 
    virtual Int_t GetCurrentEvent() { return fEntry; }
-
-   TCanvas *GetCvsPadPlane() { return fCvsPadPlane; }
-   TCanvas *GetCvsPadWave() { return fPadWave; }
 
    TList *GetTabList() { return fTabList; }
 

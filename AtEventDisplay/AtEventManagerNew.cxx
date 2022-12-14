@@ -78,98 +78,39 @@ AtEventManagerNew::AtEventManagerNew()
 
 AtEventManagerNew::~AtEventManagerNew() = default;
 
-/*void
-AtEventManagerNew::InitRiemann(Int_t option, Int_t level, Int_t nNodes)
-{
-  TEveManager::Create();
-  fRunAna->Init();
-  fEvent= gEve->AddEvent(this);
-}*/
-
 void AtEventManagerNew::AddTabTask(FairTask *task) {
    AddTask(task);
    fTabList->Add(task);
    fTabTaskNum++;
 }
 
-void AtEventManagerNew::Init(Int_t option, Int_t level, Int_t nNodes)
+void AtEventManagerNew::Init()
 {
    gStyle->SetOptTitle(0);
-   // gStyle->SetCanvasPreferGL(kTRUE);
    gStyle->SetPalette(55);
    TEveManager::Create();
 
    Int_t dummy;
    UInt_t width, height;
    UInt_t widthMax = 1400, heightMax = 650;
-   // Double_t ratio = (Double_t)widthMax / heightMax;
    gVirtualX->GetWindowSize(gClient->GetRoot()->GetId(), dummy, dummy, width, height);
-   // Assume that width of screen is always larger than the height of screen
-   /*
-      if (width > widthMax) {
-         width = widthMax;
-         height = heightMax;
-      } else
-         height = (Int_t)(width / ratio);
-   */
-   // gEve->GetMainWindow()->Resize(width,height);
 
    /**************************************************************************/
-
-   MakeTabs();
-
-   //MakeMainTab();
 
    fRunAna->Init();
    TChain *chain = FairRootManager::Instance()->GetInChain();
    fEntries = chain->GetEntriesFast();
 
-   /*if (gGeoManager) {
-      TGeoNode *geoNode = gGeoManager->GetTopNode();
-      auto *topNode = new TEveGeoTopNode(gGeoManager, geoNode, option, level, nNodes);
-      gEve->AddGlobalElement(topNode);
-
-      Int_t transparency = 80;
-
-      // gGeoManager -> DefaultColors();
-      // gGeoManager -> GetVolume("field_cage_in")     -> SetVisibility(kFALSE); //active
-      gGeoManager->GetVolume("drift_volume")->SetTransparency(transparency);
-      // gGeoManager -> GetVolume("cageSide")          -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("cageCorner")        -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("frontWindow")       -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("frontWindowFrame")  -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("frontWindowCradle") -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("bottomPlate")       -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("backWindowFrame")   -> SetTransparency(transparency);
-      ////gGeoManager -> GetVolume("backWindow")        -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("topFrame")          -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("ribmain")           -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("wirePlane")         -> SetTransparency(transparency);
-      // gGeoManager -> GetVolume("padPlane")          -> SetTransparency(transparency);
-
-      gEve->FullRedraw3D(kTRUE);
-      fEvent = gEve->AddEvent(this);
-   }*/
-
    /**************************************************************************/
-
- //  gEve->GetBrowser()->GetTabRight()->SetTab(1);
+   fEvent = gEve->AddEvent(this);
    make_gui();
 
-//   gEve->Redraw3D(kTRUE, kTRUE);
-
-//   TGLViewer *dfViewer = gEve->GetDefaultGLViewer(); // Is this doing anything?
-//   dfViewer->CurrentCamera().RotateRad(-.7, 0.5);
-//   dfViewer->DoDraw();
-
-   // RunEvent();
    std::cout << "End of AtEventManagerNew" << std::endl;
 }
 
 void AtEventManagerNew::SelectEvent()
 {
    GotoEvent(fCurrentEvent->GetIntNumber());
-   // cout<<fCurrentEvent->GetIntNumber()<<endl;
 }
 
 void AtEventManagerNew::GotoEvent(Int_t event)
@@ -182,47 +123,18 @@ void AtEventManagerNew::GotoEvent(Int_t event)
 
 void AtEventManagerNew::NextEvent()
 {
-
-   Bool_t gated = kFALSE;
-   while (gated == kFALSE) {
-      fEntry += 1;
-      cArray = nullptr;
-      cevent = nullptr;
-      if (fEntry < 1 || fEntry > fEntries) {
-         fEntry = fEntries;
-         std::cout << " No gated events found! " << std::endl;
-         break;
-      }
-      fRootManager->ReadEvent(fEntry);
-      gated = kTRUE;
-   }
-
+   fEntry += 1;
    std::cout << " Event number : " << fEntry << std::endl;
    fRunAna->Run((Long64_t)fEntry);
 }
 
 void AtEventManagerNew::PrevEvent()
 {
-
-   Bool_t gated = kFALSE;
-   while (gated == kFALSE) {
-      fEntry -= 1;
-      cArray = nullptr;
-      cevent = nullptr;
-      if (fEntry < 1 || fEntry > fEntries) {
-         fEntry = 1;
-         std::cout << " No gated events found! " << std::endl;
-         break;
-      }
-      fRootManager->ReadEvent(fEntry);
-      gated = kTRUE;
-   }
-
+   fEntry -= 1;
    std::cout << " Event number : " << fEntry << std::endl;
    fRunAna->Run((Long64_t)fEntry);
 }
 
-//void AtEventManagerNew::SelectPad(Int_t drawNums)
 void AtEventManagerNew::SelectPad()
 {
    int event = gPad->GetEvent();
@@ -271,7 +183,6 @@ void AtEventManagerNew::SelectPad()
       DrawUpdates(tPadNum);
       }
    }
-
 }
 
 void AtEventManagerNew::DrawUpdates(Int_t padNum) {
@@ -350,59 +261,4 @@ void AtEventManagerNew::make_gui()
 
    browser->StopEmbedding();
    browser->SetTabTitle("AtTPC Event Control", 0);
-}
-
-void AtEventManagerNew::MakeMainTab() {
-   TEveWindowSlot *slot = nullptr;
-   TEveWindowPack *pack = nullptr;
-
-   // 3D
-   slot = TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
-   pack = slot->MakePack();
-   pack->SetElementName("AtTPC 3D/Pad plane views");
-   pack->SetHorizontal();
-   // pack->SetVertical();
-   pack->SetShowTitleBar(kFALSE);
-
-   pack->NewSlot()->MakeCurrent();
-   TEveViewer *view3D = gEve->SpawnNewViewer("3D View", "");
-   view3D->AddScene(gEve->GetGlobalScene());
-   view3D->AddScene(gEve->GetEventScene());
-   // }
-
-   slot = pack->NewSlot();
-   TEveWindowPack *pack2 = slot->MakePack();
-   pack2->SetShowTitleBar(kFALSE);
-   pack2->SetVertical();
-   slot = pack2->NewSlot();
-   slot->StartEmbedding();
-   fPadWave = new TCanvas("AtPad Canvas");
-   fPadWave->ToggleEditor();
-   slot->StopEmbedding();
-
-   // Pad Plane
-   slot = pack2->NewSlotWithWeight(1.5);
-   auto *ecvs = new TRootEmbeddedCanvas();
-   TEveWindowFrame *frame = slot->MakeFrame(ecvs);
-   frame->SetElementName("AtTPC Pad Plane");
-   pack->GetEveFrame()->SetShowTitleBar(kFALSE);
-   fCvsPadPlane = ecvs->GetCanvas();
-   fCvsPadPlane->AddExec("ex", "AtEventManagerNew::SelectPad()");
-   //fCvsPadPlane->AddExec("ex", "AtEventManagerNew::SelectPad(fDrawTaskNum)");
-
-
-}
-
-void AtEventManagerNew::MakeTabs() {
-   char name[20];
-   for(int i = 0; i < fTabTaskNum; i++) {
-      sprintf(name, "fTabTask_%i", fTabTaskNum);
-      auto *tabTask = dynamic_cast<AtEventTabTask *>(gROOT->GetListOfSpecials()->FindObject(name));
-      if(tabTask == nullptr) {
-         std::cout << "tabTask " << i << " is nullptr!" << std::endl;
-      }
-      else {
-         tabTask->MakeTab();
-      }
-   }
 }
