@@ -276,7 +276,7 @@ void AtEventManagerNew::SelectPad()
 
 void AtEventManagerNew::DrawUpdates(Int_t padNum) {
    for(const auto&& tabTask: *(AtEventManagerNew::Instance()->GetTabList()))
-      dynamic_cast<AtEventTabTask *>(tabTask)->DrawPad(padNum);
+      dynamic_cast<AtEventTabTaskBase *>(tabTask)->DrawPad(padNum);
 }
 
 void AtEventManagerNew::RunEvent()

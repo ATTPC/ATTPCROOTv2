@@ -7,6 +7,7 @@
 #pragma link C++ class AtEventManager + ;
 #pragma link C++ class AtEventManagerNew + ;
 #pragma link C++ class AtEventManagerProto + ;
+#pragma link C++ class AtEventTabTaskBase + ;
 #pragma link C++ class AtEventTabTask + ;
 #pragma link C++ class AtEventDrawTask + ;
 #pragma link C++ class AtEventDrawTaskNew + ;
