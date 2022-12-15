@@ -81,6 +81,7 @@ AtEventManagerNew::~AtEventManagerNew() = default;
 void AtEventManagerNew::AddTabTask(FairTask *task) {
    AddTask(task);
    fTabList->Add(task);
+   dynamic_cast<AtEventTabTaskBase *>(task)->SetTaskNumber(fTabTaskNum);
    fTabTaskNum++;
 }
 

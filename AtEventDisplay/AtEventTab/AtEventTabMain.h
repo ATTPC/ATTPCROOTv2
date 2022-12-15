@@ -55,9 +55,6 @@ public:
    void SetMap(std::shared_ptr<AtMap> map) { fDetmap = map; }
    void SetThreshold(Int_t val) { fThreshold = val; }
    void SetHitAttributes(Color_t, Size_t, Style_t);
-   void SetRawEventBranch(TString branchName);
-   void SetEventBranch(TString branchName);
-   static void SelectPad(const char *rawevt);
    void DrawEvent(AtRawEvent *rawEvent, AtEvent *event) override;
    void DrawPad(Int_t PadNum) override;
    void SetMultiHit(Int_t hitMax);
