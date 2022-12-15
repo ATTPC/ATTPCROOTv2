@@ -76,7 +76,7 @@ void AtEventTabPad::MakeTab()
    pack2->SetVertical();
    slot = pack2->NewSlot();
    slot->StartEmbedding();
-   fCvsPad = new TCanvas("AtPad Canvas");
+   fCvsPad = new TCanvas(name);
    fCvsPad->ToggleEditor();
    slot->StopEmbedding();
 }

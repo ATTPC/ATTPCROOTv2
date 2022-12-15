@@ -14,6 +14,7 @@ set(SRCS
 AtEventTab/AtEventTab.cxx
 AtEventTab/AtEventTabMain.cxx
 AtEventTab/AtEventTabPad.cxx
+AtEventTab/AtEventTabMacro.cxx
 
 AtEventManager.cxx
 AtEventManagerNew.cxx
