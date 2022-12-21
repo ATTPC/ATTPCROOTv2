@@ -46,6 +46,7 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
    Double_t sigmaDWBA0=0;
    Double_t sigmaDWBA1=0;
    Double_t sigmaDWBA2=0;
+   Double_t altXS = 0;
    Double_t angle=0;
    TGraphErrors *gDWBA0 = new TGraphErrors();
    gDWBA0->SetMarkerStyle(20);
@@ -79,6 +80,23 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
    }
 
    dwbaFile.close();
+
+   // Alt analysis
+   std::ifstream altFile("kinematics_e20009/combe10dd_diffxs.txt");
+
+   TGraphErrors *gAltAnalysis = new TGraphErrors();
+   gAltAnalysis->SetMarkerStyle(20);
+   gAltAnalysis->SetMarkerSize(1.5);
+   gAltAnalysis->SetMarkerColor(kRed);
+
+   while (!altFile.eof()) {
+      std::getline(altFile, linebuff);
+      std::istringstream iss(linebuff);
+      iss >> angle >> altXS;
+      gAltAnalysis->SetPoint(gAltAnalysis->GetN(), angle, altXS);
+   }
+
+   altFile.close();
 
    // Data histograms
    TH2F *Ang_Ener = new TH2F("Ang_Ener", "Ang_Ener", 720, 0, 179, 1000, 0, 100.0);
@@ -321,6 +339,8 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
    gsigmaCM0->SetMarkerStyle(20);
    gsigmaCM0->SetMarkerSize(1.5);
 
+   Double_t sigmaCM0Corr[360];
+   std::fill_n(sigmaCM0Corr, 360, 1.0);
 
    Double_t sigmaLab1[360]={0.0};
    Double_t sigmaCM1[360]={0.0};
@@ -680,7 +700,7 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
                auto [ex_energy_exp_xtr,theta_cm_xtr] =
                   kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(), (*EFitXtrVec)[index]);
 
-	       // Excitation energy correction
+          // Excitation energy correction
                Double_t p0 = 0.0;//-3.048;
                Double_t p1 = 0.003;//0.0513295;
                Double_t mFactor = 1.00;
@@ -771,38 +791,52 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
                x_Phi->Fill(xiniFit, PhiFit * TMath::RadToDeg());
                y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
 
-	       //Angular distributions
+          //Angular distributions
 	       //Ground state
 	       if(QcorrZ>-2.0 && QcorrZ<2.0){
 
-		 Int_t index = angle;
-		 ++sigmaLab0[index];
-		 Int_t indexCM = theta_cm;
-	         ++sigmaCM0[indexCM];
+             theta_cm = -2.0 * angle + 179.76; // g.s.
+             Int_t index = angle;
+             ++sigmaLab0[index];
+             Int_t indexCM = theta_cm;
+             ++sigmaCM0[indexCM];
           }
 
-          if(QcorrZ>2.5 && QcorrZ<5.0){
+          if (QcorrZ > 2.5 && QcorrZ < 5.0) { // 3.368 MeV
 
-		 Int_t index = angle;
-		 ++sigmaLab1[index];
-		 Int_t indexCM = theta_cm;
-	         ++sigmaCM1[indexCM];
+             // if((*EFitVec)[index]<2.75
+
+             Int_t index = angle;
+             ++sigmaLab1[index];
+             Int_t indexCM = theta_cm;
+             ++sigmaCM1[indexCM];
           }
 
           if(QcorrZ>5.5 && QcorrZ<7.0){
 
-		 Int_t index = angle;
-		 ++sigmaLab2[index];
-		 Int_t indexCM = theta_cm;
-	         ++sigmaCM2[indexCM];
+             Int_t index = angle;
+             ++sigmaLab2[index];
+             Int_t indexCM = theta_cm;
+             ++sigmaCM2[indexCM];
           }
 
           if(QcorrZ>7.0 && QcorrZ<8.5){
 
-		 Int_t index = angle;
-		 ++sigmaLab3[index];
-		 Int_t indexCM = theta_cm;
-	         ++sigmaCM3[indexCM];
+             Double_t gamma = 1.405;
+
+             /*  if((*EFitVec)[index]<6.25)
+                 Double_t theta_cm = TMath::RadToDeg()*TMath::ASin(gamma * TMath::Sin(angle*TMath::DegToRad())  )-angle
+               ;//low value else theta_cm = 180.0-(angle+TMath::RadToDeg()*TMath::ASin(gamma *
+               TMath::Sin(angle*TMath::DegToRad())));//; high value*/
+
+             //  std::cout<<theta_cm<<" "<<angle<<"\n";
+
+             //  if(theta_cm>0 && theta_cm<180){
+             Int_t index = angle;
+             ++sigmaLab3[index];
+             Int_t indexCM = theta_cm;
+             ++sigmaCM3[indexCM];
+             //   }
           }
 
           QvsMult->Fill(QcorrZ, evMult);
@@ -863,8 +897,28 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
                 << " third "
                 << "\n";
 
+   // Efficeincy correction factors for different excited states
+
+   auto fcorr0 =
+      new TF1("fcorr0", "[0] + [1]*x + [2]*TMath::Power(x,2) + [3]*TMath::Power(x,3) + [4]*TMath::Power(x,4) ", 0, 180);
+
+   fcorr0->SetParameter(0, -0.393359);
+   fcorr0->SetParameter(1, 0.03903);
+   fcorr0->SetParameter(2, -0.000353706);
+   fcorr0->SetParameter(3, 7.99494e-07);
+   fcorr0->SetParameter(4, 0);
+
+   auto fcorr1 =
+      new TF1("fcorr1", "[0] + [1]*x + [2]*TMath::Power(x,2) + [3]*TMath::Power(x,3) + [4]*TMath::Power(x,4) ", 0, 180);
+   fcorr1->SetParameter(0, 2.31713);
+   fcorr1->SetParameter(1, -0.0948616);
+   fcorr1->SetParameter(2, 0.00176076);
+   fcorr1->SetParameter(3, 1.00102e-05);
+   fcorr1->SetParameter(4, 0);
+
    //Diff xs graph
-   Double_t scale0 = 0.1;
+   Double_t beamIntensity = 59855710.0;
+   Double_t scale0 = 1.0 * (2.0 * TMath::Pi()) / (beamIntensity * 3.16E21 * 1E-27);
    Double_t scale1 = 0.1;
    Double_t scale2 = 0.2;
    Double_t scale3 = 0.1;
@@ -875,12 +929,12 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
 
       gsigmaLab0->SetPoint(ig, ig, sigmaLab0[ig]);
       gsigmaLab0->SetPointError(ig, 0, TMath::Sqrt(sigmaLab0[ig]));
-      gsigmaCM0->SetPoint(ig, ig, sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig));
+      gsigmaCM0->SetPoint(ig, ig, sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig) / fcorr0->Eval(ig));
       gsigmaCM0->SetPointError(ig, 0, TMath::Sqrt(sigmaCM0[ig]) * scale0 / TMath::Sin(TMath::DegToRad() * ig));
 
       gsigmaLab1->SetPoint(ig, ig, sigmaLab1[ig]);
       gsigmaLab1->SetPointError(ig, 0, TMath::Sqrt(sigmaLab1[ig]));
-      gsigmaCM1->SetPoint(ig, ig, sigmaCM1[ig] * scale1 / TMath::Sin(TMath::DegToRad() * ig));
+      gsigmaCM1->SetPoint(ig, ig, sigmaCM1[ig] * scale1 / TMath::Sin(TMath::DegToRad() * ig)); /// fcorr1->Eval(ig) );
       gsigmaCM1->SetPointError(ig, 0, TMath::Sqrt(sigmaCM1[ig]) * scale1 / TMath::Sin(TMath::DegToRad() * ig));
 
       gsigmaLab2->SetPoint(ig, ig, sigmaLab2[ig]);
@@ -894,6 +948,7 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
       gsigmaCM3->SetPointError(ig, 0, TMath::Sqrt(sigmaCM3[ig]) * scale3 / TMath::Sin(TMath::DegToRad() * ig));
 
       outputXSFile << ig << " " << sigmaCM0[ig] << " " << sigmaCM1[ig] << "  " << sigmaCM2[ig] << " " << sigmaCM3[ig]
+                   << " " << sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig) / fcorr0->Eval(ig) << " "
                    << "\n";
    }
 
@@ -1187,6 +1242,7 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
    TCanvas *cgs = new TCanvas();
    gsigmaCM0->Draw("ALP");
    gDWBA0->Draw("L");
+   gAltAnalysis->Draw("LP");
 
    TCanvas *ce1 = new TCanvas();
    gsigmaCM1->Draw("ALP");
@@ -1212,6 +1268,34 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
    Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
+
+   // Test of kinematics
+   /* TGraphErrors *kineTest = new TGraphErrors();
+    Double_t gamma = 1.405;
+
+    for(auto i=0;i<45;++i){
+
+      angle = i;
+        Double_t theta_cm = 180.0-(angle+TMath::RadToDeg()*TMath::ASin(gamma * TMath::Sin(angle*TMath::DegToRad())));//;
+    high value kineTest->SetPoint(kineTest->GetN(),angle,theta_cm);
+
+
+      }
+
+     for(auto i=0;i<45;++i){
+
+      angle = i;
+        Double_t theta_cm = TMath::RadToDeg()*TMath::ASin(gamma * TMath::Sin(angle*TMath::DegToRad())  )-angle ;//low
+    value
+
+        kineTest->SetPoint(kineTest->GetN(),angle,theta_cm);
+
+
+      }
+
+
+     TCanvas *cKineTest = new TCanvas("cKineTest", "cKineTest", 700, 700);
+     kineTest->Draw("AP");*/
 
    /*TCanvas *c2 = new TCanvas();
    c2->Divide(2, 3);
