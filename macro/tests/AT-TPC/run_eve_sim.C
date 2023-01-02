@@ -42,13 +42,6 @@ void run_eve_sim(TString OutputDataFile = "./data/output.sim_display.root")
    tabMain->SetMultiHit(100); // Set the maximum number of multihits in the visualization
    eveMan->AddTab(std::move(tabMain));
 
-   auto tabPad = std::make_unique<AtTabPad>(2, 2);
-   tabPad->DrawRawADC(0, 0);
-   tabPad->DrawADC(0, 1);
-   tabPad->DrawArrayAug("Q", 1, 0);
-   tabPad->DrawADC(1, 1);
-   eveMan->AddTab(std::move(tabPad));
-
    eveMan->Init();
 
    std::cout << "Finished init" << std::endl;

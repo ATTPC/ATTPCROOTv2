@@ -1,9 +1,10 @@
-void rundigi_sim(
+void rundigi_sim_CD(
    TString mcFile = "./data/gadgetsim.root",
    TString mapParFile =
       "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
    TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
-{
+{  
+   
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
    timer.Start();
@@ -13,6 +14,7 @@ void rundigi_sim(
    TString scriptdir = dir + "/scripts/" + scriptfile;
    TString dataDir = dir + "/macro/data/";
    TString geomDir = dir + "/geometry/";
+   TString filename = 1;
    gSystem->Setenv("GEOMPATH", geomDir.Data());
 
    // ------------------------------------------------------------------------
@@ -20,7 +22,7 @@ void rundigi_sim(
    FairRunAna *fRun = new FairRunAna();
    FairFileSource *source = new FairFileSource(mcFile);
    fRun->SetSource(source);
-   fRun->SetOutputFile("./data/diff_digi.root");
+   fRun->SetOutputFile("./data/CD_digi.root");
 
    TString parameterFile = "GADGET.sim.par";
    TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -39,10 +41,12 @@ void rundigi_sim(
    AtClusterizeTask *clusterizer = new AtClusterizeTask();
    clusterizer->SetPersistence(kFALSE);
 
-   AtPulseTask *pulse = new AtPulseTask();
+   AtPulseTaskGADGET *pulse = new AtPulseTaskGADGET();
+   pulse->SetAdjecentPads(2);
    pulse->SetPersistence(kTRUE);
    pulse->SetSaveMCInfo();
    pulse->SetMap(mapping);
+   pulse->UseChargeSave(kTRUE);
 
    auto psa = std::make_unique<AtPSAMax>();
    psa->SetThreshold(5);
@@ -53,8 +57,9 @@ void rundigi_sim(
    AtPRAtask *praTask = new AtPRAtask();
    praTask->SetPersistence(kTRUE);
 
-   auto *wHDF = new AtHDF5WriteTask("./data/diff_digi.h5", "AtEventH");
-   wHDF->SetUseEventNum(true);
+   auto *wHDF = new AtHDF5WriteTask(
+    ("data/CD_digi_" + std::string(filename.Data()) + ".h5").c_str(), "AtEventH");
+
    /*ATTriggerTask *trigTask = new ATTriggerTask();
      trigTask  ->  SetAtMap(mapParFile);
      trigTask  ->  SetPersistence(kTRUE);*/
@@ -74,6 +79,8 @@ void rundigi_sim(
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;
    // -----   Finish   -------------------------------------------------------
+   
+
    timer.Stop();
    Double_t rtime = timer.RealTime();
    Double_t ctime = timer.CpuTime();
