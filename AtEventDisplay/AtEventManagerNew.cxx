@@ -1,8 +1,6 @@
 #include "AtEventManagerNew.h"
 
-#include "AtEvent.h" // for AtEvent
-#include "AtEventDrawTaskNew.h"
-#include "AtEventTabTask.h"
+#include "AtTabTask.h"
 #include "AtMap.h"
 
 #include <FairRootManager.h>
@@ -12,7 +10,6 @@
 #include <Rtypes.h>
 #include <TCanvas.h>
 #include <TChain.h>
-#include <TClonesArray.h> // for TClonesArray
 #include <TEveBrowser.h>
 #include <TEveEventManager.h>
 #include <TEveGeoNode.h>
@@ -68,21 +65,21 @@ AtEventManagerNew *AtEventManagerNew::Instance()
 
 AtEventManagerNew::AtEventManagerNew()
    : TEveEventManager("AtEventManager", ""), fRootManager(FairRootManager::Instance()), fRunAna(FairRunAna::Instance()),
-     fEntry(0), fEvent(nullptr), fCurrentEvent(nullptr), f3DThresDisplay(nullptr), fCvsPadPlane(nullptr),
-     fPadWave(nullptr), kToggleData(false), cArray(nullptr), fEntries(0), fTabTaskNum(0)
+     fEntry(0), fEvent(nullptr), fCurrentEvent(nullptr), f3DThresDisplay(nullptr), kToggleData(false), fEntries(0), fTabTask(nullptr)
 
 {
    fInstance = this;
-   fTabList = new TList();
 }
 
 AtEventManagerNew::~AtEventManagerNew() = default;
 
-void AtEventManagerNew::AddTabTask(FairTask *task) {
-   AddTask(task);
-   fTabList->Add(task);
-   dynamic_cast<AtEventTabTaskBase *>(task)->SetTaskNumber(fTabTaskNum);
-   fTabTaskNum++;
+void AtEventManagerNew::AddTabTask(AtTabTask *task) {
+   if(fTabTask != nullptr) 
+      LOG(error) << "AtTabTask already exists in Event Manager. Only one can exist!";
+   else {
+      AddTask(task);
+      fTabTask = task;
+   }
 }
 
 void AtEventManagerNew::Init()
@@ -172,7 +169,7 @@ void AtEventManagerNew::SelectPad()
       AtMap *tmap = nullptr;
       tmap = dynamic_cast<AtMap *>(gROOT->GetListOfSpecials()->FindObject("fMap"));
       if(tmap == nullptr) {
-         std::cout << "AtMap not set! Is an AtEventTabTask with AtEventTabMain included?" << std::endl;
+         std::cout << "AtMap not set! Is an AtTabTask with AtTabMain included?" << std::endl;
       }
       else {
       Int_t tPadNum = tmap->BinToPad(bin);
@@ -181,14 +178,13 @@ void AtEventManagerNew::SelectPad()
       //std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
       std::cout << " Raw Event Pad Num " << tPadNum << std::endl;
       //DrawUpdates(drawNums, tPadNum);
-      DrawUpdates(tPadNum);
+      AtEventManagerNew::Instance()->DrawUpdates(tPadNum);
       }
    }
 }
 
 void AtEventManagerNew::DrawUpdates(Int_t padNum) {
-   for(const auto&& tabTask: *(AtEventManagerNew::Instance()->GetTabList()))
-      dynamic_cast<AtEventTabTaskBase *>(tabTask)->DrawPad(padNum);
+   fTabTask->DrawPad(padNum);
 }
 
 void AtEventManagerNew::RunEvent()

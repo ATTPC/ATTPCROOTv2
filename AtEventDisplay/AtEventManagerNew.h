@@ -9,6 +9,7 @@
 
 #include <vector>
 
+class AtTabTask;
 class FairRootManager;
 class FairTask;
 class TBuffer;
@@ -19,30 +20,23 @@ class TGNumberEntry;
 class TGTextButton;
 class TMemberInspector;
 class TGListTreeItem;
-class AtEvent;
-class TClonesArray;
 class TList;
 
 class AtEventManagerNew : public TEveEventManager {
 private:
    FairRootManager *fRootManager;
    FairRunAna *fRunAna;
-   TClonesArray *cArray;
-   AtEvent *cevent;
 
    Int_t fEntry;
    TGListTreeItem *fEvent;
    TGNumberEntry *fCurrentEvent;
    TGNumberEntry *f3DThresDisplay;
-   TCanvas *fCvsPadPlane;
-   TCanvas *fPadWave;
 
    Bool_t kToggleData;
 
    Int_t fEntries;
-   Int_t fTabTaskNum;
 
-   TList *fTabList;
+   AtTabTask *fTabTask;
 
    static AtEventManagerNew *fInstance;
 
@@ -58,15 +52,13 @@ public:
    virtual void SelectEvent();
 
    static void SelectPad();
-   static void DrawUpdates(Int_t padNum);
+   void DrawUpdates(Int_t padNum);
 
    void AddTask(FairTask *task) { fRunAna->AddTask(task); }
-   void AddTabTask(FairTask *task);
+   void AddTabTask(AtTabTask *task);
    virtual void Init();
 
    virtual Int_t GetCurrentEvent() { return fEntry; }
-
-   TList *GetTabList() { return fTabList; }
 
    void RunEvent();
 

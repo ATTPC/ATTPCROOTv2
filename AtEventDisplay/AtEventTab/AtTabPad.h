@@ -1,7 +1,7 @@
-#ifndef ATEVENTTABPAD_H
-#define ATEVENTTABPAD_H
+#ifndef ATTABPAD_H
+#define ATTABPAD_H
 
-#include "AtEventTab.h"
+#include "AtTabBase.h"
 
 #include <Rtypes.h>  // for Int_t, Bool_t, THashConsistencyHolder, Color_t
 #include <TString.h> // for TString
@@ -21,7 +21,7 @@ class TPaletteAxis;
 
 enum class PadDrawType{ kADC, kRawADC, kArrAug };
 
-class AtEventTabPad : public AtEventTab {
+class AtTabPad : public AtTabBase {
 protected:
    AtRawEvent *fRawEvent;
    AtEvent *fEvent;
@@ -44,11 +44,18 @@ protected:
 
    TString fTabName;
 
+   TString fEventBranch;
+   TString fRawEventBranch;
+
+   std::string fInfoEventName;
+   std::string fInfoRawEventName;
+
    TEveRGBAPalette *fRGBAPalette;
 
 public:
-   AtEventTabPad();
-   void Init() override;
+   AtTabPad();
+   void InitTab() override;
+   void UpdateTab() override;
    void Reset() override;
    void MakeTab() override;
    void SetDrawADC(Int_t pos);
@@ -58,8 +65,12 @@ public:
    void SetColumns(Int_t cols) { fCols = cols; }
    void SetRows(Int_t rows) {fRows = rows;}
    void SetTabName(TString tabName) { fTabName = tabName; }
-   void DrawEvent(AtRawEvent *rawEvent, AtEvent *event) override;
+   void DrawTree() override { };
+   void DrawEvent() override { };
    void DrawPad(Int_t padNum) override;
+
+   void SetEventBranch(TString name) { fEventBranch = name; }
+   void SetRawEventBranch(TString name) { fRawEventBranch = name; }
 
 private:
    void SetDraw(Int_t pos, PadDrawType type);
@@ -68,7 +79,7 @@ private:
 
    // Functions for drawing hits
 
-   ClassDefOverride(AtEventTabPad, 1)
+   ClassDefOverride(AtTabPad, 1)
 };
 
 #endif

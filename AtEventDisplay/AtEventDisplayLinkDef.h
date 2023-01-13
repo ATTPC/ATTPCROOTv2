@@ -7,16 +7,21 @@
 #pragma link C++ class AtEventManager + ;
 #pragma link C++ class AtEventManagerNew + ;
 #pragma link C++ class AtEventManagerProto + ;
-#pragma link C++ class AtEventTabTaskBase + ;
-#pragma link C++ class AtEventTabTask + ;
+#pragma link C++ class AtTabTask + ;
 #pragma link C++ class AtEventDrawTask + ;
 #pragma link C++ class AtEventDrawTaskProto + ;
 #pragma link C++ class AtEventManagerS800 + ;
 #pragma link C++ class AtEventDrawTaskS800 + ;
 
-#pragma link C++ class AtEventTab + ;
-#pragma link C++ class AtEventTabMain + ;
-#pragma link C++ class AtEventTabPad + ;
-#pragma link C++ class AtEventTabMacro + ;
+#pragma link C++ class AtTabBase + ;
+#pragma link C++ class AtTabMain + ;
+#pragma link C++ class AtTabPad + ;
+#pragma link C++ class AtTabMacro + ;
+
+#pragma link C++ class AtTabInfoBase + ;
+#pragma link C++ class AtTabInfo + ;
+#pragma link C++ class AtTabInfoEvent + ;
+#pragma link C++ class AtTabInfoRawEvent + ;
+#pragma link C++ class AtTabInfoHEISTmusic + ;
 
 #endif

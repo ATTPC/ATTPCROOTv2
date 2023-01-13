@@ -1,9 +1,13 @@
-#include "AtEventTabMain.h"
+#include "AtTabMain.h"
 
 #include "AtEvent.h"
 #include "AtEventManagerNew.h"
 #include "AtMap.h"
 #include "AtRawEvent.h"
+#include "AtTabInfo.h"
+#include "AtTabInfoBase.h"
+#include "AtTabInfoEvent.h"
+#include "AtTabInfoRawEvent.h"
 
 #include <TCanvas.h>
 #include <TEveBrowser.h>
@@ -29,19 +33,20 @@ constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
 constexpr auto cBLUE = "\033[1;34m";
 
-ClassImp(AtEventTabMain);
+ClassImp(AtTabMain);
 
-AtEventTabMain::AtEventTabMain()
+AtTabMain::AtTabMain()
    : fRawEvent(nullptr), fEvent(nullptr), fDetmap(nullptr), fThreshold(0), fHitSet(nullptr), fPadPlanePal(nullptr),
      fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium), fCvsPadPlane(nullptr), fPadPlane(nullptr),
-     fCvsPadWave(nullptr), fPadWave(nullptr), fMultiHit(0)
+     fCvsPadWave(nullptr), fPadWave(nullptr), fMultiHit(0), fEventBranch("AtEvent"), fRawEventBranch("AtRawEvent"), fInfoEventName("AtEvent"),
+     fInfoRawEventName("AtRawEvent")
 {
 }
 
-void AtEventTabMain::Init()
+void AtTabMain::InitTab()
 {
 
-   std::cout << " =====  AtEventTabMain::Init =====" << std::endl;
+   std::cout << " =====  AtTabMain::Init =====" << std::endl;
 
    // gROOT->Reset();
    fEventManager = AtEventManagerNew::Instance();
@@ -53,15 +58,23 @@ void AtEventTabMain::Init()
    fDetmap->SetName("fMap");
    gROOT->GetListOfSpecials()->Add(fDetmap.get());
 
+   auto tTabInfoEvent = std::make_unique<AtTabInfoEvent>();
+   tTabInfoEvent->SetBranch(fEventBranch);
+   auto tTabInfoRawEvent = std::make_unique<AtTabInfoRawEvent>();
+   tTabInfoRawEvent->SetBranch(fRawEventBranch);
+
+   fTabInfo->AddAugment(fInfoEventName, std::move(tTabInfoEvent));
+   fTabInfo->AddAugment(fInfoRawEventName, std::move(tTabInfoRawEvent));
+
    gStyle->SetPalette(55);
 
    //******* NO CALLS TO TCANVAS BELOW THIS ONE
 
-   std::cout << " AtEventTabMain::Init : Initialization complete! "
+   std::cout << " AtTabMain::Init : Initialization complete! "
              << "\n";
 }
 
-void AtEventTabMain::MakeTab()
+void AtTabMain::MakeTab()
 {
    TEveWindowSlot *slot = nullptr;
    TEveWindowPack *pack = nullptr;
@@ -100,7 +113,7 @@ void AtEventTabMain::MakeTab()
    fCvsPadPlane->AddExec("ex", "AtEventManagerNew::SelectPad()");
 
    char name[20];
-   sprintf(name, "fCvsPadWave_DT%i", fTaskNumber);
+   sprintf(name, "fCvsPadWave_DT%i", fTabNumber);
    fCvsPadWave->SetName(name);
    DrawPadWave();
    fCvsPadPlane->ToggleEventStatus();
@@ -128,34 +141,38 @@ void AtEventTabMain::MakeTab()
    dfViewer->DoDraw();
 }
 
-void AtEventTabMain::DrawEvent(AtRawEvent *rawEvent, AtEvent *event)
+void AtTabMain::UpdateTab() 
 {
-   fRawEvent = rawEvent;
-   fEvent = event;
+   fEvent = dynamic_cast<AtTabInfoEvent *>(fTabInfo->GetAugment(fInfoEventName))->GetEvent();
+   fRawEvent = dynamic_cast<AtTabInfoRawEvent *>(fTabInfo->GetAugment(fInfoRawEventName))->GetRawEvent();
+}
+
+void AtTabMain::DrawEvent()
+{
    DrawHitPoints();
    gEve->Redraw3D(kFALSE);
    UpdateCvsPadPlane();
 }
 
-void AtEventTabMain::DrawPad(Int_t PadNum)
+void AtTabMain::DrawPad(Int_t PadNum)
 {
    DrawWave(PadNum);
    UpdateCvsPadWave();
 }
 
-void AtEventTabMain::SetMultiHit(Int_t hitMax)
+void AtTabMain::SetMultiHit(Int_t hitMax)
 {
    fMultiHit = hitMax;
 }
 
-void AtEventTabMain::SetHitAttributes(Color_t color, Size_t size, Style_t style)
+void AtTabMain::SetHitAttributes(Color_t color, Size_t size, Style_t style)
 {
    fHitColor = color;
    fHitSize = size;
    fHitStyle = style;
 }
 
-void AtEventTabMain::Reset()
+void AtTabMain::Reset()
 {
    if (fHitSet) {
       fHitSet->Reset();
@@ -166,7 +183,7 @@ void AtEventTabMain::Reset()
       fPadPlane->Reset(nullptr);
 }
 
-void AtEventTabMain::DrawPadPlane()
+void AtTabMain::DrawPadPlane()
 {
    if (fPadPlane) {
       fPadPlane->Reset(nullptr);
@@ -184,16 +201,16 @@ void AtEventTabMain::DrawPadPlane()
    gPad->Update();
 }
 
-void AtEventTabMain::DrawPadWave()
+void AtTabMain::DrawPadWave()
 {
    char name[20];
-   sprintf(name, "fPadWave_DT%i", fTaskNumber);
+   sprintf(name, "fPadWave_DT%i", fTabNumber);
    fPadWave = new TH1I(name, name, 512, 0, 511);
    fCvsPadWave->cd();
    fPadWave->Draw();
 }
 
-void AtEventTabMain::DrawHitPoints()
+void AtTabMain::DrawHitPoints()
 {
    if (fEvent == nullptr) {
       std::cout << "CRITICAL ERROR: Event missing for TabMain. Aborting draw." << std::endl;
@@ -243,7 +260,7 @@ void AtEventTabMain::DrawHitPoints()
    dumpEvent.close();
 }
 
-void AtEventTabMain::DrawWave(Int_t PadNum)
+void AtTabMain::DrawWave(Int_t PadNum)
 {
    //std::cout << "checking fRawEvent" << std::endl;
    if (fRawEvent == nullptr) {
@@ -266,13 +283,13 @@ void AtEventTabMain::DrawWave(Int_t PadNum)
    }
 }
 
-void AtEventTabMain::UpdateCvsPadPlane()
+void AtTabMain::UpdateCvsPadPlane()
 {
    fCvsPadPlane->Modified();
    fCvsPadPlane->Update();
 }
 
-void AtEventTabMain::UpdateCvsPadWave()
+void AtTabMain::UpdateCvsPadWave()
 {
    fCvsPadWave->Modified();
    fCvsPadWave->Update();
