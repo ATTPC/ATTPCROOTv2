@@ -1,15 +1,20 @@
 #ifndef ATTABMAIN_H
 #define ATTABMAIN_H
 
+#include "AtEvent.h"    // IWYU pragma: keep
+#include "AtRawEvent.h" // IWYU pragma: keep
 #include "AtTabBase.h"
-#include "AtTabInfo.h"
 
 #include <Rtypes.h>  // for Int_t, Bool_t, THashConsistencyHolder, Color_t
 #include <TString.h> // for TString
 
-class AtEvent;
+#include <memory> // for shared_ptr
+#include <string> // for string
+class AtTabInfo;
+class TBuffer;
+class TClass;
+class TMemberInspector;
 class AtEventManagerNew;
-class AtRawEvent;
 class AtMap;
 class TCanvas;
 class TEvePointSet;
@@ -60,7 +65,7 @@ public:
    void UpdateTab() override;
    void Reset() override;
    void MakeTab() override;
-   void DrawTree() override { };
+   void DrawTree() override{};
    void DrawEvent() override;
    void DrawPad(Int_t PadNum) override;
 

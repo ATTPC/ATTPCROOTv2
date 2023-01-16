@@ -8,13 +8,18 @@
 #include <Rtypes.h>  // for Int_t, Bool_t, THashConsistencyHolder, Color_t
 #include <TString.h> // for TString
 
+#include <algorithm> // for max
 #include <memory>
-#include <vector>        // for vector
+#include <utility> // for move
+#include <vector>  // for vector
+class TBuffer;
+class TMemberInspector;
+class TTree;
 class TClass;
 
 class AtTabTask : public FairTask {
 protected:
-   std::vector<std::unique_ptr<AtTabBase> > fTabs;
+   std::vector<std::unique_ptr<AtTabBase>> fTabs;
 
    TTree *fTree{nullptr};
    TString fTreeName;

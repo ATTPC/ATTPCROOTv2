@@ -2,16 +2,16 @@
 #define ATTABINFOHEISTMUSIC_H
 
 #include "AtTabInfoBase.h"
-#include "AtTabInfoRawEvent.h"
-
-#include "HTMusicIC.h"
-
-#include "TTreeReaderValue.h"
+#include "AtTabInfoFairRoot.h"
 
 #include <TString.h>
 
+#include "HTMusicIC.h"
+#include "TTreeReaderValue.h"
+
 class TTreeReader;
 class AtEventManagerNew;
+class AtRawEvent;
 
 class AtTabInfoHEISTmusic : public AtTabInfoBase {
 protected:
@@ -24,7 +24,7 @@ protected:
 
    HTMusicIC *fMusicIC;
 
-   std::unique_ptr<AtTabInfoRawEvent> fInfoRawEvent;
+   std::unique_ptr<AtTabInfoFairRoot<AtRawEvent>> fInfoRawEvent;
 
 public:
    AtTabInfoHEISTmusic();
@@ -35,7 +35,7 @@ public:
 
    void SetTree(TString name) { fTree = name; }
 
-   void SetRawEventBranch(TString name) {fInfoRawEvent->SetBranch(name); }
+   void SetRawEventBranch(TString name) { fInfoRawEvent->SetBranch(name); }
 
    ClassDefOverride(AtTabInfoHEISTmusic, 1);
 };

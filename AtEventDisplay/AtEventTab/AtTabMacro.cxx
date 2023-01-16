@@ -1,22 +1,23 @@
 #include "AtTabMacro.h"
 
 #include "AtEventManagerNew.h"
-#include "AtMap.h"
-#include "AtTabInfoBase.h"
 #include "AtTabInfo.h"
+#include "AtTabInfoBase.h"
+
+#include <FairLogger.h> // for LOG
 
 #include <TCanvas.h>
 #include <TChain.h>
 #include <TEveBrowser.h>
 #include <TEveManager.h>
 #include <TEveWindow.h>
-#include <TGTab.h>
-#include <TROOT.h> // for TROOT, gROOT
-#include <TRootEmbeddedCanvas.h>
-#include <TStyle.h>
-#include <TTree.h>
+#include <TVirtualPad.h> // for TVirtualPad, gPad
+
+#include <stdio.h> // for sprintf
 
 #include <iostream>
+#include <utility> // for move, pair
+#include <vector>  // for allocator
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -26,9 +27,7 @@ constexpr auto cBLUE = "\033[1;34m";
 
 ClassImp(AtTabMacro);
 
-AtTabMacro::AtTabMacro()
-   : fDetmap(nullptr), fCvsMacro(nullptr), fCols(1), fRows(1),
-     fTabName("Macro"), fTree(nullptr)
+AtTabMacro::AtTabMacro() : fDetmap(nullptr), fCvsMacro(nullptr), fCols(1), fRows(1), fTabName("Macro"), fTree(nullptr)
 {
 }
 

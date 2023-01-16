@@ -2,13 +2,18 @@
 
 #include "AtEvent.h"
 #include "AtEventManagerNew.h"
+#include "AtHit.h" // for AtHit
 #include "AtMap.h"
+#include "AtPad.h" // for AtPad
 #include "AtRawEvent.h"
 #include "AtTabInfo.h"
 #include "AtTabInfoBase.h"
-#include "AtTabInfoEvent.h"
-#include "AtTabInfoRawEvent.h"
+#include "AtTabInfoFairRoot.h"
 
+#include <FairLogger.h> // for LOG
+
+#include <Math/Point3D.h> // for PositionVector3D
+#include <TAttMarker.h>   // for kFullDotMedium
 #include <TCanvas.h>
 #include <TEveBrowser.h>
 #include <TEveGeoNode.h>
@@ -17,15 +22,27 @@
 #include <TEveTreeTools.h> // for TEvePointSelectorConsumer, TEvePoint...
 #include <TEveViewer.h>
 #include <TEveWindow.h>
+#include <TGLCamera.h> // for TGLCamera
 #include <TGLViewer.h>
 #include <TGTab.h>
 #include <TGeoManager.h>
 #include <TGeoVolume.h>
+#include <TH1.h> // for TH1I
 #include <TH2Poly.h>
-#include <TROOT.h> // for TROOT, gROOT
+#include <TNamed.h> // for TNamed
+#include <TROOT.h>  // for TROOT, gROOT
 #include <TRandom.h>
 #include <TRootEmbeddedCanvas.h>
+#include <TSeqCollection.h> // for TSeqCollection
 #include <TStyle.h>
+#include <TVirtualPad.h> // for TVirtualPad, gPad
+
+#include <array>              // for array
+#include <cstdio>             // for sprintf
+#include <ext/alloc_traits.h> // for __alloc_traits<>::value_type
+#include <iostream>           // for operator<<, endl, basic_ostream
+#include <utility>            // for move
+class TGeoNode;
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -38,8 +55,8 @@ ClassImp(AtTabMain);
 AtTabMain::AtTabMain()
    : fRawEvent(nullptr), fEvent(nullptr), fDetmap(nullptr), fThreshold(0), fHitSet(nullptr), fPadPlanePal(nullptr),
      fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium), fCvsPadPlane(nullptr), fPadPlane(nullptr),
-     fCvsPadWave(nullptr), fPadWave(nullptr), fMultiHit(0), fEventBranch("AtEvent"), fRawEventBranch("AtRawEvent"), fInfoEventName("AtEvent"),
-     fInfoRawEventName("AtRawEvent")
+     fCvsPadWave(nullptr), fPadWave(nullptr), fMultiHit(0), fEventBranch("AtEvent"), fRawEventBranch("AtRawEvent"),
+     fInfoEventName("AtEvent"), fInfoRawEventName("AtRawEvent")
 {
 }
 
@@ -58,10 +75,8 @@ void AtTabMain::InitTab()
    fDetmap->SetName("fMap");
    gROOT->GetListOfSpecials()->Add(fDetmap.get());
 
-   auto tTabInfoEvent = std::make_unique<AtTabInfoEvent>();
-   tTabInfoEvent->SetBranch(fEventBranch);
-   auto tTabInfoRawEvent = std::make_unique<AtTabInfoRawEvent>();
-   tTabInfoRawEvent->SetBranch(fRawEventBranch);
+   auto tTabInfoEvent = std::make_unique<AtTabInfoFairRoot<AtEvent>>(fEventBranch);
+   auto tTabInfoRawEvent = std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(fRawEventBranch);
 
    fTabInfo->AddAugment(fInfoEventName, std::move(tTabInfoEvent));
    fTabInfo->AddAugment(fInfoRawEventName, std::move(tTabInfoRawEvent));
@@ -141,10 +156,10 @@ void AtTabMain::MakeTab()
    dfViewer->DoDraw();
 }
 
-void AtTabMain::UpdateTab() 
+void AtTabMain::UpdateTab()
 {
-   fEvent = dynamic_cast<AtTabInfoEvent *>(fTabInfo->GetAugment(fInfoEventName))->GetEvent();
-   fRawEvent = dynamic_cast<AtTabInfoRawEvent *>(fTabInfo->GetAugment(fInfoRawEventName))->GetRawEvent();
+   fEvent = dynamic_cast<AtTabInfoFairRoot<AtEvent> *>(fTabInfo->GetAugment(fInfoEventName))->GetInfo();
+   fRawEvent = dynamic_cast<AtTabInfoFairRoot<AtRawEvent> *>(fTabInfo->GetAugment(fInfoRawEventName))->GetInfo();
 }
 
 void AtTabMain::DrawEvent()
