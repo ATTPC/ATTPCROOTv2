@@ -6,9 +6,14 @@
 #include <Rtypes.h>  // for Int_t, Bool_t, THashConsistencyHolder, Color_t
 #include <TString.h> // for TString
 
-#include <vector>
 #include <unordered_map>
+#include <memory>         // for shared_ptr
+#include <string>         // for string
+#include <utility>        // for pair
 
+class TBuffer;
+class TClass;
+class TMemberInspector;
 class AtEvent;
 class AtEventManagerNew;
 class AtRawEvent;
@@ -17,43 +22,44 @@ class AtPad;
 class TCanvas;
 class TEveRGBAPalette;
 class TH1D;
-class TPaletteAxis;
 
-enum class PadDrawType{ kADC, kRawADC, kArrAug };
 
 class AtTabPad : public AtTabBase {
+public:
+   enum class PadDrawType{ kADC, kRawADC, kArrAug };
+
 protected:
-   AtRawEvent *fRawEvent;
-   AtEvent *fEvent;
+   AtRawEvent *fRawEvent{nullptr};
+   AtEvent *fEvent{nullptr};
 
-   AtPad *fPad;
+   AtPad *fPad{nullptr};
 
-   AtEventManagerNew *fEventManager;
+   AtEventManagerNew *fEventManager{nullptr};
 
-   std::shared_ptr<AtMap> fDetmap;
+   std::shared_ptr<AtMap> fDetmap{nullptr};
 
-   TString fMap;
+   //TString fMap;
 
-   TCanvas *fCvsPad;
+   TCanvas *fCvsPad{nullptr};
 
-   Int_t fRows;
-   Int_t fCols;
+   Int_t fRows{1};
+   Int_t fCols{1};
 
    std::unordered_map<Int_t, std::pair<PadDrawType, TH1D *>> fDrawMap;
    std::unordered_map<Int_t, TString> fAugNames;
 
-   TString fTabName;
+   TString fTabName{"AtPad"};
 
-   TString fEventBranch;
-   TString fRawEventBranch;
+   TString fEventBranch{"AtEventH"};
+   TString fRawEventBranch{"AtRawEvent"};
 
-   std::string fInfoEventName;
-   std::string fInfoRawEventName;
+   std::string fInfoEventName{"AtEventH"};
+   std::string fInfoRawEventName{"AtRawEvent"};
 
-   TEveRGBAPalette *fRGBAPalette;
+   TEveRGBAPalette *fRGBAPalette{nullptr};
 
 public:
-   AtTabPad();
+   AtTabPad() : AtTabBase(){}
    void InitTab() override;
    void UpdateTab() override;
    void Reset() override;

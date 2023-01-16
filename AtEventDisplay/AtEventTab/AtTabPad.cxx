@@ -5,21 +5,31 @@
 #include "AtMap.h"
 #include "AtPad.h"
 #include "AtPadArray.h"
+#include "AtPadBase.h" // for AtPadBase
 #include "AtRawEvent.h"
 #include "AtTabInfo.h"
 #include "AtTabInfoBase.h"
 #include "AtTabInfoEvent.h"
 #include "AtTabInfoRawEvent.h"
 
+#include <FairLogger.h> // for LOG
+
 #include <TCanvas.h>
 #include <TEveBrowser.h>
 #include <TEveManager.h>
 #include <TEveWindow.h>
 #include <TGTab.h>
+#include <TH1.h> // for TH1D
 #include <TH1D.h>
 #include <TROOT.h> // for TROOT, gROOT
 #include <TRootEmbeddedCanvas.h>
 #include <TStyle.h>
+
+#include <cstdio> // for sprintf
+
+#include <array>    // for array
+#include <iostream> // for operator<<, basic_ostream::operator<<
+#include <vector>   // for allocator
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -28,13 +38,6 @@ constexpr auto cGREEN = "\033[1;32m";
 constexpr auto cBLUE = "\033[1;34m";
 
 ClassImp(AtTabPad);
-
-AtTabPad::AtTabPad()
-   : fRawEvent(nullptr), fEvent(nullptr), fPad(nullptr), fDetmap(nullptr), fCvsPad(nullptr), fCols(1), fRows(1),
-     fTabName("AtPad"), fEventBranch("AtEvent"), fRawEventBranch("AtRawEvent"), fInfoEventName("AtEvent"),
-     fInfoRawEventName("AtRawEvent")
-{
-}
 
 void AtTabPad::InitTab()
 {
