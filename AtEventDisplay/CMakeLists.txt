@@ -47,7 +47,7 @@ Set(DEPENDENCIES
 
 if(HiRAEVT_FOUND)
   set(SRCS ${SRCS}
-    AtEventTab/AtTabInfoHEISTmusic.cxx
+    AtEventTab/AtTabInfoHiRAEVT.cxx
     )
   set(DEPENDENCIES ${DEPENDENCIES}
     HTDetectors
