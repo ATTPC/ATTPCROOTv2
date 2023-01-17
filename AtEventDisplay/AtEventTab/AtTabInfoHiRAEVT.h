@@ -1,7 +1,7 @@
 #ifndef ATTABINFOHIRAEVT_H
 #define ATTABINFOHIRAEVT_H
 
-#include "AtTabInfoBase.h"
+#include "AtTabInfo.h"
 
 #include <FairRootManager.h>
 
