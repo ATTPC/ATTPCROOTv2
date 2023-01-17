@@ -1,6 +1,7 @@
 #ifndef ATPSADECONV_H
 #define ATPSADECONV_H
 
+#include "AtDataSubject.h"
 #include "AtPSA.h"
 #include "AtPad.h"
 #include "AtRawEvent.h"
@@ -119,5 +120,41 @@ protected:
    /// Assumes that the pad has it's fourier transform information filled.
    HitVector AnalyzeFFTpad(AtPad &pad);
 };
+
+namespace DataHandling {
+
+class SubjectPSADeconv : public SubjectPSA {
+protected:
+   int fFilterOrder;
+   int fCutoffFreq;
+
+public:
+   SubjectPSADeconv(int filterOrder, int cutoff, int fThreshold, int fThresholdLow = -1)
+      : SubjectPSA(fThreshold, fThresholdLow), fFilterOrder(filterOrder), fCutoffFreq(cutoff)
+   {
+   }
+
+   int GetFilterOrder() const { return fFilterOrder; }
+   int GetCutoffFreq() const { return fCutoffFreq; }
+};
+
+class ObserverPSADeconv : public ObserverPSA {
+
+public:
+   ObserverPSADeconv(AtPSADeconv *psa) : ObserverPSA(psa){};
+
+   void Update(Subject *subject)
+   {
+      ObserverPSA::Update(subject);
+      auto sub = dynamic_cast<SubjectPSADeconv *>(subject);
+      if (sub == nullptr)
+         return;
+
+      auto psa = dynamic_cast<AtPSADeconv *>(fPSA);
+      psa->SetFilterOrder(sub->GetFilterOrder());
+      psa->SetCutoffFreq(sub->GetCutoffFreq());
+   }
+};
+} // namespace DataHandling
 
 #endif //#ifndef ATPSADECONV_H
