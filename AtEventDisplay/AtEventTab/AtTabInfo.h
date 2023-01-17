@@ -13,6 +13,7 @@
 #include <map>
 #include <memory> // for allocator
 #include <string>
+
 class SubjectBase;
 
 /**
@@ -45,13 +46,15 @@ public:
    virtual void Init() = 0;
 
    /**
-    * @brief update the data this holds from its source.
-    */
-   virtual void Update() = 0;
-   /**
     * @brief update the source of the data (part of its oberver interface).
     */
    virtual void Update(SubjectBase *changedSubject) = 0;
+
+protected:
+   /**
+    * @brief update the data this holds from its source.
+    */
+   virtual void Update() = 0;
 };
 
 /**
@@ -72,13 +75,16 @@ public:
    }
 
    void Init() override;
-   void Update() override;
+
    void Update(SubjectBase *changedSubject) override;
    void AttachToSubject(SubjectBase *subject) { fSubjects.insert(subject); }
 
    AtTabInfoBase *AddAugment(std::string name, std::unique_ptr<AtTabInfoBase> augment);
    AtTabInfoBase *ReplaceAugment(std::string name, std::unique_ptr<AtTabInfoBase> augment);
    AtTabInfoBase *GetAugment(std::string name);
+
+protected:
+   void Update() override{};
 };
 
 /**
@@ -119,12 +125,6 @@ public:
       }
    }
 
-   void Update() override
-   {
-      auto fEventArray = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(fBranchName));
-      if (fEventArray != nullptr)
-         fInfo = dynamic_cast<T *>(fEventArray->At(0));
-   }
    void SetBranch(TString branchName) { fBranchName = branchName; }
    T *GetInfo()
    {
@@ -132,6 +132,14 @@ public:
       return fInfo;
    }
    TString GetBranch() const { return fBranchName; }
+
+protected:
+   void Update() override
+   {
+      auto fEventArray = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(fBranchName));
+      if (fEventArray != nullptr)
+         fInfo = dynamic_cast<T *>(fEventArray->At(0));
+   }
 };
 
 #endif

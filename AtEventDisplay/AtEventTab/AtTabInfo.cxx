@@ -18,13 +18,6 @@ void AtTabInfo::Init()
    }
 }
 
-void AtTabInfo::Update()
-{
-   for (auto const &[name, info] : fInfoAugments) {
-      LOG(debug2) << "Updating " << name;
-      info->Update();
-   }
-}
 void AtTabInfo::Update(SubjectBase *changedSubject)
 {
    for (auto const &[name, info] : fInfoAugments) {
