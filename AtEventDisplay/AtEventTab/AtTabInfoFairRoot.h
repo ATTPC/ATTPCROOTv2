@@ -6,15 +6,11 @@
 #include <FairLogger.h> // for Logger, LOG
 #include <FairRootManager.h>
 
-#include <Rtypes.h> // for THashConsistencyHolder, ClassDefOverride
 #include <TClonesArray.h>
 #include <TObject.h> // for TObject
 #include <TString.h>
 
 #include <memory> // for allocator
-class TBuffer;
-class TClass;
-class TMemberInspector;
 
 /**
  * @brief Class for tracking the information from a branch of the FairRoot source tree.
@@ -48,8 +44,6 @@ public:
    void Update() override { fInfo = dynamic_cast<T *>(fEventArray->At(0)); }
    void SetBranch(TString branchName) { fBranchName = branchName; }
    T *GetInfo() { return fInfo; }
-
-   ClassDefOverride(AtTabInfoFairRoot, 1);
 };
 
 #endif

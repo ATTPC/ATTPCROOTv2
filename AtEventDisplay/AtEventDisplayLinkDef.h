@@ -18,13 +18,13 @@
 #pragma link C++ class AtTabPad + ;
 #pragma link C++ class AtTabMacro + ;
 
-#pragma link C++ class AtTabInfoBase + ;
-#pragma link C++ class AtTabInfo + ;
+#pragma link C++ class AtTabInfoBase - !;
+#pragma link C++ class AtTabInfo - !;
 // clang-format off
-#pragma link C++ class AtTabInfoFairRoot<AtEvent> + ;
-#pragma link C++ class AtTabInfoFairRoot<AtRawEvent> + ;
-#pragma link C++ class AtTabInfoFairRoot<AtPatternEvent> + ;
-#pragma link C++ class AtTabInfoHiRAEVT<HTMusicIC> + ;
+#pragma link C++ class AtTabInfoFairRoot<AtEvent>-!;
+#pragma link C++ class AtTabInfoFairRoot<AtRawEvent>-!;
+#pragma link C++ class AtTabInfoFairRoot<AtPatternEvent>-!;
+#pragma link C++ class AtTabInfoHiRAEVT<HTMusicIC>-!;
 // clang-format on
 
 #endif
