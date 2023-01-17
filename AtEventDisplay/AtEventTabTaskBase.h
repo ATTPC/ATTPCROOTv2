@@ -15,7 +15,7 @@ class AtRawEvent;        // lines 22-22
 class TBuffer;
 class TCanvas; // lines 30-30
 class TClass;
-class TClonesArray;    // lines 31-31
+class TClonesArray; // lines 31-31
 class TMemberInspector;
 
 class AtEventTabTaskBase : public FairTask {

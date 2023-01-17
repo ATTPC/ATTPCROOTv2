@@ -92,7 +92,7 @@ class AtTabInfoFairRoot : public AtTabInfoBase {
 
 protected:
    TString fBranchName;
-   T *fInfo;
+   T *fInfo{nullptr};
 
 public:
    AtTabInfoFairRoot() : AtTabInfoFairRoot(T::Class_Name()) {}
@@ -120,11 +120,11 @@ public:
    void Update() override
    {
       auto fEventArray = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(fBranchName));
-      LOG(debug2) << "Updating info from " << fBranchName;
-      fInfo = dynamic_cast<T *>(fEventArray->At(0));
-      }
-      void SetBranch(TString branchName) { fBranchName = branchName; }
-      T *GetInfo() { return fInfo; }
-   };
+      if (fEventArray != nullptr)
+         fInfo = dynamic_cast<T *>(fEventArray->At(0));
+   }
+   void SetBranch(TString branchName) { fBranchName = branchName; }
+   T *GetInfo() { return fInfo; }
+};
 
 #endif

@@ -6,10 +6,10 @@
 #include <Rtypes.h>  // for Int_t, Bool_t, THashConsistencyHolder, Color_t
 #include <TString.h> // for TString
 
+#include <memory> // for shared_ptr
+#include <string> // for string
 #include <unordered_map>
-#include <memory>         // for shared_ptr
-#include <string>         // for string
-#include <utility>        // for pair
+#include <utility> // for pair
 
 class TBuffer;
 class TClass;
@@ -29,7 +29,7 @@ class TH1D;
  */
 class AtTabPad : public AtTabBase {
 public:
-   enum class PadDrawType{ kADC, kRawADC, kArrAug };
+   enum class PadDrawType { kADC, kRawADC, kArrAug };
 
 protected:
    AtPad *fPad{nullptr};
@@ -38,7 +38,7 @@ protected:
 
    std::shared_ptr<AtMap> fDetmap{nullptr};
 
-   //TString fMap;
+   // TString fMap;
 
    TCanvas *fCvsPad{nullptr};
 
@@ -59,7 +59,7 @@ protected:
    TEveRGBAPalette *fRGBAPalette{nullptr};
 
 public:
-   AtTabPad() : AtTabBase(){}
+   AtTabPad() : AtTabBase() {}
    void InitTab() override;
    void UpdateTab() override;
    void Reset() override;
@@ -69,10 +69,10 @@ public:
    void SetDrawArrayAug(Int_t pos, TString augName);
    void SetMap(std::shared_ptr<AtMap> map) { fDetmap = map; }
    void SetColumns(Int_t cols) { fCols = cols; }
-   void SetRows(Int_t rows) {fRows = rows;}
+   void SetRows(Int_t rows) { fRows = rows; }
    void SetTabName(TString tabName) { fTabName = tabName; }
-   void DrawTree() override { };
-   void DrawEvent() override { };
+   void DrawTree() override{};
+   void DrawEvent() override{};
    void DrawPad(Int_t padNum) override;
 
    void SetEventBranch(TString name) { fEventBranch = name; }

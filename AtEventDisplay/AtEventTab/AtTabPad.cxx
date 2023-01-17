@@ -86,15 +86,15 @@ void AtTabPad::MakeTab()
 
 void AtTabPad::UpdateTab()
 {
-   //fEvent = dynamic_cast<AtTabInfoFairRoot<AtEvent> *>(fTabInfo->GetAugment(fInfoEventName))->GetInfo();
-   
+   // fEvent = dynamic_cast<AtTabInfoFairRoot<AtEvent> *>(fTabInfo->GetAugment(fInfoEventName))->GetInfo();
 }
 
 void AtTabPad::DrawPad(Int_t padNum)
 {
 
-   AtRawEvent* fRawEvent = dynamic_cast<AtTabInfoFairRoot<AtRawEvent> *>(fTabInfo->GetAugment(fInfoRawEventName))->GetInfo();
-      
+   AtRawEvent *fRawEvent =
+      dynamic_cast<AtTabInfoFairRoot<AtRawEvent> *>(fTabInfo->GetAugment(fInfoRawEventName))->GetInfo();
+
    fPad = nullptr;
    fCvsPad->Clear();
    if (fRawEvent == nullptr) {
@@ -120,7 +120,7 @@ void AtTabPad::DrawPad(Int_t padNum)
 
 void AtTabPad::Reset()
 {
-   //fRawEvent = nullptr;
+   // fRawEvent = nullptr;
 }
 
 void AtTabPad::DrawPosition(Int_t pos)

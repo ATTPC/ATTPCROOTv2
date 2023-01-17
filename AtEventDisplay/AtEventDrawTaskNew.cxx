@@ -127,7 +127,7 @@ InitStatus AtEventDrawTaskNew::Init()
    DrawPadWave();
    fCvsPadPlane = fEventManager->GetCvsPadPlane(); // There is a problem if the pad plane is drawn first
    fCvsPadPlane->ToggleEventStatus();
-   //fCvsPadPlane->AddExec("ex", "AtEventDrawTaskNew::SelectPad(\"fRawEvent\")");
+   // fCvsPadPlane->AddExec("ex", "AtEventDrawTaskNew::SelectPad(\"fRawEvent\")");
    DrawPadPlane();
    /*fCvsQuadrant1 = fEventManager->GetCvsQuadrant1();
     fCvsQuadrant2 = fEventManager->GetCvsQuadrant2();
@@ -394,7 +394,7 @@ void AtEventDrawTaskNew::DrawPad(Int_t taskNum, Int_t PadNum)
    sprintf(name, "fRawEvent_DT%i", taskNum);
    std::cout << "checking fRawevent" << std::endl;
    AtRawEvent *tRawEvent = dynamic_cast<AtRawEvent *>(gROOT->GetListOfSpecials()->FindObject(name));
-   if(tRawEvent == nullptr) {
+   if (tRawEvent == nullptr) {
       std::cout << "tRawEvent is NULL!" << std::endl;
    } else {
       std::cout << "tRawEvent is not nullptr" << std::endl;

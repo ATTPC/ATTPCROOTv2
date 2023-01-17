@@ -51,7 +51,7 @@ AtTabInfoBase *AtTabInfo::ReplaceAugment(std::string name, std::unique_ptr<AtTab
 
 AtTabInfoBase *AtTabInfo::GetAugment(std::string name)
 {
-   if(fInfoAugments.find(name) == fInfoAugments.end())
+   if (fInfoAugments.find(name) == fInfoAugments.end())
       return nullptr;
    else
       return fInfoAugments.at(name).get();

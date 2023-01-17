@@ -103,16 +103,24 @@ void AtEventManagerNew::GenerateBranchLists()
 
    // Loop through the entire branch list and try to identify the class type of each branch
    for (int i = 0; i < ioMan->GetBranchNameList()->GetSize(); i++) {
+
       auto branchName = ioMan->GetBranchName(i);
+      std::cout << "Looking for " << branchName << std::endl;
       auto branchArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(branchName));
-      if (branchArray == nullptr || branchArray->GetSize() < 1)
+      if (branchArray == nullptr)
          continue;
+
+      while (branchArray->GetSize() == 0)
+         NextEvent();
+      std::cout << branchName << " as " << branchArray << " " << branchArray->GetSize() << std::endl;
 
       // Check for event types this is very hacky but what can you do
       for (int j = 0; j < fBranchTypes.size(); ++j) {
          fSubjectBranchNames[j] = std::make_unique<BranchName>(fBranchTypes[j], "", "");
-         if (std::string(branchArray->At(0)->ClassName()).compare(fBranchTypes[j]) == 0)
+         if (std::string(branchArray->At(0)->ClassName()).compare(fBranchTypes[j]) == 0) {
+            std::cout << "Found as " << fBranchTypes[j] << std::endl;
             fBranchNames[j].push_back(branchName);
+         }
       }
    }
 }
@@ -138,7 +146,7 @@ void AtEventManagerNew::Init()
 
    // Register the data sources with every tab now that everything is in place
    RegisterDataHandles();
-
+   GotoEvent(0);
    std::cout << "End of AtEventManagerNew" << std::endl;
 }
 
@@ -211,8 +219,8 @@ void AtEventManagerNew::make_gui()
    fBranchBoxes[0] = new TGComboBox(f2);
    for (int i = 0; i < fBranchNames[0].size(); ++i)
       fBranchBoxes[0]->AddEntry(fBranchNames[0][i], i);
-   fBranchBoxes[0]->Select(0);
    fBranchBoxes[0]->Connect("Selected(Int_t)", "AtEventManagerNew", this, "SelectAtRawEvent(Int_t)");
+   fBranchBoxes[0]->Select(0);
 
    f2->AddFrame(fBranchBoxes[0], new TGLayoutHints(kLHintsExpandX | kLHintsCenterY | kLHintsExpandY));
    frmMain->AddFrame(f2, new TGLayoutHints(kLHintsExpandX));
@@ -224,8 +232,8 @@ void AtEventManagerNew::make_gui()
    fBranchBoxes[1] = new TGComboBox(f2);
    for (int i = 0; i < fBranchNames[1].size(); ++i)
       fBranchBoxes[1]->AddEntry(fBranchNames[1][i], i);
-   fBranchBoxes[1]->Select(0);
    fBranchBoxes[1]->Connect("Selected(Int_t)", "AtEventManagerNew", this, "SelectAtEvent(Int_t)");
+   fBranchBoxes[1]->Select(0);
 
    f2->AddFrame(fBranchBoxes[1], new TGLayoutHints(kLHintsExpandX | kLHintsCenterY | kLHintsExpandY));
    frmMain->AddFrame(f2, new TGLayoutHints(kLHintsExpandX));
@@ -237,8 +245,8 @@ void AtEventManagerNew::make_gui()
    fBranchBoxes[2] = new TGComboBox(f2);
    for (int i = 0; i < fBranchNames[2].size(); ++i)
       fBranchBoxes[2]->AddEntry(fBranchNames[2][i], i);
-   fBranchBoxes[2]->Select(0);
    fBranchBoxes[2]->Connect("Selected(Int_t)", "AtEventManagerNew", this, "SelectAtPatternEvent(Int_t)");
+   fBranchBoxes[2]->Select(0);
 
    f2->AddFrame(fBranchBoxes[2], new TGLayoutHints(kLHintsExpandX | kLHintsCenterY | kLHintsExpandY));
    frmMain->AddFrame(f2, new TGLayoutHints(kLHintsExpandX));
@@ -371,4 +379,7 @@ void AtEventManagerNew::RegisterDataHandles()
    for (auto &branchSubject : fSubjectBranchNames) {
       fTabTask->AddDataSourceToTabs(branchSubject.get());
    }
+   for (int i = 0; i < fSubjectBranchNames.size(); ++i)
+      if (fBranchNames[i].size() > 0)
+         SelectEventBranch(0, i);
 }

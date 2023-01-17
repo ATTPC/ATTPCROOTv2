@@ -53,8 +53,7 @@ ClassImp(AtTabMain);
 AtTabMain::AtTabMain()
    : fRawEvent(nullptr), fEvent(nullptr), fDetmap(nullptr), fThreshold(0), fHitSet(nullptr), fPadPlanePal(nullptr),
      fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium), fCvsPadPlane(nullptr), fPadPlane(nullptr),
-     fCvsPadWave(nullptr), fPadWave(nullptr), fMultiHit(0), fEventBranch("AtEvent"), fRawEventBranch("AtRawEvent"),
-     fInfoEventName("AtEvent"), fInfoRawEventName("AtRawEvent")
+     fCvsPadWave(nullptr), fPadWave(nullptr), fMultiHit(0)
 {
 }
 
@@ -73,8 +72,8 @@ void AtTabMain::InitTab()
    fDetmap->SetName("fMap");
    gROOT->GetListOfSpecials()->Add(fDetmap.get());
 
-   auto tTabInfoEvent = std::make_unique<AtTabInfoFairRoot<AtEvent>>(fEventBranch);
-   auto tTabInfoRawEvent = std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(fRawEventBranch);
+   auto tTabInfoEvent = std::make_unique<AtTabInfoFairRoot<AtEvent>>(fDefaultEventBranch);
+   auto tTabInfoRawEvent = std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(fDefaultRawEventBranch);
 
    fTabInfo->AddAugment(fInfoEventName, std::move(tTabInfoEvent));
    fTabInfo->AddAugment(fInfoRawEventName, std::move(tTabInfoRawEvent));
@@ -230,7 +229,7 @@ void AtTabMain::DrawPadWave()
 
 void AtTabMain::DrawHitPoints()
 {
-
+   fEvent = dynamic_cast<AtTabInfoFairRoot<AtEvent> *>(fTabInfo->GetAugment(fInfoEventName))->GetInfo();
    if (fEvent == nullptr) {
       std::cout << "CRITICAL ERROR: Event missing for TabMain. Aborting draw." << std::endl;
       return;
@@ -240,7 +239,8 @@ void AtTabMain::DrawHitPoints()
    std::ofstream dumpEvent;
    dumpEvent.open("event.dat");
 
-   LOG(debug) << "Drawing 3D cloud for " << fEvent->GetEventID();
+   std::cout << "Drawing " << fEvent << std::endl;
+   LOG(info) << "Drawing 3D cloud for " << fEvent->GetEventID();
 
    Int_t eventID = fEvent->GetEventID();
    TString TSevt = " Event ID : ";
@@ -283,11 +283,11 @@ void AtTabMain::DrawHitPoints()
 
 void AtTabMain::DrawWave(Int_t PadNum)
 {
-   //std::cout << "checking fRawEvent" << std::endl;
+   // std::cout << "checking fRawEvent" << std::endl;
    if (fRawEvent == nullptr) {
       std::cout << "fRawEvent is NULL!" << std::endl;
    } else {
-      //std::cout << "fRawEvent is not nullptr" << std::endl;
+      // std::cout << "fRawEvent is not nullptr" << std::endl;
       AtPad *fPad = fRawEvent->GetPad(PadNum);
       if (fPad == nullptr)
          return;

@@ -14,24 +14,24 @@ AtEventTabTaskBase::AtEventTabTaskBase(std::unique_ptr<AtEventTab> eventTab)
 {
 }
 
-   AtEventTabTaskBase::~AtEventTabTaskBase() = default;
+AtEventTabTaskBase::~AtEventTabTaskBase() = default;
 
-   void AtEventTabTaskBase::Exec(Option_t * option)
-   {
-      Reset();
-   }
+void AtEventTabTaskBase::Exec(Option_t *option)
+{
+   Reset();
+}
 
-   void AtEventTabTaskBase::Reset()
-   {
-      fEventTab->Reset();
-   }
+void AtEventTabTaskBase::Reset()
+{
+   fEventTab->Reset();
+}
 
-   void AtEventTabTaskBase::MakeTab()
-   {
-      fEventTab->MakeTab();
-   }
+void AtEventTabTaskBase::MakeTab()
+{
+   fEventTab->MakeTab();
+}
 
-   void AtEventTabTaskBase::DrawPad(Int_t PadNum)
-   {
-      fEventTab->DrawPad(PadNum);
-   }
+void AtEventTabTaskBase::DrawPad(Int_t PadNum)
+{
+   fEventTab->DrawPad(PadNum);
+}
