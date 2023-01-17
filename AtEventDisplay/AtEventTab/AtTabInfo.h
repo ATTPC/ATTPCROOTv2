@@ -94,7 +94,11 @@ public:
          LOG(INFO) << cGREEN << "Found branch " << fBranchName << " containing " << T::Class_Name() << "." << cNORMAL;
    }
 
-   void Update() override { fInfo = dynamic_cast<T *>(fEventArray->At(0)); }
+   void Update() override
+   {
+      LOG(debug2) << "Updating info from " << fBranchName;
+      fInfo = dynamic_cast<T *>(fEventArray->At(0));
+   }
    void SetBranch(TString branchName) { fBranchName = branchName; }
    T *GetInfo() { return fInfo; }
 };

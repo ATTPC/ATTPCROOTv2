@@ -34,7 +34,7 @@ InitStatus AtTabTask::Init()
 void AtTabTask::Exec(Option_t *option)
 {
    Reset();
-
+   LOG(debug) << "Executing all tabs" << std::endl;
    for (auto &fTab : fTabs) {
       fTab->Update();
       fTab->DrawEvent();
@@ -50,6 +50,7 @@ void AtTabTask::Reset()
 
 void AtTabTask::DrawPad(Int_t PadNum)
 {
+   LOG(debug) << "Drawing all tabs" << std::endl;
    for (auto &fTab : fTabs) {
       fTab->DrawPad(PadNum);
    }

@@ -2,15 +2,20 @@
 #include "AtEventDrawTask.h"
 #include "AtEventManager.h"
 
-#include "FairLogger.h"
 #include "FairParRootFileIo.h"
 #include "FairRunAna.h"
 */
-
+#include "FairLogger.h"
 #include "HEISTpid1.h"
 
 void run_eve_test_heist(int runNum = 214, TString OutputDataFile = "./data/output.reco_display.root")
 {
+   auto verbSpec =
+      fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
+   fair::Logger::DefineVerbosity("user1", verbSpec);
+   // fair::Logger::SetVerbosity("user1");
+   // fair::Logger::SetConsoleSeverity("debug");
+
    TString inputDirectory = "/mnt/analysis/e12014/TPC/unpackedLinked/";
    TString InputDataFile = TString::Format(inputDirectory + "/run_%04d.root", runNum);
    TString evtInputDataFile = TString::Format(inputDirectory + "/evtRun_%04d.root", runNum);
@@ -61,8 +66,8 @@ void run_eve_test_heist(int runNum = 214, TString OutputDataFile = "./data/outpu
    auto heistInfo = std::make_unique<AtTabInfoHiRAEVT<HTMusicIC>>("MUSIC");
    auto tabMac = std::make_unique<AtTabMacro>();
    tabMac->AddInfoAugment("MusicIC", std::move(heistInfo));
-   tabMac->SetInputTree(evtInputDataFile, "E12014");
-   tabMac->SetDrawTreeFunction(0, PlotPID);
+   // tabMac->SetInputTree(evtInputDataFile, "E12014");
+   //  tabMac->SetDrawTreeFunction(0, PlotPID);
 
    AtTabTask *tab = new AtTabTask();
    tab->AddTab(std::move(tabMain));
