@@ -39,6 +39,8 @@ public:
       fDetector = fDetectorReader->Get();
    }
 
+   void Update(SubjectBase *changedSubject) override {}
+
    T *GetInfo() { return fDetector; }
 
    void SetTree(TString name) { fTree = name; }

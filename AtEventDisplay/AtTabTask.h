@@ -16,6 +16,7 @@ class TBuffer;
 class TMemberInspector;
 class TTree;
 class TClass;
+class SubjectBase;
 
 class AtTabTask : public FairTask {
 protected:
@@ -37,6 +38,8 @@ public:
    void DrawPad(Int_t PadNum);
 
    void AddTab(std::unique_ptr<AtTabBase> tab) { fTabs.push_back(std::move(tab)); }
+
+   void AddDataSourceToTabs(SubjectBase *subject);
 
    ClassDefOverride(AtTabTask, 1);
 };

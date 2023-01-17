@@ -1,6 +1,8 @@
 #ifndef ATTABINFO_H
 #define ATTABINFO_H
 
+#include "AtDataSource.h"
+
 #include <FairLogger.h> // for Logger, LOG
 #include <FairRootManager.h>
 
@@ -10,8 +12,8 @@
 
 #include <map>
 #include <memory> // for allocator
-#include <memory> // for unique_ptr
 #include <string>
+class SubjectBase;
 
 /**
  * @defgroup TabData Data for tabs
@@ -32,6 +34,7 @@
  * @ingroup TabData
  */
 class AtTabInfoBase {
+
 public:
    AtTabInfoBase() = default;
    virtual ~AtTabInfoBase() = default;
@@ -44,6 +47,10 @@ public:
     * @brief update the data this holds from its source.
     */
    virtual void Update() = 0;
+   /**
+    * @brief update the source of the data (part of its oberver interface).
+    */
+   virtual void Update(SubjectBase *changedSubject) = 0;
 };
 
 /**
@@ -53,11 +60,20 @@ public:
 class AtTabInfo : public AtTabInfoBase {
 protected:
    std::map<std::string, std::unique_ptr<AtTabInfoBase>> fInfoAugments;
+   std::set<SubjectBase *> fSubjects;
 
 public:
    AtTabInfo() = default;
+   ~AtTabInfo()
+   {
+      for (auto sub : fSubjects)
+         sub->Detach(this);
+   }
+
    void Init() override;
    void Update() override;
+   void Update(SubjectBase *changedSubject) override;
+   void AttachToSubject(SubjectBase *subject) { fSubjects.insert(subject); }
 
    AtTabInfoBase *AddAugment(std::string name, std::unique_ptr<AtTabInfoBase> augment);
    AtTabInfoBase *ReplaceAugment(std::string name, std::unique_ptr<AtTabInfoBase> augment);
@@ -76,7 +92,6 @@ class AtTabInfoFairRoot : public AtTabInfoBase {
 
 protected:
    TString fBranchName;
-   TClonesArray *fEventArray{};
    T *fInfo;
 
 public:
@@ -86,21 +101,30 @@ public:
    void Init() override
    {
 
-      fEventArray = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(fBranchName));
-
       constexpr auto cNORMAL = "\033[0m";
       constexpr auto cGREEN = "\033[1;32m";
-      if (fEventArray)
+      if (dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(fBranchName)))
          LOG(INFO) << cGREEN << "Found branch " << fBranchName << " containing " << T::Class_Name() << "." << cNORMAL;
    }
 
+   void Update(SubjectBase *changedSubject) override
+   {
+      // If it is a branch change with a matching type, update us.
+      auto branchChange = dynamic_cast<BranchName *>(changedSubject);
+
+      if (branchChange != nullptr && std::string(T::Class_Name()).compare(branchChange->GetBranchType()) == 0) {
+         LOG(info) << "Updating branch name from " << fBranchName << " to " << branchChange->GetBranchName();
+         fBranchName = branchChange->GetBranchName();
+      }
+   }
    void Update() override
    {
+      auto fEventArray = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(fBranchName));
       LOG(debug2) << "Updating info from " << fBranchName;
       fInfo = dynamic_cast<T *>(fEventArray->At(0));
-   }
-   void SetBranch(TString branchName) { fBranchName = branchName; }
-   T *GetInfo() { return fInfo; }
-};
+      }
+      void SetBranch(TString branchName) { fBranchName = branchName; }
+      T *GetInfo() { return fInfo; }
+   };
 
 #endif

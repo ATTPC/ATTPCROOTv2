@@ -25,6 +25,13 @@ void AtTabInfo::Update()
       info->Update();
    }
 }
+void AtTabInfo::Update(SubjectBase *changedSubject)
+{
+   for (auto const &[name, info] : fInfoAugments) {
+      LOG(debug2) << "Updating source for" << name;
+      info->Update(changedSubject);
+   }
+}
 
 AtTabInfoBase *AtTabInfo::AddAugment(std::string name, std::unique_ptr<AtTabInfoBase> augment)
 {
