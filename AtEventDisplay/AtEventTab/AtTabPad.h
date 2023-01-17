@@ -23,15 +23,15 @@ class TCanvas;
 class TEveRGBAPalette;
 class TH1D;
 
-
+/**
+ * Class for drawing traces from pads in an AtRawEvent.
+ *
+ */
 class AtTabPad : public AtTabBase {
 public:
    enum class PadDrawType{ kADC, kRawADC, kArrAug };
 
 protected:
-   AtRawEvent *fRawEvent{nullptr};
-   AtEvent *fEvent{nullptr};
-
    AtPad *fPad{nullptr};
 
    AtEventManagerNew *fEventManager{nullptr};

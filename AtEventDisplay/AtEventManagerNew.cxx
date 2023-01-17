@@ -63,21 +63,35 @@ AtEventManagerNew *AtEventManagerNew::Instance()
    return fInstance;
 }
 
-AtEventManagerNew::AtEventManagerNew()
-   : TEveEventManager("AtEventManager", ""), fRootManager(FairRootManager::Instance()), fRunAna(FairRunAna::Instance()),
-     fEntry(0), fEvent(nullptr), fCurrentEvent(nullptr), f3DThresDisplay(nullptr), kToggleData(false), fEntries(0), fTabTask(nullptr)
+AtEventManagerNew::AtEventManagerNew(std::shared_ptr<AtMap> map)
+   : TEveEventManager("AtEventManager", ""), fEntry(0), fCurrentEvent(nullptr), f3DThresDisplay(nullptr),
+     kToggleData(false), fEntries(0), fTabTask(nullptr), fMap(map)
 
 {
+   if (fInstance != nullptr)
+      LOG(fatal) << "Attempting to create a second instance of AtEventManagerNew! Only one is allowed!";
    fInstance = this;
 }
 
-AtEventManagerNew::~AtEventManagerNew() = default;
+AtEventManagerNew::~AtEventManagerNew()
+{
+   fInstance = nullptr;
+}
 
-void AtEventManagerNew::AddTabTask(AtTabTask *task) {
-   if(fTabTask != nullptr) 
-      LOG(error) << "AtTabTask already exists in Event Manager. Only one can exist!";
+void AtEventManagerNew::AddTask(FairTask *task)
+{
+   if (dynamic_cast<AtTabTask *>(task) == nullptr)
+      FairRunAna::Instance()->AddTask(task);
+   else
+      AddTabTask(dynamic_cast<AtTabTask *>(task));
+}
+
+void AtEventManagerNew::AddTabTask(AtTabTask *task)
+{
+   if (fTabTask != nullptr)
+      LOG(fatal) << "AtTabTask already exists in Event Manager. Only one can exist!";
    else {
-      AddTask(task);
+      FairRunAna::Instance()->AddTask(task);
       fTabTask = task;
    }
 }
@@ -88,19 +102,20 @@ void AtEventManagerNew::Init()
    gStyle->SetPalette(55);
    TEveManager::Create();
 
+   /*
    Int_t dummy;
    UInt_t width, height;
    UInt_t widthMax = 1400, heightMax = 650;
    gVirtualX->GetWindowSize(gClient->GetRoot()->GetId(), dummy, dummy, width, height);
-
+   */
    /**************************************************************************/
 
-   fRunAna->Init();
+   FairRunAna::Instance()->Init();
    TChain *chain = FairRootManager::Instance()->GetInChain();
    fEntries = chain->GetEntriesFast();
 
    /**************************************************************************/
-   fEvent = gEve->AddEvent(this);
+   gEve->AddEvent(this);
    make_gui();
 
    std::cout << "End of AtEventManagerNew" << std::endl;
@@ -113,83 +128,82 @@ void AtEventManagerNew::SelectEvent()
 
 void AtEventManagerNew::GotoEvent(Int_t event)
 {
-
+   std::cout << "Current event: " << FairRootManager::Instance()->GetEntryNr() << std::endl;
    fEntry = event;
    std::cout << cWHITERED << " Event number : " << fEntry << cNORMAL << std::endl;
-   fRunAna->Run((Long64_t)event);
+   FairRunAna::Instance()->Run((Long64_t)event);
+   std::cout << "New event: " << FairRootManager::Instance()->GetEntryNr() << std::endl;
 }
 
 void AtEventManagerNew::NextEvent()
 {
-   fEntry += 1;
-   std::cout << " Event number : " << fEntry << std::endl;
-   fRunAna->Run((Long64_t)fEntry);
+   GotoEvent(fEntry + 1);
 }
 
 void AtEventManagerNew::PrevEvent()
 {
-   fEntry -= 1;
-   std::cout << " Event number : " << fEntry << std::endl;
-   fRunAna->Run((Long64_t)fEntry);
+
+   GotoEvent(fEntry - 1);
+   /*   fEntry -= 1;
+      std::cout << " Event number : " << fEntry << std::endl;
+      FairRunAna::Instance()->Run((Long64_t)fEntry);
+   */
 }
 
+// Runs on any interaction with pad plane
 void AtEventManagerNew::SelectPad()
 {
+
    int event = gPad->GetEvent();
-   if (event != 11)
-      return; // may be comment this line
-   TObject *select = gPad->GetSelected();
-   if (!select)
+
+   if (event != 11) // Only continue if this was a left mouse click (rather than anything else)
       return;
-   if (select->InheritsFrom(TH2::Class())) {
-      auto *h = dynamic_cast<TH2Poly *>(select);
-      gPad->GetCanvas()->FeedbackMode(kTRUE);
-      // Char_t *bin_name = h->GetBinName();
+   auto *h = dynamic_cast<TH2Poly *>(gPad->GetSelected());
+   if (!h)
+      return;
 
-      int pyold = gPad->GetUniqueID();
-      int px = gPad->GetEventX();
-      int py = gPad->GetEventY();
-      float uxmin = gPad->GetUxmin();
-      float uxmax = gPad->GetUxmax();
-      int pxmin = gPad->XtoAbsPixel(uxmin);
-      int pxmax = gPad->XtoAbsPixel(uxmax);
-      if (pyold)
-         gVirtualX->DrawLine(pxmin, pyold, pxmax, pyold);
-      gVirtualX->DrawLine(pxmin, py, pxmax, py);
-      gPad->SetUniqueID(py);
-      Float_t upx = gPad->AbsPixeltoX(px);
-      Float_t upy = gPad->AbsPixeltoY(py);
-      Double_t x = gPad->PadtoX(upx);
-      Double_t y = gPad->PadtoY(upy);
-      Int_t bin = h->FindBin(x, y);
-      const char *bin_name = h->GetBinName(bin);
-      std::cout << " ==========================" << std::endl;
-      std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
+   gPad->GetCanvas()->FeedbackMode(true);
 
-      AtMap *tmap = nullptr;
-      tmap = dynamic_cast<AtMap *>(gROOT->GetListOfSpecials()->FindObject("fMap"));
-      if(tmap == nullptr) {
-         std::cout << "AtMap not set! Is an AtTabTask with AtTabMain included?" << std::endl;
-      }
-      else {
+   int pyold = gPad->GetUniqueID();
+   int px = gPad->GetEventX();
+   int py = gPad->GetEventY();
+   float uxmin = gPad->GetUxmin();
+   float uxmax = gPad->GetUxmax();
+   int pxmin = gPad->XtoAbsPixel(uxmin);
+   int pxmax = gPad->XtoAbsPixel(uxmax);
+   if (pyold)
+      gVirtualX->DrawLine(pxmin, pyold, pxmax, pyold);
+   gVirtualX->DrawLine(pxmin, py, pxmax, py);
+   gPad->SetUniqueID(py);
+   Float_t upx = gPad->AbsPixeltoX(px);
+   Float_t upy = gPad->AbsPixeltoY(py);
+   Double_t x = gPad->PadtoX(upx);
+   Double_t y = gPad->PadtoY(upy);
+   Int_t bin = h->FindBin(x, y);
+   const char *bin_name = h->GetBinName(bin);
+   std::cout << " ==========================" << std::endl;
+   std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
+
+   AtMap *tmap = AtEventManagerNew::Instance()->GetMap();
+   if (tmap == nullptr) {
+      LOG(fatal) << "AtMap not set! Pass a valid map to the constructor of AtEventManagerNew!";
+   } else {
       Int_t tPadNum = tmap->BinToPad(bin);
       std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
       std::cout << " Electronic mapping: " << tmap->GetPadRef(tPadNum) << std::endl;
-      //std::cout << " Event ID (Select Pad) : " << tRawEvent->GetEventID() << std::endl;
       std::cout << " Raw Event Pad Num " << tPadNum << std::endl;
-      //DrawUpdates(drawNums, tPadNum);
-      AtEventManagerNew::Instance()->DrawUpdates(tPadNum);
-      }
+      AtEventManagerNew::Instance()->DrawPad(tPadNum);
    }
 }
 
-void AtEventManagerNew::DrawUpdates(Int_t padNum) {
+void AtEventManagerNew::DrawPad(Int_t padNum)
+{
    fTabTask->DrawPad(padNum);
 }
 
 void AtEventManagerNew::RunEvent()
 {
-   fRunAna->Run((Long64_t)fEntry);
+   FairRun::Instance()->Run((Long64_t)fEntry);
 }
 
 void AtEventManagerNew::make_gui()
@@ -198,6 +212,7 @@ void AtEventManagerNew::make_gui()
    TChain *chain = FairRootManager::Instance()->GetInChain();
    Int_t Entries = chain->GetEntriesFast();
 
+   // Get the sidebar and add a tab to the left (frmMain)
    TEveBrowser *browser = gEve->GetBrowser();
    browser->StartEmbedding(TRootBrowser::kLeft);
 
@@ -207,7 +222,7 @@ void AtEventManagerNew::make_gui()
 
    auto *hf = new TGVerticalFrame(frmMain);
 
-   auto *hf_2 = new TGHorizontalFrame(frmMain);
+   auto *hf_2 = new TGHorizontalFrame(frmMain); // Navigation button frame
    {
 
       TString icondir(Form("%s/icons/", gSystem->Getenv("VMCWORKDIR")));
@@ -242,6 +257,7 @@ void AtEventManagerNew::make_gui()
    auto *TEvent = new TGLabel(frmMain, nevent.Data());
    frmMain->AddFrame(TEvent);
 
+   // f is frame with current event: [selection box]
    auto *f = new TGHorizontalFrame(frmMain);
    auto *l = new TGLabel(f, "Current Event:");
    f->AddFrame(l, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
@@ -252,10 +268,11 @@ void AtEventManagerNew::make_gui()
    fCurrentEvent->Connect("ValueSet(Long_t)", "AtEventManagerNew", fInstance, "SelectEvent()");
    frmMain->AddFrame(f);
 
+   // End addition of things to the sidebar
    frmMain->MapSubwindows();
    frmMain->Resize();
    frmMain->MapWindow();
 
    browser->StopEmbedding();
-   browser->SetTabTitle("AtTPC Event Control", 0);
+   browser->SetTabTitle("Event Control", 0);
 }

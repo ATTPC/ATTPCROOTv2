@@ -69,8 +69,6 @@ public:
    void DrawEvent() override;
    void DrawPad(Int_t PadNum) override;
 
-   AtTabInfo *GetTabInfo() { return fTabInfo; }
-
    void SetMap(std::shared_ptr<AtMap> map) { fDetmap = map; }
    void SetThreshold(Int_t val) { fThreshold = val; }
    void SetHitAttributes(Color_t, Size_t, Style_t);

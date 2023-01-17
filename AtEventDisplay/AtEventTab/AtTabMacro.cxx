@@ -104,9 +104,8 @@ void AtTabMacro::DrawEvent()
       auto it = fDrawEventMap.find(i);
       if (it == fDrawEventMap.end()) {
          return;
-      }
-      else {
-         (it->second)(fTabInfo);
+      } else {
+         (it->second)(fTabInfo.get());
          UpdateCvsMacro();
       }
    }
@@ -120,9 +119,8 @@ void AtTabMacro::DrawPad(Int_t padNum)
       auto it = fDrawPadMap.find(i);
       if (it == fDrawPadMap.end()) {
          return;
-      }
-      else {
-         (it->second)(fTabInfo, padNum);
+      } else {
+         (it->second)(fTabInfo.get(), padNum);
          UpdateCvsMacro();
       }
    }
