@@ -6,8 +6,6 @@
 
 #include <Rtypes.h> // for Bool_t, THashConsistencyHolder, ClassDefOverride
 
-#include <limits>
-#include <memory> // for make_unique, unique_ptr
 #include <string>
 
 class AtPad;

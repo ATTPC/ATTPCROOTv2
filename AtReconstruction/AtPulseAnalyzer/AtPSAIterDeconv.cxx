@@ -1,27 +1,17 @@
 #include "AtPSAIterDeconv.h"
 
-#include "AtDigiPar.h"
 #include "AtHit.h"
 #include "AtPad.h"
 #include "AtPadArray.h"
 #include "AtPadBase.h" // for AtPadBase
 #include "AtPadFFT.h"
 
-#include <FairLogger.h>
-#include <FairParSet.h> // for FairParSet
-#include <FairRun.h>
-#include <FairRuntimeDb.h>
-
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h> // for XYZPoint
-#include <Rtypes.h>          // for Int_t, Double_t
-#include <TComplex.h>
 #include <TVirtualFFT.h>
 
-#include <cmath> // for sqrt
-#include <numeric>
-#include <stdexcept> // for runtime_error
-#include <utility>   // for move, pair
+#include <memory>
+#include <utility> // for move, pair
 
 using XYZPoint = ROOT::Math::XYZPoint;
 
@@ -41,7 +31,7 @@ AtPSAIterDeconv::HitVector AtPSAIterDeconv::AnalyzePad(AtPad *pad)
    }
 
    auto respPad = GetResponse(pad->GetPadNum());
-   AtPad *diffPad = new AtPad(pad->GetPadNum());
+   auto diffPad = std::make_unique<AtPad>(pad->GetPadNum());
 
    for (int i = 0; i < fIterations; i++) {
       for (int r = 0; r < 512; r++) {
@@ -51,18 +41,16 @@ AtPSAIterDeconv::HitVector AtPSAIterDeconv::AnalyzePad(AtPad *pad)
          }
          diffPad->SetADC(r, pad->GetADC(r) - reconSig);
       }
-      auto *testPad = new AtPad(pad->GetPadNum());
+      auto testPad = std::make_unique<AtPad>(pad->GetPadNum());
       testPad->SetADC(diffPad->GetADC());
-      RunPad(testPad);
+      RunPad(testPad.get());
 
       for (int r = 0; r < 512; r++) {
          auto charge = dynamic_cast<AtPadArray *>(pad->GetAugment(fQName))->GetArray(r);
          charge += dynamic_cast<AtPadArray *>(testPad->GetAugment("Qreco"))->GetArray(r);
          dynamic_cast<AtPadArray *>(pad->GetAugment(fQName))->SetArray(r, charge);
       }
-      testPad->Delete();
    }
-   diffPad->Delete();
 
    return chargeToHits(*pad, fQName);
 }
