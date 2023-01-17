@@ -1,7 +1,8 @@
 #ifndef ATTABINFO_H
 #define ATTABINFO_H
 
-#include "AtDataSource.h"
+#include "AtDataObserver.h"
+#include "AtDataSubject.h"
 
 #include <FairLogger.h> // for Logger, LOG
 #include <FairRootManager.h>
@@ -13,8 +14,6 @@
 #include <map>
 #include <memory> // for allocator
 #include <string>
-
-class SubjectBase;
 
 /**
  * @defgroup TabData Data for tabs
@@ -34,7 +33,7 @@ class SubjectBase;
  * @brief Interface for AtTabInfo classes.
  * @ingroup TabData
  */
-class AtTabInfoBase {
+class AtTabInfoBase : public DataHandling::Observer {
 
 public:
    AtTabInfoBase() = default;
@@ -45,10 +44,7 @@ public:
     */
    virtual void Init() = 0;
 
-   /**
-    * @brief update the source of the data (part of its oberver interface).
-    */
-   virtual void Update(SubjectBase *changedSubject) = 0;
+   virtual void Update(DataHandling::Subject *subject) override = 0;
 
 protected:
    /**
@@ -64,20 +60,14 @@ protected:
 class AtTabInfo : public AtTabInfoBase {
 protected:
    std::map<std::string, std::unique_ptr<AtTabInfoBase>> fInfoAugments;
-   std::set<SubjectBase *> fSubjects;
 
 public:
    AtTabInfo() = default;
-   ~AtTabInfo()
-   {
-      for (auto sub : fSubjects)
-         sub->Detach(this);
-   }
+   ~AtTabInfo() = default;
 
    void Init() override;
 
-   void Update(SubjectBase *changedSubject) override;
-   void AttachToSubject(SubjectBase *subject) { fSubjects.insert(subject); }
+   void Update(DataHandling::Subject *changedSubject) override;
 
    AtTabInfoBase *AddAugment(std::string name, std::unique_ptr<AtTabInfoBase> augment);
    AtTabInfoBase *ReplaceAugment(std::string name, std::unique_ptr<AtTabInfoBase> augment);
@@ -114,10 +104,10 @@ public:
          LOG(INFO) << cGREEN << "Found branch " << fBranchName << " containing " << T::Class_Name() << "." << cNORMAL;
    }
 
-   void Update(SubjectBase *changedSubject) override
+   void Update(DataHandling::Subject *changedSubject) override
    {
       // If it is a branch change with a matching type, update us.
-      auto branchChange = dynamic_cast<BranchName *>(changedSubject);
+      auto branchChange = dynamic_cast<DataHandling::BranchName *>(changedSubject);
 
       if (branchChange != nullptr && std::string(T::Class_Name()).compare(branchChange->GetBranchType()) == 0) {
          LOG(info) << "Updating branch name from " << fBranchName << " to " << branchChange->GetBranchName();

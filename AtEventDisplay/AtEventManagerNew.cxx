@@ -116,7 +116,7 @@ void AtEventManagerNew::GenerateBranchLists()
 
       // Check for event types this is very hacky but what can you do
       for (int j = 0; j < fBranchTypes.size(); ++j) {
-         fSubjectBranchNames[j] = std::make_unique<BranchName>(fBranchTypes[j], "", "");
+         fSubjectBranchNames[j] = std::make_unique<DataHandling::BranchName>(fBranchTypes[j], "", "");
          if (std::string(branchArray->At(0)->ClassName()).compare(fBranchTypes[j]) == 0) {
             std::cout << "Found as " << fBranchTypes[j] << std::endl;
             fBranchNames[j].push_back(branchName);

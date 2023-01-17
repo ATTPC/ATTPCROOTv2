@@ -1,7 +1,7 @@
 #ifndef AtEVENTMANAGERNEW_H
 #define AtEVENTMANAGERNEW_H
 
-#include "AtDataSource.h"
+#include "AtDataSubject.h"
 
 #include <FairRunAna.h>
 
@@ -32,7 +32,7 @@ private:
 
    /*** Sidebar info ***/
    std::array<std::string, 3> fBranchTypes{"AtRawEvent", "AtEvent", "AtPatternEvent"};
-   std::array<std::unique_ptr<BranchName>, 3> fSubjectBranchNames;
+   std::array<std::unique_ptr<DataHandling::BranchName>, 3> fSubjectBranchNames;
    std::array<TGComboBox *, 3> fBranchBoxes;
    std::array<std::vector<TString>, 3> fBranchNames;
 

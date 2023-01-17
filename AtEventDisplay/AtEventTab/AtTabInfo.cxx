@@ -18,7 +18,7 @@ void AtTabInfo::Init()
    }
 }
 
-void AtTabInfo::Update(SubjectBase *changedSubject)
+void AtTabInfo::Update(DataHandling::Subject *changedSubject)
 {
    for (auto const &[name, info] : fInfoAugments) {
       LOG(debug2) << "Updating source for" << name;

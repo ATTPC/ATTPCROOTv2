@@ -16,7 +16,9 @@ class TBuffer;
 class TMemberInspector;
 class TTree;
 class TClass;
-class SubjectBase;
+namespace DataHandling{
+class Subject;
+}
 
 class AtTabTask : public FairTask {
 protected:
@@ -39,7 +41,7 @@ public:
 
    void AddTab(std::unique_ptr<AtTabBase> tab) { fTabs.push_back(std::move(tab)); }
 
-   void AddDataSourceToTabs(SubjectBase *subject);
+   void AddDataSourceToTabs(DataHandling::Subject  *subject);
 
    ClassDefOverride(AtTabTask, 1);
 };

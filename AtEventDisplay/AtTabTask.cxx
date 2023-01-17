@@ -55,7 +55,7 @@ void AtTabTask::DrawPad(Int_t PadNum)
       fTab->DrawPad(PadNum);
    }
 }
-void AtTabTask::AddDataSourceToTabs(SubjectBase *subject)
+void AtTabTask::AddDataSourceToTabs(DataHandling::Subject *subject)
 {
    for (auto &tab : fTabs)
       subject->Attach(tab->GetTabInfo());
