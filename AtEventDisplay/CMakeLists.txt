@@ -17,8 +17,8 @@ AtEventTab/AtTabMacro.cxx
 AtEventTab/AtTabBase.cxx
 
 AtEventTab/AtTabInfo.cxx
-AtEventTab/AtDataSubject.cxx
-AtEventTab/AtDataObserver.cxx
+AtEventTab/AtSubjectEventViewer.cxx
+
 
 AtEventManager.cxx
 AtEventManagerNew.cxx
