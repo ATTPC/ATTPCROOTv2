@@ -43,6 +43,7 @@ public:
     * @brief setup how to access this info from its data source.
     */
    virtual void Init() = 0;
+
    /**
     * @brief update the data this holds from its source.
     */
@@ -117,6 +118,7 @@ public:
          fBranchName = branchChange->GetBranchName();
       }
    }
+
    void Update() override
    {
       auto fEventArray = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(fBranchName));
@@ -124,7 +126,12 @@ public:
          fInfo = dynamic_cast<T *>(fEventArray->At(0));
    }
    void SetBranch(TString branchName) { fBranchName = branchName; }
-   T *GetInfo() { return fInfo; }
+   T *GetInfo()
+   {
+      Update();
+      return fInfo;
+   }
+   TString GetBranch() const { return fBranchName; }
 };
 
 #endif

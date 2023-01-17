@@ -12,6 +12,7 @@
 
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
+#include <TH2Poly.h>
 #include <TNamed.h>
 #include <TString.h>
 
@@ -40,8 +41,7 @@ protected:
 
    multiarray AtPadCoord;
    multiarray *fAtPadCoordPtr{};
-   Bool_t kIsParsed = false;
-   Bool_t kGUIMode = false;
+   Bool_t kIsParsed = false; //< True if the input file is parsed
    Bool_t kDebug = false;
    std::map<Int_t, AtMap::InhibitType> fIniPads;
    TCanvas *fPadPlaneCanvas{}; // Raw pointer because owned by gROOT
@@ -61,9 +61,15 @@ public:
    ~AtMap() = default;
 
    virtual void Dump() = 0;
+   /**
+    * Virtual function that creates the TH2Poly that stores the pad plane geometry
+    */
    virtual void GeneratePadPlane() = 0;
    virtual ROOT::Math::XYPoint CalcPadCenter(Int_t PadRef) = 0; // units mm
-   virtual TH2Poly *GetPadPlane() = 0;
+
+   /// Assumes it will generate the pad plane if it hasn't been generated already
+   /// returns a clone of the internal pad plane which is owned by ROOT
+   TH2Poly *GetPadPlane();
    virtual Int_t BinToPad(Int_t binval) = 0;
 
    UInt_t GetNumPads() const { return fNumberPads; }
@@ -85,7 +91,6 @@ public:
 
    std::string GetAuxName(const AtPadReference &ref) const;
 
-   inline void SetGUIMode() { kGUIMode = 1; }
    inline void SetDebugMode(Bool_t flag = true) { kDebug = flag; }
    Bool_t ParseInhibitMap(TString inimap, AtMap::InhibitType type);
    AtMap::InhibitType IsInhibited(Int_t PadNum);

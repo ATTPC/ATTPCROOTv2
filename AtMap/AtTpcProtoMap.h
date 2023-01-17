@@ -42,7 +42,7 @@ public:
    virtual void GeneratePadPlane() override;
    virtual void Dump() override;
    virtual ROOT::Math::XYPoint CalcPadCenter(Int_t PadRef) override;
-   virtual TH2Poly *GetPadPlane() override;
+
    virtual Int_t BinToPad(Int_t binval) override;
    TH2Poly *GetAtTpcPlane(TString TH2Poly_name);
 

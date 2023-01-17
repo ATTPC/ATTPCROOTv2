@@ -45,11 +45,9 @@ void run_eve_test_multi(int runNum = 214, TString OutputDataFile = "./data/outpu
    AtEventManagerNew *eveMan = new AtEventManagerNew(fMap);
 
    auto tabMain = std::make_unique<AtTabMain>();
-   tabMain->SetMap(fMap);
    tabMain->SetMultiHit(100); // Set the maximum number of multihits in the visualization
 
    auto tabPad = std::make_unique<AtTabPad>();
-   tabPad->SetMap(fMap);
    tabPad->SetColumns(2);
    tabPad->SetRows(2);
    tabPad->SetDrawRawADC(0);

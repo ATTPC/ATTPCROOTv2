@@ -41,6 +41,11 @@ void AtGadgetIIMap::Dump() {}
 
 void AtGadgetIIMap::GeneratePadPlane()
 {
+   if (fPadPlane) {
+      LOG(error) << "Skipping generation of pad plane, it is already parsed!";
+      return;
+   }
+
    Float_t pad_size = 2.2;      // mm
    Float_t pad_spacing = 0.001; // mm
 
@@ -220,33 +225,9 @@ void AtGadgetIIMap::GeneratePadPlane()
       fPadPlane->AddBin(5, px, py);
    }
 
-   // for(auto isec = 0; isec < 2; ++isec){
-   //	   for (auto ipad = 0; ipad < fPadInd; ++ipad) { // todo: Check total number of pads
-   //
-   //	      Double_t px[] = {AtPadCoord[ipad][0][0]*TMath::Power(-1,isec), AtPadCoord[ipad][1][0]*TMath::Power(-1,isec),
-   // AtPadCoord[ipad][2][0]*TMath::Power(-1,isec), AtPadCoord[ipad][3][0]*TMath::Power(-1,isec),
-   //			       AtPadCoord[ipad][0][0]*TMath::Power(-1,isec)};
-   //	      Double_t py[] = {AtPadCoord[ipad][0][1]*TMath::Power(-1,isec), AtPadCoord[ipad][1][1]*TMath::Power(-1,isec),
-   // AtPadCoord[ipad][2][1]*TMath::Power(-1,isec), AtPadCoord[ipad][3][1]*TMath::Power(-1,isec),
-   //			       AtPadCoord[ipad][0][1]*TMath::Power(-1,isec)};
-   //	      fPadPlane->AddBin(5, px, py);
-   //	   }
-   // }
-   //
-   //
-   //		for(auto isec = 1; isec < 3; ++isec){
-   //			   for (auto ipad = 0; ipad < fPadInd; ++ipad) { // todo: Check total number of pads
-   //
-   //			      Double_t px[] = {AtPadCoord[ipad][0][0]*TMath::Power(-1,isec),
-   // AtPadCoord[ipad][1][0]*TMath::Power(-1,isec), AtPadCoord[ipad][2][0]*TMath::Power(-1,isec),
-   // AtPadCoord[ipad][3][0]*TMath::Power(-1,isec), 					       AtPadCoord[ipad][0][0]*TMath::Power(-1,isec)};
-   // Double_t py[] = {AtPadCoord[ipad][0][1]*TMath::Power(-1,isec+1), AtPadCoord[ipad][1][1]*TMath::Power(-1,isec+1),
-   // AtPadCoord[ipad][2][1]*TMath::Power(-1,isec+1), AtPadCoord[ipad][3][1]*TMath::Power(-1,isec+1),
-   //					       AtPadCoord[ipad][0][1]*TMath::Power(-1,isec+1)};
-   //			      fPadPlane->AddBin(5, px, py);
-   //			   }
-   //		}
-   //
+   fPadPlane->SetName("GADGETII_Plane");
+   fPadPlane->SetTitle("GADGETII_Plane");
+   fPadPlane->ChangePartition(500, 500);
 }
 
 XYPoint AtGadgetIIMap::CalcPadCenter(Int_t PadRef)
@@ -265,26 +246,6 @@ XYPoint AtGadgetIIMap::CalcPadCenter(Int_t PadRef)
    Float_t x = (AtPadCoord[PadRef][0][0] + AtPadCoord[PadRef][1][0]) / 2.0;
    Float_t y = (AtPadCoord[PadRef][1][1] + AtPadCoord[PadRef][2][1]) / 2.0;
    return {x, y};
-}
-
-TH2Poly *AtGadgetIIMap::GetPadPlane()
-{
-
-   if (!kIsParsed) {
-
-      std::cout << " AtGadgetIIMap::GetAtTPCPlane Error : Pad plane has not been generated - Exiting... " << std::endl;
-
-      return nullptr;
-   }
-
-   fPadPlane->SetName("GADGETII_Plane");
-   fPadPlane->SetTitle("GADGETII_Plane");
-   fPadPlane->ChangePartition(500, 500);
-
-   if (kGUIMode)
-      drawPadPlane();
-
-   return fPadPlane;
 }
 
 void AtGadgetIIMap::SetBinToPadMap()

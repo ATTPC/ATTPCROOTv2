@@ -51,9 +51,8 @@ constexpr auto cBLUE = "\033[1;34m";
 ClassImp(AtTabMain);
 
 AtTabMain::AtTabMain()
-   : fRawEvent(nullptr), fEvent(nullptr), fDetmap(nullptr), fThreshold(0), fHitSet(nullptr), fPadPlanePal(nullptr),
-     fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium), fCvsPadPlane(nullptr), fPadPlane(nullptr),
-     fCvsPadWave(nullptr), fPadWave(nullptr), fMultiHit(0)
+   : fThreshold(0), fHitSet(nullptr), fHitColor(kPink), fHitSize(1), fHitStyle(kFullDotMedium), fCvsPadPlane(nullptr),
+     fPadPlane(nullptr), fCvsPadWave(nullptr), fPadWave(nullptr), fMultiHit(0)
 {
 }
 
@@ -61,16 +60,6 @@ void AtTabMain::InitTab()
 {
 
    std::cout << " =====  AtTabMain::Init =====" << std::endl;
-
-   // gROOT->Reset();
-   fEventManager = AtEventManagerNew::Instance();
-
-   if (fDetmap == nullptr) {
-      LOG(fatal) << "Map was never set using the function SetMap() in AtEventDrawTaskNew!";
-   }
-
-   fDetmap->SetName("fMap");
-   gROOT->GetListOfSpecials()->Add(fDetmap.get());
 
    auto tTabInfoEvent = std::make_unique<AtTabInfoFairRoot<AtEvent>>(fDefaultEventBranch);
    auto tTabInfoRawEvent = std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(fDefaultRawEventBranch);
@@ -153,13 +142,6 @@ void AtTabMain::MakeTab()
    dfViewer->DoDraw();
 }
 
-void AtTabMain::UpdateTab()
-{
-   fEvent = dynamic_cast<AtTabInfoFairRoot<AtEvent> *>(fTabInfo->GetAugment(fInfoEventName))->GetInfo();
-   fRawEvent = dynamic_cast<AtTabInfoFairRoot<AtRawEvent> *>(fTabInfo->GetAugment(fInfoRawEventName))->GetInfo();
-   LOG(debug) << "Event ID " << fEvent->GetEventID() << " Raw Event ID " << fRawEvent->GetEventID();
-}
-
 void AtTabMain::DrawEvent()
 {
    LOG(debug) << "Drawing tab " << fTabNumber;
@@ -193,7 +175,7 @@ void AtTabMain::Reset()
 {
    if (fHitSet) {
       fHitSet->Reset();
-      gEve->RemoveElement(fHitSet, fEventManager);
+      gEve->RemoveElement(fHitSet, AtEventManagerNew::Instance());
    }
 
    if (fPadPlane != nullptr)
@@ -207,8 +189,8 @@ void AtTabMain::DrawPadPlane()
       return;
    }
 
-   fDetmap->GeneratePadPlane();
-   fPadPlane = fDetmap->GetPadPlane();
+   AtEventManagerNew::Instance()->GetMap()->GeneratePadPlane();
+   fPadPlane = AtEventManagerNew::Instance()->GetMap()->GetPadPlane();
    fCvsPadPlane->cd();
    // fPadPlane -> Draw("COLZ L0"); //0  == bin lines adre not drawn
    fPadPlane->Draw("COL L0");
@@ -227,9 +209,20 @@ void AtTabMain::DrawPadWave()
    fPadWave->Draw();
 }
 
+AtEvent *AtTabMain::GetEvent()
+{
+   return dynamic_cast<AtTabInfoFairRoot<AtEvent> *>(fTabInfo->GetAugment(fInfoEventName))->GetInfo();
+}
+AtRawEvent *AtTabMain::GetRawEvent()
+{
+   auto info = dynamic_cast<AtTabInfoFairRoot<AtRawEvent> *>(fTabInfo->GetAugment(fInfoRawEventName));
+   LOG(debug) << "Getting raw event from " << info->GetBranch();
+   return info->GetInfo();
+}
+
 void AtTabMain::DrawHitPoints()
 {
-   fEvent = dynamic_cast<AtTabInfoFairRoot<AtEvent> *>(fTabInfo->GetAugment(fInfoEventName))->GetInfo();
+   auto fEvent = GetEvent();
    if (fEvent == nullptr) {
       std::cout << "CRITICAL ERROR: Event missing for TabMain. Aborting draw." << std::endl;
       return;
@@ -239,8 +232,7 @@ void AtTabMain::DrawHitPoints()
    std::ofstream dumpEvent;
    dumpEvent.open("event.dat");
 
-   std::cout << "Drawing " << fEvent << std::endl;
-   LOG(info) << "Drawing 3D cloud for " << fEvent->GetEventID();
+   LOG(debug) << "Drawing 3D cloud for " << fEvent->GetEventID();
 
    Int_t eventID = fEvent->GetEventID();
    TString TSevt = " Event ID : ";
@@ -281,27 +273,33 @@ void AtTabMain::DrawHitPoints()
    dumpEvent.close();
 }
 
-void AtTabMain::DrawWave(Int_t PadNum)
+bool AtTabMain::DrawWave(Int_t PadNum)
 {
+   auto fRawEvent = GetRawEvent();
+
    // std::cout << "checking fRawEvent" << std::endl;
    if (fRawEvent == nullptr) {
       std::cout << "fRawEvent is NULL!" << std::endl;
-   } else {
-      // std::cout << "fRawEvent is not nullptr" << std::endl;
-      AtPad *fPad = fRawEvent->GetPad(PadNum);
-      if (fPad == nullptr)
-         return;
-      auto rawadc = fPad->GetRawADC();
-      auto adc = fPad->GetADC();
-      fPadWave->Reset();
-      for (Int_t i = 0; i < 512; i++) {
-         fPadWave->SetBinContent(i, adc[i]);
-      }
-
-      fCvsPadWave->cd();
-      fPadWave->Draw();
-      fCvsPadWave->Update();
+      return false;
    }
+   // std::cout << "fRawEvent is not nullptr" << std::endl;
+   AtPad *fPad = fRawEvent->GetPad(PadNum);
+   if (fPad == nullptr) {
+      LOG(error) << "Pad in event is null!";
+      return false;
+   } else
+      LOG(debug) << "Drawing pad " << fPad->GetPadNum();
+
+   auto adc = fPad->GetADC();
+   fPadWave->Reset();
+   for (Int_t i = 0; i < 512; i++) {
+      fPadWave->SetBinContent(i, adc[i]);
+   }
+
+   fCvsPadWave->cd();
+   fPadWave->Draw();
+   fCvsPadWave->Update();
+   return true;
 }
 
 void AtTabMain::UpdateCvsPadPlane()
