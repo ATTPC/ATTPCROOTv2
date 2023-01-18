@@ -11,13 +11,13 @@ ${CMAKE_SOURCE_DIR}/AtEventDisplay/AtEventTab
 set(SRCS
 # Add all the source files below this line. Those must have cc for their extension.
 
-AtEventTab/AtTabMain.cxx
-AtEventTab/AtTabPad.cxx
-AtEventTab/AtTabMacro.cxx
-AtEventTab/AtTabBase.cxx
+AtTabs/AtTabMain.cxx
+AtTabs/AtTabPad.cxx
+AtTabs/AtTabMacro.cxx
+AtTabs/AtTabBase.cxx
 
-AtEventTab/AtTabInfo.cxx
-AtEventTab/AtSubjectEventViewer.cxx
+AtTabs/AtTabInfo.cxx
+AtTabs/AtSubjectEventViewer.cxx
 
 
 AtEventManager.cxx
@@ -47,7 +47,7 @@ Set(DEPENDENCIES
 
 if(HiRAEVT_FOUND)
   set(SRCS ${SRCS}
-    AtEventTab/AtTabInfoHiRAEVT.cxx
+    AtTabs/AtTabInfoHiRAEVT.cxx
     )
   set(DEPENDENCIES ${DEPENDENCIES}
     HTDetectors
