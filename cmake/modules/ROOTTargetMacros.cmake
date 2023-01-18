@@ -266,7 +266,6 @@ function(make_target_root_dictionary target)
   # add dictionary source to the target sources and suppress warnings
   target_sources(${target} PRIVATE ${dictionaryFile})
   set_source_files_properties(${dictionaryFile} PROPERTIES COMPILE_FLAGS -Wno-deprecated-declarations )
-  set_source_files_properties(${dictionaryFile} PROPERTIES COMPILE_FLAGS -Wno-inconsistent-missing-override)
   
   get_property(libs TARGET ${target} PROPERTY INTERFACE_LINK_LIBRARIES)
   #if(NOT RIO IN_LIST libs)
