@@ -6,6 +6,7 @@ Set(LIBRARY_NAME AtEventDisplay) # Change the library name and delete this comme
 set(INCLUDE_DIRECTORIES
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtEventDisplay/AtTabs
+${CMAKE_SOURCE_DIR}/AtEventDisplay/AtSidebar
   )
 
 set(SRCS
@@ -18,11 +19,11 @@ AtTabs/AtTabBase.cxx
 
 AtTabs/AtTabInfo.cxx
 AtTabs/AtSubjectEventViewer.cxx
+AtSidebar/AtEventSidebar.cxx
+AtSidebar/AtSidebarFrames.cxx
 
 
 AtEventManager.cxx
-AtEventSidebar.cxx
-AtSidebarFrames.cxx
 AtEventManagerNew.cxx
 AtEventManagerProto.cxx
 AtEventDrawTask.cxx
