@@ -132,7 +132,7 @@ void AtTabMain::MakeTab()
 
    gEve->GetBrowser()->GetTabRight()->SetTab(1);
 
-   gEve->Redraw3D(kTRUE, kTRUE);
+   gEve->Redraw3D(true, true);
 
    TGLViewer *dfViewer = gEve->GetDefaultGLViewer(); // Is this doing anything?
    dfViewer->CurrentCamera().RotateRad(-.7, 0.5);
@@ -143,7 +143,7 @@ void AtTabMain::DrawEvent()
 {
    LOG(debug) << "Drawing tab " << fTabNumber;
    DrawHitPoints();
-   gEve->Redraw3D(kFALSE);
+   gEve->Redraw3D(false);
    UpdateCvsPadPlane();
    LOG(debug) << "Done Drawing tab " << fTabNumber << std::endl;
 }
@@ -238,36 +238,57 @@ void AtTabMain::DrawHitPoints()
 
    //////////////////////////////////////////////
 
-   Int_t nHits = fEvent->GetNumHits();
-   fHitSet = new TEvePointSet("Hit", nHits, TEvePointSelectorConsumer::kTVT_XYZ);
-   fHitSet->SetOwnIds(kTRUE);
-   fHitSet->SetMarkerColor(fHitColor);
-   fHitSet->SetMarkerSize(fHitSize);
-   fHitSet->SetMarkerStyle(fHitStyle);
+   auto &hits = fEvent->GetHits();
+   LOG(info) << cBLUE << " Number of hits : " << hits.size() << cNORMAL;
+
+   FillPadPlane(hits);
+   fHitSet = GetPointsFromHits(hits);
+   // Adding raw data points
+   gEve->AddElement(fHitSet);
+
+   dumpEvent.close();
+}
+void AtTabMain::FillPadPlane(const std::vector<std::unique_ptr<AtHit>> &hits)
+{
+   for (auto &hit : hits) {
+      int padMultiHit = GetEvent()->GetHitPadMult(hit->GetPadNum());
+      if (hit->GetCharge() < fThreshold || padMultiHit > fMultiHit)
+         continue;
+      auto position = hit->GetPosition();
+      fPadPlane->Fill(position.X(), position.Y(), hit->GetCharge());
+   }
+}
+
+TEvePointSet *AtTabMain::GetPointsFromHits(const std::vector<std::unique_ptr<AtHit>> &hits)
+{
+   Int_t nHits = hits.size();
+   // auto hitSet = std::make_unique<TEvePointSet>("Hit", nHits, TEvePointSelectorConsumer::kTVT_XYZ);
+   auto hitSet = new TEvePointSet("Hit", nHits, TEvePointSelectorConsumer::kTVT_XYZ);
+   hitSet->SetOwnIds(kTRUE);
+   hitSet->SetMarkerColor(fHitColor);
+   hitSet->SetMarkerSize(fHitSize);
+   hitSet->SetMarkerStyle(fHitStyle);
    LOG(info) << cBLUE << " Number of hits : " << nHits << cNORMAL;
 
    for (Int_t iHit = 0; iHit < nHits; iHit++) {
 
-      AtHit hit = *fEvent->GetHits().at(iHit);
+      AtHit hit = *hits.at(iHit);
       Int_t PadNumHit = hit.GetPadNum();
-      Int_t PadMultHit = fEvent->GetHitPadMult(PadNumHit);
+      Int_t PadMultHit = GetEvent()->GetHitPadMult(PadNumHit);
 
       if (hit.GetCharge() < fThreshold)
          continue;
       if (PadMultHit > fMultiHit)
          continue;
+
       auto position = hit.GetPosition();
 
-      fHitSet->SetMarkerColor(fHitColor);
-      fHitSet->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.); // Convert into cm
-      fHitSet->SetPointId(new TNamed(Form("Hit %d", iHit), ""));
-      fPadPlane->Fill(position.X(), position.Y(), hit.GetCharge());
+      hitSet->SetMarkerColor(fHitColor);
+      hitSet->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.); // Convert into cm
+      hitSet->SetPointId(new TNamed(Form("Hit %d", iHit), ""));
    }
 
-   // Adding raw data points
-   gEve->AddElement(fHitSet);
-
-   dumpEvent.close();
+   return hitSet;
 }
 
 bool AtTabMain::DrawWave(Int_t PadNum)

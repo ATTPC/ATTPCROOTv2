@@ -129,8 +129,8 @@ protected:
    int fCutoffFreq;
 
 public:
-   SubjectPSADeconv(int filterOrder, int cutoff, int fThreshold, int fThresholdLow = -1)
-      : SubjectPSA(fThreshold, fThresholdLow), fFilterOrder(filterOrder), fCutoffFreq(cutoff)
+   SubjectPSADeconv(int filterOrder, int cutoff, int threshold, int thresholdLow = -1)
+      : SubjectPSA(threshold, thresholdLow), fFilterOrder(filterOrder), fCutoffFreq(cutoff)
    {
    }
 

@@ -5,7 +5,8 @@
 #include "AtRawEvent.h" // IWYU pragma: keep
 #include "AtTabBase.h"
 
-#include <Rtypes.h>  // for Int_t, Bool_t, THashConsistencyHolder, Color_t
+#include <Rtypes.h> // for Int_t, Bool_t, THashConsistencyHolder, Color_t
+#include <TEvePointSet.h>
 #include <TString.h> // for TString
 
 #include <memory> // for shared_ptr
@@ -29,6 +30,7 @@ class AtTabMain : public AtTabBase {
 protected:
    // Information for drawing 3D events
    Int_t fThreshold;
+   // std::unique_ptr<TEvePointSet> fHitSet;
    TEvePointSet *fHitSet;
 
    Color_t fHitColor;
@@ -63,6 +65,7 @@ public:
 
 private:
    AtEvent *GetEvent();
+   AtEvent *GetPatternEvent();
    AtRawEvent *GetRawEvent();
 
    // Functions to draw the initial canvases
@@ -76,6 +79,9 @@ private:
    // Functions for drawing hits
    void DrawHitPoints();
    bool DrawWave(Int_t PadNum);
+   // std::unique_ptr<TEvePointSet> GetPointsFromHits(const std::vector<std::unique_ptr<AtHit>> &hits);
+   TEvePointSet *GetPointsFromHits(const std::vector<std::unique_ptr<AtHit>> &hits);
+   void FillPadPlane(const std::vector<std::unique_ptr<AtHit>> &hits);
 
    ClassDefOverride(AtTabMain, 1)
 };
