@@ -1,6 +1,7 @@
 #include "AtEventManagerNew.h"
 
 #include "AtMap.h"
+#include "AtSidebarFrames.h"
 #include "AtTabTask.h"
 
 #include <FairRootManager.h>
@@ -65,13 +66,24 @@ AtEventManagerNew *AtEventManagerNew::Instance()
 }
 
 AtEventManagerNew::AtEventManagerNew(std::shared_ptr<AtMap> map)
-   : TEveEventManager("AtEventManager", ""), fEntry(0), fCurrentEvent(nullptr), f3DThresDisplay(nullptr),
+   : TEveEventManager("AtEventManager", ""), fEntry(0), f3DThresDisplay(nullptr),
      fTabTask(std::make_unique<AtTabTask>()), fMap(map)
 
 {
    if (fInstance != nullptr)
       LOG(fatal) << "Attempting to create a second instance of AtEventManagerNew! Only one is allowed!";
    fInstance = this;
+
+   // In order to get the sidebar to actually be *in* the sidebar we need to create the EveManager
+   // and embedd it there.
+   TEveManager::Create();
+   TEveBrowser *browser = gEve->GetBrowser();
+   browser->StartEmbedding(TRootBrowser::kLeft);
+
+   fSidebar = new AtEventSidebar();
+
+   browser->StopEmbedding();
+   browser->SetTabTitle("Control", 0);
 }
 
 AtEventManagerNew::~AtEventManagerNew()
@@ -96,7 +108,6 @@ void AtEventManagerNew::Init()
 {
    gStyle->SetOptTitle(0);
    gStyle->SetPalette(55);
-   TEveManager::Create();
 
    // Call init on the run after here all of the AtTabInfo will be created
    // Add the AtTabTask as the last task in the run
@@ -119,68 +130,14 @@ void AtEventManagerNew::Init()
 
 void AtEventManagerNew::make_gui()
 {
-   // Create minimal GUI for event navigation.
-   TChain *chain = FairRootManager::Instance()->GetInChain();
-   Int_t Entries = chain->GetEntriesFast();
-
-   // Get the sidebar and add a tab to the left (frmMain)
-   TEveBrowser *browser = gEve->GetBrowser();
-   browser->StartEmbedding(TRootBrowser::kLeft);
-
-   auto *frmMain = new TGMainFrame(gClient->GetRoot(), 1000, 600);
-   frmMain->SetWindowName("XX GUI");
-   frmMain->SetCleanup(kDeepCleanup);
-
-   auto *buttonFrame = new TGHorizontalFrame(frmMain); // Navigation button frame
-   {
-
-      TString icondir(Form("%s/icons/", gSystem->Getenv("VMCWORKDIR")));
-      TGPictureButton *b = nullptr;
-
-      b = new TGPictureButton(buttonFrame, gClient->GetPicture(icondir + "arrow_left.gif"));
-      buttonFrame->AddFrame(b);
-      b->Connect("Clicked()", "AtEventManagerNew", fInstance, "PrevEvent()");
-
-      b = new TGPictureButton(buttonFrame, gClient->GetPicture(icondir + "arrow_right.gif"));
-      buttonFrame->AddFrame(b);
-      b->Connect("Clicked()", "AtEventManagerNew", fInstance, "NextEvent()");
-   }
-
-   frmMain->AddFrame(buttonFrame);
-
-   TString Infile = "Input file : ";
-   TFile *file = FairRootManager::Instance()->GetInChain()->GetFile();
-   Infile += file->GetName();
-   auto *TFName = new TGLabel(frmMain, Infile.Data());
-   frmMain->AddFrame(TFName);
-
-   UInt_t RunId = FairRunAna::Instance()->getRunId();
-   TString run = "Run Id : ";
-   run += RunId;
-   auto *TRunId = new TGLabel(frmMain, run.Data());
-   frmMain->AddFrame(TRunId);
-
-   TString nevent = "No of events : ";
-   nevent += Entries;
-   auto *TEvent = new TGLabel(frmMain, nevent.Data());
-   frmMain->AddFrame(TEvent);
-
-   // f is frame with current event: [selection box]
-   auto *f = new TGHorizontalFrame(frmMain);
-   auto *l = new TGLabel(f, "Current Event:");
-   f->AddFrame(l, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
-
-   fCurrentEvent = new TGNumberEntry(f, 0., 6, -1, TGNumberFormat::kNESInteger, TGNumberFormat::kNEANonNegative,
-                                     TGNumberFormat::kNELLimitMinMax, 0, Entries);
-   f->AddFrame(fCurrentEvent, new TGLayoutHints(kLHintsLeft, 1, 1, 1, 1));
-   fCurrentEvent->Connect("ValueSet(Long_t)", "AtEventManagerNew", fInstance, "SelectEvent()");
-   frmMain->AddFrame(f);
+   fSidebar->FillFrames();
 
    /**** Begin code for branch selection *****/
-   frmMain->AddFrame(new TGLabel(frmMain, "Selected Branches"), new TGLayoutHints(kLHintsCenterX));
+
+   fSidebar->AddFrame(new TGLabel(fSidebar, "Selected Branches"), new TGLayoutHints(kLHintsCenterX));
 
    // Create frame to select raw event
-   auto f2 = new TGHorizontalFrame(frmMain);
+   auto f2 = new TGHorizontalFrame(fSidebar);
    f2->AddFrame(new TGLabel(f2, "Raw Event: "));
 
    fBranchBoxes[0] = new TGComboBox(f2);
@@ -190,10 +147,10 @@ void AtEventManagerNew::make_gui()
    fBranchBoxes[0]->Select(0);
 
    f2->AddFrame(fBranchBoxes[0], new TGLayoutHints(kLHintsExpandX | kLHintsCenterY | kLHintsExpandY));
-   frmMain->AddFrame(f2, new TGLayoutHints(kLHintsExpandX));
+   fSidebar->AddFrame(f2, new TGLayoutHints(kLHintsExpandX));
 
    // Create frame to select event
-   f2 = new TGHorizontalFrame(frmMain);
+   f2 = new TGHorizontalFrame(fSidebar);
    f2->AddFrame(new TGLabel(f2, "Event: "));
 
    fBranchBoxes[1] = new TGComboBox(f2);
@@ -203,10 +160,10 @@ void AtEventManagerNew::make_gui()
    fBranchBoxes[1]->Select(0);
 
    f2->AddFrame(fBranchBoxes[1], new TGLayoutHints(kLHintsExpandX | kLHintsCenterY | kLHintsExpandY));
-   frmMain->AddFrame(f2, new TGLayoutHints(kLHintsExpandX));
+   fSidebar->AddFrame(f2, new TGLayoutHints(kLHintsExpandX));
 
    // Create frame to select pattern event
-   f2 = new TGHorizontalFrame(frmMain);
+   f2 = new TGHorizontalFrame(fSidebar);
    f2->AddFrame(new TGLabel(f2, "Pattern Event: "));
 
    fBranchBoxes[2] = new TGComboBox(f2);
@@ -216,21 +173,18 @@ void AtEventManagerNew::make_gui()
    fBranchBoxes[2]->Select(0);
 
    f2->AddFrame(fBranchBoxes[2], new TGLayoutHints(kLHintsExpandX | kLHintsCenterY | kLHintsExpandY));
-   frmMain->AddFrame(f2, new TGLayoutHints(kLHintsExpandX));
+   fSidebar->AddFrame(f2, new TGLayoutHints(kLHintsExpandX));
 
-   auto redrawButton = new TGTextButton(frmMain, "Redraw All");
+   auto redrawButton = new TGTextButton(fSidebar, "Redraw All");
    redrawButton->Connect("Clicked()", "AtEventManagerNew", this, "RedrawEvent()");
-   frmMain->AddFrame(redrawButton, new TGLayoutHints(kLHintsLeft, 1, 1, 1, 1));
+   fSidebar->AddFrame(redrawButton, new TGLayoutHints(kLHintsLeft, 1, 1, 1, 1));
 
    /**** End code for branch selection *****/
 
    // End addition of things to the sidebar
-   frmMain->MapSubwindows();
-   frmMain->Resize();
-   frmMain->MapWindow();
-
-   browser->StopEmbedding();
-   browser->SetTabTitle("Event Control", 0);
+   fSidebar->MapSubwindows();
+   fSidebar->Resize();
+   fSidebar->MapWindow();
 }
 
 void AtEventManagerNew::GenerateBranchLists()

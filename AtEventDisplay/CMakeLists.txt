@@ -21,6 +21,8 @@ AtTabs/AtSubjectEventViewer.cxx
 
 
 AtEventManager.cxx
+AtEventSidebar.cxx
+AtSidebarFrames.cxx
 AtEventManagerNew.cxx
 AtEventManagerProto.cxx
 AtEventDrawTask.cxx

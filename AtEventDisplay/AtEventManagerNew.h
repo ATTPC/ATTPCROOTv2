@@ -2,6 +2,7 @@
 #define AtEVENTMANAGERNEW_H
 
 #include "AtDataSubject.h"
+#include "AtEventSidebar.h"
 #include "AtSubjectEventViewer.h"
 
 #include <FairRunAna.h>
@@ -40,9 +41,11 @@ private:
    static AtEventManagerNew *fInstance;
    Int_t fEntry;
 
+   AtEventSidebar *fSidebar;
+
    // TGListTreeItem *fEvent;
    /*** Sidebar info - Event # and event selection ***/
-   TGNumberEntry *fCurrentEvent;
+   TGNumberEntry *fCurrentEvent{nullptr};
    TGNumberEntry *f3DThresDisplay;
 
    std::unique_ptr<AtTabTask> fTabTask;
@@ -66,17 +69,19 @@ public:
    virtual void Init();
 
    AtMap *GetMap() { return fMap.get(); }
+   AtEventSidebar *GetSidebar() { return fSidebar; }
    Int_t GetCurrentEvent() { return fEntry; }
 
    /*** Functions used for event control
    "*MENU*" adds these function to the right click menue in the eve viewer
    */
    /// Main function for navigating to an event. Everything that changes event number should end up here
-   virtual void GotoEvent(Int_t event); ///< *MENU*
+   virtual void GotoEvent(Int_t event);        ///< *MENU*
    void NextEvent() { GotoEvent(fEntry + 1); } ///< *MENU*
    void PrevEvent() { GotoEvent(fEntry - 1); } ///< *MENU*
 
    virtual void SelectEvent(); //< Goto event in fCurrentEvent (callback for fCurrentEvent)
+   void SetCurrentEvent(TGNumberEntry *num) { fCurrentEvent = num; }
 
    /*** Functions for sidebar - Branch selection ***/
    void SelectAtRawEvent(Int_t);
