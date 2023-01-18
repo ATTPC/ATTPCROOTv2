@@ -15,13 +15,18 @@ constexpr auto cBLUE = "\033[1;34m";
 
 ClassImp(AtTabTask);
 
+void AtTabTask::AddTab(std::unique_ptr<AtTabBase> tab)
+{
+   tab->SetTabNumber(fTabs.size());
+   fTabs.push_back(std::move(tab));
+}
+
 InitStatus AtTabTask::Init()
 {
 
    std::cout << " =====  AtTabTask::Init =====" << std::endl;
 
    for (int i = 0; i < fTabs.size(); i++) {
-      fTabs[i]->SetTabNumber(i);
       fTabs[i]->Init();
       fTabs[i]->MakeTab();
    }
@@ -48,7 +53,7 @@ void AtTabTask::Reset()
    }
 }
 
-void AtTabTask::DrawPad(Int_t PadNum)
+void AtTabTask::DrawTabPads(Int_t PadNum)
 {
    LOG(debug) << "Drawing all tabs" << std::endl;
    for (auto &fTab : fTabs) {

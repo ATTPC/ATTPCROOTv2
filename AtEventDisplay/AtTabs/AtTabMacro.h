@@ -62,7 +62,7 @@ public:
    void SetColumns(Int_t cols) { fCols = cols; }
    void SetRows(Int_t rows) { fRows = rows; }
    void SetTabName(TString tabName) { fTabName = tabName; }
-   void DrawTree() override;
+   void DrawTree();
    void DrawEvent() override;
    void DrawPad(Int_t padNum) override;
 

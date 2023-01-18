@@ -61,15 +61,13 @@ void AtTabMain::InitTab()
 
    std::cout << " =====  AtTabMain::Init =====" << std::endl;
 
-   auto tTabInfoEvent = std::make_unique<AtTabInfoFairRoot<AtEvent>>(fDefaultEventBranch);
-   auto tTabInfoRawEvent = std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(fDefaultRawEventBranch);
+   auto tTabInfoEvent = std::make_unique<AtTabInfoFairRoot<AtEvent>>();
+   auto tTabInfoRawEvent = std::make_unique<AtTabInfoFairRoot<AtRawEvent>>();
 
    fTabInfo->AddAugment(fInfoEventName, std::move(tTabInfoEvent));
    fTabInfo->AddAugment(fInfoRawEventName, std::move(tTabInfoRawEvent));
 
    gStyle->SetPalette(55);
-
-   //******* NO CALLS TO TCANVAS BELOW THIS ONE
 
    std::cout << " AtTabMain::Init : Initialization complete! "
              << "\n";
@@ -83,7 +81,7 @@ void AtTabMain::MakeTab()
    // 3D
    slot = TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
    pack = slot->MakePack();
-   pack->SetElementName("AtTPC 3D/Pad plane views");
+   pack->SetElementName("Main");
    pack->SetHorizontal();
    // pack->SetVertical();
    pack->SetShowTitleBar(kFALSE);
@@ -113,10 +111,9 @@ void AtTabMain::MakeTab()
    fCvsPadPlane = ecvs->GetCanvas();
    fCvsPadPlane->AddExec("ex", "AtEventManagerNew::SelectPad()");
 
-   char name[20];
-   sprintf(name, "fCvsPadWave_DT%i", fTabNumber);
-   fCvsPadWave->SetName(name);
+   fCvsPadWave->SetName(TString::Format("fCvsPadWave_DT%i", fTabNumber));
    DrawPadWave();
+
    fCvsPadPlane->ToggleEventStatus();
    DrawPadPlane();
 

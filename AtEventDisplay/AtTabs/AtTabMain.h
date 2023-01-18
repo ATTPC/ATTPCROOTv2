@@ -42,9 +42,6 @@ protected:
 
    Int_t fMultiHit{10};
 
-   TString fDefaultEventBranch{"AtEventH"};
-   TString fDefaultRawEventBranch{"AtRawEvent"};
-
    std::string fInfoEventName{"AtEvent"};
    std::string fInfoRawEventName{"AtRawEvent"};
 
@@ -56,16 +53,13 @@ public:
    void UpdateTab() override {}
    void Reset() override;
    void MakeTab() override;
-   void DrawTree() override{};
+
    void DrawEvent() override;
    void DrawPad(Int_t PadNum) override;
 
    void SetThreshold(Int_t val) { fThreshold = val; }
    void SetHitAttributes(Color_t, Size_t, Style_t);
    void SetMultiHit(Int_t hitMax);
-
-   void SetEventBranch(TString name) { fDefaultEventBranch = name; }
-   void SetRawEventBranch(TString name) { fDefaultRawEventBranch = name; }
 
 private:
    AtEvent *GetEvent();

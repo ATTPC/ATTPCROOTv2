@@ -65,8 +65,8 @@ AtEventManagerNew *AtEventManagerNew::Instance()
 }
 
 AtEventManagerNew::AtEventManagerNew(std::shared_ptr<AtMap> map)
-   : TEveEventManager("AtEventManager", ""), fEntry(0), fCurrentEvent(nullptr), f3DThresDisplay(nullptr), fEntries(0),
-     fTabTask(nullptr), fMap(map)
+   : TEveEventManager("AtEventManager", ""), fEntry(0), fCurrentEvent(nullptr), f3DThresDisplay(nullptr),
+     fTabTask(std::make_unique<AtTabTask>()), fMap(map)
 
 {
    if (fInstance != nullptr)
@@ -84,45 +84,12 @@ void AtEventManagerNew::AddTask(FairTask *task)
    if (dynamic_cast<AtTabTask *>(task) == nullptr)
       FairRunAna::Instance()->AddTask(task);
    else
-      AddTabTask(dynamic_cast<AtTabTask *>(task));
+      LOG(error) << "You cannot add a AtTabTask! This is an implementation specific task that is soley managed by the "
+                    "AtEventManagerNew class.";
 }
-
-void AtEventManagerNew::AddTabTask(AtTabTask *task)
+void AtEventManagerNew::AddTab(std::unique_ptr<AtTabBase> tab)
 {
-   if (fTabTask != nullptr)
-      LOG(fatal) << "AtTabTask already exists in Event Manager. Only one can exist!";
-   else {
-      FairRunAna::Instance()->AddTask(task);
-      fTabTask = task;
-   }
-}
-void AtEventManagerNew::GenerateBranchLists()
-{
-   FairRunAna::Instance()->Run((Long64_t)0);
-   auto ioMan = FairRootManager::Instance();
-
-   // Loop through the entire branch list and try to identify the class type of each branch
-   for (int i = 0; i < ioMan->GetBranchNameList()->GetSize(); i++) {
-
-      auto branchName = ioMan->GetBranchName(i);
-      std::cout << "Looking for " << branchName << std::endl;
-      auto branchArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(branchName));
-      if (branchArray == nullptr)
-         continue;
-
-      while (branchArray->GetSize() == 0)
-         NextEvent();
-      std::cout << branchName << " as " << branchArray << " " << branchArray->GetSize() << std::endl;
-
-      // Check for event types this is very hacky but what can you do
-      for (int j = 0; j < fBranchTypes.size(); ++j) {
-         fSubjectBranchNames[j] = std::make_unique<DataHandling::BranchName>(fBranchTypes[j], "", "");
-         if (std::string(branchArray->At(0)->ClassName()).compare(fBranchTypes[j]) == 0) {
-            std::cout << "Found as " << fBranchTypes[j] << std::endl;
-            fBranchNames[j].push_back(branchName);
-         }
-      }
-   }
+   fTabTask->AddTab(std::move(tab));
 }
 
 void AtEventManagerNew::Init()
@@ -132,9 +99,9 @@ void AtEventManagerNew::Init()
    TEveManager::Create();
 
    // Call init on the run after here all of the AtTabInfo will be created
+   // Add the AtTabTask as the last task in the run
+   FairRunAna::Instance()->AddTask(fTabTask.get());
    FairRunAna::Instance()->Init();
-   TChain *chain = FairRootManager::Instance()->GetInChain();
-   fEntries = chain->GetEntriesFast();
    gEve->AddEvent(this);
 
    // Everything is loaded so construct the list of branch names
@@ -266,6 +233,35 @@ void AtEventManagerNew::make_gui()
    browser->SetTabTitle("Event Control", 0);
 }
 
+void AtEventManagerNew::GenerateBranchLists()
+{
+   FairRunAna::Instance()->Run((Long64_t)0);
+   auto ioMan = FairRootManager::Instance();
+
+   // Loop through the entire branch list and try to identify the class type of each branch
+   for (int i = 0; i < ioMan->GetBranchNameList()->GetSize(); i++) {
+
+      auto branchName = ioMan->GetBranchName(i);
+      std::cout << "Looking for " << branchName << std::endl;
+      auto branchArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(branchName));
+      if (branchArray == nullptr)
+         continue;
+
+      while (branchArray->GetSize() == 0)
+         NextEvent();
+      std::cout << branchName << " as " << branchArray << " " << branchArray->GetSize() << std::endl;
+
+      // Check for event types this is very hacky but what can you do
+      for (int j = 0; j < fBranchTypes.size(); ++j) {
+         fSubjectBranchNames[j] = std::make_unique<DataHandling::BranchName>(fBranchTypes[j], "", "");
+         if (std::string(branchArray->At(0)->ClassName()).compare(fBranchTypes[j]) == 0) {
+            std::cout << "Found as " << fBranchTypes[j] << std::endl;
+            fBranchNames[j].push_back(branchName);
+         }
+      }
+   }
+}
+
 void AtEventManagerNew::SelectEventBranch(int sel, int i)
 {
    if (sel < 0)
@@ -302,17 +298,9 @@ void AtEventManagerNew::GotoEvent(Int_t event)
 {
    fEntry = event;
    std::cout << cWHITERED << " Event number : " << fEntry << cNORMAL << std::endl;
+   if (fCurrentEvent)
+      fCurrentEvent->SetIntNumber(fEntry);
    FairRunAna::Instance()->Run((Long64_t)event);
-}
-
-void AtEventManagerNew::NextEvent()
-{
-   GotoEvent(fEntry + 1);
-}
-
-void AtEventManagerNew::PrevEvent()
-{
-   GotoEvent(fEntry - 1);
 }
 
 // Runs on any interaction with pad plane
@@ -364,12 +352,7 @@ void AtEventManagerNew::SelectPad()
 void AtEventManagerNew::DrawPad(Int_t padNum)
 {
    fPadNum = padNum;
-   fTabTask->DrawPad(padNum);
-}
-
-void AtEventManagerNew::RunEvent()
-{
-   FairRun::Instance()->Run((Long64_t)fEntry);
+   fTabTask->DrawTabPads(padNum);
 }
 
 void AtEventManagerNew::RegisterDataHandles()

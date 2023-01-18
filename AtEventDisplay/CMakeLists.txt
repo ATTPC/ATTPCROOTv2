@@ -5,7 +5,7 @@ Set(LIBRARY_NAME AtEventDisplay) # Change the library name and delete this comme
 
 set(INCLUDE_DIRECTORIES
 # Add all the folders having header files you used in the code.
-${CMAKE_SOURCE_DIR}/AtEventDisplay/AtEventTab
+${CMAKE_SOURCE_DIR}/AtEventDisplay/AtTabs
   )
 
 set(SRCS
