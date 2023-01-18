@@ -74,8 +74,10 @@ macro(set_attpcroot_defaults)
 	  ${iwyu_path}
 	  -Xiwyu
 	  #-v6
-	  --mapping_file=${CMAKE_SOURCE_DIR}/cmake/scripts/root.imp)
+	  --mapping_file=${CMAKE_SOURCE_DIR}/cmake/scripts/root.imp
+	  -w)
 	set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path_and_args})
+	message(STATUS "IWYU arguments: ${CMAKE_CXX_INCLUDE_WHAT_YOU_USE}")
       endif()
     endif()
 
@@ -105,6 +107,7 @@ macro(set_attpcroot_defaults)
 	  ${clang-tidy_path}
 	  #--fix
 	  --extra-arg=-nostdinc++
+	  --extra-arg=-Wno-deprecated-declarations
 	  )
 	message(STATUS "Setting clang tidy to: ${clang-tidy_path_and_args}") 
 	set(CMAKE_CXX_CLANG_TIDY ${clang-tidy_path_and_args})

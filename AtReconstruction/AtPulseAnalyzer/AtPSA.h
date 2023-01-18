@@ -1,7 +1,7 @@
 #ifndef AtPSA_H
 #define AtPSA_H
 
-#include "AtHit.h" // IWYU pramga: keep
+#include "AtHit.h" // IWYU pragma: keep
 
 #include <Rtypes.h>
 
