@@ -66,8 +66,6 @@ public:
    void DrawEvent() override;
    void DrawPad(Int_t padNum) override;
 
-   void AddInfoAugment(std::string name, std::unique_ptr<AtTabInfoBase> augment);
-
 private:
    void UpdateCvsMacro();
 

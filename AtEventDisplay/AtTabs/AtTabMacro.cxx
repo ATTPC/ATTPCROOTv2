@@ -161,7 +161,3 @@ void AtTabMacro::UpdateCvsMacro()
    fCvsMacro->Update();
 }
 
-void AtTabMacro::AddInfoAugment(std::string name, std::unique_ptr<AtTabInfoBase> augment)
-{
-   fTabInfo->AddAugment(name, std::move(augment));
-}
