@@ -1,8 +1,9 @@
 #ifndef ATTABMAIN_H
 #define ATTABMAIN_H
 
-#include "AtEvent.h"    // IWYU pragma: keep
-#include "AtRawEvent.h" // IWYU pragma: keep
+#include "AtEvent.h"        // IWYU pragma: keep
+#include "AtPatternEvent.h" // IWYU pragma: keep
+#include "AtRawEvent.h"     // IWYU pragma: keep
 #include "AtTabBase.h"
 
 #include <Rtypes.h> // for Int_t, Bool_t, THashConsistencyHolder, Color_t
@@ -25,32 +26,31 @@ class TH2Poly;
 class TH1I;
 class TPaletteAxis;
 class AtTabInfo;
+class AtPatternEvent;
+class AtRawEvent;
+class AtEvent;
 
 class AtTabMain : public AtTabBase {
+private:
+   using TEvePointSetPtr = std::unique_ptr<TEvePointSet>;
+
 protected:
    // Information for drawing 3D events
-   Int_t fThreshold;
-   // std::unique_ptr<TEvePointSet> fHitSet;
-   TEvePointSet *fHitSet;
+   Int_t fThreshold{0};    //< Min charge to draw hit
+   Int_t fMaxHitMulti{10}; //< Max hits in a pad for hit to be drawn
 
-   Color_t fHitColor;
-   Size_t fHitSize;
-   Style_t fHitStyle;
+   TAttMarker fHitAttr{kPink, 1, kFullDotMedium};
 
-   TCanvas *fCvsPadPlane;
-   TH2Poly *fPadPlane;
-   TCanvas *fCvsPadWave;
-   TH1I *fPadWave;
+   TEvePointSetPtr fHitSet{std::make_unique<TEvePointSet>("Hit")}; //< AtEvent Hit Set
+   std::vector<TEvePointSetPtr> fPatternHitSets;
 
-   Int_t fMultiHit{10};
-
-   std::string fInfoEventName{"AtEvent"};
-   std::string fInfoRawEventName{"AtRawEvent"};
-
-   TEveRGBAPalette *fRGBAPalette;
+   TCanvas *fCvsPadPlane{nullptr};
+   TH2Poly *fPadPlane{nullptr};
+   TCanvas *fCvsPadWave{nullptr};
+   TH1I *fPadWave{nullptr};
 
 public:
-   AtTabMain();
+   AtTabMain() = default;
    void InitTab() override;
    void UpdateTab() override {}
    void Reset() override;
@@ -58,16 +58,13 @@ public:
 
    void DrawEvent() override;
    void DrawPad(Int_t PadNum) override;
+   void DumpEvent(std::string file);
 
    void SetThreshold(Int_t val) { fThreshold = val; }
-   void SetHitAttributes(Color_t, Size_t, Style_t);
-   void SetMultiHit(Int_t hitMax);
+   void SetHitAttributes(TAttMarker attr) { fHitAttr = std::move(attr); }
+   void SetMultiHit(Int_t hitMax) { fMaxHitMulti = hitMax; }
 
 private:
-   AtEvent *GetEvent();
-   AtEvent *GetPatternEvent();
-   AtRawEvent *GetRawEvent();
-
    // Functions to draw the initial canvases
    void DrawPadPlane();
    void DrawPadWave();
@@ -78,10 +75,15 @@ private:
 
    // Functions for drawing hits
    void DrawHitPoints();
+
+   void DrawPatternHitPoints();
    bool DrawWave(Int_t PadNum);
    // std::unique_ptr<TEvePointSet> GetPointsFromHits(const std::vector<std::unique_ptr<AtHit>> &hits);
-   TEvePointSet *GetPointsFromHits(const std::vector<std::unique_ptr<AtHit>> &hits);
+   void SetPointsFromHits(TEvePointSet &hitSet, const std::vector<std::unique_ptr<AtHit>> &hits);
    void FillPadPlane(const std::vector<std::unique_ptr<AtHit>> &hits);
+
+private:
+   void AddPatternHitSet();
 
    ClassDefOverride(AtTabMain, 1)
 };

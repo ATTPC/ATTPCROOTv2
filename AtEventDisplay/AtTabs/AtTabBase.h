@@ -53,6 +53,16 @@ protected:
    virtual void InitTab() = 0;
    virtual void UpdateTab() = 0;
 
+   /**
+    * Returns the instance of T (usually an event type) associated with the AtTabInfoFairRoot
+    * augment named infoName. If infoName is not passed assume its name is "T".
+    */
+   template <typename T>
+   T *GetFairRootInfo(std::string infoName = T::Class_Name())
+   {
+      return dynamic_cast<AtTabInfoFairRoot<T> *>(fTabInfo->GetAugment(infoName))->GetInfo();
+   }
+
    ClassDef(AtTabBase, 1)
 };
 

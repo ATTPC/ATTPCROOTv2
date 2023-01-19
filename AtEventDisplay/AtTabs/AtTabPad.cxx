@@ -33,17 +33,11 @@ void AtTabPad::InitTab()
 
    std::cout << " =====  AtEventTabPad::Init =====" << std::endl;
 
-   if (fTabName == "AtPad") {
-      char name[20];
-      sprintf(name, "AtPad %i", fTabNumber);
-      fTabName = name;
-   }
+   if (fTabName == "AtPad")
+      fTabName = TString::Format(fTabName + " %d", fTabNumber);
 
-   auto tTabInfoEvent = std::make_unique<AtTabInfoFairRoot<AtEvent>>(fEventBranch);
-   auto tTabInfoRawEvent = std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(fRawEventBranch);
-
-   fTabInfo->AddAugment(fInfoEventName, std::move(tTabInfoEvent));
-   fTabInfo->AddAugment(fInfoRawEventName, std::move(tTabInfoRawEvent));
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>(fEventBranch));
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(fRawEventBranch));
 
    std::cout << " AtEventTabPad::Init : Initialization complete! "
              << "\n";
@@ -86,8 +80,7 @@ void AtTabPad::UpdateTab() {}
 void AtTabPad::DrawPad(Int_t padNum)
 {
 
-   AtRawEvent *fRawEvent =
-      dynamic_cast<AtTabInfoFairRoot<AtRawEvent> *>(fTabInfo->GetAugment(fInfoRawEventName))->GetInfo();
+   AtRawEvent *fRawEvent = GetFairRootInfo<AtRawEvent>();
 
    if (fRawEvent == nullptr) {
       std::cout << "fRawEvent is nullptr for tab " << fTabNumber << "! Please set the raw event branch." << std::endl;

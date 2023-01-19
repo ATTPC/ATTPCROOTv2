@@ -45,9 +45,6 @@ protected:
    TString fEventBranch{"AtEventH"};
    TString fRawEventBranch{"AtRawEvent"};
 
-   std::string fInfoEventName{"AtEventH"};
-   std::string fInfoRawEventName{"AtRawEvent"};
-
    TEveRGBAPalette *fRGBAPalette{nullptr};
 
 public:
