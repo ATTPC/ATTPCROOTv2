@@ -42,7 +42,7 @@ void run_eve_test_multi(int runNum = 214, TString OutputDataFile = "./data/outpu
 
    auto fMap = std::make_shared<AtTpcMap>();
    fMap->ParseXMLMap(mapDir.Data());
-   AtEventManagerNew *eveMan = new AtEventManagerNew(fMap);
+   AtViewerManager *eveMan = new AtViewerManager(fMap);
 
    auto tabMain = std::make_unique<AtTabMain>();
    tabMain->SetMultiHit(100); // Set the maximum number of multihits in the visualization

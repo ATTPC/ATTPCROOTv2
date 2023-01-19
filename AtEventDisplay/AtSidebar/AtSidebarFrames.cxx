@@ -6,7 +6,7 @@
 #include <TFile.h>
 #include <TGButton.h>
 
-#include <AtEventManagerNew.h>
+#include <AtViewerManager.h>
 
 void AtSidebarRunInfo::FillFrame()
 {
@@ -37,8 +37,8 @@ void AtSidebarEventControl::FillFrame()
                                           TGNumberFormat::kNEANonNegative, TGNumberFormat::kNELLimitMinMax, 0,
                                           FairRootManager::Instance()->GetInChain()->GetEntriesFast());
 
-   fCurrentEventEntry->Connect("ValueSet(Long_t)", "AtEventManagerNew", AtEventManagerNew::Instance(), "SelectEvent()");
-   AtEventManagerNew::Instance()->SetCurrentEvent(fCurrentEventEntry);
+   fCurrentEventEntry->Connect("ValueSet(Long_t)", "AtViewerManager", AtViewerManager::Instance(), "SelectEvent()");
+   AtViewerManager::Instance()->SetCurrentEvent(fCurrentEventEntry);
 
    fCurrentEventFrame->AddFrame(fCurrentEventLabel, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
    fCurrentEventFrame->AddFrame(fCurrentEventEntry);
@@ -49,11 +49,11 @@ void AtSidebarEventControl::FillFrame()
 
       auto b = new TGPictureButton(fButtonFrame, gClient->GetPicture(icondir + "arrow_left.gif"));
       fButtonFrame->AddFrame(b);
-      b->Connect("Clicked()", "AtEventManagerNew", AtEventManagerNew::Instance(), "PrevEvent()");
+      b->Connect("Clicked()", "AtViewerManager", AtViewerManager::Instance(), "PrevEvent()");
 
       b = new TGPictureButton(fButtonFrame, gClient->GetPicture(icondir + "arrow_right.gif"));
       fButtonFrame->AddFrame(b);
-      b->Connect("Clicked()", "AtEventManagerNew", AtEventManagerNew::Instance(), "NextEvent()");
+      b->Connect("Clicked()", "AtViewerManager", AtViewerManager::Instance(), "NextEvent()");
    }
 
    this->AddFrame(fCurrentEventFrame);

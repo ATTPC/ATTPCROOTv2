@@ -30,7 +30,7 @@ AtSidebar/PSA/AtSidebarPSAIterDeconv.cxx
 
 
 AtEventManager.cxx
-AtEventManagerNew.cxx
+AtViewerManager.cxx
 AtEventManagerProto.cxx
 AtEventDrawTask.cxx
 AtTabTask.cxx

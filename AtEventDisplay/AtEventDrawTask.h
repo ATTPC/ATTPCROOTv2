@@ -154,8 +154,8 @@ protected:
       std::vector<std::unique_ptr<TEveBoxSet>> fHitClusterSet; // Track clusterization
       std::vector<std::unique_ptr<TEveLine>> fHitLine;         // Track line
    */
-   std::vector<TEvePointSet *> fHitSetTFHC;  // for TrackFinderHC
-   std::vector<TEveBoxSet *> fHitClusterSet; // Track clusterization
+   std::vector<TEvePointSet *> fHitSetTFHC;  // hits in AtTrack
+   std::vector<TEveBoxSet *> fHitClusterSet; // clusters in AtTrack
    std::vector<TEveElement *> fHitLine;      // Track line
    std::vector<TEvePointSet *> fVertex;      // Vertex line
 

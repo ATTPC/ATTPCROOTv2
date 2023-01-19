@@ -55,6 +55,9 @@ void AtTabMain::InitTab()
 
    std::cout << " =====  AtTabMain::Init =====" << std::endl;
 
+   gEve->AddEvent(fEventManager.get());
+   fEventManager->AddElement(fHitSet.get());
+
    fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>());
    fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>());
    fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtPatternEvent>>());
@@ -101,7 +104,7 @@ void AtTabMain::MakeTab()
    frame->SetElementName("AtTPC Pad Plane");
    pack->GetEveFrame()->SetShowTitleBar(kFALSE);
    fCvsPadPlane = ecvs->GetCanvas();
-   fCvsPadPlane->AddExec("ex", "AtEventManagerNew::SelectPad()");
+   fCvsPadPlane->AddExec("ex", "AtViewerManager::SelectPad()");
 
    fCvsPadWave->SetName(TString::Format("fCvsPadWave_DT%i", fTabNumber));
    DrawPadWave();
@@ -133,11 +136,11 @@ void AtTabMain::MakeTab()
 
 void AtTabMain::DrawEvent()
 {
-   LOG(debug) << "Drawing tab " << fTabNumber;
+   // Create the hit cloud for every event we have registered
+
    DrawHitPoints();
    gEve->Redraw3D(false);
    UpdateCvsPadPlane();
-   LOG(debug) << "Done Drawing tab " << fTabNumber << std::endl;
 }
 
 void AtTabMain::DrawPad(Int_t PadNum)
@@ -161,8 +164,8 @@ void AtTabMain::DrawPadPlane()
       return;
    }
 
-   AtEventManagerNew::Instance()->GetMap()->GeneratePadPlane();
-   fPadPlane = AtEventManagerNew::Instance()->GetMap()->GetPadPlane();
+   AtViewerManager::Instance()->GetMap()->GeneratePadPlane();
+   fPadPlane = AtViewerManager::Instance()->GetMap()->GetPadPlane();
    fCvsPadPlane->cd();
    // fPadPlane -> Draw("COLZ L0"); //0  == bin lines adre not drawn
    fPadPlane->Draw("COL L0");
@@ -217,21 +220,15 @@ void AtTabMain::DrawHitPoints()
 {
    auto fEvent = GetFairRootInfo<AtEvent>();
    if (fEvent == nullptr) {
-      std::cout << "CRITICAL ERROR: Event missing for TabMain. Aborting draw." << std::endl;
+      LOG(error) << "Cannot generate AtEvent hit cloud and fill pad plane histogram: no event availible";
       return;
    }
-   TRandom r(0);
 
    auto &hits = fEvent->GetHits();
    LOG(info) << cBLUE << " Number of hits : " << hits.size() << cNORMAL;
 
    FillPadPlane(hits);
-   std::cout << "Filling hit set " << fHitSet.get() << std::endl;
    SetPointsFromHits(*fHitSet, hits);
-
-   // If this hit set has not been added to the viewer yet, add it
-   if (!gEve->GetCurrentEvent()->HasChild(fHitSet.get()))
-      gEve->AddElement(fHitSet.get());
 }
 
 void AtTabMain::FillPadPlane(const std::vector<std::unique_ptr<AtHit>> &hits)
@@ -248,7 +245,6 @@ void AtTabMain::FillPadPlane(const std::vector<std::unique_ptr<AtHit>> &hits)
 void AtTabMain::SetPointsFromHits(TEvePointSet &hitSet, const std::vector<std::unique_ptr<AtHit>> &hits)
 {
    Int_t nHits = hits.size();
-   LOG(info) << cBLUE << " Number of hits : " << nHits << cNORMAL;
 
    hitSet.Reset(nHits);
    hitSet.SetOwnIds(true);

@@ -119,9 +119,9 @@ public:
    {
       // If it is a branch change with a matching type, update us.
       auto branchChange = dynamic_cast<DataHandling::BranchName *>(changedSubject);
-
-      if (branchChange != nullptr && std::string(T::Class_Name()).compare(branchChange->GetBranchType()) == 0) {
-         LOG(info) << "Updating branch name from " << fBranchName << " to " << branchChange->GetBranchName();
+      bool typeMatches = std::string(T::Class_Name()).compare(branchChange->GetBranchType()) == 0;
+      if (branchChange != nullptr && typeMatches) {
+         LOG(debug) << "Updating branch name from " << fBranchName << " to " << branchChange->GetBranchName();
          fBranchName = branchChange->GetBranchName();
       }
    }

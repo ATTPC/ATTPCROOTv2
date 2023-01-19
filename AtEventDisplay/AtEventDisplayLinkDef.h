@@ -5,7 +5,7 @@
 #pragma link off all functions;
 
 #pragma link C++ class AtEventManager + ;
-#pragma link C++ class AtEventManagerNew + ;
+#pragma link C++ class AtViewerManager + ;
 #pragma link C++ class AtEventManagerProto + ;
 #pragma link C++ class AtTabTask + ;
 #pragma link C++ class AtEventDrawTask + ;

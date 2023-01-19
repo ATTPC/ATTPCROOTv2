@@ -10,6 +10,8 @@
 #include <TEvePointSet.h>
 #include <TString.h> // for TString
 
+#include "TEveEventManager.h"
+
 #include <memory> // for shared_ptr
 #include <set>
 #include <string> // for string
@@ -33,16 +35,25 @@ class AtEvent;
 class AtTabMain : public AtTabBase {
 private:
    using TEvePointSetPtr = std::unique_ptr<TEvePointSet>;
+   using TEveEventManagerPtr = std::unique_ptr<TEveEventManager>;
+
+public:
+   enum class DrawType { kEvent, kClusterEvent, kPatternEvent };
 
 protected:
+   TEveEventManagerPtr fEventManager{std::make_unique<TEveEventManager>("AtEventManager")};
+
    // Information for drawing 3D events
-   Int_t fThreshold{0};    //< Min charge to draw hit
-   Int_t fMaxHitMulti{10}; //< Max hits in a pad for hit to be drawn
+   Int_t fThreshold{0};                  //< Min charge to draw hit
+   Int_t fMaxHitMulti{10};               //< Max hits in a pad for hit to be drawn
+   DrawType fDrawType{DrawType::kEvent}; //< Type of event to draw
 
    TAttMarker fHitAttr{kPink, 1, kFullDotMedium};
 
    TEvePointSetPtr fHitSet{std::make_unique<TEvePointSet>("Hit")}; //< AtEvent Hit Set
+
    std::vector<TEvePointSetPtr> fPatternHitSets;
+   std::vector<TEveElement> fPatterns;
 
    TCanvas *fCvsPadPlane{nullptr};
    TH2Poly *fPadPlane{nullptr};
@@ -60,6 +71,7 @@ public:
    void DrawPad(Int_t PadNum) override;
    void DumpEvent(std::string file);
 
+   void SetDrawType(DrawType type) { fDrawType = type; }
    void SetThreshold(Int_t val) { fThreshold = val; }
    void SetHitAttributes(TAttMarker attr) { fHitAttr = std::move(attr); }
    void SetMultiHit(Int_t hitMax) { fMaxHitMulti = hitMax; }
