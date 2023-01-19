@@ -47,6 +47,11 @@ public:
 
    virtual void Update(DataHandling::Subject *subject) override = 0;
 
+   /**
+    * @brief Default name for info type.
+    */
+   virtual std::string GetDefaultName() = 0;
+
 protected:
    /**
     * @brief update the data this holds from its source.
@@ -69,9 +74,14 @@ public:
    void Init() override;
 
    void Update(DataHandling::Subject *changedSubject) override;
+   std::string GetDefaultName() override { return "AtTabInfo"; }
 
-   AtTabInfoBase *AddAugment(std::string name, std::unique_ptr<AtTabInfoBase> augment);
-   AtTabInfoBase *ReplaceAugment(std::string name, std::unique_ptr<AtTabInfoBase> augment);
+   AtTabInfoBase *AddAugment(std::unique_ptr<AtTabInfoBase> augment);
+   AtTabInfoBase *AddAugment(std::unique_ptr<AtTabInfoBase> augment, std::string name);
+
+   AtTabInfoBase *ReplaceAugment(std::unique_ptr<AtTabInfoBase> augment);
+   AtTabInfoBase *ReplaceAugment(std::unique_ptr<AtTabInfoBase> augment, std::string name);
+
    AtTabInfoBase *GetAugment(std::string name);
 
 protected:
@@ -115,6 +125,7 @@ public:
          fBranchName = branchChange->GetBranchName();
       }
    }
+   std::string GetDefaultName() override { return T::Class_Name(); }
 
    void SetBranch(TString branchName) { fBranchName = branchName; }
    T *GetInfo()

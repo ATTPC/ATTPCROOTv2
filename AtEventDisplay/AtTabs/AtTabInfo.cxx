@@ -26,17 +26,26 @@ void AtTabInfo::Update(DataHandling::Subject *changedSubject)
    }
 }
 
-AtTabInfoBase *AtTabInfo::AddAugment(std::string name, std::unique_ptr<AtTabInfoBase> augment)
+AtTabInfoBase *AtTabInfo::AddAugment(std::unique_ptr<AtTabInfoBase> augment)
+{
+   return AddAugment(std::move(augment), augment->GetDefaultName());
+}
+AtTabInfoBase *AtTabInfo::AddAugment(std::unique_ptr<AtTabInfoBase> augment, std::string name)
 {
    if (fInfoAugments.find(name) != fInfoAugments.end())
       LOG(error)
          << "AtTabInfo augment " << name
          << "already exists in this AtTabInfo. If replacement is intentional, use AtTabInfo::ReplaceAugment() instead.";
 
-   return ReplaceAugment(name, std::move(augment));
+   return ReplaceAugment(std::move(augment), name);
 }
 
-AtTabInfoBase *AtTabInfo::ReplaceAugment(std::string name, std::unique_ptr<AtTabInfoBase> augment)
+AtTabInfoBase *AtTabInfo::ReplaceAugment(std::unique_ptr<AtTabInfoBase> augment)
+{
+
+   return ReplaceAugment(std::move(augment), augment->GetDefaultName());
+}
+AtTabInfoBase *AtTabInfo::ReplaceAugment(std::unique_ptr<AtTabInfoBase> augment, std::string name)
 {
    fInfoAugments[name] = std::move(augment);
    return fInfoAugments[name].get();
