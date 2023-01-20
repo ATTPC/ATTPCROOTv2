@@ -2,12 +2,13 @@
 #define ATSIDEBARFRAMES_H
 
 #include "AtDataObserver.h"
-#include "AtSubjectEventViewer.h"
+#include "AtViewerManagerSubject.h"
 
 #include <TGComboBox.h>
 #include <TGFrame.h>
 #include <TGLabel.h>
 #include <TGNumberEntry.h>
+
 /**
  * Base class something that can be added to the sidebar. It is a frame that will be added to the
  * sidebar in the order in which they are added to the AtEventSidebar.

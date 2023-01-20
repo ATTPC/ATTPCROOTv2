@@ -3,7 +3,7 @@
 
 #include "AtDataObserver.h"
 #include "AtDataSubject.h"
-#include "AtSubjectEventViewer.h"
+#include "AtViewerManagerSubject.h"
 
 #include <FairLogger.h> // for Logger, LOG
 #include <FairRootManager.h>
@@ -19,8 +19,8 @@
 /**
  * @defgroup TabData Data for tabs
  *
- * Classes used to provide access to and update the data used by tabs in the visualizer. There are two main classes at
- the moment:
+ * Classes used to provide access to and update the data used by tabs in the visualizer. There are
+ two main classes at the moment:
 
  * AtTabInfoFairRoot which provides access to classes through the FairRoot source file.
  * AtTabInfoHiRAEVT which provides access to classes stored in a HiRAEVT stle TTree.

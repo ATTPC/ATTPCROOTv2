@@ -1,10 +1,10 @@
-#ifndef AtEVENTMANAGERNEW_H
-#define AtEVENTMANAGERNEW_H
+#ifndef ATVIEWERMANAGER_H
+#define ATVIEWERMANAGER_H
 
 #include "AtDataObserver.h"
 #include "AtDataSubject.h"
 #include "AtEventSidebar.h"
-#include "AtSubjectEventViewer.h"
+#include "AtViewerManagerSubject.h"
 
 #include <FairRunAna.h>
 
@@ -34,8 +34,8 @@ class AtTabBase;
  * Event manager than allows for the addition arbitrary pads to expand behavior.
  * Operates as a singleton who needs to be instatiated once with the detector map in use.
  *
- * Tabs are added directly to AtEventManager (which creates a task used to update the pads as events are loaded or
- * re-analyzed)
+ * Tabs are added directly to AtEventManager (which creates a task used to update the pads as events
+ * are loaded or re-analyzed)
  */
 class AtViewerManager final : DataHandling::Observer {
 private:

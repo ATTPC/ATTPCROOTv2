@@ -96,10 +96,15 @@ public:
    AtMap::InhibitType IsInhibited(Int_t PadNum);
    Int_t GetPadSize(int padNum);
 
+#pragma GCC diagnostic push
+   // Ignore shadow warning when we shadow ROOT's global GuiTypes enum
+#pragma GCC diagnostic ignored "-Wshadow"
+
    // The higher the number, the higher the priority
    // i.e. Adding a pad to the inhibit map with kTotal and kLowGain
    // will inhibit the pad. kLowGain and kXTalk will be kXTalk
    enum class InhibitType { kNone = 0, kLowGain = 1, kXTalk = 2, kTotal = 3 };
+#pragma GCC diagnostic pop
 
    ClassDefOverride(AtMap, 5);
 };

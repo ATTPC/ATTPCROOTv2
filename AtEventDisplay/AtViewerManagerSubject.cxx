@@ -1,4 +1,4 @@
-#include "AtSubjectEventViewer.h"
+#include "AtViewerManagerSubject.h"
 
 #include <iostream>
 namespace DataHandling {
