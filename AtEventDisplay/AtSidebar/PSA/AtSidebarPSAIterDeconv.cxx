@@ -2,6 +2,8 @@
 
 #include "AtPSAIterDeconv.h"
 
+//ClassImp(AtSidebarPSAIterDeconv);
+
 void AtSidebarPSAIterDeconv::FillFrame()
 {
    fThresholdFrame = new TGHorizontalFrame(this);
@@ -10,8 +12,8 @@ void AtSidebarPSAIterDeconv::FillFrame()
                                           TGNumberFormat::kNEANonNegative, TGNumberFormat::kNELLimitMinMax, -1,
                                           4000);
 
-   fThresholdEntry->Connect("ValueSet(Int_t)", "AtPSAIterDeconv", this, "SetThreshold()");
-   (fThresholdEntry->GetNumberEntry())->Connect("ReturnPressed()", "AtPSAIterDeconv", this, "SetThreshold()");
+   auto testConn = fThresholdEntry->Connect("ValueSet(Int_t)", "AtSidebarPSAIterDeconv", this, "SetThreshold()");
+   (fThresholdEntry->GetNumberEntry())->Connect("ReturnPressed()", "AtSidebarPSAIterDeconv", this, "SetThreshold()");
    fThresholdFrame->AddFrame(fThresholdLabel, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
    fThresholdFrame->AddFrame(fThresholdEntry);
 
@@ -21,7 +23,7 @@ void AtSidebarPSAIterDeconv::FillFrame()
                                           TGNumberFormat::kNEANonNegative, TGNumberFormat::kNELLimitMinMax, -1, 16
                                           );
 
-   fOrderEntry->Connect("ValueSet(Int_t)", "AtPSAIterDeconv", this, "SetOrder()");
+   fOrderEntry->Connect("ValueSet(Int_t)", "AtSidebarPSAIterDeconv", this, "SetFilterOrder()");
    fOrderFrame->AddFrame(fOrderLabel, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
    fOrderFrame->AddFrame(fOrderEntry);
 
@@ -31,7 +33,7 @@ void AtSidebarPSAIterDeconv::FillFrame()
                                           TGNumberFormat::kNEANonNegative, TGNumberFormat::kNELLimitMinMax, -1,
                                           512);
 
-   fCutoffEntry->Connect("ValueSet(Int_t)", "AtPSAIterDeconv", this, "SetCutoff()");
+   fCutoffEntry->Connect("ValueSet(Int_t)", "AtSidebarPSAIterDeconv", this, "SetCutoffFreq()");
    fCutoffFrame->AddFrame(fCutoffLabel, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
    fCutoffFrame->AddFrame(fCutoffEntry);
 
@@ -41,7 +43,7 @@ void AtSidebarPSAIterDeconv::FillFrame()
                                           TGNumberFormat::kNEANonNegative, TGNumberFormat::kNELLimitMinMax, -1,
                                           10);
 
-   fIterationsEntry->Connect("ValueSet(Int_t)", "AtPSAIterDeconv", this, "SetIterations()");
+   fIterationsEntry->Connect("ValueSet(Int_t)", "AtSidebarPSAIterDeconv", this, "SetIterations()");
    fIterationsFrame->AddFrame(fIterationsLabel, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
    fIterationsFrame->AddFrame(fIterationsEntry);
 
