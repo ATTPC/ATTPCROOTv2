@@ -80,7 +80,7 @@ AtViewerManager::AtViewerManager(std::shared_ptr<AtMap> map)
    TEveBrowser *browser = gEve->GetBrowser();
    browser->StartEmbedding(TRootBrowser::kLeft);
 
-   fSidebar = new AtEventSidebar(&fEntry, fRawEventBranch, fEventBranch, fPatternEventBranch);
+   fSidebar = new AtEventSidebar(fEntry, fRawEventBranch, fEventBranch, fPatternEventBranch);
 
    browser->StopEmbedding();
    browser->SetTabTitle("Control", 0);
@@ -89,6 +89,10 @@ AtViewerManager::AtViewerManager(std::shared_ptr<AtMap> map)
 AtViewerManager::~AtViewerManager()
 {
    fInstance = nullptr;
+   fEntry.Detach(this);
+   fRawEventBranch.Detach(this);
+   fEventBranch.Detach(this);
+   fPatternEventBranch.Detach(this);
 }
 
 void AtViewerManager::AddTask(FairTask *task)

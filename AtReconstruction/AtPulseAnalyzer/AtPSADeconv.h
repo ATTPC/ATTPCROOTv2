@@ -124,40 +124,4 @@ protected:
    HitVector AnalyzeFFTpad(AtPad &pad);
 };
 
-namespace DataHandling {
-
-class SubjectPSADeconv : public SubjectPSA {
-protected:
-   int fFilterOrder;
-   int fCutoffFreq;
-
-public:
-   SubjectPSADeconv(int filterOrder, int cutoff, int threshold, int thresholdLow = -1)
-      : SubjectPSA(threshold, thresholdLow), fFilterOrder(filterOrder), fCutoffFreq(cutoff)
-   {
-   }
-
-   int GetFilterOrder() const { return fFilterOrder; }
-   int GetCutoffFreq() const { return fCutoffFreq; }
-};
-
-class ObserverPSADeconv : public ObserverPSA {
-
-public:
-   ObserverPSADeconv(AtPSADeconv *psa) : ObserverPSA(psa){};
-
-   void Update(Subject *subject)
-   {
-      ObserverPSA::Update(subject);
-      auto sub = dynamic_cast<SubjectPSADeconv *>(subject);
-      if (sub == nullptr)
-         return;
-
-      auto psa = dynamic_cast<AtPSADeconv *>(fPSA);
-      psa->SetFilterOrder(sub->GetFilterOrder());
-      psa->SetCutoffFreq(sub->GetCutoffFreq());
-   }
-};
-} // namespace DataHandling
-
 #endif //#ifndef ATPSADECONV_H

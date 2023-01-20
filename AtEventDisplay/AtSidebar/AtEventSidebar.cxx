@@ -11,7 +11,7 @@ void AtEventSidebar::FillFrames()
       frame->FillFrame();
 }
 
-AtEventSidebar::AtEventSidebar(DataHandling::AtEntryNumber *entryNum,
+AtEventSidebar::AtEventSidebar(DataHandling::AtEntryNumber &entryNum,
                                DataHandling::AtBranchName &rawEvent,
                                DataHandling::AtBranchName &event,
                                DataHandling::AtBranchName &patternEvent)

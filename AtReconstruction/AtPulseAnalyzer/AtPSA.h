@@ -1,9 +1,9 @@
 #ifndef AtPSA_H
 #define AtPSA_H
 
-#include "AtHit.h" // IWYU pragma: keep
 #include "AtDataObserver.h"
 #include "AtDataSubject.h"
+#include "AtHit.h" // IWYU pragma: keep
 
 #include <Rtypes.h>
 
@@ -20,9 +20,6 @@ class AtPad;
 class TBuffer;
 class TClass;
 class TMemberInspector;
-namespace DataHandling {
-class ObserverPSA;
-}
 
 /**
  * @brief Abstract base class for processing AtPads (traces) into AtHits.
@@ -73,13 +70,13 @@ public:
    // virtual HitVector AnalyzeTrace(const std::vector<double> &trace) = 0;
    virtual std::unique_ptr<AtPSA> Clone() = 0;
 
-   friend class DataHandling::ObserverPSA;
-
 protected:
    // Protected functions
-   void TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit &hit); //< Assign MC Points kinematics to each hit.
+   void TrackMCPoints(std::multimap<Int_t, std::size_t> &map,
+                      AtHit &hit); //< Assign MC Points kinematics to each hit.
 
-   [[deprecated]] Double_t CalculateZ(Double_t peakIdx); ///< Calculate z position in mm using the peak index.
+   [[deprecated]] Double_t
+   CalculateZ(Double_t peakIdx); ///< Calculate z position in mm using the peak index.
 
    Double_t CalculateZGeo(Double_t peakIdx);
    Double_t getThreshold(int padSize = -1);
@@ -88,39 +85,5 @@ protected:
    virtual std::pair<double, double> getXYhitVariance() const;
    ClassDef(AtPSA, 5)
 };
-
-namespace DataHandling {
-
-class SubjectPSA : public Subject {
-protected:
-   Int_t fThreshold{-1};    ///< threshold of ADC value
-   Int_t fThresholdlow{-1}; ///< threshold for Central pads
-public:
-   SubjectPSA(int threshold, int thresholdLow = -1) : fThreshold(threshold), fThresholdlow(thresholdLow) {}
-
-   int GetThreshold() { return fThreshold; }
-   int GetThresholdLow() { return fThresholdlow; }
-};
-
-class ObserverPSA : public Observer {
-protected:
-   AtPSA *fPSA;
-
-public:
-   ObserverPSA(AtPSA *psa) : fPSA(psa) {}
-
-   void Update(Subject *subject)
-   {
-      auto sub = dynamic_cast<SubjectPSA *>(subject);
-      if (sub == nullptr)
-         return;
-
-      fPSA->SetThreshold(sub->GetThreshold());
-      if (fPSA->fUsingLowThreshold)
-         fPSA->SetThresholdLow(sub->GetThresholdLow());
-   }
-};
-
-} // namespace DataHandling
 
 #endif

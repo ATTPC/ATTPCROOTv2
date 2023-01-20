@@ -82,9 +82,9 @@ public:
    }
 
    /*** Data handlers owned by AtViewerManager ***/
-   DataHandling::AtBranchName *GetRawEventName() { return &fRawEventBranch; }
-   DataHandling::AtBranchName *GetEventName() { return &fEventBranch; }
-   DataHandling::AtBranchName *GetPatternEventName() { return &fPatternEventBranch; }
+   DataHandling::AtBranchName &GetRawEventName() { return fRawEventBranch; }
+   DataHandling::AtBranchName &GetEventName() { return fEventBranch; }
+   DataHandling::AtBranchName &GetPatternEventName() { return fPatternEventBranch; }
 
    Int_t GetCurrentEvent() { return fEntry.Get(); }
 

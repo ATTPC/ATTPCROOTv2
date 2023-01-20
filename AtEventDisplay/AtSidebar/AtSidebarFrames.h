@@ -67,7 +67,7 @@ public:
 
 class AtSidebarEventControl : public AtVerticalSidebarFrame, public DataHandling::Observer {
 private:
-   DataHandling::AtEntryNumber *fEntryNumber;
+   DataHandling::AtEntryNumber &fEntryNumber;
 
    TGHorizontalFrame *fButtonFrame{nullptr};
    TGHorizontalFrame *fCurrentEventFrame{nullptr};
@@ -75,9 +75,10 @@ private:
    TGNumberEntry *fCurrentEventEntry{nullptr};
 
 public:
-   AtSidebarEventControl(DataHandling::AtEntryNumber *entryNum, const TGWindow *p = nullptr,
+   AtSidebarEventControl(DataHandling::AtEntryNumber &entryNum, const TGWindow *p = nullptr,
                          UInt_t w = 1, UInt_t h = 1, UInt_t options = 0,
                          Pixel_t back = GetDefaultFrameBackground());
+   ~AtSidebarEventControl();
 
    void Update(DataHandling::Subject *changedSubject) override;
 
@@ -99,6 +100,8 @@ public:
                           DataHandling::AtBranchName &patternEvent, const TGWindow *p = nullptr,
                           UInt_t w = 1, UInt_t h = 1, UInt_t options = 0,
                           Pixel_t back = GetDefaultFrameBackground());
+
+   ~AtSidebarBranchControl();
 
    void Update(DataHandling::Subject *changedSubject) override;
 

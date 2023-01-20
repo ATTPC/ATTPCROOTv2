@@ -15,7 +15,7 @@ private:
    std::vector<AtSidebarFrame *> fFrames;
 
 public:
-   AtEventSidebar(DataHandling::AtEntryNumber *entryNum, DataHandling::AtBranchName &rawEvent,
+   AtEventSidebar(DataHandling::AtEntryNumber &entryNum, DataHandling::AtBranchName &rawEvent,
                   DataHandling::AtBranchName &event, DataHandling::AtBranchName &patternEvent);
 
    /// Actually generate content of the frames once Init has run

@@ -30,23 +30,28 @@ void AtSidebarRunInfo::FillFrame()
    this->AddFrame(fRunLength);
 }
 
-AtSidebarEventControl::AtSidebarEventControl(DataHandling::AtEntryNumber *entryNum,
+AtSidebarEventControl::AtSidebarEventControl(DataHandling::AtEntryNumber &entryNum,
                                              const TGWindow *p, UInt_t w, UInt_t h, UInt_t options,
                                              Pixel_t back)
    : AtVerticalSidebarFrame(p, w, h, options, back), fEntryNumber(entryNum)
 {
-   entryNum->Attach(this);
+   fEntryNumber.Attach(this);
+}
+AtSidebarEventControl::~AtSidebarEventControl()
+{
+   fEntryNumber.Detach(this);
 }
 
 void AtSidebarEventControl::Update(DataHandling::Subject *changedSubject)
 {
-   if (changedSubject == fEntryNumber && fCurrentEventEntry)
-      fCurrentEventEntry->SetIntNumber(fEntryNumber->Get());
+   if (changedSubject == &fEntryNumber && fCurrentEventEntry)
+      fCurrentEventEntry->SetIntNumber(fEntryNumber.Get());
 }
 
 void AtSidebarEventControl::SelectEvent()
 {
-   AtViewerManager::Instance()->GotoEvent(fCurrentEventEntry->GetIntNumber());
+   fEntryNumber.Set(fCurrentEventEntry->GetIntNumber());
+   // AtViewerManager::Instance()->GotoEvent(fCurrentEventEntry->GetIntNumber());
 }
 
 void AtSidebarEventControl::FillFrame()
@@ -91,6 +96,13 @@ AtSidebarBranchControl::AtSidebarBranchControl(DataHandling::AtBranchName &rawEv
    fRawEvent.Attach(this);
    fEvent.Attach(this);
    fPatternEvent.Attach(this);
+}
+
+AtSidebarBranchControl::~AtSidebarBranchControl()
+{
+   fRawEvent.Detach(this);
+   fEvent.Detach(this);
+   fPatternEvent.Detach(this);
 }
 
 int AtSidebarBranchControl::GetIndex(std::string val, const std::vector<TString> &vec)

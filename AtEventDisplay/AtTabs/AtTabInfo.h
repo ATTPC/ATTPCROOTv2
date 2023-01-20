@@ -96,15 +96,15 @@ template <typename T>
 class AtTabInfoFairRoot : public AtTabInfoBase, public DataHandling::Observer {
 
 protected:
-   DataHandling::AtBranchName *fBranchName;
+   DataHandling::AtBranchName &fBranchName;
    T *fInfo{nullptr};
 
 public:
-   AtTabInfoFairRoot(DataHandling::AtBranchName *branch) : AtTabInfoBase(), fBranchName(branch)
+   AtTabInfoFairRoot(DataHandling::AtBranchName &branch) : AtTabInfoBase(), fBranchName(branch)
    {
-      fBranchName->Attach(this);
+      fBranchName.Attach(this);
    }
-   ~AtTabInfoFairRoot() { fBranchName->Detach(this); }
+   ~AtTabInfoFairRoot() { fBranchName.Detach(this); }
 
    void Init() override {}
    std::string GetDefaultName() override { return T::Class_Name(); }
@@ -113,15 +113,16 @@ public:
 
    void Update(DataHandling::Subject *changedSubject) override
    {
-      if (changedSubject == fBranchName)
+      if (changedSubject == &fBranchName)
          Update();
    }
 
 protected:
    void Update() override
    {
-      auto branchName = fBranchName->GetBranchName();
-      auto fEventArray = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(branchName.data()));
+      auto branchName = fBranchName.GetBranchName();
+      auto fEventArray =
+         dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(branchName.data()));
       if (fEventArray != nullptr)
          fInfo = dynamic_cast<T *>(fEventArray->At(0));
    }
