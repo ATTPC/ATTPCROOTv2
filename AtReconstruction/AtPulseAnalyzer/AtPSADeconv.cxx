@@ -93,7 +93,7 @@ const AtPadFFT &AtPSADeconv::GetResponseFFT(int padNum)
    auto fft = dynamic_cast<AtPadFFT *>(pad.GetAugment("fft"));
 
    if (fft == nullptr) {
-      LOG(info) << "Adding FFT to pad " << padNum;
+      LOG(debug) << "Adding FFT to pad " << padNum;
       fFFT->SetPoints(pad.GetADC().data());
       fFFT->Transform();
       auto fftNew = std::make_unique<AtPadFFT>();
@@ -117,7 +117,7 @@ const AtPadFFT &AtPSADeconv::GetResponseFilter(int padNum)
    auto filter = dynamic_cast<AtPadFFT *>(pad.GetAugment("filter"));
 
    if (filter == nullptr) {
-      LOG(info) << "Adding filter to pad " << padNum;
+      LOG(debug) << "Adding filter to pad " << padNum;
       filter = dynamic_cast<AtPadFFT *>(pad.AddAugment("filter", std::make_unique<AtPadFFT>()));
       updateFilter(fft, filter);
    }
@@ -125,7 +125,7 @@ const AtPadFFT &AtPSADeconv::GetResponseFilter(int padNum)
 }
 void AtPSADeconv::updateFilter(const AtPadFFT &fft, AtPadFFT *filter)
 {
-   LOG(info) << "Updating filter ";
+   LOG(debug) << "Updating filter ";
    for (int i = 0; i < 512 / 2 + 1; ++i) {
       auto R = fft.GetPointComplex(i);
       auto filterVal = getFilterKernel(i) / R;
@@ -177,7 +177,7 @@ void AtPSADeconv::initFilter()
 // Assumes the passed pad already has its FFT calculated
 AtPSADeconv::HitVector AtPSADeconv::AnalyzeFFTpad(AtPad &pad)
 {
-   LOG(info) << "Analyzing pad " << pad.GetPadNum();
+   LOG(debug) << "Analyzing pad " << pad.GetPadNum();
    auto padFFT = dynamic_cast<AtPadFFT *>(pad.GetAugment("fft"));
    auto recoFFT = dynamic_cast<AtPadFFT *>(pad.AddAugment("Qreco-fft", std::make_unique<AtPadFFT>()));
    const auto &respFFT = GetResponseFilter(pad.GetPadNum());

@@ -23,6 +23,9 @@ AtTabs/AtSubjectEventViewer.cxx
 
 AtSidebar/AtEventSidebar.cxx
 AtSidebar/AtSidebarFrames.cxx
+AtSidebar/AtSidebarAddon.cxx
+AtSidebar/PSA/AtSidebarPSA.cxx
+AtSidebar/PSA/AtSidebarPSADeconv.cxx
 AtSidebar/PSA/AtSidebarPSAIterDeconv.cxx
 
 
