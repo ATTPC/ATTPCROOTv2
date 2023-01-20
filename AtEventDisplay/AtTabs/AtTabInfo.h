@@ -96,11 +96,11 @@ template <typename T>
 class AtTabInfoFairRoot : public AtTabInfoBase, public DataHandling::Observer {
 
 protected:
-   DataHandling::AtBranchName &fBranchName;
+   DataHandling::AtBranch &fBranchName;
    T *fInfo{nullptr};
 
 public:
-   AtTabInfoFairRoot(DataHandling::AtBranchName &branch) : AtTabInfoBase(), fBranchName(branch)
+   AtTabInfoFairRoot(DataHandling::AtBranch &branch) : AtTabInfoBase(), fBranchName(branch)
    {
       fBranchName.Attach(this);
    }
@@ -121,10 +121,9 @@ protected:
    void Update() override
    {
       auto branchName = fBranchName.GetBranchName();
-      auto fEventArray =
-         dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(branchName.data()));
-      if (fEventArray != nullptr)
-         fInfo = dynamic_cast<T *>(fEventArray->At(0));
+      auto array = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(branchName));
+      if (array != nullptr)
+         fInfo = dynamic_cast<T *>(array->At(0));
    }
 };
 

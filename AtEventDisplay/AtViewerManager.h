@@ -43,9 +43,6 @@ private:
 
    AtEventSidebar *fSidebar;
 
-   // TGListTreeItem *fEvent;
-   /*** Sidebar info - Event # and event selection ***/
-   // TGNumberEntry *fCurrentEvent{nullptr};
    TGNumberEntry *f3DThresDisplay;
 
    std::unique_ptr<AtTabTask> fTabTask;
@@ -53,15 +50,13 @@ private:
    Int_t fPadNum;
 
    /** Data subjects we own and send around on update **/
-   DataHandling::AtEntryNumber fEntry{0};
-   DataHandling::AtBranchName fRawEventBranch{};
-   DataHandling::AtBranchName fEventBranch{};
-   DataHandling::AtBranchName fPatternEventBranch{};
+   DataHandling::AtTreeEntry fEntry{0};
+   DataHandling::AtBranch fRawEventBranch{};
+   DataHandling::AtBranch fEventBranch{};
+   DataHandling::AtBranch fPatternEventBranch{};
 
    /** Should have the list of branch names **/
-   std::map<std::string, std::vector<TString>> fBranchNames;
-
-   /*** Sidebar info - Branch selection***/
+   std::map<TString, std::vector<TString>> fBranchNames;
 
 public:
    static AtViewerManager *Instance();
@@ -76,15 +71,12 @@ public:
 
    AtMap *GetMap() { return fMap.get(); }
    AtEventSidebar *GetSidebar() { return fSidebar; }
-   std::map<std::string, std::vector<TString>> const &GetBranchNames() const
-   {
-      return fBranchNames;
-   }
+   std::map<TString, std::vector<TString>> const &GetBranchNames() const { return fBranchNames; }
 
    /*** Data handlers owned by AtViewerManager ***/
-   DataHandling::AtBranchName &GetRawEventName() { return fRawEventBranch; }
-   DataHandling::AtBranchName &GetEventName() { return fEventBranch; }
-   DataHandling::AtBranchName &GetPatternEventName() { return fPatternEventBranch; }
+   DataHandling::AtBranch &GetRawEventName() { return fRawEventBranch; }
+   DataHandling::AtBranch &GetEventName() { return fEventBranch; }
+   DataHandling::AtBranch &GetPatternEventName() { return fPatternEventBranch; }
 
    Int_t GetCurrentEvent() { return fEntry.Get(); }
 

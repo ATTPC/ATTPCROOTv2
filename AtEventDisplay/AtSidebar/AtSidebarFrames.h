@@ -68,7 +68,7 @@ public:
 
 class AtSidebarEventControl : public AtVerticalSidebarFrame, public DataHandling::Observer {
 private:
-   DataHandling::AtEntryNumber &fEntryNumber;
+   DataHandling::AtTreeEntry &fEntryNumber;
 
    TGHorizontalFrame *fButtonFrame{nullptr};
    TGHorizontalFrame *fCurrentEventFrame{nullptr};
@@ -76,7 +76,7 @@ private:
    TGNumberEntry *fCurrentEventEntry{nullptr};
 
 public:
-   AtSidebarEventControl(DataHandling::AtEntryNumber &entryNum, const TGWindow *p = nullptr,
+   AtSidebarEventControl(DataHandling::AtTreeEntry &entryNum, const TGWindow *p = nullptr,
                          UInt_t w = 1, UInt_t h = 1, UInt_t options = 0,
                          Pixel_t back = GetDefaultFrameBackground());
    ~AtSidebarEventControl();
@@ -90,15 +90,13 @@ public:
 
 class AtSidebarBranchControl : public AtVerticalSidebarFrame, public DataHandling::Observer {
 private:
-   DataHandling::AtBranchName &fRawEvent;
-   DataHandling::AtBranchName &fEvent;
-   DataHandling::AtBranchName &fPatternEvent;
-
-   std::vector<TGComboBox *> fBranchBoxes;
+   std::map<TString, DataHandling::AtBranch &> fBranches;
+   std::map<TString, TGComboBox *> fBranchBoxes;
+   // std::vector<TGComboBox *> fBranchBoxes;
 
 public:
-   AtSidebarBranchControl(DataHandling::AtBranchName &rawEvent, DataHandling::AtBranchName &event,
-                          DataHandling::AtBranchName &patternEvent, const TGWindow *p = nullptr,
+   AtSidebarBranchControl(DataHandling::AtBranch &rawEvent, DataHandling::AtBranch &event,
+                          DataHandling::AtBranch &patternEvent, const TGWindow *p = nullptr,
                           UInt_t w = 1, UInt_t h = 1, UInt_t options = 0,
                           Pixel_t back = GetDefaultFrameBackground());
 
@@ -110,13 +108,13 @@ public:
    void SelectedAtEvent(Int_t);
    void SelectedAtPatternEvent(Int_t);
 
-   void SelectEvent();
+   void SelectEvent(Int_t ind, TString className);
 
    void FillFrame() override;
 
 private:
    void FillBranchFrame(std::string name, std::string className);
-   int GetIndex(std::string, const std::vector<TString> &vec);
+   int GetIndex(TString, const std::vector<TString> &vec);
 };
 
 #endif

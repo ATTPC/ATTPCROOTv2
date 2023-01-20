@@ -1,24 +1,41 @@
 #include "AtViewerManagerSubject.h"
 
-#include <iostream>
+#include <FairRootManager.h>
+
+#include <TString.h>
 namespace DataHandling {
 
-void AtEntryNumber::Set(long eventNum)
+void AtTreeEntry::Set(long eventNum)
 {
-   if (fEntryNum == eventNum)
+   if (fEntry == eventNum)
       return;
-   fEntryNum = eventNum;
+   fEntry = eventNum;
    Notify();
 }
 
-void AtBranchName::SetBranchName(std::string name)
+void AtBranch::SetBranchName(const TString &name)
 {
-   if (fBranchName.compare(name) == 0)
+   SetBranchId(FairRootManager::Instance()->GetBranchId(name));
+}
+
+void AtBranch::SetBranchId(const int id)
+{
+   if (fBranchId == id)
       return;
-   std::cout << "Setting branch name to " << name << std::endl;
-   fOldBranchName = fBranchName;
-   fBranchName = name;
+
+   fOldBranchId = fBranchId;
+   fBranchId = id;
    Notify();
+}
+
+TString AtBranch::GetBranchName() const
+{
+   return FairRootManager::Instance()->GetBranchName(fBranchId);
+}
+
+TString AtBranch::GetOldBranchName() const
+{
+   return FairRootManager::Instance()->GetBranchName(fOldBranchId);
 }
 
 } // namespace DataHandling

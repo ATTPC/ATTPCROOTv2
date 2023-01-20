@@ -30,9 +30,8 @@ void AtSidebarRunInfo::FillFrame()
    this->AddFrame(fRunLength);
 }
 
-AtSidebarEventControl::AtSidebarEventControl(DataHandling::AtEntryNumber &entryNum,
-                                             const TGWindow *p, UInt_t w, UInt_t h, UInt_t options,
-                                             Pixel_t back)
+AtSidebarEventControl::AtSidebarEventControl(DataHandling::AtTreeEntry &entryNum, const TGWindow *p,
+                                             UInt_t w, UInt_t h, UInt_t options, Pixel_t back)
    : AtVerticalSidebarFrame(p, w, h, options, back), fEntryNumber(entryNum)
 {
    fEntryNumber.Attach(this);
@@ -85,27 +84,28 @@ void AtSidebarEventControl::FillFrame()
    this->AddFrame(fButtonFrame);
 }
 
-AtSidebarBranchControl::AtSidebarBranchControl(DataHandling::AtBranchName &rawEvent,
-                                               DataHandling::AtBranchName &event,
-                                               DataHandling::AtBranchName &patternEvent,
+AtSidebarBranchControl::AtSidebarBranchControl(DataHandling::AtBranch &rawEvent,
+                                               DataHandling::AtBranch &event,
+                                               DataHandling::AtBranch &patternEvent,
                                                const TGWindow *p, UInt_t w, UInt_t h,
                                                UInt_t options, Pixel_t back)
-   : AtVerticalSidebarFrame(p, w, h, options, back), fRawEvent(rawEvent), fEvent(event),
-     fPatternEvent(patternEvent)
+   : AtVerticalSidebarFrame(p, w, h, options, back)
 {
-   fRawEvent.Attach(this);
-   fEvent.Attach(this);
-   fPatternEvent.Attach(this);
+   fBranches.insert({"AtRawEvent", rawEvent});
+   fBranches.insert({"AtEvent", event});
+   fBranches.insert({"AtPatternEvent", patternEvent});
+
+   for (auto &[className, branch] : fBranches)
+      branch.Attach(this);
 }
 
 AtSidebarBranchControl::~AtSidebarBranchControl()
 {
-   fRawEvent.Detach(this);
-   fEvent.Detach(this);
-   fPatternEvent.Detach(this);
+   for (auto &[className, branch] : fBranches)
+      branch.Detach(this);
 }
 
-int AtSidebarBranchControl::GetIndex(std::string val, const std::vector<TString> &vec)
+int AtSidebarBranchControl::GetIndex(TString val, const std::vector<TString> &vec)
 {
    auto iter = std::find(begin(vec), end(vec), val);
    if (iter == vec.end())
@@ -114,49 +114,37 @@ int AtSidebarBranchControl::GetIndex(std::string val, const std::vector<TString>
       return std::distance(begin(vec), iter);
 }
 
-void AtSidebarBranchControl::SelectedAtRawEvent(Int_t ind)
+void AtSidebarBranchControl::SelectEvent(Int_t ind, TString className)
 {
-   std::cout << "Selecting " << ind << " was  " << fBranchBoxes[0]->GetSelected() << std::endl;
    if (ind < 0)
       return;
-   auto name = AtViewerManager::Instance()->GetBranchNames().at("AtRawEvent").at(ind).Data();
-   fBranchBoxes[0]->Select(ind);
-   std::cout << "Selectring branch " << name << std::endl;
-   fRawEvent.SetBranchName(name);
+   auto name = AtViewerManager::Instance()->GetBranchNames().at(className.Data()).at(ind);
+   fBranchBoxes[className]->Select(ind);
+   fBranches.at(className).SetBranchName(name);
+}
+
+void AtSidebarBranchControl::SelectedAtRawEvent(Int_t ind)
+{
+   SelectEvent(ind, "AtRawEvent");
 }
 
 void AtSidebarBranchControl::SelectedAtEvent(Int_t ind)
 {
-   std::cout << "Selecting " << ind << " was  " << fBranchBoxes[1]->GetSelected() << std::endl;
-   if (ind < 0)
-      return;
-   auto name = AtViewerManager::Instance()->GetBranchNames().at("AtEvent").at(ind).Data();
-   fBranchBoxes[1]->Select(ind);
-   std::cout << "Selectring branch " << name << std::endl;
-   fEvent.SetBranchName(name);
+   SelectEvent(ind, "AtEvent");
 }
 
 void AtSidebarBranchControl::SelectedAtPatternEvent(Int_t ind)
 {
-
-   if (ind < 0)
-      return;
-   fBranchBoxes[2]->Select(ind);
-   fPatternEvent.SetBranchName(
-      AtViewerManager::Instance()->GetBranchNames().at("AtPatternEvent").at(ind).Data());
+   SelectEvent(ind, "AtPatternEvent");
 }
 
 void AtSidebarBranchControl::Update(DataHandling::Subject *changedSubject)
 {
    auto &branchNames = AtViewerManager::Instance()->GetBranchNames();
 
-   if (changedSubject == &fRawEvent)
-      fBranchBoxes[0]->Select(GetIndex(fRawEvent.GetBranchName(), branchNames.at("AtRawEvent")));
-   if (changedSubject == &fEvent)
-      fBranchBoxes[1]->Select(GetIndex(fEvent.GetBranchName(), branchNames.at("AtEvent")));
-   if (changedSubject == &fPatternEvent)
-      fBranchBoxes[2]->Select(
-         GetIndex(fPatternEvent.GetBranchName(), branchNames.at("AtPatternEvent")));
+   for (auto &[name, branch] : fBranches)
+      if (changedSubject == &branch)
+         fBranchBoxes[name]->Select(GetIndex(branch.GetBranchName(), branchNames.at(name)));
 }
 
 /**
@@ -170,14 +158,14 @@ void AtSidebarBranchControl::FillBranchFrame(std::string label, std::string clas
    frame->AddFrame(new TGLabel(frame, label.data()));
 
    auto &branchNames = AtViewerManager::Instance()->GetBranchNames().at(className);
-   fBranchBoxes.push_back(new TGComboBox(frame));
+   fBranchBoxes[className] = new TGComboBox(frame);
    for (int i = 0; i < branchNames.size(); ++i)
-      fBranchBoxes.back()->AddEntry(branchNames[i], i);
-   fBranchBoxes.back()->Connect("Selected(Int_t)", "AtSidebarBranchControl", this,
-                                TString::Format("Selected%s(Int_t)", className.data()));
-   fBranchBoxes.back()->Select(0);
+      fBranchBoxes[className]->AddEntry(branchNames[i], i);
+   fBranchBoxes[className]->Connect("Selected(Int_t)", "AtSidebarBranchControl", this,
+                                    TString::Format("Selected%s(Int_t)", className.data()));
+   fBranchBoxes[className]->Select(0);
 
-   frame->AddFrame(fBranchBoxes.back(),
+   frame->AddFrame(fBranchBoxes[className],
                    new TGLayoutHints(kLHintsExpandX | kLHintsCenterY | kLHintsExpandY));
    this->AddFrame(frame, new TGLayoutHints(kLHintsExpandX));
 }

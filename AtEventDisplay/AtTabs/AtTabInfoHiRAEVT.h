@@ -22,11 +22,11 @@ protected:
    TString fTree;
    TString fBranchName;
 
-   DataHandling::AtEntryNumber *fEntryNumber;
+   DataHandling::AtTreeEntry *fEntryNumber;
    T *fDetector{nullptr};
 
 public:
-   AtTabInfoHiRAEVT(TString tree, TString branchName, DataHandling::AtEntryNumber *entryNumber)
+   AtTabInfoHiRAEVT(TString tree, TString branchName, DataHandling::AtTreeEntry *entryNumber)
       : AtTabInfoBase(), fTree(tree), fBranchName(branchName), fEntryNumber(entryNumber)
    {
       fEntryNumber->Attach(this);

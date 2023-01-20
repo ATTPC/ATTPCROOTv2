@@ -3,42 +3,47 @@
 
 #include "AtDataSubject.h"
 
-#include <string>
+class TString;
 
 namespace DataHandling {
 
 /**
- * Subject for storing the entry number in the tree
+ * @brief Subject for the entry number in the FairRoot tree.
+ *
+ * @ingroup DataHandling
  */
-class AtEntryNumber : public Subject {
+class AtTreeEntry : public Subject {
 private:
-   long fEntryNum;
+   long fEntry;
 
 public:
-   AtEntryNumber(long eventNum) : fEntryNum(eventNum) {}
+   AtTreeEntry(long entry) : fEntry(entry) {}
 
-   long Get() const { return fEntryNum; }
+   long Get() const { return fEntry; }
 
    /// Will notify on change
-   void Set(long eventNum);
+   void Set(long entry);
 };
 
 /**
- * Branch name subject
+ * @brief Subject for the branch in the FairRoot tree.
+ * @ingroup DataHandling
  */
-class AtBranchName : public Subject {
+class AtBranch : public Subject {
 private:
-   std::string fBranchName{""};
-   std::string fOldBranchName{""};
+   int fBranchId{-1};
+   int fOldBranchId{-1};
 
 public:
-   AtBranchName() {}
-
    /// Will notify on change
-   void SetBranchName(std::string name);
+   void SetBranchName(const TString &name);
+   /// Will notify on change
+   void SetBranchId(const int id);
 
-   std::string GetBranchName() const { return fBranchName; }
-   std::string GetOldBranchName() const { return fOldBranchName; }
+   TString GetBranchName() const;
+   int GetBranchId() const { return fBranchId; }
+   TString GetOldBranchName() const;
+   int GetOldBranchId() const { return fOldBranchId; }
 };
 } // namespace DataHandling
 #endif

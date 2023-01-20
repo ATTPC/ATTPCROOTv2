@@ -7,10 +7,11 @@
 */
 #include "FairLogger.h"
 
-void run_eve_test_multi(int runNum = 214, TString OutputDataFile = "./data/output.reco_display.root")
+void run_eve_test_multi(int runNum = 214,
+                        TString OutputDataFile = "./data/output.reco_display.root")
 {
-   auto verbSpec =
-      fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
+   auto verbSpec = fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity,
+                                             fair::VerbositySpec::Info::file_line_function);
    fair::Logger::DefineVerbosity("user1", verbSpec);
    // fair::Logger::SetVerbosity("user1");
    // fair::Logger::SetConsoleSeverity("debug");
@@ -58,7 +59,8 @@ void run_eve_test_multi(int runNum = 214, TString OutputDataFile = "./data/outpu
    eveMan->AddTab(std::move(tabPad));
 
    auto method = std::make_unique<SampleConsensus::AtSampleConsensus>(
-      SampleConsensus::Estimators::kRANSAC, AtPatterns::PatternType::kY, RandomSample::SampleMethod::kWeightedY);
+      SampleConsensus::Estimators::kRANSAC, AtPatterns::PatternType::kY,
+      RandomSample::SampleMethod::kWeightedY);
    method->SetDistanceThreshold(20);
    method->SetNumIterations(500);
    method->SetMinHitsPattern(150);
@@ -74,5 +76,4 @@ void run_eve_test_multi(int runNum = 214, TString OutputDataFile = "./data/outpu
    eveMan->Init();
 
    std::cout << "Finished init" << std::endl;
-   // eveMan->RunEvent(27);
 }
