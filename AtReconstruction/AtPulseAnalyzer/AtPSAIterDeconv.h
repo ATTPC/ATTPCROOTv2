@@ -22,6 +22,8 @@ public:
    void RunPad(AtPad *pad);
    void SetIterations(int iterations) { fIterations = iterations; }
    void SetIterQName(std::string name) { fQName = name; }
+
+   int GetIterations() { return fIterations; }
 };
 
 #endif

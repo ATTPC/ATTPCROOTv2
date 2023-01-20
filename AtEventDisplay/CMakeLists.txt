@@ -7,6 +7,7 @@ set(INCLUDE_DIRECTORIES
 # Add all the folders having header files you used in the code.
 ${CMAKE_SOURCE_DIR}/AtEventDisplay/AtTabs
 ${CMAKE_SOURCE_DIR}/AtEventDisplay/AtSidebar
+${CMAKE_SOURCE_DIR}/AtEventDisplay/AtSidebar/PSA
   )
 
 set(SRCS
@@ -19,8 +20,10 @@ AtTabs/AtTabBase.cxx
 
 AtTabs/AtTabInfo.cxx
 AtTabs/AtSubjectEventViewer.cxx
+
 AtSidebar/AtEventSidebar.cxx
 AtSidebar/AtSidebarFrames.cxx
+AtSidebar/PSA/AtSidebarPSAIterDeconv.cxx
 
 
 AtEventManager.cxx
@@ -44,6 +47,7 @@ Set(DEPENDENCIES
 
   ATTPCROOT::AtData
   ATTPCROOT::AtMap
+  ATTPCROOT::AtReconstruction
   ATTPCROOT::AtS800
   ATTPCROOT::AtAnalysis
   )

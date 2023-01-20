@@ -62,6 +62,8 @@ public:
 
    void SetThreshold(Int_t threshold);
    void SetThresholdLow(Int_t thresholdlow);
+   int GetThreshold() { return fThreshold; }
+   int GetThresholdLow() { return fThresholdlow; }
 
    void SetSimulatedEvent(TClonesArray *MCSimPointArray);
 

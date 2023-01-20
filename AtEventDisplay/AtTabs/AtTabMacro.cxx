@@ -80,11 +80,12 @@ void AtTabMacro::DrawTree()
 {
    for (int i = 0; i < fCols * fRows; i++) {
       fCvsMacro->cd(i + 1);
-      gPad->Clear();
+      //gPad->Clear();
       auto it = fDrawTreeMap.find(i);
       if (it == fDrawTreeMap.end()) {
          return;
       } else {
+         std::cout << "Processing treedraw function" << std::endl;
          (it->second)(fTree);
          UpdateCvsMacro();
       }
@@ -95,7 +96,7 @@ void AtTabMacro::DrawEvent()
 {
    for (int i = 0; i < fCols * fRows; i++) {
       fCvsMacro->cd(i + 1);
-      gPad->Clear();
+      //gPad->Clear();
       auto it = fDrawEventMap.find(i);
       if (it == fDrawEventMap.end()) {
          return;
@@ -111,7 +112,7 @@ void AtTabMacro::DrawPad(Int_t padNum)
 
    for (int i = 0; i < fCols * fRows; i++) {
       fCvsMacro->cd(i + 1);
-      gPad->Clear();
+      //gPad->Clear();
       auto it = fDrawPadMap.find(i);
       if (it == fDrawPadMap.end()) {
          return;
@@ -124,7 +125,7 @@ void AtTabMacro::DrawPad(Int_t padNum)
 
 void AtTabMacro::Reset()
 {
-   fCvsMacro->Clear();
+   //fCvsMacro->Clear();
 }
 
 void AtTabMacro::SetInputTree(TString fileName, TString treeName)
@@ -134,7 +135,9 @@ void AtTabMacro::SetInputTree(TString fileName, TString treeName)
       return;
    }
    fTree = new TChain(treeName);
+   std::cout << treeName << " chain set" << std::endl;
    fTree->Add(fileName);
+   std::cout << fileName << " added" << std::endl;
 }
 
 void AtTabMacro::SetDrawTreeFunction(Int_t pos, std::function<void(TTree(*))> function)
