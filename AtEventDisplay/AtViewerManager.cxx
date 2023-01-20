@@ -75,7 +75,7 @@ AtViewerManager::AtViewerManager(std::shared_ptr<AtMap> map)
 
    // In order to get the sidebar to actually be *in* the sidebar we need to create the EveManager
    // and embedd it there.
-   TEveManager::Create();
+   TEveManager::Create(true, "IV"); // Create a mapped manager without the file viewer
    TEveBrowser *browser = gEve->GetBrowser();
    browser->StartEmbedding(TRootBrowser::kLeft);
 
