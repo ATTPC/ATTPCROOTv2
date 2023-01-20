@@ -75,8 +75,7 @@ protected:
    void TrackMCPoints(std::multimap<Int_t, std::size_t> &map,
                       AtHit &hit); //< Assign MC Points kinematics to each hit.
 
-   [[deprecated]] Double_t
-   CalculateZ(Double_t peakIdx); ///< Calculate z position in mm using the peak index.
+   [[deprecated]] Double_t CalculateZ(Double_t peakIdx); ///< Calculate z position in mm using the peak index.
 
    Double_t CalculateZGeo(Double_t peakIdx);
    Double_t getThreshold(int padSize = -1);

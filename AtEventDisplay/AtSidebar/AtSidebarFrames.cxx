@@ -30,8 +30,8 @@ void AtSidebarRunInfo::FillFrame()
    this->AddFrame(fRunLength);
 }
 
-AtSidebarEventControl::AtSidebarEventControl(DataHandling::AtTreeEntry &entryNum, const TGWindow *p,
-                                             UInt_t w, UInt_t h, UInt_t options, Pixel_t back)
+AtSidebarEventControl::AtSidebarEventControl(DataHandling::AtTreeEntry &entryNum, const TGWindow *p, UInt_t w, UInt_t h,
+                                             UInt_t options, Pixel_t back)
    : AtVerticalSidebarFrame(p, w, h, options, back), fEntryNumber(entryNum)
 {
    fEntryNumber.Attach(this);
@@ -84,11 +84,9 @@ void AtSidebarEventControl::FillFrame()
    this->AddFrame(fButtonFrame);
 }
 
-AtSidebarBranchControl::AtSidebarBranchControl(DataHandling::AtBranch &rawEvent,
-                                               DataHandling::AtBranch &event,
-                                               DataHandling::AtBranch &patternEvent,
-                                               const TGWindow *p, UInt_t w, UInt_t h,
-                                               UInt_t options, Pixel_t back)
+AtSidebarBranchControl::AtSidebarBranchControl(DataHandling::AtBranch &rawEvent, DataHandling::AtBranch &event,
+                                               DataHandling::AtBranch &patternEvent, const TGWindow *p, UInt_t w,
+                                               UInt_t h, UInt_t options, Pixel_t back)
    : AtVerticalSidebarFrame(p, w, h, options, back)
 {
    fBranches.insert({"AtRawEvent", rawEvent});
@@ -165,8 +163,7 @@ void AtSidebarBranchControl::FillBranchFrame(std::string label, std::string clas
                                     TString::Format("Selected%s(Int_t)", className.data()));
    fBranchBoxes[className]->Select(0);
 
-   frame->AddFrame(fBranchBoxes[className],
-                   new TGLayoutHints(kLHintsExpandX | kLHintsCenterY | kLHintsExpandY));
+   frame->AddFrame(fBranchBoxes[className], new TGLayoutHints(kLHintsExpandX | kLHintsCenterY | kLHintsExpandY));
    this->AddFrame(frame, new TGLayoutHints(kLHintsExpandX));
 }
 

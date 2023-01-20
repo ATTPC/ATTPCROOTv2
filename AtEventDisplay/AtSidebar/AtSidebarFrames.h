@@ -32,16 +32,16 @@ public:
 
 class AtVerticalSidebarFrame : public AtSidebarFrame {
 public:
-   AtVerticalSidebarFrame(const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1,
-                          UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground())
+   AtVerticalSidebarFrame(const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1, UInt_t options = 0,
+                          Pixel_t back = GetDefaultFrameBackground())
       : AtSidebarFrame(p, w, h, options | kVerticalFrame, back)
    {
    }
 };
 class AtHorizontalSidebarFrame : public AtSidebarFrame {
 public:
-   AtHorizontalSidebarFrame(const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1,
-                            UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground())
+   AtHorizontalSidebarFrame(const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1, UInt_t options = 0,
+                            Pixel_t back = GetDefaultFrameBackground())
       : AtSidebarFrame(p, w, h, options | kHorizontalFrame, back)
    {
    }
@@ -76,9 +76,8 @@ private:
    TGNumberEntry *fCurrentEventEntry{nullptr};
 
 public:
-   AtSidebarEventControl(DataHandling::AtTreeEntry &entryNum, const TGWindow *p = nullptr,
-                         UInt_t w = 1, UInt_t h = 1, UInt_t options = 0,
-                         Pixel_t back = GetDefaultFrameBackground());
+   AtSidebarEventControl(DataHandling::AtTreeEntry &entryNum, const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1,
+                         UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground());
    ~AtSidebarEventControl();
 
    void Update(DataHandling::Subject *changedSubject) override;
@@ -96,9 +95,8 @@ private:
 
 public:
    AtSidebarBranchControl(DataHandling::AtBranch &rawEvent, DataHandling::AtBranch &event,
-                          DataHandling::AtBranch &patternEvent, const TGWindow *p = nullptr,
-                          UInt_t w = 1, UInt_t h = 1, UInt_t options = 0,
-                          Pixel_t back = GetDefaultFrameBackground());
+                          DataHandling::AtBranch &patternEvent, const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1,
+                          UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground());
 
    ~AtSidebarBranchControl();
 

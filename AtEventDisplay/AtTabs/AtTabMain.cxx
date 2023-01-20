@@ -64,8 +64,7 @@ void AtTabMain::InitTab()
 
    fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>(man->GetEventName()));
    fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(man->GetRawEventName()));
-   fTabInfo->AddAugment(
-      std::make_unique<AtTabInfoFairRoot<AtPatternEvent>>(man->GetPatternEventName()));
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtPatternEvent>>(man->GetPatternEventName()));
 
    gStyle->SetPalette(55);
 

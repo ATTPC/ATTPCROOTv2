@@ -70,8 +70,7 @@ AtViewerManager::AtViewerManager(std::shared_ptr<AtMap> map)
 
 {
    if (fInstance != nullptr)
-      LOG(fatal)
-         << "Attempting to create a second instance of AtViewerManager! Only one is allowed!";
+      LOG(fatal) << "Attempting to create a second instance of AtViewerManager! Only one is allowed!";
    fInstance = this;
 
    // In order to get the sidebar to actually be *in* the sidebar we need to create the EveManager
@@ -241,8 +240,7 @@ void AtViewerManager::DrawPad(Int_t padNum)
 void AtViewerManager::RegisterDataHandles()
 {
    if (fTabTask == nullptr)
-      LOG(fatal)
-         << "Cannot register data handles without a AtTabTask! Was it added to the AtEventManager?";
+      LOG(fatal) << "Cannot register data handles without a AtTabTask! Was it added to the AtEventManager?";
 }
 
 void AtViewerManager::Update(DataHandling::Subject *subject)

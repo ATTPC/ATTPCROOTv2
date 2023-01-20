@@ -80,7 +80,7 @@ void AtTabMacro::DrawTree()
 {
    for (int i = 0; i < fCols * fRows; i++) {
       fCvsMacro->cd(i + 1);
-      //gPad->Clear();
+      // gPad->Clear();
       auto it = fDrawTreeMap.find(i);
       if (it == fDrawTreeMap.end()) {
          return;
@@ -96,7 +96,7 @@ void AtTabMacro::DrawEvent()
 {
    for (int i = 0; i < fCols * fRows; i++) {
       fCvsMacro->cd(i + 1);
-      //gPad->Clear();
+      // gPad->Clear();
       auto it = fDrawEventMap.find(i);
       if (it == fDrawEventMap.end()) {
          return;
@@ -112,7 +112,7 @@ void AtTabMacro::DrawPad(Int_t padNum)
 
    for (int i = 0; i < fCols * fRows; i++) {
       fCvsMacro->cd(i + 1);
-      //gPad->Clear();
+      // gPad->Clear();
       auto it = fDrawPadMap.find(i);
       if (it == fDrawPadMap.end()) {
          return;
@@ -125,7 +125,7 @@ void AtTabMacro::DrawPad(Int_t padNum)
 
 void AtTabMacro::Reset()
 {
-   //fCvsMacro->Clear();
+   // fCvsMacro->Clear();
 }
 
 void AtTabMacro::SetInputTree(TString fileName, TString treeName)
@@ -160,4 +160,3 @@ void AtTabMacro::UpdateCvsMacro()
    fCvsMacro->Modified();
    fCvsMacro->Update();
 }
-
