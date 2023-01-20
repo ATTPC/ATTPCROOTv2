@@ -12,6 +12,7 @@ void AtSidebarPSAIterDeconv::FillFrame()
                                           TGNumberFormat::kNEANonNegative, TGNumberFormat::kNELLimitMinMax, -1,
                                           4000);
 
+   std::cout << this->Class_Name() << std::endl;
    auto testConn = fThresholdEntry->Connect("ValueSet(Int_t)", "AtSidebarPSAIterDeconv", this, "SetThreshold()");
    (fThresholdEntry->GetNumberEntry())->Connect("ReturnPressed()", "AtSidebarPSAIterDeconv", this, "SetThreshold()");
    fThresholdFrame->AddFrame(fThresholdLabel, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
@@ -23,7 +24,7 @@ void AtSidebarPSAIterDeconv::FillFrame()
                                           TGNumberFormat::kNEANonNegative, TGNumberFormat::kNELLimitMinMax, -1, 16
                                           );
 
-   fOrderEntry->Connect("ValueSet(Int_t)", "AtSidebarPSAIterDeconv", this, "SetFilterOrder()");
+   fOrderEntry->Connect("ValueSet(Long_t)", "AtSidebarPSAIterDeconv", this, "SetFilterOrder()");
    fOrderFrame->AddFrame(fOrderLabel, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
    fOrderFrame->AddFrame(fOrderEntry);
 

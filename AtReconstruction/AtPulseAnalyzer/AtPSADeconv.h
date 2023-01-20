@@ -77,8 +77,8 @@ public:
    void SetFilterOrder(int order);
    void SetCutoffFreq(int freq);
 
-   int GetFilterOrder() { return fFilterOrder; }
-   int GetCutoffFreq() { return fCutoffFreq; }
+   int GetFilterOrder() { return fFilterOrder * 2; }
+   int GetCutoffFreq() { return sqrt(fCutoffFreq); }
 
    /**
     * Copy an AtRawEvent to use as the response function. If the pad number requested does

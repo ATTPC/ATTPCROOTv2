@@ -38,8 +38,12 @@ public:
    void SetPSA(AtPSAIterDeconv *psa) { fPSA = psa; }
 
    void SetThreshold() { fPSA->SetThreshold(fThresholdEntry->GetNumberEntry()->GetIntNumber()); }
-   void SetFilterOrder() { fPSA->SetFilterOrder(fOrderEntry->GetNumberEntry()->GetIntNumber()); }
-   void SetCuttoffFreq() { fPSA->SetCutoffFreq(fCutoffEntry->GetNumberEntry()->GetIntNumber()); }
+   void SetFilterOrder() { 
+      fPSA->SetFilterOrder(fOrderEntry->GetNumberEntry()->GetIntNumber()); 
+      std::cout << "Filter Order Set" << std::endl;
+      }
+
+   void SetCutoffFreq() { fPSA->SetCutoffFreq(fCutoffEntry->GetNumberEntry()->GetIntNumber()); }
    void SetIterations() { fPSA->SetIterations(fIterationsEntry->GetNumberEntry()->GetIntNumber()); }
 
    void FillFrame() override;
