@@ -1,7 +1,7 @@
 #include "AtTabMacro.h"
 
-#include "AtEventManagerNew.h"
 #include "AtTabInfo.h"
+#include "AtViewerManager.h"
 
 #include <FairLogger.h> // for LOG
 

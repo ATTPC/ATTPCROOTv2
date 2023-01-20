@@ -14,40 +14,47 @@ template <typename T>
 class TTreeReaderValue;
 
 template <typename T>
-class AtTabInfoHiRAEVT : public AtTabInfoBase {
+class AtTabInfoHiRAEVT : public AtTabInfoBase, public DataHandling::Observer {
 protected:
-   std::unique_ptr<TTreeReader> fReader;
-   std::unique_ptr<TTreeReaderValue<T>> fDetectorReader;
+   std::unique_ptr<TTreeReader> fReader{nullptr};
+   std::unique_ptr<TTreeReaderValue<T>> fDetectorReader{nullptr};
 
    TString fTree;
    TString fBranchName;
 
-   T *fDetector;
+   DataHandling::AtEntryNumber *fEntryNumber;
+   T *fDetector{nullptr};
 
 public:
-   AtTabInfoHiRAEVT(TString branchName) : AtTabInfoBase(), fBranchName(branchName) {}
+   AtTabInfoHiRAEVT(TString tree, TString branchName, DataHandling::AtEntryNumber *entryNumber)
+      : AtTabInfoBase(), fTree(tree), fBranchName(branchName), fEntryNumber(entryNumber)
+   {
+      fEntryNumber->Attach(this);
+   }
+   ~AtTabInfoHiRAEVT() { fEntryNumber->Detach(this); }
+
    void Init() override
    {
       fReader = std::make_unique<TTreeReader>(fTree);
       fDetectorReader = std::make_unique<TTreeReaderValue<T>>(*fReader, fBranchName);
    }
-   void Update() override
-   { // Get the current entry of the tree
 
-      auto entry = FairRootManager::Instance()->GetInTree()->GetReadEntry();
-      fReader->SetEntry(entry);
-      fDetector = fDetectorReader->Get();
-   }
-
-   void Update(DataHandling::Subject *changedSubject) override {}
-
-   T *GetInfo()
+   void Update(DataHandling::Subject *changedSubject) override
    {
-      Update();
-      return fDetector;
+      if (changedSubject == fEntryNumber)
+         Update();
    }
+
+   T *GetInfo() { return fDetector; }
 
    void SetTree(TString name) { fTree = name; }
+
+protected:
+   void Update() override
+   {
+      fReader->SetEntry(fEntryNumber->Get());
+      fDetector = fDetectorReader->Get();
+   }
 };
 
 #endif

@@ -8,31 +8,37 @@
 namespace DataHandling {
 
 /**
- * This is the base class used to pass around
- *
- * Any AtTabInfo may regiter itself with these subjects, and they will be notified when the state of
- * this object changes, then can then retrieve the updated information and update themselves.
- *
+ * Subject for storing the entry number in the tree
  */
-class BranchName : public Subject {
-protected:
-   std::string fBranchType;
-   std::string fBranchName;
-   std::string fOldBranchName;
+class AtEntryNumber : public Subject {
+private:
+   long fEntryNum;
 
 public:
-   BranchName(std::string type, std::string name, std::string oldName)
-      : fBranchType(type), fBranchName(name), fOldBranchName(oldName)
-   {
-   }
-   void SetBranchName(std::string name)
-   {
-      fOldBranchName = fBranchName;
-      fBranchName = name;
-   }
-   std::string GetBranchType() { return fBranchType; }
-   std::string GetBranchName() { return fBranchName; }
-   std::string GetOldBranchName() { return fOldBranchName; }
+   AtEntryNumber(long eventNum) : fEntryNum(eventNum) {}
+
+   long Get() const { return fEntryNum; }
+
+   /// Will notify on change
+   void Set(long eventNum);
+};
+
+/**
+ * Branch name subject
+ */
+class AtBranchName : public Subject {
+private:
+   std::string fBranchName{""};
+   std::string fOldBranchName{""};
+
+public:
+   AtBranchName() {}
+
+   /// Will notify on change
+   void SetBranchName(std::string name);
+
+   std::string GetBranchName() const { return fBranchName; }
+   std::string GetOldBranchName() const { return fOldBranchName; }
 };
 } // namespace DataHandling
 #endif

@@ -18,18 +18,11 @@ void AtTabInfo::Init()
    }
 }
 
-void AtTabInfo::Update(DataHandling::Subject *changedSubject)
-{
-   for (auto const &[name, info] : fInfoAugments) {
-      LOG(debug2) << "Updating source for" << name;
-      info->Update(changedSubject);
-   }
-}
-
 AtTabInfoBase *AtTabInfo::AddAugment(std::unique_ptr<AtTabInfoBase> augment)
 {
    return AddAugment(std::move(augment), augment->GetDefaultName());
 }
+
 AtTabInfoBase *AtTabInfo::AddAugment(std::unique_ptr<AtTabInfoBase> augment, std::string name)
 {
    if (fInfoAugments.find(name) != fInfoAugments.end())

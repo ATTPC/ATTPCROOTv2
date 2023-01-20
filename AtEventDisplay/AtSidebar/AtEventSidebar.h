@@ -3,15 +3,20 @@
 #include "AtSidebarFrames.h"
 
 #include <TGFrame.h>
+namespace DataHandling {
+class AtEntryNumber;
+}
 
-/** This is the parent frame of all Sidebar frames
+/**
+ * Sidebar class containings frames that also can broadcast data as a DataHandling::Subject.
  */
 class AtEventSidebar : public TGMainFrame {
 private:
    std::vector<AtSidebarFrame *> fFrames;
 
 public:
-   AtEventSidebar();
+   AtEventSidebar(DataHandling::AtEntryNumber *entryNum, DataHandling::AtBranchName &rawEvent,
+                  DataHandling::AtBranchName &event, DataHandling::AtBranchName &patternEvent);
 
    /// Actually generate content of the frames once Init has run
    void FillFrames();

@@ -1,6 +1,7 @@
 #ifndef AtEVENTMANAGERNEW_H
 #define AtEVENTMANAGERNEW_H
 
+#include "AtDataObserver.h"
 #include "AtDataSubject.h"
 #include "AtEventSidebar.h"
 #include "AtSubjectEventViewer.h"
@@ -36,27 +37,31 @@ class AtTabBase;
  * Tabs are added directly to AtEventManager (which creates a task used to update the pads as events are loaded or
  * re-analyzed)
  */
-class AtViewerManager final {
+class AtViewerManager final : DataHandling::Observer {
 private:
    static AtViewerManager *fInstance;
-   Int_t fEntry;
 
    AtEventSidebar *fSidebar;
 
    // TGListTreeItem *fEvent;
    /*** Sidebar info - Event # and event selection ***/
-   TGNumberEntry *fCurrentEvent{nullptr};
+   // TGNumberEntry *fCurrentEvent{nullptr};
    TGNumberEntry *f3DThresDisplay;
 
    std::unique_ptr<AtTabTask> fTabTask;
    std::shared_ptr<AtMap> fMap;
    Int_t fPadNum;
 
+   /** Data subjects we own and send around on update **/
+   DataHandling::AtEntryNumber fEntry{0};
+   DataHandling::AtBranchName fRawEventBranch{};
+   DataHandling::AtBranchName fEventBranch{};
+   DataHandling::AtBranchName fPatternEventBranch{};
+
+   /** Should have the list of branch names **/
+   std::map<std::string, std::vector<TString>> fBranchNames;
+
    /*** Sidebar info - Branch selection***/
-   std::array<std::string, 3> fBranchTypes{"AtRawEvent", "AtEvent", "AtPatternEvent"};
-   std::array<std::unique_ptr<DataHandling::BranchName>, 3> fSubjectBranchNames;
-   std::array<TGComboBox *, 3> fBranchBoxes;
-   std::array<std::vector<TString>, 3> fBranchNames;
 
 public:
    static AtViewerManager *Instance();
@@ -66,28 +71,36 @@ public:
    void AddTask(FairTask *task);
    void AddTab(std::unique_ptr<AtTabBase> tab);
 
-   virtual void Init();
+   void Init();
+   virtual void Update(DataHandling::Subject *) override;
 
    AtMap *GetMap() { return fMap.get(); }
    AtEventSidebar *GetSidebar() { return fSidebar; }
-   Int_t GetCurrentEvent() { return fEntry; }
+   std::map<std::string, std::vector<TString>> const &GetBranchNames() const
+   {
+      return fBranchNames;
+   }
 
-   /*** Functions used for event control
-   "*MENU*" adds these function to the right click menue in the eve viewer
-   */
-   /// Main function for navigating to an event. Everything that changes event number should end up here
-   virtual void GotoEvent(Int_t event);        ///< *MENU*
-   void NextEvent() { GotoEvent(fEntry + 1); } ///< *MENU*
-   void PrevEvent() { GotoEvent(fEntry - 1); } ///< *MENU*
+   /*** Data handlers owned by AtViewerManager ***/
+   DataHandling::AtBranchName *GetRawEventName() { return &fRawEventBranch; }
+   DataHandling::AtBranchName *GetEventName() { return &fEventBranch; }
+   DataHandling::AtBranchName *GetPatternEventName() { return &fPatternEventBranch; }
 
-   virtual void SelectEvent(); //< Goto event in fCurrentEvent (callback for fCurrentEvent)
-   void SetCurrentEvent(TGNumberEntry *num) { fCurrentEvent = num; }
+   Int_t GetCurrentEvent() { return fEntry.Get(); }
 
-   /*** Functions for sidebar - Branch selection ***/
-   void SelectAtRawEvent(Int_t);
-   void SelectAtEvent(Int_t);
-   void SelectAtPatternEvent(Int_t);
-   void RedrawEvent();
+   /*
+    * Functions used for event control
+    * "*MENU*" adds these function to the right click menue in the eve viewer
+    */
+
+   /**
+    * Main function for navigating to an event. Everything that changes event number should end up
+    * here
+    */
+   virtual void GotoEvent(Int_t event);              ///< *MENU*
+   void NextEvent() { GotoEvent(fEntry.Get() + 1); } ///< *MENU*
+   void PrevEvent() { GotoEvent(fEntry.Get() - 1); } ///< *MENU*
+   void RedrawEvent();                               ///< *MENU*
 
    static void SelectPad();
 

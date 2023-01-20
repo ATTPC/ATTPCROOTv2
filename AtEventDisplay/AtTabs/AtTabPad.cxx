@@ -1,12 +1,12 @@
 #include "AtTabPad.h"
 
 #include "AtEvent.h"
-#include "AtEventManagerNew.h"
 #include "AtPad.h"
 #include "AtPadArray.h"
 #include "AtPadBase.h" // for AtPadBase
 #include "AtRawEvent.h"
 #include "AtTabInfo.h"
+#include "AtViewerManager.h"
 
 #include <FairLogger.h> // for LOG
 
@@ -30,14 +30,14 @@ ClassImp(AtTabPad);
 
 void AtTabPad::InitTab()
 {
-
    std::cout << " =====  AtEventTabPad::Init =====" << std::endl;
 
    if (fTabName == "AtPad")
       fTabName = TString::Format(fTabName + " %d", fTabNumber);
 
-   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>(fEventBranch));
-   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(fRawEventBranch));
+   auto man = AtViewerManager::Instance();
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>(man->GetEventName()));
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(man->GetRawEventName()));
 
    std::cout << " AtEventTabPad::Init : Initialization complete! "
              << "\n";

@@ -1,12 +1,12 @@
 #include "AtTabMain.h"
 
 #include "AtEvent.h"
-#include "AtEventManagerNew.h"
 #include "AtHit.h" // for AtHit
 #include "AtMap.h"
 #include "AtPad.h" // for AtPad
 #include "AtRawEvent.h"
 #include "AtTabInfo.h"
+#include "AtViewerManager.h"
 
 #include <FairLogger.h> // for LOG
 
@@ -60,9 +60,12 @@ void AtTabMain::InitTab()
    // fEvePatternEvent = std::make_unique<TEveEventManager>("AtPatternEvent");
    gEve->AddEvent(fEvePatternEvent.get());
 
-   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>());
-   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>());
-   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtPatternEvent>>());
+   auto man = AtViewerManager::Instance();
+
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>(man->GetEventName()));
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(man->GetRawEventName()));
+   fTabInfo->AddAugment(
+      std::make_unique<AtTabInfoFairRoot<AtPatternEvent>>(man->GetPatternEventName()));
 
    gStyle->SetPalette(55);
 

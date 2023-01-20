@@ -34,7 +34,7 @@
  * @brief Interface for AtTabInfo classes.
  * @ingroup TabData
  */
-class AtTabInfoBase : public DataHandling::Observer {
+class AtTabInfoBase {
 
 public:
    AtTabInfoBase() = default;
@@ -44,8 +44,6 @@ public:
     * @brief setup how to access this info from its data source.
     */
    virtual void Init() = 0;
-
-   virtual void Update(DataHandling::Subject *subject) override = 0;
 
    /**
     * @brief Default name for info type.
@@ -73,7 +71,6 @@ public:
 
    void Init() override;
 
-   void Update(DataHandling::Subject *changedSubject) override;
    std::string GetDefaultName() override { return "AtTabInfo"; }
 
    AtTabInfoBase *AddAugment(std::unique_ptr<AtTabInfoBase> augment);
@@ -96,49 +93,35 @@ protected:
  * @ingroup TabData
  */
 template <typename T>
-class AtTabInfoFairRoot : public AtTabInfoBase {
+class AtTabInfoFairRoot : public AtTabInfoBase, public DataHandling::Observer {
 
 protected:
-   TString fBranchName;
+   DataHandling::AtBranchName *fBranchName;
    T *fInfo{nullptr};
 
 public:
-   AtTabInfoFairRoot() : AtTabInfoFairRoot(T::Class_Name()) {}
-   AtTabInfoFairRoot(TString branchName) : AtTabInfoBase(), fBranchName(branchName) {}
-
-   void Init() override
+   AtTabInfoFairRoot(DataHandling::AtBranchName *branch) : AtTabInfoBase(), fBranchName(branch)
    {
-
-      constexpr auto cNORMAL = "\033[0m";
-      constexpr auto cGREEN = "\033[1;32m";
-      if (dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(fBranchName)))
-         LOG(INFO) << cGREEN << "Found branch " << fBranchName << " containing " << T::Class_Name() << "." << cNORMAL;
+      fBranchName->Attach(this);
    }
+   ~AtTabInfoFairRoot() { fBranchName->Detach(this); }
+
+   void Init() override {}
+   std::string GetDefaultName() override { return T::Class_Name(); }
+
+   T *GetInfo() { return fInfo; }
 
    void Update(DataHandling::Subject *changedSubject) override
    {
-      // If it is a branch change with a matching type, update us.
-      auto branchChange = dynamic_cast<DataHandling::BranchName *>(changedSubject);
-      bool typeMatches = std::string(T::Class_Name()).compare(branchChange->GetBranchType()) == 0;
-      if (branchChange != nullptr && typeMatches) {
-         LOG(debug) << "Updating branch name from " << fBranchName << " to " << branchChange->GetBranchName();
-         fBranchName = branchChange->GetBranchName();
-      }
+      if (changedSubject == fBranchName)
+         Update();
    }
-   std::string GetDefaultName() override { return T::Class_Name(); }
-
-   void SetBranch(TString branchName) { fBranchName = branchName; }
-   T *GetInfo()
-   {
-      Update();
-      return fInfo;
-   }
-   TString GetBranch() const { return fBranchName; }
 
 protected:
    void Update() override
    {
-      auto fEventArray = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(fBranchName));
+      auto branchName = fBranchName->GetBranchName();
+      auto fEventArray = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(branchName.data()));
       if (fEventArray != nullptr)
          fInfo = dynamic_cast<T *>(fEventArray->At(0));
    }

@@ -1,7 +1,7 @@
 #include "AtTabTask.h"
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
-#include "AtEventManagerNew.h" // for AtEventManager
+#include "AtViewerManager.h"
 
 #include <iostream>
 
@@ -60,8 +60,11 @@ void AtTabTask::DrawTabPads(Int_t PadNum)
       fTab->DrawPad(PadNum);
    }
 }
+
 void AtTabTask::AddDataSourceToTabs(DataHandling::Subject *subject)
 {
+   /*
    for (auto &tab : fTabs)
       subject->Attach(tab->GetTabInfo());
+   */
 }

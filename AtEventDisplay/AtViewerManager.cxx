@@ -1,4 +1,4 @@
-#include "AtEventManagerNew.h"
+#include "AtViewerManager.h"
 
 #include "AtMap.h"
 #include "AtSidebarFrames.h"
@@ -66,11 +66,12 @@ AtViewerManager *AtViewerManager::Instance()
 }
 
 AtViewerManager::AtViewerManager(std::shared_ptr<AtMap> map)
-   : fEntry(0), f3DThresDisplay(nullptr), fTabTask(std::make_unique<AtTabTask>()), fMap(map)
+   : f3DThresDisplay(nullptr), fTabTask(std::make_unique<AtTabTask>()), fMap(map)
 
 {
    if (fInstance != nullptr)
-      LOG(fatal) << "Attempting to create a second instance of AtViewerManager! Only one is allowed!";
+      LOG(fatal)
+         << "Attempting to create a second instance of AtViewerManager! Only one is allowed!";
    fInstance = this;
 
    // In order to get the sidebar to actually be *in* the sidebar we need to create the EveManager
@@ -79,7 +80,7 @@ AtViewerManager::AtViewerManager(std::shared_ptr<AtMap> map)
    TEveBrowser *browser = gEve->GetBrowser();
    browser->StartEmbedding(TRootBrowser::kLeft);
 
-   fSidebar = new AtEventSidebar();
+   fSidebar = new AtEventSidebar(&fEntry, fRawEventBranch, fEventBranch, fPatternEventBranch);
 
    browser->StopEmbedding();
    browser->SetTabTitle("Control", 0);
@@ -131,49 +132,6 @@ void AtViewerManager::make_gui()
 {
    fSidebar->FillFrames();
 
-   /**** Begin code for branch selection *****/
-
-   fSidebar->AddFrame(new TGLabel(fSidebar, "Selected Branches"), new TGLayoutHints(kLHintsCenterX));
-
-   // Create frame to select raw event
-   auto f2 = new TGHorizontalFrame(fSidebar);
-   f2->AddFrame(new TGLabel(f2, "Raw Event: "));
-
-   fBranchBoxes[0] = new TGComboBox(f2);
-   for (int i = 0; i < fBranchNames[0].size(); ++i)
-      fBranchBoxes[0]->AddEntry(fBranchNames[0][i], i);
-   fBranchBoxes[0]->Connect("Selected(Int_t)", "AtViewerManager", this, "SelectAtRawEvent(Int_t)");
-   fBranchBoxes[0]->Select(0);
-
-   f2->AddFrame(fBranchBoxes[0], new TGLayoutHints(kLHintsExpandX | kLHintsCenterY | kLHintsExpandY));
-   fSidebar->AddFrame(f2, new TGLayoutHints(kLHintsExpandX));
-
-   // Create frame to select event
-   f2 = new TGHorizontalFrame(fSidebar);
-   f2->AddFrame(new TGLabel(f2, "Event: "));
-
-   fBranchBoxes[1] = new TGComboBox(f2);
-   for (int i = 0; i < fBranchNames[1].size(); ++i)
-      fBranchBoxes[1]->AddEntry(fBranchNames[1][i], i);
-   fBranchBoxes[1]->Connect("Selected(Int_t)", "AtViewerManager", this, "SelectAtEvent(Int_t)");
-   fBranchBoxes[1]->Select(0);
-
-   f2->AddFrame(fBranchBoxes[1], new TGLayoutHints(kLHintsExpandX | kLHintsCenterY | kLHintsExpandY));
-   fSidebar->AddFrame(f2, new TGLayoutHints(kLHintsExpandX));
-
-   // Create frame to select pattern event
-   f2 = new TGHorizontalFrame(fSidebar);
-   f2->AddFrame(new TGLabel(f2, "Pattern Event: "));
-
-   fBranchBoxes[2] = new TGComboBox(f2);
-   for (int i = 0; i < fBranchNames[2].size(); ++i)
-      fBranchBoxes[2]->AddEntry(fBranchNames[2][i], i);
-   fBranchBoxes[2]->Connect("Selected(Int_t)", "AtViewerManager", this, "SelectAtPatternEvent(Int_t)");
-   fBranchBoxes[2]->Select(0);
-
-   f2->AddFrame(fBranchBoxes[2], new TGLayoutHints(kLHintsExpandX | kLHintsCenterY | kLHintsExpandY));
-   fSidebar->AddFrame(f2, new TGLayoutHints(kLHintsExpandX));
-
    auto redrawButton = new TGTextButton(fSidebar, "Redraw All");
    redrawButton->Connect("Clicked()", "AtViewerManager", this, "RedrawEvent()");
    fSidebar->AddFrame(redrawButton, new TGLayoutHints(kLHintsLeft, 1, 1, 1, 1));
@@ -196,65 +154,31 @@ void AtViewerManager::GenerateBranchLists()
    for (int i = 0; i < ioMan->GetBranchNameList()->GetSize(); i++) {
 
       auto branchName = ioMan->GetBranchName(i);
-      std::cout << "Looking for " << branchName << std::endl;
       auto branchArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(branchName));
       if (branchArray == nullptr)
          continue;
 
+      // Loop until there is something in this branch
       while (branchArray->GetSize() == 0)
          NextEvent();
-      std::cout << branchName << " as " << branchArray << " " << branchArray->GetSize() << std::endl;
 
-      // Check for event types this is very hacky but what can you do
-      for (int j = 0; j < fBranchTypes.size(); ++j) {
-         fSubjectBranchNames[j] = std::make_unique<DataHandling::BranchName>(fBranchTypes[j], "", "");
-         if (std::string(branchArray->At(0)->ClassName()).compare(fBranchTypes[j]) == 0) {
-            std::cout << "Found as " << fBranchTypes[j] << std::endl;
-            fBranchNames[j].push_back(branchName);
-         }
-      }
-      std::cout << std::endl;
+      auto type = branchArray->At(0)->ClassName();
+      fBranchNames[type].push_back(branchName);
+      LOG(info) << "Found " << branchName << " with type " << type;
    }
-}
 
-void AtViewerManager::SelectEventBranch(int sel, int i)
-{
-   if (sel < 0)
-      return;
-   std::cout << "Changing " << fBranchTypes[i] << " to " << fBranchNames[i][sel] << std::endl;
-   fSubjectBranchNames[i]->SetBranchName(fBranchNames[i][sel].Data());
-   fSubjectBranchNames[i]->Notify();
-}
-
-void AtViewerManager::SelectAtRawEvent(Int_t sel)
-{
-   SelectEventBranch(sel, 0);
-}
-void AtViewerManager::SelectAtEvent(Int_t sel)
-{
-   SelectEventBranch(sel, 1);
-}
-void AtViewerManager::SelectAtPatternEvent(Int_t sel)
-{
-   SelectEventBranch(sel, 2);
-}
-
-void AtViewerManager::SelectEvent()
-{
-   GotoEvent(fCurrentEvent->GetIntNumber());
+   std::cout << std::endl;
 }
 
 void AtViewerManager::RedrawEvent()
 {
-   GotoEvent(fEntry);
+   GotoEvent(fEntry.Get());
    DrawPad(fPadNum);
 }
 void AtViewerManager::GotoEvent(Int_t event)
 {
-   fEntry = event;
-   std::cout << cWHITERED << " Event number : " << fEntry << cNORMAL << std::endl;
-   if (fCurrentEvent)
-      fCurrentEvent->SetIntNumber(fEntry);
+   fEntry.Set(event);
+   std::cout << cWHITERED << " Event number : " << fEntry.Get() << cNORMAL << std::endl;
    FairRunAna::Instance()->Run((Long64_t)event);
 }
 
@@ -313,12 +237,12 @@ void AtViewerManager::DrawPad(Int_t padNum)
 void AtViewerManager::RegisterDataHandles()
 {
    if (fTabTask == nullptr)
-      LOG(fatal) << "Cannot register data handles without a AtTabTask! Was it added to the AtEventManager?";
+      LOG(fatal)
+         << "Cannot register data handles without a AtTabTask! Was it added to the AtEventManager?";
+}
 
-   for (auto &branchSubject : fSubjectBranchNames) {
-      fTabTask->AddDataSourceToTabs(branchSubject.get());
-   }
-   for (int i = 0; i < fSubjectBranchNames.size(); ++i)
-      if (fBranchNames[i].size() > 0)
-         SelectEventBranch(0, i);
+void AtViewerManager::Update(DataHandling::Subject *subject)
+{
+   if (subject == &fEntry)
+      GotoEvent(fEntry.Get());
 }
