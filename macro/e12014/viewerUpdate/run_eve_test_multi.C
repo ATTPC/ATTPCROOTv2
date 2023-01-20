@@ -57,6 +57,20 @@ void run_eve_test_multi(int runNum = 214, TString OutputDataFile = "./data/outpu
    eveMan->AddTab(std::move(tabMain));
    eveMan->AddTab(std::move(tabPad));
 
+   auto method = std::make_unique<SampleConsensus::AtSampleConsensus>(
+      SampleConsensus::Estimators::kRANSAC, AtPatterns::PatternType::kY, RandomSample::SampleMethod::kWeightedY);
+   method->SetDistanceThreshold(20);
+   method->SetNumIterations(500);
+   method->SetMinHitsPattern(150);
+   method->SetChargeThreshold(20); //-1 implies no charge-weighted fitting
+   method->SetFitPattern(true);
+
+   auto sacTask = new AtSampleConsensusTask(std::move(method));
+   sacTask->SetPersistence(false);
+   sacTask->SetInputBranch("AtEventH");
+
+   eveMan->AddTask(sacTask);
+
    eveMan->Init();
 
    std::cout << "Finished init" << std::endl;

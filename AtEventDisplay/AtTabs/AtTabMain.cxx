@@ -52,11 +52,13 @@ ClassImp(AtTabMain);
 
 void AtTabMain::InitTab()
 {
-
    std::cout << " =====  AtTabMain::Init =====" << std::endl;
 
-   gEve->AddEvent(fEventManager.get());
-   fEventManager->AddElement(fHitSet.get());
+   gEve->AddEvent(fEveEvent.get());
+   fEveEvent->AddElement(fHitSet.get());
+
+   // fEvePatternEvent = std::make_unique<TEveEventManager>("AtPatternEvent");
+   gEve->AddEvent(fEvePatternEvent.get());
 
    fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>());
    fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>());
@@ -66,6 +68,272 @@ void AtTabMain::InitTab()
 
    std::cout << " AtTabMain::Init : Initialization complete! "
              << "\n";
+}
+
+void AtTabMain::ExpandNumPatterns(int num)
+{
+
+   // Expand vector so it's large enough for all of the patterns in the event
+   if (fPatternHitSets.size() < num)
+      LOG(info) << "Expanding number of patterns to " << num << " from " << fPatternHitSets.size() << std::endl;
+   while (fPatternHitSets.size() < num) {
+      int trackID = fPatternHitSets.size();
+
+      auto trackSet = std::make_unique<TEvePointSet>(TString::Format("Track_%d", trackID));
+      trackSet->SetDestroyOnZeroRefCnt(false);
+      fHitAttr.Copy(*trackSet);
+      trackSet->SetMarkerColor(GetTrackColor(fPatternHitSets.size()));
+
+      fPatternHitSets.push_back(std::move(trackSet));
+   }
+}
+
+Color_t AtTabMain::GetTrackColor(int i)
+{
+   std::vector<EColor> colors = {kOrange, kViolet, kTeal, kMagenta, kBlue, kViolet, kYellow, kCyan};
+   if (i < colors.size()) {
+      return colors.at(i);
+   } else
+      return kAzure;
+}
+
+void AtTabMain::DrawPad(Int_t PadNum)
+{
+   LOG(debug) << "Drawing main pad " << fTabNumber;
+   DrawWave(PadNum);
+   UpdateCvsPadWave();
+   LOG(debug) << "Done Drawing main pad " << fTabNumber;
+}
+
+void AtTabMain::Reset()
+{
+   if (fPadPlane != nullptr)
+      fPadPlane->Reset(nullptr);
+}
+
+void AtTabMain::DrawPadPlane()
+{
+   if (fPadPlane) {
+      fPadPlane->Reset(nullptr);
+      return;
+   }
+
+   AtViewerManager::Instance()->GetMap()->GeneratePadPlane();
+   fPadPlane = AtViewerManager::Instance()->GetMap()->GetPadPlane();
+   fCvsPadPlane->cd();
+   // fPadPlane -> Draw("COLZ L0"); //0  == bin lines adre not drawn
+   fPadPlane->Draw("COL L0");
+   fPadPlane->SetMinimum(1.0);
+   gStyle->SetOptStat(0);
+   gStyle->SetPalette(103);
+   gPad->Update();
+}
+
+void AtTabMain::DrawPadWave()
+{
+   char name[20];
+   sprintf(name, "fPadWave_DT%i", fTabNumber);
+   fPadWave = new TH1I(name, name, 512, 0, 511);
+   fCvsPadWave->cd();
+   fPadWave->Draw();
+}
+
+void AtTabMain::DumpEvent(std::string fileName)
+{
+   auto fEvent = GetFairRootInfo<AtEvent>();
+   if (fEvent == nullptr) {
+      std::cout << "CRITICAL ERROR: Event missing for TabMain. Aborting draw." << std::endl;
+      return;
+   }
+
+   std::ofstream dumpEvent;
+   dumpEvent.open(fileName);
+   dumpEvent << " Event ID : " << fEvent->GetEventID() << std::endl;
+
+   for (auto &hit : fEvent->GetHits())
+      dumpEvent << hit->GetPosition().X() << "," << hit->GetPosition().Y() << "," << hit->GetPosition().Z() << ","
+                << hit->GetCharge() << std::endl;
+
+   dumpEvent.close();
+}
+
+/**
+ * Called to update the entire viewer
+ */
+void AtTabMain::DrawEvent()
+{
+   // Create the hit cloud for every event we have registered
+   UpdatePadPlane();
+   UpdateEventElements();
+   UpdatePatternEventElements();
+   UpdateRenderState();
+
+   gEve->Redraw3D(false);
+   UpdateCvsPadPlane();
+}
+
+void AtTabMain::UpdateRenderState()
+{
+   fEveEvent->SetRnrState(false);
+   fEvePatternEvent->SetRnrState(true);
+}
+
+void AtTabMain::UpdatePatternEventElements()
+{
+   if (fEvePatternEvent == nullptr)
+      return;
+
+   auto fPatternEvent = GetFairRootInfo<AtPatternEvent>();
+   if (fPatternEvent == nullptr) {
+      LOG(error) << "Cannot AtPatternEvent elements: no event availible";
+      return;
+   }
+
+   // Make sure we have enough TEve elements to draw all the tracks
+   auto &tracks = fPatternEvent->GetTrackCand();
+   ExpandNumPatterns(tracks.size());
+
+   // Remove all the elements, and re-add them
+   fEvePatternEvent->RemoveElements();
+   for (int i = 0; i < tracks.size(); ++i) {
+      if (tracks[i].GetPattern() == nullptr)
+         continue;
+
+      // Update the hit points and re-add them to the event
+      auto hitSet = fPatternHitSets.at(i).get();
+      fHitAttr.Copy(*hitSet);
+      hitSet->SetMarkerColor(GetTrackColor(i));
+      SetPointsFromTrack(*hitSet, tracks[i]);
+      fEvePatternEvent->AddElement(hitSet);
+
+      // Get the pattern and add it to the event
+      auto pattern = tracks[i].GetPattern()->GetEveElement();
+      pattern->SetDestroyOnZeroRefCnt(false);
+      pattern->SetMainColor(GetTrackColor(i));
+      fEvePatternEvent->AddElement(pattern);
+   }
+}
+
+void AtTabMain::UpdateEventElements()
+{
+   auto fEvent = GetFairRootInfo<AtEvent>();
+   if (fEvent == nullptr) {
+      LOG(error) << "Cannot update AtEvent elements: no event availible";
+      return;
+   }
+
+   auto &hits = fEvent->GetHits();
+   LOG(info) << cBLUE << " Number of hits : " << hits.size() << cNORMAL;
+
+   SetPointsFromHits(*fHitSet, hits);
+}
+
+void AtTabMain::UpdatePadPlane()
+{
+   auto fEvent = GetFairRootInfo<AtEvent>();
+   if (fEvent == nullptr) {
+      LOG(error) << "Cannot fill pad plane histogram: no event availible";
+      return;
+   }
+   auto &hits = fEvent->GetHits();
+
+   for (auto &hit : hits) {
+      int padMultiHit = GetFairRootInfo<AtEvent>()->GetHitPadMult(hit->GetPadNum());
+      if (hit->GetCharge() < fThreshold || padMultiHit > fMaxHitMulti)
+         continue;
+      auto position = hit->GetPosition();
+      fPadPlane->Fill(position.X(), position.Y(), hit->GetCharge());
+   }
+}
+
+void AtTabMain::SetPointsFromHits(TEvePointSet &hitSet, const std::vector<std::unique_ptr<AtHit>> &hits)
+{
+   Int_t nHits = hits.size();
+
+   hitSet.Reset(nHits);
+   hitSet.SetOwnIds(true);
+   fHitAttr.Copy(hitSet); // Copy attributes from fHitAttr into hitSet.
+
+   for (Int_t iHit = 0; iHit < nHits; iHit++) {
+
+      auto &hit = *hits.at(iHit);
+      Int_t PadMultHit = 0;
+      if (GetFairRootInfo<AtEvent>())
+         PadMultHit = GetFairRootInfo<AtEvent>()->GetHitPadMult(hit.GetPadNum());
+
+      if (hit.GetCharge() < fThreshold || PadMultHit > fMaxHitMulti)
+         continue;
+
+      auto position = hit.GetPosition();
+
+      hitSet.SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.); // Convert into cm
+      hitSet.SetPointId(new TNamed(Form("Hit %d", iHit), ""));
+   }
+
+   gEve->ElementChanged(&hitSet);
+}
+
+void AtTabMain::SetPointsFromTrack(TEvePointSet &hitSet, const AtTrack &track)
+{
+   Int_t nHits = track.GetHitArrayConst().size();
+
+   hitSet.Reset(nHits);
+   hitSet.SetOwnIds(true);
+
+   for (Int_t i = 0; i < nHits; i++) {
+
+      auto &hit = track.GetHitArrayConst()[i];
+
+      if (hit.GetCharge() < fThreshold)
+         continue;
+
+      auto position = hit.GetPosition();
+      hitSet.SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.); // Convert into cm
+      hitSet.SetPointId(new TNamed(Form("Hit %d", i), ""));
+   }
+
+   gEve->ElementChanged(&hitSet);
+}
+
+bool AtTabMain::DrawWave(Int_t PadNum)
+{
+   auto fRawEvent = GetFairRootInfo<AtRawEvent>();
+
+   // std::cout << "checking fRawEvent" << std::endl;
+   if (fRawEvent == nullptr) {
+      std::cout << "fRawEvent is NULL!" << std::endl;
+      return false;
+   }
+   // std::cout << "fRawEvent is not nullptr" << std::endl;
+   AtPad *fPad = fRawEvent->GetPad(PadNum);
+   if (fPad == nullptr) {
+      LOG(error) << "Pad in event is null!";
+      return false;
+   } else
+      LOG(debug) << "Drawing pad " << fPad->GetPadNum();
+
+   auto adc = fPad->GetADC();
+   fPadWave->Reset();
+   for (Int_t i = 0; i < 512; i++) {
+      fPadWave->SetBinContent(i, adc[i]);
+   }
+
+   fCvsPadWave->cd();
+   fPadWave->Draw();
+   fCvsPadWave->Update();
+   return true;
+}
+
+void AtTabMain::UpdateCvsPadPlane()
+{
+   fCvsPadPlane->Modified();
+   fCvsPadPlane->Update();
+}
+
+void AtTabMain::UpdateCvsPadWave()
+{
+   fCvsPadWave->Modified();
+   fCvsPadWave->Update();
 }
 
 void AtTabMain::MakeTab()
@@ -132,179 +400,4 @@ void AtTabMain::MakeTab()
    TGLViewer *dfViewer = gEve->GetDefaultGLViewer(); // Is this doing anything?
    dfViewer->CurrentCamera().RotateRad(-.7, 0.5);
    dfViewer->DoDraw();
-}
-
-void AtTabMain::DrawEvent()
-{
-   // Create the hit cloud for every event we have registered
-
-   DrawHitPoints();
-   gEve->Redraw3D(false);
-   UpdateCvsPadPlane();
-}
-
-void AtTabMain::DrawPad(Int_t PadNum)
-{
-   LOG(debug) << "Drawing main pad " << fTabNumber;
-   DrawWave(PadNum);
-   UpdateCvsPadWave();
-   LOG(debug) << "Done Drawing main pad " << fTabNumber;
-}
-
-void AtTabMain::Reset()
-{
-   if (fPadPlane != nullptr)
-      fPadPlane->Reset(nullptr);
-}
-
-void AtTabMain::DrawPadPlane()
-{
-   if (fPadPlane) {
-      fPadPlane->Reset(nullptr);
-      return;
-   }
-
-   AtViewerManager::Instance()->GetMap()->GeneratePadPlane();
-   fPadPlane = AtViewerManager::Instance()->GetMap()->GetPadPlane();
-   fCvsPadPlane->cd();
-   // fPadPlane -> Draw("COLZ L0"); //0  == bin lines adre not drawn
-   fPadPlane->Draw("COL L0");
-   fPadPlane->SetMinimum(1.0);
-   gStyle->SetOptStat(0);
-   gStyle->SetPalette(103);
-   gPad->Update();
-}
-
-void AtTabMain::DrawPadWave()
-{
-   char name[20];
-   sprintf(name, "fPadWave_DT%i", fTabNumber);
-   fPadWave = new TH1I(name, name, 512, 0, 511);
-   fCvsPadWave->cd();
-   fPadWave->Draw();
-}
-
-void AtTabMain::DumpEvent(std::string fileName)
-{
-   auto fEvent = GetFairRootInfo<AtEvent>();
-   if (fEvent == nullptr) {
-      std::cout << "CRITICAL ERROR: Event missing for TabMain. Aborting draw." << std::endl;
-      return;
-   }
-
-   std::ofstream dumpEvent;
-   dumpEvent.open(fileName);
-   dumpEvent << " Event ID : " << fEvent->GetEventID() << std::endl;
-
-   for (auto &hit : fEvent->GetHits())
-      dumpEvent << hit->GetPosition().X() << "," << hit->GetPosition().Y() << "," << hit->GetPosition().Z() << ","
-                << hit->GetCharge() << std::endl;
-
-   dumpEvent.close();
-}
-
-void AtTabMain::DrawPatternHitPoints()
-{
-   // Expand vector so it's large enough for all of the patterns in the event
-
-   // Add the new hit sets to the viewer
-
-   // Remove any hit sets in the viewer that we will not be drawing
-
-   // Repeat above but for the TEveLines in the pattern.
-
-   // Fill the hit set and lines for each pattern.
-}
-
-void AtTabMain::DrawHitPoints()
-{
-   auto fEvent = GetFairRootInfo<AtEvent>();
-   if (fEvent == nullptr) {
-      LOG(error) << "Cannot generate AtEvent hit cloud and fill pad plane histogram: no event availible";
-      return;
-   }
-
-   auto &hits = fEvent->GetHits();
-   LOG(info) << cBLUE << " Number of hits : " << hits.size() << cNORMAL;
-
-   FillPadPlane(hits);
-   SetPointsFromHits(*fHitSet, hits);
-}
-
-void AtTabMain::FillPadPlane(const std::vector<std::unique_ptr<AtHit>> &hits)
-{
-   for (auto &hit : hits) {
-      int padMultiHit = GetFairRootInfo<AtEvent>()->GetHitPadMult(hit->GetPadNum());
-      if (hit->GetCharge() < fThreshold || padMultiHit > fMaxHitMulti)
-         continue;
-      auto position = hit->GetPosition();
-      fPadPlane->Fill(position.X(), position.Y(), hit->GetCharge());
-   }
-}
-
-void AtTabMain::SetPointsFromHits(TEvePointSet &hitSet, const std::vector<std::unique_ptr<AtHit>> &hits)
-{
-   Int_t nHits = hits.size();
-
-   hitSet.Reset(nHits);
-   hitSet.SetOwnIds(true);
-   fHitAttr.Copy(hitSet); // Copy attributes from fHitAttr into hitSet.
-
-   for (Int_t iHit = 0; iHit < nHits; iHit++) {
-
-      AtHit hit = *hits.at(iHit);
-      Int_t PadNumHit = hit.GetPadNum();
-      Int_t PadMultHit = GetFairRootInfo<AtEvent>()->GetHitPadMult(PadNumHit);
-
-      if (hit.GetCharge() < fThreshold || PadMultHit > fMaxHitMulti)
-         continue;
-
-      auto position = hit.GetPosition();
-
-      hitSet.SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.); // Convert into cm
-      hitSet.SetPointId(new TNamed(Form("Hit %d", iHit), ""));
-   }
-
-   gEve->ElementChanged(&hitSet);
-}
-
-bool AtTabMain::DrawWave(Int_t PadNum)
-{
-   auto fRawEvent = GetFairRootInfo<AtRawEvent>();
-
-   // std::cout << "checking fRawEvent" << std::endl;
-   if (fRawEvent == nullptr) {
-      std::cout << "fRawEvent is NULL!" << std::endl;
-      return false;
-   }
-   // std::cout << "fRawEvent is not nullptr" << std::endl;
-   AtPad *fPad = fRawEvent->GetPad(PadNum);
-   if (fPad == nullptr) {
-      LOG(error) << "Pad in event is null!";
-      return false;
-   } else
-      LOG(debug) << "Drawing pad " << fPad->GetPadNum();
-
-   auto adc = fPad->GetADC();
-   fPadWave->Reset();
-   for (Int_t i = 0; i < 512; i++) {
-      fPadWave->SetBinContent(i, adc[i]);
-   }
-
-   fCvsPadWave->cd();
-   fPadWave->Draw();
-   fCvsPadWave->Update();
-   return true;
-}
-
-void AtTabMain::UpdateCvsPadPlane()
-{
-   fCvsPadPlane->Modified();
-   fCvsPadPlane->Update();
-}
-
-void AtTabMain::UpdateCvsPadWave()
-{
-   fCvsPadWave->Modified();
-   fCvsPadWave->Update();
 }

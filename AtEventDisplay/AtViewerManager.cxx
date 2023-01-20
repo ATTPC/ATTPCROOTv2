@@ -188,7 +188,8 @@ void AtViewerManager::make_gui()
 
 void AtViewerManager::GenerateBranchLists()
 {
-   FairRunAna::Instance()->Run((Long64_t)0);
+   GotoEvent(0);
+
    auto ioMan = FairRootManager::Instance();
 
    // Loop through the entire branch list and try to identify the class type of each branch
@@ -212,6 +213,7 @@ void AtViewerManager::GenerateBranchLists()
             fBranchNames[j].push_back(branchName);
          }
       }
+      std::cout << std::endl;
    }
 }
 

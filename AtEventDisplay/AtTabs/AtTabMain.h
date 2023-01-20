@@ -41,7 +41,13 @@ public:
    enum class DrawType { kEvent, kClusterEvent, kPatternEvent };
 
 protected:
-   TEveEventManagerPtr fEventManager{std::make_unique<TEveEventManager>("AtEventManager")};
+   TEveEventManagerPtr fEveEvent{std::make_unique<TEveEventManager>("AtEvent")};
+   TEvePointSetPtr fHitSet{std::make_unique<TEvePointSet>("Hits")}; //< AtEvent Hit Set
+
+   TEveEventManagerPtr fEvePatternEvent{std::make_unique<TEveEventManager>("AtPatternEvent")};
+   TEvePointSetPtr fNoiseHitSet{std::make_unique<TEvePointSet>("Noise")}; //< AtPatternEvent Noise Set
+   std::vector<TEvePointSetPtr> fPatternHitSets;
+   std::vector<TEveElement> fPatterns;
 
    // Information for drawing 3D events
    Int_t fThreshold{0};                  //< Min charge to draw hit
@@ -49,11 +55,6 @@ protected:
    DrawType fDrawType{DrawType::kEvent}; //< Type of event to draw
 
    TAttMarker fHitAttr{kPink, 1, kFullDotMedium};
-
-   TEvePointSetPtr fHitSet{std::make_unique<TEvePointSet>("Hit")}; //< AtEvent Hit Set
-
-   std::vector<TEvePointSetPtr> fPatternHitSets;
-   std::vector<TEveElement> fPatterns;
 
    TCanvas *fCvsPadPlane{nullptr};
    TH2Poly *fPadPlane{nullptr};
@@ -85,17 +86,20 @@ private:
    void UpdateCvsPadPlane();
    void UpdateCvsPadWave();
 
-   // Functions for drawing hits
-   void DrawHitPoints();
-
-   void DrawPatternHitPoints();
    bool DrawWave(Int_t PadNum);
-   // std::unique_ptr<TEvePointSet> GetPointsFromHits(const std::vector<std::unique_ptr<AtHit>> &hits);
-   void SetPointsFromHits(TEvePointSet &hitSet, const std::vector<std::unique_ptr<AtHit>> &hits);
-   void FillPadPlane(const std::vector<std::unique_ptr<AtHit>> &hits);
 
-private:
-   void AddPatternHitSet();
+   // Update hit sets
+   void UpdatePadPlane();
+   void UpdateEventElements();
+   void UpdatePatternEventElements();
+   void UpdateRenderState();
+
+   void ExpandNumPatterns(int num);
+
+   void SetPointsFromHits(TEvePointSet &hitSet, const std::vector<std::unique_ptr<AtHit>> &hits);
+   void SetPointsFromTrack(TEvePointSet &hitSet, const AtTrack &track);
+
+   Color_t GetTrackColor(int i);
 
    ClassDefOverride(AtTabMain, 1)
 };
