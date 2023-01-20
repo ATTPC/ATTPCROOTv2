@@ -112,39 +112,18 @@ void AtViewerManager::Init()
    gStyle->SetOptTitle(0);
    gStyle->SetPalette(55);
 
-   // Call init on the run after here all of the AtTabInfo will be created
-   // Add the AtTabTask as the last task in the run
+   // Add the AtTabTask as the last task in the run so it can access
+   // what is created in earlier tasks in the run
    FairRunAna::Instance()->AddTask(fTabTask.get());
    FairRunAna::Instance()->Init();
-   // gEve->AddEvent(this);
 
    // Everything is loaded so construct the list of branch names
-   // Here we should also generate everything needed to create the data sources
    GenerateBranchLists();
 
-   // The bulk of this is creating the sidebar
-   make_gui();
+   fSidebar->FillFrames(); // Creates the entire sidebar GUI
 
-   // Register the data sources with every tab now that everything is in place
-   RegisterDataHandles();
    GotoEvent(0);
    std::cout << "End of AtViewerManager" << std::endl;
-}
-
-void AtViewerManager::make_gui()
-{
-   fSidebar->FillFrames();
-
-   auto redrawButton = new TGTextButton(fSidebar, "Redraw All");
-   redrawButton->Connect("Clicked()", "AtViewerManager", this, "RedrawEvent()");
-   fSidebar->AddFrame(redrawButton, new TGLayoutHints(kLHintsLeft, 1, 1, 1, 1));
-
-   /**** End code for branch selection *****/
-
-   // End addition of things to the sidebar
-   fSidebar->MapSubwindows();
-   fSidebar->Resize();
-   fSidebar->MapWindow();
 }
 
 void AtViewerManager::GenerateBranchLists()
@@ -153,7 +132,7 @@ void AtViewerManager::GenerateBranchLists()
 
    auto ioMan = FairRootManager::Instance();
 
-   // Loop through the entire branch list and try to identify the class type of each branch
+   // Loop through the entire branch list and map class type to branch name in fBranchNames
    for (int i = 0; i < ioMan->GetBranchNameList()->GetSize(); i++) {
 
       auto branchName = ioMan->GetBranchName(i);
@@ -169,26 +148,19 @@ void AtViewerManager::GenerateBranchLists()
       fBranchNames[type].push_back(branchName);
       LOG(info) << "Found " << branchName << " with type " << type;
    }
-
-   std::cout << std::endl;
 }
 
-void AtViewerManager::RedrawEvent()
-{
-   GotoEvent(fEntry.Get());
-   DrawPad(fPadNum);
-}
 void AtViewerManager::GotoEvent(Int_t event)
 {
    fEntry.Set(event);
-   std::cout << cWHITERED << " Event number : " << fEntry.Get() << cNORMAL << std::endl;
+   LOG(info) << cWHITERED << " Event number : " << fEntry.Get() << cNORMAL;
    FairRunAna::Instance()->Run((Long64_t)event);
+   DrawPad(fPadNum);
 }
 
 // Runs on any interaction with pad plane
 void AtViewerManager::SelectPad()
 {
-
    int event = gPad->GetEvent();
 
    if (event != 11) // Only continue if this was a left mouse click (rather than anything else)
@@ -235,12 +207,6 @@ void AtViewerManager::DrawPad(Int_t padNum)
 {
    fPadNum = padNum;
    fTabTask->DrawTabPads(padNum);
-}
-
-void AtViewerManager::RegisterDataHandles()
-{
-   if (fTabTask == nullptr)
-      LOG(fatal) << "Cannot register data handles without a AtTabTask! Was it added to the AtEventManager?";
 }
 
 void AtViewerManager::Update(DataHandling::Subject *subject)

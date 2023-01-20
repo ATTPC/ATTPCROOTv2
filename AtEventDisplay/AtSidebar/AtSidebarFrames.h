@@ -15,6 +15,9 @@
  */
 class AtSidebarFrame : public TGCompositeFrame {
 protected:
+   /// Option to disable picture buttons since they break some machines
+   bool kUsePictureButtons{true};
+
    // Protected constructor because this can only be instantiated as a base class
    AtSidebarFrame(const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1, UInt_t options = 0,
                   Pixel_t back = GetDefaultFrameBackground())
@@ -28,6 +31,9 @@ public:
     * frame.
     */
    virtual void FillFrame() = 0;
+
+   /// @brief Use text only buttons instead of picture buttons.
+   void UsePictureButtons(bool val = true) { kUsePictureButtons = val; }
 };
 
 class AtVerticalSidebarFrame : public AtSidebarFrame {
@@ -38,6 +44,7 @@ public:
    {
    }
 };
+
 class AtHorizontalSidebarFrame : public AtSidebarFrame {
 public:
    AtHorizontalSidebarFrame(const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1, UInt_t options = 0,
@@ -74,6 +81,7 @@ private:
    TGHorizontalFrame *fCurrentEventFrame{nullptr};
    TGLabel *fCurrentEventLabel{nullptr};
    TGNumberEntry *fCurrentEventEntry{nullptr};
+   TGTextButton *fRedrawButton{nullptr};
 
 public:
    AtSidebarEventControl(DataHandling::AtTreeEntry &entryNum, const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1,
@@ -81,10 +89,11 @@ public:
    ~AtSidebarEventControl();
 
    void Update(DataHandling::Subject *changedSubject) override;
-
-   void SelectEvent();
-
    void FillFrame() override;
+
+   /// @brief Callback for when entry in fCurrentEventLabel is changed or we redraw.
+   void SelectEvent();
+   void RedrawEvent();
 };
 
 class AtSidebarBranchControl : public AtVerticalSidebarFrame, public DataHandling::Observer {

@@ -21,6 +21,7 @@ public:
    /// Actually generate content of the frames once Init has run
    void FillFrames();
    void AddSidebarFrame(AtSidebarFrame *frame);
+   void UsePictureButtons(bool val);
 };
 
 #endif

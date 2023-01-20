@@ -49,8 +49,8 @@ void AtSidebarEventControl::Update(DataHandling::Subject *changedSubject)
 
 void AtSidebarEventControl::SelectEvent()
 {
-   fEntryNumber.Set(fCurrentEventEntry->GetIntNumber());
-   // AtViewerManager::Instance()->GotoEvent(fCurrentEventEntry->GetIntNumber());
+   AtViewerManager::Instance()->GotoEvent(fCurrentEventEntry->GetIntNumber());
+   // fEntryNumber.Set(fCurrentEventEntry->GetIntNumber());
 }
 
 void AtSidebarEventControl::FillFrame()
@@ -67,20 +67,32 @@ void AtSidebarEventControl::FillFrame()
    fCurrentEventFrame->AddFrame(fCurrentEventLabel, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
    fCurrentEventFrame->AddFrame(fCurrentEventEntry);
 
+   fRedrawButton = new TGTextButton(fCurrentEventFrame, "Rerun Event");
+   fRedrawButton->Connect("Clicked()", "AtSidebarEventControl", this, "SelectEvent()");
+   fCurrentEventFrame->AddFrame(fRedrawButton, new TGLayoutHints(kLHintsCenterX | kLHintsCenterY, 1, 1, 1, 1));
+
    fButtonFrame = new TGHorizontalFrame(this); // Navigation button frame
    {
       TString icondir(Form("%s/icons/", gSystem->Getenv("VMCWORKDIR")));
 
-      auto b = new TGPictureButton(fButtonFrame, gClient->GetPicture(icondir + "arrow_left.gif"));
+      TGButton *b = nullptr;
+      if (kUsePictureButtons)
+         b = new TGPictureButton(fButtonFrame, gClient->GetPicture(icondir + "arrow_left.gif"));
+      else
+         b = new TGTextButton(fButtonFrame, "Prev");
+
       fButtonFrame->AddFrame(b);
       b->Connect("Clicked()", "AtViewerManager", AtViewerManager::Instance(), "PrevEvent()");
 
-      b = new TGPictureButton(fButtonFrame, gClient->GetPicture(icondir + "arrow_right.gif"));
+      if (kUsePictureButtons)
+         b = new TGPictureButton(fButtonFrame, gClient->GetPicture(icondir + "arrow_right.gif"));
+      else
+         b = new TGTextButton(fButtonFrame, "Next");
       fButtonFrame->AddFrame(b);
       b->Connect("Clicked()", "AtViewerManager", AtViewerManager::Instance(), "NextEvent()");
    }
 
-   this->AddFrame(fCurrentEventFrame);
+   this->AddFrame(fCurrentEventFrame, new TGLayoutHints(kLHintsExpandX));
    this->AddFrame(fButtonFrame);
 }
 

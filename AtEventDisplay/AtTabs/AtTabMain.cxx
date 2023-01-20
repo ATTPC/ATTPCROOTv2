@@ -187,7 +187,7 @@ void AtTabMain::UpdatePatternEventElements()
 
    auto fPatternEvent = GetFairRootInfo<AtPatternEvent>();
    if (fPatternEvent == nullptr) {
-      LOG(error) << "Cannot AtPatternEvent elements: no event availible";
+      LOG(debug) << "Cannot update AtPatternEvent elements: no event availible";
       return;
    }
 
@@ -220,7 +220,7 @@ void AtTabMain::UpdateEventElements()
 {
    auto fEvent = GetFairRootInfo<AtEvent>();
    if (fEvent == nullptr) {
-      LOG(error) << "Cannot update AtEvent elements: no event availible";
+      LOG(debug) << "Cannot update AtEvent elements: no event availible";
       return;
    }
 
@@ -234,7 +234,7 @@ void AtTabMain::UpdatePadPlane()
 {
    auto fEvent = GetFairRootInfo<AtEvent>();
    if (fEvent == nullptr) {
-      LOG(error) << "Cannot fill pad plane histogram: no event availible";
+      LOG(debug) << "Cannot fill pad plane histogram: no event availible";
       return;
    }
    auto &hits = fEvent->GetHits();

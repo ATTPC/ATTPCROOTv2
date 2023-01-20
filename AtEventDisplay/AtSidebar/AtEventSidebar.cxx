@@ -9,6 +9,10 @@ void AtEventSidebar::FillFrames()
 {
    for (auto frame : fFrames)
       frame->FillFrame();
+
+   MapSubwindows();
+   Resize();
+   MapWindow();
 }
 
 AtEventSidebar::AtEventSidebar(DataHandling::AtTreeEntry &entryNum, DataHandling::AtBranch &rawEvent,
@@ -34,4 +38,10 @@ void AtEventSidebar::AddSidebarFrame(AtSidebarFrame *frame)
 
    fFrames.push_back(frame);
    TGMainFrame::AddFrame(frame, new TGLayoutHints(kLHintsExpandX));
+}
+
+void AtEventSidebar::UsePictureButtons(bool val)
+{
+   for (auto frame : fFrames)
+      frame->UsePictureButtons(val);
 }

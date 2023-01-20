@@ -80,31 +80,20 @@ public:
 
    Int_t GetCurrentEvent() { return fEntry.Get(); }
 
-   /*
-    * Functions used for event control
-    * "*MENU*" adds these function to the right click menue in the eve viewer
-    */
-
    /**
     * Main function for navigating to an event. Everything that changes event number should end up
     * here
     */
-   virtual void GotoEvent(Int_t event);              ///< *MENU*
-   void NextEvent() { GotoEvent(fEntry.Get() + 1); } ///< *MENU*
-   void PrevEvent() { GotoEvent(fEntry.Get() - 1); } ///< *MENU*
-   void RedrawEvent();                               ///< *MENU*
+   virtual void GotoEvent(Int_t event);
+   void NextEvent() { GotoEvent(fEntry.Get() + 1); }
+   void PrevEvent() { GotoEvent(fEntry.Get() - 1); }
 
    static void SelectPad();
 
 private:
    void DrawPad(Int_t padNum);
-   void RegisterDataHandles();
 
-   /*** Functions used by sidebar - Branch control ***/
-   void SelectEventBranch(int, int);
    void GenerateBranchLists();
-
-   void make_gui();
 
    ClassDef(AtViewerManager, 1);
 };
