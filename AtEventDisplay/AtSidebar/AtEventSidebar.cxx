@@ -26,6 +26,7 @@ AtEventSidebar::AtEventSidebar(DataHandling::AtTreeEntry &entryNum, DataHandling
    auto runInfo = new AtSidebarRunInfo(this);
    auto runControl = new AtSidebarEventControl(entryNum, this);
    auto branchControl = new AtSidebarBranchControl(rawEvent, event, patternEvent, this);
+
    AddSidebarFrame(runInfo);
    AddSidebarFrame(runControl);
    AddSidebarFrame(branchControl);
@@ -34,10 +35,12 @@ AtEventSidebar::AtEventSidebar(DataHandling::AtTreeEntry &entryNum, DataHandling
 void AtEventSidebar::AddSidebarFrame(AtSidebarFrame *frame)
 {
    if (frame->GetParent() != this)
-      LOG(fatal) << "Cannot pass a sidebar frame whose parent isn't the sidebar";
+      LOG(fatal) << "Cannot pass a sidebar frame whose parent (" << frame->GetParent() << ") isn't the sidebar ("
+                 << this << ")";
 
    fFrames.push_back(frame);
    TGMainFrame::AddFrame(frame, new TGLayoutHints(kLHintsExpandX));
+   frame->Layout();
 }
 
 void AtEventSidebar::UsePictureButtons(bool val)

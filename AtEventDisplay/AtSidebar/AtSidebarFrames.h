@@ -9,6 +9,8 @@
 #include <TGLabel.h>
 #include <TGNumberEntry.h>
 
+class TGTableLayout;
+
 /**
  * Base class something that can be added to the sidebar. It is a frame that will be added to the
  * sidebar in the order in which they are added to the AtEventSidebar.
@@ -71,6 +73,9 @@ public:
    }
 
    void FillFrame() override;
+
+private:
+   TString GetFileName(TString filePath);
 };
 
 class AtSidebarEventControl : public AtVerticalSidebarFrame, public DataHandling::Observer {
@@ -98,6 +103,8 @@ public:
 
 class AtSidebarBranchControl : public AtVerticalSidebarFrame, public DataHandling::Observer {
 private:
+   TGVerticalFrame *fLabels;
+   TGVerticalFrame *fBoxes;
    std::map<TString, DataHandling::AtBranch &> fBranches;
    std::map<TString, TGComboBox *> fBranchBoxes;
    // std::vector<TGComboBox *> fBranchBoxes;

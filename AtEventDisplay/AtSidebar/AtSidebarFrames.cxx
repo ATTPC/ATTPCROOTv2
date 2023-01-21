@@ -1,21 +1,41 @@
 #include "AtSidebarFrames.h"
 
+#include "AtViewerManager.h"
+
 #include <FairRootManager.h>
 #include <FairRunAna.h>
 
 #include <TFile.h>
 #include <TGButton.h>
-
-#include <AtViewerManager.h>
+#include <TGTableLayout.h>
 
 #include <iostream>
+TString AtSidebarRunInfo::GetFileName(TString filePath)
+{
+   TString tok;
+   Ssiz_t loc = 0;
+   TString name;
+   while (filePath.Tokenize(tok, loc, "/")) {
+      name = tok;
+      continue;
+   }
 
+   return name;
+}
 void AtSidebarRunInfo::FillFrame()
 {
    TString Infile = "Input file : ";
    TFile *file = FairRootManager::Instance()->GetInChain()->GetFile();
-   Infile += file->GetName();
-   fRunFile = new TGLabel(this, Infile.Data());
+
+   fRunFile = new TGLabel(this, (Infile + file->GetName()).Data());
+
+   // If the file path is too long to fit in the sidebar, just grab the file name
+   if (fRunFile->GetWidth() > this->GetWidth()) {
+      delete fRunFile;
+      TString fileName = GetFileName(file->GetName());
+      fRunFile = new TGLabel(this, (Infile + fileName).Data());
+   }
+
    this->AddFrame(fRunFile);
 
    UInt_t RunId = FairRunAna::Instance()->getRunId();
@@ -101,12 +121,53 @@ AtSidebarBranchControl::AtSidebarBranchControl(DataHandling::AtBranch &rawEvent,
                                                UInt_t h, UInt_t options, Pixel_t back)
    : AtVerticalSidebarFrame(p, w, h, options, back)
 {
+
    fBranches.insert({"AtRawEvent", rawEvent});
    fBranches.insert({"AtEvent", event});
    fBranches.insert({"AtPatternEvent", patternEvent});
 
    for (auto &[className, branch] : fBranches)
       branch.Attach(this);
+}
+
+void AtSidebarBranchControl::FillFrame()
+{
+   this->AddFrame(new TGLabel(this, "Selected Branches"), new TGLayoutHints(kLHintsCenterX));
+   TGHorizontalFrame *frame = new TGHorizontalFrame(this);
+
+   fLabels = new TGVerticalFrame(frame);
+   fBoxes = new TGVerticalFrame(frame);
+
+   FillBranchFrame("Raw Event: ", "AtRawEvent");
+   FillBranchFrame("Event: ", "AtEvent");
+   FillBranchFrame("Pattern Event: ", "AtPatternEvent");
+
+   this->AddFrame(frame, new TGLayoutHints(kLHintsExpandX));
+   frame->AddFrame(fLabels);
+   frame->AddFrame(fBoxes, new TGLayoutHints(kLHintsExpandX));
+}
+
+/**
+ *
+ * Creates a frame with a dropdown with every branch that matches the type className. When a newly
+ * thing is selected it calls the callback SelectedClassName(Int_t)
+ */
+void AtSidebarBranchControl::FillBranchFrame(std::string label, std::string className)
+{
+
+   auto labelf = new TGLabel(fLabels, label.data());
+   fLabels->AddFrame(labelf, new TGLayoutHints(kLHintsRight));
+
+   auto &branchNames = AtViewerManager::Instance()->GetBranchNames().at(className);
+   fBranchBoxes[className] = new TGComboBox(fBoxes);
+   for (int i = 0; i < branchNames.size(); ++i)
+      fBranchBoxes[className]->AddEntry(branchNames[i], i);
+   fBranchBoxes[className]->Connect("Selected(Int_t)", "AtSidebarBranchControl", this,
+                                    TString::Format("Selected%s(Int_t)", className.data()));
+   fBranchBoxes[className]->Select(0);
+
+   fBranchBoxes[className]->SetHeight(labelf->GetHeight());
+   fBoxes->AddFrame(fBranchBoxes[className], new TGLayoutHints(kLHintsExpandX));
 }
 
 AtSidebarBranchControl::~AtSidebarBranchControl()
@@ -157,34 +218,3 @@ void AtSidebarBranchControl::Update(DataHandling::Subject *changedSubject)
          fBranchBoxes[name]->Select(GetIndex(branch.GetBranchName(), branchNames.at(name)));
 }
 
-/**
- *
- * Creates a frame with a dropdown with every branch that matches the type className. When a newly
- * thing is selected it calls the callback SelectedClassName(Int_t)
- */
-void AtSidebarBranchControl::FillBranchFrame(std::string label, std::string className)
-{
-   auto frame = new TGHorizontalFrame(this);
-   frame->AddFrame(new TGLabel(frame, label.data()));
-
-   auto &branchNames = AtViewerManager::Instance()->GetBranchNames().at(className);
-   fBranchBoxes[className] = new TGComboBox(frame);
-   for (int i = 0; i < branchNames.size(); ++i)
-      fBranchBoxes[className]->AddEntry(branchNames[i], i);
-   fBranchBoxes[className]->Connect("Selected(Int_t)", "AtSidebarBranchControl", this,
-                                    TString::Format("Selected%s(Int_t)", className.data()));
-   fBranchBoxes[className]->Select(0);
-
-   frame->AddFrame(fBranchBoxes[className], new TGLayoutHints(kLHintsExpandX | kLHintsCenterY | kLHintsExpandY));
-   this->AddFrame(frame, new TGLayoutHints(kLHintsExpandX));
-}
-
-void AtSidebarBranchControl::FillFrame()
-{
-   auto &branchNames = AtViewerManager::Instance()->GetBranchNames();
-   this->AddFrame(new TGLabel(this, "Selected Branches"), new TGLayoutHints(kLHintsCenterX));
-
-   FillBranchFrame("Raw Event: ", "AtRawEvent");
-   FillBranchFrame("Event: ", "AtEvent");
-   FillBranchFrame("Pattern Event: ", "AtPatternEvent");
-}
