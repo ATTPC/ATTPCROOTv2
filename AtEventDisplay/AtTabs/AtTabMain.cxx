@@ -103,8 +103,10 @@ Color_t AtTabMain::GetTrackColor(int i)
 
 void AtTabMain::DrawPad(Int_t PadNum)
 {
+   LOG(debug) << "Drawing main pad " << fTabNumber;
    DrawWave(PadNum);
    UpdateCvsPadWave();
+   LOG(debug) << "Done Drawing main pad " << fTabNumber;
 }
 
 void AtTabMain::DrawPadPlane()
@@ -298,38 +300,39 @@ void AtTabMain::SetPointsFromTrack(TEvePointSet &hitSet, const AtTrack &track)
    gEve->ElementChanged(&hitSet);
 }
 
-/// Resets histogram if PadNum is not in the current event
 bool AtTabMain::DrawWave(Int_t PadNum)
 {
-   fPadWave->Reset();
-
    auto fRawEvent = GetFairRootInfo<AtRawEvent>();
 
+   // std::cout << "checking fRawEvent" << std::endl;
    if (fRawEvent == nullptr) {
-      LOG(debug) << "fRawEvent is NULL!";
+      std::cout << "fRawEvent is NULL!" << std::endl;
       return false;
    }
-
+   // std::cout << "fRawEvent is not nullptr" << std::endl;
    AtPad *fPad = fRawEvent->GetPad(PadNum);
    if (fPad == nullptr) {
-      LOG(debug) << "Pad in event is null!";
+      LOG(error) << "Pad in event is null!";
       return false;
    } else
       LOG(debug) << "Drawing pad " << fPad->GetPadNum();
 
+   auto adc = fPad->GetADC();
+   fPadWave->Reset();
    for (Int_t i = 0; i < 512; i++) {
-      fPadWave->SetBinContent(i, fPad->GetADC()[i]);
+      fPadWave->SetBinContent(i, adc[i]);
    }
 
+   fCvsPadWave->cd();
+   fPadWave->Draw();
+   fCvsPadWave->Update();
    return true;
 }
 
 void AtTabMain::UpdateCvsPadPlane()
 {
-   fCvsPadWave->cd();
-   fPadWave->Draw();
-   fCvsPadWave->Modified();
-   fCvsPadWave->Update();
+   fCvsPadPlane->Modified();
+   fCvsPadPlane->Update();
 }
 
 void AtTabMain::UpdateCvsPadWave()

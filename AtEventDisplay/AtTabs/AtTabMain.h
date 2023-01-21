@@ -81,11 +81,10 @@ private:
    void DrawPadPlane();
    void DrawPadWave();
 
-   // Functions to update canvas to reflect underlying data
+   // Functions to update the data on the canvases
    void UpdateCvsPadPlane();
    void UpdateCvsPadWave();
 
-   /// Replace the contents of fPadWave with ADC values in PadNum
    bool DrawWave(Int_t PadNum);
 
    // Update hit sets
