@@ -168,7 +168,6 @@ void AtTabMain::DrawEvent()
    UpdatePadPlane();
    UpdateEventElements();
    UpdatePatternEventElements();
-   UpdateRenderState();
 
    gEve->Redraw3D(false);
    UpdateCvsPadPlane();
@@ -176,8 +175,8 @@ void AtTabMain::DrawEvent()
 
 void AtTabMain::UpdateRenderState()
 {
-   fEveEvent->SetRnrState(false);
-   fEvePatternEvent->SetRnrState(true);
+   fEveEvent->SetRnrState(true);
+   fEvePatternEvent->SetRnrState(false);
 }
 
 void AtTabMain::UpdatePatternEventElements()
@@ -402,4 +401,5 @@ void AtTabMain::MakeTab()
    TGLViewer *dfViewer = gEve->GetDefaultGLViewer(); // Is this doing anything?
    dfViewer->CurrentCamera().RotateRad(-.7, 0.5);
    dfViewer->DoDraw();
+   UpdateRenderState();
 }
