@@ -302,6 +302,7 @@ void AtTabMain::SetPointsFromTrack(TEvePointSet &hitSet, const AtTrack &track)
 
 bool AtTabMain::DrawWave(Int_t PadNum)
 {
+   fPadWave->Reset();
    auto fRawEvent = GetFairRootInfo<AtRawEvent>();
 
    // std::cout << "checking fRawEvent" << std::endl;
@@ -318,7 +319,7 @@ bool AtTabMain::DrawWave(Int_t PadNum)
       LOG(debug) << "Drawing pad " << fPad->GetPadNum();
 
    auto adc = fPad->GetADC();
-   fPadWave->Reset();
+
    for (Int_t i = 0; i < 512; i++) {
       fPadWave->SetBinContent(i, adc[i]);
    }

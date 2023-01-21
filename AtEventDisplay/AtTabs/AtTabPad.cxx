@@ -88,10 +88,6 @@ void AtTabPad::DrawPad(Int_t padNum)
    }
 
    auto fPad = fRawEvent->GetPad(padNum);
-   if (fPad == nullptr) {
-      std::cout << "Pad " << padNum << " does not exist in raw event for tab " << fTabNumber << "!" << std::endl;
-      return;
-   }
 
    fCvsPad->Clear("D");
    for (int i = 0; i < fCols * fRows; i++) {
@@ -111,6 +107,14 @@ void AtTabPad::DrawPosition(Int_t pos, AtPad *fPad)
    if (it == fDrawMap.end()) {
       return;
    } else {
+      auto padHist = it->second.second;
+      padHist->Reset();
+
+      if (fPad == nullptr) {
+         std::cout << "Pad does not exist in raw event for tab " << fTabNumber << "!" << std::endl;
+         return;
+      }
+
       switch (it->second.first) {
       case PadDrawType::kADC: array = fPad->GetADC(); break;
 
@@ -133,8 +137,6 @@ void AtTabPad::DrawPosition(Int_t pos, AtPad *fPad)
 
       default: return;
       }
-      auto padHist = it->second.second;
-      padHist->Reset();
       for (int i = 0; i < 512; i++) {
          padHist->SetBinContent(i + 1, array[i]);
          padHist->Draw();
