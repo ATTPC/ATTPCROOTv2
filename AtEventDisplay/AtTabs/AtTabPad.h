@@ -51,7 +51,7 @@ public:
    AtTabPad() : AtTabBase() {}
    void InitTab() override;
    void UpdateTab() override;
-   void Reset() override;
+
    void MakeTab() override;
    void SetDrawADC(Int_t pos);
    void SetDrawRawADC(Int_t pos);

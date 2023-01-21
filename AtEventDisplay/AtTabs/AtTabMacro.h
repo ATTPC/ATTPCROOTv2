@@ -50,7 +50,6 @@ public:
    AtTabMacro();
    void InitTab() override;
    void UpdateTab() override{};
-   void Reset() override;
    void MakeTab() override;
 
    void SetInputTree(TString fileName, TString treeName);

@@ -77,8 +77,7 @@ public:
    DataHandling::AtBranch &GetRawEventName() { return fRawEventBranch; }
    DataHandling::AtBranch &GetEventName() { return fEventBranch; }
    DataHandling::AtBranch &GetPatternEventName() { return fPatternEventBranch; }
-
-   Int_t GetCurrentEvent() { return fEntry.Get(); }
+   DataHandling::AtTreeEntry &GetCurrentEntry() { return fEntry; }
 
    /**
     * Main function for navigating to an event. Everything that changes event number should end up

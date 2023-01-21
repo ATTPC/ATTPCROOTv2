@@ -107,12 +107,6 @@ void AtTabMain::DrawPad(Int_t PadNum)
    LOG(debug) << "Done Drawing main pad " << fTabNumber;
 }
 
-void AtTabMain::Reset()
-{
-   if (fPadPlane != nullptr)
-      fPadPlane->Reset(nullptr);
-}
-
 void AtTabMain::DrawPadPlane()
 {
    if (fPadPlane) {
@@ -231,6 +225,8 @@ void AtTabMain::UpdateEventElements()
 
 void AtTabMain::UpdatePadPlane()
 {
+   fPadPlane->Reset(nullptr);
+
    auto fEvent = GetFairRootInfo<AtEvent>();
    if (fEvent == nullptr) {
       LOG(debug) << "Cannot fill pad plane histogram: no event availible";

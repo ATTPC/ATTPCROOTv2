@@ -103,11 +103,6 @@ void AtTabPad::DrawPad(Int_t padNum)
    UpdateCvsPad();
 }
 
-void AtTabPad::Reset()
-{
-   // fRawEvent = nullptr;
-}
-
 void AtTabPad::DrawPosition(Int_t pos, AtPad *fPad)
 {
    LOG(debug) << "Drawing position in AtTabPad";

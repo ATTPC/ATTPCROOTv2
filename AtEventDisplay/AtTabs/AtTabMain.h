@@ -37,9 +37,6 @@ private:
    using TEvePointSetPtr = std::unique_ptr<TEvePointSet>;
    using TEveEventManagerPtr = std::unique_ptr<TEveEventManager>;
 
-public:
-   enum class DrawType { kEvent, kClusterEvent, kPatternEvent };
-
 protected:
    TEveEventManagerPtr fEveEvent{std::make_unique<TEveEventManager>("AtEvent")};
    TEvePointSetPtr fHitSet{std::make_unique<TEvePointSet>("Hits")}; //< AtEvent Hit Set
@@ -49,10 +46,8 @@ protected:
    std::vector<TEvePointSetPtr> fPatternHitSets;
    std::vector<TEveElement> fPatterns;
 
-   // Information for drawing 3D events
    Int_t fThreshold{0};                  //< Min charge to draw hit
    Int_t fMaxHitMulti{10};               //< Max hits in a pad for hit to be drawn
-   DrawType fDrawType{DrawType::kEvent}; //< Type of event to draw
 
    TAttMarker fHitAttr{kPink, 1, kFullDotMedium};
 
@@ -65,14 +60,13 @@ public:
    AtTabMain() = default;
    void InitTab() override;
    void UpdateTab() override {}
-   void Reset() override;
+
    void MakeTab() override;
 
    void DrawEvent() override;
    void DrawPad(Int_t PadNum) override;
    void DumpEvent(std::string file);
 
-   void SetDrawType(DrawType type) { fDrawType = type; }
    void SetThreshold(Int_t val) { fThreshold = val; }
    void SetHitAttributes(TAttMarker attr) { fHitAttr = std::move(attr); }
    void SetMultiHit(Int_t hitMax) { fMaxHitMulti = hitMax; }

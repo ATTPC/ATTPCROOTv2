@@ -29,14 +29,11 @@ protected:
 
 public:
    void AddTab(std::unique_ptr<AtTabBase> tab);
-   void AddDataSourceToTabs(DataHandling::Subject *subject);
 
    InitStatus Init() override;
    void Exec(Option_t *option) override;
    void DrawTabPads(Int_t PadNum);
 
-private:
-   void Reset();
    ClassDefOverride(AtTabTask, 1);
 };
 

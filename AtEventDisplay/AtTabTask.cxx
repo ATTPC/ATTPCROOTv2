@@ -38,18 +38,10 @@ InitStatus AtTabTask::Init()
 
 void AtTabTask::Exec(Option_t *option)
 {
-   Reset();
    LOG(debug) << "Executing all tabs" << std::endl;
    for (auto &fTab : fTabs) {
       fTab->Update();
       fTab->DrawEvent();
-   }
-}
-
-void AtTabTask::Reset()
-{
-   for (auto &fTab : fTabs) {
-      fTab->Reset();
    }
 }
 
@@ -61,10 +53,3 @@ void AtTabTask::DrawTabPads(Int_t PadNum)
    }
 }
 
-void AtTabTask::AddDataSourceToTabs(DataHandling::Subject *subject)
-{
-   /*
-   for (auto &tab : fTabs)
-      subject->Attach(tab->GetTabInfo());
-   */
-}

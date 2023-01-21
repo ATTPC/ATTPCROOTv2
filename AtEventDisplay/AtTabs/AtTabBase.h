@@ -35,9 +35,7 @@ public:
     */
    virtual void MakeTab() = 0;
 
-   /// Called at the start of each Exec() so whenever the event changes
-   virtual void Reset() = 0;
-   /// Called after Reset() in each Exec()
+   /// Called in each Exec()
    void Update();
    /// Called at the end of each Exec()
    virtual void DrawEvent() = 0;

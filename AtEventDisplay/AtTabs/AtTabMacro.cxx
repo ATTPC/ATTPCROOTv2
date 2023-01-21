@@ -123,11 +123,6 @@ void AtTabMacro::DrawPad(Int_t padNum)
    }
 }
 
-void AtTabMacro::Reset()
-{
-   // fCvsMacro->Clear();
-}
-
 void AtTabMacro::SetInputTree(TString fileName, TString treeName)
 {
    if (fTree != nullptr) {
