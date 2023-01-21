@@ -42,9 +42,6 @@ protected:
 
    TString fTabName{"AtPad"};
 
-   TString fEventBranch{"AtEventH"};
-   TString fRawEventBranch{"AtRawEvent"};
-
    TEveRGBAPalette *fRGBAPalette{nullptr};
 
 public:
@@ -63,9 +60,6 @@ public:
 
    void DrawEvent() override{};
    void DrawPad(Int_t padNum) override;
-
-   void SetEventBranch(TString name) { fEventBranch = name; }
-   void SetRawEventBranch(TString name) { fRawEventBranch = name; }
 
 private:
    void SetDraw(Int_t pos, PadDrawType type);

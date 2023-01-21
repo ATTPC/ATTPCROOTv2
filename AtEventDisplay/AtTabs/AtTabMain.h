@@ -59,8 +59,7 @@ protected:
 public:
    AtTabMain() = default;
    void InitTab() override;
-   void UpdateTab() override {}
-
+   void UpdateTab() override;
    void MakeTab() override;
 
    void DrawEvent() override;

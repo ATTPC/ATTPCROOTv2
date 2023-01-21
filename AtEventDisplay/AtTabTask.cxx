@@ -17,7 +17,6 @@ ClassImp(AtTabTask);
 
 void AtTabTask::AddTab(std::unique_ptr<AtTabBase> tab)
 {
-   tab->SetTabNumber(fTabs.size());
    fTabs.push_back(std::move(tab));
 }
 

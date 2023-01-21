@@ -117,7 +117,6 @@ void AtTabMain::DrawPadPlane()
    AtViewerManager::Instance()->GetMap()->GeneratePadPlane();
    fPadPlane = AtViewerManager::Instance()->GetMap()->GetPadPlane();
    fCvsPadPlane->cd();
-   // fPadPlane -> Draw("COLZ L0"); //0  == bin lines adre not drawn
    fPadPlane->Draw("COL L0");
    fPadPlane->SetMinimum(1.0);
    gStyle->SetOptStat(0);
@@ -223,9 +222,16 @@ void AtTabMain::UpdateEventElements()
    SetPointsFromHits(*fHitSet, hits);
 }
 
+void AtTabMain::UpdateTab()
+{
+   if (fPadPlane)
+      fPadPlane->Reset(nullptr);
+}
+
 void AtTabMain::UpdatePadPlane()
 {
-   fPadPlane->Reset(nullptr);
+
+   LOG(info) << "Updating pad plane ";
 
    auto fEvent = GetFairRootInfo<AtEvent>();
    if (fEvent == nullptr) {
@@ -328,6 +334,8 @@ void AtTabMain::UpdateCvsPadPlane()
 
 void AtTabMain::UpdateCvsPadWave()
 {
+   fCvsPadPlane->cd();
+
    fCvsPadWave->Modified();
    fCvsPadWave->Update();
 }

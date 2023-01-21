@@ -19,12 +19,13 @@ class TClass;
  */
 class AtTabBase {
 protected:
+   static int fNumTabs;
    Int_t fTabNumber{0};
 
    std::unique_ptr<AtTabInfo> fTabInfo{std::make_unique<AtTabInfo>()};
 
 public:
-   AtTabBase() = default;
+   AtTabBase();
    virtual ~AtTabBase() = default;
 
    /// Called in the init stage of the run.
@@ -44,7 +45,6 @@ public:
 
    // Update tab with newly selected pad
    virtual void DrawPad(Int_t padNum) = 0;
-   void SetTabNumber(Int_t tabNum) { fTabNumber = tabNum; }
 
 protected:
    /// Responsible for creating the fTabInfo object that will be updated on each event.

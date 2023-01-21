@@ -3,7 +3,12 @@
 #include "AtTabInfo.h"
 
 ClassImp(AtTabBase);
+int AtTabBase::fNumTabs = 0;
 
+AtTabBase::AtTabBase() : fTabNumber(fNumTabs)
+{
+   fNumTabs++;
+}
 /// Init both the tab (InitTab()) and then init the AtTabInfo class
 void AtTabBase::Init()
 {
