@@ -71,6 +71,12 @@ public:
    void SetHitAttributes(TAttMarker attr) { fHitAttr = std::move(attr); }
    void SetMultiHit(Int_t hitMax) { fMaxHitMulti = hitMax; }
 
+   /**
+    * This function is responsible for selecting the pad we are currently examining and passing
+    * that onto AtViewerManager.
+    */
+   static void SelectPad();
+
 private:
    // Functions to draw the initial canvases
    void DrawPadPlane();

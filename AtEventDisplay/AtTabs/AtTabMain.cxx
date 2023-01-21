@@ -33,7 +33,9 @@
 #include <TRootEmbeddedCanvas.h>
 #include <TSeqCollection.h> // for TSeqCollection
 #include <TStyle.h>
+#include <TVirtualPad.h>
 #include <TVirtualPad.h> // for TVirtualPad, gPad
+#include <TVirtualX.h>
 
 #include <array>              // for array
 #include <cstdio>             // for sprintf
@@ -369,7 +371,7 @@ void AtTabMain::MakeTab()
    frame->SetElementName("AtTPC Pad Plane");
    pack->GetEveFrame()->SetShowTitleBar(kFALSE);
    fCvsPadPlane = ecvs->GetCanvas();
-   fCvsPadPlane->AddExec("ex", "AtViewerManager::SelectPad()");
+   fCvsPadPlane->AddExec("ex", "AtTabMain::SelectPad()");
 
    fCvsPadWave->SetName(TString::Format("fCvsPadWave_DT%i", fTabNumber));
    DrawPadWave();
@@ -398,4 +400,48 @@ void AtTabMain::MakeTab()
    dfViewer->CurrentCamera().RotateRad(-.7, 0.5);
    dfViewer->DoDraw();
    UpdateRenderState();
+}
+
+void AtTabMain::SelectPad()
+{
+
+   // Return earlyt if this was not triggered by a left mouse click.
+   if (gPad->GetEvent() != 11)
+      return;
+   auto *h = dynamic_cast<TH2Poly *>(gPad->GetSelected());
+   if (!h)
+      return;
+
+   gPad->GetCanvas()->FeedbackMode(true);
+
+   int pyold = gPad->GetUniqueID();
+   int px = gPad->GetEventX();
+   int py = gPad->GetEventY();
+   float uxmin = gPad->GetUxmin();
+   float uxmax = gPad->GetUxmax();
+   int pxmin = gPad->XtoAbsPixel(uxmin);
+   int pxmax = gPad->XtoAbsPixel(uxmax);
+   if (pyold)
+      gVirtualX->DrawLine(pxmin, pyold, pxmax, pyold);
+   gVirtualX->DrawLine(pxmin, py, pxmax, py);
+   gPad->SetUniqueID(py);
+   Float_t upx = gPad->AbsPixeltoX(px);
+   Float_t upy = gPad->AbsPixeltoY(py);
+   Double_t x = gPad->PadtoX(upx);
+   Double_t y = gPad->PadtoY(upy);
+   Int_t bin = h->FindBin(x, y);
+   const char *bin_name = h->GetBinName(bin);
+   std::cout << " ==========================" << std::endl;
+   std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
+
+   AtMap *tmap = AtViewerManager::Instance()->GetMap();
+   if (tmap == nullptr) {
+      LOG(fatal) << "AtMap not set! Pass a valid map to the constructor of AtViewerManager!";
+   } else {
+      Int_t tPadNum = tmap->BinToPad(bin);
+      std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
+      std::cout << " Electronic mapping: " << tmap->GetPadRef(tPadNum) << std::endl;
+      std::cout << " Raw Event Pad Num " << tPadNum << std::endl;
+      AtViewerManager::Instance()->DrawPad(tPadNum);
+   }
 }

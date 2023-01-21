@@ -153,55 +153,11 @@ void AtViewerManager::GenerateBranchLists()
 void AtViewerManager::GotoEvent(Int_t event)
 {
    fEntry.Set(event);
-   LOG(info) << cWHITERED << " Event number : " << fEntry.Get() << cNORMAL;
    FairRunAna::Instance()->Run((Long64_t)event);
    DrawPad(fPadNum);
 }
 
 // Runs on any interaction with pad plane
-void AtViewerManager::SelectPad()
-{
-   int event = gPad->GetEvent();
-
-   if (event != 11) // Only continue if this was a left mouse click (rather than anything else)
-      return;
-   auto *h = dynamic_cast<TH2Poly *>(gPad->GetSelected());
-   if (!h)
-      return;
-
-   gPad->GetCanvas()->FeedbackMode(true);
-
-   int pyold = gPad->GetUniqueID();
-   int px = gPad->GetEventX();
-   int py = gPad->GetEventY();
-   float uxmin = gPad->GetUxmin();
-   float uxmax = gPad->GetUxmax();
-   int pxmin = gPad->XtoAbsPixel(uxmin);
-   int pxmax = gPad->XtoAbsPixel(uxmax);
-   if (pyold)
-      gVirtualX->DrawLine(pxmin, pyold, pxmax, pyold);
-   gVirtualX->DrawLine(pxmin, py, pxmax, py);
-   gPad->SetUniqueID(py);
-   Float_t upx = gPad->AbsPixeltoX(px);
-   Float_t upy = gPad->AbsPixeltoY(py);
-   Double_t x = gPad->PadtoX(upx);
-   Double_t y = gPad->PadtoY(upy);
-   Int_t bin = h->FindBin(x, y);
-   const char *bin_name = h->GetBinName(bin);
-   std::cout << " ==========================" << std::endl;
-   std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
-
-   AtMap *tmap = AtViewerManager::Instance()->GetMap();
-   if (tmap == nullptr) {
-      LOG(fatal) << "AtMap not set! Pass a valid map to the constructor of AtViewerManager!";
-   } else {
-      Int_t tPadNum = tmap->BinToPad(bin);
-      std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
-      std::cout << " Electronic mapping: " << tmap->GetPadRef(tPadNum) << std::endl;
-      std::cout << " Raw Event Pad Num " << tPadNum << std::endl;
-      AtViewerManager::Instance()->DrawPad(tPadNum);
-   }
-}
 
 void AtViewerManager::DrawPad(Int_t padNum)
 {

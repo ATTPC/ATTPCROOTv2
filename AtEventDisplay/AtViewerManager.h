@@ -87,11 +87,9 @@ public:
    void NextEvent() { GotoEvent(fEntry.Get() + 1); }
    void PrevEvent() { GotoEvent(fEntry.Get() - 1); }
 
-   static void SelectPad();
-
-private:
    void DrawPad(Int_t padNum);
 
+private:
    void GenerateBranchLists();
 
    ClassDef(AtViewerManager, 1);
