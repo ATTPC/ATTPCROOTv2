@@ -40,5 +40,30 @@ public:
    void Notify();
 };
 
+/**
+ * @brief Subject for any simple type.
+ *
+ * Assumes `==` and copy asignment operator do something reasonable.
+ *
+ * @ingroup DataHandling
+ */
+
+template <typename T>
+class Simple : public Subject {
+protected:
+   T fData;
+
+public:
+   Simple(T data) { fData = data; } // Must use assigment operator for primitive types.
+   T Get() const { return fData; }
+   void Set(T data)
+   {
+      if (fData == data)
+         return;
+      fData = data;
+      Notify();
+   }
+};
+
 } // namespace DataHandling
 #endif

@@ -5,14 +5,6 @@
 #include <TString.h>
 namespace DataHandling {
 
-void AtTreeEntry::Set(long eventNum)
-{
-   if (fEntry == eventNum)
-      return;
-   fEntry = eventNum;
-   Notify();
-}
-
 void AtBranch::SetBranchName(const TString &name)
 {
    SetBranchId(FairRootManager::Instance()->GetBranchId(name));

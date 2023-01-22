@@ -12,18 +12,7 @@ namespace DataHandling {
  *
  * @ingroup DataHandling
  */
-class AtTreeEntry : public Subject {
-private:
-   long fEntry;
-
-public:
-   AtTreeEntry(long entry) : fEntry(entry) {}
-
-   long Get() const { return fEntry; }
-
-   /// Will notify on change
-   void Set(long entry);
-};
+using AtTreeEntry = Simple<long>;
 
 /**
  * @brief Subject for the branch in the FairRoot tree.
