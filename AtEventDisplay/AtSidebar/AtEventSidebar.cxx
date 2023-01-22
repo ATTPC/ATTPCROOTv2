@@ -1,6 +1,7 @@
 #include "AtEventSidebar.h"
 
 #include "AtDataObserver.h"
+#include "AtViewerManager.h"
 
 #include <FairLogger.h>
 
@@ -24,7 +25,7 @@ AtEventSidebar::AtEventSidebar(DataHandling::AtTreeEntry &entryNum, DataHandling
 
    // Add frame components that are always there
    auto runInfo = new AtSidebarRunInfo(this);
-   auto runControl = new AtSidebarEventControl(entryNum, this);
+   auto runControl = new AtSidebarEventControl(entryNum, AtViewerManager::Instance()->GetPadNum(), this);
    auto branchControl = new AtSidebarBranchControl(rawEvent, event, patternEvent, this);
 
    AddSidebarFrame(runInfo);

@@ -77,16 +77,37 @@ public:
 private:
    TString GetFileName(TString filePath);
 };
+class AtSidebarPadControl : public AtVerticalSidebarFrame, public DataHandling::Observer {
+   DataHandling::AtPadNum &fPadNum;
 
-class AtSidebarEventControl : public AtVerticalSidebarFrame, public DataHandling::Observer {
+   TGHorizontalFrame *fCurrentPadFrame{nullptr};
+   TGLabel *fCurrentPadLabel{nullptr};
+   TGNumberEntry *fCurrentPadEntry{nullptr};
+   TGTextButton *fRedrawPadButton{nullptr};
+
+   TGLabel *fCurrentPadId{nullptr};
+   static constexpr char fPadRefString[] = "Pad Ref:[%d,%d,%d,%d]";
+   AtSidebarPadControl(DataHandling::AtPadNum &padNum, const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1,
+                       UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground());
+   ~AtSidebarPadControl();
+
+   void Update(DataHandling::Subject *changedSubject) override;
+   void FillFrame() override;
+
+   void SelectPad(); //< Pad TGNumberEntry/Button callback
+};
+
+class AtSidebarEventControl : public AtVerticalSidebarFrame,
+                              public DataHandling::Observer {
 private:
    DataHandling::AtTreeEntry &fEntryNumber;
 
-   TGHorizontalFrame *fButtonFrame{nullptr};
    TGHorizontalFrame *fCurrentEventFrame{nullptr};
    TGLabel *fCurrentEventLabel{nullptr};
    TGNumberEntry *fCurrentEventEntry{nullptr};
-   TGTextButton *fRedrawButton{nullptr};
+   TGTextButton *fRerunButton{nullptr};
+
+   TGHorizontalFrame *fButtonFrame{nullptr};
 
 public:
    AtSidebarEventControl(DataHandling::AtTreeEntry &entryNum, const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1,
@@ -96,9 +117,8 @@ public:
    void Update(DataHandling::Subject *changedSubject) override;
    void FillFrame() override;
 
-   /// @brief Callback for when entry in fCurrentEventLabel is changed or we redraw.
-   void SelectEvent();
-   void RedrawEvent();
+   void SelectEvent(); //< Event TGNumberEntry callback
+   void RedrawEvent(); //< Event TGNumberEntry callback
 };
 
 class AtSidebarBranchControl : public AtVerticalSidebarFrame, public DataHandling::Observer {

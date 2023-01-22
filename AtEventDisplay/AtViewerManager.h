@@ -42,11 +42,11 @@ private:
    using TabVec = std::vector<std::unique_ptr<AtTabBase>>;
 
    /** Data subjects we own and send around on update **/
-   DataHandling::AtTreeEntry fEntry{0};
-   DataHandling::AtBranch fRawEventBranch{};
-   DataHandling::AtBranch fEventBranch{};
-   DataHandling::AtBranch fPatternEventBranch{};
-   DataHandling::AtPadNum fPadNum{-1};
+   DataHandling::AtTreeEntry fEntry{0};          //< Observing
+   DataHandling::AtBranch fRawEventBranch{};     //< Not observing
+   DataHandling::AtBranch fEventBranch{};        //< Not observing
+   DataHandling::AtBranch fPatternEventBranch{}; //< Not observing
+   DataHandling::AtPadNum fPadNum{-1};           //< Not Observing
 
    AtEventSidebar *fSidebar;
 
@@ -81,7 +81,7 @@ public:
     * Main function for navigating to an event. Everything that changes event number should end up
     * here
     */
-   virtual void GotoEvent(Int_t event);
+   virtual void GotoEvent(Int_t event) { fEntry.Set(event); }
    void NextEvent() { GotoEvent(fEntry.Get() + 1); }
    void PrevEvent() { GotoEvent(fEntry.Get() - 1); }
 
@@ -89,6 +89,7 @@ public:
 
 private:
    void GenerateBranchLists();
+   void GotoEventImpl();
 
    ClassDef(AtViewerManager, 1);
 };

@@ -81,15 +81,13 @@ AtViewerManager::AtViewerManager(std::shared_ptr<AtMap> map) : fMap(map)
 
    browser->StopEmbedding();
    browser->SetTabTitle("Control", 0);
+   fEntry.Attach(this);
 }
 
 AtViewerManager::~AtViewerManager()
 {
    fInstance = nullptr;
    fEntry.Detach(this);
-   fRawEventBranch.Detach(this);
-   fEventBranch.Detach(this);
-   fPatternEventBranch.Detach(this);
 }
 
 void AtViewerManager::AddTask(FairTask *task)
@@ -143,10 +141,9 @@ void AtViewerManager::GenerateBranchLists()
    }
 }
 
-void AtViewerManager::GotoEvent(Int_t event)
+void AtViewerManager::GotoEventImpl()
 {
-   fEntry.Set(event);
-   FairRunAna::Instance()->Run((Long64_t)event);
+   FairRunAna::Instance()->Run((Long64_t)fEntry.Get());
    for (auto &tab : fTabs)
       tab->Exec();
 
@@ -155,6 +152,8 @@ void AtViewerManager::GotoEvent(Int_t event)
 
 void AtViewerManager::Update(DataHandling::Subject *subject)
 {
-   if (subject == &fEntry)
-      GotoEvent(fEntry.Get());
+   if (subject == &fEntry) {
+      std::cout << "Get event change" << std::endl;
+      GotoEventImpl();
+   }
 }

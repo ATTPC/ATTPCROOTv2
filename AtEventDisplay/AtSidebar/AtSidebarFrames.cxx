@@ -1,5 +1,6 @@
 #include "AtSidebarFrames.h"
 
+#include "AtMap.h"
 #include "AtViewerManager.h"
 
 #include <FairRootManager.h>
@@ -49,6 +50,52 @@ void AtSidebarRunInfo::FillFrame()
    fRunLength = new TGLabel(this, nevent.Data());
    this->AddFrame(fRunLength);
 }
+AtSidebarPadControl::AtSidebarPadControl(DataHandling::AtPadNum &entryNum, const TGWindow *p, UInt_t w, UInt_t h,
+                                         UInt_t options, Pixel_t back)
+   : AtVerticalSidebarFrame(p, w, h, options, back), fPadNum(entryNum)
+{
+   fPadNum.Attach(this);
+}
+AtSidebarPadControl::~AtSidebarPadControl()
+{
+   fPadNum.Detach(this);
+}
+
+void AtSidebarPadControl::FillFrame()
+{
+   /**** Pad Selection *****/
+   fCurrentPadFrame = new TGHorizontalFrame(this);
+   fCurrentPadLabel = new TGLabel(fCurrentPadFrame, "Current Pad: ");
+
+   fCurrentPadEntry = new TGNumberEntry(fCurrentPadFrame, 0., 6, -1, TGNumberFormat::kNESInteger,
+                                        TGNumberFormat::kNEANonNegative, TGNumberFormat::kNELLimitMinMax, 0,
+                                        FairRootManager::Instance()->GetInChain()->GetEntriesFast());
+
+   fCurrentPadEntry->Connect("ValueSet(Long_t)", "AtSidebarPadControl", this, "SelectPad()");
+
+   fCurrentPadFrame->AddFrame(fCurrentPadLabel, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
+   fCurrentPadFrame->AddFrame(fCurrentPadEntry);
+
+   fRedrawPadButton = new TGTextButton(fCurrentPadFrame, "Redraw Pad");
+   fRedrawPadButton->Connect("Clicked()", "AtSidebarPadControl", this, "SelectPad()");
+   fCurrentPadFrame->AddFrame(fRedrawPadButton, new TGLayoutHints(kLHintsCenterY, 1, 1, 1, 1));
+   this->AddFrame(fCurrentPadFrame, new TGLayoutHints());
+}
+
+void AtSidebarPadControl::Update(DataHandling::Subject *changedSubject)
+{
+   if (changedSubject == &fPadNum && fCurrentPadEntry) {
+      fCurrentPadEntry->SetIntNumber(fPadNum.Get());
+      auto ref = AtViewerManager::Instance()->GetMap()->GetPadRef(fPadNum.Get());
+      fCurrentPadId->SetText(TString::Format(fPadRefString, ref.cobo, ref.asad, ref.aget, ref.ch));
+      this->Layout();
+   }
+}
+void AtSidebarPadControl::SelectPad()
+{
+   fPadNum.Set(fCurrentPadEntry->GetIntNumber(), false);
+   fPadNum.Notify();
+}
 
 AtSidebarEventControl::AtSidebarEventControl(DataHandling::AtTreeEntry &entryNum, const TGWindow *p, UInt_t w, UInt_t h,
                                              UInt_t options, Pixel_t back)
@@ -69,12 +116,17 @@ void AtSidebarEventControl::Update(DataHandling::Subject *changedSubject)
 
 void AtSidebarEventControl::SelectEvent()
 {
-   AtViewerManager::Instance()->GotoEvent(fCurrentEventEntry->GetIntNumber());
-   // fEntryNumber.Set(fCurrentEventEntry->GetIntNumber());
+   fEntryNumber.Set(fCurrentEventEntry->GetIntNumber());
+}
+
+void AtSidebarEventControl::RedrawEvent()
+{
+   fEntryNumber.Notify();
 }
 
 void AtSidebarEventControl::FillFrame()
 {
+   /**** Event Selection *****/
    fCurrentEventFrame = new TGHorizontalFrame(this);
    fCurrentEventLabel = new TGLabel(fCurrentEventFrame, "Current Event: ");
 
@@ -87,10 +139,15 @@ void AtSidebarEventControl::FillFrame()
    fCurrentEventFrame->AddFrame(fCurrentEventLabel, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
    fCurrentEventFrame->AddFrame(fCurrentEventEntry);
 
-   fRedrawButton = new TGTextButton(fCurrentEventFrame, "Rerun Event");
-   fRedrawButton->Connect("Clicked()", "AtSidebarEventControl", this, "SelectEvent()");
-   fCurrentEventFrame->AddFrame(fRedrawButton, new TGLayoutHints(kLHintsCenterX | kLHintsCenterY, 1, 1, 1, 1));
+   fRerunButton = new TGTextButton(fCurrentEventFrame, "Rerun Event");
+   fRerunButton->Connect("Clicked()", "AtSidebarEventControl", this, "RedrawEvent()");
+   fCurrentEventFrame->AddFrame(fRerunButton, new TGLayoutHints(kLHintsCenterY, 1, 1, 1, 1));
+   this->AddFrame(fCurrentEventFrame, new TGLayoutHints(kLHintsExpandX));
 
+   // fCurrentPadId = new TGLabel(this, "Elec ID: ");
+   // this->AddFrame(fCurrentPadId);
+
+   /*** Button Frame ****/
    fButtonFrame = new TGHorizontalFrame(this); // Navigation button frame
    {
       TString icondir(Form("%s/icons/", gSystem->Getenv("VMCWORKDIR")));
@@ -111,9 +168,7 @@ void AtSidebarEventControl::FillFrame()
       fButtonFrame->AddFrame(b);
       b->Connect("Clicked()", "AtViewerManager", AtViewerManager::Instance(), "NextEvent()");
    }
-
-   this->AddFrame(fCurrentEventFrame, new TGLayoutHints(kLHintsExpandX));
-   this->AddFrame(fButtonFrame);
+   this->AddFrame(fButtonFrame, new TGLayoutHints(kLHintsCenterX));
 }
 
 AtSidebarBranchControl::AtSidebarBranchControl(DataHandling::AtBranch &rawEvent, DataHandling::AtBranch &event,

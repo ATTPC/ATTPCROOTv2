@@ -56,12 +56,13 @@ protected:
 public:
    Simple(T data) { fData = data; } // Must use assigment operator for primitive types.
    T Get() const { return fData; }
-   void Set(T data)
+   void Set(T data, bool notify = true)
    {
       if (fData == data)
          return;
       fData = data;
-      Notify();
+      if (notify)
+         Notify();
    }
 };
 
