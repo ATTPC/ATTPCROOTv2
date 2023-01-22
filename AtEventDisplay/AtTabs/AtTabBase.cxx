@@ -5,7 +5,7 @@
 ClassImp(AtTabBase);
 int AtTabBase::fNumTabs = 0;
 
-AtTabBase::AtTabBase() : fTabNumber(fNumTabs)
+AtTabBase::AtTabBase() : fTabId(fNumTabs)
 {
    fNumTabs++;
 }
@@ -16,8 +16,3 @@ void AtTabBase::Init()
    fTabInfo->Init();
 }
 
-/// Update both the tab (UpdateTab()) and then update the AtTabInfo class
-void AtTabBase::Update()
-{
-   UpdateTab();
-}

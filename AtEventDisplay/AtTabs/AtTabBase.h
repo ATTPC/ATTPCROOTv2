@@ -19,8 +19,8 @@ class TClass;
  */
 class AtTabBase {
 protected:
-   static int fNumTabs;
-   Int_t fTabNumber{0};
+   static int fNumTabs; //< Number of tab objects created
+   Int_t fTabId{0};     //< Unique ID for tab
 
    std::unique_ptr<AtTabInfo> fTabInfo{std::make_unique<AtTabInfo>()};
 
@@ -36,10 +36,7 @@ public:
     */
    virtual void MakeTab() = 0;
 
-   /// Called in each Exec()
-   void Update();
-   /// Called at the end of each Exec()
-   virtual void DrawEvent() = 0;
+   virtual void Exec() = 0;
 
    AtTabInfo *GetTabInfo() { return fTabInfo.get(); }
 
@@ -49,7 +46,6 @@ public:
 protected:
    /// Responsible for creating the fTabInfo object that will be updated on each event.
    virtual void InitTab() = 0;
-   virtual void UpdateTab() = 0;
 
    /**
     * Returns the instance of T (usually an event type) associated with the AtTabInfoFairRoot

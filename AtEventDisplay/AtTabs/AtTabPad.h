@@ -47,7 +47,7 @@ protected:
 public:
    AtTabPad() : AtTabBase() {}
    void InitTab() override;
-   void UpdateTab() override;
+   void Exec() override {}
 
    void MakeTab() override;
    void SetDrawADC(Int_t pos);
@@ -58,7 +58,6 @@ public:
    void SetRows(Int_t rows) { fRows = rows; }
    void SetTabName(TString tabName) { fTabName = tabName; }
 
-   void DrawEvent() override{};
    void DrawPad(Int_t padNum) override;
 
 private:

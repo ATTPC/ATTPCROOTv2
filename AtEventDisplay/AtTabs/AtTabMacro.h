@@ -49,7 +49,8 @@ protected:
 public:
    AtTabMacro();
    void InitTab() override;
-   void UpdateTab() override{};
+   void Exec() override;
+
    void MakeTab() override;
 
    void SetInputTree(TString fileName, TString treeName);
@@ -62,7 +63,7 @@ public:
    void SetRows(Int_t rows) { fRows = rows; }
    void SetTabName(TString tabName) { fTabName = tabName; }
    void DrawTree();
-   void DrawEvent() override;
+
    void DrawPad(Int_t padNum) override;
 
 private:

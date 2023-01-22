@@ -33,7 +33,7 @@ void AtTabPad::InitTab()
    std::cout << " =====  AtEventTabPad::Init =====" << std::endl;
 
    if (fTabName == "AtPad")
-      fTabName = TString::Format(fTabName + " %d", fTabNumber);
+      fTabName = TString::Format(fTabName + " %d", fTabId);
 
    auto man = AtViewerManager::Instance();
    fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>(man->GetEventName()));
@@ -58,7 +58,7 @@ void AtTabPad::MakeTab()
    // pack->SetVertical();
    pack->SetShowTitleBar(kFALSE);
 
-   sprintf(name, "AtPad Canvas %i", fTabNumber);
+   sprintf(name, "AtPad Canvas %i", fTabId);
    slot = pack->NewSlot();
    TEveWindowPack *pack2 = slot->MakePack();
    pack2->SetShowTitleBar(kFALSE);
@@ -75,15 +75,13 @@ void AtTabPad::MakeTab()
    slot->StopEmbedding();
 }
 
-void AtTabPad::UpdateTab() {}
-
 void AtTabPad::DrawPad(Int_t padNum)
 {
 
    AtRawEvent *fRawEvent = GetFairRootInfo<AtRawEvent>();
 
    if (fRawEvent == nullptr) {
-      std::cout << "fRawEvent is nullptr for tab " << fTabNumber << "! Please set the raw event branch." << std::endl;
+      std::cout << "fRawEvent is nullptr for tab " << fTabId << "! Please set the raw event branch." << std::endl;
       return;
    }
 
@@ -111,7 +109,7 @@ void AtTabPad::DrawPosition(Int_t pos, AtPad *fPad)
       padHist->Reset();
 
       if (fPad == nullptr) {
-         std::cout << "Pad does not exist in raw event for tab " << fTabNumber << "!" << std::endl;
+         std::cout << "Pad does not exist in raw event for tab " << fTabId << "!" << std::endl;
          return;
       }
 
@@ -147,7 +145,7 @@ void AtTabPad::DrawPosition(Int_t pos, AtPad *fPad)
 void AtTabPad::SetDraw(Int_t pos, PadDrawType type)
 {
    char name[20];
-   sprintf(name, "padHist_Tab%i_%i", fTabNumber, pos);
+   sprintf(name, "padHist_Tab%i_%i", fTabId, pos);
    TH1D *padHist = new TH1D(name, name, 512, 0, 512);
    fDrawMap.emplace(pos, std::make_pair(type, padHist));
 }

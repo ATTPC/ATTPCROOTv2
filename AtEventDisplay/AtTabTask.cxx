@@ -39,8 +39,7 @@ void AtTabTask::Exec(Option_t *option)
 {
    LOG(debug) << "Executing all tabs" << std::endl;
    for (auto &fTab : fTabs) {
-      fTab->Update();
-      fTab->DrawEvent();
+      fTab->Exec();
    }
 }
 

@@ -59,10 +59,12 @@ protected:
 public:
    AtTabMain() = default;
    void InitTab() override;
-   void UpdateTab() override;
+
+   void Exec() override;
+
    void MakeTab() override;
 
-   void DrawEvent() override;
+   void DrawEvent();
    void DrawPad(Int_t PadNum) override;
    void DumpEvent(std::string file);
 

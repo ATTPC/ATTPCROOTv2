@@ -35,11 +35,9 @@ void AtTabMacro::InitTab()
 
    std::cout << " =====  AtTabMacro::Init =====" << std::endl;
 
-   //******* NO CALLS TO TCANVAS BELOW THIS ONE
-
    if (fTabName == "Macro") {
       char name[20];
-      sprintf(name, "Macro %i", fTabNumber);
+      sprintf(name, "Macro %i", fTabId);
       fTabName = name;
    }
 
@@ -62,7 +60,7 @@ void AtTabMacro::MakeTab()
    // pack->SetVertical();
    pack->SetShowTitleBar(kFALSE);
 
-   sprintf(name, "Macro Canvas %i", fTabNumber);
+   sprintf(name, "Macro Canvas %i", fTabId);
    slot = pack->NewSlot();
    TEveWindowPack *pack2 = slot->MakePack();
    pack2->SetShowTitleBar(kFALSE);
@@ -92,7 +90,7 @@ void AtTabMacro::DrawTree()
    }
 }
 
-void AtTabMacro::DrawEvent()
+void AtTabMacro::Exec()
 {
    for (int i = 0; i < fCols * fRows; i++) {
       fCvsMacro->cd(i + 1);

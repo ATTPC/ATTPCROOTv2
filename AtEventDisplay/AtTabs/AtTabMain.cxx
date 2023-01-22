@@ -103,10 +103,10 @@ Color_t AtTabMain::GetTrackColor(int i)
 
 void AtTabMain::DrawPad(Int_t PadNum)
 {
-   LOG(debug) << "Drawing main pad " << fTabNumber;
+   LOG(debug) << "Drawing main pad " << fTabId;
    DrawWave(PadNum);
    UpdateCvsPadWave();
-   LOG(debug) << "Done Drawing main pad " << fTabNumber;
+   LOG(debug) << "Done Drawing main pad " << fTabId;
 }
 
 void AtTabMain::DrawPadPlane()
@@ -129,7 +129,7 @@ void AtTabMain::DrawPadPlane()
 void AtTabMain::DrawPadWave()
 {
    char name[20];
-   sprintf(name, "fPadWave_DT%i", fTabNumber);
+   sprintf(name, "fPadWave_DT%i", fTabId);
    fPadWave = new TH1I(name, name, 512, 0, 511);
    fCvsPadWave->cd();
    fPadWave->Draw();
@@ -157,9 +157,8 @@ void AtTabMain::DumpEvent(std::string fileName)
 /**
  * Called to update the entire viewer
  */
-void AtTabMain::DrawEvent()
+void AtTabMain::Exec()
 {
-   // Create the hit cloud for every event we have registered
    UpdatePadPlane();
    UpdateEventElements();
    UpdatePatternEventElements();
@@ -224,14 +223,11 @@ void AtTabMain::UpdateEventElements()
    SetPointsFromHits(*fHitSet, hits);
 }
 
-void AtTabMain::UpdateTab()
-{
-   if (fPadPlane)
-      fPadPlane->Reset(nullptr);
-}
-
 void AtTabMain::UpdatePadPlane()
 {
+
+   if (fPadPlane)
+      fPadPlane->Reset(nullptr);
 
    LOG(info) << "Updating pad plane ";
 
@@ -382,7 +378,7 @@ void AtTabMain::MakeTab()
    fCvsPadPlane = ecvs->GetCanvas();
    fCvsPadPlane->AddExec("ex", "AtTabMain::SelectPad()");
 
-   fCvsPadWave->SetName(TString::Format("fCvsPadWave_DT%i", fTabNumber));
+   fCvsPadWave->SetName(TString::Format("fCvsPadWave_DT%i", fTabId));
    DrawPadWave();
 
    fCvsPadPlane->ToggleEventStatus();
