@@ -28,8 +28,16 @@ ClassImp(AtTabMacro);
 
 AtTabMacro::AtTabMacro() : fDetmap(nullptr), fCvsMacro(nullptr), fCols(1), fRows(1), fTabName("Macro"), fTree(nullptr)
 {
-}
+   if (AtViewerManager::Instance() == nullptr)
+      throw "AtViewerManager must be initialized before creating tabs!";
 
+   fPadNum = &AtViewerManager::Instance()->GetPadNum();
+   fPadNum->Attach(this);
+}
+AtTabMacro::~AtTabMacro()
+{
+   fPadNum->Detach(this);
+}
 void AtTabMacro::InitTab()
 {
 
@@ -74,7 +82,7 @@ void AtTabMacro::DrawTree()
 {
    for (int i = 0; i < fCols * fRows; i++) {
       fCvsMacro->cd(i + 1);
-      // gPad->Clear();
+
       auto it = fDrawTreeMap.find(i);
       if (it == fDrawTreeMap.end()) {
          return;
@@ -90,7 +98,7 @@ void AtTabMacro::Exec()
 {
    for (int i = 0; i < fCols * fRows; i++) {
       fCvsMacro->cd(i + 1);
-      // gPad->Clear();
+
       auto it = fDrawEventMap.find(i);
       if (it == fDrawEventMap.end()) {
          return;
@@ -101,17 +109,19 @@ void AtTabMacro::Exec()
    }
 }
 
-void AtTabMacro::DrawPad(Int_t padNum)
+void AtTabMacro::Update(DataHandling::Subject *sub)
 {
+
+   if (sub != fPadNum)
+      return;
 
    for (int i = 0; i < fCols * fRows; i++) {
       fCvsMacro->cd(i + 1);
-      // gPad->Clear();
       auto it = fDrawPadMap.find(i);
       if (it == fDrawPadMap.end()) {
          return;
       } else {
-         (it->second)(fTabInfo.get(), padNum);
+         (it->second)(fTabInfo.get(), fPadNum->Get());
          UpdateCvsMacro();
       }
    }

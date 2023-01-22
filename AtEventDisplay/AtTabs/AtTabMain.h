@@ -32,7 +32,7 @@ class AtPatternEvent;
 class AtRawEvent;
 class AtEvent;
 
-class AtTabMain : public AtTabBase {
+class AtTabMain : public AtTabBase, public DataHandling::Observer {
 private:
    using TEvePointSetPtr = std::unique_ptr<TEvePointSet>;
    using TEveEventManagerPtr = std::unique_ptr<TEveEventManager>;
@@ -46,24 +46,27 @@ protected:
    std::vector<TEvePointSetPtr> fPatternHitSets;
    std::vector<TEveElement> fPatterns;
 
-   Int_t fThreshold{0};                  //< Min charge to draw hit
-   Int_t fMaxHitMulti{10};               //< Max hits in a pad for hit to be drawn
+   Int_t fThreshold{0};    //< Min charge to draw hit
+   Int_t fMaxHitMulti{10}; //< Max hits in a pad for hit to be drawn
 
    TAttMarker fHitAttr{kPink, 1, kFullDotMedium};
 
    TCanvas *fCvsPadPlane{nullptr};
    TH2Poly *fPadPlane{nullptr};
+
    TCanvas *fCvsPadWave{nullptr};
    TH1I *fPadWave{nullptr};
+   DataHandling::AtPadNum *fPadNum;
 
 public:
-   AtTabMain() = default;
+   AtTabMain();
+   ~AtTabMain();
    void InitTab() override;
 
    void Exec() override;
+   void Update(DataHandling::Subject *sub) override;
 
    void DrawEvent();
-   void DrawPad(Int_t PadNum) override;
    void DumpEvent(std::string file);
 
    void SetThreshold(Int_t val) { fThreshold = val; }

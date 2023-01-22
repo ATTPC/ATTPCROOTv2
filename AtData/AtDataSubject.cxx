@@ -12,5 +12,4 @@ void Subject::Notify()
 void Subject::Attach(Observer *observer)
 {
    fObservers.insert(observer);
-   observer->AttachToSubject(this);
 }

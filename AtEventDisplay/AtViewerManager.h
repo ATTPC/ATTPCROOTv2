@@ -40,11 +40,6 @@ class AtTabBase;
 class AtViewerManager final : DataHandling::Observer {
 private:
    using TabVec = std::vector<std::unique_ptr<AtTabBase>>;
-   static AtViewerManager *fInstance;
-   AtEventSidebar *fSidebar;
-
-   TabVec fTabs;
-   std::shared_ptr<AtMap> fMap;
 
    /** Data subjects we own and send around on update **/
    DataHandling::AtTreeEntry fEntry{0};
@@ -53,11 +48,15 @@ private:
    DataHandling::AtBranch fPatternEventBranch{};
    DataHandling::AtPadNum fPadNum{-1};
 
-   /** Should have the list of branch names **/
-   std::map<TString, std::vector<TString>> fBranchNames;
+   AtEventSidebar *fSidebar;
+
+   std::shared_ptr<AtMap> fMap;
+   std::map<TString, std::vector<TString>> fBranchNames; //< fBranchNames[type] = {list of branches}
+   TabVec fTabs;
+
+   static AtViewerManager *fInstance;
 
 public:
-   static AtViewerManager *Instance();
    AtViewerManager(std::shared_ptr<AtMap> map);
    ~AtViewerManager();
 
@@ -76,7 +75,7 @@ public:
    DataHandling::AtBranch &GetEventName() { return fEventBranch; }
    DataHandling::AtBranch &GetPatternEventName() { return fPatternEventBranch; }
    DataHandling::AtTreeEntry &GetCurrentEntry() { return fEntry; }
-   DataHandling::AtTreeEntry &GetPadNum() { return fEntry; }
+   DataHandling::AtPadNum &GetPadNum() { return fPadNum; }
 
    /**
     * Main function for navigating to an event. Everything that changes event number should end up
@@ -86,7 +85,7 @@ public:
    void NextEvent() { GotoEvent(fEntry.Get() + 1); }
    void PrevEvent() { GotoEvent(fEntry.Get() - 1); }
 
-   void DrawPad(Int_t padNum);
+   static AtViewerManager *Instance();
 
 private:
    void GenerateBranchLists();

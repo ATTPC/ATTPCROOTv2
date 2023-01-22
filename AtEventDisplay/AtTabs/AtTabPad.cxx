@@ -29,7 +29,18 @@ constexpr auto cBLUE = "\033[1;34m";
 
 ClassImp(AtTabPad);
 
-AtTabPad::AtTabPad(int nRow, int nCol, TString name) : AtTabBase(), fRows(nRow), fCols(nCol), fTabName(name) {}
+AtTabPad::AtTabPad(int nRow, int nCol, TString name) : AtTabBase(), fRows(nRow), fCols(nCol), fTabName(name)
+{
+   if (AtViewerManager::Instance() == nullptr)
+      throw "AtViewerManager must be initialized before creating tabs!";
+
+   fPadNum = &AtViewerManager::Instance()->GetPadNum();
+   fPadNum->Attach(this);
+}
+AtTabPad::~AtTabPad()
+{
+   fPadNum->Detach(this);
+}
 
 void AtTabPad::InitTab()
 {
@@ -85,9 +96,16 @@ void AtTabPad::Exec()
             DrawAdc(hist, *auxPad);
       }
    }
+   UpdateCvsPad();
 }
 
-void AtTabPad::DrawPad(Int_t padNum)
+void AtTabPad::Update(DataHandling::Subject *sub)
+{
+   if (sub == fPadNum)
+      DrawPad();
+}
+
+void AtTabPad::DrawPad()
 {
 
    AtRawEvent *fRawEvent = GetFairRootInfo<AtRawEvent>();
@@ -97,7 +115,7 @@ void AtTabPad::DrawPad(Int_t padNum)
       return;
    }
 
-   auto fPad = fRawEvent->GetPad(padNum);
+   auto fPad = fRawEvent->GetPad(fPadNum->Get());
 
    for (auto &[pos, toDraw] : fDrawMap) {
       if (toDraw.first == PadDrawType::kAuxPad)

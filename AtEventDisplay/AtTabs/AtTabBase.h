@@ -37,9 +37,6 @@ public:
 
    AtTabInfo *GetTabInfo() { return fTabInfo.get(); }
 
-   // Update tab with newly selected pad
-   virtual void DrawPad(Int_t padNum) = 0;
-
 protected:
    /// Responsible for creating the fTabInfo object that will be updated on each event.
    /// That fTabInfo object will be initialized without user input though

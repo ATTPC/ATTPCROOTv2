@@ -1,6 +1,7 @@
 #ifndef ATTABPAD_H
 #define ATTABPAD_H
 
+#include "AtDataObserver.h"
 #include "AtTabBase.h"
 
 #include <Rtypes.h>  // for Int_t, Bool_t, THashConsistencyHolder, Color_t
@@ -27,7 +28,7 @@ class TH1D;
  * Class for drawing traces from pads in an AtRawEvent.
  *
  */
-class AtTabPad : public AtTabBase {
+class AtTabPad : public AtTabBase, public DataHandling::Observer {
 protected:
    enum class PadDrawType { kADC, kRawADC, kArrAug, kAuxPad };
    TCanvas *fCvsPad{nullptr};
@@ -39,6 +40,7 @@ protected:
    /// location is row * nCols + col
    std::unordered_map<Int_t, std::pair<PadDrawType, TH1D *>> fDrawMap; //! Let root handle hist memory
    std::unordered_map<Int_t, std::string> fAugNames;                   //< Augment and Aux pad names
+   DataHandling::AtPadNum *fPadNum;
 
    TString fTabName;
 
@@ -46,8 +48,10 @@ protected:
 
 public:
    AtTabPad(int nRow = 1, int nCol = 1, TString name = "AtPad");
+   ~AtTabPad();
    void InitTab() override;
    void Exec() override;
+   void Update(DataHandling::Subject *sub) override;
 
    void DrawADC(int row = 0, int col = 0);                       //< Draw adc in current pad
    void DrawRawADC(int row = 0, int col = 0);                    //< Draw raw adc in current pad
@@ -56,13 +60,12 @@ public:
 
    void SetTabName(TString tabName) { fTabName = tabName; }
 
-   void DrawPad(Int_t padNum) override;
-
 protected:
    void MakeTab(TEveWindowSlot *) override;
 
 private:
    void SetDraw(Int_t pos, PadDrawType type);
+   void DrawPad();
    void DrawAdc(TH1D *hist, const AtPad &pad);
    void DrawRawAdc(TH1D *hist, const AtPad &pad);
    void DrawArrayAug(TH1D *hist, const AtPad &pad, TString augName);

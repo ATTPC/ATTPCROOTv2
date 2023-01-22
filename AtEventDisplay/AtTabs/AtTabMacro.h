@@ -1,6 +1,7 @@
 #ifndef ATTABMACRO_H
 #define ATTABMACRO_H
 
+#include "AtDataObserver.h"
 #include "AtTabBase.h"
 
 #include <Rtypes.h>  // for Int_t, Bool_t, THashConsistencyHolder, Color_t
@@ -25,7 +26,7 @@ class TEveRGBAPalette;
 class TChain;
 class TTree;
 
-class AtTabMacro : public AtTabBase {
+class AtTabMacro : public AtTabBase, public DataHandling::Observer {
 protected:
    std::shared_ptr<AtMap> fDetmap;
 
@@ -45,11 +46,15 @@ protected:
    TString fTabName;
 
    TEveRGBAPalette *fRGBAPalette;
+   DataHandling::AtPadNum *fPadNum;
 
 public:
    AtTabMacro();
+   ~AtTabMacro();
+
    void InitTab() override;
    void Exec() override;
+   void Update(DataHandling::Subject *sub) override;
 
    void SetInputTree(TString fileName, TString treeName);
    void SetDrawTreeFunction(Int_t pos, std::function<void(TTree(*))> function);
@@ -61,8 +66,6 @@ public:
    void SetRows(Int_t rows) { fRows = rows; }
    void SetTabName(TString tabName) { fTabName = tabName; }
    void DrawTree();
-
-   void DrawPad(Int_t padNum) override;
 
 protected:
    void MakeTab(TEveWindowSlot *) override;

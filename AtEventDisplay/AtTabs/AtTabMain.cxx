@@ -52,6 +52,20 @@ constexpr auto cBLUE = "\033[1;34m";
 
 ClassImp(AtTabMain);
 
+AtTabMain::AtTabMain()
+{
+   if (AtViewerManager::Instance() == nullptr)
+      throw "AtViewerManager must be initialized before creating tabs!";
+
+   fPadNum = &AtViewerManager::Instance()->GetPadNum();
+   fPadNum->Attach(this);
+};
+
+AtTabMain::~AtTabMain()
+{
+   fPadNum->Detach(this);
+}
+
 void AtTabMain::InitTab()
 {
    std::cout << " =====  AtTabMain::Init =====" << std::endl;
@@ -101,12 +115,12 @@ Color_t AtTabMain::GetTrackColor(int i)
       return kAzure;
 }
 
-void AtTabMain::DrawPad(Int_t PadNum)
+void AtTabMain::Update(DataHandling::Subject *sub)
 {
-   LOG(debug) << "Drawing main pad " << fTabId;
-   DrawWave(PadNum);
-   UpdateCvsPadWave();
-   LOG(debug) << "Done Drawing main pad " << fTabId;
+   if (sub == fPadNum) {
+      DrawWave(fPadNum->Get());
+      UpdateCvsPadWave();
+   }
 }
 
 void AtTabMain::DrawPadPlane()
@@ -445,6 +459,6 @@ void AtTabMain::SelectPad()
       std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
       std::cout << " Electronic mapping: " << tmap->GetPadRef(tPadNum) << std::endl;
       std::cout << " Raw Event Pad Num " << tPadNum << std::endl;
-      AtViewerManager::Instance()->DrawPad(tPadNum);
+      AtViewerManager::Instance()->GetPadNum().Set(tPadNum);
    }
 }
