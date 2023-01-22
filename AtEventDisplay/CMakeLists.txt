@@ -13,7 +13,6 @@ ${CMAKE_SOURCE_DIR}/AtEventDisplay/AtSidebar/PSA
 
 set(SRCS
 # Add all the source files below this line. Those must have cc for their extension.
-AtTabTask.cxx
 AtViewerManager.cxx
 AtViewerManagerSubject.cxx
 

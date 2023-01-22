@@ -14,5 +14,5 @@ void AtTabBase::Init()
 {
    InitTab();
    fTabInfo->Init();
+   MakeTab();
 }
-

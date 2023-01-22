@@ -39,21 +39,19 @@ class AtTabBase;
  */
 class AtViewerManager final : DataHandling::Observer {
 private:
+   using TabVec = std::vector<std::unique_ptr<AtTabBase>>;
    static AtViewerManager *fInstance;
-
    AtEventSidebar *fSidebar;
 
-   TGNumberEntry *f3DThresDisplay;
-
-   std::unique_ptr<AtTabTask> fTabTask;
+   TabVec fTabs;
    std::shared_ptr<AtMap> fMap;
-   Int_t fPadNum;
 
    /** Data subjects we own and send around on update **/
    DataHandling::AtTreeEntry fEntry{0};
    DataHandling::AtBranch fRawEventBranch{};
    DataHandling::AtBranch fEventBranch{};
    DataHandling::AtBranch fPatternEventBranch{};
+   Int_t fPadNum;
 
    /** Should have the list of branch names **/
    std::map<TString, std::vector<TString>> fBranchNames;

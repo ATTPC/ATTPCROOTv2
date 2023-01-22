@@ -2,7 +2,7 @@
 
 #include "AtMap.h"
 #include "AtSidebarFrames.h"
-#include "AtTabTask.h"
+#include "AtTabBase.h"
 
 #include <FairRootManager.h>
 #include <FairRunAna.h>
@@ -65,9 +65,7 @@ AtViewerManager *AtViewerManager::Instance()
    return fInstance;
 }
 
-AtViewerManager::AtViewerManager(std::shared_ptr<AtMap> map)
-   : f3DThresDisplay(nullptr), fTabTask(std::make_unique<AtTabTask>()), fMap(map)
-
+AtViewerManager::AtViewerManager(std::shared_ptr<AtMap> map) : fMap(map)
 {
    if (fInstance != nullptr)
       LOG(fatal) << "Attempting to create a second instance of AtViewerManager! Only one is allowed!";
@@ -96,15 +94,11 @@ AtViewerManager::~AtViewerManager()
 
 void AtViewerManager::AddTask(FairTask *task)
 {
-   if (dynamic_cast<AtTabTask *>(task) == nullptr)
-      FairRunAna::Instance()->AddTask(task);
-   else
-      LOG(error) << "You cannot add a AtTabTask! This is an implementation specific task that is soley managed by the "
-                    "AtViewerManager class.";
+   FairRunAna::Instance()->AddTask(task);
 }
 void AtViewerManager::AddTab(std::unique_ptr<AtTabBase> tab)
 {
-   fTabTask->AddTab(std::move(tab));
+   fTabs.push_back(std::move(tab));
 }
 
 void AtViewerManager::Init()
@@ -112,10 +106,9 @@ void AtViewerManager::Init()
    gStyle->SetOptTitle(0);
    gStyle->SetPalette(55);
 
-   // Add the AtTabTask as the last task in the run so it can access
-   // what is created in earlier tasks in the run
-   FairRunAna::Instance()->AddTask(fTabTask.get());
    FairRunAna::Instance()->Init();
+   for (auto &tab : fTabs)
+      tab->Init();
 
    // Everything is loaded so construct the list of branch names
    GenerateBranchLists();
@@ -154,6 +147,9 @@ void AtViewerManager::GotoEvent(Int_t event)
 {
    fEntry.Set(event);
    FairRunAna::Instance()->Run((Long64_t)event);
+   for (auto &tab : fTabs)
+      tab->Exec();
+
    DrawPad(fPadNum);
 }
 
@@ -162,7 +158,8 @@ void AtViewerManager::GotoEvent(Int_t event)
 void AtViewerManager::DrawPad(Int_t padNum)
 {
    fPadNum = padNum;
-   fTabTask->DrawTabPads(padNum);
+   for (auto &tab : fTabs)
+      tab->DrawPad(padNum);
 }
 
 void AtViewerManager::Update(DataHandling::Subject *subject)
