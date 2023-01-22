@@ -340,13 +340,11 @@ void AtTabMain::UpdateCvsPadWave()
    fCvsPadWave->Update();
 }
 
-void AtTabMain::MakeTab()
+void AtTabMain::MakeTab(TEveWindowSlot *slot)
 {
-   TEveWindowSlot *slot = nullptr;
    TEveWindowPack *pack = nullptr;
 
    // 3D
-   slot = TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
    pack = slot->MakePack();
    pack->SetElementName("Main");
    pack->SetHorizontal();

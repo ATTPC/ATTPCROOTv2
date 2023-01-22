@@ -45,16 +45,12 @@ void AtTabMacro::InitTab()
              << "\n";
 }
 
-void AtTabMacro::MakeTab()
+void AtTabMacro::MakeTab(TEveWindowSlot *slot)
 {
-   TEveWindowSlot *slot = nullptr;
-   TEveWindowPack *pack = nullptr;
-
    char name[20];
 
    // 3D
-   slot = TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight());
-   pack = slot->MakePack();
+   auto pack = slot->MakePack();
    pack->SetElementName(fTabName);
    pack->SetHorizontal();
    // pack->SetVertical();

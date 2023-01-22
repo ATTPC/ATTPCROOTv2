@@ -49,7 +49,6 @@ public:
    void InitTab() override;
    void Exec() override {}
 
-   void MakeTab() override;
    void SetDrawADC(Int_t pos);
    void SetDrawRawADC(Int_t pos);
    void SetDrawArrayAug(Int_t pos, TString augName);
@@ -59,6 +58,9 @@ public:
    void SetTabName(TString tabName) { fTabName = tabName; }
 
    void DrawPad(Int_t padNum) override;
+
+protected:
+   void MakeTab(TEveWindowSlot *) override;
 
 private:
    void SetDraw(Int_t pos, PadDrawType type);

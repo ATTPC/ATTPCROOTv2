@@ -62,8 +62,6 @@ public:
 
    void Exec() override;
 
-   void MakeTab() override;
-
    void DrawEvent();
    void DrawPad(Int_t PadNum) override;
    void DumpEvent(std::string file);
@@ -77,6 +75,9 @@ public:
     * that onto AtViewerManager.
     */
    static void SelectPad();
+
+protected:
+   void MakeTab(TEveWindowSlot *slot) override;
 
 private:
    // Functions to draw the initial canvases

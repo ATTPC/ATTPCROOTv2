@@ -2,6 +2,9 @@
 
 #include "AtTabInfo.h"
 
+#include <TEveBrowser.h>
+#include <TEveManager.h>
+#include <TEveWindow.h>
 ClassImp(AtTabBase);
 int AtTabBase::fNumTabs = 0;
 
@@ -14,5 +17,5 @@ void AtTabBase::Init()
 {
    InitTab();
    fTabInfo->Init();
-   MakeTab();
+   MakeTab(TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight()));
 }

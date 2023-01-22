@@ -51,8 +51,6 @@ public:
    void InitTab() override;
    void Exec() override;
 
-   void MakeTab() override;
-
    void SetInputTree(TString fileName, TString treeName);
    void SetDrawTreeFunction(Int_t pos, std::function<void(TTree(*))> function);
    void SetDrawEventFunction(Int_t pos, std::function<void(AtTabInfo(*))> function);
@@ -65,6 +63,9 @@ public:
    void DrawTree();
 
    void DrawPad(Int_t padNum) override;
+
+protected:
+   void MakeTab(TEveWindowSlot *) override;
 
 private:
    void UpdateCvsMacro();

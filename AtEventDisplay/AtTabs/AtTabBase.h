@@ -7,6 +7,7 @@
 
 #include <memory>
 class TClass;
+class TEveWindowSlot;
 
 /**
  * @brief Base class for all tabs that can be added to the event viewer.
@@ -30,11 +31,6 @@ public:
 
    /// Called in the init stage of the run.
    void Init();
-   /**
-    * @brief Create the gui components of the tab
-    * Called after Init() in init run stage
-    */
-   virtual void MakeTab() = 0;
 
    virtual void Exec() = 0;
 
@@ -45,7 +41,13 @@ public:
 
 protected:
    /// Responsible for creating the fTabInfo object that will be updated on each event.
+   /// That fTabInfo object will be initialized without user input though
    virtual void InitTab() = 0;
+
+   /**
+    * @brief Create the gui components of the tab in the passed window slot.
+    */
+   virtual void MakeTab(TEveWindowSlot *slot) = 0;
 
    /**
     * Returns the instance of T (usually an event type) associated with the AtTabInfoFairRoot
