@@ -67,9 +67,9 @@ void AtSidebarPadControl::FillFrame()
    fCurrentPadFrame = new TGHorizontalFrame(this);
    fCurrentPadLabel = new TGLabel(fCurrentPadFrame, "Current Pad: ");
 
-   fCurrentPadEntry = new TGNumberEntry(fCurrentPadFrame, 0., 6, -1, TGNumberFormat::kNESInteger,
-                                        TGNumberFormat::kNEANonNegative, TGNumberFormat::kNELLimitMinMax, 0,
-                                        FairRootManager::Instance()->GetInChain()->GetEntriesFast());
+   fCurrentPadEntry =
+      new TGNumberEntry(fCurrentPadFrame, 0., 6, -1, TGNumberFormat::kNESInteger, TGNumberFormat::kNEANonNegative,
+                        TGNumberFormat::kNELLimitMinMax, 0, AtViewerManager::Instance()->GetMap()->GetNumPads());
 
    fCurrentPadEntry->Connect("ValueSet(Long_t)", "AtSidebarPadControl", this, "SelectPad()");
 
@@ -80,6 +80,9 @@ void AtSidebarPadControl::FillFrame()
    fRedrawPadButton->Connect("Clicked()", "AtSidebarPadControl", this, "SelectPad()");
    fCurrentPadFrame->AddFrame(fRedrawPadButton, new TGLayoutHints(kLHintsCenterY, 1, 1, 1, 1));
    this->AddFrame(fCurrentPadFrame, new TGLayoutHints());
+
+   fCurrentPadId = new TGLabel(this, fPadRefString);
+   this->AddFrame(fCurrentPadId, new TGLayoutHints(kLHintsCenterX | kLHintsExpandX));
 }
 
 void AtSidebarPadControl::Update(DataHandling::Subject *changedSubject)
@@ -88,7 +91,7 @@ void AtSidebarPadControl::Update(DataHandling::Subject *changedSubject)
       fCurrentPadEntry->SetIntNumber(fPadNum.Get());
       auto ref = AtViewerManager::Instance()->GetMap()->GetPadRef(fPadNum.Get());
       fCurrentPadId->SetText(TString::Format(fPadRefString, ref.cobo, ref.asad, ref.aget, ref.ch));
-      this->Layout();
+      // this->Layout();
    }
 }
 void AtSidebarPadControl::SelectPad()
@@ -143,9 +146,6 @@ void AtSidebarEventControl::FillFrame()
    fRerunButton->Connect("Clicked()", "AtSidebarEventControl", this, "RedrawEvent()");
    fCurrentEventFrame->AddFrame(fRerunButton, new TGLayoutHints(kLHintsCenterY, 1, 1, 1, 1));
    this->AddFrame(fCurrentEventFrame, new TGLayoutHints(kLHintsExpandX));
-
-   // fCurrentPadId = new TGLabel(this, "Elec ID: ");
-   // this->AddFrame(fCurrentPadId);
 
    /*** Button Frame ****/
    fButtonFrame = new TGHorizontalFrame(this); // Navigation button frame

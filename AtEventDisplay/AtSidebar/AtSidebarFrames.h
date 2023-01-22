@@ -87,6 +87,8 @@ class AtSidebarPadControl : public AtVerticalSidebarFrame, public DataHandling::
 
    TGLabel *fCurrentPadId{nullptr};
    static constexpr char fPadRefString[] = "Pad Ref:[%d,%d,%d,%d]";
+
+public:
    AtSidebarPadControl(DataHandling::AtPadNum &padNum, const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1,
                        UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground());
    ~AtSidebarPadControl();

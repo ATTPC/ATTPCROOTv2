@@ -25,12 +25,14 @@ AtEventSidebar::AtEventSidebar(DataHandling::AtTreeEntry &entryNum, DataHandling
 
    // Add frame components that are always there
    auto runInfo = new AtSidebarRunInfo(this);
-   auto runControl = new AtSidebarEventControl(entryNum, AtViewerManager::Instance()->GetPadNum(), this);
+   auto runControl = new AtSidebarEventControl(entryNum, this);
    auto branchControl = new AtSidebarBranchControl(rawEvent, event, patternEvent, this);
+   auto padControl = new AtSidebarPadControl(AtViewerManager::Instance()->GetPadNum(), this);
 
    AddSidebarFrame(runInfo);
    AddSidebarFrame(runControl);
    AddSidebarFrame(branchControl);
+   AddSidebarFrame(padControl);
 }
 
 void AtEventSidebar::AddSidebarFrame(AtSidebarFrame *frame)
