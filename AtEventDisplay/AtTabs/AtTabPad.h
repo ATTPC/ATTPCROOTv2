@@ -29,7 +29,7 @@ class TH1D;
  */
 class AtTabPad : public AtTabBase {
 protected:
-   enum class PadDrawType { kADC, kRawADC, kArrAug };
+   enum class PadDrawType { kADC, kRawADC, kArrAug, kAuxPad };
    TCanvas *fCvsPad{nullptr};
 
    Int_t fRows;
@@ -38,7 +38,7 @@ protected:
    /// <location, <type, histo>
    /// location is row * nCols + col
    std::unordered_map<Int_t, std::pair<PadDrawType, TH1D *>> fDrawMap; //! Let root handle hist memory
-   std::unordered_map<Int_t, TString> fAugNames;
+   std::unordered_map<Int_t, std::string> fAugNames;                   //< Augment and Aux pad names
 
    TString fTabName;
 
@@ -47,11 +47,12 @@ protected:
 public:
    AtTabPad(int nRow = 1, int nCol = 1, TString name = "AtPad");
    void InitTab() override;
-   void Exec() override {}
+   void Exec() override;
 
    void DrawADC(int row = 0, int col = 0);                       //< Draw adc in current pad
    void DrawRawADC(int row = 0, int col = 0);                    //< Draw raw adc in current pad
    void DrawArrayAug(TString augName, int row = 0, int col = 0); //< Draw an array augment current pad
+   void DrawAuxADC(TString auxName, int row = 0, int col = 0);   //< Draw an aux pad
 
    void SetTabName(TString tabName) { fTabName = tabName; }
 

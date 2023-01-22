@@ -65,6 +65,28 @@ void AtTabPad::MakeTab(TEveWindowSlot *slot)
    slot->StopEmbedding();
 }
 
+void AtTabPad::Exec()
+{
+   AtRawEvent *fRawEvent = GetFairRootInfo<AtRawEvent>();
+   if (fRawEvent == nullptr) {
+      std::cout << "fRawEvent is nullptr for tab " << fTabId << "! Please set the raw event branch." << std::endl;
+      return;
+   }
+
+   // Redraw any Auxiliary channels
+   for (auto &[pos, toDraw] : fDrawMap) {
+      fCvsPad->cd(pos + 1);
+      auto hist = toDraw.second;
+      hist->Reset();
+      hist->Draw();
+      if (toDraw.first == PadDrawType::kAuxPad) {
+         auto auxPad = fRawEvent->GetAuxPad(fAugNames[pos]);
+         if (auxPad != nullptr)
+            DrawAdc(hist, *auxPad);
+      }
+   }
+}
+
 void AtTabPad::DrawPad(Int_t padNum)
 {
 
@@ -78,18 +100,27 @@ void AtTabPad::DrawPad(Int_t padNum)
    auto fPad = fRawEvent->GetPad(padNum);
 
    for (auto &[pos, toDraw] : fDrawMap) {
+      if (toDraw.first == PadDrawType::kAuxPad)
+         continue;
+
       fCvsPad->cd(pos + 1);
       auto hist = toDraw.second;
-      hist->Reset();
-      hist->Draw();
 
-      if (fPad == nullptr)
+      if (fPad == nullptr) {
+         hist->Reset();
+         hist->Draw();
          continue;
+      }
 
       switch (toDraw.first) {
       case PadDrawType::kADC: DrawAdc(hist, *fPad); break;
       case PadDrawType::kRawADC: DrawRawAdc(hist, *fPad); break;
       case PadDrawType::kArrAug: DrawArrayAug(hist, *fPad, fAugNames[pos]); break;
+      case PadDrawType::kAuxPad:
+         auto auxPad = fRawEvent->GetAuxPad(fAugNames[pos]);
+         if (auxPad != nullptr)
+            DrawAdc(hist, *auxPad);
+         break;
       }
    }
 
@@ -122,6 +153,7 @@ void AtTabPad::DrawArrayAug(TH1D *hist, const AtPad &pad, TString augName)
    hist->Draw();
 }
 
+
 void AtTabPad::SetDraw(Int_t pos, PadDrawType type)
 {
    auto name = TString::Format("padHist_Tab%i_%i", fTabId, pos);
@@ -143,6 +175,12 @@ void AtTabPad::DrawArrayAug(TString augName, int row, int col)
 {
    SetDraw(row * fCols + col, PadDrawType::kArrAug);
    fAugNames.emplace(row * fCols + col, augName);
+}
+
+void AtTabPad::DrawAuxADC(TString auxName, int row, int col)
+{
+   SetDraw(row * fCols + col, PadDrawType::kAuxPad);
+   fAugNames.emplace(row * fCols + col, auxName);
 }
 
 void AtTabPad::UpdateCvsPad()

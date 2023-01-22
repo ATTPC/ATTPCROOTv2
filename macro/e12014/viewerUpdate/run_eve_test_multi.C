@@ -51,6 +51,7 @@ void run_eve_test_multi(int runNum = 214, TString OutputDataFile = "./data/outpu
    auto tabPad = std::make_unique<AtTabPad>(2, 2);
    tabPad->DrawRawADC(0, 0);
    tabPad->DrawADC(0, 1);
+   tabPad->DrawAuxADC("IC", 1, 0);
    // tabPad->SetDrawArrayAug(2, "Qreco");
 
    eveMan->AddTab(std::move(tabMain));
