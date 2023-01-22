@@ -15,6 +15,7 @@
 #include <TEveManager.h>
 #include <TEveWindow.h>
 #include <TH1.h> // for TH1D
+#include <TRootEmbeddedCanvas.h>
 
 #include <array>    // for array
 #include <cstdio>   // for sprintf
@@ -46,32 +47,20 @@ void AtTabPad::InitTab()
 void AtTabPad::MakeTab(TEveWindowSlot *slot)
 {
 
-   TEveWindowPack *pack = nullptr;
-
-   char name[20];
-
-   // 3D
-
-   pack = slot->MakePack();
+   auto pack = slot->MakePack();
    pack->SetElementName(fTabName);
-   pack->SetHorizontal();
-   // pack->SetVertical();
-   pack->SetShowTitleBar(kFALSE);
+   pack->SetShowTitleBar(true);
 
-   sprintf(name, "AtPad Canvas %i", fTabId);
    slot = pack->NewSlot();
-   TEveWindowPack *pack2 = slot->MakePack();
-   pack2->SetShowTitleBar(kFALSE);
-   pack2->SetVertical();
-   slot = pack2->NewSlot();
+   slot->SetShowTitleBar(false);
    slot->StartEmbedding();
 
    // Doing this here so it is only done once. Repeated Clear() and Divide() calls were causing
    // a seg fault for reasons I do not understand.
-   fCvsPad = new TCanvas(name);
+   fCvsPad = new TCanvas(TString::Format("AtPadCanvas%d", fTabId));
    fCvsPad->Divide(fCols, fRows);
-
    fCvsPad->ToggleEditor();
+
    slot->StopEmbedding();
 }
 

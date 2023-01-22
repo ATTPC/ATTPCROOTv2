@@ -32,6 +32,7 @@ public:
    /// Called in the init stage of the run.
    void Init();
 
+   /// Called after the run's `Exec()` to update tab
    virtual void Exec() = 0;
 
    AtTabInfo *GetTabInfo() { return fTabInfo.get(); }
