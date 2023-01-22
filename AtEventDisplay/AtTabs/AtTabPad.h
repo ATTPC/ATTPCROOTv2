@@ -28,33 +28,31 @@ class TH1D;
  *
  */
 class AtTabPad : public AtTabBase {
-public:
-   enum class PadDrawType { kADC, kRawADC, kArrAug };
-
 protected:
+   enum class PadDrawType { kADC, kRawADC, kArrAug };
    TCanvas *fCvsPad{nullptr};
 
-   Int_t fRows{1};
-   Int_t fCols{1};
+   Int_t fRows;
+   Int_t fCols;
 
-   std::unordered_map<Int_t, std::pair<PadDrawType, TH1D *>> fDrawMap;
+   /// <location, <type, histo>
+   /// location is row * nCols + col
+   std::unordered_map<Int_t, std::pair<PadDrawType, TH1D *>> fDrawMap; //! Let root handle hist memory
    std::unordered_map<Int_t, TString> fAugNames;
 
-   TString fTabName{"AtPad"};
+   TString fTabName;
 
    TEveRGBAPalette *fRGBAPalette{nullptr};
 
 public:
-   AtTabPad() : AtTabBase() {}
+   AtTabPad(int nRow = 1, int nCol = 1, TString name = "AtPad");
    void InitTab() override;
    void Exec() override {}
 
-   void SetDrawADC(Int_t pos);
-   void SetDrawRawADC(Int_t pos);
-   void SetDrawArrayAug(Int_t pos, TString augName);
+   void DrawADC(int row = 0, int col = 0);                       //< Draw adc in current pad
+   void DrawRawADC(int row = 0, int col = 0);                    //< Draw raw adc in current pad
+   void DrawArrayAug(TString augName, int row = 0, int col = 0); //< Draw an array augment current pad
 
-   void SetColumns(Int_t cols) { fCols = cols; }
-   void SetRows(Int_t rows) { fRows = rows; }
    void SetTabName(TString tabName) { fTabName = tabName; }
 
    void DrawPad(Int_t padNum) override;
@@ -64,7 +62,10 @@ protected:
 
 private:
    void SetDraw(Int_t pos, PadDrawType type);
-   void DrawPosition(Int_t pos, AtPad *pad);
+   void DrawAdc(TH1D *hist, const AtPad &pad);
+   void DrawRawAdc(TH1D *hist, const AtPad &pad);
+   void DrawArrayAug(TH1D *hist, const AtPad &pad, TString augName);
+
    void UpdateCvsPad();
 
    // Functions for drawing hits

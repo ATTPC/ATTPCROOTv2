@@ -29,6 +29,8 @@ constexpr auto cBLUE = "\033[1;34m";
 
 ClassImp(AtTabPad);
 
+AtTabPad::AtTabPad(int nRow, int nCol, TString name) : AtTabBase(), fRows(nRow), fCols(nCol), fTabName(name) {}
+
 void AtTabPad::InitTab()
 {
    std::cout << " =====  AtEventTabPad::Init =====" << std::endl;
@@ -48,11 +50,10 @@ void AtTabPad::MakeTab(TEveWindowSlot *slot)
 {
 
    auto pack = slot->MakePack();
-   pack->SetElementName(fTabName);
-   pack->SetShowTitleBar(true);
+   pack->SetElementName(fTabName); // Sets name on tab
+   pack->SetShowTitleBar(false);
 
    slot = pack->NewSlot();
-   slot->SetShowTitleBar(false);
    slot->StartEmbedding();
 
    // Doing this here so it is only done once. Repeated Clear() and Divide() calls were causing
@@ -76,83 +77,72 @@ void AtTabPad::DrawPad(Int_t padNum)
 
    auto fPad = fRawEvent->GetPad(padNum);
 
-   fCvsPad->Clear("D");
-   for (int i = 0; i < fCols * fRows; i++) {
-      fCvsPad->cd(i + 1);
-      DrawPosition(i, fPad);
-      // UpdateCvsPad();
+   for (auto &[pos, toDraw] : fDrawMap) {
+      fCvsPad->cd(pos + 1);
+      auto hist = toDraw.second;
+      hist->Reset();
+      hist->Draw();
+
+      if (fPad == nullptr)
+         continue;
+
+      switch (toDraw.first) {
+      case PadDrawType::kADC: DrawAdc(hist, *fPad); break;
+      case PadDrawType::kRawADC: DrawRawAdc(hist, *fPad); break;
+      case PadDrawType::kArrAug: DrawArrayAug(hist, *fPad, fAugNames[pos]); break;
+      }
    }
-   // DrawWave(PadNum);
+
    UpdateCvsPad();
 }
 
-void AtTabPad::DrawPosition(Int_t pos, AtPad *fPad)
+void AtTabPad::DrawAdc(TH1D *hist, const AtPad &pad)
 {
-   LOG(debug) << "Drawing position in AtTabPad";
-   std::array<Double_t, 512> array = {};
-   auto it = fDrawMap.find(pos);
-   if (it == fDrawMap.end()) {
-      return;
-   } else {
-      auto padHist = it->second.second;
-      padHist->Reset();
-
-      if (fPad == nullptr) {
-         std::cout << "Pad does not exist in raw event for tab " << fTabId << "!" << std::endl;
-         return;
-      }
-
-      switch (it->second.first) {
-      case PadDrawType::kADC: array = fPad->GetADC(); break;
-
-      case PadDrawType::kRawADC: {
-         auto padArray = fPad->GetRawADC();
-         for (int i = 0; i < padArray.size(); i++)
-            array[i] = padArray[i];
-         break;
-      }
-
-      case PadDrawType::kArrAug: {
-         auto augIt = fAugNames.find(pos);
-         if (augIt == fAugNames.end()) {
-            return;
-         } else {
-            array = dynamic_cast<AtPadArray *>(fPad->GetAugment(augIt->second.Data()))->GetArray();
-         }
-         break;
-      }
-
-      default: return;
-      }
-      for (int i = 0; i < 512; i++) {
-         padHist->SetBinContent(i + 1, array[i]);
-         padHist->Draw();
-      }
+   for (int i = 0; i < 512; i++) {
+      hist->SetBinContent(i + 1, pad.GetADC()[i]);
    }
+   hist->Draw();
+}
+
+void AtTabPad::DrawRawAdc(TH1D *hist, const AtPad &pad)
+{
+   for (int i = 0; i < 512; i++) {
+      hist->SetBinContent(i + 1, pad.GetRawADC()[i]);
+   }
+   hist->Draw();
+}
+
+void AtTabPad::DrawArrayAug(TH1D *hist, const AtPad &pad, TString augName)
+{
+   auto aug = dynamic_cast<const AtPadArray *>(pad.GetAugment(augName.Data()));
+
+   for (int i = 0; i < 512; i++) {
+      hist->SetBinContent(i + 1, aug->GetArray()[i]);
+   }
+   hist->Draw();
 }
 
 void AtTabPad::SetDraw(Int_t pos, PadDrawType type)
 {
-   char name[20];
-   sprintf(name, "padHist_Tab%i_%i", fTabId, pos);
+   auto name = TString::Format("padHist_Tab%i_%i", fTabId, pos);
    TH1D *padHist = new TH1D(name, name, 512, 0, 512);
    fDrawMap.emplace(pos, std::make_pair(type, padHist));
 }
 
-void AtTabPad::SetDrawADC(Int_t pos)
+void AtTabPad::DrawADC(int row, int col)
 {
-   SetDraw(pos, PadDrawType::kADC);
+   SetDraw(row * fCols + col, PadDrawType::kADC);
 }
 
-void AtTabPad::SetDrawRawADC(Int_t pos)
+void AtTabPad::DrawRawADC(int row, int col)
 {
-   SetDraw(pos, PadDrawType::kRawADC);
+   SetDraw(row * fCols + col, PadDrawType::kRawADC);
 }
 
-void AtTabPad::SetDrawArrayAug(Int_t pos, TString augName)
+void AtTabPad::DrawArrayAug(TString augName, int row, int col)
 {
-   SetDraw(pos, PadDrawType::kArrAug);
-   fAugNames.emplace(pos, augName);
+   SetDraw(row * fCols + col, PadDrawType::kArrAug);
+   fAugNames.emplace(row * fCols + col, augName);
 }
 
 void AtTabPad::UpdateCvsPad()
