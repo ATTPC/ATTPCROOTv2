@@ -150,14 +150,16 @@ void AtViewerManager::GotoEvent(Int_t event)
    for (auto &tab : fTabs)
       tab->Exec();
 
-   DrawPad(fPadNum);
+   DrawPad(fPadNum.Get());
 }
 
 // Runs on any interaction with pad plane
 
 void AtViewerManager::DrawPad(Int_t padNum)
 {
-   fPadNum = padNum;
+   if (padNum < 0)
+      return;
+   fPadNum.Set(padNum);
    for (auto &tab : fTabs)
       tab->DrawPad(padNum);
 }
@@ -166,4 +168,6 @@ void AtViewerManager::Update(DataHandling::Subject *subject)
 {
    if (subject == &fEntry)
       GotoEvent(fEntry.Get());
+   if (subject == &fPadNum)
+      DrawPad(fPadNum.Get());
 }

@@ -51,7 +51,7 @@ private:
    DataHandling::AtBranch fRawEventBranch{};
    DataHandling::AtBranch fEventBranch{};
    DataHandling::AtBranch fPatternEventBranch{};
-   Int_t fPadNum;
+   DataHandling::AtPadNum fPadNum{-1};
 
    /** Should have the list of branch names **/
    std::map<TString, std::vector<TString>> fBranchNames;
@@ -76,6 +76,7 @@ public:
    DataHandling::AtBranch &GetEventName() { return fEventBranch; }
    DataHandling::AtBranch &GetPatternEventName() { return fPatternEventBranch; }
    DataHandling::AtTreeEntry &GetCurrentEntry() { return fEntry; }
+   DataHandling::AtTreeEntry &GetPadNum() { return fEntry; }
 
    /**
     * Main function for navigating to an event. Everything that changes event number should end up

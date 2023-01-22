@@ -15,6 +15,13 @@ namespace DataHandling {
 using AtTreeEntry = Simple<long>;
 
 /**
+ * @brief Subject for the pad currently selected.
+ *
+ * @ingroup DataHandling
+ */
+using AtPadNum = Simple<int>;
+
+/**
  * @brief Subject for the branch in the FairRoot tree.
  * @ingroup DataHandling
  */
