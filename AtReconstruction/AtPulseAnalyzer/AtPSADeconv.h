@@ -8,6 +8,7 @@
 #include <TVirtualFFT.h> // for TVirtualFFT
 
 #include <array> // for array
+#include <cmath>
 #include <functional>
 #include <memory> // for unique_ptr, make_unique
 #include <string> // for string
@@ -75,6 +76,9 @@ public:
 
    void SetFilterOrder(int order);
    void SetCutoffFreq(int freq);
+
+   int GetFilterOrder() { return fFilterOrder * 2; }
+   int GetCutoffFreq() { return sqrt(fCutoffFreq); }
 
    /**
     * Copy an AtRawEvent to use as the response function. If the pad number requested does

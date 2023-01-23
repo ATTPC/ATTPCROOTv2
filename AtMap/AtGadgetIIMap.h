@@ -17,7 +17,6 @@
 
 class TBuffer;
 class TClass;
-class TH2Poly;
 class TMemberInspector;
 
 class AtGadgetIIMap : public AtMap {
@@ -30,9 +29,6 @@ public:
    void GeneratePadPlane() override;                             // pure virtual member
    ROOT::Math::XYPoint CalcPadCenter(Int_t PadRef) override;     // pure virtual member
    Int_t BinToPad(Int_t binval) override { return binval - 1; }; // pure virtual member
-
-   TH2Poly *GetPadPlane() override; // virtual member
-
    void SetBinToPadMap();
 
 private:

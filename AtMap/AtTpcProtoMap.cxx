@@ -60,7 +60,11 @@ void AtTpcProtoMap::GeneratePadPlane()
          << std::endl;
       return;
    }
-
+   if (fPadPlane) {
+      std::cout << "Skipping generation of pad plane, it is already parsed!" << std::endl;
+      return;
+   }
+   fPadPlane = new TH2Poly(); // NOLINT
    std::cout << " AtTPC Proto Map : Generating the map geometry of the AtTPC Prototype " << std::endl;
    TMultiGraph *mg = nullptr;
    TKey *key = nullptr;
@@ -86,30 +90,6 @@ void AtTpcProtoMap::GeneratePadPlane()
    }
 
    kIsGenerated = kTRUE;
-}
-
-TH2Poly *AtTpcProtoMap::GetPadPlane()
-{
-   // This method must be called after GenerateAtTPC()
-
-   if (!kIsFileSet) {
-      std::cout
-         << " AtTPC Proto Map : No geometry file found! Please set the geometry file first via the SetGeoFile method "
-         << std::endl;
-      return nullptr;
-   }
-
-   if (!kIsGenerated) {
-      std::cout
-         << "  AtTPC Proto Map : Pad plane has not been generated. Please generate it via the GenerateAtTPC method "
-         << std::endl;
-      return nullptr;
-   }
-
-   if (kGUIMode)
-      drawPadPlane();
-
-   return fPadPlane;
 }
 
 TH2Poly *AtTpcProtoMap::GetAtTpcPlane(TString TH2Poly_name)

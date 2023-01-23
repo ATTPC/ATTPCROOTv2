@@ -57,6 +57,8 @@ public:
 
    void SetThreshold(Int_t threshold);
    void SetThresholdLow(Int_t thresholdlow);
+   int GetThreshold() { return fThreshold; }
+   int GetThresholdLow() { return fThresholdlow; }
 
    void SetSimulatedEvent(TClonesArray *MCSimPointArray);
 
@@ -68,7 +70,8 @@ public:
 
 protected:
    // Protected functions
-   void TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit &hit); //< Assign MC Points kinematics to each hit.
+   void TrackMCPoints(std::multimap<Int_t, std::size_t> &map,
+                      AtHit &hit); //< Assign MC Points kinematics to each hit.
 
    [[deprecated]] Double_t CalculateZ(Double_t peakIdx); ///< Calculate z position in mm using the peak index.
 

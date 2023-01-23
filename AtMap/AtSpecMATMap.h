@@ -15,7 +15,6 @@
 
 class TBuffer;
 class TClass;
-class TH2Poly;
 class TMemberInspector;
 
 class AtSpecMATMap : public AtMap {
@@ -28,10 +27,10 @@ public:
    void GeneratePadPlane() override;                         // pure virtual member
    ROOT::Math::XYPoint CalcPadCenter(Int_t PadRef) override; // pure virtual member
    Int_t BinToPad(Int_t binval) override { return binval; }; // pure virtual member
-   TH2Poly *GetPadPlane() override;                          // virtual member
 
    void SpecMATPadPlane();
 
+protected:
    ClassDefOverride(AtSpecMATMap, 1);
 };
 

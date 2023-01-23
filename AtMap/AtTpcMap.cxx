@@ -74,6 +74,10 @@ void AtTpcMap::Dump()
 
 void AtTpcMap::GeneratePadPlane()
 {
+   if (fPadPlane) {
+      LOG(error) << "Skipping generation of pad plane because it was already parsed!";
+      return;
+   }
 
    std::cout << " ATTPC Map : Generating the map geometry of the ATTPC " << std::endl;
    // Local variables
@@ -195,28 +199,10 @@ void AtTpcMap::GeneratePadPlane()
    // fPadInd = pad_index + pad_index_aux;
    std::cout << "created pads: " << pad_index + pad_index_aux << std::endl;
    kIsParsed = true;
-}
 
-Int_t AtTpcMap::fill_coord(int pindex, float padxoff, float padyoff, float triside, float fort)
-{
-   AtPadCoord[pindex][0][0] = padxoff;
-   AtPadCoord[pindex][0][1] = padyoff;
-   AtPadCoord[pindex][1][0] = padxoff + triside / 2.;
-   AtPadCoord[pindex][1][1] = padyoff + fort * triside * TMath::Sqrt(3.) / 2.;
-   AtPadCoord[pindex][2][0] = padxoff + triside;
-   AtPadCoord[pindex][2][1] = padyoff;
-   return 0;
-}
-
-TH2Poly *AtTpcMap::GetPadPlane()
-{
-
-   if (!kIsParsed) {
-
-      std::cout << " AtTpcMap::GetATTPCPlane Error : Pad plane has not been generated - Exiting... " << std::endl;
-
-      return nullptr;
-   }
+   if (fPadPlane != nullptr)
+      delete fPadPlane;
+   fPadPlane = new TH2Poly(); // NOLINT
 
    fPadPlane->SetName("ATTPC_Plane");
    fPadPlane->SetTitle("ATTPC_Plane");
@@ -230,11 +216,17 @@ TH2Poly *AtTpcMap::GetPadPlane()
    }
 
    fPadPlane->ChangePartition(500, 500);
+}
 
-   if (kGUIMode)
-      drawPadPlane();
-
-   return fPadPlane;
+Int_t AtTpcMap::fill_coord(int pindex, float padxoff, float padyoff, float triside, float fort)
+{
+   AtPadCoord[pindex][0][0] = padxoff;
+   AtPadCoord[pindex][0][1] = padyoff;
+   AtPadCoord[pindex][1][0] = padxoff + triside / 2.;
+   AtPadCoord[pindex][1][1] = padyoff + fort * triside * TMath::Sqrt(3.) / 2.;
+   AtPadCoord[pindex][2][0] = padxoff + triside;
+   AtPadCoord[pindex][2][1] = padyoff;
+   return 0;
 }
 
 XYPoint AtTpcMap::CalcPadCenter(Int_t PadRef)
