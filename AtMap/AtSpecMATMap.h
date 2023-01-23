@@ -15,7 +15,6 @@
 
 class TBuffer;
 class TClass;
-class TH2Poly;
 class TMemberInspector;
 
 class AtSpecMATMap : public AtMap {

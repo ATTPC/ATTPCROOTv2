@@ -246,7 +246,7 @@ void AtSpecMATMap::GeneratePadPlane()
    std::cout << " A total of  " << fNumberPads << " pads were generated  " << std::endl;
    kIsParsed = true;
 
-   fPadPlane = new TH2Poly();
+   fPadPlane = new TH2Poly(); // NOLINT
    std::vector<double> arrayAllCoordinates = TrianglesGenerator();
    double x[3];
    double y[3];

@@ -6,6 +6,7 @@
 #include <TCanvas.h>
 #include <TDOMParser.h>
 #include <TH2Poly.h>
+#include <TObject.h> // for TObject
 #include <TStyle.h>
 #include <TXMLDocument.h>
 #include <TXMLNode.h>

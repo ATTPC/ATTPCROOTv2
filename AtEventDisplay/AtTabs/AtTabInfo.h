@@ -2,10 +2,8 @@
 #define ATTABINFO_H
 
 #include "AtDataObserver.h"
-#include "AtDataSubject.h"
 #include "AtViewerManagerSubject.h"
 
-#include <FairLogger.h> // for Logger, LOG
 #include <FairRootManager.h>
 
 #include <TClonesArray.h>
@@ -15,6 +13,9 @@
 #include <map>
 #include <memory> // for allocator
 #include <string>
+namespace DataHandling {
+class AtSubject;
+}
 
 /**
  * @defgroup TabData Data for tabs
@@ -93,7 +94,7 @@ protected:
  * @ingroup TabData
  */
 template <typename T>
-class AtTabInfoFairRoot : public AtTabInfoBase, public DataHandling::Observer {
+class AtTabInfoFairRoot : public AtTabInfoBase, public DataHandling::AtObserver {
 
 protected:
    DataHandling::AtBranch &fBranchName;
@@ -111,7 +112,7 @@ public:
 
    T *GetInfo() { return fInfo; }
 
-   void Update(DataHandling::Subject *changedSubject) override
+   void Update(DataHandling::AtSubject *changedSubject) override
    {
       if (changedSubject == &fBranchName)
          Update();

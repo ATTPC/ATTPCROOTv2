@@ -1,11 +1,12 @@
 #ifndef AtEVENTSIDEBAR_H
 #define AtEVENTSIDEBAR_H
-#include "AtSidebarFrames.h"
+
+#include "AtViewerManagerSubject.h"
 
 #include <TGFrame.h>
-namespace DataHandling {
-class AtEntryNumber;
-}
+
+#include <vector> // for vector
+class AtSidebarFrame;
 
 /**
  * Sidebar class containings frames that also can broadcast data as a DataHandling::Subject.

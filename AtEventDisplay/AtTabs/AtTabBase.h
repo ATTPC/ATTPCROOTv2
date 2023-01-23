@@ -6,6 +6,10 @@
 #include <Rtypes.h>
 
 #include <memory>
+#include <string> // for string
+
+class TBuffer;
+class TMemberInspector;
 class TClass;
 class TEveWindowSlot;
 

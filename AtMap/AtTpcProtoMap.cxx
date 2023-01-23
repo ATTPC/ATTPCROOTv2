@@ -64,7 +64,7 @@ void AtTpcProtoMap::GeneratePadPlane()
       std::cout << "Skipping generation of pad plane, it is already parsed!" << std::endl;
       return;
    }
-   fPadPlane = new TH2Poly();
+   fPadPlane = new TH2Poly(); // NOLINT
    std::cout << " AtTPC Proto Map : Generating the map geometry of the AtTPC Prototype " << std::endl;
    TMultiGraph *mg = nullptr;
    TKey *key = nullptr;

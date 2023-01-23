@@ -2,8 +2,7 @@
 
 #include <FairLogger.h> // for Logger, LOG
 
-#include <iostream> // for operator<<, basic_ostream, basic_ostream<>::...
-#include <utility>  // for move, pair
+#include <utility> // for move, pair
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -20,7 +19,10 @@ void AtTabInfo::Init()
 
 AtTabInfoBase *AtTabInfo::AddAugment(std::unique_ptr<AtTabInfoBase> augment)
 {
-   return AddAugment(std::move(augment), augment->GetDefaultName());
+   if (augment == nullptr)
+      return nullptr;
+   auto name = augment->GetDefaultName();
+   return AddAugment(std::move(augment), name);
 }
 
 AtTabInfoBase *AtTabInfo::AddAugment(std::unique_ptr<AtTabInfoBase> augment, std::string name)
@@ -35,8 +37,10 @@ AtTabInfoBase *AtTabInfo::AddAugment(std::unique_ptr<AtTabInfoBase> augment, std
 
 AtTabInfoBase *AtTabInfo::ReplaceAugment(std::unique_ptr<AtTabInfoBase> augment)
 {
-
-   return ReplaceAugment(std::move(augment), augment->GetDefaultName());
+   if (augment == nullptr)
+      return nullptr;
+   auto name = augment->GetDefaultName();
+   return ReplaceAugment(std::move(augment), name);
 }
 AtTabInfoBase *AtTabInfo::ReplaceAugment(std::unique_ptr<AtTabInfoBase> augment, std::string name)
 {

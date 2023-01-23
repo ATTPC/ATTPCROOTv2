@@ -1,5 +1,6 @@
 #include "AtTabPad.h"
 
+#include "AtAuxPad.h" // for AtAuxPad
 #include "AtEvent.h"
 #include "AtPad.h"
 #include "AtPadArray.h"
@@ -8,18 +9,15 @@
 #include "AtTabInfo.h"
 #include "AtViewerManager.h"
 
-#include <FairLogger.h> // for LOG
-
 #include <TCanvas.h>
-#include <TEveBrowser.h>
-#include <TEveManager.h>
 #include <TEveWindow.h>
 #include <TH1.h> // for TH1D
-#include <TRootEmbeddedCanvas.h>
 
-#include <array>    // for array
-#include <cstdio>   // for sprintf
 #include <iostream> // for operator<<, basic_ostream::operator<<
+#include <memory>   // for make_unique, allocator, unique_ptr
+namespace DataHandling {
+class AtSubject;
+}
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -29,7 +27,7 @@ constexpr auto cBLUE = "\033[1;34m";
 
 ClassImp(AtTabPad);
 
-AtTabPad::AtTabPad(int nRow, int nCol, TString name) : AtTabBase(), fRows(nRow), fCols(nCol), fTabName(name)
+AtTabPad::AtTabPad(int nRow, int nCol, TString name) : AtTabBase(), fRows(nRow), fCols(nCol), fTabName(std::move(name))
 {
    if (AtViewerManager::Instance() == nullptr)
       throw "AtViewerManager must be initialized before creating tabs!";
@@ -78,7 +76,7 @@ void AtTabPad::MakeTab(TEveWindowSlot *slot)
 
 void AtTabPad::Exec()
 {
-   AtRawEvent *fRawEvent = GetFairRootInfo<AtRawEvent>();
+   auto fRawEvent = GetFairRootInfo<AtRawEvent>();
    if (fRawEvent == nullptr) {
       std::cout << "fRawEvent is nullptr for tab " << fTabId << "! Please set the raw event branch." << std::endl;
       return;
@@ -88,18 +86,19 @@ void AtTabPad::Exec()
    for (auto &[pos, toDraw] : fDrawMap) {
       fCvsPad->cd(pos + 1);
       auto hist = toDraw.second;
-      hist->Reset();
-      hist->Draw();
       if (toDraw.first == PadDrawType::kAuxPad) {
+         hist->Reset();
+
          auto auxPad = fRawEvent->GetAuxPad(fAugNames[pos]);
          if (auxPad != nullptr)
             DrawAdc(hist, *auxPad);
+         hist->Draw();
       }
    }
    UpdateCvsPad();
 }
 
-void AtTabPad::Update(DataHandling::Subject *sub)
+void AtTabPad::Update(DataHandling::AtSubject *sub)
 {
    if (sub == fPadNum)
       DrawPad();
@@ -108,7 +107,7 @@ void AtTabPad::Update(DataHandling::Subject *sub)
 void AtTabPad::DrawPad()
 {
 
-   AtRawEvent *fRawEvent = GetFairRootInfo<AtRawEvent>();
+   auto fRawEvent = GetFairRootInfo<AtRawEvent>();
 
    if (fRawEvent == nullptr) {
       std::cout << "fRawEvent is nullptr for tab " << fTabId << "! Please set the raw event branch." << std::endl;
@@ -170,7 +169,6 @@ void AtTabPad::DrawArrayAug(TH1D *hist, const AtPad &pad, TString augName)
    }
    hist->Draw();
 }
-
 
 void AtTabPad::SetDraw(Int_t pos, PadDrawType type)
 {

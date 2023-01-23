@@ -1,15 +1,17 @@
 #ifndef ATSIDEBARPSA_H
 #define ATSIDEBARPSA_H
-#include "AtPSA.h"
-#include "AtSidebarAddon.h"
-#include "AtSidebarFrames.h"
+#include "AtSidebarAddon.h" // for AtSidebarAddon
 
-#include <Rtypes.h>
-#include <TGFrame.h>
-#include <TGLabel.h>
-#include <TGNumberEntry.h>
+#include <Rtypes.h> // for THashConsistencyHolder, UInt_t, ClassDef...
 
-#include <string>
+#include <GuiTypes.h> // for Pixel_t
+
+#include <string> // for allocator, string
+class AtPSA;
+class TBuffer;
+class TClass;
+class TGWindow;
+class TMemberInspector;
 
 class AtSidebarPSA : public AtSidebarAddon {
 protected:

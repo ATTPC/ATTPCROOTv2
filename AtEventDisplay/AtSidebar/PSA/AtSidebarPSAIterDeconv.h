@@ -1,16 +1,16 @@
 #ifndef ATSIDEBARPSAITERDECONV_H
 #define ATSIDEBARPSAITERDECONV_H
+#include "AtSidebarPSADeconv.h" // for AtSidebarPSADeconv
 
-#include "AtSidebarPSADeconv.h"
-#include "AtSidebarAddon.h"
-#include "AtSidebarFrames.h"
+#include <Rtypes.h> // for THashConsistencyHolder, UInt_t, Clas...
 
-#include <Rtypes.h>
-#include <TGFrame.h>
-#include <TGLabel.h>
-#include <TGNumberEntry.h>
+#include <GuiTypes.h> // for Pixel_t
 
-#include <string>
+#include <string> // for allocator, string
+class TBuffer;
+class TClass;
+class TGWindow;
+class TMemberInspector;
 
 class AtSidebarPSAIterDeconv : public AtSidebarPSADeconv {
 protected:

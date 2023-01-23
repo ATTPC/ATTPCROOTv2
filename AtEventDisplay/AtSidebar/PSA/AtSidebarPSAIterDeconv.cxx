@@ -1,6 +1,15 @@
 #include "AtSidebarPSAIterDeconv.h"
 
-#include "AtPSAIterDeconv.h"
+#include "AtPSA.h"           // for AtPSA
+#include "AtPSAIterDeconv.h" // for AtPSAIterDeconv
+
+#include <TGNumberEntry.h> // for TGNumberEntry, TGNumberEntryField
+
+#include "Rtypes.h" // for TGenericClassInfo
+
+#include <iostream> // for operator<<, basic_ostream, endl, cout
+#include <map>      // for map, operator==, _Rb_tree_iterator, map...
+#include <utility>  // for pair
 
 ClassImp(AtSidebarPSAIterDeconv);
 

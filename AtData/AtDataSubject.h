@@ -2,18 +2,17 @@
 #define ATDATASUBJECT_H
 
 #include <set>
-#include <string>
 
 /**
  @defgroup DataHandling Data Handling
  *
- * Classes for storing information used by other classes that may be updated at arbitrary time. All classes in this
+ * Classes for storing information  that may be updated at arbitrary times. All classes in this
  group derive either from Subject or Observer. Subject classes store data and if that data is updated will notify every
  Observer attached to them of the change. The observer can then decide how to respond.
 
 */
 namespace DataHandling {
-class Observer;
+class AtObserver;
 
 /**
  * This is the base class for any object that may contain data to send to Observer on an update.
@@ -22,20 +21,20 @@ class Observer;
  * this object changes, then they can retrieve the updated information and act on it.
  * @ingroup DataHandling
  */
-class Subject {
+class AtSubject {
 private:
-   std::set<Observer *> fObservers;
+   std::set<AtObserver *> fObservers;
 
 protected:
-   Subject() = default;
+   AtSubject() = default;
 
 public:
-   virtual ~Subject() = default;
+   virtual ~AtSubject() = default;
 
    /// Attach an observer to get notified when this subject changes
-   void Attach(Observer *observer);
+   void Attach(AtObserver *observer);
    /// Detach an observer to stop getting notified when this subject changes
-   void Detach(Observer *observer) { fObservers.erase(observer); }
+   void Detach(AtObserver *observer) { fObservers.erase(observer); }
    /// Notify all attached subjects that something changed
    void Notify();
 };
@@ -49,12 +48,12 @@ public:
  */
 
 template <typename T>
-class Simple : public Subject {
+class AtSimpleType : public AtSubject {
 protected:
    T fData;
 
 public:
-   Simple(T data) { fData = data; } // Must use assigment operator for primitive types.
+   AtSimpleType(T data) { fData = data; } // Must use assigment operator for primitive types.
    T Get() const { return fData; }
    void Set(T data, bool notify = true)
    {

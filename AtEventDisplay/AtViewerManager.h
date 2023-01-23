@@ -1,35 +1,25 @@
 #ifndef ATVIEWERMANAGER_H
 #define ATVIEWERMANAGER_H
-
 #include "AtDataObserver.h"
-#include "AtDataSubject.h"
-#include "AtEventSidebar.h"
 #include "AtViewerManagerSubject.h"
 
-#include <FairRunAna.h>
-
 #include <Rtypes.h>
-#include <TEveEventManager.h>
-#include <TEveManager.h>
+#include <TString.h> // for TString
 
+#include <map>    // for map
+#include <memory> // for shared_ptr, unique_ptr
 #include <vector>
 
-class AtTabTask;
-class FairRootManager;
-class FairTask;
-class TBuffer;
-class TCanvas;
-class TH2F;
-class TClass;
-class TGNumberEntry;
-class TGTextButton;
-class TMemberInspector;
-class TGListTreeItem;
-class TList;
-class AtMap;
-class TGComboBox;
-class AtTabBase;
-
+class AtEventSidebar;
+class AtMap;            // lines 29-29
+class AtTabBase;        // lines 31-31
+class FairTask;         // lines 19-19
+class TBuffer;          // lines 20-20
+class TClass;           // lines 23-23
+class TMemberInspector; // lines 26-26
+namespace DataHandling {
+class AtSubject;
+}
 /**
  * Event manager than allows for the addition arbitrary pads to expand behavior.
  * Operates as a singleton who needs to be instatiated once with the detector map in use.
@@ -37,7 +27,7 @@ class AtTabBase;
  * Tabs are added directly to AtEventManager (which creates a task used to update the pads as events
  * are loaded or re-analyzed)
  */
-class AtViewerManager final : DataHandling::Observer {
+class AtViewerManager final : DataHandling::AtObserver {
 private:
    using TabVec = std::vector<std::unique_ptr<AtTabBase>>;
 
@@ -64,7 +54,7 @@ public:
    void AddTab(std::unique_ptr<AtTabBase> tab);
 
    void Init();
-   virtual void Update(DataHandling::Subject *) override;
+   virtual void Update(DataHandling::AtSubject *) override;
 
    AtMap *GetMap() { return fMap.get(); }
    AtEventSidebar *GetSidebar() { return fSidebar; }

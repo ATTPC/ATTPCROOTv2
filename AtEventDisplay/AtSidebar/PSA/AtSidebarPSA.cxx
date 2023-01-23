@@ -2,6 +2,12 @@
 
 #include "AtPSA.h"
 
+#include <TGNumberEntry.h> // for TGNumberEntry, TGNumberEntryField
+
+#include <iostream> // for operator<<, endl, basic_ostream, cout
+#include <map>      // for map, operator==, _Rb_tree_iterator, map<>...
+#include <utility>  // for paiAr
+
 ClassImp(AtSidebarPSA);
 
 void AtSidebarPSA::FillFrame()

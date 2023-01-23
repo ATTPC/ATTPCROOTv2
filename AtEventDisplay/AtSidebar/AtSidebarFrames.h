@@ -1,15 +1,27 @@
 #ifndef ATSIDEBARFRAMES_H
 #define ATSIDEBARFRAMES_H
+// IWYU pragma: no_include <ext/alloc_traits.h>
 
-#include "AtDataObserver.h"
-#include "AtViewerManagerSubject.h"
+#include "AtDataObserver.h"         // for Observer
+#include "AtViewerManagerSubject.h" // for AtBranch (ptr only), AtPadNum
 
-#include <TGComboBox.h>
-#include <TGFrame.h>
-#include <TGLabel.h>
-#include <TGNumberEntry.h>
+#include <Rtypes.h>  // for UInt_t, Int_t
+#include <TGFrame.h> // for TGHorizontalFrame (ptr only)
+#include <TString.h> // for TString
 
-class TGTableLayout;
+#include <GuiTypes.h> // for Pixel_t, kChildFrame, kHorizonta...
+
+#include <map>    // for map
+#include <string> // for string
+#include <vector> // for vector
+class TGComboBox;
+class TGLabel;
+class TGNumberEntry;
+class TGTextButton;
+class TGWindow;
+namespace DataHandling {
+class AtSubject;
+}
 
 /**
  * Base class something that can be added to the sidebar. It is a frame that will be added to the
@@ -77,7 +89,7 @@ public:
 private:
    TString GetFileName(TString filePath);
 };
-class AtSidebarPadControl : public AtVerticalSidebarFrame, public DataHandling::Observer {
+class AtSidebarPadControl : public AtVerticalSidebarFrame, public DataHandling::AtObserver {
    DataHandling::AtPadNum &fPadNum;
 
    TGHorizontalFrame *fCurrentPadFrame{nullptr};
@@ -93,14 +105,13 @@ public:
                        UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground());
    ~AtSidebarPadControl();
 
-   void Update(DataHandling::Subject *changedSubject) override;
+   void Update(DataHandling::AtSubject *changedSubject) override;
    void FillFrame() override;
 
    void SelectPad(); //< Pad TGNumberEntry/Button callback
 };
 
-class AtSidebarEventControl : public AtVerticalSidebarFrame,
-                              public DataHandling::Observer {
+class AtSidebarEventControl : public AtVerticalSidebarFrame, public DataHandling::AtObserver {
 private:
    DataHandling::AtTreeEntry &fEntryNumber;
 
@@ -116,20 +127,19 @@ public:
                          UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground());
    ~AtSidebarEventControl();
 
-   void Update(DataHandling::Subject *changedSubject) override;
+   void Update(DataHandling::AtSubject *changedSubject) override;
    void FillFrame() override;
 
    void SelectEvent(); //< Event TGNumberEntry callback
    void RedrawEvent(); //< Event TGNumberEntry callback
 };
 
-class AtSidebarBranchControl : public AtVerticalSidebarFrame, public DataHandling::Observer {
+class AtSidebarBranchControl : public AtVerticalSidebarFrame, public DataHandling::AtObserver {
 private:
-   TGVerticalFrame *fLabels;
-   TGVerticalFrame *fBoxes;
+   TGVerticalFrame *fLabels{nullptr};
+   TGVerticalFrame *fBoxes{nullptr};
    std::map<TString, DataHandling::AtBranch &> fBranches;
    std::map<TString, TGComboBox *> fBranchBoxes;
-   // std::vector<TGComboBox *> fBranchBoxes;
 
 public:
    AtSidebarBranchControl(DataHandling::AtBranch &rawEvent, DataHandling::AtBranch &event,
@@ -138,7 +148,7 @@ public:
 
    ~AtSidebarBranchControl();
 
-   void Update(DataHandling::Subject *changedSubject) override;
+   void Update(DataHandling::AtSubject *changedSubject) override;
 
    void SelectedAtRawEvent(Int_t);
    void SelectedAtEvent(Int_t);

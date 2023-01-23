@@ -1,48 +1,55 @@
 #include "AtTabMain.h"
 
-#include "AtEvent.h"
-#include "AtHit.h" // for AtHit
-#include "AtMap.h"
-#include "AtPad.h" // for AtPad
-#include "AtRawEvent.h"
-#include "AtTabInfo.h"
-#include "AtViewerManager.h"
+#include "AtEvent.h"         // for AtEvent, AtEvent::HitVector
+#include "AtHit.h"           // for AtHit, AtHit::XYZPoint
+#include "AtMap.h"           // for AtMap
+#include "AtPad.h"           // for AtPad
+#include "AtPadReference.h"  // for operator<<
+#include "AtPattern.h"       // for AtPattern
+#include "AtPatternEvent.h"  // for AtPatternEvent
+#include "AtRawEvent.h"      // for AtRawEvent
+#include "AtTabInfo.h"       // for AtTabInfoFairRoot, AtTabInfoBase
+#include "AtTrack.h"         // for AtTrack
+#include "AtViewerManager.h" // for AtViewerManager
 
-#include <FairLogger.h> // for LOG
+#include <FairLogger.h> // for LOG, Logger
 
-#include <Math/Point3D.h> // for PositionVector3D
-#include <TAttMarker.h>   // for kFullDotMedium
-#include <TCanvas.h>
-#include <TEveBrowser.h>
-#include <TEveGeoNode.h>
-#include <TEveManager.h>
-#include <TEvePointSet.h>  // for TEvePointSet
-#include <TEveTreeTools.h> // for TEvePointSelectorConsumer, TEvePoint...
-#include <TEveViewer.h>
-#include <TEveWindow.h>
-#include <TGLCamera.h> // for TGLCamera
-#include <TGLViewer.h>
-#include <TGTab.h>
-#include <TGeoManager.h>
-#include <TGeoVolume.h>
-#include <TH1.h> // for TH1I
-#include <TH2Poly.h>
-#include <TNamed.h> // for TNamed
-#include <TROOT.h>  // for TROOT, gROOT
-#include <TRandom.h>
-#include <TRootEmbeddedCanvas.h>
-#include <TSeqCollection.h> // for TSeqCollection
-#include <TStyle.h>
-#include <TVirtualPad.h>
-#include <TVirtualPad.h> // for TVirtualPad, gPad
-#include <TVirtualX.h>
+#include <Math/Point3D.h>        // for PositionVector3D
+#include <TAttMarker.h>          // for TAttMarker
+#include <TCanvas.h>             // for TCanvas
+#include <TEveBrowser.h>         // for TEveBrowser
+#include <TEveEventManager.h>    // for TEveEventManager
+#include <TEveGeoNode.h>         // for TEveGeoTopNode
+#include <TEveManager.h>         // for TEveManager, gEve
+#include <TEvePointSet.h>        // for TEvePointSet
+#include <TEveViewer.h>          // for TEveViewer
+#include <TEveWindow.h>          // for TEveWindowPack, TEveWindowSlot, TEv...
+#include <TGLCamera.h>           // for TGLCamera
+#include <TGLViewer.h>           // for TGLViewer
+#include <TGTab.h>               // for TGTab
+#include <TGeoManager.h>         // for gGeoManager, TGeoManager
+#include <TGeoVolume.h>          // for TGeoVolume
+#include <TH1.h>                 // for TH1I
+#include <TH2Poly.h>             // for TH2Poly
+#include <TNamed.h>              // for TNamed
+#include <TObject.h>             // for TObject
+#include <TRootEmbeddedCanvas.h> // for TRootEmbeddedCanvas
+#include <TString.h>             // for Form, TString
+#include <TStyle.h>              // for TStyle, gStyle
+#include <TVirtualPad.h>         // for TVirtualPad, gPad
+#include <TVirtualX.h>           // for TVirtualX, gVirtualX
 
+#include <algorithm>          // for max
 #include <array>              // for array
 #include <cstdio>             // for sprintf
 #include <ext/alloc_traits.h> // for __alloc_traits<>::value_type
 #include <iostream>           // for operator<<, endl, basic_ostream
 #include <utility>            // for move
-class TGeoNode;
+
+namespace DataHandling {
+class AtSubject;
+}
+class TGeoNode; // lines 45-45
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -115,7 +122,7 @@ Color_t AtTabMain::GetTrackColor(int i)
       return kAzure;
 }
 
-void AtTabMain::Update(DataHandling::Subject *sub)
+void AtTabMain::Update(DataHandling::AtSubject *sub)
 {
    if (sub == fPadNum) {
       DrawWave(fPadNum->Get());
@@ -242,6 +249,8 @@ void AtTabMain::UpdatePadPlane()
 
    if (fPadPlane)
       fPadPlane->Reset(nullptr);
+   else
+      return;
 
    LOG(info) << "Updating pad plane ";
 

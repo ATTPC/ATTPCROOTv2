@@ -1,17 +1,19 @@
 #ifndef ATSIDEBARADDON_H
 #define ATSIDEBARADDON_H
 
-#include "AtSidebarFrames.h"
+#include "AtSidebarFrames.h" // for AtVerticalSidebarFrame
 
-#include <Rtypes.h>
-#include <TGFrame.h>
-#include <TGLabel.h>
-#include <TGNumberEntry.h>
+#include <Rtypes.h> // for THashConsistencyHolder, UInt_t, ClassDe...
 
-#include <iostream>
-#include <map>
-#include <string>
-#include <vector>
+#include <GuiTypes.h> // for Pixel_t
+
+#include <map>    // for map
+#include <string> // for string
+class TBuffer;
+class TClass;
+class TGNumberEntry;
+class TGWindow;
+class TMemberInspector;
 
 class AtSidebarAddon : public AtVerticalSidebarFrame {
 protected:
@@ -26,7 +28,7 @@ public:
 
    void AddIntBox(std::string title, std::string function, int min = 0, int max = 1);
 
-   void FillFrame() override {};
+   void FillFrame() override{};
 
    ClassDefOverride(AtSidebarAddon, 1);
 };

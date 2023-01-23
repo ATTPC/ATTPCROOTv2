@@ -12,7 +12,6 @@
 
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
-#include <TH2Poly.h>
 #include <TNamed.h>
 #include <TString.h>
 

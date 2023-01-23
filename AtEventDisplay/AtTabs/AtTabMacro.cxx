@@ -1,23 +1,20 @@
 #include "AtTabMacro.h"
 
-#include "AtTabInfo.h"
 #include "AtViewerManager.h"
 
 #include <FairLogger.h> // for LOG
 
 #include <TCanvas.h>
 #include <TChain.h>
-#include <TEveBrowser.h>
-#include <TEveManager.h>
 #include <TEveWindow.h>
-#include <TVirtualPad.h> // for TVirtualPad, gPad
 
-#include <stdio.h> // for sprintf
-
+#include <cstdio> // for sprintf
 #include <iostream>
 #include <utility> // for move, pair
-#include <vector>  // for allocator
 
+namespace DataHandling {
+class AtSubject;
+}
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
 constexpr auto cNORMAL = "\033[0m";
@@ -109,7 +106,7 @@ void AtTabMacro::Exec()
    }
 }
 
-void AtTabMacro::Update(DataHandling::Subject *sub)
+void AtTabMacro::Update(DataHandling::AtSubject *sub)
 {
 
    if (sub != fPadNum)

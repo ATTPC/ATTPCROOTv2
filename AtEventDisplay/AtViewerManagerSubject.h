@@ -12,20 +12,20 @@ namespace DataHandling {
  *
  * @ingroup DataHandling
  */
-using AtTreeEntry = Simple<long>;
+using AtTreeEntry = AtSimpleType<long>;
 
 /**
  * @brief Subject for the pad currently selected.
  *
  * @ingroup DataHandling
  */
-using AtPadNum = Simple<int>;
+using AtPadNum = AtSimpleType<int>;
 
 /**
  * @brief Subject for the branch in the FairRoot tree.
  * @ingroup DataHandling
  */
-class AtBranch : public Subject {
+class AtBranch : public AtSubject {
 private:
    int fBranchId{-1};
    int fOldBranchId{-1};

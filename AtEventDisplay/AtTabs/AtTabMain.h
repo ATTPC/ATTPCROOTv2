@@ -1,38 +1,37 @@
 #ifndef ATTABMAIN_H
 #define ATTABMAIN_H
+#include "AtDataObserver.h"         // for Observer
+#include "AtTabBase.h"              // for AtTabBase
+#include "AtViewerManagerSubject.h" // for AtPadNum
 
-#include "AtEvent.h"        // IWYU pragma: keep
-#include "AtPatternEvent.h" // IWYU pragma: keep
-#include "AtRawEvent.h"     // IWYU pragma: keep
-#include "AtTabBase.h"
+#include <Rtypes.h>           // for Int_t, THashConsistencyHolder
+#include <TAttMarker.h>       // for TAttMarker, kFullDotMedium
+#include <TEveElement.h>      // for TEveElement
+#include <TEveEventManager.h> // for TEveEventManager
+#include <TEvePointSet.h>     // for TEvePointSet
 
-#include <Rtypes.h> // for Int_t, Bool_t, THashConsistencyHolder, Color_t
-#include <TEvePointSet.h>
-#include <TString.h> // for TString
+#include <memory>  // for make_unique, unique_ptr
+#include <string>  // for string
+#include <utility> // for move
+#include <vector>  // for vector
 
-#include "TEveEventManager.h"
+class AtHit;
+class AtTrack;
+class TBuffer; // lines 19-19
+class TCanvas; // lines 24-24
+class TClass;  // lines 20-20
+class TEveWindowSlot;
+class TH1I;             // lines 28-28
+class TH2Poly;          // lines 27-27
+class TMemberInspector; // lines 21-21
+namespace DataHandling {
+class AtSubject;
+}
 
-#include <memory> // for shared_ptr
-#include <set>
-#include <string> // for string
-
-class TBuffer;
-class TClass;
-class TMemberInspector;
-class AtEventManagerNew;
-class AtMap;
-class TCanvas;
-class TEvePointSet;
-class TEveRGBAPalette;
-class TH2Poly;
-class TH1I;
-class TPaletteAxis;
-class AtTabInfo;
-class AtPatternEvent;
-class AtRawEvent;
-class AtEvent;
-
-class AtTabMain : public AtTabBase, public DataHandling::Observer {
+/**
+ * @brief Main tab in viewer for 3D and pad selection.
+ */
+class AtTabMain : public AtTabBase, public DataHandling::AtObserver {
 private:
    using TEvePointSetPtr = std::unique_ptr<TEvePointSet>;
    using TEveEventManagerPtr = std::unique_ptr<TEveEventManager>;
@@ -64,7 +63,7 @@ public:
    void InitTab() override;
 
    void Exec() override;
-   void Update(DataHandling::Subject *sub) override;
+   void Update(DataHandling::AtSubject *sub) override;
 
    void DrawEvent();
    void DumpEvent(std::string file);

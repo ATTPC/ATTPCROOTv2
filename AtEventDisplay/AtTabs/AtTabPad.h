@@ -3,32 +3,32 @@
 
 #include "AtDataObserver.h"
 #include "AtTabBase.h"
+#include "AtViewerManagerSubject.h" // for AtPadNum
 
 #include <Rtypes.h>  // for Int_t, Bool_t, THashConsistencyHolder, Color_t
 #include <TString.h> // for TString
 
-#include <memory> // for shared_ptr
 #include <string> // for string
 #include <unordered_map>
 #include <utility> // for pair
 
+class TEveWindowSlot;
 class TBuffer;
 class TClass;
 class TMemberInspector;
-class AtEvent;
-class AtEventManagerNew;
-class AtRawEvent;
-class AtMap;
 class AtPad;
 class TCanvas;
 class TEveRGBAPalette;
 class TH1D;
+namespace DataHandling {
+class AtSubject;
+}
 
 /**
  * Class for drawing traces from pads in an AtRawEvent.
  *
  */
-class AtTabPad : public AtTabBase, public DataHandling::Observer {
+class AtTabPad : public AtTabBase, public DataHandling::AtObserver {
 protected:
    enum class PadDrawType { kADC, kRawADC, kArrAug, kAuxPad };
    TCanvas *fCvsPad{nullptr};
@@ -51,7 +51,7 @@ public:
    ~AtTabPad();
    void InitTab() override;
    void Exec() override;
-   void Update(DataHandling::Subject *sub) override;
+   void Update(DataHandling::AtSubject *sub) override;
 
    void DrawADC(int row = 0, int col = 0);                       //< Draw adc in current pad
    void DrawRawADC(int row = 0, int col = 0);                    //< Draw raw adc in current pad

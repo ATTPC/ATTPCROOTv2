@@ -1,6 +1,13 @@
 #include "AtSidebarPSADeconv.h"
 
+#include "AtPSA.h" // for AtPSA
 #include "AtPSADeconv.h"
+
+#include <TGNumberEntry.h> // for TGNumberEntry, TGNumberEntryField
+
+#include <iostream> // for operator<<, basic_ostream, endl, cout
+#include <map>      // for map, operator==, _Rb_tree_iterator, map<>...
+#include <utility>  // for pair
 
 ClassImp(AtSidebarPSADeconv);
 

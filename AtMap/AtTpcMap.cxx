@@ -202,7 +202,7 @@ void AtTpcMap::GeneratePadPlane()
 
    if (fPadPlane != nullptr)
       delete fPadPlane;
-   fPadPlane = new TH2Poly();
+   fPadPlane = new TH2Poly(); // NOLINT
 
    fPadPlane->SetName("ATTPC_Plane");
    fPadPlane->SetTitle("ATTPC_Plane");

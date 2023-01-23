@@ -1,8 +1,6 @@
 #ifndef AtPSA_H
 #define AtPSA_H
 
-#include "AtDataObserver.h"
-#include "AtDataSubject.h"
 #include "AtHit.h" // IWYU pragma: keep
 
 #include <Rtypes.h>

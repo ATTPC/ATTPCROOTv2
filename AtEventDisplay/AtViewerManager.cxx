@@ -1,47 +1,28 @@
 #include "AtViewerManager.h"
 
-#include "AtMap.h"
-#include "AtSidebarFrames.h"
-#include "AtTabBase.h"
+#include "AtEventSidebar.h" // for AtEventSidebar
+#include "AtTabBase.h"      // for AtTabBase
 
-#include <FairRootManager.h>
-#include <FairRunAna.h>
-#include <FairTask.h>
+#include <FairLogger.h>      // for Logger, LOG
+#include <FairRootManager.h> // for FairRootManager
+#include <FairRunAna.h>      // for FairRunAna
 
-#include <Rtypes.h>
-#include <TCanvas.h>
-#include <TChain.h>
-#include <TEveBrowser.h>
-#include <TEveEventManager.h>
-#include <TEveGeoNode.h>
-#include <TEveViewer.h>
-#include <TEveWindow.h>
-#include <TFile.h>
-#include <TGButton.h>
-#include <TGClient.h>
-#include <TGComboBox.h>
-#include <TGFrame.h>
-#include <TGLCamera.h>
-#include <TGLViewer.h>
-#include <TGLabel.h>
-#include <TGLayout.h>
-#include <TGNumberEntry.h>
-#include <TGTab.h>
-#include <TGWindow.h>
-#include <TGeoManager.h>
-#include <TGeoVolume.h>
-#include <TH2.h>
-#include <TH2Poly.h>
-#include <TList.h>
-#include <TObject.h>
-#include <TROOT.h> // for TROOT, gROOT
-#include <TRootBrowser.h>
-#include <TRootEmbeddedCanvas.h>
-#include <TString.h>
-#include <TStyle.h>
-#include <TSystem.h>
-#include <TVirtualPad.h>
-#include <TVirtualX.h>
+#include <Rtypes.h>       // for ClassImp, Long64_t, TGenericClassInfo
+#include <TClonesArray.h> // for TClonesArray
+#include <TEveBrowser.h>  // for TEveBrowser
+#include <TEveManager.h>  // for TEveManager, gEve
+#include <TList.h>        // for TList
+#include <TObject.h>      // for TObject
+#include <TRootBrowser.h> // for TRootBrowser, TRootBrowser::kLeft
+#include <TString.h>      // for TString, operator<<, operator<
+#include <TStyle.h>       // for TStyle, gStyle
+
+#include <iostream> // for operator<<, endl, basic_ostream, cout
+#include <utility>  // for move
+
+namespace DataHandling {
+class AtSubject;
+}
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -49,11 +30,6 @@ constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
 constexpr auto cBLUE = "\033[1;34m";
 constexpr auto cWHITERED = "\033[37;41m";
-
-#include <iostream>
-#include <string>
-
-class TGeoNode;
 
 using namespace std;
 
@@ -65,7 +41,7 @@ AtViewerManager *AtViewerManager::Instance()
    return fInstance;
 }
 
-AtViewerManager::AtViewerManager(std::shared_ptr<AtMap> map) : fMap(map)
+AtViewerManager::AtViewerManager(std::shared_ptr<AtMap> map) : fMap(std::move(map))
 {
    if (fInstance != nullptr)
       LOG(fatal) << "Attempting to create a second instance of AtViewerManager! Only one is allowed!";
@@ -150,10 +126,9 @@ void AtViewerManager::GotoEventImpl()
    fPadNum.Notify(); // Inform everyone they should act as is the pad changed
 }
 
-void AtViewerManager::Update(DataHandling::Subject *subject)
+void AtViewerManager::Update(DataHandling::AtSubject *subject)
 {
    if (subject == &fEntry) {
-      std::cout << "Get event change" << std::endl;
       GotoEventImpl();
    }
 }

@@ -1,20 +1,23 @@
 #ifndef ATTABINFOHIRAEVT_H
 #define ATTABINFOHIRAEVT_H
 
-#include "AtTabInfo.h"
+#include "AtDataObserver.h"         // for Observer
+#include "AtTabInfo.h"              // for AtTabInfoBase
+#include "AtViewerManagerSubject.h" // for AtTreeEntry
 
-#include <FairRootManager.h>
-
-#include <TString.h>
-#include <TTree.h> // for TTree
-#include <TTreeReader.h>
+#include <TString.h>     // for TString
+#include <TTreeReader.h> // for TTreeReader
 
 #include <memory> // for unique_ptr, make_unique
+
+namespace DataHandling {
+class AtSubject;
+}
 template <typename T>
 class TTreeReaderValue;
 
 template <typename T>
-class AtTabInfoHiRAEVT : public AtTabInfoBase, public DataHandling::Observer {
+class AtTabInfoHiRAEVT : public AtTabInfoBase, public DataHandling::AtObserver {
 protected:
    std::unique_ptr<TTreeReader> fReader{nullptr};
    std::unique_ptr<TTreeReaderValue<T>> fDetectorReader{nullptr};
@@ -39,7 +42,7 @@ public:
       fDetectorReader = std::make_unique<TTreeReaderValue<T>>(*fReader, fBranchName);
    }
 
-   void Update(DataHandling::Subject *changedSubject) override
+   void Update(DataHandling::AtSubject *changedSubject) override
    {
       if (changedSubject == fEntryNumber)
          Update();

@@ -1,7 +1,6 @@
 #ifndef ATPSADECONV_H
 #define ATPSADECONV_H
 
-#include "AtDataSubject.h"
 #include "AtPSA.h"
 #include "AtPad.h"
 #include "AtRawEvent.h"
@@ -9,6 +8,7 @@
 #include <TVirtualFFT.h> // for TVirtualFFT
 
 #include <array> // for array
+#include <cmath>
 #include <functional>
 #include <memory> // for unique_ptr, make_unique
 #include <string> // for string

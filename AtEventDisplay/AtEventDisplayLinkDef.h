@@ -7,7 +7,6 @@
 #pragma link C++ class AtEventManager + ;
 #pragma link C++ class AtViewerManager + ;
 #pragma link C++ class AtEventManagerProto + ;
-#pragma link C++ class AtTabTask + ;
 #pragma link C++ class AtEventDrawTask + ;
 #pragma link C++ class AtEventDrawTaskProto + ;
 #pragma link C++ class AtEventManagerS800 + ;
@@ -21,10 +20,11 @@
 #pragma link C++ class AtTabInfoBase - !;
 #pragma link C++ class AtTabInfo - !;
 // clang-format off
-#pragma link C++ class AtTabInfoFairRoot<AtEvent>-!;
-#pragma link C++ class AtTabInfoFairRoot<AtRawEvent>-!;
-#pragma link C++ class AtTabInfoFairRoot<AtPatternEvent>-!;
-#pragma link C++ class AtTabInfoHiRAEVT<HTMusicIC>-!;
+// Removing these because ROOT is struggling to properly include the headers to generate the dictionary
+//#pragma link C++ class AtTabInfoFairRoot<AtEvent>-!;
+//#pragma link C++ class AtTabInfoFairRoot<AtRawEvent>-!;
+//#pragma link C++ class AtTabInfoFairRoot<AtPatternEvent>-!;
+//#pragma link C++ class AtTabInfoHiRAEVT<HTMusicIC>-!;
 // clang-format on
 
 #pragma link C++ class AtSidebarAddon + ;

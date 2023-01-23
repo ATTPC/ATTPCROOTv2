@@ -1,16 +1,32 @@
 #include "AtSidebarFrames.h"
+// IWYU pragma: no_include <ext/alloc_traits.h>
 
-#include "AtMap.h"
-#include "AtViewerManager.h"
+#include "AtMap.h"           // for AtMap
+#include "AtPadReference.h"  // for AtPadReference
+#include "AtViewerManager.h" // for AtViewerManager
 
-#include <FairRootManager.h>
-#include <FairRunAna.h>
+#include <FairRootManager.h> // for FairRootManager
+#include <FairRunAna.h>      // for FairRunAna
 
-#include <TFile.h>
-#include <TGButton.h>
-#include <TGTableLayout.h>
+#include <TChain.h>        // for TChain
+#include <TFile.h>         // for TFile
+#include <TGButton.h>      // for TGTextButton, TGButton, TGPictureButton
+#include <TGClient.h>      // for TGClient, gClient
+#include <TGComboBox.h>    // for TGComboBox
+#include <TGLabel.h>       // for TGLabel
+#include <TGLayout.h>      // for TGLayoutHints, kLHintsExpandX, kLHints...
+#include <TGNumberEntry.h> // for TGNumberEntry, TGNumberFormat, TGNumbe...
+#include <TSystem.h>       // for TSystem, gSystem
 
-#include <iostream>
+#include <algorithm> // for find
+#include <iterator>  // for begin, distance, end
+#include <memory>    // for allocator, allocator_traits<>::value_type
+
+class TGWindow;
+namespace DataHandling {
+class AtSubject;
+}
+
 TString AtSidebarRunInfo::GetFileName(TString filePath)
 {
    TString tok;
@@ -68,8 +84,8 @@ void AtSidebarPadControl::FillFrame()
    fCurrentPadLabel = new TGLabel(fCurrentPadFrame, "Current Pad: ");
 
    fCurrentPadEntry =
-      new TGNumberEntry(fCurrentPadFrame, 0., 6, -1, TGNumberFormat::kNESInteger, TGNumberFormat::kNEANonNegative,
-                        TGNumberFormat::kNELLimitMinMax, 0, AtViewerManager::Instance()->GetMap()->GetNumPads());
+      new TGNumberEntry(fCurrentPadFrame, 0., 6, -1, TGNumberFormat::kNESInteger, TGNumberFormat::kNEAAnyNumber,
+                        TGNumberFormat::kNELLimitMinMax, -1, AtViewerManager::Instance()->GetMap()->GetNumPads());
 
    fCurrentPadEntry->Connect("ValueSet(Long_t)", "AtSidebarPadControl", this, "SelectPad()");
 
@@ -85,7 +101,7 @@ void AtSidebarPadControl::FillFrame()
    this->AddFrame(fCurrentPadId, new TGLayoutHints(kLHintsCenterX | kLHintsExpandX));
 }
 
-void AtSidebarPadControl::Update(DataHandling::Subject *changedSubject)
+void AtSidebarPadControl::Update(DataHandling::AtSubject *changedSubject)
 {
    if (changedSubject == &fPadNum && fCurrentPadEntry) {
       fCurrentPadEntry->SetIntNumber(fPadNum.Get());
@@ -111,7 +127,7 @@ AtSidebarEventControl::~AtSidebarEventControl()
    fEntryNumber.Detach(this);
 }
 
-void AtSidebarEventControl::Update(DataHandling::Subject *changedSubject)
+void AtSidebarEventControl::Update(DataHandling::AtSubject *changedSubject)
 {
    if (changedSubject == &fEntryNumber && fCurrentEventEntry)
       fCurrentEventEntry->SetIntNumber(fEntryNumber.Get());
@@ -188,7 +204,7 @@ AtSidebarBranchControl::AtSidebarBranchControl(DataHandling::AtBranch &rawEvent,
 void AtSidebarBranchControl::FillFrame()
 {
    this->AddFrame(new TGLabel(this, "Selected Branches"), new TGLayoutHints(kLHintsCenterX));
-   TGHorizontalFrame *frame = new TGHorizontalFrame(this);
+   auto frame = new TGHorizontalFrame(this);
 
    fLabels = new TGVerticalFrame(frame);
    fBoxes = new TGVerticalFrame(frame);
@@ -264,7 +280,7 @@ void AtSidebarBranchControl::SelectedAtPatternEvent(Int_t ind)
    SelectEvent(ind, "AtPatternEvent");
 }
 
-void AtSidebarBranchControl::Update(DataHandling::Subject *changedSubject)
+void AtSidebarBranchControl::Update(DataHandling::AtSubject *changedSubject)
 {
    auto &branchNames = AtViewerManager::Instance()->GetBranchNames();
 
@@ -272,4 +288,3 @@ void AtSidebarBranchControl::Update(DataHandling::Subject *changedSubject)
       if (changedSubject == &branch)
          fBranchBoxes[name]->Select(GetIndex(branch.GetBranchName(), branchNames.at(name)));
 }
-

@@ -1,11 +1,14 @@
 #include "AtEventSidebar.h"
 
-#include "AtDataObserver.h"
+#include "AtSidebarFrames.h" // for AtSidebarFrame, AtSidebarBranchControl
 #include "AtViewerManager.h"
 
 #include <FairLogger.h>
 
-#include <TGLabel.h>
+#include <TGClient.h> // for TGClient, gClient
+#include <TGLayout.h> // for TGLayoutHints, kLHintsExpandX
+
+#include <algorithm> // for max
 void AtEventSidebar::FillFrames()
 {
    for (auto frame : fFrames)

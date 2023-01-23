@@ -4,12 +4,12 @@
 
 using namespace DataHandling;
 
-void Subject::Notify()
+void AtSubject::Notify()
 {
    for (auto obs : fObservers)
       obs->Update(this);
 }
-void Subject::Attach(Observer *observer)
+void AtSubject::Attach(AtObserver *observer)
 {
    fObservers.insert(observer);
 }
