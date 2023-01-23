@@ -9,6 +9,8 @@
 #include "AtTabInfo.h"
 #include "AtViewerManager.h"
 
+#include <FairLogger.h>
+
 #include <TCanvas.h>
 #include <TEveWindow.h>
 #include <TH1.h> // for TH1D
@@ -78,7 +80,7 @@ void AtTabPad::Exec()
 {
    auto fRawEvent = GetFairRootInfo<AtRawEvent>();
    if (fRawEvent == nullptr) {
-      std::cout << "fRawEvent is nullptr for tab " << fTabId << "! Please set the raw event branch." << std::endl;
+      LOG(debug) << "fRawEvent is nullptr for tab " << fTabId << "! Please set the raw event branch.";
       return;
    }
 
@@ -110,7 +112,7 @@ void AtTabPad::DrawPad()
    auto fRawEvent = GetFairRootInfo<AtRawEvent>();
 
    if (fRawEvent == nullptr) {
-      std::cout << "fRawEvent is nullptr for tab " << fTabId << "! Please set the raw event branch." << std::endl;
+      LOG(debug) << "fRawEvent is nullptr for tab " << fTabId << "! Please set the raw event branch.";
       return;
    }
 
@@ -163,6 +165,8 @@ void AtTabPad::DrawRawAdc(TH1D *hist, const AtPad &pad)
 void AtTabPad::DrawArrayAug(TH1D *hist, const AtPad &pad, TString augName)
 {
    auto aug = dynamic_cast<const AtPadArray *>(pad.GetAugment(augName.Data()));
+   if (aug == nullptr)
+      return;
 
    for (int i = 0; i < 512; i++) {
       hist->SetBinContent(i + 1, aug->GetArray()[i]);

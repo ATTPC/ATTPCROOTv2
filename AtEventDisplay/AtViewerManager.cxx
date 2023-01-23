@@ -95,6 +95,7 @@ void AtViewerManager::Init()
 
 void AtViewerManager::GenerateBranchLists()
 {
+   LOG(info) << "Generating branch list";
    GotoEvent(0);
 
    auto ioMan = FairRootManager::Instance();
@@ -115,6 +116,7 @@ void AtViewerManager::GenerateBranchLists()
       fBranchNames[type].push_back(branchName);
       LOG(info) << "Found " << branchName << " with type " << type;
    }
+   LOG(info) << "Done generating branch list";
 }
 
 void AtViewerManager::GotoEventImpl()

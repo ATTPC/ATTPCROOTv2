@@ -252,7 +252,7 @@ void AtTabMain::UpdatePadPlane()
    else
       return;
 
-   LOG(info) << "Updating pad plane ";
+   LOG(debug) << "Updating pad plane ";
 
    auto fEvent = GetFairRootInfo<AtEvent>();
    if (fEvent == nullptr) {

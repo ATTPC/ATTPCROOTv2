@@ -225,11 +225,14 @@ void AtSidebarBranchControl::FillFrame()
  */
 void AtSidebarBranchControl::FillBranchFrame(std::string label, std::string className)
 {
+   auto &branchMap = AtViewerManager::Instance()->GetBranchNames();
+   if (branchMap.find(className) == branchMap.end())
+      return;
 
    auto labelf = new TGLabel(fLabels, label.data());
    fLabels->AddFrame(labelf, new TGLayoutHints(kLHintsRight));
 
-   auto &branchNames = AtViewerManager::Instance()->GetBranchNames().at(className);
+   auto &branchNames = branchMap.at(className);
    fBranchBoxes[className] = new TGComboBox(fBoxes);
    for (int i = 0; i < branchNames.size(); ++i)
       fBranchBoxes[className]->AddEntry(branchNames[i], i);

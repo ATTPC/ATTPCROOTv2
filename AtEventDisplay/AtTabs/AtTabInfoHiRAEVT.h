@@ -9,6 +9,7 @@
 #include <TTreeReader.h> // for TTreeReader
 
 #include <memory> // for unique_ptr, make_unique
+#include <string>
 
 namespace DataHandling {
 class AtSubject;
@@ -25,16 +26,16 @@ protected:
    TString fTree;
    TString fBranchName;
 
-   DataHandling::AtTreeEntry *fEntryNumber;
+   DataHandling::AtTreeEntry &fEntryNumber;
    T *fDetector{nullptr};
 
 public:
-   AtTabInfoHiRAEVT(TString tree, TString branchName, DataHandling::AtTreeEntry *entryNumber)
+   AtTabInfoHiRAEVT(TString tree, TString branchName, DataHandling::AtTreeEntry &entryNumber)
       : AtTabInfoBase(), fTree(tree), fBranchName(branchName), fEntryNumber(entryNumber)
    {
-      fEntryNumber->Attach(this);
+      fEntryNumber.Attach(this);
    }
-   ~AtTabInfoHiRAEVT() { fEntryNumber->Detach(this); }
+   ~AtTabInfoHiRAEVT() { fEntryNumber.Detach(this); }
 
    void Init() override
    {
@@ -44,18 +45,19 @@ public:
 
    void Update(DataHandling::AtSubject *changedSubject) override
    {
-      if (changedSubject == fEntryNumber)
+      if (changedSubject == &fEntryNumber)
          Update();
    }
 
    T *GetInfo() { return fDetector; }
 
    void SetTree(TString name) { fTree = name; }
+   std::string GetDefaultName() override { return T::Class_Name(); }
 
 protected:
    void Update() override
    {
-      fReader->SetEntry(fEntryNumber->Get());
+      fReader->SetEntry(fEntryNumber.Get());
       fDetector = fDetectorReader->Get();
    }
 };
