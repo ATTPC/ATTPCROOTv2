@@ -140,6 +140,7 @@ void AtTabMain::DrawPadPlane()
 
    AtViewerManager::Instance()->GetMap()->GeneratePadPlane();
    fPadPlane = AtViewerManager::Instance()->GetMap()->GetPadPlane();
+   fPadPlane->SetBit(TH1::kNoTitle);
    fCvsPadPlane->cd();
    fPadPlane->Draw("COL L0");
    fPadPlane->SetMinimum(1.0);
@@ -153,6 +154,7 @@ void AtTabMain::DrawPadWave()
    char name[20];
    sprintf(name, "fPadWave_DT%i", fTabId);
    fPadWave = new TH1I(name, name, 512, 0, 511);
+   fPadWave->SetBit(TH1::kNoTitle);
    fCvsPadWave->cd();
    fPadWave->Draw();
 }

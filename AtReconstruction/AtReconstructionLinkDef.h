@@ -21,6 +21,7 @@
 #pragma link C++ class AtPSAMax + ;
 #pragma link C++ class AtPSASimple2 + ;
 #pragma link C++ class AtPSADeconv - !;
+#pragma link C++ class AtPSADeconvFit - !;
 #pragma link C++ class AtPSAIterDeconv - !;
 
 #pragma link C++ nestedclass;
@@ -53,5 +54,6 @@
 #pragma link C++ class AtHDF5WriteTask + ;
 #pragma link C++ class AtHDF5ReadTask + ;
 #pragma link C++ class AtCopyTreeTask + ;
+#pragma link C++ class AtLinkDAQTask + ;
 
 #endif

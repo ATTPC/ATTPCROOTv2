@@ -15,6 +15,6 @@ AtTabBase::AtTabBase(TString name) : fTabId(fNumTabs), fTabName(std::move(name))
 /// Init both the tab (InitTab()) and then init the AtTabInfo class
 void AtTabBase::Init()
 {
-   InitTab();
    MakeTab(TEveWindow::CreateWindowInTab(gEve->GetBrowser()->GetTabRight()));
+   InitTab();
 }

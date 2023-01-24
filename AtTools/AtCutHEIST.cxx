@@ -50,6 +50,10 @@ bool AtCutHEIST::AddSpecies(std::string species)
    }
 
    fSpecies[species] = cut;
+   if (fOutFile) {
+      fOutFile->cd();
+      cut->Write();
+   }
    return true;
 }
 

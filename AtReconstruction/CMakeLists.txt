@@ -46,7 +46,9 @@ set(SRCS
   AtPulseAnalyzer/AtPSATBAvg.cxx
   AtPulseAnalyzer/AtCalibration.cxx
   AtPulseAnalyzer/AtPSADeconv.cxx
+  AtPulseAnalyzer/AtPSADeconvFit.cxx
   AtPulseAnalyzer/AtPSAIterDeconv.cxx
+
   AtFilter/AtFilter.cxx
   AtFilter/AtFilterSubtraction.cxx
   AtFilter/AtFilterDivide.cxx
@@ -57,6 +59,7 @@ set(SRCS
   AtFilter/AtRemovePulser.cxx
   AtFilter/AtFilterFPN.cxx
   AtFilter/AtSCACorrect.cxx
+
   AtPSAtask.cxx
   AtFilterTask.cxx
   AtAuxFilterTask.cxx

@@ -32,6 +32,8 @@ private:
    std::shared_ptr<TFile> fCutFile; //< File all cuts availible
    std::map<std::string, TCutG *> fSpecies;
 
+   TFile *fOutFile{nullptr}; //< File to save cuts in
+
 public:
    AtCutHEIST(TTree *tree, TString cutFile);
    AtCutHEIST(TString treeFile, TString cutFile, TString treeName = "E12014");
@@ -41,6 +43,8 @@ public:
    std::string GetSpecies();
 
    bool operator()();
+
+   void SetSaveCuts(TFile *outFile) { fOutFile = outFile; }
 
 private:
    double GetEnergy();

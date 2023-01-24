@@ -1,7 +1,9 @@
 #include "AtTabPad.h"
 
 #include "AtAuxPad.h" // for AtAuxPad
+#include "AtDataManip.h"
 #include "AtEvent.h"
+#include "AtHit.h" // for AtHit
 #include "AtPad.h"
 #include "AtPadArray.h"
 #include "AtPadBase.h" // for AtPadBase
@@ -12,6 +14,7 @@
 #include <FairLogger.h>
 
 #include <TCanvas.h>
+#include <TF1.h>
 #include <TH1.h> // for TH1D
 
 #include <iostream> // for operator<<, basic_ostream::operator<<
@@ -126,6 +129,8 @@ void AtTabPad::DrawPad()
             DrawAdc(hist, *auxPad);
          break;
       }
+      if (fDrawHits.find(pos) != fDrawHits.end())
+         DrawHit(*fPad, fDrawHits[pos]);
    }
 
    UpdateCvsPad();
@@ -159,13 +164,39 @@ void AtTabPad::DrawArrayAug(TH1D *hist, const AtPad &pad, TString augName)
    hist->Draw();
 }
 
+void AtTabPad::DrawHit(const AtPad &pad, TF1Vec &vec)
+{
+   vec.clear();
+
+   // Loop through all hits and
+   auto event = GetFairRootInfo<AtEvent>();
+   for (auto &hit : event->GetHits()) {
+      if (hit->GetPadNum() != pad.GetPadNum())
+         continue;
+
+      auto func = AtTools::GetHitFunctionTB(*hit);
+      if (func != nullptr)
+         vec.push_back(std::move(func));
+   }
+
+   for (auto &func : vec) {
+      LOG(debug) << "Drawing hit function";
+      func->Draw("SAME");
+   }
+}
+
 void AtTabPad::SetDraw(Int_t pos, PadDrawType type)
 {
    auto name = TString::Format("padHist_Tab%i_%i", fTabId, pos);
    TH1D *padHist = new TH1D(name, name, 512, 0, 512);
+   padHist->SetBit(TH1::kNoTitle);
    fDrawMap.emplace(pos, std::make_pair(type, padHist));
 }
 
+void AtTabPad::DrawHits(int row, int col)
+{
+   fDrawHits[row * fCols + col] = TF1Vec();
+}
 void AtTabPad::DrawADC(int row, int col)
 {
    SetDraw(row * fCols + col, PadDrawType::kADC);

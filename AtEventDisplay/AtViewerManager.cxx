@@ -96,7 +96,7 @@ void AtViewerManager::AddTab(std::unique_ptr<AtTabBase> tab)
 
 void AtViewerManager::Init()
 {
-   gStyle->SetOptTitle(0);
+   // gStyle->SetOptTitle(0);
    gStyle->SetPalette(55);
 
    FairRunAna::Instance()->Init();
