@@ -230,52 +230,58 @@ AtPSADeconv::HitVector AtPSADeconv::AnalyzePad(AtPad *pad)
 
 AtPSADeconv::HitVector AtPSADeconv::chargeToHits(AtPad &pad, std::string qName)
 {
+
    HitVector ret;
    auto charge = dynamic_cast<AtPadArray *>(pad.GetAugment(qName));
-   for (auto &ZandQ : getZandQ(charge->GetArray())) {
-      XYZPoint pos(pad.GetPadCoord().X(), pad.GetPadCoord().Y(), CalculateZGeo(ZandQ[0]));
+
+   LOG(debug) << "PadNum: " << pad.GetPadNum();
+   auto hitVec = getZandQ(charge->GetArray());
+
+   for (auto &ZandQ : hitVec) {
+      XYZPoint pos(pad.GetPadCoord().X(), pad.GetPadCoord().Y(), CalculateZGeo(ZandQ.z));
 
       auto posVarXY = getXYhitVariance();
-      auto posVarZ = getZhitVariance(0, ZandQ[1]);
-      LOG(debug) << "Z(tb): " << ZandQ[0] << " +- " << std::sqrt(ZandQ[1]);
+      auto posVarZ = getZhitVariance(0, ZandQ.zVar);
+
+      LOG(debug) << "Z(tb): " << ZandQ.z << " +- " << std::sqrt(ZandQ.zVar);
       LOG(debug) << "Z(mm): " << pos.Z() << " +- " << std::sqrt(posVarZ);
 
-      auto hit = std::make_unique<AtHit>(pad.GetPadNum(), pos, ZandQ[2]);
+      auto hit = std::make_unique<AtHit>(pad.GetPadNum(), pos, ZandQ.q);
       hit->SetPositionVariance({posVarXY.first, posVarXY.second, posVarZ});
-      hit->SetChargeVariance(ZandQ[3]);
+      hit->SetChargeVariance(ZandQ.qVar);
 
       ret.push_back(std::move(hit));
    }
+
    return ret;
 }
 
 AtPSADeconv::HitData AtPSADeconv::getZandQ(const AtPad::trace &charge)
 {
-   std::array<double, 4> hit{};
-
    // Get the mean time and total charge
-   hit[2] = std::accumulate(charge.begin(), charge.end(), 0.0);
-   hit[0] = 0;
+   double q = std::accumulate(charge.begin(), charge.end(), 0.0);
+   double z = 0;
    for (int i = 0; i < charge.size(); ++i)
-      hit[0] += i * charge[i];
-   hit[0] /= hit[2];
+      z += i * charge[i];
+   z /= q;
 
    // Get the variance of the time
-   hit[1] = 0;
+   double zVar = 0;
    for (int i = 0; i < charge.size(); ++i) {
-      hit[1] += charge[i] * (i - hit[0]) * (i - hit[0]);
+      zVar += charge[i] * (i - z) * (i - z);
    }
-   hit[1] /= (hit[2] - 1);
+   zVar /= (q - 1);
 
    // Get the variance of the charge
-   hit[3] = 0;
+   double qVar = 0;
 
-   return {hit};
+   return {{z, zVar, q, qVar}}; // Vector containing a single ZHitData struct
 }
+
 double AtPSADeconv::getZhitVariance(double zLoc, double zLocVar) const
 {
    // zLocVar is in TB^2
-   auto time = zLocVar * fTBTime * fTBTime;           // Get variance in ns^2
+   double time = zLocVar * fTBTime * fTBTime;         // Get variance in ns^2
    time /= 1000 * 1000;                               // Get variance in us^2
    auto pos = time * fDriftVelocity * fDriftVelocity; // Get variance in cm
    pos *= 100;                                        // Get variance in mm

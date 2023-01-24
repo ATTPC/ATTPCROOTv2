@@ -25,8 +25,8 @@ private:
    // Gas properties
    Double_t fEIonize{};       //< effective ionization energy [eV]
    Double_t fFano{};          //< Fano factor of gas
-   Double_t fCoefL{};         //< longitudinal diffusion coefficient [cm^-0.5]
-   Double_t fCoefT{};         //< transversal diffusion coefficient [cm^-0.5]
+   Double_t fCoefL{};         //< longitudinal diffusion coefficient [cm^2/us]
+   Double_t fCoefT{};         //< transversal diffusion coefficient [cm^2/us]
    Double_t fGasPressure{};   //< gas pressure [torr]
    Double_t fDensity{};       //< Gas density [kg/m^3]
    Double_t fDriftVelocity{}; //< Electron drift velocity [cm/us]

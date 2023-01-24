@@ -29,9 +29,9 @@ protected:
    Int_t fEventID{0};       //!< EventID
    Double_t fEIonize{};     //!< Effective ionization energy of gas. [eV]
    Double_t fFano{};        //!< Fano factor of the gas
-   Double_t fVelDrift{};    //!< Drift velocity of electron in gas. [mm/ns]
-   Double_t fCoefT{};       //!< Transversal diffusion coefficient. [mm^(-1/2)]
-   Double_t fCoefL{};       //!< Longitudinal diffusion coefficient. [mm^(-1/2)]
+   Double_t fVelDrift{};    //!< Drift velocity of electron in gas. [cm/us]
+   Double_t fCoefT{};       //!< Transversal diffusion coefficient. [cm^2/us]
+   Double_t fCoefL{};       //!< Longitudinal diffusion coefficient. [cm^2/us]
    Double_t fDetPadPlane{}; //!< Position of the pad plane with respect to the entrance [mm]
 
    AtDigiPar *fPar{}; //!< Base parameter container.

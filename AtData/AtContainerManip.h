@@ -82,7 +82,7 @@ std::remove_const_t<T> *GetPointerNonConst(T &t)
 template <typename T>
 std::vector<const T *> GetConstPointerVector(const std::vector<T> &vec)
 {
-   LOG(info) << "Transforming object -> pointer.";
+   LOG(debug) << "Transforming object -> pointer.";
    std::vector<const T *> ret;
    ret.resize(vec.size());
    std::transform(vec.begin(), vec.end(), ret.begin(), [](const T &a) { return GetPointer(a); });
@@ -92,7 +92,7 @@ std::vector<const T *> GetConstPointerVector(const std::vector<T> &vec)
 template <typename T>
 std::vector<const T *> GetConstPointerVector(const std::vector<std::unique_ptr<T>> &vec)
 {
-   LOG(info) << "Transforming unique pointer -> pointer.";
+   LOG(debug) << "Transforming unique pointer -> pointer.";
    std::vector<const T *> ret;
    ret.resize(vec.size());
    std::transform(vec.begin(), vec.end(), ret.begin(), [](const std::unique_ptr<T> &a) { return a.get(); });
@@ -102,7 +102,7 @@ std::vector<const T *> GetConstPointerVector(const std::vector<std::unique_ptr<T
 template <typename T>
 std::vector<T *> GetPointerVector(const std::vector<T> &vec)
 {
-   LOG(info) << "Transforming object -> pointer.";
+   LOG(debug) << "Transforming object -> pointer.";
    std::vector<T *> ret;
    ret.resize(vec.size());
    std::transform(vec.begin(), vec.end(), ret.begin(), [](const T &a) { return GetPointer(a); });
@@ -112,7 +112,7 @@ std::vector<T *> GetPointerVector(const std::vector<T> &vec)
 template <typename T>
 std::vector<T *> GetPointerVector(const std::vector<std::unique_ptr<T>> &vec)
 {
-   LOG(info) << "Transforming unique pointer -> pointer.";
+   LOG(debug) << "Transforming unique pointer -> pointer.";
    std::vector<T *> ret;
    ret.resize(vec.size());
    std::transform(vec.begin(), vec.end(), ret.begin(), [](const std::unique_ptr<T> &a) { return a.get(); });
@@ -122,7 +122,7 @@ std::vector<T *> GetPointerVector(const std::vector<std::unique_ptr<T>> &vec)
 template <typename T>
 std::vector<T> GetObjectVector(const std::vector<std::unique_ptr<T>> &vec)
 {
-   LOG(info) << "Transforming unique pointer -> object.";
+   LOG(debug) << "Transforming unique pointer -> object.";
    std::vector<T> ret;
    ret.resize(vec.size());
    std::transform(vec.begin(), vec.end(), ret.begin(), [](const std::unique_ptr<T> &a) { return *a; });

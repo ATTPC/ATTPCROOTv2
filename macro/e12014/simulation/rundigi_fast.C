@@ -87,13 +87,13 @@ void rundigi_fast()
    auto psa = std::make_unique<AtPSAMax>();
    psa->SetThreshold(25);
    auto psaDeconv = std::make_unique<AtPSADeconv>();
-   psaDeconv->SetResponse(GetNominalResponse());
-   psaDeconv->SetFilterOrder(6);
-   psaDeconv->SetCutoffFreq(60);
-   psaDeconv->SetThreshold(25);
+   // psaDeconv->SetResponse(GetNominalResponse());
+   // psaDeconv->SetFilterOrder(6);
+   // psaDeconv->SetCutoffFreq(60);
+   // psaDeconv->SetThreshold(25);
 
    // Create PSA task
-   AtPSAtask *psaTask = new AtPSAtask(std::move(psaDeconv));
+   AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
    psaTask->SetPersistence(kTRUE);
 
    auto sac = std::make_unique<SampleConsensus::AtSampleConsensus>(
@@ -105,7 +105,7 @@ void rundigi_fast()
    fRun->AddTask(pulse);
    fRun->AddTask(reduceTask);
    fRun->AddTask(psaTask);
-   fRun->AddTask(sacTask);
+   // fRun->AddTask(sacTask);
 
    //  __ Init and run ___________________________________
    fRun->Init();

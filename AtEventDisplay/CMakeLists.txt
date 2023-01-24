@@ -23,6 +23,7 @@ AtTabs/AtTabMacro.cxx
 AtTabs/AtTabMain.cxx
 AtTabs/AtTabPad.cxx
 AtTabs/AtTabInfoTree.cxx
+AtTabs/AtTabEnergyLoss.cxx
 
 AtSidebar/AtEventSidebar.cxx
 AtSidebar/AtSidebarFrames.cxx
@@ -49,6 +50,7 @@ Set(DEPENDENCIES
   ROOT::HistPainter
 
   ATTPCROOT::AtData
+  ATTPCROOT::AtTools
   ATTPCROOT::AtMap
   ATTPCROOT::AtReconstruction
   ATTPCROOT::AtS800

@@ -7,7 +7,6 @@
 
 #include <TVirtualFFT.h> // for TVirtualFFT
 
-#include <array> // for array
 #include <cmath>
 #include <functional>
 #include <memory> // for unique_ptr, make_unique
@@ -97,8 +96,16 @@ public:
    const AtPadFFT &GetResponseFilter(int padNum);
 
 protected:
-   /// Data structure for Z loc (TB), Z sigma (TB), Charge (arb), Charge sigma (arb)
-   using HitData = std::vector<std::array<double, 4>>;
+   /// Struct for storing Z and Q hit data used by getZandQ function
+   struct ZHitData {
+      double z;
+      double zVar;
+      double q;
+      double qVar;
+   };
+
+   /// Data structure for Z loc (TB), Z variance (TB), Charge (arb), Charge variance (arb)
+   using HitData = std::vector<ZHitData>;
 
    AtPad *createResponsePad(int padNum);
 

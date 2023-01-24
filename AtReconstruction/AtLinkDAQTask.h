@@ -113,6 +113,7 @@ public:
    void SetCorruptedSearchRadius(Double_t radius) { fCorruptedSearchRadius = radius; }
 
    const TChain *GetInChain() { return evtTree.get(); }
+   TFile *GetOutFile() { return fEvtOutputFile; }
    virtual InitStatus Init() override;
    virtual void Exec(Option_t *opt) override;
    virtual void Finish() override; // called at end of run
