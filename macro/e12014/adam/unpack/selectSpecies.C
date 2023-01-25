@@ -33,7 +33,10 @@ void selectSpecies()
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
    reduceTask->SetInputBranch("AtRawEventSub");
    reduceTask->SetReductionFunction([&cut]() { return cut(); });
-   fRun->AddTask(reduceTask);
+   // fRun->AddTask(reduceTask);
+
+   AtCopyTreeTask *task = new AtCopyTreeTask();
+   fRun->AddTask(task);
 
    fRun->Init();
    fRun->Run(0, 10);
