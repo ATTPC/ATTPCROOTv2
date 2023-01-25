@@ -72,7 +72,8 @@ set(SRCS
   AtRansacTask.cxx
   AtSampleConsensusTask.cxx
   AtPRAtask.cxx
-
+  AtCopyTreeTask.cxx
+  
   AtPatternRecognition/triplclust/src/cluster.cxx
   AtPatternRecognition/triplclust/src/triplet.cxx
   AtPatternRecognition/triplclust/src/main.cxx

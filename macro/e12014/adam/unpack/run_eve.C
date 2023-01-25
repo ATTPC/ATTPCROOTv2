@@ -9,7 +9,10 @@
 
 void run_eve(int runNum = 210, TString OutputDataFile = "./output/output.reco_display.root")
 {
-   TString InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpackedCalibrated/run_%04dReduced.root", runNum);
+   // TString InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/unpackedCalibrated/run_%04dReduced.root",
+   // runNum);
+   // TString InputDataFile = "/mnt/analysis/e12014/TPC/fission_linked/run_0206.root";
+   TString InputDataFile = "./data/output.root";
    std::cout << "Opening: " << InputDataFile << std::endl;
 
    TString dir = getenv("VMCWORKDIR");
@@ -35,17 +38,12 @@ void run_eve(int runNum = 210, TString OutputDataFile = "./output/output.reco_di
 
    auto fMap = std::make_shared<AtTpcMap>();
    fMap->ParseXMLMap(mapDir.Data());
+   auto eveMan = new AtViewerManager(fMap);
 
-   AtEventManager *eveMan = new AtEventManager();
-   AtEventDrawTask *eve = new AtEventDrawTask();
-   eve->SetMap(fMap);
-   eve->Set3DHitStyleBox();
-   eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
-   // eve->SetSaveTextData();
-   eve->SetRawEventBranch("AtRawEventCal");
-   eve->SetEventBranch("AtEventH");
+   auto tabMain = std::make_unique<AtTabMain>();
+   tabMain->SetMultiHit(100); // Set the maximum number of multihits in the visualization
+   eveMan->AddTab(std::move(tabMain));
 
-   eveMan->AddTask(eve);
    eveMan->Init();
 
    std::cout << "Finished init" << std::endl;
