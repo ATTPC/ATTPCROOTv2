@@ -34,10 +34,20 @@ Set(DEPENDENCIES
   ROOT::XMLParser
   ROOT::Core
 
+  FairRoot::Base
   FairRoot::FairTools
   ATTPCROOT::AtData
   ATTPCROOT::AtParameter
 )
+
+if(HiRAEVT_FOUND)
+  set(SRCS ${SRCS}
+    AtCutHEIST.cxx
+    )
+  set(DEPENDENCIES ${DEPENDENCIES}
+    HTDetectors
+    )
+endif()
 
 Set(INCLUDE_DIR
   ${CMAKE_SOURCE_DIR}/AtTools/AtHitSampling

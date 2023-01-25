@@ -33,18 +33,15 @@ void run_eve_sim(TString OutputDataFile = "./data/output.sim_display.root")
    // parIo1->open("param.dummy.root");
    rtdb->setFirstInput(parIo1);
 
-   AtEventManager *eveMan = new AtEventManager();
    AtEventDrawTask *eve = new AtEventDrawTask();
    auto fMap = std::make_shared<AtTpcMap>();
    fMap->ParseXMLMap(mapDir.Data());
-   eve->SetMap(fMap);
-   eve->Set3DHitStyleBox();
-   eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
-   // eve->SetSaveTextData();
-   eve->SetRawEventBranch("AtRawEvent");
-   eve->SetEventBranch("AtEventH");
+   AtViewerManager *eveMan = new AtViewerManager(fMap);
 
-   eveMan->AddTask(eve);
+   auto tabMain = std::make_unique<AtTabMain>();
+   tabMain->SetMultiHit(100); // Set the maximum number of multihits in the visualization
+   eveMan->AddTab(std::move(tabMain));
+
    eveMan->Init();
 
    std::cout << "Finished init" << std::endl;
