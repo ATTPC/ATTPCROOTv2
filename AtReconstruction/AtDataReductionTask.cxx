@@ -14,9 +14,12 @@
 
 ClassImp(AtDataReductionTask);
 
-AtDataReductionTask::AtDataReductionTask() : fReductionFunction(nullptr), fInputBranchName("AtRawEvent") {}
-
-AtDataReductionTask::~AtDataReductionTask() = default;
+void AtDataReductionTask::SetReductionFunction(std::function<bool(AtRawEvent *)> func)
+{
+   // Bind the reduction function to the passed function, having it call that function with the current
+   // AtRawEvent in the pointer this->fRawEvent.
+   fReductionFunc = [this, func]() { return func(fRawEvent); };
+}
 
 InitStatus AtDataReductionTask::Init()
 {
@@ -42,9 +45,8 @@ void AtDataReductionTask::Exec(Option_t *opt)
       return;
    fRawEvent = dynamic_cast<AtRawEvent *>(fInputEventArray->At(0));
 
-   // If we should skip this event
-   // if ((*reduceFunc)(fRawEvent))
-   if (fReductionFunction(fRawEvent))
+   // If we should skip this event mark bad and don't fill tree
+   if (fReductionFunc())
       LOG(info) << "Keeping event " << fRawEvent->GetEventID() << " with " << fRawEvent->GetNumPads() << " pads";
    else {
       fRawEvent->SetIsGood(false);
