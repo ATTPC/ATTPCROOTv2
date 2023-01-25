@@ -41,4 +41,6 @@
 #pragma link C++ class ElectronicResponse::AtVectorResponse - !;
 #pragma link C++ class ElectronicResponse::AtFileResponse - !;
 
+#pragma link C++ class AtCutHEIST - !; p
+
 #endif
