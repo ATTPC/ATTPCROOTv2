@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 void rundigi_sim_Ari(
+=======
+void rundigi_sim(
+>>>>>>>  added AtPulseTaskGADGET version of digi_sim
    TString mcFile = "./data/gadgetsim.root",
    TString mapParFile =
       "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
