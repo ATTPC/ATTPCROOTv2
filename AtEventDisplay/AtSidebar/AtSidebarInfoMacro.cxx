@@ -1,5 +1,10 @@
 #include "AtSidebarInfoMacro.h"
 
+#include <FairLogger.h> // for endl, basic_ostream, cout, ostream
+namespace DataHandling {
+class AtSubject;
+}
+
 ClassImp(AtSidebarInfoMacro);
 
 void AtSidebarInfoMacro::FillFrame()
@@ -10,7 +15,7 @@ void AtSidebarInfoMacro::FillFrame()
 void AtSidebarInfoMacro::Update(DataHandling::AtSubject *changedSubject)
 {
    if (changedSubject == &fEntryNumber) {
-      std::cout << fFunction() << std::endl;
+      LOG(info) << fFunction();
       SetInfoString(fLabel, fFunction());
    }
 }

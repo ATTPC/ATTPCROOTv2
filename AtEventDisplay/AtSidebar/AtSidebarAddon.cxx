@@ -7,9 +7,9 @@
 #include <TGLabel.h>       // for TGLabel
 #include <TGLayout.h>      // for TGLayoutHints, kLHintsCenterY, kLHintsLeft
 #include <TGNumberEntry.h> // for TGNumberEntry, TGNumberFormat, TGNumberFo...
+#include <TGString.h>      // for TGString
 #include <TString.h>
 
-#include <iostream>
 #include <utility> // for pair
 
 ClassImp(AtSidebarAddon);

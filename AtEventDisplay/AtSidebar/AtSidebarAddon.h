@@ -3,12 +3,14 @@
 
 #include "AtSidebarFrames.h" // for AtVerticalSidebarFrame
 
-#include <Rtypes.h> // for THashConsistencyHolder, UInt_t, ClassDe...
+#include <Rtypes.h>  // for THashConsistencyHolder, UInt_t, ClassDe...
+#include <TString.h> // for TString
 
 #include <GuiTypes.h> // for Pixel_t
 
 #include <map>    // for map
 #include <string> // for string
+class TGLabel;
 class TBuffer;
 class TClass;
 class TGNumberEntry;

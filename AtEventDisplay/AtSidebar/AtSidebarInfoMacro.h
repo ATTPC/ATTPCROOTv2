@@ -3,14 +3,23 @@
 
 #include "AtDataObserver.h"
 #include "AtSidebarAddon.h"
+#include "AtViewerManagerSubject.h" // for AtTreeEntry
 
 #include <Rtypes.h> // for THashConsistencyHolder, UInt_t, ClassDef...
 
 #include <GuiTypes.h> // for Pixel_t
 
 #include <functional>
-#include <iostream>
 #include <string>
+#include <utility> // for move
+
+class TBuffer;
+class TClass;
+class TGWindow;
+class TMemberInspector;
+namespace DataHandling {
+class AtSubject;
+}
 
 class AtSidebarInfoMacro : public AtSidebarAddon, public DataHandling::AtObserver {
 private:
