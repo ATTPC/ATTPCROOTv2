@@ -9,9 +9,27 @@
 #include <TGNumberEntry.h> // for TGNumberEntry, TGNumberFormat, TGNumberFo...
 #include <TString.h>
 
+#include <iostream>
+
 #include <utility> // for pair
 
 ClassImp(AtSidebarAddon);
+
+void AtSidebarAddon::AddInfoBox(std::string label)
+{
+   auto bFrame = new TGHorizontalFrame(this);
+   auto bLabel = new TGLabel(bFrame, (TString)label + ": ");
+   auto bInfo = new TGLabel(bFrame, "");
+   bFrame->AddFrame(bLabel);
+   bFrame->AddFrame(bInfo);
+
+   if (fStrings.find(label) != fStrings.end())
+      LOG(error) << "String labeled " << label << " already exists in this addon!";
+   else
+      fStrings.insert({label, bInfo});
+
+   this->AddFrame(bFrame);
+}
 
 void AtSidebarAddon::AddIntBox(std::string label, std::string function, int min, int max)
 {
@@ -26,11 +44,20 @@ void AtSidebarAddon::AddIntBox(std::string label, std::string function, int min,
    bFrame->AddFrame(bEntry);
 
    if (fNumbers.find(label) != fNumbers.end())
-      LOG(error) << "Number labeled " << label << "already exists in this addon!";
+      LOG(error) << "Number labeled " << label << " already exists in this addon!";
    else
       fNumbers.insert({label, bEntry});
 
    this->AddFrame(bFrame);
+}
+
+TString AtSidebarAddon::GetInfoString(std::string label)
+{
+   if (fStrings.find(label) == fStrings.end()) {
+      LOG(error) << label << " not defined!";
+      return "";
+   } else
+      return fStrings.find(label)->second->GetText()->GetString();
 }
 
 Long_t AtSidebarAddon::GetIntNumber(std::string label)
@@ -40,6 +67,14 @@ Long_t AtSidebarAddon::GetIntNumber(std::string label)
       return 0;
    } else
       return fNumbers.find(label)->second->GetNumberEntry()->GetIntNumber();
+}
+
+void AtSidebarAddon::SetInfoString(std::string label, TString value)
+{
+   if (fStrings.find(label) == fStrings.end())
+      LOG(error) << label << " not defined!";
+   else
+      fStrings.find(label)->second->SetText(value);
 }
 
 void AtSidebarAddon::SetIntNumber(std::string label, Long_t value)
