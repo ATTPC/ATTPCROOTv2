@@ -28,6 +28,7 @@
 // clang-format on
 
 #pragma link C++ class AtSidebarAddon + ;
+#pragma link C++ class AtSidebarInfoMacro + ;
 #pragma link C++ class AtSidebarPSA + ;
 #pragma link C++ class AtSidebarPSADeconv + ;
 #pragma link C++ class AtSidebarPSAIterDeconv + ;

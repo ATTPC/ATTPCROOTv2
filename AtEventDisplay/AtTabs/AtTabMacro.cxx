@@ -23,7 +23,9 @@ constexpr auto cBLUE = "\033[1;34m";
 
 ClassImp(AtTabMacro);
 
-AtTabMacro::AtTabMacro() : fDetmap(nullptr), fCvsMacro(nullptr), fCols(1), fRows(1), fTabName("Macro"), fTree(nullptr)
+AtTabMacro::AtTabMacro(int nRow, int nCol, TString name)
+   : AtTabBase(), fDetmap(nullptr), fCvsMacro(nullptr), fRows(nRow), fCols(nCol), fTabName(std::move(name)),
+     fTree(nullptr)
 {
    if (AtViewerManager::Instance() == nullptr)
       throw "AtViewerManager must be initialized before creating tabs!";
@@ -68,7 +70,8 @@ void AtTabMacro::MakeTab(TEveWindowSlot *slot)
    pack2->SetVertical();
    slot = pack2->NewSlot();
    slot->StartEmbedding();
-   fCvsMacro = new TCanvas("name");
+   fCvsMacro = new TCanvas(name);
+   fCvsMacro->Divide(fCols, fRows);
    fCvsMacro->ToggleEditor();
    slot->StopEmbedding();
 
@@ -84,7 +87,7 @@ void AtTabMacro::DrawTree()
       if (it == fDrawTreeMap.end()) {
          return;
       } else {
-         std::cout << "Processing treedraw function" << std::endl;
+         // std::cout << "Processing treedraw function" << std::endl;
          (it->second)(fTree);
          UpdateCvsMacro();
       }
@@ -95,7 +98,6 @@ void AtTabMacro::Exec()
 {
    for (int i = 0; i < fCols * fRows; i++) {
       fCvsMacro->cd(i + 1);
-
       auto it = fDrawEventMap.find(i);
       if (it == fDrawEventMap.end()) {
          return;

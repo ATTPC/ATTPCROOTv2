@@ -48,7 +48,7 @@ protected:
    TString fTabName;
 
 public:
-   AtTabMacro();
+   AtTabMacro(int nRow = 1, int nCol = 1, TString name = "Macro");
    ~AtTabMacro();
 
    void InitTab() override;
