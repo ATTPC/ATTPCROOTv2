@@ -57,20 +57,20 @@ InitStatus AtLinkDAQTask::Init()
    // Register the input and output branches with the IO manager
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == nullptr) {
-      LOG(ERROR) << "Cannot find RootManager!";
-      return kERROR;
+      LOG(fatal) << "Cannot find RootManager!";
+      return kFATAL;
    }
 
    fInputEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fInputBranchName));
    if (fInputEventArray == nullptr) {
-      LOG(ERROR) << "Cannot find AtRawEvent array in branch " << fInputBranchName << "!";
-      return kERROR;
+      LOG(fatal) << "Cannot find AtRawEvent array in branch " << fInputBranchName << "!";
+      return kFATAL;
    }
 
    // Set the branch addresses for the HiRAEVT detectors
    if (evtTree == nullptr) {
-      LOG(error) << "HiRAEVT tree was never initialized!";
-      return kERROR;
+      LOG(fatal) << "HiRAEVT tree was never initialized!";
+      return kFATAL;
    }
    std::cout << "EVT address: " << evtTree.get() << std::endl;
    evtTree->SetBranchAddress(fEvtTimestampName, &fEvtTS);
@@ -83,6 +83,7 @@ InitStatus AtLinkDAQTask::Init()
    }
    fEvtOutputFile->cd();
    fEvtOutputTree = evtTree->CloneTree(0);
+   LOG(info) << "Initialized output EVT tree in " << fEvtOutputFileName;
 
    return kSUCCESS;
 }
