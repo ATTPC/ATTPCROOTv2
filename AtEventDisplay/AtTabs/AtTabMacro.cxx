@@ -87,7 +87,7 @@ void AtTabMacro::DrawTree()
       if (it == fDrawTreeMap.end()) {
          return;
       } else {
-         //std::cout << "Processing treedraw function" << std::endl;
+         // std::cout << "Processing treedraw function" << std::endl;
          (it->second)(fTree);
          UpdateCvsMacro();
       }

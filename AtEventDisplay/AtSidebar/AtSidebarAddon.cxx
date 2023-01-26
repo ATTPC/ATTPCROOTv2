@@ -10,7 +10,6 @@
 #include <TString.h>
 
 #include <iostream>
-
 #include <utility> // for pair
 
 ClassImp(AtSidebarAddon);

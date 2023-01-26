@@ -44,7 +44,6 @@ public:
     */
    void AddIntBox(std::string label, std::string function, int min = 0, int max = 1);
 
-
    /**
     * Get the string managed by an AddInfoBox indexed by label.
     */
