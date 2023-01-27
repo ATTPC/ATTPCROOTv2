@@ -8,7 +8,7 @@
 ClassImp(AtTabBase);
 int AtTabBase::fNumTabs = 0;
 
-AtTabBase::AtTabBase(TString name) : fTabId(fNumTabs), fTabName(name)
+AtTabBase::AtTabBase(TString name) : fTabId(fNumTabs), fTabName(std::move(name))
 {
    fNumTabs++;
 }

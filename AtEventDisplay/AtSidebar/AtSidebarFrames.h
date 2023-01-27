@@ -30,7 +30,7 @@ class AtSubject;
 class AtSidebarFrame : public TGCompositeFrame {
 protected:
    /// Option to disable picture buttons since they break some machines
-   bool kUsePictureButtons{true};
+   bool kUsePictureButtons{false};
 
    // Protected constructor because this can only be instantiated as a base class
    AtSidebarFrame(const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1, UInt_t options = 0,

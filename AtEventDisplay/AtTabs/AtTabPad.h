@@ -17,8 +17,6 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 class AtPad;
-class TCanvas;
-class TEveRGBAPalette;
 class TH1D;
 namespace DataHandling {
 class AtSubject;

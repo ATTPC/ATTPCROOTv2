@@ -9,16 +9,13 @@
 #include <TString.h> // for TString
 
 #include <functional> // for function
-#include <memory>     // for shared_ptr, unique_ptr
 #include <unordered_map>
 
 class AtTabInfo;
-class AtMap;
 class TEveWindowSlot;
 class TBuffer;
 class TClass;
 class TMemberInspector;
-class TCanvas;
 class TChain;
 class TTree;
 namespace DataHandling {

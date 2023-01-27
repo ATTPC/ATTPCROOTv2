@@ -1,14 +1,20 @@
 #ifndef ATTABCANVAS_H
 #define ATTABCANVAS_H
+#include <Rtypes.h>  // for Int_t, THashConsistencyHolder, ClassDefOverride
+#include <TString.h> // for TString
+
 #include <AtTabBase.h>
 
+class TBuffer;
+class TClass;
+class TEveWindowSlot;
+class TMemberInspector;
 class TCanvas;
 
 /**
  * @brief Abstract class for a tab composed of a single TCanvas.
  *
  * Optionally can be subdivded into multiple canvases.
- *
  * We don't use TRootEmbeddedCanvas because we may want the toolbar
  */
 class AtTabCanvas : public AtTabBase {

@@ -158,9 +158,6 @@ void AtSidebarEventControl::FillFrame()
    fCurrentEventFrame->AddFrame(fCurrentEventLabel, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
    fCurrentEventFrame->AddFrame(fCurrentEventEntry);
 
-   fRerunButton = new TGTextButton(fCurrentEventFrame, "Rerun Event");
-   fRerunButton->Connect("Clicked()", "AtSidebarEventControl", this, "RedrawEvent()");
-   fCurrentEventFrame->AddFrame(fRerunButton, new TGLayoutHints(kLHintsCenterY, 1, 1, 1, 1));
    this->AddFrame(fCurrentEventFrame, new TGLayoutHints(kLHintsExpandX));
 
    /*** Button Frame ****/
@@ -174,15 +171,19 @@ void AtSidebarEventControl::FillFrame()
       else
          b = new TGTextButton(fButtonFrame, "Prev");
 
-      fButtonFrame->AddFrame(b);
+      fButtonFrame->AddFrame(b, new TGLayoutHints(kLHintsCenterY, 1, 1, 1, 1));
       b->Connect("Clicked()", "AtViewerManager", AtViewerManager::Instance(), "PrevEvent()");
 
       if (kUsePictureButtons)
          b = new TGPictureButton(fButtonFrame, gClient->GetPicture(icondir + "arrow_right.gif"));
       else
          b = new TGTextButton(fButtonFrame, "Next");
-      fButtonFrame->AddFrame(b);
+      fButtonFrame->AddFrame(b, new TGLayoutHints(kLHintsCenterY, 1, 1, 1, 1));
       b->Connect("Clicked()", "AtViewerManager", AtViewerManager::Instance(), "NextEvent()");
+
+      fRerunButton = new TGTextButton(fButtonFrame, "Rerun Event");
+      fRerunButton->Connect("Clicked()", "AtSidebarEventControl", this, "RedrawEvent()");
+      fButtonFrame->AddFrame(fRerunButton, new TGLayoutHints(kLHintsCenterY, 1, 1, 1, 1));
    }
    this->AddFrame(fButtonFrame, new TGLayoutHints(kLHintsCenterX));
 }
@@ -203,7 +204,7 @@ AtSidebarBranchControl::AtSidebarBranchControl(DataHandling::AtBranch &rawEvent,
 
 void AtSidebarBranchControl::FillFrame()
 {
-   this->AddFrame(new TGLabel(this, "Selected Branches"), new TGLayoutHints(kLHintsCenterX));
+   // this->AddFrame(new TGLabel(this, "Selected Branches"), new TGLayoutHints(kLHintsCenterX));
    auto frame = new TGHorizontalFrame(this);
 
    fLabels = new TGVerticalFrame(frame);
@@ -213,9 +214,13 @@ void AtSidebarBranchControl::FillFrame()
    FillBranchFrame("Event: ", "AtEvent");
    FillBranchFrame("Pattern Event: ", "AtPatternEvent");
 
-   this->AddFrame(frame, new TGLayoutHints(kLHintsExpandX));
+   // Resize boxes
+   for (auto &[name, box] : fBranchBoxes)
+      box->SetWidth(125);
+
    frame->AddFrame(fLabels);
-   frame->AddFrame(fBoxes, new TGLayoutHints(kLHintsExpandX));
+   frame->AddFrame(fBoxes);
+   this->AddFrame(frame, new TGLayoutHints(kLHintsExpandX));
 }
 
 /**

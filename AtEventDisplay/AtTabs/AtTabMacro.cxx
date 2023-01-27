@@ -6,12 +6,10 @@
 
 #include <TCanvas.h>
 #include <TChain.h>
-#include <TEveWindow.h>
 
-#include <cstdio> // for sprintf
 #include <iostream>
+#include <memory>  // for allocator, unique_ptr
 #include <utility> // for move, pair
-
 namespace DataHandling {
 class AtSubject;
 }

@@ -4,9 +4,11 @@
 #include "AtTabInfo.h" // IWYU pragma: keep
 
 #include <Rtypes.h>
+#include <TString.h> // for TString
 
 #include <memory>
-#include <string> // for string
+#include <string>  // for string
+#include <utility> // for move
 
 class TBuffer;
 class TMemberInspector;
@@ -24,9 +26,9 @@ class TEveWindowSlot;
  */
 class AtTabBase {
 protected:
-   static int fNumTabs;  //< Number of tab objects created
-   Int_t fTabId{0};      //< Unique ID for tab
-   TString fTabName;     //< Name for the tab
+   static int fNumTabs; //< Number of tab objects created
+   Int_t fTabId{0};     //< Unique ID for tab
+   TString fTabName;    //< Name for the tab
 
    std::unique_ptr<AtTabInfo> fTabInfo{std::make_unique<AtTabInfo>()};
 

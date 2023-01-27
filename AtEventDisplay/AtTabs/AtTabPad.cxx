@@ -12,7 +12,6 @@
 #include <FairLogger.h>
 
 #include <TCanvas.h>
-#include <TEveWindow.h>
 #include <TH1.h> // for TH1D
 
 #include <iostream> // for operator<<, basic_ostream::operator<<
