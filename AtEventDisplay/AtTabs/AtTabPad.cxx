@@ -12,7 +12,6 @@
 #include <FairLogger.h>
 
 #include <TCanvas.h>
-#include <TEveWindow.h>
 #include <TH1.h> // for TH1D
 
 #include <iostream> // for operator<<, basic_ostream::operator<<
@@ -29,7 +28,7 @@ constexpr auto cBLUE = "\033[1;34m";
 
 ClassImp(AtTabPad);
 
-AtTabPad::AtTabPad(int nRow, int nCol, TString name) : AtTabBase(), fRows(nRow), fCols(nCol), fTabName(std::move(name))
+AtTabPad::AtTabPad(int nRow, int nCol, TString name) : AtTabCanvas(name, nRow, nCol)
 {
    if (AtViewerManager::Instance() == nullptr)
       throw "AtViewerManager must be initialized before creating tabs!";
@@ -59,21 +58,7 @@ void AtTabPad::InitTab()
 
 void AtTabPad::MakeTab(TEveWindowSlot *slot)
 {
-
-   auto pack = slot->MakePack();
-   pack->SetElementName(fTabName); // Sets name on tab
-   pack->SetShowTitleBar(false);
-
-   slot = pack->NewSlot();
-   slot->StartEmbedding();
-
-   // Doing this here so it is only done once. Repeated Clear() and Divide() calls were causing
-   // a seg fault for reasons I do not understand.
-   fCvsPad = new TCanvas(TString::Format("AtPadCanvas%d", fTabId));
-   fCvsPad->Divide(fCols, fRows);
-   fCvsPad->ToggleEditor();
-
-   slot->StopEmbedding();
+   AtTabCanvas::MakeTab(slot);
 }
 
 void AtTabPad::Exec()
@@ -86,7 +71,7 @@ void AtTabPad::Exec()
 
    // Redraw any Auxiliary channels
    for (auto &[pos, toDraw] : fDrawMap) {
-      fCvsPad->cd(pos + 1);
+      fCanvas->cd(pos + 1);
       auto hist = toDraw.second;
       if (toDraw.first == PadDrawType::kAuxPad) {
          hist->Reset();
@@ -122,7 +107,7 @@ void AtTabPad::DrawPad()
       if (toDraw.first == PadDrawType::kAuxPad)
          continue;
 
-      fCvsPad->cd(pos + 1);
+      fCanvas->cd(pos + 1);
       auto hist = toDraw.second;
 
       if (fPad == nullptr) {
@@ -205,6 +190,6 @@ void AtTabPad::DrawAuxADC(TString auxName, int row, int col)
 
 void AtTabPad::UpdateCvsPad()
 {
-   fCvsPad->Modified();
-   fCvsPad->Update();
+   fCanvas->Modified();
+   fCanvas->Update();
 }

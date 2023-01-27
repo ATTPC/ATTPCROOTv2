@@ -13,6 +13,7 @@
 #include <map>
 #include <memory> // for allocator
 #include <string>
+#include <type_traits> // for enable_if_t, is_base_of
 namespace DataHandling {
 class AtSubject;
 }
@@ -42,20 +43,9 @@ public:
    virtual ~AtTabInfoBase() = default;
 
    /**
-    * @brief setup how to access this info from its data source.
-    */
-   virtual void Init() = 0;
-
-   /**
     * @brief Default name for info type.
     */
    virtual std::string GetDefaultName() = 0;
-
-protected:
-   /**
-    * @brief update the data this holds from its source.
-    */
-   virtual void Update() = 0;
 };
 
 /**
@@ -63,27 +53,32 @@ protected:
  * @ingroup TabData
  */
 class AtTabInfo : public AtTabInfoBase {
+public:
+   using BasePtr = std::shared_ptr<AtTabInfoBase>;
+
 protected:
-   std::map<std::string, std::unique_ptr<AtTabInfoBase>> fInfoAugments;
+   std::map<std::string, BasePtr> fInfoAugments;
 
 public:
    AtTabInfo() = default;
    ~AtTabInfo() = default;
 
-   void Init() override;
-
    std::string GetDefaultName() override { return "AtTabInfo"; }
 
-   AtTabInfoBase *AddAugment(std::unique_ptr<AtTabInfoBase> augment);
-   AtTabInfoBase *AddAugment(std::unique_ptr<AtTabInfoBase> augment, std::string name);
+   void AddAugment(BasePtr augment);
+   void AddAugment(BasePtr augment, std::string name);
 
-   AtTabInfoBase *ReplaceAugment(std::unique_ptr<AtTabInfoBase> augment);
-   AtTabInfoBase *ReplaceAugment(std::unique_ptr<AtTabInfoBase> augment, std::string name);
+   void ReplaceAugment(BasePtr augment);
+   void ReplaceAugment(BasePtr augment, std::string name);
 
-   AtTabInfoBase *GetAugment(std::string name);
+   BasePtr GetAugment(std::string name);
 
-protected:
-   void Update() override{};
+   /// Get Augment cast to anticipated type (which must have the proper base class).
+   template <typename T, typename std::enable_if_t<std::is_base_of<AtTabInfoBase, T>::value> * = nullptr>
+   T *GetAugment(std::string name)
+   {
+      return dynamic_cast<T *>(GetAugment(name).get());
+   }
 };
 
 /**
@@ -107,24 +102,18 @@ public:
    }
    ~AtTabInfoFairRoot() { fBranchName.Detach(this); }
 
-   void Init() override {}
    std::string GetDefaultName() override { return T::Class_Name(); }
 
    T *GetInfo() { return fInfo; }
 
    void Update(DataHandling::AtSubject *changedSubject) override
    {
-      if (changedSubject == &fBranchName)
-         Update();
-   }
-
-protected:
-   void Update() override
-   {
-      auto branchName = fBranchName.GetBranchName();
-      auto array = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(branchName));
-      if (array != nullptr)
-         fInfo = dynamic_cast<T *>(array->At(0));
+      if (changedSubject == &fBranchName) {
+         auto branchName = fBranchName.GetBranchName();
+         auto array = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(branchName));
+         if (array != nullptr)
+            fInfo = dynamic_cast<T *>(array->At(0));
+      }
    }
 };
 

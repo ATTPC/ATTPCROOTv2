@@ -13,12 +13,14 @@
 #pragma link C++ class AtEventDrawTaskS800 + ;
 
 #pragma link C++ class AtTabBase + ;
+#pragma link C++ class AtTabCanvas + ;
 #pragma link C++ class AtTabMain + ;
 #pragma link C++ class AtTabPad + ;
 #pragma link C++ class AtTabMacro + ;
 
 #pragma link C++ class AtTabInfoBase - !;
 #pragma link C++ class AtTabInfo - !;
+#pragma link C++ class AtTabInfoTree - !;
 // clang-format off
 // Removing these because ROOT is struggling to properly include the headers to generate the dictionary
 //#pragma link C++ class AtTabInfoFairRoot<AtEvent>-!;

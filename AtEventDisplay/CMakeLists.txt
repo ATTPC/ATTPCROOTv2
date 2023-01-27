@@ -17,10 +17,12 @@ AtViewerManager.cxx
 AtViewerManagerSubject.cxx
 
 AtTabs/AtTabBase.cxx
+AtTabs/AtTabCanvas.cxx
 AtTabs/AtTabInfo.cxx
 AtTabs/AtTabMacro.cxx
 AtTabs/AtTabMain.cxx
 AtTabs/AtTabPad.cxx
+AtTabs/AtTabInfoTree.cxx
 
 AtSidebar/AtEventSidebar.cxx
 AtSidebar/AtSidebarFrames.cxx
@@ -52,15 +54,6 @@ Set(DEPENDENCIES
   ATTPCROOT::AtS800
   ATTPCROOT::AtAnalysis
   )
-
-if(HiRAEVT_FOUND)
-  set(SRCS ${SRCS}
-    AtTabs/AtTabInfoHiRAEVT.cxx
-    )
-  set(DEPENDENCIES ${DEPENDENCIES}
-    HTDetectors
-    )
-endif()
 
 generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}

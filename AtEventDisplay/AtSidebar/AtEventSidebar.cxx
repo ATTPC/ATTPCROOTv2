@@ -1,7 +1,6 @@
 #include "AtEventSidebar.h"
 
 #include "AtSidebarFrames.h" // for AtSidebarFrame, AtSidebarBranchControl
-#include "AtViewerManager.h"
 
 #include <FairLogger.h>
 
@@ -19,23 +18,11 @@ void AtEventSidebar::FillFrames()
    MapWindow();
 }
 
-AtEventSidebar::AtEventSidebar(DataHandling::AtTreeEntry &entryNum, DataHandling::AtBranch &rawEvent,
-                               DataHandling::AtBranch &event, DataHandling::AtBranch &patternEvent)
-   : TGMainFrame(gClient->GetRoot(), 1000, 600)
+AtEventSidebar::AtEventSidebar(UInt_t options) : TGMainFrame(gClient->GetRoot(), 1000, 600, options)
 {
    SetWindowName("XX GUI");
    SetCleanup(kDeepCleanup);
-
-   // Add frame components that are always there
-   auto runInfo = new AtSidebarRunInfo(this);
-   auto runControl = new AtSidebarEventControl(entryNum, this);
-   auto branchControl = new AtSidebarBranchControl(rawEvent, event, patternEvent, this);
-   auto padControl = new AtSidebarPadControl(AtViewerManager::Instance()->GetPadNum(), this);
-
-   AddSidebarFrame(runInfo);
-   AddSidebarFrame(runControl);
-   AddSidebarFrame(branchControl);
-   AddSidebarFrame(padControl);
+   fExpandX = options & kVerticalFrame;
 }
 
 void AtEventSidebar::AddSidebarFrame(AtSidebarFrame *frame)
@@ -45,7 +32,10 @@ void AtEventSidebar::AddSidebarFrame(AtSidebarFrame *frame)
                  << this << ")";
 
    fFrames.push_back(frame);
-   TGMainFrame::AddFrame(frame, new TGLayoutHints(kLHintsExpandX));
+   if (fExpandX)
+      TGMainFrame::AddFrame(frame, new TGLayoutHints(kLHintsExpandX));
+   else
+      TGMainFrame::AddFrame(frame, new TGLayoutHints(kLHintsExpandY));
    frame->Layout();
 }
 

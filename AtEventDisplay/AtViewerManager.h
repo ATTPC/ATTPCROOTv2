@@ -39,6 +39,7 @@ private:
    DataHandling::AtPadNum fPadNum{-1};           //< Not Observing
 
    AtEventSidebar *fSidebar;
+   AtEventSidebar *fBasebar;
 
    std::shared_ptr<AtMap> fMap;
    std::map<TString, std::vector<TString>> fBranchNames; //< fBranchNames[type] = {list of branches}

@@ -1,7 +1,8 @@
 #include "AtViewerManager.h"
 
 #include "AtEventSidebar.h" // for AtEventSidebar
-#include "AtTabBase.h"      // for AtTabBase
+#include "AtSidebarFrames.h"
+#include "AtTabBase.h" // for AtTabBase
 
 #include <FairLogger.h>      // for Logger, LOG
 #include <FairRootManager.h> // for FairRootManager
@@ -16,6 +17,8 @@
 #include <TRootBrowser.h> // for TRootBrowser, TRootBrowser::kLeft
 #include <TString.h>      // for TString, operator<<, operator<
 #include <TStyle.h>       // for TStyle, gStyle
+
+#include <GuiTypes.h> // for kHorizontalFrame
 
 #include <iostream> // for operator<<, endl, basic_ostream, cout
 #include <utility>  // for move
@@ -51,12 +54,27 @@ AtViewerManager::AtViewerManager(std::shared_ptr<AtMap> map) : fMap(std::move(ma
    // and embedd it there.
    TEveManager::Create(true, "IV"); // Create a mapped manager without the file viewer
    TEveBrowser *browser = gEve->GetBrowser();
+
+   // Create and embed the sidebar
    browser->StartEmbedding(TRootBrowser::kLeft);
 
-   fSidebar = new AtEventSidebar(fEntry, fRawEventBranch, fEventBranch, fPatternEventBranch);
+   fSidebar = new AtEventSidebar();
+   fSidebar->AddSidebarFrame(new AtSidebarRunInfo(fSidebar));
+   fSidebar->AddSidebarFrame(new AtSidebarPadControl(fPadNum, fSidebar));
 
    browser->StopEmbedding();
-   browser->SetTabTitle("Control", 0);
+   browser->SetTabTitle("Control", TRootBrowser::kLeft);
+
+   // Create and embed the basebar
+   browser->StartEmbedding(TRootBrowser::kBottom);
+
+   fBasebar = new AtEventSidebar(kHorizontalFrame);
+   fBasebar->AddSidebarFrame(new AtSidebarEventControl(fEntry, fBasebar));
+   fBasebar->AddSidebarFrame(new AtSidebarBranchControl(fRawEventBranch, fEventBranch, fPatternEventBranch, fBasebar));
+
+   browser->StopEmbedding();
+   browser->SetTabTitle("Control", TRootBrowser::kBottom);
+
    fEntry.Attach(this);
 }
 
@@ -88,6 +106,7 @@ void AtViewerManager::Init()
    GenerateBranchLists();
 
    fSidebar->FillFrames(); // Creates the entire sidebar GUI
+   fBasebar->FillFrames(); // Creates the entire basebar GUI
 
    GotoEvent(0);
    std::cout << "End of AtViewerManager" << std::endl;

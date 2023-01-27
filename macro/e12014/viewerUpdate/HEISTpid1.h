@@ -1,6 +1,7 @@
 
-void PlotPID(TTree *tree)
+void PlotPID(AtTabInfo *info)
 {
+   TTree *tree = info->GetAugment<AtTabInfoTree>("E12014")->GetTree();
    // Find dE Range
    tree->Draw("(11.17)*(MUSIC.fEnergy[0]+MUSIC.fEnergy[1]+MUSIC.fEnergy[2]+MUSIC.fEnergy[3]+MUSIC.fEnergy[4]+MUSIC."
               "fEnergy[5]+MUSIC.fEnergy[6]+MUSIC.fEnergy[7]+MUSIC.fEnergy[8])>>temp(1000, 0, 500)",

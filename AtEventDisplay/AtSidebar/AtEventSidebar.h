@@ -1,23 +1,24 @@
 #ifndef AtEVENTSIDEBAR_H
 #define AtEVENTSIDEBAR_H
 
-#include "AtViewerManagerSubject.h"
-
+#include <Rtypes.h> // for UInt_t
 #include <TGFrame.h>
+
+#include <GuiTypes.h> // for kVerticalFrame
 
 #include <vector> // for vector
 class AtSidebarFrame;
 
 /**
- * Sidebar class containings frames that also can broadcast data as a DataHandling::Subject.
+ * Side or basebar class containings frames.
  */
 class AtEventSidebar : public TGMainFrame {
 private:
    std::vector<AtSidebarFrame *> fFrames;
+   bool fExpandX;
 
 public:
-   AtEventSidebar(DataHandling::AtTreeEntry &entryNum, DataHandling::AtBranch &rawEvent, DataHandling::AtBranch &event,
-                  DataHandling::AtBranch &patternEvent);
+   AtEventSidebar(UInt_t options = kVerticalFrame);
 
    /// Actually generate content of the frames once Init has run
    void FillFrames();

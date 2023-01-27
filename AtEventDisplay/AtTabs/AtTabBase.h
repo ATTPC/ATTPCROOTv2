@@ -4,9 +4,11 @@
 #include "AtTabInfo.h" // IWYU pragma: keep
 
 #include <Rtypes.h>
+#include <TString.h> // for TString
 
 #include <memory>
-#include <string> // for string
+#include <string>  // for string
+#include <utility> // for move
 
 class TBuffer;
 class TMemberInspector;
@@ -26,11 +28,12 @@ class AtTabBase {
 protected:
    static int fNumTabs; //< Number of tab objects created
    Int_t fTabId{0};     //< Unique ID for tab
+   TString fTabName;    //< Name for the tab
 
    std::unique_ptr<AtTabInfo> fTabInfo{std::make_unique<AtTabInfo>()};
 
 public:
-   AtTabBase();
+   AtTabBase(TString tabName);
    virtual ~AtTabBase() = default;
 
    /// Called in the init stage of the run.
@@ -40,6 +43,7 @@ public:
    virtual void Exec() = 0;
 
    AtTabInfo *GetTabInfo() { return fTabInfo.get(); }
+   void SetTabName(TString name) { fTabName = std::move(name); }
 
 protected:
    /// Responsible for creating the fTabInfo object that will be updated on each event.
@@ -58,7 +62,7 @@ protected:
    template <typename T>
    T *GetFairRootInfo(std::string infoName = T::Class_Name())
    {
-      return dynamic_cast<AtTabInfoFairRoot<T> *>(fTabInfo->GetAugment(infoName))->GetInfo();
+      return dynamic_cast<AtTabInfoFairRoot<T> *>(fTabInfo->GetAugment(infoName).get())->GetInfo();
    }
 
    ClassDef(AtTabBase, 1)
