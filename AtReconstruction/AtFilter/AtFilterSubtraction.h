@@ -33,7 +33,7 @@ protected:
    Double_t fThreshold = 0;
    AtMapPtr fMapping;
    Int_t fNumberMissedAsads{};
-   Bool_t fSetIsGood = true; // if true will set the IsGood flag on the filtered AtRawEvent
+   Bool_t fSetIsGood{false}; // if true will set the IsGood flag on the filtered AtRawEvent
 
    // Avg with baseline subtraction baseline[cobo][asad][tb]
    vecDoubleCoBo fBaseline;
@@ -54,6 +54,7 @@ public:
    AtFilterSubtraction(AtMapPtr map, Int_t numCoBos = 10, Int_t numAget = 4);
 
    void SetThreshold(Double_t thresh) { fThreshold = thresh; }
+   /// Set if we should mark the event bad if we cannot find every AGET to do subtraction
    void SetIsGood(Bool_t val) { fSetIsGood = val; }
    Double_t GetThreshold() const { return fThreshold; }
 
