@@ -23,9 +23,7 @@ constexpr auto cBLUE = "\033[1;34m";
 
 ClassImp(AtTabMacro);
 
-AtTabMacro::AtTabMacro(int nRow, int nCol, TString name)
-   : AtTabBase(), fDetmap(nullptr), fCvsMacro(nullptr), fRows(nRow), fCols(nCol), fTabName(std::move(name)),
-     fTree(nullptr)
+AtTabMacro::AtTabMacro(int nRow, int nCol, TString name) : AtTabCanvas(name, nRow, nCol), fTree(nullptr)
 {
    if (AtViewerManager::Instance() == nullptr)
       throw "AtViewerManager must be initialized before creating tabs!";
@@ -43,9 +41,7 @@ void AtTabMacro::InitTab()
    std::cout << " =====  AtTabMacro::Init =====" << std::endl;
 
    if (fTabName == "Macro") {
-      char name[20];
-      sprintf(name, "Macro %i", fTabId);
-      fTabName = name;
+      fTabName = TString::Format(fTabName + " %d", fTabId);
    }
 
    std::cout << " AtTabMacro::Init : Initialization complete! "
@@ -54,26 +50,7 @@ void AtTabMacro::InitTab()
 
 void AtTabMacro::MakeTab(TEveWindowSlot *slot)
 {
-   char name[20];
-
-   // 3D
-   auto pack = slot->MakePack();
-   pack->SetElementName(fTabName);
-   pack->SetHorizontal();
-   // pack->SetVertical();
-   pack->SetShowTitleBar(kFALSE);
-
-   sprintf(name, "Macro Canvas %i", fTabId);
-   slot = pack->NewSlot();
-   TEveWindowPack *pack2 = slot->MakePack();
-   pack2->SetShowTitleBar(kFALSE);
-   pack2->SetVertical();
-   slot = pack2->NewSlot();
-   slot->StartEmbedding();
-   fCvsMacro = new TCanvas(name);
-   fCvsMacro->Divide(fCols, fRows);
-   fCvsMacro->ToggleEditor();
-   slot->StopEmbedding();
+   AtTabCanvas::MakeTab(slot);
 
    DrawTree();
 }
@@ -81,7 +58,7 @@ void AtTabMacro::MakeTab(TEveWindowSlot *slot)
 void AtTabMacro::DrawTree()
 {
    for (int i = 0; i < fCols * fRows; i++) {
-      fCvsMacro->cd(i + 1);
+      fCanvas->cd(i + 1);
 
       auto it = fDrawTreeMap.find(i);
       if (it == fDrawTreeMap.end()) {
@@ -97,7 +74,7 @@ void AtTabMacro::DrawTree()
 void AtTabMacro::Exec()
 {
    for (int i = 0; i < fCols * fRows; i++) {
-      fCvsMacro->cd(i + 1);
+      fCanvas->cd(i + 1);
       auto it = fDrawEventMap.find(i);
       if (it == fDrawEventMap.end()) {
          return;
@@ -115,7 +92,7 @@ void AtTabMacro::Update(DataHandling::AtSubject *sub)
       return;
 
    for (int i = 0; i < fCols * fRows; i++) {
-      fCvsMacro->cd(i + 1);
+      fCanvas->cd(i + 1);
       auto it = fDrawPadMap.find(i);
       if (it == fDrawPadMap.end()) {
          return;
@@ -155,6 +132,6 @@ void AtTabMacro::SetDrawPadFunction(Int_t pos, std::function<void(AtTabInfo(*), 
 
 void AtTabMacro::UpdateCvsMacro()
 {
-   fCvsMacro->Modified();
-   fCvsMacro->Update();
+   fCanvas->Modified();
+   fCanvas->Update();
 }

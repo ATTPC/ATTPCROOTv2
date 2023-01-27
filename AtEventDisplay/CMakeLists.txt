@@ -17,10 +17,12 @@ AtViewerManager.cxx
 AtViewerManagerSubject.cxx
 
 AtTabs/AtTabBase.cxx
+AtTabs/AtTabCanvas.cxx
 AtTabs/AtTabInfo.cxx
 AtTabs/AtTabMacro.cxx
 AtTabs/AtTabMain.cxx
 AtTabs/AtTabPad.cxx
+
 
 AtSidebar/AtEventSidebar.cxx
 AtSidebar/AtSidebarFrames.cxx

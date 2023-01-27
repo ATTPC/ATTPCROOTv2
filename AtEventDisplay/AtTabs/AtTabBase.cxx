@@ -8,10 +8,11 @@
 ClassImp(AtTabBase);
 int AtTabBase::fNumTabs = 0;
 
-AtTabBase::AtTabBase() : fTabId(fNumTabs)
+AtTabBase::AtTabBase(TString name) : fTabId(fNumTabs), fTabName(name)
 {
    fNumTabs++;
 }
+
 /// Init both the tab (InitTab()) and then init the AtTabInfo class
 void AtTabBase::Init()
 {

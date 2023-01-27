@@ -59,7 +59,7 @@ constexpr auto cBLUE = "\033[1;34m";
 
 ClassImp(AtTabMain);
 
-AtTabMain::AtTabMain()
+AtTabMain::AtTabMain() : AtTabBase("Main")
 {
    if (AtViewerManager::Instance() == nullptr)
       throw "AtViewerManager must be initialized before creating tabs!";

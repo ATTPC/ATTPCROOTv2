@@ -24,13 +24,14 @@ class TEveWindowSlot;
  */
 class AtTabBase {
 protected:
-   static int fNumTabs; //< Number of tab objects created
-   Int_t fTabId{0};     //< Unique ID for tab
+   static int fNumTabs;  //< Number of tab objects created
+   Int_t fTabId{0};      //< Unique ID for tab
+   TString fTabName;     //< Name for the tab
 
    std::unique_ptr<AtTabInfo> fTabInfo{std::make_unique<AtTabInfo>()};
 
 public:
-   AtTabBase();
+   AtTabBase(TString tabName);
    virtual ~AtTabBase() = default;
 
    /// Called in the init stage of the run.
@@ -40,6 +41,7 @@ public:
    virtual void Exec() = 0;
 
    AtTabInfo *GetTabInfo() { return fTabInfo.get(); }
+   void SetTabName(TString name) { fTabName = std::move(name); }
 
 protected:
    /// Responsible for creating the fTabInfo object that will be updated on each event.

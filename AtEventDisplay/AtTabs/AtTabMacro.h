@@ -2,7 +2,7 @@
 #define ATTABMACRO_H
 
 #include "AtDataObserver.h"
-#include "AtTabBase.h"
+#include "AtTabCanvas.h"
 #include "AtViewerManagerSubject.h" // for AtPadNum
 
 #include <Rtypes.h>  // for Int_t, Bool_t, THashConsistencyHolder, Color_t
@@ -26,17 +26,8 @@ class AtSubject;
 }
 
 /// Tab for drawing arbitrary functions (probably needs refactor)
-class AtTabMacro : public AtTabBase, public DataHandling::AtObserver {
+class AtTabMacro : public AtTabCanvas, public DataHandling::AtObserver {
 protected:
-   std::shared_ptr<AtMap> fDetmap;
-
-   TString fMap;
-
-   TCanvas *fCvsMacro;
-
-   Int_t fRows;
-   Int_t fCols;
-
    TChain *fTree;
 
    DataHandling::AtPadNum *fPadNum;
@@ -44,8 +35,6 @@ protected:
    std::unordered_map<Int_t, std::function<void(TTree(*))>> fDrawTreeMap;
    std::unordered_map<Int_t, std::function<void(AtTabInfo(*))>> fDrawEventMap;
    std::unordered_map<Int_t, std::function<void(AtTabInfo(*), Int_t)>> fDrawPadMap;
-
-   TString fTabName;
 
 public:
    AtTabMacro(int nRow = 1, int nCol = 1, TString name = "Macro");
@@ -60,14 +49,9 @@ public:
    void SetDrawEventFunction(Int_t pos, std::function<void(AtTabInfo(*))> function);
    void SetDrawPadFunction(Int_t pos, std::function<void(AtTabInfo(*), Int_t)> function);
 
-   void SetMap(std::shared_ptr<AtMap> map) { fDetmap = map; }
-   void SetColumns(Int_t cols) { fCols = cols; }
-   void SetRows(Int_t rows) { fRows = rows; }
-   void SetTabName(TString tabName) { fTabName = tabName; }
-   void DrawTree();
-
 protected:
    void MakeTab(TEveWindowSlot *) override;
+   void DrawTree();
 
 private:
    void UpdateCvsMacro();
