@@ -20,3 +20,9 @@ void AtTabCanvas::MakeTab(TEveWindowSlot *slot)
 
    slot->StopEmbedding();
 }
+
+void AtTabCanvas::UpdateCanvas()
+{
+   fCanvas->Modified();
+   fCanvas->Update();
+}

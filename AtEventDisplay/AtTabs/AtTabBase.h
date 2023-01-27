@@ -62,7 +62,7 @@ protected:
    template <typename T>
    T *GetFairRootInfo(std::string infoName = T::Class_Name())
    {
-      return dynamic_cast<AtTabInfoFairRoot<T> *>(fTabInfo->GetAugment(infoName))->GetInfo();
+      return dynamic_cast<AtTabInfoFairRoot<T> *>(fTabInfo->GetAugment(infoName).get())->GetInfo();
    }
 
    ClassDef(AtTabBase, 1)

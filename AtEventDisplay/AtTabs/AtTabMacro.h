@@ -16,8 +16,6 @@ class TEveWindowSlot;
 class TBuffer;
 class TClass;
 class TMemberInspector;
-class TChain;
-class TTree;
 namespace DataHandling {
 class AtSubject;
 }
@@ -25,11 +23,9 @@ class AtSubject;
 /// Tab for drawing arbitrary functions (probably needs refactor)
 class AtTabMacro : public AtTabCanvas, public DataHandling::AtObserver {
 protected:
-   TChain *fTree;
-
    DataHandling::AtPadNum *fPadNum;
 
-   std::unordered_map<Int_t, std::function<void(TTree(*))>> fDrawTreeMap;
+   std::unordered_map<Int_t, std::function<void(AtTabInfo(*))>> fDrawTreeMap;
    std::unordered_map<Int_t, std::function<void(AtTabInfo(*))>> fDrawEventMap;
    std::unordered_map<Int_t, std::function<void(AtTabInfo(*), Int_t)>> fDrawPadMap;
 
@@ -41,19 +37,13 @@ public:
    void Exec() override;
    void Update(DataHandling::AtSubject *sub) override;
 
-   void SetInputTree(TString fileName, TString treeName);
-   void SetDrawTreeFunction(Int_t pos, std::function<void(TTree(*))> function);
-   void SetDrawEventFunction(Int_t pos, std::function<void(AtTabInfo(*))> function);
-   void SetDrawPadFunction(Int_t pos, std::function<void(AtTabInfo(*), Int_t)> function);
+   void SetDrawTreeFunction(std::function<void(AtTabInfo(*))> function, int row = 0, int col = 0);
+   void SetDrawEventFunction(std::function<void(AtTabInfo(*))> function, int row = 0, int col = 0);
+   void SetDrawPadFunction(std::function<void(AtTabInfo(*), Int_t)> function, int row = 0, int col = 0);
 
 protected:
    void MakeTab(TEveWindowSlot *) override;
    void DrawTree();
-
-private:
-   void UpdateCvsMacro();
-
-   // Functions for drawing hits
 
    ClassDefOverride(AtTabMacro, 1)
 };

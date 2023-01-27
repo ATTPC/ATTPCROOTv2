@@ -82,12 +82,13 @@ void run_eve_test_multiPSA(int runNum = 214, TString OutputDataFile = "./data/ou
    tabPad->DrawAuxADC("IC", 1, 0);
    tabPad->DrawArrayAug("Qreco", 1, 1);
 
-   auto heistInfo = std::make_unique<AtTabInfoHiRAEVT<HTMusicIC>>(evtInputDataFile, "MUSIC",
-                                                                  AtViewerManager::Instance()->GetCurrentEntry());
+   auto heistTree =
+      std::make_shared<AtTabInfoTree>("E12014", evtInputDataFile, AtViewerManager::Instance()->GetCurrentEntry());
+   auto heistInfo = std::make_shared<AtTabInfoBranch<HTMusicIC>>(heistTree, "MUSIC");
    auto tabMac = std::make_unique<AtTabMacro>();
-   tabMac->GetTabInfo()->AddAugment(std::move(heistInfo), "MusicIC");
-   tabMac->SetInputTree(evtInputDataFile, "E12014");
-   tabMac->SetDrawTreeFunction(0, PlotPID);
+   tabMac->GetTabInfo()->AddAugment(heistInfo, "MusicIC");
+   tabMac->GetTabInfo()->AddAugment(heistTree);
+   tabMac->SetDrawTreeFunction(PlotPID);
 
    eveMan->AddTask(psaTask);
    eveMan->AddTab(std::move(tabMain));

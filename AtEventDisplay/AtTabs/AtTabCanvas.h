@@ -27,6 +27,7 @@ public:
 
 protected:
    void MakeTab(TEveWindowSlot *slot) override;
+   void UpdateCanvas();
 
    ClassDefOverride(AtTabCanvas, 1)
 };
