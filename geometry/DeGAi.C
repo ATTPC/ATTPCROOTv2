@@ -249,7 +249,7 @@ TGeoVolume *create_detector()
       Cry_vol[nora]->SetTransparency(80);*/
 
 
-   for(Int_t i =0;i<4;i++){
+   for(Int_t i =0;i<40;i++){
    Cry_vol[i] = gGeoManager->MakeTube(CrystalName + name_cry[i], degaimatter, 0,
                                             Crystal_Radius/2, Box_Length / 2);
       Cry_vol[i]->SetLineColor(Color[i]);
