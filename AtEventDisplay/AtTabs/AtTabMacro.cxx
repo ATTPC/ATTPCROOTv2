@@ -53,7 +53,7 @@ void AtTabMacro::MakeTab(TEveWindowSlot *slot)
 void AtTabMacro::DrawTree()
 {
    for (auto &[pos, func] : fDrawTreeMap) {
-      fCanvas->cd(pos);
+      fCanvas->cd(pos + 1);
       func(fTabInfo.get());
    }
    UpdateCanvas();
@@ -62,7 +62,7 @@ void AtTabMacro::DrawTree()
 void AtTabMacro::Exec()
 {
    for (auto &[pos, func] : fDrawEventMap) {
-      fCanvas->cd(pos);
+      fCanvas->cd(pos + 1);
       func(fTabInfo.get());
    }
    UpdateCanvas();
@@ -74,7 +74,7 @@ void AtTabMacro::Update(DataHandling::AtSubject *sub)
    if (sub != fPadNum)
       return;
    for (auto &[pos, func] : fDrawPadMap) {
-      fCanvas->cd(pos);
+      fCanvas->cd(pos + 1);
       func(fTabInfo.get(), fPadNum->Get());
    }
    UpdateCanvas();
