@@ -115,7 +115,8 @@ void AtTabMain::ExpandNumPatterns(int num)
 
 Color_t AtTabMain::GetTrackColor(int i)
 {
-   std::vector<EColor> colors = {kOrange, kViolet, kTeal, kMagenta, kBlue, kViolet, kYellow, kCyan};
+   std::vector<Color_t> colors = {kBlue - 7,    kGreen - 8, kOrange, kViolet, kYellow, kTeal - 6,
+                                  kMagenta + 1, kBlue,      kViolet, kYellow, kCyan};
    if (i < colors.size()) {
       return colors.at(i);
    } else

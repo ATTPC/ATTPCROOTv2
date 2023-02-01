@@ -5,7 +5,8 @@ set(SRCS
   AtParsers.cxx
   AtELossManager.cxx
   AtTrackTransformer.cxx
-
+  AtDataManip.cxx
+  
   AtCSVReader.cxx
   AtEulerTransformation.cxx
   AtSpaceChargeModel.cxx

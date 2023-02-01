@@ -104,7 +104,8 @@ public:
 
    std::string GetDefaultName() override { return T::Class_Name(); }
 
-   T *GetInfo() { return fInfo; }
+   T *GetInfo() { return Get(); }
+   T *Get() { return fInfo; }
 
    void Update(DataHandling::AtSubject *changedSubject) override
    {
@@ -115,6 +116,7 @@ public:
             fInfo = dynamic_cast<T *>(array->At(0));
       }
    }
+   const DataHandling::AtBranch &GetBranch() const { return fBranchName; }
 };
 
 #endif

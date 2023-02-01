@@ -1,9 +1,17 @@
 #include "AtViewerManagerSubject.h"
 
 #include <FairRootManager.h>
+#include <FairRunAna.h>
 
 #include <TString.h>
 namespace DataHandling {
+
+void AtTreeEntry::Set(long entry)
+{
+   fEntry = entry;
+   FairRunAna::Instance()->Run((Long64_t)fEntry);
+   Notify();
+}
 
 void AtBranch::SetBranchName(const TString &name)
 {
