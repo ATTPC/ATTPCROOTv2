@@ -7,6 +7,7 @@
 #include "AtViewerManagerSubject.h"
 
 #include <Rtypes.h>
+#include <TClonesArray.h>
 #include <TString.h> // for TString
 
 #include <map>    // for map
