@@ -66,6 +66,17 @@ public:
    AtPadBase *ReplaceAugment(std::string name, std::unique_ptr<AtPadBase> augment);
    AtPadBase *GetAugment(std::string name);
    const AtPadBase *GetAugment(std::string name) const;
+   template <typename T, typename std::enable_if_t<std::is_base_of<AtPadBase, T>::value> * = nullptr>
+   T *GetAugment(std::string name)
+   {
+      return dynamic_cast<T *>(GetAugment(name));
+   }
+   template <typename T, typename std::enable_if_t<std::is_base_of<AtPadBase, T>::value> * = nullptr>
+   const T *GetAugment(std::string name) const
+   {
+      return dynamic_cast<const T *>(GetAugment(name));
+   }
+
    const std::map<std::string, std::unique_ptr<AtPadBase>> &GetAugments() const { return fPadAugments; }
    void SetValidPad(Bool_t val = kTRUE) { fIsValid = val; }
    void SetPadNum(Int_t padNum) { fPadNum = padNum; }
