@@ -2,9 +2,12 @@
 #define ATVIEWERMANAGER_H
 
 #include "AtDataObserver.h"
+#include "AtRawEvent.h"
+#include "AtTabInfo.h"
 #include "AtViewerManagerSubject.h"
 
 #include <Rtypes.h>
+#include <TClonesArray.h>
 #include <TString.h> // for TString
 
 #include <map>    // for map
@@ -46,6 +49,9 @@ private:
    std::map<TString, std::vector<TString>> fBranchNames; //< fBranchNames[type] = {list of branches}
    TabVec fTabs;
 
+   bool fCheckGood{false}; //< Check if the event is good and skip if not when using next and prev
+   std::unique_ptr<AtTabInfoFairRoot<AtRawEvent>> fCheckEvt{nullptr};
+
    static AtViewerManager *fInstance;
 
 public:
@@ -69,13 +75,19 @@ public:
    DataHandling::AtTreeEntry &GetCurrentEntry() { return fEntry; }
    DataHandling::AtPadNum &GetPadNum() { return fPadNum; }
 
+   void SetCheckBranch(DataHandling::AtBranch &branch)
+   {
+      fCheckGood = true;
+      fCheckEvt = std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(branch);
+   }
+
    /**
     * Main function for navigating to an event. Everything that changes event number should end up
     * here
     */
    virtual void GotoEvent(Int_t event) { fEntry.Set(event); }
-   void NextEvent() { GotoEvent(fEntry.Get() + 1); }
-   void PrevEvent() { GotoEvent(fEntry.Get() - 1); }
+   void NextEvent();
+   void PrevEvent();
 
    static AtViewerManager *Instance();
 

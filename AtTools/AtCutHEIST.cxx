@@ -104,5 +104,8 @@ double AtCutHEIST::GetEnergy()
 
 double AtCutHEIST::GetToF()
 {
-   return fDsMcp->GetTimeAnode()[0] - fUsMcp->GetTimeAnode()[0] + 728;
+   if (fUsMcp->GetTimeAnode().size() > 0)
+      return fDsMcp->GetTimeAnode()[0] - fUsMcp->GetTimeAnode()[0] + 728;
+   else
+      return 0;
 }
