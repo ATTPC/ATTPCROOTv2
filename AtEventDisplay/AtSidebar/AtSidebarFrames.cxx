@@ -140,7 +140,7 @@ void AtSidebarEventControl::SelectEvent()
 
 void AtSidebarEventControl::RedrawEvent()
 {
-   fEntryNumber.Notify();
+   fEntryNumber.Set(fEntryNumber.Get());
 }
 
 void AtSidebarEventControl::FillFrame()
