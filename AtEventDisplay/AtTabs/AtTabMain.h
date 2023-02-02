@@ -48,7 +48,7 @@ protected:
    Int_t fThreshold{0};    //< Min charge to draw hit
    Int_t fMaxHitMulti{10}; //< Max hits in a pad for hit to be drawn
 
-   TAttMarker fHitAttr{kPink, 1, kFullDotMedium};
+   TAttMarker fHitAttr{kPink, kFullDotMedium, 1};
 
    TCanvas *fCvsPadPlane{nullptr};
    TH2Poly *fPadPlane{nullptr};

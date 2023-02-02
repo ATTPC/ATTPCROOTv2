@@ -140,7 +140,7 @@ void AtViewerManager::GenerateBranchLists()
 
 void AtViewerManager::GotoEventImpl()
 {
-   FairRunAna::Instance()->Run((Long64_t)fEntry.Get());
+   // FairRunAna::Instance()->Run((Long64_t)fEntry.Get());
    for (auto &tab : fTabs)
       tab->Exec();
 
