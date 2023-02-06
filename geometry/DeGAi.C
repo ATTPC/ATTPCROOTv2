@@ -228,6 +228,8 @@ TGeoVolume *create_detector()
 
    Double_t Rvals[40] ={19.77683114,19.77683114,19.77647621,19.77647621,19.77759725,19.77759725,19.77713387,19.77713387,19.77644147,19.77591297,19.77633936,19.77707173,11.56007718,11.56116122,11.56116122,11.56007718,11.56118215,11.56120531,11.56120531,11.56118215,11.56103566,11.56072343,11.56072343,11.56103566,19.77724805,19.77604363,19.77762107,19.77681679,19.77604363,19.77724805,19.77681679,19.77762107,19.77604363,19.77724805,19.77681679,19.77762107,19.77604363,19.77724805,19.77681679,19.77762107};
 
+   Double_t Rnew[40] = {19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,10.67,10.67,10.67,10.67,10.67,10.67,10.67,10.67,10.67,10.67,10.67,10.67,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05};
+
    Double_t ThetaDet[40] = {128.8960565,128.8960565,116.6719632,116.6719632 ,128.8942659,128.8942659,116.6710061,116.6710061,128.4539467,128.4551626,116.2283226,116.2272773,100.5205834,100.5195857,79.4804143,79.47941659,100.5195664,100.5195451,79.48045487,79.48043356,100.5197013,100.5199886,79.4800114,79.48029875,66.30557111,66.30403974,54.07972043,54.07803245,66.30403974,66.30557111,54.07803245,54.07972043,53.82653458,58.20928332,43.77046075,38.21971664,58.20928332,53.82653458,38.21971664,43.77046075};
 
    Double_t PhiDet[40] = {322.8804903,307.1195097,308.1415006,321.8584994,277.8814104,262.1185896,263.1405474,276.8594526,231.8670515,216.2007913,217.2029612,230.8687376,344.988577,323.5782166,323.5782166,344.988577,293.5633984,272.1514237,272.1514237,293.5633984,242.1293534,220.7318372,220.7318372,242.1293534,296.6944274,283.3072445,282.4272964,297.5769804,256.6927555,243.3055726,242.4230196,257.5727036,346.4647812,328.0076872,319.4166341,342.2518078,211.9923128,193.5352188,197.7481922,220.5833659};
@@ -260,9 +262,9 @@ TGeoVolume *create_detector()
       Cry_vol[i]->SetLineColor(Color[4*i]);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(Cry_vol[i], i + 1,
-                   new TGeoCombiTrans(-Rvals[4*i]*TMath::Sin(TMath::DegToRad()*Theta[4*i])*TMath::Sin(TMath::DegToRad()*Phi[4*i]),
-                   Rvals[4*i]*TMath::Cos(TMath::DegToRad()*Phi[4*i]), 
-                   Rvals[4*i]*TMath::Cos(TMath::DegToRad()*Theta[4*i])*TMath::Sin(TMath::DegToRad()*Phi[4*i]) + cage_support_length/2,
+                   new TGeoCombiTrans(-Rnew[4*i]*TMath::Sin(TMath::DegToRad()*Theta[4*i])*TMath::Sin(TMath::DegToRad()*Phi[4*i]),
+                   Rnew[4*i]*TMath::Cos(TMath::DegToRad()*Phi[4*i]), 
+                   Rnew[4*i]*TMath::Cos(TMath::DegToRad()*Theta[4*i])*TMath::Sin(TMath::DegToRad()*Phi[4*i]) + cage_support_length/2,
                                       new TGeoRotation(CrystalName + name_cry[i],Phi[4*i],Theta[4*i] , 0)));
       Cry_vol[i]->SetTransparency(0);
    };
@@ -277,9 +279,9 @@ TGeoVolume *create_detector()
       Cry_vol[i]->SetLineColor(Color[i]);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(Cry_vol[i], i + 1,
-                   new TGeoCombiTrans(-Rvals[i]*TMath::Sin(TMath::DegToRad()*ThetaDet[i])*TMath::Sin(TMath::DegToRad()*PhiDet[i]),
-                   Rvals[i]*TMath::Cos(TMath::DegToRad()*PhiDet[i]), 
-                   Rvals[i]*TMath::Cos(TMath::DegToRad()*ThetaDet[i])*TMath::Sin(TMath::DegToRad()*PhiDet[i]) + cage_support_length/2,
+                   new TGeoCombiTrans(-Rnew[i]*TMath::Sin(TMath::DegToRad()*ThetaDet[i])*TMath::Sin(TMath::DegToRad()*PhiDet[i]),
+                   Rnew[i]*TMath::Cos(TMath::DegToRad()*PhiDet[i]), 
+                   Rnew[i]*TMath::Cos(TMath::DegToRad()*ThetaDet[i])*TMath::Sin(TMath::DegToRad()*PhiDet[i]) + cage_support_length/2,
                                       new TGeoRotation(CrystalName + name_cry[i],Phi[i],Theta[i] , 0)));
       Cry_vol[i]->SetTransparency(0);
    };
@@ -293,9 +295,9 @@ TGeoVolume *create_detector()
       Cry_vol[i]->SetLineColor(Color[i]);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(Cry_vol[i], i + 1,
-                   new TGeoCombiTrans(-Rvals[i]*TMath::Sin(TMath::DegToRad()*Thetanew[i])*TMath::Sin(TMath::DegToRad()*Phinew[i]),
-                   Rvals[i]*TMath::Cos(TMath::DegToRad()*Phinew[i]), 
-                   Rvals[i]*TMath::Cos(TMath::DegToRad()*Thetanew[i])*TMath::Sin(TMath::DegToRad()*Phinew[i]) + cage_support_length/2,
+                   new TGeoCombiTrans(-Rnew[i]*TMath::Sin(TMath::DegToRad()*Thetanew[i])*TMath::Sin(TMath::DegToRad()*Phinew[i]),
+                   Rnew[i]*TMath::Cos(TMath::DegToRad()*Phinew[i]), 
+                   Rnew[i]*TMath::Cos(TMath::DegToRad()*Thetanew[i])*TMath::Sin(TMath::DegToRad()*Phinew[i]) + cage_support_length/2,
                                       new TGeoRotation(CrystalName + name_cry[i],Phi[i],Theta[i] , 0)));
       Cry_vol[i]->SetTransparency(0);
    };
