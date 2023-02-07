@@ -1,5 +1,6 @@
 #ifndef ATVIEWERMANAGER_H
 #define ATVIEWERMANAGER_H
+
 #include "AtDataObserver.h"
 #include "AtViewerManagerSubject.h"
 

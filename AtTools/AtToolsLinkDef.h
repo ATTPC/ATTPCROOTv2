@@ -42,5 +42,13 @@
 #pragma link C++ class ElectronicResponse::AtFileResponse - !;
 
 #pragma link C++ class AtCutHEIST - !; p
+#pragma link C++ class CSVRow < int> - !;
+#pragma link C++ class CSVIterator < int> - !;
+#pragma link C++ class CSVRange < int> - !;
+
+#pragma link C++ function AtTools::GetHitFunctionTB;
+#pragma link C++ function AtTools::GetHitFunction;
+#pragma link C++ function AtTools::GetTB;
+#pragma link C++ function AtTools::GetDriftTB;
 
 #endif

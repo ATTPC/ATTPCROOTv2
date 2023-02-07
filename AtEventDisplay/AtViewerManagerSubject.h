@@ -10,9 +10,19 @@ namespace DataHandling {
 /**
  * @brief Subject for the entry number in the FairRoot tree.
  *
+ * Is responsible for updating the run (ie calling FairRunAna::Instance()->Run()) before notifying
+ * observers.
  * @ingroup DataHandling
  */
-using AtTreeEntry = AtSimpleType<long>;
+class AtTreeEntry : public AtSubject {
+protected:
+   long fEntry;
+
+public:
+   AtTreeEntry(long data) { fEntry = data; }
+   long Get() const { return fEntry; }
+   void Set(long entry);
+};
 
 /**
  * @brief Subject for the pad currently selected.
