@@ -1,6 +1,7 @@
 #include "AtViewerManager.h"
 
 #include "AtEventSidebar.h" // for AtEventSidebar
+#include "AtRawEvent.h"
 #include "AtSidebarFrames.h"
 #include "AtTabBase.h" // for AtTabBase
 
@@ -9,7 +10,6 @@
 #include <FairRunAna.h>      // for FairRunAna
 
 #include <Rtypes.h>       // for ClassImp, Long64_t, TGenericClassInfo
-#include <TClonesArray.h> // for TClonesArray
 #include <TEveBrowser.h>  // for TEveBrowser
 #include <TEveManager.h>  // for TEveManager, gEve
 #include <TList.h>        // for TList
@@ -108,6 +108,18 @@ void AtViewerManager::Init()
    fSidebar->FillFrames(); // Creates the entire sidebar GUI
    fBasebar->FillFrames(); // Creates the entire basebar GUI
 
+   FairRootManager *ioMan = FairRootManager::Instance();
+   if (ioMan == nullptr) {
+      LOG(fatal) << "Cannot find RootManager!";
+   }
+
+   if(fCheckGood == true) {
+      fCheckEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fCheckBranchName));
+      if (fCheckEventArray == nullptr) {
+         LOG(fatal) << "Cannot find AtRawEvent array in branch " << fCheckBranchName << "!";
+      }
+   }
+
    GotoEvent(0);
    std::cout << "End of AtViewerManager" << std::endl;
 }
@@ -128,8 +140,9 @@ void AtViewerManager::GenerateBranchLists()
          continue;
 
       // Loop until there is something in this branch
+      int event = 0;
       while (branchArray->GetSize() == 0)
-         NextEvent();
+         GotoEvent(event++);
 
       auto type = branchArray->At(0)->ClassName();
       fBranchNames[type].push_back(branchName);
@@ -151,5 +164,29 @@ void AtViewerManager::Update(DataHandling::AtSubject *subject)
 {
    if (subject == &fEntry) {
       GotoEventImpl();
+   }
+}
+
+void AtViewerManager::NextEvent() 
+{ 
+   while(true) {
+      GotoEvent(fEntry.Get() + 1); 
+      if(fCheckGood == false) {
+         return;
+      }
+      else if( dynamic_cast<AtRawEvent *>(fCheckEventArray->At(0))->IsGood() )
+         return;
+   }
+}
+
+void AtViewerManager::PrevEvent() 
+{ 
+   while(true) {
+      GotoEvent(fEntry.Get() - 1); 
+      if(fCheckGood == false) {
+         return;
+      }
+      else if( dynamic_cast<AtRawEvent *>(fCheckEventArray->At(0))->IsGood() )
+         return;
    }
 }

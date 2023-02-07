@@ -4,6 +4,7 @@
 #include "AtViewerManagerSubject.h"
 
 #include <Rtypes.h>
+#include <TClonesArray.h>
 #include <TString.h> // for TString
 
 #include <map>    // for map
@@ -12,6 +13,7 @@
 
 class AtEventSidebar;
 class AtMap;            // lines 29-29
+class AtRawEvent;
 class AtTabBase;        // lines 31-31
 class FairTask;         // lines 19-19
 class TBuffer;          // lines 20-20
@@ -45,6 +47,11 @@ private:
    std::map<TString, std::vector<TString>> fBranchNames; //< fBranchNames[type] = {list of branches}
    TabVec fTabs;
 
+   bool fCheckGood{false}; //< Check if the event is good and skip if not when using next and prev
+   TClonesArray *fCheckEventArray{nullptr}; //< AtRawEvent branch object
+   TString fCheckBranchName{"AtRawEvent"};  //< Name of AtRawEvent branch to check as good/not good
+   AtRawEvent *fCheckRawEvent{};                 //< Event to check as good
+
    static AtViewerManager *fInstance;
 
 public:
@@ -68,13 +75,16 @@ public:
    DataHandling::AtTreeEntry &GetCurrentEntry() { return fEntry; }
    DataHandling::AtPadNum &GetPadNum() { return fPadNum; }
 
+   void SetCheckGood() { fCheckGood = true; }
+   void SetCheckBranch(TString name) { fCheckBranchName = name; }
+
    /**
     * Main function for navigating to an event. Everything that changes event number should end up
     * here
     */
    virtual void GotoEvent(Int_t event) { fEntry.Set(event); }
-   void NextEvent() { GotoEvent(fEntry.Get() + 1); }
-   void PrevEvent() { GotoEvent(fEntry.Get() - 1); }
+   void NextEvent();
+   void PrevEvent();
 
    static AtViewerManager *Instance();
 
