@@ -13,7 +13,7 @@
 #include <vector>
 
 class AtEventSidebar;
-class AtMap;            // lines 29-29
+class AtMap; // lines 29-29
 class AtRawEvent;
 class AtTabBase;        // lines 31-31
 class FairTask;         // lines 19-19
@@ -48,10 +48,10 @@ private:
    std::map<TString, std::vector<TString>> fBranchNames; //< fBranchNames[type] = {list of branches}
    TabVec fTabs;
 
-   bool fCheckGood{false}; //< Check if the event is good and skip if not when using next and prev
+   bool fCheckGood{false};                  //< Check if the event is good and skip if not when using next and prev
    TClonesArray *fCheckEventArray{nullptr}; //< AtRawEvent branch object
    TString fCheckBranchName{"AtRawEvent"};  //< Name of AtRawEvent branch to check as good/not good
-   AtRawEvent *fCheckRawEvent{};                 //< Event to check as good
+   AtRawEvent *fCheckRawEvent{};            //< Event to check as good
 
    static AtViewerManager *fInstance;
 

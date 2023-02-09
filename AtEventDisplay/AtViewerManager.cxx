@@ -113,7 +113,7 @@ void AtViewerManager::Init()
       LOG(fatal) << "Cannot find RootManager!";
    }
 
-   if(fCheckGood == true) {
+   if (fCheckGood == true) {
       fCheckEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fCheckBranchName));
       if (fCheckEventArray == nullptr) {
          LOG(fatal) << "Cannot find AtRawEvent array in branch " << fCheckBranchName << "!";
@@ -167,26 +167,24 @@ void AtViewerManager::Update(DataHandling::AtSubject *subject)
    }
 }
 
-void AtViewerManager::NextEvent() 
-{ 
-   while(true) {
-      GotoEvent(fEntry.Get() + 1); 
-      if(fCheckGood == false) {
+void AtViewerManager::NextEvent()
+{
+   while (true) {
+      GotoEvent(fEntry.Get() + 1);
+      if (fCheckGood == false) {
          return;
-      }
-      else if( dynamic_cast<AtRawEvent *>(fCheckEventArray->At(0))->IsGood() )
+      } else if (dynamic_cast<AtRawEvent *>(fCheckEventArray->At(0))->IsGood())
          return;
    }
 }
 
-void AtViewerManager::PrevEvent() 
-{ 
-   while(true) {
-      GotoEvent(fEntry.Get() - 1); 
-      if(fCheckGood == false) {
+void AtViewerManager::PrevEvent()
+{
+   while (true) {
+      GotoEvent(fEntry.Get() - 1);
+      if (fCheckGood == false) {
          return;
-      }
-      else if( dynamic_cast<AtRawEvent *>(fCheckEventArray->At(0))->IsGood() )
+      } else if (dynamic_cast<AtRawEvent *>(fCheckEventArray->At(0))->IsGood())
          return;
    }
 }
