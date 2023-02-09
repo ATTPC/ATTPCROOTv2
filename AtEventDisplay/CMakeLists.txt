@@ -15,6 +15,7 @@ set(SRCS
 # Add all the source files below this line. Those must have cc for their extension.
 AtViewerManager.cxx
 AtViewerManagerSubject.cxx
+AtBoolMacro.cxx
 
 AtTabs/AtTabBase.cxx
 AtTabs/AtTabCanvas.cxx
