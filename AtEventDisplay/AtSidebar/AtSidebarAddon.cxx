@@ -72,8 +72,10 @@ void AtSidebarAddon::SetInfoString(std::string label, TString value)
 {
    if (fStrings.find(label) == fStrings.end())
       LOG(error) << label << " not defined!";
-   else
+   else {
       fStrings.find(label)->second->SetText(value);
+      dynamic_cast<TGFrame *>(const_cast<TGWindow *>(this->GetParent()))->Layout();
+   }
 }
 
 void AtSidebarAddon::SetIntNumber(std::string label, Long_t value)
