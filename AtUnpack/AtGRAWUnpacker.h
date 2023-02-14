@@ -60,6 +60,7 @@ protected:
     * files have the same number of events (MuTANT trigger or one cobo).
     */
    Bool_t fIsMutantOneRun{false};
+   Bool_t fCheckNumEvents{false};
 
    // String to identify which file in fInputFileName map to which fDecoder
    std::string fFileIDString;
@@ -84,7 +85,7 @@ public:
    void SetSubtractFPN(Bool_t val) { fIsSubtractFPN = val; }
    void SetBaseLineSubtraction(Bool_t val) { fIsBaseLineSubtraction = val; }
    void SetMutantOneRun(Bool_t val) { fIsMutantOneRun = val; }
-
+   void SetCheckNumEvents() { fCheckNumEvents = true; }
    // AtUnpacker interface
    virtual void Init() override;
    virtual void FillRawEvent(AtRawEvent &event) override; // Pass by ref to ensure it's a valid object

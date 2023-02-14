@@ -26,17 +26,15 @@ void run_eve(TString InputDataFile = "./data/output.root", TString OutputDataFil
    // parIo1->open("param.dummy.root");
    rtdb->setFirstInput(parIo1);
 
-   AtEventManager *eveMan = new AtEventManager();
-   AtEventDrawTask *eve = new AtEventDrawTask();
    auto fMap = std::make_shared<AtGadgetIIMap>();
    fMap->ParseXMLMap(mapDir.Data());
-   eve->SetMap(fMap);
-   eve->Set3DHitStyleBox();
-   eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
-                          // eve->SetSaveTextData();
-   eve->UnpackHoughSpace();
+   AtViewerManager *eveMan = new AtViewerManager(fMap);
 
-   eveMan->AddTask(eve);
+   auto tabMain = std::make_unique<AtTabMain>();
+   tabMain->SetMultiHit(100); // Set the maximum number of multihits in the visualization
+   eveMan->AddTab(std::move(tabMain));
+
    eveMan->Init();
-   // eveMan->GoToEvent(0);
+
+   std::cout << "Finished init" << std::endl;
 }
