@@ -387,7 +387,7 @@ void AtGRAWUnpacker::SetPseudoTopologyFrame(Int_t asadMask, Bool_t check)
 
 Long64_t AtGRAWUnpacker::GetNumEvents()
 {
-   if (fNumEvents == -1)
+   if (fNumEvents == -1 && fCheckNumEvents)
       FindAndSetNumEvents();
    return fNumEvents;
 }

@@ -217,6 +217,8 @@ void AtGadgetIIMap::GeneratePadPlane()
 
    // fPadInd = pad_num;
    kIsParsed = true;
+
+   fPadPlane = new TH2Poly(); // NOLINT
    for (auto ipad = 0; ipad < pad_num; ++ipad) {
       Double_t px[] = {AtPadCoord[ipad][0][0], AtPadCoord[ipad][1][0], AtPadCoord[ipad][2][0], AtPadCoord[ipad][3][0],
                        AtPadCoord[ipad][0][0]};
