@@ -1,5 +1,5 @@
-bool TestTPC(AtTabInfo *tabInfo) {
-   auto rawEvent = (tabInfo->GetAugment<AtTabInfoFairRoot<AtRawEvent>>("AtRawEvent"))->GetInfo();
+bool TestTPC(AtTabInfoFairRoot<AtRawEvent> *rawEventInfo) {
+   auto rawEvent = rawEventInfo->GetInfo();
 
    if (rawEvent == nullptr) {
       LOG(debug) << "event is nullptr for TestTPC! Please set the event branch.";

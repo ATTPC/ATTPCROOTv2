@@ -12,8 +12,6 @@
 #pragma link C++ class AtEventManagerS800 + ;
 #pragma link C++ class AtEventDrawTaskS800 + ;
 
-#pragma link C++ class AtBoolMacro + ;
-
 #pragma link C++ class AtTabBase + ;
 #pragma link C++ class AtTabCanvas + ;
 #pragma link C++ class AtTabMain + ;

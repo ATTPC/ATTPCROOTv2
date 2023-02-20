@@ -93,13 +93,12 @@ void run_eve_dQdtA(int runNum = 210, TString OutputDataFile = "./data/output.rec
    cut->AddAllSpecies();
    //cut->AddSpecies("Pb197");
 
-   auto boolMacEvt = std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(eveMan->GetRawEventName());
-   AtBoolMacro *boolMac = new AtBoolMacro(TestTPC);
-   boolMac->GetTabInfo()->AddAugment(std::move(boolMacEvt));
+   auto boolMacEvt = new AtTabInfoFairRoot<AtRawEvent>(eveMan->GetRawEventName());
+   auto boolFunc = TestTPC;
 
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
    reduceTask->SetInputBranch("AtRawEventSub");
-   reduceTask->SetReductionFunction([cut, boolMac]() { return (*cut)() && boolMac->ExecFunction(); });
+   reduceTask->SetReductionFunction([cut, boolFunc, boolMacEvt]() { return (*cut)() && boolFunc(boolMacEvt); });
 
    auto sideSpec = new AtSidebarInfoMacro(eveMan->GetCurrentEntry(), eveMan->GetSidebar());
    sideSpec->SetLabel("Species");
