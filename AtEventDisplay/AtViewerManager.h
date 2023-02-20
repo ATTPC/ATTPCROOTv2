@@ -15,7 +15,7 @@
 #include <vector>
 
 class AtEventSidebar;
-class AtMap; // lines 29-29
+class AtMap;            // lines 29-29
 class AtTabBase;        // lines 31-31
 class FairTask;         // lines 19-19
 class TBuffer;          // lines 20-20
