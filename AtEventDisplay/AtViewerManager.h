@@ -2,6 +2,8 @@
 #define ATVIEWERMANAGER_H
 
 #include "AtDataObserver.h"
+#include "AtRawEvent.h"
+#include "AtTabInfo.h"
 #include "AtViewerManagerSubject.h"
 
 #include <Rtypes.h>
@@ -14,7 +16,6 @@
 
 class AtEventSidebar;
 class AtMap; // lines 29-29
-class AtRawEvent;
 class AtTabBase;        // lines 31-31
 class FairTask;         // lines 19-19
 class TBuffer;          // lines 20-20
@@ -48,10 +49,8 @@ private:
    std::map<TString, std::vector<TString>> fBranchNames; //< fBranchNames[type] = {list of branches}
    TabVec fTabs;
 
-   bool fCheckGood{false};                  //< Check if the event is good and skip if not when using next and prev
-   TClonesArray *fCheckEventArray{nullptr}; //< AtRawEvent branch object
-   TString fCheckBranchName{"AtRawEvent"};  //< Name of AtRawEvent branch to check as good/not good
-   AtRawEvent *fCheckRawEvent{};            //< Event to check as good
+   bool fCheckGood{false}; //< Check if the event is good and skip if not when using next and prev
+   std::unique_ptr<AtTabInfoFairRoot<AtRawEvent>> fCheckEvt{nullptr};
 
    static AtViewerManager *fInstance;
 
@@ -76,8 +75,11 @@ public:
    DataHandling::AtTreeEntry &GetCurrentEntry() { return fEntry; }
    DataHandling::AtPadNum &GetPadNum() { return fPadNum; }
 
-   void SetCheckGood() { fCheckGood = true; }
-   void SetCheckBranch(TString name) { fCheckBranchName = name; }
+   void SetCheckBranch(DataHandling::AtBranch &branch)
+   {
+      fCheckGood = true;
+      fCheckEvt = std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(branch);
+   }
 
    /**
     * Main function for navigating to an event. Everything that changes event number should end up

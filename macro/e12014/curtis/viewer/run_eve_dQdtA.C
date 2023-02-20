@@ -62,8 +62,7 @@ void run_eve_dQdtA(int runNum = 210, TString OutputDataFile = "./data/output.rec
    fMap->ParseXMLMap(mapDir.Data());
 
    AtViewerManager *eveMan = new AtViewerManager(fMap);
-   eveMan->SetCheckGood();
-   eveMan->SetCheckBranch("AtRawEventSub");
+   eveMan->SetCheckBranch(eveMan->GetRawEventName());
 
    AtRawEvent *respAvgEvent;
    TFile *f2 = new TFile("respAvg.root");
