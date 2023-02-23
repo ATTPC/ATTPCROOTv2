@@ -294,7 +294,7 @@ TGeoVolume *create_detector()
                 new TGeoCombiTrans(0, 0, 0, new TGeoRotation("Cover_vol", 0, 0, 0)));
    Cover_vol->SetTransparency(0);
 
-
+/*
    
    // GADGET Main drift volume
    double tpc_rot = 0;
@@ -392,6 +392,6 @@ TGeoVolume *create_detector()
       ->AddNode(cathode_mount, 1,
                 new TGeoCombiTrans(0.0, 0, cathode_mount_length / 2, new TGeoRotation("cathode_mount", 0, tpc_rot, 0)));
    downstream_cap->SetTransparency(80);
-
+*/
    return dummy;
 }
