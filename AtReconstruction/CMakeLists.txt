@@ -70,6 +70,7 @@ set(SRCS
   AtSpaceChargeCorrectionTask.cxx
   AtHDF5ReadTask.cxx
   AtHDF5WriteTask.cxx
+  AtMacroTask.cxx
 
   AtPatternRecognition/AtPRA.cxx
   AtPatternRecognition/AtSampleConsensus.cxx
