@@ -495,8 +495,10 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       } else if (thetaConv < 10) {
 
           switch (fExpNum) {
-           case e20009: pdgCandFit.push_back(1000040100);
-         // pdgCandFit.push_back(1000040110);
+          case e20009:
+             pdgCandFit.push_back(1000040100);
+             break;
+             // pdgCandFit.push_back(1000040110);
           }
       }
 

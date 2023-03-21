@@ -1,13 +1,13 @@
-void Be12_pp_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
+void Be12_pp_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name
-   TString outFile = "./data/attpcsim_proto.root";
+   TString outFile = "./data/attpcsim.root";
 
    // Parameter file name
-   TString parFile = "./data/attpcpar_proto.root";
+   TString parFile = "./data/attpcpar.root";
 
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
@@ -15,8 +15,6 @@ void Be12_pp_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
    // ------------------------------------------------------------------------
 
    // gSystem->Load("libAtGen.so");
-
-   AtVertexPropagator *vertex_prop = new AtVertexPropagator();
 
    // -----   Create simulation run   ----------------------------------------
    FairRunSim *run = new FairRunSim();

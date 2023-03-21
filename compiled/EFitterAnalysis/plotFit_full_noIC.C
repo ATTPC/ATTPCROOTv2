@@ -36,8 +36,7 @@ std::tuple<double,double> kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_
    return std::make_tuple(Ex,theta_cm);
 }
 
-
-void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
+void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
 {
 
    std::ofstream outputFileEvents("list_of_events.txt");
@@ -791,7 +790,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
    //Check simulation acceptance
    TClonesArray *pointArray = 0;
    TString dir = getenv("VMCWORKDIR");
-   TString filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/data/run_sim_0_0/";
+   TString filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/data/run_sim_3_3/";
    TString inputFileName = "attpcsim";
    inputFileName = filePath + inputFileName + ".root";
 
@@ -804,7 +803,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 
    // std::cout << " Number of events " << nEvents << "\n";
 
-   for (Int_t iEvent = 0; iEvent < 36000; iEvent++) {
+   for (Int_t iEvent = 0; iEvent < nEvents; iEvent++) {
       TString VolName;
       tree->GetEvent(iEvent);
       Int_t n = pointArray->GetEntries();

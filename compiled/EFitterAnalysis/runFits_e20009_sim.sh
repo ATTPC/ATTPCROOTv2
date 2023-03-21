@@ -20,7 +20,7 @@ i=$1
 while [[ $i -le $END ]]
 do
 
-   list=$(find ./runFiles_e20009_sim -name run*run_sim_1_1_0dir*.txt)
+   list=$(find ./runFiles_e20009_sim -name run*run_sim_3_3_0dir*.txt)
    if [ -z "$list" ]
    then
       echo "Not found"

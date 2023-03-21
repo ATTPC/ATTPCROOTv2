@@ -1,4 +1,4 @@
-void Be10dd_sim(Int_t nEvents = 36000, TString mcEngine = "TGeant4")
+void Be10dd_sim(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
@@ -127,7 +127,7 @@ void Be10dd_sim(Int_t nEvents = 36000, TString mcEngine = "TGeant4")
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
    Mass.push_back(10.013533818); // uma
-   ExE.push_back(0.0);           // 3.368
+   ExE.push_back(7.542);         // 3.368
 
    // ---- Recoil -----
    Zp.push_back(1); // p  TRACKID=2
@@ -139,7 +139,7 @@ void Be10dd_sim(Int_t nEvents = 36000, TString mcEngine = "TGeant4")
    Mass.push_back(2.01410177785); // uma
    ExE.push_back(0.0);            // In MeV
 
-   Double_t ThetaMinCMS = 20.0;
+   Double_t ThetaMinCMS = 10.0;
    Double_t ThetaMaxCMS = 80.0;
 
    AtTPC2Body *TwoBody =

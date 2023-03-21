@@ -127,7 +127,7 @@ void Be12pp_ana(Int_t num_ev = 2000)
      TCanvas *c7 = new TCanvas();
      c7-> Draw();*/
 
-   std::vector<TString> files = {"data/Be12_pp_el", "data/Be12_pp_02_el", "data/Be12_pp_02_1"};
+   std::vector<TString> files = {"data/attpcsim"};
 
    std::vector<double> ex_energy_beam = {0.0, 2.251, 2.251};
    std::vector<double> ex_energy = {0.0, 2.251, 2.715};
@@ -142,9 +142,9 @@ void Be12pp_ana(Int_t num_ev = 2000)
    std:
       cout << " Analysis of simulation file  " << mcFileName << endl;
 
-      AtTpcPoint *point = new AtTpcPoint();
-      AtTpcPoint *point_forw = new AtTpcPoint();
-      AtTpcPoint *point_back = new AtTpcPoint();
+      AtMCPoint *point = new AtMCPoint();
+      AtMCPoint *point_forw = new AtMCPoint();
+      AtMCPoint *point_back = new AtMCPoint();
       TClonesArray *pointArray = 0;
       TFile *file = new TFile(mcFileName.Data(), "READ");
       TTree *tree = (TTree *)file->Get("cbmsim");
@@ -193,53 +193,37 @@ void Be12pp_ana(Int_t num_ev = 2000)
          tree->GetEvent(iEvent);
          // tree -> GetEntry(iEvent);
          Int_t n = pointArray->GetEntries();
-         if (iEvent % 100 == 0)
-            std::cout << " Event Number : " << iEvent << std::endl;
+         // if (iEvent % 100 == 0)
+         if (iEvent % 2 == 0)
+            continue;
+         std::cout << " Event Number : " << iEvent << std::endl;
          rad->Reset();
 
          for (Int_t i = 0; i < n; i++) {
 
-            point = (AtTpcPoint *)pointArray->At(i);
+            point = (AtMCPoint *)pointArray->At(i);
             VolName = point->GetVolName();
             // std::cout<<" Volume Name : "<<VolName<<std::endl;
             Int_t trackID = point->GetTrackID();
 
-            // if(i==0){
-            //	zpos=point->GetZ();
-            // std::cout<<" Z pos : "<<zpos<<std::endl;
-            // std::cout<<" Track ID : "<<trackID<<std::endl;
-            //   }
-            // std::cout<<" Track ID : "<<trackID<<std::endl;
-            // std::cout<<" Point number : "<<i<<std::endl;
             if (trackID == 0 && VolName.Contains("IC_")) {
 
                BeamEnergyLoss_IC += (point->GetEnergyLoss()) * 1000; // MeV
             }
 
-            if (trackID == 0 && VolName == "drift_volume") {
-               vertex = point->GetZ() * 10;
-               range_beam = point->GetLength() * 10; // mm
-               EnergyBeam = point->GetEIni();
-               // std::cout<<" Vertex : "<<vertex<<std::endl;
-               vertex_buff = vertex;
-               BeamEnergyLoss_IC += (point->GetEnergyLoss()) * 1000; // MeV
-            }
-
-            if (trackID == 2 && VolName == "drift_volume") { // RECOIL
+            if (trackID == 1 && VolName == "drift_volume") { // RECOIL
                n2++;
                range_rec = point->GetLength() * 10;               // mm
                energyLoss_rec += (point->GetEnergyLoss()) * 1000; // MeV
                EnergyRecoil = point->GetEIni();
                AngleRecoil = point->GetAIni();
                zpos = point->GetZ() * 10;
-               xpos = point->GetXIn() * 10;
-               // if(AngleRecoil>65 && AngleRecoil<70 && vertex>200.0 && vertex<210.0 && zpos>200.0 ){
+               xpos = point->GetX() * 10;
                tracks->Fill(zpos, xpos);
-               //}
 
                // Radius of curvature calculation
                // if(i<(n-2)){
-               if (i < 5) {
+               /*if (i < 5) {
                   nrad++;
                   point_forw = (AtTpcPoint *)pointArray->At(i + 1);
                   point_back = (AtTpcPoint *)pointArray->At(i + 2);
@@ -263,35 +247,34 @@ void Be12pp_ana(Int_t num_ev = 2000)
                   theta = TMath::ATan2(dlt, zpos - z2);
                   // std::cout<<zpos-z2<<std::endl;
                   // Double_t phi = TMath::ATan2(dy,dx);
-                  /*std::cout<<" ======================= "<<std::endl;
+                  std::cout<<" ======================= "<<std::endl;
                   std::cout<<" Point : "<<i<<" of "<<n<<std::endl;
                   std::cout<<180-theta*180/TMath::Pi()<<std::endl;
-                  std::cout<<AngleRecoil<<std::endl;*/
+                  std::cout<<AngleRecoil<<std::endl;
                   rad->SetBinContent(i + 1, radius);
                   radmean += radius;
                   thetamean += theta;
                   // std::cout<<" Point : "<<i<<" radius : "<<radius<<std::endl;
-               } // Radius calculation
+               } // Radius calculation*/
 
                //}
 
                // std::cout<<point->GetEIni()<<std::endl;
-               // std::cout<<" Track ID : "<<trackID<<std::endl;
+               //  std::cout<<" Track ID : "<<trackID<<std::endl;
 
                // std::cout<<" Point number : "<<i<<std::endl;
                // std::cout<<" Event Number : "<<iEvent<<std::endl;
                // std::cout<<" Range_rec : "<<range_rec<<std::endl;
                // std::cout<<" energyLoss_rec : "<<energyLoss_rec<<std::endl;
-
-            }                                                // TrackID == 2
-            if (trackID == 1 && VolName == "drift_volume") { // SCATTER
+            }
+            if (trackID == 0 && VolName == "drift_volume") { // SCATTER
                range_sca = point->GetLength() * 10;          // mm
                EnergySca = point->GetEIni();
                energyLoss_sca += (point->GetEnergyLoss()) * 1000; // MeV
                AngleSca = point->GetAIni();
-               // std::cout<<" Track ID : "<<trackID<<std::endl;
+               //  std::cout<<" Track ID : "<<trackID<<std::endl;
                // std::cout<<" Range_sca : "<<range_sca<<std::endl;
-               // std::cout<<" energyLoss_sca : "<<energyLoss_sca<<std::endl;
+               //  std::cout<<" energyLoss_sca : "<<energyLoss_sca<<std::endl;
             } // TrackID == 1
 
          } // n number of points
