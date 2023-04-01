@@ -41,6 +41,178 @@ void spline::set_coeffs_from_b()
    m_c0 = (m_left == first_deriv) ? 0.0 : m_c[0];
 }
 
+void spline::set_points_linear()
+{
+   int n = (int)m_x.size();
+   // linear interpolation
+   m_d.resize(n);
+   m_c.resize(n);
+   m_b.resize(n);
+   for (int i = 0; i < n - 1; i++) {
+      m_d[i] = 0.0;
+      m_c[i] = 0.0;
+      m_b[i] = (m_y[i + 1] - m_y[i]) / (m_x[i + 1] - m_x[i]);
+   }
+   // ignore boundary conditions, set slope equal to the last segment
+   m_b[n - 1] = m_b[n - 2];
+   m_c[n - 1] = 0.0;
+   m_d[n - 1] = 0.0;
+}
+
+void spline::set_points_cspline()
+{
+   int n = (int)m_x.size();
+   // classical cubic splines which are C^2 (twice cont differentiable)
+   // this requires solving an equation system
+
+   // setting up the matrix and right hand side of the equation system
+   // for the parameters b[]
+   int n_upper = (m_left == spline::not_a_knot) ? 2 : 1;
+   int n_lower = (m_right == spline::not_a_knot) ? 2 : 1;
+   internal::band_matrix A(n, n_upper, n_lower);
+   std::vector<double> rhs(n);
+   for (int i = 1; i < n - 1; i++) {
+      A(i, i - 1) = 1.0 / 3.0 * (m_x[i] - m_x[i - 1]);
+      A(i, i) = 2.0 / 3.0 * (m_x[i + 1] - m_x[i - 1]);
+      A(i, i + 1) = 1.0 / 3.0 * (m_x[i + 1] - m_x[i]);
+      rhs[i] = (m_y[i + 1] - m_y[i]) / (m_x[i + 1] - m_x[i]) - (m_y[i] - m_y[i - 1]) / (m_x[i] - m_x[i - 1]);
+   }
+   // boundary conditions
+   if (m_left == spline::second_deriv) {
+      // 2*c[0] = f''
+      A(0, 0) = 2.0;
+      A(0, 1) = 0.0;
+      rhs[0] = m_left_value;
+   } else if (m_left == spline::first_deriv) {
+      // b[0] = f', needs to be re-expressed in terms of c:
+      // (2c[0]+c[1])(m_x[1]-m_x[0]) = 3 ((m_y[1]-m_y[0])/(m_x[1]-m_x[0]) - f')
+      A(0, 0) = 2.0 * (m_x[1] - m_x[0]);
+      A(0, 1) = 1.0 * (m_x[1] - m_x[0]);
+      rhs[0] = 3.0 * ((m_y[1] - m_y[0]) / (m_x[1] - m_x[0]) - m_left_value);
+   } else if (m_left == spline::not_a_knot) {
+      // f'''(m_x[1]) exists, i.e. d[0]=d[1], or re-expressed in c:
+      // -h1*c[0] + (h0+h1)*c[1] - h0*c[2] = 0
+      A(0, 0) = -(m_x[2] - m_x[1]);
+      A(0, 1) = m_x[2] - m_x[0];
+      A(0, 2) = -(m_x[1] - m_x[0]);
+      rhs[0] = 0.0;
+   } else {
+      assert(false);
+   }
+   if (m_right == spline::second_deriv) {
+      // 2*c[n-1] = f''
+      A(n - 1, n - 1) = 2.0;
+      A(n - 1, n - 2) = 0.0;
+      rhs[n - 1] = m_right_value;
+   } else if (m_right == spline::first_deriv) {
+      // b[n-1] = f', needs to be re-expressed in terms of c:
+      // (c[n-2]+2c[n-1])(m_x[n-1]-m_x[n-2])
+      // = 3 (f' - (m_y[n-1]-m_y[n-2])/(m_x[n-1]-m_x[n-2]))
+      A(n - 1, n - 1) = 2.0 * (m_x[n - 1] - m_x[n - 2]);
+      A(n - 1, n - 2) = 1.0 * (m_x[n - 1] - m_x[n - 2]);
+      rhs[n - 1] = 3.0 * (m_right_value - (m_y[n - 1] - m_y[n - 2]) / (m_x[n - 1] - m_x[n - 2]));
+   } else if (m_right == spline::not_a_knot) {
+      // f'''(m_x[n-2]) exists, i.e. d[n-3]=d[n-2], or re-expressed in c:
+      // -h_{n-2}*c[n-3] + (h_{n-3}+h_{n-2})*c[n-2] - h_{n-3}*c[n-1] = 0
+      A(n - 1, n - 3) = -(m_x[n - 1] - m_x[n - 2]);
+      A(n - 1, n - 2) = m_x[n - 1] - m_x[n - 3];
+      A(n - 1, n - 1) = -(m_x[n - 2] - m_x[n - 3]);
+      rhs[0] = 0.0;
+   } else {
+      assert(false);
+   }
+
+   // solve the equation system to obtain the parameters c[]
+   m_c = A.lu_solve(rhs);
+
+   // calculate parameters b[] and d[] based on c[]. Also calculate the integral
+   m_d.resize(n);
+   m_b.resize(n);
+
+   for (int i = 0; i < n - 1; i++) {
+      m_d[i] = 1.0 / 3.0 * (m_c[i + 1] - m_c[i]) / (m_x[i + 1] - m_x[i]);
+      m_b[i] = (m_y[i + 1] - m_y[i]) / (m_x[i + 1] - m_x[i]) -
+               1.0 / 3.0 * (2.0 * m_c[i] + m_c[i + 1]) * (m_x[i + 1] - m_x[i]);
+   }
+
+   // for the right extrapolation coefficients (zero cubic term)
+   // f_{n-1}(x) = y_{n-1} + b*(x-x_{n-1}) + c*(x-x_{n-1})^2
+   double h = m_x[n - 1] - m_x[n - 2];
+   // m_c[n-1] is determined by the boundary condition
+   m_d[n - 1] = 0.0;
+   m_b[n - 1] = 3.0 * m_d[n - 2] * h * h + 2.0 * m_c[n - 2] * h + m_b[n - 2]; // = f'_{n-2}(x_{n-1})
+   if (m_right == first_deriv)
+      m_c[n - 1] = 0.0; // force linear extrapolation
+}
+
+void spline::set_points_cspline_hermite()
+{
+   int n = (int)m_x.size();
+   // hermite cubic splines which are C^1 (cont. differentiable)
+   // and derivatives are specified on each grid point
+   // (here we use 3-point finite differences)
+   m_b.resize(n);
+   m_c.resize(n);
+   m_d.resize(n);
+   // set b to match 1st order derivative finite difference
+   for (int i = 1; i < n - 1; i++) {
+      const double h = m_x[i + 1] - m_x[i];
+      const double hl = m_x[i] - m_x[i - 1];
+      m_b[i] = -h / (hl * (hl + h)) * m_y[i - 1] + (h - hl) / (hl * h) * m_y[i] + hl / (h * (hl + h)) * m_y[i + 1];
+   }
+   // boundary conditions determine b[0] and b[n-1]
+   if (m_left == first_deriv) {
+      m_b[0] = m_left_value;
+   } else if (m_left == second_deriv) {
+      const double h = m_x[1] - m_x[0];
+      m_b[0] = 0.5 * (-m_b[1] - 0.5 * m_left_value * h + 3.0 * (m_y[1] - m_y[0]) / h);
+   } else if (m_left == not_a_knot) {
+      // f''' continuous at x[1]
+      const double h0 = m_x[1] - m_x[0];
+      const double h1 = m_x[2] - m_x[1];
+      m_b[0] = -m_b[1] + 2.0 * (m_y[1] - m_y[0]) / h0 +
+               h0 * h0 / (h1 * h1) * (m_b[1] + m_b[2] - 2.0 * (m_y[2] - m_y[1]) / h1);
+   } else {
+      assert(false);
+   }
+   if (m_right == first_deriv) {
+      m_b[n - 1] = m_right_value;
+      m_c[n - 1] = 0.0;
+   } else if (m_right == second_deriv) {
+      const double h = m_x[n - 1] - m_x[n - 2];
+      m_b[n - 1] = 0.5 * (-m_b[n - 2] + 0.5 * m_right_value * h + 3.0 * (m_y[n - 1] - m_y[n - 2]) / h);
+      m_c[n - 1] = 0.5 * m_right_value;
+   } else if (m_right == not_a_knot) {
+      // f''' continuous at x[n-2]
+      const double h0 = m_x[n - 2] - m_x[n - 3];
+      const double h1 = m_x[n - 1] - m_x[n - 2];
+      m_b[n - 1] = -m_b[n - 2] + 2.0 * (m_y[n - 1] - m_y[n - 2]) / h1 +
+                   h1 * h1 / (h0 * h0) * (m_b[n - 3] + m_b[n - 2] - 2.0 * (m_y[n - 2] - m_y[n - 3]) / h0);
+      // f'' continuous at x[n-1]: c[n-1] = 3*d[n-2]*h[n-2] + c[n-1]
+      m_c[n - 1] = (m_b[n - 2] + 2.0 * m_b[n - 1]) / h1 - 3.0 * (m_y[n - 1] - m_y[n - 2]) / (h1 * h1);
+   } else {
+      assert(false);
+   }
+   m_d[n - 1] = 0.0;
+
+   // parameters c and d are determined by continuity and differentiability
+   set_coeffs_from_b();
+}
+
+void spline::set_integral()
+{
+   int n = (int)m_x.size();
+   // Integrate spline using Simpson's rule (exact for cubics)
+   // Simson's: h/3 * (f(a) + f(a+h) + f(b))
+   m_integral.resize(n);
+   m_integral[0] = 0;
+   for (int i = 1; i < n - 1; ++i) {
+      double h = (m_x[i] - m_x[i - 1]) / 2.;
+      m_integral[i] = h / 3. * (m_y[i - 1] + 4 * (*this)(m_x[i - 1] + h) + m_y[i]);
+      m_integral[i] += m_integral[i - 1];
+   }
+}
+
 void spline::set_points(const std::vector<double> &x, const std::vector<double> &y, spline_type type)
 {
    assert(x.size() == y.size());
@@ -59,156 +231,17 @@ void spline::set_points(const std::vector<double> &x, const std::vector<double> 
    }
 
    if (type == linear) {
-      // linear interpolation
-      m_d.resize(n);
-      m_c.resize(n);
-      m_b.resize(n);
-      for (int i = 0; i < n - 1; i++) {
-         m_d[i] = 0.0;
-         m_c[i] = 0.0;
-         m_b[i] = (m_y[i + 1] - m_y[i]) / (m_x[i + 1] - m_x[i]);
-      }
-      // ignore boundary conditions, set slope equal to the last segment
-      m_b[n - 1] = m_b[n - 2];
-      m_c[n - 1] = 0.0;
-      m_d[n - 1] = 0.0;
+      set_points_linear();
    } else if (type == cspline) {
-      // classical cubic splines which are C^2 (twice cont differentiable)
-      // this requires solving an equation system
-
-      // setting up the matrix and right hand side of the equation system
-      // for the parameters b[]
-      int n_upper = (m_left == spline::not_a_knot) ? 2 : 1;
-      int n_lower = (m_right == spline::not_a_knot) ? 2 : 1;
-      internal::band_matrix A(n, n_upper, n_lower);
-      std::vector<double> rhs(n);
-      for (int i = 1; i < n - 1; i++) {
-         A(i, i - 1) = 1.0 / 3.0 * (x[i] - x[i - 1]);
-         A(i, i) = 2.0 / 3.0 * (x[i + 1] - x[i - 1]);
-         A(i, i + 1) = 1.0 / 3.0 * (x[i + 1] - x[i]);
-         rhs[i] = (y[i + 1] - y[i]) / (x[i + 1] - x[i]) - (y[i] - y[i - 1]) / (x[i] - x[i - 1]);
-      }
-      // boundary conditions
-      if (m_left == spline::second_deriv) {
-         // 2*c[0] = f''
-         A(0, 0) = 2.0;
-         A(0, 1) = 0.0;
-         rhs[0] = m_left_value;
-      } else if (m_left == spline::first_deriv) {
-         // b[0] = f', needs to be re-expressed in terms of c:
-         // (2c[0]+c[1])(x[1]-x[0]) = 3 ((y[1]-y[0])/(x[1]-x[0]) - f')
-         A(0, 0) = 2.0 * (x[1] - x[0]);
-         A(0, 1) = 1.0 * (x[1] - x[0]);
-         rhs[0] = 3.0 * ((y[1] - y[0]) / (x[1] - x[0]) - m_left_value);
-      } else if (m_left == spline::not_a_knot) {
-         // f'''(x[1]) exists, i.e. d[0]=d[1], or re-expressed in c:
-         // -h1*c[0] + (h0+h1)*c[1] - h0*c[2] = 0
-         A(0, 0) = -(x[2] - x[1]);
-         A(0, 1) = x[2] - x[0];
-         A(0, 2) = -(x[1] - x[0]);
-         rhs[0] = 0.0;
-      } else {
-         assert(false);
-      }
-      if (m_right == spline::second_deriv) {
-         // 2*c[n-1] = f''
-         A(n - 1, n - 1) = 2.0;
-         A(n - 1, n - 2) = 0.0;
-         rhs[n - 1] = m_right_value;
-      } else if (m_right == spline::first_deriv) {
-         // b[n-1] = f', needs to be re-expressed in terms of c:
-         // (c[n-2]+2c[n-1])(x[n-1]-x[n-2])
-         // = 3 (f' - (y[n-1]-y[n-2])/(x[n-1]-x[n-2]))
-         A(n - 1, n - 1) = 2.0 * (x[n - 1] - x[n - 2]);
-         A(n - 1, n - 2) = 1.0 * (x[n - 1] - x[n - 2]);
-         rhs[n - 1] = 3.0 * (m_right_value - (y[n - 1] - y[n - 2]) / (x[n - 1] - x[n - 2]));
-      } else if (m_right == spline::not_a_knot) {
-         // f'''(x[n-2]) exists, i.e. d[n-3]=d[n-2], or re-expressed in c:
-         // -h_{n-2}*c[n-3] + (h_{n-3}+h_{n-2})*c[n-2] - h_{n-3}*c[n-1] = 0
-         A(n - 1, n - 3) = -(x[n - 1] - x[n - 2]);
-         A(n - 1, n - 2) = x[n - 1] - x[n - 3];
-         A(n - 1, n - 1) = -(x[n - 2] - x[n - 3]);
-         rhs[0] = 0.0;
-      } else {
-         assert(false);
-      }
-
-      // solve the equation system to obtain the parameters c[]
-      m_c = A.lu_solve(rhs);
-
-      // calculate parameters b[] and d[] based on c[]
-      m_d.resize(n);
-      m_b.resize(n);
-      for (int i = 0; i < n - 1; i++) {
-         m_d[i] = 1.0 / 3.0 * (m_c[i + 1] - m_c[i]) / (x[i + 1] - x[i]);
-         m_b[i] = (y[i + 1] - y[i]) / (x[i + 1] - x[i]) - 1.0 / 3.0 * (2.0 * m_c[i] + m_c[i + 1]) * (x[i + 1] - x[i]);
-      }
-      // for the right extrapolation coefficients (zero cubic term)
-      // f_{n-1}(x) = y_{n-1} + b*(x-x_{n-1}) + c*(x-x_{n-1})^2
-      double h = x[n - 1] - x[n - 2];
-      // m_c[n-1] is determined by the boundary condition
-      m_d[n - 1] = 0.0;
-      m_b[n - 1] = 3.0 * m_d[n - 2] * h * h + 2.0 * m_c[n - 2] * h + m_b[n - 2]; // = f'_{n-2}(x_{n-1})
-      if (m_right == first_deriv)
-         m_c[n - 1] = 0.0; // force linear extrapolation
-
+      set_points_cspline();
    } else if (type == cspline_hermite) {
-      // hermite cubic splines which are C^1 (cont. differentiable)
-      // and derivatives are specified on each grid point
-      // (here we use 3-point finite differences)
-      m_b.resize(n);
-      m_c.resize(n);
-      m_d.resize(n);
-      // set b to match 1st order derivative finite difference
-      for (int i = 1; i < n - 1; i++) {
-         const double h = m_x[i + 1] - m_x[i];
-         const double hl = m_x[i] - m_x[i - 1];
-         m_b[i] = -h / (hl * (hl + h)) * m_y[i - 1] + (h - hl) / (hl * h) * m_y[i] + hl / (h * (hl + h)) * m_y[i + 1];
-      }
-      // boundary conditions determine b[0] and b[n-1]
-      if (m_left == first_deriv) {
-         m_b[0] = m_left_value;
-      } else if (m_left == second_deriv) {
-         const double h = m_x[1] - m_x[0];
-         m_b[0] = 0.5 * (-m_b[1] - 0.5 * m_left_value * h + 3.0 * (m_y[1] - m_y[0]) / h);
-      } else if (m_left == not_a_knot) {
-         // f''' continuous at x[1]
-         const double h0 = m_x[1] - m_x[0];
-         const double h1 = m_x[2] - m_x[1];
-         m_b[0] = -m_b[1] + 2.0 * (m_y[1] - m_y[0]) / h0 +
-                  h0 * h0 / (h1 * h1) * (m_b[1] + m_b[2] - 2.0 * (m_y[2] - m_y[1]) / h1);
-      } else {
-         assert(false);
-      }
-      if (m_right == first_deriv) {
-         m_b[n - 1] = m_right_value;
-         m_c[n - 1] = 0.0;
-      } else if (m_right == second_deriv) {
-         const double h = m_x[n - 1] - m_x[n - 2];
-         m_b[n - 1] = 0.5 * (-m_b[n - 2] + 0.5 * m_right_value * h + 3.0 * (m_y[n - 1] - m_y[n - 2]) / h);
-         m_c[n - 1] = 0.5 * m_right_value;
-      } else if (m_right == not_a_knot) {
-         // f''' continuous at x[n-2]
-         const double h0 = m_x[n - 2] - m_x[n - 3];
-         const double h1 = m_x[n - 1] - m_x[n - 2];
-         m_b[n - 1] = -m_b[n - 2] + 2.0 * (m_y[n - 1] - m_y[n - 2]) / h1 +
-                      h1 * h1 / (h0 * h0) * (m_b[n - 3] + m_b[n - 2] - 2.0 * (m_y[n - 2] - m_y[n - 3]) / h0);
-         // f'' continuous at x[n-1]: c[n-1] = 3*d[n-2]*h[n-2] + c[n-1]
-         m_c[n - 1] = (m_b[n - 2] + 2.0 * m_b[n - 1]) / h1 - 3.0 * (m_y[n - 1] - m_y[n - 2]) / (h1 * h1);
-      } else {
-         assert(false);
-      }
-      m_d[n - 1] = 0.0;
-
-      // parameters c and d are determined by continuity and differentiability
-      set_coeffs_from_b();
-
+      set_points_cspline_hermite();
    } else {
       assert(false);
    }
-
    // for left extrapolation coefficients
    m_c0 = (m_left == first_deriv) ? 0.0 : m_c[0];
+   set_integral();
 }
 
 bool spline::make_monotonic()
@@ -255,6 +288,7 @@ bool spline::make_monotonic()
 
    if (modified == true) {
       set_coeffs_from_b();
+      set_integral();
       m_made_monotonic = true;
    }
 
@@ -328,6 +362,31 @@ double spline::deriv(int order, double x) const
    }
    return interpol;
 }
+
+double spline::integrate(double x0, double x1) const
+{
+   if (x0 == x1)
+      return 0;
+
+   assert(x0 >= get_x_min());
+   assert(x1 <= get_x_max());
+   assert(x0 <= x1);
+
+   // Get the rough integral
+   auto idx_0 = find_closest(x0);
+   auto idx_1 = find_closest(x1);
+   double integral = m_integral[idx_1] - m_integral[idx_0];
+
+   // Subtract out the integral from m_x[idx_0] to x0
+   double h = (x0 - m_x[idx_0]) / 2;
+   integral -= h / 3. * (m_y[idx_0] + 4 * (*this)(m_x[idx_0] + h) + (*this)(x0));
+
+   // Add in the integral from m_x[idx_1] to x1
+   h = (x1 - m_x[idx_1]) / 2;
+   integral += h / 3. * (m_y[idx_1] + 4 * (*this)(m_x[idx_1] + h) + (*this)(x1));
+
+   return integral;
+};
 
 std::vector<double> spline::solve(double y, bool ignore_extrapolation) const
 {

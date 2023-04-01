@@ -4,6 +4,8 @@
  * simple cubic spline interpolation library without external
  * dependencies (https://github.com/ttk592/spline and https://kluge.in-chemnitz.de/opensource/spline/)
  *
+ * Modified April 2023 to allow integration (AK Anthony)
+ *
  * ---------------------------------------------------------------------
  * Copyright (C) 2011, 2014, 2016, 2021 Tino Kluge (ttk448 at gmail.com)
  *
@@ -36,16 +38,6 @@
 #include <string>
 #endif // HAVE_SSTREAM
 
-// not ideal but disable unused-function warnings
-// (we get them because we have implementations in the header file,
-// and this is because we want to be able to quickly separate them
-// into a cpp file if necessary)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-function"
-
-// unnamed namespace only because the implementation is in this
-// header file and we don't want to export symbols to the obj files
-
 namespace tk {
 
 // spline interpolation
@@ -72,8 +64,15 @@ protected:
    bd_type m_left, m_right;
    double m_left_value, m_right_value;
    bool m_made_monotonic;
+
+   std::vector<double> m_integral; // Integral of spline from m_x[0] to m_x[i]
+
    void set_coeffs_from_b();            // calculate c_i, d_i from b_i
    size_t find_closest(double x) const; // closest idx so that m_x[idx]<=x
+   void set_points_linear();
+   void set_points_cspline();
+   void set_points_cspline_hermite();
+   void set_integral();
 
 public:
    // default constructor: set boundary condition to be zero curvature
@@ -114,6 +113,7 @@ public:
    // evaluates the spline at point x
    double operator()(double x) const;
    double deriv(int order, double x) const;
+   double integrate(double x0, double x1) const;
 
    // solves for all x so that: spline(x) = y
    std::vector<double> solve(double y, bool ignore_extrapolation = true) const;
@@ -172,7 +172,5 @@ std::vector<double> solve_cubic(double a, double b, double c, double d, int newt
 } // namespace internal
 
 } // namespace tk
-
-#pragma GCC diagnostic pop
 
 #endif /* TK_SPLINE_H */

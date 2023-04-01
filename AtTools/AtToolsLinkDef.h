@@ -9,6 +9,7 @@
 #pragma link C++ namespace AtTools;
 #pragma link C++ namespace RandomSample;
 #pragma link C++ namespace ElectronicResponse;
+#pragma link C++ namespace tk;
 
 #pragma link C++ class AtTools::AtELossManager + ;
 #pragma link C++ class AtTools::AtParsers + ;
@@ -45,6 +46,7 @@
 #pragma link C++ class CSVRow < int> - !;
 #pragma link C++ class CSVIterator < int> - !;
 #pragma link C++ class CSVRange < int> - !;
+#pragma link C++ class tk::spline - !;
 
 #pragma link C++ function AtTools::GetHitFunctionTB;
 #pragma link C++ function AtTools::GetHitFunction;
