@@ -33,17 +33,15 @@ AtTools::AtELossManager::AtELossManager(std::string Eloss_file, Double_t Mass)
    } else {
       GoodELossFile = true;
       Read >> aux >> aux >> aux >> aux >> aux >> aux; // The first line has 6 strings (columns' description).
-      points = 0;                                     // Cout the number of points.
+      points = 0;
 
       do {
          Read >> _IonEnergy >> _dEdx_e >> _dEdx_n >> _Range >> _Stragg_lon >> _Stragg_lat;
          points++;
-         // cout << IonEnergy << " " << dEdx_e << " " << dEdx_n << " " << points << endl ;
-      } while (!Read.eof());
-      // while(!Read.eof() && (points<200));
-      Read.close();
 
-      // cout << points << endl ;
+      } while (!Read.eof());
+
+      Read.close();
 
       // Go to the begining of the file and read it again to now save the info in the newly created arrays.
       Read.open(Eloss_file.c_str());

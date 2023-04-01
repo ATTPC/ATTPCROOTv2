@@ -15,6 +15,8 @@
 #pragma link C++ class AtTools::AtParsers + ;
 #pragma link C++ class AtEulerTransformation + ;
 #pragma link C++ class AtTools::AtTrackTransformer - !;
+#pragma link C++ class AtTools::AtELossModel - !;
+#pragma link C++ class AtTools::AtELossTable - !;
 
 #pragma link C++ class AtSpaceChargeModel - !;
 #pragma link C++ class AtLineChargeModel - !;
