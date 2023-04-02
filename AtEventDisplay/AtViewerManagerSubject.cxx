@@ -3,6 +3,7 @@
 #include <FairRootManager.h>
 #include <FairRunAna.h>
 
+#include <Rtypes.h>
 #include <TString.h>
 namespace DataHandling {
 

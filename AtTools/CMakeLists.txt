@@ -6,6 +6,9 @@ set(SRCS
   AtELossManager.cxx
   AtTrackTransformer.cxx
   AtDataManip.cxx
+  AtStringManip.cxx
+  AtELossModel.cxx
+  AtELossTable.cxx
   
   AtCSVReader.cxx
   AtEulerTransformation.cxx
@@ -17,6 +20,7 @@ set(SRCS
   AtKinematics.cxx
 
   AtFormat.cxx
+  AtSpline.cxx
   AtHitSampling/AtSample.cxx
   AtHitSampling/AtSampleMethods.cxx
   AtHitSampling/AtIndependentSample.cxx

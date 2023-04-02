@@ -18,6 +18,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <type_traits>
 
 class TBuffer;
 class TClass;
