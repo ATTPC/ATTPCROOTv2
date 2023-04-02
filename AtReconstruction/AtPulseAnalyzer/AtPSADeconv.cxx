@@ -215,6 +215,10 @@ AtPSADeconv::HitVector AtPSADeconv::AnalyzeFFTpad(AtPad &pad)
 
 AtPSADeconv::HitVector AtPSADeconv::AnalyzePad(AtPad *pad)
 {
+   // If this pad has simulated charge, use that instead
+   if (fUseSimulatedCharge && pad->GetAugment<AtPadArray>("Q") != nullptr)
+      return chargeToHits(*pad, "Q");
+
    // If this pad already contains FFT information, then just use it as is.
    if (dynamic_cast<AtPadFFT *>(pad->GetAugment("fft")) != nullptr)
       return AnalyzeFFTpad(*pad);

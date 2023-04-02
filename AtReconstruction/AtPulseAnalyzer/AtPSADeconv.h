@@ -61,6 +61,7 @@ protected:
 
    int fFilterOrder{0}; //< Half the filter order
    int fCutoffFreq{-1}; //< Cutoff frequency squared
+   bool fUseSimulatedCharge{false}; //< If true will attempt to use simulated charge instead of deconv.
 
 public:
    AtPSADeconv();
@@ -75,6 +76,7 @@ public:
 
    void SetFilterOrder(int order);
    void SetCutoffFreq(int freq);
+   void SetUseSimCharge(bool val) { fUseSimulatedCharge = val; }
 
    int GetFilterOrder() { return fFilterOrder * 2; }
    int GetCutoffFreq() { return sqrt(fCutoffFreq); }
