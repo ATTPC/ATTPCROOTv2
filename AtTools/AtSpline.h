@@ -30,7 +30,6 @@
 
 #include <algorithm>
 #include <cassert>
-#include <cmath>
 #include <cstdio>
 #include <vector>
 #ifdef HAVE_SSTREAM

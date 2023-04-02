@@ -3,12 +3,16 @@
 #include "AtDigiPar.h"
 
 #include <FairLogger.h>
+#include <FairParSet.h> // for FairParSet
 #include <FairRun.h>
 #include <FairRuntimeDb.h>
 
 #include <TF1.h>
+#include <TMath.h> // for Pi
 
 #include <AtHit.h>
+
+#include <cmath> // for sqrt
 
 /**
  * Assumes that window is at z = 0, and the electrons are drifting towards the pad plane at

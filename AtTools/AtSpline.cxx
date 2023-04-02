@@ -1,4 +1,8 @@
 #include "AtSpline.h"
+// IWYU pragma: no_include <ext/alloc_traits.h>
+
+#include <cmath>  // for fabs, sqrt, cos, acos, pow, M_PI
+#include <memory> // for allocator_traits<>::value_type
 
 namespace tk {
 
@@ -397,9 +401,9 @@ std::vector<double> spline::solve(double y, bool ignore_extrapolation) const
    // left extrapolation
    if (ignore_extrapolation == false) {
       root = internal::solve_cubic(m_y[0] - y, m_b[0], m_c0, 0.0, 1);
-      for (size_t j = 0; j < root.size(); j++) {
-         if (root[j] < 0.0) {
-            x.push_back(m_x[0] + root[j]);
+      for (double j : root) {
+         if (j < 0.0) {
+            x.push_back(m_x[0] + j);
          }
       }
    }
@@ -408,7 +412,7 @@ std::vector<double> spline::solve(double y, bool ignore_extrapolation) const
    // TODO: make more efficient
    for (size_t i = 0; i < n - 1; i++) {
       root = internal::solve_cubic(m_y[i] - y, m_b[i], m_c[i], m_d[i], 1);
-      for (size_t j = 0; j < root.size(); j++) {
+      for (size_t j = 0; j < root.size(); j++) { // NOLINT
          double h = (i > 0) ? (m_x[i] - m_x[i - 1]) : 0.0;
          double eps = internal::get_eps() * 512.0 * std::min(h, 1.0);
          if ((-eps <= root[j]) && (root[j] < m_x[i + 1] - m_x[i])) {
@@ -425,7 +429,7 @@ std::vector<double> spline::solve(double y, bool ignore_extrapolation) const
    // right extrapolation
    if (ignore_extrapolation == false) {
       root = internal::solve_cubic(m_y[n - 1] - y, m_b[n - 1], m_c[n - 1], 0.0, 1);
-      for (size_t j = 0; j < root.size(); j++) {
+      for (size_t j = 0; j < root.size(); j++) { // NOLINT
          if (0.0 <= root[j]) {
             x.push_back(m_x[n - 1] + root[j]);
          }
@@ -465,10 +469,10 @@ void band_matrix::resize(int dim, int n_u, int n_l)
    assert(n_l >= 0);
    m_upper.resize(n_u + 1);
    m_lower.resize(n_l + 1);
-   for (size_t i = 0; i < m_upper.size(); i++) {
+   for (size_t i = 0; i < m_upper.size(); i++) { // NOLINT
       m_upper[i].resize(dim);
    }
-   for (size_t i = 0; i < m_lower.size(); i++) {
+   for (size_t i = 0; i < m_lower.size(); i++) { // NOLINT
       m_lower[i].resize(dim);
    }
 }
@@ -653,7 +657,7 @@ std::vector<double> solve_quadratic(double a, double b, double c, int newton_ite
    }
 
    // improve solution via newton steps
-   for (size_t i = 0; i < x.size(); i++) {
+   for (size_t i = 0; i < x.size(); i++) { // NOLINT
       for (int k = 0; k < newton_iter; k++) {
          double f = (c * x[i] + b) * x[i] + a;
          double f1 = 2.0 * c * x[i] + b;
@@ -736,7 +740,7 @@ std::vector<double> solve_cubic(double a, double b, double c, double d, int newt
       double C = sgnq * pow(basis, 1.0 / 3.0); // c++11 has std::cbrt()
       z[0] = C + p / C;
    }
-   for (size_t i = 0; i < z.size(); i++) {
+   for (size_t i = 0; i < z.size(); i++) { // NOLINT
       // convert depressed cubic roots to original cubic: x = z - c/3
       z[i] -= (1.0 / 3.0) * c;
       // improve solution via newton steps

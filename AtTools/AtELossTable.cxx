@@ -1,9 +1,11 @@
 #include "AtELossTable.h"
-
+// IWYU pragma: no_include <ext/alloc_traits.h>
 #include "AtStringManip.h"
 
 #include <FairLogger.h>
 
+#include <algorithm> // for max
+#include <cmath>     // for fabs
 #include <iostream>
 
 namespace AtTools {
@@ -128,7 +130,7 @@ void AtELossTable::LoadSrimTable(std::string fileName)
       // If this is the densityt line, grab it and continue
       if (tokens[0] == "Target" && tokens[1] == "Density") {
          LOG(info) << "Setting target density to: " << tokens[3] << " g/cm^3";
-         fDensity = std::stod(tokens[3]);
+         SetIniDensity(std::stod(tokens[3]));
          continue;
       }
 
@@ -172,7 +174,7 @@ void AtELossTable::LoadLiseTable(std::string fileName, double mass, double densi
 
    std::vector<double> energy;
    std::vector<double> dEdX;
-   fDensity = fabs(density);
+   SetIniDensity(fabs(density));
 
    while (!file.eof()) {
       // Get the current line
@@ -202,16 +204,16 @@ void AtELossTable::LoadLiseTable(std::string fileName, double mass, double densi
    LoadTable(energy, dEdX);
 }
 
-   double AtELossTable::GetUnitConversion(const std::string &unit)
-   {
-      if (unit == "eV")
-         return 1e-6;
-      if (unit == "keV")
-         return 1e-3;
-      if (unit == "MeV")
-         return 1e-0;
-      if (unit == "GeV")
-         return 1e3;
-      return 0;
-   }
+double AtELossTable::GetUnitConversion(const std::string &unit)
+{
+   if (unit == "eV")
+      return 1e-6;
+   if (unit == "keV")
+      return 1e-3;
+   if (unit == "MeV")
+      return 1e-0;
+   if (unit == "GeV")
+      return 1e3;
+   return 0;
+}
 } // namespace AtTools

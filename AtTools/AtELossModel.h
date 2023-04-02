@@ -1,10 +1,6 @@
 #ifndef ATELOSSMODEL_H
 #define ATELOSSMODEL_H
 
-#include <memory>
-#include <string>
-#include <vector>
-
 namespace AtTools {
 
 /**
@@ -12,8 +8,10 @@ namespace AtTools {
  * Derived classes can represent models from different sources (SRIM, etc).
  * Internal units are Mev/mm
  *
- * Based on a combination of Nabin Rijal's AtELossManager and the EnergyLoss class (from someone at TAMU?)
+ * Based on a combination of Nabin Rijal's AtELossManager and the EnergyLoss class
+ * (https://github.com/joshhooker/EnergyLossClass) which is released unter the MIT Licsense (copyright Joshua Hooker).
  */
+
 class AtELossModel {
 protected:
    /**
@@ -55,6 +53,13 @@ public:
     * reach energyIni after distance.
     */
    virtual double GetEnergy(double energyIni, double distance) const = 0;
+
+protected:
+   void SetIniDensity(double density)
+   {
+      fDensityIni = density;
+      fDensity = density;
+   }
 };
 } // namespace AtTools
 

@@ -1,10 +1,13 @@
 #ifndef ATELOSSTABLE_H
 #define ATELOSSTABLE_H
+// IWYU pragma: no_include <ext/alloc_traits.h>
 
 #include "AtELossModel.h"
 #include "AtSpline.h"
 
+#include <string>
 #include <vector>
+
 namespace AtTools {
 
 class AtELossTable : public AtELossModel {

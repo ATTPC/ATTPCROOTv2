@@ -8,6 +8,7 @@
 #include <TGLayout.h>      // for TGLayoutHints, kLHintsCenterY, kLHintsLeft
 #include <TGNumberEntry.h> // for TGNumberEntry, TGNumberFormat, TGNumberFo...
 #include <TGString.h>      // for TGString
+#include <TGWindow.h>      // for TGWindow
 #include <TString.h>
 
 #include <utility> // for pair
@@ -74,7 +75,7 @@ void AtSidebarAddon::SetInfoString(std::string label, TString value)
       LOG(error) << label << " not defined!";
    else {
       fStrings.find(label)->second->SetText(value);
-      dynamic_cast<TGFrame *>(const_cast<TGWindow *>(this->GetParent()))->Layout();
+      dynamic_cast<TGFrame *>(const_cast<TGWindow *>(this->GetParent()))->Layout(); // NOLINT
    }
 }
 

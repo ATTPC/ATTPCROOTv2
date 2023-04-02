@@ -1,5 +1,6 @@
 #include "AtELossModel.h"
 
+#include <stdexcept>
 namespace AtTools {
 
 /**

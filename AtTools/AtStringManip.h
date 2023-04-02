@@ -1,8 +1,9 @@
 #ifndef ATSTRINGMANIP_H
 #define ATSTRINGMANIP_H
-#include <sstream>
+
 #include <string>
 #include <vector>
+
 namespace AtTools {
 
 /**
