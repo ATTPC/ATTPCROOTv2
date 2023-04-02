@@ -54,5 +54,6 @@
 #pragma link C++ function AtTools::GetHitFunction;
 #pragma link C++ function AtTools::GetTB;
 #pragma link C++ function AtTools::GetDriftTB;
+#pragma link C++ function AtTools::SplitString;
 
 #endif

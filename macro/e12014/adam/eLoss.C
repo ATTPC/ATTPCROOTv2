@@ -2,6 +2,9 @@ AtTools::AtELossTable *model = nullptr;
 
 void eLoss()
 {
+
+   model = new AtTools::AtELossTable();
+
    std::ifstream in("PbinHe.txt");
 
    double energy;

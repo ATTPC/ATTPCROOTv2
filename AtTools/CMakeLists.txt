@@ -6,6 +6,7 @@ set(SRCS
   AtELossManager.cxx
   AtTrackTransformer.cxx
   AtDataManip.cxx
+  AtStringManip.cxx
   AtELossModel.cxx
   AtELossTable.cxx
   

@@ -1,18 +1,26 @@
 #include "AtELossTable.h"
 
+#include "AtStringManip.h"
+
 #include <FairLogger.h>
 
 #include <iostream>
 
 namespace AtTools {
 
-AtELossTable::AtELossTable(const std::vector<double> &energy, const std::vector<double> &dEdX, double density)
-   : AtELossModel(density)
+void AtELossTable::LoadTable(const std::vector<double> &energy, const std::vector<double> &dEdX)
 {
+   LOG(info) << "Loading dE/dX from " << energy.front() << " MeV to " << energy.back() << " MeV ";
    std::vector<double> dXdE;
    for (auto &elem : dEdX)
       dXdE.push_back(1 / elem);
    fdXdE = tk::spline(energy, dXdE);
+}
+
+AtELossTable::AtELossTable(const std::vector<double> &energy, const std::vector<double> &dEdX, double density)
+   : AtELossModel(density)
+{
+   LoadTable(energy, dEdX);
 }
 
 double AtELossTable::GetdEdx(double energy) const
@@ -95,4 +103,73 @@ double AtELossTable::GetEnergyOld(double energyIni, double distance) const
    return guessEnergy;
 }
 
+void AtELossTable::LoadSrimTable(std::string fileName)
+{
+   std::ifstream file(fileName);
+   if (!file.is_open())
+      LOG(fatal) << "Failed to open SRIM file " << fileName;
+
+   bool atConversion = false;
+   double conversion = 0;
+   std::vector<double> energy;
+   std::vector<double> dEdX;
+
+   while (!file.eof()) {
+      // Get the current line
+      std::string line;
+      std::getline(file, line);
+      auto tokens = SplitString(line, ' ');
+      LOG(debug) << "Processing line " << line;
+
+      // If this is the densityt line, grab it and continue
+      if (tokens[0] == "Target" && tokens[1] == "Density") {
+         LOG(info) << "Setting target density to: " << tokens[3] << " g/cm^3";
+         fDensity = std::stod(tokens[3]);
+         continue;
+      }
+
+      // Check if we've reached the conversion part of the table
+      atConversion |= (tokens[0] == "Multiply");
+      LOG(debug) << "At converion: " << atConversion;
+
+      // If we're at the conversion stage, look for the correct conversion factor
+      try {
+         if (atConversion && tokens.at(1) == "MeV" && tokens.at(3) == "mm") {
+            conversion = std::stod(tokens.at(0));
+            LOG(info) << "Using conversion factor of " << conversion;
+            break;
+         }
+
+         //  If this is part of the table, grab it and continue
+         double en = std::stod(tokens.at(0)) * GetUnitConversion(tokens.at(1));
+         double dedx = std::stod(tokens.at(2)) + std::stod(tokens.at(3));
+
+         // If we made it this far then we have a valid table entry
+         energy.push_back(en);
+         dEdX.push_back(dedx);
+
+         LOG(debug) << en << " " << dedx;
+
+      } catch (...) {
+      }
+   } // end loop over file
+
+   for (auto &dedx : dEdX)
+      dedx *= conversion;
+
+   LoadTable(energy, dEdX);
+}
+
+double AtELossTable::GetUnitConversion(const std::string &unit)
+{
+   if (unit == "eV")
+      return 1e-6;
+   if (unit == "keV")
+      return 1e-3;
+   if (unit == "MeV")
+      return 1e-0;
+   if (unit == "GeV")
+      return 1e3;
+   return 0;
+}
 } // namespace AtTools
