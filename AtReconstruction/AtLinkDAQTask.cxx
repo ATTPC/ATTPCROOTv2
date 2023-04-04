@@ -342,5 +342,7 @@ void AtLinkDAQTask::Finish()
 
 Double_t AtLinkDAQTask::GetScaledInterval(ULong64_t intervalEvt, ULong64_t fIntercalTPC)
 {
+   if(kUseRatio)
+      return TMath::Abs(static_cast<double>(fIntercalTPC) / static_cast<double>(intervalEvt)) / fSearchMean;
    return TMath::Abs(static_cast<double>(intervalEvt) - static_cast<double>(fIntercalTPC)) / fSearchMean;
 }
