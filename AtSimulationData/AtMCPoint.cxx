@@ -17,18 +17,14 @@
 using std::cout;
 using std::endl;
 
-// -----   Default constructor   -------------------------------------------
 AtMCPoint::AtMCPoint() : FairMCPoint() {}
-// -------------------------------------------------------------------------
 
-// -----   Standard constructor   ------------------------------------------
 AtMCPoint::AtMCPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length,
                      Double_t eLoss)
    : FairMCPoint(trackID, detID, pos, mom, tof, length, eLoss)
 {
 }
 
-// -----   Standard constructor   ------------------------------------------
 AtMCPoint::AtMCPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length,
                      Double_t eLoss, TString VolName, Int_t detCopyID, Double_t EIni, Double_t AIni, Int_t A, Int_t Z)
    : FairMCPoint(trackID, detID, pos, mom, tof, length, eLoss), fDetCopyID(detCopyID), fVolName(std::move(VolName)),
@@ -76,4 +72,5 @@ void AtMCPoint::Clear(Option_t *)
    fAiso = 0;
    fZiso = 0;
 }
+
 ClassImp(AtMCPoint)
