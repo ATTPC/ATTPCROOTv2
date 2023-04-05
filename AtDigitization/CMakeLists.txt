@@ -27,6 +27,8 @@ AtSimulatedLine.cxx
 AtTrigger.cxx
 AtTriggerTask.cxx
 AtVectorResponse.cxx
+
+AtSimpleSimulation.cxx
 )
 
 generate_target_and_root_library(${LIBRARY_NAME}
