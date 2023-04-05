@@ -7,7 +7,9 @@
 
 #include <map>
 #include <memory>
+namespace AtTools {
 class AtELossModel;
+}
 
 /**
  * Class for simulating simple events using AtELossModels.
@@ -21,7 +23,7 @@ protected:
 
       bool operator<(const ParticleID &other) const;
    };
-   using ModelPtr = std::shared_ptr<AtELossModel>;
+   using ModelPtr = std::shared_ptr<AtTools::AtELossModel>;
    using XYZPoint = ROOT::Math::XYZPoint;
    using XYZVector = ROOT::Math::XYZVector;
 

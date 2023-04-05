@@ -92,9 +92,9 @@ AtSimpleSimulation::AtSimpleSimulation(bool isPersistant, std::string branchName
 {
    auto ioMan = FairRootManager::Instance();
    if (ioMan == nullptr)
-      LOG(fatal) << "The IO manager was not instatiated before AtSimpleSimulation.";
-
-   ioMan->Register(branchName.c_str(), "AtTpc", &fMCPoints, isPersistant);
+      LOG(error) << "The IO manager was not instatiated before AtSimpleSimulation.";
+   else
+      ioMan->Register(branchName.c_str(), "AtTpc", &fMCPoints, isPersistant);
 }
 
 void AtSimpleSimulation::NewEvent()
