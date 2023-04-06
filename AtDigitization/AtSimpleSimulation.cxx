@@ -6,9 +6,15 @@
 #include <FairLogger.h>
 #include <FairRootManager.h>
 
+#include <TClonesArray.h> // for TClonesArray
 #include <TGeoManager.h>
 #include <TGeoNode.h>
 #include <TGeoVolume.h>
+#include <TObject.h> // for TObject
+
+#include <cmath>     // for sqrt
+#include <stdexcept> // for invalid_argument
+#include <utility>   // for pair
 
 AtSimpleSimulation::AtSimpleSimulation(std::string geoFile)
 {
@@ -87,10 +93,9 @@ void AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos
 
    auto pos = iniPos;
    auto mom = iniMom;
-   auto m = iniMom.M();
-
    double length = 0;
 
+   // Need to also add a condition for when the particle stops in the detector...
    while (IsInVolume("drift_volume", pos)) {
 
       // Direction particle is traveling
@@ -145,8 +150,10 @@ void AtSimpleSimulation::AddHit(double ELoss, const XYZPoint &pos, const PxPyPzE
 void AtSimpleSimulation::Init(std::string branchName)
 {
    auto ioMan = FairRootManager::Instance();
-   if (ioMan == nullptr)
+   if (ioMan == nullptr) {
       LOG(fatal) << "The IO manager was not instatiated before attempting to simulate an event.";
+      return;
+   }
 
    fMCPoints = ioMan->Register(branchName, "AtMCPoint", "AtTPC", true);
 }

@@ -11,7 +11,9 @@
 #include <FairMCPoint.h>
 
 #include <Math/Point3D.h>
+#include <Math/Point3Dfwd.h> // for XYZPoint
 #include <Math/Vector3D.h>
+#include <Math/Vector3Dfwd.h> // for XYZVector
 #include <Rtypes.h>
 #include <TString.h>
 #include <TVector3.h>

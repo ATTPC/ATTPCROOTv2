@@ -1,9 +1,17 @@
 #ifndef AtTestSimulation_h
 #define AtTestSimulation_h
 
+#include "AtSimpleSimulation.h" // for AtSimpleSimulation
+
+#include <Rtypes.h> // for THashConsistencyHolder, ClassDefOver...
+
 #include "FairTask.h"
 
-class AtSimpleSimulation;
+#include <memory>  // for unique_ptr
+#include <utility> // for move
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtTestSimulation : public FairTask {
 protected:

@@ -2,12 +2,17 @@
 #define AT_SIMPLE_SIMULATION_H
 
 #include <Math/Point3D.h>
+#include <Math/Point3Dfwd.h> // for XYZPoint
 #include <Math/Vector3D.h>
+#include <Math/Vector3Dfwd.h> // for XYZVector
 #include <Math/Vector4D.h>
-#include <TClonesArray.h>
+#include <Math/Vector4Dfwd.h> // for PxPyPzEVector
 
 #include <map>
 #include <memory>
+#include <string> // for string
+
+class TClonesArray;
 namespace AtTools {
 class AtELossModel;
 }

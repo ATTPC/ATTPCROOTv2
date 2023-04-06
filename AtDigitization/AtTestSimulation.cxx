@@ -2,8 +2,16 @@
 
 #include "AtSimpleSimulation.h"
 
+#include <FairTask.h> // for InitStatus, kSUCCESS
+
 #include <Math/Point3D.h>
+#include <Math/Point3Dfwd.h> // for Math, XYZPoint
 #include <Math/Vector3D.h>
+#include <Math/Vector3Dfwd.h> // for XYZVector
+#include <Math/Vector4D.h>    // for LorentzVector
+#include <Math/Vector4Dfwd.h> // for PxPyPzEVector
+
+#include <cmath>
 using namespace ROOT::Math;
 
 InitStatus AtTestSimulation::Init()
@@ -25,7 +33,7 @@ void AtTestSimulation::Exec(Option_t *)
    double E = m + 35 * 207.93;
    // Grab the momentum
    double p = sqrt(E * E - m * m);
-   PxPyPzEVector mom(0, 0, p, E);
+   PxPyPzEVector mom(momDir.X() * p, momDir.Y() * p, momDir.Z() * p, E);
    fSimulation->SimulateParticle(82, 208, pos, mom);
 }
 
