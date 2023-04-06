@@ -66,8 +66,8 @@ void AtClusterizeTask::getParameters()
    std::cout << "  Ionization energy of gas: " << fEIonize << " MeV" << std::endl;
    std::cout << "  Fano factor of gas: " << fFano << std::endl;
    std::cout << "  Drift velocity: " << fVelDrift << std::endl;
-   std::cout << "  Longitudal coefficient of diffusion: " << fCoefT << std::endl;
-   std::cout << "  Transverse coefficient of diffusion: " << fCoefL << std::endl;
+   std::cout << "  Longitudal coefficient of diffusion: " << fCoefL << std::endl;
+   std::cout << "  Transverse coefficient of diffusion: " << fCoefT << std::endl;
    std::cout << "  Position of the pad plane (Z): " << fDetPadPlane << std::endl;
 }
 
@@ -145,15 +145,15 @@ void AtClusterizeTask::Exec(Option_t *option)
 // Takes drift time in us
 Double_t AtClusterizeTask::getLongitudinalDiffusion(Double_t driftTime)
 {
-   auto sigInMM = TMath::Sqrt(100. * fCoefL * 2 * driftTime);
-   auto sigInUs = sigInMM / fVelDrift;
+   auto sigInCm = TMath::Sqrt(fCoefL * 2 * driftTime);
+   auto sigInUs = sigInCm / fVelDrift;
    return sigInUs;
 }
 
-// Takes drift time in us
+// Takes drift time in us returns sigma in mm
 Double_t AtClusterizeTask::getTransverseDiffusion(Double_t driftTime)
 {
-   return TMath::Sqrt(100. * fCoefT * 2 * driftTime);
+   return 10. * TMath::Sqrt(fCoefT * 2 * driftTime);
 }
 
 UInt_t AtClusterizeTask::getNumberOfElectronsGenerated()
