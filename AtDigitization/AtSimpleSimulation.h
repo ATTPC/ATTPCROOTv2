@@ -3,6 +3,7 @@
 
 #include <Math/Point3D.h>
 #include <Math/Vector3D.h>
+#include <Math/Vector4D.h>
 #include <TClonesArray.h>
 
 #include <map>
@@ -27,6 +28,7 @@ protected:
    using ModelPtr = std::shared_ptr<AtTools::AtELossModel>;
    using XYZPoint = ROOT::Math::XYZPoint;
    using XYZVector = ROOT::Math::XYZVector;
+   using PxPyPzEVector = ROOT::Math::PxPyPzEVector;
 
    std::map<ParticleID, ModelPtr> fModels;
    TClonesArray *fMCPoints{nullptr};
@@ -48,14 +50,14 @@ public:
    void AddModel(int Z, int A, ModelPtr model);
 
    void NewEvent();
-   void SimulateParticle(int Z, int A, const XYZPoint &iniPos, const XYZVector &iniMom);
+   void SimulateParticle(int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom);
 
 protected:
    bool IsInVolume(const std::string &volName, const XYZPoint &point);
    std::string GetVolumeName(const XYZPoint &point);
 
-   void SimulateParticle(ModelPtr model, const XYZPoint &iniPos, const XYZVector &iniMom);
-   void AddHit(double ELoss, const XYZPoint &pos, const XYZVector &mom, double length);
+   void SimulateParticle(ModelPtr model, const XYZPoint &iniPos, const PxPyPzEVector &iniMom);
+   void AddHit(double ELoss, const XYZPoint &pos, const PxPyPzEVector &mom, double length);
    TGeoVolume *GetVolume(const XYZPoint &pos);
 };
 

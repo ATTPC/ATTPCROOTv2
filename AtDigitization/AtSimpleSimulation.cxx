@@ -69,7 +69,7 @@ void AtSimpleSimulation::AddModel(int Z, int A, ModelPtr model)
    fModels[id] = model;
 }
 
-void AtSimpleSimulation::SimulateParticle(int Z, int A, const XYZPoint &iniPos, const XYZVector &iniMom)
+void AtSimpleSimulation::SimulateParticle(int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom)
 {
    auto modelIt = fModels.find({A, Z});
    if (modelIt == fModels.end())
@@ -80,19 +80,35 @@ void AtSimpleSimulation::SimulateParticle(int Z, int A, const XYZPoint &iniPos, 
    SimulateParticle(modelIt->second, iniPos, iniMom);
 }
 
-void AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos, const XYZVector &iniMom)
+void AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos, const PxPyPzEVector &iniMom)
 {
    // This is a new track
    fTrackID++;
+
    auto pos = iniPos;
    auto mom = iniMom;
+   auto m = iniMom.M();
+
    double length = 0;
 
    while (IsInVolume("drift_volume", pos)) {
-      double eLoss = 100;
-      // Update the momentum from the energy loss model
 
-      pos += iniMom.Unit() * fDistStep;
+      // Direction particle is traveling
+      auto dir = iniMom.Vect().Unit();
+
+      // Get the energy loss from the model
+      double eLoss = 1;
+
+      // Update the momentum from the energy loss model. Assume the energy loss does not change
+      // the direction of the particle.
+      // newMom (x/y/z) =
+      auto E = mom.E() - eLoss;
+      double p = sqrt(E * E - mom.M2());
+      mom.SetPxPyPzE(dir.X() * p, dir.Y() * p, dir.Z() * p, E);
+
+      LOG(debug) << mom << " " << mom.M() << " " << iniMom.M();
+
+      pos += iniMom.Vect().Unit() * fDistStep;
       length += fDistStep;
       AddHit(eLoss, pos, mom, length);
    }
@@ -104,22 +120,25 @@ void AtSimpleSimulation::NewEvent()
    fTrackID = 0;
 }
 
-void AtSimpleSimulation::AddHit(double ELoss, const XYZPoint &pos, const XYZVector &mom, double length)
+/**
+ * Units are mm, Mev, and Mev/c.
+ */
+void AtSimpleSimulation::AddHit(double ELoss, const XYZPoint &pos, const PxPyPzEVector &mom, double length)
 {
    LOG(info) << "Adding a hit at element " << fMCPoints->GetEntriesFast() << " in TClonesArray.";
 
    auto *mcPoint = dynamic_cast<AtMCPoint *>(fMCPoints->ConstructedAt(fMCPoints->GetEntriesFast(), "C"));
 
    mcPoint->SetTrackID(fTrackID);
-   mcPoint->SetLength(length / 10.);
-   mcPoint->SetEnergyLoss(ELoss / 1000.);
+   mcPoint->SetLength(length / 10.);      // Convert to cm
+   mcPoint->SetEnergyLoss(ELoss / 1000.); // Convert to GeV
    mcPoint->SetVolName("drift_volume");
 
    // mcPoint->fEnergyIni = Eini;
    // mcPoint->fAiso = A;
    // mcPoint->fZiso = Z;
-   mcPoint->SetPosition(pos / 10.);
-   mcPoint->SetMomentum(mom);
+   mcPoint->SetPosition(pos / 10.);          // Convert to cm
+   mcPoint->SetMomentum(mom.Vect() / 1000.); // Convert to GeV/c
    mcPoint->Print(nullptr);
 }
 
