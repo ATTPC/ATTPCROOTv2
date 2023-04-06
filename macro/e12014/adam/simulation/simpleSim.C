@@ -4,13 +4,14 @@ void simpleSim()
    TString outputFile = inOutDir + "output_digi.root";
    TString scriptfile = "e12014_pad_mapping.xml";
    TString paramFile = "ATTPC.e12014.par";
+   TString geoFileName = "ATTPC_He1bar_geomanager.root";
 
    TString dir = getenv("VMCWORKDIR");
 
    // Create the full parameter file paths
    TString digiParFile = dir + "/parameters/" + paramFile;
    TString mapParFile = dir + "/scripts/" + scriptfile;
-
+   TString geoFile = dir + "/geometry/" + geoFileName;
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
 
@@ -31,7 +32,15 @@ void simpleSim()
    mapping->GeneratePadPlane();
    // mapping->ParseInhibitMap("./data/inhibit.txt", AtMap::InhibitType::kTotal);
 
-   AtTestSimulation *sim = new AtTestSimulation();
+   // Create underlying simulation class
+   auto sim = std::make_unique<AtSimpleSimulation>(geoFile.Data());
+
+   // Create and load energy loss models
+   auto eloss = std::make_shared<AtTools::AtELossTable>();
+   eloss->LoadSrimTable("./../PbinHeFull.txt");
+   sim->AddModel(82, 208, eloss);
+
+   AtTestSimulation *simTask = new AtTestSimulation(std::move(sim));
 
    AtClusterizeLineTask *clusterizer = new AtClusterizeLineTask();
    clusterizer->SetPersistence(kFALSE);
@@ -55,7 +64,7 @@ void simpleSim()
    ransacTask->SetDistanceThreshold(20.0);
    ransacTask->SetMinHitsLine(10);
 
-   fRun->AddTask(sim);
+   fRun->AddTask(simTask);
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
    fRun->AddTask(psaTask);
@@ -63,14 +72,9 @@ void simpleSim()
    //  __ Init and run ___________________________________
    fRun->Init();
 
-   // Add energy loss models
-   auto eloss = std::make_shared<AtTools::AtELossTable>();
-   eloss->LoadSrimTable("./../PbinHeFull.txt");
-   sim->GetSimulation()->AddModel(82, 208, eloss);
-
    timer.Start();
    // fRun->Run(0, 20001);
-   fRun->Run(0, 10);
+   fRun->Run(0, 2);
    timer.Stop();
 
    std::cout << std::endl << std::endl;

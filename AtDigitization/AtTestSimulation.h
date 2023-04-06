@@ -1,16 +1,16 @@
 #ifndef AtTestSimulation_h
 #define AtTestSimulation_h
 
-#include "AtSimpleSimulation.h"
-
 #include "FairTask.h"
+
+class AtSimpleSimulation;
 
 class AtTestSimulation : public FairTask {
 protected:
-   std::unique_ptr<AtSimpleSimulation> fSimulation{nullptr};
+   std::unique_ptr<AtSimpleSimulation> fSimulation{nullptr}; //!
 
 public:
-   AtTestSimulation();
+   AtTestSimulation(std::unique_ptr<AtSimpleSimulation> sim) : fSimulation(std::move(sim)) {}
    virtual ~AtTestSimulation() = default;
 
    virtual InitStatus Init() override;

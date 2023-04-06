@@ -1,15 +1,15 @@
 #include "AtTestSimulation.h"
 
+#include "AtSimpleSimulation.h"
+
 #include <Math/Point3D.h>
 #include <Math/Vector3D.h>
-
 using namespace ROOT::Math;
-
-AtTestSimulation::AtTestSimulation() {}
 
 InitStatus AtTestSimulation::Init()
 {
-   fSimulation = std::make_unique<AtSimpleSimulation>();
+   fSimulation->Init();
+
    return kSUCCESS;
 }
 

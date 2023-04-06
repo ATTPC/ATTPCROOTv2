@@ -10,6 +10,7 @@
 namespace AtTools {
 class AtELossModel;
 }
+class TGeoVolume;
 
 /**
  * Class for simulating simple events using AtELossModels.
@@ -28,10 +29,10 @@ protected:
    using XYZVector = ROOT::Math::XYZVector;
 
    std::map<ParticleID, ModelPtr> fModels;
-   TClonesArray fMCPoints;
+   TClonesArray *fMCPoints{nullptr};
 
    // Variables to across an entire event
-   int fTrackID;
+   int fTrackID{0};
 
    double fDistStep{1.}; // Distance step in mm for particles
 
@@ -39,10 +40,11 @@ public:
    /**
     * Assumes that the IO manager has been initialized (it will attempt to construct the branch needed here).
     */
-   AtSimpleSimulation(bool isPersistant = true, std::string branchName = "AtTpcPoint");
+   AtSimpleSimulation(std::string geoFile);
 
    ~AtSimpleSimulation() = default;
 
+   void Init(std::string branchName = "AtTpcPoint");
    void AddModel(int Z, int A, ModelPtr model);
 
    void NewEvent();
@@ -54,6 +56,7 @@ protected:
 
    void SimulateParticle(ModelPtr model, const XYZPoint &iniPos, const XYZVector &iniMom);
    void AddHit(double ELoss, const XYZPoint &pos, const XYZVector &mom, double length);
+   TGeoVolume *GetVolume(const XYZPoint &pos);
 };
 
 #endif // AT_SIMPLE_SIMULATION_H
