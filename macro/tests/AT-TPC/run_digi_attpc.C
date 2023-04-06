@@ -38,7 +38,7 @@ void run_digi_attpc()
    auto mapping = std::make_shared<AtTpcMap>();
    mapping->ParseXMLMap(mapParFile.Data());
    mapping->GeneratePadPlane();
-   mapping->ParseInhibitMap("./data/inhibit.txt", AtMap::InhibitType::kTotal);
+   // mapping->ParseInhibitMap("./data/inhibit.txt", AtMap::InhibitType::kTotal);
 
    // __ AT digi tasks___________________________________
    AtClusterizeLineTask *clusterizer = new AtClusterizeLineTask();
@@ -55,7 +55,7 @@ void run_digi_attpc()
    reduceTask->SetReductionFunction(&reduceFunc);
 
    auto psa = std::make_unique<AtPSAMax>();
-   psa->SetThreshold(1);
+   psa->SetThreshold(25);
 
    // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(std::move(psa));

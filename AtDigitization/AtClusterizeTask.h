@@ -52,7 +52,7 @@ protected:
    virtual void processPoint(Int_t mcPointID);
 
    void setNewTrack();
-   Double_t getTransverseDiffusion(Double_t driftTime);   // in cm
+   Double_t getTransverseDiffusion(Double_t driftTime);   // in mm
    Double_t getLongitudinalDiffusion(Double_t driftTime); // in us
    UInt_t getNumberOfElectronsGenerated();
    ROOT::Math::XYZVector getCurrentPointLocation();

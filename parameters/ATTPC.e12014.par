@@ -6,14 +6,14 @@
 # Description of parameters
 ################################################################################
 [AtDigiPar]
-EField:Double_t               7000   # V/m
+EField:Double_t              70000   # V/m
 BField:Double_t                0.0   # Tesla
 TBEntrance:Int_t               455   # Beam position at detector entrance in TB
 ZPadPlane:Double_t          1000.0   # Position of the micromegas pad plane 
 EIonize:Double_t             42.70   # Ionization energy of gas in eV
 Fano:Double_t                 0.24   # Fano factor of the gas
-CoefL:Double_t              0.0055   # Longitudal coefficient of diffusion [cm^-0.5]
-CoefT:Double_t              0.0038   # Transverse coefficient of diffusion [cm^-0.5]
+CoefL:Double_t               0.055   # Longitudal coefficient of diffusion [cm^2/us]
+CoefT:Double_t              0.0038   # Transverse coefficient of diffusion [cm^2/us]
 GasPressure:Double_t           800   # Gas pressure in torr
 Density:Double_t             0.175   # Gas density (kg/m3 or mg/cm3)
 DriftVelocity:Double_t        0.82   # cm/us
