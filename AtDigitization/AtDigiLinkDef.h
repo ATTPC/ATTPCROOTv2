@@ -14,5 +14,6 @@
 #pragma link C++ class AtTrigger + ;
 #pragma link C++ class AtTriggerTask + ;
 #pragma link C++ class AtVectorResponse - ;
-
+#pragma link C++ class AtTestSimulation + ;
+#pragma link C++ class AtSimpleSimulation - !;
 #endif

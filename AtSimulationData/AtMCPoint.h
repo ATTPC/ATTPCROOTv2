@@ -10,6 +10,10 @@
 
 #include <FairMCPoint.h>
 
+#include <Math/Point3D.h>
+#include <Math/Point3Dfwd.h> // for XYZPoint
+#include <Math/Vector3D.h>
+#include <Math/Vector3Dfwd.h> // for XYZVector
 #include <Rtypes.h>
 #include <TString.h>
 #include <TVector3.h>
@@ -17,10 +21,14 @@
 class TBuffer;
 class TClass;
 class TMemberInspector;
+class AtSimpleSimulation;
 
 class AtMCPoint : public FairMCPoint {
 
 protected:
+   using XYZPoint = ROOT::Math::XYZPoint;
+   using XYZVector = ROOT::Math::XYZVector;
+
    Int_t fDetCopyID = 0;
    TString fVolName;
    Double_t fEnergyIni = 0;
@@ -42,6 +50,7 @@ public:
     *@param eLoss    Energy deposit [GeV]
     **/
    AtMCPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length, Double_t eLoss);
+   AtMCPoint(Int_t trackID, Int_t detID, XYZPoint pos, XYZVector mom, Double_t tof, Double_t length, Double_t eLoss);
 
    AtMCPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length, Double_t eLoss,
              TString VolName, Int_t detCopyID, Double_t EIni, Double_t AIni, Int_t A, Int_t Z);
@@ -51,6 +60,8 @@ public:
    /** Copy constructor **/
    AtMCPoint(const AtMCPoint &point) = delete;
    AtMCPoint operator=(const AtMCPoint &point) = delete;
+
+   virtual void Clear(Option_t *) override;
 
    /** Accessors **/
    Int_t GetDetCopyID() const { return fDetCopyID; } // added by Marc
@@ -62,10 +73,17 @@ public:
 
    void SetDetCopyID(Int_t id) { fDetCopyID = id; };         // added by Marc
    void SetVolName(TString VolName) { fVolName = VolName; }; // added by Ari
+   void SetPosition(const XYZPoint &pos) { SetXYZ(pos.X(), pos.Y(), pos.Z()); }
+   void SetMomentum(const XYZVector &mom)
+   {
+      TVector3 mom2(mom.X(), mom.Y(), mom.Z());
+      FairMCPoint::SetMomentum(mom2);
+   }
 
    /** Output to screen **/
    virtual void Print(const Option_t *opt) const override;
 
+   friend AtSimpleSimulation;
    ClassDefOverride(AtMCPoint, 2)
 };
 

@@ -17,22 +17,25 @@
 using std::cout;
 using std::endl;
 
-// -----   Default constructor   -------------------------------------------
 AtMCPoint::AtMCPoint() : FairMCPoint() {}
-// -------------------------------------------------------------------------
 
-// -----   Standard constructor   ------------------------------------------
 AtMCPoint::AtMCPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length,
                      Double_t eLoss)
    : FairMCPoint(trackID, detID, pos, mom, tof, length, eLoss)
 {
 }
 
-// -----   Standard constructor   ------------------------------------------
 AtMCPoint::AtMCPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length,
                      Double_t eLoss, TString VolName, Int_t detCopyID, Double_t EIni, Double_t AIni, Int_t A, Int_t Z)
    : FairMCPoint(trackID, detID, pos, mom, tof, length, eLoss), fDetCopyID(detCopyID), fVolName(std::move(VolName)),
      fEnergyIni(EIni), fAngleIni(AIni), fAiso(A), fZiso(Z)
+{
+}
+
+AtMCPoint::AtMCPoint(Int_t trackID, Int_t detID, XYZPoint pos, XYZVector mom, Double_t tof, Double_t length,
+                     Double_t eLoss)
+   : AtMCPoint(trackID, detID, TVector3(pos.X(), pos.Y(), pos.Z()), TVector3(mom.X(), mom.Y(), mom.Z()), 0, length,
+               eLoss)
 {
 }
 
@@ -43,6 +46,31 @@ void AtMCPoint::Print(const Option_t *opt) const
    cout << "    Momentum (" << fPx << ", " << fPy << ", " << fPz << ") GeV" << endl;
    cout << "    Time " << fTime << " ns,  Length " << fLength << " cm,  Energy loss " << fELoss * 1.0e06 << " keV"
         << endl;
+}
+
+void AtMCPoint::Clear(Option_t *)
+{
+   // Clear FairMCPoint
+   fTrackID = 0;
+   fEventId = 0;
+   fPx = 0;
+   fPy = 0;
+   fPz = 0;
+   fTime = 0;
+   fLength = 0;
+   fELoss = 0;
+   fDetectorID = 0;
+   fX = 0;
+   fY = 0;
+   fZ = 0;
+
+   // Clear AtMCPoint
+   fDetCopyID = 0;
+   fVolName = "";
+   fEnergyIni = 0;
+   fAngleIni = 0;
+   fAiso = 0;
+   fZiso = 0;
 }
 
 ClassImp(AtMCPoint)
