@@ -1,6 +1,7 @@
 
 #include "AtSimpleSimulation.h"
 
+#include "AtELossModel.h"
 #include "AtMCPoint.h"
 
 #include <FairLogger.h>
@@ -99,10 +100,11 @@ void AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos
    while (IsInVolume("drift_volume", pos)) {
 
       // Direction particle is traveling
-      auto dir = iniMom.Vect().Unit();
+      auto dir = mom.Vect().Unit();
 
       // Get the energy loss from the model
-      double eLoss = 1;
+      double KE = mom.E() - mom.M();
+      double eLoss = model->GetEnergyLoss(KE, fDistStep);
 
       // Update the momentum from the energy loss model. Assume the energy loss does not change
       // the direction of the particle.
@@ -113,7 +115,7 @@ void AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos
 
       LOG(debug) << mom << " " << mom.M() << " " << iniMom.M();
 
-      pos += iniMom.Vect().Unit() * fDistStep;
+      pos += dir * fDistStep;
       length += fDistStep;
       AddHit(eLoss, pos, mom, length);
    }
@@ -144,7 +146,6 @@ void AtSimpleSimulation::AddHit(double ELoss, const XYZPoint &pos, const PxPyPzE
    // mcPoint->fZiso = Z;
    mcPoint->SetPosition(pos / 10.);          // Convert to cm
    mcPoint->SetMomentum(mom.Vect() / 1000.); // Convert to GeV/c
-   mcPoint->Print(nullptr);
 }
 
 void AtSimpleSimulation::Init(std::string branchName)
