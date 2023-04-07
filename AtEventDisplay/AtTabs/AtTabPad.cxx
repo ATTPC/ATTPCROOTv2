@@ -4,6 +4,7 @@
 #include "AtDataManip.h"
 #include "AtEvent.h"
 #include "AtHit.h" // for AtHit
+#include "AtMap.h"
 #include "AtPad.h"
 #include "AtPadArray.h"
 #include "AtPadBase.h" // for AtPadBase
@@ -123,12 +124,14 @@ void AtTabPad::DrawPad()
       case PadDrawType::kADC: DrawAdc(hist, *fPad); break;
       case PadDrawType::kRawADC: DrawRawAdc(hist, *fPad); break;
       case PadDrawType::kArrAug: DrawArrayAug(hist, *fPad, fAugNames[pos]); break;
+      case PadDrawType::kFPN: DrawFPN(hist, *fPad); break;
       case PadDrawType::kAuxPad:
          auto auxPad = fRawEvent->GetAuxPad(fAugNames[pos]);
          if (auxPad != nullptr)
             DrawAdc(hist, *auxPad);
          break;
       }
+
       if (fDrawHits.find(pos) != fDrawHits.end())
          DrawHit(*fPad, fDrawHits[pos]);
    }
@@ -140,6 +143,23 @@ void AtTabPad::DrawAdc(TH1D *hist, const AtPad &pad)
 {
    for (int i = 0; i < 512; i++) {
       hist->SetBinContent(i + 1, pad.GetADC()[i]);
+   }
+   hist->Draw();
+}
+
+void AtTabPad::DrawFPN(TH1D *hist, const AtPad &pad)
+{
+
+   auto fRawEvent = GetFairRootInfo<AtRawEvent>();
+   if (fRawEvent == nullptr) {
+      LOG(error) << "fRawEvent is nullptr for tab " << fTabId << "! Please set the raw event branch.";
+      return;
+   }
+   auto map = AtViewerManager::Instance()->GetMap();
+   auto fpnPad = fRawEvent->GetFpn(map->GetNearestFPN(pad.GetPadNum()));
+
+   for (int i = 0; i < 512; i++) {
+      hist->SetBinContent(i + 1, fpnPad->GetRawADC()[i]);
    }
    hist->Draw();
 }
@@ -200,6 +220,11 @@ void AtTabPad::DrawHits(int row, int col)
 void AtTabPad::DrawADC(int row, int col)
 {
    SetDraw(row * fCols + col, PadDrawType::kADC);
+}
+
+void AtTabPad::DrawFPN(int row, int col)
+{
+   SetDraw(row * fCols + col, PadDrawType::kFPN);
 }
 
 void AtTabPad::DrawRawADC(int row, int col)

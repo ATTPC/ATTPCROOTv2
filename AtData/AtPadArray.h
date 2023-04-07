@@ -12,6 +12,7 @@
 class TBuffer;
 class TClass;
 class TMemberInspector;
+class TH1D;
 
 /**
  * @brief Holds an addition array of doubles for an AtPad.
@@ -34,7 +35,7 @@ public:
 
    const traceDouble &GetArray() const { return fArray; }
    Double_t GetArray(Int_t idx) const { return fArray[idx]; }
-
+   std::unique_ptr<TH1D> GetHist(std::string name) const;
    ClassDefOverride(AtPadArray, 1);
 };
 
