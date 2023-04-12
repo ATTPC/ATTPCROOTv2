@@ -1,6 +1,11 @@
 #ifndef ATTRACK_H
 #define ATTRACK_H
 
+#include "AtContainerManip.h"
+#include "AtHit.h"
+#include "AtHitCluster.h"
+#include "AtPattern.h" // IWYU pragma: keep
+
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h>
 #include <Rtypes.h>
@@ -13,23 +18,22 @@
 #include <utility>
 #include <vector>
 
-// AtTPCROOT
-#include "AtHit.h"
-#include "AtHitCluster.h"
-#include "AtPattern.h"
-
 class TBuffer;
 class TClass;
 class TMemberInspector;
-using XYZPoint = ROOT::Math::XYZPoint;
 
 class AtTrack : public TObject {
 
 protected:
+   using XYZPoint = ROOT::Math::XYZPoint;
+   using HitPtr = std::unique_ptr<AtHit>;
+   using HitVector = std::vector<HitPtr>;
+   using PatternPtr = std::unique_ptr<AtPatterns::AtPattern>;
+
    // Attributes shared by all track finding algorithms
    Int_t fTrackID{-1};
-   std::vector<AtHit> fHitArray;
-   std::unique_ptr<AtPatterns::AtPattern> fPattern{nullptr};
+   HitVector fHitArray;
+   PatternPtr fPattern{nullptr};
    Bool_t fIsMerged{false};
    Double_t fVertexToZDist{0};
 
@@ -38,7 +42,7 @@ protected:
    Double_t fGeoPhiAngle{};                  //<  " azimuthal "
    Double_t fGeoRadius{};                    //< Initial radius of curvature
    std::pair<Double_t, Double_t> fGeoCenter; //< Center of the spiral track
-   std::vector<AtHitCluster> fHitClusterArray; //< Clusterized hits container
+   std::vector<AtHitCluster> fHitClusterArray; //< Clusterized hits container. Can also be stored in fHitArray
 
 public:
    AtTrack() = default;
@@ -72,8 +76,11 @@ public:
 
    // Getters
    Int_t GetTrackID() const { return fTrackID; }
-   std::vector<AtHit> &GetHitArray() { return fHitArray; }
-   const std::vector<AtHit> &GetHitArrayConst() const { return fHitArray; }
+   HitVector &GetHitArray() { return fHitArray; }
+   const HitVector &GetHitArray() const { return fHitArray; }
+
+   std::vector<AtHit> GetHitArrayObject() { return ContainerManip::GetObjectVector(fHitArray); }
+   // const std::vector<AtHit> &GetHitArrayConst() const { return fHitArray; }
    const AtPatterns::AtPattern *GetPattern() const { return fPattern.get(); }
 
    Double_t GetGeoTheta() const { return fGeoThetaAngle; }
@@ -87,8 +94,8 @@ public:
 
    // Setters
    void SetTrackID(Int_t val) { fTrackID = val; }
-   void AddHit(const AtHit &hit) { fHitArray.push_back(hit); }
-   void AddHit(AtHit &&hit) { fHitArray.push_back(hit); }
+   void AddHit(const AtHit &hit) { fHitArray.emplace_back(std::make_unique<AtHit>(hit)); }
+   void AddHit(HitPtr hit) { fHitArray.push_back(std::move(hit)); }
    void SetPattern(std::unique_ptr<AtPatterns::AtPattern> pat) { fPattern = std::move(pat); }
 
    void SetGeoTheta(Double_t angle) { fGeoThetaAngle = angle; }

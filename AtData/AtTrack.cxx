@@ -26,11 +26,13 @@ AtTrack &AtTrack::operator=(AtTrack obj)
 }
 
 AtTrack::AtTrack(const AtTrack &o)
-   : fTrackID(o.fTrackID), fHitArray(o.fHitArray), fIsMerged(o.fIsMerged), fVertexToZDist(o.fVertexToZDist),
-     fGeoThetaAngle(o.fGeoThetaAngle), fGeoPhiAngle(o.fGeoPhiAngle), fGeoRadius(o.fGeoRadius), fGeoCenter(o.fGeoCenter),
+   : fTrackID(o.fTrackID), fIsMerged(o.fIsMerged), fVertexToZDist(o.fVertexToZDist), fGeoThetaAngle(o.fGeoThetaAngle),
+     fGeoPhiAngle(o.fGeoPhiAngle), fGeoRadius(o.fGeoRadius), fGeoCenter(o.fGeoCenter),
      fHitClusterArray(o.fHitClusterArray)
 {
    fPattern = (o.fPattern != nullptr) ? o.fPattern->Clone() : nullptr;
+   for (auto &hit : o.fHitArray)
+      fHitArray.push_back(hit->Clone());
 }
 
 void AtTrack::AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster)
@@ -38,12 +40,12 @@ void AtTrack::AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster)
    fHitClusterArray.push_back(std::move(*hitCluster));
 }
 
-XYZPoint AtTrack::GetLastPoint()
+AtTrack::XYZPoint AtTrack::GetLastPoint()
 {
    Double_t maxR = 0.;
    XYZPoint maxPos;
    for (auto &nHit : fHitArray) {
-      auto temp = nHit.GetPosition();
+      auto temp = nHit->GetPosition();
       if (temp.Rho() > maxR) {
          maxR = temp.Rho();
          maxPos = temp;
@@ -52,12 +54,12 @@ XYZPoint AtTrack::GetLastPoint()
    return maxPos;
 }
 
-XYZPoint AtTrack::GetFirstPoint()
+AtTrack::XYZPoint AtTrack::GetFirstPoint()
 {
    Double_t minR = 999.;
    XYZPoint minPos;
    for (auto &nHit : fHitArray) {
-      auto temp = nHit.GetPosition();
+      auto temp = nHit->GetPosition();
       if (temp.Rho() < minR) {
          minR = temp.Rho();
          minPos = temp;
@@ -71,8 +73,8 @@ Double_t AtTrack::GetMeanTime()
    Double_t meanTime = 0.0;
 
    if (fHitArray.size() > 0) {
-      Int_t sum =
-         std::accumulate(begin(fHitArray), end(fHitArray), 0, [](int i, AtHit &hit) { return hit.GetTimeStamp() + i; });
+      Int_t sum = std::accumulate(begin(fHitArray), end(fHitArray), 0,
+                                  [](int i, HitPtr &hit) { return hit->GetTimeStamp() + i; });
       return sum / (Double_t)fHitArray.size();
    } else
       return meanTime;
@@ -81,8 +83,8 @@ Double_t AtTrack::GetMeanTime()
 Double_t AtTrack::GetLinearRange()
 {
    if (fHitArray.size() > 0) {
-      AtHit fhit = fHitArray.front(); // Last hit of the track (Low TB)
-      AtHit lhit = fHitArray.back();  // First hit of the track (High TB)
+      AtHit fhit = *fHitArray.front(); // Last hit of the track (Low TB)
+      AtHit lhit = *fHitArray.back();  // First hit of the track (High TB)
       return GetLinearRange(fhit.GetPosition(), lhit.GetPosition());
    } else
       return 0;
@@ -91,7 +93,7 @@ Double_t AtTrack::GetLinearRange()
 Double_t AtTrack::GetLinearRange(XYZPoint vertex)
 {
    if (fHitArray.size() > 0) {
-      AtHit fhit = fHitArray.front();
+      AtHit fhit = *fHitArray.front();
       return GetLinearRange(fhit.GetPosition(), vertex);
    } else
       return 0;
@@ -109,14 +111,14 @@ Double_t AtTrack::GetGeoQEnergy()
 
    if (fHitArray.size() > 0) {
       return std::accumulate(begin(fHitArray), end(fHitArray), 0.0,
-                             [](double i, const AtHit &hit) { return hit.GetCharge() + i; });
+                             [](double i, const HitPtr &hit) { return hit->GetCharge() + i; });
    } else
       return -10.0;
 }
 
 void AtTrack::SortHitArrayTime()
 {
-   std::sort(fHitArray.begin(), fHitArray.end(), AtHit::SortHitTime);
+   std::sort(fHitArray.begin(), fHitArray.end(), AtHit::SortHitTimePtr);
 }
 
 void AtTrack::SortClusterHitArrayZ()

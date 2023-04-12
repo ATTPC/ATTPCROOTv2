@@ -1,6 +1,6 @@
 #include "AtPadArray.h"
 
-#include <TH1D.h>
+#include <TH1.h> // for TH1D
 
 std::unique_ptr<AtPadBase> AtPadArray::Clone() const
 {

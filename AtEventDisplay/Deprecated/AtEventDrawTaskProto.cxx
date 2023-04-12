@@ -1,6 +1,7 @@
 #include "AtEventDrawTaskProto.h"
 // IWYU pragma: no_include <ext/alloc_traits.h>
 #include "AtAuxPad.h"            // for AtAuxPad
+#include "AtBaseEvent.h"         // for AtBaseEvent::AuxPadMap
 #include "AtEvent.h"             // for AtEvent, hitVector
 #include "AtEventManagerProto.h" // for AtEventManagerProto
 #include "AtHit.h"               // for AtHit
@@ -472,7 +473,7 @@ void AtEventDrawTaskProto::DrawHitPoints()
                for (Int_t i = 0; i < TrackCand.size(); i++) {
 
                   AtTrack track = TrackCand.at(i);
-                  std::vector<AtHit> trackHits = track.GetHitArray();
+                  std::vector<AtHit> trackHits = track.GetHitArrayObject();
                   int nHitsMin = trackHits.size();
 
                   fHitSetPR[i] = new TEvePointSet(Form("HitPR_%d", i), nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);

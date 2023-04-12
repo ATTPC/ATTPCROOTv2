@@ -68,7 +68,7 @@ public:
    virtual std::unique_ptr<AtPatternEvent> FindTracks(AtEvent &event) = 0;
 
    void PruneTrack(AtTrack &track);
-   bool kNN(const std::vector<AtHit> &hits, AtHit &hit, int k);
+   bool kNN(const std::vector<std::unique_ptr<AtHit>> &hits, AtHit &hit, int k);
 
 protected:
    // Functions that need to be moved to another class. They assume a curved track

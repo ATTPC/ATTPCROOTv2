@@ -18,7 +18,7 @@ protected:
    double fTBTime;
 
 public:
-   AtRootResponse(double tbTime, const AtRawEvent &response);
+   AtRootResponse(double tbTime, AtRawEvent response);
    AtRootResponse(double tbTime, std::string filePath, std::string objectName);
 
    virtual double GetResponse(double time) const override

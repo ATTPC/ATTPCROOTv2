@@ -2,60 +2,61 @@
 #define AtEVENT_H
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
-#include "AtAuxPad.h"
+#include "AtBaseEvent.h"
 #include "AtHit.h"
 
 #include <FairLogger.h>
 
 #include <Rtypes.h>
-#include <TNamed.h>
 
-#include <algorithm>
 #include <array>
 #include <map>
 #include <memory>
 #include <type_traits>
 #include <utility>
 #include <vector>
-
 class TBuffer;
 class TClass;
 class TMemberInspector;
 
 class AtRawEvent;
 
-class AtEvent : public TNamed {
+class AtEvent : public AtBaseEvent {
 public:
-   using AuxPadVector = std::vector<AtAuxPad>;
    using TraceArray = std::array<Float_t, 512>;
    using HitPtr = std::unique_ptr<AtHit>;
    using HitVector = std::vector<HitPtr>;
 
 private:
-   Int_t fEventID;
-   Bool_t fIsGood;
-   Bool_t fIsInGate;
-   ULong_t fTimestamp;
    Double_t fEventCharge = -100;
    Double_t fRhoVariance = 0;
 
    HitVector fHitArray;
-   std::vector<AtAuxPad> fAuxPadArray;
    std::map<Int_t, Int_t> fMultiplicityMap;
 
    TraceArray fMeshSig{};
 
 public:
    AtEvent();
-   AtEvent(Int_t eventID, Bool_t isGood, Bool_t isInGate = false, ULong_t timestamp = 0);
    AtEvent(const AtEvent &copy);
+   AtEvent &operator=(const AtEvent object);
    AtEvent(const AtRawEvent &copy);
    ~AtEvent() = default;
 
-   void Clear(Option_t *opt = nullptr) override;
+   friend void swap(AtEvent &first, AtEvent &second)
+   {
+      using std::swap;
+      swap(dynamic_cast<AtBaseEvent &>(first), dynamic_cast<AtBaseEvent &>(second));
 
-   // Copies everything except the hit array from the passed AtEvent
-   void CopyFrom(const AtEvent &event);
+      swap(first.fEventCharge, second.fEventCharge);
+      swap(first.fRhoVariance, second.fRhoVariance);
+
+      swap(first.fHitArray, second.fHitArray);
+      swap(first.fMultiplicityMap, second.fMultiplicityMap);
+      swap(first.fMeshSig, second.fMeshSig);
+   }
+
+   void Clear(Option_t *opt = nullptr) override;
 
    /**
     * @brief Create a new hit in this event.
@@ -99,22 +100,13 @@ public:
       return *(fHitArray.back());
    }
 
-   // Copies passed aux pad into the event's auxiliary pad array
-   void AddAuxPad(AtAuxPad auxPad) { fAuxPadArray.push_back(std::move(auxPad)); }
-
-   void SetEventID(Int_t evtid) { fEventID = evtid; }
-   void SetTimestamp(ULong_t timestamp) { fTimestamp = timestamp; }
    void SetEventCharge(Double_t Qevent) { fEventCharge = Qevent; }
    void SetRhoVariance(Double_t RhoVariance) { fRhoVariance = RhoVariance; }
-   void SetIsGood(Bool_t value) { fIsGood = value; }
-   void SetIsInGate(Bool_t value) { fIsInGate = value; }
 
    void SetMultiplicityMap(std::map<Int_t, Int_t> MultiMap) { fMultiplicityMap = std::move(MultiMap); }
    void SetMeshSignal(TraceArray mesharray) { fMeshSig = std::move(mesharray); }
    void SetMeshSignal(Int_t idx, Float_t val);
 
-   Int_t GetEventID() const { return fEventID; }
-   Long_t GetTimestamp() const { return fTimestamp; }
    Int_t GetNumHits() const { return fHitArray.size(); }
    Double_t GetEventCharge() const { return fEventCharge; }
    Double_t GetRhoVariance() const { return fRhoVariance; }
@@ -124,16 +116,13 @@ public:
    const AtHit &GetHit(Int_t hitNo) const { return *fHitArray.at(hitNo); }
    [[deprecated("Use GetHits()")]] std::vector<AtHit> GetHitArray() const;
    const HitVector &GetHits() const { return fHitArray; }
-   const AuxPadVector &GetAuxPads() const { return fAuxPadArray; }
+   void ClearHits() { fHitArray.clear(); }
    const std::map<Int_t, Int_t> &GetMultiMap() { return fMultiplicityMap; }
-
-   Bool_t IsGood() const { return fIsGood; }
-   Bool_t IsInGate() const { return fIsInGate; }
 
    void SortHitArray();
    void SortHitArrayTime();
 
-   ClassDefOverride(AtEvent, 5);
+   ClassDefOverride(AtEvent, 6);
 };
 
 #endif

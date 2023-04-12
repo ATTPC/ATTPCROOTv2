@@ -1,10 +1,12 @@
 #include "AtTrackTransformer.h"
 // IWYU pragma: no_include <ext/alloc_traits.h>
+#include "AtContainerManip.h"
 #include "AtHit.h"        // for AtHit, AtHit::XYZPoint
 #include "AtHitCluster.h" // for AtHitCluster
 #include "AtTrack.h"      // for XYZPoint, AtTrack
 
-#include <Math/Point3D.h>   // for PositionVector3D, Cart...
+#include <Math/Point3D.h> // for PositionVector3D, Cart...
+#include <Math/Point3Dfwd.h>
 #include <Math/Vector3D.h>  // for DisplacementVector3D
 #include <TMath.h>          // for Power, Sqrt, ATan2, Pi
 #include <TMatrixDSymfwd.h> // for TMatrixDSym
@@ -18,10 +20,11 @@
 
 AtTools::AtTrackTransformer::AtTrackTransformer() = default;
 AtTools::AtTrackTransformer::~AtTrackTransformer() = default;
+using XYZPoint = ROOT::Math::XYZPoint;
 
 void AtTools::AtTrackTransformer::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius)
 {
-   std::vector<AtHit> hitArray = track.GetHitArray();
+   std::vector<AtHit> hitArray = track.GetHitArrayObject();
    std::vector<AtHit> hitTBArray;
    int clusterID = 0;
 

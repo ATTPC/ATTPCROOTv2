@@ -247,7 +247,7 @@ bool AtTabEnergyLoss::isGoodHit(const AtHit &hit)
    return true;
 }
 
-void AtTabEnergyLoss::FillChargeSum(TH1F *hist, const std::vector<AtHit> &hits, int threshold)
+void AtTabEnergyLoss::FillChargeSum(TH1F *hist, const HitVector &hits, int threshold)
 {
    auto rawEvent = fRawEvent.GetInfo();
    if (rawEvent == nullptr) {
@@ -258,11 +258,11 @@ void AtTabEnergyLoss::FillChargeSum(TH1F *hist, const std::vector<AtHit> &hits, 
    std::set<int> usedPads;
    for (auto &hit : hits) {
 
-      if (usedPads.count(hit.GetPadNum()) != 0 || !isGoodHit(hit))
+      if (usedPads.count(hit->GetPadNum()) != 0 || !isGoodHit(*hit))
          continue;
-      usedPads.insert(hit.GetPadNum());
+      usedPads.insert(hit->GetPadNum());
 
-      auto pad = fRawEvent.Get()->GetPad(hit.GetPadNum());
+      auto pad = fRawEvent.Get()->GetPad(hit->GetPadNum());
       if (pad == nullptr)
          continue;
 
@@ -288,21 +288,21 @@ void AtTabEnergyLoss::FillSums(float threshold)
 
       // Fill fSumFit
       for (auto &hit : fPatternEvent.GetInfo()->GetTrackCand()[i].GetHitArray()) {
-         if (isGoodHit(hit)) {
-            FillFitSum(fSumFit[i].get(), hit, threshold);
+         if (isGoodHit(*hit)) {
+            FillFitSum(fSumFit[i].get(), *hit, threshold);
 
             // Update the first hit (want highest TB)
             if (fFirstHit[i] == nullptr) {
-               fFirstHit[i] = &hit;
-            } else if (hit.GetPosition().Z() - fSigmaFromHit.Get() * hit.GetPositionSigma().Z() <
+               fFirstHit[i] = hit.get();
+            } else if (hit->GetPosition().Z() - fSigmaFromHit.Get() * hit->GetPositionSigma().Z() <
                        fFirstHit[i]->GetPosition().Z() - fSigmaFromHit.Get() * fFirstHit[i]->GetPositionSigma().Z()) {
-               fFirstHit[i] = &hit;
+               fFirstHit[i] = hit.get();
             }
 
             // Update hit location
-            auto hitLocation = hit.GetPosition().Z() - fSigmaFromHit.Get() * hit.GetPositionSigma().Z();
+            auto hitLocation = hit->GetPosition().Z() - fSigmaFromHit.Get() * hit->GetPositionSigma().Z();
             if (fTrackStart[i] < hitLocation) {
-               LOG(debug) << "Setting start of " << i << " to " << hit.GetPosition() << " at " << hit.GetPadNum();
+               LOG(debug) << "Setting start of " << i << " to " << hit->GetPosition() << " at " << hit->GetPadNum();
                fTrackStart[i] = hitLocation;
             }
          }
@@ -314,9 +314,9 @@ void AtTabEnergyLoss::setdEdX()
    for (int i = 0; i < 2; ++i) {
 
       for (auto &hit : fPatternEvent.GetInfo()->GetTrackCand()[i].GetHitArray())
-         if (hit.GetPosition().z() > 0 && hit.GetPosition().Z() > fVertex.Z()) {
-            dEdx[i]->Fill(getHitDistanceFromVertex(hit), hit.GetCharge());
-            dEdxZ[i]->Fill(getHitDistanceFromVertexAlongZ(hit), hit.GetCharge());
+         if (hit->GetPosition().z() > 0 && hit->GetPosition().Z() > fVertex.Z()) {
+            dEdx[i]->Fill(getHitDistanceFromVertex(*hit), hit->GetCharge());
+            dEdxZ[i]->Fill(getHitDistanceFromVertexAlongZ(*hit), hit->GetCharge());
          }
 
       for (int bin = 0; bin < dEdx[i]->GetNbinsX(); ++bin) {

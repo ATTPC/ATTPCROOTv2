@@ -1,6 +1,7 @@
 #include "AtFilterTask.h"
 
 #include "AtAuxPad.h"
+#include "AtBaseEvent.h"
 #include "AtFilter.h"
 #include "AtPadReference.h" // for operator<<
 #include "AtRawEvent.h"

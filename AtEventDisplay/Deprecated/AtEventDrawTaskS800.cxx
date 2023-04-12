@@ -485,7 +485,7 @@ void AtEventDrawTaskS800::DrawHitPoints()
             for (Int_t i = 0; i < TrackCand.size(); i++) {
 
                AtTrack track = TrackCand.at(i);
-               std::vector<AtHit> trackHits = track.GetHitArray();
+               std::vector<AtHit> trackHits = track.GetHitArrayObject();
 
                fHitSetTFHC[i] = new TEvePointSet(Form("HitMC_%d", i), nHitsMin, TEvePointSelectorConsumer::kTVT_XYZ);
                fHitSetTFHC[i]->SetMarkerColor(GetTrackColor(i) + 1);

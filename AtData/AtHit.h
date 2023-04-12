@@ -89,6 +89,16 @@ public:
    const std::vector<AtHit::MCSimPoint> &GetMCSimPointArray() const { return fMCSimPointArray; }
 
    static Bool_t SortHit(const AtHit &lhs, const AtHit &rhs) { return lhs.GetPadNum() < rhs.GetPadNum(); }
+   static Bool_t SortHit(const std::unique_ptr<AtHit> &lhs, const std::unique_ptr<AtHit> &rhs)
+   {
+      return SortHit(*lhs, *rhs);
+   }
+
+   static Bool_t SortHitTimePtr(const std::unique_ptr<AtHit> &lhs, const std::unique_ptr<AtHit> &rhs)
+   {
+      return SortHitTime(*lhs, *rhs);
+   }
+
    static Bool_t SortHitTime(const AtHit &lhs, const AtHit &rhs) { return lhs.GetTimeStamp() < rhs.GetTimeStamp(); }
 
    struct MCSimPoint {

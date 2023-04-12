@@ -3,15 +3,24 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 300) && evt->IsGood();
 }
 
-double lineField(double r, double z)
+double EField2(double rho, double z)
 {
-   double lambda = 5.28e-8;               // SI
+   double lambda = 2.35e-6;               // SI
+   constexpr double rBeam = 2.0 / 100;    // in *m*
    constexpr double eps = 8.85418782E-12; // SI
    constexpr double pi = 3.14159265358979;
    constexpr double eps2pi = 2 * pi * eps;
-   r /= 100.;                        // Convert units from cm to m
-   auto field = lambda / eps2pi / r; // v/m
-   return field / 100.;              // V/cm
+   rho /= 100.; // Convert units from cm to m
+   z /= 100.;   // Convert units from cm to m
+
+   double field;
+   if (rho > rBeam)
+      field = lambda / eps2pi / rho * (z / 1.); // v/m
+   else
+      // field = lambda / eps2pi / rBeam / rBeam * rho * (z/1.); // v/m
+      field = 0;
+   return field / 100.; // V/cm
+                        // return field;
 }
 
 // Requires the TPC run number
@@ -108,7 +117,7 @@ void unpack(int runNumber = 206)
 
    // Add SC Model
    // auto SCModel = std::make_unique<AtLineChargeModel>();
-   auto SCModel = std::make_unique<AtRadialChargeModel>(&lineField);
+   auto SCModel = std::make_unique<AtRadialChargeModel>(&EField2);
    auto SCTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
    SCTask->SetInputBranchName("AtEventFiltered");
 

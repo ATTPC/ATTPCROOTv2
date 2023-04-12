@@ -5,6 +5,7 @@
 #include "AtTrack.h"
 
 #include <Math/Point3D.h>
+#include <Math/Point3Dfwd.h> // for XYZPoint
 #include <RKTrackRep.h>
 #include <TClonesArray.h>
 #include <TDatabasePDG.h>
@@ -41,11 +42,12 @@
 #include <iostream>
 #include <tuple>
 #include <utility>
-
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
 constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
+
+using XYZPoint = ROOT::Math::XYZPoint;
 
 AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile,
                              Float_t gasMediumDensity, Int_t pdg, Int_t minit, Int_t maxit)
