@@ -43,6 +43,11 @@
 #pragma link C++ namespace AtFITTER;
 #pragma link C++ class AtFitterTask + ;
 
+#pragma link C++ namespace MCFitter;
+#pragma link C++ class MCFitter::AtParameterDistribution - !;
+#pragma link C++ class MCFitter::AtUniformDistribution - !;
+#pragma link C++ class MCFitter::AtStudentDistribution - !;
+
 /* Tasks in AtReconstruction */
 #pragma link C++ class AtPSAtask + ;
 #pragma link C++ class AtPRAtask + ;

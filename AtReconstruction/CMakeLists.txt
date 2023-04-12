@@ -10,6 +10,7 @@ ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPulseAnalyzer
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
 #${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/trackfinder
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
+${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter/ParameterDistributions
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/triplclust/src
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/triplclust/src/hclust
@@ -90,6 +91,10 @@ set(SRCS
   AtPatternRecognition/triplclust/src/graph.cxx
   AtPatternRecognition/AtTrackFinderTC.cxx
 
+
+  AtFitter/ParameterDistributions/AtParameterDistribution.cxx
+  AtFitter/ParameterDistributions/AtUniformDistribution.cxx
+  AtFitter/ParameterDistributions/AtStudentDistribution.cxx
   )
 
 ### Add additional sources and libraries if we found certain modules ###
