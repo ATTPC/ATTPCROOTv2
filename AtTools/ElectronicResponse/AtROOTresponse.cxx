@@ -17,6 +17,7 @@ AtRootResponse::AtRootResponse(double tbTime, std::string filePath, std::string 
       throw std::invalid_argument("objectName");
    fResponse = *event;
 }
+AtRootResponse::AtRootResponse(double tbTime, const AtRawEvent &response) : fTBTime(tbTime), fResponse(response) {}
 
 double AtRootResponse::GetResponse(int padNum, double time) const
 {
