@@ -20,7 +20,17 @@ AtSimulatedPoint::AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, Int_t
 {
 }
 
-AtSimulatedPoint::~AtSimulatedPoint() = default;
+AtSimulatedPoint::AtSimulatedPoint(const AtSimulatedPoint &object)
+   : TObject(object), fMCPointID(object.fMCPointID), fMCEventID(object.fMCEventID), fClusterID(object.fClusterID),
+     fCharge(object.fCharge), fPosition(object.fPosition)
+{
+}
+
+AtSimulatedPoint &AtSimulatedPoint::operator=(AtSimulatedPoint other)
+{
+   swap(*this, other);
+   return *this;
+}
 
 void AtSimulatedPoint::SetClusterID(Int_t clusterID)
 {

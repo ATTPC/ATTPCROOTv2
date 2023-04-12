@@ -2,6 +2,7 @@
 
 #include <FairLogger.h>
 
+#include <Math/Point2D.h>
 #include <Rtypes.h>
 #include <TCanvas.h>
 #include <TDOMParser.h>
@@ -71,6 +72,17 @@ TH2Poly *AtMap::GetPadPlane()
       GeneratePadPlane();
 
    return dynamic_cast<TH2Poly *>(fPadPlane->Clone());
+}
+
+Int_t AtMap::GetPadNum(ROOT::Math::XYPoint &point)
+{
+   if (fPadPlane == nullptr)
+      GeneratePadPlane();
+   auto binNum = fPadPlane->FindBin(point.X(), point.Y());
+   if (binNum < 0)
+      return -1;
+   else
+      return BinToPad(binNum);
 }
 
 Int_t AtMap::GetPadNum(const AtPadReference &PadRef) const

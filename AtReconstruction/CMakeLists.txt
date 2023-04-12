@@ -27,7 +27,8 @@ Set(DEPENDENCIES
   ATTPCROOT::AtSimulationData
   ATTPCROOT::AtData
   ATTPCROOT::AtTools
-
+  ATTPCROOT::AtDigitization
+  
   ROOT::Spectrum
   ROOT::Core
 

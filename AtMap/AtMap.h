@@ -74,6 +74,8 @@ public:
    UInt_t GetNumPads() const { return fNumberPads; }
 
    Int_t GetPadNum(const AtPadReference &PadRef) const;
+   Int_t GetPadNum(ROOT::Math::XYPoint &point);
+
    multiarray GetPadCoordArr() { return AtPadCoord; }
    multiarray *GetPadCoord() { return fAtPadCoordPtr = &AtPadCoord; }
 

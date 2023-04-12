@@ -18,12 +18,19 @@ Set(DEPENDENCIES
 
 set(SRCS
 # Add all the source files below this line.
+AtClusterize.cxx
+AtClusterizeLine.cxx
 AtClusterizeTask.cxx
 AtClusterizeLineTask.cxx
+
+AtPulse.cxx
+AtPulseLine.cxx
 AtPulseTask.cxx
-AtPulseLineTask.cxx
+#AtPulseLineTask.cxx
+
 AtSimulatedPoint.cxx
 AtSimulatedLine.cxx
+
 AtTrigger.cxx
 AtTriggerTask.cxx
 AtVectorResponse.cxx

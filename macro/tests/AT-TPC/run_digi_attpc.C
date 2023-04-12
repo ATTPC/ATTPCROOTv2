@@ -41,14 +41,17 @@ void run_digi_attpc()
    // mapping->ParseInhibitMap("./data/inhibit.txt", AtMap::InhibitType::kTotal);
 
    // __ AT digi tasks___________________________________
-   AtClusterizeLineTask *clusterizer = new AtClusterizeLineTask();
+   // AtClusterizeTask *clusterizer = new AtClusterizeTask(std::make_shared<AtClusterize>());
+   AtClusterizeTask *clusterizer = new AtClusterizeTask(std::make_shared<AtClusterizeLine>());
    clusterizer->SetPersistence(kFALSE);
 
-   // AtPulseTask *pulse = new AtPulseTask();
-   AtPulseLineTask *pulse = new AtPulseLineTask();
+   // AtPulseLineTask *pulse = new AtPulseLineTask();
+
+   // AtPulseTask *pulse = new AtPulseTask(std::make_shared<AtPulse>(mapping));
+   AtPulseTask *pulse = new AtPulseTask(std::make_shared<AtPulseLine>(mapping));
    pulse->SetPersistence(kTRUE);
-   pulse->SetMap(mapping);
-   pulse->SetSaveMCInfo();
+   // pulse->SetMap(mapping);
+   // pulse->SetSaveMCInfo();
 
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
    reduceTask->SetInputBranch("AtRawEvent");

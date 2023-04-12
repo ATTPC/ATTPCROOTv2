@@ -8,6 +8,8 @@
 #ifndef AtClusterizeTask_H
 #define AtClusterizeTask_H
 
+#include "AtClusterize.h"
+
 #include <FairTask.h>
 
 #include <Math/Vector3D.h>
@@ -26,49 +28,32 @@ class TMemberInspector;
 
 class AtClusterizeTask : public FairTask {
 protected:
-   Int_t fEventID{0};       //!< EventID
-   Double_t fEIonize{};     //!< Effective ionization energy of gas. [eV]
-   Double_t fFano{};        //!< Fano factor of the gas
-   Double_t fVelDrift{};    //!< Drift velocity of electron in gas. [cm/us]
-   Double_t fCoefT{};       //!< Transversal diffusion coefficient. [cm^2/us]
-   Double_t fCoefL{};       //!< Longitudinal diffusion coefficient. [cm^2/us]
-   Double_t fDetPadPlane{}; //!< Position of the pad plane with respect to the entrance [mm]
+   Int_t fEventID{0}; //!< EventID
 
    AtDigiPar *fPar{}; //!< Base parameter container.
 
+   // IO stuff
+   TString fMCPointName{"AtTpcPoint"};
    TClonesArray *fMCPointArray{};
-   AtMCPoint *fMCPoint{};
+
    std::unique_ptr<TClonesArray> fSimulatedPointArray{nullptr}; //!< Primary cluster array
    Bool_t fIsPersistent{false};                                 //!< If true, save container
 
-   ROOT::Math::XYZVector fPrevPoint;
-   Int_t fCurrTrackID{};
-
-private:
-   ROOT::Math::XYZVector applyDiffusion(const ROOT::Math::XYZVector &loc, double_t sigTrans, double sigLong);
-
-protected:
-   virtual void getParameters();
-   virtual void processPoint(Int_t mcPointID);
-
-   void setNewTrack();
-   Double_t getTransverseDiffusion(Double_t driftTime);   // in mm
-   Double_t getLongitudinalDiffusion(Double_t driftTime); // in us
-   UInt_t getNumberOfElectronsGenerated();
-   ROOT::Math::XYZVector getCurrentPointLocation();
+   std::shared_ptr<AtClusterize> fClusterize; //<!Cluster Task
 
 public:
-   AtClusterizeTask();
-   AtClusterizeTask(const char *name);
+   AtClusterizeTask(std::shared_ptr<AtClusterize> clusterize = std::make_shared<AtClusterize>(),
+                    const char *name = "AtClusterizeTask");
    ~AtClusterizeTask();
 
    void SetPersistence(Bool_t val) { fIsPersistent = val; }
+   void SetClusterizeMethod(std::shared_ptr<AtClusterize> cluster) { fClusterize = cluster; }
 
    virtual InitStatus Init() override;        //!< Initiliazation of task at the beginning of a run.
    virtual void Exec(Option_t *opt) override; //!< Executed for each event.
    virtual void SetParContainers() override;  //!< Load the parameter container from the runtime database.
 
-   ClassDefOverride(AtClusterizeTask, 1);
+   ClassDefOverride(AtClusterizeTask, 2);
 };
 
 #endif

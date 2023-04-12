@@ -5,6 +5,7 @@
 #ifndef ATCLUSTERIZELINETASK_H
 #define ATCLUSTERIZELINETASK_H
 
+#include "AtClusterizeLine.h"
 #include "AtClusterizeTask.h"
 
 #include <FairTask.h>
@@ -15,21 +16,13 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-class AtClusterizeLineTask : public AtClusterizeTask {
-private:
-   Double_t fTBTime{}; //!< Width of a time bucket [us]
+class [[deprecated(
+   "AtClusterizeLineTask is deprecated. Use AtClusterizeTask with AtClusterizeLine instead.")]] AtClusterizeLineTask
+   : public AtClusterizeTask
+{
+   AtClusterizeLineTask() : AtClusterizeTask(std::make_shared<AtClusterizeLine>()) {}
 
-protected:
-   virtual void getParameters() override;
-   virtual void processPoint(Int_t mcPointID) override;
-
-public:
-   AtClusterizeLineTask();
-   ~AtClusterizeLineTask();
-
-   virtual InitStatus Init() override; //!< Initiliazation of task at the beginning of a run.
-
-   ClassDefOverride(AtClusterizeLineTask, 1);
+   ClassDefOverride(AtClusterizeLineTask, 2);
 };
 
 #endif //#define ATCLUSTERIZELINETASK_H

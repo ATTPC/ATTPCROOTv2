@@ -10,4 +10,4 @@ AtParameterDistribution::AtParameterDistribution(double mean, double spread, lon
    fRand = std::mt19937(seed);
 }
 
-}// namespace MCFitter
+} // namespace MCFitter
