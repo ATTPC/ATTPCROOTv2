@@ -16,6 +16,7 @@
 #pragma link C++ class AtPadValue + ;
 #pragma link C++ class AtPulserInfo + ;
 
+#pragma link C++ class AtBaseEvent + ;
 #pragma link C++ class AtRawEvent + ;
 #pragma link C++ class AtHit + ;
 #pragma link C++ class AtHitCluster + ;

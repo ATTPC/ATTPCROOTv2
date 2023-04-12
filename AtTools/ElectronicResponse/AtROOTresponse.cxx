@@ -5,6 +5,9 @@
 
 #include <TFile.h>
 #include <TObject.h>
+
+#include <utility> // for move
+
 using namespace ElectronicResponse;
 
 AtRootResponse::AtRootResponse(double tbTime, std::string filePath, std::string objectName) : fTBTime(tbTime)
@@ -17,7 +20,7 @@ AtRootResponse::AtRootResponse(double tbTime, std::string filePath, std::string 
       throw std::invalid_argument("objectName");
    fResponse = *event;
 }
-AtRootResponse::AtRootResponse(double tbTime, const AtRawEvent &response) : fTBTime(tbTime), fResponse(response) {}
+AtRootResponse::AtRootResponse(double tbTime, AtRawEvent response) : fTBTime(tbTime), fResponse(std::move(response)) {}
 
 double AtRootResponse::GetResponse(int padNum, double time) const
 {

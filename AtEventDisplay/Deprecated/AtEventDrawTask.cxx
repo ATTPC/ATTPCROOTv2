@@ -7,6 +7,7 @@
 #include "AtEventDrawTask.h"
 // IWYU pragma: no_include <ext/alloc_traits.h>
 #include "AtAuxPad.h"       // for AtAuxPad
+#include "AtBaseEvent.h"    // for AtBaseEvent::AuxPadMap
 #include "AtEvent.h"        // for AtEvent, hitVector
 #include "AtEventManager.h" // for AtEventManager
 #include "AtFindVertex.h"   //for vertex
@@ -338,7 +339,7 @@ void AtEventDrawTask::DrawRecoHits()
          fHitLine.back()->SetElementName(Form("line_%i", (int)fHitLine.size() - 1));
       }
 
-      std::vector<AtHit> trackHits = track.GetHitArray();
+      std::vector<AtHit> trackHits = track.GetHitArrayObject();
 
       /*      fHitSetTFHC.push_back(
                std::make_unique<TEvePointSet>(Form("HitMC_%d", i), 0, TEvePointSelectorConsumer::kTVT_XYZ));
@@ -388,7 +389,7 @@ void AtEventDrawTask::DrawRecoHits()
    fHitSetTFHC.back()->SetMarkerStyle(fHitStyle);
 
    for (auto &hit : patternEvent->GetNoiseHits()) {
-      auto position = hit.GetPosition();
+      auto position = hit->GetPosition();
       fHitSetTFHC.back()->SetNextPoint(position.X() / 10., position.Y() / 10., position.Z() / 10.);
    }
 

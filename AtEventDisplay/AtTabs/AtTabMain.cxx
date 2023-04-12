@@ -302,14 +302,14 @@ void AtTabMain::SetPointsFromHits(TEvePointSet &hitSet, const std::vector<std::u
 
 void AtTabMain::SetPointsFromTrack(TEvePointSet &hitSet, const AtTrack &track)
 {
-   Int_t nHits = track.GetHitArrayConst().size();
+   Int_t nHits = track.GetHitArray().size();
 
    hitSet.Reset(nHits);
    hitSet.SetOwnIds(true);
 
    for (Int_t i = 0; i < nHits; i++) {
 
-      auto &hit = track.GetHitArrayConst()[i];
+      auto &hit = *track.GetHitArray()[i];
 
       if (hit.GetCharge() < fThreshold)
          continue;

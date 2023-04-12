@@ -7,57 +7,41 @@
 
 #include <algorithm>
 #include <iostream>
+#include <string> // for string
 
 ClassImp(AtEvent);
 
-AtEvent::AtEvent() : AtEvent(-1, false) {}
-
-AtEvent::AtEvent(Int_t eventID, Bool_t isGood, Bool_t isInGate, ULong_t timestamp)
-   : TNamed("AtEvent", "Event container"), fEventID(eventID), fIsGood(isGood), fIsInGate(isInGate),
-     fTimestamp(timestamp)
-{
-}
+AtEvent::AtEvent() : AtBaseEvent("AtEvent") {}
 
 AtEvent::AtEvent(const AtEvent &copy)
-   : fEventID(copy.fEventID), fIsGood(copy.fIsGood), fIsInGate(copy.fIsInGate), fTimestamp(copy.fTimestamp),
-     fEventCharge(copy.fEventCharge), fRhoVariance(copy.fRhoVariance), fAuxPadArray(copy.fAuxPadArray),
+   : AtBaseEvent(copy), fEventCharge(copy.fEventCharge), fRhoVariance(copy.fRhoVariance),
      fMultiplicityMap(copy.fMultiplicityMap), fMeshSig(copy.fMeshSig)
 {
    for (const auto &hit : copy.fHitArray)
       fHitArray.push_back(hit->Clone());
 }
 
-AtEvent::AtEvent(const AtRawEvent &copy)
-   : AtEvent(copy.GetEventID(), copy.IsGood(), copy.GetIsExtGate(), copy.GetTimestamp())
+// Here we are intentionally slicing to call the copy constructor to copy all the shared data between
+// event types
+AtEvent::AtEvent(const AtRawEvent &copy) : AtBaseEvent(copy) // NOLINT
 {
-   for (const auto &[auxName, auxPad] : copy.GetAuxPads())
-      fAuxPadArray.emplace_back(auxPad);
-}
-void AtEvent::Clear(Option_t *opt)
-{
-   fEventID = -1;
-   fIsGood = false;
-   fIsInGate = false;
-   fEventCharge = -100;
-   fRhoVariance = 0;
-   fTimestamp = 0;
-   fHitArray.clear();
-   fAuxPadArray.clear();
-   fMultiplicityMap.clear();
-   fMeshSig.fill(0);
+   SetName("AtEvent");
 }
 
-void AtEvent::CopyFrom(const AtEvent &inputEvent)
+AtEvent &AtEvent::operator=(AtEvent object)
 {
-   this->fEventID = inputEvent.GetEventID();
-   this->fIsGood = inputEvent.fIsGood;
-   this->fIsInGate = inputEvent.fIsInGate;
-   this->fEventCharge = inputEvent.fEventCharge;
-   this->fRhoVariance = inputEvent.fRhoVariance;
-   this->fTimestamp = inputEvent.fTimestamp;
-   this->fAuxPadArray = inputEvent.fAuxPadArray;
-   this->fMultiplicityMap = inputEvent.fMultiplicityMap;
-   this->fMeshSig = inputEvent.fMeshSig;
+   swap(*this, object);
+   return *this;
+}
+
+void AtEvent::Clear(Option_t *opt)
+{
+   AtBaseEvent::Clear(opt);
+   fEventCharge = -100;
+   fRhoVariance = 0;
+   fHitArray.clear();
+   fMultiplicityMap.clear();
+   fMeshSig.fill(0);
 }
 
 void AtEvent::SetMeshSignal(Int_t idx, Float_t val)

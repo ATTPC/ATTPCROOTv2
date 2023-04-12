@@ -38,15 +38,13 @@ void run_eve(int runNum = 206, TString OutputDataFile = "output.reco_display.roo
 
    auto fMap = std::make_shared<AtTpcMap>();
    fMap->ParseXMLMap(mapDir.Data());
-   AtEventManager *eveMan = new AtEventManager();
-   AtEventDrawTask *eve = new AtEventDrawTask();
-   eve->SetMap(fMap);
-   eve->Set3DHitStyleBox();
-   eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
-   eve->SetRawEventBranch("AtRawEventFiltered");
-   eve->SetEventBranch("AtEventFiltered");
-   eve->SetCorrectedEventBranch("AtEventCorrected");
-   eveMan->AddTask(eve);
+
+   AtViewerManager *eveMan = new AtViewerManager(fMap);
+
+   auto tabMain = std::make_unique<AtTabMain>();
+   tabMain->SetMultiHit(100); // Set the maximum number of multihits in the visualization
+   eveMan->AddTab(std::move(tabMain));
+
    eveMan->Init();
 
    std::cout << "Finished init" << std::endl;

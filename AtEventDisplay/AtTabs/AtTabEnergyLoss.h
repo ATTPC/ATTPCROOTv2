@@ -37,6 +37,7 @@ protected:
    using XYZVector = ROOT::Math::XYZVector;
    using XYZPoint = ROOT::Math::XYZPoint;
    using TH1Ptr = std::unique_ptr<TH1F>;
+   using HitVector = std::vector<std::unique_ptr<AtHit>>;
 
    AtTabInfoFairRoot<AtRawEvent> fRawEvent;         //< Points to selected RawEventBranch
    AtTabInfoFairRoot<AtEvent> fEvent;               //< Points to selected EventBranch
@@ -105,7 +106,7 @@ private:
 
    void FillSums(float threshold = 15);
 
-   void FillChargeSum(TH1F *hist, const std::vector<AtHit> &hits, int threshold);
+   void FillChargeSum(TH1F *hist, const HitVector &hits, int threshold);
    void FillFitSum(TH1F *hist, const AtHit &hit, int threshold);
 
    void FillRatio();

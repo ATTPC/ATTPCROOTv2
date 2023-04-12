@@ -450,7 +450,7 @@ void AtEventManager::NextEvent()
       cArray = dynamic_cast<TClonesArray *>(fRootManager->GetObject("AtEventH"));
       // cArray = dynamic_cast<TObject *>(fRootManager->GetObject("AtEventH"));
       cevent = dynamic_cast<AtEvent *>(cArray->At(0));
-      gated = cevent->IsInGate();
+      gated = cevent->GetIsExtGate();
    }
 
    std::cout << " Event number : " << fEntry << std::endl;
@@ -474,7 +474,7 @@ void AtEventManager::PrevEvent()
       cArray = dynamic_cast<TClonesArray *>(fRootManager->GetObject("AtEventH"));
       // cArray = dynamic_cast<TObject *>(fRootManager->GetObject("AtEventH"));
       cevent = dynamic_cast<AtEvent *>(cArray->At(0));
-      gated = cevent->IsInGate();
+      gated = cevent->GetIsExtGate();
    }
 
    std::cout << " Event number : " << fEntry << std::endl;

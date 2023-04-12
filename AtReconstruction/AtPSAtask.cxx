@@ -90,7 +90,7 @@ void AtPSAtask::Exec(Option_t *opt)
 
    auto *rawEvent = dynamic_cast<AtRawEvent *>(fRawEventArray->At(0));
    auto *event = dynamic_cast<AtEvent *>(fEventArray.ConstructedAt(0, "C")); // Get and clear old event
-   event->CopyFrom(*rawEvent);
+   *event = *rawEvent;
 
    if (!rawEvent->IsGood()) {
       LOG(debug) << "Event " << rawEvent->GetEventID() << " is not good, skipping PSA";

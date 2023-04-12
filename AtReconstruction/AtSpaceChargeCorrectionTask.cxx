@@ -67,7 +67,8 @@ void AtSpaceChargeCorrectionTask::Exec(Option_t *opt)
 
    auto inputEvent = dynamic_cast<AtEvent *>(fInputEventArray->At(0));
    auto outputEvent = dynamic_cast<AtEvent *>(fOutputEventArray.ConstructedAt(0));
-   outputEvent->CopyFrom(*inputEvent);
+   *outputEvent = *inputEvent;
+   outputEvent->ClearHits();
 
    for (auto &inHit : inputEvent->GetHits()) {
       XYZPoint newPosition;

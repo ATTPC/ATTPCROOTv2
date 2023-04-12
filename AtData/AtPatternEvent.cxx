@@ -1,18 +1,30 @@
 #include "AtPatternEvent.h"
 
+#include "AtHit.h" // for AtHit
+
 #include <Rtypes.h>
+
+#include <string> // for string
 
 ClassImp(AtPatternEvent);
 
-AtPatternEvent::AtPatternEvent() : TNamed("AtPatternEvent", "Pattern Recognition Event") {}
+AtPatternEvent::AtPatternEvent() : AtBaseEvent("AtPatternEvent") {}
 
-AtPatternEvent::~AtPatternEvent() = default;
-
-void AtPatternEvent::SetTrackCand(std::vector<AtTrack> tracks)
+AtPatternEvent::AtPatternEvent(const AtPatternEvent &copy) : AtBaseEvent(copy), fTrackCand(copy.fTrackCand)
 {
-   fTrackCand = tracks;
+   for (const auto &hit : copy.fNoise)
+      fNoise.push_back(hit->Clone());
 }
-std::vector<AtTrack> &AtPatternEvent::GetTrackCand()
+
+AtPatternEvent &AtPatternEvent::operator=(AtPatternEvent object)
 {
-   return fTrackCand;
+   swap(*this, object);
+   return *this;
+}
+
+void AtPatternEvent::Clear(Option_t *opt)
+{
+   AtBaseEvent::Clear(opt);
+   fTrackCand.clear();
+   fNoise.clear();
 }

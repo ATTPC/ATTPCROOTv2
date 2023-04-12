@@ -142,7 +142,7 @@ Bool_t AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack *> *trackCandSource, 
                    << trackToMerge->GetTrackID() << "\n";
          for (const auto &hit : trackToMerge->GetHitArray()) {
 
-            vertexTrack->AddHit(hit);
+            vertexTrack->AddHit(hit->Clone()); // TODO: Look at code and see if this can be a move instead of a copy
             ++addHitCnt;
          }
 
@@ -184,7 +184,7 @@ AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack> *trackCandSource, std::vect
 
    for (auto trackCand : *trackCandSource) {
       Double_t thetaCand = trackCand.GetGeoTheta();
-      auto hitArrayCand = trackCand.GetHitArray();
+      auto &hitArrayCand = trackCand.GetHitArray();
       std::pair<Double_t, Double_t> centerCand = trackCand.GetGeoCenter();
 
       AtTrack track = trackCand;
@@ -200,7 +200,7 @@ AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack> *trackCandSource, std::vect
 
       for (auto trackJunk : *trackJunkSource) {
          Double_t thetaJunk = trackJunk.GetGeoTheta();
-         auto hitArrayJunk = trackJunk.GetHitArray();
+         auto &hitArrayJunk = trackJunk.GetHitArray();
          std::pair<Double_t, Double_t> centerJunk = trackJunk.GetGeoCenter();
 
          if (simulationConv) {
@@ -235,7 +235,7 @@ AtFITTER::AtFitter::MergeTracks(std::vector<AtTrack> *trackCandSource, std::vect
 
                   for (const auto &hit : hitArrayJunk) {
 
-                     track.AddHit(hit);
+                     track.AddHit(hit->Clone());
                      ++jnkHitCnt;
                   }
             }
