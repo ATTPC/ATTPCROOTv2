@@ -96,6 +96,10 @@ set(SRCS
   AtFitter/ParameterDistributions/AtParameterDistribution.cxx
   AtFitter/ParameterDistributions/AtUniformDistribution.cxx
   AtFitter/ParameterDistributions/AtStudentDistribution.cxx
+
+  AtFitter/AtMCFitter.cxx
+  AtFitter/AtMCFitterTask.cxx
+  AtFitter/AtMCFission.cxx
   )
 
 ### Add additional sources and libraries if we found certain modules ###

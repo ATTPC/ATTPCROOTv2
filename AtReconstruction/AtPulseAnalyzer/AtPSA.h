@@ -62,6 +62,7 @@ public:
 
    void SetSimulatedEvent(TClonesArray *MCSimPointArray);
 
+   AtEvent Analyze(AtRawEvent &rawEvent);
    virtual void Analyze(AtRawEvent *rawEvent, AtEvent *event);
    virtual HitVector AnalyzePad(AtPad *pad) = 0;
 

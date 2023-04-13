@@ -16,7 +16,7 @@ using namespace ROOT::Math;
 
 InitStatus AtTestSimulation::Init()
 {
-   fSimulation->Init();
+   fSimulation->RegisterBranch();
 
    return kSUCCESS;
 }

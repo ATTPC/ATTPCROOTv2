@@ -17,13 +17,19 @@
 #include <stdexcept> // for invalid_argument
 #include <utility>   // for pair
 
-AtSimpleSimulation::AtSimpleSimulation(std::string geoFile)
+AtSimpleSimulation::AtSimpleSimulation(std::string geoFile) : fMCPoints("AtMCPoint")
 {
    TGeoManager *geo = TGeoManager::Import(geoFile.c_str());
 
    if (gGeoManager == nullptr)
       LOG(fatal) << "Failed to load geometry file " << geoFile << " " << geo;
 }
+AtSimpleSimulation::AtSimpleSimulation() : fMCPoints("AtMCPoint")
+{
+   if (gGeoManager == nullptr)
+      LOG(fatal) << "No geometry file loaded!";
+}
+
 bool AtSimpleSimulation::ParticleID::operator<(const ParticleID &other) const
 {
    if (A < other.A) {
@@ -123,7 +129,7 @@ void AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos
 
 void AtSimpleSimulation::NewEvent()
 {
-   fMCPoints->Clear();
+   fMCPoints.Clear();
    fTrackID = 0;
 }
 
@@ -132,9 +138,9 @@ void AtSimpleSimulation::NewEvent()
  */
 void AtSimpleSimulation::AddHit(double ELoss, const XYZPoint &pos, const PxPyPzEVector &mom, double length)
 {
-   LOG(info) << "Adding a hit at element " << fMCPoints->GetEntriesFast() << " in TClonesArray.";
+   LOG(debug) << "Adding a hit at element " << fMCPoints.GetEntriesFast() << " in TClonesArray.";
 
-   auto *mcPoint = dynamic_cast<AtMCPoint *>(fMCPoints->ConstructedAt(fMCPoints->GetEntriesFast(), "C"));
+   auto *mcPoint = dynamic_cast<AtMCPoint *>(fMCPoints.ConstructedAt(fMCPoints.GetEntriesFast(), "C"));
 
    mcPoint->SetTrackID(fTrackID);
    mcPoint->SetLength(length / 10.);      // Convert to cm
@@ -148,7 +154,7 @@ void AtSimpleSimulation::AddHit(double ELoss, const XYZPoint &pos, const PxPyPzE
    mcPoint->SetMomentum(mom.Vect() / 1000.); // Convert to GeV/c
 }
 
-void AtSimpleSimulation::Init(std::string branchName)
+void AtSimpleSimulation::RegisterBranch(std::string branchName, bool perc)
 {
    auto ioMan = FairRootManager::Instance();
    if (ioMan == nullptr) {
@@ -156,5 +162,5 @@ void AtSimpleSimulation::Init(std::string branchName)
       return;
    }
 
-   fMCPoints = ioMan->Register(branchName, "AtMCPoint", "AtTPC", true);
+   ioMan->Register(branchName.c_str(), "AtTPC", &fMCPoints, perc);
 }

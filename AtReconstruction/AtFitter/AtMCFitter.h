@@ -3,16 +3,20 @@
 
 #include "AtParameterDistribution.h"
 
+#include <TClonesArray.h>
+
 #include <map>
 #include <memory>
+#include <set>
 #include <string>
-
 class AtPatternEvent;
 class AtBaseEvent;
 class AtSimpleSimulation;
-class AtClusterizeTask;
-class AtPulseTask;
+class AtClusterize;
+class AtPulse;
 class FairTask;
+class AtMap;
+class AtPSA;
 
 namespace MCFitter {
 
@@ -20,24 +24,37 @@ class AtMCFitter {
 protected:
    using ParamPtr = std::shared_ptr<AtParameterDistribution>;
    using SimPtr = std::shared_ptr<AtSimpleSimulation>;
-   using ClusterPtr = std::shared_ptr<AtClusterizeTask>;
-   using PulsePtr = std::shared_ptr<AtPulseTask>;
+   using ClusterPtr = std::shared_ptr<AtClusterize>;
+   using PulsePtr = std::shared_ptr<AtPulse>;
+   using MapPtr = std::shared_ptr<AtMap>;
+   using PsaPtr = std::shared_ptr<AtPSA>;
+   using ObjPair = std::pair<int, double>;
 
    std::map<std::string, ParamPtr> fParameters;
 
-   SimPtr fSim{nullptr};
-   ClusterPtr *fClusterize;
-   PulsePtr *fPulse;
-   std::vector<FairTask *> fTasks;
+   MapPtr fMap;
+   SimPtr fSim;
+   ClusterPtr fClusterize;
+   PulsePtr fPulse;
+   PsaPtr fPSA{nullptr};
+
+   int fNumIter{1};
+
+   std::set<ObjPair, std::function<bool(ObjPair, ObjPair)>> fObjectives; // Objectives
+   TClonesArray fRawEventArray;
+   TClonesArray fEventArray;
 
 public:
-   AtMCFitter();
-   AtMCFitter(AtClusterizeTask *cluster, AtPulseTask *pulse);
+   AtMCFitter(SimPtr sim, ClusterPtr cluster, PulsePtr pulse);
    virtual ~AtMCFitter() = default;
 
    void Init();
-   // void AddParameter(const std::string &name, ParamPtr parameter);
+   void SetPSA(PsaPtr psa) { fPSA = psa; }
+   void Exec(const AtPatternEvent &event);
+
    ParamPtr GetParameter(const std::string &name) const;
+   TClonesArray &GetEventArray() { return fEventArray; }
+   TClonesArray &GetRawEventArray() { return fRawEventArray; }
 
 protected:
    /**
@@ -51,14 +68,19 @@ protected:
    virtual void SetParamsFromEvent(const AtPatternEvent &event) = 0;
 
    /**
-    * @brief This is the thing we are minimizing between events
+    * @brief This is the thing we are minimizing between events (SimEventID is index in TClonesArray)
     */
-   virtual double ObjectiveFunction(const AtBaseEvent &expEvent, const AtBaseEvent &simEvent) = 0;
+   virtual double ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventID) = 0;
 
    /**
-    * Simulate an event and save it in the
+    * Simulate an event. The data should be stored in fSim ready to access.
     */
    virtual void SimulateEvent() = 0;
+
+   /**
+    * Create the AtRawEvent and AtEvent from fSim
+    */
+   int DigitizeEvent();
 };
 
 } // namespace MCFitter

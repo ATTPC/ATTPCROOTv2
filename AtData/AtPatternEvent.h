@@ -51,7 +51,9 @@ public:
       fNoise.emplace_back(std::make_unique<AtHit>(std::forward<Ts>(params)...));
    }
    const HitVector &GetNoiseHits() { return fNoise; }
+
    std::vector<AtTrack> &GetTrackCand() { return fTrackCand; }
+   const std::vector<AtTrack> &GetTrackCand() const { return fTrackCand; }
 
    ClassDefOverride(AtPatternEvent, 3);
 };
