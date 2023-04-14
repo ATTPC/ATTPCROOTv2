@@ -48,7 +48,7 @@
 #pragma link C++ class MCFitter::AtUniformDistribution - !;
 #pragma link C++ class MCFitter::AtStudentDistribution - !;
 #pragma link C++ class MCFitter::AtMCFitter - !;
-#pragma link C++ class MCFitter::AtMCFisson - !;
+#pragma link C++ class MCFitter::AtMCFission - !;
 #pragma link C++ class AtMCFitterTask + ;
 
 /* Tasks in AtReconstruction */

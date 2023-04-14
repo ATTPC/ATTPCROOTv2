@@ -109,7 +109,9 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
 
    auto cluster = std::make_shared<AtClusterizeLine>();
    auto pulse = std::make_shared<AtPulseLine>(fMap);
-   auto psa2 = std::make_shared<AtPSAMax>();
+   pulse->SetSaveCharge(true);
+   // auto psa2 = std::make_shared<AtPSAMax>();
+   auto psa2 = std::make_shared<AtPSADeconvFit>();
    psa2->SetThreshold(25);
    auto fitter = std::make_shared<MCFitter::AtMCFission>(sim, cluster, pulse);
    fitter->SetPSA(psa2);
