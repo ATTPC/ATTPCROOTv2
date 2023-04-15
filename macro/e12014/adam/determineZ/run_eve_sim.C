@@ -62,6 +62,7 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
    tabPad->DrawArrayAug("Q", 1, 0);
    tabPad->DrawArrayAug("Qreco", 1, 1);
    tabPad->DrawHits(1, 1);
+   tabPad->DrawHits(1, 0);
 
    eveMan->AddTab(std::move(tabMain));
    eveMan->AddTab(std::move(tabPad));
@@ -113,10 +114,11 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
    auto cluster = std::make_shared<AtClusterizeLine>();
    auto pulse = std::make_shared<AtPulseLine>(fMap);
    pulse->SetSaveCharge(true);
-   auto psa2 = std::make_shared<AtPSAMax>();
-   // auto psa2 = std::make_shared<AtPSADeconvFit>();
-   // psa2->SetUseSimCharge(true);
-   psa2->SetThreshold(25);
+   // auto psa2 = std::make_shared<AtPSAMax>();
+   // psa2->SetThreshold(25);
+   auto psa2 = std::make_shared<AtPSADeconvFit>();
+   psa2->SetUseSimCharge(true);
+   psa2->SetThreshold(25 * 7.9);
    auto fitter = std::make_shared<MCFitter::AtMCFission>(sim, cluster, pulse);
    fitter->SetPSA(psa2);
 

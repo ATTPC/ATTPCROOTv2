@@ -102,9 +102,13 @@ void AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos
    auto mom = iniMom;
    double length = 0;
 
-   // Need to also add a condition for when the particle stops in the detector...
-   while (IsInVolume("drift_volume", pos)) {
+   // Go until we exit the volume or the KE is less than 1keV
+   while (IsInVolume("drift_volume", pos) && mom.E() - mom.M() > 1e-3) {
 
+      if (isnan(pos.X()) || isnan(mom.X())) {
+         LOG(error) << "Failed to simulate a point with nan!";
+         return;
+      }
       // Direction particle is traveling
       auto dir = mom.Vect().Unit();
 
@@ -147,11 +151,9 @@ void AtSimpleSimulation::AddHit(double ELoss, const XYZPoint &pos, const PxPyPzE
    mcPoint->SetEnergyLoss(ELoss / 1000.); // Convert to GeV
    mcPoint->SetVolName("drift_volume");
 
-   // mcPoint->fEnergyIni = Eini;
-   // mcPoint->fAiso = A;
-   // mcPoint->fZiso = Z;
    mcPoint->SetPosition(pos / 10.);          // Convert to cm
    mcPoint->SetMomentum(mom.Vect() / 1000.); // Convert to GeV/c
+   // mcPoint->Print(nullptr);
 }
 
 void AtSimpleSimulation::RegisterBranch(std::string branchName, bool perc)

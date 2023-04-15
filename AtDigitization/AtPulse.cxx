@@ -47,7 +47,7 @@ void AtPulse::FillPad(AtPad &pad, TH1F &hist)
    auto charge = std::make_unique<AtPadArray>();
 
    for (int kk = 1; kk <= fNumTbs; ++kk) {
-      double nEle = hist.GetBinContent(kk);
+      double nEle = hist.GetBinContent(kk) * fGETGain;
       if (nEle > 0) {
          charge->SetArray(kk - 1, nEle);
 
@@ -67,13 +67,12 @@ void AtPulse::FillPad(AtPad &pad, TH1F &hist)
    if (fSaveCharge)
       pad.AddAugment("Q", std::move(charge));
 
-   ApplyNoiseAndGETgain(pad);
+   ApplyNoise(pad);
 }
 
-void AtPulse::ApplyNoiseAndGETgain(AtPad &pad)
+void AtPulse::ApplyNoise(AtPad &pad)
 {
    for (int i = 0; i < fNumTbs; ++i) {
-      pad.SetADC(i, pad.GetADC(i) * fGETGain);
       if (fNoiseSigma != 0)
          pad.SetADC(i, pad.GetADC(i) * gRandom->Gaus(0, fNoiseSigma));
    }

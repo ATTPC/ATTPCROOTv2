@@ -67,7 +67,7 @@ protected:
    double GetGain(int padNum, int numElectrons);
    void GenerateTraceFromElectrons();
    void FillPad(AtPad &pad, TH1F &hist);
-   void ApplyNoiseAndGETgain(AtPad &pad);
+   void ApplyNoise(AtPad &pad);
 };
 
 #endif // ATPULSE_H

@@ -28,8 +28,10 @@ AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
    auto zTB = static_cast<double>(std::distance(begin(charge), maxTB));
    auto diffCoeff = fPar->GetCoefDiffusionLong();
 
-   auto zPos = CalculateZGeo(zTB);                       // [mm]
-   auto driftTime = zPos / fDriftVelocity / 10.;         // [us] drift velocity is cm/us
+   auto zPos = CalculateZGeo(zTB);               // [mm]
+   auto driftTime = zPos / fDriftVelocity / 10.; // [us] drift velocity is cm/us
+   if (driftTime < 0)
+      driftTime = 0;
    auto longDiff = std::sqrt(2 * diffCoeff * driftTime); // [cm] longitudal diff sigma
    auto sigTime = longDiff / fDriftVelocity;             // [us] longitudal diff sigma
    auto sigTB = sigTime / fTBTime * 1000.;               // [TB] sigTime is us, TBTime is ns.
@@ -55,7 +57,8 @@ AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
    // Fit without graphics and saving everything in the result ptr
    auto resultPtr = hist->Fit(&gauss, "SQNR");
    if (resultPtr.Get() == nullptr) {
-      LOG(info) << "Null fit for pad using mean and deviation of trace";
+      LOG(info) << "Null fit for pad using mean and deviation of trace."
+                << "mean: " << zTB << " sig:" << sigTB << " max:" << *maxTB;
       return {};
    }
 
