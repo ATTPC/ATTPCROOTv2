@@ -204,12 +204,21 @@ void AtTabPad::DrawHit(const AtPad &pad, TF1Vec &vec)
       func->Draw("SAME");
    }
 }
-
+std::string AtTabPad::GetName(int pos, PadDrawType type)
+{
+   switch (type) {
+   case PadDrawType::kADC: return "ADC";
+   case PadDrawType::kRawADC: return "Raw ADC";
+   case PadDrawType::kArrAug: return fAugNames[pos];
+   case PadDrawType::kFPN: return "Closest FPN";
+   case PadDrawType::kAuxPad: return fAugNames[pos];
+   }
+   return "";
+}
 void AtTabPad::SetDraw(Int_t pos, PadDrawType type)
 {
    auto name = TString::Format("padHist_Tab%i_%i", fTabId, pos);
-   TH1D *padHist = new TH1D(name, name, 512, 0, 512);
-   padHist->SetBit(TH1::kNoTitle);
+   TH1D *padHist = new TH1D(name, GetName(pos, type).c_str(), 512, 0, 512);
    fDrawMap.emplace(pos, std::make_pair(type, padHist));
 }
 
@@ -234,14 +243,14 @@ void AtTabPad::DrawRawADC(int row, int col)
 
 void AtTabPad::DrawArrayAug(TString augName, int row, int col)
 {
-   SetDraw(row * fCols + col, PadDrawType::kArrAug);
    fAugNames.emplace(row * fCols + col, augName);
+   SetDraw(row * fCols + col, PadDrawType::kArrAug);
 }
 
 void AtTabPad::DrawAuxADC(TString auxName, int row, int col)
 {
-   SetDraw(row * fCols + col, PadDrawType::kAuxPad);
    fAugNames.emplace(row * fCols + col, auxName);
+   SetDraw(row * fCols + col, PadDrawType::kAuxPad);
 }
 
 void AtTabPad::UpdateCvsPad()

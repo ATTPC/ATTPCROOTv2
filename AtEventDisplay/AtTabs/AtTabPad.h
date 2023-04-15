@@ -76,7 +76,7 @@ private:
    // void DrawHit(TPad *canv, const AtHit &hit);
 
    void UpdateCvsPad();
-
+   std::string GetName(int pos, PadDrawType type);
    // Functions for drawing hits
 
    ClassDefOverride(AtTabPad, 1)

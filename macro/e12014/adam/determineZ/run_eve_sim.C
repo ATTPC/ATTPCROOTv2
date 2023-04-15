@@ -59,7 +59,7 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
    auto tabPad = std::make_unique<AtTabPad>(2, 2);
    tabPad->DrawRawADC(0, 0);
    tabPad->DrawADC(0, 1);
-   tabPad->DrawAuxADC("IC", 1, 0);
+   tabPad->DrawArrayAug("Q", 1, 0);
    tabPad->DrawArrayAug("Qreco", 1, 1);
    tabPad->DrawHits(1, 1);
 
