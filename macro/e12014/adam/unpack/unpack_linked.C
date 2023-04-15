@@ -169,7 +169,7 @@ void unpack_linked(int tpcRunNum = 206)
    psa->SetThreshold(15); // Threshold in charge units
    psa->SetFilterOrder(6);
    psa->SetCutoffFreq(75);
-   psa->SetThreshold(threshold);
+   psa->SetThreshold(10);
    AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
    psaTask->SetInputBranch("AtRawEvent");
    psaTask->SetOutputBranch("AtEvent");
