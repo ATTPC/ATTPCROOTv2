@@ -13,6 +13,8 @@
 #include <Math/VectorUtil.h>
 
 #include <vector>
+class AtEvent;
+
 namespace MCFitter {
 struct Ion {
    int Z;
@@ -41,12 +43,17 @@ protected:
    virtual double ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventID) override;
    virtual void SimulateEvent() override;
 
+protected:
+   double ObjectivePosition(AtEvent &expEvent, int SimEventID);
+
 public:
    XYZPoint SampleVertex();
    std::array<Ion, 2> SampleFragmentSpecies();
    XYZVector SampleBeamDir();
    std::array<XYZVector, 2> SampleMomDir();
    void SetMomMagnitude(XYZVector beamDir, std::array<XYZVector, 2> &mom, const std::array<double, 2> &pTrans);
+
+   static double ObjectivePosition(double uE, double sE, double uO, double sO);
 
    // Returns the average total kinetic energy from viola systematics in MeV
    static double violaEn(int A, int Z) { return 0.1189 * Z * Z / std::pow(A, 1.0 / 3.0) + 7.3; }

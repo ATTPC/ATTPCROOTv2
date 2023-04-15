@@ -1,13 +1,16 @@
 #include "AtMCFission.h"
 
+#include "AtEvent.h"
 #include "AtPatternEvent.h"
 #include "AtPatternLine.h"
+#include "AtRawEvent.h"
 #include "AtSimpleSimulation.h"
 #include "AtStudentDistribution.h"
 #include "AtUniformDistribution.h"
 #include "AtVectorUtil.h"
 
 #include <Math/Vector4D.h>
+#include <TRandom.h>
 
 using namespace MCFitter;
 using namespace AtPatterns;
@@ -81,6 +84,51 @@ double AtMCFission::ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventI
    return 1;
 }
 
+double AtMCFission::ObjectivePosition(AtEvent &expEvent, int SimEventID)
+{
+   AtEvent &event = *dynamic_cast<AtEvent *>(fEventArray.At(SimEventID));
+
+   // Sort the hits by pad number
+   event.SortHitArray();
+   expEvent.SortHitArray();
+   auto lastHit = event.GetHits().begin();
+
+   double chi2 = 0;
+   // Get every pad that was in the event
+   for (auto &hit : expEvent.GetHits()) {
+      auto padNum = hit->GetPadNum();
+
+      // Look for pad in simulated event
+      auto hitIt = std::find_if(lastHit, event.GetHits().end(),
+                                [padNum](const AtEvent::HitPtr &hit2) { return hit2->GetPadNum() == padNum; });
+      if (hitIt == event.GetHits().end()) {
+         chi2++; // This is the integral of the normalized gaussian that we have nothing to compare to
+         LOG(info) << "Did not find pad " << padNum << "in the simulated event.";
+         continue;
+      }
+
+      // Update the chi2 with this hit
+
+      lastHit = hitIt;
+      double diff = ObjectivePosition(hit->GetPosition().Z(), hit->GetPositionSigma().Z(),
+                                      lastHit->get()->GetPosition().Z(), lastHit->get()->GetPositionSigma().Z());
+      LOG(info) << "Found " << padNum << "in the simulated event. Chi2 between pads is " << diff;
+      chi2 += diff;
+   }
+   return chi2;
+}
+/**
+ * Returns \Integral_{-inf}^{inf} (G[uO,sO,x] - G[uE,sE,x])^2/G[uE,sE,x] dx
+ * Assuming the Gaussain functions are normalized.
+ *
+ * The experimental is the expected, the observed is our simulated event
+ */
+double AtMCFission::ObjectivePosition(double uE, double sE, double uO, double sO)
+{
+   double num = sE * sE * std::exp(((uE - uO) * (uE - uO)) / (2 * sE * sE - sO * sO));
+   double denom = sO * std::sqrt(2 * sE * sE - sO * sO);
+   return num / denom - 1;
+}
 XYZPoint AtMCFission::SampleVertex()
 {
    return {fParameters["vX"]->Sample(), fParameters["vY"]->Sample(), fParameters["vZ"]->Sample()};
@@ -91,7 +139,9 @@ std::array<Ion, 2> AtMCFission::SampleFragmentSpecies()
    int Z1 = std::round(fParameters["Z"]->Sample());
    int A1 = std::round(fCN.A * (double)Z1 / fCN.Z);
 
-   return {Ion{Z1, A1}, Ion{fCN.Z - Z1, fCN.A - A1}};
+   if (gRandom->Integer(2))
+      return {Ion{Z1, A1}, Ion{fCN.Z - Z1, fCN.A - A1}};
+   return {Ion{fCN.Z - Z1, fCN.A - A1}, Ion{Z1, A1}};
 }
 /**
  * Get gamma for fragment 1 in a system decaying into two fragments with total KE
@@ -203,32 +253,16 @@ void AtMCFission::SimulateEvent()
    SetMomMagnitude(beamDir, mom, {p1, p2});
 
    // Now that we have the momentum of the FF, generate the 4 vectors
-   auto ff1 = Get4Vector(mom[0], AtoE(fragID[0].A));
-   auto ff2 = Get4Vector(mom[1], AtoE(fragID[1].A));
+   std::vector<XYZEVector> ffMom(2);
+   ffMom[0] = Get4Vector(mom[0], AtoE(fragID[0].A));
+   ffMom[1] = Get4Vector(mom[1], AtoE(fragID[1].A));
 
    // Use conservation of 4 momentum to get the beam momentum
-   auto pBeam = ff1 + ff2;
+   auto pBeam = ffMom[0] + ffMom[1];
 
-   LOG(info) << "Frag A: " << ff1 << " mass " << EtoA(ff1.M()) << " energy: " << ff1.E() - ff1.M();
-   LOG(info) << "Frag B: " << ff2 << " mass " << EtoA(ff2.M()) << " energy: " << ff2.E() - ff2.M();
+   LOG(info) << "Frag A: " << ffMom[0] << " mass " << EtoA(ffMom[0].M()) << " energy: " << ffMom[0].E() - ffMom[0].M();
+   LOG(info) << "Frag B: " << ffMom[1] << " mass " << EtoA(ffMom[1].M()) << " energy: " << ffMom[1].E() - ffMom[1].M();
    LOG(info) << "Beam: " << pBeam << " mass " << EtoA(pBeam.M()) << " energy: " << pBeam.E() - pBeam.M();
-
-   //**** Fragment 1 *****//
-
-   /*
-   double m = A * 931.4936; // Mev
-   double E = m + 35 * A;
-   double p = sqrt(E * E - m * m);
-   PxPyPzEVector mom(momDir.X() * p, momDir.Y() * p, momDir.Z() * p, E);
-   fSim->SimulateParticle(Z, A, vertex, mom);
-
-   // **** Fragment 2 ******* /
-   momDir = Polar3D(1, fParameters["th1"]->Sample(), fParameters["ph1"]->Sample()).Unit();
-   LOG(info) << "Setting dir 2: " << momDir.Theta() * TMath::RadToDeg() << " " << momDir.Phi() * TMath::RadToDeg();
-   m = A * 931.4936; // Mev
-   E = m + 35 * A;
-   p = sqrt(E * E - m * m);
-   mom = PxPyPzEVector(momDir.X() * p, momDir.Y() * p, momDir.Z() * p, E);
-   fSim->SimulateParticle(fZcn - Z, fAcn - A, vertex, mom);
-   */
+   for (int i = 0; i < 2; ++i)
+      fSim->SimulateParticle(fragID[i].Z, fragID[i].A, vertex, ffMom[i]);
 }

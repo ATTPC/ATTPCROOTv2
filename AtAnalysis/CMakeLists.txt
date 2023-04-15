@@ -11,15 +11,19 @@ ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
 
 set(DEPENDENCIES
   FairRoot::Base
+  FairRoot::FairTools
+    ROOT::GenVector
   ROOT::Core
 
   ATTPCROOT::AtData
-
+  ATTPCROOT::AtTools
+  ATTPCROOT::AtMap
   )
 
 set(SRCS
   AtRunAna.cxx
   AtFindVertex.cxx
+  AtFissionEvent.cxx
   )
 
 generate_target_and_root_library(${LIBRARY_NAME}

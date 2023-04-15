@@ -39,7 +39,8 @@ void AtMCFitter::Init()
 
    fPulse->SetParameters(fPar);
    fClusterize->GetParameters(fPar);
-   fPSA->Init();
+   if (fPSA)
+      fPSA->Init();
 }
 
 void AtMCFitter::Exec(const AtPatternEvent &event)
@@ -65,7 +66,8 @@ int AtMCFitter::DigitizeEvent()
    AtEvent *event = dynamic_cast<AtEvent *>(fEventArray.ConstructedAt(eventIndex));
 
    *rawEvent = fPulse->GenerateEvent(vec);
-   *event = fPSA->Analyze(*rawEvent);
+   if (fPSA)
+      *event = fPSA->Analyze(*rawEvent);
 
    return eventIndex;
 }

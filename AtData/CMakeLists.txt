@@ -36,6 +36,7 @@ set(SRCS
   AtProtoEventAna.cxx
   AtTrackingEventAna.cxx
   AtPatternEvent.cxx
+
   AtProtoQuadrant.cxx
   AtTrack.cxx
   AtContainerManip.cxx

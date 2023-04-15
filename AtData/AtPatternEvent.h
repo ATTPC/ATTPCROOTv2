@@ -17,7 +17,7 @@ class TClass;
 class TMemberInspector;
 
 class AtPatternEvent : public AtBaseEvent {
-private:
+protected:
    using HitPtr = std::unique_ptr<AtHit>;
    using HitVector = std::vector<HitPtr>;
 
@@ -25,7 +25,7 @@ private:
    HitVector fNoise;
 
 public:
-   AtPatternEvent();
+   AtPatternEvent(const char *name = "AtPatternEvent");
    AtPatternEvent(const AtPatternEvent &copy);
    AtPatternEvent(AtPatternEvent &&copy) = default;
    AtPatternEvent &operator=(const AtPatternEvent object);

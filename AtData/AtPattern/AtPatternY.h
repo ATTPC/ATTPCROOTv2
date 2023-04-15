@@ -54,6 +54,12 @@ public:
     */
    XYZVector GetFragmentDirection(int frag) const { return fFragments.at(frag).GetDirection(); }
 
+   /**
+    * Returns an integer specifying which ray the point is closest to.
+    * 0 -> fragment 0. 1 -> fragment 1. 2 -> beam.
+    */
+   int GetPointAssignment(const XYZPoint &point) const;
+
    virtual void DefinePattern(const std::vector<XYZPoint> &points) override;
    virtual void DefinePattern(std::vector<double> par) override;
    virtual Double_t DistanceToPattern(const XYZPoint &point) const override;

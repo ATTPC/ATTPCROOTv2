@@ -103,15 +103,19 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
    // Create underlying simulation class
    auto sim = std::make_shared<AtSimpleSimulation>(GeoDataPath.Data());
    // Create and load energy loss models
-   auto eloss = std::make_shared<AtTools::AtELossTable>();
-   eloss->LoadLiseTable("./eLoss/42_100.txt", 100, 0);
-   sim->AddModel(42, 100, eloss);
+   std::vector<std::pair<int, int>> ions = {{42, 101}, {43, 103}};
+   for (auto [Z, A] : ions) {
+      auto eloss = std::make_shared<AtTools::AtELossTable>();
+      eloss->LoadLiseTable(TString::Format("./eLoss/%d_%d.txt", Z, A).Data(), A, 0);
+      sim->AddModel(Z, A, eloss);
+   }
 
    auto cluster = std::make_shared<AtClusterizeLine>();
    auto pulse = std::make_shared<AtPulseLine>(fMap);
    pulse->SetSaveCharge(true);
-   // auto psa2 = std::make_shared<AtPSAMax>();
-   auto psa2 = std::make_shared<AtPSADeconvFit>();
+   auto psa2 = std::make_shared<AtPSAMax>();
+   // auto psa2 = std::make_shared<AtPSADeconvFit>();
+   // psa2->SetUseSimCharge(true);
    psa2->SetThreshold(25);
    auto fitter = std::make_shared<MCFitter::AtMCFission>(sim, cluster, pulse);
    fitter->SetPSA(psa2);

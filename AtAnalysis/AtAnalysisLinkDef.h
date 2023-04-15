@@ -6,5 +6,6 @@
 
 #pragma link C++ class AtRunAna + ;
 #pragma link C++ class AtFindVertex + ;
+#pragma link C++ class AtFissionEvent + ;
 
 #endif
