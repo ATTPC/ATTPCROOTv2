@@ -47,9 +47,10 @@ void AtPulse::FillPad(AtPad &pad, TH1F &hist)
    auto charge = std::make_unique<AtPadArray>();
 
    for (int kk = 1; kk <= fNumTbs; ++kk) {
-      double nEle = hist.GetBinContent(kk) * fGETGain;
+      double nEle = hist.GetBinContent(kk);
       if (nEle > 0) {
-         charge->SetArray(kk - 1, nEle);
+         // Scale the saved charge down so its closer to reco
+         charge->SetArray(kk - 1, nEle * fGETGain * fResponse(pad.GetPadNum(), fPeakingTime));
 
          // Do the convolution
          for (int nn = kk - 1; nn < fNumTbs; ++nn) {
@@ -73,6 +74,7 @@ void AtPulse::FillPad(AtPad &pad, TH1F &hist)
 void AtPulse::ApplyNoise(AtPad &pad)
 {
    for (int i = 0; i < fNumTbs; ++i) {
+      pad.SetADC(i, pad.GetADC(i) * fGETGain);
       if (fNoiseSigma != 0)
          pad.SetADC(i, pad.GetADC(i) * gRandom->Gaus(0, fNoiseSigma));
    }
