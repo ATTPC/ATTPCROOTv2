@@ -1,4 +1,38 @@
+#include <FairFileSource.h>
+#include <FairParAsciiFileIo.h>
+#include <FairRootFileSink.h>
+#include <FairRuntimeDb.h>
+
+#include <TChain.h>
+#include <TFile.h>
+#include <TString.h>
+
+#include "SpaceChargeModel.h"
 #include "TxtEvent.h"
+#ifndef __CLING__
+#include "../build/include/AtCopyTreeTask.h"
+#include "../build/include/AtCutHEIST.h"
+#include "../build/include/AtDataReductionTask.h"
+#include "../build/include/AtHDFUnpacker.h"
+#include "../build/include/AtLinkDAQTask.h"
+#include "../build/include/AtPSADeconvFit.h"
+#include "../build/include/AtRunAna.h"
+#include "../build/include/AtTpcMap.h"
+#include "../build/include/AtUnpackTask.h"
+
+#endif
+
+/**
+ * This will unpack a run file with every fission event in it that can be matched to HEIST.
+ * The output tree structure has these branches (branch name: description)
+ *
+ * AtRawEvent: AtRawEvent with ch0 subtraction and calibration applied.
+ * AtEvent: AtEvent with no space charge correction.
+ * AtEventCorr: AtEvent with space charge correction.
+ * AtPatternEvent: AtPatternEvent with space charge correction.
+ * AtFissionEvent: AtFissionEvent constructed from AtPatternEvent and AtEvent.
+ *
+ */
 
 void unpack_linked(int tpcRunNum = 206)
 {
@@ -20,7 +54,7 @@ void unpack_linked(int tpcRunNum = 206)
    EventMap eventMap(sharedInfoDir + "RunMap.csv");
    int nsclRunNum = eventMap.GetNsclRunNum(tpcRunNum);
    if (nsclRunNum == -1)
-      throw std::invalid_argument("No matting NSCL run number");
+      throw std::invalid_argument("No matching NSCL run number");
 
    // Set the in/out files
    TString inputFile = inputDir + TString::Format("/run_%04d.h5", tpcRunNum);
@@ -70,23 +104,23 @@ void unpack_linked(int tpcRunNum = 206)
    mapping->AddAuxPad({10, 0, 1, 0}, "MCP_DS");
    mapping->AddAuxPad({10, 0, 2, 34}, "IC");
 
-   // Create the unpacker task
+   /**** HDF5 unpacker ****/
    auto unpacker = std::make_unique<AtHDFUnpacker>(mapping);
    unpacker->SetInputFileName(inputFile.Data());
    unpacker->SetNumberTimestamps(2);
    unpacker->SetBaseLineSubtraction(true);
-
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
+   unpackTask->SetOuputBranchName("AtEventRaw");
    unpackTask->SetPersistence(false);
-   run->AddTask(unpackTask);
 
+   /**** Data reduction task (keep fission only) ****/
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
    reduceTask->SetInputBranch("AtRawEvent");
    TxtEvents events;
    events.AddTxtFile(TString::Format(sharedInfoDir + "/EventLabels/fissionEventsRun_%04d", tpcRunNum).Data());
    reduceTask->SetReductionFunction(events);
-   run->AddTask(reduceTask);
 
+   /**** DAQ linking task  ****/
    AtLinkDAQTask *linker = new AtLinkDAQTask(); //< Must run after the data reduction task!!!
    auto success = linker->SetInputTree(evtInputFile, "E12014");
    linker->SetEvtOutputFile(evtOutputFile);
@@ -95,27 +129,64 @@ void unpack_linked(int tpcRunNum = 206)
    linker->SetSearchMean(1);
    linker->SetSearchRadius(2);
    linker->SetCorruptedSearchRadius(1000);
-   run->AddTask(linker);
 
    auto threshold = 45;
 
+   /**** Ch0 subtraction ****/
    auto filterSub = new AtFilterSubtraction(mapping);
    filterSub->SetThreshold(threshold);
    filterSub->SetIsGood(false); // Save events event if
    AtFilterTask *subTask = new AtFilterTask(filterSub);
-   subTask->SetPersistence(true);
+   subTask->SetPersistence(false);
    subTask->SetFilterAux(true);
+   subTask->SetInputBranch("AtRawEventRaw");
    subTask->SetOutputBranch("AtRawEventSub");
 
-   run->AddTask(subTask);
+   /**** Calibration Task ****/
+   auto filterCal = new AtFilterCalibrate();
+   filterCal->SetCalibrationFile("");
+   filterCal->SetIsGood(false); // Save events event if
+   AtFilterTask *calTask = new AtFilterTask(filterCal);
+   calTask->SetPersistence(true);
+   calTask->SetFilterAux(false);
+   calTask->SetInputBranch("AtRawEventSub");
+   calTask->SetOutputBranch("AtRawEvent");
 
-   auto psa = std::make_unique<AtPSAMax>();
+   /**** PSA Task ****/
+   auto psa = std::make_unique<AtPSDeconvFit>();
    psa->SetThreshold(threshold);
    AtPSAtask *psaTask = new AtPSAtask(psa->Clone());
-   psaTask->SetInputBranch("AtRawEventSub");
+   psaTask->SetInputBranch("AtRawEvent");
    psaTask->SetOutputBranch("AtEvent");
    psaTask->SetPersistence(true);
+
+   /**** Space charge correction ****/
+   auto SCModel = std::make_unique<AtRadialChargeModel>(&EField);
+   auto scTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
+   scTask->SetInputBranch("AtEvent");
+   scTask->SetOutputBranch("AtEventCorr");
+
+   /**** Y pattern fit ****/
+   auto method = std::make_unique<SampleConsensus::AtSampleConsensus>(
+      SampleConsensus::Estimators::kRANSAC, AtPatterns::PatternType::kLine, RandomSample::SampleMethod::kUniform);
+   method->SetDistanceThreshold(20);
+   method->SetNumIterations(200);
+   method->SetMinHitsPattern(20);
+   method->SetChargeThreshold(15); //-1 implies no charge-weighted fitting
+   method->SetFitPattern(true);
+   auto sacTask = new AtSampleConsensusTask(std::move(method));
+   sacTask->SetPersistence(false);
+   sacTask->SetInputBranch("AtEventCorr");
+   sacTask->SetOutputBranch("AtPatternEvent");
+
+   run->AddTask(unpackTask);
+   run->AddTask(reduceTask);
+   run->AddTask(linker);
+   run->AddTask(subTask);
+   run->AddTask(calTask);
    run->AddTask(psaTask);
+   run->AddTask(scTask);
+   run->AddTask(sacTask);
 
    run->Init();
 

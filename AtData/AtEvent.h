@@ -120,6 +120,7 @@ public:
    const std::map<Int_t, Int_t> &GetMultiMap() { return fMultiplicityMap; }
 
    void SortHitArray();
+   void SortHitArrayID();
    void SortHitArrayTime();
 
    ClassDefOverride(AtEvent, 6);

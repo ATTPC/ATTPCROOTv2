@@ -67,6 +67,11 @@ void AtEvent::SortHitArray()
    std::sort(fHitArray.begin(), fHitArray.end(),
              [](const HitPtr &a, const HitPtr &b) { return AtHit::SortHit(*a, *b); });
 }
+void AtEvent::SortHitArrayID()
+{
+   std::sort(fHitArray.begin(), fHitArray.end(),
+             [](const HitPtr &a, const HitPtr &b) { return a->GetHitID() < b->GetHitID(); });
+}
 
 void AtEvent::SortHitArrayTime()
 {

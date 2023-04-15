@@ -14,6 +14,22 @@ ClassImp(AtFissionEvent);
 
 AtFissionEvent::AtFissionEvent() : AtPatternEvent("AtFissionEvent") {}
 
+AtFissionEvent::AtFissionEvent(const AtFissionEvent &obj) : AtPatternEvent(obj)
+{
+   for (auto &hit : obj.fBeamHits)
+      fBeamHits.push_back(hit->Clone());
+   for (int i = 0; i < obj.fFragHits.size(); ++i)
+      for (auto &hit : obj.fFragHits[i])
+         fFragHits[i].push_back(hit->Clone());
+}
+AtFissionEvent::AtFissionEvent(const AtPatternEvent &obj) : AtPatternEvent(obj) {}
+
+AtFissionEvent &AtFissionEvent::operator=(AtFissionEvent other)
+{
+   swap(*this, other);
+   return *this;
+}
+
 const AtPatterns::AtPatternY *AtFissionEvent::GetYPattern()
 {
    return dynamic_cast<const AtPatterns::AtPatternY *>(GetYTrack().GetPattern());
