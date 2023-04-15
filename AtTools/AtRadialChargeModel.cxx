@@ -27,9 +27,25 @@ using XYVector = ROOT::Math::XYVector;
 
 AtRadialChargeModel::AtRadialChargeModel(EFieldPtr eField) : AtSpaceChargeModel(), GetEField(eField) {}
 
+XYZPoint AtRadialChargeModel::OffsetForBeam(XYZPoint point)
+{
+   XYZPoint fOffset = fWindow + (fPadPlane - fWindow) / (fPadPlane.Z() - fWindow.Z()) * point.Z();
+
+   return {point.X() - fOffset.X(), point.Y() - fOffset.Y(), point.Z()};
+}
+XYZPoint AtRadialChargeModel::UndoOffsetForBeam(XYZPoint point)
+{
+   XYZPoint fOffset = fWindow + (fPadPlane - fWindow) / (fPadPlane.Z() - fWindow.Z()) * point.Z();
+
+   return {point.X() + fOffset.X(), point.Y() + fOffset.Y(), point.Z()};
+}
+
 XYZPoint AtRadialChargeModel::CorrectSpaceCharge(const XYZPoint &input)
 {
-   return SolveEqn(input / 10, true) * 10;
+   auto offsetHit = OffsetForBeam(input);
+   LOG(debug) << input << " to " << offsetHit;
+   auto corrHit = SolveEqn(offsetHit / 10, true) * 10;
+   return UndoOffsetForBeam(corrHit);
 }
 
 XYZPoint AtRadialChargeModel::ApplySpaceCharge(const XYZPoint &input)
@@ -40,6 +56,7 @@ XYZPoint AtRadialChargeModel::ApplySpaceCharge(const XYZPoint &input)
 // Assumes units are cm
 XYZPoint AtRadialChargeModel::SolveEqn(XYZPoint ele, bool correct)
 {
+
    // Verify step size is logical
    auto minStepSize = 2 * fMobilityElec * me / c2;
    if (fStepSize < minStepSize) {
@@ -65,6 +82,7 @@ XYZPoint AtRadialChargeModel::SolveEqn(XYZPoint ele, bool correct)
       }
 
       auto Efield = GetEField(pos, z);
+      LOG(debug) << "Field " << Efield << " V/cm rho: " << pos << " cm and z: " << z << " cm.";
       if (!correct)
          Efield *= -1;
 
@@ -99,7 +117,7 @@ void AtRadialChargeModel::LoadParameters(AtDigiPar *par)
    if (par == nullptr)
       return;
 
-   SetEField(par->GetEField());
+   SetEField(par->GetEField() / 100.); // EField units in param are V/m. Need V/cm.
    SetDriftVelocity(par->GetDriftVelocity());
 }
 

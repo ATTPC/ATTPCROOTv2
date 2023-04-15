@@ -36,6 +36,12 @@
 
 void unpack_linked(int tpcRunNum = 206)
 {
+   auto verbSpec =
+      fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
+   fair::Logger::DefineVerbosity("user1", verbSpec);
+   // fair::Logger::SetVerbosity("user1");
+   // fair::Logger::SetConsoleSeverity("debug");
+
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
 
@@ -110,12 +116,12 @@ void unpack_linked(int tpcRunNum = 206)
    unpacker->SetNumberTimestamps(2);
    unpacker->SetBaseLineSubtraction(true);
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
-   unpackTask->SetOuputBranchName("AtEventRaw");
+   unpackTask->SetOuputBranchName("AtRawEventRaw");
    unpackTask->SetPersistence(false);
 
    /**** Data reduction task (keep fission only) ****/
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
-   reduceTask->SetInputBranch("AtRawEvent");
+   reduceTask->SetInputBranch("AtRawEventRaw");
    TxtEvents events;
    events.AddTxtFile(TString::Format(sharedInfoDir + "/EventLabels/fissionEventsRun_%04d", tpcRunNum).Data());
    reduceTask->SetReductionFunction(events);
@@ -129,6 +135,7 @@ void unpack_linked(int tpcRunNum = 206)
    linker->SetSearchMean(1);
    linker->SetSearchRadius(2);
    linker->SetCorruptedSearchRadius(1000);
+   linker->SetInputBranch("AtRawEventRaw");
 
    auto threshold = 45;
 
@@ -144,8 +151,7 @@ void unpack_linked(int tpcRunNum = 206)
 
    /**** Calibration Task ****/
    auto filterCal = new AtFilterCalibrate();
-   filterCal->SetCalibrationFile("");
-   filterCal->SetIsGood(false); // Save events event if
+   filterCal->SetCalibrationFile(sharedInfoDir + "/calibrationFormated.txt");
    AtFilterTask *calTask = new AtFilterTask(filterCal);
    calTask->SetPersistence(true);
    calTask->SetFilterAux(false);
@@ -153,15 +159,26 @@ void unpack_linked(int tpcRunNum = 206)
    calTask->SetOutputBranch("AtRawEvent");
 
    /**** PSA Task ****/
-   auto psa = std::make_unique<AtPSDeconvFit>();
+   AtRawEvent *respAvgEvent;
+   TFile *f2 = new TFile(sharedInfoDir + "respAvg.root");
+   f2->GetObject("avgResp", respAvgEvent);
+   f2->Close();
+
+   auto psa = std::make_unique<AtPSADeconvFit>();
+   psa->SetResponse(*respAvgEvent);
+   psa->SetThreshold(15); // Threshold in charge units
+   psa->SetFilterOrder(6);
+   psa->SetCutoffFreq(75);
    psa->SetThreshold(threshold);
-   AtPSAtask *psaTask = new AtPSAtask(psa->Clone());
+   AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
    psaTask->SetInputBranch("AtRawEvent");
    psaTask->SetOutputBranch("AtEvent");
    psaTask->SetPersistence(true);
 
    /**** Space charge correction ****/
    auto SCModel = std::make_unique<AtRadialChargeModel>(&EField);
+   SCModel->SetStepSize(0.1);
+   SCModel->SetBeamLocation({0, -6, 0}, {10, 0, 1000});
    auto scTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
    scTask->SetInputBranch("AtEvent");
    scTask->SetOutputBranch("AtEventCorr");
@@ -175,7 +192,7 @@ void unpack_linked(int tpcRunNum = 206)
    method->SetChargeThreshold(15); //-1 implies no charge-weighted fitting
    method->SetFitPattern(true);
    auto sacTask = new AtSampleConsensusTask(std::move(method));
-   sacTask->SetPersistence(false);
+   sacTask->SetPersistence(true);
    sacTask->SetInputBranch("AtEventCorr");
    sacTask->SetOutputBranch("AtPatternEvent");
 
@@ -194,7 +211,7 @@ void unpack_linked(int tpcRunNum = 206)
    auto numEvents = unpackTask->GetNumEvents();
 
    // numEvents = 1700;//217;
-   // numEvents = 500;
+   numEvents = 500;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 

@@ -32,6 +32,8 @@ private:
    Double_t fDriftVel{0.815};           //< Drift velocity of electron in gas [cm/us]
    Double_t fMobilityElec{1.16429 - 3}; //< Mobility of electron (calculated from drift velocity) [cm2/V/us]
    Double_t fStepSize{1e-4};           //< Step size for solving differential equation [us]
+   XYZPoint fWindow{0, 0, 0};          //<Beam location at window in mm
+   XYZPoint fPadPlane{0, 0, 1000};     //<Beam location at pad plane in mm
 
 public:
    AtRadialChargeModel(EFieldPtr efield);
@@ -43,6 +45,15 @@ public:
    void SetEField(double field);
    void SetDriftVelocity(double v);
    void LoadParameters(AtDigiPar *par) override;
+   void SetBeamLocation(XYZPoint window, XYZPoint padPlane)
+   {
+      fWindow = window;
+      fPadPlane = padPlane;
+   }
+
+protected:
+   XYZPoint OffsetForBeam(XYZPoint point);
+   XYZPoint UndoOffsetForBeam(XYZPoint point);
 
 private:
    XYZPoint SolveEqn(XYZPoint ele, bool correction);

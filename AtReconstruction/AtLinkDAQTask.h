@@ -106,7 +106,7 @@ public:
    void SetTpcTimestampIndex(Int_t index) { fTpcTimestampIndex = index; }
    void SetEvtOutputFile(TString fileName) { fEvtOutputFileName = fileName; }
    void SetPersistance(Bool_t val) { kPersistent = val; }
-   void SetInputBranchName(TString name) { fInputBranchName = name; }
+   void SetInputBranch(TString name) { fInputBranchName = name; }
 
    void SetSearchMean(Double_t mean) { fSearchMean = mean; }
    void SetSearchRadius(Double_t radius) { fSearchRadius = radius; }
