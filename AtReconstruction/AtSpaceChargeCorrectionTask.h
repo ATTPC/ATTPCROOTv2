@@ -37,7 +37,7 @@ public:
    AtSpaceChargeCorrectionTask(SCModelPtr &&model);
    virtual ~AtSpaceChargeCorrectionTask() = default;
 
-   g void SetInputBranchName(std::string branchName) { fInputBranchName = branchName; }
+   void SetInputBranchName(std::string branchName) { fInputBranchName = branchName; }
    void SetOuputBranchName(std::string branchName) { fOuputBranchName = branchName; }
    void SetPersistence(Bool_t value) { fIsPersistent = value; }
 
