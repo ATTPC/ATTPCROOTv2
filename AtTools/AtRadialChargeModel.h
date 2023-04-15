@@ -5,8 +5,8 @@
 
 #include <Rtypes.h> // for Double_t
 
+#include <functional>
 #include <type_traits> // for add_pointer_t
-
 class AtDigiPar;
 
 /**
@@ -18,7 +18,7 @@ class AtDigiPar;
  */
 class AtRadialChargeModel : public AtSpaceChargeModel {
 public:
-   using EFieldPtr = std::add_pointer_t<double(double rho, double z)>;
+   using EFieldPtr = std::function<double(double rho, double z)>;
 
 private:
    /**
@@ -31,9 +31,9 @@ private:
    Double_t fEFieldZ{700};              //< Magnitude of electric field in Z direction [V/cm]
    Double_t fDriftVel{0.815};           //< Drift velocity of electron in gas [cm/us]
    Double_t fMobilityElec{1.16429 - 3}; //< Mobility of electron (calculated from drift velocity) [cm2/V/us]
-   Double_t fStepSize{1e-4};           //< Step size for solving differential equation [us]
-   XYZPoint fWindow{0, 0, 0};          //<Beam location at window in mm
-   XYZPoint fPadPlane{0, 0, 1000};     //<Beam location at pad plane in mm
+   Double_t fStepSize{1e-4};            //< Step size for solving differential equation [us]
+   XYZPoint fWindow{0, 0, 0};           //<Beam location at window in mm
+   XYZPoint fPadPlane{0, 0, 1000};      //<Beam location at pad plane in mm
 
 public:
    AtRadialChargeModel(EFieldPtr efield);

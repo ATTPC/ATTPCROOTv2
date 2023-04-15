@@ -29,8 +29,8 @@
  * AtRawEvent: AtRawEvent with ch0 subtraction and calibration applied.
  * AtEvent: AtEvent with no space charge correction.
  * AtEventCorr: AtEvent with space charge correction.
- * AtPatternEvent: AtPatternEvent with space charge correction.
- * AtFissionEvent: AtFissionEvent constructed from AtPatternEvent and AtEvent.
+ * AtPatternEvent: AtPatternEvent with space charge correction. (Still lines)
+ * AtFissionEvent: AtFissionEvent constructed from AtPatternEvent and AtEvent. (ToDo)
  *
  */
 
@@ -176,14 +176,14 @@ void unpack_linked(int tpcRunNum = 206)
    psaTask->SetPersistence(true);
 
    /**** Space charge correction ****/
-   auto SCModel = std::make_unique<AtRadialChargeModel>(&EField);
+   auto SCModel = std::make_unique<AtRadialChargeModel>(E12014SC(nsclRunNum));
    SCModel->SetStepSize(0.1);
    SCModel->SetBeamLocation({0, -6, 0}, {10, 0, 1000});
    auto scTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
    scTask->SetInputBranch("AtEvent");
    scTask->SetOutputBranch("AtEventCorr");
 
-   /**** Y pattern fit ****/
+   /**** 2 lines pattern fit ****/
    auto method = std::make_unique<SampleConsensus::AtSampleConsensus>(
       SampleConsensus::Estimators::kRANSAC, AtPatterns::PatternType::kLine, RandomSample::SampleMethod::kUniform);
    method->SetDistanceThreshold(20);
@@ -211,7 +211,7 @@ void unpack_linked(int tpcRunNum = 206)
    auto numEvents = unpackTask->GetNumEvents();
 
    // numEvents = 1700;//217;
-   numEvents = 500;
+   // numEvents = 500;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
