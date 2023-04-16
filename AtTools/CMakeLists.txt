@@ -30,6 +30,7 @@ set(SRCS
   AtHitSampling/AtGaussian.cxx
   AtHitSampling/AtWeightedGaussian.cxx
   AtHitSampling/AtWeightedY.cxx
+    AtHitSampling/AtY.cxx
   ElectronicResponse/AtElectronicResponse.cxx
   ElectronicResponse/AtROOTresponse.cxx
   AtHitSampling/AtWeightedGaussianTrunc.cxx

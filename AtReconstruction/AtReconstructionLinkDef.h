@@ -23,6 +23,7 @@
 #pragma link C++ class AtPSADeconv - !;
 #pragma link C++ class AtPSADeconvFit - !;
 #pragma link C++ class AtPSAIterDeconv - !;
+#pragma link C++ class AtPSAComposite - !;
 
 #pragma link C++ nestedclass;
 #pragma link C++ nestedtypedef;

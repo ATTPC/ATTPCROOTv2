@@ -170,7 +170,10 @@ void unpack_linked(int tpcRunNum = 206)
    psa->SetFilterOrder(6);
    psa->SetCutoffFreq(75);
    psa->SetThreshold(10);
-   AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
+   auto psaBeam = std::make_unique<AtPSATBAvg>();
+   psaBeam->SetThreshold(45);
+   auto psaComp = std::make_unique<AtPSAComposite>(std::move(psaBeam), std::move(psa), 20);
+   AtPSAtask *psaTask = new AtPSAtask(std::move(psaComp));
    psaTask->SetInputBranch("AtRawEvent");
    psaTask->SetOutputBranch("AtEvent");
    psaTask->SetPersistence(true);
@@ -185,11 +188,11 @@ void unpack_linked(int tpcRunNum = 206)
 
    /**** 2 lines pattern fit ****/
    auto method = std::make_unique<SampleConsensus::AtSampleConsensus>(
-      SampleConsensus::Estimators::kRANSAC, AtPatterns::PatternType::kLine, RandomSample::SampleMethod::kUniform);
+      SampleConsensus::Estimators::kRANSAC, AtPatterns::PatternType::kY, RandomSample::SampleMethod::kY);
    method->SetDistanceThreshold(20);
-   method->SetNumIterations(200);
-   method->SetMinHitsPattern(20);
-   method->SetChargeThreshold(15); //-1 implies no charge-weighted fitting
+   method->SetNumIterations(500);
+   method->SetMinHitsPattern(200);
+   method->SetChargeThreshold(10); //-1 implies no charge-weighted fitting
    method->SetFitPattern(true);
    auto sacTask = new AtSampleConsensusTask(std::move(method));
    sacTask->SetPersistence(true);
@@ -211,7 +214,7 @@ void unpack_linked(int tpcRunNum = 206)
    auto numEvents = unpackTask->GetNumEvents();
 
    // numEvents = 1700;//217;
-   // numEvents = 500;
+   numEvents = 1000;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 

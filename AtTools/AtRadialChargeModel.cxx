@@ -82,7 +82,7 @@ XYZPoint AtRadialChargeModel::SolveEqn(XYZPoint ele, bool correct)
       }
 
       auto Efield = GetEField(pos, z);
-      LOG(debug) << "Field " << Efield << " V/cm rho: " << pos << " cm and z: " << z << " cm.";
+      LOG(debug2) << "Field " << Efield << " V/cm rho: " << pos << " cm and z: " << z << " cm.";
       if (!correct)
          Efield *= -1;
 

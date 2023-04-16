@@ -74,7 +74,7 @@ void AtPSADeconv::initFFTs()
  */
 AtPad &AtPSADeconv::GetResponse(int padNum)
 {
-   LOG(debug) << "Getting pad " << padNum << " from response event.";
+   LOG(debug2) << "Getting pad " << padNum << " from response event.";
    auto pad = fEventResponse.GetPad(padNum);
    if (pad == nullptr)
       pad = createResponsePad(padNum);
@@ -131,7 +131,7 @@ void AtPSADeconv::updateFilter(const AtPadFFT &fft, AtPadFFT *filter)
       auto R = fft.GetPointComplex(i);
       auto filterVal = getFilterKernel(i) / R;
 
-      LOG(debug) << i << " " << TComplex::Abs(R) << " " << getFilterKernel(i) << " " << filterVal;
+      LOG(debug2) << i << " " << TComplex::Abs(R) << " " << getFilterKernel(i) << " " << filterVal;
       filter->SetPointRe(i, filterVal.Re());
       filter->SetPointIm(i, filterVal.Im());
    }
@@ -194,7 +194,7 @@ AtPSADeconv::HitVector AtPSADeconv::AnalyzeFFTpad(AtPad &pad)
    for (int i = 0; i < 512 / 2 + 1; ++i) {
       auto a = padFFT->GetPointComplex(i);
       auto b = respFFT.GetPointComplex(i);
-      LOG(debug) << i << " " << a << " " << b << " " << a * b;
+      LOG(debug2) << i << " " << a << " " << b << " " << a * b;
       auto z = a * b;
 
       recoFFT->SetPoint(i, z);
