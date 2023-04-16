@@ -1,6 +1,5 @@
 #include "AtPulseLine.h"
 
-#include "AtMCPoint.h"
 #include "AtMap.h"
 #include "AtSimulatedLine.h"
 #include "AtSimulatedPoint.h"
@@ -8,19 +7,18 @@
 #include <FairLogger.h>
 
 #include <Math/Point2D.h>
+#include <Math/Point2Dfwd.h> // for XYPoint
 #include <Math/Vector3D.h>
 #include <Math/Vector3Dfwd.h>
 #include <TAxis.h>
-#include <TClonesArray.h>
 #include <TH1.h>
-#include <TH2Poly.h>
 #include <TMath.h>
-#include <TObject.h>
 #include <TRandom.h>
 
-#include <algorithm>
+#include <algorithm> // for copy
 #include <memory>
 #include <numeric>
+#include <set> // for set
 #include <utility>
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";

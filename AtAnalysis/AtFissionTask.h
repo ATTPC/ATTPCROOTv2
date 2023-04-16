@@ -1,10 +1,16 @@
 #ifndef ATFSSIONTASK_H
 #define ATFSSIONTASK_H
-#include "AtHit.h"
 
 #include <FairTask.h>
 
+#include <Rtypes.h> // for Bool_t, Double_t, Option_t
 #include <TClonesArray.h>
+#include <TString.h> // for TString
+
+#include <memory> // for unique_ptr
+#include <vector> // for vector
+class AtHit;
+
 class AtFissionEvent;
 
 /**

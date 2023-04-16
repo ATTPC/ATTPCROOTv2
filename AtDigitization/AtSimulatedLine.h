@@ -8,6 +8,7 @@
 #include <Rtypes.h>
 
 #include <cstddef>
+#include <utility> // for swap
 
 class TBuffer;
 class TClass;
@@ -24,7 +25,7 @@ public:
    AtSimulatedLine();
    AtSimulatedLine(std::size_t mcPointID, Int_t clusterID, Int_t charge, const ROOT::Math::XYZVector &posIn,
                    ROOT::Math::XYZVector posOut, Double_t longitudalDiffusionSigma, Double_t transverseDiffusionSigma);
-   AtSimulatedLine(const AtSimulatedLine &other);
+   AtSimulatedLine(const AtSimulatedLine &other) = default;
    AtSimulatedLine &operator=(AtSimulatedLine other);
 
    friend void swap(AtSimulatedLine &first, AtSimulatedLine &second) noexcept

@@ -14,7 +14,8 @@
 #include <Math/Vector3Dfwd.h> // for XYZVector
 
 #include <cmath>
-#include <memory> // for allocator
+#include <memory>  // for allocator
+#include <utility> // for move
 
 constexpr auto c = 29979.2;  //< c in cm/us
 constexpr auto c2 = c * c;   //< c^2
@@ -25,7 +26,7 @@ using XYZVector = ROOT::Math::XYZVector;
 using XYPoint = ROOT::Math::XYPoint;
 using XYVector = ROOT::Math::XYVector;
 
-AtRadialChargeModel::AtRadialChargeModel(EFieldPtr eField) : AtSpaceChargeModel(), GetEField(eField) {}
+AtRadialChargeModel::AtRadialChargeModel(EFieldPtr eField) : AtSpaceChargeModel(), GetEField(std::move(eField)) {}
 
 XYZPoint AtRadialChargeModel::OffsetForBeam(XYZPoint point)
 {

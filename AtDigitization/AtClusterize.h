@@ -2,9 +2,13 @@
 #define ATCLUSTERIZE_H
 
 #include <Math/Point3D.h>
+#include <Math/Point3Dfwd.h> // for XYZPoint
 #include <Math/Vector3D.h>
 #include <Math/Vector3Dfwd.h>
 
+#include <cmath>   // for double_t
+#include <cstdint> // for uint64_t
+#include <memory>  // for unique_ptr
 #include <string>
 #include <vector>
 class AtDigiPar;

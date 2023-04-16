@@ -1,14 +1,26 @@
 #ifndef ATFISIONEVENT_H
 #define ATFISIONEVENT_H
 
-#include "AtPadReference.h" // for AtPadReference
 #include "AtPatternEvent.h"
 #include "AtPatternY.h"
 
+#include <Math/Point3D.h>     // for PositionVector3D
+#include <Math/Point3Dfwd.h>  // for XYZPoint
+#include <Math/Vector3D.h>    // for DisplacementVector3D
+#include <Math/Vector3Dfwd.h> // for XYZVector
+#include <Rtypes.h>           // for THashConsistencyHolder, ClassDefOverride
+
+#include <array>   // for swap, array
+#include <memory>  // for shared_ptr
+#include <utility> // for move
 #include <vector>
-namespace AtPatterns {
-class AtPatternY;
-}
+class AtHit;
+class AtTrack;
+class TBuffer;
+class TClass;
+class TMemberInspector;
+struct AtPadReference;
+
 class AtMap;
 
 /**

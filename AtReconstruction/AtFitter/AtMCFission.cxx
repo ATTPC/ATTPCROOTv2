@@ -1,16 +1,33 @@
 #include "AtMCFission.h"
+// IWYU pragma: no_include <ext/alloc_traits.h>
 
 #include "AtEvent.h"
+#include "AtHit.h"                   // for AtHit, AtHit::XYZPoint, AtHit...
+#include "AtParameterDistribution.h" // for AtParameterDistribution, MCFi...
+#include "AtPattern.h"               // for AtPattern, AtPatterns
 #include "AtPatternEvent.h"
 #include "AtPatternLine.h"
-#include "AtRawEvent.h"
 #include "AtSimpleSimulation.h"
 #include "AtStudentDistribution.h"
 #include "AtUniformDistribution.h"
 #include "AtVectorUtil.h"
 
+#include <FairLogger.h> // for Logger, LOG
+
+#include <Math/AxisAngle.h> // for AxisAngle
 #include <Math/Vector4D.h>
+#include <Math/VectorUtil.h> // for Angle
+#include <TClonesArray.h>    // for TClonesArray
+#include <TMath.h>           // for RadToDeg, C, DegToRad, Pi
+#include <TObject.h>         // for TObject
 #include <TRandom.h>
+
+#include <algorithm> // for find_if
+#include <iostream>  // for endl, cout, ostream
+#include <map>       // for map, map<>::mapped_type
+#include <memory>    // for make_shared, __shared_ptr_access
+#include <string>    // for string
+#include <vector>    // for vector, allocator
 
 using namespace MCFitter;
 using namespace AtPatterns;

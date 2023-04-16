@@ -2,6 +2,17 @@
 
 #include "AtEvent.h"
 #include "AtFissionEvent.h"
+#include "AtHit.h"          // for AtHit
+#include "AtPatternEvent.h" // for AtPatternEvent
+
+#include <FairLogger.h>      // for LOG, Logger
+#include <FairRootManager.h> // for FairRootManager
+
+#include <TObject.h> // for TObject
+
+#include <algorithm> // for sort, find_if
+#include <utility>   // for move
+
 AtFissionTask::AtFissionTask(double lambda)
    : FairTask("AtFissionTask"), fFissionEventArray("AtFissionEvent", 1), fLambda(lambda)
 {
@@ -52,15 +63,23 @@ std::vector<AtHit *> AtFissionTask::GetSortedFragmentHits(AtFissionEvent *event,
 void AtFissionTask::Exec(Option_t *opt)
 {
    fFissionEventArray.Clear();
-   AtFissionEvent *fissionEvent = dynamic_cast<AtFissionEvent *>(fFissionEventArray.ConstructedAt(0));
-   if (fissionEvent == nullptr)
+   auto *fissionEvent = dynamic_cast<AtFissionEvent *>(fFissionEventArray.ConstructedAt(0));
+   if (fissionEvent == nullptr) {
       LOG(fatal) << "Failed to create or load a fission event in the branch.";
-   AtPatternEvent *patternEvent = dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0));
-   if (patternEvent == nullptr)
+      return;
+   }
+
+   auto *patternEvent = dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0));
+   if (patternEvent == nullptr) {
       LOG(fatal) << "Failed to load an AtPatternEvent in the branch.";
-   AtEvent *event = dynamic_cast<AtEvent *>(fEventArray->At(0));
-   if (event == nullptr)
+      return;
+   }
+
+   auto *event = dynamic_cast<AtEvent *>(fEventArray->At(0));
+   if (event == nullptr) {
       LOG(fatal) << "Failed to load an AtEvent in the branch.";
+      return;
+   }
 
    // Skip if event is not good
    if (!event->IsGood())

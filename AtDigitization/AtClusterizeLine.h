@@ -7,6 +7,12 @@
 
 #include "AtClusterize.h"
 
+#include <string> // for allocator, string
+#include <vector> // for vector
+class AtDigiPar;
+class AtMCPoint;
+class TClonesArray;
+
 class AtClusterizeLine : public AtClusterize {
 private:
    double fTBTime{}; //!< Width of a time bucket [us]

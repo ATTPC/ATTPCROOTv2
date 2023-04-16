@@ -1,22 +1,24 @@
 #ifndef ATMCFITTER_H
 #define ATMCFITTER_H
 
-#include "AtParameterDistribution.h"
+#include <TClonesArray.h> // for TClonesArray
 
-#include <TClonesArray.h>
-
-#include <map>
-#include <memory>
-#include <set>
-#include <string>
-class AtPatternEvent;
-class AtBaseEvent;
-class AtSimpleSimulation;
-class AtClusterize;
-class AtPulse;
-class FairTask;
-class AtMap;
-class AtPSA;
+#include <functional>     // for function
+#include <map>            // for map
+#include <memory>         // for shared_ptr
+#include <set>            // for set
+#include <string>         // for string
+#include <utility>        // for pair
+class AtBaseEvent;        // lines 13-13
+class AtClusterize;       // lines 15-15
+class AtMap;              // lines 18-18
+class AtPSA;              // lines 19-19
+class AtPatternEvent;     // lines 12-12
+class AtPulse;            // lines 16-16
+class AtSimpleSimulation; // lines 14-14
+namespace MCFitter {
+class AtParameterDistribution;
+}
 
 namespace MCFitter {
 

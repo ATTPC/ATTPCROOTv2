@@ -1,6 +1,5 @@
 #include "AtStudentDistribution.h"
 
-#include <TRandom.h>
 namespace MCFitter {
 
 AtStudentDistribution::AtStudentDistribution(double mean, double spread, double seed)

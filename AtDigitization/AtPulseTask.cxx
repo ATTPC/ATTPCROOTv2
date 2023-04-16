@@ -1,38 +1,31 @@
 #include "AtPulseTask.h"
 
-#include "AtDigiPar.h"
-#include "AtElectronicResponse.h"
-#include "AtMCPoint.h"
-#include "AtMap.h"
-#include "AtPad.h"
-#include "AtPadArray.h"
-#include "AtPadBase.h"
-#include "AtRawEvent.h"
-#include "AtSimulatedPoint.h"
+#include "AtDigiPar.h"            // for AtDigiPar
+#include "AtElectronicResponse.h" // for ElectronicResponse
+#include "AtMCPoint.h"            // for AtMCPoint
+#include "AtMap.h"                // for AtMap
+#include "AtPulse.h"              // for AtPulse, AtPulse::AtMapPtr
+#include "AtRawEvent.h"           // for AtRawEvent
+#include "AtSimulatedPoint.h"     // for AtSimulatedPoint
 
-#include <FairLogger.h>
-#include <FairParSet.h> // for FairParSet
-#include <FairRootManager.h>
-#include <FairRunAna.h>
-#include <FairRuntimeDb.h>
-#include <FairTask.h>
+#include <FairLogger.h>      // for LOG, Logger
+#include <FairParSet.h>      // for FairParSet
+#include <FairRootManager.h> // for FairRootManager
+#include <FairRunAna.h>      // for FairRunAna
+#include <FairRuntimeDb.h>   // for FairRuntimeDb
+#include <FairTask.h>        // for kFATAL, FairTask, InitStatus, kSUC...
 
-#include <Math/Point2D.h>
-#include <Math/Vector3D.h>
-#include <TAxis.h>
-#include <TClonesArray.h>
-#include <TF1.h>
-#include <TH1.h>
-#include <TH2Poly.h>
-#include <TMath.h>
-#include <TObject.h>
-#include <TRandom.h>
+#include <Math/Point2D.h>     // for PositionVector2D
+#include <Math/Point2Dfwd.h>  // for XYPoint
+#include <Math/Vector3D.h>    // for DisplacementVector3D
+#include <Math/Vector3Dfwd.h> // for XYZVector
+#include <TClonesArray.h>     // for TClonesArray
+#include <TObject.h>          // for TObject
 
-#include <algorithm>
-#include <cmath>
-#include <cstdio>
-#include <iostream>
-#include <utility>
+#include <algorithm> // for max
+#include <iostream>  // for operator<<, basic_ostream::operator<<
+#include <utility>   // for pair, make_pair, move
+#include <vector>    // for vector
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -43,7 +36,7 @@ using namespace ElectronicResponse;
 using XYPoint = ROOT::Math::XYPoint;
 
 AtPulseTask::AtPulseTask(std::shared_ptr<AtPulse> pulse)
-   : FairTask("AtPulseTask"), fPulse(pulse), fRawEventArray(TClonesArray("AtRawEvent", 1))
+   : FairTask("AtPulseTask"), fPulse(std::move(pulse)), fRawEventArray(TClonesArray("AtRawEvent", 1))
 {
 }
 

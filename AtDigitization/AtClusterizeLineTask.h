@@ -8,9 +8,9 @@
 #include "AtClusterizeLine.h"
 #include "AtClusterizeTask.h"
 
-#include <FairTask.h>
-
 #include <Rtypes.h>
+
+#include <memory> // for make_shared, shared_ptr
 
 class TBuffer;
 class TClass;

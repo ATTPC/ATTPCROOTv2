@@ -15,7 +15,7 @@
 #include <map>
 #include <memory>
 #include <string> // for string
-class TClonesArray;
+
 namespace AtTools {
 class AtELossModel;
 }

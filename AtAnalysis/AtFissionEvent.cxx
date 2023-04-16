@@ -2,13 +2,18 @@
 
 #include "AtContainerManip.h"
 #include "AtDataManip.h"
+#include "AtHit.h" // for AtHit
 #include "AtMap.h"
+#include "AtPadReference.h" // for AtPadReference, operator==
+#include "AtPattern.h"      // for AtPattern
+#include "AtTrack.h"        // for AtTrack, AtTrack::HitVector
 
 #include <Math/VectorUtil.h>
 #include <TF1.h>
 
+#include <algorithm> // for find
 #include <cassert>
-#include <set>
+#include <stdexcept> // for invalid_argument
 
 ClassImp(AtFissionEvent);
 

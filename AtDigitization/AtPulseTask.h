@@ -8,27 +8,21 @@
 #ifndef AtPulseTask_H
 #define AtPulseTask_H
 
-#include "AtPulse.h"
-
 #include <FairTask.h>
 
 #include <Rtypes.h>
 #include <TClonesArray.h>
-#include <TF1.h> //Needed for unique_ptr<TF1>
-#include <TH1.h> //Needed for unique_ptr<TH1F>
 
 #include <cstddef>
 #include <functional> // for function
-#include <iterator>
 #include <map>
 #include <memory>
 #include <type_traits> // for add_pointer_t
-#include <utility>     // for move
-#include <vector>
+
 class AtMap;
-class AtRawEvent;
-class TH2Poly;
 class AtSimulatedPoint;
+class AtDigiPar;
+class AtPulse;
 class TBuffer;
 class TClass;
 class TMemberInspector;

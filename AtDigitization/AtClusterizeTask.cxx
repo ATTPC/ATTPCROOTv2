@@ -1,28 +1,26 @@
 #include "AtClusterizeTask.h"
 
+#include "AtClusterize.h" // for AtClusterize
+#include "AtDigiPar.h"
+#include "AtSimulatedPoint.h" // IWYU pragma: keep
+
 #include <FairLogger.h>
 #include <FairParSet.h>
-#include <FairTask.h>
-
-#include <TMathBase.h>
-#include <TObject.h>
-#include <TRandom.h>
-#include <TString.h>
-
-#include <iostream>
-#include <memory>
-
-// Fair class header
-#include "AtDigiPar.h"
-#include "AtMCPoint.h"
-#include "AtSimulatedPoint.h"
-
 #include <FairRootManager.h>
 #include <FairRunAna.h>
 #include <FairRuntimeDb.h>
+#include <FairTask.h>
 
+#include <Math/Point3D.h>     // for PositionVector3D
+#include <Math/Point3Dfwd.h>  // for XYZPoint
+#include <Math/Vector3D.h>    // for DisplacementVector3D
+#include <Math/Vector3Dfwd.h> // for XYZVector
 #include <TClonesArray.h>
-#include <TMath.h>
+#include <TObject.h>
+
+#include <memory>
+#include <string> // for string
+#include <utility>
 
 using XYZVector = ROOT::Math::XYZVector;
 using XYZPoint = ROOT::Math::XYZPoint;
@@ -34,7 +32,7 @@ constexpr auto cGREEN = "\033[1;32m";
 constexpr auto cBLUE = "\033[1;34m";
 
 AtClusterizeTask::AtClusterizeTask(std::shared_ptr<AtClusterize> clusterize, const char *name)
-   : FairTask(name), fClusterize(clusterize)
+   : FairTask(name), fClusterize(std::move(clusterize))
 {
 }
 

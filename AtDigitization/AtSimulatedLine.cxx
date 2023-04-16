@@ -13,12 +13,6 @@ AtSimulatedLine::AtSimulatedLine(std::size_t mcPointID, Int_t clusterID, Int_t c
 {
 }
 
-AtSimulatedLine::AtSimulatedLine(const AtSimulatedLine &other)
-   : AtSimulatedPoint(other), fSigmaLongDiffusion(other.fSigmaLongDiffusion),
-     fSigmaTransDiffusion(other.fSigmaTransDiffusion), fPositionFinal(other.fPositionFinal)
-{
-}
-
 AtSimulatedLine &AtSimulatedLine::operator=(AtSimulatedLine other)
 {
    swap(*this, other);

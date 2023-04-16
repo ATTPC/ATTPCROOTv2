@@ -3,17 +3,18 @@
 #include "AtDigiPar.h"
 #include "AtMCPoint.h"
 #include "AtSimulatedLine.h"
+#include "AtSimulatedPoint.h" // for AtSimulatedPoint
 
 #include <FairLogger.h>
-#include <FairRootManager.h>
 
 #include <Math/Vector3D.h>
 #include <Math/Vector3Dfwd.h>
 #include <TClonesArray.h>
-#include <TObject.h>
+#include <TString.h> // for operator!=, TString
 
-#include <iostream>
+#include <algorithm> // for max
 #include <memory>
+#include <utility> // for move
 
 void AtClusterizeLine::GetParameters(AtDigiPar *fPar)
 {
@@ -26,7 +27,7 @@ void AtClusterizeLine::FillTClonesArray(TClonesArray &array, std::vector<SimPoin
 {
    for (auto &point : vec) {
       auto size = array.GetEntriesFast();
-      AtSimulatedLine *line = dynamic_cast<AtSimulatedLine *>(point.get());
+      auto *line = dynamic_cast<AtSimulatedLine *>(point.get());
       new (array[size]) AtSimulatedLine(std::move(*line)); // NO LINT
    }
 }

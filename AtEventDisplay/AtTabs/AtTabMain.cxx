@@ -1,16 +1,17 @@
 #include "AtTabMain.h"
 
-#include "AtEvent.h"         // for AtEvent, AtEvent::HitVector
-#include "AtHit.h"           // for AtHit, AtHit::XYZPoint
-#include "AtMap.h"           // for AtMap
-#include "AtPad.h"           // for AtPad
-#include "AtPadReference.h"  // for operator<<
-#include "AtPattern.h"       // for AtPattern
-#include "AtPatternEvent.h"  // for AtPatternEvent
-#include "AtRawEvent.h"      // for AtRawEvent
-#include "AtTabInfo.h"       // for AtTabInfoFairRoot, AtTabInfoBase
-#include "AtTrack.h"         // for AtTrack
-#include "AtViewerManager.h" // for AtViewerManager
+#include "AtContainerManip.h" // for GetPointerVector
+#include "AtEvent.h"          // for AtEvent, AtEvent::HitVector
+#include "AtHit.h"            // for AtHit, AtHit::XYZPoint
+#include "AtMap.h"            // for AtMap
+#include "AtPad.h"            // for AtPad
+#include "AtPadReference.h"   // for operator<<
+#include "AtPattern.h"        // for AtPattern
+#include "AtPatternEvent.h"   // for AtPatternEvent
+#include "AtRawEvent.h"       // for AtRawEvent
+#include "AtTabInfo.h"        // for AtTabInfoFairRoot, AtTabInfoBase
+#include "AtTrack.h"          // for AtTrack
+#include "AtViewerManager.h"  // for AtViewerManager
 
 #include <FairLogger.h> // for LOG, Logger
 
@@ -39,13 +40,12 @@
 #include <TVirtualPad.h>         // for TVirtualPad, gPad
 #include <TVirtualX.h>           // for TVirtualX, gVirtualX
 
-#include <algorithm>          // for max
-#include <array>              // for array
-#include <cstdio>             // for sprintf
-#include <ext/alloc_traits.h> // for __alloc_traits<>::value_type
-#include <iostream>           // for operator<<, endl, basic_ostream
-#include <utility>            // for move
-
+#include <algorithm> // for max
+#include <array>     // for array
+#include <cstdio>    // for sprintf
+#include <iostream>  // for operator<<, endl, basic_ostream
+#include <utility>   // for move
+// IWYU pragma: no_include <ext/alloc_traits.h>
 namespace DataHandling {
 class AtSubject;
 }

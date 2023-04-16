@@ -7,7 +7,14 @@
 #include <FairLogger.h>
 
 #include <TClonesArray.h>
+#include <TMath.h>     // for Sqrt, Cos, Sin, TwoPi
+#include <TMathBase.h> // for Abs
+#include <TObject.h>   // for TObject
 #include <TRandom.h>
+#include <TString.h> // for operator!=, TString
+
+#include <algorithm> // for max
+#include <utility>   // for move
 
 void AtClusterize::GetParameters(AtDigiPar *fPar)
 {

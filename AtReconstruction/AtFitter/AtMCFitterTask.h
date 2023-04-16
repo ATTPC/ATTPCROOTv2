@@ -3,7 +3,11 @@
 
 #include <FairTask.h>
 
-#include <TClonesArray.h>
+#include <Rtypes.h> // for Option_t
+
+#include <memory> // for shared_ptr
+
+class TClonesArray;
 namespace MCFitter {
 class AtMCFitter;
 }

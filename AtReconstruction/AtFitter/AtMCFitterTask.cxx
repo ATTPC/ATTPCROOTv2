@@ -3,6 +3,9 @@
 #include "AtMCFitter.h"
 #include "AtPatternEvent.h"
 
+#include <FairRootManager.h> // for FairRootManager
+
+#include <TClonesArray.h> // for TClonesArray
 #include <TObject.h>
 InitStatus AtMCFitterTask::Init()
 {

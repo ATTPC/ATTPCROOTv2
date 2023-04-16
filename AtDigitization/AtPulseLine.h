@@ -1,7 +1,7 @@
 #ifndef AtPULSELINETASK_H
 #define AtPULSELINETASK_H
 
-#include "AtPulseTask.h"
+#include "AtPulse.h" // for AtPulse::ResponseFunc, AtPulse, AtPuls...
 
 #include <Rtypes.h>
 
@@ -12,9 +12,6 @@
 
 class AtSimulatedLine;
 class AtSimulatedPoint;
-class TBuffer;
-class TClass;
-class TMemberInspector;
 
 class AtPulseLine : public AtPulse {
 

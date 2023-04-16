@@ -1,51 +1,20 @@
 #include "AtTabFission.h"
 
-#include "AtEvent.h" // for AtEvent, AtEvent::HitVector
-#include "AtFissionEvent.h"
-#include "AtHit.h"           // for AtHit, AtHit::XYZPoint
-#include "AtMap.h"           // for AtMap
-#include "AtPad.h"           // for AtPad
-#include "AtPadReference.h"  // for operator<<
-#include "AtPattern.h"       // for AtPattern
-#include "AtPatternEvent.h"  // for AtPatternEvent
-#include "AtRawEvent.h"      // for AtRawEvent
-#include "AtTabInfo.h"       // for AtTabInfoFairRoot, AtTabInfoBase
-#include "AtTrack.h"         // for AtTrack
-#include "AtViewerManager.h" // for AtViewerManager
+#include "AtFissionEvent.h" // for AtFissionEvent
+#include "AtPattern.h"      // for AtPattern
+#include "AtTabInfo.h"      // for AtTabInfoFairRoot, AtTabInfo
+#include "AtTrack.h"        // for AtTrack
 
-#include <FairLogger.h> // for LOG, Logger
+#include <FairLogger.h> // for LOG
 
-#include <Math/Point3D.h>        // for PositionVector3D
-#include <TAttMarker.h>          // for TAttMarker
-#include <TCanvas.h>             // for TCanvas
-#include <TEveBrowser.h>         // for TEveBrowser
-#include <TEveEventManager.h>    // for TEveEventManager
-#include <TEveGeoNode.h>         // for TEveGeoTopNode
-#include <TEveManager.h>         // for TEveManager, gEve
-#include <TEvePointSet.h>        // for TEvePointSet
-#include <TEveViewer.h>          // for TEveViewer
-#include <TEveWindow.h>          // for TEveWindowPack, TEveWindowSlot, TEv...
-#include <TGLCamera.h>           // for TGLCamera
-#include <TGLViewer.h>           // for TGLViewer
-#include <TGTab.h>               // for TGTab
-#include <TGeoManager.h>         // for gGeoManager, TGeoManager
-#include <TGeoVolume.h>          // for TGeoVolume
-#include <TH1.h>                 // for TH1I
-#include <TH2Poly.h>             // for TH2Poly
-#include <TNamed.h>              // for TNamed
-#include <TObject.h>             // for TObject
-#include <TRootEmbeddedCanvas.h> // for TRootEmbeddedCanvas
-#include <TString.h>             // for Form, TString
-#include <TStyle.h>              // for TStyle, gStyle
-#include <TVirtualPad.h>         // for TVirtualPad, gPad
-#include <TVirtualX.h>           // for TVirtualX, gVirtualX
+#include <TAttMarker.h>       // for TAttMarker
+#include <TEveElement.h>      // for TEveElement
+#include <TEveEventManager.h> // for TEveEventManager
+#include <TEveManager.h>      // for TEveManager, gEve
+#include <TEvePointSet.h>     // for TEvePointSet
 
-#include <algorithm>          // for max
-#include <array>              // for array
-#include <cstdio>             // for sprintf
-#include <ext/alloc_traits.h> // for __alloc_traits<>::value_type
-#include <iostream>           // for operator<<, endl, basic_ostream
-#include <utility>            // for move
+#include <array>   // for array
+#include <utility> // for move
 ClassImp(AtTabFission);
 
 AtTabFission::AtTabFission()

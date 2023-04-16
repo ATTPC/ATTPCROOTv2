@@ -3,14 +3,25 @@
 #include "AtContainerManip.h"
 #include "AtDigiPar.h"
 #include "AtElectronicResponse.h"
+#include "AtMap.h" // for AtMap, AtMap::InhibitType, AtMap::...
 #include "AtPad.h"
 #include "AtPadArray.h"
+#include "AtPadBase.h" // for AtPadBase
 #include "AtRawEvent.h"
 #include "AtSimulatedPoint.h"
 
+#include <FairLogger.h> // for Logger, LOG
+
 #include <Math/Point2D.h>
+#include <Math/Point2Dfwd.h> // for XYPoint
+#include <Rtypes.h>          // for Int_t
 #include <TAxis.h>
+#include <TMath.h> // for Gamma, Sqrt
 #include <TRandom.h>
+#include <TString.h> // for TString
+
+#include <ext/alloc_traits.h> // for __alloc_traits<>::value_type
+#include <utility>            // for move
 
 using XYPoint = ROOT::Math::XYPoint;
 

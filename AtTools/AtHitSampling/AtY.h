@@ -1,7 +1,7 @@
 #ifndef ATY_H
 #define ATY_H
 
-#include "AtChargeWeighted.h"
+#include "AtIndependentSample.h" // for AtIndependentSample
 
 #include <vector> // for vector
 class AtHit;

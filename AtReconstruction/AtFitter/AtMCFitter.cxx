@@ -1,21 +1,26 @@
 #include "AtMCFitter.h"
 
-#include "AtClusterize.h"
-#include "AtDigiPar.h"
-#include "AtEvent.h"
-#include "AtPSA.h"
-#include "AtPatternEvent.h"
-#include "AtPulse.h"
-#include "AtRawEvent.h"
-#include "AtSimpleSimulation.h"
-#include "AtSimulatedPoint.h"
+#include "AtClusterize.h"       // for AtClusterize
+#include "AtDigiPar.h"          // for AtDigiPar
+#include "AtEvent.h"            // for AtEvent
+#include "AtPSA.h"              // for AtPSA
+#include "AtPatternEvent.h"     // for AtPatternEvent
+#include "AtPulse.h"            // for AtPulse
+#include "AtRawEvent.h"         // for AtRawEvent
+#include "AtSimpleSimulation.h" // for AtSimpleSimulation
+#include "AtSimulatedPoint.h"   // IWYU pragma: keep
 
-#include <FairRunAna.h>
-#include <FairRuntimeDb.h>
+#include <FairParSet.h>    // for FairParSet
+#include <FairRunAna.h>    // for FairRunAna
+#include <FairRuntimeDb.h> // for FairRuntimeDb
+
+#include <TObject.h> // for TObject
+
+using std::move;
 namespace MCFitter {
 
 AtMCFitter::AtMCFitter(SimPtr sim, ClusterPtr cluster, PulsePtr pulse)
-   : fMap(pulse->GetMap()), fSim(sim), fClusterize(cluster), fPulse(pulse),
+   : fMap(pulse->GetMap()), fSim(move(sim)), fClusterize(move(cluster)), fPulse(move(pulse)),
      fObjectives([](const ObjPair &a, const ObjPair &b) { return a.second < b.second; }), fRawEventArray("AtRawEvent"),
      fEventArray("AtEvent")
 {
@@ -62,8 +67,8 @@ int AtMCFitter::DigitizeEvent()
    // Event has been simulated and is sitting in the fSim
    auto vec = fClusterize->ProcessEvent(fSim->GetPointsArray());
    int eventIndex = fRawEventArray.GetEntries();
-   AtRawEvent *rawEvent = dynamic_cast<AtRawEvent *>(fRawEventArray.ConstructedAt(eventIndex));
-   AtEvent *event = dynamic_cast<AtEvent *>(fEventArray.ConstructedAt(eventIndex));
+   auto *rawEvent = dynamic_cast<AtRawEvent *>(fRawEventArray.ConstructedAt(eventIndex));
+   auto *event = dynamic_cast<AtEvent *>(fEventArray.ConstructedAt(eventIndex));
 
    *rawEvent = fPulse->GenerateEvent(vec);
    if (fPSA)

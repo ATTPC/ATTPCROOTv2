@@ -1,19 +1,20 @@
 #ifndef ATMCFISSION_H
 #define ATMCFISSION_H
 
-#include "AtMCFitter.h"
+#include "AtBaseEvent.h"    // for AtBaseEvent
+#include "AtMCFitter.h"     // for AtMCFitter, AtMCFitter::ClusterPtr
+#include "AtPatternEvent.h" // for AtPatternEvent
 
-#include <Math/AxisAngle.h>
-#include <Math/Point3D.h>
-#include <Math/Point3Dfwd.h> // for XYZPoint
-#include <Math/Rotation3D.h>
-#include <Math/Vector3D.h>
+#include <Math/Point3D.h>     // for PositionVector3D
+#include <Math/Point3Dfwd.h>  // for XYZPoint
+#include <Math/Vector3D.h>    // for DisplacementVector3D
 #include <Math/Vector3Dfwd.h> // for XYZVector
-#include <Math/Vector4D.h>
-#include <Math/VectorUtil.h>
+#include <Math/Vector4D.h>    // for LorentzVector
+#include <Math/Vector4Dfwd.h> // for PxPyPzEVector
 
-#include <vector>
-class AtEvent;
+#include <array> // for array
+#include <cmath> // for sqrt
+class AtEvent;   // lines 16-16
 
 namespace MCFitter {
 struct Ion {

@@ -1,16 +1,19 @@
 #ifndef ATPULSE_H
 #define ATPULSE_H
-#include "AtMap.h"
 
 #include <Math/Point3D.h>
+#include <Math/Point3Dfwd.h> // for XYZPoint
 #include <Math/Vector3D.h>
 #include <Math/Vector3Dfwd.h>
-#include <Rtypes.h>
-#include <TClonesArray.h>
 #include <TF1.h> //Needed for unique_ptr<TF1>
 #include <TH1.h> //Needed for unique_ptr<TH1F>
 
+#include <functional> // for function
+#include <memory>     // for unique_ptr, shared_ptr
 #include <set>
+#include <type_traits> // for add_pointer_t
+#include <vector>      // for vector
+class AtMap;
 class AtSimulatedPoint;
 class AtRawEvent;
 class AtDigiPar;

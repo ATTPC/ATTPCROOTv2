@@ -6,7 +6,6 @@
 #include <Rtypes.h> // for Double_t
 
 #include <functional>
-#include <type_traits> // for add_pointer_t
 class AtDigiPar;
 
 /**

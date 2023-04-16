@@ -3,6 +3,9 @@
 
 #include "AtPSA.h"
 
+#include <memory> // for unique_ptr, make_unique
+class AtPad;
+
 /**
  * @brief Uses different PSA methods in/out of beam region.
  *

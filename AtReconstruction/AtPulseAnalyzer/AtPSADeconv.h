@@ -59,8 +59,8 @@ protected:
    std::unique_ptr<TVirtualFFT> fFFT{nullptr};
    std::unique_ptr<TVirtualFFT> fFFTbackward{nullptr};
 
-   int fFilterOrder{0}; //< Half the filter order
-   int fCutoffFreq{-1}; //< Cutoff frequency squared
+   int fFilterOrder{0};             //< Half the filter order
+   int fCutoffFreq{-1};             //< Cutoff frequency squared
    bool fUseSimulatedCharge{false}; //< If true will attempt to use simulated charge instead of deconv.
 
 public:

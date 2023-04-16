@@ -8,20 +8,15 @@
 #ifndef AtClusterizeTask_H
 #define AtClusterizeTask_H
 
-#include "AtClusterize.h"
-
 #include <FairTask.h>
 
-#include <Math/Vector3D.h>
-#include <Math/Vector3Dfwd.h>
 #include <Rtypes.h>
 #include <TClonesArray.h>
+#include <TString.h> // for TString
 
-#include <cmath>
 #include <memory>
-
+class AtClusterize;
 class AtDigiPar;
-class AtMCPoint;
 class TBuffer;
 class TClass;
 class TMemberInspector;
