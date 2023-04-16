@@ -11,6 +11,8 @@ private:
    double fLambda;
 
 public:
+   double GetLambda() const { return fLambda; }
+
    E12014SC(int nsclRunNumber)
    {
       TString fileName = TString::Format("/mnt/analysis/e12014/home/scalers/run%04d.csv", nsclRunNumber);

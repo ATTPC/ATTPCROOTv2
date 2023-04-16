@@ -5,6 +5,7 @@
 
 #include <TChain.h>
 #include <TFile.h>
+#include <TStopwatch.h>
 #include <TString.h>
 
 #include "SpaceChargeModel.h"
@@ -13,13 +14,24 @@
 #include "../build/include/AtCopyTreeTask.h"
 #include "../build/include/AtCutHEIST.h"
 #include "../build/include/AtDataReductionTask.h"
+#include "../build/include/AtFilterCalibrate.h"
+#include "../build/include/AtFilterSubtraction.h"
+#include "../build/include/AtFilterTask.h"
+#include "../build/include/AtFissionTask.h"
 #include "../build/include/AtHDFUnpacker.h"
 #include "../build/include/AtLinkDAQTask.h"
+#include "../build/include/AtPSA.h"
+#include "../build/include/AtPSAComposite.h"
 #include "../build/include/AtPSADeconvFit.h"
+#include "../build/include/AtPSATBAvg.h"
+#include "../build/include/AtPSAtask.h"
+#include "../build/include/AtRadialChargeModel.h"
 #include "../build/include/AtRunAna.h"
+#include "../build/include/AtSampleConsensus.h"
+#include "../build/include/AtSampleConsensusTask.h"
+#include "../build/include/AtSpaceChargeCorrectionTask.h"
 #include "../build/include/AtTpcMap.h"
 #include "../build/include/AtUnpackTask.h"
-
 #endif
 
 /**
@@ -29,8 +41,8 @@
  * AtRawEvent: AtRawEvent with ch0 subtraction and calibration applied.
  * AtEvent: AtEvent with no space charge correction.
  * AtEventCorr: AtEvent with space charge correction.
- * AtPatternEvent: AtPatternEvent with space charge correction. (Still lines)
- * AtFissionEvent: AtFissionEvent constructed from AtPatternEvent and AtEvent. (ToDo)
+ * AtPatternEvent: AtPatternEvent with space charge correction.
+ * AtFissionEvent: AtFissionEvent constructed from AtPatternEvent and AtEvent.
  *
  */
 
@@ -195,9 +207,16 @@ void unpack_linked(int tpcRunNum = 206)
    method->SetChargeThreshold(10); //-1 implies no charge-weighted fitting
    method->SetFitPattern(true);
    auto sacTask = new AtSampleConsensusTask(std::move(method));
-   sacTask->SetPersistence(true);
+   sacTask->SetPersistence(false);
    sacTask->SetInputBranch("AtEventCorr");
    sacTask->SetOutputBranch("AtPatternEvent");
+
+   /******** Create fission task ********/
+   AtFissionTask *fissionTask = new AtFissionTask(E12014SC(nsclRunNum).GetLambda());
+   fissionTask->SetUncorrectedEventBranch("AtEvent");
+   fissionTask->SetPatternBranch("AtPatternEvent");
+   fissionTask->SetOutBranch("AtFissionEvent");
+   fissionTask->SetPersistance(true);
 
    run->AddTask(unpackTask);
    run->AddTask(reduceTask);
@@ -207,6 +226,7 @@ void unpack_linked(int tpcRunNum = 206)
    run->AddTask(psaTask);
    run->AddTask(scTask);
    run->AddTask(sacTask);
+   run->AddTask(fissionTask);
 
    run->Init();
 
@@ -214,7 +234,7 @@ void unpack_linked(int tpcRunNum = 206)
    auto numEvents = unpackTask->GetNumEvents();
 
    // numEvents = 1700;//217;
-   // numEvents = 1000;
+   numEvents = 1000;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
@@ -228,10 +248,10 @@ void unpack_linked(int tpcRunNum = 206)
    timer.Stop();
    Double_t rtime = timer.RealTime();
    Double_t ctime = timer.CpuTime();
+   using std::cout;
+   using std::endl;
    cout << endl << endl;
    cout << "Real time " << rtime << " s, CPU time " << ctime << " s" << endl;
    cout << endl;
    // ------------------------------------------------------------------------
-
-   return 0;
 }

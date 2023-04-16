@@ -17,8 +17,8 @@ class AtFissionEvent;
 class AtFissionTask : public FairTask {
 protected:
    TString fOutBranch{"AtFissionEvent"};
-   TString fPatternBranch{"AtPatternEvent"};
-   TString fEventBranch{"AtEventH"};
+   TString fPatternBranch{"AtPatternEvent"}; //< Pattern with corrected hits
+   TString fEventBranch{"AtEventH"};         //< Uncorrected event
 
    TClonesArray fFissionEventArray;
    TClonesArray *fPatternEventArray{nullptr};
@@ -36,6 +36,9 @@ public:
    virtual void Finish() {}
 
    void SetPersistance(bool val) { fIsPersistant = val; }
+   void SetOutBranch(TString name) { fOutBranch = name; }
+   void SetPatternBranch(TString name) { fPatternBranch = name; }
+   void SetUncorrectedEventBranch(TString name) { fEventBranch = name; }
 
 protected:
    using HitVector = std::vector<std::unique_ptr<AtHit>>;

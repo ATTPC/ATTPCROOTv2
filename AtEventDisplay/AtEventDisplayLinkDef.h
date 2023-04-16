@@ -15,6 +15,7 @@
 #pragma link C++ class AtTabBase + ;
 #pragma link C++ class AtTabCanvas + ;
 #pragma link C++ class AtTabMain + ;
+#pragma link C++ class AtTabFission + ;
 #pragma link C++ class AtTabPad + ;
 #pragma link C++ class AtTabMacro + ;
 #pragma link C++ class AtTabEnergyLoss + ;

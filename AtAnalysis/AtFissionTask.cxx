@@ -59,25 +59,33 @@ void AtFissionTask::Exec(Option_t *opt)
    if (patternEvent == nullptr)
       LOG(fatal) << "Failed to load an AtPatternEvent in the branch.";
    AtEvent *event = dynamic_cast<AtEvent *>(fEventArray->At(0));
-   if (patternEvent == nullptr)
+   if (event == nullptr)
       LOG(fatal) << "Failed to load an AtEvent in the branch.";
 
-   // Copy the pattern event into our fission event
-   *fissionEvent = AtFissionEvent(*patternEvent);
-   fissionEvent->SetLambda(fLambda);
+   // Skip if event is not good
+   if (!event->IsGood())
+      return;
 
-   // This is the vector we will search through for the hits to clone into our fission event
-   event->SortHitArrayID();
-   auto &uncorrHits = event->GetHits();
+   try {
+      // Copy this pattern event into our fission event
+      *fissionEvent = AtFissionEvent(*patternEvent);
+      fissionEvent->SetLambda(fLambda);
 
-   // Get this hits associated with the beam and copy the uncorrected version of them
-   auto clonedHits = GetMatchingHits(GetSortedBeamHits(fissionEvent), uncorrHits);
-   fissionEvent->SetBeamHits(std::move(clonedHits));
+      // This is the vector we will search through for the hits to clone into our fission event
+      event->SortHitArrayID();
+      auto &uncorrHits = event->GetHits();
 
-   // Get this hits associated with the fragments and copy the uncorrected version of them
-   for (int i = 0; i < 2; ++i) {
-      clonedHits = GetMatchingHits(GetSortedFragmentHits(fissionEvent, i), uncorrHits);
-      fissionEvent->SetFragHits(i, std::move(clonedHits));
+      // Get this hits associated with the beam and copy the uncorrected version of them
+      auto clonedHits = GetMatchingHits(GetSortedBeamHits(fissionEvent), uncorrHits);
+      fissionEvent->SetBeamHits(std::move(clonedHits));
+
+      // Get this hits associated with the fragments and copy the uncorrected version of them
+      for (int i = 0; i < 2; ++i) {
+         clonedHits = GetMatchingHits(GetSortedFragmentHits(fissionEvent, i), uncorrHits);
+         fissionEvent->SetFragHits(i, std::move(clonedHits));
+      }
+   } catch (...) {
+      LOG(error) << "Failed to create a fission event for event " << event->GetEventID();
    }
 }
 

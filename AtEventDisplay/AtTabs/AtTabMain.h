@@ -32,11 +32,10 @@ class AtSubject;
  * @brief Main tab in viewer for 3D and pad selection.
  */
 class AtTabMain : public AtTabBase, public DataHandling::AtObserver {
-private:
+protected:
    using TEvePointSetPtr = std::unique_ptr<TEvePointSet>;
    using TEveEventManagerPtr = std::unique_ptr<TEveEventManager>;
 
-protected:
    TEveEventManagerPtr fEveEvent{std::make_unique<TEveEventManager>("AtEvent")};
    TEvePointSetPtr fHitSet{std::make_unique<TEvePointSet>("Hits")}; //< AtEvent Hit Set
 
@@ -65,7 +64,6 @@ public:
    void Exec() override;
    void Update(DataHandling::AtSubject *sub) override;
 
-   void DrawEvent();
    void DumpEvent(std::string file);
 
    void SetThreshold(Int_t val) { fThreshold = val; }
@@ -80,6 +78,13 @@ public:
 
 protected:
    void MakeTab(TEveWindowSlot *slot) override;
+
+   // Sets the default render state for TEveEventManagers
+   virtual void UpdateRenderState();
+   Color_t GetTrackColor(int i);
+   void SetPointsFromHits(TEvePointSet &hitSet, const std::vector<std::unique_ptr<AtHit>> &hits);
+   void SetPointsFromHits(TEvePointSet &hitSet, const std::vector<AtHit *> &hits);
+   void SetPointsFromTrack(TEvePointSet &hitSet, const AtTrack &track);
 
 private:
    // Functions to draw the initial canvases
@@ -96,14 +101,8 @@ private:
    void UpdatePadPlane();
    void UpdateEventElements();
    void UpdatePatternEventElements();
-   void UpdateRenderState();
 
    void ExpandNumPatterns(int num);
-
-   void SetPointsFromHits(TEvePointSet &hitSet, const std::vector<std::unique_ptr<AtHit>> &hits);
-   void SetPointsFromTrack(TEvePointSet &hitSet, const AtTrack &track);
-
-   Color_t GetTrackColor(int i);
 
    ClassDefOverride(AtTabMain, 1)
 };

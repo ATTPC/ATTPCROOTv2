@@ -94,7 +94,7 @@ int AtPatternY::GetPointAssignment(const XYZPoint &point) const
 
    for (int i = 0; i < fFragments.size(); ++i)
       points.insert({i, fFragments[i].DistanceToPattern(point)});
-   points.insert({points.size(), fBeam.DistanceToPattern(point)});
+   points.insert({fFragments.size(), fBeam.DistanceToPattern(point)});
 
    return points.begin()->first;
 }

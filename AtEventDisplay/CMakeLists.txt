@@ -21,6 +21,7 @@ AtTabs/AtTabCanvas.cxx
 AtTabs/AtTabInfo.cxx
 AtTabs/AtTabMacro.cxx
 AtTabs/AtTabMain.cxx
+AtTabs/AtTabFission.cxx
 AtTabs/AtTabPad.cxx
 AtTabs/AtTabInfoTree.cxx
 AtTabs/AtTabEnergyLoss.cxx

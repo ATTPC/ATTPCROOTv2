@@ -163,3 +163,10 @@ std::vector<double> AtFissionEvent::GetdQdTB(int fragID, const std::vector<AtPad
 
    return ret;
 }
+
+void AtFissionEvent::SetFragHits(int fragID, HitVector vec)
+{
+
+   assert(fragID >= 0 && fragID < 2);
+   fFragHits[fragID] = std::move(vec);
+}

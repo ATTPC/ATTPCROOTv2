@@ -80,7 +80,6 @@ void AtTabMain::InitTab()
    gEve->AddEvent(fEveEvent.get());
    fEveEvent->AddElement(fHitSet.get());
 
-   // fEvePatternEvent = std::make_unique<TEveEventManager>("AtPatternEvent");
    gEve->AddEvent(fEvePatternEvent.get());
 
    auto man = AtViewerManager::Instance();
@@ -272,8 +271,12 @@ void AtTabMain::UpdatePadPlane()
       fPadPlane->Fill(position.X(), position.Y(), hit->GetCharge());
    }
 }
-
 void AtTabMain::SetPointsFromHits(TEvePointSet &hitSet, const std::vector<std::unique_ptr<AtHit>> &hits)
+{
+   SetPointsFromHits(hitSet, ContainerManip::GetPointerVector(hits));
+}
+
+void AtTabMain::SetPointsFromHits(TEvePointSet &hitSet, const std::vector<AtHit *> &hits)
 {
    Int_t nHits = hits.size();
 
