@@ -191,7 +191,7 @@ void unpack_linked(int tpcRunNum = 206)
       SampleConsensus::Estimators::kRANSAC, AtPatterns::PatternType::kY, RandomSample::SampleMethod::kY);
    method->SetDistanceThreshold(20);
    method->SetNumIterations(500);
-   method->SetMinHitsPattern(200);
+   method->SetMinHitsPattern(150);
    method->SetChargeThreshold(10); //-1 implies no charge-weighted fitting
    method->SetFitPattern(true);
    auto sacTask = new AtSampleConsensusTask(std::move(method));
@@ -214,7 +214,7 @@ void unpack_linked(int tpcRunNum = 206)
    auto numEvents = unpackTask->GetNumEvents();
 
    // numEvents = 1700;//217;
-   numEvents = 1000;
+   // numEvents = 1000;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 

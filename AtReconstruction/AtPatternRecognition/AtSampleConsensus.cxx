@@ -75,7 +75,7 @@ AtPatternEvent AtSampleConsensus::Solve(const std::vector<AtHit> &hitArray)
 AtPatternEvent AtSampleConsensus::Solve(const std::vector<const AtHit *> &hitArray)
 {
    if (hitArray.size() < fMinPatternPoints) {
-      LOG(error) << "Not enough points to solve. Requires" << fMinPatternPoints;
+      LOG(error) << "Not enough points to solve. Has " << hitArray.size() << " requires " << fMinPatternPoints;
       return {};
    }
    LOG(info) << "Solving with " << hitArray.size() << " points";
