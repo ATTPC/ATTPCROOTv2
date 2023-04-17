@@ -58,22 +58,22 @@ AtSampleConsensus::GeneratePatternFromHits(const std::vector<const AtHit *> &hit
 
 AtPatternEvent AtSampleConsensus::Solve(AtEvent *event)
 {
-   if (event->IsGood()) {
-      auto hitVec = ContainerManip::GetConstPointerVector(event->GetHits());
-      return Solve(hitVec);
-   }
-
-   return {};
+   auto hitVec = ContainerManip::GetConstPointerVector(event->GetHits());
+   return Solve(hitVec, event);
 }
 
-AtPatternEvent AtSampleConsensus::Solve(const std::vector<AtHit> &hitArray)
+AtPatternEvent AtSampleConsensus::Solve(const std::vector<AtHit> &hitArray, AtBaseEvent *event)
 {
    auto hitVec = ContainerManip::GetConstPointerVector(hitArray);
-   return Solve(hitVec);
+   return Solve(hitVec, event);
 };
 
-AtPatternEvent AtSampleConsensus::Solve(const std::vector<const AtHit *> &hitArray)
+AtPatternEvent AtSampleConsensus::Solve(const std::vector<const AtHit *> &hitArray, AtBaseEvent *event)
 {
+   // Return early if we were passed an event and it is marked bad
+   if (event != nullptr && !event->IsGood())
+      return AtPatternEvent(*event);
+
    if (hitArray.size() < fMinPatternPoints) {
       LOG(error) << "Not enough points to solve. Has " << hitArray.size() << " requires " << fMinPatternPoints;
       return {};
@@ -98,6 +98,9 @@ AtPatternEvent AtSampleConsensus::Solve(const std::vector<const AtHit *> &hitArr
    // Loop through each pattern, and extract the points that fit each pattern
    auto remainHits = hitArray;
    AtPatternEvent retEvent;
+   if (event)
+      retEvent = AtPatternEvent(*event);
+
    for (const auto &pattern : sortedPatterns) {
       if (remainHits.size() < fMinPatternPoints)
          break;
