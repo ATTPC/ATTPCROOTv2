@@ -62,7 +62,6 @@ void AtMCFitter::Exec(const AtPatternEvent &event)
    for (int i = 0; i < fNumIter; ++i) {
 
       auto result = DefineEvent();
-      result.Print();
       auto mcPoints = SimulateEvent(result);
 
       int idx = DigitizeEvent(mcPoints);
@@ -70,6 +69,7 @@ void AtMCFitter::Exec(const AtPatternEvent &event)
 
       result.fIterNum = idx;
       result.fObjective = obj;
+      result.Print();
       fResults.insert(result);
    }
 }

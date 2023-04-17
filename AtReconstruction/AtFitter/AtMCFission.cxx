@@ -101,58 +101,102 @@ double AtMCFission::ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventI
 
 double AtMCFission::ObjectivePosition(const AtFissionEvent &expEvent, int SimEventID)
 {
-   AtEvent &event = *dynamic_cast<AtEvent *>(fEventArray.At(SimEventID));
+   AtEvent &simEvent = *dynamic_cast<AtEvent *>(fEventArray.At(SimEventID));
 
    // Sort the hits by pad number
-   event.SortHitArray();
+   simEvent.SortHitArray();
    auto fragHits = expEvent.GetFragHits();
 
    std::sort(fragHits.begin(), fragHits.end(),
              [](const AtHit *a, const AtHit *b) { return a->GetPadNum() < b->GetPadNum(); });
 
-   auto lastHit = event.GetHits().begin();
+   auto simHit = simEvent.GetHits().begin();
 
    auto map = fPulse->GetMap();
    double chi2 = 0;
 
    // Get every pad that was in the experimental event (assumes that each pad was only used once)
-   for (auto hit : fragHits) {
-      auto padNum = hit->GetPadNum();
+   for (auto expHit : fragHits) {
+      auto padNum = expHit->GetPadNum();
 
       // Only keep hits where the pad is not inhibited in some way
       if (fMap->IsInhibited(padNum) != AtMap::InhibitType::kNone)
          continue;
 
       // Look for pad in simulated event
-      auto hitIt = std::find_if(lastHit, event.GetHits().end(),
+      auto hitIt = std::find_if(simHit, simEvent.GetHits().end(),
                                 [padNum](const AtEvent::HitPtr &hit2) { return hit2->GetPadNum() == padNum; });
-      if (hitIt == event.GetHits().end()) {
+      if (hitIt == simEvent.GetHits().end() || expHit->GetPositionSigma().Z() == 0) {
          chi2++; // This is the integral of the normalized gaussian that we have nothing to compare to
-         LOG(debug) << "Did not find pad " << padNum << "in the simulated event.";
+         LOG(debug) << "Did not find pad " << padNum << " in the simulated event or it's in the beam region";
          continue;
       }
 
       // Update the chi2 with this hit
 
-      lastHit = hitIt;
-      double diff = ObjectivePosition(hit->GetPosition().Z(), hit->GetPositionSigma().Z(),
-                                      lastHit->get()->GetPosition().Z(), lastHit->get()->GetPositionSigma().Z());
-      LOG(debug) << "Found " << padNum << "in the simulated event. Chi2 between pads is " << diff;
+      simHit = hitIt;
+      double simZ = simHit->get()->GetPosition().Z();
+      double simSig = simHit->get()->GetPositionSigma().Z();
+      double expZ = expHit->GetPosition().Z();
+      double expSig = expHit->GetPositionSigma().Z();
+
+      double diff = ObjectivePosition(expZ, expSig, simZ, simSig);
+      LOG(debug) << "Found " << padNum << " in the simulated event. Simulated hit is " << simZ << " +- " << simSig
+                 << "  Experimental hit is " << expZ << " +- " << expSig << " Chi2 between pads is " << diff;
       chi2 += diff;
    }
    return chi2;
 }
 /**
  * Returns \Integral_{-inf}^{inf} (G[uO,sO,x] - G[uE,sE,x])^2/G[uE,sE,x] dx
- * Assuming the Gaussain functions are normalized.
+ * Assuming the Gaussain functions are normalized (same area).
+ *
+ * The experimental is the expected, the observed is our simulated event
+ */
+double AtMCFission::ObjectivePosition2(double uE, double sE, double uO, double sO)
+{
+   double num = sE * sE * std::exp(((uE - uO) * (uE - uO)) / (2 * sE * sE - sO * sO));
+   double denom = sO * std::sqrt(2 * sE * sE - sO * sO);
+   return num / denom - 1;
+}
+
+/**
+ * Returns \Integral_{-inf}^{inf} (G[uO,sO,x] - G[uE,sE,x])^2 dx
+ * Assuming the Gaussain functions have the same height.
+ *
+ * The experimental is the expected, the observed is our simulated event
+ */
+double AtMCFission::ObjectivePosition4(double uE, double sE, double uO, double sO)
+{
+   double num = 2 * sqrt(2) * sE * sO * std::exp((-(uE - uO) * (uE - uO)) / (2 * (sE * sE + sO * sO)));
+   double denom = std::sqrt(sE * sE + sO * sO);
+   return sE + sO - num / denom;
+}
+
+/**
+ * Returns \Integral_{-inf}^{inf} (G[uO,sO,x] - G[uE,sE,x])^2 dx
+ * Assuming the Gaussain functions have the same area.
  *
  * The experimental is the expected, the observed is our simulated event
  */
 double AtMCFission::ObjectivePosition(double uE, double sE, double uO, double sO)
 {
-   double num = sE * sE * std::exp(((uE - uO) * (uE - uO)) / (2 * sE * sE - sO * sO));
-   double denom = sO * std::sqrt(2 * sE * sE - sO * sO);
-   return num / denom - 1;
+   double num = 2 * sqrt(2) * std::exp((-(uE - uO) * (uE - uO)) / (2 * (sE * sE + sO * sO)));
+   double denom = std::sqrt(sE * sE + sO * sO);
+   return 1 / sE + 1 / sO - num / denom;
+}
+
+/**
+ * Returns \Integral_{-inf}^{inf} (G[uO,sO,x] - G[uE,sE,x])^2/G[uE,sE,x] dx
+ * Assuming the Gaussain functions have the same height.
+ *
+ * The experimental is the expected, the observed is our simulated event
+ */
+double AtMCFission::ObjectivePosition3(double uE, double sE, double uO, double sO)
+{
+   double num = sE * sO * std::exp(((uE - uO) * (uE - uO)) / (2 * sE * sE - sO * sO));
+   double denom = std::sqrt(2 * sE * sE - sO * sO);
+   return sE - 2 * sO + num / denom;
 }
 
 XYZPoint AtMCFission::GetVertex(AtMCResult &res)
@@ -279,7 +323,7 @@ void AtMCFission::SetMomMagnitude(XYZVector beamDir, std::array<XYZVector, 2> &m
    }
 }
 
-TClonesArray AtMCFission::SimulateEvent(AtMCResult def)
+TClonesArray AtMCFission::SimulateEvent(AtMCResult &def)
 {
    fSim->NewEvent();
    auto scModel = dynamic_cast<AtRadialChargeModel *>(fSim->GetSpaceChargeModel().get());
@@ -322,6 +366,8 @@ TClonesArray AtMCFission::SimulateEvent(AtMCResult def)
    LOG(info) << "Frag A: " << ffMom[0] << " mass " << EtoA(ffMom[0].M()) << " energy: " << ffMom[0].E() - ffMom[0].M();
    LOG(info) << "Frag B: " << ffMom[1] << " mass " << EtoA(ffMom[1].M()) << " energy: " << ffMom[1].E() - ffMom[1].M();
    LOG(info) << "Beam: " << pBeam << " mass " << EtoA(pBeam.M()) << " energy: " << pBeam.E() - pBeam.M();
+   def.fParameters["EBeam"] = pBeam.E() - pBeam.M();
+
    for (int i = 0; i < 2; ++i)
       fSim->SimulateParticle(fragID[i].Z, fragID[i].A, vertex, ffMom[i]);
 

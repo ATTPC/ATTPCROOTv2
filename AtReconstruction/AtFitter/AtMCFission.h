@@ -43,7 +43,7 @@ protected:
    virtual void CreateParamDistros() override;
    virtual void SetParamDistributions(const AtPatternEvent &event) override;
    virtual double ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventID) override;
-   virtual TClonesArray SimulateEvent(AtMCResult definition) override;
+   virtual TClonesArray SimulateEvent(AtMCResult &definition) override;
    virtual AtMCResult DefineEvent() override;
 
 protected:
@@ -57,6 +57,9 @@ public:
 
    void SetMomMagnitude(XYZVector beamDir, std::array<XYZVector, 2> &mom, double pTrans);
 
+   static double ObjectivePosition4(double uE, double sE, double uO, double sO);
+   static double ObjectivePosition3(double uE, double sE, double uO, double sO);
+   static double ObjectivePosition2(double uE, double sE, double uO, double sO);
    static double ObjectivePosition(double uE, double sE, double uO, double sO);
 
    // Returns the average total kinetic energy from viola systematics in MeV

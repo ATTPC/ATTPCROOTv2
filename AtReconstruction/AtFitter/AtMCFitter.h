@@ -59,6 +59,7 @@ public:
    TClonesArray &GetEventArray() { return fEventArray; }
    TClonesArray &GetRawEventArray() { return fRawEventArray; }
    void FillResultArray(TClonesArray &resultArray) const;
+   void SetNumIter(int iter) { fNumIter = iter; }
 
 protected:
    /**
@@ -80,7 +81,7 @@ protected:
     * Simulate an event using the parameters in the passed AtMCResult class and return an array of
     * the AtMCPoints to then digitize.
     */
-   virtual TClonesArray SimulateEvent(AtMCResult definition) = 0;
+   virtual TClonesArray SimulateEvent(AtMCResult &definition) = 0;
 
    /**
     * Sample parameter distributions and constrain the system to simulate an event.

@@ -16,7 +16,7 @@ InitStatus AtMCFitterTask::Init()
    FairRootManager *ioman = FairRootManager::Instance();
    ioman->Register("SimEvent", "cbmsim", &fFitter->GetEventArray(), false);
    ioman->Register("SimRawEvent", "cbmsim", &fFitter->GetRawEventArray(), false);
-   ioman->Register("AtMCResult", "cbmsim", &fResultArray, false);
+   ioman->Register("AtMCResult", "cbmsim", &fResultArray, true);
 
    fPatternArray = dynamic_cast<TClonesArray *>(ioman->GetObject(fPatternBranchName));
    if (fPatternArray == nullptr)

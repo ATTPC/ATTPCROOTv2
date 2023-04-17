@@ -241,7 +241,7 @@ void AtTabMain::UpdateEventElements()
    }
 
    auto &hits = fEvent->GetHits();
-   LOG(info) << cBLUE << " Number of hits : " << hits.size() << cNORMAL;
+   LOG(info) << cBLUE << " Number of hits : " << hits.size() << " in " << fEvent->GetEventID() << cNORMAL;
 
    SetPointsFromHits(*fHitSet, hits);
 }
