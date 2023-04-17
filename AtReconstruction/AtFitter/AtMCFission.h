@@ -1,8 +1,9 @@
 #ifndef ATMCFISSION_H
 #define ATMCFISSION_H
 
-#include "AtBaseEvent.h"    // for AtBaseEvent
-#include "AtMCFitter.h"     // for AtMCFitter, AtMCFitter::ClusterPtr
+#include "AtBaseEvent.h" // for AtBaseEvent
+#include "AtMCFitter.h"  // for AtMCFitter, AtMCFitter::ClusterPtr
+#include "AtMCResult.h"
 #include "AtPatternEvent.h" // for AtPatternEvent
 
 #include <Math/Point3D.h>     // for PositionVector3D
@@ -15,7 +16,7 @@
 #include <array> // for array
 #include <cmath> // for sqrt
 class AtEvent;   // lines 16-16
-
+class AtFissionEvent;
 namespace MCFitter {
 struct Ion {
    int Z;
@@ -40,19 +41,21 @@ public:
 
 protected:
    virtual void CreateParamDistros() override;
-   virtual void SetParamsFromEvent(const AtPatternEvent &event) override;
+   virtual void SetParamDistributions(const AtPatternEvent &event) override;
    virtual double ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventID) override;
-   virtual void SimulateEvent() override;
+   virtual TClonesArray SimulateEvent(AtMCResult definition) override;
+   virtual AtMCResult DefineEvent() override;
 
 protected:
-   double ObjectivePosition(AtEvent &expEvent, int SimEventID);
+   double ObjectivePosition(const AtFissionEvent &expEvent, int SimEventID);
 
 public:
-   XYZPoint SampleVertex();
-   std::array<Ion, 2> SampleFragmentSpecies();
-   XYZVector SampleBeamDir();
-   std::array<XYZVector, 2> SampleMomDir();
-   void SetMomMagnitude(XYZVector beamDir, std::array<XYZVector, 2> &mom, const std::array<double, 2> &pTrans);
+   static XYZPoint GetVertex(AtMCResult &);
+   static std::array<Ion, 2> GetFragmentSpecies(AtMCResult &, const Ion &CN);
+   XYZVector GetBeamDir(AtMCResult &);
+   static std::array<XYZVector, 2> GetMomDirLab(AtMCResult &);
+
+   void SetMomMagnitude(XYZVector beamDir, std::array<XYZVector, 2> &mom, double pTrans);
 
    static double ObjectivePosition(double uE, double sE, double uO, double sO);
 

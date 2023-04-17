@@ -51,14 +51,15 @@ public:
       swap(first.fFragHits, second.fFragHits);
    }
 
-   const AtPatterns::AtPatternY *GetYPattern();
-   const AtTrack &GetYTrack();
+   const AtPatterns::AtPatternY *GetYPattern() const;
+   const AtTrack &GetYTrack() const;
    double GetFoldingAngle();
    XYZPoint GetVertex() { return GetYPattern()->GetVertex(); }
+   double GetLambda() const { return fLambda; }
 
-   std::vector<AtHit *> GetBeamHits();
-   std::vector<AtHit *> GetFragHits();
-   std::vector<AtHit *> GetFragHits(int fragID);
+   std::vector<AtHit *> GetBeamHits() const;
+   std::vector<AtHit *> GetFragHits() const;
+   std::vector<AtHit *> GetFragHits(int fragID) const;
 
    std::vector<AtHit *> GetBeamHitsCorr();
    std::vector<AtHit *> GetFragHitsCorr();

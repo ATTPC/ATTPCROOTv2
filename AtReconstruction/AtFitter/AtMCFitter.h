@@ -16,21 +16,21 @@ class AtPSA;              // lines 19-19
 class AtPatternEvent;     // lines 12-12
 class AtPulse;            // lines 16-16
 class AtSimpleSimulation; // lines 14-14
-namespace MCFitter {
-class AtParameterDistribution;
-}
 
 namespace MCFitter {
+class AtParameterDistribution;
+class AtMCResult;
 
 class AtMCFitter {
 protected:
    using ParamPtr = std::shared_ptr<AtParameterDistribution>;
    using SimPtr = std::shared_ptr<AtSimpleSimulation>;
+
    using ClusterPtr = std::shared_ptr<AtClusterize>;
    using PulsePtr = std::shared_ptr<AtPulse>;
    using MapPtr = std::shared_ptr<AtMap>;
    using PsaPtr = std::shared_ptr<AtPSA>;
-   using ObjPair = std::pair<int, double>;
+   using ObjPair = std::pair<int, double>; //< Iteration number and objective function value
 
    std::map<std::string, ParamPtr> fParameters;
 
@@ -42,7 +42,8 @@ protected:
 
    int fNumIter{1};
 
-   std::set<ObjPair, std::function<bool(ObjPair, ObjPair)>> fObjectives; // Objectives
+   /// Store the iteration number sorted by lowest objective funtion
+   std::set<AtMCResult, std::function<bool(AtMCResult, AtMCResult)>> fResults;
    TClonesArray fRawEventArray;
    TClonesArray fEventArray;
 
@@ -57,6 +58,7 @@ public:
    ParamPtr GetParameter(const std::string &name) const;
    TClonesArray &GetEventArray() { return fEventArray; }
    TClonesArray &GetRawEventArray() { return fRawEventArray; }
+   void FillResultArray(TClonesArray &resultArray) const;
 
 protected:
    /**
@@ -67,7 +69,7 @@ protected:
    /**
     * @brief Set parameter distributions (mean/spread) from the event.
     */
-   virtual void SetParamsFromEvent(const AtPatternEvent &event) = 0;
+   virtual void SetParamDistributions(const AtPatternEvent &event) = 0;
 
    /**
     * @brief This is the thing we are minimizing between events (SimEventID is index in TClonesArray)
@@ -75,14 +77,23 @@ protected:
    virtual double ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventID) = 0;
 
    /**
-    * Simulate an event. The data should be stored in fSim ready to access.
+    * Simulate an event using the parameters in the passed AtMCResult class and return an array of
+    * the AtMCPoints to then digitize.
     */
-   virtual void SimulateEvent() = 0;
+   virtual TClonesArray SimulateEvent(AtMCResult definition) = 0;
+
+   /**
+    * Sample parameter distributions and constrain the system to simulate an event.
+    * The parameters in AtMCResult will be used to then simulate an event.
+    * This function calls Sample() on all the parameter distributions and saves them.
+    */
+   virtual AtMCResult DefineEvent();
 
    /**
     * Create the AtRawEvent and AtEvent from fSim
+    * returns the index of the event in the TClonesArray
     */
-   int DigitizeEvent();
+   int DigitizeEvent(const TClonesArray &points);
 };
 
 } // namespace MCFitter

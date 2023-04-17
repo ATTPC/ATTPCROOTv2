@@ -37,4 +37,5 @@
 #pragma link C++ enum AtPatterns::PatternType;
 #pragma link C++ function AtPatterns::CreatePattern;
 
+#pragma link C++ class MCFitter::AtMCResult + ;
 #endif

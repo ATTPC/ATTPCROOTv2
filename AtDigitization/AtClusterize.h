@@ -37,7 +37,7 @@ protected:
    int fTrackID;          //!< The current track ID
 
 public:
-   std::vector<SimPointPtr> ProcessEvent(TClonesArray &fMCPointArray);
+   std::vector<SimPointPtr> ProcessEvent(const TClonesArray &fMCPointArray);
    virtual void GetParameters(AtDigiPar *fPar);
    virtual std::string GetSavedClassName() const { return "AtSimulatedPoint"; }
    virtual void FillTClonesArray(TClonesArray &array, std::vector<SimPointPtr> &vec);

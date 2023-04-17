@@ -2,6 +2,7 @@
 #define AT_SIMPLE_SIMULATION_H
 
 #include "AtMCPoint.h"
+#include "AtSpaceChargeModel.h"
 
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h> // for XYZPoint
@@ -15,7 +16,6 @@
 #include <map>
 #include <memory>
 #include <string> // for string
-
 namespace AtTools {
 class AtELossModel;
 }
@@ -33,12 +33,14 @@ protected:
 
       bool operator<(const ParticleID &other) const;
    };
+   using SpaceChargeModel = std::shared_ptr<AtSpaceChargeModel>;
    using ModelPtr = std::shared_ptr<AtTools::AtELossModel>;
    using XYZPoint = ROOT::Math::XYZPoint;
    using XYZVector = ROOT::Math::XYZVector;
    using PxPyPzEVector = ROOT::Math::PxPyPzEVector;
 
    std::map<ParticleID, ModelPtr> fModels;
+   SpaceChargeModel fSCModel{nullptr};
    TClonesArray fMCPoints;
 
    // Variables to across an entire event
@@ -57,6 +59,7 @@ public:
 
    void RegisterBranch(std::string branchName = "AtTpcPoint", bool pers = true);
    void AddModel(int Z, int A, ModelPtr model);
+   void SetSpaceChargeModel(SpaceChargeModel model) { fSCModel = model; }
 
    void NewEvent();
    void SimulateParticle(int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom);
@@ -64,6 +67,7 @@ public:
    AtMCPoint &GetMcPoint(int i) { return dynamic_cast<AtMCPoint &>(*fMCPoints.At(i)); }
    int GetNumPoints() { return fMCPoints.GetEntries(); }
    TClonesArray &GetPointsArray() { return fMCPoints; }
+   SpaceChargeModel GetSpaceChargeModel() { return fSCModel; }
 
 protected:
    bool IsInVolume(const std::string &volName, const XYZPoint &point);

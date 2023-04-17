@@ -151,7 +151,16 @@ void AtSimpleSimulation::AddHit(double ELoss, const XYZPoint &pos, const PxPyPzE
    mcPoint->SetEnergyLoss(ELoss / 1000.); // Convert to GeV
    mcPoint->SetVolName("drift_volume");
 
-   mcPoint->SetPosition(pos / 10.);          // Convert to cm
+   if (fSCModel) {
+      // In the simulation z = 0 is the window and z=1000 is the pad plane.
+      // In the data analysis that is flipped, so we must adjust the z value, apply SC and move back
+      auto posExpCoord = pos;
+      posExpCoord.SetZ(1000 - pos.Z());
+      auto corrExpCoord = fSCModel->ApplySpaceCharge(posExpCoord);
+      corrExpCoord.SetZ(1000 + corrExpCoord.Z());
+      mcPoint->SetPosition(corrExpCoord / 10.);
+   } else
+      mcPoint->SetPosition(pos / 10.);       // Convert to cm
    mcPoint->SetMomentum(mom.Vect() / 1000.); // Convert to GeV/c
    // mcPoint->Print(nullptr);
 }

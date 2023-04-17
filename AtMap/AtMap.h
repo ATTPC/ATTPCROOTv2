@@ -104,7 +104,7 @@ public:
    // The higher the number, the higher the priority
    // i.e. Adding a pad to the inhibit map with kTotal and kLowGain
    // will inhibit the pad. kLowGain and kXTalk will be kXTalk
-   enum class InhibitType { kNone = 0, kLowGain = 1, kXTalk = 2, kTotal = 3 };
+   enum class InhibitType { kNone = 0, kLowGain = 1, kXTalk = 2, kTotal = 3, kBadPad = 4 };
 #pragma GCC diagnostic pop
 
    ClassDefOverride(AtMap, 5);

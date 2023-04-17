@@ -42,7 +42,7 @@ void AtClusterize::FillTClonesArray(TClonesArray &array, std::vector<SimPointPtr
    }
 }
 
-std::vector<AtClusterize::SimPointPtr> AtClusterize::ProcessEvent(TClonesArray &fMCPointArray)
+std::vector<AtClusterize::SimPointPtr> AtClusterize::ProcessEvent(const TClonesArray &fMCPointArray)
 {
    std::vector<SimPointPtr> ret;
    for (int i = 0; i < fMCPointArray.GetEntries(); ++i) {

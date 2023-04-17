@@ -53,10 +53,6 @@ Int_t AtEvent::GetHitPadMult(Int_t PadNum)
 {
    auto its = fMultiplicityMap.find(PadNum);
    if (its == fMultiplicityMap.end()) {
-      std::cerr << " = AtEvent::GetHitPadMult - PadNum not found " << PadNum << std::endl;
-      std::cout << fMultiplicityMap.size() << std::endl;
-      for (const auto &pair : fMultiplicityMap)
-         std::cout << "    " << pair.first << " " << pair.second << std::endl;
       return -1;
    } else
       return its->second;

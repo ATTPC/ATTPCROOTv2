@@ -51,7 +51,9 @@ XYZPoint AtRadialChargeModel::CorrectSpaceCharge(const XYZPoint &input)
 
 XYZPoint AtRadialChargeModel::ApplySpaceCharge(const XYZPoint &input)
 {
-   return SolveEqn(input / 10, false) * 10;
+   auto offsetHit = OffsetForBeam(input);
+   auto corrHit = SolveEqn(offsetHit / 10, false) * 10;
+   return UndoOffsetForBeam(corrHit);
 }
 
 // Assumes units are cm
@@ -82,7 +84,12 @@ XYZPoint AtRadialChargeModel::SolveEqn(XYZPoint ele, bool correct)
          break;
       }
 
-      auto Efield = GetEField(pos, z);
+      double Efield = 0;
+      if (GetEField == nullptr) {
+         LOG(fatal) << "The distrotion field was never set!";
+      } else
+         Efield = GetEField(pos, z);
+
       LOG(debug2) << "Field " << Efield << " V/cm rho: " << pos << " cm and z: " << z << " cm.";
       if (!correct)
          Efield *= -1;
@@ -120,6 +127,7 @@ void AtRadialChargeModel::LoadParameters(AtDigiPar *par)
 
    SetEField(par->GetEField() / 100.); // EField units in param are V/m. Need V/cm.
    SetDriftVelocity(par->GetDriftVelocity());
+   LOG(debug) << "Setting mobility to: " << fMobilityElec;
 }
 
 void AtRadialChargeModel::SetEField(double field)

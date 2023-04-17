@@ -1,9 +1,11 @@
 #include "AtMCFitter.h"
 
-#include "AtClusterize.h"       // for AtClusterize
-#include "AtDigiPar.h"          // for AtDigiPar
-#include "AtEvent.h"            // for AtEvent
-#include "AtPSA.h"              // for AtPSA
+#include "AtClusterize.h" // for AtClusterize
+#include "AtDigiPar.h"    // for AtDigiPar
+#include "AtEvent.h"      // for AtEvent
+#include "AtMCResult.h"
+#include "AtPSA.h" // for AtPSA
+#include "AtParameterDistribution.h"
 #include "AtPatternEvent.h"     // for AtPatternEvent
 #include "AtPulse.h"            // for AtPulse
 #include "AtRawEvent.h"         // for AtRawEvent
@@ -21,8 +23,8 @@ namespace MCFitter {
 
 AtMCFitter::AtMCFitter(SimPtr sim, ClusterPtr cluster, PulsePtr pulse)
    : fMap(pulse->GetMap()), fSim(move(sim)), fClusterize(move(cluster)), fPulse(move(pulse)),
-     fObjectives([](const ObjPair &a, const ObjPair &b) { return a.second < b.second; }), fRawEventArray("AtRawEvent"),
-     fEventArray("AtEvent")
+     fResults([](const AtMCResult &a, const AtMCResult &b) { return a.fObjective < b.fObjective; }),
+     fRawEventArray("AtRawEvent"), fEventArray("AtEvent")
 {
 }
 
@@ -46,26 +48,36 @@ void AtMCFitter::Init()
    fClusterize->GetParameters(fPar);
    if (fPSA)
       fPSA->Init();
+   if (fSim->GetSpaceChargeModel())
+      fSim->GetSpaceChargeModel()->LoadParameters(fPar);
 }
 
 void AtMCFitter::Exec(const AtPatternEvent &event)
 {
    fRawEventArray.Clear();
    fEventArray.Clear();
-   SetParamsFromEvent(event);
+   fResults.clear();
+   SetParamDistributions(event);
 
    for (int i = 0; i < fNumIter; ++i) {
-      SimulateEvent();
-      int idx = DigitizeEvent();
+
+      auto result = DefineEvent();
+      result.Print();
+      auto mcPoints = SimulateEvent(result);
+
+      int idx = DigitizeEvent(mcPoints);
       double obj = ObjectiveFunction(event, idx);
-      fObjectives.insert({idx, obj});
+
+      result.fIterNum = idx;
+      result.fObjective = obj;
+      fResults.insert(result);
    }
 }
 
-int AtMCFitter::DigitizeEvent()
+int AtMCFitter::DigitizeEvent(const TClonesArray &points)
 {
    // Event has been simulated and is sitting in the fSim
-   auto vec = fClusterize->ProcessEvent(fSim->GetPointsArray());
+   auto vec = fClusterize->ProcessEvent(points);
    int eventIndex = fRawEventArray.GetEntries();
    auto *rawEvent = dynamic_cast<AtRawEvent *>(fRawEventArray.ConstructedAt(eventIndex));
    auto *event = dynamic_cast<AtEvent *>(fEventArray.ConstructedAt(eventIndex));
@@ -75,6 +87,30 @@ int AtMCFitter::DigitizeEvent()
       *event = fPSA->Analyze(*rawEvent);
 
    return eventIndex;
+}
+
+void AtMCFitter::FillResultArray(TClonesArray &resultArray) const
+{
+   resultArray.Clear();
+   LOG(debug) << "Filling TCLonesArray with " << fResults.size() << " things";
+   for (auto &res : fResults) {
+      int idx = resultArray.GetEntries();
+      auto toFill = dynamic_cast<AtMCResult *>(resultArray.ConstructedAt(idx));
+      if (toFill == nullptr) {
+         LOG(fatal) << "Failed to get the AtMCResult to fill in output TClonesArray!";
+         return;
+      }
+      LOG(debug2) << "Filling TClonesArray at " << idx;
+      *toFill = res;
+   }
+}
+
+AtMCResult AtMCFitter::DefineEvent()
+{
+   AtMCResult result;
+   for (auto &[name, distro] : fParameters)
+      result.fParameters[name] = distro->Sample();
+   return result;
 }
 
 } // namespace MCFitter

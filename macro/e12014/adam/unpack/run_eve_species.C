@@ -49,7 +49,7 @@ void run_eve_species(TString species, int pressure = 150, TString OutputDataFile
    fMap->ParseXMLMap(mapDir.Data());
    auto eveMan = new AtViewerManager(fMap);
 
-   auto tabMain = std::make_unique<AtTabMain>();
+   auto tabMain = std::make_unique<AtTabFission>();
    tabMain->SetMultiHit(100); // Set the maximum number of multihits in the visualization
 
    auto tabPad = std::make_unique<AtTabPad>(2, 2);

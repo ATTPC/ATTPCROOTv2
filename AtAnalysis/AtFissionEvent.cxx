@@ -35,12 +35,12 @@ AtFissionEvent &AtFissionEvent::operator=(AtFissionEvent other)
    return *this;
 }
 
-const AtPatterns::AtPatternY *AtFissionEvent::GetYPattern()
+const AtPatterns::AtPatternY *AtFissionEvent::GetYPattern() const
 {
    return dynamic_cast<const AtPatterns::AtPatternY *>(GetYTrack().GetPattern());
 }
 
-const AtTrack &AtFissionEvent::GetYTrack()
+const AtTrack &AtFissionEvent::GetYTrack() const
 {
    for (auto &track : fTrackCand) {
       auto pat = dynamic_cast<const AtPatterns::AtPatternY *>(track.GetPattern());
@@ -59,7 +59,7 @@ double AtFissionEvent::GetFoldingAngle()
  * Get the hits associated with the beam that have not been space-charge corrected.
  * (The hits stored in this sub-class)
  */
-std::vector<AtHit *> AtFissionEvent::GetBeamHits()
+std::vector<AtHit *> AtFissionEvent::GetBeamHits() const
 {
    return ContainerManip::GetPointerVector(fBeamHits);
 }
@@ -68,7 +68,7 @@ std::vector<AtHit *> AtFissionEvent::GetBeamHits()
  * Get the hits associated with both fission fragments that have not been space-charge corrected.
  * (The hits stored in this sub-class)
  */
-std::vector<AtHit *> AtFissionEvent::GetFragHits()
+std::vector<AtHit *> AtFissionEvent::GetFragHits() const
 {
    auto ret = ContainerManip::GetPointerVector(fFragHits[0]);
    for (auto &hit : fFragHits[1])
@@ -80,7 +80,7 @@ std::vector<AtHit *> AtFissionEvent::GetFragHits()
  * Get the hits associated with both fission fragments that have not been space-charge corrected.
  * (The hits stored in this sub-class)
  */
-std::vector<AtHit *> AtFissionEvent::GetFragHits(int fragID)
+std::vector<AtHit *> AtFissionEvent::GetFragHits(int fragID) const
 {
    assert(fragID >= 0 && fragID < 2);
    return ContainerManip::GetPointerVector(fFragHits[fragID]);

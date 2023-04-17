@@ -40,6 +40,8 @@ set(SRCS
   AtProtoQuadrant.cxx
   AtTrack.cxx
   AtContainerManip.cxx
+
+  AtMCResult.cxx
   
   AtPattern/AtPattern.cxx
   AtPattern/AtPatternLine.cxx
