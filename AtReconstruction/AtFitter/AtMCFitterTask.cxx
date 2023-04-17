@@ -30,6 +30,8 @@ void AtMCFitterTask::Exec(Option_t *)
 {
    LOG(debug) << "Exec";
    auto patEvent = dynamic_cast<AtPatternEvent *>(fPatternArray->At(0));
+   if (!patEvent->IsGood())
+      return;
    fFitter->Exec(*patEvent);
    fFitter->FillResultArray(fResultArray);
 }

@@ -51,11 +51,11 @@ void run_test(TString species = "Bi200", int pressure = 150, TString OutputDataF
 
    auto fMap = std::make_shared<AtTpcMap>();
    fMap->ParseXMLMap(mapDir.Data());
-   auto eveMan = new AtViewerManager(fMap);
 
    /**** Data reduction task (keep fission only) ****/
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
    reduceTask->SetInputBranch("AtRawEvent");
+   reduceTask->SetOutputBranch("AtFissionEvent");
    TxtEvents events;
    events.AddTxtFile("goodEvent.txt");
    reduceTask->SetReductionFunction(events);
@@ -85,7 +85,7 @@ void run_test(TString species = "Bi200", int pressure = 150, TString OutputDataF
 
    auto fitter = std::make_shared<MCFitter::AtMCFission>(sim, cluster, pulse);
    fitter->SetPSA(psa2);
-   fitter->SetNumIter(500);
+   fitter->SetNumIter(30);
 
    AtMCFitterTask *fitTask = new AtMCFitterTask(fitter);
    fitTask->SetPatternBranchName("AtFissionEvent");
@@ -94,6 +94,6 @@ void run_test(TString species = "Bi200", int pressure = 150, TString OutputDataF
    fRun->AddTask(fitTask);
 
    fRun->Init();
-
+   fRun->Run(0, 100);
    std::cout << "Finished init" << std::endl;
 }
