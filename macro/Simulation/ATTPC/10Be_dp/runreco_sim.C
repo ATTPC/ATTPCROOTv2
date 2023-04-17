@@ -1,4 +1,4 @@
-void runreco_sim(TString mcFile = "output_digi_dp_gs.root")
+void runreco_sim(TString mcFile = "output_digi.root")
 {
    TString mapParFile =
       "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml";
@@ -19,7 +19,7 @@ void runreco_sim(TString mcFile = "output_digi_dp_gs.root")
    FairRunAna *fRun = new FairRunAna();
    fRun->SetInputFile(mcFile);
    fRun->SetGeomFile("/user/e20020/ATTPCROOTv2_e20020_dev/geometry/ATTPC_D1bar_v2_geomanager.root");
-   fRun->SetOutputFile("output_reco_dp_gs.root");
+   fRun->SetOutputFile("output_reco.root");
 
    TString parameterFile = "ATTPC.e20009_sim.par";
    TString digiParFile = dir + "/parameters/" + parameterFile;

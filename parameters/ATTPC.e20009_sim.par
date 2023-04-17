@@ -17,7 +17,7 @@ GroundWirePlaneY:Double_t     -8.1   # mm
 GatingWirePlaneY:Double_t      -14   # mm
 EField:Double_t               5000   # V/m
 NumTbs:Int_t                   512
-SamplingRate:Int_t             3.0   # 
+SamplingRate:Int_t             3.0   #
 DriftVelocity:Double_t         1.0   # cm/us
 DriftLength:Double_t          1000   # mm //ATTPC : 1000 - Prototype : 500
 YDivider:Int_t                1000   # Full drift length will be divided by this number when finding cluster
@@ -36,9 +36,9 @@ ThetaRot:Double_t              0.0   # Second Lorentz Angle
 GasPressure:Double_t           600   # Gas pressure in torr
 EIonize:Double_t            15.603   # Ionization energy of gas in eV
 Fano:Double_t                 0.24   # Fano factor of the gas
-CoefL:Double_t              0.0009   # Longitudal coefficient of diffusion [cm^2/us]
-CoefT:Double_t              0.0009   # Transverse coefficient of diffusion [cm^2/us]
-Gain:Double_t                10000   # Average gain of micromegas
+CoefL:Double_t           0.0000009   # Longitudal coefficient of diffusion [cm^2/us]
+CoefT:Double_t             0.00009   # Transverse coefficient of diffusion [cm^2/us]
+Gain:Double_t               100000   # Average gain of micromegas
 GETGain:Double_t              1000   # Gain of the GET electronics in fC
 PeakingTime:Int_t              720   # Electronic peaking time in ns
 MaxRange:Double_t            500.0   # Maximum range from Beam energy in mm

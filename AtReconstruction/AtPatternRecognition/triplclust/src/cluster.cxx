@@ -78,7 +78,7 @@ void compute_hc(const PointCloud &cloud, cluster_group &result, const std::vecto
    size_t k, cluster_size;
    hclust_fast_methods link;
 
-   if (!triplet_size) {
+   if (triplet_size < 3) {
       // if no triplets are generated
       return;
    }

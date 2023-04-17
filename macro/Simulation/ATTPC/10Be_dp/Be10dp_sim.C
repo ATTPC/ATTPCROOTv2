@@ -4,10 +4,10 @@ void Be10dp_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name
-   TString outFile = "./data/attpcsim_ctest_520.root";
+   TString outFile = "./data/attpcsim.root";
 
    // Parameter file name
-   TString parFile = "./data/attpcpar_ctest_520.root";
+   TString parFile = "./data/attpcpar.root";
 
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
@@ -15,8 +15,6 @@ void Be10dp_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
    // ------------------------------------------------------------------------
 
    // gSystem->Load("libAtGen.so");
-
-   AtVertexPropagator *vertex_prop = new AtVertexPropagator();
 
    // -----   Create simulation run   ----------------------------------------
    FairRunSim *run = new FairRunSim();

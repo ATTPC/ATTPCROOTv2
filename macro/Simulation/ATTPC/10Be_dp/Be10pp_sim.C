@@ -4,10 +4,10 @@ void Be10pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name
-   TString outFile = "./data/attpcsim_gs.root";
+   TString outFile = "./data/attpcsim.root";
 
    // Parameter file name
-   TString parFile = "./data/attpcpar_gs.root";
+   TString parFile = "./data/attpcpar.root";
 
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
@@ -16,7 +16,6 @@ void Be10pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 
    // gSystem->Load("libAtGen.so");
 
-   AtVertexPropagator *vertex_prop = new AtVertexPropagator();
 
    // -----   Create simulation run   ----------------------------------------
    FairRunSim *run = new FairRunSim();
@@ -122,14 +121,14 @@ void Be10pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    ExE.push_back(0.0);            // In MeV
 
    //--- Scattered -----
-   Zp.push_back(4);  // 12Be TRACKID=1
+   Zp.push_back(4);  // 10Be TRACKID=1
    Ap.push_back(10); //
    Qp.push_back(0);
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
    Mass.push_back(10.013533818); // uma
-   ExE.push_back(0.0);           // 3.368
+   ExE.push_back(7.5);           // 3.368
 
    // ---- Recoil -----
    Zp.push_back(1); // p  TRACKID=2

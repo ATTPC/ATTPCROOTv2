@@ -1,19 +1,23 @@
-void run_eve(TString InputDataFile = "output_digi_dp_gs.root", TString OutputDataFile = "output.reco_display.root",
-             TString unpackDir = "/Simulation/ATTPC/10Be_dp/")
+void run_eve(TString InputFile = "output_digi.root", TString OutputFile = "output.reco_display.root",
+             TString unpackDir = "/Simulation/ATTPC/10Be_dp/data/")
 {
    FairLogger *fLogger = FairLogger::GetLogger();
    fLogger->SetLogToScreen(kTRUE);
    fLogger->SetLogVerbosityLevel("MEDIUM");
    TString dir = getenv("VMCWORKDIR");
-   TString geoFile = "ATTPC_D1bar_v2_geomanager.root";
+   TString geoFile = "ATTPC_He600torr_v2_geomanager.root";
+   TString mapFile = "Lookup20150611.xml";
 
-   TString InputDataPath = dir + "/macro/" + unpackDir + InputDataFile;
-   TString OutputDataPath = dir + "/macro/" + unpackDir + OutputDataFile;
+   TString InputDataFile = dir + "/macro/" + unpackDir + InputFile;
+   TString OutputDataFile = dir + "/macro/" + unpackDir + OutputFile;
    TString GeoDataPath = dir + "/geometry/" + geoFile;
+   TString mapDir = dir + "/scripts/" + mapFile;
 
    FairRunAna *fRun = new FairRunAna();
-   fRun->SetInputFile(InputDataPath);
-   fRun->SetOutputFile(OutputDataPath);
+   FairRootFileSink *sink = new FairRootFileSink(OutputDataFile);
+   FairFileSource *source = new FairFileSource(InputDataFile);
+   fRun->SetSource(source);
+   fRun->SetSink(sink);
    fRun->SetGeomFile(GeoDataPath);
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
@@ -25,11 +29,18 @@ void run_eve(TString InputDataFile = "output_digi_dp_gs.root", TString OutputDat
 
    AtEventManager *eveMan = new AtEventManager();
    AtEventDrawTask *eve = new AtEventDrawTask();
+   auto fMap = std::make_shared<AtTpcMap>();
+   fMap->ParseXMLMap(mapDir.Data());
+   eve->SetMap(fMap);
    eve->Set3DHitStyleBox();
    eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
-   eve->SetSaveTextData();
-   eve->UnpackHoughSpace();
+   // eve->SetSaveTextData();
+   eve->SetRawEventBranch("AtRawEvent");
+   eve->SetEventBranch("AtEventH");
 
    eveMan->AddTask(eve);
    eveMan->Init();
+
+   std::cout << "Finished init" << std::endl;
+   // eveMan->RunEvent(27);
 }

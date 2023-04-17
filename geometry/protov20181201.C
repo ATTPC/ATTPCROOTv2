@@ -202,6 +202,6 @@ void protov20181201()
 
    TCanvas *c1 = new TCanvas("c1", "Pad Plane", 600, 600);
    c1->cd();
-   h2pol->Draw("colz");
+   h2pol->Draw("colz L");
    sec_center->Draw("P");
 }

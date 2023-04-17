@@ -97,16 +97,17 @@ std::vector<double> AtTools::AtKinematics::KinematicalFit(std::vector<double> &p
 
    for (auto i = 0; i < fNumParticles; ++i) {
       for (auto j = 0; j < 4; ++j) {
-
          (*fAlphaP.at(i + 1))[j][0] = parameters[i * 4 + j];
       }
-      (*fAlphaP.at(0)).SetSub(i, 0, (*fAlphaP.at(i + 1)));
+      (*fAlphaP.at(0)).SetSub(i*4, 0, (*fAlphaP.at(i + 1)));
    }
 
    TMatrixD *alpha;
    TMatrixD dalpha(4 * fNumParticles, 1); // delta alpha
    dalpha.Zero();
    alpha = fAlphaP.at(0).get();
+
+   //alpha->Print();
 
    TMatrixD chi2(1, 1);
    chi2.Zero();
@@ -119,7 +120,8 @@ std::vector<double> AtTools::AtKinematics::KinematicalFit(std::vector<double> &p
 
       TMatrixD D = CalculateD(alpha);
       TMatrixD Dt = D;
-      TMatrixD Vd = D * Cov * Dt.T();
+      Dt.T();
+      TMatrixD Vd = D * Cov * Dt;
       Vd.Invert();
       Cov = Cov - Cov * Dt * Vd * D * Cov * weighting;
 
@@ -136,6 +138,8 @@ std::vector<double> AtTools::AtKinematics::KinematicalFit(std::vector<double> &p
       *alpha = *fAlphaP.at(0).get() - weighting * Cov * Dt * lambda;
       dalpha = *alpha - *fAlphaP.at(0).get();
       *fAlphaP.at(0).get() = *alpha;
+
+      //std::cout<<" chi2 "<<chi2[0][0]<<"\n";
 
       if (fabs(chi2[0][0]) < 1.0)
          break;
@@ -164,17 +168,20 @@ TMatrixD AtTools::AtKinematics::Calculated(TMatrixD *alpha)
       mout2 += (*alpha)[4 * i + 1][0];
       mout3 += (*alpha)[4 * i + 2][0];
       mout4 += (*alpha)[4 * i + 3][0];
+      //std::cout<<mout1<<"\n";
    }
 
    double h1 = (*alpha)[0][0] - mout1; // momentum conservation X
    double h2 = (*alpha)[1][0] - mout2; // momentum conservation Y
    double h3 = (*alpha)[2][0] - mout3; // momentum conservation Z
-   double h4 = (*alpha)[3][0] + mout4; // Total Energy conservation
+   double h4 = (*alpha)[3][0] + mt - mout4; // Total Energy conservation
 
    dval[0][0] = h1;
    dval[1][0] = h2;
    dval[2][0] = h3;
    dval[3][0] = h4;
+
+   //dval.Print();
 
    return dval;
 }
@@ -196,7 +203,7 @@ TMatrixD AtTools::AtKinematics::CalculateD(TMatrixD *alpha)
       Dval.SetSub(0, i * 4, Dsub);
    }
 
-   // Dval.Print();
+   //Dval.Print();
 
    return Dval;
 }
@@ -216,7 +223,7 @@ TMatrixD AtTools::AtKinematics::CalculateCovariance()
       Vval.SetSub(i * 4, i * 4, Vsub);
    }
 
-   // Vval.Print();
+    //Vval.Print();
 
    return Vval;
 }
