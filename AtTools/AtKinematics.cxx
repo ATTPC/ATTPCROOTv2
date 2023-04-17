@@ -155,7 +155,7 @@ TMatrixD AtTools::AtKinematics::Calculated(TMatrixD *alpha)
 {
    TMatrixD dval(4, 1);
    dval.Zero();
-   // double mt = fTargetMass * 931.494; // target mass
+   double mt = fTargetMass * 931.494; // target mass
 
    double mout1 = 0.0;
    double mout2 = 0.0;
