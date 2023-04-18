@@ -11,7 +11,6 @@
 #include <Rtypes.h>           // for THashConsistencyHolder, ClassDefOverride
 
 #include <array>   // for swap, array
-#include <memory>  // for shared_ptr
 #include <utility> // for move
 #include <vector>
 class AtHit;
@@ -19,9 +18,6 @@ class AtTrack;
 class TBuffer;
 class TClass;
 class TMemberInspector;
-struct AtPadReference;
-
-class AtMap;
 
 /**
  * Class for getting useful information from fission events.

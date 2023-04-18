@@ -1,6 +1,5 @@
 #ifndef ATMCFISSION_H
 #define ATMCFISSION_H
-
 #include "AtBaseEvent.h" // for AtBaseEvent
 #include "AtMCFitter.h"  // for AtMCFitter, AtMCFitter::ClusterPtr
 #include "AtMCResult.h"
@@ -12,10 +11,11 @@
 #include <Math/Vector3Dfwd.h> // for XYZVector
 #include <Math/Vector4D.h>    // for LorentzVector
 #include <Math/Vector4Dfwd.h> // for PxPyPzEVector
+#include <TClonesArray.h>     // for TClonesArray
 
 #include <array> // for array
 #include <cmath> // for sqrt
-class AtEvent;   // lines 16-16
+
 class AtFissionEvent;
 namespace MCFitter {
 struct Ion {

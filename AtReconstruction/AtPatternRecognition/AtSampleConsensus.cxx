@@ -1,5 +1,6 @@
 #include "AtSampleConsensus.h"
 
+#include "AtBaseEvent.h" // for AtBaseEvent
 #include "AtContainerManip.h"
 #include "AtEvent.h" // for AtEvent
 #include "AtHit.h"   // for AtHit
@@ -72,7 +73,7 @@ AtPatternEvent AtSampleConsensus::Solve(const std::vector<const AtHit *> &hitArr
 {
    // Return early if we were passed an event and it is marked bad
    if (event != nullptr && !event->IsGood())
-      return AtPatternEvent(*event);
+      return {*event};
 
    if (hitArray.size() < fMinPatternPoints) {
       LOG(error) << "Not enough points to solve. Has " << hitArray.size() << " requires " << fMinPatternPoints;

@@ -6,7 +6,6 @@
 #include <Rtypes.h>
 
 #include <algorithm>
-#include <iostream>
 #include <string> // for string
 
 ClassImp(AtEvent);

@@ -1,6 +1,8 @@
 #ifndef ATMCFITTER_H
 #define ATMCFITTER_H
 
+#include "AtMCResult.h" // for AtMCResult
+
 #include <TClonesArray.h> // for TClonesArray
 
 #include <functional>     // for function
@@ -19,7 +21,6 @@ class AtSimpleSimulation; // lines 14-14
 
 namespace MCFitter {
 class AtParameterDistribution;
-class AtMCResult;
 
 class AtMCFitter {
 protected:

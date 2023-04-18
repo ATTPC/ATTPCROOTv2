@@ -10,8 +10,6 @@
 #include <TClonesArray.h>
 #include <TObject.h>
 
-#include <memory>
-
 ClassImp(AtDataReductionTask);
 
 void AtDataReductionTask::SetReductionFunction(std::function<bool(AtBaseEvent *)> func)

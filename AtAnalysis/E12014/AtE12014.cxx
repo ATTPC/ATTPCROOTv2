@@ -4,7 +4,9 @@
 #include "AtDataManip.h"
 #include "AtHit.h"
 #include "AtMap.h"
+#include "AtPad.h" // for AtPad
 #include "AtPadArray.h"
+#include "AtPadReference.h" // for AtPadReference
 #include "AtRawEvent.h"
 #include "AtTpcMap.h"
 
@@ -14,6 +16,8 @@
 #include <TH1.h>
 #include <TString.h>
 
+#include <cstdlib> // for getenv
+#include <iosfwd>  // for ifstream
 #include <set>
 std::shared_ptr<AtMap> E12014::fMap;
 

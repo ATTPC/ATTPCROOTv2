@@ -1,8 +1,8 @@
 #ifndef ATE12014_H
 #define ATE12014_H
 #include <memory>
+#include <string> // for string
 #include <vector>
-
 class AtMap;
 class TH1;
 class AtHit;

@@ -7,7 +7,7 @@
 #include "AtParameterDistribution.h" // for AtParameterDistribution, MCFi...
 #include "AtPattern.h"               // for AtPattern, AtPatterns
 #include "AtPatternEvent.h"
-#include "AtPatternLine.h"
+#include "AtPatternY.h" // for AtPatternY, AtPatternY::XYZVector
 #include "AtPulse.h"
 #include "AtRadialChargeModel.h"
 #include "AtSimpleSimulation.h"
@@ -26,12 +26,10 @@
 #include <TRandom.h>
 
 #include <algorithm> // for find_if
-#include <iostream>  // for endl, cout, ostream
 #include <map>       // for map, map<>::mapped_type
 #include <memory>    // for make_shared, __shared_ptr_access
 #include <string>    // for string
 #include <vector>    // for vector, allocator
-
 using namespace MCFitter;
 using namespace AtPatterns;
 using Polar3D = ROOT::Math::Polar3DVector;
@@ -316,10 +314,10 @@ AtMCResult AtMCFission::DefineEvent()
  */
 void AtMCFission::SetMomMagnitude(XYZVector beamDir, std::array<XYZVector, 2> &mom, double pTrans)
 {
-   for (int i = 0; i < mom.size(); ++i) {
-      auto angle = ROOT::Math::VectorUtil::Angle(beamDir, mom[i]);
+   for (auto &i : mom) {
+      auto angle = ROOT::Math::VectorUtil::Angle(beamDir, i);
       auto p = pTrans / std::sin(angle);
-      mom[i] *= p;
+      i *= p;
    }
 }
 

@@ -1,34 +1,26 @@
 #include "AtTabEnergyLoss.h"
 
-#include "AtCSVReader.h"
-#include "AtDataManip.h"
-#include "AtE12014.h"
-#include "AtEvent.h"
-#include "AtHit.h" // for AtHit, AtHit::XYZPoint, AtHit::X...
-#include "AtMap.h"
-#include "AtPad.h" // for AtPad
-#include "AtPadArray.h"
-#include "AtPattern.h" // for AtPattern
-#include "AtPatternEvent.h"
-#include "AtPatternLine.h"
-#include "AtRawEvent.h"
-#include "AtTrack.h"
-#include "AtViewerManager.h"
-#include "AtViewerManagerSubject.h" // for AtTreeEntry
+#include "AtCSVReader.h"            // for CSVRow, CSVRange, CSVIterator
+#include "AtDataManip.h"            // for GetTB
+#include "AtE12014.h"               // for E12014
+#include "AtHit.h"                  // for AtHit, AtHit::XYZPoint, AtHit::X...
+#include "AtMap.h"                  // for AtMap, AtMap::InhibitType, AtMap...
+#include "AtRawEvent.h"             // for AtRawEvent
+#include "AtViewerManager.h"        // for AtViewerManager
+#include "AtViewerManagerSubject.h" // for AtTreeEntry, AtBranch
 
 #include <FairLogger.h> // for Logger, LOG
 
-#include <TCanvas.h>
-#include <TF1.h>
-#include <TH1.h>
-#include <THStack.h>
-#include <TMath.h>   // for Sqrt, Sq, ACos, CeilNint, RadToDeg
-#include <TString.h> // for TString
+#include <TCanvas.h> // for TCanvas
+#include <TF1.h>     // for TF1, TF1::EAddToList, TF1::EAddT...
+#include <TH1.h>     // for TH1F
+#include <THStack.h> // for THStack
+#include <TMath.h>   // for Sqrt, Sq, CeilNint
+#include <TString.h> // for TString, operator<<
 
 #include <algorithm> // for max
 #include <cmath>     // for abs, sqrt
-#include <iostream>  // for ifstream, operator<<, endl, basi...
-#include <set>       // for set
+#include <iostream>  // for ifstream
 #include <string>    // for getline, string
 
 using XYZVector = ROOT::Math::XYZVector;

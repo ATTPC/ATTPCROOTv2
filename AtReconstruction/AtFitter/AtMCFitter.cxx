@@ -11,7 +11,9 @@
 #include "AtRawEvent.h"         // for AtRawEvent
 #include "AtSimpleSimulation.h" // for AtSimpleSimulation
 #include "AtSimulatedPoint.h"   // IWYU pragma: keep
+#include "AtSpaceChargeModel.h"
 
+#include <FairLogger.h>    // for LOG, Logger
 #include <FairParSet.h>    // for FairParSet
 #include <FairRunAna.h>    // for FairRunAna
 #include <FairRuntimeDb.h> // for FairRuntimeDb

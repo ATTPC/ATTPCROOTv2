@@ -1,7 +1,5 @@
 #include "AtMCResult.h"
 
-#include <TObject.h>
-
 #include <iostream>
 ClassImp(MCFitter::AtMCResult);
 namespace MCFitter {

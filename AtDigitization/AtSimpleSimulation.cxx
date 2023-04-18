@@ -3,6 +3,7 @@
 
 #include "AtELossModel.h"
 #include "AtMCPoint.h"
+#include "AtSpaceChargeModel.h" // for AtSpaceChargeModel
 
 #include <FairLogger.h>
 #include <FairRootManager.h>

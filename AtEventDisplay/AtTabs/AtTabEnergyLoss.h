@@ -2,14 +2,11 @@
 #define ATTABENERGYLOSS_H
 #include "AtDataObserver.h" // for AtObserver
 #include "AtDataSubject.h"  // for AtSimpleType, AtSubject (ptr only)
-#include "AtEvent.h"
 #include "AtFissionEvent.h"
 #include "AtPadReference.h" // for AtPadReference
-#include "AtPatternEvent.h"
 #include "AtRawEvent.h"
 #include "AtTabCanvas.h"
 #include "AtTabInfo.h" // for AtTabInfoFairRoot
-#include "AtTrack.h"
 
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h> // for XYZPoint
@@ -28,7 +25,9 @@ class TH1F;
 namespace DataHandling {
 class AtTreeEntry;
 }
-
+namespace DataHandling {
+class AtBranch;
+}
 /**
  * @brief Class to calculate dE/dx for fission fragments (but possibly generally).
  *

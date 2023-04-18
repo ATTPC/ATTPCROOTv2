@@ -2,7 +2,6 @@
 #define AT_SIMPLE_SIMULATION_H
 
 #include "AtMCPoint.h"
-#include "AtSpaceChargeModel.h"
 
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h> // for XYZPoint
@@ -20,6 +19,7 @@ namespace AtTools {
 class AtELossModel;
 }
 class TGeoVolume;
+class AtSpaceChargeModel;
 
 /**
  * Class for simulating simple events using AtELossModels.

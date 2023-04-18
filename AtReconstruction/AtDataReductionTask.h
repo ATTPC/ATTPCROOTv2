@@ -6,8 +6,10 @@
 #include <Rtypes.h>
 #include <TString.h>
 
+#include <algorithm>  // for max
 #include <functional> // for function
 #include <utility>    // for move
+#include <vector>     // for vector
 
 class AtBaseEvent;
 class TClonesArray;

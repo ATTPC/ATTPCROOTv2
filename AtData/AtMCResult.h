@@ -1,9 +1,15 @@
 #ifndef ATMCRESULT_H
 #define ATMCRESULT_H
 
+#include <Rtypes.h> // for Double_t, THashConsistencyHolder, ClassDefOverride
 #include <TObject.h>
 
 #include <map>
+#include <string> // for string
+class TBuffer;
+class TClass;
+class TMemberInspector;
+
 namespace MCFitter {
 
 /**

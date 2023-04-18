@@ -5,6 +5,7 @@
 
 #include <Rtypes.h> // for Option_t
 #include <TClonesArray.h>
+#include <TString.h> // for TString
 
 #include <memory> // for shared_ptr
 

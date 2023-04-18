@@ -35,6 +35,7 @@ std::ostream &operator<<(std::ostream &os, const AtMap::InhibitType &t)
    case InhibitType::kTotal: os << "kTotal"; break;
    case InhibitType::kLowGain: os << "kLowGain"; break;
    case InhibitType::kXTalk: os << "kXTalk"; break;
+   case InhibitType::kBadPad: os << "kBadPad"; break;
    }
    return os;
 }

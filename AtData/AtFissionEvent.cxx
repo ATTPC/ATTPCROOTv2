@@ -6,10 +6,10 @@
 #include "AtTrack.h"   // for AtTrack, AtTrack::HitVector
 
 #include <Math/VectorUtil.h>
-#include <TF1.h>
 
 #include <algorithm> // for find
 #include <cassert>
+#include <memory>    // for unique_ptr
 #include <stdexcept> // for invalid_argument
 
 ClassImp(AtFissionEvent);

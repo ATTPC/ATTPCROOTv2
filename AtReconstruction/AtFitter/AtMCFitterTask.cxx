@@ -3,6 +3,7 @@
 #include "AtMCFitter.h"
 #include "AtPatternEvent.h"
 
+#include <FairLogger.h>      // for LOG, Logger
 #include <FairRootManager.h> // for FairRootManager
 
 #include <TClonesArray.h> // for TClonesArray
