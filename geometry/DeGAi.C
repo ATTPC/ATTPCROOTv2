@@ -21,6 +21,7 @@
 #include "TString.h"
 #include "TSystem.h"
 
+#include <Math/Polar3D.h>
 #include <iostream>
 
 // Name of geometry version and output file
@@ -80,7 +81,7 @@ const Float_t cage_support_length = 38.6867;
 // DeGAi
 const Float_t Box_Width = 10.1;
 const Float_t Box_Length = 7.0;
-const Float_t Crystal_Diameter = 5.0;
+const Float_t Crystal_Diameter = 2.5;
 const Float_t Crystal_Length = 7.0;
 const Float_t Hole_Diameter = 1.0;
 const Float_t Hole_Length = 4.0;
@@ -306,19 +307,20 @@ TGeoVolume *create_detector()
       Cry_vol[nora]->SetTransparency(80);*/
 
    /*         322.8804903,307.1195097,308.1415006,321.8584994      -Phi[i],Theta[i]            */
+
    TString PositionType = "mine";
    if(PositionType=="center"){
 
    for(Int_t i =0;i<10;i++){
-   TGeoVolume *center = new TGeoVolume(CrystalName + name_cry[4*i], Detector, degaimatter);
-      center->SetLineColor(Color[4*i]);
+   ROOT::Math::Polar3D vec = ROOT::Math::Polar3D(Rnew[4*i],TMath::DegToRad()*Phi[4*i],TMath::DegToRad()*Theta[4*i]);
+   Cry_vol[i] = gGeoManager->MakeTube(CrystalName + name_cry[i], degaimatter, 0,
+                                            Crystal_Diameter/2, Box_Length / 2);
+      Cry_vol[i]->SetLineColor(Color[4*i]);
       gGeoMan->GetVolume(geoVersion)
-         ->AddNode(center, i + 1,
-                   new TGeoCombiTrans(-Rnew[4*i]*TMath::Sin(TMath::DegToRad()*Theta[4*i])*TMath::Sin(TMath::DegToRad()*Phi[4*i]),
-                   Rnew[4*i]*TMath::Cos(TMath::DegToRad()*Phi[4*i]), 
-                   Rnew[4*i]*TMath::Cos(TMath::DegToRad()*Theta[4*i])*TMath::Sin(TMath::DegToRad()*Phi[4*i]) + cage_support_length/2,
-                                      new TGeoRotation("center",Phi[4*i],Theta[4*i] , 0)));
-      center->SetTransparency(0);
+         ->AddNode(Cry_vol[i], i + 1,
+                   new TGeoCombiTrans(-vec.y(),vec.z(),vec.x() + cage_support_length/2,
+                                      new TGeoRotation(CrystalName + name_cry[i],Phi[4*i],Theta[4*i] , 0)));
+      Cry_vol[i]->SetTransparency(0);
    };
    }
    // DeGAi given values
@@ -326,37 +328,53 @@ TGeoVolume *create_detector()
    else if(PositionType=="given"){
 
    for(Int_t i =0;i<40;i++){
+
+   ROOT::Math::Polar3D vec = ROOT::Math::Polar3D(Rvals[i],TMath::DegToRad()*ThetaDet[i],TMath::DegToRad()*PhiDet[i]);
    Cry_vol[i] = gGeoManager->MakeTube(CrystalName + name_cry[i], degaimatter, 0,
                                             Crystal_Diameter/2, Box_Length / 2);
       Cry_vol[i]->SetLineColor(Color[i]);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(Cry_vol[i], i + 1,
-                   new TGeoCombiTrans(-Rvals[i]*TMath::Sin(TMath::DegToRad()*ThetaDet[i])*TMath::Sin(TMath::DegToRad()*PhiDet[i]),
-                   Rvals[i]*TMath::Cos(TMath::DegToRad()*PhiDet[i]), 
-                   Rvals[i]*TMath::Cos(TMath::DegToRad()*ThetaDet[i])*TMath::Sin(TMath::DegToRad()*PhiDet[i]) + cage_support_length/2,
+                   new TGeoCombiTrans(vec.z(),vec.x(),vec.y() + cage_support_length/2,
                                       new TGeoRotation(CrystalName + name_cry[i],Phi[i],Theta[i] , 0)));
       Cry_vol[i]->SetTransparency(0);
    };
    }
   
    else if(PositionType=="mine"){
-
-   for(Int_t i =0;i<40;i++){
+   for(Int_t i =0;i<0;i++){
+   ROOT::Math::Polar3D vec = ROOT::Math::Polar3D(Rnew[4*i],TMath::DegToRad()*Phi[4*i],TMath::DegToRad()*Theta[4*i]);
+   TGeoVolume *center = gGeoManager->MakeTube("center", degaimatter, 0,
+                                            Crystal_Diameter/2, Box_Length / 2);
+      center->SetLineColor(Color[4*i]);
+      gGeoMan->GetVolume(geoVersion)
+         ->AddNode(center, i + 1,
+                   new TGeoCombiTrans(-vec.y(),vec.z(),vec.x() + cage_support_length/2,
+                                      new TGeoRotation("center",Phi[4*i],Theta[4*i] , 0)));
+      center->SetTransparency(0);
+   };   
+   
+   for(Int_t i =0;i<8;i++){
+   ROOT::Math::Polar3D vec = ROOT::Math::Polar3D(Rn[i],TMath::DegToRad()*Phinew[i],TMath::DegToRad()*Thetanew[i]);
    Cry_vol[i] = gGeoManager->MakeTube(CrystalName + name_cry[i], degaimatter, 0,
                                             Crystal_Diameter/2, Box_Length / 2);
       Cry_vol[i]->SetLineColor(Color[i]);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(Cry_vol[i], i + 1,
-                   new TGeoCombiTrans(-Rn[i]*TMath::Sin(TMath::DegToRad()*Thetanew[i])*TMath::Sin(TMath::DegToRad()*Phinew[i]),
-                   Rn[i]*TMath::Cos(TMath::DegToRad()*Phinew[i]), 
-                   Rn[i]*TMath::Cos(TMath::DegToRad()*Thetanew[i])*TMath::Sin(TMath::DegToRad()*Phinew[i]) + cage_support_length/2,
+                   new TGeoCombiTrans(-vec.y(), vec.z(),vec.x() + cage_support_length/2,
                                       new TGeoRotation(CrystalName + name_cry[i],Phi[i],Theta[i] , 0)));
       Cry_vol[i]->SetTransparency(0);
-      std::cout<<"detector: " << i << " R: " << Rn[i] << " Theta: " << Thetanew[i] << " Phi: " << Phinew[i] << std::endl;
-      std::cout<< "x: " << -Rn[i]*TMath::Sin(TMath::DegToRad()*Thetanew[i])*TMath::Sin(TMath::DegToRad()*Phinew[i]) << " y: " << Rn[i]*TMath::Cos(TMath::DegToRad()*Phinew[i]) << " z: " << Rn[i]*TMath::Cos(TMath::DegToRad()*Thetanew[i])*TMath::Sin(TMath::DegToRad()*Phinew[i]) + cage_support_length/2 << std::endl;
+      
+      std::cout<< "x = y, y = z, z = x"<<std::endl;
+      std::cout<< "x:" << -vec.y() << " y:" << vec.z() << " z:" << vec.x() << std::endl;
+      std::cout<< "x: " << -Rn[i]*TMath::Sin(TMath::DegToRad()*Thetanew[i])*TMath::Sin(TMath::DegToRad()*Phinew[i]) << 
+      " y: " << Rn[i]*TMath::Cos(TMath::DegToRad()*Phinew[i]) << 
+      " z: " << Rn[i]*TMath::Cos(TMath::DegToRad()*Thetanew[i])*TMath::Sin(TMath::DegToRad()*Phinew[i]) + cage_support_length/2 << std::endl;
    };
    };/*
-   
+   #include <Math/GenVector/DisplacementVector3D.h>
+#include <Math/GenVector/SphericalCoordinateSystem.h>
+#include <Math/GenVector/Cartesian3D.h>
       for(Int_t i =0;i<10;i++){
          Cry_vol[4*i] = new TGeoVolume(CrystalName + name_cry[4*i], Clover1, degaimatter);
          Cry_vol[4*i]->SetLineColor(Color[4*i]);
