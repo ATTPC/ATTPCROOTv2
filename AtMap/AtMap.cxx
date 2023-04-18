@@ -181,7 +181,7 @@ void AtMap::ParseMapList(TXMLNode *node)
       if (node->GetNodeType() == TXMLNode::kXMLElementNode) { // Element node
          if (strcmp(node->GetNodeName(), "e17504_fission") == 0 || strcmp(node->GetNodeName(), "Lookup20150611") == 0 ||
              strcmp(node->GetNodeName(), "e18505") == 0 || strcmp(node->GetNodeName(), "LookupProto20150331") == 0 ||
-             strcmp(node->GetNodeName(), "LookupProto10Be") == 0 ||
+             strcmp(node->GetNodeName(), "LookupProto10Be") == 0 || "ANL2023.xml" ||
              strcmp(node->GetNodeName(), "LookupProto20181201v2") == 0 ||
              strcmp(node->GetNodeName(), "LookupProtoX17") == 0 ||
              strcmp(node->GetNodeName(), "e12014_pad_mapping") == 0 ||
