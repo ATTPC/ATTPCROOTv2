@@ -27,12 +27,12 @@ private:
     */
    EFieldPtr GetEField{nullptr};
 
-   Double_t fEFieldZ{700};              //< Magnitude of electric field in Z direction [V/cm]
-   Double_t fDriftVel{0.815};           //< Drift velocity of electron in gas [cm/us]
-   Double_t fMobilityElec{1.16429e-3};  //< Mobility of electron (calculated from drift velocity) [cm2/V/us]
-   Double_t fStepSize{1e-4};            //< Step size for solving differential equation [us]
-   XYZPoint fWindow{0, 0, 0};           //<Beam location at window in mm
-   XYZPoint fPadPlane{0, 0, 1000};      //<Beam location at pad plane in mm
+   Double_t fEFieldZ{700};             //< Magnitude of electric field in Z direction [V/cm]
+   Double_t fDriftVel{0.815};          //< Drift velocity of electron in gas [cm/us]
+   Double_t fMobilityElec{1.16429e-3}; //< Mobility of electron (calculated from drift velocity) [cm2/V/us]
+   Double_t fStepSize{1e-4};           //< Step size for solving differential equation [us]
+   XYZPoint fWindow{0, 0, 0};          //<Beam location at window in mm
+   XYZPoint fPadPlane{0, 0, 1000};     //<Beam location at pad plane in mm
 
 public:
    AtRadialChargeModel(EFieldPtr efield);

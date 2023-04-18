@@ -32,4 +32,5 @@ generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
   DEPS_PUBLIC ${DEPENDENCIES}
+  INCLUDE_DIR ${INCLUDE_DIRECTORIES}
   )
