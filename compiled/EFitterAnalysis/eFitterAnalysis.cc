@@ -26,10 +26,11 @@ int main(int argc, char *argv[])
    bool simulationConv = 0;
    bool enableMerging = 1;
    bool enableSingleVertexTrack = 1;
-   bool enableReclustering = 1;     // For benchmarking purposes
-   Double_t clusterRadius = 7.5;    // mm
-   Double_t clusterDistance = 15.0; // mm
-   Exp exp = e20009;
+   bool enableReclustering = 1;//For benchmarking purposes
+   Double_t clusterRadius = 7.5;//mm
+   Double_t clusterDistance   = 15.0;//mm
+   Exp exp = a1954;
+
 
    // Physics parameters
    Float_t magneticField = 3.0;       // T
@@ -65,7 +66,31 @@ int main(int argc, char *argv[])
    TString simFile;
    TString outputFileName;
 
-   switch (exp) {
+   switch(exp)
+      {
+
+   case a1954:
+      gasMediumDensity = 0.083147;
+
+      if (simulationConv) {
+         filePath = dir + "/macro/Simulation/ATTPC/14C_pp/data/";
+         simFile = "_sim_";
+      } else {
+         filePath = dir + "/macro/Unpack_HDF5/a1954/";
+         simFile = "";
+      }
+
+      geoManFile = dir + "/geometry/ATTPC_H1bar_geomanager.root";
+      ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
+
+      std::cout << " Analysis of experiment a1954. Gas density : " << gasMediumDensity << " mg/cm3"
+                << "\n";
+      std::cout << " File path : " << filePath << "\n";
+      std::cout << " Geomtry file : " << geoManFile << "\n";
+      std::cout << " Ion list file : " << ionList << "\n";
+
+      break;
+
    case e20009:
       gasMediumDensity = 0.13129;
 
@@ -170,7 +195,7 @@ int main(int argc, char *argv[])
          std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
          std::cout << cGREEN << "   >>>> Number of pattern tracks " << patternTrackCand.size() << cNORMAL << "\n";
 
-         fitManager->GetAuxiliaryChannels(auxPadArray);
+         // fitManager->GetAuxiliaryChannels(auxPadArray);
 
          fitManager->FitTracks(patternTrackCand);
 
@@ -289,9 +314,9 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       AtHitCluster endCluster;
       Double_t zIniCal = 0;
       Double_t zEndCal = 0;
-      XYZPoint iniPos;
-      XYZPoint secPos;
-      XYZPoint endPos;
+      ROOT::Math::XYZPoint iniPos;
+      ROOT::Math::XYZPoint secPos;
+      ROOT::Math::XYZPoint endPos;
 
       if (thetaConv < 90.0) { // Forward tracks
          iniCluster =
@@ -424,7 +449,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
       auto hitClusterArray = track.GetHitClusterArray();
       AtHitCluster iniCluster;
       Double_t zIniCal = 0;
-      XYZPoint iniPos;
+      ROOT::Math::XYZPoint iniPos;
 
       // for(auto hitCluster : *hitClusterArray)
       // std::cout<<" Cluster hit "<<hitCluster.GetHitID()<<" - "<<hitCluster.GetPosition().X()<<" -
@@ -882,6 +907,7 @@ Bool_t FitManager::SetInputFile(TString &file, std::size_t firstEve, std::size_t
 
 void FitManager::GetAuxiliaryChannels(const std::map<std::string, AtAuxPad> &padArray)
 {
+
    for (const auto &[name, pad] : padArray) {
 
       if (name.compare(std::string("IC_sca")) == 0) {
@@ -890,6 +916,7 @@ void FitManager::GetAuxiliaryChannels(const std::map<std::string, AtAuxPad> &pad
          ICMult = GetNPeaksHRS(&ICTimeVec, &ICVec, adc.data());
       }
       if (name.compare(std::string("IC")) == 0) {
+
          auto &adc = pad.GetADC();
 
          for (auto iadc = 0; iadc < 512; ++iadc)
@@ -1295,6 +1322,7 @@ Bool_t FitManager::CheckOverlap(AtTrack *trA, AtTrack *trB)
       while ((itB = std::find_if(itB, hitArrayB.end(), [&itA](std::unique_ptr<AtHit> &hitB) {
                  return hitB->GetTimeStamp() == (*itA)->GetTimeStamp();
               })) != hitArrayB.end()) {
+
          iTBMatches.push_back(std::distance(hitArrayB.begin(), itB));
          itB++;
       }
