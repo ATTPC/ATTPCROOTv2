@@ -31,6 +31,7 @@ public:
 
    void InitTab() override;
    void Exec() override;
+   DataHandling::AtBranch &GetFissionBranch() { return fFissionEventBranch; }
 
 protected:
    void UpdateRenderState() override;

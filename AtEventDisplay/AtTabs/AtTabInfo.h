@@ -106,6 +106,7 @@ public:
 
    T *GetInfo() { return Get(); }
    T *Get() { return fInfo; }
+   T *operator->() { return Get(); }
 
    void Update(DataHandling::AtSubject *changedSubject) override
    {

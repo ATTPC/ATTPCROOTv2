@@ -45,12 +45,10 @@ void AtTabEnergyLoss::SetStyle(std::array<TH1Ptr, 2> &hists, THStack &stack)
    }
 }
 
-AtTabEnergyLoss::AtTabEnergyLoss()
+AtTabEnergyLoss::AtTabEnergyLoss(DataHandling::AtBranch &fissionBranch)
    : AtTabCanvas("dE/dx", 2, 2), fRawEvent(AtViewerManager::Instance()->GetRawEventName()),
-     fEvent(AtViewerManager::Instance()->GetEventName()),
-     fPatternEvent(AtViewerManager::Instance()->GetPatternEventName()),
-     fEntry(AtViewerManager::Instance()->GetCurrentEntry()), fBinWidth(100), fSigmaFromHit(2), fTBtoAvg(10),
-     fRatioFunc(std::make_unique<TF1>("ratioFunc", "pol0", 0, 1, TF1::EAddToList::kNo)),
+     fFissionEvent(fissionBranch), fEntry(AtViewerManager::Instance()->GetCurrentEntry()), fBinWidth(100),
+     fSigmaFromHit(2), fTBtoAvg(10), fRatioFunc(std::make_unique<TF1>("ratioFunc", "pol0", 0, 1, TF1::EAddToList::kNo)),
      fProxyFunc(std::make_unique<TF1>("proxyFunc", "pol0", 0, 1, TF1::EAddToList::kNo)),
      fZFunc(std::make_unique<TF1>("zFunc", "pol0", 0, 1, TF1::EAddToList::kNo))
 {
@@ -134,15 +132,14 @@ void AtTabEnergyLoss::Update()
    fProxy->Reset();
    fZHist->Reset();
 
-   if (fPatternEvent.GetInfo() == nullptr) {
-      return;
-   }
-   if (fPatternEvent.GetInfo()->GetTrackCand().size() != 2) {
-      LOG(info) << "Skipping dEdx in event. Not exactly two tracks.";
+   if (fFissionEvent.Get() == nullptr) {
+      LOG(info) << "Cannot find AtFissionEvent in branch " << fFissionEvent.GetBranch().GetBranchName();
       return;
    }
 
-   setAngleAndVertex();
+   fAngle = fFissionEvent->GetFoldingAngle();
+   fVertex = fFissionEvent->GetVertex();
+
    setdEdX();
 
    // Fill fSumQ and fSumFit
@@ -284,19 +281,19 @@ void AtTabEnergyLoss::FillSums(float threshold)
       fTrackStart[i] = 0;
 
       // Fill fSumQ
-      FillChargeSum(fSumQ[i].get(), fPatternEvent.Get()->GetTrackCand()[i].GetHitArray(), threshold);
+      FillChargeSum(fSumQ[i].get(), fFissionEvent->GetFragHits(i), threshold);
 
       // Fill fSumFit
-      for (auto &hit : fPatternEvent.GetInfo()->GetTrackCand()[i].GetHitArray()) {
+      for (auto &hit : fFissionEvent->GetFragHits(i)) {
          if (isGoodHit(*hit)) {
             FillFitSum(fSumFit[i].get(), *hit, threshold);
 
             // Update the first hit (want highest TB)
             if (fFirstHit[i] == nullptr) {
-               fFirstHit[i] = hit.get();
+               fFirstHit[i] = hit;
             } else if (hit->GetPosition().Z() - fSigmaFromHit.Get() * hit->GetPositionSigma().Z() <
                        fFirstHit[i]->GetPosition().Z() - fSigmaFromHit.Get() * fFirstHit[i]->GetPositionSigma().Z()) {
-               fFirstHit[i] = hit.get();
+               fFirstHit[i] = hit;
             }
 
             // Update hit location
@@ -313,7 +310,7 @@ void AtTabEnergyLoss::setdEdX()
 {
    for (int i = 0; i < 2; ++i) {
 
-      for (auto &hit : fPatternEvent.GetInfo()->GetTrackCand()[i].GetHitArray())
+      for (auto &hit : fFissionEvent->GetFragHits(i))
          if (hit->GetPosition().z() > 0 && hit->GetPosition().Z() > fVertex.Z()) {
             dEdx[i]->Fill(getHitDistanceFromVertex(*hit), hit->GetCharge());
             dEdxZ[i]->Fill(getHitDistanceFromVertexAlongZ(*hit), hit->GetCharge());

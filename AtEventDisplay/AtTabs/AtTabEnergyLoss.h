@@ -3,6 +3,7 @@
 #include "AtDataObserver.h" // for AtObserver
 #include "AtDataSubject.h"  // for AtSimpleType, AtSubject (ptr only)
 #include "AtEvent.h"
+#include "AtFissionEvent.h"
 #include "AtPadReference.h" // for AtPadReference
 #include "AtPatternEvent.h"
 #include "AtRawEvent.h"
@@ -37,13 +38,13 @@ protected:
    using XYZVector = ROOT::Math::XYZVector;
    using XYZPoint = ROOT::Math::XYZPoint;
    using TH1Ptr = std::unique_ptr<TH1F>;
-   using HitVector = std::vector<std::unique_ptr<AtHit>>;
+   using HitVector = std::vector<AtHit *>;
 
    AtTabInfoFairRoot<AtRawEvent> fRawEvent;         //< Points to selected RawEventBranch
-   AtTabInfoFairRoot<AtEvent> fEvent;               //< Points to selected EventBranch
-   AtTabInfoFairRoot<AtPatternEvent> fPatternEvent; //< Points to selected Pattern Event Branch
-   DataHandling::AtTreeEntry &fEntry;               //< Tracks current entry
-   DataHandling::AtSimpleType<float> fBinWidth;     //< Width of binning in mm
+   AtTabInfoFairRoot<AtFissionEvent> fFissionEvent; //< Fision event to analyse
+
+   DataHandling::AtTreeEntry &fEntry;           //< Tracks current entry
+   DataHandling::AtSimpleType<float> fBinWidth; //< Width of binning in mm
 
    /// Number of std dev to go after the mean of the first hit before calcualting the ratio of the
    /// histograms.
@@ -87,7 +88,7 @@ protected:
    std::vector<AtPadReference> fVetoPads;
 
 public:
-   AtTabEnergyLoss();
+   AtTabEnergyLoss(DataHandling::AtBranch &fissionBranch);
    ~AtTabEnergyLoss();
    void InitTab() override;
    void Exec() override{};
