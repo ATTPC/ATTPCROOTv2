@@ -9,6 +9,7 @@ set(SRCS
   AtStringManip.cxx
   AtELossModel.cxx
   AtELossTable.cxx
+  AtFindVertex.cxx
   
   AtCSVReader.cxx
   AtEulerTransformation.cxx
@@ -30,7 +31,7 @@ set(SRCS
   AtHitSampling/AtGaussian.cxx
   AtHitSampling/AtWeightedGaussian.cxx
   AtHitSampling/AtWeightedY.cxx
-    AtHitSampling/AtY.cxx
+  AtHitSampling/AtY.cxx
   ElectronicResponse/AtElectronicResponse.cxx
   ElectronicResponse/AtROOTresponse.cxx
   AtHitSampling/AtWeightedGaussianTrunc.cxx

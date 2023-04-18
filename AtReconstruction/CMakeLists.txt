@@ -21,13 +21,13 @@ Set(DEPENDENCIES
   FairRoot::Base
   FairRoot::FairTools
 
-  ATTPCROOT::AtAnalysis
   ATTPCROOT::AtMap
   ATTPCROOT::AtParameter
   ATTPCROOT::AtSimulationData
   ATTPCROOT::AtData
   ATTPCROOT::AtTools
   ATTPCROOT::AtDigitization
+  ATTPCROOT::AtAnalysis
   
   ROOT::Spectrum
   ROOT::Core

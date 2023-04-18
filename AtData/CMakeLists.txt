@@ -42,6 +42,7 @@ set(SRCS
   AtContainerManip.cxx
 
   AtMCResult.cxx
+  AtFissionEvent.cxx
   
   AtPattern/AtPattern.cxx
   AtPattern/AtPatternLine.cxx

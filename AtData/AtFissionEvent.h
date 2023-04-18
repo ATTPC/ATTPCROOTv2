@@ -65,9 +65,6 @@ public:
    std::vector<AtHit *> GetFragHitsCorr();
    std::vector<AtHit *> GetFragHitsCorr(int fragID);
 
-   std::vector<double>
-   GetdQdTB(int fragID, const std::vector<AtPadReference> &vetoPads, std::shared_ptr<AtMap> fMap, int threshold = 15);
-
    void SetBeamHits(HitVector vec) { fBeamHits = std::move(vec); }
    void SetFragHits(int fragID, HitVector vec);
    void SetLambda(double l) { fLambda = l; }

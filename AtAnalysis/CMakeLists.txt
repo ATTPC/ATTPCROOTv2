@@ -5,27 +5,27 @@ Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
 set(INCLUDE_DIRECTORIES
 # Add all the folders having header files you used in the code.
-${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
-#${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/trackfinder
+${CMAKE_SOURCE_DIR}/AtAnalysis/E12014
 )
 
 set(DEPENDENCIES
   FairRoot::Base
   FairRoot::FairTools
-    ROOT::GenVector
+
+  ROOT::GenVector
   ROOT::Core
 
   ATTPCROOT::AtData
   ATTPCROOT::AtTools
   ATTPCROOT::AtMap
+
   )
 
 set(SRCS
   AtRunAna.cxx
-  AtFindVertex.cxx
-  AtFissionEvent.cxx
-  AtFissionTask.cxx
-  AtE12014.cxx
+  
+  E12014/AtFissionTask.cxx
+  E12014/AtE12014.cxx
   )
 
 generate_target_and_root_library(${LIBRARY_NAME}

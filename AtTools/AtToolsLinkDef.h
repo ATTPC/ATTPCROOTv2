@@ -45,12 +45,14 @@
 #pragma link C++ class ElectronicResponse::AtVectorResponse - !;
 #pragma link C++ class ElectronicResponse::AtFileResponse - !;
 
-#pragma link C++ class AtCutHEIST - !; p
+#pragma link C++ class AtCutHEIST - !;
 #pragma link C++ class CSVRow < int> - !;
 #pragma link C++ class CSVIterator < int> - !;
 #pragma link C++ class CSVRange < int> - !;
 #pragma link C++ class CSVRange < std::string> - !;
 #pragma link C++ class tk::spline - !;
+
+#pragma link C++ class AtFindVertex - ;
 
 #pragma link C++ function AtTools::GetHitFunctionTB;
 #pragma link C++ function AtTools::GetHitFunction;
