@@ -48,9 +48,8 @@ void run_eve(TString species = "Bi200", int pressure = 150, TString OutputDataFi
    fRun->GetRuntimeDb()->setFirstInput(parIo1);
    fRun->GetRuntimeDb()->getContainer("AtDigiPar");
 
-   auto fMap = std::make_shared<AtTpcMap>();
-   fMap->ParseXMLMap(mapDir.Data());
-   auto eveMan = new AtViewerManager(fMap);
+   E12014::CreateMap();
+   auto eveMan = new AtViewerManager(E12014::fMap);
 
    auto tabMain = std::make_unique<AtTabFission>();
    tabMain->SetMultiHit(100); // Set the maximum number of multihits in the visualization

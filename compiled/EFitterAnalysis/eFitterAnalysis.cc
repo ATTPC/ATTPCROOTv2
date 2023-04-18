@@ -1,5 +1,5 @@
 #include "eFitterAnalysis.h"
-
+using XYZPoint = ROOT::Math::XYZPoint;
 int main(int argc, char *argv[])
 {
 
@@ -26,14 +26,14 @@ int main(int argc, char *argv[])
    bool simulationConv = 0;
    bool enableMerging = 1;
    bool enableSingleVertexTrack = 1;
-   bool enableReclustering = 1;//For benchmarking purposes
-   Double_t clusterRadius = 7.5;//mm
-   Double_t clusterDistance   = 15.0;//mm
+   bool enableReclustering = 1;     // For benchmarking purposes
+   Double_t clusterRadius = 7.5;    // mm
+   Double_t clusterDistance = 15.0; // mm
    Exp exp = e20009;
 
    // Physics parameters
-   Float_t magneticField = 3.0;        // T
-   Float_t gasMediumDensity = 0.1533;  //  0.1533 mg/cm3 (a,a) - 0.13129 mg/cm3 (d,p)
+   Float_t magneticField = 3.0;       // T
+   Float_t gasMediumDensity = 0.1533; //  0.1533 mg/cm3 (a,a) - 0.13129 mg/cm3 (d,p)
 
    //  Arguments
    if (argc == 7) {
@@ -65,61 +65,59 @@ int main(int argc, char *argv[])
    TString simFile;
    TString outputFileName;
 
-   switch(exp)
-      {
-       case e20009:
-	gasMediumDensity = 0.13129;
+   switch (exp) {
+   case e20009:
+      gasMediumDensity = 0.13129;
 
-   if (simulationConv) {
-      filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/data/";
-      simFile = "_sim_";
-        } else {
+      if (simulationConv) {
+         filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/data/";
+         simFile = "_sim_";
+      } else {
          filePath = dir + "/macro/Unpack_HDF5/e20009/";
          simFile = "";
-        }
+      }
 
-        geoManFile = dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
-        ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
+      geoManFile = dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
+      ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
 
-        std::cout << " Analysis of experiment e20009. Gas density : " << gasMediumDensity << " mg/cm3"
-                  << "\n";
-        std::cout << " File path : " << filePath << "\n";
-        std::cout << " Geomtry file : " << geoManFile << "\n";
-        std::cout << " Ion list file : " << ionList << "\n";
+      std::cout << " Analysis of experiment e20009. Gas density : " << gasMediumDensity << " mg/cm3"
+                << "\n";
+      std::cout << " File path : " << filePath << "\n";
+      std::cout << " Geomtry file : " << geoManFile << "\n";
+      std::cout << " Ion list file : " << ionList << "\n";
 
-        break;
+      break;
 
-       case e20020:
-	gasMediumDensity = 0.1533;
+   case e20020:
+      gasMediumDensity = 0.1533;
 
-	if (simulationConv) {
-      filePath = dir + "/macro/Simulation/ATTPC/16O_aa_v2/";
-      simFile = "_sim_";
-        } else {
-           filePath = dir + "/macro/Unpack_HDF5/e20020/";
-           simFile = "";
-        }
+      if (simulationConv) {
+         filePath = dir + "/macro/Simulation/ATTPC/16O_aa_v2/";
+         simFile = "_sim_";
+      } else {
+         filePath = dir + "/macro/Unpack_HDF5/e20020/";
+         simFile = "";
+      }
 
-        geoManFile = dir + "/geometry/ATTPC_He1bar_v2_geomanager.root";
-        ionList = dirCstr + "/resources/ionFitLists/e20020_ionList.xml";
+      geoManFile = dir + "/geometry/ATTPC_He1bar_v2_geomanager.root";
+      ionList = dirCstr + "/resources/ionFitLists/e20020_ionList.xml";
 
-        std::cout << " Analysis of experiment e20020. Gas density : " << gasMediumDensity << " mg/cm3"
-                  << "\n";
-        std::cout << " File path : " << filePath << "\n";
-        std::cout << " Geomtry file : " << geoManFile << "\n";
-        std::cout << " Ion list file : " << ionList << "\n";
-        break;
-     }
+      std::cout << " Analysis of experiment e20020. Gas density : " << gasMediumDensity << " mg/cm3"
+                << "\n";
+      std::cout << " File path : " << filePath << "\n";
+      std::cout << " Geomtry file : " << geoManFile << "\n";
+      std::cout << " Ion list file : " << ionList << "\n";
+      break;
+   }
 
    outputFileName = "fit_analysis_" + simFile + inputFileName;
    outputFileName += "_" + std::to_string(firstEvt) + "_" + std::to_string(lastEvt) + ".root";
 
    inputFileName = filePath + inputFileName + ".root";
 
-   std::cout<<" Input file name : "<<inputFileName<<"\n";
+   std::cout << " Input file name : " << inputFileName << "\n";
 
-   ////FitManager becomes owner
-
+   ////FitManagerfita becomes owner
    std::shared_ptr<FitManager> fitManager;
 
    try {
@@ -138,7 +136,7 @@ int main(int argc, char *argv[])
    fitManager->SetFitDirection(fitDirection);
    fitManager->EnableMerging(enableMerging);
    fitManager->EnableSingleVertexTrack(enableSingleVertexTrack);
-   fitManager->EnableReclustering(enableReclustering,clusterRadius,clusterDistance);
+   fitManager->EnableReclustering(enableReclustering, clusterRadius, clusterDistance);
    fitManager->SetExpNum(exp);
 
    if (fInteractiveMode)
@@ -882,17 +880,17 @@ Bool_t FitManager::SetInputFile(TString &file, std::size_t firstEve, std::size_t
    return true;
 }
 
-void FitManager::GetAuxiliaryChannels(const std::vector<AtAuxPad> &padArray)
+void FitManager::GetAuxiliaryChannels(const std::map<std::string, AtAuxPad> &padArray)
 {
-   for (const auto& pad : padArray) {
+   for (const auto &[name, pad] : padArray) {
 
-      if (pad.GetAuxName().compare(std::string("IC_sca")) == 0) {
+      if (name.compare(std::string("IC_sca")) == 0) {
 
          auto adc = pad.GetADC();
          ICMult = GetNPeaksHRS(&ICTimeVec, &ICVec, adc.data());
       }
-      if (pad.GetAuxName().compare(std::string("IC")) == 0) {
-         auto& adc = pad.GetADC();
+      if (name.compare(std::string("IC")) == 0) {
+         auto &adc = pad.GetADC();
 
          for (auto iadc = 0; iadc < 512; ++iadc)
             ICEVec.push_back(adc[iadc]);
@@ -1294,8 +1292,8 @@ Bool_t FitManager::CheckOverlap(AtTrack *trA, AtTrack *trB)
 
       std::vector<Int_t> iTBMatches;
       auto itB = hitArrayB.begin();
-      while ((itB = std::find_if(itB, hitArrayB.end(), [&itA](AtHit &hitB) {
-                 return hitB.GetTimeStamp() == itA->GetTimeStamp();
+      while ((itB = std::find_if(itB, hitArrayB.end(), [&itA](std::unique_ptr<AtHit> &hitB) {
+                 return hitB->GetTimeStamp() == (*itA)->GetTimeStamp();
               })) != hitArrayB.end()) {
          iTBMatches.push_back(std::distance(hitArrayB.begin(), itB));
          itB++;

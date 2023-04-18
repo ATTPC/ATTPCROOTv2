@@ -25,6 +25,7 @@ set(SRCS
   AtFindVertex.cxx
   AtFissionEvent.cxx
   AtFissionTask.cxx
+  AtE12014.cxx
   )
 
 generate_target_and_root_library(${LIBRARY_NAME}

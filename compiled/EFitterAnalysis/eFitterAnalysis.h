@@ -123,7 +123,7 @@ public:
    std::shared_ptr<TTreeReader> GetReader() { return fReader; }
    AtPatternEvent *GetPatternEve() { return (AtPatternEvent *)fPatternEveArray->Get()->At(0); }
    AtEvent *GetEve() { return (AtEvent *)fEveArray->Get()->At(0); }
-   void GetAuxiliaryChannels(const std::vector<AtAuxPad> &auxPadArray);
+   void GetAuxiliaryChannels(const std::map<std::string, AtAuxPad> &padArray);
    Exp GetExpNum() { return fExpNum; }
 
    // File management

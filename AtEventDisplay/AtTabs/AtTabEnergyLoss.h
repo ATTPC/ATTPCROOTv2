@@ -99,11 +99,7 @@ private:
 
    void FillSums(float threshold = 15);
 
-   void FillChargeSum(TH1F *hist, const HitVector &hits, int threshold);
-   void FillFitSum(TH1F *hist, const AtHit &hit, int threshold);
-
    void FillRatio();
-   bool isGoodHit(const AtHit &hit);
 };
 
 #endif //#ifndef ATTABENERGYLOSS_H

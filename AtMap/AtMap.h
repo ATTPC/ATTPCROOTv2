@@ -42,7 +42,7 @@ protected:
    multiarray *fAtPadCoordPtr{};
    Bool_t kIsParsed = false; //< True if the input file is parsed
    Bool_t kDebug = false;
-   std::map<Int_t, AtMap::InhibitType> fIniPads;
+   std::unordered_map<AtPadReference, AtMap::InhibitType> fIniPads;
    TCanvas *fPadPlaneCanvas{}; // Raw pointer because owned by gROOT
    TH2Poly *fPadPlane;         // Raw pointer because owned by gDirectory
    UInt_t fNumberPads{};
@@ -52,7 +52,6 @@ protected:
    std::unordered_map<AtPadReference, std::string> fAuxPadMap;
    std::map<int, int> fPadSizeMap;
 
-   void inhibitPad(Int_t padNum, AtMap::InhibitType type);
    void drawPadPlane();
 
 public:
@@ -94,7 +93,10 @@ public:
 
    inline void SetDebugMode(Bool_t flag = true) { kDebug = flag; }
    Bool_t ParseInhibitMap(TString inimap, AtMap::InhibitType type);
-   AtMap::InhibitType IsInhibited(Int_t PadNum);
+   void InhibitPad(Int_t padNum, AtMap::InhibitType type) { InhibitPad(GetPadRef(padNum), type); }
+   void InhibitPad(AtPadReference padRef, AtMap::InhibitType type);
+   AtMap::InhibitType IsInhibited(Int_t PadNum) { return IsInhibited(GetPadRef(PadNum)); }
+   AtMap::InhibitType IsInhibited(AtPadReference padRef);
    Int_t GetPadSize(int padNum);
 
 #pragma GCC diagnostic push

@@ -8,5 +8,6 @@
 #pragma link C++ class AtFindVertex + ;
 #pragma link C++ class AtFissionEvent + ;
 #pragma link C++ class AtFissionTask + ;
+#pragma link C++ class E12014 - !;
 
 #endif

@@ -106,7 +106,10 @@ public:
 
    T *GetInfo() { return Get(); }
    T *Get() { return fInfo; }
+   const T *operator->() const { return Get(); }
+   const T &operator*() const { return *Get(); }
    T *operator->() { return Get(); }
+   T &operator*() { return *Get(); }
 
    void Update(DataHandling::AtSubject *changedSubject) override
    {

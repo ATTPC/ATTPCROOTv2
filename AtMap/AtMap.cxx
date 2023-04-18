@@ -125,22 +125,23 @@ Bool_t AtMap::ParseInhibitMap(TString inimap, AtMap::InhibitType type)
 
    while (!fIni.eof()) {
       fIni >> pad;
-      inhibitPad(pad, type);
+      InhibitPad(pad, type);
    }
 
    LOG(info) << cYELLOW << fIniPads.size() << " pads in inhibition list." << cNORMAL;
    return true;
 }
 
-void AtMap::inhibitPad(Int_t padNum, AtMap::InhibitType type)
+void AtMap::InhibitPad(AtPadReference padRef, AtMap::InhibitType type)
 {
-   auto pad = fIniPads.find(padNum);
+   auto pad = fIniPads.find(padRef);
    if (pad == fIniPads.end() || pad->second < type)
-      fIniPads[padNum] = type;
+      fIniPads[padRef] = type;
 }
-AtMap::InhibitType AtMap::IsInhibited(Int_t PadNum)
+
+AtMap::InhibitType AtMap::IsInhibited(AtPadReference padRef)
 {
-   auto pad = fIniPads.find(PadNum);
+   auto pad = fIniPads.find(padRef);
    if (pad == fIniPads.end())
       return InhibitType::kNone;
    else

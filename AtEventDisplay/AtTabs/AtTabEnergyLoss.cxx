@@ -2,6 +2,7 @@
 
 #include "AtCSVReader.h"
 #include "AtDataManip.h"
+#include "AtE12014.h"
 #include "AtEvent.h"
 #include "AtHit.h" // for AtHit, AtHit::XYZPoint, AtHit::X...
 #include "AtMap.h"
@@ -215,75 +216,23 @@ void AtTabEnergyLoss::FillRatio()
    fProxyFunc->SetParameter(0, proxyAvg);
 }
 
-void AtTabEnergyLoss::FillFitSum(TH1F *hist, const AtHit &hit, int threshold)
-{
-   auto func = AtTools::GetHitFunctionTB(hit);
-   if (func == nullptr)
-      return;
-
-   for (int tb = 0; tb < 512; ++tb) {
-      auto val = func->Eval(tb);
-      if (val > threshold)
-         hist->Fill(tb, val);
-   }
-}
-
-bool AtTabEnergyLoss::isGoodHit(const AtHit &hit)
-{
-   auto padRef = AtViewerManager::Instance()->GetMap()->GetPadRef(hit.GetPadNum());
-   if (padRef.cobo == 2 && padRef.asad == 3)
-      return false;
-
-   for (auto ref : fVetoPads)
-      if (ref == padRef)
-         return false;
-
-   return true;
-}
-
-void AtTabEnergyLoss::FillChargeSum(TH1F *hist, const HitVector &hits, int threshold)
-{
-   auto rawEvent = fRawEvent.GetInfo();
-   if (rawEvent == nullptr) {
-      std::cout << "Raw event is null!" << std::endl;
-      return;
-   }
-
-   std::set<int> usedPads;
-   for (auto &hit : hits) {
-
-      if (usedPads.count(hit->GetPadNum()) != 0 || !isGoodHit(*hit))
-         continue;
-      usedPads.insert(hit->GetPadNum());
-
-      auto pad = fRawEvent.Get()->GetPad(hit->GetPadNum());
-      if (pad == nullptr)
-         continue;
-
-      const auto charge = pad->GetAugment<AtPadArray>("Qreco");
-      if (charge == nullptr)
-         continue;
-
-      // If we pass all the checks, add the charge to the histogram
-      for (int tb = 20; tb < 500; ++tb)
-         if (charge->GetArray(tb) > threshold)
-            hist->Fill(tb + 0.5, charge->GetArray(tb));
-
-   } // end loop over hits
-}
 void AtTabEnergyLoss::FillSums(float threshold)
 {
+   if (fRawEvent.Get() == nullptr)
+      return;
    for (int i = 0; i < 2; ++i) {
       fFirstHit[i] = nullptr;
       fTrackStart[i] = 0;
 
       // Fill fSumQ
-      FillChargeSum(fSumQ[i].get(), fFissionEvent->GetFragHits(i), threshold);
+      E12014::FillChargeSum(fSumQ[i].get(), fFissionEvent->GetFragHits(i), *fRawEvent, threshold);
 
       // Fill fSumFit
+      E12014::FillHitSum(fSumFit[i].get(), fFissionEvent->GetFragHits(i), threshold);
+
       for (auto &hit : fFissionEvent->GetFragHits(i)) {
-         if (isGoodHit(*hit)) {
-            FillFitSum(fSumFit[i].get(), *hit, threshold);
+         auto inhibitType = AtViewerManager::Instance()->GetMap()->IsInhibited(hit->GetPadNum());
+         if (inhibitType != AtMap::InhibitType::kNone) {
 
             // Update the first hit (want highest TB)
             if (fFirstHit[i] == nullptr) {
