@@ -137,9 +137,6 @@ void AtTabEnergyLoss::Update()
       return;
    }
 
-   fAngle = fFissionEvent->GetFoldingAngle();
-   fVertex = fFissionEvent->GetVertex();
-
    setdEdX();
 
    // Fill fSumQ and fSumFit
@@ -311,7 +308,7 @@ void AtTabEnergyLoss::setdEdX()
    for (int i = 0; i < 2; ++i) {
 
       for (auto &hit : fFissionEvent->GetFragHits(i))
-         if (hit->GetPosition().z() > 0 && hit->GetPosition().Z() > fVertex.Z()) {
+         if (hit->GetPosition().z() > 0 && hit->GetPosition().Z() > fFissionEvent->GetVertex().Z()) {
             dEdx[i]->Fill(getHitDistanceFromVertex(*hit), hit->GetCharge());
             dEdxZ[i]->Fill(getHitDistanceFromVertexAlongZ(*hit), hit->GetCharge());
          }
@@ -323,53 +320,17 @@ void AtTabEnergyLoss::setdEdX()
    }
 }
 
-void AtTabEnergyLoss::setAngleAndVertex()
-{
-   std::vector<XYZVector> lineStart;
-   std::vector<XYZVector> lineStep; // each step is 1 mm in z
-   if (fTracks.size() != 2)
-      return;
-
-   for (auto &track : fTracks) {
-      auto line = dynamic_cast<const AtPatterns::AtPatternLine *>(track.GetPattern());
-      if (line == nullptr)
-         return;
-      lineStart.emplace_back(line->GetPoint());
-      lineStep.emplace_back(line->GetDirection());
-   }
-
-   fVertex = calcualteVetrex(lineStart, lineStep);
-   LOG(info) << "Vertex: " << fVertex;
-
-   auto dot = lineStep[0].Unit().Dot(lineStep[1].Unit());
-   fAngle = TMath::ACos(dot) * TMath::RadToDeg();
-   LOG(info) << "Angle: " << fAngle;
-}
-
-XYZPoint
-AtTabEnergyLoss::calcualteVetrex(const std::vector<XYZVector> &lineStart, const std::vector<XYZVector> &lineStep)
-{
-   auto n = lineStep[0].Cross(lineStep[1]);
-   auto n0 = lineStep[0].Cross(n);
-   auto n1 = lineStep[1].Cross(n);
-
-   auto c0 = lineStart[0] + (lineStart[1] - lineStart[0]).Dot(n1) / lineStep[0].Dot(n1) * lineStep[0];
-   auto c1 = lineStart[1] + (lineStart[0] - lineStart[1]).Dot(n0) / lineStep[1].Dot(n0) * lineStep[1];
-
-   return XYZPoint((c0 + c1) / 2.);
-}
-
 double AtTabEnergyLoss::getHitDistanceFromVertex(const AtHit &hit)
 {
    auto p = hit.GetPosition();
    auto position = XYZPoint(p.x(), p.y(), p.z());
-   auto diff = position - fVertex;
+   auto diff = position - fFissionEvent->GetVertex();
    return TMath::Sqrt(diff.Mag2());
 }
 
 double AtTabEnergyLoss::getHitDistanceFromVertexAlongZ(const AtHit &hit)
 {
    auto p = hit.GetPosition();
-   auto diff = p.z() - fVertex.z();
+   auto diff = p.z() - fFissionEvent->GetVertex().z();
    return diff;
 }

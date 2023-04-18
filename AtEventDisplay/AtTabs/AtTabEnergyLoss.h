@@ -51,12 +51,6 @@ protected:
    DataHandling::AtSimpleType<float> fSigmaFromHit;
    DataHandling::AtSimpleType<int> fTBtoAvg; //< Number of TB from track start to average for ratio.
 
-   // Data for current entry
-   double fAngle{0};
-   XYZPoint fVertex;
-   std::vector<std::vector<double>> fCharge;
-   std::vector<AtTrack> fTracks;
-
    // Helpful things
    const std::array<Color_t, 2> fHistColors = {9, 31};
 
@@ -99,11 +93,9 @@ public:
 private:
    void SetStyle(std::array<TH1Ptr, 2> &hists, THStack &stack);
    void Update();
-   void setAngleAndVertex();
    void setdEdX();
    double getHitDistanceFromVertex(const AtHit &hit);
    double getHitDistanceFromVertexAlongZ(const AtHit &hit);
-   XYZPoint calcualteVetrex(const std::vector<XYZVector> &lineStart, const std::vector<XYZVector> &lineStep);
 
    void FillSums(float threshold = 15);
 
