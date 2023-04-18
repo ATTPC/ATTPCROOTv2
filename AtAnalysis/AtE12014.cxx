@@ -6,7 +6,7 @@
 #include "AtPadArray.h"
 #include "AtRawEvent.h"
 #include "AtTpcMap.h"
-
+#include "AtCSVReader.h"
 #include <FairLogger.h>
 
 #include <TF1.h>
@@ -35,6 +35,21 @@ void E12014::CreateMap()
 
    for (auto &badPad : badPads)
       fMap->InhibitPad(badPad, AtMap::InhibitType::kBadPad);
+
+   // Add the smart-zap region to the map
+   std::ifstream file("/mnt/projects/hira/e12014/tpcSharedInfo/e12014_zap.csv");
+   if (!file.is_open())
+      LOG(error) << "Failed to open smart zap file";
+
+   // Clear out the header
+   std::string temp;
+   std::getline(file, temp);
+   std::getline(file, temp);
+
+   for (auto &row : CSVRange<int>(file)) {
+      LOG(debug) << "Inhibiting " << row[4];
+      fMap->InhibitPad(row[4], AtMap::InhibitType::kLowGain);
+   }
 }
 
 void E12014::FillChargeSum(TH1 *hist, const std::vector<AtHit *> &hits, AtRawEvent &event, int threshold,

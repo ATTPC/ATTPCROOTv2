@@ -232,22 +232,23 @@ void AtTabEnergyLoss::FillSums(float threshold)
 
       for (auto &hit : fFissionEvent->GetFragHits(i)) {
          auto inhibitType = AtViewerManager::Instance()->GetMap()->IsInhibited(hit->GetPadNum());
-         if (inhibitType != AtMap::InhibitType::kNone) {
+         if (inhibitType != AtMap::InhibitType::kNone)
+            continue;
 
-            // Update the first hit (want highest TB)
-            if (fFirstHit[i] == nullptr) {
-               fFirstHit[i] = hit;
-            } else if (hit->GetPosition().Z() - fSigmaFromHit.Get() * hit->GetPositionSigma().Z() <
-                       fFirstHit[i]->GetPosition().Z() - fSigmaFromHit.Get() * fFirstHit[i]->GetPositionSigma().Z()) {
-               fFirstHit[i] = hit;
-            }
+         // Update the first hit (want highest TB)
+         auto hitLocation = hit->GetPosition().Z() - fSigmaFromHit.Get() * hit->GetPositionSigma().Z();
+         if (fFirstHit[i] == nullptr) {
+            fFirstHit[i] = hit;
+         } else if (hitLocation <
+                    fFirstHit[i]->GetPosition().Z() - fSigmaFromHit.Get() * fFirstHit[i]->GetPositionSigma().Z()) {
+            fFirstHit[i] = hit;
+         }
 
-            // Update hit location
-            auto hitLocation = hit->GetPosition().Z() - fSigmaFromHit.Get() * hit->GetPositionSigma().Z();
-            if (fTrackStart[i] < hitLocation) {
-               LOG(debug) << "Setting start of " << i << " to " << hit->GetPosition() << " at " << hit->GetPadNum();
-               fTrackStart[i] = hitLocation;
-            }
+         // Update hit location
+
+         if (fTrackStart[i] < hitLocation) {
+            LOG(debug) << "Setting start of " << i << " to " << hit->GetPosition() << " at " << hit->GetPadNum();
+            fTrackStart[i] = hitLocation;
          }
       }
    }
