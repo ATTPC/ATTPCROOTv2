@@ -15,7 +15,6 @@ AtPatternEvent::AtPatternEvent(const AtPatternEvent &copy) : AtBaseEvent(copy), 
    for (const auto &hit : copy.fNoise)
       fNoise.push_back(hit->Clone());
 }
-AtPatternEvent::AtPatternEvent(const AtBaseEvent &copy) : AtBaseEvent(copy) {}
 
 AtPatternEvent &AtPatternEvent::operator=(AtPatternEvent object)
 {

@@ -20,13 +20,6 @@ AtEvent::AtEvent(const AtEvent &copy)
       fHitArray.push_back(hit->Clone());
 }
 
-// Here we are intentionally slicing to call the copy constructor to copy all the shared data between
-// event types
-AtEvent::AtEvent(const AtRawEvent &copy) : AtBaseEvent(copy) // NOLINT
-{
-   SetName("AtEvent");
-}
-
 AtEvent &AtEvent::operator=(AtEvent object)
 {
    swap(*this, object);

@@ -39,8 +39,8 @@ private:
 public:
    AtEvent();
    AtEvent(const AtEvent &copy);
+   AtEvent(const AtBaseEvent &copy) : AtBaseEvent(copy) { SetName("AtEvent"); }
    AtEvent &operator=(const AtEvent object);
-   AtEvent(const AtRawEvent &copy);
    ~AtEvent() = default;
 
    friend void swap(AtEvent &first, AtEvent &second)

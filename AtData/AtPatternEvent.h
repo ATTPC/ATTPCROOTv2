@@ -27,7 +27,7 @@ protected:
 public:
    AtPatternEvent(const char *name = "AtPatternEvent");
    AtPatternEvent(const AtPatternEvent &copy);
-   AtPatternEvent(const AtBaseEvent &copy);
+   AtPatternEvent(const AtBaseEvent &copy) : AtBaseEvent(copy) { SetName("AtPatternEvent"); }
    AtPatternEvent(AtPatternEvent &&copy) = default;
    AtPatternEvent &operator=(const AtPatternEvent object);
    virtual ~AtPatternEvent() = default;
