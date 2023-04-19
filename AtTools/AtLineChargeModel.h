@@ -13,18 +13,30 @@ using XYZPoint = ROOT::Math::XYZPoint;
 class AtLineChargeModel : public AtSpaceChargeModel {
 
 private:
-   double fLambda; //< Magnitude of line charge [C/m]
-   double fField;  //< Magnitude of drift field [V/m]
+   double fLambda{1.54e-8};   //< Magnitude of line charge [C/m]
+   double fField{70000};      //< Magnitude of drift field [V/m]
+   double fDetectorLength{1}; //< Length of detector [m]
+   double fBeamRadius{.02};   //< Radius of beam region (don't correct inside this radius) [m]
+   bool fLinearField{true};   //<If true the field grows linearly from the pad plane to the window.
 
 public:
-   // units are ...
-   AtLineChargeModel(double inputLambda = 5.28e-8, double inputfield = 70000);
+   AtLineChargeModel() = default;
    ~AtLineChargeModel() = default;
 
-   void SetDriftField(double field) { fField = field; }
    virtual XYZPoint CorrectSpaceCharge(const XYZPoint &directInputPosition) override;
    virtual XYZPoint ApplySpaceCharge(const XYZPoint &reverseInputPosition) override;
    virtual void LoadParameters(AtDigiPar *par) override;
+
+   void SetDriftField(double field) { fField = field; }
+   void SetConstantCharge() { fLinearField = false; }
+   void SetLambda(double lambda) { fLambda = lambda; }
+
+   double GetLambda() const { return fLambda; }
+   double GetField() const { return fField; }
+   double GetDetectorLength() const { return fDetectorLength; }
+
+public:
+   double getDist2(double dZ);
 };
 
 #endif

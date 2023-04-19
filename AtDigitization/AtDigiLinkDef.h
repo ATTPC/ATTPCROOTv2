@@ -5,8 +5,8 @@
 #pragma link off all functions;
 
 #pragma link C++ class AtClusterize - !;
+#pragma link C++ class AtClusterizeLine - !;
 #pragma link C++ class AtClusterizeTask + ;
-#pragma link C++ class AtClusterizeFastTask + ;
 #pragma link C++ class AtClusterizeLineTask + ;
 
 #pragma link C++ class AtPulse - !;

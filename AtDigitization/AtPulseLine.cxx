@@ -102,9 +102,9 @@ int AtPulseLine::integrateTimebuckets(std::vector<double> &zIntegral, AtSimulate
    auto tMin = line->GetFinalPosition().z() + fTBPadPlane * fTBTime;
    auto dT = (tMax - tMin);
    if (dT > fTBTime) {
-      LOG(warn) << "This line charge spans multiple TB widths from " << tMin << " us to " << tMax << " us.";
-      LOG(warn) << " The time distribution is likely widder than will be calculated. dT: " << dT
-                << "ns TB width: " << fTBTime << "ns";
+      LOG(debug) << "This line charge spans multiple TB widths from " << tMin << " us to " << tMax << " us.";
+      LOG(debug) << " The time distribution is likely widder than will be calculated. dT: " << dT
+                 << "ns TB width: " << fTBTime << "ns";
    }
 
    auto tMean = (tMax + tMin) / 2.;

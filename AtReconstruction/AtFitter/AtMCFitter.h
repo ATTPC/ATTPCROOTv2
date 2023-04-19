@@ -42,6 +42,7 @@ protected:
    PsaPtr fPSA{nullptr};
 
    int fNumIter{1};
+   bool fTimeEvent{false};
 
    /// Store the iteration number sorted by lowest objective funtion
    std::set<AtMCResult, std::function<bool(AtMCResult, AtMCResult)>> fResults;
@@ -61,6 +62,7 @@ public:
    TClonesArray &GetRawEventArray() { return fRawEventArray; }
    void FillResultArray(TClonesArray &resultArray) const;
    void SetNumIter(int iter) { fNumIter = iter; }
+   void SetTimeEvent(bool val) { fTimeEvent = val; }
 
 protected:
    /**

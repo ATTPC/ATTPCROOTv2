@@ -10,6 +10,9 @@ class AtSpaceChargeModel {
 protected:
    using XYZPoint = ROOT::Math::XYZPoint;
 
+   XYZPoint fWindow{0, 0, 0};      //<Beam location at window in mm
+   XYZPoint fPadPlane{0, 0, 1000}; //<Beam location at pad plane in mm
+
 public:
    virtual ~AtSpaceChargeModel() = default;
    /**
@@ -37,6 +40,16 @@ public:
     * to the run.
     */
    virtual void LoadParameters(AtDigiPar *par) = 0;
+
+   void SetBeamLocation(XYZPoint window, XYZPoint padPlane)
+   {
+      fWindow = window;
+      fPadPlane = padPlane;
+   }
+
+protected:
+   XYZPoint OffsetForBeam(XYZPoint point);
+   XYZPoint UndoOffsetForBeam(XYZPoint point);
 };
 
 #endif //#ifndef ATSPACECHARGEMODEL_H

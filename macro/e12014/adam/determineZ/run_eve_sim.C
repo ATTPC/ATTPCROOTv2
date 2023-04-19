@@ -8,6 +8,13 @@
 #include "FairLogger.h"
 
 #include "/mnt/simulations/attpcroot/adam/ATTPCROOTv2/macro/e12014/viewerUpdate/HEISTpid1.h"
+std::shared_ptr<MCFitter::AtMCFission> fitter = nullptr;
+std::shared_ptr<AtPulseLine> pulse = nullptr;
+std::shared_ptr<AtClusterizeLine> cluster = nullptr;
+std::shared_ptr<AtSimpleSimulation> sim = nullptr;
+std::shared_ptr<AtLineChargeModel> scModel = nullptr;
+// std::shared_ptr<AtRadialChargeModel> scModel = nullptr;
+std::shared_ptr<AtPSADeconvFit> simPSA = nullptr;
 
 void run_eve_sim(TString species = "Bi200", int pressure = 150,
                  TString OutputDataFile = "./data/output.reco_display.root")
@@ -66,48 +73,13 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
 
    eveMan->AddTab(std::move(tabMain));
    eveMan->AddTab(std::move(tabPad));
-   /*
-     eveMan->AddTab(std::make_unique<AtTabEnergyLoss>());
-
-      AtRawEvent *respAvgEvent;
-      TFile *f2 = new TFile("respAvg.root");
-      f2->GetObject("avgResp", respAvgEvent);
-      f2->Close();
-
-      // Create PSA and control for it
-      auto psa = std::make_unique<AtPSADeconvFit>();
-      psa->SetResponse(*respAvgEvent);
-      psa->SetThreshold(15); // Threshold in charge units
-      psa->SetFilterOrder(6);
-      psa->SetCutoffFreq(75);
-      auto sidePSA = new AtSidebarPSADeconv(eveMan->GetSidebar());
-      sidePSA->SetPSA(psa.get());
-      eveMan->GetSidebar()->AddSidebarFrame(sidePSA);
-
-      // Add PSA task to run
-      AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
-      psaTask->SetInputBranch("AtRawEventSub");
-      eveMan->AddTask(psaTask);
-
-      auto method = std::make_unique<SampleConsensus::AtSampleConsensus>(
-         SampleConsensus::Estimators::kRANSAC, AtPatterns::PatternType::kLine, RandomSample::SampleMethod::kUniform);
-      method->SetDistanceThreshold(20);
-      method->SetNumIterations(200);
-      method->SetMinHitsPattern(20);
-      method->SetChargeThreshold(15); //-1 implies no charge-weighted fitting
-      method->SetFitPattern(true);
-
-      auto sacTask = new AtSampleConsensusTask(std::move(method));
-      sacTask->SetPersistence(false);
-      sacTask->SetInputBranch("AtEventH");
-      // eveMan->AddTask(sacTask);
-      */
 
    // Create underlying simulation class
-   auto sim = std::make_shared<AtSimpleSimulation>(GeoDataPath.Data());
+   sim = std::make_shared<AtSimpleSimulation>(GeoDataPath.Data());
 
-   auto scModel = std::make_shared<AtRadialChargeModel>(nullptr);
-   scModel->SetStepSize(0.1);
+   // scModel = std::make_shared<AtRadialChargeModel>(nullptr);
+   // scModel->SetStepSize(0.1);
+   scModel = std::make_shared<AtLineChargeModel>();
    scModel->SetBeamLocation({0, -6, 0}, {10, 0, 1000});
    sim->SetSpaceChargeModel(scModel);
 
@@ -119,15 +91,19 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
       sim->AddModel(Z, A, eloss);
    }
 
-   auto cluster = std::make_shared<AtClusterizeLine>();
-   auto pulse = std::make_shared<AtPulseLine>(fMap);
+   cluster = std::make_shared<AtClusterizeLine>();
+   pulse = std::make_shared<AtPulseLine>(fMap);
    pulse->SetSaveCharge(true);
-   auto psa2 = std::make_shared<AtPSADeconvFit>();
-   psa2->SetUseSimCharge(true);
-   psa2->SetThreshold(25);
+   pulse->SetDoConvolution(false);
 
-   auto fitter = std::make_shared<MCFitter::AtMCFission>(sim, cluster, pulse);
-   fitter->SetPSA(psa2);
+   fitter = std::make_shared<MCFitter::AtMCFission>(sim, cluster, pulse);
+   fitter->SetTimeEvent(true);
+
+   simPSA = std::make_shared<AtPSADeconvFit>();
+   simPSA->SetUseSimCharge(true);
+   simPSA->SetThreshold(25);
+
+   fitter->SetPSA(simPSA);
 
    AtMCFitterTask *fitTask = new AtMCFitterTask(fitter);
    fitTask->SetPatternBranchName("AtFissionEvent");

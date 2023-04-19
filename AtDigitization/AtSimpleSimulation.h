@@ -60,6 +60,7 @@ public:
    void RegisterBranch(std::string branchName = "AtTpcPoint", bool pers = true);
    void AddModel(int Z, int A, ModelPtr model);
    void SetSpaceChargeModel(SpaceChargeModel model) { fSCModel = model; }
+   void SetDistanceStep(double step) { fDistStep = step; } //<In mm
 
    void NewEvent();
    void SimulateParticle(int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom);
