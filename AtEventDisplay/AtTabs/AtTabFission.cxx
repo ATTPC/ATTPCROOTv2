@@ -15,6 +15,10 @@
 
 #include <array>   // for array
 #include <utility> // for move
+namespace DataHandling {
+class AtSubject;
+}
+
 ClassImp(AtTabFission);
 
 AtTabFission::AtTabFission()

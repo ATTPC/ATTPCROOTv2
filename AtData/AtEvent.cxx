@@ -1,7 +1,6 @@
 #include "AtEvent.h"
 
 #include "AtContainerManip.h"
-#include "AtRawEvent.h"
 
 #include <Rtypes.h>
 

@@ -98,8 +98,6 @@ void AtTabMain::InitTab()
 
    gEve->AddEvent(fEvePatternEvent.get());
 
-   auto man = AtViewerManager::Instance();
-
    fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>(*fEventBranch));
    fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(*fRawEventBranch));
    fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtPatternEvent>>(*fPatternEventBranch));
@@ -148,7 +146,7 @@ void AtTabMain::Update(DataHandling::AtSubject *sub)
    if (sub == fPatternEventBranch || sub == fEntry) {
       UpdatePatternEventElements();
    }
-   if (sub == fPadNum) {
+   if (sub == fRawEventBranch || sub == fEntry || sub == fPadNum) {
       DrawWave(fPadNum->Get());
    }
 
@@ -469,17 +467,17 @@ void AtTabMain::SelectPad()
    Double_t y = gPad->PadtoY(upy);
    Int_t bin = h->FindBin(x, y);
    const char *bin_name = h->GetBinName(bin);
-   std::cout << " ==========================" << std::endl;
-   std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
+   LOG(debug) << " ==========================";
+   LOG(debug) << " Bin number selected : " << bin << " Bin name :" << bin_name;
 
    AtMap *tmap = AtViewerManager::Instance()->GetMap();
    if (tmap == nullptr) {
       LOG(fatal) << "AtMap not set! Pass a valid map to the constructor of AtViewerManager!";
    } else {
       Int_t tPadNum = tmap->BinToPad(bin);
-      std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
-      std::cout << " Electronic mapping: " << tmap->GetPadRef(tPadNum) << std::endl;
-      std::cout << " Raw Event Pad Num " << tPadNum << std::endl;
+      LOG(debug) << " Bin : " << bin << " to Pad : " << tPadNum;
+      LOG(debug) << " Electronic mapping: " << tmap->GetPadRef(tPadNum);
+      LOG(debug) << " Raw Event Pad Num " << tPadNum;
       AtViewerManager::Instance()->GetPadNum().Set(tPadNum);
    }
 }

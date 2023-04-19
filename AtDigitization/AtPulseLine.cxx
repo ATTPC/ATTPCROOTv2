@@ -31,12 +31,12 @@ AtPulseLine::AtPulseLine(AtMapPtr map, ResponseFunc response) : AtPulse(map, res
    LOG(debug) << "Constructor of AtPulseLineTask";
 }
 
-Int_t AtPulseLine::throwRandomAndGetPadAfterDiffusion(const ROOT::Math::XYZVector &loc, Double_t diffusionSigma)
+int AtPulseLine::throwRandomAndGetPadAfterDiffusion(const ROOT::Math::XYZVector &loc, double diffusionSigma)
 {
    auto r = gRandom->Gaus(0, diffusionSigma);
    auto phi = gRandom->Uniform(0, TMath::TwoPi());
-   Double_t propX = loc.x() + r * TMath::Cos(phi);
-   Double_t propY = loc.y() + r * TMath::Sin(phi);
+   double propX = loc.x() + r * TMath::Cos(phi);
+   double propY = loc.y() + r * TMath::Sin(phi);
    XYPoint pos(propX, propY);
    return fMap->GetPadNum(pos);
 }
@@ -46,7 +46,7 @@ void AtPulseLine::generateIntegrationMap(AtSimulatedLine &line)
    // MC the integration over the pad plane
    fXYintegrationMap.clear();
    auto loc = line.GetPosition();
-   Int_t validPoints = 0;
+   int validPoints = 0;
 
    LOG(debug2) << "Sampling with transverse diffusion of: " << line.GetTransverseDiffusion();
    for (int i = 0; i < fNumIntegrationPoints; ++i) {
@@ -93,7 +93,7 @@ bool AtPulseLine::AssignElectronsToPad(AtSimulatedPoint *point)
 }
 // Returns the bin ID (binMin) that the zIntegral starts from
 // fills zIntegral with the integral for bins starting with binMin, inclusive
-Int_t AtPulseLine::integrateTimebuckets(std::vector<double> &zIntegral, AtSimulatedLine *line)
+int AtPulseLine::integrateTimebuckets(std::vector<double> &zIntegral, AtSimulatedLine *line)
 {
    zIntegral.clear();
 

@@ -19,8 +19,6 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-class AtRawEvent;
-
 class AtEvent : public AtBaseEvent {
 public:
    using TraceArray = std::array<Float_t, 512>;

@@ -1,4 +1,5 @@
 #include "AtPulse.h"
+// IWYU pragma: no_include <ext/alloc_traits.h>
 
 #include "AtContainerManip.h"
 #include "AtDigiPar.h"
@@ -20,8 +21,7 @@
 #include <TRandom.h>
 #include <TString.h> // for TString
 
-#include <ext/alloc_traits.h> // for __alloc_traits<>::value_type
-#include <utility>            // for move
+#include <utility> // for move
 
 using XYPoint = ROOT::Math::XYPoint;
 

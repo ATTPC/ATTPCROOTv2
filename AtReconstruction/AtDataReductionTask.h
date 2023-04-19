@@ -41,6 +41,13 @@ public:
 
    void SetReductionFunction(ReductionFunction func) { fReductionFunc = std::move(func); }
    void SetReductionFunction(std::function<bool(AtBaseEvent *)> func);
+
+   /// This will cast whatever is in the input array to type T and then call the passed function
+   template <class T>
+   void SetReductionFunction(std::function<bool(T *)> func)
+   {
+      fReductionFunc = [this, func]() { return func(dynamic_cast<T *>(fEvent)); };
+   }
    void SetInputBranch(TString inputBranch)
    {
       fInputBranchName = inputBranch;

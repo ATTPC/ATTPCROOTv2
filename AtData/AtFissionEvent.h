@@ -1,6 +1,7 @@
 #ifndef ATFISIONEVENT_H
 #define ATFISIONEVENT_H
 
+#include "AtBaseEvent.h" // for AtBaseEvent
 #include "AtPatternEvent.h"
 #include "AtPatternY.h"
 

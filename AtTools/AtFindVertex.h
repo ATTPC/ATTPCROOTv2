@@ -7,7 +7,6 @@
 #include <Math/Vector3D.h>    // for DisplacemenXYZVectorD
 #include <Math/Vector3Dfwd.h> // for XYZVector
 #include <Rtypes.h>
-#include <TObject.h>
 
 #include <algorithm> // for max
 #include <utility>   // for pair

@@ -12,6 +12,9 @@
 class TBuffer;          // lines 21-21
 class TClass;           // lines 23-23
 class TMemberInspector; // lines 27-27
+namespace DataHandling {
+class AtSubject;
+}
 
 /**
  * @brief Tab for hangling fission events in viewer

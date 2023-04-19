@@ -55,7 +55,7 @@ void run_digi_attpc()
 
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
    reduceTask->SetInputBranch("AtRawEvent");
-   reduceTask->SetReductionFunction(&reduceFunc);
+   reduceTask->SetReductionFunction<AtRawEvent>(&reduceFunc);
 
    auto psa = std::make_unique<AtPSAMax>();
    psa->SetThreshold(25);
