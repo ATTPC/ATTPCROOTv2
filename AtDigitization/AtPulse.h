@@ -45,6 +45,7 @@ protected:
    bool fUseFastGain = true;
    double fNoiseSigma = 0; //! Sigma of random gaussian noise to apply to trace
    bool fSaveCharge = true;
+   bool fDoConvolution{true}; //< Whether we should set the ADC by doing a convolution of the charge with the response
 
    std::vector<std::unique_ptr<TH1F>> fPadCharge; //!<
    std::set<int> fPadsWithCharge;                 //!<
@@ -60,6 +61,7 @@ public:
    void UseFastGain(bool val) { fUseFastGain = val; }
    void SetNoiseSigma(double val) { fNoiseSigma = val; }
    void SetSaveCharge(bool val) { fSaveCharge = val; }
+   void SetDoConvolution(bool val) { fDoConvolution = val; }
 
    AtRawEvent GenerateEvent(std::vector<SimPointPtr> &vec);
    AtRawEvent GenerateEvent(std::vector<AtSimulatedPoint *> &vec);
