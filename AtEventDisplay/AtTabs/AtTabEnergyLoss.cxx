@@ -39,7 +39,7 @@ void AtTabEnergyLoss::SetStyle(std::array<TH1Ptr, 2> &hists, THStack &stack)
 }
 
 AtTabEnergyLoss::AtTabEnergyLoss(DataHandling::AtBranch &fissionBranch)
-   : AtTabCanvas("dE/dx", 2, 2), fRawEvent(AtViewerManager::Instance()->GetRawEventName()),
+   : AtTabCanvas("dE/dx", 2, 2), fRawEvent(AtViewerManager::Instance()->GetRawEventBranch()),
      fFissionEvent(fissionBranch), fEntry(AtViewerManager::Instance()->GetCurrentEntry()), fBinWidth(100),
      fSigmaFromHit(2), fTBtoAvg(10), fRatioFunc(std::make_unique<TF1>("ratioFunc", "pol0", 0, 1, TF1::EAddToList::kNo)),
      fProxyFunc(std::make_unique<TF1>("proxyFunc", "pol0", 0, 1, TF1::EAddToList::kNo)),

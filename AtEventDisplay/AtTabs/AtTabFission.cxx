@@ -37,19 +37,18 @@ void AtTabFission::InitTab()
       set->SetDestroyOnZeroRefCnt(false);
 }
 
-void AtTabFission::Exec()
+void AtTabFission::Update(DataHandling::AtSubject *sub)
 {
-   UpdateFissionElements();
-   AtTabMain::Exec();
+   if (sub == fEntry)
+      UpdateFissionElements();
+
+   AtTabMain::Update(sub);
 }
 
 void AtTabFission::UpdateFissionElements()
 {
    if (fEveFissionEvent == nullptr)
       return;
-
-   // auto eventInfo = fTabInfo->GetAugment<AtTabInfoFairRoot<AtFissionEvent>>("AtFissionEvent");
-   // eventInfo->Update(&fFissionEventBranch);
 
    fFissionEventBranch.Notify();
    auto fissionEvent = GetFairRootInfo<AtFissionEvent>();

@@ -52,7 +52,7 @@
 #pragma link C++ class CSVRange < std::string> - !;
 #pragma link C++ class tk::spline - !;
 
-#pragma link C++ class AtFindVertex - ;
+#pragma link C++ class AtFindVertex - !;
 
 #pragma link C++ function AtTools::GetHitFunctionTB;
 #pragma link C++ function AtTools::GetHitFunction;

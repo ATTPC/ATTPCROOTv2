@@ -66,11 +66,27 @@ AtTabMain::AtTabMain() : AtTabBase("Main")
 
    fPadNum = &AtViewerManager::Instance()->GetPadNum();
    fPadNum->Attach(this);
+
+   fEventBranch = &AtViewerManager::Instance()->GetEventBranch();
+   fEventBranch->Attach(this);
+
+   fRawEventBranch = &AtViewerManager::Instance()->GetRawEventBranch();
+   fRawEventBranch->Attach(this);
+
+   fPatternEventBranch = &AtViewerManager::Instance()->GetPatternEventBranch();
+   fPatternEventBranch->Attach(this);
+
+   fEntry = &AtViewerManager::Instance()->GetCurrentEntry();
+   fEntry->Attach(this);
 };
 
 AtTabMain::~AtTabMain()
 {
    fPadNum->Detach(this);
+   fEventBranch->Detach(this);
+   fRawEventBranch->Detach(this);
+   fPatternEventBranch->Detach(this);
+   fEntry->Detach(this);
 }
 
 void AtTabMain::InitTab()
@@ -84,9 +100,9 @@ void AtTabMain::InitTab()
 
    auto man = AtViewerManager::Instance();
 
-   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>(man->GetEventName()));
-   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(man->GetRawEventName()));
-   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtPatternEvent>>(man->GetPatternEventName()));
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>(*fEventBranch));
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(*fRawEventBranch));
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtPatternEvent>>(*fPatternEventBranch));
 
    gStyle->SetPalette(55);
 
@@ -124,9 +140,21 @@ Color_t AtTabMain::GetTrackColor(int i)
 
 void AtTabMain::Update(DataHandling::AtSubject *sub)
 {
+   // If we should update the stuff that depends on the AtEvent
+   if (sub == fEventBranch || sub == fEntry) {
+      UpdatePadPlane();
+      UpdateEventElements();
+   }
+   if (sub == fPatternEventBranch || sub == fEntry) {
+      UpdatePatternEventElements();
+   }
    if (sub == fPadNum) {
       DrawWave(fPadNum->Get());
-      UpdateCvsPadWave();
+   }
+
+   // If we should update the 3D display
+   if (sub == fEventBranch || sub == fPatternEventBranch || sub == fEntry) {
+      gEve->Redraw3D(false); // false -> don't reset camera
    }
 }
 
@@ -175,19 +203,6 @@ void AtTabMain::DumpEvent(std::string fileName)
                 << hit->GetCharge() << std::endl;
 
    dumpEvent.close();
-}
-
-/**
- * Called to update the entire viewer
- */
-void AtTabMain::Exec()
-{
-   UpdatePadPlane();
-   UpdateEventElements();
-   UpdatePatternEventElements();
-
-   gEve->Redraw3D(false);
-   UpdateCvsPadPlane();
 }
 
 void AtTabMain::UpdateRenderState()
@@ -270,6 +285,9 @@ void AtTabMain::UpdatePadPlane()
       auto position = hit->GetPosition();
       fPadPlane->Fill(position.X(), position.Y(), hit->GetCharge());
    }
+
+   fCvsPadPlane->Modified();
+   fCvsPadPlane->Update();
 }
 void AtTabMain::SetPointsFromHits(TEvePointSet &hitSet, const std::vector<std::unique_ptr<AtHit>> &hits)
 {
@@ -351,22 +369,10 @@ bool AtTabMain::DrawWave(Int_t PadNum)
 
    fCvsPadWave->cd();
    fPadWave->Draw();
-   fCvsPadWave->Update();
-   return true;
-}
-
-void AtTabMain::UpdateCvsPadPlane()
-{
-   fCvsPadPlane->Modified();
-   fCvsPadPlane->Update();
-}
-
-void AtTabMain::UpdateCvsPadWave()
-{
-   fCvsPadPlane->cd();
-
    fCvsPadWave->Modified();
    fCvsPadWave->Update();
+
+   return true;
 }
 
 void AtTabMain::MakeTab(TEveWindowSlot *slot)

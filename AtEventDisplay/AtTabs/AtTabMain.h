@@ -55,13 +55,17 @@ protected:
    TCanvas *fCvsPadWave{nullptr};
    TH1I *fPadWave{nullptr};
    DataHandling::AtPadNum *fPadNum;
+   DataHandling::AtBranch *fEventBranch;
+   DataHandling::AtBranch *fRawEventBranch;
+   DataHandling::AtBranch *fPatternEventBranch;
+   DataHandling::AtTreeEntry *fEntry;
 
 public:
    AtTabMain();
    ~AtTabMain();
    void InitTab() override;
 
-   void Exec() override;
+   void Exec() override{};
    void Update(DataHandling::AtSubject *sub) override;
 
    void DumpEvent(std::string file);
@@ -90,10 +94,6 @@ private:
    // Functions to draw the initial canvases
    void DrawPadPlane();
    void DrawPadWave();
-
-   // Functions to update the data on the canvases
-   void UpdateCvsPadPlane();
-   void UpdateCvsPadWave();
 
    bool DrawWave(Int_t PadNum);
 

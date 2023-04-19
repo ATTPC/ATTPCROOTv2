@@ -30,7 +30,8 @@ public:
    ~AtTabFission() = default;
 
    void InitTab() override;
-   void Exec() override;
+   void Update(DataHandling::AtSubject *sub) override;
+
    DataHandling::AtBranch &GetFissionBranch() { return fFissionEventBranch; }
 
 protected:

@@ -53,8 +53,8 @@ void AtTabPad::InitTab()
       fTabName = TString::Format(fTabName + " %d", fTabId);
 
    auto man = AtViewerManager::Instance();
-   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>(man->GetEventName()));
-   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(man->GetRawEventName()));
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>(man->GetEventBranch()));
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(man->GetRawEventBranch()));
 
    std::cout << " AtEventTabPad::Init : Initialization complete! "
              << "\n";
