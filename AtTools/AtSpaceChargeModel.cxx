@@ -1,4 +1,5 @@
 #include "AtSpaceChargeModel.h"
+
 #include <Math/Point3D.h>
 #include <Math/Vector3D.h>
 

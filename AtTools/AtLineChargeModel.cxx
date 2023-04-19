@@ -3,14 +3,10 @@
 
 #include "AtDigiPar.h"
 
-#include <FairLogger.h>
-
 #include <Math/Point3D.h>
-#include <Math/Vector3D.h>
 #include <Rtypes.h>
 
 #include <cmath>
-#include <memory>
 
 using XYZPoint = ROOT::Math::XYZPoint;
 using RZPPoint = ROOT::Math::RhoZPhiPoint;
