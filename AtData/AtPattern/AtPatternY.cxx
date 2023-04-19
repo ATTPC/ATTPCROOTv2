@@ -87,6 +87,18 @@ Double_t AtPatternY::DistanceToPattern(const XYZPoint &point) const
    return *std::min_element(distances.begin(), distances.end());
 }
 
+int AtPatternY::GetPointAssignment(const XYZPoint &point) const
+{
+   auto comp = [](const std::pair<int, double> &a, const std::pair<int, double> &b) { return a.second < b.second; };
+   auto points = std::set<std::pair<int, double>, decltype(comp)>(comp);
+
+   for (int i = 0; i < fFragments.size(); ++i)
+      points.insert({i, fFragments[i].DistanceToPattern(point)});
+   points.insert({fFragments.size(), fBeam.DistanceToPattern(point)});
+
+   return points.begin()->first;
+}
+
 std::vector<double> AtPatternY::GetPatternPar() const
 {
    std::vector<double> ret;

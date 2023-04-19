@@ -24,8 +24,6 @@ constexpr auto cYELLOW = "\033[1;33m";
 constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
 
-ClassImp(AtFindVertex);
-
 AtFindVertex::AtFindVertex(Double_t lineDistThreshold) : fLineDistThreshold(lineDistThreshold), fTracksFromVertex(0)
 {
    fBeamPoint.SetXYZ(0, 0, 500);

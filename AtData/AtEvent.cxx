@@ -1,12 +1,10 @@
 #include "AtEvent.h"
 
 #include "AtContainerManip.h"
-#include "AtRawEvent.h"
 
 #include <Rtypes.h>
 
 #include <algorithm>
-#include <iostream>
 #include <string> // for string
 
 ClassImp(AtEvent);
@@ -19,13 +17,6 @@ AtEvent::AtEvent(const AtEvent &copy)
 {
    for (const auto &hit : copy.fHitArray)
       fHitArray.push_back(hit->Clone());
-}
-
-// Here we are intentionally slicing to call the copy constructor to copy all the shared data between
-// event types
-AtEvent::AtEvent(const AtRawEvent &copy) : AtBaseEvent(copy) // NOLINT
-{
-   SetName("AtEvent");
 }
 
 AtEvent &AtEvent::operator=(AtEvent object)
@@ -53,10 +44,6 @@ Int_t AtEvent::GetHitPadMult(Int_t PadNum)
 {
    auto its = fMultiplicityMap.find(PadNum);
    if (its == fMultiplicityMap.end()) {
-      std::cerr << " = AtEvent::GetHitPadMult - PadNum not found " << PadNum << std::endl;
-      std::cout << fMultiplicityMap.size() << std::endl;
-      for (const auto &pair : fMultiplicityMap)
-         std::cout << "    " << pair.first << " " << pair.second << std::endl;
       return -1;
    } else
       return its->second;
@@ -66,6 +53,11 @@ void AtEvent::SortHitArray()
 {
    std::sort(fHitArray.begin(), fHitArray.end(),
              [](const HitPtr &a, const HitPtr &b) { return AtHit::SortHit(*a, *b); });
+}
+void AtEvent::SortHitArrayID()
+{
+   std::sort(fHitArray.begin(), fHitArray.end(),
+             [](const HitPtr &a, const HitPtr &b) { return a->GetHitID() < b->GetHitID(); });
 }
 
 void AtEvent::SortHitArrayTime()

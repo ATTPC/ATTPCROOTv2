@@ -1,16 +1,17 @@
 #include "AtTabMain.h"
 
-#include "AtEvent.h"         // for AtEvent, AtEvent::HitVector
-#include "AtHit.h"           // for AtHit, AtHit::XYZPoint
-#include "AtMap.h"           // for AtMap
-#include "AtPad.h"           // for AtPad
-#include "AtPadReference.h"  // for operator<<
-#include "AtPattern.h"       // for AtPattern
-#include "AtPatternEvent.h"  // for AtPatternEvent
-#include "AtRawEvent.h"      // for AtRawEvent
-#include "AtTabInfo.h"       // for AtTabInfoFairRoot, AtTabInfoBase
-#include "AtTrack.h"         // for AtTrack
-#include "AtViewerManager.h" // for AtViewerManager
+#include "AtContainerManip.h" // for GetPointerVector
+#include "AtEvent.h"          // for AtEvent, AtEvent::HitVector
+#include "AtHit.h"            // for AtHit, AtHit::XYZPoint
+#include "AtMap.h"            // for AtMap
+#include "AtPad.h"            // for AtPad
+#include "AtPadReference.h"   // for operator<<
+#include "AtPattern.h"        // for AtPattern
+#include "AtPatternEvent.h"   // for AtPatternEvent
+#include "AtRawEvent.h"       // for AtRawEvent
+#include "AtTabInfo.h"        // for AtTabInfoFairRoot, AtTabInfoBase
+#include "AtTrack.h"          // for AtTrack
+#include "AtViewerManager.h"  // for AtViewerManager
 
 #include <FairLogger.h> // for LOG, Logger
 
@@ -39,13 +40,12 @@
 #include <TVirtualPad.h>         // for TVirtualPad, gPad
 #include <TVirtualX.h>           // for TVirtualX, gVirtualX
 
-#include <algorithm>          // for max
-#include <array>              // for array
-#include <cstdio>             // for sprintf
-#include <ext/alloc_traits.h> // for __alloc_traits<>::value_type
-#include <iostream>           // for operator<<, endl, basic_ostream
-#include <utility>            // for move
-
+#include <algorithm> // for max
+#include <array>     // for array
+#include <cstdio>    // for sprintf
+#include <iostream>  // for operator<<, endl, basic_ostream
+#include <utility>   // for move
+// IWYU pragma: no_include <ext/alloc_traits.h>
 namespace DataHandling {
 class AtSubject;
 }
@@ -66,11 +66,27 @@ AtTabMain::AtTabMain() : AtTabBase("Main")
 
    fPadNum = &AtViewerManager::Instance()->GetPadNum();
    fPadNum->Attach(this);
+
+   fEventBranch = &AtViewerManager::Instance()->GetEventBranch();
+   fEventBranch->Attach(this);
+
+   fRawEventBranch = &AtViewerManager::Instance()->GetRawEventBranch();
+   fRawEventBranch->Attach(this);
+
+   fPatternEventBranch = &AtViewerManager::Instance()->GetPatternEventBranch();
+   fPatternEventBranch->Attach(this);
+
+   fEntry = &AtViewerManager::Instance()->GetCurrentEntry();
+   fEntry->Attach(this);
 };
 
 AtTabMain::~AtTabMain()
 {
    fPadNum->Detach(this);
+   fEventBranch->Detach(this);
+   fRawEventBranch->Detach(this);
+   fPatternEventBranch->Detach(this);
+   fEntry->Detach(this);
 }
 
 void AtTabMain::InitTab()
@@ -80,14 +96,11 @@ void AtTabMain::InitTab()
    gEve->AddEvent(fEveEvent.get());
    fEveEvent->AddElement(fHitSet.get());
 
-   // fEvePatternEvent = std::make_unique<TEveEventManager>("AtPatternEvent");
    gEve->AddEvent(fEvePatternEvent.get());
 
-   auto man = AtViewerManager::Instance();
-
-   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>(man->GetEventName()));
-   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(man->GetRawEventName()));
-   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtPatternEvent>>(man->GetPatternEventName()));
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtEvent>>(*fEventBranch));
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtRawEvent>>(*fRawEventBranch));
+   fTabInfo->AddAugment(std::make_unique<AtTabInfoFairRoot<AtPatternEvent>>(*fPatternEventBranch));
 
    gStyle->SetPalette(55);
 
@@ -125,9 +138,21 @@ Color_t AtTabMain::GetTrackColor(int i)
 
 void AtTabMain::Update(DataHandling::AtSubject *sub)
 {
-   if (sub == fPadNum) {
+   // If we should update the stuff that depends on the AtEvent
+   if (sub == fEventBranch || sub == fEntry) {
+      UpdatePadPlane();
+      UpdateEventElements();
+   }
+   if (sub == fPatternEventBranch || sub == fEntry) {
+      UpdatePatternEventElements();
+   }
+   if (sub == fRawEventBranch || sub == fEntry || sub == fPadNum) {
       DrawWave(fPadNum->Get());
-      UpdateCvsPadWave();
+   }
+
+   // If we should update the 3D display
+   if (sub == fEventBranch || sub == fPatternEventBranch || sub == fEntry) {
+      gEve->Redraw3D(false); // false -> don't reset camera
    }
 }
 
@@ -176,19 +201,6 @@ void AtTabMain::DumpEvent(std::string fileName)
                 << hit->GetCharge() << std::endl;
 
    dumpEvent.close();
-}
-
-/**
- * Called to update the entire viewer
- */
-void AtTabMain::Exec()
-{
-   UpdatePadPlane();
-   UpdateEventElements();
-   UpdatePatternEventElements();
-
-   gEve->Redraw3D(false);
-   UpdateCvsPadPlane();
 }
 
 void AtTabMain::UpdateRenderState()
@@ -242,7 +254,7 @@ void AtTabMain::UpdateEventElements()
    }
 
    auto &hits = fEvent->GetHits();
-   LOG(info) << cBLUE << " Number of hits : " << hits.size() << cNORMAL;
+   LOG(info) << cBLUE << " Number of hits : " << hits.size() << " in " << fEvent->GetEventID() << cNORMAL;
 
    SetPointsFromHits(*fHitSet, hits);
 }
@@ -271,9 +283,16 @@ void AtTabMain::UpdatePadPlane()
       auto position = hit->GetPosition();
       fPadPlane->Fill(position.X(), position.Y(), hit->GetCharge());
    }
+
+   fCvsPadPlane->Modified();
+   fCvsPadPlane->Update();
+}
+void AtTabMain::SetPointsFromHits(TEvePointSet &hitSet, const std::vector<std::unique_ptr<AtHit>> &hits)
+{
+   SetPointsFromHits(hitSet, ContainerManip::GetPointerVector(hits));
 }
 
-void AtTabMain::SetPointsFromHits(TEvePointSet &hitSet, const std::vector<std::unique_ptr<AtHit>> &hits)
+void AtTabMain::SetPointsFromHits(TEvePointSet &hitSet, const std::vector<AtHit *> &hits)
 {
    Int_t nHits = hits.size();
 
@@ -348,22 +367,10 @@ bool AtTabMain::DrawWave(Int_t PadNum)
 
    fCvsPadWave->cd();
    fPadWave->Draw();
-   fCvsPadWave->Update();
-   return true;
-}
-
-void AtTabMain::UpdateCvsPadPlane()
-{
-   fCvsPadPlane->Modified();
-   fCvsPadPlane->Update();
-}
-
-void AtTabMain::UpdateCvsPadWave()
-{
-   fCvsPadPlane->cd();
-
    fCvsPadWave->Modified();
    fCvsPadWave->Update();
+
+   return true;
 }
 
 void AtTabMain::MakeTab(TEveWindowSlot *slot)
@@ -460,17 +467,17 @@ void AtTabMain::SelectPad()
    Double_t y = gPad->PadtoY(upy);
    Int_t bin = h->FindBin(x, y);
    const char *bin_name = h->GetBinName(bin);
-   std::cout << " ==========================" << std::endl;
-   std::cout << " Bin number selected : " << bin << " Bin name :" << bin_name << std::endl;
+   LOG(debug) << " ==========================";
+   LOG(debug) << " Bin number selected : " << bin << " Bin name :" << bin_name;
 
    AtMap *tmap = AtViewerManager::Instance()->GetMap();
    if (tmap == nullptr) {
       LOG(fatal) << "AtMap not set! Pass a valid map to the constructor of AtViewerManager!";
    } else {
       Int_t tPadNum = tmap->BinToPad(bin);
-      std::cout << " Bin : " << bin << " to Pad : " << tPadNum << std::endl;
-      std::cout << " Electronic mapping: " << tmap->GetPadRef(tPadNum) << std::endl;
-      std::cout << " Raw Event Pad Num " << tPadNum << std::endl;
+      LOG(debug) << " Bin : " << bin << " to Pad : " << tPadNum;
+      LOG(debug) << " Electronic mapping: " << tmap->GetPadRef(tPadNum);
+      LOG(debug) << " Raw Event Pad Num " << tPadNum;
       AtViewerManager::Instance()->GetPadNum().Set(tPadNum);
    }
 }

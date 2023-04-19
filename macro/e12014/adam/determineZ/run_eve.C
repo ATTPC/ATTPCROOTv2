@@ -16,7 +16,7 @@ void run_eve(TString species = "Bi200", int pressure = 150, TString OutputDataFi
       fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
    fair::Logger::DefineVerbosity("user1", verbSpec);
    // fair::Logger::SetVerbosity("user1");
-   // fair::Logger::SetConsoleSeverity("debug");
+   //  fair::Logger::SetConsoleSeverity("debug");
 
    TString InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr/%s.root", pressure, species.Data());
    // TString InputDataFile =
@@ -48,12 +48,12 @@ void run_eve(TString species = "Bi200", int pressure = 150, TString OutputDataFi
    fRun->GetRuntimeDb()->setFirstInput(parIo1);
    fRun->GetRuntimeDb()->getContainer("AtDigiPar");
 
-   auto fMap = std::make_shared<AtTpcMap>();
-   fMap->ParseXMLMap(mapDir.Data());
-   auto eveMan = new AtViewerManager(fMap);
+   E12014::CreateMap();
+   auto eveMan = new AtViewerManager(E12014::fMap);
 
-   auto tabMain = std::make_unique<AtTabMain>();
+   auto tabMain = std::make_unique<AtTabFission>();
    tabMain->SetMultiHit(100); // Set the maximum number of multihits in the visualization
+   auto &fissionBranch = tabMain->GetFissionBranch();
 
    auto tabPad = std::make_unique<AtTabPad>(2, 2);
    tabPad->DrawRawADC(0, 0);
@@ -64,12 +64,14 @@ void run_eve(TString species = "Bi200", int pressure = 150, TString OutputDataFi
 
    eveMan->AddTab(std::move(tabMain));
    eveMan->AddTab(std::move(tabPad));
-   eveMan->AddTab(std::make_unique<AtTabEnergyLoss>());
+   eveMan->AddTab(std::make_unique<AtTabEnergyLoss>(fissionBranch));
 
+   /*
    AtRawEvent *respAvgEvent;
    TFile *f2 = new TFile("respAvg.root");
    f2->GetObject("avgResp", respAvgEvent);
    f2->Close();
+
 
    // Create PSA and control for it
    auto psa = std::make_unique<AtPSADeconvFit>();
@@ -112,7 +114,7 @@ void run_eve(TString species = "Bi200", int pressure = 150, TString OutputDataFi
    sacTask2->SetInputBranch("AtEventH");
    sacTask2->SetOutputBranch("AtPatternDeconv");
    eveMan->AddTask(sacTask2);
-
+   */
    eveMan->Init();
 
    std::cout << "Finished init" << std::endl;

@@ -1,6 +1,6 @@
 #include "AtDataReductionTask.h"
 
-#include "AtRawEvent.h"
+#include "AtBaseEvent.h"
 
 #include <FairLogger.h>
 #include <FairRootManager.h>
@@ -10,15 +10,13 @@
 #include <TClonesArray.h>
 #include <TObject.h>
 
-#include <memory>
-
 ClassImp(AtDataReductionTask);
 
-void AtDataReductionTask::SetReductionFunction(std::function<bool(AtRawEvent *)> func)
+void AtDataReductionTask::SetReductionFunction(std::function<bool(AtBaseEvent *)> func)
 {
    // Bind the reduction function to the passed function, having it call that function with the current
    // AtRawEvent in the pointer this->fRawEvent.
-   fReductionFunc = [this, func]() { return func(fRawEvent); };
+   fReductionFunc = [this, func]() { return func(fEvent); };
 }
 
 InitStatus AtDataReductionTask::Init()
@@ -43,13 +41,28 @@ void AtDataReductionTask::Exec(Option_t *opt)
    // Get raw event
    if (fInputEventArray->GetEntriesFast() == 0)
       return;
-   fRawEvent = dynamic_cast<AtRawEvent *>(fInputEventArray->At(0));
+   fEvent = dynamic_cast<AtBaseEvent *>(fInputEventArray->At(0));
 
    // If we should skip this event mark bad and don't fill tree
    if (fReductionFunc())
-      LOG(info) << "Keeping event " << fRawEvent->GetEventID() << " with " << fRawEvent->GetNumPads() << " pads";
+      LOG(info) << "Keeping event " << fEvent->GetEventID();
    else {
-      fRawEvent->SetIsGood(false);
+
+      LOG(info) << "Skipping event " << fEvent->GetEventID();
+
+      FairRootManager *ioMan = FairRootManager::Instance();
+      for (auto name : fOutputBranchs) {
+         auto b = dynamic_cast<TClonesArray *>(ioMan->GetObject(name));
+         if (fInputEventArray == nullptr)
+            LOG(fatal) << "Cannot find branch " << name << "!";
+
+         auto e = dynamic_cast<AtBaseEvent *>(b->At(0));
+         if (e == nullptr) {
+            LOG(error) << "Not setting " << name;
+            continue;
+         }
+         e->SetIsGood(false);
+      }
       FairRunAna::Instance()->MarkFill(false);
    }
 }

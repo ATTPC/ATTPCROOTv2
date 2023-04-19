@@ -14,7 +14,8 @@
 #include <Math/Vector3Dfwd.h> // for XYZVector
 
 #include <cmath>
-#include <memory> // for allocator
+#include <memory>  // for allocator
+#include <utility> // for move
 
 constexpr auto c = 29979.2;  //< c in cm/us
 constexpr auto c2 = c * c;   //< c^2
@@ -25,21 +26,40 @@ using XYZVector = ROOT::Math::XYZVector;
 using XYPoint = ROOT::Math::XYPoint;
 using XYVector = ROOT::Math::XYVector;
 
-AtRadialChargeModel::AtRadialChargeModel(EFieldPtr eField) : AtSpaceChargeModel(), GetEField(eField) {}
+AtRadialChargeModel::AtRadialChargeModel(EFieldPtr eField) : AtSpaceChargeModel(), GetEField(std::move(eField)) {}
+
+XYZPoint AtRadialChargeModel::OffsetForBeam(XYZPoint point)
+{
+   XYZPoint fOffset = fWindow + (fPadPlane - fWindow) / (fPadPlane.Z() - fWindow.Z()) * point.Z();
+
+   return {point.X() - fOffset.X(), point.Y() - fOffset.Y(), point.Z()};
+}
+XYZPoint AtRadialChargeModel::UndoOffsetForBeam(XYZPoint point)
+{
+   XYZPoint fOffset = fWindow + (fPadPlane - fWindow) / (fPadPlane.Z() - fWindow.Z()) * point.Z();
+
+   return {point.X() + fOffset.X(), point.Y() + fOffset.Y(), point.Z()};
+}
 
 XYZPoint AtRadialChargeModel::CorrectSpaceCharge(const XYZPoint &input)
 {
-   return SolveEqn(input / 10, true) * 10;
+   auto offsetHit = OffsetForBeam(input);
+   LOG(debug) << input << " to " << offsetHit;
+   auto corrHit = SolveEqn(offsetHit / 10, true) * 10;
+   return UndoOffsetForBeam(corrHit);
 }
 
 XYZPoint AtRadialChargeModel::ApplySpaceCharge(const XYZPoint &input)
 {
-   return SolveEqn(input / 10, false) * 10;
+   auto offsetHit = OffsetForBeam(input);
+   auto corrHit = SolveEqn(offsetHit / 10, false) * 10;
+   return UndoOffsetForBeam(corrHit);
 }
 
 // Assumes units are cm
 XYZPoint AtRadialChargeModel::SolveEqn(XYZPoint ele, bool correct)
 {
+
    // Verify step size is logical
    auto minStepSize = 2 * fMobilityElec * me / c2;
    if (fStepSize < minStepSize) {
@@ -64,7 +84,13 @@ XYZPoint AtRadialChargeModel::SolveEqn(XYZPoint ele, bool correct)
          break;
       }
 
-      auto Efield = GetEField(pos, z);
+      double Efield = 0;
+      if (GetEField == nullptr) {
+         LOG(fatal) << "The distrotion field was never set!";
+      } else
+         Efield = GetEField(pos, z);
+
+      LOG(debug2) << "Field " << Efield << " V/cm rho: " << pos << " cm and z: " << z << " cm.";
       if (!correct)
          Efield *= -1;
 
@@ -99,8 +125,9 @@ void AtRadialChargeModel::LoadParameters(AtDigiPar *par)
    if (par == nullptr)
       return;
 
-   SetEField(par->GetEField());
+   SetEField(par->GetEField() / 100.); // EField units in param are V/m. Need V/cm.
    SetDriftVelocity(par->GetDriftVelocity());
+   LOG(debug) << "Setting mobility to: " << fMobilityElec;
 }
 
 void AtRadialChargeModel::SetEField(double field)

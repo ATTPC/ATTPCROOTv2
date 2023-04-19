@@ -7,15 +7,10 @@
 #include <Math/Vector3D.h>    // for DisplacemenXYZVectorD
 #include <Math/Vector3Dfwd.h> // for XYZVector
 #include <Rtypes.h>
-#include <TObject.h>
 
 #include <algorithm> // for max
 #include <utility>   // for pair
 #include <vector>    // for vector
-
-class TBuffer;
-class TClass;
-class TMemberInspector;
 
 using XYZVector = ROOT::Math::XYZVector;
 
@@ -24,7 +19,7 @@ struct tracksFromVertex {
    std::vector<AtTrack> tracks;
 };
 
-class AtFindVertex : public TObject {
+class AtFindVertex {
 
 public:
    AtFindVertex(Double_t lineDistThreshold = 15);
@@ -73,8 +68,6 @@ private:
    XYZVector fBeamDir;
    std::vector<Double_t> fBeamLine;
    std::vector<std::vector<Double_t>> fLineCand;
-
-   ClassDef(AtFindVertex, 1);
 };
 
 #endif //#ifndef AtFindVertex_H

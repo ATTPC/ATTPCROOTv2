@@ -68,9 +68,9 @@ public:
    std::map<TString, std::vector<TString>> const &GetBranchNames() const { return fBranchNames; }
 
    /*** Data handlers owned by AtViewerManager ***/
-   DataHandling::AtBranch &GetRawEventName() { return fRawEventBranch; }
-   DataHandling::AtBranch &GetEventName() { return fEventBranch; }
-   DataHandling::AtBranch &GetPatternEventName() { return fPatternEventBranch; }
+   DataHandling::AtBranch &GetRawEventBranch() { return fRawEventBranch; }
+   DataHandling::AtBranch &GetEventBranch() { return fEventBranch; }
+   DataHandling::AtBranch &GetPatternEventBranch() { return fPatternEventBranch; }
    DataHandling::AtTreeEntry &GetCurrentEntry() { return fEntry; }
    DataHandling::AtPadNum &GetPadNum() { return fPadNum; }
 

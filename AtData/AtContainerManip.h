@@ -129,6 +129,16 @@ std::vector<T> GetObjectVector(const std::vector<std::unique_ptr<T>> &vec)
    return ret;
 }
 
+template <typename T>
+std::vector<T &> GetReferenceVector(const std::vector<std::unique_ptr<T>> &vec)
+{
+   LOG(debug) << "Transforming unique pointer -> object.";
+   std::vector<T &> ret;
+   ret.resize(vec.size());
+   std::transform(vec.begin(), vec.end(), ret.begin(), [](const std::unique_ptr<T> &a) { return *a; });
+   return ret;
+}
+
 /**
  * Will move elements from the input vector to the output vector if op(elem) returns true
  * Suggested to make op() take a const referance to T so Operator is type bool(const T&)

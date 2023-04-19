@@ -129,6 +129,7 @@ void AtViewerManager::GenerateBranchLists()
    for (int i = 0; i < ioMan->GetBranchNameList()->GetSize(); i++) {
 
       auto branchName = ioMan->GetBranchName(i);
+      LOG(debug) << "Looking for " << branchName;
       auto branchArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(branchName));
       if (branchArray == nullptr)
          continue;
@@ -136,7 +137,13 @@ void AtViewerManager::GenerateBranchLists()
       // Loop until there is something in this branch
       int event = 0;
       while (branchArray->GetSize() == 0)
-         GotoEvent(event++);
+         GotoEvent(++event);
+
+      LOG(debug) << "Examining " << branchArray->At(0);
+      LOG(debug) << "With type " << branchArray->At(0)->ClassName();
+
+      if (branchArray->At(0) == nullptr)
+         LOG(error) << "Failed to determine type of " << branchName << "! The TCLonesArray contains a nullptr.";
 
       auto type = branchArray->At(0)->ClassName();
       fBranchNames[type].push_back(branchName);
@@ -147,7 +154,6 @@ void AtViewerManager::GenerateBranchLists()
 
 void AtViewerManager::GotoEventImpl()
 {
-   // FairRunAna::Instance()->Run((Long64_t)fEntry.Get());
    for (auto &tab : fTabs)
       tab->Exec();
 

@@ -6,10 +6,12 @@
 #include <Rtypes.h>
 #include <TString.h>
 
+#include <algorithm>  // for max
 #include <functional> // for function
 #include <utility>    // for move
+#include <vector>     // for vector
 
-class AtRawEvent;
+class AtBaseEvent;
 class TClonesArray;
 class TBuffer;
 class TClass;
@@ -30,15 +32,28 @@ private:
 
    TClonesArray *fInputEventArray{nullptr}; //< AtRawEvent branch object
    TString fInputBranchName{"AtRawEvent"};  //< Name of AtRawEvent branch to mark as good/not good
-   AtRawEvent *fRawEvent{};                 //< Event to mark as good
+   AtBaseEvent *fEvent;
+   std::vector<TString> fOutputBranchs;
 
 public:
    AtDataReductionTask() = default;
    ~AtDataReductionTask() = default;
 
    void SetReductionFunction(ReductionFunction func) { fReductionFunc = std::move(func); }
-   void SetReductionFunction(std::function<bool(AtRawEvent *)> func);
-   void SetInputBranch(TString inputBranch) { fInputBranchName = inputBranch; }
+   void SetReductionFunction(std::function<bool(AtBaseEvent *)> func);
+
+   /// This will cast whatever is in the input array to type T and then call the passed function
+   template <class T>
+   void SetReductionFunction(std::function<bool(T *)> func)
+   {
+      fReductionFunc = [this, func]() { return func(dynamic_cast<T *>(fEvent)); };
+   }
+   void SetInputBranch(TString inputBranch)
+   {
+      fInputBranchName = inputBranch;
+      fOutputBranchs.push_back(inputBranch);
+   }
+   void SetOutputBranch(TString outputBranch) { fOutputBranchs.push_back(outputBranch); }
 
    virtual InitStatus Init() override;
    virtual void Exec(Option_t *opt) override;

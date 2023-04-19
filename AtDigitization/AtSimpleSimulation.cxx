@@ -3,6 +3,7 @@
 
 #include "AtELossModel.h"
 #include "AtMCPoint.h"
+#include "AtSpaceChargeModel.h" // for AtSpaceChargeModel
 
 #include <FairLogger.h>
 #include <FairRootManager.h>
@@ -17,13 +18,19 @@
 #include <stdexcept> // for invalid_argument
 #include <utility>   // for pair
 
-AtSimpleSimulation::AtSimpleSimulation(std::string geoFile)
+AtSimpleSimulation::AtSimpleSimulation(std::string geoFile) : fMCPoints("AtMCPoint")
 {
    TGeoManager *geo = TGeoManager::Import(geoFile.c_str());
 
    if (gGeoManager == nullptr)
       LOG(fatal) << "Failed to load geometry file " << geoFile << " " << geo;
 }
+AtSimpleSimulation::AtSimpleSimulation() : fMCPoints("AtMCPoint")
+{
+   if (gGeoManager == nullptr)
+      LOG(fatal) << "No geometry file loaded!";
+}
+
 bool AtSimpleSimulation::ParticleID::operator<(const ParticleID &other) const
 {
    if (A < other.A) {
@@ -96,9 +103,13 @@ void AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos
    auto mom = iniMom;
    double length = 0;
 
-   // Need to also add a condition for when the particle stops in the detector...
-   while (IsInVolume("drift_volume", pos)) {
+   // Go until we exit the volume or the KE is less than 1keV
+   while (IsInVolume("drift_volume", pos) && mom.E() - mom.M() > 1e-3) {
 
+      if (isnan(pos.X()) || isnan(mom.X())) {
+         LOG(error) << "Failed to simulate a point with nan!";
+         return;
+      }
       // Direction particle is traveling
       auto dir = mom.Vect().Unit();
 
@@ -123,7 +134,7 @@ void AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos
 
 void AtSimpleSimulation::NewEvent()
 {
-   fMCPoints->Clear();
+   fMCPoints.Clear();
    fTrackID = 0;
 }
 
@@ -132,23 +143,30 @@ void AtSimpleSimulation::NewEvent()
  */
 void AtSimpleSimulation::AddHit(double ELoss, const XYZPoint &pos, const PxPyPzEVector &mom, double length)
 {
-   LOG(info) << "Adding a hit at element " << fMCPoints->GetEntriesFast() << " in TClonesArray.";
+   LOG(debug) << "Adding a hit at element " << fMCPoints.GetEntriesFast() << " in TClonesArray.";
 
-   auto *mcPoint = dynamic_cast<AtMCPoint *>(fMCPoints->ConstructedAt(fMCPoints->GetEntriesFast(), "C"));
+   auto *mcPoint = dynamic_cast<AtMCPoint *>(fMCPoints.ConstructedAt(fMCPoints.GetEntriesFast(), "C"));
 
    mcPoint->SetTrackID(fTrackID);
    mcPoint->SetLength(length / 10.);      // Convert to cm
    mcPoint->SetEnergyLoss(ELoss / 1000.); // Convert to GeV
    mcPoint->SetVolName("drift_volume");
 
-   // mcPoint->fEnergyIni = Eini;
-   // mcPoint->fAiso = A;
-   // mcPoint->fZiso = Z;
-   mcPoint->SetPosition(pos / 10.);          // Convert to cm
+   if (fSCModel) {
+      // In the simulation z = 0 is the window and z=1000 is the pad plane.
+      // In the data analysis that is flipped, so we must adjust the z value, apply SC and move back
+      auto posExpCoord = pos;
+      posExpCoord.SetZ(1000 - pos.Z());
+      auto corrExpCoord = fSCModel->ApplySpaceCharge(posExpCoord);
+      corrExpCoord.SetZ(1000 + corrExpCoord.Z());
+      mcPoint->SetPosition(corrExpCoord / 10.);
+   } else
+      mcPoint->SetPosition(pos / 10.);       // Convert to cm
    mcPoint->SetMomentum(mom.Vect() / 1000.); // Convert to GeV/c
+   // mcPoint->Print(nullptr);
 }
 
-void AtSimpleSimulation::Init(std::string branchName)
+void AtSimpleSimulation::RegisterBranch(std::string branchName, bool perc)
 {
    auto ioMan = FairRootManager::Instance();
    if (ioMan == nullptr) {
@@ -156,5 +174,5 @@ void AtSimpleSimulation::Init(std::string branchName)
       return;
    }
 
-   fMCPoints = ioMan->Register(branchName, "AtMCPoint", "AtTPC", true);
+   ioMan->Register(branchName.c_str(), "AtTPC", &fMCPoints, perc);
 }

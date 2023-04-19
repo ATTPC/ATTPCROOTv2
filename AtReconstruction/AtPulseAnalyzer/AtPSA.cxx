@@ -113,6 +113,13 @@ void AtPSA::TrackMCPoints(std::multimap<Int_t, std::size_t> &map, AtHit &hit)
    }
 }
 
+AtEvent AtPSA::Analyze(AtRawEvent &rawEvent)
+{
+   AtEvent event;
+   Analyze(&rawEvent, &event);
+   return event;
+}
+
 /**
  * Analyzes every pad in event, and add the hits to AtEvent. Called by AtPSATask.
  *

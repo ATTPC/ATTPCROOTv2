@@ -8,6 +8,7 @@
 #include "AtWeightedGaussian.h"      // IWYU pragma: keep
 #include "AtWeightedGaussianTrunc.h" // IWYU pragma: keep
 #include "AtWeightedY.h"             // IWYU pragma: keep
+#include "AtY.h"                     // IWYU pragma: keep
 
 #include <memory>
 #include <utility>
@@ -24,7 +25,8 @@ enum class SampleMethod {
    kGaussian = 2,
    kWeightedGaussian = 3,
    kWeightedY = 4,
-   kWeightedGaussianTrunc = 5
+   kWeightedGaussianTrunc = 5,
+   kY = 6
 };
 
 /**
@@ -45,6 +47,7 @@ std::unique_ptr<AtSample> CreateSampler(SampleMethod method, Ts &&...params)
    case SampleMethod::kWeightedGaussian: return std::make_unique<AtWeightedGaussian>(std::forward<Ts>(params)...);
    case SampleMethod::kWeightedY: return std::make_unique<AtWeightedY>(std::forward<Ts>(params)...);
    case SampleMethod::kWeightedGaussianTrunc: return std::make_unique<AtWeightedGaussianTrunc>();
+   case SampleMethod::kY: return std::make_unique<AtY>();
    default: return nullptr;
    };
 }

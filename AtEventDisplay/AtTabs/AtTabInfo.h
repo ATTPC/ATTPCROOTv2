@@ -1,7 +1,6 @@
 #ifndef ATTABINFO_H
 #define ATTABINFO_H
 
-#include "AtDataObserver.h"
 #include "AtViewerManagerSubject.h"
 
 #include <FairRootManager.h>
@@ -14,9 +13,6 @@
 #include <memory> // for allocator
 #include <string>
 #include <type_traits> // for enable_if_t, is_base_of
-namespace DataHandling {
-class AtSubject;
-}
 
 /**
  * @defgroup TabData Data for tabs
@@ -89,33 +85,35 @@ public:
  * @ingroup TabData
  */
 template <typename T>
-class AtTabInfoFairRoot : public AtTabInfoBase, public DataHandling::AtObserver {
+class AtTabInfoFairRoot : public AtTabInfoBase {
 
 protected:
    DataHandling::AtBranch &fBranchName;
-   T *fInfo{nullptr};
+   TString fCurrentBranchName;
+   TClonesArray *fArray{nullptr};
 
 public:
-   AtTabInfoFairRoot(DataHandling::AtBranch &branch) : AtTabInfoBase(), fBranchName(branch)
-   {
-      fBranchName.Attach(this);
-   }
-   ~AtTabInfoFairRoot() { fBranchName.Detach(this); }
+   AtTabInfoFairRoot(DataHandling::AtBranch &branch) : AtTabInfoBase(), fBranchName(branch) {}
+   ~AtTabInfoFairRoot() {}
 
    std::string GetDefaultName() override { return T::Class_Name(); }
 
    T *GetInfo() { return Get(); }
-   T *Get() { return fInfo; }
-
-   void Update(DataHandling::AtSubject *changedSubject) override
+   T *Get()
    {
-      if (changedSubject == &fBranchName) {
-         auto branchName = fBranchName.GetBranchName();
-         auto array = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(branchName));
-         if (array != nullptr)
-            fInfo = dynamic_cast<T *>(array->At(0));
+      if (fCurrentBranchName != fBranchName.GetBranchName()) {
+         fCurrentBranchName = fBranchName.GetBranchName();
+         fArray = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(fCurrentBranchName));
       }
+      if (fArray != nullptr)
+         return dynamic_cast<T *>(fArray->At(0));
+      return nullptr;
    }
+   const T *operator->() const { return Get(); }
+   const T &operator*() const { return *Get(); }
+   T *operator->() { return Get(); }
+   T &operator*() { return *Get(); }
+
    const DataHandling::AtBranch &GetBranch() const { return fBranchName; }
 };
 

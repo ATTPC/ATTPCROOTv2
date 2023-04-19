@@ -19,8 +19,6 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-class AtRawEvent;
-
 class AtEvent : public AtBaseEvent {
 public:
    using TraceArray = std::array<Float_t, 512>;
@@ -39,8 +37,8 @@ private:
 public:
    AtEvent();
    AtEvent(const AtEvent &copy);
+   AtEvent(const AtBaseEvent &copy) : AtBaseEvent(copy) { SetName("AtEvent"); }
    AtEvent &operator=(const AtEvent object);
-   AtEvent(const AtRawEvent &copy);
    ~AtEvent() = default;
 
    friend void swap(AtEvent &first, AtEvent &second)
@@ -120,6 +118,7 @@ public:
    const std::map<Int_t, Int_t> &GetMultiMap() { return fMultiplicityMap; }
 
    void SortHitArray();
+   void SortHitArrayID();
    void SortHitArrayTime();
 
    ClassDefOverride(AtEvent, 6);

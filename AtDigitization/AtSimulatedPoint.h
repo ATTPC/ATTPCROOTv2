@@ -4,10 +4,10 @@
 #include <Math/Vector3D.h>
 #include <Math/Vector3Dfwd.h>
 #include <Rtypes.h>
-//#include <TROOT.h>
 #include <TObject.h>
 
 #include <cstddef>
+#include <utility> // for swap
 
 class TBuffer;
 class TClass;
@@ -28,8 +28,20 @@ public:
    AtSimulatedPoint();
    AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, ROOT::Math::XYZVector pointLocation);
    AtSimulatedPoint(std::size_t mcPointID, Int_t clusterID, Int_t charge, ROOT::Math::XYZVector pointLocation);
+   AtSimulatedPoint(const AtSimulatedPoint &object) = default;
+   AtSimulatedPoint &operator=(AtSimulatedPoint other);
 
-   ~AtSimulatedPoint();
+   friend void swap(AtSimulatedPoint &first, AtSimulatedPoint &second)
+   {
+      using std::swap;
+      swap(first.fMCPointID, second.fMCPointID);
+      swap(first.fMCEventID, second.fMCEventID);
+      swap(first.fClusterID, second.fClusterID);
+      swap(first.fCharge, second.fCharge);
+      swap(first.fPosition, second.fPosition);
+   }
+
+   ~AtSimulatedPoint() = default;
 
    void SetClusterID(Int_t clusterID);
    void SetMCPointID(std::size_t id);

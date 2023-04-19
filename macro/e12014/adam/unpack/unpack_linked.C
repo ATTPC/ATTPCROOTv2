@@ -1,7 +1,59 @@
+#include <FairFileSource.h>
+#include <FairParAsciiFileIo.h>
+#include <FairRootFileSink.h>
+#include <FairRuntimeDb.h>
+
+#include <TChain.h>
+#include <TFile.h>
+#include <TStopwatch.h>
+#include <TString.h>
+
+#include "SpaceChargeModel.h"
 #include "TxtEvent.h"
+#ifndef __CLING__
+#include "../build/include/AtCopyTreeTask.h"
+#include "../build/include/AtCutHEIST.h"
+#include "../build/include/AtDataReductionTask.h"
+#include "../build/include/AtFilterCalibrate.h"
+#include "../build/include/AtFilterSubtraction.h"
+#include "../build/include/AtFilterTask.h"
+#include "../build/include/AtFissionTask.h"
+#include "../build/include/AtHDFUnpacker.h"
+#include "../build/include/AtLinkDAQTask.h"
+#include "../build/include/AtPSA.h"
+#include "../build/include/AtPSAComposite.h"
+#include "../build/include/AtPSADeconvFit.h"
+#include "../build/include/AtPSATBAvg.h"
+#include "../build/include/AtPSAtask.h"
+#include "../build/include/AtRadialChargeModel.h"
+#include "../build/include/AtRunAna.h"
+#include "../build/include/AtSampleConsensus.h"
+#include "../build/include/AtSampleConsensusTask.h"
+#include "../build/include/AtSpaceChargeCorrectionTask.h"
+#include "../build/include/AtTpcMap.h"
+#include "../build/include/AtUnpackTask.h"
+#endif
+
+/**
+ * This will unpack a run file with every fission event in it that can be matched to HEIST.
+ * The output tree structure has these branches (branch name: description)
+ *
+ * AtRawEvent: AtRawEvent with ch0 subtraction and calibration applied.
+ * AtEvent: AtEvent with no space charge correction.
+ * AtEventCorr: AtEvent with space charge correction.
+ * AtPatternEvent: AtPatternEvent with space charge correction.
+ * AtFissionEvent: AtFissionEvent constructed from AtPatternEvent and AtEvent.
+ *
+ */
 
 void unpack_linked(int tpcRunNum = 206)
 {
+   auto verbSpec =
+      fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
+   fair::Logger::DefineVerbosity("user1", verbSpec);
+   // fair::Logger::SetVerbosity("user1");
+   // fair::Logger::SetConsoleSeverity("debug");
+
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
 
@@ -20,7 +72,7 @@ void unpack_linked(int tpcRunNum = 206)
    EventMap eventMap(sharedInfoDir + "RunMap.csv");
    int nsclRunNum = eventMap.GetNsclRunNum(tpcRunNum);
    if (nsclRunNum == -1)
-      throw std::invalid_argument("No matting NSCL run number");
+      throw std::invalid_argument("No matching NSCL run number");
 
    // Set the in/out files
    TString inputFile = inputDir + TString::Format("/run_%04d.h5", tpcRunNum);
@@ -70,23 +122,23 @@ void unpack_linked(int tpcRunNum = 206)
    mapping->AddAuxPad({10, 0, 1, 0}, "MCP_DS");
    mapping->AddAuxPad({10, 0, 2, 34}, "IC");
 
-   // Create the unpacker task
+   /**** HDF5 unpacker ****/
    auto unpacker = std::make_unique<AtHDFUnpacker>(mapping);
    unpacker->SetInputFileName(inputFile.Data());
    unpacker->SetNumberTimestamps(2);
    unpacker->SetBaseLineSubtraction(true);
-
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
+   unpackTask->SetOuputBranchName("AtRawEventRaw");
    unpackTask->SetPersistence(false);
-   run->AddTask(unpackTask);
 
+   /**** Data reduction task (keep fission only) ****/
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
-   reduceTask->SetInputBranch("AtRawEvent");
+   reduceTask->SetInputBranch("AtRawEventRaw");
    TxtEvents events;
    events.AddTxtFile(TString::Format(sharedInfoDir + "/EventLabels/fissionEventsRun_%04d", tpcRunNum).Data());
    reduceTask->SetReductionFunction(events);
-   run->AddTask(reduceTask);
 
+   /**** DAQ linking task  ****/
    AtLinkDAQTask *linker = new AtLinkDAQTask(); //< Must run after the data reduction task!!!
    auto success = linker->SetInputTree(evtInputFile, "E12014");
    linker->SetEvtOutputFile(evtOutputFile);
@@ -95,27 +147,86 @@ void unpack_linked(int tpcRunNum = 206)
    linker->SetSearchMean(1);
    linker->SetSearchRadius(2);
    linker->SetCorruptedSearchRadius(1000);
-   run->AddTask(linker);
+   linker->SetInputBranch("AtRawEventRaw");
 
    auto threshold = 45;
 
+   /**** Ch0 subtraction ****/
    auto filterSub = new AtFilterSubtraction(mapping);
    filterSub->SetThreshold(threshold);
    filterSub->SetIsGood(false); // Save events event if
    AtFilterTask *subTask = new AtFilterTask(filterSub);
-   subTask->SetPersistence(true);
+   subTask->SetPersistence(false);
    subTask->SetFilterAux(true);
+   subTask->SetInputBranch("AtRawEventRaw");
    subTask->SetOutputBranch("AtRawEventSub");
 
-   run->AddTask(subTask);
+   /**** Calibration Task ****/
+   auto filterCal = new AtFilterCalibrate();
+   filterCal->SetCalibrationFile(sharedInfoDir + "/calibrationFormated.txt");
+   AtFilterTask *calTask = new AtFilterTask(filterCal);
+   calTask->SetPersistence(true);
+   calTask->SetFilterAux(false);
+   calTask->SetInputBranch("AtRawEventSub");
+   calTask->SetOutputBranch("AtRawEvent");
 
-   auto psa = std::make_unique<AtPSAMax>();
-   psa->SetThreshold(threshold);
-   AtPSAtask *psaTask = new AtPSAtask(psa->Clone());
-   psaTask->SetInputBranch("AtRawEventSub");
+   /**** PSA Task ****/
+   AtRawEvent *respAvgEvent;
+   TFile *f2 = new TFile(sharedInfoDir + "respAvg.root");
+   f2->GetObject("avgResp", respAvgEvent);
+   f2->Close();
+
+   auto psa = std::make_unique<AtPSADeconvFit>();
+   psa->SetResponse(*respAvgEvent);
+   psa->SetThreshold(15); // Threshold in charge units
+   psa->SetFilterOrder(6);
+   psa->SetCutoffFreq(75);
+   psa->SetThreshold(10);
+   auto psaBeam = std::make_unique<AtPSATBAvg>();
+   psaBeam->SetThreshold(45);
+   auto psaComp = std::make_unique<AtPSAComposite>(std::move(psaBeam), std::move(psa), 20);
+   AtPSAtask *psaTask = new AtPSAtask(std::move(psaComp));
+   psaTask->SetInputBranch("AtRawEvent");
    psaTask->SetOutputBranch("AtEvent");
    psaTask->SetPersistence(true);
+
+   /**** Space charge correction ****/
+   auto SCModel = std::make_unique<AtRadialChargeModel>(E12014SC(nsclRunNum));
+   SCModel->SetStepSize(0.1);
+   SCModel->SetBeamLocation({0, -6, 0}, {10, 0, 1000});
+   auto scTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
+   scTask->SetInputBranch("AtEvent");
+   scTask->SetOutputBranch("AtEventCorr");
+
+   /**** 2 lines pattern fit ****/
+   auto method = std::make_unique<SampleConsensus::AtSampleConsensus>(
+      SampleConsensus::Estimators::kRANSAC, AtPatterns::PatternType::kY, RandomSample::SampleMethod::kY);
+   method->SetDistanceThreshold(20);
+   method->SetNumIterations(500);
+   method->SetMinHitsPattern(150);
+   method->SetChargeThreshold(10); //-1 implies no charge-weighted fitting
+   method->SetFitPattern(true);
+   auto sacTask = new AtSampleConsensusTask(std::move(method));
+   sacTask->SetPersistence(false);
+   sacTask->SetInputBranch("AtEventCorr");
+   sacTask->SetOutputBranch("AtPatternEvent");
+
+   /******** Create fission task ********/
+   AtFissionTask *fissionTask = new AtFissionTask(E12014SC(nsclRunNum).GetLambda());
+   fissionTask->SetUncorrectedEventBranch("AtEvent");
+   fissionTask->SetPatternBranch("AtPatternEvent");
+   fissionTask->SetOutBranch("AtFissionEvent");
+   fissionTask->SetPersistance(true);
+
+   run->AddTask(unpackTask);
+   run->AddTask(reduceTask);
+   run->AddTask(linker);
+   run->AddTask(subTask);
+   run->AddTask(calTask);
    run->AddTask(psaTask);
+   run->AddTask(scTask);
+   run->AddTask(sacTask);
+   run->AddTask(fissionTask);
 
    run->Init();
 
@@ -123,7 +234,7 @@ void unpack_linked(int tpcRunNum = 206)
    auto numEvents = unpackTask->GetNumEvents();
 
    // numEvents = 1700;//217;
-   // numEvents = 500;
+   // numEvents = 1000;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
@@ -137,10 +248,10 @@ void unpack_linked(int tpcRunNum = 206)
    timer.Stop();
    Double_t rtime = timer.RealTime();
    Double_t ctime = timer.CpuTime();
+   using std::cout;
+   using std::endl;
    cout << endl << endl;
    cout << "Real time " << rtime << " s, CPU time " << ctime << " s" << endl;
    cout << endl;
    // ------------------------------------------------------------------------
-
-   return 0;
 }

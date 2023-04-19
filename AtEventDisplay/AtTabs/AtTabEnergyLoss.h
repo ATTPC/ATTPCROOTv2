@@ -2,13 +2,11 @@
 #define ATTABENERGYLOSS_H
 #include "AtDataObserver.h" // for AtObserver
 #include "AtDataSubject.h"  // for AtSimpleType, AtSubject (ptr only)
-#include "AtEvent.h"
+#include "AtFissionEvent.h"
 #include "AtPadReference.h" // for AtPadReference
-#include "AtPatternEvent.h"
 #include "AtRawEvent.h"
 #include "AtTabCanvas.h"
 #include "AtTabInfo.h" // for AtTabInfoFairRoot
-#include "AtTrack.h"
 
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h> // for XYZPoint
@@ -27,7 +25,9 @@ class TH1F;
 namespace DataHandling {
 class AtTreeEntry;
 }
-
+namespace DataHandling {
+class AtBranch;
+}
 /**
  * @brief Class to calculate dE/dx for fission fragments (but possibly generally).
  *
@@ -37,24 +37,18 @@ protected:
    using XYZVector = ROOT::Math::XYZVector;
    using XYZPoint = ROOT::Math::XYZPoint;
    using TH1Ptr = std::unique_ptr<TH1F>;
-   using HitVector = std::vector<std::unique_ptr<AtHit>>;
+   using HitVector = std::vector<AtHit *>;
 
    AtTabInfoFairRoot<AtRawEvent> fRawEvent;         //< Points to selected RawEventBranch
-   AtTabInfoFairRoot<AtEvent> fEvent;               //< Points to selected EventBranch
-   AtTabInfoFairRoot<AtPatternEvent> fPatternEvent; //< Points to selected Pattern Event Branch
-   DataHandling::AtTreeEntry &fEntry;               //< Tracks current entry
-   DataHandling::AtSimpleType<float> fBinWidth;     //< Width of binning in mm
+   AtTabInfoFairRoot<AtFissionEvent> fFissionEvent; //< Fision event to analyse
+
+   DataHandling::AtTreeEntry &fEntry;           //< Tracks current entry
+   DataHandling::AtSimpleType<float> fBinWidth; //< Width of binning in mm
 
    /// Number of std dev to go after the mean of the first hit before calcualting the ratio of the
    /// histograms.
    DataHandling::AtSimpleType<float> fSigmaFromHit;
    DataHandling::AtSimpleType<int> fTBtoAvg; //< Number of TB from track start to average for ratio.
-
-   // Data for current entry
-   double fAngle{0};
-   XYZPoint fVertex;
-   std::vector<std::vector<double>> fCharge;
-   std::vector<AtTrack> fTracks;
 
    // Helpful things
    const std::array<Color_t, 2> fHistColors = {9, 31};
@@ -87,7 +81,7 @@ protected:
    std::vector<AtPadReference> fVetoPads;
 
 public:
-   AtTabEnergyLoss();
+   AtTabEnergyLoss(DataHandling::AtBranch &fissionBranch);
    ~AtTabEnergyLoss();
    void InitTab() override;
    void Exec() override{};
@@ -98,19 +92,13 @@ public:
 private:
    void SetStyle(std::array<TH1Ptr, 2> &hists, THStack &stack);
    void Update();
-   void setAngleAndVertex();
    void setdEdX();
    double getHitDistanceFromVertex(const AtHit &hit);
    double getHitDistanceFromVertexAlongZ(const AtHit &hit);
-   XYZPoint calcualteVetrex(const std::vector<XYZVector> &lineStart, const std::vector<XYZVector> &lineStep);
 
    void FillSums(float threshold = 15);
 
-   void FillChargeSum(TH1F *hist, const HitVector &hits, int threshold);
-   void FillFitSum(TH1F *hist, const AtHit &hit, int threshold);
-
    void FillRatio();
-   bool isGoodHit(const AtHit &hit);
 };
 
 #endif //#ifndef ATTABENERGYLOSS_H

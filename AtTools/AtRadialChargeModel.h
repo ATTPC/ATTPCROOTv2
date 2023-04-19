@@ -5,8 +5,7 @@
 
 #include <Rtypes.h> // for Double_t
 
-#include <type_traits> // for add_pointer_t
-
+#include <functional>
 class AtDigiPar;
 
 /**
@@ -18,7 +17,7 @@ class AtDigiPar;
  */
 class AtRadialChargeModel : public AtSpaceChargeModel {
 public:
-   using EFieldPtr = std::add_pointer_t<double(double rho, double z)>;
+   using EFieldPtr = std::function<double(double rho, double z)>;
 
 private:
    /**
@@ -28,10 +27,12 @@ private:
     */
    EFieldPtr GetEField{nullptr};
 
-   Double_t fEFieldZ{7000};            //< Magnitude of electric field in Z direction [V/cm]
-   Double_t fDriftVel{0.82};           //< Drift velocity of electron in gas [cm/us]
-   Double_t fMobilityElec{1.17143e-3}; //< Mobility of electron (calculated from drift velocity) [cm2/V/us]
+   Double_t fEFieldZ{700};             //< Magnitude of electric field in Z direction [V/cm]
+   Double_t fDriftVel{0.815};          //< Drift velocity of electron in gas [cm/us]
+   Double_t fMobilityElec{1.16429e-3}; //< Mobility of electron (calculated from drift velocity) [cm2/V/us]
    Double_t fStepSize{1e-4};           //< Step size for solving differential equation [us]
+   XYZPoint fWindow{0, 0, 0};          //<Beam location at window in mm
+   XYZPoint fPadPlane{0, 0, 1000};     //<Beam location at pad plane in mm
 
 public:
    AtRadialChargeModel(EFieldPtr efield);
@@ -39,12 +40,48 @@ public:
    virtual XYZPoint CorrectSpaceCharge(const XYZPoint &directInputPosition) override;
    virtual XYZPoint ApplySpaceCharge(const XYZPoint &reverseInputPosition) override;
 
+   void SetDistortionField(EFieldPtr field) { GetEField = field; }
    void SetStepSize(double setSize) { fStepSize = setSize; }
    void SetEField(double field);
    void SetDriftVelocity(double v);
    void LoadParameters(AtDigiPar *par) override;
+   void SetBeamLocation(XYZPoint window, XYZPoint padPlane)
+   {
+      fWindow = window;
+      fPadPlane = padPlane;
+   }
+
+protected:
+   XYZPoint OffsetForBeam(XYZPoint point);
+   XYZPoint UndoOffsetForBeam(XYZPoint point);
 
 private:
    XYZPoint SolveEqn(XYZPoint ele, bool correction);
+};
+
+class AtLineChargeZDep {
+
+   double fLambda;
+
+public:
+   AtLineChargeZDep(double l) : fLambda(l) {}
+
+   double operator()(double rho, double z)
+   {
+      constexpr double rBeam = 2.0 / 100;    // in *m*
+      constexpr double eps = 8.85418782E-12; // SI
+      constexpr double pi = 3.14159265358979;
+      constexpr double eps2pi = 2 * pi * eps;
+      rho /= 100.; // Convert units from cm to m
+      z /= 100.;   // Convert units from cm to m
+
+      double field;
+      if (rho > rBeam)
+         field = fLambda / eps2pi / rho * (z / 1.); // v/m
+      else
+         // field = lambda / eps2pi / rBeam / rBeam * rho * (z/1.); // v/m
+         field = 0;
+      return field / 100.; // V/cm
+   }
 };
 #endif /* ATRADIALCHARGEMODEL_H */

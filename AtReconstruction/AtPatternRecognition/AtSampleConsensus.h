@@ -22,6 +22,7 @@
 class AtHit;
 class AtEvent;
 class AtPatternEvent;
+class AtBaseEvent;
 namespace RandomSample {
 class AtSample;
 }
@@ -74,8 +75,8 @@ public:
    /// See Solve(const std::vector<const AtHit *> &hitArray)
    AtPatternEvent Solve(AtEvent *event);
    /// See Solve(const std::vector<const AtHit *> &hitArray)
-   AtPatternEvent Solve(const std::vector<AtHit> &hitArray);
-   AtPatternEvent Solve(const std::vector<const AtHit *> &hitArray);
+   AtPatternEvent Solve(const std::vector<AtHit> &hitArray, AtBaseEvent *event = nullptr);
+   AtPatternEvent Solve(const std::vector<const AtHit *> &hitArray, AtBaseEvent *event = nullptr);
 
    void SetRandomSample(AtSamplePtr mode) { fRandSampler = std::move(mode); };
    void SetPatternType(PatternType type) { fPatternType = type; }

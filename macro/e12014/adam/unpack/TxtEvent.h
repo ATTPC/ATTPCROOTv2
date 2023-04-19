@@ -30,7 +30,7 @@ public:
    }
 
    // Returns true if the event number is in the added text files
-   bool operator()(AtRawEvent *event)
+   bool operator()(AtBaseEvent *event)
    {
       int eventNum = event->GetEventID();
       if (fEventNumbers[fLastAcces] > eventNum) {

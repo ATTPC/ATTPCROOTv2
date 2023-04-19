@@ -31,8 +31,8 @@ AtPSADeconv::AtPSADeconv() : AtPSA()
 };
 
 AtPSADeconv::AtPSADeconv(const AtPSADeconv &r)
-   : fResponse(r.fResponse), fFFT(nullptr), fFFTbackward(nullptr), fFilterOrder(r.fFilterOrder),
-     fCutoffFreq(r.fCutoffFreq)
+   : fEventResponse(r.fEventResponse), fResponse(r.fResponse), fFFT(nullptr), fFFTbackward(nullptr),
+     fFilterOrder(r.fFilterOrder), fCutoffFreq(r.fCutoffFreq)
 {
    initFFTs();
 }
@@ -74,6 +74,7 @@ void AtPSADeconv::initFFTs()
  */
 AtPad &AtPSADeconv::GetResponse(int padNum)
 {
+   LOG(debug2) << "Getting pad " << padNum << " from response event.";
    auto pad = fEventResponse.GetPad(padNum);
    if (pad == nullptr)
       pad = createResponsePad(padNum);
@@ -130,7 +131,7 @@ void AtPSADeconv::updateFilter(const AtPadFFT &fft, AtPadFFT *filter)
       auto R = fft.GetPointComplex(i);
       auto filterVal = getFilterKernel(i) / R;
 
-      LOG(debug) << i << " " << TComplex::Abs(R) << " " << getFilterKernel(i) << " " << filterVal;
+      LOG(debug2) << i << " " << TComplex::Abs(R) << " " << getFilterKernel(i) << " " << filterVal;
       filter->SetPointRe(i, filterVal.Re());
       filter->SetPointIm(i, filterVal.Im());
    }
@@ -138,10 +139,12 @@ void AtPSADeconv::updateFilter(const AtPadFFT &fft, AtPadFFT *filter)
 
 AtPad *AtPSADeconv::createResponsePad(int padNum)
 {
+   LOG(debug) << "Creating response pad for " << padNum;
    auto fPar = dynamic_cast<AtDigiPar *>(FairRun::Instance()->GetRuntimeDb()->getContainer("AtDigiPar"));
    auto tbTime = fPar->GetTBTime() / 1000.;
 
    auto pad = fEventResponse.AddPad(padNum);
+   LOG(debug) << "Filling response pad for " << padNum;
    for (int i = 0; i < 512; ++i) {
       auto time = (i + 0.5) * tbTime;
       pad->SetADC(i, fResponse(padNum, time));
@@ -180,7 +183,9 @@ AtPSADeconv::HitVector AtPSADeconv::AnalyzeFFTpad(AtPad &pad)
    LOG(debug) << "Analyzing pad " << pad.GetPadNum();
    auto padFFT = dynamic_cast<AtPadFFT *>(pad.GetAugment("fft"));
    auto recoFFT = dynamic_cast<AtPadFFT *>(pad.AddAugment("Qreco-fft", std::make_unique<AtPadFFT>()));
+   LOG(debug) << "Getting response filter";
    const auto &respFFT = GetResponseFilter(pad.GetPadNum());
+   LOG(debug) << "Got response filter";
 
    if (padFFT == nullptr)
       throw std::runtime_error("Missing FFT information in pad");
@@ -189,7 +194,7 @@ AtPSADeconv::HitVector AtPSADeconv::AnalyzeFFTpad(AtPad &pad)
    for (int i = 0; i < 512 / 2 + 1; ++i) {
       auto a = padFFT->GetPointComplex(i);
       auto b = respFFT.GetPointComplex(i);
-      LOG(debug) << i << " " << a << " " << b << " " << a * b;
+      LOG(debug2) << i << " " << a << " " << b << " " << a * b;
       auto z = a * b;
 
       recoFFT->SetPoint(i, z);

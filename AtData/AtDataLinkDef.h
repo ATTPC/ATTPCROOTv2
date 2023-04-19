@@ -28,6 +28,7 @@
 #pragma link C++ class AtTrackingEventAna + ;
 #pragma link C++ class AtProtoQuadrant + ;
 #pragma link C++ class AtTrack + ;
+#pragma link C++ class AtFissionEvent + ;
 
 #pragma link C++ class AtPatterns::AtPattern + ;
 #pragma link C++ class AtPatterns::AtPatternLine + ;
@@ -37,4 +38,5 @@
 #pragma link C++ enum AtPatterns::PatternType;
 #pragma link C++ function AtPatterns::CreatePattern;
 
+#pragma link C++ class MCFitter::AtMCResult + ;
 #endif

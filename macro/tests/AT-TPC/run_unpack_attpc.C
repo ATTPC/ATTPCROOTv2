@@ -73,7 +73,7 @@ void run_unpack_attpc(int runNumber = 174)
    // Create data reduction task
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
    reduceTask->SetInputBranch("AtRawEvent");
-   reduceTask->SetReductionFunction(&reduceFunc);
+   reduceTask->SetReductionFunction<AtRawEvent>(&reduceFunc);
 
    auto threshold = 45;
 

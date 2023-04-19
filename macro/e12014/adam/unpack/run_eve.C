@@ -7,7 +7,7 @@
 */
 #include "FairLogger.h"
 
-void run_eve(int runNum = 214, TString OutputDataFile = "./data/output.reco_display.root")
+void run_eve(int runNum = 206, TString OutputDataFile = "./data/output.reco_display.root")
 {
 
    auto verbSpec =
@@ -17,8 +17,8 @@ void run_eve(int runNum = 214, TString OutputDataFile = "./data/output.reco_disp
    // fair::Logger::SetConsoleSeverity("debug");
 
    TString inputDirectory = "/mnt/analysis/e12014/TPC/fission_linked/";
-   TString InputDataFile = "./data/output.root";
-   // TString InputDataFile = TString::Format(inputDirectory + "/run_%04d.root", runNum);
+   // TString InputDataFile = "./data/output.root";
+   TString InputDataFile = TString::Format(inputDirectory + "/run_%04d.root", runNum);
    std::cout << "Opening: " << InputDataFile << std::endl;
 
    TString dir = getenv("VMCWORKDIR");
@@ -46,34 +46,17 @@ void run_eve(int runNum = 214, TString OutputDataFile = "./data/output.reco_disp
    fMap->ParseXMLMap(mapDir.Data());
    auto eveMan = new AtViewerManager(fMap);
 
-   AtViewerManager *eveMan = new AtViewerManager(fMap);
-   // eveMan->GetSidebar()->UsePictureButtons(false);
-
-   auto tabMain = std::make_unique<AtTabMain>();
+   auto tabMain = std::make_unique<AtTabFission>();
    tabMain->SetMultiHit(100); // Set the maximum number of multihits in the visualization
 
    auto tabPad = std::make_unique<AtTabPad>(2, 2);
    tabPad->DrawRawADC(0, 0);
    tabPad->DrawADC(0, 1);
    tabPad->DrawAuxADC("IC", 1, 0);
-   // tabPad->SetDrawArrayAug(2, "Qreco");
+   tabPad->DrawArrayAug("Qreco", 1, 1);
 
    eveMan->AddTab(std::move(tabMain));
    eveMan->AddTab(std::move(tabPad));
-
-   auto method = std::make_unique<SampleConsensus::AtSampleConsensus>(
-      SampleConsensus::Estimators::kRANSAC, AtPatterns::PatternType::kY, RandomSample::SampleMethod::kWeightedY);
-   method->SetDistanceThreshold(20);
-   method->SetNumIterations(500);
-   method->SetMinHitsPattern(150);
-   method->SetChargeThreshold(20); //-1 implies no charge-weighted fitting
-   method->SetFitPattern(true);
-
-   auto sacTask = new AtSampleConsensusTask(std::move(method));
-   sacTask->SetPersistence(false);
-   sacTask->SetInputBranch("AtEvent");
-
-   eveMan->AddTask(sacTask);
 
    eveMan->Init();
 

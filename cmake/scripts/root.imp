@@ -27,6 +27,8 @@
     { include: ["<Math/GenVector/LorentzVector.h>", "private", "<Math/Vector4D.h>", "public"]},
 
     { include: ["<Math/GenVector/Rotation3D.h>", "private", "<Math/Rotation3D.h>", "public"]},
+    { include: ["<Math/GenVector/VectorUtil.h>", "private", "<Math/VectorUtil.h>", "public"]},
+    { include: ["<Math/GenVector/AxisAngle.h>", "private", "<Math/AxisAngle.h>", "public"]},
 
     # Mappings for Rtypes and the private stuff it includes
     { include: ["<RtypesCore.h>", "private", "<Rtypes.h>", "public"]},

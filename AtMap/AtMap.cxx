@@ -2,6 +2,7 @@
 
 #include <FairLogger.h>
 
+#include <Math/Point2D.h>
 #include <Rtypes.h>
 #include <TCanvas.h>
 #include <TDOMParser.h>
@@ -34,6 +35,7 @@ std::ostream &operator<<(std::ostream &os, const AtMap::InhibitType &t)
    case InhibitType::kTotal: os << "kTotal"; break;
    case InhibitType::kLowGain: os << "kLowGain"; break;
    case InhibitType::kXTalk: os << "kXTalk"; break;
+   case InhibitType::kBadPad: os << "kBadPad"; break;
    }
    return os;
 }
@@ -71,6 +73,17 @@ TH2Poly *AtMap::GetPadPlane()
       GeneratePadPlane();
 
    return dynamic_cast<TH2Poly *>(fPadPlane->Clone());
+}
+
+Int_t AtMap::GetPadNum(ROOT::Math::XYPoint &point)
+{
+   if (fPadPlane == nullptr)
+      GeneratePadPlane();
+   auto binNum = fPadPlane->FindBin(point.X(), point.Y());
+   if (binNum < 0)
+      return -1;
+   else
+      return BinToPad(binNum);
 }
 
 Int_t AtMap::GetPadNum(const AtPadReference &PadRef) const
@@ -113,22 +126,23 @@ Bool_t AtMap::ParseInhibitMap(TString inimap, AtMap::InhibitType type)
 
    while (!fIni.eof()) {
       fIni >> pad;
-      inhibitPad(pad, type);
+      InhibitPad(pad, type);
    }
 
    LOG(info) << cYELLOW << fIniPads.size() << " pads in inhibition list." << cNORMAL;
    return true;
 }
 
-void AtMap::inhibitPad(Int_t padNum, AtMap::InhibitType type)
+void AtMap::InhibitPad(AtPadReference padRef, AtMap::InhibitType type)
 {
-   auto pad = fIniPads.find(padNum);
+   auto pad = fIniPads.find(padRef);
    if (pad == fIniPads.end() || pad->second < type)
-      fIniPads[padNum] = type;
+      fIniPads[padRef] = type;
 }
-AtMap::InhibitType AtMap::IsInhibited(Int_t PadNum)
+
+AtMap::InhibitType AtMap::IsInhibited(AtPadReference padRef)
 {
-   auto pad = fIniPads.find(PadNum);
+   auto pad = fIniPads.find(padRef);
    if (pad == fIniPads.end())
       return InhibitType::kNone;
    else

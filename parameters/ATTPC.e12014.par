@@ -12,7 +12,7 @@ TBEntrance:Int_t               455   # Beam position at detector entrance in TB
 ZPadPlane:Double_t          1000.0   # Position of the micromegas pad plane 
 EIonize:Double_t             42.70   # Ionization energy of gas in eV
 Fano:Double_t                 0.24   # Fano factor of the gas
-CoefL:Double_t               0.055   # Longitudal coefficient of diffusion [cm^2/us]
+CoefL:Double_t              0.0055   # Longitudal coefficient of diffusion [cm^2/us]
 CoefT:Double_t              0.0038   # Transverse coefficient of diffusion [cm^2/us]
 GasPressure:Double_t           800   # Gas pressure in torr
 Density:Double_t             0.175   # Gas density (kg/m3 or mg/cm3)

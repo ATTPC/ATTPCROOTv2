@@ -66,7 +66,8 @@ double AtELossTable::GetEnergy(double energyIni, double distance) const
       guessEnergy += GetdEdx(guessEnergy) * (range - distance);
    }
 
-   LOG(error) << "Energy calculation failed to converge in " << maxIt << " iterations!";
+   LOG(error) << "Energy calculation (" << energyIni << " MeV through " << distance << " mm) failed to converge in "
+              << maxIt << " iterations!";
    return -1;
 }
 

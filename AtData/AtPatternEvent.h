@@ -17,7 +17,7 @@ class TClass;
 class TMemberInspector;
 
 class AtPatternEvent : public AtBaseEvent {
-private:
+protected:
    using HitPtr = std::unique_ptr<AtHit>;
    using HitVector = std::vector<HitPtr>;
 
@@ -25,8 +25,9 @@ private:
    HitVector fNoise;
 
 public:
-   AtPatternEvent();
+   AtPatternEvent(const char *name = "AtPatternEvent");
    AtPatternEvent(const AtPatternEvent &copy);
+   AtPatternEvent(const AtBaseEvent &copy) : AtBaseEvent(copy) { SetName("AtPatternEvent"); }
    AtPatternEvent(AtPatternEvent &&copy) = default;
    AtPatternEvent &operator=(const AtPatternEvent object);
    virtual ~AtPatternEvent() = default;
@@ -51,7 +52,9 @@ public:
       fNoise.emplace_back(std::make_unique<AtHit>(std::forward<Ts>(params)...));
    }
    const HitVector &GetNoiseHits() { return fNoise; }
+
    std::vector<AtTrack> &GetTrackCand() { return fTrackCand; }
+   const std::vector<AtTrack> &GetTrackCand() const { return fTrackCand; }
 
    ClassDefOverride(AtPatternEvent, 3);
 };

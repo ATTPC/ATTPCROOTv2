@@ -8,7 +8,7 @@
 
 ClassImp(AtPatternEvent);
 
-AtPatternEvent::AtPatternEvent() : AtBaseEvent("AtPatternEvent") {}
+AtPatternEvent::AtPatternEvent(const char *name) : AtBaseEvent(name) {}
 
 AtPatternEvent::AtPatternEvent(const AtPatternEvent &copy) : AtBaseEvent(copy), fTrackCand(copy.fTrackCand)
 {

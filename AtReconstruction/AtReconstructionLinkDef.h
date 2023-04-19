@@ -23,6 +23,7 @@
 #pragma link C++ class AtPSADeconv - !;
 #pragma link C++ class AtPSADeconvFit - !;
 #pragma link C++ class AtPSAIterDeconv - !;
+#pragma link C++ class AtPSAComposite - !;
 
 #pragma link C++ nestedclass;
 #pragma link C++ nestedtypedef;
@@ -42,6 +43,14 @@
 #pragma link C++ class AtFITTER::AtGenfit + ;
 #pragma link C++ namespace AtFITTER;
 #pragma link C++ class AtFitterTask + ;
+
+#pragma link C++ namespace MCFitter;
+#pragma link C++ class MCFitter::AtParameterDistribution - !;
+#pragma link C++ class MCFitter::AtUniformDistribution - !;
+#pragma link C++ class MCFitter::AtStudentDistribution - !;
+#pragma link C++ class MCFitter::AtMCFitter - !;
+#pragma link C++ class MCFitter::AtMCFission - !;
+#pragma link C++ class AtMCFitterTask + ;
 
 /* Tasks in AtReconstruction */
 #pragma link C++ class AtPSAtask + ;
