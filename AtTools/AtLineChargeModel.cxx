@@ -3,47 +3,64 @@
 
 #include "AtDigiPar.h"
 
-#include <FairLogger.h>
-
+#include <Math/Point3D.h>
 #include <Rtypes.h>
 
 #include <cmath>
-#include <memory>
 
 using XYZPoint = ROOT::Math::XYZPoint;
 using RZPPoint = ROOT::Math::RhoZPhiPoint;
+namespace {
+constexpr double eps = 8.85418782E-12; // SI
+constexpr double pi = 3.14159265358979;
+} // namespace
 
-AtLineChargeModel::AtLineChargeModel(double inputLambda, double inputField) : fLambda(inputLambda), fField(inputField)
+/// Units are m
+double AtLineChargeModel::getDist2(double dZ)
 {
+   double prefactor = fLambda / pi / eps / fField;
+   double dist2 = prefactor * dZ;
+   if (fLinearField)
+      dist2 *= dZ / 2 / fDetectorLength;
+   return dist2;
 }
 
 XYZPoint AtLineChargeModel::CorrectSpaceCharge(const XYZPoint &directInputPosition)
 {
-   auto rhoI = directInputPosition.Rho() * 1e-3;
-   auto delZ = directInputPosition.Z() * 1e-3;
+   auto input = OffsetForBeam(directInputPosition);
+   if (input.Rho() < fBeamRadius * 1000)
+      return directInputPosition;
 
-   // 256787 is numerical value of constant factors in distortion expression
-   auto rhoF = sqrt(rhoI * rhoI + 2 * (256787 / fField) * (70000) * fLambda * delZ) * 1e3;
-   LOG(debug) << "Correcting rho: " << rhoI * 1e3 << " to " << rhoF;
-   return (XYZPoint)RZPPoint(rhoF, directInputPosition.Z(), directInputPosition.Phi());
+   auto delZ = input.Z();
+   double dist2 = getDist2(delZ);
+   double newRho = sqrt(input.Rho() * input.Rho() + dist2);
+
+   XYZPoint output(RZPPoint(newRho, input.Z(), input.Phi()));
+   return UndoOffsetForBeam(output);
 }
 
 XYZPoint AtLineChargeModel::ApplySpaceCharge(const XYZPoint &reverseInputPosition)
 {
-   auto rhoI = reverseInputPosition.Rho() * 1e-3;
-   auto delZ = reverseInputPosition.Z() * 1e-3;
+   auto input = OffsetForBeam(reverseInputPosition);
+   if (input.Rho() < fBeamRadius * 1000) {
+      return reverseInputPosition;
+   }
 
-   // 256787 is numerical value of constant factors in distortion expression
-   auto rhoF = sqrt(rhoI * rhoI - 2 * (256787 / fField) * (70000) * fLambda * delZ) * 1e3;
-   return (XYZPoint)RZPPoint(rhoF, reverseInputPosition.Z(), reverseInputPosition.Phi());
+   auto delZ = input.Z();         // in mm
+   double dist2 = getDist2(delZ); // in mm;
+   double newRho = sqrt(input.Rho() * input.Rho() - dist2);
+
+   XYZPoint output(RZPPoint(newRho, input.Z(), input.Phi()));
+   return UndoOffsetForBeam(output);
 }
 
 void AtLineChargeModel::LoadParameters(AtDigiPar *par)
 {
    if (par == nullptr)
       return;
-   auto field = par->GetEField(); //[V/cm]
-   fField = field * 100.;         // v/m
+
+   fField = par->GetEField(); // v/m
+   fDetectorLength = par->GetZPadPlane() / 1000;
 }
 
 ClassImp(AtLineChargeModel);

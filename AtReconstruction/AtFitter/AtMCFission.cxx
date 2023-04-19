@@ -3,6 +3,7 @@
 #include "AtEvent.h"
 #include "AtFissionEvent.h"
 #include "AtHit.h" // for AtHit, AtHit::XYZPoint, AtHit...
+#include "AtLineChargeModel.h"
 #include "AtMap.h"
 #include "AtParameterDistribution.h" // for AtParameterDistribution, MCFi...
 #include "AtPattern.h"               // for AtPattern, AtPatterns
@@ -324,10 +325,16 @@ void AtMCFission::SetMomMagnitude(XYZVector beamDir, std::array<XYZVector, 2> &m
 TClonesArray AtMCFission::SimulateEvent(AtMCResult &def)
 {
    fSim->NewEvent();
-   auto scModel = dynamic_cast<AtRadialChargeModel *>(fSim->GetSpaceChargeModel().get());
-   if (scModel) {
-      scModel->SetDistortionField(AtLineChargeZDep(def.fParameters["lambda"]));
+   auto radialModel = dynamic_cast<AtRadialChargeModel *>(fSim->GetSpaceChargeModel().get());
+   auto lineModel = dynamic_cast<AtLineChargeModel *>(fSim->GetSpaceChargeModel().get());
+   if (radialModel) {
+      radialModel->SetDistortionField(AtLineChargeZDep(def.fParameters["lambda"]));
       LOG(info) << "Setting Lambda: " << def.fParameters["lambda"];
+
+   } else if (lineModel) {
+      lineModel->SetLambda(def.fParameters["lambda"]);
+      LOG(info) << "Setting Lambda: " << def.fParameters["lambda"];
+
    } else
       LOG(info) << "No space charge to apply.";
 

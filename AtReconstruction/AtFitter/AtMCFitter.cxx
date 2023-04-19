@@ -20,6 +20,8 @@
 
 #include <TObject.h> // for TObject
 
+#include <chrono>
+
 using std::move;
 namespace MCFitter {
 
@@ -61,6 +63,7 @@ void AtMCFitter::Exec(const AtPatternEvent &event)
    fResults.clear();
    SetParamDistributions(event);
 
+   auto start = std::chrono::high_resolution_clock::now();
    for (int i = 0; i < fNumIter; ++i) {
 
       auto result = DefineEvent();
@@ -74,6 +77,10 @@ void AtMCFitter::Exec(const AtPatternEvent &event)
       result.Print();
       fResults.insert(result);
    }
+   auto stop = std::chrono::high_resolution_clock::now();
+   if (fTimeEvent)
+      LOG(info) << "Simulation of " << fNumIter << " events took "
+                << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << " ms.";
 }
 
 int AtMCFitter::DigitizeEvent(const TClonesArray &points)

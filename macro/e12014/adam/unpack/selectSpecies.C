@@ -46,7 +46,7 @@ void selectSpecies(TString species, TString pressure, std::vector<int> runs);
 void selectSpecies(TString species, int pressure)
 {
    if (pressure == 150)
-      selectSpecies(species, "150Torr", torr150Short);
+      selectSpecies(species, "150Torr", torr150);
    if (pressure == 200)
       selectSpecies(species, "200Torr", torr200);
 }

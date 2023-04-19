@@ -45,15 +45,6 @@ public:
    void SetEField(double field);
    void SetDriftVelocity(double v);
    void LoadParameters(AtDigiPar *par) override;
-   void SetBeamLocation(XYZPoint window, XYZPoint padPlane)
-   {
-      fWindow = window;
-      fPadPlane = padPlane;
-   }
-
-protected:
-   XYZPoint OffsetForBeam(XYZPoint point);
-   XYZPoint UndoOffsetForBeam(XYZPoint point);
 
 private:
    XYZPoint SolveEqn(XYZPoint ele, bool correction);

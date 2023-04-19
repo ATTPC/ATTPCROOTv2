@@ -28,19 +28,6 @@ using XYVector = ROOT::Math::XYVector;
 
 AtRadialChargeModel::AtRadialChargeModel(EFieldPtr eField) : AtSpaceChargeModel(), GetEField(std::move(eField)) {}
 
-XYZPoint AtRadialChargeModel::OffsetForBeam(XYZPoint point)
-{
-   XYZPoint fOffset = fWindow + (fPadPlane - fWindow) / (fPadPlane.Z() - fWindow.Z()) * point.Z();
-
-   return {point.X() - fOffset.X(), point.Y() - fOffset.Y(), point.Z()};
-}
-XYZPoint AtRadialChargeModel::UndoOffsetForBeam(XYZPoint point)
-{
-   XYZPoint fOffset = fWindow + (fPadPlane - fWindow) / (fPadPlane.Z() - fWindow.Z()) * point.Z();
-
-   return {point.X() + fOffset.X(), point.Y() + fOffset.Y(), point.Z()};
-}
-
 XYZPoint AtRadialChargeModel::CorrectSpaceCharge(const XYZPoint &input)
 {
    auto offsetHit = OffsetForBeam(input);
