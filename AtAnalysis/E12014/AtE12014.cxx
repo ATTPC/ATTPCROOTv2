@@ -1,6 +1,7 @@
 #include "AtE12014.h"
 
 #include "AtCSVReader.h"
+#include "AtContainerManip.h"
 #include "AtDataManip.h"
 #include "AtHit.h"
 #include "AtMap.h"
@@ -86,23 +87,44 @@ void E12014::FillChargeSum(TH1 *hist, const std::vector<AtHit *> &hits, AtRawEve
    }
 }
 
-void E12014::FillHitSum(TH1 *hist, const std::vector<AtHit *> &hits, int threshold)
+std::set<int> E12014::FillHitSum(TH1 &hist, const std::vector<AtHit *> &hits, int threshold, float satThresh)
 {
+   std::vector<double> charge;
+   auto pads = FillHitSum(charge, hits, threshold, satThresh);
+   ContainerManip::SetHistFromData(hist, charge);
+   return pads;
+}
+
+std::set<int>
+E12014::FillHitSum(std::vector<double> &vec, const std::vector<AtHit *> &hits, int threshold, float satThresh)
+{
+   vec.clear();
+   vec.resize(512);
+   std::fill_n(vec.begin(), 512, 0);
+   std::set<int> goodPads;
+
    if (fMap == nullptr)
       LOG(fatal) << "The map (E12014::fMap) was never set!";
 
    for (auto &hit : hits) {
       if (fMap->IsInhibited(hit->GetPadNum()) != AtMap::InhibitType::kNone)
          continue;
+      if (hit->GetCharge() > satThresh)
+         continue;
 
       auto func = AtTools::GetHitFunctionTB(*hit);
       if (func == nullptr)
          continue;
 
-      for (int tb = 0; tb < 512; ++tb) {
+      // Add the charge to the array
+      for (int tb = 0; tb < vec.size(); ++tb) {
          auto val = func->Eval(tb);
          if (val > threshold)
-            hist->Fill(tb, val);
+            vec[tb] += val;
       }
+      // Add the pad to the return list
+      goodPads.insert(hit->GetPadNum());
    }
+
+   return goodPads;
 }

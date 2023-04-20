@@ -1,8 +1,10 @@
 #ifndef ATE12014_H
 #define ATE12014_H
 #include <memory>
+#include <set>
 #include <string> // for string
 #include <vector>
+
 class AtMap;
 class TH1;
 class AtHit;
@@ -40,8 +42,19 @@ public:
     * Fill the historgram with charge information from the passed hits assuming the charge is gauss distributed.
     *@param[in/out] hist Histrogram to clear and fill.
     *@param[in] hits Add the charge from the hits associated with these hits.
+    *@return The pads associated with the hits used to fill the histogram.
     */
-   static void FillHitSum(TH1 *hist, const std::vector<AtHit *> &hits, int threshold = 0);
+   static std::set<int> FillHitSum(TH1 &hist, const std::vector<AtHit *> &hits, int threshold = 0,
+                                   float saturationThreshold = std::numeric_limits<float>::max());
+
+   /**
+    * Fill the array with charge information from the passed hits assuming the charge is gauss distributed.
+    *@param[in/out] vec vector to clear and fill.
+    *@param[in] hits Add the charge from the hits associated with these hits.
+    *@return The pads associated with the hits used to fill the histogram.
+    */
+   static std::set<int> FillHitSum(std::vector<double> &vec, const std::vector<AtHit *> &hits, int threshold = 0,
+                                   float saturationThreshold = std::numeric_limits<float>::max());
 
 }; // namespace E12014
 
