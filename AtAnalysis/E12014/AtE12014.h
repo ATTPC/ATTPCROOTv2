@@ -9,6 +9,8 @@ class AtMap;
 class TH1;
 class AtHit;
 class AtRawEvent;
+class AtEvent;
+class AtFissionEvent;
 
 /**
  * Namespace deticated for useful functions specific to the E12014 fission experiment.
@@ -55,6 +57,18 @@ public:
     */
    static std::set<int> FillHitSum(std::vector<double> &vec, const std::vector<AtHit *> &hits, int threshold = 0,
                                    float saturationThreshold = std::numeric_limits<float>::max());
+
+   /**
+    * Fill the array with charge information from the passed hits assuming the charge is gauss distributed. Designed to
+    *be used for simulated hits and only include those that match the passed pads
+    *@param[in/out] vec vector to clear and fill.
+    *@param[in] hits Add the charge from the hits associated with these hits.
+    *@return The pads associated with the hits used to fill the histogram.
+    */
+   static void FillSimHitSum(std::vector<double> &vec, const std::vector<AtHit *> &hits, const std::set<int> &goodPads,
+                             int threshold = 0, float saturationThreshold = std::numeric_limits<float>::max());
+   static void FillSimHitSum(TH1 &hist, const std::vector<AtHit *> &hits, const std::set<int> &goodPads,
+                             int threshold = 0, float saturationThreshold = std::numeric_limits<float>::max());
 
 }; // namespace E12014
 

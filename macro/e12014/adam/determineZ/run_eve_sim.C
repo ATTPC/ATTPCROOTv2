@@ -13,7 +13,6 @@ std::shared_ptr<AtPulseLine> pulse = nullptr;
 std::shared_ptr<AtClusterizeLine> cluster = nullptr;
 std::shared_ptr<AtSimpleSimulation> sim = nullptr;
 std::shared_ptr<AtLineChargeModel> scModel = nullptr;
-// std::shared_ptr<AtRadialChargeModel> scModel = nullptr;
 std::shared_ptr<AtPSADeconvFit> simPSA = nullptr;
 
 void run_eve_sim(TString species = "Bi200", int pressure = 150,
@@ -56,8 +55,10 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
    fRun->GetRuntimeDb()->setFirstInput(parIo1);
    fRun->GetRuntimeDb()->getContainer("AtDigiPar");
 
-   auto fMap = std::make_shared<AtTpcMap>();
+   E12014::CreateMap();
+   auto fMap = E12014::fMap;
    fMap->ParseXMLMap(mapDir.Data());
+
    auto eveMan = new AtViewerManager(fMap);
 
    auto tabMain = std::make_unique<AtTabFission>();
@@ -71,14 +72,17 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
    tabPad->DrawHits(1, 1);
    tabPad->DrawHits(1, 0);
 
+   auto &fissionBranch = tabMain->GetFissionBranch();
+   auto tabFF = std::make_unique<AtTabFF>(fissionBranch);
+
    eveMan->AddTab(std::move(tabMain));
    eveMan->AddTab(std::move(tabPad));
+   eveMan->AddTab(std::move(tabFF));
+   eveMan->AddTab(std::make_unique<AtTabEnergyLoss>(fissionBranch));
 
    // Create underlying simulation class
    sim = std::make_shared<AtSimpleSimulation>(GeoDataPath.Data());
 
-   // scModel = std::make_shared<AtRadialChargeModel>(nullptr);
-   // scModel->SetStepSize(0.1);
    scModel = std::make_shared<AtLineChargeModel>();
    scModel->SetBeamLocation({0, -6, 0}, {10, 0, 1000});
    sim->SetSpaceChargeModel(scModel);

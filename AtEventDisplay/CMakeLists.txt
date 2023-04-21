@@ -25,6 +25,7 @@ AtTabs/AtTabFission.cxx
 AtTabs/AtTabPad.cxx
 AtTabs/AtTabInfoTree.cxx
 AtTabs/AtTabEnergyLoss.cxx
+AtTabs/AtTabFF.cxx
 
 AtSidebar/AtEventSidebar.cxx
 AtSidebar/AtSidebarFrames.cxx

@@ -128,3 +128,41 @@ E12014::FillHitSum(std::vector<double> &vec, const std::vector<AtHit *> &hits, i
 
    return goodPads;
 }
+
+void E12014::FillSimHitSum(TH1 &hist, const std::vector<AtHit *> &hits, const std::set<int> &goodPads, int threshold,
+                           float satThresh)
+{
+   std::vector<double> charge;
+   FillSimHitSum(charge, hits, goodPads, threshold, satThresh);
+   ContainerManip::SetHistFromData(hist, charge);
+}
+
+void E12014::FillSimHitSum(std::vector<double> &vec, const std::vector<AtHit *> &hits, const std::set<int> &goodPads,
+                           int threshold, float satThresh)
+{
+   vec.clear();
+   vec.resize(512);
+   std::fill_n(vec.begin(), 512, 0);
+
+   for (auto &hit : hits) {
+      if (goodPads.find(hit->GetPadNum()) == goodPads.end()) {
+         LOG(debug) << "Skipping pad " << hit->GetPadNum() << " because not good";
+         continue;
+      }
+      if (hit->GetCharge() > satThresh)
+         continue;
+
+      auto func = AtTools::GetHitFunctionTB(*hit);
+      if (func == nullptr)
+         continue;
+
+      // Add the charge to the array
+      LOG(debug) << "Adding pad " << hit->GetPadNum();
+
+      for (int tb = 0; tb < vec.size(); ++tb) {
+         auto val = func->Eval(tb);
+         if (val > threshold)
+            vec[tb] += val;
+      }
+   }
+}

@@ -220,7 +220,7 @@ void AtTabEnergyLoss::FillSums(float threshold)
       E12014::FillChargeSum(fSumQ[i].get(), fFissionEvent->GetFragHits(i), *fRawEvent, threshold);
 
       // Fill fSumFit
-      E12014::FillHitSum(*fSumFit[i], fFissionEvent->GetFragHits(i), threshold);
+      E12014::FillHitSum(*fSumFit[i], fFissionEvent->GetFragHits(i), threshold, 4500);
 
       for (auto &hit : fFissionEvent->GetFragHits(i)) {
          auto inhibitType = AtViewerManager::Instance()->GetMap()->IsInhibited(hit->GetPadNum());

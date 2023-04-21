@@ -194,6 +194,7 @@ void AtTabPad::DrawHit(const AtPad &pad, TF1Vec &vec)
       if (hit->GetPadNum() != pad.GetPadNum())
          continue;
 
+      LOG(info) << "Drawing hit with charge " << hit->GetCharge();
       auto func = AtTools::GetHitFunctionTB(*hit);
       if (func != nullptr)
          vec.push_back(std::move(func));
