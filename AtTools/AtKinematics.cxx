@@ -285,6 +285,9 @@ double AtoE(double Amu)
 {
    return Amu * 931.5;
 }
-
+double EtoA(double mass)
+{
+   return mass / 931.5;
+}
 } // namespace Kinematics
 } // namespace AtTools

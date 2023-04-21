@@ -42,26 +42,32 @@ public:
 protected:
    virtual void CreateParamDistros() override;
    virtual void SetParamDistributions(const AtPatternEvent &event) override;
-   virtual double ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventID) override;
+   virtual double ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventID, AtMCResult &definition) override;
    virtual TClonesArray SimulateEvent(AtMCResult &definition) override;
    virtual AtMCResult DefineEvent() override;
 
 protected:
    double ObjectivePosition(const AtFissionEvent &expEvent, int SimEventID);
+   double ObjectiveCharge(const AtFissionEvent &expEvent, int SimEventID, AtMCResult &def);
 
 public:
    static XYZPoint GetVertex(AtMCResult &);
    static std::array<Ion, 2> GetFragmentSpecies(AtMCResult &, const Ion &CN);
-   XYZVector GetBeamDir(AtMCResult &);
+
+   XYZVector GetBeamDir(AtMCResult &, const std::array<XYZVector, 2> &ffDir);
+   XYZVector GetBeamDirSameV(AtMCResult &, const std::array<XYZVector, 2> &ffDir);
    static std::array<XYZVector, 2> GetMomDirLab(AtMCResult &);
 
-   void SetMomMagnitude(XYZVector beamDir, std::array<XYZVector, 2> &mom, double pTrans);
+   void SetMomMagnitude(std::array<XYZVector, 2> &mom, double pTrans);
 
    static double ObjectivePosition(double uE, double sE, double uO, double sO);
 
    static double ObjectivePosition4(double uE, double sE, double uO, double sO);
    static double ObjectivePosition3(double uE, double sE, double uO, double sO);
    static double ObjectivePosition2(double uE, double sE, double uO, double sO);
+
+   double ObjectiveCharge(const std::array<std::vector<double>, 2> &exp, const std::array<std::vector<double>, 2> &sim,
+                          AtMCResult &definition);
 
    // Returns the average total kinetic energy from viola systematics in MeV
    static double violaEn(int A, int Z) { return 0.1189 * Z * Z / std::pow(A, 1.0 / 3.0) + 7.3; }

@@ -88,7 +88,7 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
    sim->SetSpaceChargeModel(scModel);
 
    // Create and load energy loss models
-   std::vector<std::pair<int, int>> ions = {{42, 101}, {43, 103}};
+   std::vector<std::pair<int, int>> ions = {{42, 101}, {43, 103}, {42, 102}, {43, 102}};
    for (auto [Z, A] : ions) {
       auto eloss = std::make_shared<AtTools::AtELossTable>();
       eloss->LoadLiseTable(TString::Format("./eLoss/%d_%d.txt", Z, A).Data(), A, 0);

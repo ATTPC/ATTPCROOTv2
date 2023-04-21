@@ -22,6 +22,9 @@
 #include <iosfwd>    // for ifstream
 #include <set>
 std::shared_ptr<AtMap> E12014::fMap;
+int E12014::fTBMin = 105;
+int E12014::fThreshold = 1;
+double E12014::fSatThreshold = 4200;
 
 void E12014::CreateMap()
 {
@@ -96,6 +99,54 @@ std::set<int> E12014::FillHitSum(TH1 &hist, const std::vector<AtHit *> &hits, in
    return pads;
 }
 
+void E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
+                         const std::vector<AtHit *> &simHits, int threshold, float satThresh)
+{
+   exp.clear();
+   exp.resize(512);
+   std::fill_n(exp.begin(), 512, 0);
+   sim.clear();
+   sim.resize(512);
+   std::fill_n(sim.begin(), 512, 0);
+
+   if (fMap == nullptr)
+      LOG(fatal) << "The map (E12014::fMap) was never set!";
+
+   for (auto &expHit : expHits) {
+      if (fMap->IsInhibited(expHit->GetPadNum()) != AtMap::InhibitType::kNone)
+         continue;
+      if (expHit->GetCharge() > satThresh)
+         continue;
+      auto funcExp = AtTools::GetHitFunctionTB(*expHit);
+      if (funcExp == nullptr)
+         continue;
+
+      // We have a hit we want to save for both exp and fisison.
+      // Find the corresponding simulated hit if it exists.
+      AtHit *simHit = nullptr;
+      for (auto &hit : simHits) {
+         if (expHit->GetPadNum() == hit->GetPadNum()) {
+            simHit = hit;
+            break;
+         }
+      }
+      if (simHit == nullptr)
+         continue;
+      auto funcSim = AtTools::GetHitFunctionTB(*simHit);
+      if (funcSim == nullptr)
+         continue;
+
+      // We now have the sim and exp hits. Fill the arrays
+      for (int tb = fTBMin; tb < 512; ++tb) {
+         auto val = funcExp->Eval(tb);
+         if (val > threshold) {
+            exp[tb] += val;
+            sim[tb] += funcSim->Eval(tb);
+         }
+      }
+   }
+}
+
 std::set<int>
 E12014::FillHitSum(std::vector<double> &vec, const std::vector<AtHit *> &hits, int threshold, float satThresh)
 {
@@ -130,16 +181,16 @@ E12014::FillHitSum(std::vector<double> &vec, const std::vector<AtHit *> &hits, i
    return goodPads;
 }
 
-void E12014::FillSimHitSum(TH1 &hist, const std::vector<AtHit *> &hits, const std::set<int> &goodPads, int threshold,
-                           float satThresh)
+void E12014::FillSimHitSum(TH1 &hist, const std::vector<AtHit *> &hits, const std::set<int> &goodPads, double amp,
+                           int threshold, float satThresh)
 {
    std::vector<double> charge;
-   FillSimHitSum(charge, hits, goodPads, threshold, satThresh);
+   FillSimHitSum(charge, hits, goodPads, amp, threshold, satThresh);
    ContainerManip::SetHistFromData(hist, charge);
 }
 
 void E12014::FillSimHitSum(std::vector<double> &vec, const std::vector<AtHit *> &hits, const std::set<int> &goodPads,
-                           int threshold, float satThresh)
+                           double amp, int threshold, float satThresh)
 {
    vec.clear();
    vec.resize(512);
@@ -161,7 +212,7 @@ void E12014::FillSimHitSum(std::vector<double> &vec, const std::vector<AtHit *> 
       LOG(debug) << "Adding pad " << hit->GetPadNum();
 
       for (int tb = 0; tb < vec.size(); ++tb) {
-         auto val = func->Eval(tb);
+         auto val = func->Eval(tb) * amp;
          if (val > threshold)
             vec[tb] += val;
       }

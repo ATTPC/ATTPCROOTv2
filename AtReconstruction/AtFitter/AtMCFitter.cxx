@@ -70,7 +70,7 @@ void AtMCFitter::Exec(const AtPatternEvent &event)
       auto mcPoints = SimulateEvent(result);
 
       int idx = DigitizeEvent(mcPoints);
-      double obj = ObjectiveFunction(event, idx);
+      double obj = ObjectiveFunction(event, idx, result);
 
       result.fIterNum = idx;
       result.fObjective = obj;

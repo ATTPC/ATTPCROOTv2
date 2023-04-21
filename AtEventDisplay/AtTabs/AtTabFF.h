@@ -12,6 +12,7 @@
 #include <Math/Vector3D.h>
 #include <Math/Vector3Dfwd.h> // for XYZVector
 #include <Rtypes.h>           // for Color_t
+#include <THStack.h>
 
 #include <array>  // for array
 #include <memory> // for unique_ptr
@@ -38,6 +39,7 @@ protected:
    using XYZPoint = ROOT::Math::XYZPoint;
    using TH1Ptr = std::unique_ptr<TH1F>;
    using HitVector = std::vector<AtHit *>;
+   using THStackPtr = std::unique_ptr<THStack>;
 
    AtTabInfoFairRoot<AtEvent> fEvent;
    AtTabInfoFairRoot<AtFissionEvent> fFissionEvent;
@@ -46,6 +48,7 @@ protected:
    std::array<TH1Ptr, 2> fSimdQdZ;
    std::array<TH1Ptr, 2> fExpdQdZ;
    std::array<std::set<int>, 2> fCurrPads;
+   std::array<THStackPtr, 4> fStacks;
 
 public:
    AtTabFF(DataHandling::AtBranch &fissionBranch);
@@ -56,8 +59,7 @@ public:
    void Update(DataHandling::AtSubject *sub) override;
 
 protected:
-   void UpdateSimEvent();
-   void UpdateExpEvent();
+   void UpdateEvent();
    void DrawCanvas();
 
    ClassDefOverride(AtTabFF, 1);

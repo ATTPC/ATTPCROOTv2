@@ -78,7 +78,7 @@ protected:
    /**
     * @brief This is the thing we are minimizing between events (SimEventID is index in TClonesArray)
     */
-   virtual double ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventID) = 0;
+   virtual double ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventID, AtMCResult &definition) = 0;
 
    /**
     * Simulate an event using the parameters in the passed AtMCResult class and return an array of
