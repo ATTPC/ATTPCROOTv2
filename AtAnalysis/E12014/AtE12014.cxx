@@ -17,8 +17,9 @@
 #include <TH1.h>
 #include <TString.h>
 
-#include <cstdlib> // for getenv
-#include <iosfwd>  // for ifstream
+#include <algorithm> // for fill_n, max
+#include <cstdlib>   // for getenv
+#include <iosfwd>    // for ifstream
 #include <set>
 std::shared_ptr<AtMap> E12014::fMap;
 

@@ -57,26 +57,14 @@ public:
 
    void SetMomMagnitude(XYZVector beamDir, std::array<XYZVector, 2> &mom, double pTrans);
 
+   static double ObjectivePosition(double uE, double sE, double uO, double sO);
+
    static double ObjectivePosition4(double uE, double sE, double uO, double sO);
    static double ObjectivePosition3(double uE, double sE, double uO, double sO);
    static double ObjectivePosition2(double uE, double sE, double uO, double sO);
-   static double ObjectivePosition(double uE, double sE, double uO, double sO);
 
    // Returns the average total kinetic energy from viola systematics in MeV
    static double violaEn(int A, int Z) { return 0.1189 * Z * Z / std::pow(A, 1.0 / 3.0) + 7.3; }
-
-   static double GetGamma(double KE, double m1, double m2);
-   static double GetVelocity(double gamma);
-   static double GetBeta(double gamma);
-   static double GetRelMom(double gamma, double mass);
-   static double AtoE(double Amu);
-   static double EtoA(double mass) { return mass / 931.5; }
-
-   template <class Vector>
-   static XYZEVector Get4Vector(Vector mom, double m)
-   {
-      return {mom.X(), mom.Y(), mom.Z(), std::sqrt(mom.Mag2() + m * m)};
-   }
 };
 
 } // namespace MCFitter

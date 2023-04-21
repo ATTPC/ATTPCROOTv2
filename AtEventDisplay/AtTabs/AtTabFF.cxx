@@ -1,10 +1,16 @@
 #include "AtTabFF.h"
 
+#include "AtContainerManip.h" // for GetPointerVector
 #include "AtE12014.h"
 #include "AtViewerManager.h"
+#include "AtViewerManagerSubject.h" // for AtBranch, AtTreeEntry
 
 #include <TCanvas.h>
+#include <TH1.h> // for TH1F
 #include <TString.h>
+namespace DataHandling {
+class AtSubject;
+}
 
 AtTabFF::AtTabFF(DataHandling::AtBranch &fissionBranch)
    : AtTabCanvas("FF", 2, 1), fEvent(AtViewerManager::Instance()->GetEventBranch()), fFissionEvent(fissionBranch),

@@ -1,16 +1,14 @@
 #ifndef ATE12014_H
 #define ATE12014_H
+#include <limits> // for numeric_limits
 #include <memory>
 #include <set>
 #include <string> // for string
 #include <vector>
-
 class AtMap;
 class TH1;
 class AtHit;
 class AtRawEvent;
-class AtEvent;
-class AtFissionEvent;
 
 /**
  * Namespace deticated for useful functions specific to the E12014 fission experiment.

@@ -4,7 +4,6 @@
 #include "AtDataObserver.h"
 #include "AtEvent.h"
 #include "AtFissionEvent.h"
-#include "AtPadReference.h" // for AtPadReference
 #include "AtTabCanvas.h"
 #include "AtTabInfo.h" // for AtTabInfoFairRoot
 
@@ -13,7 +12,25 @@
 #include <Math/Vector3D.h>
 #include <Math/Vector3Dfwd.h> // for XYZVector
 #include <Rtypes.h>           // for Color_t
-#include <THStack.h>
+
+#include <array>  // for array
+#include <memory> // for unique_ptr
+#include <set>    // for set
+#include <vector> // for vector
+class AtHit;
+class TBuffer;
+class TClass;
+class TH1F;
+class TMemberInspector;
+namespace DataHandling {
+class AtBranch;
+}
+namespace DataHandling {
+class AtSubject;
+}
+namespace DataHandling {
+class AtTreeEntry;
+}
 
 class AtTabFF : public AtTabCanvas, public DataHandling::AtObserver {
 protected:
