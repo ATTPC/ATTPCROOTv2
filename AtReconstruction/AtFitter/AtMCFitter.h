@@ -1,7 +1,9 @@
 #ifndef ATMCFITTER_H
 #define ATMCFITTER_H
 
+#include "AtEvent.h"
 #include "AtMCResult.h" // for AtMCResult
+#include "AtRawEvent.h"
 
 #include <TClonesArray.h> // for TClonesArray
 
@@ -46,8 +48,8 @@ protected:
 
    /// Store the iteration number sorted by lowest objective funtion
    std::set<AtMCResult, std::function<bool(AtMCResult, AtMCResult)>> fResults;
-   TClonesArray fRawEventArray;
-   TClonesArray fEventArray;
+   std::vector<AtRawEvent> fRawEventArray;
+   std::vector<AtEvent> fEventArray;
 
 public:
    AtMCFitter(SimPtr sim, ClusterPtr cluster, PulsePtr pulse);
@@ -58,9 +60,7 @@ public:
    void Exec(const AtPatternEvent &event);
 
    ParamPtr GetParameter(const std::string &name) const;
-   TClonesArray &GetEventArray() { return fEventArray; }
-   TClonesArray &GetRawEventArray() { return fRawEventArray; }
-   void FillResultArray(TClonesArray &resultArray) const;
+   void FillResultArrays(TClonesArray &resultArray, TClonesArray &simEvent, TClonesArray &simRawEvent);
    void SetNumIter(int iter) { fNumIter = iter; }
    void SetTimeEvent(bool val) { fTimeEvent = val; }
 

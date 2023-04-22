@@ -9,15 +9,20 @@
 #include <TClonesArray.h> // for TClonesArray
 #include <TObject.h>
 
+AtMCFitterTask::AtMCFitterTask(std::shared_ptr<MCFitter::AtMCFitter> fitter)
+   : fFitter(fitter), fResultArray("MCFitter::AtMCResult"), fSimEventArray("AtEvent"), fSimRawEventArray("AtRawEvent")
+{
+}
+
 InitStatus AtMCFitterTask::Init()
 {
    LOG(debug) << "Initialing fitter";
    fFitter->Init();
 
    FairRootManager *ioman = FairRootManager::Instance();
-   ioman->Register("SimEvent", "cbmsim", &fFitter->GetEventArray(), false);
-   ioman->Register("SimRawEvent", "cbmsim", &fFitter->GetRawEventArray(), false);
-   ioman->Register("AtMCResult", "cbmsim", &fResultArray, true);
+   ioman->Register("SimEvent", "cbmsim", &fSimEventArray, fSaveEvent);
+   ioman->Register("SimRawEvent", "cbmsim", &fSimRawEventArray, fSaveRawEvent);
+   ioman->Register("AtMCResult", "cbmsim", &fResultArray, fSaveResult);
 
    fPatternArray = dynamic_cast<TClonesArray *>(ioman->GetObject(fPatternBranchName));
    if (fPatternArray == nullptr)
@@ -33,6 +38,7 @@ void AtMCFitterTask::Exec(Option_t *)
    auto patEvent = dynamic_cast<AtPatternEvent *>(fPatternArray->At(0));
    if (!patEvent->IsGood())
       return;
+
    fFitter->Exec(*patEvent);
-   fFitter->FillResultArray(fResultArray);
+   fFitter->FillResultArrays(fResultArray, fSimEventArray, fSimRawEventArray);
 }

@@ -50,21 +50,19 @@ protected:
    double ObjectivePosition(const AtFissionEvent &expEvent, int SimEventID);
    double ObjectiveCharge(const AtFissionEvent &expEvent, int SimEventID, AtMCResult &def);
 
-public:
-   static XYZPoint GetVertex(AtMCResult &);
-   static std::array<Ion, 2> GetFragmentSpecies(AtMCResult &, const Ion &CN);
+   XYZPoint GetVertex(AtMCResult &);
+   std::array<Ion, 2> GetFragmentSpecies(AtMCResult &, const Ion &CN);
 
    XYZVector GetBeamDir(AtMCResult &, const std::array<XYZVector, 2> &ffDir);
    XYZVector GetBeamDirSameV(AtMCResult &, const std::array<XYZVector, 2> &ffDir);
-   static std::array<XYZVector, 2> GetMomDirLab(AtMCResult &);
+   std::array<XYZVector, 2> GetMomDirLab(AtMCResult &);
 
    void SetMomMagnitude(std::array<XYZVector, 2> &mom, double pTrans);
 
-   static double ObjectivePosition(double uE, double sE, double uO, double sO);
-
-   static double ObjectivePosition4(double uE, double sE, double uO, double sO);
-   static double ObjectivePosition3(double uE, double sE, double uO, double sO);
-   static double ObjectivePosition2(double uE, double sE, double uO, double sO);
+   double ObjectivePosition(double uE, double sE, double uO, double sO);
+   double ObjectivePosition4(double uE, double sE, double uO, double sO);
+   double ObjectivePosition3(double uE, double sE, double uO, double sO);
+   double ObjectivePosition2(double uE, double sE, double uO, double sO);
 
    double ObjectiveCharge(const std::array<std::vector<double>, 2> &exp, const std::array<std::vector<double>, 2> &sim,
                           AtMCResult &definition);

@@ -52,7 +52,7 @@ public:
    const AtPatterns::AtPatternY *GetYPattern() const;
    const AtTrack &GetYTrack() const;
    double GetFoldingAngle();
-   XYZPoint GetVertex() { return GetYPattern()->GetVertex(); }
+   XYZPoint GetVertex() const;
    double GetLambda() const { return fLambda; }
 
    std::vector<AtHit *> GetBeamHits() const;

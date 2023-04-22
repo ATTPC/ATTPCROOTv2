@@ -27,8 +27,7 @@ namespace MCFitter {
 
 AtMCFitter::AtMCFitter(SimPtr sim, ClusterPtr cluster, PulsePtr pulse)
    : fMap(pulse->GetMap()), fSim(move(sim)), fClusterize(move(cluster)), fPulse(move(pulse)),
-     fResults([](const AtMCResult &a, const AtMCResult &b) { return a.fObjective < b.fObjective; }),
-     fRawEventArray("AtRawEvent"), fEventArray("AtEvent")
+     fResults([](const AtMCResult &a, const AtMCResult &b) { return a.fObjective < b.fObjective; })
 {
 }
 
@@ -58,9 +57,10 @@ void AtMCFitter::Init()
 
 void AtMCFitter::Exec(const AtPatternEvent &event)
 {
-   fRawEventArray.Clear();
-   fEventArray.Clear();
+   fRawEventArray.clear();
+   fEventArray.clear();
    fResults.clear();
+
    SetParamDistributions(event);
 
    auto start = std::chrono::high_resolution_clock::now();
@@ -87,31 +87,52 @@ int AtMCFitter::DigitizeEvent(const TClonesArray &points)
 {
    // Event has been simulated and is sitting in the fSim
    auto vec = fClusterize->ProcessEvent(points);
-   int eventIndex = fRawEventArray.GetEntries();
-   auto *rawEvent = dynamic_cast<AtRawEvent *>(fRawEventArray.ConstructedAt(eventIndex));
-   auto *event = dynamic_cast<AtEvent *>(fEventArray.ConstructedAt(eventIndex));
+   int eventIndex = fRawEventArray.size();
 
-   *rawEvent = fPulse->GenerateEvent(vec);
+   fRawEventArray.push_back(std::move(fPulse->GenerateEvent(vec)));
    if (fPSA)
-      *event = fPSA->Analyze(*rawEvent);
+      fEventArray.push_back(std::move(fPSA->Analyze(fRawEventArray.at(eventIndex))));
 
    return eventIndex;
 }
 
-void AtMCFitter::FillResultArray(TClonesArray &resultArray) const
+/**
+ * Fill the TClonesArray in order of smallest to largest chi2.
+ */
+void AtMCFitter::FillResultArrays(TClonesArray &resultArray, TClonesArray &simEvent, TClonesArray &simRawEvent)
 {
    resultArray.Clear();
-   LOG(debug) << "Filling TCLonesArray with " << fResults.size() << " things";
+   simEvent.Clear();
+   simRawEvent.Clear();
+
    for (auto &res : fResults) {
-      int idx = resultArray.GetEntries();
-      auto toFill = dynamic_cast<AtMCResult *>(resultArray.ConstructedAt(idx));
-      if (toFill == nullptr) {
+      int clonesIdx = resultArray.GetEntries();
+      int eventIdx = res.fIterNum;
+
+      auto result = dynamic_cast<AtMCResult *>(resultArray.ConstructedAt(clonesIdx));
+      auto event = dynamic_cast<AtEvent *>(simEvent.ConstructedAt(clonesIdx));
+      auto rawEvent = dynamic_cast<AtRawEvent *>(simRawEvent.ConstructedAt(clonesIdx));
+
+      if (result == nullptr) {
          LOG(fatal) << "Failed to get the AtMCResult to fill in output TClonesArray!";
          return;
       }
-      LOG(debug2) << "Filling TClonesArray at " << idx;
-      *toFill = res;
+      if (event == nullptr) {
+         LOG(fatal) << "Failed to get the AtEvent to fill in output TClonesArray!";
+         return;
+      }
+      if (rawEvent == nullptr) {
+         LOG(fatal) << "Failed to get the AtRawEvent to fill in output TClonesArray!";
+         return;
+      }
+
+      *result = res;
+      *event = std::move(fEventArray[eventIdx]);
+      *rawEvent = std::move(fRawEventArray[eventIdx]);
    }
+
+   fEventArray.clear();
+   fRawEventArray.clear();
 }
 
 AtMCResult AtMCFitter::DefineEvent()

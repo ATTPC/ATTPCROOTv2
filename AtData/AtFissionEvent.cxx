@@ -34,7 +34,12 @@ AtFissionEvent &AtFissionEvent::operator=(AtFissionEvent other)
 
 const AtPatterns::AtPatternY *AtFissionEvent::GetYPattern() const
 {
-   return dynamic_cast<const AtPatterns::AtPatternY *>(GetYTrack().GetPattern());
+   const AtPatterns::AtPatternY *patt = nullptr;
+   try {
+      patt = dynamic_cast<const AtPatterns::AtPatternY *>(GetYTrack().GetPattern());
+   } catch (...) {
+   }
+   return patt;
 }
 
 const AtTrack &AtFissionEvent::GetYTrack() const
@@ -49,7 +54,19 @@ const AtTrack &AtFissionEvent::GetYTrack() const
 
 double AtFissionEvent::GetFoldingAngle()
 {
-   return ROOT::Math::VectorUtil::Angle(GetYPattern()->GetFragmentDirection(0), GetYPattern()->GetFragmentDirection(1));
+   auto yPatt = GetYPattern();
+   if (yPatt)
+      return ROOT::Math::VectorUtil::Angle(yPatt->GetFragmentDirection(0), yPatt->GetFragmentDirection(1));
+   return -1;
+}
+
+AtFissionEvent::XYZPoint AtFissionEvent::GetVertex() const
+{
+   auto yPatt = GetYPattern();
+   if (yPatt)
+      return yPatt->GetVertex();
+   else
+      return {-1000, -1000, -1000};
 }
 
 /**
