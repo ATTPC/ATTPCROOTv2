@@ -39,7 +39,7 @@ public:
    AtEvent(const AtEvent &copy);
    AtEvent(const AtBaseEvent &copy) : AtBaseEvent(copy) { SetName("AtEvent"); }
    AtEvent &operator=(const AtEvent object);
-   ~AtEvent() = default;
+   virtual ~AtEvent() = default;
 
    friend void swap(AtEvent &first, AtEvent &second)
    {

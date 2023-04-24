@@ -103,7 +103,7 @@ double AtMCFission::ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventI
    auto expFission = dynamic_cast<const AtFissionEvent &>(expEvent);
    auto charge = ObjectiveCharge(expFission, SimEventID, definition);
    auto pos = ObjectivePosition(expFission, SimEventID);
-   LOG(info) << "Chi2 Pos: " << pos << " Chi2 Q: " << charge;
+   LOG(debug) << "Chi2 Pos: " << pos << " Chi2 Q: " << charge;
    return pos + charge;
 }
 
@@ -175,7 +175,7 @@ double AtMCFission::ObjectivePosition(const AtFissionEvent &expEvent, int SimEve
    // Sort the hits by pad number
    simEvent.SortHitArray();
    auto fragHits = expEvent.GetFragHits();
-   LOG(info) << fragHits.size() << " " << expEvent.GetFragHits(0).size() << " " << expEvent.GetFragHits(1).size();
+   LOG(debug) << fragHits.size() << " " << expEvent.GetFragHits(0).size() << " " << expEvent.GetFragHits(1).size();
 
    std::sort(fragHits.begin(), fragHits.end(),
              [](const AtHit *a, const AtHit *b) { return a->GetPadNum() < b->GetPadNum(); });
@@ -392,11 +392,11 @@ TClonesArray AtMCFission::SimulateEvent(AtMCResult &def)
       LOG(debug) << "No space charge to apply.";
 
    auto vertex = GetVertex(def);
-   LOG(info) << "Setting vertex: " << vertex;
+   LOG(debug) << "Setting vertex: " << vertex;
 
    auto fragID = GetFragmentSpecies(def, fCN);
-   LOG(info) << "Setting fragment 1: " << fragID[0].Z << " " << fragID[0].A;
-   LOG(info) << "Setting fragment 2: " << fragID[1].Z << " " << fragID[1].A;
+   LOG(debug) << "Setting fragment 1: " << fragID[0].Z << " " << fragID[0].A;
+   LOG(debug) << "Setting fragment 2: " << fragID[1].Z << " " << fragID[1].A;
 
    // We have the masses, now calculate the momentum of these two fragments in the CoM frame. We will
    // fudge and say the mass of a fragment is A amu (neglecting binding energy).
@@ -452,11 +452,11 @@ TClonesArray AtMCFission::SimulateEvent(AtMCResult &def)
    // Use conservation of 4 momentum to get the beam momentum
    pBeam = ffMom[0] + ffMom[1];
 
-   LOG(info) << "Frag A: " << ffMom[0] << " mass " << EtoA(ffMom[0].M()) << " energy: " << ffMom[0].E() - ffMom[0].M()
-             << " beta: " << ffMom[0].Beta();
-   LOG(info) << "Frag B: " << ffMom[1] << " mass " << EtoA(ffMom[1].M()) << " energy: " << ffMom[1].E() - ffMom[1].M()
-             << " beta: " << ffMom[1].Beta();
-   LOG(info) << "Beam: " << pBeam << " mass " << EtoA(pBeam.M()) << " energy: " << pBeam.E() - pBeam.M();
+   LOG(debug) << "Frag A: " << ffMom[0] << " mass " << EtoA(ffMom[0].M()) << " energy: " << ffMom[0].E() - ffMom[0].M()
+              << " beta: " << ffMom[0].Beta();
+   LOG(debug) << "Frag B: " << ffMom[1] << " mass " << EtoA(ffMom[1].M()) << " energy: " << ffMom[1].E() - ffMom[1].M()
+              << " beta: " << ffMom[1].Beta();
+   LOG(debug) << "Beam: " << pBeam << " mass " << EtoA(pBeam.M()) << " energy: " << pBeam.E() - pBeam.M();
    def.fParameters["EBeam"] = pBeam.E() - pBeam.M();
 
    for (int i = 0; i < 2; ++i)

@@ -40,5 +40,15 @@ void AtMCFitterTask::Exec(Option_t *)
       return;
 
    fFitter->Exec(*patEvent);
+   fResultArray.Delete();
+   fSimEventArray.Delete();
+   fSimRawEventArray.Delete();
+
    fFitter->FillResultArrays(fResultArray, fSimEventArray, fSimRawEventArray);
+
+   LOG(info) << "Size of result arrays: " << fResultArray.GetEntries() << " " << fSimEventArray.GetEntries() << " "
+             << fSimRawEventArray.GetEntries();
+   ;
+   ;
+   ;
 }

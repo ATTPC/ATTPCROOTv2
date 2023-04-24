@@ -74,7 +74,7 @@ void AtMCFitter::Exec(const AtPatternEvent &event)
 
       result.fIterNum = idx;
       result.fObjective = obj;
-      result.Print();
+      // result.Print();
       fResults.insert(result);
    }
    auto stop = std::chrono::high_resolution_clock::now();
@@ -88,6 +88,7 @@ int AtMCFitter::DigitizeEvent(const TClonesArray &points)
    // Event has been simulated and is sitting in the fSim
    auto vec = fClusterize->ProcessEvent(points);
    int eventIndex = fRawEventArray.size();
+   LOG(info) << "Digitizing event at " << eventIndex;
 
    fRawEventArray.push_back(std::move(fPulse->GenerateEvent(vec)));
    if (fPSA)
@@ -106,8 +107,10 @@ void AtMCFitter::FillResultArrays(TClonesArray &resultArray, TClonesArray &simEv
    simRawEvent.Clear();
 
    for (auto &res : fResults) {
+
       int clonesIdx = resultArray.GetEntries();
       int eventIdx = res.fIterNum;
+      LOG(info) << "Filling iteration " << eventIdx << " at index " << resultArray.GetEntries();
 
       auto result = dynamic_cast<AtMCResult *>(resultArray.ConstructedAt(clonesIdx));
       auto event = dynamic_cast<AtEvent *>(simEvent.ConstructedAt(clonesIdx));

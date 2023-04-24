@@ -149,11 +149,9 @@ void unpack_linked(int tpcRunNum = 206)
    linker->SetCorruptedSearchRadius(1000);
    linker->SetInputBranch("AtRawEventRaw");
 
-   auto threshold = 45;
-
    /**** Ch0 subtraction ****/
    auto filterSub = new AtFilterSubtraction(mapping);
-   filterSub->SetThreshold(threshold);
+   filterSub->SetThreshold(25);
    filterSub->SetIsGood(false); // Save events event if
    AtFilterTask *subTask = new AtFilterTask(filterSub);
    subTask->SetPersistence(false);

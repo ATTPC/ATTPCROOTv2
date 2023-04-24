@@ -29,7 +29,7 @@ InitStatus AtDataReductionTask::Init()
 
    fInputEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fInputBranchName));
    if (fInputEventArray == nullptr) {
-      LOG(fatal) << "Cannot find AtRawEvent array in branch " << fInputBranchName << "!";
+      LOG(fatal) << "Cannot find TClonesArray in branch " << fInputBranchName << "!";
       return kFATAL;
    }
 
@@ -45,10 +45,10 @@ void AtDataReductionTask::Exec(Option_t *opt)
 
    // If we should skip this event mark bad and don't fill tree
    if (fReductionFunc())
-      LOG(info) << "Keeping event " << fEvent->GetEventID();
+      LOG(info) << "Keeping event " << fEvent->GetEventID() << " at " << FairRootManager::Instance()->GetEntryNr();
    else {
 
-      LOG(info) << "Skipping event " << fEvent->GetEventID();
+      LOG(info) << "Skipping event " << fEvent->GetEventID() << " at " << FairRootManager::Instance()->GetEntryNr();
 
       FairRootManager *ioMan = FairRootManager::Instance();
       for (auto name : fOutputBranchs) {
