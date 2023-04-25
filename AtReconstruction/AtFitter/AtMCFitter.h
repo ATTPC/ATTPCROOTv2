@@ -20,6 +20,7 @@ class AtPSA;              // lines 19-19
 class AtPatternEvent;     // lines 12-12
 class AtPulse;            // lines 16-16
 class AtSimpleSimulation; // lines 14-14
+class AtDigiPar;
 
 namespace MCFitter {
 class AtParameterDistribution;
@@ -44,9 +45,19 @@ protected:
    PsaPtr fPSA{nullptr};
 
    int fNumIter{1};
+   int fNumEventsToSave{10};
    bool fTimeEvent{false};
+   int fNumThreads{1};
 
+   // Things used by threads excecuting that are either expensive to create and delete
+   // or unaccessable due to FairRoot design choices
+   const AtPatternEvent *fCurrentEvent{nullptr};
+   std::vector<PulsePtr> fThPulse; //< Cached because it is expensive to create and delete.
+   const AtDigiPar *fPar{nullptr};
+
+   /** Things below here need to be written to by threads and will be locked using a shared mutex ***/
    /// Store the iteration number sorted by lowest objective funtion
+   std::mutex fResultMutex;
    std::set<AtMCResult, std::function<bool(AtMCResult, AtMCResult)>> fResults;
    std::vector<AtRawEvent> fRawEventArray;
    std::vector<AtEvent> fEventArray;
@@ -63,8 +74,12 @@ public:
    void FillResultArrays(TClonesArray &resultArray, TClonesArray &simEvent, TClonesArray &simRawEvent);
    void SetNumIter(int iter) { fNumIter = iter; }
    void SetTimeEvent(bool val) { fTimeEvent = val; }
+   void SetNumEventsToSave(int num) { fNumEventsToSave = num; }
 
 protected:
+   void RunIter(int iterNum){};
+   void RunIterRange(int startIter, int numIter, AtPulse *pulse);
+
    /**
     *@brief Create the parameter distributions to use for the fit.
     */
@@ -84,7 +99,12 @@ protected:
     * Simulate an event using the parameters in the passed AtMCResult class and return an array of
     * the AtMCPoints to then digitize.
     */
-   virtual TClonesArray SimulateEvent(AtMCResult &definition) = 0;
+   virtual TClonesArray SimulateEvent(AtMCResult &definition, AtSimpleSimulation *sim) = 0;
+   /**
+    * Simulate an event using the parameters in the passed AtMCResult class and return an array of
+    * the AtMCPoints to then digitize using fSim .
+    */
+   TClonesArray SimulateEvent(AtMCResult &definition) { return SimulateEvent(definition, fSim.get()); }
 
    /**
     * Sample parameter distributions and constrain the system to simulate an event.
@@ -97,7 +117,7 @@ protected:
     * Create the AtRawEvent and AtEvent from fSim
     * returns the index of the event in the TClonesArray
     */
-   int DigitizeEvent(const TClonesArray &points);
+   int DigitizeEvent(const TClonesArray &points, int idx, AtClusterize *cluster, AtPulse *pulse, AtPSA *psa);
 };
 
 } // namespace MCFitter

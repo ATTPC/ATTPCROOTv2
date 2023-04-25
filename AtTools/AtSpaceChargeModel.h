@@ -39,7 +39,7 @@ public:
     * Will load any parameters used by the model from the parameter file attached
     * to the run.
     */
-   virtual void LoadParameters(AtDigiPar *par) = 0;
+   virtual void LoadParameters(const AtDigiPar *par) = 0;
 
    void SetBeamLocation(XYZPoint window, XYZPoint padPlane)
    {

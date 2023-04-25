@@ -119,8 +119,8 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
 
    AtMCFitterTask *fitTask = new AtMCFitterTask(fitter);
    fitTask->SetPatternBranchName("AtFissionEvent");
-   fitTask->SetSaveRawEvent(false);
-   fitTask->SetSaveEvent(false);
+   fitTask->SetSaveRawEvent(true);
+   fitTask->SetSaveEvent(true);
 
    fRun->AddTask(reduceTask);
    fRun->AddTask(copyTask);
@@ -128,5 +128,6 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
 
    fRun->Init();
 
-   fRun->Run(0, 1000);
+   fRun->Run(0, 65);
+   // fRun->Run();
 }

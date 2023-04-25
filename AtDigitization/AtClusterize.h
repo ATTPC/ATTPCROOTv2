@@ -38,9 +38,10 @@ protected:
 
 public:
    std::vector<SimPointPtr> ProcessEvent(const TClonesArray &fMCPointArray);
-   virtual void GetParameters(AtDigiPar *fPar);
+   virtual void GetParameters(const AtDigiPar *fPar);
    virtual std::string GetSavedClassName() const { return "AtSimulatedPoint"; }
    virtual void FillTClonesArray(TClonesArray &array, std::vector<SimPointPtr> &vec);
+   virtual std::shared_ptr<AtClusterize> Clone() const { return std::make_shared<AtClusterize>(*this); }
 
 private:
    XYZPoint applyDiffusion(const XYZPoint &loc, double_t sigTrans, double sigLong);

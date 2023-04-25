@@ -18,8 +18,9 @@ private:
    double fTBTime{}; //!< Width of a time bucket [us]
 
 public:
-   virtual void GetParameters(AtDigiPar *fPar) override;
+   virtual void GetParameters(const AtDigiPar *fPar) override;
    virtual void FillTClonesArray(TClonesArray &array, std::vector<SimPointPtr> &vec) override;
+   virtual std::shared_ptr<AtClusterize> Clone() const override { return std::make_shared<AtClusterizeLine>(*this); }
 
 protected:
    virtual std::vector<SimPointPtr> processPoint(AtMCPoint &mcPoint, int pointID) override;

@@ -117,7 +117,7 @@ double AtMCFission::ObjectiveCharge(const AtFissionEvent &expEvent, int SimEvent
    std::array<std::vector<double>, 2> sim;
    for (int i = 0; i < 2; ++i) {
       E12014::FillHitSums(exp[i], sim[i], expEvent.GetFragHits(i), ContainerManip::GetPointerVector(simEvent.GetHits()),
-                          E12014::fThreshold, E12014::fSatThreshold);
+                          E12014::fThreshold, E12014::fSatThreshold, fPar);
    }
 
    return ObjectiveCharge(exp, sim, def);
@@ -372,14 +372,15 @@ void AtMCFission::SetMomMagnitude(std::array<XYZVector, 2> &moms, double pTrans)
    }
 }
 
-TClonesArray AtMCFission::SimulateEvent(AtMCResult &def)
+TClonesArray AtMCFission::SimulateEvent(AtMCResult &def, AtSimpleSimulation *sim)
 {
    using namespace AtTools::Kinematics;
-   fSim->NewEvent();
+   sim->NewEvent();
 
    // Set the magnitude of the space charge for this event.
-   auto radialModel = dynamic_cast<AtRadialChargeModel *>(fSim->GetSpaceChargeModel().get());
-   auto lineModel = dynamic_cast<AtLineChargeModel *>(fSim->GetSpaceChargeModel().get());
+   // TODO: Make this thread safe (deep copy simplesim, and once per thread)
+   auto radialModel = dynamic_cast<AtRadialChargeModel *>(sim->GetSpaceChargeModel().get());
+   auto lineModel = dynamic_cast<AtLineChargeModel *>(sim->GetSpaceChargeModel().get());
    if (radialModel) {
       radialModel->SetDistortionField(AtLineChargeZDep(def.fParameters["lambda"]));
       LOG(debug) << "Setting Lambda: " << def.fParameters["lambda"];
@@ -460,7 +461,7 @@ TClonesArray AtMCFission::SimulateEvent(AtMCResult &def)
    def.fParameters["EBeam"] = pBeam.E() - pBeam.M();
 
    for (int i = 0; i < 2; ++i)
-      fSim->SimulateParticle(fragID[i].Z, fragID[i].A, vertex, ffMom[i]);
+      sim->SimulateParticle(fragID[i].Z, fragID[i].A, vertex, ffMom[i]);
 
-   return fSim->GetPointsArray();
+   return sim->GetPointsArray();
 }

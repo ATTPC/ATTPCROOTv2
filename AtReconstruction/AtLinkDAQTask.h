@@ -38,7 +38,7 @@ class HTTimestamp;
 // ROOT classes
 class TClonesArray;
 // ATTPCROOT classes
-class AtRawEvent;
+class AtBaseEvent;
 class TFile;
 
 class AtLinkDAQTask : public FairTask {
@@ -47,7 +47,7 @@ private:
    // Info for AT-TPC Tree
    TClonesArray *fInputEventArray{};       // AtRawEvent
    TString fInputBranchName{"AtRawEvent"}; // Name if AtRawEvent branch
-   AtRawEvent *fRawEvent{nullptr};
+   AtBaseEvent *fEvent{nullptr};
 
    // Info for HiRAEVT Tree input
    std::unique_ptr<TChain> evtTree{nullptr};

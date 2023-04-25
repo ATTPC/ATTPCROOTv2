@@ -54,7 +54,7 @@ public:
     */
    AtSimpleSimulation(std::string geoFile);
    AtSimpleSimulation();
-
+   AtSimpleSimulation(const AtSimpleSimulation &other) = default;
    ~AtSimpleSimulation() = default;
 
    void RegisterBranch(std::string branchName = "AtTpcPoint", bool pers = true);

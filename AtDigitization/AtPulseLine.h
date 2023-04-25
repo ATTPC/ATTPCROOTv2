@@ -22,11 +22,13 @@ private:
 
 public:
    AtPulseLine(AtMapPtr map, ResponseFunc response = nullptr);
+   AtPulseLine(const AtPulseLine &other) = default;
 
    void SetNumIntegrationPoints(uint numPoints) { fNumIntegrationPoints = numPoints; }
    void SetNumSigmaToIntegrateZ(ushort zScore) { fNumSigmaToIntegrateZ = zScore; }
    uint GetNumIntegrationPoints() { return fNumIntegrationPoints; }
    ushort SetNumSigmaToIntegrateZ() { return fNumSigmaToIntegrateZ; }
+   virtual std::shared_ptr<AtPulse> Clone() const override { return std::make_shared<AtPulseLine>(*this); }
 
 protected:
    void generateIntegrationMap(AtSimulatedLine &line);

@@ -51,11 +51,6 @@ void AtPSADeconv::SetCutoffFreq(int freq)
    initFilter();
 }
 
-void AtPSADeconv::Init()
-{
-   AtPSA::Init();
-}
-
 void AtPSADeconv::initFFTs()
 {
    std::vector<Int_t> dimSize = {512};

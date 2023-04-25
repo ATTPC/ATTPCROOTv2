@@ -44,7 +44,7 @@ public:
    void SetStepSize(double setSize) { fStepSize = setSize; }
    void SetEField(double field);
    void SetDriftVelocity(double v);
-   void LoadParameters(AtDigiPar *par) override;
+   void LoadParameters(const AtDigiPar *par) override;
 
 private:
    XYZPoint SolveEqn(XYZPoint ele, bool correction);

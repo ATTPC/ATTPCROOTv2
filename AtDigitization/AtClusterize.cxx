@@ -16,7 +16,7 @@
 #include <algorithm> // for max
 #include <utility>   // for move
 
-void AtClusterize::GetParameters(AtDigiPar *fPar)
+void AtClusterize::GetParameters(const AtDigiPar *fPar)
 {
    fEIonize = fPar->GetEIonize() / 1000000; // [MeV]
    fFano = fPar->GetFano();

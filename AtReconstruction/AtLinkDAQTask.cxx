@@ -1,6 +1,6 @@
 #include "AtLinkDAQTask.h"
 
-#include "AtRawEvent.h"
+#include "AtBaseEvent.h"
 #include "AtRunAna.h"
 
 #include <FairLogger.h>
@@ -92,7 +92,7 @@ void AtLinkDAQTask::DoFirstEvent()
 {
    evtTree->GetEntry(0);
    fEvtTimestamp = fEvtTS->GetTimestamp();
-   fTpcTimestamp = fRawEvent->GetTimestamps();
+   fTpcTimestamp = fEvent->GetTimestamps();
 
    LOG(info) << "Initial timestamps: " << fTpcTimestamp.at(fTpcTimestampIndex) << " " << fEvtTimestamp;
    kFirstEvent = false;
@@ -102,7 +102,7 @@ void AtLinkDAQTask::DoFirstEvent()
 
    // Get the number of timestamps in the the AtRawEvent
    // And create the graphs to plot
-   auto numTimestamps = fRawEvent->GetTimestamps().size();
+   auto numTimestamps = fEvent->GetTimestamps().size();
    for (int i = 0; i < numTimestamps; ++i) {
       fGrDataRatio.emplace_back();
       fGrDataAbs.emplace_back();
@@ -119,7 +119,7 @@ bool AtLinkDAQTask::UpdateTimestamps()
    fOldEvtTimestamp = fEvtTimestamp;
    fOldTpcTimestamp = fTpcTimestamp;
    fEvtTimestamp = fEvtTS->GetTimestamp();
-   fTpcTimestamp = fRawEvent->GetTimestamps();
+   fTpcTimestamp = fEvent->GetTimestamps();
    if (fTpcTimestamp.size() < fTpcTimestampIndex)
       return false;
 
@@ -182,7 +182,7 @@ void AtLinkDAQTask::Exec(Option_t *opt)
    // first event then set the old timestamp and continue without filling
    if (fInputEventArray->GetEntriesFast() == 0)
       return;
-   fRawEvent = dynamic_cast<AtRawEvent *>(fInputEventArray->At(0));
+   fEvent = dynamic_cast<AtBaseEvent *>(fInputEventArray->At(0));
 
    if (kFirstEvent) {
       DoFirstEvent();

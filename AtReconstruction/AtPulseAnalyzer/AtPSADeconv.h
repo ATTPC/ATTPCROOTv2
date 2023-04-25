@@ -71,7 +71,6 @@ public:
    ~AtPSADeconv() = default;
 
    virtual std::unique_ptr<AtPSA> Clone() override { return std::make_unique<AtPSADeconv>(*this); }
-   virtual void Init() override;
    virtual HitVector AnalyzePad(AtPad *pad) override;
 
    void SetFilterOrder(int order);

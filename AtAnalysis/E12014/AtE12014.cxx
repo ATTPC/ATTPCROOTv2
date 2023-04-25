@@ -100,7 +100,7 @@ std::set<int> E12014::FillHitSum(TH1 &hist, const std::vector<AtHit *> &hits, in
 }
 
 void E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
-                         const std::vector<AtHit *> &simHits, int threshold, float satThresh)
+                         const std::vector<AtHit *> &simHits, int threshold, float satThresh, const AtDigiPar *fPar)
 {
    exp.clear();
    exp.resize(512);
@@ -117,7 +117,7 @@ void E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, con
          continue;
       if (expHit->GetCharge() > satThresh)
          continue;
-      auto funcExp = AtTools::GetHitFunctionTB(*expHit);
+      auto funcExp = AtTools::GetHitFunctionTB(*expHit, fPar);
       if (funcExp == nullptr)
          continue;
 
@@ -132,7 +132,7 @@ void E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, con
       }
       if (simHit == nullptr)
          continue;
-      auto funcSim = AtTools::GetHitFunctionTB(*simHit);
+      auto funcSim = AtTools::GetHitFunctionTB(*simHit, fPar);
       if (funcSim == nullptr)
          continue;
 

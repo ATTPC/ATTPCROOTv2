@@ -10,10 +10,9 @@
 void run_eve_cut(TString cut = "cut1", TString species = "Bi200", int pressure = 150,
                  TString OutputDataFile = "./data/output.reco_display.root")
 {
-   g
 
-      auto verbSpec =
-         fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
+   auto verbSpec =
+      fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
    fair::Logger::DefineVerbosity("user1", verbSpec);
    // fair::Logger::SetVerbosity("user1");
    // fair::Logger::SetConsoleSeverity("debug");

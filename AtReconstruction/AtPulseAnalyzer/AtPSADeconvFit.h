@@ -7,7 +7,11 @@
 class AtPSADeconvFit : public AtPSADeconv {
 
 public:
+   virtual void Init() override;
+
 protected:
+   double fDiffLong; //< Longitudinal diffusion coefficient
+
    HitData getZandQ(const AtPad::trace &charge) override;
 };
 

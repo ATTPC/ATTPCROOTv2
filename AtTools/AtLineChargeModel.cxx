@@ -54,7 +54,7 @@ XYZPoint AtLineChargeModel::ApplySpaceCharge(const XYZPoint &reverseInputPositio
    return UndoOffsetForBeam(output);
 }
 
-void AtLineChargeModel::LoadParameters(AtDigiPar *par)
+void AtLineChargeModel::LoadParameters(const AtDigiPar *par)
 {
    if (par == nullptr)
       return;

@@ -19,20 +19,24 @@
 #include <iterator>  // for begin, distance, end
 #include <memory>    // for allocator, unique_ptr
 
+void AtPSADeconvFit::Init()
+{
+   AtPSADeconv::Init();
+   auto fPar = dynamic_cast<AtDigiPar *>(FairRun::Instance()->GetRuntimeDb()->getContainer("AtDigiPar"));
+   fDiffLong = fPar->GetCoefDiffusionLong();
+}
+
 AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
 {
    // Get initial guess for hit. Z loc is max and std dev is estimated from diffusion
    auto maxTB = std::max_element(begin(charge), end(charge));
-   auto fPar = dynamic_cast<AtDigiPar *>(FairRun::Instance()->GetRuntimeDb()->getContainer("AtDigiPar"));
-
    auto zTB = static_cast<double>(std::distance(begin(charge), maxTB));
-   auto diffCoeff = fPar->GetCoefDiffusionLong();
 
    auto zPos = CalculateZGeo(zTB);               // [mm]
    auto driftTime = zPos / fDriftVelocity / 10.; // [us] drift velocity is cm/us
    if (driftTime < 0)
       driftTime = 0;
-   auto longDiff = std::sqrt(2 * diffCoeff * driftTime); // [cm] longitudal diff sigma
+   auto longDiff = std::sqrt(2 * fDiffLong * driftTime); // [cm] longitudal diff sigma
    auto sigTime = longDiff / fDriftVelocity;             // [us] longitudal diff sigma
    auto sigTB = sigTime / fTBTime * 1000.;               // [TB] sigTime is us, TBTime is ns.
 

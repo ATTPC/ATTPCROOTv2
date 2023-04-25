@@ -2,6 +2,7 @@
 
 TH1F *zHist = nullptr;
 TH1F *aHist = nullptr;
+TH1F *hAmp = nullptr;
 TH2F *hBeam = nullptr;
 void PlotZ()
 {
@@ -19,6 +20,7 @@ void PlotZ()
    zHist = new TH1F("hZ", "Z", zMax - zMin, zMin, zMax);
    aHist = new TH1F("hA", "A", zMax - zMin, aMin, aMax);
    hBeam = new TH2F("hBeam", "Beam energy", 100, 0, 1000, 100, 0, 4500);
+   hAmp = new TH1F("hAmp", "Charge Scaling Factor", 100, 0, 1);
    while (reader.Next()) {
       auto *result = dynamic_cast<MCFitter::AtMCResult *>(resultArray->At(0));
       if (result) {
@@ -27,6 +29,7 @@ void PlotZ()
          aHist->Fill(result->fParameters["A0"]);
          aHist->Fill(result->fParameters["A1"]);
          hBeam->Fill(result->fParameters["vZ"], result->fParameters["EBeam"]);
+         hAmp->Fill(result->fParameters["Amp"]);
       }
    }
 
