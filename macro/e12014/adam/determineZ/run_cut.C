@@ -116,8 +116,8 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    simPSA->SetThreshold(25);
 
    fitter->SetPSA(simPSA);
-   fitter->SetNumIter(10);
-   fitter->SetNumThreads(2);
+   fitter->SetNumIter(1);
+   fitter->SetNumThreads(1);
 
    AtMCFitterTask *fitTask = new AtMCFitterTask(fitter);
    fitTask->SetPatternBranchName("AtFissionEvent");
@@ -130,6 +130,7 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
 
    fRun->Init();
 
-   fRun->Run(0, 65);
-   // fRun->Run();
+   fRun->Run(0, 4);
+   // fRun->Run(0, 65);
+   //  fRun->Run();
 }

@@ -38,14 +38,14 @@ void SetHistFromData(TH1 &hist, const T &data, double xMin = 0, double xMax = 0)
  * according to xMin and xMax. If both are 0, then sets the axis to [0,data.size()].
  * The returned unique_ptr owns the memory and it will not be cleaned up by root.
  */
-template <typename T>
-std::unique_ptr<TH1D> CreateHistFromData(const std::string &name, const T &data, double xMin = 0, double xMax = 0)
+template <typename Hist = TH1D, typename T>
+std::unique_ptr<Hist> CreateHistFromData(const std::string &name, const T &data, double xMin = 0, double xMax = 0)
 {
    if (xMin == 0 && xMax == 0)
       xMax = data.size();
 
    TH1::AddDirectory(false); // Make sure pointer has ownership
-   auto ret = std::make_unique<TH1D>(name.data(), name.data(), data.size(), 0, data.size());
+   auto ret = std::make_unique<Hist>(name.data(), name.data(), data.size(), 0, data.size());
    for (int i = 0; i < ret->GetNbinsX(); ++i)
       ret->SetBinContent(i + 1, data.at(i));
    // ret->SetDirectory(nullptr);

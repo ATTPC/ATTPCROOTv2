@@ -121,26 +121,27 @@ void AtViewerManager::Init()
 void AtViewerManager::GenerateBranchLists()
 {
    LOG(info) << "Generating branch list";
-   GotoEvent(0);
 
    auto ioMan = FairRootManager::Instance();
+   GotoEvent(0);
 
    // Loop through the entire branch list and map class type to branch name in fBranchNames
    for (int i = 0; i < ioMan->GetBranchNameList()->GetSize(); i++) {
 
       auto branchName = ioMan->GetBranchName(i);
-      LOG(debug) << "Looking for " << branchName;
       auto branchArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(branchName));
       if (branchArray == nullptr)
          continue;
 
       // Loop until there is something in this branch
       int event = 0;
-      while (branchArray->GetEntries() == 0 && event < 5)
-         GotoEvent(++event);
+      while (branchArray->GetEntries() == 0 && event < 5) {
+         GotoEvent(event++);
+      }
 
       if (branchArray->GetEntries() == 0) {
-         LOG(error) << "Failed to find type of branch " << branchName;
+         LOG(error) << "Failed to find type of branch " << branchName << std::endl;
+
          continue;
       }
       LOG(debug) << "Examining " << branchArray->At(0);
@@ -151,7 +152,7 @@ void AtViewerManager::GenerateBranchLists()
 
       auto type = branchArray->At(0)->ClassName();
       fBranchNames[type].push_back(branchName);
-      LOG(info) << "Found " << branchName << " with type " << type;
+      LOG(info) << "Found " << branchName << " with type " << type << std::endl;
    }
    LOG(info) << "Done generating branch list";
 }

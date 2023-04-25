@@ -163,37 +163,20 @@ int AtMCFitter::DigitizeEvent(const TClonesArray &points, int idx, AtPulse *puls
  */
 void AtMCFitter::FillResultArrays(TClonesArray &resultArray, TClonesArray &simEvent, TClonesArray &simRawEvent)
 {
-   resultArray.Clear();
-   simEvent.Clear();
-   simRawEvent.Clear();
+   resultArray.Delete();
+   simEvent.Delete();
+   simRawEvent.Delete();
 
    for (auto &res : fResults) {
 
       int clonesIdx = resultArray.GetEntries();
       int eventIdx = res.fIterNum;
-      LOG(info) << "Filling iteration " << eventIdx << " at index " << resultArray.GetEntries();
+      LOG(debug) << "Filling iteration " << eventIdx << " at index " << resultArray.GetEntries();
 
-      auto result = dynamic_cast<AtMCResult *>(resultArray.ConstructedAt(clonesIdx));
-      auto event = dynamic_cast<AtEvent *>(simEvent.ConstructedAt(clonesIdx));
-      auto rawEvent = dynamic_cast<AtRawEvent *>(simRawEvent.ConstructedAt(clonesIdx));
-
-      if (result == nullptr) {
-         LOG(fatal) << "Failed to get the AtMCResult to fill in output TClonesArray!";
-         return;
-      }
-      if (event == nullptr) {
-         LOG(fatal) << "Failed to get the AtEvent to fill in output TClonesArray!";
-         return;
-      }
-      if (rawEvent == nullptr) {
-         LOG(fatal) << "Failed to get the AtRawEvent to fill in output TClonesArray!";
-         return;
-      }
-
-      *result = res;
+      new (resultArray[clonesIdx]) AtMCResult(std::move(res));
       if (clonesIdx < fNumEventsToSave) {
-         *event = std::move(fEventArray[eventIdx]);
-         *rawEvent = std::move(fRawEventArray[eventIdx]);
+         new (simEvent[clonesIdx]) AtEvent(std::move(fEventArray[eventIdx]));
+         new (simRawEvent[clonesIdx]) AtRawEvent(std::move(fRawEventArray[eventIdx]));
       }
    }
 

@@ -58,7 +58,7 @@ void AtTabFission::UpdateFissionElements()
    auto fissionEvent = GetFairRootInfo<AtFissionEvent>();
 
    if (fissionEvent == nullptr) {
-      LOG(error) << "Cannot update fission event: no event availible.";
+      LOG(debug) << "Cannot update fission event: no event availible.";
       return;
    }
 

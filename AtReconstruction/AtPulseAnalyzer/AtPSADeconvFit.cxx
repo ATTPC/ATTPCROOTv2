@@ -45,7 +45,8 @@ AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
    auto longDiff = std::sqrt(2 * fDiffLong * driftTime); // [cm] longitudal diff sigma
    auto sigTime = longDiff / fDriftVelocity;             // [us] longitudal diff sigma
    auto sigTB = sigTime / fTBTime * 1000.;               // [TB] sigTime is us, TBTime is ns.
-
+   if (sigTB == 0)
+      sigTB = 0.1;
    LOG(debug) << "zTB: " << zTB << " zTime " << driftTime << " sigTB: " << sigTB << " Amp: " << *maxTB;
 
    if (*maxTB < getThreshold() || zTB < 20 || zTB > 500) {
@@ -55,10 +56,12 @@ AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
    }
 
    // Create a historgram to fit and fit to range mean +- 4 sigma.
-   auto hist = ContainerManip::CreateHistFromData("Qreco_fit", charge);
+   auto hist = ContainerManip::CreateHistFromData<TH1F>("Qreco_fit", charge);
 
    // Add an addition +-2 for when we are close to the pad plane and diffusion is small
-   auto fitRange = 3 * sigTB + 2;
+   auto fitRange = 3 * sigTB;
+   if (fitRange < 3)
+      fitRange = 3;
    auto id = std::hash<std::thread::id>{}(std::this_thread::get_id());
    TF1 gauss(TString::Format("fitGauss%lu", id), "gaus(0)", zTB - fitRange, zTB + fitRange, TF1::EAddToList::kNo);
    gauss.SetParameter(0, *maxTB); // Set initial height of gaussian
@@ -67,33 +70,26 @@ AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
 
    // Fit without graphics and saving everything in the result ptr
    // auto resultPtr = hist->Fit(&gauss, "SQNR");
-   auto resultPtr = FitHistorgramParallel(*hist, gauss);
-   if (resultPtr == nullptr) {
+   auto result = FitHistorgramParallel(*hist, gauss);
+   if (!result.IsValid()) {
       LOG(info) << "Null fit for pad using mean and deviation of trace."
                 << " mean: " << zTB << " sig:" << sigTB << " max:" << *maxTB;
       return {};
    }
 
-   auto amp = resultPtr->GetParams()[0];
-   auto z = resultPtr->GetParams()[1];
-   auto sig = resultPtr->GetParams()[2];
+   auto amp = result.GetParams()[0];
+   auto z = result.GetParams()[1];
+   auto sig = result.GetParams()[2];
 
    auto Q = amp * sig * std::sqrt(2 * TMath::Pi());
-   LOG(debug) << "Initial: " << zTB << " " << sigTB << " " << *maxTB;
-   LOG(debug) << "Fit: " << z << " " << sig << " " << amp;
-   // LOG(info) << "Q: " << Q;
-
-   /// TODO: Error in charge?
+   LOG(debug) << "Initial: " << *maxTB << " " << zTB << " " << sigTB;
+   LOG(debug) << "Fit: " << amp << " " << z << " " << sig;
 
    return {{z, sig * sig, Q, 0}};
 }
 
-const ROOT::Fit::FitResult *AtPSADeconvFit::FitHistorgramParallel(TH1D &hist, TF1 &func)
+const ROOT::Fit::FitResult AtPSADeconvFit::FitHistorgramParallel(TH1F &hist, TF1 &func)
 {
-   // Create the fitter and set the function to fit
-   ROOT::Fit::Fitter fitter;
-   fitter.Config().SetMinimizer("Minuit2"); // Set a thread safe minimizer
-
    // Create the data to fit
    double xmin = 0, xmax = 0;
    func.GetRange(xmin, xmax);
@@ -102,13 +98,16 @@ const ROOT::Fit::FitResult *AtPSADeconvFit::FitHistorgramParallel(TH1D &hist, TF
    ROOT::Fit::BinData d(opt, range);
    ROOT::Fit::FillData(d, &hist);
 
-   // Create the function to fit
+   // Create the function to fit (just a wrapper)
    ROOT::Math::WrappedMultiTF1 wf(func);
-   fitter.SetFunction(wf, false); // Disable use of gradient
 
-   bool goodFit = fitter.Fit(d);
+   ROOT::Fit::Fitter fFitter;
+   fFitter.Config().SetMinimizer("Minuit2");
+   fFitter.SetFunction(wf, false);
+
+   bool goodFit = fFitter.Fit(d);
    if (goodFit)
-      return &fitter.Result();
+      return fFitter.Result();
    else
-      return nullptr;
+      return {};
 }
