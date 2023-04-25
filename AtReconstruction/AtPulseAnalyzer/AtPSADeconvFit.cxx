@@ -8,12 +8,17 @@
 #include <FairRun.h>
 #include <FairRuntimeDb.h>
 
+#include <Math/WrappedMultiTF1.h>
 #include <TF1.h>
 #include <TFitResult.h>
 #include <TFitResultPtr.h> // for TFitResultPtr
 #include <TH1.h>           // for TH1D
 #include <TMath.h>         // for Pi
 
+#include <HFitInterface.h>
+
+#include <Fit/BinData.h>
+#include <Fit/Fitter.h>
 #include <algorithm> // for max_element
 #include <cmath>     // for sqrt
 #include <iterator>  // for begin, distance, end
@@ -61,10 +66,11 @@ AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
    gauss.SetParameter(2, sigTB);  // Set initial sigma of gaussian
 
    // Fit without graphics and saving everything in the result ptr
-   auto resultPtr = hist->Fit(&gauss, "SQNR");
-   if (resultPtr.Get() == nullptr) {
+   // auto resultPtr = hist->Fit(&gauss, "SQNR");
+   auto resultPtr = FitHistorgramParallel(*hist, gauss);
+   if (resultPtr == nullptr) {
       LOG(info) << "Null fit for pad using mean and deviation of trace."
-                << "mean: " << zTB << " sig:" << sigTB << " max:" << *maxTB;
+                << " mean: " << zTB << " sig:" << sigTB << " max:" << *maxTB;
       return {};
    }
 
@@ -80,4 +86,29 @@ AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
    /// TODO: Error in charge?
 
    return {{z, sig * sig, Q, 0}};
+}
+
+const ROOT::Fit::FitResult *AtPSADeconvFit::FitHistorgramParallel(TH1D &hist, TF1 &func)
+{
+   // Create the fitter and set the function to fit
+   ROOT::Fit::Fitter fitter;
+   fitter.Config().SetMinimizer("Minuit2"); // Set a thread safe minimizer
+
+   // Create the data to fit
+   double xmin = 0, xmax = 0;
+   func.GetRange(xmin, xmax);
+   ROOT::Fit::DataOptions opt;
+   ROOT::Fit::DataRange range(xmin, xmax);
+   ROOT::Fit::BinData d(opt, range);
+   ROOT::Fit::FillData(d, &hist);
+
+   // Create the function to fit
+   ROOT::Math::WrappedMultiTF1 wf(func);
+   fitter.SetFunction(wf, false); // Disable use of gradient
+
+   bool goodFit = fitter.Fit(d);
+   if (goodFit)
+      return &fitter.Result();
+   else
+      return nullptr;
 }
