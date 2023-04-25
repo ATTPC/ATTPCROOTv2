@@ -54,7 +54,7 @@ protected:
    double fAvgGainDeviation{};
 
 public:
-   AtPulse(AtMapPtr map, ResponseFunc response = nullptr) : fMap(map), fResponse(response) {}
+   AtPulse(AtMapPtr map, ResponseFunc response = nullptr);
    AtPulse(const AtPulse &);
 
    void SetParameters(const AtDigiPar *fPar);

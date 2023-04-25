@@ -23,7 +23,6 @@
 #include <chrono>
 #include <mutex>
 #include <thread>
-
 using std::move;
 namespace MCFitter {
 
@@ -59,23 +58,23 @@ void AtMCFitter::Init()
    fThPulse.resize(fNumThreads);
    for (int i = 0; i < fNumThreads; ++i)
       fThPulse[i] = fPulse->Clone();
+   fThPSA.clear();
+   for (int i = 0; i < fNumThreads; ++i)
+      fThPSA.emplace_back(std::move(fPSA->Clone()));
 }
 
-void AtMCFitter::RunIterRange(int startIter, int numIter, AtPulse *pulse)
+void AtMCFitter::RunIterRange(int startIter, int numIter, AtPulse *pulse, AtPSA *psa)
 {
    // Here we should copy each thread their own version of the clusterize, pulse, and simulation
    // objects (only if the number of threads is greater than 1). Needs to be deep copies
-
-   auto sim = std::make_shared<AtSimpleSimulation>(*fSim); // Underlying models are shared
-   auto clusterize = fClusterize->Clone();
 
    for (int i = 0; i < numIter; ++i) {
 
       int idx = startIter + i;
       auto result = DefineEvent();
-      auto mcPoints = SimulateEvent(result, sim.get());
+      auto mcPoints = SimulateEvent(result);
 
-      DigitizeEvent(mcPoints, idx, clusterize.get(), fPulse.get(), fPSA.get());
+      DigitizeEvent(mcPoints, idx, pulse, psa);
       double obj = ObjectiveFunction(*fCurrentEvent, idx, result);
 
       result.fIterNum = idx;
@@ -125,8 +124,8 @@ void AtMCFitter::Exec(const AtPatternEvent &event)
       LOG(info) << "Creating thread " << i << " with " << threadParam[i].first << " " << threadParam[i].second
                 << " and " << fPulse.get();
       threads.emplace_back([this](std::pair<int, int> param, AtPulse *pulse,
-                                  const AtDigiPar *par) { this->RunIterRange(param.first, param.second, pulse); },
-                           threadParam[i], fPulse.get(), fPar);
+                                  AtPSA *psa) { this->RunIterRange(param.first, param.second, pulse, psa); },
+                           threadParam[i], fThPulse[i].get(), fThPSA[i].get());
    }
 
    for (auto &th : threads)
@@ -143,10 +142,10 @@ void AtMCFitter::Exec(const AtPatternEvent &event)
                 << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << " ms.";
 }
 
-int AtMCFitter::DigitizeEvent(const TClonesArray &points, int idx, AtClusterize *clusterize, AtPulse *pulse, AtPSA *psa)
+int AtMCFitter::DigitizeEvent(const TClonesArray &points, int idx, AtPulse *pulse, AtPSA *psa)
 {
    // Event has been simulated and is sitting in the fSim
-   auto vec = clusterize->ProcessEvent(points);
+   auto vec = fClusterize->ProcessEvent(points);
    LOG(info) << "Digitizing event at " << idx;
 
    fRawEventArray[idx] = pulse->GenerateEvent(vec);

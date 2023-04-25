@@ -43,7 +43,7 @@ protected:
    virtual void CreateParamDistros() override;
    virtual void SetParamDistributions(const AtPatternEvent &event) override;
    virtual double ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventID, AtMCResult &definition) override;
-   virtual TClonesArray SimulateEvent(AtMCResult &definition, AtSimpleSimulation *sim) override;
+   virtual TClonesArray SimulateEvent(AtMCResult &definition) override;
    virtual AtMCResult DefineEvent() override;
 
 protected:

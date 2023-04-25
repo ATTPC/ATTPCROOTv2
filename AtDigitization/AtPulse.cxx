@@ -24,6 +24,12 @@
 #include <utility> // for move
 
 using XYPoint = ROOT::Math::XYPoint;
+AtPulse::AtPulse(AtMapPtr map, ResponseFunc response) : fMap(map), fResponse(response)
+{
+   // Make sure the pad plane is generated so we can just access it for reading info (ie multiple threads will not be
+   // trying to create the underlying TH2poly.
+   fMap->GeneratePadPlane();
+}
 
 AtPulse::AtPulse(const AtPulse &other)
    : fMap(other.fMap), fEventID(other.fEventID), fGain(other.fGain), fLowGainFactor(other.fLowGainFactor),

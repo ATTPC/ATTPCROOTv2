@@ -44,10 +44,12 @@ std::unique_ptr<TH1D> CreateHistFromData(const std::string &name, const T &data,
    if (xMin == 0 && xMax == 0)
       xMax = data.size();
 
+   TH1::AddDirectory(false); // Make sure pointer has ownership
    auto ret = std::make_unique<TH1D>(name.data(), name.data(), data.size(), 0, data.size());
    for (int i = 0; i < ret->GetNbinsX(); ++i)
       ret->SetBinContent(i + 1, data.at(i));
-   ret->SetDirectory(nullptr); // Pass ownership to the pointer instead of current ROOT directory
+   // ret->SetDirectory(nullptr);
+   TH1::AddDirectory(true);
    return ret;
 }
 

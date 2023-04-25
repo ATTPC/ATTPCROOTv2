@@ -17,23 +17,18 @@
 #include <cmath>     // for sqrt
 #include <stdexcept> // for invalid_argument
 #include <utility>   // for pair
-/*
-AtSimpleSimulation::AtSimpleSimulation(AtSimpleSimulation &other)
-   : fMCPoints(other.fMCPoints), fTrackID(other.fTrackID), fDistStep(other.fDistStep)
-{
-   for (auto &[id, model] : other.fModels)
-      fModels[id] = (model) ? std::make_shared<AtTools::AtELossModel>(*model) : nullptr;
-   fSCModel = std::make_shared<AtSpaceChargeModel>(*other.fSCModel);
-}
-*/
-AtSimpleSimulation::AtSimpleSimulation(std::string geoFile) : fMCPoints("AtMCPoint")
+
+thread_local TClonesArray AtSimpleSimulation::fMCPoints("AtMCPoint");
+thread_local int AtSimpleSimulation::fTrackID = 0;
+
+AtSimpleSimulation::AtSimpleSimulation(std::string geoFile)
 {
    TGeoManager *geo = TGeoManager::Import(geoFile.c_str());
 
    if (gGeoManager == nullptr)
       LOG(fatal) << "Failed to load geometry file " << geoFile << " " << geo;
 }
-AtSimpleSimulation::AtSimpleSimulation() : fMCPoints("AtMCPoint")
+AtSimpleSimulation::AtSimpleSimulation()
 {
    if (gGeoManager == nullptr)
       LOG(fatal) << "No geometry file loaded!";

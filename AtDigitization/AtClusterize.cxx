@@ -16,6 +16,9 @@
 #include <algorithm> // for max
 #include <utility>   // for move
 
+thread_local AtClusterize::XYZPoint AtClusterize::fPrevPoint;
+thread_local int AtClusterize::fTrackID = 0;
+
 void AtClusterize::GetParameters(const AtDigiPar *fPar)
 {
    fEIonize = fPar->GetEIonize() / 1000000; // [MeV]
