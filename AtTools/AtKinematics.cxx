@@ -240,8 +240,7 @@ void AtTools::AtKinematics::PrintMatrices()
       alpha->Print();
 }
 
-namespace AtTools {
-namespace Kinematics {
+namespace AtTools::Kinematics {
 
 /**
  * Get gamma for fragment 1 in a system decaying into two fragments with total KE
@@ -289,5 +288,5 @@ double EtoA(double mass)
 {
    return mass / 931.5;
 }
-} // namespace Kinematics
-} // namespace AtTools
+
+} // namespace AtTools::Kinematics

@@ -4,6 +4,7 @@
 #include "AtPulse.h" // for AtPulse::ResponseFunc, AtPulse, AtPuls...
 
 #include <map>
+#include <memory> // for make_shared, shared_ptr
 #include <sys/types.h>
 #include <vector>
 

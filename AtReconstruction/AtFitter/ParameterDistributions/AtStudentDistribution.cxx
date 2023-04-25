@@ -1,5 +1,6 @@
 #include "AtStudentDistribution.h"
 
+#include <memory> // for unique_ptr<>::element_type, unique_ptr
 namespace MCFitter {
 
 AtStudentDistribution::AtStudentDistribution(double mean, double spread, double seed)

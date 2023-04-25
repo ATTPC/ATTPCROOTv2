@@ -1,4 +1,5 @@
 #include "AtMCFitter.h"
+// IWYU pragma: no_include <ext/alloc_traits.h>
 
 #include "AtClusterize.h" // for AtClusterize
 #include "AtDigiPar.h"    // for AtDigiPar
@@ -18,8 +19,7 @@
 #include <FairRunAna.h>    // for FairRunAna
 #include <FairRuntimeDb.h> // for FairRuntimeDb
 
-#include <TObject.h> // for TObject
-
+#include <algorithm> // for max
 #include <chrono>
 #include <mutex>
 #include <thread>

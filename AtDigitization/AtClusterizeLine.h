@@ -7,6 +7,7 @@
 
 #include "AtClusterize.h"
 
+#include <memory> // for make_shared, shared_ptr
 #include <string> // for allocator, string
 #include <vector> // for vector
 class AtDigiPar;

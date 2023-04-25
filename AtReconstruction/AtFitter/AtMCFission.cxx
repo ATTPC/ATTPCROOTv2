@@ -1,5 +1,6 @@
 #include "AtMCFission.h"
 // IWYU pragma: no_include <ext/alloc_traits.h>
+#include "AtContainerManip.h" // for GetPointerVector
 #include "AtE12014.h"
 #include "AtEvent.h"
 #include "AtFissionEvent.h"
@@ -26,18 +27,15 @@
 #include <Math/VectorUtil.h> // for Angle
 #include <TClonesArray.h>    // for TClonesArray
 #include <TMath.h>           // for RadToDeg, C, DegToRad, Pi
-#include <TObject.h>         // for TObject
-#include <TRandom.h>
 
-#include <Fit/FitConfig.h> // for FitConfig
 #include <Fit/FitResult.h> // for FitResult
 #include <Fit/Fitter.h>
-#include <Fit/ParameterSettings.h> // for ParameterSettings
-#include <algorithm>               // for find_if
-#include <map>                     // for map, map<>::mapped_type
-#include <memory>                  // for make_shared, __shared_ptr_access
-#include <string>                  // for string
-#include <vector>                  // for vector, allocator
+#include <algorithm> // for find_if
+#include <cmath>     // for sqrt, exp, sin, round
+#include <map>       // for map, map<>::mapped_type
+#include <memory>    // for make_shared, __shared_ptr_access
+#include <string>    // for string
+#include <vector>    // for vector, allocator
 using namespace MCFitter;
 using namespace AtPatterns;
 using Polar3D = ROOT::Math::Polar3DVector;

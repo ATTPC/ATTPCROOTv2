@@ -2,7 +2,6 @@
 
 #include <FairLogger.h>
 
-#include <thread>
 namespace MCFitter {
 
 thread_local std::unique_ptr<std::mt19937> AtParameterDistribution::fRand = nullptr;

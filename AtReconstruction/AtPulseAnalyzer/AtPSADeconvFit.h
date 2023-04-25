@@ -4,7 +4,10 @@
 #include "AtPSADeconv.h"
 #include "AtPad.h" // for AtPad, AtPad::trace
 
-#include <Fit/Fitter.h>
+#include <Fit/FitResult.h> // for FitResult
+#include <memory>          // for unique_ptr, make_unique
+class AtPSA;
+
 class TH1F;
 class TF1;
 class AtPSADeconvFit : public AtPSADeconv {

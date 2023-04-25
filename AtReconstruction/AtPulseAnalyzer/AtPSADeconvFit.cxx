@@ -10,19 +10,22 @@
 
 #include <Math/WrappedMultiTF1.h>
 #include <TF1.h>
-#include <TFitResult.h>
-#include <TFitResultPtr.h> // for TFitResultPtr
-#include <TH1.h>           // for TH1D
-#include <TMath.h>         // for Pi
+#include <TH1.h>     // for TH1D
+#include <TMath.h>   // for Pi
+#include <TString.h> // for TString
 
 #include <HFitInterface.h>
 
 #include <Fit/BinData.h>
+#include <Fit/DataOptions.h> // for DataOptions
+#include <Fit/DataRange.h>   // for DataRange
+#include <Fit/FitConfig.h>   // for FitConfig
 #include <Fit/Fitter.h>
-#include <algorithm> // for max_element
-#include <cmath>     // for sqrt
-#include <iterator>  // for begin, distance, end
-#include <memory>    // for allocator, unique_ptr
+#include <algorithm>  // for max_element
+#include <cmath>      // for sqrt
+#include <functional> // for hash
+#include <iterator>   // for begin, distance, end
+#include <memory>     // for allocator, unique_ptr
 #include <thread>
 thread_local std::unique_ptr<TH1F> AtPSADeconvFit::fHist = nullptr;
 

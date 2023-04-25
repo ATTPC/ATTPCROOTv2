@@ -9,7 +9,6 @@ namespace DataHandling {
 
 void AtTreeEntry::Set(long entry)
 {
-   LOG(info) << "Running event " << entry;
    fEntry = entry;
    FairRunAna::Instance()->Run((Long64_t)fEntry);
    Notify();

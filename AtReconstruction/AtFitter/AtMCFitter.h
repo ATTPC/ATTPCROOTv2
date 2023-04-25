@@ -8,16 +8,18 @@
 
 #include <TClonesArray.h> // for TClonesArray
 
-#include <functional>     // for function
-#include <map>            // for map
-#include <memory>         // for shared_ptr
-#include <set>            // for set
-#include <string>         // for string
-#include <utility>        // for pair
+#include <functional> // for function
+#include <map>        // for map
+#include <memory>     // for shared_ptr
+#include <mutex>      // for mutex
+#include <set>        // for set
+#include <string>     // for string
+#include <utility>    // for pair
+#include <vector>     // for vector
+
 class AtBaseEvent;        // lines 13-13
 class AtClusterize;       // lines 15-15
 class AtMap;              // lines 18-18
-class AtPSA;              // lines 19-19
 class AtPatternEvent;     // lines 12-12
 class AtPulse;            // lines 16-16
 class AtSimpleSimulation; // lines 14-14

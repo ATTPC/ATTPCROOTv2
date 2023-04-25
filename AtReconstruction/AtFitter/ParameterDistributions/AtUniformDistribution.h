@@ -3,7 +3,6 @@
 
 #include "AtParameterDistribution.h"
 
-#include <random>
 namespace MCFitter {
 
 class AtUniformDistribution : public AtParameterDistribution {

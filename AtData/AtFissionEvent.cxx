@@ -3,7 +3,8 @@
 #include "AtContainerManip.h"
 #include "AtHit.h"     // for AtHit
 #include "AtPattern.h" // for AtPattern
-#include "AtTrack.h"   // for AtTrack, AtTrack::HitVector
+#include "AtPatternY.h"
+#include "AtTrack.h" // for AtTrack, AtTrack::HitVector
 
 #include <Math/VectorUtil.h>
 

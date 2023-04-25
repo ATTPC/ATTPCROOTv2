@@ -1,14 +1,18 @@
 #include "AtTabFF.h"
 
 #include "AtContainerManip.h" // for GetPointerVector
-#include "AtContainerManip.h"
 #include "AtE12014.h"
 #include "AtMCResult.h"
 #include "AtViewerManager.h"
 #include "AtViewerManagerSubject.h" // for AtBranch, AtTreeEntry
 
+#include <FairRootManager.h> // for FairRootManager
+
 #include <TCanvas.h>
-#include <TH1.h> // for TH1F
+#include <TClonesArray.h> // for TClonesArray
+#include <TH1.h>          // for TH1F
+#include <THStack.h>      // for THStack
+#include <TObject.h>      // for TObject
 #include <TString.h>
 namespace DataHandling {
 class AtSubject;

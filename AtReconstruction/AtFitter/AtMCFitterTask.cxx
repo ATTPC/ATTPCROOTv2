@@ -9,8 +9,11 @@
 #include <TClonesArray.h> // for TClonesArray
 #include <TObject.h>
 
+#include <utility>
+
 AtMCFitterTask::AtMCFitterTask(std::shared_ptr<MCFitter::AtMCFitter> fitter)
-   : fFitter(fitter), fResultArray("MCFitter::AtMCResult"), fSimEventArray("AtEvent"), fSimRawEventArray("AtRawEvent")
+   : fFitter(std::move(fitter)), fResultArray("MCFitter::AtMCResult"), fSimEventArray("AtEvent"),
+     fSimRawEventArray("AtRawEvent")
 {
 }
 

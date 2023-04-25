@@ -12,7 +12,6 @@
 #include <Math/Vector3D.h>
 #include <Math/Vector3Dfwd.h> // for XYZVector
 #include <Rtypes.h>           // for Color_t
-#include <THStack.h>
 
 #include <array>  // for array
 #include <memory> // for unique_ptr
@@ -23,6 +22,7 @@ class TBuffer;
 class TClass;
 class TH1F;
 class TMemberInspector;
+class THStack;
 namespace DataHandling {
 class AtBranch;
 }

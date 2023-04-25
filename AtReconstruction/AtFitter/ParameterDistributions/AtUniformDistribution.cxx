@@ -1,4 +1,8 @@
 #include "AtUniformDistribution.h"
+
+#include <memory> // for unique_ptr<>::element_type, unique_ptr
+#include <random> // for uniform_real_distribution
+
 namespace MCFitter {
 AtUniformDistribution::AtUniformDistribution(double mean, double spread, double seed)
    : AtParameterDistribution(mean, spread, seed)
