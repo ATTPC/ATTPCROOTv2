@@ -49,11 +49,14 @@ bool AtSimpleSimulation::ParticleID::operator<(const ParticleID &other) const
 TGeoVolume *AtSimpleSimulation::GetVolume(const XYZPoint &point)
 {
    auto pointCm = point / 10.;
-   TGeoNode *node = gGeoManager->FindNode(pointCm.X(), pointCm.Y(), pointCm.Z());
-   if (node == nullptr) {
-      return nullptr;
+   {
+      std::lock_guard<std::mutex> lock(fGeoMutex);
+      TGeoNode *node = gGeoManager->FindNode(pointCm.X(), pointCm.Y(), pointCm.Z());
+      if (node == nullptr) {
+         return nullptr;
+      }
+      return node->GetVolume();
    }
-   return node->GetVolume();
 }
 
 bool AtSimpleSimulation::IsInVolume(const std::string &volName, const XYZPoint &point)

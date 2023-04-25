@@ -18,6 +18,7 @@
 #include <cmath>     // for sqrt
 #include <iterator>  // for begin, distance, end
 #include <memory>    // for allocator, unique_ptr
+#include <thread>
 
 void AtPSADeconvFit::Init()
 {
@@ -53,7 +54,8 @@ AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
 
    // Add an addition +-2 for when we are close to the pad plane and diffusion is small
    auto fitRange = 3 * sigTB + 2;
-   TF1 gauss("fitGauss", "gaus(0)", zTB - fitRange, zTB + fitRange);
+   auto id = std::hash<std::thread::id>{}(std::this_thread::get_id());
+   TF1 gauss(TString::Format("fitGauss%lu", id), "gaus(0)", zTB - fitRange, zTB + fitRange, TF1::EAddToList::kNo);
    gauss.SetParameter(0, *maxTB); // Set initial height of gaussian
    gauss.SetParameter(1, zTB);    // Set initial position of gaussian
    gauss.SetParameter(2, sigTB);  // Set initial sigma of gaussian

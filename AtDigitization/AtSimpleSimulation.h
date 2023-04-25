@@ -14,8 +14,8 @@
 
 #include <map>
 #include <memory>
+#include <mutex>
 #include <string> // for string
-//#include <mutex>
 namespace AtTools {
 class AtELossModel;
 }
@@ -43,7 +43,7 @@ protected:
    std::map<ParticleID, ModelPtr> fModels;
    SpaceChargeModel fSCModel{nullptr};
    double fDistStep{1.}; // Distance step in mm for particles
-   // std::mutex fGeoMutex;
+   std::mutex fGeoMutex;
 
    // Variables to across an entire event
    static thread_local int fTrackID;

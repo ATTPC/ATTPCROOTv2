@@ -151,7 +151,7 @@ int AtMCFitter::DigitizeEvent(const TClonesArray &points, int idx, AtPulse *puls
    fRawEventArray[idx] = pulse->GenerateEvent(vec);
 
    if (psa) {
-      LOG(info) << "Running PSA at " << idx;
+      LOG(info) << "Running PSA at " << idx << " with " << psa;
       fEventArray[idx] = psa->Analyze(fRawEventArray[idx]);
    }
    LOG(info) << "Done digitizing event at " << idx;
