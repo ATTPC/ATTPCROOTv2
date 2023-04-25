@@ -136,9 +136,13 @@ void AtViewerManager::GenerateBranchLists()
 
       // Loop until there is something in this branch
       int event = 0;
-      while (branchArray->GetSize() == 0)
+      while (branchArray->GetEntries() == 0 && event < 5)
          GotoEvent(++event);
 
+      if (branchArray->GetEntries() == 0) {
+         LOG(error) << "Failed to find type of branch " << branchName;
+         continue;
+      }
       LOG(debug) << "Examining " << branchArray->At(0);
       LOG(debug) << "With type " << branchArray->At(0)->ClassName();
 

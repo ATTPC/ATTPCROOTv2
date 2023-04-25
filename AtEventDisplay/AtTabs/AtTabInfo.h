@@ -105,7 +105,7 @@ public:
          fCurrentBranchName = fBranchName.GetBranchName();
          fArray = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject(fCurrentBranchName));
       }
-      if (fArray != nullptr)
+      if (fArray != nullptr && fArray->GetEntries() > 0)
          return dynamic_cast<T *>(fArray->At(0));
       return nullptr;
    }

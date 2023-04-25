@@ -34,6 +34,7 @@ bool cut2(AtFissionEvent *evt)
 
 void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure = 150)
 {
+   ROOT::EnableThreadSafety();
 
    auto verbSpec =
       fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
@@ -70,7 +71,6 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
 
    E12014::CreateMap();
    auto fMap = E12014::fMap;
-   fMap->ParseXMLMap(mapDir.Data());
 
    /** Add the cuts and copy the data to the output tree **/
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
@@ -84,6 +84,7 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    AtCopyTreeTask *copyTask = new AtCopyTreeTask();
 
    /** Create the simulation to do the fittin on **/
+   /*
    auto sim = std::make_shared<AtSimpleSimulation>(GeoDataPath.Data());
    sim->SetDistanceStep(5);
 
@@ -115,16 +116,18 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    simPSA->SetThreshold(25);
 
    fitter->SetPSA(simPSA);
-   fitter->SetNumIter(100);
+   fitter->SetNumIter(10);
+   // fitter->SetNumThreads(1);
+
 
    AtMCFitterTask *fitTask = new AtMCFitterTask(fitter);
    fitTask->SetPatternBranchName("AtFissionEvent");
    fitTask->SetSaveRawEvent(true);
    fitTask->SetSaveEvent(true);
-
+   */
    fRun->AddTask(reduceTask);
    fRun->AddTask(copyTask);
-   fRun->AddTask(fitTask);
+   // fRun->AddTask(fitTask);
 
    fRun->Init();
 
