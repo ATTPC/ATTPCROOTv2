@@ -86,7 +86,7 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    /** Create the simulation to do the fittin on **/
 
    auto sim = std::make_shared<AtSimpleSimulation>(GeoDataPath.Data());
-   sim->SetDistanceStep(5);
+   sim->SetDistanceStep(2.5);
 
    auto scModel = std::make_shared<AtLineChargeModel>();
    scModel->SetBeamLocation({0, -6, 0}, {10, 0, 1000});
@@ -116,8 +116,8 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    simPSA->SetThreshold(25);
 
    fitter->SetPSA(simPSA);
-   fitter->SetNumIter(1);
-   fitter->SetNumThreads(1);
+   fitter->SetNumIter(100);
+   fitter->SetNumThreads(4);
 
    AtMCFitterTask *fitTask = new AtMCFitterTask(fitter);
    fitTask->SetPatternBranchName("AtFissionEvent");
@@ -130,7 +130,7 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
 
    fRun->Init();
 
-   fRun->Run(0, 4);
-   // fRun->Run(0, 65);
-   //  fRun->Run();
+   // fRun->Run(0, 4);
+   fRun->Run(0, 65);
+   //   fRun->Run();
 }

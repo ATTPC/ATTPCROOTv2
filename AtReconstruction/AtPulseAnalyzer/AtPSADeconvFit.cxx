@@ -24,6 +24,7 @@
 #include <iterator>  // for begin, distance, end
 #include <memory>    // for allocator, unique_ptr
 #include <thread>
+thread_local std::unique_ptr<TH1F> AtPSADeconvFit::fHist = nullptr;
 
 void AtPSADeconvFit::Init()
 {
@@ -45,7 +46,7 @@ AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
    auto longDiff = std::sqrt(2 * fDiffLong * driftTime); // [cm] longitudal diff sigma
    auto sigTime = longDiff / fDriftVelocity;             // [us] longitudal diff sigma
    auto sigTB = sigTime / fTBTime * 1000.;               // [TB] sigTime is us, TBTime is ns.
-   if (sigTB == 0)
+   if (sigTB < 0.1)
       sigTB = 0.1;
    LOG(debug) << "zTB: " << zTB << " zTime " << driftTime << " sigTB: " << sigTB << " Amp: " << *maxTB;
 
@@ -56,13 +57,17 @@ AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
    }
 
    // Create a historgram to fit and fit to range mean +- 4 sigma.
-   auto hist = ContainerManip::CreateHistFromData<TH1F>("Qreco_fit", charge);
+   auto id = std::hash<std::thread::id>{}(std::this_thread::get_id());
+   if (fHist)
+      ContainerManip::SetHistFromData(*fHist, charge);
+   else
+      fHist = ContainerManip::CreateHistFromData<TH1F>(TString::Format("%lu", id).Data(), charge);
 
    // Add an addition +-2 for when we are close to the pad plane and diffusion is small
-   auto fitRange = 3 * sigTB;
+   auto fitRange = 3 * sigTB + 2;
    if (fitRange < 3)
       fitRange = 3;
-   auto id = std::hash<std::thread::id>{}(std::this_thread::get_id());
+
    TF1 gauss(TString::Format("fitGauss%lu", id), "gaus(0)", zTB - fitRange, zTB + fitRange, TF1::EAddToList::kNo);
    gauss.SetParameter(0, *maxTB); // Set initial height of gaussian
    gauss.SetParameter(1, zTB);    // Set initial position of gaussian
@@ -70,9 +75,9 @@ AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
 
    // Fit without graphics and saving everything in the result ptr
    // auto resultPtr = hist->Fit(&gauss, "SQNR");
-   auto result = FitHistorgramParallel(*hist, gauss);
+   auto result = FitHistorgramParallel(*fHist, gauss);
    if (!result.IsValid()) {
-      LOG(info) << "Null fit for pad using mean and deviation of trace."
+      LOG(info) << "Fit did not converge using initial conditions:"
                 << " mean: " << zTB << " sig:" << sigTB << " max:" << *maxTB;
       return {};
    }
@@ -94,6 +99,7 @@ const ROOT::Fit::FitResult AtPSADeconvFit::FitHistorgramParallel(TH1F &hist, TF1
    double xmin = 0, xmax = 0;
    func.GetRange(xmin, xmax);
    ROOT::Fit::DataOptions opt;
+
    ROOT::Fit::DataRange range(xmin, xmax);
    ROOT::Fit::BinData d(opt, range);
    ROOT::Fit::FillData(d, &hist);

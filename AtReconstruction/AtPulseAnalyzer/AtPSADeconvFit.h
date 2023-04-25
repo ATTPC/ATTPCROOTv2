@@ -10,6 +10,7 @@ class TF1;
 class AtPSADeconvFit : public AtPSADeconv {
 protected:
    double fDiffLong; //< Longitudinal diffusion coefficient
+   static thread_local std::unique_ptr<TH1F> fHist;
 
 public:
    virtual void Init() override;

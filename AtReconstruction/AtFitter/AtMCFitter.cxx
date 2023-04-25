@@ -85,7 +85,7 @@ void AtMCFitter::RunIterRange(int startIter, int numIter, AtPulse *pulse, AtPSA 
          fResults.insert(result);
       }
    }
-   LOG(info) << "Done with run iter range";
+   LOG(debug) << "Done with run iter range";
 }
 
 void AtMCFitter::Exec(const AtPatternEvent &event)
@@ -121,20 +121,16 @@ void AtMCFitter::Exec(const AtPatternEvent &event)
 
    std::vector<std::thread> threads;
    for (int i = 0; i < fNumThreads; ++i) {
-      LOG(info) << "Creating thread " << i << " with " << threadParam[i].first << " " << threadParam[i].second
-                << " and " << fPulse.get();
+      LOG(debug) << "Creating thread " << i << " with " << threadParam[i].first << " " << threadParam[i].second
+                 << " and " << fPulse.get();
       threads.emplace_back([this](std::pair<int, int> param, AtPulse *pulse,
                                   AtPSA *psa) { this->RunIterRange(param.first, param.second, pulse, psa); },
-                           threadParam[i], fThPulse[i].get(), fThPSA[i].get());
+                           threadParam[i], fThPulse[i].get(), fPSA.get());
    }
 
    for (auto &th : threads)
       th.join();
 
-   // RunIterRange called on each thread.
-
-   // RunIterRange(0, fNumIter, fPulse.get());
-   LOG(info) << "Done with run iter range";
    auto stop = std::chrono::high_resolution_clock::now();
 
    if (fTimeEvent)
@@ -146,15 +142,15 @@ int AtMCFitter::DigitizeEvent(const TClonesArray &points, int idx, AtPulse *puls
 {
    // Event has been simulated and is sitting in the fSim
    auto vec = fClusterize->ProcessEvent(points);
-   LOG(info) << "Digitizing event at " << idx;
+   LOG(debug) << "Digitizing event at " << idx;
 
    fRawEventArray[idx] = pulse->GenerateEvent(vec);
 
    if (psa) {
-      LOG(info) << "Running PSA at " << idx << " with " << psa;
+      LOG(debug) << "Running PSA at " << idx << " with " << psa;
       fEventArray[idx] = psa->Analyze(fRawEventArray[idx]);
    }
-   LOG(info) << "Done digitizing event at " << idx;
+   LOG(debug) << "Done digitizing event at " << idx;
    return idx;
 }
 
