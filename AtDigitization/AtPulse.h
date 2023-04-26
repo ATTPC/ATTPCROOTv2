@@ -67,11 +67,7 @@ public:
    AtRawEvent GenerateEvent(std::vector<SimPointPtr> &vec);
    AtRawEvent GenerateEvent(std::vector<AtSimulatedPoint *> &vec);
 
-   virtual std::shared_ptr<AtPulse> Clone() const
-   {
-      // return nullptr;
-      return std::make_shared<AtPulse>(*this);
-   }
+   virtual std::shared_ptr<AtPulse> Clone() const { return std::make_shared<AtPulse>(*this); }
 
 protected:
    void Reset();

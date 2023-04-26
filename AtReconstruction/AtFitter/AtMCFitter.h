@@ -3,7 +3,6 @@
 
 #include "AtEvent.h"
 #include "AtMCResult.h" // for AtMCResult
-#include "AtPSA.h"
 #include "AtRawEvent.h"
 
 #include <TClonesArray.h> // for TClonesArray
@@ -24,6 +23,7 @@ class AtPatternEvent;     // lines 12-12
 class AtPulse;            // lines 16-16
 class AtSimpleSimulation; // lines 14-14
 class AtDigiPar;
+class AtPSA;
 
 namespace MCFitter {
 class AtParameterDistribution;
@@ -55,17 +55,18 @@ protected:
    // Things used by threads excecuting that are either expensive to create and delete
    // or unaccessable due to FairRoot design choices
    const AtPatternEvent *fCurrentEvent{nullptr};
-   std::vector<PulsePtr> fThPulse;             //< Cached because it is expensive to create and delete.
-   std::vector<std::unique_ptr<AtPSA>> fThPSA; //< Cached because it is expensive to create and delete.
+   std::vector<PulsePtr> fThPulse; //< Cached because it is expensive to create and delete.
+   const AtDigiPar *fPar{nullptr}; //<Tracked sepretly because FairRun::Instance is thread local.
 
-   const AtDigiPar *fPar{nullptr};
+   // These are not locked by the mutex since we ensure no realloc of the vector is happening and
+   // each thread is accessing a discrete subset of the elements of these vectors
+   std::vector<AtRawEvent> fRawEventArray;
+   std::vector<AtEvent> fEventArray;
 
    /** Things below here need to be written to by threads and will be locked using a shared mutex ***/
    /// Store the iteration number sorted by lowest objective funtion
    std::mutex fResultMutex;
    std::set<AtMCResult, std::function<bool(AtMCResult, AtMCResult)>> fResults;
-   std::vector<AtRawEvent> fRawEventArray;
-   std::vector<AtEvent> fEventArray;
 
 public:
    AtMCFitter(SimPtr sim, ClusterPtr cluster, PulsePtr pulse);
@@ -80,11 +81,10 @@ public:
    void SetNumIter(int iter) { fNumIter = iter; }
    void SetTimeEvent(bool val) { fTimeEvent = val; }
    void SetNumEventsToSave(int num) { fNumEventsToSave = num; }
-   void SetNumThreads(int num) { fNumThreads = num; }
+   void SetNumThreads(int num);
 
 protected:
-   void RunIter(int iterNum){};
-   void RunIterRange(int startIter, int numIter, AtPulse *pulse, AtPSA *psa);
+   void RunIterRange(int startIter, int numIter, AtPulse *pulse);
 
    /**
     *@brief Create the parameter distributions to use for the fit.
@@ -118,7 +118,7 @@ protected:
     * Create the AtRawEvent and AtEvent from fSim
     * returns the index of the event in the TClonesArray
     */
-   int DigitizeEvent(const TClonesArray &points, int idx, AtPulse *pulse, AtPSA *psa);
+   int DigitizeEvent(const TClonesArray &points, int idx, AtPulse *pulse);
 };
 
 } // namespace MCFitter

@@ -34,7 +34,7 @@ bool cut2(AtFissionEvent *evt)
 
 void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure = 150)
 {
-   ROOT::EnableThreadSafety();
+   // ROOT::EnableThreadSafety();
 
    auto verbSpec =
       fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
