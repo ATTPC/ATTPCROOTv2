@@ -239,3 +239,54 @@ void AtTools::AtKinematics::PrintMatrices()
    for (auto &alpha : fAlphaP)
       alpha->Print();
 }
+
+namespace AtTools::Kinematics {
+
+/**
+ * Get gamma for fragment 1 in a system decaying into two fragments with total KE
+ * Units are SR (c=1).
+ */
+double GetGamma(double KE, double m1, double m2)
+{
+   double num = KE * KE + 2 * (m1 + m2) * (KE + m1);
+   double denom = 2 * m1 * (KE + m1 + m2);
+   return num / denom;
+}
+
+/**
+ * Get velocity (cm/ns) of a particle with gamma.
+ */
+double GetVelocity(double gamma)
+{
+   return GetBeta(gamma) * TMath::C() * 1e-7;
+}
+
+/**
+ * Get velocity (SR units, c=1) of a particle with gamma.
+ */
+double GetBeta(double gamma)
+{
+   return std::sqrt(gamma * gamma - 1) / gamma;
+}
+
+/**
+ * Get the relativistic momentum of a particle will mass (MeV)
+ */
+double GetRelMom(double gamma, double mass)
+{
+   return std::sqrt(gamma * gamma - 1) * mass;
+}
+
+/**
+ * Get the mass in MeV of a fragment of mass in amu (or A)
+ */
+double AtoE(double Amu)
+{
+   return Amu * 931.5;
+}
+double EtoA(double mass)
+{
+   return mass / 931.5;
+}
+
+} // namespace AtTools::Kinematics

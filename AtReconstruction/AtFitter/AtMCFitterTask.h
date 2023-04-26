@@ -20,16 +20,24 @@ class AtMCFitterTask : public FairTask {
    TClonesArray *fPatternArray{nullptr};
 
    TClonesArray fResultArray; //< Output of task
+   TClonesArray fSimEventArray;
+   TClonesArray fSimRawEventArray;
+
+   Bool_t fSaveResult{true};
+   Bool_t fSaveEvent{false};
+   Bool_t fSaveRawEvent{false};
 
 public:
-   AtMCFitterTask(std::shared_ptr<MCFitter::AtMCFitter> fitter)
-      : fFitter(fitter), fResultArray("MCFitter::AtMCResult"){};
+   AtMCFitterTask(std::shared_ptr<MCFitter::AtMCFitter> fitter);
 
    InitStatus Init() override;
    void Exec(Option_t *option = "") override;
    void Finish() override{};
 
    void SetPatternBranchName(TString name) { fPatternBranchName = name; }
+   void SetSaveResult(bool val) { fSaveResult = val; }
+   void SetSaveEvent(bool val) { fSaveEvent = val; }
+   void SetSaveRawEvent(bool val) { fSaveRawEvent = val; }
 };
 
 #endif // ATMCFITTERTASK_H

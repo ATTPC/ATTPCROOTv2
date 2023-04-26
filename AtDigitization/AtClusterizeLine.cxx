@@ -16,7 +16,7 @@
 #include <memory>
 #include <utility> // for move
 
-void AtClusterizeLine::GetParameters(AtDigiPar *fPar)
+void AtClusterizeLine::GetParameters(const AtDigiPar *fPar)
 {
    AtClusterize::GetParameters(fPar);
    fTBTime = fPar->GetTBTime() / 1000.; // in us

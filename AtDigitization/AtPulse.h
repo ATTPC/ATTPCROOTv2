@@ -54,9 +54,10 @@ protected:
    double fAvgGainDeviation{};
 
 public:
-   AtPulse(AtMapPtr map, ResponseFunc response = nullptr) : fMap(map), fResponse(response) {}
+   AtPulse(AtMapPtr map, ResponseFunc response = nullptr);
+   AtPulse(const AtPulse &);
 
-   void SetParameters(AtDigiPar *fPar);
+   void SetParameters(const AtDigiPar *fPar);
    AtMapPtr GetMap() { return fMap; }
    void UseFastGain(bool val) { fUseFastGain = val; }
    void SetNoiseSigma(double val) { fNoiseSigma = val; }
@@ -65,6 +66,8 @@ public:
 
    AtRawEvent GenerateEvent(std::vector<SimPointPtr> &vec);
    AtRawEvent GenerateEvent(std::vector<AtSimulatedPoint *> &vec);
+
+   virtual std::shared_ptr<AtPulse> Clone() const { return std::make_shared<AtPulse>(*this); }
 
 protected:
    void Reset();

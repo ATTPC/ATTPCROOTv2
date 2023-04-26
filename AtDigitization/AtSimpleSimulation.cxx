@@ -18,14 +18,17 @@
 #include <stdexcept> // for invalid_argument
 #include <utility>   // for pair
 
-AtSimpleSimulation::AtSimpleSimulation(std::string geoFile) : fMCPoints("AtMCPoint")
+thread_local TClonesArray AtSimpleSimulation::fMCPoints("AtMCPoint");
+thread_local int AtSimpleSimulation::fTrackID = 0;
+
+AtSimpleSimulation::AtSimpleSimulation(std::string geoFile)
 {
    TGeoManager *geo = TGeoManager::Import(geoFile.c_str());
 
    if (gGeoManager == nullptr)
       LOG(fatal) << "Failed to load geometry file " << geoFile << " " << geo;
 }
-AtSimpleSimulation::AtSimpleSimulation() : fMCPoints("AtMCPoint")
+AtSimpleSimulation::AtSimpleSimulation()
 {
    if (gGeoManager == nullptr)
       LOG(fatal) << "No geometry file loaded!";
@@ -46,11 +49,14 @@ bool AtSimpleSimulation::ParticleID::operator<(const ParticleID &other) const
 TGeoVolume *AtSimpleSimulation::GetVolume(const XYZPoint &point)
 {
    auto pointCm = point / 10.;
-   TGeoNode *node = gGeoManager->FindNode(pointCm.X(), pointCm.Y(), pointCm.Z());
-   if (node == nullptr) {
-      return nullptr;
+   {
+      std::lock_guard<std::mutex> lock(fGeoMutex);
+      TGeoNode *node = gGeoManager->FindNode(pointCm.X(), pointCm.Y(), pointCm.Z());
+      if (node == nullptr) {
+         return nullptr;
+      }
+      return node->GetVolume();
    }
-   return node->GetVolume();
 }
 
 bool AtSimpleSimulation::IsInVolume(const std::string &volName, const XYZPoint &point)

@@ -32,7 +32,7 @@ AtPSADeconv::AtPSADeconv() : AtPSA()
 
 AtPSADeconv::AtPSADeconv(const AtPSADeconv &r)
    : fEventResponse(r.fEventResponse), fResponse(r.fResponse), fFFT(nullptr), fFFTbackward(nullptr),
-     fFilterOrder(r.fFilterOrder), fCutoffFreq(r.fCutoffFreq)
+     fFilterOrder(r.fFilterOrder), fCutoffFreq(r.fCutoffFreq), fUseSimulatedCharge(r.fUseSimulatedCharge)
 {
    initFFTs();
 }
@@ -49,11 +49,6 @@ void AtPSADeconv::SetCutoffFreq(int freq)
 {
    fCutoffFreq = freq * freq;
    initFilter();
-}
-
-void AtPSADeconv::Init()
-{
-   AtPSA::Init();
 }
 
 void AtPSADeconv::initFFTs()

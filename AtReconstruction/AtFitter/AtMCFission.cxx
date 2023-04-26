@@ -1,8 +1,11 @@
 #include "AtMCFission.h"
 // IWYU pragma: no_include <ext/alloc_traits.h>
+#include "AtContainerManip.h" // for GetPointerVector
+#include "AtE12014.h"
 #include "AtEvent.h"
 #include "AtFissionEvent.h"
 #include "AtHit.h" // for AtHit, AtHit::XYZPoint, AtHit...
+#include "AtKinematics.h"
 #include "AtLineChargeModel.h"
 #include "AtMap.h"
 #include "AtParameterDistribution.h" // for AtParameterDistribution, MCFi...
@@ -19,14 +22,16 @@
 #include <FairLogger.h> // for Logger, LOG
 
 #include <Math/AxisAngle.h> // for AxisAngle
+#include <Math/Functor.h>
 #include <Math/Vector4D.h>
 #include <Math/VectorUtil.h> // for Angle
 #include <TClonesArray.h>    // for TClonesArray
 #include <TMath.h>           // for RadToDeg, C, DegToRad, Pi
-#include <TObject.h>         // for TObject
-#include <TRandom.h>
 
+#include <Fit/FitResult.h> // for FitResult
+#include <Fit/Fitter.h>
 #include <algorithm> // for find_if
+#include <cmath>     // for sqrt, exp, sin, round
 #include <map>       // for map, map<>::mapped_type
 #include <memory>    // for make_shared, __shared_ptr_access
 #include <string>    // for string
@@ -48,7 +53,7 @@ void AtMCFission::CreateParamDistros()
    fParameters["vX"] = std::make_shared<AtUniformDistribution>(0, 0);
    fParameters["vY"] = std::make_shared<AtUniformDistribution>(0, 0);
    fParameters["vZ"] = std::make_shared<AtUniformDistribution>(0, 0);
-   fParameters["Z"] = std::make_shared<AtUniformDistribution>(0, 0);
+   fParameters["Z"] = std::make_shared<AtStudentDistribution>(0, 0);
 
    // These are the angle to sample w.r.t. the nominal beam axis
    fParameters["thBeam"] = std::make_shared<AtStudentDistribution>(0, 1 * TMath::DegToRad());
@@ -86,25 +91,89 @@ void AtMCFission::SetParamDistributions(const AtPatternEvent &event)
    fParameters["vZ"]->SetMean(1000 - vertex.Z());
 
    fParameters["Z"]->SetMean(fCN.Z / 2);
+   fParameters["Z"]->SetSpread(3);
    fParameters["lambda"]->SetMean(fissionEvent.GetLambda());
 }
 
-double AtMCFission::ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventID)
+double AtMCFission::ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventID, AtMCResult &definition)
 {
    // Make sure we were passed the right event type
-
    auto expFission = dynamic_cast<const AtFissionEvent &>(expEvent);
+   auto charge = ObjectiveCharge(expFission, SimEventID, definition);
+   auto pos = ObjectivePosition(expFission, SimEventID);
+   LOG(debug) << "Chi2 Pos: " << pos << " Chi2 Q: " << charge;
+   return pos + charge;
+}
 
-   return ObjectivePosition(expFission, SimEventID);
+double AtMCFission::ObjectiveCharge(const AtFissionEvent &expEvent, int SimEventID, AtMCResult &def)
+{
+   AtEvent &simEvent = fEventArray.at(SimEventID);
+   auto fragHits = expEvent.GetFragHits();
+
+   // Get the charge curves for this event
+   std::array<std::vector<double>, 2> exp;
+   std::array<std::vector<double>, 2> sim;
+   for (int i = 0; i < 2; ++i) {
+      E12014::FillHitSums(exp[i], sim[i], expEvent.GetFragHits(i), ContainerManip::GetPointerVector(simEvent.GetHits()),
+                          E12014::fThreshold, E12014::fSatThreshold, fPar);
+   }
+
+   return ObjectiveCharge(exp, sim, def);
+}
+
+double AtMCFission::ObjectiveCharge(const std::array<std::vector<double>, 2> &expFull,
+                                    const std::array<std::vector<double>, 2> &simFull, AtMCResult &definition)
+{
+   // Start by trimming the two FFs down by removing the zeros in the charge and
+   // combining into a single array. Don't examine things within 6 TB of the pad plane
+   std::vector<double> exp;
+   std::vector<double> sim;
+   for (int i = 0; i < 2; ++i) {
+      for (int tb = 80; tb < 512; ++tb) {
+         LOG(debug) << i << "," << tb << " " << expFull[i][tb] << " " << simFull[i][tb];
+         if (expFull[i][tb] != 0) {
+            exp.push_back(expFull[i][tb]);
+            sim.push_back(simFull[i][tb]);
+         }
+      }
+   }
+
+   // Now we want to minimize the difference between exp and A*sim
+   auto func = [&exp, &sim](const double *par) {
+      double chi2 = 0;
+      for (int i = 0; i < exp.size(); ++i)
+         chi2 += (exp[i] - par[0] * sim[i]) * (exp[i] - par[0] * sim[i]) / exp[i];
+
+      chi2 /= exp.size();
+      LOG(debug) << "A: " << par[0] << " Chi2: " << chi2;
+      return chi2;
+   };
+
+   auto functor = ROOT::Math::Functor(func, 1);
+
+   std::vector<double> A = {1};
+   ROOT::Fit::Fitter fitter;
+   fitter.SetFCN(functor, A.data());
+   bool ok = fitter.FitFCN();
+   if (!ok) {
+      LOG(error) << "Failed to fit the charge curves. Not adding to objective.";
+      return 0;
+   }
+   auto &result = fitter.Result();
+   double amp = result.Parameter(0);
+   definition.fParameters["Amp"] = amp;
+   definition.fParameters["qChi2"] = result.MinFcnValue();
+   return result.MinFcnValue();
 }
 
 double AtMCFission::ObjectivePosition(const AtFissionEvent &expEvent, int SimEventID)
 {
-   AtEvent &simEvent = *dynamic_cast<AtEvent *>(fEventArray.At(SimEventID));
+   AtEvent &simEvent = fEventArray.at(SimEventID);
 
    // Sort the hits by pad number
    simEvent.SortHitArray();
    auto fragHits = expEvent.GetFragHits();
+   LOG(debug) << fragHits.size() << " " << expEvent.GetFragHits(0).size() << " " << expEvent.GetFragHits(1).size();
 
    std::sort(fragHits.begin(), fragHits.end(),
              [](const AtHit *a, const AtHit *b) { return a->GetPadNum() < b->GetPadNum(); });
@@ -211,64 +280,42 @@ std::array<Ion, 2> AtMCFission::GetFragmentSpecies(AtMCResult &res, const Ion &C
 
    return {Ion{Z1, A1}, Ion{CN.Z - Z1, CN.A - A1}};
 }
-
 /**
- * Get gamma for fragment 1 in a system decaying into two fragments with total KE
- * Units are SR (c=1).
+ * Gets the beam direction assuming the velocity of the FFs are the same (i.e. it assumes the beam
+ * direction is half way between the two FF in tha lab frame.
  */
-double AtMCFission::GetGamma(double KE, double m1, double m2)
+XYZVector AtMCFission::GetBeamDirSameV(AtMCResult &res, const std::array<XYZVector, 2> &ffDir)
 {
-   double num = KE * KE + 2 * (m1 + m2) * (KE + m1);
-   double denom = 2 * m1 * (KE + m1 + m2);
-   return num / denom;
+   auto beamInLabFrame = (ffDir[0].Unit() + ffDir[1].Unit()) / 2;
+   res.fParameters["beamX"] = beamInLabFrame.Unit().X();
+   res.fParameters["beamY"] = beamInLabFrame.Unit().Y();
+   res.fParameters["beamZ"] = beamInLabFrame.Unit().Z();
+
+   return beamInLabFrame;
 }
 
 /**
- * Get velocity (cm/ns) of a particle with gamma.
+ * Gets the beam direction by taking the sampled thBeam parameter and rotating the nominal beam
+ * direction projected in the decay plane by thBeam.
  */
-double AtMCFission::GetVelocity(double gamma)
-{
-   return GetBeta(gamma) * TMath::C() * 1e-7;
-}
-
-/**
- * Get velocity (SR units, c=1) of a particle with gamma.
- */
-double AtMCFission::GetBeta(double gamma)
-{
-   return std::sqrt(gamma * gamma - 1) / gamma;
-}
-
-/**
- * Get the relativistic momentum of a particle will mass (MeV)
- */
-double AtMCFission::GetRelMom(double gamma, double mass)
-{
-   return std::sqrt(gamma * gamma - 1) * mass;
-}
-
-/**
- * Get the mass in MeV of a fragment of mass in amu (or A)
- */
-double AtMCFission::AtoE(double Amu)
-{
-   return Amu * 931.5;
-}
-
-XYZVector AtMCFission::GetBeamDir(AtMCResult &res)
+XYZVector AtMCFission::GetBeamDir(AtMCResult &res, const std::array<XYZVector, 2> &ffDir)
 {
    // Sample the deviation of the beam away from the nominal beam direction
    Polar3D beamDir(1, res.fParameters["thBeam"], 0);
-   LOG(debug) << "Sampled beam direction (deviation from nominal)"
-              << ROOT::Math::VectorUtil::Angle(XYZVector(0, 0, 1), beamDir) * TMath::RadToDeg() << " "
-              << beamDir.Theta() * TMath::RadToDeg();
+   LOG(info) << "Sampled beam direction (deviation from nominal)"
+             << ROOT::Math::VectorUtil::Angle(XYZVector(0, 0, 1), beamDir) * TMath::RadToDeg() << " "
+             << beamDir.Theta() * TMath::RadToDeg();
+
+   // Get our nominal beam direction projected into the plane of the reaction
+   auto norm = ffDir[0].Cross(ffDir[1]).Unit();
+   auto projBeam = fNominalBeamDir - fNominalBeamDir.Dot(norm) * norm;
 
    // Rotate the beam vector so our deviation is from the nominal beam axis
-   auto rot = AtTools::GetRotationToZ(fNominalBeamDir);
+   auto rot = AtTools::GetRotationToZ(projBeam);
    auto beamInLabFrame = XYZVector(rot.Inverse()(beamDir));
-   LOG(debug) << "Sampled beam direction in lab frame: " << beamInLabFrame * 1000 / beamInLabFrame.Z();
+   // auto beamInLabFrame = projBeam;
    LOG(info) << " Sampled beam deviates from nominal by "
-             << ROOT::Math::VectorUtil::Angle(beamInLabFrame, fNominalBeamDir) * TMath::RadToDeg() << " def.";
+             << ROOT::Math::VectorUtil::Angle(beamInLabFrame, projBeam) * TMath::RadToDeg() << " deg.";
 
    // Set the beam direction in the result file as well
    res.fParameters["beamX"] = beamInLabFrame.Unit().X();
@@ -289,88 +336,126 @@ std::array<XYZVector, 2> AtMCFission::GetMomDirLab(AtMCResult &res)
 
 AtMCResult AtMCFission::DefineEvent()
 {
-   LOG(info) << "Defining the event.";
-
+   // This will sample all the defined patameter distributions and save the results in
+   // the returned AtMCResult
    AtMCResult result = AtMCFitter::DefineEvent();
 
-   // Sample variations away from nominal FF momenta directions and vertex location
+   // Translate the sampled Z into the particle ID of the FF.
    int Z1 = std::round(result.fParameters["Z"]);
+   if (Z1 > 55 || Z1 < 30)
+      Z1 = 55;
    int A1 = std::round(fCN.A * (double)Z1 / fCN.Z);
-   if (gRandom->Integer(2)) {
-      Z1 = fCN.Z - Z1;
-      A1 = fCN.A - A1;
-   }
    result.fParameters["Z0"] = Z1;
    result.fParameters["A0"] = A1;
+   result.fParameters["Z1"] = fCN.Z - Z1;
+   result.fParameters["A1"] = fCN.A - A1;
 
    result.fParameters["thCM"] = 90 * TMath::DegToRad(); // Decay angle in CoM frame
    return result;
 }
 
 /**
- * Set the magnitude of the FF momenta.
- * The transverse momentum of the fission fragment in the lab frame is the same as in the CoM frame
- * because of our assumtion on the decay angle. By transvse I mean transverse w.r.t. the beam axis.
+ * Set the magnitude of the FF momenta in the lab' frame (assume the beam direction points
+ * in the Z direction).
+ * The transverse momentum (w.r.t. the beam axis) of the fission fragment in the lab frame
+ * is the same as in the CoM frame.
  * We can calculate the magnitude of p for a FF by comparing the angle between the beam and FF.
  */
-void AtMCFission::SetMomMagnitude(XYZVector beamDir, std::array<XYZVector, 2> &mom, double pTrans)
+void AtMCFission::SetMomMagnitude(std::array<XYZVector, 2> &moms, double pTrans)
 {
-   for (auto &i : mom) {
-      auto angle = ROOT::Math::VectorUtil::Angle(beamDir, i);
+   for (auto &mom : moms) {
+      auto angle = mom.Theta();
       auto p = pTrans / std::sin(angle);
-      i *= p;
+      mom = mom.Unit() * p;
    }
 }
 
 TClonesArray AtMCFission::SimulateEvent(AtMCResult &def)
 {
+   using namespace AtTools::Kinematics;
    fSim->NewEvent();
+
+   // Set the magnitude of the space charge for this event.
+   // TODO: Make this thread safe (deep copy simplesim, and once per thread)
    auto radialModel = dynamic_cast<AtRadialChargeModel *>(fSim->GetSpaceChargeModel().get());
    auto lineModel = dynamic_cast<AtLineChargeModel *>(fSim->GetSpaceChargeModel().get());
    if (radialModel) {
       radialModel->SetDistortionField(AtLineChargeZDep(def.fParameters["lambda"]));
-      LOG(info) << "Setting Lambda: " << def.fParameters["lambda"];
+      LOG(debug) << "Setting Lambda: " << def.fParameters["lambda"];
 
    } else if (lineModel) {
       lineModel->SetLambda(def.fParameters["lambda"]);
-      LOG(info) << "Setting Lambda: " << def.fParameters["lambda"];
+      LOG(debug) << "Setting Lambda: " << def.fParameters["lambda"];
 
    } else
-      LOG(info) << "No space charge to apply.";
+      LOG(debug) << "No space charge to apply.";
 
    auto vertex = GetVertex(def);
-   LOG(info) << "Setting vertex: " << vertex;
+   LOG(debug) << "Setting vertex: " << vertex;
 
    auto fragID = GetFragmentSpecies(def, fCN);
-   LOG(info) << "Setting fragment 1: " << fragID[0].Z << " " << fragID[0].A;
-   LOG(info) << "Setting fragment 2: " << fragID[1].Z << " " << fragID[1].A;
+   LOG(debug) << "Setting fragment 1: " << fragID[0].Z << " " << fragID[0].A;
+   LOG(debug) << "Setting fragment 2: " << fragID[1].Z << " " << fragID[1].A;
 
    // We have the masses, now calculate the momentum of these two fragments in the CoM frame. We will
-   // fudge and say the mass of a fragment is A amu.
+   // fudge and say the mass of a fragment is A amu (neglecting binding energy).
    double KE = violaEn(fCN.A, fCN.Z);
    double gamma1 = GetGamma(KE, AtoE(fragID[0].A), AtoE(fragID[1].A));
    double p1 = GetRelMom(gamma1, AtoE(fragID[0].A));
+   p1 *= sin(def.fParameters["thCM"]);
 
    // Get the momentum direction for the FF and beam in the lab frame
-   auto beamDir = GetBeamDir(def);
-   auto mom = GetMomDirLab(def);
+   auto mom = GetMomDirLab(def); // Pulled from the data
+   auto beamDir = GetBeamDirSameV(def, mom);
+   // auto beamDir = GetBeamDir(def, mom);
 
-   // Set the momentum of the fission fragments assuming that the
-   // We need to adjust p1 and p2 to get the transverse momentum component
-   p1 *= sin(def.fParameters["thCM"]);
-   SetMomMagnitude(beamDir, mom, p1);
+   LOG(debug) << "p1: " << mom[0];
+   LOG(debug) << "p2: " << mom[1];
+   LOG(debug) << "b:  " << beamDir;
+   LOG(debug) << "p1 * b: " << mom[0].Dot(beamDir);
+   LOG(debug) << "p2 * b: " << mom[1].Dot(beamDir);
+   LOG(debug) << "Transforming to Lab'";
 
-   // Now that we have the momentum of the FF, generate the 4 vectors
+   // Transform the momentum into the Lab' frame (beamDir points along z)
+   auto toLabPrime = AtTools::GetRotationToZ(beamDir);
+   beamDir = toLabPrime(beamDir);
+   for (int i = 0; i < 2; ++i)
+      mom[i] = toLabPrime(mom[i]);
+
+   LOG(debug) << "p1: " << mom[0];
+   LOG(debug) << "p2: " << mom[1];
+   LOG(debug) << "b:  " << beamDir;
+   LOG(debug) << "p1 * b: " << mom[0].Dot(beamDir);
+   LOG(debug) << "p2 * b: " << mom[1].Dot(beamDir);
+
+   // Set the momentum of the fission fragments in the lab' frame
+   SetMomMagnitude(mom, p1);
    std::vector<XYZEVector> ffMom(2);
    ffMom[0] = Get4Vector(mom[0], AtoE(fragID[0].A));
    ffMom[1] = Get4Vector(mom[1], AtoE(fragID[1].A));
 
-   // Use conservation of 4 momentum to get the beam momentum
    auto pBeam = ffMom[0] + ffMom[1];
 
-   LOG(info) << "Frag A: " << ffMom[0] << " mass " << EtoA(ffMom[0].M()) << " energy: " << ffMom[0].E() - ffMom[0].M();
-   LOG(info) << "Frag B: " << ffMom[1] << " mass " << EtoA(ffMom[1].M()) << " energy: " << ffMom[1].E() - ffMom[1].M();
-   LOG(info) << "Beam: " << pBeam << " mass " << EtoA(pBeam.M()) << " energy: " << pBeam.E() - pBeam.M();
+   LOG(debug) << "Frag A: " << ffMom[0] << " mass " << EtoA(ffMom[0].M()) << " energy: " << ffMom[0].E() - ffMom[0].M()
+              << " beta: " << ffMom[0].Beta();
+   LOG(debug) << "Frag B: " << ffMom[1] << " mass " << EtoA(ffMom[1].M()) << " energy: " << ffMom[1].E() - ffMom[1].M()
+              << " beta: " << ffMom[1].Beta();
+   LOG(debug) << "Beam: " << pBeam << " mass " << EtoA(pBeam.M()) << " energy: " << pBeam.E() - pBeam.M();
+
+   LOG(debug) << "Transforming back to lab frame";
+
+   // Transform the momentum of the FF back into the lab frame.
+   for (int i = 0; i < 2; ++i)
+      ffMom[i] = toLabPrime.Inverse()(ffMom[i]);
+
+   // Use conservation of 4 momentum to get the beam momentum
+   pBeam = ffMom[0] + ffMom[1];
+
+   LOG(debug) << "Frag A: " << ffMom[0] << " mass " << EtoA(ffMom[0].M()) << " energy: " << ffMom[0].E() - ffMom[0].M()
+              << " beta: " << ffMom[0].Beta();
+   LOG(debug) << "Frag B: " << ffMom[1] << " mass " << EtoA(ffMom[1].M()) << " energy: " << ffMom[1].E() - ffMom[1].M()
+              << " beta: " << ffMom[1].Beta();
+   LOG(debug) << "Beam: " << pBeam << " mass " << EtoA(pBeam.M()) << " energy: " << pBeam.E() - pBeam.M();
    def.fParameters["EBeam"] = pBeam.E() - pBeam.M();
 
    for (int i = 0; i < 2; ++i)

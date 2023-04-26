@@ -348,7 +348,6 @@ bool AtTabMain::DrawWave(Int_t PadNum)
 
    // std::cout << "checking fRawEvent" << std::endl;
    if (fRawEvent == nullptr) {
-      std::cout << "fRawEvent is NULL!" << std::endl;
       return false;
    }
    // std::cout << "fRawEvent is not nullptr" << std::endl;

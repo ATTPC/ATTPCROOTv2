@@ -33,14 +33,16 @@ protected:
    double fCoefT{};       //!< Transversal diffusion coefficient. [cm^2/us]
    double fCoefL{};       //!< Longitudinal diffusion coefficient. [cm^2/us]
    double fDetPadPlane{}; //!< Position of the pad plane with respect to the entrance [mm]
-   XYZPoint fPrevPoint;   //!< The previous point we recorded charge.
-   int fTrackID;          //!< The current track ID
+
+   static thread_local XYZPoint fPrevPoint; //!< The previous point we recorded charge.
+   static thread_local int fTrackID;        //!< The current track ID
 
 public:
    std::vector<SimPointPtr> ProcessEvent(const TClonesArray &fMCPointArray);
-   virtual void GetParameters(AtDigiPar *fPar);
+   virtual void GetParameters(const AtDigiPar *fPar);
    virtual std::string GetSavedClassName() const { return "AtSimulatedPoint"; }
    virtual void FillTClonesArray(TClonesArray &array, std::vector<SimPointPtr> &vec);
+   virtual std::shared_ptr<AtClusterize> Clone() const { return std::make_shared<AtClusterize>(*this); }
 
 private:
    XYZPoint applyDiffusion(const XYZPoint &loc, double_t sigTrans, double sigLong);

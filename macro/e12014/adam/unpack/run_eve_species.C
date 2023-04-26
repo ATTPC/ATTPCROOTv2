@@ -8,7 +8,8 @@
 #include "FairLogger.h"
 
 #include "/mnt/simulations/attpcroot/adam/ATTPCROOTv2/macro/e12014/viewerUpdate/HEISTpid1.h"
-void run_eve_species(TString species, int pressure = 150, TString OutputDataFile = "./data/output.reco_display.root")
+void run_eve_species(TString species = "Bi200", int pressure = 150,
+                     TString OutputDataFile = "./data/output.reco_display.root")
 {
 
    auto verbSpec =

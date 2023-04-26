@@ -1,0 +1,106 @@
+#include "AtTabFF.h"
+
+#include "AtContainerManip.h" // for GetPointerVector
+#include "AtE12014.h"
+#include "AtMCResult.h"
+#include "AtViewerManager.h"
+#include "AtViewerManagerSubject.h" // for AtBranch, AtTreeEntry
+
+#include <FairRootManager.h> // for FairRootManager
+
+#include <TCanvas.h>
+#include <TClonesArray.h> // for TClonesArray
+#include <TH1.h>          // for TH1F
+#include <THStack.h>      // for THStack
+#include <TObject.h>      // for TObject
+#include <TString.h>
+namespace DataHandling {
+class AtSubject;
+}
+
+AtTabFF::AtTabFF(DataHandling::AtBranch &fissionBranch)
+   : AtTabCanvas("FF", 2, 2), fEvent(AtViewerManager::Instance()->GetEventBranch()), fFissionEvent(fissionBranch),
+     fEntry(AtViewerManager::Instance()->GetCurrentEntry())
+{
+   fStacks[0] = std::make_unique<THStack>("hFF1", "FF 1");
+   fStacks[2] = std::make_unique<THStack>("hFF2", "FF 2");
+   fStacks[1] = std::make_unique<THStack>("hExp", "Experimental dE/dX curves");
+   fStacks[3] = std::make_unique<THStack>("hSim", "Simulated dE/dX curves");
+
+   std::array<Color_t, 2> colors = {9, 31};
+   for (int i = 0; i < 2; ++i) {
+      fSimdQdZ[i] = std::make_unique<TH1F>(TString::Format("sim%d", i), TString::Format("Sim FF %d", i), 512, 0, 512);
+      fExpdQdZ[i] = std::make_unique<TH1F>(TString::Format("exp%d", i), TString::Format("Exp FF %d", i), 512, 0, 512);
+
+      fSimdQdZ[i]->SetDirectory(nullptr);
+      fExpdQdZ[i]->SetDirectory(nullptr);
+      fSimdQdZ[i]->SetLineColor(kRed);
+      fExpdQdZ[i]->SetLineColor(kBlue);
+
+      // FF i should be added to i*2 (they're the first coloumn
+      fStacks[i * 2]->Add(fSimdQdZ[i].get());
+      fStacks[i * 2]->Add(fExpdQdZ[i].get());
+
+      fStacks[1]->Add(fExpdQdZ[i].get());
+      fStacks[3]->Add(fSimdQdZ[i].get());
+   }
+
+   fEntry.Attach(this);
+   AtViewerManager::Instance()->GetEventBranch().Attach(this);
+}
+
+AtTabFF::~AtTabFF()
+{
+   fEntry.Detach(this);
+   AtViewerManager::Instance()->GetEventBranch().Detach(this);
+}
+
+void AtTabFF::Update(DataHandling::AtSubject *sub)
+{
+   UpdateEvent();
+   DrawCanvas();
+}
+
+void AtTabFF::UpdateEvent()
+{
+   if (fEvent.Get() == nullptr)
+      return;
+
+   for (int i = 0; i < 2; ++i) {
+      std::vector<double> exp;
+      std::vector<double> sim;
+      E12014::FillHitSums(exp, sim, fFissionEvent->GetFragHits(i), ContainerManip::GetPointerVector(fEvent->GetHits()),
+                          E12014::fThreshold, E12014::fSatThreshold);
+      ContainerManip::SetHistFromData(*fExpdQdZ[i], exp);
+      ContainerManip::SetHistFromData(*fSimdQdZ[i], sim);
+      auto fResultArray = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject("AtMCResult"));
+      if (fResultArray) {
+         double amp = dynamic_cast<MCFitter::AtMCResult *>(fResultArray->At(0))->fParameters["Amp"];
+         fSimdQdZ[i]->Scale(amp);
+      }
+   }
+}
+
+void AtTabFF::DrawCanvas()
+{
+   // Loop through each stack. If its an even
+   for (int i = 0; i < 4; ++i) {
+      fCanvas->cd(i + 1);
+      // We are drawing a sim vs experiment
+      if (i % 2 == 0) {
+         fSimdQdZ[i / 2]->SetLineColor(kRed);
+         fExpdQdZ[i / 2]->SetLineColor(kBlue);
+         fStacks[i]->Draw("nostack;hist");
+      } else if (i == 1) { // Drawing experimental stack
+         // fExpdQdZ[0]->SetLineColor(9);
+         // fExpdQdZ[1]->SetLineColor(31);
+         fStacks[i]->Draw("nostack;hist");
+      } else if (i == 3) { // Drawing simulation stack
+         // fSimdQdZ[0]->SetLineColor(9);
+         // fSimdQdZ[1]->SetLineColor(31);
+         fStacks[i]->Draw("nostack;hist");
+      }
+   }
+   UpdateCanvas();
+}
+ClassImp(AtTabFF);

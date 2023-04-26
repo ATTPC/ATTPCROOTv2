@@ -24,6 +24,34 @@
 #include <utility> // for move
 
 using XYPoint = ROOT::Math::XYPoint;
+AtPulse::AtPulse(AtMapPtr map, ResponseFunc response) : fMap(map), fResponse(response)
+{
+   // Make sure the pad plane is generated so we can just access it for reading info (ie multiple threads will not be
+   // trying to create the underlying TH2poly.
+   fMap->GeneratePadPlane();
+}
+
+AtPulse::AtPulse(const AtPulse &other)
+   : fMap(other.fMap), fEventID(other.fEventID), fGain(other.fGain), fLowGainFactor(other.fLowGainFactor),
+     fGETGain(other.fGETGain), fPeakingTime(other.fPeakingTime), fTBTime(other.fTBTime), fNumTbs(other.fNumTbs),
+     fTBEntrance(other.fTBEntrance), fTBPadPlane(other.fTBPadPlane), fResponse(other.fResponse),
+     fUseFastGain(other.fUseFastGain), fNoiseSigma(other.fNoiseSigma), fSaveCharge(other.fSaveCharge),
+     fDoConvolution(other.fDoConvolution), fAvgGainDeviation(other.fAvgGainDeviation)
+{
+
+   // For reasons unknown, copying the historgam from other (calling copy constructor) causes a huge performance hit.
+   // Recreating from scratch does not.
+   fPadCharge.resize(fMap->GetNumPads());
+   for (Int_t padS = 0; padS < fMap->GetNumPads(); padS++) {
+      auto maxTime = fTBTime * fNumTbs; // maxTime in ns
+      fPadCharge[padS] =
+         std::make_unique<TH1F>(TString::Format("%d", padS), TString::Format("%d", padS), fNumTbs, 0, maxTime);
+      fPadCharge[padS]->SetDirectory(nullptr);
+   }
+
+   fPadsWithCharge = other.fPadsWithCharge;
+   fGainFunc = (other.fGainFunc) ? std::make_unique<TF1>(*other.fGainFunc) : nullptr;
+}
 
 AtRawEvent AtPulse::GenerateEvent(std::vector<SimPointPtr> &vec)
 {
@@ -101,7 +129,7 @@ void AtPulse::Reset()
       fPadCharge[padNum]->Reset();
    fPadsWithCharge.clear();
 }
-void AtPulse::SetParameters(AtDigiPar *fPar)
+void AtPulse::SetParameters(const AtDigiPar *fPar)
 {
 
    fGain = fPar->GetGain();
@@ -131,6 +159,7 @@ void AtPulse::SetParameters(AtDigiPar *fPar)
       auto maxTime = fTBTime * fNumTbs; // maxTime in ns
       fPadCharge[padS] =
          std::make_unique<TH1F>(TString::Format("%d", padS), TString::Format("%d", padS), fNumTbs, 0, maxTime);
+      fPadCharge[padS]->SetDirectory(nullptr);
    }
 
    // If there is not a response function create a default one

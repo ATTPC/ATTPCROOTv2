@@ -13,8 +13,8 @@
 #include <Math/Vector4Dfwd.h> // for PxPyPzEVector
 #include <TClonesArray.h>     // for TClonesArray
 
-#include <array> // for array
-#include <cmath> // for sqrt
+#include <array>  // for array
+#include <vector> // for vector
 
 class AtFissionEvent;
 namespace MCFitter {
@@ -42,41 +42,33 @@ public:
 protected:
    virtual void CreateParamDistros() override;
    virtual void SetParamDistributions(const AtPatternEvent &event) override;
-   virtual double ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventID) override;
+   virtual double ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventID, AtMCResult &definition) override;
    virtual TClonesArray SimulateEvent(AtMCResult &definition) override;
    virtual AtMCResult DefineEvent() override;
 
 protected:
    double ObjectivePosition(const AtFissionEvent &expEvent, int SimEventID);
+   double ObjectiveCharge(const AtFissionEvent &expEvent, int SimEventID, AtMCResult &def);
 
-public:
-   static XYZPoint GetVertex(AtMCResult &);
-   static std::array<Ion, 2> GetFragmentSpecies(AtMCResult &, const Ion &CN);
-   XYZVector GetBeamDir(AtMCResult &);
-   static std::array<XYZVector, 2> GetMomDirLab(AtMCResult &);
+   XYZPoint GetVertex(AtMCResult &);
+   std::array<Ion, 2> GetFragmentSpecies(AtMCResult &, const Ion &CN);
 
-   void SetMomMagnitude(XYZVector beamDir, std::array<XYZVector, 2> &mom, double pTrans);
+   XYZVector GetBeamDir(AtMCResult &, const std::array<XYZVector, 2> &ffDir);
+   XYZVector GetBeamDirSameV(AtMCResult &, const std::array<XYZVector, 2> &ffDir);
+   std::array<XYZVector, 2> GetMomDirLab(AtMCResult &);
 
-   static double ObjectivePosition4(double uE, double sE, double uO, double sO);
-   static double ObjectivePosition3(double uE, double sE, double uO, double sO);
-   static double ObjectivePosition2(double uE, double sE, double uO, double sO);
-   static double ObjectivePosition(double uE, double sE, double uO, double sO);
+   void SetMomMagnitude(std::array<XYZVector, 2> &mom, double pTrans);
+
+   double ObjectivePosition(double uE, double sE, double uO, double sO);
+   double ObjectivePosition4(double uE, double sE, double uO, double sO);
+   double ObjectivePosition3(double uE, double sE, double uO, double sO);
+   double ObjectivePosition2(double uE, double sE, double uO, double sO);
+
+   double ObjectiveCharge(const std::array<std::vector<double>, 2> &exp, const std::array<std::vector<double>, 2> &sim,
+                          AtMCResult &definition);
 
    // Returns the average total kinetic energy from viola systematics in MeV
    static double violaEn(int A, int Z) { return 0.1189 * Z * Z / std::pow(A, 1.0 / 3.0) + 7.3; }
-
-   static double GetGamma(double KE, double m1, double m2);
-   static double GetVelocity(double gamma);
-   static double GetBeta(double gamma);
-   static double GetRelMom(double gamma, double mass);
-   static double AtoE(double Amu);
-   static double EtoA(double mass) { return mass / 931.5; }
-
-   template <class Vector>
-   static XYZEVector Get4Vector(Vector mom, double m)
-   {
-      return {mom.X(), mom.Y(), mom.Z(), std::sqrt(mom.Mag2() + m * m)};
-   }
 };
 
 } // namespace MCFitter

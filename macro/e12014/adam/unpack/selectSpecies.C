@@ -32,9 +32,9 @@
 #endif
 
 // Macro "unpack"
-std::vector<int> torr150 = {130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147,
-                            148, 149, 150, 151, 152, 153, 154, 155, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166,
-                            167, 200, 201, 202, 203, 204, 206, 207, 208, 210, 211, 212, 213, 214, 215, 216};
+std::vector<int> torr150 = {130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146,
+                            147, 148, 149, 150, 151, 152, 153, 154, 155, 157, 159, 160, 161, 162, 163, 164, 165,
+                            166, 167, 200, 201, 202, 203, 204, 206, 207, 208, 210, 211, 212, 213, 214, 215, 216};
 
 std::vector<int> torr150Short = {130, 133, 134, 140, 141, 142};
 
@@ -53,11 +53,11 @@ void selectSpecies(TString species, int pressure)
 
 void selectSpecies(TString species, TString pressure, std::vector<int> runs)
 {
-   TString input = "/mnt/analysis/e12014/TPC/fission_linked/run_%04d.root";
-   TString inputEvt = "/mnt/analysis/e12014/TPC/fission_linked/evtRun_%04d.root";
+   TString input = "/mnt/analysis/e12014/TPC/fission_linked_nomod/run_%04d.root";
+   TString inputEvt = "/mnt/analysis/e12014/TPC/fission_linked_nomod/evtRun_%04d.root";
    TString inputCuts = TString::Format("/mnt/projects/hira/e12014/tpcSharedInfo/PIDcuts/%sYield.root", pressure.Data());
-   TString output = TString::Format("/mnt/analysis/e12014/TPC/%s/%s.root", pressure.Data(), species.Data());
-   TString outputEvt = TString::Format("/mnt/analysis/e12014/TPC/%s/%sEvt.root", pressure.Data(), species.Data());
+   TString output = TString::Format("/mnt/analysis/e12014/TPC/%s/%sNoMod.root", pressure.Data(), species.Data());
+   TString outputEvt = TString::Format("/mnt/analysis/e12014/TPC/%s/%sEvtNoMod.root", pressure.Data(), species.Data());
 
    TString geoFile = "ATTPC_v1.1_geomanager.root";
    TString mapFile = "e12014_pad_mapping.xml";
@@ -108,7 +108,7 @@ void selectSpecies(TString species, TString pressure, std::vector<int> runs)
    AtCutHEIST cut(&evtChain, inputCuts);
    cut.AddSpecies(species.Data());
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
-   reduceTask->SetInputBranch("AtRawEvent");
+   reduceTask->SetInputBranch("AtRawEventRaw");
    reduceTask->SetReductionFunction([&cut]() { return cut(); });
 
    /***** Copy tree to new file *****/
@@ -116,7 +116,7 @@ void selectSpecies(TString species, TString pressure, std::vector<int> runs)
 
    /***** Link HEIST and TPC *****/
    linkTask->SetEvtOutputFile(outputEvt);
-   linkTask->SetInputBranch("AtRawEvent");
+   linkTask->SetInputBranch("AtRawEventRaw");
    linkTask->SetEvtTimestamp("tstamp");
    linkTask->SetTpcTimestampIndex(1);
    linkTask->SetSearchMean(1);

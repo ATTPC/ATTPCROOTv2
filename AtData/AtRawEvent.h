@@ -49,7 +49,7 @@ public:
    AtRawEvent(const AtRawEvent &object);
    AtRawEvent(const AtBaseEvent &object) : AtBaseEvent(object) { SetName("AtRawEvent"); }
    AtRawEvent &operator=(AtRawEvent object);
-   ~AtRawEvent() = default;
+   virtual ~AtRawEvent() = default;
 
    friend void swap(AtRawEvent &first, AtRawEvent &second)
    {

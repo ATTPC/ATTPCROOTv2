@@ -108,7 +108,7 @@ void AtFilterSubtraction::Filter(AtPad *pad, AtPadReference *padReference)
    auto &adcRaw = pad->GetRawADC();
 
    for (int tb = 0; tb < 512; ++tb) {
-      pad->SetRawADC(tb, adcRaw[tb] - fRawBaseline[cobo][asad][tb]);
+      // pad->SetRawADC(tb, adcRaw[tb] - fRawBaseline[cobo][asad][tb]);
       if (pad->IsPedestalSubtracted())
          pad->SetADC(tb, adc[tb] - fBaseline[cobo][asad][tb]);
    }

@@ -1,12 +1,15 @@
 #ifndef ATE12014_H
 #define ATE12014_H
+#include <limits> // for numeric_limits
 #include <memory>
+#include <set>
 #include <string> // for string
 #include <vector>
 class AtMap;
 class TH1;
 class AtHit;
 class AtRawEvent;
+class AtDigiPar;
 
 /**
  * Namespace deticated for useful functions specific to the E12014 fission experiment.
@@ -19,6 +22,9 @@ public:
     * Mapping to use when executing functions in the E12014 namespace.
     */
    static std::shared_ptr<AtMap> fMap; //!
+   static int fTBMin;
+   static int fThreshold;
+   static double fSatThreshold;
 
    /**
     * Create and set fMap to the mapping for this experiment including setting the pad pads.
@@ -40,8 +46,38 @@ public:
     * Fill the historgram with charge information from the passed hits assuming the charge is gauss distributed.
     *@param[in/out] hist Histrogram to clear and fill.
     *@param[in] hits Add the charge from the hits associated with these hits.
+    *@return The pads associated with the hits used to fill the histogram.
     */
-   static void FillHitSum(TH1 *hist, const std::vector<AtHit *> &hits, int threshold = 0);
+   static std::set<int> FillHitSum(TH1 &hist, const std::vector<AtHit *> &hits, int threshold = 0,
+                                   float saturationThreshold = std::numeric_limits<float>::max());
+
+   /**
+    * Fill the array with charge information from the passed hits assuming the charge is gauss distributed.
+    *@param[in/out] vec vector to clear and fill.
+    *@param[in] hits Add the charge from the hits associated with these hits.
+    *@return The pads associated with the hits used to fill the histogram.
+    */
+   static std::set<int> FillHitSum(std::vector<double> &vec, const std::vector<AtHit *> &hits, int threshold = 0,
+                                   float saturationThreshold = std::numeric_limits<float>::max());
+
+   static void FillHitSums(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
+                           const std::vector<AtHit *> &simHits, int threshold = 0,
+                           float saturationThreshold = std::numeric_limits<float>::max(),
+                           const AtDigiPar *par = nullptr);
+
+   /**
+    * Fill the array with charge information from the passed hits assuming the charge is gauss distributed. Designed to
+    *be used for simulated hits and only include those that match the passed pads
+    *@param[in/out] vec vector to clear and fill.
+    *@param[in] hits Add the charge from the hits associated with these hits.
+    *@param[in] amp Scalling factor to apply to the simulated charge data (essentially a calibration).
+    *@return The pads associated with the hits used to fill the histogram.
+    */
+   static void FillSimHitSum(std::vector<double> &vec, const std::vector<AtHit *> &hits, const std::set<int> &goodPads,
+                             double amp, int threshold = 0,
+                             float saturationThreshold = std::numeric_limits<float>::max());
+   static void FillSimHitSum(TH1 &hist, const std::vector<AtHit *> &hits, const std::set<int> &goodPads, double amp,
+                             int threshold = 0, float saturationThreshold = std::numeric_limits<float>::max());
 
 }; // namespace E12014
 

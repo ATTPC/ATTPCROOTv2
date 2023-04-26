@@ -14,6 +14,7 @@
 
 #include <map>
 #include <memory>
+#include <mutex>
 #include <string> // for string
 namespace AtTools {
 class AtELossModel;
@@ -41,12 +42,12 @@ protected:
 
    std::map<ParticleID, ModelPtr> fModels;
    SpaceChargeModel fSCModel{nullptr};
-   TClonesArray fMCPoints;
+   double fDistStep{1.}; // Distance step in mm for particles
+   std::mutex fGeoMutex;
 
    // Variables to across an entire event
-   int fTrackID{0};
-
-   double fDistStep{1.}; // Distance step in mm for particles
+   static thread_local int fTrackID;
+   static thread_local TClonesArray fMCPoints;
 
 public:
    /**
@@ -54,7 +55,7 @@ public:
     */
    AtSimpleSimulation(std::string geoFile);
    AtSimpleSimulation();
-
+   AtSimpleSimulation(const AtSimpleSimulation &other) = default;
    ~AtSimpleSimulation() = default;
 
    void RegisterBranch(std::string branchName = "AtTpcPoint", bool pers = true);

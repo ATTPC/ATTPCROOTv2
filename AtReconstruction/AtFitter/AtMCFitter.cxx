@@ -1,4 +1,5 @@
 #include "AtMCFitter.h"
+// IWYU pragma: no_include <ext/alloc_traits.h>
 
 #include "AtClusterize.h" // for AtClusterize
 #include "AtDigiPar.h"    // for AtDigiPar
@@ -18,17 +19,18 @@
 #include <FairRunAna.h>    // for FairRunAna
 #include <FairRuntimeDb.h> // for FairRuntimeDb
 
-#include <TObject.h> // for TObject
+#include <TROOT.h>
 
+#include <algorithm> // for max
 #include <chrono>
-
+#include <mutex>
+#include <thread>
 using std::move;
 namespace MCFitter {
 
 AtMCFitter::AtMCFitter(SimPtr sim, ClusterPtr cluster, PulsePtr pulse)
    : fMap(pulse->GetMap()), fSim(move(sim)), fClusterize(move(cluster)), fPulse(move(pulse)),
-     fResults([](const AtMCResult &a, const AtMCResult &b) { return a.fObjective < b.fObjective; }),
-     fRawEventArray("AtRawEvent"), fEventArray("AtEvent")
+     fResults([](const AtMCResult &a, const AtMCResult &b) { return a.fObjective < b.fObjective; })
 {
 }
 
@@ -40,13 +42,20 @@ AtMCFitter::ParamPtr AtMCFitter::GetParameter(const std::string &name) const
    return nullptr;
 }
 
+void AtMCFitter::SetNumThreads(int num)
+{
+   if (num > 1)
+      ROOT::EnableThreadSafety();
+   fNumThreads = num;
+}
+
 void AtMCFitter::Init()
 {
    CreateParamDistros();
 
    FairRunAna *ana = FairRunAna::Instance();
    FairRuntimeDb *rtdb = ana->GetRuntimeDb();
-   auto fPar = dynamic_cast<AtDigiPar *>(rtdb->getContainer("AtDigiPar"));
+   fPar = dynamic_cast<AtDigiPar *>(rtdb->getContainer("AtDigiPar"));
 
    fPulse->SetParameters(fPar);
    fClusterize->GetParameters(fPar);
@@ -54,64 +63,130 @@ void AtMCFitter::Init()
       fPSA->Init();
    if (fSim->GetSpaceChargeModel())
       fSim->GetSpaceChargeModel()->LoadParameters(fPar);
+
+   fThPulse.resize(fNumThreads);
+   for (int i = 0; i < fNumThreads; ++i)
+      fThPulse[i] = fPulse->Clone();
+}
+
+void AtMCFitter::RunIterRange(int startIter, int numIter, AtPulse *pulse)
+{
+   // Here we should copy each thread their own version of the clusterize, pulse, and simulation
+   // objects (only if the number of threads is greater than 1). Needs to be deep copies
+
+   for (int i = 0; i < numIter; ++i) {
+
+      int idx = startIter + i;
+      auto result = DefineEvent();
+      auto mcPoints = SimulateEvent(result);
+
+      DigitizeEvent(mcPoints, idx, pulse);
+      double obj = ObjectiveFunction(*fCurrentEvent, idx, result);
+
+      result.fIterNum = idx;
+      result.fObjective = obj;
+      // result.Print();
+      {
+         std::lock_guard<std::mutex> lk(fResultMutex);
+         fResults.insert(result);
+      }
+   }
+   LOG(debug) << "Done with run iter range";
 }
 
 void AtMCFitter::Exec(const AtPatternEvent &event)
 {
-   fRawEventArray.Clear();
-   fEventArray.Clear();
+   fRawEventArray.clear();
+   fEventArray.clear();
    fResults.clear();
+
    SetParamDistributions(event);
 
    auto start = std::chrono::high_resolution_clock::now();
-   for (int i = 0; i < fNumIter; ++i) {
 
-      auto result = DefineEvent();
-      auto mcPoints = SimulateEvent(result);
+   // Make sure the event arrays are large enough so no resizing will happen
+   fRawEventArray.resize(fNumIter);
+   fEventArray.resize(fNumIter);
 
-      int idx = DigitizeEvent(mcPoints);
-      double obj = ObjectiveFunction(event, idx);
+   // Get what iterations to do on what thread.
+   std::vector<std::pair<int, int>> threadParam;
+   int iterPerTh = fNumIter / fNumThreads;
+   for (int i = 0; i < fNumThreads; ++i)
+      threadParam.emplace_back(0, iterPerTh);
+   for (int i = 0; i < fNumIter % fNumThreads; ++i)
+      threadParam[i].second++;
+   for (int i = 1; i < fNumThreads; ++i)
+      threadParam[i].first = threadParam[i - 1].first + threadParam[i - 1].second;
 
-      result.fIterNum = idx;
-      result.fObjective = obj;
-      result.Print();
-      fResults.insert(result);
+   for (int i = 0; i < threadParam.size(); ++i) {
+      LOG(info) << i << ": " << threadParam[i].first << " " << threadParam[i].second;
    }
+
+   // Set the conditions for simulating the event
+   fCurrentEvent = &event;
+
+   std::vector<std::thread> threads;
+   for (int i = 0; i < fNumThreads; ++i) {
+      LOG(debug) << "Creating thread " << i << " with " << threadParam[i].first << " " << threadParam[i].second
+                 << " and " << fPulse.get();
+
+      // Spawn a thread to call RunIterRange.
+      threads.emplace_back(
+         [this](std::pair<int, int> param, AtPulse *pulse) { this->RunIterRange(param.first, param.second, pulse); },
+         threadParam[i], fThPulse[i].get());
+   }
+
+   // Wait for all threads to finish
+   for (auto &th : threads)
+      th.join();
+
    auto stop = std::chrono::high_resolution_clock::now();
+
    if (fTimeEvent)
       LOG(info) << "Simulation of " << fNumIter << " events took "
                 << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << " ms.";
 }
 
-int AtMCFitter::DigitizeEvent(const TClonesArray &points)
+int AtMCFitter::DigitizeEvent(const TClonesArray &points, int idx, AtPulse *pulse)
 {
    // Event has been simulated and is sitting in the fSim
    auto vec = fClusterize->ProcessEvent(points);
-   int eventIndex = fRawEventArray.GetEntries();
-   auto *rawEvent = dynamic_cast<AtRawEvent *>(fRawEventArray.ConstructedAt(eventIndex));
-   auto *event = dynamic_cast<AtEvent *>(fEventArray.ConstructedAt(eventIndex));
+   LOG(debug) << "Digitizing event at " << idx;
 
-   *rawEvent = fPulse->GenerateEvent(vec);
-   if (fPSA)
-      *event = fPSA->Analyze(*rawEvent);
+   fRawEventArray[idx] = pulse->GenerateEvent(vec);
 
-   return eventIndex;
+   if (fPSA) {
+      LOG(debug) << "Running PSA at " << idx;
+      fEventArray[idx] = fPSA->Analyze(fRawEventArray[idx]);
+   }
+   LOG(debug) << "Done digitizing event at " << idx;
+   return idx;
 }
 
-void AtMCFitter::FillResultArray(TClonesArray &resultArray) const
+/**
+ * Fill the TClonesArray in order of smallest to largest chi2.
+ */
+void AtMCFitter::FillResultArrays(TClonesArray &resultArray, TClonesArray &simEvent, TClonesArray &simRawEvent)
 {
-   resultArray.Clear();
-   LOG(debug) << "Filling TCLonesArray with " << fResults.size() << " things";
+   resultArray.Delete();
+   simEvent.Delete();
+   simRawEvent.Delete();
+
    for (auto &res : fResults) {
-      int idx = resultArray.GetEntries();
-      auto toFill = dynamic_cast<AtMCResult *>(resultArray.ConstructedAt(idx));
-      if (toFill == nullptr) {
-         LOG(fatal) << "Failed to get the AtMCResult to fill in output TClonesArray!";
-         return;
+
+      int clonesIdx = resultArray.GetEntries();
+      int eventIdx = res.fIterNum;
+      LOG(debug) << "Filling iteration " << eventIdx << " at index " << resultArray.GetEntries();
+
+      new (resultArray[clonesIdx]) AtMCResult(std::move(res));
+      if (clonesIdx < fNumEventsToSave) {
+         new (simEvent[clonesIdx]) AtEvent(std::move(fEventArray[eventIdx]));
+         new (simRawEvent[clonesIdx]) AtRawEvent(std::move(fRawEventArray[eventIdx]));
       }
-      LOG(debug2) << "Filling TClonesArray at " << idx;
-      *toFill = res;
    }
+
+   fEventArray.clear();
+   fRawEventArray.clear();
 }
 
 AtMCResult AtMCFitter::DefineEvent()

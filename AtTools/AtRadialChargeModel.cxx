@@ -107,7 +107,7 @@ XYZPoint AtRadialChargeModel::SolveEqn(XYZPoint ele, bool correct)
    return XYZPoint(ROOT::Math::RhoZPhiPoint(pos, ele.Z(), ele.phi()));
 }
 
-void AtRadialChargeModel::LoadParameters(AtDigiPar *par)
+void AtRadialChargeModel::LoadParameters(const AtDigiPar *par)
 {
    if (par == nullptr)
       return;

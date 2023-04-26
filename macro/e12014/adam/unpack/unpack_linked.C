@@ -63,7 +63,8 @@ void unpack_linked(int tpcRunNum = 206)
    // Set the input/output directories
    TString inputDir = "/mnt/rawdata/e12014_attpc/h5";
    TString evtInputDir = "/mnt/analysis/e12014/HiRAEVT/mapped";
-   TString outDir = "/mnt/analysis/e12014/TPC/fission_linked";
+   // TString outDir = "/mnt/analysis/e12014/TPC/fission_linked";
+   TString outDir = "/mnt/analysis/e12014/TPC/fission_linked_nomod";
    TString evtOutDir = outDir;
    TString sharedInfoDir = "/mnt/projects/hira/e12014/tpcSharedInfo/";
 
@@ -129,7 +130,7 @@ void unpack_linked(int tpcRunNum = 206)
    unpacker->SetBaseLineSubtraction(true);
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetOuputBranchName("AtRawEventRaw");
-   unpackTask->SetPersistence(false);
+   unpackTask->SetPersistence(true);
 
    /**** Data reduction task (keep fission only) ****/
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
@@ -149,11 +150,9 @@ void unpack_linked(int tpcRunNum = 206)
    linker->SetCorruptedSearchRadius(1000);
    linker->SetInputBranch("AtRawEventRaw");
 
-   auto threshold = 45;
-
    /**** Ch0 subtraction ****/
    auto filterSub = new AtFilterSubtraction(mapping);
-   filterSub->SetThreshold(threshold);
+   filterSub->SetThreshold(25);
    filterSub->SetIsGood(false); // Save events event if
    AtFilterTask *subTask = new AtFilterTask(filterSub);
    subTask->SetPersistence(false);
@@ -186,7 +185,7 @@ void unpack_linked(int tpcRunNum = 206)
    psaBeam->SetThreshold(45);
    auto psaComp = std::make_unique<AtPSAComposite>(std::move(psaBeam), std::move(psa), 20);
    AtPSAtask *psaTask = new AtPSAtask(std::move(psaComp));
-   psaTask->SetInputBranch("AtRawEvent");
+   psaTask->SetInputBranch("AtRawEventRaw");
    psaTask->SetOutputBranch("AtEvent");
    psaTask->SetPersistence(true);
 
@@ -221,8 +220,8 @@ void unpack_linked(int tpcRunNum = 206)
    run->AddTask(unpackTask);
    run->AddTask(reduceTask);
    run->AddTask(linker);
-   run->AddTask(subTask);
-   run->AddTask(calTask);
+   // run->AddTask(subTask);
+   // run->AddTask(calTask);
    run->AddTask(psaTask);
    run->AddTask(scTask);
    run->AddTask(sacTask);

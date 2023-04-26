@@ -3,7 +3,6 @@
 
 #include "AtBaseEvent.h" // for AtBaseEvent
 #include "AtPatternEvent.h"
-#include "AtPatternY.h"
 
 #include <Math/Point3D.h>     // for PositionVector3D
 #include <Math/Point3Dfwd.h>  // for XYZPoint
@@ -19,6 +18,9 @@ class AtTrack;
 class TBuffer;
 class TClass;
 class TMemberInspector;
+namespace AtPatterns {
+class AtPatternY;
+}
 
 /**
  * Class for getting useful information from fission events.
@@ -52,7 +54,7 @@ public:
    const AtPatterns::AtPatternY *GetYPattern() const;
    const AtTrack &GetYTrack() const;
    double GetFoldingAngle();
-   XYZPoint GetVertex() { return GetYPattern()->GetVertex(); }
+   XYZPoint GetVertex() const;
    double GetLambda() const { return fLambda; }
 
    std::vector<AtHit *> GetBeamHits() const;

@@ -25,7 +25,7 @@ public:
 
    virtual XYZPoint CorrectSpaceCharge(const XYZPoint &directInputPosition) override;
    virtual XYZPoint ApplySpaceCharge(const XYZPoint &reverseInputPosition) override;
-   virtual void LoadParameters(AtDigiPar *par) override;
+   virtual void LoadParameters(const AtDigiPar *par) override;
 
    void SetDriftField(double field) { fField = field; }
    void SetConstantCharge() { fLinearField = false; }

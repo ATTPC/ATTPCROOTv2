@@ -71,7 +71,7 @@ public:
    virtual XYZPoint CorrectSpaceCharge(const XYZPoint &directInputPosition) override;
    virtual XYZPoint ApplySpaceCharge(const XYZPoint &reverseInputPosition) override;
 
-   void LoadParameters(AtDigiPar *par) override{};
+   void LoadParameters(const AtDigiPar *par) override{};
 
    Bool_t SetCorrectionMaps(const std::string &zlut, const std::string &radlut,
                             const std::string &tralut); //! Set the mapping files via file path

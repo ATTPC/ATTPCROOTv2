@@ -13,7 +13,6 @@ std::shared_ptr<AtPulseLine> pulse = nullptr;
 std::shared_ptr<AtClusterizeLine> cluster = nullptr;
 std::shared_ptr<AtSimpleSimulation> sim = nullptr;
 std::shared_ptr<AtLineChargeModel> scModel = nullptr;
-// std::shared_ptr<AtRadialChargeModel> scModel = nullptr;
 std::shared_ptr<AtPSADeconvFit> simPSA = nullptr;
 
 void run_eve_sim(TString species = "Bi200", int pressure = 150,
@@ -56,8 +55,10 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
    fRun->GetRuntimeDb()->setFirstInput(parIo1);
    fRun->GetRuntimeDb()->getContainer("AtDigiPar");
 
-   auto fMap = std::make_shared<AtTpcMap>();
+   E12014::CreateMap();
+   auto fMap = E12014::fMap;
    fMap->ParseXMLMap(mapDir.Data());
+
    auto eveMan = new AtViewerManager(fMap);
 
    auto tabMain = std::make_unique<AtTabFission>();
@@ -71,20 +72,25 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
    tabPad->DrawHits(1, 1);
    tabPad->DrawHits(1, 0);
 
+   auto &fissionBranch = tabMain->GetFissionBranch();
+   auto tabFF = std::make_unique<AtTabFF>(fissionBranch);
+
    eveMan->AddTab(std::move(tabMain));
    eveMan->AddTab(std::move(tabPad));
+   eveMan->AddTab(std::move(tabFF));
+   eveMan->AddTab(std::make_unique<AtTabEnergyLoss>(fissionBranch));
 
    // Create underlying simulation class
    sim = std::make_shared<AtSimpleSimulation>(GeoDataPath.Data());
 
-   // scModel = std::make_shared<AtRadialChargeModel>(nullptr);
-   // scModel->SetStepSize(0.1);
    scModel = std::make_shared<AtLineChargeModel>();
    scModel->SetBeamLocation({0, -6, 0}, {10, 0, 1000});
    sim->SetSpaceChargeModel(scModel);
 
    // Create and load energy loss models
-   std::vector<std::pair<int, int>> ions = {{42, 101}, {43, 103}};
+   std::vector<std::pair<int, int>> ions;
+   for (int i = 30; i <= 55; i++)
+      ions.push_back({i, std::round((double)i / 85 * 204)});
    for (auto [Z, A] : ions) {
       auto eloss = std::make_shared<AtTools::AtELossTable>();
       eloss->LoadLiseTable(TString::Format("./eLoss/%d_%d.txt", Z, A).Data(), A, 0);
