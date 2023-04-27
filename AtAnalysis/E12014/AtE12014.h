@@ -63,7 +63,8 @@ public:
    static void FillHitSums(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
                            const std::vector<AtHit *> &simHits, int threshold = 0,
                            float saturationThreshold = std::numeric_limits<float>::max(),
-                           const AtDigiPar *par = nullptr);
+                           const AtDigiPar *par = nullptr, std::vector<double> *expADC = nullptr,
+                           AtRawEvent *expEvent = nullptr);
 
    /**
     * Fill the array with charge information from the passed hits assuming the charge is gauss distributed. Designed to

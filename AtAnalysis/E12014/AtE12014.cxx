@@ -100,23 +100,30 @@ std::set<int> E12014::FillHitSum(TH1 &hist, const std::vector<AtHit *> &hits, in
 }
 
 void E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
-                         const std::vector<AtHit *> &simHits, int threshold, float satThresh, const AtDigiPar *fPar)
+                         const std::vector<AtHit *> &simHits, int threshold, float satThresh, const AtDigiPar *fPar,
+                         std::vector<double> *expADC, AtRawEvent *expEvent)
 {
+   if (fMap == nullptr)
+      LOG(fatal) << "The map (E12014::fMap) was never set!";
+
    exp.clear();
    exp.resize(512);
    std::fill_n(exp.begin(), 512, 0);
    sim.clear();
    sim.resize(512);
    std::fill_n(sim.begin(), 512, 0);
-
-   if (fMap == nullptr)
-      LOG(fatal) << "The map (E12014::fMap) was never set!";
+   if (expADC) {
+      expADC->clear();
+      expADC->resize(512);
+      std::fill_n(expADC->begin(), 512, 0);
+   }
 
    for (auto &expHit : expHits) {
       if (fMap->IsInhibited(expHit->GetPadNum()) != AtMap::InhibitType::kNone)
          continue;
       if (expHit->GetCharge() > satThresh)
          continue;
+
       auto funcExp = AtTools::GetHitFunctionTB(*expHit, fPar);
       if (funcExp == nullptr)
          continue;
@@ -136,12 +143,20 @@ void E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, con
       if (funcSim == nullptr)
          continue;
 
-      // We now have the sim and exp hits. Fill the arrays
+      AtPad *pad = nullptr;
+      if (expEvent)
+         pad = expEvent->GetPad(expHit->GetPadNum());
+
+      // Get the pad that corresponds to
+      //  We now have the sim and exp hits. Fill the arrays
       for (int tb = fTBMin; tb < 512; ++tb) {
+
          auto val = funcExp->Eval(tb);
          if (val > threshold) {
             exp[tb] += val;
             sim[tb] += funcSim->Eval(tb);
+            if (pad && expADC)
+               (*expADC)[tb] += pad->GetADC(tb);
          }
       }
    }
