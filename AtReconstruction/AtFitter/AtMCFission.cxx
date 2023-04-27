@@ -101,7 +101,10 @@ double AtMCFission::ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventI
    auto expFission = dynamic_cast<const AtFissionEvent &>(expEvent);
    auto charge = ObjectiveCharge(expFission, SimEventID, definition);
    auto pos = ObjectivePosition(expFission, SimEventID);
-   LOG(debug) << "Chi2 Pos: " << pos << " Chi2 Q: " << charge;
+   LOG(info) << "Chi2 Pos: " << pos << " Chi2 Q: " << charge;
+   definition.fParameters["ObjQ"] = charge;
+   definition.fParameters["ObjPos"] = pos;
+
    return pos + charge;
 }
 
@@ -121,6 +124,38 @@ double AtMCFission::ObjectiveCharge(const AtFissionEvent &expEvent, int SimEvent
    return ObjectiveCharge(exp, sim, def);
 }
 
+double
+AtMCFission::ObjectiveChargeChi2(const std::vector<double> &exp, const std::vector<double> &sim, const double *par)
+{
+   if (exp.size() == 0)
+      return std::numeric_limits<double>::max();
+
+   double chi2 = 0;
+   for (int i = 0; i < exp.size(); ++i)
+      chi2 += (exp[i] - par[0] * sim[i]) * (exp[i] - par[0] * sim[i]) / exp[i];
+
+   chi2 /= exp.size();
+   LOG(debug) << "A: " << par[0] << " Chi2: " << chi2;
+   return chi2;
+}
+double
+AtMCFission::ObjectiveChargeDiff2(const std::vector<double> &exp, const std::vector<double> &sim, const double *par)
+{
+   if (exp.size() == 0)
+      return std::numeric_limits<double>::max();
+
+   double chi2 = 0;
+   double Qtot = 0;
+   for (int i = 0; i < exp.size(); ++i) {
+      chi2 += (exp[i] - par[0] * sim[i]) * (exp[i] - par[0] * sim[i]);
+      Qtot += exp[i];
+   }
+
+   chi2 /= Qtot;
+   LOG(debug) << "A: " << par[0] << " Chi2: " << chi2;
+   return chi2;
+}
+
 double AtMCFission::ObjectiveCharge(const std::array<std::vector<double>, 2> &expFull,
                                     const std::array<std::vector<double>, 2> &simFull, AtMCResult &definition)
 {
@@ -138,18 +173,7 @@ double AtMCFission::ObjectiveCharge(const std::array<std::vector<double>, 2> &ex
       }
    }
 
-   // Now we want to minimize the difference between exp and A*sim
-   auto func = [&exp, &sim](const double *par) {
-      double chi2 = 0;
-      for (int i = 0; i < exp.size(); ++i)
-         chi2 += (exp[i] - par[0] * sim[i]) * (exp[i] - par[0] * sim[i]) / exp[i];
-
-      chi2 /= exp.size();
-      LOG(debug) << "A: " << par[0] << " Chi2: " << chi2;
-      return chi2;
-   };
-
-   auto functor = ROOT::Math::Functor(func, 1);
+   auto functor = ROOT::Math::Functor(std::bind(fObjCharge, exp, sim, std::placeholders::_1), 1);
 
    std::vector<double> A = {1};
    ROOT::Fit::Fitter fitter;

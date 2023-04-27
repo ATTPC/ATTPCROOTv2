@@ -7,7 +7,7 @@
 */
 #include "FairLogger.h"
 
-void run_eve_cut(TString cut = "cut1", TString species = "Bi200", int pressure = 150,
+void run_eve_cut(TString cut = "cut1", TString species = "Bi200", int pressure = 150, bool lise = false,
                  TString OutputDataFile = "./data/output.reco_display.root")
 {
 
@@ -17,8 +17,8 @@ void run_eve_cut(TString cut = "cut1", TString species = "Bi200", int pressure =
    // fair::Logger::SetVerbosity("user1");
    // fair::Logger::SetConsoleSeverity("debug");
 
-   TString InputDataFile =
-      TString::Format("/mnt/analysis/e12014/TPC/%dTorr/%s/%s.root", pressure, cut.Data(), species.Data());
+   TString InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%s/%s/%s.root", pressure, cut.Data(),
+                                           lise ? "LISE" : "SRIM", species.Data());
 
    TString dir = getenv("VMCWORKDIR");
    TString geoFile = "ATTPC_v1.1_geomanager.root";
@@ -60,7 +60,7 @@ void run_eve_cut(TString cut = "cut1", TString species = "Bi200", int pressure =
    tabPad->DrawHits(1, 0);
 
    auto &fissionBranch = tabMain->GetFissionBranch();
-   auto tabFF = std::make_unique<AtTabFF>(fissionBranch);
+   auto tabFF = std::make_unique<AtTabFF>(fissionBranch, false);
 
    eveMan->AddTab(std::move(tabMain));
    eveMan->AddTab(std::move(tabPad));

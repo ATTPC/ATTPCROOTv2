@@ -153,6 +153,13 @@ void AtPulse::SetParameters(const AtDigiPar *fPar)
       TMath::Sqrt(TMath::Gamma(b + 3) / TMath::Gamma(b + 1) -
                   TMath::Gamma(b + 2) * TMath::Gamma(b + 2) / TMath::Gamma(b + 1) / TMath::Gamma(b + 1));
 
+   LOG(info) << "Gain: " << fGain;
+   LOG(info) << "GETGain: " << fGETGain;
+   LOG(info) << "Peaking time: " << fPeakingTime;
+   LOG(info) << "TB Time: " << fTBTime;
+   LOG(info) << "TB entrance: " << fTBEntrance;
+   LOG(info) << "TB Pad Plane: " << fTBPadPlane;
+
    // Create all of the historgrmas
    fPadCharge.resize(fMap->GetNumPads());
    for (Int_t padS = 0; padS < fMap->GetNumPads(); padS++) {

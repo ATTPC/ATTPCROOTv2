@@ -32,7 +32,19 @@ bool cut2(AtFissionEvent *evt)
    return ang < upper && ang > lower;
 }
 
-void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure = 150)
+enum ChargeObj { kChi2, kDiff2 };
+
+string to_string(ChargeObj obj)
+{
+   switch (obj) {
+   case ChargeObj::kChi2: return "Chi2";
+
+   case ChargeObj::kDiff2: return "Diff2";
+   }
+   return "";
+}
+void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure = 150, bool lise = false,
+             ChargeObj obj = kDiff2)
 {
    // ROOT::EnableThreadSafety();
 
@@ -42,10 +54,12 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    // fair::Logger::SetVerbosity("user1");
    // fair::Logger::SetConsoleSeverity("debug");
 
-   TString InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr/%s.root", pressure, species.Data());
-   TString evtInputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr/%sEvt.root", pressure, species.Data());
+   TString InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%s.root", pressure, species.Data());
+   TString evtInputDataFile =
+      TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%sEvt.root", pressure, species.Data());
    TString OutputDataFile =
-      TString::Format("/mnt/analysis/e12014/TPC/%dTorr/%s/%s.root", pressure, cutName.Data(), species.Data());
+      TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%s/%s/%s%s.root", pressure, cutName.Data(),
+                      lise ? "LISE" : "SRIM", species.Data(), to_string(obj).c_str());
 
    TString dir = getenv("VMCWORKDIR");
    TString geoFile = "ATTPC_v1.1_geomanager.root";
@@ -86,7 +100,7 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    /** Create the simulation to do the fittin on **/
 
    auto sim = std::make_shared<AtSimpleSimulation>(GeoDataPath.Data());
-   sim->SetDistanceStep(2.5);
+   sim->SetDistanceStep(5);
 
    auto scModel = std::make_shared<AtLineChargeModel>();
    scModel->SetBeamLocation({0, -6, 0}, {10, 0, 1000});
@@ -98,7 +112,10 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
       ions.push_back({i, std::round((double)i / 85 * 204)});
    for (auto [Z, A] : ions) {
       auto eloss = std::make_shared<AtTools::AtELossTable>();
-      eloss->LoadLiseTable(TString::Format("./eLoss/%d_%d.txt", Z, A).Data(), A, 0);
+      if (lise)
+         eloss->LoadLiseTable(TString::Format("./eLoss/LISE/%d_%d.txt", Z, A).Data(), A, 0);
+      else
+         eloss->LoadSrimTable(TString::Format("./eLoss/SRIM/%d_%d.txt", Z, A).Data());
       sim->AddModel(Z, A, eloss);
    }
 
@@ -110,6 +127,10 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
 
    auto fitter = std::make_shared<MCFitter::AtMCFission>(sim, cluster, pulse);
    fitter->SetTimeEvent(true);
+   switch (obj) {
+   case kDiff2: fitter->SetChargeObjective(MCFitter::AtMCFission::ObjectiveChargeDiff2); break;
+   case kChi2: fitter->SetChargeObjective(MCFitter::AtMCFission::ObjectiveChargeChi2); break;
+   }
 
    auto simPSA = std::make_shared<AtPSADeconvFit>();
    simPSA->SetUseSimCharge(true);
@@ -128,9 +149,15 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    fRun->AddTask(copyTask);
    fRun->AddTask(fitTask);
 
+   auto initStart = std::chrono::high_resolution_clock::now();
    fRun->Init();
-
+   auto runStart = std::chrono::high_resolution_clock::now();
    // fRun->Run(0, 4);
-   fRun->Run(0, 65);
-   //   fRun->Run();
+   // fRun->Run(0, 65);
+   fRun->Run();
+   auto runStop = std::chrono::high_resolution_clock::now();
+
+   LOG(info) << "Run processed in "
+             << std::chrono::duration_cast<std::chrono::milliseconds>(runStop - initStart).count() / (double)1000
+             << " seconds.";
 }

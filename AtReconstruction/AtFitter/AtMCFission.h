@@ -28,16 +28,27 @@ protected:
    using XYZPoint = ROOT::Math::XYZPoint;
    using XYZVector = ROOT::Math::XYZVector;
    using XYZEVector = ROOT::Math::PxPyPzEVector;
+   using ObjectiveFuncCharge =
+      std::function<double(const std::vector<double> &exp, const std::vector<double> &sim, const double *par)>;
    Ion fCN{85, 204};
 
    /// Average beam direction. We will sample the beam direction as deviations from this vector.
    /// Default value taken from Joe's plots in the overleaf on space charge
    XYZVector fNominalBeamDir{11.464, 3.754, 1000};
 
+   /// Objective function to minimize the difference between A*sim and exp charge curves.
+   ObjectiveFuncCharge fObjCharge{ObjectiveChargeChi2};
+
 public:
    AtMCFission(SimPtr sim, ClusterPtr cluster, PulsePtr pulse) : AtMCFitter(sim, cluster, pulse) {}
    virtual ~AtMCFission() = default;
    void SetCN(Ion cn) { fCN = cn; }
+   void SetChargeObjective(ObjectiveFuncCharge obj) { fObjCharge = obj; }
+
+   // Options to use as the function to minimize when fitting sim to exp.
+   static double ObjectiveChargeChi2(const std::vector<double> &exp, const std::vector<double> &sim, const double *par);
+   static double
+   ObjectiveChargeDiff2(const std::vector<double> &exp, const std::vector<double> &sim, const double *par);
 
 protected:
    virtual void CreateParamDistros() override;
