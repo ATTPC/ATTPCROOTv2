@@ -82,6 +82,7 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
 
    // Create underlying simulation class
    sim = std::make_shared<AtSimpleSimulation>(GeoDataPath.Data());
+   sim->SetDistanceStep(5);
 
    scModel = std::make_shared<AtLineChargeModel>();
    scModel->SetBeamLocation({0, -6, 0}, {10, 0, 1000});
@@ -101,6 +102,7 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
    pulse = std::make_shared<AtPulseLine>(fMap);
    pulse->SetSaveCharge(true);
    pulse->SetDoConvolution(false);
+   pulse->SetNumIntegrationPoints(250);
 
    fitter = std::make_shared<MCFitter::AtMCFission>(sim, cluster, pulse);
    fitter->SetTimeEvent(true);
@@ -110,6 +112,8 @@ void run_eve_sim(TString species = "Bi200", int pressure = 150,
    simPSA->SetThreshold(25);
 
    fitter->SetPSA(simPSA);
+   fitter->SetNumIter(10);
+   fitter->SetNumThreads(1);
 
    AtMCFitterTask *fitTask = new AtMCFitterTask(fitter);
    fitTask->SetPatternBranchName("AtFissionEvent");

@@ -14,13 +14,21 @@ namespace SampleConsensus {
  * All implemented estimators for AtSampleConsensus.
  * @ingroup SampleConsensus
  */
-enum class Estimators { kRANSAC, kLMedS, kMLESAC, kWRANSAC, kChi2 };
+enum class Estimators { kRANSAC, kLMedS, kMLESAC, kWRANSAC, kChi2, kYRANSAC };
 /**
  * @brief Implementation of RANSAC estimator.
  *
  * Maximizes the number of inliers.
  */
 int EvaluateRansac(AtPatterns::AtPattern *model, const std::vector<const AtHit *> &hitArray, double distanceThreshold);
+
+/**
+ * @brief Implementation of RANSAC estimator ignoring beam component of y.
+ *
+ * Maximizes the number of inliers on the non-beam rays of the Y pattern.
+ */
+int EvaluateYRansac(AtPatterns::AtPattern *model, const std::vector<const AtHit *> &hitArray, double distanceThreshold);
+
 /**
  * @brief Implementation of estimator that minimizes chi2.
  *

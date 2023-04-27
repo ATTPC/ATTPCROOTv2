@@ -48,10 +48,10 @@ void run_digi_attpc()
    // AtPulseLineTask *pulse = new AtPulseLineTask();
 
    // AtPulseTask *pulse = new AtPulseTask(std::make_shared<AtPulse>(mapping));
-   AtPulseTask *pulse = new AtPulseTask(std::make_shared<AtPulseLine>(mapping));
-   pulse->SetPersistence(kTRUE);
-   // pulse->SetMap(mapping);
-   // pulse->SetSaveMCInfo();
+   auto pulse = std::make_shared<AtPulseLine>(mapping);
+   pulse->SetSaveCharge(true);
+   AtPulseTask *pulseTask = new AtPulseTask(pulse);
+   pulseTask->SetPersistence(kTRUE);
 
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
    reduceTask->SetInputBranch("AtRawEvent");
@@ -71,7 +71,7 @@ void run_digi_attpc()
    ransacTask->SetMinHitsLine(10);
 
    fRun->AddTask(clusterizer);
-   fRun->AddTask(pulse);
+   fRun->AddTask(pulseTask);
    fRun->AddTask(reduceTask);
    fRun->AddTask(psaTask);
    fRun->AddTask(ransacTask);

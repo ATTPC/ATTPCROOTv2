@@ -44,6 +44,20 @@ public:
 
       return fEventNumbers[fLastAcces] == eventNum;
    }
+
+   bool operator()(int eventNum)
+   {
+      if (fEventNumbers[fLastAcces] > eventNum) {
+         if (fLastAcces == 0)
+            return false;
+         fLastAcces--;
+         return (*this)(eventNum);
+      }
+      while (fEventNumbers[fLastAcces] < eventNum)
+         fLastAcces++;
+
+      return fEventNumbers[fLastAcces] == eventNum;
+   }
 };
 
 class EventMap {

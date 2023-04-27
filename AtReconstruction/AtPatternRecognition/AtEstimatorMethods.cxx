@@ -3,9 +3,11 @@
 #include "AtContainerManip.h"
 #include "AtHit.h" // for AtHit
 #include "AtPattern.h"
+#include "AtPatternY.h"
 
 #include <algorithm> // for max_element, nth_element, max
-#include <cmath>     // for exp, sqrt, isinf, log, M_PI
+#include <cassert>
+#include <cmath> // for exp, sqrt, isinf, log, M_PI
 using namespace SampleConsensus;
 
 int SampleConsensus::EvaluateChi2(AtPatterns::AtPattern *model, const std::vector<const AtHit *> &hitArray,
@@ -32,6 +34,27 @@ int SampleConsensus::EvaluateRansac(AtPatterns::AtPattern *model, const std::vec
    int nbInliers = 0;
    for (const auto &hit : hitArray) {
       auto &pos = hit->GetPosition();
+      double error = model->DistanceToPattern(pos);
+      error = error * error;
+      if (error < (distanceThreshold * distanceThreshold)) {
+         nbInliers++;
+      }
+   }
+   model->SetChi2(1.0 / nbInliers);
+   return nbInliers;
+}
+
+int SampleConsensus::EvaluateYRansac(AtPatterns::AtPattern *model, const std::vector<const AtHit *> &hitArray,
+                                     double distanceThreshold)
+{
+   auto *yModel = dynamic_cast<AtPatterns::AtPatternY *>(model);
+   assert(yModel != nullptr);
+
+   int nbInliers = 0;
+   for (const auto &hit : hitArray) {
+      auto &pos = hit->GetPosition();
+      if (yModel->GetPointAssignment(pos) >= 2)
+         continue;
       double error = model->DistanceToPattern(pos);
       error = error * error;
       if (error < (distanceThreshold * distanceThreshold)) {
