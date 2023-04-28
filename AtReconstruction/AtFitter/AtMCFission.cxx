@@ -319,10 +319,52 @@ XYZVector AtMCFission::GetBeamDirSameV(AtMCResult &res, const std::array<XYZVect
 }
 
 /**
- * Gets the beam direction by taking the sampled thBeam parameter and rotating the nominal beam
- * direction projected in the decay plane by thBeam.
+ * Gets the beam direction using kinematics constraints given our assumtion on the kinetic energy of
+ * the fission fragments from viola systematics, the masses of the fission fragments, and the folding
+ * angle between the fission fragments.
  */
-XYZVector AtMCFission::GetBeamDir(AtMCResult &res, const std::array<XYZVector, 2> &ffDir)
+XYZVector AtMCFission::GetBeamDir(AtMCResult &res, const std::array<XYZVector, 2> &ffDir, double pTrans)
+{
+   using namespace AtTools::Kinematics;
+
+   // Get the transverse velocity of the fission fragments
+   double v1 = GetBeta(pTrans, AtoE(res.fParameters["A0"]));
+   double v2 = GetBeta(pTrans, AtoE(res.fParameters["A1"]));
+
+   // Get the folding angle between the fision fragments
+   auto foldingAngle = ROOT::Math::VectorUtil::Angle(ffDir[0], ffDir[1]);
+
+   // The velocity of the beam is related to the folding angle and the transverse velocities
+   //  Here we assume that we are at non-relativistic velocities, or the decay angle is closs to
+   //  90 degrees (basically (beta of the beam * beta of FF in z direction in CoM frame) is zero)
+   auto tanA = std::tan(foldingAngle);
+   auto s = std::sqrt(v1 * v1 + 4 * v1 * v2 * tanA * tanA + 2 * v1 * v2 + v2 * v2);
+   auto vBeam = (v1 + v2 + s) / (2 * tanA);
+
+   // The angle between FF1 and the beam is given by
+   auto angle1 = std::atan(v1 / vBeam);
+   auto angle2 = std::atan(v2 / vBeam);
+   LOG(debug) << "Angle 1: " << angle1 * TMath::RadToDeg() << " Angle 2: " << angle2 * TMath::RadToDeg();
+   LOG(debug) << "Folding angle: " << foldingAngle * TMath::RadToDeg() << " Beam v: " << vBeam;
+
+   // The beam direction should be the FF direction vector rotated around the normal vector to the plane
+   // containing the fission fragments by the angle between the FF direction and the beam.
+
+   auto norm = ffDir[0].Cross(ffDir[1]).Unit();
+   auto rot1 = ROOT::Math::AxisAngle(norm, angle1);
+   auto beamDir = rot1(ffDir[0]);
+   res.fParameters["beamX"] = beamDir.Unit().X();
+   res.fParameters["beamY"] = beamDir.Unit().Y();
+   res.fParameters["beamZ"] = beamDir.Unit().Z();
+
+   LOG(debug) << "Beam dir: " << beamDir;
+
+   LOG(debug) << "Angle 1: " << ROOT::Math::VectorUtil::Angle(ffDir[0], beamDir) * TMath::RadToDeg()
+              << " Angle 2: " << ROOT::Math::VectorUtil::Angle(ffDir[1], beamDir) * TMath::RadToDeg();
+   return beamDir;
+}
+
+XYZVector AtMCFission::GetBeamDirSample(AtMCResult &res, const std::array<XYZVector, 2> &ffDir)
 {
    // Sample the deviation of the beam away from the nominal beam direction
    Polar3D beamDir(1, res.fParameters["thBeam"], 0);
@@ -389,6 +431,7 @@ void AtMCFission::SetMomMagnitude(std::array<XYZVector, 2> &moms, double pTrans)
 {
    for (auto &mom : moms) {
       auto angle = mom.Theta();
+      LOG(debug) << "Angle: " << mom.Theta() * TMath::RadToDeg();
       auto p = pTrans / std::sin(angle);
       mom = mom.Unit() * p;
    }
@@ -428,10 +471,13 @@ TClonesArray AtMCFission::SimulateEvent(AtMCResult &def)
    double p1 = GetRelMom(gamma1, AtoE(fragID[0].A));
    p1 *= sin(def.fParameters["thCM"]);
 
+   LOG(debug) << "v1: " << GetBeta(gamma1) << " v2: " << GetBeta(GetGamma(KE, AtoE(fragID[1].A), AtoE(fragID[0].A)));
+
    // Get the momentum direction for the FF and beam in the lab frame
    auto mom = GetMomDirLab(def); // Pulled from the data
-   auto beamDir = GetBeamDirSameV(def, mom);
+   // auto beamDir = GetBeamDirSameV(def, mom);
    // auto beamDir = GetBeamDir(def, mom);
+   auto beamDir = GetBeamDir(def, mom, p1);
 
    LOG(debug) << "p1: " << mom[0];
    LOG(debug) << "p2: " << mom[1];

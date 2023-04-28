@@ -268,6 +268,18 @@ double GetBeta(double gamma)
 {
    return std::sqrt(gamma * gamma - 1) / gamma;
 }
+/**
+ * Get velocity (SR units, c=1) of a particle with momentum p (MeV) and mass m (MeV).
+ */
+double GetBeta(double p, double m)
+{
+   return p / std::sqrt(p * p + m * m);
+}
+double GetGamma(double beta)
+{
+   assert(beta >= 0 && beta <= 1);
+   return 1 / std::sqrt(1 - beta * beta);
+}
 
 /**
  * Get the relativistic momentum of a particle will mass (MeV)

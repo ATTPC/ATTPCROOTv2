@@ -57,10 +57,15 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    TString InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%s.root", pressure, species.Data());
    TString evtInputDataFile =
       TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%sEvt.root", pressure, species.Data());
+
    TString OutputDataFile =
       TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%s/%s/%s%s.root", pressure, cutName.Data(),
                       lise ? "LISE" : "SRIM", species.Data(), to_string(obj).c_str());
 
+   /*
+      TString OutputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr/%s/%s/%s.root", pressure,
+      cutName.Data(), lise ? "LISE" : "SRIM", species.Data());
+   */
    TString dir = getenv("VMCWORKDIR");
    TString geoFile = "ATTPC_v1.1_geomanager.root";
    TString mapFile = "e12014_pad_mapping.xml";
@@ -137,7 +142,7 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    simPSA->SetThreshold(25);
 
    fitter->SetPSA(simPSA);
-   fitter->SetNumIter(100);
+   fitter->SetNumIter(200);
    fitter->SetNumThreads(4);
 
    AtMCFitterTask *fitTask = new AtMCFitterTask(fitter);
@@ -153,7 +158,7 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    fRun->Init();
    auto runStart = std::chrono::high_resolution_clock::now();
    // fRun->Run(0, 4);
-   // fRun->Run(0, 65);
+   //  fRun->Run(0, 65);
    fRun->Run();
    auto runStop = std::chrono::high_resolution_clock::now();
 

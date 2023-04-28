@@ -65,8 +65,11 @@ public:
 namespace Kinematics {
 
 double GetGamma(double KE, double m1, double m2);
+double GetGamma(double beta);
 double GetVelocity(double gamma);
 double GetBeta(double gamma);
+double GetBeta(double p, int A);
+double GetBeta(double p, double mass);
 double GetRelMom(double gamma, double mass);
 double AtoE(double Amu);
 double EtoA(double mass);

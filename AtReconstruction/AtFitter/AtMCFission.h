@@ -64,7 +64,8 @@ protected:
    XYZPoint GetVertex(AtMCResult &);
    std::array<Ion, 2> GetFragmentSpecies(AtMCResult &, const Ion &CN);
 
-   XYZVector GetBeamDir(AtMCResult &, const std::array<XYZVector, 2> &ffDir);
+   XYZVector GetBeamDir(AtMCResult &, const std::array<XYZVector, 2> &ffDir, double pTrans);
+   XYZVector GetBeamDirSample(AtMCResult &, const std::array<XYZVector, 2> &ffDir);
    XYZVector GetBeamDirSameV(AtMCResult &, const std::array<XYZVector, 2> &ffDir);
    std::array<XYZVector, 2> GetMomDirLab(AtMCResult &);
 

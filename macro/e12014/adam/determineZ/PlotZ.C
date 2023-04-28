@@ -54,7 +54,8 @@ void FillPlots(float EMin = 0, float EMax = 5000)
 
 void PlotZ()
 {
-   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200.root";
+   TString fileName = "/mnt/analysis/e12014/TPC/150Torr/cut1/SRIM/Bi200Diff2.root";
+   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr/cut1/SRIM/Bi200Chi2.root";
 
    if (!tree) {
       tree = new TChain("cbmsim");
