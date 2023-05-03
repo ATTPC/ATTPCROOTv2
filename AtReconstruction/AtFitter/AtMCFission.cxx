@@ -314,7 +314,7 @@ XYZVector AtMCFission::GetBeamDirSameV(AtMCResult &res, const std::array<XYZVect
    res.fParameters["beamX"] = beamInLabFrame.Unit().X();
    res.fParameters["beamY"] = beamInLabFrame.Unit().Y();
    res.fParameters["beamZ"] = beamInLabFrame.Unit().Z();
-
+   res.fParameters["beamSel"] = 1;
    return beamInLabFrame;
 }
 
@@ -356,6 +356,7 @@ XYZVector AtMCFission::GetBeamDir(AtMCResult &res, const std::array<XYZVector, 2
    res.fParameters["beamX"] = beamDir.Unit().X();
    res.fParameters["beamY"] = beamDir.Unit().Y();
    res.fParameters["beamZ"] = beamDir.Unit().Z();
+   res.fParameters["beamSel"] = 0;
 
    LOG(debug) << "Beam dir: " << beamDir;
 
@@ -387,6 +388,7 @@ XYZVector AtMCFission::GetBeamDirSample(AtMCResult &res, const std::array<XYZVec
    res.fParameters["beamX"] = beamInLabFrame.Unit().X();
    res.fParameters["beamY"] = beamInLabFrame.Unit().Y();
    res.fParameters["beamZ"] = beamInLabFrame.Unit().Z();
+   res.fParameters["beamSel"] = 2;
    return beamInLabFrame.Unit();
 }
 
@@ -475,9 +477,8 @@ TClonesArray AtMCFission::SimulateEvent(AtMCResult &def)
 
    // Get the momentum direction for the FF and beam in the lab frame
    auto mom = GetMomDirLab(def); // Pulled from the data
-   // auto beamDir = GetBeamDirSameV(def, mom);
-   // auto beamDir = GetBeamDir(def, mom);
-   auto beamDir = GetBeamDir(def, mom, p1);
+   auto beamDir = GetBeamDirSameV(def, mom);
+   // auto beamDir = GetBeamDir(def, mom, p1);
 
    LOG(debug) << "p1: " << mom[0];
    LOG(debug) << "p2: " << mom[1];

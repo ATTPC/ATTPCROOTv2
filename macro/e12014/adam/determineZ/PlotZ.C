@@ -6,6 +6,7 @@ TH1F *hAmp = nullptr;
 TH2F *hBeam = nullptr;
 TH1F *hObj = nullptr;
 TChain *tree;
+MCFitter::AtMCResult *result = nullptr;
 
 double GetAvg(string name, TClonesArray &result, int toAvg = 1)
 {
@@ -31,8 +32,8 @@ void FillPlots(float EMin = 0, float EMax = 5000)
    hObj->Reset();
    hBeam->Reset();
 
-   while (reader.Next()) {
-      auto *result = dynamic_cast<MCFitter::AtMCResult *>(resultArray->At(0));
+   while (reader.Next() && reader.GetCurrentEntry() < 1) {
+      result = dynamic_cast<MCFitter::AtMCResult *>(resultArray->At(0));
       if (result) {
          if (result->fParameters["vZ"] > EMin && result->fParameters["vZ"] < EMax) {
             zHist->Fill(result->fParameters["Z0"]);
@@ -44,18 +45,20 @@ void FillPlots(float EMin = 0, float EMax = 5000)
             aHist->Fill(result->fParameters["A1"]);
             hAmp->Fill(result->fParameters["Amp"]);
             hObj->Fill(result->fObjective);
+
+            // Plot angle1 vs angle2
          }
          hBeam->Fill(result->fParameters["vZ"], result->fParameters["EBeam"]);
       }
    }
-
-   zHist->Draw();
 }
 
-void PlotZ()
+void PlotZ(bool draw = true)
 {
-   TString fileName = "/mnt/analysis/e12014/TPC/150Torr/cut1/SRIM/Bi200Diff2.root";
-   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr/cut1/SRIM/Bi200Chi2.root";
+   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Diff2.root";
+   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Diff2.root";
+   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameV/cut1/SRIM/Bi200Diff2.root";
+   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
 
    if (!tree) {
       tree = new TChain("cbmsim");
@@ -73,4 +76,6 @@ void PlotZ()
    hObj = new TH1F("hObj", "Objective Function", 100, 0, 1000);
 
    FillPlots();
+   if (draw)
+      zHist->Draw();
 }

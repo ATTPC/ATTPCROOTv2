@@ -43,10 +43,10 @@ string to_string(ChargeObj obj)
    }
    return "";
 }
+
 void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure = 150, bool lise = false,
-             ChargeObj obj = kDiff2)
+             ChargeObj obj = kChi2)
 {
-   // ROOT::EnableThreadSafety();
 
    auto verbSpec =
       fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
@@ -142,7 +142,7 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    simPSA->SetThreshold(25);
 
    fitter->SetPSA(simPSA);
-   fitter->SetNumIter(200);
+   fitter->SetNumIter(100);
    fitter->SetNumThreads(4);
 
    AtMCFitterTask *fitTask = new AtMCFitterTask(fitter);
@@ -158,7 +158,7 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    fRun->Init();
    auto runStart = std::chrono::high_resolution_clock::now();
    // fRun->Run(0, 4);
-   //  fRun->Run(0, 65);
+   // fRun->Run(0, 100);
    fRun->Run();
    auto runStop = std::chrono::high_resolution_clock::now();
 
