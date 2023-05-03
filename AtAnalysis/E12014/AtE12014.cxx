@@ -29,7 +29,7 @@ double E12014::fSatThreshold = 4200;
 void E12014::CreateMap()
 {
    fMap = std::make_shared<AtTpcMap>();
-   auto mapFile = TString(getenv("VMCWORKDIR")) + "/scripts/e12014_pad_mapping.xml";
+   auto mapFile = TString(getenv("VMCWORKDIR")) + "/scripts/e12014_pad_map_size.xml";
    fMap->ParseXMLMap(mapFile.Data());
 
    // Add the inhibited pads
@@ -122,6 +122,9 @@ void E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, con
       if (fMap->IsInhibited(expHit->GetPadNum()) != AtMap::InhibitType::kNone)
          continue;
       if (expHit->GetCharge() > satThresh)
+         continue;
+
+      if (fMap->GetPadSize(expHit->GetPadNum()) != 0)
          continue;
 
       auto funcExp = AtTools::GetHitFunctionTB(*expHit, fPar);
