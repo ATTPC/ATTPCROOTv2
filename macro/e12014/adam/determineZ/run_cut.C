@@ -45,7 +45,7 @@ string to_string(ChargeObj obj)
 }
 
 void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure = 150, bool lise = false,
-             ChargeObj obj = kChi2)
+             ChargeObj obj = kDiff2)
 {
 
    auto verbSpec =

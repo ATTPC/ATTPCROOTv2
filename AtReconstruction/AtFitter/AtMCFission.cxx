@@ -477,8 +477,8 @@ TClonesArray AtMCFission::SimulateEvent(AtMCResult &def)
 
    // Get the momentum direction for the FF and beam in the lab frame
    auto mom = GetMomDirLab(def); // Pulled from the data
-   auto beamDir = GetBeamDirSameV(def, mom);
-   // auto beamDir = GetBeamDir(def, mom, p1);
+                                 // auto beamDir = GetBeamDirSameV(def, mom);
+   auto beamDir = GetBeamDir(def, mom, p1);
 
    LOG(debug) << "p1: " << mom[0];
    LOG(debug) << "p2: " << mom[1];

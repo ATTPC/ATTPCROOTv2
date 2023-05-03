@@ -32,7 +32,7 @@ void FillPlots(float EMin = 0, float EMax = 5000)
    hObj->Reset();
    hBeam->Reset();
 
-   while (reader.Next() && reader.GetCurrentEntry() < 1) {
+   while (reader.Next() && reader.GetCurrentEntry() < 10000) {
       result = dynamic_cast<MCFitter::AtMCResult *>(resultArray->At(0));
       if (result) {
          if (result->fParameters["vZ"] > EMin && result->fParameters["vZ"] < EMax) {
@@ -56,9 +56,10 @@ void FillPlots(float EMin = 0, float EMax = 5000)
 void PlotZ(bool draw = true)
 {
    // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Diff2.root";
-   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Diff2.root";
-   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameV/cut1/SRIM/Bi200Diff2.root";
-   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
+   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Chi2.root";
+   //   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameV/cut1/SRIM/Bi200Diff2.root";
+   //   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
+   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameVSmall/cut1/SRIM/Bi200Chi2.root";
 
    if (!tree) {
       tree = new TChain("cbmsim");
