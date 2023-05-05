@@ -35,9 +35,9 @@ void unpack_a1954(TString fileName = "run_0069")
    TString geoManFile = dir + "/geometry/ATTPC_H1bar.root";
 
    // Specific paths for three LUT for electric field correction
-   TString zlutFile = dir + "/resources/corrections/e20009/zLUT.txt";
-   TString radlutFile = dir + "/resources/corrections/e20009/radLUT.txt";
-   TString tralutFile = dir + "/resources/corrections/e20009/traLUT.txt";
+   TString zlutFile = dir + "/resources/corrections/a1954/zLUT.txt";
+   TString radlutFile = dir + "/resources/corrections/a1954/radLUT.txt";
+   TString tralutFile = dir + "/resources/corrections/a1954/traLUT.txt";
 
    FairRunAna *run = new FairRunAna();
    run->SetOutputFile(outputFile);
@@ -85,15 +85,16 @@ void unpack_a1954(TString fileName = "run_0069")
    AtPSAtask *psaTask = new AtPSAtask(psa);
    psaTask->SetPersistence(kTRUE);
    // psaTask->SetInputBranch("AtRawEventFiltered");
+   psaTask->SetOutputBranch("AtEventH");
 
-   // auto SCModel = std::make_unique<AtEDistortionModel>();
-   // SCModel->SetCorrectionMaps(zlutFile.Data(), radlutFile.Data(), tralutFile.Data());
-   // auto SCTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
-   // SCTask->SetInputBranchName("AtEventH");
+   auto SCModel = std::make_unique<AtEDistortionModel>();
+   SCModel->SetCorrectionMaps(zlutFile.Data(), radlutFile.Data(), tralutFile.Data());
+   auto SCTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
+   SCTask->SetInputBranchName("AtEventH");
 
    AtPRAtask *praTask = new AtPRAtask();
-   // praTask->SetInputBranch("AtEventCorrected");
-   // praTask->SetOutputBranch("AtPatternEvent");
+   praTask->SetInputBranch("AtEventCorrected");
+   praTask->SetOutputBranch("AtPatternEvent");
    praTask->SetPersistence(kTRUE);
    // praTask->SetMaxNumHits(3000);
    // praTask->SetMinNumHits(100);
@@ -101,7 +102,7 @@ void unpack_a1954(TString fileName = "run_0069")
    run->AddTask(unpackTask);
    // run->AddTask(filterTask);
    run->AddTask(psaTask);
-   // run->AddTask(SCTask);
+   run->AddTask(SCTask);
    run->AddTask(praTask);
 
    std::cout << "***** Starting Init ******" << std::endl;

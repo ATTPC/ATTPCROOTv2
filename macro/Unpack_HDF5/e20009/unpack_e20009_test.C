@@ -8,8 +8,7 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-
-void unpack_e20009_test(TString fileName = "run_0350")
+void unpack_e20009_test(TString fileName = "run_0300")
 {
 
    // Load the library for unpacking and reconstruction
@@ -17,11 +16,10 @@ void unpack_e20009_test(TString fileName = "run_0350")
 
    TStopwatch timer;
    timer.Start();
-  
-  
+
    TString parameterFile = "ATTPC.e20009.par";
    TString mappath = "";
-   TString filepath = "/mnt/daqtesting/e20009_attpc_transfer/h5/";
+   TString filepath = "/media/yassid/Data/e20009/";
    TString fileExt = ".h5";
    TString inputFile = filepath + fileName + fileExt;
    TString scriptfile = "e12014_pad_mapping.xml";
@@ -31,7 +29,7 @@ void unpack_e20009_test(TString fileName = "run_0350")
    TString dataDir = dir + "/macro/data/";
    TString geomDir = dir + "/geometry/";
    gSystem->Setenv("GEOMPATH", geomDir.Data());
-   TString outputFile =  fileName + ".root"; 
+   TString outputFile = fileName + ".root";
    TString loggerFile = dataDir + "ATTPCLog.log";
    TString digiParFile = dir + "/parameters/" + parameterFile;
    TString geoManFile = dir + "/geometry/ATTPC_He1bar_v2.root";
@@ -40,7 +38,7 @@ void unpack_e20009_test(TString fileName = "run_0350")
    TString zlutFile = dir + "/resources/corrections/e20009/zLUT.txt";
    TString radlutFile = dir + "/resources/corrections/e20009/radLUT.txt";
    TString tralutFile = dir + "/resources/corrections/e20009/traLUT.txt";
-   
+
    FairRunAna *run = new FairRunAna();
    run->SetOutputFile(outputFile);
    run->SetGeomFile(geoManFile);
@@ -68,7 +66,7 @@ void unpack_e20009_test(TString fileName = "run_0350")
    fAtMapPtr->AddAuxPad({10,0,2,0},"trigger_free");
    fAtMapPtr->AddAuxPad({10,0,3,34},"DB_beam");
    fAtMapPtr->AddAuxPad({10,0,3,0},"unassigned");
-   
+
    auto unpacker = std::make_unique<AtHDFUnpacker>(fAtMapPtr);
    unpacker->SetInputFileName(inputFile.Data());
    unpacker->SetNumberTimestamps(2);
@@ -76,7 +74,7 @@ void unpack_e20009_test(TString fileName = "run_0350")
 
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetPersistence(false);
-   
+
    AtFilterSubtraction *filter = new AtFilterSubtraction(fAtMapPtr);
    filter->SetThreshold(50);
    filter->SetIsGood(false);
@@ -116,7 +114,7 @@ void unpack_e20009_test(TString fileName = "run_0350")
    run->AddTask(psaTask);
    run->AddTask(SCTask);
    run->AddTask(praTask);
-   
+
    std::cout << "***** Starting Init ******" << std::endl;
    run->Init();
    std::cout << "***** Ending Init ******" << std::endl;

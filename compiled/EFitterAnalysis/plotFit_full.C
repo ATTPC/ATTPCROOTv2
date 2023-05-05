@@ -581,7 +581,7 @@ void plotFit_full(std::string fileFolder = "data/")
 
    // Merging
    if (kIsMerging)
-      m_Chain->Merge("finalDp.root", "C");
+      m_Chain->Merge("final.root", "C");
 
    // Adding kinematic lines
    Double_t *ThetaCMS = new Double_t[20000];

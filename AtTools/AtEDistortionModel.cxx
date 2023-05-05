@@ -101,13 +101,13 @@ AtEDistortionModel::GetCorrectionFactors(const Int_t &radius, const Int_t &zpos)
 {
 
    if (fDistortionMap->size() == 0) {
-      LOG(error) << " Warning! Correction map is empty. ";
+      //  LOG(error) << " Warning! Correction map is empty. ";
       return std::make_tuple(0, 0, 0);
    }
 
    EFieldMapRef ref{radius, zpos};
    if (fDistortionMap->find(ref) == fDistortionMap->end()) {
-      LOG(error) << " Correction factor not found. ";
+      // LOG(error) << " Correction factor not found. ";
       return std::make_tuple(0, 0, 0);
    } else {
       auto corr = fDistortionMap->at(ref);
@@ -118,6 +118,8 @@ AtEDistortionModel::GetCorrectionFactors(const Int_t &radius, const Int_t &zpos)
 void AtEDistortionModel::SetBufferMap(std::ifstream &lut, BufferMap *map)
 {
 
+   Int_t radiusCnt = 0;
+
    while (!lut.eof()) {
 
       std::string line;
@@ -127,7 +129,9 @@ void AtEDistortionModel::SetBufferMap(std::ifstream &lut, BufferMap *map)
       std::istringstream buffer(line);
       Int_t cnt = 0;
 
-      buffer >> radius;
+      // N.B. e20009 correction files have an extra parameter at the beginning of each line. That parameter is the
+      // radius in mm buffer >> radius;
+      radius = radiusCnt;
 
       while (buffer >> value) {
 
@@ -135,6 +139,8 @@ void AtEDistortionModel::SetBufferMap(std::ifstream &lut, BufferMap *map)
          map->emplace(ref, value);
          ++cnt;
       }
+
+      ++radiusCnt;
    }
 }
 

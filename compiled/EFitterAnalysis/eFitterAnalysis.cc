@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
 
    case a1954:
       gasMediumDensity = 0.083147;
+      magneticField = 2.85;
 
       if (simulationConv) {
          filePath = dir + "/macro/Simulation/ATTPC/14C_pp/data/";
@@ -93,6 +94,7 @@ int main(int argc, char *argv[])
 
    case e20009:
       gasMediumDensity = 0.13129;
+      magneticField = 3.0;
 
       if (simulationConv) {
          filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/data/";
@@ -100,40 +102,43 @@ int main(int argc, char *argv[])
       } else {
          filePath = dir + "/macro/Unpack_HDF5/e20009/";
          simFile = "";
-      }
 
-      geoManFile = dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
-      ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
+        }
 
-      std::cout << " Analysis of experiment e20009. Gas density : " << gasMediumDensity << " mg/cm3"
-                << "\n";
-      std::cout << " File path : " << filePath << "\n";
-      std::cout << " Geomtry file : " << geoManFile << "\n";
-      std::cout << " Ion list file : " << ionList << "\n";
+        geoManFile = dir + "/geometry/ATTPC_D600torr_v2_geomanager.root";
+        ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
 
-      break;
+        std::cout << " Analysis of experiment e20009. Gas density : " << gasMediumDensity << " mg/cm3"
+                  << "\n";
+        std::cout << " File path : " << filePath << "\n";
+        std::cout << " Geomtry file : " << geoManFile << "\n";
+        std::cout << " Ion list file : " << ionList << "\n";
 
-   case e20020:
-      gasMediumDensity = 0.1533;
+        break;
 
-      if (simulationConv) {
-         filePath = dir + "/macro/Simulation/ATTPC/16O_aa_v2/";
-         simFile = "_sim_";
-      } else {
-         filePath = dir + "/macro/Unpack_HDF5/e20020/";
-         simFile = "";
-      }
+       case e20020:
+	gasMediumDensity = 0.1533;
+   magneticField = 3.0;
 
-      geoManFile = dir + "/geometry/ATTPC_He1bar_v2_geomanager.root";
-      ionList = dirCstr + "/resources/ionFitLists/e20020_ionList.xml";
+   if (simulationConv) {
+      filePath = dir + "/macro/Simulation/ATTPC/16O_aa_v2/";
+      simFile = "_sim_";
+        } else {
+           filePath = dir + "/macro/Unpack_HDF5/e20020/";
+           simFile = "";
+        }
 
-      std::cout << " Analysis of experiment e20020. Gas density : " << gasMediumDensity << " mg/cm3"
-                << "\n";
-      std::cout << " File path : " << filePath << "\n";
-      std::cout << " Geomtry file : " << geoManFile << "\n";
-      std::cout << " Ion list file : " << ionList << "\n";
-      break;
-   }
+        geoManFile = dir + "/geometry/ATTPC_He1bar_v2_geomanager.root";
+        ionList = dirCstr + "/resources/ionFitLists/e20020_ionList.xml";
+
+        std::cout << " Analysis of experiment e20020. Gas density : " << gasMediumDensity << " mg/cm3"
+                  << "\n";
+        std::cout << " File path : " << filePath << "\n";
+        std::cout << " Geomtry file : " << geoManFile << "\n";
+        std::cout << " Ion list file : " << ionList << "\n";
+        break;
+     }
+
 
    outputFileName = "fit_analysis_" + simFile + inputFileName;
    outputFileName += "_" + std::to_string(firstEvt) + "_" + std::to_string(lastEvt) + ".root";
@@ -506,13 +511,14 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
 	 case e20009:
 	   pdgCandFit.push_back(2212);
 	   break;
-	}
+   }
 
 } else if (thetaConv < 90 && thetaConv > 10) {
 
          switch (fExpNum) {
          case e20020: pdgCandFit.push_back(1000020040); break;
          case e20009: pdgCandFit.push_back(1000010020); break;
+         case a1954: pdgCandFit.push_back(2212); break;
          }
 
       } else if (thetaConv < 10) {
