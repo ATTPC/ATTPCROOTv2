@@ -32,8 +32,8 @@ int Mainrel()
    kineStr.open("Kine.txt");
 
    Int_t a = 1;
-   int A1 = 10.; // mass0 of the incident particle
-   int Z1 = 4.;  // charge of the incident particle
+   int A1 = 16.; // mass0 of the incident particle
+   int Z1 = 6.;  // charge of the incident particle
    char *El1 = new char[2];
 
    // double m1=77.963180;
@@ -48,8 +48,8 @@ int Mainrel()
 
    // cout<<El2<<endl;
 
-   int A3 = 10; // mass0 of the scattered particle
-   int Z3 = 4;  // charge of the scattered particle
+   int A3 = 16; // mass0 of the scattered particle
+   int Z3 = 6;  // charge of the scattered particle
    char *El3 = new char[2];
 
    // double m3=78.971987;
@@ -74,15 +74,15 @@ int Mainrel()
 
    double ex1 = 0;     // excitation energy of the incident particle
    double ex2 = 0;     // excitation energy of the target
-   double ex3 = 7.542; // excitation energy of the scattered particle
+   double ex3 = 15.0;  // excitation energy of the scattered particle
    double ex4 = 0.0;   // excitation energy of the recoil
 
-   double tbt = 9.05; // incident energy (total Lab energy in MeV)
+   double tbt = 11.5; // incident energy (total Lab energy in MeV)
 
    double Energyrdec, Anglerdec;
 
-   // cout<<" Mass of the incident particle A1"<<endl;
-   // cin>>A1;
+   //  cout<<" Mass of the incident particle A1"<<endl;
+   //  cin>>A1;
    //  cout<<" Charge of the incident particle Z1"<<endl;
    //  cin>>Z1;
    double m1 = read_ame03(Z1, A1, El1);
@@ -248,7 +248,8 @@ int Mainrel()
 
 Double_t read_ame03(int Zin, int Ain, char *El)
 {
-   ifstream *in = new ifstream("masstable.dat");
+   // std::ifstream *in = new std::ifstream("masstable.dat");
+   std::ifstream in("masstable.dat");
    Char_t line[256];
    Int_t N;
    Int_t Z;
@@ -257,13 +258,13 @@ Double_t read_ame03(int Zin, int Ain, char *El)
    Char_t dummy[256];
    Double_t mass;
    for (Int_t k = 0; k < 39; k++) {
-      in->getline(line, 256);
+      in.getline(line, 256);
       // cout<<line<<endl;
    }
-   while (!in->eof()) {
-      *in >> N >> Z >> elem;
+   while (!in.eof()) {
+      in >> N >> Z >> elem;
       // cout<<N<<" "<<Z<<" "<<elem<<endl;
-      in->get(line, 256, '\n');
+      in.get(line, 256, '\n');
       // cout<<line<<endl;
       Int_t a = atoi(elem);
       if (a != 0) {
@@ -290,6 +291,6 @@ Double_t read_ame03(int Zin, int Ain, char *El)
       }
    }
    cout << "Mass not found!" << endl;
-   delete in;
+   // delete in;
    return -1;
 }
