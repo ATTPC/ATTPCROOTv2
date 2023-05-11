@@ -89,8 +89,14 @@ void AtTabFF::UpdateEvent()
       ContainerManip::SetHistFromData(*fExpADCSum[i], adcSum);
       auto fResultArray = dynamic_cast<TClonesArray *>(FairRootManager::Instance()->GetObject("AtMCResult"));
       if (fResultArray) {
-         double amp = dynamic_cast<MCFitter::AtMCResult *>(fResultArray->At(0))->fParameters["Amp"];
-         fSimdQdZ[i]->Scale(amp);
+         auto result = dynamic_cast<MCFitter::AtMCResult *>(fResultArray->At(0));
+         fSimdQdZ[i]->Scale(result->fParameters["Amp"]);
+         if (i == 0) {
+            LOG(info) << "Z1: " << result->fParameters["Z0"] << " A1: " << result->fParameters["A0"];
+            LOG(info) << "Z2: " << result->fParameters["Z1"] << " A2: " << result->fParameters["A1"];
+            LOG(info) << "ObjQ: " << result->fParameters["ObjQ"] << " ObjPos: " << result->fParameters["ObjPos"]
+                      << " Amp: " << result->fParameters["Amp"];
+         }
       }
    }
 }

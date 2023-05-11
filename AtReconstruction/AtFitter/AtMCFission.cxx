@@ -43,6 +43,12 @@ using XYZPoint = ROOT::Math::XYZPoint;
 using XYZVector = ROOT::Math::XYZVector;
 using PxPyPzEVector = ROOT::Math::PxPyPzEVector;
 
+void AtMCFission::SetAmp(float amp)
+{
+   fAmp = amp;
+   fFitAmp = false;
+}
+
 void AtMCFission::CreateParamDistros()
 
 {
@@ -105,7 +111,7 @@ double AtMCFission::ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventI
    definition.fParameters["ObjQ"] = charge;
    definition.fParameters["ObjPos"] = pos;
 
-   return pos + charge;
+   return charge;
 }
 
 double AtMCFission::ObjectiveCharge(const AtFissionEvent &expEvent, int SimEventID, AtMCResult &def)
@@ -127,17 +133,18 @@ double AtMCFission::ObjectiveCharge(const AtFissionEvent &expEvent, int SimEvent
 double
 AtMCFission::ObjectiveChargeChi2(const std::vector<double> &exp, const std::vector<double> &sim, const double *par)
 {
-   if (exp.size() == 0)
+   if (exp.size() == 0 || exp.size() != sim.size())
       return std::numeric_limits<double>::max();
 
    double chi2 = 0;
    for (int i = 0; i < exp.size(); ++i)
-      chi2 += (exp[i] - par[0] * sim[i]) * (exp[i] - par[0] * sim[i]) / exp[i];
+      chi2 += (exp.at(i) - par[0] * sim.at(i)) * (exp.at(i) - par[0] * sim.at(i)) / exp.at(i);
 
    chi2 /= exp.size();
    LOG(debug) << "A: " << par[0] << " Chi2: " << chi2;
    return chi2;
 }
+
 double
 AtMCFission::ObjectiveChargeDiff2(const std::vector<double> &exp, const std::vector<double> &sim, const double *par)
 {
@@ -173,21 +180,32 @@ double AtMCFission::ObjectiveCharge(const std::array<std::vector<double>, 2> &ex
       }
    }
 
-   auto functor = ROOT::Math::Functor(std::bind(fObjCharge, exp, sim, std::placeholders::_1), 1);
+   if (fFitAmp && !(exp.size() == 0 || exp.size() != sim.size())) {
+      LOG(info) << exp.size() << " " << sim.size();
+      auto functor = ROOT::Math::Functor(std::bind(fObjCharge, exp, sim, std::placeholders::_1), 1);
 
-   std::vector<double> A = {1};
-   ROOT::Fit::Fitter fitter;
-   fitter.SetFCN(functor, A.data());
-   bool ok = fitter.FitFCN();
-   if (!ok) {
-      LOG(error) << "Failed to fit the charge curves. Not adding to objective.";
-      return 0;
+      std::vector<double> A = {fAmp};
+      ROOT::Fit::Fitter fitter;
+      fitter.Config().SetMinimizer("Minuit2");
+      fitter.SetFCN(functor, A.data());
+      bool ok = fitter.FitFCN();
+      if (!ok) {
+         LOG(error) << "Failed to fit the charge curves. Not adding to objective.";
+         return std::numeric_limits<double>::max();
+      }
+      auto &result = fitter.Result();
+      double amp = result.Parameter(0);
+      definition.fParameters["Amp"] = amp;
+      definition.fParameters["qChi2"] = result.MinFcnValue();
+      return result.MinFcnValue();
+   } else {
+
+      definition.fParameters["Amp"] = fAmp;
+      std::vector<double> A = {fAmp};
+      auto chi2 = fObjCharge(exp, sim, A.data());
+      definition.fParameters["qChi2"] = chi2;
+      return chi2;
    }
-   auto &result = fitter.Result();
-   double amp = result.Parameter(0);
-   definition.fParameters["Amp"] = amp;
-   definition.fParameters["qChi2"] = result.MinFcnValue();
-   return result.MinFcnValue();
 }
 
 double AtMCFission::ObjectivePosition(const AtFissionEvent &expEvent, int SimEventID)
@@ -206,6 +224,7 @@ double AtMCFission::ObjectivePosition(const AtFissionEvent &expEvent, int SimEve
 
    auto map = fPulse->GetMap();
    double chi2 = 0;
+   int nPads = 0;
 
    // Get every pad that was in the experimental event (assumes that each pad was only used once)
    for (auto expHit : fragHits) {
@@ -220,6 +239,7 @@ double AtMCFission::ObjectivePosition(const AtFissionEvent &expEvent, int SimEve
                                 [padNum](const AtEvent::HitPtr &hit2) { return hit2->GetPadNum() == padNum; });
       if (hitIt == simEvent.GetHits().end() || expHit->GetPositionSigma().Z() == 0) {
          chi2++; // This is the integral of the normalized gaussian that we have nothing to compare to
+         nPads++;
          LOG(debug) << "Did not find pad " << padNum << " in the simulated event or it's in the beam region";
          continue;
       }
@@ -236,8 +256,9 @@ double AtMCFission::ObjectivePosition(const AtFissionEvent &expEvent, int SimEve
       LOG(debug) << "Found " << padNum << " in the simulated event. Simulated hit is " << simZ << " +- " << simSig
                  << "  Experimental hit is " << expZ << " +- " << expSig << " Chi2 between pads is " << diff;
       chi2 += diff;
+      nPads++;
    }
-   return chi2;
+   return chi2 / nPads;
 }
 /**
  * Returns \Integral_{-inf}^{inf} (G[uO,sO,x] - G[uE,sE,x])^2/G[uE,sE,x] dx

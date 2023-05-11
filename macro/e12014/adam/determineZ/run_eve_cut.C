@@ -17,10 +17,11 @@ void run_eve_cut(TString cut = "cut1", TString species = "Bi200", int pressure =
    // fair::Logger::SetVerbosity("user1");
    // fair::Logger::SetConsoleSeverity("debug");
 
-   TString InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%s/%s/%sDiff2.root", pressure,
+   TString InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%s/%s/%sChi2.root", pressure,
                                            cut.Data(), lise ? "LISE" : "SRIM", species.Data());
 
    // InputDataFile = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
+   InputDataFile = "./Chi2FixAmp.root";
 
    TString dir = getenv("VMCWORKDIR");
    TString geoFile = "ATTPC_v1.1_geomanager.root";

@@ -39,11 +39,15 @@ protected:
    /// Objective function to minimize the difference between A*sim and exp charge curves.
    ObjectiveFuncCharge fObjCharge{ObjectiveChargeChi2};
 
+   float fAmp = 1;
+   bool fFitAmp = true;
+
 public:
    AtMCFission(SimPtr sim, ClusterPtr cluster, PulsePtr pulse) : AtMCFitter(sim, cluster, pulse) {}
    virtual ~AtMCFission() = default;
    void SetCN(Ion cn) { fCN = cn; }
    void SetChargeObjective(ObjectiveFuncCharge obj) { fObjCharge = obj; }
+   void SetAmp(float amp);
 
    // Options to use as the function to minimize when fitting sim to exp.
    static double ObjectiveChargeChi2(const std::vector<double> &exp, const std::vector<double> &sim, const double *par);
