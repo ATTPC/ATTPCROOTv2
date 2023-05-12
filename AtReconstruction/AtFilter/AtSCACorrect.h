@@ -23,13 +23,18 @@ private:
    using RawEventPtr = std::unique_ptr<AtRawEvent>;
    AtMapPtr fMap;
 
-   RawEventPtr fBaseline;
-   RawEventPtr fPhase;
+   RawEventPtr fRawEvent;
+
+   Bool_t fDoBaseline;
+   Bool_t fDoPhase;
+   Bool_t fUseChanZero;
+
+   TString fBaseAugName;
+   TString fPhaseAugName;
 
 public:
-   AtSCACorrect(AtMapPtr map, TString baselineFilename, TString baselineEventName, TString phaseFilename,
-                TString phaseEventName);
-   AtSCACorrect(AtMapPtr map, RawEventPtr baseline, RawEventPtr phase);
+   AtSCACorrect(AtMapPtr map, TString filename, TString eventName, TString baselineAug, TString phaseAug);
+   AtSCACorrect(AtMapPtr map, RawEventPtr rawEvent, TString baselineAug, TString phaseAug);
 
    virtual void Init() override {}
    virtual void InitEvent(AtRawEvent *) override {}
@@ -37,10 +42,15 @@ public:
 
    virtual void Filter(AtPad *pad, AtPadReference *padReference) override;
 
+   void DoBaseline(Bool_t val) { fDoBaseline = val; }
+   void DoPhase(Bool_t val) { fDoPhase = val; }
+
+   void UseChannelZero() { fUseChanZero = true; }
+
 private:
    void removeBaseline(AtPad *pad, AtPadReference *padReference);
    void removePhase(AtPad *pad, AtPadReference *padReference);
    AtPad *getMatchingPad(AtPad *pad, AtPadReference *ref, AtRawEvent *event);
 };
 
-#endif //#ifndef ATSCACORRECT_H
+#endif // #ifndef ATSCACORRECT_H
