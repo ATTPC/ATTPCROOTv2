@@ -20,7 +20,6 @@ public:
 
    void AddFunction(std::function<void()> function) { fFunctions.push_back(function); }
 
-
    ClassDef(AtMacroTask, 1);
 };
 
