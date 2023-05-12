@@ -2,11 +2,11 @@
 #define ATSIDEBARPSATBAVG_H
 #include "AtSidebarPSA.h" // for AtSidebarPSA
 
-#include <Rtypes.h>       // for THashConsistencyHolder, UInt_t, ClassDefOv...
+#include <Rtypes.h> // for THashConsistencyHolder, UInt_t, ClassDefOv...
 
-#include <GuiTypes.h>     // for Pixel_t
+#include <GuiTypes.h> // for Pixel_t
 
-#include <string>         // for allocator, string
+#include <string> // for allocator, string
 class TBuffer;
 class TClass;
 class TGWindow;
