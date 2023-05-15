@@ -9,8 +9,14 @@ bool cut1(AtFissionEvent *evt)
    if (vZ < 200 || vZ > 955)
       return false;
 
+   // Bi200
    double upper = 0.58 + (955 - vZ) * .2 / 755;
    double lower = 0.46 + (955 - vZ) * .2 / 755;
+
+   // Pb198
+   // double upper = 0.6 + (955 - vZ) * .12 / 755;
+   // double lower = 0.48 + (955 - vZ) * .12 / 755;
+
    double ang = evt->GetFoldingAngle();
 
    return ang < upper && ang > lower;
@@ -25,8 +31,14 @@ bool cut2(AtFissionEvent *evt)
    if (vZ < 200 || vZ > 955)
       return false;
 
+   // Bi200
    double upper = 0.58 + (955 - vZ) * .2 / 755;
    double lower = 0.40 + (955 - vZ) * .2 / 755;
+
+   // Pb198
+   // double upper = 0.58 + (955 - vZ) * .2 / 755;
+   // double lower = 0.40 + (955 - vZ) * .2 / 755;
+
    double ang = evt->GetFoldingAngle();
 
    return ang < upper && ang > lower;
@@ -44,8 +56,8 @@ string to_string(ChargeObj obj)
    return "";
 }
 
-void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure = 150, bool lise = false,
-             ChargeObj obj = kDiff2)
+void run_cut(TString cutName = "cut2", TString species = "Bi200", int pressure = 150, bool lise = false,
+             ChargeObj obj = kChi2)
 {
 
    auto verbSpec =
@@ -61,11 +73,13 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    TString OutputDataFile =
       TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%s/%s/%s%s.root", pressure, cutName.Data(),
                       lise ? "LISE" : "SRIM", species.Data(), to_string(obj).c_str());
+   // OutputDataFile = "./Chi2FixAmp.root";
+   // OutputDataFile = "./Chi2NormalPosition.root";
 
    /*
-      TString OutputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr/%s/%s/%s.root", pressure,
-      cutName.Data(), lise ? "LISE" : "SRIM", species.Data());
-   */
+         TString OutputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr/%s/%s/%s.root", pressure,
+         cutName.Data(), lise ? "LISE" : "SRIM", species.Data());
+      */
    TString dir = getenv("VMCWORKDIR");
    TString geoFile = "ATTPC_v1.1_geomanager.root";
    TString mapFile = "e12014_pad_mapping.xml";
@@ -111,10 +125,12 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    scModel->SetBeamLocation({0, -6, 0}, {10, 0, 1000});
    sim->SetSpaceChargeModel(scModel);
 
+   int Zcn = 83 + 2;
+   int Acn = 200 + 4;
    // Create and load energy loss models
    std::vector<std::pair<int, int>> ions;
    for (int i = 30; i <= 55; i++)
-      ions.push_back({i, std::round((double)i / 85 * 204)});
+      ions.push_back({i, std::round((double)i / Zcn * Acn)});
    for (auto [Z, A] : ions) {
       auto eloss = std::make_shared<AtTools::AtELossTable>();
       if (lise)
@@ -132,10 +148,12 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
 
    auto fitter = std::make_shared<MCFitter::AtMCFission>(sim, cluster, pulse);
    fitter->SetTimeEvent(true);
+   fitter->SetCN({Zcn, Acn});
    switch (obj) {
    case kDiff2: fitter->SetChargeObjective(MCFitter::AtMCFission::ObjectiveChargeDiff2); break;
    case kChi2: fitter->SetChargeObjective(MCFitter::AtMCFission::ObjectiveChargeChi2); break;
    }
+   // fitter->SetAmp(0.454);
 
    auto simPSA = std::make_shared<AtPSADeconvFit>();
    simPSA->SetUseSimCharge(true);
@@ -159,7 +177,7 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    auto runStart = std::chrono::high_resolution_clock::now();
    // fRun->Run(0, 4);
    // fRun->Run(0, 100);
-   fRun->Run();
+   fRun->Run(0, 2000);
    auto runStop = std::chrono::high_resolution_clock::now();
 
    LOG(info) << "Run processed in "

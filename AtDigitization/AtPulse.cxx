@@ -90,6 +90,7 @@ void AtPulse::FillPad(AtPad &pad, TH1F &hist)
       if (nEle > 0) {
          // Scale the saved charge down so its closer to reco
          charge->SetArray(kk - 1, nEle * fGETGain * fResponse(pad.GetPadNum(), fPeakingTime));
+         // charge->SetArray(kk - 1, nEle);
          if (!fDoConvolution) {
             pad.SetADC(kk - 1, 0);
             continue;
