@@ -97,14 +97,14 @@ void FillPlots(float ampCut = 1, float EMin = 0, float EMax = 5000, float pos = 
 void PlotZ(bool draw = true)
 {
    // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Diff2.root";
-   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Chi2.root";
-   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut2/SRIM/Bi200Chi2.root";
-   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Pb198Chi2.root";
-   //        TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameV/cut1/SRIM/Bi200Diff2.root";
-   //        TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
-   //    TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameVSmall/cut1/SRIM/Bi200Chi2.root";
-   //    TString fileName = "./Chi2FixAmp.root";
-   //  TString fileName = "./Chi2NormalPosition.root";
+   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Chi2.root";
+   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut2/SRIM/Bi200Chi2.root";
+   //  TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Pb198Chi2.root";
+   //         TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameV/cut1/SRIM/Bi200Diff2.root";
+   //         TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
+   //     TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameVSmall/cut1/SRIM/Bi200Chi2.root";
+   //     TString fileName = "./Chi2FixAmp.root";
+   //   TString fileName = "./Chi2NormalPosition.root";
 
    if (!tree) {
       tree = new TChain("cbmsim");

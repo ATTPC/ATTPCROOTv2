@@ -275,6 +275,11 @@ double GetBeta(double p, double m)
 {
    return p / std::sqrt(p * p + m * m);
 }
+double GetBeta(double p, int A)
+{
+   return GetBeta(p, AtoE(A));
+}
+
 double GetGamma(double beta)
 {
    assert(beta >= 0 && beta <= 1);
