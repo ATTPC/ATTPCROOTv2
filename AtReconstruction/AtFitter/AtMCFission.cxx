@@ -106,12 +106,98 @@ double AtMCFission::ObjectiveFunction(const AtBaseEvent &expEvent, int SimEventI
    // Make sure we were passed the right event type
    auto expFission = dynamic_cast<const AtFissionEvent &>(expEvent);
    auto charge = ObjectiveCharge(expFission, SimEventID, definition);
-   auto pos = ObjectivePosition(expFission, SimEventID);
+   // auto charge = ObjectiveChargePads(expFission, SimEventID, definition);
+   auto pos = ObjectivePositionPads(expFission, SimEventID);
    LOG(info) << "Chi2 Pos: " << pos << " Chi2 Q: " << charge;
    definition.fParameters["ObjQ"] = charge;
    definition.fParameters["ObjPos"] = pos;
 
    return charge;
+}
+
+/**
+ * Gets the max charge of a hit in the experimental event that is associated with a FF (Qmax)
+ * Fits the scaling parameter, A to minimize the following (which is the objective funtion)
+ *
+ * Chi2 = 1/N \Sum (Q_exp - A*Q_sim)^2/(0.1*Qmax)^2
+ * summing over all good pads in the experimental event.
+ */
+double AtMCFission::ObjectiveChargePads(const AtFissionEvent &expEvent, int SimEventID, AtMCResult &def)
+{
+   AtEvent &simEvent = fEventArray.at(SimEventID);
+   auto fragHits1 = expEvent.GetFragHits(0);
+   auto fragHits2 = expEvent.GetFragHits(1);
+
+   // Get the max charge in the experimental event
+   auto comp = [](const AtHit *a, const AtHit *b) { return a->GetCharge() < b->GetCharge(); };
+
+   auto maxQ1 = (*std::max_element(fragHits1.begin(), fragHits1.end(), comp))->GetCharge();
+   auto maxQ2 = (*std::max_element(fragHits2.begin(), fragHits2.end(), comp))->GetCharge();
+
+   // Loop through every hit in the experimental event associated with the FF, and create an array
+   //  of the corresponding hits in the simulated event
+   std::vector<std::vector<double>> expCharge, simCharge;
+   expCharge.resize(2);
+   simCharge.resize(2);
+   E12014::FillHits(expCharge[0], simCharge[0], fragHits1, ContainerManip::GetPointerVector(simEvent.GetHits()),
+                    E12014::fSatThreshold);
+   E12014::FillHits(expCharge[1], simCharge[1], fragHits2, ContainerManip::GetPointerVector(simEvent.GetHits()),
+                    E12014::fSatThreshold);
+
+   // So now that we have our two vectors to compare, run the minimization
+   assert(expCharge[0].size() == simCharge[0].size() && expCharge[1].size() == simCharge[1].size());
+
+   auto func = [&expCharge, &simCharge, maxQ1, maxQ2](const double *par) {
+      double chi2_1 = 0;
+      for (int i = 0; i < expCharge[0].size(); ++i) {
+         double chi = (expCharge[0][i] - par[0] * simCharge[0][i]) / (0.1 * maxQ1);
+         chi2_1 += chi * chi;
+      }
+      chi2_1 /= expCharge[0].size();
+
+      double chi2_2 = 0;
+      for (int i = 0; i < expCharge[1].size(); ++i) {
+         double chi = (expCharge[1][i] - par[0] * simCharge[1][i]) / (0.1 * maxQ2);
+         chi2_2 += chi * chi;
+      }
+      chi2_2 /= expCharge[1].size();
+
+      return chi2_1 + chi2_2;
+   };
+   auto functor = ROOT::Math::Functor(func, 1);
+
+   std::vector<double> A = {fAmp};
+   ROOT::Fit::Fitter fitter;
+   fitter.Config().SetMinimizer("Minuit2");
+   fitter.SetFCN(functor, A.data());
+   bool ok = fitter.FitFCN();
+   if (!ok) {
+      LOG(error) << "Failed to fit the charge curves. Not adding to objective.";
+      return std::numeric_limits<double>::max();
+   }
+   auto &result = fitter.Result();
+   double amp = result.Parameter(0);
+   def.fParameters["Amp"] = amp;
+   def.fParameters["qChi2"] = result.MinFcnValue();
+   return result.MinFcnValue();
+}
+
+double AtMCFission::ObjectivePositionPads(const AtFissionEvent &expEvent, int SimEventID)
+{
+   AtEvent &simEvent = fEventArray.at(SimEventID);
+   auto fragHits = expEvent.GetFragHits();
+
+   std::vector<double> exp, sim;
+   E12014::FillZPos(exp, sim, fragHits, ContainerManip::GetPointerVector(simEvent.GetHits()), E12014::fSatThreshold);
+
+   assert(exp.size() == sim.size());
+   double chi2 = 0;
+   for (int i = 0; i < exp.size(); ++i) {
+
+      double chi = (exp[i] - sim[i]) / (1 * 0.320 * .815 * 10); // 1 TB = 320 ns = .32*.815*10 mm
+      chi2 += chi * chi;
+   }
+   return chi2 / exp.size();
 }
 
 double AtMCFission::ObjectiveCharge(const AtFissionEvent &expEvent, int SimEventID, AtMCResult &def)
@@ -139,6 +225,23 @@ AtMCFission::ObjectiveChargeChi2(const std::vector<double> &exp, const std::vect
    double chi2 = 0;
    for (int i = 0; i < exp.size(); ++i)
       chi2 += (exp.at(i) - par[0] * sim.at(i)) * (exp.at(i) - par[0] * sim.at(i)) / exp.at(i);
+
+   chi2 /= exp.size();
+   LOG(debug) << "A: " << par[0] << " Chi2: " << chi2;
+   return chi2;
+}
+
+double
+AtMCFission::ObjectiveChargeChi2Norm(const std::vector<double> &exp, const std::vector<double> &sim, const double *par)
+{
+   if (exp.size() == 0 || exp.size() != sim.size())
+      return std::numeric_limits<double>::max();
+
+   double chi2 = 0;
+   for (int i = 0; i < exp.size(); ++i) {
+      double chi = (exp.at(i) - par[0] * sim.at(i)) / (0.1 * exp.at(i));
+      chi2 += chi * chi;
+   }
 
    chi2 /= exp.size();
    LOG(debug) << "A: " << par[0] << " Chi2: " << chi2;

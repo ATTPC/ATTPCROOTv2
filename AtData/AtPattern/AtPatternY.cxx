@@ -193,18 +193,36 @@ void AtPatternY::FitPattern(const std::vector<XYZPoint> &points, const std::vect
    // This functor is what we are minimizing. It takes in the model parameters and defines an example
    // of this pattern based on the model parameters. It then loops through every hit associated with
    // pattern and calculates the chi2.
-   auto func = [&points, &charge, weighted](const double *par) {
+   auto func = [&points, &charge, weighted, this](const double *par) {
       AtPatternY pat;
       pat.DefinePattern(std::vector<double>(par, par + 12));
-      double chi2 = 0;
-      double qTot = 0;
+      std::array<double, 3> chi2 = {0, 0, 0};
+      std::array<double, 3> qTot = {0, 0, 0};
+
       for (int i = 0; i < points.size(); ++i) {
          auto q = weighted ? charge[i] : 1;
-         chi2 += pat.DistanceToPattern(points[i]) * pat.DistanceToPattern(points[i]) * q;
-         qTot += q;
+         auto pointAss = this->GetPointAssignment(points[i]);
+
+         // We can skip including points if they were originally FF points, or they were beam points
+         //  and are now FF points.
+         bool skippable = pointAss < 2;
+         skippable |= (pointAss == 2 && pat.GetPointAssignment(points[i]) < 2);
+
+         if (skippable && points[i].Rho() < 20)
+            continue;
+         LOG(debug) << q << " " << pat.DistanceToPattern(points[i]);
+         chi2[pointAss] += pat.DistanceToPattern(points[i]) * pat.DistanceToPattern(points[i]) * q;
+         qTot[pointAss] += q;
       }
 
-      return fabs(chi2 / qTot);
+      double retVal = 0;
+      for (int i = 0; i < 2; ++i) {
+         LOG(debug) << i << ": " << chi2[i] << "/" << qTot[i] << " = " << chi2[i] / qTot[i];
+         if (qTot[i] != 0)
+            retVal += chi2[i] / qTot[i];
+      }
+      LOG(debug) << "Obj: " << retVal;
+      return retVal;
    };
 
    auto functor = ROOT::Math::Functor(func, 12);

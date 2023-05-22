@@ -67,6 +67,16 @@ public:
                            AtRawEvent *expEvent = nullptr);
 
    /**
+    * Fill exp and sim with the charge of hits with all good experimental pads
+    *
+    */
+   static void FillHits(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
+                        const std::vector<AtHit *> &simHits, float satThresh);
+
+   static void FillZPos(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
+                        const std::vector<AtHit *> &simHits, float satThresh);
+
+   /**
     * Fill the array with charge information from the passed hits assuming the charge is gauss distributed. Designed to
     *be used for simulated hits and only include those that match the passed pads
     *@param[in/out] vec vector to clear and fill.

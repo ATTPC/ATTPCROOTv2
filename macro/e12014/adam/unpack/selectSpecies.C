@@ -53,11 +53,11 @@ void selectSpecies(TString species, int pressure)
 
 void selectSpecies(TString species, TString pressure, std::vector<int> runs)
 {
-   TString input = "/mnt/analysis/e12014/TPC/fission_linked/run_%04d.root";
-   TString inputEvt = "/mnt/analysis/e12014/TPC/fission_linked/evtRun_%04d.root";
+   TString input = "/mnt/analysis/e12014/TPC/fission_linked_yFit/run_%04d.root";
+   TString inputEvt = "/mnt/analysis/e12014/TPC/fission_linked_yFit/evtRun_%04d.root";
    TString inputCuts = TString::Format("/mnt/projects/hira/e12014/tpcSharedInfo/PIDcuts/%sYield.root", pressure.Data());
-   TString output = TString::Format("/mnt/analysis/e12014/TPC/%s/%s.root", pressure.Data(), species.Data());
-   TString outputEvt = TString::Format("/mnt/analysis/e12014/TPC/%s/%sEvt.root", pressure.Data(), species.Data());
+   TString output = TString::Format("/mnt/analysis/e12014/TPC/%s_yFit/%s.root", pressure.Data(), species.Data());
+   TString outputEvt = TString::Format("/mnt/analysis/e12014/TPC/%s_yFit/%sEvt.root", pressure.Data(), species.Data());
 
    TString geoFile = "ATTPC_v1.1_geomanager.root";
    TString mapFile = "e12014_pad_mapping.xml";
@@ -108,7 +108,7 @@ void selectSpecies(TString species, TString pressure, std::vector<int> runs)
    AtCutHEIST cut(&evtChain, inputCuts);
    cut.AddSpecies(species.Data());
    AtDataReductionTask *reduceTask = new AtDataReductionTask();
-   reduceTask->SetInputBranch("AtRawEvent");
+   reduceTask->SetInputBranch("AtRawEventRaw");
    reduceTask->SetReductionFunction([&cut]() { return cut(); });
 
    /***** Copy tree to new file *****/
@@ -116,7 +116,7 @@ void selectSpecies(TString species, TString pressure, std::vector<int> runs)
 
    /***** Link HEIST and TPC *****/
    linkTask->SetEvtOutputFile(outputEvt);
-   linkTask->SetInputBranch("AtRawEvent");
+   linkTask->SetInputBranch("AtRawEventRaw");
    linkTask->SetEvtTimestamp("tstamp");
    linkTask->SetTpcTimestampIndex(1);
    linkTask->SetSearchMean(1);

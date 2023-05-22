@@ -82,8 +82,11 @@ void AtTabFF::UpdateEvent()
       std::vector<double> exp;
       std::vector<double> sim;
       std::vector<double> adcSum;
+      auto tbMin = E12014::fTBMin;
+      E12014::fTBMin = 0;
       E12014::FillHitSums(exp, sim, fFissionEvent->GetFragHits(i), ContainerManip::GetPointerVector(fEvent->GetHits()),
-                          E12014::fThreshold, E12014::fSatThreshold, nullptr, &adcSum, fRawEvent.Get());
+                          0, E12014::fSatThreshold, nullptr, &adcSum, fRawEvent.Get());
+      E12014::fTBMin = tbMin;
       ContainerManip::SetHistFromData(*fExpdQdZ[i], exp);
       ContainerManip::SetHistFromData(*fSimdQdZ[i], sim);
       ContainerManip::SetHistFromData(*fExpADCSum[i], adcSum);

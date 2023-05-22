@@ -56,7 +56,7 @@ string to_string(ChargeObj obj)
    return "";
 }
 
-void run_cut(TString cutName = "cut2", TString species = "Bi200", int pressure = 150, bool lise = false,
+void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure = 150, bool lise = false,
              ChargeObj obj = kChi2)
 {
 
@@ -65,16 +65,14 @@ void run_cut(TString cutName = "cut2", TString species = "Bi200", int pressure =
    fair::Logger::DefineVerbosity("user1", verbSpec);
    // fair::Logger::SetVerbosity("user1");
    // fair::Logger::SetConsoleSeverity("debug");
+   TString path = "/mnt/analysis/e12014/TPC/%dTorr_yFit";
+   TString InputDataFile = TString::Format(path + "/%s.root", pressure, species.Data());
+   TString evtInputDataFile = TString::Format(path + "/%sEvt.root", pressure, species.Data());
 
-   TString InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%s.root", pressure, species.Data());
-   TString evtInputDataFile =
-      TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%sEvt.root", pressure, species.Data());
-
-   TString OutputDataFile =
-      TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%s/%s/%s%s.root", pressure, cutName.Data(),
-                      lise ? "LISE" : "SRIM", species.Data(), to_string(obj).c_str());
-   // OutputDataFile = "./Chi2FixAmp.root";
-   // OutputDataFile = "./Chi2NormalPosition.root";
+   TString OutputDataFile = TString::Format(path + "/%s/%s/%s%s.root", pressure, cutName.Data(), lise ? "LISE" : "SRIM",
+                                            species.Data(), to_string(obj).c_str());
+   // OutputDataFile = "./Bi200NewObj.root";
+   // OutputDataFile = "./Chi2Norm.root";
 
    /*
          TString OutputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr/%s/%s/%s.root", pressure,
@@ -177,7 +175,8 @@ void run_cut(TString cutName = "cut2", TString species = "Bi200", int pressure =
    auto runStart = std::chrono::high_resolution_clock::now();
    // fRun->Run(0, 4);
    // fRun->Run(0, 100);
-   fRun->Run(0, 2000);
+   // fRun->Run(0, 2000);
+   fRun->Run();
    auto runStop = std::chrono::high_resolution_clock::now();
 
    LOG(info) << "Run processed in "

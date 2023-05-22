@@ -1,5 +1,7 @@
 #include <TString.h>
 
+#include "../unpack/TxtEvent.h"
+
 TH1F *zHist = nullptr;
 TH1F *aHist = nullptr;
 TH1F *hAmp = nullptr;
@@ -17,6 +19,8 @@ TH2F *hAmpvsLoc = nullptr;
 TChain *tree;
 MCFitter::AtMCResult *result = nullptr;
 
+int maxObjQ = 100;
+
 double GetAvg(string name, TClonesArray &result, int toAvg = 1)
 {
    double num = 0;
@@ -30,7 +34,8 @@ double GetAvg(string name, TClonesArray &result, int toAvg = 1)
    return num / denom;
 }
 
-void FillPlots(float ampCut = 1, float EMin = 0, float EMax = 5000, float pos = 100)
+void FillPlots(float ampMin = 0, float ampCut = 1, float qMin = 0, float qMax = 1000, float EMin = 0, float EMax = 5000,
+               float pos = 100)
 {
 
    TTreeReader reader(tree);
@@ -48,21 +53,29 @@ void FillPlots(float ampCut = 1, float EMin = 0, float EMax = 5000, float pos = 
    hAmpvsObj->Reset();
    hAmpvsLoc->Reset();
 
+   TxtEvents check;
+   check.AddTxtFile("./data/Chi2QCut13.txt");
+   ofstream file("goodEvent.txt");
+
    while (reader.Next() && reader.GetCurrentEntry() < 10000) {
 
       // if (reader.GetCurrentEntry() == 36) {
-      int z = 0;
-      float amp = 0;
+      if (false && !check(reader.GetCurrentEntry()))
+         continue;
+
+      result = dynamic_cast<MCFitter::AtMCResult *>(resultArray->At(0));
+
+      int z = result->fParameters["Z1"];
+      float amp = result->fParameters["Amp"];
+      float objPos = result->fParameters["ObjPos"];
+      float objQ = result->fParameters["ObjQ"];
+
       for (int i = 0; i < resultArray->GetEntries(); ++i) {
 
          result = dynamic_cast<MCFitter::AtMCResult *>(resultArray->At(i));
 
-         if (i == 0) {
-            z = result->fParameters["Z1"];
-            amp = result->fParameters["Amp"];
-         }
+         if (objPos < pos && amp < ampCut && amp > ampMin && objQ < qMax && objQ > qMin) {
 
-         if (amp > 0 && amp < ampCut) {
             hZvsObj->Fill(z - result->fParameters["Z1"], result->fParameters["ObjQ"]);
             hZvsAmp->Fill(z - result->fParameters["Z1"], result->fParameters["Amp"]);
             hAmpvsPosObj->Fill(result->fParameters["Amp"], result->fParameters["ObjPos"]);
@@ -74,7 +87,13 @@ void FillPlots(float ampCut = 1, float EMin = 0, float EMax = 5000, float pos = 
       result = dynamic_cast<MCFitter::AtMCResult *>(resultArray->At(0));
       if (result) {
          if (result->fParameters["vZ"] > EMin && result->fParameters["vZ"] < EMax &&
-             result->fParameters["ObjPos"] < pos && result->fParameters["Amp"] < ampCut) {
+             result->fParameters["Amp"] < ampCut && result->fParameters["Amp"] > ampMin &&
+             result->fParameters["ObjQ"] < qMax && result->fParameters["ObjQ"] > qMin &&
+             result->fParameters["ObjPos"] < pos) {
+
+            // Save event number to file
+            file << reader.GetCurrentEntry() << std::endl;
+
             zHist->Fill(result->fParameters["Z0"]);
             zHist->Fill(result->fParameters["Z1"]);
             // zHist->Fill(GetAvg("Z0", *resultArray));
@@ -94,17 +113,39 @@ void FillPlots(float ampCut = 1, float EMin = 0, float EMax = 5000, float pos = 
    }
 }
 
+void PlotRange(double min, double max, double step)
+{
+   // Pictures will be saved to ./figures/out
+   TCanvas *c1 = new TCanvas();
+
+   int numIter = (max - min) / step;
+   for (int i = 0; i < numIter; ++i) {
+
+      double lMin = min + i * step;
+      double lMax = lMin + step;
+      cout << i << " " << lMin << " to " << lMax << endl;
+
+      FillPlots(0, 1, lMin, lMax);
+      c1->cd();
+      hZvsAmp->Draw("colz");
+      c1->SaveAs(TString::Format("./figures/out/ZvsAmp%f_%f.png", lMin, lMax));
+   }
+}
+
 void PlotZ(bool draw = true)
 {
    // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Diff2.root";
-   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Chi2.root";
-   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut2/SRIM/Bi200Chi2.root";
-   //  TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Pb198Chi2.root";
-   //         TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameV/cut1/SRIM/Bi200Diff2.root";
-   //         TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
-   //     TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameVSmall/cut1/SRIM/Bi200Chi2.root";
-   //     TString fileName = "./Chi2FixAmp.root";
-   //   TString fileName = "./Chi2NormalPosition.root";
+   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_yFit/cut1/SRIM/Bi200Chi2.root";
+   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Chi2.root";
+   //   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut2/SRIM/Bi200Chi2.root";
+   //     TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Pb198Chi2.root";
+   //            TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameV/cut1/SRIM/Bi200Diff2.root";
+   //            TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
+   //        TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameVSmall/cut1/SRIM/Bi200Chi2.root";
+   //        TString fileName = "./Chi2FixAmp.root";
+   //      TString fileName = "./Chi2NormalPosition.root";
+   //    TString fileName = "./Bi200NewObj.root";
+   //    TString fileName = "./Chi2Norm.root";
 
    if (!tree) {
       tree = new TChain("cbmsim");
@@ -119,14 +160,14 @@ void PlotZ(bool draw = true)
    aHist = new TH1F("hA", "A", zMax - zMin + 1, aMin, aMax);
    hBeam = new TH2F("hBeam", "Beam energy", 100, 0, 1000, 100, 0, 4500);
    hAmp = new TH1F("hAmp", "Charge Scaling Factor", 100, 0, 1);
-   hObj = new TH1F("hObj", "Objective Function", 100, 0, 1000);
-   hObjPos = new TH1F("hObjPos", "Objective Function Position", 50, 0, 1);
-   hObjQ = new TH1F("hObjQ", "Objective Function Charge", 100, 0, 1000);
+   hObj = new TH1F("hObj", "Objective Function", 100, 0, maxObjQ);
+   hObjPos = new TH1F("hObjPos", "Objective Function Position", 50, 0, 50);
+   hObjQ = new TH1F("hObjQ", "Objective Function Charge", 100, 0, maxObjQ);
 
-   hZvsObj = new TH2F("hZvsObj", "dZ vs Chi2", 20 + 1, -10, 10, 100, 0, 100);
+   hZvsObj = new TH2F("hZvsObj", "dZ vs Chi2", 20 + 1, -10, 10, 100, 0, maxObjQ);
    hZvsAmp = new TH2F("hZvsAmp", "dZ vs Amp", 20 + 1, -10, 10, 50, 0, 1);
-   hAmpvsPosObj = new TH2F("hAmpvsPosObj", "Amp vs Pos Objective", 50, 0, 1, 50, 0, 0.5);
-   hAmpvsObj = new TH2F("hAmpvsObj", "Amp vs Objective", 50, 0, 1, 50, 0, 100);
+   hAmpvsPosObj = new TH2F("hAmpvsPosObj", "Amp vs Pos Objective", 50, 0, 1, 50, 0, 10);
+   hAmpvsObj = new TH2F("hAmpvsObj", "Amp vs Objective", 50, 0, 1, 50, 0, maxObjQ);
    hAmpvsLoc = new TH2F("hAmpvsLoc", "Amp vs Location", 50, 0, 1000, 50, 0, 1);
    FillPlots();
    if (draw)

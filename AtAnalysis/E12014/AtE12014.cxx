@@ -165,6 +165,69 @@ void E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, con
    }
 }
 
+void E12014::FillHits(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
+                      const std::vector<AtHit *> &simHits, float satThresh)
+{
+   if (fMap == nullptr)
+      LOG(fatal) << "The map (E12014::fMap) was never set!";
+
+   exp.clear();
+   sim.clear();
+
+   for (auto &expHit : expHits) {
+      if (fMap->IsInhibited(expHit->GetPadNum()) != AtMap::InhibitType::kNone)
+         continue;
+      if (expHit->GetCharge() > satThresh)
+         continue;
+      if (expHit->GetPosition().z() < 50)
+         continue;
+      if (fMap->GetPadSize(expHit->GetPadNum()) != 0)
+         continue;
+
+      // This is a good hit so save the experiment charge.
+      exp.push_back(expHit->GetCharge());
+
+      // Look for the matching simualted hit and save its charge
+      int padNum = expHit->GetPadNum();
+      auto simHit =
+         std::find_if(simHits.begin(), simHits.end(), [padNum](const AtHit *a) { return a->GetPadNum() == padNum; });
+      if (simHit == simHits.end())
+         sim.push_back(0);
+      else
+         sim.push_back((*simHit)->GetCharge());
+   }
+}
+
+void E12014::FillZPos(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
+                      const std::vector<AtHit *> &simHits, float satThresh)
+{
+   if (fMap == nullptr)
+      LOG(fatal) << "The map (E12014::fMap) was never set!";
+
+   exp.clear();
+   sim.clear();
+
+   for (auto &expHit : expHits) {
+      if (fMap->IsInhibited(expHit->GetPadNum()) != AtMap::InhibitType::kNone)
+         continue;
+      if (expHit->GetCharge() > satThresh)
+         continue;
+
+      if (fMap->GetPadSize(expHit->GetPadNum()) != 0)
+         continue;
+
+      // Look for the matching simualted hit and save its charge
+      int padNum = expHit->GetPadNum();
+      auto simHit =
+         std::find_if(simHits.begin(), simHits.end(), [padNum](const AtHit *a) { return a->GetPadNum() == padNum; });
+      if (simHit != simHits.end()) {
+         // This is a good hit so save the experiment charge.
+         exp.push_back(expHit->GetPosition().z());
+         sim.push_back((*simHit)->GetPosition().z());
+      }
+   }
+}
+
 std::set<int>
 E12014::FillHitSum(std::vector<double> &vec, const std::vector<AtHit *> &hits, int threshold, float satThresh)
 {

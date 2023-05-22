@@ -52,6 +52,8 @@ public:
    // Options to use as the function to minimize when fitting sim to exp.
    static double ObjectiveChargeChi2(const std::vector<double> &exp, const std::vector<double> &sim, const double *par);
    static double
+   ObjectiveChargeChi2Norm(const std::vector<double> &exp, const std::vector<double> &sim, const double *par);
+   static double
    ObjectiveChargeDiff2(const std::vector<double> &exp, const std::vector<double> &sim, const double *par);
 
 protected:
@@ -64,6 +66,8 @@ protected:
 protected:
    double ObjectivePosition(const AtFissionEvent &expEvent, int SimEventID);
    double ObjectiveCharge(const AtFissionEvent &expEvent, int SimEventID, AtMCResult &def);
+   double ObjectiveChargePads(const AtFissionEvent &expEvent, int SimEventID, AtMCResult &def);
+   double ObjectivePositionPads(const AtFissionEvent &expEvent, int SimEventID);
 
    XYZPoint GetVertex(AtMCResult &);
    std::array<Ion, 2> GetFragmentSpecies(AtMCResult &, const Ion &CN);
