@@ -205,18 +205,20 @@ void AtPatternY::FitPattern(const std::vector<XYZPoint> &points, const std::vect
 
          // We can skip including points if they were originally FF points, or they were beam points
          //  and are now FF points.
-         bool skippable = pointAss < 2;
-         skippable |= (pointAss == 2 && pat.GetPointAssignment(points[i]) < 2);
+         bool origFF = pointAss < 2;
+         // skippable |= (pointAss == 2 && pat.GetPointAssignment(points[i]) < 2);
 
-         if (skippable && points[i].Rho() < 20)
+         if (origFF && points[i].Rho() < 40)
             continue;
          LOG(debug) << q << " " << pat.DistanceToPattern(points[i]);
-         chi2[pointAss] += pat.DistanceToPattern(points[i]) * pat.DistanceToPattern(points[i]) * q;
-         qTot[pointAss] += q;
+         if ((pointAss == 2 && pat.GetPointAssignment(points[i]) == 2) || pointAss < 2) {
+            chi2[pointAss] += pat.DistanceToPattern(points[i]) * pat.DistanceToPattern(points[i]) * q;
+            qTot[pointAss] += q;
+         }
       }
 
       double retVal = 0;
-      for (int i = 0; i < 2; ++i) {
+      for (int i = 0; i < 3; ++i) {
          LOG(debug) << i << ": " << chi2[i] << "/" << qTot[i] << " = " << chi2[i] / qTot[i];
          if (qTot[i] != 0)
             retVal += chi2[i] / qTot[i];

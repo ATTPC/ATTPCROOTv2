@@ -65,7 +65,7 @@ void unpack_linked(int tpcRunNum = 130)
    TString inputDir = "/mnt/rawdata/e12014_attpc/h5";
    TString evtInputDir = "/mnt/analysis/e12014/HiRAEVT/mapped";
    // TString outDir = "/mnt/analysis/e12014/TPC/fission_linked";
-   TString outDir = "/mnt/analysis/e12014/TPC/fission_linked_yFit";
+   TString outDir = "/mnt/analysis/e12014/TPC/fission_linked_yFit2";
    // TString outDir = "./";
    TString evtOutDir = outDir;
    TString sharedInfoDir = "/mnt/projects/hira/e12014/tpcSharedInfo/";
@@ -240,8 +240,8 @@ void unpack_linked(int tpcRunNum = 130)
    // numEvents = 1000;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
-   // numEvents = 2100;
-   //    return;
+   // numEvents = 3800;
+   //     return;
    run->Run(0, numEvents);
 
    std::cout << std::endl << std::endl;
