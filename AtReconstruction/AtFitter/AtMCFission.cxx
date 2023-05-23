@@ -534,8 +534,10 @@ AtMCResult AtMCFission::DefineEvent()
 
    // Translate the sampled Z into the particle ID of the FF.
    int Z1 = std::round(result.fParameters["Z"]);
-   if (Z1 > 55 || Z1 < 30)
-      Z1 = 55;
+   while (Z1 > 59 || Z1 < 26) {
+      result.fParameters["Z"] = fParameters["Z"]->Sample();
+      Z1 = std::round(result.fParameters["Z"]);
+   }
    int A1 = std::round(fCN.A * (double)Z1 / fCN.Z);
    result.fParameters["Z0"] = Z1;
    result.fParameters["A0"] = A1;

@@ -73,8 +73,9 @@ AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
 
    TF1 gauss(TString::Format("fitGauss%lu", id), "gaus(0)", zTB - fitRange, zTB + fitRange, TF1::EAddToList::kNo);
    gauss.SetParameter(0, *maxTB); // Set initial height of gaussian
-   gauss.SetParameter(1, zTB);    // Set initial position of gaussian
-   gauss.SetParameter(2, sigTB);  // Set initial sigma of gaussian
+   gauss.SetParLimits(0, 0, *maxTB * 2);
+   gauss.SetParameter(1, zTB);   // Set initial position of gaussian
+   gauss.SetParameter(2, sigTB); // Set initial sigma of gaussian
 
    // Fit without graphics and saving everything in the result ptr
    // auto resultPtr = hist->Fit(&gauss, "SQNR");

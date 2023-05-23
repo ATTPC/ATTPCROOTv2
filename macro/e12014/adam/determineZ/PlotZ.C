@@ -8,6 +8,7 @@ TH1F *hAmp = nullptr;
 TH1F *hObj = nullptr;
 TH1F *hObjPos = nullptr;
 TH1F *hObjQ = nullptr;
+TH1F *hMR = nullptr;
 
 TH2F *hBeam = nullptr;
 
@@ -52,6 +53,7 @@ void FillPlots(float ampMin = 0, float ampCut = 1, float qMin = 0, float qMax = 
    hAmpvsPosObj->Reset();
    hAmpvsObj->Reset();
    hAmpvsLoc->Reset();
+   hMR->Reset();
 
    TxtEvents check;
    check.AddTxtFile("./data/Chi2QCut13.txt");
@@ -96,6 +98,8 @@ void FillPlots(float ampMin = 0, float ampCut = 1, float qMin = 0, float qMax = 
 
             zHist->Fill(result->fParameters["Z0"]);
             zHist->Fill(result->fParameters["Z1"]);
+            hMR->Fill(result->fParameters["Z0"] / (result->fParameters["Z0"] + result->fParameters["Z1"]));
+            hMR->Fill(result->fParameters["Z1"] / (result->fParameters["Z0"] + result->fParameters["Z1"]));
             // zHist->Fill(GetAvg("Z0", *resultArray));
             // zHist->Fill(GetAvg("Z1", *resultArray));
 
@@ -134,29 +138,33 @@ void PlotRange(double min, double max, double step)
 
 void PlotZ(bool draw = true)
 {
+   TH1::SetDefaultSumw2();
    // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Diff2.root";
-   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_yFit/cut1/SRIM/Bi200Chi2.root";
+   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_yFit/cut1/SRIM/Bi200Chi2.root";
+   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_yFit2/cut1/SRIM/Bi200Chi2.root";
    // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Chi2.root";
-   //   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut2/SRIM/Bi200Chi2.root";
-   //     TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Pb198Chi2.root";
-   //            TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameV/cut1/SRIM/Bi200Diff2.root";
-   //            TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
-   //        TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameVSmall/cut1/SRIM/Bi200Chi2.root";
-   //        TString fileName = "./Chi2FixAmp.root";
-   //      TString fileName = "./Chi2NormalPosition.root";
-   //    TString fileName = "./Bi200NewObj.root";
-   //    TString fileName = "./Chi2Norm.root";
+   //    TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut2/SRIM/Bi200Chi2.root";
+   //      TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Pb198Chi2.root";
+   //             TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameV/cut1/SRIM/Bi200Diff2.root";
+   //             TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
+   //         TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameVSmall/cut1/SRIM/Bi200Chi2.root";
+   //         TString fileName = "./Chi2FixAmp.root";
+   //       TString fileName = "./Chi2NormalPosition.root";
+   //     TString fileName = "./Bi200NewObj.root";
+   //     TString fileName = "./Chi2Norm.root";
+   TString fileName = "./Bi200NewFit.root";
 
    if (!tree) {
       tree = new TChain("cbmsim");
       tree->Add(fileName);
    }
 
-   int zMin = 31;
-   int zMax = 55;
+   int zMin = 26;
+   int zMax = 59;
    int aMin = zMin * (float)204 / 85;
    int aMax = zMax * (float)204 / 85;
-   zHist = new TH1F("hZ", "Z", zMax - zMin, zMin, zMax);
+   zHist = new TH1F("hZ", "Z", zMax - zMin + 1, zMin - 0.5, zMax + 0.5);
+   hMR = new TH1F("hMR", "M_R", zMax - zMin + 1, (zMin - 0.5) / 85, (zMax + 0.5) / 85);
    aHist = new TH1F("hA", "A", zMax - zMin + 1, aMin, aMax);
    hBeam = new TH2F("hBeam", "Beam energy", 100, 0, 1000, 100, 0, 4500);
    hAmp = new TH1F("hAmp", "Charge Scaling Factor", 100, 0, 1);
@@ -172,4 +180,73 @@ void PlotZ(bool draw = true)
    FillPlots();
    if (draw)
       zHist->Draw();
+}
+
+void FitZ()
+{
+   // Fit two functions, gaus and gaus2.
+   zHist->SetStats(0);
+   zHist->SetMarkerStyle(22);
+   zHist->SetMarkerSize(2);
+   gStyle->SetErrorX(0);
+   zHist->Draw("ep");
+
+   TF1 *gaus1 = new TF1("gaus1", "gaus(0)", 26, 59);
+   std::cout << "Fitting single gaussian" << endl;
+   gaus1->SetParameters(80, 42.5, 5);
+   gaus1->FixParameter(1, 42.5);
+
+   zHist->Fit(gaus1, "SN");
+   gaus1->SetLineColor(kBlue);
+   gaus1->SetLineStyle(2);
+   gaus1->DrawCopy("same");
+   TF1 *gaus2 =
+      new TF1("gaus2", " [0]*( exp( -(x - [1] - [3])^2/(2*[2]^2)) + exp( -(x - [1]+[3])^2/(2*[2]^2)))", 26, 59);
+   gaus2->SetParameters(gaus1->GetParameter(0) / 2, 42.5, 5, 2);
+   gaus2->FixParameter(1, 42.5);
+   std::cout << "Fitting double gaussian" << endl;
+   auto res = zHist->Fit(gaus2, "SN");
+
+   gaus1->SetParameters(res->Parameter(0), res->Parameter(1) - res->Parameter(3), res->Parameter(2));
+   gaus1->SetLineColor(kGreen);
+   gaus1->SetLineStyle(7);
+   gaus1->DrawCopy("same");
+   gaus1->SetParameters(res->Parameter(0), res->Parameter(1) + res->Parameter(3), res->Parameter(2));
+   gaus1->DrawCopy("same");
+   gaus2->Draw("same");
+}
+
+void FitMR()
+{
+   // Fit two functions, gaus and gaus2.
+   hMR->SetStats(0);
+   hMR->SetMarkerStyle(22);
+   hMR->SetMarkerSize(2);
+   gStyle->SetErrorX(0);
+   hMR->Draw("ep");
+
+   TF1 *gaus2 =
+      new TF1("gaus2", " [0]*( exp( -(x - [1] - [3])^2/(2*[2]^2)) + exp( -(x - [1]+[3])^2/(2*[2]^2)))", 26, 59);
+   gaus2->SetParameters(80, 0.5, 0.06, 2);
+   gaus2->FixParameter(1, 0.5);
+   std::cout << "Fitting double gaussian" << endl;
+   auto res = hMR->Fit(gaus2, "SN");
+
+   TF1 *gaus1 = new TF1("gaus1", "gaus(0)", 26, 59);
+   gaus1->SetParameters(res->Parameter(0), res->Parameter(1) - res->Parameter(3), res->Parameter(2));
+   gaus1->SetLineColor(kGreen);
+   gaus1->SetLineStyle(7);
+   gaus1->DrawCopy("same");
+   gaus1->SetParameters(res->Parameter(0), res->Parameter(1) + res->Parameter(3), res->Parameter(2));
+   gaus1->DrawCopy("same");
+   gaus2->Draw("same");
+
+   std::cout << "Fitting single gaussian" << endl;
+   gaus1->SetParameters(80, 0.5, 0.06);
+   gaus1->FixParameter(1, 0.5);
+
+   hMR->Fit(gaus1, "SN");
+   gaus1->SetLineColor(kBlue);
+   gaus1->SetLineStyle(2);
+   gaus1->DrawCopy("same");
 }

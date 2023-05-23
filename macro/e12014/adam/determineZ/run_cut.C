@@ -56,7 +56,7 @@ string to_string(ChargeObj obj)
    return "";
 }
 
-void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure = 150, bool lise = false,
+void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure = 150, bool lise = true,
              ChargeObj obj = kChi2)
 {
 
@@ -73,7 +73,7 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
                                             species.Data(), to_string(obj).c_str());
    // OutputDataFile = "./Bi200NewObj.root";
    // OutputDataFile = "./Chi2Norm.root";
-
+   // OutputDataFile = "./Bi200NewFit.root";
    /*
          TString OutputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr/%s/%s/%s.root", pressure,
          cutName.Data(), lise ? "LISE" : "SRIM", species.Data());
@@ -127,7 +127,7 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    int Acn = 200 + 4;
    // Create and load energy loss models
    std::vector<std::pair<int, int>> ions;
-   for (int i = 30; i <= 55; i++)
+   for (int i = 26; i <= 59; i++)
       ions.push_back({i, std::round((double)i / Zcn * Acn)});
    for (auto [Z, A] : ions) {
       auto eloss = std::make_shared<AtTools::AtELossTable>();
@@ -159,6 +159,7 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
 
    fitter->SetPSA(simPSA);
    fitter->SetNumIter(100);
+   fitter->SetNumRounds(2);
    fitter->SetNumThreads(4);
 
    AtMCFitterTask *fitTask = new AtMCFitterTask(fitter);
