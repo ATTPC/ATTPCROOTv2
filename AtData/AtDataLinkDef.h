@@ -29,6 +29,7 @@
 #pragma link C++ class AtProtoQuadrant + ;
 #pragma link C++ class AtTrack + ;
 #pragma link C++ class AtFissionEvent + ;
+#pragma link C++ class AtGenericTrace + ;
 
 #pragma link C++ class AtPatterns::AtPattern + ;
 #pragma link C++ class AtPatterns::AtPatternLine + ;

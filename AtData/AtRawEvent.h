@@ -11,6 +11,7 @@
 #define AtRAWEVENT_H
 
 #include "AtBaseEvent.h"
+#include "AtGenericTrace.h"
 #include "AtPadReference.h" // IWYU pragma: keep
 
 #include <Rtypes.h>
@@ -24,6 +25,8 @@
 #include <unordered_map> // for unordered_map
 #include <utility>
 #include <vector>
+
+class AtGenericTrace;
 class AtPad;
 class TBuffer;
 class TClass;
@@ -34,9 +37,12 @@ private:
    using AtPadPtr = std::unique_ptr<AtPad>;
    using FpnMap = std::unordered_map<AtPadReference, AtPad>;
    using PadVector = std::vector<AtPadPtr>;
+   using AtGenTracePtr = std::unique_ptr<AtGenericTrace>;
+   using GenTraceVector = std::vector<AtGenTracePtr>;
 
    PadVector fPadList;
    FpnMap fFpnMap;
+   GenTraceVector fGTraceList;
 
    std::multimap<Int_t, std::size_t> fSimMCPointMap; //<! Monte Carlo Point - Hit map for kinematics
 
@@ -99,6 +105,12 @@ public:
 
    void RemovePad(Int_t padNum);
    void SetSimMCPointMap(std::multimap<Int_t, std::size_t> map) { fSimMCPointMap = std::move(map); }
+
+   AtGenericTrace *AddGenericTrace(std::unique_ptr<AtGenericTrace> ptr)
+   {
+      fGTraceList.push_back(std::move(ptr));
+      return fGTraceList.back().get();
+   }
 
    // getters
    Int_t GetNumPads() const { return fPadList.size(); }

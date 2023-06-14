@@ -11,14 +11,14 @@ ${CMAKE_SOURCE_DIR}/AtUnpack/GETDecoder2
 
 Set(DEPENDENCIES
   FairRoot::Base
-  
+
   ATTPCROOT::AtMap
   ATTPCROOT::AtData
-  
+
   ROOT::Core
   ROOT::Tree
   ROOT::TreePlayer
-  
+
   hdf5::hdf5-shared
   )
 
@@ -29,6 +29,7 @@ set(SRCS
   AtUnpackTask.cxx
   AtUnpacker.cxx
   AtHDFUnpacker.cxx
+  AtFRIBHDFUnpacker.cxx
   AtROOTUnpacker.cxx
   AtGRAWUnpacker.cxx
 
@@ -43,7 +44,7 @@ set(SRCS
   GETDecoder2/GETLayeredFrame.cxx
   GETDecoder2/GETMath2.cxx
   GETDecoder2/GETFileChecker.cxx
-  
+
   )
 
 generate_target_and_root_library(${LIBRARY_NAME}
