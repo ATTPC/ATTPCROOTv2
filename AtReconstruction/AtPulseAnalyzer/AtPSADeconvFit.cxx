@@ -67,15 +67,16 @@ AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
       fHist = ContainerManip::CreateHistFromData<TH1F>(TString::Format("%lu", id).Data(), charge);
 
    // Add an addition +-2 for when we are close to the pad plane and diffusion is small
-   auto fitRange = 3 * sigTB + 2;
+   auto fitRange = 5 * sigTB + 2;
    if (fitRange < 3)
       fitRange = 3;
 
-   TF1 gauss(TString::Format("fitGauss%lu", id), "gaus(0)", zTB - fitRange, zTB + fitRange, TF1::EAddToList::kNo);
+   TF1 gauss(TString::Format("fitGauss%lu", id), "gaus(0) + [3]", zTB - fitRange, zTB + fitRange, TF1::EAddToList::kNo);
    gauss.SetParameter(0, *maxTB); // Set initial height of gaussian
    gauss.SetParLimits(0, 0, *maxTB * 2);
    gauss.SetParameter(1, zTB);   // Set initial position of gaussian
    gauss.SetParameter(2, sigTB); // Set initial sigma of gaussian
+   gauss.SetParameter(3, 0);     // Set initial sigma of gaussian
 
    // Fit without graphics and saving everything in the result ptr
    // auto resultPtr = hist->Fit(&gauss, "SQNR");
@@ -89,10 +90,11 @@ AtPSADeconv::HitData AtPSADeconvFit::getZandQ(const AtPad::trace &charge)
    auto amp = result.GetParams()[0];
    auto z = result.GetParams()[1];
    auto sig = result.GetParams()[2];
+   auto offset = result.GetParams()[3];
 
    auto Q = amp * sig * std::sqrt(2 * TMath::Pi());
-   LOG(debug) << "Initial: " << *maxTB << " " << zTB << " " << sigTB;
-   LOG(debug) << "Fit: " << amp << " " << z << " " << sig;
+   LOG(info) << "Initial: " << *maxTB << " " << zTB << " " << sigTB;
+   LOG(info) << "Fit: " << amp << " " << z << " " << sig << " " << offset << std::endl;
 
    return {{z, sig * sig, Q, 0}};
 }

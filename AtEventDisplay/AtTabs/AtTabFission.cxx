@@ -92,6 +92,7 @@ void AtTabFission::UpdateFissionElements()
       auto pattern = track.GetPattern()->GetEveElement();
       pattern->SetDestroyOnZeroRefCnt(false);
       pattern->SetMainColor(kRed);
+      pattern->FindChild("beam")->SetRnrState(false);
       fEveFissionEvent->AddElement(pattern);
    } catch (...) {
       fEveFissionEvent->RemoveElements();

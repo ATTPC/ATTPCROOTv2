@@ -65,6 +65,7 @@ protected:
    void UpdateEvent();
    void DrawCanvas();
 
+   std::vector<AtHit *> GetFragmentHits(AtEvent *event);
    ClassDefOverride(AtTabFF, 1);
 };
 

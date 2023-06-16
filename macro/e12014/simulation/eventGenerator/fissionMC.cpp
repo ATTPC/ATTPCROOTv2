@@ -93,7 +93,7 @@ ion_list.dat a file listing all of the ions in fissionFragments.root for TPC sim
 A1 is always the more massive fragment, and A2 is the lighter.
 */
 int fissionMC(int N, int Z = 82, int A = 196, float massFrac = 0.56, float massDev = 6, float polarAng = 0,
-              TString fName = "fissionFragments.root")
+              TString fName = "fissionFragmentsIsotropic.root")
 {
    TRandom3 rand;
 
@@ -250,8 +250,10 @@ std::vector<VecXYZE> getProductMomenta(const vecInt &fragA, const vecInt &fragZ,
    if (decayAng.Theta() != 0)
       decayAng.SetPhi(rand->Uniform(TMath::TwoPi()));
    else {
-      // decayAng = SampleUniform();
-      decayAng = SampleAsym();
+      // decayAng.SetPhi(rand->Uniform(TMath::TwoPi()));
+      // decayAng.SetTheta(rand->Uniform(TMath::Pi()));
+      decayAng = SampleUniform();
+      //  decayAng = SampleAsym();
    }
 
    // Set the momentum of first particles

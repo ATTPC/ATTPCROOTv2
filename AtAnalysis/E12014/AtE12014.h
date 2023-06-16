@@ -60,11 +60,10 @@ public:
    static std::set<int> FillHitSum(std::vector<double> &vec, const std::vector<AtHit *> &hits, int threshold = 0,
                                    float saturationThreshold = std::numeric_limits<float>::max());
 
-   static void FillHitSums(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
-                           const std::vector<AtHit *> &simHits, int threshold = 0,
-                           float saturationThreshold = std::numeric_limits<float>::max(),
-                           const AtDigiPar *par = nullptr, std::vector<double> *expADC = nullptr,
-                           AtRawEvent *expEvent = nullptr);
+   static int FillHitSums(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
+                          const std::vector<AtHit *> &simHits, int threshold = 0,
+                          float saturationThreshold = std::numeric_limits<float>::max(), const AtDigiPar *par = nullptr,
+                          std::vector<double> *expADC = nullptr, AtRawEvent *expEvent = nullptr);
 
    /**
     * Fill exp and sim with the charge of hits with all good experimental pads
@@ -90,6 +89,7 @@ public:
    static void FillSimHitSum(TH1 &hist, const std::vector<AtHit *> &hits, const std::set<int> &goodPads, double amp,
                              int threshold = 0, float saturationThreshold = std::numeric_limits<float>::max());
 
+   static void FillSimSum(std::vector<double> &sim, const std::vector<AtHit *> &simHits);
 }; // namespace E12014
 
 #endif //#ifndef ATE12014_H

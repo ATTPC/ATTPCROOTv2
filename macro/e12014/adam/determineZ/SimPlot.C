@@ -8,6 +8,10 @@ TH1F *hAngCut = nullptr;
 TH1F *hAngCut2 = nullptr;
 TH1F *hAngCut3 = nullptr;
 
+TH2F *hAngvsZTrig = nullptr;
+TH1 *hZ = nullptr;
+TH1 *hZTrig = nullptr;
+
 using VecXYZE = ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<>>;
 using test = AtTools::AtKinematics; // Literally this is just to force ROOT to load the AtTools lib
 
@@ -81,6 +85,7 @@ double getVRatio(double angDecay, double v_cm, double v_b)
 
 void PlotStopingRatio()
 {
+
    // Start by creating all of the energy loss models we will use
    std::map<int, std::shared_ptr<AtTools::AtELossTable>> lossModels; //[z] = model
 
@@ -116,11 +121,28 @@ void PlotStopingRatio()
          auto p1 = (*fragArray)[0].Vect();
          auto p2 = (*fragArray)[1].Vect();
 
-         auto beam = GetBeam(100);
+         auto z = gRandom->Uniform(1000);
+         auto beam = GetBeam(z);
          auto boost = ROOT::Math::Boost(beam.BoostToCM());
 
          auto vec1 = boost((*fragArray)[0]);
          auto vec2 = boost((*fragArray)[1]);
+
+         // Now look at the location where we hit the pad plane
+         XYZPoint fWindow = {10, 0, 0};
+         XYZPoint fPadPlane = {0, -6, 1000};
+         XYZPoint beamLoc = fWindow + (fPadPlane - fWindow) / (fPadPlane.Z() - fWindow.Z()) * z;
+         XYZPoint locPP1 = beamLoc + vec1.Vect() / vec1.Vect().z() * (1000 - z);
+         XYZPoint locPP2 = beamLoc + vec2.Vect() / vec2.Vect().z() * (1000 - z);
+
+         LOG(info) << "z: " << z << " beam: " << beamLoc;
+         LOG(info) << " vec1: " << vec1.Vect() << " pp1: " << locPP1;
+         LOG(info) << " vec1: " << vec2.Vect() << " pp1: " << locPP2;
+
+         ROOT::Math::XYPoint pad1 = {locPP1.x(), locPP1.y()};
+         ROOT::Math::XYPoint pad2 = {locPP2.x(), locPP2.y()};
+         bool passedCut = E12014::fMap->IsInhibited(E12014::fMap->GetPadNum(pad1)) != AtMap::InhibitType::kLowGain;
+         passedCut &= E12014::fMap->IsInhibited(E12014::fMap->GetPadNum(pad2)) != AtMap::InhibitType::kLowGain;
 
          // E1 is the heavier fragment, by definition in the simulation.
          int z1 = chargeArray->at(0);
@@ -147,6 +169,9 @@ void PlotStopingRatio()
 
 void SimPlot()
 {
+   E12014::CreateMap();
+
+   // TString fileName = "/user/anthonya/attpcroot/macro/e12014/simulation/eventGenerator/fissionFragments.root";
    TString fileName = "/user/anthonya/attpcroot/macro/e12014/simulation/eventGenerator/fissionFragments.root";
 
    if (!tree) {
@@ -160,7 +185,8 @@ void SimPlot()
    hAngCut2 = new TH1F("hAngCut2", "sin(Decay angle) (w.r.t. z)", 50, 0.75, 1);
    hAngCut3 = new TH1F("hAngCut3", "v_actual/v_assumed (lab frame)", 50, 0.6, 1.8);
    hFoldLab = new TH1F("hFoldAngle", "Folding Angle Lab", 50, 0, TMath::Pi() + 1e-4);
-   hAngvsZ = new TH2F("hAngVsLoc", "Folding angle vs Z", 50, 200, 1100, 50, 0, 1);
+   hAngvsZ = new TH2F("hAngVsLoc", "Folding angle vs Z", 50, 00, 1000, 50, 0, 1);
+   hAngvsZTrig = new TH2F("hAngvsZTrig", "Folding angle vs Z Triggered", 50, 00, 1000, 50, 0, 1);
 
    TTreeReader reader(tree);
    TTreeReaderValue<std::vector<VecXYZE>> fragArray(reader, "decayFragments");
@@ -169,10 +195,11 @@ void SimPlot()
    while (reader.Next() && reader.GetCurrentEntry() < 100000000) {
       auto p1 = (*fragArray)[0].Vect();
       auto p2 = (*fragArray)[1].Vect();
-      auto bDir = ROOT::Math::XYZVector(0, 0, 1);
+
+      auto zDir = ROOT::Math::XYZVector(0, 0, 1);
       auto foldingAngle = ROOT::Math::VectorUtil::Angle(p1, p2);
-      auto decayAngle = ROOT::Math::VectorUtil::Angle(p1, bDir);
-      auto decayAngle2 = ROOT::Math::VectorUtil::Angle(p2, bDir);
+      auto decayAngle = ROOT::Math::VectorUtil::Angle(p1, zDir);
+      auto decayAngle2 = ROOT::Math::VectorUtil::Angle(p2, zDir);
 
       auto v_cm1 = AtTools::Kinematics::GetBeta(p1.R(), (*massArray)[0]);
       auto v_cm2 = AtTools::Kinematics::GetBeta(p2.R(), (*massArray)[1]);
@@ -182,7 +209,7 @@ void SimPlot()
       hAng->Fill(decayAngle2);
 
       // Get the beam boost
-      auto z = gRandom->Uniform(700);
+      auto z = gRandom->Uniform(1000);
       auto beam = GetBeam(z);
       auto boost = ROOT::Math::Boost(beam.BoostToCM());
 
@@ -203,6 +230,26 @@ void SimPlot()
       p1 = boost((*fragArray)[0]).Vect();
       p2 = boost((*fragArray)[1]).Vect();
 
+      //** Plot folding angle vs Z and the cut folding angle vs Z
+      hAngvsZ->Fill(1000 - z, ROOT::Math::VectorUtil::Angle(p1, p2));
+
+      XYZPoint fWindow = {10, 0, 0};
+      XYZPoint fPadPlane = {0, -6, 1000};
+      XYZPoint beamLoc = fWindow + (fPadPlane - fWindow) / (fPadPlane.Z() - fWindow.Z()) * z;
+      XYZPoint locPP1 = beamLoc + p1 / p1.z() * (1000 - z);
+      XYZPoint locPP2 = beamLoc + p2 / p2.z() * (1000 - z);
+
+      ROOT::Math::XYPoint pad1 = {locPP1.x(), locPP1.y()};
+      ROOT::Math::XYPoint pad2 = {locPP2.x(), locPP2.y()};
+      bool passedCut = E12014::fMap->IsInhibited(E12014::fMap->GetPadNum(pad1)) != AtMap::InhibitType::kLowGain;
+      passedCut &= E12014::fMap->IsInhibited(E12014::fMap->GetPadNum(pad2)) != AtMap::InhibitType::kLowGain;
+
+      double rCut = 90;
+      passedCut = pad1.R() > rCut;
+      passedCut &= pad2.R() > rCut;
+      if (passedCut)
+         hAngvsZTrig->Fill(1000 - z, ROOT::Math::VectorUtil::Angle(p1, p2));
+
       if (UseRelBoost) {
          v_1 = AtTools::Kinematics::GetBeta(p1.R(), (*massArray)[0]);
          v_2 = AtTools::Kinematics::GetBeta(p2.R(), (*massArray)[1]);
@@ -213,7 +260,7 @@ void SimPlot()
 
       foldingAngle = ROOT::Math::VectorUtil::Angle(p1, p2);
       hFoldLab->Fill(foldingAngle);
-      // hAngvsZ->Fill(1000 - z, ROOT::Math::VectorUtil::Angle(p1, p2));
+
       if (cut2(1000 - z, foldingAngle)) {
          hAngCut->Fill(decayAngle);
          hAngCut->Fill(decayAngle2);
@@ -225,9 +272,11 @@ void SimPlot()
          hAngCut3->Fill(v_1T / v_1);
          // else
          hAngCut3->Fill(v_2T / v_2);
-         hAngvsZ->Fill(1000 - z, ROOT::Math::VectorUtil::Angle(p1, p2));
+         // hAngvsZ->Fill(1000 - z, ROOT::Math::VectorUtil::Angle(p1, p2));
       }
    }
 
+   hZ = hAngvsZ->ProjectionX();
+   hZTrig = hAngvsZTrig->ProjectionX();
    hAng->Draw();
 }

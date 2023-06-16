@@ -99,9 +99,9 @@ std::set<int> E12014::FillHitSum(TH1 &hist, const std::vector<AtHit *> &hits, in
    return pads;
 }
 
-void E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
-                         const std::vector<AtHit *> &simHits, int threshold, float satThresh, const AtDigiPar *fPar,
-                         std::vector<double> *expADC, AtRawEvent *expEvent)
+int E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
+                        const std::vector<AtHit *> &simHits, int threshold, float satThresh, const AtDigiPar *fPar,
+                        std::vector<double> *expADC, AtRawEvent *expEvent)
 {
    if (fMap == nullptr)
       LOG(fatal) << "The map (E12014::fMap) was never set!";
@@ -118,6 +118,7 @@ void E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, con
       std::fill_n(expADC->begin(), 512, 0);
    }
 
+   int numGoodHits = 0;
    for (auto &expHit : expHits) {
       if (fMap->IsInhibited(expHit->GetPadNum()) != AtMap::InhibitType::kNone)
          continue;
@@ -150,6 +151,7 @@ void E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, con
       if (expEvent)
          pad = expEvent->GetPad(expHit->GetPadNum());
 
+      numGoodHits++;
       // Get the pad that corresponds to
       //  We now have the sim and exp hits. Fill the arrays
       for (int tb = fTBMin; tb < 512; ++tb) {
@@ -161,6 +163,28 @@ void E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, con
             if (pad && expADC)
                (*expADC)[tb] += pad->GetADC(tb);
          }
+      }
+   }
+   return numGoodHits;
+}
+
+void E12014::FillSimSum(std::vector<double> &sim, const std::vector<AtHit *> &simHits)
+{
+   if (fMap == nullptr)
+      LOG(fatal) << "The map (E12014::fMap) was never set!";
+
+   sim.clear();
+   sim.resize(512);
+   std::fill_n(sim.begin(), 512, 0);
+
+   for (auto &expHit : simHits) {
+
+      auto funcExp = AtTools::GetHitFunctionTB(*expHit);
+      if (funcExp == nullptr)
+         continue;
+
+      for (int tb = fTBMin; tb < 512; ++tb) {
+         sim[tb] += funcExp->Eval(tb);
       }
    }
 }

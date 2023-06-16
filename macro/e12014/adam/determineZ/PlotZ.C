@@ -22,6 +22,16 @@ MCFitter::AtMCResult *result = nullptr;
 
 int maxObjQ = 100;
 
+double ex(double E)
+{
+   int ABeam = 192;
+   double beAlpha = 7.07 * 4;
+   double beCN = 7.87 * (ABeam + 4);
+   double beBeam = 7.91 * ABeam;
+
+   return E / ABeam * 4 + beAlpha + beBeam - beCN;
+}
+
 double GetAvg(string name, TClonesArray &result, int toAvg = 1)
 {
    double num = 0;
@@ -61,34 +71,36 @@ void FillPlots(float ampMin = 0, float ampCut = 1, float qMin = 0, float qMax = 
 
    while (reader.Next() && reader.GetCurrentEntry() < 10000) {
 
-      // if (reader.GetCurrentEntry() == 36) {
-      if (false && !check(reader.GetCurrentEntry()))
-         continue;
+      if (true || reader.GetCurrentEntry() == 17) {
+         if (false && !check(reader.GetCurrentEntry()))
+            continue;
 
-      result = dynamic_cast<MCFitter::AtMCResult *>(resultArray->At(0));
+         result = dynamic_cast<MCFitter::AtMCResult *>(resultArray->At(0));
 
-      int z = result->fParameters["Z1"];
-      float amp = result->fParameters["Amp"];
-      float objPos = result->fParameters["ObjPos"];
-      float objQ = result->fParameters["ObjQ"];
+         int z = result->fParameters["Z1"];
+         int z2 = result->fParameters["Z2"];
+         float amp = result->fParameters["Amp"];
+         float objPos = result->fParameters["ObjPos"];
+         float objQ = result->fParameters["ObjQ"];
 
-      for (int i = 0; i < resultArray->GetEntries(); ++i) {
+         for (int i = 0; i < resultArray->GetEntries(); ++i) {
 
-         result = dynamic_cast<MCFitter::AtMCResult *>(resultArray->At(i));
+            result = dynamic_cast<MCFitter::AtMCResult *>(resultArray->At(i));
 
-         if (objPos < pos && amp < ampCut && amp > ampMin && objQ < qMax && objQ > qMin) {
+            if (objPos < pos && amp < ampCut && amp > ampMin && objQ < qMax && objQ > qMin) {
 
-            hZvsObj->Fill(z - result->fParameters["Z1"], result->fParameters["ObjQ"]);
-            hZvsAmp->Fill(z - result->fParameters["Z1"], result->fParameters["Amp"]);
-            hAmpvsPosObj->Fill(result->fParameters["Amp"], result->fParameters["ObjPos"]);
-            hAmpvsObj->Fill(result->fParameters["Amp"], result->fParameters["ObjQ"]);
+               hZvsObj->Fill(z - result->fParameters["Z1"], result->fParameters["ObjQ"]);
+               hZvsObj->Fill(-(z - result->fParameters["Z1"]), result->fParameters["ObjQ"]);
+               // hZvsObj->Fill(z2 - result->fParameters["Z2"], result->fParameters["ObjQ"]);
+               hZvsAmp->Fill(z - result->fParameters["Z1"], result->fParameters["Amp"]);
+               hAmpvsPosObj->Fill(result->fParameters["Amp"], result->fParameters["ObjPos"]);
+            }
          }
       }
-      //}
 
       result = dynamic_cast<MCFitter::AtMCResult *>(resultArray->At(0));
       if (result) {
-         if (result->fParameters["vZ"] > EMin && result->fParameters["vZ"] < EMax &&
+         if (ex(result->fParameters["EBeam"]) > EMin && ex(result->fParameters["EBeam"]) < EMax &&
              result->fParameters["Amp"] < ampCut && result->fParameters["Amp"] > ampMin &&
              result->fParameters["ObjQ"] < qMax && result->fParameters["ObjQ"] > qMin &&
              result->fParameters["ObjPos"] < pos) {
@@ -96,12 +108,14 @@ void FillPlots(float ampMin = 0, float ampCut = 1, float qMin = 0, float qMax = 
             // Save event number to file
             file << reader.GetCurrentEntry() << std::endl;
 
-            zHist->Fill(result->fParameters["Z0"]);
-            zHist->Fill(result->fParameters["Z1"]);
+            // zHist->Fill(result->fParameters["Z0"]);
+            // zHist->Fill(result->fParameters["Z1"]);
+            zHist->Fill(GetAvg("Z0", *resultArray, 10));
+            zHist->Fill(GetAvg("Z1", *resultArray, 10));
+
             hMR->Fill(result->fParameters["Z0"] / (result->fParameters["Z0"] + result->fParameters["Z1"]));
             hMR->Fill(result->fParameters["Z1"] / (result->fParameters["Z0"] + result->fParameters["Z1"]));
-            // zHist->Fill(GetAvg("Z0", *resultArray));
-            // zHist->Fill(GetAvg("Z1", *resultArray));
+            hAmpvsObj->Fill(result->fParameters["Amp"], result->fParameters["ObjQ"]);
 
             aHist->Fill(result->fParameters["A0"]);
             aHist->Fill(result->fParameters["A1"]);
@@ -110,7 +124,7 @@ void FillPlots(float ampMin = 0, float ampCut = 1, float qMin = 0, float qMax = 
             hObjPos->Fill(result->fParameters["ObjPos"]);
             hObjQ->Fill(result->fParameters["ObjQ"]);
             // Plot angle1 vs angle2
-            hBeam->Fill(result->fParameters["vZ"], result->fParameters["EBeam"]);
+            hBeam->Fill(result->fParameters["vZ"], ex(result->fParameters["EBeam"]));
             hAmpvsLoc->Fill(result->fParameters["vZ"], result->fParameters["Amp"]);
          }
       }
@@ -141,18 +155,19 @@ void PlotZ(bool draw = true)
    TH1::SetDefaultSumw2();
    // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Diff2.root";
    // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_yFit/cut1/SRIM/Bi200Chi2.root";
-   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_yFit2/cut1/SRIM/Bi200Chi2.root";
-   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Chi2.root";
-   //    TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut2/SRIM/Bi200Chi2.root";
-   //      TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Pb198Chi2.root";
-   //             TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameV/cut1/SRIM/Bi200Diff2.root";
-   //             TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
-   //         TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameVSmall/cut1/SRIM/Bi200Chi2.root";
-   //         TString fileName = "./Chi2FixAmp.root";
-   //       TString fileName = "./Chi2NormalPosition.root";
-   //     TString fileName = "./Bi200NewObj.root";
-   //     TString fileName = "./Chi2Norm.root";
-   TString fileName = "./Bi200NewFit.root";
+   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_yFit/cut1/LISE/Bi200Chi2.root";
+   //  TString fileName = "/mnt/analysis/e12014/TPC/150Torr_yFit2/cut1/SRIM/Bi200Chi2.root";
+   //  TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Chi2.root";
+   //     TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut2/SRIM/Bi200Chi2.root";
+   //       TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Pb198Chi2.root";
+   //              TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameV/cut1/SRIM/Bi200Diff2.root";
+   //              TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
+   //          TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameVSmall/cut1/SRIM/Bi200Chi2.root";
+   //          TString fileName = "./Chi2FixAmp.root";
+   //        TString fileName = "./Chi2NormalPosition.root";
+   //      TString fileName = "./Bi200NewObj.root";
+   //      TString fileName = "./Chi2Norm.root";
+   //  TString fileName = "./Bi200NewFit.root";
 
    if (!tree) {
       tree = new TChain("cbmsim");
@@ -166,16 +181,16 @@ void PlotZ(bool draw = true)
    zHist = new TH1F("hZ", "Z", zMax - zMin + 1, zMin - 0.5, zMax + 0.5);
    hMR = new TH1F("hMR", "M_R", zMax - zMin + 1, (zMin - 0.5) / 85, (zMax + 0.5) / 85);
    aHist = new TH1F("hA", "A", zMax - zMin + 1, aMin, aMax);
-   hBeam = new TH2F("hBeam", "Beam energy", 100, 0, 1000, 100, 0, 4500);
+   hBeam = new TH2F("hBeam", "Beam energy", 50, 0, 1000, 50, 0, ex(4500));
    hAmp = new TH1F("hAmp", "Charge Scaling Factor", 100, 0, 1);
    hObj = new TH1F("hObj", "Objective Function", 100, 0, maxObjQ);
    hObjPos = new TH1F("hObjPos", "Objective Function Position", 50, 0, 50);
    hObjQ = new TH1F("hObjQ", "Objective Function Charge", 100, 0, maxObjQ);
 
-   hZvsObj = new TH2F("hZvsObj", "dZ vs Chi2", 20 + 1, -10, 10, 100, 0, maxObjQ);
+   hZvsObj = new TH2F("hZvsObj", "dZ vs Chi2", 21, -10 - .5, 10.5, 100, 0, maxObjQ);
    hZvsAmp = new TH2F("hZvsAmp", "dZ vs Amp", 20 + 1, -10, 10, 50, 0, 1);
    hAmpvsPosObj = new TH2F("hAmpvsPosObj", "Amp vs Pos Objective", 50, 0, 1, 50, 0, 10);
-   hAmpvsObj = new TH2F("hAmpvsObj", "Amp vs Objective", 50, 0, 1, 50, 0, maxObjQ);
+   hAmpvsObj = new TH2F("hAmpvsObj", "Amp vs Objective", 25, 0.3, .8, 25, 0, maxObjQ / 2.);
    hAmpvsLoc = new TH2F("hAmpvsLoc", "Amp vs Location", 50, 0, 1000, 50, 0, 1);
    FillPlots();
    if (draw)
@@ -191,19 +206,22 @@ void FitZ()
    gStyle->SetErrorX(0);
    zHist->Draw("ep");
 
-   TF1 *gaus1 = new TF1("gaus1", "gaus(0)", 26, 59);
+   TF1 *gaus1 = new TF1("gaus1", "gaus(0)", 30, 55);
    std::cout << "Fitting single gaussian" << endl;
    gaus1->SetParameters(80, 42.5, 5);
    gaus1->FixParameter(1, 42.5);
 
-   zHist->Fit(gaus1, "SN");
+   zHist->Fit(gaus1, "SNR");
    gaus1->SetLineColor(kBlue);
    gaus1->SetLineStyle(2);
    gaus1->DrawCopy("same");
+
+   /*
    TF1 *gaus2 =
       new TF1("gaus2", " [0]*( exp( -(x - [1] - [3])^2/(2*[2]^2)) + exp( -(x - [1]+[3])^2/(2*[2]^2)))", 26, 59);
    gaus2->SetParameters(gaus1->GetParameter(0) / 2, 42.5, 5, 2);
    gaus2->FixParameter(1, 42.5);
+   // gaus2->SetParLimits(3, 2, 10);
    std::cout << "Fitting double gaussian" << endl;
    auto res = zHist->Fit(gaus2, "SN");
 
@@ -214,6 +232,7 @@ void FitZ()
    gaus1->SetParameters(res->Parameter(0), res->Parameter(1) + res->Parameter(3), res->Parameter(2));
    gaus1->DrawCopy("same");
    gaus2->Draw("same");
+   */
 }
 
 void FitMR()

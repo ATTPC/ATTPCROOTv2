@@ -3,6 +3,7 @@
 #include "AtContainerManip.h" // for GetPointerVector
 #include "AtE12014.h"
 #include "AtMCResult.h"
+#include "AtSampleConsensus.h"
 #include "AtViewerManager.h"
 #include "AtViewerManagerSubject.h" // for AtBranch, AtTreeEntry
 
@@ -73,6 +74,12 @@ void AtTabFF::Update(DataHandling::AtSubject *sub)
    DrawCanvas();
 }
 
+std::vector<AtHit *> AtTabFF::GetFragmentHits(AtEvent *event)
+{
+
+   return {};
+}
+
 void AtTabFF::UpdateEvent()
 {
    if (fEvent.Get() == nullptr)
@@ -84,8 +91,17 @@ void AtTabFF::UpdateEvent()
       std::vector<double> adcSum;
       auto tbMin = E12014::fTBMin;
       E12014::fTBMin = 0;
-      E12014::FillHitSums(exp, sim, fFissionEvent->GetFragHits(i), ContainerManip::GetPointerVector(fEvent->GetHits()),
-                          0, E12014::fSatThreshold, nullptr, &adcSum, fRawEvent.Get());
+      int goodHits = E12014::FillHitSums(exp, sim, fFissionEvent->GetFragHits(i),
+                                         ContainerManip::GetPointerVector(fEvent->GetHits()), 0, E12014::fSatThreshold,
+                                         nullptr, &adcSum, fRawEvent.Get());
+      LOG(info) << "Good hits " << goodHits;
+      /*
+      using namespace SampleConsensus;
+      AtSampleConsensus sac(Estimators::kRANSAC, AtPatterns::PatternType::kLine, RandomSample::SampleMethod::kUniform);
+      auto patEvent = sac.Solve(fEvent.Get());
+
+      E12014::FillSimSum(sim, ContainerManip::GetPointerVector(patEvent.GetTrackCand()[1].GetHitArray()));
+      */
       E12014::fTBMin = tbMin;
       ContainerManip::SetHistFromData(*fExpdQdZ[i], exp);
       ContainerManip::SetHistFromData(*fSimdQdZ[i], sim);
@@ -99,6 +115,8 @@ void AtTabFF::UpdateEvent()
             LOG(info) << "Z2: " << result->fParameters["Z1"] << " A2: " << result->fParameters["A1"];
             LOG(info) << "ObjQ: " << result->fParameters["ObjQ"] << " ObjPos: " << result->fParameters["ObjPos"]
                       << " Amp: " << result->fParameters["Amp"];
+            bool inCut = result->fParameters["ObjQ"] < 15 && result->fParameters["Amp"] < 0.5;
+            LOG(info) << std::endl << (inCut ? "In Cut" : "Out Cut") << std::endl;
          }
       }
    }
