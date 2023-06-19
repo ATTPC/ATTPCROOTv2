@@ -37,6 +37,7 @@ public:
 
    const rawTrace &GetRawADC() const { return fRawAdc; }
    const trace &GetADC() const { return fAdc; }
+   Int_t GetTraceSize() const { return fSize; }
 
    ClassDefOverride(AtGenericTrace, 1);
 };

@@ -60,19 +60,12 @@ void AtFRIBHDFUnpacker::processPad(std::size_t ipad)
 {
    std::vector<int16_t> rawadc = pad_raw_data(ipad);
 
-   // AtGenericTrace*
-   // auto pad = fRawEvent->AddGenericTrace(ipad);
-   // setAdc(pad, rawadc);
-}
-
-void AtFRIBHDFUnpacker::setAdc(AtPad *pad, const std::vector<int16_t> &data)
-{
-   // auto baseline = getBaseline(data);
+   auto trace = fRawEvent->AddGenericTrace(ipad);
+   auto baseline = getBaseline(rawadc);
    for (Int_t iTb = 0; iTb < 2048; iTb++) {
-      // pad->SetRawADC(iTb, data.at(iTb)); // First 5 words are electronic id
-      // pad->SetADC(iTb, data.at(iTb) - baseline);
+      trace->SetRawADC(iTb, rawadc.at(iTb));
+      trace->SetADC(iTb, rawadc.at(iTb) - baseline);
    }
-   pad->SetPedestalSubtracted(fIsBaseLineSubtraction);
 }
 
 std::vector<int16_t> AtFRIBHDFUnpacker::pad_raw_data(std::size_t i_pad)

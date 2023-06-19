@@ -106,6 +106,13 @@ public:
    void RemovePad(Int_t padNum);
    void SetSimMCPointMap(std::multimap<Int_t, std::size_t> map) { fSimMCPointMap = std::move(map); }
 
+   template <typename... Ts>
+   AtGenericTrace *AddGenericTrace(Ts &&... params)
+   {
+      fGTraceList.push_back(std::make_unique<AtGenericTrace>(std::forward<Ts>(params)...));
+      return fGTraceList.back().get();
+   }
+
    AtGenericTrace *AddGenericTrace(std::unique_ptr<AtGenericTrace> ptr)
    {
       fGTraceList.push_back(std::move(ptr));
@@ -124,6 +131,8 @@ public:
    const AtPad *GetFpn(const AtPadReference &ref) const;
    const PadVector &GetPads() const { return fPadList; }
    PadVector &GetPads() { return const_cast<PadVector &>(const_cast<const AtRawEvent *>(this)->GetPads()); }
+
+   const GenTraceVector &GetGenTraces() const { return fGTraceList; }
 
    const FpnMap &GetFpnPads() const { return fFpnMap; }
    std::multimap<Int_t, std::size_t> &GetSimMCPointMap() { return fSimMCPointMap; }

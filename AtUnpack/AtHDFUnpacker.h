@@ -59,7 +59,6 @@ protected:
    virtual void processPad(std::size_t padIndex);
    virtual std::size_t n_pads(std::string i_raw_event);
    virtual std::vector<int16_t> pad_raw_data(std::size_t i_pad);
-   virtual void setAdc(AtPad *pad, const std::vector<int16_t> &data);
    hid_t open_file(char const *file, IO_MODE mode);
    std::tuple<hid_t, hsize_t> open_group(hid_t fileId, char const *group);
    std::tuple<hid_t, std::vector<hsize_t>> open_dataset(hid_t locId, char const *dataset);
@@ -68,6 +67,7 @@ protected:
    void close_group(hid_t group);
    void close_dataset(hid_t dataset);
    void end_raw_event();
+   Float_t getBaseline(const std::vector<int16_t> &data);
 
    template <typename T>
    void read_slab(hid_t dataset, hsize_t *counts, hsize_t *offsets, hsize_t *dims_out, T *data)
@@ -89,7 +89,7 @@ private:
    void setEventIDAndTimestamps();
    AtPad *createPadAndSetIsAux(const AtPadReference &padRef);
    void setDimensions(AtPad *pad);
-   Float_t getBaseline(const std::vector<int16_t> &data);
+   void setAdc(AtPad *pad, const std::vector<int16_t> &data);
 
    // Following methods satisfy the data_handler interface
    std::vector<uint64_t> get_header(std::string headerName);

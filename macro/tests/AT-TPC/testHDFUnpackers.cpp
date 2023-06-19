@@ -12,5 +12,6 @@ void testHDFUnpackers()
    unpacker->SetNumberTimestamps(1);
    unpacker->Init();
    unpacker->FillRawEvent(rawEvent);
+   std::cout << " Number of events : " << unpacker->GetNumEvents() << "\n";
    // dynamic_cast<AtFRIBHDFUnpacker*>(unpacker.get())->open("/home/yassid/Desktop/run_0140.h5");
 }
