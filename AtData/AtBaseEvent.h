@@ -27,6 +27,7 @@ protected:
 
    std::vector<ULong64_t> fTimestamp{1};
    AuxPadMap fAuxPadMap;
+   std::string fEventName;
 
 public:
    AtBaseEvent(std::string name = "AtBaseEvent");
@@ -60,12 +61,14 @@ public:
    void SetTimestamp(ULong64_t timestamp, int index = 0);
    void SetNumberOfTimestamps(int numTS) { fTimestamp.resize(numTS, 0); }
    void SetIsExtGate(Bool_t value) { fIsInGate = value; }
+   void SetEventName(std::string name) { fEventName = name; }
 
    ULong_t GetEventID() const { return fEventID; }
    ULong64_t GetTimestamp(int index = 0) const { return index < fTimestamp.size() ? fTimestamp.at(index) : 0; }
    const std::vector<ULong64_t> &GetTimestamps() const { return fTimestamp; }
    Bool_t IsGood() const { return fIsGood; }
    Bool_t GetIsExtGate() const { return fIsInGate; }
+   std::string GetEventName() const { return fEventName; }
 
    AtAuxPad *GetAuxPad(std::string auxPad)
    {

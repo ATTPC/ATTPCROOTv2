@@ -48,6 +48,7 @@ std::size_t AtFRIBHDFUnpacker::open(char const *file)
 void AtFRIBHDFUnpacker::processData()
 {
    TString event_name = TString::Format("evt%lld_1903", fDataEventID);
+   fRawEvent->SetEventName(event_name.Data());
    std::size_t npads = n_pads(event_name.Data());
 
    for (auto ipad = 0; ipad < npads; ++ipad)

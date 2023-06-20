@@ -35,8 +35,8 @@ public:
    void SetRawADC(Int_t idx, Int_t val) { fRawAdc[idx] = val; }
    void SetADC(Int_t idx, Double_t val) { fAdc[idx] = val; }
 
-   const rawTrace &GetRawADC() const { return fRawAdc; }
-   const trace &GetADC() const { return fAdc; }
+   rawTrace &GetRawADC() { return fRawAdc; }
+   trace &GetADC() { return fAdc; }
    Int_t GetTraceSize() const { return fSize; }
 
    ClassDefOverride(AtGenericTrace, 1);

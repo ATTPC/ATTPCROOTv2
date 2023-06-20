@@ -91,6 +91,7 @@ void AtHDFUnpacker::setEventIDAndTimestamps()
 void AtHDFUnpacker::processData()
 {
    TString event_name = TString::Format("evt%lld_data", fDataEventID);
+   fRawEvent->SetEventName(event_name.Data());
    std::size_t npads = n_pads(event_name.Data());
 
    for (auto ipad = 0; ipad < npads; ++ipad)

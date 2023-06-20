@@ -56,6 +56,7 @@ void unpack_a1975_FRIBDAQ(TString fileName = "run_0011")
    auto unpacker = std::make_unique<AtFRIBHDFUnpacker>(fAtMapPtr);
    unpacker->SetInputFileName(inputFile.Data());
    unpacker->SetNumberTimestamps(1);
+   unpacker->SetBaseLineSubtraction(true);
 
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetPersistence(true);
@@ -70,7 +71,7 @@ void unpack_a1975_FRIBDAQ(TString fileName = "run_0011")
    auto numEvents = unpackTask->GetNumEvents();
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
-   run->Run(0, 1);
+   run->Run(0, numEvents);
 
    std::cout << std::endl << std::endl;
    std::cout << "Done unpacking events" << std::endl << std::endl;

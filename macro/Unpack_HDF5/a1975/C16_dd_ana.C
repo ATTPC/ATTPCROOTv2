@@ -52,6 +52,8 @@ void C16_dd_ana()
    TH2F *QvsEb = new TH2F("QvsEb", "QvsEb", 1000, -5, 15, 300, 0, 300);
    TH2F *QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 50, 200, -100, 100);
 
+   TH1F *henergyIC = new TH1F("henergyIC", "henergyIC", 2048, 0, 2047);
+
    // Deuteron
    TCutG *cutg = new TCutG("CUTG", 30);
    cutg->SetVarX("bro_vs_eloss");
@@ -122,8 +124,8 @@ void C16_dd_ana()
 
    TString dir = "/home/yassid/fair_install/data/a1954/";
 
-   std::vector<TString> files{"run_0006.root", "run_0007.root", "run_0008.root", "run_0009.root",
-                              "run_0010.root", "run_0011.root", "run_0013.root"};
+   std::vector<TString> files{"run_0011.root"};
+   /*files.push_back("run_0013.root");
    files.push_back("run_0014.root");
    files.push_back("run_0015.root");
    files.push_back("run_0016.root");
@@ -139,22 +141,35 @@ void C16_dd_ana()
    files.push_back("run_0026.root");
    files.push_back("run_0027.root");
    files.push_back("run_0028.root");
-   files.push_back("run_0030.root");
-   files.push_back("run_0031.root");
-   files.push_back("run_0032.root");
-   files.push_back("run_0033.root");
-   files.push_back("run_0034.root");
+   files.push_back("run_0030.root");*/
+
+   // std::vector<TString> files{"run_0011.root"};
+
+   // FRIB DAQ data file
+   std::vector<TString> fribfiles{"run_0011_FRIB_sorted.root"};
 
    for (auto iFile : files) {
 
       TFile *file = new TFile(iFile.Data(), "READ");
-
       TTree *tree = (TTree *)file->Get("cbmsim");
       Int_t nEvents = tree->GetEntries();
       std::cout << " Number of events : " << nEvents << std::endl;
 
       TTreeReader Reader1("cbmsim", file);
       TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtPatternEvent");
+
+      // FRIB data
+      TFile *fileFRIB = new TFile("run_0011_FRIB_sorted.root", "READ");
+      TTree *treeFRIB = (TTree *)fileFRIB->Get("FRIB_output_tree");
+      Int_t nEventsFRIB = treeFRIB->GetEntries();
+      std::cout << " Number of FRIB DAQ events : " << nEventsFRIB << std::endl;
+
+      TTreeReader Reader2("FRIB_output_tree", fileFRIB);
+      TTreeReaderValue<ULong_t> ts(Reader2, "timestamp");
+      TTreeReaderValue<std::vector<Float_t>> energyIC(Reader2, "energy");
+      TTreeReaderValue<std::vector<Float_t>> timeIC(Reader2, "time");
+      TTreeReaderValue<UInt_t> multIC(Reader2, "mult");
+      TTreeReaderValue<std::string> fribEvName(Reader2, "eventName");
 
       for (Int_t i = 0; i < nEvents; i++) {
 
@@ -163,11 +178,26 @@ void C16_dd_ana()
             std::cout << " Event Number : " << i << "\n";
 
          Reader1.Next();
+         Reader2.Next();
 
          AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
 
+         // 900 - 1300
+         Bool_t goodBeam = false;
+         for (auto ener : *energyIC) {
+            if (ener > 900 && ener < 1300) {
+               goodBeam = true;
+               henergyIC->Fill(ener);
+            }
+         }
+         if (!goodBeam)
+            continue;
+
+         // std::cout<<*fribEvName<<"\n";
+
          if (patternEvent) {
             std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
+            auto eventName = patternEvent->GetEventName();
             // std::cout << " Number of pattern tracks " << patternTrackCand.size() << "\n";
 
             // Find track with largets angle
@@ -275,18 +305,18 @@ void C16_dd_ana()
                // if(ener*Am>8.0)
                //  continue;
 
-               if (cutg->IsInside(eloss, bro)) { // Selection of protons
+               // if (cutg->IsInside(eloss, bro)) { // Selection of protons
 
-                  angle_vs_energy->Fill(theta * TMath::RadToDeg(), ener * Am);
-                  auto [ex_energy_exp, theta_cm] = kine_2b(m_C16, m_d, m_b, m_B, Ebeam_buff, theta, ener * Am);
+               angle_vs_energy->Fill(theta * TMath::RadToDeg(), ener * Am);
+               auto [ex_energy_exp, theta_cm] = kine_2b(m_C16, m_d, m_b, m_B, Ebeam_buff, theta, ener * Am);
 
-                  HQval->Fill(ex_energy_exp);
+               HQval->Fill(ex_energy_exp);
 
-                  // Excitation energy vs Beam energy
-                  for (auto iEb = 0; iEb < 300; ++iEb) {
-                     auto [Qdep, theta_cm_qdep] = kine_2b(m_C16, m_d, m_b, m_B, iEb, theta, ener * Am);
-                     QvsEb->Fill(Qdep, iEb);
-                  }
+               // Excitation energy vs Beam energy
+               for (auto iEb = 0; iEb < 300; ++iEb) {
+                  auto [Qdep, theta_cm_qdep] = kine_2b(m_C16, m_d, m_b, m_B, iEb, theta, ener * Am);
+                  QvsEb->Fill(Qdep, iEb);
+                  //  }
 
                   // Rough vertex
                   QvsZpos->Fill(ex_energy_exp, zpos / 10.0);
@@ -397,6 +427,9 @@ void C16_dd_ana()
 
    TCanvas *c_ExEner = new TCanvas();
    HQval->Draw();
+
+   TCanvas *c_IC = new TCanvas();
+   henergyIC->Draw();
 }
 
 void GetEnergy(Double_t M, Double_t IZ, Double_t BRO, Double_t &E)
