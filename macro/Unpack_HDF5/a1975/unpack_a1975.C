@@ -8,7 +8,7 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpack_a1975(TString fileName = "run_0212")
+void unpack_a1975(TString fileName = "run_0003")
 {
 
    // Load the library for unpacking and reconstruction

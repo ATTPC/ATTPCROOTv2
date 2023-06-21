@@ -22,7 +22,7 @@ void C16_dd_ana_FRIB()
 {
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
 
-   std::vector<TString> files{"run_0011_FRIB"};
+   std::vector<TString> files{"run_0021_FRIB"};
    TString filesuffix = ".root";
 
    TH1F *hwaveform = new TH1F("waveform", "waveform", 2048, 0, 2047);
@@ -60,7 +60,7 @@ void C16_dd_ana_FRIB()
       TTreeReader Reader1("cbmsim", file);
       TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtRawEvent");
 
-      for (Int_t i = 0; i < nEvents - 1; i++) {
+      for (Int_t i = 0; i < nEvents - 1; i++) { // NB to prevent crashing due to the last event being empty
 
          if (i % 1000 == 0)
             std::cout << " Event Number : " << i << "\n";

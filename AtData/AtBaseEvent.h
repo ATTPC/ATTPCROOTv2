@@ -44,6 +44,7 @@ public:
       swap(first.fIsInGate, second.fIsInGate);
       swap(first.fTimestamp, second.fTimestamp);
       swap(first.fAuxPadMap, second.fAuxPadMap);
+      swap(first.fEventName, second.fEventName);
    };
 
    void Clear(Option_t *opt) override;

@@ -1,3 +1,30 @@
+Bool_t compareEventName(std::string &getname, std::string &fribname)
+{
+   // Parsing FRIB event number
+   std::regex fribregex("evt(\\d+)_\\d+");
+   std::string result = std::regex_replace(fribname, fribregex, "$1\n");
+
+   int fribnumber;
+   std::istringstream iss(result);
+   while (iss >> fribnumber) {
+      // std::cout << fribnumber << std::endl;
+   }
+
+   // Parsing GET event name
+   std::regex getregex("evt(\\d+)_data");
+   result = std::regex_replace(getname, getregex, "$1\n");
+
+   int getnumber;
+   std::istringstream isss(result);
+   while (isss >> getnumber) {
+      // std::cout << getnumber << std::endl;
+   }
+
+   return (fribnumber == getnumber) ? 1 : 0;
+
+   return 0;
+}
+
 Double_t omega(Double_t x, Double_t y, Double_t z)
 {
    return sqrt(x * x + y * y + z * z - 2 * x * y - 2 * y * z - 2 * x * z);
@@ -124,42 +151,34 @@ void C16_dd_ana()
 
    TString dir = "/home/yassid/fair_install/data/a1954/";
 
-   std::vector<TString> files{"run_0011.root"};
-   /*files.push_back("run_0013.root");
-   files.push_back("run_0014.root");
-   files.push_back("run_0015.root");
-   files.push_back("run_0016.root");
-   files.push_back("run_0017.root");
-   files.push_back("run_0018.root");
-   files.push_back("run_0019.root");
-   files.push_back("run_0020.root");
-   files.push_back("run_0021.root");
-   files.push_back("run_0022.root");
-   files.push_back("run_0023.root");
-   files.push_back("run_0024.root");
-   files.push_back("run_0025.root");
-   files.push_back("run_0026.root");
-   files.push_back("run_0027.root");
-   files.push_back("run_0028.root");
-   files.push_back("run_0030.root");*/
+   std::vector<std::pair<TString, TString>> filepairs;
+   // filepairs.push_back(std::make_pair("run_0013.root","run_0013_FRIB_sorted.root"));
+   /*filepairs.push_back(std::make_pair("run_0011.root","run_0011_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0014.root","run_0014_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0015.root","run_0015_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0016.root","run_0016_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0019.root","run_0019_FRIB_sorted.root"));*/
 
-   // std::vector<TString> files{"run_0011.root"};
+   filepairs.push_back(std::make_pair("run_0011.root", "run_0011_FRIB_sorted.root"));
 
-   // FRIB DAQ data file
-   std::vector<TString> fribfiles{"run_0011_FRIB_sorted.root"};
+   // Conflicting runs: 13 (GET ev2), 17, 18 (mutant?), 19 (mutant), 20 (mutant and FRIB ev2), 21 and 22 and 23 and 24
+   // and 25 (mutant
+   // 26 (evt2), 27 (mutant)
 
-   for (auto iFile : files) {
+   for (auto iFile : filepairs) {
 
-      TFile *file = new TFile(iFile.Data(), "READ");
+      // GET Data
+      TFile *file = new TFile(iFile.first.Data(), "READ");
       TTree *tree = (TTree *)file->Get("cbmsim");
       Int_t nEvents = tree->GetEntries();
       std::cout << " Number of events : " << nEvents << std::endl;
 
       TTreeReader Reader1("cbmsim", file);
       TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtPatternEvent");
+      TTreeReaderValue<TClonesArray> eventHArray(Reader1, "AtEventH");
 
       // FRIB data
-      TFile *fileFRIB = new TFile("run_0011_FRIB_sorted.root", "READ");
+      TFile *fileFRIB = new TFile(iFile.second.Data(), "READ");
       TTree *treeFRIB = (TTree *)fileFRIB->Get("FRIB_output_tree");
       Int_t nEventsFRIB = treeFRIB->GetEntries();
       std::cout << " Number of FRIB DAQ events : " << nEventsFRIB << std::endl;
@@ -171,7 +190,19 @@ void C16_dd_ana()
       TTreeReaderValue<UInt_t> multIC(Reader2, "mult");
       TTreeReaderValue<std::string> fribEvName(Reader2, "eventName");
 
-      for (Int_t i = 0; i < nEvents; i++) {
+      if (nEvents != nEventsFRIB + 1) {
+         std::cerr << " Error, incompatible number of events! Exiting... "
+                   << "\n";
+         // std::exit(0);
+      }
+
+      ULong64_t fribTSRef = 0;
+      ULong64_t getTSRef = 0;
+
+      ULong64_t fribDTS = 0;
+      ULong64_t getDTS = 0;
+
+      for (Int_t i = 0; i < 100; i++) {
 
          // eventArray->Clear();
          if (i % 1000 == 0)
@@ -181,23 +212,47 @@ void C16_dd_ana()
          Reader2.Next();
 
          AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
+         AtEvent *event = (AtEvent *)eventHArray->At(0);
 
-         // 900 - 1300
-         Bool_t goodBeam = false;
-         for (auto ener : *energyIC) {
-            if (ener > 900 && ener < 1300) {
-               goodBeam = true;
-               henergyIC->Fill(ener);
-            }
-         }
-         if (!goodBeam)
-            continue;
-
-         // std::cout<<*fribEvName<<"\n";
-
-         if (patternEvent) {
+         if (patternEvent && event) {
             std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
-            auto eventName = patternEvent->GetEventName();
+            auto eventName = event->GetEventName();
+            auto getTS = event->GetTimestamp(1);
+
+            if (i == 0) {
+               fribDTS = 0;
+               getDTS = 0;
+            } else {
+
+               fribDTS = *ts - fribTSRef;
+               getDTS = getTS - getTSRef;
+            }
+
+            std::cout << i << "  " << fribDTS << "  " << getDTS << "\n";
+
+            getTSRef = getTS;
+            fribTSRef = *ts;
+
+            // 900 - 1300
+            Bool_t goodBeam = false;
+            for (auto ener : *energyIC) {
+               if (ener > 900 && ener < 1300) {
+                  goodBeam = true;
+                  henergyIC->Fill(ener);
+               }
+            }
+            if (!goodBeam)
+               continue;
+
+            /*std::string str2 = "evt2_data";
+
+            if(!compareEventName(eventName,*fribEvName)){
+              std::cerr<< " Error, Mismatching event names! Exiting... "<<"\n";
+              //if(eventName.compare(str2) == 0)
+               std::cout<<eventName <<" "<<*fribEvName<<"\n";
+               std::exit(0);
+             }*/
+
             // std::cout << " Number of pattern tracks " << patternTrackCand.size() << "\n";
 
             // Find track with largets angle

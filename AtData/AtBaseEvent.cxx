@@ -20,6 +20,7 @@ void AtBaseEvent::Clear(Option_t *opt)
 
    fIsGood = true;
    fIsInGate = false;
+   fEventName = "";
 }
 
 const AtAuxPad *AtBaseEvent::GetAuxPad(std::string auxName) const
