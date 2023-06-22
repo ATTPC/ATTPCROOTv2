@@ -18,11 +18,11 @@ Double_t GetNPeaksHRS(std::vector<Int_t> *timeMax, std::vector<Float_t> *adcMax,
    return nfound;
 }
 
-void C16_dd_ana_FRIB()
+void C16_dd_ana_FRIB(TString fileName = "run_0011_FRIB")
 {
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
 
-   std::vector<TString> files{"run_0021_FRIB"};
+   std::vector<TString> files{fileName};
    TString filesuffix = ".root";
 
    TH1F *hwaveform = new TH1F("waveform", "waveform", 2048, 0, 2047);

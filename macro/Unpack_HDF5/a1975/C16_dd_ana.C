@@ -118,6 +118,43 @@ void C16_dd_ana()
    cutg->SetPoint(28, 230.5729, 0.9668508);
    cutg->SetPoint(29, 238.8968, 0.9658209);
 
+   // protons
+   TCutG *cutp = new TCutG("CUTP", 30);
+   cutp->SetVarX("bro_vs_eloss");
+   cutp->SetVarY("");
+   cutp->SetTitle("Graph");
+   cutp->SetFillStyle(1000);
+   cutp->SetPoint(0, 4232.583, 0.1645176);
+   cutp->SetPoint(1, 5277.039, 0.1217023);
+   cutp->SetPoint(2, 6554.724, 0.106717);
+   cutp->SetPoint(3, 8106.198, 0.09922434);
+   cutp->SetPoint(4, 9302.759, 0.09815395);
+   cutp->SetPoint(5, 10509.46, 0.08209824);
+   cutp->SetPoint(6, 10468.9, 0.06390175);
+   cutp->SetPoint(7, 8197.461, 0.05426832);
+   cutp->SetPoint(8, 5895.601, 0.06497214);
+   cutp->SetPoint(9, 4415.109, 0.07460557);
+   cutp->SetPoint(10, 3188.127, 0.09280205);
+   cutp->SetPoint(11, 2204.513, 0.1377581);
+   cutp->SetPoint(12, 1231.039, 0.1827141);
+   cutp->SetPoint(13, 287.9859, 0.2854707);
+   cutp->SetPoint(14, 176.4421, 0.3197229);
+   cutp->SetPoint(15, 105.4596, 0.4032126);
+   cutp->SetPoint(16, 85.17888, 0.426761);
+   cutp->SetPoint(17, 166.3017, 0.4417463);
+   cutp->SetPoint(18, 450.2316, 0.4331833);
+   cutp->SetPoint(19, 663.179, 0.3957199);
+   cutp->SetPoint(20, 815.2843, 0.3507639);
+   cutp->SetPoint(21, 1018.091, 0.3154413);
+   cutp->SetPoint(22, 1190.477, 0.291893);
+   cutp->SetPoint(23, 1606.232, 0.2555);
+   cutp->SetPoint(24, 2295.776, 0.2265997);
+   cutp->SetPoint(25, 2620.267, 0.2126847);
+   cutp->SetPoint(26, 3127.285, 0.1955586);
+   cutp->SetPoint(27, 3644.443, 0.1784325);
+   cutp->SetPoint(28, 4303.566, 0.1623768);
+   cutp->SetPoint(29, 4232.583, 0.1645176);
+
    // NB: Not used
    // Q-value calculation
    Double_t m_p = 1.007825 * 931.49401;
@@ -152,18 +189,39 @@ void C16_dd_ana()
    TString dir = "/home/yassid/fair_install/data/a1954/";
 
    std::vector<std::pair<TString, TString>> filepairs;
-   // filepairs.push_back(std::make_pair("run_0013.root","run_0013_FRIB_sorted.root"));
-   /*filepairs.push_back(std::make_pair("run_0011.root","run_0011_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0011.root", "run_0011_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0013.root", "run_0013_FRIB_sorted.root"));
    filepairs.push_back(std::make_pair("run_0014.root","run_0014_FRIB_sorted.root"));
    filepairs.push_back(std::make_pair("run_0015.root","run_0015_FRIB_sorted.root"));
    filepairs.push_back(std::make_pair("run_0016.root","run_0016_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0019.root","run_0019_FRIB_sorted.root"));*/
-
-   filepairs.push_back(std::make_pair("run_0011.root", "run_0011_FRIB_sorted.root"));
-
-   // Conflicting runs: 13 (GET ev2), 17, 18 (mutant?), 19 (mutant), 20 (mutant and FRIB ev2), 21 and 22 and 23 and 24
-   // and 25 (mutant
-   // 26 (evt2), 27 (mutant)
+   filepairs.push_back(std::make_pair("run_0016.root", "run_0017_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0016.root", "run_0018_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0019.root", "run_0019_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0020.root", "run_0020_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0021.root", "run_0021_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0022.root", "run_0022_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0023.root", "run_0023_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0026.root", "run_0026_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0027.root", "run_0027_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0028.root", "run_0028_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0030.root", "run_0030_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0031.root", "run_0031_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0032.root", "run_0032_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0033.root", "run_0033_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0034.root", "run_0034_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0035.root", "run_0035_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0036.root", "run_0036_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0037.root", "run_0037_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0038.root", "run_0038_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0039.root", "run_0039_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0040.root", "run_0040_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0041.root", "run_0041_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0042.root", "run_0042_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0043.root", "run_0043_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0044.root", "run_0044_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0045.root", "run_0045_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0046.root", "run_0046_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0048.root", "run_0048_FRIB_sorted.root"));
 
    for (auto iFile : filepairs) {
 
@@ -171,6 +229,7 @@ void C16_dd_ana()
       TFile *file = new TFile(iFile.first.Data(), "READ");
       TTree *tree = (TTree *)file->Get("cbmsim");
       Int_t nEvents = tree->GetEntries();
+      std::cout << " Processing file : " << iFile.first.Data() << "\n";
       std::cout << " Number of events : " << nEvents << std::endl;
 
       TTreeReader Reader1("cbmsim", file);
@@ -202,10 +261,10 @@ void C16_dd_ana()
       ULong64_t fribDTS = 0;
       ULong64_t getDTS = 0;
 
-      for (Int_t i = 0; i < 100; i++) {
+      for (Int_t i = 0; i < nEvents; i++) {
 
          // eventArray->Clear();
-         if (i % 1000 == 0)
+         if (i % 10000 == 0)
             std::cout << " Event Number : " << i << "\n";
 
          Reader1.Next();
@@ -228,7 +287,10 @@ void C16_dd_ana()
                getDTS = getTS - getTSRef;
             }
 
-            std::cout << i << "  " << fribDTS << "  " << getDTS << "\n";
+            if (fribDTS > (getDTS + 5) && fribDTS < (getDTS - 5)) {
+               std::cerr << i << "  " << fribDTS << "  " << getDTS << "\n";
+               std::exit(0);
+            }
 
             getTSRef = getTS;
             fribTSRef = *ts;
@@ -272,8 +334,8 @@ void C16_dd_ana()
                Double_t theta = track.GetGeoTheta();
                Double_t rad = track.GetGeoRadius();
 
-               // if(theta* TMath::RadToDeg()>90.0 || theta* TMath::RadToDeg()<10.0)
-               //  continue;
+               if (theta * TMath::RadToDeg() < 90.0)
+                  continue;
 
                Double_t B_f = 2.85;
 
@@ -382,6 +444,7 @@ void C16_dd_ana()
                bro_vs_dedx->Fill(dedx, bro);
 
                angle_vs_energy_lr->Fill(theta * TMath::RadToDeg(), ener * Am);
+               //}
             }
          }
 
@@ -461,6 +524,7 @@ void C16_dd_ana()
    c_PID_eloss->cd();
    bro_vs_eloss->Draw("colz");
    cutg->Draw("l");
+   cutp->Draw("l");
    c_PID_dedx->cd();
    bro_vs_dedx->Draw("colz");
 
