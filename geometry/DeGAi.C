@@ -81,7 +81,7 @@ const Float_t cage_support_length = 38.6867;
 // DeGAi
 const Float_t Box_Width = 10.1;
 const Float_t Box_Length = 7.0;
-const Float_t Crystal_Diameter = 2.5;
+const Float_t Crystal_Diameter = 5;
 const Float_t Crystal_Length = 7.0;
 const Float_t Hole_Diameter = 1.0;
 const Float_t Hole_Length = 4.0;
@@ -90,6 +90,27 @@ const Float_t Hole_Length = 4.0;
 TGeoManager *gGeoMan = new TGeoManager("ATTPC", "ATTPC");
 ;                     // Pointer to TGeoManager instance
 TGeoVolume *gModules; // Global storage for module types
+
+// function to convert spherical coordinates to Cartesian coordinates
+void convert2coords(Double_t r, Double_t phi, Double_t theta, Double_t outputArray[6]) {
+    // Convert spherical coordinates to Cartesian coordinates with modified axes
+    Double_t x = -r * TMath::Sin(theta) * TMath::Cos(phi);
+    Double_t y = r * TMath::Cos(theta);
+    Double_t z = r * TMath::Sin(theta) * TMath::Sin(phi);
+
+    // Calculate Euler angles
+    Double_t roll = 0.0;  // No rotation around X-axis in this example
+    Double_t pitch = TMath::ATan2(z, TMath::Sqrt(x*x + y*y));
+    Double_t yaw = TMath::ATan2(-y, x);  // Reversed sign for yaw due to modified axes
+
+    // Assign values to the output array
+    outputArray[0] = x;
+    outputArray[1] = y;
+    outputArray[2] = z;
+    outputArray[3] = roll;
+    outputArray[4] = pitch;
+    outputArray[5] = yaw;
+}
 
 // Forward declarations
 void create_materials_from_media_file();
@@ -191,40 +212,18 @@ TGeoVolume *create_detector()
    TGeoMedium *degaimatter = gGeoMan->GetMedium(DeGAiMatter);
    TGeoMedium *mediumvacuum4 = gGeoMan->GetMedium(MediumVacuum);
 
-   // Shell 
-/*
-   TGeoVolume *shell = gGeoManager->MakeSphere("shell", shellmatter, Hull_Inner_Radii/2, Hull_Outer_Radii/2);
-   shell->SetLineColor(kCyan);
-   gGeoMan->GetVolume(geoVersion)
-      ->AddNode(shell, 1,
-                new TGeoCombiTrans(0.0, 0,39/2, new TGeoRotation("shell", 0, 0, 0)));
-   shell->SetTransparency(80);
-*/
+
 
 
    TGeoVolume *dummy = gGeoManager->MakeTube("dummy", mediumvacuum4, 0, 0, 0);
    gGeoMan->GetVolume(geoVersion)->AddNode(dummy, 1, new TGeoCombiTrans(0.0, 0, 0, new TGeoRotation("dummy", 0, 0, 0)));
    dummy->SetTransparency(100);
-/*
-   //Shell with holes
-   TGeoTube *entrance = new TGeoTube("entrance", 0, Hull_Outer_Radii/2, Hull_Outer_Radii +3 );
 
-   TGeoSphere *body = new TGeoSphere("body", Hull_Inner_Radii, Hull_Outer_Radii);
-   TGeoCompositeShape *shell = new TGeoCompositeShape("shell", "(body - entrance)");
-
-   TGeoVolume *shelly = new TGeoVolume("shelly", shell,shellmatter);
-   shelly->SetLineColor(kCyan);
-   gGeoMan->GetVolume(geoVersion)
-      ->AddNode(shelly, 1,
-                new TGeoCombiTrans(0.0, 0,39/2, new TGeoRotation("shelly", 0, 0, 0)));
-   shelly->SetTransparency(70);
-
- */   
  // CLover
 
    TGeoTube *Crystal = new TGeoTube("Det1", 0, Crystal_Diameter/2, Crystal_Length/2);
    TGeoTube *Hole = new TGeoTube("Hole", 0, Hole_Diameter/2, Hole_Length/2);
-   TGeoCombiTrans *Holetrans = new TGeoCombiTrans("Holetrans", 0, 0, -2.0, new TGeoRotation("Holetrans", 0, 0, 0));
+   TGeoCombiTrans *Holetrans = new TGeoCombiTrans("Holetrans", 0, 0, 2.0, new TGeoRotation("Holetrans", 0, 0, 0));
    Holetrans->RegisterYourself();
    TGeoBBox *FlattenCrystalV = new TGeoBBox("FlattenCrystalV", 0.38, Crystal_Diameter/2, Crystal_Length/2+1);
    TGeoCombiTrans *FlattenCrystaltrans1 = new TGeoCombiTrans("FlattenCrystaltrans1", 2.5, 0, 0, new TGeoRotation("FlattenCrystaltrans", 0, 0, 0));
@@ -241,12 +240,8 @@ TGeoVolume *create_detector()
    TGeoCompositeShape *Clover1 = new TGeoCompositeShape("Clover1", "(Det1 - Hole:Holetrans - FlattenCrystalV:FlattenCrystaltrans1  - FlattenCrystalH:FlattenCrystaltrans4)");
 // Top Left clover
    TGeoCompositeShape *Clover2 = new TGeoCompositeShape("Clover2", "(Det1 - Hole:Holetrans - FlattenCrystalV:FlattenCrystaltrans2  - FlattenCrystalH:FlattenCrystaltrans4)");
-  
-
 // Bottom Right clover
    TGeoCompositeShape *Clover3 = new TGeoCompositeShape("Clover3", "(Det1 - Hole:Holetrans - FlattenCrystalV:FlattenCrystaltrans1  - FlattenCrystalH:FlattenCrystaltrans3)");
-
-
 // Bottom Left clover
    TGeoCompositeShape *Clover4 = new TGeoCompositeShape("Clover4", "(Det1 - Hole:Holetrans - FlattenCrystalV:FlattenCrystaltrans2  - FlattenCrystalH:FlattenCrystaltrans3)");
   
@@ -267,7 +262,7 @@ TGeoVolume *create_detector()
    TGeoCompositeShape *Clover4hole = new TGeoCompositeShape("Clover4hole", "(Det1 - FlattenCrystalV:FlattenCrystaltrans2  - FlattenCrystalH:FlattenCrystaltrans3)");
 
    TGeoBBox *Box = new TGeoBBox("Box", Box_Width/2, Box_Width/2, Box_Length/2-0.01);
-   TGeoCompositeShape *Cover = new TGeoCompositeShape("Cover", "Box - Clover1hole:TRtrans - Clover2hole:TLtrans - Clover3hole:BRtrans - Clover4hole:BLtrans ");
+   TGeoCompositeShape *CoverB = new TGeoCompositeShape("Cover", "Box - Clover1hole:TRtrans - Clover2hole:TLtrans - Clover3hole:BRtrans - Clover4hole:BLtrans ");
    TGeoCompositeShape *Detector = new TGeoCompositeShape("Detector", "Cover + Clover1:TRtrans + Clover2:TLtrans + Clover3:BRtrans + Clover4:BLtrans");
    //detector
    TGeoVolume **Cry_vol;
@@ -276,11 +271,8 @@ TGeoVolume *create_detector()
    TString CrystalName = "Crystal_";
    TString name_cry[40] = {"01", "02", "03", "04", "05", "06", "07", "08", "09","10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40"};
 
-   Double_t RvalsDet[40] = {19.05112315,19.05112315,19.05112315,19.05112315,19.05022437,19.05022437,19.05022437,19.05022437,19.05060231,19.05060231,19.05060231,19.05060231,10.66749804,10.66749804,10.66749804,10.66749804,10.66898269,10.66898269,10.66898269,10.66898269,10.66915413,10.66915413,10.66915413,10.66915413,19.04863682,19.04863682,19.04863682,19.04863682,19.0493892,19.0493892,19.0493892,19.0493892,14.47761989,14.47761989,14.47761989,14.47761989,14.47761989,14.47761989,14.47761989,14.47761989};
-
+ 
    Double_t Rvals[40] ={19.77683114,19.77683114,19.77647621,19.77647621,19.77759725,19.77759725,19.77713387,19.77713387,19.77644147,19.77591297,19.77633936,19.77707173,11.56007718,11.56116122,11.56116122,11.56007718,11.56118215,11.56120531,11.56120531,11.56118215,11.56103566,11.56072343,11.56072343,11.56103566,19.77724805,19.77604363,19.77762107,19.77681679,19.77604363,19.77724805,19.77681679,19.77762107,19.77604363,19.77724805,19.77681679,19.77762107,19.77604363,19.77724805,19.77681679,19.77762107};
-
-   Double_t Rnew[40] = {19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,10.67,10.67,10.67,10.67,10.67,10.67,10.67,10.67,10.67,10.67,10.67,10.67,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05,19.05};
 
    Double_t ThetaDet[40] = {128.8960565,128.8960565,116.6719632,116.6719632 ,128.8942659,128.8942659,116.6710061,116.6710061,128.4539467,128.4551626,116.2283226,116.2272773,100.5205834,100.5195857,79.4804143,79.47941659,100.5195664,100.5195451,79.48045487,79.48043356,100.5197013,100.5199886,79.4800114,79.48029875,66.30557111,66.30403974,54.07972043,54.07803245,66.30403974,66.30557111,54.07803245,54.07972043,53.82653458,58.20928332,43.77046075,38.21971664,58.20928332,53.82653458,38.21971664,43.77046075};
 
@@ -290,138 +282,69 @@ TGeoVolume *create_detector()
 
    Double_t Theta[40] = {122.999694,122.999694,122.999694,122.999694,123.0014495,123.0014495,123.0014495,123.0014495,122.5555004,122.5555004,122.5555004,122.5555004,90,90,90,90,90,90,90,90,90,90,90,90,59.99763268,59.99763268,59.99763268,59.99763268,59.99893933,59.99893933,59.99893933,59.99893933,47.99924684,47.99924684,47.99924684,47.99924684,47.99924684,47.99924684,47.99924684,47.99924684};
 
-   Double_t Phinew[40] = {322.4764063,322.4764063,307.5235937,307.5235937,277.4764063,277.4764063,262.5235937,262.5235937,231.5086426,231.5086426,216.55583,216.55583,347.4757696,347.4757696,321.1025018,321.1025018,296.0483378,296.0483378,269.67507,269.67507,244.6141667,244.6141667,218.2408989,218.2408989,297.4738336,297.4738336,282.521021,282.521021,257.4706893,257.4706893,242.5178767,242.5178767,341.47395,341.47395,326.5211374,326.5211374,213.4788626,213.4788626,198.52605,198.52605};
-
-   Double_t Thetanew[40] = {130.4761003,100.5232877,115.5232877,130.4761003,130.4778558,115.5250432,115.5250432,130.4778558,130.0319067,115.0790941,115.0790941,130.0319067,103.1866339,76.81336606,76.81336606,103.1866339,103.1866339,76.81336606,76.81336606,103.1866339,103.1866339,76.81336606,76.81336606,103.1866339,67.47403901,52.52122635,52.52122635,67.47403901,67.47534566,52.522533,52.522533,67.47534566,55.47565317,40.52284051,40.52284051,55.47565317,55.47565317,40.52284051,40.52284051,55.47565317};
-
-   Double_t Rn[40] = {19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,10.95896437,10.95896437,10.95896437,10.95896437,10.95896437,10.95896437,10.95896437,10.95896437,10.95896437,10.95896437,10.95896437,10.95896437,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172,19.21334172};
-
    Int_t Color[40] = {600,400,416,632,600,400,416,632,600,400,416,632,600,400,416,632,600,400,416,632,600,400,416,632,600,400,416,632,600,400,416,632,600,400,416,632,600,400,416,632};
-/*Cry_vol[nora] = gGeoManager->MakeTube(CrystalName + name_cry[nora], segamatter, sega_inner_dead_layer_rad_out,
-                                            sega_active_rad_out, sega_active_length / 2);
-      Cry_vol[nora]->SetLineColor(kBlue);
-      gGeoMan->GetVolume(geoVersion)
-         ->AddNode(Cry_vol[nora], nora + 1,
-                   new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
-                                      new TGeoRotation("activeL", phirot[nora], updown * thetarot[nora], 0)));
-      Cry_vol[nora]->SetTransparency(80);*/
 
-   /*         322.8804903,307.1195097,308.1415006,321.8584994      -Phi[i],Theta[i]            */
 
-   TString PositionType = "mine";
-   if(PositionType=="center"){
-
-   for(Int_t i =0;i<10;i++){
-   ROOT::Math::Polar3D vec = ROOT::Math::Polar3D(Rnew[4*i],TMath::DegToRad()*Phi[4*i],TMath::DegToRad()*Theta[4*i]);
-   Cry_vol[i] = gGeoManager->MakeTube(CrystalName + name_cry[i], degaimatter, 0,
-                                            Crystal_Diameter/2, Box_Length / 2);
-      Cry_vol[i]->SetLineColor(Color[4*i]);
-      gGeoMan->GetVolume(geoVersion)
-         ->AddNode(Cry_vol[i], i + 1,
-                   new TGeoCombiTrans(-vec.y(),vec.z(),vec.x() + cage_support_length/2,
-                                      new TGeoRotation(CrystalName + name_cry[i],Phi[4*i],Theta[4*i] , 0)));
-      Cry_vol[i]->SetTransparency(0);
-   };
-   }
-   // DeGAi given values
-
-   else if(PositionType=="given"){
-
-   for(Int_t i =0;i<40;i++){
-
-   ROOT::Math::Polar3D vec = ROOT::Math::Polar3D(Rvals[i],TMath::DegToRad()*ThetaDet[i],TMath::DegToRad()*PhiDet[i]);
-   Cry_vol[i] = gGeoManager->MakeTube(CrystalName + name_cry[i], degaimatter, 0,
-                                            Crystal_Diameter/2, Box_Length / 2);
-      Cry_vol[i]->SetLineColor(Color[i]);
-      gGeoMan->GetVolume(geoVersion)
-         ->AddNode(Cry_vol[i], i + 1,
-                   new TGeoCombiTrans(vec.z(),vec.x(),vec.y() + cage_support_length/2,
-                                      new TGeoRotation(CrystalName + name_cry[i],Phi[i],Theta[i] , 0)));
-      Cry_vol[i]->SetTransparency(0);
-   };
-   }
   
-   else if(PositionType=="mine"){
-   for(Int_t i =0;i<0;i++){
-   ROOT::Math::Polar3D vec = ROOT::Math::Polar3D(Rnew[4*i],TMath::DegToRad()*Phi[4*i],TMath::DegToRad()*Theta[4*i]);
-   TGeoVolume *center = gGeoManager->MakeTube("center", degaimatter, 0,
-                                            Crystal_Diameter/2, Box_Length / 2);
-      center->SetLineColor(Color[4*i]);
-      gGeoMan->GetVolume(geoVersion)
-         ->AddNode(center, i + 1,
-                   new TGeoCombiTrans(-vec.y(),vec.z(),vec.x() + cage_support_length/2,
-                                      new TGeoRotation("center",Phi[4*i],Theta[4*i] , 0)));
-      center->SetTransparency(0);
-   };   
    
-   for(Int_t i =0;i<8;i++){
-   ROOT::Math::Polar3D vec = ROOT::Math::Polar3D(Rn[i],TMath::DegToRad()*Phinew[i],TMath::DegToRad()*Thetanew[i]);
-   Cry_vol[i] = gGeoManager->MakeTube(CrystalName + name_cry[i], degaimatter, 0,
-                                            Crystal_Diameter/2, Box_Length / 2);
-      Cry_vol[i]->SetLineColor(Color[i]);
-      gGeoMan->GetVolume(geoVersion)
-         ->AddNode(Cry_vol[i], i + 1,
-                   new TGeoCombiTrans(-vec.y(), vec.z(),vec.x() + cage_support_length/2,
-                                      new TGeoRotation(CrystalName + name_cry[i],Phi[i],Theta[i] , 0)));
-      Cry_vol[i]->SetTransparency(0);
-      
-      std::cout<< "x = y, y = z, z = x"<<std::endl;
-      std::cout<< "x:" << -vec.y() << " y:" << vec.z() << " z:" << vec.x() << std::endl;
-      std::cout<< "x: " << -Rn[i]*TMath::Sin(TMath::DegToRad()*Thetanew[i])*TMath::Sin(TMath::DegToRad()*Phinew[i]) << 
-      " y: " << Rn[i]*TMath::Cos(TMath::DegToRad()*Phinew[i]) << 
-      " z: " << Rn[i]*TMath::Cos(TMath::DegToRad()*Thetanew[i])*TMath::Sin(TMath::DegToRad()*Phinew[i]) + cage_support_length/2 << std::endl;
-   };
-   };/*
-   #include <Math/GenVector/DisplacementVector3D.h>
-#include <Math/GenVector/SphericalCoordinateSystem.h>
-#include <Math/GenVector/Cartesian3D.h>
-      for(Int_t i =0;i<10;i++){
-         Cry_vol[4*i] = new TGeoVolume(CrystalName + name_cry[4*i], Clover1, degaimatter);
+for(Int_t i =0;i<10;i++){
+       Double_t avec0[6];
+      convert2coords(Rvals[4*i],TMath::DegToRad()*Phi[4*i],TMath::DegToRad()*Theta[4*i],avec0);
+      TGeoVolume *Cover =  new TGeoVolume(CrystalName + name_cry[4*i], CoverB, shellmatter);
+         Cover->SetLineColor(kGray);
+         gGeoMan->GetVolume(geoVersion)
+            ->AddNode(Cover, 4*i + 1,
+                      new TGeoCombiTrans(avec0[2],avec0[0],avec0[1] + cage_support_length/2,
+                                         new TGeoRotation(CrystalName + name_cry[4*i],Phi[4*i],Theta[4*i] , 0)));
+         Cover->SetTransparency(0);
+
+
+
+
+
+
+      Double_t avec1[6];
+      convert2coords(Rvals[4*i],TMath::DegToRad()*PhiDet[4*i],TMath::DegToRad()*ThetaDet[4*i],avec1);
+         Cry_vol[4*i] = new TGeoVolume(CrystalName + name_cry[4*i], Clover4, degaimatter);
          Cry_vol[4*i]->SetLineColor(Color[4*i]);
          gGeoMan->GetVolume(geoVersion)
             ->AddNode(Cry_vol[4*i], 4*i + 1,
-                      new TGeoCombiTrans(-Rnew[4*i]*TMath::Sin(TMath::DegToRad()*Theta[4*i])*TMath::Sin(TMath::DegToRad()*Phi[4*i]),
-                      Rnew[4*i]*TMath::Cos(TMath::DegToRad()*Phi[4*i]), 
-                      Rnew[4*i]*TMath::Cos(TMath::DegToRad()*Theta[4*i])*TMath::Sin(TMath::DegToRad()*Phi[4*i]) + cage_support_length/2,
+                      new TGeoCombiTrans(avec1[2],avec1[0],avec1[1] + cage_support_length/2,
                                          new TGeoRotation(CrystalName + name_cry[4*i],Phi[4*i],Theta[4*i] , 0)));
          Cry_vol[4*i]->SetTransparency(0);
 
-         Cry_vol[4*i+1] = new TGeoVolume(CrystalName + name_cry[4*i+1], Clover2, degaimatter);
+      Double_t avec2[6];
+      convert2coords(Rvals[4*i+1],TMath::DegToRad()*PhiDet[4*i+1],TMath::DegToRad()*ThetaDet[4*i+1],avec2);
+      Cry_vol[4*i+1] = new TGeoVolume(CrystalName + name_cry[4*i+1], Clover3, degaimatter);
          Cry_vol[4*i+1]->SetLineColor(Color[4*i+1]);
          gGeoMan->GetVolume(geoVersion)
             ->AddNode(Cry_vol[4*i+1], 4*i + 2,
-                      new TGeoCombiTrans(-Rnew[4*i+1]*TMath::Sin(TMath::DegToRad()*Theta[4*i+1])*TMath::Sin(TMath::DegToRad()*Phi[4*i+1]),
-                      Rnew[4*i+1]*TMath::Cos(TMath::DegToRad()*Phi[4*i+1]), 
-                      Rnew[4*i+1]*TMath::Cos(TMath::DegToRad()*Theta[4*i+1])*TMath::Sin(TMath::DegToRad()*Phi[4*i+1]) + cage_support_length/2,
+                      new TGeoCombiTrans(avec2[2],avec2[0],avec2[1] + cage_support_length/2,
                                          new TGeoRotation(CrystalName + name_cry[4*i+1],Phi[4*i+1],Theta[4*i+1] , 0)));
          Cry_vol[4*i+1]->SetTransparency(0);
 
-         Cry_vol[4*i+2] = new TGeoVolume(CrystalName + name_cry[4*i+2], Clover4, degaimatter);
+      Double_t avec3[6];
+      convert2coords(Rvals[4*i+2],TMath::DegToRad()*PhiDet[4*i+2],TMath::DegToRad()*ThetaDet[4*i+2],avec3);
+         Cry_vol[4*i+2] = new TGeoVolume(CrystalName + name_cry[4*i+2], Clover1, degaimatter);
          Cry_vol[4*i+2]->SetLineColor(Color[4*i+2]);
          gGeoMan->GetVolume(geoVersion)
             ->AddNode(Cry_vol[4*i+2], 4*i + 3,
-                      new TGeoCombiTrans(-Rnew[4*i+2]*TMath::Sin(TMath::DegToRad()*Theta[4*i+2])*TMath::Sin(TMath::DegToRad()*Phi[4*i+2]),
-                      Rnew[4*i+2]*TMath::Cos(TMath::DegToRad()*Phi[4*i+2]), 
-                      Rnew[4*i+2]*TMath::Cos(TMath::DegToRad()*Theta[4*i+2])*TMath::Sin(TMath::DegToRad()*Phi[4*i+2]) + cage_support_length/2,
+                      new TGeoCombiTrans(avec3[2],avec3[0],avec3[1] + cage_support_length/2,
                                          new TGeoRotation(CrystalName + name_cry[4*i+2],Phi[4*i+2],Theta[4*i+2] , 0)));
          Cry_vol[4*i+2]->SetTransparency(0);
 
-         Cry_vol[4*i+3] = new TGeoVolume(CrystalName + name_cry[4*i+3], Clover3, degaimatter);
+      Double_t avec4[6];
+      convert2coords(Rvals[4*i+3],TMath::DegToRad()*PhiDet[4*i+3],TMath::DegToRad()*ThetaDet[4*i+3],avec4);
+         Cry_vol[4*i+3] = new TGeoVolume(CrystalName + name_cry[4*i+3], Clover2, degaimatter);
          Cry_vol[4*i+3]->SetLineColor(Color[4*i+3]);
          gGeoMan->GetVolume(geoVersion)
             ->AddNode(Cry_vol[4*i+3], 4*i + 4,
-                      new TGeoCombiTrans(-Rnew[4*i+3]*TMath::Sin(TMath::DegToRad()*Theta[4*i+3])*TMath::Sin(TMath::DegToRad()*Phi[4*i+3]),
-                      Rnew[4*i+3]*TMath::Cos(TMath::DegToRad()*Phi[4*i+3]), 
-                      Rnew[4*i+3]*TMath::Cos(TMath::DegToRad()*Theta[4*i+3])*TMath::Sin(TMath::DegToRad()*Phi[4*i+3]) + cage_support_length/2,
+                      new TGeoCombiTrans(avec4[2],avec4[0],avec4[1] + cage_support_length/2,
                                          new TGeoRotation(CrystalName + name_cry[4*i+3],Phi[4*i+3],Theta[4*i+3] , 0)));
          Cry_vol[4*i+3]->SetTransparency(0);
 
+        
       };
-
-   
-*/
-
-
 
    // GADGET Main drift volume
    double tpc_rot = 0;
