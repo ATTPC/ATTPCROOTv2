@@ -10,7 +10,6 @@
 #include "TCanvas.h"
 #include "TRandom3.h"
 
-
 void gamma_analysis(Int_t num_ev = 50000)
 {
     // Ask user for file name
@@ -19,14 +18,11 @@ void gamma_analysis(Int_t num_ev = 50000)
     std::cin >> fileName;
     Double_t momentum;
     std::vector<std::string> isotopes = { "60Co", "173Cs", "22Na" };
-    if (doesNotEqualAny(fileName, isotopes)) {
 
         std::cout << "momentum: (MeV)";
         std::cin >> momentum;
     }
 
-    TString mcFileNameHead = "./DeGAi_";
-    TString mcFileNameTail = ".root";
     TString mcFileName = mcFileNameHead + TString(fileName.c_str()) + mcFileNameTail;
     TString outFileNameHead = "./data/DeGAiana";
     TString outFileNameTail = ".root";
@@ -113,4 +109,3 @@ void gamma_analysis(Int_t num_ev = 50000)
     Energy_loss->SetTitle(Form("Photopeak Efficiency: Energy Loss Spectrum (%.2f%%)", photopeakEfficiency));
     Energy_loss->Draw();
 }
-
