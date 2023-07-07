@@ -37,9 +37,9 @@ void gamma_analysis(Int_t num_ev = 50000)
         nEvents = num_ev;
 
     // Histograms
-    Int_t Bins = 15000;
-    Int_t MeV = 15;
-    TH1D* Energy_loss = new TH1D("Energy_loss", "Photopeak Efficiency: Energy Loss Spectrum", Bins, 0, MeV);
+    Int_t Bins = 2000;
+    Int_t MeV = 2;
+    TH1D* Energy_loss = new TH1D("Energy_loss", "Photopeak Efficiency: ", Bins, 0, MeV);
     TCanvas* c1 = new TCanvas();
     c1->Draw();
 
