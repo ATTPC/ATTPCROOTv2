@@ -24,12 +24,14 @@ int maxObjQ = 100;
 
 double ex(double E)
 {
-   int ABeam = 192;
-   double beAlpha = 7.07 * 4;
-   double beCN = 7.87 * (ABeam + 4);
-   double beBeam = 7.91 * ABeam;
+   return E;
+   int ABeam = 200;
+   // Ecm
+   double Ecm = E / ABeam * 4;
 
-   return E / ABeam * 4 + beAlpha + beBeam - beCN;
+   // Q Value (200Bi + 4He -> 204At)
+   double Q = -6.07;
+   return Ecm + Q;
 }
 
 double GetAvg(string name, TClonesArray &result, int toAvg = 1)
@@ -154,20 +156,20 @@ void PlotZ(bool draw = true)
 {
    TH1::SetDefaultSumw2();
    // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Diff2.root";
-   // TString fileName = "/mnt/analysis/e12014/TPC/150Torr_yFit/cut1/SRIM/Bi200Chi2.root";
-   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_yFit/cut1/LISE/Bi200Chi2.root";
+   TString fileName = "/mnt/analysis/e12014/TPC/150Torr_yFit/cut1/SRIM/Bi200Chi2.root";
+   //  TString fileName = "/mnt/analysis/e12014/TPC/150Torr_yFit/cut1/LISE/Bi200Chi2.root";
    //  TString fileName = "/mnt/analysis/e12014/TPC/150Torr_yFit2/cut1/SRIM/Bi200Chi2.root";
-   //  TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Chi2.root";
-   //     TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut2/SRIM/Bi200Chi2.root";
-   //       TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Pb198Chi2.root";
-   //              TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameV/cut1/SRIM/Bi200Diff2.root";
-   //              TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
-   //          TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameVSmall/cut1/SRIM/Bi200Chi2.root";
-   //          TString fileName = "./Chi2FixAmp.root";
-   //        TString fileName = "./Chi2NormalPosition.root";
-   //      TString fileName = "./Bi200NewObj.root";
-   //      TString fileName = "./Chi2Norm.root";
-   //  TString fileName = "./Bi200NewFit.root";
+   //    TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Bi200Chi2.root";
+   //       TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut2/SRIM/Bi200Chi2.root";
+   //         TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/cut1/SRIM/Pb198Chi2.root";
+   //                TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameV/cut1/SRIM/Bi200Diff2.root";
+   //                TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
+   //            TString fileName = "/mnt/analysis/e12014/TPC/150Torr_nomod/sameVSmall/cut1/SRIM/Bi200Chi2.root";
+   //            TString fileName = "./Chi2FixAmp.root";
+   //          TString fileName = "./Chi2NormalPosition.root";
+   //        TString fileName = "./Bi200NewObj.root";
+   //        TString fileName = "./Chi2Norm.root";
+   //    TString fileName = "./Bi200NewFit.root";
 
    if (!tree) {
       tree = new TChain("cbmsim");
@@ -181,7 +183,7 @@ void PlotZ(bool draw = true)
    zHist = new TH1F("hZ", "Z", zMax - zMin + 1, zMin - 0.5, zMax + 0.5);
    hMR = new TH1F("hMR", "M_R", zMax - zMin + 1, (zMin - 0.5) / 85, (zMax + 0.5) / 85);
    aHist = new TH1F("hA", "A", zMax - zMin + 1, aMin, aMax);
-   hBeam = new TH2F("hBeam", "Beam energy", 50, 0, 1000, 50, 0, ex(4500));
+   hBeam = new TH2F("hBeam", "Beam energy", 100, 0, 1000, 100, 0, ex(4500));
    hAmp = new TH1F("hAmp", "Charge Scaling Factor", 100, 0, 1);
    hObj = new TH1F("hObj", "Objective Function", 100, 0, maxObjQ);
    hObjPos = new TH1F("hObjPos", "Objective Function Position", 50, 0, 50);
@@ -207,6 +209,7 @@ void FitZ()
    zHist->Draw("ep");
 
    TF1 *gaus1 = new TF1("gaus1", "gaus(0)", 30, 55);
+   // TF1 *gaus1 = new TF1("gaus1", "gaus(0)", 43, 55);
    std::cout << "Fitting single gaussian" << endl;
    gaus1->SetParameters(80, 42.5, 5);
    gaus1->FixParameter(1, 42.5);
@@ -268,4 +271,51 @@ void FitMR()
    gaus1->SetLineColor(kBlue);
    gaus1->SetLineStyle(2);
    gaus1->DrawCopy("same");
+}
+
+void FitTheory(string fileName)
+{
+   std::ifstream file(fileName);
+   std::vector<double> A;
+   std::vector<double> Yield;
+   for (auto &row : CSVRange<double>(file)) {
+      A.push_back(row[0]);
+      Yield.push_back(row[1]);
+   }
+   auto g = new TGraph(A.size(), A.data(), Yield.data());
+   g->Fit("gaus");
+   g->Draw("AC*");
+}
+
+void FitTheoryMumpower(string fileName)
+{
+   std::ifstream file(fileName);
+   std::string header;
+   std::getline(file, header);
+
+   std::vector<double> Z;
+   std::vector<double> A;
+   std::vector<double> Yield;
+   for (auto &row : CSVRange<double>(file)) {
+      Z.push_back(row[0]);
+      A.push_back(row[1]);
+      Yield.push_back(row[2]);
+   }
+   std::vector<double> ZComp;
+   std::vector<double> YieldComp;
+   int lastZ = Z[0];
+   ZComp.push_back(0);
+   YieldComp.push_back(0);
+   for (int i = 0; i < Z.size(); ++i) {
+      if (lastZ == Z[i])
+         YieldComp.back() += Yield[i];
+      else {
+         ZComp.push_back(Z[i]);
+         YieldComp.push_back(Yield[i]);
+         lastZ = Z[i];
+      }
+   }
+   auto g = new TGraph(ZComp.size(), ZComp.data(), YieldComp.data());
+   g->Fit("gaus");
+   g->Draw("AC*");
 }

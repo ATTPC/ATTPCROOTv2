@@ -1,6 +1,7 @@
 #include <FairLogger.h>
 TGraph *gr = nullptr;
 TH2F *hNSCLvsTPC = new TH2F("hNSCLvsTPC", "MUSIC Correlation", 100, 500, 2000, 100, 0.5, 1);
+TH2F *hNSCLvsTPCCorrupt = new TH2F("hNSCLvsTPCCorr", "MUSIC Correlation", 100, 500, 2000, 100, 0.5, 1);
 
 void checkICLink(Int_t runNumber = 130)
 {
@@ -37,7 +38,11 @@ void checkICLink(Int_t runNumber = 130)
       Short_t icPeak = *std::max_element(std::begin(icPad->GetRawADC()), std::end(icPad->GetRawADC()));
       icRatio.push_back(icPeak / ic->GetEnergy(0));
 
-      hNSCLvsTPC->Fill(icPeak, oldIC);
+      // hNSCLvsTPC->Fill(icPeak, oldIC);
+      if (reader.GetCurrentEntry() >= 136 && reader.GetCurrentEntry() < 329)
+         hNSCLvsTPCCorrupt->Fill(icPeak, ic->GetEnergy(0));
+      else
+         hNSCLvsTPC->Fill(icPeak, ic->GetEnergy(0));
       oldIC = ic->GetEnergy(0);
    }
 

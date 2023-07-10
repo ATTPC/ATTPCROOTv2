@@ -181,7 +181,7 @@ void SimPlot()
 
    hFold = new TH1F("hFold", "Folding Angle", 50, 0, TMath::Pi() + 1e-4);
    hAng = new TH1F("hAng", "Decay angle (w.r.t. z)", 50, 0, TMath::Pi());
-   hAngCut = new TH1F("hAngCut", "Decay angle (w.r.t. z)", 50, 0, TMath::Pi());
+   hAngCut = new TH1F("hAngCut", "Decay angle (w.r.t. z)", 50, 0, 180);
    hAngCut2 = new TH1F("hAngCut2", "sin(Decay angle) (w.r.t. z)", 50, 0.75, 1);
    hAngCut3 = new TH1F("hAngCut3", "v_actual/v_assumed (lab frame)", 50, 0.6, 1.8);
    hFoldLab = new TH1F("hFoldAngle", "Folding Angle Lab", 50, 0, TMath::Pi() + 1e-4);
@@ -261,9 +261,9 @@ void SimPlot()
       foldingAngle = ROOT::Math::VectorUtil::Angle(p1, p2);
       hFoldLab->Fill(foldingAngle);
 
-      if (cut2(1000 - z, foldingAngle)) {
-         hAngCut->Fill(decayAngle);
-         hAngCut->Fill(decayAngle2);
+      if (cut1(1000 - z, foldingAngle)) {
+         hAngCut->Fill(decayAngle * TMath::RadToDeg());
+         hAngCut->Fill(decayAngle2 * TMath::RadToDeg());
 
          hAngCut2->Fill(sin(decayAngle));
          hAngCut2->Fill(sin(decayAngle2));
