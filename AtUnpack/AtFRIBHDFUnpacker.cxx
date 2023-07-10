@@ -1,15 +1,23 @@
 #include "AtFRIBHDFUnpacker.h"
 
-#include "AtAuxPad.h"
-#include "AtMap.h"
-#include "AtPad.h"
-#include "AtPadReference.h"
+#include "AtGenericTrace.h" // for AtGenericTrace
 #include "AtRawEvent.h"
 
 #include <FairLogger.h>
 
 #include <Rtypes.h>
 #include <TString.h>
+
+#include <H5Cpp.h>     // for herr_t, hsize_t
+#include <H5Gpublic.h> // for H5Giterate
+#include <H5Ipublic.h> // for hid_t
+
+#include <algorithm> // for max_element, min_element
+#include <cstdint>   // for int16_t
+#include <regex>     // for match_results<>::_Base_type, regex_replace
+#include <sstream>   // for basic_stringbuf<>::int_type, basic_strin...
+#include <tuple>     // for get
+#include <utility>   // for __tuple_element_t
 
 ClassImp(AtFRIBHDFUnpacker);
 
@@ -93,22 +101,7 @@ std::size_t AtFRIBHDFUnpacker::n_pads(std::string i_raw_event)
 void AtFRIBHDFUnpacker::setFirstAndLastEventNum()
 {
    // Look for the meta group and from it pull the minimum and maximum event numbers
-   auto meta_size = open_group(_file, "meta");
-   auto metaID = std::get<0>(meta_size);
-   /* if (metaID > 0) {
-       std::string datasetName = "meta";
-       auto dataset_dims = open_dataset(metaID, datasetName.c_str());
-       auto datasetId = std::get<0>(dataset_dims);
-       auto len = std::get<1>(dataset_dims).at(0);
-
-       auto *data = new int64_t[len]; // NOLINT
-       H5Dread(datasetId, H5T_NATIVE_ULONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
-
-       fFirstEvent = data[0];
-       fLastEvent = data[2];
-
-       delete[] data; // NOLINT
-    } else {*/
+   open_group(_file, "meta");
 
    // N.B. This function is adapted to the format of the FRIB DAQ data stored in the HDF5.
    auto addToVector = [](hid_t group, const char *name, void *op_data) -> herr_t {
