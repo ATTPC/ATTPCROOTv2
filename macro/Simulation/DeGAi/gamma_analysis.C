@@ -10,6 +10,15 @@
 #include "TCanvas.h"
 #include "TRandom3.h"
 
+bool doesNotEqualAny(const std::string& str, const std::vector<std::string>& values) {
+    for (const auto& value : values) {
+        if (str == value) {
+            return false;  // String matches a value in the list
+        }
+    }
+    return true;  // String does not match any value in the list
+}
+
 void gamma_analysis(Int_t num_ev = 50000)
 {
     // Ask user for file name
@@ -18,6 +27,10 @@ void gamma_analysis(Int_t num_ev = 50000)
     std::cin >> fileName;
     Double_t momentum;
     std::vector<std::string> isotopes = { "60Co", "173Cs", "22Na" };
+<<<<<<< HEAD
+=======
+    if (doesNotEqualAny(fileName, isotopes)) {
+>>>>>>> Better gamma analysis for degai and efficency curve creation
 
         std::cout << "momentum: (MeV)";
         std::cin >> momentum;
@@ -80,7 +93,20 @@ void gamma_analysis(Int_t num_ev = 50000)
                 // Update hit count for VolName
                 crystalHits[VolName.Data()]++;
 
+<<<<<<< HEAD
                 
+=======
+                // Check if energyLoss is within the photopeak range for specific isotopes
+                if (fileName.find("60Co") != std::string::npos && ((energyLoss >= 1.16 && energyLoss <= 1.18) || (energyLoss >= 1.32 && energyLoss <= 1.34))) {
+                    PhotopeakCount++;
+                } else if (fileName.find("137Cs") != std::string::npos && energyLoss >= 0.65 && energyLoss <= 0.67) {
+                    PhotopeakCount++;
+                } else if (fileName.find("22Na") != std::string::npos && energyLoss >= 0.50 && energyLoss <= 0.52) {
+                    PhotopeakCount++;
+                } else if (energyLoss >= momentum * 0.95 && energyLoss <= momentum * 1.05) {
+                    PhotopeakCount++;
+                }
+>>>>>>> Better gamma analysis for degai and efficency curve creation
             }
         }
 
@@ -109,3 +135,4 @@ void gamma_analysis(Int_t num_ev = 50000)
     Energy_loss->SetTitle(Form("Photopeak Efficiency: Energy Loss Spectrum (%.2f%%)", photopeakEfficiency));
     Energy_loss->Draw();
 }
+
