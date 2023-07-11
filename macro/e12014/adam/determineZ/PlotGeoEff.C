@@ -29,7 +29,9 @@ VecXYZE GetBeam(double zLoc)
    // p = mv gamma
 }
 
-void PlotGeoEff()
+// Plot the detection efficiecy keeping fission events where both fission fragments hit the pad plane
+// at a radius greater than rCut (mm)
+void PlotGeoEff(double rCut = 100)
 {
 
    TChain tree("fragments");
@@ -85,6 +87,8 @@ void PlotGeoEff()
       }
 }
 
+// Fill 2D histograms of angle vs Z for fission events. One raw and the other corrected for the
+// efficiecny in hAngVsZEff.
 void PlotCounts()
 {
 

@@ -1,7 +1,10 @@
 #include <TString.h>
 
 #include "../unpack/TxtEvent.h"
-
+/**
+ * Tools for filling just a bunch of different plots from the MCResult of the fit.
+ *
+ */
 TH1F *zHist = nullptr;
 TH1F *aHist = nullptr;
 TH1F *hAmp = nullptr;

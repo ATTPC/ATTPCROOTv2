@@ -1,4 +1,6 @@
-
+/**
+ * Tools for making simulated angle vs Z plots under different assumptions
+ */
 TChain *tree = nullptr;
 TH1F *hFold = nullptr;
 TH1F *hAng = nullptr;

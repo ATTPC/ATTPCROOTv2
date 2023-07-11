@@ -13,10 +13,6 @@ bool cut1(AtFissionEvent *evt)
    double upper = 0.58 + (955 - vZ) * .2 / 755;
    double lower = 0.46 + (955 - vZ) * .2 / 755;
 
-   // Pb198
-   // double upper = 0.6 + (955 - vZ) * .12 / 755;
-   // double lower = 0.48 + (955 - vZ) * .12 / 755;
-
    double ang = evt->GetFoldingAngle();
 
    return ang < upper && ang > lower;
@@ -35,10 +31,6 @@ bool cut2(AtFissionEvent *evt)
    double upper = 0.58 + (955 - vZ) * .2 / 755;
    double lower = 0.40 + (955 - vZ) * .2 / 755;
 
-   // Pb198
-   // double upper = 0.58 + (955 - vZ) * .2 / 755;
-   // double lower = 0.40 + (955 - vZ) * .2 / 755;
-
    double ang = evt->GetFoldingAngle();
 
    return ang < upper && ang > lower;
@@ -55,6 +47,15 @@ string to_string(ChargeObj obj)
    }
    return "";
 }
+
+/**
+ * Macro for running the MCFit code applying some cut given the following compount nucleus
+ * This WILL overwrite data if you are not carful.
+ */
+int Zcn = 83 + 2;
+int Acn = 200 + 4;
+int Zmin = 26;
+int Zmax = 59;
 
 void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure = 150, bool lise = true,
              ChargeObj obj = kChi2)
@@ -123,11 +124,9 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    scModel->SetBeamLocation({0, -6, 0}, {10, 0, 1000});
    sim->SetSpaceChargeModel(scModel);
 
-   int Zcn = 83 + 2;
-   int Acn = 200 + 4;
    // Create and load energy loss models
    std::vector<std::pair<int, int>> ions;
-   for (int i = 26; i <= 59; i++)
+   for (int i = Zmin; i <= Zmax; i++)
       ions.push_back({i, std::round((double)i / Zcn * Acn)});
    for (auto [Z, A] : ions) {
       auto eloss = std::make_shared<AtTools::AtELossTable>();
@@ -147,6 +146,7 @@ void run_cut(TString cutName = "cut1", TString species = "Bi200", int pressure =
    auto fitter = std::make_shared<MCFitter::AtMCFission>(sim, cluster, pulse);
    fitter->SetTimeEvent(true);
    fitter->SetCN({Zcn, Acn});
+   fitter->SetZRange(Zmin, Zmax);
    switch (obj) {
    case kDiff2: fitter->SetChargeObjective(MCFitter::AtMCFission::ObjectiveChargeDiff2); break;
    case kChi2: fitter->SetChargeObjective(MCFitter::AtMCFission::ObjectiveChargeChi2); break;

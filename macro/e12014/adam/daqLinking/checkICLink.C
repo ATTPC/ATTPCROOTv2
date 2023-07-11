@@ -3,6 +3,8 @@ TGraph *gr = nullptr;
 TH2F *hNSCLvsTPC = new TH2F("hNSCLvsTPC", "MUSIC Correlation", 100, 500, 2000, 100, 0.5, 1);
 TH2F *hNSCLvsTPCCorrupt = new TH2F("hNSCLvsTPCCorr", "MUSIC Correlation", 100, 500, 2000, 100, 0.5, 1);
 
+// Draw correlation plots between IC signal in HiRAEVT and TPC DAQs
+// Takes in TPC run number
 void checkICLink(Int_t runNumber = 130)
 {
    LOG(info) << "Processing event";

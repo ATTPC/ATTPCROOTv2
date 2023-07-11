@@ -204,7 +204,7 @@ void unpack_linked(int tpcRunNum = 130)
 
    /**** 2 lines pattern fit ****/
    auto method = std::make_unique<SampleConsensus::AtSampleConsensus>(
-      SampleConsensus::Estimators::kYRANSAC, AtPatterns::PatternType::kY, RandomSample::SampleMethod::kY);
+      SampleConsensus::Estimators::kYRANSAC, AtPatterns::PatternType::kFission, RandomSample::SampleMethod::kY);
    method->SetDistanceThreshold(20);
    method->SetNumIterations(500);
    method->SetMinHitsPattern(150);
