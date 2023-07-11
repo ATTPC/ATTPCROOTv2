@@ -193,21 +193,18 @@ void AtPatternY::FitPattern(const std::vector<XYZPoint> &points, const std::vect
    // This functor is what we are minimizing. It takes in the model parameters and defines an example
    // of this pattern based on the model parameters. It then loops through every hit associated with
    // pattern and calculates the chi2.
-   auto func = [&points, &charge, weighted, this](const double *par) {
+   auto func = [&points, &charge, weighted](const double *par) {
       AtPatternY pat;
       pat.DefinePattern(std::vector<double>(par, par + 12));
       double chi2 = 0;
       double qTot = 0;
-
       for (int i = 0; i < points.size(); ++i) {
          auto q = weighted ? charge[i] : 1;
          chi2 += pat.DistanceToPattern(points[i]) * pat.DistanceToPattern(points[i]) * q;
          qTot += q;
       }
 
-      double retVal = fabs(chi2 / qTot);
-      LOG(debug) << "Obj: " << retVal;
-      return retVal;
+      return fabs(chi2 / qTot);
    };
 
    auto functor = ROOT::Math::Functor(func, 12);
