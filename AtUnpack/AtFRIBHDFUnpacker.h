@@ -6,15 +6,28 @@
 #define _AtFRIBHDFUNPACKER_H_
 
 #include "AtHDFUnpacker.h"
+#include "AtUnpacker.h" // for mapPtr
+
+#include <Rtypes.h> // for THashConsistencyHolder, ClassDefOverride
+
+#include <cstddef> // for size_t
+#include <cstdint> // for int16_t
+#include <string>  // for string
+#include <vector>  // for vector
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 class AtFRIBHDFUnpacker : public AtHDFUnpacker {
 
-private:
 public:
    AtFRIBHDFUnpacker(mapPtr map);
    ~AtFRIBHDFUnpacker() = default;
 
    void Init() override;
+
+protected:
    std::size_t open(char const *file) override;
    void setFirstAndLastEventNum() override;
    void processData() override;

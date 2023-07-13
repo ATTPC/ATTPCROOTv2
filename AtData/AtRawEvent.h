@@ -11,7 +11,7 @@
 #define AtRAWEVENT_H
 
 #include "AtBaseEvent.h"
-#include "AtGenericTrace.h"
+#include "AtGenericTrace.h" // IWYU pragma: keep
 #include "AtPadReference.h" // IWYU pragma: keep
 
 #include <Rtypes.h>
@@ -26,7 +26,6 @@
 #include <utility>
 #include <vector>
 
-class AtGenericTrace;
 class AtPad;
 class TBuffer;
 class TClass;
@@ -107,7 +106,7 @@ public:
    void SetSimMCPointMap(std::multimap<Int_t, std::size_t> map) { fSimMCPointMap = std::move(map); }
 
    template <typename... Ts>
-   AtGenericTrace *AddGenericTrace(Ts &&... params)
+   AtGenericTrace *AddGenericTrace(Ts &&...params)
    {
       fGTraceList.push_back(std::make_unique<AtGenericTrace>(std::forward<Ts>(params)...));
       return fGTraceList.back().get();

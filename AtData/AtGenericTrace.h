@@ -4,12 +4,12 @@
 #include <Rtypes.h>
 #include <TObject.h>
 
-#include <array>
-#include <map>
-#include <memory>
-#include <string>
-#include <type_traits>
+#include <cstddef> // for size_t
 #include <vector>
+
+class TBuffer;
+class TClass;
+class TMemberInspector;
 
 /**
  * @brief Trace recorded by other data acquisition systems
