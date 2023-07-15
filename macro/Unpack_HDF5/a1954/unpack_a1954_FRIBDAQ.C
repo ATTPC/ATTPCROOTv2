@@ -8,7 +8,7 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpack_a1975(TString fileName = "run_0003")
+void unpack_a1954_FRIBDAQ(TString fileName = "run_0055")
 {
 
    // Load the library for unpacking and reconstruction
@@ -19,7 +19,7 @@ void unpack_a1975(TString fileName = "run_0003")
 
    TString parameterFile = "ATTPC.a1954.par";
    TString mappath = "";
-   TString filepath = "/media/yassid/bdcb3c81-adb9-4a9d-9172-0bd5935c1dd5/data/a1957/";
+   TString filepath = "/home/yassid/fair_install/data/a1954/";
    TString fileExt = ".h5";
    TString inputFile = filepath + fileName + fileExt;
    TString scriptfile = "ANL2023.xml";
@@ -29,15 +29,10 @@ void unpack_a1975(TString fileName = "run_0003")
    TString dataDir = dir + "/macro/data/";
    TString geomDir = dir + "/geometry/";
    gSystem->Setenv("GEOMPATH", geomDir.Data());
-   TString outputFile = fileName + ".root";
+   TString outputFile = fileName + "_FRIB.root";
    TString loggerFile = dataDir + "ATTPCLog.log";
    TString digiParFile = dir + "/parameters/" + parameterFile;
    TString geoManFile = dir + "/geometry/ATTPC_H1bar.root";
-
-   // Specific paths for three LUT for electric field correction
-   TString zlutFile = dir + "/resources/corrections/a1954/zLUT.txt";
-   TString radlutFile = dir + "/resources/corrections/a1954/radLUT.txt";
-   TString tralutFile = dir + "/resources/corrections/a1954/traLUT.txt";
 
    FairRunAna *run = new FairRunAna();
    run->SetOutputFile(outputFile);
@@ -58,52 +53,14 @@ void unpack_a1975(TString fileName = "run_0003")
    fAtMapPtr->ParseXMLMap(mapDir.Data());
    fAtMapPtr->GeneratePadPlane();
 
-   auto unpacker = std::make_unique<AtHDFUnpacker>(fAtMapPtr);
+   auto unpacker = std::make_unique<AtFRIBHDFUnpacker>(fAtMapPtr);
    unpacker->SetInputFileName(inputFile.Data());
-   unpacker->SetNumberTimestamps(2);
-   unpacker->SetBaseLineSubtraction(true);
+   unpacker->SetNumberTimestamps(1);
 
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
-   unpackTask->SetPersistence(false);
-
-   AtFilterSubtraction *filter = new AtFilterSubtraction(fAtMapPtr);
-   filter->SetThreshold(50);
-   filter->SetIsGood(false);
-
-   AtFilterTask *filterTask = new AtFilterTask(filter);
-   filterTask->SetPersistence(false);
-   filterTask->SetFilterAux(false);
-
-   auto threshold = 20;
-
-   // auto psa = new AtPSASimple2();
-   auto psa = new AtPSAMax();
-   psa->SetThreshold(threshold);
-   // psa->SetMaxFinder();
-
-   // Create PSA task
-   AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetPersistence(kTRUE);
-   // psaTask->SetInputBranch("AtRawEventFiltered");
-   psaTask->SetOutputBranch("AtEventH");
-
-   // auto SCModel = std::make_unique<AtEDistortionModel>();
-   // SCModel->SetCorrectionMaps(zlutFile.Data(), radlutFile.Data(), tralutFile.Data());
-   // auto SCTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
-   // SCTask->SetInputBranchName("AtEventH");
-
-   AtPRAtask *praTask = new AtPRAtask();
-   // praTask->SetInputBranch("AtEventCorrected");
-   // praTask->SetOutputBranch("AtPatternEvent");
-   praTask->SetPersistence(kTRUE);
-   // praTask->SetMaxNumHits(3000);
-   // praTask->SetMinNumHits(100);
+   unpackTask->SetPersistence(true);
 
    run->AddTask(unpackTask);
-   // run->AddTask(filterTask);
-   run->AddTask(psaTask);
-   // run->AddTask(SCTask);
-   run->AddTask(praTask);
 
    std::cout << "***** Starting Init ******" << std::endl;
    run->Init();

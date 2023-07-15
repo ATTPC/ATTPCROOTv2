@@ -43,6 +43,7 @@ void AtRawEvent::Clear(Option_t *opt)
    fPadList.clear();
    fFpnMap.clear();
    fSimMCPointMap.clear();
+   fGTraceList.clear();
 }
 
 void AtRawEvent::RemovePad(Int_t padNum)

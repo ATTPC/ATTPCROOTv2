@@ -31,14 +31,9 @@ class TMemberInspector;
 
 class AtHDFUnpacker : public AtUnpacker {
 
-private:
+protected:
    Int_t fNumberTimestamps{};
    Bool_t fIsBaseLineSubtraction{};
-
-   hid_t _file{};
-   hid_t _group{};
-   hid_t _dataset{};
-   std::vector<std::string> _eventsbyname;
 
    std::size_t fFirstEvent{};
    std::size_t fLastEvent{};
@@ -55,25 +50,24 @@ public:
    bool IsLastEvent() override;
    Long64_t GetNumEvents() override;
 
-private:
-   void setEventIDAndTimestamps();
-   void processData();
-   void processPad(std::size_t padIndex);
-   AtPad *createPadAndSetIsAux(const AtPadReference &padRef);
-   void setDimensions(AtPad *pad);
-   Float_t getBaseline(const std::vector<int16_t> &data);
-   void setAdc(AtPad *pad, const std::vector<int16_t> &data);
-
+protected:
    enum class IO_MODE { READ, WRITE };
 
+   virtual std::size_t open(char const *file);
+   virtual void setFirstAndLastEventNum();
+   virtual void processData();
+   virtual void processPad(std::size_t padIndex);
+   virtual std::size_t n_pads(std::string i_raw_event);
+   virtual std::vector<int16_t> pad_raw_data(std::size_t i_pad);
    hid_t open_file(char const *file, IO_MODE mode);
    std::tuple<hid_t, hsize_t> open_group(hid_t fileId, char const *group);
-
-   // Returns the id of the dataspace and the dimesnions in the vector
    std::tuple<hid_t, std::vector<hsize_t>> open_dataset(hid_t locId, char const *dataset);
+   // Returns the id of the dataspace and the dimesnions in the vector
    void close_file(hid_t file);
    void close_group(hid_t group);
    void close_dataset(hid_t dataset);
+   void end_raw_event();
+   Float_t getBaseline(const std::vector<int16_t> &data);
 
    template <typename T>
    void read_slab(hid_t dataset, hsize_t *counts, hsize_t *offsets, hsize_t *dims_out, T *data)
@@ -86,17 +80,23 @@ private:
       H5Sclose(dataspace);
    }
 
+   hid_t _file{};
+   hid_t _group{};
+   hid_t _dataset{};
+   std::vector<std::string> _eventsbyname;
+
+private:
+   void setEventIDAndTimestamps();
+   AtPad *createPadAndSetIsAux(const AtPadReference &padRef);
+   void setDimensions(AtPad *pad);
+   void setAdc(AtPad *pad, const std::vector<int16_t> &data);
+
    // Following methods satisfy the data_handler interface
-   std::size_t open(char const *file);
-   std::size_t n_pads(std::string i_raw_event);
-   std::vector<int16_t> pad_raw_data(std::size_t i_pad);
    std::vector<uint64_t> get_header(std::string headerName);
    std::size_t datasets();
    static herr_t file_info(hid_t loc_id, const char *name, const H5L_info_t *linfo, void *opdata);
-   void end_raw_event();
    void close();
    std::string get_event_name(std::size_t idx);
-   void setFirstAndLastEventNum();
    ClassDefOverride(AtHDFUnpacker, 1);
 };
 

@@ -11,6 +11,7 @@
 #define AtRAWEVENT_H
 
 #include "AtBaseEvent.h"
+#include "AtGenericTrace.h" // IWYU pragma: keep
 #include "AtPadReference.h" // IWYU pragma: keep
 
 #include <Rtypes.h>
@@ -24,6 +25,7 @@
 #include <unordered_map> // for unordered_map
 #include <utility>
 #include <vector>
+
 class AtPad;
 class TBuffer;
 class TClass;
@@ -34,9 +36,12 @@ private:
    using AtPadPtr = std::unique_ptr<AtPad>;
    using FpnMap = std::unordered_map<AtPadReference, AtPad>;
    using PadVector = std::vector<AtPadPtr>;
+   using AtGenTracePtr = std::unique_ptr<AtGenericTrace>;
+   using GenTraceVector = std::vector<AtGenTracePtr>;
 
    PadVector fPadList;
    FpnMap fFpnMap;
+   GenTraceVector fGTraceList;
 
    std::multimap<Int_t, std::size_t> fSimMCPointMap; //<! Monte Carlo Point - Hit map for kinematics
 
@@ -100,6 +105,19 @@ public:
    void RemovePad(Int_t padNum);
    void SetSimMCPointMap(std::multimap<Int_t, std::size_t> map) { fSimMCPointMap = std::move(map); }
 
+   template <typename... Ts>
+   AtGenericTrace *AddGenericTrace(Ts &&...params)
+   {
+      fGTraceList.push_back(std::make_unique<AtGenericTrace>(std::forward<Ts>(params)...));
+      return fGTraceList.back().get();
+   }
+
+   AtGenericTrace *AddGenericTrace(std::unique_ptr<AtGenericTrace> ptr)
+   {
+      fGTraceList.push_back(std::move(ptr));
+      return fGTraceList.back().get();
+   }
+
    // getters
    Int_t GetNumPads() const { return fPadList.size(); }
    Int_t GetNumAuxPads() const { return fAuxPadMap.size(); }
@@ -112,6 +130,8 @@ public:
    const AtPad *GetFpn(const AtPadReference &ref) const;
    const PadVector &GetPads() const { return fPadList; }
    PadVector &GetPads() { return const_cast<PadVector &>(const_cast<const AtRawEvent *>(this)->GetPads()); }
+
+   const GenTraceVector &GetGenTraces() const { return fGTraceList; }
 
    const FpnMap &GetFpnPads() const { return fFpnMap; }
    std::multimap<Int_t, std::size_t> &GetSimMCPointMap() { return fSimMCPointMap; }

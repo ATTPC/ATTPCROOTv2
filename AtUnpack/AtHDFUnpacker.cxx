@@ -78,8 +78,9 @@ void AtHDFUnpacker::setEventIDAndTimestamps()
       auto header = get_header(header_name.Data());
 
       fRawEvent->SetNumberOfTimestamps(fNumberTimestamps);
-      for (int i = 0; i < fNumberTimestamps; ++i)
+      for (int i = 0; i < fNumberTimestamps; ++i) {
          fRawEvent->SetTimestamp(header.at(i + 1), i);
+      }
    } catch (const std::out_of_range &e) {
       LOG(error) << "Expected " << fNumberTimestamps << " but the header is not long enough!";
    } catch (const std::exception &e) {
@@ -90,6 +91,8 @@ void AtHDFUnpacker::setEventIDAndTimestamps()
 void AtHDFUnpacker::processData()
 {
    TString event_name = TString::Format("evt%lld_data", fDataEventID);
+   // fRawEvent->SetEventName(event_name.Data());
+   LOG(debug) << fRawEvent->GetEventName() << "\n";
    std::size_t npads = n_pads(event_name.Data());
 
    for (auto ipad = 0; ipad < npads; ++ipad)
