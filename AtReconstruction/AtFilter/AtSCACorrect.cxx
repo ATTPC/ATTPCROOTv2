@@ -58,11 +58,11 @@ AtPad *AtSCACorrect::getMatchingPad(AtPad *pad, AtPadReference *padReference, At
 void AtSCACorrect::removeBaseline(AtPad *pad, AtPadReference *padReference)
 {
 
-   auto padRef = new AtPadReference(*padReference);
+   auto padRef = *padReference;
    if (fUseChanZero)
-      padRef->ch = 0;
+      padRef.ch = 0;
 
-   AtPad *baselinePad = getMatchingPad(pad, padRef, fRawEvent.get());
+   AtPad *baselinePad = getMatchingPad(pad, &padRef, fRawEvent.get());
 
    if (baselinePad != nullptr) {
       auto baseArray = dynamic_cast<AtPadArray *>(baselinePad->GetAugment(fBaseAugName.Data()));
@@ -81,11 +81,11 @@ void AtSCACorrect::removeBaseline(AtPad *pad, AtPadReference *padReference)
 
 void AtSCACorrect::removePhase(AtPad *pad, AtPadReference *padReference)
 {
-   auto padRef = new AtPadReference(*padReference);
+   auto padRef = *padReference;
    if (fUseChanZero)
-      padRef->ch = 0;
+      padRef.ch = 0;
 
-   AtPad *phasePad = getMatchingPad(pad, padReference, fRawEvent.get());
+   AtPad *phasePad = getMatchingPad(pad, &padRef, fRawEvent.get());
 
    if (phasePad != nullptr) {
       auto phaseArray = dynamic_cast<AtPadArray *>(phasePad->GetAugment(fBaseAugName.Data()));

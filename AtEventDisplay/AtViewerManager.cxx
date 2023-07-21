@@ -9,7 +9,8 @@
 #include <FairRootManager.h> // for FairRootManager
 #include <FairRunAna.h>      // for FairRunAna
 
-#include <Rtypes.h>       // for ClassImp, Long64_t, TGenericClassInfo
+#include <Rtypes.h> // for ClassImp, Long64_t, TGenericClassInfo
+#include <TClonesArray.h>
 #include <TEveBrowser.h>  // for TEveBrowser
 #include <TEveManager.h>  // for TEveManager, gEve
 #include <TList.h>        // for TList

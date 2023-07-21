@@ -75,7 +75,7 @@ void AtSidebarAddon::SetInfoString(std::string label, TString value)
       LOG(error) << label << " not defined!";
    else {
       fStrings.find(label)->second->SetText(value);
-      dynamic_cast<TGFrame *>(const_cast<TGWindow *>(this->GetParent()))->Layout();
+      dynamic_cast<TGFrame *>(const_cast<TGWindow *>(this->GetParent()))->Layout(); // NOLINT
    }
 }
 

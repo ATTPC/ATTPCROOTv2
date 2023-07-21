@@ -9,25 +9,37 @@ ClassImp(AtSidebarPSATBAvg);
 
 void AtSidebarPSATBAvg::FillFrame()
 {
+   auto tPSA = dynamic_cast<AtPSATBAvg *>(fPSA);
+   if (tPSA == nullptr)
+      return;
+
    AtSidebarPSA::FillFrame();
 
    AddIntBox(fTBtoAvg, "SetTBtoAvg()", 0, 16);
    AddIntBox(fMaxThreshold, "SetMaxThreshold()", 0, 512);
 
-   SetIntNumber(fTBtoAvg, dynamic_cast<AtPSATBAvg *>(fPSA)->GetNumTBToAvg());
-   SetIntNumber(fMaxThreshold, dynamic_cast<AtPSATBAvg *>(fPSA)->GetMaxThreshold());
+   SetIntNumber(fTBtoAvg, tPSA->GetNumTBToAvg());
+   SetIntNumber(fMaxThreshold, tPSA->GetMaxThreshold());
 }
 
 void AtSidebarPSATBAvg::SetTBtoAvg()
 {
+   auto tPSA = dynamic_cast<AtPSATBAvg *>(fPSA);
+   if (tPSA == nullptr)
+      return;
+
    auto value = GetIntNumber(fTBtoAvg);
-   dynamic_cast<AtPSATBAvg *>(fPSA)->SetNumTBToAvg(value);
+   tPSA->SetNumTBToAvg(value);
    LOG(debug) << fTBtoAvg << " set: " << value;
 }
 
 void AtSidebarPSATBAvg::SetMaxThreshold()
 {
+   auto tPSA = dynamic_cast<AtPSATBAvg *>(fPSA);
+   if (tPSA == nullptr)
+      return;
+
    auto value = GetIntNumber(fMaxThreshold);
-   dynamic_cast<AtPSATBAvg *>(fPSA)->SetMaxThreshold(value);
+   tPSA->SetMaxThreshold(value);
    LOG(debug) << fMaxThreshold << " set: " << value;
 }
