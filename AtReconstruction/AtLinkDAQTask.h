@@ -83,6 +83,8 @@ private:
    Bool_t kFillEvt{};
    Bool_t kCorruptedTimestamp{};
 
+   Bool_t kUseRatio{false};
+
    // diagnostic graphs to write in HiRAEVT output file
    std::vector<std::vector<double>> fGrDataRatio;
    std::vector<std::vector<double>> fGrDataAbs;
@@ -111,6 +113,8 @@ public:
    void SetSearchMean(Double_t mean) { fSearchMean = mean; }
    void SetSearchRadius(Double_t radius) { fSearchRadius = radius; }
    void SetCorruptedSearchRadius(Double_t radius) { fCorruptedSearchRadius = radius; }
+
+   void SetUseRatio(Bool_t val) { kUseRatio = val; }
 
    const TChain *GetInChain() { return evtTree.get(); }
    TFile *GetOutFile() { return fEvtOutputFile; }
