@@ -36,7 +36,7 @@ std::tuple<double,double> kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_
    return std::make_tuple(Ex,theta_cm);
 }
 
-void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
+void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 {
 
    std::ofstream outputFileEvents("list_of_events.txt");
@@ -530,8 +530,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
                // if((*eLossADC)[index]>50)
                // continue;
 
-               // if((*AFitVec)[index]>82 || (*AFitVec)[index]<70)
-		  // continue;
+               if ((*AFitVec)[index] < 20 || (*AFitVec)[index] > 90)
+                  continue;
 
                // Particle ID
                ELossvsBrho->Fill((*eLossADC)[index], (*brhoVec)[index]);
@@ -550,8 +550,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
                //if ((*dEdxADC)[index] < 3000) // particleID
 		 //continue;
 
-	       //if ((*trackLengthVec)[index] < 14.0 || (*trackLengthVec)[index] > 28.0)
-	       //continue;
+               // if ((*trackLengthVec)[index] < 35.0 || (*trackLengthVec)[index] > 100.0)
+               //   continue;
 
                // if ((*fitConvergedVec)[index] == 0)
                //  continue;
@@ -684,8 +684,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
               HQval_Xtr_recalc->Fill(ex_energy_exp);
 
               // Excitation energy correction
-              Double_t p0 = -3.048;
-              Double_t p1 = 0.0513295;
+              Double_t p0 = 0.0;
+              Double_t p1 = 0.0063295;
               Double_t mFactor = 1.00;
               Double_t offSet = 0.0;
               Double_t QcorrZ = 0.0;
@@ -992,6 +992,19 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
    c1->Modified();
    c1->cd(4);
    HQval_Xtr->Draw();
+
+   TCanvas *cKineLines = new TCanvas("cKineLines", "cKineLines", 700, 700);
+   Ang_Ener->Draw("col");
+   Ang_Ener->GetXaxis()->SetTitle("Angle (deg)");
+   Ang_Ener->GetYaxis()->SetTitle("Energy (MeV)");
+
+   TCanvas *cKineFit = new TCanvas("cKineFit", "cKineFit", 700, 700);
+   // cKineFit->Divide(2, 1);
+   cKineFit->Draw();
+   cKineFit->cd(1);
+   HQCorr->GetXaxis()->SetTitle("Excitation Energy (MeV)");
+   HQCorr->GetYaxis()->SetTitle("Counts");
+   HQCorr->Draw();
 
    TCanvas *c2 = new TCanvas();
    c2->Divide(2, 2);

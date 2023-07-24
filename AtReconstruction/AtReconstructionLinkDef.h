@@ -37,6 +37,8 @@
 #pragma link C++ class SampleConsensus::AtEstimator - !;
 #pragma link C++ enum SampleConsensus::Estimators;
 
+#pragma link C++ class AtMacroTask + ;
+
 /* Classes that depend on Genfit2 */
 #pragma link C++ class genfit::AtSpacepointMeasurement + ;
 #pragma link C++ class AtFITTER::AtFitter + ;

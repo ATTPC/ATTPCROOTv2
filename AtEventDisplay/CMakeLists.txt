@@ -34,6 +34,7 @@ AtSidebar/AtSidebarInfoMacro.cxx
 AtSidebar/PSA/AtSidebarPSA.cxx
 AtSidebar/PSA/AtSidebarPSADeconv.cxx
 AtSidebar/PSA/AtSidebarPSAIterDeconv.cxx
+AtSidebar/PSA/AtSidebarPSATBAvg.cxx
 
 Deprecated/AtEventManager.cxx
 Deprecated/AtEventManagerProto.cxx

@@ -37,5 +37,6 @@
 #pragma link C++ class AtSidebarPSA + ;
 #pragma link C++ class AtSidebarPSADeconv + ;
 #pragma link C++ class AtSidebarPSAIterDeconv + ;
+#pragma link C++ class AtSidebarPSATBAvg + ;
 
 #endif

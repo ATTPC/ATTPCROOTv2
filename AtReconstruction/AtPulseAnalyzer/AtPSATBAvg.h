@@ -29,6 +29,9 @@ public:
    HitVector AnalyzePad(AtPad *pad) override;
    std::unique_ptr<AtPSA> Clone() override { return std::make_unique<AtPSATBAvg>(*this); }
 
+   int GetNumTBToAvg() { return fTBtoAvg; }
+   double GetMaxThreshold() { return fMaxThreshold; }
+
    void SetNumTBToAvg(Int_t num) { fTBtoAvg = num; }
    void SetMaxThreshold(Double_t max) { fMaxThreshold = max; }
    void UseArrayAugment(std::string name)
