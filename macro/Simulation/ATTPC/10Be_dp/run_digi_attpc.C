@@ -41,10 +41,8 @@ void run_digi_attpc()
    AtClusterizeTask *clusterizer = new AtClusterizeTask();
    clusterizer->SetPersistence(kFALSE);
 
-   AtPulseTask *pulse = new AtPulseTask();
+   AtPulseTask *pulse = new AtPulseTask(std::make_shared<AtPulse>(mapping));
    pulse->SetPersistence(kTRUE);
-   pulse->SetSaveMCInfo();
-   pulse->SetMap(mapping);
 
    auto psa = std::make_unique<AtPSAMax>();
    psa->SetThreshold(0);

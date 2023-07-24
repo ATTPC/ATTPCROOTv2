@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
          std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
          std::cout << cGREEN << "   >>>> Number of pattern tracks " << patternTrackCand.size() << cNORMAL << "\n";
 
-         // fitManager->GetAuxiliaryChannels(auxPadArray);
+         fitManager->GetAuxiliaryChannels(auxPadArray);
 
          fitManager->FitTracks(patternTrackCand);
 
