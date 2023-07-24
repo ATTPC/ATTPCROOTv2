@@ -99,7 +99,7 @@ void unpack_e20009_test(TString fileName = "run_0300")
    auto SCModel = std::make_unique<AtEDistortionModel>();
    SCModel->SetCorrectionMaps(zlutFile.Data(), radlutFile.Data(), tralutFile.Data());
    auto SCTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
-   SCTask->SetInputBranchName("AtEventH");
+   SCTask->SetInputBranch("AtEventH");
 
    AtPRAtask *praTask = new AtPRAtask();
    praTask->SetInputBranch("AtEventCorrected");
