@@ -52,6 +52,8 @@ void C14_pp_ana()
    TH2F *QvsEb = new TH2F("QvsEb", "QvsEb", 1000, -5, 15, 300, 0, 300);
    TH2F *QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 50, 200, -100, 100);
 
+   TH2F *QvsACM = new TH2F("QvsACM", "QvsACM", 1000, -10, 50, 180, 0, 180);
+
    TCutG *cutg = new TCutG("CUTG", 29);
    cutg->SetVarX("bro_vs_eloss");
    cutg->SetVarY("");
@@ -87,6 +89,32 @@ void C14_pp_ana()
    cutg->SetPoint(27, 205.8801, 0.9570895);
    cutg->SetPoint(28, 198.1692, 0.954291);
 
+   TCutG *cutd = new TCutG("cutd", 20);
+   cutd->SetVarX("ELossvsBrhoZoom");
+   cutd->SetVarY("");
+   cutd->SetTitle("Graph");
+   cutd->SetFillStyle(1000);
+   cutd->SetPoint(0, 1339.479, 1.393532);
+   cutd->SetPoint(1, 3153.544, 1.113479);
+   cutd->SetPoint(2, 5535.87, 0.8872819);
+   cutd->SetPoint(3, 8508.314, 0.6933989);
+   cutd->SetPoint(4, 14431.35, 0.4725878);
+   cutd->SetPoint(5, 18409.17, 0.3971888);
+   cutd->SetPoint(6, 19414.56, 0.3541037);
+   cutd->SetPoint(7, 19414.56, 0.1979202);
+   cutd->SetPoint(8, 16616.97, 0.1656064);
+   cutd->SetPoint(9, 13797.52, 0.2086915);
+   cutd->SetPoint(10, 8420.889, 0.2517766);
+   cutd->SetPoint(11, 3984.08, 0.3379468);
+   cutd->SetPoint(12, 2082.59, 0.558758);
+   cutd->SetPoint(13, 1077.205, 0.8334255);
+   cutd->SetPoint(14, 28.10694, 1.167335);
+   cutd->SetPoint(15, 28.10694, 1.722056);
+   cutd->SetPoint(16, 727.5055, 1.781298);
+   cutd->SetPoint(17, 880.4989, 1.517402);
+   cutd->SetPoint(18, 1120.917, 1.425846);
+   cutd->SetPoint(19, 1339.479, 1.393532);
+
    // NB: Not used
    // Q-value calculation
    Double_t m_p = 1.007825 * 931.49401;
@@ -110,8 +138,8 @@ void C14_pp_ana()
    Double_t m_b;
    Double_t m_B;
 
-   m_b = m_p;
-   m_B = m_C14;
+   m_b = m_d;
+   m_B = m_C13;
 
    TString FileName = "run_0060.root";
    // std::cout << " Opening File : " << FileName.Data() << std::endl;
@@ -169,7 +197,7 @@ void C14_pp_ana()
 
                double bro = B_f * rad / TMath::Sin(theta) / 1000.0;
                double ener = 0;
-               Double_t Am = 1.0;
+               Double_t Am = 2.0;
 
                GetEnergy(Am, 1.0, bro, ener);
 
@@ -221,19 +249,24 @@ void C14_pp_ana()
                if (zpos < 500.0 || zpos > 950)
                   continue;
 
-               if (theta * TMath::RadToDeg() < 13.0)
-                  continue;
+               // if(ener*Am>20.0)
+               // continue;
 
-               if (cutg->IsInside(eloss, bro)) { // Selection of protons
+               // if (theta * TMath::RadToDeg() < 13.0)
+               // continue;
 
-                  angle_vs_energy->Fill(theta * TMath::RadToDeg(), ener);
-                  auto [ex_energy_exp, theta_cm] = kine_2b(m_C14, m_p, m_b, m_B, Ebeam_buff, theta, ener);
+               if (cutd->IsInside(eloss, bro)) { // Selection of protons
+
+                  angle_vs_energy->Fill(theta * TMath::RadToDeg(), ener * Am);
+                  auto [ex_energy_exp, theta_cm] = kine_2b(m_C14, m_p, m_b, m_B, Ebeam_buff, theta, ener * Am);
 
                   HQval->Fill(ex_energy_exp);
 
+                  QvsACM->Fill(ex_energy_exp, theta_cm);
+
                   // Excitation energy vs Beam energy
                   for (auto iEb = 0; iEb < 300; ++iEb) {
-                     auto [Qdep, theta_cm_qdep] = kine_2b(m_C14, m_p, m_b, m_B, iEb, theta, ener);
+                     auto [Qdep, theta_cm_qdep] = kine_2b(m_C14, m_p, m_b, m_B, iEb, theta, ener * Am);
                      QvsEb->Fill(Qdep, iEb);
                   }
 
@@ -346,6 +379,9 @@ void C14_pp_ana()
 
    TCanvas *c_ExEner = new TCanvas();
    HQval->Draw();
+
+   TCanvas *c_qacm = new TCanvas();
+   QvsACM->Draw("zcol");
 }
 
 void GetEnergy(Double_t M, Double_t IZ, Double_t BRO, Double_t &E)
