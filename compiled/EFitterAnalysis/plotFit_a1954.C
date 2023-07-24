@@ -35,7 +35,7 @@ kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Dou
    return std::make_tuple(Ex, theta_cm);
 }
 
-void plotFit_a1954(std::string fileFolder = "data_55_69/")
+void plotFit_a1954(std::string fileFolder = "data_56_68/")
 {
 
    std::ofstream outputFileEvents("list_of_events.txt");
@@ -258,7 +258,7 @@ void plotFit_a1954(std::string fileFolder = "data_55_69/")
    Double_t m_a = 4.00260325415 * 931.49401;
    Double_t m_O16 = 15.99491461956 * 931.49401;
 
-   Double_t Ebeam_buff = 169.5; // 167.5;
+   Double_t Ebeam_buff = 162.0; // 169.5; // 167.5;
    Double_t m_b;
    Double_t m_B;
 
@@ -288,6 +288,8 @@ void plotFit_a1954(std::string fileFolder = "data_55_69/")
    gsigmaCM1->SetMarkerStyle(21);
    gsigmaCM1->SetMarkerSize(1.5);
    gsigmaCM1->SetMarkerColor(kRed);
+
+   TH1F *hsigmaCM1 = new TH1F("hsigmaCM1", "hsigmaCM1", 360, 0, 360);
 
    Double_t sigmaLab2[360] = {0.0};
    Double_t sigmaCM2[360] = {0.0};
@@ -601,14 +603,14 @@ void plotFit_a1954(std::string fileFolder = "data_55_69/")
                // if ((*POCAXtrVec)[index] > 2000.0)
                // continue;
 
-               if ((*ziniFitVec)[index] < -20.0 || (*ziniFitVec)[index] > 60.0)
+               if ((*ziniFitVec)[index] < 20.0 || (*ziniFitVec)[index] > 60.0)
                   continue;
 
                // if((*AFitVec)[index]<50 || (*AFitVec)[index]>70)
                // continue;
 
-               /* if ((*EFitVec)[index] < 5 || (*EFitVec)[index] > 10)
-                     continue;*/
+               // if ((*EFitVec)[index] < 0 || (*EFitVec)[index] > 15)
+               // continue;
 
                /*     if ((*fChi2Vec)[index] / (*fNdfVec)[index] < 0.000)
                       continue;
@@ -638,7 +640,7 @@ void plotFit_a1954(std::string fileFolder = "data_55_69/")
 
                // Excitation energy correction
                Double_t p0 = 0.0;    //-3.048;
-               Double_t p1 = 0.0093; // 0.0513295;
+               Double_t p1 = 0.002;  // 0.0513295;
                Double_t mFactor = 1.00;
                Double_t offSet = 0.0;
                Double_t QcorrZ = 0.0;
@@ -746,7 +748,7 @@ void plotFit_a1954(std::string fileFolder = "data_55_69/")
                   ++sigmaCM0[indexCM];
                }
 
-               if (QcorrZ > 2.5 && QcorrZ < 5.0) { // 3.368 MeV
+               if (QcorrZ > 8.8 && QcorrZ < 9.7) { // 9.2 MeV
 
                   // if((*EFitVec)[index]<2.75
 
@@ -874,7 +876,7 @@ void plotFit_a1954(std::string fileFolder = "data_55_69/")
    // Diff xs graph
    Double_t beamIntensity = 59855710.0;
    Double_t scale0 = 1.0 * (2.0 * TMath::Pi()) / (beamIntensity * 3.16E21 * 1E-27);
-   Double_t scale1 = 2.0 * 1.0 * (2.0 * TMath::Pi()) / (beamIntensity * 3.16E21 * 1E-27);
+   Double_t scale1 = 1.0; // 2.0 * 1.0 * (2.0 * TMath::Pi()) / (beamIntensity * 3.16E21 * 1E-27);
    Double_t scale2 = 0.2;
    Double_t scale3 = 0.1;
 
@@ -882,29 +884,30 @@ void plotFit_a1954(std::string fileFolder = "data_55_69/")
 
    {
 
-      gsigmaLab0->SetPoint(ig, ig, sigmaLab0[ig]);
-      gsigmaLab0->SetPointError(ig, 0, TMath::Sqrt(sigmaLab0[ig]));
-      gsigmaCM0->SetPoint(ig, ig, sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig) / fcorr0->Eval(ig));
-      gsigmaCM0->SetPointError(ig, 0, TMath::Sqrt(sigmaCM0[ig]) * scale0 / TMath::Sin(TMath::DegToRad() * ig));
+      /*  gsigmaLab0->SetPoint(ig, ig, sigmaLab0[ig]);
+        gsigmaLab0->SetPointError(ig, 0, TMath::Sqrt(sigmaLab0[ig]));
+        gsigmaCM0->SetPoint(ig, ig, sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig) / fcorr0->Eval(ig));
+        gsigmaCM0->SetPointError(ig, 0, TMath::Sqrt(sigmaCM0[ig]) * scale0 / TMath::Sin(TMath::DegToRad() * ig));*/
 
       gsigmaLab1->SetPoint(ig, ig, sigmaLab1[ig]);
       gsigmaLab1->SetPointError(ig, 0, TMath::Sqrt(sigmaLab1[ig]));
       gsigmaCM1->SetPoint(ig, ig, sigmaCM1[ig] * scale1 / TMath::Sin(TMath::DegToRad() * ig) / fcorr1->Eval(ig));
       gsigmaCM1->SetPointError(ig, 0, TMath::Sqrt(sigmaCM1[ig]) * scale1 / TMath::Sin(TMath::DegToRad() * ig));
 
-      gsigmaLab2->SetPoint(ig, ig, sigmaLab2[ig]);
-      gsigmaLab2->SetPointError(ig, 0, TMath::Sqrt(sigmaLab2[ig]));
-      gsigmaCM2->SetPoint(ig, ig, sigmaCM2[ig] * scale2 / TMath::Sin(TMath::DegToRad() * ig));
-      gsigmaCM2->SetPointError(ig, 0, TMath::Sqrt(sigmaCM2[ig]) * scale2 / TMath::Sin(TMath::DegToRad() * ig));
+      /*  gsigmaLab2->SetPoint(ig, ig, sigmaLab2[ig]);
+        gsigmaLab2->SetPointError(ig, 0, TMath::Sqrt(sigmaLab2[ig]));
+        gsigmaCM2->SetPoint(ig, ig, sigmaCM2[ig] * scale2 / TMath::Sin(TMath::DegToRad() * ig));
+        gsigmaCM2->SetPointError(ig, 0, TMath::Sqrt(sigmaCM2[ig]) * scale2 / TMath::Sin(TMath::DegToRad() * ig));
 
-      gsigmaLab3->SetPoint(ig, ig, sigmaLab3[ig]);
-      gsigmaLab3->SetPointError(ig, 0, TMath::Sqrt(sigmaLab3[ig]));
-      gsigmaCM3->SetPoint(ig, ig, sigmaCM3[ig] * scale3 / TMath::Sin(TMath::DegToRad() * ig));
-      gsigmaCM3->SetPointError(ig, 0, TMath::Sqrt(sigmaCM3[ig]) * scale3 / TMath::Sin(TMath::DegToRad() * ig));
+        gsigmaLab3->SetPoint(ig, ig, sigmaLab3[ig]);
+        gsigmaLab3->SetPointError(ig, 0, TMath::Sqrt(sigmaLab3[ig]));
+        gsigmaCM3->SetPoint(ig, ig, sigmaCM3[ig] * scale3 / TMath::Sin(TMath::DegToRad() * ig));
+        gsigmaCM3->SetPointError(ig, 0, TMath::Sqrt(sigmaCM3[ig]) * scale3 / TMath::Sin(TMath::DegToRad() * ig));*/
 
-      outputXSFile << ig << " " << sigmaCM0[ig] << " " << sigmaCM1[ig] << "  " << sigmaCM2[ig] << " " << sigmaCM3[ig]
-                   << " " << sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig) / fcorr0->Eval(ig) << " "
-                   << "\n";
+      /*  outputXSFile << ig << " " << sigmaCM0[ig] << " " << sigmaCM1[ig] << "  " << sigmaCM2[ig] << " " <<
+         sigmaCM3[ig]
+                     << " " << sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig) / fcorr0->Eval(ig) << " "
+                     << "\n";*/
    }
 
    // Merging
@@ -1229,14 +1232,22 @@ void plotFit_a1954(std::string fileFolder = "data_55_69/")
    TCanvas *cgs = new TCanvas();
    gsigmaCM0->Draw("ALP");
    gDWBA0->Draw("L");
-   gAltAnalysis->Draw("LP");
+   gAltAnalysis->Draw("LP");*/
 
    TCanvas *ce1 = new TCanvas();
-   gsigmaCM1->Draw("ALP");
-   gDWBA1->Draw("L");
-   gDWBA2->Draw("L");
+   hsigmaCM1->Draw("histo");
+   // gsigmaCM1->Draw("ALP");
+   // gDWBA1->Draw("L");
+   // gDWBA2->Draw("L");
 
-   TCanvas *ce2 = new TCanvas();
+   auto nPoints = gsigmaCM1->GetN(); // number of points in your TGraph
+   for (int i = 0; i < nPoints; ++i) {
+      double x, y;
+      gsigmaCM1->GetPoint(i, x, y);
+      hsigmaCM1->SetBinContent(i, y); // ?
+   }
+
+   /*TCanvas *ce2 = new TCanvas();
    gsigmaCM2->Draw("ALP");
    gDWBA1->Draw("L");
    gDWBA2->Draw("L");
@@ -1303,6 +1314,116 @@ void plotFit_a1954(std::string fileFolder = "data_55_69/")
 
    TCanvas *cTrackLength = new TCanvas("cTrackLength", "cTrackLength", 700, 700);
    QvsTrackLengthH->Draw();
+
+   TF1 *g1 = new TF1("m1", "gaus", -2.0, 2.0);
+   TF1 *g2 = new TF1("m2", "gaus", 5.6, 6.4);
+   TF1 *g3 = new TF1("m3", "gaus", 6.4, 6.9);
+   TF1 *g4 = new TF1("m4", "gaus", 6.8, 7.3);
+   TF1 *g5 = new TF1("m5", "gaus", 7.3, 7.7);
+   TF1 *g6 = new TF1("m6", "gaus", 8.2, 8.6);
+   TF1 *g7 = new TF1("m7", "gaus", 8.6, 9.6);
+   TF1 *g8 = new TF1("m8", "gaus", 9.7, 10.1);
+   TF1 *g9 = new TF1("m9", "gaus", 10.1, 11.0);
+
+   TF1 *total_gaus =
+      new TF1("total_gaus", "gaus(0)+gaus(3)+gaus(6)+gaus(9)+gaus(12)+gaus(15)+gaus(18)+gaus(21)+gaus(24)", -2.0,
+              11.0); /* define combined function*/
+   HQCorr->Fit(g1, "R");
+   HQCorr->Fit(g2, "R+");
+   HQCorr->Fit(g3, "R+");
+   HQCorr->Fit(g4, "R+");
+   HQCorr->Fit(g5, "R+");
+   HQCorr->Fit(g6, "R+");
+   HQCorr->Fit(g7, "R+");
+   HQCorr->Fit(g8, "R+");
+   HQCorr->Fit(g9, "R+");
+   total_gaus->SetNpx(1000);
+
+   Double_t par[26]; /* parameter array */
+
+   /* get parameters from the fit, it first fits & takes the parameter from there */
+   g1->GetParameters(&par[0]);
+   g2->GetParameters(&par[3]);
+   g3->GetParameters(&par[6]);
+   g4->GetParameters(&par[9]);
+   g5->GetParameters(&par[12]);
+   g6->GetParameters(&par[15]);
+   g7->GetParameters(&par[18]);
+   g8->GetParameters(&par[21]);
+   g9->GetParameters(&par[24]);
+
+   total_gaus->SetParameters(par);
+   // HQval->Fit("total_gaus","","",-2.0,9.0); /*fitting gaussian curve on the histogram */
+   HQCorr->Fit("total_gaus", "", "", -2.0, 11.0);
+   total_gaus->GetParameters(&par[0]);
+
+   auto gfit1 = new TF1("gfit1", "gaus(0)", -2.0, 2.0);
+   gfit1->SetParameter(0, par[0]);
+   gfit1->SetParameter(1, par[1]);
+   gfit1->SetParameter(2, par[2]);
+   gfit1->SetLineColor(kBlue);
+   gfit1->SetNpx(1000);
+   auto gfit2 = new TF1("gfit2", "gaus(0)", 5.0, 7.0);
+   gfit2->SetParameter(0, par[3]);
+   gfit2->SetParameter(1, par[4]);
+   gfit2->SetParameter(2, par[5]);
+   gfit2->SetLineColor(kBlue);
+   gfit2->SetNpx(1000);
+   auto gfit3 = new TF1("gfit3", "gaus(0)", 5.0, 9.0);
+   gfit3->SetParameter(0, par[6]);
+   gfit3->SetParameter(1, par[7]);
+   gfit3->SetParameter(2, par[8]);
+   gfit3->SetLineColor(kBlue);
+   gfit3->SetNpx(1000);
+   auto gfit4 = new TF1("gfit4", "gaus(0)", 5.0, 9.0);
+   gfit4->SetParameter(0, par[9]);
+   gfit4->SetParameter(1, par[10]);
+   gfit4->SetParameter(2, par[11]);
+   gfit4->SetLineColor(kBlue);
+   gfit4->SetNpx(1000);
+   auto gfit5 = new TF1("gfit5", "gaus(0)", 5.0, 9.0);
+   gfit5->SetParameter(0, par[12]);
+   gfit5->SetParameter(1, par[13]);
+   gfit5->SetParameter(2, par[14]);
+   gfit5->SetLineColor(kBlue);
+   gfit5->SetNpx(1000);
+   auto gfit6 = new TF1("gfit6", "gaus(0)", 5.0, 9.0);
+   gfit6->SetParameter(0, par[15]);
+   gfit6->SetParameter(1, par[16]);
+   gfit6->SetParameter(2, par[17]);
+   gfit6->SetLineColor(kBlue);
+   gfit6->SetNpx(1000);
+   auto gfit7 = new TF1("gfit7", "gaus(0)", 8.0, 10.0);
+   gfit7->SetParameter(0, par[18]);
+   gfit7->SetParameter(1, par[19]);
+   gfit7->SetParameter(2, par[20]);
+   gfit7->SetLineColor(kBlue);
+   gfit7->SetNpx(1000);
+   auto gfit8 = new TF1("gfit8", "gaus(0)", 9.5, 10.5);
+   gfit8->SetParameter(0, par[21]);
+   gfit8->SetParameter(1, par[22]);
+   gfit8->SetParameter(2, par[23]);
+   gfit8->SetLineColor(kBlue);
+   gfit8->SetNpx(1000);
+   auto gfit9 = new TF1("gfit9", "gaus(0)", 10.0, 11.0);
+   gfit9->SetParameter(0, par[24]);
+   gfit9->SetParameter(1, par[25]);
+   gfit9->SetParameter(2, par[26]);
+   gfit9->SetLineColor(kBlue);
+   gfit9->SetNpx(1000);
+
+   TCanvas *cqcorr = new TCanvas("cqcorr", "cqcorr", 700, 700);
+   HQCorr->Draw();
+   gfit1->Draw("same l");
+   gfit2->Draw("same l");
+   gfit3->Draw("same l");
+   gfit4->Draw("same l");
+   gfit5->Draw("same l");
+   gfit6->Draw("same l");
+   gfit7->Draw("same l");
+   gfit8->Draw("same l");
+   gfit9->Draw("same l");
+   // total_gaus->Draw("same l");
 
    // Test of kinematics
    /* TGraphErrors *kineTest = new TGraphErrors();
