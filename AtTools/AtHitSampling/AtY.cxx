@@ -17,7 +17,7 @@ std::vector<AtHit> AtY::SampleHits(int N)
 
    // If every hit is outside of the beam region, then skip the vetoed beam region
    if (fBeam.size() + N - 2 > fHits->size() || fNotBeam.size() + 2 > fHits->size()) {
-      LOG(error) << "Defaulting to normal sampling (fBeam is size: " << fBeam.size() << ")";
+      LOG(debug) << "Defaulting to normal sampling (fBeam is size: " << fBeam.size() << ")";
       for (auto ind : sampleIndicesFromCDF(N))
          ret.push_back(*fHits->at(ind));
       return ret;

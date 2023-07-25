@@ -24,7 +24,7 @@
 #include <utility> // for move
 
 using XYPoint = ROOT::Math::XYPoint;
-AtPulse::AtPulse(AtMapPtr map, ResponseFunc response) : fMap(map), fResponse(response)
+AtPulse::AtPulse(AtMapPtr map, ResponseFunc response) : fMap(map), fResponse(response) // NOLINT
 {
    // Make sure the pad plane is generated so we can just access it for reading info (ie multiple threads will not be
    // trying to create the underlying TH2poly.
@@ -90,6 +90,7 @@ void AtPulse::FillPad(AtPad &pad, TH1F &hist)
       if (nEle > 0) {
          // Scale the saved charge down so its closer to reco
          charge->SetArray(kk - 1, nEle * fGETGain * fResponse(pad.GetPadNum(), fPeakingTime));
+         // charge->SetArray(kk - 1, nEle);
          if (!fDoConvolution) {
             pad.SetADC(kk - 1, 0);
             continue;
@@ -152,6 +153,13 @@ void AtPulse::SetParameters(const AtDigiPar *fPar)
    fAvgGainDeviation *=
       TMath::Sqrt(TMath::Gamma(b + 3) / TMath::Gamma(b + 1) -
                   TMath::Gamma(b + 2) * TMath::Gamma(b + 2) / TMath::Gamma(b + 1) / TMath::Gamma(b + 1));
+
+   LOG(info) << "Gain: " << fGain;
+   LOG(info) << "GETGain: " << fGETGain;
+   LOG(info) << "Peaking time: " << fPeakingTime;
+   LOG(info) << "TB Time: " << fTBTime;
+   LOG(info) << "TB entrance: " << fTBEntrance;
+   LOG(info) << "TB Pad Plane: " << fTBPadPlane;
 
    // Create all of the historgrmas
    fPadCharge.resize(fMap->GetNumPads());

@@ -19,6 +19,7 @@
 #include "../build/include/AtFilterTask.h"
 #include "../build/include/AtFissionTask.h"
 #include "../build/include/AtHDFUnpacker.h"
+#include "../build/include/AtLineChargeModel.h"
 #include "../build/include/AtLinkDAQTask.h"
 #include "../build/include/AtPSA.h"
 #include "../build/include/AtPSAComposite.h"
@@ -46,7 +47,7 @@
  *
  */
 
-void unpack_linked(int tpcRunNum = 206)
+void unpack_linked(int tpcRunNum = 130)
 {
    auto verbSpec =
       fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
@@ -64,7 +65,8 @@ void unpack_linked(int tpcRunNum = 206)
    TString inputDir = "/mnt/rawdata/e12014_attpc/h5";
    TString evtInputDir = "/mnt/analysis/e12014/HiRAEVT/mapped";
    // TString outDir = "/mnt/analysis/e12014/TPC/fission_linked";
-   TString outDir = "/mnt/analysis/e12014/TPC/fission_linked_nomod";
+   TString outDir = "/mnt/analysis/e12014/TPC/fission_linked_baseline/";
+   // TString outDir = "./";
    TString evtOutDir = outDir;
    TString sharedInfoDir = "/mnt/projects/hira/e12014/tpcSharedInfo/";
 
@@ -102,6 +104,7 @@ void unpack_linked(int tpcRunNum = 206)
    AtRunAna *run = new AtRunAna();
    run->SetSink(new FairRootFileSink(outputFile));
    run->SetGeomFile(geoManFile);
+   run->SetRunId(tpcRunNum);
 
    // Set the parameter file
    FairRuntimeDb *rtdb = run->GetRuntimeDb();
@@ -166,7 +169,7 @@ void unpack_linked(int tpcRunNum = 206)
    AtFilterTask *calTask = new AtFilterTask(filterCal);
    calTask->SetPersistence(true);
    calTask->SetFilterAux(false);
-   calTask->SetInputBranch("AtRawEventSub");
+   calTask->SetInputBranch("AtRawEventRaw");
    calTask->SetOutputBranch("AtRawEvent");
 
    /**** PSA Task ****/
@@ -190,8 +193,10 @@ void unpack_linked(int tpcRunNum = 206)
    psaTask->SetPersistence(true);
 
    /**** Space charge correction ****/
-   auto SCModel = std::make_unique<AtRadialChargeModel>(E12014SC(nsclRunNum));
-   SCModel->SetStepSize(0.1);
+   // auto SCModel = std::make_unique<AtRadialChargeModel>(E12014SC(nsclRunNum));
+   auto SCModel = std::make_unique<AtLineChargeModel>();
+   SCModel->SetLambda(E12014SC(nsclRunNum).GetLambda());
+   // SCModel->SetStepSize(0.1);
    SCModel->SetBeamLocation({0, -6, 0}, {10, 0, 1000});
    auto scTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
    scTask->SetInputBranch("AtEvent");
@@ -199,7 +204,7 @@ void unpack_linked(int tpcRunNum = 206)
 
    /**** 2 lines pattern fit ****/
    auto method = std::make_unique<SampleConsensus::AtSampleConsensus>(
-      SampleConsensus::Estimators::kRANSAC, AtPatterns::PatternType::kY, RandomSample::SampleMethod::kY);
+      SampleConsensus::Estimators::kYRANSAC, AtPatterns::PatternType::kFission, RandomSample::SampleMethod::kY);
    method->SetDistanceThreshold(20);
    method->SetNumIterations(500);
    method->SetMinHitsPattern(150);
@@ -233,11 +238,11 @@ void unpack_linked(int tpcRunNum = 206)
    auto numEvents = unpackTask->GetNumEvents();
 
    // numEvents = 1700;//217;
-   // numEvents = 1000;
+   numEvents = 100;
 
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
-
-   // return;
+   // numEvents = 3800;
+   //      return;
    run->Run(0, numEvents);
 
    std::cout << std::endl << std::endl;

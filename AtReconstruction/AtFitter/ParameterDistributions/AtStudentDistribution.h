@@ -18,7 +18,7 @@ public:
    double GetDoF() const { return fDistro.n(); }
    void SetDoF(double dof) { fDistro = std::student_t_distribution<>(dof); }
 
-   void TruncateSpace() override { SetDoF(GetDoF() + 1); }
+   void TruncateSpace() override { fSpread *= .5; }
 
 protected:
    double SampleSpread() override;

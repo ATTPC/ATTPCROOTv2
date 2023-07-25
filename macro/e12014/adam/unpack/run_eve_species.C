@@ -19,8 +19,9 @@ void run_eve_species(TString species = "Bi200", int pressure = 150,
    // fair::Logger::SetConsoleSeverity("debug");
 
    // TString inputDirectory = TString::Format("/mnt/analysis/e12014/TPC/%dTorr/%s.root", pressure, species.Data());
-   TString InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr/%s.root", pressure, species.Data());
-   TString evtInputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr/%sEvt.root", pressure, species.Data());
+   TString InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%s.root", pressure, species.Data());
+   TString evtInputDataFile =
+      TString::Format("/mnt/analysis/e12014/TPC/%dTorr_nomod/%sEvt.root", pressure, species.Data());
    //   TString InputDataFile = "./data/output.root";
 
    std::cout << "Opening: " << InputDataFile << std::endl;

@@ -7,33 +7,59 @@
  * Modified 8/17/21, added different ways of generating Z distributions
  */
 
-#include "TRandom3.h"
-#include "TH2.h"
-#include "TFile.h"
-#include "TMath.h"
-#include "TLorentzVector.h"
-#include "TString.h"
 #include "TCanvas.h"
-#include "Math/Vector3D.h"
-#include "Math/Vector4D.h"
+#include "TFile.h"
+#include "TH2.h"
+#include "TLorentzVector.h"
+#include "TMath.h"
+#include "TRandom3.h"
+#include "TString.h"
 #include "TTree.h"
 
-#include <iostream>
-#include <set>
 #include <fstream>
+#include <iostream>
 #include <numeric>
+#include <set>
+
+#include "Math/Vector3D.h"
+#include "Math/Vector4D.h"
 
 const double AtoE = 939.0;
 const double c = 2.998e8; // In m/s
 using VecXYZE = ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<>>;
 using VecPolar = ROOT::Math::Polar3D<double>;
+using XYZVector = ROOT::Math::XYZVector;
 using vecInt = std::vector<Int_t>;
+using test = AtTools::AtKinematics; // Literally this is just to force ROOT to load the AtTools lib
+
+TF1 *fAsym = nullptr;
 
 // Function prototypes
 vecInt getProducMasses(Int_t A, Float_t massFrac, Float_t massDev, TRandom *rand = new TRandom3());
 vecInt getProductChargeSameDistro(Int_t Z, const vecInt &masses);
 vecInt getProductChargeMaxBE(Int_t Z, const vecInt &masses);
 vecInt getProductChargeMaxBEA(Int_t Z, const vecInt &masses);
+XYZVector SampleUniform()
+{
+   Double_t x, y, z;
+   gRandom->Sphere(x, y, z, 1.0);
+   return {x, y, z};
+}
+XYZVector SampleAsym()
+{
+
+   if (fAsym == nullptr) {
+      fAsym = new TF1("asym",
+                      "1 + [0] * cos(x) * cos(x) + [1] * cos(x) * cos(x) * cos(x) * cos(x)+ [2] * cos(x) * cos(x)* "
+                      "cos(x) * cos(x)* cos(x) * cos(x)",
+                      0, TMath::Pi());
+      fAsym->SetParameters(0.2676, 0.7282, 0.5472);
+   }
+
+   double theta = fAsym->GetRandom();
+   VecPolar decayAng(1, theta, gRandom->Uniform(TMath::TwoPi()));
+   return {decayAng.x(), decayAng.y(), decayAng.z()};
+}
 
 std::vector<VecXYZE> getProductMomenta(const vecInt &fragA, const vecInt &fragZ, TRandom *rand, VecPolar &decayAng);
 
@@ -64,13 +90,15 @@ polarAng: Angle of decay with respect to beam axis (in degrees)
 Output:
 fissionFragments.root with histograms of results and a TTree of generated events in rest frame
 ion_list.dat a file listing all of the ions in fissionFragments.root for TPC simulation
+A1 is always the more massive fragment, and A2 is the lighter.
 */
-int fissionMC(int N, int Z = 82, int A = 196, float massFrac = 0.56, float massDev = 6, float polarAng = 0)
+int fissionMC(int N, int Z = 82, int A = 196, float massFrac = 0.56, float massDev = 6, float polarAng = 0,
+              TString fName = "fissionFragmentsIsotropic.root")
 {
    TRandom3 rand;
 
    // Create a file to save the generated histograms
-   TFile *f = new TFile("fissionFragments.root", "RECREATE");
+   TFile *f = new TFile(fName, "RECREATE");
    TTree tr("fragments", "Fission Fragments in CoM frame");
    std::vector<VecXYZE> decayMomenta;
    std::vector<Int_t> fragA;
@@ -206,28 +234,38 @@ std::vector<VecXYZE> getProductMomenta(const vecInt &fragA, const vecInt &fragZ,
    // Get the KE of the products
    double kE = violaEn(A, Z);
 
-   // Assume the kinetic energy is evenly split between the particles
-   // Get the energies of the two particles
-   double E[2];
-   E[1] = m[0] * m[1] + m[1] * m[1] + kE * (m[0] + m[1]) + kE * kE / 2.0;
-   E[1] /= m[0] + m[1] + kE;
-   E[0] = TMath::Sqrt(E[1] * E[1] + m[0] * m[0] - m[1] * m[1]);
+   double gamma1 = AtTools::Kinematics::GetGamma(kE, m[0], m[1]);
+   double p1 = AtTools::Kinematics::GetRelMom(gamma1, m[0]);
+
+   /*
+      // Assume the kinetic energy is evenly split between the particles
+      // Get the energies of the two particles
+      double E[2];
+      E[1] = m[0] * m[1] + m[1] * m[1] + kE * (m[0] + m[1]) + kE * kE / 2.0;
+      E[1] /= m[0] + m[1] + kE;
+      E[0] = TMath::Sqrt(E[1] * E[1] + m[0] * m[0] - m[1] * m[1]);
+      */
 
    // Set the momentum unit vector if nullptr
    if (decayAng.Theta() != 0)
       decayAng.SetPhi(rand->Uniform(TMath::TwoPi()));
    else {
-      Double_t x, y, z;
-      rand->Sphere(x, y, z, 1.0);
-      decayAng = ROOT::Math::XYZVectorD(x, y, z);
+      // decayAng.SetPhi(rand->Uniform(TMath::TwoPi()));
+      // decayAng.SetTheta(rand->Uniform(TMath::Pi()));
+      decayAng = SampleUniform();
+      //  decayAng = SampleAsym();
    }
 
    // Set the momentum of first particles
-   decayAng.SetR(TMath::Sqrt(E[0] * E[0] - m[0] * m[0]));
+   // decayAng.SetR(TMath::Sqrt(E[0] * E[0] - m[0] * m[0]));
+   decayAng.SetR(p1);
+   ROOT::Math::XYZVector pDir(decayAng);
 
    std::vector<VecXYZE> ret;
-   ret.push_back(VecXYZE(decayAng.X(), decayAng.Y(), decayAng.Z(), E[0]));
-   ret.push_back(VecXYZE(-decayAng.X(), -decayAng.Y(), -decayAng.Z(), E[1]));
+   // ret.push_back(VecXYZE(decayAng.X(), decayAng.Y(), decayAng.Z(), E[0]));
+   // ret.push_back(VecXYZE(-decayAng.X(), -decayAng.Y(), -decayAng.Z(), E[1]));
+   ret.push_back(AtTools::Kinematics::Get4Vector(pDir, m[0]));
+   ret.push_back(AtTools::Kinematics::Get4Vector(-pDir, m[1]));
 
    return ret;
 }

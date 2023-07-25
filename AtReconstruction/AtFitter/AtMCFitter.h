@@ -48,6 +48,7 @@ protected:
    PsaPtr fPSA{nullptr};
 
    int fNumIter{1};
+   int fNumRounds{1};
    int fNumEventsToSave{10};
    bool fTimeEvent{false};
    int fNumThreads{1};
@@ -79,11 +80,15 @@ public:
    ParamPtr GetParameter(const std::string &name) const;
    void FillResultArrays(TClonesArray &resultArray, TClonesArray &simEvent, TClonesArray &simRawEvent);
    void SetNumIter(int iter) { fNumIter = iter; }
+
+   /// Set number of times to run fNumIter iterations and then re-center and truncate the parameter space.
+   void SetNumRounds(int rounds) { fNumRounds = rounds; }
    void SetTimeEvent(bool val) { fTimeEvent = val; }
    void SetNumEventsToSave(int num) { fNumEventsToSave = num; }
    void SetNumThreads(int num);
 
 protected:
+   void RunRound();
    void RunIterRange(int startIter, int numIter, AtPulse *pulse);
 
    /**
@@ -113,6 +118,11 @@ protected:
     * This function calls Sample() on all the parameter distributions and saves them.
     */
    virtual AtMCResult DefineEvent();
+
+   /**
+    * Recenter the parameter distributions around the best result and truncate the parameter space.
+    */
+   virtual void RecenterParamDistributions();
 
    /**
     * Create the AtRawEvent and AtEvent from fSim

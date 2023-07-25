@@ -29,7 +29,7 @@ double E12014::fSatThreshold = 4200;
 void E12014::CreateMap()
 {
    fMap = std::make_shared<AtTpcMap>();
-   auto mapFile = TString(getenv("VMCWORKDIR")) + "/scripts/e12014_pad_mapping.xml";
+   auto mapFile = TString(getenv("VMCWORKDIR")) + "/scripts/e12014_pad_map_size.xml";
    fMap->ParseXMLMap(mapFile.Data());
 
    // Add the inhibited pads
@@ -99,24 +99,35 @@ std::set<int> E12014::FillHitSum(TH1 &hist, const std::vector<AtHit *> &hits, in
    return pads;
 }
 
-void E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
-                         const std::vector<AtHit *> &simHits, int threshold, float satThresh, const AtDigiPar *fPar)
+int E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
+                        const std::vector<AtHit *> &simHits, int threshold, float satThresh, const AtDigiPar *fPar,
+                        std::vector<double> *expADC, AtRawEvent *expEvent)
 {
+   if (fMap == nullptr)
+      LOG(fatal) << "The map (E12014::fMap) was never set!";
+
    exp.clear();
    exp.resize(512);
    std::fill_n(exp.begin(), 512, 0);
    sim.clear();
    sim.resize(512);
    std::fill_n(sim.begin(), 512, 0);
+   if (expADC) {
+      expADC->clear();
+      expADC->resize(512);
+      std::fill_n(expADC->begin(), 512, 0);
+   }
 
-   if (fMap == nullptr)
-      LOG(fatal) << "The map (E12014::fMap) was never set!";
-
+   int numGoodHits = 0;
    for (auto &expHit : expHits) {
       if (fMap->IsInhibited(expHit->GetPadNum()) != AtMap::InhibitType::kNone)
          continue;
       if (expHit->GetCharge() > satThresh)
          continue;
+
+      if (fMap->GetPadSize(expHit->GetPadNum()) != 0)
+         continue;
+
       auto funcExp = AtTools::GetHitFunctionTB(*expHit, fPar);
       if (funcExp == nullptr)
          continue;
@@ -136,13 +147,107 @@ void E12014::FillHitSums(std::vector<double> &exp, std::vector<double> &sim, con
       if (funcSim == nullptr)
          continue;
 
-      // We now have the sim and exp hits. Fill the arrays
+      AtPad *pad = nullptr;
+      if (expEvent)
+         pad = expEvent->GetPad(expHit->GetPadNum());
+
+      numGoodHits++;
+      // Get the pad that corresponds to
+      //  We now have the sim and exp hits. Fill the arrays
       for (int tb = fTBMin; tb < 512; ++tb) {
+
          auto val = funcExp->Eval(tb);
          if (val > threshold) {
             exp[tb] += val;
             sim[tb] += funcSim->Eval(tb);
+            if (pad && expADC)
+               (*expADC)[tb] += pad->GetADC(tb);
          }
+      }
+   }
+   return numGoodHits;
+}
+
+void E12014::FillSimSum(std::vector<double> &sim, const std::vector<AtHit *> &simHits)
+{
+   if (fMap == nullptr)
+      LOG(fatal) << "The map (E12014::fMap) was never set!";
+
+   sim.clear();
+   sim.resize(512);
+   std::fill_n(sim.begin(), 512, 0);
+
+   for (auto &expHit : simHits) {
+
+      auto funcExp = AtTools::GetHitFunctionTB(*expHit);
+      if (funcExp == nullptr)
+         continue;
+
+      for (int tb = fTBMin; tb < 512; ++tb) {
+         sim[tb] += funcExp->Eval(tb);
+      }
+   }
+}
+
+void E12014::FillHits(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
+                      const std::vector<AtHit *> &simHits, float satThresh)
+{
+   if (fMap == nullptr)
+      LOG(fatal) << "The map (E12014::fMap) was never set!";
+
+   exp.clear();
+   sim.clear();
+
+   for (auto &expHit : expHits) {
+      if (fMap->IsInhibited(expHit->GetPadNum()) != AtMap::InhibitType::kNone)
+         continue;
+      if (expHit->GetCharge() > satThresh)
+         continue;
+      if (expHit->GetPosition().z() < 50)
+         continue;
+      if (fMap->GetPadSize(expHit->GetPadNum()) != 0)
+         continue;
+
+      // This is a good hit so save the experiment charge.
+      exp.push_back(expHit->GetCharge());
+
+      // Look for the matching simualted hit and save its charge
+      int padNum = expHit->GetPadNum();
+      auto simHit =
+         std::find_if(simHits.begin(), simHits.end(), [padNum](const AtHit *a) { return a->GetPadNum() == padNum; });
+      if (simHit == simHits.end())
+         sim.push_back(0);
+      else
+         sim.push_back((*simHit)->GetCharge());
+   }
+}
+
+void E12014::FillZPos(std::vector<double> &exp, std::vector<double> &sim, const std::vector<AtHit *> &expHits,
+                      const std::vector<AtHit *> &simHits, float satThresh)
+{
+   if (fMap == nullptr)
+      LOG(fatal) << "The map (E12014::fMap) was never set!";
+
+   exp.clear();
+   sim.clear();
+
+   for (auto &expHit : expHits) {
+      if (fMap->IsInhibited(expHit->GetPadNum()) != AtMap::InhibitType::kNone)
+         continue;
+      if (expHit->GetCharge() > satThresh)
+         continue;
+
+      if (fMap->GetPadSize(expHit->GetPadNum()) != 0)
+         continue;
+
+      // Look for the matching simualted hit and save its charge
+      int padNum = expHit->GetPadNum();
+      auto simHit =
+         std::find_if(simHits.begin(), simHits.end(), [padNum](const AtHit *a) { return a->GetPadNum() == padNum; });
+      if (simHit != simHits.end()) {
+         // This is a good hit so save the experiment charge.
+         exp.push_back(expHit->GetPosition().z());
+         sim.push_back((*simHit)->GetPosition().z());
       }
    }
 }

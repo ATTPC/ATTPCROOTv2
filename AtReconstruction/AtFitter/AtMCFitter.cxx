@@ -102,11 +102,22 @@ void AtMCFitter::Exec(const AtPatternEvent &event)
 
    SetParamDistributions(event);
 
-   auto start = std::chrono::high_resolution_clock::now();
+   // Set the conditions for simulating the event
+   fCurrentEvent = &event;
 
    // Make sure the event arrays are large enough so no resizing will happen
    fRawEventArray.resize(fNumIter);
    fEventArray.resize(fNumIter);
+
+   for (int i = 0; i < fNumRounds; ++i) {
+      RunRound();
+      RecenterParamDistributions();
+   }
+}
+void AtMCFitter::RunRound()
+{
+   // Begining of round
+   auto start = std::chrono::high_resolution_clock::now();
 
    // Get what iterations to do on what thread.
    std::vector<std::pair<int, int>> threadParam;
@@ -121,9 +132,6 @@ void AtMCFitter::Exec(const AtPatternEvent &event)
    for (int i = 0; i < threadParam.size(); ++i) {
       LOG(info) << i << ": " << threadParam[i].first << " " << threadParam[i].second;
    }
-
-   // Set the conditions for simulating the event
-   fCurrentEvent = &event;
 
    std::vector<std::thread> threads;
    for (int i = 0; i < fNumThreads; ++i) {
@@ -195,6 +203,14 @@ AtMCResult AtMCFitter::DefineEvent()
    for (auto &[name, distro] : fParameters)
       result.fParameters[name] = distro->Sample();
    return result;
+}
+void AtMCFitter::RecenterParamDistributions()
+{
+   for (auto &[name, distro] : fParameters) {
+      AtMCResult result = *fResults.begin();
+      distro->SetMean(result.fParameters[name]);
+      distro->TruncateSpace();
+   }
 }
 
 } // namespace MCFitter

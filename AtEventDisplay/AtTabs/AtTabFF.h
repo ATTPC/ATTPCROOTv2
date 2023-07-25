@@ -4,6 +4,7 @@
 #include "AtDataObserver.h"
 #include "AtEvent.h"
 #include "AtFissionEvent.h"
+#include "AtRawEvent.h"
 #include "AtTabCanvas.h"
 #include "AtTabInfo.h" // for AtTabInfoFairRoot
 
@@ -42,16 +43,18 @@ protected:
    using THStackPtr = std::unique_ptr<THStack>;
 
    AtTabInfoFairRoot<AtEvent> fEvent;
+   AtTabInfoFairRoot<AtRawEvent> fRawEvent;
    AtTabInfoFairRoot<AtFissionEvent> fFissionEvent;
    DataHandling::AtTreeEntry &fEntry;
 
    std::array<TH1Ptr, 2> fSimdQdZ;
    std::array<TH1Ptr, 2> fExpdQdZ;
+   std::array<TH1Ptr, 2> fExpADCSum;
    std::array<std::set<int>, 2> fCurrPads;
    std::array<THStackPtr, 4> fStacks;
 
 public:
-   AtTabFF(DataHandling::AtBranch &fissionBranch);
+   AtTabFF(DataHandling::AtBranch &fissionBranch, bool plotADC = false);
    ~AtTabFF();
 
    void Exec() override {}
@@ -62,6 +65,7 @@ protected:
    void UpdateEvent();
    void DrawCanvas();
 
+   std::vector<AtHit *> GetFragmentHits(AtEvent *event);
    ClassDefOverride(AtTabFF, 1);
 };
 
