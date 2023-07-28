@@ -8,7 +8,7 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpack_a1954_FRIBDAQ(TString fileName = "run_0055")
+void unpack_a1954_FRIBDAQ(TString fileName = "run_0065")
 {
 
    // Load the library for unpacking and reconstruction
@@ -19,7 +19,7 @@ void unpack_a1954_FRIBDAQ(TString fileName = "run_0055")
 
    TString parameterFile = "ATTPC.a1954.par";
    TString mappath = "";
-   TString filepath = "/home/yassid/fair_install/data/a1954/";
+   TString filepath = "/media/yassid/bdcb3c81-adb9-4a9d-9172-0bd5935c1dd5/data/a1954_full/h5/";
    TString fileExt = ".h5";
    TString inputFile = filepath + fileName + fileExt;
    TString scriptfile = "ANL2023.xml";
@@ -56,6 +56,7 @@ void unpack_a1954_FRIBDAQ(TString fileName = "run_0055")
    auto unpacker = std::make_unique<AtFRIBHDFUnpacker>(fAtMapPtr);
    unpacker->SetInputFileName(inputFile.Data());
    unpacker->SetNumberTimestamps(1);
+   unpacker->SetBaseLineSubtraction(true);
 
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
    unpackTask->SetPersistence(true);
