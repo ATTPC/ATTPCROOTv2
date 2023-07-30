@@ -12,7 +12,7 @@
 #include "TMath.h"
 
 
-void Simp_gamma_analysis(Double_t momentum,Int_t num_ev = 50000)
+void Simp_gamma_analysis(Double_t momentum,Int_t num_ev )
 {
    
     std::string fileName = "test";

@@ -1,4 +1,4 @@
-void gamma_sim(Double_t momentum,Int_t nEvents = 50000, TString mcEngine = "TGeant4" )
+void gamma_sim(Double_t momentum,Int_t nEvents, TString mcEngine = "TGeant4" )
 {
 
    TString dir = getenv("VMCWORKDIR");

@@ -2,16 +2,17 @@ import os
 import csv
 import re
 
-momentum_values = [i / 2 for i in range(1, 21)]
+momentum_values = [1,2,3,4,5,6,7,8,9,10,12,15,17,20,50]
 output_lines = []
+no_events = 150000
 
 # Run gamma_sim.C and Simp_gamma_analysis.C for each momentum value
 for momentum in momentum_values:
     # Compile and run gamma_sim.C with momentum as a command-line argument
-    os.system(f"root -l -b -q 'gamma_sim.C({momentum})'")
+    os.system(f"root -l -b -q 'gamma_sim.C({momentum, no_events})'")
 
     # Compile and run Simp_gamma_analysis.C with momentum as a command-line argument
-    output = os.popen(f"root -l -b -q 'Simp_gamma_analysis.C({momentum})'").read()
+    output = os.popen(f"root -l -b -q 'Simp_gamma_analysis.C({momentum, no_events})'").read()
 
     # Extract efficiency and error from the terminal output
     efficiency_match = re.search(r"Photopeak Efficiency : ([\d.]+)%", output)
