@@ -6,13 +6,13 @@
  #         GNU Lesser General Public Licence version 3 (LGPL) version 3,        #
  #                  copied verbatim in the file "LICENSE"                       #
  ################################################################################
-# Create a library called "libAtDeGAi" which includes the source files given in
+# Create a library called "libAtPxCT" which includes the source files given in
 # the array .
 # The extension is already found.  Any number of sources could be listed here
 cmake_minimum_required(VERSION 3.13)
-project(AtDeGAi)
-Set(LINKDEF AtDeGAiLinkDef.h)
-Set(LIBRARY_NAME AtDeGAi)
+project(AtPxCT)
+Set(LINKDEF AtPxCTLinkDef.h)
+Set(LIBRARY_NAME AtPxCT)
 Set(DEPENDENCIES
   FairRoot::Base
   ROOT::Core
@@ -22,10 +22,10 @@ Set(DEPENDENCIES
 
 set(SRCS
 #Put here your sourcefiles
-AtDeGAi.cxx
-AtDeGAiContFact.cxx
-AtDeGAiCrystalCalData.cxx
-AtDeGAiDigitizer.cxx
+AtPxCT.cxx
+AtPxCTContFact.cxx
+AtPxCTCrystalCalData.cxx
+AtPxCTDigitizer.cxx
 )
 
 generate_target_and_root_library(${LIBRARY_NAME}
