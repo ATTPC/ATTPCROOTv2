@@ -105,11 +105,7 @@ void convert2coords(Double_t r, Double_t phi, Double_t theta, Double_t outputArr
 }
 
   
-void changes(Double_t arr1[], Double_t val) {
-    for (Int_t i=0; i < 8; i++) {
-        arr1[32+i] = arr1[32+i]+val;
-    }
-}
+
 
   
 // Forward declarations
@@ -260,7 +256,7 @@ TGeoVolume *create_detector()
    TGeoCompositeShape *Detector = new TGeoCompositeShape("Detector", "Cover + Clover1:TRtrans + Clover2:TLtrans + Clover3:BRtrans + Clover4:BLtrans");
    //detector
    TGeoVolume **Cry_vol;
-   Cry_vol = new TGeoVolume *[40];
+   Cry_vol = new TGeoVolume *[41];
 
    TString CrystalName = "Crystal_";
    TString name_cry[40] = {"01", "02", "03", "04", "05", "06", "07", "08", "09","10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40"};
@@ -318,6 +314,7 @@ for (Int_t i = 0; i < 10; i++) {
         Cry_vol->SetTransparency(0);
     }
 }
+
 
 
    // GADGET Main drift volume

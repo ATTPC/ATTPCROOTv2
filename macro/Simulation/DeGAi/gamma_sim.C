@@ -53,23 +53,13 @@ void gamma_sim(Double_t momentum,Int_t nEvents, TString mcEngine = "TGeant4" )
      // GeV/c
      
      Int_t multiplicity = 1;
-     AtTPCGammaDummyGenerator* gammasGen = new AtTPCGammaDummyGenerator(pdgId, multiplicity);
-     gammasGen->SetThetaRange(theta1, theta2);
-     gammasGen->SetCosTheta();
-     gammasGen->SetPRange(momentum/1000, momentum/1000);
-     //gammasGen->SetDecayChainPoint(0.000513,0.1);
-     //gammasGen->SetDecayChainPoint(0.000854,0.5);
-     //gammasGen->SetDecayChainPoint(0.001561,0.1);
-     //gammasGen->SetDecayChainPoint(0.002002,0.1);
-     //gammasGen->SetDecayChainPoint(0.003750,0.2);
-     gammasGen->SetPhiRange(0., 360.); //(2.5,4)
-    gammasGen->SetXYZ(0.0,0.0,-5.0);
-     gammasGen->SetLorentzBoost(0.0); // for instance beta=0.8197505718204776 for 700 A MeV
-     // add the gamma generator
-     primGen->AddGenerator(gammasGen);
+     auto boxGen = new FairBoxGenerator(2112, 1);
+   boxGen->SetXYZ(0, 0, -5.);
+ 
+   boxGen->SetEkinRange(momentum/1000, momentum/1000);
 
+   primGen->AddGenerator(boxGen);
 
-     run->SetGenerator(primGen);
 
    // ------------------------------------------------------------------------
 

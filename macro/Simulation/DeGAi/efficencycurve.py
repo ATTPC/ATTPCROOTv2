@@ -3,26 +3,26 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Reading data from file into a pandas DataFrame
-data = pd.read_csv("efficiency_curve.csv")
+data = pd.read_csv("efficency_curve.csv")
 
 # Extracting momentum, efficiency, and error columns from the DataFrame
 momentum = data["Momentum"].values
-efficiency = data["Efficiency"].values
+efficiency = data["Efficency"].values
 error = data["Error"].values
 
 # Rest of the code remains the same...
 
 # Polynomial regression
 degree = 2  # Adjust the degree of the polynomial fit as desired
-coefficients = np.polyfit(momentum, efficiency, degree)
+coefficients = np.polyfit(momentum*10e2, efficiency, degree)
 polynomial = np.poly1d(coefficients)
 formula = polynomial.__str__()
 
 # Plotting the data and the best-fit curve
 plt.figure(figsize=(10, 6))
-plt.errorbar(momentum, efficiency, yerr=error, fmt='o', color='b', ecolor='g', capsize=5, label='Data')
+plt.errorbar(momentum*10e2, efficiency, yerr=error, fmt='o', color='b', ecolor='g', capsize=5, label='Data')
 plt.plot(momentum, polynomial(momentum), c='r', label='Best-fit Curve')
-plt.xlabel('Energy (MeV)')
+plt.xlabel('Energy (KeV)')
 plt.ylabel('Efficiency (%)')
 plt.title('Degai Efficiency Curve')
 plt.legend()

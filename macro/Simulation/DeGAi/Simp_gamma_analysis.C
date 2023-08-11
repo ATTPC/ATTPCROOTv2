@@ -12,7 +12,7 @@
 #include "TMath.h"
 
 
-void Simp_gamma_analysis(Double_t momentum,Int_t num_ev )
+void Simp_gamma_analysis(Double_t momentum,Int_t num_ev)
 {
    
     std::string fileName = "test";
@@ -41,7 +41,7 @@ void Simp_gamma_analysis(Double_t momentum,Int_t num_ev )
     // Histograms
     Int_t Bins = 11000;
     Int_t MeV = 11;
-    TH1D* Energy_loss = new TH1D("Energy_loss", "Photopeak Efficiency: ", Bins, 0, MeV);
+    TH1D* Energy_loss = new TH1D("Energy_loss", "Photopeak Efficency: ", Bins, 0, MeV);
 
     Double_t Count = 0.0;
     Double_t PhotopeakCount = 0.0;
@@ -60,32 +60,35 @@ void Simp_gamma_analysis(Double_t momentum,Int_t num_ev )
             auto VolName = point->GetVolName();
 
             auto trackID = point->GetTrackID();
-            if (VolName.Contains("Crystal_")) {
+            if (VolName.Contains("Crystal_") && !VolName.Contains("41")) {
 
                 // Gaussian smearing
-                Float_t fResolutionGe = .30;
+                //Float_t fResolutionGe = .30;
                 Double_t inputEnergy = point->GetEnergyLoss();
-                Double_t randomIs = gRandom->Gaus(0, inputEnergy * fResolutionGe * 1000 / (235 * sqrt(inputEnergy * 1000)));
-                energyLoss += (inputEnergy + randomIs / 1000) * 1000; // MeV
+                //Double_t randomIs = gRandom->Gaus(0, inputEnergy * fResolutionGe * 1000 / (235 * sqrt(inputEnergy * 1000)));
+                //energyLoss += (inputEnergy + randomIs / 1000) * 1000; // MeV
+                energyLoss += inputEnergy * 1000;
                 Count++;
 
             
 
-                // Check if energyLoss is within the photopeak range for specific isotopes
-                if (energyLoss >= momentum * 0.95 && energyLoss <= momentum * 1.05) {
-                    PhotopeakCount++;
-                }
+                
          }
+         else if(VolName.Contains("41")) {
+                Count++;
+            }
 }
         
     }
 
-    // Calculate photopeak efficiency
-    Double_t photopeakEfficiency = (PhotopeakCount / Count) * 100.0;
-    Double_t Err = (TMath::Sqrt(PhotopeakCount)/Count) *100.0;
+    // Calculate photopeak efficency
+    PhotopeakCount = Energy_loss->GetXaxis()->FindBin(momentum);
+    Double_t photopeakEfficency = (PhotopeakCount / Count) * 100.0;
+    Double_t Err = (TMath::Sqrt(PhotopeakCount)/PhotopeakCount) *100.0;
 
-
-    std::cout << "Photopeak Efficiency : " << photopeakEfficiency << "%" << std::endl;
+    std::cout << "Total number of events : " << Count << std::endl;
+    std::cout << "Number of events in photopeak : " << PhotopeakCount << std::endl;
+    std::cout << "Photopeak Efficency : " << photopeakEfficency << "%" << std::endl;
     std::cout<<"Error:" << Err<< std::endl;
 }
 
