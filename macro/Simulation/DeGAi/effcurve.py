@@ -10,7 +10,7 @@ momentum_values= [0.1,1,2.0]
 output_lines = []
 no_events = 50000
 # Send a notification
-pb = Pushbullet("o.ujiJPb5NJp4DaI6nQViea799x2UInEiP")
+pb = Pushbullet("")
 # Run gamma_sim.C and Simp_gamma_analysis.C for each momentum value
 for momentum in momentum_values:
     # Compile and run gamma_sim.C with momentum as a command-line argument
