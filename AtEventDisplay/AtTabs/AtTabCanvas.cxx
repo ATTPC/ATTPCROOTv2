@@ -15,8 +15,7 @@ void AtTabCanvas::MakeTab(TEveWindowSlot *slot)
    slot->StartEmbedding();
 
    fCanvas = new TCanvas(TString::Format("AtTabCanvas%d", fTabId));
-   if (fRows != 1 || fCols != 1)
-      fCanvas->Divide(fCols, fRows);
+   fCanvas->Divide(fCols, fRows);
 
    slot->StopEmbedding();
 }
