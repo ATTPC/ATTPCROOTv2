@@ -41,6 +41,8 @@ protected:
    int fTBEntrance = 0;       //! Window location in timebuckets (from config)
    int fTBPadPlane = 0;       //! Pad plane location in TBs (calculated from DriftVelocity, TBEntrance, ZPadPlane
 
+   double fScaling = 1; // Scales the trace by this amount;
+
    ResponseFunc fResponse; //! Response function of the electronics
    bool fUseFastGain = true;
    double fNoiseSigma = 0; //! Sigma of random gaussian noise to apply to trace
@@ -64,6 +66,7 @@ public:
    void SetSaveCharge(bool val) { fSaveCharge = val; }
    void SetDoConvolution(bool val) { fDoConvolution = val; }
    void SetLowGain(double val) { fLowGainFactor = val; }
+   void SetScaling(double val) { fScaling = val; }
 
    AtRawEvent GenerateEvent(std::vector<SimPointPtr> &vec);
    AtRawEvent GenerateEvent(std::vector<AtSimulatedPoint *> &vec);
