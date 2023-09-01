@@ -176,6 +176,8 @@ void C14_pp_ana_IC()
    m_b = m_p;
    m_B = m_C14;
 
+   std::ofstream outputFileEvents("list_of_events.txt");
+
    std::ofstream kineFile("kinematics_14C_p.dat");
    if (!kineFile.good())
       std::cout << "Failed to open file" << std::endl;
@@ -443,7 +445,12 @@ void C14_pp_ana_IC()
                   angle_vs_energy_lr->Fill(theta * TMath::RadToDeg(), ener * Am);
 
                   kineFile << theta * TMath::RadToDeg() << "  " << ener * Am << "\n";
-               }
+
+                  // List of events
+                  if (ex_energy_exp > 9.0 && ex_energy_exp < 9.4)
+                     outputFileEvents << iFile.first.Data() << " - Ev. : " << i << "\n";
+
+               } // protons
             }
          }
 
