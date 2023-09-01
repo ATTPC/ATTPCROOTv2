@@ -8,7 +8,7 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpack_a1975(TString fileName = "run_0003")
+void unpack_a1975(TString fileName = "run_0116")
 {
 
    // Load the library for unpacking and reconstruction
@@ -87,14 +87,14 @@ void unpack_a1975(TString fileName = "run_0003")
    // psaTask->SetInputBranch("AtRawEventFiltered");
    psaTask->SetOutputBranch("AtEventH");
 
-   // auto SCModel = std::make_unique<AtEDistortionModel>();
-   // SCModel->SetCorrectionMaps(zlutFile.Data(), radlutFile.Data(), tralutFile.Data());
-   // auto SCTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
-   // SCTask->SetInputBranchName("AtEventH");
+   auto SCModel = std::make_unique<AtEDistortionModel>();
+   SCModel->SetCorrectionMaps(zlutFile.Data(), radlutFile.Data(), tralutFile.Data());
+   auto SCTask = new AtSpaceChargeCorrectionTask(std::move(SCModel));
+   SCTask->SetInputBranch("AtEventH");
 
    AtPRAtask *praTask = new AtPRAtask();
-   // praTask->SetInputBranch("AtEventCorrected");
-   // praTask->SetOutputBranch("AtPatternEvent");
+   praTask->SetInputBranch("AtEventCorrected");
+   praTask->SetOutputBranch("AtPatternEvent");
    praTask->SetPersistence(kTRUE);
    // praTask->SetMaxNumHits(3000);
    // praTask->SetMinNumHits(100);
@@ -102,7 +102,7 @@ void unpack_a1975(TString fileName = "run_0003")
    run->AddTask(unpackTask);
    // run->AddTask(filterTask);
    run->AddTask(psaTask);
-   // run->AddTask(SCTask);
+   run->AddTask(SCTask);
    run->AddTask(praTask);
 
    std::cout << "***** Starting Init ******" << std::endl;

@@ -338,11 +338,11 @@ void C16_pp_ana()
                // if(zpos<500.0 || zpos>950)
                // continue;
 
-               if (theta * TMath::RadToDeg() < 10.0 || theta * TMath::RadToDeg() > 40.0)
-                  continue;
+               /* if (theta * TMath::RadToDeg() < 10.0 || theta * TMath::RadToDeg() > 40.0)
+                   continue;
 
-               if (ener * Am > 20.0 || ener * Am < 4.0)
-                  continue;
+                if (ener * Am > 20.0 || ener * Am < 4.0)
+                   continue;*/
 
                if (!cutg->IsInside(eloss, bro) && !cutC->IsInside(eloss, bro)) { // Selection of protons
 

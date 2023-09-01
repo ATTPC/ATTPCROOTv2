@@ -265,6 +265,79 @@ void plotFit_a1954_pd(std::string fileFolder = "data_56_68/")
    cutd->SetPoint(18, 1120.917, 1.425846);
    cutd->SetPoint(19, 1339.479, 1.393532);
 
+   TCutG *cuta = new TCutG("cuta", 13);
+   cuta->SetVarX("ELossvsBrhoZoom");
+   cuta->SetVarY("");
+   cuta->SetTitle("Graph");
+   cuta->SetFillStyle(1000);
+
+   // High low energy blob (tritium)
+   cuta->SetPoint(0, 194.5243, 1.957597);
+   cuta->SetPoint(1, 677.997, 1.767391);
+   cuta->SetPoint(2, 743.7756, 1.493971);
+   cuta->SetPoint(3, 722.3975, 1.226495);
+   cuta->SetPoint(4, 309.6368, 1.369149);
+   cuta->SetPoint(5, 248.7916, 1.470195);
+   cuta->SetPoint(6, 189.5909, 1.939765);
+   cuta->SetPoint(7, 194.5243, 1.957597);
+
+   // Lower low energy blob
+   /*cuta->SetPoint(0,285.0274,1.394147);
+   cuta->SetPoint(1,622.3779,1.194396);
+   cuta->SetPoint(2,1048.885,0.9033307);
+   cuta->SetPoint(3,1477.802,0.8063088);
+   cuta->SetPoint(4,1860.936,0.6750439);
+   cuta->SetPoint(5,1872.984,0.5266575);
+   cuta->SetPoint(6,1458.525,0.4810002);
+   cuta->SetPoint(7,1070.572,0.5437791);
+   cuta->SetPoint(8,668.1612,0.7321156);
+   cuta->SetPoint(9,335.63,0.9604024);
+   cuta->SetPoint(10,217.5573,1.148739);
+   cuta->SetPoint(11,277.7985,1.416976);
+   cuta->SetPoint(12,285.0274,1.394147);*/
+
+   // cut on dedxvsBrho for tritons
+   TCutG *cutt = new TCutG("cutt", 11);
+   cutt->SetVarX("dedxvsBrho");
+   cutt->SetVarY("");
+   cutt->SetTitle("Graph");
+   cutt->SetFillStyle(1000);
+   cutt->SetPoint(0, 19.6731, 1.91327);
+   cutt->SetPoint(1, 65.97763, 1.830931);
+   cutt->SetPoint(2, 101.4839, 1.598618);
+   cutt->SetPoint(3, 129.4862, 1.372186);
+   cutt->SetPoint(4, 127.29, 1.295728);
+   cutt->SetPoint(5, 83.54773, 1.378067);
+   cutt->SetPoint(6, 26.99398, 1.613321);
+   cutt->SetPoint(7, 11.07108, 1.728008);
+   cutt->SetPoint(8, 8.691791, 1.848575);
+   cutt->SetPoint(9, 20.77123, 1.91327);
+   cutt->SetPoint(10, 19.6731, 1.91327);
+
+   // cut on Kinematics
+   TCutG *cutk = new TCutG("cutk", 17);
+   cutk->SetVarX("Ang_Ener");
+   cutk->SetVarY("");
+   cutk->SetTitle("Graph");
+   cutk->SetFillStyle(1000);
+   cutk->SetPoint(0, 14.34066, 61.48415);
+   cutk->SetPoint(1, 22.52707, 46.36657);
+   cutk->SetPoint(2, 24.19467, 29.97743);
+   cutk->SetPoint(3, 21.71853, 23.05442);
+   cutk->SetPoint(4, 18.43386, 19.38099);
+   cutk->SetPoint(5, 13.93639, 16.27271);
+   cutk->SetPoint(6, 10.75279, 15.14242);
+   cutk->SetPoint(7, 9.691592, 23.19571);
+   cutk->SetPoint(8, 12.82466, 25.73885);
+   cutk->SetPoint(9, 15.55346, 31.81414);
+   cutk->SetPoint(10, 15.19973, 38.87843);
+   cutk->SetPoint(11, 14.03746, 45.66014);
+   cutk->SetPoint(12, 12.16773, 51.17029);
+   cutk->SetPoint(13, 11.81399, 55.26758);
+   cutk->SetPoint(14, 13.07733, 60.63644);
+   cutk->SetPoint(15, 14.18906, 61.48415);
+   cutk->SetPoint(16, 14.34066, 61.48415);
+
    // NB: Not used
    // Q-value calculation
    Double_t m_p = 1.007825 * 931.49401;
@@ -574,19 +647,25 @@ void plotFit_a1954_pd(std::string fileFolder = "data_56_68/")
                if (index != maxAIndex)
                   continue;
 
+               //  if((*eLossADC)[index]<1000)
+               //    continue;
+
                eventMultH->Fill(evMult);
                multvsnumpoints->Fill(evMult, (*trackPointsVec)[index]);
 
                Ang_Ener_PRA->Fill(APRA, EPRA);
                PhiPRAH->Fill(PhiPRA);
 
+               // if ((*EFitVec)[index] < 32 || (*EFitVec)[index] > 34)
+               // continue;
+
+               // if (cutk->IsInside(APRA, EPRA))// kinegate
+               // continue;
+
                // if((*lengthOrbZVec)[index]<30)
                // continue;
 
                // if((*brhoVec)[index]>0.8)
-               // continue;
-
-               // if((*eLossADC)[index]<1000)
                // continue;
 
                // if ((*AFitVec)[index] < 0 || (*AFitVec)[index] > 90)
@@ -603,6 +682,10 @@ void plotFit_a1954_pd(std::string fileFolder = "data_56_68/")
 
                if (!cutd->IsInside((*eLossADC)[index], (*brhoVec)[index])) // Proton gate
                   continue;
+
+               // if (!cutt->IsInside((*dEdxADC)[index], (*brhoVec)[index])) // particleID
+               // continue;
+
                /*if (!cutD->IsInside((*eLossADC)[index], (*brhoVec)[index])) // particleID
                   continue;*/
 
@@ -629,13 +712,13 @@ void plotFit_a1954_pd(std::string fileFolder = "data_56_68/")
                // if ((*POCAXtrVec)[index] > 2000.0)
                // continue;
 
-               if ((*ziniFitVec)[index] < 20.0 || (*ziniFitVec)[index] > 60.0)
-                  continue;
+               // if ((*ziniFitVec)[index] < 20.0 || (*ziniFitVec)[index] > 60.0)
+               //    continue;
 
                // if((*AFitVec)[index]<50 || (*AFitVec)[index]>70)
                // continue;
 
-               // if ((*EFitVec)[index] < 0 || (*EFitVec)[index] > 15)
+               // if ((*EFitVec)[index] < 30 || (*EFitVec)[index] > 40)
                // continue;
 
                /*     if ((*fChi2Vec)[index] / (*fNdfVec)[index] < 0.000)
@@ -1220,12 +1303,14 @@ void plotFit_a1954_pd(std::string fileFolder = "data_56_68/")
    ELossvsBrhoZoom->Draw("zcol");
    cutp->Draw("l");
    cutd->Draw("l");
+   cuta->Draw("l");
    cpid->cd(3);
    dedxvsBrho->Draw("zcol");
    cpid->cd(4);
    dedxvsBrhoZoom->Draw("zcol");
    cpid->cd(5);
    dedxvsBrhoCond->Draw("zcol");
+   cutt->Draw("l");
 
    TCanvas *c7 = new TCanvas();
    c7->Divide(1, 2);
@@ -1345,6 +1430,7 @@ void plotFit_a1954_pd(std::string fileFolder = "data_56_68/")
 
    TF1 *g1 = new TF1("m1", "gaus", -2.0, 2.0);
    TF1 *g2 = new TF1("m2", "gaus", 5.6, 6.4);
+   TF1 *g10 = new TF1("m10", "gaus", 6.0, 6.7);
    TF1 *g3 = new TF1("m3", "gaus", 6.4, 6.9);
    TF1 *g4 = new TF1("m4", "gaus", 6.8, 7.3);
    TF1 *g5 = new TF1("m5", "gaus", 7.3, 7.7);
@@ -1354,10 +1440,11 @@ void plotFit_a1954_pd(std::string fileFolder = "data_56_68/")
    TF1 *g9 = new TF1("m9", "gaus", 10.1, 11.0);
 
    TF1 *total_gaus =
-      new TF1("total_gaus", "gaus(0)+gaus(3)+gaus(6)+gaus(9)+gaus(12)+gaus(15)+gaus(18)+gaus(21)+gaus(24)", -2.0,
-              11.0); /* define combined function*/
+      new TF1("total_gaus", "gaus(0)+gaus(3)+gaus(6)+gaus(9)+gaus(12)+gaus(15)+gaus(18)+gaus(21)+gaus(24)+gaus(27)",
+              -2.0, 11.0); /* define combined function*/
    HQCorr->Fit(g1, "R");
    HQCorr->Fit(g2, "R+");
+   HQCorr->Fit(g10, "R+");
    HQCorr->Fit(g3, "R+");
    HQCorr->Fit(g4, "R+");
    HQCorr->Fit(g5, "R+");
@@ -1367,18 +1454,19 @@ void plotFit_a1954_pd(std::string fileFolder = "data_56_68/")
    HQCorr->Fit(g9, "R+");
    total_gaus->SetNpx(1000);
 
-   Double_t par[26]; /* parameter array */
+   Double_t par[29]; /* parameter array */
 
    /* get parameters from the fit, it first fits & takes the parameter from there */
    g1->GetParameters(&par[0]);
    g2->GetParameters(&par[3]);
-   g3->GetParameters(&par[6]);
-   g4->GetParameters(&par[9]);
-   g5->GetParameters(&par[12]);
-   g6->GetParameters(&par[15]);
-   g7->GetParameters(&par[18]);
-   g8->GetParameters(&par[21]);
-   g9->GetParameters(&par[24]);
+   g10->GetParameters(&par[6]);
+   g3->GetParameters(&par[9]);
+   g4->GetParameters(&par[12]);
+   g5->GetParameters(&par[15]);
+   g6->GetParameters(&par[18]);
+   g7->GetParameters(&par[21]);
+   g8->GetParameters(&par[24]);
+   g9->GetParameters(&par[27]);
 
    total_gaus->SetParameters(par);
    // HQval->Fit("total_gaus","","",-2.0,9.0); /*fitting gaussian curve on the histogram */
@@ -1397,46 +1485,52 @@ void plotFit_a1954_pd(std::string fileFolder = "data_56_68/")
    gfit2->SetParameter(2, par[5]);
    gfit2->SetLineColor(kBlue);
    gfit2->SetNpx(1000);
+   auto gfit10 = new TF1("gfit10", "gaus(0)", 5.0, 7.0);
+   gfit10->SetParameter(0, par[6]);
+   gfit10->SetParameter(1, par[7]);
+   gfit10->SetParameter(2, par[8]);
+   gfit10->SetLineColor(kBlue);
+   gfit10->SetNpx(1000);
    auto gfit3 = new TF1("gfit3", "gaus(0)", 5.0, 9.0);
-   gfit3->SetParameter(0, par[6]);
-   gfit3->SetParameter(1, par[7]);
-   gfit3->SetParameter(2, par[8]);
+   gfit3->SetParameter(0, par[9]);
+   gfit3->SetParameter(1, par[10]);
+   gfit3->SetParameter(2, par[11]);
    gfit3->SetLineColor(kBlue);
    gfit3->SetNpx(1000);
    auto gfit4 = new TF1("gfit4", "gaus(0)", 5.0, 9.0);
-   gfit4->SetParameter(0, par[9]);
-   gfit4->SetParameter(1, par[10]);
-   gfit4->SetParameter(2, par[11]);
+   gfit4->SetParameter(0, par[12]);
+   gfit4->SetParameter(1, par[13]);
+   gfit4->SetParameter(2, par[14]);
    gfit4->SetLineColor(kBlue);
    gfit4->SetNpx(1000);
    auto gfit5 = new TF1("gfit5", "gaus(0)", 5.0, 9.0);
-   gfit5->SetParameter(0, par[12]);
-   gfit5->SetParameter(1, par[13]);
-   gfit5->SetParameter(2, par[14]);
+   gfit5->SetParameter(0, par[15]);
+   gfit5->SetParameter(1, par[16]);
+   gfit5->SetParameter(2, par[17]);
    gfit5->SetLineColor(kBlue);
    gfit5->SetNpx(1000);
    auto gfit6 = new TF1("gfit6", "gaus(0)", 5.0, 9.0);
-   gfit6->SetParameter(0, par[15]);
-   gfit6->SetParameter(1, par[16]);
-   gfit6->SetParameter(2, par[17]);
+   gfit6->SetParameter(0, par[18]);
+   gfit6->SetParameter(1, par[19]);
+   gfit6->SetParameter(2, par[20]);
    gfit6->SetLineColor(kBlue);
    gfit6->SetNpx(1000);
    auto gfit7 = new TF1("gfit7", "gaus(0)", 8.0, 10.0);
-   gfit7->SetParameter(0, par[18]);
-   gfit7->SetParameter(1, par[19]);
-   gfit7->SetParameter(2, par[20]);
+   gfit7->SetParameter(0, par[21]);
+   gfit7->SetParameter(1, par[22]);
+   gfit7->SetParameter(2, par[23]);
    gfit7->SetLineColor(kBlue);
    gfit7->SetNpx(1000);
    auto gfit8 = new TF1("gfit8", "gaus(0)", 9.5, 10.5);
-   gfit8->SetParameter(0, par[21]);
-   gfit8->SetParameter(1, par[22]);
-   gfit8->SetParameter(2, par[23]);
+   gfit8->SetParameter(0, par[24]);
+   gfit8->SetParameter(1, par[25]);
+   gfit8->SetParameter(2, par[26]);
    gfit8->SetLineColor(kBlue);
    gfit8->SetNpx(1000);
    auto gfit9 = new TF1("gfit9", "gaus(0)", 10.0, 11.0);
-   gfit9->SetParameter(0, par[24]);
-   gfit9->SetParameter(1, par[25]);
-   gfit9->SetParameter(2, par[26]);
+   gfit9->SetParameter(0, par[27]);
+   gfit9->SetParameter(1, par[28]);
+   gfit9->SetParameter(2, par[29]);
    gfit9->SetLineColor(kBlue);
    gfit9->SetNpx(1000);
 
@@ -1451,6 +1545,7 @@ void plotFit_a1954_pd(std::string fileFolder = "data_56_68/")
    gfit7->Draw("same l");
    gfit8->Draw("same l");
    gfit9->Draw("same l");
+   gfit10->Draw("same l");
    // total_gaus->Draw("same l");
 
    // Test of kinematics

@@ -18,7 +18,7 @@ Double_t GetNPeaksHRS(std::vector<Int_t> *timeMax, std::vector<Float_t> *adcMax,
    return nfound;
 }
 
-void C16_dd_ana_FRIB(TString fileName = "run_0011_FRIB")
+void C16_dd_ana_FRIB(TString fileName = "run_0106_FRIB")
 {
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
 
@@ -42,7 +42,7 @@ void C16_dd_ana_FRIB(TString fileName = "run_0011_FRIB")
    TString outputName = files.at(0) + "_sorted" + filesuffix;
    TFile *outfile = TFile::Open(outputName.Data(), "RECREATE");
    TTree *outtree = new TTree("FRIB_output_tree", "FRIB_output_tree");
-   outtree->Branch("timestamp", &timestamp, "timestamp/g");
+   outtree->Branch("timestamp", &timestamp, "timestamp/l");
    outtree->Branch("fileNames", &fileNames, "fileNames/C");
    outtree->Branch("eventName", &eventName);
    outtree->Branch("mult", &mult, "mult/i");
