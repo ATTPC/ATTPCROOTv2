@@ -11,8 +11,9 @@ struct auxchannel {
    uint8_t channel;
 };
 
-void run_unpack_adam(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_0250.h5",
-                     TString parameterFile = "ATTPC.e15250_sim.par", TString mappath = "")
+void run_unpack_adam(
+   std::string dataFile = "/media/yassid/bdcb3c81-adb9-4a9d-9172-0bd5935c1dd5/data/e15250_attpc/h5/run_0255.h5",
+   TString parameterFile = "ATTPC.e15250_sim.par", TString mappath = "")
 {
 
    // -----   Timer   --------------------------------------------------------
@@ -32,7 +33,7 @@ void run_unpack_adam(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_0
 
    // TString inputFile   = dataDir + name + ".digi.root";
    // TString outputFile  = dataDir + "output.root";
-   TString outputFile = "output.root";
+   TString outputFile = "/media/yassid/bdcb3c81-adb9-4a9d-9172-0bd5935c1dd5/data/e15250_attpc/root/output.root";
    // TString mcParFile   = dataDir + name + ".params.root";
    TString loggerFile = dataDir + "ATTPCLog.log";
    TString digiParFile = dir + "/parameters/" + parameterFile;
@@ -91,14 +92,14 @@ void run_unpack_adam(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_0
    unpacker->SetBaseLineSubtraction(true);
 
    auto unpackTask = new AtUnpackTask(std::move(unpacker));
-   unpackTask->SetPersistence(true);
+   unpackTask->SetPersistence(false);
 
    auto threshold = 45;
 
    auto *filter = new AtFilterFFT();
    filter->SetLowPass(6, 100);
    filter->DumpFactors();
-   filter->SetSaveTransform(true);
+   filter->SetSaveTransform(false);
 
    AtFilterTask *filterTask = new AtFilterTask(filter);
    filterTask->SetPersistence(kTRUE);
@@ -109,22 +110,27 @@ void run_unpack_adam(std::string dataFile = "/mnt/analysis/e15250_attpc/h5/run_0
 
    AtPSAtask *psaTask = new AtPSAtask(psa->Clone());
    // psaTask->SetInputBranch("AtRawEventFiltered");
-   psaTask->SetPersistence(true);
+   psaTask->SetPersistence(false);
 
    AtPSAtask *psaTaskFilter = new AtPSAtask(psa->Clone());
    psaTaskFilter->SetInputBranch("AtRawEventFiltered");
    psaTaskFilter->SetOutputBranch("AtEventFiltered");
    psaTaskFilter->SetPersistence(true);
 
+   auto *wHDF = new AtHDF5WriteTask(
+      "/media/yassid/bdcb3c81-adb9-4a9d-9172-0bd5935c1dd5/data/e15250_attpc/root/outputOther.h5", "AtEventFiltered");
+   wHDF->SetUseEventNum(true);
+
    run->AddTask(unpackTask);
    run->AddTask(filterTask);
    run->AddTask(psaTask);
    run->AddTask(psaTaskFilter);
+   run->AddTask(wHDF);
 
    run->Init();
 
    auto numEvents = unpackTask->GetNumEvents();
-   numEvents = 10;
+   // numEvents = 100;
 
    run->Run(0, numEvents);
    // run->Run(0, 1000);

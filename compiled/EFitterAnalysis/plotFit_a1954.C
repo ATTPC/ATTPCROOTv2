@@ -63,27 +63,28 @@ void plotFit_a1954(std::string fileFolder = "data_56_68/")
    gDWBA2->SetLineWidth(3);
    gDWBA2->SetLineColor(kRed);
 
-   /* std::ifstream dwbaFile("kinematics_a1954/DWBA.Xsec.txt");
+   std::ifstream dwbaFile("kinematics_a1954/C14_pp_elastic_DWBA.txt");
 
-    std::string linebuff;
-    //Read header and zero degree
-    for(auto i=0;i<5;++i)
+   std::string linebuff;
+   // Read header and zero degree
+   // for(auto i=0;i<5;++i)
+   //  std::getline(dwbaFile, linebuff);
+
+   while (!dwbaFile.eof()) {
       std::getline(dwbaFile, linebuff);
+      std::istringstream iss(linebuff);
+      // iss >> angle >> sigmaDWBA0 >> sigmaDWBA1 >> sigmaDWBA2;
+      iss >> angle >> sigmaDWBA0;
+      gDWBA0->SetPoint(gDWBA0->GetN(), angle, sigmaDWBA0);
 
-    while (!dwbaFile.eof()) {
-       std::getline(dwbaFile, linebuff);
-       std::istringstream iss(linebuff);
-       iss >> angle >> sigmaDWBA0 >> sigmaDWBA1 >> sigmaDWBA2;
-       gDWBA0->SetPoint(gDWBA0->GetN(), angle, sigmaDWBA0);
-
-       gDWBA1->SetPoint(gDWBA1->GetN(), angle, sigmaDWBA1);
-       gDWBA2->SetPoint(gDWBA2->GetN(), angle, sigmaDWBA2);
+      // gDWBA1->SetPoint(gDWBA1->GetN(), angle, sigmaDWBA1);
+      // gDWBA2->SetPoint(gDWBA2->GetN(), angle, sigmaDWBA2);
     }
 
     dwbaFile.close();
 
     // Alt analysis
-    std::ifstream altFile("kinematics_a1954/combe10dd_diffxs.txt");
+    /*std::ifstream altFile("kinematics_a1954/combe10dd_diffxs.txt");
 
     TGraphErrors *gAltAnalysis = new TGraphErrors();
     gAltAnalysis->SetMarkerStyle(20);
@@ -99,242 +100,242 @@ void plotFit_a1954(std::string fileFolder = "data_56_68/")
 
     altFile.close();*/
 
-   // Data histograms
-   TH2F *Ang_Ener = new TH2F("Ang_Ener", "Ang_Ener", 720, 0, 179, 1000, 0, 100.0);
-   TH2F *Ang_Ener_PRAC = new TH2F("Ang_Ener_PRAC", "Ang_Ener_PRAC", 1000, 0, 100, 1000, 0, 10.0);
-   TH1F *HQval = new TH1F("HQval", "HQval", 600, -5, 55);
-   TH1F *HQvalPRA = new TH1F("HQvalPRA", "HQvalPRA", 600, -5, 55);
-   TH1F *HIC = new TH1F("HIC", "HIC", 1000, 0, 4095);
+    // Data histograms
+    TH2F *Ang_Ener = new TH2F("Ang_Ener", "Ang_Ener", 720, 0, 179, 1000, 0, 100.0);
+    TH2F *Ang_Ener_PRAC = new TH2F("Ang_Ener_PRAC", "Ang_Ener_PRAC", 1000, 0, 100, 1000, 0, 10.0);
+    TH1F *HQval = new TH1F("HQval", "HQval", 600, -5, 55);
+    TH1F *HQvalPRA = new TH1F("HQvalPRA", "HQvalPRA", 600, -5, 55);
+    TH1F *HIC = new TH1F("HIC", "HIC", 1000, 0, 4095);
 
-   TH2F *Ang_Ener_Xtr = new TH2F("Ang_Ener_Xtr", "Ang_Ener_Xtr", 720, 0, 179, 1000, 0, 100.0);
-   TH1F *HQval_Xtr = new TH1F("HQval_Xtr", "HQval_Xtr", 600, -5, 55);
-   TH1F *HQCorr = new TH1F("HQCorr", "HQCorr", 600, -5, 55);
-   TH1F *HQCorrArray[10];
+    TH2F *Ang_Ener_Xtr = new TH2F("Ang_Ener_Xtr", "Ang_Ener_Xtr", 720, 0, 179, 1000, 0, 100.0);
+    TH1F *HQval_Xtr = new TH1F("HQval_Xtr", "HQval_Xtr", 600, -5, 55);
+    TH1F *HQCorr = new TH1F("HQCorr", "HQCorr", 600, -5, 55);
+    TH1F *HQCorrArray[10];
 
-   TH1F *HQval_Xtr_recalc = new TH1F("HQval_Xtr_recalc", "HQval_Xtr_recalc", 1200, -5, 55);
-   TH1F *HQval_Xtr_recalc_cutps = new TH1F("HQval_Xtr_recalc_cutps", "HQval_Xtr_recalc_cutps", 1200, -5, 55);
+    TH1F *HQval_Xtr_recalc = new TH1F("HQval_Xtr_recalc", "HQval_Xtr_recalc", 1200, -5, 55);
+    TH1F *HQval_Xtr_recalc_cutps = new TH1F("HQval_Xtr_recalc_cutps", "HQval_Xtr_recalc_cutps", 1200, -5, 55);
 
-   TH2F *QvsAng = new TH2F("QvsAng", "QvsAng", 1000, -5, 25, 720, 0, 179);
-   TH2F *QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 50, 200, -100, 100);
-   TH2F *QcorrvsZpos = new TH2F("QcorrvsZpos", "QcorrvsZpos", 1000, -10, 10, 200, -100, 100);
-   TH2F *ZposvsAng = new TH2F("ZposvsAng", "ZposvsAng", 200, -100, 100, 720, 0, 179);
-   TH2F *QvsXpos = new TH2F("QvsXpos", "QvsXpos", 1000, -10, 10, 100, -10, 10);
+    TH2F *QvsAng = new TH2F("QvsAng", "QvsAng", 1000, -5, 25, 720, 0, 179);
+    TH2F *QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 50, 200, -100, 100);
+    TH2F *QcorrvsZpos = new TH2F("QcorrvsZpos", "QcorrvsZpos", 1000, -10, 10, 200, -100, 100);
+    TH2F *ZposvsAng = new TH2F("ZposvsAng", "ZposvsAng", 200, -100, 100, 720, 0, 179);
+    TH2F *QvsXpos = new TH2F("QvsXpos", "QvsXpos", 1000, -10, 10, 100, -10, 10);
 
-   TH2F *QvsEb = new TH2F("QvsEb", "QvsEb", 1000, -5, 15, 300, 0, 300);
+    TH2F *QvsEb = new TH2F("QvsEb", "QvsEb", 1000, -5, 15, 300, 0, 300);
 
-   TH2F *QvsTrackLengthH = new TH2F("QvsTrackLengthH", "QvsTrackLengthH", 1000, -10, 50, 1000, 0, 1000);
+    TH2F *QvsTrackLengthH = new TH2F("QvsTrackLengthH", "QvsTrackLengthH", 1000, -10, 50, 1000, 0, 1000);
 
-   TH2F *QvsAng_Xtr = new TH2F("QvsAng_Xtr", "QvsAng_Xtr", 1000, -10, 10, 720, 0, 179);
+    TH2F *QvsAng_Xtr = new TH2F("QvsAng_Xtr", "QvsAng_Xtr", 1000, -10, 10, 720, 0, 179);
 
-   TH1F *hxpos_fit = new TH1F("hxpos_fit", "hxpos_fit", 100, -10, 10);
-   TH1F *hypos_fit = new TH1F("hypos_fit", "hypos_fit", 100, -10, 10);
-   TH1F *hzpos_fit = new TH1F("hzpos_fit", "hzpos_fit", 200, -100, 100);
+    TH1F *hxpos_fit = new TH1F("hxpos_fit", "hxpos_fit", 100, -10, 10);
+    TH1F *hypos_fit = new TH1F("hypos_fit", "hypos_fit", 100, -10, 10);
+    TH1F *hzpos_fit = new TH1F("hzpos_fit", "hzpos_fit", 200, -100, 100);
 
-   TH1F *hxpos_fit_Xtr = new TH1F("hxpos_fit_Xtr", "hxpos_fit_Xtr", 100, -10, 10);
-   TH1F *hypos_fit_Xtr = new TH1F("hypos_fit_Xtr", "hypos_fit_Xtr", 100, -10, 10);
-   TH1F *hzpos_fit_Xtr = new TH1F("hzpos_fit_Xtr", "hzpos_fit_Xtr", 300, -100, 200);
+    TH1F *hxpos_fit_Xtr = new TH1F("hxpos_fit_Xtr", "hxpos_fit_Xtr", 100, -10, 10);
+    TH1F *hypos_fit_Xtr = new TH1F("hypos_fit_Xtr", "hypos_fit_Xtr", 100, -10, 10);
+    TH1F *hzpos_fit_Xtr = new TH1F("hzpos_fit_Xtr", "hzpos_fit_Xtr", 300, -100, 200);
 
-   // PRA
-   TH2F *Ang_Ener_PRA = new TH2F("Ang_Ener_PRA", "Ang_Ener_PRA", 720, 0, 179, 1000, 0, 100.0);
-   TH2F *Ang_Ener_PRA_Cond = new TH2F("Ang_Ener_PRA_Cond", "Ang_Ener_PRA_Cond", 720, 0, 179, 1000, 0, 100.0);
-   TH1F *PhiPRAH = new TH1F("PhiPRAH", "PhiPRAH", 720, -179, 179);
+    // PRA
+    TH2F *Ang_Ener_PRA = new TH2F("Ang_Ener_PRA", "Ang_Ener_PRA", 720, 0, 179, 1000, 0, 100.0);
+    TH2F *Ang_Ener_PRA_Cond = new TH2F("Ang_Ener_PRA_Cond", "Ang_Ener_PRA_Cond", 720, 0, 179, 1000, 0, 100.0);
+    TH1F *PhiPRAH = new TH1F("PhiPRAH", "PhiPRAH", 720, -179, 179);
 
-   // Correlations
-   TH2F *Ang_AngPRA = new TH2F("Ang_AngPRA", "Ang_AngPRA", 720, 0, 179, 720, 0, 179);
-   TH2F *Phi_PhiPRA = new TH2F("Phi_PhiPRA", "Phi_PhiPRA", 720, -179, 179, 720, -179, 179);
-   TH2F *zfit_zPRA = new TH2F("zfit_zPRA", "zfit_zPRA", 1000, -100, 100, 1000, -100, 100);
+    // Correlations
+    TH2F *Ang_AngPRA = new TH2F("Ang_AngPRA", "Ang_AngPRA", 720, 0, 179, 720, 0, 179);
+    TH2F *Phi_PhiPRA = new TH2F("Phi_PhiPRA", "Phi_PhiPRA", 720, -179, 179, 720, -179, 179);
+    TH2F *zfit_zPRA = new TH2F("zfit_zPRA", "zfit_zPRA", 1000, -100, 100, 1000, -100, 100);
 
-   TH2F *Ang_Phi = new TH2F("Ang_Phi", "Ang_Phi", 720, 0, 179, 720, -179, 179);
+    TH2F *Ang_Phi = new TH2F("Ang_Phi", "Ang_Phi", 720, 0, 179, 720, -179, 179);
 
-   TH2F *x_Phi = new TH2F("x_Phi", "x_Phi", 1000, -10, 10, 720, -179, 179);
-   TH2F *y_Phi = new TH2F("y_Phi", "y_Phi", 1000, -10, 10, 720, -179, 179);
+    TH2F *x_Phi = new TH2F("x_Phi", "x_Phi", 1000, -10, 10, 720, -179, 179);
+    TH2F *y_Phi = new TH2F("y_Phi", "y_Phi", 1000, -10, 10, 720, -179, 179);
 
-   TH2F *x_y_Fit = new TH2F("x_y_Fit", "x_y_Fit", 1000, -10, 10, 1000, -10, 10);
+    TH2F *x_y_Fit = new TH2F("x_y_Fit", "x_y_Fit", 1000, -10, 10, 1000, -10, 10);
 
-   TH2F *x_y_Xtr = new TH2F("x_y_Xtr", "x_y_Xtr", 1000, -10, 10, 1000, -10, 10);
+    TH2F *x_y_Xtr = new TH2F("x_y_Xtr", "x_y_Xtr", 1000, -10, 10, 1000, -10, 10);
 
-   TH1F *POCAXtrH = new TH1F("POCAXtrH", "POCAXtrH", 1000, -10, 10);
+    TH1F *POCAXtrH = new TH1F("POCAXtrH", "POCAXtrH", 1000, -10, 10);
 
-   TH1F *tracklengthH = new TH1F("tracklengthH", "tracklengthH", 1000, 0, 1000);
+    TH1F *tracklengthH = new TH1F("tracklengthH", "tracklengthH", 1000, 0, 1000);
 
-   TH2F *ZposvsEvH = new TH2F("ZposvsEvH", "ZposvsEvH", 200, -100, 100, 1000, 0, 10000);
+    TH2F *ZposvsEvH = new TH2F("ZposvsEvH", "ZposvsEvH", 200, -100, 100, 1000, 0, 10000);
 
-   TH2F *ZposvsRad = new TH2F("ZposvsRad", "ZposvsRad", 200, -100, 100, 1000, 0, 10);
+    TH2F *ZposvsRad = new TH2F("ZposvsRad", "ZposvsRad", 200, -100, 100, 1000, 0, 10);
 
-   TH1F *fChi2H = new TH1F("fChi2H", "fChi2H", 100, -10, 10);
-   TH1F *bChi2H = new TH1F("bChi2H", "bChi2H", 100, -10, 10);
-   TH1F *fNdfH = new TH1F("fNdfH", "fNdfH", 100, -10, 10);
-   TH1F *bNdfH = new TH1F("bNdfH", "fbNdfH", 100, -10, 10);
+    TH1F *fChi2H = new TH1F("fChi2H", "fChi2H", 100, -10, 10);
+    TH1F *bChi2H = new TH1F("bChi2H", "bChi2H", 100, -10, 10);
+    TH1F *fNdfH = new TH1F("fNdfH", "fNdfH", 100, -10, 10);
+    TH1F *bNdfH = new TH1F("bNdfH", "fbNdfH", 100, -10, 10);
 
-   TH1F *fChi2NH = new TH1F("fChi2NH", "fChi2NH", 1000, 0, 10);
+    TH1F *fChi2NH = new TH1F("fChi2NH", "fChi2NH", 1000, 0, 10);
 
-   TH2F *QvsChi2 = new TH2F("QvsChi2", "QvsChi2", 1000, -10, 10, 1000, 0, 0.1);
+    TH2F *QvsChi2 = new TH2F("QvsChi2", "QvsChi2", 1000, -10, 10, 1000, 0, 0.1);
 
-   TH1I *ICMultH = new TH1I("ICMultH", "ICMultH", 100, 0, 100);
-   TH1I *ICTimeH = new TH1I("ICTimeH", "ICTimeH", 512, 0, 511);
-   TH1I *ICQH = new TH1I("ICQH", "ICQH", 1000, 0, 20000);
-   TH1I *ICAH = new TH1I("ICAH", "ICAH", 1000, 0, 4096);
+    TH1I *ICMultH = new TH1I("ICMultH", "ICMultH", 100, 0, 100);
+    TH1I *ICTimeH = new TH1I("ICTimeH", "ICTimeH", 512, 0, 511);
+    TH1I *ICQH = new TH1I("ICQH", "ICQH", 1000, 0, 20000);
+    TH1I *ICAH = new TH1I("ICAH", "ICAH", 1000, 0, 4096);
 
-   TH1I *particleQH = new TH1I("particleQH", "particleQH", 21, -10.5, 10.5);
+    TH1I *particleQH = new TH1I("particleQH", "particleQH", 21, -10.5, 10.5);
 
-   TH1I *eventMultH = new TH1I("eventMultH", "eventMultH", 10, 0, 10);
+    TH1I *eventMultH = new TH1I("eventMultH", "eventMultH", 10, 0, 10);
 
-   TH2F *ICEvsTime = new TH2F("ICEvsTime", "ICEvsTime", 1000, 0, 4095, 512, 0, 511);
+    TH2F *ICEvsTime = new TH2F("ICEvsTime", "ICEvsTime", 1000, 0, 4095, 512, 0, 511);
 
-   TH1F *ExZ[10];
+    TH1F *ExZ[10];
 
-   TH2F *ELossvsBrho = new TH2F("ELossvsBrho", "ELossvsBrho", 4000, 0, 4000, 1000, 0, 3);
-   TH2F *ELossvsBrhoZoom = new TH2F("ELossvsBrhoZoom", "ELossvsBrhoZoom", 4000, 0, 20000, 1000, 0, 3);
-   TH2F *dedxvsBrho = new TH2F("dedxvsBrho", "dedxvsBrho", 4000, 0, 10000, 1000, 0, 3);
-   TH2F *dedxvsBrhoCond = new TH2F("dedxvsBrhoCond", "dedxvsBrhoCond", 4000, 0, 10000, 1000, 0, 3);
-   TH2F *dedxvsBrhoZoom = new TH2F("dedxvsBrhoZoom", "dedxvsBrhoZoom", 4000, 0, 1000, 1000, 0, 3);
+    TH2F *ELossvsBrho = new TH2F("ELossvsBrho", "ELossvsBrho", 4000, 0, 4000, 1000, 0, 3);
+    TH2F *ELossvsBrhoZoom = new TH2F("ELossvsBrhoZoom", "ELossvsBrhoZoom", 4000, 0, 20000, 1000, 0, 3);
+    TH2F *dedxvsBrho = new TH2F("dedxvsBrho", "dedxvsBrho", 4000, 0, 10000, 1000, 0, 3);
+    TH2F *dedxvsBrhoCond = new TH2F("dedxvsBrhoCond", "dedxvsBrhoCond", 4000, 0, 10000, 1000, 0, 3);
+    TH2F *dedxvsBrhoZoom = new TH2F("dedxvsBrhoZoom", "dedxvsBrhoZoom", 4000, 0, 1000, 1000, 0, 3);
 
-   TH2F *multvsnumpoints = new TH2F("multvsnumpoints", "multvsnumpoints", 10, 0, 10, 500, 0, 500);
+    TH2F *multvsnumpoints = new TH2F("multvsnumpoints", "multvsnumpoints", 10, 0, 10, 500, 0, 500);
 
-   for (auto iHist = 0; iHist < 10; ++iHist)
-      ExZ[iHist] = new TH1F(Form("ExZ[%i]", iHist), Form("ExZ[%i]", iHist), 1000, -2, 18);
+    for (auto iHist = 0; iHist < 10; ++iHist)
+       ExZ[iHist] = new TH1F(Form("ExZ[%i]", iHist), Form("ExZ[%i]", iHist), 1000, -2, 18);
 
-   for (auto iHist = 0; iHist < 10; ++iHist)
-      HQCorrArray[iHist] = new TH1F(Form("HQCorrArray[%i]", iHist), Form("HQCorrArray[%i]", iHist), 600, -5, 55);
+    for (auto iHist = 0; iHist < 10; ++iHist)
+       HQCorrArray[iHist] = new TH1F(Form("HQCorrArray[%i]", iHist), Form("HQCorrArray[%i]", iHist), 600, -5, 55);
 
-   TH2F *QvsEvent = new TH2F("QvsEvent", "QvsEvent", 1000, -10, 10, 1000, 0, 1000);
-   TH2F *QvsMult = new TH2F("QvsMult", "QvsMult", 1000, -10, 10, 10, 0, 10);
+    TH2F *QvsEvent = new TH2F("QvsEvent", "QvsEvent", 1000, -10, 10, 1000, 0, 1000);
+    TH2F *QvsMult = new TH2F("QvsMult", "QvsMult", 1000, -10, 10, 10, 0, 10);
 
-   TH2F *fOrbZvsfOrbLength = new TH2F("fOrbZvsfOrbLength", "fOrbZvsfOrbLength", 500, -250, 250, 500, 0, 500);
-   TH2F *fOrbZvsEFit = new TH2F("fOrbZvsEFit", "fOrbZvsEFit", 1000, 0, 200, 1000, 0, 100);
-   TH2F *fOrbLengthvsEFit = new TH2F("fOrbLengthvsEFit", "fOrbLengthvsEFit", 500, 0, 500, 1000, 0, 100);
-   TH1F *PhiOrbZH = new TH1F("PhiOrbZH", "PhiOrbZH", 1000, 0, 100);
-   TH2F *fOrbZvsEx = new TH2F("fOrbZvsEx", "fOrbZvsEx", 200, 0, 200, 100, -10, 10);
-   TH2F *fOrbZvsZ = new TH2F("fOrbZvsZ", "fOrbZvsZ", 1000, -200, 200, 1000, -200, 200);
-   TH1F *HQCorrOrbZ = new TH1F("HQCorrOrbZ", "HQCorrOrbZ", 600, -5, 55);
-   TH2F *fOrbZvsAFit = new TH2F("fOrbZvsAFit", "fOrbZvsAFit", 1000, 0, 200, 720, 0, 180);
-   TH2F *fOrbZvsMomLoss = new TH2F("fOrbZvsMomLoss", "fOrbZvsMomLoss", 1000, 0, 200, 100, 0, 10);
-   TH2F *fOrbLengthvsMomLoss = new TH2F("fOrbLengthvsMomLoss", "fOrbLengthvsMomLoss", 500, 0, 500, 100, 0, 10);
+    TH2F *fOrbZvsfOrbLength = new TH2F("fOrbZvsfOrbLength", "fOrbZvsfOrbLength", 500, -250, 250, 500, 0, 500);
+    TH2F *fOrbZvsEFit = new TH2F("fOrbZvsEFit", "fOrbZvsEFit", 1000, 0, 200, 1000, 0, 100);
+    TH2F *fOrbLengthvsEFit = new TH2F("fOrbLengthvsEFit", "fOrbLengthvsEFit", 500, 0, 500, 1000, 0, 100);
+    TH1F *PhiOrbZH = new TH1F("PhiOrbZH", "PhiOrbZH", 1000, 0, 100);
+    TH2F *fOrbZvsEx = new TH2F("fOrbZvsEx", "fOrbZvsEx", 200, 0, 200, 100, -10, 10);
+    TH2F *fOrbZvsZ = new TH2F("fOrbZvsZ", "fOrbZvsZ", 1000, -200, 200, 1000, -200, 200);
+    TH1F *HQCorrOrbZ = new TH1F("HQCorrOrbZ", "HQCorrOrbZ", 600, -5, 55);
+    TH2F *fOrbZvsAFit = new TH2F("fOrbZvsAFit", "fOrbZvsAFit", 1000, 0, 200, 720, 0, 180);
+    TH2F *fOrbZvsMomLoss = new TH2F("fOrbZvsMomLoss", "fOrbZvsMomLoss", 1000, 0, 200, 100, 0, 10);
+    TH2F *fOrbLengthvsMomLoss = new TH2F("fOrbLengthvsMomLoss", "fOrbLengthvsMomLoss", 500, 0, 500, 100, 0, 10);
 
-   // Binary
-   TH2F *hARecvsASca = new TH2F("hARecvsASca", "hARecvsASca", 1000, 0, 180, 1000, 0, 180);
+    // Binary
+    TH2F *hARecvsASca = new TH2F("hARecvsASca", "hARecvsASca", 1000, 0, 180, 1000, 0, 180);
 
-   // Cut 14C proton gate
-   TCutG *cutp = new TCutG("cutp", 18);
-   cutp->SetVarX("ELossvsBrhoZoom");
-   cutp->SetVarY("");
-   cutp->SetTitle("Graph");
-   cutp->SetFillStyle(1000);
-   cutp->SetPoint(0, 181.1004, 1.092132);
-   cutp->SetPoint(1, 1011.636, 0.556248);
-   cutp->SetPoint(2, 2235.584, 0.4222769);
-   cutp->SetPoint(3, 4399.348, 0.3329628);
-   cutp->SetPoint(4, 9207.713, 0.1900603);
-   cutp->SetPoint(5, 11917.88, 0.1811289);
-   cutp->SetPoint(6, 16070.56, 0.1543347);
-   cutp->SetPoint(7, 19130.43, 0.1543347);
-   cutp->SetPoint(8, 19829.83, 0.1543347);
-   cutp->SetPoint(9, 19960.96, 0.09181484);
-   cutp->SetPoint(10, 19807.97, 0.002500774);
-   cutp->SetPoint(11, 7109.517, 0.0382264);
-   cutp->SetPoint(12, 2694.564, 0.06502062);
-   cutp->SetPoint(13, 530.7996, 0.2257859);
-   cutp->SetPoint(14, 49.96314, 0.6455621);
-   cutp->SetPoint(15, 28.10694, 0.8509844);
-   cutp->SetPoint(16, 115.5318, 1.07427);
-   cutp->SetPoint(17, 181.1004, 1.092132);
+    // Cut 14C proton gate
+    TCutG *cutp = new TCutG("cutp", 18);
+    cutp->SetVarX("ELossvsBrhoZoom");
+    cutp->SetVarY("");
+    cutp->SetTitle("Graph");
+    cutp->SetFillStyle(1000);
+    cutp->SetPoint(0, 181.1004, 1.092132);
+    cutp->SetPoint(1, 1011.636, 0.556248);
+    cutp->SetPoint(2, 2235.584, 0.4222769);
+    cutp->SetPoint(3, 4399.348, 0.3329628);
+    cutp->SetPoint(4, 9207.713, 0.1900603);
+    cutp->SetPoint(5, 11917.88, 0.1811289);
+    cutp->SetPoint(6, 16070.56, 0.1543347);
+    cutp->SetPoint(7, 19130.43, 0.1543347);
+    cutp->SetPoint(8, 19829.83, 0.1543347);
+    cutp->SetPoint(9, 19960.96, 0.09181484);
+    cutp->SetPoint(10, 19807.97, 0.002500774);
+    cutp->SetPoint(11, 7109.517, 0.0382264);
+    cutp->SetPoint(12, 2694.564, 0.06502062);
+    cutp->SetPoint(13, 530.7996, 0.2257859);
+    cutp->SetPoint(14, 49.96314, 0.6455621);
+    cutp->SetPoint(15, 28.10694, 0.8509844);
+    cutp->SetPoint(16, 115.5318, 1.07427);
+    cutp->SetPoint(17, 181.1004, 1.092132);
 
-   // NB: Not used
-   // Q-value calculation
-   Double_t m_p = 1.007825 * 931.49401;
-   Double_t m_d = 2.0135532 * 931.49401;
-   Double_t m_t = 3.016049281 * 931.49401;
-   Double_t m_He3 = 3.016029 * 931.49401;
-   Double_t m_Be10 = 10.013533818 * 931.49401;
-   Double_t m_Be11 = 11.021657749 * 931.49401;
-   Double_t m_Li9 = 9.026790 * 931.49401;
-   Double_t m_beam = m_Be10;
-   Float_t aMass = 4.00260325415;
-   Float_t O16Mass = 15.99491461956;
-   Double_t m_C14 = 14.003242 * 931.49401;
-   Double_t m_C13 = 13.00335484 * 931.49401;
-   Double_t m_C12 = 12.00 * 931.49401;
+    // NB: Not used
+    // Q-value calculation
+    Double_t m_p = 1.007825 * 931.49401;
+    Double_t m_d = 2.0135532 * 931.49401;
+    Double_t m_t = 3.016049281 * 931.49401;
+    Double_t m_He3 = 3.016029 * 931.49401;
+    Double_t m_Be10 = 10.013533818 * 931.49401;
+    Double_t m_Be11 = 11.021657749 * 931.49401;
+    Double_t m_Li9 = 9.026790 * 931.49401;
+    Double_t m_beam = m_Be10;
+    Float_t aMass = 4.00260325415;
+    Float_t O16Mass = 15.99491461956;
+    Double_t m_C14 = 14.003242 * 931.49401;
+    Double_t m_C13 = 13.00335484 * 931.49401;
+    Double_t m_C12 = 12.00 * 931.49401;
 
-   Double_t m_a = 4.00260325415 * 931.49401;
-   Double_t m_O16 = 15.99491461956 * 931.49401;
+    Double_t m_a = 4.00260325415 * 931.49401;
+    Double_t m_O16 = 15.99491461956 * 931.49401;
 
-   Double_t Ebeam_buff = 162.0; // 169.5; // 167.5;
-   Double_t m_b;
-   Double_t m_B;
+    Double_t Ebeam_buff = 162.0; // 169.5; // 167.5;
+    Double_t m_b;
+    Double_t m_B;
 
-   m_b = m_p;
-   m_B = m_C14;
+    m_b = m_p;
+    m_B = m_C14;
 
-   // Differential cross sections
-   Double_t sigmaLab0[360] = {0.0};
-   Double_t sigmaCM0[360] = {0.0};
-   TGraphErrors *gsigmaLab0 = new TGraphErrors();
-   gsigmaLab0->SetMarkerStyle(20);
-   gsigmaLab0->SetMarkerSize(1.5);
-   TGraphErrors *gsigmaCM0 = new TGraphErrors();
-   gsigmaCM0->SetMarkerStyle(20);
-   gsigmaCM0->SetMarkerSize(1.5);
+    // Differential cross sections
+    Double_t sigmaLab0[360] = {0.0};
+    Double_t sigmaCM0[360] = {0.0};
+    /*TGraphErrors *gsigmaLab0 = new TGraphErrors();
+    gsigmaLab0->SetMarkerStyle(20);
+    gsigmaLab0->SetMarkerSize(1.5);
+    TGraphErrors *gsigmaCM0 = new TGraphErrors();
+    gsigmaCM0->SetMarkerStyle(20);
+    gsigmaCM0->SetMarkerSize(1.5);*/
 
-   Double_t sigmaCM0Corr[360];
-   std::fill_n(sigmaCM0Corr, 360, 1.0);
+    Double_t sigmaCM0Corr[360];
+    std::fill_n(sigmaCM0Corr, 360, 1.0);
 
-   Double_t sigmaLab1[360] = {0.0};
-   Double_t sigmaCM1[360] = {0.0};
-   TGraphErrors *gsigmaLab1 = new TGraphErrors();
-   gsigmaLab1->SetMarkerStyle(21);
-   gsigmaLab1->SetMarkerSize(1.5);
-   gsigmaLab1->SetMarkerColor(kRed);
-   TGraphErrors *gsigmaCM1 = new TGraphErrors();
-   gsigmaCM1->SetMarkerStyle(21);
-   gsigmaCM1->SetMarkerSize(1.5);
-   gsigmaCM1->SetMarkerColor(kRed);
+    Double_t sigmaLab1[360] = {0.0};
+    Double_t sigmaCM1[360] = {0.0};
+    TGraphErrors *gsigmaLab1 = new TGraphErrors();
+    gsigmaLab1->SetMarkerStyle(21);
+    gsigmaLab1->SetMarkerSize(1.5);
+    gsigmaLab1->SetMarkerColor(kRed);
+    TGraphErrors *gsigmaCM1 = new TGraphErrors();
+    gsigmaCM1->SetMarkerStyle(21);
+    gsigmaCM1->SetMarkerSize(1.5);
+    gsigmaCM1->SetMarkerColor(kRed);
 
-   TH1F *hsigmaCM1 = new TH1F("hsigmaCM1", "hsigmaCM1", 360, 0, 360);
+    TH1F *hsigmaCM1 = new TH1F("hsigmaCM1", "hsigmaCM1", 360, 0, 360);
 
-   Double_t sigmaLab2[360] = {0.0};
-   Double_t sigmaCM2[360] = {0.0};
-   TGraphErrors *gsigmaLab2 = new TGraphErrors();
-   gsigmaLab2->SetMarkerStyle(22);
-   gsigmaLab2->SetMarkerSize(1.5);
-   gsigmaLab2->SetMarkerColor(kBlue);
-   TGraphErrors *gsigmaCM2 = new TGraphErrors();
-   gsigmaCM2->SetMarkerStyle(22);
-   gsigmaCM2->SetMarkerSize(1.5);
-   gsigmaCM2->SetMarkerColor(kBlue);
+    Double_t sigmaLab2[360] = {0.0};
+    Double_t sigmaCM2[360] = {0.0};
+    /*TGraphErrors *gsigmaLab2 = new TGraphErrors();
+    gsigmaLab2->SetMarkerStyle(22);
+    gsigmaLab2->SetMarkerSize(1.5);
+    gsigmaLab2->SetMarkerColor(kBlue);
+    TGraphErrors *gsigmaCM2 = new TGraphErrors();
+    gsigmaCM2->SetMarkerStyle(22);
+    gsigmaCM2->SetMarkerSize(1.5);
+    gsigmaCM2->SetMarkerColor(kBlue);*/
 
-   Double_t sigmaLab3[360] = {0.0};
-   Double_t sigmaCM3[360] = {0.0};
-   TGraphErrors *gsigmaLab3 = new TGraphErrors();
-   gsigmaLab3->SetMarkerStyle(23);
-   gsigmaLab3->SetMarkerSize(1.5);
-   gsigmaLab3->SetMarkerColor(kGreen);
-   TGraphErrors *gsigmaCM3 = new TGraphErrors();
-   gsigmaCM3->SetMarkerStyle(23);
-   gsigmaCM3->SetMarkerSize(1.5);
-   gsigmaCM3->SetMarkerColor(kGreen);
+    Double_t sigmaLab3[360] = {0.0};
+    Double_t sigmaCM3[360] = {0.0};
+    TGraphErrors *gsigmaLab3 = new TGraphErrors();
+    gsigmaLab3->SetMarkerStyle(23);
+    gsigmaLab3->SetMarkerSize(1.5);
+    gsigmaLab3->SetMarkerColor(kGreen);
+    TGraphErrors *gsigmaCM3 = new TGraphErrors();
+    gsigmaCM3->SetMarkerStyle(23);
+    gsigmaCM3->SetMarkerSize(1.5);
+    gsigmaCM3->SetMarkerColor(kGreen);
 
-   // Find every valid file
-   std::string command = "find ./" + fileFolder + " -maxdepth 1 -printf \"%f\n\" >test.txt";
-   std::system(command.c_str()); // execute the UNIX command "ls -l
-   std::ifstream file;
-   file.open("test.txt");
-   std::string line;
-   std::string fileType = "fit_analysis";
-   std::string fileExt = "*.root";
-   std::vector<std::string> files;
+    // Find every valid file
+    std::string command = "find ./" + fileFolder + " -maxdepth 1 -printf \"%f\n\" >test.txt";
+    std::system(command.c_str()); // execute the UNIX command "ls -l
+    std::ifstream file;
+    file.open("test.txt");
+    std::string line;
+    std::string fileType = "fit_analysis";
+    std::string fileExt = "*.root";
+    std::vector<std::string> files;
 
-   // Final merging
-   Bool_t kIsMerging = 0;
-   TChain *m_Chain = new TChain("outputTree");
+    // Final merging
+    Bool_t kIsMerging = 0;
+    TChain *m_Chain = new TChain("outputTree");
 
-   while (std::getline(file, line)) {
-      std::istringstream iss(line);
-      if (line.find(fileType) != std::string::npos) {
-         std::cout << " Found fit file : " << line << "\n";
-         files.push_back(fileFolder + line);
+    while (std::getline(file, line)) {
+       std::istringstream iss(line);
+       if (line.find(fileType) != std::string::npos) {
+          std::cout << " Found fit file : " << line << "\n";
+          files.push_back(fileFolder + line);
 
-         // files.push_back(line);
-      }
+          // files.push_back(line);
+       }
    }
 
    int fileCnt = 0;
@@ -609,8 +610,8 @@ void plotFit_a1954(std::string fileFolder = "data_56_68/")
                // if((*AFitVec)[index]<50 || (*AFitVec)[index]>70)
                // continue;
 
-               // if ((*EFitVec)[index] < 0 || (*EFitVec)[index] > 15)
-               // continue;
+               if ((*EFitVec)[index] < 0 || (*EFitVec)[index] > 15)
+                  continue;
 
                /*     if ((*fChi2Vec)[index] / (*fNdfVec)[index] < 0.000)
                       continue;
@@ -651,7 +652,6 @@ void plotFit_a1954(std::string fileFolder = "data_56_68/")
                else
                   QcorrZ = ex_energy_exp;
 
-               HQCorr->Fill(QcorrZ);
 
                // if(QcorrZ<7.0 || QcorrZ>8.0)
                // continue;
@@ -738,6 +738,7 @@ void plotFit_a1954(std::string fileFolder = "data_56_68/")
                y_Phi->Fill(yiniFit, PhiFit * TMath::RadToDeg());
 
                // Angular distributions
+               Double_t cm_angle = 0.0;
                // Ground state
                if (QcorrZ > -2.0 && QcorrZ < 2.0) {
 
@@ -748,7 +749,8 @@ void plotFit_a1954(std::string fileFolder = "data_56_68/")
                   ++sigmaCM0[indexCM];
                }
 
-               if (QcorrZ > 8.8 && QcorrZ < 9.7) { // 9.2 MeV
+               // Group of 3 states
+               if (QcorrZ > 6.4 && QcorrZ < 7.7) { // 9.2 MeV
 
                   // if((*EFitVec)[index]<2.75
 
@@ -756,9 +758,12 @@ void plotFit_a1954(std::string fileFolder = "data_56_68/")
                   ++sigmaLab1[index];
                   Int_t indexCM = theta_cm;
                   ++sigmaCM1[indexCM];
+                  cm_angle = theta_cm;
+                  // std::cout<<cm_angle<<"\n";
                }
 
-               if (QcorrZ > 5.5 && QcorrZ < 7.0) {
+               // 8.3 MeV state
+               if (QcorrZ > 8.0 && QcorrZ < 8.7) {
 
                   Int_t index = angle;
                   ++sigmaLab2[index];
@@ -787,6 +792,12 @@ void plotFit_a1954(std::string fileFolder = "data_56_68/")
                }
 
                QvsMult->Fill(QcorrZ, evMult);
+
+               if (cm_angle < 20.0 || cm_angle > 30)
+                  continue;
+
+               hsigmaCM1->Fill(cm_angle);
+               HQCorr->Fill(QcorrZ);
 
                // QvsEvent->Fill(ex_energy_exp, iEvt);
 
@@ -875,39 +886,80 @@ void plotFit_a1954(std::string fileFolder = "data_56_68/")
 
    // Diff xs graph
    Double_t beamIntensity = 59855710.0;
-   Double_t scale0 = 1.0 * (2.0 * TMath::Pi()) / (beamIntensity * 3.16E21 * 1E-27);
+   Double_t scale0 = 1.0; //* (2.0 * TMath::Pi()) / (beamIntensity * 3.16E21 * 1E-27);
    Double_t scale1 = 1.0; // 2.0 * 1.0 * (2.0 * TMath::Pi()) / (beamIntensity * 3.16E21 * 1E-27);
-   Double_t scale2 = 0.2;
-   Double_t scale3 = 0.1;
+   Double_t scale2 = 1.0;
+   Double_t scale3 = 1.0;
+
+   TGraphErrors *gsigmaLab0 = new TGraphErrors();
+   gsigmaLab0->SetMarkerStyle(20);
+   gsigmaLab0->SetMarkerSize(1.5);
+   TGraphErrors *gsigmaCM0 = new TGraphErrors();
+   gsigmaCM0->SetMarkerStyle(20);
+   gsigmaCM0->SetMarkerSize(1.5);
+
+   TGraphErrors *gsigmaLab2 = new TGraphErrors();
+   gsigmaLab2->SetMarkerStyle(22);
+   gsigmaLab2->SetMarkerSize(1.5);
+   gsigmaLab2->SetMarkerColor(kBlue);
+   TGraphErrors *gsigmaCM2 = new TGraphErrors();
+   gsigmaCM2->SetMarkerStyle(22);
+   gsigmaCM2->SetMarkerSize(1.5);
+   gsigmaCM2->SetMarkerColor(kBlue);
 
    for (auto ig = 1; ig < 360; ++ig)
 
    {
 
-      /*  gsigmaLab0->SetPoint(ig, ig, sigmaLab0[ig]);
-        gsigmaLab0->SetPointError(ig, 0, TMath::Sqrt(sigmaLab0[ig]));
-        gsigmaCM0->SetPoint(ig, ig, sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig) / fcorr0->Eval(ig));
-        gsigmaCM0->SetPointError(ig, 0, TMath::Sqrt(sigmaCM0[ig]) * scale0 / TMath::Sin(TMath::DegToRad() * ig));*/
+      gsigmaLab0->SetPoint(ig, ig, sigmaLab0[ig]);
+      gsigmaLab0->SetPointError(ig, 0, TMath::Sqrt(sigmaLab0[ig]));
+      gsigmaCM0->SetPoint(ig, ig,
+                          sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig) / 10.5); // fcorr0->Eval(ig));
+      gsigmaCM0->SetPointError(ig, 0, TMath::Sqrt(sigmaCM0[ig]) * scale0 / TMath::Sin(TMath::DegToRad() * ig) / 10.5);
 
       gsigmaLab1->SetPoint(ig, ig, sigmaLab1[ig]);
       gsigmaLab1->SetPointError(ig, 0, TMath::Sqrt(sigmaLab1[ig]));
       gsigmaCM1->SetPoint(ig, ig, sigmaCM1[ig] * scale1 / TMath::Sin(TMath::DegToRad() * ig) / fcorr1->Eval(ig));
       gsigmaCM1->SetPointError(ig, 0, TMath::Sqrt(sigmaCM1[ig]) * scale1 / TMath::Sin(TMath::DegToRad() * ig));
 
-      /*  gsigmaLab2->SetPoint(ig, ig, sigmaLab2[ig]);
-        gsigmaLab2->SetPointError(ig, 0, TMath::Sqrt(sigmaLab2[ig]));
-        gsigmaCM2->SetPoint(ig, ig, sigmaCM2[ig] * scale2 / TMath::Sin(TMath::DegToRad() * ig));
-        gsigmaCM2->SetPointError(ig, 0, TMath::Sqrt(sigmaCM2[ig]) * scale2 / TMath::Sin(TMath::DegToRad() * ig));
+      gsigmaLab2->SetPoint(ig, ig, sigmaLab2[ig]);
+      gsigmaLab2->SetPointError(ig, 0, TMath::Sqrt(sigmaLab2[ig]));
+      gsigmaCM2->SetPoint(ig, ig, sigmaCM2[ig] * scale2 / TMath::Sin(TMath::DegToRad() * ig));
+      gsigmaCM2->SetPointError(ig, 0, TMath::Sqrt(sigmaCM2[ig]) * scale2 / TMath::Sin(TMath::DegToRad() * ig));
 
-        gsigmaLab3->SetPoint(ig, ig, sigmaLab3[ig]);
-        gsigmaLab3->SetPointError(ig, 0, TMath::Sqrt(sigmaLab3[ig]));
-        gsigmaCM3->SetPoint(ig, ig, sigmaCM3[ig] * scale3 / TMath::Sin(TMath::DegToRad() * ig));
-        gsigmaCM3->SetPointError(ig, 0, TMath::Sqrt(sigmaCM3[ig]) * scale3 / TMath::Sin(TMath::DegToRad() * ig));*/
+      /*gsigmaLab3->SetPoint(ig, ig, sigmaLab3[ig]);
+      gsigmaLab3->SetPointError(ig, 0, TMath::Sqrt(sigmaLab3[ig]));
+      gsigmaCM3->SetPoint(ig, ig, sigmaCM3[ig] * scale3 / TMath::Sin(TMath::DegToRad() * ig));
+      gsigmaCM3->SetPointError(ig, 0, TMath::Sqrt(sigmaCM3[ig]) * scale3 / TMath::Sin(TMath::DegToRad() * ig));*/
 
       /*  outputXSFile << ig << " " << sigmaCM0[ig] << " " << sigmaCM1[ig] << "  " << sigmaCM2[ig] << " " <<
          sigmaCM3[ig]
                      << " " << sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig) / fcorr0->Eval(ig) << " "
                      << "\n";*/
+   }
+
+   TGraphErrors *gsigmaCM2RB = new TGraphErrors();
+   gsigmaCM2RB->SetMarkerStyle(22);
+   gsigmaCM2RB->SetMarkerSize(1.5);
+   gsigmaCM2RB->SetMarkerColor(kBlue);
+
+   auto nPoints = gsigmaCM2->GetN();
+   Int_t nPointsRB = 0;
+
+   for (int i = 0; i < nPoints - 3; i += 4) {
+
+      double x1, y1, x2, y2, x3, y3, x4, y4;
+      gsigmaCM2->GetPoint(i, x1, y1);
+      gsigmaCM2->GetPoint(i + 1, x2, y2);
+      gsigmaCM2->GetPoint(i + 2, x3, y3);
+      gsigmaCM2->GetPoint(i + 3, x4, y4);
+
+      Double_t x5 = (x4 + x1) / 2.0;
+      Double_t y5 = y1 + y2 + y3 + y4;
+
+      gsigmaCM2RB->SetPoint(nPointsRB, x5, y5);
+
+      ++nPointsRB;
    }
 
    // Merging
@@ -1217,22 +1269,24 @@ void plotFit_a1954(std::string fileFolder = "data_56_68/")
    QvsEb->Draw("zcol");
    // QvsMult->Draw("zcol");
 
-   /*auto leg = new TLegend(0.1,0.1,0.2,0.2);
+   auto leg = new TLegend(0.1, 0.1, 0.2, 0.2);
    leg->AddEntry(gsigmaCM0, "O_1+","lp");
-   leg->AddEntry(gsigmaCM1, "2_1+","lp");
-   leg->AddEntry(gsigmaCM2, "0_2+","lp");
-   leg->AddEntry(gsigmaCM3, "3_1-","lp");
-   TCanvas *cxs = new TCanvas();
-   gsigmaCM0->Draw("ALP");
-   gsigmaCM1->Draw("LP");
-   gsigmaCM2->Draw("LP");
-   gsigmaCM3->Draw("LP");
-   leg->Draw();
+   // leg->AddEntry(gsigmaCM1, "2_1+","lp");
+   // leg->AddEntry(gsigmaCM2, "0_2+","lp");
+   // leg->AddEntry(gsigmaCM3, "3_1-","lp");
+   TCanvas *cxs = new TCanvas("cxs", "cxs", 700, 700);
+   // gsigmaCM0->Draw("ALP");
+   // gsigmaCM1->Draw("LP");
+   gsigmaCM2RB->Draw("ALP");
+   // gsigmaCM3->Draw("LP");
+   // leg->Draw();
 
-   TCanvas *cgs = new TCanvas();
+   TCanvas *cgs = new TCanvas("cgs", "cgs", 700, 700);
    gsigmaCM0->Draw("ALP");
+   gsigmaCM0->GetXaxis()->SetTitle("#theta (deg)");
+   gsigmaCM0->GetYaxis()->SetTitle("E (MeV)");
    gDWBA0->Draw("L");
-   gAltAnalysis->Draw("LP");*/
+   /*gAltAnalysis->Draw("LP");*/
 
    TCanvas *ce1 = new TCanvas();
    hsigmaCM1->Draw("histo");
@@ -1240,12 +1294,12 @@ void plotFit_a1954(std::string fileFolder = "data_56_68/")
    // gDWBA1->Draw("L");
    // gDWBA2->Draw("L");
 
-   auto nPoints = gsigmaCM1->GetN(); // number of points in your TGraph
+   /*auto nPoints = gsigmaCM1->GetN(); // number of points in your TGraph
    for (int i = 0; i < nPoints; ++i) {
       double x, y;
       gsigmaCM1->GetPoint(i, x, y);
       hsigmaCM1->SetBinContent(i, y); // ?
-   }
+   }*/
 
    /*TCanvas *ce2 = new TCanvas();
    gsigmaCM2->Draw("ALP");
@@ -1316,45 +1370,76 @@ void plotFit_a1954(std::string fileFolder = "data_56_68/")
    QvsTrackLengthH->Draw();
 
    TF1 *g1 = new TF1("m1", "gaus", -2.0, 2.0);
-   TF1 *g2 = new TF1("m2", "gaus", 5.6, 6.4);
+   TF1 *g2 = new TF1("m2", "gaus", 5.8, 6.2);
+   // TF1 *g10 = new TF1("m10", "gaus", 6.0, 6.7);
    TF1 *g3 = new TF1("m3", "gaus", 6.4, 6.9);
    TF1 *g4 = new TF1("m4", "gaus", 6.8, 7.3);
    TF1 *g5 = new TF1("m5", "gaus", 7.3, 7.7);
    TF1 *g6 = new TF1("m6", "gaus", 8.2, 8.6);
-   TF1 *g7 = new TF1("m7", "gaus", 8.6, 9.6);
+   /*TF1 *g7 = new TF1("m7", "gaus", 8.6, 9.6);
    TF1 *g8 = new TF1("m8", "gaus", 9.7, 10.1);
-   TF1 *g9 = new TF1("m9", "gaus", 10.1, 11.0);
+   TF1 *g9 = new TF1("m9", "gaus", 10.1, 11.0);*/
 
+   /*TF1 *total_gaus =
+      new TF1("total_gaus", "gaus(0)+gaus(3)+gaus(6)+gaus(9)+gaus(12)+gaus(15)+gaus(18)+gaus(21)+gaus(24)+gaus(27)",
+      -2.0, 11.0);  define combined function*/
    TF1 *total_gaus =
-      new TF1("total_gaus", "gaus(0)+gaus(3)+gaus(6)+gaus(9)+gaus(12)+gaus(15)+gaus(18)+gaus(21)+gaus(24)", -2.0,
-              11.0); /* define combined function*/
+      new TF1("total_gaus", "gaus(0)+gaus(3)+gaus(6)+gaus(9)+gaus(12)", -2.0, 8.0); /* define combined function*/
+
+   total_gaus->SetParameter(4, 6.09);
+   total_gaus->SetParLimits(4, 5.95, 6.15);
+   total_gaus->SetParameter(5, 0.15);
+   total_gaus->SetParLimits(5, 0.1, 0.15);
+
+   /*total_gaus->SetParameter(7,6.6);
+   total_gaus->SetParLimits(7,6.5,6.65);
+   total_gaus->SetParameter(8,0.15);
+   total_gaus->SetParLimits(8,0.1,0.2);*/
+
+   total_gaus->SetParameter(7, 6.7);
+   total_gaus->SetParLimits(7, 6.6, 6.8);
+   total_gaus->SetParameter(8, 0.15);
+   total_gaus->SetParLimits(8, 0.15, 0.2);
+
+   total_gaus->SetParameter(10, 7.0);
+   total_gaus->SetParLimits(10, 6.9, 7.05);
+   total_gaus->SetParameter(11, 0.15);
+   total_gaus->SetParLimits(11, 0.15, 0.17);
+
+   total_gaus->SetParameter(13, 7.27);
+   total_gaus->SetParLimits(13, 7.25, 7.3);
+   total_gaus->SetParameter(14, 0.15);
+   total_gaus->SetParLimits(14, 0.14, 0.150);
+
    HQCorr->Fit(g1, "R");
    HQCorr->Fit(g2, "R+");
+   // HQCorr->Fit(g10, "R+");
    HQCorr->Fit(g3, "R+");
    HQCorr->Fit(g4, "R+");
    HQCorr->Fit(g5, "R+");
-   HQCorr->Fit(g6, "R+");
+   /*HQCorr->Fit(g6, "R+");
    HQCorr->Fit(g7, "R+");
    HQCorr->Fit(g8, "R+");
-   HQCorr->Fit(g9, "R+");
+   HQCorr->Fit(g9, "R+");*/
    total_gaus->SetNpx(1000);
 
-   Double_t par[26]; /* parameter array */
+   Double_t par[18]; /* parameter array */
 
    /* get parameters from the fit, it first fits & takes the parameter from there */
    g1->GetParameters(&par[0]);
    g2->GetParameters(&par[3]);
+   // g10->GetParameters(&par[6]);
    g3->GetParameters(&par[6]);
    g4->GetParameters(&par[9]);
    g5->GetParameters(&par[12]);
-   g6->GetParameters(&par[15]);
-   g7->GetParameters(&par[18]);
-   g8->GetParameters(&par[21]);
-   g9->GetParameters(&par[24]);
+   /*g6->GetParameters(&par[18]);
+   g7->GetParameters(&par[21]);
+   g8->GetParameters(&par[24]);
+   g9->GetParameters(&par[27]);*/
 
    total_gaus->SetParameters(par);
    // HQval->Fit("total_gaus","","",-2.0,9.0); /*fitting gaussian curve on the histogram */
-   HQCorr->Fit("total_gaus", "", "", -2.0, 11.0);
+   HQCorr->Fit("total_gaus", "", "", -2.0, 8.0);
    total_gaus->GetParameters(&par[0]);
 
    auto gfit1 = new TF1("gfit1", "gaus(0)", -2.0, 2.0);
@@ -1369,60 +1454,73 @@ void plotFit_a1954(std::string fileFolder = "data_56_68/")
    gfit2->SetParameter(2, par[5]);
    gfit2->SetLineColor(kBlue);
    gfit2->SetNpx(1000);
+   auto gfit10 = new TF1("gfit10", "gaus(0)", 5.0, 9.0);
+   gfit10->SetParameter(0, par[6]);
+   gfit10->SetParameter(1, par[7]);
+   gfit10->SetParameter(2, par[8]);
+   gfit10->SetLineColor(kBlue);
+   gfit10->SetNpx(1000);
    auto gfit3 = new TF1("gfit3", "gaus(0)", 5.0, 9.0);
-   gfit3->SetParameter(0, par[6]);
-   gfit3->SetParameter(1, par[7]);
-   gfit3->SetParameter(2, par[8]);
+   gfit3->SetParameter(0, par[9]);
+   gfit3->SetParameter(1, par[10]);
+   gfit3->SetParameter(2, par[11]);
    gfit3->SetLineColor(kBlue);
+
+   // Number of Counts
+   Double_t cnts = gfit3->Integral(5.0, 9.0);
+   std::cout << " Number of counts " << cnts / HQCorr->GetBinWidth(1) << "\n";
+   std::cout << " Peak " << gfit3->Eval(7.0) << "\n";
+
    gfit3->SetNpx(1000);
    auto gfit4 = new TF1("gfit4", "gaus(0)", 5.0, 9.0);
-   gfit4->SetParameter(0, par[9]);
-   gfit4->SetParameter(1, par[10]);
-   gfit4->SetParameter(2, par[11]);
+   gfit4->SetParameter(0, par[12]);
+   gfit4->SetParameter(1, par[13]);
+   gfit4->SetParameter(2, par[14]);
    gfit4->SetLineColor(kBlue);
    gfit4->SetNpx(1000);
    auto gfit5 = new TF1("gfit5", "gaus(0)", 5.0, 9.0);
-   gfit5->SetParameter(0, par[12]);
-   gfit5->SetParameter(1, par[13]);
-   gfit5->SetParameter(2, par[14]);
+   gfit5->SetParameter(0, par[15]);
+   gfit5->SetParameter(1, par[16]);
+   gfit5->SetParameter(2, par[17]);
    gfit5->SetLineColor(kBlue);
    gfit5->SetNpx(1000);
-   auto gfit6 = new TF1("gfit6", "gaus(0)", 5.0, 9.0);
-   gfit6->SetParameter(0, par[15]);
-   gfit6->SetParameter(1, par[16]);
-   gfit6->SetParameter(2, par[17]);
+   /*auto gfit6 = new TF1("gfit6", "gaus(0)", 5.0, 9.0);
+   gfit6->SetParameter(0, par[18]);
+   gfit6->SetParameter(1, par[19]);
+   gfit6->SetParameter(2, par[20]);
    gfit6->SetLineColor(kBlue);
    gfit6->SetNpx(1000);
    auto gfit7 = new TF1("gfit7", "gaus(0)", 8.0, 10.0);
-   gfit7->SetParameter(0, par[18]);
-   gfit7->SetParameter(1, par[19]);
-   gfit7->SetParameter(2, par[20]);
+   gfit7->SetParameter(0, par[21]);
+   gfit7->SetParameter(1, par[22]);
+   gfit7->SetParameter(2, par[23]);
    gfit7->SetLineColor(kBlue);
    gfit7->SetNpx(1000);
    auto gfit8 = new TF1("gfit8", "gaus(0)", 9.5, 10.5);
-   gfit8->SetParameter(0, par[21]);
-   gfit8->SetParameter(1, par[22]);
-   gfit8->SetParameter(2, par[23]);
+   gfit8->SetParameter(0, par[24]);
+   gfit8->SetParameter(1, par[25]);
+   gfit8->SetParameter(2, par[26]);
    gfit8->SetLineColor(kBlue);
    gfit8->SetNpx(1000);
    auto gfit9 = new TF1("gfit9", "gaus(0)", 10.0, 11.0);
-   gfit9->SetParameter(0, par[24]);
-   gfit9->SetParameter(1, par[25]);
-   gfit9->SetParameter(2, par[26]);
+   gfit9->SetParameter(0, par[27]);
+   gfit9->SetParameter(1, par[28]);
+   gfit9->SetParameter(2, par[29]);
    gfit9->SetLineColor(kBlue);
-   gfit9->SetNpx(1000);
+   gfit9->SetNpx(1000);*/
 
    TCanvas *cqcorr = new TCanvas("cqcorr", "cqcorr", 700, 700);
    HQCorr->Draw();
    gfit1->Draw("same l");
    gfit2->Draw("same l");
+   gfit10->Draw("same l");
    gfit3->Draw("same l");
    gfit4->Draw("same l");
-   gfit5->Draw("same l");
-   gfit6->Draw("same l");
+   // gfit5->Draw("same l");
+   /*gfit6->Draw("same l");
    gfit7->Draw("same l");
    gfit8->Draw("same l");
-   gfit9->Draw("same l");
+   gfit9->Draw("same l");*/
    // total_gaus->Draw("same l");
 
    // Test of kinematics

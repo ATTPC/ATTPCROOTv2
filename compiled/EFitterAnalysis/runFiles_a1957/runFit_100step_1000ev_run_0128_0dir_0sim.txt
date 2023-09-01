@@ -1,0 +1,10 @@
+./build/eFitterAnaExe 0 100 0 run_0128 0 0
+./build/eFitterAnaExe 100 200 0 run_0128 0 0
+./build/eFitterAnaExe 200 300 0 run_0128 0 0
+./build/eFitterAnaExe 300 400 0 run_0128 0 0
+./build/eFitterAnaExe 400 500 0 run_0128 0 0
+./build/eFitterAnaExe 500 600 0 run_0128 0 0
+./build/eFitterAnaExe 600 700 0 run_0128 0 0
+./build/eFitterAnaExe 700 800 0 run_0128 0 0
+./build/eFitterAnaExe 800 900 0 run_0128 0 0
+./build/eFitterAnaExe 900 1000 0 run_0128 0 0

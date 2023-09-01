@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
 
    std::cout << " Input file name : " << inputFileName << "\n";
 
-   ////FitManagerfita becomes owner
+   ////FitManager becomes owner
    std::shared_ptr<FitManager> fitManager;
 
    try {
@@ -200,9 +200,15 @@ int main(int argc, char *argv[])
          std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
          std::cout << cGREEN << "   >>>> Number of pattern tracks " << patternTrackCand.size() << cNORMAL << "\n";
 
+         auto &noiseHits = patternEvent->GetNoiseHits();
+         std::cout << cGREEN << "   >>>> Number of noise hits " << noiseHits.size() << cNORMAL << "\n";
+
+         auto &hits = event->GetHits();
+         std::cout << cGREEN << "   >>>> Number of hits " << hits.size() << cNORMAL << "\n";
+
          fitManager->GetAuxiliaryChannels(auxPadArray);
 
-         fitManager->FitTracks(patternTrackCand);
+         // fitManager->FitTracks(patternTrackCand);
 
       } // pattern event
 

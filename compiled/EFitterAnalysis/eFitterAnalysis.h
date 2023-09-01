@@ -64,7 +64,7 @@
 #include <thread>
 #include <vector>
 
-enum Exp { e20020, e20009, a1954 };
+enum Exp { e20020, e20009, a1954, a1975 };
 
 struct trackSegment {
    Double_t eLoss;

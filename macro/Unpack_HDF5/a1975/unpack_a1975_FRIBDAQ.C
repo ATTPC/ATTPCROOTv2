@@ -8,7 +8,7 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpack_a1975_FRIBDAQ(TString fileName = "run_0047")
+void unpack_a1975_FRIBDAQ(TString fileName = "run_0106")
 {
 
    // Load the library for unpacking and reconstruction
