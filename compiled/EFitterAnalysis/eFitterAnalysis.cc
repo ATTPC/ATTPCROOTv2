@@ -29,8 +29,7 @@ int main(int argc, char *argv[])
    bool enableReclustering = 1;//For benchmarking purposes
    Double_t clusterRadius = 7.5;//mm
    Double_t clusterDistance   = 15.0;//mm
-   Exp exp = a1954;
-
+   Exp exp = a1975;
 
    // Physics parameters
    Float_t magneticField = 3.0;       // T
@@ -68,6 +67,29 @@ int main(int argc, char *argv[])
 
    switch(exp)
       {
+
+   case a1975:
+      gasMediumDensity = 0.083147;
+      magneticField = 2.85;
+
+      if (simulationConv) {
+         filePath = dir + "/macro/Simulation/ATTPC/16C_pp/data/";
+         simFile = "_sim_";
+      } else {
+         filePath = dir + "/macro/Unpack_HDF5/a1975/";
+         simFile = "";
+      }
+
+      geoManFile = dir + "/geometry/ATTPC_H1bar_geomanager.root";
+      ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
+
+      std::cout << " Analysis of experiment a1975. Gas density : " << gasMediumDensity << " mg/cm3"
+                << "\n";
+      std::cout << " File path : " << filePath << "\n";
+      std::cout << " Geomtry file : " << geoManFile << "\n";
+      std::cout << " Ion list file : " << ionList << "\n";
+
+      break;
 
    case a1954:
       gasMediumDensity = 0.083147;
@@ -208,7 +230,7 @@ int main(int argc, char *argv[])
 
          fitManager->GetAuxiliaryChannels(auxPadArray);
 
-         // fitManager->FitTracks(patternTrackCand);
+         fitManager->FitTracks(patternTrackCand);
 
       } // pattern event
 
@@ -525,6 +547,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
          case e20020: pdgCandFit.push_back(1000020040); break;
          case e20009: pdgCandFit.push_back(1000010020); break;
          case a1954: pdgCandFit.push_back(2212); break;
+         case a1975: pdgCandFit.push_back(2212); break;
          }
 
       } else if (thetaConv < 10) {
