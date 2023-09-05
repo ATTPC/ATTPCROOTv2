@@ -254,7 +254,7 @@ int main(int argc, char *argv[])
 
          fitManager->GetAuxiliaryChannels(auxPadArray);
 
-         // fitManager->FitTracks(patternTrackCand);
+         fitManager->FitTracks(patternTrackCand);
 
       } // pattern event
 
