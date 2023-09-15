@@ -16,7 +16,8 @@ AtTriggerPar.cxx
 Set(DEPENDENCIES
   ROOT::Core
   FairRoot::ParBase
-  )
+  FairLogger::FairLogger
+)
 
 generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}

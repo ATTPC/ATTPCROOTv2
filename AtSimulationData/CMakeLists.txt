@@ -6,7 +6,7 @@ Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 set(DEPENDENCIES
   FairRoot::Base # FairRunIdGenerator
   FairRoot::FairTools # FairLogger
-
+  Boost::headers
   ROOT::Core
   )
 
