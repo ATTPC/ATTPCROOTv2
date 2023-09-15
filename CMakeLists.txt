@@ -126,7 +126,7 @@ if(TARGET Eigen3::Eigen)
   message("Found Eigen, grabbing OpenKF")
   
   FetchContent_Declare(openkf
-    GIT_REPOSITORY git@github.com:anthoak13/OpenKF.git
+    GIT_REPOSITORY https://github.com/anthoak13/OpenKF.git
     GIT_TAG main)
   FetchContent_GetProperties(openkf)
   if (NOT openkf_POPULATED)
