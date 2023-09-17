@@ -1,0 +1,25 @@
+################################################################################
+# Parameters used throughout ATTPCROOT software
+# Format:
+# parameter_name:parameter_type(Int_t-integer, Double_t-double) parameter_value
+# AtDigiPar
+# Description of parameters
+################################################################################
+[AtDigiPar]
+EField:Double_t               5000   # V/m
+SamplingRate:Int_t             3.0   #
+DriftVelocity:Double_t        1.30   # cm/us
+BField:Double_t               2.85   # Tesla
+TBEntrance:Int_t               300   # Beam position at detector entrance in TB
+ZPadPlane:Double_t          1000.0   # Position of the micromegas pad plane
+Density:Double_t             0.197   # Gas density (kg/m3 or mg/cm3)
+GasPressure:Double_t           300   # Gas pressure in torr
+EIonize:Double_t            15.603   # Ionization energy of gas in eV
+Fano:Double_t                 0.24   # Fano factor of the gas
+CoefL:Double_t              0.0009   # Longitudal coefficient of diffusion [cm^2/us]
+CoefT:Double_t              0.0009   # Transverse coefficient of diffusion [cm^2/us]
+Gain:Double_t                10000   # Average gain of micromegas
+GETGain:Double_t              1000   # Gain of the GET electronics in fC
+PeakingTime:Int_t              720   # Electronic peaking time in ns
+MaxRange:Double_t            500.0   # Maximum range from Beam energy in mm
+################################################################################
