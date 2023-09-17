@@ -279,6 +279,16 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    filepairs.push_back(std::make_pair("run_0043.root", "run_0043_FRIB_sorted.root"));
    filepairs.push_back(std::make_pair("run_0044.root", "run_0044_FRIB_sorted.root"));
    filepairs.push_back(std::make_pair("run_0049.root", "run_0049_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0050.root", "run_0050_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0051.root", "run_0051_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0052.root", "run_0052_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0053.root", "run_0053_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0054.root", "run_0054_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0055.root", "run_0055_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0056.root", "run_0056_FRIB_sorted.root"));
+   //filepairs.push_back(std::make_pair("run_0057.root", "run_0057_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0058.root", "run_0058_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0059.root", "run_0059_FRIB_sorted.root"));
 
    // Final merging
    Bool_t kIsMerging = 0;

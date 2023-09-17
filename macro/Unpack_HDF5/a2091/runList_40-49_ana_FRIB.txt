@@ -1,0 +1,5 @@
+root -b -q -l "C15_dd_ana_FRIB.C(\"run_0040_FRIB\")"
+root -b -q -l "C15_dd_ana_FRIB.C(\"run_0042_FRIB\")"
+root -b -q -l "C15_dd_ana_FRIB.C(\"run_0043_FRIB\")"
+root -b -q -l "C15_dd_ana_FRIB.C(\"run_0044_FRIB\")"
+root -b -q -l "C15_dd_ana_FRIB.C(\"run_0049_FRIB\")"
