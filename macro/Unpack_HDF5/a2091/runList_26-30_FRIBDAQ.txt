@@ -1,0 +1,5 @@
+root -b -q -l "unpack_a2091_FRIBDAQ.C(\"run_0026\")"
+root -b -q -l "unpack_a2091_FRIBDAQ.C(\"run_0027\")"
+root -b -q -l "unpack_a2091_FRIBDAQ.C(\"run_0028\")"
+root -b -q -l "unpack_a2091_FRIBDAQ.C(\"run_0029\")"
+root -b -q -l "unpack_a2091_FRIBDAQ.C(\"run_0030\")"
