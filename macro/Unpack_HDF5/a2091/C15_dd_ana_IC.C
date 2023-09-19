@@ -70,6 +70,7 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
 
    TFile * histFile;
    TH2F *bro_vs_eloss;
+   TH2F *bro_vs_eloss_uncut;
    TH2F *bro_vs_dedx;
    TH2F *angle_vs_energy;
    TH2F *angle_vs_energy_lr;
@@ -80,6 +81,7 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    TH1F *HQvalp;
    TH2F *QvsEb;
    TH2F *QvsZpos;
+   TH2F *vx_vs_vy;
 
    TH1F *henergyIC;
    std::vector<TString> *processedFiles;
@@ -89,11 +91,14 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    histFile = new TFile("C15_dd_ana_hist.root", "RECREATE");
 
    bro_vs_eloss = new TH2F("bro_vs_eloss", "bro_vs_eloss", 4000, 0, 25000.0, 1000, 0, 3);
+   bro_vs_eloss_uncut = new TH2F("bro_vs_eloss", "bro_vs_eloss", 4000, 0, 25000.0, 1000, 0, 3);
    bro_vs_dedx = new TH2F("bro_vs_dedx", "bro_vs_dedx", 4000, 0, 4000.0, 1000, 0, 3);
    angle_vs_energy = new TH2F("angle_vs_energy", "angle_vs_energy", 720, 0, 179, 500, 0, 80.0);
    angle_vs_energy_lr = new TH2F("angle_vs_energy_lr", "angle_vs_energy_lr", 720, 0, 179, 500, 0, 100.0);
    angle_vs_energy_t = new TH2F("angle_vs_energy_t", "angle_vs_energy_t", 720, 0, 179, 500, 0, 80.0);
    angle_vs_momentum = new TH2F("angle_vs_momentum", "angle_vs_momentum", 720, 0, 179, 1000, 0, 2.0);
+
+   vx_vs_vy = new TH2F("vx_vs_vy","vx_vs_vy",1000,0,10,1000,0,10);
 
    HQval = new TH1F("HQval", "HQval", 600, -5, 55);
    HQvalp = new TH1F("HQvalp", "HQvalp", 600, -5, 55);
@@ -109,6 +114,7 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    histFile = new TFile("C15_dd_ana_hist.root", "UPDATE");
 
    bro_vs_eloss = dynamic_cast<TH2F*>(histFile->Get("bro_vs_eloss"));
+   bro_vs_eloss_uncut = dynamic_cast<TH2F*>(histFile->Get("bro_vs_eloss_uncut"));
    bro_vs_dedx = dynamic_cast<TH2F*>(histFile->Get("bro_vs_dedx"));
    angle_vs_energy = dynamic_cast<TH2F*>(histFile->Get("angle_vs_energy"));
    angle_vs_energy_lr = dynamic_cast<TH2F*>(histFile->Get("angle_vs_energy_lr"));
@@ -157,42 +163,91 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    cutg->SetPoint(20, 106.4023, 0.9184422);
 
    //Deuteron
+   
    TCutG *cutd = new TCutG("CUTD",31);
    cutd->SetVarX("bro_vs_eloss");
    cutd->SetVarY("");
    cutd->SetTitle("Graph");
    cutd->SetFillStyle(1000);
-   cutd->SetPoint(0,147.0521,1.126267);
-   cutd->SetPoint(1,304.7738,1.086526);
-   cutd->SetPoint(2,513.523,0.9341844);
-   cutd->SetPoint(3,703.7168,0.7566735);
-   cutd->SetPoint(4,1070.188,0.5685649);
-   cutd->SetPoint(5,1798.491,0.4016516);
-   cutd->SetPoint(6,2197.434,0.3380656);
-   cutd->SetPoint(7,3269.013,0.254609);
-   cutd->SetPoint(8,4373.064,0.245336);
-   cutd->SetPoint(9,5774.004,0.2307642);
-   cutd->SetPoint(10,6822.389,0.2334136);
-   cutd->SetPoint(11,8548.049,0.2241407);
-   cutd->SetPoint(12,10463.9,0.2214912);
-   cutd->SetPoint(13,11976.18,0.2016206);
-   cutd->SetPoint(14,13228.67,0.1949971);
-   cutd->SetPoint(15,13479.17,0.1208134);
-   cutd->SetPoint(16,13340,0.06120152);
-   cutd->SetPoint(17,12667.37,0.06120152);
-   cutd->SetPoint(18,9137.186,0.07047447);
-   cutd->SetPoint(19,6738.889,0.09961806);
-   cutd->SetPoint(20,5560.616,0.09564394);
-   cutd->SetPoint(21,4043.705,0.08769568);
-   cutd->SetPoint(22,3018.514,0.1022675);
-   cutd->SetPoint(23,1849.518,0.1883735);
-   cutd->SetPoint(24,675.8835,0.3102467);
-   cutd->SetPoint(25,365.0791,0.5063036);
-   cutd->SetPoint(26,151.691,0.6758662);
-   cutd->SetPoint(27,105.3023,0.8626501);
-   cutd->SetPoint(28,109.9412,1.044135);
-   cutd->SetPoint(29,147.0521,1.124942);
-   cutd->SetPoint(30,147.0521,1.126267);
+   /*cutd->SetPoint(0,718.147,1.56742);
+   cutd->SetPoint(1,823.997,1.34694);
+   cutd->SetPoint(2,1108.98,1.10459);
+   cutd->SetPoint(3,1605.65,0.885933);
+   cutd->SetPoint(4,2647.86,0.645408);
+   cutd->SetPoint(5,3413.24,0.506924);
+   cutd->SetPoint(6,4211.18,0.417638);
+   cutd->SetPoint(7,5587.22,0.397595);
+   cutd->SetPoint(8,7093.54,0.38484);
+   cutd->SetPoint(9,10277.2,0.397595);
+   cutd->SetPoint(10,10285.3,0.213557);
+   cutd->SetPoint(11,8664.99,0.168003);
+   cutd->SetPoint(12,5139.4,0.186224);
+   cutd->SetPoint(13,3804.06,0.213557);
+   cutd->SetPoint(14,2485.02,0.313775);
+   cutd->SetPoint(15,1393.96,0.470481);
+   cutd->SetPoint(16,734.432,0.712828);
+   cutd->SetPoint(17,465.737,0.949708);
+   cutd->SetPoint(18,180.758,1.51822);
+   cutd->SetPoint(19,237.754,2.92675);
+   cutd->SetPoint(20,758.859,2.91582);
+   cutd->SetPoint(21,734.432,1.56195);
+   cutd->SetPoint(22,718.147,1.56742);*/
+   cutd->SetPoint(0,57.15925,2.926749);
+   cutd->SetPoint(1,168.0656,1.108236);
+   cutd->SetPoint(2,406.9409,0.8513119);
+   cutd->SetPoint(3,748.1912,0.5524781);
+   cutd->SetPoint(4,1345.379,0.4103498);
+   cutd->SetPoint(5,2420.318,0.2609329);
+   cutd->SetPoint(6,3375.819,0.180758);
+   cutd->SetPoint(7,4382.507,0.1151603);
+   cutd->SetPoint(8,5312.415,0.1169825);
+   cutd->SetPoint(9,7888.855,0.1206268);
+   cutd->SetPoint(10,9518.325,0.1151603);
+   cutd->SetPoint(11,10081.39,0.1479592);
+   cutd->SetPoint(12,10141.11,0.2080904);
+   cutd->SetPoint(13,9467.138,0.2226676);
+   cutd->SetPoint(14,7598.792,0.2372449);
+   cutd->SetPoint(15,6097.29,0.2463557);
+   cutd->SetPoint(16,5363.602,0.2955539);
+   cutd->SetPoint(17,3990.069,0.3629737);
+   cutd->SetPoint(18,2795.693,0.4540816);
+   cutd->SetPoint(19,1516.004,0.6526968);
+   cutd->SetPoint(20,842.035,1.066327);
+   cutd->SetPoint(21,611.6911,1.308673);
+   cutd->SetPoint(22,577.566,1.731414);
+   cutd->SetPoint(23,483.7222,2.135933);
+   cutd->SetPoint(24,517.8472,2.389213);
+   cutd->SetPoint(25,466.6597,2.63156);
+   cutd->SetPoint(26,415.4721,2.883018);
+   cutd->SetPoint(27,313.097,2.91035);
+   cutd->SetPoint(28,91.28428,2.919461);
+   cutd->SetPoint(29,57.15925,2.926749);
+
+   //Deuteron gate on dedx
+   TCutG *cutd2 = new TCutG("CUTG",19);
+   cutd2->SetVarX("PID (p/d)");
+   cutd2->SetVarY("");
+   cutd2->SetTitle("Graph");
+   cutd2->SetFillStyle(1000);
+   cutd2->SetPoint(0,42.5536,1.00769);
+   cutd2->SetPoint(1,54.9278,0.861278);
+   cutd2->SetPoint(2,111.987,0.642867);
+   cutd2->SetPoint(3,155.297,0.51806);
+   cutd2->SetPoint(4,247.416,0.458057);
+   cutd2->SetPoint(5,430.279,0.438856);
+   cutd2->SetPoint(6,542.335,0.414855);
+   cutd2->SetPoint(7,672.264,0.410055);
+   cutd2->SetPoint(8,595.269,0.50126);
+   cutd2->SetPoint(9,458.465,0.618866);
+   cutd2->SetPoint(10,291.413,0.801275);
+   cutd2->SetPoint(11,192.419,1.04849);
+   cutd2->SetPoint(12,122.299,1.39651);
+   cutd2->SetPoint(13,83.801,1.78533);
+   cutd2->SetPoint(14,65.2397,2.16695);
+   cutd2->SetPoint(15,54.2403,2.39016);
+   cutd2->SetPoint(16,12.3055,2.38056);
+   cutd2->SetPoint(17,35.679,1.09409);
+   cutd2->SetPoint(18,42.5536,1.00769);
 
    //triton
    TCutG *cutt = new TCutG("CUTT",34);
@@ -252,6 +307,7 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
 
    std::vector<std::pair<TString, TString>> filepairs;
    filepairs.push_back(std::make_pair("run_0014.root", "run_0014_FRIB_sorted.root"));
+   /*
    filepairs.push_back(std::make_pair("run_0015.root", "run_0015_FRIB_sorted.root"));
    filepairs.push_back(std::make_pair("run_0016.root", "run_0016_FRIB_sorted.root"));
    filepairs.push_back(std::make_pair("run_0017.root", "run_0017_FRIB_sorted.root"));
@@ -289,6 +345,13 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    //filepairs.push_back(std::make_pair("run_0057.root", "run_0057_FRIB_sorted.root"));
    filepairs.push_back(std::make_pair("run_0058.root", "run_0058_FRIB_sorted.root"));
    filepairs.push_back(std::make_pair("run_0059.root", "run_0059_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0060.root", "run_0060_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0061.root", "run_0061_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0062.root", "run_0062_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0063.root", "run_0063_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0064.root", "run_0064_FRIB_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0065.root", "run_0065_FRIB_sorted.root"));
+   */
 
    // Final merging
    Bool_t kIsMerging = 0;
@@ -508,11 +571,19 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
                //if (zpos < 200.0 || zpos > 900)
                   //continue;
 
-               // if(theta * TMath::RadToDeg()>90.0)
-               //  continue;
+                if(theta * TMath::RadToDeg()>90.0)
+                 continue;
 
-               // if(ener*Am>8.0)
-               //  continue;
+                //if(bro<1.2)
+                 //continue;
+
+                //if(eloss>1000)
+                //continue; 
+
+                Double_t vx = TMath::Sin(theta)*TMath::Sqrt(ener*Am);
+                Double_t vy = TMath::Cos(theta)*TMath::Sqrt(ener*Am);
+
+                vx_vs_vy->Fill(vx,vy);
 
                // if (cutp->IsInside(eloss, bro)) {
                //if (theta * TMath::RadToDeg() > 100.0) {
@@ -521,13 +592,15 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
                   HQvalp->Fill(ex_energy_exp);
                //}
                //}
-
-               if (!cutd->IsInside(eloss, bro)) { // Selection of protons
+               bro_vs_eloss_uncut->Fill(eloss, bro);
+               //if (cutd->IsInside(eloss, bro) && cutd2->IsInside(dedx, bro)) { // Selection of d
+               //if(cutd->IsInside(eloss, bro)){
+                  if(true){
 
                   angle_vs_energy->Fill(theta * TMath::RadToDeg(), ener * Am);
                   auto [ex_energy_exp, theta_cm] = kine_2b(m_C15, m_d, m_b, m_B, Ebeam_buff, theta, ener * Am);
 
-                  HQval->Fill(ex_energy_exp);
+                  HQval->Fill(ex_energy_exp);   
 
                   // Excitation energy vs Beam energy
                   for (auto iEb = 0; iEb < 300; ++iEb) {
@@ -644,6 +717,9 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
 
    /****************************/
 
+   TCanvas *cvxvy = new TCanvas();
+   vx_vs_vy->Draw("zcol");
+
    TCanvas *c_kn_el_lr = new TCanvas();
    angle_vs_energy_lr->Draw("ZCOL");
    Kine_AngRec_EnerRec->Draw("SAME");
@@ -668,9 +744,12 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    angle_vs_energy_t->Draw("colz");
 
    TCanvas *c_PID_eloss = new TCanvas();
+   TCanvas *c_PID_eloss_uncut = new TCanvas();
    TCanvas *c_PID_dedx = new TCanvas();
    c_PID_eloss->cd();
    bro_vs_eloss->Draw("colz");
+   c_PID_eloss_uncut->cd();
+   bro_vs_eloss_uncut->Draw("colz");
    // cutg->Draw("l");
    // cutp->Draw("l");
    c_PID_dedx->cd();
