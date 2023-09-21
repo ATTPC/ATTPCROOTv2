@@ -105,18 +105,7 @@ void gamma_analysis(Int_t num_ev = 50000)
         }
     }
 
-    // Calculate photopeak efficiency
-// Check if energyLoss is within the photopeak range for specific isotopes
-/*
-                if (fileName.find("60Co") != std::string::npos) {
-                    PhotopeakCount= Energy_loss->GetXaxis()->FindBin(1.17)+Energy_loss->GetXaxis()->FindBin(1.33);
-                } else if (fileName.find("137Cs") != std::string::npos) {
-                    PhotopeakCount = Energy_loss->GetXaxis()->FindBin(0.66);
-                } else if (fileName.find("22Na") != std::string::npos ) {
-                    PhotopeakCount= Energy_loss->GetXaxis()->FindBin(0.511);
-                } else{
-                    PhotopeakCount= Energy_loss->GetXaxis()->FindBin(momentum);
-                }*/
+   
     Double_t photopeakEfficiency = ( PhotopeakCount/ num_ev) * 100.0;
     Double_t Err = (TMath::Sqrt(PhotopeakCount)/PhotopeakCount) *100.0;
 
