@@ -4,45 +4,45 @@ import re
 from pushbullet import Pushbullet
 import numpy as np
 
-#momentum_values = np.arange(0.1, 6.1, 0.1)
-momentum_values= [0.1,1,2.0]
-#momentum_value= [0.1,0.2,0.3,0.4,0.5,1,1.5,2,3,4,5]
+energy_values = [2]
+no_events = [750000]
+
+pb = Pushbullet("o.ujiJPb5NJp4DaI6nQViea799x2UInEiP")
+
 output_lines = []
-no_events = 50000
-# Send a notification
-pb = Pushbullet("")
-# Run gamma_sim.C and Simp_gamma_analysis.C for each momentum value
-for momentum in momentum_values:
-    # Compile and run gamma_sim.C with momentum as a command-line argument
-    
-    os.system(f"root -l -b -q 'gamma_sim.C({momentum},{no_events})'")
 
-    # Compile and run Simp_gamma_analysis.C with momentum as a command-line argument
-    output = os.popen(f"root -l -b -q 'Simp_gamma_analysis.C({momentum},{no_events})'").read()
+for energy in energy_values:
+    for no_event in no_events:
+        os.system(f"root -l -b -q 'gamma_sim.C({energy},{no_event})'")
+        
+        output = os.popen(f"root -l -b -q 'Simp_gamma_analysis.C({energy},{no_event})'").read()
 
-    # Extract efficency and error from the terminal output
-    efficency_match = re.search(r"Photopeak Efficency : ([\d.]+)%", output)
-    error_match = re.search(r"Error:([\d.]+)", output)
+        # Extract all relevant values from the terminal output
+        num_ev_match = re.search(r"Total number of events : (\d+)", output)
+        PhotopeakCount_match = re.search(r"Number of events in photopeak : (\d+)", output)
+        efficiency_match = re.search(r"Photopeak Efficency : ([\d.]+)%", output)
+        error_match = re.search(r"Error: ([\d.]+)", output)
 
-    efficency = efficency_match.group(1) if efficency_match else "N/A"
-    error = error_match.group(1) if error_match else "N/A"
+        num_ev = num_ev_match.group(1) if num_ev_match else "N/A"
+        PhotopeakCount = PhotopeakCount_match.group(1) if PhotopeakCount_match else "N/A"
+        efficiency = efficiency_match.group(1) if efficiency_match else "N/A"
+        error = error_match.group(1) if error_match else "N/A"
 
-    # Print efficency and error
-    print(f"Momentum: {momentum}")
-    print(f"Photopeak Efficency: {efficency}%")
-    print(f"Error:{error}\n")
+        # Print values
+        print(f"Energy: {energy}")
+        print(f"Total number of events: {num_ev}")
+        print(f"Number of events in photopeak: {PhotopeakCount}")
+        print(f"Photopeak Efficiency: {efficiency}%")
+        print(f"Error: {error}\n")
 
-    # Store output line for CSV
-    output_lines.append([momentum, efficency, error])
+        # Store output line for CSV
+        output_lines.append([no_event, energy, PhotopeakCount, efficiency, error])
 
-# Collect results in efficency_curve.csv
-with open("efficency_curve.csv", "w", newline='') as f:
-    writer = csv.writer(f)
-    writer.writerow(["Momentum", "Efficency", "Error"])
-    writer.writerows(output_lines)
-
+        # Open the CSV file in append mode and write the output line
+        with open("efficiency_curve.csv", "a", newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([no_event, energy, num_ev, PhotopeakCount, efficiency, error])
 
 pb.push_note("Simulation Done", "The simulation and analysis are complete!")
 
-# Open the CSV file in the default application
-os.system("more efficency_curve.csv")
+os.system("more efficiency_curve.csv")

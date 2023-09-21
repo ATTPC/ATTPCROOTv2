@@ -12,7 +12,7 @@
 #include "TMath.h"
 
 
-void Simp_gamma_analysis(Double_t momentum,Int_t num_ev)
+void Simp_gamma_analysis(Double_t energy=6,Int_t num_ev=750000)
 {
    
     std::string fileName = "test";
@@ -69,26 +69,37 @@ void Simp_gamma_analysis(Double_t momentum,Int_t num_ev)
                 //energyLoss += (inputEnergy + randomIs / 1000) * 1000; // MeV
                 energyLoss += inputEnergy * 1000;
                 Count++;
-
+            
+            }
             
 
                 
          }
-         else if(VolName.Contains("41")) {
-                Count++;
-            }
-}
+          if (energyLoss != 0.0) {
+          
+            Energy_loss->Fill(energyLoss);
+        }
+        }
+         
+
         
-    }
+    
 
     // Calculate photopeak efficency
-    PhotopeakCount = Energy_loss->GetXaxis()->FindBin(momentum);
-    Double_t photopeakEfficency = (PhotopeakCount / Count) * 100.0;
-    Double_t Err = (TMath::Sqrt(PhotopeakCount)/PhotopeakCount) *100.0;
+    // Define the range
+    Double_t lowerBound = energy - 0.01;
+    Double_t upperBound = energy + 0.01;
 
-    std::cout << "Total number of events : " << Count << std::endl;
+
+    for (Int_t bin = Energy_loss->GetXaxis()->FindBin(lowerBound); bin <= Energy_loss->GetXaxis()->FindBin(upperBound); bin++) {
+    PhotopeakCount += Energy_loss->GetBinContent(bin);
+}
+    Double_t photopeakEfficency = (PhotopeakCount / num_ev) * 100.0;
+    Double_t Err = (TMath::Sqrt(PhotopeakCount)/PhotopeakCount) *photopeakEfficency;
+
+    std::cout << "Total number of events : " << num_ev << std::endl;
     std::cout << "Number of events in photopeak : " << PhotopeakCount << std::endl;
     std::cout << "Photopeak Efficency : " << photopeakEfficency << "%" << std::endl;
-    std::cout<<"Error:" << Err<< std::endl;
+    std::cout<<"Error: " << Err << std::endl;
 }
 

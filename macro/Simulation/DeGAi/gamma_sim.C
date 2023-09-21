@@ -1,4 +1,4 @@
-void gamma_sim(Double_t momentum,Int_t nEvents, TString mcEngine = "TGeant4" )
+void gamma_sim(Double_t energy,Int_t nEvents, TString mcEngine = "TGeant4" )
 {
 
    TString dir = getenv("VMCWORKDIR");
@@ -53,13 +53,15 @@ void gamma_sim(Double_t momentum,Int_t nEvents, TString mcEngine = "TGeant4" )
      // GeV/c
      
      Int_t multiplicity = 1;
-     auto boxGen = new FairBoxGenerator(2112, 1);
-   boxGen->SetXYZ(0, 0, -5.);
- 
-   boxGen->SetEkinRange(momentum/1000, momentum/1000);
+     auto boxGen = new FairBoxGenerator(22, 1);
+   boxGen->SetXYZ(0, 0, 20);
+    boxGen->SetThetaRange(theta1, theta2);
+    boxGen->SetPhiRange(0, 360);
+    //boxGen->SetPRange();
+   boxGen->SetEkinRange(energy/1000, energy/1000);
 
    primGen->AddGenerator(boxGen);
-
+  run->SetGenerator(primGen);
 
    // ------------------------------------------------------------------------
 

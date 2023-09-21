@@ -53,8 +53,8 @@ void gamma_analysis(Int_t num_ev = 50000)
         nEvents = num_ev;
 
     // Histograms
-    Int_t Bins = 2000;
-    Int_t MeV = 2;
+    Int_t Bins = 11000;
+    Int_t MeV = 11;
     TH1D* Energy_loss = new TH1D("Energy_loss", "Photopeak Efficiency: ", Bins, 0, MeV);
     TCanvas* c1 = new TCanvas();
     c1->Draw();
@@ -70,6 +70,7 @@ void gamma_analysis(Int_t num_ev = 50000)
         tree->GetEvent(iEvent);
         Int_t n = pointArray->GetEntries();
         Double_t energyLoss = 0.0;
+        Double_t GausenergyLoss = 0.0;
 
         for (Int_t i = 0; i < n; i++) {
 
@@ -83,31 +84,41 @@ void gamma_analysis(Int_t num_ev = 50000)
                 Float_t fResolutionGe = .30;
                 Double_t inputEnergy = point->GetEnergyLoss();
                 Double_t randomIs = gRandom->Gaus(0, inputEnergy * fResolutionGe * 1000 / (235 * sqrt(inputEnergy * 1000)));
-                energyLoss += (inputEnergy + randomIs / 1000) * 1000; // MeV
+                GausenergyLoss += (inputEnergy + randomIs / 1000) * 1000; // MeV
+                energyLoss += inputEnergy * 1000; // MeV
+                
                 Count++;
 
                 // Update hit count for VolName
                 crystalHits[VolName.Data()]++;
 
-                // Check if energyLoss is within the photopeak range for specific isotopes
-                if (fileName.find("60Co") != std::string::npos && ((energyLoss >= 1.16 && energyLoss <= 1.18) || (energyLoss >= 1.32 && energyLoss <= 1.34))) {
-                    PhotopeakCount++;
-                } else if (fileName.find("137Cs") != std::string::npos && energyLoss >= 0.65 && energyLoss <= 0.67) {
-                    PhotopeakCount++;
-                } else if (fileName.find("22Na") != std::string::npos && energyLoss >= 0.50 && energyLoss <= 0.52) {
-                    PhotopeakCount++;
-                } else if (energyLoss >= momentum * 0.95 && energyLoss <= momentum * 1.05) {
-                    PhotopeakCount++;
-                }
+                
             }
         }
-        if (energyLoss != 0.0) {
-            Energy_loss->Fill(energyLoss);
+
+        if(energyLoss >= momentum-0.02 && energyLoss <= momentum+0.02){
+            PhotopeakCount++;
+        }
+        if (GausenergyLoss != 0.0) {
+            std::cout << "energyLoss: " << energyLoss << std::endl;
+            Energy_loss->Fill(GausenergyLoss);
         }
     }
 
     // Calculate photopeak efficiency
-    Double_t photopeakEfficiency = (PhotopeakCount / Count) * 100.0;
+// Check if energyLoss is within the photopeak range for specific isotopes
+/*
+                if (fileName.find("60Co") != std::string::npos) {
+                    PhotopeakCount= Energy_loss->GetXaxis()->FindBin(1.17)+Energy_loss->GetXaxis()->FindBin(1.33);
+                } else if (fileName.find("137Cs") != std::string::npos) {
+                    PhotopeakCount = Energy_loss->GetXaxis()->FindBin(0.66);
+                } else if (fileName.find("22Na") != std::string::npos ) {
+                    PhotopeakCount= Energy_loss->GetXaxis()->FindBin(0.511);
+                } else{
+                    PhotopeakCount= Energy_loss->GetXaxis()->FindBin(momentum);
+                }*/
+    Double_t photopeakEfficiency = ( PhotopeakCount/ num_ev) * 100.0;
+    Double_t Err = (TMath::Sqrt(PhotopeakCount)/PhotopeakCount) *100.0;
 
     // Print the tally board for each crystal volume
     for (const auto& crystal : crystalHits) {
@@ -115,7 +126,8 @@ void gamma_analysis(Int_t num_ev = 50000)
     }
 
     std::cout << "Photopeak Efficiency : " << photopeakEfficiency << "%" << std::endl;
-
+    std::cout << PhotopeakCount << std::endl;
+    std::cout <<"Error: "<< Err << std::endl;
     c1->cd(1);
     Energy_loss->SetTitle(Form("Photopeak Efficiency: Energy Loss Spectrum (%.2f%%)", photopeakEfficiency));
     Energy_loss->Draw();

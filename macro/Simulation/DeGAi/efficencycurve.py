@@ -1,47 +1,36 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from scipy.optimize import curve_fit
+from scipy.stats import lognorm
 
-# Reading data from file into a pandas DataFrame
-data = pd.read_csv("efficency_curve.csv")
+# Reading data from a file into a pandas DataFrame
+data = pd.read_csv("efficiency_curve.csv")
 
-# Extracting momentum, efficiency, and error columns from the DataFrame
-momentum = data["Momentum"].values
-efficiency = data["Efficency"].values
+# Extracting energy, efficiency, and error columns from the DataFrame
+energy = data["Energy"].values
+efficiency = data["Efficiency"].values
 error = data["Error"].values
 
-# Rest of the code remains the same...
+# Log-normal function to fit
+def func(x, s, loc, scale):
+    return lognorm.pdf(x, s, loc=loc, scale=scale) * scale  # The scale factor is used to adjust the y-values to the data range.
 
-# Polynomial regression
-degree = 2  # Adjust the degree of the polynomial fit as desired
-coefficients = np.polyfit(momentum*10e2, efficiency, degree)
-polynomial = np.poly1d(coefficients)
-formula = polynomial.__str__()
+# Curve fitting
+popt, pcov = curve_fit(func, energy, efficiency)
 
 # Plotting the data and the best-fit curve
 plt.figure(figsize=(10, 6))
-plt.errorbar(momentum*10e2, efficiency, yerr=error, fmt='o', color='b', ecolor='g', capsize=5, label='Data')
-plt.plot(momentum, polynomial(momentum), c='r', label='Best-fit Curve')
-plt.xlabel('Energy (KeV)')
-plt.ylabel('Efficiency (%)')
-plt.title('Degai Efficiency Curve')
+plt.errorbar(energy, efficiency, yerr=error, fmt='+', color='b', ecolor='g', capsize=5, label='Data')
+plt.plot(energy, func(energy, *popt), 'r-', label='Fit: s=%5.3f, loc=%5.3f, scale=%5.3f' % tuple(popt))
+
+plt.xlabel('Energy')
+plt.ylabel('Efficiency')
+plt.title('DeGai Efficiency Curve')
 plt.legend()
 plt.grid(True)
 
-# Prompting the user to input momentum values to add to the plot
-num_points = int(input("Number of predicted points: "))
-user_momentum = []
-if num_points > 0:
-    for i in range(num_points):
-        momentum_value = float(input(f"Enter Energy value {i+1}: "))
-        user_momentum.append(momentum_value)
-
-    user_efficiency = polynomial(user_momentum)
-    plt.plot(user_momentum, user_efficiency, 'ro', label='User Inputted Efficiency')
-
-# Displaying the formula
-plt.text(0.5, 5, f'Curve Formula: {formula}', fontsize=12, bbox={'facecolor': 'white', 'alpha': 0.5})
-
-# Displaying the plot
+# Displaying the fitted formula
+print(f"Fitted Parameters:\n s: {popt[0]:.2f}\n loc: {popt[1]:.2f}\n scale: {popt[2]:.2f}")
+#plt.ylim(-0.1, 1.1)  # Adjust the y-axis limits as needed
 plt.show()
-
