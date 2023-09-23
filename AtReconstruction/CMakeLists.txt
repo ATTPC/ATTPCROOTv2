@@ -106,32 +106,6 @@ set(SRCS
 
 ### Add additional sources and libraries if we found certain modules ###
 
-# Adding libraries that depend on PCL
-if(PCL_FOUND)
-  set(SRCS ${SRCS}
-    #AtPatternRecognition/AtTrackFinderHC.cxx
-    #AtPatternRecognition/trackfinder/smoothenCloud.cxx
-    #AtPatternRecognition/trackfinder/msd.cxx
-    #AtPatternRecognition/trackfinder/cluster.cxx
-    #AtPatternRecognition/trackfinder/hc.cxx
-    #AtPatternRecognition/trackfinder/fastcluster.cxx
-    )
-  set(DEPENDENCIES ${DEPENDENCIES}
-    ${PCL_LIBRARIES}
-    )
-
-  # Add include directory and link directory if no targets
-  if(NOT TARGET pcl_common)
-    message("No set targets for PCL!")
-    set(LINK_DIRECTORIES ${LINK_DIRECTORIES}
-      ${PCL_LIBRARY_DIR}
-      )
-    set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES}
-      ${PCL_INCLUDE_DIRS}
-      )
-
-  endif()
-endif()
 
 if(GENFIT2_FOUND)
   set(SRCS ${SRCS}
