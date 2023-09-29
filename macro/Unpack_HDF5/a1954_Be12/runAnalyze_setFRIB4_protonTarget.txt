@@ -1,0 +1,13 @@
+root -b -q -l "Be12_pp_ana_FRIB.C(\"run_0204_FRIB\")"
+root -b -q -l "Be12_pp_ana_FRIB.C(\"run_0205_FRIB\")"
+root -b -q -l "Be12_pp_ana_FRIB.C(\"run_0206_FRIB\")"
+root -b -q -l "Be12_pp_ana_FRIB.C(\"run_0207_FRIB\")"
+root -b -q -l "Be12_pp_ana_FRIB.C(\"run_0208_FRIB\")"
+root -b -q -l "Be12_pp_ana_FRIB.C(\"run_0209_FRIB\")"
+root -b -q -l "Be12_pp_ana_FRIB.C(\"run_0210_FRIB\")"
+root -b -q -l "Be12_pp_ana_FRIB.C(\"run_0211_FRIB\")"
+root -b -q -l "Be12_pp_ana_FRIB.C(\"run_0212_FRIB\")"
+root -b -q -l "Be12_pp_ana_FRIB.C(\"run_0213_FRIB\")"
+root -b -q -l "Be12_pp_ana_FRIB.C(\"run_0214_FRIB\")"
+root -b -q -l "Be12_pp_ana_FRIB.C(\"run_0215_FRIB\")"
+
