@@ -3,7 +3,7 @@ Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 
 Set(DEPENDENCIES
   FairRoot::FairTools
-
+  FairLogger::FairLogger
   ROOT::Core
   ROOT::XMLParser
   ROOT::GenVector

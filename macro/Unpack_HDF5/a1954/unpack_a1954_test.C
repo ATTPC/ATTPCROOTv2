@@ -8,17 +8,18 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpack_a2091(TString fileName = "run_0037", bool eCorr = true)
+void unpack_a1954_test(TString fileName = "run_0062")
 {
+
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
 
    TStopwatch timer;
    timer.Start();
 
-   TString parameterFile = "ATTPC.a2091.par";
+   TString parameterFile = "ATTPC.a1954.par";
    TString mappath = "";
-   TString filepath = "/media/attpc/DATA/a2091/h5/";
+   TString filepath = "/home/attpc/Argonne2023/a1954/";
    TString fileExt = ".h5";
    TString inputFile = filepath + fileName + fileExt;
    TString scriptfile = "ANL2023.xml";
@@ -28,11 +29,7 @@ void unpack_a2091(TString fileName = "run_0037", bool eCorr = true)
    TString dataDir = dir + "/macro/data/";
    TString geomDir = dir + "/geometry/";
    gSystem->Setenv("GEOMPATH", geomDir.Data());
-   TString outputFile;
-   if (eCorr)
-      outputFile = fileName + ".root";
-   else
-      outputFile = fileName + "NoCorr.root";
+   TString outputFile = fileName + ".root";
    TString loggerFile = dataDir + "ATTPCLog.log";
    TString digiParFile = dir + "/parameters/" + parameterFile;
    TString geoManFile = dir + "/geometry/ATTPC_H1bar.root";
@@ -61,7 +58,6 @@ void unpack_a2091(TString fileName = "run_0037", bool eCorr = true)
    fAtMapPtr->ParseXMLMap(mapDir.Data());
    fAtMapPtr->GeneratePadPlane();
 
-   LOG(info) << "Opening file " << inputFile;
    auto unpacker = std::make_unique<AtHDFUnpacker>(fAtMapPtr);
    unpacker->SetInputFileName(inputFile.Data());
    unpacker->SetNumberTimestamps(2);
@@ -78,10 +74,12 @@ void unpack_a2091(TString fileName = "run_0037", bool eCorr = true)
    filterTask->SetPersistence(false);
    filterTask->SetFilterAux(false);
 
-   auto threshold = 50;
+   auto threshold = 20;
 
+   // auto psa = new AtPSASimple2();
    auto psa = new AtPSAMax();
    psa->SetThreshold(threshold);
+   // psa->SetMaxFinder();
 
    // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(psa);
@@ -95,19 +93,16 @@ void unpack_a2091(TString fileName = "run_0037", bool eCorr = true)
    SCTask->SetInputBranch("AtEventH");
 
    AtPRAtask *praTask = new AtPRAtask();
-   if (eCorr)
-      praTask->SetInputBranch("AtEventCorrected");
+   praTask->SetInputBranch("AtEventCorrected");
    praTask->SetOutputBranch("AtPatternEvent");
    praTask->SetPersistence(kTRUE);
-   praTask->SetTcluster(8);
    // praTask->SetMaxNumHits(3000);
    // praTask->SetMinNumHits(100);
 
    run->AddTask(unpackTask);
    // run->AddTask(filterTask);
    run->AddTask(psaTask);
-   if (eCorr)
-      run->AddTask(SCTask);
+   run->AddTask(SCTask);
    run->AddTask(praTask);
 
    std::cout << "***** Starting Init ******" << std::endl;
@@ -118,7 +113,6 @@ void unpack_a2091(TString fileName = "run_0037", bool eCorr = true)
    auto numEvents = unpackTask->GetNumEvents();
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
-   // numEvents = 10000;
    run->Run(0, numEvents);
 
    std::cout << std::endl << std::endl;

@@ -142,6 +142,15 @@ if(GENFIT2_FOUND)
     )
   set(DEPENDENCIES ${DEPENDENCIES}
     GENFIT2::genfit2
+   )
+endif()
+
+if(TARGET OpenKF)
+  set(SRCS ${SRCS}
+    AtFitter/AtOpenKFTest.cxx
+    )
+  set(DEPENDENCIES ${DEPENDENCIES}
+    OpenKF
     )
 endif()
 
