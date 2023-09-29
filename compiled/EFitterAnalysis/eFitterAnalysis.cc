@@ -106,7 +106,31 @@ int main(int argc, char *argv[])
       geoManFile = dir + "/geometry/ATTPC_H1bar_geomanager.root";
       ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
 
-      std::cout << " Analysis of experiment a1954. Gas density : " << gasMediumDensity << " mg/cm3"
+      std::cout << " Analysis of experiment a1954 (14C beam on proton). Gas density : " << gasMediumDensity << " mg/cm3"
+                << "\n";
+      std::cout << " File path : " << filePath << "\n";
+      std::cout << " Geomtry file : " << geoManFile << "\n";
+      std::cout << " Ion list file : " << ionList << "\n";
+
+      break;
+
+   case a1954b:
+      gasMediumDensity = 0.083147;
+      magneticField = 2.85;
+
+      if (simulationConv) {
+         filePath = dir + "/macro/Simulation/ATTPC/14C_pp/data/";
+         simFile = "_sim_";
+      } else {
+         filePath = dir + "/macro/Unpack_HDF5/a1954_Be12/";
+         simFile = "";
+      }
+
+      geoManFile = dir + "/geometry/ATTPC_H1bar_geomanager.root";
+      ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
+
+      std::cout << " Analysis of experiment a1954b (12Be beam on proton). Gas density : " << gasMediumDensity
+                << " mg/cm3"
                 << "\n";
       std::cout << " File path : " << filePath << "\n";
       std::cout << " Geomtry file : " << geoManFile << "\n";
@@ -547,6 +571,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
          case e20020: pdgCandFit.push_back(1000020040); break;
          case e20009: pdgCandFit.push_back(1000010020); break;
          case a1954: pdgCandFit.push_back(2212); break;
+         case a1954b: pdgCandFit.push_back(2212); break;
          case a1975: pdgCandFit.push_back(2212); break;
          }
 
