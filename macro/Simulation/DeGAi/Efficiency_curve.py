@@ -13,7 +13,7 @@ energy_values = np.concatenate((array1,array2,array3,array4,array5))
 
 no_events = [750000]
 
-pb = Pushbullet("o.ujiJPb5NJp4DaI6nQViea799x2UInEiP")
+pb = Pushbullet("")
 
 output_lines = []
 
