@@ -10,14 +10,6 @@
 #include "TCanvas.h"
 #include "TRandom3.h"
 
-bool doesNotEqualAny(const std::string& str, const std::vector<std::string>& values) {
-    for (const auto& value : values) {
-        if (str == value) {
-            return false;  // String matches a value in the list
-        }
-    }
-    return true;  // String does not match any value in the list
-}
 
 void gamma_analysis(Int_t num_ev = 50000)
 {
@@ -96,9 +88,7 @@ void gamma_analysis(Int_t num_ev = 50000)
             }
         }
 
-        if(energyLoss >= momentum-0.02 && energyLoss <= momentum+0.02){
-            PhotopeakCount++;
-        }
+        
         if (GausenergyLoss != 0.0) {
             std::cout << "energyLoss: " << energyLoss << std::endl;
             Energy_loss->Fill(GausenergyLoss);
@@ -106,9 +96,11 @@ void gamma_analysis(Int_t num_ev = 50000)
     }
 
    
-    Double_t photopeakEfficiency = ( PhotopeakCount/ num_ev) * 100.0;
-    Double_t Err = (TMath::Sqrt(PhotopeakCount)/PhotopeakCount) *100.0;
-
+    for (Int_t bin = Energy_loss->GetXaxis()->FindBin(lowerBound); bin <= Energy_loss->GetXaxis()->FindBin(upperBound); bin++) {
+    PhotopeakCount += Energy_loss->GetBinContent(bin);
+}
+    Double_t photopeakEfficency = (PhotopeakCount / num_ev) * 100.0;
+    Double_t Err = (TMath::Sqrt(PhotopeakCount)/PhotopeakCount) *photopeakEfficency;
     // Print the tally board for each crystal volume
     for (const auto& crystal : crystalHits) {
         std::cout << "VolName: " << crystal.first << " had " << crystal.second << " hits." << std::endl;
