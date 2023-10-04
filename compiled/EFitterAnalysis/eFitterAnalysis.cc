@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
    std::size_t lastEvt = 0;
    bool fInteractiveMode = 1;
    TString inputFileName = "";
+   TString inputAuxFileName = "";
    bool fitDirection = 0; // 0: Forward (d,d) - 1: Backwards (d,p)
    bool simulationConv = 0;
    bool enableMerging = 1;
@@ -29,7 +30,8 @@ int main(int argc, char *argv[])
    bool enableReclustering = 1;//For benchmarking purposes
    Double_t clusterRadius = 7.5;//mm
    Double_t clusterDistance   = 15.0;//mm
-   Exp exp = a1975;
+   bool externalTimeStamp = 0;       // Enables Timestamp merging from FRIB DAQ file
+   Exp exp = a1954b;
 
    // Physics parameters
    Float_t magneticField = 3.0;       // T
@@ -129,12 +131,15 @@ int main(int argc, char *argv[])
       geoManFile = dir + "/geometry/ATTPC_H1bar_geomanager.root";
       ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
 
+      externalTimeStamp = 1;
+
       std::cout << " Analysis of experiment a1954b (12Be beam on proton). Gas density : " << gasMediumDensity
                 << " mg/cm3"
                 << "\n";
       std::cout << " File path : " << filePath << "\n";
       std::cout << " Geomtry file : " << geoManFile << "\n";
       std::cout << " Ion list file : " << ionList << "\n";
+      std::cout << " External timestamp: " << externalTimeStamp << "\n";
 
       break;
 
@@ -189,9 +194,11 @@ int main(int argc, char *argv[])
    outputFileName = "fit_analysis_" + simFile + inputFileName;
    outputFileName += "_" + std::to_string(firstEvt) + "_" + std::to_string(lastEvt) + ".root";
 
+   inputAuxFileName = filePath + inputFileName + "_FRIB_sorted.root";
    inputFileName = filePath + inputFileName + ".root";
 
    std::cout << " Input file name : " << inputFileName << "\n";
+   std::cout << " Input auxiliary file name : " << inputAuxFileName << "\n";
 
    ////FitManager becomes owner
    std::shared_ptr<FitManager> fitManager;
@@ -207,6 +214,10 @@ int main(int argc, char *argv[])
 
    fitManager->SetGeometry(geoManFile, magneticField, gasMediumDensity);
    fitManager->SetInputFile(inputFileName, firstEvt, lastEvt);
+
+   if (externalTimeStamp)
+      fitManager->SetAuxInputFile(inputAuxFileName, firstEvt, lastEvt);
+
    fitManager->SetOutputFile(outputFileName);
    fitManager->SetFitters(simulationConv);
    fitManager->SetFitDirection(fitDirection);
@@ -226,6 +237,7 @@ int main(int argc, char *argv[])
    std::shared_ptr<AtTools::AtKinematics> kine = std::make_shared<AtTools::AtKinematics>();
 
    auto reader = fitManager->GetReader();
+   auto readerAux = fitManager->GetAuxReader();
 
    // Event loop
    for (auto i = firstEvt; i < lastEvt; i++) {
@@ -234,9 +246,15 @@ int main(int argc, char *argv[])
       fitManager->ClearTree();
 
       reader->Next();
+      readerAux->Next();
 
       AtPatternEvent *patternEvent = fitManager->GetPatternEve();
       AtEvent *event = fitManager->GetEve();
+
+      if (externalTimeStamp) {
+         fitManager->SetICMult(*fitManager->GetICMult());
+         fitManager->SetIC(*fitManager->GetIC());
+      }
 
       if (patternEvent) {
 
@@ -572,6 +590,7 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
          case e20009: pdgCandFit.push_back(1000010020); break;
          case a1954: pdgCandFit.push_back(2212); break;
          case a1954b: pdgCandFit.push_back(2212); break;
+         // case a1954b: pdgCandFit.push_back(1000010020); break;
          case a1975: pdgCandFit.push_back(2212); break;
          }
 
@@ -961,6 +980,28 @@ Bool_t FitManager::SetInputFile(TString &file, std::size_t firstEve, std::size_t
    fPatternEveArray = std::make_shared<TTreeReaderValue<TClonesArray>>(*fReader, "AtPatternEvent");
    fEveArray = std::make_shared<TTreeReaderValue<TClonesArray>>(*fReader, "AtEventH");
    fReader->SetEntriesRange(firstEve, lastEve);
+
+   return true;
+}
+
+Bool_t FitManager::SetAuxInputFile(TString &file, std::size_t firstEve, std::size_t lastEve)
+{
+   Int_t nEvents = lastEve - firstEve;
+   std::cout << " Opening Auxiliary File (FRIB DAQ) : " << file.Data() << "\n";
+   std::cout << " Number of events : " << nEvents << std::endl;
+
+   fAuxInputFile = std::make_shared<TFile>(file.Data(), "READ");
+   fAuxReader = std::make_shared<TTreeReader>("FRIB_output_tree", fAuxInputFile.get());
+   if (fAuxInputFile.get()->IsZombie()) {
+      std::cerr << " File not found ! " << file.Data() << "\n";
+      std::exit(0);
+   }
+   fTs = std::make_shared<TTreeReaderValue<ULong64_t>>(*fAuxReader, "timestamp");
+   fEnergyIC = std::make_shared<TTreeReaderValue<std::vector<Float_t>>>(*fAuxReader, "energy");
+   fTimeIC = std::make_shared<TTreeReaderValue<std::vector<Float_t>>>(*fAuxReader, "time");
+   fMultIC = std::make_shared<TTreeReaderValue<UInt_t>>(*fAuxReader, "mult");
+   fFribEvName = std::make_shared<TTreeReaderValue<std::string>>(*fAuxReader, "eventName");
+   fAuxReader->SetEntriesRange(firstEve, lastEve);
 
    return true;
 }
