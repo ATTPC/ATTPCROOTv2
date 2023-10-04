@@ -35,7 +35,7 @@ kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Dou
    return std::make_tuple(Ex, theta_cm);
 }
 
-void plotFit_a1954b(std::string fileFolder = "data_143_145/")
+void plotFit_a1954b(std::string fileFolder = "data_143_215/")
 {
 
    std::ofstream outputFileEvents("list_of_events.txt");
@@ -215,30 +215,64 @@ void plotFit_a1954b(std::string fileFolder = "data_143_145/")
    // Binary
    TH2F *hARecvsASca = new TH2F("hARecvsASca", "hARecvsASca", 1000, 0, 180, 1000, 0, 180);
 
-   // Cut 14C proton gate
+   // Cut 12Be proton gate
    TCutG *cutp = new TCutG("cutp", 18);
    cutp->SetVarX("ELossvsBrhoZoom");
    cutp->SetVarY("");
    cutp->SetTitle("Graph");
    cutp->SetFillStyle(1000);
-   cutp->SetPoint(0, 181.1004, 1.092132);
-   cutp->SetPoint(1, 1011.636, 0.556248);
-   cutp->SetPoint(2, 2235.584, 0.4222769);
-   cutp->SetPoint(3, 4399.348, 0.3329628);
-   cutp->SetPoint(4, 9207.713, 0.1900603);
-   cutp->SetPoint(5, 11917.88, 0.1811289);
-   cutp->SetPoint(6, 16070.56, 0.1543347);
-   cutp->SetPoint(7, 19130.43, 0.1543347);
-   cutp->SetPoint(8, 19829.83, 0.1543347);
-   cutp->SetPoint(9, 19960.96, 0.09181484);
-   cutp->SetPoint(10, 19807.97, 0.002500774);
-   cutp->SetPoint(11, 7109.517, 0.0382264);
-   cutp->SetPoint(12, 2694.564, 0.06502062);
-   cutp->SetPoint(13, 530.7996, 0.2257859);
-   cutp->SetPoint(14, 49.96314, 0.6455621);
-   cutp->SetPoint(15, 28.10694, 0.8509844);
-   cutp->SetPoint(16, 115.5318, 1.07427);
-   cutp->SetPoint(17, 181.1004, 1.092132);
+   cutp->SetPoint(0, 93.67555, 1.000578);
+   cutp->SetPoint(1, 640.0806, 0.8610333);
+   cutp->SetPoint(2, 1120.917, 0.5774433);
+   cutp->SetPoint(3, 1842.172, 0.4424004);
+   cutp->SetPoint(4, 3787.374, 0.3523719);
+   cutp->SetPoint(5, 6912.811, 0.2848504);
+   cutp->SetPoint(6, 11874.17, 0.2308333);
+   cutp->SetPoint(7, 15852, 0.2083261);
+   cutp->SetPoint(8, 18431.03, 0.1723147);
+   cutp->SetPoint(9, 19545.7, 0.1678133);
+   cutp->SetPoint(10, 19873.54, 0.1408047);
+   cutp->SetPoint(11, 19851.68, 0.09128897);
+   cutp->SetPoint(12, 19348.99, 0.05527754);
+   cutp->SetPoint(13, 12551.71, 0.0642804);
+   cutp->SetPoint(14, 5426.589, 0.07778468);
+   cutp->SetPoint(15, 1951.453, 0.154309);
+   cutp->SetPoint(16, 967.9237, 0.2128276);
+   cutp->SetPoint(17, -37.46167, 0.5729419);
+   cutp->SetPoint(18, 93.67555, 0.9870734);
+   cutp->SetPoint(19, 93.67555, 1.000578);
+
+   TCutG *cutd = new TCutG("CUTD", 12);
+   cutd->SetVarX("ELossvsBrhoZoom");
+   cutd->SetVarY("");
+   cutd->SetTitle("Graph");
+   cutd->SetFillStyle(1000);
+   cutd->SetPoint(0, 103.1106, 1.788782);
+   cutd->SetPoint(1, 1277.718, 0.9492299);
+   cutd->SetPoint(2, 3117.464, 0.6634249);
+   cutd->SetPoint(3, 5579.893, 0.6544935);
+   cutd->SetPoint(4, 6995.082, 0.5830422);
+   cutd->SetPoint(5, 7462.094, 0.4847967);
+   cutd->SetPoint(6, 6443.158, 0.3329628);
+   cutd->SetPoint(7, 3768.451, 0.3686885);
+   cutd->SetPoint(8, 1291.87, 0.5294538);
+   cutd->SetPoint(9, 131.4144, 1.07427);
+   cutd->SetPoint(10, 88.9587, 1.806645);
+   cutd->SetPoint(11, 103.1106, 1.788782);
+
+   TCutG *cuttdedx = new TCutG("CUTTDEDX", 8);
+   cuttdedx->SetVarX("dedxvsBrhoCond");
+   cuttdedx->SetVarY("");
+   cuttdedx->SetTitle("Graph");
+   cuttdedx->SetFillStyle(1000);
+   cuttdedx->SetPoint(0, 5.973314, 2.343927);
+   cuttdedx->SetPoint(1, 16.25119, 1.309027);
+   cuttdedx->SetPoint(2, 101.7445, 1.185131);
+   cuttdedx->SetPoint(3, 178.8286, 1.498516);
+   cuttdedx->SetPoint(4, 182.0988, 1.848341);
+   cuttdedx->SetPoint(5, 141.9216, 2.256471);
+   cuttdedx->SetPoint(6, 5.506138, 2.358503);
+   cuttdedx->SetPoint(7, 5.973314, 2.343927);
 
    // NB: Not used
    // Q-value calculation
@@ -264,8 +298,8 @@ void plotFit_a1954b(std::string fileFolder = "data_143_145/")
    Double_t m_b;
    Double_t m_B;
 
-   m_b = m_p;
-   m_B = m_Be12;
+   m_b = m_d;
+   m_B = m_Be11;
 
    // Differential cross sections
    Double_t sigmaLab0[360] = {0.0};
@@ -470,8 +504,8 @@ void plotFit_a1954b(std::string fileFolder = "data_143_145/")
 
             ++iEvt;
 
-            // if (ICMult > 3)
-            // continue;
+            if (ICMult < 3)
+               continue;
 
             // if(evMult !=2)
             //   continue;
@@ -484,7 +518,7 @@ void plotFit_a1954b(std::string fileFolder = "data_143_145/")
 
             try {
 
-               if (ICEVec->size() > 0) {
+               /*if (ICEVec->size() > 0) {
 
                   for (iQindex = 0; iQindex < 20; ++iQindex)
                      ICBL += (*ICEVec)[iQindex];
@@ -502,7 +536,7 @@ void plotFit_a1954b(std::string fileFolder = "data_143_145/")
 
                   ICQH->Fill(ICQ);
                   ICAH->Fill(ICA);
-               }
+               }*/
                //}
 
                //  if (ICA < 500 || ICA > 900)
@@ -511,12 +545,23 @@ void plotFit_a1954b(std::string fileFolder = "data_143_145/")
                for (ICIndex = 0; ICIndex < ICVec->size(); ++ICIndex) {
 
                   HIC->Fill((*ICVec)[ICIndex]);
-                  ICEvsTime->Fill((*ICVec)[ICIndex], (*ICTimeVec)[ICIndex]);
-                  ICTimeH->Fill((*ICTimeVec)[ICIndex]);
+                  // ICEvsTime->Fill((*ICVec)[ICIndex], (*ICTimeVec)[ICIndex]);
+                  // ICTimeH->Fill((*ICTimeVec)[ICIndex]);
                }
 
             } catch (...) {
             }
+
+            // 900 - 1300
+            Bool_t goodBeam = false;
+            for (auto ener : *ICVec) {
+               if (ener > 600 && ener < 750) {
+                  goodBeam = true;
+                  // henergyIC->Fill(ener);
+               }
+            }
+            if (!goodBeam)
+               continue;
 
             // if ((IC > 900 && IC < 1500)) {
             // From std::vector
@@ -577,10 +622,13 @@ void plotFit_a1954b(std::string fileFolder = "data_143_145/")
                dedxvsBrhoZoom->Fill((*dEdxADC)[index], (*brhoVec)[index]);
                //}
 
-               // if (!cutp->IsInside((*eLossADC)[index], (*brhoVec)[index])) // Proton gate
-               // continue;
+               if (!cutd->IsInside((*eLossADC)[index], (*brhoVec)[index])) // Proton gate
+                  continue;
                /*if (!cutD->IsInside((*eLossADC)[index], (*brhoVec)[index])) // particleID
                   continue;*/
+
+               // if(cuttdedx->IsInside((*dEdxADC)[index], (*brhoVec)[index]))
+               // continue;
 
                Ang_Ener_PRA_Cond->Fill(APRA, EPRA);
 
@@ -590,8 +638,8 @@ void plotFit_a1954b(std::string fileFolder = "data_143_145/")
                // if ((*dEdxADC)[index] < 3000) // particleID
                // continue;
 
-               /*   if ((*trackLengthVec)[index] < 65.0)
-                     continue;*/
+               // if ((*trackLengthVec)[index] < 30.0)
+               // continue;
 
                // if ((*fitConvergedVec)[index] == 0)
                // continue;
@@ -611,8 +659,8 @@ void plotFit_a1954b(std::string fileFolder = "data_143_145/")
                // if((*AFitVec)[index]<50 || (*AFitVec)[index]>70)
                // continue;
 
-               // if ((*EFitVec)[index] < 0 || (*EFitVec)[index] > 15)
-               // continue;
+               if ((*EFitVec)[index] < 0 || (*EFitVec)[index] > 15)
+                  continue;
 
                /*     if ((*fChi2Vec)[index] / (*fNdfVec)[index] < 0.000)
                       continue;
@@ -642,16 +690,16 @@ void plotFit_a1954b(std::string fileFolder = "data_143_145/")
 
                // Excitation energy correction
                Double_t p0 = 0.0;   //-3.048;
-               Double_t p1 = 0.002; // 0.0513295;
+               Double_t p1 = 0.0035; // 0.0513295;
                Double_t mFactor = 1.00;
                Double_t offSet = 0.0;
                Double_t QcorrZ = 0.0;
 
                // Ad hoc correction (to be investigated)
-               if (ex_energy_exp > 5.0)
-                  QcorrZ = ex_energy_exp - mFactor * p1 * ((*ziniFitXtrVec)[index]) - p0;
-               else
-                  QcorrZ = ex_energy_exp;
+               // if (ex_energy_exp > 5.0)
+               QcorrZ = ex_energy_exp - mFactor * p1 * ((*ziniFitXtrVec)[index]) - p0;
+               /*else
+                  QcorrZ = ex_energy_exp;*/
 
                // if(QcorrZ<7.0 || QcorrZ>8.0)
                // continue;
@@ -793,8 +841,8 @@ void plotFit_a1954b(std::string fileFolder = "data_143_145/")
 
                QvsMult->Fill(QcorrZ, evMult);
 
-               if (cm_angle < 20.0 || cm_angle > 30)
-                  continue;
+               // if (cm_angle < 20.0 || cm_angle > 30)
+               // continue;
 
                hsigmaCM1->Fill(cm_angle);
                HQCorr->Fill(QcorrZ);
@@ -1442,7 +1490,7 @@ void plotFit_a1954b(std::string fileFolder = "data_143_145/")
    HQCorr->Fit("total_gaus", "", "", -2.0, 8.0);
    total_gaus->GetParameters(&par[0]);
 
-   auto gfit1 = new TF1("gfit1", "gaus(0)", -2.0, 2.0);
+   /*auto gfit1 = new TF1("gfit1", "gaus(0)", -2.0, 2.0);
    gfit1->SetParameter(0, par[0]);
    gfit1->SetParameter(1, par[1]);
    gfit1->SetParameter(2, par[2]);
@@ -1483,7 +1531,7 @@ void plotFit_a1954b(std::string fileFolder = "data_143_145/")
    gfit5->SetParameter(1, par[16]);
    gfit5->SetParameter(2, par[17]);
    gfit5->SetLineColor(kBlue);
-   gfit5->SetNpx(1000);
+   gfit5->SetNpx(1000);*/
    /*auto gfit6 = new TF1("gfit6", "gaus(0)", 5.0, 9.0);
    gfit6->SetParameter(0, par[18]);
    gfit6->SetParameter(1, par[19]);
@@ -1511,11 +1559,11 @@ void plotFit_a1954b(std::string fileFolder = "data_143_145/")
 
    TCanvas *cqcorr = new TCanvas("cqcorr", "cqcorr", 700, 700);
    HQCorr->Draw();
-   gfit1->Draw("same l");
+   /*gfit1->Draw("same l");
    gfit2->Draw("same l");
    gfit10->Draw("same l");
    gfit3->Draw("same l");
-   gfit4->Draw("same l");
+   gfit4->Draw("same l");*/
    // gfit5->Draw("same l");
    /*gfit6->Draw("same l");
    gfit7->Draw("same l");
