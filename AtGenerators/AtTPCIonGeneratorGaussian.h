@@ -12,8 +12,8 @@ class TMemberInspector;
 class AtTPCIonGeneratorGaussian : public AtTPCIonGenerator {
 protected:
    Double_t fTheta{0}; //< Maximum angle [rad]
-   Double_t fX{0}; //< X coordinate at the window
-   Double_t fY{0}; //< Y coordinate at the window
+   Double_t fX{0};     //< X coordinate at the window
+   Double_t fY{0};     //< Y coordinate at the window
 
    virtual void SetVertexCoordinates() override;
 

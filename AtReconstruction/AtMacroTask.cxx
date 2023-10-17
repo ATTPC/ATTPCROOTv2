@@ -6,7 +6,7 @@ InitStatus AtMacroTask::Init()
 {
    for (auto func : fInitFunctions)
       func();
-   
+
    return kSUCCESS;
 }
 
