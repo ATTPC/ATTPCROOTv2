@@ -11,7 +11,7 @@ void AtSidebarIntMacro::FillFrame()
    SetIntNumber(fLabel, fStart);
 }
 
-void AtSidebarIntMacro::RunFunction() 
+void AtSidebarIntMacro::RunFunction()
 {
    auto value = GetIntNumber(fLabel);
    fFunction(value);

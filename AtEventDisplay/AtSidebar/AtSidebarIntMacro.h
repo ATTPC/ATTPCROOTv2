@@ -28,18 +28,22 @@ private:
    int fStart{0};
 
 public:
-   AtSidebarIntMacro(const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1,
-                      UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground())
+   AtSidebarIntMacro(const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1, UInt_t options = 0,
+                     Pixel_t back = GetDefaultFrameBackground())
       : AtSidebarAddon(p, w, h, options, back)
    {
    }
-   ~AtSidebarIntMacro() { }
+   ~AtSidebarIntMacro() {}
 
    void FillFrame() override;
 
    void RunFunction();
 
-   void SetBounds(int min, int max) { fMin = min; fMax = max; }
+   void SetBounds(int min, int max)
+   {
+      fMin = min;
+      fMax = max;
+   }
    void SetFunction(MacroFunction function) { fFunction = std::move(function); }
    void SetInitialValue(int value) { fStart = value; }
    void SetLabel(std::string label) { fLabel = label; }
