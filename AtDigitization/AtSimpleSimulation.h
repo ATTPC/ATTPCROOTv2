@@ -12,6 +12,7 @@
 #include <TClonesArray.h>
 #include <TObject.h>
 
+#include <functional> // for function
 #include <map>
 #include <memory>
 #include <mutex>
@@ -64,7 +65,9 @@ public:
    void SetDistanceStep(double step) { fDistStep = step; } //<In mm
 
    void NewEvent();
-   void SimulateParticle(int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom);
+   std::pair<XYZPoint, PxPyPzEVector> SimulateParticle(
+      int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
+      std::function<bool(XYZPoint, PxPyPzEVector)> func = [](XYZPoint pos, PxPyPzEVector mom) { return true; });
 
    AtMCPoint &GetMcPoint(int i) { return dynamic_cast<AtMCPoint &>(*fMCPoints.At(i)); }
    int GetNumPoints() { return fMCPoints.GetEntries(); }
@@ -75,7 +78,9 @@ protected:
    bool IsInVolume(const std::string &volName, const XYZPoint &point);
    std::string GetVolumeName(const XYZPoint &point);
 
-   void SimulateParticle(ModelPtr model, const XYZPoint &iniPos, const PxPyPzEVector &iniMom);
+   std::pair<XYZPoint, PxPyPzEVector> SimulateParticle(
+      ModelPtr model, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
+      std::function<bool(XYZPoint, PxPyPzEVector)> func = [](XYZPoint pos, PxPyPzEVector mom) { return true; });
    void AddHit(double ELoss, const XYZPoint &pos, const PxPyPzEVector &mom, double length);
    TGeoVolume *GetVolume(const XYZPoint &pos);
 };
